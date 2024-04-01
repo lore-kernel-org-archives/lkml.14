@@ -1,124 +1,129 @@
-Received: from mx0b-001ae601.pphosted.com (mx0a-001ae601.pphosted.com [67.231.149.25])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B47414014;
-	Mon,  1 Apr 2024 10:02:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.149.25
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F211AFC17;
+	Mon,  1 Apr 2024 10:10:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711965747; cv=none; b=dtvTIdglllVebGaqqCQtYd+6E6x4q9xt2Yu83ecgvLfefggJ/vR2IX9XO0pxiz56LH+olIfo7AV0E7a2CzxGmQJN+GhjHh5Qo0QCJ3LYXSafYZvlLhHu5shJft11Wz0D/O4dRpmVIVn5wvItXwqn78IdnLifGKgg8J79e87gdxs=
+	t=1711966255; cv=none; b=IU4YCGugK8qPwrUH40AG2FICpA51eCsMFGJiO2debTNru9lDPNyge1HkTbtKBHboMHnNQYkI3eGRC7jDg79VXY2PUwceEGv7J+t58UHw3J7371FevCgZN+BverbEzkN/p1ekb4wUUQ2jSNPzFSF2ggG7/p0BNMvcyCmrSAoEePM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711965747; c=relaxed/simple;
-	bh=s/N/0MGnnbaI2ruainzBFAMTg5WL9GCIxZMR9Vo5V2w=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=oJOAk5zj1by0X2/VvbKFFoxMb9jYiQFxZ532NUdHyEGXiUvvz6uZrVffG3bW1EfEILkFE9OJSnZeHn5uTkTFaINOhMa6B7JVIGtksXbH5aaH6lHdKsKmzcAP7yKcbPUfNw17phzY80aWVd5oATWX3WV7+XH6ai88fypk3SfUKt4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com; spf=pass smtp.mailfrom=opensource.cirrus.com; dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b=Wb4xgyCn; arc=none smtp.client-ip=67.231.149.25
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=opensource.cirrus.com
+	s=arc-20240116; t=1711966255; c=relaxed/simple;
+	bh=N5wbw2MnTKS/5RK9ZX2lKvMkhhY+eswYx65v4Ex7yME=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=O/26c6ZCMzCIKMQffgIl95grqTRnG3p1hmhMsXrnFXVKNb9KInfGAK7KpFdol3RCy/vVe72ImsWbD8lY92Hr91kRmXA1++YQyyBv5w/q3NjKvYhlL8lrMTvMrrZY3Agy/63CyyzTJn+TSPE/HHK4anuTCJTDjX7hB7mg26yoOZs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JqZVze4S; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="Wb4xgyCn"
-Received: from pps.filterd (m0077473.ppops.net [127.0.0.1])
-	by mx0a-001ae601.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 4319jd4e020490;
-	Mon, 1 Apr 2024 05:02:13 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=
-	from:to:cc:subject:date:message-id:in-reply-to:references
-	:mime-version:content-transfer-encoding:content-type; s=
-	PODMain02222019; bh=QyfgH0d6kp4gRp6HlUFJbwfDEHAE87v+bFNRFgBAiMM=; b=
-	Wb4xgyCnUQoxMSFoyqerBRoCGWcUAVRNlkSkUbIBp/nqlfKbfgIUjqHjgHLr3jMo
-	1Ry+UUmW2VPGvE4cwmLNzeYj8/XpnpJhz8Yc8KPJUkQbi9y6wHIngwWJiEm8P321
-	a63OgI//UR42usNwrsbKR3Nujl2rur9hgEiPLx1JtRygmHGv5xYNmWI7QwfQdjER
-	u4pToHG9w/E3hYG6bzMgw8+IrDvPHgzxa014Upm0zqI2Pb6BU/BMpqITHNRSjjE8
-	LIzQ+wWyMHJX6upZpJ8uJOncKMHlmSJmtAiEfhRRdhdoKdHwYuDjatq/zJEQREjj
-	OGohMwe8BWoz09wUc+uW2g==
-Received: from ediex01.ad.cirrus.com ([84.19.233.68])
-	by mx0a-001ae601.pphosted.com (PPS) with ESMTPS id 3x6g4xhtw7-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 01 Apr 2024 05:02:12 -0500 (CDT)
-Received: from ediex01.ad.cirrus.com (198.61.84.80) by ediex01.ad.cirrus.com
- (198.61.84.80) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Mon, 1 Apr 2024
- 11:02:10 +0100
-Received: from ediswmail9.ad.cirrus.com (198.61.86.93) by
- ediex01.ad.cirrus.com (198.61.84.80) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9
- via Frontend Transport; Mon, 1 Apr 2024 11:02:10 +0100
-Received: from ediswws06.ad.cirrus.com (ediswws06.ad.cirrus.com [198.90.208.18])
-	by ediswmail9.ad.cirrus.com (Postfix) with ESMTP id 3FD0A820270;
-	Mon,  1 Apr 2024 10:02:10 +0000 (UTC)
-From: Richard Fitzgerald <rf@opensource.cirrus.com>
-To: <broonie@kernel.org>, <tiwai@suse.com>
-CC: <linux-sound@vger.kernel.org>, <alsa-devel@alsa-project.org>,
-        <linux-kernel@vger.kernel.org>, <patches@opensource.cirrus.com>,
-        "Richard
- Fitzgerald" <rf@opensource.cirrus.com>
-Subject: [PATCH v2 2/3] ASoC: soc-card: Use snd_ctl_find_id_mixer() instead of open-coding
-Date: Mon, 1 Apr 2024 10:02:09 +0000
-Message-ID: <20240401100210.61277-3-rf@opensource.cirrus.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240401100210.61277-1-rf@opensource.cirrus.com>
-References: <20240401100210.61277-1-rf@opensource.cirrus.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JqZVze4S"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id BC495C433F1;
+	Mon,  1 Apr 2024 10:10:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1711966254;
+	bh=N5wbw2MnTKS/5RK9ZX2lKvMkhhY+eswYx65v4Ex7yME=;
+	h=From:Subject:Date:To:Cc:Reply-To:From;
+	b=JqZVze4Sf9kDR70QfYPtILbk+0ghgXLLKUbEFUyumrEKnQMxb8IQjvf36WqkxzZMD
+	 6hzSb2twRKbs9P++P+nHyp33GUkgRyW3UizQmbT/MkObV4hpPIfEekNimvYXFvA6Is
+	 IqcHUDHIHTbxS0p620y8UhWWAdTSdFDDqq6HqvTxfVDLsNOmaTRM0kVIhqPrLwq2Xl
+	 ztXC6FhtrvjbB0KEMAvBYS52gumewKpLg4mUvVEf8yzciF5y0YBHGfMlIAt0zZ76YM
+	 btxmzu0ch42KBc1nASTPzhJVQRsGbTQa3BZk+Rtv/zlKoCiGs6DAHib8crhnOpzqd9
+	 6CTFAMQhYSemg==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6DF3CD1288;
+	Mon,  1 Apr 2024 10:10:54 +0000 (UTC)
+From: Xianwei Zhao via B4 Relay <devnull+xianwei.zhao.amlogic.com@kernel.org>
+Subject: [PATCH v3 0/5] Baisc devicetree support for Amlogic A4 and A5
+Date: Mon, 01 Apr 2024 18:10:48 +0800
+Message-Id: <20240401-basic_dt-v3-0-cb29ae1c16da@amlogic.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Proofpoint-ORIG-GUID: Ts69AvBdsGy9ubWHypuuhOhtbMX5BcX-
-X-Proofpoint-GUID: Ts69AvBdsGy9ubWHypuuhOhtbMX5BcX-
-X-Proofpoint-Spam-Reason: safe
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIACmICmYC/22MywqDMBBFf0Wybkpm4quu+h+llBgTHaimJBJax
+ H9vdGWhy3O55ywsGE8msCZbmDeRArkpgTxlTA9q6g2nLjFDgbmQgLxVgfSjmzkUJq8KLFQOkqX
+ 7yxtL7z11uyceKMzOf/ZyhG39E4nABa8sQGelEvWlvKrx6XrSZ+1GtmUiHlQUBxWTWtZgtG1Rt
+ sr+quu6fgHmGofN3QAAAA==
+To: Rob Herring <robh+dt@kernel.org>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Neil Armstrong <neil.armstrong@linaro.org>, 
+ Martin Blumenstingl <martin.blumenstingl@googlemail.com>, 
+ Jerome Brunet <jbrunet@baylibre.com>, Kevin Hilman <khilman@baylibre.com>, 
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+ Jiri Slaby <jirislaby@kernel.org>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, 
+ linux-serial@vger.kernel.org, Xianwei Zhao <xianwei.zhao@amlogic.com>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+X-Mailer: b4 0.12.4
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1711966252; l=2281;
+ i=xianwei.zhao@amlogic.com; s=20231208; h=from:subject:message-id;
+ bh=N5wbw2MnTKS/5RK9ZX2lKvMkhhY+eswYx65v4Ex7yME=;
+ b=HJ4Y6rVs3Ko4rtxCb2S3YncOGcj95WtddZ5a28tWO5DhOf4QZsNzBblo93y0AcDmkm0MIG44a
+ oizL5JSYrk5ClFUJCFY8afUZbCqUms1epCd5QivqZcogc7AIatuK3iC
+X-Developer-Key: i=xianwei.zhao@amlogic.com; a=ed25519;
+ pk=o4fDH8ZXL6xQg5h17eNzRljf6pwZHWWjqcOSsj3dW24=
+X-Endpoint-Received: by B4 Relay for xianwei.zhao@amlogic.com/20231208 with
+ auth_id=107
+X-Original-From: Xianwei Zhao <xianwei.zhao@amlogic.com>
+Reply-To: xianwei.zhao@amlogic.com
 
-Use the snd_ctl_find_id_mixer[_locked]() wrapper in
-snd_soc_card_get_kcontrol[_locked]() instead of open-coding a custom
-list walk of the card controls list.
+Amlogic A4 and A5 are application processors designed for smart audio
+and IoT applications.
 
-Signed-off-by: Richard Fitzgerald <rf@opensource.cirrus.com>
+Add the new A4 SoC/board device tree bindings.
+
+Add the new A5 SoC/board device tree bindings.
+
+Add A4 UART compatible line for documentation.
+
+Add basic support for the A4 based Amlogic AV400 board, which describes
+the following components: CPU, GIC, IRQ, Timer and UART. These are capable of
+booting up into the serial console.
+
+Add basic support for the A5 based Amlogic AV400 board, which describes
+the following components: CPU, GIC, IRQ, Timer and UART. These are capable of
+booting up into the serial console.
+
+Signed-off-by: Xianwei Zhao <xianwei.zhao@amlogic.com>
 ---
- sound/soc/soc-card.c | 21 ++++-----------------
- 1 file changed, 4 insertions(+), 17 deletions(-)
+Changes in v3:
+- Keep alphabetical order.
+- Add the necessary spaces.
+- Link to v2: https://lore.kernel.org/r/20240320-basic_dt-v2-0-681ecfb23baf@amlogic.com
 
-diff --git a/sound/soc/soc-card.c b/sound/soc/soc-card.c
-index 8a2f163da6bc..0a3104d4ad23 100644
---- a/sound/soc/soc-card.c
-+++ b/sound/soc/soc-card.c
-@@ -32,33 +32,20 @@ static inline int _soc_card_ret(struct snd_soc_card *card,
- struct snd_kcontrol *snd_soc_card_get_kcontrol_locked(struct snd_soc_card *soc_card,
- 						      const char *name)
- {
--	struct snd_card *card = soc_card->snd_card;
--	struct snd_kcontrol *kctl;
--
--	/* must be held read or write */
--	lockdep_assert_held(&card->controls_rwsem);
--
- 	if (unlikely(!name))
- 		return NULL;
- 
--	list_for_each_entry(kctl, &card->controls, list)
--		if (!strncmp(kctl->id.name, name, sizeof(kctl->id.name)))
--			return kctl;
--	return NULL;
-+	return snd_ctl_find_id_mixer_locked(soc_card->snd_card, name);
- }
- EXPORT_SYMBOL_GPL(snd_soc_card_get_kcontrol_locked);
- 
- struct snd_kcontrol *snd_soc_card_get_kcontrol(struct snd_soc_card *soc_card,
- 					       const char *name)
- {
--	struct snd_card *card = soc_card->snd_card;
--	struct snd_kcontrol *kctl;
-+	if (unlikely(!name))
-+		return NULL;
- 
--	down_read(&card->controls_rwsem);
--	kctl = snd_soc_card_get_kcontrol_locked(soc_card, name);
--	up_read(&card->controls_rwsem);
--
--	return kctl;
-+	return snd_ctl_find_id_mixer(soc_card->snd_card, name);
- }
- EXPORT_SYMBOL_GPL(snd_soc_card_get_kcontrol);
- 
+Changes in v2:
+- Delete bindings for uncommitted boards.
+- Add A4 UART compatible line for documentation.
+- Use common dtsi for a4 and a5.
+- Fix psci version 1.0, and fix some formats.
+- Modify secmon reserved memory size 10M(actual using).
+- Link to v1: https://lore.kernel.org/r/20240312-basic_dt-v1-0-7f11df3a0896@amlogic.com
+
+---
+Xianwei Zhao (5):
+      dt-bindings: arm: amlogic: add A4 support
+      dt-bindings: arm: amlogic: add A5 support
+      dt-bindings: serial: amlogic,meson-uart: Add compatible string for A4
+      arm64: dts: add support for A4 based Amlogic BA400
+      arm64: dts: add support for A5 based Amlogic AV400
+
+ Documentation/devicetree/bindings/arm/amlogic.yaml | 12 ++++
+ .../bindings/serial/amlogic,meson-uart.yaml        |  4 +-
+ arch/arm64/boot/dts/amlogic/Makefile               |  2 +
+ .../boot/dts/amlogic/amlogic-a4-a113l2-ba400.dts   | 42 ++++++++++++++
+ arch/arm64/boot/dts/amlogic/amlogic-a4-common.dtsi | 66 ++++++++++++++++++++++
+ arch/arm64/boot/dts/amlogic/amlogic-a4.dtsi        | 40 +++++++++++++
+ .../boot/dts/amlogic/amlogic-a5-a113x2-av400.dts   | 42 ++++++++++++++
+ arch/arm64/boot/dts/amlogic/amlogic-a5.dtsi        | 40 +++++++++++++
+ 8 files changed, 247 insertions(+), 1 deletion(-)
+---
+base-commit: 7092cfae086f0bc235baca413d0bd904f182670c
+change-id: 20240312-basic_dt-15e47525a413
+
+Best regards,
 -- 
-2.39.2
+Xianwei Zhao <xianwei.zhao@amlogic.com>
+
 
