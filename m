@@ -1,356 +1,138 @@
-Received: from mx0b-0016f401.pphosted.com (mx0b-0016f401.pphosted.com [67.231.156.173])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82D832F3A;
-	Mon,  1 Apr 2024 08:38:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=67.231.156.173
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711960740; cv=fail; b=R9mVXzwj5pkC1OVjmiJfTt5f6nAC14iomrDIqa3t4BnF93XFqRd0+EKyp2+ylMlps2tjIffwjNOyYhDDEJbCq/Vud1tqxGDDlvFMB6SPt2fWkwYS1BIEzhy0lPGKwtwUQhxvcaykHRGGG7Q998dv4jIKRmM8rW9dmCI3+RsHS04=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711960740; c=relaxed/simple;
-	bh=PUIbA9BOPm7Q+N+WIq/+7JOhTXf7Yqvge5eHH6BUdLk=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=eKwV++9hlzSfHJSQN4vRJWB0kMdXk2UpsKj1JHC6DY6YNtWVBUQy77Iltj/a28j6XJ9gUooQUJrK40TqNdvYIJt+B7jZqdz4Ri1Up3L9pLRSFu+2QaNhViVw5NJ07qWRBb4hSwARv6p3c6XR2pZSUPhsTVinE7cUgjDGh4fJmwI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com; spf=pass smtp.mailfrom=marvell.com; dkim=pass (1024-bit key) header.d=marvell.com header.i=@marvell.com header.b=rkQF+VlW; arc=fail smtp.client-ip=67.231.156.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=marvell.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB9D0FC08;
+	Mon,  1 Apr 2024 08:39:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1711960748; cv=none; b=R0VKFJUYfluRdOjLilZV6fhNDlBwhNpy9B5MXynYxi/APeN7ztA/aqlzHBxknYANKZSoSuNIgP+buEGnNd/oNojf/nNzMToMDRWnURFNK0XOOs/JR/JiUej8HhvdiivKv3eOEanNnZLzGMoyALn2c6mjeS6lJc8BO5kGHvnnfA0=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1711960748; c=relaxed/simple;
+	bh=1Tn1esD1kJcJI+TkMvadUmF0KzwOA5IFTcW+3nhhjFM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=uXMO5wdGcCnQh6n1d4guxIhwVMP8SlO3POhRBc6Vbv9HEKnUUtACCA6NKCqJzvhC7K0Ve7o/+NEZD0tokMgaXTjIPGPwAPAsqwOXqr0r+G+bI5o+i5TUr8NRpXbKcpRroG9RF0lS2kNwL35DwYViHc5nks7wgmHH70ci6VzsYac=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=JOyiWYWB; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=marvell.com header.i=@marvell.com header.b="rkQF+VlW"
-Received: from pps.filterd (m0045851.ppops.net [127.0.0.1])
-	by mx0b-0016f401.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 4318D9Kh003499;
-	Mon, 1 Apr 2024 01:38:50 -0700
-Received: from nam11-bn8-obe.outbound.protection.outlook.com (mail-bn8nam11lp2169.outbound.protection.outlook.com [104.47.58.169])
-	by mx0b-0016f401.pphosted.com (PPS) with ESMTPS id 3x7kkcguwe-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 01 Apr 2024 01:38:50 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=JdTOuAIXTPBI1AUP8VmyU6NBd3k7nlpAbFaJzF60trOCNC0T7gX0P0PZD+gvrSIOLhUoVjlA78g4pWd3uOdCdKaZgJXEMKreHDC/qdn4cJMWLNShEc6FLsKIBzKEM4J+fnunPY/s7u3NVGpIPhCnXAKXJMmksFISSvQy5pp39cGJyEQ9dnxA00b2Kch406otuy0m5EFoOiPIutT135wS3KqclhK6Dfe16Z0Oa59HC5KmuAORYE+7A5Fux42Yw5WqpgD3bbcwr/nnky1rAWg6kq3Dcxsor3LP/EH/dDBMRKpk5d4MgZ4xrAIrLOavr0OqC4z9UHayWvd+tuP274rsBA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=QWK4O9pzEHr+EDNTx5EvJlr2ck4BVNQVhpABG2ecaMQ=;
- b=nZJ59L/Wl/K9OzRkK5V+sypjaLZ3fU1AxJP07IKVGF9DJC/rkZ2OfYgW07OJeu2fjJ7Qo+CeDOrHeLC3+QX5/+RoYbEXFio2FdZYytAwAJCIdnuO3ozdwzYEjbqpzucpwqDpEuue8VxrqNFZLAnWwJx4T9nXyDDkm3f2kFtR1OgPPy00zdMFVjjdufq1QdG1+HqWzGfdDkiSfCLUj92B3hNcG9oZKP/ZdvGHIbYqiO5BbJ7GKbK/ERZ6HnmlwXK8z5Z2kuDPtYAe0lKmDAgMe5Js7b9GXEcuE7+gmjczz6KpbUBLxxak3PBkc0wOxYhrRHbWdPL26LwbcBy/iggWUA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=marvell.com; dmarc=pass action=none header.from=marvell.com;
- dkim=pass header.d=marvell.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=QWK4O9pzEHr+EDNTx5EvJlr2ck4BVNQVhpABG2ecaMQ=;
- b=rkQF+VlWKHzXLH8gRvEe8yLWvC8RAvWyEhu+0jGEfCAMjWC+hJ98EwaOBZHMLhsiwCL6NjaeouKxuQmLogTQpdjIkLofR1IP5xP/kKpMsqU/QwFIBdfuhk20oO8wUCb9J32lrRNygaYraN4mb0OSil57oMoCUGqYmkMYTnMDesg=
-Received: from PH0PR18MB4474.namprd18.prod.outlook.com (2603:10b6:510:ea::22)
- by CO1PR18MB4809.namprd18.prod.outlook.com (2603:10b6:303:ec::6) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.46; Mon, 1 Apr
- 2024 08:38:46 +0000
-Received: from PH0PR18MB4474.namprd18.prod.outlook.com
- ([fe80::d068:f07:a59b:eb2f]) by PH0PR18MB4474.namprd18.prod.outlook.com
- ([fe80::d068:f07:a59b:eb2f%6]) with mapi id 15.20.7409.042; Mon, 1 Apr 2024
- 08:38:46 +0000
-From: Hariprasad Kelam <hkelam@marvell.com>
-To: Simon Horman <horms@kernel.org>
-CC: "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kuba@kernel.org" <kuba@kernel.org>,
-        "davem@davemloft.net"
-	<davem@davemloft.net>,
-        Sunil Kovvuri Goutham <sgoutham@marvell.com>,
-        Geethasowjanya Akula <gakula@marvell.com>,
-        Jerin Jacob <jerinj@marvell.com>, Linu Cherian <lcherian@marvell.com>,
-        Subbaraya Sundeep Bhatta
-	<sbhatta@marvell.com>,
-        Naveen Mamindlapalli <naveenm@marvell.com>,
-        "edumazet@google.com" <edumazet@google.com>,
-        "pabeni@redhat.com"
-	<pabeni@redhat.com>
-Subject: ] Re: [net-next Patch] octeontx2-af: map management port always to
- first PF
-Thread-Topic: ] Re: [net-next Patch] octeontx2-af: map management port always
- to first PF
-Thread-Index: AQHahBADL0TiP64nPEWg/DZao7Q9dg==
-Date: Mon, 1 Apr 2024 08:38:46 +0000
-Message-ID: 
- <PH0PR18MB4474061FA888A03A74CE2D5DDE3F2@PH0PR18MB4474.namprd18.prod.outlook.com>
-References: <20240327160348.3023-1-hkelam@marvell.com>
- <20240328145819.GN403975@kernel.org>
-In-Reply-To: <20240328145819.GN403975@kernel.org>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: PH0PR18MB4474:EE_|CO1PR18MB4809:EE_
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 
- 5DIpk5/oB27e+nh2QEjByO418s7V/hcq3XeCKzi9aYt1Ik5S5H/0hY9apZ9Pr6apO/gWKGchNLE03ya5cXuk+RtjuBcH/evSfIqyQn0BtUCD2WA6+KwKamSP+h1CObZQd6rdN4oq4UlkhHwyWQ3uXUfKy2vtos2xGCUIgLVmYQosrdhPOFs7fDXMJa8de1h9ylaQWzSsfcxP4bvN+7dKkKGN41sJHp0pg4QZpijH82dOXoyNj+1QSZXyaryfqAlcezdUHsa5e/+QBcL7UvvqwdS2jFc9vKaSiEVRvckMKjPaKH+XM2NqNq8IL4sMk8A1Ur64HusnecMZgQwU7tT6LXxqVt5UI1fwUxh9zKmCWpPKS1ZzrkVLqlq/725EuWQ0NealzW4WGB0g8T9oi/bgpfkt2lN8SQmhvv62rkOmjvnFALbV5fr3ow3Env8luDF+Q9JmZS7iSRMcukhXvs69mEjf6DtAFhfBytl6Nb5OLCg4O508Lr+0rg/otYBWPHYLPAghv0BodwwYBVp/oHPG4ySF/RRx9XU33B0cKadzPGUx7daPUybq5bL/zynVfqB7dP+MUJv2czOIikTSLIBMIL5IJ7dPZJJhsZdGKHcfcJHr4MmtMppOBwdV4CFMPGcZI9Q2UR+YZ2SBykzR2uldvOe5sSGH3tUEDzjQlnpTY4g=
-x-forefront-antispam-report: 
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH0PR18MB4474.namprd18.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(1800799015)(376005)(366007);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: 
- =?us-ascii?Q?pnuW7mZu2mn0zQKwR4gfQdPKWYlNvDS9RFIcrgmEYqnI2Yt9UGPaXgKXurkI?=
- =?us-ascii?Q?HRHnV2hHyOjXmef9iru9u/h82bEqhKZknuvC5P/HxxzhQS3N1jkFJhAuds1H?=
- =?us-ascii?Q?ByAl41hZd/eIqYo4N+hs4ZJZumvNV4XGK7pYHFCfeRUnprXEHuN+GmgjEo2N?=
- =?us-ascii?Q?8xJ1T+/kWyKJR2nPJ9FxhSKsU2k56OH8hksAb8DveAiELB921iyIabySEoBl?=
- =?us-ascii?Q?p1qHzhEH7WQZRTikcSQIBUA+J8NtpTArXgvSgWVLlB2v4JF0TODyOWCMIrbY?=
- =?us-ascii?Q?WYbK3CKq/D0vhQim4DKJc7+GCLZI0lrs5bcrKeCxkNQcSJkOginATZ+QpcNm?=
- =?us-ascii?Q?GdNDMUqUEYxkB6hlneHcOw2BWdx65MtY+3vQKIvskde0qGke556E1+9RGQIB?=
- =?us-ascii?Q?zY36vBfDiC9gvD+KBAUYKTOTfBaZXZo2XawWh2QEweP6Qnedmed5phghXlzI?=
- =?us-ascii?Q?TJQx8FKVkWkXIstc/Z5Qhg6BhWKdog8pXtcYn4poG1OKgnqo6HDhBJj6ggsF?=
- =?us-ascii?Q?GDUVCEJCD1qUGJctNqpSnCMzVlCwHUkRk+EGRsyI4hCz+vJ2Q0of9iKpH27k?=
- =?us-ascii?Q?Bko6/nKPc+4ZMSzrtEyw0pqnme7LMLy0Tqv7j/zTMvciFoEyKLi3DB713h1e?=
- =?us-ascii?Q?m2NV0HHaZWPrOPx299Hde2Np/NNK3vvF5WrF9twNIizvUMtV4g5t2EzcwSoA?=
- =?us-ascii?Q?lWYV32qpP6SsOo6MRl9p7GyOshXdZ6IYcYR3i18tOkireFtRh8phA3GTqOCj?=
- =?us-ascii?Q?OnnXiJk18Lysr6AC3+sAg8Y1OmEalqvtuals2hKPjSIKKFdRtGCE0ZT0g2EY?=
- =?us-ascii?Q?8wQqqLgdZjZqX1ejisQeuv7m/Koh/enbXwR718sq+dCz9So3hZxI9cU+8Jqn?=
- =?us-ascii?Q?NgJuXMcyLLI0pK2SUfUxLTLi+uV+D7YE1uvxuKbxQn+VHzSwoijHotTHppHv?=
- =?us-ascii?Q?MYZAaS7b1F4+gnHndpQ0ZQaql7ButQV+7UihJ066ngtjPeCtl3gNKeNHdtOT?=
- =?us-ascii?Q?7Df1A+fI6S8wneATzcmKU6MEq+OPxuDawn/vdJeHzrVWS/W4O9jPQyxzbEcq?=
- =?us-ascii?Q?5cNefSuf/TI1dP+cL40mPy02CmUWeClArx5gOeM8PwA+3tKQRXoWsk3XDU/k?=
- =?us-ascii?Q?UftWbs98fZMgsyMgzzDcZ2P+zaSSE1Nu6hf3DrMiK/35D9jQE2CYfI4VdLQP?=
- =?us-ascii?Q?pUyZB1HNOfK0Rb4ZaK39BWjR8tqbRr2JYEkqaNv4wCSmMEz573SctFtGz0Bz?=
- =?us-ascii?Q?6J4KVSMG9cunvUeC9MPMOKorfkpKao7S26tbfnW6P7VhKCtdyaOEbli/td60?=
- =?us-ascii?Q?UAqonhfFz1t9d0b3sYhjKhfHCKisMe2fQP3x4YOYh/c8oYq6QLR6PpOa1iN8?=
- =?us-ascii?Q?UB3eQQXjzLF5ofpFXtfU7Rj5AyCfL06/IQldsOa8Gs5N28SV4D8fK3SgGR0C?=
- =?us-ascii?Q?IdX+gOTuEiOjxaeZAMcI3MC/BvVpx0Jb9/Q0smq5O5Ng+5vKFCfRN3zYOx0y?=
- =?us-ascii?Q?6XCu34SWDmnBKoZxGcHvEymoRoWfPEa2MeifMVya4KdRerC3EgXUT97GhhCt?=
- =?us-ascii?Q?ZSJbt/ZHXNCIc7Ee2d4=3D?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="JOyiWYWB"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:To:Subject:MIME-Version:Date:Message-ID:From:
+	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
+	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
+	References; bh=BjGaJFLrLvMVQq06MTRerBRTLWVUItjpux/8jwfcOwI=; t=1711960745;
+	x=1712392745; b=JOyiWYWBuh/2oVTIpol+iSbaGT0B0vCD+LqVqsra6DeRg+j3M9t4Ld2OhkYny
+	M5HqF+eOW1TMtjNUydKDO6gItTIRmpnV5LIuiaByOkwoasvttdshAuxYmEjeGS8/wqjj/3ihIEsTr
+	ijG9cToFSxHcXqGnUQDHom58AHah1tSJUz3bretCDSY2gk1YvVpJYRGMubg5yQQJROTtxhUMcZkHz
+	Kzvr9pxdRrIDKOu472H4Qu1qSdlOKcfD1rO4nMcctGT9+RGAw0sYOpKKE8cGsnDVxbBG8A/e7YPBE
+	nHyzI53EK0bZMdSHWR5WhnH3SiX5DYacTZE6sZ1v7c/TOWDx3g==;
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1rrDBt-0007A8-17; Mon, 01 Apr 2024 10:38:53 +0200
+Message-ID: <dfa22ac1-36e9-48da-a2a8-8d7818c09187@leemhuis.info>
+Date: Mon, 1 Apr 2024 10:38:52 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: marvell.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: PH0PR18MB4474.namprd18.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 883dfa61-47d1-4179-49f1-08dc52272584
-X-MS-Exchange-CrossTenant-originalarrivaltime: 01 Apr 2024 08:38:46.6123
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 70e1fb47-1155-421d-87fc-2e58f638b6e0
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: UwWcCRUBpvDLJ4TZoTtBaxQtowz36hku/hKse3id5PQWon+p/y0iHqs93Jk5I3rFq7ibVSoLi7baAh+8Hb6a3g==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CO1PR18MB4809
-X-Proofpoint-GUID: WNa7aTWDX4HJmdq7VYaUwKtfnPeFFSrK
-X-Proofpoint-ORIG-GUID: WNa7aTWDX4HJmdq7VYaUwKtfnPeFFSrK
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-04-01_05,2024-03-28_01,2023-05-22_02
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/2] docs: handling-regressions.rst: clarify that
+ "Closes:" tags work too
+To: Karel Balej <balejk@matfyz.cz>, Jonathan Corbet <corbet@lwn.net>,
+ regressions@lists.linux.dev, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org, workflows@vger.kernel.org
+References: <20240328194342.11760-1-balejk@matfyz.cz>
+ <20240328194342.11760-3-balejk@matfyz.cz>
+From: Thorsten Leemhuis <linux@leemhuis.info>
+Content-Language: en-US, de-DE
+Autocrypt: addr=linux@leemhuis.info; keydata=
+ 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 n7RI
+In-Reply-To: <20240328194342.11760-3-balejk@matfyz.cz>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;linux@leemhuis.info;1711960745;94e34c62;
+X-HE-SMSGID: 1rrDBt-0007A8-17
 
+On 28.03.24 20:29, Karel Balej wrote:
+> The regressions handling manual claims that regzbot associates patches
+> fixing an issue with the report based on the occurrence of the
+> appropriate "Link:" trailers. It reasons that this does not add any
+> burden on the maintainers/bug fix authors as this is already mandated by
+> the "Submitting patches" guide. In fact however, the guide encourages
+> using "Link:" tags for related discussions or issues which the patch
+> fixes only partially, recommending "Closes:" for full resolutions.
+> 
+> Despite it not being mentioned anywhere in the "Handling regressions"
+> guide, regzbot does in fact take the "Closes:" tags into account and
+> seems to in fact treat them fully equivalently to "Link:" tags.
+> 
+> Clarify this in the regressions handling guide by always mentioning both
+> of the tags.
 
-Hi Simon,
+Many thx for this and the other patch. I had planned to do something
+like this myself, but never got around to.
 
-Thanks for the review, see inline=20
+There is just one thing that makes me slightly unhappy: this tells
+readers that they can use both, but leaves the question "what's the
+difference" respectively "in which situation should I use one or the
+other" unanswered.
 
-> On Wed, Mar 27, 2024 at 09:33:48PM +0530, Hariprasad Kelam wrote:
-> > The user can enable or disable any MAC block or a few ports of the
-> > block. The management port's interface name varies depending on the
-> > setup of the user if its not mapped to the first pf.
-> >
-> > The management port mapping is now configured to always connect to the
-> > first PF. This patch implements this change.
-> >
-> > Signed-off-by: Hariprasad Kelam <hkelam@marvell.com>
-> > Signed-off-by: Sunil Kovvuri Goutham <sgoutham@marvell.com>
->=20
-> Hi Hariprasad and Sunil,
->=20
-> some feedback from my side.
->=20
-> > ---
-> >  .../net/ethernet/marvell/octeontx2/af/mbox.h  |  5 +-
-> >  .../ethernet/marvell/octeontx2/af/rvu_cgx.c   | 60 +++++++++++++++----
-> >  2 files changed, 53 insertions(+), 12 deletions(-)
-> >
-> > diff --git a/drivers/net/ethernet/marvell/octeontx2/af/mbox.h
-> > b/drivers/net/ethernet/marvell/octeontx2/af/mbox.h
-> > index eb2a20b5a0d0..105d2e8f25df 100644
-> > --- a/drivers/net/ethernet/marvell/octeontx2/af/mbox.h
-> > +++ b/drivers/net/ethernet/marvell/octeontx2/af/mbox.h
-> > @@ -638,7 +638,10 @@ struct cgx_lmac_fwdata_s {
-> >  	/* Only applicable if SFP/QSFP slot is present */
-> >  	struct sfp_eeprom_s sfp_eeprom;
-> >  	struct phy_s phy;
-> > -#define LMAC_FWDATA_RESERVED_MEM 1021
-> > +	u32 lmac_type;
-> > +	u32 portm_idx;
-> > +	u64 mgmt_port:1;
-> > +#define LMAC_FWDATA_RESERVED_MEM 1019
-> >  	u64 reserved[LMAC_FWDATA_RESERVED_MEM];
-> >  };
-> >
-> > diff --git a/drivers/net/ethernet/marvell/octeontx2/af/rvu_cgx.c
-> > b/drivers/net/ethernet/marvell/octeontx2/af/rvu_cgx.c
-> > index 72e060cf6b61..446344801576 100644
-> > --- a/drivers/net/ethernet/marvell/octeontx2/af/rvu_cgx.c
-> > +++ b/drivers/net/ethernet/marvell/octeontx2/af/rvu_cgx.c
-> > @@ -118,15 +118,40 @@ static void rvu_map_cgx_nix_block(struct rvu
-> *rvu, int pf,
-> >  		pfvf->nix_blkaddr =3D BLKADDR_NIX1;
-> >  }
-> >
-> > -static int rvu_map_cgx_lmac_pf(struct rvu *rvu)
-> > +static bool rvu_cgx_is_mgmt_port(struct rvu *rvu, int cgx_id, int
-> > +lmac_id) {
-> > +	struct cgx_lmac_fwdata_s *fwdata;
-> > +
-> > +	fwdata =3D  &rvu->fwdata->cgx_fw_data_usx[cgx_id][lmac_id];
-> > +	if (fwdata->mgmt_port)
-> > +		return true;
-> > +
-> > +	return false;
->=20
-> nit: I think this could be more succinctly expressed as:
->=20
-> 	return !!fwdata->mgmt_port;
-> ACK, will fix in V2.=20
+To answer that question: in a ideal world developers would use "Closes:"
+when a change resolves an issue, and "Link" when it's somehow related to
+a report, but not resolving the problem.
 
-> > +}
-> > +
-> > +static void __rvu_map_cgx_lmac_pf(struct rvu *rvu, int pf, int cgx,
-> > +int lmac)
-> >  {
-> >  	struct npc_pkind *pkind =3D &rvu->hw->pkind;
-> > +	int numvfs, hwvfs;
-> > +	int free_pkind;
-> > +
-> > +	rvu->pf2cgxlmac_map[pf] =3D cgxlmac_id_to_bmap(cgx, lmac);
-> > +	rvu->cgxlmac2pf_map[CGX_OFFSET(cgx) + lmac] =3D 1 << pf;
->=20
-> This isn't strictly related to this patch, but here it seems implied that=
- pf is not
-> negative and <=3D 63, as
-> rvu->cgxlmac2pf_map[CGX_OFFSET(cgx) + lmac] is only 64 bits wide.
->=20
-> So firstly I wonder if pf should be unsigned
->=20
-> > +	free_pkind =3D rvu_alloc_rsrc(&pkind->rsrc);
-> > +	pkind->pfchan_map[free_pkind] =3D ((pf) & 0x3F) << 16;
->=20
-> Here pf is masked off so it is not more than 63.
-> But that seems to conflict with the assumption above that it is <=3D 63.
->=20
-> If there is a concern about it being larger, it should be capped in the f=
-or loop
-> that calls __rvu_map_cgx_lmac_pf() ?
->=20
-     Max PF value is from 0 to 63  will address  proposed change in V2.
-> > +	rvu_map_cgx_nix_block(rvu, pf, cgx, lmac);
-> > +	rvu->cgx_mapped_pfs++;
-> > +	rvu_get_pf_numvfs(rvu, pf, &numvfs, &hwvfs);
-> > +	rvu->cgx_mapped_vfs +=3D numvfs;
-> > +}
-> > +
-> > +static int rvu_map_cgx_lmac_pf(struct rvu *rvu) {
-> >  	int cgx_cnt_max =3D rvu->cgx_cnt_max;
-> >  	int pf =3D PF_CGXMAP_BASE;
-> >  	unsigned long lmac_bmap;
-> > -	int size, free_pkind;
-> >  	int cgx, lmac, iter;
-> > -	int numvfs, hwvfs;
-> > +	int size;
-> >
-> >  	if (!cgx_cnt_max)
-> >  		return 0;
-> > @@ -155,6 +180,24 @@ static int rvu_map_cgx_lmac_pf(struct rvu *rvu)
-> >  		return -ENOMEM;
-> >
-> >  	rvu->cgx_mapped_pfs =3D 0;
-> > +
-> > +	/* Map mgmt port always to first PF */
-> > +	for (cgx =3D 0; cgx < cgx_cnt_max; cgx++) {
-> > +		if (!rvu_cgx_pdata(cgx, rvu))
-> > +			continue;
-> > +		lmac_bmap =3D cgx_get_lmac_bmap(rvu_cgx_pdata(cgx, rvu));
-> > +		for_each_set_bit(iter, &lmac_bmap, rvu->hw->lmac_per_cgx)
-> {
-> > +			lmac =3D cgx_get_lmacid(rvu_cgx_pdata(cgx, rvu), iter);
-> > +			if (rvu_cgx_is_mgmt_port(rvu, cgx, lmac)) {
-> > +				__rvu_map_cgx_lmac_pf(rvu, pf, cgx, lmac);
-> > +				pf++;
-> > +				goto non_mgmtport_mapping;
-> > +			}
-> > +		}
-> > +	}
-> > +
-> > +non_mgmtport_mapping:
-> > +
-> >  	for (cgx =3D 0; cgx < cgx_cnt_max; cgx++) {
-> >  		if (!rvu_cgx_pdata(cgx, rvu))
-> >  			continue;
-> > @@ -162,14 +205,9 @@ static int rvu_map_cgx_lmac_pf(struct rvu *rvu)
-> >  		for_each_set_bit(iter, &lmac_bmap, rvu->hw->lmac_per_cgx)
-> {
-> >  			lmac =3D cgx_get_lmacid(rvu_cgx_pdata(cgx, rvu),
-> >  					      iter);
-> > -			rvu->pf2cgxlmac_map[pf] =3D cgxlmac_id_to_bmap(cgx,
-> lmac);
-> > -			rvu->cgxlmac2pf_map[CGX_OFFSET(cgx) + lmac] =3D 1
-> << pf;
-> > -			free_pkind =3D rvu_alloc_rsrc(&pkind->rsrc);
-> > -			pkind->pfchan_map[free_pkind] =3D ((pf) & 0x3F) <<
-> 16;
-> > -			rvu_map_cgx_nix_block(rvu, pf, cgx, lmac);
-> > -			rvu->cgx_mapped_pfs++;
-> > -			rvu_get_pf_numvfs(rvu, pf, &numvfs, &hwvfs);
-> > -			rvu->cgx_mapped_vfs +=3D numvfs;
-> > +			if (rvu_cgx_is_mgmt_port(rvu, cgx, lmac))
-> > +				continue;
-> > +			__rvu_map_cgx_lmac_pf(rvu, pf, cgx, lmac);
-> >  			pf++;
-> >  		}
-> >  	}
->=20
-> There seems to be a fair amount of code duplication above.
-> If we can assume that there is always a management port, then perhaps the
-> following is simpler (compile tested only!).
->=20
-> And if not, I'd suggest moving the outermost for loop and everything with=
-in it
-> into a helper with a parameter such that it can handle the (first?) manag=
-ement
-> port on one invocation, and non management ports on the next invocation.
->=20
+But we don't live in that world and I wonder if we ever reach that point
+where regzbot could act accordingly. Nevertheless I'd say it would be
+wise to write the docs towards that ideal world. E.g.: tell developers
+to uses 'Closes:', but in some places briefly hint that "'Link:' works
+for now, too".
 
-Management ports might not be available on all devices,  we will go with op=
-tion2.
+I also find the patch description a bit verbose; and it would be good to
+turn the text upside down: first outline what the patch, then maybe
+describe the "why".
 
-    Thanks,
-    Hariprasad k
-
->  static int rvu_map_cgx_lmac_pf(struct rvu *rvu)  {
->  	struct npc_pkind *pkind =3D &rvu->hw->pkind;
->  	int cgx_cnt_max =3D rvu->cgx_cnt_max;
-> -	int pf =3D PF_CGXMAP_BASE;
-> +	int next_pf =3D PF_CGXMAP_BASE + 1;
->  	unsigned long lmac_bmap;
->  	int size, free_pkind;
->  	int cgx, lmac, iter;
-> @@ -158,10 +167,20 @@ static int rvu_map_cgx_lmac_pf(struct rvu *rvu)
->  	for (cgx =3D 0; cgx < cgx_cnt_max; cgx++) {
->  		if (!rvu_cgx_pdata(cgx, rvu))
->  			continue;
-> +
->  		lmac_bmap =3D cgx_get_lmac_bmap(rvu_cgx_pdata(cgx, rvu));
->  		for_each_set_bit(iter, &lmac_bmap, rvu->hw->lmac_per_cgx)
-> {
-> +			int pf;
-> +
->  			lmac =3D cgx_get_lmacid(rvu_cgx_pdata(cgx, rvu),
->  					      iter);
-> +
-> +			/* Always use first PF for management port */
-> +			if (rvu_cgx_is_mgmt_port(rvu, cgx, lmac))
-> +				pf =3D PF_CGXMAP_BASE;
-> +			else
-> +				pf =3D next_pf++;
-> +
->  			rvu->pf2cgxlmac_map[pf] =3D cgxlmac_id_to_bmap(cgx,
-> lmac);
->  			rvu->cgxlmac2pf_map[CGX_OFFSET(cgx) + lmac] =3D 1
-> << pf;
->  			free_pkind =3D rvu_alloc_rsrc(&pkind->rsrc);
+Ciao, Thorsten
