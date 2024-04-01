@@ -1,160 +1,149 @@
-Received: from m-r1.th.seeweb.it (m-r1.th.seeweb.it [5.144.164.170])
+Received: from vps-vb.mhejs.net (vps-vb.mhejs.net [37.28.154.113])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17FE21CA80
-	for <linux-kernel@vger.kernel.org>; Mon,  1 Apr 2024 10:38:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=5.144.164.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05238200A6
+	for <linux-kernel@vger.kernel.org>; Mon,  1 Apr 2024 10:38:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=37.28.154.113
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711967903; cv=none; b=EuLZNtOvZbynF8D4BSmZiIcy/kmuc4DsFnKpcHCO4/y0Uum2IrGAD293TBWEV+dw1/ewvSz+B+uhd3xEYwN8wejYimvYPZoiSWX4jvYb/N5qGZAa37oRPftClt7tXOqsYwk8XeOQmmFA6xY/X6/QjeJ4fRMNGqKVk68p38BiQBs=
+	t=1711967908; cv=none; b=ZlMfu84iagMCBpqTz3h3hK7ItxRAel+yDd/7+YnMukXd/GX6ORHFnmDklGA2jfBDlggNCW97qzcPwmt6sbk1y5o3BZs3QF2aJaNGEzcsR0HxDF+r1En0hA+ui+5FBlnCG7ED2zIXxlZyK+6MFYgrwMBSUvjP3xoSfWWQhshlcrg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711967903; c=relaxed/simple;
-	bh=H7BslMtmEAho3K6c0yYeroJVhCd4s5RKvNp5WXCydPI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GNHf2gwPBHY5yHkKbOV2ry55TvgluTD/50ERRd2TD4srSmV7/JPp4Nl4TnaEChWIUUBc+KtZoTUWG3ft26IncKqJsMQELLU03iPYOu9e4G/fcEltMMkzS9cYuoxx2OG+f6HLB8UQYIib2mSrVqUeJx+StJPcuRgVrN7OmR9RXsI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=somainline.org; spf=pass smtp.mailfrom=somainline.org; arc=none smtp.client-ip=5.144.164.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=somainline.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=somainline.org
-Received: from SoMainline.org (94-211-6-86.cable.dynamic.v4.ziggo.nl [94.211.6.86])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by m-r1.th.seeweb.it (Postfix) with ESMTPSA id 57FC01F950;
-	Mon,  1 Apr 2024 12:38:18 +0200 (CEST)
-Date: Mon, 1 Apr 2024 12:38:17 +0200
-From: Marijn Suijten <marijn.suijten@somainline.org>
-To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Cc: Sumit Semwal <sumit.semwal@linaro.org>, 
-	Caleb Connolly <caleb.connolly@linaro.org>, Neil Armstrong <neil.armstrong@linaro.org>, 
-	Jessica Zhang <quic_jesszhan@quicinc.com>, Sam Ravnborg <sam@ravnborg.org>, 
-	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-arm-msm@vger.kernel.org
-Subject: Re: [PATCH 2/3] drm/mipi-dsi: add mipi_dsi_compression_mode_raw()
-Message-ID: <cmevrewvs4ultfn5yeo2yqxt3eo7kpw2bt4sgeoirv7k5oske5@qv2niojixnuy>
-References: <20240330-lg-sw43408-panel-v1-0-f5580fc9f2da@linaro.org>
- <20240330-lg-sw43408-panel-v1-2-f5580fc9f2da@linaro.org>
+	s=arc-20240116; t=1711967908; c=relaxed/simple;
+	bh=xALpn2xp66RFV4OxE/ZnsPAvZ5zAuLADDlRfGuPxKiU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=br44KBeRoTxJEOS9LZ1ZcrmnlJ7EIB2DOy7GhCzDPikt7EkV8ImxN7UjDdHrK7HxXRzB4cUKeIq8fMK/OThFCAkGEH69zu0oL1l1G1EnSyuw7nYmSAzdrhMDsloAS49LZC/h2PIzfMt8akZSW71DX7PDKYpey+g5lD7a12uRAFk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=maciej.szmigiero.name; spf=pass smtp.mailfrom=maciej.szmigiero.name; arc=none smtp.client-ip=37.28.154.113
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=maciej.szmigiero.name
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=maciej.szmigiero.name
+Received: from MUA
+	by vps-vb.mhejs.net with esmtps  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.94.2)
+	(envelope-from <mail@maciej.szmigiero.name>)
+	id 1rrF3C-0000cd-Fg; Mon, 01 Apr 2024 12:38:02 +0200
+Message-ID: <d111a52c-8f42-4743-9b1a-691882ca58be@maciej.szmigiero.name>
+Date: Mon, 1 Apr 2024 12:37:56 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240330-lg-sw43408-panel-v1-2-f5580fc9f2da@linaro.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH 5/9] mm: zswap: remove zswap_same_filled_pages_enabled
+To: Yosry Ahmed <yosryahmed@google.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>, Nhat Pham <nphamcs@gmail.com>,
+ Chengming Zhou <chengming.zhou@linux.dev>, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org, Johannes Weiner <hannes@cmpxchg.org>
+References: <20240325235018.2028408-1-yosryahmed@google.com>
+ <20240325235018.2028408-6-yosryahmed@google.com>
+ <20240328191109.GE7597@cmpxchg.org>
+ <CAJD7tka4iKD0=MOkj7iBCXvG6Jmq6WQgvRNV3mY+YRWPnYWmAg@mail.gmail.com>
+ <CAJD7tkYo90ynKfBcWyMZLu7r-GJj3egnnJyGiJ5T2SN-Tn3d9A@mail.gmail.com>
+ <19d5cdee-2868-41bd-83d5-6da75d72e940@maciej.szmigiero.name>
+ <20240329174457.GJ7597@cmpxchg.org>
+ <CAJD7tkaXtbM6_6+Oe08_xorMRrU94nvEeDj4_R78nKdZZWqAMw@mail.gmail.com>
+Content-Language: en-US, pl-PL
+From: "Maciej S. Szmigiero" <mail@maciej.szmigiero.name>
+Autocrypt: addr=mail@maciej.szmigiero.name; keydata=
+ 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
+In-Reply-To: <CAJD7tkaXtbM6_6+Oe08_xorMRrU94nvEeDj4_R78nKdZZWqAMw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On 2024-03-30 05:59:29, Dmitry Baryshkov wrote:
-> The LG SW43408 panel requires sending non-standard data as a part of the
-> MIPI_DSI_COMPRESSION_MODE packet. Rather than hacking existing
-> mipi_dsi_compression_mode() add mipi_dsi_compression_mode_raw(), which
-> accepts raw data buffer and length.
-
-Even though I doubt the usefulness of this _raw() command before further
-understanding the panel and driver (according the the review-followup sent a few
-minutes ago), let me review this a little bit.
-
-> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-> ---
->  drivers/gpu/drm/drm_mipi_dsi.c | 34 ++++++++++++++++++++++++++--------
->  include/drm/drm_mipi_dsi.h     |  1 +
->  2 files changed, 27 insertions(+), 8 deletions(-)
+On 29.03.2024 19:22, Yosry Ahmed wrote:
+> On Fri, Mar 29, 2024 at 10:45 AM Johannes Weiner <hannes@cmpxchg.org> wrote:
+>>
+>> On Fri, Mar 29, 2024 at 03:02:10PM +0100, Maciej S. Szmigiero wrote:
+>>> On 29.03.2024 03:14, Yosry Ahmed wrote:
+>>>> On Thu, Mar 28, 2024 at 1:06 PM Yosry Ahmed <yosryahmed@google.com> wrote:
+>>>>>
+>>>>> On Thu, Mar 28, 2024 at 12:11 PM Johannes Weiner <hannes@cmpxchg.org> wrote:
+>>>>>>
+>>>>>> On Mon, Mar 25, 2024 at 11:50:13PM +0000, Yosry Ahmed wrote:
+>>>>>>> There is no logical reason to refuse storing same-filled pages more
+>>>>>>> efficiently and opt for compression. Remove the userspace knob.
+>>>>>>>
+>>>>>>> Signed-off-by: Yosry Ahmed <yosryahmed@google.com>
+>>>>>>
+>>>>>> Acked-by: Johannes Weiner <hannes@cmpxchg.org>
+>>>>>>
+>>>>>> I also think the non_same_filled_pages_enabled option should go
+>>>>>> away. Both of these tunables are pretty bizarre.
+>>>>>
+>>>>> Happy to remove both in the next version :)
+>>>>
+>>>> I thought non_same_filled_pages_enabled was introduced with the
+>>>> initial support for same-filled pages, but it was introduced
+>>>> separately (and much more recently):
+>>>> https://lore.kernel.org/all/7dbafa963e8bab43608189abbe2067f4b9287831.1641247624.git.maciej.szmigiero@oracle.com/
+>>>>
+>>>> I am CCing Maciej to hear more about the use case for this.
+>>>
+>>> Thanks for CCing me.
+>>>
+>>> I introduced "non_same_filled_pages_enabled" a few years ago to
+>>> enable using zswap in a lightweight mode where it is only used for
+>>> its ability to store same-filled pages effectively.
+>>
+>> But all the pages it rejects go to disk swap instead, which is much
+>> slower than compression...
+>>
+>>> As far as I remember, there were some interactions between full
+>>> zswap and the cgroup memory controller - like, it made it easier
+>>> for an aggressive workload to exceed its cgroup memory.high limits.
+>>
+>> Ok, that makes sense! A container fairness measure, rather than a
+>> performance optimization.
+>>
+>> Fair enough, but that's moot then with cgroup accounting of the
+>> backing memory, f4840ccfca25 ("zswap: memcg accounting").
 > 
-> diff --git a/drivers/gpu/drm/drm_mipi_dsi.c b/drivers/gpu/drm/drm_mipi_dsi.c
-> index ef6e416522f8..f340d1e0a9a5 100644
-> --- a/drivers/gpu/drm/drm_mipi_dsi.c
-> +++ b/drivers/gpu/drm/drm_mipi_dsi.c
-> @@ -645,29 +645,47 @@ int mipi_dsi_set_maximum_return_packet_size(struct mipi_dsi_device *dsi,
->  EXPORT_SYMBOL(mipi_dsi_set_maximum_return_packet_size);
->  
->  /**
-> - * mipi_dsi_compression_mode() - enable/disable DSC on the peripheral
-> + * mipi_dsi_compression_mode_raw() - control DSC on the peripheral
->   * @dsi: DSI peripheral device
-> - * @enable: Whether to enable or disable the DSC
-> + * @data: data to be sent to the device
-> + * @len: size of the data buffer
->   *
-> - * Enable or disable Display Stream Compression on the peripheral using the
-> + * Control the Display Stream Compression on the peripheral using the
-
-+ mode?
-
->   * default Picture Parameter Set and VESA DSC 1.1 algorithm.
-
-This is no longer true.  Both the algoritm identifier and "default Picture
-Parameter Set" (which I assume means table *index*!) are described by the
-custom/raw bytes that one is allowed to pass.
-
-In fact, in the SW43408 driver that you reference in the commit message the
-custom data passed to the _raw() function is used to select the second PPS
-table (unless the panel interprets the input data in a non-standard way...), and
-further sets the PPS for the first table only :)
-
->   *
->   * Return: 0 on success or a negative error code on failure.
->   */
-> -ssize_t mipi_dsi_compression_mode(struct mipi_dsi_device *dsi, bool enable)
-> +ssize_t mipi_dsi_compression_mode_raw(struct mipi_dsi_device *dsi, void *data, size_t len)
->  {
-> -	/* Note: Needs updating for non-default PPS or algorithm */
-> -	u8 tx[2] = { enable << 0, 0 };
->  	struct mipi_dsi_msg msg = {
->  		.channel = dsi->channel,
->  		.type = MIPI_DSI_COMPRESSION_MODE,
-> -		.tx_len = sizeof(tx),
-> -		.tx_buf = tx,
-> +		.tx_len = len,
-> +		.tx_buf = data,
->  	};
->  	int ret = mipi_dsi_device_transfer(dsi, &msg);
->  
->  	return (ret < 0) ? ret : 0;
->  }
-> +EXPORT_SYMBOL(mipi_dsi_compression_mode_raw);
-> +
-> +/**
-> + * mipi_dsi_compression_mode() - enable/disable DSC on the peripheral
-> + * @dsi: DSI peripheral device
-> + * @enable: Whether to enable or disable the DSC
-> + *
-> + * Enable or disable Display Stream Compression on the peripheral using the
-> + * default Picture Parameter Set and VESA DSC 1.1 algorithm.
-
-And while fixing this up, let's make it clear that this doesn't change the
-PPS, just the *index* of which PPS to use (the PPS is updated with a different
-command).
-
-- Marijn
-
-> + *
-> + * Return: 0 on success or a negative error code on failure.
-> + */
-> +ssize_t mipi_dsi_compression_mode(struct mipi_dsi_device *dsi, bool enable)
-> +{
-> +	/* Note: Needs updating for non-default PPS or algorithm */
-> +	u8 tx[2] = { enable << 0, 0 };
-> +
-> +	return mipi_dsi_compression_mode_raw(dsi, tx, sizeof(tx));
-> +}
->  EXPORT_SYMBOL(mipi_dsi_compression_mode);
->  
->  /**
-> diff --git a/include/drm/drm_mipi_dsi.h b/include/drm/drm_mipi_dsi.h
-> index c0aec0d4d664..321d2b019687 100644
-> --- a/include/drm/drm_mipi_dsi.h
-> +++ b/include/drm/drm_mipi_dsi.h
-> @@ -242,6 +242,7 @@ int mipi_dsi_turn_on_peripheral(struct mipi_dsi_device *dsi);
->  int mipi_dsi_set_maximum_return_packet_size(struct mipi_dsi_device *dsi,
->  					    u16 value);
->  ssize_t mipi_dsi_compression_mode(struct mipi_dsi_device *dsi, bool enable);
-> +ssize_t mipi_dsi_compression_mode_raw(struct mipi_dsi_device *dsi, void *data, size_t len);
->  ssize_t mipi_dsi_picture_parameter_set(struct mipi_dsi_device *dsi,
->  				       const struct drm_dsc_picture_parameter_set *pps);
->  
+> Right, this should no longer be needed with the zswap charging.
 > 
-> -- 
-> 2.39.2
-> 
+> Maciej, is this still being used on kernels with f4840ccfca25 (5.19+)?
+> Any objections to removing it now?
+
+I don't object to its removal as long as stable kernel trees aren't
+affected.
+
+Thanks,
+Maciej
+
