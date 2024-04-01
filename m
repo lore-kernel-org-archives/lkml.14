@@ -1,238 +1,193 @@
-Received: from EUR02-DB5-obe.outbound.protection.outlook.com (mail-db5eur02on2098.outbound.protection.outlook.com [40.107.249.98])
+Received: from mx.swemel.ru (mx.swemel.ru [95.143.211.150])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB6FC3FE55;
-	Mon,  1 Apr 2024 17:42:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.249.98
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711993342; cv=fail; b=TnfW8WiSaEDPL7VxX/bryA0jpTXoHDBhSJqHlsPt6hMVz8pTeN/z2jDWA4a6ewGUBoMx0SeT512FPurnL+Mq2rGuAKZYqD0jHE24lmXeBNaamRvjv/oUNedLAHELCICRo0C729zwuprMMGeLxuzwskUST83HT+7eL+sV2kneKoA=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711993342; c=relaxed/simple;
-	bh=yUw1i+Qg1bKYG9dlRVK30DS3m9WdMEqGrsLgdbn5d30=;
-	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=GN83yTHoNp8BcDu1AJiy2Tw762kxwY5jzxKDegkL8j9aVF54vvvw0a1OvL1JjidBQX4lRg6YUA6lK65aIh7bs6AlMq/OGlqi9fjIf8aT3mFdp2pyYeqCmejCBAI5wltY2n6AkQW6KdXcU2eSkQBisWh05BurpEm3lwqV49WAnnU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b=VkO5qbtT; arc=fail smtp.client-ip=40.107.249.98
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0EE83FE55;
+	Mon,  1 Apr 2024 17:43:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.143.211.150
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1711993388; cv=none; b=Qf/25BBGCiNZOKE+ISYx2Lz1Sy81+q1JSlP1SMptCRxzkwpkC9dInQPuY1so6D8Ppfokya/Bi+zy+j4ne1BNY9QKMYvDuHf5dEr/b9b7REiBQ4ufzVpa18zHKZQbOh9Th8y1ZFLNr2U2r3MiU4XPpqOAPrLZXpG7+u6gyonl1aA=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1711993388; c=relaxed/simple;
+	bh=JgU8DwGeS6UdB0ISiaIplMMPCy9sdLqL6ijz1fpUNqc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=X9HqYuXMS9d4FSODIYOUhni0nmE5qo7ZjftpwTTOj0AoXrIhfeZGit6HMJB48Zj0qCQg0/nPZ+DVn+x9lcGoPV1J2OQHao43+XCdSa9ndDaCgVdrAhY/klGaL3+kOJEYBe4ezcW5RbVZ/o7N3sgmTziQNmjhbXY3sHtwhZ2m9CE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=swemel.ru; spf=pass smtp.mailfrom=swemel.ru; dkim=pass (1024-bit key) header.d=swemel.ru header.i=@swemel.ru header.b=pv12/5Hs; arc=none smtp.client-ip=95.143.211.150
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=swemel.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=swemel.ru
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="VkO5qbtT"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=WbK0Jpc1IQXHoI5apNNqY8p5pWGEnYYyWk2nZmL0ewZa+1Y+b97mwYg87mJIDSmTCCr6+1KaCRHlZn2fLpDYR343aNrOfhO01tjpGdbdsFboroq3zGH2/LqVuDKAzPbZJsQpolmlSKboiJBbS8BNeN0Kpqzsd33OIquinNgAVcVr6kVWzC7EKFpleQOPNuOmlRXmnuQthMjEQM9k1AA3ppZeE3QFZZBCmctmiFGBsLjZkB2dYqymiXtNwOag/QnQiArpIqgm4AaM9nXn0mUNgHUk1NAqhf0dWFGaI6R4S9rxM2fR5c1DFjB9mSQCAq3loWUcZgJfzvoBEqzdngVF/g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=DCuL3SUrmC0AZwVY++sQ7JSSOGlDwwqqFRgsih4XiLM=;
- b=lsaKBy/wsKzdhSYlDQJYeouCtJWvZ0F1KwPhqYjEY6vlQ0eHE5N66ZS6wS5qq+JRbxbe+sRmd/LF29XnW2uRg+fQDwrYsHkbUx3OELvhKgS+dzH5oIF9u4VVJM38wkSrdX4FwKMtL78mEghSZ0zJKmcnCtGT3zSLvNFHYisGEMUIuoOyBnIyNam8vWE4VTxxdqeB3KNHTj2mw2xj9l+CL5HfzpGv5Gx0Ug9YJg9p46Dx3qYWuyprI1xwDKB58LS2rG/y/vC4H7Bpg2Qf9zX5/71b4j+lZQaK3npyP6M9Bph2QE0YoldZ2XQRapGj9VHiPr0OHTbjMxPrY6UIH8rrQw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=DCuL3SUrmC0AZwVY++sQ7JSSOGlDwwqqFRgsih4XiLM=;
- b=VkO5qbtTB02E6wi53ItyhdJjouNz83UC33k8aXUyr5fBIOuoEL55zJZDi/6NHCWEl580tXqlBO14ZKvX/uVWWFDo6KNv7Z7WNCmI8nUKlcENJEqnKXK/DSHpzuy9hq5UqTudRCyrUleVB0uEV+rdFRa7o51UpjmTr1mUUUcMq1E=
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
- by AM9PR04MB8398.eurprd04.prod.outlook.com (2603:10a6:20b:3b7::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.46; Mon, 1 Apr
- 2024 17:42:17 +0000
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::3168:91:27c6:edf6]) by PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::3168:91:27c6:edf6%3]) with mapi id 15.20.7409.042; Mon, 1 Apr 2024
- 17:42:17 +0000
-From: Frank Li <Frank.Li@nxp.com>
-To: rdunlap@infradead.org,
-	hch@infradead.org
-Cc: Frank.Li@nxp.com,
-	corbet@lwn.net,
-	dmaengine@vger.kernel.org,
-	imx@lists.linux.dev,
-	linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org,
-	lizhijian@fujitsu.com,
-	mst@redhat.com
-Subject: [PATCH v2 1/1] docs: dma: correct dma_set_mask() sample code
-Date: Mon,  1 Apr 2024 13:41:59 -0400
-Message-Id: <20240401174159.642998-1-Frank.Li@nxp.com>
-X-Mailer: git-send-email 2.34.1
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: BY5PR16CA0001.namprd16.prod.outlook.com
- (2603:10b6:a03:1a0::14) To PAXPR04MB9642.eurprd04.prod.outlook.com
- (2603:10a6:102:240::14)
+	dkim=pass (1024-bit key) header.d=swemel.ru header.i=@swemel.ru header.b="pv12/5Hs"
+Date: Mon, 1 Apr 2024 20:36:58 +0300
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=swemel.ru; s=mail;
+	t=1711993018;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=HV1qp1NUlPyvoGDoA7alKszkCgDl8gSbryMc5j01V3w=;
+	b=pv12/5HsDAD0zZShi3p6j4DD+fYgUUCNL0ULdWiHMD7c2HpDZQ1MyjmL+zK/q34wzeGIoP
+	Ve4oGM3aY/bMsC0AwfykPos0qCIe3Gdwu/Bpg5A5FVZuEbpilkIwah9Dfe/wcUlF+HbofV
+	nDKEsGmyoSHXuJS4M6KVhieirpwBUdA=
+From: Andrey Kalachev <kalachev@swemel.ru>
+To: syzbot <syzbot+f07cc9be8d1d226947ed@syzkaller.appspotmail.com>
+Cc: andriin@fb.com, ast@kernel.org, bpf@vger.kernel.org,
+	daniel@iogearbox.net, jmorris@namei.org, john.fastabend@gmail.com,
+	kafai@fb.com, kpsingh@chromium.org, linux-kernel@vger.kernel.org,
+	linux-security-module@vger.kernel.org, netdev@vger.kernel.org,
+	serge@hallyn.com, songliubraving@fb.com,
+	syzkaller-bugs@googlegroups.com, yhs@fb.com, miklos@szeredi.hu,
+	linux-unionfs@vger.kernel.org, lvc-project@linuxtesting.org
+Subject: Re: general protection fault in security_inode_getattr
+Message-ID: <ZgrwugCEDH2fLJXK@ural>
+References: <0000000000008caae305ab9a5318@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|AM9PR04MB8398:EE_
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	vjGX+a6J0ag06c7Hc1X6MWvpbhJEEyDcrcZcjjQFZmwxIoHkQP50jhHpUd60aGvwyWMNYt5nhbE0mAUYrDukdR9Fjlfd2eaxGAFlMsm+HZWqa9Gv6BxuABJ/wzfxWGMAzwIlWOnodHjT6026vsARdHnwYpe96JJEZLlvYM5iALWlXLMTFEp41uJAWBEtWg8wkgnhKXJbjfLojLfVpUUX6Xk0jlNW6mot5x8dPJ6TJmWprFEm3HJllqM6XQCdXZVVGTWqT9FII7pYXJo+L6myuiwekODvSrvO5IoToDtUmrEgMg8fm+UQeJxQcIvLr1nh8nyswhIEbn3KdFsiNaaMYleEWK9PmOdzYKqIPv2OK6Rv8hJ5ncV47PzFHQwrVXf8fqY9ZwiGfXYwqKQXm+tROAsr2Js1VSNJvcEL3ti+adTwwb84YaPBfU5BuD4YtUrDarcPknzIwJeZ4wZu+Jy3omAY+WCZPjTTYCkgWHeii1DUks7yGO/IaYDnfYFHlzG59WyKApt5DeGIZXN0yAmq/1oiQ8qGhf6OoksDhwDm/PeIhAuirYPbRjfZCkVlERPmU+4rndBFi6qGUPmdi2Zez1xCkRwaqM477hwbyW+5bTxVI9vxyMHRK9RucJYA5UlTZtn/SpUMJG1FnZ5rtKN2CCtVrv/GVopGzaPJwgd/gwTyNEi9RUh26Y9zrIU8MszXcOifMLeKCcngG5/0RZJ/2zs258sqLD6su/kduk3iKek=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376005)(7416005)(366007)(52116005)(1800799015)(38350700005);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?Xafy3gIFJS4y/PrNThQh9F0iBsMNhw894eqTmp+kd4QagJWlFjFrXBpzmk2A?=
- =?us-ascii?Q?KU04L/lLJhN2ev1ZkREZvZprAdofA9Zted6fnpRz8x2S6uu3UZx5WCh6bQL4?=
- =?us-ascii?Q?NRU1c/n8dOx5iYAAfwCF15DqeBnasV8bYLCxgSPT3UplswwncheJucgFhdt2?=
- =?us-ascii?Q?ECKLyCiLxluaCVbV7fjEiJY0DYhwA5GkoxKiGDKqZInjNKuFK7Awq4RXENwS?=
- =?us-ascii?Q?Y5xHgsPU9Pd6EWIzklrmLGd8Dan8w4umC0pf19LAHc0JFFWseFvC9fAcNiS3?=
- =?us-ascii?Q?rE9Nt6FQSNt0jRFw0buuI31YUTajXxxmOPy9UzuxIHJoWwJXsQq9PYIvu7yY?=
- =?us-ascii?Q?hpzU7a6/Qg2TjuPQEFZRWyGau99SZCuq6MdfmlS9vAUgMoDjmKUdReFcgOf6?=
- =?us-ascii?Q?6+S/WvkOC7LEW0nRSQK1+QB8OtFXcFIKSwFBRWA1iYHbN6/RJSAJ46ZvMRdX?=
- =?us-ascii?Q?b+eV/gnUum0f0f4QBGvtyaKRC1GOdH7NjfXFkrp3k/179NXJQ0DzLYB1yScs?=
- =?us-ascii?Q?ZtrIsE0r/U+pid1yiijeQE0BpnNg46l75b+n84z3eA/k71fuOnrrI3PQZ3KN?=
- =?us-ascii?Q?UatSlDKwi+X5FDRmVYNRsJNQx1FVmYuWkehtkdZLuk6wJqqDpFvz6nNVdxmn?=
- =?us-ascii?Q?1wyVhuMKF2XBHKXlxYSITBx2w+awZvZ4ZKvDzVf5uP1KBc9itMCASXJq2sO9?=
- =?us-ascii?Q?XpMEnFJ8O7NfMjn2sW9NQhJVXOBrzCEVWgg6DxYJ9ACKvrrKMmWbmpJWIQzD?=
- =?us-ascii?Q?sM9BRb6HuH/Lr/zrJF+uNUNWFZh1+mc6YNafHdTMwNwIUjxhK//KVc18hHVh?=
- =?us-ascii?Q?A8tTQDMKIsvGtYaBPwKHz3G9fb63Fibjq+6naruZf+RQ3XkLZ2dvuSAh8ODo?=
- =?us-ascii?Q?31c8BDBp6JJtb9FXmYIdTfCyDf7+SkwYHoo6Ynk5o5V1V+qYKqhzvvhDvPtf?=
- =?us-ascii?Q?T3g9QF0YoA9WkiN0qBsxvCSId9dYpkn0wbMzXaiSNPl1quMIbc2w1KQIaSCM?=
- =?us-ascii?Q?377ZfMHASHoUs7takrNdhRmUnud/A4ciWdVQSw0bqS9kPYGhF8lbeQnbRsqA?=
- =?us-ascii?Q?vBGvK/v9x2epBJASBvoLcIJEqIvBFyn9idKDrAvadQb/LGUZMa5Im+OdNlMo?=
- =?us-ascii?Q?0FCDPW9qIWl+6/4VDhaPqAuVFfuubV4uD8F8IllzRJrGVURm0RqYhEd8LwXm?=
- =?us-ascii?Q?lC/1nkfzEj+AIqcMAiNZdrWzzgKncN9GBvUHp4v2NXBsOw3t9yHOf9j0vCDQ?=
- =?us-ascii?Q?MEGIs/6/QyhHQm6IjAETx0ZFkDOBECw1vmCbBgpDQcMsN7XEzxkx0E0ZGL2m?=
- =?us-ascii?Q?ChaE+mYGZfrgWpIH776H+LWsrQm3fJOdaJiCxvRFVl37wX5+PmqZ7GJj/aB+?=
- =?us-ascii?Q?cPzxuxS/eyMgDB01jVN/zeiMZYfieGWzliqXYLb8/UXemqNUUUK86b2JYS+T?=
- =?us-ascii?Q?ZsgyHU1NpPc9pfdP35Ti95NTEi087cZS7+cRJ/LbK3gTLb9usjdkkOadcR4y?=
- =?us-ascii?Q?f9AT24kHffA/zaclhXfIAVzRT6FRZQh0oL9aejYxO6p1VIk7UBFqDNy5M0uQ?=
- =?us-ascii?Q?e91JqaIw4b1LG9DNwr5FrB/P87hvQGG8A7SgD2Pv?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 986ed8c2-89a9-4861-caa4-08dc527312cc
-X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Apr 2024 17:42:17.1251
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: XUfCZDaSu12yqLpc6imfsFY9s/sa1cRDplUn/30/ykxmsD8gncXgD5Mw9WzfPY3gtezel+sH7OeQtLiJvcK89Q==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM9PR04MB8398
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <0000000000008caae305ab9a5318@google.com>
 
-There are bunch of codes in driver like
+On Wed, Jul 29, 2020 at 01:23:18PM -0700, syzbot wrote:
+>Hello,
+>
+>syzbot found the following issue on:
+>
+>HEAD commit:    92ed3019 Linux 5.8-rc7
+>git tree:       upstream
+>console output: https://syzkaller.appspot.com/x/log.txt?x=140003ac900000
+>kernel config:  https://syzkaller.appspot.com/x/.config?x=84f076779e989e69
+>dashboard link: https://syzkaller.appspot.com/bug?extid=f07cc9be8d1d226947ed
+>compiler:       gcc (GCC) 10.1.0-syz 20200507
+>
+>Unfortunately, I don't have any reproducer for this issue yet.
+>
+>IMPORTANT: if you fix the issue, please add the following tag to the commit:
+>Reported-by: syzbot+f07cc9be8d1d226947ed@syzkaller.appspotmail.com
+>
+>general protection fault, probably for non-canonical address 0xdffffc000000000c: 0000 [#1] PREEMPT SMP KASAN
+>KASAN: null-ptr-deref in range [0x0000000000000060-0x0000000000000067]
+>CPU: 0 PID: 9214 Comm: syz-executor.3 Not tainted 5.8.0-rc7-syzkaller #0
+>Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+>RIP: 0010:d_backing_inode include/linux/dcache.h:549 [inline]
+>RIP: 0010:security_inode_getattr+0x46/0x140 security/security.c:1276
+>Code: 48 89 fa 48 c1 ea 03 80 3c 02 00 0f 85 04 01 00 00 48 b8 00 00 00 00 00 fc ff df 49 8b 5d 08 48 8d 7b 60 48 89 fa 48 c1 ea 03 <80> 3c 02 00 0f 85 d7 00 00 00 48 b8 00 00 00 00 00 fc ff df 48 8b
+>RSP: 0018:ffffc9000d41f638 EFLAGS: 00010206
+>RAX: dffffc0000000000 RBX: 0000000000000000 RCX: ffffc9000f539000
+>RDX: 000000000000000c RSI: ffffffff8354f8ee RDI: 0000000000000060
+>RBP: ffffc9000d41f810 R08: 0000000000000001 R09: ffff88804edc2dc8
+>R10: 0000000000000000 R11: 00000000000ebc58 R12: ffff888089f10170
+>R13: ffffc9000d41f810 R14: 00000000000007ff R15: 0000000000000000
+>FS:  00007f3599717700(0000) GS:ffff8880ae600000(0000) knlGS:0000000000000000
+>CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+>CR2: 0000001b2c12c000 CR3: 0000000099919000 CR4: 00000000001406f0
+>DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+>DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+>Call Trace:
+> vfs_getattr+0x22/0x60 fs/stat.c:121
+> ovl_copy_up_one+0x13b/0x1870 fs/overlayfs/copy_up.c:850
+> ovl_copy_up_flags+0x14b/0x1d0 fs/overlayfs/copy_up.c:931
+> ovl_maybe_copy_up+0x140/0x190 fs/overlayfs/copy_up.c:963
+> ovl_open+0xba/0x270 fs/overlayfs/file.c:147
+> do_dentry_open+0x501/0x1290 fs/open.c:828
+> do_open fs/namei.c:3243 [inline]
+> path_openat+0x1bb9/0x2750 fs/namei.c:3360
+> do_filp_open+0x17e/0x3c0 fs/namei.c:3387
+> file_open_name+0x290/0x400 fs/open.c:1124
+> acct_on+0x78/0x770 kernel/acct.c:207
+> __do_sys_acct kernel/acct.c:286 [inline]
+> __se_sys_acct kernel/acct.c:273 [inline]
+> __x64_sys_acct+0xab/0x1f0 kernel/acct.c:273
+> do_syscall_64+0x60/0xe0 arch/x86/entry/common.c:384
+> entry_SYSCALL_64_after_hwframe+0x44/0xa9
+>RIP: 0033:0x45c369
+>Code: 8d b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 5b b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00
+>RSP: 002b:00007f3599716c78 EFLAGS: 00000246 ORIG_RAX: 00000000000000a3
+>RAX: ffffffffffffffda RBX: 0000000000000700 RCX: 000000000045c369
+>RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000020000440
+>RBP: 000000000078bf30 R08: 0000000000000000 R09: 0000000000000000
+>R10: 0000000000000000 R11: 0000000000000246 R12: 000000000078bf0c
+>R13: 00007ffda41ffbef R14: 00007f35997179c0 R15: 000000000078bf0c
+>Modules linked in:
+>---[ end trace d1398a63985d3915 ]---
+>RIP: 0010:d_backing_inode include/linux/dcache.h:549 [inline]
+>RIP: 0010:security_inode_getattr+0x46/0x140 security/security.c:1276
+>Code: 48 89 fa 48 c1 ea 03 80 3c 02 00 0f 85 04 01 00 00 48 b8 00 00 00 00 00 fc ff df 49 8b 5d 08 48 8d 7b 60 48 89 fa 48 c1 ea 03 <80> 3c 02 00 0f 85 d7 00 00 00 48 b8 00 00 00 00 00 fc ff df 48 8b
+>RSP: 0018:ffffc9000d41f638 EFLAGS: 00010206
+>RAX: dffffc0000000000 RBX: 0000000000000000 RCX: ffffc9000f539000
+>RDX: 000000000000000c RSI: ffffffff8354f8ee RDI: 0000000000000060
+>RBP: ffffc9000d41f810 R08: 0000000000000001 R09: ffff88804edc2dc8
+>R10: 0000000000000000 R11: 00000000000ebc58 R12: ffff888089f10170
+>R13: ffffc9000d41f810 R14: 00000000000007ff R15: 0000000000000000
+>FS:  00007f3599717700(0000) GS:ffff8880ae600000(0000) knlGS:0000000000000000
+>CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+>CR2: 0000000020000440 CR3: 0000000099919000 CR4: 00000000001406f0
+>DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+>DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+>
+>
+>---
+>This report is generated by a bot. It may contain errors.
+>See https://goo.gl/tpsmEJ for more information about syzbot.
+>syzbot engineers can be reached at syzkaller@googlegroups.com.
+>
+>syzbot will keep track of this issue. See:
+>https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
 
-       if (dma_set_mask_and_coherent(dev, DMA_BIT_MASK(64)))
-               dma_set_mask_and_coherent(dev, DMA_BIT_MASK(32))
+Hello,
 
-Actually it is wrong because if dma_set_mask_and_coherent(64) fails,
-dma_set_mask_and_coherent(32) will fail for the same reason.
+I've found that the bug fixed by commit:
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=0af950f57fefabab628f1963af881e6b9bfe7f38
+merged with mainline here:
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/log/?id=be3c213150dc4370ef211a78d78457ff166eba4e
 
-And dma_set_mask_and_coherent(64) never returns failure.
+Kernel release 6.5 include the fixed code.
 
-According to the definition of dma_set_mask(), it indicates the width of
-address that device DMA can access. If it can access 64-bit address, it
-must access 32-bit address inherently. So only need set biggest address
-width.
+Hence, the stable kernels up to 6.5 still affected.
+I've got early version (4.19.139) from syzbot report, here is the first time when been reported.
+Maybe previous versions are also affected, I haven't checked it.
 
-See below code fragment:
+I've only deal with stable 5.10 and 6.1, here I can confirm the issue.
 
-dma_set_mask(mask)
-{
-	mask = (dma_addr_t)mask;
+The tracing results showed that GPF caused by the dentry shared between two processes.
+Suppose we have a regular file `A` onto lower overlayfs layer, metacopy=on.
+P1 execute link syscall ( `A` link to `B`), P2 do open `B`.
 
-	if (!dev->dma_mask || !dma_supported(dev, mask))
-		return -EIO;
+   P1          P2
 
-	arch_dma_set_mask(dev, mask);
-	*dev->dma_mask = mask;
-	return 0;
-}
+   sys_link
+               sys_open
+                 ovl_lookup B -- lookup non existent `B`, alloc `B` dentry
+                   ovl_alloc_entry -- non existent file, zero filled ovl_entry
 
-dma_supported() will call dma_direct_supported or iommux's dma_supported
-call back function.
+     ovl_link -- link A to B, use same dentry `B`, dentry associated with
+     `A`, lower layer file now.
 
-int dma_direct_supported(struct device *dev, u64 mask)
-{
-	u64 min_mask = (max_pfn - 1) << PAGE_SHIFT;
+   sys_link -- return to userspace, zero filled ovl_entry `B` untouched
 
-	/*
-	 * Because 32-bit DMA masks are so common we expect every architecture
-	 * to be able to satisfy them - either by not supporting more physical
-	 * memory, or by providing a ZONE_DMA32.  If neither is the case, the
-	 * architecture needs to use an IOMMU instead of the direct mapping.
-	 */
-	if (mask >= DMA_BIT_MASK(32))
-		return 1;
+                     ovl_open B, reuse the same dentry `B`
+                       ovl_copy_up_one
+                         ovl_path_lower
+                           ovl_numlower(oe) -- return 0, numlower in zero filled ovl_entry `oe`
+                         ovl_path_lower -- return zero filled `struct path`
+                         vfs_getattr(struct path, ..)
+                           security_inode_getattr(struct path, ...)
+                             d_backing_inode(path->dentry) -- NULL dereference, GPF
 
-	...
-}
+Stable kernel v6.1 can be easy fixed by 4 mainline commits transfer:
 
-The iommux's dma_supported() actually means iommu requires devices's
-minimized dma capability.
+0af950f57fef ovl: move ovl_entry into ovl_inode
+163db0da3515 ovl: factor out ovl_free_entry() and ovl_stack_*() helpers
+5522c9c7cbd2 ovl: use ovl_numlower() and ovl_lowerstack() accessors
+a6ff2bc0be17 ovl: use OVL_E() and OVL_E_FLAGS() accessors
 
-An example:
+Just commit 5522c9c7cbd2 has conflict caused by
+4609e1f18e19c ("fs: port ->permission() to pass mnt_idmap").
+It is enough to change mnt_idmap() call to mnt_user_ns(),
+in the rejected hunk.
 
-static int sba_dma_supported( struct device *dev, u64 mask)()
-{
-	...
-	 * check if mask is >= than the current max IO Virt Address
-         * The max IO Virt address will *always* < 30 bits.
-         */
-        return((int)(mask >= (ioc->ibase - 1 +
-                        (ioc->pdir_size / sizeof(u64) * IOVP_SIZE) )));
-	...
-}
-
-1 means supported. 0 means unsupported.
-
-Correct document to make it more clear and provide correct sample code.
-
-Signed-off-by: Frank Li <Frank.Li@nxp.com>
----
-
-Notes:
-    Change from v1 to v2:
-    - fixed typo, review by Randy Dunlap
-
- Documentation/core-api/dma-api-howto.rst | 24 ++++++++++++++++++++++--
- 1 file changed, 22 insertions(+), 2 deletions(-)
-
-diff --git a/Documentation/core-api/dma-api-howto.rst b/Documentation/core-api/dma-api-howto.rst
-index e8a55f9d61dbc..5f6a7d86b6bc2 100644
---- a/Documentation/core-api/dma-api-howto.rst
-+++ b/Documentation/core-api/dma-api-howto.rst
-@@ -203,13 +203,33 @@ setting the DMA mask fails.  In this manner, if a user of your driver reports
- that performance is bad or that the device is not even detected, you can ask
- them for the kernel messages to find out exactly why.
- 
--The standard 64-bit addressing device would do something like this::
-+The 24-bit addressing device would do something like this::
- 
--	if (dma_set_mask_and_coherent(dev, DMA_BIT_MASK(64))) {
-+	if (dma_set_mask_and_coherent(dev, DMA_BIT_MASK(24))) {
- 		dev_warn(dev, "mydev: No suitable DMA available\n");
- 		goto ignore_this_device;
- 	}
- 
-+The standard 64-bit addressing device would do something like this::
-+
-+	dma_set_mask_and_coherent(dev, DMA_BIT_MASK(64))
-+
-+dma_set_mask_and_coherent() never return fail when DMA_BIT_MASK(64). Typical
-+error code like::
-+
-+	/* Wrong code */
-+	if (dma_set_mask_and_coherent(dev, DMA_BIT_MASK(64)))
-+		dma_set_mask_and_coherent(dev, DMA_BIT_MASK(32))
-+
-+dma_set_mask_and_coherent() will never return failure when bigger then 32.
-+So typical code like::
-+
-+	/* Recommended code */
-+	if (support_64bit)
-+		dma_set_mask_and_coherent(dev, DMA_BIT_MASK(64));
-+	else
-+		dma_set_mask_and_coherent(dev, DMA_BIT_MASK(32));
-+
- If the device only supports 32-bit addressing for descriptors in the
- coherent allocations, but supports full 64-bits for streaming mappings
- it would look like this::
--- 
-2.34.1
+--
+Andrey Kalachev
+Software Engineer,
+Swemel
 
