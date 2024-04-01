@@ -1,147 +1,103 @@
-Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2C3020DE7
-	for <linux-kernel@vger.kernel.org>; Mon,  1 Apr 2024 20:01:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F5DF3D9E;
+	Mon,  1 Apr 2024 20:06:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712001714; cv=none; b=B/kdK8frxelOrHltu4Nzb8FN5yu+Q2fPa0aKxrXuRxHsm8IpgQWxJjmxUZ1kC1NkD0PHA2YNFLLJTvn4IyhqXMKFNPMUGBPILsOkYwdDficg8ccZrIyHj22jIw0clZiF3ln8rzLallBlXRofdSEvVF5E7kjqUEBtX8KgPH2DFQM=
+	t=1712002005; cv=none; b=abBfyFhnpoaTF9ux6HcpqfXRIaiNDYp0+24iiiy8hFQkVoi0rvSKSmSqHbI2tlCzHxTfpwawaAvx/aOiiiqeioy4IEnW4YW9PzS2eyD7HOlvOLRpcSj7zVL9JRy/FV8gGqYXKVw/8GFm4VdlQyFZZfWdG+Pe+ho52YSEPQ3wfwQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712001714; c=relaxed/simple;
-	bh=d4AgVvQfDxsO4HKlrM9TlJqYk+dfwSSv3RP/H+3B2M4=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=KvChoWtHzoWTdwJ0GrHsUubb9xvzGGBV2AUYnMYt/r92V/271Qrf9P+f8hbMmDjpZwf8/Yt458dX1tdrNiLOWPPRnEjpUJxdAUjYyLkqma3F+gyuYhwoAXLSez9sQ44Flwjl4vXeWD5v9AgYz4zt8vFsh9/RWh1ZtaLKaAp15i8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--justinstitt.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Yyhp8BXB; arc=none smtp.client-ip=209.85.128.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--justinstitt.bounces.google.com
+	s=arc-20240116; t=1712002005; c=relaxed/simple;
+	bh=hHQRXmo2aZ/DOP23EIK2Ayp/OQTbGs67h/enIjBg6/c=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=cZkFV/r3+tH/bqwV/12wHAXLMjLXCq7nHEfwu4XnFkBuvtsYNlDAA0OJGaDAzkxqOvIutlsZ/aH5RVeH2OPat2iqEj+i19MdA0G2Ad7JUe7CnBxdI2tz3RXhWVFGe2s2qK0UeUGK/LwVBkvqnDgX1i/28BfM0ior9J47R/SIG58=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nGZNDbmO; arc=none smtp.client-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Yyhp8BXB"
-Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-615119b39deso6052177b3.3
-        for <linux-kernel@vger.kernel.org>; Mon, 01 Apr 2024 13:01:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1712001712; x=1712606512; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=ohu9J8V3slBzBNecdA/Mm/ogrugR1WhcZXDtgnukl9Y=;
-        b=Yyhp8BXBL0SfHFg8fHIJ2KxkxMp+n01k8sajY2bDBerMNpwwstRYGKxOtVJOXqnAPN
-         TFm9Xkc/hiJ9isz/QerjkWR+OYmsYZ3vngbAL71KWkso2Ssaq4HO0F1anEvKTY+SQQKZ
-         vKGU+WB5io2otNs/ECt2ltOAoQbN/9IKy14r8ZZUEjtX3qQaaCKmGPXldOZ0iH9jmEuM
-         ATsrT3ORSD5uqSLFbKxiKegV6aKkt0z+HCdGkuIQlFVQEIHBkfqtBVpVdCeCiPFNWALE
-         oj1oV/mVre0rF0OaPD+2cebPXWMP58S+Mm7O9XH0MYxHsYMk5SDQZn1+6tzbCGo9Uq8z
-         9ZtQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712001712; x=1712606512;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=ohu9J8V3slBzBNecdA/Mm/ogrugR1WhcZXDtgnukl9Y=;
-        b=gTzOp/V731J47kO65OkWLJP3YKbGw5IOT2ljB2xgdmR7Czdm+TnANimPJsG557gxGl
-         AcSZWgo893sHyG7NRG51HF5TE+vQuk0+oxj6QJvj+A6e3sDogynv5bidOEm3fpTTU3+D
-         2UJl+V+XpEjVfqF4XdZR/etO3z80+/YW8ambx2sc9fBC8ZJAlTWCdpDwEvyEkJ7T1m0U
-         nCh4zrzJf5IBrmFAxETNUKedIiTlG8CAExFH72ua3h+zx9vnEOT3m9hoYz7y/qNbdSGD
-         sXhVW/EkbYdHI10epM6wx5JYgIr96MKwTybjiwok6Ip1zQjC+Njxt0BPTCYufepymtwn
-         ZLRg==
-X-Gm-Message-State: AOJu0YwuAPXyOvVRTcpTocrKnW5FUQY1m/BQSlKtoFHOE34iXtUeccwf
-	HOqQuMiTw/tepg/NwA6jwzJpgfHtjiqDbIOKdL3UVmLu4QQQhiTXqpxAinGQsKW0OWFokBtUbGq
-	8jMUZe6/CGceOr9fFtTNQoQ==
-X-Google-Smtp-Source: AGHT+IFV/55l3VXvrIqD3f5Ut3eTi3qLd5jLPB1PRdN8bsHilEXwud8S56q7n8vTh8Iw9WSvYUNIMFJWRqfjoSszYQ==
-X-Received: from jstitt-linux1.c.googlers.com ([fda3:e722:ac3:cc00:2b:ff92:c0a8:23b5])
- (user=justinstitt job=sendgmr) by 2002:a0d:e2ca:0:b0:611:33b5:8555 with SMTP
- id l193-20020a0de2ca000000b0061133b58555mr2903019ywe.3.1712001711942; Mon, 01
- Apr 2024 13:01:51 -0700 (PDT)
-Date: Mon, 01 Apr 2024 20:01:51 +0000
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nGZNDbmO"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1712002004; x=1743538004;
+  h=message-id:subject:from:to:cc:date:in-reply-to:
+   references:content-transfer-encoding:mime-version;
+  bh=hHQRXmo2aZ/DOP23EIK2Ayp/OQTbGs67h/enIjBg6/c=;
+  b=nGZNDbmOOFRVN5WdC4fDO9BYJPrGEV6qMdy9tHNizOBb0C4MSnCtLMhc
+   Mo5i851uLX+iIaC8DHIZ1+LI4rtQ6sqOgUocj6vN8PGaKRl+dLTB9KBuB
+   TbDj/XPHLjrOVJ7BEFY3P1cbGA45H8JwapU/5MpvjZQI5q6WJ6WHEHOe/
+   2+A2es3Xm88QHg5Guv9NeMwjcm5gKIhbVLIoZE87FNYCSZrHDD/SYSZng
+   l0yASq+cBKDbxwMCism4d2n2p6B/ww2FYDd/tMAIrnaulrEVMvjJhbu8Q
+   okONkpZbt5b9+2zKg4+VtfyTRRwLGPe1MmffUlSohioITVkkJwmpmXldX
+   w==;
+X-CSE-ConnectionGUID: Ccqx6x5SS7a3GywE7GAH6w==
+X-CSE-MsgGUID: BT8j6hYqSke2r26mSlI2mA==
+X-IronPort-AV: E=McAfee;i="6600,9927,11031"; a="18594648"
+X-IronPort-AV: E=Sophos;i="6.07,173,1708416000"; 
+   d="scan'208";a="18594648"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Apr 2024 13:06:43 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,173,1708416000"; 
+   d="scan'208";a="17637588"
+Received: from spandruv-desk1.amr.corp.intel.com ([10.209.0.212])
+  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Apr 2024 13:06:43 -0700
+Message-ID: <509b52f28a911bc11f21c217e20e769bd094f24d.camel@linux.intel.com>
+Subject: Re: [PATCH v1 1/6] cpufreq: intel_pstate: Fold
+ intel_pstate_max_within_limits() into caller
+From: srinivas pandruvada <srinivas.pandruvada@linux.intel.com>
+To: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Linux PM
+ <linux-pm@vger.kernel.org>
+Cc: LKML <linux-kernel@vger.kernel.org>
+Date: Mon, 01 Apr 2024 13:06:42 -0700
+In-Reply-To: <3297274.aeNJFYEL58@kreacher>
+References: <13494237.uLZWGnKmhe@kreacher> <3297274.aeNJFYEL58@kreacher>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: base64
+User-Agent: Evolution 3.48.4 (3.48.4-1.fc38) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-B4-Tracking: v=1; b=H4sIAK4SC2YC/x3MQQ7CIBBA0as0s3YSKBitVzFdIAw6G0pmbKMh3
- F3i8i3+b6AkTAq3qYHQwcpbGbCnCeIrlCchp2GYzeyNNxb1LSXWL2bFPWXUvZJgxOXq/PlCDx+ igxFXocyf//i+9v4DrBtO72gAAAA=
-X-Developer-Key: i=justinstitt@google.com; a=ed25519; pk=tC3hNkJQTpNX/gLKxTNQKDmiQl6QjBNCGKJINqAdJsE=
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1712001711; l=2724;
- i=justinstitt@google.com; s=20230717; h=from:subject:message-id;
- bh=d4AgVvQfDxsO4HKlrM9TlJqYk+dfwSSv3RP/H+3B2M4=; b=WzUrYsCQC/OoCv2dtg4p+2iW/utOWrqjmReCDJPMh+lESSzaXdlVNUPjmGGj1+E4BDThJmSzA
- v+K+74E6xaOBc/aVcVyjlsLdIqXrFVfnW5KDHiO4lwSaRygoQnVvkwY
-X-Mailer: b4 0.12.3
-Message-ID: <20240401-strncpy-fs-udf-super-c-v1-1-80cddab7a281@google.com>
-Subject: [PATCH] udf: replace deprecated strncpy/strcpy with strscpy
-From: Justin Stitt <justinstitt@google.com>
-To: Jan Kara <jack@suse.com>
-Cc: linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, 
-	Justin Stitt <justinstitt@google.com>
-Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
 
-strncpy() is deprecated for use on NUL-terminated destination strings
-[1] and as such we should prefer more robust and less ambiguous string
-interfaces. Also replace an instance of strcpy() which is also
-deprecated.
-
-s_volume_ident is a NUL-terminated string which is evident from its
-usage in udf_debug:
-|	udf_debug("volIdent[] = '%s'\n", UDF_SB(sb)->s_volume_ident);
-
-s_volume_ident should also be NUL-padded as it is copied out to
-userspace:
-|	if (copy_to_user((char __user *)arg,
-|				UDF_SB(inode->i_sb)->s_volume_ident, 32))
-|		return -EFAULT;
-
-Considering the above, a suitable replacement is `strscpy_pad` [2] due
-to the fact that it guarantees both NUL-termination and NUL-padding on
-the destination buffer.
-
-To simplify the code, let's use the new 2-argument version of
-strscpy_pad() introduced in Commit e6584c3964f2f ("string: Allow
-2-argument strscpy()"). Also zero-allocate @outstr so we can safely use
-a non-@ret length argument. This is just in case udf_dstrCS0toChar()
-doesn't include the NUL-byte in its return length, we won't truncate
-@outstr or write garbage bytes either.
-
-Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
-Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html [2]
-Link: https://github.com/KSPP/linux/issues/90
-Cc: linux-hardening@vger.kernel.org
-Signed-off-by: Justin Stitt <justinstitt@google.com>
----
-Note: build-tested only.
-
-Found with: $ rg "strncpy\("
----
- fs/udf/super.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/fs/udf/super.c b/fs/udf/super.c
-index 2217f7ed7a49..77d32fe14434 100644
---- a/fs/udf/super.c
-+++ b/fs/udf/super.c
-@@ -895,7 +895,7 @@ static int udf_load_pvoldesc(struct super_block *sb, sector_t block)
- 	int ret;
- 	struct timestamp *ts;
- 
--	outstr = kmalloc(128, GFP_KERNEL);
-+	outstr = kzalloc(128, GFP_KERNEL);
- 	if (!outstr)
- 		return -ENOMEM;
- 
-@@ -921,11 +921,11 @@ static int udf_load_pvoldesc(struct super_block *sb, sector_t block)
- 
- 	ret = udf_dstrCS0toChar(sb, outstr, 31, pvoldesc->volIdent, 32);
- 	if (ret < 0) {
--		strcpy(UDF_SB(sb)->s_volume_ident, "InvalidName");
-+		strscpy_pad(UDF_SB(sb)->s_volume_ident, "InvalidName");
- 		pr_warn("incorrect volume identification, setting to "
- 			"'InvalidName'\n");
- 	} else {
--		strncpy(UDF_SB(sb)->s_volume_ident, outstr, ret);
-+		strscpy_pad(UDF_SB(sb)->s_volume_ident, outstr);
- 	}
- 	udf_debug("volIdent[] = '%s'\n", UDF_SB(sb)->s_volume_ident);
- 
-
----
-base-commit: 928a87efa42302a23bb9554be081a28058495f22
-change-id: 20240401-strncpy-fs-udf-super-c-983457eb4ac3
-
-Best regards,
---
-Justin Stitt <justinstitt@google.com>
+T24gTW9uLCAyMDI0LTAzLTI1IGF0IDE4OjAxICswMTAwLCBSYWZhZWwgSi4gV3lzb2NraSB3cm90
+ZToKPiBGcm9tOiBSYWZhZWwgSi4gV3lzb2NraSA8cmFmYWVsLmoud3lzb2NraUBpbnRlbC5jb20+
+Cj4gCj4gRm9sZCBpbnRlbF9wc3RhdGVfbWF4X3dpdGhpbl9saW1pdHMoKSBpbnRvIGl0cyBvbmx5
+IGNhbGxlci4KPiAKPiBObyBmdW5jdGlvbmFsIGltcGFjdC4KPiAKPiBTaWduZWQtb2ZmLWJ5OiBS
+YWZhZWwgSi4gV3lzb2NraSA8cmFmYWVsLmoud3lzb2NraUBpbnRlbC5jb20+CkFja2VkLWJ5OiBT
+cmluaXZhcyBQYW5kcnV2YWRhIDxzcmluaXZhcy5wYW5kcnV2YWRhQGxpbnV4LmludGVsLmNvbT4K
+Cj4gLS0tCj4gwqBkcml2ZXJzL2NwdWZyZXEvaW50ZWxfcHN0YXRlLmMgfMKgwqAgMTMgKysrKy0t
+LS0tLS0tLQo+IMKgMSBmaWxlIGNoYW5nZWQsIDQgaW5zZXJ0aW9ucygrKSwgOSBkZWxldGlvbnMo
+LSkKPiAKPiBJbmRleDogbGludXgtcG0vZHJpdmVycy9jcHVmcmVxL2ludGVsX3BzdGF0ZS5jCj4g
+PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
+PT09PT09PT09PQo+IC0tLSBsaW51eC1wbS5vcmlnL2RyaXZlcnMvY3B1ZnJlcS9pbnRlbF9wc3Rh
+dGUuYwo+ICsrKyBsaW51eC1wbS9kcml2ZXJzL2NwdWZyZXEvaW50ZWxfcHN0YXRlLmMKPiBAQCAt
+MjAxMiwxNCArMjAxMiw2IEBAIHN0YXRpYyB2b2lkIGludGVsX3BzdGF0ZV9zZXRfbWluX3BzdGF0
+ZSgKPiDCoMKgwqDCoMKgwqDCoMKgaW50ZWxfcHN0YXRlX3NldF9wc3RhdGUoY3B1LCBjcHUtPnBz
+dGF0ZS5taW5fcHN0YXRlKTsKPiDCoH0KPiDCoAo+IC1zdGF0aWMgdm9pZCBpbnRlbF9wc3RhdGVf
+bWF4X3dpdGhpbl9saW1pdHMoc3RydWN0IGNwdWRhdGEgKmNwdSkKPiAtewo+IC3CoMKgwqDCoMKg
+wqDCoGludCBwc3RhdGUgPSBtYXgoY3B1LT5wc3RhdGUubWluX3BzdGF0ZSwgY3B1LQo+ID5tYXhf
+cGVyZl9yYXRpbyk7Cj4gLQo+IC3CoMKgwqDCoMKgwqDCoHVwZGF0ZV90dXJib19zdGF0ZSgpOwo+
+IC3CoMKgwqDCoMKgwqDCoGludGVsX3BzdGF0ZV9zZXRfcHN0YXRlKGNwdSwgcHN0YXRlKTsKPiAt
+fQo+IC0KPiDCoHN0YXRpYyB2b2lkIGludGVsX3BzdGF0ZV9nZXRfY3B1X3BzdGF0ZXMoc3RydWN0
+IGNwdWRhdGEgKmNwdSkKPiDCoHsKPiDCoMKgwqDCoMKgwqDCoMKgaW50IHBlcmZfY3RsX21heF9w
+aHlzID0gcHN0YXRlX2Z1bmNzLmdldF9tYXhfcGh5c2ljYWwoY3B1LQo+ID5jcHUpOwo+IEBAIC0y
+NTk0LDEyICsyNTg2LDE1IEBAIHN0YXRpYyBpbnQgaW50ZWxfcHN0YXRlX3NldF9wb2xpY3koc3Ry
+dWMKPiDCoMKgwqDCoMKgwqDCoMKgaW50ZWxfcHN0YXRlX3VwZGF0ZV9wZXJmX2xpbWl0cyhjcHUs
+IHBvbGljeS0+bWluLCBwb2xpY3ktCj4gPm1heCk7Cj4gwqAKPiDCoMKgwqDCoMKgwqDCoMKgaWYg
+KGNwdS0+cG9saWN5ID09IENQVUZSRVFfUE9MSUNZX1BFUkZPUk1BTkNFKSB7Cj4gK8KgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoGludCBwc3RhdGUgPSBtYXgoY3B1LT5wc3RhdGUubWluX3Bz
+dGF0ZSwgY3B1LQo+ID5tYXhfcGVyZl9yYXRpbyk7Cj4gKwo+IMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgLyoKPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCAqIE5PSFpf
+RlVMTCBDUFVzIG5lZWQgdGhpcyBhcyB0aGUgZ292ZXJub3IgY2FsbGJhY2sKPiBtYXkgbm90Cj4g
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgKiBiZSBpbnZva2VkIG9uIHRoZW0uCj4g
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgKi8KPiDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoGludGVsX3BzdGF0ZV9jbGVhcl91cGRhdGVfdXRpbF9ob29rKHBvbGljeS0+
+Y3B1KTsKPiAtwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgaW50ZWxfcHN0YXRlX21heF93
+aXRoaW5fbGltaXRzKGNwdSk7Cj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoHVwZGF0
+ZV90dXJib19zdGF0ZSgpOwo+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBpbnRlbF9w
+c3RhdGVfc2V0X3BzdGF0ZShjcHUsIHBzdGF0ZSk7Cj4gwqDCoMKgwqDCoMKgwqDCoH0gZWxzZSB7
+Cj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBpbnRlbF9wc3RhdGVfc2V0X3VwZGF0
+ZV91dGlsX2hvb2socG9saWN5LT5jcHUpOwo+IMKgwqDCoMKgwqDCoMKgwqB9Cj4gCj4gCj4gCgo=
 
