@@ -1,122 +1,103 @@
-Received: from m16.mail.126.com (m16.mail.126.com [117.135.210.8])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 957DAB67D;
-	Mon,  1 Apr 2024 08:06:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.8
+Received: from mail-oo1-f44.google.com (mail-oo1-f44.google.com [209.85.161.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38DBE8BF0;
+	Mon,  1 Apr 2024 08:13:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711958815; cv=none; b=JI4yR034TuurgQZ8ZxmzYeX9xS3z6/ip3NbXO3KFUBNHHrInskd2G1dHK5O9/uGkEhqrwJ0NJbrvUVFY6LYSNt2iWtQgr910otNLxDoHGycJbrd4DpE+qnTQ21OR05y/UKFpv2Z6Tbzjr8Iin0YYulW/f6Z8M4RuNzwPJ/8637w=
+	t=1711959229; cv=none; b=nRA/n/p2RG/xdeiAozY8gWn4EZTPrZY1WmB5tLC9nTq9j4AsqG95urDltp65aCtNIvyGkK3Yg939d0Z3r/6BpthQ/vxAAJj4D5ppFGyRE9e9AAldZEBKllIqK2kUIHjPafjNNPVxdULEe1154Qjh4Pw0PCyyVMqK7i95pIR+Jh0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711958815; c=relaxed/simple;
-	bh=dv7waqHQs0vwYKfDcU27zXQuQ91eC/DvcVEwqH0xT7g=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=SJX15+IigKuizYg8aJaINNZ3JZv9IIdK3Q9bZLxHh7yuDo95tvOIsadTKslfT8VdXO7LWshqS1alIWS7IzgtxBsxw64dlVdQbJrnQnNhPxpVCUg4etGeYUUVee5FgJgRhCRoyty1LWO9NUXGzwGY+W+qlUgjxUbLZVs9yuwjgOQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=126.com; spf=pass smtp.mailfrom=126.com; dkim=pass (1024-bit key) header.d=126.com header.i=@126.com header.b=Yig2SCAM; arc=none smtp.client-ip=117.135.210.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=126.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=126.com
+	s=arc-20240116; t=1711959229; c=relaxed/simple;
+	bh=EmOBM/0uJprbcekt/hql8SXwoNf6xXb8BYAWyWp7SoQ=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=kyOGAyxsPRCY1BIbOVnQ2kn8CKAemi9t70yo3ny3y4HyrSCQ4bZoa5MnhA8msvl6IRm6gvTZiheHDi6NgnwGX836yziLcAeIv1qfXe/JMzofH3Wiq0IjOtHOmOCN7My6QRgfgIuuy2LONNAAuHbXquBY3xCuxApUi1cIl20+nF0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WbPiyms8; arc=none smtp.client-ip=209.85.161.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=126.com header.i=@126.com header.b="Yig2SCAM"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=126.com;
-	s=s110527; h=Message-ID:Date:MIME-Version:Subject:From:
-	Content-Type; bh=OWoUGFK7msyMCDg9YbIYisHA611Jcw8kSzLG0yI4RZs=;
-	b=Yig2SCAMic+m84mKTiObnnVPcQ2fQR9yDPvdznkmbfr/aKG/9OS/Pjw1DsyAkb
-	W6uJB/ENr99iQFhrEk1P+EuOAshXoJdTYnE8Zv6tti6Ge9nzwBiaCwdRjFXti7FO
-	YkcfkyTDgEybJQHjEF3Yv3cQ+Tg6ceaac9o8ytPfHTOQ0=
-Received: from [172.24.140.18] (unknown [111.204.182.99])
-	by gzga-smtp-mta-g1-4 (Coremail) with SMTP id _____wD33+qRagpmB4MsAg--.37333S2;
-	Mon, 01 Apr 2024 16:04:36 +0800 (CST)
-Message-ID: <073e5bf0-99c4-4dc5-8894-5442e2d53a34@126.com>
-Date: Mon, 1 Apr 2024 16:04:33 +0800
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WbPiyms8"
+Received: by mail-oo1-f44.google.com with SMTP id 006d021491bc7-5a7a4119d02so950063eaf.1;
+        Mon, 01 Apr 2024 01:13:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1711959226; x=1712564026; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Cej9zpiWpk2htv89hye5Ck+sNEHdHBz2DKWSX4aWhq4=;
+        b=WbPiyms8mQ8KonqQPEttbw43kZX733zDIY+GdqGKY9UJOUD+u8xFcg2aeIZz7CxcZ0
+         XMuHPck95ucRTzkdDKv5/xfrCZptvrp+AO+R5M/PeVbvir7VCB+OwzdoDsPs0vTaiKGm
+         K74d3vhatmLQNbh2AH7IMbVDb8byQF6Im4qKcqmgTnUB1JgkLGBHNSsbnIwWvOb5jWn+
+         s3YCgC3tcxdkiG1cb3uhqKjU5BeycZ65nPddCNIH8jvGVYDcOZNh/3SNi48xTBI/QhcZ
+         Sp/D0qj2j/S02hDp9cuIkd7fnKiOTgT6wFfpX14mS36uyI+wsWT7VHCaUx/a4gKkokIu
+         oSmA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711959226; x=1712564026;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Cej9zpiWpk2htv89hye5Ck+sNEHdHBz2DKWSX4aWhq4=;
+        b=VYOMzkRFcG43RERzMIY6eC7C6yN4A5FT/g2lIdmfgWxRQpiW0GYMFwx3LHvH0yEcW4
+         DWf3ie1CMDbwmOABbtV32JzmAZLE/9usH1d+DImzAKFOs9NzqzP/snnYM7xTtOM28GdH
+         1N3DEtzsfV21W/fEFK9EyIPmWo7NPD9EQPueLexyqHhdbPWSywuO8xb0Wbxf+6vqlqrZ
+         N5uwjcemG6LT57Ugfz2ms7knwdkyAsiPy3MxNQVn4y+yKbwjF25EpJD6tSEQrvtdebcz
+         8bs4CTxmS9CAQ6mWRqdXaiC9iubD1DxbgKIMhFc6TFhJWGt7kxkIeG/Xmb5gqn5axA7x
+         OQpg==
+X-Forwarded-Encrypted: i=1; AJvYcCU/AI8YUwV68uy0QR6wzBW2mkOmQPvit04p0k7sWHhQfDk+uiNfF3CHBBBY7obuyP32e5eDuTehi78KM0PpLEf7aXCmvvXGl5UGQEwg
+X-Gm-Message-State: AOJu0YwVJrGmJHn3RNh6OQjC8hOK9+T9SDou+3IvHViZPO7Zz3AmJRVn
+	Kwau5R99UWCN+JLEh/yCZtWbiub6msXs+iYBQ8dhphww8Hk4tVIuIEhOeWkuEwppXA==
+X-Google-Smtp-Source: AGHT+IHT7Kfi3nG9Qctt4Fkkm+M8SUzv6s58mZxn7nhIPocD64H3r6VAmceDyGR2xHIKzH3DHuqwAw==
+X-Received: by 2002:a05:6870:6e17:b0:229:f7fc:54aa with SMTP id qt23-20020a0568706e1700b00229f7fc54aamr10183931oab.5.1711959226268;
+        Mon, 01 Apr 2024 01:13:46 -0700 (PDT)
+Received: from localhost.localdomain ([221.220.133.103])
+        by smtp.gmail.com with ESMTPSA id r1-20020aa78441000000b006e69a142458sm7262817pfn.213.2024.04.01.01.13.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 01 Apr 2024 01:13:45 -0700 (PDT)
+From: Jianfeng Liu <liujianfeng1994@gmail.com>
+To: devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-rockchip@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Cc: robh@kernel.org,
+	krzysztof.kozlowski+dt@linaro.org,
+	conor+dt@kernel.org,
+	heiko@sntech.de,
+	sfr@canb.auug.org.au,
+	liujianfeng1994@gmail.com
+Subject: [PATCH] arm64: dts: rockchip: remove startup-delay-us from vcc3v3_pcie2x1l0 on rock-5b
+Date: Mon,  1 Apr 2024 16:13:02 +0800
+Message-Id: <20240401081302.942742-1-liujianfeng1994@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] sched/fair: Fix forked task check in vruntime_normalized
-To: "mingyang.cui" <mingyang.cui@horizon.ai>, mingo@redhat.com,
- peterz@infradead.org, juri.lelli@redhat.com, vincent.guittot@linaro.org,
- dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
- mgorman@suse.de, bristot@redhat.com
-Cc: linux-kernel@vger.kernel.org, kernel-team@android.com,
- stable@vger.kernel.org, tkjos@google.com, pjt@google.com,
- quentin.perret@arm.com, Patrick.Bellasi@arm.com, Chris.Redpath@arm.com,
- Morten.Rasmussen@arm.com, joaodias@google.com
-References: <20240328062757.29803-1-mingyang.cui@horizon.ai>
-Content-Language: en-US
-From: Honglei Wang <jameshongleiwang@126.com>
-In-Reply-To: <20240328062757.29803-1-mingyang.cui@horizon.ai>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:_____wD33+qRagpmB4MsAg--.37333S2
-X-Coremail-Antispam: 1Uf129KBjvJXoWxZw1kXw48JF4UXFW7Ar4kXrb_yoW5Xw13pF
-	4kXFW3Jr4kWw12krnrJrZ7Jry5G393Ga17JrnIya4rAws8Ww1IyrW7Ka129FWjyr4xAFWf
-	tF48tw4fGws0yFJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07jVQ6JUUUUU=
-X-CM-SenderInfo: 5mdpv2pkrqwzphlzt0bj6rjloofrz/1tbiTxOzrWVLZlNMcQABsl
+Content-Transfer-Encoding: 8bit
 
+Property startup-delay-us is copied from vendor dts and it will
+make kernel not detect pcie wifi device. If I run command:
+"echo 1 > /sys/bus/pci/rescan", pcie wifi device is detected, but
+my wifi device RTL8822CE failed to load driver. Another device
+RTL8723BE can load driver but no wifi signal is detected.
 
+Removing this property will fix issues above.
 
-On 2024/3/28 14:27, mingyang.cui wrote:
-> When rt_mutex_setprio changes a task's scheduling class to RT,
-> sometimes the task's vruntime is not updated correctly upon
-> return to the fair class.
-> Specifically, the following is being observed:
-> - task has just been created and running for a short time
-> - task sleep while still in the fair class
-> - task is boosted to RT via rt_mutex_setprio, which changes
->    the task to RT and calls check_class_changed.
-> - check_class_changed leads to detach_task_cfs_rq, at which point
->    the vruntime_normalized check sees that the task's sum_exec_runtime
->    is zero, which results in skipping the subtraction of the
->    rq's min_vruntime from the task's vruntime
-Hi Mingyang,
+Signed-off-by: Jianfeng Liu <liujianfeng1994@gmail.com>
+---
+ arch/arm64/boot/dts/rockchip/rk3588-rock-5b.dts | 1 -
+ 1 file changed, 1 deletion(-)
 
-Did you do the test on the latest tree? vruntime_normalized was removed 
-by e8f331bcc2 (sched/smp: Use lag to simplify cross-runqueue placement).
+diff --git a/arch/arm64/boot/dts/rockchip/rk3588-rock-5b.dts b/arch/arm64/boot/dts/rockchip/rk3588-rock-5b.dts
+index d6bf2ee07..a9af654a0 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3588-rock-5b.dts
++++ b/arch/arm64/boot/dts/rockchip/rk3588-rock-5b.dts
+@@ -76,7 +76,6 @@ vcc3v3_pcie2x1l0: vcc3v3-pcie2x1l0-regulator {
+ 		regulator-boot-on;
+ 		regulator-min-microvolt = <3300000>;
+ 		regulator-max-microvolt = <3300000>;
+-		startup-delay-us = <50000>;
+ 		vin-supply = <&vcc5v0_sys>;
+ 	};
 
-Thanks,
-Honglei
-
-> - later, when the prio is deboosted and the task is moved back
->    to the fair class, the fair rq's min_vruntime is added to
->    the task's vruntime, even though it wasn't subtracted earlier.
-> 
-> Since the task's vruntime is about double that of other tasks in cfs_rq,
-> the task to be unable to run for a long time when there are continuous
-> runnable tasks in cfs_rq.
-> 
-> The immediate result is inflation of the task's vruntime, giving
-> it lower priority (starving it if there's enough available work).
-> The longer-term effect is inflation of all vruntimes because the
-> task's vruntime becomes the rq's min_vruntime when the higher
-> priority tasks go idle. That leads to a vicious cycle, where
-> the vruntime inflation repeatedly doubled.
-> 
-> The root cause of the problem is that the vruntime_normalized made a
-> misjudgment. Since the sum_exec_runtime of some tasks that were just
-> created and run for a short time is zero, the vruntime_normalized
-> mistakenly thinks that they are tasks that have just been forked.
-> Therefore, sum_exec_runtime is not subtracted from the vruntime of the
-> task.
-> 
-> So, we fix this bug by adding a check condition for newly forked task.
-> 
-> Signed-off-by: mingyang.cui <mingyang.cui@horizon.ai>
-> ---
->   kernel/sched/fair.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-> index 73a89fbd81be..3d0c14f3731f 100644
-> --- a/kernel/sched/fair.c
-> +++ b/kernel/sched/fair.c
-> @@ -11112,7 +11112,7 @@ static inline bool vruntime_normalized(struct task_struct *p)
->   	 * - A task which has been woken up by try_to_wake_up() and
->   	 *   waiting for actually being woken up by sched_ttwu_pending().
->   	 */
-> -	if (!se->sum_exec_runtime ||
-> +	if (!se->sum_exec_runtime && p->state == TASK_NEW ||
->   	    (p->state == TASK_WAKING && p->sched_remote_wakeup))
->   		return true;
->   
+--
+2.34.1
 
