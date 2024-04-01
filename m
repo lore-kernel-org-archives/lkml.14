@@ -1,255 +1,181 @@
-Received: from mail2.andi.de1.cc (vmd64148.contaboserver.net [161.97.139.27])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDE79BE4C;
-	Mon,  1 Apr 2024 08:18:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=161.97.139.27
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711959530; cv=none; b=fP9UN009ne54EiJy9KGvVziH9rpqYwQZJGTlef72qeldCwg4yrJ8z+vmnXds6COcYzHQdERhMcqHW5bPj1qD9Yekn2uky+cN9dAZEWVcSG0I9SMQwgrh7z7QD+mUuq78KF1klrQuPkHqfnmwrIT1s7PhUTo95Ubq94vW9y/EblM=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711959530; c=relaxed/simple;
-	bh=RalONbHJmjL+5dC6j9f7WkhK0rfe+l8VIoPe6ry5m+o=;
-	h=From:To:Subject:Date:Message-Id:MIME-Version; b=tO0ojZ10TPuPoxHdBGlnd7fWcwpy3IK6at8AZQPENjWH4sILqqsqPfS4sBZKp722KR77T0vrZjTTmmMawHsZ1+a/1XcyjfQNUTJofKoKkjJJqnW48HyOM+0INWvSuf95hhC2Hdi/yBIpsQoMUehVglSMFLF+iKcjKVL+Iwrg4UI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kemnade.info; spf=pass smtp.mailfrom=kemnade.info; dkim=pass (2048-bit key) header.d=kemnade.info header.i=@kemnade.info header.b=E0FhWtPN; arc=none smtp.client-ip=161.97.139.27
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kemnade.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kemnade.info
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7ED1B671;
+	Mon,  1 Apr 2024 08:19:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.16
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1711959580; cv=fail; b=Zwbdjm/9xRtx/dac/mIQ/Z76bgCPNGTgjta49iP1ZR+HF2oEDUXMROvsjq6UkytFgA9eRtnbOinh3EOtdMqch8uep7mI2jdSnWBmE0sIyIMy60EkE6pKXuy0DgM41BhySq1WgwySM8PDc61OPkkHYhNZ6xwxqrS8n4JFJU8T5yE=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1711959580; c=relaxed/simple;
+	bh=Dkyr23tDZO5BysELTC1b/oIQJpfAcfFK4NNUqUGaObY=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=GBImCYdtGCZ9c7HA7E1c5jjkiD1UnUrooejOEEbLJVf+iqc6liC7oxnOoJasSS4ozr4lQuUGvVPtmCYllXIlrjP7gXAaHlVHvHzoafkCgrTS6J2tB6QkUJuVBx7Ak/oPfUurbO8P4/vNxFQw6/ojEodzlKSSGa97+OiDQOT8940=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Mnn8ahkH; arc=fail smtp.client-ip=198.175.65.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kemnade.info header.i=@kemnade.info header.b="E0FhWtPN"
-Received: from mail.andi.de1.cc ([2a02:c205:3004:2154::1])
-	by mail2.andi.de1.cc with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <andreas@kemnade.info>)
-	id 1rrCsI-003hxX-2o;
-	Mon, 01 Apr 2024 10:18:38 +0200
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=kemnade.info; s=20220719; h=Content-Transfer-Encoding:MIME-Version:
-	Message-Id:Date:Subject:To:From:Sender:Reply-To:Cc:Content-Type:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=matAENjD3Sff8egEAIeTHD8iydE2FAZ42pT+Mb7DKIo=; b=E0FhWtPNWyOeG0OVnjy/ib27pB
-	wMRNgiJKSDOas2ukg+bkXWMQb2/Py/jAJAZq843x1lyO4uQFOIpTWlYVafJLi/FaOuswqBMTZ7ano
-	vvUW2BavHNbXMuHjMoEb95xXfw8bZuP/bCLfQdY759RL0LFZOnpj/4SFAO9bQjkz4FeVd76UtEhBo
-	pgkuonYWVcvYvbisNUViwUmQrZ0HkinGKZRAs/YIO3kLtfcu6CtBS0rnmakWHuuaZmzStoC2f5GKv
-	66QlnYuGq/nf7Bhe/gBE4DeEwEjgskjDouxoakCMNFaILTiR+sjC6Ecm3WwN8TQWaXlB4xsNCzniG
-	PsHox9NQ==;
-Received: from p2003010777026a001a3da2fffebfd33a.dip0.t-ipconnect.de ([2003:107:7702:6a00:1a3d:a2ff:febf:d33a] helo=aktux)
-	by mail.andi.de1.cc with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <andreas@kemnade.info>)
-	id 1rrCsB-000Fdf-2I;
-	Mon, 01 Apr 2024 10:18:32 +0200
-Received: from andi by aktux with local (Exim 4.96)
-	(envelope-from <andreas@kemnade.info>)
-	id 1rrCsB-001uqP-1y;
-	Mon, 01 Apr 2024 10:18:31 +0200
-From: Andreas Kemnade <andreas@kemnade.info>
-To: dmitry.torokhov@gmail.com,
-	robh@kernel.org,
-	krzysztof.kozlowski+dt@linaro.org,
-	conor+dt@kernel.org,
-	lee@kernel.org,
-	alexandre.belloni@bootlin.com,
-	wim@linux-watchdog.org,
-	linux@roeck-us.net,
-	andreas@kemnade.info,
-	linux-input@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-rtc@vger.kernel.org,
-	linux-watchdog@vger.kernel.org,
-	sre@kernel.org
-Subject: [PATCH v3] dt-bindings: mfd: twl: Convert trivial subdevices to json-schema
-Date: Mon,  1 Apr 2024 10:18:31 +0200
-Message-Id: <20240401081831.456828-1-andreas@kemnade.info>
-X-Mailer: git-send-email 2.39.2
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Mnn8ahkH"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1711959579; x=1743495579;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=Dkyr23tDZO5BysELTC1b/oIQJpfAcfFK4NNUqUGaObY=;
+  b=Mnn8ahkHDKuj1oZmyqbn+kfesM5EMcasI4/SQPSK3WxYGKwQr3e7bp51
+   E6e0Jz9wg4Wnmu7Q1xofMuNosTveizk7Ag00No/l772Viq+av3nvHqMGu
+   p4yoX81Qdtdv3Twz3c0aUnHYhMRq1Wtke1jB0sqQTT1fWIuZnFU+fRoTe
+   vmLEu2DDe7sf11+E5G3ZMhw5P762nnmjoVzguznDC3fzHeHKVjT91ZVnc
+   i7sTx1UDbK/PaP/IC4eAFZlxHrx42H4FheqBZdTYrXSMoOc35aS2i6R+S
+   1zeEwi3IeEcG+TkuNIW72IzlK7TWKOCtBXPg6G2s5T5mTqvzyYWf9DLYb
+   A==;
+X-CSE-ConnectionGUID: qVCzzyz6TlOZNjMFyH6sUw==
+X-CSE-MsgGUID: 3qzUjCHgTFaZXqy8hzfevA==
+X-IronPort-AV: E=McAfee;i="6600,9927,11030"; a="7206651"
+X-IronPort-AV: E=Sophos;i="6.07,171,1708416000"; 
+   d="scan'208";a="7206651"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Apr 2024 01:19:38 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,171,1708416000"; 
+   d="scan'208";a="17726588"
+Received: from orsmsx602.amr.corp.intel.com ([10.22.229.15])
+  by fmviesa007.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 01 Apr 2024 01:19:38 -0700
+Received: from orsmsx610.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX602.amr.corp.intel.com (10.22.229.15) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Mon, 1 Apr 2024 01:19:37 -0700
+Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
+ orsmsx610.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35 via Frontend Transport; Mon, 1 Apr 2024 01:19:37 -0700
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (104.47.58.168)
+ by edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Mon, 1 Apr 2024 01:19:36 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=W521OR2Q1xk9ciYf+RA5NI/vQ9Qfu/HpbJYZZIqnsZRl2lcY7xxmt3KSnDDypIgYgHJU0W5gFIL0cg1NrD+Kbm5uQ4dLQW+FaEvroh5CtfLzmhIdnA4lliznYtP3Fnyi6T7+xR330e87puTEVaTeN9eguKf3fo4fegM+QHZVbIAKH2xD43ndm1JTGdHIgiki716PWTzoIC7Yu2T+Hk94e2OvDVHcqybWOJaEAXpUfQI4kCUy2Zyum53hvRk/OzbOhvyTHUivRqN/Y1lkZkT65H5er0nHpbU6RDGzAA0Ca+mKCMYFVCtcFCuMxCCDas8JSequIr1IB5C2Sfe9trC4vw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Dkyr23tDZO5BysELTC1b/oIQJpfAcfFK4NNUqUGaObY=;
+ b=d8PEZeRkOorSGDp19a0Fa6Uf+m7UVlMnIYISAWg3MyCYRVkudE6twIpoqwuecuiEIM8slNdkAB31rWRdUYLnp+35m4rspkk+DorZfRgmJQ3Z9q4uG+XjDb8ohj36v72pu8RNulMnb7hwHN9wn+9WB2UciOTK0VynCgGVqACoIFBvJ9PB55Rm2Je47MV4+B95VyqYMXlgOIwHFb/wN8vL9eevGMQlZmVY4IguSmpbmuNkmZXtcp2WxwqJSyE2VTCpGh/VgrYE4mpgSMlpRR4PtIdysM70JsGfTx+Ob+zhRb2Hao3n6I5xuoQ13CfGOVc/Uf/hHvPgkJgSOpdHeRxR7A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Received: from BL1PR11MB5271.namprd11.prod.outlook.com (2603:10b6:208:31a::21)
+ by SJ0PR11MB4957.namprd11.prod.outlook.com (2603:10b6:a03:2df::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7452.25; Mon, 1 Apr
+ 2024 08:19:35 +0000
+Received: from BL1PR11MB5271.namprd11.prod.outlook.com
+ ([fe80::21c:ed31:369e:d9c1]) by BL1PR11MB5271.namprd11.prod.outlook.com
+ ([fe80::21c:ed31:369e:d9c1%6]) with mapi id 15.20.7452.019; Mon, 1 Apr 2024
+ 08:19:35 +0000
+From: "Tian, Kevin" <kevin.tian@intel.com>
+To: "Williams, Dan J" <dan.j.williams@intel.com>, "peterz@infradead.org"
+	<peterz@infradead.org>, "torvalds@linux-foundation.org"
+	<torvalds@linux-foundation.org>
+CC: Bjorn Helgaas <bhelgaas@google.com>, "Weiny, Ira" <ira.weiny@intel.com>,
+	"Brandeburg, Jesse" <jesse.brandeburg@intel.com>,
+	=?utf-8?B?SWxwbyBKw6RydmluZW4=?= <ilpo.jarvinen@linux.intel.com>, "Lukas
+ Wunner" <lukas@wunner.de>, Jonathan Corbet <corbet@lwn.net>, Jonathan Cameron
+	<Jonathan.Cameron@huawei.com>, "gregkh@linuxfoundation.org"
+	<gregkh@linuxfoundation.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "linux-pci@vger.kernel.org"
+	<linux-pci@vger.kernel.org>
+Subject: RE: [PATCH v3] cleanup: Add usage and style documentation
+Thread-Topic: [PATCH v3] cleanup: Add usage and style documentation
+Thread-Index: AQHagjO6wPJsWPMJmU6m9/S9PbTAlLFTFiug
+Date: Mon, 1 Apr 2024 08:19:34 +0000
+Message-ID: <BL1PR11MB5271DB63688BF220D0317AC08C3F2@BL1PR11MB5271.namprd11.prod.outlook.com>
+References: <171140738438.1574931.15717256954707430472.stgit@dwillia2-xfh.jf.intel.com>
+ <171175585714.2192972.12661675876300167762.stgit@dwillia2-xfh.jf.intel.com>
+In-Reply-To: <171175585714.2192972.12661675876300167762.stgit@dwillia2-xfh.jf.intel.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: BL1PR11MB5271:EE_|SJ0PR11MB4957:EE_
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: z6AdnCg/c2O5XAGQm/632WQNacuUdH3DgcyVyfFkVHZXVMmjAD1L2iSTI0A/bPWjz/Pz2O93w77x1by3br2S2uoi7/10XLckGyXtrGWQ5CkfdZ2HU5p4RK1/OXQ6MUCgaOHfHBbrN/rkeD4eil6DMYsorcGokSXEL1IFzEuiW5uoJL+f1msNX0WtxGoHMtLKc82jzFgQ73Frv56CllYa/Dgu6MJfl7n7KjIZ27ipSdQj1unAg5fFkXFhPge89h4oUA6wuFDYcvI6GVR5BuksEpD30VSaQD3V7Q4EEWcZlcIg9nwwTNLD3vtFTT6vbwrN8crLS7PgQDZB7Yo8mf2pmsYGmm9sVeMQdJGA3Z3j1eUca7LjPBV0IT2+hH5t3W4vjPE+4XVWamWXJ8lU67WvTMNt2KdQM0Smp5f6sjUxtpVVOtjdOLq5MTXcWbCy+5WYvXzDZPNzOWd0cf3i3qWvUFqOcEUxl7yRYAa8VjxCgNLaVfH8qYHkKZZ4zbe8u/RNnfV/FtoeuPyGkaBSCE9x0hhgYckoDe/pHVHVGhJrnlf2QXiOOeCsVK7fNUYAYsf+f4pbz0Mki0yDh19XsG5hRylhKJo8ByM7LuoUKaFtofE=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL1PR11MB5271.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366007)(376005)(7416005)(1800799015);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?utf-8?B?RFd0TTJsRGYrRUxIcHVFaG5yYTVDSE5qaS9kcnd0V2xhZXVEWEpJUFFQaHNq?=
+ =?utf-8?B?cVVwamEwS0tjcVRSYjY2Q1Y0RWR6QTFyUmdDTk9QVEVyUVh2YjZaRkJsTTRr?=
+ =?utf-8?B?QnhMVVo3ZE5lcXpPNGdYMFNwcllFWnRlR3AxNEp4NkNsbTFmemVoVHI4bXk5?=
+ =?utf-8?B?VUlSSnc3dCttMHpvV1U2MUNyUmZ4a0c4bmZ4dDJTdnRldWpmNG04bFBta2Zu?=
+ =?utf-8?B?STZ1ZGJtR0lvK3VxRjVpVHNuQ0FNS2YzT2ExOXAyc3FqVXdkZnFpTFQ0LzRj?=
+ =?utf-8?B?MEZsQzg4Y1BoekJzOXQwSFF4Y0d4UkZoU0lHWHUwbEJhOUpraytuYU9DVzli?=
+ =?utf-8?B?RWZUc3lQSEFKVnc1NnhaUHh2TzdhT2x0ZGFLVCtYb1F1c3lQNVpmMiswZVN1?=
+ =?utf-8?B?bnBMLzFmMjlUaDdEZjN6TUdBZTZiTXA5b1lmSlc4RUE1WGFUbGU3bUtVWVJQ?=
+ =?utf-8?B?WElheXY5WUh4NlhBMFR4bFZSZm9QYjBTL3RibEQ5Tmpua0tDdjRBU0xqdUJS?=
+ =?utf-8?B?c21pWUpvZi9aRHpqSzBiOG92L003WmcxcVNFUysreXV2QUxBck1nd1lVMjFT?=
+ =?utf-8?B?dGgxU05iaE5Wc1pSNGhndkNoWFVBU3dldTQ1NllXSjBnaS96SWpDNmFHVjRO?=
+ =?utf-8?B?ampOVnRNNWg3U1ZETmt1bTQzUWZLemI3Y0RKZXI4cWFCV1p2V09WamwrcXRJ?=
+ =?utf-8?B?MElHbkQ4S0pwTVpyY1prTnd5d0FaYnV0QzFUR3hmWkJ3TWJnMG5BSWxDOEJz?=
+ =?utf-8?B?WTJCclhHR2pITitVczVRdnk4akdnNXYxcWdPaXVOaFZ1ZUNpa2Zqb0pRbnUr?=
+ =?utf-8?B?T29uREUrN2VNRVZYS05TcS9MMFVUWDNFUUw5THFPSzNHYmg0eC92WFZ2OE1O?=
+ =?utf-8?B?QzF0REVwcmxMYnIrK1QxWTBSSlFXVktzUUErZTc2NStSTUF0UGFMajR4dFJO?=
+ =?utf-8?B?Y09XbW5GMnJUQUptT3FRMlpWMUVMQUdXZEx1dWQvVmkyZGY5YjVGQVpXTFo1?=
+ =?utf-8?B?ck1yZzQ0blhwZVZyc1htY040Z2ppQ3QxU1JGMmxINU5KUldmWDE0UmF4eExi?=
+ =?utf-8?B?OGErSWNSc256d3FiVWZiOTVwN1JtMGFMRFA3bjA2UFBubndTWGY2WXpXK0M1?=
+ =?utf-8?B?MnVBS1BxbDkrN3RzOTBJVmZNdXhJSGlib2RiWGlBNUlUeTY2TDYwZWFlbFJx?=
+ =?utf-8?B?Tnc3SkQ1SHZ3SVVEMmx4ZU9aWUh4VzgzTkJPMXFOY2NrdTZxcjAxWFR2K3JV?=
+ =?utf-8?B?VmNxVVE0TXlMTGgwN2I1bS9MNkxpa2pZODM2UGlINmQ4ckdsQkdSK1BFVno3?=
+ =?utf-8?B?YjVwODQreDJ5empoRGtUZjNQNk1yOHRkVTJteXV4UWxNQUJsNWJxeDY0VDMy?=
+ =?utf-8?B?ME9DYno5UEZtQTFhQXd5RW0ybDFjcU8zRmV6cHRnVlhVTk5HN0ZXYlcxNW83?=
+ =?utf-8?B?V2RTZUlTanE5Z3BIbDJDem9MVDdia3NRL253TWdBRDljVndEYi8rQkxOYWh0?=
+ =?utf-8?B?YlA0SUM2WUtrQVBYUkk1WlhPYnR0ay9TejdHN2JvdUpMaFZydTVWUlZ2ci9y?=
+ =?utf-8?B?V09JRVlNS1BHQUNNNnlOS0NCLzE1cTZuMm9Fek5OejA3SEN2d1llQUQ1U3h5?=
+ =?utf-8?B?YW4zWEVuSHVTSmNiU1RJT2d0eGJyclZPQlNaYlRQL24zc3I4MUFjUC83TjdT?=
+ =?utf-8?B?dGwwMTVYdlFQS3M3aGdUMjhldHFqK25xaWNFbWQ3bitYQmdVNUI1Nk9ucWk5?=
+ =?utf-8?B?Qko0WUhNd0RReXRJdk1HaHkraDc0OU93NFpzWnBqeUIwZVF0M3NMWVNGeVlX?=
+ =?utf-8?B?MytqVnUxTFl0WmNOL0ZkZUliR2NlQUxUUWN5OEh5N1RISWc0Q1J5L2xDczU3?=
+ =?utf-8?B?SnN6M1ova09MQmdpeHBRQ1hnazFuYUdjbjB5VGIxUFI5clN1RnJ2ajVEOUd0?=
+ =?utf-8?B?Nk9xZHBtTklqVGdHZ043L2FJUGZvM2VENG1CK1VKTXkySUo2aDg4VjVjQnFX?=
+ =?utf-8?B?MnJjSFBENkZuR0EvaitLL0FXLytPdWdIWnFwd0grUTk2UkJxcEpub1FIYWhl?=
+ =?utf-8?B?TFhBZHVxOGhFaGpvdDJsL2JqU1BYa0NKdDVoem1HMHdtbVpzZTB1R0o1SlBu?=
+ =?utf-8?Q?nXe5p0IY7axYud7uWZh2/MhxU?=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: BL1PR11MB5271.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0c6bb1df-948f-41f7-a596-08dc52247719
+X-MS-Exchange-CrossTenant-originalarrivaltime: 01 Apr 2024 08:19:34.9786
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: CcMXtQAmGL+T5lnewSiAJNbRVCQItF1+lY/Ng4P5eoHlpxYI9yVRlpBGgRzmMloMoWxFgkJ5Tt9YTCfi2FCtDg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR11MB4957
+X-OriginatorOrg: intel.com
 
-Convert subdevices with just an interrupt and compatbile to
-json-schema and wire up already converted subdevices.
-RTC is available in all variants, so allow it unconditionally.
-GPADC binding for TWL603X uses two different compatibles, so
-specify just the compatible and do not include it.
-
-Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
-Acked-by: Guenter Roeck <linux@roeck-us.net>
----
-Changes in v3:
-- added Ack
-  (apparantly many recipients did not receive the V2 patch,
-   so there is a need for a resend)
-
-Changes in v2:
-- style cleanup
-- absolute paths
-- unevalutedProperties instead of additionalProperties
-  due to not accepting things in if: clauses without it
-
- .../bindings/input/twl4030-pwrbutton.txt      | 21 ------
- .../devicetree/bindings/mfd/ti,twl.yaml       | 72 ++++++++++++++++++-
- .../devicetree/bindings/rtc/twl-rtc.txt       | 11 ---
- .../bindings/watchdog/twl4030-wdt.txt         | 10 ---
- 4 files changed, 71 insertions(+), 43 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/input/twl4030-pwrbutton.txt
- delete mode 100644 Documentation/devicetree/bindings/rtc/twl-rtc.txt
- delete mode 100644 Documentation/devicetree/bindings/watchdog/twl4030-wdt.txt
-
-diff --git a/Documentation/devicetree/bindings/input/twl4030-pwrbutton.txt b/Documentation/devicetree/bindings/input/twl4030-pwrbutton.txt
-deleted file mode 100644
-index 6c201a2ba8acf..0000000000000
---- a/Documentation/devicetree/bindings/input/twl4030-pwrbutton.txt
-+++ /dev/null
-@@ -1,21 +0,0 @@
--Texas Instruments TWL family (twl4030) pwrbutton module
--
--This module is part of the TWL4030. For more details about the whole
--chip see Documentation/devicetree/bindings/mfd/ti,twl.yaml.
--
--This module provides a simple power button event via an Interrupt.
--
--Required properties:
--- compatible: should be one of the following
--   - "ti,twl4030-pwrbutton": For controllers compatible with twl4030
--- interrupts: should be one of the following
--   - <8>: For controllers compatible with twl4030
--
--Example:
--
--&twl {
--	twl_pwrbutton: pwrbutton {
--		compatible = "ti,twl4030-pwrbutton";
--		interrupts = <8>;
--	};
--};
-diff --git a/Documentation/devicetree/bindings/mfd/ti,twl.yaml b/Documentation/devicetree/bindings/mfd/ti,twl.yaml
-index 52ed228fb1e7e..c2357fecb56cc 100644
---- a/Documentation/devicetree/bindings/mfd/ti,twl.yaml
-+++ b/Documentation/devicetree/bindings/mfd/ti,twl.yaml
-@@ -15,6 +15,67 @@ description: |
-   USB transceiver or Audio amplifier.
-   These chips are connected to an i2c bus.
- 
-+allOf:
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            const: ti,twl4030
-+    then:
-+      properties:
-+        madc:
-+          type: object
-+          $ref: /schemas/iio/adc/ti,twl4030-madc.yaml
-+          unevaluatedProperties: false
-+
-+        bci:
-+          type: object
-+          $ref: /schemas/power/supply/twl4030-charger.yaml
-+          unevaluatedProperties: false
-+
-+        pwrbutton:
-+          type: object
-+          additionalProperties: false
-+          properties:
-+            compatible:
-+              const: ti,twl4030-pwrbutton
-+            interrupts:
-+              items:
-+                - items:
-+                    const: 8
-+
-+        watchdog:
-+          type: object
-+          additionalProperties: false
-+          properties:
-+            compatible:
-+              const: ti,twl4030-wdt
-+
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            const: ti,twl6030
-+    then:
-+      properties:
-+        gpadc:
-+          type: object
-+          properties:
-+            compatible:
-+              const: ti,twl6030-gpadc
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            const: ti,twl6032
-+    then:
-+      properties:
-+        gpadc:
-+          type: object
-+          properties:
-+            compatible:
-+              const: ti,twl6032-gpadc
-+
- properties:
-   compatible:
-     description:
-@@ -42,7 +103,16 @@ properties:
-   "#clock-cells":
-     const: 1
- 
--additionalProperties: false
-+  rtc:
-+    type: object
-+    additionalProperties: false
-+    properties:
-+      compatible:
-+        const: ti,twl4030-rtc
-+      interrupts:
-+        maxItems: 1
-+
-+unevaluatedProperties: false
- 
- required:
-   - compatible
-diff --git a/Documentation/devicetree/bindings/rtc/twl-rtc.txt b/Documentation/devicetree/bindings/rtc/twl-rtc.txt
-deleted file mode 100644
-index 8f9a94f2f8969..0000000000000
---- a/Documentation/devicetree/bindings/rtc/twl-rtc.txt
-+++ /dev/null
-@@ -1,11 +0,0 @@
--* Texas Instruments TWL4030/6030 RTC
--
--Required properties:
--- compatible : Should be "ti,twl4030-rtc"
--- interrupts : Should be the interrupt number.
--
--Example:
--	rtc {
--		compatible = "ti,twl4030-rtc";
--		interrupts = <11>;
--	};
-diff --git a/Documentation/devicetree/bindings/watchdog/twl4030-wdt.txt b/Documentation/devicetree/bindings/watchdog/twl4030-wdt.txt
-deleted file mode 100644
-index 80a37193c0b86..0000000000000
---- a/Documentation/devicetree/bindings/watchdog/twl4030-wdt.txt
-+++ /dev/null
-@@ -1,10 +0,0 @@
--Device tree bindings for twl4030-wdt driver (TWL4030 watchdog)
--
--Required properties:
--	compatible = "ti,twl4030-wdt";
--
--Example:
--
--watchdog {
--	compatible = "ti,twl4030-wdt";
--};
--- 
-2.39.2
-
+PiBGcm9tOiBEYW4gV2lsbGlhbXMgPGRhbi5qLndpbGxpYW1zQGludGVsLmNvbT4NCj4gU2VudDog
+U2F0dXJkYXksIE1hcmNoIDMwLCAyMDI0IDc6NDkgQU0NCj4gDQo+IFdoZW4gcHJvcG9zaW5nIHRo
+YXQgUENJIGdyb3cgc29tZSBuZXcgY2xlYW51cCBoZWxwZXJzIGZvciBwY2lfZGV2X3B1dCgpDQo+
+IGFuZCBwY2lfZGV2X3tsb2NrLHVubG9ja30gWzFdLCBCam9ybiBoYWQgc29tZSBmdW5kYW1lbnRh
+bCBxdWVzdGlvbnMNCj4gYWJvdXQgZXhwZWN0YXRpb25zIGFuZCBiZXN0IHByYWN0aWNlcy4gVXBv
+biByZXZpZXdpbmcgYW4gdXBkYXRlZA0KPiBjaGFuZ2Vsb2cgd2l0aCB0aG9zZSBkZXRhaWxzIGhl
+IHJlY29tbWVuZGVkIGFkZGluZyB0aGVtIHRvIGRvY3VtZW50YXRpb24NCj4gaW4gdGhlIGhlYWRl
+ciBmaWxlIGl0c2VsZi4NCj4gDQo+IEFkZCB0aGF0IGRvY3VtZW50YXRpb24gYW5kIGxpbmsgaXQg
+aW50byB0aGUgcmVuZGVyaW5nIGZvcg0KPiBEb2N1bWVudGF0aW9uL2NvcmUtYXBpLy4NCj4gDQo+
+IExpbms6IGh0dHA6Ly9sb3JlLmtlcm5lbC5vcmcvci8yMDI0MDEwNDE4MzIxOC5HQTE4MjA4NzJA
+YmhlbGdhYXMgWzFdDQo+IENjOiBCam9ybiBIZWxnYWFzIDxiaGVsZ2Fhc0Bnb29nbGUuY29tPg0K
+PiBDYzogSXJhIFdlaW55IDxpcmEud2VpbnlAaW50ZWwuY29tPg0KPiBDYzogSmVzc2UgQnJhbmRl
+YnVyZyA8amVzc2UuYnJhbmRlYnVyZ0BpbnRlbC5jb20+DQo+IENjOiBJbHBvIErDpHJ2aW5lbiA8
+aWxwby5qYXJ2aW5lbkBsaW51eC5pbnRlbC5jb20+DQo+IENjOiBMdWthcyBXdW5uZXIgPGx1a2Fz
+QHd1bm5lci5kZT4NCj4gQ2M6IFBldGVyIFppamxzdHJhIDxwZXRlcnpAaW5mcmFkZWFkLm9yZz4N
+Cj4gQ2M6IEpvbmF0aGFuIENvcmJldCA8Y29yYmV0QGx3bi5uZXQ+DQo+IFJldmlld2VkLWJ5OiBK
+b25hdGhhbiBDYW1lcm9uIDxKb25hdGhhbi5DYW1lcm9uQGh1YXdlaS5jb20+DQo+IFNpZ25lZC1v
+ZmYtYnk6IERhbiBXaWxsaWFtcyA8ZGFuLmoud2lsbGlhbXNAaW50ZWwuY29tPg0KDQpSZXZpZXdl
+ZC1ieTogS2V2aW4gVGlhbiA8a2V2aW4udGlhbkBpbnRlbC5jb20+DQo=
