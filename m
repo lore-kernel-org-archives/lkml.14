@@ -1,107 +1,105 @@
-Received: from mail-pj1-f42.google.com (mail-pj1-f42.google.com [209.85.216.42])
+Received: from mail-io1-f42.google.com (mail-io1-f42.google.com [209.85.166.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF8BA4AEF6
-	for <linux-kernel@vger.kernel.org>; Mon,  1 Apr 2024 15:21:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1552846426
+	for <linux-kernel@vger.kernel.org>; Mon,  1 Apr 2024 15:21:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711984864; cv=none; b=lmo0PxIOL7raJDhmeO77LiDwOgCpJXci+lFtMuTkvGIye6ZR9ddVnUw40sjfGu/uVX20SrjB3kv3R3v16FsRaZkM17/fCn3NqExl/jbYum98+uM3ZY8jWtNbYPUaTPbBJpod0toD89Vxk+mm8GjNldoJ+IBwdzpSkJO2Sjga++A=
+	t=1711984879; cv=none; b=G6RNrwewUpztvCYbpnZDX6pACOeuKfomIst7kFPEdY3hN51tkvM7opnK5Ewuj2QRU8V+Cs6ma0dkM82duicEBq6RTEBKCZQ38LKf9gESXeHssv+upNme+g/rtZxY5c9/5M6EEFhsms0VnCkbMmRMOhsguzY61BJ4/guCOFFz2NI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711984864; c=relaxed/simple;
-	bh=nW4KVcUljnrqT34rDqiJ5XMz9R+fw396kTItAuhWVC0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=koiwBuc83Vydh6fvMEAqg/zuFu8X2c4c80PYdnv4QGpG3sIxVfIM0wnxSadylHKJGqp+TMmFgsrJz+PKUkBOJoldeN4uXDvF91oFplJt+LD/yQ7HgT57ux9GWodShlTxHKV3NuppQ8YJ+ov7LqeC05IxqyF6sqwagY4zRaq3LsE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fireburn.co.uk; spf=none smtp.mailfrom=fireburn.co.uk; dkim=pass (2048-bit key) header.d=fireburn-co-uk.20230601.gappssmtp.com header.i=@fireburn-co-uk.20230601.gappssmtp.com header.b=CDoC1mx2; arc=none smtp.client-ip=209.85.216.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fireburn.co.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=fireburn.co.uk
+	s=arc-20240116; t=1711984879; c=relaxed/simple;
+	bh=/KLdZiR4QXPlmZ2IyRX/B74PqmuFJXw/EHBtXhxRrcQ=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:References:
+	 In-Reply-To:Content-Type; b=LCNLMhZ8k2ztD9UDD/ToPLh0rlW/k4MwzN9fIfybaY1Rz713A3WeyB9sbcENHgMplK8cNbrCpaC/rQBQpB3hCvSvB+IO2Ya+LL6/ezraV1CH8MOcTvHaU70okNckOI5wf3Hz3eL4qFXDtzxh1k859ZxyVfLHg9DsFV1sh93W0qM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=oJN4K/kp; arc=none smtp.client-ip=209.85.166.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fireburn-co-uk.20230601.gappssmtp.com header.i=@fireburn-co-uk.20230601.gappssmtp.com header.b="CDoC1mx2"
-Received: by mail-pj1-f42.google.com with SMTP id 98e67ed59e1d1-2a07b092c4fso3106941a91.0
-        for <linux-kernel@vger.kernel.org>; Mon, 01 Apr 2024 08:21:02 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="oJN4K/kp"
+Received: by mail-io1-f42.google.com with SMTP id ca18e2360f4ac-7d0ab7842b4so26942839f.0
+        for <linux-kernel@vger.kernel.org>; Mon, 01 Apr 2024 08:21:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fireburn-co-uk.20230601.gappssmtp.com; s=20230601; t=1711984862; x=1712589662; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=3Kyf88o4qsQlO/wR+KsemeXOmT0rB7nYlUY+SaWAaQc=;
-        b=CDoC1mx2Yrpa5tdATcbKXMf/VAxsAtlJixpbZxmsulMQsRE20IcUtRBfX+r6vfV46W
-         UTFlx6kCqA+yragjAWVU9/GcsszkgvygORS1RB1OqkM6icoJtfE7Se60X9gr7QV7LPoz
-         l87mC1XGoOM3Qq9ES62I1cQu8QpcB4AjcTmhFfzVJ7/drTVsrn93Yl4V9qJagJYvgaoS
-         gbGse+HBBnERS1GJfhvsoC1eADa7DisXXvTLG1jYXccbv5vIiJi+MNknIa1U98BufZp1
-         DRSzVVRCxFq7A3PqNupj0hVp8mi05qBx42f32eklsgkvhGAMlUhbCg3MJBcGhRxq8FYO
-         BRiA==
+        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1711984876; x=1712589676; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:references:to:from
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=P/V2MZ5uh3gLfvXWw9QFbKA/inszNG5TrDoVBEM3XV4=;
+        b=oJN4K/kpob0buDTkPKOc24f3WNEwcKoxW1QfmwAC9/GDjpahYncqQen99AwysD5Sja
+         dWzpeqX/g69RN4q74raipg/DNByss1ydHLHAa2FfqXgvZiMFij1YWooB3JINMNxH9mkZ
+         03CfC7XFq8diFerHwjZlG08tGgbT9JDQbgPX+X/E1TY3x1+Yc2vzabYZGDrg0q40SrRN
+         CNlGPDIjef39IvBqNr2ba3J2kzPr0tmkc/5kABWOHvrRxc2T8eVhxjOR9wkmeWB+LlrN
+         mXLoZ/L8c6KES2j8slZQJvU7W9nLt/1KOQLK5rkuZlof5NynkwKyYInzbxXDoo8isRDd
+         Z4eg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711984862; x=1712589662;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=3Kyf88o4qsQlO/wR+KsemeXOmT0rB7nYlUY+SaWAaQc=;
-        b=GMTFUlOg1EPMT/JP8n7Q8+3iWuLZZIa8YadS0AMGK+mbtqUf6qE1YL7MqyxYAHj0pV
-         eH2Ij8CMA3SOGjZl//i+eWT77CC2GSbbPBdbYkWYyYJfT9ta6hu6aBxFMWFpN1nQOD/I
-         ZgNvWhBvZP9g0J7NdehsaalZDHW6wH/tbagcTLEjMvP1uT26cXAzHv+UJm3ZFGLQEAaw
-         TiJErV8eEzA9JIcx1VKgucjKoQy8czil1LBLmrKtEx/Cq4FlxyPwBsWXD2Mmv7kEH42W
-         xKcskjPJqUUKjCJBFyLedQjRCtYItWLfSFnRpK+sK1e05tKYNXJ5xWsQyQSK59ES8UYO
-         qDtg==
-X-Forwarded-Encrypted: i=1; AJvYcCWriXbHcfseU067ckinH9dWlTWHavOd+kN3M4SHZE52U6joXdsz6VCRd7AkEJ5dl76DTukJMAyeocv0NpEw4lNm0XIJEuUC7B51hD0+
-X-Gm-Message-State: AOJu0YwtzLTMM6BPQeEKy2vlXaroW2H9PMHvJzL1iUBcNe+UrCDIsM7x
-	2KiNsfXzVmwFm/GxzhyBn72fhCw8+BfVgfY0UTOwrXi7W57VLyD/aKWgeHJtKJodt5Rl1Vhnpbe
-	g6GD0zJSPUbTANKiO+Ld4HOuvvp51UL8v3Mok
-X-Google-Smtp-Source: AGHT+IFPdgTg4m5tdz2zVUYiPfiHs6ZUPBKRXVgXamNWYYGHph95LpNshQvN2PHe1hlxkS0udPLirfwMVN9/FJiljx4=
-X-Received: by 2002:a17:90a:f3c6:b0:2a0:5234:6842 with SMTP id
- ha6-20020a17090af3c600b002a052346842mr8533728pjb.31.1711984861895; Mon, 01
- Apr 2024 08:21:01 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1711984876; x=1712589676;
+        h=content-transfer-encoding:in-reply-to:references:to:from
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=P/V2MZ5uh3gLfvXWw9QFbKA/inszNG5TrDoVBEM3XV4=;
+        b=eITHOW5IQKG9xA9u3ohtF0vJfyf/qbxUz/cTHMxpI//zvFNQ+7nFMQOTWIXwyvD31+
+         uIUkXnJtRx/P1KEK0MYx4Zuv+fNLgi5iY6RaxQXCJUJsRCRVRr6gR3FtqK8NvTBkoTgJ
+         7dirLKU+SXwqiEoqFpucUSY8hL2ojJmywroyl+XojbKuSU7W1WgwK/kJOz5i1XXkZXAA
+         0GuOKkSuNArUk8QdBvPQO+qNAZGKm/8U627Q85NWPDbxm+L1ODU8nUA40LT8VLEWxzsU
+         vmkYLraCWQjXO9T46ZnC1Fl3pnlORfag6euRksCa690m0QHTGUt7fnZaW87gGdEXJ51B
+         v0+g==
+X-Forwarded-Encrypted: i=1; AJvYcCXMCzG9FWpiEeOkKnrQGoUWpgGzZOJgePSAuIyW8ppGs6iABKEEw1JhB0DJLI3EfT2m7A37+ACJJ0YZ8kbWs8+77caBdRtAOyjdz2ta
+X-Gm-Message-State: AOJu0YwTQCIftS1mabGgCezJxciLt0mU508L3Fzz3uiy7IJ/WW/B+a4V
+	OysYwj5cM315Xe/ux9cPAHCMnH7Bh66HKHb78D4PRO6QXQJ7UKObPzD8Nqsa7yk=
+X-Google-Smtp-Source: AGHT+IHtPUA6MoDL6pF6M3w1Ctukj+h8rfggeiJyWbO/sid7Xq4kATg69AICl5/lJgmSKHySgFrpVA==
+X-Received: by 2002:a5d:9b1a:0:b0:7d0:8461:7819 with SMTP id y26-20020a5d9b1a000000b007d084617819mr9360885ion.1.1711984873215;
+        Mon, 01 Apr 2024 08:21:13 -0700 (PDT)
+Received: from [192.168.1.116] ([96.43.243.2])
+        by smtp.gmail.com with ESMTPSA id fn16-20020a056638641000b0047ecd14e8fcsm2624456jab.130.2024.04.01.08.21.12
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 01 Apr 2024 08:21:12 -0700 (PDT)
+Message-ID: <c37a4c3f-e584-4e8d-9973-e4b95cfb0169@kernel.dk>
+Date: Mon, 1 Apr 2024 09:21:12 -0600
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240304144844.2042-1-peter.tsao@mediatek.com> <20240401144424.1714-1-mike@fireburn.co.uk>
-In-Reply-To: <20240401144424.1714-1-mike@fireburn.co.uk>
-From: Mike Lothian <mike@fireburn.co.uk>
-Date: Mon, 1 Apr 2024 16:20:50 +0100
-Message-ID: <CAHbf0-FqUqoDty81OH9_Et7MTWFikYYhEvP7SBVGyeXO-R94_A@mail.gmail.com>
-Subject: Re: [PATCH] [PATCH] Bluetooth: btusb: Add support Mediatek MT7920
-To: peter.tsao@mediatek.com
-Cc: aaron.hou@mediatek.com, chris.lu@mediatek.com, deren.Wu@mediatek.com, 
-	johan.hedberg@gmail.com, linux-bluetooth@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, 
-	luiz.dentz@gmail.com, marcel@holtmann.org, sean.wang@mediatek.com, 
-	steve.lee@mediatek.com
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] timerfd: fix nonblocking reads
+Content-Language: en-US
+From: Jens Axboe <axboe@kernel.dk>
+To: Christian Brauner <brauner@kernel.org>,
+ "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+ LKML <linux-kernel@vger.kernel.org>
+References: <b4059ed0-5567-44e7-95f7-f7e4b227501c@kernel.dk>
+In-Reply-To: <b4059ed0-5567-44e7-95f7-f7e4b227501c@kernel.dk>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Mon, 1 Apr 2024 at 15:44, Mike Lothian <mike@fireburn.co.uk> wrote:
->
-> Hi
->
-> I think this patch is causing issues with older firmware
->
-> Bus 003 Device 002: ID 13d3:3563 IMC Networks Wireless_Device
->
-> [    0.315064] Bluetooth: Core ver 2.22
-> [    0.315064] NET: Registered PF_BLUETOOTH protocol family
-> [    0.315064] Bluetooth: HCI device and connection manager initialized
-> [    0.315064] Bluetooth: HCI socket layer initialized
-> [    0.315064] Bluetooth: L2CAP socket layer initialized
-> [    0.315064] Bluetooth: SCO socket layer initialized
-> [    4.670811] Bluetooth: RFCOMM TTY layer initialized
-> [    4.671029] Bluetooth: RFCOMM socket layer initialized
-> [    4.671790] Bluetooth: RFCOMM ver 1.11
-> [    4.673416] Bluetooth: BNEP (Ethernet Emulation) ver 1.3
-> [    4.673659] Bluetooth: BNEP filters: protocol multicast
-> [    4.673895] Bluetooth: BNEP socket layer initialized
-> [    4.674125] Bluetooth: HIDP (Human Interface Emulation) ver 1.2
-> [    4.674360] Bluetooth: HIDP socket layer initialized
-> [    5.016365] bluetooth hci0: Direct firmware load for mediatek/BT_RAM_CODE_MT7961_1a_2_hdr.bin failed with error -2
-> [    5.017163] Bluetooth: hci0: Failed to load firmware file (-2)
-> [    5.017557] Bluetooth: hci0: Failed to set up firmware (-2)
-> [    5.018129] Bluetooth: hci0: HCI Enhanced Setup Synchronous Connection command is advertised, but not supported.
->
-> The correct name should be mediatek/BT_RAM_CODE_MT7961_1_2_hdr.bin
->
-> Reverting this patch fixes things
->
-> Cheers
->
-> Mike
+On 4/1/24 8:36 AM, Jens Axboe wrote:
+> timerfd is utterly buggy wrt nonblocking reads - regardless of whether
+> or not there's data available, it returns -EAGAIN. This is incompatible
+> with how nonblocking reads should work. If there's data available, it
+> should be returned.
+> 
+> Convert it to use fops->read_iter() so it can handle both nonblocking
+> fds and IOCB_NOWAIT, mark it as FMODE_NOWAIT to signify that it's
+> compatible with nonblocking reads, and finally have timerfd_read_iter()
+> properly check for data availability in nonblocking mode.
+> 
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Jens Axboe <axboe@kernel.dk>
+> 
+> ---
+> 
+> Can't believe it's this broken... Patch has been tested with a test case
+> that was reported via io_uring, and I also ran the ltp timerfd test
+> cases and it passes all of those too.
 
-If it helps, the device ID is 0x7961 and the fw_flavour is 24 or 0x18 in hex
+OK pre-coffee email, it's not actually that broken. Which makes me feel
+better, because I'm not used to finding stuff like this in core bits,
+mostly just the odd drivers.
+
+I'll send a revised version of this with a fixed up changelog, as
+supporting IOCB_NOWAIT is still very useful. Won't change the actual
+patch, as that's really all it does.
+
+-- 
+Jens Axboe
+
