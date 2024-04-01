@@ -1,105 +1,109 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71B6310A03;
-	Mon,  1 Apr 2024 14:30:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DE951C0DF1;
+	Mon,  1 Apr 2024 14:31:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711981814; cv=none; b=qXFf1lIrlRdV3CEKGYLAJPdsfGKmXOn/TarOfsoFrVpDzHGStA2nN2oItES/q5VYDiAmUBH+KlZJ2MFBkQILbjWR8zaqqGF43CxlmgaADES2jVlMK/ZBc87WZWee3cb1I+jaRrbw61zyJs8HM2yBYw6hnAYHutWBE4X+rlSYvkY=
+	t=1711981913; cv=none; b=TXIR2N77lysChUDtrtUwgOC+OxvohGZsqTd0Ej7s8Xgbj08gJcpyu9hLJZfjb5xS+hBu5/RcRdnLHnXfeKjdWKt+DYFnv59B+qMjONgvV/jzHqe8Afm6nUl33ass46yIrAu+FO9iYGtdFlcW2tCJ89MSUPqwlmLpwxbcjXp1QHs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711981814; c=relaxed/simple;
-	bh=rUtbKhJd42W49mcH+PWZ7Hn3kLbojDapBlOE3UUUjqg=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=c8FdvD4aOm0EPTNCAJyef2CRqoZHkWcBnojy8ey1ZPwXd3hn7aNEUCpTVwHke4rdYWK8SAWMBNhNjMmiBg4D2tKbUvfT1qO4zYnL7kD6vSoSxaLFsnyWt3Ec3qEOSzkxjhZ2pky+k6UTsrgo37Ct8bKaFPsDOg6x7BnGFZoT9D8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nSAsAvvr; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1711981913; c=relaxed/simple;
+	bh=GZJ0qHPwhhIYdtdZ/yXQI/beI8+GkNE90kSPhqbSSQQ=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=c5nuj+R4It1GDPRD4hlkDfSdkLEstTgkefmp5JpyzEiGuLQoCWi1LGt31v3TUDDTQCoXCXLlw8lejBJUBq4Zc/29lOS0pzESYF58Qa60AlHkC39ZPuT40q7KljwzgCXIYJTZIhXzm36S8u+HvjH4pJRunpeMAOFzQ0LZZxNgZfw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cl3a4PFy; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nSAsAvvr"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 68741C433F1;
-	Mon,  1 Apr 2024 14:30:09 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cl3a4PFy"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id C9970C433C7;
+	Mon,  1 Apr 2024 14:31:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711981814;
-	bh=rUtbKhJd42W49mcH+PWZ7Hn3kLbojDapBlOE3UUUjqg=;
-	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
-	b=nSAsAvvrPavW1PfN4Fkbep2/goAmTke8164aFwdRKMyR3xw6D6s3Gwq390kOGo+PP
-	 EHhifHhLUn7xfjwnbBUEtxQl/gEd7nELO+z/xZyFcQh9KgNwQdWkML3quMpEEP7Qju
-	 46QgINKC8vwrM1ZYL/uJ7AeykQ2qn2KjdBC9r7RF9NCKIvdkb1r9l4ly8l1u2JvlIC
-	 MzgaNHG2FjN8zxZj5lZcZW88Gb5qGCbpbKwJQrSvFE5EowVoROxCgr7429wmjaWkyy
-	 HDTBo/ZnG/5PtJz7sqfKO7fBNvABvuXIFcn4mPph/KQfkVCVJyxjGjc8+Kdc0zP6UA
-	 4rN7b0QvM50WA==
+	s=k20201202; t=1711981912;
+	bh=GZJ0qHPwhhIYdtdZ/yXQI/beI8+GkNE90kSPhqbSSQQ=;
+	h=From:Date:Subject:To:Cc:Reply-To:From;
+	b=cl3a4PFy9rmvwyZfAgOdn+b8rU3y/xg5TOSBKtZ7unfD/DmGRn6bDLXCdIsEFhAXK
+	 2vBa0KbHLazy/ACncf6MPcfswdSwlgEyi+9+MecUuRkqc/73xlU2cGJiMcmpo6kQyj
+	 UkySuiN4i5CcMpFLNTsoRs5n0EtzoQdlYhSmBocsRTJbjzI0bv2dRcf8FYNbnyrF1e
+	 2RZgAiaqk+jzdRQZUVUmk3WWeCfa7+aK2jRw8zSffXhfLJClQdOrsIY3FmUGrza6gP
+	 2GMC/q5G2pq31VPz48Oi7TVGHid/TmhWQfHaGJRR/8miN4WVf00l2ZJ5gbsx7LmWqf
+	 AJxr7SEdCCJyA==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB401CD1292;
+	Mon,  1 Apr 2024 14:31:52 +0000 (UTC)
+From: Daniel Berlin via B4 Relay <devnull+dberlin.dberlin.org@kernel.org>
+Date: Mon, 01 Apr 2024 10:31:30 -0400
+Subject: [PATCH] Add support for 2024 ROG Strix G634JZR
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Mon, 01 Apr 2024 17:30:07 +0300
-Message-Id: <D08UWGYDKS6D.2J34TCDQ836RF@kernel.org>
-Cc: "mikko.ylinen@linux.intel.com" <mikko.ylinen@linux.intel.com>,
- "seanjc@google.com" <seanjc@google.com>, "anakrish@microsoft.com"
- <anakrish@microsoft.com>, "Zhang, Bo" <zhanb@microsoft.com>,
- "kristen@linux.intel.com" <kristen@linux.intel.com>,
- "yangjie@microsoft.com" <yangjie@microsoft.com>, "Li, Zhiquan1"
- <zhiquan1.li@intel.com>, "chrisyan@microsoft.com" <chrisyan@microsoft.com>
-Subject: Re: [PATCH v10 05/14] x86/sgx: Implement basic EPC misc cgroup
- functionality
-From: "Jarkko Sakkinen" <jarkko@kernel.org>
-To: "Huang, Kai" <kai.huang@intel.com>, "mingo@redhat.com"
- <mingo@redhat.com>, "x86@kernel.org" <x86@kernel.org>,
- "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
- "linux-sgx@vger.kernel.org" <linux-sgx@vger.kernel.org>, "hpa@zytor.com"
- <hpa@zytor.com>, "tim.c.chen@linux.intel.com" <tim.c.chen@linux.intel.com>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "mkoutny@suse.com" <mkoutny@suse.com>, "haitao.huang@linux.intel.com"
- <haitao.huang@linux.intel.com>, "cgroups@vger.kernel.org"
- <cgroups@vger.kernel.org>, "tj@kernel.org" <tj@kernel.org>, "Mehta, Sohil"
- <sohil.mehta@intel.com>, "tglx@linutronix.de" <tglx@linutronix.de>,
- "bp@alien8.de" <bp@alien8.de>
-X-Mailer: aerc 0.17.0
-References: <20240328002229.30264-1-haitao.huang@linux.intel.com>
- <20240328002229.30264-6-haitao.huang@linux.intel.com>
- <89b4e053db21c31859cf2572428fd9d4ab4475ab.camel@intel.com>
- <D071JQZYBH2W.399N43JS6GY6Z@kernel.org>
- <5a5dee86713a2852fc2c1ebef28ae08927d2c95f.camel@intel.com>
-In-Reply-To: <5a5dee86713a2852fc2c1ebef28ae08927d2c95f.camel@intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240401-add-rog-strix-16-g634jzr-v1-1-ac396095409e@dberlin.org>
+X-B4-Tracking: v=1; b=H4sIAEHFCmYC/x3MQQ5AMBBA0avIrE3SVkm4ilhUO2oskKmIEHfXW
+ L7F/w8kEqYEXfGA0MmJtzVDlwX42a2RkEM2GGWsskqjCwFli5gO4Qt1g7Gp7HILtlTbVnkXvBk
+ h57vQxNe/7of3/QAvzIPVagAAAA==
+To: James Schulman <james.schulman@cirrus.com>, 
+ David Rhodes <david.rhodes@cirrus.com>, 
+ Richard Fitzgerald <rf@opensource.cirrus.com>, 
+ Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>
+Cc: alsa-devel@alsa-project.org, patches@opensource.cirrus.com, 
+ linux-sound@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Daniel Berlin <dberlin@dberlin.org>
+X-Mailer: b4 0.13.0
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1711981912; l=1959;
+ i=dberlin@dberlin.org; s=20231103; h=from:subject:message-id;
+ bh=OkAb0mgem2LTUaEtI3QpWVORvUHuRQ4HTHDw+7mTmOo=;
+ b=YVpBuS/DPGPSMIvGvxBHJw3haqM0JyxXizPd9bNmgUQrCczpAtLBPuXOb2U+cilk8c/JMCLHZ
+ djiMPPPiofUCumZT2HN3Y3EM2dPYqLVSXN41TPEjDEE0IspYGoyAv1W
+X-Developer-Key: i=dberlin@dberlin.org; a=ed25519;
+ pk=cy2fotxgi42vqBilzDOe7Wq2+TsfMspPwg7pfE9Te+M=
+X-Endpoint-Received: by B4 Relay for dberlin@dberlin.org/20231103 with
+ auth_id=96
+X-Original-From: Daniel Berlin <dberlin@dberlin.org>
+Reply-To: dberlin@dberlin.org
 
-On Mon Apr 1, 2024 at 12:29 PM EEST, Huang, Kai wrote:
-> On Sat, 2024-03-30 at 13:17 +0200, Jarkko Sakkinen wrote:
-> > On Thu Mar 28, 2024 at 2:53 PM EET, Huang, Kai wrote:
-> > >=20
-> > > > --- /dev/null
-> > > > +++ b/arch/x86/kernel/cpu/sgx/epc_cgroup.c
-> > > > @@ -0,0 +1,74 @@
-> > > > +// SPDX-License-Identifier: GPL-2.0
-> > > > +// Copyright(c) 2022 Intel Corporation.
-> > >=20
-> > > It's 2024 now.
-> > >=20
-> > > And looks you need to use C style comment for /* Copyright ... */, af=
-ter looking
-> > > at some other C files.
-> >=20
-> > To be fair, this happens *all the time* to everyone :-)
-> >=20
-> > I've proposed this few times in SGX context and going to say it now.
-> > Given the nature of Git copyrights would anyway need to be sorted by
-> > the Git log not possibly incorrect copyright platters in the header
-> > and source files.
-> >=20
->
-> Sure fine to me either way.  Thanks for pointing out.
->
-> I have some vague memory that we should update the year but I guess I was=
- wrong.
+From: Daniel Berlin <dberlin@dberlin.org>
 
-I think updating year makes sense!
+The windows driver inf says it uses the exact same tunings and setup as the
+older G634, and then reuses the data for ID 1043:1CAF.
 
-I'd be fine not having copyright platter at all since the commit is from
-Intel domain anyway but if it is kept then the year needs to be
-corrected.
+We do the same here.
+Tested on an actual laptop, sound works fine with this patch plus
+default fallback firmware.
 
-I mean Git commit stores all the data, including exact date.
+Signed-off-by: Daniel Berlin <dberlin@dberlin.org>
+---
+ sound/pci/hda/cs35l41_hda_property.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-BR, Jarkko
+diff --git a/sound/pci/hda/cs35l41_hda_property.c b/sound/pci/hda/cs35l41_hda_property.c
+index 72ec872afb8d..25c117db3317 100644
+--- a/sound/pci/hda/cs35l41_hda_property.c
++++ b/sound/pci/hda/cs35l41_hda_property.c
+@@ -108,6 +108,7 @@ static const struct cs35l41_config cs35l41_config_table[] = {
+ 	{ "10431F12", 2, INTERNAL, { CS35L41_LEFT, CS35L41_RIGHT, 0, 0 }, 0, 1, -1, 1000, 4500, 24 },
+ 	{ "10431F1F", 2, EXTERNAL, { CS35L41_LEFT, CS35L41_RIGHT, 0, 0 }, 1, -1, 0, 0, 0, 0 },
+ 	{ "10431F62", 2, EXTERNAL, { CS35L41_LEFT, CS35L41_RIGHT, 0, 0 }, 1, 2, 0, 0, 0, 0 },
++	{ "10433A60", 2, INTERNAL, { CS35L41_LEFT, CS35L41_RIGHT, 0, 0 }, 1, 2, 0, 1000, 4500, 24 },
+ 	{ "17AA386F", 2, EXTERNAL, { CS35L41_LEFT, CS35L41_RIGHT, 0, 0 }, 0, -1, -1, 0, 0, 0 },
+ 	{ "17AA38A9", 2, EXTERNAL, { CS35L41_LEFT, CS35L41_RIGHT, 0, 0 }, 0, 2, -1, 0, 0, 0 },
+ 	{ "17AA38AB", 2, EXTERNAL, { CS35L41_LEFT, CS35L41_RIGHT, 0, 0 }, 0, 2, -1, 0, 0, 0 },
+@@ -496,6 +497,7 @@ static const struct cs35l41_prop_model cs35l41_prop_model_table[] = {
+ 	{ "CSC3551", "10431F12", generic_dsd_config },
+ 	{ "CSC3551", "10431F1F", generic_dsd_config },
+ 	{ "CSC3551", "10431F62", generic_dsd_config },
++	{ "CSC3551", "10433A60", generic_dsd_config },
+ 	{ "CSC3551", "17AA386F", generic_dsd_config },
+ 	{ "CSC3551", "17AA38A9", generic_dsd_config },
+ 	{ "CSC3551", "17AA38AB", generic_dsd_config },
+
+---
+base-commit: 39cd87c4eb2b893354f3b850f916353f2658ae6f
+change-id: 20240401-add-rog-strix-16-g634jzr-9e5490cadc2b
+
+Best regards,
+-- 
+Daniel Berlin <dberlin@dberlin.org>
+
 
