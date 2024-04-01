@@ -1,73 +1,84 @@
-Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECB3456B9C;
-	Mon,  1 Apr 2024 21:55:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 482D755792
+	for <linux-kernel@vger.kernel.org>; Mon,  1 Apr 2024 21:56:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712008553; cv=none; b=R0bg1hFdzBvdwvGltUQO1DJBcZoXnXdkwMBUGYahUw3ZUysqDXXYw2M9GYK8U+1VnUl0I7pN54hYl4KXQN8rl+IfEnWvHddNJxYwmolQJBuKecVaGYFoum9VwxdlzokALXZdiV7VjbX+WC6X6qP7PQvbTryOkmDBQCtZUGvRY3c=
+	t=1712008599; cv=none; b=AoHkwgkkezuEg+yjHg6quIYnRddNnxCJ0jEGmswuER3IDYMlMZCkqYyrlE4R3dNJnTqfXj2nUlnODFo7XKIUnITogKPuerxIKAKHz56qcD4/dpM322Hud7O55hfzxFSBSA5UldUVwiDMNwWf1ZEOMfnrxC4Efk+VFaxUQn8viLo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712008553; c=relaxed/simple;
-	bh=X6cpgVcs2FJiescebraCebWKxwbpU3WG1GDvvn1zkXo=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=gzH7ob+sqwMsw+rQ3UaAY/5omWOylrwASZanq1+0i8XaiQehWj/9pi+GRf2FL4Va8uRK2wkzbkzNQToCPodChTXRng+kxSlmiF3tSwZC1OPARJSA1RsswtXu6109oOnGMWaA/Zio7CKJAeiPrZeFSvqp2iPtsW+DLq2/onrf80k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; arc=none smtp.client-ip=185.11.138.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
-Received: from i53875aaf.versanet.de ([83.135.90.175] helo=phil.lan)
-	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <heiko@sntech.de>)
-	id 1rrPct-0008FL-3v; Mon, 01 Apr 2024 23:55:35 +0200
-From: Heiko Stuebner <heiko@sntech.de>
-To: Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Rob Herring <robh@kernel.org>,
-	Folker Schwesinger <dev@folker-schwesinger.de>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Chris Ruehl <chris.ruehl@gtsys.com.hk>,
-	Vinod Koul <vkoul@kernel.org>,
-	Yogesh Hegde <yogi.kernel@gmail.com>
-Cc: Heiko Stuebner <heiko@sntech.de>,
-	devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	Christopher Obbard <chris.obbard@collabora.com>,
-	linux-kernel@vger.kernel.org,
-	Dragan Simic <dsimic@manjaro.org>,
-	linux-rockchip@lists.infradead.org
-Subject: Re: [PATCH 0/2] Enable internal strobe pulldown on Radxa ROCK 4 SBCs
-Date: Mon,  1 Apr 2024 23:55:30 +0200
-Message-Id: <171200852042.1394042.15662763470622443255.b4-ty@sntech.de>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240327192641.14220-1-dev@folker-schwesinger.de>
-References: <20240327192641.14220-1-dev@folker-schwesinger.de>
+	s=arc-20240116; t=1712008599; c=relaxed/simple;
+	bh=6k5BrjOuMeQB/WSl+ly2g5AtD0c2vDIBP07u7b9MxN0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZvenqjPgyuI5IWE1YxYmM8J/JGsjid1qsxh3DxnQ30usgiIjj/sXtXI0owDKEEHeBj3dLsxEQxHSiHzMDa5hcb1SVFM3FlkoqEAP1FgP6gnCdC0w9sYg2EUGe8G79m5CM9TncfjgMUGR8Y4jjy4o4tzGFB2Ql5R3pCd1+UfSQiI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DGHPGO1p; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DGHPGO1p"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7C436C433C7;
+	Mon,  1 Apr 2024 21:56:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1712008598;
+	bh=6k5BrjOuMeQB/WSl+ly2g5AtD0c2vDIBP07u7b9MxN0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=DGHPGO1pjbSvbZfmQHmu66cGRmgZD1wO0PrDbfnlVh593aDmgzXhFYSwaaNtXSnRO
+	 daipjZX5dKsVWEmuYeR13abZDAELBCJYw4vfBN9QxqTiIgLqBSm3qmIoqli1bCwW6X
+	 YVv4GrVY9quvMyZ5m2C7WoAcZVhpbtBAH+RmAJ0hnxx450ocmOh1gwDn0rNxSI0LiL
+	 zjmS9/B5Zp6CWDd6CYBkAhBoKOjWtEjiW18PlJdWL7e70/FxypCS64eJf0fZ2XQ4sa
+	 FwiSXbURee2yz5Dn+rjHPQ7D5POUJDK9Gf1NP/CQFO/QXs9njhbjMtNvVBGhxdg4b0
+	 EB3tYayIKuK2Q==
+Date: Mon, 1 Apr 2024 23:56:36 +0200
+From: Frederic Weisbecker <frederic@kernel.org>
+To: "Paul E. McKenney" <paulmck@kernel.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>,
+	LKML <linux-kernel@vger.kernel.org>, Ingo Molnar <mingo@kernel.org>,
+	Anna-Maria Behnsen <anna-maria@linutronix.de>
+Subject: Re: [PATCH 2/2] timers: Fix removed self-IPI on global timer's
+ enqueue in nohz_full
+Message-ID: <ZgstlCZn0l9wSv7H@pavilion.home>
+References: <20240318230729.15497-1-frederic@kernel.org>
+ <20240318230729.15497-3-frederic@kernel.org>
+ <464f6be2-4a72-440d-be53-6a1035d56a4f@paulmck-laptop>
+ <1b5752c8-ef32-4ed4-b539-95d507ec99ce@paulmck-laptop>
+ <ZfsLtMijRrNZfqh6@localhost.localdomain>
+ <6a95b6ac-6681-4492-b155-e30c19bb3341@paulmck-laptop>
+ <ZfwdEROGFFmIbkCM@lothringen>
+ <bf8689c2-0749-47cb-9535-53cf66e34f5e@paulmck-laptop>
+ <797f44f9-701d-4fca-a9f4-d112a7178e7b@paulmck-laptop>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <797f44f9-701d-4fca-a9f4-d112a7178e7b@paulmck-laptop>
 
-On Wed, 27 Mar 2024 20:26:36 +0100, Folker Schwesinger wrote:
-> Various RK3399 boards, including the ROCK Pi 4 series showed instabilities
-> with some eMMC modules when operating in HS400 mode [1]. Later, a missing
-> pull-down resistor on the eMMC strobe line was identified as the root
-> cause of these instabilities [2].
+Le Mon, Apr 01, 2024 at 02:26:25PM -0700, Paul E. McKenney a écrit :
+> > > _ The RCU CPU Stall report. I strongly suspect the cause is the hrtimer
+> > >   enqueue to an offline CPU. Let's solve that and we'll see if it still
+> > >   triggers.
+> > 
+> > Sounds like a plan!
 > 
-> This series enables the internal pull-down on the eMMC PHY strobe line
-> for all ROCK 4 series boards as they all lack an external strobe
-> pull-down resistor.
+> Just checking in on this one.  I did reproduce your RCU CPU stall report
+> and also saw a TREE03 OOM that might (or might not) be related.  Please
+> let me know if hammering TREE03 harder or adding some debug would help.
+> Otherwise, I will assume that you are getting sufficient bug reports
+> from your own testing to be getting along with.
+
+Hehe, there are a lot indeed :-)
+
+So there has been some discussion on CPUSET VS Hotplug, as a problem there
+is likely the cause of the hrtimer warning you saw, which in turn might
+be the cause of the RCU stalls.
+
+Do you always see the hrtimer warning along the RCU stalls? Because if so, this
+might help:
+https://lore.kernel.org/lkml/20240401145858.2656598-1-longman@redhat.com/T/#m1bed4d298715d1a6b8289ed48e9353993c63c896
+
+Thanks.
+
 > 
-> [...]
-
-Applied, thanks!
-
-[1/2] arm64: dts: rockchip: Add enable-strobe-pulldown to emmc phy on ROCK Pi 4
-      commit: f720dd9b8b6d8b2160beda789429d5489ce8a099
-[2/2] arm64: dts: rockchip: Add enable-strobe-pulldown to emmc phy on ROCK 4C+
-      commit: c1b1f340dd7db11f273e426e110697551c9f501f
-
-Best regards,
--- 
-Heiko Stuebner <heiko@sntech.de>
+> 							Thanx, Paul
