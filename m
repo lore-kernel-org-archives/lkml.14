@@ -1,171 +1,125 @@
-Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A5321CA8F
-	for <linux-kernel@vger.kernel.org>; Mon,  1 Apr 2024 16:01:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D11A383BA;
+	Mon,  1 Apr 2024 16:04:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711987317; cv=none; b=WSzmxJBfnKte2K4Xgos7qUy/C5oEXefYLEwC94VjctWYQLgbS6mSSF+u5qThG5jJtMNNYvmmCkUvJH6jOEIakbK3vkBBCkyi0PwUqEr+9eYi4jXACVVBzu/WDWIrWZjsHdtRkMkf2BDI9I6rXEx6Q0wCJFn6bTPQd9n8tOOrOBM=
+	t=1711987465; cv=none; b=CmGvKsXpJOeMW9btsUWjhbddiGxfpsV6JghhUsbp5eALzPFRUG3O0EypMIzIq6DHjfnYLyKYV3NuxdcHnW5UXXjXsQ4DdCIyeOcdtkPmzn9AZyV0cO+2pql9Op2Bb2X5i8QWRXEYI75twc4cbiZYQnnrY89SWQBh9Bvqai0Uuck=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711987317; c=relaxed/simple;
-	bh=3jY/J46RZtli8mScReLicmAc9lElr0SHi5G+SHCPV0I=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mY/AXtJBRgOSLarJ5v3XxsFOgu+a6G8iPcscToboFmKmEa5NrI3JbXP7wZQSJ5Xw0d7cIP+Q0XfSPBS/JJNw0zym+8Yqbf7aROBoDgea88Nk6832+v1OJcQLl2LuKiCWBMOGhhJFYJPtYUXmK4O09wE2Icr4YAEr58Or8R8vpBA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=TPjhSYV3; arc=none smtp.client-ip=209.85.214.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1711987465; c=relaxed/simple;
+	bh=30q5MPlePjPKHlT+QuhcWwxtQQ6URh5gtR7ZctbDe0U=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=hcJ7n1COh3URxHOmucwukhrqZty9/u+ynEckMw02PYCzCMUefH57pAiQae4LYh26DunhsC1/gcctb5E9oT+xDEpMYRtSa1IEd9sUd7jjERS3qUsc5GPqbTv4Jneaq81JKmuw9uP6ycvdYvUh28mqHYtjCKrPWdiPjamCvo10gpE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=U/1mQzUb; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="TPjhSYV3"
-Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-1e0edd0340fso37685375ad.2
-        for <linux-kernel@vger.kernel.org>; Mon, 01 Apr 2024 09:01:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1711987314; x=1712592114; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=iFnuB6vS67T3Bx2L10cFFT7Mq1afjPSG44HJZCE7BdQ=;
-        b=TPjhSYV3goylMPbwtoV9tWPNmBVjTJbtCVNGpoq8Tr3WfuDPFq89LZib+fOnRe819G
-         xd5GpKWKDoc5ADwdz4/F5cUry6pvM04sqBCacB2gH0VcvwsULnruM+XLEJdVFFIVTEwN
-         PGPEveinozZ3xqg63HHTCdwBytX0S912RwphNBHt5Q3tugWbTKyEapBDaeASxwEuWpvK
-         e/Kg1m05+t5SsNHw5X2EtpeUnmlWxBIyKWJsXdS7PZX6ricKCzB4KK7fHKNQl6rtvD3u
-         wIJktqs+PATq5dNU3Qop5KNZzt4E5x3d6YyMBFR0KRV66/P3XRusV8vebMeCTqnDRhm/
-         SnEw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711987314; x=1712592114;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=iFnuB6vS67T3Bx2L10cFFT7Mq1afjPSG44HJZCE7BdQ=;
-        b=EygtMIP9YqQB3UAcuikEGp0N9MHYyUFJ0L2hrdcASUjGfxYLPAnujPG0eKiSD9ge/k
-         Ob5EfebZxrqC+6djNjQjuHIwax1XOJuW7lP0HVXDbDNkB6Qvho0igv7pa9hklt+IAHeS
-         PymJKe6qeyvlYs8j/6CKTIWbhcdnNd9uBNUGRHZbokeLHAGIxXbLbhqGLqfdCLp+u4Qc
-         QS/3j98UU2tgdqI9OC5aoGBrB3SrOvdBksPdRNLIw+WTXi9kVDAHL1bj4FFnQLqf9lRW
-         2arvfqWRCKEImppuOjACL8wVWok7yLrxQFEtZO18hDXchnOH9T8zV3DpyFbEjaQS8LD0
-         TcRA==
-X-Forwarded-Encrypted: i=1; AJvYcCVJLHzMtqQLO1q6BMcCOtPW/wFuYBhjDl8ofxQp93GVRPuEw0m83VJqrjQKwIxPdtcptv7RdicwUS0RZaxl1eQLsMMCE0f77nmNlE20
-X-Gm-Message-State: AOJu0YzBiRkL2BtJwR/jf2nUAdR3Mb7n84D3QfcaV0IeGvPydQAbzZep
-	jxKI61UmZXQUOiErWmNE617HAxIKQ5oI+kzabmyD+4c7wVSKy3I60w9/czNrGMM=
-X-Google-Smtp-Source: AGHT+IE2dwtITxXsxaB0G/uLpOwwGbnutfeGyBbuSp4/5enbVEAxS7FoDRT1e/cft7qh39/yhDc8SQ==
-X-Received: by 2002:a17:903:543:b0:1dd:e114:121c with SMTP id jo3-20020a170903054300b001dde114121cmr10066859plb.56.1711987314265;
-        Mon, 01 Apr 2024 09:01:54 -0700 (PDT)
-Received: from p14s ([2604:3d09:148c:c800:8aef:41d9:be1:3de4])
-        by smtp.gmail.com with ESMTPSA id lc13-20020a170902fa8d00b001e0c949124fsm9133368plb.309.2024.04.01.09.01.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 01 Apr 2024 09:01:53 -0700 (PDT)
-Date: Mon, 1 Apr 2024 10:01:51 -0600
-From: Mathieu Poirier <mathieu.poirier@linaro.org>
-To: Andrew Davis <afd@ti.com>
-Cc: Bjorn Andersson <andersson@kernel.org>,
-	linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/3] remoteproc: k3-dsp: Fix usage of omap_mbox_message
- and mbox_msg_t
-Message-ID: <Zgrab/l1Fp5HPKDb@p14s>
-References: <20240325165808.31885-1-afd@ti.com>
- <ZgWMi088/zORh0m3@p14s>
- <0697211f-4a28-4a74-8540-840c075d513c@ti.com>
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="U/1mQzUb"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F000FC433F1;
+	Mon,  1 Apr 2024 16:04:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1711987465;
+	bh=30q5MPlePjPKHlT+QuhcWwxtQQ6URh5gtR7ZctbDe0U=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=U/1mQzUbo+s8bkQdLgoQ7dUt1QAGLKrb86Cp6xS01NUYSDBjxqbngudL2gwQeK8vL
+	 Rp05eBVcMYJo5PNUoksjsnnLrGC2X1OwaqOGCkxJoaw58nxh5me3PJ7OKZDBFwqwfH
+	 8cFUmONRhlAo9omQP57iEzCcl8tfW1KCrQj/irX4=
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: stable@vger.kernel.org
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	patches@lists.linux.dev,
+	linux-efi@vger.kernel.org,
+	Tom Englund <tomenglund26@gmail.com>,
+	linux-kernel@vger.kernel.org,
+	Kazuma Kondo <kazuma-kondo@nec.com>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 6.8 267/399] efi/libstub: fix efi_random_alloc() to allocate memory at alloc_min or higher address
+Date: Mon,  1 Apr 2024 17:43:53 +0200
+Message-ID: <20240401152557.156667243@linuxfoundation.org>
+X-Mailer: git-send-email 2.44.0
+In-Reply-To: <20240401152549.131030308@linuxfoundation.org>
+References: <20240401152549.131030308@linuxfoundation.org>
+User-Agent: quilt/0.67
+X-stable: review
+X-Patchwork-Hint: ignore
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <0697211f-4a28-4a74-8540-840c075d513c@ti.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Thu, Mar 28, 2024 at 11:26:24AM -0500, Andrew Davis wrote:
-> On 3/28/24 10:28 AM, Mathieu Poirier wrote:
-> > Hi Andrew,
-> > 
-> > On Mon, Mar 25, 2024 at 11:58:06AM -0500, Andrew Davis wrote:
-> > > The type of message sent using omap-mailbox is always u32. The definition
-> > > of mbox_msg_t is uintptr_t which is wrong as that type changes based on
-> > > the architecture (32bit vs 64bit). Use u32 unconditionally and remove
-> > > the now unneeded omap-mailbox.h include.
-> > > 
-> > > Signed-off-by: Andrew Davis <afd@ti.com>
-> > > ---
-> > >   drivers/remoteproc/ti_k3_dsp_remoteproc.c | 7 +++----
-> > >   1 file changed, 3 insertions(+), 4 deletions(-)
-> > > 
-> > > diff --git a/drivers/remoteproc/ti_k3_dsp_remoteproc.c b/drivers/remoteproc/ti_k3_dsp_remoteproc.c
-> > > index 3555b535b1683..33b30cfb86c9d 100644
-> > > --- a/drivers/remoteproc/ti_k3_dsp_remoteproc.c
-> > > +++ b/drivers/remoteproc/ti_k3_dsp_remoteproc.c
-> > > @@ -11,7 +11,6 @@
-> > >   #include <linux/module.h>
-> > >   #include <linux/of.h>
-> > >   #include <linux/of_reserved_mem.h>
-> > > -#include <linux/omap-mailbox.h>
-> > >   #include <linux/platform_device.h>
-> > >   #include <linux/remoteproc.h>
-> > >   #include <linux/reset.h>
-> > > @@ -113,7 +112,7 @@ static void k3_dsp_rproc_mbox_callback(struct mbox_client *client, void *data)
-> > >   						  client);
-> > >   	struct device *dev = kproc->rproc->dev.parent;
-> > >   	const char *name = kproc->rproc->name;
-> > > -	u32 msg = omap_mbox_message(data);
-> > > +	u32 msg = (u32)(uintptr_t)(data);
-> > 
-> > Looking at omap-mailbox.h and unless I'm missing something, the end result is
-> > the same.
-> > 
-> > 
-> > >   	dev_dbg(dev, "mbox msg: 0x%x\n", msg);
-> > > @@ -152,11 +151,11 @@ static void k3_dsp_rproc_kick(struct rproc *rproc, int vqid)
-> > >   {
-> > >   	struct k3_dsp_rproc *kproc = rproc->priv;
-> > >   	struct device *dev = rproc->dev.parent;
-> > > -	mbox_msg_t msg = (mbox_msg_t)vqid;
-> > > +	u32 msg = vqid;
-> > >   	int ret;
-> > > 
-> > 
-> > Here @vqid becomes a 'u32' rather than a 'uintptr'...
-> > 
-> 
-> u32 is the correct type for messages sent with OMAP mailbox. It
-> only sends 32bit messages, uintptr is 64bit when compiled on
-> 64bit hardware (like our ARM64 cores on K3). mbox_msg_t should
-> have been defined as u32, this was a mistake we missed as we only
-> ever used to compile it for 32bit cores (where uintptr is 32bit).
-> 
-> > >   	/* send the index of the triggered virtqueue in the mailbox payload */
-> > > -	ret = mbox_send_message(kproc->mbox, (void *)msg);
-> > > +	ret = mbox_send_message(kproc->mbox, (void *)(uintptr_t)msg);
-> > 
-> > ... but here it is casted as a 'uintptr_t', which yields the same result.
-> > 
-> 
-> The function mbox_send_message() takes a void*, so we need to cast our 32bit
-> message to that first, it is cast back to u32 inside the OMAP mailbox driver.
-> Doing that in one step (u32 -> void*) causes a warning when void* is 64bit
-> (cast from int to pointer of different size).
-> 
-> > 
-> > I am puzzled - other than getting rid of a header file I don't see what else
-> > this patch does.
-> > 
-> 
-> Getting rid of the header is the main point of this patch (I have a later
-> series that needs that header gone). But the difference this patch makes is that
-> before we passed a pointer to a 64bit int to OMAP mailbox which takes a pointer
-> to a 32bit int. Sure, the result is the same in little-endian systems, but that
-> isn't a strictly correct in general.
+6.8-stable review patch.  If anyone has any objections, please let me know.
 
-From your explanation above this patchset is about two things:
+------------------
 
-1) Getting rid of a compilation warning when void* is 64bit wide
-2) Getting rid of omap-mailbox.h
+From: KONDO KAZUMA(近藤　和真) <kazuma-kondo@nec.com>
 
-This is what the changelog should describe.  And next time, please add a cover
-letter to your work.
+[ Upstream commit 3cb4a4827596abc82e55b80364f509d0fefc3051 ]
 
-Thanks,
-Mathieu
+Following warning is sometimes observed while booting my servers:
+  [    3.594838] DMA: preallocated 4096 KiB GFP_KERNEL pool for atomic allocations
+  [    3.602918] swapper/0: page allocation failure: order:10, mode:0xcc1(GFP_KERNEL|GFP_DMA), nodemask=(null),cpuset=/,mems_allowed=0-1
+  ...
+  [    3.851862] DMA: preallocated 1024 KiB GFP_KERNEL|GFP_DMA pool for atomic allocation
 
-> > >   	if (ret < 0)
-> > >   		dev_err(dev, "failed to send mailbox message (%pe)\n",
-> > >   			ERR_PTR(ret));
-> > > -- 
-> > > 2.39.2
-> > > 
+If 'nokaslr' boot option is set, the warning always happens.
+
+On x86, ZONE_DMA is small zone at the first 16MB of physical address
+space. When this problem happens, most of that space seems to be used by
+decompressed kernel. Thereby, there is not enough space at DMA_ZONE to
+meet the request of DMA pool allocation.
+
+The commit 2f77465b05b1 ("x86/efistub: Avoid placing the kernel below
+LOAD_PHYSICAL_ADDR") tried to fix this problem by introducing lower
+bound of allocation.
+
+But the fix is not complete.
+
+efi_random_alloc() allocates pages by following steps.
+1. Count total available slots ('total_slots')
+2. Select a slot ('target_slot') to allocate randomly
+3. Calculate a starting address ('target') to be included target_slot
+4. Allocate pages, which starting address is 'target'
+
+In step 1, 'alloc_min' is used to offset the starting address of memory
+chunk. But in step 3 'alloc_min' is not considered at all.  As the
+result, 'target' can be miscalculated and become lower than 'alloc_min'.
+
+When KASLR is disabled, 'target_slot' is always 0 and the problem
+happens everytime if the EFI memory map of the system meets the
+condition.
+
+Fix this problem by calculating 'target' considering 'alloc_min'.
+
+Cc: linux-efi@vger.kernel.org
+Cc: Tom Englund <tomenglund26@gmail.com>
+Cc: linux-kernel@vger.kernel.org
+Fixes: 2f77465b05b1 ("x86/efistub: Avoid placing the kernel below LOAD_PHYSICAL_ADDR")
+Signed-off-by: Kazuma Kondo <kazuma-kondo@nec.com>
+Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/firmware/efi/libstub/randomalloc.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/firmware/efi/libstub/randomalloc.c b/drivers/firmware/efi/libstub/randomalloc.c
+index 4e96a855fdf47..7e18528595502 100644
+--- a/drivers/firmware/efi/libstub/randomalloc.c
++++ b/drivers/firmware/efi/libstub/randomalloc.c
+@@ -120,7 +120,7 @@ efi_status_t efi_random_alloc(unsigned long size,
+ 			continue;
+ 		}
+ 
+-		target = round_up(md->phys_addr, align) + target_slot * align;
++		target = round_up(max(md->phys_addr, alloc_min), align) + target_slot * align;
+ 		pages = size / EFI_PAGE_SIZE;
+ 
+ 		status = efi_bs_call(allocate_pages, EFI_ALLOCATE_ADDRESS,
+-- 
+2.43.0
+
+
+
