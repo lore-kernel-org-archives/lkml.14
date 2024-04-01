@@ -1,129 +1,217 @@
-Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com [209.85.208.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54962B67D;
-	Mon,  1 Apr 2024 08:04:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FF1E1113;
+	Mon,  1 Apr 2024 08:06:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711958669; cv=none; b=k2pM/4bjN4mb2CcmsunxFny/SWdAwbcnuCam/1iOC6ErYRgTNhE8iGir/Id0gG3xl0dibEwadfXrtV4Bb6WKoBK3D4hnec9OzQ36HMBKbF3kVvlwGFlh/Yl1lB1PutwKEhp4GeN0kl8gNxkWFUultdk8+SQmeINsnS0IIqjozzE=
+	t=1711958804; cv=none; b=k2WBj6LH/QnrDp3/CzBuuekMkSQ7j1kykM50N4eGqBWyFYO+eGDHhHol/bWlNpc49giejZR5Ea5X17BvMXBTCmkIck+vGsFAR8eymvXMA6Hht4oP+x3UHx/WNIbtCZI0S/N+cCkvkUiwK7J5sKHUZMg27rmvgnrDlKxwScW4Xn4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711958669; c=relaxed/simple;
-	bh=MqCZEthzj+56GwiyzSk1Iz5eNGmS1DlYXJDS/UbVRh0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=BwF3jpg9dpmk2E2zecpfj7xaC48NtsuIETLn0PznISP9ZQXUP2HrmsmuwMxKOviewulsOiiaL5mT8HlLWT+OtLTW6Ab95ONQrcZhrl45ithA1eC+piEcYx9OEDEJU3IJBugULYr7MdcLt83BuBs/VY4qfkNVnyL6YjU8RkTT5HM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=W4Fe9muz; arc=none smtp.client-ip=209.85.208.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1711958804; c=relaxed/simple;
+	bh=HXl89clGCBmFMUQwsMNffueQqIafNclJQm4lGSgRHks=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Tv6pIxwmVa5UBGu8tTsbK2wJ+GhqgRLHxlp0/LyU4DikR3HxMUe0h4q1wzuxP5i+Xd7LFLmEqjvzBOsJAyLdk59Ywu7CY/eieXGDFQJFP8TPJuW40cZw4mWlF61DdCg5NMbRuBVKD0FkXWoe9GXcR8NCP1a9g90MB6qZE8MeYh0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TgJSwzBp; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="W4Fe9muz"
-Received: by mail-lj1-f169.google.com with SMTP id 38308e7fff4ca-2d717603aa5so33834171fa.0;
-        Mon, 01 Apr 2024 01:04:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1711958665; x=1712563465; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=xIPBLDUKvVlC/efDjwEAjrOmS6XB1w+iWO2tkQJfZSI=;
-        b=W4Fe9muz/t89OgjDr4tSOSNXxRQI1HzHpagyyggN4KLf/DfBe1bRRZdfwRSjfQuBx+
-         LYfxHsG6W8nT+3EL60fwgpUMiou5tCD+iU1arExVINsttOJXcyGtkoLMUnuzrVNY7jLN
-         PDEeMFx8wy1eiH7TvtV3aU+gaY8xmSa4ku+MhBpIUE200K/b8Cn9jubDj6PAAUSrzR0A
-         9MOqiFFV9lsob7ypY+I/+odIDbCVk3Hmf1M7l2OW+xsMcY81hVn5rAyDw9MW2V7uSWfS
-         ro5BKVPAljvY69+jwknI1JDmz01qHtjMSHJy9PUYz2Vn1Udx2aRzyhYYYkkJDRa4SR39
-         CS5Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711958665; x=1712563465;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=xIPBLDUKvVlC/efDjwEAjrOmS6XB1w+iWO2tkQJfZSI=;
-        b=rCvu1or3RcjPz9G99w9c079KTxxU3j4ojih2mLuZT1blz1+pV44Wi6si8s2PAyY7sm
-         7ORJ/0WhRUHVhtUHYJul5RJjF8wkWRcQSmYn0fJxMBN47pB9832OPgNZjpBmqrvz+yTC
-         EbUtQVGshaMq5yWvXi3hP23HTgsDTj9zheLGU77yG0uEfc3+wpe/ocKpgWg+a8TrX1Dv
-         CDBX1Bb5PQJMy/KeudM5R1jBmg4vWdx7+D8EhRwJaI3Qtdbw3sL38Ndw9LsazLmukBHq
-         cQ06dLTI1vWBByKKxTSM/EtAeQMfME+vhZdyA5NVD07z1BfVSFyfrZdEWd6lGXEzqawz
-         3w/A==
-X-Forwarded-Encrypted: i=1; AJvYcCWOyjWaJl5d2RExVIYW5uTE6u3fWiE2K3wvVztx+yNV3I8F4iQrDaUt7ZiXasfLgN06Ms0XgezbNzLD5x5XxQcLfCTo51FEwEp78ghkaoEhLnbHhdsah1PB0vCNsSovry6KpbNGTqmwkg==
-X-Gm-Message-State: AOJu0YyLaTX1zTCEPTWJdIgbmgheVDRoQfNgy0DUsLKdEW7r/MrwnY36
-	N73onJf2FoXdVlfst+aeiH516qkGTwBS+xBmt2Yytcw0w+l62q3TMELb/lXIw3hvg+GtIjr5/yH
-	XTHKOaVmQlNlCjO4egfVQHPWXvEw=
-X-Google-Smtp-Source: AGHT+IF6MZSEh0qpjHWy2tctMPsCT4wg3Q6kZZ6mM8KnuUoKqHKr0TeNgyq+KgbADsJN1HMt9yrxPapQuQRzM4rXDtQ=
-X-Received: by 2002:a2e:9141:0:b0:2d6:f085:1f64 with SMTP id
- q1-20020a2e9141000000b002d6f0851f64mr5832377ljg.48.1711958665425; Mon, 01 Apr
- 2024 01:04:25 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TgJSwzBp"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1711958802; x=1743494802;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=HXl89clGCBmFMUQwsMNffueQqIafNclJQm4lGSgRHks=;
+  b=TgJSwzBpY2KickNloCs9wrum5AU8mJqML4Td/YX3Ci4WFN6QPlknFYtc
+   ULk5qFKX0vECHUAKO9aupp3wQdCvWczKymLlOW0OlkNBiFhud4zDkcTYx
+   MRX7BuJ5WAv7iJJpfCeb0kAWgz8pw8xcrKWLstxxEajmxAtbcYyBkQ5kC
+   mreOyg0x8eFp5xb3bNqRj/OaEU5o7YAMsHCiF028b/74pFNYw1LTgtN8C
+   rcrJmuOD6Ech2YtnkayF0vfcBZEvqKSmSjQ5xzFLVjXjnMhINl3BdRMSS
+   HBm440HrXqp4nSxuxfjLWCFv/FHLWvBtL9H0RLmb9FFM3zl5s4sxm8Uqq
+   g==;
+X-CSE-ConnectionGUID: BdqdgPRSSzCjaCdGZfu8bw==
+X-CSE-MsgGUID: Ji9+nn1KSzCXQNz5FGoexg==
+X-IronPort-AV: E=McAfee;i="6600,9927,11030"; a="29553376"
+X-IronPort-AV: E=Sophos;i="6.07,171,1708416000"; 
+   d="scan'208";a="29553376"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Apr 2024 01:06:42 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,171,1708416000"; 
+   d="scan'208";a="22386789"
+Received: from haibo-optiplex-7090.sh.intel.com ([10.239.159.132])
+  by orviesa004.jf.intel.com with ESMTP; 01 Apr 2024 01:06:37 -0700
+From: Haibo Xu <haibo1.xu@intel.com>
+To: ajones@ventanamicro.com
+Cc: xiaobo55x@gmail.com,
+	Haibo Xu <haibo1.xu@intel.com>,
+	Paolo Bonzini <pbonzini@redhat.com>,
+	Shuah Khan <shuah@kernel.org>,
+	Anup Patel <anup@brainfault.org>,
+	Atish Patra <atishp@atishpatra.org>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	linux-kernel@vger.kernel.org,
+	kvm@vger.kernel.org,
+	linux-kselftest@vger.kernel.org,
+	kvm-riscv@lists.infradead.org,
+	linux-riscv@lists.infradead.org
+Subject: [PATCH] KVM: riscv: selftests: Add SBI base extension test
+Date: Mon,  1 Apr 2024 16:20:18 +0800
+Message-Id: <20240401082019.2318193-1-haibo1.xu@intel.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cover.1709780590.git.haibo1.xu@intel.com> <01cb5780041565784d459cd94a5c4f55eaa87739.1709780590.git.haibo1.xu@intel.com>
- <Zgpf0rqUSEZcSiAV@sunil-laptop>
-In-Reply-To: <Zgpf0rqUSEZcSiAV@sunil-laptop>
-From: Haibo Xu <xiaobo55x@gmail.com>
-Date: Mon, 1 Apr 2024 16:04:13 +0800
-Message-ID: <CAJve8om9-cTtYKLmB0R=6Wwh5KQ9z+16AFR-tuUkJhJjbn0UEA@mail.gmail.com>
-Subject: Re: [PATCH v2 6/6] ACPI: RISCV: Enable ACPI based NUMA
-To: Sunil V L <sunilvl@ventanamicro.com>
-Cc: Haibo Xu <haibo1.xu@intel.com>, ajones@ventanamicro.com, 
-	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
-	Albert Ou <aou@eecs.berkeley.edu>, "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>, 
-	Robert Moore <robert.moore@intel.com>, Conor Dooley <conor.dooley@microchip.com>, 
-	Guo Ren <guoren@kernel.org>, Alexandre Ghiti <alexghiti@rivosinc.com>, 
-	Greentime Hu <greentime.hu@sifive.com>, Charlie Jenkins <charlie@rivosinc.com>, 
-	Sami Tolvanen <samitolvanen@google.com>, Zong Li <zong.li@sifive.com>, 
-	Jisheng Zhang <jszhang@kernel.org>, Baoquan He <bhe@redhat.com>, 
-	=?UTF-8?B?Q2zDqW1lbnQgTMOpZ2Vy?= <cleger@rivosinc.com>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Chen Jiahao <chenjiahao16@huawei.com>, 
-	Arnd Bergmann <arnd@arndb.de>, James Morse <james.morse@arm.com>, 
-	"Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>, Evan Green <evan@rivosinc.com>, 
-	Samuel Holland <samuel.holland@sifive.com>, Marc Zyngier <maz@kernel.org>, 
-	Anup Patel <apatel@ventanamicro.com>, Tony Luck <tony.luck@intel.com>, 
-	Ard Biesheuvel <ardb@kernel.org>, Yuntao Wang <ytcoode@gmail.com>, 
-	Alison Schofield <alison.schofield@intel.com>, Dave Hansen <dave.hansen@linux.intel.com>, 
-	Dan Williams <dan.j.williams@intel.com>, linux-riscv@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org, 
-	acpica-devel@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Mon, Apr 1, 2024 at 3:18=E2=80=AFPM Sunil V L <sunilvl@ventanamicro.com>=
- wrote:
->
-> Hi Haibo,
->
-> On Thu, Mar 07, 2024 at 04:47:58PM +0800, Haibo Xu wrote:
-> > Enable ACPI based NUMA for RISCV in Kconfig.
-> >
-> > Signed-off-by: Haibo Xu <haibo1.xu@intel.com>
-> > ---
-> >  arch/riscv/Kconfig | 1 +
-> >  1 file changed, 1 insertion(+)
-> >
-> > diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
-> > index 0bfcfec67ed5..0fb55f166701 100644
-> > --- a/arch/riscv/Kconfig
-> > +++ b/arch/riscv/Kconfig
-> > @@ -447,6 +447,7 @@ config NUMA
-> >       select HAVE_SETUP_PER_CPU_AREA
-> >       select NEED_PER_CPU_EMBED_FIRST_CHUNK
-> >       select NEED_PER_CPU_PAGE_FIRST_CHUNK
-> > +     select ACPI_NUMA if ACPI
->
-> If the firmware didn't provide the SRAT/SLIT on ACPI based systems, then
-> there will be a message "Failed to initialise from firmware" from
-> arch_acpi_numa_init(). This is not specific to RISC-V. But I am
-> wondering why should it be pr_info instead of pr_debug.
->
+This is the first patch to enable the base extension selftest
+for the SBI implementation in KVM. Test for other extensions
+will be added later.
 
-My understanding is maybe it just wants to expose explicit logs to
-avoid any potential
-bugs from FW or Kernel.
+Signed-off-by: Haibo Xu <haibo1.xu@intel.com>
+---
+ tools/testing/selftests/kvm/Makefile          |  1 +
+ .../selftests/kvm/include/riscv/processor.h   |  8 +-
+ tools/testing/selftests/kvm/riscv/sbi_test.c  | 95 +++++++++++++++++++
+ 3 files changed, 103 insertions(+), 1 deletion(-)
+ create mode 100644 tools/testing/selftests/kvm/riscv/sbi_test.c
 
-> Thanks,
-> Sunil
-> >       select OF_NUMA
-> >       select USE_PERCPU_NUMA_NODE_ID
-> >       help
-> > --
-> > 2.34.1
-> >
+diff --git a/tools/testing/selftests/kvm/Makefile b/tools/testing/selftests/kvm/Makefile
+index 741c7dc16afc..a6acbbcad757 100644
+--- a/tools/testing/selftests/kvm/Makefile
++++ b/tools/testing/selftests/kvm/Makefile
+@@ -189,6 +189,7 @@ TEST_GEN_PROGS_s390x += rseq_test
+ TEST_GEN_PROGS_s390x += set_memory_region_test
+ TEST_GEN_PROGS_s390x += kvm_binary_stats_test
+ 
++TEST_GEN_PROGS_riscv += riscv/sbi_test
+ TEST_GEN_PROGS_riscv += arch_timer
+ TEST_GEN_PROGS_riscv += demand_paging_test
+ TEST_GEN_PROGS_riscv += dirty_log_test
+diff --git a/tools/testing/selftests/kvm/include/riscv/processor.h b/tools/testing/selftests/kvm/include/riscv/processor.h
+index ce473fe251dd..df530ac751c4 100644
+--- a/tools/testing/selftests/kvm/include/riscv/processor.h
++++ b/tools/testing/selftests/kvm/include/riscv/processor.h
+@@ -178,7 +178,13 @@ enum sbi_ext_id {
+ };
+ 
+ enum sbi_ext_base_fid {
+-	SBI_EXT_BASE_PROBE_EXT = 3,
++	SBI_EXT_BASE_GET_SPEC_VERSION = 0,
++	SBI_EXT_BASE_GET_IMP_ID,
++	SBI_EXT_BASE_GET_IMP_VERSION,
++	SBI_EXT_BASE_PROBE_EXT,
++	SBI_EXT_BASE_GET_MVENDORID,
++	SBI_EXT_BASE_GET_MARCHID,
++	SBI_EXT_BASE_GET_MIMPID,
+ };
+ 
+ struct sbiret {
+diff --git a/tools/testing/selftests/kvm/riscv/sbi_test.c b/tools/testing/selftests/kvm/riscv/sbi_test.c
+new file mode 100644
+index 000000000000..b9378546e3b6
+--- /dev/null
++++ b/tools/testing/selftests/kvm/riscv/sbi_test.c
+@@ -0,0 +1,95 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * sbi_test - SBI API test for KVM's SBI implementation.
++ *
++ * Copyright (c) 2024 Intel Corporation
++ *
++ * Test cover the following SBI extentions:
++ *  - Base: All functions in this extension should be supported
++ */
++
++#include "kvm_util.h"
++#include "processor.h"
++#include "test_util.h"
++
++/*
++ * Test that all functions in the base extension must be supported
++ */
++static void base_ext_guest_code(void)
++{
++	struct sbiret ret;
++
++	/*
++	 * Since the base extension was introduced in SBI Spec v0.2,
++	 * assert if the implemented SBI version is below 0.2.
++	 */
++	ret = sbi_ecall(SBI_EXT_BASE, SBI_EXT_BASE_GET_SPEC_VERSION, 0,
++			0, 0, 0, 0, 0);
++	__GUEST_ASSERT(!ret.error && ret.value >= 2, "Get Spec Version Error: ret.error=%ld, "
++			"ret.value=%ld\n", ret.error, ret.value);
++
++	ret = sbi_ecall(SBI_EXT_BASE, SBI_EXT_BASE_GET_IMP_ID, 0,
++			0, 0, 0, 0, 0);
++	__GUEST_ASSERT(!ret.error && ret.value == 3, "Get Imp ID Error: ret.error=%ld, "
++			"ret.value=%ld\n",
++			ret.error, ret.value);
++
++	ret = sbi_ecall(SBI_EXT_BASE, SBI_EXT_BASE_GET_IMP_VERSION, 0,
++			0, 0, 0, 0, 0);
++	__GUEST_ASSERT(!ret.error, "Get Imp Version Error: ret.error=%ld\n", ret.error);
++
++	ret = sbi_ecall(SBI_EXT_BASE, SBI_EXT_BASE_PROBE_EXT, SBI_EXT_BASE,
++			0, 0, 0, 0, 0);
++	__GUEST_ASSERT(!ret.error && ret.value == 1, "Probe ext Error: ret.error=%ld, "
++			"ret.value=%ld\n",
++			ret.error, ret.value);
++
++	ret = sbi_ecall(SBI_EXT_BASE, SBI_EXT_BASE_GET_MVENDORID, 0,
++			0, 0, 0, 0, 0);
++	__GUEST_ASSERT(!ret.error, "Get Machine Vendor ID Error: ret.error=%ld\n", ret.error);
++
++	ret = sbi_ecall(SBI_EXT_BASE, SBI_EXT_BASE_GET_MARCHID, 0,
++			0, 0, 0, 0, 0);
++	__GUEST_ASSERT(!ret.error, "Get Machine Arch ID Error: ret.error=%ld\n", ret.error);
++
++	ret = sbi_ecall(SBI_EXT_BASE, SBI_EXT_BASE_GET_MIMPID, 0,
++			0, 0, 0, 0, 0);
++	__GUEST_ASSERT(!ret.error, "Get Machine Imp ID Error: ret.error=%ld\n", ret.error);
++
++	GUEST_DONE();
++}
++
++static void sbi_base_ext_test(void)
++{
++	struct kvm_vm *vm;
++	struct kvm_vcpu *vcpu;
++	struct ucall uc;
++
++	vm = vm_create_with_one_vcpu(&vcpu, base_ext_guest_code);
++	while (1) {
++		vcpu_run(vcpu);
++		TEST_ASSERT(vcpu->run->exit_reason == UCALL_EXIT_REASON,
++			    "Unexpected exit reason: %u (%s),",
++			    vcpu->run->exit_reason, exit_reason_str(vcpu->run->exit_reason));
++
++		switch (get_ucall(vcpu, &uc)) {
++		case UCALL_DONE:
++			goto done;
++		case UCALL_ABORT:
++			fprintf(stderr, "Guest assert failed!\n");
++			REPORT_GUEST_ASSERT(uc);
++		default:
++			TEST_FAIL("Unexpected ucall %lu", uc.cmd);
++		}
++	}
++
++done:
++	kvm_vm_free(vm);
++}
++
++int main(void)
++{
++	sbi_base_ext_test();
++
++	return 0;
++}
+-- 
+2.34.1
+
