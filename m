@@ -1,98 +1,285 @@
-Received: from relay.hostedemail.com (smtprelay0012.hostedemail.com [216.40.44.12])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEA144A3E;
-	Mon,  1 Apr 2024 02:45:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9850A7F
+	for <linux-kernel@vger.kernel.org>; Mon,  1 Apr 2024 02:52:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711939523; cv=none; b=RhzSso8I/1USRUDdD/VPOurOjXvLJ5TsvNH11KJZiCa0IBDXWLAc9bbbokuVUJge3AhB4+vxxzixG13cM8uQaDYca7qefpbNRtRIpv+5KtCEB+SZRQ9bN8QE5BI2gosBn4IAgRAatM9b3jLsfGEkWjPViEMOOXOVzFRJNNQQ6b4=
+	t=1711939956; cv=none; b=MoI6Pwc48pRBHH9OS8Uc59wIeqr31FslH3lwhJz2pvjoXtrDeeSiUSzNuO/MG8iGmYCXsVYUH1WUAT+24ckYm0VgMFEQN6dqTls6s8O9uOw6IFg2t8d7iWyMKf0e4/8x/7CLbXoa/fZhqO+cF0kYd8asCMPaDcLSS+uBApngoRw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711939523; c=relaxed/simple;
-	bh=/ikhAY81eL2sCha6HmZfwOSjv2FnyUPw0qvgAVX+Pm0=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=kWRpAGgmT2ZCJNPpqylEfGa7J5FsSyTwY1b/X3ZraR4Qoi1mKhiW5rjn4l3BAISdbuzTtIRCjXMktWWxK5L+cbIVJk9KXDfEM7Y1ZQDgq9eZK9I0wEn4oleKiD9lGo1QQNW2410RiW8nBmUzhcFXAmgJQLyBqoFA3pLSeawNTgc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=perches.com; spf=pass smtp.mailfrom=perches.com; arc=none smtp.client-ip=216.40.44.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=perches.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=perches.com
-Received: from omf14.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay08.hostedemail.com (Postfix) with ESMTP id E5F9B140163;
-	Mon,  1 Apr 2024 02:37:16 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: joe@perches.com) by omf14.hostedemail.com (Postfix) with ESMTPA id 94F752F;
-	Mon,  1 Apr 2024 02:37:10 +0000 (UTC)
-Message-ID: <f5bb12d8602a03d28b2a8aeaffd8f74f001d692d.camel@perches.com>
-Subject: Re: [PATCH v5 2/2] scripts: checkpatch: check unused parameters for
- function-like macro
-From: Joe Perches <joe@perches.com>
-To: Barry Song <21cnbao@gmail.com>, akpm@linux-foundation.org, 
-	linux-doc@vger.kernel.org, workflows@vger.kernel.org
-Cc: apw@canonical.com, broonie@kernel.org, chenhuacai@loongson.cn, 
- chris@zankel.net, corbet@lwn.net, dwaipayanray1@gmail.com, 
- herbert@gondor.apana.org.au, linux-kernel@vger.kernel.org,
- linux@roeck-us.net,  lukas.bulwahn@gmail.com, mac.xxn@outlook.com,
- sfr@canb.auug.org.au,  v-songbaohua@oppo.com, Max Filippov
- <jcmvbkbc@gmail.com>, Jeff Johnson <quic_jjohnson@quicinc.com>, Charlemagne
- Lasse <charlemagnelasse@gmail.com>
-Date: Sun, 31 Mar 2024 19:37:09 -0700
-In-Reply-To: <20240401012120.6052-3-21cnbao@gmail.com>
-References: <20240401012120.6052-1-21cnbao@gmail.com>
-	 <20240401012120.6052-3-21cnbao@gmail.com>
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.48.4 (3.48.4-1.fc38) 
+	s=arc-20240116; t=1711939956; c=relaxed/simple;
+	bh=vGA7sDQYoQv858YvmllNKPFLnGAF5d3t65jAh5FdeHo=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=ShtaVkiK0oEdM2gNxJsADCB7XTYY5e/X+XMCrfmk9iuusrYPRtavMk+A1U5WhYmRgdF7EYPoLG12iPRbSe4Deg2qy0EKcnKBRGFljgoH90iWm3z2b/U9dEtpn8xeiCiF9vtnjc/C93Pv9s89mbNAs0lO37abWgYN1UqFFaqvAUE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Y3pGBVJg; arc=none smtp.client-ip=192.198.163.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Y3pGBVJg"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1711939953; x=1743475953;
+  h=from:to:cc:subject:in-reply-to:references:date:
+   message-id:mime-version;
+  bh=vGA7sDQYoQv858YvmllNKPFLnGAF5d3t65jAh5FdeHo=;
+  b=Y3pGBVJgugYjPbHJaVgQyX0o/mT9eYYFYhaJ0thimx2a8/AplGlz+isJ
+   VCSz+lBu9Dep+EpCNwepVCs0eTeV1AyD/iZE/B+3TjqiqmDaku97kZjUI
+   rB0msDv9hzViFUjb/d8FAlF5qzcihX5LlHWd4ZJ33rqe68H2W4NlR+jzl
+   L9eTm/sevefiA3ROqVSQunmL6T1vqXQIRxaWI8V7FWCBZyLphrRrCj0Gl
+   IAWTYGKOmPCpA9qydEc9Wc7Vsbhm9r/u/TMWco0hUCtBtjHaVdRgflEvb
+   I32e6RsJCwHJX986vxzo2r9RyAaLidUbeJn/P3Aj7T8OJUtanbgXoGECl
+   g==;
+X-CSE-ConnectionGUID: K8+s4+9OQ9WQ9waNk2vaPg==
+X-CSE-MsgGUID: gYhF0d0ASreBObhmvCVtBg==
+X-IronPort-AV: E=McAfee;i="6600,9927,11030"; a="7269481"
+X-IronPort-AV: E=Sophos;i="6.07,171,1708416000"; 
+   d="scan'208";a="7269481"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Mar 2024 19:52:32 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,171,1708416000"; 
+   d="scan'208";a="17652282"
+Received: from yhuang6-desk2.sh.intel.com (HELO yhuang6-desk2.ccr.corp.intel.com) ([10.238.208.55])
+  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Mar 2024 19:52:29 -0700
+From: "Huang, Ying" <ying.huang@intel.com>
+To: Baolin Wang <baolin.wang@linux.alibaba.com>
+Cc: akpm@linux-foundation.org,  <david@redhat.com>,
+  <mgorman@techsingularity.net>,  <wangkefeng.wang@huawei.com>,
+  <jhubbard@nvidia.com>,  <21cnbao@gmail.com>,  <ryan.roberts@arm.com>,
+  <linux-mm@kvack.org>,  <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 2/2] mm: support multi-size THP numa balancing
+In-Reply-To: <d28d276d599c26df7f38c9de8446f60e22dd1950.1711683069.git.baolin.wang@linux.alibaba.com>
+	(Baolin Wang's message of "Fri, 29 Mar 2024 14:56:46 +0800")
+References: <cover.1711683069.git.baolin.wang@linux.alibaba.com>
+	<d28d276d599c26df7f38c9de8446f60e22dd1950.1711683069.git.baolin.wang@linux.alibaba.com>
+Date: Mon, 01 Apr 2024 10:50:36 +0800
+Message-ID: <87sf05kd8j.fsf@yhuang6-desk2.ccr.corp.intel.com>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Rspamd-Queue-Id: 94F752F
-X-Rspamd-Server: rspamout08
-X-Stat-Signature: a64u7rec3zbcz9m6awd8n83w4n8owb8p
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-Session-ID: U2FsdGVkX18vTDvEamRn37xuX0ppkjF8TUYGi2CltWY=
-X-HE-Tag: 1711939030-101202
-X-HE-Meta: U2FsdGVkX1+Dx54Uuqrd53Q4Vep/KFkwhvXqJk6K+2fTwbRYgQygoOfSJsYBJDw84ZBamvcQYhupnfrLn9ldNQLAGJrWEj60xTLfSMsyleKhi+/p0qWgdGoJZqMSe3Zz76le2WPoWvML+QMTcLEbO6OKVuncThXxfrNnF7TxLynxHvalOcCJkIbvmpMSjdGtIcAvARlWuSxHJHXBIT5Kz8ZnBmmRdi2hFRwBL4KiWABcewafY6N2K4ALoAvk4roy7Kc+RUcymqg513RXQzkbUxY4qOKha6WrqQgUXIeJhuU7UsF7BacG7m/oo5yCsHL3vqxp7tjU6T6r7x0Te8gtdCUullfxBDA/
+Content-Type: text/plain; charset=ascii
 
-On Mon, 2024-04-01 at 14:21 +1300, Barry Song wrote:
-> From: Xining Xu <mac.xxn@outlook.com>
->=20
-> If function-like macros do not utilize a parameter, it might result in a
-> build warning.  In our coding style guidelines, we advocate for utilizing
-> static inline functions to replace such macros.  This patch verifies
-> compliance with the new rule.
->=20
-> For a macro such as the one below,
->=20
->  #define test(a) do { } while (0)
->=20
-> The test result is as follows.
->=20
->  ERROR: Parameter 'a' is not used in function-like macro, please use stat=
-ic
->  inline instead
->  #21: FILE: mm/init-mm.c:20:
->  +#define test(a) do { } while (0)
+Baolin Wang <baolin.wang@linux.alibaba.com> writes:
 
-This is no longer true.
-Please update the ERROR->WARN and message as below
+> Now the anonymous page allocation already supports multi-size THP (mTHP),
+> but the numa balancing still prohibits mTHP migration even though it is an
+> exclusive mapping, which is unreasonable.
+>
+> Allow scanning mTHP:
+> Commit 859d4adc3415 ("mm: numa: do not trap faults on shared data section
+> pages") skips shared CoW pages' NUMA page migration to avoid shared data
+> segment migration. In addition, commit 80d47f5de5e3 ("mm: don't try to
+> NUMA-migrate COW pages that have other uses") change to use page_count()
+> to avoid GUP pages migration, that will also skip the mTHP numa scaning.
+> Theoretically, we can use folio_maybe_dma_pinned() to detect the GUP
+> issue, although there is still a GUP race, the issue seems to have been
+> resolved by commit 80d47f5de5e3. Meanwhile, use the folio_likely_mapped_shared()
+> to skip shared CoW pages though this is not a precise sharers count. To
+> check if the folio is shared, ideally we want to make sure every page is
+> mapped to the same process, but doing that seems expensive and using
+> the estimated mapcount seems can work when running autonuma benchmark.
+>
+> Allow migrating mTHP:
+> As mentioned in the previous thread[1], large folios (including THP) are
+> more susceptible to false sharing issues among threads than 4K base page,
+> leading to pages ping-pong back and forth during numa balancing, which is
+> currently not easy to resolve. Therefore, as a start to support mTHP numa
+> balancing, we can follow the PMD mapped THP's strategy, that means we can
+> reuse the 2-stage filter in should_numa_migrate_memory() to check if the
+> mTHP is being heavily contended among threads (through checking the CPU id
+> and pid of the last access) to avoid false sharing at some degree. Thus,
+> we can restore all PTE maps upon the first hint page fault of a large folio
+> to follow the PMD mapped THP's strategy. In the future, we can continue to
+> optimize the NUMA balancing algorithm to avoid the false sharing issue with
+> large folios as much as possible.
+>
+> Performance data:
+> Machine environment: 2 nodes, 128 cores Intel(R) Xeon(R) Platinum
+> Base: 2024-03-25 mm-unstable branch
+> Enable mTHP to run autonuma-benchmark
+>
+> mTHP:16K
+> Base				Patched
+> numa01				numa01
+> 224.70				143.48
+> numa01_THREAD_ALLOC		numa01_THREAD_ALLOC
+> 118.05				47.43
+> numa02				numa02
+> 13.45				9.29
+> numa02_SMT			numa02_SMT
+> 14.80				7.50
+>
+> mTHP:64K
+> Base				Patched
+> numa01				numa01
+> 216.15				114.40
+> numa01_THREAD_ALLOC		numa01_THREAD_ALLOC
+> 115.35				47.41
+> numa02				numa02
+> 13.24				9.25
+> numa02_SMT			numa02_SMT
+> 14.67				7.34
+>
+> mTHP:128K
+> Base				Patched
+> numa01				numa01
+> 205.13				144.45
+> numa01_THREAD_ALLOC		numa01_THREAD_ALLOC
+> 112.93				41.88
+> numa02				numa02
+> 13.16				9.18
+> numa02_SMT			numa02_SMT
+> 14.81				7.49
+>
+> [1] https://lore.kernel.org/all/20231117100745.fnpijbk4xgmals3k@techsingularity.net/
+> Signed-off-by: Baolin Wang <baolin.wang@linux.alibaba.com>
+> ---
+>  mm/memory.c   | 57 +++++++++++++++++++++++++++++++++++++++++++--------
+>  mm/mprotect.c |  3 ++-
+>  2 files changed, 51 insertions(+), 9 deletions(-)
+>
+> diff --git a/mm/memory.c b/mm/memory.c
+> index c30fb4b95e15..2aca19e4fbd8 100644
+> --- a/mm/memory.c
+> +++ b/mm/memory.c
+> @@ -5068,16 +5068,56 @@ static void numa_rebuild_single_mapping(struct vm_fault *vmf, struct vm_area_str
+>  	update_mmu_cache_range(vmf, vma, vmf->address, vmf->pte, 1);
+>  }
+>  
+> +static void numa_rebuild_large_mapping(struct vm_fault *vmf, struct vm_area_struct *vma,
+> +				       struct folio *folio, pte_t fault_pte, bool ignore_writable)
+> +{
+> +	int nr = pte_pfn(fault_pte) - folio_pfn(folio);
+> +	unsigned long start = max(vmf->address - nr * PAGE_SIZE, vma->vm_start);
+> +	unsigned long end = min(vmf->address + (folio_nr_pages(folio) - nr) * PAGE_SIZE, vma->vm_end);
+> +	pte_t *start_ptep = vmf->pte - (vmf->address - start) / PAGE_SIZE;
+> +	bool pte_write_upgrade = vma_wants_manual_pte_write_upgrade(vma);
 
-Ideally, this would have an update to
-Documentation/dev-tools/checkpatch.rst
+We call vma_wants_manual_pte_write_upgrade() in do_numa_page() already.
+It seems that we can make "ignore_writable = true" if
+"vma_wants_manual_pte_write_upgrade() == false" in do_numa_page() to
+remove one call.
 
-to describe the new --verbose message type
+Otherwise, the patchset LGTM, feel free to add
 
-> diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
-[]
-> @@ -6040,6 +6040,12 @@ sub process {
->  					CHK("MACRO_ARG_PRECEDENCE",
->  					    "Macro argument '$arg' may be better as '($arg)' to avoid prece=
-dence issues\n" . "$herectx");
->  				}
+Reviewed-by: "Huang, Ying" <ying.huang@intel.com>
+
+in the future versions.
+
+--
+Best Regards,
+Huang, Ying
+
+
+> +	unsigned long addr;
 > +
-> +# check if this is an unused argument
-> +				if ($define_stmt !~ /\b$arg\b/) {
-> +					WARN("MACRO_ARG_UNUSED",
-> +						"Argument '$arg' is not used in function-like macro\n" . "$herectx=
-");
-> +				}
-
+> +	/* Restore all PTEs' mapping of the large folio */
+> +	for (addr = start; addr != end; start_ptep++, addr += PAGE_SIZE) {
+> +		pte_t pte, old_pte;
+> +		pte_t ptent = ptep_get(start_ptep);
+> +		bool writable = false;
+> +
+> +		if (!pte_present(ptent) || !pte_protnone(ptent))
+> +			continue;
+> +
+> +		if (pfn_folio(pte_pfn(ptent)) != folio)
+> +			continue;
+> +
+> +		if (!ignore_writable) {
+> +			ptent = pte_modify(ptent, vma->vm_page_prot);
+> +			writable = pte_write(ptent);
+> +			if (!writable && pte_write_upgrade &&
+> +			    can_change_pte_writable(vma, addr, ptent))
+> +				writable = true;
+> +		}
+> +
+> +		old_pte = ptep_modify_prot_start(vma, addr, start_ptep);
+> +		pte = pte_modify(old_pte, vma->vm_page_prot);
+> +		pte = pte_mkyoung(pte);
+> +		if (writable)
+> +			pte = pte_mkwrite(pte, vma);
+> +		ptep_modify_prot_commit(vma, addr, start_ptep, old_pte, pte);
+> +		update_mmu_cache_range(vmf, vma, addr, start_ptep, 1);
+> +	}
+> +}
+> +
+>  static vm_fault_t do_numa_page(struct vm_fault *vmf)
+>  {
+>  	struct vm_area_struct *vma = vmf->vma;
+>  	struct folio *folio = NULL;
+>  	int nid = NUMA_NO_NODE;
+> -	bool writable = false;
+> +	bool writable = false, ignore_writable = false;
+>  	int last_cpupid;
+>  	int target_nid;
+>  	pte_t pte, old_pte;
+> -	int flags = 0;
+> +	int flags = 0, nr_pages;
+>  
+>  	/*
+>  	 * The pte cannot be used safely until we verify, while holding the page
+> @@ -5107,10 +5147,6 @@ static vm_fault_t do_numa_page(struct vm_fault *vmf)
+>  	if (!folio || folio_is_zone_device(folio))
+>  		goto out_map;
+>  
+> -	/* TODO: handle PTE-mapped THP */
+> -	if (folio_test_large(folio))
+> -		goto out_map;
+> -
+>  	/*
+>  	 * Avoid grouping on RO pages in general. RO pages shouldn't hurt as
+>  	 * much anyway since they can be in shared cache state. This misses
+> @@ -5130,6 +5166,7 @@ static vm_fault_t do_numa_page(struct vm_fault *vmf)
+>  		flags |= TNF_SHARED;
+>  
+>  	nid = folio_nid(folio);
+> +	nr_pages = folio_nr_pages(folio);
+>  	/*
+>  	 * For memory tiering mode, cpupid of slow memory page is used
+>  	 * to record page access time.  So use default value.
+> @@ -5146,6 +5183,7 @@ static vm_fault_t do_numa_page(struct vm_fault *vmf)
+>  	}
+>  	pte_unmap_unlock(vmf->pte, vmf->ptl);
+>  	writable = false;
+> +	ignore_writable = true;
+>  
+>  	/* Migrate to the requested node */
+>  	if (migrate_misplaced_folio(folio, vma, target_nid)) {
+> @@ -5166,14 +5204,17 @@ static vm_fault_t do_numa_page(struct vm_fault *vmf)
+>  
+>  out:
+>  	if (nid != NUMA_NO_NODE)
+> -		task_numa_fault(last_cpupid, nid, 1, flags);
+> +		task_numa_fault(last_cpupid, nid, nr_pages, flags);
+>  	return 0;
+>  out_map:
+>  	/*
+>  	 * Make it present again, depending on how arch implements
+>  	 * non-accessible ptes, some can allow access by kernel mode.
+>  	 */
+> -	numa_rebuild_single_mapping(vmf, vma, writable);
+> +	if (folio && folio_test_large(folio))
+> +		numa_rebuild_large_mapping(vmf, vma, folio, pte, ignore_writable);
+> +	else
+> +		numa_rebuild_single_mapping(vmf, vma, writable);
+>  	pte_unmap_unlock(vmf->pte, vmf->ptl);
+>  	goto out;
+>  }
+> diff --git a/mm/mprotect.c b/mm/mprotect.c
+> index f8a4544b4601..94878c39ee32 100644
+> --- a/mm/mprotect.c
+> +++ b/mm/mprotect.c
+> @@ -129,7 +129,8 @@ static long change_pte_range(struct mmu_gather *tlb,
+>  
+>  				/* Also skip shared copy-on-write pages */
+>  				if (is_cow_mapping(vma->vm_flags) &&
+> -				    folio_ref_count(folio) != 1)
+> +				    (folio_maybe_dma_pinned(folio) ||
+> +				     folio_likely_mapped_shared(folio)))
+>  					continue;
+>  
+>  				/*
