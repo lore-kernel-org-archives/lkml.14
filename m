@@ -1,183 +1,125 @@
-Received: from mail-qv1-f51.google.com (mail-qv1-f51.google.com [209.85.219.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AD7E4D11D;
-	Mon,  1 Apr 2024 16:50:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BC38481D1;
+	Mon,  1 Apr 2024 16:51:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711990241; cv=none; b=lIhhobkng31Q4pHRzCTsjyo1WFwkMqxfprdhVztXi0IyXsMKu2mStz6BuLv5rYVep2jP4qMMYjSp+nU4mfNcwiH+snDcV+lIqjRXcwJPwTFwzRatxBILvRkgKVSdOGL4QkQl231vXdROjW2qsJinEp4ddzLcVQNVWnr5D3PXqUE=
+	t=1711990275; cv=none; b=TRJxRWIyMaS9SBNGpW8tlBqaOytGOSxW3dzBwfXt4zi4124akb7Zl6PSpDxRdT4jkC4SN9Nd2U9tW9PK3cD05tzKuRCjJWgUYKKZBm80qYzhdZ162doizc4KZf2DVVMYz24xsCEbqOlLntf3sblGYQVs8hdm7iU132wys17ewHE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711990241; c=relaxed/simple;
-	bh=5awwDDBktLQM4l0OZm+d+L47DmrR33aIVMdFPJxYh24=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=WRAxQfQchZXGYU26irbmcJOs5hhvBaz3epgknYGlC5ZELVvkSHUCMGQWiyObZQ0Ac8kS96yP2cPhijqUY+qPM4pA8/NcVHFI9zOHVOUyKK339ZRywtwxeaHO5U41fdiYg563iqNaVNEw+Si/pmcrvfUfimnic6UDHTZzYzmtKeU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Zzv6H8Li; arc=none smtp.client-ip=209.85.219.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1711990275; c=relaxed/simple;
+	bh=JaHB1WCfSl+JRh0Aed6/FLQFQXdNaijhbRYev4Inkc4=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=X+ASVjeurnPWNfBDfAZH2CJMHBt/ePtrxqnqFStDe75a/IqsonL5jxgXdkUSPpm0okxkaoHy5Rpfu8hSe9vMkgUVDk0JVF3szuhzLjT9WuQdOV50Av6oKSq2rdW9VEQyMLdsurRZFoVJX4695LFc+gDEp1tfdSNTNN/dPVTBHsQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=hsec50z5; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Zzv6H8Li"
-Received: by mail-qv1-f51.google.com with SMTP id 6a1803df08f44-6990efb56fcso1535376d6.0;
-        Mon, 01 Apr 2024 09:50:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1711990238; x=1712595038; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=sFdTtQEhrlvUy6ZociJ27yi27v8XQ4Lcvn+acNNZdYo=;
-        b=Zzv6H8LiDhEbkXP6/sfM66zlNGMnBKMvbXIrMkPGT0tB2Pp9zZ5s3DPeU1I50ocSvo
-         S8Wwri7QvKgDl1uz5O6KEL4+/TEG6CX6hp7EJQSM5ZdBkDeuPBZ9UzW1bAzHFjVTh2NY
-         etbSvxVkt37Ulg5nRCG9d4lq73i5xbRgasDx/ED/xZCbe2pLXzjP4+5QCSYbaxKwBBJW
-         22wQuJf+5HnM9bTF/Ql4AjVc8d8y1Yd4BV8rC8w/OSUfa31dUX/xtJhvCs2QbQAgBch4
-         1I2RHDsowjNyR3l6H5/Su4JgxUGrABONGPxTXJ4KX6sAINkv7BOBjt4yHUNyUmNJPnoL
-         AoBg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711990238; x=1712595038;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=sFdTtQEhrlvUy6ZociJ27yi27v8XQ4Lcvn+acNNZdYo=;
-        b=aP/c88W5m8+tSV9ijBhKzLaJkcFWDJzFTyq4jF2jG25MrLxs/csp9SmwQWjaRSe8bU
-         BJl9TmJo6saKY320g/mbV7ZVLp++l+TFI37do7wJJ+2C0FWJffqfhgLOA9cvkI2OneRP
-         hEXxMnySj3Zu7kYE01kE0NEfUgDshNK6wy4QiS0bouPVHnWTRffU0o1w2GrWdpEg7/B1
-         OknLT7oqajomkNCTlByPciRI7XAa7At8nOjw9dDuzBCyzZb9ubXQPiwzNlGBBHTYceTE
-         wbG4ajPVE2y5yEpz/XAz+iVg2pf8VW9Pb9lxODdb3LMPcvDlERpGZDm/nU5vOr9slpoB
-         lRnQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVj9aHr1HU+vDKJ3LJ1tPw/Dw659LuLHqKp+fC83an9JH8xGSc0BJ5ZnApO4kjE3ErW9E6NMMpQWzoD93DRdAl7BCVh3AAdANubdLU=
-X-Gm-Message-State: AOJu0Yy7oKq0HffBBqao+vEo1K69Sh6SyghNiQKdbQZc/g2nadK4O/qL
-	uEAwz3qpG4dqQg3jK/LfqLjeLg3/xzrQa6ZVoFmhjLCT3aAeeLY5XO0KOCWIPr03j8u9zjA/tG0
-	Hd8w1D6FqVpVqz3MyQ5+0ObUXeyFvwJVTJAXMx4qvEbM=
-X-Google-Smtp-Source: AGHT+IEJ8mUuXDzKZTVFgaRP6kPL5i+QnDb0aexndug9J4eMjlhKS4LGUyNBk+jzI9pa2CeDDyTQE1Gj1gFUc9emBIE=
-X-Received: by 2002:a0c:c792:0:b0:699:dfe:6015 with SMTP id
- k18-20020a0cc792000000b006990dfe6015mr1890172qvj.5.1711990237905; Mon, 01 Apr
- 2024 09:50:37 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="hsec50z5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EACE9C433C7;
+	Mon,  1 Apr 2024 16:51:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1711990275;
+	bh=JaHB1WCfSl+JRh0Aed6/FLQFQXdNaijhbRYev4Inkc4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=hsec50z5VueWVLhL2ryaxr11Fmp6IY9Ms0EUF3pYg/nyj0UruxdPA15ivpiqDQxMi
+	 VD/L9LAQh5VmRxXG895mc3sC1OF2XzechtGWeWmi2kr8NRLR+BQAdU6tM9lYW7ishB
+	 DNQ5z9p5kucOWipfA32zWUiWf58cqBRhxdER4Hvk=
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: stable@vger.kernel.org
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	patches@lists.linux.dev,
+	linux-efi@vger.kernel.org,
+	Tom Englund <tomenglund26@gmail.com>,
+	linux-kernel@vger.kernel.org,
+	Kazuma Kondo <kazuma-kondo@nec.com>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 6.6 300/396] efi/libstub: fix efi_random_alloc() to allocate memory at alloc_min or higher address
+Date: Mon,  1 Apr 2024 17:45:49 +0200
+Message-ID: <20240401152556.846021617@linuxfoundation.org>
+X-Mailer: git-send-email 2.44.0
+In-Reply-To: <20240401152547.867452742@linuxfoundation.org>
+References: <20240401152547.867452742@linuxfoundation.org>
+User-Agent: quilt/0.67
+X-stable: review
+X-Patchwork-Hint: ignore
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CABXGCsNmEtrN9DK-XmESaPm_1xpXm8A+juE+44Jf6AK5JE0+TQ@mail.gmail.com>
- <874jcl7e83.wl-tiwai@suse.de> <CABXGCsMmRFW3EYJ3UvNd-LO7ZTOyoNqjc_3OAmaCDSL=LuxJqg@mail.gmail.com>
- <87v851e2di.wl-tiwai@suse.de> <CABXGCsNMBRUaY-V8mhUQKdq+CQW5+eGUWL_YCJWXo0cgh9bGJQ@mail.gmail.com>
- <87h6glt9zc.wl-tiwai@suse.de>
-In-Reply-To: <87h6glt9zc.wl-tiwai@suse.de>
-From: Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
-Date: Mon, 1 Apr 2024 21:50:27 +0500
-Message-ID: <CABXGCsMcazRvmiN4XtiHQCE9=dB=M=VsRqB=v+RPmtuhBL29DA@mail.gmail.com>
-Subject: Re: regression/bisected/6.9 commit 587d67fd929ad89801bcc429675bda90d53f6592
- decrease 30% of gaming performance
-To: Takashi Iwai <tiwai@suse.de>
-Cc: Linux List Kernel Mailing <linux-kernel@vger.kernel.org>, linux-sound@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Mon, Apr 1, 2024 at 7:48=E2=80=AFPM Takashi Iwai <tiwai@suse.de> wrote:
->
->
-> Then it shouldn't be dmix/dsnoop.  You'd better try profiling what's
-> going on there.  e.g. try to get perf results with and without the
-> commit.
+6.6-stable review patch.  If anyone has any objections, please let me know.
 
-perf diff perf-with-revert-587d67fd929a.data
-perf-with-revert-587d67fd929a-beb45974dd49.data
-No kallsyms or vmlinux with build-id
-81ed128ee346c4f6a2595295d5b0f85ba85f770c was found
-No kallsyms or vmlinux with build-id
-5b7d215e519bfbc813e04bbb3850a08b8a8274c5 was found
-# Event 'cycles:P'
-#
-# Baseline  Delta Abs  Shared Object
-Symbol
+------------------
 
-                        >
-# ........  .........  ..............................................
-...........................................................................=
-...........................................................................=
-................>
-#
-    44.80%    +14.98%  [kernel.kallsyms]
-[k] 0xffffffff9f006bc0
-    43.34%    -11.87%  ShadowOfTheTombRaider
-[.] 0x00000000001d9da1
-     1.67%     -0.70%  libc.so.6
-[.] syscall
-     0.75%     -0.21%  libvulkan_radeon.so
-[.] radv_UpdateDescriptorSetWithTemplate
-     0.42%     -0.12%  libvulkan_radeon.so
-[.] radv_CmdBindPipeline
-     0.35%     -0.12%  libm.so.6
-[.] __powf_fma
-     0.44%     -0.11%  libvulkan_radeon.so
-[.] radv_bind_descriptor_sets
-     0.51%     -0.11%  libc.so.6
-[.] __memmove_avx512_unaligned_erms
-     0.36%     -0.11%  libc.so.6
-[.] __memset_avx512_unaligned_erms
-     0.35%     -0.10%  libvulkan_radeon.so
-[.] radv_amdgpu_add_cs_to_bo_list
-     0.28%     -0.07%  libvulkan_radeon.so
-[.] radv_emit_all_graphics_states
-     0.21%     -0.07%  libc.so.6
-[.] sem_post@GLIBC_2.2.5
-     0.31%     -0.07%  libvulkan_radeon.so
-[.] radv_AllocateDescriptorSets
-     0.20%     -0.06%  libvulkan_radeon.so
-[.] radv_CmdDrawIndexed
-     0.21%     -0.06%  [vdso]
-[.] 0x00000000000005a0
-     0.23%     -0.06%  [amdgpu]
-[k] amdgpu_bo_placement_from_domain
-     0.19%     -0.05%  libvulkan_radeon.so
-[.] radv_flush_constants
-     0.23%     -0.05%  [amdgpu]
-[k] amdgpu_vram_mgr_compatible
-     0.18%     -0.05%  [amdgpu]
-[k] amdgpu_vm_bo_update
-     0.12%     -0.05%  libc.so.6
-[.] __futex_abstimed_wait_common
-     0.14%     -0.04%  libvulkan_radeon.so
-[.] radv_emit_graphics_pipeline
-     0.16%     -0.04%  libvulkan_radeon.so
-[.] radv_amdgpu_cs_find_buffer
-     0.14%     -0.04%  libm.so.6
-[.] powf@GLIBC_2.2.5
-     0.18%     -0.04%  libvulkan_radeon.so
-[.] radv_amdgpu_cs_add_buffer
-     0.14%     -0.04%  [amdgpu]
-[k] amdgpu_bo_list_entry_cmp
-     0.15%     -0.04%  libvulkan_radeon.so
-[.] radv_emit_all_inline_push_consts
-     0.08%     -0.03%  libc.so.6
-[.] __new_sem_wait_slow64.constprop.0
-     0.10%     -0.03%  libvulkan_radeon.so
-[.] radv_ResetDescriptorPool
-     0.11%     -0.03%  libvulkan_radeon.so
-[.] radv_upload_graphics_shader_descriptors
-               +0.02%  [JIT] tid 6669
-[.] 0x000034d982fb9005
-     0.04%     -0.02%  [amdgpu]
-[k] amdgpu_cs_ioctl
-     0.10%     -0.02%  libvulkan_radeon.so
-[.] radv_bind_shader
-     0.00%     +0.02%  [crc32c_intel]
-[k] crc_pcl
-     0.09%     -0.02%  libvulkan_radeon.so
-[.] radv_emit_descriptor_pointers.isra.0
-     0.05%     -0.02%  libc.so.6
-[.] sem_wait@@GLIBC_2.34
-     0.06%     -0.02%  libvulkan_radeon.so
-[.] vk_common_CmdBindDescriptorSets
-     0.08%     +0.02%  libcef.so
-[.] 0x0000000002470460
-     0.05%     -0.02%  libm.so.6
-[.] __logf_fma
+From: KONDO KAZUMA(近藤　和真) <kazuma-kondo@nec.com>
 
-Here is original perf files:
-[1] perf-with-revert-587d67fd929a.data -
-https://mega.nz/file/EpZmXbgL#vEnxuODoB__jM6TwV6XbwC_TWMMqvT7qaWkJU22JY48
-[2] perf-with-revert-587d67fd929a-beb45974dd49.data -
-https://mega.nz/file/0lI31CDA#hKsv6vX7t5u-Sx1_p2E7-Y32-z5VFPlW2Y793oM-JRU
+[ Upstream commit 3cb4a4827596abc82e55b80364f509d0fefc3051 ]
 
---=20
-Best Regards,
-Mike Gavrilov.
+Following warning is sometimes observed while booting my servers:
+  [    3.594838] DMA: preallocated 4096 KiB GFP_KERNEL pool for atomic allocations
+  [    3.602918] swapper/0: page allocation failure: order:10, mode:0xcc1(GFP_KERNEL|GFP_DMA), nodemask=(null),cpuset=/,mems_allowed=0-1
+  ...
+  [    3.851862] DMA: preallocated 1024 KiB GFP_KERNEL|GFP_DMA pool for atomic allocation
+
+If 'nokaslr' boot option is set, the warning always happens.
+
+On x86, ZONE_DMA is small zone at the first 16MB of physical address
+space. When this problem happens, most of that space seems to be used by
+decompressed kernel. Thereby, there is not enough space at DMA_ZONE to
+meet the request of DMA pool allocation.
+
+The commit 2f77465b05b1 ("x86/efistub: Avoid placing the kernel below
+LOAD_PHYSICAL_ADDR") tried to fix this problem by introducing lower
+bound of allocation.
+
+But the fix is not complete.
+
+efi_random_alloc() allocates pages by following steps.
+1. Count total available slots ('total_slots')
+2. Select a slot ('target_slot') to allocate randomly
+3. Calculate a starting address ('target') to be included target_slot
+4. Allocate pages, which starting address is 'target'
+
+In step 1, 'alloc_min' is used to offset the starting address of memory
+chunk. But in step 3 'alloc_min' is not considered at all.  As the
+result, 'target' can be miscalculated and become lower than 'alloc_min'.
+
+When KASLR is disabled, 'target_slot' is always 0 and the problem
+happens everytime if the EFI memory map of the system meets the
+condition.
+
+Fix this problem by calculating 'target' considering 'alloc_min'.
+
+Cc: linux-efi@vger.kernel.org
+Cc: Tom Englund <tomenglund26@gmail.com>
+Cc: linux-kernel@vger.kernel.org
+Fixes: 2f77465b05b1 ("x86/efistub: Avoid placing the kernel below LOAD_PHYSICAL_ADDR")
+Signed-off-by: Kazuma Kondo <kazuma-kondo@nec.com>
+Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/firmware/efi/libstub/randomalloc.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/firmware/efi/libstub/randomalloc.c b/drivers/firmware/efi/libstub/randomalloc.c
+index 4e96a855fdf47..7e18528595502 100644
+--- a/drivers/firmware/efi/libstub/randomalloc.c
++++ b/drivers/firmware/efi/libstub/randomalloc.c
+@@ -120,7 +120,7 @@ efi_status_t efi_random_alloc(unsigned long size,
+ 			continue;
+ 		}
+ 
+-		target = round_up(md->phys_addr, align) + target_slot * align;
++		target = round_up(max(md->phys_addr, alloc_min), align) + target_slot * align;
+ 		pages = size / EFI_PAGE_SIZE;
+ 
+ 		status = efi_bs_call(allocate_pages, EFI_ALLOCATE_ADDRESS,
+-- 
+2.43.0
+
+
+
