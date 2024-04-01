@@ -1,404 +1,105 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mx01.omp.ru (mx01.omp.ru [90.154.21.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38F9E28DC0
-	for <linux-kernel@vger.kernel.org>; Mon,  1 Apr 2024 12:24:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7C9B28DC0;
+	Mon,  1 Apr 2024 12:24:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.154.21.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711974250; cv=none; b=RY3Tt7Ya3nQRLB35Q5YzkPsHfYM1D7CrZ9NMHH6ltzE0iok4ro8+HCUkhRh7GIauJaOVepUGKG0RwEkKNv7MJMKrOU6R2XX6nhDe0X8I6O8leia2tuAPR6Z0Mbt9RqHfIeDZ9jFdYiIthCMVAwUB1RC9VGb6H27bHLCXCwrq/mM=
+	t=1711974288; cv=none; b=epKoaITwzc5QhdJlU7RzenYmsjiPzDIUcxcwQFgt2gs8U6vH9lhvWYIquyuij1P9H1qbCXNhVXLLYl0PVsDRgZr3QmhNE5EU2Bx974f6rm+w4JmFLMdSsa7LLdReNY/lXdxlqjz6J0nNDOa2wmOkRVIIfdXFgoYC2gaFmorXJvM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711974250; c=relaxed/simple;
-	bh=spJ9RMVRv0rFwfAZFjfUbN/DezHPiJgk650X8Hq4PQk=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=kQJLWyS0Pbnu86GHgRespKSRhYwrcB2tKAqv4vkPGBfUnDTtCukUNrCgCCcQjbuhPyMMXr3/NGcLt+9qIYmk8Thm9z5vAWqtZ1h94dGppUEwYGPH8/SwHLo0/3GRilHrHcbbcO03e2U8A0zC/wlf75r9bi3YV1qATVNAwzgVZ3I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=cbe5JFy4; arc=none smtp.client-ip=192.198.163.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cbe5JFy4"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1711974248; x=1743510248;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=spJ9RMVRv0rFwfAZFjfUbN/DezHPiJgk650X8Hq4PQk=;
-  b=cbe5JFy4zUwnmchcrBdi0zj4oBeTiUIv062bhXgvulCJFSY9hJRJWxuR
-   c7NcBne1jIMLLXx+QdwSB6vqmot8DXEDL/Y6691Wy0u03yxBKwICIZGpZ
-   htZ9nO8LbH6S7SibGb8mEn/nu3myBEb31DKCnTlEFgAS+1NrUYH1v45uK
-   LhPxY0piN4ID0twbbBMx1RPC1VkXYZFvp7+1byyXkOFcojxtbfh16Hv2P
-   6Altdm15ow8GaCSbl2uhJzUIp6mC3az/Wp+lRhtOxcWQTX0hYIGq2+Yju
-   0CAgIoDHM601nz2ON5Gsq/ZFWODk58cTyaSCFOTCmfZyBmW40zHM/ooIa
-   g==;
-X-CSE-ConnectionGUID: Xz1TvRftS9GxfLWeTG+RIQ==
-X-CSE-MsgGUID: NdssrXcvQKC3+ShZ7yuUkg==
-X-IronPort-AV: E=McAfee;i="6600,9927,11030"; a="10055454"
-X-IronPort-AV: E=Sophos;i="6.07,172,1708416000"; 
-   d="scan'208";a="10055454"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Apr 2024 05:24:07 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,172,1708416000"; 
-   d="scan'208";a="17525456"
-Received: from lkp-server02.sh.intel.com (HELO 90ee3aa53dbd) ([10.239.97.151])
-  by orviesa010.jf.intel.com with ESMTP; 01 Apr 2024 05:24:05 -0700
-Received: from kbuild by 90ee3aa53dbd with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1rrGhn-0000IF-1N;
-	Mon, 01 Apr 2024 12:24:03 +0000
-Date: Mon, 1 Apr 2024 20:23:42 +0800
-From: kernel test robot <lkp@intel.com>
-To: Huacai Chen <chenhuacai@loongson.cn>
-Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org
-Subject: arch/loongarch/kernel/signal.c:370:47: sparse: sparse: incorrect
- type in initializer (different address spaces)
-Message-ID: <202404012046.TImS0QcF-lkp@intel.com>
+	s=arc-20240116; t=1711974288; c=relaxed/simple;
+	bh=S17umzcSkzJVxMkeDGKprCS0QF3nLYcojO97hIZGnQk=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=uONZXgq5dUymxqCl93YesnRGXmxUXSGMQYjBdjztovezYm3ZmUYnQAs00uwqT43ainkmDRccK/zkkdybwU3SpwUGb6ahHyJ4t4UnWaHzcJX4+9dGiUnEvPV2V+imoElKrUGyYbZn1pTX6Q4pbJ34Bo8GNnjHDHV5Dwwt70dJY2E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=omp.ru; spf=pass smtp.mailfrom=omp.ru; arc=none smtp.client-ip=90.154.21.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=omp.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=omp.ru
+Received: from msk1wst434n.omp.ru (81.22.207.138) by msexch01.omp.ru
+ (10.188.4.12) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.2.1258.12; Mon, 1 Apr
+ 2024 15:24:33 +0300
+From: Roman Smirnov <r.smirnov@omp.ru>
+To: Herbert Xu <herbert@gondor.apana.org.au>, "David S. Miller"
+	<davem@davemloft.net>
+CC: Roman Smirnov <r.smirnov@omp.ru>, <linux-crypto@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, Sergey Shtylyov <s.shtylyov@omp.ru>,
+	<lvc-project@linuxtesting.org>
+Subject: [PATCH v2] crypto: algboss: remove NULL check in cryptomgr_schedule_probe()
+Date: Mon, 1 Apr 2024 15:22:58 +0300
+Message-ID: <20240401122258.111414-1-r.smirnov@omp.ru>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: msexch01.omp.ru (10.188.4.12) To msexch01.omp.ru
+ (10.188.4.12)
+X-KSE-ServerInfo: msexch01.omp.ru, 9
+X-KSE-AntiSpam-Interceptor-Info: scan successful
+X-KSE-AntiSpam-Version: 6.1.0, Database issued on: 04/01/2024 12:04:20
+X-KSE-AntiSpam-Status: KAS_STATUS_NOT_DETECTED
+X-KSE-AntiSpam-Method: none
+X-KSE-AntiSpam-Rate: 19
+X-KSE-AntiSpam-Info: Lua profiles 184505 [Apr 01 2024]
+X-KSE-AntiSpam-Info: Version: 6.1.0.4
+X-KSE-AntiSpam-Info: Envelope from: r.smirnov@omp.ru
+X-KSE-AntiSpam-Info: LuaCore: 14 0.3.14
+ 5a0c43d8a1c3c0e5b0916cc02a90d4b950c01f96
+X-KSE-AntiSpam-Info: {rep_avail}
+X-KSE-AntiSpam-Info: {Tracking_from_domain_doesnt_match_to}
+X-KSE-AntiSpam-Info: {SMTP from is not routable}
+X-KSE-AntiSpam-Info: {Found in DNSBL: 81.22.207.138 in (user)
+ b.barracudacentral.org}
+X-KSE-AntiSpam-Info: {Found in DNSBL: 81.22.207.138 in (user)
+ dbl.spamhaus.org}
+X-KSE-AntiSpam-Info:
+	127.0.0.199:7.1.2;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;omp.ru:7.1.1;msk1wst434n.omp.ru:7.1.1;81.22.207.138:7.1.2
+X-KSE-AntiSpam-Info: ApMailHostAddress: 81.22.207.138
+X-KSE-AntiSpam-Info: {DNS response errors}
+X-KSE-AntiSpam-Info: Rate: 19
+X-KSE-AntiSpam-Info: Status: not_detected
+X-KSE-AntiSpam-Info: Method: none
+X-KSE-AntiSpam-Info: Auth:dmarc=temperror header.from=omp.ru;spf=temperror
+ smtp.mailfrom=omp.ru;dkim=none
+X-KSE-Antiphishing-Info: Clean
+X-KSE-Antiphishing-ScanningType: Heuristic
+X-KSE-Antiphishing-Method: None
+X-KSE-Antiphishing-Bases: 04/01/2024 12:07:00
+X-KSE-Antivirus-Interceptor-Info: scan successful
+X-KSE-Antivirus-Info: Clean, bases: 4/1/2024 9:49:00 AM
+X-KSE-Attachment-Filter-Triggered-Rules: Clean
+X-KSE-Attachment-Filter-Triggered-Filters: Clean
+X-KSE-BulkMessagesFiltering-Scan-Result: InTheLimit
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-head:   39cd87c4eb2b893354f3b850f916353f2658ae6f
-commit: 616500232e632dba8b03981eeccadacf2fbf1c30 LoongArch: Add vector extensions support
-date:   9 months ago
-config: loongarch-randconfig-r034-20230511 (https://download.01.org/0day-ci/archive/20240401/202404012046.TImS0QcF-lkp@intel.com/config)
-compiler: loongarch64-linux-gcc (GCC) 12.3.0
-reproduce: (https://download.01.org/0day-ci/archive/20240401/202404012046.TImS0QcF-lkp@intel.com/reproduce)
+The for loop will be executed at least once, so i > 0. If the loop
+is interrupted before i is incremented (e.g., when checking len for NULL),
+i will not be checked.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202404012046.TImS0QcF-lkp@intel.com/
+Found by Linux Verification Center (linuxtesting.org) with Svace.
 
-sparse warnings: (new ones prefixed by >>)
-   arch/loongarch/kernel/signal.c:94:36: sparse: sparse: cast removes address space '__user' of expression
-   arch/loongarch/kernel/signal.c:94:36: sparse: sparse: incorrect type in initializer (different address spaces) @@     expected unsigned long long [noderef] [usertype] __user *regs @@     got unsigned long long [usertype] * @@
-   arch/loongarch/kernel/signal.c:94:36: sparse:     expected unsigned long long [noderef] [usertype] __user *regs
-   arch/loongarch/kernel/signal.c:94:36: sparse:     got unsigned long long [usertype] *
-   arch/loongarch/kernel/signal.c:114:36: sparse: sparse: cast removes address space '__user' of expression
-   arch/loongarch/kernel/signal.c:114:36: sparse: sparse: incorrect type in initializer (different address spaces) @@     expected unsigned long long [noderef] [usertype] __user *regs @@     got unsigned long long [usertype] * @@
-   arch/loongarch/kernel/signal.c:114:36: sparse:     expected unsigned long long [noderef] [usertype] __user *regs
-   arch/loongarch/kernel/signal.c:114:36: sparse:     got unsigned long long [usertype] *
-   arch/loongarch/kernel/signal.c:132:36: sparse: sparse: cast removes address space '__user' of expression
-   arch/loongarch/kernel/signal.c:132:36: sparse: sparse: incorrect type in initializer (different address spaces) @@     expected unsigned long long [noderef] [usertype] __user *regs @@     got unsigned long long [usertype] * @@
-   arch/loongarch/kernel/signal.c:132:36: sparse:     expected unsigned long long [noderef] [usertype] __user *regs
-   arch/loongarch/kernel/signal.c:132:36: sparse:     got unsigned long long [usertype] *
-   arch/loongarch/kernel/signal.c:153:36: sparse: sparse: cast removes address space '__user' of expression
-   arch/loongarch/kernel/signal.c:153:36: sparse: sparse: incorrect type in initializer (different address spaces) @@     expected unsigned long long [noderef] [usertype] __user *regs @@     got unsigned long long [usertype] * @@
-   arch/loongarch/kernel/signal.c:153:36: sparse:     expected unsigned long long [noderef] [usertype] __user *regs
-   arch/loongarch/kernel/signal.c:153:36: sparse:     got unsigned long long [usertype] *
-   arch/loongarch/kernel/signal.c:173:36: sparse: sparse: cast removes address space '__user' of expression
-   arch/loongarch/kernel/signal.c:173:36: sparse: sparse: incorrect type in initializer (different address spaces) @@     expected unsigned long long [noderef] [usertype] __user *regs @@     got unsigned long long [usertype] * @@
-   arch/loongarch/kernel/signal.c:173:36: sparse:     expected unsigned long long [noderef] [usertype] __user *regs
-   arch/loongarch/kernel/signal.c:173:36: sparse:     got unsigned long long [usertype] *
-   arch/loongarch/kernel/signal.c:198:36: sparse: sparse: cast removes address space '__user' of expression
-   arch/loongarch/kernel/signal.c:198:36: sparse: sparse: incorrect type in initializer (different address spaces) @@     expected unsigned long long [noderef] [usertype] __user *regs @@     got unsigned long long [usertype] * @@
-   arch/loongarch/kernel/signal.c:198:36: sparse:     expected unsigned long long [noderef] [usertype] __user *regs
-   arch/loongarch/kernel/signal.c:198:36: sparse:     got unsigned long long [usertype] *
-   arch/loongarch/kernel/signal.c:223:36: sparse: sparse: cast removes address space '__user' of expression
-   arch/loongarch/kernel/signal.c:223:36: sparse: sparse: incorrect type in initializer (different address spaces) @@     expected unsigned long long [noderef] [usertype] __user *regs @@     got unsigned long long [usertype] * @@
-   arch/loongarch/kernel/signal.c:223:36: sparse:     expected unsigned long long [noderef] [usertype] __user *regs
-   arch/loongarch/kernel/signal.c:223:36: sparse:     got unsigned long long [usertype] *
-   arch/loongarch/kernel/signal.c:232:36: sparse: sparse: cast removes address space '__user' of expression
-   arch/loongarch/kernel/signal.c:232:36: sparse: sparse: incorrect type in initializer (different address spaces) @@     expected unsigned long long [noderef] [usertype] __user *regs @@     got unsigned long long [usertype] * @@
-   arch/loongarch/kernel/signal.c:232:36: sparse:     expected unsigned long long [noderef] [usertype] __user *regs
-   arch/loongarch/kernel/signal.c:232:36: sparse:     got unsigned long long [usertype] *
-   arch/loongarch/kernel/signal.c:241:36: sparse: sparse: cast removes address space '__user' of expression
-   arch/loongarch/kernel/signal.c:241:36: sparse: sparse: incorrect type in initializer (different address spaces) @@     expected unsigned long long [noderef] [usertype] __user *regs @@     got unsigned long long [usertype] * @@
-   arch/loongarch/kernel/signal.c:241:36: sparse:     expected unsigned long long [noderef] [usertype] __user *regs
-   arch/loongarch/kernel/signal.c:241:36: sparse:     got unsigned long long [usertype] *
-   arch/loongarch/kernel/signal.c:250:36: sparse: sparse: cast removes address space '__user' of expression
-   arch/loongarch/kernel/signal.c:250:36: sparse: sparse: incorrect type in initializer (different address spaces) @@     expected unsigned long long [noderef] [usertype] __user *regs @@     got unsigned long long [usertype] * @@
-   arch/loongarch/kernel/signal.c:250:36: sparse:     expected unsigned long long [noderef] [usertype] __user *regs
-   arch/loongarch/kernel/signal.c:250:36: sparse:     got unsigned long long [usertype] *
-   arch/loongarch/kernel/signal.c:259:36: sparse: sparse: cast removes address space '__user' of expression
-   arch/loongarch/kernel/signal.c:259:36: sparse: sparse: incorrect type in initializer (different address spaces) @@     expected unsigned long long [noderef] [usertype] __user *regs @@     got unsigned long long [usertype] * @@
-   arch/loongarch/kernel/signal.c:259:36: sparse:     expected unsigned long long [noderef] [usertype] __user *regs
-   arch/loongarch/kernel/signal.c:259:36: sparse:     got unsigned long long [usertype] *
-   arch/loongarch/kernel/signal.c:268:36: sparse: sparse: cast removes address space '__user' of expression
-   arch/loongarch/kernel/signal.c:268:36: sparse: sparse: incorrect type in initializer (different address spaces) @@     expected unsigned long long [noderef] [usertype] __user *regs @@     got unsigned long long [usertype] * @@
-   arch/loongarch/kernel/signal.c:268:36: sparse:     expected unsigned long long [noderef] [usertype] __user *regs
-   arch/loongarch/kernel/signal.c:268:36: sparse:     got unsigned long long [usertype] *
-   arch/loongarch/kernel/signal.c:300:52: sparse: sparse: incorrect type in initializer (different address spaces) @@     expected struct sctx_info [noderef] __user *info @@     got struct sctx_info *addr @@
-   arch/loongarch/kernel/signal.c:300:52: sparse:     expected struct sctx_info [noderef] __user *info
-   arch/loongarch/kernel/signal.c:300:52: sparse:     got struct sctx_info *addr
-   arch/loongarch/kernel/signal.c:301:92: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected struct sctx_info *info @@     got struct sctx_info [noderef] __user *info @@
-   arch/loongarch/kernel/signal.c:301:92: sparse:     expected struct sctx_info *info
-   arch/loongarch/kernel/signal.c:301:92: sparse:     got struct sctx_info [noderef] __user *info
-   arch/loongarch/kernel/signal.c:301:47: sparse: sparse: cast removes address space '__user' of expression
-   arch/loongarch/kernel/signal.c:301:47: sparse: sparse: incorrect type in initializer (different address spaces) @@     expected struct fpu_context [noderef] __user *fpu_ctx @@     got struct fpu_context * @@
-   arch/loongarch/kernel/signal.c:301:47: sparse:     expected struct fpu_context [noderef] __user *fpu_ctx
-   arch/loongarch/kernel/signal.c:301:47: sparse:     got struct fpu_context *
-   arch/loongarch/kernel/signal.c:302:36: sparse: sparse: cast removes address space '__user' of expression
-   arch/loongarch/kernel/signal.c:302:36: sparse: sparse: incorrect type in initializer (different address spaces) @@     expected unsigned long long [noderef] [usertype] __user *regs @@     got unsigned long long [usertype] * @@
-   arch/loongarch/kernel/signal.c:302:36: sparse:     expected unsigned long long [noderef] [usertype] __user *regs
-   arch/loongarch/kernel/signal.c:302:36: sparse:     got unsigned long long [usertype] *
-   arch/loongarch/kernel/signal.c:334:52: sparse: sparse: incorrect type in initializer (different address spaces) @@     expected struct sctx_info [noderef] __user *info @@     got struct sctx_info *addr @@
-   arch/loongarch/kernel/signal.c:334:52: sparse:     expected struct sctx_info [noderef] __user *info
-   arch/loongarch/kernel/signal.c:334:52: sparse:     got struct sctx_info *addr
-   arch/loongarch/kernel/signal.c:335:92: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected struct sctx_info *info @@     got struct sctx_info [noderef] __user *info @@
-   arch/loongarch/kernel/signal.c:335:92: sparse:     expected struct sctx_info *info
-   arch/loongarch/kernel/signal.c:335:92: sparse:     got struct sctx_info [noderef] __user *info
-   arch/loongarch/kernel/signal.c:335:47: sparse: sparse: cast removes address space '__user' of expression
-   arch/loongarch/kernel/signal.c:335:47: sparse: sparse: incorrect type in initializer (different address spaces) @@     expected struct fpu_context [noderef] __user *fpu_ctx @@     got struct fpu_context * @@
-   arch/loongarch/kernel/signal.c:335:47: sparse:     expected struct fpu_context [noderef] __user *fpu_ctx
-   arch/loongarch/kernel/signal.c:335:47: sparse:     got struct fpu_context *
-   arch/loongarch/kernel/signal.c:336:36: sparse: sparse: cast removes address space '__user' of expression
-   arch/loongarch/kernel/signal.c:336:36: sparse: sparse: incorrect type in initializer (different address spaces) @@     expected unsigned long long [noderef] [usertype] __user *regs @@     got unsigned long long [usertype] * @@
-   arch/loongarch/kernel/signal.c:336:36: sparse:     expected unsigned long long [noderef] [usertype] __user *regs
-   arch/loongarch/kernel/signal.c:336:36: sparse:     got unsigned long long [usertype] *
-   arch/loongarch/kernel/signal.c:369:52: sparse: sparse: incorrect type in initializer (different address spaces) @@     expected struct sctx_info [noderef] __user *info @@     got struct sctx_info *addr @@
-   arch/loongarch/kernel/signal.c:369:52: sparse:     expected struct sctx_info [noderef] __user *info
-   arch/loongarch/kernel/signal.c:369:52: sparse:     got struct sctx_info *addr
-   arch/loongarch/kernel/signal.c:370:92: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected struct sctx_info *info @@     got struct sctx_info [noderef] __user *info @@
-   arch/loongarch/kernel/signal.c:370:92: sparse:     expected struct sctx_info *info
-   arch/loongarch/kernel/signal.c:370:92: sparse:     got struct sctx_info [noderef] __user *info
-   arch/loongarch/kernel/signal.c:370:47: sparse: sparse: cast removes address space '__user' of expression
->> arch/loongarch/kernel/signal.c:370:47: sparse: sparse: incorrect type in initializer (different address spaces) @@     expected struct lsx_context [noderef] __user *lsx_ctx @@     got struct lsx_context * @@
-   arch/loongarch/kernel/signal.c:370:47: sparse:     expected struct lsx_context [noderef] __user *lsx_ctx
-   arch/loongarch/kernel/signal.c:370:47: sparse:     got struct lsx_context *
-   arch/loongarch/kernel/signal.c:371:36: sparse: sparse: cast removes address space '__user' of expression
-   arch/loongarch/kernel/signal.c:371:36: sparse: sparse: incorrect type in initializer (different address spaces) @@     expected unsigned long long [noderef] [usertype] __user *regs @@     got unsigned long long [usertype] * @@
-   arch/loongarch/kernel/signal.c:371:36: sparse:     expected unsigned long long [noderef] [usertype] __user *regs
-   arch/loongarch/kernel/signal.c:371:36: sparse:     got unsigned long long [usertype] *
-   arch/loongarch/kernel/signal.c:406:52: sparse: sparse: incorrect type in initializer (different address spaces) @@     expected struct sctx_info [noderef] __user *info @@     got struct sctx_info *addr @@
-   arch/loongarch/kernel/signal.c:406:52: sparse:     expected struct sctx_info [noderef] __user *info
-   arch/loongarch/kernel/signal.c:406:52: sparse:     got struct sctx_info *addr
-   arch/loongarch/kernel/signal.c:407:92: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected struct sctx_info *info @@     got struct sctx_info [noderef] __user *info @@
-   arch/loongarch/kernel/signal.c:407:92: sparse:     expected struct sctx_info *info
-   arch/loongarch/kernel/signal.c:407:92: sparse:     got struct sctx_info [noderef] __user *info
-   arch/loongarch/kernel/signal.c:407:47: sparse: sparse: cast removes address space '__user' of expression
-   arch/loongarch/kernel/signal.c:407:47: sparse: sparse: incorrect type in initializer (different address spaces) @@     expected struct lsx_context [noderef] __user *lsx_ctx @@     got struct lsx_context * @@
-   arch/loongarch/kernel/signal.c:407:47: sparse:     expected struct lsx_context [noderef] __user *lsx_ctx
-   arch/loongarch/kernel/signal.c:407:47: sparse:     got struct lsx_context *
-   arch/loongarch/kernel/signal.c:408:36: sparse: sparse: cast removes address space '__user' of expression
-   arch/loongarch/kernel/signal.c:408:36: sparse: sparse: incorrect type in initializer (different address spaces) @@     expected unsigned long long [noderef] [usertype] __user *regs @@     got unsigned long long [usertype] * @@
-   arch/loongarch/kernel/signal.c:408:36: sparse:     expected unsigned long long [noderef] [usertype] __user *regs
-   arch/loongarch/kernel/signal.c:408:36: sparse:     got unsigned long long [usertype] *
-   arch/loongarch/kernel/signal.c:444:53: sparse: sparse: incorrect type in initializer (different address spaces) @@     expected struct sctx_info [noderef] __user *info @@     got struct sctx_info *addr @@
-   arch/loongarch/kernel/signal.c:444:53: sparse:     expected struct sctx_info [noderef] __user *info
-   arch/loongarch/kernel/signal.c:444:53: sparse:     got struct sctx_info *addr
-   arch/loongarch/kernel/signal.c:446:64: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected struct sctx_info *info @@     got struct sctx_info [noderef] __user *info @@
-   arch/loongarch/kernel/signal.c:446:64: sparse:     expected struct sctx_info *info
-   arch/loongarch/kernel/signal.c:446:64: sparse:     got struct sctx_info [noderef] __user *info
-   arch/loongarch/kernel/signal.c:446:18: sparse: sparse: cast removes address space '__user' of expression
->> arch/loongarch/kernel/signal.c:446:18: sparse: sparse: incorrect type in initializer (different address spaces) @@     expected struct lasx_context [noderef] __user *lasx_ctx @@     got struct lasx_context * @@
-   arch/loongarch/kernel/signal.c:446:18: sparse:     expected struct lasx_context [noderef] __user *lasx_ctx
-   arch/loongarch/kernel/signal.c:446:18: sparse:     got struct lasx_context *
-   arch/loongarch/kernel/signal.c:447:36: sparse: sparse: cast removes address space '__user' of expression
-   arch/loongarch/kernel/signal.c:447:36: sparse: sparse: incorrect type in initializer (different address spaces) @@     expected unsigned long long [noderef] [usertype] __user *regs @@     got unsigned long long [usertype] * @@
-   arch/loongarch/kernel/signal.c:447:36: sparse:     expected unsigned long long [noderef] [usertype] __user *regs
-   arch/loongarch/kernel/signal.c:447:36: sparse:     got unsigned long long [usertype] *
-   arch/loongarch/kernel/signal.c:484:53: sparse: sparse: incorrect type in initializer (different address spaces) @@     expected struct sctx_info [noderef] __user *info @@     got struct sctx_info *addr @@
-   arch/loongarch/kernel/signal.c:484:53: sparse:     expected struct sctx_info [noderef] __user *info
-   arch/loongarch/kernel/signal.c:484:53: sparse:     got struct sctx_info *addr
-   arch/loongarch/kernel/signal.c:486:64: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected struct sctx_info *info @@     got struct sctx_info [noderef] __user *info @@
-   arch/loongarch/kernel/signal.c:486:64: sparse:     expected struct sctx_info *info
-   arch/loongarch/kernel/signal.c:486:64: sparse:     got struct sctx_info [noderef] __user *info
-   arch/loongarch/kernel/signal.c:486:18: sparse: sparse: cast removes address space '__user' of expression
-   arch/loongarch/kernel/signal.c:486:18: sparse: sparse: incorrect type in initializer (different address spaces) @@     expected struct lasx_context [noderef] __user *lasx_ctx @@     got struct lasx_context * @@
-   arch/loongarch/kernel/signal.c:486:18: sparse:     expected struct lasx_context [noderef] __user *lasx_ctx
-   arch/loongarch/kernel/signal.c:486:18: sparse:     got struct lasx_context *
-   arch/loongarch/kernel/signal.c:487:36: sparse: sparse: cast removes address space '__user' of expression
-   arch/loongarch/kernel/signal.c:487:36: sparse: sparse: incorrect type in initializer (different address spaces) @@     expected unsigned long long [noderef] [usertype] __user *regs @@     got unsigned long long [usertype] * @@
-   arch/loongarch/kernel/signal.c:487:36: sparse:     expected unsigned long long [noderef] [usertype] __user *regs
-   arch/loongarch/kernel/signal.c:487:36: sparse:     got unsigned long long [usertype] *
-   arch/loongarch/kernel/signal.c:543:14: sparse: sparse: incorrect type in assignment (different address spaces) @@     expected struct sctx_info [noderef] __user *info @@     got struct sctx_info * @@
-   arch/loongarch/kernel/signal.c:543:14: sparse:     expected struct sctx_info [noderef] __user *info
-   arch/loongarch/kernel/signal.c:543:14: sparse:     got struct sctx_info *
-   arch/loongarch/kernel/signal.c:570:42: sparse: sparse: incorrect type in assignment (different address spaces) @@     expected struct sctx_info *addr @@     got struct sctx_info [noderef] __user *info @@
-   arch/loongarch/kernel/signal.c:570:42: sparse:     expected struct sctx_info *addr
-   arch/loongarch/kernel/signal.c:570:42: sparse:     got struct sctx_info [noderef] __user *info
-   arch/loongarch/kernel/signal.c:577:42: sparse: sparse: incorrect type in assignment (different address spaces) @@     expected struct sctx_info *addr @@     got struct sctx_info [noderef] __user *info @@
-   arch/loongarch/kernel/signal.c:577:42: sparse:     expected struct sctx_info *addr
-   arch/loongarch/kernel/signal.c:577:42: sparse:     got struct sctx_info [noderef] __user *info
-   arch/loongarch/kernel/signal.c:584:43: sparse: sparse: incorrect type in assignment (different address spaces) @@     expected struct sctx_info *addr @@     got struct sctx_info [noderef] __user *info @@
-   arch/loongarch/kernel/signal.c:584:43: sparse:     expected struct sctx_info *addr
-   arch/loongarch/kernel/signal.c:584:43: sparse:     got struct sctx_info [noderef] __user *info
-   arch/loongarch/kernel/signal.c:591:46: sparse: sparse: cast removes address space '__user' of expression
-   arch/loongarch/kernel/signal.c:591:22: sparse: sparse: incorrect type in assignment (different address spaces) @@     expected struct sctx_info [noderef] __user *info @@     got struct sctx_info * @@
-   arch/loongarch/kernel/signal.c:591:22: sparse:     expected struct sctx_info [noderef] __user *info
-   arch/loongarch/kernel/signal.c:591:22: sparse:     got struct sctx_info *
-   arch/loongarch/kernel/signal.c:737:17: sparse: sparse: symbol 'sys_rt_sigreturn' was not declared. Should it be static?
-   arch/loongarch/kernel/signal.c: note: in included file:
-   arch/loongarch/include/asm/fpu.h:72:17: sparse: sparse: undefined identifier '__builtin_loongarch_csrrd_w'
-   arch/loongarch/include/asm/fpu.h:72:17: sparse: sparse: cast from unknown type
-   arch/loongarch/include/asm/fpu.h:72:17: sparse: sparse: cast from unknown type
-   arch/loongarch/include/asm/fpu.h:81:17: sparse: sparse: undefined identifier '__builtin_loongarch_csrrd_w'
-   arch/loongarch/include/asm/fpu.h:81:17: sparse: sparse: cast from unknown type
-   arch/loongarch/include/asm/fpu.h:72:17: sparse: sparse: cast from unknown type
-   arch/loongarch/include/asm/fpu.h:81:17: sparse: sparse: cast from unknown type
-   arch/loongarch/include/asm/fpu.h:72:17: sparse: sparse: cast from unknown type
-   arch/loongarch/include/asm/fpu.h:72:17: sparse: sparse: cast from unknown type
-   arch/loongarch/include/asm/fpu.h:81:17: sparse: sparse: cast from unknown type
-   arch/loongarch/kernel/signal.c: note: in included file (through arch/loongarch/include/asm/cpu-info.h, arch/loongarch/include/asm/processor.h, ...):
-   arch/loongarch/include/asm/loongarch.h:1281:1: sparse: sparse: undefined identifier '__builtin_loongarch_csrrd_w'
-   arch/loongarch/include/asm/loongarch.h:1281:1: sparse: sparse: cast from unknown type
-   arch/loongarch/include/asm/loongarch.h:1281:1: sparse: sparse: undefined identifier '__builtin_loongarch_csrwr_w'
-   arch/loongarch/include/asm/loongarch.h:1281:1: sparse: sparse: cast from unknown type
-   arch/loongarch/kernel/signal.c: note: in included file:
-   arch/loongarch/include/asm/fpu.h:81:17: sparse: sparse: cast from unknown type
-   arch/loongarch/kernel/signal.c: note: in included file (through arch/loongarch/include/asm/cpu-info.h, arch/loongarch/include/asm/processor.h, ...):
-   arch/loongarch/include/asm/loongarch.h:1281:1: sparse: sparse: cast from unknown type
-   arch/loongarch/include/asm/loongarch.h:1281:1: sparse: sparse: cast from unknown type
+Signed-off-by: Roman Smirnov <r.smirnov@omp.ru>
+Reviewed-by: Sergey Shtylyov <s.shtylyov@omp.ru>
+---
+ crypto/algboss.c | 3 ---
+ 1 file changed, 3 deletions(-)
 
-vim +370 arch/loongarch/kernel/signal.c
-
-   330	
-   331	static int protected_restore_fpu_context(struct extctx_layout *extctx)
-   332	{
-   333		int err = 0, sig = 0, tmp __maybe_unused;
-   334		struct sctx_info __user *info = extctx->fpu.addr;
-   335		struct fpu_context __user *fpu_ctx = (struct fpu_context *)get_ctx_through_ctxinfo(info);
- > 336		uint64_t __user *regs	= (uint64_t *)&fpu_ctx->regs;
-   337		uint64_t __user *fcc	= &fpu_ctx->fcc;
-   338		uint32_t __user *fcsr	= &fpu_ctx->fcsr;
-   339	
-   340		err = sig = fcsr_pending(fcsr);
-   341		if (err < 0)
-   342			return err;
-   343	
-   344		while (1) {
-   345			lock_fpu_owner();
-   346			if (is_fpu_owner())
-   347				err = restore_hw_fpu_context(fpu_ctx);
-   348			else
-   349				err = copy_fpu_from_sigcontext(fpu_ctx);
-   350			unlock_fpu_owner();
-   351	
-   352			if (likely(!err))
-   353				break;
-   354			/* Touch the FPU context and try again */
-   355			err = __get_user(tmp, &regs[0]) |
-   356				__get_user(tmp, &regs[31]) |
-   357				__get_user(tmp, fcc) |
-   358				__get_user(tmp, fcsr);
-   359			if (err)
-   360				break;	/* really bad sigcontext */
-   361		}
-   362	
-   363		return err ?: sig;
-   364	}
-   365	
-   366	static int protected_save_lsx_context(struct extctx_layout *extctx)
-   367	{
-   368		int err = 0;
-   369		struct sctx_info __user *info = extctx->lsx.addr;
- > 370		struct lsx_context __user *lsx_ctx = (struct lsx_context *)get_ctx_through_ctxinfo(info);
-   371		uint64_t __user *regs	= (uint64_t *)&lsx_ctx->regs;
-   372		uint64_t __user *fcc	= &lsx_ctx->fcc;
-   373		uint32_t __user *fcsr	= &lsx_ctx->fcsr;
-   374	
-   375		while (1) {
-   376			lock_fpu_owner();
-   377			if (is_lsx_enabled())
-   378				err = save_hw_lsx_context(lsx_ctx);
-   379			else {
-   380				if (is_fpu_owner())
-   381					save_fp(current);
-   382				err = copy_lsx_to_sigcontext(lsx_ctx);
-   383			}
-   384			unlock_fpu_owner();
-   385	
-   386			err |= __put_user(LSX_CTX_MAGIC, &info->magic);
-   387			err |= __put_user(extctx->lsx.size, &info->size);
-   388	
-   389			if (likely(!err))
-   390				break;
-   391			/* Touch the LSX context and try again */
-   392			err = __put_user(0, &regs[0]) |
-   393				__put_user(0, &regs[32*2-1]) |
-   394				__put_user(0, fcc) |
-   395				__put_user(0, fcsr);
-   396			if (err)
-   397				return err;	/* really bad sigcontext */
-   398		}
-   399	
-   400		return err;
-   401	}
-   402	
-   403	static int protected_restore_lsx_context(struct extctx_layout *extctx)
-   404	{
-   405		int err = 0, sig = 0, tmp __maybe_unused;
-   406		struct sctx_info __user *info = extctx->lsx.addr;
-   407		struct lsx_context __user *lsx_ctx = (struct lsx_context *)get_ctx_through_ctxinfo(info);
- > 408		uint64_t __user *regs	= (uint64_t *)&lsx_ctx->regs;
-   409		uint64_t __user *fcc	= &lsx_ctx->fcc;
-   410		uint32_t __user *fcsr	= &lsx_ctx->fcsr;
-   411	
-   412		err = sig = fcsr_pending(fcsr);
-   413		if (err < 0)
-   414			return err;
-   415	
-   416		while (1) {
-   417			lock_fpu_owner();
-   418			if (is_lsx_enabled())
-   419				err = restore_hw_lsx_context(lsx_ctx);
-   420			else {
-   421				err = copy_lsx_from_sigcontext(lsx_ctx);
-   422				if (is_fpu_owner())
-   423					restore_fp(current);
-   424			}
-   425			unlock_fpu_owner();
-   426	
-   427			if (likely(!err))
-   428				break;
-   429			/* Touch the LSX context and try again */
-   430			err = __get_user(tmp, &regs[0]) |
-   431				__get_user(tmp, &regs[32*2-1]) |
-   432				__get_user(tmp, fcc) |
-   433				__get_user(tmp, fcsr);
-   434			if (err)
-   435				break;	/* really bad sigcontext */
-   436		}
-   437	
-   438		return err ?: sig;
-   439	}
-   440	
-   441	static int protected_save_lasx_context(struct extctx_layout *extctx)
-   442	{
-   443		int err = 0;
-   444		struct sctx_info __user *info = extctx->lasx.addr;
-   445		struct lasx_context __user *lasx_ctx =
- > 446			(struct lasx_context *)get_ctx_through_ctxinfo(info);
-   447		uint64_t __user *regs	= (uint64_t *)&lasx_ctx->regs;
-   448		uint64_t __user *fcc	= &lasx_ctx->fcc;
-   449		uint32_t __user *fcsr	= &lasx_ctx->fcsr;
-   450	
-   451		while (1) {
-   452			lock_fpu_owner();
-   453			if (is_lasx_enabled())
-   454				err = save_hw_lasx_context(lasx_ctx);
-   455			else {
-   456				if (is_lsx_enabled())
-   457					save_lsx(current);
-   458				else if (is_fpu_owner())
-   459					save_fp(current);
-   460				err = copy_lasx_to_sigcontext(lasx_ctx);
-   461			}
-   462			unlock_fpu_owner();
-   463	
-   464			err |= __put_user(LASX_CTX_MAGIC, &info->magic);
-   465			err |= __put_user(extctx->lasx.size, &info->size);
-   466	
-   467			if (likely(!err))
-   468				break;
-   469			/* Touch the LASX context and try again */
-   470			err = __put_user(0, &regs[0]) |
-   471				__put_user(0, &regs[32*4-1]) |
-   472				__put_user(0, fcc) |
-   473				__put_user(0, fcsr);
-   474			if (err)
-   475				return err;	/* really bad sigcontext */
-   476		}
-   477	
-   478		return err;
-   479	}
-   480	
-
+diff --git a/crypto/algboss.c b/crypto/algboss.c
+index 0de1e6697949..1aa5f306998a 100644
+--- a/crypto/algboss.c
++++ b/crypto/algboss.c
+@@ -138,9 +138,6 @@ static int cryptomgr_schedule_probe(struct crypto_larval *larval)
+ 			goto err_free_param;
+ 	}
+ 
+-	if (!i)
+-		goto err_free_param;
+-
+ 	param->tb[i + 1] = NULL;
+ 
+ 	param->type.attr.rta_len = sizeof(param->type);
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.34.1
+
