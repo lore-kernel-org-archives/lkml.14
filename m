@@ -1,139 +1,122 @@
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2067.outbound.protection.outlook.com [40.107.220.67])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED8C0446A1;
-	Mon,  1 Apr 2024 15:02:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.220.67
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711983749; cv=fail; b=UU3vGFC/W7yz2MmreAvlM53JXIo+yY791rrCcrsKJLpBdTmXLZ0WnU6gxdc/c4DfPanfUm+X96Kp4dXQR39nJk/WbIgcueG9DYbp5wzmx0HanLjmugDpAipo5/RxTlohq6K7Skowjr1fHB/vnZWgsLFVqOtVWXFQ9RT5rAqcXdI=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711983749; c=relaxed/simple;
-	bh=EZpogD/eoxUMLJyn5WFz78yyy+XeY1RWiHMP2Mkxd2g=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=SQmiFrcnstm4i/5mMMcst+QJzCLi1TfHiqFpeTjBj1XOgknsYSQTo317qvRH6vW471B3/Jw78t1+yY3GB/Ext7EhNJXpMWFHhTS8T8RmtOSjfJGn1OsEOBv5OoZjkuqbK8pMhB424Wvv9K99dFCHnYpIxp5qCr72+rByag3OKQE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=kAXEwxg9; arc=fail smtp.client-ip=40.107.220.67
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC63246525;
+	Mon,  1 Apr 2024 15:02:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1711983756; cv=none; b=lTrDI/Zg72CYgbVkBubnzrnKACb07/1dLdi2UmSw8OJY/CP/MAZJ8L+lAUy43s4WeImgDnhTGH2RJ1uq871NB66KPcDoU9/+BdmRzQmACsQ6J2tNW/3sxQL1KbyY+AideDzPByGGaZCYNCw5lo9v6vzqRKuN6AB9oFCSRIsOTjU=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1711983756; c=relaxed/simple;
+	bh=XHGJn6TzTehov6tjSa7o3b57YxPm8TU+Uf8wPfAwNKg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=po57hWaF1GDAzpH2V1uAkHPUVTm3O5Rjt+LQkS3ASOGKueCjfCoGXHFJjFO7UMzCk6fqFVeoFy4/hyueUJvUoCaVCpWsLmVKJCDOnXlwW4Or3Fj+KKeOLJ38SyWiOsF0CtMKWlDUQGZS8AYlnz1uST6HVc1mSs6CANo03VgdrCg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=knq7Zgm6; arc=none smtp.client-ip=192.198.163.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="kAXEwxg9"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ADfnp2JZqI52Y7/bnAgGyj7deb+u2Dh/TVFz390dGafdQAzCzzz9YS/pFByeux9APcN21WdRNtrEEdeI7ROdqzmi1Xj/qajx/YwvrZedy9z8uBJjAL806I9ArtHvp7IcnryR7DfY35tq8txnoUD52NKrT3Kb1dwktlT4rKH3Cx3W7iCcI4Bi8hoHNT6Y+1X4OWHetvJbWJQ7CqHeyeNhEHvQS8wypIhKHOIEDwFkCHTNHSM7W3rH9Fi8iDs+umYbw8h7MTJov/doGkFxtKcDwVWnpsleMe7qMfwNDoWIfuYwcWd+so+1piJZNbvG2HDsnUDe3jEW0xoT/SMEB52xAg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=lDvYaaUMBBjACilIuCAz9pXoEFE+UkUyz3Pi+d3wmww=;
- b=EUn8JQ2J+6ZeGsT0I6JQFxnxs2fHOT9QmzK/8p8U+Sg9H0MkJ1T9TqIAHZRNHpHXRtKuZs7gSDgKBBlQJ9RlX3ZV6le50mBqr4JQ8JIS19BeQgZTeHud8m75RU5GRhl6NK72UJPqZdyrep3QQk4AHpFdMwTjg9foaW5umBUDTwHibF9Fub47tSlG2ERxMvAHFFZNhbmJtRyJoP1KUVD6gF9XbgGOya6s4Za8yqmf0DMVl1dPm0yrMntTwYXTgXEm03PLBTIKxc0Gy6CnFNWQA03+gMnrT8j7nHKWqLNotzMola2nJWKd+1Qg0VOFS0/C9YQp1YUaKuIV4yohhXxwAA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.117.161) smtp.rcpttodomain=kernel.org smtp.mailfrom=nvidia.com;
- dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=lDvYaaUMBBjACilIuCAz9pXoEFE+UkUyz3Pi+d3wmww=;
- b=kAXEwxg9BgHBcc+QW12Zl2+7CSTgPAjoNwI/tfTc9qs0bzbFJr/5f8mrexhB5vrqpQfvjZx7uV+atkhABW56A8UorU6RsbgtR7Qqj6w24axzw5aQEZu5dSf/yJ063OuI0qPY6Z405uQ6zeR3xsEnkgXuZjaRoS3UmrgD8ajc5lW7h5i2B6WFWlwq99uvH1ueH8/+tHl6XyeJ9CH3N0Z9T5l/XKEP0WBs/pabXC0jusmnJ2SQKfg2hua/qOvBmcPpZFWFXnDLFGPh3gg9Bi8KF+ZPsTFVrcMqkQ+Od4lRFNZK9EvV+tfYXSqz0JzFXxj/uiDe5KRARkHgtic0RImRIA==
-Received: from MW4PR04CA0328.namprd04.prod.outlook.com (2603:10b6:303:82::33)
- by SA1PR12MB8599.namprd12.prod.outlook.com (2603:10b6:806:254::7) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.46; Mon, 1 Apr
- 2024 15:02:21 +0000
-Received: from CO1PEPF000044F0.namprd05.prod.outlook.com
- (2603:10b6:303:82:cafe::70) by MW4PR04CA0328.outlook.office365.com
- (2603:10b6:303:82::33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.46 via Frontend
- Transport; Mon, 1 Apr 2024 15:02:19 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.161)
- smtp.mailfrom=nvidia.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=nvidia.com;
-Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.117.161 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.117.161; helo=mail.nvidia.com; pr=C
-Received: from mail.nvidia.com (216.228.117.161) by
- CO1PEPF000044F0.mail.protection.outlook.com (10.167.241.70) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.7452.22 via Frontend Transport; Mon, 1 Apr 2024 15:02:19 +0000
-Received: from rnnvmail203.nvidia.com (10.129.68.9) by mail.nvidia.com
- (10.129.200.67) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.41; Mon, 1 Apr 2024
- 08:01:23 -0700
-Received: from rnnvmail203.nvidia.com (10.129.68.9) by rnnvmail203.nvidia.com
- (10.129.68.9) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1258.12; Mon, 1 Apr
- 2024 08:01:23 -0700
-Received: from vidyas-desktop.nvidia.com (10.127.8.9) by mail.nvidia.com
- (10.129.68.9) with Microsoft SMTP Server id 15.2.1258.12 via Frontend
- Transport; Mon, 1 Apr 2024 08:01:19 -0700
-From: Vidya Sagar <vidyas@nvidia.com>
-To: <lpieralisi@kernel.org>, <kw@linux.com>, <robh@kernel.org>,
-	<bhelgaas@google.com>
-CC: <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
-	<linux-pci@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <kthota@nvidia.com>,
-	<mmaddireddy@nvidia.com>, <vidyas@nvidia.com>, <sagar.tv@gmail.com>
-Subject: [PATCH V1] PCI: tegra194: Fix probe path for Endpoint mode
-Date: Mon, 1 Apr 2024 20:31:16 +0530
-Message-ID: <20240401150116.298069-1-vidyas@nvidia.com>
-X-Mailer: git-send-email 2.25.1
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="knq7Zgm6"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1711983754; x=1743519754;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=XHGJn6TzTehov6tjSa7o3b57YxPm8TU+Uf8wPfAwNKg=;
+  b=knq7Zgm6TIlPv7KU2UTBA3n8o/LogkuYLIP9buO77UPFPuxK/qro8x7z
+   MqMG/TTR51qoFZpo/cSZUOfaBdJW+7BMXimnG7MzBCdJHFCh3Kh8lw1Q3
+   AkGnkCuA7v3pPMYXOqovsr0bojboBAcjePSlujmqYPpQczhmQqqk/4ui8
+   nPEzBrDXBfbYXG44KUgZeBqzMDhkFx3H8hEH+ZMCuRvis9pJac5LyHFnv
+   uECdJkDhiIqg6Hii0FGiuubzYFvxE5m83SgRtHw7Df/xJXBVLeY++1gJY
+   AZMjxkijM0mk1DhBXYe9ERSQjL/A144YplCEcTiVYwb+WtI/Byov2YS2l
+   Q==;
+X-CSE-ConnectionGUID: Kg1PyfFOTgeC7bqJxynZxw==
+X-CSE-MsgGUID: rFfrU9gjRCW6SzmzpL3c3A==
+X-IronPort-AV: E=McAfee;i="6600,9927,11031"; a="7302970"
+X-IronPort-AV: E=Sophos;i="6.07,172,1708416000"; 
+   d="scan'208";a="7302970"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Apr 2024 08:02:33 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,172,1708416000"; 
+   d="scan'208";a="22428863"
+Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.165])
+  by orviesa005.jf.intel.com with ESMTP; 01 Apr 2024 08:02:30 -0700
+Date: Mon, 1 Apr 2024 22:57:40 +0800
+From: Xu Yilun <yilun.xu@linux.intel.com>
+To: Peter Colberg <peter.colberg@intel.com>
+Cc: Wu Hao <hao.wu@intel.com>, Tom Rix <trix@redhat.com>,
+	Moritz Fischer <mdf@kernel.org>, Xu Yilun <yilun.xu@intel.com>,
+	linux-fpga@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Russ Weight <russ.weight@linux.dev>,
+	Marco Pagani <marpagan@redhat.com>,
+	Matthew Gerlach <matthew.gerlach@linux.intel.com>
+Subject: Re: [PATCH] fpga: dfl: afu: remove unused member pdata from struct
+ dfl_afu
+Message-ID: <ZgrLZCl1nPDMcq/i@yilunxu-OptiPlex-7050>
+References: <20240328235417.7219-1-peter.colberg@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-NVConfidentiality: public
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-NV-OnPremToCloud: ExternallySecured
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CO1PEPF000044F0:EE_|SA1PR12MB8599:EE_
-X-MS-Office365-Filtering-Correlation-Id: 875855e6-253a-4452-fa3a-08dc525cba34
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	GC0di54ZIqPnpU6D/+b0qSjsp+YiTAY/cEWbmmcubKUyweWFr+dduR9f6NwK3v9asDjlQEA3tDKlA9N2IyaKcZisM40L/+wyBRZR0/auLJYn4NqymizEGB/+xJ4IpCSIor4ZJMftG17wVR0owlvma+Cd8xLglfYuLAMc9ldm0RwqBdSg7OcBd3sGIrdzZi6E28B+zIrZ3xWIDF3/1LzSpWH7fDEJMGO2TcffehtkDdsiYmb3jO3vOIsfCqBkmNJoMH0WANkv7iZiFnfR3tuj+TRR+nGV2S0ahRzoobvTqrh6a37kO+p0tKVFKAj5y/XvXcuFFtN0L2ixPLFdoTgpaSvQQKICx7u9q+dTVgdGRinzPd4fUOuT2y9TrYM6ONDXaUjz4VyeNhTEC8nycE/kaKxEFctgAszYiu4EToucBazEH/2OyluTSpsdfTkjVM/OtxDBxfCMqV7CQ0dZFPOHFrEw1tXIwFmm4abR1xHO9+14Q80B8tF3JXe8Ab53vNpUrSrHPln4DkI5DHpx2CanyBh+LHZJvdnY21KUWpvD4VHTyMeh2czmexRa93+KH3K525LkW9PL2AFR2hYimzscgDMRTLTGmnq4p9YdueWg50tXVIu/I0P0hR2EuwqiBQlN0O09WNPu811N4ptvDZrs7R80CtMRZsvM7ZL54Ry05edf5U38dFxNKsCyYXkN3pSYKzEw1FF9bvi+/vJ2AQLG5J5u/utQtkucrDaYhyESnGvJfAI860hNcmqtwou/AUFG
-X-Forefront-Antispam-Report:
-	CIP:216.228.117.161;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge2.nvidia.com;CAT:NONE;SFS:(13230031)(376005)(36860700004)(82310400014)(1800799015);DIR:OUT;SFP:1101;
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Apr 2024 15:02:19.3333
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 875855e6-253a-4452-fa3a-08dc525cba34
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.161];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	CO1PEPF000044F0.namprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR12MB8599
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240328235417.7219-1-peter.colberg@intel.com>
 
-Tegra194 PCIe probe path is taking failure path in success case for
-Endpoint mode. Return success from the switch case instead of going
-into the failure path.
+On Thu, Mar 28, 2024 at 07:54:17PM -0400, Peter Colberg wrote:
+> The member pdata was added to struct dfl_afu in commit 857a26222ff7
+> ("fpga: dfl: afu: add afu sub feature support") and is set in function
+> afu_dev_init() but otherwise never used.
 
-Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
----
- drivers/pci/controller/dwc/pcie-tegra194.c | 3 +++
- 1 file changed, 3 insertions(+)
+Could you also help check if dfl_fme has the same issue?
 
-diff --git a/drivers/pci/controller/dwc/pcie-tegra194.c b/drivers/pci/controller/dwc/pcie-tegra194.c
-index 4bba31502ce1..1a8178dc899a 100644
---- a/drivers/pci/controller/dwc/pcie-tegra194.c
-+++ b/drivers/pci/controller/dwc/pcie-tegra194.c
-@@ -2273,11 +2273,14 @@ static int tegra_pcie_dw_probe(struct platform_device *pdev)
- 		ret = tegra_pcie_config_ep(pcie, pdev);
- 		if (ret < 0)
- 			goto fail;
-+		else
-+			return 0;
- 		break;
- 
- 	default:
- 		dev_err(dev, "Invalid PCIe device type %d\n",
- 			pcie->of_data->mode);
-+		ret = -EINVAL;
- 	}
- 
- fail:
--- 
-2.25.1
+Thanks,
+Yilun
 
+> 
+> Signed-off-by: Peter Colberg <peter.colberg@intel.com>
+> Reviewed-by: Matthew Gerlach <matthew.gerlach@linux.intel.com>
+> ---
+>  drivers/fpga/dfl-afu-main.c | 2 --
+>  drivers/fpga/dfl-afu.h      | 3 ---
+>  2 files changed, 5 deletions(-)
+> 
+> diff --git a/drivers/fpga/dfl-afu-main.c b/drivers/fpga/dfl-afu-main.c
+> index c0a75ca360d6..6b97c073849e 100644
+> --- a/drivers/fpga/dfl-afu-main.c
+> +++ b/drivers/fpga/dfl-afu-main.c
+> @@ -858,8 +858,6 @@ static int afu_dev_init(struct platform_device *pdev)
+>  	if (!afu)
+>  		return -ENOMEM;
+>  
+> -	afu->pdata = pdata;
+> -
+>  	mutex_lock(&pdata->lock);
+>  	dfl_fpga_pdata_set_private(pdata, afu);
+>  	afu_mmio_region_init(pdata);
+> diff --git a/drivers/fpga/dfl-afu.h b/drivers/fpga/dfl-afu.h
+> index 674e9772f0ea..7bef3e300aa2 100644
+> --- a/drivers/fpga/dfl-afu.h
+> +++ b/drivers/fpga/dfl-afu.h
+> @@ -67,7 +67,6 @@ struct dfl_afu_dma_region {
+>   * @regions: the mmio region linked list of this afu feature device.
+>   * @dma_regions: root of dma regions rb tree.
+>   * @num_umsgs: num of umsgs.
+> - * @pdata: afu platform device's pdata.
+>   */
+>  struct dfl_afu {
+>  	u64 region_cur_offset;
+> @@ -75,8 +74,6 @@ struct dfl_afu {
+>  	u8 num_umsgs;
+>  	struct list_head regions;
+>  	struct rb_root dma_regions;
+> -
+> -	struct dfl_feature_platform_data *pdata;
+>  };
+>  
+>  /* hold pdata->lock when call __afu_port_enable/disable */
+> -- 
+> 2.44.0
+> 
+> 
