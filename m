@@ -1,62 +1,62 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01A858BF0;
-	Mon,  1 Apr 2024 08:47:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D88F7FBE9;
+	Mon,  1 Apr 2024 08:47:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711961259; cv=none; b=fPIUOgxcMRcMydEtO1aaro0Qc9C3DI3lx2PRAFAjt9nHxKX/S6zFw9rCgcS4Rm4MM3Pe4m9f1PcnZJiwDfHr98cfrqa0JLuIpgXq7G+NddPR3bHL88qryrwuUhJnUrHFf1pWJ/HOh/fT59UohUn8qe9+bXPW6TqH+p4qUusxgyQ=
+	t=1711961260; cv=none; b=hXHjvz5V8VGDlP0/biyGC0UaD43sk28VFJ7z0Bi9IGd9dbNHQBGYlHZgb5jkYEd3SeknAnIdi+Kw/z0go4w4Dgn+T00Zrts64AgYxeI2hHbYGZXMAV8pCJ5DKxK4lii5xSvdb3AS4WLREEUwUSurOA9Uzoe9Alt2LBz/GAxfRKQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711961259; c=relaxed/simple;
-	bh=6vhjG1prBgD1BUtFbazTz3a0+5bx/I33FVhvfcrjka8=;
+	s=arc-20240116; t=1711961260; c=relaxed/simple;
+	bh=KbICzgljB7ACLdZ5wKi9SqnmBz6H7yenJrVKn7kAIq0=;
 	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=tSZ8baJdCfRm71ft3dFjncMeQll2ovBRsLPvw//xuDnMhC5CkaHEMIIPY/ZQzWVXjA44aI+D4A391OcSWYAFVFWkBC+HA8hQhrEyCO48LMNBPD5aalHFnSWpnNYet3p2Z57HpS606JuOQG0v3XOnenBCMb1QKTCO1KwKcUvrkwU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=R+5tc7Lc; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=EIpGP2Ti; arc=none smtp.client-ip=193.142.43.55
+	 Message-ID:Content-Type; b=JAI4Qc8De1E8Y5fQBFTRhO2kcZIHprvtFgXp6gRXeR2TQ2T6q1CPh4rbTzhTY5AyeP+08ZkPlQp0cIsdMelT6P9UnMs/qP8BYmRhFOlTpnwimASvjU3aucNgMKGWj9zza7F/wHAmicniOduuH4fZ970pPCBWczTbslHeiTHkfTc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=ThjDbkjS; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=e/LpfFgN; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="R+5tc7Lc";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="EIpGP2Ti"
-Date: Mon, 01 Apr 2024 08:47:28 -0000
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ThjDbkjS";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="e/LpfFgN"
+Date: Mon, 01 Apr 2024 08:47:30 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1711961249;
+	s=2020; t=1711961251;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=1nVAKrG2DTFtsm0sFhNd+3eKvN95UV47L0lhR7edu6s=;
-	b=R+5tc7LcpyvzhnK5qgQDrFY+pnsUlLj28pn1kIvW0Tr3g5JhFhmyadPOoahGg1WvZjydae
-	PRMwgWaUFOsksLqaadufM9tE8KBDCNRhddbqDQ9R5voRM2LYMj15wlP5UqXZgJK+NqlWlB
-	rvQf0KEJzu8n53r+mymPH0wXVkYcWUk3Xcx4fy3L+Q4NPZTob+bIIa3iQnF++dJ4ISpCJm
-	1R22djLpSP7cnJfHr6M5rXNRVuqGoHaCuGkqJOfSUMRDa/MsEgByZ3hcRxL/5jRc/tKa5Y
-	3wsUX3HbL8CyKECJBSAk9MpOVvg3kuW3LR5c99GoRMr3zywHRtMYzklZ11HgMg==
+	bh=3nzj11H7LrsCH4joX4/FtsyxIS6CeGswBl9Obe2Iex0=;
+	b=ThjDbkjSyNLcDrrhmcxWTcK7qGL+kDsIqVbpC/tjaRhWQleLZWekfBNjfE9asGLjkGYB4o
+	IRYXMln+q22/OnDsYgNQDXbMsHHLPdIfduBsf7A8XWpJtxvMSjGLkWN6TQSfJj/rgOuPKg
+	pFiHXchQbB4Nb6EBJ8wP6P6hPtOPUBt6ZLasi1NZbgFmhZslW4nO2U9GVFxCNwR8gjiUym
+	Bpoo5cf952KMr+IOv6ZCj+PtTjD7KBWbf4dyLHwC4ZxMSJ+K6OW9i7o7w96eAUEG+G0PQl
+	PPDeaVjRZmegLYWWXrOdD96bosjfBWfUfZ1mJShzMmy36RI9wXbc8JhYwxRRTw==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1711961249;
+	s=2020e; t=1711961251;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=1nVAKrG2DTFtsm0sFhNd+3eKvN95UV47L0lhR7edu6s=;
-	b=EIpGP2TiMyIuJ0jdRnumnNpIyla9le3M9kUrbyNXLH0VNZ5nTKHasPCD/Q9bQjGlbP0JlH
-	pKOewHlKy7u5WzDA==
+	bh=3nzj11H7LrsCH4joX4/FtsyxIS6CeGswBl9Obe2Iex0=;
+	b=e/LpfFgNuHCOxwkc4ZMXwqXLW3FejLzd2gPmuVWww9DHDnLcIuBkeIFaljA9yv1YAHZwwL
+	LgZzvx0oLqPeDUBw==
 From: "tip-bot2 for Randy Dunlap" <tip-bot2@linutronix.de>
 Sender: tip-bot2@linutronix.de
 Reply-to: linux-kernel@vger.kernel.org
 To: linux-tip-commits@vger.kernel.org
-Subject: [tip: timers/urgent] tick/sched: Fix various kernel-doc warnings
+Subject: [tip: timers/urgent] time/timecounter: Fix inline documentation
 Cc: Randy Dunlap <rdunlap@infradead.org>, Ingo Molnar <mingo@kernel.org>,
  x86@kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20240331172652.14086-5-rdunlap@infradead.org>
-References: <20240331172652.14086-5-rdunlap@infradead.org>
+In-Reply-To: <20240331172652.14086-2-rdunlap@infradead.org>
+References: <20240331172652.14086-2-rdunlap@infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <171196124826.10875.6261994448383066262.tip-bot2@tip-bot2>
+Message-ID: <171196125025.10875.6672650842976422044.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2@linutronix.de>
 Robot-Unsubscribe:
  Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -66,120 +66,84 @@ Content-Transfer-Encoding: 7bit
 
 The following commit has been merged into the timers/urgent branch of tip:
 
-Commit-ID:     f29536bf1721802d2ebdc7893ed2991d4da0a4b6
-Gitweb:        https://git.kernel.org/tip/f29536bf1721802d2ebdc7893ed2991d4da0a4b6
+Commit-ID:     aa7cbefe65e455178c33eca308349e687d262ea7
+Gitweb:        https://git.kernel.org/tip/aa7cbefe65e455178c33eca308349e687d262ea7
 Author:        Randy Dunlap <rdunlap@infradead.org>
-AuthorDate:    Sun, 31 Mar 2024 10:26:50 -07:00
+AuthorDate:    Sun, 31 Mar 2024 10:26:47 -07:00
 Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Mon, 01 Apr 2024 10:36:35 +02:00
+CommitterDate: Mon, 01 Apr 2024 10:36:34 +02:00
 
-tick/sched: Fix various kernel-doc warnings
+time/timecounter: Fix inline documentation
 
-Fix a slew of kernel-doc warnings in tick-sched.c:
+Fix kernel-doc warnings, text punctuation, and a kernel-doc marker
+(change '%' to '&' to indicate a struct):
 
-  tick-sched.c:650: warning: Function parameter or struct member 'now' not described in 'tick_nohz_update_jiffies'
-  tick-sched.c:741: warning: No description found for return value of 'get_cpu_idle_time_us'
-  tick-sched.c:767: warning: No description found for return value of 'get_cpu_iowait_time_us'
-  tick-sched.c:1210: warning: No description found for return value of 'tick_nohz_idle_got_tick'
-  tick-sched.c:1228: warning: No description found for return value of 'tick_nohz_get_next_hrtimer'
-  tick-sched.c:1243: warning: No description found for return value of 'tick_nohz_get_sleep_length'
-  tick-sched.c:1282: warning: Function parameter or struct member 'cpu' not described in 'tick_nohz_get_idle_calls_cpu'
-  tick-sched.c:1282: warning: No description found for return value of 'tick_nohz_get_idle_calls_cpu'
-  tick-sched.c:1294: warning: No description found for return value of 'tick_nohz_get_idle_calls'
-  tick-sched.c:1577: warning: Function parameter or struct member 'hrtimer' not described in 'tick_setup_sched_timer'
-  tick-sched.c:1577: warning: Excess function parameter 'mode' description in 'tick_setup_sched_timer'
+  timecounter.h:72: warning: No description found for return value of 'cyclecounter_cyc2ns'
+  timecounter.h:85: warning: Function parameter or member 'tc' not described in 'timecounter_adjtime'
+  timecounter.h:111: warning: No description found for return value of 'timecounter_read'
+  timecounter.h:128: warning: No description found for return value of 'timecounter_cyc2time'
 
 Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Link: https://lore.kernel.org/r/20240331172652.14086-5-rdunlap@infradead.org
+Link: https://lore.kernel.org/r/20240331172652.14086-2-rdunlap@infradead.org
 ---
- kernel/time/tick-sched.c | 18 +++++++++++++++---
- 1 file changed, 15 insertions(+), 3 deletions(-)
+ include/linux/timecounter.h | 11 +++++++++--
+ 1 file changed, 9 insertions(+), 2 deletions(-)
 
-diff --git a/kernel/time/tick-sched.c b/kernel/time/tick-sched.c
-index 269e215..1331216 100644
---- a/kernel/time/tick-sched.c
-+++ b/kernel/time/tick-sched.c
-@@ -697,6 +697,7 @@ bool tick_nohz_tick_stopped_cpu(int cpu)
+diff --git a/include/linux/timecounter.h b/include/linux/timecounter.h
+index c6540ce..0982d1d 100644
+--- a/include/linux/timecounter.h
++++ b/include/linux/timecounter.h
+@@ -22,7 +22,7 @@
+  *
+  * @read:		returns the current cycle value
+  * @mask:		bitmask for two's complement
+- *			subtraction of non 64 bit counters,
++ *			subtraction of non-64-bit counters,
+  *			see CYCLECOUNTER_MASK() helper macro
+  * @mult:		cycle to nanosecond multiplier
+  * @shift:		cycle to nanosecond divisor (power of two)
+@@ -35,7 +35,7 @@ struct cyclecounter {
+ };
  
  /**
-  * tick_nohz_update_jiffies - update jiffies when idle was interrupted
-+ * @now: current ktime_t
-  *
-  * Called from interrupt entry when the CPU was idle
-  *
-@@ -794,7 +795,7 @@ static u64 get_cpu_sleep_time_us(struct tick_sched *ts, ktime_t *sleeptime,
-  * This time is measured via accounting rather than sampling,
-  * and is as accurate as ktime_get() is.
-  *
-- * This function returns -1 if NOHZ is not enabled.
-+ * Return: -1 if NOHZ is not enabled, else total idle time of the @cpu
+- * struct timecounter - layer above a %struct cyclecounter which counts nanoseconds
++ * struct timecounter - layer above a &struct cyclecounter which counts nanoseconds
+  *	Contains the state needed by timecounter_read() to detect
+  *	cycle counter wrap around. Initialize with
+  *	timecounter_init(). Also used to convert cycle counts into the
+@@ -66,6 +66,8 @@ struct timecounter {
+  * @cycles:	Cycles
+  * @mask:	bit mask for maintaining the 'frac' field
+  * @frac:	pointer to storage for the fractional nanoseconds.
++ *
++ * Returns: cycle counter cycles converted to nanoseconds
   */
- u64 get_cpu_idle_time_us(int cpu, u64 *last_update_time)
- {
-@@ -820,7 +821,7 @@ EXPORT_SYMBOL_GPL(get_cpu_idle_time_us);
-  * This time is measured via accounting rather than sampling,
-  * and is as accurate as ktime_get() is.
-  *
-- * This function returns -1 if NOHZ is not enabled.
-+ * Return: -1 if NOHZ is not enabled, else total iowait time of @cpu
-  */
- u64 get_cpu_iowait_time_us(int cpu, u64 *last_update_time)
- {
-@@ -1287,6 +1288,8 @@ void tick_nohz_irq_exit(void)
+ static inline u64 cyclecounter_cyc2ns(const struct cyclecounter *cc,
+ 				      u64 cycles, u64 mask, u64 *frac)
+@@ -79,6 +81,7 @@ static inline u64 cyclecounter_cyc2ns(const struct cyclecounter *cc,
  
  /**
-  * tick_nohz_idle_got_tick - Check whether or not the tick handler has run
-+ *
-+ * Return: %true if the tick handler has run, otherwise %false
+  * timecounter_adjtime - Shifts the time of the clock.
++ * @tc:		The &struct timecounter to adjust
+  * @delta:	Desired change in nanoseconds.
   */
- bool tick_nohz_idle_got_tick(void)
- {
-@@ -1305,6 +1308,8 @@ bool tick_nohz_idle_got_tick(void)
-  * stopped, it returns the next hrtimer.
+ static inline void timecounter_adjtime(struct timecounter *tc, s64 delta)
+@@ -107,6 +110,8 @@ extern void timecounter_init(struct timecounter *tc,
   *
-  * Called from power state control code with interrupts disabled
+  * In other words, keeps track of time since the same epoch as
+  * the function which generated the initial time stamp.
 + *
-+ * Return: the next expiration time
++ * Returns: nanoseconds since the initial time stamp
   */
- ktime_t tick_nohz_get_next_hrtimer(void)
- {
-@@ -1320,6 +1325,8 @@ ktime_t tick_nohz_get_next_hrtimer(void)
-  * The return value of this function and/or the value returned by it through the
-  * @delta_next pointer can be negative which must be taken into account by its
-  * callers.
-+ *
-+ * Return: the expected length of the current sleep
-  */
- ktime_t tick_nohz_get_sleep_length(ktime_t *delta_next)
- {
-@@ -1357,8 +1364,11 @@ ktime_t tick_nohz_get_sleep_length(ktime_t *delta_next)
- /**
-  * tick_nohz_get_idle_calls_cpu - return the current idle calls counter value
-  * for a particular CPU.
-+ * @cpu: target CPU number
-  *
-  * Called from the schedutil frequency scaling governor in scheduler context.
-+ *
-+ * Return: the current idle calls counter value for @cpu
-  */
- unsigned long tick_nohz_get_idle_calls_cpu(int cpu)
- {
-@@ -1371,6 +1381,8 @@ unsigned long tick_nohz_get_idle_calls_cpu(int cpu)
-  * tick_nohz_get_idle_calls - return the current idle calls counter value
-  *
-  * Called from the schedutil frequency scaling governor in scheduler context.
-+ *
-+ * Return: the current idle calls counter value for the current CPU
-  */
- unsigned long tick_nohz_get_idle_calls(void)
- {
-@@ -1559,7 +1571,7 @@ early_param("skew_tick", skew_tick);
+ extern u64 timecounter_read(struct timecounter *tc);
  
- /**
-  * tick_setup_sched_timer - setup the tick emulation timer
-- * @mode: tick_nohz_mode to setup for
-+ * @hrtimer: whether to use the hrtimer or not
+@@ -123,6 +128,8 @@ extern u64 timecounter_read(struct timecounter *tc);
+  *
+  * This allows conversion of cycle counter values which were generated
+  * in the past.
++ *
++ * Returns: cycle counter converted to nanoseconds since the initial time stamp
   */
- void tick_setup_sched_timer(bool hrtimer)
- {
+ extern u64 timecounter_cyc2time(const struct timecounter *tc,
+ 				u64 cycle_tstamp);
