@@ -1,79 +1,61 @@
-Received: from mail78-58.sinamail.sina.com.cn (mail78-58.sinamail.sina.com.cn [219.142.78.58])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EB568F6F
-	for <linux-kernel@vger.kernel.org>; Mon,  1 Apr 2024 22:44:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=219.142.78.58
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E19DB51016;
+	Mon,  1 Apr 2024 22:44:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712011485; cv=none; b=PoqpI5jWgL/uvKv59nW7xjZMTOmOJ72m5KlttY8xcqDcvqJ4y1XJZo+deJpC9dcL1mfgOCNwDLGozC/E++oUWbZPGzt2EjoFsg+ZzHySaeQBsSlEAxXCrnt8CZ4CrvY7blBtYH9/CCEd06RP58C0GsHFlVbJ001ph7k+hzqxyqM=
+	t=1712011490; cv=none; b=b8LCNp6UbJOdZL8peyYfHS0G9JZD06XcUxRbujLOHfWsx2JMvxNej3waxS3AzOjQd4GMmaFsF4fTkCfcOYs78o90knliM0twhZCKAv3gc71n8GBkdsTyXsFChVOPApfg7tWYDJBx4zp6XnQNYRoLIdNATuh4Rq0Zuw6tbb8A9j8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712011485; c=relaxed/simple;
-	bh=BN41TiMUof/vzEn8Zcps2uobhDyLps0occ8y/R4YGKE=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=TJtVizCf58IqCBN2mFU2qYgLGPUr8KBcvBE+QCecHI9hiWpyWJkdc2volXQhPNMxSEHrHbTTNehrqzKH1iZjKENqddWnX5Sh9z3RHDQfubdFiCyLjBQW57MXoC1u4qs7A9y7L0PNh6G5m5B27Nza6Wh5z3M+ppTgGSC9uDiybLw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sina.com; spf=pass smtp.mailfrom=sina.com; arc=none smtp.client-ip=219.142.78.58
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sina.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sina.com
-X-SMAIL-HELO: localhost.localdomain
-Received: from unknown (HELO localhost.localdomain)([116.24.9.84])
-	by sina.com (172.16.235.25) with ESMTP
-	id 660B38CB00006A37; Mon, 2 Apr 2024 06:44:29 +0800 (CST)
-X-Sender: hdanton@sina.com
-X-Auth-ID: hdanton@sina.com
-Authentication-Results: sina.com;
-	 spf=none smtp.mailfrom=hdanton@sina.com;
-	 dkim=none header.i=none;
-	 dmarc=none action=none header.from=hdanton@sina.com
-X-SMAIL-MID: 46685634210238
-X-SMAIL-UIID: DD47F5E67B9F467E9D2D755F83738CA5-20240402-064429-1
-From: Hillf Danton <hdanton@sina.com>
-To: syzbot <syzbot+fbf74291c3b7e753b481@syzkaller.appspotmail.com>
-Cc: linux-kernel@vger.kernel.org,
-	syzkaller-bugs@googlegroups.com
-Subject: Re: [syzbot] [net?] possible deadlock in hsr_dev_xmit (2)
-Date: Tue,  2 Apr 2024 06:44:17 +0800
-Message-Id: <20240401224417.3584-1-hdanton@sina.com>
-In-Reply-To: <00000000000022c6b2061502dcbb@google.com>
-References: 
+	s=arc-20240116; t=1712011490; c=relaxed/simple;
+	bh=eI5MsN85TsXU30wMhxjefSqPjw0emEgsFMRpCXt7WwM=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=NH1Apb1WB4EmDD5T9ZvOAuATCHalBEjB4Uj+asclnbPLx4pNbqJC+9jkpZKzAH6xmRMMu0EeSVlzw9Nk7OUjaKquJAO6eciKoyVDLu6dQmTk6iM67ckf4Z+ll2ini0hQuDs4ykaR/VY+XUHi3ny/FXBQfxJHmVbFclpSBw4YwNQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=T3PR5H6p; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="T3PR5H6p"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2925DC433F1;
+	Mon,  1 Apr 2024 22:44:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1712011489;
+	bh=eI5MsN85TsXU30wMhxjefSqPjw0emEgsFMRpCXt7WwM=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=T3PR5H6pZ4A2bpIRWtMsKe3tDzzHiF+xp3aP4mAXJY02KZMfDoEEwbazU77Sr+BVx
+	 LrSgfASHY61airF6HySC/ky6v70+4X8ecESXNSk24kAyfz1JPBoZ/XXwGMumGXjNX4
+	 calsdk4DBZTwuUbpMahJYZWUT9NczVwcTQBdxirHEK0NOgUj1BA3cymQ5aq0dqzdGQ
+	 djVjxGiG6QX4FQS40GUa5CY7WqF38E7JXvpItgYMk9OKQ+wYYuaJurL0+VR1UxJVwU
+	 PkDppxXNazbSMntXdF2uwklO3IWIqrRoO5yHqL9LedqAC2XesI9vJYjdMg7C8+jCFH
+	 I+BA54SQNclfQ==
+Date: Mon, 1 Apr 2024 17:44:47 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: matthew.gerlach@linux.intel.com
+Cc: joyce.ooi@intel.com, bhelgaas@google.com, lpieralisi@kernel.org,
+	kw@linux.com, robh@kernel.org, krzysztof.kozlowski+dt@linaro.org,
+	conor+dt@kernel.org, linux-pci@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] dt-bindings: pci: altera: covert to yaml
+Message-ID: <20240401224447.GA1762763@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240329170031.3379524-1-matthew.gerlach@linux.intel.com>
 
-On Sun, 31 Mar 2024 23:11:27 -0700
-> syzbot has found a reproducer for the following issue on:
+"git log --oneline Documentation/devicetree/bindings/pci/" says the
+typical style would be:
+
+  dt-bindings: PCI: altera: Convert to YAML
+
+On Fri, Mar 29, 2024 at 12:00:31PM -0500, matthew.gerlach@linux.intel.com wrote:
+> From: Matthew Gerlach <matthew.gerlach@linux.intel.com>
 > 
-> HEAD commit:    480e035fc4c7 Merge tag 'drm-next-2024-03-13' of https://gi..
-> git tree:       upstream
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=15e0f5c3180000
+> Covert the device tree bindings for the Altera Root
+> Port controller from text to yaml.
 
-#syz test https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git  480e035fc4c7
+s/covert/convert/ (both in subject and commit log).
 
---- x/net/hsr/hsr_device.c
-+++ y/net/hsr/hsr_device.c
-@@ -220,15 +220,19 @@ static netdev_tx_t hsr_dev_xmit(struct s
- {
- 	struct hsr_priv *hsr = netdev_priv(dev);
- 	struct hsr_port *master;
-+	static int depth = 0;
- 
- 	master = hsr_port_get_hsr(hsr, HSR_PT_MASTER);
- 	if (master) {
- 		skb->dev = master->dev;
- 		skb_reset_mac_header(skb);
- 		skb_reset_mac_len(skb);
--		spin_lock_bh(&hsr->seqnr_lock);
-+		local_bh_disable();
-+		spin_lock_nested(&hsr->seqnr_lock, ++depth);
- 		hsr_forward_skb(skb, master);
--		spin_unlock_bh(&hsr->seqnr_lock);
-+		--depth;
-+		spin_unlock(&hsr->seqnr_lock);
-+		local_bh_enable();
- 	} else {
- 		dev_core_stats_tx_dropped_inc(dev);
- 		dev_kfree_skb_any(skb);
---
+Rewrap to fill 80 columns.
