@@ -1,126 +1,164 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from EUR01-VE1-obe.outbound.protection.outlook.com (mail-ve1eur01on2119.outbound.protection.outlook.com [40.107.14.119])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 902DD4683;
-	Mon,  1 Apr 2024 01:57:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711936636; cv=none; b=VDYp/cCp2wPuJwSGA+k1bOI9AdH4ZPC7VYIzwmstWSCmFJTie7F6wxAuZqnsXwwNX1AFc9Osi5//Fa0GjjHvLi6ftapBeYgwPcXLVIldaWKCyH4/1w2c5AE2OdO4HyVpvLf9mEinKuKMNLdGn+mud9WA9xjHC0rAf+m9nKl8eo0=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711936636; c=relaxed/simple;
-	bh=MWWUYfBfJ+W+K7MWTchapqC1K1oEOTbwWXy3pHBvkxw=;
-	h=From:Subject:Date:Message-ID:MIME-Version:Content-Type:To:CC; b=CfjsHXEWSPY6zvLfNi0MUwuIMq/BLAFxM28PSLCI/aRoP5iWqgsYPTG10Yhj9kzZj1/J/Cy2iXwELVtlL4vdtO8suJm41z+epDgrA+JyACR9/7lJzEAfhE//ZBNUp6qwBWItUcCe8kwPiW+uej8dxkWjvCQZB5MrzkPqL3wqp/8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=JTIMJvHR; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97E5E10E5;
+	Mon,  1 Apr 2024 02:12:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.14.119
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1711937559; cv=fail; b=TVcqT/wC9DJIvOn6lovDOOi7xxw8YcffYgwZnmjWrk05V3V/d37seJtByLD0G9h7Vpd2I+U/pl5yGZqwiZAXGYLdhWY9LzhJ6NTCG2hxiVbrGanewaDQay2czNIyhe2gNQMqz+WA5k8bBT+373NtJKvRY7DxbfT3aoYq0/Nujhc=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1711937559; c=relaxed/simple;
+	bh=tBZidNL6DY4EM+D9DDAnU8rjy0h0OonJ3Na1FZDMZp0=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=gMuIFJN1u861JLQTj9f+iLncZ4YAWlZTxQ51spitcmhFAn/pf4m7TRsfDyGU4LGYEvsrTpVCiFoTZWfp2UAEnHTOCMAzwD1GM+XuUpiW7sJpnlucj7k5tpInn2MLksGHDZiqwwlP7C1ZapnrTsGtPk90X0d58t0gUsqkBQg4vik=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b=HMeMcpZ1; arc=fail smtp.client-ip=40.107.14.119
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="JTIMJvHR"
-Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 4311gHTl031750;
-	Mon, 1 Apr 2024 01:56:57 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	from:subject:date:message-id:mime-version:content-type
-	:content-transfer-encoding:to:cc; s=qcppdkim1; bh=GAkLdLSYFHmFYC
-	lUBJFWkUPMHRmzAIsktPBWFnF+tCY=; b=JTIMJvHRu7WS85OY2hAKshTHYEr8OV
-	lVkD0oYp0aD6rEPGuB9wEbhBZpu4z5WlqYEHrCPQSLMMQI2N+PpQ6V++siuM+kwu
-	wtZyLyKTb0DoUjse+UNod+DMp41B/VlR1S9K07xRSNgorZ/hNijEK2Ybw4nuFRe1
-	l0r1ftu3h8zwhSG0+fI8K53iQdfbHehmvgYl+w/EmdzLErdUWD+fDEcgOQ9N9Y+N
-	6oTPwwGvP4+iLfMLaZIpy3KbGAq6ezHNV9Zaxn/+OjhlnztulIylTaPyHsah0Ide
-	LtmWIfi6tRuA/SSDKUYeUVriW49iGCTGUjZR7gmFaGyl4HKh/Ik/LdrQ==
-Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3x69pvtx3s-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 01 Apr 2024 01:56:56 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA02.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 4311uuEC009280
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 1 Apr 2024 01:56:56 GMT
-Received: from jianbinz-gv.ap.qualcomm.com (10.80.80.8) by
- nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.40; Sun, 31 Mar 2024 18:56:53 -0700
-From: jianbin zhang <quic_jianbinz@quicinc.com>
-Subject: [PATCH v4 0/2] rtc-pm8xxx: fix rtc alarm which fired before driver
- probe not be cleard
-Date: Mon, 1 Apr 2024 09:56:28 +0800
-Message-ID: <20240401-fix-rtc-alarm-which-fired-before-driver-probe-not-be-cleard-v1-0-aab2cd6ddab8@quicinc.com>
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="HMeMcpZ1"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=XJr6061d9EhBrullFQnrlmfXXJSaNPciLOiKcRoV/iMzr3G4IyOKZ85tfuQefqtSv4gQE+jb0cWhEKMcDK7yWNGFupL4tThM6LpM4+ay50lZgLZ1BJfF7FBuY97hTPFFq3CbEfyYBbSlziFr7R3tUr4x7kxosYfuCRE1PIyIwSCq6LUkQZZ0Or8XHoCTfFbsYLGHdbQAebIz/PfjvbA5Jch79Km+GnNkVPLrx1EJnNnFBL2Xx6enliC9sML3NSFY9yN1boXqy4DUpwIIWUcBvWSm70Jbukfjoty9h/DTtD998n7/H9FV/w4qKXeMcfHdmXrrTXoTMJhZF8YlkZc83g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=tBZidNL6DY4EM+D9DDAnU8rjy0h0OonJ3Na1FZDMZp0=;
+ b=n7VlzYUT7N8Ls6/OIFJmom7rs9eT2EZvu77zBQqackHxG2Oyj/YSsngoF9Z+0oZHcgVjsYctOWXahH3wwgHicKWjZCwgS4B1XL6nDajk919pAypBk58Lz7/Q7XMqwTP2UmqwzyADpvDdzU1p3OLQBV1l6v5VNjf2EtqN0Ln617rDIR3lsm6w7zTug+AqcjwHeY6IWXelhxbBWF1J39BlfEQMNUStON760qj0CU/uJfbYOwKt2uQ8gPi9Sdwl7/puJjqwSd+22O4GNUxoMj1EOFY32c08sfbMS3UZ5bbCdmCzX5gbFRu7RZlWpDK2z7uk2teZ3dncFvQOjU4V0RSeNw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=tBZidNL6DY4EM+D9DDAnU8rjy0h0OonJ3Na1FZDMZp0=;
+ b=HMeMcpZ1ucEBjU4ayAQb9gIwZ/sv21ulzjBqkMg/QqVUwbj509099ND+F6LQQjXoNWTvMINDMRvZe/nNv64cpV/aQOJzLSA6NWvTzkC+mNrQ/jfLuus8NL7DvuQvMsIKkbrwqc3gm2X1bfvCgjEw1XePYKq87bhV6k3Z2YNfKZg=
+Received: from AS8PR04MB8676.eurprd04.prod.outlook.com (2603:10a6:20b:42b::10)
+ by DBAPR04MB7414.eurprd04.prod.outlook.com (2603:10a6:10:1a0::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.46; Mon, 1 Apr
+ 2024 02:12:33 +0000
+Received: from AS8PR04MB8676.eurprd04.prod.outlook.com
+ ([fe80::5dad:f991:ed59:3123]) by AS8PR04MB8676.eurprd04.prod.outlook.com
+ ([fe80::5dad:f991:ed59:3123%5]) with mapi id 15.20.7409.042; Mon, 1 Apr 2024
+ 02:12:33 +0000
+From: Hongxing Zhu <hongxing.zhu@nxp.com>
+To: Frank Li <frank.li@nxp.com>
+CC: "vkoul@kernel.org" <vkoul@kernel.org>, "kishon@kernel.org"
+	<kishon@kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>,
+	"krzysztof.kozlowski+dt@linaro.org" <krzysztof.kozlowski+dt@linaro.org>,
+	"conor+dt@kernel.org" <conor+dt@kernel.org>, "linux-phy@lists.infradead.org"
+	<linux-phy@lists.infradead.org>, "devicetree@vger.kernel.org"
+	<devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org"
+	<linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "kernel@pengutronix.de"
+	<kernel@pengutronix.de>, dl-linux-imx <linux-imx@nxp.com>
+Subject: RE: [v1 0/3] Add i.MX8Q HSIO PHY driver support
+Thread-Topic: [v1 0/3] Add i.MX8Q HSIO PHY driver support
+Thread-Index: AQHagbLY3navoPljxESuLsicYqwT8LFOw5AAgAPguBA=
+Date: Mon, 1 Apr 2024 02:12:33 +0000
+Message-ID:
+ <AS8PR04MB8676E0F9E660A0740759B6688C3F2@AS8PR04MB8676.eurprd04.prod.outlook.com>
+References: <1711699790-16494-1-git-send-email-hongxing.zhu@nxp.com>
+ <ZgbM4hpFhYW0QCHm@lizhi-Precision-Tower-5810>
+In-Reply-To: <ZgbM4hpFhYW0QCHm@lizhi-Precision-Tower-5810>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: AS8PR04MB8676:EE_|DBAPR04MB7414:EE_
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info:
+ QY8eiUgtjx6HCXpCJYpkAtKzPPdwZteiajRbDZd2vPmQmmtoBOHHAO/Oo+6KBd9WLOfAiVD7KCnsk460LtTOKJte7jaNKPDzvVj2dbzIaGVZp1RTF22CM55Ex0GHe8HcclBxePU/rh5cU2imb6HMod5ne/37cDNrsjLzMyEPQeFL88KAS6qfosZEzTToqCQy2Tq6VYNaFRXEPRRRVsPsihmWe9ZDLlvOJjZeGj3OVi2G2znSge3gvCx3cntrRyV3LwAmVCbVXTLAzfYWCWRz84IOd/UgJIE8yskkxS1fSakuq3qyt0LYCjiyHBVQQUa1/F7r0P0fqF9uA2QKyLBG1AYN78Bx3cHTGPmWYgCyDEXjcSIiX74e9MlWuMjiFhIjyRMKhBnPECJAJ6CI6PTG8WokJDY9Mi47iSXBZ+61GfsQUMd7Iv5SSiGZPD5M/xFEzhYC21lmKpSXYzjqlsNaJc1TLVSZ8XB+wPnprpN9HSi+t5VZAqRAPOdrmeGpunNQ474rHSniwy6QQf55wk8OwP2wG8psCxQ2r44V/RBeKGsRv7hPG66Oh1777Xqu4MRJh7iLSCyqsWylaIxjoiuOcx5JgeHtRrCvbx/qh62s9g4jLnaXvfwjXrfaGzd1rLGEv7x6tElGGGqnTZoadvCZ3jQTyOhuZ9AnM+S0Powbvto=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:zh-cn;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AS8PR04MB8676.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366007)(7416005)(376005)(1800799015);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?gb2312?B?VWlHNXJ3MkpUVk5lNk5hZkdCY3Z2SFRQbmlXSVdKM1JYTThmYmxFUzNHMDg0?=
+ =?gb2312?B?emp3T3Q1OHdmS0VQbkcwUElRMnA5SXI5bCsxTENUU0JON1NseVF5MVI3cVNv?=
+ =?gb2312?B?Y1FFbWlCa04zRlVVWjlJOVhtei9MZWNtSzIwMzhUUDZBRmNNdEQ5QXhIMVRP?=
+ =?gb2312?B?WFhwNWE1UVNsbHhBc2VmSjZIUEFiSERGTVhvcUd3WXcvOXMvZXloTkp0VnhQ?=
+ =?gb2312?B?S2JiZ2c0UXY2ZlZzbDRTRnlnMjdUbVVtVjJlVlduaEVPbWk1VTE0bk53MFp2?=
+ =?gb2312?B?RnF3TUJRdmJwUWtQTnJDeElRUUxScHZJYTBPUThhY0FuVjkrZFk3Q3VsMTNZ?=
+ =?gb2312?B?ZjZtQ09NUHVmM1ZXTTBLSDBEY1h4dktFZlBWYU1qdGwzYUFoZURjYTV1UVo3?=
+ =?gb2312?B?cWQxcnd5VzUwT0NWa3IxOHpSL2Rtb1M1dVZtK0QvQ1JHcnFTNzhaTmhxTjdD?=
+ =?gb2312?B?NVBUaTNLWkdRNmgxckpYRlpWbzdhMVFIL3dWUlI1dUd5MEZXM3RSQ1RISWM4?=
+ =?gb2312?B?eDN2QjBOb1U3UXJ1L0NXQmxqeGNXTFc4NjN6SFNzOGdZUTlMYkphcjZHM09Z?=
+ =?gb2312?B?OVJQRGNuelBRQTJRcW15YXY2Tm1ESFQrL2lWemlZSnEzNGlFSm1DckZmK3Vh?=
+ =?gb2312?B?MEIwWjF0YjB2ZS9EMXJDc2MxVE1mMkRvMVdyeDlFQlJoSUVIYk1Lc1FkUDhL?=
+ =?gb2312?B?N3BaMkpwT0RyL2paOWJXVFd5dlFsV0hORjVPdXJ3VTdybGNTdVB2Ujc0Rmk4?=
+ =?gb2312?B?cTVqbCtKU1Vpelk4a09mNnJqMUN5VEtYL2ZuR2dmY3NCa3BENk5GUzhyU3k2?=
+ =?gb2312?B?ZWFrU1EwZ0VrTjlOTy8wVGxkWmVha0NmUUNpZUs2bWlCSDYzVUhPNWQ5Y0d2?=
+ =?gb2312?B?M1dmcnRudzJyeitjRStpUmRBMHZpV1VQV1ZNaXBMZnJ1bUEyMzdXWkVURCt6?=
+ =?gb2312?B?UTJYZDgzQnFQYlhmamp3ejBuNFg1VTBMNjBoRWNGOGlobE9sWmpTd2dzZ0NT?=
+ =?gb2312?B?ZGI5K3puSHk0YUdMazJsZjlCSVV2eFRwanUxZEhCT2VROWhsSzJkbDNhaGF6?=
+ =?gb2312?B?UEQ3WUk5UzNwY2taNHZoT0h3QXJDbU1vdkRxZHhhWm5TNXFncXVNZjhuSjJV?=
+ =?gb2312?B?b002ZXdTMDlLdC83dEl5TU1McE9ZaFo2Rk9LekI0SHRNUXFlcXBPbVI4Y0pn?=
+ =?gb2312?B?V0pWREwwNVhOdEY1RUVWdVZ1Znpkc1NKWERCTzRkS2xxU2J6c0xobHpBSXRH?=
+ =?gb2312?B?Wk9PQjlVU3I5NzdwV2xQajBTaFgvYTV4aVVjQXliVXRLdjBPSjZqbVNkNkhS?=
+ =?gb2312?B?T3JDZHk4N2FFUWs5MmNkU0l5VnJsT1pHVFdmc0djKzhKNVJCUGJTVlhrZ1FH?=
+ =?gb2312?B?WldjMDBueHlDQ1NRR05hQ3kzV0Fub0RScTh4eUJwUHA4cXpKOTUySkJXZ2RH?=
+ =?gb2312?B?cy9oVGd0eUNOc2loTUFGVmpOUnVBVDBvSWl4cUNlMHB5SkpXcTlnTlM5UnZH?=
+ =?gb2312?B?b2JCR09rY3RSaVpYU0xITy9IUWU5NFB1NHU3ODVCamE5TGVjeHQveEdaVGxy?=
+ =?gb2312?B?Smh0ZXpFQU9NQnBpVkVRYnNpM3l6Y0dpaVZybktpNFdyVmtlY0ZDTDRnc3Yw?=
+ =?gb2312?B?Zm1hUHVwb2lZMVJORmpzNXF5YlJDYWhZeTVZL3dEOERVblR1cHlGcHNkOUlo?=
+ =?gb2312?B?T2IxYVhOSzJJWEJWZFpUcGtMU1NTRmNRekJOc2V6SU1xTEYxTE5uR0drZmJG?=
+ =?gb2312?B?RUxVSUpDK2paRiswcUM2QmVCSTR0VXQ3QW14KzNKWlU3ZlZIZ1FkUGpKWEJJ?=
+ =?gb2312?B?K2djVVRuU1FmL2lVTnB0MExqcmlGUEliRlc2d2xMUWxEMVFya210VC9yRUVj?=
+ =?gb2312?B?M1RaelRkSUN3a2s2eVdnV3dYUlNHNEtjWml4aUs2SUhOS05tTmVvWHFCa0tT?=
+ =?gb2312?B?YXdVMFc5dTZxYURKSTM2QThvZE5jdHdRekhNWWttS0JySUd0UTJTRXJtNUdn?=
+ =?gb2312?B?cXo2SkZRV0RzMllqa1FDeS9qY0pEOU8yWHE1SEdjWE1LRlh2UEkreDllWitY?=
+ =?gb2312?B?SmM1TFBHYm9ZOVJzaWF6cEwyU0orMVFYZmRNZE0wYlJWOHVFZWRFRkFubkY5?=
+ =?gb2312?Q?eLvA+fSeasrFbU/PzXdhFSuYg?=
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAE0UCmYC/x2NwQ6CMBAFf4Xs2U1KhaB+iBfjobQPuwm2ZEvQh
- PDvNh5nDjM7Faig0K3ZSbFJkZwqtKeGfHTpBZZQmayxnTnbK0/yZV09u9npmz9RfKxOEXjElBU
- cVDYoL5pHcMpr9exnOA1sBm/bi0Hfm4HqYVHU3P/+oHtHz+P4AWgKYvmRAAAA
-To: Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio
-	<konrad.dybcio@linaro.org>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>
-CC: <linux-arm-msm@vger.kernel.org>, <linux-rtc@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        jianbin zhang <quic_jianbinz@quicinc.com>
-X-Mailer: b4 0.14-dev
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1711936613; l=1607;
- i=quic_jianbinz@quicinc.com; s=20240329; h=from:subject:message-id;
- bh=MWWUYfBfJ+W+K7MWTchapqC1K1oEOTbwWXy3pHBvkxw=;
- b=xZuifqRCbJMCACnTkYoyyYGiltQ0nZfzdGAx7rRLd+j2TWwU0Ox9M0075nxW7SYwDDcsYmg3U
- T16fR98PXRJAdUE1ZCLlpIJyhTI4MdzGHrXUL/47dujNAFcbEsig4Su
-X-Developer-Key: i=quic_jianbinz@quicinc.com; a=ed25519;
- pk=8Qm7Xwv+QY8Y3hGEXPGglY/NRmdGYSKQJh+oPGgX+2c=
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: v_cfyh0-Ds5N7P1nEJB0UAqf-foGbg44
-X-Proofpoint-GUID: v_cfyh0-Ds5N7P1nEJB0UAqf-foGbg44
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-03-31_21,2024-03-28_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- suspectscore=0 phishscore=0 lowpriorityscore=0 impostorscore=0 spamscore=0
- mlxscore=0 malwarescore=0 mlxlogscore=749 clxscore=1011 bulkscore=0
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2403210001 definitions=main-2404010013
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: AS8PR04MB8676.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: fb4c73ea-dc99-4ade-0d95-08dc51f1313f
+X-MS-Exchange-CrossTenant-originalarrivaltime: 01 Apr 2024 02:12:33.4545
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: tsCjIWbR4NyKUHSXtVg+PIfpuaUslc06ciKBN3HJWGLksWC8AeAtahmmT2Jctu7nYcNFxFwD1zNvCJUAUypugA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DBAPR04MB7414
 
-Hi maintainers,
-
-In this v4 patch series include following:
-- Fix the issue that rtc alarm interrupt triggered befor driver probe is not cleared
-- Correct the value written into PM8xxx_RTC_ALARM_CLEAR register in trigger function
-
-Regarding the issue "Fix the issue that rtc alarm interrupt triggered befor driver probe is not cleared":
-- Issue describtion as following
-  If the alarm is triggered before the driver gets probed, the alarm interrupt
-  will be missed and it won't be detected, and the stale alarm settings will
-  be still retained because of not being cleared.
-- Issue reproduce step:
-  (1) set the alarm and poweroff the device
-  (2) alarm happens and the device boots
-  (3) poweroff the device again
-  (4) alarm irq not be cleard, device boots again
-
-Regarding "Correct the value written into PM8xxx_RTC_ALARM_CLEAR"
-- Writing 1 to the register is expected to clear the fired alarm
- register. In patch v2, the value written to the register in the
- trigger function is incorrectly written as 0. So correct the value
- to 1.
-
-Signed-off-by: jianbin zhang <quic_jianbinz@quicinc.com>
----
-jianbin zhang (2):
-      rtc-pm8xxx: clear the triggered alarm interrupt during driver probe
-      rtc-pm8xxx: Correct the value written into the PM8xxx_RTC_ALARM_CLEAR
-
- drivers/rtc/rtc-pm8xxx.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
----
-base-commit: 317c7bc0ef035d8ebfc3e55c5dde0566fd5fb171
-change-id: 20240329-fix-rtc-alarm-which-fired-before-driver-probe-not-be-cleard-07c2180e5507
-
-Best regards,
--- 
-jianbin zhang <quic_jianbinz@quicinc.com>
-
+PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBGcmFuayBMaSA8ZnJhbmsubGlA
+bnhwLmNvbT4NCj4gU2VudDogMjAyNMTqM9TCMjnI1SAyMjoxNQ0KPiBUbzogSG9uZ3hpbmcgWmh1
+IDxob25neGluZy56aHVAbnhwLmNvbT4NCj4gQ2M6IHZrb3VsQGtlcm5lbC5vcmc7IGtpc2hvbkBr
+ZXJuZWwub3JnOyByb2JoK2R0QGtlcm5lbC5vcmc7DQo+IGtyenlzenRvZi5rb3psb3dza2krZHRA
+bGluYXJvLm9yZzsgY29ub3IrZHRAa2VybmVsLm9yZzsNCj4gbGludXgtcGh5QGxpc3RzLmluZnJh
+ZGVhZC5vcmc7IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnOw0KPiBsaW51eC1hcm0ta2VybmVs
+QGxpc3RzLmluZnJhZGVhZC5vcmc7IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7DQo+IGtl
+cm5lbEBwZW5ndXRyb25peC5kZTsgZGwtbGludXgtaW14IDxsaW51eC1pbXhAbnhwLmNvbT4NCj4g
+U3ViamVjdDogUmU6IFt2MSAwLzNdIEFkZCBpLk1YOFEgSFNJTyBQSFkgZHJpdmVyIHN1cHBvcnQN
+Cj4gDQo+IE9uIEZyaSwgTWFyIDI5LCAyMDI0IGF0IDA0OjA5OjQ3UE0gKzA4MDAsIFJpY2hhcmQg
+Wmh1IHdyb3RlOg0KPiA+IHYxIGNoYW5nZXM6DQo+ID4gLSBSZWJhc2UgdG8gdGhlIDYuOS1yYzEs
+IGFuZCBjb25zdGlmeSBvZl9waGFuZGxlX2FyZ3MgaW4geGxhdGUuDQo+ID4gTm8gb3RoZXIgY2hh
+bmdlcy4NCj4gDQo+IE5leHQgdGltZSBwbGVhc2Ugc2VuZCB0byBpbXhAbGlzdHMubGludXguZGV2
+IGluc3RlYWQgb2YgbGludXgtaW14QG54cC5jb20uDQo+IA0KPiBGcmFuaw0KT2theSwgdGhhbmtz
+IGZvciB5b3VyIHJldmlldy4NCg0KQmVzdCBSZWdhcmRzDQpSaWNoYXJkIFpodQ0KPiANCj4gPg0K
+PiA+IGkuTVg4USBIU0lPIG1vZHVsZSBoYXMgUEhZIGFuZCBtaXggY29udHJvbCByZWdpb25zLg0K
+PiA+IFRoaXMgcGF0Y2gtc2V0IGFkZHMgaS5NWDhRIEhTSU8gUEhZIGRyaXZlciBzdXBwb3J0LCBh
+bmQgcHJvdmlkZXMNCj4gPiBzdGFuZGFyZCBQSFkgcGhhbmRsZXMgdGhhdCBjYW4gYmUgdXNlZCBi
+eSBpLk1YOFEgUENJZSBvciBTQVRBIGRyaXZlcg0KPiA+IGxhdGVyLg0KPiA+DQo+ID4gW1BBVENI
+IHYxIDEvM10gZHQtYmluZGluZ3M6IHBoeTogQWRkIGkuTVg4USBIU0lPIFNlckRlcyBQSFkgYmlu
+ZGluZw0KPiA+IFtQQVRDSCB2MSAyLzNdIGR0LWJpbmRpbmdzOiBwaHk6IHBoeS1pbXg4LXBjaWU6
+IEFkZCBiaW5kaW5nIGZvciBbUEFUQ0gNCj4gPiB2MSAzLzNdIHBoeTogZnJlZXNjYWxlOiBpbXg4
+cS1oc2lvOiBBZGQgaS5NWDhRIEhTSU8gUEhZIGRyaXZlcg0KPiA+DQo+ID4gRG9jdW1lbnRhdGlv
+bi9kZXZpY2V0cmVlL2JpbmRpbmdzL3BoeS9mc2wsaW14OHEtaHNpby55YW1sIHwgMTQzDQo+ICsr
+KysrKysrKysrKysrKysrKysrKysrKw0KPiA+IGRyaXZlcnMvcGh5L2ZyZWVzY2FsZS9LY29uZmln
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICB8ICAgOCArKw0KPiA+IGRyaXZlcnMvcGh5L2Zy
+ZWVzY2FsZS9NYWtlZmlsZSAgICAgICAgICAgICAgICAgICAgICAgICAgICB8ICAgMSArDQo+ID4g
+ZHJpdmVycy9waHkvZnJlZXNjYWxlL3BoeS1mc2wtaW14OHEtaHNpby5jICAgICAgICAgICAgICAg
+IHwgNTE4DQo+ICsrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysr
+KysrKysrKysrKysrKysNCj4gKysrKysrKysrKysrKysrKysrKysrKysrDQo+ID4gaW5jbHVkZS9k
+dC1iaW5kaW5ncy9waHkvcGh5LWlteDgtcGNpZS5oICAgICAgICAgICAgICAgICAgIHwgIDI2ICsr
+KysrDQo+ID4gNSBmaWxlcyBjaGFuZ2VkLCA2OTYgaW5zZXJ0aW9ucygrKQ0K
