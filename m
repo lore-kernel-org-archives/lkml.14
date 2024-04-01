@@ -1,104 +1,79 @@
-Received: from gandalf.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+Received: from jabberwock.ucw.cz (jabberwock.ucw.cz [46.255.230.98])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CF052A1BF;
-	Mon,  1 Apr 2024 20:59:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C40F754F87;
+	Mon,  1 Apr 2024 20:59:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.255.230.98
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712005150; cv=none; b=GTxtyV9VZXZVm+j0WuK3l1tao5mE9W9SmLdm3/YCujpmbaUr68X/f55PCOwVJ0xDqclM04axEkf6NFLHF5L2G25bgBcazoz7eK+V0yjdgaaMUPQD0iXbDUy5v2wRGwcIj8+A4ftGSNCbgV3r7ICY2QXVZlh74yn5K/JhJgsK7Bg=
+	t=1712005178; cv=none; b=QMScywaVtfmsGP/mL8lGg6gvQFzhVcKR0hJQWiLK4Clj+F3ENiXGqTdjJGEzm7sna5sAPB8yctcK0X0B9WGVUyFCTAUDcU2UL5sXRQp0nuF66ajBMhyJ8Trjd9aD4l8HEDzkPFUMENBB5QMmsnNRV4OGt2IXEveziRnhBuCScfo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712005150; c=relaxed/simple;
-	bh=OB0ETBxnseius7m19Wmd6yrUIYnFKVtrxfsfellkL/0=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=r37wg1e1Vb3Tt8p6Z+8vcI7O2tksd089YMthZWtSEITgC+lCsqty/INDaC1BIU1KpEv1FJexgkgBp9LZWIZJBasdRRI7qfI5pyV//4crK1wqG9fercmz/Ca3/1upe8hooQxMTnXh0P3j5LmAGDdwTWf8NcbllxsKGii5qHYNNo8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=P8plVfOP; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="P8plVfOP"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=201702; t=1712005135;
-	bh=M9y+v2QMPLEHcbgJ2rGOOe+abN6YHUdrG4eoxD783hA=;
-	h=Date:From:To:Cc:Subject:From;
-	b=P8plVfOPiEOwVa5GYa+hlCTDfnttSyYUTVcdovNgK5oQ4sC2XwqQ77XN9/clflHoA
-	 JVU4RZZRb+GCIoclz7FlJO3krPxtDYwoTSBfGrjApejy0wKPKL4VtdhfIvY4+oJbCd
-	 aKWDS4UdQa+cQLS9Ab+68QgCyM4ux/svSfKsnMfZNOmMGis10QC/qwKYWss+60Mc0N
-	 Kdgkg8rktWmppR1lM8pxMlBqSsEt8hxHV5ilWzzD7yP+GPvSwYfHQMOc2DuqAZBbek
-	 rwr+/W3obhL1/wRsJNFvh2vk9XnMgi7uzId3zwderWM6IGo2KmmbjhZ44/qtXKa5L/
-	 AXluqUuPyG0Pw==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4V7jzf5Zspz4wcn;
-	Tue,  2 Apr 2024 07:58:54 +1100 (AEDT)
-Date: Tue, 2 Apr 2024 07:58:53 +1100
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: Takashi Iwai <tiwai@suse.de>
-Cc: Oswald Buddenhagen <oswald.buddenhagen@gmx.de>, Linux Kernel Mailing
- List <linux-kernel@vger.kernel.org>, Linux Next Mailing List
- <linux-next@vger.kernel.org>
-Subject: linux-next: Fixes tag needs some work in the sound-current tree
-Message-ID: <20240402075853.4e5a61cf@canb.auug.org.au>
+	s=arc-20240116; t=1712005178; c=relaxed/simple;
+	bh=eKWG1f6tm0zIMg5xKZI/ckCdSvymeFvwHNa29v4r2OI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=py8hBui6GSJwppms8i8WHLtM1nQBLwz3F/kUT1M9unJOnUXX5CBnkg5mpZk0c0X4IWlfKNcL6nh+JaU1XgFtogWIIkIzITY4PUMRgsuU9F1w5JweMtS19N5wtNL1RLt+T/AnDfQT3ZsUBrc+iC1N6MsDLrjtSBMLxYtTUYcTv4w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=denx.de; spf=fail smtp.mailfrom=denx.de; arc=none smtp.client-ip=46.255.230.98
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=denx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=denx.de
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+	id B7DD91C007F; Mon,  1 Apr 2024 22:49:38 +0200 (CEST)
+Date: Mon, 1 Apr 2024 22:49:38 +0200
+From: Pavel Machek <pavel@denx.de>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: stable@vger.kernel.org, patches@lists.linux.dev,
+	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
+	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de,
+	jonathanh@nvidia.com, f.fainelli@gmail.com,
+	sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de,
+	conor@kernel.org, allen.lkml@gmail.com, broonie@kernel.org
+Subject: Re: [PATCH 6.1 000/272] 6.1.84-rc1 review
+Message-ID: <Zgsd4rrC5wztALCG@duo.ucw.cz>
+References: <20240401152530.237785232@linuxfoundation.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/LWwARJsdLi1heG3CjWP.50C";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="Of4ZIbeCjk+Z5oeV"
+Content-Disposition: inline
+In-Reply-To: <20240401152530.237785232@linuxfoundation.org>
 
---Sig_/LWwARJsdLi1heG3CjWP.50C
-Content-Type: text/plain; charset=US-ASCII
+
+--Of4ZIbeCjk+Z5oeV
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-Hi all,
+Hi!
 
-In commit
+> This is the start of the stable review cycle for the 6.1.84 release.
+> There are 272 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 
-  e1d8acf35ce7 ("Revert "ALSA: emu10k1: fix synthesizer sample playback pos=
-ition and caching"")
+CIP testing did not find any problems here:
 
-Fixes tag
+https://gitlab.com/cip-project/cip-testing/linux-stable-rc-ci/-/tree/linux-=
+6.1.y
 
-  Fixes: df335e9a8b (ALSA: emu10k1: fix synthesizer sample playback positio=
-n and caching, 2023-05-18)
+Tested-by: Pavel Machek (CIP) <pavel@denx.de>
 
-has these problem(s):
-
-  - SHA1 should be at least 12 digits long
-    This can be fixed for the future by setting core.abbrev to 12 (or
-    more) or (for git v2.11 or later) just making sure it is not set
-    (or set to "auto").
-  - Subject does not match target commit subject
-    Just use
-        git log -1 --format=3D'Fixes: %h ("%s")'
-
-The date field adds nothing.
-
-Thus:
-
-Fixes: df335e9a8bcb ("ALSA: emu10k1: fix synthesizer sample playback positi=
-on and caching")
-
+Best regards,
+                                                                Pavel
 --=20
-Cheers,
-Stephen Rothwell
+DENX Software Engineering GmbH,        Managing Director: Erika Unter
+HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
 
---Sig_/LWwARJsdLi1heG3CjWP.50C
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+--Of4ZIbeCjk+Z5oeV
+Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmYLIA0ACgkQAVBC80lX
-0GxSmQf/U73DHJIZMTtvtRMUHeMJIbfnQWMQFp2wpLLY53vu7Cdv20kc0xM13/C0
-KGKp66A9ObD17QOwT14AGrmUeUZk/EqW6OUg2iBOqArQvgnD0Jm7A0pHddgYfLcU
-XvHL3A/5MZWS1pFMslPkCBDJMHNCgwyvJploH9SG2lx1WXGCaIenPp8szn7PEGZ0
-x/xjX1XFiWFhhiYLFJfTXi8rU1AARgEmDB+aSuGPXWnZo2O8bmu1X3jdCdmmQ/tE
-07wpD1NxHCTpEcrCRgaw9VNVZ261kiAvGmYFaSqfB+qPn2CNpNmAsSG0oq+KmCLI
-yt9f9y9/jfodIGfX6SNW55A58bI6Fw==
-=UjWk
+iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCZgsd4gAKCRAw5/Bqldv6
+8ip8AJ985uqouM5Ahp8XKWBviSlAhm0XEwCcCycULJA2isYd4SGrgz6YaVMSV6Y=
+=gLxA
 -----END PGP SIGNATURE-----
 
---Sig_/LWwARJsdLi1heG3CjWP.50C--
+--Of4ZIbeCjk+Z5oeV--
