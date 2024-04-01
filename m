@@ -1,55 +1,55 @@
-Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
+Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3A2658133
-	for <linux-kernel@vger.kernel.org>; Mon,  1 Apr 2024 23:44:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E73F358ACC
+	for <linux-kernel@vger.kernel.org>; Mon,  1 Apr 2024 23:44:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712015097; cv=none; b=cSH/srKsHCHxjlWpx7tcaEDUGVrjI506bRd0ov7m1eUZlk/Ze2/YQvjirHGW9bvgW/KJWPd0a1KIoH9J1THFYGrWiCVMxrnFpazhjbvIuLynuCkP1xgN0UDli0QfQcjZv0AaVgAyRWK82Ow87HaRBN3BdAOqb6n4VBNd0ZTjATk=
+	t=1712015100; cv=none; b=LdSf47+yGGZY37mwhRnWgiHuzqq2zr+9uRZsFOzNNa4DTy8/ZUOzkCZwxeykgB105eHn8EtL0rDdfnOA6stpCfZzwhP26mKRx/f0qc1Hst1aAEK6c4+SIX08+Qxna1bjJIqnxgAZ8H74RhzMn/gN3wBomeI0Ir4D3eGiIGULVoQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712015097; c=relaxed/simple;
-	bh=EJ34wqd6b/ux/q+BX6JNRu0xPaf1PNbXxTmJ4orQ594=;
+	s=arc-20240116; t=1712015100; c=relaxed/simple;
+	bh=xOMUb+GmiXukMH9HQceN3GVQdj0ZjM9Tp+Q+1CsUWig=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=s6+Me0dCQy3Dojtbw7MTE+pfn+D2xfNoPDehA/M5i7yDI87CADWPv2/eXvHPeifCvH/TQONnxY2VL6oj0+sEuM9wGmVEiOf6TOxSbISFVK7EdfgcqgV+1HszG0ZVXeqsFJA/NtLoEUmE8WD35N7l29EhgTy52o6YqLJOVbeH1VI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--jstultz.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=DpuyJBrQ; arc=none smtp.client-ip=209.85.219.202
+	 To:Cc:Content-Type; b=b5hVLrEOkgZ18u6HNTQwHJGRrgvaKllJhW6lLduJufWxvuX5y+GVFMKGNYGnnm53dTGmOiAClH46U4pyxX0yFBtMwdx17jDP4vDNE8alO1Ka4R23Rcqsx3+FxfgMIi0fq6uH4V4D4NxAjszS7Lzvm77pv5P/T4yOM6ZxQp3HDFc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--jstultz.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=fhtwqDpo; arc=none smtp.client-ip=209.85.219.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--jstultz.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="DpuyJBrQ"
-Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-dcbee93a3e1so6920091276.3
-        for <linux-kernel@vger.kernel.org>; Mon, 01 Apr 2024 16:44:55 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="fhtwqDpo"
+Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-dcd94cc48a1so7104800276.3
+        for <linux-kernel@vger.kernel.org>; Mon, 01 Apr 2024 16:44:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1712015095; x=1712619895; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1712015098; x=1712619898; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Se153erLk5xq/r1GOlypzsiGXhlpYY7z2C8apfnTM7c=;
-        b=DpuyJBrQVpAwhAODbBYO48ewaI6x4nPezI0TJ4/OtaKMzQMEDYz+WlrFZzvZ+74Fxr
-         bBfcfHFHUICawwuBbxd9RZQpFfc1xgGC0XhWMvrKqATnpNMIEERaDEtlUTtKN9UeYMM1
-         3v7YWStQr5dbtfxa+uPwun/opBXxsaWTATEf9uVRVdO7Q+rqnONhYGop5kf9uUWwqFDy
-         /IZK7h1KE9nkR19gd39NHEz0CXRBKE54T2uLrUtH/bsAV1l5BPDm4727KCjxMGrhH+42
-         Onhv8wup/2GZbA1NL7WvSctNHGIyKm0OT5FFqErDw4Ibffrmv40i5QcFrBHNJEjZxK70
-         nKbQ==
+        bh=QgqtM/d+7PpQv4HE31iqvyKrSmgqLa7oQqkgUO0r7vE=;
+        b=fhtwqDpoEWrXo0lB5QIDUAOhYIl61Qn9zQXIuF4HEr/OSFJ7YykZG9dmmiYDRvZbCH
+         W4MJjv6oYU5204fN1F29HeVnXV02CIYyV+y97ydv0GIKjag3PSvTEq31RI94pC1G2J+g
+         UOvaepNyyK89AiEdhIAFZcE6O1a9yncTEwl/5tE84jMenm/v4fCVgY7RF0A+FLv21G59
+         7uUgl+/ch/mhaTk7rKmQFkkY9YYR8AsR5odVt+nuEYk560LUpr4D6Z7rua+PfjlYAQdX
+         o9XAsEp1O+qxGdZqTlxkoxYpw+5KoIwQ0fZqwhzjR1K3pASNBw+Lbk+h660DhyowS08q
+         BJEg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712015095; x=1712619895;
+        d=1e100.net; s=20230601; t=1712015098; x=1712619898;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Se153erLk5xq/r1GOlypzsiGXhlpYY7z2C8apfnTM7c=;
-        b=NBjGblVFdbps/b8hkfB87MU/x5sjBHfYr7ybLnQDOmcNIZCvr8XV8hUUAToW4De0Ph
-         ejRAtcnSb2eSzMmTcY8VQ+6laFUWyX0yj9R8rafBEn8tdkUJokcCDaGlp/sirYP4/EBD
-         Gb8NYHHCxLdk+zuqBwByZRbP08fRqFCGv7NICOoeqn/28TXvucxYlkE+cRlwr0/pHRyl
-         iEPH8nRyN89TCEJbZZVJalhXzXkcJFCzZdIU6oiVln6x89ywNNrDerifgx7rRTFEjAG+
-         VSAMJ+c3jgrvLlPJ9WkHjtpVGIsvO1poytaJXBAYkSsZUJMCU4IWDZSFH/deRdHKB3SP
-         GWTQ==
-X-Gm-Message-State: AOJu0Yzv3TAQYNV4d2PLGSKChBusQvM9dWUftSEmJEGBAmYoP7Jo7rGl
-	xrIBtnUx1pjoFdYocmRqEApjZnb0uNnqwD+64YiT+QKfp2GkSteOPW649aRDeIFpBxqUiki8SlF
-	xClzPZnC99hGVPKiNxE64o3YR4Oia02cue9eSjDo6/WWxJjXxFT2r93jAPYTUd5EpT74PCLSaaM
-	p6t4GhRrTD2JKnOZrbffCJvjzwRb9srkVuH4dD5ybgvkm2
-X-Google-Smtp-Source: AGHT+IF0RhHf8+AI3UDQGWpPn6ccU8GMZRG67P37CakQ2sxG9XWGJC3KcmZS6ipbhQWec1WHRG87AUZBALdn
+        bh=QgqtM/d+7PpQv4HE31iqvyKrSmgqLa7oQqkgUO0r7vE=;
+        b=FWr7Q+6gw4AJj1yrpwlfeT5+9Rqno8D5pZmxlQXpaZ8oAZR7EDQsUu7u6nHYzDsLAs
+         aWGwixNEZv3Q8EuNFAOnv6gKCsWsvxfTFLDwNBNM1wJ+BfD8tPINdbecIhwmkvw9v3H8
+         p+ms2bGZGPMfTN/xHsH0OKs1A1CL4GZaaVK1u7RoHx+rLCwVqBYu/HhpNd7CZJLZZbgm
+         TqIMhLysYDTymmLiA6dboDHdGb2juH3qrNi6KXxVQ/GY5mULBk1RcWTArE8pyM4hUk77
+         VohALRGQMqxqZahMArJFjIGZn5idN1u+iIuJ5Q3RWSAU7tQNGV6R9f31DC1tS9cTAaLS
+         nRig==
+X-Gm-Message-State: AOJu0YzKgq5aKq3J9YKg/EPMHkAd5/jnEBtH0qwL6t+mMkJt+OwU3CRS
+	nrr7TzIMCRWVdyFNn7a4Nu06MROqp47dah4hqvx/BN0+EYlMbYTCphkpUTaLdJ7Pk3Th7dxM3n1
+	O2LGNpUCaxfeXfS5IDvN7VVEo6FzA6VVsxz64XCs9+qgh6voIbICsOda7GxRvyTCF/zOlRL/PIB
+	Q1uy38aPkKxkvU4ZNP785x2eAqT/Otc65Xut+jvrPiBAKF
+X-Google-Smtp-Source: AGHT+IG81utI2kl1Gn1sM2N8PqFdBdAaI2i00f63wU9a+w5ADuC0vVidLWOXzMl+jp7aeSU/i4t9+9F8b9w5
 X-Received: from jstultz-noogler2.c.googlers.com ([fda3:e722:ac3:cc00:24:72f4:c0a8:600])
- (user=jstultz job=sendgmr) by 2002:a05:6902:102f:b0:dc2:2ace:860 with SMTP id
- x15-20020a056902102f00b00dc22ace0860mr934958ybt.2.1712015094611; Mon, 01 Apr
- 2024 16:44:54 -0700 (PDT)
-Date: Mon,  1 Apr 2024 16:44:26 -0700
+ (user=jstultz job=sendgmr) by 2002:a05:6902:1006:b0:dd9:4ad1:a1f7 with SMTP
+ id w6-20020a056902100600b00dd94ad1a1f7mr3543161ybt.9.1712015097848; Mon, 01
+ Apr 2024 16:44:57 -0700 (PDT)
+Date: Mon,  1 Apr 2024 16:44:28 -0700
 In-Reply-To: <20240401234439.834544-1-jstultz@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -59,11 +59,12 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20240401234439.834544-1-jstultz@google.com>
 X-Mailer: git-send-email 2.44.0.478.gd926399ef9-goog
-Message-ID: <20240401234439.834544-5-jstultz@google.com>
-Subject: [RESEND][PATCH v9 4/7] sched: Add do_push_task helper
+Message-ID: <20240401234439.834544-7-jstultz@google.com>
+Subject: [RESEND][PATCH v9 6/7] sched: Split out __schedule() deactivate task
+ logic into a helper
 From: John Stultz <jstultz@google.com>
 To: LKML <linux-kernel@vger.kernel.org>
-Cc: "Connor O'Brien" <connoro@google.com>, Joel Fernandes <joelaf@google.com>, 
+Cc: John Stultz <jstultz@google.com>, Joel Fernandes <joelaf@google.com>, 
 	Qais Yousef <qyousef@google.com>, Ingo Molnar <mingo@redhat.com>, 
 	Peter Zijlstra <peterz@infradead.org>, Juri Lelli <juri.lelli@redhat.com>, 
 	Vincent Guittot <vincent.guittot@linaro.org>, Dietmar Eggemann <dietmar.eggemann@arm.com>, 
@@ -73,19 +74,11 @@ Cc: "Connor O'Brien" <connoro@google.com>, Joel Fernandes <joelaf@google.com>,
 	Daniel Bristot de Oliveira <bristot@redhat.com>, Will Deacon <will@kernel.org>, Waiman Long <longman@redhat.com>, 
 	Boqun Feng <boqun.feng@gmail.com>, "Paul E. McKenney" <paulmck@kernel.org>, 
 	Metin Kaya <Metin.Kaya@arm.com>, Xuewen Yan <xuewen.yan94@gmail.com>, 
-	K Prateek Nayak <kprateek.nayak@amd.com>, Thomas Gleixner <tglx@linutronix.de>, kernel-team@android.com, 
-	John Stultz <jstultz@google.com>
+	K Prateek Nayak <kprateek.nayak@amd.com>, Thomas Gleixner <tglx@linutronix.de>, kernel-team@android.com
 Content-Type: text/plain; charset="UTF-8"
 
-From: Connor O'Brien <connoro@google.com>
-
-Switch logic that deactivates, sets the task cpu,
-and reactivates a task on a different rq to use a
-helper that will be later extended to push entire
-blocked task chains.
-
-This patch was broken out from a larger chain migration
-patch originally by Connor O'Brien.
+As we're going to re-use the deactivation logic,
+split it into a helper.
 
 Cc: Joel Fernandes <joelaf@google.com>
 Cc: Qais Yousef <qyousef@google.com>
@@ -111,106 +104,108 @@ Cc: K Prateek Nayak <kprateek.nayak@amd.com>
 Cc: Thomas Gleixner <tglx@linutronix.de>
 Cc: kernel-team@android.com
 Tested-by: K Prateek Nayak <kprateek.nayak@amd.com>
-Signed-off-by: Connor O'Brien <connoro@google.com>
-[jstultz: split out from larger chain migration patch]
 Signed-off-by: John Stultz <jstultz@google.com>
 ---
-v8:
-* Renamed from push_task_chain to do_push_task so it makes
-  more sense without proxy-execution
+v6:
+* Define function as static to avoid "no previous prototype"
+  warnings as Reported-by: kernel test robot <lkp@intel.com>
+v7:
+* Rename state task_state to be more clear, as suggested by
+  Metin Kaya
 ---
- kernel/sched/core.c     | 4 +---
- kernel/sched/deadline.c | 8 ++------
- kernel/sched/rt.c       | 8 ++------
- kernel/sched/sched.h    | 9 +++++++++
- 4 files changed, 14 insertions(+), 15 deletions(-)
+ kernel/sched/core.c | 72 +++++++++++++++++++++++++++------------------
+ 1 file changed, 43 insertions(+), 29 deletions(-)
 
 diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index 7019a40457a6..586a3f8186bd 100644
+index 586a3f8186bd..0eaa0855ef86 100644
 --- a/kernel/sched/core.c
 +++ b/kernel/sched/core.c
-@@ -2712,9 +2712,7 @@ int push_cpu_stop(void *arg)
+@@ -6572,6 +6572,48 @@ pick_next_task(struct rq *rq, struct task_struct *prev, struct rq_flags *rf)
+ # define SM_MASK_PREEMPT	SM_PREEMPT
+ #endif
  
- 	// XXX validate p is still the highest prio task
- 	if (task_rq(p) == rq) {
--		deactivate_task(rq, p, 0);
--		set_task_cpu(p, lowest_rq->cpu);
--		activate_task(lowest_rq, p, 0);
-+		do_push_task(rq, lowest_rq, p);
- 		resched_curr(lowest_rq);
- 	}
- 
-diff --git a/kernel/sched/deadline.c b/kernel/sched/deadline.c
-index a04a436af8cc..e68d88963e89 100644
---- a/kernel/sched/deadline.c
-+++ b/kernel/sched/deadline.c
-@@ -2443,9 +2443,7 @@ static int push_dl_task(struct rq *rq)
- 		goto retry;
- 	}
- 
--	deactivate_task(rq, next_task, 0);
--	set_task_cpu(next_task, later_rq->cpu);
--	activate_task(later_rq, next_task, 0);
-+	do_push_task(rq, later_rq, next_task);
- 	ret = 1;
- 
- 	resched_curr(later_rq);
-@@ -2531,9 +2529,7 @@ static void pull_dl_task(struct rq *this_rq)
- 			if (is_migration_disabled(p)) {
- 				push_task = get_push_task(src_rq);
- 			} else {
--				deactivate_task(src_rq, p, 0);
--				set_task_cpu(p, this_cpu);
--				activate_task(this_rq, p, 0);
-+				do_push_task(src_rq, this_rq, p);
- 				dmin = p->dl.deadline;
- 				resched = true;
- 			}
-diff --git a/kernel/sched/rt.c b/kernel/sched/rt.c
-index 3261b067b67e..dd072d11cc02 100644
---- a/kernel/sched/rt.c
-+++ b/kernel/sched/rt.c
-@@ -2106,9 +2106,7 @@ static int push_rt_task(struct rq *rq, bool pull)
- 		goto retry;
- 	}
- 
--	deactivate_task(rq, next_task, 0);
--	set_task_cpu(next_task, lowest_rq->cpu);
--	activate_task(lowest_rq, next_task, 0);
-+	do_push_task(rq, lowest_rq, next_task);
- 	resched_curr(lowest_rq);
- 	ret = 1;
- 
-@@ -2379,9 +2377,7 @@ static void pull_rt_task(struct rq *this_rq)
- 			if (is_migration_disabled(p)) {
- 				push_task = get_push_task(src_rq);
- 			} else {
--				deactivate_task(src_rq, p, 0);
--				set_task_cpu(p, this_cpu);
--				activate_task(this_rq, p, 0);
-+				do_push_task(src_rq, this_rq, p);
- 				resched = true;
- 			}
- 			/*
-diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
-index d2242679239e..16057de24ecd 100644
---- a/kernel/sched/sched.h
-+++ b/kernel/sched/sched.h
-@@ -3472,5 +3472,14 @@ static inline void init_sched_mm_cid(struct task_struct *t) { }
- 
- extern u64 avg_vruntime(struct cfs_rq *cfs_rq);
- extern int entity_eligible(struct cfs_rq *cfs_rq, struct sched_entity *se);
-+#ifdef CONFIG_SMP
-+static inline
-+void do_push_task(struct rq *rq, struct rq *dst_rq, struct task_struct *task)
++/*
++ * Helper function for __schedule()
++ *
++ * If a task does not have signals pending, deactivate it and return true
++ * Otherwise marks the task's __state as RUNNING and returns false
++ */
++static bool try_to_deactivate_task(struct rq *rq, struct task_struct *p,
++				   unsigned long task_state)
 +{
-+	deactivate_task(rq, task, 0);
-+	set_task_cpu(task, dst_rq->cpu);
-+	activate_task(dst_rq, task, 0);
++	if (signal_pending_state(task_state, p)) {
++		WRITE_ONCE(p->__state, TASK_RUNNING);
++	} else {
++		p->sched_contributes_to_load =
++			(task_state & TASK_UNINTERRUPTIBLE) &&
++			!(task_state & TASK_NOLOAD) &&
++			!(task_state & TASK_FROZEN);
++
++		if (p->sched_contributes_to_load)
++			rq->nr_uninterruptible++;
++
++		/*
++		 * __schedule()			ttwu()
++		 *   prev_state = prev->state;    if (p->on_rq && ...)
++		 *   if (prev_state)		    goto out;
++		 *     p->on_rq = 0;		  smp_acquire__after_ctrl_dep();
++		 *				  p->state = TASK_WAKING
++		 *
++		 * Where __schedule() and ttwu() have matching control dependencies.
++		 *
++		 * After this, schedule() must not care about p->state any more.
++		 */
++		deactivate_task(rq, p, DEQUEUE_SLEEP | DEQUEUE_NOCLOCK);
++
++		if (p->in_iowait) {
++			atomic_inc(&rq->nr_iowait);
++			delayacct_blkio_start();
++		}
++		return true;
++	}
++	return false;
 +}
-+#endif
++
+ /*
+  * __schedule() is the main scheduler function.
+  *
+@@ -6665,35 +6707,7 @@ static void __sched notrace __schedule(unsigned int sched_mode)
+ 	 */
+ 	prev_state = READ_ONCE(prev->__state);
+ 	if (!(sched_mode & SM_MASK_PREEMPT) && prev_state) {
+-		if (signal_pending_state(prev_state, prev)) {
+-			WRITE_ONCE(prev->__state, TASK_RUNNING);
+-		} else {
+-			prev->sched_contributes_to_load =
+-				(prev_state & TASK_UNINTERRUPTIBLE) &&
+-				!(prev_state & TASK_NOLOAD) &&
+-				!(prev_state & TASK_FROZEN);
+-
+-			if (prev->sched_contributes_to_load)
+-				rq->nr_uninterruptible++;
+-
+-			/*
+-			 * __schedule()			ttwu()
+-			 *   prev_state = prev->state;    if (p->on_rq && ...)
+-			 *   if (prev_state)		    goto out;
+-			 *     p->on_rq = 0;		  smp_acquire__after_ctrl_dep();
+-			 *				  p->state = TASK_WAKING
+-			 *
+-			 * Where __schedule() and ttwu() have matching control dependencies.
+-			 *
+-			 * After this, schedule() must not care about p->state any more.
+-			 */
+-			deactivate_task(rq, prev, DEQUEUE_SLEEP | DEQUEUE_NOCLOCK);
+-
+-			if (prev->in_iowait) {
+-				atomic_inc(&rq->nr_iowait);
+-				delayacct_blkio_start();
+-			}
+-		}
++		try_to_deactivate_task(rq, prev, prev_state);
+ 		switch_count = &prev->nvcsw;
+ 	}
  
- #endif /* _KERNEL_SCHED_SCHED_H */
 -- 
 2.44.0.478.gd926399ef9-goog
 
