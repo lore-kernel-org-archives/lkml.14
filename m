@@ -1,159 +1,132 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E39601095A
-	for <linux-kernel@vger.kernel.org>; Mon,  1 Apr 2024 09:48:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 905DE1095A;
+	Mon,  1 Apr 2024 09:48:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711964884; cv=none; b=Q09Hi5oNQ8COWtLZNjwHvWclcEscUpLc7XthtSMBqzIoWPpEzPZkxr/tVI1U/2xsjdXSDfaDKWvTIyltqjxdwyWe3ZiMtyBqhKi97G0P7BZKKq0+66N40r3ceG7axP1IGZx0WvSpHWjRB97gL9+PjCnNzjEe7u6FItjjzkVkEsc=
+	t=1711964889; cv=none; b=iMxA5RUze03NOGMcnJ8ey3HJAXlIoaLgkq1TDpE2oLgpzPzsDKZFmDIV8yoELl0JZF51VeMpx6OZ9S5yFPhw1SC6NncsC+OXqr4PQIgzbBj0QmfxL/gViIw+e1F+SJsPR86onPtH3gfvHqGqYe2hJOoIQ9gNc50YJpvsih3zuLM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711964884; c=relaxed/simple;
-	bh=9FjL7Gk4yg+RLbu8ygy3B4kxvcDbjpFdU9WPgWfD7wc=;
-	h=From:To:Subject:Date:Message-Id:MIME-Version:Content-Type; b=CH/EQD1mFITT+5C61UMa74cRekImKaAsNSOA0Cy81R83FAuu8aBxHLkeQ5PtpCVMezaOjZ+C0n6NsAAqKzElYttXa178feqEHUZzK8iEpG1/37WzG+A5pTniYxySVMdj3tyrqarAM6dyos50ZV2I28jqoYrZ8zOwsTjSfXWZbUk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XlJJsKVl; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1711964889; c=relaxed/simple;
+	bh=06wOk/U0MualMJ4bunj44L58B9nb+s9Iaqf0BY9Iihk=;
+	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=R0fbu7d0cnvSSeCj3pCBCiwTZkqtlB0XIWrn59lYf7ez8ee3gzmrVeKm1j3rIsioVzGqIXa3ofzsMpcbtw5Vexqdb8RoimQje0WX9K0wZ1LnLPsPeaMuX612eLaUce6H4YpULPJoreYQraGH9UGwICmVPk39VF6Ck1/EyuxJV0M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=IKkpukb8; arc=none smtp.client-ip=46.235.227.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XlJJsKVl"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5507FC433C7;
-	Mon,  1 Apr 2024 09:48:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711964883;
-	bh=9FjL7Gk4yg+RLbu8ygy3B4kxvcDbjpFdU9WPgWfD7wc=;
-	h=From:To:Subject:Date:From;
-	b=XlJJsKVl7chfcjDyYCQCWQPoPo3F+uloFJr2cmeJqsGlrnviWe20AYbiev77OYzIX
-	 veR3hHxBXP9feVdxJ3B236ygUQMhSqwfQfKfGSdZIx+nnlcBzb5ta3TSGNvqTjOAkJ
-	 olLg4JjFWxXwnit9SpD2ZHsHyUkSe8C71NNaZ27L+Fsi351VwEBN9gTmPk3LcJMfLE
-	 ThYpoFL8Wm027zeYos9ZAGparLeoPov29+64dxoU5zfKUI5H/MQz/hw6Czogo3dE3t
-	 RZQ7a31qZt2hxcZ6NQ/V9FC6iWPlmUWvpsDWKkJcUMnERJkmuHyed/imBLRhaXC2lo
-	 c8vGqt42dudIw==
-Received: by pali.im (Postfix)
-	id 7A5DA344; Mon,  1 Apr 2024 11:48:00 +0200 (CEST)
-From: =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>
-To: x86@kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2] x86/boot: This program cannot be run in DOS mode.$
-Date: Mon,  1 Apr 2024 11:47:19 +0200
-Message-Id: <20240401094719.29536-1-pali@kernel.org>
-X-Mailer: git-send-email 2.20.1
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="IKkpukb8"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1711964885;
+	bh=06wOk/U0MualMJ4bunj44L58B9nb+s9Iaqf0BY9Iihk=;
+	h=Date:Cc:Subject:To:References:From:In-Reply-To:From;
+	b=IKkpukb884sj8Eg4Yw/1yM6F+jVI41WbIFR5wppl38DPIFzg7d+snPhJSh90a3YbB
+	 6UxRTezpSmT4wNQmWC70hAfP/JxH0Ch921mvOmRMG6ao7uQPIuZ7OsFD7KR2aH5N87
+	 tG0r+nrikfEXbQvrvlxX1XWEKAWH5gay7UPdFl6DDuIhYIr3WnRTZy/d4En7a/hkhB
+	 ryU3/OINHUKgVPtbeLhy24Ru35rCA0iPfjdVytimtX+uverHEJe3H4njiECn3UAPIe
+	 pNY86YqfqdyTKZh6NivIn+8POtsgH3Jxd+ULYNYtQQqgOUeGD7ZqZngxjW5K5IDaXk
+	 qoDfDq7BJ5Z5Q==
+Received: from [10.193.1.1] (broslavsky.collaboradmins.com [68.183.210.73])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: usama.anjum)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 8BFC2378148F;
+	Mon,  1 Apr 2024 09:47:23 +0000 (UTC)
+Message-ID: <ef72ae20-6b68-496a-a819-8818ade0d433@collabora.com>
+Date: Mon, 1 Apr 2024 14:46:13 +0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Cc: Muhammad Usama Anjum <usama.anjum@collabora.com>,
+ paul.walmsley@sifive.com, rick.p.edgecombe@intel.com, broonie@kernel.org,
+ Szabolcs.Nagy@arm.com, kito.cheng@sifive.com, keescook@chromium.org,
+ ajones@ventanamicro.com, conor.dooley@microchip.com, cleger@rivosinc.com,
+ atishp@atishpatra.org, alex@ghiti.fr, bjorn@rivosinc.com,
+ alexghiti@rivosinc.com, samuel.holland@sifive.com, palmer@sifive.com,
+ conor@kernel.org, linux-doc@vger.kernel.org,
+ linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-mm@kvack.org, linux-arch@vger.kernel.org,
+ linux-kselftest@vger.kernel.org, corbet@lwn.net,
+ tech-j-ext@lists.risc-v.org, palmer@dabbelt.com, aou@eecs.berkeley.edu,
+ robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org, oleg@redhat.com,
+ akpm@linux-foundation.org, arnd@arndb.de, ebiederm@xmission.com,
+ Liam.Howlett@oracle.com, vbabka@suse.cz, lstoakes@gmail.com,
+ shuah@kernel.org, brauner@kernel.org, andy.chiu@sifive.com,
+ jerry.shih@sifive.com, hankuan.chen@sifive.com, greentime.hu@sifive.com,
+ evan@rivosinc.com, xiao.w.wang@intel.com, charlie@rivosinc.com,
+ apatel@ventanamicro.com, mchitale@ventanamicro.com,
+ dbarboza@ventanamicro.com, sameo@rivosinc.com, shikemeng@huaweicloud.com,
+ willy@infradead.org, vincent.chen@sifive.com, guoren@kernel.org,
+ samitolvanen@google.com, songshuaishuai@tinylab.org, gerg@kernel.org,
+ heiko@sntech.de, bhe@redhat.com, jeeheng.sia@starfivetech.com,
+ cyy@cyyself.name, maskray@google.com, ancientmodern4@gmail.com,
+ mathis.salmen@matsal.de, cuiyunhui@bytedance.com, bgray@linux.ibm.com,
+ mpe@ellerman.id.au, baruch@tkos.co.il, alx@kernel.org, david@redhat.com,
+ catalin.marinas@arm.com, revest@chromium.org, josh@joshtriplett.org,
+ shr@devkernel.io, deller@gmx.de, omosnace@redhat.com, ojeda@kernel.org,
+ jhubbard@nvidia.com
+Subject: Re: [PATCH v2 27/27] kselftest/riscv: kselftest for user mode cfi
+To: Deepak Gupta <debug@rivosinc.com>
+References: <20240329044459.3990638-1-debug@rivosinc.com>
+ <20240329044459.3990638-28-debug@rivosinc.com>
+ <4b38393a-f69d-4a77-a896-b6cd42c7edcf@collabora.com>
+ <CAKC1njQ_RU=uHhrna=MFVdjAMjjQNqZWnkjPoJvO7CxtPMeNuQ@mail.gmail.com>
+Content-Language: en-US
+From: Muhammad Usama Anjum <usama.anjum@collabora.com>
+In-Reply-To: <CAKC1njQ_RU=uHhrna=MFVdjAMjjQNqZWnkjPoJvO7CxtPMeNuQ@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-There is a well known requirement which everybody knows: Every PE binary
-executed in DOS must print legendary and famous message to the computer
-screen:
+On 3/30/24 1:02 AM, Deepak Gupta wrote:
+> On Fri, Mar 29, 2024 at 12:50 PM Muhammad Usama Anjum
+> <usama.anjum@collabora.com> wrote:
+>>
+>> On 3/29/24 9:44 AM, Deepak Gupta wrote:
+>>> Adds kselftest for RISC-V control flow integrity implementation for user
+>>> mode. There is not a lot going on in kernel for enabling landing pad for
+>>> user mode. Thus kselftest simply enables landing pad for the binary and
+>>> a signal handler is registered for SIGSEGV. Any control flow violation are
+>>> reported as SIGSEGV with si_code = SEGV_CPERR. Test will fail on recieving
+>>> any SEGV_CPERR. Shadow stack part has more changes in kernel and thus there
+>>> are separate tests for that
+>>>       - enable and disable
+>>>       - Exercise `map_shadow_stack` syscall
+>>>       - `fork` test to make sure COW works for shadow stack pages
+>>>       - gup tests
+>>>         As of today kernel uses FOLL_FORCE when access happens to memory via
+>>>         /proc/<pid>/mem. Not breaking that for shadow stack
+>>>       - signal test. Make sure signal delivery results in token creation on
+>>>       shadow stack and consumes (and verifies) token on sigreturn
+>>>     - shadow stack protection test. attempts to write using regular store
+>>>         instruction on shadow stack memory must result in access faults
+>>>
+>>> Signed-off-by: Deepak Gupta <debug@rivosinc.com>
+>>> ---
+>>>  tools/testing/selftests/riscv/Makefile        |   2 +-
+>>>  tools/testing/selftests/riscv/cfi/Makefile    |  10 +
+>>>  .../testing/selftests/riscv/cfi/cfi_rv_test.h |  85 ++++
+>>>  .../selftests/riscv/cfi/riscv_cfi_test.c      |  91 +++++
+>>>  .../testing/selftests/riscv/cfi/shadowstack.c | 376 ++++++++++++++++++
+>>>  .../testing/selftests/riscv/cfi/shadowstack.h |  39 ++
+>> Please add generated binaries in the .gitignore files.
+> 
+> hmm...
+> I don't see binary as part of the patch. Which file are you referring
+> to here being binary?
+shadowstack would be generated by the build. Create a .gitignore file and
+add it there. For example, look at
+tools/testing/selftests/riscv/vector/.gitignore to understand.
 
-  This program cannot be run in DOS mode.
 
-Linux kernel binary bzImage with enabled config option CONFIG_EFI_STUB is
-bootable EFI binary. Every bootable EFI binary is in PE format. So bzImage
-is also PE binary, but currently it does not meet that error message
-requirement.
+> 
+>>
+> 
 
-So fix this issue by properly filling all fields in the MZ DOS header part
-of PE binary. And add a simple code which prints the required message on
-the computer screen to fulfil the requirement.
-
-In this case the required message "This program cannot be run in DOS mode."
-is not fully truth as for example LOADLIN.EXE application can run Linux
-kernel from DOS mode. So extend error message and prints additional line:
-
-  Use DOS loader LOADLIN.EXE.
-
-For sure it helps users to know what they should do when they unexpectedly
-try to run Linux kernel from DOS mode.
-
-Note that DOS strings are not null-terminated but rather dollar-terminated.
-Therefore it is required to pay for printing this error message in $$$.
-
-Signed-off-by: Pali Rohár <pali@kernel.org>
-
----
-Changes in v2:
-
-Due to big popularity of the first version, now after years I'm sending a
-second version of this patch. Second version fixes booting issue by not
-moving content of PE header (it is not needed now as the PE code after
-years evolved) and patch is rebased on the top of the master branch.
----
- arch/x86/boot/header.S | 60 ++++++++++++++++++++++++++++++++++++------
- 1 file changed, 52 insertions(+), 8 deletions(-)
-
-diff --git a/arch/x86/boot/header.S b/arch/x86/boot/header.S
-index b5c79f43359b..b0a8d89b510c 100644
---- a/arch/x86/boot/header.S
-+++ b/arch/x86/boot/header.S
-@@ -42,14 +42,58 @@ SYSSEG		= 0x1000		/* historical load address >> 4 */
- 	.code16
- 	.section ".bstext", "ax"
- #ifdef CONFIG_EFI_STUB
--	# "MZ", MS-DOS header
--	.word	MZ_MAGIC
--	.org	0x38
--	#
--	# Offset to the PE header.
--	#
--	.long	LINUX_PE_MAGIC
--	.long	pe_header
-+dos_header:
-+	# "MZ", DOS header
-+	.word	MZ_MAGIC                        # e_magic - Magic number
-+	.word	(pe_header-dos_header)%512      # e_cblp - Bytes on last page of file
-+	.word	(pe_header-dos_header+511)/512  # e_cp - Pages in file
-+	.word	0                               # e_crlc - Relocations
-+	.word	(dos_start-dos_header+15)/16    # e_cparhdr - Size of header in paragraphs
-+	.word	0                               # e_minalloc - Minimum extra paragraphs needed
-+	.word	0xffff                          # e_maxalloc - Maximum extra paragraphs needed
-+	.word	0                               # e_ss - Initial (relative) SS value
-+	.word	0xb8                            # e_sp - Initial SP value
-+	.word	0                               # e_csum - Checksum
-+	.word	0                               # e_ip - Initial IP value
-+	.word	0                               # e_cs - Initial (relative) CS value
-+	.word	dos_start-dos_header            # e_lfarlc - File address of relocation table
-+	.word	0                               # e_ovno - Overlay number
-+	.word	1                               # e_ver - Linker version, 1 for DOS compatibility
-+	.word	0                               # e_res[1] - reserved
-+	.word	0                               # e_flags - Old exe header flags, behavior bits
-+	.word	0                               # e_res[3] - reserved
-+	.word	0                               # e_oemid - OEM identifier
-+	.word	0                               # e_oeminfo - OEM information
-+	.word	0                               # e_res2[0] - reserved
-+	.word	0                               # e_res2[1] - reserved
-+	.word	0                               # e_res2[2] - reserved
-+	.word	0                               # e_res2[3] - reserved
-+	.word	0                               # e_res2[4] - reserved
-+	.word	0                               # e_res2[5] - reserved
-+	.word	0                               # e_res2[6] - reserved
-+	.word	0                               # e_res2[7] - reserved
-+	.long	LINUX_PE_MAGIC                  # e_res2[8], e_res2[9] - unknown
-+	.long	pe_header-dos_header            # e_lfanew - File address of new exe header
-+
-+	# DOS start code (must be paragraph aligned)
-+	.balign	16, 0
-+dos_start:
-+	# Print dos_msg string (ds:dx)
-+	push	%cs
-+	pop	%ds
-+	mov	$(dos_msg-dos_start), %dx
-+	mov	$0x09, %ah
-+	int	$0x21
-+
-+	# Terminate program
-+	mov	$0x4c01, %ax
-+	int	$0x21
-+
-+dos_msg:
-+	.ascii	"This program cannot be run in DOS mode.\r\n"
-+	.ascii	"Use DOS loader LOADLIN.EXE.\r\r\n"
-+	.ascii	"$"
-+
- pe_header:
- 	.long	PE_MAGIC
- 
 -- 
-2.20.1
-
+BR,
+Muhammad Usama Anjum
