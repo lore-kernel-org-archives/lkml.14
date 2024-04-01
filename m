@@ -1,82 +1,84 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp.smtpout.orange.fr (smtp-27.smtpout.orange.fr [80.12.242.27])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 785AF3A262;
-	Mon,  1 Apr 2024 13:17:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB0283F8D0;
+	Mon,  1 Apr 2024 13:18:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.27
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711977474; cv=none; b=fv/6JBmWxMY27aYFOpWlRyNTfkruLI8MtIK9kmoswRY5LSsjEiUQTXWord2KhqGQqNpLD4qUkJL6keHpaqHN1Bc/LQ0gydNG/8S7Bvv8arU2tPnrHBLHY2WY+ukJcCV843FpAntQkcJStzQBeb+IE4Qj46vfeMzxpdjV0IxEh/g=
+	t=1711977489; cv=none; b=FamyEzKbLV/tiu2pdAHzHfViOH6KdiHygjz8uu8eo5TG/kNdhCG0J6vqqhJT7+HoRwF0yxarototwBMI0vQExjV9SvdDXZwos321COqLyXAI7ZGHgWIO5JGp/5RfYX5yw1UNuuWM7SI711BD1Yru2K45UzNd5kvXWvKcIiZwWWY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711977474; c=relaxed/simple;
-	bh=S9b4HSEM/2PDqziShOQR1wWt0JzsyhQb7gIWzGjTp8k=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=QCP1E8Z81b/FV8mgWvu3JJNr2IWRVaE+argkQAou85MciYyA64Zbtn+tKYyXKbN3ENFiomFVgtHJhD2tYtq/cLm0pr5uihKOTPFOmv7UVewx/nqWkPTPW+8+AaAymYhSI/Eb21q8jIlFxxSh3jYWwyNgc+BO+3jAvgv/In8NRzE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=olEDGg0s; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1711977489; c=relaxed/simple;
+	bh=kRLfKL0JGLQjQTaM8tLA39C/3K27Jq4C8G3X1iw/RH4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=B761CmliPOY+n85y+U5iaMNTkHjKp1J8oZeQkteBzJf6161X9pjlHd6iVj3pOVPdVePNrixrsWHdGWUDeJXOYrvkQ4LOBaoZeXtgu5B0LbzMUmD532dxITWtgTprlyyJ2UPvKlgybiKXeTqgs6ZCZiQHHJuzUcRONVpNOKqQ/8k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=Ew3UVoD1; arc=none smtp.client-ip=80.12.242.27
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="olEDGg0s"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 78219C433C7;
-	Mon,  1 Apr 2024 13:17:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711977474;
-	bh=S9b4HSEM/2PDqziShOQR1wWt0JzsyhQb7gIWzGjTp8k=;
-	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
-	b=olEDGg0sasK0vUUJ0DRnbTjgsazK8GojY7P25lg0oA8J0wgmQm3tm/6VNF4ydA/Gi
-	 GwV4WxqAYCvnQ6cAnangoHSUg8P3LIbEnqLprBrBUHFEPFvxeQrzJhEdl9DkDUyGRZ
-	 P+7/mkij/BJRqwJIggIfQ6Ilu/byx6Y09cBkllmUpf0Hzx74XKi+Af5YH6bnRB5ih4
-	 SMbW/egiSxPeTi2qN1NZwA8+Xp9e4QNGuafndOSDF7MBJEcR2MBgQV8m9nEn1ZyF7o
-	 upaHstcC0quBKA/wgoVAq6Wi4LVST67LlSf9otB/nL9fPWHUoHY/jN8rN+aoCiQ1Xt
-	 /FEteglNKksUg==
+	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="Ew3UVoD1"
+Received: from fedora.home ([86.243.17.157])
+	by smtp.orange.fr with ESMTPA
+	id rH1hrOZwdvgJFrH1hr3sW9; Mon, 01 Apr 2024 14:44:38 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
+	s=t20230301; t=1711975478;
+	bh=Yu8leq0vscV/4JPRiTZKtnUrj46s9nQc5F/iD/konlQ=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version;
+	b=Ew3UVoD10l//SFm8GppZswThlk91Da+AnocbMuCrrpiOB4IbAQy7631GwO2+eWUpi
+	 QEFyHRTXcwWPucTNej7HHJ5WTTvVgNw8iseGVfrMjDganGtAXIWo4mRrJISskoGuVi
+	 YahysPiPR2io4eQrAZkoXnwS9gK22rEho2F/FuBwQ25cY9z5q344Hc1CTfLaZIFks+
+	 wiO1LfGA5vnhguf8evdWE8xM/C2Xo9VMh4CQJ4O1kJPu0ypJFSZDIx+elRsWmiL8Gr
+	 xgZ+OmoQqm2Dd93N+g7HSA9K8xDx1fI3ZKZs3sjFhBzuSvmgDgXZBPWaZ2BvFAlBTD
+	 setNZnc7nev1Q==
+X-ME-Helo: fedora.home
+X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
+X-ME-Date: Mon, 01 Apr 2024 14:44:38 +0200
+X-ME-IP: 86.243.17.157
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+To: Patrice Chotard <patrice.chotard@foss.st.com>,
+	Damien Le Moal <dlemoal@kernel.org>,
+	Niklas Cassel <cassel@kernel.org>
+Cc: linux-kernel@vger.kernel.org,
+	kernel-janitors@vger.kernel.org,
+	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-ide@vger.kernel.org
+Subject: [PATCH] ata: ahci_st: Remove an unused field in struct st_ahci_drv_data
+Date: Mon,  1 Apr 2024 14:44:29 +0200
+Message-ID: <f1804954a746e93382429cf38e4f1f9fb46bb578.1711975449.git.christophe.jaillet@wanadoo.fr>
+X-Mailer: git-send-email 2.44.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Mon, 01 Apr 2024 16:17:50 +0300
-Message-Id: <D08TD4LASWJO.30BX8927MB1YK@kernel.org>
-Cc: <dhowells@redhat.com>, "Peter Huewe" <peterhuewe@gmx.de>, "Jason
- Gunthorpe" <jgg@ziepe.ca>, <linux-integrity@vger.kernel.org>,
- <linux-kernel@vger.kernel.org>, <keyrings@vger.kernel.org>
-Subject: Re: [GIT PULL] tpmdd changes for v6.9-rc2
-From: "Jarkko Sakkinen" <jarkko@kernel.org>
-To: "Linus Torvalds" <torvalds@linux-foundation.org>
-X-Mailer: aerc 0.17.0
-References: <20240326143838.15076-1-jarkko@kernel.org>
- <CAHk-=wgNpPQFJyLe5dwEVH66ubviuiwM1_tjbyzQv4BytPw7dQ@mail.gmail.com>
- <D07PD5NTOXSQ.30D5V19O6KMQS@kernel.org>
- <CAHk-=wi-VWatwU5Gi6n74LF66dRWCo4dUozwj_DwTBRO-wDFcA@mail.gmail.com>
-In-Reply-To: <CAHk-=wi-VWatwU5Gi6n74LF66dRWCo4dUozwj_DwTBRO-wDFcA@mail.gmail.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-On Sun Mar 31, 2024 at 8:01 PM EEST, Linus Torvalds wrote:
-> On Sat, 30 Mar 2024 at 22:57, Jarkko Sakkinen <jarkko@kernel.org> wrote:
-> >
-> > OK, point taken and it is evolutionary issue really but definitely
-> > needs to be fixed.
-> >
-> > I review and test most of the stuff that goes to keyring but other
-> > than trusted keys, I usually pick only few patches every now and
-> > then to my tree.
->
-> It's perfectly fine if you send me key updates - you're listed as
-> maintainer etc, that's not a problem.
->
-> But when I get a tag name that says "tpmdd" and a subject that says
-> "tpmdd", I'm noty expecting to then see key updates in the pull.
->
-> So that part of my issue was literally just that your subject line and
-> tag name didn't match the contents, and that just makes me go "there's
-> something wrong here".
->
-> So keys coming through your tree is fine per se, it's just that I want
-> the subject line etc to actually make sense.
->
->                     Linus
+In "struct st_ahci_drv_data", the 'ahci' field is unused.
+Remove it.
 
-OK, I'll we'll address no problem :-) I think separate tag and
-appropriate subject line  is sufficient change as we always sync=20
-up with these (through IRC channel), i.e. David is aware when
-I send anything keyring specific.
+Found with cppcheck, unusedStructMember.
 
-BR, Jarkko
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+---
+Apparently, it has never be used. It is not a left-over from a refactoring.
+
+Compile tested only.
+---
+ drivers/ata/ahci_st.c | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/drivers/ata/ahci_st.c b/drivers/ata/ahci_st.c
+index d4a626f87963..79a8b0aa37bf 100644
+--- a/drivers/ata/ahci_st.c
++++ b/drivers/ata/ahci_st.c
+@@ -30,7 +30,6 @@
+ #define ST_AHCI_OOBR_CIMAX_SHIFT	0
+ 
+ struct st_ahci_drv_data {
+-	struct platform_device *ahci;
+ 	struct reset_control *pwr;
+ 	struct reset_control *sw_rst;
+ 	struct reset_control *pwr_rst;
+-- 
+2.44.0
+
