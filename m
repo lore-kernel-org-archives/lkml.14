@@ -1,89 +1,129 @@
-Received: from mail-yb1-f177.google.com (mail-yb1-f177.google.com [209.85.219.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E2732E3EB
-	for <linux-kernel@vger.kernel.org>; Mon,  1 Apr 2024 20:47:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D00D717552;
+	Mon,  1 Apr 2024 20:49:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712004450; cv=none; b=VKGpgq286gArK3NGQiD819+ZPvpUBu7pcxnHYkZP2cmDCF3ZfzgBr//RAe6aoQyvvp5E/ymH1c8+HQ1xyOF79QMlZjoFhdRRSkIPaCKmcRzpbUB/98grmlVkay8JzmvjeduTNilFBXkGh2Nz535o6FMAOqurCxr0Ox7yx75Zxjk=
+	t=1712004580; cv=none; b=mrz/l4E9opuQCtQrJMoyvz9XLOwakPhAsmut7bFVOS3EQHnT4X3fFb8h7qr0U8OCldVc2Am1GE/zvnFhZ6bIYJxzZu8orK//GtO3wRJGYQySuW0h0MVcrP9dfc0nGbfmS+jxGCx2BJT2qGMzW0t8BUr8FfvDO309HdfW3syNO/8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712004450; c=relaxed/simple;
-	bh=fUcKWaylPje7JoEGRLPNgb/gXUPzyY52GFBTMrRUYug=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=uCv6bM7hopbRoEziN/XsiuEID6INplaeXvvvsXWtsZTDj1y87iuNawu5rLgb19HrGqn0bnaowBgZZk8hKfYXbj756n3/PAo3J9l3DQTi3BMbf8XmrMXBPi4u/1rzxsTLFfYIIX95AKPs+Rmb2ZWVeLK4336DUCYqoekZ1C3m7Pg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RJ6d9zDc; arc=none smtp.client-ip=209.85.219.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1712004580; c=relaxed/simple;
+	bh=ZGg73G5kdSdc6/MO4BB/Q5ripgdhYtNLKWJWVmNze30=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=e/VEjp7oBRrQNhlqzDik8n9sIlKXlP6lt7fTC51x+geIC6Xko4kYSv5Pd3Xepd7xGUkBmvehACPPWXFoiEP/s8aTQiEyy5ikgpalwH5S6f5eMliZsWHFlKWAn4BsiRhig7dSVNLCMtaTQwnW0yTJ9jT0mXXiIDISrChuEm3b/qY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=gWUhY/nD; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RJ6d9zDc"
-Received: by mail-yb1-f177.google.com with SMTP id 3f1490d57ef6-dcc7cdb3a98so3988145276.2
-        for <linux-kernel@vger.kernel.org>; Mon, 01 Apr 2024 13:47:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1712004448; x=1712609248; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=fUcKWaylPje7JoEGRLPNgb/gXUPzyY52GFBTMrRUYug=;
-        b=RJ6d9zDcm8W1kBV5u8HZ7HuFSrPqMkGHBKnrEfPcEU2BzVw2MPkewWuxAi/6KikLVf
-         AixoH0jx+nyQShVwQG/ZbNDTbZrhauYqwanX4cex1OhlwHrU3Tz/orNvk+IMR1xUxg5B
-         jJo5DLMa/Dd7TmCZKvqMS0eZkZWyWLoHPOfJzMsejk4faK2x79LyrMxX5zKmhpyLrXyF
-         0haSmvLqmUNZEgKHXSTD5v+pCfYlspS9gSQGdLdjyk4eW2lu6kv2iKhOAjs429QBIjuh
-         eGMCYqWGqeUnlikRToI5mQZRjGeclaDPcJAIFQc/F5+dJ5eSIcVcX5PgyKVhGza9yx5i
-         r9PQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712004448; x=1712609248;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=fUcKWaylPje7JoEGRLPNgb/gXUPzyY52GFBTMrRUYug=;
-        b=bnK8GKRus7oQZNJtLwP6N2dRnSDtfk5yG9zk4ENzPr7LMGOfwmd/SrIfsuVupwIYoJ
-         ZPxcwegEMhnshNX3BxdPVrrkMbrs1V3sMNUO8OmF0/8PJhu6V6Zr07UPGDlUMplyvDc8
-         c7YuAqsL1MbGpJv6aY//1zWsmQxdsD/dSVoYCpFGQdsASBuotTNrmi1TB9vZ0yMLpU+B
-         zIvP2LIFV800OdfEcLuVSQ7kShJQKlp1m1+aKc8AhNhIem/8wQ61W9lMLXOtufNvL+CI
-         Io9//8/60iNSSMYWLM0ZpACIx9804H7tOeIiUPON9PrOyKCugeNzLMD9mRRuoV1uJR2m
-         qXsw==
-X-Gm-Message-State: AOJu0Ywn17kC8MPFDhojAPW/t7Dg3mqotOyTuwd8OsCpXMRyOw/kRjMr
-	OL51o1R/9G1KWRsq9uvNAY7woKvYPUL0dqEyvV1waPRMkcr9MKSOf1EjmBf+LRJpS/7v9GpZ7h1
-	xus6vvbFfn93JaWqGhcrUnx62lO6Q9iawNOg=
-X-Google-Smtp-Source: AGHT+IGMQ31IZyI1sF5KGelg7Rndph9eLBjm42ggsH1ak4z/OcFWIMsn4LcrqY6f5tjG8qRdjlBF1PVAgfV+MCWZSnE=
-X-Received: by 2002:a25:bb51:0:b0:dc6:238e:d766 with SMTP id
- b17-20020a25bb51000000b00dc6238ed766mr8748595ybk.2.1712004448456; Mon, 01 Apr
- 2024 13:47:28 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="gWUhY/nD"
+Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 431JQQrU010966;
+	Mon, 1 Apr 2024 20:49:22 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	from:to:cc:subject:date:message-id:mime-version
+	:content-transfer-encoding:content-type; s=qcppdkim1; bh=SDPpPZr
+	Ybjlj5SIHl69Y3/3Hon0AHxjShyC0S7sqTuw=; b=gWUhY/nDw1O3b2HSJpQdJ1S
+	YLecUNRaBOdOmUCT1FsK7GcH0MCJacbe4K2KKMjypFqphpo9q6zvpIHfDFiRJTpn
+	hVmuGtYstGQvCtIWILH0zktBsJV5G/bN9eYwxI4fY0D5dK6kEEdNnUoCOcH4jXTp
+	52jDKptCDyrTb3Bo6tXIWxf+dE4I3WzMwOCQHw8O+YIvJRVLqURvVVZ6YIPUCKk6
+	/f7mC9YYjhc3gUrvUYLQ9xI9rb33rythwSWizub8ZFygUxj4/iQNJ0bAW0bekVU5
+	ggPT1uKZS9f6Mh+19isyr6EUaInRhg5QcdP75bSk99a7jNOTbhqHl0H/hcvR6Jg=
+	=
+Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3x8320r41y-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 01 Apr 2024 20:49:22 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA03.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 431KnKoA003393
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 1 Apr 2024 20:49:20 GMT
+Received: from jesszhan-linux.qualcomm.com (10.80.80.8) by
+ nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.40; Mon, 1 Apr 2024 13:49:20 -0700
+From: Abhinav Kumar <quic_abhinavk@quicinc.com>
+To: Rob Clark <robdclark@gmail.com>,
+        Abhinav Kumar
+	<quic_abhinavk@quicinc.com>,
+        Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+        Sean Paul <sean@poorly.run>,
+        Marijn Suijten <marijn.suijten@somainline.org>,
+        Helen Koike <helen.koike@collabora.com>,
+        Maarten Lankhorst
+	<maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>
+CC: <linux-arm-msm@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
+        <freedreno@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH] drm: ci: fix the xfails for apq8016
+Date: Mon, 1 Apr 2024 13:48:58 -0700
+Message-ID: <20240401204859.24223-1-quic_abhinavk@quicinc.com>
+X-Mailer: git-send-email 2.43.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CALaQ_hrVM0dMaFqLshW5NTkkomGSvGnpyLOPx8E0QpniewyxUA@mail.gmail.com>
- <20240329194603.ed67a334f75ba3c933cc8876@linux-foundation.org>
-In-Reply-To: <20240329194603.ed67a334f75ba3c933cc8876@linux-foundation.org>
-From: Nathan Royce <nroycea+kernel@gmail.com>
-Date: Mon, 1 Apr 2024 15:46:52 -0500
-Message-ID: <CALaQ_hqHwBKFBFPyantgr59SDpfZHwJFyWimLAZROdDsvA6rwQ@mail.gmail.com>
-Subject: Re: Allmodconfig - logic_outb - Boot Panic
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: WUNq6n4cZHd7jJtRqt-PHtW2RFpAY2OW
+X-Proofpoint-GUID: WUNq6n4cZHd7jJtRqt-PHtW2RFpAY2OW
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-04-01_14,2024-04-01_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 malwarescore=0
+ bulkscore=0 suspectscore=0 priorityscore=1501 mlxlogscore=999 spamscore=0
+ clxscore=1011 mlxscore=0 adultscore=0 impostorscore=0 lowpriorityscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2403210001
+ definitions=main-2404010145
 
-Yup. I just figured linux would gracefully handle these sorts of
-issues (eg. notify the caller, for them to handle, or just do
-nothing).
-"ISAPNP" was one of the small handful of things I had to disable from
-"allmodconfig" before I could get it to boot.
-The latest (and last) was "DEBUG_TEST_DRIVER_REMOVE". I had to add
-"dump_stack()" in "__kernfs_remove"" in "fs/kernfs/dir.c" because I
-couldn't understand why I was getting other hardware panics for
-hardware that DID exist.
-So while I wanted "everything under the sun", which "allmodconfig"
-delivered, it also delivered things that simply made booting
-impossible.
-One other requirement for "allmodconfig" is making sure the FS that
-root exists on is enabled ('Y', not 'M') for it (common-sense mention
-for anyone searching for "allmodconfig" issues).
+After IGT migrating to dynamic sub-tests, the pipe prefixes
+in the expected fails list are incorrect. Lets drop those
+to accurately match the expected fails.
 
-On Fri, Mar 29, 2024 at 9:46=E2=80=AFPM Andrew Morton <akpm@linux-foundatio=
-n.org> wrote:
-> Could be that the logic_pio driver is crashing when the hardware isn't th=
-ere.
+In addition, update the xfails list to match the current passing
+list. This should have ideally failed in the CI run because some
+tests were marked as fail even though they passed but due to the
+mismatch in test names, the matching didn't correctly work and was
+resulting in those failures not being seen.
+
+Here is the passing pipeline for apq8016 with this change:
+
+https://gitlab.freedesktop.org/drm/msm/-/jobs/57050562
+
+Signed-off-by: Abhinav Kumar <quic_abhinavk@quicinc.com>
+---
+ drivers/gpu/drm/ci/xfails/msm-apq8016-fails.txt | 13 +------------
+ 1 file changed, 1 insertion(+), 12 deletions(-)
+
+diff --git a/drivers/gpu/drm/ci/xfails/msm-apq8016-fails.txt b/drivers/gpu/drm/ci/xfails/msm-apq8016-fails.txt
+index 44a5c62dedad..b14d4e884971 100644
+--- a/drivers/gpu/drm/ci/xfails/msm-apq8016-fails.txt
++++ b/drivers/gpu/drm/ci/xfails/msm-apq8016-fails.txt
+@@ -1,17 +1,6 @@
+ kms_3d,Fail
+ kms_addfb_basic@addfb25-bad-modifier,Fail
+-kms_cursor_legacy@all-pipes-forked-bo,Fail
+-kms_cursor_legacy@all-pipes-forked-move,Fail
+-kms_cursor_legacy@all-pipes-single-bo,Fail
+-kms_cursor_legacy@all-pipes-single-move,Fail
+-kms_cursor_legacy@all-pipes-torture-bo,Fail
+-kms_cursor_legacy@all-pipes-torture-move,Fail
+-kms_cursor_legacy@pipe-A-forked-bo,Fail
+-kms_cursor_legacy@pipe-A-forked-move,Fail
+-kms_cursor_legacy@pipe-A-single-bo,Fail
+-kms_cursor_legacy@pipe-A-single-move,Fail
+-kms_cursor_legacy@pipe-A-torture-bo,Fail
+-kms_cursor_legacy@pipe-A-torture-move,Fail
++kms_cursor_legacy@torture-bo,Fail
+ kms_force_connector_basic@force-edid,Fail
+ kms_hdmi_inject@inject-4k,Fail
+ kms_selftest@drm_format,Timeout
+-- 
+2.43.2
+
