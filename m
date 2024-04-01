@@ -1,458 +1,232 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8E924778E;
-	Mon,  1 Apr 2024 15:10:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711984217; cv=none; b=JN7AC4vNzI6ZdKAbu22URQiLWm/JzjnSUs1QOnAd++aqOMvlAruaJZzzUHBB6LS4pTSxOMNvwcOkPIN2bfBKFSFdB/hwhEctuJGFxaNxmRUJp0s985Bz/5Kc4QHNNxw0WhG7s1UyRnC2Iuwmm1MFYi/2Z+IxBeOILaRLlW6hu8o=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711984217; c=relaxed/simple;
-	bh=KNM3Z/xPIReDwB4TB74SR3DTpeDcKNy5Ue7Za5F40a8=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=Ip/OgA8D0RUXi/hEdOaEoDx7h5D2SmjjscRytF1JiIoYrYiuVBIRwHeFDVsckT5W/R+60x0G2Q6bAPMneHEzvCWtpXPKEBKW7DX8ATFWwiGcs7ZUPNtOrHN/CXFjto0Kj8cHmz5DSN95hA8Uwxqnlw9nPVHazYEQfRiaz0qlJzs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gRZ7U572; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B527B45C04
+	for <linux-kernel@vger.kernel.org>; Mon,  1 Apr 2024 15:11:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.20
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1711984295; cv=fail; b=pbTZ68563nUXNRwCt+pMuNvaIqVynHghR766Q7gNwvnOwv/Fe5ysX7TrkoKKgGefFxOanAitgeXtj2UJLR1jcG7kMWm55A4Q0YspxLc1Yg3SpYiU/3HvMr7F98gvHpFXLa4JA/QcytYqc1QQaStkn02LHi7StoIdDp5SXIuX0g0=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1711984295; c=relaxed/simple;
+	bh=G501xDC6Qxh0FI+BNDlFlPPifpDwoU3Xtjpp8bDt7/o=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=Z+gvvzwfabQTezSx6DATCaI+HfvSVMeJd+kC10y5eRR67B8VGQlDAu8B5lKKOIJYZd3TM5IYjDcrvhHO63yPFlCYAUE4i6ees1jXjgpjyM638Zi2fJP/akcr+vi6swYAKRramqYzvFw0Z6sUe/Oyq3VcALoSb2SpYm0hNHYYXgU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fXZwSbxC; arc=fail smtp.client-ip=198.175.65.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gRZ7U572"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 55C56C41679;
-	Mon,  1 Apr 2024 15:10:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711984217;
-	bh=KNM3Z/xPIReDwB4TB74SR3DTpeDcKNy5Ue7Za5F40a8=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=gRZ7U572QYXVHu/OzMZAW2YGeyIoO6wR4T8Z1iYuTNJIXpLqMafJhqi9/+/pDmZDJ
-	 gknfSf4Ynj3Z2/+dDnwt0G0L07cm0QiQAB/PVrYxxKiIkC9GK1jbr9VLhWmrx1th/k
-	 jcmsSyCcvlecLzOGrriNi9T//03Sa7rREnSLiX+LNqCU09E+PL6oHh39Jemi8J7fNp
-	 afyQPq/9mIuzlnCMom6m++VAXvlQZ1F33MRJ2VVSYLoPYCqghIE+gwZdJR3hWx2yjz
-	 jGq2jujgFveQ8+fxUhBx+vEIU/l8XG0LzSS8S133N5pfuANX16mkQjtmqkP3n4dWDQ
-	 5wxY2dc/JihwQ==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BF4ACD1288;
-	Mon,  1 Apr 2024 15:10:17 +0000 (UTC)
-From: Dumitru Ceclan via B4 Relay <devnull+dumitru.ceclan.analog.com@kernel.org>
-Date: Mon, 01 Apr 2024 18:32:24 +0300
-Subject: [PATCH 6/6] iio: adc: ad7173: Add support for AD411x devices
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fXZwSbxC"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1711984292; x=1743520292;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=G501xDC6Qxh0FI+BNDlFlPPifpDwoU3Xtjpp8bDt7/o=;
+  b=fXZwSbxCmwEAg6b34fMTv+s+CT6komLDHxSSEkXIJSx4CFM/hqtdqybh
+   Q4u4wy/RdxQTa7lB7o5+IwX/tx7YEJLsaZPsqomf7aZlWv28LAa7usRin
+   jgrpDeGtQtbMI8NfWvi+MjUJMU+KVwXs7okOzjYvZH/LAfk7ZLK3NFBtf
+   k0WP8n6AteofHgROqjYIs+XFF7SdIr5TS2gLKn21Tm/VvqeLcKmAT6D7J
+   0ekKseDDSZ9AIfaT1LtSIQ3kTlF33grcKRxXRn2V+v93lwoWeL6MYOhqp
+   H6nADROwYbWeYormVl56R9a+wKc+uE1JBMsFcZAWs/GmRkLj90A/uUbWO
+   Q==;
+X-CSE-ConnectionGUID: cUEuAi/LScqwA8IVOX6a1A==
+X-CSE-MsgGUID: RF93tpDKTUmmEhScwU70pg==
+X-IronPort-AV: E=McAfee;i="6600,9927,11031"; a="7010525"
+X-IronPort-AV: E=Sophos;i="6.07,172,1708416000"; 
+   d="scan'208";a="7010525"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Apr 2024 08:11:32 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,172,1708416000"; 
+   d="scan'208";a="22418381"
+Received: from orsmsx603.amr.corp.intel.com ([10.22.229.16])
+  by orviesa003.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 01 Apr 2024 08:11:31 -0700
+Received: from orsmsx610.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Mon, 1 Apr 2024 08:11:30 -0700
+Received: from ORSEDG601.ED.cps.intel.com (10.7.248.6) by
+ orsmsx610.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35 via Frontend Transport; Mon, 1 Apr 2024 08:11:30 -0700
+Received: from NAM04-BN8-obe.outbound.protection.outlook.com (104.47.74.41) by
+ edgegateway.intel.com (134.134.137.102) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Mon, 1 Apr 2024 08:11:30 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=BsdHFE2H42+bMOT3DErS6bc9BrABia3znWBh5yG229x1p3rChS4pg94szSR/oM9HAtt+5dyVXMv7RIe4pQ0DJlCttfTSXiMGxHJSz/Xy+w6XIiGpH4/2ohISKZCtShLMPVHAobEtK1T8SVGp3JbRu8aNIn1zdpVG7tPBfvruUGtbfDKAqKsxUPVUA94hFMremAA6934wCqdUm82rOF0FdiAk9WlyReSsgOvI9nC1PMmCxNMDMRiIdoTZqdXWARlfizGr64MnyQPqN1opUIuJ6CYYnzKMBRVwIzA87IW8MykHG2VOIE+xCOPAiL/FfTuIf6NtUTUy7/S3C8HYffXeIw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=G501xDC6Qxh0FI+BNDlFlPPifpDwoU3Xtjpp8bDt7/o=;
+ b=FG7g6s1+wg6iHHc4twiaqceWndzGyy7LxlRRFB6Ct0QGvUD+USnDmmsMD7k97+yM9uu5OEzu1Kxbbpo5/QDmYhdT6H3FQNocRCSmEjhtRgM5raUO7+0n8AvDjQGeHk+kokvxtdHpltIo5J4QQPkUUjczVJ9B/u/D4amnQ5galnyF1rqT19Gax5ATZUeHLdmg7efH17s98KDfaRouM1JRaHIb2WBZyGEXQl22V2/1sao8fUqRrNNvjt4OCIOgPpPBXgvXmRBd6rpzyEbHbB+NWew7JsmUXFeBFE/p0MRTjm5piMWe5wdCmv6DM+DSYQ4SfqWkspbjYNdsZbYSdzes5A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Received: from CY5PR11MB6366.namprd11.prod.outlook.com (2603:10b6:930:3a::8)
+ by SA1PR11MB6871.namprd11.prod.outlook.com (2603:10b6:806:2b1::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7452.24; Mon, 1 Apr
+ 2024 15:11:26 +0000
+Received: from CY5PR11MB6366.namprd11.prod.outlook.com
+ ([fe80::90e5:7578:2fbf:b7c4]) by CY5PR11MB6366.namprd11.prod.outlook.com
+ ([fe80::90e5:7578:2fbf:b7c4%4]) with mapi id 15.20.7452.019; Mon, 1 Apr 2024
+ 15:11:26 +0000
+From: "Usyskin, Alexander" <alexander.usyskin@intel.com>
+To: Paul Menzel <pmenzel@molgen.mpg.de>, "Winkler, Tomas"
+	<tomas.winkler@intel.com>
+CC: LKML <linux-kernel@vger.kernel.org>
+Subject: RE: Linux logs error: `mei_me 0000:00:16.0: cl:host=04 me=00 is not
+ connected`
+Thread-Topic: Linux logs error: `mei_me 0000:00:16.0: cl:host=04 me=00 is not
+ connected`
+Thread-Index: AQHagb5xXYUPlfLHd0KdEFyAoBFj27FQGuoAgAADYICAAt+Y8IAAaZMAgAAf9CA=
+Date: Mon, 1 Apr 2024 15:11:26 +0000
+Message-ID: <CY5PR11MB6366991764CA4226DCD5DC6BED3F2@CY5PR11MB6366.namprd11.prod.outlook.com>
+References: <4c785706-2961-4eac-b5d7-2cf89c195969@molgen.mpg.de>
+ <PH7PR11MB76058497570D49516C809BE9E5392@PH7PR11MB7605.namprd11.prod.outlook.com>
+ <9a0551c8-d29e-4fb8-a85e-6f7f72e0de69@molgen.mpg.de>
+ <CY5PR11MB6366A6163D4029FE505C9A18ED3F2@CY5PR11MB6366.namprd11.prod.outlook.com>
+ <e89ad4a6-4de6-4290-a0e8-1686af96e11a@molgen.mpg.de>
+In-Reply-To: <e89ad4a6-4de6-4290-a0e8-1686af96e11a@molgen.mpg.de>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: CY5PR11MB6366:EE_|SA1PR11MB6871:EE_
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: q8sFcS7BMe0RYlFhXl69GrcBd9Twz27Op+avJmgr/e7L2kcd/9fk6R+3JGya2WPt1LhEzz3VwhZKW1fQYEzsrU1yFUqNoPSo8y4nRb5xm493IOuDdIr483WmKWFIHfsj8fWsmFLQMeCWnTwZhjc9tcEJkWUpYuQ8baXwyfsP1v5RS2hTF7eV9i0w0uKXp9oAkexnHpR+PbwmuWQaBxyN5cTv17soFthNPClozcSbw34xjUItgX1N3ToyxSAGWhYD3SBu32mYQRV9oVvUtum8Qpw591CGFTsqppm58p/7r3Dn777mc3X/v+6WiSdxbUw4gjVxIk2R8JEZ2myizplrTIymXMOm9xcGmWJLg13ZtD18ToQZjM2STvZYfR99tSI/z5qpKu7HsdGUDRbVnJ31PGQNQYjXs8SpkerPrAPPXq+9YCvkOocNXIv27iiqyPB+Vx4VafeoMg5EfmULHtGQ+ZmV9yoZWAGFqCsK68nwpN/dJ24N5SP85h1Vcv7yptik5oq+x4C4ngiOd+D6X2fbasXt+AxaTc+eYW1mn1jjXCYDUXWJw4yqsv50G7QleZntWgdGBHnAUQNyl4X7uTwNhCRBpd5wgKDF8NVje7czUnc=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CY5PR11MB6366.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376005)(366007)(1800799015);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?utf-8?B?MFVoMUJZWEtNZnN0ZjlLSmczR2hZOUtIVms2elN3R0dFbnR1cGNVVGhvVDRy?=
+ =?utf-8?B?Zm5kZzRBZjhpMXkzSFhOb1lmdk1WTS9nTVpkdDBqYXZSV0Zxakorbm1lbHRO?=
+ =?utf-8?B?ZTBqTmRDSmIxakpuZVQ2YzVSVmRyVFhsMGcvbURMQ2dsN2FqQlZUYmZGajcr?=
+ =?utf-8?B?UklvWW1KYUtOREZXZEs0NTZrS2VrdFpPKzRQbGd1dVIvTFc0cUwwVUFwSVlC?=
+ =?utf-8?B?Yi9nMnEyd2U3SVNwY2VONll0NVJpUGc2VUo0cmdJbXRQdUszenRkUFVIVnli?=
+ =?utf-8?B?VHp5UGxKQTFITkN6MmhYdWRyWmF6SjZlcWZtc2JtaU05cWtDbXFhRnl0Tk1C?=
+ =?utf-8?B?eWU4N01HRTloVGZFODVUYllrU2o2VGNwMm5NWHgweTZGbmN1Q01sVnliUEda?=
+ =?utf-8?B?andvdTY1SE5yTHpYeWIwMERWcEJIOHExbkNEMzd5b3JscVl1R3BDRkxpQWFt?=
+ =?utf-8?B?TnZCVW8zWFpoSnFBSGRLb1BwSWg5WWtxMlczQ0NzNVFKL0F2Qyt6SkFLejJY?=
+ =?utf-8?B?eEFSVTNMaHJYeW5wcnZZR01HdmxldlZFT1lhL2RDTmx3aUZLWnJtL0xoRjVJ?=
+ =?utf-8?B?eGtJYm5ocy9xNHNTOGFUc1YwWERIT1dBU1pPVU1qd0g2dU0vSGI4ZWdMODlo?=
+ =?utf-8?B?U0F5V2d3YmdRVVRYVS8rSTRyM2NvNXpjWHROb09Fa2Y2MStESk1WeFE3Y3Bi?=
+ =?utf-8?B?L3NQOEhGeXd2Sm9WQllZQ3FiNDgyV0VSL280bjAxMW9kUU1xcGVQc09qQzB2?=
+ =?utf-8?B?MnBMN3gyQk5ZTXVFMFcyRi9oZXJqRjFMOG91L0wwZk42NHBaaEJsVzJJdDRE?=
+ =?utf-8?B?RnY5SThVTkFGMDRCVkxYNm5kUWFCQW5BQjlxanAwdFpxU2R4b09sNDdORVB1?=
+ =?utf-8?B?Wk11SFFyc01TQkVxcGg4OTFPTTh0eUd6OThJN2dESXhET01RL3JmSXJNbDBn?=
+ =?utf-8?B?WjQ1Um5qZUJtaFdpdjAvYlBaUEcxMnd6bDRoczRWRUlIbXBuQ2VzQWxsNGd2?=
+ =?utf-8?B?TmYybHBGK25uTGNHT1FjNXZMTGVRVWl3c2Z0OWFGNWlldkY2RnFJS24rUXlG?=
+ =?utf-8?B?bGRHZVZJV3hxeXQzNFBHQ1k1NWJwRWpQOTRQaUE5WExQNWtQUXc2STZ5a2Vt?=
+ =?utf-8?B?L1YzY2QvZG5ZOVppeHA3MWdFeFk1L25iYkttdzhaeDhqSUtjS0ZaY2RTRlkr?=
+ =?utf-8?B?MlR2bDFaK2JQaDM4SmN2SU9aSHREUXpFamk5MU5VamppZ05Ra1NETGlSbk91?=
+ =?utf-8?B?VTQ1RWJiYURFOTdVWFM3dEV4eFlnbVZ5U3Fobm51SXJJNU5mM1lQWjA4b0NB?=
+ =?utf-8?B?Z1loaHJBNlhCMWxjTXVpWkxVZnlqK3Nvamt5eERhM2lIbXNrYlpmcmxWQldv?=
+ =?utf-8?B?UHJBUXlEbkcrTzRGQ2VKL1J6dWF4Z0xIWklXaHdvUUVja1Y2YlFlekRwRnVC?=
+ =?utf-8?B?UnJoRnpOdmRKa2VxaHFOemg0Si9iMGJKdkJ1bUV3S3NkK2c3Z2tNeWVzRGpp?=
+ =?utf-8?B?RlNBSDZyNEVZenJ5ak9LM3hSa242M0NhTEVPTXFXY1gyKzhxWTVQQ1lBWnRm?=
+ =?utf-8?B?aWJPTDl0Z3NCckJIUzFkclpKbWszQjRqbWhkZm8zNzdscGRaTXJjVXFQSFNO?=
+ =?utf-8?B?RTczTHVzbU1xSHgxWE53TFJzNzczeHBhTlVNOVF0SFBpSHVwQmc1cTgzN292?=
+ =?utf-8?B?VzRqb0F6YnVLN254SHJleXVkcnA4elQ1T21NdjRGMTFxeTdMUEZFaTRMcVp2?=
+ =?utf-8?B?WTNidFp0ZWtHMFpha1lUSWZIRmVZNmI5L3J3cU5KcHZ6R3NlYmR1ZG5UbTZh?=
+ =?utf-8?B?Y0J2OHRHZXljVldFM2ptaHd2ckdFcTRTcVYxanVJZEVlaElHMm42VkJ6Ym5F?=
+ =?utf-8?B?YmYxWXEwOGVXNko1SnZybzZFa0g0Z2M2VFF0SEtaV2E1RlVPNDlBaEpHSU9D?=
+ =?utf-8?B?NEZEeHpsc1dqeG5hcjkvUHJleW9QRXRzSTY1bkRPVkJVYkV0KzZSRnZRVVBW?=
+ =?utf-8?B?dDZzcTF3UE96bHN1RDNvNm94dUo4elFwbUpQSXAxWmJhM2tqVWR5OTVvQW5U?=
+ =?utf-8?B?ajd0Qk1LbHhZMTdXUVllaS9VM2gvT0w1NGx5VFNOV25MRlltNVpSS3Z0bW40?=
+ =?utf-8?B?Q2dLbkMrcnNycGVIaVM1bjVDZU5tTFNuWG8ySGVSSGxscHQrVEc4TlJ2Mi92?=
+ =?utf-8?B?WGc9PQ==?=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240401-ad4111-v1-6-34618a9cc502@analog.com>
-References: <20240401-ad4111-v1-0-34618a9cc502@analog.com>
-In-Reply-To: <20240401-ad4111-v1-0-34618a9cc502@analog.com>
-To: Ceclan Dumitru <dumitru.ceclan@analog.com>
-Cc: Lars-Peter Clausen <lars@metafoo.de>, 
- Michael Hennerich <Michael.Hennerich@analog.com>, 
- Jonathan Cameron <jic23@kernel.org>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
- Conor Dooley <conor+dt@kernel.org>, David Lechner <dlechner@baylibre.com>, 
- linux-iio@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, Dumitru Ceclan <mitrutzceclan@gmail.com>
-X-Mailer: b4 0.12.4
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1711985550; l=12578;
- i=dumitru.ceclan@analog.com; s=20240313; h=from:subject:message-id;
- bh=kiHu5JNtgoCzcntlDNshNci5NsEdS6HEdpF8vTbhVrY=;
- b=3PzLgxXE80EKuvp129PliMgrHheZyY6v4yLLBSuo77eMS8g/Uv4fB8VlUVy9QvZYi1HQth4G/
- LvW21PcLKMkA7ZlJsym0F74JH1+8fmHHi4kue5czc/a9hTLtuoQ0JPk
-X-Developer-Key: i=dumitru.ceclan@analog.com; a=ed25519;
- pk=HdqMlVyrcazwoiai7oN6ghU+Bj1pusGUFRl30jhS7Bo=
-X-Endpoint-Received: by B4 Relay for dumitru.ceclan@analog.com/20240313
- with auth_id=140
-X-Original-From: Dumitru Ceclan <dumitru.ceclan@analog.com>
-Reply-To: dumitru.ceclan@analog.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: CY5PR11MB6366.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 783752f3-88ee-4991-18bc-08dc525e0065
+X-MS-Exchange-CrossTenant-originalarrivaltime: 01 Apr 2024 15:11:26.6204
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: yV7pzg3IU41jLFz0TUjfp37J2Ajn4EbBr/k/tQGCAt1sBeQszdzY1AW8VwRrF/ofzyrqNhKumF/b9v7T/tKpTFygwFDWPIo1b7kJPJpFGtM=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR11MB6871
+X-OriginatorOrg: intel.com
 
-From: Dumitru Ceclan <dumitru.ceclan@analog.com>
-
-Add support for AD4111/AD4112/AD4114/AD4115/AD4116.
-
-The AD411X family encompasses a series of low power, low noise, 24-bit,
-sigma-delta analog-to-digital converters that offer a versatile range of
-specifications.
-
-This family of ADCs integrates an analog front end suitable for processing
-both fully differential and single-ended, bipolar voltage inputs
-addressing a wide array of industrial and instrumentation requirements.
-
-- All ADCs have inputs with a precision voltage divider with a division
-  ratio of 10.
-- AD4116 has 5 low level inputs without a voltage divider.
-- AD4111 and AD4112 support current inputs (0 mA to 20 mA) using a 50ohm
-  shunt resistor.
-
-Signed-off-by: Dumitru Ceclan <dumitru.ceclan@analog.com>
----
- drivers/iio/adc/ad7173.c | 224 ++++++++++++++++++++++++++++++++++++++++++++---
- 1 file changed, 210 insertions(+), 14 deletions(-)
-
-diff --git a/drivers/iio/adc/ad7173.c b/drivers/iio/adc/ad7173.c
-index 9526585e6929..ac32bd7dbd1e 100644
---- a/drivers/iio/adc/ad7173.c
-+++ b/drivers/iio/adc/ad7173.c
-@@ -1,8 +1,9 @@
- // SPDX-License-Identifier: GPL-2.0+
- /*
-- * AD717x family SPI ADC driver
-+ * AD717x and AD411x family SPI ADC driver
-  *
-  * Supported devices:
-+ *  AD4111/AD4112/AD4114/AD4115/AD4116
-  *  AD7172-2/AD7172-4/AD7173-8/AD7175-2
-  *  AD7175-8/AD7176-2/AD7177-2
-  *
-@@ -72,6 +73,11 @@
- #define AD7175_2_ID			0x0cd0
- #define AD7172_4_ID			0x2050
- #define AD7173_ID			0x30d0
-+#define AD4111_ID			0x30d0
-+#define AD4112_ID			0x30d0
-+#define AD4114_ID			0x30d0
-+#define AD4116_ID			0x34d0
-+#define AD4115_ID			0x38d0
- #define AD7175_8_ID			0x3cd0
- #define AD7177_ID			0x4fd0
- #define AD7173_ID_MASK			GENMASK(15, 4)
-@@ -120,11 +126,20 @@
- #define AD7173_VOLTAGE_INT_REF_uV	2500000
- #define AD7173_TEMP_SENSIIVITY_uV_per_C	477
- #define AD7177_ODR_START_VALUE		0x07
-+#define AD4111_SHUNT_RESISTOR_OHM	50
-+#define AD4111_DIVIDER_RATIO		10
-+#define AD411X_VCOM_INPUT		0X10
-+#define AD4111_CURRENT_CHAN_CUTOFF	16
- 
- #define AD7173_FILTER_ODR0_MASK		GENMASK(5, 0)
- #define AD7173_MAX_CONFIGS		8
- 
- enum ad7173_ids {
-+	ID_AD4111,
-+	ID_AD4112,
-+	ID_AD4114,
-+	ID_AD4115,
-+	ID_AD4116,
- 	ID_AD7172_2,
- 	ID_AD7172_4,
- 	ID_AD7173_8,
-@@ -134,16 +149,26 @@ enum ad7173_ids {
- 	ID_AD7177_2,
- };
- 
-+enum ad4111_current_channels {
-+	AD4111_CURRENT_IN0P_IN0N,
-+	AD4111_CURRENT_IN1P_IN1N,
-+	AD4111_CURRENT_IN2P_IN2N,
-+	AD4111_CURRENT_IN3P_IN3N,
-+};
-+
- struct ad7173_device_info {
- 	const unsigned int *sinc5_data_rates;
- 	unsigned int num_sinc5_data_rates;
- 	unsigned int odr_start_value;
-+	unsigned int num_inputs_with_divider;
- 	unsigned int num_channels;
- 	unsigned int num_configs;
- 	unsigned int num_inputs;
- 	unsigned int clock;
- 	unsigned int id;
- 	char *name;
-+	bool has_current_inputs;
-+	bool has_vcom;
- 	bool has_temp;
- 	bool has_input_buf;
- 	bool has_int_ref;
-@@ -189,6 +214,24 @@ struct ad7173_state {
- #endif
- };
- 
-+static unsigned int ad4115_sinc5_data_rates[] = {
-+	24845000, 24845000, 20725000, 20725000,	/*  0-3  */
-+	15564000, 13841000, 10390000, 10390000,	/*  4-7  */
-+	4994000,  2499000,  1000000,  500000,	/*  8-11 */
-+	395500,   200000,   100000,   59890,	/* 12-15 */
-+	49920,    20000,    16660,    10000,	/* 16-19 */
-+	5000,	  2500,     2500,		/* 20-22 */
-+};
-+
-+static unsigned int ad4116_sinc5_data_rates[] = {
-+	12422360, 12422360, 12422360, 12422360,	/*  0-3  */
-+	10362690, 10362690, 7782100,  6290530,	/*  4-7  */
-+	5194800,  2496900,  1007600,  499900,	/*  8-11 */
-+	390600,	  200300,   100000,   59750,	/* 12-15 */
-+	49840,	  20000,    16650,    10000,	/* 16-19 */
-+	5000,	  2500,	    1250,		/* 20-22 */
-+};
-+
- static const unsigned int ad7173_sinc5_data_rates[] = {
- 	6211000, 6211000, 6211000, 6211000, 6211000, 6211000, 5181000, 4444000,	/*  0-7  */
- 	3115000, 2597000, 1007000, 503800,  381000,  200300,  100500,  59520,	/*  8-15 */
-@@ -204,7 +247,91 @@ static const unsigned int ad7175_sinc5_data_rates[] = {
- 	5000,					/* 20    */
- };
- 
-+static unsigned int ad4111_current_channel_config[] = {
-+	[AD4111_CURRENT_IN0P_IN0N] = 0x1E8,
-+	[AD4111_CURRENT_IN1P_IN1N] = 0x1C9,
-+	[AD4111_CURRENT_IN2P_IN2N] = 0x1AA,
-+	[AD4111_CURRENT_IN3P_IN3N] = 0x18B,
-+};
-+
- static const struct ad7173_device_info ad7173_device_info[] = {
-+	[ID_AD4111] = {
-+		.id = AD4111_ID,
-+		.num_inputs_with_divider = 8,
-+		.num_channels = 16,
-+		.num_configs = 8,
-+		.num_inputs = 8,
-+		.num_gpios = 2,
-+		.has_temp = true,
-+		.has_vcom = true,
-+		.has_input_buf = true,
-+		.has_current_inputs = true,
-+		.has_int_ref = true,
-+		.clock = 2 * HZ_PER_MHZ,
-+		.sinc5_data_rates = ad7173_sinc5_data_rates,
-+		.num_sinc5_data_rates = ARRAY_SIZE(ad7173_sinc5_data_rates),
-+	},
-+	[ID_AD4112] = {
-+		.id = AD4112_ID,
-+		.num_inputs_with_divider = 8,
-+		.num_channels = 16,
-+		.num_configs = 8,
-+		.num_inputs = 8,
-+		.num_gpios = 2,
-+		.has_vcom = true,
-+		.has_temp = true,
-+		.has_input_buf = true,
-+		.has_current_inputs = true,
-+		.has_int_ref = true,
-+		.clock = 2 * HZ_PER_MHZ,
-+		.sinc5_data_rates = ad7173_sinc5_data_rates,
-+		.num_sinc5_data_rates = ARRAY_SIZE(ad7173_sinc5_data_rates),
-+	},
-+	[ID_AD4114] = {
-+		.id = AD4114_ID,
-+		.num_inputs_with_divider = 16,
-+		.num_channels = 16,
-+		.num_configs = 8,
-+		.num_inputs = 16,
-+		.num_gpios = 4,
-+		.has_vcom = true,
-+		.has_temp = true,
-+		.has_input_buf = true,
-+		.has_int_ref = true,
-+		.clock = 2 * HZ_PER_MHZ,
-+		.sinc5_data_rates = ad7173_sinc5_data_rates,
-+		.num_sinc5_data_rates = ARRAY_SIZE(ad7173_sinc5_data_rates),
-+	},
-+	[ID_AD4115] = {
-+		.id = AD4115_ID,
-+		.num_inputs_with_divider = 16,
-+		.num_channels = 16,
-+		.num_configs = 8,
-+		.num_inputs = 16,
-+		.num_gpios = 4,
-+		.has_vcom = true,
-+		.has_temp = true,
-+		.has_input_buf = true,
-+		.has_int_ref = true,
-+		.clock = 8 * HZ_PER_MHZ,
-+		.sinc5_data_rates = ad4115_sinc5_data_rates,
-+		.num_sinc5_data_rates = ARRAY_SIZE(ad4115_sinc5_data_rates),
-+	},
-+	[ID_AD4116] = {
-+		.id = AD4116_ID,
-+		.num_inputs_with_divider = 11,
-+		.num_channels = 16,
-+		.num_configs = 8,
-+		.num_inputs = 16,
-+		.num_gpios = 4,
-+		.has_vcom = true,
-+		.has_temp = true,
-+		.has_input_buf = true,
-+		.has_int_ref = true,
-+		.clock = 4 * HZ_PER_MHZ,
-+		.sinc5_data_rates = ad4116_sinc5_data_rates,
-+		.num_sinc5_data_rates = ARRAY_SIZE(ad4116_sinc5_data_rates),
-+	},
- 	[ID_AD7172_2] = {
- 		.name = "ad7172-2",
- 		.id = AD7172_2_ID,
-@@ -670,18 +797,34 @@ static int ad7173_read_raw(struct iio_dev *indio_dev,
- 
- 		return IIO_VAL_INT;
- 	case IIO_CHAN_INFO_SCALE:
--		if (chan->type == IIO_TEMP) {
-+
-+		switch (chan->type) {
-+		case IIO_TEMP:
- 			temp = AD7173_VOLTAGE_INT_REF_uV * MILLI;
- 			temp /= AD7173_TEMP_SENSIIVITY_uV_per_C;
- 			*val = temp;
- 			*val2 = chan->scan_type.realbits;
--		} else {
-+			break;
-+		case IIO_VOLTAGE:
- 			*val = ad7173_get_ref_voltage_milli(st, ch->cfg.ref_sel);
- 			*val2 = chan->scan_type.realbits - !!(ch->cfg.bipolar);
-+
-+			if (chan->channel < st->info->num_inputs_with_divider)
-+				*val *= AD4111_DIVIDER_RATIO;
-+			break;
-+		case IIO_CURRENT:
-+			*val = ad7173_get_ref_voltage_milli(st, ch->cfg.ref_sel);
-+			*val /= AD4111_SHUNT_RESISTOR_OHM;
-+			*val2 = chan->scan_type.realbits - !!(ch->cfg.bipolar);
-+			break;
-+		default:
-+			return -EINVAL;
- 		}
- 		return IIO_VAL_FRACTIONAL_LOG2;
- 	case IIO_CHAN_INFO_OFFSET:
--		if (chan->type == IIO_TEMP) {
-+
-+		switch (chan->type) {
-+		case IIO_TEMP:
- 			/* 0 Kelvin -> raw sample */
- 			temp   = -ABSOLUTE_ZERO_MILLICELSIUS;
- 			temp  *= AD7173_TEMP_SENSIIVITY_uV_per_C;
-@@ -690,8 +833,13 @@ static int ad7173_read_raw(struct iio_dev *indio_dev,
- 						       AD7173_VOLTAGE_INT_REF_uV *
- 						       MILLI);
- 			*val   = -temp;
--		} else {
-+			break;
-+		case IIO_VOLTAGE:
-+		case IIO_CURRENT:
- 			*val = -BIT(chan->scan_type.realbits - 1);
-+			break;
-+		default:
-+			return -EINVAL;
- 		}
- 		return IIO_VAL_INT;
- 	case IIO_CHAN_INFO_SAMP_FREQ:
-@@ -909,6 +1057,24 @@ static int ad7173_register_clk_provider(struct iio_dev *indio_dev)
- 					   &st->int_clk_hw);
- }
- 
-+static int ad4111_validate_current_ain(struct ad7173_state *st,
-+				       unsigned int ain[2])
-+{
-+	struct device *dev = &st->sd.spi->dev;
-+
-+	if (!st->info->has_current_inputs)
-+		return dev_err_probe(dev, -EINVAL,
-+			"Reg values equal to or higher than %d are restricted to models with current channels.\n",
-+			AD4111_CURRENT_CHAN_CUTOFF);
-+
-+	if (ain[1] != 0 && ain[0] >= ARRAY_SIZE(ad4111_current_channel_config))
-+		return dev_err_probe(dev, -EINVAL,
-+			"For current channel diff-channels must be <[0-%d],0>\n",
-+			ARRAY_SIZE(ad4111_current_channel_config) - 1);
-+
-+	return 0;
-+}
-+
- static int ad7173_validate_voltage_ain_inputs(struct ad7173_state *st,
- 					      unsigned int ain[2])
- {
-@@ -951,7 +1117,7 @@ static int ad7173_fw_parse_channel_config(struct iio_dev *indio_dev)
- 	struct device *dev = indio_dev->dev.parent;
- 	struct iio_chan_spec *chan_arr, *chan;
- 	unsigned int ain[2], chan_index = 0;
--	int ref_sel, ret, num_channels;
-+	int ref_sel, ret, reg, num_channels;
- 
- 	num_channels = device_get_child_node_count(dev);
- 
-@@ -1004,10 +1170,20 @@ static int ad7173_fw_parse_channel_config(struct iio_dev *indio_dev)
- 		if (ret)
- 			return ret;
- 
--		ret = ad7173_validate_voltage_ain_inputs(st, ain);
-+		ret = fwnode_property_read_u32(child, "reg", &reg);
- 		if (ret)
- 			return ret;
- 
-+		if (reg >= AD4111_CURRENT_CHAN_CUTOFF) {
-+			ret = ad4111_validate_current_ain(st, ain);
-+			if (ret)
-+				return ret;
-+		} else {
-+			ret = ad7173_validate_voltage_ain_inputs(st, ain);
-+			if (ret)
-+				return ret;
-+		}
-+
- 		ret = fwnode_property_match_property_string(child,
- 							    "adi,reference-select",
- 							    ad7173_ref_sel_str,
-@@ -1028,15 +1204,22 @@ static int ad7173_fw_parse_channel_config(struct iio_dev *indio_dev)
- 		*chan = ad7173_channel_template;
- 		chan->address = chan_index;
- 		chan->scan_index = chan_index;
--		chan->channel = ain[0];
--		chan->channel2 = ain[1];
--		chan->differential = true;
- 
--		chan_st_priv->ain = AD7173_CH_ADDRESS(ain[0], ain[1]);
-+		if (reg >= AD4111_CURRENT_CHAN_CUTOFF) {
-+			chan->type = IIO_CURRENT;
-+			chan->channel = ain[0];
-+			chan_st_priv->ain = ad4111_current_channel_config[ain[0]];
-+		} else {
-+			chan->channel = ain[0];
-+			chan->channel2 = ain[1];
-+			chan->differential = true;
-+
-+			chan_st_priv->ain = AD7173_CH_ADDRESS(ain[0], ain[1]);
-+			chan_st_priv->cfg.input_buf = st->info->has_input_buf;
-+		}
-+
- 		chan_st_priv->chan_reg = chan_index;
--		chan_st_priv->cfg.input_buf = st->info->has_input_buf;
- 		chan_st_priv->cfg.odr = 0;
--
- 		chan_st_priv->cfg.bipolar = fwnode_property_read_bool(child, "bipolar");
- 		if (chan_st_priv->cfg.bipolar)
- 			chan->info_mask_separate |= BIT(IIO_CHAN_INFO_OFFSET);
-@@ -1167,6 +1350,14 @@ static int ad7173_probe(struct spi_device *spi)
- }
- 
- static const struct of_device_id ad7173_of_match[] = {
-+	{ .compatible = "ad4111",
-+	  .data = &ad7173_device_info[ID_AD4111]},
-+	{ .compatible = "ad4112",
-+	  .data = &ad7173_device_info[ID_AD4112]},
-+	{ .compatible = "ad4114",
-+	  .data = &ad7173_device_info[ID_AD4114]},
-+	{ .compatible = "ad4115",
-+	  .data = &ad7173_device_info[ID_AD4115]},
- 	{ .compatible = "adi,ad7172-2",
- 	  .data = &ad7173_device_info[ID_AD7172_2]},
- 	{ .compatible = "adi,ad7172-4",
-@@ -1186,6 +1377,11 @@ static const struct of_device_id ad7173_of_match[] = {
- MODULE_DEVICE_TABLE(of, ad7173_of_match);
- 
- static const struct spi_device_id ad7173_id_table[] = {
-+	{ "ad4111", (kernel_ulong_t)&ad7173_device_info[ID_AD4111]},
-+	{ "ad4112", (kernel_ulong_t)&ad7173_device_info[ID_AD4112]},
-+	{ "ad4114", (kernel_ulong_t)&ad7173_device_info[ID_AD4114]},
-+	{ "ad4115", (kernel_ulong_t)&ad7173_device_info[ID_AD4115]},
-+	{ "ad4116", (kernel_ulong_t)&ad7173_device_info[ID_AD4116]},
- 	{ "ad7172-2", (kernel_ulong_t)&ad7173_device_info[ID_AD7172_2]},
- 	{ "ad7172-4", (kernel_ulong_t)&ad7173_device_info[ID_AD7172_4]},
- 	{ "ad7173-8", (kernel_ulong_t)&ad7173_device_info[ID_AD7173_8]},
-@@ -1210,5 +1406,5 @@ module_spi_driver(ad7173_driver);
- MODULE_IMPORT_NS(IIO_AD_SIGMA_DELTA);
- MODULE_AUTHOR("Lars-Peter Clausen <lars@metafo.de>");
- MODULE_AUTHOR("Dumitru Ceclan <dumitru.ceclan@analog.com>");
--MODULE_DESCRIPTION("Analog Devices AD7172/AD7173/AD7175/AD7176 ADC driver");
-+MODULE_DESCRIPTION("Analog Devices AD717x and AD411x ADC driver");
- MODULE_LICENSE("GPL");
-
--- 
-2.43.0
-
-
+PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBQYXVsIE1lbnplbCA8cG1lbnpl
+bEBtb2xnZW4ubXBnLmRlPg0KPiBTZW50OiBNb25kYXksIEFwcmlsIDAxLCAyMDI0IDE2OjA3DQo+
+IFRvOiBVc3lza2luLCBBbGV4YW5kZXIgPGFsZXhhbmRlci51c3lza2luQGludGVsLmNvbT47IFdp
+bmtsZXIsIFRvbWFzDQo+IDx0b21hcy53aW5rbGVyQGludGVsLmNvbT4NCj4gQ2M6IExLTUwgPGxp
+bnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc+DQo+IFN1YmplY3Q6IFJlOiBMaW51eCBsb2dzIGVy
+cm9yOiBgbWVpX21lIDAwMDA6MDA6MTYuMDogY2w6aG9zdD0wNCBtZT0wMCBpcyBub3QNCj4gY29u
+bmVjdGVkYA0KPiANCj4gRGVhciBBbGV4YW5kZXIsDQo+IA0KPiANCj4gVGhhbmsgeW91IHZlcnkg
+bXVjaCBmb3IgeW91ciByZXBseS4NCj4gDQo+IEFtIDAxLjA0LjI0IHVtIDA4OjU0IHNjaHJpZWIg
+VXN5c2tpbiwgQWxleGFuZGVyOg0KPiA+PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiAN
+Cj4gPj4gU2VudDogU2F0dXJkYXksIE1hcmNoIDMwLCAyMDI0IDEzOjU2DQo+ID4+IEFtIDMwLjAz
+LjI0IHVtIDExOjUwIHNjaHJpZWIgV2lua2xlciwgVG9tYXM6DQo+ID4+Pg0KPiA+Pj4+IC0tLS0t
+T3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+ID4+Pj4gRnJvbTogUGF1bCBNZW56ZWwgPHBtZW56ZWxA
+bW9sZ2VuLm1wZy5kZT4NCj4gPj4+PiBTZW50OiBGcmlkYXksIE1hcmNoIDI5LCAyMDI0IDEyOjQ5
+IFBNDQo+ID4+DQo+ID4+IFvigKZdDQo+ID4+DQo+ID4+Pj4gT24gYSBEZWxsIFhQUyAxMyA5MzYw
+LzA1OTZLRiwgQklPUyAyLjIxLjAgMDYvMDIvMjAyMiB3aXRoIERlYmlhbg0KPiA+Pj4+IHNpZC91
+bnN0YWJsZSBhbmQgc2VsZi1idWlsdCBMaW51eCA2LjktcmMxKyB3aXRoIG9uZSBwYXRjaCBvbiB0
+b3AgWzFdIGFuZA0KPiA+Pj4+IEtBU0FOIGVuYWJsZWQuDQo+ID4+Pj4NCj4gPj4+PiAgICAgICAg
+JCBnaXQgbG9nIC0tbm8tZGVjb3JhdGUgLS1vbmVsaW5lIC0yIGEyY2UwMjJhZmNiYg0KPiA+Pj4+
+ICAgICAgICBhMmNlMDIyYWZjYmIgW1BBVENIXSBrYnVpbGQ6IERpc2FibGUgS0NTQU4gZm9yIGF1
+dG9nZW5lcmF0ZWQgKi5tb2QuYw0KPiBpbnRlcm1lZGlhcmllcw0KPiA+Pj4+ICAgICAgICA4ZDAy
+NWUyMDkyZTIgTWVyZ2UgdGFnICdlcm9mcy1mb3ItNi45LXJjMi1maXhlcycgb2YNCj4gZ2l0Oi8v
+Z2l0Lmtlcm5lbC5vcmcvcHViL3NjbS9saW51eC9rZXJuZWwvZ2l0L3hpYW5nL2Vyb2ZzDQo+ID4+
+Pj4NCj4gPj4+PiBBZnRlciBzZXZlcmFsIEFDUEkgUzMgKGRlZXApIHN1c3BlbmQgYW5kIHJlc3Vt
+ZSBjeWNsZXMsIHRoaXMgbW9ybmluZyBJDQo+ID4+Pj4gbm90aWNlZCB0aGUgZXJyb3IgYmVsb3c6
+DQo+ID4+Pj4NCj4gPj4+PiAgICAgICAgWzI5MzU3LjE3NzYzNV0gbWVpX21lIDAwMDA6MDA6MTYu
+MDogY2w6aG9zdD0wNCBtZT0wMCBpcyBub3QNCj4gY29ubmVjdGVkDQo+ID4+Pj4NCj4gPj4+PiBU
+aGlzIHNlZW1zIHRvIGJlIGxvZ2dlZCBmcm9tIGBtZWlfd3JpdGUoKWAgaW4gYGRyaXZlcnMvbWlz
+Yy9tZWkvbWFpbi5jYC4NCj4gPj4+Pg0KPiA+Pj4+ICAgICAgICBpZiAoIW1laV9jbF9pc19jb25u
+ZWN0ZWQoY2wpKSB7DQo+ID4+Pj4gICAgICAgIAljbF9lcnIoZGV2LCBjbCwgImlzIG5vdCBjb25u
+ZWN0ZWQiKTsNCj4gPj4+PiAgICAgICAgCXJldHMgPSAtRU5PREVWOw0KPiA+Pj4+ICAgICAgICAJ
+Z290byBvdXQ7DQo+ID4+Pj4gICAgICAgIH0NCj4gPj4+Pg0KPiA+Pj4+IHdpdGggYGRyaXZlcnMv
+bWlzYy9tZWkvY2xpZW50LmhgIGNvbnRhaW5pbmc6DQo+ID4+Pj4NCj4gPj4+PiAgICAgICAgLyoq
+DQo+ID4+Pj4gICAgICAgICAqIG1laV9jbF9pc19jb25uZWN0ZWQgLSBob3N0IGNsaWVudCBpcyBj
+b25uZWN0ZWQNCj4gPj4+PiAgICAgICAgICoNCj4gPj4+PiAgICAgICAgICogQGNsOiBob3N0IGNs
+aWVudA0KPiA+Pj4+ICAgICAgICAgKg0KPiA+Pj4+ICAgICAgICAgKiBSZXR1cm46IHRydWUgaWYg
+dGhlIGhvc3QgY2xpZW50IGlzIGNvbm5lY3RlZA0KPiA+Pj4+ICAgICAgICAgKi8NCj4gPj4+PiAg
+ICAgICAgc3RhdGljIGlubGluZSBib29sIG1laV9jbF9pc19jb25uZWN0ZWQoY29uc3Qgc3RydWN0
+IG1laV9jbCAqY2wpDQo+ID4+Pj4gICAgICAgIHsNCj4gPj4+PiAgICAgICAgCXJldHVybiAgY2wt
+PnN0YXRlID09IE1FSV9GSUxFX0NPTk5FQ1RFRDsNCj4gPj4+PiAgICAgICAgfQ0KPiA+Pj4+DQo+
+ID4+Pj4gVW5mb3J0dW5hdGVseSwgSSBkbyBub3Qga25vdyBhdCBhbGwsIHdoeSB0aGUgTUUgbmVl
+ZHMgdG8gYmUgd3JpdHRlbiB0bywgYW5kDQo+ID4+Pj4gd2hhdCB3YXMgdHJpZWQgdG8gYmUgd3Jp
+dHRlbiwgYW5kIHdoYXQgdGhlIGVmZmVjdCBvZiB0aGlzIGZhaWx1cmUgaXMuDQo+ID4+Pj4NCj4g
+Pj4+PiBDb3VsZCB5b3UgcGxlYXNlIHRha2UgYSBsb29rIGF0IGl0Pw0KPiA+Pj4NCj4gPj4+IExv
+b2tzIGxpa2UgYSB0aW1pbmcgaXNzdWUgYmV0d2VlbiBzZXR0aW5nIHVwIEhEQ1AgYnkgZ3JhcGhp
+Y3MgYW5kDQo+ID4+PiBkZXZpY2UgcG93ZXIgbWFuYWdlbWVudC4gIEkgZG9uJ3QgdGhpbmsgdGhp
+cyBpcyBhIHJlYWxseSBhbiBpc3N1ZSBpZg0KPiA+Pj4gdGhpcyBpcyBoYXBwZW5pbmcgZHVyaW5n
+IHBvd2VyIGN5Y2xlcyBzdHJlc3MuDQo+ID4+DQo+ID4+IFVuZGVyc3Rvb2QuIENvdWxkIHRoaXMg
+YmUgYmVjYXVzZSBvZiB0aGUgQWRkcmVzcyBTYW5pdGl6ZXIgKEtBU0FOKT8NCj4gPj4NCj4gPj4+
+IEFueXdheSB3ZSB3aWxsIGxvb2sgYXQgdGhhdCwgd2lsbCB5b3UgYmUgYWJsZSB0byBwcm92aWRl
+IG1vcmUgZGVidWcNCj4gPj4+IGluZm9ybWF0aW9uIGlmIHdlIGFzayBmb3IgaXQ/DQo+ID4+DQo+
+ID4+IFRoYW5rIHlvdS4gWWVzLCBJIGNhbiB0ZXN0IHBhdGNoZXMuIEJ1dCByaWdodCBub3csIEkg
+d2FzIG9ubHkgYWJsZSB0bw0KPiA+PiBzZWUgdGhpcyBvbmNlLCBzbyBJIGFtIG5vdCBzdXJlIGhv
+dyB0byByZXByb2R1Y2UgaXQuDQo+ID4NCj4gPiBUaGlzIHByaW50IGlzIGluIHRoZSBjb2RlIHBh
+dGggZXhlY3V0ZWQgZnJvbSB1c2VyLXNwYWNlIG9ubHkuIFNlZW0NCj4gPiBsaWtlIHNvbWUgdXNl
+ciBzcGFjZSBhcHAgaGF2ZSBoYWQgY29ubmVjdGlvbiBvcGVuZWQgYmVmb3JlIHN1c3BlbmQNCj4g
+PiBhbmQgdHJpZWQgdG8gd3JpdGUgYWZ0ZXIgcmVzdW1lLCBidXQgZHJpdmVyIGNsb3NlZCBhbGwg
+Y29ubmVjdGlvbnMgb24NCj4gPiBzdXNwZW5kLiBUaGlzIGlzIG5vcm1hbCBmbG93OyB1c2VyIHNw
+YWNlIHNob3VsZCByZW9wZW4gaGFuZGxlIGFuZA0KPiA+IHJldHJ5IGluIHRoaXMgY2FzZS4NCj4g
+DQo+IEludGVyZXN0aW5nLiBXb3VsZCB1c2VyIHNwYWNlIHByb2dyYW0gY291bGQgdGhpcyBiZT8N
+Cj4gDQoNCllvdSBjYW4gdHJ5IHRvIGxvb2sgd2hvIG9wZW5zIC9kZXYvbWVpKiB3aXRoIGxzb2Yg
+b3Igc2ltaWxhci4NCg0KPiA+IFRoZSBwcmludCBjYW4gYmUgZGVtb3RlZCB0byBkZWJ1ZywgSSB0
+aGluay4NCj4gDQo+IFVuZGVyc3Rvb2QuIFN0aWxsIG1heWJlIGl0IGNvdWxkIGJlIGV4dGVuZGVk
+IHRvbywgc28gdGhlIGNhdXNlL3NvbHV0aW9uDQo+IGNvdWxkIGJlIGRlZHVjZWQgZnJvbSB0aGUg
+TGludXggbG9ncy4NCj4gDQpUaGlzIGNhbiBiZSBnZW51aW5lIHVzZXItc3BhY2UgZXJyb3Igd2hl
+biBhcHAgYnJlYWtzIHRoZSBwcm90b2NvbC4NCkRyaXZlciBoYXMgbm8gZGF0YSB0byBkaXN0aW5n
+dWlzaC4NCg0KPiANCj4gS2luZCByZWdhcmRzLA0KPiANCj4gUGF1bA0KPiANCj4gDQo+IFBTOiBP
+bmx5IGlmIHlvdSBjYXJlOg0KPiANCj4gPiAtLQ0KPiA+IEFsZXhhbmRlciAoU2FzaGEpIFVzeXNr
+aW4NCj4gDQo+IFlvdXIgc2lnbmF0dXJlIGRlbGltaXRlciBtaXNzZXMgYSB0cmFpbGluZyBzcGFj
+ZSBhdCB0aGUgZW5kIFsxXS4NCj4gDQo+IA0KPiBbMV06IGh0dHBzOi8vZW4ud2lraXBlZGlhLm9y
+Zy93aWtpL1NpZ25hdHVyZV9ibG9jayNTdGFuZGFyZF9kZWxpbWl0ZXINCg0KVGh4LCBmaXhpbmcs
+IHRoaXMgc2hvdWxkIGJlIHJpZ2h0Lg0KDQotLSANCkFsZXhhbmRlciAoU2FzaGEpIFVzeXNraW4N
+Cg0KQ1NFIEZXIERldiAtIEhvc3QgU1cNCkludGVsIElzcmFlbCAoNzQpIExpbWl0ZWQNCg0KDQo=
