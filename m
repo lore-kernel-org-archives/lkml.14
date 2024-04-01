@@ -1,30 +1,30 @@
 Received: from blizzard.enjellic.com (wind.enjellic.com [76.10.64.91])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 45E6137144;
-	Mon,  1 Apr 2024 10:50:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DA89C200AE;
+	Mon,  1 Apr 2024 10:50:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=76.10.64.91
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711968648; cv=none; b=RkDP/n6RE9+nY8Suj4UByHvQ0d4azm6VD5zLkaSVWguSH2jFI/EQWZKFg7dniZYi0ldydxYAm7LnYPtfMZVugQQhJeLrTqqyrYWY8lai3MTkUMY6FCP/HgBTLCDhgJguZFMMjQu6tVowqh1OPKCAiPK0zn5BZCb/uu8oNbuqrJY=
+	t=1711968643; cv=none; b=CV0X+s2tk+JQGwCzHA81q75TtNEPyYcJ5yU971nMLYyEr77h5tJTnmUh8yBQIC/D5IJ5tPYLRrt221tYZafgc8TKSCbpEJYl8azDwbCwNp1LwD0Bns0vJ8kmTK+j9x/fxC3bKzxNMR2IF/suADUZmX1mzOGulXLf4YSAeo0nFdQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711968648; c=relaxed/simple;
-	bh=A3YJ20u5Z9Tj4aFGrDSHD0JkGW4BIAHoUUkzF4gW2c4=;
+	s=arc-20240116; t=1711968643; c=relaxed/simple;
+	bh=FITvcy/U2qmFYois7O0wms199+Wip/Z1oLcWfVDT3nM=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=lshT9NV40/cUSYM/Vhmf41C5Tjq8KZwiMJvLKA+gRzs8iDeGL/7YZ2ZGPbR+ytK7teRkAe1viMSBI/Zfa5urUGHCLwTOSvSeFAg3hcXrI7hlY1MDi93/seoGvQfOX6glTD9N4tjsefAMp9XpmXcT7PY3Ccvh5ZR3NKoq4Z7K6es=
+	 MIME-Version; b=opDZvHagVeP9yKJo2tKg+/jLSJh6bR93k0tgvh9bwccFJYJsxm1X/2Pkgw4RuFs+coGZuAPljDSjOtApbUgy26P6zl1uJvBwZAThvo2HN+DDEalNkfPQgyOcN9suxMZyhj9uf6527AmcjbO1wX7JTAPbl9UvvN750WwDzzdu1Hw=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=enjellic.com; spf=pass smtp.mailfrom=enjellic.com; arc=none smtp.client-ip=76.10.64.91
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=enjellic.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=enjellic.com
 Received: from blizzard.enjellic.com (localhost [127.0.0.1])
-	by blizzard.enjellic.com (8.15.2/8.15.2) with ESMTP id 431AoI3U027653;
-	Mon, 1 Apr 2024 05:50:18 -0500
+	by blizzard.enjellic.com (8.15.2/8.15.2) with ESMTP id 431AoLPh027673;
+	Mon, 1 Apr 2024 05:50:21 -0500
 Received: (from greg@localhost)
-	by blizzard.enjellic.com (8.15.2/8.15.2/Submit) id 431AoIUV027651;
-	Mon, 1 Apr 2024 05:50:18 -0500
+	by blizzard.enjellic.com (8.15.2/8.15.2/Submit) id 431AoLYl027671;
+	Mon, 1 Apr 2024 05:50:21 -0500
 X-Authentication-Warning: blizzard.enjellic.com: greg set sender to greg@enjellic.com using -f
 From: Greg Wettstein <greg@enjellic.com>
 To: linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
 Cc: jmorris@namei.org
-Subject: [PATCH v3 01/12] Update MAINTAINERS file.
-Date: Mon,  1 Apr 2024 05:50:04 -0500
-Message-Id: <20240401105015.27614-2-greg@enjellic.com>
+Subject: [PATCH v3 05/12] Add root domain trust implementation.
+Date: Mon,  1 Apr 2024 05:50:08 -0500
+Message-Id: <20240401105015.27614-6-greg@enjellic.com>
 X-Mailer: git-send-email 2.39.1
 In-Reply-To: <20240401105015.27614-1-greg@enjellic.com>
 References: <20240401105015.27614-1-greg@enjellic.com>
@@ -38,32 +38,293 @@ Content-Transfer-Encoding: 8bit
 
 From: "Dr. Greg" <greg@enjellic.com>
 
-Add an entry to the MAINTAINERS file to document the maintainer's
-address and files relevant to the Trusted Security Event Modeling
-system (TSEM).
----
- MAINTAINERS | 8 ++++++++
- 1 file changed, 8 insertions(+)
+The trust.c contains the support infrastructure for anchoring the
+root modeling domain to a Trusted Platform Modul (TPM)
+implementation if one is available.
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index aa3b947fb080..03b1cd71701e 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -22469,6 +22469,14 @@ F:	Documentation/ABI/testing/configfs-tsm
- F:	drivers/virt/coco/tsm.c
- F:	include/linux/tsm.h
- 
-+TSEM SECURITY MODULE
-+M:	Greg Wettstein <greg@enjellic.com>
-+S:	Maintained
-+L:	linux-security-module@vger.kernel.org
-+F:	Documentation/admin-guide/LSM/tsem.rst
-+F:	Documentation/ABI/testing/tsem
-+F:	security/tsem/
+The Platform Configuation Register (PCR) that is selected for the
+trust root is extended with the security state coefficients that
+each security event maps into.
+
+Also included is functionality that computes the hardware
+platform aggregate measurement that is the linear extension sum
+over PCR register 0 through 8.  The hardware aggregate
+measurement is generated and maintained in multiple cryptographic
+digest forms depending on the cryptographic hash functions used
+in the security modeling namespaces that request the value of the
+hardware aggregate.
+---
+ security/tsem/trust.c | 261 ++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 261 insertions(+)
+ create mode 100644 security/tsem/trust.c
+
+diff --git a/security/tsem/trust.c b/security/tsem/trust.c
+new file mode 100644
+index 000000000000..762bca735afc
+--- /dev/null
++++ b/security/tsem/trust.c
+@@ -0,0 +1,261 @@
++// SPDX-License-Identifier: GPL-2.0-only
 +
- TTY LAYER AND SERIAL DRIVERS
- M:	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
- M:	Jiri Slaby <jirislaby@kernel.org>
++/*
++ * Copyright (C) 2024 Enjellic Systems Development, LLC
++ * Author: Dr. Greg Wettstein <greg@enjellic.com>
++ *
++ * On a platform that has access to a TPM device, this file is
++ * responsible for maintaining a root of trust based on that device.
++ *
++ * As with other trusted platform implementations the root of trust is
++ * a linear extension measurement maintained in a Platform
++ * Configuration Register (PCR) on the TPM device.
++ *
++ * The PCR is extended with each unique security state coefficient
++ * that is generated by the model being implemented for the
++ * root security modeling namespace.  As with other trusted systems
++ * the value of the PCR will be variable depending on scheduling
++ * artifacts that are experienced by the root modeling namespace.
++ *
++ * TSEM uses a strategy of executing the TPM extension transactions
++ * using an ordered workqueue rather than doing them at the time the
++ * security event is processed.  This is done both for performance
++ * reasons and the fact that the coefficient extensions may arise from
++ * security events that are being invoked by processes running in
++ * atomic context.
++ *
++ * If the trust_init() function detects the presence of a TPM an
++ * ordered workqueue with the following name is created:
++ *
++ * tsem_tpm
++ *
++ * The tsem_trust_add_event() function places a work request
++ * containing a description of the event on this workqueue that will
++ * then asynchronously extend the security state coefficient of the
++ * event into the PCR being used to measure the trust state of
++ * the root security modeling namespace.
++ *
++ * This file is also responsible for providing the hardware aggregate
++ * measurement for injection into both internally and externally
++ * modeled namespaces.  The hardware aggregate value is the linear
++ * extension sum of PCR registers 0 through 8.
++ *
++ * Since TSEM supports multiple cryptographic digest functions on a
++ * namespace by namespace basis the hardware aggregate value is
++ * maintained in multiple digest forms.  The tsem_trust_aggregate()
++ * function returns a pointer to the digest value for the
++ * cryptographic digest function that is being used by the security
++ * modeling namespace in effect for the calling process.
++ */
++
++#include <linux/tpm.h>
++
++#include "tsem.h"
++
++static struct workqueue_struct *tpm_update_wq;
++
++static u8 zero_aggregate[HASH_MAX_DIGESTSIZE];
++
++static struct tpm_chip *tpm;
++
++static struct tpm_digest *digests;
++
++struct hardware_aggregate {
++	struct list_head list;
++	char *name;
++	u8 value[HASH_MAX_DIGESTSIZE];
++};
++
++DEFINE_MUTEX(hardware_aggregate_mutex);
++LIST_HEAD(hardware_aggregate_list);
++
++static struct hardware_aggregate *find_aggregate(void)
++{
++	struct hardware_aggregate *aggregate;
++
++	list_for_each_entry(aggregate, &hardware_aggregate_list, list) {
++		if (!strcmp(aggregate->name,
++			    tsem_context(current)->digestname))
++			goto done;
++	}
++	aggregate = NULL;
++
++ done:
++	return aggregate;
++}
++
++static struct hardware_aggregate *add_aggregate(u8 *new_aggregate)
++{
++	struct hardware_aggregate *aggregate;
++
++	aggregate = kzalloc(sizeof(*aggregate), GFP_KERNEL);
++	if (!aggregate)
++		return NULL;
++
++	aggregate->name = kstrdup(tsem_context(current)->digestname,
++				  GFP_KERNEL);
++	if (!aggregate->name) {
++		kfree(aggregate);
++		return NULL;
++	}
++	memcpy(aggregate->value, new_aggregate, tsem_digestsize());
++
++	list_add(&aggregate->list, &hardware_aggregate_list);
++
++	return aggregate;
++}
++
++/**
++ * tsem_trust_aggregate() - Return a pointer to the hardware aggregate.
++ *
++ * This function returns a pointer to the hardware aggregate encoded
++ * with the hash function for the current modeling domain.
++ *
++ * Return: A pointer is returned to the hardware aggregate value that
++ *	   has been cached.
++ */
++u8 *tsem_trust_aggregate(void)
++{
++	u8 aggregate[HASH_MAX_DIGESTSIZE], *retn = zero_aggregate;
++	u16 size;
++	unsigned int lp;
++	struct tpm_digest pcr;
++	struct hardware_aggregate *hw_aggregate;
++	SHASH_DESC_ON_STACK(shash, tfm);
++
++	if (!tpm)
++		return retn;
++
++	mutex_lock(&hardware_aggregate_mutex);
++
++	hw_aggregate = find_aggregate();
++	if (hw_aggregate) {
++		retn = hw_aggregate->value;
++		goto done;
++	}
++
++	shash->tfm = tsem_digest();
++	if (crypto_shash_init(shash))
++		goto done;
++
++	if (tpm_is_tpm2(tpm))
++		pcr.alg_id = TPM_ALG_SHA256;
++	else
++		pcr.alg_id = TPM_ALG_SHA1;
++	memset(pcr.digest, '\0', TPM_MAX_DIGEST_SIZE);
++
++	for (lp = 0; lp < tpm->nr_allocated_banks; lp++) {
++		if (pcr.alg_id == tpm->allocated_banks[lp].alg_id) {
++			size = tpm->allocated_banks[lp].digest_size;
++			break;
++		}
++	}
++
++	for (lp = 0; lp < 8; ++lp) {
++		if (tpm_pcr_read(tpm, lp, &pcr))
++			goto done;
++		if (crypto_shash_update(shash, pcr.digest, size))
++			goto done;
++	}
++	if (!crypto_shash_final(shash, aggregate)) {
++		hw_aggregate = add_aggregate(aggregate);
++		if (hw_aggregate)
++			retn = hw_aggregate->value;
++	}
++
++ done:
++	mutex_unlock(&hardware_aggregate_mutex);
++
++	if (retn == zero_aggregate)
++		pr_warn("tsem: Error generating platform aggregate\n");
++
++	return retn;
++}
++
++static void tpm_update_worker(struct work_struct *work)
++{
++	int amt, bank, digestsize;
++	struct tsem_event *ep;
++
++	ep = container_of(work, struct tsem_event, work);
++	digestsize = ep->digestsize;
++
++	for (bank = 0; bank < tpm->nr_allocated_banks; bank++) {
++		if (tpm->allocated_banks[bank].digest_size > digestsize) {
++			amt = digestsize;
++			memset(digests[bank].digest, '\0',
++			       tpm->allocated_banks[bank].digest_size);
++		} else
++			amt = tpm->allocated_banks[bank].digest_size;
++		memcpy(digests[bank].digest, ep->mapping, amt);
++	}
++
++	if (tpm_pcr_extend(tpm, CONFIG_SECURITY_TSEM_ROOT_MODEL_PCR,
++			   digests))
++		pr_warn("tsem: Failed TPM update.\n");
++
++	tsem_event_put(ep);
++}
++
++/**
++ * tsem_trust_add_point() - Add a measurement to the trust root.
++ * @ep: A pointer to the security event description whose measurement
++ *	is to be extended into the TPM.
++ *
++ * This function extends the platform configuration register being
++ * used to document the hardware root of trust for internally modeled
++ * domains with a security event coefficient value.
++ *
++ * Return: If the extension fails the error return value from the
++ *	   TPM command is returned, otherwise a value of zero is
++ *	   returned.
++ */
++int tsem_trust_add_event(struct tsem_event *ep)
++{
++	bool retn;
++
++	if (!tpm)
++		return 0;
++
++	tsem_event_get(ep);
++	ep->digestsize = tsem_digestsize();
++
++	INIT_WORK(&ep->work, tpm_update_worker);
++	retn = queue_work(tpm_update_wq, &ep->work);
++
++	return 0;
++}
++
++static int __init trust_init(void)
++{
++	int retn = -EINVAL, lp;
++
++	tpm = tpm_default_chip();
++	if (!tpm)
++		return retn;
++
++	tpm_update_wq = alloc_ordered_workqueue("tsem_tpm", 0);
++	if (IS_ERR(tpm_update_wq)) {
++		retn = PTR_ERR(tpm_update_wq);
++		goto done;
++	}
++
++	digests = kcalloc(tpm->nr_allocated_banks, sizeof(*digests), GFP_NOFS);
++	if (!digests) {
++		tpm = NULL;
++		return retn;
++	}
++	for (lp = 0; lp < tpm->nr_allocated_banks; lp++)
++		digests[lp].alg_id = tpm->allocated_banks[lp].alg_id;
++	retn = 0;
++
++ done:
++	if (retn) {
++		destroy_workqueue(tpm_update_wq);
++		kfree(digests);
++	}
++
++	return retn;
++}
++
++device_initcall_sync(trust_init);
 -- 
 2.39.1
 
