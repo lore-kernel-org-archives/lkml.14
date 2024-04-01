@@ -1,94 +1,106 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from relay1-d.mail.gandi.net (relay1-d.mail.gandi.net [217.70.183.193])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04529481B8
-	for <linux-kernel@vger.kernel.org>; Mon,  1 Apr 2024 16:57:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A4471DFF4
+	for <linux-kernel@vger.kernel.org>; Mon,  1 Apr 2024 16:57:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.193
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711990639; cv=none; b=NX1WiwgXl89AwTw4dnyyM/KjHR5TzCCxrayVaC6Q3muxDsljzzdc3QFEBt1oJMJPiEM4LnPiHmqZ5GkrMOb70YP51n+u67HRgrZvvB+92xSLVIhnKDPx+5DiA8POXuOzeimpKDinEMJIjjUHbMni5M/mqAcfR3FMxLt/K8zL47M=
+	t=1711990647; cv=none; b=nbKTPVhIw6ihlPQ1yeO2qV+hJFj53fa0iJXRGiGI4lRJvYlvBCCl5qEMu1FOtB28MUeZjcBpwrS3bH4fuxtJUQpw6PxHyUb7xnr2wT+wZCjSwEf5je5MSW110e6qknlNCSjVaIUrZOcVvrSdJ88eBNOED/F5IvfaOrOGkxQ/kMY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711990639; c=relaxed/simple;
-	bh=Q1GiDPsmOA9yFoE9UumeRh3CLhd1FXbZpuCn264ms8c=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=EOoUBsECQ4Gjv02QKr0Y4flJvBFfhoc5fsytV4rXDlHAQkWnMQCPCo+KSJZCunARxLv6PUWDx9fm2m5+mWkEVbSf0eEHw3sCkA7NavGJNCB0d1/xe50IZCUhd4YdCG8BKp6r6I78hMRyTJmwb8D7YYN3sd2eWkZ4M+zFAtBBO0k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.31])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4V7cCp0fbxz6K5t9;
-	Tue,  2 Apr 2024 00:39:02 +0800 (CST)
-Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
-	by mail.maildlp.com (Postfix) with ESMTPS id 92DB71400D1;
-	Tue,  2 Apr 2024 00:40:12 +0800 (CST)
-Received: from localhost (10.48.156.172) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.35; Mon, 1 Apr
- 2024 17:40:11 +0100
-Date: Mon, 1 Apr 2024 17:40:09 +0100
-From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To: Aleksandr Aprelkov <aaprelkov@usergate.com>
-CC: Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>, Joerg
- Roedel <joro@8bytes.org>, Jason Gunthorpe <jgg@ziepe.ca>, "Nicolin Chen"
-	<nicolinc@nvidia.com>, Michael Shavit <mshavit@google.com>, Lu Baolu
-	<baolu.lu@linux.intel.com>, Marc Zyngier <maz@kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, <iommu@lists.linux.dev>,
-	<linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] iommu/arm-smmu-v3: Free MSIs in case of ENOMEM
-Message-ID: <20240401174009.00003644@Huawei.com>
-In-Reply-To: <20240329095133.576605-1-aaprelkov@usergate.com>
-References: <20240329095133.576605-1-aaprelkov@usergate.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+	s=arc-20240116; t=1711990647; c=relaxed/simple;
+	bh=vy2rwbkfeJlFAVqAh6iqsYi/WykwrRM/d7Y4v1HZ5aE=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=hjmfu8EjL7QnAO8L7f2BvwfTl61x7H/CCDm9i9RVDL121T3yQ1cZNpOeWv1X8irlxWvGzLrqXJxWNsV153H3pxsH77cx5BiuUKPw93dP8/H7zKzOAq9UondIgHyljJkk+fzvFTgDzHue5oX3P/v5KrfvEvgW51mr6e6adK1lxsY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=otheo.eu; spf=pass smtp.mailfrom=otheo.eu; dkim=pass (2048-bit key) header.d=otheo.eu header.i=@otheo.eu header.b=G2F5sCk2; arc=none smtp.client-ip=217.70.183.193
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=otheo.eu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=otheo.eu
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=otheo.eu header.i=@otheo.eu header.b="G2F5sCk2"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id D137A240007;
+	Mon,  1 Apr 2024 16:57:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=otheo.eu; s=gm1;
+	t=1711990643;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=SXWXDxA4hAxCjyuMS6SXVKSd48hGUzqLhteYMJWfkuM=;
+	b=G2F5sCk2pJpMZJzoom4M7p7nAYCh0irmbxh+VYFfPzmowDvubASFpre48OhBTZhkQSftzk
+	wIbB4ZYHi6orp5K3nzLU3/e5n0W+CiY+122zpCK9Lt7JsjQ7VF81d1wtaFgjxhdc3RmSyr
+	WXUpNErmpa0fOicXmLEBokZVDeu6DyYTLCWBerQ13LipRvNDtRay3Py9qxh5MmuRDp5Ecq
+	s5oHG5XiW+kBiNkpn5XkNeQ1nvU97V9Ifnc7DQ8Tdga7x3z3tBb6Bn7Ju0eu/sFLnPKf+l
+	5sqjONgZJ41Vm9kIqtCtqiS4pH23GH1qrKyCf1YQgP505LHaWzqk07rnpn6zDA==
+Date: Mon, 1 Apr 2024 18:57:12 +0200
+From: Javier Pello <devel@otheo.eu>
+To: linux-kernel@vger.kernel.org
+Cc: x86@kernel.org, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar
+ <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave Hansen
+ <dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>
+Subject: [PATCH 1/1] x86/mm/pae: Align up pteval_t, pmdval_t and pudval_t to
+ avoid split locks
+Message-Id: <20240401185712.a80deeb2fddeded0ad42cc04@otheo.eu>
+In-Reply-To: <20240401185451.6897208962d3fc47a12ffb5a@otheo.eu>
+References: <20240401185451.6897208962d3fc47a12ffb5a@otheo.eu>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.32; i686-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml500005.china.huawei.com (7.191.163.240) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
+X-GND-Sasl: #01#@otheo.eu
 
-On Fri, 29 Mar 2024 16:51:33 +0700
-Aleksandr Aprelkov <aaprelkov@usergate.com> wrote:
+From: Javier Pello <devel@otheo.eu>
 
-> If devm_add_action() returns ENOMEM, then MSIs allocated but
-> not freed on teardown.
-> 
-> Found by Linux Verification Center (linuxtesting.org) with SVACE.
-> 
-> Fixes: 166bdbd23161 ("iommu/arm-smmu: Add support for MSI on SMMUv3")
-> Signed-off-by: Aleksandr Aprelkov <aaprelkov@usergate.com>
+When PAE is enabled on x86-32, the types pte_t, pmd_t and pud_t are
+defined in terms of pteval_t, pmdval_t and pudval_t, respectively,
+all of which are typedefs for u64, which is an 8-byte type with
+4-byte alignment. However, variables of these types are subject to
+compare-and-exchange operations in their respective native_set_*
+functions, which can trigger split locks if a variable spans two
+cache lines, for instance on the stack. Annotate these types with
+__aligned(8) to avoid this.
 
-I've not checked this is an actual bug (though it looks like one from
-the context of the patch - the comment below is just about
-how you fix it.
+Signed-off-by: Javier Pello <devel@otheo.eu>
+Cc: x86@kernel.org
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Dave Hansen <dave.hansen@linux.intel.com>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: stable@vger.kernel.org
+---
+ arch/x86/include/asm/pgtable-3level_types.h | 16 ++++++++++------
+ 1 file changed, 10 insertions(+), 6 deletions(-)
 
-> ---
->  drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c | 7 ++++++-
->  1 file changed, 6 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c b/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c
-> index 41f93c3ab160..136d0cdce6a9 100644
-> --- a/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c
-> +++ b/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c
-> @@ -3402,7 +3402,12 @@ static void arm_smmu_setup_msis(struct arm_smmu_device *smmu)
->  	smmu->priq.q.irq = msi_get_virq(dev, PRIQ_MSI_INDEX);
->  
->  	/* Add callback to free MSIs on teardown */
-> -	devm_add_action(dev, arm_smmu_free_msis, dev);
-> +	ret = devm_add_action(dev, arm_smmu_free_msis, dev);
-
-Use devm_add_action_or_reset() which exists to solve the case of devm registration failing.
-
-
-> +	if (ret) {
-> +		dev_warn(dev, "failed to add free MSIs callback - falling back to wired irqs\n");
-> +		arm_smmu_free_msis(dev);
-> +		return;
-> +	}
->  }
->  
->  static void arm_smmu_setup_unique_irqs(struct arm_smmu_device *smmu)
-
+diff --git a/arch/x86/include/asm/pgtable-3level_types.h b/arch/x86/include/asm/pgtable-3level_types.h
+index 80911349..61f62ab4 100644
+--- a/arch/x86/include/asm/pgtable-3level_types.h
++++ b/arch/x86/include/asm/pgtable-3level_types.h
+@@ -5,12 +5,16 @@
+ #ifndef __ASSEMBLY__
+ #include <linux/types.h>
+ 
+-typedef u64	pteval_t;
+-typedef u64	pmdval_t;
+-typedef u64	pudval_t;
+-typedef u64	p4dval_t;
+-typedef u64	pgdval_t;
+-typedef u64	pgprotval_t;
++/*
++ * Variables of these types are subject to atomic compare-and-exchange
++ * operations, so they have to be properly aligned to avoid split locks.
++ */
++typedef u64	pteval_t	__aligned(8);
++typedef u64	pmdval_t	__aligned(8);
++typedef u64	pudval_t	__aligned(8);
++typedef u64	p4dval_t	__aligned(8);
++typedef u64	pgdval_t	__aligned(8);
++typedef u64	pgprotval_t	__aligned(8);
+ 
+ typedef union {
+ 	struct {
+-- 
+2.43.3
