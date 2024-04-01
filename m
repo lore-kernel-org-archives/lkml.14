@@ -1,71 +1,64 @@
-Received: from mail115-63.sinamail.sina.com.cn (mail115-63.sinamail.sina.com.cn [218.30.115.63])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0496921A0A
-	for <linux-kernel@vger.kernel.org>; Mon,  1 Apr 2024 13:04:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=218.30.115.63
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C33003E47B;
+	Mon,  1 Apr 2024 13:05:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711976670; cv=none; b=qLH2+sfCWYH+ws41uFiUc4LOuuJeaNfE3xfrAKJGFrD9tMwCCosRfwqDTc56D52h09JeEO8CkZ0sWQ4YvoOQZ1FkllqvlPmkY+1MoP4H0kDDB7DQy21sEBbRZ4wY+bQhdo9F4e70np1a8BMy6MZUxMzkr/tzy2Heyhlklc5daQs=
+	t=1711976702; cv=none; b=PqEaJoNNiKkEekUyqwfVR4RhAuIVZHnk5+48nZ8BSD8UYMD1kdlC/uLnQdnIiQUiYA/uraOw1O5z2auQiUyeU9FnK3uVvxR3j+KEMxJHkbOCjLXoZHXP0V0v28L7SERJ5Px5lhGo6m9zULkoUJN805kxNgFxVpcBgORAJmx2Rjk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711976670; c=relaxed/simple;
-	bh=WOf1t5/kLTuMP0vqmrlw4HwW7o7C0/4Q8Dfs/g7PJ5I=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Pm0mx/RlDTL9/zpsAG2BiXSjNCplb/hXURPQmYMg4bmlWnznsk1VAmz/PvyKQtz4lolhSvdSNIupQRNMb+Cw+LaEX7CuknertFxEZ6Cw7/VAOb9k/R8qn20dl2mMo3S9uAL/jhf6wO9//nL+BYJ9rqi4GcP3hawHd3CQE5pMZlI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sina.com; spf=pass smtp.mailfrom=sina.com; arc=none smtp.client-ip=218.30.115.63
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sina.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sina.com
-X-SMAIL-HELO: localhost.localdomain
-Received: from unknown (HELO localhost.localdomain)([113.88.49.36])
-	by sina.com (10.75.12.45) with ESMTP
-	id 660AB0A800007332; Mon, 1 Apr 2024 21:03:42 +0800 (CST)
-X-Sender: hdanton@sina.com
-X-Auth-ID: hdanton@sina.com
-Authentication-Results: sina.com;
-	 spf=none smtp.mailfrom=hdanton@sina.com;
-	 dkim=none header.i=none;
-	 dmarc=none action=none header.from=hdanton@sina.com
-X-SMAIL-MID: 55674131457705
-X-SMAIL-UIID: 6CF2D06D852B4E73966546F7E98388BD-20240401-210342-1
-From: Hillf Danton <hdanton@sina.com>
-To: syzbot <syzbot+fbf74291c3b7e753b481@syzkaller.appspotmail.com>
-Cc: linux-kernel@vger.kernel.org,
-	syzkaller-bugs@googlegroups.com
-Subject: Re: [syzbot] [net?] possible deadlock in hsr_dev_xmit (2)
-Date: Mon,  1 Apr 2024 21:03:28 +0800
-Message-Id: <20240401130328.3529-1-hdanton@sina.com>
-In-Reply-To: <00000000000022c6b2061502dcbb@google.com>
-References: 
+	s=arc-20240116; t=1711976702; c=relaxed/simple;
+	bh=/om3O2ArRQUfyz8QVchaYcKwUeJkzk6N4jIEnVO3eHo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=O/hzkpts+5ZQovaEyCcTyg4Zyo9DUPw65KkqA64GvpU3LBVd40LvVwSp961cnMEIA2RvGF7gIUvdJa6321M6bm/mXRXtVnKF3vyZV4caAYslJKJ27PNdgZU0a1ViL8GCffN+hEHIQpE7RgiaeARdPBwC/+EV/Xlf7L96WoevMWA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RuXsPS+O; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RuXsPS+O"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2F515C433F1;
+	Mon,  1 Apr 2024 13:05:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1711976702;
+	bh=/om3O2ArRQUfyz8QVchaYcKwUeJkzk6N4jIEnVO3eHo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=RuXsPS+O8XzAjnlWu2+gwrG3G9448lzEye+RjZo2hDCp/hLoQefUoYMgL8Iq4An8x
+	 4diHGRYigiclOsbp/Sn1Y/9HLVgZEaluh+Mji0KaEQMRS+9XGiER4/yGAO8YvJ3Rlu
+	 x/7cBBvU7VVcBvy0V0NVj4Bi8dGXJ7dqRxngg8rgj8pvZQmBxuBP1swbgbcw1/YHH+
+	 zoJi3ggSM7nAKVf5KWfdtz3nsTVOkPDv559fqIbTLSho6ZV2nvtES9UN7etGtr4f2Z
+	 XExRSEsp473rQsE8Z0Zo011fIA7onsl06vvu0s+rRKZBH1ocz6Ip/9yZ1VBJqQV/T2
+	 ublNhwxpJftdw==
+Date: Mon, 1 Apr 2024 08:05:00 -0500
+From: Rob Herring <robh@kernel.org>
+To: Alexandru Marc Serdeliuc <serdeliuk@yahoo.com>
+Cc: devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+	Bjorn Andersson <andersson@kernel.org>,
+	linux-kernel@vger.kernel.org, Conor Dooley <conor+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Konrad Dybcio <konrad.dybcio@linaro.org>
+Subject: Re: [PATCH v3 1/2] dt-bindings: arm: qcom: Document the Samsung
+ Galaxy Z Fold5
+Message-ID: <171197669724.279571.2288668471464628597.robh@kernel.org>
+References: <20240331-samsung-galaxy-zfold5-q5q-v3-0-17ae8d0a9fba@yahoo.com>
+ <20240331-samsung-galaxy-zfold5-q5q-v3-1-17ae8d0a9fba@yahoo.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240331-samsung-galaxy-zfold5-q5q-v3-1-17ae8d0a9fba@yahoo.com>
 
-On Sun, 31 Mar 2024 23:11:27 -0700
-> syzbot has found a reproducer for the following issue on:
+
+On Sun, 31 Mar 2024 12:56:39 +0200, Alexandru Marc Serdeliuc wrote:
+> This documents Samsung Galaxy Z Fold5 (samsung,q5q)
+> which is a foldable phone by Samsung based on the sm8550 SoC.
 > 
-> HEAD commit:    480e035fc4c7 Merge tag 'drm-next-2024-03-13' of https://gi..
-> git tree:       upstream
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=15e0f5c3180000
+> Signed-off-by: Alexandru Marc Serdeliuc <serdeliuk@yahoo.com>
+> ---
+>  Documentation/devicetree/bindings/arm/qcom.yaml | 1 +
+>  1 file changed, 1 insertion(+)
+> 
 
-#syz test https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git  480e035fc4c7
+Acked-by: Rob Herring <robh@kernel.org>
 
---- x/net/hsr/hsr_device.c
-+++ y/net/hsr/hsr_device.c
-@@ -226,9 +226,11 @@ static netdev_tx_t hsr_dev_xmit(struct s
- 		skb->dev = master->dev;
- 		skb_reset_mac_header(skb);
- 		skb_reset_mac_len(skb);
--		spin_lock_bh(&hsr->seqnr_lock);
-+		local_bh_disable();
-+		spin_lock_nested(&hsr->seqnr_lock, 1);
- 		hsr_forward_skb(skb, master);
--		spin_unlock_bh(&hsr->seqnr_lock);
-+		spin_unlock(&hsr->seqnr_lock);
-+		local_bh_enable();
- 	} else {
- 		dev_core_stats_tx_dropped_inc(dev);
- 		dev_kfree_skb_any(skb);
---
