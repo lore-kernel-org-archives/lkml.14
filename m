@@ -1,97 +1,87 @@
-Received: from mx0b-001ae601.pphosted.com (mx0a-001ae601.pphosted.com [67.231.149.25])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2D31D52B;
-	Mon,  1 Apr 2024 09:33:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.149.25
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4EEEDDB6;
+	Mon,  1 Apr 2024 09:37:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711964001; cv=none; b=ahzEY2/Q9pblY5ZAfqQQ562wsUC+6RyHpki86booTgmjspjOhLf2EVI0N1z1yCLrq2scbcce7La7nqrvG5P5oZPiOD6wuJnrpvlXAHMJqHtFgK4wNayHWICJo2ZyF+/1OA9e0uZtOY0Mclw6T04U0xSjOSYOdb8ozbrRyWqA9Sw=
+	t=1711964260; cv=none; b=oq2kRbxF0i84FrLFMmTU2HDFf2Oc0FPruaRtsIEt4YqEEtWWdEt899nw4HwTWfqDhWAXIEe6Ux1eNEYJ8BzOD/zNmHk/zNo4qo004r6lz5ehR7YOX9mKhEHm33kGaAwAt1mNT22o9SpnEruR43b2vVqTILgWjos63sT8roKNBfs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711964001; c=relaxed/simple;
-	bh=gOkdMufNrYUHI5wqynku6mgw73bfwiCTsJ3WOegpWGY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=WZQVEGoImw7KiLlhXJ+95tfPINe/cb3TU8jsTwsMw5uBm5cK2OeqCRjUjs4Z0oipP33btYhBWABlwA0lLL4/GKZ7XmGa5iF1aHFqKzazCh5uQkVFKeV4Dh7I3D08hhUuQ7hD3OZ7xi3IWg0ZpGVHZvVQ22JyJLl7FtMUnV/RB8I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com; spf=pass smtp.mailfrom=opensource.cirrus.com; dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b=AE2aJNqg; arc=none smtp.client-ip=67.231.149.25
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=opensource.cirrus.com
+	s=arc-20240116; t=1711964260; c=relaxed/simple;
+	bh=oDisQHZ5QyWOBRBhJ8kMuP+uptWUSRjIpRSluHtVhVc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=c3UdP/rcxqPZeD0te7KSciz0V/MH39XJ6z6CWnbw/37zvCAbrrJckGYTetCBbpkpeqkkob+9Qjp6jGqYzEKhAdMyHXcTE1+tUNKFrGjyXDyZwrG3dLuDU5M/8miuUYHvkcvG4IU4IxYznK5BJ3gj+xAQWGw+nsTbXAHh8L4wGOA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=Tt/EZVv/; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="AE2aJNqg"
-Received: from pps.filterd (m0077473.ppops.net [127.0.0.1])
-	by mx0a-001ae601.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 4315ekd0020303;
-	Mon, 1 Apr 2024 04:32:52 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=
-	message-id:date:mime-version:subject:to:cc:references:from
-	:in-reply-to:content-type:content-transfer-encoding; s=
-	PODMain02222019; bh=IS79sOATqoSucVXftmm3JIChsEbp2Y5YeWT6V7cQvMU=; b=
-	AE2aJNqgxtLWDMIHbo9wr1d72n9q6S7IRl64ZV441sOYw6jDPwLh+9OkaL5m0+8g
-	ei8qL+rPDCbbvvpbFYq5VkUlNjeg4o3OLFRRMuq5CPdmTGYM9/W6CB1ANhkHhf2e
-	YR8eUF5qIVaYoEE1+2VCe1Oer5FIFDjEKRNoYbHLr1SzgflqjDSAmNCt/XCaWqYU
-	qdCBCnfLC5OmTXPpHAAaGRKgot+LaLM7aVwC5xcLj5AOwnlJkfjc3m1kBCedCRYR
-	dPyP28RhvEZS9Fqo3YtGyCM+CR+Mipkc3m0j1yQ/mAz+D6+Rdfd+048XXQ097Tfu
-	piVA4+TOuoDy0q+SHNnFpg==
-Received: from ediex01.ad.cirrus.com ([84.19.233.68])
-	by mx0a-001ae601.pphosted.com (PPS) with ESMTPS id 3x6g4xht6r-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 01 Apr 2024 04:32:52 -0500 (CDT)
-Received: from ediex02.ad.cirrus.com (198.61.84.81) by ediex01.ad.cirrus.com
- (198.61.84.80) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Mon, 1 Apr 2024
- 10:32:50 +0100
-Received: from ediswmail9.ad.cirrus.com (198.61.86.93) by
- anon-ediex02.ad.cirrus.com (198.61.84.81) with Microsoft SMTP Server id
- 15.2.1544.9 via Frontend Transport; Mon, 1 Apr 2024 10:32:50 +0100
-Received: from [198.90.208.18] (ediswws06.ad.cirrus.com [198.90.208.18])
-	by ediswmail9.ad.cirrus.com (Postfix) with ESMTP id EC522820243;
-	Mon,  1 Apr 2024 09:32:49 +0000 (UTC)
-Message-ID: <41d1aad9-2381-4d7b-b247-9d114c5c517f@opensource.cirrus.com>
-Date: Mon, 1 Apr 2024 09:32:49 +0000
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="Tt/EZVv/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8BB43C433C7;
+	Mon,  1 Apr 2024 09:37:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1711964260;
+	bh=oDisQHZ5QyWOBRBhJ8kMuP+uptWUSRjIpRSluHtVhVc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Tt/EZVv/ZR4QHN+8t5vtOuvEZrap4N7Kp7jzy5BgK0XNRRXOjGiX6dc0f9EBgKWys
+	 kJiG9vkUu2CBvy3w1voiAz8nZDbgVZ6J/pWy2Zh9bZiS+TDbC+66fW6wetGS7Qmn7/
+	 AF1ChqhTPW7+uehANNKEHibK+mojRJtl/93diCQA=
+Date: Mon, 1 Apr 2024 11:37:36 +0200
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Ajay Kaher <ajay.kaher@broadcom.com>
+Cc: Kuntal Nayak <kuntal.nayak@broadcom.com>, stable@vger.kernel.org,
+	jslaby@suse.com, linux-kernel@vger.kernel.org,
+	alexey.makhalov@broadcom.com, vasavi.sirnapalli@broadcom.com,
+	Yangxi Xiang <xyangxi5@gmail.com>, stable <stable@kernel.org>,
+	Florian Fainelli <florian.fainelli@broadcom.com>
+Subject: Re: [PATCH v4.19-v5.4] vt: fix memory overlapping when deleting
+ chars in the buffer
+Message-ID: <2024040149-countable-ecosystem-ee44@gregkh>
+References: <20240329191208.88821-1-kuntal.nayak@broadcom.com>
+ <2024033014-deception-cartoon-7470@gregkh>
+ <CAD2QZ9aJtFpXWYRVmgJRjad6qXXECvi+-J++QAR2t4opa6cdUA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/5] ALSA: cirrus: Tidy up of firmware control read/write
-To: Takashi Iwai <tiwai@suse.de>
-CC: <broonie@kernel.org>, <tiwai@suse.com>, <linux-sound@vger.kernel.org>,
-        <alsa-devel@alsa-project.org>, <linux-kernel@vger.kernel.org>,
-        <patches@opensource.cirrus.com>
-References: <20240325113127.112783-1-rf@opensource.cirrus.com>
- <87o7awnmdd.wl-tiwai@suse.de>
-Content-Language: en-GB
-From: Richard Fitzgerald <rf@opensource.cirrus.com>
-In-Reply-To: <87o7awnmdd.wl-tiwai@suse.de>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-ORIG-GUID: x87jzAli0Me04_Yui-dnNvnewki0wu45
-X-Proofpoint-GUID: x87jzAli0Me04_Yui-dnNvnewki0wu45
-X-Proofpoint-Spam-Reason: safe
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAD2QZ9aJtFpXWYRVmgJRjad6qXXECvi+-J++QAR2t4opa6cdUA@mail.gmail.com>
 
-On 30/03/2024 08:40, Takashi Iwai wrote:
-> On Mon, 25 Mar 2024 12:31:22 +0100,
-> Richard Fitzgerald wrote:
->>
->> This set of patches factors out some repeated code to clean up
->> firmware control read/write functions, and removes some redundant
->> control notification code.
->>
->> Simon Trimmer (5):
->>    firmware: cs_dsp: Add locked wrappers for coeff read and write
->>    ASoC: wm_adsp: Use cs_dsp_coeff_lock_and_[read|write]_ctrl()
->>    ALSA: hda: hda_cs_dsp_ctl: Use
->>      cs_dsp_coeff_lock_and_[read|write]_ctrl()
->>    ASoC: wm_adsp: Remove notification of driver write
->>    ALSA: hda: hda_cs_dsp_ctl: Remove notification of driver write
+On Mon, Apr 01, 2024 at 02:51:55PM +0530, Ajay Kaher wrote:
+> On Sat, Mar 30, 2024 at 2:37 PM Greg KH <gregkh@linuxfoundation.org> wrote:
+> >
+> > On Fri, Mar 29, 2024 at 12:12:08PM -0700, Kuntal Nayak wrote:
+> > > From: Yangxi Xiang <xyangxi5@gmail.com>
+> > >
+> > > [ upstream commit 39cdb68c64d8 ]
+> >
+> > Please use the full git id in the future, it makes it easier and our
+> > tools want it that way so that we can tell the difference between a
+> > "Fixes:" tag and an actual backport.  I'll go queue this up now, thanks!
+> >
 > 
-> The patch 4 doesn't look cleanly applicable to my tree.
-> Should it be applied via Mark's tree?
+> Thanks Greg for accepting the patch.
 > 
+> ./scripts/checkpatch.pl confuse developers, as it gives error/warning
+> if we use full git id.
 
-Yes, it will need to go through Mark's tree.
-Mark's for-next has one extra patch to wm_adsp.c that changes
-the same function:
+No need to run checkpatch on backports, as the changelog text should not
+be an issue.
 
-f193957b0fbb ("ASoC: wm_adsp: Fix missing mutex_lock in
-wm_adsp_write_ctl()")
+> Example:
+> ERROR: Please use git commit description style 'commit <12+ chars of
+> sha1> ("<title line>")' - ie: 'commit e26d3009efda ("netfilter:
+> nf_tables: disallow timeout for anonymous sets")'
+> #6:
+> commit e26d3009efda338f19016df4175f354a9bd0a4ab upstream.
+> 
+> Or shall we have something ./scripts/checkpatchstable.pl or
+> ./scripts/checkpatch.pl stable (pass argument)?
 
+Nah, it's never come up before now, I don't think people actually run
+it, and I know I've never done so or even noticed, so all is fine.
+
+thanks,
+
+greg k-h
