@@ -1,207 +1,264 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f170.google.com (mail-yw1-f170.google.com [209.85.128.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3A8851C52;
-	Mon,  1 Apr 2024 20:26:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.15
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712003220; cv=fail; b=nnK7RF2w0mzI230KOeTSkAsHLjbGOOLSZJhNx9uGSSFK7Xn94dI88HsQVHR+NGTnKL0/MXY00y9uXn8/PDjeZHOcErzcmr0psS/5ru+p5A19t7u358zz0XRaW1ADD4xsbd2/QvHORm+H4voJpdhKnNvSNyZZClymynHiZV93T+c=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D141853E12
+	for <linux-kernel@vger.kernel.org>; Mon,  1 Apr 2024 20:26:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.170
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1712003220; cv=none; b=NuJtpRvjKsJ0KVhvl93xueLjA4CPmcFww/Jv5Jr1iscBvx0pLIDT69A0YCQX77Epc3vzyBOp2hufoD3S5gMyNfn6uiZr9YSzb9mjyaf/SRk/BTNe+PqlOmUi/sr1AVusKWrB/nVLsCXYThhxhC9KNykJ3I+Irm1rtLPi5sz0SOc=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1712003220; c=relaxed/simple;
-	bh=dT/AScDTEK+2rlqfqk/hZ+gmPDRHi99IoEcrZWnT/Lg=;
-	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=GSxQavHSAok6i4qPPsg63wQqqTT13R1bhNwsf/QqnxH0rxZHoNYEL7/SZYsFst4nFeh2Z3JH9g2VH8lkJX7wV5fKvZZLdnG1VvWTshW2KSMSdj0Tuo/SrhcsjqX8dt6Cb8DLANpO+yU4lhKV349arW37CEn2BoxuEE3hfSrrNyg=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=OUHJbAvQ; arc=fail smtp.client-ip=198.175.65.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	bh=K2uUxOa/BPDSkpao/7L01Qy9c+58bEbnJO9fU8fkXq4=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=cc/cbgvBXjBwP+K2Hj2x8lC73YptAQyFY8iERYBVjDWWL4aLdrUsbsJcfU/OuflY0DuwYnJCzMfi1hpZqlBbtrRPZWMPuOCDB+fBvwFdFXm+REMhby0goSZlGJhAh7Rm0XzZyUiZgnwx3iWzkLi0Fak4+bY+1TumIuafKrKskNE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Mjk1Sx6x; arc=none smtp.client-ip=209.85.128.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="OUHJbAvQ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1712003218; x=1743539218;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=dT/AScDTEK+2rlqfqk/hZ+gmPDRHi99IoEcrZWnT/Lg=;
-  b=OUHJbAvQ8EJL5bqUV8NnKjlCkLsQkb/kbNYQYwN4G8TbBfcOOtJEIIBC
-   i3G7KrPV0Zap9d0LvrshZsDrIcYPIvogussJ2Z5V3KoRb3rdh027nc8CG
-   JeE+ao8Wquw1B6B4GQRqRVQ6ushaWp+9RDuIOwODouYPKiur1GWgfabE1
-   H5oQzN+HIHsxMp4WM54ntRuUi+tNOGEctCIAo2qf+VFDfOfAVymrP+aDc
-   +pPjDZ/P870/WW38q9BUfPTxQcxwVxteBWS92KcXSXx2jgU0SkRDEILEZ
-   asaVasG/BdcdLWEB/UEnaGkdFHlkK15hzJQKm8BDa4KPJnMiNJjPe9MSC
-   w==;
-X-CSE-ConnectionGUID: 1IVSb01vRWWAcz9SihzeGg==
-X-CSE-MsgGUID: AIIA/t+yS++zbQAXpdxtRw==
-X-IronPort-AV: E=McAfee;i="6600,9927,11031"; a="10967030"
-X-IronPort-AV: E=Sophos;i="6.07,173,1708416000"; 
-   d="scan'208";a="10967030"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Apr 2024 13:26:57 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,173,1708416000"; 
-   d="scan'208";a="17906883"
-Received: from fmsmsx602.amr.corp.intel.com ([10.18.126.82])
-  by fmviesa008.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 01 Apr 2024 13:26:57 -0700
-Received: from fmsmsx601.amr.corp.intel.com (10.18.126.81) by
- fmsmsx602.amr.corp.intel.com (10.18.126.82) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Mon, 1 Apr 2024 13:26:56 -0700
-Received: from fmsedg602.ED.cps.intel.com (10.1.192.136) by
- fmsmsx601.amr.corp.intel.com (10.18.126.81) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35 via Frontend Transport; Mon, 1 Apr 2024 13:26:56 -0700
-Received: from NAM04-DM6-obe.outbound.protection.outlook.com (104.47.73.41) by
- edgegateway.intel.com (192.55.55.71) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Mon, 1 Apr 2024 13:26:56 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=YF18wjTflCoekNqv7hB7ugM5fEtAxk5MVF4j11uDKcdrTyfq8A97nI+XtQWK46w1yhDkb71aZlyDLTgzThlwYOnDXV/DXc81PBpQPrnPBHz32kr/JD03VshPW6ycVsbbFXa2DBtSfuQHRGn7Z/1vtYOk5Cb4V+eQbOyTzliROqMzSvi69f7spd7HqfGsXHdcbAfJUzyqYf25vYuHRhzYM2e+lCmjYYzbLkWUrHSeNrG8+eq5t9AnZ7yYAd0wuB9vFNtd3DUsEFfCaw4YBJsnVg8OVzgCj2SIbi6O74uwbpAhLAIAtBmFQ4dYS642daRIw29leZMLyfW7//v/OPSuIw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=I9Tun2qcZaiVDDsRhLwGKLkYZAZG0/AURa6ey0rKhBc=;
- b=Od8FhVyiWipYb8FCXvr4x2tIkMlEToK2DHwJW2hLAv0SNBkMabWGIcJfP18qm5myDoOsVQ9pgEhhXq8hlM5MZ726xW0Xu4y1kKXLtCUD41G7Dq646MVWHW74mgrnvTXMA2VVIh33/bKkgJb+Ms4wpWdSUbAMy+cMlEnSkGMDRY639qqSXZ52tsINchIB/fLAYubzfAgJSfK10BD3u1C+Vgv1/zEuYPM4g1w1ryyjE5mMHydyWaP/ytgIuGbfLdpC4+Vvafpq9u7sTm8L8HyZ2A/cehqfgwFQ9CfDy39nL5q9VZPUL7Su+yg52QfIXrLZLfGlTxRMzff0U+SpcmbMOA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Received: from SA1PR11MB6733.namprd11.prod.outlook.com (2603:10b6:806:25c::17)
- by LV3PR11MB8693.namprd11.prod.outlook.com (2603:10b6:408:215::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7452.25; Mon, 1 Apr
- 2024 20:26:54 +0000
-Received: from SA1PR11MB6733.namprd11.prod.outlook.com
- ([fe80::5c74:8206:b635:e10e]) by SA1PR11MB6733.namprd11.prod.outlook.com
- ([fe80::5c74:8206:b635:e10e%7]) with mapi id 15.20.7452.019; Mon, 1 Apr 2024
- 20:26:54 +0000
-Date: Mon, 1 Apr 2024 13:26:46 -0700
-From: Ira Weiny <ira.weiny@intel.com>
-To: Kwangjin Ko <kwangjin.ko@sk.com>, <dave@stgolabs.net>,
-	<jonathan.cameron@huawei.com>, <dave.jiang@intel.com>,
-	<alison.schofield@intel.com>, <vishal.l.verma@intel.com>,
-	<ira.weiny@intel.com>, <dan.j.williams@intel.com>
-CC: <linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<kernel_team@skhynix.com>
-Subject: Re: [PATCH 1/2] cxl/core: Fix initialization of mbox_cmd.size_out in
- get event
-Message-ID: <660b1886315db_750ac294bc@iweiny-mobl.notmuch>
-References: <20240401091057.1044-1-kwangjin.ko@sk.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20240401091057.1044-1-kwangjin.ko@sk.com>
-X-ClientProxiedBy: SJ0PR03CA0045.namprd03.prod.outlook.com
- (2603:10b6:a03:33e::20) To SA1PR11MB6733.namprd11.prod.outlook.com
- (2603:10b6:806:25c::17)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Mjk1Sx6x"
+Received: by mail-yw1-f170.google.com with SMTP id 00721157ae682-615038fc5baso7222667b3.3
+        for <linux-kernel@vger.kernel.org>; Mon, 01 Apr 2024 13:26:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1712003218; x=1712608018; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=WwRQK61zxAOtZTuzQkMVrkDP5lES+e4npSppnKc4AGI=;
+        b=Mjk1Sx6x8CAgnv7UDMs2S+DU12YDXHVaTuumIfu3DF/NslvNiRskDCfCXglzlCNkb9
+         +zpmbUIRJlVT1WC/y5nuqTNkKskUO3dAXt0hKELOqY4Z1xynXA6ZMr1dnGgbs1EswKnB
+         j/Sf0t/PV4C7P12T3ZHSjv3jluYHDXSo0jq5GvgKSXwomFCuLVGza2nTIcHArujmYSTO
+         oopgHCCu3JzSwmUMVDr2Ept5az+sb4AVQ55IxxsphQji8PwoWVuqKLqTYtVEfw8l6y51
+         KBToE58dpxhGITHGmNOmwWaGOTkh5tAenOLnx/dd89d9tCNXDJF5AmZvMPSr3W+rebpc
+         Eulg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712003218; x=1712608018;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=WwRQK61zxAOtZTuzQkMVrkDP5lES+e4npSppnKc4AGI=;
+        b=ttSFxrY3aevkQKeGgrNdiZl3ZFF9gskrCQKTbPMk+EbZKHjZADaQzJMNTxn0tSukRf
+         7ORK3XG92JS0kDFTJmzmf8bRpDP4JPgZiiHKieZXVCgOOLXms/iddry1+MGEHYzSOewN
+         idoGULBn3NCENbnv2kCyNYMDlbZhKTrHpo1ynsZVWzGI9HsTL/4E3dzcwtsiqcp1qj+5
+         Tv+5yyqHuS/ugZAqSoNgdntGGIoda9AxMVeNmMFcUlXotky56Lyj3KQMtWSLiDbvDPxu
+         MvGZ3HIaUEaKQ+trMj9oRj7YGhzzMxsxAYY65RZLziwi6LvecR4ULqzoRtHDlt2igvnf
+         M1nw==
+X-Gm-Message-State: AOJu0Yw/q8EYzsghZQyWk6PDowBmB/e1dNKZ/NrQFP/ATz0Lw1in61l4
+	tyKY3zt25uLFbnj/5nIV9PHteSRiPtEmw2jIXUqk6x1dKIYPoKyJ
+X-Google-Smtp-Source: AGHT+IFisZq4EuxDLU4uS1EpjFvcKMqEqYfO+yamypsLgW77pMy3m4jr7Iv/oNYRYg9OIrA5cUAWAg==
+X-Received: by 2002:a0d:e7c6:0:b0:611:30a2:1758 with SMTP id q189-20020a0de7c6000000b0061130a21758mr9909937ywe.37.1712003217812;
+        Mon, 01 Apr 2024 13:26:57 -0700 (PDT)
+Received: from fedora.attlocal.net ([2600:1700:2f7d:1800::23])
+        by smtp.googlemail.com with ESMTPSA id y72-20020a81a14b000000b006142210a31esm1171181ywg.23.2024.04.01.13.26.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 01 Apr 2024 13:26:57 -0700 (PDT)
+From: "Vishal Moola (Oracle)" <vishal.moola@gmail.com>
+To: linux-mm@kvack.org
+Cc: linux-kernel@vger.kernel.org,
+	akpm@linux-foundation.org,
+	muchun.song@linux.dev,
+	willy@infradead.org,
+	"Vishal Moola (Oracle)" <vishal.moola@gmail.com>
+Subject: [PATCH v2 2/3] hugetlb: Convert hugetlb_no_page() to use struct vm_fault
+Date: Mon,  1 Apr 2024 13:26:50 -0700
+Message-ID: <20240401202651.31440-3-vishal.moola@gmail.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240401202651.31440-1-vishal.moola@gmail.com>
+References: <20240401202651.31440-1-vishal.moola@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SA1PR11MB6733:EE_|LV3PR11MB8693:EE_
-X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: MaoMSKPXJd46oeyjgUPejwvjj03aR13uWXtVmekux/wEXnsUbhPfYY6g+ytqAUcp01c+BmKd/uDZSy2SEi65gEH+yH6eDA8HxmoSIMa74d56asDPQCDLV0c8WJGcuZqQeuSfqic46RuiD7T5akV6i48sSWDSmAEHPOvSqKXxXO8Y55+y4CMKfgoc3BpNmPAtiKu3YC6LQeEhJPmpjKcCNMVh1/RdkHqGIPLvRMmkifuX8YkgrOxHtfxZf1gi1nSThSe23GPYYMofUS52UT1JIAmuzaQlOYqYqyOkQIQBtvOar7OJLmn5qjwnIF4//ebbNThea44cV5JggJJH1v5+kqcnWaKkWx2G9+Nt56oD1Nt/KyfvdpjXgZA+vTtAlYTGy/I3iHrs0zf0nfdI87AmMWqlXUSqf6je/rytvdQSdKaGEEsX6diDZ3IBkjBfvWwcKbZl5AmDcV3rCBUuuqjJyCwvLb3vX9tJ2TT6GbaY1+MNiMNDfpHNREdgiPaGMISZ64Z5uxTE+r/a/BIMoTR8ocWBlzrSVuA9uz4xiKZ0UFnJEz68ceKLGVNuILvfvWV4NL+re3iJuT8K0hrMQtBEOFCSdZV5Fhm+TTiLNH+nlAEai8CQXTVcpNdIfcIt913a7VU7ydW+dXPhg6K+ZmoYlnMTrNBkVjn+oOWxwQIE63Q=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR11MB6733.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(1800799015)(366007)(376005);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?qCTywhjYp6G9K8a246VT1cQcV7mhOXqPw6z+PUDr45Ujmc+6HlvRItJC4rJU?=
- =?us-ascii?Q?U8pXM7P/iO4nOdB2RaFck5URhU4YMBu8jSVzidvs5aoq8ojqJ2gfFLDgyGk3?=
- =?us-ascii?Q?MHz+Dp4Ss+f2Kh6t0NyqAfp1BbRPNiuzOi5o1KQVqVvL9EvJqYBbLGcDgqbj?=
- =?us-ascii?Q?nMh5TXKN9JfQMX6bPZbzPzmLAuSx5GSQu6Z4DCB/7WxZ7iRnPLroMyOFcqhe?=
- =?us-ascii?Q?fwNLRz8LVe6VRyrWwPqFPaCH8udUuTgxMMNAXaliF+XvNIHZSGeyM4fMj0Aj?=
- =?us-ascii?Q?4BW4YqoiWEdJG7KyYiK6kjye8nzguWrG+ilkP4ubkHC/HQcI1Hv8iyTQuBS7?=
- =?us-ascii?Q?wRqwp0kCX8IlFyziAu4T0RGNhjON5LaR8zC5hyYFt6mw+jcSRLV2KCdrADw1?=
- =?us-ascii?Q?ho0Pu8nPpYn5zdIX5HX5SGmF3YIeVlZxkka3GnDyR/P5IEydlaejPb6vfTTy?=
- =?us-ascii?Q?Xec6kqsHhZNMdHoKpEGqaKDR+16rEMSUjB33LIdmzQftFeGYQ8N4yPH4Lj9t?=
- =?us-ascii?Q?MiuoB/PNuHrtl00sZ++igt3tqShJphIUw4Fz+WxIrkbaacqbWXxclrBaiAEp?=
- =?us-ascii?Q?uqm1tXxVkW4ljb2WTNBoSnO8XOX0/Bjy+sw4am/jlIxwTLKta6ZU41MCK3Ix?=
- =?us-ascii?Q?vUrqlXXWDulOzdT3MqLkxSEkYfXWxyccFdNB3J3MOLa4l9Bq5XcpM66kJb9C?=
- =?us-ascii?Q?DwjiktBFEH3GqgsM9YB0x8B0pwOWFL386S2VmMucsSGE5fQ3NKDPCxOQvFmB?=
- =?us-ascii?Q?+UkG+b07ijktpsT7aO92YeyLRLeDoyZgCKWNl8Nn4q5ODyDR41H1zJVTmN9a?=
- =?us-ascii?Q?46B/kjSrgR+UEDDXBiop7YHFUTzUxTOWsbXah8IX60hMu8+m72BuDo2WvhSn?=
- =?us-ascii?Q?0P6tfdxOvjjFDJxL2TMEE1jUEhKykKMfsv+DobcTt5ScH2U24TI1qf4Ol96O?=
- =?us-ascii?Q?sAb5syLrDe8CAyFCo85ks1k80GVqQddrBcnKo1wJ+/GQjLRE6bI/Y1k1LiPn?=
- =?us-ascii?Q?0BYv1NNjCzeFLxl1IAo33cdzm6FLYKfe3R7vgr40d7z6O8uJtCgSNZk3xF5M?=
- =?us-ascii?Q?4V9dNCZtznYGHMes9mTlRZ2pvFCYYKt1DV7yb+Zxbam6qkZYShCtviJZKIgk?=
- =?us-ascii?Q?EEoE6Msf/Ws4TuIvMUtlnC0zZbrP7CabPz3esNDEDGwjnOC9JQrqcA1MUfja?=
- =?us-ascii?Q?zuopPvZN5/Qj+kOA27p7zPupbgsnFkcyeLC2y6in9pJmWAqRsXUYbwgrl4VC?=
- =?us-ascii?Q?ndHLaNeqzk3N5G3suPBTM45q48/gFjBnDXlloIdqHfwk8N0a1vl/Jk3kWk57?=
- =?us-ascii?Q?/zdQgJd1RM9bvxxkb0VDP8kvpz57mTnRW08dOd15OgxAJsa0qcrfXRVnmeTt?=
- =?us-ascii?Q?rYzlntK6iR9DKN0Cse9qcde2PYi2Qwz9HnSORqJ4o9pO1ypghBsrkfqXCPBP?=
- =?us-ascii?Q?wD3AEnFQPPk5s+OvrJfsKGRghNKhWNaussXjADhOOW483iYOuUPJMSYB73KM?=
- =?us-ascii?Q?vbhDmiicmcywGf3+fnLifQ91Jb51AJe3PlU/lA/FHhEUaSmUmer+bYmaZxT2?=
- =?us-ascii?Q?5dXrdB5y0/vKGXRmwdCyqiu8joGJTIoe7dRVsT1C?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: fb34a45f-483b-4874-082d-08dc528a1202
-X-MS-Exchange-CrossTenant-AuthSource: SA1PR11MB6733.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Apr 2024 20:26:54.2724
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: wY1pJqeeiI+SYb6Xa68MXG2uCAesKz/PQ2s85MoVXm2pTJROj8Txm6KOrTXfBOS3X2Qp02tDT0vbpzrCO8kqcQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV3PR11MB8693
-X-OriginatorOrg: intel.com
+Content-Transfer-Encoding: 8bit
 
-Kwangjin Ko wrote:
-> Since mbox_cmd.size_out is overwritten with the actual output size in
-> the function below, it needs to be initialized every time.
-> 
-> cxl_internal_send_cmd -> __cxl_pci_mbox_send_cmd
-> 
-> Problem scenario:
-> 
-> 1) The size_out variable is initially set to the size of the mailbox
-> 2) Read an event
->    - size_out is set to 160 bytes (header 32B + one event 128B)
->    - Two event are created while read
-> 3) Read two events
->    - size_out is still set as 160 bytes
->    - Although the value of out_len is 288 bytes, only 160 bytes are
->      copied from the mailbox register to the local variable
->    - record_count is set to 2
->    - Acessing records[1] causes a buffer overflow
+hugetlb_no_page() can use the struct vm_fault passed in from
+hugetlb_fault(). This alleviates the stack by consolidating 7
+variables into a single struct.
 
-I see how this causes a missed event due to only 1 event being copied into
-the buffer but how does this cause a buffer overflow with the payload
-buffer being set to the max mailbox size?
+Signed-off-by: Vishal Moola (Oracle) <vishal.moola@gmail.com>
+---
+ mm/hugetlb.c | 59 ++++++++++++++++++++++++++--------------------------
+ 1 file changed, 29 insertions(+), 30 deletions(-)
 
-Did you simply mean that records[1] accesses incorrect data?  I agree that
-is an issue.  I'm looking at a test for this.
-
-Ira
-
-> 
-> Signed-off-by: Kwangjin Ko <kwangjin.ko@sk.com>
-> ---
->  drivers/cxl/core/mbox.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
-> index 9adda4795eb7..a38531a055c8 100644
-> --- a/drivers/cxl/core/mbox.c
-> +++ b/drivers/cxl/core/mbox.c
-> @@ -958,13 +958,14 @@ static void cxl_mem_get_records_log(struct cxl_memdev_state *mds,
->  		.payload_in = &log_type,
->  		.size_in = sizeof(log_type),
->  		.payload_out = payload,
-> -		.size_out = mds->payload_size,
->  		.min_out = struct_size(payload, records, 0),
->  	};
->  
->  	do {
->  		int rc, i;
->  
-> +		mbox_cmd.size_out = mds->payload_size;
-> +
->  		rc = cxl_internal_send_cmd(mds, &mbox_cmd);
->  		if (rc) {
->  			dev_err_ratelimited(dev,
-> 
-> base-commit: 39cd87c4eb2b893354f3b850f916353f2658ae6f
-> -- 
-> 2.34.1
-> 
-
+diff --git a/mm/hugetlb.c b/mm/hugetlb.c
+index 360b82374a89..aca2f11b4138 100644
+--- a/mm/hugetlb.c
++++ b/mm/hugetlb.c
+@@ -6189,9 +6189,7 @@ static bool hugetlb_pte_stable(struct hstate *h, struct mm_struct *mm,
+ 
+ static vm_fault_t hugetlb_no_page(struct mm_struct *mm,
+ 			struct vm_area_struct *vma,
+-			struct address_space *mapping, pgoff_t idx,
+-			unsigned long address, pte_t *ptep,
+-			pte_t old_pte, unsigned int flags,
++			struct address_space *mapping,
+ 			struct vm_fault *vmf)
+ {
+ 	struct hstate *h = hstate_vma(vma);
+@@ -6200,10 +6198,8 @@ static vm_fault_t hugetlb_no_page(struct mm_struct *mm,
+ 	unsigned long size;
+ 	struct folio *folio;
+ 	pte_t new_pte;
+-	spinlock_t *ptl;
+-	unsigned long haddr = address & huge_page_mask(h);
+ 	bool new_folio, new_pagecache_folio = false;
+-	u32 hash = hugetlb_fault_mutex_hash(mapping, idx);
++	u32 hash = hugetlb_fault_mutex_hash(mapping, vmf->pgoff);
+ 
+ 	/*
+ 	 * Currently, we are forced to kill the process in the event the
+@@ -6222,10 +6218,10 @@ static vm_fault_t hugetlb_no_page(struct mm_struct *mm,
+ 	 * before we get page_table_lock.
+ 	 */
+ 	new_folio = false;
+-	folio = filemap_lock_hugetlb_folio(h, mapping, idx);
++	folio = filemap_lock_hugetlb_folio(h, mapping, vmf->pgoff);
+ 	if (IS_ERR(folio)) {
+ 		size = i_size_read(mapping->host) >> huge_page_shift(h);
+-		if (idx >= size)
++		if (vmf->pgoff >= size)
+ 			goto out;
+ 		/* Check for page in userfault range */
+ 		if (userfaultfd_missing(vma)) {
+@@ -6246,7 +6242,7 @@ static vm_fault_t hugetlb_no_page(struct mm_struct *mm,
+ 			 * never happen on the page after UFFDIO_COPY has
+ 			 * correctly installed the page and returned.
+ 			 */
+-			if (!hugetlb_pte_stable(h, mm, ptep, old_pte)) {
++			if (!hugetlb_pte_stable(h, mm, vmf->pte, vmf->orig_pte)) {
+ 				ret = 0;
+ 				goto out;
+ 			}
+@@ -6255,7 +6251,7 @@ static vm_fault_t hugetlb_no_page(struct mm_struct *mm,
+ 							VM_UFFD_MISSING);
+ 		}
+ 
+-		folio = alloc_hugetlb_folio(vma, haddr, 0);
++		folio = alloc_hugetlb_folio(vma, vmf->address, 0);
+ 		if (IS_ERR(folio)) {
+ 			/*
+ 			 * Returning error will result in faulting task being
+@@ -6269,18 +6265,20 @@ static vm_fault_t hugetlb_no_page(struct mm_struct *mm,
+ 			 * here.  Before returning error, get ptl and make
+ 			 * sure there really is no pte entry.
+ 			 */
+-			if (hugetlb_pte_stable(h, mm, ptep, old_pte))
++			if (hugetlb_pte_stable(h, mm, vmf->pte, vmf->orig_pte))
+ 				ret = vmf_error(PTR_ERR(folio));
+ 			else
+ 				ret = 0;
+ 			goto out;
+ 		}
+-		clear_huge_page(&folio->page, address, pages_per_huge_page(h));
++		clear_huge_page(&folio->page, vmf->real_address,
++				pages_per_huge_page(h));
+ 		__folio_mark_uptodate(folio);
+ 		new_folio = true;
+ 
+ 		if (vma->vm_flags & VM_MAYSHARE) {
+-			int err = hugetlb_add_to_page_cache(folio, mapping, idx);
++			int err = hugetlb_add_to_page_cache(folio, mapping,
++							vmf->pgoff);
+ 			if (err) {
+ 				/*
+ 				 * err can't be -EEXIST which implies someone
+@@ -6289,7 +6287,8 @@ static vm_fault_t hugetlb_no_page(struct mm_struct *mm,
+ 				 * to the page cache. So it's safe to call
+ 				 * restore_reserve_on_error() here.
+ 				 */
+-				restore_reserve_on_error(h, vma, haddr, folio);
++				restore_reserve_on_error(h, vma, vmf->address,
++							folio);
+ 				folio_put(folio);
+ 				goto out;
+ 			}
+@@ -6319,7 +6318,7 @@ static vm_fault_t hugetlb_no_page(struct mm_struct *mm,
+ 			folio_unlock(folio);
+ 			folio_put(folio);
+ 			/* See comment in userfaultfd_missing() block above */
+-			if (!hugetlb_pte_stable(h, mm, ptep, old_pte)) {
++			if (!hugetlb_pte_stable(h, mm, vmf->pte, vmf->orig_pte)) {
+ 				ret = 0;
+ 				goto out;
+ 			}
+@@ -6334,23 +6333,23 @@ static vm_fault_t hugetlb_no_page(struct mm_struct *mm,
+ 	 * any allocations necessary to record that reservation occur outside
+ 	 * the spinlock.
+ 	 */
+-	if ((flags & FAULT_FLAG_WRITE) && !(vma->vm_flags & VM_SHARED)) {
+-		if (vma_needs_reservation(h, vma, haddr) < 0) {
++	if ((vmf->flags & FAULT_FLAG_WRITE) && !(vma->vm_flags & VM_SHARED)) {
++		if (vma_needs_reservation(h, vma, vmf->address) < 0) {
+ 			ret = VM_FAULT_OOM;
+ 			goto backout_unlocked;
+ 		}
+ 		/* Just decrements count, does not deallocate */
+-		vma_end_reservation(h, vma, haddr);
++		vma_end_reservation(h, vma, vmf->address);
+ 	}
+ 
+-	ptl = huge_pte_lock(h, mm, ptep);
++	vmf->ptl = huge_pte_lock(h, mm, vmf->pte);
+ 	ret = 0;
+ 	/* If pte changed from under us, retry */
+-	if (!pte_same(huge_ptep_get(ptep), old_pte))
++	if (!pte_same(huge_ptep_get(vmf->pte), vmf->orig_pte))
+ 		goto backout;
+ 
+ 	if (anon_rmap)
+-		hugetlb_add_new_anon_rmap(folio, vma, haddr);
++		hugetlb_add_new_anon_rmap(folio, vma, vmf->address);
+ 	else
+ 		hugetlb_add_file_rmap(folio);
+ 	new_pte = make_huge_pte(vma, &folio->page, ((vma->vm_flags & VM_WRITE)
+@@ -6359,17 +6358,18 @@ static vm_fault_t hugetlb_no_page(struct mm_struct *mm,
+ 	 * If this pte was previously wr-protected, keep it wr-protected even
+ 	 * if populated.
+ 	 */
+-	if (unlikely(pte_marker_uffd_wp(old_pte)))
++	if (unlikely(pte_marker_uffd_wp(vmf->orig_pte)))
+ 		new_pte = huge_pte_mkuffd_wp(new_pte);
+-	set_huge_pte_at(mm, haddr, ptep, new_pte, huge_page_size(h));
++	set_huge_pte_at(mm, vmf->address, vmf->pte, new_pte, huge_page_size(h));
+ 
+ 	hugetlb_count_add(pages_per_huge_page(h), mm);
+-	if ((flags & FAULT_FLAG_WRITE) && !(vma->vm_flags & VM_SHARED)) {
++	if ((vmf->flags & FAULT_FLAG_WRITE) && !(vma->vm_flags & VM_SHARED)) {
+ 		/* Optimization, do the COW without a second fault */
+-		ret = hugetlb_wp(mm, vma, address, ptep, flags, folio, ptl, vmf);
++		ret = hugetlb_wp(mm, vma, vmf->real_address, vmf->pte,
++				vmf->flags, folio, vmf->ptl, vmf);
+ 	}
+ 
+-	spin_unlock(ptl);
++	spin_unlock(vmf->ptl);
+ 
+ 	/*
+ 	 * Only set hugetlb_migratable in newly allocated pages.  Existing pages
+@@ -6386,10 +6386,10 @@ static vm_fault_t hugetlb_no_page(struct mm_struct *mm,
+ 	return ret;
+ 
+ backout:
+-	spin_unlock(ptl);
++	spin_unlock(vmf->ptl);
+ backout_unlocked:
+ 	if (new_folio && !new_pagecache_folio)
+-		restore_reserve_on_error(h, vma, haddr, folio);
++		restore_reserve_on_error(h, vma, vmf->address, folio);
+ 
+ 	folio_unlock(folio);
+ 	folio_put(folio);
+@@ -6485,8 +6485,7 @@ vm_fault_t hugetlb_fault(struct mm_struct *mm, struct vm_area_struct *vma,
+ 		 * hugetlb_no_page will drop vma lock and hugetlb fault
+ 		 * mutex internally, which make us return immediately.
+ 		 */
+-		return hugetlb_no_page(mm, vma, mapping, vmf.pgoff, address,
+-					vmf.pte, vmf.orig_pte, flags, &vmf);
++		return hugetlb_no_page(mm, vma, mapping, &vmf);
+ 	}
+ 
+ 	ret = 0;
+-- 
+2.43.0
 
