@@ -1,606 +1,261 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.19])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f72.google.com (mail-io1-f72.google.com [209.85.166.72])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E5C642072;
-	Mon,  1 Apr 2024 14:07:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC0E540BFD
+	for <linux-kernel@vger.kernel.org>; Mon,  1 Apr 2024 14:08:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711980465; cv=none; b=ntVb/BKcxtLftMukPywden/Uy9Z8MJEhzGuX/bF0WIMRU2Ft6ACkzPCA2AS9VPXqsFCeSbfGUmC7bHnm5ZYHn4kfujJQ7SVsSUMCq8shiKazOr/2C1TCYjwJvqjBb4dRHs5Fr2muwO+f3BOcWjcZR6gVmYeY+O/Ttwa8ALXACnA=
+	t=1711980511; cv=none; b=qSLgQ39O0NEs0VlS/353haFqftEq6pNiqmCO/YMF3gbfd5ICDCudZ7rXpFDOjhARwCHe5Whuoy2E2+9MwJO72atTPDAnOdtq2H2njMhnUFQOx3b7ivdU1PBdvVr1AsqLWWPtq0zaAIRZ/EN+0Q0V3UssXUUUnZEAnKV/9xBakgg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711980465; c=relaxed/simple;
-	bh=jQ46ngBE+kplES66tQFStF5bcAcwjh9OBBGD3tiCTYo=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=URDY3pZ8SfJPTgo2mDuOhmj3UX1f30VKs1UfHkChv6xeOCmOwGrIXt3zD+ELv91Xl1KxiV18tDZt1gbBRXNK7krBS/V8CpzrjiL4C81JH61TBPdWU6opR6T/0vEIsq+O4LzZ3lC4SJqepVSKU8Af1tcabSp8ZQcJ1BK9ncpi7fw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net; spf=pass smtp.mailfrom=gmx.net; dkim=pass (2048-bit key) header.d=gmx.net header.i=j.neuschaefer@gmx.net header.b=B12rstuf; arc=none smtp.client-ip=212.227.15.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.net
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.net header.i=j.neuschaefer@gmx.net header.b="B12rstuf"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.net;
-	s=s31663417; t=1711980454; x=1712585254; i=j.neuschaefer@gmx.net;
-	bh=2l5ll8AdLhLurBfeU1mq08CDD+umJpWBTj/MfN5e4LE=;
-	h=X-UI-Sender-Class:From:Date:Subject:References:In-Reply-To:To:
-	 Cc;
-	b=B12rstufyRnvptvwiaaUkiEBu1CvTnT6oi9LW3MePTTm46MgUu4iqnsLb5utlWad
-	 a8oVr6e0flGVJo9ZqG7rE38vdjHN7bL6F/AiLFyXd0WKFM0FtoICI2jX2DiGkFpX/
-	 +RvFPX06k6nQVV96e9FzELLsuE0OMTg9weuZ/NMrxet5VTGMAb0jrvitdGRNgqtba
-	 9MGxl6d+zqzXoTrEBankaZ25xgl6e2c78yqbx/kBlnK1x3ViTUWrP4XPT7HkhejfS
-	 HFhUduIPodxXRFk56OLmn9r8SobOoXK8rjuEoGiBSAoYS5kFNgyEz56DhPVLRv/U1
-	 oy3Jx3RkHETiy/Xpbw==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from probook ([5.145.135.152]) by mail.gmx.net (mrgmx004
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1N3se2-1sqmrG2wCW-00zlmJ; Mon, 01
- Apr 2024 16:07:34 +0200
-From: =?utf-8?q?Jonathan_Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
-Date: Mon, 01 Apr 2024 16:06:32 +0200
-Subject: [PATCH v11 3/4] clk: wpcm450: Add Nuvoton WPCM450 clock/reset
- controller driver
+	s=arc-20240116; t=1711980511; c=relaxed/simple;
+	bh=QE/azOG+sdCDa9i/ChxB7j8lmmuGKSYJpyCvCgdezGk=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=l5C0DbHkLlPGmhjtRxomjOZTfbRYoBO8dhMHpbOIgRJyw6Wm9kjtbAK+AuVE0ibUrv5cEmJS3MtQ7lhAoy/B22E+19kXvLD1hzQb3YcDh+ryWPKALzPdrrH01urmcKW1Rz4eiQPJZVo74+PZnemcH6yDzvdcOaSmIs3KAKWeJ4E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.72
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f72.google.com with SMTP id ca18e2360f4ac-7cc0a422d43so455047239f.2
+        for <linux-kernel@vger.kernel.org>; Mon, 01 Apr 2024 07:08:29 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711980509; x=1712585309;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=D+RN2kaba+YcpqIdLIA1URl8bnDzjP/nh4Z/qLlrurY=;
+        b=jSEzDY54tsgHodaMmryZ5OdNN0ePFm1FSX7WngIu0jckQoBKzvuqlp0l3oJh6XegkH
+         sCKE347wEl1FMy4rX2V79ty4Qk4HJXagWJfINBZl61k1EblK27rFlW2tZkMNgCzq39Hq
+         fynH4fmSRVH8v4VgOPrbJyd8rDyLkbofGoBi7vbr7ybCoTfNxt01qytvg5MzvpnBqxHS
+         bKzUdZWxCFXoGuYjuD76ZE9LiD1Df6inLp9zjylFagSv+reaefrlAEWWIx5DjHg0BlXO
+         y84xq3iPzz+5mQV0UyeoSVw7jRl4tzCiTJirihIysHkU8qz61njVqwrbAbHK3/ol7eLi
+         Z6OQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXDIdcxjFmEExqzjdQ3WnpFYtfwmntjswAXKPy6K03sZlPDjqgB08quhwSuackd4jgzWjQ3QAkaFD2X9OTNTqcXDmg4Gr1r7Uz8HtAB
+X-Gm-Message-State: AOJu0YxHlUYWQIYF/Y5DE61kj3VQyOredHSt37yKmMerwiu4KJZwpRj4
+	ORBK+Mq3D1lQGc9H4Q4Oa7KXrtQTBkybRs4MLhf8IKVSSSz+mTNmS3rAIUANIiRcvhFdEYp0oFe
+	tMpjtnap2MkhgtRvxpXQYu7ahpbJTvJuo6MpdthHr94TAnaJpsXLcBs4=
+X-Google-Smtp-Source: AGHT+IEXEW2XEdKYxr7Es5tMPmApuZiyWDb9KBttBC3s2fwSfroDnexKvV853rHkZaWFIRtnHjdLhk8H7bOQH77vwbfYXwPK7jXa
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <20240401-wpcm-clk-v11-3-379472961244@gmx.net>
-References: <20240401-wpcm-clk-v11-0-379472961244@gmx.net>
-In-Reply-To: <20240401-wpcm-clk-v11-0-379472961244@gmx.net>
-To: openbmc@lists.ozlabs.org, linux-clk@vger.kernel.org, 
- devicetree@vger.kernel.org
-Cc: Michael Turquette <mturquette@baylibre.com>, 
- Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
- Conor Dooley <conor+dt@kernel.org>, Joel Stanley <joel@jms.id.au>, 
- Philipp Zabel <p.zabel@pengutronix.de>, linux-kernel@vger.kernel.org, 
- =?utf-8?q?Jonathan_Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
-X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1711980406; l=15843;
- i=j.neuschaefer@gmx.net; s=20240329; h=from:subject:message-id;
- bh=UPeEaga1J3UrtecMXMiI+BuPgg+EO1dTix3uUSMxUtA=;
- b=WSr9LGfIK22yrApFcMZvTG0JH8tV6sMSVGdbwVtKVJ9QZ8RA4qHhxrYSJN2PaO2fx3YpuF/XO
- /cBcuDVkjPnDpN9FXHaz7dQ7WhtFPkEvJC2py+HKDb+SUz6+7Yn0ed/
-X-Developer-Key: i=j.neuschaefer@gmx.net; a=ed25519;
- pk=NIe0bK42wNaX/C4bi6ezm7NJK0IQE+8MKBm7igFMIS4=
-X-Provags-ID: V03:K1:O6tSXg1bixJjYBYRYi42XYA09hwB8IB03c3mYeKX8fc8XfNvsex
- tNG772Q5u5+wfidPfRzWO/mlCq5saxC5NXx9n7pbZ1BgXMitC159TK3ovN/y8tcpqEqbj3c
- KkBe9et1+81/mvsvh9Req4D4PFIo4/sJ3T9C43SKDiWXhNdI+HRw7FbEGHxbfzPe3QGUKhU
- 0CibwgA+QRVaFL9htwdsw==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:1QDU1+ubDig=;RdBSZG0T/5J0cErCtK6JklE/hTq
- BAHKVJL/3DJl7efBgBv7dqF1W+1bFalBF62wjLuiUXnczoc4TuCWr8XGgWJSeNuJgFbidhDwn
- 4gsg2rmzQ/MnRRyxuu6sZVue68OcKw2Mj+PPbzxdhbHLXZhpkbQIpQ6bUTlwwQkmDkPONrCd7
- zsWfW6tkdJjF1MuCImvE4G/9rXv3VEFuIhcEOL4Kk7UxupiaQoHGwxt8qXpqNHJDwHR9oLVRw
- MPC2GwxF3qBUpJreiRq/CNsdTBCoO8qXSqA8Ad7xMvIAqZryID0cS4zZE2gMNk6oV8kXfWytU
- k/5JwadxMZ1OyTIn9UCtdbRl75gSSSfIZtuS3TAj3OeYc693Vx6DT1K92/STwkXlGc0ntHSQ1
- dHsMwV3RhkKfqAOg3bnISO4z0Lx29nmgM+n2oIEs4j3MK8H0yHKw6rgQHpTnAiWJlpPxluS9S
- y0YRIswprzazxsjVFO8sohOmYIQ0fbiybu8HJH001nXpQJmjc3u7sdxAyApw5MHyr8A93eTbs
- hpaa6oX5ljsJBVMV9B5LzazX7um/Gua4vkyI70IA3Ap4s59642ZXL3RLX/Iuc8EyVc2uo1fzY
- HbGZGrBOlHkd4oNiwlIjKnlRz8lxWDNBBcUQNpSHYiUWvWuBiZt5GMY19c9KdNe73EQMtVpZZ
- DKRgZu1j1NdM37wpdEci64pYgTCvM0wM+3+QrlDaAj+57nHx0iQ/LTKBzdAkqRnhzaVgn08JG
- u2oPTGkQ2Fme94SrjOkqHWiallb2AJzDMDr0sQ5PtiB33eeXrc4PUHojs817h90SA1P3vHXVQ
- kTDDehTnjO5AWJyuAPZV3PZGB/dxLAKhBz4uii87dMJFGXs2pkvZ4gZRktzoI4ZQ70
+X-Received: by 2002:a05:6602:3412:b0:7cc:1357:1d1d with SMTP id
+ n18-20020a056602341200b007cc13571d1dmr108199ioz.0.1711980508958; Mon, 01 Apr
+ 2024 07:08:28 -0700 (PDT)
+Date: Mon, 01 Apr 2024 07:08:28 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000001963d306150986f9@google.com>
+Subject: [syzbot] [crypto?] inconsistent lock state in padata_do_parallel (2)
+From: syzbot <syzbot+0cb5bb0f4bf9e79db3b3@syzkaller.appspotmail.com>
+To: davem@davemloft.net, herbert@gondor.apana.org.au, 
+	linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org, luto@kernel.org, 
+	peterz@infradead.org, syzkaller-bugs@googlegroups.com, tglx@linutronix.de
+Content-Type: text/plain; charset="UTF-8"
 
-This driver implements the following features w.r.t. the clock and reset
-controller in the WPCM450 SoC:
+Hello,
 
-- It calculates the rates for all clocks managed by the clock controller
-- It leaves the clock tree mostly unchanged, except that it enables/
-  disables clock gates based on usage.
-- It exposes the reset lines managed by the controller using the
-  Generic Reset Controller subsystem
+syzbot found the following issue on:
 
-NOTE: If the driver and the corresponding devicetree node are present,
-      the driver will disable "unused" clocks. This is problem until
-      the clock relations are properly declared in the devicetree (in a
-      later patch). Until then, the clk_ignore_unused kernel parameter
-      can be used as a workaround.
+HEAD commit:    18737353cca0 Merge tag 'edac_urgent_for_v6.9_rc2' of git:/..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=15d605e5180000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=f64ec427e98bccd7
+dashboard link: https://syzkaller.appspot.com/bug?extid=0cb5bb0f4bf9e79db3b3
+compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
 
-Signed-off-by: Jonathan Neusch=C3=A4fer <j.neuschaefer@gmx.net>
-Reviewed-by: Joel Stanley <joel@jms.id.au>
-=2D--
+Unfortunately, I don't have any reproducer for this issue yet.
 
-I have considered converting this driver to a platform driver instead of
-using CLK_OF_DECLARE, because platform drivers are generally the way
-forward. However, the timer-npcm7xx driver used on the same platform
-requires is initialized with TIMER_OF_DECLARE and thus requires the
-clocks to be available earlier than a platform driver can provide them.
+Downloadable assets:
+disk image (non-bootable): https://storage.googleapis.com/syzbot-assets/7bc7510fe41f/non_bootable_disk-18737353.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/e9d064c31921/vmlinux-18737353.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/6d950d42963e/bzImage-18737353.xz
 
-v11:
-- no changes
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+0cb5bb0f4bf9e79db3b3@syzkaller.appspotmail.com
 
-v10:
-- select RESET_{CONTROLLER,SIMPLE} from CLK_WPCM450 instead of messing wit=
-h the 'default' statement
+================================
+WARNING: inconsistent lock state
+6.9.0-rc1-syzkaller-00379-g18737353cca0 #0 Not tainted
+--------------------------------
+inconsistent {SOFTIRQ-ON-W} -> {IN-SOFTIRQ-W} usage.
+syz-executor.3/9760 [HC0[0]:SC1[3]:HE1:SE0] takes:
+ffffffff8dcbca58 (padata_works_lock){+.?.}-{2:2}, at: spin_lock include/linux/spinlock.h:351 [inline]
+ffffffff8dcbca58 (padata_works_lock){+.?.}-{2:2}, at: padata_do_parallel+0x3af/0x9e0 kernel/padata.c:213
+{SOFTIRQ-ON-W} state was registered at:
+  lock_acquire kernel/locking/lockdep.c:5754 [inline]
+  lock_acquire+0x1b1/0x560 kernel/locking/lockdep.c:5719
+  __raw_spin_lock include/linux/spinlock_api_smp.h:133 [inline]
+  _raw_spin_lock+0x2e/0x40 kernel/locking/spinlock.c:154
+  spin_lock include/linux/spinlock.h:351 [inline]
+  padata_work_alloc_mt kernel/padata.c:109 [inline]
+  padata_do_multithreaded+0x213/0xad0 kernel/padata.c:507
+  gather_bootmem_prealloc mm/hugetlb.c:3478 [inline]
+  hugetlb_init+0x38b/0x1150 mm/hugetlb.c:4634
+  do_one_initcall+0x128/0x700 init/main.c:1238
+  do_initcall_level init/main.c:1300 [inline]
+  do_initcalls init/main.c:1316 [inline]
+  do_basic_setup init/main.c:1335 [inline]
+  kernel_init_freeable+0x69d/0xca0 init/main.c:1548
+  kernel_init+0x1c/0x2b0 init/main.c:1437
+  ret_from_fork+0x45/0x80 arch/x86/kernel/process.c:147
+  ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:243
+irq event stamp: 2347422
+hardirqs last  enabled at (2347422): [<ffffffff8ae18812>] __raw_spin_unlock_irqrestore include/linux/spinlock_api_smp.h:151 [inline]
+hardirqs last  enabled at (2347422): [<ffffffff8ae18812>] _raw_spin_unlock_irqrestore+0x52/0x80 kernel/locking/spinlock.c:194
+hardirqs last disabled at (2347421): [<ffffffff8ae18522>] __raw_spin_lock_irqsave include/linux/spinlock_api_smp.h:108 [inline]
+hardirqs last disabled at (2347421): [<ffffffff8ae18522>] _raw_spin_lock_irqsave+0x52/0x60 kernel/locking/spinlock.c:162
+softirqs last  enabled at (2342856): [<ffffffff8ae1b6ba>] softirq_handle_end kernel/softirq.c:400 [inline]
+softirqs last  enabled at (2342856): [<ffffffff8ae1b6ba>] __do_softirq+0x5da/0x922 kernel/softirq.c:583
+softirqs last disabled at (2347407): [<ffffffff8151d6f9>] invoke_softirq kernel/softirq.c:428 [inline]
+softirqs last disabled at (2347407): [<ffffffff8151d6f9>] __irq_exit_rcu kernel/softirq.c:633 [inline]
+softirqs last disabled at (2347407): [<ffffffff8151d6f9>] irq_exit_rcu+0xb9/0x120 kernel/softirq.c:645
 
-v9:
-- Apply comments made by Stephen Boyd
-- Move to drivers/clk/nuvoton/ directory
-- Update SPDX license identifier from GPL-2.0 to GPL-2.0-only
-- Rename clk_np variable to np
-- Use of_clk_hw_register
-- Refer to clock parents by .fw_name
+other info that might help us debug this:
+ Possible unsafe locking scenario:
 
-v8:
-- https://lore.kernel.org/lkml/20230428190226.1304326-3-j.neuschaefer@gmx.=
-net/
-- Use %pe format specifier throughout the driver, as suggested by Philipp =
-Zabel
-- Add Joel's R-b
+       CPU0
+       ----
+  lock(padata_works_lock);
+  <Interrupt>
+    lock(padata_works_lock);
 
-v7:
-- https://lore.kernel.org/lkml/20230422220240.322572-3-j.neuschaefer@gmx.n=
-et/
-- Simplify error handling by not deallocating resources
+ *** DEADLOCK ***
 
-v6:
-- Enable RESET_SIMPLE based on ARCH_WPCM450, not ARCH_NPCM, as suggested b=
-y Tomer Maimon
+4 locks held by syz-executor.3/9760:
+ #0: ffff8880234280e0 (&type->s_umount_key#110){+.+.}-{3:3}, at: __super_lock fs/super.c:56 [inline]
+ #0: ffff8880234280e0 (&type->s_umount_key#110){+.+.}-{3:3}, at: __super_lock_excl fs/super.c:71 [inline]
+ #0: ffff8880234280e0 (&type->s_umount_key#110){+.+.}-{3:3}, at: deactivate_super+0xd6/0x100 fs/super.c:504
+ #1: ffffc900008f8cb0 ((&d->timer)){+.-.}-{0:0}, at: call_timer_fn+0x11a/0x610 kernel/time/timer.c:1790
+ #2: ffffffff8dbb1560 (rcu_read_lock){....}-{1:2}, at: rcu_lock_acquire include/linux/rcupdate.h:329 [inline]
+ #2: ffffffff8dbb1560 (rcu_read_lock){....}-{1:2}, at: rcu_read_lock include/linux/rcupdate.h:781 [inline]
+ #2: ffffffff8dbb1560 (rcu_read_lock){....}-{1:2}, at: tipc_bearer_xmit_skb+0xb8/0x430 net/tipc/bearer.c:564
+ #3: ffffffff8dbb1500 (rcu_read_lock_bh){....}-{1:2}, at: local_bh_disable include/linux/bottom_half.h:20 [inline]
+ #3: ffffffff8dbb1500 (rcu_read_lock_bh){....}-{1:2}, at: rcu_read_lock_bh include/linux/rcupdate.h:833 [inline]
+ #3: ffffffff8dbb1500 (rcu_read_lock_bh){....}-{1:2}, at: padata_do_parallel+0x42/0x9e0 kernel/padata.c:183
 
-v5:
-- https://lore.kernel.org/lkml/20221104161850.2889894-6-j.neuschaefer@gmx.=
-net/
-- Switch to using clk_parent_data
+stack backtrace:
+CPU: 3 PID: 9760 Comm: syz-executor.3 Not tainted 6.9.0-rc1-syzkaller-00379-g18737353cca0 #0
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.2-debian-1.16.2-1 04/01/2014
+Call Trace:
+ <IRQ>
+ __dump_stack lib/dump_stack.c:88 [inline]
+ dump_stack_lvl+0x116/0x1f0 lib/dump_stack.c:114
+ print_usage_bug kernel/locking/lockdep.c:3971 [inline]
+ valid_state kernel/locking/lockdep.c:4013 [inline]
+ mark_lock_irq kernel/locking/lockdep.c:4216 [inline]
+ mark_lock+0x923/0xc60 kernel/locking/lockdep.c:4678
+ mark_usage kernel/locking/lockdep.c:4567 [inline]
+ __lock_acquire+0x13d4/0x3b30 kernel/locking/lockdep.c:5091
+ lock_acquire kernel/locking/lockdep.c:5754 [inline]
+ lock_acquire+0x1b1/0x560 kernel/locking/lockdep.c:5719
+ __raw_spin_lock include/linux/spinlock_api_smp.h:133 [inline]
+ _raw_spin_lock+0x2e/0x40 kernel/locking/spinlock.c:154
+ spin_lock include/linux/spinlock.h:351 [inline]
+ padata_do_parallel+0x3af/0x9e0 kernel/padata.c:213
+ pcrypt_aead_encrypt+0x3a3/0x4f0 crypto/pcrypt.c:117
+ crypto_aead_encrypt+0xbe/0x100 crypto/aead.c:121
+ tipc_aead_encrypt net/tipc/crypto.c:821 [inline]
+ tipc_crypto_xmit+0xe3d/0x23e0 net/tipc/crypto.c:1756
+ tipc_bearer_xmit_skb+0x160/0x430 net/tipc/bearer.c:568
+ tipc_disc_timeout+0x5b3/0x850 net/tipc/discover.c:338
+ call_timer_fn+0x1a0/0x610 kernel/time/timer.c:1793
+ expire_timers kernel/time/timer.c:1844 [inline]
+ __run_timers+0x74b/0xaf0 kernel/time/timer.c:2418
+ __run_timer_base kernel/time/timer.c:2429 [inline]
+ __run_timer_base kernel/time/timer.c:2422 [inline]
+ run_timer_base+0x111/0x190 kernel/time/timer.c:2438
+ run_timer_softirq+0x1a/0x40 kernel/time/timer.c:2448
+ __do_softirq+0x218/0x922 kernel/softirq.c:554
+ invoke_softirq kernel/softirq.c:428 [inline]
+ __irq_exit_rcu kernel/softirq.c:633 [inline]
+ irq_exit_rcu+0xb9/0x120 kernel/softirq.c:645
+ instr_sysvec_apic_timer_interrupt arch/x86/kernel/apic/apic.c:1043 [inline]
+ sysvec_apic_timer_interrupt+0x95/0xb0 arch/x86/kernel/apic/apic.c:1043
+ </IRQ>
+ <TASK>
+ asm_sysvec_apic_timer_interrupt+0x1a/0x20 arch/x86/include/asm/idtentry.h:702
+RIP: 0010:__sanitizer_cov_trace_pc+0x33/0x60 kernel/kcov.c:207
+Code: 65 76 7e 65 8b 05 25 65 76 7e a9 00 01 ff 00 48 8b 34 24 74 0f f6 c4 01 74 35 8b 82 14 16 00 00 85 c0 74 2b 8b 82 f0 15 00 00 <83> f8 02 75 20 48 8b 8a f8 15 00 00 8b 92 f4 15 00 00 48 8b 01 48
+RSP: 0018:ffffc90003b9f5a0 EFLAGS: 00000246
+RAX: 0000000000000000 RBX: 0000000000000001 RCX: ffffffff8134284f
+RDX: ffff888027030000 RSI: ffffffff813427f9 RDI: 0000000000000005
+RBP: ffffc90003b9f640 R08: 0000000000000005 R09: 0000000000000000
+R10: 0000000000000001 R11: 0000000000000001 R12: ffffc90003b9f5b0
+R13: ffffffff81793df0 R14: ffffc90003b9f670 R15: ffff888027030000
+ arch_stack_walk+0xb9/0x170 arch/x86/kernel/stacktrace.c:26
+ stack_trace_save+0x95/0xd0 kernel/stacktrace.c:122
+ kasan_save_stack+0x33/0x60 mm/kasan/common.c:47
+ kasan_save_track+0x14/0x30 mm/kasan/common.c:68
+ kasan_save_free_info+0x3b/0x60 mm/kasan/generic.c:579
+ poison_slab_object mm/kasan/common.c:240 [inline]
+ __kasan_slab_free+0x11d/0x1a0 mm/kasan/common.c:256
+ kasan_slab_free include/linux/kasan.h:184 [inline]
+ slab_free_hook mm/slub.c:2106 [inline]
+ slab_free mm/slub.c:4280 [inline]
+ kfree+0x129/0x390 mm/slub.c:4390
+ kvfree+0x47/0x50 mm/util.c:680
+ f2fs_destroy_node_manager+0x85a/0xc60 fs/f2fs/node.c:3408
+ f2fs_put_super+0x6c8/0xf60 fs/f2fs/super.c:1658
+ generic_shutdown_super+0x159/0x3d0 fs/super.c:641
+ kill_block_super+0x3b/0x90 fs/super.c:1693
+ kill_f2fs_super+0x2b4/0x440 fs/f2fs/super.c:4857
+ deactivate_locked_super+0xbe/0x1a0 fs/super.c:472
+ deactivate_super+0xde/0x100 fs/super.c:505
+ cleanup_mnt+0x222/0x450 fs/namespace.c:1267
+ task_work_run+0x14e/0x250 kernel/task_work.c:180
+ resume_user_mode_work include/linux/resume_user_mode.h:50 [inline]
+ exit_to_user_mode_loop kernel/entry/common.c:114 [inline]
+ exit_to_user_mode_prepare include/linux/entry-common.h:328 [inline]
+ __syscall_exit_to_user_mode_work kernel/entry/common.c:207 [inline]
+ syscall_exit_to_user_mode+0x275/0x2a0 kernel/entry/common.c:218
+ do_syscall_64+0xe2/0x260 arch/x86/entry/common.c:89
+ entry_SYSCALL_64_after_hwframe+0x72/0x7a
+RIP: 0033:0x7feb5a67f0d7
+Code: b0 ff ff ff f7 d8 64 89 01 48 83 c8 ff c3 0f 1f 44 00 00 31 f6 e9 09 00 00 00 66 0f 1f 84 00 00 00 00 00 b8 a6 00 00 00 0f 05 <48> 3d 00 f0 ff ff 77 01 c3 48 c7 c2 b0 ff ff ff f7 d8 64 89 02 b8
+RSP: 002b:00007fff44da0148 EFLAGS: 00000246 ORIG_RAX: 00000000000000a6
+RAX: 0000000000000000 RBX: 0000000000000000 RCX: 00007feb5a67f0d7
+RDX: 0000000000000000 RSI: 000000000000000a RDI: 00007fff44da0200
+RBP: 00007fff44da0200 R08: 0000000000000000 R09: 0000000000000000
+R10: 00000000ffffffff R11: 0000000000000246 R12: 00007fff44da12c0
+R13: 00007feb5a6c93b9 R14: 00000000000340c5 R15: 000000000000000d
+ </TASK>
+----------------
+Code disassembly (best guess):
+   0:	65 76 7e             	gs jbe 0x81
+   3:	65 8b 05 25 65 76 7e 	mov    %gs:0x7e766525(%rip),%eax        # 0x7e76652f
+   a:	a9 00 01 ff 00       	test   $0xff0100,%eax
+   f:	48 8b 34 24          	mov    (%rsp),%rsi
+  13:	74 0f                	je     0x24
+  15:	f6 c4 01             	test   $0x1,%ah
+  18:	74 35                	je     0x4f
+  1a:	8b 82 14 16 00 00    	mov    0x1614(%rdx),%eax
+  20:	85 c0                	test   %eax,%eax
+  22:	74 2b                	je     0x4f
+  24:	8b 82 f0 15 00 00    	mov    0x15f0(%rdx),%eax
+* 2a:	83 f8 02             	cmp    $0x2,%eax <-- trapping instruction
+  2d:	75 20                	jne    0x4f
+  2f:	48 8b 8a f8 15 00 00 	mov    0x15f8(%rdx),%rcx
+  36:	8b 92 f4 15 00 00    	mov    0x15f4(%rdx),%edx
+  3c:	48 8b 01             	mov    (%rcx),%rax
+  3f:	48                   	rex.W
 
-v4:
-- Fix reset controller initialization
 
-v3:
-- Change reference clock name from "refclk" to "ref"
-- Remove unused variable in return path of wpcm450_clk_register_pll
-- Remove unused divisor tables
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-v2:
-- no changes
-=2D--
- drivers/clk/Makefile              |   2 +-
- drivers/clk/nuvoton/Kconfig       |  10 +-
- drivers/clk/nuvoton/Makefile      |   1 +
- drivers/clk/nuvoton/clk-wpcm450.c | 372 +++++++++++++++++++++++++++++++++=
-+++++
- 4 files changed, 383 insertions(+), 2 deletions(-)
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
 
-diff --git a/drivers/clk/Makefile b/drivers/clk/Makefile
-index 14fa8d4ecc1fbe..cdeb2ecf3a8e99 100644
-=2D-- a/drivers/clk/Makefile
-+++ b/drivers/clk/Makefile
-@@ -107,7 +107,7 @@ endif
- obj-y					+=3D mstar/
- obj-y					+=3D mvebu/
- obj-$(CONFIG_ARCH_MXS)			+=3D mxs/
--obj-$(CONFIG_ARCH_MA35)			+=3D nuvoton/
-+obj-y					+=3D nuvoton/
- obj-$(CONFIG_COMMON_CLK_NXP)		+=3D nxp/
- obj-$(CONFIG_COMMON_CLK_PISTACHIO)	+=3D pistachio/
- obj-$(CONFIG_COMMON_CLK_PXA)		+=3D pxa/
-diff --git a/drivers/clk/nuvoton/Kconfig b/drivers/clk/nuvoton/Kconfig
-index fe4b7f62f46704..908881654b2e91 100644
-=2D-- a/drivers/clk/nuvoton/Kconfig
-+++ b/drivers/clk/nuvoton/Kconfig
-@@ -3,7 +3,7 @@
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
 
- config COMMON_CLK_NUVOTON
- 	bool "Nuvoton clock controller common support"
--	depends on ARCH_MA35 || COMPILE_TEST
-+	depends on ARCH_MA35 || ARCH_NPCM || COMPILE_TEST
- 	default y
- 	help
- 	  Say y here to enable common clock controller for Nuvoton platforms.
-@@ -16,4 +16,12 @@ config CLK_MA35D1
- 	help
- 	  Build the clock controller driver for MA35D1 SoC.
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
 
-+config CLK_WPCM450
-+	bool "Nuvoton WPCM450 clock/reset controller support"
-+	default y
-+	select RESET_CONTROLLER
-+	select RESET_SIMPLE
-+	help
-+	  Build the clock and reset controller driver for the WPCM450 SoC.
-+
- endif
-diff --git a/drivers/clk/nuvoton/Makefile b/drivers/clk/nuvoton/Makefile
-index c3c59dd9f2aaab..b130f0d3889ca0 100644
-=2D-- a/drivers/clk/nuvoton/Makefile
-+++ b/drivers/clk/nuvoton/Makefile
-@@ -2,3 +2,4 @@
- obj-$(CONFIG_CLK_MA35D1) +=3D clk-ma35d1.o
- obj-$(CONFIG_CLK_MA35D1) +=3D clk-ma35d1-divider.o
- obj-$(CONFIG_CLK_MA35D1) +=3D clk-ma35d1-pll.o
-+obj-$(CONFIG_CLK_WPCM450) +=3D clk-wpcm450.o
-diff --git a/drivers/clk/nuvoton/clk-wpcm450.c b/drivers/clk/nuvoton/clk-w=
-pcm450.c
-new file mode 100644
-index 00000000000000..9100c4b8a56483
-=2D-- /dev/null
-+++ b/drivers/clk/nuvoton/clk-wpcm450.c
-@@ -0,0 +1,372 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Nuvoton WPCM450 clock and reset controller driver.
-+ *
-+ * Copyright (C) 2022 Jonathan Neusch=C3=A4fer <j.neuschaefer@gmx.net>
-+ */
-+
-+#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
-+
-+#include <linux/bitfield.h>
-+#include <linux/clk-provider.h>
-+#include <linux/io.h>
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/of_address.h>
-+#include <linux/reset-controller.h>
-+#include <linux/reset/reset-simple.h>
-+#include <linux/slab.h>
-+
-+#include <dt-bindings/clock/nuvoton,wpcm450-clk.h>
-+
-+struct wpcm450_clk_pll {
-+	struct clk_hw hw;
-+	void __iomem *pllcon;
-+	u8 flags;
-+};
-+
-+#define to_wpcm450_clk_pll(_hw) container_of(_hw, struct wpcm450_clk_pll,=
- hw)
-+
-+#define PLLCON_FBDV	GENMASK(24, 16)
-+#define PLLCON_PRST	BIT(13)
-+#define PLLCON_PWDEN	BIT(12)
-+#define PLLCON_OTDV	GENMASK(10, 8)
-+#define PLLCON_INDV	GENMASK(5, 0)
-+
-+static unsigned long wpcm450_clk_pll_recalc_rate(struct clk_hw *hw,
-+						 unsigned long parent_rate)
-+{
-+	struct wpcm450_clk_pll *pll =3D to_wpcm450_clk_pll(hw);
-+	unsigned long fbdv, indv, otdv;
-+	u64 rate;
-+	u32 pllcon;
-+
-+	if (parent_rate =3D=3D 0)
-+		return 0;
-+
-+	pllcon =3D readl_relaxed(pll->pllcon);
-+
-+	indv =3D FIELD_GET(PLLCON_INDV, pllcon) + 1;
-+	fbdv =3D FIELD_GET(PLLCON_FBDV, pllcon) + 1;
-+	otdv =3D FIELD_GET(PLLCON_OTDV, pllcon) + 1;
-+
-+	rate =3D (u64)parent_rate * fbdv;
-+	do_div(rate, indv * otdv);
-+
-+	return rate;
-+}
-+
-+static int wpcm450_clk_pll_is_enabled(struct clk_hw *hw)
-+{
-+	struct wpcm450_clk_pll *pll =3D to_wpcm450_clk_pll(hw);
-+	u32 pllcon;
-+
-+	pllcon =3D readl_relaxed(pll->pllcon);
-+
-+	return !(pllcon & PLLCON_PRST);
-+}
-+
-+static void wpcm450_clk_pll_disable(struct clk_hw *hw)
-+{
-+	struct wpcm450_clk_pll *pll =3D to_wpcm450_clk_pll(hw);
-+	u32 pllcon;
-+
-+	pllcon =3D readl_relaxed(pll->pllcon);
-+	pllcon |=3D PLLCON_PRST | PLLCON_PWDEN;
-+	writel(pllcon, pll->pllcon);
-+}
-+
-+static const struct clk_ops wpcm450_clk_pll_ops =3D {
-+	.recalc_rate =3D wpcm450_clk_pll_recalc_rate,
-+	.is_enabled =3D wpcm450_clk_pll_is_enabled,
-+	.disable =3D wpcm450_clk_pll_disable
-+};
-+
-+static struct clk_hw *
-+wpcm450_clk_register_pll(struct device_node *np, void __iomem *pllcon, co=
-nst char *name,
-+			 const struct clk_parent_data *parent, unsigned long flags)
-+{
-+	struct wpcm450_clk_pll *pll;
-+	struct clk_init_data init =3D {};
-+	int ret;
-+
-+	pll =3D kzalloc(sizeof(*pll), GFP_KERNEL);
-+	if (!pll)
-+		return ERR_PTR(-ENOMEM);
-+
-+	init.name =3D name;
-+	init.ops =3D &wpcm450_clk_pll_ops;
-+	init.parent_data =3D parent;
-+	init.num_parents =3D 1;
-+	init.flags =3D flags;
-+
-+	pll->pllcon =3D pllcon;
-+	pll->hw.init =3D &init;
-+
-+	ret =3D of_clk_hw_register(np, &pll->hw);
-+	if (ret) {
-+		kfree(pll);
-+		return ERR_PTR(ret);
-+	}
-+
-+	return &pll->hw;
-+}
-+
-+#define REG_CLKEN	0x00
-+#define REG_CLKSEL	0x04
-+#define REG_CLKDIV	0x08
-+#define REG_PLLCON0	0x0c
-+#define REG_PLLCON1	0x10
-+#define REG_PMCON	0x14
-+#define REG_IRQWAKECON	0x18
-+#define REG_IRQWAKEFLAG	0x1c
-+#define REG_IPSRST	0x20
-+
-+struct wpcm450_pll_data {
-+	const char *name;
-+	struct clk_parent_data parent;
-+	unsigned int reg;
-+	unsigned long flags;
-+};
-+
-+static const struct wpcm450_pll_data pll_data[] =3D {
-+	{ "pll0", { .fw_name =3D "ref" }, REG_PLLCON0, 0 },
-+	{ "pll1", { .fw_name =3D "ref" }, REG_PLLCON1, 0 },
-+};
-+
-+struct wpcm450_clksel_data {
-+	const char *name;
-+	const struct clk_parent_data *parents;
-+	unsigned int num_parents;
-+	const u32 *table;
-+	int shift;
-+	int width;
-+	int index;
-+	unsigned long flags;
-+};
-+
-+static const u32 parent_table[] =3D { 0, 1, 2 };
-+
-+static const struct clk_parent_data default_parents[] =3D {
-+	{ .name =3D "pll0" },
-+	{ .name =3D "pll1" },
-+	{ .name =3D "ref" },
-+};
-+
-+static const struct clk_parent_data huart_parents[] =3D {
-+	{ .fw_name =3D "ref" },
-+	{ .name =3D "refdiv2" },
-+};
-+
-+static const struct wpcm450_clksel_data clksel_data[] =3D {
-+	{ "cpusel", default_parents, ARRAY_SIZE(default_parents),
-+		parent_table, 0, 2, -1, CLK_IS_CRITICAL },
-+	{ "clkout", default_parents, ARRAY_SIZE(default_parents),
-+		parent_table, 2, 2, -1, 0 },
-+	{ "usbphy", default_parents, ARRAY_SIZE(default_parents),
-+		parent_table, 6, 2, -1, 0 },
-+	{ "uartsel", default_parents, ARRAY_SIZE(default_parents),
-+		parent_table, 8, 2, WPCM450_CLK_USBPHY, 0 },
-+	{ "huartsel", huart_parents, ARRAY_SIZE(huart_parents),
-+		parent_table, 10, 1, -1, 0 },
-+};
-+
-+static const struct clk_div_table div_fixed2[] =3D {
-+	{ .val =3D 0, .div =3D 2 },
-+	{ }
-+};
-+
-+struct wpcm450_clkdiv_data {
-+	const char *name;
-+	struct clk_parent_data parent;
-+	int div_flags;
-+	const struct clk_div_table *table;
-+	int shift;
-+	int width;
-+	unsigned long flags;
-+};
-+
-+static struct wpcm450_clkdiv_data clkdiv_data_early[] =3D {
-+	{ "refdiv2", { .name =3D "ref" }, 0, div_fixed2, 0, 0 },
-+};
-+
-+static const struct wpcm450_clkdiv_data clkdiv_data[] =3D {
-+	{ "cpu", { .name =3D "cpusel" }, 0, div_fixed2, 0, 0, CLK_IS_CRITICAL },
-+	{ "adcdiv", { .name =3D "ref" }, CLK_DIVIDER_POWER_OF_TWO, NULL, 28, 2, =
-0 },
-+	{ "apb", { .name =3D "ahb" }, CLK_DIVIDER_POWER_OF_TWO, NULL, 26, 2, 0 }=
-,
-+	{ "ahb", { .name =3D "cpu" }, CLK_DIVIDER_POWER_OF_TWO, NULL, 24, 2, 0 }=
-,
-+	{ "uart", { .name =3D "uartsel" }, 0, NULL, 16, 4, 0 },
-+	{ "ahb3", { .name =3D "ahb" }, CLK_DIVIDER_POWER_OF_TWO, NULL, 8, 2, 0 }=
-,
-+};
-+
-+struct wpcm450_clken_data {
-+	const char *name;
-+	struct clk_parent_data parent;
-+	int bitnum;
-+	unsigned long flags;
-+};
-+
-+static const struct wpcm450_clken_data clken_data[] =3D {
-+	{ "fiu", { .name =3D "ahb3" }, WPCM450_CLK_FIU, 0 },
-+	{ "xbus", { .name =3D "ahb3" }, WPCM450_CLK_XBUS, 0 },
-+	{ "kcs", { .name =3D "apb" }, WPCM450_CLK_KCS, 0 },
-+	{ "shm", { .name =3D "ahb3" }, WPCM450_CLK_SHM, 0 },
-+	{ "usb1", { .name =3D "ahb" }, WPCM450_CLK_USB1, 0 },
-+	{ "emc0", { .name =3D "ahb" }, WPCM450_CLK_EMC0, 0 },
-+	{ "emc1", { .name =3D "ahb" }, WPCM450_CLK_EMC1, 0 },
-+	{ "usb0", { .name =3D "ahb" }, WPCM450_CLK_USB0, 0 },
-+	{ "peci", { .name =3D "apb" }, WPCM450_CLK_PECI, 0 },
-+	{ "aes", { .name =3D "apb" }, WPCM450_CLK_AES, 0 },
-+	{ "uart0", { .name =3D "uart" }, WPCM450_CLK_UART0, 0 },
-+	{ "uart1", { .name =3D "uart" }, WPCM450_CLK_UART1, 0 },
-+	{ "smb2", { .name =3D "apb" }, WPCM450_CLK_SMB2, 0 },
-+	{ "smb3", { .name =3D "apb" }, WPCM450_CLK_SMB3, 0 },
-+	{ "smb4", { .name =3D "apb" }, WPCM450_CLK_SMB4, 0 },
-+	{ "smb5", { .name =3D "apb" }, WPCM450_CLK_SMB5, 0 },
-+	{ "huart", { .name =3D "huartsel" }, WPCM450_CLK_HUART, 0 },
-+	{ "pwm", { .name =3D "apb" }, WPCM450_CLK_PWM, 0 },
-+	{ "timer0", { .name =3D "refdiv2" }, WPCM450_CLK_TIMER0, 0 },
-+	{ "timer1", { .name =3D "refdiv2" }, WPCM450_CLK_TIMER1, 0 },
-+	{ "timer2", { .name =3D "refdiv2" }, WPCM450_CLK_TIMER2, 0 },
-+	{ "timer3", { .name =3D "refdiv2" }, WPCM450_CLK_TIMER3, 0 },
-+	{ "timer4", { .name =3D "refdiv2" }, WPCM450_CLK_TIMER4, 0 },
-+	{ "mft0", { .name =3D "apb" }, WPCM450_CLK_MFT0, 0 },
-+	{ "mft1", { .name =3D "apb" }, WPCM450_CLK_MFT1, 0 },
-+	{ "wdt", { .name =3D "refdiv2" }, WPCM450_CLK_WDT, 0 },
-+	{ "adc", { .name =3D "adcdiv" }, WPCM450_CLK_ADC, 0 },
-+	{ "sdio", { .name =3D "ahb" }, WPCM450_CLK_SDIO, 0 },
-+	{ "sspi", { .name =3D "apb" }, WPCM450_CLK_SSPI, 0 },
-+	{ "smb0", { .name =3D "apb" }, WPCM450_CLK_SMB0, 0 },
-+	{ "smb1", { .name =3D "apb" }, WPCM450_CLK_SMB1, 0 },
-+};
-+
-+static DEFINE_SPINLOCK(wpcm450_clk_lock);
-+
-+/*
-+ * NOTE: Error handling is very rudimentary here. If the clock driver ini=
-tial-
-+ * ization fails, the system is probably in bigger trouble than what is c=
-aused
-+ * by a few leaked resources.
-+ */
-+
-+static void __init wpcm450_clk_init(struct device_node *np)
-+{
-+	struct clk_hw_onecell_data *clk_data;
-+	static struct clk_hw **hws;
-+	static struct clk_hw *hw;
-+	void __iomem *clk_base;
-+	int i, ret;
-+	struct reset_simple_data *reset;
-+
-+	clk_base =3D of_iomap(np, 0);
-+	if (!clk_base) {
-+		pr_err("%pOFP: failed to map registers\n", np);
-+		of_node_put(np);
-+		return;
-+	}
-+	of_node_put(np);
-+
-+	clk_data =3D kzalloc(struct_size(clk_data, hws, WPCM450_NUM_CLKS), GFP_K=
-ERNEL);
-+	if (!clk_data)
-+		return;
-+
-+	clk_data->num =3D WPCM450_NUM_CLKS;
-+	hws =3D clk_data->hws;
-+
-+	for (i =3D 0; i < WPCM450_NUM_CLKS; i++)
-+		hws[i] =3D ERR_PTR(-ENOENT);
-+
-+	/* PLLs */
-+	for (i =3D 0; i < ARRAY_SIZE(pll_data); i++) {
-+		const struct wpcm450_pll_data *data =3D &pll_data[i];
-+
-+		hw =3D wpcm450_clk_register_pll(np, clk_base + data->reg, data->name,
-+					      &data->parent, data->flags);
-+		if (IS_ERR(hw)) {
-+			pr_info("Failed to register PLL: %pe\n", hw);
-+			return;
-+		}
-+	}
-+
-+	/* Early divisors (REF/2) */
-+	for (i =3D 0; i < ARRAY_SIZE(clkdiv_data_early); i++) {
-+		const struct wpcm450_clkdiv_data *data =3D &clkdiv_data_early[i];
-+
-+		hw =3D clk_hw_register_divider_table_parent_data(NULL, data->name, &dat=
-a->parent,
-+							       data->flags, clk_base + REG_CLKDIV,
-+							       data->shift, data->width,
-+							       data->div_flags, data->table,
-+							       &wpcm450_clk_lock);
-+		if (IS_ERR(hw)) {
-+			pr_err("Failed to register div table: %pe\n", hw);
-+			return;
-+		}
-+	}
-+
-+	/* Selects/muxes */
-+	for (i =3D 0; i < ARRAY_SIZE(clksel_data); i++) {
-+		const struct wpcm450_clksel_data *data =3D &clksel_data[i];
-+
-+		hw =3D clk_hw_register_mux_parent_data(NULL, data->name, data->parents,
-+						     data->num_parents, data->flags,
-+						     clk_base + REG_CLKSEL, data->shift,
-+						     data->width, 0,
-+						     &wpcm450_clk_lock);
-+		if (IS_ERR(hw)) {
-+			pr_err("Failed to register mux: %pe\n", hw);
-+			return;
-+		}
-+		if (data->index >=3D 0)
-+			clk_data->hws[data->index] =3D hw;
-+	}
-+
-+	/* Divisors */
-+	for (i =3D 0; i < ARRAY_SIZE(clkdiv_data); i++) {
-+		const struct wpcm450_clkdiv_data *data =3D &clkdiv_data[i];
-+
-+		hw =3D clk_hw_register_divider_table_parent_data(NULL, data->name, &dat=
-a->parent,
-+							       data->flags, clk_base + REG_CLKDIV,
-+							       data->shift, data->width,
-+							       data->div_flags, data->table,
-+							       &wpcm450_clk_lock);
-+		if (IS_ERR(hw)) {
-+			pr_err("Failed to register divider: %pe\n", hw);
-+			return;
-+		}
-+	}
-+
-+	/* Enables/gates */
-+	for (i =3D 0; i < ARRAY_SIZE(clken_data); i++) {
-+		const struct wpcm450_clken_data *data =3D &clken_data[i];
-+
-+		hw =3D clk_hw_register_gate_parent_data(NULL, data->name, &data->parent=
-, data->flags,
-+						      clk_base + REG_CLKEN, data->bitnum,
-+						      data->flags, &wpcm450_clk_lock);
-+		if (IS_ERR(hw)) {
-+			pr_err("Failed to register gate: %pe\n", hw);
-+			return;
-+		}
-+		clk_data->hws[data->bitnum] =3D hw;
-+	}
-+
-+	ret =3D of_clk_add_hw_provider(np, of_clk_hw_onecell_get, clk_data);
-+	if (ret)
-+		pr_err("Failed to add DT provider: %pe\n", ERR_PTR(ret));
-+
-+	/* Reset controller */
-+	reset =3D kzalloc(sizeof(*reset), GFP_KERNEL);
-+	if (!reset)
-+		return;
-+	reset->rcdev.owner =3D THIS_MODULE;
-+	reset->rcdev.nr_resets =3D WPCM450_NUM_RESETS;
-+	reset->rcdev.ops =3D &reset_simple_ops;
-+	reset->rcdev.of_node =3D np;
-+	reset->membase =3D clk_base + REG_IPSRST;
-+	ret =3D reset_controller_register(&reset->rcdev);
-+	if (ret)
-+		pr_err("Failed to register reset controller: %pe\n", ERR_PTR(ret));
-+
-+	of_node_put(np);
-+}
-+
-+CLK_OF_DECLARE(wpcm450_clk_init, "nuvoton,wpcm450-clk", wpcm450_clk_init)=
-;
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
 
-=2D-
-2.43.0
-
+If you want to undo deduplication, reply with:
+#syz undup
