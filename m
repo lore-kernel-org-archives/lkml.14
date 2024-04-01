@@ -1,37 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77AA745BEC;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAABA4779C;
 	Mon,  1 Apr 2024 15:10:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711984217; cv=none; b=gQ+MWWL9B75qEEzKzsNIl6tn9LBxr2IYLSrAxGyOyeoLwfIjfpQlXo3gwYO6i/2ApXuUrx+kxGoxTwyiNBMGs8PIZYOoGJThtEAJpC0rBA5K0buGRzHNPgHCwaeaUMV82RWO7CUwHoD5EvF41lqU/cUoZQaGcpsz9ncSGzJZvvQ=
+	t=1711984217; cv=none; b=o0xWMFrrC90G+YGQ7UvKcwsMRr/ZwbtZ9rEQCmojI8wSh1jsj0BySY1sYWpKpy2JkTzMe3bMPV5/AZccIMJK4yJertV/sCVVQOkJ2VZG1v+036t9MYhFs7OQe9Wu7fhUmJVLS+VrPRyM+UZ//shKe7AtVVcDCfaOp75+IxrqQGo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1711984217; c=relaxed/simple;
-	bh=ypyseA7gjkezHNz8byQb1xroCwMnLrrumCgs2qcJ9TM=;
+	bh=rMNIm6FF+KZ2ZTd24xaZhI8c5F+8wLFZxJzWUcCFoE0=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=H/b9PHRqP0p/rAOhpIcR0vRGqp2AP8t2vuD7LRJXmBohdU3bylH3ZU2pWLOCJsSBxVtBGAQ04Su6estFnTMtJu0vATVBH5GRpqkoeQ96bTnyRfEIXZn+U2L/uDxl2X9Fz+5Rj8+xheMr7Js5JpUlaUVadz4XakMzl2TrZ6l71/w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kqIzWbE/; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=RWhoRTMMGm4Hpnpa8GlvF+6MSh0T+cIYRmt/M4BnKEeS3hrNxnNklB1uh6xQ1z4elWoV5SJ46guHuzQUqRJlcZhlwvlXGPYGdoOcQMIVe9o40EVtZqe7q5U9w/SKj1DHVKDtKT1XNuUGgc9FisX5hgdYUgF6M7qejly/dbWkRas=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Yi+2EWfO; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kqIzWbE/"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 11CEFC43390;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Yi+2EWfO"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 42A6AC43142;
 	Mon,  1 Apr 2024 15:10:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1711984217;
-	bh=ypyseA7gjkezHNz8byQb1xroCwMnLrrumCgs2qcJ9TM=;
+	bh=rMNIm6FF+KZ2ZTd24xaZhI8c5F+8wLFZxJzWUcCFoE0=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=kqIzWbE/88Dxgs2PUcPDRr4wCvLECfF7SyBly1ZZdfPqyzF1TqIC62iPGfu6mCp1y
-	 PApzigXBT3XRaFaTC2g9yxdOfw6DmHjCy7E8zq/NTr4o3nA6ia2v5TvaNtJSqQYZPw
-	 tTW5yAbseOcyif1tIkuAFr5slgU/kGRHfKKV1+1U7z5VzoVadDC+8kq6jmwSsaczwg
-	 uMgyElTWfF/zipJXK1EJXyJ5Vq2DXJKQm3UGzMDWRLXic2ghvX6qlUoO+0wXTDbuKm
-	 WMtaj86hNbhlun4u/o3EVCslxAR8T2+A4VdSothhK6QdmIig8fFdPNlHZkuvOykNhQ
-	 TUyuz2rlxwrWQ==
+	b=Yi+2EWfO+KGVpi7JDBs5lIvKSv+UTUhk2N3pUx7aBUI7L3F7npNPeW7U2c/gtJcBt
+	 yuffCjtV2eFE8LQufDwLWcynUvO9yUP9F1sfqv/Nth7mfI+a56+i6YGkH3G9fmtN4Z
+	 kFcDCHxqhTbJni5odIg/rGYUJ+v2DRbRJRbMVZs33HnZueYP8IwOnqowR6zWHH7qnX
+	 vigRtRTTNZVa0j281w5raiyNlX+IBYp39iQAisICf7oFZedfdns84NkRoPI8Z1YWso
+	 2AttD8CWIMH/ZqUvokiXQ9jpz4wKNvwx+a8dlVDwM/VlHekFeGIo2/LYzwDDRAp2Jd
+	 ReTv5wHgLj7kw==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0A84CD1288;
-	Mon,  1 Apr 2024 15:10:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B35ECD128D;
+	Mon,  1 Apr 2024 15:10:17 +0000 (UTC)
 From: Dumitru Ceclan via B4 Relay <devnull+dumitru.ceclan.analog.com@kernel.org>
-Date: Mon, 01 Apr 2024 18:32:19 +0300
-Subject: [PATCH 1/6] dt-bindings: adc: ad7173: add support for ad411x
+Date: Mon, 01 Apr 2024 18:32:23 +0300
+Subject: [PATCH 5/6] iio: adc: ad7173: Remove index from temp channel
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -39,8 +39,8 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-Id: <20240401-ad4111-v1-1-34618a9cc502@analog.com>
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240401-ad4111-v1-5-34618a9cc502@analog.com>
 References: <20240401-ad4111-v1-0-34618a9cc502@analog.com>
 In-Reply-To: <20240401-ad4111-v1-0-34618a9cc502@analog.com>
 To: Ceclan Dumitru <dumitru.ceclan@analog.com>
@@ -52,11 +52,11 @@ Cc: Lars-Peter Clausen <lars@metafoo.de>,
  linux-iio@vger.kernel.org, devicetree@vger.kernel.org, 
  linux-kernel@vger.kernel.org, Dumitru Ceclan <mitrutzceclan@gmail.com>
 X-Mailer: b4 0.12.4
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1711985550; l=4017;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1711985550; l=697;
  i=dumitru.ceclan@analog.com; s=20240313; h=from:subject:message-id;
- bh=ZyRClsyDd6RKV/PtoHfGxoOfXDbJoSHfK85MVhx0ze8=;
- b=OVfXhcFTgH9CYNC7fhmMZbavK94vVtJeh+VDoQk2nZ9ZKe93KmREz9IS2PvDGUG6wrpoXP4TU
- tS58/VzjVh1AsCfd01MdgrIYEuNU+n4kbO4agDA4qQqmCt6T01rMm+d
+ bh=BEq6V85bjOhRpMOZUvZXO8DDCT8wIyhHIFI5fumHsUQ=;
+ b=uRtEs9PSWhwA2agYFbdIGhRPxleMz2YI6DJQGcqKWjiKcckx5OaBkgBeVypd7Pkc4k2o8EF4Z
+ Oe/2pVoVCLyDEuuNazmWNj21SPV6BuCXgX9le+FvPpRM4d/974PE+6r
 X-Developer-Key: i=dumitru.ceclan@analog.com; a=ed25519;
  pk=HdqMlVyrcazwoiai7oN6ghU+Bj1pusGUFRl30jhS7Bo=
 X-Endpoint-Received: by B4 Relay for dumitru.ceclan@analog.com/20240313
@@ -66,119 +66,25 @@ Reply-To: dumitru.ceclan@analog.com
 
 From: Dumitru Ceclan <dumitru.ceclan@analog.com>
 
-Add support for: AD4111, AD4112, AD4114, AD4115, AD4116.
-
-AD411x family ADCs support a VCOM pin, dedicated for single-ended usage.
-AD4111/AD4112 support current channels, usage is implemented by
- specifying channel reg values bigger than 15.
+Temperature channel is unique per device, index is not needed.
 
 Signed-off-by: Dumitru Ceclan <dumitru.ceclan@analog.com>
 ---
- .../devicetree/bindings/iio/adc/adi,ad7173.yaml    | 59 +++++++++++++++++++++-
- 1 file changed, 57 insertions(+), 2 deletions(-)
+ drivers/iio/adc/ad7173.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/iio/adc/adi,ad7173.yaml b/Documentation/devicetree/bindings/iio/adc/adi,ad7173.yaml
-index ea6cfcd0aff4..bba2de0a52f3 100644
---- a/Documentation/devicetree/bindings/iio/adc/adi,ad7173.yaml
-+++ b/Documentation/devicetree/bindings/iio/adc/adi,ad7173.yaml
-@@ -19,7 +19,18 @@ description: |
-   primarily for measurement of signals close to DC but also delivers
-   outstanding performance with input bandwidths out to ~10kHz.
+diff --git a/drivers/iio/adc/ad7173.c b/drivers/iio/adc/ad7173.c
+index bf5a5b384fe2..9526585e6929 100644
+--- a/drivers/iio/adc/ad7173.c
++++ b/drivers/iio/adc/ad7173.c
+@@ -797,7 +797,6 @@ static const struct iio_info ad7173_info = {
  
-+  Analog Devices AD411x ADC's:
-+  The AD411X family encompasses a series of low power, low noise, 24-bit,
-+  sigma-delta analog-to-digital converters that offer a versatile range of
-+  specifications. They integrate an analog front end suitable for processing
-+  fully differential/single-ended and bipolar voltage inputs.
-+
-   Datasheets for supported chips:
-+    https://www.analog.com/media/en/technical-documentation/data-sheets/AD4111.pdf
-+    https://www.analog.com/media/en/technical-documentation/data-sheets/AD4112.pdf
-+    https://www.analog.com/media/en/technical-documentation/data-sheets/AD4114.pdf
-+    https://www.analog.com/media/en/technical-documentation/data-sheets/AD4115.pdf
-+    https://www.analog.com/media/en/technical-documentation/data-sheets/AD4116.pdf
-     https://www.analog.com/media/en/technical-documentation/data-sheets/AD7172-2.pdf
-     https://www.analog.com/media/en/technical-documentation/data-sheets/AD7172-4.pdf
-     https://www.analog.com/media/en/technical-documentation/data-sheets/AD7173-8.pdf
-@@ -31,6 +42,11 @@ description: |
- properties:
-   compatible:
-     enum:
-+      - adi,ad4111
-+      - adi,ad4112
-+      - adi,ad4114
-+      - adi,ad4115
-+      - adi,ad4116
-       - adi,ad7172-2
-       - adi,ad7172-4
-       - adi,ad7173-8
-@@ -125,10 +141,19 @@ patternProperties:
- 
-     properties:
-       reg:
-+        description:
-+          Reg values 16-19 are only permitted for ad4111/ad4112 current channels.
-         minimum: 0
--        maximum: 15
-+        maximum: 19
- 
-       diff-channels:
-+        description:
-+          For using current channels specify only the positive channel.
-+            (IIN2+, IIN2−) -> diff-channels = <2 0>
-+
-+          Family AD411x supports a dedicated VCOM voltage input.
-+          To select it set the second channel to 16.
-+            (VIN2, VCOM) -> diff-channels = <2 16>
-         items:
-           minimum: 0
-           maximum: 31
-@@ -166,7 +191,6 @@ allOf:
-   - $ref: /schemas/spi/spi-peripheral-props.yaml#
- 
-   # Only ad7172-4, ad7173-8 and ad7175-8 support vref2
--  # Other models have [0-3] channel registers
-   - if:
-       properties:
-         compatible:
-@@ -187,6 +211,37 @@ allOf:
-                 - vref
-                 - refout-avss
-                 - avdd
-+
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            enum:
-+              - adi,ad4114
-+              - adi,ad4115
-+              - adi,ad4116
-+              - adi,ad7173-8
-+              - adi,ad7175-8
-+    then:
-+      patternProperties:
-+        "^channel@[0-9a-f]$":
-+          properties:
-+            reg:
-+              maximum: 15
-+
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            enum:
-+              - adi,ad7172-2
-+              - adi,ad7175-2
-+              - adi,ad7176-2
-+              - adi,ad7177-2
-+    then:
-+      patternProperties:
-+        "^channel@[0-9a-f]$":
-+          properties:
-             reg:
-               maximum: 3
- 
+ static const struct iio_chan_spec ad7173_channel_template = {
+ 	.type = IIO_VOLTAGE,
+-	.indexed = 1,
+ 	.info_mask_separate = BIT(IIO_CHAN_INFO_RAW) |
+ 		BIT(IIO_CHAN_INFO_SCALE),
+ 	.info_mask_shared_by_all = BIT(IIO_CHAN_INFO_SAMP_FREQ),
 
 -- 
 2.43.0
