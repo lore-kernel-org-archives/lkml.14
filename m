@@ -1,42 +1,51 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from msa.smtpout.orange.fr (msa-209.smtpout.orange.fr [193.252.23.209])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B83774E1D5;
-	Mon,  1 Apr 2024 20:50:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 150E04E1D5;
+	Mon,  1 Apr 2024 20:50:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.252.23.209
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712004607; cv=none; b=hWIgGIs0dyNqXVmRbbTUWFBTS2VhSak1W3xdCNaa0Z3bDF5IMrOQ20IFCLdKm6oX5GhyAFErciGBxH7cdCRoXAccJ8D9BJALxbeNJFfbtlfgGLak9kUG6yPaFEp9AKphgwRyggis+oIL0Jnecx/1Go0VmxxZ8jTRGHgi6QE+tWE=
+	t=1712004616; cv=none; b=oQIcSQFbIFEyz/y7l6E+9vQYU/hZlqw9CVbjtc7fSE6yCg5KgEyeLhmWlg4oEnTXXl3OUM3NMazV8uh4YT64qCNE4KMZAwY0v6RN7o7/iuzvzNOhEWFfm6jBa9+v7/zJLRNXAdA3noFqUgtqAjI9t/RGNP3Z5xKpaq1aNyGGn/w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712004607; c=relaxed/simple;
-	bh=yIx+UD6lf8yLqkorOuqWQO92jCJ0l41vcQ1dggv5Vbo=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=bb9tMTgPJ+0t9AcIghzooCrq21sMgjZkbIKiCElRZYTesBqGkq9CcMp0GSJQxd2nEZbZgBuwJFqYz610+csq4hj77yFnyPepd3A2N/Sl7HwM2uM2zXC5F8qazFVu3kYTJQJFTbBGu/ZOTR9o7JbgbMhzLq27TTvjhAMo0LNxtdM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qN34Hj7Q; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1712004616; c=relaxed/simple;
+	bh=VKgxvyuMDn6pPuzrSQH/fyXU71CRcxvmHV5mShrhvU4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=srOgBqivxnNESPDECyDSDCvFNvTQ95lxotCoMfaD6X+scOUE9hgVl4XNHeKCJSYYXpI0QC/5CCtAS5K4bXKXh9OLTiBUTrj1A2hJIAgQ+xts9jhUu7v/x1l3vVDiwEU3qZYKO6HhFE2XXOQKPpLuj8YHp4pUwjtQ9cdzyaSdYNY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=byCKusv8; arc=none smtp.client-ip=193.252.23.209
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qN34Hj7Q"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0F32CC433C7;
-	Mon,  1 Apr 2024 20:50:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712004607;
-	bh=yIx+UD6lf8yLqkorOuqWQO92jCJ0l41vcQ1dggv5Vbo=;
-	h=From:To:Cc:Subject:Date:From;
-	b=qN34Hj7QQ56j7lJaBBh0SaEaHBKLsMXdc4Nl9FSLl2Xf8KkmhIHUCNs3J3k0q5v3K
-	 CMB0Ieixm0jU9EfagM3eZIkRLe1EdqqnTSJI0ElKG5HXC2r6ucMFvfrxCmzM9/xlbC
-	 wqbX9LGVdO++0uS/bt5+fBnyhkI2jMfmWrLWNa2oH2lF/PRBKrMaO5P1MfW/d+mp3s
-	 vhk31rOSkAri2OXwBg74r38tpSjV56jFsbTX51X541sC++pS+WD2jy8Og+rADBQ433
-	 oylCSEqF9S3Xy528AkTiJstErWh6jo/IxU/CNZFHOLVbSMS+CJ+YjHTZZ8oSJ+vw1T
-	 7SoFRZTK5rMrg==
-From: Rob Herring <robh@kernel.org>
-To: Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Heiko Stuebner <heiko@sntech.de>
-Cc: devicetree@vger.kernel.org,
+	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="byCKusv8"
+Received: from fedora.home ([86.243.17.157])
+	by smtp.orange.fr with ESMTPA
+	id rOaSrTguCRo54rOaTrI000; Mon, 01 Apr 2024 22:49:03 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
+	s=t20230301; t=1712004543;
+	bh=VPi98jZXacwHLVzFnIc7JUWg7LJMcQPKff2POQefCl8=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version;
+	b=byCKusv8wkGLaFBaQFNvZ5G2kLW3RWNvThLQQygSe4RTcCOdA6jG9JascXZynUFlZ
+	 MHXcF1oKKwslBSp5r+R0wD5D2YuhMvCr7lGoKdOnifttuEoe/S0i0zlBhJWsVJP/rC
+	 Ae/+eVgT2pCScoEUlXmec83fcVkBjYQDm+kEQrI3vsilo5u5jybTmI4yZ1bdsf8PjL
+	 /CyUHTq4djDRlTVdRkS6Gy5GNOSOR5bLFdumIV2wO+FxQ8+xoAoc3YrvK2I3s3PoJ3
+	 xUMyciEpw0oZ9v3rYfcDWSu/n7ijHBVJXXzNJUwcuvFbNAUseeMS5g422Tns91Eq/f
+	 YTR7sA2fxIR9A==
+X-ME-Helo: fedora.home
+X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
+X-ME-Date: Mon, 01 Apr 2024 22:49:03 +0200
+X-ME-IP: 86.243.17.157
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+To: Tony Lindgren <tony@atomide.com>,
+	Haojian Zhuang <haojian.zhuang@linaro.org>,
+	Linus Walleij <linus.walleij@linaro.org>
+Cc: linux-kernel@vger.kernel.org,
+	kernel-janitors@vger.kernel.org,
+	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
 	linux-arm-kernel@lists.infradead.org,
-	linux-rockchip@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] dt-bindings: rockchip: grf: Add missing type to 'pcie-phy' node
-Date: Mon,  1 Apr 2024 15:49:58 -0500
-Message-ID: <20240401204959.1698106-1-robh@kernel.org>
-X-Mailer: git-send-email 2.43.0
+	linux-omap@vger.kernel.org,
+	linux-gpio@vger.kernel.org
+Subject: [PATCH] pinctrl: pinctrl-single: Remove some unused fields in struct pcs_function
+Date: Mon,  1 Apr 2024 22:48:55 +0200
+Message-ID: <a6b653642298d35b1e3656e9bfc6d1b322fbbe68.1712004518.git.christophe.jaillet@wanadoo.fr>
+X-Mailer: git-send-email 2.44.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -45,26 +54,43 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-'pcie-phy' is missing any type. Add 'type: object' to indicate it's a
-node.
+In "struct pcs_function", the 'pgnames' and 'npgnames' fields are unused.
+This is a left-over from commit 571aec4df5b7 ("pinctrl: single: Use generic
+pinmux helpers for managing functions");
 
-Signed-off-by: Rob Herring <robh@kernel.org>
+Remove them.
+
+Found with cppcheck, unusedStructMember.
+
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 ---
- Documentation/devicetree/bindings/soc/rockchip/grf.yaml | 1 +
- 1 file changed, 1 insertion(+)
+Compile tested only.
+---
+ drivers/pinctrl/pinctrl-single.c | 4 ----
+ 1 file changed, 4 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/soc/rockchip/grf.yaml b/Documentation/devicetree/bindings/soc/rockchip/grf.yaml
-index 0b87c266760c..79798c747476 100644
---- a/Documentation/devicetree/bindings/soc/rockchip/grf.yaml
-+++ b/Documentation/devicetree/bindings/soc/rockchip/grf.yaml
-@@ -171,6 +171,7 @@ allOf:
-           unevaluatedProperties: false
- 
-         pcie-phy:
-+          type: object
-           description:
-             Documentation/devicetree/bindings/phy/rockchip-pcie-phy.txt
- 
+diff --git a/drivers/pinctrl/pinctrl-single.c b/drivers/pinctrl/pinctrl-single.c
+index 19cc0db771a5..2261d4663d19 100644
+--- a/drivers/pinctrl/pinctrl-single.c
++++ b/drivers/pinctrl/pinctrl-single.c
+@@ -81,8 +81,6 @@ struct pcs_conf_type {
+  * @name:	pinctrl function name
+  * @vals:	register and vals array
+  * @nvals:	number of entries in vals array
+- * @pgnames:	array of pingroup names the function uses
+- * @npgnames:	number of pingroup names the function uses
+  * @conf:	array of pin configurations
+  * @nconfs:	number of pin configurations available
+  * @node:	list node
+@@ -91,8 +89,6 @@ struct pcs_function {
+ 	const char *name;
+ 	struct pcs_func_vals *vals;
+ 	unsigned nvals;
+-	const char **pgnames;
+-	int npgnames;
+ 	struct pcs_conf_vals *conf;
+ 	int nconfs;
+ 	struct list_head node;
 -- 
-2.43.0
+2.44.0
 
