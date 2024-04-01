@@ -1,511 +1,139 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2067.outbound.protection.outlook.com [40.107.220.67])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 984234502B
-	for <linux-kernel@vger.kernel.org>; Mon,  1 Apr 2024 14:59:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711983568; cv=none; b=nxJNlNxmb5li1bH7SCEKoQYtzaMJ2LWT9oS2jqIqy0hU02o5+W4Ks9gDK2kjRTnvwzFf0vTPFm5gsyXM5TiLgJJmVFkj9c6ANIPjURZqJqVUsXOse+b3PHzxYYj7uD1h9V8brcYYMHOR6MCbr/c81Mb+8019w4KAmA683BUVys8=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711983568; c=relaxed/simple;
-	bh=8WyyKP8aFQnIswaTC7KZype/wriCTjqtSOHurWjPsPI=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=ibi0EbmtC8HpT7ukL8M8Os/L68EBuHkbHXqD9Zb4LJaWLI7LlKTfAk4LChZZJStddrPghQRdPjq/qE7/HxioLQtcmtQ7X5qtGufS3VVscbK4+hR+aroiO2qnKk12h1glUu1TjYq/MEPsLwvDqOh47aPFxIIIwOY3h6zUeu81mgQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=CtuaRXzX; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED8C0446A1;
+	Mon,  1 Apr 2024 15:02:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.220.67
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1711983749; cv=fail; b=UU3vGFC/W7yz2MmreAvlM53JXIo+yY791rrCcrsKJLpBdTmXLZ0WnU6gxdc/c4DfPanfUm+X96Kp4dXQR39nJk/WbIgcueG9DYbp5wzmx0HanLjmugDpAipo5/RxTlohq6K7Skowjr1fHB/vnZWgsLFVqOtVWXFQ9RT5rAqcXdI=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1711983749; c=relaxed/simple;
+	bh=EZpogD/eoxUMLJyn5WFz78yyy+XeY1RWiHMP2Mkxd2g=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=SQmiFrcnstm4i/5mMMcst+QJzCLi1TfHiqFpeTjBj1XOgknsYSQTo317qvRH6vW471B3/Jw78t1+yY3GB/Ext7EhNJXpMWFHhTS8T8RmtOSjfJGn1OsEOBv5OoZjkuqbK8pMhB424Wvv9K99dFCHnYpIxp5qCr72+rByag3OKQE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=kAXEwxg9; arc=fail smtp.client-ip=40.107.220.67
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CtuaRXzX"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1711983563;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ye1lANxNBASLNuX/99KRd1YDu9rGniQQ8NUx3WbjYJA=;
-	b=CtuaRXzXwUrI/1OaSkAy3lAK8jIZBp/xfDIFsc2wyMr5GYhRIHJ4bB3aLxUVvs35XcjFg5
-	T/mInyhpy9Eapv3fqwVpGOm/a5yKlB8tzzCRbSD7GwQ+wel485mfUnt1rEzUW/Up1uakVN
-	+tS1xzPLUMQTFY0Z3YTp7a3va06sIO0=
-Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
- by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-396-KCMi-KA1Nf25G6_qSu8YXw-1; Mon,
- 01 Apr 2024 10:59:19 -0400
-X-MC-Unique: KCMi-KA1Nf25G6_qSu8YXw-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.rdu2.redhat.com [10.11.54.5])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 835C33815EE3;
-	Mon,  1 Apr 2024 14:59:18 +0000 (UTC)
-Received: from llong.com (unknown [10.22.16.160])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 50E1B8173;
-	Mon,  1 Apr 2024 14:59:17 +0000 (UTC)
-From: Waiman Long <longman@redhat.com>
-To: Tejun Heo <tj@kernel.org>,
-	Zefan Li <lizefan.x@bytedance.com>,
-	Johannes Weiner <hannes@cmpxchg.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Peter Zijlstra <peterz@infradead.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Len Brown <len.brown@intel.com>,
-	Pavel Machek <pavel@ucw.cz>,
-	Shuah Khan <shuah@kernel.org>
-Cc: linux-kernel@vger.kernel.org,
-	cgroups@vger.kernel.org,
-	linux-pm@vger.kernel.org,
-	linux-kselftest@vger.kernel.org,
-	Frederic Weisbecker <frederic@kernel.org>,
-	"Paul E. McKenney" <paulmck@kernel.org>,
-	Ingo Molnar <mingo@kernel.org>,
-	Valentin Schneider <vschneid@redhat.com>,
-	Anna-Maria Behnsen <anna-maria@linutronix.de>,
-	Alex Shi <alexs@kernel.org>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Barry Song <song.bao.hua@hisilicon.com>,
-	Waiman Long <longman@redhat.com>
-Subject: [PATCH 1/2] cgroup/cpuset: Make cpuset hotplug processing synchronous
-Date: Mon,  1 Apr 2024 10:58:57 -0400
-Message-Id: <20240401145858.2656598-2-longman@redhat.com>
-In-Reply-To: <20240401145858.2656598-1-longman@redhat.com>
-References: <20240401145858.2656598-1-longman@redhat.com>
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="kAXEwxg9"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=ADfnp2JZqI52Y7/bnAgGyj7deb+u2Dh/TVFz390dGafdQAzCzzz9YS/pFByeux9APcN21WdRNtrEEdeI7ROdqzmi1Xj/qajx/YwvrZedy9z8uBJjAL806I9ArtHvp7IcnryR7DfY35tq8txnoUD52NKrT3Kb1dwktlT4rKH3Cx3W7iCcI4Bi8hoHNT6Y+1X4OWHetvJbWJQ7CqHeyeNhEHvQS8wypIhKHOIEDwFkCHTNHSM7W3rH9Fi8iDs+umYbw8h7MTJov/doGkFxtKcDwVWnpsleMe7qMfwNDoWIfuYwcWd+so+1piJZNbvG2HDsnUDe3jEW0xoT/SMEB52xAg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=lDvYaaUMBBjACilIuCAz9pXoEFE+UkUyz3Pi+d3wmww=;
+ b=EUn8JQ2J+6ZeGsT0I6JQFxnxs2fHOT9QmzK/8p8U+Sg9H0MkJ1T9TqIAHZRNHpHXRtKuZs7gSDgKBBlQJ9RlX3ZV6le50mBqr4JQ8JIS19BeQgZTeHud8m75RU5GRhl6NK72UJPqZdyrep3QQk4AHpFdMwTjg9foaW5umBUDTwHibF9Fub47tSlG2ERxMvAHFFZNhbmJtRyJoP1KUVD6gF9XbgGOya6s4Za8yqmf0DMVl1dPm0yrMntTwYXTgXEm03PLBTIKxc0Gy6CnFNWQA03+gMnrT8j7nHKWqLNotzMola2nJWKd+1Qg0VOFS0/C9YQp1YUaKuIV4yohhXxwAA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 216.228.117.161) smtp.rcpttodomain=kernel.org smtp.mailfrom=nvidia.com;
+ dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=lDvYaaUMBBjACilIuCAz9pXoEFE+UkUyz3Pi+d3wmww=;
+ b=kAXEwxg9BgHBcc+QW12Zl2+7CSTgPAjoNwI/tfTc9qs0bzbFJr/5f8mrexhB5vrqpQfvjZx7uV+atkhABW56A8UorU6RsbgtR7Qqj6w24axzw5aQEZu5dSf/yJ063OuI0qPY6Z405uQ6zeR3xsEnkgXuZjaRoS3UmrgD8ajc5lW7h5i2B6WFWlwq99uvH1ueH8/+tHl6XyeJ9CH3N0Z9T5l/XKEP0WBs/pabXC0jusmnJ2SQKfg2hua/qOvBmcPpZFWFXnDLFGPh3gg9Bi8KF+ZPsTFVrcMqkQ+Od4lRFNZK9EvV+tfYXSqz0JzFXxj/uiDe5KRARkHgtic0RImRIA==
+Received: from MW4PR04CA0328.namprd04.prod.outlook.com (2603:10b6:303:82::33)
+ by SA1PR12MB8599.namprd12.prod.outlook.com (2603:10b6:806:254::7) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.46; Mon, 1 Apr
+ 2024 15:02:21 +0000
+Received: from CO1PEPF000044F0.namprd05.prod.outlook.com
+ (2603:10b6:303:82:cafe::70) by MW4PR04CA0328.outlook.office365.com
+ (2603:10b6:303:82::33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.46 via Frontend
+ Transport; Mon, 1 Apr 2024 15:02:19 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.161)
+ smtp.mailfrom=nvidia.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=nvidia.com;
+Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
+ 216.228.117.161 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.117.161; helo=mail.nvidia.com; pr=C
+Received: from mail.nvidia.com (216.228.117.161) by
+ CO1PEPF000044F0.mail.protection.outlook.com (10.167.241.70) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.7452.22 via Frontend Transport; Mon, 1 Apr 2024 15:02:19 +0000
+Received: from rnnvmail203.nvidia.com (10.129.68.9) by mail.nvidia.com
+ (10.129.200.67) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.41; Mon, 1 Apr 2024
+ 08:01:23 -0700
+Received: from rnnvmail203.nvidia.com (10.129.68.9) by rnnvmail203.nvidia.com
+ (10.129.68.9) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1258.12; Mon, 1 Apr
+ 2024 08:01:23 -0700
+Received: from vidyas-desktop.nvidia.com (10.127.8.9) by mail.nvidia.com
+ (10.129.68.9) with Microsoft SMTP Server id 15.2.1258.12 via Frontend
+ Transport; Mon, 1 Apr 2024 08:01:19 -0700
+From: Vidya Sagar <vidyas@nvidia.com>
+To: <lpieralisi@kernel.org>, <kw@linux.com>, <robh@kernel.org>,
+	<bhelgaas@google.com>
+CC: <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
+	<linux-pci@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <kthota@nvidia.com>,
+	<mmaddireddy@nvidia.com>, <vidyas@nvidia.com>, <sagar.tv@gmail.com>
+Subject: [PATCH V1] PCI: tegra194: Fix probe path for Endpoint mode
+Date: Mon, 1 Apr 2024 20:31:16 +0530
+Message-ID: <20240401150116.298069-1-vidyas@nvidia.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+X-NVConfidentiality: public
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.5
+Content-Type: text/plain
+X-NV-OnPremToCloud: ExternallySecured
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CO1PEPF000044F0:EE_|SA1PR12MB8599:EE_
+X-MS-Office365-Filtering-Correlation-Id: 875855e6-253a-4452-fa3a-08dc525cba34
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	GC0di54ZIqPnpU6D/+b0qSjsp+YiTAY/cEWbmmcubKUyweWFr+dduR9f6NwK3v9asDjlQEA3tDKlA9N2IyaKcZisM40L/+wyBRZR0/auLJYn4NqymizEGB/+xJ4IpCSIor4ZJMftG17wVR0owlvma+Cd8xLglfYuLAMc9ldm0RwqBdSg7OcBd3sGIrdzZi6E28B+zIrZ3xWIDF3/1LzSpWH7fDEJMGO2TcffehtkDdsiYmb3jO3vOIsfCqBkmNJoMH0WANkv7iZiFnfR3tuj+TRR+nGV2S0ahRzoobvTqrh6a37kO+p0tKVFKAj5y/XvXcuFFtN0L2ixPLFdoTgpaSvQQKICx7u9q+dTVgdGRinzPd4fUOuT2y9TrYM6ONDXaUjz4VyeNhTEC8nycE/kaKxEFctgAszYiu4EToucBazEH/2OyluTSpsdfTkjVM/OtxDBxfCMqV7CQ0dZFPOHFrEw1tXIwFmm4abR1xHO9+14Q80B8tF3JXe8Ab53vNpUrSrHPln4DkI5DHpx2CanyBh+LHZJvdnY21KUWpvD4VHTyMeh2czmexRa93+KH3K525LkW9PL2AFR2hYimzscgDMRTLTGmnq4p9YdueWg50tXVIu/I0P0hR2EuwqiBQlN0O09WNPu811N4ptvDZrs7R80CtMRZsvM7ZL54Ry05edf5U38dFxNKsCyYXkN3pSYKzEw1FF9bvi+/vJ2AQLG5J5u/utQtkucrDaYhyESnGvJfAI860hNcmqtwou/AUFG
+X-Forefront-Antispam-Report:
+	CIP:216.228.117.161;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge2.nvidia.com;CAT:NONE;SFS:(13230031)(376005)(36860700004)(82310400014)(1800799015);DIR:OUT;SFP:1101;
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Apr 2024 15:02:19.3333
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 875855e6-253a-4452-fa3a-08dc525cba34
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.161];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	CO1PEPF000044F0.namprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR12MB8599
 
-Since commit 3a5a6d0c2b03("cpuset: don't nest cgroup_mutex inside
-get_online_cpus()"), cpuset hotplug was done asynchronously via a work
-function. This is to avoid recursive locking of cgroup_mutex.
+Tegra194 PCIe probe path is taking failure path in success case for
+Endpoint mode. Return success from the switch case instead of going
+into the failure path.
 
-Since then, the cgroup locking scheme has changed quite a bit. A
-cpuset_mutex was introduced to protect cpuset specific operations.
-The cpuset_mutex is then replaced by a cpuset_rwsem. With commit
-d74b27d63a8b ("cgroup/cpuset: Change cpuset_rwsem and hotplug lock
-order"), cpu_hotplug_lock is acquired before cpuset_rwsem. Later on,
-cpuset_rwsem is reverted back to cpuset_mutex. All these locking changes
-allow the hotplug code to call into cpuset core directly.
-
-The following commits were also merged due to the asynchronous nature
-of cpuset hotplug processing.
-
-  - commit b22afcdf04c9 ("cpu/hotplug: Cure the cpusets trainwreck")
-  - commit 50e76632339d ("sched/cpuset/pm: Fix cpuset vs. suspend-resume
-    bugs")
-  - commit 28b89b9e6f7b ("cpuset: handle race between CPU hotplug and
-    cpuset_hotplug_work")
-
-Clean up all these bandages by making cpuset hotplug
-processing synchronous again with the exception that the call to
-cgroup_transfer_tasks() to transfer tasks out of an empty cgroup v1
-cpuset, if necessary, will still be done via a work function due to the
-existing cgroup_mutex -> cpu_hotplug_lock dependency. It is possible
-to reverse that dependency, but that will require updating a number of
-different cgroup controllers. This special hotplug code path should be
-rarely taken anyway.
-
-As all the cpuset states will be updated by the end of the hotplug
-operation, we can revert most the above commits except commit
-50e76632339d ("sched/cpuset/pm: Fix cpuset vs. suspend-resume bugs")
-which is partially reverted.  Also removing some cpus_read_lock trylock
-attempts in the cpuset partition code as they are no longer necessary
-since the cpu_hotplug_lock is now held for the whole duration of the
-cpuset hotplug code path.
-
-Signed-off-by: Waiman Long <longman@redhat.com>
+Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
 ---
- include/linux/cpuset.h |   3 -
- kernel/cgroup/cpuset.c | 131 +++++++++++++++--------------------------
- kernel/cpu.c           |  48 ---------------
- kernel/power/process.c |   2 -
- 4 files changed, 47 insertions(+), 137 deletions(-)
+ drivers/pci/controller/dwc/pcie-tegra194.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/include/linux/cpuset.h b/include/linux/cpuset.h
-index 0ce6ff0d9c9a..de4cf0ee96f7 100644
---- a/include/linux/cpuset.h
-+++ b/include/linux/cpuset.h
-@@ -70,7 +70,6 @@ extern int cpuset_init(void);
- extern void cpuset_init_smp(void);
- extern void cpuset_force_rebuild(void);
- extern void cpuset_update_active_cpus(void);
--extern void cpuset_wait_for_hotplug(void);
- extern void inc_dl_tasks_cs(struct task_struct *task);
- extern void dec_dl_tasks_cs(struct task_struct *task);
- extern void cpuset_lock(void);
-@@ -185,8 +184,6 @@ static inline void cpuset_update_active_cpus(void)
- 	partition_sched_domains(1, NULL, NULL);
- }
+diff --git a/drivers/pci/controller/dwc/pcie-tegra194.c b/drivers/pci/controller/dwc/pcie-tegra194.c
+index 4bba31502ce1..1a8178dc899a 100644
+--- a/drivers/pci/controller/dwc/pcie-tegra194.c
++++ b/drivers/pci/controller/dwc/pcie-tegra194.c
+@@ -2273,11 +2273,14 @@ static int tegra_pcie_dw_probe(struct platform_device *pdev)
+ 		ret = tegra_pcie_config_ep(pcie, pdev);
+ 		if (ret < 0)
+ 			goto fail;
++		else
++			return 0;
+ 		break;
  
--static inline void cpuset_wait_for_hotplug(void) { }
--
- static inline void inc_dl_tasks_cs(struct task_struct *task) { }
- static inline void dec_dl_tasks_cs(struct task_struct *task) { }
- static inline void cpuset_lock(void) { }
-diff --git a/kernel/cgroup/cpuset.c b/kernel/cgroup/cpuset.c
-index 4237c8748715..13d27b17c889 100644
---- a/kernel/cgroup/cpuset.c
-+++ b/kernel/cgroup/cpuset.c
-@@ -201,6 +201,14 @@ struct cpuset {
- 	struct list_head remote_sibling;
- };
- 
-+/*
-+ * Legacy hierarchy call to cgroup_transfer_tasks() is handled asynchrously
-+ */
-+struct cpuset_remove_tasks_struct {
-+	struct work_struct work;
-+	struct cpuset *cs;
-+};
-+
- /*
-  * Exclusive CPUs distributed out to sub-partitions of top_cpuset
-  */
-@@ -449,12 +457,6 @@ static DEFINE_SPINLOCK(callback_lock);
- 
- static struct workqueue_struct *cpuset_migrate_mm_wq;
- 
--/*
-- * CPU / memory hotplug is handled asynchronously.
-- */
--static void cpuset_hotplug_workfn(struct work_struct *work);
--static DECLARE_WORK(cpuset_hotplug_work, cpuset_hotplug_workfn);
--
- static DECLARE_WAIT_QUEUE_HEAD(cpuset_attach_wq);
- 
- static inline void check_insane_mems_config(nodemask_t *nodes)
-@@ -540,22 +542,10 @@ static void guarantee_online_cpus(struct task_struct *tsk,
- 	rcu_read_lock();
- 	cs = task_cs(tsk);
- 
--	while (!cpumask_intersects(cs->effective_cpus, pmask)) {
-+	while (!cpumask_intersects(cs->effective_cpus, pmask))
- 		cs = parent_cs(cs);
--		if (unlikely(!cs)) {
--			/*
--			 * The top cpuset doesn't have any online cpu as a
--			 * consequence of a race between cpuset_hotplug_work
--			 * and cpu hotplug notifier.  But we know the top
--			 * cpuset's effective_cpus is on its way to be
--			 * identical to cpu_online_mask.
--			 */
--			goto out_unlock;
--		}
--	}
--	cpumask_and(pmask, pmask, cs->effective_cpus);
- 
--out_unlock:
-+	cpumask_and(pmask, pmask, cs->effective_cpus);
- 	rcu_read_unlock();
- }
- 
-@@ -1217,7 +1207,7 @@ static void rebuild_sched_domains_locked(void)
- 	/*
- 	 * If we have raced with CPU hotplug, return early to avoid
- 	 * passing doms with offlined cpu to partition_sched_domains().
--	 * Anyways, cpuset_hotplug_workfn() will rebuild sched domains.
-+	 * Anyways, cpuset_handle_hotplug() will rebuild sched domains.
- 	 *
- 	 * With no CPUs in any subpartitions, top_cpuset's effective CPUs
- 	 * should be the same as the active CPUs, so checking only top_cpuset
-@@ -1262,11 +1252,9 @@ static void rebuild_sched_domains_locked(void)
- 
- void rebuild_sched_domains(void)
- {
--	cpus_read_lock();
- 	mutex_lock(&cpuset_mutex);
- 	rebuild_sched_domains_locked();
- 	mutex_unlock(&cpuset_mutex);
--	cpus_read_unlock();
- }
- 
- /**
-@@ -2079,14 +2067,11 @@ static int update_parent_effective_cpumask(struct cpuset *cs, int cmd,
- 
- 	/*
- 	 * For partcmd_update without newmask, it is being called from
--	 * cpuset_hotplug_workfn() where cpus_read_lock() wasn't taken.
--	 * Update the load balance flag and scheduling domain if
--	 * cpus_read_trylock() is successful.
-+	 * cpuset_handle_hotplug(). Update the load balance flag and
-+	 * scheduling domain accordingly.
- 	 */
--	if ((cmd == partcmd_update) && !newmask && cpus_read_trylock()) {
-+	if ((cmd == partcmd_update) && !newmask)
- 		update_partition_sd_lb(cs, old_prs);
--		cpus_read_unlock();
--	}
- 
- 	notify_partition_change(cs, old_prs);
- 	return 0;
-@@ -3599,8 +3584,8 @@ static ssize_t cpuset_write_resmask(struct kernfs_open_file *of,
- 	 * proceeding, so that we don't end up keep removing tasks added
- 	 * after execution capability is restored.
- 	 *
--	 * cpuset_hotplug_work calls back into cgroup core via
--	 * cgroup_transfer_tasks() and waiting for it from a cgroupfs
-+	 * cpuset_handle_hotplug may call back into cgroup core asynchronously
-+	 * via cgroup_transfer_tasks() and waiting for it from a cgroupfs
- 	 * operation like this one can lead to a deadlock through kernfs
- 	 * active_ref protection.  Let's break the protection.  Losing the
- 	 * protection is okay as we check whether @cs is online after
-@@ -3609,7 +3594,6 @@ static ssize_t cpuset_write_resmask(struct kernfs_open_file *of,
- 	 */
- 	css_get(&cs->css);
- 	kernfs_break_active_protection(of->kn);
--	flush_work(&cpuset_hotplug_work);
- 
- 	cpus_read_lock();
- 	mutex_lock(&cpuset_mutex);
-@@ -4354,6 +4338,16 @@ static void remove_tasks_in_empty_cpuset(struct cpuset *cs)
- 	}
- }
- 
-+static void cpuset_migrate_tasks_workfn(struct work_struct *work)
-+{
-+	struct cpuset_remove_tasks_struct *s;
-+
-+	s = container_of(work, struct cpuset_remove_tasks_struct, work);
-+	remove_tasks_in_empty_cpuset(s->cs);
-+	css_put(&s->cs->css);
-+	kfree(s);
-+}
-+
- static void
- hotplug_update_tasks_legacy(struct cpuset *cs,
- 			    struct cpumask *new_cpus, nodemask_t *new_mems,
-@@ -4383,12 +4377,20 @@ hotplug_update_tasks_legacy(struct cpuset *cs,
- 	/*
- 	 * Move tasks to the nearest ancestor with execution resources,
- 	 * This is full cgroup operation which will also call back into
--	 * cpuset. Should be done outside any lock.
-+	 * cpuset. Execute it asynchronously using workqueue.
- 	 */
--	if (is_empty) {
--		mutex_unlock(&cpuset_mutex);
--		remove_tasks_in_empty_cpuset(cs);
--		mutex_lock(&cpuset_mutex);
-+	if (is_empty && css_tryget_online(&cs->css)) {
-+		struct cpuset_remove_tasks_struct *s;
-+
-+		s = kzalloc(sizeof(*s), GFP_KERNEL);
-+		if (WARN_ON_ONCE(!s)) {
-+			css_put(&cs->css);
-+			return;
-+		}
-+
-+		s->cs = cs;
-+		INIT_WORK(&s->work, cpuset_migrate_tasks_workfn);
-+		schedule_work(&s->work);
- 	}
- }
- 
-@@ -4421,30 +4423,6 @@ void cpuset_force_rebuild(void)
- 	force_rebuild = true;
- }
- 
--/*
-- * Attempt to acquire a cpus_read_lock while a hotplug operation may be in
-- * progress.
-- * Return: true if successful, false otherwise
-- *
-- * To avoid circular lock dependency between cpuset_mutex and cpus_read_lock,
-- * cpus_read_trylock() is used here to acquire the lock.
-- */
--static bool cpuset_hotplug_cpus_read_trylock(void)
--{
--	int retries = 0;
--
--	while (!cpus_read_trylock()) {
--		/*
--		 * CPU hotplug still in progress. Retry 5 times
--		 * with a 10ms wait before bailing out.
--		 */
--		if (++retries > 5)
--			return false;
--		msleep(10);
--	}
--	return true;
--}
--
- /**
-  * cpuset_hotplug_update_tasks - update tasks in a cpuset for hotunplug
-  * @cs: cpuset in interest
-@@ -4493,13 +4471,11 @@ static void cpuset_hotplug_update_tasks(struct cpuset *cs, struct tmpmasks *tmp)
- 		compute_partition_effective_cpumask(cs, &new_cpus);
- 
- 	if (remote && cpumask_empty(&new_cpus) &&
--	    partition_is_populated(cs, NULL) &&
--	    cpuset_hotplug_cpus_read_trylock()) {
-+	    partition_is_populated(cs, NULL)) {
- 		remote_partition_disable(cs, tmp);
- 		compute_effective_cpumask(&new_cpus, cs, parent);
- 		remote = false;
- 		cpuset_force_rebuild();
--		cpus_read_unlock();
+ 	default:
+ 		dev_err(dev, "Invalid PCIe device type %d\n",
+ 			pcie->of_data->mode);
++		ret = -EINVAL;
  	}
  
- 	/*
-@@ -4519,18 +4495,8 @@ static void cpuset_hotplug_update_tasks(struct cpuset *cs, struct tmpmasks *tmp)
- 	else if (is_partition_valid(parent) && is_partition_invalid(cs))
- 		partcmd = partcmd_update;
- 
--	/*
--	 * cpus_read_lock needs to be held before calling
--	 * update_parent_effective_cpumask(). To avoid circular lock
--	 * dependency between cpuset_mutex and cpus_read_lock,
--	 * cpus_read_trylock() is used here to acquire the lock.
--	 */
- 	if (partcmd >= 0) {
--		if (!cpuset_hotplug_cpus_read_trylock())
--			goto update_tasks;
--
- 		update_parent_effective_cpumask(cs, partcmd, NULL, tmp);
--		cpus_read_unlock();
- 		if ((partcmd == partcmd_invalidate) || is_partition_valid(cs)) {
- 			compute_partition_effective_cpumask(cs, &new_cpus);
- 			cpuset_force_rebuild();
-@@ -4558,8 +4524,7 @@ static void cpuset_hotplug_update_tasks(struct cpuset *cs, struct tmpmasks *tmp)
- }
- 
- /**
-- * cpuset_hotplug_workfn - handle CPU/memory hotunplug for a cpuset
-- * @work: unused
-+ * cpuset_handle_hotplug - handle CPU/memory hot{,un}plug for a cpuset
-  *
-  * This function is called after either CPU or memory configuration has
-  * changed and updates cpuset accordingly.  The top_cpuset is always
-@@ -4573,8 +4538,10 @@ static void cpuset_hotplug_update_tasks(struct cpuset *cs, struct tmpmasks *tmp)
-  *
-  * Note that CPU offlining during suspend is ignored.  We don't modify
-  * cpusets across suspend/resume cycles at all.
-+ *
-+ * CPU / memory hotplug is handled synchronously.
-  */
--static void cpuset_hotplug_workfn(struct work_struct *work)
-+static void cpuset_handle_hotplug(void)
- {
- 	static cpumask_t new_cpus;
- 	static nodemask_t new_mems;
-@@ -4585,6 +4552,7 @@ static void cpuset_hotplug_workfn(struct work_struct *work)
- 	if (on_dfl && !alloc_cpumasks(NULL, &tmp))
- 		ptmp = &tmp;
- 
-+	lockdep_assert_cpus_held();
- 	mutex_lock(&cpuset_mutex);
- 
- 	/* fetch the available cpus/mems and find out which changed how */
-@@ -4679,12 +4647,7 @@ void cpuset_update_active_cpus(void)
- 	 * inside cgroup synchronization.  Bounce actual hotplug processing
- 	 * to a work item to avoid reverse locking order.
- 	 */
--	schedule_work(&cpuset_hotplug_work);
--}
--
--void cpuset_wait_for_hotplug(void)
--{
--	flush_work(&cpuset_hotplug_work);
-+	cpuset_handle_hotplug();
- }
- 
- /*
-@@ -4695,7 +4658,7 @@ void cpuset_wait_for_hotplug(void)
- static int cpuset_track_online_nodes(struct notifier_block *self,
- 				unsigned long action, void *arg)
- {
--	schedule_work(&cpuset_hotplug_work);
-+	cpuset_handle_hotplug();
- 	return NOTIFY_OK;
- }
- 
-diff --git a/kernel/cpu.c b/kernel/cpu.c
-index 8f6affd051f7..49ce3f309688 100644
---- a/kernel/cpu.c
-+++ b/kernel/cpu.c
-@@ -1208,52 +1208,6 @@ void __init cpuhp_threads_init(void)
- 	kthread_unpark(this_cpu_read(cpuhp_state.thread));
- }
- 
--/*
-- *
-- * Serialize hotplug trainwrecks outside of the cpu_hotplug_lock
-- * protected region.
-- *
-- * The operation is still serialized against concurrent CPU hotplug via
-- * cpu_add_remove_lock, i.e. CPU map protection.  But it is _not_
-- * serialized against other hotplug related activity like adding or
-- * removing of state callbacks and state instances, which invoke either the
-- * startup or the teardown callback of the affected state.
-- *
-- * This is required for subsystems which are unfixable vs. CPU hotplug and
-- * evade lock inversion problems by scheduling work which has to be
-- * completed _before_ cpu_up()/_cpu_down() returns.
-- *
-- * Don't even think about adding anything to this for any new code or even
-- * drivers. It's only purpose is to keep existing lock order trainwrecks
-- * working.
-- *
-- * For cpu_down() there might be valid reasons to finish cleanups which are
-- * not required to be done under cpu_hotplug_lock, but that's a different
-- * story and would be not invoked via this.
-- */
--static void cpu_up_down_serialize_trainwrecks(bool tasks_frozen)
--{
--	/*
--	 * cpusets delegate hotplug operations to a worker to "solve" the
--	 * lock order problems. Wait for the worker, but only if tasks are
--	 * _not_ frozen (suspend, hibernate) as that would wait forever.
--	 *
--	 * The wait is required because otherwise the hotplug operation
--	 * returns with inconsistent state, which could even be observed in
--	 * user space when a new CPU is brought up. The CPU plug uevent
--	 * would be delivered and user space reacting on it would fail to
--	 * move tasks to the newly plugged CPU up to the point where the
--	 * work has finished because up to that point the newly plugged CPU
--	 * is not assignable in cpusets/cgroups. On unplug that's not
--	 * necessarily a visible issue, but it is still inconsistent state,
--	 * which is the real problem which needs to be "fixed". This can't
--	 * prevent the transient state between scheduling the work and
--	 * returning from waiting for it.
--	 */
--	if (!tasks_frozen)
--		cpuset_wait_for_hotplug();
--}
--
- #ifdef CONFIG_HOTPLUG_CPU
- #ifndef arch_clear_mm_cpumask_cpu
- #define arch_clear_mm_cpumask_cpu(cpu, mm) cpumask_clear_cpu(cpu, mm_cpumask(mm))
-@@ -1494,7 +1448,6 @@ static int __ref _cpu_down(unsigned int cpu, int tasks_frozen,
- 	 */
- 	lockup_detector_cleanup();
- 	arch_smt_update();
--	cpu_up_down_serialize_trainwrecks(tasks_frozen);
- 	return ret;
- }
- 
-@@ -1728,7 +1681,6 @@ static int _cpu_up(unsigned int cpu, int tasks_frozen, enum cpuhp_state target)
- out:
- 	cpus_write_unlock();
- 	arch_smt_update();
--	cpu_up_down_serialize_trainwrecks(tasks_frozen);
- 	return ret;
- }
- 
-diff --git a/kernel/power/process.c b/kernel/power/process.c
-index cae81a87cc91..66ac067d9ae6 100644
---- a/kernel/power/process.c
-+++ b/kernel/power/process.c
-@@ -194,8 +194,6 @@ void thaw_processes(void)
- 	__usermodehelper_set_disable_depth(UMH_FREEZING);
- 	thaw_workqueues();
- 
--	cpuset_wait_for_hotplug();
--
- 	read_lock(&tasklist_lock);
- 	for_each_process_thread(g, p) {
- 		/* No other threads should have PF_SUSPEND_TASK set */
+ fail:
 -- 
-2.39.3
+2.25.1
 
