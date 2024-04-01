@@ -1,67 +1,38 @@
-Received: from mail-oa1-f41.google.com (mail-oa1-f41.google.com [209.85.160.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C30C4653A
-	for <linux-kernel@vger.kernel.org>; Mon,  1 Apr 2024 15:10:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8896045BF9;
+	Mon,  1 Apr 2024 15:10:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711984208; cv=none; b=o1fg5HEnMzaIwMqKUt2mvQcyyPt4lv6P1vDkVapT2v6v63g30CLhtU+Qs8z86KBZ4HmamYWrYhxmJqejBX3muMsb4EMow0+RmyxvpXZigpvWkTSwONyp0OBnMf/2NAvunVdaa2fYlkmwdrt1YRiYb7LYxVHxmkpZOwp+x+TWR0Y=
+	t=1711984217; cv=none; b=dPKH/FdqjmVxvHC8QhrrM9pTOetdNnYKO1HtXi1VWWith022VC/4N1rV5HqwiMukGTHR/1s/22cQE3n7kO460WE3dYv6gVGpAJmXUkrWdVOiXSOsZVlk+4H1baDXmLm+5yFqjtOiDY+SGfaZK4tRXIoamz4qcsXQis3qn5XwLBQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711984208; c=relaxed/simple;
-	bh=Yi05bZlr3S+bK6PgvEQ75C/AE3jftkZgNZvSQjHaCW8=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=iE9zSJ02n1+QSOTbfqaQyE6CeH/21wzRa7q2K6uycjz1sewUphD7nIPiUkyoZkDrfyyNH12ezAIKqcAQx5KnbyM3/PrUARFzI4ZzOhAvgEMgC9WLBHlk8deJEIrRzZUQrf0AwjTv/yRCOlefUxuGafZEhGrWfghN5i/D91wcqo0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=fZaW36wF; arc=none smtp.client-ip=209.85.160.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1711984217; c=relaxed/simple;
+	bh=sB4XW2Iy9WrEDv3ZxInXXORojt09vA9WlbAC80dGpys=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=juYhmVwnaTKYSzHbVlvhDl5nOhge6rCrjTxsTTRAOOq76hOKexfYN5P40pyFhpaaCmCF6lAQ4bK40LugCjzpBmtxTle4qLnUBQDTNs9OyeLVlmwb9DhuWmC8VkNzkeM31s6m6+zTgfJ9e1U6WG767fpXff/PEvqOorBX5GISCxc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XqdzuZ0T; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="fZaW36wF"
-Received: by mail-oa1-f41.google.com with SMTP id 586e51a60fabf-22a1e72f683so3148388fac.0
-        for <linux-kernel@vger.kernel.org>; Mon, 01 Apr 2024 08:10:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1711984203; x=1712589003; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=pQFlUQeyKWFDWLBpqoob08XtJp95F+fDHik08zWnRFQ=;
-        b=fZaW36wFLPfy1OFNuM52Ig2pnM08D1EWktKuliUUupi04+0WHKyrEVc5+NDoc7Renj
-         TWhI5AtMg5gOWw+9pfJA2smbqqvIMdSZFtwW+V23ocHe9qiMtkuoPksatm8j40bEf2Kc
-         qDDirLBLvJtI8yJXPAoTPBiMNpR8WOyw5TWaJ+sVrKm7HOGpxerpLhS7VNIMR+1gkW4Y
-         BiL2ay2zS9wnIGdU0DKL2oIuM9rIVcvPB1yq0fJcjWv67ZGT0PPmmdMKzdoWFV6nzCha
-         i1SlKsuvxnUH4aPLKnaikxNZ+x8gWBb2y678kMjfAq6kQJF6CIOHNAIjX8bdUQKeG+Mj
-         jVcw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711984203; x=1712589003;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=pQFlUQeyKWFDWLBpqoob08XtJp95F+fDHik08zWnRFQ=;
-        b=WlQ0Js1oc3jgZJycJ64ZNoDzRfcyChefyQpuvfO1lv17CLHHpfkqti+BaPd/hZn0Q6
-         SwuT37iQRt7owzFpolamziVprgCmeQDUzwxdfc2VvMtS/gBqV6SytiXg0cbNo87Y8azI
-         vdJqMxhLOFWt3F9TlCLYWF67Lysx6lIr6EGORMJWviwt3zKqJql6ub5w4fx2foX2/Sgp
-         gOVPx969Egb/S1PpchGDh1I3lIyy5BLeFnNCfuGLn8xBZVi2ucSU3eVHqeQBr77p19Dc
-         w7YyAt1pCcf9DwXPvSy9Nd4LJ7Lqqu5XoxoRufjgn7cyZ/HdP9nO7gOCsCoLgIFALG1R
-         vTTw==
-X-Forwarded-Encrypted: i=1; AJvYcCXnxsPuj4exTM8kDDQN+6POIIlLXsyLluUQ/atd5TV+krOOAWr7acR5VyY7daGltL1ZUdZkqAar74wNC6rJ4Of3qGuvyF5t6IewNgFh
-X-Gm-Message-State: AOJu0YwBCY99IGpdSbs8FEmsEmzBrhXe4mO1ifsNai5sLPwJHVdI3XlG
-	OLo7SRd1NfgDPRZT5h11yIQoCE8AfXUwG3qrWUYnkfRUUMWigQC9zgNbLnbuqKU=
-X-Google-Smtp-Source: AGHT+IG46vil8V+QX6v3m1ld79YQdQe2MsqNEZ3wOUmMBazrwxw5yn2Y+XRVOOoqP0m2sTdp5+bcMg==
-X-Received: by 2002:a05:6871:741a:b0:229:cec1:cbb8 with SMTP id nw26-20020a056871741a00b00229cec1cbb8mr11814398oac.3.1711984202793;
-        Mon, 01 Apr 2024 08:10:02 -0700 (PDT)
-Received: from freyr.lechnology.com (ip98-183-112-25.ok.ok.cox.net. [98.183.112.25])
-        by smtp.gmail.com with ESMTPSA id d5-20020a9d51c5000000b006e67f654617sm1957534oth.23.2024.04.01.08.10.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 01 Apr 2024 08:10:01 -0700 (PDT)
-From: David Lechner <dlechner@baylibre.com>
-To: Bartosz Golaszewski <brgl@bgdev.pl>,
-	Russell King <linux@armlinux.org.uk>,
-	Arnd Bergmann <arnd@arndb.de>
-Cc: David Lechner <dlechner@baylibre.com>,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] ARM: davinci: da850: fix selecting ARCH_DAVINCI_DA8XX
-Date: Mon,  1 Apr 2024 10:09:46 -0500
-Message-ID: <20240401-da850-fix-select-da8xx-v1-1-a348ab91448f@baylibre.com>
-X-Mailer: git-send-email 2.43.2
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XqdzuZ0T"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 2CFDCC43399;
+	Mon,  1 Apr 2024 15:10:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1711984217;
+	bh=sB4XW2Iy9WrEDv3ZxInXXORojt09vA9WlbAC80dGpys=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
+	b=XqdzuZ0TlU9SV1IQWTipwyCFeQFQXqkWz6PyJIVtrt9+OmKll9rWL1QY8CkKZ3BfH
+	 /fOIjjOeszDCLUsXOth8Q6GvcoM2/1Zvm0i/rxTQ46fmCQcgvdPlAYPz1nPtVg8wu2
+	 IMHK2V8E4CUc0JkqQkjq+kaSZtpz52S+b62GeG4YXxbJaU4MLfn+lj81TjKWxw65hb
+	 m6du6HCFBiFbvE7QZ/66HFm03jp8VMDhcNBxGI9zz6yov+flZolcSbay89eVfvgHQ0
+	 I4fhJvFE3vRgek+y5qBYd0eek7dNK6FBgsU9cL/8PUjBfSEr1sYjf3GZpVT2MJqchI
+	 4BDSXiMrwkmkw==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EB90CD1292;
+	Mon,  1 Apr 2024 15:10:17 +0000 (UTC)
+From: Dumitru Ceclan via B4 Relay <devnull+dumitru.ceclan.analog.com@kernel.org>
+Date: Mon, 01 Apr 2024 18:32:21 +0300
+Subject: [PATCH 3/6] iio: adc: ad7173: refactor channel configuration
+ parsing
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -69,33 +40,97 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240401-ad4111-v1-3-34618a9cc502@analog.com>
+References: <20240401-ad4111-v1-0-34618a9cc502@analog.com>
+In-Reply-To: <20240401-ad4111-v1-0-34618a9cc502@analog.com>
+To: Ceclan Dumitru <dumitru.ceclan@analog.com>
+Cc: Lars-Peter Clausen <lars@metafoo.de>, 
+ Michael Hennerich <Michael.Hennerich@analog.com>, 
+ Jonathan Cameron <jic23@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
+ Conor Dooley <conor+dt@kernel.org>, David Lechner <dlechner@baylibre.com>, 
+ linux-iio@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, Dumitru Ceclan <mitrutzceclan@gmail.com>
 X-Mailer: b4 0.12.4
-Content-Transfer-Encoding: 8bit
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1711985550; l=2160;
+ i=dumitru.ceclan@analog.com; s=20240313; h=from:subject:message-id;
+ bh=LP925hA7l/Zq+jxivGEGAOgI2hBOHLlP0ftz5riKxwA=;
+ b=/RbMwmYnyhC5pKQaInX3g8tTV5ka0OyCWhWopLnpDFY3wgL+e2loPLkV1ldaDbSKtknDIKhsB
+ /+X38d8OzhKC/vKCrDsGYSh0zjHicqefIm2+JfwdgrZGF5a+ELQ9yVs
+X-Developer-Key: i=dumitru.ceclan@analog.com; a=ed25519;
+ pk=HdqMlVyrcazwoiai7oN6ghU+Bj1pusGUFRl30jhS7Bo=
+X-Endpoint-Received: by B4 Relay for dumitru.ceclan@analog.com/20240313
+ with auth_id=140
+X-Original-From: Dumitru Ceclan <dumitru.ceclan@analog.com>
+Reply-To: dumitru.ceclan@analog.com
 
-Chips in the DA850 family need to have ARCH_DAVINCI_DA8XX to be selected
-in order to enable some peripheral drivers.
+From: Dumitru Ceclan <dumitru.ceclan@analog.com>
 
-This was accidentally removed in a previous commit.
+Move configurations regarding number of channels from
+*_fw_parse_device_config to *_fw_parse_channel_config.
 
-Fixes: dec85a95167a ("ARM: davinci: clean up platform support")
-Signed-off-by: David Lechner <dlechner@baylibre.com>
+Signed-off-by: Dumitru Ceclan <dumitru.ceclan@analog.com>
 ---
- arch/arm/mach-davinci/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/iio/adc/ad7173.c | 29 +++++++++++++++++------------
+ 1 file changed, 17 insertions(+), 12 deletions(-)
 
-diff --git a/arch/arm/mach-davinci/Kconfig b/arch/arm/mach-davinci/Kconfig
-index 2a8a9fe46586..3fa15f342240 100644
---- a/arch/arm/mach-davinci/Kconfig
-+++ b/arch/arm/mach-davinci/Kconfig
-@@ -27,6 +27,7 @@ config ARCH_DAVINCI_DA830
+diff --git a/drivers/iio/adc/ad7173.c b/drivers/iio/adc/ad7173.c
+index 8a95b1391826..699bc6970790 100644
+--- a/drivers/iio/adc/ad7173.c
++++ b/drivers/iio/adc/ad7173.c
+@@ -917,7 +917,23 @@ static int ad7173_fw_parse_channel_config(struct iio_dev *indio_dev)
+ 	struct device *dev = indio_dev->dev.parent;
+ 	struct iio_chan_spec *chan_arr, *chan;
+ 	unsigned int ain[2], chan_index = 0;
+-	int ref_sel, ret;
++	int ref_sel, ret, num_channels;
++
++	num_channels = device_get_child_node_count(dev);
++
++	if (st->info->has_temp)
++		num_channels++;
++
++	if (num_channels == 0)
++		return dev_err_probe(dev, -ENODATA, "No channels specified\n");
++
++	if (num_channels > st->info->num_channels)
++		return dev_err_probe(dev, -EINVAL,
++			"Too many channels specified. Maximum is %d, not including temperature channel if supported.\n",
++			st->info->num_channels);
++
++	indio_dev->num_channels = num_channels;
++	st->num_channels = num_channels;
  
- config ARCH_DAVINCI_DA850
- 	bool "DA850/OMAP-L138/AM18x based system"
-+	select ARCH_DAVINCI_DA8XX
- 	select DAVINCI_CP_INTC
+ 	chan_arr = devm_kcalloc(dev, sizeof(*indio_dev->channels),
+ 				st->num_channels, GFP_KERNEL);
+@@ -1012,7 +1028,6 @@ static int ad7173_fw_parse_device_config(struct iio_dev *indio_dev)
+ {
+ 	struct ad7173_state *st = iio_priv(indio_dev);
+ 	struct device *dev = indio_dev->dev.parent;
+-	unsigned int num_channels;
+ 	int ret;
  
- config ARCH_DAVINCI_DA8XX
+ 	st->regulators[0].supply = ad7173_ref_sel_str[AD7173_SETUP_REF_SEL_EXT_REF];
+@@ -1071,16 +1086,6 @@ static int ad7173_fw_parse_device_config(struct iio_dev *indio_dev)
+ 
+ 	ad7173_sigma_delta_info.irq_line = ret;
+ 
+-	num_channels = device_get_child_node_count(dev);
+-
+-	if (st->info->has_temp)
+-		num_channels++;
+-
+-	if (num_channels == 0)
+-		return dev_err_probe(dev, -ENODATA, "No channels specified\n");
+-	indio_dev->num_channels = num_channels;
+-	st->num_channels = num_channels;
+-
+ 	return ad7173_fw_parse_channel_config(indio_dev);
+ }
+ 
 
----
-base-commit: 39cd87c4eb2b893354f3b850f916353f2658ae6f
-change-id: 20240401-da850-fix-select-da8xx-989725eec11f
+-- 
+2.43.0
+
+
