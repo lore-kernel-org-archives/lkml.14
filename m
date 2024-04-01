@@ -1,87 +1,76 @@
-Received: from msa.smtpout.orange.fr (msa-209.smtpout.orange.fr [193.252.23.209])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from inva020.nxp.com (inva020.nxp.com [92.121.34.13])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AC72383BA;
-	Mon,  1 Apr 2024 13:08:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.252.23.209
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BB463E495;
+	Mon,  1 Apr 2024 13:11:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=92.121.34.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711976911; cv=none; b=UEdUH/Zu68KanzNjSc6dY9ZxPmnJooV5HvVMUIuRCbpzKzTbr4aSbPB9g6Su3EoLYS5n5yKgfK7SG9FG6id/QetcuvKEu/BXHtNWCRQS6Dk2XfB/x4SHb53WNPQslN0zhi/mze7Rj2Mxcuw/2jyMAGe6TbOwQguTRUsu/N4+rPA=
+	t=1711977113; cv=none; b=cQ324q6b83Ps7nBGe8ikpk2wG2C82XyLTaogn6xLilh0u6BKB4axb6O1WzF6KHFZnQVZ4131AlTxuhmSp4/DsxAD5ORZdS+yLDMZqXn3ieILXVFr73FdQe0C24Uv0rHqig30fWgsUVMpXAgrnmplBV/7zrC1U/+YdVZqB9HoY2Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711976911; c=relaxed/simple;
-	bh=3j7ZintJt6IY5YGQgufV4/rhKwMzKzmHz80qDoMWNpw=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ASQf53s+6DkcTkkPOQU7xjkL4aIturJuSZGCDxf8KZia1kFovQbXwUrF4F+E9Wk/8Pi68YQ91liWyCz03RGiHFW6SU10oyGdU+bYw3SOeHDztqNDd8aVLcQ8sXeEN2WEvzc7QXYhj+43DJsEPkrkzMfNHH4PKMvD2ykmEQPpd/k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=gKtEF0Vm; arc=none smtp.client-ip=193.252.23.209
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="gKtEF0Vm"
-Received: from fedora.home ([86.243.17.157])
-	by smtp.orange.fr with ESMTPA
-	id rHOirI9t6uWdGrHOirOs7H; Mon, 01 Apr 2024 15:08:26 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
-	s=t20230301; t=1711976906;
-	bh=98Z2FPBJRx39uUlwlsoLLukd26uFSpPNJzTdkcV+H8w=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version;
-	b=gKtEF0Vm22hOmvVP8w6nKcQh5fM++77MKgJMF9Kn/o4hD9TNHriG3fQoUlowHZAHJ
-	 NC7HGj449Mwrhz6bFSTkQCeObs7suwY6heb8Myi68AYHyFT+BE0HZBXaCID9uW8KO7
-	 0BlTf4PgYxGFhUzKatCX00j2qZ0tLmuPmw5MjXVzw9Ah1C5TrSXy1lVyFhrcE/ihiH
-	 bbV/CsipxrgwoY443nyTUVWMOz2heEJSZNtbmYV95/IooilM647eM+YCo9y/8M82mV
-	 dVFQfsNonO2xFXqyNgWSI3AT5jmRYpg+wkT8bBZ1AJCgJCMtOz/NsH06r8EvVnUC0o
-	 kQ+5itbwPD8ng==
-X-ME-Helo: fedora.home
-X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
-X-ME-Date: Mon, 01 Apr 2024 15:08:26 +0200
-X-ME-IP: 86.243.17.157
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-To: Moritz Fischer <mdf@kernel.org>,
-	Wu Hao <hao.wu@intel.com>,
-	Xu Yilun <yilun.xu@intel.com>,
-	Tom Rix <trix@redhat.com>
-Cc: linux-kernel@vger.kernel.org,
-	kernel-janitors@vger.kernel.org,
-	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-	linux-fpga@vger.kernel.org
-Subject: [PATCH] fpga: altera-cvp: Remove an unused field in struct altera_cvp_conf
-Date: Mon,  1 Apr 2024 15:08:21 +0200
-Message-ID: <7986690e79fa6f7880bc1db783cb0e46a1c2723e.1711976883.git.christophe.jaillet@wanadoo.fr>
-X-Mailer: git-send-email 2.44.0
+	s=arc-20240116; t=1711977113; c=relaxed/simple;
+	bh=/xRbQyEj49OzBik80PzEYVfra1poW7CuE+P7YJUgUhA=;
+	h=From:To:Subject:Date:Message-Id; b=eKngOXXCKPVO7VJ8x+t6GDorZvV14TcSRg+uahQd3LNi758i447klrYuIOSUyglbuGhLZuFlvRU0fPazwl82wWEyg/noX8P0RV48OqwiTIwvmDYs2wHpO5MqIxobQ8ZRqLR3NieCToI2JWe6HMVYawAzjdN2XxUzCfNjME3i8To=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; arc=none smtp.client-ip=92.121.34.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+	by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 68AE81A0138;
+	Mon,  1 Apr 2024 15:11:45 +0200 (CEST)
+Received: from aprdc01srsp001v.ap-rdc01.nxp.com (aprdc01srsp001v.ap-rdc01.nxp.com [165.114.16.16])
+	by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 1D2161A00F8;
+	Mon,  1 Apr 2024 15:11:45 +0200 (CEST)
+Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
+	by aprdc01srsp001v.ap-rdc01.nxp.com (Postfix) with ESMTP id 0A6E9180031D;
+	Mon,  1 Apr 2024 21:11:42 +0800 (+08)
+From: Shengjiu Wang <shengjiu.wang@nxp.com>
+To: lgirdwood@gmail.com,
+	broonie@kernel.org,
+	robh+dt@kernel.org,
+	krzysztof.kozlowski+dt@linaro.org,
+	conor+dt@kernel.org,
+	shengjiu.wang@gmail.com,
+	linux-sound@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	shawnguo@kernel.org,
+	s.hauer@pengutronix.de,
+	kernel@pengutronix.de,
+	festevam@gmail.com,
+	imx@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org
+Subject: [PATCH v2 0/2] ASoC: dt-bindings: convert fsl-asoc-card.txt to YAML
+Date: Mon,  1 Apr 2024 20:54:14 +0800
+Message-Id: <1711976056-19884-1-git-send-email-shengjiu.wang@nxp.com>
+X-Mailer: git-send-email 2.7.4
+X-Virus-Scanned: ClamAV using ClamSMTP
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-In "struct altera_cvp_conf", the 'mgr' field is unused.
-Remove it.
+Convert fsl-asoc-card.txt to YAML. In order to pass the checking,
+add some used compatible string from devicetree.
 
-Found with cppcheck, unusedStructMember.
+change cpu-dai in imx6sx-nitrogen6sx to ssi-controller.
 
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
----
-Apparently, it has never been used. It is not a left-over from a
-refactoring.
+changes in v2:
+- update commit message for reason why add compatible strings
+  which are not in txt file.
+- add deprecated
+- add $ref for bitclock-master and others.
 
-The address of the 'fpga_manager' is handled via pci_[s|g]et_drvdata().
+Shengjiu Wang (2):
+  ARM: dts: imx6sx-nitrogen6sx: drop incorrect cpu-dai property
+  ASoC: dt-bindings: fsl-asoc-card: convert to YAML
 
-Compile tested only.
----
- drivers/fpga/altera-cvp.c | 1 -
- 1 file changed, 1 deletion(-)
+ .../bindings/sound/fsl-asoc-card.txt          | 117 -----------
+ .../bindings/sound/fsl-asoc-card.yaml         | 195 ++++++++++++++++++
+ .../boot/dts/nxp/imx/imx6sx-nitrogen6sx.dts   |   2 +-
+ 3 files changed, 196 insertions(+), 118 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/sound/fsl-asoc-card.txt
+ create mode 100644 Documentation/devicetree/bindings/sound/fsl-asoc-card.yaml
 
-diff --git a/drivers/fpga/altera-cvp.c b/drivers/fpga/altera-cvp.c
-index 4ffb9da537d8..6b0914432445 100644
---- a/drivers/fpga/altera-cvp.c
-+++ b/drivers/fpga/altera-cvp.c
-@@ -72,7 +72,6 @@ static bool altera_cvp_chkcfg;
- struct cvp_priv;
- 
- struct altera_cvp_conf {
--	struct fpga_manager	*mgr;
- 	struct pci_dev		*pci_dev;
- 	void __iomem		*map;
- 	void			(*write_data)(struct altera_cvp_conf *conf,
 -- 
-2.44.0
+2.34.1
 
