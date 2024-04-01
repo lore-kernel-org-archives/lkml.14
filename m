@@ -1,76 +1,74 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1BC6446D5;
-	Mon,  1 Apr 2024 14:54:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE97240872;
+	Mon,  1 Apr 2024 14:57:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711983257; cv=none; b=XlTW2R+hQRyKB76IfDUYCtvCw15WWYpdnAn5BcUCphahEjat/rN7+4Wy9XfYEOquJqDm3OJNbsJ26ncCXvRKoILtCDGgrNSwcNXB3GdsAgDZrvNh91yoEUwRbuOyJHhla3ggzmPqsw/+Vfcl0inITiGSWklUVMQQrNBHhpqD70E=
+	t=1711983471; cv=none; b=oY7Lz22sV4q1Mgf9SONteHGSpw5cB7H/uXtI1B41wIwCL3dbD7ZVyPIELnT/h/OMbcKctruszcsATseqMd/tLGeri915Iw1bVGftrAzpFZC8pC35f82rNymRF2J+hIB/ZXQdWpXBRGNXQA5juIzT8V+OtN8R5ekAmEgJM0CFroo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711983257; c=relaxed/simple;
-	bh=CZU9iRUym/va2d6/9xkrujZBBOra9du2dj2ls/Rjeek=;
+	s=arc-20240116; t=1711983471; c=relaxed/simple;
+	bh=s/Kq0rz7zLu9YXogoVE0wyeYA30vKKY0Jd2nsR5FfWE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=e5FHRRPZKdIKh6hOeqK6IGyM7aZDwYJUl4IUJX8c6jgk2JTeS6CXTlDtNiLaWg5heJGP/6dC+llI0bR7BKpqki3j5tjYzECg39pmizKPt7DOE/SqdwyKdiJtHvyOdPHC/Jobq4d1a/dpYG/oCNuIJyo2DdAXK/plUDWQ7xug4Es=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=RYKGg0nk; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+	 Content-Type:Content-Disposition:In-Reply-To; b=eunr/9dCJmDpahVCT8kz3s1fc7aD4i7oqwtDU00WWCpKCJw7zOoTRaJlwszbuiCHD2lH/6aR0uan9eaOHN/SLbF1yPCbO0bkzSHd4iBaUQbMdfX7aMDYh+DCSKrG5jChcr1YoQZX8YssiqFPciO58ao/hoUgtdVVcDKEGZyHoHI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gYEoLEsX; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="RYKGg0nk"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Transfer-Encoding:Content-Disposition:
-	Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:From:
-	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Content-Disposition:
-	In-Reply-To:References; bh=jbM2j7z0fvG4RLqHXyIcHYAtFB/yFOWhm9X/G9CnWtU=; b=RY
-	KGg0nkWaZfZ0bS/7N258fqRJ7j+5ueaHzu6N5/MgJEXi0vAJRiZPM3ht/9u7j6EdiUndM6dv9YjrR
-	GEXMzohGaoKeyiaxuEF8irEJbQWREGGFZSjmAyROFsWQ4R/nRMafkSiYaP10XNkVByopsH/8WS54z
-	ZPt7aeBH7FwntHw=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1rrJ31-00BrdN-R9; Mon, 01 Apr 2024 16:54:07 +0200
-Date: Mon, 1 Apr 2024 16:54:07 +0200
-From: Andrew Lunn <andrew@lunn.ch>
-To: =?utf-8?B?UGF3ZcWC?= Owoc <frut3k7@gmail.com>
-Cc: Heiner Kallweit <hkallweit1@gmail.com>,
-	Russell King <linux@armlinux.org.uk>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Christian Marangi <ansuelsmth@gmail.com>,
-	Robert Marko <robimarko@gmail.com>,
-	"Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>,
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next v2] net: phy: aquantia: add support for AQR114C
- PHY ID
-Message-ID: <6ac20747-8fc0-4a28-a513-a2512b58dc7d@lunn.ch>
-References: <20240315080657.3460084-1-frut3k7@gmail.com>
- <20240401145114.1699451-1-frut3k7@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gYEoLEsX"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 296C3C433C7;
+	Mon,  1 Apr 2024 14:57:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1711983471;
+	bh=s/Kq0rz7zLu9YXogoVE0wyeYA30vKKY0Jd2nsR5FfWE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=gYEoLEsXkFl7p10gvrZ1Wk5QHBxQVt+EFOdrWhph1e9/qsMyGexSBW6NZ1o1ruMN0
+	 alFvVY1mFnaOMYx/EiL3ikLRN1Drv0Vfv3BWicg2qPUaHmNnvFppBpgEUF+m+y1xDf
+	 6WXsYJf9iLDB/hKVCqsKvFSNeHKmo0NvhZFyz4pL5ZM14W8PWzbOZYOJ87z0K5SAXG
+	 SYxDA4MEMYO+pYyhOWBJ6sjaTeVNE5NUKmWwiwY485YvOM8vAw+yuYe8vAcLMBxkfC
+	 +Nv/PVRxS6w8SqOhin72KVz0oV+csNZj3QCEuRPDxvG6HD/+ZBVVc0GGxU3Aa+pAt/
+	 FUYPe1vdfDKvQ==
+Date: Mon, 1 Apr 2024 09:57:49 -0500
+From: Rob Herring <robh@kernel.org>
+To: Dmitry Rokosov <ddrokosov@salutedevices.com>
+Cc: sboyd@kernel.org, neil.armstrong@linaro.org, jbrunet@baylibre.com,
+	khilman@baylibre.com, rockosov@gmail.com, linux-clk@vger.kernel.org,
+	linux-kernel@vger.kernel.org, krzysztof.kozlowski+dt@linaro.org,
+	kernel@salutedevices.com, devicetree@vger.kernel.org,
+	linux-amlogic@lists.infradead.org, robh+dt@kernel.org,
+	mturquette@baylibre.com, linux-arm-kernel@lists.infradead.org,
+	martin.blumenstingl@googlemail.com
+Subject: Re: [PATCH v1 5/6] dt-bindings: clock: meson: add A1 CPU clock
+ controller bindings
+Message-ID: <171198346654.607486.15665713709092404506.robh@kernel.org>
+References: <20240329205904.25002-1-ddrokosov@salutedevices.com>
+ <20240329205904.25002-6-ddrokosov@salutedevices.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240401145114.1699451-1-frut3k7@gmail.com>
+In-Reply-To: <20240329205904.25002-6-ddrokosov@salutedevices.com>
 
-On Mon, Apr 01, 2024 at 04:51:06PM +0200, Paweł Owoc wrote:
-> Add support for AQR114C PHY ID. This PHY advertise 10G speed:
-> SPEED(0x04): 0x6031
->   capabilities: -400g +5g +2.5g -200g -25g -10g-xr -100g -40g -10g/1g -10
->                 +100 +1000 -10-ts -2-tl +10g
-> EXTABLE(0x0B): 0x40fc
->   capabilities: -10g-cx4 -10g-lrm +10g-t +10g-kx4 +10g-kr +1000-t +1000-kx
->                 +100-tx -10-t -p2mp -40g/100g -1000/100-t1 -25g -200g/400g
->                 +2.5g/5g -1000-h
+
+On Fri, 29 Mar 2024 23:58:45 +0300, Dmitry Rokosov wrote:
+> Add the documentation and dt bindings for Amlogic A1 CPU clock
+> controller.
 > 
-> but supports only up to 5G speed (as with AQR111/111B0).
-> AQR111 init config is used to set max speed 5G.
+> This controller consists of the general 'cpu_clk' and two main parents:
+> 'cpu fixed clock' and 'syspll'. The 'cpu fixed clock' is an internal
+> fixed clock, while the 'syspll' serves as an external input from the A1
+> PLL clock controller.
 > 
-> Signed-off-by: Paweł Owoc <frut3k7@gmail.com>
+> Signed-off-by: Dmitry Rokosov <ddrokosov@salutedevices.com>
+> ---
+>  .../bindings/clock/amlogic,a1-cpu-clkc.yaml   | 64 +++++++++++++++++++
+>  .../dt-bindings/clock/amlogic,a1-cpu-clkc.h   | 19 ++++++
+>  2 files changed, 83 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/clock/amlogic,a1-cpu-clkc.yaml
+>  create mode 100644 include/dt-bindings/clock/amlogic,a1-cpu-clkc.h
+> 
 
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+Reviewed-by: Rob Herring <robh@kernel.org>
 
-    Andrew
