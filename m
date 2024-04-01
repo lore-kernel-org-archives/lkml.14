@@ -1,40 +1,58 @@
-Received: from SHSQR01.spreadtrum.com (unknown [222.66.158.135])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 121578BF0
-	for <linux-kernel@vger.kernel.org>; Mon,  1 Apr 2024 08:20:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=222.66.158.135
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B97AD2FF
+	for <linux-kernel@vger.kernel.org>; Mon,  1 Apr 2024 08:20:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711959622; cv=none; b=BF8EQaySO4eET1BXbQPXDFexBcgIlasHpu37U+nDFuCxYk1A0tGhTfvqgnUUCcW9r2kc8A3JdDS1XaYBcQpsz9LTpBM8vuQdVHYnwVu3ALMifYOGU4EB8v8bOWpsGOy++uctbNHIkQ/8svPHBgFkkvuPJpsvbnLoQWLZtPczOJo=
+	t=1711959628; cv=none; b=SKAPSawAV5dyAId5Bw7HjSxAjkjnrrsIi/xe701n4KA34LtSDS6f1rfPT8tOxUaC7NmKtttzrSJUWDW4FsVdB2AtSIouvwKl9XP0RzXaYQuoCxeBeg6R/3dgtaocBsP58syPM4amRnEozCCEmRfgcaiGKMEe1bkuFnsK3gjnH4Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711959622; c=relaxed/simple;
-	bh=mLvBsBy2vP+9pDtVl7gEb7V/ctm5B+nb9Klb/z/TDOA=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=d56eLHXSMBtPlfYh8YJSJ+k3hD8v3G8TH/aYslzxPdkwhQ5BCCS8IlgRFMVrMwSdEopcZqopAptgbKS7T/t306N1GV2Yd51OTqoF3XVjDAM1yOYSuS4cSKJNQGCi7UiYgHHQbPjlj5vvpg0ydVH6Gi4DESwRAfiNL80YbAOH/K0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=unisoc.com; spf=pass smtp.mailfrom=unisoc.com; arc=none smtp.client-ip=222.66.158.135
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=unisoc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=unisoc.com
-Received: from dlp.unisoc.com ([10.29.3.86])
-	by SHSQR01.spreadtrum.com with ESMTP id 4318HlFb028029;
-	Mon, 1 Apr 2024 16:17:47 +0800 (+08)
-	(envelope-from zhaoyang.huang@unisoc.com)
-Received: from SHDLP.spreadtrum.com (bjmbx01.spreadtrum.com [10.0.64.7])
-	by dlp.unisoc.com (SkyGuard) with ESMTPS id 4V7P3G46yjz2MDQdm;
-	Mon,  1 Apr 2024 16:15:54 +0800 (CST)
-Received: from bj03382pcu01.spreadtrum.com (10.0.73.40) by
- BJMBX01.spreadtrum.com (10.0.64.7) with Microsoft SMTP Server (TLS) id
- 15.0.1497.23; Mon, 1 Apr 2024 16:17:45 +0800
-From: "zhaoyang.huang" <zhaoyang.huang@unisoc.com>
-To: Andrew Morton <akpm@linux-foundation.org>, NeilBrown <neilb@suse.de>,
-        <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>,
-        Zhaoyang Huang
-	<huangzhaoyang@gmail.com>, <steve.kang@unisoc.com>
-CC: Matthew Wilcox <willy@infradead.org>,
-        Christoph Hellwig
-	<hch@infradead.org>
-Subject: [PATCHv2 1/1] mm: fix unproperly folio_put by changing API in read_pages
-Date: Mon, 1 Apr 2024 16:17:34 +0800
-Message-ID: <20240401081734.1433755-1-zhaoyang.huang@unisoc.com>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1711959628; c=relaxed/simple;
+	bh=AYfbXjqn1csMfWieLVj4OX3kYZy+q/Ro04Eoi583V2M=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=eG8ZP/4SPkuY1a4wO/aaXa6m4nZnSll6Qx+Jx1uygNJ+0Ztl1CxzvwJnrzwCsRXHo5sakPSt2b791eAPwvmfx3zpYwSgj29xTxrWcMMe1b7kE5smdDK6/wsyAE9Qsjzi778XyNYpKesSVvz2N/e80CwQQ9rJVm9GuxBPIF0sU/o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=BDVImgV4; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BDVImgV4"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1711959626;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=ykcYgNvqI+rrvzzN7v7HbAkkijLEL7CWTEdxTlOuJ/U=;
+	b=BDVImgV47seDmWU7geWKUcf71c/GcCe1MP/EMPMxTxP5eiB4SP2HGwji410/JYPImqiBnC
+	W/3bNnNXu7z0yIsdzjm6S5CVKoaDtCczwgmVQk4fWWqPSNrE0F6LugXp8RVBPZ2mrcKS/C
+	vzn0mSdELNyA3nHKDJM6nSnsRpSfg2M=
+Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
+ by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-97-h5FlAcv-NCW53rjv43MBeA-1; Mon,
+ 01 Apr 2024 04:20:22 -0400
+X-MC-Unique: h5FlAcv-NCW53rjv43MBeA-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.rdu2.redhat.com [10.11.54.5])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 3F49F3C0E641;
+	Mon,  1 Apr 2024 08:20:22 +0000 (UTC)
+Received: from fedora.redhat.com (unknown [10.39.192.124])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 6DB778173;
+	Mon,  1 Apr 2024 08:20:19 +0000 (UTC)
+From: Jose Ignacio Tornos Martinez <jtornosm@redhat.com>
+To: horms@kernel.org,
+	davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	linux-usb@vger.kernel.org,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Jose Ignacio Tornos Martinez <jtornosm@redhat.com>,
+	stable@vger.kernel.org,
+	Dave Stevenson <dave.stevenson@raspberrypi.com>
+Subject: [PATCH net v3] net: usb: ax88179_178a: avoid the interface always configured as random address
+Date: Mon,  1 Apr 2024 10:19:50 +0200
+Message-ID: <20240401082004.7412-1-jtornosm@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -42,113 +60,49 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SHCAS03.spreadtrum.com (10.0.1.207) To
- BJMBX01.spreadtrum.com (10.0.64.7)
-X-MAIL:SHSQR01.spreadtrum.com 4318HlFb028029
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.5
 
-From: Zhaoyang Huang <zhaoyang.huang@unisoc.com>
+After the commit d2689b6a86b9 ("net: usb: ax88179_178a: avoid two
+consecutive device resets"), reset is not executed from bind operation and
+mac address is not read from the device registers or the devicetree at that
+moment. Since the check to configure if the assigned mac address is random
+or not for the interface, happens after the bind operation from
+usbnet_probe, the interface keeps configured as random address, although the
+address is correctly read and set during open operation (the only reset
+now).
 
-An VM_BUG_ON in step 9 of [1] could happen as the refcnt is dropped
-unproperly during the procedure of read_pages()->readahead_folio->folio_put.
-This is introduced by commit 9fd472af84ab ("mm: improve cleanup when
-->readpages doesn't process all pages")'.
+In order to keep only one reset for the device and to avoid the interface
+always configured as random address, after reset, configure correctly the
+suitable field from the driver, if the mac address is read successfully from
+the device registers or the devicetree.
 
-key steps of[1] in brief:
-2'. Thread_truncate get folio to its local fbatch by find_get_entry in step 2
-7'. Last refcnt remained which is not as expect as from alloc_pages
-    but from thread_truncate's local fbatch in step 7
-8'. Thread_reclaim succeed to isolate the folio by the wrong refcnt(not
-    the value but meaning) in step 8
-9'. Thread_truncate hit the VM_BUG_ON in step 9
-
-[1]
-Thread_readahead:
-0. folio = filemap_alloc_folio(gfp_mask, 0);
-       (refcount 1: alloc_pages)
-1. ret = filemap_add_folio(mapping, folio, index + i, gfp_mask);
-       (refcount 2: alloc_pages, page_cache)
-
-Thread_truncate:
-2. folio = find_get_entries(&fbatch_truncate);
-       (refcount 3: alloc_pages, page_cache, fbatch_truncate))
-
-Thread_readahead:
-3. Then we call read_pages()
-       First we call ->readahead() which for some reason stops early.
-4. Then we call readahead_folio() which calls folio_put()
-       (refcount 2: page_cache, fbatch_truncate)
-5. Then we call folio_get()
-       (refcount 3: page_cache, fbatch_truncate, read_pages_temp)
-6. Then we call filemap_remove_folio()
-       (refcount 2: fbatch_truncate, read_pages_temp)
-7. Then we call folio_unlock() and folio_put()
-       (refcount 1: fbatch_truncate)
-
-Thread_reclaim:
-8. collect the page from LRU and call shrink_inactive_list->isolate_lru_folios
-        shrink_inactive_list
-        {
-            isolate_lru_folios
-            {
-               if (!folio_test_lru(folio)) //false
-                   bail out;
-               if (!folio_try_get(folio)) //false
-                   bail out;
-            }
-         }
-         (refcount 2: fbatch_truncate, reclaim_isolate)
-
-9. call shrink_folio_list->__remove_mapping
-        shrink_folio_list()
-        {
-            folio_try_lock(folio);
-            __remove_mapping()
-            {
-                if (!folio_ref_freeze(2)) //false
-                    bail out;
-            }
-            folio_unlock(folio)
-            list_add(folio, free_folios);
-        }
-        (folio has refcount 0)
-
-Thread_truncate:
-10. Thread_truncate will hit the refcnt VM_BUG_ON(refcnt == 0) in
-release_pages->folio_put_testzero
-        truncate_inode_pages_range
-        {
-            folio = find_get_entries(&fbatch_truncate);
-            truncate_inode_pages(&fbatch_truncate);
-            folio_fbatch_release(&fbatch_truncate);
-            {
-                folio_put_testzero(folio); //VM_BUG_ON here
-            }
-        }
-
-fix: commit 9fd472af84ab ("mm: improve cleanup when ->readpages doesn't process all pages")'
-
-Signed-off-by: Zhaoyang Huang <zhaoyang.huang@unisoc.com>
+cc: stable@vger.kernel.org # 6.6+
+Fixes: d2689b6a86b9 ("net: usb: ax88179_178a: avoid two consecutive device resets")
+Reported-by: Dave Stevenson  <dave.stevenson@raspberrypi.com>
+Signed-off-by: Jose Ignacio Tornos Martinez <jtornosm@redhat.com>
 ---
-patch v2: update commit message
----
----
- mm/readahead.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+v3:
+  - Send the patch separately to net.
+v2:
+  - Split the fix and the improvement in two patches as Simon Horman
+suggests.
+v1: https://lore.kernel.org/netdev/20240325173155.671807-1-jtornosm@redhat.com/
 
-diff --git a/mm/readahead.c b/mm/readahead.c
-index 130c0e7df99f..657736200a92 100644
---- a/mm/readahead.c
-+++ b/mm/readahead.c
-@@ -163,7 +163,7 @@ static void read_pages(struct readahead_control *rac)
- 		 * may be used to size the next readahead, so make sure
- 		 * they accurately reflect what happened.
- 		 */
--		while ((folio = readahead_folio(rac)) != NULL) {
-+		while ((folio = __readahead_folio(rac)) != NULL) {
- 			unsigned long nr = folio_nr_pages(folio);
+ drivers/net/usb/ax88179_178a.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/net/usb/ax88179_178a.c b/drivers/net/usb/ax88179_178a.c
+index 88e084534853..8ca8ace93d9c 100644
+--- a/drivers/net/usb/ax88179_178a.c
++++ b/drivers/net/usb/ax88179_178a.c
+@@ -1273,6 +1273,7 @@ static void ax88179_get_mac_addr(struct usbnet *dev)
  
- 			folio_get(folio);
+ 	if (is_valid_ether_addr(mac)) {
+ 		eth_hw_addr_set(dev->net, mac);
++		dev->net->addr_assign_type = NET_ADDR_PERM;
+ 	} else {
+ 		netdev_info(dev->net, "invalid MAC address, using random\n");
+ 		eth_hw_addr_random(dev->net);
 -- 
-2.25.1
+2.44.0
 
