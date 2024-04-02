@@ -1,156 +1,176 @@
-Received: from NAM02-BN1-obe.outbound.protection.outlook.com (mail-bn1nam02on2097.outbound.protection.outlook.com [40.107.212.97])
+Received: from dvalin.narfation.org (dvalin.narfation.org [213.160.73.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C25032C9D;
-	Tue,  2 Apr 2024 19:16:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.212.97
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712085366; cv=fail; b=DSW4Nue2MyRE+laJIuDNXKYEXFKmcqtHxYm77CZX9+vbOEam/9MV9hZyMgeULp5rXOqDN10sDSRasWWisbJvVfryTMuZA7Wg2C/GB0ZnpbIJLg054Bd0z/zA/2kzladIONWeMPewre2aoNU59Tl3iMb0RCYGuvo0J7yloorE4Dc=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712085366; c=relaxed/simple;
-	bh=8KJ8yCMfuyJN3hYA6NQp12h4hUtLZLXmjfnqzwgYAxE=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=Fi0ARNCTTlmkbFHhpE+A1kvJJsReoh9cML4K5pSpd9dJQd5xUWVzFwQHlSppHzoRkxTrnsRy6WsbL8bQ2c6gXS9VqqNC7SyGXmN6KmSB9zTFvc3FMV1t73jO072UvuJyn8F4VkZ5aMrzBKcisfLmEp9eq94Cx61UKLg4KpBOJtw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=bqZ9j4CQ; arc=fail smtp.client-ip=40.107.212.97
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D20E12C9D;
+	Tue,  2 Apr 2024 19:16:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.160.73.56
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1712085373; cv=none; b=lmH21WdVLTXHZr4pdPdB02FQtLfE3sdBc4KBqlM77ZfgWfXr8qr72KkCXzyEGcQp9T0Y2EkxNnJ4sFes6c8Le3otvDAQ90V4nolzCqtQlP3l9mZGyUxi8lAORnyQrm7+LofV6MgWsDBXsydSZp5DbsHpJ9eQoyomrPn9wj66aqM=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1712085373; c=relaxed/simple;
+	bh=9JIPjNr0peSxZTcP+6cQZbMtmxMOiiyJXzs2wV8FEds=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=uk0QIBZzwzaaG+3EwFxoyRy7xp2kC0TOn/xytMQaXKusPrRFPc1HympfxPRXr1hA7/7jeLz1lyFiZTVD+CQxtEfZdjWQbPnHp5Ypwj59W6zI2wFiFoQucrj/kZoEozoIrA6dEo30wP/UNECHgvaml7JYVmnhJ5uyQzC2j7yGE84=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=narfation.org; spf=pass smtp.mailfrom=narfation.org; dkim=pass (1024-bit key) header.d=narfation.org header.i=@narfation.org header.b=1cQ1X5a9; arc=none smtp.client-ip=213.160.73.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=narfation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=narfation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="bqZ9j4CQ"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=LYk4pP4UDZHO4jxZGg8Otanym73rPe8H4w8RUfU0bT8e3wXQvpUa2Mmk9216cxm0C/EQxUcz/dFb8BCzG8tATDvXz9Ay8gtCKnUvwBx+iCQyO2GQaaJvk1jDSgPVWDlT+40AzEcV8ALLlZF4h+xL7ToICJe7JtnhCfHfJphjfQ9Hjrf+mm7Ii7l5GyJ+SEeLvWRMQIpkbbjcUer5apsozeSyGeEEUmV3/LcJyY/ZslXFZ8bwqoTL/W+Aky9+IkheOyl0kgSDMjvbL0IDpzmdX1AV62brnNNEynO2o+UECSwrX3n35MhVIcWoizJAGnnPEsexDPee1J/lVle8SxGsFQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=1Da/oKn1qZF6zjn9SObWWMi15bekYymTg/iZbBQP+M4=;
- b=m0/vFB4gDgn+QFQWrATw50LaEsMmE69nrdBxaOlK/PYuuxdHQnnml3smbSqJLymEJgEixpCkm2MD7L7aLsz76xsvvSjI+RWjeRA2ArmOUiH0fsu1SX1zc/IlToTVkZ46UtDZ8oAiEJGdC/7QmfKOTUduoIp2MVKFqjWDDp20Euu+0xXYrgUNjaZTtUeeIZrtBBvQKJn7fCbklEeWJMXRwnt9JVVazQr4kX+U7Qedfze+fTCbVoQUD3+CmKa9kgg9KKTeJtuQGXG0dSGEp2kAUvcztDB+stZHJVyz6yTZDgVoUDrQAOKZZ/JLenj48iRBESfTrfpOpxFIv06Spo571Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=1Da/oKn1qZF6zjn9SObWWMi15bekYymTg/iZbBQP+M4=;
- b=bqZ9j4CQr45K7GhJcEkO0hjptTo3qoxYcFQvaCyWXhpQzSLNYFUXxGc/q6av6N51nPLKFLSg6vTdaFPhvUnShyw8C4ZrLZzLcYRAG/xxbGOs54pniwZmMgaUI3lLSTVaEHe0AGjmqVZWEPrRkbfs5j1GcEOFpb0O2BygbwF9FZSpwAPnTUqhvrdmZFSSUOL5MmwoKjoq0+N3hGu8yX0gRngod9LZ+h9qK2EYWyfJdxlncHHobZpuzLyYpPQnLor+myh59+gea4XEb9OOFcbeR9n+T48vfFiMgxxxneq8qpvfNTqIaZ+GeUuG4Ar3sXlIrRXRlUCS22Nxsn28Fon25w==
-Received: from CO6PR12MB5444.namprd12.prod.outlook.com (2603:10b6:5:35e::8) by
- CYYPR12MB8752.namprd12.prod.outlook.com (2603:10b6:930:b9::13) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.7409.46; Tue, 2 Apr 2024 19:16:01 +0000
-Received: from CO6PR12MB5444.namprd12.prod.outlook.com
- ([fe80::5159:5fc3:7933:24c0]) by CO6PR12MB5444.namprd12.prod.outlook.com
- ([fe80::5159:5fc3:7933:24c0%7]) with mapi id 15.20.7409.042; Tue, 2 Apr 2024
- 19:16:01 +0000
-Message-ID: <025ed42a-c6f2-48e6-a8d1-b6de79d6957b@nvidia.com>
-Date: Tue, 2 Apr 2024 20:15:55 +0100
-User-Agent: Mozilla Thunderbird
-Subject: Re: [Patch v2 1/2] dt-bindings: make sid and broadcast reg optional
-Content-Language: en-US
-To: Sumit Gupta <sumitg@nvidia.com>, krzysztof.kozlowski@linaro.org,
- robh@kernel.org, conor+dt@kernel.org, maz@kernel.org, mark.rutland@arm.com,
- treding@nvidia.com
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-tegra@vger.kernel.org, amhetre@nvidia.com, bbasu@nvidia.com
-References: <20240402132626.24693-1-sumitg@nvidia.com>
- <20240402132626.24693-2-sumitg@nvidia.com>
-From: Jon Hunter <jonathanh@nvidia.com>
-In-Reply-To: <20240402132626.24693-2-sumitg@nvidia.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: LO4P123CA0200.GBRP123.PROD.OUTLOOK.COM
- (2603:10a6:600:1a5::7) To CO6PR12MB5444.namprd12.prod.outlook.com
- (2603:10b6:5:35e::8)
+	dkim=pass (1024-bit key) header.d=narfation.org header.i=@narfation.org header.b="1cQ1X5a9"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=narfation.org;
+	s=20121; t=1712084798;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=8YOkmEuC9pUsK+tk/6J60XipwO318aL0a2KtV/Z5R7c=;
+	b=1cQ1X5a9FEnn7pUky3k2RC1MLWAVUsKjHvXV+ap0gIexfmavkuZDqhuJ1HK0vnBpvWmjhB
+	GwucBct323m5dXolJ/m+ZkFKfFNvdKgC/Laa7Zj59EKZWfHYEmnVuO7JS+isgTu2Xf0pWS
+	oABPA6SEHeL4iEo/8WK4zGw1cJ+c8Vk=
+From: Sven Eckelmann <sven@narfation.org>
+To: Marek Lindner <mareklindner@neomailbox.ch>,
+ Simon Wunderlich <sw@simonwunderlich.de>, Antonio Quartulli <a@unstable.cc>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ Kees Cook <keescook@chromium.org>,
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+ Erick Archer <erick.archer@outlook.com>
+Cc: Erick Archer <erick.archer@outlook.com>, b.a.t.m.a.n@lists.open-mesh.org,
+ linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+ linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] batman-adv: Add flex array to struct batadv_tvlv_tt_data
+Date: Tue, 02 Apr 2024 21:06:35 +0200
+Message-ID: <5466543.Sb9uPGUboI@sven-l14>
+In-Reply-To:
+ <AS8PR02MB7237987BF9DFCA030B330F658B3E2@AS8PR02MB7237.eurprd02.prod.outlook.com>
+References:
+ <AS8PR02MB7237987BF9DFCA030B330F658B3E2@AS8PR02MB7237.eurprd02.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CO6PR12MB5444:EE_|CYYPR12MB8752:EE_
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	2IyHEU7t01oTNojIH/BLS6eICgym7CdD70NPZvNRdo2S5KXY2b8qEkpLPNa0MKPBoVfNE0T6wJOvWvLXYNLIKdYRc977z+z8UpJiKKTBPL+svK1efQkNI35nTKibAxH3qObFqdgbAuzlFYCyRRJGTWn35MAriCjFeQt0lBXYKvnJdncbbAw5Api8dTdQSCnz3Gm0xQHrzhDKZoi1k2bb1rieyBhXFb/VI4zbBvqFCzWEDH5c9iz/wA3/zGhZInx4ZVos0I+yP273Dw4/w7FxlPHTuAJwDUr1lLXXsuATPSWgUaqPfIj/9Lz6WGRk2Hr2xtAB+OqVHdo2QFtBUKHPOe/7Vd7VneH11lcSo1dmH7UloU+mvYfHIg+WFOWO9xD/G5nVyt6NGmDiYG7jK9AqsMMZWuCu68JPo/TkE/KBrWcz8axvNk5Xb5FuEwLkJzYIsSPIpcjT7/WvykxIuYh5iwaFCcpQwORPv7kRdpbxq3xhtDffr+qi0jRuxuuNzYy5kNc+G1kh0KBwigF4ityNa4/lY4NP9watXLCIOfxd91/YW9rLu/dVB0r04wyCfwtDnd+WfVLy21F6Qs2oZJJ5VR2Ut/BumQRRT5AmES8Gcmstong90tCQ40lqAGbzmajT8/dlyAHKEMqdxvh7EFyVuwBQ2xjJMD8i/fUdreFBPtM=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CO6PR12MB5444.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366007)(376005)(1800799015);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?VmtuRHMwOVZteElFSkJlN2pBNTJUVlFQSHNsam1Wd24zdzhld2VmZFF1bHcz?=
- =?utf-8?B?OXNEWjZTUUp5TUV4WGhDMmYxdWZZNHdCZkJ5QjdnRGlqUGd0Y2VOU0VIb2du?=
- =?utf-8?B?M1JDMUxVL1JsVG1yaUFWdFNZSmhkMjE3UHlLcjdjSVZyYzFjTHVmOW1UV3R6?=
- =?utf-8?B?SmZ1bU94eTcwbFFNUHJzcDJwN1B5bExoNXBuckptd0Y0eStqTU5CbGhXVHFP?=
- =?utf-8?B?Vzdwdlh0eThMUHkwZkdsdmhSYTM0b1l1NGxxVjFkdkN3NmlHLzlsVlVmTit1?=
- =?utf-8?B?WlozcVA1VWZUTVdvMFV0S3Zxb1E0V3lNWmJhem5yUExDaVltVkVCNVhab1A3?=
- =?utf-8?B?bldhdkpySUZ2dDZCNVJ6SUV0UFd3QTFENmNzby81elhCTWtiQjZMeW9hUFFY?=
- =?utf-8?B?R2FDdWltVXlGS2FpR0hSTG00cWtMVXRFenErNG0xRnJUVFJXbFVlMzVWeWVa?=
- =?utf-8?B?U21wTmttZnFnSEt6TTF1VXJGSkF0bE1Tdi9oeXR2SWtIakR2clphaHFGSzRS?=
- =?utf-8?B?aStvVEdZK1huMWJ6Q1g2T3F3MHZKd1B3bE04RFhBbVNoSm0vcFNnWE9OUWNP?=
- =?utf-8?B?VzRwR1l1bnJqUTB3Nk9aRnRQeTJraE95Q0RiOG5IMU5ZKzExK2JUWUd1L1ZL?=
- =?utf-8?B?TTdBeWR6U0hNTVRwczlFdkJTTG15ZzE3Umh3aEtHOGhOZjJ2cDAxeWhOa1hX?=
- =?utf-8?B?ZHBsRHVvVjJ0U2x0R0lVUHpFeG83Njk2SkN4VHJ3dW5WVjQ0aWNBaC9uRG1a?=
- =?utf-8?B?aFI4SmppbVNVeklnYkxuK3VhYW8wSmJvcmc2MW5KOTBScitKYU5kRG5CdDY1?=
- =?utf-8?B?cHVjT0pTRE9uV2VJWHFKM0tYL0sxanN3MEdEejN3RXVaL3d3R3VTck5IYTVN?=
- =?utf-8?B?UGxjLzUrV1NCUUE2OXgrcHBGSXZ1VzA1cUh4OVk0VUhvV0MxNUZScHNXUDRB?=
- =?utf-8?B?T2RmSjU2cnMxVzBHNHowd2M0TEZRdiswUnI0dUZhUUxKUTF3Q01xWDYwTVdn?=
- =?utf-8?B?cWRja0hpZ3ZRb0U1YWh2Z1V6U1M5QndIb0h0OHpQeFVnZE1TU1JZaFJNNHRO?=
- =?utf-8?B?Mm43b3dGcC9IRjlmdTRJb1BOTGRNaWZxSFlpV3h5cEh4a2dKRi9FSGczdjFK?=
- =?utf-8?B?RytudThUcXpsbDQyWWY5RTZXTm5kNFFFUWlZL3IzQVR3WjB5ZXlZNUdoL2tj?=
- =?utf-8?B?QkJXKzcxbFVCRXJ1YmJDbmJicW1Nd2d1M0gydHRrZWtZb2tDMlNGVldITHYy?=
- =?utf-8?B?SjBjUFVMbjZEQW9RcG5lam1qNDFZQWxjc2RpV1JwVkp2b0dYbFNFRnluQjZR?=
- =?utf-8?B?amVqOXNjMTB5dTl2M2JVWHBWd2FXUUhWVk1RWjIzdWdpUE5yczdLcklXTVN2?=
- =?utf-8?B?eW5ubUJLenNGWFFkNWlwaTByVGVsNytDSGZUYWJiNjVBeDY4dWJEV3VENzRT?=
- =?utf-8?B?UmFDenVGcElqK04yblA4T3o3MHVlOGRLY1lDbkxEcC81N0FwMmJSSUszRThu?=
- =?utf-8?B?cWZwSEhLanhRTEtlaWhuS0hmM2JrYUpJNzlWM1gySWs0WjY0M0E0d2ZEZEtE?=
- =?utf-8?B?aUZOeUIyR0JTT0ttMXBtalhoeEF0SnkwUzNTVVozNS8zR2J1K3UrbGtYa1RC?=
- =?utf-8?B?SmdjdVFOcGhDOVNZcVNkUWV5MlRib1pUaVZBK2xIQjR2WmFmanQ1YmoxbFYw?=
- =?utf-8?B?RjVNVFhUYWRwcFdHODZuTlkrZ1FjUkdON3grUThkcjF0ZHJLc1RtQnhTNHNR?=
- =?utf-8?B?a01zUEYzdmQwSm5iQy9Fa0lheThMTUdMYXIwL3FZM0oxOGpLQTA5c003S0tH?=
- =?utf-8?B?UlJtQVNjbUxNOE9IMFlnUXR2WTNkbXByVUdXQVg5V3hQUjhqVzJKVVZOZnpp?=
- =?utf-8?B?dkQ1NXdVaU5RUW01Wk01bEZYQkF2NmVMMDlhYXRjVlFtTkZxK1AwTU9XL1lK?=
- =?utf-8?B?VEhSTThWYlE4aUkyS1ZzRm5tbHl2WGVYMGNFWW1ZOTNoRkxxbjZmMExzSGxp?=
- =?utf-8?B?SkFXcFd1OGNNRzJERmMyRzR4UjN6UzZ2R3dUMVFBQlpDUTBxcXJNdVV3aVVO?=
- =?utf-8?B?L293U0NYek90SHNSdXRjd1h3RTFnRFhtWXF3MERtNENhQ2dlbGNoUHFlZ3NS?=
- =?utf-8?Q?7Vy0AaqxEWNn7xMaV8vI9s102?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f6f73b5a-3e6b-47f3-65f9-08dc53495528
-X-MS-Exchange-CrossTenant-AuthSource: CO6PR12MB5444.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Apr 2024 19:16:01.3294
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: r7vNNLekO8QLpn4hdU9b892EOT5b6yQP7FkhzP+BRC9GzLNFda8ulWS4ezNK4CfjLsqNHpPgAw0QrxofGL+4sg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CYYPR12MB8752
+Content-Type: multipart/signed; boundary="nextPart1984222.yKVeVyVuyW";
+ micalg="pgp-sha512"; protocol="application/pgp-signature"
 
+--nextPart1984222.yKVeVyVuyW
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"; protected-headers="v1"
+From: Sven Eckelmann <sven@narfation.org>
+Date: Tue, 02 Apr 2024 21:06:35 +0200
+Message-ID: <5466543.Sb9uPGUboI@sven-l14>
+MIME-Version: 1.0
 
-
-On 02/04/2024 14:26, Sumit Gupta wrote:
-> MC SID and Broadbast channel register access is restricted for Guest VM.
-> Make both the regions as optional for SoC's from Tegra186 onwards.
-> Tegra MC driver will skip access to the restricted registers from Guest
-> if the respective regions are not present in the memory-controller node
-> of Guest DT.
+On Tuesday, 2 April 2024 19:23:01 CEST Erick Archer wrote:
+> The "struct batadv_tvlv_tt_data" uses a dynamically sized set of
+> trailing elements. Specifically, it uses an array of structures of type
+> "batadv_tvlv_tt_vlan_data". So, use the preferred way in the kernel
+> declaring a flexible array [1].
 > 
-> Signed-off-by: Sumit Gupta <sumitg@nvidia.com>
+> The order in which the structure batadv_tvlv_tt_data and the structure
+> batadv_tvlv_tt_vlan_data are defined must be swap to avoid an incomplete
+> type error.
+> 
+> Also, avoid the open-coded arithmetic in memory allocator functions [2]
+> using the "struct_size" macro and use the "flex_array_size" helper to
+> clarify some calculations, when possible.
+> 
+> Moreover, the new structure member also allow us to avoid the open-coded
+> arithmetic on pointers in some situations. Take advantage of this.
+> 
+> This code was detected with the help of Coccinelle, and audited and
+> modified manually.
+> 
+> Link: https://www.kernel.org/doc/html/next/process/deprecated.html#zero-length-and-one-element-arrays [1]
+> Link: https://www.kernel.org/doc/html/next/process/deprecated.html#open-coded-arithmetic-in-allocator-arguments [2]
+> Signed-off-by: Erick Archer <erick.archer@outlook.com>
+
 > ---
->   .../memory-controllers/nvidia,tegra186-mc.yaml | 18 +++++++++---------
->   1 file changed, 9 insertions(+), 9 deletions(-)
+> Hi,
 > 
-> diff --git a/Documentation/devicetree/bindings/memory-controllers/nvidia,tegra186-mc.yaml b/Documentation/devicetree/bindings/memory-controllers/nvidia,tegra186-mc.yaml
-> index 935d63d181d9..c52c259f7ec5 100644
-> --- a/Documentation/devicetree/bindings/memory-controllers/nvidia,tegra186-mc.yaml
-> +++ b/Documentation/devicetree/bindings/memory-controllers/nvidia,tegra186-mc.yaml
-> @@ -146,17 +146,17 @@ allOf:
->       then:
->         properties:
->           reg:
-> -          maxItems: 6
-> +          maxItems: 4
+> I would like to add the "__counted_by(num_vlan)" tag to the new flex member
+> but I don't know if this line can affect it.
+> 
+> ntohs(tt_data->num_vlan)
 
-minItems?
 
-Jon
+Yes, num_vlan is a __be16. I could only identify the kernel-doc related 
+scripts as consumer. But maybe they are more - so I would defer this question 
+to kernel-hardening.
 
--- 
-nvpublic
+
+And with this change, I get a lot of additional warnings (-Wsparse-all)
+
+
+cfg: BLA=n DAT=y DEBUG=y TRACING=n NC=y MCAST=n BATMAN_V=n
+    net/batman-adv/translation-table.c:574:21: warning: using sizeof on a flexible structure
+    net/batman-adv/translation-table.c:859:25: warning: using sizeof on a flexible structure
+    net/batman-adv/translation-table.c:859:25: warning: using sizeof on a flexible structure
+    net/batman-adv/translation-table.c:938:25: warning: using sizeof on a flexible structure
+    net/batman-adv/translation-table.c:938:25: warning: using sizeof on a flexible structure
+    net/batman-adv/translation-table.c:2932:16: warning: using sizeof on a flexible structure
+    net/batman-adv/translation-table.c:2932:16: warning: using sizeof on a flexible structure
+    net/batman-adv/translation-table.c:3378:21: warning: using sizeof on a flexible structure
+    net/batman-adv/translation-table.c:3378:21: warning: using sizeof on a flexible structure
+    net/batman-adv/translation-table.c:3982:30: warning: using sizeof on a flexible structure
+    net/batman-adv/translation-table.c:3986:27: warning: using sizeof on a flexible structure
+    net/batman-adv/translation-table.c:4026:30: warning: using sizeof on a flexible structure
+    net/batman-adv/translation-table.c:4030:27: warning: using sizeof on a flexible structure
+    net/batman-adv/translation-table.c:4032:23: warning: cast from restricted __be16
+    net/batman-adv/translation-table.c:4032:23: warning: restricted __be16 degrades to integer
+    net/batman-adv/translation-table.c:4032:23: warning: incorrect type in argument 1 (different base types)
+    net/batman-adv/translation-table.c:4032:23:    expected unsigned long [usertype] factor1
+    net/batman-adv/translation-table.c:4032:23:    got restricted __be16 [usertype] num_vlan
+
+[...]
+>  	num_vlan = ntohs(tt_data->num_vlan);
+>  
+> -	if (tvlv_value_len < sizeof(*tt_vlan) * num_vlan)
+> +	flex_size = flex_array_size(tt_data, vlan_data, num_vlan);
+> +	if (tvlv_value_len < flex_size)
+>  		return;
+
+This helper would need an #include of <linux/overflow.h> in 
+net/batman-adv/translation-table.c
+
+[....]
+>  /**
+> @@ -4039,8 +4029,7 @@ static int batadv_tt_tvlv_unicast_handler_v1(struct batadv_priv *bat_priv,
+>  	tt_data = tvlv_value;
+>  	tvlv_value_len -= sizeof(*tt_data);
+>  
+> -	tt_vlan_len = sizeof(struct batadv_tvlv_tt_vlan_data);
+> -	tt_vlan_len *= ntohs(tt_data->num_vlan);
+> +	tt_vlan_len = flex_array_size(tt_data, vlan_data, tt_data->num_vlan);
+
+This is definitely wrong on little endian systems. You first need to convert 
+num_vlan from network (big endian) to host order.
+
+Kind regards,
+	Sven
+
+--nextPart1984222.yKVeVyVuyW
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part.
+Content-Transfer-Encoding: 7Bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEF10rh2Elc9zjMuACXYcKB8Eme0YFAmYMVzsACgkQXYcKB8Em
+e0aCQBAAj3anzJhaGazYsoqA2U/5qDV64DoNdrlYz34rT3lYX3DTJKcA11cuSvN+
+aDVUaOi8G7Gn4sE+Ql8FGsBmXoCMvwyLJ/eQ6mrr1MGSWLodaZbvmjRxwPRzFbou
+wAK5ZE25usWliJxf2ds7gpSjm6TBFnsNIRAtQ2zz7b8dAhXOe79ASRsrl0P9QBiE
+fM8QeT6hB0gLY5RXmsugrRUfCpqQOfTS44b9siyICMN+mKbRG7GpDj4Ruf/6koNo
+Qy1Unmm+qhyuPUtoYBASGVzC/Gm3pDh7UXuiptY0vgU/o0yjyTHi683cFBtmD30V
+d+pNZDCa2YS0+j0N8Nh/oS3fOWb36I/eKiEaCdmgx9awQ4dO3CxZE5TsLeohNNUO
+OpTdwucSLW8gEo+r+BQI0G2y3+TPCtGv8vLRIXF1frSWjE7EPbXH3BjbcvoDaaYO
+uO1a7tyAAbZ4zZO9wO6qIcRjz1q3E0V8Dx9LRolzC5EA4IvnNa+WQ7OZdTGe8zu3
+GRlIYG/sedhar8Wla+bh8wi8oeInErE4k4pDFI6o1AS5GHTcpTR7Plp/vpnrAEPF
+LAjEHTQT1LOIRLIrzvGBWC/KNnjXd3q2TluOKRBxsNYAnn+nHL3aBmYSp8gCOg9g
+Sta4U5Vrs2QpAT3mk8CoAhQSujqZaOkM+fy63PcaWrhCMDh9mGo=
+=CYsH
+-----END PGP SIGNATURE-----
+
+--nextPart1984222.yKVeVyVuyW--
+
+
+
