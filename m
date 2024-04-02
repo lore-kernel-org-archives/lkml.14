@@ -1,86 +1,81 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out203-205-251-84.mail.qq.com (unknown [203.205.251.84])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43FA0168B1;
-	Tue,  2 Apr 2024 04:12:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C614175BD
+	for <linux-kernel@vger.kernel.org>; Tue,  2 Apr 2024 04:16:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.251.84
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712031155; cv=none; b=WWGAcXRZBG6WqcYFo/kcCH5a5j/yLX3toKSm3um8JujzmesowbABT1jaxLFhK01MotoXEK7xbLvvHu76aD6qN1DOIV/3AZecCXPoh0DI0AJfkap00rj8z3cUPVcpMSL9VUooBEYkZKaiIyHSZnscbQjhAZI9B3H2FMQIAI//u+c=
+	t=1712031371; cv=none; b=hQL9I6gxO//xqgtnFXAOWyA8ZGwG+At8wmrD1HtyMSo72Hgchz1hjDGrkbdEg5wl7xI5uaTm0BhIeZyp0tf04R9arjgiySwavm47R7ArhBgn6RbNtvp81G4pctWQLCaMrNyfv3xvrU3r1eCJD0siWhNB8kIMbHqPKEDjJrPONZs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712031155; c=relaxed/simple;
-	bh=aI3eJF8HniXat2ib1QyBX8zCGp45TAApFBysvadGBQs=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=noVgS2SVCt8ST8HcgSW+vNT5yM6YTB2kvMzM5h9Md/Hyi/DhO+2/FLepbpY6osHTfoCDfVwIbX2PRmGxum5CO0NrgUgCWw+l9iiL+/XMMZ4y353fO0rgUexLmXMA7rdI4xD9yAkwUnVUluuuiGqV2AIBWLwRybJW8vH/kDDst3E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nkTzWbGD; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1712031371; c=relaxed/simple;
+	bh=s/HHnwD+SmkKVBqoUGGKKDAzr0kT/JyFkYQoA4a1XBU=;
+	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
+	 MIME-Version; b=jCbH2gHcZ3FfTi36C1f3uzfNXRvlZrDE3C0NILDn5UxlqmXXWpLcq4Mbt+Tx4YXvJKN6buWM/yZLSP0nv5yOXqmqAw2kgEj9k3kMwjQaAnaKbmXS4fskoGpVyBNcwfN87OaifhV+vF3cqVUhf2MnGOkXnCCeeixc6snKemlm1NM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=gRT3Fs+v; arc=none smtp.client-ip=203.205.251.84
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nkTzWbGD"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 672A3C433C7;
-	Tue,  2 Apr 2024 04:12:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712031154;
-	bh=aI3eJF8HniXat2ib1QyBX8zCGp45TAApFBysvadGBQs=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=nkTzWbGDGnmj8/6m7801zLy+B6JjA/ZXpJtp/FkRdEg9tN9IzGfm0CgMNlSQZ95KA
-	 HqxuhIuo0Z8jXpeg7+WS8AqPQMI3opBF15vPciltVh6dp1j4k9FufIgrSaC/5V2kCt
-	 YEPK5SKsvPPG6KBRWKu0WIHe8/jRr1UzS/lOZBFygL9M7mX0OYThU3fLemJ6C6UhXx
-	 eZZxq598IWatnRW/We9rCVsWeiyKs8JcHDpSLnBbSEV5DuEgCQtyF4olFeKEa5c0ou
-	 eYO3Jbd1Y/f6t6QROP/ViG0ZZliYkzMGtNSo1LuXTlS+lLNb7DndsBZc/K6DXHLcv+
-	 82IVNF+FUIJlA==
-Date: Mon, 1 Apr 2024 21:12:32 -0700
-From: Jakub Kicinski <kuba@kernel.org>
-To: Dexuan Cui <decui@microsoft.com>
-Cc: Haiyang Zhang <haiyangz@microsoft.com>, "linux-hyperv@vger.kernel.org"
- <linux-hyperv@vger.kernel.org>, "netdev@vger.kernel.org"
- <netdev@vger.kernel.org>, Wei Hu <weh@microsoft.com>, stephen
- <stephen@networkplumber.org>, KY Srinivasan <kys@microsoft.com>, Paul
- Rosswurm <paulros@microsoft.com>, "olaf@aepfle.de" <olaf@aepfle.de>,
- "vkuznets@redhat.com" <vkuznets@redhat.com>, "davem@davemloft.net"
- <davem@davemloft.net>, "wei.liu@kernel.org" <wei.liu@kernel.org>,
- "edumazet@google.com" <edumazet@google.com>, "pabeni@redhat.com"
- <pabeni@redhat.com>, "leon@kernel.org" <leon@kernel.org>, Long Li
- <longli@microsoft.com>, "ssengar@linux.microsoft.com"
- <ssengar@linux.microsoft.com>, "linux-rdma@vger.kernel.org"
- <linux-rdma@vger.kernel.org>, "daniel@iogearbox.net"
- <daniel@iogearbox.net>, "john.fastabend@gmail.com"
- <john.fastabend@gmail.com>, "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
- "ast@kernel.org" <ast@kernel.org>, "sharmaajay@microsoft.com"
- <sharmaajay@microsoft.com>, "hawk@kernel.org" <hawk@kernel.org>,
- "tglx@linutronix.de" <tglx@linutronix.de>,
- "shradhagupta@linux.microsoft.com" <shradhagupta@linux.microsoft.com>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "stable@vger.kernel.org" <stable@vger.kernel.org>
-Subject: Re: [PATCH net] net: mana: Fix Rx DMA datasize and skb_over_panic
-Message-ID: <20240401211232.57b17081@kernel.org>
-In-Reply-To: <CY5PR21MB37590FD539C1E380FBDC96B0BF3E2@CY5PR21MB3759.namprd21.prod.outlook.com>
-References: <1711748213-30517-1-git-send-email-haiyangz@microsoft.com>
-	<CY5PR21MB375904FD3437BA610E6BDBD1BF392@CY5PR21MB3759.namprd21.prod.outlook.com>
-	<CH2PR21MB1480E02C74E7BB5A52A71859CA3F2@CH2PR21MB1480.namprd21.prod.outlook.com>
-	<CY5PR21MB37590FD539C1E380FBDC96B0BF3E2@CY5PR21MB3759.namprd21.prod.outlook.com>
+	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="gRT3Fs+v"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
+	t=1712031059; bh=MXUyitxU3QQUntbz7v+tHoLVPwTiSCKPD9XlMVmmt+Y=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=gRT3Fs+vnfscAUkZSPnnZ9O9mvH8C8MueYFaOrjg9M3jRAv+G4SOS7L06UYSCr1ri
+	 MeAlxkcB0VgU29LPFRxGD4jJoSpgXlWUj6VrwV4gy4nrzZbTpIvdMtx2Iha8QTPzP4
+	 S3n5C8lxWwMJdHuGWwzpNcwB9ppRdTa0m9yOgsbc=
+Received: from pek-lxu-l1.wrs.com ([111.198.228.153])
+	by newxmesmtplogicsvrszc5-1.qq.com (NewEsmtp) with SMTP
+	id 2B9AE89D; Tue, 02 Apr 2024 12:10:57 +0800
+X-QQ-mid: xmsmtpt1712031057trjz466f6
+Message-ID: <tencent_1F326FF82C456F509544E992ECBECE087A0A@qq.com>
+X-QQ-XMAILINFO: NvxNySBpH0QlOg07ENiPGFyGyemJSpSmZEAM3Hy7bSDkiyrqiePYBB69d+DAJj
+	 sttNSzSM6PDb5FPqIzAyQheZQ1FeQLP7BJcF5t2Dq1hgQXc+HxPbDYJkFI7m0qvrqvCqPRsiPUiN
+	 NUEK/PYl/YTJ9xxekA0FuEDVEdV2V9hAKTtrNroPRFbAQxNAvw1VGe824WjELlNxbFPEwQThIWcx
+	 MJkZLQMybwt/iXm6NbYy2ywuuxsyO0EH9tEMmzqEZV6He05RkoTusP8Y7NgNlZB8jnAXaQAqE2aF
+	 98BykFREaP0wJp0Kd0y7KmwMxWHiz4Zx/gEhPt2sR8ntAWdiy3nxqPSSCmPxBNbWxjOyYe8g9zim
+	 omyhT076YY8K6BzwZB/T/o5Ajgcv4u1mxrwpgEhFAw/zGmZdUXScU3J0kr5NDQSdYyepqeMz49At
+	 T4k8e7OiVO2FiSPlFjY0XEcVwH4kbIDfS+MJ6t6mzfdrnHVzzovF8RQFNv5vP4QpN4vsKQY/tbTH
+	 vggGs+D29fd9t3f5B44UypY+LKH/yK+BxkNtr4EVkpJMPCN/K4taW4sOogtbkOg63v9/ss2GVFcH
+	 u0935tzhHb/gzPQD8O9ErIzXaYMYT5xW3tct0GDSUXQhbjiIPGxbn8QToqWElcdOxr0DqwX/z7io
+	 qHzTsvekD9sl4uzku3roiP2vpPETdSaGgZ53m/te/H0PzeYUJMqJ1OHbdFoqgCV6J9n1Fj63FrKN
+	 7uXM+wxnrtg6T/IcUmaugUpJDfszkaZDFJONtQpXCQmeyn+GMZp5JZm7hhFVuVsyRB922BZGRXjp
+	 EeyED+CImwJdz6ZuCO6NWOm97XFzwXMXMGTJthIIclVpesUAoaS9O60Z8Cyma7F7u7S7AIMFsTRI
+	 XyZojY5UfxaxA3CVUnO7eoCvdvnkZbi4GBdaEvQVgRYZWS38Jyp5NndQbEpdL7cS8SN9/NZo8p2u
+	 2vzT6kbb0=
+X-QQ-XMRINFO: NS+P29fieYNw95Bth2bWPxk=
+From: Edward Adam Davis <eadavis@qq.com>
+To: syzbot+f516089d7815b10197c9@syzkaller.appspotmail.com
+Cc: linux-kernel@vger.kernel.org,
+	syzkaller-bugs@googlegroups.com
+Subject: Re: [syzbot] [mtd?] WARNING: zero-size vmalloc in ubi_read_volume_table
+Date: Tue,  2 Apr 2024 12:10:58 +0800
+X-OQ-MSGID: <20240402041057.1873314-2-eadavis@qq.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <000000000000a7f84306150bc9d5@google.com>
+References: <000000000000a7f84306150bc9d5@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On Tue, 2 Apr 2024 01:23:08 +0000 Dexuan Cui wrote:
-> > > I suggest the Fixes tag should be updated. Otherwise the fix
-> > > looks good to me.  
-> > 
-> > Thanks for the suggestion. I actually thought about this before
-> > submission.
-> > I was worried about someone back ports the jumbo frame feature,
-> > they may not automatically know this patch should be backported
-> > too.   
-> 
-> The jumbo frame commit (2fbbd712baf1) depends on the MTU
-> commit (2fbbd712baf1), so adding "Fixes: 2fbbd712baf1" (
-> instead of "Fixes: ca9c54d2d6a5") might make it easier for people
-> to notice and pick up this fix.
-> 
-> I'm OK if the patch remains as is. Just wanted to make  sure I
-> understand the issue here.
+please test zs in ubi_read_volume_table
 
-Please update the tag to where the bug was actually first exposed.
+#syz test https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+
+diff --git a/drivers/mtd/ubi/vtbl.c b/drivers/mtd/ubi/vtbl.c
+index f700f0e4f2ec..e3b337afdb4f 100644
+--- a/drivers/mtd/ubi/vtbl.c
++++ b/drivers/mtd/ubi/vtbl.c
+@@ -791,7 +791,8 @@ int ubi_read_volume_table(struct ubi_device *ubi, struct ubi_attach_info *ai)
+ 	 * The number of supported volumes is limited by the eraseblock size
+ 	 * and by the UBI_MAX_VOLUMES constant.
+ 	 */
+-	ubi->vtbl_slots = ubi->leb_size / UBI_VTBL_RECORD_SIZE;
++	ubi->vtbl_slots = ubi->leb_size > UBI_VTBL_RECORD_SIZE ? 
++			  ubi->leb_size / UBI_VTBL_RECORD_SIZE : 1;
+ 	if (ubi->vtbl_slots > UBI_MAX_VOLUMES)
+ 		ubi->vtbl_slots = UBI_MAX_VOLUMES;
+ 
+
