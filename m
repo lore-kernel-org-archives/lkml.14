@@ -1,103 +1,88 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f70.google.com (mail-io1-f70.google.com [209.85.166.70])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C3A2249E4;
-	Tue,  2 Apr 2024 06:35:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85EF024A03
+	for <linux-kernel@vger.kernel.org>; Tue,  2 Apr 2024 06:36:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.70
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712039754; cv=none; b=ATfO+jxyOjbi2kb6FuuNE8RImKsgM+wXQFdbLfZSnkN1s2p8yhgC58/DP0iA/b/Mk6A2dy8BnmRsrwSmLecCJNfBfm4Tv7dgnNNJ+VPZPD5O0VQOO9KR6z5JgYrLgYBqy6gh9aRN5vMca5q3JkZ5E2c9oHtbCiSnGm42NlrwzKE=
+	t=1712039787; cv=none; b=WYen1Zam8VzlbN4x+NeO0PlqVohUOqOJgH6CGx7wO1DrjXRHOFtwfG++74OKe1C0pSXH8UmL2w3qj1VBhAtPNH8P0N1TCXdW9nk09xLArnfiEqhFI5a/xDpMgkoKKKeMmRhJw4/awOxlw0vL8foLsNlmuSyYngy6Q2U8t4DNoIc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712039754; c=relaxed/simple;
-	bh=Feqjj4R3LtzqrmfPSc4AxFtg1P9nxO6x1fNkNugNZJw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GOdBmLtyr+qol1ufV9agnc9NRVdyeLA5aNAPyskVw7tYenXbfx4PRp/xg9WGlVr/JURSLxLNTVmL5MMdxlcAOH5skLDGjLVj7yqolnIcJ8PwAyF0IDZEibSW2HEMYr/obCdBGaIrPpDJFnStexcnBpi5jFrkDoAMZNdaE3IxfT8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=c3khOu2N; arc=none smtp.client-ip=192.198.163.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="c3khOu2N"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1712039753; x=1743575753;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=Feqjj4R3LtzqrmfPSc4AxFtg1P9nxO6x1fNkNugNZJw=;
-  b=c3khOu2NdM2V0fD0EqN6gA1l/69wX05ds4CxY8Q/G7b0w7HEwqnBJ8wA
-   VELK99RFIS4HOu89u6253Dld4Uz5y73vqgWRC1yGBoGgy3DlEN9wjACDM
-   S4NQIBHBRO7Lu9QVpVgkzXlTWTDFOdnY7SXN6VP9pRXQLLNu14MmlaZKI
-   wCymdkbZBtlqpEfozJo9wR9ABTjhw/yEjHUETUTFqExV3srOX8mZsTVEy
-   36J86TTGlC/6tvH/HUk/Mn8SYzgUO0txlwip2RjMJm3I/+K6CKxIe+TyA
-   2lo1PgMckCi9u7T+QMo/6HEetxFl9kMXNPcczC49WqEgce/waGrrebS2e
-   A==;
-X-CSE-ConnectionGUID: VoxBJcvFQvSfIUkcPxb2iw==
-X-CSE-MsgGUID: ddVnmZ9ZS3WW58SS/DlbiA==
-X-IronPort-AV: E=McAfee;i="6600,9927,11031"; a="17810246"
-X-IronPort-AV: E=Sophos;i="6.07,174,1708416000"; 
-   d="scan'208";a="17810246"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Apr 2024 23:35:49 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,174,1708416000"; 
-   d="scan'208";a="18043933"
-Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.165])
-  by fmviesa008.fm.intel.com with ESMTP; 01 Apr 2024 23:35:47 -0700
-Date: Tue, 2 Apr 2024 14:30:57 +0800
-From: Xu Yilun <yilun.xu@linux.intel.com>
-To: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Cc: Moritz Fischer <mdf@kernel.org>, Wu Hao <hao.wu@intel.com>,
-	Xu Yilun <yilun.xu@intel.com>, Tom Rix <trix@redhat.com>,
-	linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
-	linux-fpga@vger.kernel.org
-Subject: Re: [PATCH] fpga: altera-cvp: Remove an unused field in struct
- altera_cvp_conf
-Message-ID: <ZgumIQV3fUpxNqno@yilunxu-OptiPlex-7050>
-References: <7986690e79fa6f7880bc1db783cb0e46a1c2723e.1711976883.git.christophe.jaillet@wanadoo.fr>
+	s=arc-20240116; t=1712039787; c=relaxed/simple;
+	bh=UpNhgPX5pJk/ucZAJ9d2nkFuwOYtfcnkbRYGSoOgZQw=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=cdp4sK4eIb3PV8mG4/SN+os+i0OU+G/G+UeQ99icQs33EqHnIva5UFgKploSuewUldZmTDHwGUFVYiaG9EJxtzLdf9wF2ycm6iTTZWK/aALAkY+HhCS5Wg9wG3SVIh7e4kLZkq+1BuDy5Q1B25Ia0TvvpNmgLmmaiPsHjr4BQ4Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.70
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f70.google.com with SMTP id ca18e2360f4ac-7c9aa481ce4so514642939f.3
+        for <linux-kernel@vger.kernel.org>; Mon, 01 Apr 2024 23:36:26 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712039786; x=1712644586;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=lGgcl9N6u4wFnOxqWzVNRb0CjVaO5JkGiuxXchA0GQk=;
+        b=CDgi4x9VulCHqD/CSF1f/zLcciE8a5ixmh3OaWrgb2J9DBOVSMs8gvPvHsg3eoMiuO
+         WYvDesY72qz34blzzXg/3uuQIhrRN1uHSiXcYYlwkB+IW1YcN6pWLURW17Bd3n9Hrzxz
+         Evb6+npb2z+XZ0YAqQu/dOFXR5M/eNtOWRuzD3ZUxiLoAKRgC1WlOvj+Ao2FKlBKBDft
+         5Qp/YSmyUfNpHecMwfY2J+hEayVkaD8K9jMkSRO1Y/JYaQ087zTN8hSNjHJDbKDtmze6
+         oOjMioi0lkLWhc/JfFos1h2v7FmCJ9rI8Rtw8VZj3VBvj1nxJP/RFY2EzuSb/3vfFdOl
+         a22w==
+X-Forwarded-Encrypted: i=1; AJvYcCUuYuoXrGsYhmgmV23Ry+/dgbSBhHn4E7VgtFWxRbWmj0asFYVqWTp7hcR3YT135BEJmB+QaboRU7h1Gk4Lf/D5TBlT59Bwp4Fa9g5t
+X-Gm-Message-State: AOJu0Yytcogio9RAqbWDm4ksrza8Wn3fWhW1rM8c/lXcEqQt6u0Elhwj
+	0W84ccvu/V5lJYjTQM1D6/xsIyf0D1eB6ZG+IJ1mbDg+2xiyxsAfC/Fw0SBtmII7I9w7MvcUqGT
+	m6FGNXe6OGshVSqFOwjNdbgQlBqqp+PmKgum0tWhH2aB+fgNBxUW9HPI=
+X-Google-Smtp-Source: AGHT+IEYEj6d0xT19iBjCW1jFVxSMYZmKm6iRawu+ptTIk8DytC+tb2aDqS3iXamWTGcIVzecHQ6ajlR7ZhU3e8ZqeewW08gnmN3
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <7986690e79fa6f7880bc1db783cb0e46a1c2723e.1711976883.git.christophe.jaillet@wanadoo.fr>
+X-Received: by 2002:a05:6638:2b07:b0:47e:c09b:69e with SMTP id
+ fm7-20020a0566382b0700b0047ec09b069emr472329jab.0.1712039785822; Mon, 01 Apr
+ 2024 23:36:25 -0700 (PDT)
+Date: Mon, 01 Apr 2024 23:36:25 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000468fff06151753a0@google.com>
+Subject: [syzbot] bpf-next build error (6)
+From: syzbot <syzbot+1f0620b0141e43a84282@syzkaller.appspotmail.com>
+To: ast@kernel.org, daniel@iogearbox.net, linux-kernel@vger.kernel.org, 
+	netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-On Mon, Apr 01, 2024 at 03:08:21PM +0200, Christophe JAILLET wrote:
-> In "struct altera_cvp_conf", the 'mgr' field is unused.
-> Remove it.
-> 
-> Found with cppcheck, unusedStructMember.
-> 
-> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Hello,
 
-Acked-by: Xu Yilun <yilun.xu@intel.com>
+syzbot found the following issue on:
 
-Applied to for-next.
+HEAD commit:    e478cf26c556 Merge branch 'bpf-fix-a-couple-of-test-failur..
+git tree:       bpf-next
+console output: https://syzkaller.appspot.com/x/log.txt?x=168bc92d180000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=7b667bc37450fdcd
+dashboard link: https://syzkaller.appspot.com/bug?extid=1f0620b0141e43a84282
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
 
-> ---
-> Apparently, it has never been used. It is not a left-over from a
-> refactoring.
-> 
-> The address of the 'fpga_manager' is handled via pci_[s|g]et_drvdata().
-> 
-> Compile tested only.
-> ---
->  drivers/fpga/altera-cvp.c | 1 -
->  1 file changed, 1 deletion(-)
-> 
-> diff --git a/drivers/fpga/altera-cvp.c b/drivers/fpga/altera-cvp.c
-> index 4ffb9da537d8..6b0914432445 100644
-> --- a/drivers/fpga/altera-cvp.c
-> +++ b/drivers/fpga/altera-cvp.c
-> @@ -72,7 +72,6 @@ static bool altera_cvp_chkcfg;
->  struct cvp_priv;
->  
->  struct altera_cvp_conf {
-> -	struct fpga_manager	*mgr;
->  	struct pci_dev		*pci_dev;
->  	void __iomem		*map;
->  	void			(*write_data)(struct altera_cvp_conf *conf,
-> -- 
-> 2.44.0
-> 
-> 
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+1f0620b0141e43a84282@syzkaller.appspotmail.com
+
+failed to run ["make" "-j" "64" "ARCH=x86_64" "CC=clang" "bzImage"]: exit status 2
+
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
+
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
