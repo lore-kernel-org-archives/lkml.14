@@ -1,212 +1,108 @@
-Received: from smtpbg156.qq.com (smtpbg156.qq.com [15.184.82.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f50.google.com (mail-io1-f50.google.com [209.85.166.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AC0E85285;
-	Tue,  2 Apr 2024 13:41:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=15.184.82.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEB4F82D86
+	for <linux-kernel@vger.kernel.org>; Tue,  2 Apr 2024 13:41:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712065293; cv=none; b=MHTk3iGk0F1LgsXvIPlsD7qzrpQ0QHrjFOp3ZtjoKnYJViJRSAUStsANUtOlsHdWwrhjYfjP5xLf9pP7/o7TAI7ZgZh+qSnq9dbYYDFxOta/tytCYm7LAtCZs61R2ujSTP7MXeKtAQ+ctMZYuRBVBoWTRkTUK5/zqlQGb+6tk9Y=
+	t=1712065301; cv=none; b=gq3F1p+uDXHoOSVwpRbN1RnyWEygBB2K44XHcmvNZS1hecZqt0bzS7nN4w/fY+ipcUyRHOsSe8Zfq1WJcoAxrk6D17qCFHRqfdRkJkQEIvxl/qr3YB/lBqpUlGPts0+HPKCKbZgJhECwtV/YxnR5qwbW2AhUnjZw6bWDFSJ2buU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712065293; c=relaxed/simple;
-	bh=qXxdVor5uXd8YNxYp/isrNRYhhWxs7u+gFLdY2RXpNk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SgenVgrRrmYmkkwOmF0eve4IVQrvxJg9bto+CLpIDUuCL5TtJckB/gbBqB+9wyPE+QB+lIvzmrxP8/FeiKi49i/gXh20x8OZQ6O5H4t0LYzbWnw8DuiA2juNbGQ0UZb1s7qBqaghp5xJAqJUZ8KoTAb65NHJkX08PO7scSy05TM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=shingroup.cn; spf=pass smtp.mailfrom=shingroup.cn; arc=none smtp.client-ip=15.184.82.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=shingroup.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=shingroup.cn
-X-QQ-mid: bizesmtp81t1712065210tpwhlyo1
-X-QQ-Originating-IP: yDbBUvpK7jSUTaku6o3rrP2fuyoH+hdyO2Sc673Abrs=
-Received: from localhost ( [112.0.147.175])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Tue, 02 Apr 2024 21:40:09 +0800 (CST)
-X-QQ-SSF: 01400000000000704000000C0000000
-X-QQ-FEAT: qcKkmz/zJhwKO7uO84H8MICt3oiHfhIRqQcEddlIPcnXa4UhXjD4Mi/qlTLDf
-	ors901SIDj4uUrR7FQXfcYI0O4eTd3avOwZvhyn4LabdXRNfuQk5SwHH8yx0yqOGKeXqf1b
-	L1c7669qp4GBeM2l0/uMZYsyvbsuOEPVyjveGxM34OcqMcvUju04R/KfR8few0/4d3b6O7x
-	57DJTMj54IG3ukftw3kKyXdhfF2H1ckt6GeQmsSBBL7nmAxF9WcAf8vflfC9trKek9jznhk
-	1/Ylj+VarFRl3EUSUpTbd3sW2PS8mLcvye8X+5wicq7BJwvBssImdmhF9+ck7h6OfqtNQdp
-	8CGIj+F/aAs3xO4qc4ckzwio5fTkVSg8qqExpFONh7Q/fPIpNGp5UoQyYMU4w2bdd1yixFs
-	M1ddlbbDkcw=
-X-QQ-GoodBg: 2
-X-BIZMAIL-ID: 17939997509187438316
-Date: Tue, 2 Apr 2024 21:40:08 +0800
-From: Dawei Li <dawei.li@shingroup.cn>
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: will@kernel.org, xueshuai@linux.alibaba.com, renyu.zj@linux.alibaba.com,
-	yangyicong@hisilicon.com, jonathan.cameron@huawei.com,
-	andersson@kernel.org, konrad.dybcio@linaro.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-arm-msm@vger.kernel.org
-Subject: Re: [PATCH 0/9] perf: Avoid explicit cpumask var allocation from
- stack
-Message-ID: <190FE91C35AB9AE8+ZgwKuORh3VzTkfeJ@centos8>
-References: <20240402105610.1695644-1-dawei.li@shingroup.cn>
- <ZgvoMunpbaE-x3jV@FVFF77S0Q05N>
+	s=arc-20240116; t=1712065301; c=relaxed/simple;
+	bh=0LtRApWIgSlpJ9ww/YIqK7ZhGrxEnPNn5T2jGau3Mqg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=TP2J75XX+x8F0Oi2Ioi/q6pmFRVr3tSE0vI6zrkjswhnCJv6skyq3Lkzuh2wSJp+swVO0mtFPx+CjhuNTWPUEzq2WisRLMvUf0jafRQNJYqGpGcnAy9KX5MArtYe/j5nv40RPSB2JOItJIqNTMe9VBCBT6XTLlhqMkq67KVBCf8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=2EZej/8t; arc=none smtp.client-ip=209.85.166.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="2EZej/8t"
+Received: by mail-io1-f50.google.com with SMTP id ca18e2360f4ac-7c8e4c0412dso32155539f.1
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Apr 2024 06:41:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1712065299; x=1712670099; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=4ayu5f1JpVyjh9EymQM1sQHOrd/giDk3ss1JwfvraeE=;
+        b=2EZej/8tfFfaTOOX95T9KAJg10lp4PXkT6jn1C7LiXCjN5WS3dwzcy1DCWxNFCGGfv
+         8kiAglMtxO69/47BJASC6t5M0R4dE4M4+FvlzJcuICsomBrtDXmIP4VEzsquX648L6ZV
+         0hNcdiRxQGRMu9khCkr6mpOdLt3TOkmBaZHh4cg+0y2S9CvgcShknHjWeWdWWNJ77Lo0
+         gJxs9MPG67Mx3qdNOCUSIO+0i88BJki+DOeIa8ZxuTcrmIKOFqNRDu9labKWvMTg9Qpx
+         rhpkVkkCaAYyuJAS5meMpvzDjvqV3aKKsKhcu2XtEVSEhEW+ZNqT5EG6DU/cnV5zK+6R
+         XtUg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712065299; x=1712670099;
+        h=content-transfer-encoding:in-reply-to:from:references:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=4ayu5f1JpVyjh9EymQM1sQHOrd/giDk3ss1JwfvraeE=;
+        b=aeipADRxS3ScnbFWXPxuYJ3dsk+gTtnsbbIXghl9dIGoEpJeuv6WKmrOlY0Q2YEk31
+         i1GVCmaouUE5Uu1F9DrqCEBXHBWbB03MkMPe2E3Z3MyD3b1YNAqezOUZKQc9RzqitAnN
+         TgeoLHlaelIktAlwBRZ/9fc1eytBGyePx6BYGuVMzYbaI6yq5h7bU4165xhHc2MAT/1A
+         rSzvoC9w6SdHvt79URcKNSLSAvMpuBs/v7JyTNLV6+WilLg8xgFq3bQR4YWa4slSG2bA
+         tOw4wlrV8rdzGuMNLA0InSItwX/jWOHXtiFcq4+hTS1xUFfgEPozplpguUQpvKD31R+7
+         kn+A==
+X-Forwarded-Encrypted: i=1; AJvYcCUVDj9zlWoZWpBvuSbf81W5l7F2LNkDeKE5Cti8HLcasI7fCJSIRAS6e/6m6x8vvzy0Fr8Jymdx6oC4zbP4GCtO/mW9HDt79zMtQt/M
+X-Gm-Message-State: AOJu0Yzs3muREy4GGOBVJIhVHMWQ9N9eCPf4quz/Lh+1JXEWiYw9soTz
+	O3jIVJ3Sec/OPPwtoSoOvbecnik5mqD/yAwr+YXi5y80ycr28BsF155yAe9HkTjnTTc0k1xnKzb
+	Y
+X-Google-Smtp-Source: AGHT+IGDUMItsDY7XwZRAzi1VsGUdRgc2+dwdqgArOafC34sSXfwfBgED9VOJLRu6JugwPpSDO3KfQ==
+X-Received: by 2002:a6b:7d0c:0:b0:7d0:3f6b:6af9 with SMTP id c12-20020a6b7d0c000000b007d03f6b6af9mr12019000ioq.0.1712065298876;
+        Tue, 02 Apr 2024 06:41:38 -0700 (PDT)
+Received: from [192.168.1.116] ([96.43.243.2])
+        by smtp.gmail.com with ESMTPSA id it37-20020a05663885a500b00476f1daad44sm3194814jab.54.2024.04.02.06.41.38
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 02 Apr 2024 06:41:38 -0700 (PDT)
+Message-ID: <2ff5d891-2120-475d-be8e-82bf20a8b7b7@kernel.dk>
+Date: Tue, 2 Apr 2024 07:41:37 -0600
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZgvoMunpbaE-x3jV@FVFF77S0Q05N>
-X-QQ-SENDSIZE: 520
-Feedback-ID: bizesmtp:shingroup.cn:qybglogicsvrgz:qybglogicsvrgz5a-1
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 6.8 015/715] io_uring: remove unconditional looping in
+ local task_work handling
+Content-Language: en-US
+To: Jiri Slaby <jirislaby@kernel.org>, Sasha Levin <sashal@kernel.org>,
+ linux-kernel@vger.kernel.org, stable@vger.kernel.org
+References: <20240324223455.1342824-1-sashal@kernel.org>
+ <20240324223455.1342824-16-sashal@kernel.org>
+ <bcf80774-98c2-4c14-a1e7-6efcb79a7fee@kernel.org>
+From: Jens Axboe <axboe@kernel.dk>
+In-Reply-To: <bcf80774-98c2-4c14-a1e7-6efcb79a7fee@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi Mark,
-
-Thanks for the quick review.
-
-On Tue, Apr 02, 2024 at 12:12:50PM +0100, Mark Rutland wrote:
-> On Tue, Apr 02, 2024 at 06:56:01PM +0800, Dawei Li wrote:
-> > Hi,
-> > 
-> > This series try to eliminate direct cpumask var allocation from stack
-> > for perf subsystem.
-> > 
-> > Direct/explicit allocation of cpumask on stack could be dangerous since
-> > it can lead to stack overflow for systems with big NR_CPUS or
-> > CONFIG_CPUMASK_OFFSTACK=y.
-> > 
-> > For arm64, it's more urgent since commit 3fbd56f0e7c1 ("ARM64: Dynamically
-> > allocate cpumasks and increase supported CPUs to 512").
-> > 
-> > It's sort of a pattern that almost every cpumask var in perf subystem
-> > occurs in teardown callback of cpuhp. In which case, if dynamic
-> > allocation failed(which is unlikely), we choose return 0 rather than
-> > -ENOMEM to caller cuz:
-> > @teardown is not supposed to fail and if it does, system crashes:
+On 4/2/24 2:12 AM, Jiri Slaby wrote:
+> On 24. 03. 24, 23:23, Sasha Levin wrote:
+>> From: Jens Axboe <axboe@kernel.dk>
+>>
+>> [ Upstream commit 9fe3eaea4a3530ca34a8d8ff00b1848c528789ca ]
+>>
+>> If we have a ton of notifications coming in, we can be looping in here
+>> for a long time. This can be problematic for various reasons, mostly
+>> because we can starve userspace. If the application is waiting on N
+>> events, then only re-run if we need more events.
 > 
-> .. but we've left the system in an incorrect state, so that makes no sense.
+> This commit breaks test/recv-multishot.c from liburing:
+> early error: res 4
+> test stream=1 wait_each=0 recvmsg=0 early_error=0  defer=1 failed
 > 
-> As I commented on the first patch, NAK to dynamically allocating cpumasks in
-> the CPUHP callbacks. Please allocate the necessry cpumasks up-front when we
-> probe the PMU. At that time we can handle an allocation failure by cleaning up
-> and failing to probe the PMU, and then the CPUHP callbacks don't need to
-> allocate memory to offline a CPU...
-
-Agreed that dynamically allocation in callbacks lead to inconsistency
-to system.
-
-My (original)alternative plan is simple but ugly, just make cpumask var
-_static_ and add extra static lock to protect it.
-
-The only difference between solution above and your proposal is static/
-dynamic alloction. CPUHP's teardown cb is supposed to run in targetted
-cpuhp thread for most cases, and it's racy. Even the cpumask var is
-wrapped in dynamically allocated struct xxx_pmu, it's still shareable
-between different threads/contexts and needs proper protection.
-
-Simple as this(_untested_):
-
-diff --git a/drivers/perf/arm-cmn.c b/drivers/perf/arm-cmn.c
-index 7ef9c7e4836b..fa89c3db4d7d 100644
---- a/drivers/perf/arm-cmn.c
-+++ b/drivers/perf/arm-cmn.c
-@@ -1950,18 +1950,24 @@ static int arm_cmn_pmu_offline_cpu(unsigned int cpu, struct hlist_node *cpuhp_no
-        struct arm_cmn *cmn;
-        unsigned int target;
-        int node;
--       cpumask_t mask;
-+       static cpumask_t mask;
-+       static DEFINE_SPINLOCK(cpumask_lock);
-
-        cmn = hlist_entry_safe(cpuhp_node, struct arm_cmn, cpuhp_node);
-        if (cpu != cmn->cpu)
-                return 0;
-
-+       spin_lock(&cpumask_lock);
-+
-        node = dev_to_node(cmn->dev);
-        if (cpumask_and(&mask, cpumask_of_node(node), cpu_online_mask) &&
-            cpumask_andnot(&mask, &mask, cpumask_of(cpu)))
-                target = cpumask_any(&mask);
-        else
-                target = cpumask_any_but(cpu_online_mask, cpu);
-+
-+       spin_unlock(&cpumask_lock);
-+
-        if (target < nr_cpu_ids)
-                arm_cmn_migrate(cmn, target);
-        return 0;
-
-And yes, static allocation is evil :) 
-
-
-Thanks,
-
-    Dawei
-
+> The behaviour is the same in 6.9-rc2 (which contains the commit too).
 > 
-> Also, for the titles it'd be better to say something like "avoid placing
-> cpumasks on the stack", because "explicit cpumask var allocation" sounds like
-> the use of alloc_cpumask_var().
+> Reverting the commit on the top of 6.8.2 makes it pass again.
+> 
+> Should the test be updated or is the commit wrong?
 
-Sound great! I will update it.
+The commit is fine, it's the test that is buggy. Sometimes test cases
+make odd assumptions that are just wrong but happen to work, for some
+definition of work. Eg it would work fine on an idle system, but not
+necessarily if not. For this one, the fix is in liburing:
 
-> 
-> Mark.
-> 
-> > 
-> > static int cpuhp_issue_call(int cpu, enum cpuhp_state state, bool bringup,
-> >                             struct hlist_node *node)
-> > {
-> >         struct cpuhp_step *sp = cpuhp_get_step(state);
-> >         int ret;
-> > 
-> >         /*
-> >          * If there's nothing to do, we done.
-> >          * Relies on the union for multi_instance.
-> >          */
-> >         if (cpuhp_step_empty(bringup, sp))
-> >                 return 0;
-> >         /*
-> >          * The non AP bound callbacks can fail on bringup. On teardown
-> >          * e.g. module removal we crash for now.
-> >          */
-> > 	#ifdef CONFIG_SMP
-> >         if (cpuhp_is_ap_state(state))
-> >                 ret = cpuhp_invoke_ap_callback(cpu, state, bringup, node);
-> >         else
-> >                 ret = cpuhp_invoke_callback(cpu, state, bringup, node,
-> > 		NULL);
-> > 	#else
-> >         ret = cpuhp_invoke_callback(cpu, state, bringup, node, NULL);
-> > 	#endif
-> >         BUG_ON(ret && !bringup);
-> >         return ret;
-> > }
-> > 
-> > Dawei Li (9):
-> >   perf/alibaba_uncore_drw: Avoid explicit cpumask var allocation from
-> >     stack
-> >   perf/arm-cmn: Avoid explicit cpumask var allocation from stack
-> >   perf/arm_cspmu: Avoid explicit cpumask var allocation from stack
-> >   perf/arm_dsu: Avoid explicit cpumask var allocation from stack
-> >   perf/dwc_pcie: Avoid explicit cpumask var allocation from stack
-> >   perf/hisi_pcie: Avoid explicit cpumask var allocation from stack
-> >   perf/hisi_uncore: Avoid explicit cpumask var allocation from stack
-> >   perf/qcom_l2: Avoid explicit cpumask var allocation from stack
-> >   perf/thunder_x2: Avoid explicit cpumask var allocation from stack
-> > 
-> >  drivers/perf/alibaba_uncore_drw_pmu.c    | 13 +++++++++----
-> >  drivers/perf/arm-cmn.c                   | 13 +++++++++----
-> >  drivers/perf/arm_cspmu/arm_cspmu.c       | 13 +++++++++----
-> >  drivers/perf/arm_dsu_pmu.c               | 18 +++++++++++++-----
-> >  drivers/perf/dwc_pcie_pmu.c              | 17 +++++++++++------
-> >  drivers/perf/hisilicon/hisi_pcie_pmu.c   | 15 ++++++++++-----
-> >  drivers/perf/hisilicon/hisi_uncore_pmu.c | 13 +++++++++----
-> >  drivers/perf/qcom_l2_pmu.c               | 15 ++++++++++-----
-> >  drivers/perf/thunderx2_pmu.c             | 20 ++++++++++++--------
-> >  9 files changed, 92 insertions(+), 45 deletions(-)
-> > 
-> > 
-> > Thanks,
-> > 
-> >     Dawei
-> > 
-> > -- 
-> > 2.27.0
-> > 
-> 
+https://git.kernel.dk/cgit/liburing/commit/test/recv-multishot.c?id=a1d5e4b863a60af93d0cab9d4bbf578733337a90
+
+-- 
+Jens Axboe
+
