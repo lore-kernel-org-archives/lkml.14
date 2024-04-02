@@ -1,107 +1,101 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from zeniv.linux.org.uk (zeniv.linux.org.uk [62.89.141.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D22F1D6AE;
-	Tue,  2 Apr 2024 22:37:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29EB71E531;
+	Tue,  2 Apr 2024 22:42:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.89.141.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712097452; cv=none; b=W10TqsaPvy5VnnlmThzMZBeFgxDZOjLBb3GGNNh17bIpp2lcCYgQVV/Ny27yjt1URfxO0PVhgRDAa3lW1Rzk3RPUEvLnRmFCrP+NWTS/GlnUozRTu7bf0MwzlT9Q8uDI0/CULHYDoe0RGFSy6GEw5PqJgZ4ULQXqg6M/1BFhu7o=
+	t=1712097759; cv=none; b=eDqTikItMHGt80/6D5ftrymZ9iAK2cVokzdsUvFpbGC4fRaMgqsqeROzcgJs9JBulJbgqH8/R3Zo/ZWRgteN75Zt9uQPjV/KpaziYy7vbU/fwYX6Op8x/lA40bvhs2OZOXNY23YcdoaMoGEGTULrOYFNs1lnAVcV6CzAjQ8KRk0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712097452; c=relaxed/simple;
-	bh=RTJ4TUWlWWd2tTYwH9K2+rCPELvAiNcHn8N7wtsQdE4=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=uGv4B2I9IO7Vu7D2acS2jIBX/gxlkKM4ATuqG+QfjxQjmx/2Pht0zs2TkEkZUIX/lnkI30+++eVc1mZD0VJ0Gk7auouuAUcs6wVE3Iqfs0OPjkwcKfr+msubxKZqnG2ro6pMSSxTJm048CRtQer5Ay8E8FlJeUQnwMF8Kbte+1I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=y8gs3/kN; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=/S3kigRc; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1712097759; c=relaxed/simple;
+	bh=76n/dtlrdS4V3B69xGR2/C2+sMIqOX5IJ8MMCJoFQsE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Jy+lajzzJGXcHY6Ge3NLY4adydlY+1wGWG5AZzs0yOKzlSY42fP/2X+7q6g4IUY6WLUInPPuY1WqleRiju2JcS+YW52wj5E853AI1KoG2qQpWHLKiukIStvsvOfmbBw3x4WzlrVzEAm1iUJjW4tdnw2a4C/MrO1SCqtgI7p5Yos=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk; spf=none smtp.mailfrom=ftp.linux.org.uk; dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b=E84EBHY9; arc=none smtp.client-ip=62.89.141.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ftp.linux.org.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="y8gs3/kN";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="/S3kigRc"
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1712097449;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=clN786LC8NAM+WdiMM9dgE3xxt8pA/vNnE2Z1vIrTT0=;
-	b=y8gs3/kNhqVMDT69laurybXNrUUQLXSrWBlCfk7pYoQcD7sK8QMi2tcLxZzkUPDz1X8GFu
-	rDsIpWZ0dnEQluAc24xXlL4OxvWeX0lwaDKuqO838hTIEmqov7noMajRVkE4KsmiJRAFsQ
-	3vsSR5JyyO2QIU4l+hPyGZvLBGQ96v5jvXV9Sh2ifVY5GBGOQaIHT3bmPElkDDpBp7Nr3v
-	ou/q6j9YcqJz8Gz30kQRCGPebZaTDn7VkUNbbI+KO5BTEDOOP2q3L7BLEWF1I1ZZ1YOXaG
-	C79sLoWN91aYOfwqYOMJ0rCrI198o5Dd+BP7sBJx9J4T5MaI6XiMi2qXJC8CcQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1712097449;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=clN786LC8NAM+WdiMM9dgE3xxt8pA/vNnE2Z1vIrTT0=;
-	b=/S3kigRc0yKHbucTfmxketx4NbcQwgEjHo9AEoMAW71rZkqIq1rlQldWDmbV8LlyBHHCAK
-	2c+UPz+ei3Kc93DA==
-To: =?utf-8?B?TWFoZXNoIEJhbmRld2FyICjgpK7gpLngpYfgpLYg4KSs4KSC4KSh4KWH4KS1?=
- =?utf-8?B?4KS+4KSwKQ==?= <maheshb@google.com>
-Cc: Sagi Maimon <maimon.sagi@gmail.com>, richardcochran@gmail.com,
- luto@kernel.org, mingo@redhat.com, bp@alien8.de,
- dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com, arnd@arndb.de,
- geert@linux-m68k.org, peterz@infradead.org, hannes@cmpxchg.org,
- sohil.mehta@intel.com, rick.p.edgecombe@intel.com, nphamcs@gmail.com,
- palmer@sifive.com, keescook@chromium.org, legion@kernel.org,
- mark.rutland@arm.com, mszeredi@redhat.com, casey@schaufler-ca.com,
- reibax@gmail.com, davem@davemloft.net, brauner@kernel.org,
- linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
- linux-arch@vger.kernel.org, netdev@vger.kernel.org
-Subject: Re: [PATCH v7] posix-timers: add clock_compare system call
-In-Reply-To: <CAF2d9jj6km7aVSqgcOE-b-A-WDH2TJNGzGy-5MRyw5HrzbqhaA@mail.gmail.com>
-References: <CAMuE1bHBky9NGP22PVHKdi2+WniwxiLSmMnwRM6wm36sU8W4jA@mail.gmail.com>
- <878r29hjds.ffs@tglx>
- <CAMuE1bF9ioo39_08Eh26X4WOtnvJ1geJ=WRVt5DhU8gEbYJNdA@mail.gmail.com>
- <87o7asdd65.ffs@tglx>
- <CAF2d9jjA8iM1AoPUhQPK62tdd7gPnCnt51f_NMhOAs546rU3dA@mail.gmail.com>
- <87il10ce1g.ffs@tglx>
- <CAF2d9jj6km7aVSqgcOE-b-A-WDH2TJNGzGy-5MRyw5HrzbqhaA@mail.gmail.com>
-Date: Wed, 03 Apr 2024 00:37:28 +0200
-Message-ID: <877chfcrx3.ffs@tglx>
+	dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b="E84EBHY9"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=linux.org.uk; s=zeniv-20220401; h=Sender:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=9vuFRydjFmA3iR+UUnQHu939ajflmP5RxYpQ3S/7QEQ=; b=E84EBHY99VSck8VRb3I+xR7fQ3
+	MOhva1SFDx4LcquqPIXb78cVrAuiJ/XZr+ypDL49prxUF9jv5V7KRYCJkx54WLbnYkrLnJDHRF5YU
+	voQJIsae1qL9QyTm/6BE0udqedcbzXUyMZw7p4PsoxekPQgDlxlZ9VwZmDAOapcuSjP778b1WnVeE
+	DvjhZUou0IYs9ZRuwXrEbW7JYnPGnlAA4pT+bVbjyaqvq5/ao6K97lRwm7bQokmatWc+o7fegbN9a
+	hpC/U4c9t0XInAkGopJOxDFZfdLu5KxE3g7QsadDkZXiKyIMcK0WTEImfFaNPexLoYg3aB1n+zzsJ
+	1e/Nt3EQ==;
+Received: from viro by zeniv.linux.org.uk with local (Exim 4.96 #2 (Red Hat Linux))
+	id 1rrmpq-004St9-2e;
+	Tue, 02 Apr 2024 22:42:30 +0000
+Date: Tue, 2 Apr 2024 23:42:30 +0100
+From: Al Viro <viro@zeniv.linux.org.uk>
+To: Paul Moore <paul@paul-moore.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>,
+	Roberto Sassu <roberto.sassu@huaweicloud.com>,
+	linux-integrity@vger.kernel.org,
+	linux-security-module@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org, linux-cifs@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Roberto Sassu <roberto.sassu@huawei.com>
+Subject: Re: [GIT PULL] security changes for v6.9-rc3
+Message-ID: <20240402224230.GJ538574@ZenIV>
+References: <20240402141145.2685631-1-roberto.sassu@huaweicloud.com>
+ <CAHk-=wgepVMJCYj9s7J50_Tpb5BWq9buBoF0J5HAa1xjet6B8A@mail.gmail.com>
+ <CAHk-=wjjx3oZ55Uyaw9N_kboHdiScLkXAu05CmPF_p_UhQ-tbw@mail.gmail.com>
+ <20240402210035.GI538574@ZenIV>
+ <CAHC9VhSWiQQ3shgczkNr+xYX6G5PX+LgeP3bsMepnM_cp4Gd4g@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHC9VhSWiQQ3shgczkNr+xYX6G5PX+LgeP3bsMepnM_cp4Gd4g@mail.gmail.com>
+Sender: Al Viro <viro@ftp.linux.org.uk>
 
-On Tue, Apr 02 2024 at 14:16, Mahesh Bandewar (=E0=A4=AE=E0=A4=B9=E0=A5=87=
-=E0=A4=B6 =E0=A4=AC=E0=A4=82=E0=A4=A1=E0=A5=87=E0=A4=B5=E0=A4=BE=E0=A4=B0) =
-wrote:
-> On Tue, Apr 2, 2024 at 2:25=E2=80=AFAM Thomas Gleixner <tglx@linutronix.d=
-e> wrote:
->> Works as well. I'm not seing the point for CLOCK_MONOTONIC and the
->> change logs are not really telling anything about the problem being
->> solved....
->>
-> https://lore.kernel.org/lkml/20240104212431.3275688-1-maheshb@google.com/=
-T/#:~:text=3D*%20[PATCHv3%20net%2Dnext%200/3]%20add%20ptp_gettimex64any()%2=
-0API,21:24%20Mahesh%20Bandewar%200%20siblings%2C%200%20replies;
->
-> This is the cover letter where I tried to explain the need for this.
+On Tue, Apr 02, 2024 at 05:36:30PM -0400, Paul Moore wrote:
 
-The justification for a patch needs to be in the change log and not in
-the cover letter because the cover letter is not part of the git
-history.
+> >         1) location of that hook is wrong.  It's really "how do we catch
+> > file creation that does not come through open() - yes, you can use
+> > mknod(2) for that".  It should've been after the call of vfs_create(),
+> > not the entire switch.  LSM folks have a disturbing fondness of inserting
+> > hooks in various places, but IMO this one has no business being where
+> > they'd placed it.
+> 
+> I know it's everyone's favorite hobby to bash the LSM and LSM devs,
+> but it's important to note that we don't add hooks without working
+> with the associated subsystem devs to get approval.  In the cases
+> where we don't get an explicit ACK, there is an on-list approval, or
+> several ignored on-list attempts over weeks/months/years.  We want to
+> be good neighbors.
+> 
+> Roberto's original patch which converted from the IMA/EVM hook to the
+> LSM hook was ACK'd by the VFS folks.
+> 
+> Regardless, Roberto if it isn't obvious by now, just move the hook
+> back to where it was prior to v6.9-rc1.
 
-> Granted, my current use case is for CLOCK_MONOTONIC_RAW but just
-> because I don't have a use case doesn't mean someone else may not have
-> it and hence added it.
+The root cause is in the too vague documentation - it's very easy to
+misread as "->mknod() must call d_instantiate()", so the authors of
+that patchset and reviewers of the same had missed the subtlety
+involved.  No arguments about that.
 
-Then why did you not five other clock IDs? Someone else might have a
-use case, no?
+Unkind comments about the LSM folks' tendency to shove hooks in
+places where they make no sense had been brought by many things,
+the most recent instance being this:
+	However, I thought, since we were promoting it as an LSM hook,
+	we should be as generic possible, and support more usages than
+	what was needed for IMA.
+(https://lore.kernel.org/all/3441a4a1140944f5b418b70f557bca72@huawei.com/)
 
-While a syscall/ioctl should be flexible for future use, the kernel does
-not add features just because there might be some use case. It's
-documented how this works.
-
-Thanks,
-
-        tglx
-
+I'm not blaming Roberto - that really seems to be the general attitude
+around LSM;  I've seen a _lot_ of "it doesn't matter if it makes any sense,
+somebody might figure out some use for the data we have at that point in
+control flow, eventually if not now" kind of responses over the years.
+IME asking what this or that hook is for and what it expects from the objects
+passed to it gets treated as invalid question.  Which invites treating
+hooks as black boxes...
