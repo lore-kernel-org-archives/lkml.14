@@ -1,89 +1,91 @@
-Received: from gate2.alliedtelesis.co.nz (gate2.alliedtelesis.co.nz [202.36.163.20])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f52.google.com (mail-io1-f52.google.com [209.85.166.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11AED14AD2A
-	for <linux-kernel@vger.kernel.org>; Tue,  2 Apr 2024 20:24:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.36.163.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C976259B41
+	for <linux-kernel@vger.kernel.org>; Tue,  2 Apr 2024 20:25:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712089483; cv=none; b=EpBRC+XfXvyOTfQ1BeAj0Ca7pooDd7qB5wWgCYqCZc87nko45ZslQQj9oTICR9h3O3Ft2NbvMBVnw/Kq1vSbPklpfRVl91cXHJ8dlkReyO8K/a4tqRZvbbGTVN3NiQQVzbk65LrRiyLgmUWrBzYnoDVw/gyQqRRUEEUgZ6zmjjs=
+	t=1712089531; cv=none; b=nZicmJQOD49PnIYsJWS1SqtjyMdldsVaAy+ZOASa3zRZrwDZ00K1+XSNFGC1hn0szP2xpvNLI/72Mi1HMoHyCSnmL1OOc9p17eEytiDjABi0mF97L8LpwVBSwELD4hreMkSYiogcsqIVxZdxqtOV1GOqpwJYDxE5eSSBlp0R+FE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712089483; c=relaxed/simple;
-	bh=R205FE43OH6rrOt4iwtgF3+kwicEz8ULkm/QpFGb2aY=;
-	h=From:To:CC:Subject:Date:Message-ID:Content-Type:MIME-Version; b=cWxqw8qe6GuNP132fpnzXyft9xV3px4MHGulP5XZaTOIwbwU0jm1KV8+7mJv2+qduHxRiHZKtWxySUbBsIwLQd3YGyhBFt8sA5zO8HKzR9wcUyXBx9UWKlHJY9g1sCPAOEcT00aMZ2l5m9Bmz4c7BHn1E0bJzYsJpx62Y+HSsA4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=alliedtelesis.co.nz; spf=pass smtp.mailfrom=alliedtelesis.co.nz; dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b=utKT8FIb; arc=none smtp.client-ip=202.36.163.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=alliedtelesis.co.nz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alliedtelesis.co.nz
+	s=arc-20240116; t=1712089531; c=relaxed/simple;
+	bh=SFYOW08PqpPzwfxB7hZzx34O7i0fjEPQxzRH+d1frpE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Sb+gLhhnMmn0H3cPb+JatGE0AD6ji+WM1yLrsj6xRV2BBjvW6M63+RnBvYlVnXW0Sq5IiQSql9cn4ZdhGUr4gzDb3oCaQRpAnFdBARSEkCeoCvvtcmT47DyVX404U5Fsrqt+m42/RqYsWGqCmfoJ+LhCLZ/sUZCB6zmNDcEsI20=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=rajTLTK7; arc=none smtp.client-ip=209.85.166.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="utKT8FIb"
-Received: from svr-chch-seg1.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id B4D4E2C03B0;
-	Wed,  3 Apr 2024 09:24:38 +1300 (NZDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
-	s=mail181024; t=1712089478;
-	bh=R205FE43OH6rrOt4iwtgF3+kwicEz8ULkm/QpFGb2aY=;
-	h=From:To:CC:Subject:Date:From;
-	b=utKT8FIbmRzBwl1qsJ3QrpZ2uCOfTX/LTNj1gjg8R9+4+dHEfPnPf04oYC26rYOqI
-	 +g5KPPL2lEQLJDpq/NDahcDR8MCe07YQDcroAmcy5P3xBiPpNKaPV0x0Rkj6d+Dnae
-	 DIpzKt7mZhGR8EnY+S/T7lcvudYbwmAM9+8QhvqIlwAiM1rT/Z7u49xzogtjx0NQg6
-	 8/RTI0p5o5toL2eFSmqDQbPbW3/IYkG48/AGOm8u4DI6OwayzvJOzbBNZT0zcTUsbs
-	 sCnG/nT5boCGMoGDn7BQXTVjiMDdv/XfjwxewKS/LP+KkQOvv9vC0MDSSXmlxslLIZ
-	 oPJxRN5t8UUWg==
-Received: from svr-chch-ex2.atlnz.lc (Not Verified[2001:df5:b000:bc8::76]) by svr-chch-seg1.atlnz.lc with Trustwave SEG (v8,2,6,11305)
-	id <B660c69860001>; Wed, 03 Apr 2024 09:24:38 +1300
-Received: from svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8::77) by
- svr-chch-ex2.atlnz.lc (2001:df5:b000:bc8::76) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.2.1544.9; Wed, 3 Apr 2024 09:24:38 +1300
-Received: from svr-chch-ex2.atlnz.lc (2001:df5:b000:bc8::76) by
- svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8::77) with Microsoft SMTP Server
- (TLS) id 15.0.1497.48; Wed, 3 Apr 2024 09:24:38 +1300
-Received: from svr-chch-ex2.atlnz.lc ([fe80::a9eb:c9b7:8b52:9567]) by
- svr-chch-ex2.atlnz.lc ([fe80::a9eb:c9b7:8b52:9567%15]) with mapi id
- 15.02.1544.009; Wed, 3 Apr 2024 09:24:38 +1300
-From: Chris Packham <Chris.Packham@alliedtelesis.co.nz>
-To: Guenter Roeck <linux@roeck-us.net>, "jdelvare@suse.com"
-	<jdelvare@suse.com>
-CC: "linux-hwmon@vger.kernel.org" <linux-hwmon@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: hwmon: label vs temp%d_label
-Thread-Topic: hwmon: label vs temp%d_label
-Thread-Index: AQHahTvINn4/LiD+qEqZV7u6Rj72tg==
-Date: Tue, 2 Apr 2024 20:24:37 +0000
-Message-ID: <9a09bf46-d097-4e5b-bdb3-cc9dc6f5d01c@alliedtelesis.co.nz>
-Accept-Language: en-NZ, en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <55A81BE23C67E9428E7C391E9D84968D@atlnz.lc>
-Content-Transfer-Encoding: base64
+	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="rajTLTK7"
+Received: by mail-io1-f52.google.com with SMTP id ca18e2360f4ac-7cb9dd46babso52438239f.1
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Apr 2024 13:25:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1712089529; x=1712694329; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=dBH876vAyKlWi1e2URAo959a0NCBuQah4G/duvZWoLs=;
+        b=rajTLTK7azCbVxtKACPZqVnekoh0J9ambIIcnVvHESH38en1zKvSJlwPZYgVwaU8EI
+         vsyb1fevE8r5m5u+fm2cr7S+q6Q/ttJFyTayY59OoFyTs/IB+hoNw1Ltdj78GttYQs0Z
+         vI2ur8CsAPFoxQ/Bqfhyem3mRmOFbsdrQSl+8dERQslV8XpMHgVtmcRhy658Pbv1iRGt
+         c9lJb+Ry4GoM2nSEgI4bQBp87Ljnya1m3Kxwn2AS56OKqC6YSrfhQopwdWvtMcggDn/g
+         5n110D87p1SNSylX9pxWHHo33qnYVnF9WFLj7mc12Zg9ZjHE+xpa5PgBrr8WQiGiebsL
+         K1Hg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712089529; x=1712694329;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=dBH876vAyKlWi1e2URAo959a0NCBuQah4G/duvZWoLs=;
+        b=r0jYHolviy+HjuVUL/+4gq0UHK6FWZVwqrzTJCX+LLHwm3gxsTBY0hQUlJgWzlR0t7
+         8D+W+0qal6/U6BF1BsZpQ5b3dMmRT0pPClndW4H28HxdRPT1RrhC4dmeWGBemIWBfGb0
+         SWwOIzlX5yaBNkGK/ZFOa3Fw5LRqjWLF979Qm52UlmPteJpqMLcdJajmy70qDzpk2b5K
+         NtbuOfKlPmNaYc6A1Ur9zErUBkho7myQV9RPVR3XZmhiFshYrzCeazvpLXbDdXudrS4D
+         FD7dxHjqo6nkWDvomjP0Xn0p5C2ubaEYQIsFj7oP3rz4TF76ey5r2fI5N/1o6DBG+piE
+         kDsw==
+X-Forwarded-Encrypted: i=1; AJvYcCWnsloz9lKLy+qSST5XUURiOFPvvY/FB3AakmSmDbhSgOAS94cGNzlM1OC5+WZT/Ee6QIqA2jFribeVJVMb8OBSudqs3uLd0ANY5MBS
+X-Gm-Message-State: AOJu0Yzj/p1/qvjhs10fZNRIAWoxOn0a15DhS10Ghbzvksv1NW1wps7X
+	SIT1AgCGC/z73yXLDFGjW/iuv/aD5ozVhoYe5Oic9+fpHjpzXMNdcd+Nw35SVoieokD6ak5p5Ue
+	i
+X-Google-Smtp-Source: AGHT+IGt8zx3yfoLHWJoD/9BicLeLb9BGtnXdE3dsIhE1rH1dRottnU4h8A2EJ7PIpY1aSbDRfOG7w==
+X-Received: by 2002:a05:6602:3422:b0:7d0:5b47:8f57 with SMTP id n34-20020a056602342200b007d05b478f57mr16468113ioz.1.1712089528818;
+        Tue, 02 Apr 2024 13:25:28 -0700 (PDT)
+Received: from localhost.localdomain ([96.43.243.2])
+        by smtp.gmail.com with ESMTPSA id u9-20020a02cbc9000000b0047ec029412fsm3445956jaq.12.2024.04.02.13.25.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 02 Apr 2024 13:25:28 -0700 (PDT)
+From: Jens Axboe <axboe@kernel.dk>
+To: linux-fsdevel@vger.kernel.org
+Cc: brauner@kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCHSET 0/3] Convert fs drivers to ->read_iter()
+Date: Tue,  2 Apr 2024 14:18:20 -0600
+Message-ID: <20240402202524.1514963-1-axboe@kernel.dk>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-SEG-SpamProfiler-Analysis: v=2.4 cv=KIH5D0Fo c=1 sm=1 tr=0 ts=660c6986 a=Xf/6aR1Nyvzi7BryhOrcLQ==:117 a=xqWC_Br6kY4A:10 a=X1bIBW7fO_EA:10 a=75chYTbOgJ0A:10 a=IkcTkHD0fZMA:10 a=raytVjVEu-sA:10 a=HnSBbm6KEwkWcQZ2umYA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
-X-SEG-SpamProfiler-Score: 0
+Content-Transfer-Encoding: 8bit
 
-SGkgR3VlbnRlciwgSmVhbiwNCg0KSSd2ZSBnb3QgYSByZXF1aXJlbWVudCB0byBhZGQgc29tZSBt
-ZWFuaW5nZnVsIG5hbWVzIHRvIHNvbWUgaHdtb24gDQpzZW5zb3JzIChMTTc1IHNwZWNpZmljYWxs
-eSkgc28gdGhhdCB3ZSBjYW4gcHJvdmlkZSBzb21lIGluZGljYXRpb24gb2YgDQp3aGVyZSBvbiBh
-IGJvYXJkIHRoZSBzZW5zb3IgaXMgbG9jYXRlZCAoZS5nLiAiSW50YWtlIiB2cyAiRXhoYXVzdCIg
-dnMgDQoiTmVhciB0aGF0IHJlYWxseSBob3QgY2hpcCIpLg0KDQpJIHNlZSB0aGF0IHRoZSBzeXNm
-cyBBQkkgZG9jdW1lbnRzIGJvdGggImxhYmVsIiBmb3IgdGhlIGNoaXAgYW5kIA0KInRlbXBbMS0q
-XV9sYWJlbCIgKGFzIHdlbGwgYXMgc2ltaWxhciBmYW4gYW5kIFZpbiBhdHRyaWJ1dGVzKS4gVGhl
-IA0KbGF0dGVyIHNlZW0gdG8gYmUgc3VwcG9ydGVkIGJ5IHRoZSBod21vbiBjb3JlIGJ1dCBJIGRv
-bid0IHNlZSBhbnl0aGluZyANCmZvciB0aGUgZm9ybWVyIChJJ20gc3RydWdnbGluZyB0byBmaW5k
-IGFueSBkcml2ZXIgdGhhdCBzdXBwb3J0cyBhIA0KY2hpcC13aWRlIGxhYmVsKS4NCg0KQXNzdW1p
-bmcgSSB3YW50IHRvIGhhdmUgYSBsYWJlbCBhZGRlZCBpbiB0aGUgZGV2aWNlIHRyZWUgdG8gYSBs
-bTc1IHdvdWxkIA0Kc29tZXRoaW5nIGxpa2UgdGhlIGZvbGxvd2luZyBiZSBhY2NlcHRhYmxlDQoN
-CiDCoMKgwqDCoMKgIHNlbnNvckA0OCB7DQogwqDCoMKgwqDCoMKgwqAgY29tcGF0aWJsZSA9ICJu
-YXRpb25hbCxsbTc1IjsNCiDCoMKgwqDCoMKgwqDCoCByZWcgPSA8MHg0OD47DQogwqDCoMKgwqDC
-oMKgwqAgbGFiZWwgPSAiSW50YWtlIjsNCiDCoMKgwqDCoMKgIH07DQoNCkknZCB0aGVuIHVwZGF0
-ZSB0aGUgbG03NSBkcml2ZXIgdG8gZ3JhYiB0aGF0IGZyb20gdGhlIGRldmljZXRyZWUgYW5kIHVz
-ZSANCml0IHRvIHByb3ZpZGUgdGhlIGh3bW9uX3RlbXBfbGFiZWwgYXR0cmlidXRlLg0KDQpUaGFu
-a3MsDQpDaHJpcw0K
+Hi,
+
+There are still a few users of fops->read() in the core parts of the
+fs stack. Which is a shame, since it'd be nice to get rid of the
+non-iterator parts of down the line, and reclaim that part of the
+file_operations struct.
+
+Outside of moving in that direction as a cleanup, using ->read_iter()
+enables us to mark them with FMODE_NOWAIT. This is important for users
+like io_uring, where per-IO nonblocking hints make a difference in how
+efficiently IO can be done.
+
+Those two things are my main motivation for starting this work, with
+hopefully more to come down the line.
+
+All patches have been booted and tested, and the corresponding test
+cases been run. The timerfd one was sent separately previously, figured
+I'd do a few more and make a smaller series out of it.
+
+-- 
+Jens Axboe
+
