@@ -1,72 +1,129 @@
-Received: from mail-io1-f71.google.com (mail-io1-f71.google.com [209.85.166.71])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEA44168B1
-	for <linux-kernel@vger.kernel.org>; Tue,  2 Apr 2024 03:52:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.71
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5131179BC;
+	Tue,  2 Apr 2024 03:52:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712029925; cv=none; b=t/SWIP5Xg3J5gjxNUxXwJo//edLre4uryWcR5BNbMThDytN2h0F6zW7rXMQG/0H9H9UfKjlW8XEPjWTomsoJVIFHIUbnQTWpUrLgpHm8N4iI6mNvo/BHSGMZIFHnsIWGtLR2cmth13qVeZuAlGbYXoGBg1zsx28dt1YOMzIIGNk=
+	t=1712029930; cv=none; b=WT9tbLFxZFXikMVkJ+E+UoqE2JNlbrbImEH3xUY9hWOCO8KXch4dK6ePP3MYUDbIIYLPr37ebX6f4hLvqHHZqQdKyn2FmeaK4PJPNhkUJqdkduyYigem8XrmhHSVFxON4m0UZXQzE6DGOmFrQlBcVRT9+ed+hWnzh5SfM2LsAQo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712029925; c=relaxed/simple;
-	bh=G0IwExIEFgJIfZrp+Nko9MTFW8rdtxlZtGN9KIUkNiE=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=tSlsa5WS7Ht5TgmkTWx0rkxpAbO9XdZSSNQQnKEKGIK4kbjZfvHD8MdLPP7ruixfHZ5cLz0amPjaEaMRd5ujCf1g5xzzOzT2fK6DwkSS6jK4VG/7eW8be2gB63IdQ+wbIDmEJFnVCQzbT3sWggd6jeJV8lb061b2gCPC+aHhZO8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.71
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f71.google.com with SMTP id ca18e2360f4ac-7cc01445f6bso549802939f.3
-        for <linux-kernel@vger.kernel.org>; Mon, 01 Apr 2024 20:52:03 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712029923; x=1712634723;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=suybyOoFwcpCDHMAw8Om9CcoZMbKwOnR4XdhaOIDPjQ=;
-        b=VNy81mPxjhFLssWN3xg6H/HZSZNtUPhCrxJR5A5MLpBd+ZDzk0jiqDfWBHUzpe6td4
-         YQidAAETJS5kegejvECHFXvTtvn/UcjbNu/34bCEIebkXBnA5vM8GKe0t8wnBUoi9vrP
-         ZDe2OdWhmLAAGkJSDqsoAF/aioDjysaKeEx74wBwQOFnsA8PFz69FA5Z8iwy7uWvpXt6
-         FwvZw8WLek79JZk3DRr4KT+8+MJKjea6nVY+BC3McMK+gc6nhlu4oUhdIzX9GbdeuA1U
-         o9MIU6gnaHMNT9fXy80KN3qasq3rpofcafIZZ6V+DLrtmFDJntzUKKR0H1rwy4emTVSX
-         3ecA==
-X-Forwarded-Encrypted: i=1; AJvYcCXBjMTZbpVAE5cXnFdhx3RUJstfKGrboZQLotSrLQheuf7/gPKAnSg43krCn84MaJES1192bFKKT56/T4RsHHoP6NqdpjrNHF/Y+Sem
-X-Gm-Message-State: AOJu0YzcP2vjYXyt/QXSz4fX7zjTvaEHW7+g0a6X/P4/1dC7aCQw/afk
-	4aRhmEM7azLitlD085G0yfBurCESbRknL2UNJ7ssvYatXKcmck6Ka6Aj3EUon1KIcaqoEyX1/yP
-	vU1iS+wCe0n9/f6FqobfFh1+Bh0dtKElmgIEFDcANXuHYxrdOH2h7yr0=
-X-Google-Smtp-Source: AGHT+IGCpZ5IhzK/baYOBbYvO2tKi06n3naIhJ1MESe6cNNtuib5PbvTxRzHdde9tMNbGVkgA7FunXZtVhRlwFXEDPCdRTjiVYcu
+	s=arc-20240116; t=1712029930; c=relaxed/simple;
+	bh=7gHW/qvQSs1Nc3EuoXfs26hkvGBC1r6itQPxwRNZFek=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=SI1efpX6kL7v9YTtgAWJFII07Wxcemv6o/82XyyeFE78KAR4BEqj10pYzjDv4V4/vaMzxp3Db3kY00yxwtRzPVj0fllYSm7qY0U5ekx4Km4DtsJAQrSmkUvANO+OItivfM8v9FIO2LYAmW5nGfvFN7dy8k2Rtb8ohmzZTAjqAPM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=L388u013; arc=none smtp.client-ip=192.198.163.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="L388u013"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1712029929; x=1743565929;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=7gHW/qvQSs1Nc3EuoXfs26hkvGBC1r6itQPxwRNZFek=;
+  b=L388u013YZb7SfLPzYdct0x67zWhnIahEaXBG4Stz7tPjBd1sCudBVO+
+   7edR+a9PZ8BNbY5n4vptQKc/xr17ERsOPUuzxWfhh81C2ab2cCEqREdk6
+   q0676fcHh467iUEbnZ/Ey47KzZzt5W8JmU+K19OI3f9XWXWdyOYnVQOrQ
+   4ef9HoNlbI8QWTZEmVz7zVgHzVw0kCKoR7gcD3OH1+lF9ZLiJdo0qtcCB
+   QVcIUIp/27dFkRvsyfvGZ2E1/42Ht1wzADnu0F2X9Z9WS0xxgoCHEPcba
+   GdWeSUJE2OboJISb6Xnb1gNoYGLJsdMffS0RNTFyxwW6FNeCfgT1dAy1r
+   g==;
+X-CSE-ConnectionGUID: PA8vrnaxTqyvtyWzZqDffw==
+X-CSE-MsgGUID: jEzjLMaMRwaVv12PvyTTiQ==
+X-IronPort-AV: E=McAfee;i="6600,9927,11031"; a="18539075"
+X-IronPort-AV: E=Sophos;i="6.07,173,1708416000"; 
+   d="scan'208";a="18539075"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Apr 2024 20:52:08 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,173,1708416000"; 
+   d="scan'208";a="22607322"
+Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.165])
+  by orviesa003.jf.intel.com with ESMTP; 01 Apr 2024 20:52:04 -0700
+Date: Tue, 2 Apr 2024 11:47:13 +0800
+From: Xu Yilun <yilun.xu@linux.intel.com>
+To: Peter Colberg <peter.colberg@intel.com>
+Cc: Wu Hao <hao.wu@intel.com>, Tom Rix <trix@redhat.com>,
+	Moritz Fischer <mdf@kernel.org>, Xu Yilun <yilun.xu@intel.com>,
+	Alan Tull <atull@kernel.org>, Shiva Rao <shiva.rao@intel.com>,
+	Kang Luwei <luwei.kang@intel.com>,
+	Enno Luebbers <enno.luebbers@intel.com>, linux-fpga@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Russ Weight <russ.weight@linux.dev>,
+	Marco Pagani <marpagan@redhat.com>,
+	Matthew Gerlach <matthew.gerlach@linux.intel.com>,
+	kernel test robot <lkp@intel.com>
+Subject: Re: [PATCH] fpga: dfl: fme: fix kernel-doc comments for some
+ functions
+Message-ID: <Zgt/wftzm4xthfio@yilunxu-OptiPlex-7050>
+References: <20240329001542.8099-1-peter.colberg@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6638:2b0b:b0:47e:cfc4:319e with SMTP id
- fm11-20020a0566382b0b00b0047ecfc4319emr816496jab.4.1712029923157; Mon, 01 Apr
- 2024 20:52:03 -0700 (PDT)
-Date: Mon, 01 Apr 2024 20:52:03 -0700
-In-Reply-To: <20240401230144.3642-1-hdanton@sina.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000006a37bc06151507a7@google.com>
-Subject: Re: [syzbot] [usb?] KASAN: slab-use-after-free Write in
- usb_anchor_suspend_wakeups (2)
-From: syzbot <syzbot+9a3c54f52bd1edbd975f@syzkaller.appspotmail.com>
-To: hdanton@sina.com, linux-kernel@vger.kernel.org, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240329001542.8099-1-peter.colberg@intel.com>
 
-Hello,
+On Thu, Mar 28, 2024 at 08:15:42PM -0400, Peter Colberg wrote:
+> From: Xu Yilun <yilun.xu@intel.com>
 
-syzbot has tested the proposed patch and the reproducer did not trigger any issue:
+I didn't remember I wrote this exact patch, but anyway the patch itself
+is confusing.
 
-Reported-and-tested-by: syzbot+9a3c54f52bd1edbd975f@syzkaller.appspotmail.com
+> 
+> lkp reported 2 build warnings:
+> 
+>    drivers/fpga/dfl/dfl-fme-pr.c:175: warning: Function parameter or member 'feature' not described in 'dfl_fme_create_mgr'
+> 
+> >> drivers/fpga/dfl/dfl-fme-pr.c:280: warning: expecting prototype for
+> >> dfl_fme_destroy_bridge(). Prototype was for dfl_fme_destroy_bridges()
+> >> instead
+> 
+> Fixes: 29de76240e86 ("fpga: dfl: fme: add partial reconfiguration sub feature support")
+> Reported-by: kernel test robot <lkp@intel.com>
+> Signed-off-by: Xu Yilun <yilun.xu@intel.com>
+> Signed-off-by: Peter Colberg <peter.colberg@intel.com>
+> ---
+>  drivers/fpga/dfl-fme-pr.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/fpga/dfl-fme-pr.c b/drivers/fpga/dfl-fme-pr.c
+> index cdcf6dea4cc9..96cb24787ab1 100644
+> --- a/drivers/fpga/dfl-fme-pr.c
+> +++ b/drivers/fpga/dfl-fme-pr.c
+> @@ -166,6 +166,7 @@ static int fme_pr(struct platform_device *pdev, unsigned long arg)
+>   * dfl_fme_create_mgr - create fpga mgr platform device as child device
+>   * @feature: sub feature info
 
-Tested on:
+The member 'feature' is described here. It still causes build warning?
 
-commit:         480e035f Merge tag 'drm-next-2024-03-13' of https://gi..
-git tree:       https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
-console output: https://syzkaller.appspot.com/x/log.txt?x=137a04c5180000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=1e5b814e91787669
-dashboard link: https://syzkaller.appspot.com/bug?extid=9a3c54f52bd1edbd975f
-compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
-patch:          https://syzkaller.appspot.com/x/patch.diff?x=10f48795180000
+>   * @pdata: fme platform_device's pdata
+> + * @feature: the dfl fme PR sub feature
 
-Note: testing is done by a robot and is best-effort only.
+Why adding a duplicated item would fix the warning?
+
+>   *
+>   * Return: mgr platform device if successful, and error code otherwise.
+>   */
+> @@ -273,7 +274,7 @@ static void dfl_fme_destroy_bridge(struct dfl_fme_bridge *fme_br)
+>  }
+>  
+>  /**
+> - * dfl_fme_destroy_bridges - destroy all fpga bridge platform device
+
+The prototype is for dfl_fme_destroy_bridges(), why the warning?
+
+> + * dfl_fme_destroy_bridges - destroy all fpga bridge platform devices
+
+Correct the plural form in description would fix the warning?
+
+>   * @pdata: fme platform device's pdata
+>   */
+>  static void dfl_fme_destroy_bridges(struct dfl_feature_platform_data *pdata)
+> -- 
+> 2.44.0
+> 
+> 
