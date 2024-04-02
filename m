@@ -1,34 +1,34 @@
-Received: from smtpbgeu1.qq.com (smtpbgeu1.qq.com [52.59.177.22])
+Received: from smtpbgeu2.qq.com (smtpbgeu2.qq.com [18.194.254.142])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EC497FBA6;
-	Tue,  2 Apr 2024 10:57:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=52.59.177.22
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F6F580BEE;
+	Tue,  2 Apr 2024 10:58:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=18.194.254.142
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712055481; cv=none; b=oOpgKyyi+7rQKmlZvf6XprodE01Hp2iBjm1vtAuOPOzI23F47Hplme4BuZYfvXJ5/zwhF+ue6RkOB5xO1vVETd4yWSqFmM1QiQr41fxZ3Cprwm599UbahPo6+7A2epeQIjPc7BqLOYNjuxjdL4scEUXgWFDzRxThcnWKHRB05pI=
+	t=1712055486; cv=none; b=GblwOrhjw46lmpMwQjhDaSbUJ2j5ZudxMwA1LuJ2Ac4xY5WplPM+RNVPMJxi/+4j+EZzBVs5GYWjoUPPGCFIOhqmoTES+RVaYYJ5kBUAUEu6LD9NubOisIlwPWPgf6CzkekQ1IDxP2WqVaj9r17HFKQ5s75JnsJtkGF44cMPRA4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712055481; c=relaxed/simple;
-	bh=ZvjQTwcwJWrNuKxZ/U40Rg12tZQV5ecf7TdNFA4g0vo=;
+	s=arc-20240116; t=1712055486; c=relaxed/simple;
+	bh=UD78b+Ao8lKwjj50NaM+HsEbsQALsMtRe09N+rD98HI=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=VljmaX7HoA0tEio3HGrn+HAK95Y+hY7KX36PynaYIXweV1ATtcVUR0KG+OICLwglH90JnLLtN4i1MTV7MpfIi9JQhXsRbwAApJQ26YwNT4eECwHiFKSwUQZgLla1R3Oy6FdWdvFYn+VQrqlYQGdd4c0xNtuQ+sduueqgjhUbBGc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=shingroup.cn; spf=pass smtp.mailfrom=shingroup.cn; arc=none smtp.client-ip=52.59.177.22
+	 MIME-Version; b=qsu1xdcYNdtH78rvyJVQ+eE/1Kkf3N8u/uObu5xe6hWeVDv+XvNJsYzjKNGqytGBio4CPmtMebhZA4nry2zJTkj8yLr9WeP3LNjZax0L2XtrctVtzwpsWtx+X7D9v7JXvLVwMUP9GkorUFsLEd1gY4g54088gUle7aBwjMfpP+I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=shingroup.cn; spf=pass smtp.mailfrom=shingroup.cn; arc=none smtp.client-ip=18.194.254.142
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=shingroup.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=shingroup.cn
-X-QQ-mid: bizesmtpsz11t1712055412t3i2gh
-X-QQ-Originating-IP: F6TQ7P//4zKCDA4lZjfDOIcvWwLHa3rkwI4TauOF850=
+X-QQ-mid: bizesmtpsz10t1712055431tb6jud
+X-QQ-Originating-IP: f5R2VecJRELIO4EhbfBbAraDQpJloHN0LErZyEBfGhk=
 Received: from localhost ( [112.0.147.175])
 	by bizesmtp.qq.com (ESMTP) with 
-	id ; Tue, 02 Apr 2024 18:56:50 +0800 (CST)
+	id ; Tue, 02 Apr 2024 18:57:10 +0800 (CST)
 X-QQ-SSF: 01400000000000704000000A0000000
-X-QQ-FEAT: RrZlkntZBfnEBj5q3ATNBISnIDtwBbucJTGdzlgBBvrPwGxeSdaQrY2O7BNVi
-	YN80SJcxNGBKWF0mruul/SsnAWrUS8ddgudFE1oKLS+jEevXvqDVNOKV7qFTXJ2rWhaiVwC
-	wf53ZcO6SmAMsC3C1CJHDBF0dfZYwzSqn0K+iSYk5demHoOL9cBAnCJAZLi6wUcHGD/LLkb
-	nVxeOLJ5wurYne7LYr/EDn7GE3nhxzVQNsZwtVJ0OsawWR+2wb6uTrsCVaOXr0rW+h88K9e
-	9WMOEptV2D/kJIUNt9z/2S5zmeqg9SEFNX4sRK/OfM1KWB9BocIU/Yyhz/wDFrUP6WiT3gP
-	mXvRveYfpPSpxV/c+Z54oWRjyV5azHp3mf2Md5hIZtywx43saDBp89NTzKklvOo8k71L/49
-	1Vp4X/aU9ie3lhYq4qg9zQ==
+X-QQ-FEAT: /gpUuYPpeIVF+4ZT8cHhA8f1Nym8iAKHB9yJxhFcqQIPnmtaClBuJ5UBbVQNM
+	IEJIVlWFCEiAVpwNgfL3+wEC5zAc/v9VNgPtpLb2Nu3+hz6dKboZRGdqZdHMQ+0N03cwH1U
+	zVW6Lnh9JP2B21xzyMzX4/G9WzXGa52g1YHpSnC0Isz9wvC5dj9j2bOfmvkLAQf5FlEqiES
+	3g3ZAYRiaoNPZtKNGHMAJUclEz/FQpDvQ149pbnEMoJXyK6y3OvsZgNwjprBKrmuQko0DPU
+	LvKZeMuT9YpXKTLfbsfnewbG78wA8D7cvlmuhEOFjjbMQ1IgdJQe1MIXr+dJhuPRp9ram+i
+	Ywxf5T8dqPqMU22rXG10pxPgy2AOnT62LcI09jlb2GiAeHzl5WAN8xrhXa5vwRYJSp2ybSK
+	Mn62VFjduUiRVx/st/ykZg==
 X-QQ-GoodBg: 2
-X-BIZMAIL-ID: 8890398727476667611
+X-BIZMAIL-ID: 7950645969911555121
 From: Dawei Li <dawei.li@shingroup.cn>
 To: will@kernel.org,
 	mark.rutland@arm.com
@@ -42,9 +42,9 @@ Cc: xueshuai@linux.alibaba.com,
 	linux-kernel@vger.kernel.org,
 	linux-arm-msm@vger.kernel.org,
 	Dawei Li <dawei.li@shingroup.cn>
-Subject: [PATCH 2/9] perf/arm-cmn: Avoid explicit cpumask var allocation from stack
-Date: Tue,  2 Apr 2024 18:56:03 +0800
-Message-Id: <20240402105610.1695644-3-dawei.li@shingroup.cn>
+Subject: [PATCH 5/9] perf/dwc_pcie: Avoid explicit cpumask var allocation from stack
+Date: Tue,  2 Apr 2024 18:56:06 +0800
+Message-Id: <20240402105610.1695644-6-dawei.li@shingroup.cn>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20240402105610.1695644-1-dawei.li@shingroup.cn>
 References: <20240402105610.1695644-1-dawei.li@shingroup.cn>
@@ -70,29 +70,34 @@ Use *cpumask_var API(s) to address it.
 
 Signed-off-by: Dawei Li <dawei.li@shingroup.cn>
 ---
- drivers/perf/arm-cmn.c | 13 +++++++++----
- 1 file changed, 9 insertions(+), 4 deletions(-)
+ drivers/perf/dwc_pcie_pmu.c | 17 +++++++++++------
+ 1 file changed, 11 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/perf/arm-cmn.c b/drivers/perf/arm-cmn.c
-index 7ef9c7e4836b..7278fd72d3da 100644
---- a/drivers/perf/arm-cmn.c
-+++ b/drivers/perf/arm-cmn.c
-@@ -1949,21 +1949,26 @@ static int arm_cmn_pmu_offline_cpu(unsigned int cpu, struct hlist_node *cpuhp_no
+diff --git a/drivers/perf/dwc_pcie_pmu.c b/drivers/perf/dwc_pcie_pmu.c
+index 957058ad0099..97037b6aaa97 100644
+--- a/drivers/perf/dwc_pcie_pmu.c
++++ b/drivers/perf/dwc_pcie_pmu.c
+@@ -690,33 +690,38 @@ static int dwc_pcie_pmu_offline_cpu(unsigned int cpu, struct hlist_node *cpuhp_n
  {
- 	struct arm_cmn *cmn;
+ 	struct dwc_pcie_pmu *pcie_pmu;
+ 	struct pci_dev *pdev;
+-	int node;
+-	cpumask_t mask;
  	unsigned int target;
 +	cpumask_var_t mask;
- 	int node;
--	cpumask_t mask;
++	int node;
  
- 	cmn = hlist_entry_safe(cpuhp_node, struct arm_cmn, cpuhp_node);
- 	if (cpu != cmn->cpu)
+ 	pcie_pmu = hlist_entry_safe(cpuhp_node, struct dwc_pcie_pmu, cpuhp_node);
+ 	/* Nothing to do if this CPU doesn't own the PMU */
+ 	if (cpu != pcie_pmu->on_cpu)
  		return 0;
  
 +	if (!alloc_cpumask_var(&mask, GFP_KERNEL))
 +		return 0;
 +
- 	node = dev_to_node(cmn->dev);
+ 	pcie_pmu->on_cpu = -1;
+ 	pdev = pcie_pmu->pdev;
+ 	node = dev_to_node(&pdev->dev);
 -	if (cpumask_and(&mask, cpumask_of_node(node), cpu_online_mask) &&
 -	    cpumask_andnot(&mask, &mask, cpumask_of(cpu)))
 -		target = cpumask_any(&mask);
@@ -101,9 +106,18 @@ index 7ef9c7e4836b..7278fd72d3da 100644
 +		target = cpumask_any(mask);
  	else
  		target = cpumask_any_but(cpu_online_mask, cpu);
- 	if (target < nr_cpu_ids)
- 		arm_cmn_migrate(cmn, target);
-+
+ 
+ 	if (target >= nr_cpu_ids) {
+ 		pci_err(pdev, "There is no CPU to set\n");
+-		return 0;
++		goto __free_cpumask;
+ 	}
+ 
+ 	/* This PMU does NOT support interrupt, just migrate context. */
+ 	perf_pmu_migrate_context(&pcie_pmu->pmu, cpu, target);
+ 	pcie_pmu->on_cpu = target;
+ 
++__free_cpumask:
 +	free_cpumask_var(mask);
  	return 0;
  }
