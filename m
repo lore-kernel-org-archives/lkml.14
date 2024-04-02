@@ -1,46 +1,46 @@
 Received: from mx0b-000eb902.pphosted.com (mx0b-000eb902.pphosted.com [205.220.177.212])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CFC08BE5;
-	Tue,  2 Apr 2024 00:12:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1069217C7F;
+	Tue,  2 Apr 2024 00:13:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.177.212
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712016779; cv=fail; b=VL5O7R7eqZQrudpD8GTjmwN8h3rsv8kOQE8nTVS2ujR5OecpRcNPH59uKzoqcykraFrIouhr01bNfqz4zRiUOZlEpc6bQrx7VXLexXzmfKLNQNbR53jC4M5VSF7681fdQw/0UIR/V8bPtO382kfINx6Vay4e2IGTx8+QdG5wivo=
+	t=1712016785; cv=fail; b=gHLuP/r7OjAy4M7uQR9oR4PaDQySFkOSZkemvaAkUVmB/iraBmwyttCtdHy6l4pqFOk7q03h/LKu7XwoouK6IMSr032Z+X86WefWksb5PGoQkFV3j0jdA8Lc+avoSDP+5dVBBsSEhgrLeTW8fsGjB2vULos2jtl1UoKlTAKuy0Y=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712016779; c=relaxed/simple;
-	bh=TQJufkiN6+FwmkxY8Kc9C6WhsreIiFsobupB1QMJ8Xg=;
+	s=arc-20240116; t=1712016785; c=relaxed/simple;
+	bh=Wc73mW7EnGFKOH9xhFC4rNfn4cnTBtDwqBe/JF6WTO4=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=tmOTBtz0Yodri2zXVlziAOdzSZAt+S/OF4AnzJxaNNoe/6iil5o42/ZlIcUbg1wX60TqEEIlge6mGLNvi0UQjBbqTv9RSIqCKYGNQy6EqhFP/FylFOYBnBhHbCvqePxDkaqYSHLBY8Fc4Qy5IV75Pz4qd5v0mFCNVS4B84WN83E=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=garmin.com; spf=pass smtp.mailfrom=garmin.com; dkim=pass (2048-bit key) header.d=garmin.com header.i=@garmin.com header.b=eWIGWjzH; dkim=pass (2048-bit key) header.d=garmin.com header.i=@garmin.com header.b=EspMfqjt; arc=fail smtp.client-ip=205.220.177.212
+	 MIME-Version:Content-Type; b=Qq0rj54Lh8OYgxM/3qklY20krzG/svE8Gxz1bljWc0hp5TzVLw+djFWy4FtFEdjGOhw79N/rAU1q6fLcq2WjE4EUXHGopsoB+esv/8SdUdc5wunAtp2JANj4guOJmjyHmil8qimEuDaI2RW3qXf5Fs7Gm0CSFX1jf9TC+vp1Ni4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=garmin.com; spf=pass smtp.mailfrom=garmin.com; dkim=pass (2048-bit key) header.d=garmin.com header.i=@garmin.com header.b=tvd8MLjO; dkim=pass (2048-bit key) header.d=garmin.com header.i=@garmin.com header.b=AfPqKO0I; arc=fail smtp.client-ip=205.220.177.212
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=garmin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=garmin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=garmin.com header.i=@garmin.com header.b="eWIGWjzH";
-	dkim=pass (2048-bit key) header.d=garmin.com header.i=@garmin.com header.b="EspMfqjt"
+	dkim=pass (2048-bit key) header.d=garmin.com header.i=@garmin.com header.b="tvd8MLjO";
+	dkim=pass (2048-bit key) header.d=garmin.com header.i=@garmin.com header.b="AfPqKO0I"
 Received: from pps.filterd (m0220297.ppops.net [127.0.0.1])
-	by mx0a-000eb902.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 431J0Gf0003286;
-	Mon, 1 Apr 2024 19:12:37 -0500
+	by mx0a-000eb902.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 431IxpjL002781;
+	Mon, 1 Apr 2024 19:12:46 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=garmin.com; h=
 	from:to:cc:subject:date:message-id:in-reply-to:references
 	:mime-version:content-transfer-encoding:content-type; s=pps1;
-	 bh=hl9b1s+/NgfLZDUBljKqbssQp7LoQo+naDmi0MKelYk=; b=eWIGWjzHtQmL
-	cFar6bxeRW8zxdjRkgN15td/HRkHgZUPzYyAGlP6UUygX+QzqZRQf+6CrT+zlm5X
-	9Cifel910yUeCMr4fNzXz4cQAK+h82PLMbb6dppOMJNZEdpzR12c6ZwzJ/zQFVMu
-	wk+pih4PykC9greRr9HBLeIT39asf5B/23imyMlMZ17kL/uZjZb2lD1uofa0oBXO
-	DzzL5Qlmy1EIPdy1l+1vym90/DiJzDhZpMSRo+1V8sNSAI6vP+y3yxvqNbo4Y2ti
-	luApv/SjAHHR12RLf46r2SaFRcS6Br4TQ5X/vtM/fmys9DwzKbS32zyclwOE6EAb
-	mcKfIfM8Zg==
-Received: from nam10-dm6-obe.outbound.protection.outlook.com (mail-dm6nam10lp2101.outbound.protection.outlook.com [104.47.58.101])
-	by mx0a-000eb902.pphosted.com (PPS) with ESMTPS id 3x808696h3-1
+	 bh=mMJgjAePvMZmBF+A9ormyhlsr8Ss5uPilTWqIEI2O+Y=; b=tvd8MLjO5dMt
+	G8E8bj6/mC64+idH3j0Rmz0QprIvoGHwpuGSyKwYLUCoi6qr/inIGaaW0ETQAm/N
+	stgBxCMQAFj5yBOgBjhK6jQdhk0HPWcsUobkUOCcPeJnnb+xvHoIHTPjX/fpFDgZ
+	79K4NaTELt5XAqou40+faT2g6Cg7l0fa+H/S0Xk7Jw4k9B1QVxtSlS8cdBXgFp0p
+	WzIy1iYnvu9zUHRLScjScGjD0nbiueIteDGSBIwf50rYDQ+wy9n1B/9ZYP8ULQ+Q
+	hD+JgNL+7+R3aLgw6IeAImtZqFdUrzuV5wzdWQ8uVerf0MQoOTAotyHmDvXJpFnc
+	agDu60RTXg==
+Received: from nam12-bn8-obe.outbound.protection.outlook.com (mail-bn8nam12lp2169.outbound.protection.outlook.com [104.47.55.169])
+	by mx0a-000eb902.pphosted.com (PPS) with ESMTPS id 3x808696h9-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 01 Apr 2024 19:12:37 -0500 (CDT)
+	Mon, 01 Apr 2024 19:12:46 -0500 (CDT)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=BVWlbziF7wBdm57bymx/EU88idFIonUmMyDehskJA2N2PpI0X4EEYcM3L8BDrBPcRTK7EtL99+anPlTl/6TwHXrjHt4g4ITv4jmn0zGB92RXCedm1mi5tWh41xuBhbVNSODpUP/j2um5v9QMdyPAhLxoyLEOU0cvhAXJ5CqWIY1Pzyjb4VLA27S/4CKke/o47FAf1FrwLvJD3c0blHA5X3ElG8oO6SIxUj8mCmph/ZmQ9WZcnMpKLhDID7DBcr56ktn6kO6P7ngxhA3GInYn4ez52JC4ju5ZKAJ71r78epdRbmEaD8GMOEmDE6RF3l+ADEL1xGDJhJ9JqoyxNuWcRA==
+ b=CjJUIMQzvlgo5rsOG1UkE5itxULbfNTWsf+L7PRMbouELAGBVZcupykWrGA5pJd4uDLYyiizR266tYpX+4h8pHxCjwJaV9fVkjxmxQIQxxazcsUg63wAOBJlft/aqALqBJsribHCx9KhSOZb5WKxhZcuE4cmnztJfdbKg2xhOHvEzzklAKIQUThhT8oTJBn656eXlY+BDdWVj2REyOQ4fWcOkNSYNcxXD9swF47kdyiCGZ+2wKRqlUc6EWxw88su3tM+HI3CVXG+efM8v+lljP8pv2Lb00bhmLaVK2Yujh8bv0ynWzp6lLl4XNwZI9fXHRi2ObULPsnywU94UbrrpQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=hl9b1s+/NgfLZDUBljKqbssQp7LoQo+naDmi0MKelYk=;
- b=RlmmPRsinliGR+K1AbJZHLnJjvJEvRFb3GPJE+PWc9evYqbJbuFAeZFZk8IrQyAGKxrkvovQvbzf1i6K+UhFPkQdYo4CbFXOYgEYMgsBaxmStY65ehpQT9tWgW5yyRF9R0fH9/Wx8qC8OJCQX5lRwFx5AOCjZRmqKiAGJqS07LU4QVcoxWzSsWbwLb+qXgQ61+3TSQUHZGK4AWJyiUg+VB2nl7mxrP80Lr+vGFrUzh5cqhCRP1qhSEjnN1EFBZQRg2X7s1zbNI7zDaY37QoGUd+54CRI8zSkYIE+d6EXLCe3rmdWTG/IJzL741LnIm2kBtd518vv0B4gLHjhMhb2xQ==
+ bh=mMJgjAePvMZmBF+A9ormyhlsr8Ss5uPilTWqIEI2O+Y=;
+ b=JXNWAAURgho2lZ3PVW5TGtMmA9jTLkgoKPKFGcoJhnpSwokHxiVWY6zHX1ri/yQPlZnJGBoA+x7hr7QlM5OjEtM+M1VZqGfZok0p1b5X566osw7grdE8p1a56Yb9DtCr3SF8hx3KqXgFguUdD6h4cmjiU/et8CAIaW9QYFbeyE/otQXaeFaHiA1D7Tx14eYIxNiOoGhVV1vrHJBcm/SjbNTnBMNnU42eD+egE35eFbQtO50DpHMmoJr+fM2lRy67CGEq87Gq7ePu09U+37LwPNchRju72H/rlVCKrAYu2IH0vgip+/OU25UCxsHjmJ9dFLEUiy+U61sXHg4Cf0vTHw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  204.77.163.244) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=garmin.com;
  dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
@@ -48,18 +48,18 @@ ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=garmin.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=hl9b1s+/NgfLZDUBljKqbssQp7LoQo+naDmi0MKelYk=;
- b=EspMfqjtCAcTHpW7LiRlmWKhU5PJMh3mMlk7XB8iTy/ycmP43HFOoxwr86NHCX9Qmn7ZU/H+OriD0VC+CRzix12kG7cAuulAWfDdgdcOgIuyBKyP6W+lzREsfOjGRT9rijou6xdKqvsIYZcky2dYYnnR5xh823tGXsOag//kuqplUDh/EJyFuwfrISWcE/u19dCLJkYNs9lCx9eFJalVUVu3ep7xhkcArUUDaKGln7M6cKryifalZE+gRqe0N2/XYdCqs3KyXq/sbUHFL46Q+tkMD8UmwnddmsdF0ylerQrWRkbmL6vrNGwgdAZdxZ3dUIoe4L8yKfutkmg9WpMINQ==
-Received: from DM6PR08CA0057.namprd08.prod.outlook.com (2603:10b6:5:1e0::31)
- by CH0PR04MB8097.namprd04.prod.outlook.com (2603:10b6:610:f5::19) with
+ bh=mMJgjAePvMZmBF+A9ormyhlsr8Ss5uPilTWqIEI2O+Y=;
+ b=AfPqKO0IZLdUuYq5scLrWhHVVn5V7JE8Qk5VVhK69Rk2S6kj1fI0lS1Ok730gfEifCxaIsjdqdrAU10oFU7fBKfGlknEOPo9T1zS6iMplO1pWU9kfBCpkpuPSn0XiHv1BPdtfJCPzklRX415Ndt11QAGwPKbuuvsvNgHt1RXN30xqqinjoOfEcXMXloHa/VW1zszmFQ4sBY9An3ExsuipS+dNcq6AWbZT1kyif5QPKdVId22iNzJM2wP513+RrBsR9riTfL0RqmOeKtYJYGf2LGGxTDWijPoPbK9LJ49Wv88OzvwbXfzNX6US4KmhVr79JrSfwSMq3vUPPwUehky8g==
+Received: from PH7PR17CA0003.namprd17.prod.outlook.com (2603:10b6:510:324::23)
+ by DM6PR04MB7004.namprd04.prod.outlook.com (2603:10b6:5:245::24) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.46; Tue, 2 Apr
- 2024 00:12:35 +0000
-Received: from CY4PEPF0000E9DB.namprd05.prod.outlook.com
- (2603:10b6:5:1e0:cafe::3b) by DM6PR08CA0057.outlook.office365.com
- (2603:10b6:5:1e0::31) with Microsoft SMTP Server (version=TLS1_2,
+ 2024 00:12:42 +0000
+Received: from CY4PEPF0000E9D9.namprd05.prod.outlook.com
+ (2603:10b6:510:324:cafe::6c) by PH7PR17CA0003.outlook.office365.com
+ (2603:10b6:510:324::23) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.46 via Frontend
- Transport; Tue, 2 Apr 2024 00:12:35 +0000
+ Transport; Tue, 2 Apr 2024 00:12:42 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 204.77.163.244)
  smtp.mailfrom=garmin.com; dkim=none (message not signed)
  header.d=none;dmarc=pass action=none header.from=garmin.com;
@@ -67,24 +67,24 @@ Received-SPF: Pass (protection.outlook.com: domain of garmin.com designates
  204.77.163.244 as permitted sender) receiver=protection.outlook.com;
  client-ip=204.77.163.244; helo=edgetransport.garmin.com; pr=C
 Received: from edgetransport.garmin.com (204.77.163.244) by
- CY4PEPF0000E9DB.mail.protection.outlook.com (10.167.241.81) with Microsoft
+ CY4PEPF0000E9D9.mail.protection.outlook.com (10.167.241.77) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.7452.22 via Frontend Transport; Tue, 2 Apr 2024 00:12:35 +0000
-Received: from cv1wpa-exmb3.ad.garmin.com (10.5.144.73) by
+ 15.20.7452.22 via Frontend Transport; Tue, 2 Apr 2024 00:12:42 +0000
+Received: from OLAWPA-EXMB1.ad.garmin.com (10.5.144.23) by
  olawpa-edge4.garmin.com (10.60.4.228) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.32; Mon, 1 Apr 2024 19:12:27 -0500
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.32; Mon, 1 Apr 2024 19:12:34 -0500
 Received: from cv1wpa-exmb5.ad.garmin.com (10.5.144.75) by
- cv1wpa-exmb3.ad.garmin.com (10.5.144.73) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.37; Mon, 1 Apr 2024 19:12:34 -0500
+ olawpa-exmb1.ad.garmin.com (10.5.144.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.37; Mon, 1 Apr 2024 19:12:41 -0500
 Received: from kc3wpa-exmb3.ad.garmin.com (10.65.32.83) by
  cv1wpa-exmb5.ad.garmin.com (10.5.144.75) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.32; Mon, 1 Apr 2024 19:12:33 -0500
+ 15.2.1258.32; Mon, 1 Apr 2024 19:12:40 -0500
 Received: from CAR-4RCMR33.ad.garmin.com (10.5.209.17) by mail.garmin.com
  (10.65.32.83) with Microsoft SMTP Server id 15.2.1258.32 via Frontend
- Transport; Mon, 1 Apr 2024 19:12:33 -0500
+ Transport; Mon, 1 Apr 2024 19:12:39 -0500
 From: Joseph Huang <Joseph.Huang@garmin.com>
 To: <netdev@vger.kernel.org>
 CC: Joseph Huang <Joseph.Huang@garmin.com>, Andrew Lunn <andrew@lunn.ch>,
@@ -97,9 +97,9 @@ CC: Joseph Huang <Joseph.Huang@garmin.com>, Andrew Lunn <andrew@lunn.ch>,
         Nikolay Aleksandrov <razor@blackwall.org>,
         =?UTF-8?q?Linus=20L=C3=BCssing?= <linus.luessing@c0d3.blue>,
         <linux-kernel@vger.kernel.org>, <bridge@lists.linux.dev>
-Subject: [PATCH RFC net-next 07/10] net: dsa: mv88e6xxx: Track bridge mdb objects
-Date: Mon, 1 Apr 2024 20:11:06 -0400
-Message-ID: <20240402001137.2980589-8-Joseph.Huang@garmin.com>
+Subject: [PATCH RFC net-next 09/10] net: dsa: mv88e6xxx: Enable mc flood for mrouter port
+Date: Mon, 1 Apr 2024 20:11:08 -0400
+Message-ID: <20240402001137.2980589-10-Joseph.Huang@garmin.com>
 X-Mailer: git-send-email 2.43.2
 In-Reply-To: <20240402001137.2980589-1-Joseph.Huang@garmin.com>
 References: <20240402001137.2980589-1-Joseph.Huang@garmin.com>
@@ -113,28 +113,28 @@ Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CY4PEPF0000E9DB:EE_|CH0PR04MB8097:EE_
-X-MS-Office365-Filtering-Correlation-Id: 2f99e027-0c30-4414-40a3-08dc52a99922
+X-MS-TrafficTypeDiagnostic: CY4PEPF0000E9D9:EE_|DM6PR04MB7004:EE_
+X-MS-Office365-Filtering-Correlation-Id: 3dc8e2b4-5a84-4462-d0e1-08dc52a99d48
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
 X-Microsoft-Antispam-Message-Info: 
-	XrFxhwE7FssqrLjnrBO/JoatIlbvZdqyXy8xR7zDKCpo76Witkn/pYlv+jIXYlPVRrnLuLk5GsbrRQVyNU4xCR44O1TGOp9fDzcYf+yKzKAlAgke2udMq8ykHug+DGed1priQ51w0Tw2qsxPNPZUvMjNnGD/B4ysqtr7+IswbNSKOcPV7OlBynflW4DSjUJc+iAsi0FwVT8/EXfNXzD5grCOCxLSCXxMIL+lpdGE5oP/Df8EjgoVTIr8l8TYxSkRu8aodh1yJ0Mp86+PU8yJgyrtAnjE+kLEdevMtIy2rO7KY4k7jUZqbwJ668g4ePWlf3I+Ta1qPVopnjANH7fgF/WmJ0wqvyYQOHn3/uqok3siBztyGW09KbDvFTyYfjyZL2qxMy8U2pUpJU0bNY4DTgAoR1wN4LRR69Z/8L1GqngoqKIDG0HbGUIXVDcNNoYtEmfgNm8XygpNkYm52prz/0UL7q3jNOWqPfUvDLxuImnXOZUmyyCLhs5eeoZoFqKgdlM/FYLeN56Ocmpdwpi638txID+Qkx169aVhWsYjl5l9gpIB5el1vmTWHmbZ9Y/zJvwnDzuu3+cVjNlycx/rH00ehlPIMiYnjvFzuDVEktu7LL8Gi51b6XM7H6pcosyUNkfCBFAg7tOzHDyAKF4vpGivOs5vqPYUbqCXas0Rfg3vZQEazG7jq7IJaDBT66T0eSxhRRtRP+hVHNzmctXLjdUMLpRaG6PXz93NcudaHbxWLCR+SRHKY4HBgAfS+Je0
+	8ijRXn2wR6VV5h88zPUj8FZVMIyktsqRphsNs3tPS6xFISAQfkl48MqDOtCUotmMXoacrAPPWClcBO/xXxUhWFpyS4WYrorQYgOjBNzXT4wHDhOwuc2KrKiirgS1jckKvk8H4sNA7hXgp2QfTdboiI6e1cVxpgFfPCEBGalpzMInuASJd9scA2+PkjHQBzm76vC6VK5J6mNYFVdA/7olpl3PDPTVFZDZLnRfeAvaKdmP2dPsrgm2f3okZoEsQ59YmG8rUyW5eOn6ACPpc2nktw8s7Vzlwsv6Jsbgiypo9i1+hFoCAV5/YXTDKAuuBIvqjGGZYNneFs5RQzfF927JUYO8Lvht0JbubtMjMyjOABW9hiyNjauVaNZvNE+zn4jxWtSJIRSML1agoqbAHR9HaE9YgzEhmtk2fYq6kq8d9lpdhAfTIEpNu+GTvhj40eS2dHRRZU3DRZNPs+n5P5E0i+rbOupQCygflsrBgBxuCLmzqk5GCjvvfNM7ZVctSahlD/Ygsr7t8kp4+V/Kcdt13+gC1+OgfVGNwa/RjMgC9fRKF/l5VrFCer54FzbLVe1eKxTcvqpCW5VshJdEriaILbPfmW06GJ1NzI/PG3Gl2ZmriEFAWpgP7zi20f8+rMT1TqBGXAcoy0dMighjIzbg7pmDBgBKrhMPNxttxE7n4B267/EPKATeMlU2g5/MDhuP5uDjb6/NHEwM8UuoS5/urY8xZxQncfn6HqhBLqvfaFQs1EzVTwtFwDwkXvz1DqpM
 X-Forefront-Antispam-Report: 
-	CIP:204.77.163.244;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:edgetransport.garmin.com;PTR:extedge.garmin.com;CAT:NONE;SFS:(13230031)(7416005)(376005)(82310400014)(36860700004)(1800799015);DIR:OUT;SFP:1102;
+	CIP:204.77.163.244;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:edgetransport.garmin.com;PTR:extedge.garmin.com;CAT:NONE;SFS:(13230031)(1800799015)(376005)(82310400014)(7416005)(36860700004);DIR:OUT;SFP:1102;
 X-OriginatorOrg: garmin.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Apr 2024 00:12:35.0939
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Apr 2024 00:12:42.0107
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2f99e027-0c30-4414-40a3-08dc52a99922
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3dc8e2b4-5a84-4462-d0e1-08dc52a99d48
 X-MS-Exchange-CrossTenant-Id: 38d0d425-ba52-4c0a-a03e-2a65c8e82e2d
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=38d0d425-ba52-4c0a-a03e-2a65c8e82e2d;Ip=[204.77.163.244];Helo=[edgetransport.garmin.com]
 X-MS-Exchange-CrossTenant-AuthSource: 
-	CY4PEPF0000E9DB.namprd05.prod.outlook.com
+	CY4PEPF0000E9D9.namprd05.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH0PR04MB8097
-X-Proofpoint-ORIG-GUID: nHpMqpoJ1mrr7prrOOz8KxzvLv56tl-q
-X-Proofpoint-GUID: nHpMqpoJ1mrr7prrOOz8KxzvLv56tl-q
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR04MB7004
+X-Proofpoint-ORIG-GUID: 9AFrCKegaumqDp1-oi1oZPU64ACH3ExY
+X-Proofpoint-GUID: 9AFrCKegaumqDp1-oi1oZPU64ACH3ExY
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
  definitions=2024-04-01_16,2024-04-01_01,2023-05-22_02
@@ -144,192 +144,186 @@ X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscor
  lowpriorityscore=0 adultscore=0 classifier=spam adjust=0 reason=mlx
  scancount=1 engine=8.19.0-2403210001 definitions=main-2404010168
 
-Keep track of bridge mdb objects in the driver.
+When a port turns into an mrouter port, enable multicast flooding
+on that port even if multicast flooding is disabled by user config. This
+is necessary so that in a distributed system, the multicast packets
+can be forwarded to the Querier when the multicast source is attached
+to a Non-Querier bridge.
 
-Similar to the previous patch, since the driver doesn't get explicit
-notifications about mdb group creation or destruction, just create
-the mdb group when the first port joins the group via
-mv88e6xxx_port_mdb_add(), and destroys the group when the last port left
-the group via mv88e6xxx_port_mdb_del().
+Consider the following scenario:
 
-Use the group's L2 address together with the VLAN ID as the key to the list.
-Port membership is again stored in a bitmask.
+                 +--------------------+
+                 |                    |
+                 |      Snooping      |    +------------+
+                 |      Bridge 1      |----| Listener 1 |
+                 |     (Querier)      |    +------------+
+                 |                    |
+                 +--------------------+
+                           |
+                           |
+                 +--------------------+
+                 |    | mrouter |     |
++-----------+    |    +---------+     |
+| MC Source |----|      Snooping      |
++-----------|    |      Bridge 2      |
+                 |    (Non-Querier)   |
+                 +--------------------+
+
+In this scenario, Listener 1 will never receive multicast traffic
+from MC Source if multicast flooding is disabled on the mrouter port on
+Snooping Bridge 2.
 
 Signed-off-by: Joseph Huang <Joseph.Huang@garmin.com>
 ---
- drivers/net/dsa/mv88e6xxx/chip.c | 117 +++++++++++++++++++++++++++++++
- 1 file changed, 117 insertions(+)
+ drivers/net/dsa/mv88e6xxx/chip.c | 86 ++++++++++++++++++++++++++++++--
+ drivers/net/dsa/mv88e6xxx/chip.h |  1 +
+ 2 files changed, 83 insertions(+), 4 deletions(-)
 
 diff --git a/drivers/net/dsa/mv88e6xxx/chip.c b/drivers/net/dsa/mv88e6xxx/chip.c
-index f66ddde484dc..32a613c965b1 100644
+index 32a613c965b1..9831aa370921 100644
 --- a/drivers/net/dsa/mv88e6xxx/chip.c
 +++ b/drivers/net/dsa/mv88e6xxx/chip.c
-@@ -47,6 +47,14 @@ struct mv88e6xxx_bridge {
+@@ -47,6 +47,7 @@ struct mv88e6xxx_bridge {
  	struct list_head head;
  	struct net_device *br_dev;
  	u16 ports;
-+	struct list_head br_mdb_list;
-+};
-+
-+struct mv88e6xxx_br_mdb {
-+	struct list_head head;
-+	unsigned char addr[ETH_ALEN];
-+	u16 vid;
-+	u16 portvec;
++	u16 mrouter_ports;
+ 	struct list_head br_mdb_list;
  };
  
- static void assert_reg_lock(struct mv88e6xxx_chip *chip)
-@@ -2974,6 +2982,7 @@ mv88e6xxx_bridge_create(struct mv88e6xxx_chip *chip, struct net_device *br_dev)
- 		return ERR_PTR(-ENOMEM);
- 
- 	mv_bridge->br_dev = br_dev;
-+	INIT_LIST_HEAD(&mv_bridge->br_mdb_list);
- 	list_add(&mv_bridge->head, &chip->bridge_list);
- 
- 	return mv_bridge;
-@@ -2984,6 +2993,7 @@ static void mv88e6xxx_bridge_destroy(struct mv88e6xxx_bridge *mv_bridge)
+@@ -2993,6 +2994,7 @@ static void mv88e6xxx_bridge_destroy(struct mv88e6xxx_bridge *mv_bridge)
  	list_del(&mv_bridge->head);
  
  	WARN_ON(mv_bridge->ports);
-+	WARN_ON(!list_empty(&mv_bridge->br_mdb_list));
++	WARN_ON(mv_bridge->mrouter_ports);
+ 	WARN_ON(!list_empty(&mv_bridge->br_mdb_list));
  	kfree(mv_bridge);
  }
- 
-@@ -6583,16 +6593,101 @@ static int mv88e6xxx_change_tag_protocol(struct dsa_switch *ds,
- 	return err;
+@@ -3010,6 +3012,19 @@ struct mv88e6xxx_bridge *mv88e6xxx_bridge_by_dev(struct mv88e6xxx_chip *chip,
+ 	return NULL;
  }
  
-+static struct mv88e6xxx_br_mdb *
-+mv88e6xxx_br_mdb_create(struct mv88e6xxx_bridge *mv_bridge,
-+			const struct switchdev_obj_port_mdb *mdb)
++static
++struct mv88e6xxx_bridge *mv88e6xxx_bridge_by_port(struct mv88e6xxx_chip *chip,
++						  int port)
 +{
-+	struct mv88e6xxx_br_mdb *mv_br_mdb;
++	struct mv88e6xxx_bridge *mv_bridge;
 +
-+	mv_br_mdb = kzalloc(sizeof(*mv_br_mdb), GFP_KERNEL);
-+	if (!mv_br_mdb)
-+		return ERR_PTR(-ENOMEM);
-+
-+	ether_addr_copy(mv_br_mdb->addr, mdb->addr);
-+	mv_br_mdb->vid = mdb->vid;
-+	list_add(&mv_br_mdb->head, &mv_bridge->br_mdb_list);
-+
-+	return mv_br_mdb;
-+}
-+
-+static void mv88e6xxx_br_mdb_destroy(struct mv88e6xxx_br_mdb *mv_br_mdb)
-+{
-+	list_del(&mv_br_mdb->head);
-+
-+	WARN_ON(mv_br_mdb->portvec);
-+	kfree(mv_br_mdb);
-+}
-+
-+static struct mv88e6xxx_br_mdb *
-+mv88e6xxx_br_mdb_find(struct mv88e6xxx_bridge *mv_bridge,
-+		      const struct switchdev_obj_port_mdb *mdb)
-+{
-+	struct mv88e6xxx_br_mdb *mv_br_mdb;
-+
-+	list_for_each_entry(mv_br_mdb, &mv_bridge->br_mdb_list, head)
-+		if (ether_addr_equal(mv_br_mdb->addr, mdb->addr) &&
-+		    mv_br_mdb->vid == mdb->vid)
-+			return mv_br_mdb;
++	list_for_each_entry(mv_bridge, &chip->bridge_list, head)
++		if (mv_bridge->ports & BIT(port))
++			return mv_bridge;
 +
 +	return NULL;
 +}
 +
-+static struct mv88e6xxx_br_mdb *
-+mv88e6xxx_br_mdb_get(struct mv88e6xxx_bridge *mv_bridge,
-+		     const struct switchdev_obj_port_mdb *mdb)
-+{
-+	struct mv88e6xxx_br_mdb *mv_br_mdb;
-+
-+	mv_br_mdb = mv88e6xxx_br_mdb_find(mv_bridge, mdb);
-+	if (!mv_br_mdb)
-+		mv_br_mdb = mv88e6xxx_br_mdb_create(mv_bridge, mdb);
-+
-+	return mv_br_mdb;
-+}
-+
-+static void mv88e6xxx_br_mdb_put(struct mv88e6xxx_br_mdb *mv_br_mdb)
-+{
-+	if (!mv_br_mdb->portvec)
-+		mv88e6xxx_br_mdb_destroy(mv_br_mdb);
-+}
-+
- static int mv88e6xxx_port_mdb_add(struct dsa_switch *ds, int port,
- 				  const struct switchdev_obj_port_mdb *mdb,
- 				  struct dsa_db db)
+ static struct mv88e6xxx_bridge *
+ mv88e6xxx_bridge_get(struct mv88e6xxx_chip *chip, struct net_device *br_dev)
  {
- 	struct mv88e6xxx_chip *chip = ds->priv;
-+	struct mv88e6xxx_bridge *mv_bridge;
-+	struct mv88e6xxx_br_mdb *mv_br_mdb;
-+	struct net_device *orig_dev;
-+	struct net_device *br_dev;
- 	int err;
+@@ -6849,11 +6864,28 @@ static int mv88e6xxx_port_bridge_flags(struct dsa_switch *ds, int port,
  
-+	orig_dev = mdb->obj.orig_dev;
-+	br_dev = netdev_master_upper_dev_get(orig_dev);
-+	if (!br_dev)
-+		br_dev = orig_dev;
+ 	if (flags.mask & BR_MCAST_FLOOD) {
+ 		bool multicast = !!(flags.val & BR_MCAST_FLOOD);
++		struct mv88e6xxx_bridge *mv_bridge;
++		struct mv88e6xxx_port *p;
++		bool mrouter;
+ 
+-		err = chip->info->ops->port_set_mcast_flood(chip, port,
+-							    multicast);
+-		if (err)
+-			goto out;
++		mv_bridge = mv88e6xxx_bridge_by_port(chip, port);
++		if (!mv_bridge)
++			return -EINVAL;
 +
-+	mv_bridge = mv88e6xxx_bridge_by_dev(chip, br_dev);
++		p = &chip->ports[port];
++		mrouter = !!(mv_bridge->mrouter_ports & BIT(port));
++
++		if (!mrouter) {
++			err = chip->info->ops->port_set_mcast_flood(chip, port,
++								    multicast);
++			if (err)
++				goto out;
++		}
++
++		if (multicast)
++			p->flags |= MV88E6XXX_PORT_FLAG_MC_FLOOD;
++		else
++			p->flags &= ~MV88E6XXX_PORT_FLAG_MC_FLOOD;
+ 	}
+ 
+ 	if (flags.mask & BR_BCAST_FLOOD) {
+@@ -6883,6 +6915,51 @@ static int mv88e6xxx_port_bridge_flags(struct dsa_switch *ds, int port,
+ 	return err;
+ }
+ 
++static int mv88e6xxx_port_mrouter(struct dsa_switch *ds, int port,
++				  bool mrouter,
++				  struct netlink_ext_ack *extack)
++{
++	struct mv88e6xxx_chip *chip = ds->priv;
++	struct mv88e6xxx_bridge *mv_bridge;
++	struct mv88e6xxx_port *p;
++	bool old_mrouter;
++	bool mc_flood;
++	int err;
++
++	if (!chip->info->ops->port_set_mcast_flood)
++		return -EOPNOTSUPP;
++
++	mv_bridge = mv88e6xxx_bridge_by_port(chip, port);
 +	if (!mv_bridge)
 +		return -EINVAL;
 +
-+	mv_br_mdb = mv88e6xxx_br_mdb_get(mv_bridge, mdb);
-+	if (IS_ERR(mv_br_mdb))
-+		return PTR_ERR(mv_br_mdb);
++	old_mrouter = !!(mv_bridge->mrouter_ports & BIT(port));
++	if (mrouter == old_mrouter)
++		return 0;
 +
-+	if (mv_br_mdb->portvec & BIT(port))
-+		return -EEXIST;
++	p = &chip->ports[port];
++	mc_flood = !!(p->flags & MV88E6XXX_PORT_FLAG_MC_FLOOD);
 +
- 	mv88e6xxx_reg_lock(chip);
- 	err = mv88e6xxx_port_db_load_purge(chip, port, mdb->addr, mdb->vid,
- 					   MV88E6XXX_G1_ATU_DATA_STATE_MC_STATIC);
++	mv88e6xxx_reg_lock(chip);
 +
-+	if (err)
-+		goto out;
++	if (!mc_flood) {
++		err = chip->info->ops->port_set_mcast_flood(chip, port,
++							    mrouter);
++		if (err)
++			goto out;
++	}
 +
-+	mv_br_mdb->portvec |= BIT(port);
++	if (mrouter)
++		mv_bridge->mrouter_ports |= BIT(port);
++	else
++		mv_bridge->mrouter_ports &= ~BIT(port);
 +
 +out:
- 	mv88e6xxx_reg_unlock(chip);
++	mv88e6xxx_reg_unlock(chip);
++
++	return err;
++}
++
+ static bool mv88e6xxx_lag_can_offload(struct dsa_switch *ds,
+ 				      struct dsa_lag lag,
+ 				      struct netdev_lag_upper_info *info,
+@@ -7199,6 +7276,7 @@ static const struct dsa_switch_ops mv88e6xxx_switch_ops = {
+ 	.port_bridge_leave	= mv88e6xxx_port_bridge_leave,
+ 	.port_pre_bridge_flags	= mv88e6xxx_port_pre_bridge_flags,
+ 	.port_bridge_flags	= mv88e6xxx_port_bridge_flags,
++	.port_mrouter		= mv88e6xxx_port_mrouter,
+ 	.port_stp_state_set	= mv88e6xxx_port_stp_state_set,
+ 	.port_mst_state_set	= mv88e6xxx_port_mst_state_set,
+ 	.port_fast_age		= mv88e6xxx_port_fast_age,
+diff --git a/drivers/net/dsa/mv88e6xxx/chip.h b/drivers/net/dsa/mv88e6xxx/chip.h
+index 205f6777c2ac..47e056dc7925 100644
+--- a/drivers/net/dsa/mv88e6xxx/chip.h
++++ b/drivers/net/dsa/mv88e6xxx/chip.h
+@@ -274,6 +274,7 @@ struct mv88e6xxx_vlan {
  
- 	return err;
-@@ -6603,10 +6698,32 @@ static int mv88e6xxx_port_mdb_del(struct dsa_switch *ds, int port,
- 				  struct dsa_db db)
- {
- 	struct mv88e6xxx_chip *chip = ds->priv;
-+	struct mv88e6xxx_bridge *mv_bridge;
-+	struct mv88e6xxx_br_mdb *mv_br_mdb;
-+	struct net_device *orig_dev;
-+	struct net_device *br_dev;
- 	int err;
+ /* MacAuth Bypass Control Flag */
+ #define MV88E6XXX_PORT_FLAG_MAB		BIT(0)
++#define MV88E6XXX_PORT_FLAG_MC_FLOOD	BIT(1)
  
-+	orig_dev = mdb->obj.orig_dev;
-+	br_dev = netdev_master_upper_dev_get(orig_dev);
-+	if (!br_dev)
-+		br_dev = orig_dev;
-+
-+	mv_bridge = mv88e6xxx_bridge_by_dev(chip, br_dev);
-+	if (!mv_bridge)
-+		return -EINVAL;
-+
-+	mv_br_mdb = mv88e6xxx_br_mdb_find(mv_bridge, mdb);
-+	if (!mv_br_mdb)
-+		return -ENOENT;
-+
-+	if (!(mv_br_mdb->portvec & BIT(port)))
-+		return -ENOENT;
-+
- 	mv88e6xxx_reg_lock(chip);
- 	err = mv88e6xxx_port_db_load_purge(chip, port, mdb->addr, mdb->vid, 0);
-+	mv_br_mdb->portvec &= ~BIT(port);
-+	mv88e6xxx_br_mdb_put(mv_br_mdb);
- 	mv88e6xxx_reg_unlock(chip);
- 
- 	return err;
+ struct mv88e6xxx_port {
+ 	struct mv88e6xxx_chip *chip;
 -- 
 2.17.1
 
