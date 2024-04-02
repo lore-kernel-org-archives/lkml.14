@@ -1,57 +1,57 @@
-Received: from mail-vk1-f171.google.com (mail-vk1-f171.google.com [209.85.221.171])
+Received: from mail-qv1-f44.google.com (mail-qv1-f44.google.com [209.85.219.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0BBF626A0
-	for <linux-kernel@vger.kernel.org>; Tue,  2 Apr 2024 11:14:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 267BD65BD1
+	for <linux-kernel@vger.kernel.org>; Tue,  2 Apr 2024 11:14:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712056468; cv=none; b=b2AYkucUwvnlqsLYI3L7ACPHFPBqg/DU3C8qW63ojxsC/0lU6z/lNZ7I4J2tWp3jsjDY9wucSOm4S8nY7RWra+w7HLJxoPlxlag+88g53T1touSnKY1SRn5xCVyRgIoxQ5RUnu4nKGqw/mUI4a4bn2/WapHTuv222ol8WiJqR4A=
+	t=1712056471; cv=none; b=IkUUdCwKaGugtK5Iw0dc2ClIGevbEwo/LRdGFiJFLNoKBQoVgXCs1n2lw5waIXld0MZKN21q2TlwCIv2AJ1ADd9KD7MgogX4pw2jCxMVVa4qldtLRcJHjiSSeFdZYhHzIAUqZ7kP/wI0nzhthKkdumMtOWqVp7xrQsd53npeAvA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712056468; c=relaxed/simple;
-	bh=g/WMOp/DBXdvY4p/J51T2DdQvuOBI7ftgCcNNdq/ZQg=;
+	s=arc-20240116; t=1712056471; c=relaxed/simple;
+	bh=jK+AFaPuB4QJkOlQSpapYzjziTfiCfCCfo7UWLC+ajY=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Kh0XZrs+yRv1mgzpyhEmzZgEP9i5b+bJcpvVi+H1qf5yEUlEC/QU/6nOZ1cFQ88fSZwIUMoG0A0gWYGRrF5sNMaWyMIlQ3Prfg2+CNktUgLfPkgirDd4nNjHkD2IVyooBkuCa19lDrpzptCXhna0mnemz96NbP2FBPhqpKyOCK4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Iph6/H3+; arc=none smtp.client-ip=209.85.221.171
+	 MIME-Version; b=P2YJLm12QC1LePG0kJn2za6UhCj5zBkDWBsrIO91rMcgYrUvPfLb3U50UBFSqa3nVWvoivbg+rakyc635pdXh/1lxPo056sQB3yG0A+JCcQBWPYKSRJ4jLPVYEU+mhFwaqvmjE5Kp2CpAFitQXfIeYxJtsJ5bofYvsl4OpMxiM0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XTatd7zE; arc=none smtp.client-ip=209.85.219.44
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Iph6/H3+"
-Received: by mail-vk1-f171.google.com with SMTP id 71dfb90a1353d-4d47000f875so2080102e0c.2
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Apr 2024 04:14:25 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XTatd7zE"
+Received: by mail-qv1-f44.google.com with SMTP id 6a1803df08f44-6962e6fbf60so44097786d6.1
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Apr 2024 04:14:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1712056465; x=1712661265; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1712056469; x=1712661269; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=AwPl8LYnfW65bMF9In5HJ2vXzRSbzAQqtlyK3TQNiLw=;
-        b=Iph6/H3+8m9q7/eVHUTq8b/7ZXJ/2t+4k1RMSQQ3w4j3GQhSU+VtY1iSJ2BxzBDjCt
-         vmpYOHAqBl48wRVeMNrAKzLX+OwTJ71HfpU9i0cXIOvUamtCJBN8bFOn5KNcjsmzdpZo
-         hqc5Igfkkn8Cn5oNyc+j+6gWe9TPlz3ohM7MMJeHockVHbUPXjrcbV4CkXVecDb/o2y1
-         56Rg6JX/AiKh6CLHZxcA8ugED8FXGub+h+p2cY0B2ejBRwog1oUbt4WzuZkfmjjqrHh3
-         LFS8JHJjKDg6fTmW/xyrinaW4tmE3uyJYuXTNY7P/mh6o6JDcjURbjjZH5eFLqCVHcYR
-         7L5Q==
+        bh=bF9nmGQgrbBBKoEODSqmsdf3m34vi7We9f5KYGrq5eQ=;
+        b=XTatd7zExMDOaI0CoJwn8flni40honijO/2m59N6mMmHyiAnC8HZK5wfXbao3WaUiF
+         ddikk650/vphdp6UdS8O0ORrpaWs15dn1Q+kZ4AWENLNLaY2vNN4EUNIBLnOxqmaRYPZ
+         n00eBZN1JuKBwIvBOPrl7ehL/qDVQW6MTpkUQyW7yaY4JNNc3GYwCww7MQ9rbN+Ojm8K
+         aG2XC0JVaebM03kIZq1SaWD8DqLHmzNBZC9ZAyOxD/u3rss8HI18nw319O2k8TJeXhmw
+         viHQ3ZSWNlUMxyIQfWd+sVorJnsEGxVzih1OjYv9vnNhVBqem+YfxrN7XH4jAGyq1OKl
+         epDw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712056465; x=1712661265;
+        d=1e100.net; s=20230601; t=1712056469; x=1712661269;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=AwPl8LYnfW65bMF9In5HJ2vXzRSbzAQqtlyK3TQNiLw=;
-        b=uxAguD06/jxosug0z7sVEaDhJalodgYlLUTm1ncitkapdPJ/a7MMijMtmpefnfv+pA
-         +w+4aGx05eE44IdhxEn7ZTZOq2nZ11H/8d2Y7IE3pBuyzNMS3vUj16nQnX9ZnteaSnY4
-         MRD/Wa3FC/0C+Ws+iHw+Q9RCxETe8z9IKd2YLmZ8hqr+WGeOCf+RV56h7/TzzPQISfZY
-         GyF+cb5pS/mvRX8bhdfISJphaQtoiGpw2IPXAFMLv4J9KHi/Fi8oiP5yDhMLU7kWSvn3
-         hWsoM2hZDIYWiSaAttpJlREZ2NUJpq8Xrr3wPh5cpuJScyRRMG4334yXqJnzBGvRjWcz
-         O3RQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXMQTV2kMTX3xIuqa85iuwmz+a1IC6Ew74U8zu3r994YIR93Hw8oEJn0+1Ec5+Wu/yOkCoeVoN66LPBuvHIZ7pcowc6SrGZMFWMs3To
-X-Gm-Message-State: AOJu0YyOS2PhjPPnFLCL6GlXWSnOqD7hDNIJ/piKRfN6xXVel1Gi2KtE
-	lC63NF33bAZCnz9EtcgJTR7BJ2ZxTm3WKBu/i8Pbr0FERWTxpLtw
-X-Google-Smtp-Source: AGHT+IGQ+gz5kG9dTgq1zUZPBLECe9wqwN5K7d6gbfjwiXOgW0CKfm40k68E2evbnEs3WIhJ/0Q7UQ==
-X-Received: by 2002:a67:f2d0:0:b0:478:46db:6222 with SMTP id a16-20020a67f2d0000000b0047846db6222mr9938357vsn.24.1712056464764;
-        Tue, 02 Apr 2024 04:14:24 -0700 (PDT)
+        bh=bF9nmGQgrbBBKoEODSqmsdf3m34vi7We9f5KYGrq5eQ=;
+        b=RfIm3bZMOu54oW4kMIv4LORxDK9eP2Sw29vEbASC+ER1WWyk16JTovNYpgZPcV2y5E
+         mmSd6G0Whk9g3F2BhTUcvVQnPmbEO7Dvt4UNMkUyn5mfAT9tYNx68xQVPlpuG1nvqCSF
+         8LKXLLo1UIa8qQoPBV57z18RCRdZFQlw90Zvy+URA+NxZm6zgpYYjiOzK7axDDuNSuha
+         4l/eAydjtOPSh7a7GqzDqEidE53tZHjLjZ0oQr0jki+bxSA6yQL6ppl/MpegbxRtEF2a
+         B2LwJF2ss/plGOVSjf173RY9FQhdgAj/oSJP/FpnZSTEI99jAEsV3MP/NRjzwv9DhVZ/
+         qSCQ==
+X-Forwarded-Encrypted: i=1; AJvYcCX8HZNEtnICa77KPOgFnqSMzYtv3L2uLJA7jHqFG3xLQ1FuRvWj64YD+R7tjYoCUTILd89fIoG6hMOHrzj2XbIly1QHNVhboS5zrhhM
+X-Gm-Message-State: AOJu0YxYDtaD60BMpoQ0YIfqQiid/dFF7drSGKiNuwhBY6h47fH0G58k
+	cePeO5ViukHyyglQeT+MaxmTcbC9DxvWU0wjMm7ags9/tbJb1yHE
+X-Google-Smtp-Source: AGHT+IGS0uqiCKJa4dv9VNSkOwxSSex+kQ8m3oeOu7lY86dHg2spNQmL+dupDA7mrw1XNDRQdV8eTw==
+X-Received: by 2002:a0c:fecc:0:b0:699:af7:1fa6 with SMTP id z12-20020a0cfecc000000b006990af71fa6mr5206180qvs.47.1712056469197;
+        Tue, 02 Apr 2024 04:14:29 -0700 (PDT)
 Received: from YOGA.local ([2a06:c701:737b:ef00:2c6f:6cdc:f641:6ecf])
-        by smtp.gmail.com with ESMTPSA id 11-20020a05621420cb00b006968a6fb010sm5428855qve.91.2024.04.02.04.14.22
+        by smtp.gmail.com with ESMTPSA id 11-20020a05621420cb00b006968a6fb010sm5428855qve.91.2024.04.02.04.14.27
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 02 Apr 2024 04:14:24 -0700 (PDT)
+        Tue, 02 Apr 2024 04:14:28 -0700 (PDT)
 From: Shahar Avidar <ikobh7@gmail.com>
 To: gregkh@linuxfoundation.org,
 	hverkuil-cisco@xs4all.nl,
@@ -60,9 +60,9 @@ To: gregkh@linuxfoundation.org,
 	felixkimbu1@gmail.com
 Cc: linux-staging@lists.linux.dev,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 1/6] staging: pi433: Rename struct pi433_device buffer field to tx_buffer.
-Date: Tue,  2 Apr 2024 14:14:09 +0300
-Message-Id: <20240402111414.871089-2-ikobh7@gmail.com>
+Subject: [PATCH v2 3/6] staging: pi433: Replace pi433_receive param void type to struct pi433_device.
+Date: Tue,  2 Apr 2024 14:14:11 +0300
+Message-Id: <20240402111414.871089-4-ikobh7@gmail.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20240402111414.871089-1-ikobh7@gmail.com>
 References: <20240402111414.871089-1-ikobh7@gmail.com>
@@ -74,76 +74,30 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Driver holds buffers in different structs, as does the HW.
-Using explicit names for buffers increases readability.
+pi433_receive is only called once.
+It immediately assigns the data param to a struct pi433_device.
+Rename param name to pi433.
 
 Signed-off-by: Shahar Avidar <ikobh7@gmail.com>
 ---
- drivers/staging/pi433/pi433_if.c | 18 +++++++++---------
- 1 file changed, 9 insertions(+), 9 deletions(-)
+ drivers/staging/pi433/pi433_if.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
 diff --git a/drivers/staging/pi433/pi433_if.c b/drivers/staging/pi433/pi433_if.c
-index 8c513ac62156..13b464ab7db8 100644
+index 7efe6b8501e3..208c0c6d3649 100644
 --- a/drivers/staging/pi433/pi433_if.c
 +++ b/drivers/staging/pi433/pi433_if.c
-@@ -90,7 +90,7 @@ struct pi433_device {
- 	struct task_struct	*tx_task_struct;
- 	wait_queue_head_t	tx_wait_queue;
- 	u8			free_in_fifo;
--	char			buffer[MAX_MSG_SIZE];
-+	char			tx_buffer[MAX_MSG_SIZE];
+@@ -409,9 +409,8 @@ static int pi433_start_rx(struct pi433_device *pi433)
  
- 	/* rx related values */
- 	struct pi433_rx_cfg	rx_cfg;
-@@ -613,8 +613,8 @@ static int pi433_tx_thread(void *data)
- 		if (tx_cfg.enable_address_byte == OPTION_ON)
- 			size++;
+ /*-------------------------------------------------------------------------*/
  
--		/* prime buffer */
--		memset(device->buffer, 0, size);
-+		/* prime tx_buffer */
-+		memset(device->tx_buffer, 0, size);
- 		position = 0;
- 
- 		/* add length byte, if requested */
-@@ -623,15 +623,15 @@ static int pi433_tx_thread(void *data)
- 			 * according to spec, length byte itself must be
- 			 * excluded from the length calculation
- 			 */
--			device->buffer[position++] = size - 1;
-+			device->tx_buffer[position++] = size - 1;
- 
- 		/* add adr byte, if requested */
- 		if (tx_cfg.enable_address_byte == OPTION_ON)
--			device->buffer[position++] = tx_cfg.address_byte;
-+			device->tx_buffer[position++] = tx_cfg.address_byte;
- 
- 		/* finally get message data from fifo */
--		retval = kfifo_out(&device->tx_fifo, &device->buffer[position],
--				   sizeof(device->buffer) - position);
-+		retval = kfifo_out(&device->tx_fifo, &device->tx_buffer[position],
-+				   sizeof(device->tx_buffer) - position);
- 		dev_dbg(device->dev,
- 			"read %d message byte(s) from fifo queue.\n", retval);
- 
-@@ -715,7 +715,7 @@ static int pi433_tx_thread(void *data)
- 
- 				device->free_in_fifo = 0;
- 				rf69_write_fifo(spi,
--						&device->buffer[position],
-+						&device->tx_buffer[position],
- 						write_size);
- 				position += write_size;
- 			} else {
-@@ -723,7 +723,7 @@ static int pi433_tx_thread(void *data)
- 				device->free_in_fifo -= size;
- 				repetitions--;
- 				rf69_write_fifo(spi,
--						&device->buffer[position],
-+						&device->tx_buffer[position],
- 						(size - position));
- 				position = 0; /* reset for next repetition */
- 			}
+-static int pi433_receive(void *data)
++static int pi433_receive(struct pi433_device *pi433)
+ {
+-	struct pi433_device *pi433 = data;
+ 	struct spi_device *spi = pi433->spi;
+ 	int bytes_to_read, bytes_total;
+ 	int retval;
 -- 
 2.34.1
 
