@@ -1,109 +1,107 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+Received: from relay9-d.mail.gandi.net (relay9-d.mail.gandi.net [217.70.183.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F912335A7;
-	Tue,  2 Apr 2024 12:36:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FDD078B63;
+	Tue,  2 Apr 2024 12:36:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712061389; cv=none; b=Uz6UFLcD4DYLB6ITcC9MpH+UuiPuvDnro5Dy1Xd6uLP7VyooHv1/2U97BuwnZYfbJI8Ayn5byRaXQX6oKuf88Ygav0dbO7gB8gdOWM32OMP95//o6Jjc7IY2g+u46hwaQ/y4rHhGmrYN+KtfA4lju2y5ZE0YqbGp6cwLmJxxrA4=
+	t=1712061402; cv=none; b=pbtBhMSCNPbe1QufSSiYTreASXchZCQd1Um5ziA3v3YgrpNblQ0q3nGwztF1Zr8lB7YZcBHHdnWDr0tt6Lpm7qSSodfNaiaTtllocyrAGdVNrZuvyT0tGv9Gw8biVJxsaaaGiwSL6fZiQQHmCrWSxuGEgoLALDCbwUM+gGPxtLs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712061389; c=relaxed/simple;
-	bh=LSeP6HN3z5K0OrmN8QMXYgQgBRdsW+fePyJf3hdOeBM=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=SclKaaRfzdLQO6+D6GqrvbHmebeEmCUKi53DdOS1eV2cTKw+sN0mgNWrpgvjzF0X54pY4Y86YGHL8MdhyQkPUXCW8tJpHNo3L7XM6AULzSsE7cIJIp9JZ+HkI8wh4/Q/MLA2UYIlaWse04cAYfzSjPXB2T/+ceZhxcv3E2dtslY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=U80+1NCT; arc=none smtp.client-ip=192.198.163.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1712061402; c=relaxed/simple;
+	bh=CqoAkQqjHL6tWHYJw4f9BhF7XnKfqr4ur0BOKMnjGwY=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=I1s3pNNcPeeiU0/hlpa3rZTo70XHNvpwajxzo89Pkdkt5OJY0x9yW3eajrtStE5yE10+AHO1j25iOftocYViCepVHp+DNKsBzZHiOphaISTw1WcDy/GMmkArfJROIDjAAt6x9BtKwvFWxNZXLHJVswSk8GSh6BdVKYqENEDSCYg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=Qr4KMBLU; arc=none smtp.client-ip=217.70.183.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="U80+1NCT"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1712061388; x=1743597388;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=LSeP6HN3z5K0OrmN8QMXYgQgBRdsW+fePyJf3hdOeBM=;
-  b=U80+1NCTpJVptOlpbA3DqcvAx+wofy2mw5B3N9faYVVPXlAQjtLIdOAn
-   XFB9A5ILVhWkTYlT68wVOUsGGQoLeBnjTD5KdRMIcIc4ugeSAVztp4/Ok
-   D35oNtaR9Ut0TXad2h4C/SF954O9PsQ0/OvZFwlFrgdgG0C+5xmDA1Kwu
-   0fO3f009gwTTMxtY+WAJPXV4+0Scss/3dCYFjxdeJsqaBdq7QPcckTjQm
-   aYGr+sSZRJS4J2ZE1Y+ixEuDZjesJ0t8wwiOy2PRo0C+awxdiat0duKn/
-   qpat3cOgwBIYU+l61YjdBhT3MeDTJI/caIalLfQyacwlmTYlKS1/eZ1WN
-   g==;
-X-CSE-ConnectionGUID: o0qCbYu6R3ioGQ3VYgVAWA==
-X-CSE-MsgGUID: MAd9wtCLSxuCRZ96H8jq/g==
-X-IronPort-AV: E=McAfee;i="6600,9927,11031"; a="7415864"
-X-IronPort-AV: E=Sophos;i="6.07,174,1708416000"; 
-   d="scan'208";a="7415864"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2024 05:36:27 -0700
-X-CSE-ConnectionGUID: bpp0ap3QQ02FGnbHYhaZeg==
-X-CSE-MsgGUID: OGqpTPEnRY6nrhf+1VUPGw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,174,1708416000"; 
-   d="scan'208";a="22507089"
-Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.247.23])
-  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2024 05:36:24 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Tue, 2 Apr 2024 15:36:21 +0300 (EEST)
-To: Maxim Korotkov <korotkov.maxim.s@gmail.com>
-cc: Armin Wolf <W_Armin@gmx.de>, Kenneth Chan <kenneth.t.chan@gmail.com>, 
-    Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>, 
-    Len Brown <len.brown@intel.com>, 
-    Henrique de Moraes Holschuh <hmh@hmh.eng.br>, 
-    Harald Welte <laforge@gnumonks.org>, Matthew Garrett <mjg@redhat.com>, 
-    Ivan Kapranov <i.kapranov@securitycode.ru>, lvc-project@linuxtesting.org, 
-    platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] platform/x86: panasonic-laptop: fix NULL dereference
-In-Reply-To: <9c4cfaf8-7738-4ba8-951e-5b91a3414f37@gmail.com>
-Message-ID: <ab04ebea-235b-e3ec-5982-e1f7907bcc64@linux.intel.com>
-References: <20240328103518.169604-1-korotkov.maxim.s@gmail.com> <da442a04-9db8-4951-98b4-3e149ea06415@gmx.de> <9c4cfaf8-7738-4ba8-951e-5b91a3414f37@gmail.com>
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="Qr4KMBLU"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id CE393FF810;
+	Tue,  2 Apr 2024 12:36:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1712061393;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=vbMj3lx6/AbEHxFwUiXuMUpd+hrzcJ437vem59DVMVE=;
+	b=Qr4KMBLUPrDOshUpxPGyYmIyAe9REwoFnf81l5s5Cd1aYPEMEXbC+uiezz1MyirfLQTVf3
+	vCk0KCQ83dECqHCONREOe8nt1qvvH4vmMBj7yYMsIe7amQhH3LBNeq+VwyF2t+Yt4LrpSj
+	V5vKw5RCsHmSEy32P22ST58gflprLoHFN+LZh2F0HX+uo77UllaXMsWX1pRysGV4358GzU
+	z0bbqwEWWRV8WmNZHf5/8CKhDVj+ptKpibvGH26mixv3g2EHfNQanpfrmUGznMmf6m/k0B
+	kqUWlviZzGnsI4Ers/NzAvje4jkr3bzhahVCwMA+f57PclaNazf5H7XCkIOJyQ==
+From: Romain Gantois <romain.gantois@bootlin.com>
+Subject: [PATCH net-next 0/3] net: stmmac: Add support for RZN1 GMAC
+ devices
+Date: Tue, 02 Apr 2024 14:36:59 +0200
+Message-Id: <20240402-rzn1-gmac1-v1-0-5be2b2894d8c@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-B4-Tracking: v=1; b=H4sIAOz7C2YC/x3MPQqAMAxA4atIZgNt/fcq4iBtqhmM0oqI4t0tj
+ t/w3gORAlOEPnsg0MmRN0nQeQZ2mWQmZJcMRplSlcpguEXjvE5WY91W1rdNVzhFkII9kOfrnw0
+ gdKDQdcD4vh9T22SNZgAAAA==
+To: "David S. Miller" <davem@davemloft.net>, 
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
+ Paolo Abeni <pabeni@redhat.com>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Geert Uytterhoeven <geert+renesas@glider.be>, 
+ Magnus Damm <magnus.damm@gmail.com>, 
+ Alexandre Torgue <alexandre.torgue@foss.st.com>, 
+ Jose Abreu <joabreu@synopsys.com>, 
+ Maxime Coquelin <mcoquelin.stm32@gmail.com>, 
+ Russell King <linux@armlinux.org.uk>, 
+ =?utf-8?q?Cl=C3=A9ment_L=C3=A9ger?= <clement.leger@bootlin.com>
+Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>, netdev@vger.kernel.org, 
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-renesas-soc@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, 
+ linux-arm-kernel@lists.infradead.org, 
+ Romain Gantois <romain.gantois@bootlin.com>
+X-Mailer: b4 0.13.0
+X-GND-Sasl: romain.gantois@bootlin.com
 
-On Fri, 29 Mar 2024, Maxim Korotkov wrote:
-> On 29.03.2024 03:21, Armin Wolf wrote:
-> > > Added a pointer check to ensure that it is valid
-> > > before using it for pcc initialization.
-> > 
-> > is this check even needed? I think the ACPI driver core takes care
-> > of passing a valid ACPI device pointer to acpi_pcc_hotkey_remove().
-> 
-> I proceeded from the assumption that the current check was not redundant.
-> Kuppuswamy correctly noted in the message that the device would most likely be
-> valid for the function of removal.
-> 
-> However, in my opinion, checking for NULL is a good coding practice, and has
-> now been implemented incorrectly in this case.
-> 
-> Eliminating NULL checks could potentially cause bugs in this context.
+Hello everyone,
 
-Hi,
+This is version one of my series that adds support for a Gigabit Ethernet
+controller featured in the Renesas r9a06g032 SoC, of the RZ/N1 family. This
+GMAC device is based on a Synopsys IP and is compatible with the stmmac driver.
 
-If you're going to be submitting patches based on some automated tool 
-which finds "bugs" in kernel, you need to be ready to go through the hoops 
-of the review process and not just assume the patches are good as is.
+My former colleague Clément Léger originally sent a series for this driver,
+but an issue in bringing up the PCS clock had blocked the upstreaming
+process. This issue has since been resolved by the following series:
 
-We do not do pointless NULL checks in the kernel, this is not a matter of 
-opinion. If there are unnecessary NULL checks, they should to be 
-eventually removed (and definitely not used as an excuse to add more).
+https://lore.kernel.org/all/20240326-rxc_bugfix-v6-0-24a74e5c761f@bootlin.com/
 
-If the NULL check is not required as was implied to you by the reviewers, 
-the correct response is to go check that the what the reviewers pointed 
-out is true and _adapt_ the patch based on that. Then send a v2 of the 
-patch. It how the kernel development process works. You might sometimes 
-find the reviewers are wrong too, if that happens you can come back and 
-point out why the patch is correct.
+This series consists of a devicetree binding describing the RZN1 GMAC
+controller IP, a node for the GMAC1 device in the r9a06g032 SoC device
+tree, and the GMAC driver itself which is a glue layer in stmmac.
 
-Either removing that check adds a bug or it doesn't. Not "potentially" 
-which is just an excuse for not wanting to figure it out from the code.
-It takes time and significant effort, I know, but spending time is 
-required if you want to participate in the kernel development.
+Best Regards,
 
+Romain Gantois
+
+---
+Clément Léger (3):
+      dt-bindings: net: renesas,rzn1-gmac: Document RZ/N1 GMAC support
+      net: stmmac: add support for RZ/N1 GMAC
+      ARM: dts: r9a06g032: describe GMAC1
+
+ .../devicetree/bindings/net/renesas,rzn1-gmac.yaml | 66 ++++++++++++++++
+ MAINTAINERS                                        |  6 ++
+ arch/arm/boot/dts/renesas/r9a06g032.dtsi           | 19 +++++
+ drivers/net/ethernet/stmicro/stmmac/Kconfig        | 12 +++
+ drivers/net/ethernet/stmicro/stmmac/Makefile       |  1 +
+ drivers/net/ethernet/stmicro/stmmac/dwmac-rzn1.c   | 87 ++++++++++++++++++++++
+ 6 files changed, 191 insertions(+)
+---
+base-commit: 5fc68320c1fb3c7d456ddcae0b4757326a043e6f
+change-id: 20240402-rzn1-gmac1-685cf8793d0e
+
+Best regards,
 -- 
- i.
+Romain Gantois <romain.gantois@bootlin.com>
 
