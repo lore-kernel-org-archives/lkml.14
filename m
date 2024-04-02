@@ -1,105 +1,113 @@
-Received: from mail-ot1-f43.google.com (mail-ot1-f43.google.com [209.85.210.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx1.sberdevices.ru (mx1.sberdevices.ru [37.18.73.165])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5BF656B9F;
-	Tue,  2 Apr 2024 20:36:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3283B2B9D8;
+	Tue,  2 Apr 2024 20:37:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=37.18.73.165
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712090182; cv=none; b=M1B7Cg+4Ds9281zBV3krGTKQYvi5+14Qhybj0CJFsOLvkoxnM+gER7aMrSziZeKmVtCnVYtL5o/2TcSFnRC8I95z8mTWHcoJxeC/zF/APD4mOA2sL9xgifmswL9I9ejJ86os6lINWcGEzOXMh4Eux7KLwWyO1rfKoExmB5qJ60Q=
+	t=1712090272; cv=none; b=arkIbFqbMnrqrLIW83z0f1EJEgRLd/FTitS5pwI7G7e+c8qG/nYF5ez8W91pmAct4RxxEuqONoCoPCnqcGZSWUJpH7rxO2c6L5NLfmsHrF3bMOwq+sjIPsrGUzDoWKnN2/5kG224Uit064Bv2rrwQTcPW/7G9pQIzD/cCKDNph0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712090182; c=relaxed/simple;
-	bh=pu/dtKESlMLWjPNUU+kDrCkePPMwceLQft9I+MF7CBQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=OVjLHZqn0qqQvifdNEdzJXW2jx6gac5IgPp0Mun6vo2LZG1AcdGvN+sJ3vs9GZi4gSL/o/dO0w2/rtGWqmpS3ZY3gQswKW2Dzw5GpUqGLDPPShuvblOaIaiYmW5TIqrLbpIAbyZ0D40KlQyXmm8EUgnlzptpXxxzIwWaY6lWK8A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Y+84mNRH; arc=none smtp.client-ip=209.85.210.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1712090272; c=relaxed/simple;
+	bh=6Xrhbw6PvP/C4cqci2/uu8hCKyWsCfti56SDDRAnJno=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=XX6owa1mi/TtCuKMbBEbjfg5VXaiy0ovvpse+YNX1J2mfW7HAnn8bqUFCcjifBEpg4ap+5Nklt7kxL160AucqUM8+TUGDj22V0H6aEf7wI2umz+7Bgw94D1TQu7Ow1zFi9FDgCJX2cWhAUAr5NoId7ySFJi7o3I4AEgJEyVq9VY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=salutedevices.com; spf=pass smtp.mailfrom=salutedevices.com; dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b=oGeh1gvH; arc=none smtp.client-ip=37.18.73.165
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=salutedevices.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=salutedevices.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Y+84mNRH"
-Received: by mail-ot1-f43.google.com with SMTP id 46e09a7af769-6e89c87a72eso1888754a34.0;
-        Tue, 02 Apr 2024 13:36:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1712090180; x=1712694980; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=c62HqBKZ9JFuv72U/KX7IUtAQ2RBkr0nXwJORv/Egrw=;
-        b=Y+84mNRHks5FEN9SYQfEXE5fji9Mfs/LP9Uhr8cVUkP1udJcd4JBCNuX1MyqFddbHh
-         FS1oLt/R/yVnR+RbIwPXCiAxROx9Tp4+DZCNLZNZ9PAMdQiPw8LnJeZXth0C07IFr/2z
-         j91yVnbE4EGUDPUVccPMPcxsNDO0vYeegL+OKheR+jOSQPM2tAt55sgleFzt1n7yaB/Q
-         fAKMqrAw8P/Yj6zOT9GGt6HIHHUtyhHw+R7HZ4+POmwdbmzFj6r5uljokUe18L4O/Fod
-         FYNTLeu3w7DOQqlRIxA0OGn4HyA3uet8M+V9Y30PzANhoqTR+hasBzT95PzhhOr4TV2d
-         D8OQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712090180; x=1712694980;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=c62HqBKZ9JFuv72U/KX7IUtAQ2RBkr0nXwJORv/Egrw=;
-        b=HAsR2uXePSZ6f+k2Ussb8DlGL68KKnAr3rE+zw3cXLNH12xw+Ri21psWEG/B8JOz/w
-         dy8K36D9r2oMPzPHy9HjHlOWNN341zR/leORY5pnPJOdON6y+mBF34L3EClyH7UTK575
-         6+kU4Z5kK4u9+l0nML1Gkph80tqUmOyDRbk96+JrlG6m4kGL8Irfk8Mrj0a7jHyriuVK
-         1SZKQX/pXQnILMONm0QOu1vo4IOPsiRJFtxthJ/ieuqR0skyQ14fyTNJ2B/SX7tfUH2w
-         klx2Wj56DzhbqjZW9cpYJ+MCJCgZHkrjO5WOzkE0s0wNcZtxSsOKO7B75EgiW/Y5KvE1
-         aHLQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUiFKr/cjUq0yLH+dZFkY6PGf+zQk9eVH/OHuaaR1iE+WLKUAixTO/t6oZVt7Pa0TFQ50goYNg9Usi2T5TnN8zL6zveq4Yah+omdqmr
-X-Gm-Message-State: AOJu0YzGNgRufe2pao2hHqCRsxc73wAizOw8Jb84wZ2HC1CqhyLl9ZTo
-	YCU54d2EjFPnnXwmzeilpzvdXBTvOBTZvdrDY3JGpFQAMzRaHlOTLTI0ezWYcf/C7zY4RFEBfx8
-	P+QLudtlefNT3K/ZHbIJ88LwoMz3gU7n3
-X-Google-Smtp-Source: AGHT+IH/CM92Bu9nZ42Px1Quy/S+88iEki0V1wnAuYDP7sgJL6PMkgTZ/OiwVlavGWTgMTHVQMVeRmN9zvmXPNIfGp0=
-X-Received: by 2002:a05:6830:3445:b0:6e6:bd65:d485 with SMTP id
- b5-20020a056830344500b006e6bd65d485mr13293740otu.16.1712090179932; Tue, 02
- Apr 2024 13:36:19 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b="oGeh1gvH"
+Received: from p-infra-ksmg-sc-msk01 (localhost [127.0.0.1])
+	by mx1.sberdevices.ru (Postfix) with ESMTP id 52E18100008;
+	Tue,  2 Apr 2024 23:37:40 +0300 (MSK)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mx1.sberdevices.ru 52E18100008
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=salutedevices.com;
+	s=mail; t=1712090260;
+	bh=t2tHqsxYS8zoZJEGqRjan30QoziQPMtBbv04+Qu4qSI=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type:From;
+	b=oGeh1gvHQR6G1jzxf2b8eRj0ll8bP18T3CyiLJIbGlDemqYoaDd51wNgBUWu0AD3W
+	 hwrHqWsNvrVuPECd8m/dsDTmK0WWx4j/G4lwF6ELkpMRl8bwPe1M0/vMvXpB+4FIZ2
+	 w36oMAERlIA0NXoPvKnV5VTJ7Nknz7sdTnTs2DRwBqNG3CCxb3LLV9qJr1i23Y9LC1
+	 GzXgRacp03u4jiQT4KlVBBJMexBC2VRmn3ikm6ikxNx4oDCRVMFAyda4miksJs69Iq
+	 kmfBPiE1WJjzN/vc5KUu3qQVejmZZWI+DggEv/iOvFSsdvKN4Pfu/KyplkhOMKU7Wy
+	 6I+Kx/aHFNmEw==
+Received: from smtp.sberdevices.ru (p-i-exch-sc-m02.sberdevices.ru [172.16.192.103])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by mx1.sberdevices.ru (Postfix) with ESMTPS;
+	Tue,  2 Apr 2024 23:37:40 +0300 (MSK)
+Received: from localhost.localdomain (100.64.160.123) by
+ p-i-exch-sc-m02.sberdevices.ru (172.16.192.103) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.40; Tue, 2 Apr 2024 23:37:39 +0300
+From: Arseniy Krasnov <avkrasnov@salutedevices.com>
+To: Miquel Raynal <miquel.raynal@bootlin.com>, Richard Weinberger
+	<richard@nod.at>, Vignesh Raghavendra <vigneshr@ti.com>, Rob Herring
+	<robh+dt@kernel.org>, Krzysztof Kozlowski
+	<krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, Neil
+ Armstrong <neil.armstrong@linaro.org>, Kevin Hilman <khilman@baylibre.com>,
+	Jerome Brunet <jbrunet@baylibre.com>, Martin Blumenstingl
+	<martin.blumenstingl@googlemail.com>
+CC: <linux-mtd@lists.infradead.org>, <devicetree@vger.kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, <linux-amlogic@lists.infradead.org>,
+	<linux-kernel@vger.kernel.org>, <oxffffaa@gmail.com>,
+	<kernel@sberdevices.ru>, Arseniy Krasnov <avkrasnov@salutedevices.com>
+Subject: [PATCH v1 0/2] Meson: R/W support for pages used by boot ROM
+Date: Tue, 2 Apr 2024 23:27:03 +0300
+Message-ID: <20240402202705.2355326-1-avkrasnov@salutedevices.com>
+X-Mailer: git-send-email 2.35.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231226135243.1393780-1-masahiroy@kernel.org>
- <20231226135243.1393780-6-masahiroy@kernel.org> <CAOCHtYiCcxssYNvPwq5RoSv30+hkWOJD4=uRaGQmatOdJR9n0A@mail.gmail.com>
-In-Reply-To: <CAOCHtYiCcxssYNvPwq5RoSv30+hkWOJD4=uRaGQmatOdJR9n0A@mail.gmail.com>
-From: Robert Nelson <robertcnelson@gmail.com>
-Date: Tue, 2 Apr 2024 15:35:53 -0500
-Message-ID: <CAOCHtYhkenjeC_PUZYBQde5Cb9U+qfGFWNVVGeji7CowbxXS_w@mail.gmail.com>
-Subject: Re: [PATCH 6/6] kbuild: deb-pkg: use more debhelper commands in builddeb
-To: Masahiro Yamada <masahiroy@kernel.org>
-Cc: linux-kbuild@vger.kernel.org, Ben Hutchings <ben@decadent.org.uk>, 
-	Nicolas Schier <n.schier@avm.de>, Nathan Chancellor <nathan@kernel.org>, 
-	Nick Desaulniers <ndesaulniers@google.com>, Nicolas Schier <nicolas@fjasle.eu>, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: p-i-exch-sc-m01.sberdevices.ru (172.16.192.107) To
+ p-i-exch-sc-m02.sberdevices.ru (172.16.192.103)
+X-KSMG-Rule-ID: 10
+X-KSMG-Message-Action: clean
+X-KSMG-AntiSpam-Lua-Profiles: 184542 [Apr 02 2024]
+X-KSMG-AntiSpam-Version: 6.1.0.4
+X-KSMG-AntiSpam-Envelope-From: avkrasnov@salutedevices.com
+X-KSMG-AntiSpam-Rate: 0
+X-KSMG-AntiSpam-Status: not_detected
+X-KSMG-AntiSpam-Method: none
+X-KSMG-AntiSpam-Auth: dkim=none
+X-KSMG-AntiSpam-Info: LuaCore: 14 0.3.14 5a0c43d8a1c3c0e5b0916cc02a90d4b950c01f96, {Tracking_from_domain_doesnt_match_to}, 100.64.160.123:7.1.2;127.0.0.199:7.1.2;salutedevices.com:7.1.1;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;smtp.sberdevices.ru:7.1.1,5.0.1, FromAlignment: s, ApMailHostAddress: 100.64.160.123
+X-MS-Exchange-Organization-SCL: -1
+X-KSMG-AntiSpam-Interceptor-Info: scan successful
+X-KSMG-AntiPhishing: Clean
+X-KSMG-LinksScanning: Clean
+X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 2.0.1.6960, bases: 2024/04/02 18:05:00 #24580759
+X-KSMG-AntiVirus-Status: Clean, skipped
 
-> > +++ b/scripts/package/mkdebian
-> > @@ -193,7 +193,7 @@ Section: kernel
-> >  Priority: optional
-> >  Maintainer: $maintainer
-> >  Rules-Requires-Root: no
-> > -Build-Depends: debhelper
-> > +Build-Depends: debhelper-compat (= 12)
->
-> make ARCH=arm  CROSS_COMPILE=  bindeb-pkg
->
-> I'm seeing a fun issue with Ubuntu 24.04 (Noble)... 13.14.1ubuntu5:
-> https://launchpad.net/ubuntu/+source/debhelper
->
-> dpkg-buildpackage --build=binary --no-pre-clean --unsigned-changes
-> -R'make -f debian/rules' -j1 -a$(cat debian/arch)
-> dpkg-buildpackage: info: source package linux-upstream
-> dpkg-buildpackage: info: source version 1noble
-> dpkg-buildpackage: info: source distribution noble
-> dpkg-buildpackage: info: source changed by rcn-ee <robertcnelson@gmail.com>
->  dpkg-source --before-build .
-> dpkg-buildpackage: info: host architecture armhf
-> dpkg-checkbuilddeps: error: Unmet build dependencies: debhelper-compat (= 12)
-> dpkg-buildpackage: warning: build dependencies/conflicts unsatisfied; aborting
-> dpkg-buildpackage: warning: (Use -d flag to override.)
+Amlogic's boot ROM code needs that some pages on NAND must be written
+in special "short" ECC mode with scrambling enabled. Such pages:
+1) Contain some metadata about hardware.
+2) Located with some interval starting from 0 offset, until some
+   specified offset. Interval and second offset are set in the
+   device tree.
 
-Sorry for the noise, this looks to be a time32 related issue in
-Ubuntu's armhf Vs, arm64... As my arm64 Noble schroot just finished
-it's version of v6.9.0-rc2 package with no issues..
+This patchset adds R/W support for such pages. To enable it we can setup
+it in dts:
 
-Regards,
+    nand-is-boot-medium;
+    meson,boot-page-last = <1024>;
+    meson,boot-page-step = <128>;
+
+It means that each 128th page in range 0 to 1024 pages will be accessed
+in special mode ("short" ECC + scrambling). In practice this feature is
+needed when we want to update first block of NAND - driver will enable
+required mode by itself using value from device tree.
+
+Arseniy Krasnov (2):
+  dt-bindings: mtd: amlogic,meson-nand: support fields for boot ROM code
+  mtd: rawnand: meson: support R/W mode for boot ROM
+
+ .../bindings/mtd/amlogic,meson-nand.yaml      | 16 ++++
+ drivers/mtd/nand/raw/meson_nand.c             | 88 +++++++++++++------
+ 2 files changed, 75 insertions(+), 29 deletions(-)
 
 -- 
-Robert Nelson
-https://rcn-ee.com/
+2.35.0
+
