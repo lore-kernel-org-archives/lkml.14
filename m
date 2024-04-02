@@ -1,74 +1,65 @@
-Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E63912B171
-	for <linux-kernel@vger.kernel.org>; Tue,  2 Apr 2024 14:44:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.54
+Received: from mail-177131.yeah.net (mail-177131.yeah.net [123.58.177.131])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 757E712C544;
+	Tue,  2 Apr 2024 14:45:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=123.58.177.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712069066; cv=none; b=r2g60snHvu/mHc8juQTJ3dOBU6D303HK1XrXKSaLR9S6NMEA4QuSSWQn2JWoo3zer00x2INm/pPSDcH/NqQyv2R8ELE7URwbsRsDlRQNaKgKl8FgAQAq/rhKQIiyo/fxAzCdWb+qxIIneZ9ZxRZY+S/hBh4D/ARE/1QuGxwHrAI=
+	t=1712069103; cv=none; b=Qo8olfDyVa+tmGWj/zst9hOYCbq6t5Bxuoj8EdrHM6+xDk6C2LEIcgAVszyQfU9rrQ2/S3oWtBU1uDpc700EMoZaASMlPqfSVbOkO2leeXDTj27ltqqynRC8DZPVJZVuzENn21RlMXkr/UyybCOOoqfzmiwBjcX8/5KOUFiPfTg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712069066; c=relaxed/simple;
-	bh=fGuaPdX4+28sYtC5DboaV6Cdo5XbtDu/aiutArVxNMM=;
+	s=arc-20240116; t=1712069103; c=relaxed/simple;
+	bh=UoAIQh6T2R5yd03vS3etflEo5KsJFR7Ir5HehSGj0qU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nceXHTbeHgaCICAF6QQ/CUIFcu8w42Wq0keCsHGGyarP1xuQ424yU71q/LKialyhEjGHO1Q37Vjm54O7Rlkmglrs67OtFmuX+7/+CNFLKuuBfWREdhbTXpkN66VoYJv8YzPFmHSuFV/3aW4svQ2Gu3+8XN0qp8RFGCzb2g1BpUM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=bkJkgsz+; arc=none smtp.client-ip=209.85.208.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=I0kOnoH9UXN6za2tjzjus/yr9ubGTrx+ZMTF6DCJrFNTmf90WEYKdNyl9FVD4R2KPHSzjVWn/ldGLWVULwiqltYEXPl1K79WFwBKKCXXFG7iHE7K1GCJKW0voZkRKOBxMz9sK9kVf9+rYzsL9n3YJXoIERnF9MVoUccWPHmXn3Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yeah.net; spf=pass smtp.mailfrom=yeah.net; dkim=pass (1024-bit key) header.d=yeah.net header.i=@yeah.net header.b=I8eFhD78; arc=none smtp.client-ip=123.58.177.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yeah.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yeah.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="bkJkgsz+"
-Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-56be32b9775so6947913a12.1
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Apr 2024 07:44:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1712069063; x=1712673863; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=llvWiU6WYMOEo8iT+6jDXsiJqq1fV6TG+kjDiXbKQ00=;
-        b=bkJkgsz+Pi3KdolvflzrXw9MQ1j4UeCJMUi+vhwcf9RkV8z77dVrpyFyROoF9xRjYA
-         pMPWPCanluKA3VywzG56JKLSiGZyFBgBom//vH9UP9VmHyYG6p/2W+OYT21FWRnxMA6K
-         Xbb9MIzXk0eshITs1+KldRkWNBEK98TAZh6n26LnVXYOrvH58Ja8Qc/pl2kRpeJNTncE
-         VcW2lPWz5FIsi95r8CIXyyt0yYkAGHAYSVijooeZqqtONRuuJVhgDBY04ntEb8zjR8Ht
-         kSOkxbO8hUa0HUcPu2/6ba1luGEQla/7vkFpFEiJAHPjW4KTCXDH409NfJdUb7fsYqXd
-         M6Nw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712069063; x=1712673863;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=llvWiU6WYMOEo8iT+6jDXsiJqq1fV6TG+kjDiXbKQ00=;
-        b=FMZRCg90JEVsp6RHZYrrBw5o+jk/pR8OiouMAd/L2cHw5Q7/HexiDdcTxgfidrE6xs
-         Zzb9Yx3vX2pTNK5Ptmqm51WiFTelvM85KcWd6YzN6EjpUgvI0iOMXEP479NLpQ+6/tTW
-         S1pM+/ZJCDrqOXuGibHDy2Ny+nb2KvywnM5YnlQY/nskn3NWVq2hfVUDYaUQWBKGhzp6
-         mhKwf/mAiSVzjORWXiMDBF2U0MupJ1z3tycqR+TH0fRQ5z28/odJa1+/piZ4oYx015c2
-         zJ3NgonhfmHs7AHab06VH8YV1wKgjA746HETzFbJMkndFdGoTUH21egI7c7kz7qsbfMn
-         SXng==
-X-Forwarded-Encrypted: i=1; AJvYcCVxZ+tMK7nmIMcvLT/gUOo9gQQwfrSvbFhrwTNBsX2m0eTdux33E065D7Fna4tLk7tlxMCD0i9vLEP+1qa9n+y/6pCzhp3+TnT/TlOp
-X-Gm-Message-State: AOJu0YxYv0ZPlF5N0Kqxz+INp+q/Ihu2BlyWyjibve81u6IE23KKv4gq
-	PAPg0mNJu6KFQVvvJrdVA5DixsYhxI+S9UjW9zRtS4nba6h8rFpuAGDyhlLUImc=
-X-Google-Smtp-Source: AGHT+IGHCy6AW5RJuX88eDfDpaARDXtUhVjEm97XYVInHvyg/NeNlnam7roamuVmcsfAR6UYhzSKPg==
-X-Received: by 2002:a50:c318:0:b0:56c:16c9:bd2e with SMTP id a24-20020a50c318000000b0056c16c9bd2emr31946edb.9.1712069063270;
-        Tue, 02 Apr 2024 07:44:23 -0700 (PDT)
-Received: from localhost ([102.222.70.76])
-        by smtp.gmail.com with ESMTPSA id bf18-20020a0564021a5200b0056bd13ce50esm6951480edb.44.2024.04.02.07.44.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 02 Apr 2024 07:44:22 -0700 (PDT)
-Date: Tue, 2 Apr 2024 17:44:18 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: Boris Brezillon <boris.brezillon@collabora.com>
-Cc: Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>,
-	Steven Price <steven.price@arm.com>,
-	Liviu Dudau <liviu.dudau@arm.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
-	Heiko Stuebner <heiko@sntech.de>,
-	Grant Likely <grant.likely@linaro.org>,
-	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-	kernel-janitors@vger.kernel.org, error27@gmail.com
-Subject: Re: [PATCH v3] drm/panthor: Fix couple of NULL vs IS_ERR() bugs
-Message-ID: <91e25b42-c3fa-4b69-ab8c-5d79610e757b@moroto.mountain>
-References: <20240402141412.1707949-1-harshit.m.mogalapalli@oracle.com>
- <20240402163838.34003a10@collabora.com>
+	dkim=pass (1024-bit key) header.d=yeah.net header.i=@yeah.net header.b="I8eFhD78"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yeah.net;
+	s=s110527; h=Date:From:Subject:Message-ID:MIME-Version:
+	Content-Type; bh=sNp+AZXGX0bUEOLXo2ZGNsWH+ua3wPGWHS+AYi2Sy94=;
+	b=I8eFhD78wX/KsGbMXjYCDiOI/4+iFV21AYAWatCGUUr9GlU1h2acMWQGuPSVc+
+	dx/49bGRy+cZNIPU8xEzxUJyuHI1B54xWKQtEVBWlgFH9jKZKfWhBJcVDnNc6yHq
+	oHplaASZd4k0BeDzmHPOoPw7UtMFu9iVBlqw2a1m1zi4I=
+Received: from dragon (unknown [223.68.79.243])
+	by smtp1 (Coremail) with SMTP id ClUQrADnr0IuGQxm_E+mAQ--.45967S3;
+	Tue, 02 Apr 2024 22:41:51 +0800 (CST)
+Date: Tue, 2 Apr 2024 22:41:50 +0800
+From: Shawn Guo <shawnguo2@yeah.net>
+To: Wadim Mueller <wafgo01@gmail.com>
+Cc: Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Ulf Hansson <ulf.hansson@linaro.org>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	NXP Linux Team <linux-imx@nxp.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Jiri Slaby <jirislaby@kernel.org>,
+	Chester Lin <chester62515@gmail.com>,
+	Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>,
+	Matthias Brugger <mbrugger@suse.com>,
+	NXP S32 Linux Team <s32@nxp.com>,
+	Tim Harvey <tharvey@gateworks.com>,
+	Marco Felsch <m.felsch@pengutronix.de>, Marek Vasut <marex@denx.de>,
+	Gregor Herburger <gregor.herburger@ew.tq-group.com>,
+	Hugo Villeneuve <hvilleneuve@dimonoff.com>,
+	Joao Paulo Goncalves <joao.goncalves@toradex.com>,
+	Markus Niebel <Markus.Niebel@ew.tq-group.com>,
+	Matthias Schiffer <matthias.schiffer@tq-group.com>,
+	Stefan Wahren <stefan.wahren@chargebyte.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Philippe Schenker <philippe.schenker@toradex.com>,
+	Josua Mayer <josua@solid-run.com>, Li Yang <leoyang.li@nxp.com>,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-mmc@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-serial@vger.kernel.org
+Subject: Re: [PATCH v4 4/4] arm64: dts: S32G3: Introduce device tree for
+ S32G-VNP-RDB3
+Message-ID: <ZgwZLkpBf11rHNrG@dragon>
+References: <20240324214329.29988-1-wafgo01@gmail.com>
+ <20240324214329.29988-5-wafgo01@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -77,31 +68,66 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240402163838.34003a10@collabora.com>
+In-Reply-To: <20240324214329.29988-5-wafgo01@gmail.com>
+X-CM-TRANSID:ClUQrADnr0IuGQxm_E+mAQ--.45967S3
+X-Coremail-Antispam: 1Uf129KBjvJXoW7Cw1xGry8Zw1DCFWfuryUWrg_yoW5Jr1fpa
+	yrCrZ3GrZ7Gr17Zayaga1kWFyqvws5JFWYkry5ury8tr45Zr9Yqr10krsIgr47Xrn5Aayr
+	CF1F9ryxu3WYy3DanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07j34SrUUUUU=
+X-CM-SenderInfo: pvkd40hjxrjqh1hdxhhqhw/1tbiFRC0ZV6NnBoE+QAAs8
 
-On Tue, Apr 02, 2024 at 04:38:38PM +0200, Boris Brezillon wrote:
-> On Tue,  2 Apr 2024 07:14:11 -0700
-> Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com> wrote:
+On Sun, Mar 24, 2024 at 10:43:26PM +0100, Wadim Mueller wrote:
+> This commit adds device tree support for the NXP S32G3-based
+> S32G-VNP-RDB3 Board [1].
 > 
-> > Currently panthor_vm_get_heap_pool() returns both ERR_PTR() and
-> > NULL(when create is false and if there is no poool attached to the
+> The S32G3 features an 8-core ARM Cortex-A53 based SoC developed by NXP.
 > 
->                                                ^ pool
+> The device tree files are derived from the official NXP downstream
+> Linux tree [2].
 > 
-> > VM)
-> > 	- Change the function to return error pointers, when pool is
-> > 	  NULL return -ENOENT
-> > 	- Also handle the callers to check for IS_ERR() on failure.
-> > 
-> > Fixes: 4bdca1150792 ("drm/panthor: Add the driver frontend block")
+> This addition encompasses a limited selection of peripherals that
+> are upstream-supported. Apart from the ARM System Modules
+> (GIC, Generic Timer, etc.), the following IPs have been validated:
 > 
-> I would explain that the code was correct, but the documentation didn't
-> match the function behavior, otherwise it feels a bit weird to have a
-> Fixes tag here.
+>     * UART: fsl-linflexuart
+>     * SDHC: fsl-imx-esdhc
+> 
+> Clock settings for the chip rely on ATF Firmware [3].
+> Pin control integration into the device tree is pending and currently
+> relies on Firmware/U-Boot settings [4].
+> 
+> These changes were validated using BSP39 Firmware/U-Boot from NXP [5].
+> 
+> The modifications enable booting the official Ubuntu 22.04 from NXP on
+> the RDB3 with default settings from the SD card and eMMC.
+> 
+> [1] https://www.nxp.com/design/design-center/designs/s32g3-vehicle-networking-reference-design:S32G-VNP-RDB3
+> [2] https://github.com/nxp-auto-linux/linux
+> [3] https://github.com/nxp-auto-linux/arm-trusted-firmware
+> [4] https://github.com/nxp-auto-linux/u-boot
+> [5] https://github.com/nxp-auto-linux/auto_yocto_bsp
+> 
+> Signed-off-by: Wadim Mueller <wafgo01@gmail.com>
+> ---
+>  arch/arm64/boot/dts/freescale/Makefile        |   1 +
+>  arch/arm64/boot/dts/freescale/s32g3.dtsi      | 233 ++++++++++++++++++
+>  .../boot/dts/freescale/s32g399a-rdb3.dts      |  45 ++++
+>  3 files changed, 279 insertions(+)
+>  create mode 100644 arch/arm64/boot/dts/freescale/s32g3.dtsi
+>  create mode 100644 arch/arm64/boot/dts/freescale/s32g399a-rdb3.dts
+> 
+> diff --git a/arch/arm64/boot/dts/freescale/Makefile b/arch/arm64/boot/dts/freescale/Makefile
+> index 2cb0212b63c6..e701008dbc7b 100644
+> --- a/arch/arm64/boot/dts/freescale/Makefile
+> +++ b/arch/arm64/boot/dts/freescale/Makefile
+> @@ -252,3 +252,4 @@ dtb-$(CONFIG_ARCH_MXC) += imx8mp-venice-gw74xx-rpidsi.dtb
+>  dtb-$(CONFIG_ARCH_S32) += s32g274a-evb.dtb
+>  dtb-$(CONFIG_ARCH_S32) += s32g274a-rdb2.dtb
+>  dtb-$(CONFIG_ARCH_S32) += s32v234-evb.dtb
+> +dtb-$(CONFIG_ARCH_S32) += s32g399a-rdb3.dtb
 
-The code wasn't correct, it returned a mix of error pointers and NULL.
-So it needs a Fixes tag.
+The list is alphabetically sorted, so it should be added before
+s32v234-evb.dtb.  I fixed it up and applied the patch.
 
-regards,
-dan carpenter
+Shawn
 
