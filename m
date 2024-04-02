@@ -1,202 +1,151 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+Received: from wfout3-smtp.messagingengine.com (wfout3-smtp.messagingengine.com [64.147.123.146])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE4F617742;
-	Tue,  2 Apr 2024 02:26:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.15
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712024808; cv=fail; b=lYBDVJ6OZoK2G4w3qXW+IqHLYQjucSOIy7Qbx/sKUpg+6Vx6LZnhl2+NqNlNqMegFJoVTI8RyIQN6HvMeWa8G8EZ246Aq10ajksfUrcik76q02qDZyqzfP9KFjN7Hj0XNeZisJc0DO4RGDPipNj0894rDUHsBgjtKFQ9qfAfnLI=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712024808; c=relaxed/simple;
-	bh=uImO6kxDIidgF0FAOb6EXw5HL2mVMUo0zY+5ojx1X3w=;
-	h=Message-ID:Date:Subject:To:CC:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=R7zyongk6MMahnDc9V1km9468km5f0SPE5Zh6EimVpSEZS+UqQxsELdKIRM4nS3X+LzS/TLxCBGGvzx7Kb8QpG/iZam6V9VFSCtmKezID6HLifci+pKhLWVMbG76CTP85ynotUZXTjlJGasELddgE9BWl5NbXOoFWqTn/J7rnjg=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hEbKCX/Y; arc=fail smtp.client-ip=192.198.163.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1D2017C7C;
+	Tue,  2 Apr 2024 02:26:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=64.147.123.146
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1712024811; cv=none; b=Bl5dBv2A6TMKzg6UqgvIskKrMY1tUQn/CPIDRo12MszwFGfootjKZ9H7jagQ70kQT5u9jhiug7NFQbMf45djoKUA/VBf55gxJ2eBm2OeGPUbumNCSppR20ARFX5iyrLa1MoGNG3a38Q+0onlMZjvNZTTAJ90LIpRx48Aq35hj3I=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1712024811; c=relaxed/simple;
+	bh=DpU+90yzllWC8NY3lXLp9lfHmboCaJNtCEDWV7RIZnw=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=Z4e29M4Mjw2H2Pkaq7frg6Nuf98MWOJ7/3V1MC5B79UCMZ4R0oBXTZs1r0/RM9JMXYyZsGsoAZLhKsh12ehRb7gDPxx/uS+92BMCJtPHyk36SnPwkIjQHZ4d4acQezDV+hJ41SxA4iHofe+ZcNA6yE7KxTsYGpyPZdi7U7Itljg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ljones.dev; spf=none smtp.mailfrom=ljones.dev; dkim=pass (2048-bit key) header.d=ljones.dev header.i=@ljones.dev header.b=L9GGML5O; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=g4ZqQrS4; arc=none smtp.client-ip=64.147.123.146
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ljones.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ljones.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hEbKCX/Y"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1712024807; x=1743560807;
-  h=message-id:date:subject:to:cc:references:from:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=uImO6kxDIidgF0FAOb6EXw5HL2mVMUo0zY+5ojx1X3w=;
-  b=hEbKCX/YRYx3AViaEzsUKwDWSlCEt1CnOpi3LeSww018xkpZU3RrZwBF
-   Ex0nxA5OEc4lTblfpTqieHbTyXXv4MBNVLOVYNJS61eRDSB+3I2MusXSN
-   nevdG02QLWhJCYYOw9lVYSkt5VJ5Hl0s+luJ/JDPOVvFNbRJBqRloLnwc
-   YsqdkbVhODZv9L/ndzqcGOuVEkfjTVZKG3iFVb5adtUcPQlWsMlIRYVBg
-   E7a2e7CxDBeYHfqUDj1+oKzO01lTEv7zwSsUYaCp8LivpSxTxG4Dy+/LW
-   DibAKd87ykDdB+gJk6vu2wpX5JEtzasdgIshIZkrIFCXHxhxGvGRCo8y9
-   A==;
-X-CSE-ConnectionGUID: h11Ii1APQoi2SsSgQu+yvw==
-X-CSE-MsgGUID: tcPin18STPSbm+Fofiblmg==
-X-IronPort-AV: E=McAfee;i="6600,9927,11031"; a="7362184"
-X-IronPort-AV: E=Sophos;i="6.07,173,1708416000"; 
-   d="scan'208";a="7362184"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Apr 2024 19:26:44 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,173,1708416000"; 
-   d="scan'208";a="18305835"
-Received: from fmsmsx603.amr.corp.intel.com ([10.18.126.83])
-  by orviesa007.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 01 Apr 2024 19:26:44 -0700
-Received: from fmsmsx612.amr.corp.intel.com (10.18.126.92) by
- fmsmsx603.amr.corp.intel.com (10.18.126.83) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Mon, 1 Apr 2024 19:26:43 -0700
-Received: from fmsmsx612.amr.corp.intel.com (10.18.126.92) by
- fmsmsx612.amr.corp.intel.com (10.18.126.92) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Mon, 1 Apr 2024 19:26:43 -0700
-Received: from FMSEDG603.ED.cps.intel.com (10.1.192.133) by
- fmsmsx612.amr.corp.intel.com (10.18.126.92) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35 via Frontend Transport; Mon, 1 Apr 2024 19:26:43 -0700
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (104.47.56.169)
- by edgegateway.intel.com (192.55.55.68) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Mon, 1 Apr 2024 19:26:42 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=avl7AYP7kuJrK173glcoqfg+YeihvhhQ8mIFfWg+RQRnfmS5/dGOnixb2RxVpqnvQbskzz8k6Wcrrf9TL2W7g9G1kfaDskpN2l4+lceAKtBJB0wSS0tcLrcA7USPIegpWn7KKMzXHhkyQSmOfRCeq0g61+AdP7jigr0V83E1/LNXwpmt6E7U4Q1ZhSzNTU/OqkgNEcKstCP6s/ySedgncsTBvybQuE1pebRV2uxg5ygoriHt0GlYC3g8h/dpQ1G9Ot9PsB56/usM1EpQXUnGxw3u1p6njCsfe5aqZlOKuaOJRkpesfdOjlM+XV8GinBNqyaTrti75AkOBann0ACkog==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=bv3VaeVKjb52HLRkSeHkbZapMTbbqQn5roMTxGrC3EU=;
- b=ULmnDVmM9xkiQqnSo/XZJdSQNxV/WX+4VByFF2TYPgvkSFzzmG0+vrefUCYI9yTwcv7xk/z9mjYc1amyAdFFGdsJVCz51sb4epy0IqZHmLYSE54rduSpPPWsV+5onoOmo2JK7u+RxyCfKrql+3EdTf/zFu06Xfb7/XNnAPnHvybMa9MgJpeWcHJlEvWr9p/UQNKaJolXtHsxE83Z6YG5PL3ybhELWP61RLyraKCvvSzrRLffo1HxS31N8karRwweTo2fVhFVW5aWNGsxtLoQ9nEJIZaYIkum17h4CvBFy3fANZ5YuessFjbCC/7uPe3aHxaNKvMhLq2e1OcqMlV/KQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Received: from SJ2PR11MB7573.namprd11.prod.outlook.com (2603:10b6:a03:4d2::10)
- by PH7PR11MB6500.namprd11.prod.outlook.com (2603:10b6:510:213::7) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7452.25; Tue, 2 Apr
- 2024 02:26:41 +0000
-Received: from SJ2PR11MB7573.namprd11.prod.outlook.com
- ([fe80::d610:9c43:6085:9e68]) by SJ2PR11MB7573.namprd11.prod.outlook.com
- ([fe80::d610:9c43:6085:9e68%7]) with mapi id 15.20.7452.019; Tue, 2 Apr 2024
- 02:26:41 +0000
-Message-ID: <387a313b-9a1f-4997-acc7-932291f69ea7@intel.com>
-Date: Mon, 1 Apr 2024 19:26:38 -0700
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] Documentation/x86: Document resctrl bandwidth control
- units are MiB
-To: "Luck, Tony" <tony.luck@intel.com>
-CC: "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "Yu, Fenghua"
-	<fenghua.yu@intel.com>, Peter Newman <peternewman@google.com>, James Morse
-	<james.morse@arm.com>, Babu Moger <babu.moger@amd.com>, Drew Fustini
-	<dfustini@baylibre.com>, "x86@kernel.org" <x86@kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"patches@lists.linux.dev" <patches@lists.linux.dev>
-References: <20240322182016.196544-1-tony.luck@intel.com>
- <56a93ec2-dc01-49be-b917-5134f5794062@intel.com>
- <Zgbe2FFwyHMmmsyM@agluck-desk3>
- <cf59f587-9ca2-4f0d-b412-69b559acbabb@intel.com>
- <d6a649fd-0bd3-4777-acb3-2b9362131796@intel.com>
- <SJ1PR11MB6083D3C5616E60D3D03CCEB5FC3F2@SJ1PR11MB6083.namprd11.prod.outlook.com>
-Content-Language: en-US
-From: Reinette Chatre <reinette.chatre@intel.com>
-In-Reply-To: <SJ1PR11MB6083D3C5616E60D3D03CCEB5FC3F2@SJ1PR11MB6083.namprd11.prod.outlook.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: MW4PR03CA0359.namprd03.prod.outlook.com
- (2603:10b6:303:dc::34) To SJ2PR11MB7573.namprd11.prod.outlook.com
- (2603:10b6:a03:4d2::10)
+	dkim=pass (2048-bit key) header.d=ljones.dev header.i=@ljones.dev header.b="L9GGML5O";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="g4ZqQrS4"
+Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
+	by mailfout.west.internal (Postfix) with ESMTP id 5C5561C000CC;
+	Mon,  1 Apr 2024 22:26:48 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute1.internal (MEProxy); Mon, 01 Apr 2024 22:26:48 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ljones.dev; h=cc
+	:cc:content-transfer-encoding:content-type:date:date:from:from
+	:in-reply-to:in-reply-to:message-id:mime-version:references
+	:reply-to:subject:subject:to:to; s=fm3; t=1712024807; x=
+	1712111207; bh=EJJ/s7hSFzUoPuPOGWvFkDGMhyLn0Akl3eFtGSVwkcU=; b=L
+	9GGML5Odgd1DJJCPXJOIwmM9bwWHPF5rciuQefl424MIws360A/rqm/yaSkMRfri
+	QezjMzAzo86LbO3Xl1zxywFolnhv09vzCCCUNed9n0vHy/5UvBq/fdkqvO1amExs
+	UOoBJB2IEjj2KmWpXV3+Yjmw3tgdA4jUHj0IXakWDGTs7nq3+oizvbK20BX7fBKd
+	5Siomc+xxfQ94HCuMcrmYZOqSZI7y/BL6DFL30e2VH46Jdm6wxyhvtCpP9WWeQ/k
+	EIqsM41dSjWEJbplkQqBTwxs5Pop0Z5nQhbCvGERFhSmmUQEZFVjvIyHbMIqMxz1
+	9VyWRKqMzZYwues14G6pg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:date:date:feedback-id:feedback-id:from:from
+	:in-reply-to:in-reply-to:message-id:mime-version:references
+	:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1712024807; x=
+	1712111207; bh=EJJ/s7hSFzUoPuPOGWvFkDGMhyLn0Akl3eFtGSVwkcU=; b=g
+	4ZqQrS47WlPdmwD50wT79tbEBQliHeAB3XgrWbZLH2e9ClqXVy/6XRiXyEv+BqYp
+	BZjdznbw5ToxeyiSwZAcr/+Xdmeyy5rnh/MN0pvLFm9bmL/jZPVRFBTsugOKgTQP
+	uxO1Eht+PYEVIGA+grK1eAMaXY//J16whGLy+0W3qcIIVcSwhTdd/0bqjRG4oL38
+	7Kq7Zf6sEQAI10HyyCILGcsJwYc5nsSYGvBVUu1duEGipvxJv9isqUWM259rTw/+
+	JaPoqt3KOqY0NUVvquyTuYYL1EalMz4sBdwy6LTIkbjsAnkZQdHEi1qU6kVPu5Lr
+	BjZk0qi33Qnaf+fXkbwFQ==
+X-ME-Sender: <xms:52wLZm025OFe6_M___rfmP-2XwqkzzzOwf11bswY3ufPMpnbctj6kg>
+    <xme:52wLZpE2gzEZA5DNIq-lP1iBsfvosmbRU4oZ5Fm3HGPcAef_2dwnj1WO_jhPZD9sY
+    CnKpEdZ7n86cyXmAXc>
+X-ME-Received: <xmr:52wLZu7Z8PpIJR5QFk8KSag7wbDgYI634ISUR6i93ZJ6oOXEpzrHxZO44xIy>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrudefuddgheekucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucenucfjughrpefhvfevufffkffojghfggfgsedtke
+    ertdertddtnecuhfhrohhmpedfnfhukhgvucffrdculfhonhgvshdfuceolhhukhgvsehl
+    jhhonhgvshdruggvvheqnecuggftrfgrthhtvghrnhepgfetfedugfetudeuheetjefhue
+    fggfelleetvdevtefhueeujeefvdegleevhefgnecuvehluhhsthgvrhfuihiivgeptden
+    ucfrrghrrghmpehmrghilhhfrhhomheplhhukhgvsehljhhonhgvshdruggvvh
+X-ME-Proxy: <xmx:52wLZn0KpMxnXQW9Jxmz1VAzdraKOGd7_ZnrtRDVSOfIYtwHemTtGw>
+    <xmx:52wLZpGJxNAudiF7n97fAJdcWlTY8vf-0b92olTIn9kgEQxSsvBZTg>
+    <xmx:52wLZg912Yf-uhLxwdg9mj5Z_uSiZLe9uPNTqORc8CJCZ4GqdvMQJg>
+    <xmx:52wLZuniM5VXBy77utBjX_t2jcmOBU6uIW6h-SvM7TPJKddFY7zDkA>
+    <xmx:52wLZu4QMFjT5vAFeglR13ifdupSll-ehBorPbFi5yxymLZoC0qJwvoG>
+Feedback-ID: i5ec1447f:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
+ 1 Apr 2024 22:26:44 -0400 (EDT)
+From: "Luke D. Jones" <luke@ljones.dev>
+To: hdegoede@redhat.com
+Cc: corentin.chary@gmail.com,
+	ilpo.jarvinen@linux.intel.com,
+	platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	"Luke D. Jones" <luke@ljones.dev>
+Subject: [PATCH v2 7/9] platform/x86: asus-wmi: ROG Ally increase wait time, allow MCU powersave
+Date: Tue,  2 Apr 2024 15:26:05 +1300
+Message-ID: <20240402022607.34625-8-luke@ljones.dev>
+X-Mailer: git-send-email 2.44.0
+In-Reply-To: <20240402022607.34625-1-luke@ljones.dev>
+References: <20240402022607.34625-1-luke@ljones.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ2PR11MB7573:EE_|PH7PR11MB6500:EE_
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: ppnLUMqdh6BaPfqyYlp38TTTkP6AFf5vSZu9X5sWJE+81HZAEZlssubY10dRs0L3FMWx2eWe8mXow/ZVOUGZitmx+713qZ2gjNFYKqThxa0mL3+fvMh+9TQ+gEiTPxDMVfkt4X8saRpb3wPa/udh8yX1bPvkMhD+GRH9y3VZDXZR0qBGX5Mt8gMATGaetN94GqFbHkBDcp8mhFAagjFxbinnLZvvQM3E0sfQSxohvk+j9na10KSc6xsreKykbEcCyROv3wkWX+zQOR7N4Ts6Rf5t7YrCVwQZphP8/mVwtprhDV5B/yFJ5zi8IlM73vj8H+SDlHURvrTnGMXBFttqDCZ5je5NLMVi68Ot3pzAJq2CDH4VXasOqFfA/3XEzJe63cN7L4ODTb0WITUNKrFWs1/jKsNyhN6mVHN8xQnPuBw5jCeTQlR5JQN4ySi8HyMBkxOVN207fcwjuv1HkyRbWED+dzWVaOQRf3eAM9yQQ0Pha4+DaIuwg6bmFcW6VXO8DKOZ3zanfAO1QGyT7biKD9P0nlwxLH6CTRmiPQYhbvB9MFuvCC2TzajVC8hYAaho9hKl9EEvDdjHJoLHEgEPmu0XBAJxHeeGWGM+yldyNpI=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ2PR11MB7573.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366007)(1800799015)(376005);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?NVdKYXZaL2NZMm5CUlNrWDZ5NzZDdzNNZGtWMzhGcWtrQkxvamtXWE1ZbjNz?=
- =?utf-8?B?dlI5eU1CSGpnc3VZSHpjbVVoOVBIc01OQTNxQWxyaHMxNUZhZ2pKUDhEVXg1?=
- =?utf-8?B?eXYrUmhNQ1JoQVdSWTVDK1Evc1Q3d2UvM2xVU1dqVWo2SHYzUzVwMjdaa05Y?=
- =?utf-8?B?STlRd1o3cWV5TCs5SmZSNWtlMFhCL0sxd0NTNWZTTVk0UUJtTkZmUEJiUm03?=
- =?utf-8?B?UkpuV0hxSndTbkI2bGpxeW00a0VRUE9QQUZ6S0FqdEpxenc4MklzdllXQkpE?=
- =?utf-8?B?UldtZE5RZ1VoMnhmREJoMzM5MFo5bU0rTm5kUHFHRUo4ZEllMkE4WFUyUUla?=
- =?utf-8?B?TGpWRXMySlNXcE9rSFlscHZrOURRL0p3b1ErTmowdE5GNzQxcmhnWEcvL3U2?=
- =?utf-8?B?cGNsZVY4ZVk0WkZSZkZMdjRmVXdQSzR6U2Y3aTVxUkVkd0NGNnYrVWlaOVZQ?=
- =?utf-8?B?Y2o5UG1VRjRwZkxQazkwNTNicHIzd2gxQlF3RUFJVkFDR2ZMUEM4S0cyQUFS?=
- =?utf-8?B?VElQYmw0RXhpdlRmREVkTVphWXVONHpUN1hJcmRCVWdOMEtPVjRpY3dwcGQx?=
- =?utf-8?B?NzYxaWRwOTY3OHZ5dUkxMlN1QVRhSmNORGtCelRQMFY1aXhyTndETWV3WlJ5?=
- =?utf-8?B?VnhlVWRLakl0VlovVXR3RGhTR2lld0pSNFVZQnJDVTRmMTg5ODRsemNIYmM3?=
- =?utf-8?B?S0IwWXhHVk90Ym5paEM3SXVHSCtuNEh2bm9HN2VNdm0yTDU3eWFPYlhZVkkx?=
- =?utf-8?B?NlM1a0RKVTZSeUNnc0M1akg5YXBDdHB5VDFINStweCt4cERONng5MkZ6WWdL?=
- =?utf-8?B?WFVVZysrMGx6K0FDc2FDN0tFbXpET1RuYVRjZFBLSmVsOUxzajMra1lxbWV1?=
- =?utf-8?B?eXdGcTZKei80eCt5VjlSek5IMmtIZnVEK0laMkJnUzFKWGhZcjFhZjlXNzhz?=
- =?utf-8?B?RzdqTk9iQ1Q1dkV4eEIvYWFtdjE4aXBOMDlsL3lUcm43Q25qZUh3VFlacXZP?=
- =?utf-8?B?bzcxRW9KNE5GNjRtUGl1YnI3cXBXdStrOEROY0lKcUNxOWpUVXF2Ky9uMjZJ?=
- =?utf-8?B?Y2RRK3hHaGszT3BRdyt5YzN1TGtyU1U4NGlPdTVJYUJaVEtPZDNoN0hBQjgy?=
- =?utf-8?B?ZUFMYVNZbGNpQlpCay91UTZ3OTA0a1dFVGNONFV6SFFSSVltMGlhaVQzQ0Fn?=
- =?utf-8?B?eDM1cmZKZ29aWHNMLzNaMTBmUWtGWUg1S0FPeTNwVTdkU0ZZS252NldCN3hY?=
- =?utf-8?B?eFovZThCb1Q3MUJqdXlmSjRjWmVzSCtxZFNTYS8vMDhGUlN3N2dOYyt0bS85?=
- =?utf-8?B?NFpHcHRtVUNOeXgwMnB6S2Q5dDFHRTd5VUpPd1l5Q3djY3ZFbDBobS91Y215?=
- =?utf-8?B?Zi9kQi92R2tsTkhuRXlSbzB0SUxIOWE1NjhrRk4wMWdKeHNzRWl6OWc5K01u?=
- =?utf-8?B?ejVOUnhUYURiVkFmM3BWTVF5Zjh0Z3RRQklzYTliWHFJOVNORTdLQ2FESGpN?=
- =?utf-8?B?NkRCczdLQ3g4c2pYTlRaWW40TTdOUVVKZHA4L2ptalFsYnBhOWFZL0tTYjRM?=
- =?utf-8?B?ZFFFTDlJdzg2RHY5NHZ4empXdUs5MFRSeDJNMVNYd3pFR2dzb1JaRStxQ2RV?=
- =?utf-8?B?VEZ2VXJBRDZMTXFqOUFBZW5XOEQyUTluekpUQTBPeG5PVjdCeG12T3RFYzRl?=
- =?utf-8?B?SlVLSWpzL2cyTVMwc2VTdGNmVDhEZ2Z1TGZRSGhwVGVvZlhPT0w0d1hMUVZF?=
- =?utf-8?B?Q0Y1QXRpcXpTZkFHZnRIdHlkWDRSWTRMa0g3Y0ttK3dEVWs1T2ZVMFlCZUxE?=
- =?utf-8?B?RTJSdWZtQVJCSWt4TGtWQ3prNmw3R3k4N2pPTXcwdDFrUmJCVHNkSCtEcUQw?=
- =?utf-8?B?dG1aYnJyT0lQMHNZZ1hKY2dxZU4vdVBLaU9PS1N0Mkc3Vm9iVmFVNENFak40?=
- =?utf-8?B?WWxrdncrSUJBdUIwZFV1WkNZNGhvWHIrRG04Q2pML2FEeThvYmtDVUhUK0hB?=
- =?utf-8?B?SUdMTU81eWxvaVF3VmN5SlNnaDM3UXZ6WnJJUHd4K1FOdW9hQjZNK1E4cjhk?=
- =?utf-8?B?Z05DamZKUklTeHdVbWt1T2kweGxWdG5TazJiM0lkdWhGSFQ2K0JxazRybXh6?=
- =?utf-8?B?SDl2b3djRkNrR0xETlFSbU5JMFI4T1J6SWtIdzNwelFkek1EaWhlcWc3K051?=
- =?utf-8?B?YXc9PQ==?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: c5ee19ab-29a7-4f40-3df9-08dc52bc54c9
-X-MS-Exchange-CrossTenant-AuthSource: SJ2PR11MB7573.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Apr 2024 02:26:41.1230
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: IxxRF4UY7b3e24a39eH7xrYXBhoFIV6VOXnwEIl7fs1AbIjNrNAKcU8+hlBlRDU9ZjD15Zqkf6xuh5dMGloR/3d7fCQQg6G4oKRHoI4yDvU=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR11MB6500
-X-OriginatorOrg: intel.com
+Content-Transfer-Encoding: 8bit
 
-Hi Tony,
+The previous work to allow the MCU to be resumed correctly after sleep
+and resume tried to take the shortest possible time. However as work
+continues in various other parts of the s2idle subsystems it has shown
+that it wasn't entirely reliable.
 
-On 4/1/2024 4:03 PM, Luck, Tony wrote:
->> It appears that there is no custom here and it may just be somebody's preference?
-> 
-> Reinette,
-> 
-> Thanks for digging around. I had thought there was general consensus that
-> memory was measured in 2^20, storage in 10^6 and networking in either
-> 10^6 or 10^9 (but bits rather than bytes.
-> 
-> But, as you've found, there doesn't seem to be to be even that much of
-> a custom.
-> 
-> Maybe a case for https://xkcd.com/927/ (since it is April 1st, I propose
-> everyone standardize on Teranibbles per fortnight[1] :-) )
-> 
-> But back to the patch. As there is no standard, changing the documentation
-> to accurately represent the code looks like a good option.
+If the MCU disable/enable call is done correctly the MCU fully removes
+its USB endpoints, and this shows as a full USB device reconnection on
+resume. When we tried to short this as much as possible sometimes the
+MCU doesn't get to complete what it needs to do before going to low-power
+and this affected the reconnection.
 
-It is not obvious to me what the right thing is to do. The documentation has
-stated since the inception of the software controller that that it accepts
-bandwidth in MBps. You demonstrated this is the case but it is not obvious to
-me that this is a documentation problem or an issue that needs to
-be fixed in the code. I am not familiar with a precedent in this regard.
+Through trial it is found that the minimum time required is approx 1200ms
+to allow a proper disconnect and disable, and the same amount of time on
+resume is required to prevent a rapid disconnect/reconnect happening on
+seemingly random occasions. To be safe the time is now 1500ms for msleep.
 
-Changing the documentation does seem like the least controversial approach.
-The consequence is that resctrl documentation itself now switches back and
-forth between the units ... it uses MiBps for the software controller and
-GBps when referring to AMD and talking about memory bandwidth in general
-(see section Memory bandwidth Allocation and monitoring). I hope that it
-is clear enough that MiBps is just related to the software
-controller.
+Signed-off-by: Luke D. Jones <luke@ljones.dev>
+---
+ drivers/platform/x86/asus-wmi.c | 12 ++----------
+ 1 file changed, 2 insertions(+), 10 deletions(-)
 
-Reinette
+diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
+index 1743ff1eb0ac..ddf568ef8c5e 100644
+--- a/drivers/platform/x86/asus-wmi.c
++++ b/drivers/platform/x86/asus-wmi.c
+@@ -129,7 +129,7 @@ module_param(fnlock_default, bool, 0444);
+ /* Controls the power state of the USB0 hub on ROG Ally which input is on */
+ #define ASUS_USB0_PWR_EC0_CSEE "\\_SB.PCI0.SBRG.EC0.CSEE"
+ /* 300ms so far seems to produce a reliable result on AC and battery */
+-#define ASUS_USB0_PWR_EC0_CSEE_WAIT 300
++#define ASUS_USB0_PWR_EC0_CSEE_WAIT 1500
+ 
+ static const char * const ashs_ids[] = { "ATK4001", "ATK4002", NULL };
+ 
+@@ -4811,6 +4811,7 @@ static int asus_hotk_resume_early(struct device *device)
+ 	struct asus_wmi *asus = dev_get_drvdata(device);
+ 
+ 	if (asus->ally_mcu_usb_switch) {
++		/* sleep required to prevent USB0 being yanked then reappearing rapidly */
+ 		if (ACPI_FAILURE(acpi_execute_simple_method(NULL, ASUS_USB0_PWR_EC0_CSEE, 0xB8)))
+ 			dev_err(device, "ROG Ally MCU failed to connect USB dev\n");
+ 		else
+@@ -4822,17 +4823,8 @@ static int asus_hotk_resume_early(struct device *device)
+ static int asus_hotk_prepare(struct device *device)
+ {
+ 	struct asus_wmi *asus = dev_get_drvdata(device);
+-	int result, err;
+ 
+ 	if (asus->ally_mcu_usb_switch) {
+-		/* When powersave is enabled it causes many issues with resume of USB hub */
+-		result = asus_wmi_get_devstate_simple(asus, ASUS_WMI_DEVID_MCU_POWERSAVE);
+-		if (result == 1) {
+-			dev_warn(device, "MCU powersave enabled, disabling to prevent resume issues");
+-			err = asus_wmi_set_devstate(ASUS_WMI_DEVID_MCU_POWERSAVE, 0, &result);
+-			if (err || result != 1)
+-				dev_err(device, "Failed to set MCU powersave mode: %d\n", err);
+-		}
+ 		/* sleep required to ensure USB0 is disabled before sleep continues */
+ 		if (ACPI_FAILURE(acpi_execute_simple_method(NULL, ASUS_USB0_PWR_EC0_CSEE, 0xB7)))
+ 			dev_err(device, "ROG Ally MCU failed to disconnect USB dev\n");
+-- 
+2.44.0
+
