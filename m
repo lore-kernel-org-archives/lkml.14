@@ -1,193 +1,219 @@
-Received: from EUR04-DB3-obe.outbound.protection.outlook.com (mail-db3eur04on2092.outbound.protection.outlook.com [40.107.6.92])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f174.google.com (mail-qk1-f174.google.com [209.85.222.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B52285651;
-	Tue,  2 Apr 2024 14:01:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.6.92
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712066496; cv=fail; b=mUrsKGHbU3jPkaalzjnH4/M59NGK8WzYB1jNUqxGDrADLATsSnlDSYD03l2Cda8JDtMqCbAWWP70jU6WqIBL928CZAxuakdRToCbgthfgQYikHXu4ahkq6TAxKyzFe/YGk8Jhz7hIL2Ly8Cu0X1xwZtz37k9Gl7k+7h/cLowKlE=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712066496; c=relaxed/simple;
-	bh=rJzq72yMLoorhROrFAjV0O345A/PB0XRL3ebo01xLk0=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=KPz7BoxCxzkdNA68QFMIt7MAVnxc2bXOzFxkGi6FrrTmuPj/aG3sRyNp+7DwQ6ORJhtu39ZmIHVTEdNjdnXKVXzcJsDhPyrNQjFNnSTreUOCobhh3khfCj32OY2UWTQoZTDRqljQ6aViosiqPkOIkFFxmhva1kZcbOP2Tu5vX9w=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b=LrN3xgN3; arc=fail smtp.client-ip=40.107.6.92
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC81184A22;
+	Tue,  2 Apr 2024 14:02:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.174
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1712066546; cv=none; b=hNciZRhUasbHm1/jo8OBQgfJoZv80dhGR9iV0Iewz+vK1jw7ov5voQ1c8z3zABQzX9sKrzbaXT02ecPcN4ubkjFQ2raLw0dkxS5f6waja+uN+oqBsxWh3oscApFocf2/eLwGxwxFHmMFcxOJRh0XfMfa2v/4605DFGEH5lGuyCw=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1712066546; c=relaxed/simple;
+	bh=UO9L6r+vy9lR2lIAPzgynVMMD8ptxjYlJtiwB4qr5Rg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=itTeIOmd5I2+SDvAA9GR2/UPgIYikoBUtMtCLdF4Gk9/6TBnIIBEYNdBCTIrmkBuK2Sw+iQy5Nhxao5ChmHhHhqGgno1739I4E3kyO1XNHr68g8HZjeiogpn0oQ55GZxea800IxezPs+Om7/cdgpTyWRezdBWuUhh7AdfLRB/RM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GW0iibiz; arc=none smtp.client-ip=209.85.222.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="LrN3xgN3"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Ih+MSDiGYsr749bQNIOj4Q1LqXQVAd2F1J3ZhS4PhbDwJEJ5upuVjzTkN+QX8IAN1Us55tVlsigvfpC9JOcMQl9VKRpLnIVXScdXlDQDQmjT96mR+5vi3JjtyI6uLZGC4gMtuoViHUGAdNd0v4yooVLMNPgWyiqQURh/zcky+3SWDascy7M7/zui3MwGLvbMD9WrWhjwHxTZ83KRCLxMh8zS18GTNXBdoTTHvDIRxeEN2A2fJLefyx8TZhGwhLSFfsDfLJdJmGqEgpPDKRLyHO/dKnmtkEydp+c5+lTUfNiT9ZMm5AUukvIAjVP/JHeJVZZTMuddvSiZr7LVHUTVEw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=rJzq72yMLoorhROrFAjV0O345A/PB0XRL3ebo01xLk0=;
- b=cRLRt7ax1dmBgAiVjgsnCdQONA51uP+YfGzir8VwE6x5e+XhKKWYvGEjEYdZCs3fLpbAkgTSRJ1LsJA+4W/wAmQ7zrEeH+43WDrES9sbp1O1j8hdylC727eKKmM+QchEw7mEFND8g4dPT0GfkIgxVsyXWwR7d5C03p5V0R5hYODVntXFrSdlltcwHWjp0WoJ4boZmIFe5h37f2KRCO9zMeD5NgBvPHCPgh+oaTu4pxs4v9uFHsMbSSS4FHecQTkcxWi9L+7a2HOXak3fS9eSJpsCFHwg73LRV20hfEgYW6Os2GzIdWtkvX6Dc0PjideinlbctbAEU4iLAKVuuT/iKA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=rJzq72yMLoorhROrFAjV0O345A/PB0XRL3ebo01xLk0=;
- b=LrN3xgN3obu0N4xgdNN8EJTl+wT/p33QmeLiv54LoRjVgC821M5VobMI6KisGRVl9Yx5GX4KKtbjB8URzcvYLQ8Z5G05v1czpyg2/BsyrKzMQXRPab/rOh26gF/EZvlNo9M2ng3QP2DcQOvPiXvDwOeuvPG35UN8Uld9Pr7YW1U=
-Received: from DU0PR04MB9417.eurprd04.prod.outlook.com (2603:10a6:10:358::11)
- by PA4PR04MB9416.eurprd04.prod.outlook.com (2603:10a6:102:2ab::21) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.39; Tue, 2 Apr
- 2024 14:01:30 +0000
-Received: from DU0PR04MB9417.eurprd04.prod.outlook.com
- ([fe80::d30b:44e7:e78e:662d]) by DU0PR04MB9417.eurprd04.prod.outlook.com
- ([fe80::d30b:44e7:e78e:662d%4]) with mapi id 15.20.7386.037; Tue, 2 Apr 2024
- 14:01:30 +0000
-From: Peng Fan <peng.fan@nxp.com>
-To: Andy Shevchenko <andy.shevchenko@gmail.com>, Cristian Marussi
-	<cristian.marussi@arm.com>
-CC: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>, Sudeep Holla
-	<sudeep.holla@arm.com>, Rob Herring <robh@kernel.org>, Krzysztof Kozlowski
-	<krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>,
-	Linus Walleij <linus.walleij@linaro.org>, Dan Carpenter
-	<dan.carpenter@linaro.org>, "linux-arm-kernel@lists.infradead.org"
-	<linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org"
-	<devicetree@vger.kernel.org>, "linux-gpio@vger.kernel.org"
-	<linux-gpio@vger.kernel.org>, Oleksii Moisieiev <oleksii_moisieiev@epam.com>
-Subject: RE: [PATCH v6 3/4] firmware: arm_scmi: Add SCMI v3.2 pincontrol
- protocol basic support
-Thread-Topic: [PATCH v6 3/4] firmware: arm_scmi: Add SCMI v3.2 pincontrol
- protocol basic support
-Thread-Index: AQHafRqyofu9Mu9OLUiaociI+9q/i7FPHJwAgALIoZCAAsTtAIAAWKsAgAAO4RA=
-Date: Tue, 2 Apr 2024 14:01:30 +0000
-Message-ID:
- <DU0PR04MB94172B29B33AC0002CF6991B883E2@DU0PR04MB9417.eurprd04.prod.outlook.com>
-References: <20240323-pinctrl-scmi-v6-0-a895243257c0@nxp.com>
- <20240323-pinctrl-scmi-v6-3-a895243257c0@nxp.com>
- <ZgcP4IkTQGks9ehH@surfacebook.localdomain>
- <DU0PR04MB9417E797F4E0F7BB6154B3BE88382@DU0PR04MB9417.eurprd04.prod.outlook.com>
- <Zgu4Tok43W5t8KM0@pluto>
- <CAHp75VdAaTeQ_Ag3gd0s9UfT=kAT2hwibeJ9-YFXJx4z=R3e+g@mail.gmail.com>
-In-Reply-To:
- <CAHp75VdAaTeQ_Ag3gd0s9UfT=kAT2hwibeJ9-YFXJx4z=R3e+g@mail.gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: DU0PR04MB9417:EE_|PA4PR04MB9416:EE_
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info:
- OgpB14oHrgvywD4+25m+tGx9e/gGxggN8vZhwuYOqrQty+G6PrTINAGlebPMbVeRJgz1wid0fwkwfpeqhIu2M/9hpXJS+1dortUbTakil93ZESNpxcI+DKcsCB9pIssVwYKma6TL1N8thX8kGjUzBCJpy7tSTiK88UzjNhd5iHflNbfLDsqAVOK/GaxmJyqKwaIwXIM0mNt8AR5VLTmHB2k4eScAAJy+ES+P6l4tYZcMoe/TFSSGpspxqYx3q64qWJ64A8dPyPSO/cbAsxbXgFg4AnyAjaKmSPR9B7kUm+mTlutIp4AQ1MgvWDk3/Cq/4VQ2/BxggOiNkfztwG/V8pkWxq04h/WngIEnwXNtuy0J2Bkjl2UgGke1olB3mD+oeWZdN+rxFAM1NqE1/QNq6Z9/SeF9bJffwCGJe6E+YXd7foRgqZgk7JiCgZX2lZve8W+ImzZNLTQk+AJwRTm40UxuGSnDlBJQ0HfcoQmhr5LLdNfBSHffzcOar+41arViFOTSfevxLIqfcXsEd/95KatZwxSALG7HydbDTITmx6CaXq6Nj2TKS247Bs1VXcdKnMCNTDFjMMPFjfF7VYNA3EPfBuReDYkOvPCyfe5hr9SgBGYLYPZHa+3fvslKw/kCiOkquhBnsv7PqZ7ih3eazpOx2q6EGgPN6PgXD/l8K7w=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DU0PR04MB9417.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(1800799015)(7416005)(376005)(366007);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?utf-8?B?VzlITFJNY0toUHFpUUhOdjFEVFRrdk42VU9uR3IyYXZNb0pJU2J6SDJtS0V6?=
- =?utf-8?B?V1NkYTkyV2orSVo1SW40MGtCUjJHZTNWTkt1eEJHY3VOMDFTNFE2djBtbWFD?=
- =?utf-8?B?WUhsaWRBMDZTZFVvb0lCMW9jRTI2WVlHYnVrL1RUcFBkWFhMNGhBUmQrTWFI?=
- =?utf-8?B?V0JyV2NJa01DRmgxdjc5OGpaNHpIYmJQT1BQaDkvaS9HSHhNMnAvNTUxQ2s0?=
- =?utf-8?B?eU5oeEZOSjZXdG5QZlFVSmJYNHFSNThVTkJ0SnltNXZuTWdZOVovZkJxUE0y?=
- =?utf-8?B?RjFXc1dRNStCaC84ajhQd3VYakgrbnBuVE51RU9jTXJ4NnBudlNNdDR5ckor?=
- =?utf-8?B?QlJETDNjei9SQk94blJQOGlOUXJ0blJHZDRGVXRWS1R0SHltTVBmWFU5aFpL?=
- =?utf-8?B?RktRaENIOWwvdDBFOHZWd1VLazdlVnpQQ1AvUyttM05HVERkbjhOcjFYcHBt?=
- =?utf-8?B?cWdlRzhIWk0rODNsVTM2cklmUHlWWnZFZm94SU9LTCtMNndUY0U3WGo3eU1D?=
- =?utf-8?B?bmUxVC8rNXhreTZsYVJwL2FKMExTUVZ0aWhJajczV0pWKzE1NUtjS0pEcS8y?=
- =?utf-8?B?bzNjR3RWYS93QnkxRVd3SmkyT2hSY2d6R2FHU3p1L3pRc2ZZakNqWUI5MDcv?=
- =?utf-8?B?MjBxaHVQWCtrY2RmTzIxOHBLcm0rb01QbnJ5WEMzV2tNNitZWExuTkdFUWRB?=
- =?utf-8?B?Y0dOUFQ3eW1VdXBsVmg1LysxemxIaFNEUkd1eWJNaS8rTlk1UGdCdUwybUlT?=
- =?utf-8?B?M1hUbU1vQ3BuOVhFeWhJWEJIRE5aZCtVWjlCbkxvSFFIM1B6NDJrZTRQbkda?=
- =?utf-8?B?N3A2RGtORENJcFJLdzlkUG5OU2RiTFZCdTlVNnp1aW9Kb1AzamNQSWFRUHlJ?=
- =?utf-8?B?di9lRDZLdFB0aTFwVTN0eGVSV0pHQWtSbFNBS1J5YjRFRjVGNU8zbTBpSlc5?=
- =?utf-8?B?Qy9TOU10Q04xWjBSOStaLytqVlZCWjFvOFhERTJ3THlybEc2enZQeGtUdUhq?=
- =?utf-8?B?RUdJZHdhaDZVWTkraExoazF5UWdma3NqeE5pcHc5RUpUMmZJR0sxRCtqSDFv?=
- =?utf-8?B?K2hpOTZpMzlkdVkwck01VzJrclhINVJWcWtzNVFOeHNaNEwxQ2VpN1psS0Yz?=
- =?utf-8?B?SjA5MnNCamZvUWdXUUs1Zm42alJwV2pLYjJWL0dBOVQ1YnkyVW1wM2p4SHZW?=
- =?utf-8?B?T05YMnNxZEpKMW45c01yWFFnc3l3MDQzRDlqQjhPR2JFam9iMVlnclBnSWpZ?=
- =?utf-8?B?bG4vS2FXWWR6NEpjVURQVm5pOURSNW1IZFRiZHBLSzVIbUNhTm1PaDh1VkNs?=
- =?utf-8?B?bllKVDBFdmpiNlI3TWJvazNLR3V3dDRXRGwwVDRlZ3NMWUxOTXpSMHhZdjF4?=
- =?utf-8?B?ZkxJaXM2R1NLQzBtbGNOV1dtbDVaZmZqVllXeVVVMzZ6OXVWYW8xVnpxWVVi?=
- =?utf-8?B?S2dvQ0c3N1VuTC9jY2Y4bnBtQ3Z0MVhwMCt3NTRnclAwWVM0L0NVWHdEcXpk?=
- =?utf-8?B?NnR6bk55VkVDQVhGZHpOTVBQSG1UTk9qREJ2bUphZ0ZUakx6eVdOZEc5MTZn?=
- =?utf-8?B?djQ4Y082eDBOckhPZEdqT0Q1dVhodDFCR0dJOUxJd0dnN3NwRDdvQUxMdlBu?=
- =?utf-8?B?aExrUk5FTGZWcU5yZjN0SVhDVmRFZXRSQmVqMzYvREtxZGNyS3g3T1hiNllK?=
- =?utf-8?B?T3VQV2oxaTV5N0E2TGQxY212OGpodVNRbnAxQTJWVkV6RDIxcEZhLzJWM0lw?=
- =?utf-8?B?RkJuYzhlTnNtUDllRm8xRzhlOXpEelY5bytDbktEZ0ZIZUZNSCtBajlLYVZY?=
- =?utf-8?B?UDhXendQOGw3OHExMGt4WDdic0ZhOUhEdXI0S1dzYm1SNzBCNU1yMlJlZnc2?=
- =?utf-8?B?dTE5dmh2S0JuQzlkTksyS0RxRzNMTTgxUFVsbk9QYnNpVStEclAxLzEzWTNQ?=
- =?utf-8?B?di9XZzcyMXpyQUMvd2FRZVIyRWEvOEF5OXZ4T2Y3c3dUWkJtT1dVUDdNd0J0?=
- =?utf-8?B?VDFXaGtrTklBTjZyRUlaNzluQ1ZpcTQ2b1ZuWVg4bkE4Q3NSMGtCRENydlhC?=
- =?utf-8?B?TnhlS1MvMjJVTUovVkdvNW1ybjh4NmQ5ak15Z0xnK2d1SGNTR3h2MzFzck1H?=
- =?utf-8?Q?tSKo=3D?=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GW0iibiz"
+Received: by mail-qk1-f174.google.com with SMTP id af79cd13be357-78a746759b4so379296785a.2;
+        Tue, 02 Apr 2024 07:02:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1712066543; x=1712671343; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=QHSoMgHSVCnzk9XY/4SW/zti9qPkDr59hKAE7jpY8Tg=;
+        b=GW0iibizMDfs4tL2jAt3gwJn9oRMyIWxqcPsdSw9pp6Ik6E1wDXST7YfyN8GXu95sU
+         7cRy0aIaSNM1UIbzfc936BAF4mcKnYCbZKAysnKKYOf5jEhX6qVnXI4bJAAhUiG0iOly
+         t8rw2BbrcZqIlJT6ekbQEgh2XhsJ3Dl1z4oedHOkxYWXIisEEWRURsjC+jNl2ftQLxkt
+         z7FpyLdkt/vSqOsEkXgNKRW/erZWgYhD04An+QzgSneBEX4GUAgkwC1aR8UsNkKc68MS
+         aC/9a7ED0F1tjfVOKTJNy1OxeydtqVCY/RN9DORTHr6lMr/iIdCx7yqghTRNcvSbisqW
+         gMng==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712066543; x=1712671343;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=QHSoMgHSVCnzk9XY/4SW/zti9qPkDr59hKAE7jpY8Tg=;
+        b=inZr0bB92Ya1gIjv8BEZ3IULhoqEiYGIb7DkqXPQ6a7AcwUdYruKnRmEfl3ahySCE+
+         ik0vs5cM7A5cJ/q1sKZyY+2uKP9fZMhe5GZaONUgtvmp057d67A6swHJuJLauI2ZlAVB
+         C9BdFpDfLQgR9alanTPNsS2h9hrOAEpGOO0C6x0W/PPhD57S3r+1ceNQt8g3M+r5OiJh
+         5rzStoicNz9ywsgqLNeXlz366YWyrCJ/94iRGRmXYk4Inxjyf5QmZk6vKNohJD5Brwzc
+         6L2oUBaN/wBpfN7jDrUjCAQQJ1ANVBa5p7owgTEJW4GuWq7IHfgZ+Pnf1PFxNUGUhMhO
+         ouBA==
+X-Forwarded-Encrypted: i=1; AJvYcCVsv2T08F2L/H8fmPfOFCDCfFG99h+lrRjQiROdsVRW2h962uJvEya9m0sORJnB7MuZWvnDpfncaUJzEpUjvkVvoDSJFBXntNlBuQxCBUEMS0P8B38fLg+DmuhIEqYUgR2FTiFRjmAVDTqAGA==
+X-Gm-Message-State: AOJu0YwprDNxwUD+SNtkuSqG25xZuAQ3y4Q+Xg/5zwoO+oeTSTqzLa0o
+	f4XLWBylOhyVB6W7KFSY8hLCsCrS5jTVJ1Nbs9ZCeDvOnFrfoF7q3LA4M/sBwAAWrDSm7DqkLAm
+	P2FMuIRSyhX1Eh7zAhCoPGVoQAAA=
+X-Google-Smtp-Source: AGHT+IE3Ie6UqpwR2ahcExp5xoKdrL6D3srT7/FC+clGzi0IT7DyqDbvdiFN6ftWm9TmZrO0LeCLO9dpE3KzPEnQxIA=
+X-Received: by 2002:ad4:4e62:0:b0:699:514:3031 with SMTP id
+ ec2-20020ad44e62000000b0069905143031mr5645451qvb.20.1712066543293; Tue, 02
+ Apr 2024 07:02:23 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: DU0PR04MB9417.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 13dfdd6d-621a-4903-369f-08dc531d65ec
-X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Apr 2024 14:01:30.8503
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: Qzna5pr5zxWG8/quqZ55oJTZLi8N/8DwL1Qs6l2XWy9XYUmOwDApHuLyqpvyd7/X7yAVyPG1XUCXc/LggMo96w==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PA4PR04MB9416
+References: <20240402-setlease-v2-1-b098a5f9295d@kernel.org>
+ <8a8e8c0d-7878-4289-b490-cb9bf17e56b9@fastmail.fm> <f6bbdf158f0ca7a12de9b9f980d4d7fa31399ed9.camel@kernel.org>
+In-Reply-To: <f6bbdf158f0ca7a12de9b9f980d4d7fa31399ed9.camel@kernel.org>
+From: Amir Goldstein <amir73il@gmail.com>
+Date: Tue, 2 Apr 2024 17:02:12 +0300
+Message-ID: <CAOQ4uxiv7xSUS7RDK3esa1Crp8reYXewxkr5fFbhG623P20PwA@mail.gmail.com>
+Subject: Re: [PATCH v2] fuse: allow FUSE drivers to declare themselves free
+ from outside changes
+To: Jeff Layton <jlayton@kernel.org>
+Cc: Bernd Schubert <bernd.schubert@fastmail.fm>, Miklos Szeredi <miklos@szeredi.hu>, 
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-PiBTdWJqZWN0OiBSZTogW1BBVENIIHY2IDMvNF0gZmlybXdhcmU6IGFybV9zY21pOiBBZGQgU0NN
-SSB2My4yIHBpbmNvbnRyb2wNCj4gcHJvdG9jb2wgYmFzaWMgc3VwcG9ydA0KPiANCj4gT24gVHVl
-LCBBcHIgMiwgMjAyNCBhdCAxMDo0OOKAr0FNIENyaXN0aWFuIE1hcnVzc2kNCj4gPGNyaXN0aWFu
-Lm1hcnVzc2lAYXJtLmNvbT4gd3JvdGU6DQo+ID4gT24gU3VuLCBNYXIgMzEsIDIwMjQgYXQgMDE6
-NDQ6MjhQTSArMDAwMCwgUGVuZyBGYW4gd3JvdGU6DQo+ID4gPiA+IFNhdCwgTWFyIDIzLCAyMDI0
-IGF0IDA4OjE1OjE2UE0gKzA4MDAsIFBlbmcgRmFuIChPU1MpIGtpcmpvaXR0aToNCj4gDQo+IC4u
-Lg0KPiANCj4gPiA+ID4gPiArI2luY2x1ZGUgPGxpbnV4L21vZHVsZS5oPg0KPiA+ID4gPiA+ICsj
-aW5jbHVkZSA8bGludXgvc2NtaV9wcm90b2NvbC5oPiAjaW5jbHVkZSA8bGludXgvc2xhYi5oPg0K
-PiA+ID4gPg0KPiA+ID4gPiBUaGlzIGlzIHNlbWktcmFuZG9tIGxpc3Qgb2YgaGVhZGVycy4gUGxl
-YXNlLCBmb2xsb3cgSVdZVSBwcmluY2lwbGUNCj4gPiA+ID4gKGluY2x1ZGUgd2hhdCB5b3UgdXNl
-KS4gVGhlcmUgYXJlIGEgbG90IG9mIGluY2x1c2lvbnMgSSBzZWUNCj4gPiA+ID4gbWlzc2luZyAo
-anVzdCBpbiB0aGUgY29udGV4dCBvZiB0aGlzIHBhZ2UgSSBzZWUgYml0cy5oLCB0eXBlcy5oLCBh
-bmQNCj4gYXNtL2J5dGVvcmRlci5oKS4NCj4gPiA+DQo+ID4gPiBJcyB0aGVyZSBhbnkgZG9jdW1l
-bnRhdGlvbiBhYm91dCB0aGlzIHJlcXVpcmVtZW50Pw0KPiA+ID4gU29tZSBoZWFkZXJzIGFyZSBh
-bHJlYWR5IGluY2x1ZGVkIGJ5IG90aGVycy4NCj4gDQo+IFRoZSBkb2N1bWVudGF0aW9uIGhlcmUg
-aXMgY2FsbGVkICJhIGNvbW1vbiBzZW5zZSIuDQo+IFRoZSBDIGxhbmd1YWdlIGlzIGJ1aWx0IGxp
-a2UgdGhpcyBhbmQgd2UgZXhwZWN0IHRoYXQgbm9ib2R5IHdpbGwgaW52ZXN0IGludG8gdGhlDQo+
-IGRlcGVuZGVuY3kgaGVsbCB0aGF0IHdlIGhhdmUgYWxyZWFkeSwgdGhhdCdzIHdoeSBJV1lVIHBy
-aW5jaXBsZSwgcGxlYXNlDQo+IGZvbGxvdyBpdC4NCj4gDQo+ID4gQW5keSBtYWRlIChtb3N0bHkp
-IHRoZSBzYW1lIHJlbWFya3Mgb24gdGhpcyBzYW1lIHBhdGNoIH4xLXllYXIgYWdvIG9uDQo+ID4g
-dGhpcyBzYW1lIHBhdGNoIHdoaWxlIGl0IHdhcyBwb3N0ZWQgYnkgT2xla3NpaS4NCj4gPg0KPiA+
-IEFuZCBJIHRvbGQgdGhhdCB0aW1lIHRoYXQgbW9zdCBvZiB0aGUgcmVtYXJrcyBhcm91bmQgZGV2
-bV8gdXNhZ2Ugd2VyZQ0KPiA+IHdyb25nIGR1ZSB0byBob3cgdGhlIFNDTUkgY29yZSBoYW5kbGVz
-IHByb3RvY29sIGluaXRpYWxpemF0aW9uICh1c2luZw0KPiA+IGEgZGV2cmVzIGdyb3VwIHRyYW5z
-cGFyZW50bHkpLg0KPiA+DQo+ID4gVGhpcyBpcyB3aGF0IEkgYW5zd2VyZWQgdGhhdCB0aW1lLg0K
-PiA+DQo+ID4gaHR0cHM6Ly9ldXIwMS5zYWZlbGlua3MucHJvdGVjdGlvbi5vdXRsb29rLmNvbS8/
-dXJsPWh0dHBzJTNBJTJGJTJGbG9yZQ0KPiA+IC5rZXJuZWwub3JnJTJGbGludXgtYXJtLWtlcm5l
-bCUyRlpKNzhoQmNqQWhpVSUyQlpCTyU0MGUxMjA5MzctDQo+IGxpbiUyRiUyDQo+ID4NCj4gM3Qm
-ZGF0YT0wNSU3QzAyJTdDcGVuZy5mYW4lNDBueHAuY29tJTdDM2Y4YzEyMDYyZGIwNDg2MDhlMmEw
-OGQNCj4gYzUzMTViZWQNCj4gPg0KPiAwJTdDNjg2ZWExZDNiYzJiNGM2ZmE5MmNkOTljNWMzMDE2
-MzUlN0MwJTdDMCU3QzYzODQ3NjYwMDA1ODMNCj4gNDA0MzAlN0NVbg0KPiA+DQo+IGtub3duJTdD
-VFdGcGJHWnNiM2Q4ZXlKV0lqb2lNQzR3TGpBd01EQWlMQ0pRSWpvaVYybHVNeklpTENKQlRpSTZJ
-DQo+IGsxaGFXDQo+ID4NCj4gd2lMQ0pYVkNJNk1uMCUzRCU3QzAlN0MlN0MlN0Mmc2RhdGE9V2hu
-M2VoWmpYeSUyQmNLRzRpcmxXalE2DQo+IEszSEYlMkZvZkQNCj4gPiBZdTdqMExybThkTjVrJTNE
-JnJlc2VydmVkPTANCj4gPg0KPiA+IEkgd29udCByZXBlYXQgbXlzZWxmLCBidXQsIGluIGEgbnV0
-c2hlbGwgdGhlIG1lbW9yeSBhbGxvY2F0aW9uIGxpa2UgaXQNCj4gPiBpcyBub3cgaXMgZmluZTog
-YSBiaXQgaGFwcGVucyB2aWEgZGV2bV8gYXQgcHJvdG9jb2wgaW5pdGlhbGl6YXRpb24sDQo+ID4g
-dGhlIG90aGVyIGlzIGRvZSB2aWEgZXhwbGljaXQga21hbGxvYyBhdCBydW50aW1lIGFuZCBmcmVl
-ZCB2aWEga2ZyZWUNCj4gPiBhdCByZW1vdmUgdGltZSAoaWYgbmVlZGVkLi4uaS5lLiBjaGVja2lu
-ZyB0aGUgcHJlc2VudCBmbGFnIG9mIHNvbWUNCj4gPiBzdHJ1Y3RzKQ0KPiANCj4gVGhpcyBzb3Vu
-ZHMgbGlrZSBhIG1lc3MuIGRldm1fIGlzIGV4cGVjdGVkIHRvIGJlIHVzZWQgb25seSBmb3IgdGhl
-DQo+IC0+cHJvYmUoKSBzdGFnZSwgb3RoZXJ3aXNlIHlvdSBtYXkgY29uc2lkZXIgY2xlYW51cC5o
-IChfX2ZyZWUoKSBtYWNybykNCj4gdG8gaGF2ZSBhdXRvbWF0aWMgZnJlZSBhdCB0aGUgcGF0aHMg
-d2hlcmUgbWVtb3J5IGlzIG5vdCBuZWVkZWQuDQo+IA0KPiBBbmQgdGhlIGZ1bmN0aW9uIG5hbWlu
-ZyBkb2Vzbid0IHN1Z2dlc3QgdGhhdCB5b3UgaGF2ZSBhIHByb2JlLXJlbW92ZSBwYWlyLg0KPiBN
-b3Jlb3ZlciwgaWYgdGhlIGluaXQtZGVpbml0IHBhcnQgaXMgY2FsbGVkIGluIHRoZSBwcm9iZS1y
-ZW1vdmUsIHRoZSBkZXZtXw0KPiBtdXN0IG5vdCBiZSBtaXhlZCB3aXRoIG5vbi1kZXZtIG9uZXMs
-IGFzIGl0IGJyZWFrcyB0aGUgb3JkZXIgYW5kIGxlYWRzIHRvDQo+IHN1YnRsZSBtaXN0YWtlcy4N
-Cg0KSSBhbSBuZXcgdG8gX19mcmVlKCkgaG9uZXN0bHkuIEknbGwgbGV0IENyaXN0aWFuIGFuZCBT
-dWRlZXAgdG8gY29tbWVudCBvbg0Kd2hhdCBzaG91bGQgSSBkbyBmb3IgdjguDQoNClRoYW5rcywN
-ClBlbmcuDQoNCj4gDQo+ID4gSSdsbCBtYWRlIGZ1cnRoZXIgcmVtYXJrcyBvbiB2NyB0aGF0IHlv
-dSBqdXN0IHBvc3RlZC4NCj4gDQo+IC0tDQo+IFdpdGggQmVzdCBSZWdhcmRzLA0KPiBBbmR5IFNo
-ZXZjaGVua28NCg==
+On Tue, Apr 2, 2024 at 4:29=E2=80=AFPM Jeff Layton <jlayton@kernel.org> wro=
+te:
+>
+> On Tue, 2024-04-02 at 15:23 +0200, Bernd Schubert wrote:
+> >
+> > On 4/2/24 15:10, Jeff Layton wrote:
+> > > Traditionally, we've allowed people to set leases on FUSE inodes.  So=
+me
+> > > FUSE drivers are effectively local filesystems and should be fine wit=
+h
+> > > kernel-internal lease support. Others are backed by a network server
+> > > that may have multiple clients, or may be backed by something non-fil=
+e
+> > > like entirely. On those, we don't want to allow leases.
+> > >
+> > > Have the filesytem driver to set a fuse_conn flag to indicate whether
+> > > the inodes are subject to outside changes, not done via kernel APIs. =
+ If
+> > > the flag is unset (the default), then setlease attempts will fail wit=
+h
+> > > -EINVAL, indicating that leases aren't supported on that inode.
+> > >
+> > > Local-ish filesystems may want to start setting this value to true to
+> > > preserve the ability to set leases.
+> > >
+> > > Signed-off-by: Jeff Layton <jlayton@kernel.org>
+> > > ---
+> > > This is only tested for compilation, but it's fairly straightforward.
+> > >
+> > > I've left the default the "safe" value of false, so that we assume th=
+at
+> > > outside changes are possible unless told otherwise.
+> > > ---
+> > > Changes in v2:
+> > > - renamed flag to FUSE_NO_OUTSIDE_CHANGES
+> > > - flesh out comment describing the new flag
+> > > ---
+> > >  fs/fuse/file.c            | 11 +++++++++++
+> > >  fs/fuse/fuse_i.h          |  5 +++++
+> > >  fs/fuse/inode.c           |  4 +++-
+> > >  include/uapi/linux/fuse.h |  1 +
+> > >  4 files changed, 20 insertions(+), 1 deletion(-)
+> > >
+> > > diff --git a/fs/fuse/file.c b/fs/fuse/file.c
+> > > index a56e7bffd000..79c7152c0d12 100644
+> > > --- a/fs/fuse/file.c
+> > > +++ b/fs/fuse/file.c
+> > > @@ -3298,6 +3298,16 @@ static ssize_t fuse_copy_file_range(struct fil=
+e *src_file, loff_t src_off,
+> > >     return ret;
+> > >  }
+> > >
+> > > +static int fuse_setlease(struct file *file, int arg,
+> > > +                    struct file_lease **flp, void **priv)
+> > > +{
+> > > +   struct fuse_conn *fc =3D get_fuse_conn(file_inode(file));
+> > > +
+> > > +   if (fc->no_outside_changes)
+> > > +           return generic_setlease(file, arg, flp, priv);
+> > > +   return -EINVAL;
+> > > +}
+> > > +
+> > >  static const struct file_operations fuse_file_operations =3D {
+> > >     .llseek         =3D fuse_file_llseek,
+> > >     .read_iter      =3D fuse_file_read_iter,
+> > > @@ -3317,6 +3327,7 @@ static const struct file_operations fuse_file_o=
+perations =3D {
+> > >     .poll           =3D fuse_file_poll,
+> > >     .fallocate      =3D fuse_file_fallocate,
+> > >     .copy_file_range =3D fuse_copy_file_range,
+> > > +   .setlease       =3D fuse_setlease,
+> > >  };
+> > >
+> > >  static const struct address_space_operations fuse_file_aops  =3D {
+> > > diff --git a/fs/fuse/fuse_i.h b/fs/fuse/fuse_i.h
+> > > index b24084b60864..49d44a07b0db 100644
+> > > --- a/fs/fuse/fuse_i.h
+> > > +++ b/fs/fuse/fuse_i.h
+> > > @@ -860,6 +860,11 @@ struct fuse_conn {
+> > >     /** Passthrough support for read/write IO */
+> > >     unsigned int passthrough:1;
+> > >
+> > > +   /** Can we assume that the only changes will be done via the loca=
+l
+> > > +    *  kernel? If the driver represents a network filesystem or is a=
+ front
+> > > +    *  for data that can change on its own, set this to false. */
+> > > +   unsigned int no_outside_changes:1;
+> > > +
+> > >     /** Maximum stack depth for passthrough backing files */
+> > >     int max_stack_depth;
+> > >
+> > > diff --git a/fs/fuse/inode.c b/fs/fuse/inode.c
+> > > index 3a5d88878335..f33aedccdb26 100644
+> > > --- a/fs/fuse/inode.c
+> > > +++ b/fs/fuse/inode.c
+> > > @@ -1330,6 +1330,8 @@ static void process_init_reply(struct fuse_moun=
+t *fm, struct fuse_args *args,
+> > >                     }
+> > >                     if (flags & FUSE_NO_EXPORT_SUPPORT)
+> > >                             fm->sb->s_export_op =3D &fuse_export_fid_=
+operations;
+> > > +                   if (flags & FUSE_NO_OUTSIDE_CHANGES)
+> > > +                           fc->no_outside_changes =3D 1;
+> > >             } else {
+> > >                     ra_pages =3D fc->max_read / PAGE_SIZE;
+> > >                     fc->no_lock =3D 1;
+> > > @@ -1377,7 +1379,7 @@ void fuse_send_init(struct fuse_mount *fm)
+> > >             FUSE_HANDLE_KILLPRIV_V2 | FUSE_SETXATTR_EXT | FUSE_INIT_E=
+XT |
+> > >             FUSE_SECURITY_CTX | FUSE_CREATE_SUPP_GROUP |
+> > >             FUSE_HAS_EXPIRE_ONLY | FUSE_DIRECT_IO_ALLOW_MMAP |
+> > > -           FUSE_NO_EXPORT_SUPPORT | FUSE_HAS_RESEND;
+> > > +           FUSE_NO_EXPORT_SUPPORT | FUSE_HAS_RESEND | FUSE_NO_OUTSID=
+E_CHANGES;
+> > >  #ifdef CONFIG_FUSE_DAX
+> > >     if (fm->fc->dax)
+> > >             flags |=3D FUSE_MAP_ALIGNMENT;
+> > > diff --git a/include/uapi/linux/fuse.h b/include/uapi/linux/fuse.h
+> > > index d08b99d60f6f..703d149d45ff 100644
+> > > --- a/include/uapi/linux/fuse.h
+> > > +++ b/include/uapi/linux/fuse.h
+> > > @@ -463,6 +463,7 @@ struct fuse_file_lock {
+> > >  #define FUSE_PASSTHROUGH   (1ULL << 37)
+> > >  #define FUSE_NO_EXPORT_SUPPORT     (1ULL << 38)
+> > >  #define FUSE_HAS_RESEND            (1ULL << 39)
+> > > +#define FUSE_NO_OUTSIDE_CHANGES    (1ULL << 40)
+> >
+> > Above all of these flags are comments explaining the flags, so that one
+> > doesn't need to look up in kernel sources what the exact meaning is.
+> >
+> > Could you please add something like below?
+> >
+> > FUSE_NO_OUTSIDE_CHANGES: No file changes through other mounts / clients
+> >
+>
+> Definitely. I've added that in my local branch. I can either resend
+> later, or maybe Miklos can just add that if he's otherwise OK with this
+> patch.
+
+Don't love the name but don't have any suggestions either.
+
+I am wondering out loud, if we have such a mode for the fs,
+if and how should it affect caching configuration?
+
+Thanks,
+Amir.
