@@ -1,123 +1,81 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97B1B132C38;
-	Tue,  2 Apr 2024 17:09:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30DCF132C38;
+	Tue,  2 Apr 2024 17:10:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712077758; cv=none; b=tleRcDI99MCU7aBWM3OQToRlJGQy0yD0hGUp6WXVW15BWBHjc6uWIjQvAWIEpELYk4ASMncxOZfcNhdg3vt1cTSH9rfJ58ydNj3UAFa+86BuVPc9E7pdzcGwetb6TaQdIBv8Um1de5PqxgWw6ld2Ld1dPo4InaqGyMRH8CtJtN0=
+	t=1712077825; cv=none; b=oSPygG61mUXoQARU8YHLTtCuMHKku+yScE6hbD7n8xJAPCzHCrEynkpJasGOJwpflZuaVB9OFkB0MsDMv8cw4cCKWShdMpNdfdnRySus6TdAyJwg1Grnwhq1LBaaEUOoMNmQyVB8s3ZLndEXMcaF+hvmkdpt+I/Y+n0aRwe8eoU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712077758; c=relaxed/simple;
-	bh=vrLrw4PZ2pbInWmXixTmINalXWw5pkUqlP1Cbc0VEPY=;
-	h=Date:From:To:Subject:Cc:MIME-Version:Message-ID:Content-Type; b=KosQISC49pUCzWtyUnOITHtVXc480Itme2+8ToUnLuDmcIXGu28OzCTa1jMJZhd8LTKcGrpQDK1YgBX9QlBw7ueVqcBnRap1puLAK8AfoOa4bpRuVoK378ZdpbwDpGYHx5Z53NC3tY0EGIDd2xkrpgVaB5NHWSjydkP6m8ggIck=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=VWviRR/q; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Zo96D1JF; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1712077825; c=relaxed/simple;
+	bh=HF/7wros3imLgQh1dI6bjYbQnodA/QtlZyCB0sW0qgA=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=nvGfTTbJX9Lotd8NsW3yZJqh5IqUYtk9pwzWp5V+yd4FvBLM++iEP8m++9qV+UzBxMFNb/xulOUWsFAD1g0SkC2DS7x35cZJUE6wHO7UJau6RDR8ht6KfDXNmu/QgibsJyV4PcZQmk97H/dSWZ+jXQFy66K7jfptw+BRWWX0R0o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=SZK7JqIY; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="VWviRR/q";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Zo96D1JF"
-Date: Tue, 02 Apr 2024 17:09:13 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1712077754;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:  content-transfer-encoding:content-transfer-encoding;
-	bh=EkUkhRyxrhRLwcnDLbcsaRp00vCMdcCteMROj6SGNos=;
-	b=VWviRR/qEUBGUkqKpn/7HJ8s3dqptv98MS16lIUCP3AtZ/n2EMV2lVRgMsoOfYQEAg7X3A
-	hFtpThU9obeTOqAWGQ7V7/e+oHl5byv5kuiBustqWfyFKO1uUfvRR/DAELvvz3VM5eNlQ6
-	daEgv4MO50BpLXd+e9tvkGi21XUSedw11/lqIrgsJBrXdN6UAno74oGqlOiXZPqu9F0a24
-	FH8GL/gEFLxF6eISuVNOKm7oot4i+RINFPE/Grz+Fe7yvecnc27cRqyeL+nw/MwMA90qmn
-	QDpqBhZdgu19ubQgTosMpKLJe7Q0Z8wncZD6ftT0lrh488Un45FiwMQQ2i/uLg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1712077754;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:  content-transfer-encoding:content-transfer-encoding;
-	bh=EkUkhRyxrhRLwcnDLbcsaRp00vCMdcCteMROj6SGNos=;
-	b=Zo96D1JFWujbWb/9U7wUUnBxL97Avj8ta2tI1DEjwlPzggn/mh/jTt0H1j4h7HKr/PJCKI
-	X4exOjuqW+9Kf7AQ==
-From: "tip-bot2 for Dave Hansen" <tip-bot2@linutronix.de>
-Sender: tip-bot2@linutronix.de
-Reply-to: linux-kernel@vger.kernel.org
-To: linux-tip-commits@vger.kernel.org
-Subject:
- [tip: x86/misc] Documentation/maintainer-tip: Clarify merge window policy
-Cc: Dave Hansen <dave.hansen@linux.intel.com>,
- "Borislav Petkov (AMD)" <bp@alien8.de>, x86@kernel.org,
- linux-kernel@vger.kernel.org
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="SZK7JqIY"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 49E26C433C7;
+	Tue,  2 Apr 2024 17:10:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
+	s=korg; t=1712077824;
+	bh=HF/7wros3imLgQh1dI6bjYbQnodA/QtlZyCB0sW0qgA=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=SZK7JqIY4+EnQ8cqKq3vtIyq4RVVkQj77PcnyPW4AJ0+1nbGD+dj2SIwpyVLycUsS
+	 +JRFJLVwCpJcA+zybd/6s/BFuyfhZog57mZR6CSJYuBNxd3d/3KdcMh7b8DghjHRuD
+	 oez+HfA0aq+TRD0f3LpXnnoNvVjd1YwXGPhIVTO8=
+Date: Tue, 2 Apr 2024 10:10:23 -0700
+From: Andrew Morton <akpm@linux-foundation.org>
+To: Mike Rapoport <rppt@linux.ibm.com>
+Cc: Herbert Xu <herbert@gondor.apana.org.au>, xingwei lee
+ <xrivendell7@gmail.com>, davem@davemloft.net, linux-crypto@vger.kernel.org,
+ linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com,
+ samsun1006219@gmail.com, Linus Torvalds <torvalds@linux-foundation.org>,
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+ netdev@vger.kernel.org
+Subject: Re: BUG: unable to handle kernel paging request in
+ crypto_sha3_update
+Message-Id: <20240402101023.aea0f8ed981903077dcd9e6b@linux-foundation.org>
+In-Reply-To: <ZgwfoSj7GqFiOOsc@linux.ibm.com>
+References: <CABOYnLzjayx369ygmr0PsGYGeRpnBnaH1XPqfbispL5nAeOJ9w@mail.gmail.com>
+	<ZgvDe6fdJzgb8aZZ@gondor.apana.org.au>
+	<ZgwfoSj7GqFiOOsc@linux.ibm.com>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Message-ID: <171207775367.10875.7993832027274159765.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2@linutronix.de>
-Robot-Unsubscribe:
- Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Precedence: bulk
-Content-Type: text/plain; charset="utf-8"
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-The following commit has been merged into the x86/misc branch of tip:
+On Tue, 2 Apr 2024 18:09:21 +0300 Mike Rapoport <rppt@linux.ibm.com> wrote:
 
-Commit-ID:     bdc42c8b9befcef6368be345004cee3da1ace955
-Gitweb:        https://git.kernel.org/tip/bdc42c8b9befcef6368be345004cee3da1ace955
-Author:        Dave Hansen <dave.hansen@linux.intel.com>
-AuthorDate:    Fri, 22 Mar 2024 11:34:03 -07:00
-Committer:     Dave Hansen <dave.hansen@linux.intel.com>
-CommitterDate: Tue, 02 Apr 2024 09:40:23 -07:00
+> On Tue, Apr 02, 2024 at 04:36:11PM +0800, Herbert Xu wrote:
+> > On Wed, Mar 20, 2024 at 10:57:53AM +0800, xingwei lee wrote:
+> > >
+> > >   syscall(__NR_bind, /*fd=*/r[0], /*addr=*/0x20000000ul, /*addrlen=*/0x58ul);
+> > >   res = syscall(__NR_accept, /*fd=*/r[0], /*peer=*/0ul, /*peerlen=*/0ul);
+> > >   if (res != -1)
+> > >     r[1] = res;
+> > >   res = syscall(__NR_memfd_secret, /*flags=*/0ul);
+> > >   if (res != -1)
+> > >     r[2] = res;
+> > 
+> > So this is the key to the issue.  The whole point of memfd_secret is
+> > to make the pages inaccessible to the kernel.  The issue is those
+> > pages are then gifted to the kernel through sendmsg.  Somewhere
+> > along the line someone is supposed to throw up an error about this,
+> > or map the pages properly.  I guess neither happened which is why
+> > we end up with a page fault.
+> 
+> Yeah, there was a bug in folio_is_secretmem() that should have throw an
+> error about this.
+> 
+> David Hildenbrand sent a fix, it's in Andrew's tree
+> 
+> https://lore.kernel.org/all/20240326143210.291116-1-david@redhat.com
 
-Documentation/maintainer-tip: Clarify merge window policy
+I'll send "mm/secretmem: fix GUP-fast succeeding on secretmem folios"
+upstream this week.
 
-There are lots of maintainers "pings" during the merge window, even
-for trivial patches.
-
-Clarify that contributors should not expect progress on *any*
-non-urgent patches during the merge window.  This applies to all
-contributions, not just large ones.
-
-Clarify the language around -rc1.  Trees really are closed during the
-merge window.
-
-Signed-off-by: Dave Hansen <dave.hansen@linux.intel.com>
-Acked-by: Borislav Petkov (AMD) <bp@alien8.de>
-Link: https://lore.kernel.org/all/20240322183403.67BAEEFE%40davehans-spike.ostc.intel.com
----
- Documentation/process/maintainer-tip.rst | 18 +++++++++---------
- 1 file changed, 9 insertions(+), 9 deletions(-)
-
-diff --git a/Documentation/process/maintainer-tip.rst b/Documentation/process/maintainer-tip.rst
-index 497bb39..6473996 100644
---- a/Documentation/process/maintainer-tip.rst
-+++ b/Documentation/process/maintainer-tip.rst
-@@ -409,20 +409,20 @@ See :ref:`resend_reminders`.
- Merge window
- ^^^^^^^^^^^^
- 
--Please do not expect large patch series to be handled during the merge
--window or even during the week before.  Such patches should be submitted in
--mergeable state *at* *least* a week before the merge window opens.
--Exceptions are made for bug fixes and *sometimes* for small standalone
--drivers for new hardware or minimally invasive patches for hardware
--enablement.
-+Please do not expect patches to be reviewed or merged by tip
-+maintainers around or during the merge window.  The trees are closed
-+to all but urgent fixes during this time.  They reopen once the merge
-+window closes and a new -rc1 kernel has been released.
-+
-+Large series should be submitted in mergeable state *at* *least* a week
-+before the merge window opens.  Exceptions are made for bug fixes and
-+*sometimes* for small standalone drivers for new hardware or minimally
-+invasive patches for hardware enablement.
- 
- During the merge window, the maintainers instead focus on following the
- upstream changes, fixing merge window fallout, collecting bug fixes, and
- allowing themselves a breath. Please respect that.
- 
--The release candidate -rc1 is the starting point for new patches to be
--applied which are targeted for the next merge window.
--
- So called _urgent_ branches will be merged into mainline during the
- stabilization phase of each release.
- 
