@@ -1,111 +1,154 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65C8513AEE;
-	Tue,  2 Apr 2024 04:47:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49F3B17BBA;
+	Tue,  2 Apr 2024 04:48:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712033265; cv=none; b=ASFfhgcmdJ5fifBQRR9jYMtg1LsL28JsO031X+jMR1YraG3BkcZ6YQBAGT8SYULmMtYuSbODkB53pLZimccKNAggEjif4r4fpcgv6hvOdWF4YA+fd7tryHptSsAbW3uv3n/I1z5vwLk3ocMqTlwNaGRc51wuC6YiW+iYcAT2F34=
+	t=1712033339; cv=none; b=bhPimYtXDTXR5UWtXwzGDHcBaGLif2fqcJG1xTPy34A9N41iWLKey63hxDvOV6kBSUGYnDx2bawWTCgi9UHg6XlBDiLt8JFClTFZJB3kMQqbuaZk9pFJ8ALLhc/ZfpwB5yJ3iLqEUs8Zj6ISF4QGpTQ1B2Q14iq3dTdcy9s/uBo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712033265; c=relaxed/simple;
-	bh=fIbRMyu2FSJwTCkrEkncIv8XsK1ysTaoL3oaW3uwl6o=;
+	s=arc-20240116; t=1712033339; c=relaxed/simple;
+	bh=9dnJjfacnC5NIXeRU42Rs8bqYi+ZfEdAnf1tJGX8DCc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=J0v1y9YuXwqpDAEaK8B4ylbElNy6U3rNr/XvnqmApAi0b53ZSFwutqb8vzsjojdZHxfAU9zLD3ZU3U77ZArCCo0Z/k6qJfOGsmNisVCJ7GMrLfIwSeDxT2f6otSpmT11FjNpcdNFBGBMb9OGSwzbNOSdYKxJAOZcSqr5kR5vzjI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NpuOmR0/; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=Oy2SFSV9vACHj21c8qtKQYufNaUu8b785KjgRX9Et7iWmJnRfPBKCU5Mlz6RNVzAYW46JJvWu5q1VE27X0zilw94yX1dhyBbRhYlua6J6mf0wA7zTKb5220MFgQsZYc0Fsvrf98w/9ZZEkDbN9iMt90dS+2l/bP1hRfwvAjLEac=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FQaVlFg0; arc=none smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NpuOmR0/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7FDA9C433F1;
-	Tue,  2 Apr 2024 04:47:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712033264;
-	bh=fIbRMyu2FSJwTCkrEkncIv8XsK1ysTaoL3oaW3uwl6o=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=NpuOmR0/FGJOnCZGzJ3S6AbppyjVo9LF7bPap4p2ckE+771FM64GhAKmoK/xo0+fc
-	 1jq2EwzUQVmo64ifTR8ua9fqDQs92H9MSc0ucbwui7uKByvFdnROHhA+X8sWNwsWM/
-	 0ECmn9CPLUF7nhZnp9eBZqgh9XQVTbSgKhqjr6bQk3EQ+uK42DUFdnCBtIcvrJtbPz
-	 2Nat/T9kvXaZ+P+qbOULtjKOLIrXpAmu61kRBprdjiQYEQMnY5X26gD11f4DpyH8G3
-	 WXhLjKELuFRceoooqMvcuiBErdYPps6rDPpuAbBeLq/QmDa5ISl8bIm98rMczdiP1p
-	 6px8MEsOCJ8jQ==
-Date: Tue, 2 Apr 2024 10:17:35 +0530
-From: Manivannan Sadhasivam <mani@kernel.org>
-To: Andrew Halaney <ahalaney@redhat.com>
-Cc: Andy Gross <agross@kernel.org>, Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konrad.dybcio@linaro.org>,
-	"James E.J. Bottomley" <jejb@linux.ibm.com>,
-	"Martin K. Petersen" <martin.petersen@oracle.com>,
-	Hannes Reinecke <hare@suse.de>, Janek Kotas <jank@cadence.com>,
-	Alim Akhtar <alim.akhtar@samsung.com>,
-	Avri Altman <avri.altman@wdc.com>,
-	Bart Van Assche <bvanassche@acm.org>,
-	Can Guo <quic_cang@quicinc.com>,
-	Anjana Hari <quic_ahari@quicinc.com>, Will Deacon <will@kernel.org>,
-	linux-arm-msm@vger.kernel.org, linux-scsi@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 04/11] scsi: ufs: qcom: Perform read back after
- writing unipro mode
-Message-ID: <20240402044735.GD2933@thinkpad>
-References: <20240329-ufs-reset-ensure-effect-before-delay-v5-0-181252004586@redhat.com>
- <20240329-ufs-reset-ensure-effect-before-delay-v5-4-181252004586@redhat.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FQaVlFg0"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1712033337; x=1743569337;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=9dnJjfacnC5NIXeRU42Rs8bqYi+ZfEdAnf1tJGX8DCc=;
+  b=FQaVlFg0oLACqi4CtmMTHoHJ0zrqTj50S3M2l695jDqFds6K2B3gX2Bp
+   B86tH0mWyUFbEua76H8zbY5IiCi3v9RCFwMFK5C+uZQk6nO9puCOPmfJW
+   eOpK+YzuuLW+FvPgQi+GevJyE/3V0GNCPbeDvW9F9V9QOIbbei/43wLOX
+   DtXcxUFXP2fZjJ70FtOGfcTj+RorkLSQqw4jFAAFEnFsiLh8r7PbinQyp
+   Wejg99OKpyKwJx5RebCUx5xm8I9Kn1u6nj9uWxa0Ucp9UuOgaG13ye7zr
+   siJR1NOPmzmc8ZzmudP7klHWxCMJKCObnGtyDG6+KVdoTzZgQWbVfaTDh
+   Q==;
+X-CSE-ConnectionGUID: LkR//19HQR2ci2V1gQmFmw==
+X-CSE-MsgGUID: 2MvqGf7YQViSQWnT0TamUg==
+X-IronPort-AV: E=McAfee;i="6600,9927,11031"; a="24639104"
+X-IronPort-AV: E=Sophos;i="6.07,174,1708416000"; 
+   d="scan'208";a="24639104"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Apr 2024 21:48:57 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,174,1708416000"; 
+   d="scan'208";a="22601807"
+Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.165])
+  by fmviesa004.fm.intel.com with ESMTP; 01 Apr 2024 21:48:54 -0700
+Date: Tue, 2 Apr 2024 12:44:03 +0800
+From: Xu Yilun <yilun.xu@linux.intel.com>
+To: matthew.gerlach@linux.intel.com
+Cc: hao.wu@intel.com, trix@redhat.com, mdf@kernel.org, yilun.xu@intel.com,
+	linux-fpga@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Tim Whisonant <tim.whisonant@intel.com>,
+	Ananda Ravuri <ananda.ravuri@intel.com>
+Subject: Re: [PATCH] fpga: add DFL driver for CXL Cache IP block
+Message-ID: <ZguNE7mnDwNaT+/7@yilunxu-OptiPlex-7050>
+References: <20240308172327.1970160-1-matthew.gerlach@linux.intel.com>
+ <ZflkK/VZO0wqiAhz@yilunxu-OptiPlex-7050>
+ <alpine.DEB.2.22.394.2403281549070.340749@sj-4150-psse-sw-opae-dev2>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240329-ufs-reset-ensure-effect-before-delay-v5-4-181252004586@redhat.com>
+In-Reply-To: <alpine.DEB.2.22.394.2403281549070.340749@sj-4150-psse-sw-opae-dev2>
 
-On Fri, Mar 29, 2024 at 03:46:46PM -0500, Andrew Halaney wrote:
-> Currently, the QUNIPRO_SEL bit is written to and then an mb() is used to
-> ensure that completes before continuing.
+On Fri, Mar 29, 2024 at 08:34:49AM -0700, matthew.gerlach@linux.intel.com wrote:
 > 
-> mb() ensure that the write completes, but completion doesn't mean that
-> it isn't stored in a buffer somewhere. The recommendation for
-> ensuring this bit has taken effect on the device is to perform a read
-> back to force it to make it all the way to the device. This is
-> documented in device-io.rst and a talk by Will Deacon on this can
-> be seen over here:
 > 
->     https://youtu.be/i6DayghhA8Q?si=MiyxB5cKJXSaoc01&t=1678
+> On Tue, 19 Mar 2024, Xu Yilun wrote:
 > 
-> But, there's really no reason to even ensure completion before
-> continuing. The only requirement here is that this write is ordered to
-> this endpoint (which readl()/writel() guarantees already). For that
-> reason the mb() can be dropped altogether without anything forcing
-> completion.
+> > On Fri, Mar 08, 2024 at 09:23:27AM -0800, Matthew Gerlach wrote:
+> > > From: Tim Whisonant <tim.whisonant@intel.com>
+> > > 
+> > > Add a Device Feature List (DFL) driver for the
+> > > Intel CXL Cache IP block. The driver
+> > > provides a means of accessing the device MMIO and the
+> > 
+> > Why the device MMIO should be accessed by userspace?
 > 
-> Fixes: f06fcc7155dc ("scsi: ufs-qcom: add QUniPro hardware support and power optimizations")
-> Signed-off-by: Andrew Halaney <ahalaney@redhat.com>
+> The definition of the MMIO space is actually dependent on the the custom
+> logic in the FPGA image. Given the variability of the custom logic
+> implemented in the FPGA, it seems burdensome to handle the variability in
+> kernel code.
+> 
+> > 
+> > > capability to pin buffers and program their physical
+> > > addresses into the HE-Cache registers. User interface
+> > 
+> > Are these registers also exposed to userspace?
+> 
+> These registers are currently exposed to user space as well. It probably
+> make sense to be consistent and let user space code handle these registers,
+> like all custom logic registers, in user space.
+> 
+> > 
+> > And this patch to support a new device/IP, please firstly describe
+> > what the device/IP is doing.  I think not everyone(including me) here
+> > is familar with CXL standard and how this IP block is implementing CXL
+> > functionality.  Some reference documentation is also helpful.
+> 
+> This is very good feedback. There are actually multiple IP blocks involved
+> here. There is a Hard IP block (HIP), and there is a FPGA/soft IP block
+> interfacing the HIP, and then there is custom logic implementing a desired
+> application.
+> 
+> > 
+> > After a quick skim of this patch, I can see user is trying to write a
+> > set of physical addrs to some register, but have no idea why this
+> > should be done. i.e. Do not reiterate what the code literally does.
+> 
+> In this case, the physical addresses are being written to the custom,
+> application logic in the FPGA and should be moved to user space.
+> 
+> If all MMIO to the custom logic is moved to user space, then this driver is
+> not really about CXL and hardware. This driver just provides services of
+> pinning/unpinning memory with numa node awareness. In this case, the driver
+> name is wrong because there is nothing related to CXL nor any specific
+> hardware implementation.
 
-Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+If this is not related to any hardware implementation. I'm afraid it is not
+just the naming. From the limited knowledge I've got, you just want an
+interface in memory management system, not in FPGA/DFL. You may send a
+patch to MM people (or VFIO) for review, their opinions are determinative.
+But my opinion is the patch is far from being ready to send. Some
+questions I can quickly think of, FYI:
 
-- Mani
+1. A justification why a physical address(CPU's perspective) is needed in
+   userspace?
 
-> ---
->  drivers/ufs/host/ufs-qcom.c | 3 ---
->  1 file changed, 3 deletions(-)
-> 
-> diff --git a/drivers/ufs/host/ufs-qcom.c b/drivers/ufs/host/ufs-qcom.c
-> index 649fada24345..66a6c95f5d72 100644
-> --- a/drivers/ufs/host/ufs-qcom.c
-> +++ b/drivers/ufs/host/ufs-qcom.c
-> @@ -278,9 +278,6 @@ static void ufs_qcom_select_unipro_mode(struct ufs_qcom_host *host)
->  
->  	if (host->hw_ver.major >= 0x05)
->  		ufshcd_rmwl(host->hba, QUNIPRO_G4_SEL, 0, REG_UFS_CFG0);
-> -
-> -	/* make sure above configuration is applied before we return */
-> -	mb();
->  }
->  
->  /*
-> 
-> -- 
-> 2.44.0
-> 
-> 
+2. If question #1 is related to device requirement, why a device needs a
+CPU physical address, rather than IOVA.
 
--- 
-மணிவண்ணன் சதாசிவம்
+> 
+> > 
+> > > is exposed via /dev/dfl-cxl-cache.X as described in
+> > > include/uapi/linux/fpga-dfl.h.
+> > 
+> > And please split the patch, e.g. first add a skeleton of bus driver,
+> > then add the skeleton of char interface, then add the functionalities
+> > one by one.  This gives chances to clearly describe each function, and
+> > why add it, etc.
+> 
+> If this driver is only implementing a char interface to memory management,
+> does it make sense to split the code into separate patches?
+
+In general, it is alway good to split the whole code into small patches.
+That makes better understanding. But since it seems to be a different
+story now, the most important thing is to clearly tell the use case, what's
+the existing solution kernel have, why they are not fit for you? what
+are the possible options? why you choose this option? A general word that
+application logic demands is not helpful.
+
+Thanks,
+Yilun
