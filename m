@@ -1,52 +1,53 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B48E15E80B
-	for <linux-kernel@vger.kernel.org>; Tue,  2 Apr 2024 22:11:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1164B15ECD9
+	for <linux-kernel@vger.kernel.org>; Tue,  2 Apr 2024 22:11:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712095898; cv=none; b=KXB6qLHJem3p03fID9aiC647nMbWi2IP3N3twbiko8MFnj+NXO/DJc/7ewQcBpK2uzFIe9q3a1oqlUIRHtXUAuKpBkMRzYKe9yDsnESI1W6jkDmXGP8GIMT5ryH4BC+0IJPDqHxEJvRrqtn1umJx5kyd7s4dqqt6Bu3SIvRE874=
+	t=1712095898; cv=none; b=q250+hZ1S/60hl5ndwclzvitLdNbifQk/56BRyJ/DGcfvbgBWkZFm8vxH50Xd9k1Yd7cJHB2AZNbLwDzCghQOU1NveTjuEsAtn26C/QQvfE+OAYrDUBr0WzR5CYLTqIKGHT7z2zRVHT+Eny30Q3BKmDGrUr5zpFDMuKo4Y7MdRs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1712095898; c=relaxed/simple;
-	bh=8gNFB2aN+FDgLO4RQJ229KG75St1FCE48jzNGYZ/Lqg=;
+	bh=jrBdWUk0rwcYI/oiQlw6iijdJI0T4nkboPn0QdreNXc=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=aXSMFBVmzKkWfs2b4Cf2CxJMlZKGly0trBkW8kzS+87YHmjp8X8A1ToeCuld2uBbuGma1cthR1yddVWy9HY2qiDTEPRG6GoZZQqbYcw4Dsld4teH72VqRahNfMd6RPS8Rx+1ePADw4vWFPGKUnF3yMHRMjJJWarXlddhWTHqeT0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=STpUA7WP; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=abVaAe2b; arc=none smtp.client-ip=193.142.43.55
+	 MIME-Version; b=MwVJwpDlYnyYT8hZC1owkeKDVAobBDOGVvVuEOaMgmXgny2S7ydZPwfDJ8sfpvW2IyzLP2CHhV6cgEi+yh8/Ymdgp19KJmSkR5Nu1kThXrZhJ38pmNT+BlRpsKEErNlz4v+KaAUkue1Oe2vHxBUv70nzccH7NS6r3OJDBt5SlyU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=JmpaqF7h; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=It7qU4S/; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="STpUA7WP";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="abVaAe2b"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="JmpaqF7h";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="It7qU4S/"
 From: John Ogness <john.ogness@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1712095893;
+	s=2020; t=1712095895;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=clMqsySLzP4iDk2N/9w8Tlak39hMNqLWvIbOFYB9iUM=;
-	b=STpUA7WP46KPFCg+EABRpi8ZJ6z/BmNct4cP7i+RwGUPsllyQHfuOQ+k2DBxop+S3tB/+7
-	94dn2PxGgNfTVf7KVzLRwSV55dp7e0kyaSs51M4EOyeWoNEP2Mdv2P8AC+yVvZAXOFofJP
-	RIzADPKjRwFGQ2UNIJOkuh8sUEDDPQlpOtwZFosbcOlfV7QtKz2plb/GvSJxHUlUaV26i/
-	vhKW7MuSXFaUyrC3PYuxnZrv5UQy3Xb0fMxm0LL7oMMJX0wnYaFABsV13xEkSUDjuUt8iF
-	JUxAHXeCamecG7l+Bf/Wm6O5M/GmMPe8z3DEac/GbuR+T4kuJ+8YZ9tC0iQCVQ==
+	bh=j7f10dybj3FQO66c59r1wqvQXH3mAcKwMAOFWXgWZuw=;
+	b=JmpaqF7hZ4FLu5RF6TYpoK+3EfVmWLLlR1kWZ951pqeuaLSVsruuIVzTy6aaO/tC/Dxm9d
+	hFvGW0qCA4jzr8usSgmVTikp0EqQ/j+2QhvNHf6TWoN71TDBYcqiLZb5aTnNIn95gcVe/o
+	tPQ1jvi88p0C5VnvaBkElqTJbKX4X/ZQbHQH1C3tPgOb3uuj3Y8bg83Pj6sH4tigHzI3K5
+	4G+Hpcu8KxOKSNcfSeZVhnzpu/BvQVCjIqMmiAH73JUmRiUrOyWDANmc7Zf4RCoUqE+3u3
+	+eh7DqaBWXlJzVKJ8uMd78Mkus0+6QrmGMyBHEf4uqAiEMQYs91RjCzsrD/azQ==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1712095893;
+	s=2020e; t=1712095895;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=clMqsySLzP4iDk2N/9w8Tlak39hMNqLWvIbOFYB9iUM=;
-	b=abVaAe2bY6SNXtus/u286s8LbuB9sQPtVZn8ycCUKkX8cKJN1oBzqzjCSCFWh2ZTly1HA6
-	DJPkCPYV5dEy8RCQ==
+	bh=j7f10dybj3FQO66c59r1wqvQXH3mAcKwMAOFWXgWZuw=;
+	b=It7qU4S/vnwflESxCbemUum5nBq739Y9mSUdt7m9223da5g7xjBH38haOBKxn7mA0UQIjv
+	VnrH766dSMsTngDg==
 To: Petr Mladek <pmladek@suse.com>
 Cc: Sergey Senozhatsky <senozhatsky@chromium.org>,
 	Steven Rostedt <rostedt@goodmis.org>,
 	Thomas Gleixner <tglx@linutronix.de>,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH printk v4 02/27] printk: Properly deal with nbcon consoles on seq init
-Date: Wed,  3 Apr 2024 00:17:04 +0206
-Message-Id: <20240402221129.2613843-3-john.ogness@linutronix.de>
+	linux-kernel@vger.kernel.org,
+	Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Subject: [PATCH printk v4 04/27] printk: Check printk_deferred_enter()/_exit() usage
+Date: Wed,  3 Apr 2024 00:17:06 +0206
+Message-Id: <20240402221129.2613843-5-john.ogness@linutronix.de>
 In-Reply-To: <20240402221129.2613843-1-john.ogness@linutronix.de>
 References: <20240402221129.2613843-1-john.ogness@linutronix.de>
 Precedence: bulk
@@ -57,120 +58,82 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-If a non-boot console is registering and boot consoles exist, the
-consoles are flushed before being unregistered. This allows the
-non-boot console to continue where the boot console left off.
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 
-If for whatever reason flushing fails, the lowest seq found from
-any of the enabled boot consoles is used. Until now con->seq was
-checked. However, if it is an nbcon boot console, the function
-nbcon_seq_read() must be used to read seq because con->seq is
-not updated for nbcon consoles.
+Add validation that printk_deferred_enter()/_exit() are called in
+non-migration contexts.
 
-Check if it is an nbcon boot console and if so call
-nbcon_seq_read() to read seq.
-
-Also setup the nbcon sequence number and reset the legacy
-sequence number from register_console() (rather than in
-nbcon_init() and nbcon_seq_force()). This removes all legacy
-sequence handling from nbcon.c so the code is easier to follow
-and maintain.
-
+Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 Signed-off-by: John Ogness <john.ogness@linutronix.de>
+Reviewed-by: Petr Mladek <pmladek@suse.com>
 ---
- kernel/printk/nbcon.c  |  7 +------
- kernel/printk/printk.c | 29 ++++++++++++++++++++++++-----
- 2 files changed, 25 insertions(+), 11 deletions(-)
+ include/linux/printk.h      |  9 +++++----
+ kernel/printk/internal.h    |  3 +++
+ kernel/printk/printk_safe.c | 12 ++++++++++++
+ 3 files changed, 20 insertions(+), 4 deletions(-)
 
-diff --git a/kernel/printk/nbcon.c b/kernel/printk/nbcon.c
-index c8093bcc01fe..d741659d26ec 100644
---- a/kernel/printk/nbcon.c
-+++ b/kernel/printk/nbcon.c
-@@ -172,9 +172,6 @@ void nbcon_seq_force(struct console *con, u64 seq)
- 	u64 valid_seq = max_t(u64, seq, prb_first_valid_seq(prb));
- 
- 	atomic_long_set(&ACCESS_PRIVATE(con, nbcon_seq), __u64seq_to_ulseq(valid_seq));
--
--	/* Clear con->seq since nbcon consoles use con->nbcon_seq instead. */
--	con->seq = 0;
- }
- 
- /**
-@@ -964,8 +961,6 @@ bool nbcon_alloc(struct console *con)
-  *
-  * nbcon_alloc() *must* be called and succeed before this function
-  * is called.
-- *
-- * This function expects that the legacy @con->seq has been set.
+diff --git a/include/linux/printk.h b/include/linux/printk.h
+index 2fde40cc9677..d8b3f51d9e98 100644
+--- a/include/linux/printk.h
++++ b/include/linux/printk.h
+@@ -157,15 +157,16 @@ int _printk(const char *fmt, ...);
   */
- void nbcon_init(struct console *con)
- {
-@@ -974,7 +969,7 @@ void nbcon_init(struct console *con)
- 	/* nbcon_alloc() must have been called and successful! */
- 	BUG_ON(!con->pbufs);
+ __printf(1, 2) __cold int _printk_deferred(const char *fmt, ...);
  
--	nbcon_seq_force(con, con->seq);
-+	nbcon_seq_force(con, 0);
- 	nbcon_state_set(con, &state);
+-extern void __printk_safe_enter(void);
+-extern void __printk_safe_exit(void);
++extern void __printk_deferred_enter(void);
++extern void __printk_deferred_exit(void);
++
+ /*
+  * The printk_deferred_enter/exit macros are available only as a hack for
+  * some code paths that need to defer all printk console printing. Interrupts
+  * must be disabled for the deferred duration.
+  */
+-#define printk_deferred_enter __printk_safe_enter
+-#define printk_deferred_exit __printk_safe_exit
++#define printk_deferred_enter() __printk_deferred_enter()
++#define printk_deferred_exit() __printk_deferred_exit()
+ 
+ /*
+  * Please don't use printk_ratelimit(), because it shares ratelimiting state
+diff --git a/kernel/printk/internal.h b/kernel/printk/internal.h
+index 6c2afee5ef62..4e0edcb3c311 100644
+--- a/kernel/printk/internal.h
++++ b/kernel/printk/internal.h
+@@ -53,6 +53,9 @@ int vprintk_store(int facility, int level,
+ __printf(1, 0) int vprintk_default(const char *fmt, va_list args);
+ __printf(1, 0) int vprintk_deferred(const char *fmt, va_list args);
+ 
++void __printk_safe_enter(void);
++void __printk_safe_exit(void);
++
+ bool printk_percpu_data_ready(void);
+ 
+ #define printk_safe_enter_irqsave(flags)	\
+diff --git a/kernel/printk/printk_safe.c b/kernel/printk/printk_safe.c
+index 6d10927a07d8..4421ccac3113 100644
+--- a/kernel/printk/printk_safe.c
++++ b/kernel/printk/printk_safe.c
+@@ -26,6 +26,18 @@ void __printk_safe_exit(void)
+ 	this_cpu_dec(printk_context);
  }
  
-diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c
-index c7c0ee2b47eb..b7e52b3f3e96 100644
---- a/kernel/printk/printk.c
-+++ b/kernel/printk/printk.c
-@@ -3348,6 +3348,7 @@ static void try_enable_default_console(struct console *newcon)
- 		newcon->flags |= CON_CONSDEV;
- }
- 
-+/* Set @newcon->seq to the first record this console should print. */
- static void console_init_seq(struct console *newcon, bool bootcon_registered)
++void __printk_deferred_enter(void)
++{
++	cant_migrate();
++	__printk_safe_enter();
++}
++
++void __printk_deferred_exit(void)
++{
++	cant_migrate();
++	__printk_safe_exit();
++}
++
+ asmlinkage int vprintk(const char *fmt, va_list args)
  {
- 	struct console *con;
-@@ -3396,11 +3397,20 @@ static void console_init_seq(struct console *newcon, bool bootcon_registered)
- 
- 				newcon->seq = prb_next_seq(prb);
- 				for_each_console(con) {
--					if ((con->flags & CON_BOOT) &&
--					    (con->flags & CON_ENABLED) &&
--					    con->seq < newcon->seq) {
--						newcon->seq = con->seq;
-+					u64 seq;
-+
-+					if (!((con->flags & CON_BOOT) &&
-+					      (con->flags & CON_ENABLED))) {
-+						continue;
- 					}
-+
-+					if (con->flags & CON_NBCON)
-+						seq = nbcon_seq_read(con);
-+					else
-+						seq = con->seq;
-+
-+					if (seq < newcon->seq)
-+						newcon->seq = seq;
- 				}
- 			}
- 
-@@ -3517,9 +3527,18 @@ void register_console(struct console *newcon)
- 	newcon->dropped = 0;
- 	console_init_seq(newcon, bootcon_registered);
- 
--	if (newcon->flags & CON_NBCON)
-+	if (newcon->flags & CON_NBCON) {
- 		nbcon_init(newcon);
- 
-+		/*
-+		 * nbcon consoles have their own sequence counter. The legacy
-+		 * sequence counter is reset so that it is clear it is not
-+		 * being used.
-+		 */
-+		nbcon_seq_force(newcon, newcon->seq);
-+		newcon->seq = 0;
-+	}
-+
- 	/*
- 	 * Put this console in the list - keep the
- 	 * preferred driver at the head of the list.
+ #ifdef CONFIG_KGDB_KDB
 -- 
 2.39.2
 
