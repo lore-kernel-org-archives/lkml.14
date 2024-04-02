@@ -1,69 +1,102 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7D0783CD5;
-	Tue,  2 Apr 2024 13:43:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2B4D80BFE;
+	Tue,  2 Apr 2024 13:44:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712065435; cv=none; b=V5NnXyUXhv2R56b9t/RMPodyO+W5WauFMJGKBHx4CMFeZ6Flog8PI++Gy8oJgTfIVdxW91GJ28Om/VWWVuITUMhpfGSYJgJXBv6EIP2EiHF3xt4haGFawk1n/oM7JbpiQsToe9NJENvk/Mx2hI2c8EZFKE3PEPnmTQmF7aoDhxk=
+	t=1712065456; cv=none; b=AojUp0HP95vRKq8LQB9A/Oia7b0I4kk3uFYxaWhz4CjY+mFbaoz9QygjZm7zPsyZqHiLefXcqi9TEAbk7O09AnWdQZG3eh4W115HOjW6XYYR7onqAc1qjkzNq/5Lhp+LTRtxSAdV4tj6RMGoM5sSG7PQ3yr+msQDU7nGoC20ppw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712065435; c=relaxed/simple;
-	bh=ILknQX3J4PZxUszkFt7epugC1M4nZbhuqbLyTS3A8iQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WEfqLkfDuGYMb5BbZf4/fJ/XO+DXtM2sFIJRBJFpItPX+RDlC0K+TeOgI6FT66rgr4gMZELGae4FPj1L0kBKWVp6uFvE65vSr1kVIOkLEeXH+MResu+TWzOaQ89QxeOkgG7qNlZxCZWq6gVKs85a71wD5we6RsRte7LR8hDZVmc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Xauo+CfB; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1712065456; c=relaxed/simple;
+	bh=fX4wdNLj4mpJXnKy6OYwufs3fuHwSvr3osAkiv/d/rw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Yr8ant2V9zyeEZPSe3F7Up6VSYzQz0Z4des2hf+67DKTJlLmDiK5U9L7qJHVQB13ttxz11N2icf8gTuGOsK9ppAKgy/gAoZDrDTn9nJdz41ArAG7MrGCi3eIY+WWw1eJ8hTXA3eC/2YOEjAhWX/KZf/LZnPDyzPx9baZJcYgOb8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=P+Frg/IV; arc=none smtp.client-ip=209.85.208.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Xauo+CfB"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2B6DCC43390;
-	Tue,  2 Apr 2024 13:43:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712065435;
-	bh=ILknQX3J4PZxUszkFt7epugC1M4nZbhuqbLyTS3A8iQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Xauo+CfBBB47w5kBNrl6dtBQuuAAndmgLyo7PKwtYCZ1gP2onEgiJm9SmIPWEy4Rj
-	 DhVJYkwhSNBFyYnfTBO7+y+hpL7kosgM0w/mzyEuFyWRxBZHhtS4nAzRfwqUU0WM9W
-	 R0ClOMfBrLdqzihPQagAF4KzuchmW4RqPRPvyPydeLv0lvCQ5r0pSbsdtn2fEb3I51
-	 bVlQmuENfzLLiZuUn+AjMszgkM+qKaRzu/aMQ4QxaH/2dFtqK36zoBP2FDC29vc8Iz
-	 aTXTb7cFRfsrIIca2BgtEGXDZkbo/W9pKi6uXdfnDmOhdIbI0V3TuHBSHUp6Epo9sU
-	 MmUFwcy+g4r0w==
-Date: Tue, 2 Apr 2024 08:43:53 -0500
-From: Rob Herring <robh@kernel.org>
-To: Robert Nelson <robertcnelson@gmail.com>
-Cc: Jason Kridner <jkridner@beagleboard.org>,
-	linux-arm-kernel@lists.infradead.org, Nishanth Menon <nm@ti.com>,
-	linux-kernel@vger.kernel.org, Jared McArthur <j-mcarthur@ti.com>,
-	devicetree@vger.kernel.org,
-	Deepak Khatri <lorforlinux@beagleboard.org>
-Subject: Re: [PATCH 1/2] dt-bindings: arm: ti: Add BeagleY-AI
-Message-ID: <171206542850.4100155.11719958875815891934.robh@kernel.org>
-References: <20240328191205.82295-1-robertcnelson@gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="P+Frg/IV"
+Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-56c583f5381so6880387a12.1;
+        Tue, 02 Apr 2024 06:44:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1712065453; x=1712670253; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=h8hhkZTFbU/vuzsYhmShVWNS4yGIt56q5tjAp6Vay20=;
+        b=P+Frg/IVXg7zGK6l+IfhBCRwKX9D/ZFduPX/wcdu7qeRYgrKAxr0mHu/4GXMfWMRVa
+         RZrBS2iq8rne/DIui0NQQfhea1TbNem0M3C5bJOy91Xqy1iPJV8PxoQpFmWzn9qUkGRO
+         1gCAPqnmMJTKancMzRg2izyRP/3EsFdJlujnzKi46VwlSpNWDTUkY8739PNxB8kqvTrC
+         VuWpkzrvpY+I1VvrwGnyNtq0Ld96A1Mx8HzNCPBAFJyR7VCsGgheW50UaRkhFZjQ6zNj
+         h5If2aE5BACDI80E8iq9sNRIc872610zgl1Y1NnyNi3rvPJKvnLajVV2qKtB9x85lJ8p
+         3xuw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712065453; x=1712670253;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=h8hhkZTFbU/vuzsYhmShVWNS4yGIt56q5tjAp6Vay20=;
+        b=NvpBkf+u9BuLNHjNDpwRTOlhWzntzotkeGWOdoKcIXbOfctT/4HWjhmYXheMGEk36T
+         ZV7vjgkVENi2V6C4OTFjZ3lhKiKqPw2Vh9tumUuchkZ6oknB4coiwpnXSKcMVfkOK7ZS
+         3cYRG1gDomXSU5K20M53HLNcs/S5gyKgST5jhecnUhSAb+dGwM7t7vNp2+g3WVjXLjvj
+         LdiWZ04YHzRVJzYVJnybhJoZN6uSw8K9uovbXRYMDmaP/TmXlV7dRblfQnUqaJP2ggju
+         qWVZ/DSzjpMKPuLwWqjIG5FvizsKy8T7VemSoMZhnlCBhDpvwQ/9ZekZwVCPQl56Nb2D
+         /exA==
+X-Forwarded-Encrypted: i=1; AJvYcCXePWJJN5Ha3EYcQ+BDly/dKs58o9AFBCALnhyw+aXcpPjt3WXry5uxmxA68Z4qQUZs6qqupOEehjjsaNqCEg5eeuXvd8drrGQEhsOZqvgI1CnIfkRa9uagk5NzZGZYL7ciCjUiKQP52Gg=
+X-Gm-Message-State: AOJu0YyETpkB3cZHjhjTsRobFP2EuhvCe7wtIV3y/oP1qk1We0Ja9uwY
+	1TTd92A4oIMz47w+OCj0AriwzuXldotSZhOa/PPMuehDnpgkSyya
+X-Google-Smtp-Source: AGHT+IHbYAQ9hfvj++/l//lkX9k97qC+cvPqgA97/D4BDSsfP170cjxSJc20nAEgUjLrcC6M+pSGXw==
+X-Received: by 2002:a05:6402:3590:b0:56b:ddcb:bb67 with SMTP id y16-20020a056402359000b0056bddcbbb67mr12994163edc.2.1712065452859;
+        Tue, 02 Apr 2024 06:44:12 -0700 (PDT)
+Received: from lola.. ([178.25.29.59])
+        by smtp.gmail.com with ESMTPSA id g28-20020a056402321c00b0056c1c2b851esm6818177eda.0.2024.04.02.06.44.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 02 Apr 2024 06:44:12 -0700 (PDT)
+From: Lukas Bulwahn <lukas.bulwahn@gmail.com>
+To: Jean Delvare <jdelvare@suse.com>,
+	Guenter Roeck <linux@roeck-us.net>,
+	Radu Sabau <radu.sabau@analog.com>,
+	linux-hwmon@vger.kernel.org
+Cc: kernel-janitors@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Lukas Bulwahn <lukas.bulwahn@gmail.com>
+Subject: [PATCH] MAINTAINERS: repair file entry in ADP1050 HARDWARE MONITOR DRIVER
+Date: Tue,  2 Apr 2024 15:42:03 +0200
+Message-ID: <20240402134203.8297-1-lukas.bulwahn@gmail.com>
+X-Mailer: git-send-email 2.44.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240328191205.82295-1-robertcnelson@gmail.com>
+Content-Transfer-Encoding: 8bit
 
+Commit 4e1008d8aae5 ("dt-bindings: hwmon: pmbus: adp1050: add bindings")
+adds the ADP1050 HARDWARE MONITOR DRIVER section, but slips in a typo in
+its file entry.
 
-On Thu, 28 Mar 2024 14:12:04 -0500, Robert Nelson wrote:
-> This board is based on ti,j722s
-> 
-> https://beagley-ai.org/
-> https://openbeagle.org/beagley-ai/beagley-ai
-> 
-> Signed-off-by: Robert Nelson <robertcnelson@gmail.com>
-> CC: Rob Herring <robh@kernel.org>
-> CC: Nishanth Menon <nm@ti.com>
-> CC: Jared McArthur <j-mcarthur@ti.com>
-> CC: Jason Kridner <jkridner@beagleboard.org>
-> CC: Deepak Khatri <lorforlinux@beagleboard.org>
-> ---
->  Documentation/devicetree/bindings/arm/ti/k3.yaml | 1 +
->  1 file changed, 1 insertion(+)
-> 
+Fortunately, ./scripts/get_maintainer.pl --self-test=patterns complains
+about this broken reference.
 
-Acked-by: Rob Herring <robh@kernel.org>
+Remove the typo in ADP1050 HARDWARE MONITOR DRIVER.
+
+Signed-off-by: Lukas Bulwahn <lukas.bulwahn@gmail.com>
+---
+ MAINTAINERS | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 13ac7ce270b3..272b238d5488 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -506,7 +506,7 @@ M:	Radu Sabau <radu.sabau@analog.com>
+ L:	linux-hwmon@vger.kernel.org
+ S:	Supported
+ W:	https://ez.analog.com/linux-software-drivers
+-F:	Dcumentation/devicetree/bindings/hwmon/pmbus/adi,adp1050.yaml
++F:	Documentation/devicetree/bindings/hwmon/pmbus/adi,adp1050.yaml
+ 
+ ADP1653 FLASH CONTROLLER DRIVER
+ M:	Sakari Ailus <sakari.ailus@iki.fi>
+-- 
+2.44.0
 
