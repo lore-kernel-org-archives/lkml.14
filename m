@@ -1,97 +1,127 @@
-Received: from mail-yb1-f179.google.com (mail-yb1-f179.google.com [209.85.219.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DBBA65BAA
-	for <linux-kernel@vger.kernel.org>; Tue,  2 Apr 2024 10:49:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE8EA5D749;
+	Tue,  2 Apr 2024 10:49:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712054943; cv=none; b=qN2qgwq1L1ObCBRJZWrcwl+s1307w3W7BJKiWv6GrnOtBpufhCzYGnkQDgPdzXoppj6TAYEBBglM2V+9b71OcdWF/G+qflfxsR/O/ymDV+pSGh1oTfe/DDv5KvOC1BLCqfbuUFv195h5nC4No8n/W+cT3vhenJErjePiE1K5BbM=
+	t=1712054997; cv=none; b=ZQYfqgkGCU6HlCTKRYTxMIcMVUsXIXJlau4g/VVWRMrkcqZJ0zMyq/r6t+FDcsAkc/lTryiM5QO8pXcHoP6N94m7MRDaH+XB5ie+SHG2PCN3TT3guP8p2RZngoF9D5qiEZ1APp/g9IAObKEN0LIomN/vSJfkFe1m2ZX73kYj+bE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712054943; c=relaxed/simple;
-	bh=ntfWqHpmDy4DIMcm7CKN+FPSTquvhkckHhRW34UWCtc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=GgDwLTIXplx9NyWurIhywKF/rz70qTOK82pVw7Dr8VLSFwRYdWXshy9gvCB84Y9wV+t0xfcidtiVVE9XrZtIronyvCuJ1w0o3ipFeERSgRwDI4xtFoNtPRcfBHL/wwqN2p53OAl3JIE/In4U5MzWQjjDvPrCvnwrZAa7aDOL9N4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=fyr3C/ng; arc=none smtp.client-ip=209.85.219.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1712054997; c=relaxed/simple;
+	bh=yojujZju9qOfqfMFPNKUKUV4/uQaL/mRXhf6pdQvYh0=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=STvaDERw+hA3ee50wsnkQNRYAkOweRBp+4NZh1c+SUEp49p24SpGovP6N5C2zpbxAnX/Ecsgur3L7LEVQcbyFLuWhLoc85qrwE88Wo+CrU2xyYQWZwlj1P4/D8muqmKWB9TnoW2M/0xDSw8SQNveXJdcKXJxoeAk87Zguezi6Zk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bfQINJTv; arc=none smtp.client-ip=198.175.65.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fyr3C/ng"
-Received: by mail-yb1-f179.google.com with SMTP id 3f1490d57ef6-dcd9e34430cso5153126276.1
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Apr 2024 03:49:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1712054939; x=1712659739; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=cL+6rU031lCbn4rJijXxXCPdj92d+pFHGEV2AGXf59Q=;
-        b=fyr3C/ngTM2VuxuFV12egZBfFLQ4AxVeiSt2FjHUuultNYQuRd3xWWLYOn9q3mU4J8
-         d1MQ+NGV6jqVWtDUpV2oE6xP+c44ufRS4UoTiZLWZR5qGp/IfZ09oW99yQDJR4DOGDQw
-         BgxV/At5a2wwkuBFn11ZDArQu68DcH+UHJpQe8H1gIUmsSlH/WLA1Q/p86qdMYFyhuH2
-         C1XqLR1YND2h0M/ld0sTne9OwweQ4NjxxQnoupiYz0mBDmMLs3AJ4v+57FTDSSeA8dU1
-         TU+Kv9kTi2nvbtaapvwsHUkC7iNHapr+LXW9ui80qroQUBdAofRDpMmZ72BqT8WxwbqN
-         azeQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712054939; x=1712659739;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=cL+6rU031lCbn4rJijXxXCPdj92d+pFHGEV2AGXf59Q=;
-        b=iIN07XbMFsdnxk5o1OHB1T86wjKlKh0T0BlgEFtUj6a9PWxb134+UHxlGK8+JNR1BW
-         Oee0zAPbvyD5tkIhavlMroqcCBKC8gHNWJiDr5khSxNyXVfzNIN+K2dpe4z1qPmkMqDz
-         baQC0PKOgh3nsM7I9fSHHHDhE6NuclmtvY931e4nS1v7VAYqBrs1wIRKl4Eck/o/SrML
-         6n1zADlOR/TDNG7KjVMq9sftMV5JjCWNLpabeeUSm+HckSQrALirVwPPHOBYRwCU1Cao
-         a3QKjPAd9t83QRKZzIH42A8S/HLBImdsi8jtIZ6HtmZHhYhlLUSa0MyDrrcUytInZjas
-         sMMA==
-X-Forwarded-Encrypted: i=1; AJvYcCWDakBEt1LIDW8eTEHrA8l2Z73eKbWkdxJuBIDljR7uO62arFpKcJhJebQjjWEirgW7mJmNWjl+QeeOpSq5hZvas9UIefiMcJOTzuC6
-X-Gm-Message-State: AOJu0Yy3eC5y1F5IcvQqJ99viKvgydXAPi0fHFNw3vFkgJyZUWNdK5h/
-	2ZXjXLJrMr4NuIrpDQ/HJZLAsG2pNr+ZkewAatgtEFcnh1ziQFdfvGUUZYXvpBVFRktGnhv08z4
-	4/N6CyIQ/xfLbGHgko4wfswgnMuUfiCq1KgGhDQ==
-X-Google-Smtp-Source: AGHT+IF3amTy3mi9gx0Fg8qpLFvR2VZ42wU7eSSjKWNzlxbLx8pQTgtu/c6DCvvde5oLRreiYm6VwKWGKN3tbIa8iIE=
-X-Received: by 2002:a25:99c1:0:b0:dcd:aee6:fa9 with SMTP id
- q1-20020a2599c1000000b00dcdaee60fa9mr8752476ybo.53.1712054939333; Tue, 02 Apr
- 2024 03:48:59 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bfQINJTv"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1712054997; x=1743590997;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=yojujZju9qOfqfMFPNKUKUV4/uQaL/mRXhf6pdQvYh0=;
+  b=bfQINJTv4AFh4u9vmv8nBr+iuEnYu0H1/KkFkE7OzYyAPmA7HK/5NoIs
+   G5b3astiswrVgrE9QM6UA+WWi17M5aAAkgkcflZibiLjWXzuzFTp8YeSY
+   JNW8eKWk7OlR9Rh2y8l6aYb8BftWfdCQgLwdZyoIbPb+z8NCTqsX0CBdT
+   EmkejftvHuSVUa1pq5weALxlK/HQ6FjsaSMlZcu8do+4+W33yq0vyjny2
+   loVh56Rfm5clAl501rVmlCCvxGLdP89J2suTo6NNtsdd3m1b1vbd1krR6
+   iXbyGgmJTws6p6f+uMqdWSec9oYRIFhjvHdbESMEzjgiaPq7ILYZV8/60
+   g==;
+X-CSE-ConnectionGUID: mI5ZNKKVQNqI3nNoP1Ro5A==
+X-CSE-MsgGUID: EJMhYBxLSPOApsrw0zLcyA==
+X-IronPort-AV: E=McAfee;i="6600,9927,11031"; a="11049777"
+X-IronPort-AV: E=Sophos;i="6.07,174,1708416000"; 
+   d="scan'208";a="11049777"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2024 03:49:56 -0700
+X-CSE-ConnectionGUID: YDnriq/YQ4aMde48zhTGjw==
+X-CSE-MsgGUID: yOg2Gc9BT6mmCUeyKEU0LQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,174,1708416000"; 
+   d="scan'208";a="22479505"
+Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.247.23])
+  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2024 03:49:53 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Tue, 2 Apr 2024 13:49:50 +0300 (EEST)
+To: "Luke D. Jones" <luke@ljones.dev>
+cc: Hans de Goede <hdegoede@redhat.com>, corentin.chary@gmail.com, 
+    platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 5/9] platform/x86: asus-wmi: store a min default for
+ ppt options
+In-Reply-To: <20240402022607.34625-6-luke@ljones.dev>
+Message-ID: <89b0c0ea-30ce-28c6-19d2-ebd113b17935@linux.intel.com>
+References: <20240402022607.34625-1-luke@ljones.dev> <20240402022607.34625-6-luke@ljones.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240402103406.3638821-1-quic_varada@quicinc.com> <20240402103406.3638821-7-quic_varada@quicinc.com>
-In-Reply-To: <20240402103406.3638821-7-quic_varada@quicinc.com>
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Date: Tue, 2 Apr 2024 13:48:48 +0300
-Message-ID: <CAA8EJpok9DzjSSt=ejegFo78zJqycs3S+bua76oXDivvzW7icg@mail.gmail.com>
-Subject: Re: [PATCH v6 6/6] arm64: dts: qcom: ipq9574: Add icc provider
- ability to gcc
-To: Varadarajan Narayanan <quic_varada@quicinc.com>
-Cc: andersson@kernel.org, konrad.dybcio@linaro.org, mturquette@baylibre.com, 
-	sboyd@kernel.org, robh@kernel.org, krzysztof.kozlowski+dt@linaro.org, 
-	conor+dt@kernel.org, djakov@kernel.org, quic_anusha@quicinc.com, 
-	linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-pm@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
 
-On Tue, 2 Apr 2024 at 13:34, Varadarajan Narayanan
-<quic_varada@quicinc.com> wrote:
->
-> IPQ SoCs dont involve RPM in managing NoC related clocks and
-> there is no NoC scaling. Linux itself handles these clocks.
-> However, these should not be exposed as just clocks and align
-> with other Qualcomm SoCs that handle these clocks from a
-> interconnect provider.
->
-> Hence include icc provider capability to the gcc node so that
-> peripherals can use the interconnect facility to enable these
-> clocks.
->
-> Signed-off-by: Varadarajan Narayanan <quic_varada@quicinc.com>
+On Tue, 2 Apr 2024, Luke D. Jones wrote:
+
+> Laptops with any of the ppt or nv tunables default to the minimum setting
+> on boot so we can safely assume a stored value is correct.
+> 
+> This patch adds storing of those values in the local struct, and enables
+> reading of those values back. To prevent creating a series of byte holes
+> in the struct the "<name>_available" bool is removed and
+> `asus_sysfs_is_visible()` uses the `ASUS_WMI_DEVID_<name>` directly.
+> 
+> Signed-off-by: Luke D. Jones <luke@ljones.dev>
 > ---
->  arch/arm64/boot/dts/qcom/ipq9574.dtsi | 2 ++
->  1 file changed, 2 insertions(+)
+>  drivers/platform/x86/asus-wmi.c | 127 +++++++++++++++++++++++++-------
+>  1 file changed, 99 insertions(+), 28 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
+> index b795f9c1941f..c80afa385532 100644
+> --- a/drivers/platform/x86/asus-wmi.c
+> +++ b/drivers/platform/x86/asus-wmi.c
+> @@ -262,13 +262,13 @@ struct asus_wmi {
+>  	u32 gpu_mux_dev;
+>  
+>  	/* Tunables provided by ASUS for gaming laptops */
+> -	bool ppt_pl2_sppt_available;
+> -	bool ppt_pl1_spl_available;
+> -	bool ppt_apu_sppt_available;
+> -	bool ppt_plat_sppt_available;
+> -	bool ppt_fppt_available;
+> -	bool nv_dyn_boost_available;
+> -	bool nv_temp_tgt_available;
+> +	u32 ppt_pl2_sppt;
+> +	u32 ppt_pl1_spl;
+> +	u32 ppt_apu_sppt;
+> +	u32 ppt_platform_sppt;
+> +	u32 ppt_fppt;
+> +	u32 nv_dynamic_boost;
+> +	u32 nv_temp_target;
+>  
+>  	u32 kbd_rgb_dev;
+>  	bool kbd_rgb_state_available;
+> @@ -1020,11 +1020,21 @@ static ssize_t ppt_pl2_sppt_store(struct device *dev,
+>  		return -EIO;
+>  	}
+>  
+> +	asus->ppt_pl2_sppt = value;
+>  	sysfs_notify(&asus->platform_device->dev.kobj, NULL, "ppt_pl2_sppt");
+>  
+>  	return count;
+>  }
+> -static DEVICE_ATTR_WO(ppt_pl2_sppt);
+> +
+> +static ssize_t ppt_pl2_sppt_show(struct device *dev,
+> +				       struct device_attribute *attr,
+> +				       char *buf)
+> +{
+> +	struct asus_wmi *asus = dev_get_drvdata(dev);
+> +
+> +	return sysfs_emit(buf, "%d\n", asus->ppt_pl2_sppt);
 
-Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-
+Use %u for u32 values. This applies to all sysfs_emits in this patch.
 
 -- 
-With best wishes
-Dmitry
+ i.
+
