@@ -1,245 +1,146 @@
-Received: from hz.preining.info (hz.preining.info [95.216.25.247])
+Received: from CHN02-BJS-obe.outbound.protection.partner.outlook.cn (mail-bjschn02on2099.outbound.protection.partner.outlook.cn [139.219.17.99])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7A8D6341C
-	for <linux-kernel@vger.kernel.org>; Tue,  2 Apr 2024 11:34:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.216.25.247
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712057659; cv=none; b=gKDbbGiFEUHd+6FgYrCDiEgeXyxXr0+1eQxNVmrfod1/ERqCiJFZTqR/FCT+W1eyZVeBV2oxRXRfbR8tKXXPqRZH4RWQFYxrg/Eb3x6qmPj1MriBAiQbG57pnNJwcsrBxFpD/L5pst5K2UTMih4aJkXJAV3nQtwmoF2AtVBXHf8=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712057659; c=relaxed/simple;
-	bh=Fw1+hra0A03myJvexzxBfAOfEr31l9iivWcQ+7VOtjY=;
-	h=Date:From:To:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=iRuNdZPpTjXBZ4bDxT4b0bJWasibKlpqVy/6JMBRg3TP4mTP8XADz8Yi4ABImbGdrfqbGlKMl0a5yUqZKX+UXWafvQaVA2iJUN/UdsViIQJnL6Z01X32jUQKm2s0z9l7Qcbp8CuGb8Ci0B+XOjcMKyehU1Q33OFNgtveVlQqKW0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=preining.info; spf=pass smtp.mailfrom=preining.info; dkim=pass (2048-bit key) header.d=preining.info header.i=@preining.info header.b=dzG/PLp5; arc=none smtp.client-ip=95.216.25.247
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=preining.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=preining.info
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=preining.info header.i=@preining.info header.b="dzG/PLp5"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=preining.info; s=201909; h=Content-Transfer-Encoding:Content-Type:
-	MIME-Version:Message-ID:Subject:To:From:Date:Sender:Reply-To:Cc:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=hMGGVOdo/itUKwmWLaKc0bOikp+kpkHqFdkzGAK43Ro=; b=dzG/PLp5SW/Z9TzZ1FJiSfQsNx
-	57Cd70cedGr7QMGENwJCqdfRd+dG/HTZZoXfXsrB2cTxZWHba3+OGThefkOSfHsrpUIb26OZr3Qaq
-	srwtj+XS7KPhcY2y7+AJtg4NraRma/GNXzzIB0lkA2nHECNYgvftqPkMOTUkKhGE0QYGbfh+etbJ6
-	EocOmFKaZeTcdlCtGtunJE8XuXIP5zsyWZU5OpdmSDxxLhiOrg+X1kOh2saxebeMh/51V3MsyqOEq
-	DnN9DcuAOy4SKiMUOqg0d4V/P3C4ZJneFgWfcw8RdDXb1CtJQbv+tJcdA0U25WYD9xWR9ehvvI2Kw
-	XjfUSSVQ==;
-Received: from tvk215040.tvk.ne.jp ([180.94.215.40] helo=burischnitzel.preining.info)
-	by hz.preining.info with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <norbert@preining.info>)
-	id 1rrbnh-00Epco-0f
-	for linux-kernel@vger.kernel.org;
-	Tue, 02 Apr 2024 10:55:33 +0000
-Received: by burischnitzel.preining.info (Postfix, from userid 1000)
-	id 3391FF8C182; Tue,  2 Apr 2024 19:55:29 +0900 (JST)
-Date: Tue, 2 Apr 2024 19:55:29 +0900
-From: Norbert Preining <norbert@preining.info>
-To: linux-kernel@vger.kernel.org
-Subject: Regression in kernel 6.8.2 fails in various ways (USB, BT, ...)
-Message-ID: <ZgvkIZFN23rkYhtS@burischnitzel>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B4536996E;
+	Tue,  2 Apr 2024 11:34:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=139.219.17.99
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1712057666; cv=fail; b=U3rqN8+310x+lC1g0riHZNlPfhYbaHG1WzJdAU6NaN2B+5EBGC5vjS0A8LrsNusVqNx4vwoVcFng1BsnuY9Pt8+eiyZcg6r8CvGoEtd0sQMN2qnbgODFYGsQe7Odp6l02HztennMLFSPuWkJB8aIpjYOOhTBPqoZBdMnP05tpzg=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1712057666; c=relaxed/simple;
+	bh=ZqS10ZAMwMKng4bCcyIYliSH0HU2nzc9NUI+fmHqPks=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=HAoFBt1AzQVfk6UIQ0DE3hOndAwMprk/Tykk2Dje1ajsuSkkbMZBr0n4CK2XN62fhrFsNa3uuu6qz1sEYIsAYFZibMUqZzbNWiyPhCGEagnB3ke55IavUeYwj5jDKaKtd5MywMoD1vawl2/NTxODeNjwWXMGBPhDzYu2LA4u4w8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com; spf=pass smtp.mailfrom=starfivetech.com; arc=fail smtp.client-ip=139.219.17.99
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=starfivetech.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=daYlQVy0dvMGPWZ7c8gBbo/98HrnklsMOMLfAQR06P9O+LKwIetX5rTzLBMl+LxlOGagDNSA2cxOvs89EMyu7ujtYm9lYj3gPZci3o+XAmZLB9X7MK8GAWot5q4nWW1g+Uw/KiznEPy+FqeFbe7QpN1eZptTtaNU0axhjCDRxZw9wkkzvFuC9PQp7htHvH+i46GA6r4un0plgrugE49CnyFMwvoAeMU735UY08bMKo73r9/7I6cLz2M+T4tj4U0Iusd6zz+af8QgZa0y5i24R2jU8nUzLIJzRkkhqg/t75kdoUOTtB8y2jU61kv2MMFtpAfmziYALIfk9DM2hKVu+A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=IpYS+v+cBn1HqDAmhXTHJL+v2aLemV00fes8PvGvKzM=;
+ b=YD8DStXGF3TibSz/ydKCXpnkOFbP1pKPYh7az9HwpM6gTSgvPXo8cgVsEad77RhqqkLygWwkuyT8ojApFDafym4tz7gTAE5IHqo993co+qHsuUmHRLPYq/jjBhDV4ROWvkqTfM+mjS6fH33apSjKp3nNjLCnANxcORWPhi8SBmjU8GULmoELw661ljKtYl00pnkwq7NBLIOjmxqLNRKgAxdWx6tBIbSnY9BqUO09xlsoc6ZNI4IlkaHaImHV9ugkSn80+iPf3035Ko45PI528gHF330KlvC0uFqXcKvJBkevawzX42aO2zIcTRAhe7/QtUHgXNwInsUDWya1+pHITQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=starfivetech.com; dmarc=pass action=none
+ header.from=starfivetech.com; dkim=pass header.d=starfivetech.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=starfivetech.com;
+Received: from SHXPR01MB0671.CHNPR01.prod.partner.outlook.cn
+ (2406:e500:c311:25::10) by SHXPR01MB0462.CHNPR01.prod.partner.outlook.cn
+ (2406:e500:c311:1e::21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.46; Tue, 2 Apr
+ 2024 10:00:38 +0000
+Received: from SHXPR01MB0671.CHNPR01.prod.partner.outlook.cn
+ ([fe80::b0af:4c9d:2058:a344]) by
+ SHXPR01MB0671.CHNPR01.prod.partner.outlook.cn ([fe80::b0af:4c9d:2058:a344%7])
+ with mapi id 15.20.7409.038; Tue, 2 Apr 2024 10:00:37 +0000
+From: Changhuang Liang <changhuang.liang@starfivetech.com>
+To: Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+	Ming Qian <ming.qian@nxp.com>,
+	Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+	Nicolas Dufresne <nicolas.dufresne@collabora.com>,
+	Benjamin Gaignard <benjamin.gaignard@collabora.com>,
+	Tomi Valkeinen <tomi.valkeinen+renesas@ideasonboard.com>,
+	Mingjia Zhang <mingjia.zhang@mediatek.com>,
+	Marvin Lin <milkfafa@gmail.com>
+Cc: Jack Zhu <jack.zhu@starfivetech.com>,
+	Changhuang Liang <changhuang.liang@starfivetech.com>,
+	linux-media@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-staging@lists.linux.dev
+Subject: [PATCH v4 10/13] staging: media: starfive: Add V4L2_CAP_IO_MC capability
+Date: Tue,  2 Apr 2024 03:00:08 -0700
+Message-Id: <20240402100011.13480-11-changhuang.liang@starfivetech.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20240402100011.13480-1-changhuang.liang@starfivetech.com>
+References: <20240402100011.13480-1-changhuang.liang@starfivetech.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: ZQ0PR01CA0005.CHNPR01.prod.partner.outlook.cn
+ (2406:e500:c550:5::11) To SHXPR01MB0671.CHNPR01.prod.partner.outlook.cn
+ (2406:e500:c311:25::10)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SHXPR01MB0671:EE_|SHXPR01MB0462:EE_
+X-MS-Office365-Filtering-Correlation-Id: 19475ed6-e837-4fe2-7130-08dc52fbbf37
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	jC2asqYZDPvM7257TdOE38s6girr4yTXNr+Z1FQdqcOSxSl4+vD2PdQ+UXut/nc/h7Yj73Ch0Bt2BBO10t3/UjiUhtC8nhcG5EfLPlC1Zv1eWPHq7Vn6wWID/vpdaVxFXsa7g31rJScXftHEGBV8a910XuGm80v5Ocm7xv/fnCjveuJExxQ8n/kJcf4D8LsNpoDH+1dLDjXI3LUDX8OYXszoaOn0tVom3pfB0oeepnWUtluA9Xkb2BmK31ubLDs13PTM6t9Ypx40ddCWiRSfENkbbI6RSavz6ayit0gUDozwLNqg0Vcg3k1tuU4WeeJOil08//PfTGf6eL7JdPx7gMeQyDERimxI7IbKW/GpOda9roNyNRo+d/WcFfjZay3WSy0XefRhzGW0NLA23pzCuSFNSvg87pXMQ7oyRZx/wSQImf/79NunB1LET44TmbnKSCqo+q7XpGV8dnzlht9R2vXSVX+YKAPp0dbHcyrJNPSRN6M88vm/JBN6P0cphNzWrohEBBigK2mFZYrfAVA57HiSVFL3RKfjnJKbY05erDAITHFd9qbof0J8TDj/ia+CJLwwjVr3dQ1prQAsafeWW86h6wWJPIEDj7LFJq4BpHNyhF7TvYhHCBdXVty8MBLhdMjyriLv/r3Cj7CueTOYZA==
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SHXPR01MB0671.CHNPR01.prod.partner.outlook.cn;PTR:;CAT:NONE;SFS:(13230031)(1800799015)(52116005)(7416005)(41320700004)(366007)(38350700005)(921011);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?TtLTMtOAhQ3yKSjXXB2ZSmv4xrSpfNMoekM7kO6NoPEJSJd10koWCiED79Jv?=
+ =?us-ascii?Q?l93V+sqYxpaMLZdT/ZttzXbXYKd6xhq0Ji5nD7TWfhPPGYFY9whSCLhKZ90U?=
+ =?us-ascii?Q?TVuD5yfvp4s5GupgIM5lhHK4/nUgL2rNGNAQpCt6dYgxNYiZuWLidSRGq4cW?=
+ =?us-ascii?Q?5mfgllO2tvQPSEbCUHrmRZ+bBaWwJcDKNq2ycGmiJPQp4hu5GyGxy5dZqLR8?=
+ =?us-ascii?Q?y4Ooz3Xe3pCoPrx04zh577GavvMZUf5t9ZWEhGk2mmXUoJAi68BoiDlsh01T?=
+ =?us-ascii?Q?JrS+V/0QkIwLdxJy1sb2UzxYxmV8m96lNnjSSlOnLrp7Y9EhsClXRPqX7Vtr?=
+ =?us-ascii?Q?5zuCP2a2L6F88CG/ocaT3GRq0/pbVAvipKuSUXJuYlyDXcgeGvZkB9s/DNVR?=
+ =?us-ascii?Q?KYeCeVJbPV7T28PVHk/gTtBeUHCHwL9kpneJkBOVLzfzVivulzSKpSgUvWCE?=
+ =?us-ascii?Q?xN74pP1doDjKr2FVsd0DmgklpbDaofjTMmUdI4NURzpWNub5om4UHbGrXjFv?=
+ =?us-ascii?Q?fW+cFi5CC3Bxj7LIIAIOvzeOU/OmPPSYFCnp15PM3t8QajD8G68HuBP77fcQ?=
+ =?us-ascii?Q?D5bAAiWaQQ5RD4dXd05n2ZepaBmquIlST8bprN2d5d5HMqmO5q0XkUnCrqe/?=
+ =?us-ascii?Q?MMtHvqvyUS7YQES9dNLJsIjRDGBgA408pyUF8LveFEt8wWSvDysnZIUU49HP?=
+ =?us-ascii?Q?xobv11o9oNV3po81Ew5HkOtfmEp/mPECxF81OMB8WeynnwkZ0j+bAmmJXZZp?=
+ =?us-ascii?Q?HmAxr5F/z5rwfTPg6O5hyM8LUzS07xNs1RLm/qdNS1ULSsds+HcIxqtcE4lW?=
+ =?us-ascii?Q?7gd3XBngvO+sS77fYSJz/ARKzJeA30z9OXqODcNjI1P1Vk+cjPHssrDWUHNn?=
+ =?us-ascii?Q?moBeREnUndTjtvNKqRydAXKsItQpv0UvHLLi3/RXf1FhTcYxi63NJ3UGOfdT?=
+ =?us-ascii?Q?Clt2ncZPUK05xhwI3A9i3q4XWx1YREsbUr8hI24awK+RWBQcybtKdPS6xmQa?=
+ =?us-ascii?Q?D12W7bz1/i91bu8XKH66ELBQG0O1kpjCIjxHQ92FCb3MDq1TA8NrSRBlDIVO?=
+ =?us-ascii?Q?jKjIOyY20KiWB33+gjnPdKXVmBkJr4nXYl0/e4egZkBCnMrBSEsIvGn0QLA0?=
+ =?us-ascii?Q?5EpF/IEaPAd0Rf1GehffvgGCdrYys5VbUYwXdaNAM9OcOrznS2aMXd4AlpGB?=
+ =?us-ascii?Q?Hjde0bBGAbg0YDRpDQa0+PfshlB7abcZNV0DbS2Yw3E7LbDaCflNB35tlcU+?=
+ =?us-ascii?Q?Af56rOB9HXebprZVl6Nz3tplVAIAsdBT1XMJ4W+NZb36cQOsadXX6oVyJnAM?=
+ =?us-ascii?Q?J1CDCclhS7oZGkMIWObTZV0DOgrj2VbbItVx3XirP9OMoX9QMONtgfglEbrQ?=
+ =?us-ascii?Q?02/6/1bloUTipuuxAqIiLeb4Y133HKpiAsNSV5afsAvzMI+TWBBKmO/mRQNp?=
+ =?us-ascii?Q?YfTrHVptIHiE5QW9Gi2IeFG0DbSuqYefWipJsKqr3C3QoJ/aq3Ex1w6QvJvz?=
+ =?us-ascii?Q?iW1bcI20XJn+ETGeojZeyOkdF460V5zCbuvVMpSI3mYWR0hxqKR2khrrc5YD?=
+ =?us-ascii?Q?yT2rXFZMsnnYND3mknKMo6ke+FOvNBJjaZzcOnZSxBwUV09S5ds7v9lC2uEy?=
+ =?us-ascii?Q?xt7JCIa9yo3BwXgZ+7lJZT0=3D?=
+X-OriginatorOrg: starfivetech.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 19475ed6-e837-4fe2-7130-08dc52fbbf37
+X-MS-Exchange-CrossTenant-AuthSource: SHXPR01MB0671.CHNPR01.prod.partner.outlook.cn
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Apr 2024 10:00:37.9349
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 06fe3fa3-1221-43d3-861b-5a4ee687a85c
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: V4h5e6lKJaPFZk5uVM0u8Ch3dT2aehoqFcS641D6ZiqVo+Hncu7rP5CniAWpfHe85Kbw8WF2Bpu7W1dgmC6izRIhT3M49s6UabvY95FpADQWTXFU/jR/JmpyYHtEKa71
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SHXPR01MB0462
 
-Hi all
+Add V4L2_CAP_IO_MC capabality for video device. User space can enumerate
+formats by mbus code.
 
-(please cc)
+Signed-off-by: Changhuang Liang <changhuang.liang@starfivetech.com>
+---
+ drivers/staging/media/starfive/camss/stf-video.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-I am running Arch Linux on a Lenovo X1 Carbon Gen 10.
-Tests are made with uptodate system, and besides the kernel no
-difference.
-The kernels are as distributed by Arch, but if necessary I can compile
-locally.
+diff --git a/drivers/staging/media/starfive/camss/stf-video.c b/drivers/staging/media/starfive/camss/stf-video.c
+index d9e51d4e2004..4ca889a7b757 100644
+--- a/drivers/staging/media/starfive/camss/stf-video.c
++++ b/drivers/staging/media/starfive/camss/stf-video.c
+@@ -665,7 +665,7 @@ int stf_video_register(struct stfcamss_video *video,
+ 	}
+ 
+ 	vdev->fops = &stf_vid_fops;
+-	vdev->device_caps |= V4L2_CAP_STREAMING;
++	vdev->device_caps |= V4L2_CAP_STREAMING | V4L2_CAP_IO_MC;
+ 	vdev->entity.ops = &stf_media_ops;
+ 	vdev->vfl_dir = VFL_DIR_RX;
+ 	vdev->release = stf_video_release;
+-- 
+2.25.1
 
-
-Arch Linux kernel 6.8.1 works without any problems.
-Upgrading to 6.8.2 breaks a lot of things:
-
-* Plugging in my Yubikey C does not trigger any reaction
-  (as a consequence scdaemon hangs)
-* sending of bluetooth firmware data fails with Oops (see below)
-* shutdown hangs and does not turn off the computer
-
-
-I can repeat this behaviour on every reboot into 6.8.2.
-
-I have dmesg/journalctl -b for both kernels collected, if required, I
-can send them. I checked the diffs but nothing really did stand out.
-
-Yubikey plugin:
-On 6.8.1 when I plug in the yubikey it lights up, and in the logs I see:
-[  370.767739] usb 3-1: new full-speed USB device number 5 using xhci_hcd
-[  370.910392] usb 3-1: New USB device found, idVendor=3D1050, idProduct=3D=
-0407, bcdDevice=3D 5.43
-[  370.910403] usb 3-1: New USB device strings: Mfr=3D1, Product=3D2, Seria=
-lNumber=3D0
-[  370.910407] usb 3-1: Product: YubiKey OTP+FIDO+CCID
-[  370.910409] usb 3-1: Manufacturer: Yubico
-[  371.497496] input: Yubico YubiKey OTP+FIDO+CCID as /devices/pci0000:00/0=
-000:00:14.0/usb3/3-1/3-1:1.0/0003:1050:0407.0005/input/input21
-[  371.555342] hid-generic 0003:1050:0407.0005: input,hidraw4: USB HID v1.1=
-0 Keyboard [Yubico YubiKey OTP+FIDO+CCID] on usb-0000:00:14.0-1/input0
-[  371.557021] hid-generic 0003:1050:0407.0006: hiddev96,hidraw5: USB HID v=
-1.10 Device [Yubico YubiKey OTP+FIDO+CCID] on usb-0000:00:14.0-1/input1
-[  371.557145] usbcore: registered new interface driver usbhid
-[  371.557151] usbhid: USB HID core driver
-
-On 6.8.2 not short blinking, and nothing in the logs.
-
-
-
-Bluetooth Ooops:
-   14.271713] usb usb3-port10: disabled by hub (EMI?), re-enabling...
-[   14.271725] usb 3-10: USB disconnect, device number 4
-[   14.271893] Bluetooth: hci0: Failed to send firmware data (-19)
-[   14.271953] Bluetooth: hci0: sending frame failed (-19)
-[   14.271976] Bluetooth: hci0: Intel reset sent to retry FW download
-[   14.427765] Bluetooth: hci0: sending frame failed (-19)
-[   14.427811] BUG: kernel NULL pointer dereference, address: 0000000000000=
-070
-[   14.427814] #PF: supervisor read access in kernel mode
-[   14.427815] #PF: error_code(0x0000) - not-present page
-[   14.427816] PGD 0 P4D 0
-[   14.427819] Oops: 0000 [#1] PREEMPT SMP NOPTI
-[   14.427820] CPU: 0 PID: 198 Comm: kworker/u41:0 Tainted: G           OE =
-     6.8.2-arch2-1 #1 a430fb92f7ba43092b62bbe6bac995458d3d442d
-[   14.427823] Hardware name: LENOVO 21CBCTO1WW/21CBCTO1WW, BIOS N3AET80W (=
-1.45 ) 02/20/2024
-[   14.427824] Workqueue: hci0 hci_power_on [bluetooth]
-[   14.427874] RIP: 0010:btintel_read_debug_features+0x4d/0xf0 [btintel]
-[   14.427880] Code: 65 48 8b 04 25 28 00 00 00 48 89 44 24 08 31 c0 48 8d =
-4c 24 07 c6 44 24 07 01 e8 de a9 ef ff 48 89 c3 48 3d 00 f0 ff ff 77 49 <83=
-> 78 70 13 75 67 48 8b 80 d0 00 00 00 be 02 00 00 00 48 89 df 48
-[   14.427881] RSP: 0018:ffffb7ba80aa3cc0 EFLAGS: 00010207
-[   14.427882] RAX: 0000000000000000 RBX: 0000000000000000 RCX: ffff965ac0d=
-daab0
-[   14.427884] RDX: 0000000000000000 RSI: 0000000000000202 RDI: ffff965ac0d=
-daaa8
-[   14.427884] RBP: ffffb7ba80aa3cf0 R08: ffff965ac0ddaab0 R09: 00000000000=
-00000
-[   14.427885] R10: 0000000000000001 R11: 0000000000000100 R12: ffff965ac0d=
-da000
-[   14.427886] R13: ffff965a84746900 R14: ffff965a8208ca05 R15: ffff965ac0d=
-da6d0
-[   14.427887] FS:  0000000000000000(0000) GS:ffff9661bf400000(0000) knlGS:=
-0000000000000000
-[   14.427888] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[   14.427889] CR2: 0000000000000070 CR3: 00000002bb620000 CR4: 0000000000f=
-50ef0
-[   14.427889] PKRU: 55555554
-[   14.427890] Call Trace:
-[   14.427891]  <TASK>
-[   14.427893]  ? __die+0x23/0x70
-[   14.427898]  ? page_fault_oops+0x171/0x4e0
-[   14.427901]  ? __timer_delete_sync+0x7d/0xe0
-[   14.427905]  ? exc_page_fault+0x7f/0x180
-[   14.427908]  ? asm_exc_page_fault+0x26/0x30
-[   14.427912]  ? btintel_read_debug_features+0x4d/0xf0 [btintel 6735e787c9=
-ed982ceaa471c7ab364a390a1acb37]
-[   14.427916]  btintel_register_devcoredump_support.isra.0+0x3e/0x110 [bti=
-ntel 6735e787c9ed982ceaa471c7ab364a390a1acb37]
-[   14.427921]  btintel_setup_combined+0x503/0x790 [btintel 6735e787c9ed982=
-ceaa471c7ab364a390a1acb37]
-[   14.427925]  hci_dev_open_sync+0x102/0xc20 [bluetooth 81a2e5f6c3a85f38da=
-de670bfe91d861a9119613]
-[   14.427953]  ? __schedule+0x3ee/0x1520
-[   14.427956]  hci_dev_do_open+0x23/0x60 [bluetooth 81a2e5f6c3a85f38dade67=
-0bfe91d861a9119613]
-[   14.427975]  hci_power_on+0x51/0x260 [bluetooth 81a2e5f6c3a85f38dade670b=
-fe91d861a9119613]
-[   14.427994]  process_one_work+0x183/0x370
-[   14.427998]  worker_thread+0x3ab/0x4f0
-[   14.428000]  ? __pfx_worker_thread+0x10/0x10
-[   14.428001]  kthread+0xe5/0x120
-[   14.428005]  ? __pfx_kthread+0x10/0x10
-[   14.428006]  ret_from_fork+0x31/0x50
-[   14.428009]  ? __pfx_kthread+0x10/0x10
-[   14.428011]  ret_from_fork_asm+0x1b/0x30
-[   14.428014]  </TASK>
-[   14.428015] Modules linked in: nf_tables bnep tun btusb btrtl btintel bt=
-bcm btmtk bluetooth gpio_ljca i2c_ljca ecdh_generic hid_sensor_custom_intel=
-_hinge hid_sensor_trigger industrialio_triggered_buffer kfifo_buf hid_senso=
-r_iio_common industrialio hid_sensor_custom hid_sensor_hub intel_ishtp_hid =
-joydev vfat fat ext4 crc16 mbcache jbd2 snd_ctl_led snd_soc_skl_hda_dsp snd=
-_soc_hdac_hdmi snd_soc_intel_hda_dsp_common snd_sof_probes hid_multitouch h=
-id_generic mousedev snd_hda_codec_hdmi snd_hda_codec_realtek snd_hda_codec_=
-generic snd_soc_dmic snd_sof_pci_intel_tgl snd_sof_intel_hda_common soundwi=
-re_intel snd_sof_intel_hda_mlink soundwire_cadence snd_sof_intel_hda snd_so=
-f_pci snd_sof_xtensa_dsp snd_sof snd_sof_utils snd_soc_hdac_hda snd_hda_ext=
-_core snd_soc_acpi_intel_match intel_uncore_frequency intel_uncore_frequenc=
-y_common snd_soc_acpi intel_tcc_cooling iwlmvm soundwire_generic_allocation=
- soundwire_bus x86_pkg_temp_thermal intel_powerclamp snd_soc_core mac80211 =
-coretemp snd_compress ac97_bus snd_pcm_dmaengine kvm_intel
-[   14.428048]  snd_hda_intel libarc4 ptp snd_intel_dspcfg pps_core snd_int=
-el_sdw_acpi snd_hda_codec processor_thermal_device_pci kvm processor_therma=
-l_device processor_thermal_wt_hint snd_hda_core processor_thermal_rfim iwlw=
-ifi iTCO_wdt irqbypass intel_rapl_msr processor_thermal_rapl mei_pxp snd_hw=
-dep ucsi_acpi mei_hdcp mei_wdt rapl intel_rapl_common intel_pmc_bxt typec_u=
-csi iTCO_vendor_support intel_lpss_pci intel_cstate thinkpad_acpi mei_me th=
-ink_lmi snd_pcm spi_nor processor_thermal_wt_req intel_ish_ipc typec ntfs3 =
-i2c_i801 intel_lpss nxp_nci_i2c ledtrig_audio processor_thermal_power_floor=
- cfg80211 wmi_bmof intel_uncore psmouse pcspkr firmware_attributes_class mt=
-d thunderbolt mei snd_timer idma64 intel_ishtp i2c_smbus ov2740 roles platf=
-orm_profile igen6_edac processor_thermal_mbox nxp_nci v4l2_fwnode nci snd i=
-ntel_skl_int3472_tps68470 int3403_thermal v4l2_async intel_pmc_core soc_but=
-ton_array tps68470_regulator nfc soundcore int340x_thermal_zone clk_tps6847=
-0 mei_vsc_hw rfkill videodev intel_vsec i2c_hid_acpi
-[   14.428085]  intel_hid int3400_thermal i2c_hid pmt_telemetry mc pinctrl_=
-tigerlake sparse_keymap acpi_pad acpi_thermal_rel intel_skl_int3472_discret=
-e acpi_tad pmt_class mac_hid i2c_dev corefreqk(OE) sg crypto_user fuse loop=
- nfnetlink ip_tables x_tables btrfs blake2b_generic libcrc32c crc32c_generi=
-c xor raid6_pq dm_crypt cbc encrypted_keys trusted asn1_encoder tee dm_mod =
-xe drm_ttm_helper gpu_sched drm_suballoc_helper drm_gpuvm drm_exec spi_ljca=
- usb_ljca i915 crct10dif_pclmul crc32_pclmul crc32c_intel polyval_clmulni p=
-olyval_generic gf128mul ghash_clmulni_intel sha512_ssse3 serio_raw sha256_s=
-sse3 atkbd i2c_algo_bit sha1_ssse3 drm_buddy libps2 vivaldi_fmap aesni_inte=
-l ttm nvme intel_gtt crypto_simd nvme_core cryptd drm_display_helper video =
-xhci_pci spi_intel_pci i8042 nvme_auth xhci_pci_renesas spi_intel cec serio=
- wmi
-[   14.428121] CR2: 0000000000000070
-[   14.428123] ---[ end trace 0000000000000000 ]---
-[   14.428124] RIP: 0010:btintel_read_debug_features+0x4d/0xf0 [btintel]
-[   14.428128] Code: 65 48 8b 04 25 28 00 00 00 48 89 44 24 08 31 c0 48 8d =
-4c 24 07 c6 44 24 07 01 e8 de a9 ef ff 48 89 c3 48 3d 00 f0 ff ff 77 49 <83=
-> 78 70 13 75 67 48 8b 80 d0 00 00 00 be 02 00 00 00 48 89 df 48
-[   14.428130] RSP: 0018:ffffb7ba80aa3cc0 EFLAGS: 00010207
-[   14.428131] RAX: 0000000000000000 RBX: 0000000000000000 RCX: ffff965ac0d=
-daab0
-[   14.428131] RDX: 0000000000000000 RSI: 0000000000000202 RDI: ffff965ac0d=
-daaa8
-[   14.428132] RBP: ffffb7ba80aa3cf0 R08: ffff965ac0ddaab0 R09: 00000000000=
-00000
-[   14.428133] R10: 0000000000000001 R11: 0000000000000100 R12: ffff965ac0d=
-da000
-[   14.428133] R13: ffff965a84746900 R14: ffff965a8208ca05 R15: ffff965ac0d=
-da6d0
-[   14.428134] FS:  0000000000000000(0000) GS:ffff9661bf400000(0000) knlGS:=
-0000000000000000
-[   14.428135] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[   14.428136] CR2: 0000000000000070 CR3: 00000002bb620000 CR4: 0000000000f=
-50ef0
-[   14.428137] PKRU: 55555554
-[   14.428137] note: kworker/u41:0[198] exited with irqs disabled
-[   16.434794] Bluetooth: hci0: command 0xfc09 tx timeout
-
-
-Thanks for any suggestions and best regards
-(and please Cc)
-
-Norbert
-
---
-PREINING Norbert                              https://www.preining.info
-arXiv / Cornell University   +   IFMGA Guide   +   TU Wien  +  TeX Live
-GPG: 0x860CDC13   fp: F7D8 A928 26E3 16A1 9FA0 ACF0 6CAC A448 860C DC13
