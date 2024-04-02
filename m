@@ -1,106 +1,212 @@
-Received: from mx0b-0016f401.pphosted.com (mx0a-0016f401.pphosted.com [67.231.148.174])
+Received: from smtpbg156.qq.com (smtpbg156.qq.com [15.184.82.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E80A786254;
-	Tue,  2 Apr 2024 13:40:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.148.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AC0E85285;
+	Tue,  2 Apr 2024 13:41:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=15.184.82.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712065248; cv=none; b=ginTTODiZqcuOmYVIEi9BvlAtaibGj2BeK9CbyUN2pdlbO6nEl+RyhPFXtMVN85i7i8mO9TW5PSZ4fyOxDthtW9MS56yZTsPkC9cDXuXkJmuSJDfs5zwjbmbUcplQEi4VGmyFA3CjtT/QwUpTa0kdYypDv5od+OjLcjnr66EMPI=
+	t=1712065293; cv=none; b=MHTk3iGk0F1LgsXvIPlsD7qzrpQ0QHrjFOp3ZtjoKnYJViJRSAUStsANUtOlsHdWwrhjYfjP5xLf9pP7/o7TAI7ZgZh+qSnq9dbYYDFxOta/tytCYm7LAtCZs61R2ujSTP7MXeKtAQ+ctMZYuRBVBoWTRkTUK5/zqlQGb+6tk9Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712065248; c=relaxed/simple;
-	bh=0JMY6VdfKsSKx12FfWw6I+DdfcWxm4lbZgJjNmLKpZ8=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=BEzWo28wjFHppV9CILfWg1OP00fPNrdgsJ6/YY5gmfEEM2DhzEXOKBQ1bK3W+UGalFtFmDicq5LHmSw/T0ue31bj9o6hbl454q4OaYALNLdcfbTNf6Iq7iULjBlUZvNDiXevII1ope/hYVz9rqdFWaQhTUHpXZM9utiLc2fOB+w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com; spf=pass smtp.mailfrom=marvell.com; dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b=SWVb/P57; arc=none smtp.client-ip=67.231.148.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=marvell.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="SWVb/P57"
-Received: from pps.filterd (m0045849.ppops.net [127.0.0.1])
-	by mx0a-0016f401.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 432C6u3Z015315;
-	Tue, 2 Apr 2024 06:40:45 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=
-	from:to:cc:subject:date:message-id:in-reply-to:references
-	:mime-version:content-transfer-encoding:content-type; s=
-	pfpt0220; bh=NPqbJ/EVM7J6lCGcpbFhwJx8Oa2Ct1SMsBvy5II9QgE=; b=SWV
-	b/P57exIoBwx4Mj5HkIG9cYJesA9l5I1PpyxGjn8SD2eZlDP+5iHS6sKn+nVwnj2
-	EEO+jemqWr3a9bFbQakdh2+z4sXNa7PQkJp53byNqwx6M7RKfO2qUZrIqisB1tb4
-	eTysNPE+ebGLYrdJj1ftyaw40OTTw083hlJaJaiNXIzj8mAN24fSPizHimk7Yxxu
-	PAJ5+UzHgYATfYyJJalofRlMYdIdnhPb5Pc487z18pOFfTExc/pSVWnntQgrYx+U
-	dQ3rq+ABjK2nnUnBL6pdl7gMknQC/nP4+xJ85PRS/UJINI2KP/y5mEXPTTtkhRvY
-	hQoO19C5QSbtuIjtigA==
-Received: from dc5-exch05.marvell.com ([199.233.59.128])
-	by mx0a-0016f401.pphosted.com (PPS) with ESMTPS id 3x8hr70c9h-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 02 Apr 2024 06:40:44 -0700 (PDT)
-Received: from DC5-EXCH05.marvell.com (10.69.176.209) by
- DC5-EXCH05.marvell.com (10.69.176.209) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.4; Tue, 2 Apr 2024 06:40:43 -0700
-Received: from maili.marvell.com (10.69.176.80) by DC5-EXCH05.marvell.com
- (10.69.176.209) with Microsoft SMTP Server id 15.2.1544.4 via Frontend
- Transport; Tue, 2 Apr 2024 06:40:43 -0700
-Received: from Dell2s-9.sclab.marvell.com (unknown [10.110.150.250])
-	by maili.marvell.com (Postfix) with ESMTP id 534043F706C;
-	Tue,  2 Apr 2024 06:40:43 -0700 (PDT)
-From: Piyush Malgujar <pmalgujar@marvell.com>
-To: <andi.shyti@kernel.org>, <linux-i2c@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-CC: <sgarapati@marvell.com>, <cchavva@marvell.com>, <jannadurai@marvell.com>,
-        Piyush Malgujar <pmalgujar@marvell.com>
-Subject: [PATCH v6 4/4] i2c: thunderx: Adding ioclk support
-Date: Tue, 2 Apr 2024 06:40:14 -0700
-Message-ID: <20240402134018.2686919-5-pmalgujar@marvell.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240402134018.2686919-1-pmalgujar@marvell.com>
-References: <20240402134018.2686919-1-pmalgujar@marvell.com>
+	s=arc-20240116; t=1712065293; c=relaxed/simple;
+	bh=qXxdVor5uXd8YNxYp/isrNRYhhWxs7u+gFLdY2RXpNk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=SgenVgrRrmYmkkwOmF0eve4IVQrvxJg9bto+CLpIDUuCL5TtJckB/gbBqB+9wyPE+QB+lIvzmrxP8/FeiKi49i/gXh20x8OZQ6O5H4t0LYzbWnw8DuiA2juNbGQ0UZb1s7qBqaghp5xJAqJUZ8KoTAb65NHJkX08PO7scSy05TM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=shingroup.cn; spf=pass smtp.mailfrom=shingroup.cn; arc=none smtp.client-ip=15.184.82.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=shingroup.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=shingroup.cn
+X-QQ-mid: bizesmtp81t1712065210tpwhlyo1
+X-QQ-Originating-IP: yDbBUvpK7jSUTaku6o3rrP2fuyoH+hdyO2Sc673Abrs=
+Received: from localhost ( [112.0.147.175])
+	by bizesmtp.qq.com (ESMTP) with 
+	id ; Tue, 02 Apr 2024 21:40:09 +0800 (CST)
+X-QQ-SSF: 01400000000000704000000C0000000
+X-QQ-FEAT: qcKkmz/zJhwKO7uO84H8MICt3oiHfhIRqQcEddlIPcnXa4UhXjD4Mi/qlTLDf
+	ors901SIDj4uUrR7FQXfcYI0O4eTd3avOwZvhyn4LabdXRNfuQk5SwHH8yx0yqOGKeXqf1b
+	L1c7669qp4GBeM2l0/uMZYsyvbsuOEPVyjveGxM34OcqMcvUju04R/KfR8few0/4d3b6O7x
+	57DJTMj54IG3ukftw3kKyXdhfF2H1ckt6GeQmsSBBL7nmAxF9WcAf8vflfC9trKek9jznhk
+	1/Ylj+VarFRl3EUSUpTbd3sW2PS8mLcvye8X+5wicq7BJwvBssImdmhF9+ck7h6OfqtNQdp
+	8CGIj+F/aAs3xO4qc4ckzwio5fTkVSg8qqExpFONh7Q/fPIpNGp5UoQyYMU4w2bdd1yixFs
+	M1ddlbbDkcw=
+X-QQ-GoodBg: 2
+X-BIZMAIL-ID: 17939997509187438316
+Date: Tue, 2 Apr 2024 21:40:08 +0800
+From: Dawei Li <dawei.li@shingroup.cn>
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: will@kernel.org, xueshuai@linux.alibaba.com, renyu.zj@linux.alibaba.com,
+	yangyicong@hisilicon.com, jonathan.cameron@huawei.com,
+	andersson@kernel.org, konrad.dybcio@linaro.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-arm-msm@vger.kernel.org
+Subject: Re: [PATCH 0/9] perf: Avoid explicit cpumask var allocation from
+ stack
+Message-ID: <190FE91C35AB9AE8+ZgwKuORh3VzTkfeJ@centos8>
+References: <20240402105610.1695644-1-dawei.li@shingroup.cn>
+ <ZgvoMunpbaE-x3jV@FVFF77S0Q05N>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Proofpoint-GUID: kEYOF7EZWBI5mAXJQT_AiYK-bt7kAz2Q
-X-Proofpoint-ORIG-GUID: kEYOF7EZWBI5mAXJQT_AiYK-bt7kAz2Q
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-04-02_06,2024-04-01_01,2023-05-22_02
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZgvoMunpbaE-x3jV@FVFF77S0Q05N>
+X-QQ-SENDSIZE: 520
+Feedback-ID: bizesmtp:shingroup.cn:qybglogicsvrgz:qybglogicsvrgz5a-1
 
-Read the ioclk property as reference clock if sclk not present in acpi
-table to make it SOC agnostic.
-In case, it's not populated from dts/acpi table, use the default clock
-of 800 MHz which is optimal in either case of sclk/ioclk.
+Hi Mark,
 
-Signed-off-by: Piyush Malgujar <pmalgujar@marvell.com>
----
- drivers/i2c/busses/i2c-thunderx-pcidrv.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+Thanks for the quick review.
 
-diff --git a/drivers/i2c/busses/i2c-thunderx-pcidrv.c b/drivers/i2c/busses/i2c-thunderx-pcidrv.c
-index 31f11b77ab663626967c86086a03213876bf4a07..32d0e3930b675484138084e1bbed2e7cf898e1e1 100644
---- a/drivers/i2c/busses/i2c-thunderx-pcidrv.c
-+++ b/drivers/i2c/busses/i2c-thunderx-pcidrv.c
-@@ -27,7 +27,7 @@
- 
- #define PCI_DEVICE_ID_THUNDER_TWSI	0xa012
- 
--#define SYS_FREQ_DEFAULT		700000000
-+#define SYS_FREQ_DEFAULT		800000000
- #define OTX2_REF_FREQ_DEFAULT		100000000
- 
- #define TWSI_INT_ENA_W1C		0x1028
-@@ -100,7 +100,8 @@ static void thunder_i2c_clock_enable(struct device *dev, struct octeon_i2c *i2c)
- 		i2c->sys_freq = clk_get_rate(i2c->clk);
- 	} else {
- 		/* ACPI */
--		device_property_read_u32(dev, "sclk", &i2c->sys_freq);
-+		if (device_property_read_u32(dev, "sclk", &i2c->sys_freq))
-+			device_property_read_u32(dev, "ioclk", &i2c->sys_freq);
- 	}
- 
- skip:
--- 
-2.43.0
+On Tue, Apr 02, 2024 at 12:12:50PM +0100, Mark Rutland wrote:
+> On Tue, Apr 02, 2024 at 06:56:01PM +0800, Dawei Li wrote:
+> > Hi,
+> > 
+> > This series try to eliminate direct cpumask var allocation from stack
+> > for perf subsystem.
+> > 
+> > Direct/explicit allocation of cpumask on stack could be dangerous since
+> > it can lead to stack overflow for systems with big NR_CPUS or
+> > CONFIG_CPUMASK_OFFSTACK=y.
+> > 
+> > For arm64, it's more urgent since commit 3fbd56f0e7c1 ("ARM64: Dynamically
+> > allocate cpumasks and increase supported CPUs to 512").
+> > 
+> > It's sort of a pattern that almost every cpumask var in perf subystem
+> > occurs in teardown callback of cpuhp. In which case, if dynamic
+> > allocation failed(which is unlikely), we choose return 0 rather than
+> > -ENOMEM to caller cuz:
+> > @teardown is not supposed to fail and if it does, system crashes:
+> 
+> .. but we've left the system in an incorrect state, so that makes no sense.
+> 
+> As I commented on the first patch, NAK to dynamically allocating cpumasks in
+> the CPUHP callbacks. Please allocate the necessry cpumasks up-front when we
+> probe the PMU. At that time we can handle an allocation failure by cleaning up
+> and failing to probe the PMU, and then the CPUHP callbacks don't need to
+> allocate memory to offline a CPU...
 
+Agreed that dynamically allocation in callbacks lead to inconsistency
+to system.
+
+My (original)alternative plan is simple but ugly, just make cpumask var
+_static_ and add extra static lock to protect it.
+
+The only difference between solution above and your proposal is static/
+dynamic alloction. CPUHP's teardown cb is supposed to run in targetted
+cpuhp thread for most cases, and it's racy. Even the cpumask var is
+wrapped in dynamically allocated struct xxx_pmu, it's still shareable
+between different threads/contexts and needs proper protection.
+
+Simple as this(_untested_):
+
+diff --git a/drivers/perf/arm-cmn.c b/drivers/perf/arm-cmn.c
+index 7ef9c7e4836b..fa89c3db4d7d 100644
+--- a/drivers/perf/arm-cmn.c
++++ b/drivers/perf/arm-cmn.c
+@@ -1950,18 +1950,24 @@ static int arm_cmn_pmu_offline_cpu(unsigned int cpu, struct hlist_node *cpuhp_no
+        struct arm_cmn *cmn;
+        unsigned int target;
+        int node;
+-       cpumask_t mask;
++       static cpumask_t mask;
++       static DEFINE_SPINLOCK(cpumask_lock);
+
+        cmn = hlist_entry_safe(cpuhp_node, struct arm_cmn, cpuhp_node);
+        if (cpu != cmn->cpu)
+                return 0;
+
++       spin_lock(&cpumask_lock);
++
+        node = dev_to_node(cmn->dev);
+        if (cpumask_and(&mask, cpumask_of_node(node), cpu_online_mask) &&
+            cpumask_andnot(&mask, &mask, cpumask_of(cpu)))
+                target = cpumask_any(&mask);
+        else
+                target = cpumask_any_but(cpu_online_mask, cpu);
++
++       spin_unlock(&cpumask_lock);
++
+        if (target < nr_cpu_ids)
+                arm_cmn_migrate(cmn, target);
+        return 0;
+
+And yes, static allocation is evil :) 
+
+
+Thanks,
+
+    Dawei
+
+> 
+> Also, for the titles it'd be better to say something like "avoid placing
+> cpumasks on the stack", because "explicit cpumask var allocation" sounds like
+> the use of alloc_cpumask_var().
+
+Sound great! I will update it.
+
+> 
+> Mark.
+> 
+> > 
+> > static int cpuhp_issue_call(int cpu, enum cpuhp_state state, bool bringup,
+> >                             struct hlist_node *node)
+> > {
+> >         struct cpuhp_step *sp = cpuhp_get_step(state);
+> >         int ret;
+> > 
+> >         /*
+> >          * If there's nothing to do, we done.
+> >          * Relies on the union for multi_instance.
+> >          */
+> >         if (cpuhp_step_empty(bringup, sp))
+> >                 return 0;
+> >         /*
+> >          * The non AP bound callbacks can fail on bringup. On teardown
+> >          * e.g. module removal we crash for now.
+> >          */
+> > 	#ifdef CONFIG_SMP
+> >         if (cpuhp_is_ap_state(state))
+> >                 ret = cpuhp_invoke_ap_callback(cpu, state, bringup, node);
+> >         else
+> >                 ret = cpuhp_invoke_callback(cpu, state, bringup, node,
+> > 		NULL);
+> > 	#else
+> >         ret = cpuhp_invoke_callback(cpu, state, bringup, node, NULL);
+> > 	#endif
+> >         BUG_ON(ret && !bringup);
+> >         return ret;
+> > }
+> > 
+> > Dawei Li (9):
+> >   perf/alibaba_uncore_drw: Avoid explicit cpumask var allocation from
+> >     stack
+> >   perf/arm-cmn: Avoid explicit cpumask var allocation from stack
+> >   perf/arm_cspmu: Avoid explicit cpumask var allocation from stack
+> >   perf/arm_dsu: Avoid explicit cpumask var allocation from stack
+> >   perf/dwc_pcie: Avoid explicit cpumask var allocation from stack
+> >   perf/hisi_pcie: Avoid explicit cpumask var allocation from stack
+> >   perf/hisi_uncore: Avoid explicit cpumask var allocation from stack
+> >   perf/qcom_l2: Avoid explicit cpumask var allocation from stack
+> >   perf/thunder_x2: Avoid explicit cpumask var allocation from stack
+> > 
+> >  drivers/perf/alibaba_uncore_drw_pmu.c    | 13 +++++++++----
+> >  drivers/perf/arm-cmn.c                   | 13 +++++++++----
+> >  drivers/perf/arm_cspmu/arm_cspmu.c       | 13 +++++++++----
+> >  drivers/perf/arm_dsu_pmu.c               | 18 +++++++++++++-----
+> >  drivers/perf/dwc_pcie_pmu.c              | 17 +++++++++++------
+> >  drivers/perf/hisilicon/hisi_pcie_pmu.c   | 15 ++++++++++-----
+> >  drivers/perf/hisilicon/hisi_uncore_pmu.c | 13 +++++++++----
+> >  drivers/perf/qcom_l2_pmu.c               | 15 ++++++++++-----
+> >  drivers/perf/thunderx2_pmu.c             | 20 ++++++++++++--------
+> >  9 files changed, 92 insertions(+), 45 deletions(-)
+> > 
+> > 
+> > Thanks,
+> > 
+> >     Dawei
+> > 
+> > -- 
+> > 2.27.0
+> > 
+> 
