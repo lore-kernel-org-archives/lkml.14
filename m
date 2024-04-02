@@ -1,44 +1,45 @@
 Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2100.outbound.protection.outlook.com [40.107.236.100])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F4D414AD1D;
-	Tue,  2 Apr 2024 16:08:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3036214AD38;
+	Tue,  2 Apr 2024 16:08:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.236.100
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712074127; cv=fail; b=iUTjXrg2/36xNbYNi5KQ+I3mfl1lwIx+RLpaV11FaqAk4s4ReJw9he/+3Cm7/2rUhggMrLnVn/+x+jj3p5R2y7mB5tfZ9oWACpTtn0d2OcqUQEagNFSNnR01R8jgjQnzAQvapYuvmL8fPeV+gwSSW5aRfFAApWdrEJEqwAUICjY=
+	t=1712074129; cv=fail; b=A5WvUAci8zYbtV4k4+VtBWTux7ODKjEmybTwg/Ja1LQy4BQda3rDOHpZpla9WS/Fvkqbjfjn7D8OQ+QBLBEtTRzcK+2rwANEc9KAx+OqXAQ5Qx8Jkn2I8CsKTP/dnRmkS1jQuLLFxMJ/4ra9b6QQGS8yHE86jHfXm//QRAhG7E0=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712074127; c=relaxed/simple;
-	bh=GDbO8YntxMEoJgmDZg1Gjd6atM03ZT6li144WFX9dLM=;
-	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=bQjGuFDi9/UDywOtxS52EjzN1eBdRQA872NID1yqvrdX5dfp/wR7X67JulhZ585KMt121sF5YnFVLJ/73QSKLA0xBmBrV3yFHUvzvd09KeiAUbUz31q+ZmhNCSOd368zJniZSBFR2KZqK+IJ0tyj8gAaNFlV49onwlvfKni/Mk4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=phytec.com; spf=pass smtp.mailfrom=phytec.com; dkim=pass (1024-bit key) header.d=phytec.com header.i=@phytec.com header.b=TiynvNQ/; arc=fail smtp.client-ip=40.107.236.100
+	s=arc-20240116; t=1712074129; c=relaxed/simple;
+	bh=8N/haP7/St1ra/XnNx1SPtRCDNyQy09x/TgZajujdN8=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=Bpco7pROa7AhGlCzPxwrMBPPcZVRQWMDotLD95+vNweOQxkqypSbgpZ2iK8g56t3h6FZOARXjnzq/X7GKIyO1b3qHFRczJrUOs8Yej6p69hDmcRpEc54tTtxm62KPLpnp2SjpyzqbhFouUptMu5/4T18yIbjEXI89zZf9B7MVVM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=phytec.com; spf=pass smtp.mailfrom=phytec.com; dkim=pass (1024-bit key) header.d=phytec.com header.i=@phytec.com header.b=Hs8PKm3e; arc=fail smtp.client-ip=40.107.236.100
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=phytec.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=phytec.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=phytec.com header.i=@phytec.com header.b="TiynvNQ/"
+	dkim=pass (1024-bit key) header.d=phytec.com header.i=@phytec.com header.b="Hs8PKm3e"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Xp0KzGu+cLJPnrooLnWIK+043XionZDPBWSaQZYaVuqkHG+1XSumisx5GYpuhjZX7wgseNGO/zWlMDzRV4ObEUgHoDN2phTwXzrDsKgZis86vViqYIAVz2eSEjZx/L00rxV7BkkYv37ArbvREIeDUnlay/eI75mqV5fY1vr2MwxVQ4BgEa2WCuTpxuY2zXjw452j3rSivRHMoXw/9tR7iCYNfu1jWOeOQCKCu+kqeioISDNSQIOfaFeEi94plJNNzuWhbS4Z7EQZduEJVcetVnvTM84UoMpzAvHyJOgf8RVGgYzSVsmEVwRIq4zFTED9uWgzZkBP0rPRp/CkEAmQcA==
+ b=A7Ln5j40zS+4yQcDl8gEi5TVbKu0gEZr8vkGFizK+KDOK8qw7xWnYQcyq6+mhJSV6EefVwgtslgt3j9wBHCPkINaPm3vR7yw3icYqtpqO06RJztzeUtJ1BfJh0MXIaJBw9PbcVmWPx1Dp/PklRUgxkukAJzQgJJV0Zs2yxrGtaFbFnKjJAJFR0mkRsBfbBHK3HelXcerDmlkpuYhEGEgQEHeFrJPlD6nrsGHsteHssDpfh7EjxCK+fwwZLCuYEvYKfKIOURtIEhyua4Ychb5DOdJDTfXYfZSwdEcKqp5+WmZ652LQCZxnfKDnxbOlfnBeSB92YFIAMI7wbc5UkcH+g==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=57RBwjQieubSxbYSnCa9rzMpZeMEGeS0SV4p8T7a6mA=;
- b=Zie0F8+1IuKm9q3IIPy4qFuK1mvsBN2qpsH2j4jfeB5WSMYc0HPrDoz0ND7KrS3P1f/B5rqkVzgrH2cyVuvCs1/i/P8OaDDXKkM1iFjeREa+JvQZWgjGaC1Y3cVZjkvzvizzSbYM1dXDQeEIgN5pjgXFkGd/c5rRY1I5QN5kIp6bX+1Dlb/2vRrcdlTgzzpilSmoHah6a7iS+Beh47iyR0ZJeSK9fKIHnk2e1yjZh2WmRgflV48aULVB4uh1yZ4KpyM4UGHAiumGDXOLaQe3cXH+y8mgIKApRNjDUv/yQZ9Aj3YUg6bH566fpAzDYULmBgvEz6i9Rq9fntt8IOSu+Q==
+ bh=LisQD85ZxGEEXiBfRJbLVGI2siGO7lDslU5F6WvU7gI=;
+ b=cNnxvdc/niGYpEYQYR4W53lNkE/D3PPw7ayWlKaTx4W0QU74bAaaYXe0jTEoSDmsih8bidkVLSOuoMurXbTPkY0PdptLd9bXd+QK4cT3yebKZuHoC80xaKyq9z92/V64T4jEQ6CdTOycyLrQuT6yUAYpi82Y7ZLRtMvQHp3PCtkZ0qw2GsUUKLge7DfFRG+w5qG5YrqBD+dd8G2JdeZY4t8H2idQyfhpiPZWWMNomsHsgbPwvYtE9FzONJ24PRcDeqhZBPlS916YzcR5EQpb6/KJfBZR2Rcs+nxXVylwaBOJmV9s8OSFmSvQeDAeXngBrKd1RhmOfwFZJZOa+YffwQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=phytec.com; dmarc=pass action=none header.from=phytec.com;
  dkim=pass header.d=phytec.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=phytec.com;
  s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=57RBwjQieubSxbYSnCa9rzMpZeMEGeS0SV4p8T7a6mA=;
- b=TiynvNQ/mkHXQNa6nEPNPh/pnKHxKAsMVuJoNA6phMsW0C1G3BgBsVAupdH9rTMAvJBdxWPt7WxflZ+ONl7k9Y+gPUGttXJqKsJLKHh4xbNN45Cq6OAusuroDxjycScvEiQQCO3Wfdbvu9MzLZNiWMcMxhjC/xE2Xu+8Eaotw+A=
+ bh=LisQD85ZxGEEXiBfRJbLVGI2siGO7lDslU5F6WvU7gI=;
+ b=Hs8PKm3emXr7YJgRNXApQNb1xtAXz5vRw8dyFsT/wJvbTYSBW8/hGoc9ILuaW23jiY8ATNFj0CvY+/Qg8UYMjv4W1QOxkMbtPNvlYrRH51FYpPWkoQvn7y7VHRYnekHzSWWznlWqa89ciifYX5P2AuyqZQqXZ9RnplT3foYbc8I=
 Received: from SA1PR22MB5636.namprd22.prod.outlook.com (2603:10b6:806:3e2::15)
  by PH8PR22MB4097.namprd22.prod.outlook.com (2603:10b6:510:238::20) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.46; Tue, 2 Apr
- 2024 16:08:37 +0000
+ 2024 16:08:40 +0000
 Received: from SA1PR22MB5636.namprd22.prod.outlook.com
  ([fe80::e6c9:dbd4:f002:212f]) by SA1PR22MB5636.namprd22.prod.outlook.com
  ([fe80::e6c9:dbd4:f002:212f%7]) with mapi id 15.20.7409.042; Tue, 2 Apr 2024
- 16:08:37 +0000
+ 16:08:40 +0000
 From: Nathan Morrisson <nmorrisson@phytec.com>
 To: nm@ti.com,
 	vigneshr@ti.com,
@@ -51,10 +52,12 @@ Cc: linux-arm-kernel@lists.infradead.org,
 	linux-kernel@vger.kernel.org,
 	upstream@lists.phytec.de,
 	w.egorov@phytec.de
-Subject: [PATCH 0/2] Increase CAN max bitrate for phyCORE-AM62x and phyCORE-am64x
-Date: Tue,  2 Apr 2024 09:08:23 -0700
-Message-Id: <20240402160825.1516036-1-nmorrisson@phytec.com>
+Subject: [PATCH 2/2] arm64: dts: ti: k3-am642-phyboard-electra-rdk: Increase CAN max bitrate
+Date: Tue,  2 Apr 2024 09:08:25 -0700
+Message-Id: <20240402160825.1516036-3-nmorrisson@phytec.com>
 X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20240402160825.1516036-1-nmorrisson@phytec.com>
+References: <20240402160825.1516036-1-nmorrisson@phytec.com>
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
 X-ClientProxiedBy: CH0PR13CA0011.namprd13.prod.outlook.com
@@ -72,59 +75,82 @@ X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
 X-Microsoft-Antispam-Message-Info:
-	xYIzR9JfuRYjVCMyCshb2LPCBwNjIJTXz7EZelA4afKO7K17+DpNqI7ruo+vEATvqW1ADqncwd7waPNkwL9B6UfKuO7tImWoHrWBmkbTJaZhTGBVF0HcrOq9HCM6FN7JPULCU39+okU/DaP9Yv6W+0ZDIdjBHCJQ+5+QMfm8P4eoq1i9Ok/JKmcPPqOfxeyqT0ssaVJi5sV0AAA3314pUaa5QRmepCS3GodrRqKdR3b5JBMRwF4rwQN5T7JRN3OsFC/tKC5HLnBSlex/A3f1sFoD4Hp+S3SOQZVdUBtu0VVlkxxzuaDKM5tV7IqOv2t/yFyCikjuqVltVmKGK2LID6Dp0/Sk3IIOm12gjWlWSEASNPJ3zxjcne/TQ5NVdJdlNQfaR2R7wzMMQk2GeDTCi9mTLeYynDwR7KHf16pq0K3CoMp7dzWhOQoYZ4hl4Ocz5iU0Hk0wKBDb7ooAa9pXFeBD7fCGGB6fME+ZPp131/A0GId/oAdDJ2ko0PhI7twtLRRXL739aKUUw7xOiG+m9FOZNJW30R+lovreQ06SeO52eySEWd/9gMtFt+uy33sWkMgtdhpuybG89nmxqtp0gnGpFpoEQbLNB5o0fPYxWkFtnCsAYt0TOka9xiTOuyptjldekpAKGhR+KVY0hN1sJ+YMmn77Ab2DcuJmuqjFi1+wKrAGAHdROkQUpHBIF8/XnlJP9FoOWhWD8hyTXQeifA==
+	Vat/PJL0CRXqCGGRKiL+WI3sVucJeikZlP4dmfEt6n6yPMryGckRdX0OG6hsgmW8I8pUhv+PFJU/3ZURBK/Mq0OQ6hiqkfVfSzPb9pD/XDdgLCnpq7mxMUuusUiJi5p8QKyz6SkECVKWs9h69PL0mqBiTW/u50ZSAh9eK3zt1RlIWSJscOWoRzY70PikGW/+3NvolZa6VZc8v827uUDwMvx+xNP1LUCQ/KIhH7nhujwUA1DrgYvXsz3/m+rsQgBSLDOa2oud9+qkE4phT7dw76mgajwXdbm5ojcoTcgJlu6dBB9I9LxpGgjs0KouBqP+sIpb6ZGgyia/kASAiMtwbEX87BVSOQOjedlwqzB/gn2JBGtCMGBcGrZ3/uCep1aTtUY15q2BBdL2mZWD0QaeZea3epHE1D44Rl6i7tgBPOmlVaFNHDm4J0Ludos5dbpWfwgRRjj4AG3/x1o56y87lJUI/VDdVPHhtlLb/r/8deXJJGcRBOE7X25KAZuLMqr9sbo1grQVJIvKLWnmc+Ng+IhpZzUupJfC2kKSS+mTSSZ9z7aIQ5u1kyjP/bK1MGiDBu0iIQpkj0AICODwdnDQkcioYvhH9MRyfrdmCLOgJSR9xUEOjy2sNxdb9O3kLyUfpLAh0rGnCowuZs1KEU5allkdkACp4dQc6T7Uzy3iz5MkTP6Kv5vRCBloygolM8LjvTkd7RFKjXX8pLiZ46+lmNI1mLZbcNjBKSsB728GiTE=
 X-Forefront-Antispam-Report:
 	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR22MB5636.namprd22.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366007)(376005)(7416005)(52116005)(1800799015)(38350700005);DIR:OUT;SFP:1102;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?WtwmtQAX0LRIXzfma5SUFs0NKlS592EIYG4cQtSRhU+xRJL8CnlujbeN+COA?=
- =?us-ascii?Q?LKDOHXlnuzhxI9l251VRQhK77eZfQN+KzWxlawPEA0BSbPxgWWev9HcOz/9X?=
- =?us-ascii?Q?Bm0hAR0bJLIrJbwuAuabrWp59LlIrg9cfFAuePAS6ALD3jNIPAWdR7sanP93?=
- =?us-ascii?Q?vpEHoXJMP85nqfgoWRvtEiG6oOf7BcVuptTl8xQT+AU9qZtju6ZskQbDkpSC?=
- =?us-ascii?Q?5TUl+xvAxLfsht13gcEAfZWCCLa5Zt9fNA5X+JGMU82NfMBjx7m9MuYKxGRh?=
- =?us-ascii?Q?WBlqm+f06QUuT4EBR7o6MvQEVCzPbsrum0pDb34xGc5geU4X3lxnHoSJBh9l?=
- =?us-ascii?Q?UgGDoNxRMvI34xRiDocmpFX2L9R2f0je5q0kad54kRaQUZ5AlsuM+i+mb5sU?=
- =?us-ascii?Q?5JqTiKjdIeUrWdpkz4FwNpACZdRKy3Vd29aNbc5nTnzSES7AqSpiiSYSRIIy?=
- =?us-ascii?Q?FFU5ZM1JJ40btXQ5jcFXvZO//pghawnj83qq+lYJPftnSn0xB11lMeqcYPxb?=
- =?us-ascii?Q?1Erb8jQPBru2ECEoCvXPwBb6MSE0o7iycwNGr77/zCkLr52ekipzETiFBJtc?=
- =?us-ascii?Q?QATxyeR10E6gXn8QGQ/oYyWK3XXZXwkdnlwWnMsRRKeR43VKZ6DJ3GMGe9Xa?=
- =?us-ascii?Q?pZxMcUqzLsIbW5b965yLEVzs/wo6FdY2lgDk9LpcTChEAkzc5lbdX0NrjD6b?=
- =?us-ascii?Q?dwtx2Qe5TWMBT8ba1NtVl9iOJnTA3gGjZB7vKHRYIMzGCl3XIYloB8N4Pe5y?=
- =?us-ascii?Q?aLYKPLEcYLj8rwXLMMY7g/Owd2GKz8Yh7xDDItHAsiLvXdcmKlNJlA7Ow264?=
- =?us-ascii?Q?0I/ouRLN5TckfpqfYGr2fgVc+257QtpuzR+XOyJOxqFwD1d8AY2xaufO2yeu?=
- =?us-ascii?Q?7SUZka6I0wKDWYNBQhtYeewNrEqmHI+S52QueGlwgpLWaU4WjwVYL9tT8MPM?=
- =?us-ascii?Q?Hy+UAgPFfa7rs4Sau0YZkKZPrOgWQz/w6HQeuvFyCL0CgxBU0a280V6Cv1xJ?=
- =?us-ascii?Q?7wSqNMbnNYvmX23rXnMrT2AHHs36hiuHNIUkcpM00DNeMn1BaJltQ0+bOuWJ?=
- =?us-ascii?Q?8LILfsHPDFpkk/dX+yQvqws/GDju3SSqjOuwkMDGoCrf1qd7QVyHHbLfMqJk?=
- =?us-ascii?Q?++u5sv4fwpNSvNBdTlKc0QIkeavjWlnnZZPhGGhpq/Ke0CdF/qw66ZcjO2xq?=
- =?us-ascii?Q?pXaH4Dnh11YjpaRhg8P1ZLBz4mEyojkE5kLavtbg0PmRNDvlgqiecef38Gj7?=
- =?us-ascii?Q?UAtKyHZYbxicrlp2dOtJeh3nNXg4L2E1SjzWXLyMbPkHWfhuGKKhxssmlT5z?=
- =?us-ascii?Q?DYlwQM1keIcVEAnk/NwTSQ521hucNRBXvsE6nrXSQ7/IwdrZz5/preImvkCN?=
- =?us-ascii?Q?P+7hhVhzL2C98s/t8iov+6Tk4T2ANgyGbL4w4mjb1GQ6e0xm+i9j2Yhjaugp?=
- =?us-ascii?Q?QuhYEIPf97Z705ZnmF48Y9ApHVMPEDdPeufiprq76nLHMXNlff2BYEtJLP+3?=
- =?us-ascii?Q?TGbSuGm9OwDOgTsgbgyEPsGp5XELRiIMR3V+5FJX1/kswQ0RaGzdgK+YxVLQ?=
- =?us-ascii?Q?oFCczeXvlV2d8Whjwku5JCzOt9gdQeCt1AfVNY4e?=
+	=?us-ascii?Q?9UJ/MyFCDOp6WymHlVWnYGQgGP3wehp7/VXLuZaGhXajGXlVgMaPC+ECEjTU?=
+ =?us-ascii?Q?HHvNl1/LPGmywtS/dRCP/HVVyi10wS5g1MV6w5J6acBUTLkDZbAcrFX9VGkl?=
+ =?us-ascii?Q?2Yg9qE8FhB/ONU2ms7QuzFZaVMtUi2ubmTDPHg0V4WtsaMQSA3IhNT2t3JvZ?=
+ =?us-ascii?Q?StxNpGlub2j51bR0NsDeg573F3AconcQJ0hjL//UL5adL7WsyX53DpNpdGZz?=
+ =?us-ascii?Q?6a8xssh1pp2Rsaz+fCVbRnWr/zXGJMSkukouXE6I1sm0mCBJ3n0rkOnCr6bu?=
+ =?us-ascii?Q?ETN98vvj9wRGbFesau7mLrXP3PfKmLBxpuZ0omP8i1C9yZ/asoE4O0FeCGWT?=
+ =?us-ascii?Q?nH9aMHFogLV2J0RyyMjshn2VmZ4Qcq8I3y//Ai7lKcRl/qILMQWWwKTeEJ9X?=
+ =?us-ascii?Q?NJDcKoafgO6KjrgC/3n1YyAcPcDYa1JmUQfDOKpQeb0sAQCafC33HukVqbWv?=
+ =?us-ascii?Q?eBY35SWSQPYg2n2/Pe+wPf5U1hj3R/A8DjQPUP+6KXgk3Nx9u1nAJqyIL2kP?=
+ =?us-ascii?Q?fmoYRHP/FHRfM4IZy6rNjmKb0H2Dnn6sgqpJ8UZ5RhcK4N7tXd4Z9P+uT2dH?=
+ =?us-ascii?Q?FQPJHhBiOJ2aMtmvDlE+aDEWGaF0o99o+2KQs+Qjd6Ku6ET754Mu03RvZlJ2?=
+ =?us-ascii?Q?cjun93EU6mAkQkjIjZsmf8oBdPIhZrvZlWkAc8JDHGIbTaaoLabRTgjfQXaU?=
+ =?us-ascii?Q?qRNNT9WQKZr/or6a6SBRd/FWUIHUO653E4+uA4u+Po0FgKoFghf4a8MIqDS8?=
+ =?us-ascii?Q?mSuplQb95Rvjba+OnH65ms1Xhl/2WFoHa5HtBP6xxkCO9NC4WVN+6wIhPeN1?=
+ =?us-ascii?Q?mQ5wFD3be3s6ncBGbCLr7Dso5cYtfqOWo6Mg6qDjXYvCMivCSgSgbljJu2Ld?=
+ =?us-ascii?Q?qB0NiTtkcSRZBd3APhtVo6FrTLft57tCdVtv8QW7pr0XC75eKTFJOdxvR4xY?=
+ =?us-ascii?Q?/yjc2PqqKbu2lotEWKk1YDLKhdbTd5+qIj4OlglO7x/zBxbxr1O3uogaJcH2?=
+ =?us-ascii?Q?UuYsstFyMDIwsFsZ7PkA3cE8YpjC+wHAmCLhhJy/s58gbJoxD1P01kqztxTW?=
+ =?us-ascii?Q?847dvW13JQz9Yn/VYGD28iewwJJQyOXNUVAA85E4YJ3HFYL6adkkD2MH6AKo?=
+ =?us-ascii?Q?pv68E/EacORIkm/K5Zc7PBRfk5VYpbSGLA6mRcy6ywNLwtBqNA5uiqIXK7fW?=
+ =?us-ascii?Q?8A5JVYpr/IhtPl1Ee5RuUw/vJJwNLu7Rl5jTBsXO4/AecakyauS+XRP0R+GP?=
+ =?us-ascii?Q?GCimuwB9LBxcOQtqum6liamMJe+1ttcH2TnLXKnBhWx47djTZVoOoI+8FHsG?=
+ =?us-ascii?Q?KO2rMPRCeMQ/CqtZoLWx7PoSWiEN+CFIiKJj4hDH72zHeO+QC7eIMVR5Cz3e?=
+ =?us-ascii?Q?5O6Nkz0ZRzeXZVz7ypjVMX6x7p0ASMpFDSvLJ7kH6RKG0/XtvefL6foPHhsX?=
+ =?us-ascii?Q?O9HMBctV4cbN3ZNrpZqNQqf+jXsI+g7G+LWYt87oyvhdRGU6HBXByxzJKb/1?=
+ =?us-ascii?Q?NUR7kIO3fNYDLfg0zPf2+pdVkbRUN6MZWBihHjc+OroRIwAWYRYA+8B2B23R?=
+ =?us-ascii?Q?aE+e0tKrE2/0jR67NFPdIGFvWnYDk9swKXB4dG9K?=
 X-OriginatorOrg: phytec.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6f9ac8d0-625d-47bb-7949-08dc532f274e
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5f68b4dd-9d38-422e-6ed6-08dc532f2921
 X-MS-Exchange-CrossTenant-AuthSource: SA1PR22MB5636.namprd22.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Apr 2024 16:08:36.9650
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Apr 2024 16:08:39.9805
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 67bcab1a-5db0-4ee8-86f4-1533d0b4b5c7
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: oPu0OmKlpP3g2oSOM6v9mOvAw36AmHb2eftUC1LBnBb1A7yf/w7x64IAm/ZnEjnOo81/4zsNX/lPTcbqGcMBug==
+X-MS-Exchange-CrossTenant-UserPrincipalName: oie1GjpQ5/b4/Pg9hGf1RqbPRTJdu86btWYLRWu14S8YAr5+MB01FT//uZQ0jVY2X23Fb8ei4nSJg4cIUQVedA==
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH8PR22MB4097
 
-Nathan Morrisson (2):
-  arm64: dts: ti: k3-am625-phyboard-lyra-rdk: Increase CAN max bitrate
-  arm64: dts: ti: k3-am642-phyboard-electra-rdk: Increase CAN max
-    bitrate
+The phyBOARD-Electra has two TCAN1044VDD CAN transceivers which
+support CAN FD at 8 Mbps.
 
- arch/arm64/boot/dts/ti/k3-am625-phyboard-lyra-rdk.dts    | 2 +-
+Increase the maximum bitrate to 8 Mbps.
+
+Signed-off-by: Nathan Morrisson <nmorrisson@phytec.com>
+---
  arch/arm64/boot/dts/ti/k3-am642-phyboard-electra-rdk.dts | 4 ++--
- 2 files changed, 3 insertions(+), 3 deletions(-)
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
+diff --git a/arch/arm64/boot/dts/ti/k3-am642-phyboard-electra-rdk.dts b/arch/arm64/boot/dts/ti/k3-am642-phyboard-electra-rdk.dts
+index 8237b8c815b8..522699ec65e8 100644
+--- a/arch/arm64/boot/dts/ti/k3-am642-phyboard-electra-rdk.dts
++++ b/arch/arm64/boot/dts/ti/k3-am642-phyboard-electra-rdk.dts
+@@ -42,7 +42,7 @@ can_tc1: can-phy0 {
+ 		pinctrl-names = "default";
+ 		pinctrl-0 = <&can_tc1_pins_default>;
+ 		#phy-cells = <0>;
+-		max-bitrate = <5000000>;
++		max-bitrate = <8000000>;
+ 		standby-gpios = <&main_gpio0 32 GPIO_ACTIVE_HIGH>;
+ 	};
+ 
+@@ -51,7 +51,7 @@ can_tc2: can-phy1 {
+ 		pinctrl-names = "default";
+ 		pinctrl-0 = <&can_tc2_pins_default>;
+ 		#phy-cells = <0>;
+-		max-bitrate = <5000000>;
++		max-bitrate = <8000000>;
+ 		standby-gpios = <&main_gpio0 35 GPIO_ACTIVE_HIGH>;
+ 	};
+ 
 -- 
 2.25.1
 
