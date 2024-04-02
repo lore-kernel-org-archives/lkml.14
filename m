@@ -1,37 +1,41 @@
-Received: from mail-40133.protonmail.ch (mail-40133.protonmail.ch [185.70.40.133])
+Received: from mail-4322.protonmail.ch (mail-4322.protonmail.ch [185.70.43.22])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A8373A1CB
-	for <linux-kernel@vger.kernel.org>; Tue,  2 Apr 2024 22:43:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.40.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B5394207D
+	for <linux-kernel@vger.kernel.org>; Tue,  2 Apr 2024 22:43:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.43.22
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712097829; cv=none; b=XJXdpF4mxW6DrnxBKE4oIHlxXdLQSw2Xp/4pwaCD0+faEXzXBV5D6rGDWjR68wq4xbwGsB0sokEF5e5QmhmsJi6bpRlcIOF0tMh1IdyJJDMtxTSChMT1Uckjk7P/76tGiXHm2bRHcPzl6ofvWfkTmb9ay6Xl4y+20sZHOCW4VEs=
+	t=1712097831; cv=none; b=Z3eCsQ8zUayUXYvMbvelASNh1ZDpcsXpEJ4eOCbt55oUpIPkupoPXr/kI+9s86uZ4KfPiJkJB2UpQNYDzG3I9zQ8mcJ7+W8gStPOR/p+anW7eQGxkCHWraSvVpvB9U6RM80Mv+jXGg5UMeOD7mwQbiXIy25ILetsd//l6abbeBI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712097829; c=relaxed/simple;
-	bh=hPdgagz7v4SzJXkwGntJzlht9V/tU7oiKRHkBkLDJu4=;
-	h=Date:To:From:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=CQ/fzBIr5XfO4GKgo7e6u69GZLMth4kTUwca8D3SOzmZ/ondY8d+Q7FZSm+rZLrOFK6nGq2coUM7p6ZD51zD9/1IVBi6gIBqCtzNC5LrRilyDqQajNn7HIbcXfarbAvaYfCwid7J2mwUY4lbBuDgqBmPeRoEoy6NL3nI53Pns5g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pm.me; spf=pass smtp.mailfrom=pm.me; dkim=pass (2048-bit key) header.d=pm.me header.i=@pm.me header.b=SwvVNHVe; arc=none smtp.client-ip=185.70.40.133
+	s=arc-20240116; t=1712097831; c=relaxed/simple;
+	bh=XIFJFDCnMih7GLxIKrMXNc/ZOU0eJjY9LF1DqMUOk2Q=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=og/cLjJ1jTC10QvxhI6B7C56wpG4vjJqa5T43cb1KSjHW2aBNnw3R4F6kAsVvufqzVfIOaQevQQ16Sf9sYiUmIXi79YgyszL3OD3BYs90uDlrmvuHwMqJEqO6qmL2z4tUeqAEBUctLpKzgEJPhlLp4U5O+HX4I6k2m0v4p3bDj0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pm.me; spf=pass smtp.mailfrom=pm.me; dkim=pass (2048-bit key) header.d=pm.me header.i=@pm.me header.b=R2Mv59eh; arc=none smtp.client-ip=185.70.43.22
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pm.me
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pm.me
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=pm.me header.i=@pm.me header.b="SwvVNHVe"
+	dkim=pass (2048-bit key) header.d=pm.me header.i=@pm.me header.b="R2Mv59eh"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pm.me;
-	s=protonmail3; t=1712097819; x=1712357019;
-	bh=MR7zmTwADGewdo6zllRIZ/UTARO0kkmfGknWcirmVYw=;
-	h=Date:To:From:Cc:Subject:Message-ID:Feedback-ID:From:To:Cc:Date:
-	 Subject:Reply-To:Feedback-ID:Message-ID:BIMI-Selector;
-	b=SwvVNHVeQJJLFM/VFfha1Ro2bdtkvE5DpYjEM//3CSt7emQnfjGMN3H8Jh9Th1BpZ
-	 sOMXFe42Ta/5TWlWUm2Pm5Z3YpV+dv1CPiUEbtSHWM/VQ4gwcdG+45l7GQZw07geXP
-	 5v33aTQ5VxoWG/NUBE0tzO7FAuVwsgnehs17WP8Z2WSSfm1AY1spHktsK0VFKDMmxU
-	 rU4lRvX2DR+Vl55p7RNoB+75Z8cCpMxMVS6O8W2tSFnpZsnb1dziTx+uZ0U76iknzn
-	 pKA4KLXlhGAsBr14vknhm26iFGg+oOZoB1Vq7IPZpuAX+1qW8zEF8QigG7rTl/nE/S
-	 5J5UaalFVPJNg==
-Date: Tue, 02 Apr 2024 22:43:30 +0000
+	s=protonmail3; t=1712097821; x=1712357021;
+	bh=F0SQdHHWp6QcFExmIqpo0ogahH8H5BOigMCQ40qcicw=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
+	 Message-ID:BIMI-Selector;
+	b=R2Mv59ehoIyH/WQrnuI8OI18xL8joPaY08/tXAePLDtkmo8Rkyj8LrPH7TazRoRBw
+	 cUEf1fc78ZcGBp1Z557S1L4JP44fUn3PuoOV8nB4k+6uLLOm+pa6MfYtndIapCgTus
+	 waJou+wgPiA91UA9p0W6ECX7qzkBAuTjLYuoYj8cdvk4/QgXgl6qZZTg3mKkH6upRA
+	 iH5g87hHwL0AehQRx+IOtuc/n6pWKD8sVIm4UtNMRM2XQbnDSdesijK9ZPPFWtZpg3
+	 VqyY45S9gCcW88LYjc7mT8+dhjrJTfaASwfXFI3ytvMuKGgzxQsieNLi5dQhIaZVL2
+	 q3Cb7x7IrPycQ==
+Date: Tue, 02 Apr 2024 22:43:34 +0000
 To: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
 From: Nicolas Devos <ndevos-dev@pm.me>
 Cc: Nicolas Devos <ndevos-dev@pm.me>
-Subject: [PATCH 0/4] gpu/drm: Fix checkpatch warnings in drm_connector.c
-Message-ID: <20240402224320.12146-1-ndevos-dev@pm.me>
+Subject: [PATCH 1/4] gpu/drm: Add SPDX-license-Identifier tag
+Message-ID: <20240402224320.12146-2-ndevos-dev@pm.me>
+In-Reply-To: <20240402224320.12146-1-ndevos-dev@pm.me>
+References: <20240402224320.12146-1-ndevos-dev@pm.me>
 Feedback-ID: 76711691:user:proton
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -42,31 +46,24 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
 
-Hello,
+This commit fixes following checkpatch warning:
+WARNING: Missing or malformed SPDX-License-Identifier tag
 
-First time contributor here, I am getting familiar with the flow by
-fixing some checkpatch warnings. This patch series fixes the warnings of
-drivers/gpu/drm/drm_connector.c.
+Signed-off-by: Nicolas Devos <ndevos-dev@pm.me>
+---
+ drivers/gpu/drm/drm_connector.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-The result is 4 patches that each address a separate issue raised by
-the checkpatch.pl script.
-
-My initial attempt [1] was not accepted, this patch series addresses the
-given review comments.
-
-Please, let me know if something is not as expected.
-
-[1]: https://lore.kernel.org/all/20240222204450.7943-1-ndevos-dev@pm.me/
-
-Nicolas Devos (4):
-  gpu/drm: Add SPDX-license-Identifier tag
-  gpu/drm: Remove unnecessary braces
-  gpu/drm: Prefer `unsigned int` over `unsigned`
-  gpu/drm: Replace tabs with spaces in comments
-
- drivers/gpu/drm/drm_connector.c | 722 ++++++++++++++++----------------
- 1 file changed, 361 insertions(+), 361 deletions(-)
-
+diff --git a/drivers/gpu/drm/drm_connector.c b/drivers/gpu/drm/drm_connecto=
+r.c
+index b0516505f7ae..40350256b1f6 100644
+--- a/drivers/gpu/drm/drm_connector.c
++++ b/drivers/gpu/drm/drm_connector.c
+@@ -1,3 +1,4 @@
++// SPDX-License-Identifier: GPL-2.0 or MIT
+ /*
+  * Copyright (c) 2016 Intel Corporation
+  *
 --=20
 2.42.0
 
