@@ -1,111 +1,255 @@
-Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1704B15E200;
-	Tue,  2 Apr 2024 21:10:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.126.157
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B602915ADB1
+	for <linux-kernel@vger.kernel.org>; Tue,  2 Apr 2024 21:16:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712092249; cv=none; b=oXDZH6gLFEJgzPw+j6jx1Y9+3dOHxQrGplm174+PiCvn+cSF9nBWIiWDfGlI1++bEbZRz9q3TWJsr4w2JxxHSt3vRhRN50x5NsDEi7UbaxSYiivcYl876ITlH3PFrfX3wdlmSKUlcpUtBuyeJjLs8+zQJwcLfTWIbLrRtaanwIA=
+	t=1712092565; cv=none; b=TKVvuuWGmW5j0kjVmb1qoC0ITLQ0m3G7xcAdjoUPdR3DOR9hQZPy4PD70He3aqOCtAhDNPDAo7MlfPSjz3dqJ5dQf42COKG+b6CZr4KavtTm/to+V+ISaTZ89832BSyMhm7TB81Lxh9f85Tuuf4+Kc6kOphETIxFyBjafpKcitA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712092249; c=relaxed/simple;
-	bh=VDHNmPR75jbDet7a94lKLLoM+37d0gOeLXruir8XK2A=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=SWVoWDI05FQN3AAi/N5w6p2iK4RwiqwvkWe7ESJmHp2pem7WfBKYf1OfA4MCAke0sE+Qkwc2Ffiq7LpNCoqmPf8+tstNcjHnikqTTOwb/J5pd9i+fgPqRxccS9c+onBkGCvfswRDnNeeo9L79GvvZDRtvk0s4WH5uUG2B7HNihs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=weissschuh.net; spf=pass smtp.mailfrom=weissschuh.net; dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b=ouhGV+Ur; arc=none smtp.client-ip=159.69.126.157
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=weissschuh.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=weissschuh.net
+	s=arc-20240116; t=1712092565; c=relaxed/simple;
+	bh=hzooCVZc2LI/R+f/afiRVcNmo13hiN1rKNxBb/t2wYo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=EKin7Ja+dm9fiZdhW9OODy6iE8VH+FG4O3IaNLWu6mhi8dc/GzujG/8lKblw8VNDiHLtlmHlKALc9krOBX8c4e73s1rn9x5D/UbAff7FCJZszjkAUTaC7Gwlb2AjjyUSAXBOE6W/O7RxL0rENk/7tKEyJ5R2NWeKB/IyTh5OvcI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=adG/5T0X; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="ouhGV+Ur"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
-	s=mail; t=1712092237;
-	bh=VDHNmPR75jbDet7a94lKLLoM+37d0gOeLXruir8XK2A=;
-	h=From:Date:Subject:To:Cc:From;
-	b=ouhGV+Ur5q0YndpUrFAr27tDCG1tuKQAg9UnTFJAPvzzIlnqC7JjFI815/PLm/gfY
-	 SVJGRCCQOLhzA8TAZcrvUehXey9aSfv9CEpsKozc04HlDkBvBlOLpOwgBRe5r+TewW
-	 QkHZqz1n/ztFgrQaTJEtrmrW+jUc0SSywo/0Rdbo=
-From: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
-Date: Tue, 02 Apr 2024 23:10:34 +0200
-Subject: [PATCH v3] fs/proc/proc_sysctl.c: always initialize i_uid/i_gid
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="adG/5T0X"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1712092559;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=YauaqpkrhxRbKvVylgbrqgv+lTFltW5WE3450/rVgy8=;
+	b=adG/5T0XJVNqKZ8f+RjtOaYzv5OTXKvynS9gLlkre5vb5saPwxq8ObFpoHgYuya9Ff6hDK
+	AKuxqwMfJR0NyIwC9+3ID2zlVNMEgay48QDF7gfDzKQ8Ueywpq5f/kMfC4za501iY+S2Cp
+	+FLYbRavYkr26yRJYKHwPuWX1EGOCiw=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-55-APf3oiDSN_OEvl4soMltFg-1; Tue, 02 Apr 2024 17:15:58 -0400
+X-MC-Unique: APf3oiDSN_OEvl4soMltFg-1
+Received: by mail-wr1-f72.google.com with SMTP id ffacd0b85a97d-341678a510bso3606420f8f.1
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Apr 2024 14:15:58 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712092556; x=1712697356;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=YauaqpkrhxRbKvVylgbrqgv+lTFltW5WE3450/rVgy8=;
+        b=sa0cykBpwJIogiTYoDM9bmO4hfso+/KK77q4eqdEMmNn/jttxCt0YLxVgk1rd0+0Rt
+         sK0V9QBvGMlDCmtjeMDNRVVuMFUCkrRjw/fUTfYW5UHtPfEIljbnIflFoCI1LhLxkuuF
+         s0pcYI1pu+BBZqrskzpHeUAV/gOGwnNuOUc2iemClpNx7hSYWv4DiFQcbWZ5woX++XYR
+         9q3n19jqZHwPABBsu9+OSme0la9gQmZ0eG944YyKFJfEXsnw0stOQnBkzOjhIE04qc/O
+         DDdpibwK5Dv6Vadj3Aj30Af8VMWsrPSpL7DfC+b3G6OVrp/IA6m0H5v4e1v8SPXBVZIo
+         nI2Q==
+X-Forwarded-Encrypted: i=1; AJvYcCWGwPSdlQN8pz4SSXHYiUvRypDTbpsd/G9QPg1juAyjwWlJzo63Be8Mbrz3JSf4uHVehLzGbKbo/oClM3+69a0eI4bYIHfrP4gMDz8a
+X-Gm-Message-State: AOJu0YxP7KksIEihYXWhhfF+P6rAquj+EWclxtqZGXByvJRL9ove27eb
+	5+Ig6e+/ixtXQcDeaA48EEZ1gM9KMdpkNcVhqqFuaaWvzRDVM53/ZNWcM4zg+/h/wz7TRnCEGX0
+	bs8B/Dwr+o0VS2R45ZaSg87buYshEobSiRq7QOp+29KMSKUR8hcOGwTQhQa2FhtJt6A0uEkDg
+X-Received: by 2002:a05:6000:1548:b0:343:4727:d11e with SMTP id 8-20020a056000154800b003434727d11emr6791922wry.47.1712092556122;
+        Tue, 02 Apr 2024 14:15:56 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHpz0Z96Sl3gjTdi++FxeNCApiQkHFejvf/IgvyhWpcQLN9IQVqCvfTlGw4xk5Z68Ld0ri66w==
+X-Received: by 2002:a05:6000:1548:b0:343:4727:d11e with SMTP id 8-20020a056000154800b003434727d11emr6791904wry.47.1712092555590;
+        Tue, 02 Apr 2024 14:15:55 -0700 (PDT)
+Received: from redhat.com ([2.52.21.244])
+        by smtp.gmail.com with ESMTPSA id b12-20020a5d4b8c000000b00343723c126asm2116005wrt.48.2024.04.02.14.15.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 02 Apr 2024 14:15:55 -0700 (PDT)
+Date: Tue, 2 Apr 2024 17:15:51 -0400
+From: "Michael S. Tsirkin" <mst@redhat.com>
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
+	linux-kernel@vger.kernel.org,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@kernel.org>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	Zhu Lingshan <lingshan.zhu@intel.com>,
+	Jason Wang <jasowang@redhat.com>
+Subject: Re: [PATCH fyi 1/1] perf trace beauty: Sync linux/vhost.h with the
+ kernel sources
+Message-ID: <20240402170955-mutt-send-email-mst@kernel.org>
+References: <ZfybkuM8DKsdX_yO@x1>
+ <CAM9d7cjSN6M4VvKRifwQ=bpvbc92pLoghnjCwWiOE7SFSzXWRg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-Message-Id: <20240402-sysctl-net-ownership-v3-1-366b1a76d48a@weissschuh.net>
-X-B4-Tracking: v=1; b=H4sIAEl0DGYC/4XNzw6CMAwG8FchOzvDuoF/Tr6H8TBmdU3MICsOC
- eHdHZxMjLG3r/n66yQYIyGLYzGJiImY2pCD3hTCeRvuKOmas4ASTKlVJXlk1z9kwF62Q8DInjr
- ZOINqhxbR1iKfdhFv9FrZ8yVnT9y3cVy/JLVs/4BJSSWhMXWVx8IBTgMSMzv/9NtcFYua4EMC+
- CFBluy+MVbrsq7MtzTP8xtc/CpwBwEAAA==
-To: "David S. Miller" <davem@davemloft.net>, 
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
- Paolo Abeni <pabeni@redhat.com>, 
- Dmitry Torokhov <dmitry.torokhov@gmail.com>, 
- "Eric W. Biederman" <ebiederm@xmission.com>, 
- Joel Granados <j.granados@samsung.com>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Luis Chamberlain <mcgrof@kernel.org>, Kuniyuki Iwashima <kuniyu@amazon.com>, 
- stable@vger.kernel.org, 
- =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
-X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1712092237; l=1832;
- i=linux@weissschuh.net; s=20221212; h=from:subject:message-id;
- bh=VDHNmPR75jbDet7a94lKLLoM+37d0gOeLXruir8XK2A=;
- b=3d5SEnUKrYRSHwfNL8QNXWIJisGyNdAhCaS42oJchWZe5GQKUgQbWYtuL17x95HYYGZcRbduG
- 8n9cGvk/GywCBxXzn+SvcMiKIUCHN38TRshTmCCzOFnyqo79kyiotjx
-X-Developer-Key: i=linux@weissschuh.net; a=ed25519;
- pk=KcycQgFPX2wGR5azS7RhpBqedglOZVgRPfdFSPB1LNw=
+In-Reply-To: <CAM9d7cjSN6M4VvKRifwQ=bpvbc92pLoghnjCwWiOE7SFSzXWRg@mail.gmail.com>
 
-Commit 5ec27ec735ba ("fs/proc/proc_sysctl.c: fix the default values of i_uid/i_gid on /proc/sys inodes.")
-added defaults for i_uid/i_gid when set_ownership() is not implemented.
-It missed to also adjust net_ctl_set_ownership() to use the same default
-values in case the computation of a better value fails.
+On Tue, Apr 02, 2024 at 02:04:39PM -0700, Namhyung Kim wrote:
+> On Thu, Mar 21, 2024 at 1:41 PM Arnaldo Carvalho de Melo
+> <acme@kernel.org> wrote:
+> >
+> > tldr; Just FYI, I'm carrying this on the perf tools tree.
+> 
+> Have you applied this to perf-tools-next?
+> 
+> >
+> > Full explanation:
+> >
+> > There used to be no copies, with tools/ code using kernel headers
+> > directly. From time to time tools/perf/ broke due to legitimate kernel
+> > hacking. At some point Linus complained about such direct usage. Then we
+> > adopted the current model.
+> >
+> > The way these headers are used in perf are not restricted to just
+> > including them to compile something.
+> >
+> > There are sometimes used in scripts that convert defines into string
+> > tables, etc, so some change may break one of these scripts, or new MSRs
+> > may use some different #define pattern, etc.
+> >
+> > E.g.:
+> >
+> >   $ ls -1 tools/perf/trace/beauty/*.sh | head -5
+> >   tools/perf/trace/beauty/arch_errno_names.sh
+> >   tools/perf/trace/beauty/drm_ioctl.sh
+> >   tools/perf/trace/beauty/fadvise.sh
+> >   tools/perf/trace/beauty/fsconfig.sh
+> >   tools/perf/trace/beauty/fsmount.sh
+> >   $
+> >   $ tools/perf/trace/beauty/fadvise.sh
+> >   static const char *fadvise_advices[] = {
+> >         [0] = "NORMAL",
+> >         [1] = "RANDOM",
+> >         [2] = "SEQUENTIAL",
+> >         [3] = "WILLNEED",
+> >         [4] = "DONTNEED",
+> >         [5] = "NOREUSE",
+> >   };
+> >   $
+> >
+> > The tools/perf/check-headers.sh script, part of the tools/ build
+> > process, points out changes in the original files.
+> >
+> > So its important not to touch the copies in tools/ when doing changes in
+> > the original kernel headers, that will be done later, when
+> > check-headers.sh inform about the change to the perf tools hackers.
+> >
+> > To get the changes in:
+> >
+> >   1496c47065f9f841 ("vhost-vdpa: uapi to support reporting per vq size")
+> >
+> > To pick up these changes and support them:
+> >
+> >   $ tools/perf/trace/beauty/vhost_virtio_ioctl.sh > before
+> >   $ cp include/uapi/linux/vhost.h tools/perf/trace/beauty/include/uapi/linux/vhost.h
+> >   $ tools/perf/trace/beauty/vhost_virtio_ioctl.sh > after
+> >   $ diff -u before after
+> >   --- before    2024-03-21 17:33:58.878173388 -0300
+> >   +++ after     2024-03-21 17:34:07.687563333 -0300
+> >   @@ -49,6 +49,7 @@
+> >         [0x7B] = "VDPA_GET_VRING_GROUP",
+> >         [0x7F] = "VDPA_GET_VRING_DESC_GROUP",
+> >         [0x80] = "VDPA_GET_VQS_COUNT",
+> >   +     [0x80] = "VDPA_GET_VRING_SIZE",
+> 
+> This gives me a build error:
+> 
+>   CC      trace/beauty/ioctl.o
+> In file included from trace/beauty/ioctl.c:93:
+> linux/tools/perf/trace/beauty/generated/ioctl/vhost_virtio_ioctl_array.c:
+>    In function ‘ioctl__scnprintf_vhost_virtio_cmd’:
+> linux/tools/perf/trace/beauty/generated/ioctl/vhost_virtio_ioctl_array.c:53:18:
+>    error: initialized field overwritten [-Werror=override-init]
+>    53 |         [0x80] = "VDPA_GET_VRING_SIZE",
+>       |                  ^~~~~~~~~~~~~~~~~~~~~
+> linux/tools/perf/trace/beauty/generated/ioctl/vhost_virtio_ioctl_array.c:53:18:
+>    note: (near initialization for ‘vhost_virtio_ioctl_read_cmds[128]’)
+> 
+> Because there are two entries for 0x80 now.
+> 
+> Is it ok for vhost to have the same number for VQS_COUNT
+> and VRING_SIZE?
+> 
+> Thanks,
+> Namhyung
 
-Instead always initialize i_uid/i_gid inside the sysfs core so
-set_ownership() can safely skip setting them.
+Oh!
+This is a bug in:
 
-Fixes: 5ec27ec735ba ("fs/proc/proc_sysctl.c: fix the default values of i_uid/i_gid on /proc/sys inodes.")
-Cc: stable@vger.kernel.org
-Signed-off-by: Thomas Weißschuh <linux@weissschuh.net>
----
-Changes in v3:
-- Rebase onto v6.9-rc1
-- Reword commit message and mention correct fixed commit
-- Link to v2: https://lore.kernel.org/r/20240322-sysctl-net-ownership-v2-1-a8b4a3306542@weissschuh.net
+commit 1496c47065f9f8413296780c63374daee9bdae20
+Author: Zhu Lingshan <lingshan.zhu@intel.com>
+Date:   Sat Feb 3 00:38:56 2024 +0800
 
-Changes in v2:
-- Move the fallback logic to the sysctl core
-- Link to v1: https://lore.kernel.org/r/20240315-sysctl-net-ownership-v1-1-2b465555a292@weissschuh.net
----
- fs/proc/proc_sysctl.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+    vhost-vdpa: uapi to support reporting per vq size
+    
+    The size of a virtqueue is a per vq configuration.
+    This commit introduce a new ioctl uAPI to support this flexibility.
+    
+    Signed-off-by: Zhu Lingshan <lingshan.zhu@intel.com>
+    Message-Id: <20240202163905.8834-2-lingshan.zhu@intel.com>
+    Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
 
-diff --git a/fs/proc/proc_sysctl.c b/fs/proc/proc_sysctl.c
-index 37cde0efee57..9e34ab9c21e4 100644
---- a/fs/proc/proc_sysctl.c
-+++ b/fs/proc/proc_sysctl.c
-@@ -479,12 +479,10 @@ static struct inode *proc_sys_make_inode(struct super_block *sb,
- 			make_empty_dir_inode(inode);
- 	}
- 
-+	inode->i_uid = GLOBAL_ROOT_UID;
-+	inode->i_gid = GLOBAL_ROOT_GID;
- 	if (root->set_ownership)
- 		root->set_ownership(head, table, &inode->i_uid, &inode->i_gid);
--	else {
--		inode->i_uid = GLOBAL_ROOT_UID;
--		inode->i_gid = GLOBAL_ROOT_GID;
--	}
- 
- 	return inode;
- }
 
----
-base-commit: 4cece764965020c22cff7665b18a012006359095
-change-id: 20240315-sysctl-net-ownership-bc4e17eaeea6
+It's great that you noticed. It works by chance because one is IOR the
+other IOWR and the size is different.
 
-Best regards,
--- 
-Thomas Weißschuh <linux@weissschuh.net>
+But yes we must fix it - it is not too late this is just in an rc not
+in any released kernels.
+
+Will send a fix soon!
+
+> 
+> >         [0x81] = "VDPA_GET_GROUP_NUM",
+> >         [0x8] = "NEW_WORKER",
+> >    };
+> >   $
+> >
+> > For instance, see how those 'cmd' ioctl arguments get translated, now
+> > VDPA_GET_VRING_SIZE will be as well.
+> >
+> >   # perf trace -a -e ioctl --max-events=10
+> >        0.000 ( 0.011 ms): pipewire/2261 ioctl(fd: 60, cmd: SNDRV_PCM_HWSYNC, arg: 0x1)                   = 0
+> >       21.353 ( 0.014 ms): pipewire/2261 ioctl(fd: 60, cmd: SNDRV_PCM_HWSYNC, arg: 0x1)                   = 0
+> >       25.766 ( 0.014 ms): gnome-shell/2196 ioctl(fd: 14, cmd: DRM_I915_IRQ_WAIT, arg: 0x7ffe4a22c740)    = 0
+> >       25.845 ( 0.034 ms): gnome-shel:cs0/2212 ioctl(fd: 14, cmd: DRM_I915_IRQ_EMIT, arg: 0x7fd43915dc70) = 0
+> >       25.916 ( 0.011 ms): gnome-shell/2196 ioctl(fd: 9, cmd: DRM_MODE_ADDFB2, arg: 0x7ffe4a22c8a0)       = 0
+> >       25.941 ( 0.025 ms): gnome-shell/2196 ioctl(fd: 9, cmd: DRM_MODE_ATOMIC, arg: 0x7ffe4a22c840)       = 0
+> >       32.915 ( 0.009 ms): gnome-shell/2196 ioctl(fd: 9, cmd: DRM_MODE_RMFB, arg: 0x7ffe4a22cf9c)         = 0
+> >       42.522 ( 0.013 ms): gnome-shell/2196 ioctl(fd: 14, cmd: DRM_I915_IRQ_WAIT, arg: 0x7ffe4a22c740)    = 0
+> >       42.579 ( 0.031 ms): gnome-shel:cs0/2212 ioctl(fd: 14, cmd: DRM_I915_IRQ_EMIT, arg: 0x7fd43915dc70) = 0
+> >       42.644 ( 0.010 ms): gnome-shell/2196 ioctl(fd: 9, cmd: DRM_MODE_ADDFB2, arg: 0x7ffe4a22c8a0)       = 0
+> >   #
+> >
+> > Cc: Adrian Hunter <adrian.hunter@intel.com>
+> > Cc: Ian Rogers <irogers@google.com>
+> > Cc: Jiri Olsa <jolsa@kernel.org>
+> > Cc: Kan Liang <kan.liang@linux.intel.com>
+> > Cc: Michael S. Tsirkin <mst@redhat.com>
+> > Cc: Namhyung Kim <namhyung@kernel.org>
+> > Cc: Zhu Lingshan <lingshan.zhu@intel.com>
+> > Link: https://lore.kernel.org/lkml/
+> > Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+> > ---
+> >  tools/perf/trace/beauty/include/uapi/linux/vhost.h | 7 +++++++
+> >  1 file changed, 7 insertions(+)
+> >
+> > diff --git a/tools/perf/trace/beauty/include/uapi/linux/vhost.h b/tools/perf/trace/beauty/include/uapi/linux/vhost.h
+> > index 649560c685f13b73..bea6973906134656 100644
+> > --- a/tools/perf/trace/beauty/include/uapi/linux/vhost.h
+> > +++ b/tools/perf/trace/beauty/include/uapi/linux/vhost.h
+> > @@ -227,4 +227,11 @@
+> >   */
+> >  #define VHOST_VDPA_GET_VRING_DESC_GROUP        _IOWR(VHOST_VIRTIO, 0x7F,       \
+> >                                               struct vhost_vring_state)
+> > +
+> > +/* Get the queue size of a specific virtqueue.
+> > + * userspace set the vring index in vhost_vring_state.index
+> > + * kernel set the queue size in vhost_vring_state.num
+> > + */
+> > +#define VHOST_VDPA_GET_VRING_SIZE      _IOWR(VHOST_VIRTIO, 0x80,       \
+> > +                                             struct vhost_vring_state)
+> >  #endif
+> > --
+> > 2.44.0
+> >
 
