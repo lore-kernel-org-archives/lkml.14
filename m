@@ -1,107 +1,167 @@
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CB0460DFB;
-	Tue,  2 Apr 2024 11:17:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.177.32
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FA02657D3
+	for <linux-kernel@vger.kernel.org>; Tue,  2 Apr 2024 11:18:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712056682; cv=none; b=g5WA2Yf0eeMLrvxrwogiXHu3N5Hg8rkoZS2X6dIbyNYkQdDIEXrdw3sKePkE1OSpwKdtC6YKj/2g8jE1RakiKsB+8HTtvlLcZR9HhVlp9ZouBaVqM5ivovvLs8dn33Dx5THpCPfD9CVmJoNepDkUSH+THeS65kTS8jLgUZDNgJ0=
+	t=1712056702; cv=none; b=q1Z+tQ6q3n88oP3SM1GICysCJmIFvcKVspI3hMWEFhvaRmEWGAqG3TC5OBTauIcASLBgvSCoDEC+VzhROFfWnorYHPE2E9+0isloXmE5Y5YKUI8nR1m3yLERZVz8H64/1vbDcaFaDk596jb5GHoa7dkyejxrokWsYUzKB1SYUuI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712056682; c=relaxed/simple;
-	bh=0bhLmQsAUJaL5x/OICWEgSfO1n8lrNeGgWIGNPGZEfA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=qCihFnwV7OjU1ODqSpvzhCn7VUF909PREdjOu3t06AplbwzRaoOYHOZaSXHwB3J4CohZU3/WranXcdGcETcG+vEp8XdjawPnlvG752f3tlQigmSWWweOoBaVynDjWRFfKKPAdiK73ybDaqTR+a3ACvWI3SBJ79kDwVVXts6FkUY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=I0imACyH; arc=none smtp.client-ip=205.220.177.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+	s=arc-20240116; t=1712056702; c=relaxed/simple;
+	bh=ICD4Y8wvqTNQH/0MD5Y90RNOMbA2NIYL56fFbjuysDE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=eBZT+luSat+7Cp8snm6/LEKrjRVZFgN+DQ+/Q4pJ84ZoKByC3g7hMLYh1dQeqdBTZUJv/L2ttBLWhgTPfw7xnOLhtKfwoqPv26EP+JU3qjsaVApFYP4LKUxyVOXIPXCiAh513eY6r8We7s06LKvQ955FVjpqRXloiap9OJA6bBY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=OpjzEZSI; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=sqEKNPI3; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="I0imACyH"
-Received: from pps.filterd (m0246632.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 4327hsVV021280;
-	Tue, 2 Apr 2024 11:17:45 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : mime-version : content-transfer-encoding;
- s=corp-2023-11-20; bh=x4uFkHBfZr5gLzCiwxnD9ABQcDyNK3J+4CO6ymkzwmk=;
- b=I0imACyH07tBnNSWHApVFNcWSCa5FlTjuNaP6Jel9macdAtJorLsNMH44gfqRY35dVWl
- KDG7wWoqJmPAeGg43yKTHU/H3l9aD6RcwhpP7SM4m1rMjxF66XhDMdVfbyAKs0VYulgU
- 67MJnA5bMttghCGrli4t750Z3/D7XWLuWFYn4jhoji4rl+EuVBIZZMpKSwfnN7TjncyX
- xVCI1G4F9rmr4ZN5f6vpgwvQf818qQkukmzXiwe9BgN4JQ32fM0fROxQJrWgFafVdD2Y
- zjexxtuae8NIE8fut3fK4GNqsLbjMVMKvE5xI4wQcorPd3MiZWmuskqwmYYbAoSQhxUT Mg== 
-Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.appoci.oracle.com [130.35.103.27])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3x6abucbyt-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 02 Apr 2024 11:17:45 +0000
-Received: from pps.filterd (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 432B2aZ6006608;
-	Tue, 2 Apr 2024 11:17:44 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3x6966wbc5-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 02 Apr 2024 11:17:44 +0000
-Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 432BHi91004477;
-	Tue, 2 Apr 2024 11:17:44 GMT
-Received: from ca-dev112.us.oracle.com (ca-dev112.us.oracle.com [10.129.136.47])
-	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTP id 3x6966wbb2-1;
-	Tue, 02 Apr 2024 11:17:44 +0000
-From: Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>
-To: Boris Brezillon <boris.brezillon@collabora.com>,
-        Steven Price <steven.price@arm.com>, Liviu Dudau <liviu.dudau@arm.com>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
-        Heiko Stuebner <heiko@sntech.de>, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org
-Cc: dan.carpenter@linaro.org, kernel-janitors@vger.kernel.org,
-        error27@gmail.com, harshit.m.mogalapalli@oracle.com
-Subject: [PATCH] drm/panthor: Fix IS_ERR() vs NULL bug in group_process_tiler_oom()
-Date: Tue,  2 Apr 2024 04:17:39 -0700
-Message-ID: <20240402111740.1700310-1-harshit.m.mogalapalli@oracle.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="OpjzEZSI";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="sqEKNPI3"
+Received: from imap2.dmz-prg2.suse.org (imap2.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:98])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 7E6C1345F5;
+	Tue,  2 Apr 2024 11:18:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1712056697; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=aAq/U+6X2FU1Ny7L5MaCtJaxVAMjEFjjhoVMNVa1LRA=;
+	b=OpjzEZSIeaV/xVL5HxPYCzZcziyAGhwFUlrXAJCEiamSkZp7kMngXd7IvTFJs86ubo9BwB
+	4/hv/kIjmcj52eCfkL8Id5Fq3NMe+Nx10EtkEpFwLBMVK9HAoBnoKWEyR2Byu3o7NF+xyP
+	PcuH5bySzf/55VT4EwUNme6qF88H4e8=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1712056697;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=aAq/U+6X2FU1Ny7L5MaCtJaxVAMjEFjjhoVMNVa1LRA=;
+	b=sqEKNPI3qoHg/qxrpvEH7msdmJiNVLL2N05M4q6ZjouWy9JNY8LvXoQg5JLPeCRXk/ngnv
+	aaoFRSl5Vn64DUCg==
+Authentication-Results: smtp-out1.suse.de;
+	dkim=none
+Received: from imap2.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap2.dmz-prg2.suse.org (Postfix) with ESMTPS id 0875813357;
+	Tue,  2 Apr 2024 11:18:16 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap2.dmz-prg2.suse.org with ESMTPSA
+	id CgP9OnjpC2YJJwAAn2gu4w
+	(envelope-from <osalvador@suse.de>); Tue, 02 Apr 2024 11:18:16 +0000
+Date: Tue, 2 Apr 2024 13:19:42 +0200
+From: Oscar Salvador <osalvador@suse.de>
+To: Vlastimil Babka <vbabka@suse.cz>
+Cc: Andrew Morton <akpm@linux-foundation.org>, linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org, Michal Hocko <mhocko@suse.com>,
+	Marco Elver <elver@google.com>,
+	Andrey Konovalov <andreyknvl@gmail.com>,
+	Alexander Potapenko <glider@google.com>
+Subject: Re: [PATCH v3 1/3] mm,page_owner: Update metada for tail pages
+Message-ID: <ZgvpzvX8E2WOkQmW@localhost.localdomain>
+References: <20240326063036.6242-1-osalvador@suse.de>
+ <20240326063036.6242-2-osalvador@suse.de>
+ <fede9c3a-5686-4c44-a459-bf36c7093203@suse.cz>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-04-02_04,2024-04-01_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 bulkscore=0
- mlxlogscore=999 adultscore=0 malwarescore=0 spamscore=0 mlxscore=0
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2403210000 definitions=main-2404020081
-X-Proofpoint-ORIG-GUID: fJ6_IRjHkqbCPM448T_3oltVdsYI62xz
-X-Proofpoint-GUID: fJ6_IRjHkqbCPM448T_3oltVdsYI62xz
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <fede9c3a-5686-4c44-a459-bf36c7093203@suse.cz>
+X-Rspamd-Queue-Id: 7E6C1345F5
+X-Spamd-Result: default: False [-3.31 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_SHORT(-0.20)[-0.995];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	TO_DN_SOME(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[8];
+	ARC_NA(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	R_DKIM_NA(0.00)[];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FROM_HAS_DN(0.00)[];
+	FREEMAIL_CC(0.00)[linux-foundation.org,vger.kernel.org,kvack.org,suse.com,google.com,gmail.com];
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:98:from];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:email]
+X-Rspamd-Action: no action
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Spam-Score: -3.31
+X-Spam-Level: 
+X-Spam-Flag: NO
 
-panthor_vm_get_heap_pool() returns ERR_PTR on failure, update the check
-accordingly.
+On Tue, Apr 02, 2024 at 12:13:37PM +0200, Vlastimil Babka wrote:
+> Subject: metada -> metadata
 
-Fixes: de8548813824 ("drm/panthor: Add the scheduler logical block")
-Signed-off-by: Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>
----
-This is based on static analysis with smatch, only compile tested.
----
- drivers/gpu/drm/panthor/panthor_sched.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+Ooops.
 
-diff --git a/drivers/gpu/drm/panthor/panthor_sched.c b/drivers/gpu/drm/panthor/panthor_sched.c
-index 5f7803b6fc48..d34f213795a3 100644
---- a/drivers/gpu/drm/panthor/panthor_sched.c
-+++ b/drivers/gpu/drm/panthor/panthor_sched.c
-@@ -1343,7 +1343,10 @@ static int group_process_tiler_oom(struct panthor_group *group, u32 cs_id)
- 	if (unlikely(csg_id < 0))
- 		return 0;
- 
--	if (!heaps || frag_end > vt_end || vt_end >= vt_start) {
-+	if (IS_ERR(heaps))
-+		return PTR_ERR(heaps);
-+
-+	if (frag_end > vt_end || vt_end >= vt_start) {
- 		ret = -EINVAL;
- 	} else {
- 		/* We do the allocation without holding the scheduler lock to avoid
+> > Signed-off-by: Oscar Salvador <osalvador@suse.de>
+> 
+> Reviewed-by: Vlastimil Babka <vbabka@suse.cz>
+
+Thanks!
+
+> > @@ -355,31 +375,21 @@ void __folio_copy_owner(struct folio *newfolio, struct folio *old)
+> > -	 * We don't clear the bit on the old folio as it's going to be freed
+> > -	 * after migration. Until then, the info can be useful in case of
+> > -	 * a bug, and the overall stats will be off a bit only temporarily.
+> > -	 * Also, migrate_misplaced_transhuge_page() can still fail the
+> > -	 * migration and then we want the old folio to retain the info. But
+> > -	 * in that case we also don't need to explicitly clear the info from
+> > -	 * the new page, which will be freed.
+> > +	 * Do not proactively clear PAGE_EXT_OWNER{_ALLOCATED} bits as the folio
+> > +	 * will be freed after migration. Keep them until then as they may be
+> > +	 * useful.
+> >  	 */
+> 
+> The full old comment made sense, the new one sounds like it's talking about
+> the old folio ("will be freed after migration") but we're modifying the new
+> folio here. IIUC it means the case of migration failing and then the new
+> folio MIGHT be freed. So I think you made the comment too much concise to be
+> immediately clear?
+
+It probably could be improved by saying that there is no need to clear
+the bit from the old folio since that will be done when __reset_page_owner()
+gets called on the old folio.
+
+Now, answering your question about whether we can fail or not at this
+stage.
+I looked into this a few weeks ago and I made my mind that no, we cannot
+fail at this stage, and the following is my reasoning.
+
+This is the callchain that leads to folio_copy_owner:
+
+migrate_folio_move
+ move_to_new_folio
+  migrate_folio
+   migrate_folio_extra
+    folio_migrate_copy
+     folio_copy
+     folio_migrate_flags
+      folio_copy_owner
+
+folio_copy_owner() gets called only from folio_migrate_flags().
+And all the functions that call folio_migrate_flags(), return
+MIGRATEPAGE_SUCCESS right after calling it, so it is kinda the last
+step of the migration.
+
+So no, we cannot fail at this stage, so we do not have to worry about
+undoing this.
+
+
 -- 
-2.39.3
-
+Oscar Salvador
+SUSE Labs
