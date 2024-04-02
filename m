@@ -1,122 +1,140 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88A5284FCD
-	for <linux-kernel@vger.kernel.org>; Tue,  2 Apr 2024 15:48:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8340C131751;
+	Tue,  2 Apr 2024 15:48:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712072915; cv=none; b=mUqxvSvquJ+LYJlRBXZj3tQ8zc2RLM/F9VyTPP4zvEga1kK7NKrmzOyNaW/xIZv5Fx3nvHiAHargWENItlua5zL1SabnItLuJ5GrpuG7r1qEgfRPgh5mVBTSDBkde/EiSKSwDRQa+ZWiRg7uq0d/Mw/z0xg6Ai+U3zEZViGBW/U=
+	t=1712072932; cv=none; b=ak8xXkgXcZ/FTMVu1OXoCc9x1oRXLO2oA6utX9s4XlL0Awwy0f+iJaeraVH+4u+dMt7QHOxvFc630OVMfA/O4Vqv6oGLNYKH4Yv2LeR68xMaAy+UYwq1k5TZO14QBYAkGFAkvYR2MnrI6DDR9gpgMpKnzg86EmG/H2z5CWJoVzA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712072915; c=relaxed/simple;
-	bh=piAKnhg8FS4n7pS0Dn6A+pN5uvt8YR0IVYBuMyFEm8A=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NRUcDo0kB4tvTmAlnsPk+FuaqCUYpGsJICiJ9w4mBUQrWJXDi8YqRI36lOm5elmca/VWtputtX1DaOvi/2jXtwK99sCVkA5HPyydXFl0bUPeBR+XXahgX+RBx9BFl38mqhOje7uB5G4Im70rTmRTQOV6A8YUq0F115eGFaR3e5I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <ore@pengutronix.de>)
-	id 1rrgMi-0005Ya-Eu; Tue, 02 Apr 2024 17:48:00 +0200
-Received: from [2a0a:edc0:2:b01:1d::c5] (helo=pty.whiteo.stw.pengutronix.de)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <ore@pengutronix.de>)
-	id 1rrgMg-00A0j3-Hg; Tue, 02 Apr 2024 17:47:58 +0200
-Received: from ore by pty.whiteo.stw.pengutronix.de with local (Exim 4.96)
-	(envelope-from <ore@pengutronix.de>)
-	id 1rrgMg-00Asbo-1Q;
-	Tue, 02 Apr 2024 17:47:58 +0200
-Date: Tue, 2 Apr 2024 17:47:58 +0200
-From: Oleksij Rempel <o.rempel@pengutronix.de>
-To: Rob Herring <robh@kernel.org>
-Cc: Kory Maincent <kory.maincent@bootlin.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Luis Chamberlain <mcgrof@kernel.org>,
-	Russ Weight <russ.weight@linux.dev>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>, Mark Brown <broonie@kernel.org>,
-	Frank Rowand <frowand.list@gmail.com>, Andrew Lunn <andrew@lunn.ch>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	Russell King <linux@armlinux.org.uk>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-doc@vger.kernel.org, devicetree@vger.kernel.org,
-	Dent Project <dentproject@linuxfoundation.org>
-Subject: Re: [PATCH net-next v6 11/17] dt-bindings: net: pse-pd: Add another
- way of describing several PSE PIs
-Message-ID: <ZgworgDAXXOpf3QV@pengutronix.de>
-References: <20240326-feature_poe-v6-0-c1011b6ea1cb@bootlin.com>
- <20240326-feature_poe-v6-11-c1011b6ea1cb@bootlin.com>
- <20240402132637.GA3744978-robh@kernel.org>
+	s=arc-20240116; t=1712072932; c=relaxed/simple;
+	bh=3Q4sw2WXlvOL56uRd8hcDkbPNnR7p5wFvWwXppPSe2U=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=b+Kc+m5Awuz4DZD5oX/vW9MOTHcGbDc4LDtRXzcI2AE1SyIrYHqp2ZW5umNe9Ps0U2l9c8MZsC8DEdNKH3Bu2xiv6N6J3PaufLYvFIiqqrUQET2gYygHQJJ7fnWSVBXHVQkPGrXrBvrMfLVoozCXOnazxpZrAWBAQVQGWYnEBvc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=PI5xi3Zy; arc=none smtp.client-ip=46.235.227.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="PI5xi3Zy"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1712072928;
+	bh=3Q4sw2WXlvOL56uRd8hcDkbPNnR7p5wFvWwXppPSe2U=;
+	h=From:To:Cc:Subject:Date:From;
+	b=PI5xi3ZycfvN4c9ep2fl6zXkWItHP4JowiwSlBcekvXuv+387JU5aaViZoOZiQxcY
+	 KXPq0fzMtqwFNcYQdmx41zEs70JREAPN9TUs3o5ozIszcmS6Bptwi9z1Lu3ATVk4B6
+	 MgqN8T5PoAbXhyNwEEjSucXtOtesYNy4HFvq25d1k33pXfm+4xTfeGVjIjdIDj/FHL
+	 jFq1RxQ8Ai4ME2kV0BdRjMYOj+NTmtDibf+zOL6QI0UMXJKGa4ZvIrlqZbMOdTWulW
+	 D3vawV71c3/oRq6OGFlpOr5rS9fuXPBvGiXFyWz/8IMW6jovaYklSo9TN83IgZW1hR
+	 8ukjO3YmuytlQ==
+Received: from eugen-station.. (cola.collaboradmins.com [195.201.22.229])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: ehristev)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 8ACDD3780C39;
+	Tue,  2 Apr 2024 15:48:47 +0000 (UTC)
+From: Eugen Hristev <eugen.hristev@collabora.com>
+To: tytso@mit.edu,
+	adilger.kernel@dilger.ca,
+	linux-ext4@vger.kernel.org,
+	jaegeuk@kernel.org,
+	chao@kernel.org,
+	linux-f2fs-devel@lists.sourceforge.net,
+	linux-fsdevel@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	kernel@collabora.com,
+	eugen.hristev@collabora.com,
+	viro@zeniv.linux.org.uk,
+	brauner@kernel.org,
+	jack@suse.cz,
+	krisman@suse.de
+Subject: [PATCH v15 0/9] Cache insensitive cleanup for ext4/f2fs
+Date: Tue,  2 Apr 2024 18:48:33 +0300
+Message-Id: <20240402154842.508032-1-eugen.hristev@collabora.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20240402132637.GA3744978-robh@kernel.org>
-X-Sent-From: Pengutronix Hildesheim
-X-URL: http://www.pengutronix.de/
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ore@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: 8bit
 
-On Tue, Apr 02, 2024 at 08:26:37AM -0500, Rob Herring wrote:
-> > +          pairsets:
-> > +            $ref: /schemas/types.yaml#/definitions/phandle-array
-> > +            description:
-> > +              List of phandles, each pointing to the power supply for the
-> > +              corresponding pairset named in 'pairset-names'. This property
-> > +              aligns with IEEE 802.3-2022, Section 33.2.3 and 145.2.4.
-> > +              PSE Pinout Alternatives (as per IEEE 802.3-2022 Table 145\u20133)
-> > +              |-----------|---------------|---------------|---------------|---------------|
-> > +              | Conductor | Alternative A | Alternative A | Alternative B | Alternative B |
-> > +              |           |    (MDI-X)    |     (MDI)     |      (X)      |      (S)      |
-> > +              |-----------|---------------|---------------|---------------|---------------|
-> > +              | 1         | Negative VPSE | Positive VPSE | \u2014             | \u2014             |
-> > +              | 2         | Negative VPSE | Positive VPSE | \u2014             | \u2014             |
-> > +              | 3         | Positive VPSE | Negative VPSE | \u2014             | \u2014             |
-> > +              | 4         | \u2014             | \u2014             | Negative VPSE | Positive VPSE |
-> > +              | 5         | \u2014             | \u2014             | Negative VPSE | Positive VPSE |
-> > +              | 6         | Positive VPSE | Negative VPSE | \u2014             | \u2014             |
-> > +              | 7         | \u2014             | \u2014             | Positive VPSE | Negative VPSE |
-> > +              | 8         | \u2014             | \u2014             | Positive VPSE | Negative VPSE |
-> > +            minItems: 1
-> > +            maxItems: 2
-> 
-> "pairsets" does not follow the normal design pattern of foos, foo-names, 
-> and #foo-cells. You could add #foo-cells I suppose, but what would cells 
-> convey? I don't think it's a good fit for what you need.
-> 
-> The other oddity is the number of entries and the names are fixed. That 
-> is usually defined per consumer. 
-> 
-> As each entry is just a power rail, why can't the regulator binding be 
-> used here?
+Hello,
 
-I'm not against describing it consequent with regulator till the wire
-end, but right now I have no idea how it should be described by using
-regulator bindings. There are maximum 2 rails going in to PSE PI on one
-side and 4 rails with at least 5 combinations supported by standard on
-other side. Instead of inventing anything new, I suggested to describe
-supported output combinations by using IEEE 802.3 standard.
+I am trying to respin the series here :
+https://www.spinics.net/lists/linux-ext4/msg85081.html
 
-Regards,
-Oleksij
+I resent some of the v9 patches and got some reviews from Gabriel,
+I did changes as requested and here is v15.
+
+Changes in v15:
+- fix wrong check `ret<0` in 7/9
+- fix memleak reintroduced in 8/9
+
+Changes in v14:
+- fix wrong kfree unchecked call
+- changed the return code in 3/8
+
+Changes in v13:
+- removed stray wrong line in 2/8
+- removed old R-b as it's too long since they were given
+- removed check for null buff in 2/8
+- added new patch `f2fs: Log error when lookup of encoded dentry fails` as suggested
+- rebased on unicode.git for-next branch
+
+Changes in v12:
+- revert to v10 comparison with propagating the error code from utf comparison
+
+Changes in v11:
+- revert to the original v9 implementation for the comparison helper.
+
+Changes in v10:
+- reworked a bit the comparison helper to improve performance by
+first performing the exact lookup.
+
+
+* Original commit letter
+
+The case-insensitive implementations in f2fs and ext4 have quite a bit
+of duplicated code.  This series simplifies the ext4 version, with the
+goal of extracting ext4_ci_compare into a helper library that can be
+used by both filesystems.  It also reduces the clutter from many
+codeguards for CONFIG_UNICODE; as requested by Linus, they are part of
+the codeflow now.
+
+While there, I noticed we can leverage the utf8 functions to detect
+encoded names that are corrupted in the filesystem. Therefore, it also
+adds an ext4 error on that scenario, to mark the filesystem as
+corrupted.
+
+This series survived passes of xfstests -g quick.
+
+Eugen Hristev (1):
+  f2fs: Log error when lookup of encoded dentry fails
+
+Gabriel Krisman Bertazi (8):
+  ext4: Simplify the handling of cached insensitive names
+  f2fs: Simplify the handling of cached insensitive names
+  libfs: Introduce case-insensitive string comparison helper
+  ext4: Reuse generic_ci_match for ci comparisons
+  f2fs: Reuse generic_ci_match for ci comparisons
+  ext4: Log error when lookup of encoded dentry fails
+  ext4: Move CONFIG_UNICODE defguards into the code flow
+  f2fs: Move CONFIG_UNICODE defguards into the code flow
+
+ fs/ext4/crypto.c   |  10 +---
+ fs/ext4/ext4.h     |  35 +++++++-----
+ fs/ext4/namei.c    | 129 ++++++++++++++++-----------------------------
+ fs/ext4/super.c    |   4 +-
+ fs/f2fs/dir.c      | 108 ++++++++++++-------------------------
+ fs/f2fs/f2fs.h     |  16 +++++-
+ fs/f2fs/namei.c    |  10 ++--
+ fs/f2fs/recovery.c |   5 +-
+ fs/f2fs/super.c    |   8 +--
+ fs/libfs.c         |  77 +++++++++++++++++++++++++++
+ include/linux/fs.h |   4 ++
+ 11 files changed, 210 insertions(+), 196 deletions(-)
+
 -- 
-Pengutronix e.K.                           |                             |
-Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
-31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+2.34.1
+
