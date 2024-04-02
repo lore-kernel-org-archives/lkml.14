@@ -1,101 +1,134 @@
-Received: from mail-yb1-f180.google.com (mail-yb1-f180.google.com [209.85.219.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtpbgeu2.qq.com (smtpbgeu2.qq.com [18.194.254.142])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13E1C66B57
-	for <linux-kernel@vger.kernel.org>; Tue,  2 Apr 2024 10:57:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DE1C69D29;
+	Tue,  2 Apr 2024 10:57:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=18.194.254.142
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712055455; cv=none; b=tdcszr564oZkOoVPphQfW+W8x+lwsrYY7Ixl9gI45LwuOaWc8BnefHJlozUdCkwr1V4hSqFJtVqRniQHu9E2OSdjawEoZFwPa/f8R4Sx0ld3Bv4zR5RKqCnlqlEj748fnnQBfaUie5t6WS4vbBYJ0rZZI9GygDDVXSSZkAQN+zk=
+	t=1712055460; cv=none; b=uUnCHmC6aTNEhsLX5tUrpNf9KYZlfvnmjFHRuXeQC4B47iiPrNEg6KMtpCmNXwvxRZTxzNgmZRsRrUqSu8zdfu5qH1DS2K6J1OxQdDZ1rQ1ERFR+pDcXz3ZnLtovTKYGyFoVECg1vmjblAegqswwAtvd8Ffqpi1SO51XnTLX0r0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712055455; c=relaxed/simple;
-	bh=vqO89eEBR/ktnLPEQMdwBobaFGHWU1KaYv7JeHQaYdc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=pS54Twb6emcprtydlJPMtq/Yl2ysmmDasq7sWz3mD0FOpM8oWMdc33aPYV/WA8gXhuYGNcRcCak2r3oAJPSS9slwxfQ6lDG0EOOH4jOfavEM57hM8/oiu3iM7cuDoLX0yqbyhLUnSoBEraUOOkdYfN4DeP1IWtrwAjEJtrva44o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=uobyZy9N; arc=none smtp.client-ip=209.85.219.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="uobyZy9N"
-Received: by mail-yb1-f180.google.com with SMTP id 3f1490d57ef6-dc742543119so4921513276.0
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Apr 2024 03:57:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1712055453; x=1712660253; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=yVXc1Bs+lpB1RIEnPb5YwNz2pgwy6ujAacaSwqfyeHo=;
-        b=uobyZy9NKaUBGNXzkFnGopX75NrEOqO0RCxYx4AZ1qb2gkqq+3CraffwwXEEydaQhh
-         /GTsKkc6WrT4DcPj2okLoCJ+AWCVEx0NhXhFcuD9hgzGm+WSx8S4WrqnmY6lSq4kuKwH
-         xWRtsjPZXvoZrG8b0FD54YwB/lzq06pQrgwM2I+8wyGr4Opu9/DRvfAYmw7S3z+x2Ohc
-         +UScUOIPfZvS7sAsjzdcEPtusJQ574hE6sxr+8KgXggJX3uOU+5HM8fhZ6ruuYkiuON7
-         cuweW1ZwypaJMR7kGuRyJCy06QsdDEdgcH3yrHxKmmySukiHjtDV8X3Zie9awVYOhz6O
-         /ghg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712055453; x=1712660253;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=yVXc1Bs+lpB1RIEnPb5YwNz2pgwy6ujAacaSwqfyeHo=;
-        b=fzps5asyYnF4gE+rF/yUATLEeZ3ohjPrCygLWqOV6+pDttI1V/PVlxCcFRI0yU0i6l
-         cO2AwHV+o4QfBsLQp7dcxFB1K8sS+Rt1SEKwkM29OngVJN70T33hU+GhSaLx45zsjkQS
-         BLrkVFNug/p/zog6I6UvFSMIgnwrU4isdFiD0zzmR1pjYRdOBySy2Y/n0QLuBLLY3Lmg
-         DAbWDm+8IAL4X1aaVvVKdi/N2uNOrH7pbxV1YCwB4lcPUeb+Gq8EZucrw64WhzNJCir9
-         448quZgs/Qxcw+RX1TYd3rFPoZ0UhXbpZkhPoGlid3kwPcXg8g6ezoceWH7McnunLsYr
-         Xs+Q==
-X-Forwarded-Encrypted: i=1; AJvYcCXEY7y0FD17ObM5Fh0qvx1T3/Ap2dej8H+MApT1RdXTV9rEd67aZMOVD1XI2fmHbprWobvDrcYoBlCKdsmlo5q4SH0wuVCxsOZzfHb6
-X-Gm-Message-State: AOJu0Yyk7NHUVZOpOJMqSY6sZkCJXxdCi/ZYWtMjLtnPsT5aoVHwZ8Q+
-	p5wvqXDUMB+leKr5PWnOBYNXr/jr34rkI6kcSrITDGOi0j8nu5Ebj9EZsgR33ZP1nTUrxxSniQj
-	bVSSElioBQxc/Wb9N2yJQQwHI0IjMfApnd0jqwecr9iJugHQe
-X-Google-Smtp-Source: AGHT+IFg1hu4FwOjpqGBH/SGeVvovCBllWh1O5bBs6IVNCKUcnc1PpAomYGLskhTJ+VShxhyKPmS5NFMVCtcej5YTDQ=
-X-Received: by 2002:a0d:c145:0:b0:60c:d22b:8541 with SMTP id
- c66-20020a0dc145000000b0060cd22b8541mr9859110ywd.49.1712055452835; Tue, 02
- Apr 2024 03:57:32 -0700 (PDT)
+	s=arc-20240116; t=1712055460; c=relaxed/simple;
+	bh=ZRYL0tm66PlUF17wSgS7t8Otxaj80Ds/bGY0ik9xez0=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=XTvdUiASRAOq2GgqjZk69B4YI/VXBud+a4Z85DfyuF8qwo7/a2yjlwN5IbGDv2pYtukNm4yVRcHj8Lh8p6aNfNy0OftExtv59dOGxPOfrjyuFrvuEGW9ukzHUEG+TOR28K+P0FQYOEwZXqWrzO1Pk1QXNOMa9S3TdfPShX8D4GM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=shingroup.cn; spf=pass smtp.mailfrom=shingroup.cn; arc=none smtp.client-ip=18.194.254.142
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=shingroup.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=shingroup.cn
+X-QQ-mid: bizesmtpsz8t1712055389tx1i9do
+X-QQ-Originating-IP: npMTgiYLrAXZVfH9UzuoxN0WWf6arlNvluh0QgiuEPM=
+Received: from localhost ( [112.0.147.175])
+	by bizesmtp.qq.com (ESMTP) with 
+	id ; Tue, 02 Apr 2024 18:56:27 +0800 (CST)
+X-QQ-SSF: 01400000000000704000000A0000000
+X-QQ-FEAT: U4uNK7LTfdrLsqLmQfZRWmU4TTRkTMv9/wdPfBCemXIxmWjsfkg+yE23RLl3O
+	yWmO4DknxnZb8FXBxhPsu+CxpuKghtgmdZ/+TJh6K9lHe2TQubcT4IShhqebXjQGM4q3Hrj
+	zOc1wfOasA6I5o/rp9VAxtkYDeVIfvj2UmXRBDh+Nr9d9Cp7C57Bq6dFKn0Gu4TWBFuWcYi
+	ire/ACUxmnnxV+hEysx2faHEQDe+0cpPtVYQBYsnB7E5Yzg1ORvgFWqUvMYXw0xDajbWtPp
+	dgRKhs7VVA0IrpYjQyFzNuVhDufUh4cU+tqhKr5jBMyFSnclf/lrBOBQf7hi+SbnlO6NFs1
+	BrGVJ/2WLsuWjm2WgFV1AujEFu1qVc4TvZCZzkAAEHeXXshTcix1WGHgb7bRz5/0CCacN9I
+X-QQ-GoodBg: 2
+X-BIZMAIL-ID: 13364674971117449586
+From: Dawei Li <dawei.li@shingroup.cn>
+To: will@kernel.org,
+	mark.rutland@arm.com
+Cc: xueshuai@linux.alibaba.com,
+	renyu.zj@linux.alibaba.com,
+	yangyicong@hisilicon.com,
+	jonathan.cameron@huawei.com,
+	andersson@kernel.org,
+	konrad.dybcio@linaro.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	linux-arm-msm@vger.kernel.org,
+	Dawei Li <dawei.li@shingroup.cn>
+Subject: [PATCH 0/9] perf: Avoid explicit cpumask var allocation from stack 
+Date: Tue,  2 Apr 2024 18:56:01 +0800
+Message-Id: <20240402105610.1695644-1-dawei.li@shingroup.cn>
+X-Mailer: git-send-email 2.27.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240326094215.212930-1-r.czerwinski@pengutronix.de> <20240326094215.212930-2-r.czerwinski@pengutronix.de>
-In-Reply-To: <20240326094215.212930-2-r.czerwinski@pengutronix.de>
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Date: Tue, 2 Apr 2024 12:56:57 +0200
-Message-ID: <CAPDyKFpUkAOd3h_s-zCArPWBhxqGHJ=dS6K6Bv+b6t0norMMeg@mail.gmail.com>
-Subject: Re: [PATCH 2/2] mmc: debugfs: add card entry for quirks
-To: Rouven Czerwinski <r.czerwinski@pengutronix.de>
-Cc: kernel@pengutronix.de, linux-mmc@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-QQ-SENDSIZE: 520
+Feedback-ID: bizesmtpsz:shingroup.cn:qybglogicsvrgz:qybglogicsvrgz5a-1
 
-On Tue, 26 Mar 2024 at 10:42, Rouven Czerwinski
-<r.czerwinski@pengutronix.de> wrote:
->
-> This is useful to check if a quirk has been applied for the connected
-> mmc card.
->
-> Signed-off-by: Rouven Czerwinski <r.czerwinski@pengutronix.de>
+Hi,
 
-Applied for next, thanks!
+This series try to eliminate direct cpumask var allocation from stack
+for perf subsystem.
 
-Kind regards
-Uffe
+Direct/explicit allocation of cpumask on stack could be dangerous since
+it can lead to stack overflow for systems with big NR_CPUS or
+CONFIG_CPUMASK_OFFSTACK=y.
+
+For arm64, it's more urgent since commit 3fbd56f0e7c1 ("ARM64: Dynamically
+allocate cpumasks and increase supported CPUs to 512").
+
+It's sort of a pattern that almost every cpumask var in perf subystem
+occurs in teardown callback of cpuhp. In which case, if dynamic
+allocation failed(which is unlikely), we choose return 0 rather than
+-ENOMEM to caller cuz:
+@teardown is not supposed to fail and if it does, system crashes:
+
+static int cpuhp_issue_call(int cpu, enum cpuhp_state state, bool bringup,
+                            struct hlist_node *node)
+{
+        struct cpuhp_step *sp = cpuhp_get_step(state);
+        int ret;
+
+        /*
+         * If there's nothing to do, we done.
+         * Relies on the union for multi_instance.
+         */
+        if (cpuhp_step_empty(bringup, sp))
+                return 0;
+        /*
+         * The non AP bound callbacks can fail on bringup. On teardown
+         * e.g. module removal we crash for now.
+         */
+	#ifdef CONFIG_SMP
+        if (cpuhp_is_ap_state(state))
+                ret = cpuhp_invoke_ap_callback(cpu, state, bringup, node);
+        else
+                ret = cpuhp_invoke_callback(cpu, state, bringup, node,
+		NULL);
+	#else
+        ret = cpuhp_invoke_callback(cpu, state, bringup, node, NULL);
+	#endif
+        BUG_ON(ret && !bringup);
+        return ret;
+}
+
+Dawei Li (9):
+  perf/alibaba_uncore_drw: Avoid explicit cpumask var allocation from
+    stack
+  perf/arm-cmn: Avoid explicit cpumask var allocation from stack
+  perf/arm_cspmu: Avoid explicit cpumask var allocation from stack
+  perf/arm_dsu: Avoid explicit cpumask var allocation from stack
+  perf/dwc_pcie: Avoid explicit cpumask var allocation from stack
+  perf/hisi_pcie: Avoid explicit cpumask var allocation from stack
+  perf/hisi_uncore: Avoid explicit cpumask var allocation from stack
+  perf/qcom_l2: Avoid explicit cpumask var allocation from stack
+  perf/thunder_x2: Avoid explicit cpumask var allocation from stack
+
+ drivers/perf/alibaba_uncore_drw_pmu.c    | 13 +++++++++----
+ drivers/perf/arm-cmn.c                   | 13 +++++++++----
+ drivers/perf/arm_cspmu/arm_cspmu.c       | 13 +++++++++----
+ drivers/perf/arm_dsu_pmu.c               | 18 +++++++++++++-----
+ drivers/perf/dwc_pcie_pmu.c              | 17 +++++++++++------
+ drivers/perf/hisilicon/hisi_pcie_pmu.c   | 15 ++++++++++-----
+ drivers/perf/hisilicon/hisi_uncore_pmu.c | 13 +++++++++----
+ drivers/perf/qcom_l2_pmu.c               | 15 ++++++++++-----
+ drivers/perf/thunderx2_pmu.c             | 20 ++++++++++++--------
+ 9 files changed, 92 insertions(+), 45 deletions(-)
 
 
-> ---
->  drivers/mmc/core/debugfs.c | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/drivers/mmc/core/debugfs.c b/drivers/mmc/core/debugfs.c
-> index 6dbab860e453..f10a4dcf1f95 100644
-> --- a/drivers/mmc/core/debugfs.c
-> +++ b/drivers/mmc/core/debugfs.c
-> @@ -389,6 +389,7 @@ void mmc_add_card_debugfs(struct mmc_card *card)
->         card->debugfs_root = root;
->
->         debugfs_create_x32("state", 0400, root, &card->state);
-> +       debugfs_create_x32("quirks", 0400, root, &card->quirks);
->  }
->
->  void mmc_remove_card_debugfs(struct mmc_card *card)
-> --
-> 2.44.0
->
+Thanks,
+
+    Dawei
+
+-- 
+2.27.0
+
