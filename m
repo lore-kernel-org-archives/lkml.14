@@ -1,93 +1,103 @@
-Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com [209.85.208.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65EC5241E2
-	for <linux-kernel@vger.kernel.org>; Tue,  2 Apr 2024 06:33:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C3A2249E4;
+	Tue,  2 Apr 2024 06:35:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712039635; cv=none; b=Nf7BfAFympAePJMdayvpxGkAKs86GF1E7O2gjHd9lVUZZl2twSEfOcV/0LpVVUup8ABg2mlLvGYGPhEyNnjyRb3JY2DCHgCwJfpYsVty63V35JJrEUTpcjtCIUkqggHCe2be4rB8lFvTvX0Q+xEvWQfJ2BQXOzui8otRSxv0V/Y=
+	t=1712039754; cv=none; b=ATfO+jxyOjbi2kb6FuuNE8RImKsgM+wXQFdbLfZSnkN1s2p8yhgC58/DP0iA/b/Mk6A2dy8BnmRsrwSmLecCJNfBfm4Tv7dgnNNJ+VPZPD5O0VQOO9KR6z5JgYrLgYBqy6gh9aRN5vMca5q3JkZ5E2c9oHtbCiSnGm42NlrwzKE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712039635; c=relaxed/simple;
-	bh=WfJZUXB0Wucy4wWsY3edrboz9hVbKA+JvOoaZXPXl/s=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ibfhRNqG6SKbC5DjplUcDCd/3kSrbNRoR+ClPigjQRM0tHMhodAft4Y2Rk7NhJdBBaAl7+nqNuOFyQ77Vtn6fsXRWfk/wE6VRAZaPGdSm2IRJtALStosRzM9058TXUOAJNiihVSJuE5AcaF1shv2MddD1tWitVsNALk7c3eBupQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PRWe0NAO; arc=none smtp.client-ip=209.85.208.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1712039754; c=relaxed/simple;
+	bh=Feqjj4R3LtzqrmfPSc4AxFtg1P9nxO6x1fNkNugNZJw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GOdBmLtyr+qol1ufV9agnc9NRVdyeLA5aNAPyskVw7tYenXbfx4PRp/xg9WGlVr/JURSLxLNTVmL5MMdxlcAOH5skLDGjLVj7yqolnIcJ8PwAyF0IDZEibSW2HEMYr/obCdBGaIrPpDJFnStexcnBpi5jFrkDoAMZNdaE3IxfT8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=c3khOu2N; arc=none smtp.client-ip=192.198.163.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PRWe0NAO"
-Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-2d8129797fcso26284181fa.1
-        for <linux-kernel@vger.kernel.org>; Mon, 01 Apr 2024 23:33:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1712039631; x=1712644431; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=WfJZUXB0Wucy4wWsY3edrboz9hVbKA+JvOoaZXPXl/s=;
-        b=PRWe0NAOejAmXQ3ITqRqMOjDbRWeR+WlTlWmvA9sWSXfABUNJmc4SAyay4Wno4aY0j
-         XrJotDT+oy5RZC40WK7/doXUnClCtulww7MUTcb31XuA+dIYcOnRTNwOaGMVbHC7EbHw
-         QlvchKbBAF5djQCiWp4+t3P1Zn6oXCMDujY/z30I9/ulj38BHymSjPWmqu8vSFyoGNCc
-         PKQkJGd+67Cgc7mlKFZo0CGZfYTJrLFbSsGYGZZIzUmVD8N4NeXeOkOQGw+/Hyc/CRwA
-         +rdwv0iTFjpklHIrxnA24cyqPwNARtCon23gNaY/7r2unRlozlATsHkIVeHVODTj0j+1
-         y4ow==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712039631; x=1712644431;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=WfJZUXB0Wucy4wWsY3edrboz9hVbKA+JvOoaZXPXl/s=;
-        b=uAdQTATJiCYJvcTY5lmqAU+yK1IPqk/oHn7A5eOyCd8Xew8fJ0oryvPD/ZHR2xAnBc
-         7S2bEyrDhIsA+MagNhYOEwxlnW4W5ztjY682JV3CN38NOyIMIbn0NrUDked0PmQz23bY
-         QQSFkNI+SfDLuIkgdr2Cp16Jl9TJ6057jHMRKGJF3KZNv28auf7Q+09tAR0l5CjmsSuI
-         6om3x18xXfFhMoSzOitwlOevZSA8p/T7PLsg7qNqssTa5C5wrJGVYK6JGEtWg8EkRtT4
-         aF9o+OZB2GIxeh9yFkNcQ3kUfT7MUmQL1JDTomBoiX5bhh0b2WoQ7tnv8dRcOBpyYEi3
-         dROg==
-X-Forwarded-Encrypted: i=1; AJvYcCUw9IYzvxq18Y+xxhHA4V5iYWj2HU5Fvd89oQZBSblZd5mo8+dx8nPYuwqIMOGXvts03/5DA+YbVXj+Sz9mjGpwA6//ZcSLRI7QG308
-X-Gm-Message-State: AOJu0Yz9cunCiiyD4d5LZB7NbN5DcC1V+ece6+6JhcwLzqxBklU8kehl
-	ZbwbmVwcqs3gtYU6HCf0vujp0zGraJIgJhFrRZXt/T9Xl95KrriMvn6TTPRofDqMexgkCkD+clq
-	C7ejeMg5JrBdBd1YimppDSXE9DII=
-X-Google-Smtp-Source: AGHT+IFrF+peqaqFCCGF16X35g5CpPH1YFC+SDa8pFRJeYm9hZc1mBc9E20qaewP7CYxn4hnM1CjsauVZLyC504KnbE=
-X-Received: by 2002:a2e:954e:0:b0:2d7:1ce5:3e24 with SMTP id
- t14-20020a2e954e000000b002d71ce53e24mr5521022ljh.34.1712039631218; Mon, 01
- Apr 2024 23:33:51 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="c3khOu2N"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1712039753; x=1743575753;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=Feqjj4R3LtzqrmfPSc4AxFtg1P9nxO6x1fNkNugNZJw=;
+  b=c3khOu2NdM2V0fD0EqN6gA1l/69wX05ds4CxY8Q/G7b0w7HEwqnBJ8wA
+   VELK99RFIS4HOu89u6253Dld4Uz5y73vqgWRC1yGBoGgy3DlEN9wjACDM
+   S4NQIBHBRO7Lu9QVpVgkzXlTWTDFOdnY7SXN6VP9pRXQLLNu14MmlaZKI
+   wCymdkbZBtlqpEfozJo9wR9ABTjhw/yEjHUETUTFqExV3srOX8mZsTVEy
+   36J86TTGlC/6tvH/HUk/Mn8SYzgUO0txlwip2RjMJm3I/+K6CKxIe+TyA
+   2lo1PgMckCi9u7T+QMo/6HEetxFl9kMXNPcczC49WqEgce/waGrrebS2e
+   A==;
+X-CSE-ConnectionGUID: VoxBJcvFQvSfIUkcPxb2iw==
+X-CSE-MsgGUID: ddVnmZ9ZS3WW58SS/DlbiA==
+X-IronPort-AV: E=McAfee;i="6600,9927,11031"; a="17810246"
+X-IronPort-AV: E=Sophos;i="6.07,174,1708416000"; 
+   d="scan'208";a="17810246"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Apr 2024 23:35:49 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,174,1708416000"; 
+   d="scan'208";a="18043933"
+Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.165])
+  by fmviesa008.fm.intel.com with ESMTP; 01 Apr 2024 23:35:47 -0700
+Date: Tue, 2 Apr 2024 14:30:57 +0800
+From: Xu Yilun <yilun.xu@linux.intel.com>
+To: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Cc: Moritz Fischer <mdf@kernel.org>, Wu Hao <hao.wu@intel.com>,
+	Xu Yilun <yilun.xu@intel.com>, Tom Rix <trix@redhat.com>,
+	linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
+	linux-fpga@vger.kernel.org
+Subject: Re: [PATCH] fpga: altera-cvp: Remove an unused field in struct
+ altera_cvp_conf
+Message-ID: <ZgumIQV3fUpxNqno@yilunxu-OptiPlex-7050>
+References: <7986690e79fa6f7880bc1db783cb0e46a1c2723e.1711976883.git.christophe.jaillet@wanadoo.fr>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240401081734.1433755-1-zhaoyang.huang@unisoc.com> <ZgtSfsRxXiTCkejS@casper.infradead.org>
-In-Reply-To: <ZgtSfsRxXiTCkejS@casper.infradead.org>
-From: Zhaoyang Huang <huangzhaoyang@gmail.com>
-Date: Tue, 2 Apr 2024 14:33:39 +0800
-Message-ID: <CAGWkznEF1gSROzNc8c4BbdYzkvwAv=Wu6YuF635UY7TCjByb-Q@mail.gmail.com>
-Subject: Re: [PATCHv2 1/1] mm: fix unproperly folio_put by changing API in read_pages
-To: Matthew Wilcox <willy@infradead.org>
-Cc: "zhaoyang.huang" <zhaoyang.huang@unisoc.com>, Andrew Morton <akpm@linux-foundation.org>, 
-	NeilBrown <neilb@suse.de>, linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
-	steve.kang@unisoc.com, Christoph Hellwig <hch@infradead.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <7986690e79fa6f7880bc1db783cb0e46a1c2723e.1711976883.git.christophe.jaillet@wanadoo.fr>
 
-On Tue, Apr 2, 2024 at 8:34=E2=80=AFAM Matthew Wilcox <willy@infradead.org>=
- wrote:
->
-> On Mon, Apr 01, 2024 at 04:17:34PM +0800, zhaoyang.huang wrote:
-> > From: Zhaoyang Huang <zhaoyang.huang@unisoc.com>
-> >
-> > An VM_BUG_ON in step 9 of [1] could happen as the refcnt is dropped
-> > unproperly during the procedure of read_pages()->readahead_folio->folio=
-_put.
-> > This is introduced by commit 9fd472af84ab ("mm: improve cleanup when
-> > ->readpages doesn't process all pages")'.
->
-> This patch is no less bullshit than the last time you posted it.
-> I explained why here:
-> https://lore.kernel.org/linux-mm/ZgQRtQ60mrvOUKXo@casper.infradead.org/
-Yes. I get your point in your previous feedback. Could you please
-check the timing sequence in v2's commit message, where the folio_lock
-failed to prevent the race from happening. I also would like to insist
-that the refcnt got from alloc_pages just paired with the one which is
-checked in __remove_mapping but any other folio_put. The sequence of
-read_pages->readahead_folio->folio_put happens to be right when no
-race and then frees the folio immediatly.
+On Mon, Apr 01, 2024 at 03:08:21PM +0200, Christophe JAILLET wrote:
+> In "struct altera_cvp_conf", the 'mgr' field is unused.
+> Remove it.
+> 
+> Found with cppcheck, unusedStructMember.
+> 
+> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+
+Acked-by: Xu Yilun <yilun.xu@intel.com>
+
+Applied to for-next.
+
+> ---
+> Apparently, it has never been used. It is not a left-over from a
+> refactoring.
+> 
+> The address of the 'fpga_manager' is handled via pci_[s|g]et_drvdata().
+> 
+> Compile tested only.
+> ---
+>  drivers/fpga/altera-cvp.c | 1 -
+>  1 file changed, 1 deletion(-)
+> 
+> diff --git a/drivers/fpga/altera-cvp.c b/drivers/fpga/altera-cvp.c
+> index 4ffb9da537d8..6b0914432445 100644
+> --- a/drivers/fpga/altera-cvp.c
+> +++ b/drivers/fpga/altera-cvp.c
+> @@ -72,7 +72,6 @@ static bool altera_cvp_chkcfg;
+>  struct cvp_priv;
+>  
+>  struct altera_cvp_conf {
+> -	struct fpga_manager	*mgr;
+>  	struct pci_dev		*pci_dev;
+>  	void __iomem		*map;
+>  	void			(*write_data)(struct altera_cvp_conf *conf,
+> -- 
+> 2.44.0
+> 
+> 
