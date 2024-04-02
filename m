@@ -1,260 +1,131 @@
-Received: from mail-yw1-f182.google.com (mail-yw1-f182.google.com [209.85.128.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from wfout3-smtp.messagingengine.com (wfout3-smtp.messagingengine.com [64.147.123.146])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87219D524
-	for <linux-kernel@vger.kernel.org>; Tue,  2 Apr 2024 01:26:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 261378F55;
+	Tue,  2 Apr 2024 01:35:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=64.147.123.146
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712021210; cv=none; b=VNHOyA/TJrKeu+C+jY0MNAOhvAv70yl8w/bSyA3J8nJAI4iI1NCO0Cs5+8xH/sreSxhllb7frNZ0LtzWwVvnvrJ0B8LMMPBuPaQtd3K/KMrMpPEpIYAw9YGKTiIYFaPLn9TSJzB480ULzOiJSCYV0df2lqz//cA6ZP7gW52oAzY=
+	t=1712021707; cv=none; b=X0oGIHejEWTZQPXnNDh4PvlUdpR5pFvt5F5H3WWBPtyLYuJSrNVtvA7O4TKRt/SmNVklwUYaTDBQz9dWsExmHtvcHscn9B2g4oRiKf2+mHE4YZVvvVg2mvVuZF2B9ZSvsuEJZPP1YxLWetiwws18tDnS4czT7gJDcqfHLKsXhrU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712021210; c=relaxed/simple;
-	bh=r81tVplr/mXsa6cwAdC5W16sL6mZ3+LlluvNMb7GzWw=;
-	h=Date:Message-ID:MIME-Version:Content-Type:Content-Disposition:
-	 From:To:Cc:Subject:References:In-Reply-To; b=LA5PpI0/9wrtGS+l+9+lhnrC02jVOTuTD9sbRDQyw1CLp59TngKT6WjylhR/gKJG6iThnqx2mJDSf6GgObP/2APTgMJF2dK7zwyKKY/jMde97t4/EEJrRIGBnhVv0wyN8IKusxar3QAyo0zCUyXc6IVV613itdmIsVE3LrFcxIE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com; spf=pass smtp.mailfrom=paul-moore.com; dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b=U1GwS7k7; arc=none smtp.client-ip=209.85.128.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=paul-moore.com
+	s=arc-20240116; t=1712021707; c=relaxed/simple;
+	bh=9BQEaRwtlziCRrSzQ8XnilTqjrDIVbHdGrwuUf5F6v8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=gzJjX9p4GZE6EOwfwE4th2/n4WsWrGQDMI78nZ4JYJvEPs4vh+KrCKgLkqYVVT2eno5Ibfvg+T99Ck1jL2Vbl7LLJc9ehs5n8WLrF/iBQX1flv7SYBz+4loXhBGuGCtdmMgqYSpwRC9YhfibBfZQg5nBrDzUENL6rdA9/9h5jGQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ljones.dev; spf=none smtp.mailfrom=ljones.dev; dkim=pass (2048-bit key) header.d=ljones.dev header.i=@ljones.dev header.b=HxqbgGZG; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=lY7ys7EC; arc=none smtp.client-ip=64.147.123.146
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ljones.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ljones.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b="U1GwS7k7"
-Received: by mail-yw1-f182.google.com with SMTP id 00721157ae682-61524d10f86so1038727b3.3
-        for <linux-kernel@vger.kernel.org>; Mon, 01 Apr 2024 18:26:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore.com; s=google; t=1712021205; x=1712626005; darn=vger.kernel.org;
-        h=in-reply-to:references:subject:cc:to:from:content-transfer-encoding
-         :content-disposition:mime-version:message-id:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=YvU3eDeGNif8WZjhEP3jhv+aJxwb2qUvZEErn5YlURc=;
-        b=U1GwS7k7R+XTZDYYhT4yW6nOBibRGNZ1dV8n1pvCC0efv8tqTNXyDG18Xz+3tgUYnx
-         lke3nDhDp9vjCqBKuy6UNdbOLYr4TcBthAnQaQJ1ynk7rWhVaWaSfjcn3vsv85EXviEj
-         ZFL4QeN1nW1qWpb5Iwgd00zNcFEXsvgKicYVBmH2+z9NcoyhXG1e+MsRr3Zqv7d0teyy
-         K126Vi73T0gH6l1PpJpTsIky0akqZ0CJ5Z/J/3YLJ3ALyE4Xh1uU+82wrhIs7iY6h0Bm
-         ViANu6YBzvlIoAUFmrB7p8q6GXE/BCeSjjeLqaTDhAcVFP8MF5ghoazQD58FBkPn+5oS
-         1Nfg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712021205; x=1712626005;
-        h=in-reply-to:references:subject:cc:to:from:content-transfer-encoding
-         :content-disposition:mime-version:message-id:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=YvU3eDeGNif8WZjhEP3jhv+aJxwb2qUvZEErn5YlURc=;
-        b=UaaTlJhoN9XjPlUwxQ0dUstLbp6PnNuoIRuzThOisgKIk3RpwXYaYwTPslObCUcDYc
-         IHOI4y3lkyF2UFoGI0dZJaw5vFtMwYJAwU4xsdKZ7Q4KMzMrilrZX/eqe5C4iE/le64G
-         tiQwPMe/3pCtTIEaMnepK678sZOW/AnPZOFBrXx38T/+d0b4YHYAIOCKeKknnNQ22YZ9
-         ViA2IyAqLlA1hhf407KSC+VZsiqMOkpglCBFsOknz4C3TtLEly5myECxSNCeLdYkmZQZ
-         pCYGFcBMWqF3FmX6o5huQhs+ptJ1VjwxC6H1Vl06qT4ABeifA/MbodZPcRuXH2k/0dD9
-         utZg==
-X-Forwarded-Encrypted: i=1; AJvYcCVcWyjtv8PhOjWREURm9+zvUAdpmR3YzJAmrfG5r1IVF/n53AhkzC5za0A0uxB18fVNOtkzzx23KQMQX2cq22mlgFyXVb+EsGXy4XPi
-X-Gm-Message-State: AOJu0YzDjuakB9g4hEX+9J1yibUCuKGcgzkuyVMygJeLV2seKugvMjbN
-	DrMiv0Q96V5lQUfTToMgvOVw+DEW/7/VppNsMXGjCR1vK6xQyEBtKWLWuOyweg==
-X-Google-Smtp-Source: AGHT+IHcwelFOZJua7sBX5BklkyXs7C7ZndzRUSAmvczI0RmFqF9qben7QrlRY0K6vcuZ7H7X473Hw==
-X-Received: by 2002:a0d:d78c:0:b0:611:2a5b:8543 with SMTP id z134-20020a0dd78c000000b006112a5b8543mr10278060ywd.23.1712021205494;
-        Mon, 01 Apr 2024 18:26:45 -0700 (PDT)
-Received: from localhost ([70.22.175.108])
-        by smtp.gmail.com with ESMTPSA id i19-20020ae9ee13000000b0078a280c92c6sm3861806qkg.134.2024.04.01.18.26.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 01 Apr 2024 18:26:45 -0700 (PDT)
-Date: Mon, 01 Apr 2024 21:26:44 -0400
-Message-ID: <a811e4dda817d7a01f39b14ffa16a484@paul-moore.com>
+	dkim=pass (2048-bit key) header.d=ljones.dev header.i=@ljones.dev header.b="HxqbgGZG";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="lY7ys7EC"
+Received: from compute7.internal (compute7.nyi.internal [10.202.2.48])
+	by mailfout.west.internal (Postfix) with ESMTP id AF3171C000D9;
+	Mon,  1 Apr 2024 21:35:03 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute7.internal (MEProxy); Mon, 01 Apr 2024 21:35:04 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ljones.dev; h=cc
+	:cc:content-transfer-encoding:content-type:date:date:from:from
+	:in-reply-to:message-id:mime-version:reply-to:subject:subject:to
+	:to; s=fm3; t=1712021703; x=1712108103; bh=bmMyF7ct42nzKhAjWMlmI
+	0spC9T18BPY/N16z5kWpus=; b=HxqbgGZG3GSnrvNy1r42XR/GDDKICCimjj6c/
+	8jP8FsH5zifM2uhRapgxdInxgnmTrk+MALnGPfeweeNOjExZMhFfF/V+iGxSOiGR
+	NNo3Kn8MPJcaCucuEF57Y5o/BZOz/IynOrjhQwnnP8khp/RJ/8rxR3z7M/LtfEZm
+	7KKgvN7rLfoWbCrcgdPfHpR2PGvwwXDjpLJnOiwEfgufNzYtudH3zYqxh3j2Zikj
+	W2hJVqM44KywSBx42GCtlAfUKjUFvr7lYH0FJ3PtdAntlUypHHdP+6tSly4Wk/w+
+	RH04farswoPLsj1Jl0BxGuWEu+6nsqcILMFD2jR2Oqm5fkutw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:date:date:feedback-id:feedback-id:from:from
+	:in-reply-to:message-id:mime-version:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+	fm2; t=1712021703; x=1712108103; bh=bmMyF7ct42nzKhAjWMlmI0spC9T1
+	8BPY/N16z5kWpus=; b=lY7ys7ECMuMwwAMbj35szwiRdhlMn5ZHb1ylbH6wgpCB
+	74cNG/Dz4WTt046tCOqLGyeCJ/YYcNMzpZTepD3+28+IZ5kuo+VETcomZNwskM9J
+	bMJQxCjQDmhu/H0roKxm/Na4JoTQqZmASDtcFGpofZI9FfzgKlPtk3iPit9xBEfB
+	I08f4owdzBlRnvY7+yJHS9r1hlZIP5kPbZFycfKfTbrMJWM0ZrFpQMv/ZUkPHA4I
+	FZd9jQUJitJt5LxW69U8hJPrikNy5SqiElFFW0dCyKy1xrbIKq/mtF+3q9wsYrPk
+	CUpDqTgvlg6f5/bQJOpxGKMfOOT3Al3+2KZH2mKq/A==
+X-ME-Sender: <xms:xmALZjqHtbDndt89jBl0AT14MlbgiOKEotXWuAu2fK3vAEdr0_5Sag>
+    <xme:xmALZtrLNpJ3b73BtJzPdAaHKnMR2XxPQRESeDXpwJR7X7XP9Jw4fXuwXh0Vn9QGQ
+    Dxpm3ducxTPAM7xOw0>
+X-ME-Received: <xmr:xmALZgMA02zMk7_1HJsz5ABOksrkwL1YjmTQBeB-yGL0kFDwAoK275GdN_m_>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrudefuddggeekucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucenucfjughrpefhvfevufffkffoggfgsedtkeertd
+    ertddtnecuhfhrohhmpedfnfhukhgvucffrdculfhonhgvshdfuceolhhukhgvsehljhho
+    nhgvshdruggvvheqnecuggftrfgrthhtvghrnheptdehkeeigeeggfelkeeufeefjeduvd
+    ejveduvdehtdegveeftdeugeetvdeltdejnecuffhomhgrihhnpehkvghrnhgvlhdrohhr
+    ghenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehluh
+    hkvgeslhhjohhnvghsrdguvghv
+X-ME-Proxy: <xmx:xmALZm4fgckvfydhtbCrrrCyxti6bzA5ldGYU6ywCEJEorr0PlBxGg>
+    <xmx:xmALZi764mfINuY392KdM7lcayrFEp94yLUakATp3ykJKbZdzsLemg>
+    <xmx:xmALZuh1uC9XeqlqdjhB-PvIg4ViQBoYqb1c6_HUDt6wbGhZv-AKxw>
+    <xmx:xmALZk419l_2Wtwc34bqbIVyVhPu2fum1Hn0auOxx4WIYFVDtft5jA>
+    <xmx:x2ALZvsu2_peoECK2AVo2PO7HLkZqYiZlJGCSwX4S9NADdxSV6haWnqD-IY>
+Feedback-ID: i5ec1447f:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
+ 1 Apr 2024 21:34:59 -0400 (EDT)
+From: "Luke D. Jones" <luke@ljones.dev>
+To: hdegoede@redhat.com
+Cc: corentin.chary@gmail.com,
+	ilpo.jarvinen@linux.intel.com,
+	platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	"Luke D. Jones" <luke@ljones.dev>
+Subject: [PATCH v1 0/9] asus-wmi: add new features, clean up, fixes
+Date: Tue,  2 Apr 2024 14:34:44 +1300
+Message-ID: <20240402013453.18205-1-luke@ljones.dev>
+X-Mailer: git-send-email 2.44.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 
-Content-Type: text/plain; charset=utf-8 
-Content-Disposition: inline 
+MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-From: Paul Moore <paul@paul-moore.com>
-To: Fan Wu <wufan@linux.microsoft.com>, corbet@lwn.net, zohar@linux.ibm.com, jmorris@namei.org, serge@hallyn.com, tytso@mit.edu, ebiggers@kernel.org, axboe@kernel.dk, agk@redhat.com, snitzer@kernel.org, eparis@redhat.com
-Cc: linux-doc@vger.kernel.org, linux-integrity@vger.kernel.org, linux-security-module@vger.kernel.org, fsverity@lists.linux.dev, linux-block@vger.kernel.org, dm-devel@lists.linux.dev, audit@vger.kernel.org, linux-kernel@vger.kernel.org, Deven Bowers <deven.desai@linux.microsoft.com>, Fan Wu <wufan@linux.microsoft.com>
-Subject: Re: [PATCH v16 14/20] ipe: add support for dm-verity as a trust  provider
-References: <1711657047-10526-15-git-send-email-wufan@linux.microsoft.com>
-In-Reply-To: <1711657047-10526-15-git-send-email-wufan@linux.microsoft.com>
 
-On Mar 28, 2024 Fan Wu <wufan@linux.microsoft.com> wrote:
-> 
-> Allows author of IPE policy to indicate trust for a singular dm-verity
-> volume, identified by roothash, through "dmverity_roothash" and all
-> signed dm-verity volumes, through "dmverity_signature".
-> 
-> Signed-off-by: Deven Bowers <deven.desai@linux.microsoft.com>
-> Signed-off-by: Fan Wu <wufan@linux.microsoft.com>
-> ---
-> v2:
->   + No Changes
-> 
-> v3:
->   + No changes
-> 
-> v4:
->   + No changes
-> 
-> v5:
->   + No changes
-> 
-> v6:
->   + Fix an improper cleanup that can result in
->     a leak
-> 
-> v7:
->   + Squash patch 08/12, 10/12 to [11/16]
-> 
-> v8:
->   + Undo squash of 08/12, 10/12 - separating drivers/md/ from security/
->     & block/
->   + Use common-audit function for dmverity_signature.
->   + Change implementation for storing the dm-verity digest to use the
->     newly introduced dm_verity_digest structure introduced in patch
->     14/20.
-> 
-> v9:
->   + Adapt to the new parser
-> 
-> v10:
->   + Select the Kconfig when all dependencies are enabled
-> 
-> v11:
->   + No changes
-> 
-> v12:
->   + Refactor to use struct digest_info* instead of void*
->   + Correct audit format
-> 
-> v13:
->   + Remove the CONFIG_IPE_PROP_DM_VERITY dependency inside the parser
->     to make the policy grammar independent of the kernel config.
-> 
-> v14:
->   + No changes
-> 
-> v15:
->   + Fix one grammar issue in KCONFIG
->   + Switch to use security_bdev_setintegrity() hook
-> 
-> v16:
->   + Refactor for enum integrity type
-> ---
->  security/ipe/Kconfig         |  18 ++++++
->  security/ipe/Makefile        |   1 +
->  security/ipe/audit.c         |  29 ++++++++-
->  security/ipe/digest.c        | 120 +++++++++++++++++++++++++++++++++++
->  security/ipe/digest.h        |  26 ++++++++
->  security/ipe/eval.c          |  91 +++++++++++++++++++++++++-
->  security/ipe/eval.h          |  10 +++
->  security/ipe/hooks.c         |  72 +++++++++++++++++++++
->  security/ipe/hooks.h         |   8 +++
->  security/ipe/ipe.c           |  15 +++++
->  security/ipe/ipe.h           |   4 ++
->  security/ipe/policy.h        |   3 +
->  security/ipe/policy_parser.c |  24 ++++++-
->  13 files changed, 417 insertions(+), 4 deletions(-)
->  create mode 100644 security/ipe/digest.c
->  create mode 100644 security/ipe/digest.h
+This patch series touches quite a few things along with adding support for some
+new features.
 
-...
+- Add support for mini-LED on 2024 ROG lpatops
+- Add support for the gpu MUX WMI call on Vivobook laptops
+- Add support for the POST boot sound on ROG laptops
+- Add support for MCU power-save (ROG Ally only, saves more power on suspend)
+- Store written values for ppt_* features
+- Small formatting cleanup
+- Small fixes to cleanup struct holes found with pahole
 
-> diff --git a/security/ipe/hooks.c b/security/ipe/hooks.c
-> index 6bcc7908ed13..f95986a87d51 100644
-> --- a/security/ipe/hooks.c
-> +++ b/security/ipe/hooks.c
-> @@ -187,3 +191,71 @@ void ipe_unpack_initramfs(void)
->  {
->  	ipe_sb(current->fs->root.mnt->mnt_sb)->initramfs = true;
->  }
-> +
-> +#ifdef CONFIG_IPE_PROP_DM_VERITY
-> +/**
-> + * ipe_bdev_free_security - free IPE's LSM blob of block_devices.
-> + * @bdev: Supplies a pointer to a block_device that contains the structure
-> + *	  to free.
-> + */
-> +void ipe_bdev_free_security(struct block_device *bdev)
-> +{
-> +	struct ipe_bdev *blob = ipe_bdev(bdev);
-> +
-> +	ipe_digest_free(blob->root_hash);
-> +}
-> +
-> +/**
-> + * ipe_bdev_setintegrity - save integrity data from a bdev to IPE's LSM blob.
-> + * @bdev: Supplies a pointer to a block_device that contains the LSM blob.
-> + * @type: Supplies the integrity type.
-> + * @value: Supplies the value to store.
-> + * @size: The size of @value.
-> + */
-> +int ipe_bdev_setintegrity(struct block_device *bdev, enum lsm_integrity_type type,
-> +			  const void *value, size_t size)
-> +{
-> +	struct ipe_bdev *blob = ipe_bdev(bdev);
-> +
-> +	if (type == LSM_INT_DMVERITY_ROOTHASH) {
-> +		if (!value) {
-> +			ipe_digest_free(blob->root_hash);
-> +			blob->root_hash = NULL;
-> +
-> +			return 0;
-> +		}
-> +
-> +		const struct dm_verity_digest *digest = value;
-> +		struct digest_info *info = NULL;
+Obsoletes:
+- https://lore.kernel.org/all/20240320011442.11608-1-luke@ljones.dev/
+- https://lore.kernel.org/all/20240310065408.63703-1-luke@ljones.dev/
+- https://lore.kernel.org/all/20240310061715.16531-1-luke@ljones.dev/
+- https://lore.kernel.org/all/20240310055312.11293-1-luke@ljones.dev/
+- https://lore.kernel.org/all/20240310233722.30884-1-luke@ljones.dev/
 
-General kernel coding conventions put variable declarations at the top
-of the scope; in other words, move the '!value' if-statement below
-this.
+Changelog:
+- V1
+  - Mini-LED: use asus_wmi_get_devstate() and not asus_wmi_get_devstate_simple()
+  - Fix dates in Documentation/ABI/testing/sysfs-platform-asus-wmi
+  - Remove <name>_available bools and rely on devid for:
+    - gpu_mux
+    - mini_led
+    - kbd_rgb (TUF RGB LED)
 
-> +		info = kzalloc(sizeof(*info), GFP_KERNEL);
-> +		if (!info)
-> +			return -ENOMEM;
-> +
-> +		info->digest_len = digest->digest_len;
-> +
-> +		info->digest = kmemdup(digest->digest, info->digest_len,
-> +				       GFP_KERNEL);
-> +		if (!info->digest)
-> +			goto err;
+Luke D. Jones (9):
+  platform/x86: asus-wmi: add support for 2024 ROG Mini-LED
+  platform/x86: asus-wmi: add support for Vivobook GPU MUX
+  platform/x86: asus-wmi: add support variant of TUF RGB
+  platform/x86: asus-wmi: support toggling POST sound
+  platform/x86: asus-wmi: store a min default for ppt options
+  platform/x86: asus-wmi: adjust formatting of ppt-<name>() functions
+  platform/x86: asus-wmi: ROG Ally increase wait time, allow MCU
+    powersave
+  platform/x86: asus-wmi: Add support for MCU powersave
+  platform/x86: asus-wmi: cleanup main struct to avoid some holes
 
-It's always a good practice to not do any work you might not need to
-do in case of error:
+ .../ABI/testing/sysfs-platform-asus-wmi       |  26 ++
+ drivers/platform/x86/asus-wmi.c               | 396 ++++++++++++++----
+ include/linux/platform_data/x86/asus-wmi.h    |   6 +
+ 3 files changed, 341 insertions(+), 87 deletions(-)
 
-  info->digest = kmemdup(...);
-  if (!info->digest)
-    goto dmv_roothash_err;
-  info->digest_len = digest->digest_len;
+-- 
+2.44.0
 
-> +		info->alg = kstrdup(digest->alg, GFP_KERNEL);
-> +		if (!info->alg)
-> +			goto err;
-> +
-> +		blob->root_hash = info;
-> +
-> +		return 0;
-> +err:
-
-You might want to consider naming this 'dmv_roothash_err' to help
-indicate that it is a jump label specifically for use within the
-DMVERITY_ROOTHASH block.
-
-> +		ipe_digest_free(info);
-> +
-> +		return -ENOMEM;
-> +	} else if (type == LSM_INT_DMVERITY_SIG) {
-> +		blob->dm_verity_signed = size > 0 && value;
-> +
-> +		return 0;
-> +	}
-
-Woule it be worth returning -EINVAL if some other lsm_integrity_type
-value was used here?
-
-  if (ROOTHASH) {
-    ...
-  } else if (SIG) {
-    ...
-  } else
-    return -EINVAL;
-
-> +	return 0;
-> +}
-> +#endif /* CONFIG_IPE_PROP_DM_VERITY */
-
---
-paul-moore.com
