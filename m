@@ -1,230 +1,167 @@
-Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 136E956B8C
-	for <linux-kernel@vger.kernel.org>; Tue,  2 Apr 2024 09:04:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DADB157305;
+	Tue,  2 Apr 2024 09:04:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712048685; cv=none; b=oQnvQEVApidyB5Fk5qj7s0Ulp64T6q+7ZnXYtso3uhkA6TVsZrIp5mGbWmBSYI4+rSLj7IvHQZCQooY8x6YflbmDAx/ym43vNXAbFF7uQrISyZDT6dZwfi6j96uZsw5OwLYkJnvMsclvKTGPARimQn0aedmv7E6OQeiaUDmuU7c=
+	t=1712048688; cv=none; b=n3qtJF5qpdQE5O1EcgdH/k5Hef1IxUPvEtNb8oRqe6AZj/ZlJK4swbfcUzIG8AM/bt5tjYo8QfwmoIBLCUeT95DE395FCN9JFMZpafqsSW5Y8MvzpYLmlY6igTI8i3Mt7hpwtXCAxS6S/9xKyGUuIOdyHuevbsAjK9nMggXdYxo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712048685; c=relaxed/simple;
-	bh=UOcXMEcrvtS1548Y9244NrKksQOuvYTLDtzFV9UxEBE=;
-	h=References:From:To:Cc:Subject:Date:In-reply-to:Message-ID:
-	 MIME-Version:Content-Type; b=FyV8JcXQYEh8k21s3DIwiedtCACtmRbSyxTUpIcFARRMTu8hzFQSTCPZ09POkWUMlr+DCvruNy8p8Kg83iAg3MVCbbXOpSwV/qTWmDWy1YJyLaCEyQUO6+tVyn33B5Fzk8m5c/sPYmTtZLpyqWQBqxOPDDE0cHgBavBrQgZA6dA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=WGTtMwvz; arc=none smtp.client-ip=209.85.221.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1712048688; c=relaxed/simple;
+	bh=YvAxsRirqP9WIUZqYwF0tiTfjgDxAvwrGrHJaBMhnbg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=IJw0pWL92Na0iVJzfb+DbQLpuoRT3SiwP2Hzyq8x8XGkDZr9hSixS+AHGfNyVGcNFLIZCEoKEoqECIlKSQiadZA913auzQp1lAqgBYqa5SV3nvziOTuh4CE8g+FcX4eQxHsH9DJXkTLWR0fbqm4fN5jy9CVsBt4c71SP6cYuFnA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=pCC4bfr3; arc=none smtp.client-ip=78.32.30.218
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="WGTtMwvz"
-Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-3416df43cabso3466255f8f.3
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Apr 2024 02:04:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1712048681; x=1712653481; darn=vger.kernel.org;
-        h=mime-version:message-id:in-reply-to:date:subject:cc:to:from
-         :user-agent:references:from:to:cc:subject:date:message-id:reply-to;
-        bh=5DtpQsHWTJr85nIclH627DiK8ml0pGvXwXdSfSvXc3Y=;
-        b=WGTtMwvzmFupxB8lisf4+EHLP48vdfvFVTdJ/nGrZOhPyHfVSSqcWJqeUzbrTcMc5G
-         O4YcJY3X+GNkKKnvyg+NPGDaf9ka8mO0EwkwZA1wavJIJSBTw8K9hSIx0EkQdzcjy88Q
-         ynrxxCXExM1+dYA4BYq3MfgKsl4GJvjYrajQ/4xqvWfDuQkqUIV8JYCus9WIWvtX+Gjv
-         ix07CU0HyTYAQiN4n1eBs+RhaM9unzfs+zd4HyCGQctX4TjFrr3yfzN4xW55jLDCaYze
-         B9NtTG9HPF6l2p/kwfwZZvRlbz6ztiB/zC6CYkEymSjJbccLvIrp7Jp6JlAOqcdh4qww
-         YQ/g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712048681; x=1712653481;
-        h=mime-version:message-id:in-reply-to:date:subject:cc:to:from
-         :user-agent:references:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=5DtpQsHWTJr85nIclH627DiK8ml0pGvXwXdSfSvXc3Y=;
-        b=GcD3mTWqriUZrbUYS4YLcU1RUaQgRDqvreBWAr1uwUi/3FuJv0BiBEfUu/+uEo9RbR
-         Ab4a5WfpuhksI4mjPcXeQ36kk0b/Fu4nXRv2y8XxIJO4/294oQE94naOS2jiUq9tqbD/
-         QeeCshKzFn2LsJwEQNrTf1WYotxdM+2E8vjBD6CsE+9nyfgKDv3boVDnr2mClzvgXx13
-         LSYao1fDRDOzQLsmD0wnMSZlGrXtcZHUvKW9QdiP0IJykVEmgTv4z+2FdKNE0ODEEaje
-         9AwEbdXSsyeLtgalF0NBIpdDFgr5e0+ees6AfljjlOMQwdUo2XocJm9uWt+mKRnvkYjL
-         TW8Q==
-X-Forwarded-Encrypted: i=1; AJvYcCXnTUdgOgUQUT/PxDOHujaIMjKAO+v1ymOxEw6CPDgLhi7KibLAhZfROL3D7W/+zpix6xsAAFf0WX+uk94wdkmlcQKyzXDSZMBABUTA
-X-Gm-Message-State: AOJu0YwJ4pRqGk+KCUm4pgjb+kSLD4FPRGmxKqjT/HD+qhRHuK8KL/Z7
-	P2/a2OjH4veGlDmWk1AI4QWH7tQq2BlkM7oJlkaD6G6t1aLuyFxOh1sZ+PgNp1w=
-X-Google-Smtp-Source: AGHT+IH63/gwJe4lsLdmn86BYF7wjy6dJ6d3CdKbvsodEW1CIse+oGPeG50Lip9oSH4TRd0rV3oHFg==
-X-Received: by 2002:a05:6000:c8:b0:341:b8d6:e7c7 with SMTP id q8-20020a05600000c800b00341b8d6e7c7mr6500554wrx.71.1712048681104;
-        Tue, 02 Apr 2024 02:04:41 -0700 (PDT)
-Received: from localhost ([2a01:e0a:3c5:5fb1:db22:d5c9:a527:a4cf])
-        by smtp.gmail.com with ESMTPSA id dj11-20020a0560000b0b00b003437799a373sm191115wrb.83.2024.04.02.02.04.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 02 Apr 2024 02:04:40 -0700 (PDT)
-References: <20240329205904.25002-1-ddrokosov@salutedevices.com>
- <20240329205904.25002-3-ddrokosov@salutedevices.com>
-User-agent: mu4e 1.10.8; emacs 29.2
-From: Jerome Brunet <jbrunet@baylibre.com>
-To: Dmitry Rokosov <ddrokosov@salutedevices.com>
-Cc: neil.armstrong@linaro.org, jbrunet@baylibre.com,
- mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org,
- krzysztof.kozlowski+dt@linaro.org, khilman@baylibre.com,
- martin.blumenstingl@googlemail.com, kernel@salutedevices.com,
- rockosov@gmail.com, linux-amlogic@lists.infradead.org,
- linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v1 2/6] clk: meson: a1: pll: support 'syspll'
- general-purpose PLL for CPU clock
-Date: Tue, 02 Apr 2024 11:00:42 +0200
-In-reply-to: <20240329205904.25002-3-ddrokosov@salutedevices.com>
-Message-ID: <1j4jckjftk.fsf@starbuckisacylon.baylibre.com>
+	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="pCC4bfr3"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=/sLPoPRj7yaTMRifvssA4ocGQZQ13k50t3gTbGc6at4=; b=pCC4bfr3tEL7rd4uaTZq+6Fpyu
+	d+b3YySnKJPGaKKYgvve+kH+pO/ODBmZxycpxzsqacSBSdWqeYQDiEntqiuyA5cau6k33vgQiFDsO
+	qTlXke5NWkvtiCNdtwLxqrMeHOqaPZAmWI1PdAVLlcOnyjRqTOfUDAgYt7IIyRB97bgcLAVGHikxE
+	6FDGpSBr+ssVKqsGTlUYERTuxv8xLEMlCVg1uHs/VSLGiOfXKS+hO9Wxmm/9/x+Mpwtl6Z95AWH3e
+	Q6UlRsos1rowDkHF5p/nblE1JIq7nT7xR6M/TLYUUxuWJoHm2dDiLno9T0narThxj9NxMVoafbYWi
+	Xo6yfp7Q==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:39088)
+	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <linux@armlinux.org.uk>)
+	id 1rrZwT-00061T-21;
+	Tue, 02 Apr 2024 09:56:29 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.94.2)
+	(envelope-from <linux@shell.armlinux.org.uk>)
+	id 1rrZwH-0006pd-Kx; Tue, 02 Apr 2024 09:56:17 +0100
+Date: Tue, 2 Apr 2024 09:56:17 +0100
+From: "Russell King (Oracle)" <linux@armlinux.org.uk>
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc: Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Mike Leach <mike.leach@linaro.org>,
+	James Clark <james.clark@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+	Alexandre Torgue <alexandre.torgue@foss.st.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Andi Shyti <andi.shyti@kernel.org>,
+	Olivia Mackall <olivia@selenic.com>,
+	Herbert Xu <herbert@gondor.apana.org.au>,
+	Vinod Koul <vkoul@kernel.org>,
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+	Miquel Raynal <miquel.raynal@bootlin.com>,
+	Michal Simek <michal.simek@amd.com>,
+	Eric Auger <eric.auger@redhat.com>,
+	Alex Williamson <alex.williamson@redhat.com>,
+	linux-kernel@vger.kernel.org, coresight@lists.linaro.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-stm32@st-md-mailman.stormreply.com, linux-i2c@vger.kernel.org,
+	linux-crypto@vger.kernel.org, dmaengine@vger.kernel.org,
+	linux-input@vger.kernel.org, kvm@vger.kernel.org
+Subject: Re: [PATCH 00/19] amba: store owner from modules with
+ amba_driver_register()
+Message-ID: <ZgvIMRDfeQaeVxYt@shell.armlinux.org.uk>
+References: <20240326-module-owner-amba-v1-0-4517b091385b@linaro.org>
+ <f514d9e1-61fa-4c55-aea1-d70c955bb96a@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <f514d9e1-61fa-4c55-aea1-d70c955bb96a@linaro.org>
+Sender: Russell King (Oracle) <linux@armlinux.org.uk>
 
+On Sat, Mar 30, 2024 at 01:18:30PM +0100, Krzysztof Kozlowski wrote:
+> On 26/03/2024 21:23, Krzysztof Kozlowski wrote:
+> > Merging
+> > =======
+> > All further patches depend on the first amba patch, therefore please ack
+> > and this should go via one tree.
+> > 
+> > Description
+> > ===========
+> > Modules registering driver with amba_driver_register() often forget to
+> > set .owner field.
+> > 
+> > Solve the problem by moving this task away from the drivers to the core
+> > amba bus code, just like we did for platform_driver in commit
+> > 9447057eaff8 ("platform_device: use a macro instead of
+> > platform_driver_register").
+> > 
+> > Best regards,
+> 
+> I tried to submit this series to Russell patch tracker and failed. This
+> is ridiculous. It's 2024 and instead of normal process, like every other
+> maintainer, so b4 or Patchwork, we have some unusable system rejecting
+> standard patches.
 
-On Fri 29 Mar 2024 at 23:58, Dmitry Rokosov <ddrokosov@salutedevices.com> wrote:
+Sorry but no. Stop being offensive.
 
-> The 'syspll' PLL, also known as the system PLL, is a general and
-> essential PLL responsible for generating the CPU clock frequency.
-> With its wide-ranging capabilities, it is designed to accommodate
-> frequencies within the range of 768MHz to 1536MHz.
->
-> Signed-off-by: Dmitry Rokosov <ddrokosov@salutedevices.com>
-> ---
->  drivers/clk/meson/a1-pll.c | 78 ++++++++++++++++++++++++++++++++++++++
->  drivers/clk/meson/a1-pll.h |  6 +++
->  2 files changed, 84 insertions(+)
->
-> diff --git a/drivers/clk/meson/a1-pll.c b/drivers/clk/meson/a1-pll.c
-> index 60b2e53e7e51..02fd2d325cc6 100644
-> --- a/drivers/clk/meson/a1-pll.c
-> +++ b/drivers/clk/meson/a1-pll.c
-> @@ -138,6 +138,81 @@ static struct clk_regmap hifi_pll = {
->  	},
->  };
->  
-> +static const struct pll_mult_range sys_pll_mult_range = {
-> +	.min = 32,
-> +	.max = 64,
-> +};
-> +
-> +/*
-> + * We assume that the sys_pll_clk has already been set up by the low-level
-> + * bootloaders as the main CPU PLL source. Therefore, it is not necessary to
-> + * run the initialization sequence.
-> + */
+> First, it depends some weird, duplicated signed-off-by's.
 
-I see no reason to make such assumption.
-This clock is no read-only, it apparently is able to re-lock so assuming
-anything from the bootloader is just asking from trouble
+Eh? There is no such logic in there.
 
-> +static struct clk_regmap sys_pll = {
-> +	.data = &(struct meson_clk_pll_data){
-> +		.en = {
-> +			.reg_off = ANACTRL_SYSPLL_CTRL0,
-> +			.shift   = 28,
-> +			.width   = 1,
-> +		},
-> +		.m = {
-> +			.reg_off = ANACTRL_SYSPLL_CTRL0,
-> +			.shift   = 0,
-> +			.width   = 8,
-> +		},
-> +		.n = {
-> +			.reg_off = ANACTRL_SYSPLL_CTRL0,
-> +			.shift   = 10,
-> +			.width   = 5,
-> +		},
-> +		.frac = {
-> +			.reg_off = ANACTRL_SYSPLL_CTRL1,
-> +			.shift   = 0,
-> +			.width   = 19,
-> +		},
-> +		.l = {
-> +			.reg_off = ANACTRL_SYSPLL_STS,
-> +			.shift   = 31,
-> +			.width   = 1,
-> +		},
-> +		.current_en = {
-> +			.reg_off = ANACTRL_SYSPLL_CTRL0,
-> +			.shift   = 26,
-> +			.width   = 1,
-> +		},
-> +		.l_detect = {
-> +			.reg_off = ANACTRL_SYSPLL_CTRL2,
-> +			.shift   = 6,
-> +			.width   = 1,
-> +		},
-> +		.range = &sys_pll_mult_range,
-> +	},
-> +	.hw.init = &(struct clk_init_data){
-> +		.name = "sys_pll",
-> +		.ops = &meson_clk_pll_ops,
-> +		.parent_names = (const char *[]){ "syspll_in" },
-> +		.num_parents = 1,
-> +		/*
-> +		 * This clock is used as the main CPU PLL source in low-level
-> +		 * bootloaders, and it is necessary to mark it as critical.
-> +		 */
-> +		.flags = CLK_IS_CRITICAL,
+> Second it > submitting patch-by-patch, all with clicking on some web
+> (!!!) interface.
 
-No I don't think so. Downstream consumer maybe critical but that one is
-not, unless it is read-only.
+Again, no it doesn't, and you're just throwing crap out because you
+failed. Unlike most of the "normal" processes, the patch system allows
+you to submit both by *email* and also by *web* for those cases where
+the emails get screwed up by ones company mail server. That's why the
+web interface exists - to give people *flexibility*.
 
-A CPU pll, like on the g12 family, is unlikely to be read-only since the
-PLL will need to relock to change rates. During this phase, there will
-be no reate coming from the PLL so the PLL is not critical and you must
-be able to "park" your CPU an another clock while poking this one
+The fact is, the web interface is merely a front end interface that
+generates an email and submits it in the usual way by email - an
+email that you can perfectly well generate that is *very* close to
+the standard email that git format-patch generates.
 
-> +	},
-> +};
-> +
-> +static struct clk_fixed_factor sys_pll_div16 = {
-> +	.mult = 1,
-> +	.div = 16,
-> +	.hw.init = &(struct clk_init_data){
-> +		.name = "sys_pll_div16",
-> +		.ops = &clk_fixed_factor_ops,
-> +		.parent_hws = (const struct clk_hw *[]) {
-> +			&sys_pll.hw
-> +		},
-> +		.num_parents = 1,
-> +	},
-> +};
-> +
->  static struct clk_fixed_factor fclk_div2_div = {
->  	.mult = 1,
->  	.div = 2,
-> @@ -283,6 +358,8 @@ static struct clk_hw *a1_pll_hw_clks[] = {
->  	[CLKID_FCLK_DIV5]	= &fclk_div5.hw,
->  	[CLKID_FCLK_DIV7]	= &fclk_div7.hw,
->  	[CLKID_HIFI_PLL]	= &hifi_pll.hw,
-> +	[CLKID_SYS_PLL]		= &sys_pll.hw,
-> +	[CLKID_SYS_PLL_DIV16]	= &sys_pll_div16.hw,
->  };
->  
->  static struct clk_regmap *const a1_pll_regmaps[] = {
-> @@ -293,6 +370,7 @@ static struct clk_regmap *const a1_pll_regmaps[] = {
->  	&fclk_div5,
->  	&fclk_div7,
->  	&hifi_pll,
-> +	&sys_pll,
->  };
->  
->  static struct regmap_config a1_pll_regmap_cfg = {
-> diff --git a/drivers/clk/meson/a1-pll.h b/drivers/clk/meson/a1-pll.h
-> index 4be17b2bf383..666d9b2137e9 100644
-> --- a/drivers/clk/meson/a1-pll.h
-> +++ b/drivers/clk/meson/a1-pll.h
-> @@ -18,6 +18,12 @@
->  #define ANACTRL_FIXPLL_CTRL0	0x0
->  #define ANACTRL_FIXPLL_CTRL1	0x4
->  #define ANACTRL_FIXPLL_STS	0x14
-> +#define ANACTRL_SYSPLL_CTRL0	0x80
-> +#define ANACTRL_SYSPLL_CTRL1	0x84
-> +#define ANACTRL_SYSPLL_CTRL2	0x88
-> +#define ANACTRL_SYSPLL_CTRL3	0x8c
-> +#define ANACTRL_SYSPLL_CTRL4	0x90
-> +#define ANACTRL_SYSPLL_STS	0x94
->  #define ANACTRL_HIFIPLL_CTRL0	0xc0
->  #define ANACTRL_HIFIPLL_CTRL1	0xc4
->  #define ANACTRL_HIFIPLL_CTRL2	0xc8
+The *only* difference is that the patch system wants a KernelVersion:
+tag in the email _somewhere_ and it doesn't matter where it appears.
+Git even has support to do this.
 
+  git format-patch --add-header="KernelVersion: $foo"
+
+Why does it want the kernel version? Because when we were running 2.4
+and 2.5 kernel versions in parallel, it was important to know which
+tree the patch was being submitted for. It has continued to be required
+because it means when there's problems applying a patch, it gives me
+the additional information about the base used for the patch (and it
+keeps on being useful to have.)
+
+> That's the response:
+> -------------
+> Your patch has not been logged because:
+> 
+> Error:   Please supply a summary subject line briefly describing
+>          your patch.
+> 
+> 
+> Error:   Please supply a "KernelVersion: " tag after "PATCH FOLLOWS" or
+> "---".
+> 
+> Error:   the patch you are submitting has one or more missing or incorrect
+>          Signed-off-by lines:
+> 
+>          - author signoff <krzkreg@gmail.com> is missing.
+> 
+>          Please see the file Documentation/SubmittingPatches, section 11
+>          for details on signing off patches.
+
+Lots of people use it without a problem. I've just run the parser
+through its offline tests, and it parses email content correctly.
+I've no idea what you're doing wrong, but it looks like something
+pretty serious if it didn't parse the subject line.
+
+Rather than getting stressed about it, why don't you send me an email
+the first time something goes wrong so I can investigate, turn on
+debugging to capture the problem email?
 
 -- 
-Jerome
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
