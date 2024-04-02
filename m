@@ -1,125 +1,118 @@
-Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from szxga07-in.huawei.com (szxga07-in.huawei.com [45.249.212.35])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22D8F56754
-	for <linux-kernel@vger.kernel.org>; Tue,  2 Apr 2024 09:07:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 597CC1E525;
+	Tue,  2 Apr 2024 09:09:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.35
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712048871; cv=none; b=Nkicyl434zbqPlLEzXPyZ4X80Ei0oFd2Vakjx+eADiu4gBz9bzcp+tiMj7zsWzriJE15YW+m0FEdtM6t9lGB3AyDB2bBL9lcobBnYuEAuuv/lvZ2n5f+hg6rk3hVbG/c71yfOF3GK+LleAwJKXEOAOdJw8U1Hd5N2LkUqsoV4+0=
+	t=1712048944; cv=none; b=t1n++FA2iWoV8IZak8xSEBPKAhpyGoBZi51FUEqG07YL6C2iASWFFaHJ+hOO6nYPtoXpeF8O2LdYkbOIJ0JSnWAc9Ver0h/oyrMFDw/4+DqTVlpWMCOOoYbKls6IBH8DB3xeNEFYE0e9Or3n8i0fIwhNUPB/9xLWfqaSAfgw7vM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712048871; c=relaxed/simple;
-	bh=BmiFl2dlvUSQbFQDIWYMV3yfnVRwHbjvGePU4GqEhN0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=VcLWW290ksFZrR1stUW7QM+sj6w7rfnfiTP6aP9j36QZcF3LVZ3Q2qNZKCksdOvENZlFPGpxMmYgSFNME1cRQBHRmJVgUaosXKzgRZYlw+5djmWIH6wT/OZa7a7mKvAGBWISCbj9GkXWFJVGmbl2N1CBYoSaMUDGLldH0NFsxnM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=2QX5B+0D; arc=none smtp.client-ip=209.85.208.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="2QX5B+0D"
-Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-56c2cfdd728so43473a12.1
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Apr 2024 02:07:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1712048868; x=1712653668; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Gj2lIs7j0qMeOLAI9CgIcyOVJL5/QjEQamjTy+gS40c=;
-        b=2QX5B+0DXiqwvck7Z+42zwaJpGf2S/dkfH9YaQC/K9cAKOiFssmHJLmlkl+5F/J5So
-         1XFmATGk41aWRmthoO9NWyqxcV+fZ/CR8oNkHWt/N1/rcRcrQF4/QSwm9H4hbVZERs++
-         Al5miBvPdIUBtoFuXc/h0JViqMAylpJi89knJVNWZOpZ2um6osfOH3HKBgwflhXH2oxL
-         BlqTHhFSKzJy1weiirQ8XGHu8FkBonBjid4Bodx0R6GdXZDRROkKOSxEJRHMiZnSEmJB
-         6O3yAC0ZQMnD8JCq39xiDrTYizilHKrGCdNLhc4s3dPP4b1bzcbh9kqmkpvoTupFIGMz
-         xhpg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712048868; x=1712653668;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Gj2lIs7j0qMeOLAI9CgIcyOVJL5/QjEQamjTy+gS40c=;
-        b=T4kpMzV16A0kjdz889j1cZtSEKrOSV9Bve0UwEKhsk/6RSs/iCh0eWLEQvijaHyynl
-         gPg2Dgc2KzJ8VwW0ZHwD9NosRxQHQiAlOOo/r4y69Yi0qyGnoQbLe9tz3IdW934tnnv7
-         4CRtvoiS/suB/irVklcY88YMlyMqv4RlNPMBaOYxe6Ln13o8HvHcQc2lu6U/dyEoZC8K
-         u/mRWv8qsTJArDPWUAB4maxYPRGkxy6qlPNeCLQMItf1jAbc4VpjXqTRcW1FVqkHgddq
-         YOyqxv8xJB9CNgFU/70rYhLkug5Vrf935/QXYlh84lcSptDLTzWyf+gNywJa2NjGEyko
-         GVZA==
-X-Forwarded-Encrypted: i=1; AJvYcCX7rrsuM7Da4rZJHqOo3BUfmuVhdrF8BhKd6q7NV0n9vFfPPiQiKtN7wTz4DUWrcwGOwLTicNoAGbZHKYpINInKpaF3vxwtjZbI8r+h
-X-Gm-Message-State: AOJu0YyMnRKcKeDiS7ibO2JHwot+it0lasbSoBNi5nGEhtB/5iptR72E
-	xBSSEtovP4yJ2/lZp/9MtMwYFxXdeOUNemS3bal6S0H/FWOPm7iu5/NsNkU+irYKkfHgEURL3fc
-	MiCkKmA9py/PIzQDpgXC+Q+UK6ggYrxPC6Pwa
-X-Google-Smtp-Source: AGHT+IHoV8vKV4c3GSfLunloGPf6EZQrAdvAMSsmbrytkJD9bd1jsE0BDkfwvXFHjbexFnUTzHovVRHCTH/mcV7A2qE=
-X-Received: by 2002:a05:6402:5253:b0:56d:eeb0:c76e with SMTP id
- t19-20020a056402525300b0056deeb0c76emr60307edd.7.1712048868331; Tue, 02 Apr
- 2024 02:07:48 -0700 (PDT)
+	s=arc-20240116; t=1712048944; c=relaxed/simple;
+	bh=y84DH1FpxfRn08U5oPYikSNOXDDr/iVJd9EcIchY8d8=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=W9tp1ylXVBANuweyyt2opn8344QW1s3s4+D2jC6CWtaV5XBcVbch1s+A7FNQCGeRrXVmFMxvWhcgS/k9daAiXA0go5fFtX0czWB7hiKowbe3kTHJY1MQrE2crif80aSoGO6tBmdDof3zg438SeKwSN0DH4u4mbtE09maHzMCEBc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.35
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.88.163])
+	by szxga07-in.huawei.com (SkyGuard) with ESMTP id 4V826s3MxGz1R9bj;
+	Tue,  2 Apr 2024 17:06:13 +0800 (CST)
+Received: from canpemm500010.china.huawei.com (unknown [7.192.105.118])
+	by mail.maildlp.com (Postfix) with ESMTPS id 8A5BF18002D;
+	Tue,  2 Apr 2024 17:08:58 +0800 (CST)
+Received: from huawei.com (10.175.127.227) by canpemm500010.china.huawei.com
+ (7.192.105.118) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.35; Tue, 2 Apr
+ 2024 17:08:58 +0800
+From: Ye Bin <yebin10@huawei.com>
+To: <tytso@mit.edu>, <adilger.kernel@dilger.ca>, <linux-ext4@vger.kernel.org>
+CC: <linux-kernel@vger.kernel.org>, <jack@suse.cz>, Ye Bin
+	<yebin10@huawei.com>
+Subject: [PATCH] jbd2: avoid mount failed when commit block is partial submitted
+Date: Tue, 2 Apr 2024 17:09:51 +0800
+Message-ID: <20240402090951.527619-1-yebin10@huawei.com>
+X-Mailer: git-send-email 2.31.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20230316123028.2890338-1-elver@google.com> <CANDhNCqBGnAr_MSBhQxWo+-8YnPPggxoVL32zVrDB+NcoKXVPQ@mail.gmail.com>
-In-Reply-To: <CANDhNCqBGnAr_MSBhQxWo+-8YnPPggxoVL32zVrDB+NcoKXVPQ@mail.gmail.com>
-From: Dmitry Vyukov <dvyukov@google.com>
-Date: Tue, 2 Apr 2024 11:07:32 +0200
-Message-ID: <CACT4Y+a6E8wg3PZhG_AoZtZwozhqUC+LPgMV3G_gQZXkr1rGzw@mail.gmail.com>
-Subject: Re: [PATCH v6 1/2] posix-timers: Prefer delivery of signals to the
- current thread
-To: John Stultz <jstultz@google.com>
-Cc: Marco Elver <elver@google.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@kernel.org>, Oleg Nesterov <oleg@redhat.com>, 
-	"Eric W. Biederman" <ebiederm@xmission.com>, linux-kernel@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org, kasan-dev@googlegroups.com, 
-	Edward Liaw <edliaw@google.com>, Carlos Llamas <cmllamas@google.com>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
+ canpemm500010.china.huawei.com (7.192.105.118)
 
-On Mon, 1 Apr 2024 at 22:17, John Stultz <jstultz@google.com> wrote:
->
-> On Thu, Mar 16, 2023 at 5:30=E2=80=AFAM Marco Elver <elver@google.com> wr=
-ote:
-> >
-> > From: Dmitry Vyukov <dvyukov@google.com>
-> >
-> > POSIX timers using the CLOCK_PROCESS_CPUTIME_ID clock prefer the main
-> > thread of a thread group for signal delivery.     However, this has a
-> > significant downside: it requires waking up a potentially idle thread.
-> >
-> > Instead, prefer to deliver signals to the current thread (in the same
-> > thread group) if SIGEV_THREAD_ID is not set by the user. This does not
-> > change guaranteed semantics, since POSIX process CPU time timers have
-> > never guaranteed that signal delivery is to a specific thread (without
-> > SIGEV_THREAD_ID set).
-> >
-> > The effect is that we no longer wake up potentially idle threads, and
-> > the kernel is no longer biased towards delivering the timer signal to
-> > any particular thread (which better distributes the timer signals esp.
-> > when multiple timers fire concurrently).
-> >
-> > Signed-off-by: Dmitry Vyukov <dvyukov@google.com>
-> > Suggested-by: Oleg Nesterov <oleg@redhat.com>
-> > Reviewed-by: Oleg Nesterov <oleg@redhat.com>
-> > Signed-off-by: Marco Elver <elver@google.com>
->
-> Apologies for drudging up this old thread.
->
-> I wanted to ask if anyone had objections to including this in the -stable=
- trees?
->
-> After this and the follow-on patch e797203fb3ba
-> ("selftests/timers/posix_timers: Test delivery of signals across
-> threads") landed, folks testing older kernels with the latest
-> selftests started to see the new test checking for this behavior to
-> stall.  Thomas did submit an adjustment to the test here to avoid the
-> stall: https://lore.kernel.org/lkml/20230606142031.071059989@linutronix.d=
-e/,
-> but it didn't seem to land, however that would just result in the test
-> failing instead of hanging.
->
-> This change does seem to cherry-pick cleanly back to at least
-> stable/linux-5.10.y cleanly, so it looks simple to pull this change
-> back. But I wanted to make sure there wasn't anything subtle I was
-> missing before sending patches.
+We encountered a problem that the file system could not be mounted in
+the power-off scenario. The analysis of the file system mirror shows that
+only part of the data is written to the last commit block.
+To solve above issue, if commit block checksum is incorrect, check the next
+block if has valid magic and transaction ID. If next block hasn't valid
+magic or transaction ID then just drop the last transaction ignore checksum
+error. Theoretically, the transaction ID maybe occur loopback, which may cause
+the mounting failure.
 
-I don't have objections per se. But I wonder how other tests deal with
-such situations. It should happen for any test for new functionality.
-Can we do the same other tests are doing?
+Signed-off-by: Ye Bin <yebin10@huawei.com>
+---
+ fs/jbd2/recovery.c | 39 +++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 39 insertions(+)
+
+diff --git a/fs/jbd2/recovery.c b/fs/jbd2/recovery.c
+index 1f7664984d6e..0a09f1a5fd1e 100644
+--- a/fs/jbd2/recovery.c
++++ b/fs/jbd2/recovery.c
+@@ -463,6 +463,41 @@ static int jbd2_block_tag_csum_verify(journal_t *j, journal_block_tag_t *tag,
+ 		return tag->t_checksum == cpu_to_be16(csum32);
+ }
+ 
++static int check_incomplete_commit(journal_t *journal, unsigned long next_block,
++				   unsigned int next_commit_ID)
++{
++	journal_header_t *tmp;
++	struct buffer_head *bh;
++	int err = 0;
++
++	err = jread(&bh, journal, next_block);
++	if (err)
++		return err;
++
++	tmp = (journal_header_t *)bh->b_data;
++	/*
++	 * If the next block does not contain consecutive transactions, it can
++	 * be considered that the checksum error of the current commit block
++	 * is caused by incomplete commit. Ignore the checksum error and drop
++	 * the last transaction.
++	 */
++	if (tmp->h_magic != cpu_to_be32(JBD2_MAGIC_NUMBER) ||
++	    be32_to_cpu(tmp->h_sequence) != next_commit_ID) {
++		jbd2_debug("JBD2: will drop incomplete transaction %u commit block %lu\n",
++			   next_commit_ID - 1, next_block - 1);
++		goto out;
++	}
++
++	pr_err("JBD2: potential continuous transaction detected %u at %lu, "
++	       "likely invalid checksum in transaction %u\n",
++	       next_commit_ID,  next_block, next_commit_ID - 1);
++
++	err = -EFSBADCRC;
++out:
++	brelse(bh);
++	return err;
++}
++
+ static int do_one_pass(journal_t *journal,
+ 			struct recovery_info *info, enum passtype pass)
+ {
+@@ -810,6 +845,10 @@ static int do_one_pass(journal_t *journal,
+ 			if (pass == PASS_SCAN &&
+ 			    !jbd2_commit_block_csum_verify(journal,
+ 							   bh->b_data)) {
++				if (!check_incomplete_commit(journal,
++							     next_log_block,
++							     next_commit_ID + 1))
++					goto ignore_crc_mismatch;
+ 			chksum_error:
+ 				if (commit_time < last_trans_commit_time)
+ 					goto ignore_crc_mismatch;
+-- 
+2.31.1
+
