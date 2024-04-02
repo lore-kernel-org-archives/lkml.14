@@ -1,59 +1,25 @@
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4988E604BB
-	for <linux-kernel@vger.kernel.org>; Tue,  2 Apr 2024 11:19:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4DA7F5A4C7
+	for <linux-kernel@vger.kernel.org>; Tue,  2 Apr 2024 11:20:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712056764; cv=none; b=JHoI7YvEA/TU3fp6K5N7bXvgIhWgXdRYNSJrklRFuXKXuLlyVKu4BPdNwl+VsKsFRNUDlH8MLJryNnvF523mpY+RBPL4R3DOh53zFjNY7x6yER4ivrEnrGy7a7EG0mZalWMk4//y1VJ5+ev+eepDLRU6DvNZChxKq39p4pKAYl4=
+	t=1712056832; cv=none; b=CXpUvb6HfhDgJGNONZfeBWxXylbuEjfcvrjN5JPHbJ/LFERXWHHlSeMaBdgaFUTTlqOB7avqqZ6N/ZqtlQH32vViK+lJqp6h9ORhARc4xfJSe7c+BShIWGsfKViB5BozIjCJgy6Aq/AamfBUMgEj1rDeZaqLMOANbW24rIN78rA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712056764; c=relaxed/simple;
-	bh=rQFgi4M3cexqDiX/+IGY5Z+RJksbQHqthZoyORy+Juo=;
+	s=arc-20240116; t=1712056832; c=relaxed/simple;
+	bh=mEvnbkn3r3O+4y6wp1DpHktGoOPUPxEbsE+P/19Sx3Q=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=svegN1BUILlFnj6k6dmgX2OucBL/9VgFOnNxD4HGysGh8xlmh39okSQGARhCXujsZ4f+m+he5RvgP6yt6+L6YEG+UklXXnBo50zL9QQ0b3tZKYy4uAYo1hr/ustMt3OVjyX6KOiAnCYEEk68pPUd5g2bzyn2KyGiT+U5X3dfhBo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WQ+V23QT; arc=none smtp.client-ip=209.85.128.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WQ+V23QT"
-Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-415db53d905so4846585e9.2
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Apr 2024 04:19:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1712056761; x=1712661561; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=hcdJ2aIprvBghotSA/VhJHR8Q1l5wGnaxpQFSHTwQ/s=;
-        b=WQ+V23QT9EoVZC6O6ShzYq8ViV/KjKCeLicG8bROGgjR0lVFWFtK3Kp/v7IclRpa5z
-         ISBemVAAZiHKrM/9IfTDpYpxAeJ5gRyKBOzurWmB4omoQK5mUExMEX/aMsPxUQmD27K+
-         YTJ9O9zR9no7CUe+slv1YKAkl1sr8AvG75CRd+qgSndHVC9ZmpMxxt3gdSCXusnVI/7A
-         myi91UkfkEgnma3DUSo22PC6kuD5NH2cLNE0P+ud6CbIPUxLBUq7ZzbVhGc0LQf4hCIg
-         uod6IuVOFvjHUmz4R/B/OdXe7pwJGPEzgxWmR677/YthZvZV1CmGNscj7RZSikRK3gop
-         ThSg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712056761; x=1712661561;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=hcdJ2aIprvBghotSA/VhJHR8Q1l5wGnaxpQFSHTwQ/s=;
-        b=jBVoi3I87lomgZ8vORnZjACOh8MmL1FFgi4VolULQF4ZxOuIHsMXlieSkH1Q76QnEs
-         5f7ndNqS+7fHw8xqNwhQmYZP++WpZIksV3vEgaY6LtvIvKqDyLSA26/R00ySjRX60VEj
-         yhez59Sx2aeOYXUQ0FuLP8MK0AZHf7BeEijRxuIarpgp2pJ8PtMWvG5Pk/7UctfafLWW
-         W6JDqFE+1cznmj6vSpmtW2xLAmfznpcaOUntrObDjNNwoM+rftjbZP8SD6s5NTSEr7zM
-         tcG+ChMlumN1TvPDOJv1ix8IJE7dHjt91Tia1UTtOvC2wVnrYeOHgq+ndOE8CvcjuZPz
-         NYjw==
-X-Forwarded-Encrypted: i=1; AJvYcCUS1keFWJ9C9MWpQkxI5+chydd04mRHNG6iCs3BCoKfwiblOWwKBkNrampm4kAgIQMEFtmKteD+BiLLwDhmcL8UoWijZvz0LoGFNrJl
-X-Gm-Message-State: AOJu0Yw/7y9RtfYkHqdWTwK5VnxBPv73/I9Zkam74d8PGAXr/0FOrCjf
-	A5QxJwe23vH4HXAraORr2aV019Ln4oV46nqVvaBatMxRkOJxMF3J
-X-Google-Smtp-Source: AGHT+IGHt2nx7R5Gkn9VecupLkbMsdI+X4a4VkRjtUoxpqHUTjCSoXT5wPR3+GmOhpv3Fb+qRsNNFg==
-X-Received: by 2002:a05:600c:4589:b0:414:809f:8ff8 with SMTP id r9-20020a05600c458900b00414809f8ff8mr9025704wmo.12.1712056761524;
-        Tue, 02 Apr 2024 04:19:21 -0700 (PDT)
-Received: from ?IPV6:2a06:c701:737b:ef00:2c6f:6cdc:f641:6ecf? ([2a06:c701:737b:ef00:2c6f:6cdc:f641:6ecf])
-        by smtp.gmail.com with ESMTPSA id fm12-20020a05600c0c0c00b004156a55592fsm4760123wmb.6.2024.04.02.04.19.19
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 02 Apr 2024 04:19:20 -0700 (PDT)
-Message-ID: <8e363bc3-2643-4019-beb8-76284e6171cd@gmail.com>
-Date: Tue, 2 Apr 2024 14:19:18 +0300
+	 In-Reply-To:Content-Type; b=G9vmRkWoGSecRRZCI0U62zxQWe8oLLrpRLD670bzSo98sB7BssknUH8BBkfR96Q4774T//jHWBZfHW5rc2C+DgkXHerWzwj5RgO3OBL/jKgm24g3jk7LDqRSkMSUq9/Ny/MX68iddioh6PZTp7t1VF1Ys8ptD2FpEb6ApU/NXic=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8C4291007;
+	Tue,  2 Apr 2024 04:21:01 -0700 (PDT)
+Received: from [10.1.38.163] (XHFQ2J9959.cambridge.arm.com [10.1.38.163])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C46703F766;
+	Tue,  2 Apr 2024 04:20:27 -0700 (PDT)
+Message-ID: <e0b6fb0e-0ef0-4b58-99ef-3d74fb0e4079@arm.com>
+Date: Tue, 2 Apr 2024 12:20:26 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -61,94 +27,319 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 5/5] staging: pi433: Remove duplicated code using the
- "goto" error recovery scheme.
-To: Dan Carpenter <dan.carpenter@linaro.org>
-Cc: gregkh@linuxfoundation.org, hverkuil-cisco@xs4all.nl,
- andriy.shevchenko@linux.intel.com, robh@kernel.org, felixkimbu1@gmail.com,
- linux-staging@lists.linux.dev, linux-kernel@vger.kernel.org
-References: <20240328121244.1244719-1-ikobh7@gmail.com>
- <20240328121244.1244719-7-ikobh7@gmail.com>
- <9c5b4159-da26-49d8-9682-445c01b19a51@moroto.mountain>
-Content-Language: en-US
-From: Shahar Avidar <ikobh7@gmail.com>
-In-Reply-To: <9c5b4159-da26-49d8-9682-445c01b19a51@moroto.mountain>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Subject: Re: [PATCH v5 6/6] mm: madvise: Avoid split during MADV_PAGEOUT and
+ MADV_COLD
+Content-Language: en-GB
+To: Lance Yang <ioworker0@gmail.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+ David Hildenbrand <david@redhat.com>, Matthew Wilcox <willy@infradead.org>,
+ Huang Ying <ying.huang@intel.com>, Gao Xiang <xiang@kernel.org>,
+ Yu Zhao <yuzhao@google.com>, Yang Shi <shy828301@gmail.com>,
+ Michal Hocko <mhocko@suse.com>, Kefeng Wang <wangkefeng.wang@huawei.com>,
+ Barry Song <21cnbao@gmail.com>, Chris Li <chrisl@kernel.org>,
+ linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+ Barry Song <v-songbaohua@oppo.com>
+References: <20240327144537.4165578-1-ryan.roberts@arm.com>
+ <20240327144537.4165578-7-ryan.roberts@arm.com>
+ <CAK1f24kON1tLerfYMPUO5vXN2yL9UXozOgACDtSwgGO_zFzTQQ@mail.gmail.com>
+From: Ryan Roberts <ryan.roberts@arm.com>
+In-Reply-To: <CAK1f24kON1tLerfYMPUO5vXN2yL9UXozOgACDtSwgGO_zFzTQQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Hi Dan, I appreciate your review.
-
-On 28/03/2024 16:03, Dan Carpenter wrote:
-> On Thu, Mar 28, 2024 at 02:12:44PM +0200, Shahar Avidar wrote:
->> pi433_init had "unregister_chrdev" called twice.
->> Remove it using goto statements.
+On 01/04/2024 13:25, Lance Yang wrote:
+> On Wed, Mar 27, 2024 at 10:46 PM Ryan Roberts <ryan.roberts@arm.com> wrote:
 >>
->> Signed-off-by: Shahar Avidar <ikobh7@gmail.com>
+>> Rework madvise_cold_or_pageout_pte_range() to avoid splitting any large
+>> folio that is fully and contiguously mapped in the pageout/cold vm
+>> range. This change means that large folios will be maintained all the
+>> way to swap storage. This both improves performance during swap-out, by
+>> eliding the cost of splitting the folio, and sets us up nicely for
+>> maintaining the large folio when it is swapped back in (to be covered in
+>> a separate series).
+>>
+>> Folios that are not fully mapped in the target range are still split,
+>> but note that behavior is changed so that if the split fails for any
+>> reason (folio locked, shared, etc) we now leave it as is and move to the
+>> next pte in the range and continue work on the proceeding folios.
+>> Previously any failure of this sort would cause the entire operation to
+>> give up and no folios mapped at higher addresses were paged out or made
+>> cold. Given large folios are becoming more common, this old behavior
+>> would have likely lead to wasted opportunities.
+>>
+>> While we are at it, change the code that clears young from the ptes to
+>> use ptep_test_and_clear_young(), via the new mkold_ptes() batch helper
+>> function. This is more efficent than get_and_clear/modify/set,
+>> especially for contpte mappings on arm64, where the old approach would
+>> require unfolding/refolding and the new approach can be done in place.
+>>
+>> Reviewed-by: Barry Song <v-songbaohua@oppo.com>
+>> Signed-off-by: Ryan Roberts <ryan.roberts@arm.com>
 >> ---
->>   drivers/staging/pi433/pi433_if.c | 23 ++++++++++++-----------
->>   1 file changed, 12 insertions(+), 11 deletions(-)
+>>  include/linux/pgtable.h | 30 ++++++++++++++
+>>  mm/internal.h           | 12 +++++-
+>>  mm/madvise.c            | 88 ++++++++++++++++++++++++-----------------
+>>  mm/memory.c             |  4 +-
+>>  4 files changed, 93 insertions(+), 41 deletions(-)
 >>
->> diff --git a/drivers/staging/pi433/pi433_if.c b/drivers/staging/pi433/pi433_if.c
->> index 62ce75b07bf0..e538f1d4e787 100644
->> --- a/drivers/staging/pi433/pi433_if.c
->> +++ b/drivers/staging/pi433/pi433_if.c
->> @@ -1400,24 +1400,25 @@ static int __init pi433_init(void)
->>   	 */
->>   	status = alloc_chrdev_region(&pi433_devt, 0, N_PI433_MINORS, "pi433");
->>   	if (status < 0)
->> -		return status;
->> +		goto fail;
+>> diff --git a/include/linux/pgtable.h b/include/linux/pgtable.h
+>> index 8185939df1e8..391f56a1b188 100644
+>> --- a/include/linux/pgtable.h
+>> +++ b/include/linux/pgtable.h
+>> @@ -361,6 +361,36 @@ static inline int ptep_test_and_clear_young(struct vm_area_struct *vma,
+>>  }
+>>  #endif
+>>
+>> +#ifndef mkold_ptes
+>> +/**
+>> + * mkold_ptes - Mark PTEs that map consecutive pages of the same folio as old.
+>> + * @vma: VMA the pages are mapped into.
+>> + * @addr: Address the first page is mapped at.
+>> + * @ptep: Page table pointer for the first entry.
+>> + * @nr: Number of entries to mark old.
+>> + *
+>> + * May be overridden by the architecture; otherwise, implemented as a simple
+>> + * loop over ptep_test_and_clear_young().
+>> + *
+>> + * Note that PTE bits in the PTE range besides the PFN can differ. For example,
+>> + * some PTEs might be write-protected.
+>> + *
+>> + * Context: The caller holds the page table lock.  The PTEs map consecutive
+>> + * pages that belong to the same folio.  The PTEs are all in the same PMD.
+>> + */
+>> +static inline void mkold_ptes(struct vm_area_struct *vma, unsigned long addr,
+>> +               pte_t *ptep, unsigned int nr)
+>> +{
+>> +       for (;;) {
+>> +               ptep_test_and_clear_young(vma, addr, ptep);
 > 
-> Just return directly.  Do nothing gotos are bad for readability and they
-> create Forgot to Set the Error Code bugs.  Also there was a direct
-> return earlier in the function so it's better to do things consistently.
-Fixed in V2.
+> IIUC, if the first PTE is a CONT-PTE, then calling ptep_test_and_clear_young()
+> will clear the young bit for the entire contig range to avoid having
+> to unfold. So,
+> the other PTEs within the range don't need to clear again.
+> 
+> Maybe we should consider overriding mkold_ptes for arm64?
+
+Yes completely agree. I was saving this for a separate submission though, to
+reduce the complexity of this initial series as much as possible. Let me know if
+you disagree and want to see that change as part of this series.
 
 > 
->>   
->>   	status = class_register(&pi433_class);
->> -	if (status) {
->> -		unregister_chrdev(MAJOR(pi433_devt),
->> -				  pi433_spi_driver.driver.name);
->> -		return status;
->> -	}
->> +	if (status)
->> +		goto unreg_chrdev;
->>   
->>   	root_dir = debugfs_create_dir(KBUILD_MODNAME, NULL);
->>   
->>   	status = spi_register_driver(&pi433_spi_driver);
->> -	if (status < 0) {
->> -		class_unregister(&pi433_class);
->> -		unregister_chrdev(MAJOR(pi433_devt),
->> -				  pi433_spi_driver.driver.name);
->> -	}
->> +	if (status < 0)
->> +		goto unreg_class;
->>   
->> +	return 0;
+> Thanks,
+> Lance
+> 
+>> +               if (--nr == 0)
+>> +                       break;
+>> +               ptep++;
+>> +               addr += PAGE_SIZE;
+>> +       }
+>> +}
+>> +#endif
 >> +
->> +unreg_class:
->> +	class_unregister(&pi433_class);
-> 
-> There is a debugfs_remove() missing.  I have written a blog that might
-> be helpful:
-> 
-> https://staticthinking.wordpress.com/2022/04/28/free-the-last-thing-style/
-Interesting blog post.
-I hope I followed through & made the right changes.
-> 
-> regards,
-> dan carpenter
-> 
->> +unreg_chrdev:
->> +	unregister_chrdev(MAJOR(pi433_devt), pi433_spi_driver.driver.name);
->> +fail:
->>   	return status;
->>   }
-> 
--- 
-Regards,
-
-Shahar
+>>  #ifndef __HAVE_ARCH_PMDP_TEST_AND_CLEAR_YOUNG
+>>  #if defined(CONFIG_TRANSPARENT_HUGEPAGE) || defined(CONFIG_ARCH_HAS_NONLEAF_PMD_YOUNG)
+>>  static inline int pmdp_test_and_clear_young(struct vm_area_struct *vma,
+>> diff --git a/mm/internal.h b/mm/internal.h
+>> index eadb79c3a357..efee8e4cd2af 100644
+>> --- a/mm/internal.h
+>> +++ b/mm/internal.h
+>> @@ -130,6 +130,8 @@ static inline pte_t __pte_batch_clear_ignored(pte_t pte, fpb_t flags)
+>>   * @flags: Flags to modify the PTE batch semantics.
+>>   * @any_writable: Optional pointer to indicate whether any entry except the
+>>   *               first one is writable.
+>> + * @any_young: Optional pointer to indicate whether any entry except the
+>> + *               first one is young.
+>>   *
+>>   * Detect a PTE batch: consecutive (present) PTEs that map consecutive
+>>   * pages of the same large folio.
+>> @@ -145,16 +147,18 @@ static inline pte_t __pte_batch_clear_ignored(pte_t pte, fpb_t flags)
+>>   */
+>>  static inline int folio_pte_batch(struct folio *folio, unsigned long addr,
+>>                 pte_t *start_ptep, pte_t pte, int max_nr, fpb_t flags,
+>> -               bool *any_writable)
+>> +               bool *any_writable, bool *any_young)
+>>  {
+>>         unsigned long folio_end_pfn = folio_pfn(folio) + folio_nr_pages(folio);
+>>         const pte_t *end_ptep = start_ptep + max_nr;
+>>         pte_t expected_pte, *ptep;
+>> -       bool writable;
+>> +       bool writable, young;
+>>         int nr;
+>>
+>>         if (any_writable)
+>>                 *any_writable = false;
+>> +       if (any_young)
+>> +               *any_young = false;
+>>
+>>         VM_WARN_ON_FOLIO(!pte_present(pte), folio);
+>>         VM_WARN_ON_FOLIO(!folio_test_large(folio) || max_nr < 1, folio);
+>> @@ -168,6 +172,8 @@ static inline int folio_pte_batch(struct folio *folio, unsigned long addr,
+>>                 pte = ptep_get(ptep);
+>>                 if (any_writable)
+>>                         writable = !!pte_write(pte);
+>> +               if (any_young)
+>> +                       young = !!pte_young(pte);
+>>                 pte = __pte_batch_clear_ignored(pte, flags);
+>>
+>>                 if (!pte_same(pte, expected_pte))
+>> @@ -183,6 +189,8 @@ static inline int folio_pte_batch(struct folio *folio, unsigned long addr,
+>>
+>>                 if (any_writable)
+>>                         *any_writable |= writable;
+>> +               if (any_young)
+>> +                       *any_young |= young;
+>>
+>>                 nr = pte_batch_hint(ptep, pte);
+>>                 expected_pte = pte_advance_pfn(expected_pte, nr);
+>> diff --git a/mm/madvise.c b/mm/madvise.c
+>> index 070bedb4996e..bd00b83e7c50 100644
+>> --- a/mm/madvise.c
+>> +++ b/mm/madvise.c
+>> @@ -336,6 +336,7 @@ static int madvise_cold_or_pageout_pte_range(pmd_t *pmd,
+>>         LIST_HEAD(folio_list);
+>>         bool pageout_anon_only_filter;
+>>         unsigned int batch_count = 0;
+>> +       int nr;
+>>
+>>         if (fatal_signal_pending(current))
+>>                 return -EINTR;
+>> @@ -423,7 +424,8 @@ static int madvise_cold_or_pageout_pte_range(pmd_t *pmd,
+>>                 return 0;
+>>         flush_tlb_batched_pending(mm);
+>>         arch_enter_lazy_mmu_mode();
+>> -       for (; addr < end; pte++, addr += PAGE_SIZE) {
+>> +       for (; addr < end; pte += nr, addr += nr * PAGE_SIZE) {
+>> +               nr = 1;
+>>                 ptent = ptep_get(pte);
+>>
+>>                 if (++batch_count == SWAP_CLUSTER_MAX) {
+>> @@ -447,55 +449,67 @@ static int madvise_cold_or_pageout_pte_range(pmd_t *pmd,
+>>                         continue;
+>>
+>>                 /*
+>> -                * Creating a THP page is expensive so split it only if we
+>> -                * are sure it's worth. Split it if we are only owner.
+>> +                * If we encounter a large folio, only split it if it is not
+>> +                * fully mapped within the range we are operating on. Otherwise
+>> +                * leave it as is so that it can be swapped out whole. If we
+>> +                * fail to split a folio, leave it in place and advance to the
+>> +                * next pte in the range.
+>>                  */
+>>                 if (folio_test_large(folio)) {
+>> -                       int err;
+>> -
+>> -                       if (folio_likely_mapped_shared(folio))
+>> -                               break;
+>> -                       if (pageout_anon_only_filter && !folio_test_anon(folio))
+>> -                               break;
+>> -                       if (!folio_trylock(folio))
+>> -                               break;
+>> -                       folio_get(folio);
+>> -                       arch_leave_lazy_mmu_mode();
+>> -                       pte_unmap_unlock(start_pte, ptl);
+>> -                       start_pte = NULL;
+>> -                       err = split_folio(folio);
+>> -                       folio_unlock(folio);
+>> -                       folio_put(folio);
+>> -                       if (err)
+>> -                               break;
+>> -                       start_pte = pte =
+>> -                               pte_offset_map_lock(mm, pmd, addr, &ptl);
+>> -                       if (!start_pte)
+>> -                               break;
+>> -                       arch_enter_lazy_mmu_mode();
+>> -                       pte--;
+>> -                       addr -= PAGE_SIZE;
+>> -                       continue;
+>> +                       const fpb_t fpb_flags = FPB_IGNORE_DIRTY |
+>> +                                               FPB_IGNORE_SOFT_DIRTY;
+>> +                       int max_nr = (end - addr) / PAGE_SIZE;
+>> +                       bool any_young;
+>> +
+>> +                       nr = folio_pte_batch(folio, addr, pte, ptent, max_nr,
+>> +                                            fpb_flags, NULL, &any_young);
+>> +                       if (any_young)
+>> +                               ptent = pte_mkyoung(ptent);
+>> +
+>> +                       if (nr < folio_nr_pages(folio)) {
+>> +                               int err;
+>> +
+>> +                               if (folio_likely_mapped_shared(folio))
+>> +                                       continue;
+>> +                               if (pageout_anon_only_filter && !folio_test_anon(folio))
+>> +                                       continue;
+>> +                               if (!folio_trylock(folio))
+>> +                                       continue;
+>> +                               folio_get(folio);
+>> +                               arch_leave_lazy_mmu_mode();
+>> +                               pte_unmap_unlock(start_pte, ptl);
+>> +                               start_pte = NULL;
+>> +                               err = split_folio(folio);
+>> +                               folio_unlock(folio);
+>> +                               folio_put(folio);
+>> +                               if (err)
+>> +                                       continue;
+>> +                               start_pte = pte =
+>> +                                       pte_offset_map_lock(mm, pmd, addr, &ptl);
+>> +                               if (!start_pte)
+>> +                                       break;
+>> +                               arch_enter_lazy_mmu_mode();
+>> +                               nr = 0;
+>> +                               continue;
+>> +                       }
+>>                 }
+>>
+>>                 /*
+>>                  * Do not interfere with other mappings of this folio and
+>> -                * non-LRU folio.
+>> +                * non-LRU folio. If we have a large folio at this point, we
+>> +                * know it is fully mapped so if its mapcount is the same as its
+>> +                * number of pages, it must be exclusive.
+>>                  */
+>> -               if (!folio_test_lru(folio) || folio_mapcount(folio) != 1)
+>> +               if (!folio_test_lru(folio) ||
+>> +                   folio_mapcount(folio) != folio_nr_pages(folio))
+>>                         continue;
+>>
+>>                 if (pageout_anon_only_filter && !folio_test_anon(folio))
+>>                         continue;
+>>
+>> -               VM_BUG_ON_FOLIO(folio_test_large(folio), folio);
+>> -
+>>                 if (!pageout && pte_young(ptent)) {
+>> -                       ptent = ptep_get_and_clear_full(mm, addr, pte,
+>> -                                                       tlb->fullmm);
+>> -                       ptent = pte_mkold(ptent);
+>> -                       set_pte_at(mm, addr, pte, ptent);
+>> -                       tlb_remove_tlb_entry(tlb, pte, addr);
+>> +                       mkold_ptes(vma, addr, pte, nr);
+>> +                       tlb_remove_tlb_entries(tlb, pte, nr, addr);
+>>                 }
+>>
+>>                 /*
+>> diff --git a/mm/memory.c b/mm/memory.c
+>> index 9d844582ba38..b5b48f4cf2af 100644
+>> --- a/mm/memory.c
+>> +++ b/mm/memory.c
+>> @@ -989,7 +989,7 @@ copy_present_ptes(struct vm_area_struct *dst_vma, struct vm_area_struct *src_vma
+>>                         flags |= FPB_IGNORE_SOFT_DIRTY;
+>>
+>>                 nr = folio_pte_batch(folio, addr, src_pte, pte, max_nr, flags,
+>> -                                    &any_writable);
+>> +                                    &any_writable, NULL);
+>>                 folio_ref_add(folio, nr);
+>>                 if (folio_test_anon(folio)) {
+>>                         if (unlikely(folio_try_dup_anon_rmap_ptes(folio, page,
+>> @@ -1553,7 +1553,7 @@ static inline int zap_present_ptes(struct mmu_gather *tlb,
+>>          */
+>>         if (unlikely(folio_test_large(folio) && max_nr != 1)) {
+>>                 nr = folio_pte_batch(folio, addr, pte, ptent, max_nr, fpb_flags,
+>> -                                    NULL);
+>> +                                    NULL, NULL);
+>>
+>>                 zap_present_folio_ptes(tlb, vma, folio, page, pte, ptent, nr,
+>>                                        addr, details, rss, force_flush,
+>> --
+>> 2.25.1
+>>
 
