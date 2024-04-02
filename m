@@ -1,443 +1,212 @@
-Received: from dispatch1-us1.ppe-hosted.com (dispatch1-us1.ppe-hosted.com [67.231.154.164])
+Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 043D717582
-	for <linux-kernel@vger.kernel.org>; Tue,  2 Apr 2024 17:38:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.154.164
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B842115A4A4
+	for <linux-kernel@vger.kernel.org>; Tue,  2 Apr 2024 17:38:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712079509; cv=none; b=Um1che+a9khqdVDSxyuZZ+PBoiatglofjYgzYLPVEGtCGT9+2FaELkF/IqSWMfFtvuYkPfI6e7UGmz48bLK6+4Y6VpkyU8lnSTGTjii8JWXqsTWgZKJWHmdV3kF+yNqxlsctqQrkoRklEWK1jZhKm4UsVoyzSQFuW7H7H+MVhNk=
+	t=1712079523; cv=none; b=m+yX6e0kbWFOAnv4tLjVDQXeJBIUHA87F0l7r631OU84mjqSvPxo910mSyQKfB6AWrIhi+4I1/co/fBI+ZgFwOw5GlmStnL2q9thYSGwtV6aNr5dMyLfFkKMpXbWql6/CWnCjd7/tjVlYaa2Ddl/7Tf8mc9YDfPvAhy+UAeSyO4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712079509; c=relaxed/simple;
-	bh=ir+4+naPsdWX8LSyAClpF/Nf2lvpor8zHNPk4Dagn/Q=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:References:
-	 In-Reply-To:Content-Type; b=F5cpuFVZ0sFIyXWDU4BZ/XT4wmvNbidiBV1rvmiKUZGKAx4n1sKfxL/lmN3E4FKkx79HXh/M9ctuLHPsd+8fJKFJg7BcvkkEG3MPwfMvRRBCq5BQTrVC6cOOXuVrChKXwzeBbqxZQXfEdm9zmbtKAVkBAbW0Djce9B5wRJIImtE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=candelatech.com; spf=pass smtp.mailfrom=candelatech.com; dkim=pass (1024-bit key) header.d=candelatech.com header.i=@candelatech.com header.b=hsdlIBS7; arc=none smtp.client-ip=67.231.154.164
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=candelatech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=candelatech.com
+	s=arc-20240116; t=1712079523; c=relaxed/simple;
+	bh=mjehrL1CeGLW4kKW6mfOdXsxoEA+KJygo9ZmNvXCcmw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=SuiCmBpzwd+WAkr7Qjsi4fSoftvGM6lkB06n127eUegRxVvnEeJ2lcRA0Yg5PW2glSCJ+NwqQgRW+GCtoCJcDD7B0aCEGKnPD/9W48nyxKGBYKhgPhYcdFqhi/1eSyu71HPlfYhAIzQpJgBk+l3gmPE6KDlfbgzpJhCSbbtIuTI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=cwYm0/+M; arc=none smtp.client-ip=209.85.210.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=candelatech.com header.i=@candelatech.com header.b="hsdlIBS7"
-X-Virus-Scanned: Proofpoint Essentials engine
-Received: from mail3.candelatech.com (mail2.candelatech.com [208.74.158.173])
-	by mx1-us1.ppe-hosted.com (PPE Hosted ESMTP Server) with ESMTP id 3590C3C0071
-	for <linux-kernel@vger.kernel.org>; Tue,  2 Apr 2024 17:38:19 +0000 (UTC)
-Received: from [192.168.100.159] (unknown [50.251.239.81])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by mail3.candelatech.com (Postfix) with ESMTPSA id AB6C213C2B0
-	for <linux-kernel@vger.kernel.org>; Tue,  2 Apr 2024 10:38:18 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail3.candelatech.com AB6C213C2B0
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=candelatech.com;
-	s=default; t=1712079498;
-	bh=ir+4+naPsdWX8LSyAClpF/Nf2lvpor8zHNPk4Dagn/Q=;
-	h=Date:Subject:From:To:References:In-Reply-To:From;
-	b=hsdlIBS7uNxfcZOIFrqvTHzPPsk+uR4R4uzK04ob5fC7a3vzrW//WQmiqIejk7uv2
-	 ahcoqQKV207ruP6tw1RF1cwtBSOyF1qlxHhs1iDTJkQ5GouMsZ9V85uzjcyLBegdry
-	 7q8y9LD/XlOm3UU1P/Q2eCg48J8QUjrRrbVz1ik4=
-Message-ID: <30819e01-43ce-638f-0cc6-067d6a8d03c7@candelatech.com>
-Date: Tue, 2 Apr 2024 10:38:18 -0700
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="cwYm0/+M"
+Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-6e6afb754fcso5180076b3a.3
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Apr 2024 10:38:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1712079521; x=1712684321; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=HtrkSh59QkjttbNzKcHQJ3LYMjwTS4ircoPC1SuYzsc=;
+        b=cwYm0/+MP90FD7gcZnZWzAQ1lF6KtZlZ8o0M7ZMvq/P/0O8M1el4K2bZUHzle+WU8w
+         gF1IAfpS3MVTt2+Kkocb2BodYAiDwsGxNSbW7nciozRHzLZ1YhyBZlRsbxvekcqoo6pE
+         qIVFfAk71n4D1B5yQSYnhiH0oBFXgHd25BAxc=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712079521; x=1712684321;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=HtrkSh59QkjttbNzKcHQJ3LYMjwTS4ircoPC1SuYzsc=;
+        b=s+iJvXnSVY3hlYD/VMsDR7ZyV8aVrXVx/qOIe8VEvNHSqNjHGF9wNZJ8xP9xqbwe7X
+         lvsjrLIKhqETHLtfnmd3y5gu1WGfODC1GqI39hb+w9Gbe2EShizBgdLnlXUueopnTfXh
+         vwJLLrSw3l6km8Y/JmRdoH/Il7RCPkDBeRBcHDU/+UlJvEXViuuXAL6tSgcCBKqDJjSu
+         NZBRzr8hy58aB1xQaDt1VNslo7xtCm59u1zawNHQyMx3ubboLk1pGw+HbkdXzy70U9hu
+         tOMrYbSJoqYuPxYs8Cn2ABVfE+LkmAap/QlMkKralGMdOiZg/aDDaQPp+oepEx2zOH5C
+         dF4g==
+X-Forwarded-Encrypted: i=1; AJvYcCVr3hcxwofYWbO9F5nu6Aw8SO46FRo5iYCKH7EaOs0XsYjV0sYCaonINExIssqATlNoLbydM05TiYqj6z04guNjKfp5Bp8EdDt0lY2o
+X-Gm-Message-State: AOJu0YzxKAboSRgJcV6LxnbbEFbtCLyonP7gY4IOXhl6mCFYhHt/lVgW
+	waj1Ap75W+4D6Ew8V9rnLdFJpFUIwjQjyaWOy5ipCLEVTrCKtF5knUynZnzfVA==
+X-Google-Smtp-Source: AGHT+IHTJsSiXsH6JTcmk3cWEEqNnvSwl5ZRIjvO/yZBSMNZyrIBM9Ot3MLRUkrax586uwZ+CcwyQw==
+X-Received: by 2002:a05:6a20:7354:b0:1a7:23ae:92c3 with SMTP id v20-20020a056a20735400b001a723ae92c3mr2197471pzc.12.1712079520977;
+        Tue, 02 Apr 2024 10:38:40 -0700 (PDT)
+Received: from localhost ([2620:15c:9d:2:73c6:f4e5:23b5:e248])
+        by smtp.gmail.com with UTF8SMTPSA id n4-20020a170903110400b001dcc7795524sm11363589plh.24.2024.04.02.10.38.40
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 02 Apr 2024 10:38:40 -0700 (PDT)
+Date: Tue, 2 Apr 2024 10:38:38 -0700
+From: Brian Norris <briannorris@chromium.org>
+To: David Lin <yu-hao.lin@nxp.com>,
+	Johannes Berg <johannes@sipsolutions.net>
+Cc: Johannes Berg <johannes@sipsolutions.net>,
+	Francesco Dolcini <francesco@dolcini.it>,
+	"kvalo@kernel.org" <kvalo@kernel.org>,
+	"linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	Pete Hsieh <tsung-hsien.hsieh@nxp.com>,
+	"rafael.beims" <rafael.beims@toradex.com>,
+	Francesco Dolcini <francesco.dolcini@toradex.com>
+Subject: Re: [EXT] Re: [PATCH v9 0/2] wifi: mwifiex: add code to support host
+ mlme
+Message-ID: <ZgxCngq_Rguc4qs8@google.com>
+References: <ZfTspRKFgrO9xCTH@google.com>
+ <969e95ccc4a1d35b45212b7fcb536ee90995e3b5.camel@sipsolutions.net>
+ <PA4PR04MB9638D253189D6DD330B198B2D1332@PA4PR04MB9638.eurprd04.prod.outlook.com>
+ <PA4PR04MB9638BE73DDBCE1CE8AA32BA8D1332@PA4PR04MB9638.eurprd04.prod.outlook.com>
+ <b2d9a7ef53c5ab4212617e8edf202bbafe52e2f8.camel@sipsolutions.net>
+ <ZftaJEIeNfV7YrVo@google.com>
+ <PA4PR04MB9638F5037D1AB9BCF51CC9D9D1322@PA4PR04MB9638.eurprd04.prod.outlook.com>
+ <Zf4rDifM6bLuqpX2@google.com>
+ <4e5f3741819e457c5c79d825c6520cb9ee531b95.camel@sipsolutions.net>
+ <PA4PR04MB96386917877832602F221282D13A2@PA4PR04MB9638.eurprd04.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.15.1
-Subject: Re: 6.9.0-rc2+ kernel hangs on boot.
-Content-Language: en-US
-From: Ben Greear <greearb@candelatech.com>
-To: LKML <linux-kernel@vger.kernel.org>
-References: <30f757e3-73c5-5473-c1f8-328bab98fd7d@candelatech.com>
-Organization: Candela Technologies
-In-Reply-To: <30f757e3-73c5-5473-c1f8-328bab98fd7d@candelatech.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-MDID: 1712079499-4ffM3zQ6kniz
-X-MDID-O:
- us5;at1;1712079499;4ffM3zQ6kniz;<greearb@candelatech.com>;c71d53d8b4bf163c84f4470b0e4d7294
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <PA4PR04MB96386917877832602F221282D13A2@PA4PR04MB9638.eurprd04.prod.outlook.com>
 
-On 4/2/24 09:37, Ben Greear wrote:
-> Hello,
+Hi Johannes and David,
+
+On Fri, Mar 29, 2024 at 10:06:19AM +0000, David Lin wrote:
+> > From: Johannes Berg <johannes@sipsolutions.net>
+> > 
+> > The way I see it, the issue here isn't necessarily the fact that this uses the
+> > auth command (and then requires assoc, of course), but that we see here
+> > this is "growing" towards a more mac80211-like model, with the code
+> > duplication (albeit little that it is today) implied by that. To me, it seems like
+> > the firmware is moving into the "oh we can't do all _that_ in firmware"
+> > territory, and that brings it closer to mac80211.
+> > 
+> > At the same time, as you say, mac80211 is doing more and more offload
+> > capability, so it seems like apart from "today the firmware requires an assoc
+> > command rather than assoc frame processing in the host", it's actually not
+> > _that_ far apart any more!
+> > 
+> > Now that may be an issue in the short term, but I wouldn't be surprised at
+> > all if desiring to implement FILS and other new features in this space would
+> > make the driver move to assoc frame processing in the host as well, because
+> > it's getting more and more complex, just like auth.
+> > 
+> > At which point - yeah the APIs are still significantly different, but again we'd
+> > end up implementing something that exists in mac80211 today and taking it
+> > into mwifiex?
+
+So it seems there's 2 possible sticking points: code duplication, and
+overall trend in the specs and implementation that might increase
+duplication?
+
+To me, it seems like the duplication is minimal today, or at least, not
+much as a result of anything in this patch proposal. There's some
+repetition of 802.11 definitions already, but that's probably
+orthogonal.
+
+I have less understanding and foresight on the "trend" questions,
+although David seems to somewhat agree in his response below -- that NXP
+intends to handle modern security features in the host more and more,
+which could indeed mean a bit more framing-related duplication.
+
+> Mwifiex is designed based on a "Thick FW" architecture. 
+> As security features become more complicated, this patch adds WPA3 support by offloading to wpa_supplicant/hostapd
+> With this patch, auth, assoc and key handshakes are handled in wpa_supplicant/hostapd. 
+> Wpa_supplicant communicates peer capability and derived keys to driver/FW via cfg80211 assoc and add_key commands.   
+> The cfg80211 commands are standard. Implementation between driver and firmware is vendor specific. It shall not break any existing architecture.
 > 
-> Sometime between rc1 and today's rc2, my system quit booting.
-> I'm not seeing any splats, it just stops.  Evidently before
-> sysrq is enabled.
+> > > It may be harder to add
+> > > future additions to the mac80211 stack [*], if we have to add new
+> > > concerns of a non-mac80211 implementation in the mix.
+> > 
+> > Not sure that makes a difference for mac80211 in itself, obviously changes in
+> > this space would then affect mwifiex, but that shouldn't be much of an
+> > issue.
+> > 
 > 
-> [  OK  ] Started Flush Journal to Persistent Storage.
-> [  OK  ] Started udev Coldplug all Devices.
->           Starting udev Wait for Complete Device Initialization...
-> [  OK  ] Listening on Load/Save RF …itch Status /dev/rfkill Watch.
-> [  OK  ] Created slice system-lvm2\x2dpvscan.slice.
->           Starting LVM2 PV scan on device 8:19...
->           Starting LVM2 PV scan on device 8:3...
-> [  OK  ] Started Device-mapper event daemon.
-> iwlwifi 0000:04:00.0: WRT: Invalid buffer destination: 0
-> sysrq: This sysrq operation is disabled.
+> With this patch Mwifiex still a non-mac80211 implementation. 
+> Driver communicates with wpa_supplicant/hostapd via cfg80211 
+> I think how driver/FW communicate each other is proprietary, I don't see a dependency with mac80211 here
+
+David, I may have pointed in the wrong direction by claiming "conflict"
+with mac80211. I believe Johannes's concerns are in code duplication.
+Pretty much all other actively-maintained Linux WiFi drivers are based
+on mac80211, so that we don't all have to implement the same frame
+construction and parsing code. mwifiex is somewhat of an outlier in
+actively adding new features while remaining a cfg80211-only driver.
+
+But for myself, I'm not even fully convinced mac80211-style stuff makes
+sense here. Even just looking at the auth() stuff in patch 1, this
+driver is far from a thin layer that allows mac80211 to handle the
+802.11 details. Just look at the 'priv->host_mlme_reg' and
+HostCmd_CMD_MGMT_FRAME_REG stuff -- it seems that the simple act of
+sending a single 802.11 frame requires opting into some FW-specific
+command mask. This feels "thick", like David mentioned above.
+
+> > I'm less worried about this individual patch than what it says about the
+> > direction this driver and firmware are taking, and I fear we'll end up in a
+> > situation where over time this driver actually gets to a point where it should
+> > be using mac80211, but because it's such a piece-meal affair (auth frames
+> > now, etc.) and large architectural change, they'd never actually do that.
+> > 
+> > To be fair, that might also require firmware API changes in some way. I used
+> > to think that was something we should never require, but I'm not so sure
+> > now any more - certainly we've changed our (Intel) FW API in support of
+> > Linux architecture many times, and overall that's for a better product (on
+> > Linux at least.)
+
+Yeah, I feel like I see hints of stuff (in public driver code, and in
+internal discussions with vendors) where things really work best in
+mac80211 land if firmware is developed with *some* consideration for the
+mac80211 Linux architecture (or else already is a very thin firmware
+from the start). I don't feel like Marvell/NXP has that consideration at
+all, and so trying to drag its firmware into mac80211 regardless would
+bring its own unique pain. But that's just a lightly-educated feeling.
+
+> > Also: David, I'd appreciate if you actually took this discussion seriously; so
+> > far you've not really contributed any technical arguments.
 > 
-> I can start a bisect, but in case anyone knows the answer already, please let me know.
-> 
-> Thanks,
-> Ben
-> 
+> I think we are using standard cfg80211 commands. How it's handled
+> between driver/FW is proprietary, it's carefully verified and shall
+> not impact other features or break any architecture. 
 
-So, deadlock I guess....
+David, repeating the "carefully verified" stuff doesn't really help the
+subject at hand, and it's not really a technical argument either, when
+it's not accompanied by any proofs. Being careful and running a good QA
+cycle are excellent and appreciated, but that's not what we're talking
+about any more. We're trying to understand what the firmware
+architecture is like, and what driver architecture matches your future
+development best, with the needs of the Linux community in mind.
 
-  INFO: task kworker/5:13:648 blocked for more than 180 seconds.
-       Not tainted 6.9.0-rc2+ #23
-"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-task:kworker/5:13    state:D stack:0     pid:648   tgid:648   ppid:2      flags:0x00004000
-Workqueue: events deferred_probe_timeout_work_func
-Call Trace:
-  <TASK>
-  __schedule+0x43d/0xe20
-  schedule+0x31/0x130
-  schedule_timeout+0x1b9/0x1d0
-  ? mark_held_locks+0x49/0x70
-  ? lockdep_hardirqs_on_prepare+0xd6/0x170
-  __wait_for_common+0xb9/0x1d0
-  ? usleep_range_state+0xb0/0xb0
-  ? __flush_work+0x1ff/0x460
-  __flush_work+0x287/0x460
-  ? flush_workqueue_prep_pwqs+0x120/0x120
-  deferred_probe_timeout_work_func+0x2b/0xa0
-  process_one_work+0x212/0x710
-  ? lock_is_held_type+0xa5/0x110
-  worker_thread+0x188/0x340
-  ? rescuer_thread+0x380/0x380
-  kthread+0xd7/0x110
-  ? kthread_complete_and_exit+0x20/0x20
-  ret_from_fork+0x28/0x40
-  ? kthread_complete_and_exit+0x20/0x20
-  ret_from_fork_asm+0x11/0x20
-  </TASK>
-INFO: task udevadm:763 blocked for more than 180 seconds.
-       Not tainted 6.9.0-rc2+ #23
-"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-task:udevadm         state:D stack:0     pid:763   tgid:763   ppid:1      flags:0x00000000
-Call Trace:
-  <TASK>
-  __schedule+0x43d/0xe20
-  schedule+0x31/0x130
-  schedule_timeout+0x1b9/0x1d0
-  ? __wait_for_common+0xb0/0x1d0
-  ? lock_release+0xc6/0x290
-  ? lockdep_hardirqs_on_prepare+0xd6/0x170
-  __wait_for_common+0xb9/0x1d0
-  ? usleep_range_state+0xb0/0xb0
-  ? __flush_work+0x1ff/0x460
-  __flush_work+0x287/0x460
-  ? flush_workqueue_prep_pwqs+0x120/0x120
-  fsnotify_destroy_group+0x66/0xf0
-  inotify_release+0x12/0x40
-  __fput+0xa6/0x2d0
-  __x64_sys_close+0x33/0x70
-  do_syscall_64+0x6c/0x170
-  entry_SYSCALL_64_after_hwframe+0x46/0x4e
-RIP: 0033:0x7f744d5bc878
-RSP: 002b:00007ffcef12f8d8 EFLAGS: 00000246 ORIG_RAX: 0000000000000003
-RAX: ffffffffffffffda RBX: 00007f744cd048c0 RCX: 00007f744d5bc878
-RDX: ffffffffffffff80 RSI: 0000000000000000 RDI: 0000000000000003
-RBP: 0000000000000003 R08: 000055f9ce349fb0 R09: 0000000000000000
-R10: 00007ffcef12f8f0 R11: 0000000000000246 R12: 0000000000000002
-R13: 0000000007270e00 R14: 000055f99670c9b8 R15: 0000000000000002
-  </TASK>
-INFO: task modprobe:968 blocked for more than 180 seconds.
-       Not tainted 6.9.0-rc2+ #23
-"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-task:modprobe        state:D stack:0     pid:968   tgid:968   ppid:65     flags:0x00000000
-Call Trace:
-  <TASK>
-  __schedule+0x43d/0xe20
-  schedule+0x31/0x130
-  schedule_timeout+0x1b9/0x1d0
-  ? __wait_for_common+0xb0/0x1d0
-  ? lock_release+0xc6/0x290
-  ? lockdep_hardirqs_on_prepare+0xd6/0x170
-  __wait_for_common+0xb9/0x1d0
-  ? usleep_range_state+0xb0/0xb0
-  idempotent_init_module+0x1ae/0x290
-  __x64_sys_finit_module+0x55/0xb0
-  do_syscall_64+0x6c/0x170
-  entry_SYSCALL_64_after_hwframe+0x46/0x4e
-RIP: 0033:0x7fde25530ddd
-RSP: 002b:00007fffac078518 EFLAGS: 00000246 ORIG_RAX: 0000000000000139
-RAX: ffffffffffffffda RBX: 0000558758e28ef0 RCX: 00007fde25530ddd
-RDX: 0000000000000000 RSI: 000055873cebf358 RDI: 0000000000000001
-RBP: 0000000000040000 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000001 R11: 0000000000000246 R12: 000055873cebf358
-R13: 0000000000000000 R14: 0000558758e29020 R15: 0000558758e28ef0
-  </TASK>
-INFO: task modprobe:969 blocked for more than 180 seconds.
-       Not tainted 6.9.0-rc2+ #23
-"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-task:modprobe        state:D stack:0     pid:969   tgid:969   ppid:93     flags:0x00000000
-Call Trace:
-  <TASK>
-  __schedule+0x43d/0xe20
-  schedule+0x31/0x130
-  schedule_timeout+0x1b9/0x1d0
-  ? __wait_for_common+0xb0/0x1d0
-  ? lock_release+0xc6/0x290
-  ? lockdep_hardirqs_on_prepare+0xd6/0x170
-  __wait_for_common+0xb9/0x1d0
-  ? usleep_range_state+0xb0/0xb0
-  idempotent_init_module+0x1ae/0x290
-  __x64_sys_finit_module+0x55/0xb0
-  do_syscall_64+0x6c/0x170
-  entry_SYSCALL_64_after_hwframe+0x46/0x4e
-RIP: 0033:0x7f338d516ddd
-RSP: 002b:00007ffd155cd1e8 EFLAGS: 00000246 ORIG_RAX: 0000000000000139
-RAX: ffffffffffffffda RBX: 000056092cb0def0 RCX: 00007f338d516ddd
-RDX: 0000000000000000 RSI: 00005608ecb4a358 RDI: 0000000000000001
-RBP: 0000000000040000 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000001 R11: 0000000000000246 R12: 00005608ecb4a358
-R13: 0000000000000000 R14: 000056092cb0e020 R15: 000056092cb0def0
-  </TASK>
-INFO: task modprobe:1044 blocked for more than 180 seconds.
-       Not tainted 6.9.0-rc2+ #23
-"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-task:modprobe        state:D stack:0     pid:1044  tgid:1044  ppid:10     flags:0x00000000
-Call Trace:
-  <TASK>
-  __schedule+0x43d/0xe20
-  schedule+0x31/0x130
-  schedule_timeout+0x1b9/0x1d0
-  ? __wait_for_common+0xb0/0x1d0
-  ? lock_release+0xc6/0x290
-  ? lockdep_hardirqs_on_prepare+0xd6/0x170
-  __wait_for_common+0xb9/0x1d0
-  ? usleep_range_state+0xb0/0xb0
-  idempotent_init_module+0x1ae/0x290
-  __x64_sys_finit_module+0x55/0xb0
-  do_syscall_64+0x6c/0x170
-  entry_SYSCALL_64_after_hwframe+0x46/0x4e
-RIP: 0033:0x7f7637b30ddd
-RSP: 002b:00007ffe6251da78 EFLAGS: 00000246 ORIG_RAX: 0000000000000139
-RAX: ffffffffffffffda RBX: 000055b889cb3ef0 RCX: 00007f7637b30ddd
-RDX: 0000000000000000 RSI: 000055b854eea358 RDI: 0000000000000001
-RBP: 0000000000040000 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000001 R11: 0000000000000246 R12: 000055b854eea358
-R13: 0000000000000000 R14: 000055b889cb4020 R15: 000055b889cb3ef0
-  </TASK>
-INFO: task modprobe:1047 blocked for more than 180 seconds.
-       Not tainted 6.9.0-rc2+ #23
-"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-task:modprobe        state:D stack:0     pid:1047  tgid:1047  ppid:113    flags:0x00000000
-Call Trace:
-  <TASK>
-  __schedule+0x43d/0xe20
-  schedule+0x31/0x130
-  schedule_timeout+0x1b9/0x1d0
-  ? __wait_for_common+0xb0/0x1d0
-  ? lock_release+0xc6/0x290
-  ? lockdep_hardirqs_on_prepare+0xd6/0x170
-  __wait_for_common+0xb9/0x1d0
-  ? usleep_range_state+0xb0/0xb0
-  idempotent_init_module+0x1ae/0x290
-  __x64_sys_finit_module+0x55/0xb0
-  do_syscall_64+0x6c/0x170
-  entry_SYSCALL_64_after_hwframe+0x46/0x4e
-RIP: 0033:0x7f3907130ddd
-RSP: 002b:00007ffc36e4eb08 EFLAGS: 00000246 ORIG_RAX: 0000000000000139
-RAX: ffffffffffffffda RBX: 000056100a856ef0 RCX: 00007f3907130ddd
-RDX: 0000000000000000 RSI: 0000560fff0ec358 RDI: 0000000000000001
-RBP: 0000000000040000 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000001 R11: 0000000000000246 R12: 0000560fff0ec358
-R13: 0000000000000000 R14: 000056100a857020 R15: 000056100a856ef0
-  </TASK>
-INFO: task modprobe:1056 blocked for more than 180 seconds.
-       Not tainted 6.9.0-rc2+ #23
-"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-task:modprobe        state:D stack:0     pid:1056  tgid:1056  ppid:1045   flags:0x00000000
-Call Trace:
-  <TASK>
-  __schedule+0x43d/0xe20
-  schedule+0x31/0x130
-  schedule_timeout+0x1b9/0x1d0
-  ? __wait_for_common+0xb0/0x1d0
-  ? lock_release+0xc6/0x290
-  ? lockdep_hardirqs_on_prepare+0xd6/0x170
-  __wait_for_common+0xb9/0x1d0
-  ? usleep_range_state+0xb0/0xb0
-  idempotent_init_module+0x1ae/0x290
-  __x64_sys_finit_module+0x55/0xb0
-  do_syscall_64+0x6c/0x170
-  entry_SYSCALL_64_after_hwframe+0x46/0x4e
-RIP: 0033:0x7fcb1e730ddd
-RSP: 002b:00007ffc692d0ad8 EFLAGS: 00000246 ORIG_RAX: 0000000000000139
-RAX: ffffffffffffffda RBX: 000055f8d8828ef0 RCX: 00007fcb1e730ddd
-RDX: 0000000000000000 RSI: 000055f8bff36358 RDI: 0000000000000001
-RBP: 0000000000040000 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000001 R11: 0000000000000246 R12: 000055f8bff36358
-R13: 0000000000000000 R14: 000055f8d8829020 R15: 000055f8d8828ef0
-  </TASK>
-INFO: task modprobe:1058 blocked for more than 180 seconds.
-       Not tainted 6.9.0-rc2+ #23
-"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-task:modprobe        state:D stack:0     pid:1058  tgid:1058  ppid:1051   flags:0x00000000
-Call Trace:
-  <TASK>
-  __schedule+0x43d/0xe20
-  schedule+0x31/0x130
-  schedule_timeout+0x1b9/0x1d0
-  ? __wait_for_common+0xb0/0x1d0
-  ? lock_release+0xc6/0x290
-  ? lockdep_hardirqs_on_prepare+0xd6/0x170
-  __wait_for_common+0xb9/0x1d0
-  ? usleep_range_state+0xb0/0xb0
-  idempotent_init_module+0x1ae/0x290
-  __x64_sys_finit_module+0x55/0xb0
-  do_syscall_64+0x6c/0x170
-  entry_SYSCALL_64_after_hwframe+0x46/0x4e
-RIP: 0033:0x7f0a17b30ddd
-RSP: 002b:00007fff56d619e8 EFLAGS: 00000246 ORIG_RAX: 0000000000000139
-RAX: ffffffffffffffda RBX: 000055abd6741ef0 RCX: 00007f0a17b30ddd
-RDX: 0000000000000000 RSI: 000055abc6586358 RDI: 0000000000000001
-RBP: 0000000000040000 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000001 R11: 0000000000000246 R12: 000055abc6586358
-R13: 0000000000000000 R14: 000055abd6742020 R15: 000055abd6741ef0
-  </TASK>
-INFO: task modprobe:1060 blocked for more than 181 seconds.
-       Not tainted 6.9.0-rc2+ #23
-"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-task:modprobe        state:D stack:0     pid:1060  tgid:1060  ppid:1057   flags:0x00000000
-Call Trace:
-  <TASK>
-  __schedule+0x43d/0xe20
-  schedule+0x31/0x130
-  schedule_timeout+0x1b9/0x1d0
-  ? __wait_for_common+0xb0/0x1d0
-  ? lock_release+0xc6/0x290
-  ? lockdep_hardirqs_on_prepare+0xd6/0x170
-  __wait_for_common+0xb9/0x1d0
-  ? usleep_range_state+0xb0/0xb0
-  idempotent_init_module+0x1ae/0x290
-  __x64_sys_finit_module+0x55/0xb0
-  do_syscall_64+0x6c/0x170
-  entry_SYSCALL_64_after_hwframe+0x46/0x4e
-RIP: 0033:0x7f12c0130ddd
-RSP: 002b:00007ffccdef0488 EFLAGS: 00000246 ORIG_RAX: 0000000000000139
-RAX: ffffffffffffffda RBX: 000056249db40ef0 RCX: 00007f12c0130ddd
-RDX: 0000000000000000 RSI: 0000562471e4d358 RDI: 0000000000000001
-RBP: 0000000000040000 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000001 R11: 0000000000000246 R12: 0000562471e4d358
-R13: 0000000000000000 R14: 000056249db41020 R15: 000056249db40ef0
-  </TASK>
+(Now, as an example useful argument: if you claimed that implementing a
+mac80211 driver with a generalized ieee80211_ops::tx() function would
+introduce unvetted combinations of control logic that cannot be
+reconciled with your HostCmd protocols, or that QA can't properly vet
+that ... well, that would be a start of a technical argument. But it
+would require more than a sentence or two to describe why that's
+impossible or difficult.)
 
-Showing all locks held in the system:
-2 locks held by systemd/1:
-  #0: ffff88812a7a10a0 (&tty->ldisc_sem){++++}-{0:0}, at: tty_ldisc_ref_wait+0x1f/0x50
-  #1: ffff88812a7a1130 (&tty->atomic_write_lock){+.+.}-{4:4}, at: file_tty_write.constprop.0+0xab/0x330
-2 locks held by kworker/0:1/9:
-  #0: ffff88812006c548 ((wq_completion)events){+.+.}-{0:0}, at: process_one_work+0x41e/0x710
-  #1: ffffc900000afe50 ((work_completion)(&fw_work->work)){+.+.}-{0:0}, at: process_one_work+0x1d1/0x710
-2 locks held by kworker/u32:0/10:
-  #0: ffff888120070948 ((wq_completion)events_unbound){+.+.}-{0:0}, at: process_one_work+0x41e/0x710
-  #1: ffffc900000b7e50 ((work_completion)(&sub_info->work)){+.+.}-{0:0}, at: process_one_work+0x1d1/0x710
-2 locks held by kworker/3:0/37:
-  #0: ffff88812006c548 ((wq_completion)events){+.+.}-{0:0}, at: process_one_work+0x41e/0x710
-  #1: ffffc900001cbe50 ((work_completion)(&fw_work->work)){+.+.}-{0:0}, at: process_one_work+0x1d1/0x710
-2 locks held by kworker/7:0/61:
-  #0: ffff88812006c548 ((wq_completion)events){+.+.}-{0:0}, at: process_one_work+0x41e/0x710
-  #1: ffffc9000029be50 ((work_completion)(&fw_work->work)){+.+.}-{0:0}, at: process_one_work+0x1d1/0x710
-2 locks held by kworker/u32:1/65:
-  #0: ffff888120070948 ((wq_completion)events_unbound){+.+.}-{0:0}, at: process_one_work+0x41e/0x710
-  #1: ffffc900002bfe50 ((work_completion)(&sub_info->work)){+.+.}-{0:0}, at: process_one_work+0x1d1/0x710
-1 lock held by khungtaskd/66:
-  #0: ffffffff8296e760 (rcu_read_lock){....}-{1:3}, at: debug_show_all_locks+0x32/0x1c0
-2 locks held by kworker/1:1/79:
-  #0: ffff88812006c548 ((wq_completion)events){+.+.}-{0:0}, at: process_one_work+0x41e/0x710
-  #1: ffffc9000032fe50 ((work_completion)(&fw_work->work)){+.+.}-{0:0}, at: process_one_work+0x1d1/0x710
-2 locks held by kworker/u32:2/93:
-  #0: ffff888120070948 ((wq_completion)events_unbound){+.+.}-{0:0}, at: process_one_work+0x41e/0x710
-  #1: ffffc900003d3e50 ((work_completion)(&sub_info->work)){+.+.}-{0:0}, at: process_one_work+0x1d1/0x710
-2 locks held by kworker/6:1/94:
-  #0: ffff88812006c548 ((wq_completion)events){+.+.}-{0:0}, at: process_one_work+0x41e/0x710
-  #1: ffffc900003dbe50 ((work_completion)(&fw_work->work)){+.+.}-{0:0}, at: process_one_work+0x1d1/0x710
-2 locks held by kworker/3:1/96:
-  #0: ffff88812006c548 ((wq_completion)events){+.+.}-{0:0}, at: process_one_work+0x41e/0x710
-  #1: ffffc900003ebe50 ((work_completion)(&fw_work->work)){+.+.}-{0:0}, at: process_one_work+0x1d1/0x710
-2 locks held by kworker/1:2/102:
-  #0: ffff88812006c548 ((wq_completion)events){+.+.}-{0:0}, at: process_one_work+0x41e/0x710
-  #1: ffffc90000eabe50 ((work_completion)(&fw_work->work)){+.+.}-{0:0}, at: process_one_work+0x1d1/0x710
-2 locks held by kworker/u32:3/107:
-  #0: ffff888120070948 ((wq_completion)events_unbound){+.+.}-{0:0}, at: process_one_work+0x41e/0x710
-  #1: ffffc90000ed3e50 ((work_completion)(&sub_info->work)){+.+.}-{0:0}, at: process_one_work+0x1d1/0x710
-2 locks held by kworker/u32:4/113:
-  #0: ffff888120070948 ((wq_completion)events_unbound){+.+.}-{0:0}, at: process_one_work+0x41e/0x710
-  #1: ffffc90000f03e50 ((work_completion)(&sub_info->work)){+.+.}-{0:0}, at: process_one_work+0x1d1/0x710
-2 locks held by kworker/6:2/189:
-  #0: ffff88812006c548 ((wq_completion)events){+.+.}-{0:0}, at: process_one_work+0x41e/0x710
-  #1: ffffc90000e0fe50 ((work_completion)(&fw_work->work)){+.+.}-{0:0}, at: process_one_work+0x1d1/0x710
-2 locks held by kworker/6:5/196:
-  #0: ffff88812006c548 ((wq_completion)events){+.+.}-{0:0}, at: process_one_work+0x41e/0x710
-  #1: ffffc90000f13e50 ((work_completion)(&fw_work->work)){+.+.}-{0:0}, at: process_one_work+0x1d1/0x710
-2 locks held by kworker/6:6/197:
-  #0: ffff88812006c548 ((wq_completion)events){+.+.}-{0:0}, at: process_one_work+0x41e/0x710
-  #1: ffffc90000f23e50 ((work_completion)(&(&hda->probe_work)->work)){+.+.}-{0:0}, at: process_one_work+0x1d1/0x710
-2 locks held by kworker/6:8/199:
-  #0: ffff88812006c548 ((wq_completion)events){+.+.}-{0:0}, at: process_one_work+0x41e/0x710
-  #1: ffffc90000f53e50 ((work_completion)(&fw_work->work)){+.+.}-{0:0}, at: process_one_work+0x1d1/0x710
-2 locks held by kworker/7:2/296:
-  #0: ffff88812006c548 ((wq_completion)events){+.+.}-{0:0}, at: process_one_work+0x41e/0x710
-  #1: ffffc9000105be50 ((work_completion)(&fw_work->work)){+.+.}-{0:0}, at: process_one_work+0x1d1/0x710
-2 locks held by kworker/7:3/297:
-  #0: ffff88812006c548 ((wq_completion)events){+.+.}-{0:0}, at: process_one_work+0x41e/0x710
-  #1: ffffc90001043e50 ((work_completion)(&fw_work->work)){+.+.}-{0:0}, at: process_one_work+0x1d1/0x710
-2 locks held by kworker/7:4/298:
-  #0: ffff88812006c548 ((wq_completion)events){+.+.}-{0:0}, at: process_one_work+0x41e/0x710
-  #1: ffffc90001063e50 ((work_completion)(&fw_work->work)){+.+.}-{0:0}, at: process_one_work+0x1d1/0x710
-2 locks held by kworker/7:5/320:
-  #0: ffff88812006c548 ((wq_completion)events){+.+.}-{0:0}, at: process_one_work+0x41e/0x710
-  #1: ffffc90001003e50 ((work_completion)(&fw_work->work)){+.+.}-{0:0}, at: process_one_work+0x1d1/0x710
-2 locks held by kworker/2:2/371:
-  #0: ffff88812006c548 ((wq_completion)events){+.+.}-{0:0}, at: process_one_work+0x41e/0x710
-  #1: ffffc9000104be50 ((work_completion)(&fw_work->work)){+.+.}-{0:0}, at: process_one_work+0x1d1/0x710
-2 locks held by kworker/5:13/648:
-  #0: ffff88812006c548 ((wq_completion)events){+.+.}-{0:0}, at: process_one_work+0x41e/0x710
-  #1: ffffc9000198fe50 ((deferred_probe_timeout_work).work){+.+.}-{0:0}, at: process_one_work+0x1d1/0x710
-2 locks held by kworker/5:14/649:
-  #0: ffff88812006c548 ((wq_completion)events){+.+.}-{0:0}, at: process_one_work+0x41e/0x710
-  #1: ffffc90001997e50 ((work_completion)(&fw_work->work)){+.+.}-{0:0}, at: process_one_work+0x1d1/0x710
-2 locks held by kworker/5:15/650:
-  #0: ffff88812006c548 ((wq_completion)events){+.+.}-{0:0}, at: process_one_work+0x41e/0x710
-  #1: ffffc9000199fe50 ((work_completion)(&fw_work->work)){+.+.}-{0:0}, at: process_one_work+0x1d1/0x710
-2 locks held by kworker/5:16/651:
-  #0: ffff88812006c548 ((wq_completion)events){+.+.}-{0:0}, at: process_one_work+0x41e/0x710
-  #1: ffffc900019a7e50 ((work_completion)(&fw_work->work)){+.+.}-{0:0}, at: process_one_work+0x1d1/0x710
-2 locks held by kworker/4:3/722:
-  #0: ffff88812006c548 ((wq_completion)events){+.+.}-{0:0}, at: process_one_work+0x41e/0x710
-  #1: ffffc90001a27e50 ((work_completion)(&fw_work->work)){+.+.}-{0:0}, at: process_one_work+0x1d1/0x710
-2 locks held by kworker/1:4/768:
-  #0: ffff88812006c548 ((wq_completion)events){+.+.}-{0:0}, at: process_one_work+0x41e/0x710
-  #1: ffffc900010d7e50 ((work_completion)(&fw_work->work)){+.+.}-{0:0}, at: process_one_work+0x1d1/0x710
-2 locks held by kworker/1:5/769:
-  #0: ffff88812006c548 ((wq_completion)events){+.+.}-{0:0}, at: process_one_work+0x41e/0x710
-  #1: ffffc900010dfe50 ((work_completion)(&fw_work->work)){+.+.}-{0:0}, at: process_one_work+0x1d1/0x710
-2 locks held by kworker/0:2/849:
-  #0: ffff88812006c548 ((wq_completion)events){+.+.}-{0:0}, at: process_one_work+0x41e/0x710
-  #1: ffffc90001353e50 ((work_completion)(&fw_work->work)){+.+.}-{0:0}, at: process_one_work+0x1d1/0x710
-2 locks held by lvm/860:
-  #0: ffff8881323c19a8 (&md->type_lock){+.+.}-{4:4}, at: table_load+0xc9/0x400
-  #1: ffff88813200c3b8 (&mddev->reconfig_mutex){+.+.}-{4:4}, at: raid_ctr+0x13b3/0x2860 [dm_raid]
-2 locks held by modprobe/1019:
-  #0: ffffffffa0ca7b68 (iwlwifi_opmode_table_mtx){+.+.}-{4:4}, at: iwl_opmode_register+0x27/0xd0 [iwlwifi]
-  #1: ffff888139f88270 (&led_cdev->led_access){+.+.}-{4:4}, at: led_classdev_register_ext+0x195/0x450
-2 locks held by kworker/u32:5/1045:
-  #0: ffff888120070948 ((wq_completion)events_unbound){+.+.}-{0:0}, at: process_one_work+0x41e/0x710
-  #1: ffffc90004367e50 ((work_completion)(&sub_info->work)){+.+.}-{0:0}, at: process_one_work+0x1d1/0x710
-2 locks held by kworker/u32:6/1051:
-  #0: ffff888120070948 ((wq_completion)events_unbound){+.+.}-{0:0}, at: process_one_work+0x41e/0x710
-  #1: ffffc90004703e50 ((work_completion)(&sub_info->work)){+.+.}-{0:0}, at: process_one_work+0x1d1/0x710
-2 locks held by kworker/u32:7/1057:
-  #0: ffff888120070948 ((wq_completion)events_unbound){+.+.}-{0:0}, at: process_one_work+0x41e/0x710
-  #1: ffffc90004a97e50 ((work_completion)(&sub_info->work)){+.+.}-{0:0}, at: process_one_work+0x1d1/0x710
-2 locks held by kworker/3:3/1111:
-  #0: ffff88812006c548 ((wq_completion)events){+.+.}-{0:0}, at: process_one_work+0x41e/0x710
-  #1: ffffc90005bafe50 ((work_completion)(&fw_work->work)){+.+.}-{0:0}, at: process_one_work+0x1d1/0x710
-2 locks held by kworker/3:4/1132:
-  #0: ffff88812006c548 ((wq_completion)events){+.+.}-{0:0}, at: process_one_work+0x41e/0x710
-  #1: ffffc90005e13e50 ((work_completion)(&fw_work->work)){+.+.}-{0:0}, at: process_one_work+0x1d1/0x710
+> We do not see a need why driver has to be redesigned based on
+> mac80211. We can keep adding new features using cfg80211.
 
-=============================================
+All in all, other than being a little grumpy about reviewing new
+features here, I'm still leaning toward David's statement here -- that I
+don't see why it *must* be rewritten toward mac80211. But I still defer
+to Johannes, and I'm just trying to be a bit of a referee, or the
+proverbial "devil's advocate".
 
+Brian
