@@ -1,139 +1,68 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay1-d.mail.gandi.net (relay1-d.mail.gandi.net [217.70.183.193])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D8B79454;
-	Tue,  2 Apr 2024 09:41:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE0E358AB4;
+	Tue,  2 Apr 2024 09:41:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.193
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712050867; cv=none; b=LJPcpNpcXfF58Sg3iCm/z757w+we48101aIRCxnqhA+rnck4YBktHFZmB65tF4g33C9qtwyqJV05dsepSP7q83i4FtDDiGwxs4eAYWZaI6qS0IQiUdZ2fYJ2ba6NoFh0Mzp2QUQAP0mP6nLt6dMA4Scg1WPbVPr/QurF9BXY9Ms=
+	t=1712050885; cv=none; b=DaxqZL2m9GEyr0Jl9u/qB+T0InyISzuT1bRzaC/sjXYPsdCrf6CCg9pElLe8p5O0SzGq0n2cXHYF6w3s8+s/pD+t19lFWXzjqGNglVNr4xgnEk6qMAaC2OWY8W5uX5/9Ob93IjXQD7ATBPkP1XEeZDsErlU2X4Krrm/jh4dJPrc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712050867; c=relaxed/simple;
-	bh=1+JbQzvwocmkPZJ25oUBQdFuhjuvVbr9C5IUSGthFBc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Zf/U+lRY2bd7mvrb8n6RygBagRjixogQDbgMSfQHzDi3SKShtuSHrCpT68V0TDOz2uTN0jEtj172y1F4/BUUetsbpFJ0P4v6Dj037eFiaAtk/n7raWxZHLNBaIGbeFHD80gQXzbEmu+K73cYB7kr8rZWP/uZYP8JV3eEPJ2+lUM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MjfO+tX0; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MjfO+tX0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B1F73C433C7;
-	Tue,  2 Apr 2024 09:41:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712050866;
-	bh=1+JbQzvwocmkPZJ25oUBQdFuhjuvVbr9C5IUSGthFBc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=MjfO+tX0nuoKKP8XrPY8G8F08OlHHBr687YgRsWjw+KGshvwv+s7vv1nuxoh0Emt+
-	 1sB7jtbaP6R8XX6kjWyXpHozaPQ68IhvOxtsGqtq7lpx+cv+BG7rDUgp5FRsyMNJlf
-	 KuvkwCTDtGI/H7tf0bjtmDnNXDCgPWRjDKdgGdojXK1+S3bZ1h22u4BkwB9lBoxShJ
-	 KlBPIvuF3cKN4UrBldFxW0tWsOHzsL5RVKJhyxl17GHEkBAtZpi3fnwJff5YnKxhP+
-	 /6579sVQ9Lfj4Ss7v+K28yicNQ9gT0rq3tw5LIUD6eiiWKt3dcW/nprJIVrORHSUbe
-	 cWIZm61BAmyyw==
-Date: Tue, 2 Apr 2024 11:41:00 +0200
-From: Niklas Cassel <cassel@kernel.org>
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	Thierry Reding <thierry.reding@gmail.com>,
-	Jonathan Hunter <jonathanh@nvidia.com>,
-	Jingoo Han <jingoohan1@gmail.com>, linux-pci@vger.kernel.org,
-	linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-	mhi@lists.linux.dev, linux-tegra@vger.kernel.org
-Subject: Re: [PATCH v2 00/10] PCI: endpoint: Make host reboot handling more
- robust
-Message-ID: <ZgvSrLpvChG4jqQl@ryzen>
-References: <20240401-pci-epf-rework-v2-0-970dbe90b99d@linaro.org>
+	s=arc-20240116; t=1712050885; c=relaxed/simple;
+	bh=tN5oFyh5FT8nbCxWgzIRTCIMvlCH6sP7pAG/9YBbhUA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=slM8bwvsRiETx2pLwUVw7zZwjKATie1S1BOF1/3m6trkwsj4NuMcPzkrdcX/aG4lbDj/Us8Buz2kf3/AjkI8MQw3iPvfsO+k36tWwaQfMAHcceNZ1twsTh8JLoad9FEK4+Rgx20/q9QGvbTUvREOfuRjn0Xz4Inr41WYvNay09I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr; spf=pass smtp.mailfrom=ghiti.fr; arc=none smtp.client-ip=217.70.183.193
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ghiti.fr
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 17803240009;
+	Tue,  2 Apr 2024 09:41:17 +0000 (UTC)
+Message-ID: <0643e9d2-3799-4b6b-81fa-fe516e850f72@ghiti.fr>
+Date: Tue, 2 Apr 2024 11:41:17 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240401-pci-epf-rework-v2-0-970dbe90b99d@linaro.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 0/2] Fix the warnings in the 32-bit platform
+Content-Language: en-US
+To: Ben Zong-You Xie <ben717@andestech.com>, peterz@infradead.org,
+ mingo@redhat.com, acme@kernel.org, namhyung@kernel.org,
+ mark.rutland@arm.com, alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+ irogers@google.com, adrian.hunter@intel.com, paul.walmsley@sifive.com,
+ palmer@dabbelt.com, aou@eecs.berkeley.edu, linux-perf-users@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org
+Cc: dylan@andestech.com, tim609@andestech.com
+References: <20240305120501.1785084-1-ben717@andestech.com>
+From: Alexandre Ghiti <alex@ghiti.fr>
+In-Reply-To: <20240305120501.1785084-1-ben717@andestech.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-GND-Sasl: alex@ghiti.fr
 
-On Mon, Apr 01, 2024 at 09:20:26PM +0530, Manivannan Sadhasivam wrote:
-> Hello,
-> 
-> This is the follow up series of [1], to improve the handling of host reboot in
-> the endpoint subsystem. This involves refining the PERST# and Link Down event
-> handling in both the controller and function drivers.
-> 
-> Testing
-> =======
-> 
-> This series is tested on Qcom SM8450 based development board with both MHI_EPF
-> and EPF_TEST function drivers.
-> 
-> Dependency
-> ==========
-> 
-> This series depends on [1] and [2].
-> 
-> - Mani
+Hi Ben,
 
-Hello Mani,
+On 05/03/2024 13:04, Ben Zong-You Xie wrote:
+> This series fix two incompatible type warnings when building perf in the
+> 32-bit platform.
+>
+> Ben Zong-You Xie (2):
+>    perf daemon: Fix the warning about time_t
+>    perf riscv: Fix the warning due to the incompatible type
+>
+>   tools/perf/arch/riscv/util/header.c | 2 +-
+>   tools/perf/builtin-daemon.c         | 9 +++++----
+>   2 files changed, 6 insertions(+), 5 deletions(-)
+>
 
-> [1] https://lore.kernel.org/linux-pci/20240314-pci-dbi-rework-v10-0-14a45c5a938e@linaro.org/
-> [2] https://lore.kernel.org/linux-pci/20240320113157.322695-1-cassel@kernel.org/
+For the series, you can add:
 
-AFAICT both these series [1] (DBI rework v12, not v10) and [2] are fully
-reviewed and seem to be ready to go.
+Reviewed-by: Alexandre Ghiti <alexghiti@rivosinc.com>
 
-Considering that we have patches depending on [1] and [2],
-namely the series in $subject, but also:
-https://lore.kernel.org/linux-pci/20240330041928.1555578-1-dlemoal@kernel.org/T/#t
+To me this should go into -fixes, but which tree? perf or riscv?
 
-I think it would be a good idea if you could apply [1] and [2] to the
-pci/endpoint branch.
+Thanks,
 
-(It is not easy for people to know that they will need to rebase their work on
-these (fully reviewed) series, when they have not been applied.)
+Alex
 
-
-Kind regards,
-Niklas
-
-
-> 
-> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> ---
-> Changes in v2:
-> - Dropped the {start/stop}_link rework patches
-> - Incorporated comments from Niklas
-> - Collected review tags
-> - Rebased on top of v6.9-rc1 and https://lore.kernel.org/linux-pci/20240320113157.322695-1-cassel@kernel.org/
-> - Link to v1: https://lore.kernel.org/r/20240314-pci-epf-rework-v1-0-6134e6c1d491@linaro.org
-> 
-> ---
-> Manivannan Sadhasivam (10):
->       PCI: qcom-ep: Disable resources unconditionally during PERST# assert
->       PCI: endpoint: Decouple EPC and PCIe bus specific events
->       PCI: endpoint: Rename core_init() callback in 'struct pci_epc_event_ops' to init()
->       PCI: epf-test: Refactor pci_epf_test_unbind() function
->       PCI: epf-{mhi/test}: Move DMA initialization to EPC init callback
->       PCI: endpoint: Introduce EPC 'deinit' event and notify the EPF drivers
->       PCI: dwc: ep: Add a generic dw_pcie_ep_linkdown() API to handle Link Down event
->       PCI: qcom-ep: Use the generic dw_pcie_ep_linkdown() API to handle Link Down event
->       PCI: epf-test: Handle Link Down event
->       PCI: qcom: Implement shutdown() callback to properly reset the endpoint devices
-> 
->  drivers/pci/controller/dwc/pcie-designware-ep.c |  99 ++++++++++++++---------
->  drivers/pci/controller/dwc/pcie-designware.h    |   5 ++
->  drivers/pci/controller/dwc/pcie-qcom-ep.c       |   9 +--
->  drivers/pci/controller/dwc/pcie-qcom.c          |   8 ++
->  drivers/pci/controller/dwc/pcie-tegra194.c      |   1 +
->  drivers/pci/endpoint/functions/pci-epf-mhi.c    |  47 ++++++++---
->  drivers/pci/endpoint/functions/pci-epf-test.c   | 103 +++++++++++++++++-------
->  drivers/pci/endpoint/pci-epc-core.c             |  53 ++++++++----
->  include/linux/pci-epc.h                         |   1 +
->  include/linux/pci-epf.h                         |  27 +++++--
->  10 files changed, 248 insertions(+), 105 deletions(-)
-> ---
-> base-commit: e6377605ca734126533a0f8e4de2b4bac881f076
-> change-id: 20240314-pci-epf-rework-a6e65b103a79
-> 
-> Best regards,
-> -- 
-> Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> 
