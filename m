@@ -1,125 +1,117 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F3C614286;
-	Tue,  2 Apr 2024 03:33:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7381A1758B;
+	Tue,  2 Apr 2024 03:34:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712028836; cv=none; b=hkXcCpXk199KxtRCRGKUBt8rdT7T3q5IP2GWmJOTr/kEryOoIb9Zy/dxNRPq0tNxF2fpeDchq5WzkCVuB+RIjIXdQ1dONr3T9gvR3dpAZV+qpRyB/QsDic8EQ/Ug0KiFMlsZvFSFKeoysP8+PM33sBGaThw8Ufpjdihjux2Lw4c=
+	t=1712028860; cv=none; b=RZxDe59BkKRUNcmnFtYjqS9ehF0qggGNQAqoSwAKFcaknA2hckN862U9bvLjXlHGMyJ9yVDGQgi4QWbtreKCUzx55ik+X6qFGymCEOE8SyOe/bjbj/F3U/+00x2xlN9mXY6L3566GJHtYkBE2AU4NyEV/s0tMLILbdOM+rSWTv8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712028836; c=relaxed/simple;
-	bh=nm+nAlqpw3ca2xRqXTLmgegLhY4MxsydF/vxsaUw2M0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PAU++oRdk8LUPi5Gpsc8DlvZKzHXDhjCYx0lhhgMBRWNuHk2AoDs1YfQ81DMBRJ9iXzKC+5IhpqcX8nwZekLQkwdt8eI/vB6H8NQhyhSW6b1anGFNnxlqZGGKjL61xxTpdp7xwSrSnksCXmy0WRKj+HYGa4z0K+HRbS/1rAnhK8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=VJYsoJ+V; arc=none smtp.client-ip=198.175.65.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="VJYsoJ+V"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1712028835; x=1743564835;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=nm+nAlqpw3ca2xRqXTLmgegLhY4MxsydF/vxsaUw2M0=;
-  b=VJYsoJ+VfIuaCv5r9auzCwKTzQOA8AxZZiy2DOP6dibSnqjl94erSl/u
-   5KJn9USDVJ7CQaXCWqqBnsEEgkdzj8j1q3YXnfV46w6/JlWAGbBHXRQrD
-   6hjTYQCuTCkL21FX5DkLAoEaG38v25e9SeRZ+zvUVFh6qf11IHU20xd0K
-   uWt6ZQ18/CQC4o9TiV/LCpnZGkLz1yPUmeML34xr6a9we3IQ4xohw59g0
-   UX/D+MTqtKueAg+PyjFlUDyXaZENF4DZiM77vPNtrEq2Oy/XPGldoMoNt
-   VqNdO7I1mPhL3Q/5qt3od+hZlgV6IXs+tgC77wQOEBjyIaKjTPojIrwK5
-   Q==;
-X-CSE-ConnectionGUID: cOJwGq+CSjW5IU63M5OqUQ==
-X-CSE-MsgGUID: 1UUT7MF/QJS/IqMqBbUcvA==
-X-IronPort-AV: E=McAfee;i="6600,9927,11031"; a="10997135"
-X-IronPort-AV: E=Sophos;i="6.07,173,1708416000"; 
-   d="scan'208";a="10997135"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Apr 2024 20:33:54 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,173,1708416000"; 
-   d="scan'208";a="22587250"
-Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.165])
-  by fmviesa004.fm.intel.com with ESMTP; 01 Apr 2024 20:33:51 -0700
-Date: Tue, 2 Apr 2024 11:29:00 +0800
-From: Xu Yilun <yilun.xu@linux.intel.com>
-To: Peter Colberg <peter.colberg@intel.com>
-Cc: Wu Hao <hao.wu@intel.com>, Tom Rix <trix@redhat.com>,
-	Moritz Fischer <mdf@kernel.org>, Xu Yilun <yilun.xu@intel.com>,
-	linux-fpga@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Russ Weight <russ.weight@linux.dev>,
-	Marco Pagani <marpagan@redhat.com>,
-	Matthew Gerlach <matthew.gerlach@linux.intel.com>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: Re: [PATCH RESEND] fpga: dfl: omit unneeded casts of u64 values for
- dev_dbg()
-Message-ID: <Zgt7fA/Jfks/iKYi@yilunxu-OptiPlex-7050>
-References: <20240329000429.7493-1-peter.colberg@intel.com>
+	s=arc-20240116; t=1712028860; c=relaxed/simple;
+	bh=9TcJj3m3lWySpxZPEa6pJXgM3D7Sglz7sBGcMQSePZA=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=hk7/z418lL6daq+YA30H0BkfxVBch7ODXDBMoHR4ZBH58ZoNZueG+9PYZX7eyotjmUEN3pu3iIWwJXixWpb/pESIu26830QxFAKWvtrowhmV6jmygSXGFPQCHMCA7UrVkWpIx+rJji5cDxYAZ/xkshnxHBYKHcr9Hz76qdok7Ko=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.20.42.173])
+	by gateway (Coremail) with SMTP id _____8DxWPC3fAtm2jAiAA--.12641S3;
+	Tue, 02 Apr 2024 11:34:15 +0800 (CST)
+Received: from [10.20.42.173] (unknown [10.20.42.173])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8CxZRGzfAtmgGNxAA--.12269S3;
+	Tue, 02 Apr 2024 11:34:13 +0800 (CST)
+Subject: Re: [PATCH v7 3/7] LoongArch: KVM: Add cpucfg area for kvm hypervisor
+To: Xi Ruoyao <xry111@xry111.site>, WANG Xuerui <kernel@xen0n.name>,
+ Huacai Chen <chenhuacai@kernel.org>, Tianrui Zhao <zhaotianrui@loongson.cn>,
+ Juergen Gross <jgross@suse.com>, Paolo Bonzini <pbonzini@redhat.com>,
+ Jonathan Corbet <corbet@lwn.net>
+Cc: loongarch@lists.linux.dev, linux-kernel@vger.kernel.org,
+ virtualization@lists.linux.dev, kvm@vger.kernel.org
+References: <20240315080710.2812974-1-maobibo@loongson.cn>
+ <20240315080710.2812974-4-maobibo@loongson.cn>
+ <4668e606-a7b5-49b7-a68d-1c2af86f7d76@xen0n.name>
+ <57e66ff5-1cb6-06bd-ee6f-a3c3dadd6aef@loongson.cn>
+ <b7d91c1a42470821983a811a16f9fc1c55cfe699.camel@xry111.site>
+From: maobibo <maobibo@loongson.cn>
+Message-ID: <d42c7783-3d0a-57fd-fcbe-a1a657255ae4@loongson.cn>
+Date: Tue, 2 Apr 2024 11:34:11 +0800
+User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240329000429.7493-1-peter.colberg@intel.com>
+In-Reply-To: <b7d91c1a42470821983a811a16f9fc1c55cfe699.camel@xry111.site>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:AQAAf8CxZRGzfAtmgGNxAA--.12269S3
+X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
+X-Coremail-Antispam: 1Uk129KBj93XoW7tw4rXry7CF1rGF1UJFy3WrX_yoW8Cr43pF
+	W5KasrAF4qqr1Ivw4kX3WxuFy0krn3Ja15Crn8Cr1rZw15GryrKw4aga4Y9FZ2yr1IkF1j
+	vr4aq34kA3yDArXCm3ZEXasCq-sJn29KB7ZKAUJUUUUx529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUPab4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
+	xVW8Jr0_Cr1UM2kKe7AKxVWUAVWUtwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07
+	AIYIkI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWU
+	AVWUtwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI4
+	8JMxk0xIA0c2IEe2xFo4CEbIxvr21lc7CjxVAaw2AFwI0_JF0_Jw1l42xK82IYc2Ij64vI
+	r41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1l4IxYO2xFxVAFwI0_Jw0_GFylx2IqxVAqx4xG67
+	AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIY
+	rxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_JFI_Gr1lIxAIcVC0I7IYx2IY6xkF7I0E14
+	v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVW8JVWx
+	JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxU4SoGDU
+	UUU
 
-On Thu, Mar 28, 2024 at 08:04:29PM -0400, Peter Colberg wrote:
-> Omit unneeded casts of u64 values to unsigned long long for use with
-> printk() format specifier %llx. Unlike user space, the kernel defines
-> u64 as unsigned long long for all architectures; see commit 2a7930bd77fe
-> ("Documentation/printk-formats.txt: No casts needed for u64/s64").
 
-The change is OK. But I suggest just delete the unnecessary dev_dbg()
-since now people normally don't want these "Hello, I'm here!" info.
+
+On 2024/4/2 上午10:49, Xi Ruoyao wrote:
+> On Tue, 2024-04-02 at 09:43 +0800, maobibo wrote:
+>>> Sorry for the late reply, but I think it may be a bit non-constructive
+>>> to repeatedly submit the same code without due explanation in our
+>>> previous review threads. Let me try to recollect some of the details
+>>> though...
+>> Because your review comments about hypercall method is wrong, I need not
+>> adopt it.
+> 
+> Again it's unfair to say so considering the lack of LVZ documentation.
+> 
+> /* snip */
+> 
+>>
+>> 1. T0-T7 are scratch registers during SYSCALL ABI, this is what you
+>> suggest, does there exist information leaking to user space from T0-T7
+>> registers?
+> 
+> It's not a problem.  When syscall returns RESTORE_ALL_AND_RET is invoked
+> despite T0-T7 are not saved.  So a "junk" value will be read from the
+> leading PT_SIZE bytes of the kernel stack for this thread.
+> 
+> The leading PT_SIZE bytes of the kernel stack is dedicated for storing
+> the struct pt_regs representing the reg file of the thread in the
+> userspace.
+Not all syscalls use leading PT_SIZE bytes of the kernel stack. It is 
+complicated if syscall is combined with interrupt and singals.
 
 > 
-> These changes are cosmetic only; no functional changes.
+> Thus we may only read out the userspace T0-T7 value stored when the same
+> thread was interrupted or trapped last time, or 0 (if the thread was
+> never interrupted or trapped before).
 > 
-> Suggested-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> Signed-off-by: Peter Colberg <peter.colberg@intel.com>
-> ---
-> This is an unmodified resend of the second patch only from the series
-> "fpga: dfl: clean up string formatting for sysfs_emit() and dev_dbg()".
+> And it's impossible to read some data used by the kernel internally, or
+> some data of another thread.
+Are you sure that it's impossible to read some data used by the kernel 
+internally?
 
-Why only pick this patch out of the series?
-
-[...]
-
-> diff --git a/drivers/fpga/dfl-fme-mgr.c b/drivers/fpga/dfl-fme-mgr.c
-> index ab228d8837a0..da3cb9c35de5 100644
-> --- a/drivers/fpga/dfl-fme-mgr.c
-> +++ b/drivers/fpga/dfl-fme-mgr.c
-> @@ -150,7 +150,7 @@ static int fme_mgr_write_init(struct fpga_manager *mgr,
->  	priv->pr_error = fme_mgr_pr_error_handle(fme_pr);
->  	if (priv->pr_error)
->  		dev_dbg(dev, "previous PR error detected %llx\n",
-> -			(unsigned long long)priv->pr_error);
-> +			priv->pr_error);
-
-I'm not sure if this is an real problem. Maybe we could keep it.
-
->  
->  	dev_dbg(dev, "set PR port ID\n");
->  
-> @@ -242,8 +242,7 @@ static int fme_mgr_write_complete(struct fpga_manager *mgr,
->  	dev_dbg(dev, "PR operation complete, checking status\n");
->  	priv->pr_error = fme_mgr_pr_error_handle(fme_pr);
->  	if (priv->pr_error) {
-> -		dev_dbg(dev, "PR error detected %llx\n",
-> -			(unsigned long long)priv->pr_error);
-> +		dev_dbg(dev, "PR error detected %llx\n", priv->pr_error);
-
-This is a real problem, is it? Change to dev_err()?
-
-Thanks,
-Yilun
-
->  		return -EIO;
->  	}
->  
-> -- 
-> 2.44.0
+Regards
+Bibo Mao
 > 
+> But indeed there is some improvement here.  Zeroing these registers
+> seems cleaner than reading out the junk values, and also faster (move
+> $t0, $r0 is faster than ld.d $t0, $sp, PT_R12).  Not sure if it's worthy
+> to violate Huacai's "keep things simple" aspiration though.
 > 
+
