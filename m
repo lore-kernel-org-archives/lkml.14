@@ -1,57 +1,57 @@
-Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com [209.85.167.43])
+Received: from mail-lj1-f173.google.com (mail-lj1-f173.google.com [209.85.208.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B18915A4AC;
-	Tue,  2 Apr 2024 16:46:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C24C515AAC9;
+	Tue,  2 Apr 2024 16:46:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712076376; cv=none; b=hpKinvnuYM4fARZ1psv+vDQy9eV/qnXRQKH71ZeOjoYPWXt+c7nisXR5RbeAmIPtoNvQN3SITddMUDA1S6PU73Z6a/CG5btBL7iA7tnZ2UxoEzG0DOBHag+I/QJYFIdPZPDByW14WVsBAxCq2+fzXwMXSqnFCo/vw5igExBbA5A=
+	t=1712076380; cv=none; b=I2FJGurDiGdxTU6QVg6wmuL/+FZdX/HAUSKqdIBf9v05nXNA0mI/Qmv3JJyluhImOjEwJ0kM9qdD70MQfvgLWst/o9JUMGOxJQrcazDYHg4H0O4ZQloypKDxjHeb3KOfef3Hx+474pqhn05AZG5AHB6sRtQ1kedItayoZh/QaY0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712076376; c=relaxed/simple;
-	bh=yE0FsoUymeXjfLMsyNScjrVGMjxDxsYpVdsOrcTmCh4=;
+	s=arc-20240116; t=1712076380; c=relaxed/simple;
+	bh=p9Dddd2V1n+rmD1qDYTdwmyLSKw+UqqIeEou+gt2b/c=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=e6NoejLQVGL56Eh915VhJ5/YzYReTTz96H7I7rUhUZYOpL35AbP0Mo0GdqNSo1cHg62YMkhTQuQ457djJ3um7Jqay6F2VearaiRx09FhFohhgEM1NVNxpZygRDDm8YEOflVrJNVZLOOGsam68IdShCl2O1m/JEl7qqmOWLFQmw0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KEzfPU6S; arc=none smtp.client-ip=209.85.167.43
+	 MIME-Version; b=PoYwP3Pe3wAakQ1kQdxhWsIea5ZxJ3KL1P6aSp6sq3SvTvYD2KCbdtiHWCW4TYl4lG2RrHu3a2abnaC9cUUO6bkDU1+HWZfgL9yHCFUsMcz/vr0sdtWSBZU0ckqmyNKjVUcbCOd2FNWhDN5WaqyKmjOI3kn9JXRkFKzbdLv4QLw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=O3XvdOyd; arc=none smtp.client-ip=209.85.208.173
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KEzfPU6S"
-Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-513d247e3c4so49868e87.0;
-        Tue, 02 Apr 2024 09:46:14 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="O3XvdOyd"
+Received: by mail-lj1-f173.google.com with SMTP id 38308e7fff4ca-2d6eedf3e99so316321fa.1;
+        Tue, 02 Apr 2024 09:46:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1712076372; x=1712681172; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1712076376; x=1712681176; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=9NYgY1znrae2KCyhiaf38CHKStR6C+BE55+RHyD8rWk=;
-        b=KEzfPU6S7l0lVM8/PZPSaFutv/a6DImfRBrBPFxJFgyTBU/Scf/N3xTpZGgtczgJRc
-         B6pUQkGjgq6HIGOKsT33AzMn1PhOv9DCOU1/FZdv92WCbR3yK2Vb6Rt7YVVG2X+idzSB
-         Q+x6d8sSzrGeLfAS3CL2qdiYMDhAjTGv0Dtdi5Fp5Xc1EiDKqAYMrZAgtkbdoRscTZtm
-         M6AWz6JT78RyGdryYeQwCOjbKwPU05Sdoj2xd4fJMymHoHk48v2O1oSmYubl6hshuDoW
-         r+hLVCzbh3Wo8CTfV/G6eX62ykSVjqXJZbVJVhbLbOKI0TPDahnwGKW4igqxAkaSO6Le
-         IAUg==
+        bh=ngAa270WUPsZp48uTGGMM7fPG1prY3FiJDKrNebGRfg=;
+        b=O3XvdOydtvYGqNhDEmJTqUD4c4fGIW9TfrU2UEYy5eJMrQpVRE2X7RmGue1ch4hUHK
+         uiH6cFY77XpBvWpgIfhTHY5IPWbHU5LrrrP8JJfghZLvQV7Gzaz093pJx5bpp8gKCjr8
+         GLWfG4OYxJZxKtOwNPQZChnVHPQyIo6IqTDVdJEYMpBatTvu6XP1xq+L0tBiu3yehKnH
+         ZX3i4c+gUVOEPH08p8o4iMeTZdQ6Q5svkzJLLE0SlQ2W0TYPwEFntHchoerK6wo5gclT
+         ei8iGkc41eqK5V0sd+gdqNMDNg+W7oePvQMa8BUAtNDhxx/uvQfXYpjDY9eK24lgly1H
+         MxMw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712076372; x=1712681172;
+        d=1e100.net; s=20230601; t=1712076376; x=1712681176;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=9NYgY1znrae2KCyhiaf38CHKStR6C+BE55+RHyD8rWk=;
-        b=EAWhmPEXrs1u5te2lNhTDMdsrn3XWFpQm5RbAQYA0HFAJIvc1TH4sm6ZT8Tb5rcynM
-         fM51A/TcqiPfKET9h4OWVlIOA97GkwvSMDl4WmkDWufOckKtyiYXvviTh4fhCvLaK7W7
-         JbwiLp7BqeXbyXWEaw7rpjfE/nwyijvSshNU5UlnCqxnZKFRcpRkvm5WsSN7uyGj6Hza
-         R5wQ650yRYf+up5hpavhbHm35O132+YGo0EQj9OQFEytqxqii3yKyTmcXhJ8uysdIIDZ
-         S/d9N8x/xlp2o3oJT/jk5sbGgjnMbd5POlskuQF1fJGUIJ30ikQDqzQh1rTtrAm+S3KU
-         wHCw==
-X-Forwarded-Encrypted: i=1; AJvYcCUXnOaSnDl6SUY+RcgK9NDPmoPCAUfaxX390WdradgH2uoc4OGe+3JHBF998rpz1fBm2MGNS4aeFZGiYj7wxbr+G/OeTDf7jiNpFEKc
-X-Gm-Message-State: AOJu0YzreH+G4tuGUYSJygd23azWoaLi84p2Rc533ref46qeocfHyPfy
-	lgtE60LK2ymfHJ5m1ly7jajQoKEcjl2oaEMRpKliEYQcVkh7l9wlT3KTTxzQo45jiQ==
-X-Google-Smtp-Source: AGHT+IEbqT1qtDrPXym+06/GaUki8nFJlVHxGAeNzFOWXRypLpTW30p4QiC/2evEZByVTFlJz7en9Q==
-X-Received: by 2002:a19:5e13:0:b0:513:d125:43b8 with SMTP id s19-20020a195e13000000b00513d12543b8mr11018lfb.25.1712076371753;
-        Tue, 02 Apr 2024 09:46:11 -0700 (PDT)
+        bh=ngAa270WUPsZp48uTGGMM7fPG1prY3FiJDKrNebGRfg=;
+        b=uiVuVkF6fRDCvEXa7bpiFB1TOABedDto5tAIoKRUrNPibKAfuT4AEZ7yH0mJVYrElu
+         LVLhaUQnfuDQs1s/w1ym8CTKwHR71v5dfE1GHBF2Uj3gVG4vR3kd7dZFqwEb+LCGdv4t
+         WhzwmVFJvr0YhI1zCQzBoG9Hv2gaznvSjmRP8qegnT3UHwaB4VKPlkhqzhJ5m1nehzC0
+         9LS3s0aoYkqv4V2pCa6Tgep+958mBbMJhvkP8upqpj4VBQ7QE2LaXYqVkRAMC3oULCKe
+         bOo2ST5fN+Ov4SCdUII7YdHRb1ccm6x7YYQOm4xJooINowoxfI+GipDwA3KwVBS6ql1n
+         mf4w==
+X-Forwarded-Encrypted: i=1; AJvYcCWsbw7o7dr6EsaH6qU3Jyx950WeJXoDkzzqr4qTLg4ICMMOM5Bwnfb3OUqGkaa8Heujf+bSPaFg1/d1ERUNQUlmAih7l9fHOdwfRUAI
+X-Gm-Message-State: AOJu0YyOPMwClyDmCw9FmgptyEyN5k1z5u82netq0OEbabdwB4icutT/
+	YyxtwsaP+4ShFhswsQKOgp7Vxoo8VaxPJYtWVNfGS2N4q7IjZ5Kg5Ay0dMIONcPiRA==
+X-Google-Smtp-Source: AGHT+IEeldKMunA/Y2xY4aktPwfyalDim0v7bNvFrnQC0AyHnPn+I8CDmrZbVBr8+Bs83UFD/VXw2A==
+X-Received: by 2002:a2e:b8d4:0:b0:2d5:9d0c:9590 with SMTP id s20-20020a2eb8d4000000b002d59d0c9590mr11630ljp.19.1712076376062;
+        Tue, 02 Apr 2024 09:46:16 -0700 (PDT)
 Received: from localhost ([77.91.78.25])
-        by smtp.gmail.com with ESMTPSA id z10-20020ac25dea000000b00515d4457ff9sm1190395lfq.89.2024.04.02.09.46.11
+        by smtp.gmail.com with ESMTPSA id h6-20020a2e9ec6000000b002d6bd3b6bcbsm1713013ljk.33.2024.04.02.09.46.15
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 02 Apr 2024 09:46:11 -0700 (PDT)
+        Tue, 02 Apr 2024 09:46:15 -0700 (PDT)
 From: Mikhail Rudenko <mike.rudenko@gmail.com>
 To: linux-media@vger.kernel.org,
 	linux-kernel@vger.kernel.org
@@ -63,9 +63,9 @@ Cc: Sakari Ailus <sakari.ailus@linux.intel.com>,
 	Dave Stevenson <dave.stevenson@raspberrypi.com>,
 	Mauro Carvalho Chehab <mchehab@kernel.org>,
 	Mikhail Rudenko <mike.rudenko@gmail.com>
-Subject: [PATCH v4 03/20] media: i2c: ov4689: Fix typo in a comment
-Date: Tue,  2 Apr 2024 19:45:34 +0300
-Message-ID: <20240402164552.19171-4-mike.rudenko@gmail.com>
+Subject: [PATCH v4 05/20] media: i2c: ov4689: Remove i2c_client from ov4689 struct
+Date: Tue,  2 Apr 2024 19:45:36 +0300
+Message-ID: <20240402164552.19171-6-mike.rudenko@gmail.com>
 X-Mailer: git-send-email 2.44.0
 In-Reply-To: <20240402164552.19171-1-mike.rudenko@gmail.com>
 References: <20240402164552.19171-1-mike.rudenko@gmail.com>
@@ -77,27 +77,166 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Fix a spelling error in a comment.
+The 'client' field within the 'ov4689' structure is solely used to
+access its 'dev' member. This commit removes the 'client' field and
+directly stores a pointer to the 'struct device'.
 
 Signed-off-by: Mikhail Rudenko <mike.rudenko@gmail.com>
 Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 ---
- drivers/media/i2c/ov4689.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/media/i2c/ov4689.c | 36 ++++++++++++++++++------------------
+ 1 file changed, 18 insertions(+), 18 deletions(-)
 
 diff --git a/drivers/media/i2c/ov4689.c b/drivers/media/i2c/ov4689.c
-index a6c101044eb3..f2614a0b1340 100644
+index d31659139a6e..56bf1d964e43 100644
 --- a/drivers/media/i2c/ov4689.c
 +++ b/drivers/media/i2c/ov4689.c
-@@ -692,7 +692,7 @@ static int ov4689_set_ctrl(struct v4l2_ctrl *ctrl)
+@@ -74,7 +74,7 @@ struct ov4689_mode {
+ };
+ 
+ struct ov4689 {
+-	struct i2c_client *client;
++	struct device *dev;
+ 	struct regmap *regmap;
+ 	struct clk *xvclk;
+ 	struct gpio_desc *reset_gpio;
+@@ -405,13 +405,13 @@ static int ov4689_get_selection(struct v4l2_subdev *sd,
+ static int ov4689_s_stream(struct v4l2_subdev *sd, int on)
+ {
+ 	struct ov4689 *ov4689 = to_ov4689(sd);
+-	struct i2c_client *client = ov4689->client;
++	struct device *dev = ov4689->dev;
+ 	int ret = 0;
+ 
+ 	mutex_lock(&ov4689->mutex);
+ 
+ 	if (on) {
+-		ret = pm_runtime_resume_and_get(&client->dev);
++		ret = pm_runtime_resume_and_get(dev);
+ 		if (ret < 0)
+ 			goto unlock_and_return;
+ 
+@@ -420,26 +420,26 @@ static int ov4689_s_stream(struct v4l2_subdev *sd, int on)
+ 					  ov4689->cur_mode->num_regs,
+ 					  NULL);
+ 		if (ret) {
+-			pm_runtime_put(&client->dev);
++			pm_runtime_put(dev);
+ 			goto unlock_and_return;
+ 		}
+ 
+ 		ret = __v4l2_ctrl_handler_setup(&ov4689->ctrl_handler);
+ 		if (ret) {
+-			pm_runtime_put(&client->dev);
++			pm_runtime_put(dev);
+ 			goto unlock_and_return;
+ 		}
+ 
+ 		ret = cci_write(ov4689->regmap, OV4689_REG_CTRL_MODE,
+ 				OV4689_MODE_STREAMING, NULL);
+ 		if (ret) {
+-			pm_runtime_put(&client->dev);
++			pm_runtime_put(dev);
+ 			goto unlock_and_return;
+ 		}
+ 	} else {
+ 		cci_write(ov4689->regmap, OV4689_REG_CTRL_MODE,
+ 			  OV4689_MODE_SW_STANDBY, NULL);
+-		pm_runtime_put(&client->dev);
++		pm_runtime_put(dev);
+ 	}
+ 
+ unlock_and_return:
+@@ -553,7 +553,6 @@ static const struct v4l2_subdev_ops ov4689_subdev_ops = {
+  */
+ static int ov4689_map_gain(struct ov4689 *ov4689, int logical_gain, int *result)
+ {
+-	const struct device *dev = &ov4689->client->dev;
+ 	const struct ov4689_gain_range *range;
+ 	unsigned int n;
+ 
+@@ -564,7 +563,8 @@ static int ov4689_map_gain(struct ov4689 *ov4689, int logical_gain, int *result)
+ 	}
+ 
+ 	if (n == ARRAY_SIZE(ov4689_gain_ranges)) {
+-		dev_warn_ratelimited(dev, "no mapping found for gain %d\n",
++		dev_warn_ratelimited(ov4689->dev,
++				     "no mapping found for gain %d\n",
+ 				     logical_gain);
+ 		return -EINVAL;
+ 	}
+@@ -580,7 +580,7 @@ static int ov4689_set_ctrl(struct v4l2_ctrl *ctrl)
+ {
+ 	struct ov4689 *ov4689 =
+ 		container_of(ctrl->handler, struct ov4689, ctrl_handler);
+-	struct i2c_client *client = ov4689->client;
++	struct device *dev = ov4689->dev;
+ 	int sensor_gain;
+ 	s64 max_expo;
+ 	int ret;
+@@ -597,7 +597,7 @@ static int ov4689_set_ctrl(struct v4l2_ctrl *ctrl)
+ 		break;
+ 	}
+ 
+-	if (!pm_runtime_get_if_in_use(&client->dev))
++	if (!pm_runtime_get_if_in_use(dev))
+ 		return 0;
  
  	switch (ctrl->id) {
- 	case V4L2_CID_EXPOSURE:
--		/* 4 least significant bits of expsoure are fractional part */
-+		/* 4 least significant bits of exposure are fractional part */
- 		ret = ov4689_write_reg(ov4689->client, OV4689_REG_EXPOSURE,
- 				       OV4689_REG_VALUE_24BIT, ctrl->val << 4);
+@@ -618,13 +618,13 @@ static int ov4689_set_ctrl(struct v4l2_ctrl *ctrl)
+ 		ret = ov4689_enable_test_pattern(ov4689, ctrl->val);
  		break;
+ 	default:
+-		dev_warn(&client->dev, "%s Unhandled id:0x%x, val:0x%x\n",
++		dev_warn(dev, "%s Unhandled id:0x%x, val:0x%x\n",
+ 			 __func__, ctrl->id, ctrl->val);
+ 		ret = -EINVAL;
+ 		break;
+ 	}
+ 
+-	pm_runtime_put(&client->dev);
++	pm_runtime_put(dev);
+ 
+ 	return ret;
+ }
+@@ -689,8 +689,7 @@ static int ov4689_initialize_controls(struct ov4689 *ov4689)
+ 
+ 	if (handler->error) {
+ 		ret = handler->error;
+-		dev_err(&ov4689->client->dev, "Failed to init controls(%d)\n",
+-			ret);
++		dev_err(ov4689->dev, "Failed to init controls(%d)\n", ret);
+ 		goto err_free_handler;
+ 	}
+ 
+@@ -716,7 +715,7 @@ static int ov4689_initialize_controls(struct ov4689 *ov4689)
+ static int ov4689_check_sensor_id(struct ov4689 *ov4689,
+ 				  struct i2c_client *client)
+ {
+-	struct device *dev = &ov4689->client->dev;
++	struct device *dev = ov4689->dev;
+ 	u64 id = 0;
+ 	int ret;
+ 
+@@ -744,7 +743,7 @@ static int ov4689_configure_regulators(struct ov4689 *ov4689)
+ 	for (i = 0; i < ARRAY_SIZE(ov4689_supply_names); i++)
+ 		ov4689->supplies[i].supply = ov4689_supply_names[i];
+ 
+-	return devm_regulator_bulk_get(&ov4689->client->dev,
++	return devm_regulator_bulk_get(ov4689->dev,
+ 				       ARRAY_SIZE(ov4689_supply_names),
+ 				       ov4689->supplies);
+ }
+@@ -813,7 +812,8 @@ static int ov4689_probe(struct i2c_client *client)
+ 	if (!ov4689)
+ 		return -ENOMEM;
+ 
+-	ov4689->client = client;
++	ov4689->dev = dev;
++
+ 	ov4689->cur_mode = &supported_modes[OV4689_MODE_2688_1520];
+ 
+ 	ov4689->xvclk = devm_clk_get_optional(dev, NULL);
 -- 
 2.44.0
 
