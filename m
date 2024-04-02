@@ -1,69 +1,71 @@
-Received: from mail.nfschina.com (unknown [42.101.60.195])
-	by smtp.subspace.kernel.org (Postfix) with SMTP id C94CD2F52;
-	Tue,  2 Apr 2024 03:19:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=42.101.60.195
+Received: from mail-io1-f69.google.com (mail-io1-f69.google.com [209.85.166.69])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDB7314AB7
+	for <linux-kernel@vger.kernel.org>; Tue,  2 Apr 2024 03:26:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.69
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712027981; cv=none; b=qxwRVCfpDOHajoefNS+9o0B3GxHniPtpjv8dLNn0mkATSkAF1PHmheHzpFqXnL9vQwhs5jtz1AHM+SL48v2WXvYrY7UZg6hvQPHwzMYxocgvhxOsAVdhxZRSQ/i9KU13c0CvDQlbfNKcjJ3CMRkKEaMN/bxfOhuLpwki2RADQDU=
+	t=1712028365; cv=none; b=TcKcRBheq4abTHbHgz1DzixuTEXkC1ulyxJWKpDRzyEFYsL/a5No8wNMqOeiHkHyvx+DeKyfoSVD2TtAESI2svoEnXl5RNk1gifYK0qY+0WlA5E2YLbKE0yf/uUvsGeE8+LfN+JdWRafVXX2JrLkXjQDcb8r/jNrSVWlVL7y0Nk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712027981; c=relaxed/simple;
-	bh=t7OGwSPTzMHZ3C/Fcp6Kle6Ak4fVZXc+vcW4hvY4BuM=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=ddr6akNdIEThWDuyGXb1xGmyk9P5khCg0dxC7WkkiU0PiD7lSdXxUSBPtBiQ4E6BQyAhbfhWvEkjTuZppAx2vdzhbtSyPCE9PLTIaGbo3x53U6tAvUvQXTkPdpZl/da5DP3XbffJMm4pmd4Gc4Q/aiKgTBZz/W3nSXRpQI+ZCJo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nfschina.com; spf=pass smtp.mailfrom=nfschina.com; arc=none smtp.client-ip=42.101.60.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nfschina.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nfschina.com
-Received: from localhost.localdomain (unknown [219.141.250.2])
-	by mail.nfschina.com (Maildata Gateway V2.8.8) with ESMTPA id A1A1F60A51E62;
-	Tue,  2 Apr 2024 11:19:35 +0800 (CST)
-X-MD-Sfrom: kunyu@nfschina.com
-X-MD-SrcIP: 219.141.250.2
-From: Li kunyu <kunyu@nfschina.com>
-To: tytso@mit.edu,
-	adilger.kernel@dilger.ca
-Cc: linux-ext4@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Li kunyu <kunyu@nfschina.com>
-Subject: [PATCH] =?UTF-8?q?ext4:=20extents:=20Remove=20unnecessary=20?= =?UTF-8?q?=E2=80=980=E2=80=99=20values=20from=20error?=
-Date: Tue,  2 Apr 2024 11:19:28 +0800
-Message-Id: <20240402031928.33790-1-kunyu@nfschina.com>
-X-Mailer: git-send-email 2.18.2
+	s=arc-20240116; t=1712028365; c=relaxed/simple;
+	bh=wSr3rHG9nJpkblrt+sv3U5SXJ+62qimKQYaXZjWG1lw=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=uQYu16G9hzw78VE39BYx/5hBNE18K7y98JjbfzQe3F1Mib0dLHM/cFLsq18BecJ8qk7NVs7G570QAOtUhGKnoax5gjOybMvj3zlDNRHG78AZpFbP+s+BEsTn5X30MRPV/Z3baHTx9oQ0wLNPTZDsobrO7UYg7NzENLn2ATnjOg4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.69
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f69.google.com with SMTP id ca18e2360f4ac-7cbf1ea053cso512725839f.1
+        for <linux-kernel@vger.kernel.org>; Mon, 01 Apr 2024 20:26:03 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712028363; x=1712633163;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=2Mees8FCkEDruqSqmIUhviuHEO5gv56mgH0AeESTS2Y=;
+        b=YCUPn/RRw+uzpLtMqmeCCzo5/Pzzdih78ehJn1YzArLhJt9SlsjzEhi5RAhQEQCF4b
+         +sAdQ08QHRrDXcCXbfPCmRUKlaivaapNtqppJbtnrgckdAFElYZ7zzUEHKKEys4vv501
+         xlGROywDw38NH9J1Pi4I5tdojwCaVyLpC8fjOd/SJ/kb9Gy4q9iE3sKrulKzELFIP8pc
+         NFM4gx2GQy+gry4kspD2X0Trgc+xc+H/I1iED+dlEn9GL52CS/oFY/eYhM5VBfpW+duy
+         y1lAaZtgodmdMvAXLa+IKr+DQ7WoXsWUAiwcOvUKCLWUXQk5/LtWTuuFWNeCZ8jLr3Bd
+         uJfA==
+X-Forwarded-Encrypted: i=1; AJvYcCVnDAhdHs1+MomPwowFZDeH5rFMiGuAnIQupsFfKtZtMQA+HgD4z6blP++vkrIz/xtHTYLxv4e5W0j+YczJOyjJI5akvCHHwcBYt9T0
+X-Gm-Message-State: AOJu0Ywcy8lJucuuYqxFYPbg1R2OEC5yvH4DirNgcaiVsZmKzdsA9GBj
+	j3eauRE/pjOZb7M8nJJqF8kGLYTM7TmFE1IbUOxmguytgaen/htH63/t2zTyRLh51s8hkOMPAx3
+	aphLs0HAaQEt8Ab6q4RoE8a37BkwLWGryHFWmo2l0QW9fd8qUncF+br0=
+X-Google-Smtp-Source: AGHT+IEo2rSqQ15OlQCfn2L4f3vXzdxQRQ/Of88zK2yidJsVVjpMr/NNUFYe81KRvzr6I4LzNd3uEJWbz7wN1sxxZ1w2JTPIADMe
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+X-Received: by 2002:a05:6638:1413:b0:47e:e557:ba45 with SMTP id
+ k19-20020a056638141300b0047ee557ba45mr417058jad.0.1712028363088; Mon, 01 Apr
+ 2024 20:26:03 -0700 (PDT)
+Date: Mon, 01 Apr 2024 20:26:03 -0700
+In-Reply-To: <20240401224417.3584-1-hdanton@sina.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000006d7564061514aa3e@google.com>
+Subject: Re: [syzbot] [net?] possible deadlock in hsr_dev_xmit (2)
+From: syzbot <syzbot+fbf74291c3b7e753b481@syzkaller.appspotmail.com>
+To: hdanton@sina.com, linux-kernel@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-error is assigned first, so it does not need to initialize the assignment.
+Hello,
 
-Signed-off-by: Li kunyu <kunyu@nfschina.com>
----
- fs/ext4/extents.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+syzbot has tested the proposed patch and the reproducer did not trigger any issue:
 
-diff --git a/fs/ext4/extents.c b/fs/ext4/extents.c
-index f3cb570951a7e..254e07a33eb9b 100644
---- a/fs/ext4/extents.c
-+++ b/fs/ext4/extents.c
-@@ -4977,7 +4977,7 @@ static int ext4_fiemap_check_ranges(struct inode *inode, u64 start, u64 *len)
- int ext4_fiemap(struct inode *inode, struct fiemap_extent_info *fieinfo,
- 		u64 start, u64 len)
- {
--	int error = 0;
-+	int error;
- 
- 	if (fieinfo->fi_flags & FIEMAP_FLAG_CACHE) {
- 		error = ext4_ext_precache(inode);
-@@ -5009,7 +5009,7 @@ int ext4_get_es_cache(struct inode *inode, struct fiemap_extent_info *fieinfo,
- {
- 	ext4_lblk_t start_blk, len_blks;
- 	__u64 last_blk;
--	int error = 0;
-+	int error;
- 
- 	if (ext4_has_inline_data(inode)) {
- 		int has_inline;
--- 
-2.18.2
+Reported-and-tested-by: syzbot+fbf74291c3b7e753b481@syzkaller.appspotmail.com
 
+Tested on:
+
+commit:         480e035f Merge tag 'drm-next-2024-03-13' of https://gi..
+git tree:       https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
+console output: https://syzkaller.appspot.com/x/log.txt?x=12e1130d180000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=1e5b814e91787669
+dashboard link: https://syzkaller.appspot.com/bug?extid=fbf74291c3b7e753b481
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+patch:          https://syzkaller.appspot.com/x/patch.diff?x=1321fac5180000
+
+Note: testing is done by a robot and is best-effort only.
