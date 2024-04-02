@@ -1,104 +1,83 @@
-Received: from relmlie6.idc.renesas.com (relmlor2.renesas.com [210.160.252.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5ECCF12E1C1;
-	Tue,  2 Apr 2024 14:53:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.160.252.172
+Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D4CD126F16
+	for <linux-kernel@vger.kernel.org>; Tue,  2 Apr 2024 14:54:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712069623; cv=none; b=tG19/dHXcSoNQ/MTgSigrIbbY7swUlGcT8Wb0irE0HUH50N2OlMfdr550w94qW6q3jM2fGLOcNTbnBhxH0Ymycb0KvsHSlCSc0mQACSkvUNhXwThCEMLA+LU7bLax6+uIlSxlpiIw1PbS0PPFLnYjdtoWedlTWzxR4O5fmfPfi4=
+	t=1712069672; cv=none; b=Q4mkhbiQkUgAZxdkQ6qz7nxsaMMD9wEfXcwz2Apm8/Af70nX2PnphmAteMfO0dkv3qu1wVBt6x0v7yU30k61YZ9dqVUg7IbWRiavXGY/89ioLnOYbwKT+Auy/CckibRrN0CeSpUruL5lh6XQzmjFXYiugJZejaMiw8NiSc+nGkU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712069623; c=relaxed/simple;
-	bh=yvWgqBRAemfrm35I3KIyriiHuR6znVWOdsVNvpWD4cg=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=XAyBkf/hgyrM73uudKHOuJ9/8zUGkraH21fBJk3AsH4kSogKkyeOiqX0v99pnWSwxAE9TALoqKiQRjRwDPmOyK2So7eS3l5C7SMac6U14w/eK/lj86ZuCCEKr3NHLkFh2Jxof1GwvyU03C9sfogHvd+OYF7EghQPZYvbpRAktd0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com; spf=pass smtp.mailfrom=bp.renesas.com; arc=none smtp.client-ip=210.160.252.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bp.renesas.com
-X-IronPort-AV: E=Sophos;i="6.07,175,1708354800"; 
-   d="scan'208";a="204068020"
-Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
-  by relmlie6.idc.renesas.com with ESMTP; 02 Apr 2024 23:53:34 +0900
-Received: from renesas-deb12.cephei.uk (unknown [10.226.93.98])
-	by relmlir6.idc.renesas.com (Postfix) with ESMTP id 267BF4254193;
-	Tue,  2 Apr 2024 23:53:29 +0900 (JST)
-From: Paul Barker <paul.barker.ct@bp.renesas.com>
-To: Sergey Shtylyov <s.shtylyov@omp.ru>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	=?UTF-8?q?Niklas=20S=C3=B6derlund?= <niklas.soderlund+renesas@ragnatech.se>
-Cc: Paul Barker <paul.barker.ct@bp.renesas.com>,
-	netdev@vger.kernel.org,
-	linux-renesas-soc@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 2/2] net: ravb: Always update error counters
-Date: Tue,  2 Apr 2024 15:53:05 +0100
-Message-Id: <20240402145305.82148-2-paul.barker.ct@bp.renesas.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240402145305.82148-1-paul.barker.ct@bp.renesas.com>
-References: <20240402145305.82148-1-paul.barker.ct@bp.renesas.com>
+	s=arc-20240116; t=1712069672; c=relaxed/simple;
+	bh=XhHqbYUE6Sx2oXD4UwzUkAidMzUAqX4XcQB43g8/Juk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=grWAKoSZM8EnNspmBRONezxF7oHOV5deORvWTnRdWXdCLDxRCWhXDcdWkjL+l1qppeVeUatYGMNkaZdSPw7kGuplQTKPBygIvjgDz//7uXBIjY8UvkCCeBJF77/j1chQPUDaz287vSkL38WpmBjpGCAhtdPLmZkj+WP6xzbEwQE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=szeredi.hu; spf=pass smtp.mailfrom=szeredi.hu; dkim=pass (1024-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b=CzgL9RzM; arc=none smtp.client-ip=209.85.208.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=szeredi.hu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=szeredi.hu
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="CzgL9RzM"
+Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-565c6cf4819so10052361a12.1
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Apr 2024 07:54:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=szeredi.hu; s=google; t=1712069669; x=1712674469; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=XhHqbYUE6Sx2oXD4UwzUkAidMzUAqX4XcQB43g8/Juk=;
+        b=CzgL9RzMGnY0+BA1XuU0yV6fA2fMLzh14fbb1EUNV8bPAXX9mn9Oo5pgYxhlLWgYm7
+         7yR20Jy/Y+uZFal8F4S1gMDg6SebWCirAtoxgobYw1QFwv7EtRF3gQ89OA9cxslhdavd
+         +QsuajtlLfo5zGMpPiGls0tkeISAQGGcDU6us=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712069669; x=1712674469;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=XhHqbYUE6Sx2oXD4UwzUkAidMzUAqX4XcQB43g8/Juk=;
+        b=U0h3o2DXYddhu8TV45CNTKene0KCMPKS9qL/99HmCCqvdkdZf+TUMZtAks0+l4G2s1
+         VFt2dZlex7I+Eea0ZmeySsqPKlPCvJ3BdkCIboKYBVPo39MUs0Q9St4cMLgWHTCuuoHu
+         HizgTCwEUY63FCZ+RgWxso4Xk72uTCWRnbZJP46Ryfim+ig3mhO+ie7jSSDUSw5kF0YX
+         sf4UaDwiaTinpgYZRFUUqRoX+ov+Q9J0MMhPExvjzl9bikuO5zF4ejlI/f1ORCnr+IbD
+         b6N+pC4aRxcGB+hW4oNTQ6ojKvzoQarjUpb2voPBNU63IVCVBPqGIHnxpY3P5BfIUMEr
+         QaLw==
+X-Forwarded-Encrypted: i=1; AJvYcCUT6H1lKXeVeXiPEC1UOVrFFTmIT2cngWjKuQV54Jej9JpgonDu23ZIN17rVSK0XQdMFVAYxXvEboohwmENoY7bx4w3CpkaK6AW1WsU
+X-Gm-Message-State: AOJu0Yxq44krBilxIAok5FpCHXNWqWLkOapvY+5HZTnzDqvyAV/no0hC
+	KCNwEZB7UfNxn6OMCPE9eM6QgTjr0sX4tCeOz3P5sJnJuu+87Vym76BYo1Obk9aw9nsJ3weC+zs
+	ez9mSVeM4LCQf1T5koDL5fcP50hkU1Rmyp39jaQ==
+X-Google-Smtp-Source: AGHT+IEfPsC0av5KNUW2YwqX9Ii2cWfCfOzCgMFH2tQFtuKqbx1k0z9SiaRv2Dtswp06nVXO7FYfzwuU2PtAB+0IZeA=
+X-Received: by 2002:a17:906:f591:b0:a4e:1d5f:73ae with SMTP id
+ cm17-20020a170906f59100b00a4e1d5f73aemr14164406ejd.12.1712069669482; Tue, 02
+ Apr 2024 07:54:29 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20240402-setlease-v2-1-b098a5f9295d@kernel.org>
+ <8a8e8c0d-7878-4289-b490-cb9bf17e56b9@fastmail.fm> <f6bbdf158f0ca7a12de9b9f980d4d7fa31399ed9.camel@kernel.org>
+ <CAOQ4uxiv7xSUS7RDK3esa1Crp8reYXewxkr5fFbhG623P20PwA@mail.gmail.com>
+ <CAJfpegvRDKS1kKrMPyqzmuSs8KXZ2ohpwp0nEzEf7e3vv940xg@mail.gmail.com> <fbd0b9e5fb765eaea98fef23e9e36f266d7926ea.camel@kernel.org>
+In-Reply-To: <fbd0b9e5fb765eaea98fef23e9e36f266d7926ea.camel@kernel.org>
+From: Miklos Szeredi <miklos@szeredi.hu>
+Date: Tue, 2 Apr 2024 16:54:17 +0200
+Message-ID: <CAJfpeguWCNDzAuDndB8pbcai5c+ux3KLtrAaAOuh74+wCtZBXA@mail.gmail.com>
+Subject: Re: [PATCH v2] fuse: allow FUSE drivers to declare themselves free
+ from outside changes
+To: Jeff Layton <jlayton@kernel.org>
+Cc: Amir Goldstein <amir73il@gmail.com>, Bernd Schubert <bernd.schubert@fastmail.fm>, 
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-The error statistics should be updated each time the poll function is
-called, even if the full RX work budget has been consumed. This prevents
-the counts from becoming stuck when RX bandwidth usage is high.
+On Tue, 2 Apr 2024 at 16:51, Jeff Layton <jlayton@kernel.org> wrote:
+>
+> I'm fine with whatever verbiage you prefer. Let me know if you need me
+> to resend.
 
-This also ensures that error counters are not updated after we've
-re-enabled interrupts as that could result in a race condition.
+I'll do this, no need to resend.
 
-Also drop an unnecessary space.
+> Another thing to consider: what about fsnotify? Should notifications be
+> allowed when this flag isn't set?
 
-Fixes: c156633f1353 ("Renesas Ethernet AVB driver proper")
-Signed-off-by: Paul Barker <paul.barker.ct@bp.renesas.com>
----
-Changes from v1:
-  * Use the correct 'Fixes' tag.
-  * Actually drop the space described in the commit message!
-    (I must have lost this when rebasing things)
+Aren't local notification done for all network filesystems?
 
- drivers/net/ethernet/renesas/ravb_main.c | 17 +++++++++--------
- 1 file changed, 9 insertions(+), 8 deletions(-)
-
-diff --git a/drivers/net/ethernet/renesas/ravb_main.c b/drivers/net/ethernet/renesas/ravb_main.c
-index 48803050abdb..ba01c8cc3c90 100644
---- a/drivers/net/ethernet/renesas/ravb_main.c
-+++ b/drivers/net/ethernet/renesas/ravb_main.c
-@@ -1339,6 +1339,15 @@ static int ravb_poll(struct napi_struct *napi, int budget)
- 	netif_wake_subqueue(ndev, q);
- 	spin_unlock_irqrestore(&priv->lock, flags);
- 
-+	/* Receive error message handling */
-+	priv->rx_over_errors = priv->stats[RAVB_BE].rx_over_errors;
-+	if (info->nc_queues)
-+		priv->rx_over_errors += priv->stats[RAVB_NC].rx_over_errors;
-+	if (priv->rx_over_errors != ndev->stats.rx_over_errors)
-+		ndev->stats.rx_over_errors = priv->rx_over_errors;
-+	if (priv->rx_fifo_errors != ndev->stats.rx_fifo_errors)
-+		ndev->stats.rx_fifo_errors = priv->rx_fifo_errors;
-+
- 	if (!unmask)
- 		goto out;
- 
-@@ -1355,14 +1364,6 @@ static int ravb_poll(struct napi_struct *napi, int budget)
- 	}
- 	spin_unlock_irqrestore(&priv->lock, flags);
- 
--	/* Receive error message handling */
--	priv->rx_over_errors =  priv->stats[RAVB_BE].rx_over_errors;
--	if (info->nc_queues)
--		priv->rx_over_errors += priv->stats[RAVB_NC].rx_over_errors;
--	if (priv->rx_over_errors != ndev->stats.rx_over_errors)
--		ndev->stats.rx_over_errors = priv->rx_over_errors;
--	if (priv->rx_fifo_errors != ndev->stats.rx_fifo_errors)
--		ndev->stats.rx_fifo_errors = priv->rx_fifo_errors;
- out:
- 	return budget - quota;
- }
--- 
-2.39.2
-
+Thanks,
+Miklos
