@@ -1,238 +1,290 @@
-Received: from mail-oi1-f173.google.com (mail-oi1-f173.google.com [209.85.167.173])
+Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com [209.85.167.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 783A584FD3
-	for <linux-kernel@vger.kernel.org>; Tue,  2 Apr 2024 13:08:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 956047FBB1;
+	Tue,  2 Apr 2024 13:08:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712063283; cv=none; b=fkB9VLt2BWHTvd+zxPGaxJ15l5mJFJjJXtZSIhnJXhPq3EdDzkriZ91o9D0Uow6f2kK3RFLlDXGrLFHRA0KIajV1sHDcPQ/6ON/uTnDiK6DiovcjLQytABdzlxKDrtQF6gQR7CR4M+kLXO5I9veBZHdS/Ryc55N/xwb+QpRX6/M=
+	t=1712063296; cv=none; b=RU3Vkuaiz4uFjMw8+w9+/dEK2/Nnvurs4dKayM2WI1200ADugeuYvMJqJOPkacgCkFjz+vkJM736tcKNBpyvsIG8FL4DY7LpMAonLivm/yiCKKzi1hrHLj+QWXB9N50+8klp4UcQeyyHQ3akOeVIlRUV4vGHhGlvdEKBuQqMdQU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712063283; c=relaxed/simple;
-	bh=vgP+36VWKafj4cVC7SyOoL9SCfau5bABFyH+Csakpn0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=b9rq1kGQUsDUknpXNxjxiTNe8jkpjk6cqkD3uCxyxyyf3nGzFiCIIY/o+75NU8qyASmMyhq+PlbYwNmSa9zDRXokpXXZ3p2cuBZDaFXDyBNYTeqoq1QKB+ECPmlkADIMvtYlqY3t1Q/XVTL0bxzH2cmafoPmWvFxBsAfq69/ZkI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=m0EBIbrR; arc=none smtp.client-ip=209.85.167.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1712063296; c=relaxed/simple;
+	bh=h/SRFFoQahv/2WTtb3N/Yc2EPcE9jm/wdTxm2fXzcNM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=kwpE8V/gh49pO1CbuO3LQJfsxIQBGilqmpRD2RnmUgQFv9wnRywBHa5tsJJ+bgRJZ4NjTpXs8lTohKYJS9Ohpu0iTklCf5oW8OpKAouPwDbO0FsmXWaA1PWgMkCkv9rH0DDSmxxqd6pBHmFEspcnADzcnc/NH8MU4OhT3BJR8t8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Yd/xTT6l; arc=none smtp.client-ip=209.85.167.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="m0EBIbrR"
-Received: by mail-oi1-f173.google.com with SMTP id 5614622812f47-3c4f55a1bd6so329867b6e.0
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Apr 2024 06:08:01 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Yd/xTT6l"
+Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-51588f70d2dso6802323e87.3;
+        Tue, 02 Apr 2024 06:08:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1712063280; x=1712668080; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=lwz+te3v25y+UIyojEIFe5So3l8Pl+raR0jXQRZwL4g=;
-        b=m0EBIbrRo2aNG3nZVIb2tMspivbN+KZS3njoFjN1mf343kOEkVlYfc4JUGFuRcYUWm
-         jwpHFyOPJ5LxYONiIWZxr92uUbAPqMXpn0N2Vo7YRj8XDTeiS5RIWyaDDO9Zns3s0sh+
-         zleHL5NXKjRmX2MBcsLga2nXl6RDH4EpD8Bwn3nElV7t+6Cjc3gedndiSXNKegEfIkdd
-         s6+UB95VAdRVZzStBT/AokHkIhiKQWIl6QAXzeoT/J7GqIXg7wCoCdzl6GvDwZGgaiqF
-         6g6XQz6WToQiGl1FVZQnWXpcaIxSfmh+doj97Jv9gtbE3XcFskjd29IcgjL+QifaJajM
-         nOSQ==
+        d=gmail.com; s=20230601; t=1712063293; x=1712668093; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=+qPCFmSJWSkRP3Bq2Sdn0FQYOOLtpoSr9p5xtyWUSwg=;
+        b=Yd/xTT6ln0Q5wLs3X6URcPimrFXLFXbUc8aswMrYVDaegyn3Mi3qZJ+RoWrZALcYg4
+         wJSdYeu9eWPMFBnlEIOhq+8JsouzeY/W5rvsfHAySiebkJDXzU3NCtfBeFYN+oQ/qM1V
+         /e9LK9rH/V4nx24VtPK5HapiUmBIpZ9KRf6thZ3GY+354ogGDzPhO/lPXxzAFrPXSbgR
+         xmtFfBb4HDkjMFubFVZMIu3clvQncRifXFeoFPRi1KsGx6JWXcBJeFZDncqFfUOSwkwe
+         WoxWDqXQ2slYzOkbQE66E+Oh2nh0BpC99KDRQL3JOGRTDKmZhoElMTPw7UeF9pLH6U13
+         FzuQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712063280; x=1712668080;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=lwz+te3v25y+UIyojEIFe5So3l8Pl+raR0jXQRZwL4g=;
-        b=kgeKO+9qwmCXpxtcql1lmkESZ64A1v82XXyXEr9yVmj6EqDNUN3yuMHZvbAV3CZ+ZV
-         1GWYX+pWy0cVvaCpMJDn6isIdUrrJ6uCpaB1ISB4zJI+5hSb821xfIuI2SUHsuLEH6iL
-         G89Jlr3nVelGMA5qrIzr4N9F1ZgIJaw8L3kJUP06tUTA48ELwEesk36zlaTx7WdOzkBC
-         qwu6mkwkcATS+NWYCzgAPyzEdN4cQtzLC0klK5RUMKF/ZRaNAxe12ys7NTVHN6FIcSv2
-         chaozhxxKeWf6+RfcvyQjvPcEKvc/O4gVElN5lv8DkK3aQHQ6hnub5xc8OHXJk/SSCfz
-         zE0g==
-X-Gm-Message-State: AOJu0Ywq4Bkn4NohSjl6wevxsMfjB2cdwmH3z+VcpyG/c8x17ExiKDrv
-	u4KG42+i0kajwg4vi0GDSv/v3S1XfEpuIalADQ+ghxOlIlBHIzMxAB3pLdLu1+NxalyjdWbMjxp
-	ae4Ox4d7tzqsxfLBg40un0xGNR/IZhzNxI8qF
-X-Google-Smtp-Source: AGHT+IFfjHomY9Q1pqJvyjMwrOtxO9qwBxdriDeV+1TZPmKhKqftTRLWP/h8EQ6LJ6NPd7qWAALGTCn/qXfM/KNFjPs=
-X-Received: by 2002:a05:6808:1707:b0:3c4:f08d:544d with SMTP id
- bc7-20020a056808170700b003c4f08d544dmr4327794oib.17.1712063280344; Tue, 02
- Apr 2024 06:08:00 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1712063293; x=1712668093;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=+qPCFmSJWSkRP3Bq2Sdn0FQYOOLtpoSr9p5xtyWUSwg=;
+        b=MXNxPXthKvwEZPMu7pyHkv+GgCwfLWctaBO2w5T+h5kBb4Gwy+bJIUNy+Y5fHfPOO3
+         Z8e2EaW20jmd3cWStvnmBW57efgdoC4u9qBzDrLQRLABJG00ut2lb2eLZEiL3u+bF+Hb
+         ACZ2/QBhp4dtdGfkqqd3LbHCRSi9qfOddqAve3hqW5OVV3X2pFcAIVCBVwlxj5Rn58RN
+         YZDcC9hG6VhuPWVpISBpfL/bG+gXEPO0ddg+vOKh2G/WjYmLD/GH86QhmFh8uIHymuso
+         R0svgv7S1X9HDIzhFwCWenxkpoPKIhFWAAvNzSZDnVmy0F1rRYNXQo4v7RK/PjsvdR8/
+         9J9Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUW4xI1LY8TXaKKlosfoLGTgGIZ77FTW2qFCoaExOP4Qt9xioWT+QEt3NCFBEC6aK3hz67Y9ylH857h7yQfQWjNj1Tu+oNQ9gSeuc8AloOvqKpiftnrrl6MjqQa4b4vZvFb9plGKqkR0zTKtvOnb81ydl6lMrhKNSJWc1GF5oYkE+WqQhtlGYlW
+X-Gm-Message-State: AOJu0YxgSvh9APqR91xC54F3mexPowX+YCAPjVxc9CRHJ0Q2N/RWCRFS
+	lqY18le0wtMjFQOOzgQTof52k5tkcroys+N+UqbDKmnt27FZTKXmT++dKYVT
+X-Google-Smtp-Source: AGHT+IE3ezZBDx2wBIqjnF9l9mn5sokOcqKwU3G4yz29XjH/jY/x9aHtp8030qQfry+f0rVY/26ULw==
+X-Received: by 2002:a05:6512:6cd:b0:513:5e6b:a191 with SMTP id u13-20020a05651206cd00b005135e6ba191mr9245189lff.50.1712063292439;
+        Tue, 02 Apr 2024 06:08:12 -0700 (PDT)
+Received: from fedora ([213.255.186.46])
+        by smtp.gmail.com with ESMTPSA id f25-20020a193819000000b00515a614c6easm1740728lfa.23.2024.04.02.06.08.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 02 Apr 2024 06:08:11 -0700 (PDT)
+Date: Tue, 2 Apr 2024 16:08:07 +0300
+From: Matti Vaittinen <mazziesaccount@gmail.com>
+To: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
+	Matti Vaittinen <mazziesaccount@gmail.com>
+Cc: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Liam Girdwood <lgirdwood@gmail.com>,
+	Mark Brown <broonie@kernel.org>,
+	Matti Vaittinen <mazziesaccount@gmail.com>,
+	Wim Van Sebroeck <wim@linux-watchdog.org>,
+	Guenter Roeck <linux@roeck-us.net>, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-watchdog@vger.kernel.org
+Subject: [RFC PATCH 2/6] dt-bindings: mfd: bd96801 PMIC core
+Message-ID: <8eeda07847b14438d3dd4e61cbfa3cfbfd51d750.1712058690.git.mazziesaccount@gmail.com>
+References: <cover.1712058690.git.mazziesaccount@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <31c82dcc-e203-48a9-aadd-f2fcd57d94c1@paulmck-laptop> <20240401213950.3910531-1-paulmck@kernel.org>
-In-Reply-To: <20240401213950.3910531-1-paulmck@kernel.org>
-From: Marco Elver <elver@google.com>
-Date: Tue, 2 Apr 2024 15:07:22 +0200
-Message-ID: <CANpmjNNSCWSndpf-N7=ifSUFhLWjYJibRf58hETjHeW25RzWYg@mail.gmail.com>
-Subject: Re: [PATCH RFC cmpxchg 1/8] lib: Add one-byte and two-byte cmpxchg()
- emulation functions
-To: "Paul E. McKenney" <paulmck@kernel.org>
-Cc: linux-kernel@vger.kernel.org, kernel-team@meta.com, 
-	Andrew Morton <akpm@linux-foundation.org>, Thomas Gleixner <tglx@linutronix.de>, 
-	"Peter Zijlstra (Intel)" <peterz@infradead.org>, Douglas Anderson <dianders@chromium.org>, 
-	Petr Mladek <pmladek@suse.com>, linux-arch@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="kn48Aktgc7gzaBgr"
+Content-Disposition: inline
+In-Reply-To: <cover.1712058690.git.mazziesaccount@gmail.com>
 
-On Mon, 1 Apr 2024 at 23:39, Paul E. McKenney <paulmck@kernel.org> wrote:
->
-> Architectures are required to provide four-byte cmpxchg() and 64-bit
-> architectures are additionally required to provide eight-byte cmpxchg().
-> However, there are cases where one-byte and two-byte cmpxchg()
-> would be extremely useful.  Therefore, provide cmpxchg_emu_u8() and
-> cmpxchg_emu_u16() that emulate one-byte and two-byte cmpxchg() in terms
-> of four-byte cmpxchg().
->
-> Note that these emulations are fully ordered, and can (for example)
-> cause one-byte cmpxchg_relaxed() to incur the overhead of full ordering.
-> If this causes problems for a given architecture, that architecture is
-> free to provide its own lighter-weight primitives.
->
-> [ paulmck: Apply Marco Elver feedback. ]
-> [ paulmck: Apply kernel test robot feedback. ]
->
-> Link: https://lore.kernel.org/all/0733eb10-5e7a-4450-9b8a-527b97c842ff@paulmck-laptop/
->
-> Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
-> Cc: Marco Elver <elver@google.com>
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: "Peter Zijlstra (Intel)" <peterz@infradead.org>
-> Cc: Douglas Anderson <dianders@chromium.org>
-> Cc: Petr Mladek <pmladek@suse.com>
-> Cc: <linux-arch@vger.kernel.org>
 
-Acked-by: Marco Elver <elver@google.com>
+--kn48Aktgc7gzaBgr
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> ---
->  arch/Kconfig                |  3 ++
->  include/linux/cmpxchg-emu.h | 16 ++++++++
->  lib/Makefile                |  1 +
->  lib/cmpxchg-emu.c           | 74 +++++++++++++++++++++++++++++++++++++
->  4 files changed, 94 insertions(+)
->  create mode 100644 include/linux/cmpxchg-emu.h
->  create mode 100644 lib/cmpxchg-emu.c
->
-> diff --git a/arch/Kconfig b/arch/Kconfig
-> index ae4a4f37bbf08..01093c60952a5 100644
-> --- a/arch/Kconfig
-> +++ b/arch/Kconfig
-> @@ -1609,4 +1609,7 @@ config CC_HAS_SANE_FUNCTION_ALIGNMENT
->         # strict alignment always, even with -falign-functions.
->         def_bool CC_HAS_MIN_FUNCTION_ALIGNMENT || CC_IS_CLANG
->
-> +config ARCH_NEED_CMPXCHG_1_2_EMU
-> +       bool
-> +
->  endmenu
-> diff --git a/include/linux/cmpxchg-emu.h b/include/linux/cmpxchg-emu.h
-> new file mode 100644
-> index 0000000000000..fee8171fa05eb
-> --- /dev/null
-> +++ b/include/linux/cmpxchg-emu.h
-> @@ -0,0 +1,16 @@
-> +/* SPDX-License-Identifier: GPL-2.0+ */
-> +/*
-> + * Emulated 1-byte and 2-byte cmpxchg operations for architectures
-> + * lacking direct support for these sizes.  These are implemented in terms
-> + * of 4-byte cmpxchg operations.
-> + *
-> + * Copyright (C) 2024 Paul E. McKenney.
-> + */
-> +
-> +#ifndef __LINUX_CMPXCHG_EMU_H
-> +#define __LINUX_CMPXCHG_EMU_H
-> +
-> +uintptr_t cmpxchg_emu_u8(volatile u8 *p, uintptr_t old, uintptr_t new);
-> +uintptr_t cmpxchg_emu_u16(volatile u16 *p, uintptr_t old, uintptr_t new);
-> +
-> +#endif /* __LINUX_CMPXCHG_EMU_H */
-> diff --git a/lib/Makefile b/lib/Makefile
-> index ffc6b2341b45a..1d93b61a7ecbe 100644
-> --- a/lib/Makefile
-> +++ b/lib/Makefile
-> @@ -236,6 +236,7 @@ obj-$(CONFIG_FUNCTION_ERROR_INJECTION) += error-inject.o
->  lib-$(CONFIG_GENERIC_BUG) += bug.o
->
->  obj-$(CONFIG_HAVE_ARCH_TRACEHOOK) += syscall.o
-> +obj-$(CONFIG_ARCH_NEED_CMPXCHG_1_2_EMU) += cmpxchg-emu.o
->
->  obj-$(CONFIG_DYNAMIC_DEBUG_CORE) += dynamic_debug.o
->  #ensure exported functions have prototypes
-> diff --git a/lib/cmpxchg-emu.c b/lib/cmpxchg-emu.c
-> new file mode 100644
-> index 0000000000000..a88c4f3c88430
-> --- /dev/null
-> +++ b/lib/cmpxchg-emu.c
-> @@ -0,0 +1,74 @@
-> +/* SPDX-License-Identifier: GPL-2.0+ */
-> +/*
-> + * Emulated 1-byte and 2-byte cmpxchg operations for architectures
-> + * lacking direct support for these sizes.  These are implemented in terms
-> + * of 4-byte cmpxchg operations.
-> + *
-> + * Copyright (C) 2024 Paul E. McKenney.
-> + */
-> +
-> +#include <linux/types.h>
-> +#include <linux/export.h>
-> +#include <linux/instrumented.h>
-> +#include <linux/atomic.h>
-> +#include <linux/panic.h>
-> +#include <linux/bug.h>
-> +#include <asm-generic/rwonce.h>
-> +#include <linux/cmpxchg-emu.h>
-> +
-> +union u8_32 {
-> +       u8 b[4];
-> +       u32 w;
-> +};
-> +
-> +/* Emulate one-byte cmpxchg() in terms of 4-byte cmpxchg. */
-> +uintptr_t cmpxchg_emu_u8(volatile u8 *p, uintptr_t old, uintptr_t new)
-> +{
-> +       u32 *p32 = (u32 *)(((uintptr_t)p) & ~0x3);
-> +       int i = ((uintptr_t)p) & 0x3;
-> +       union u8_32 old32;
-> +       union u8_32 new32;
-> +       u32 ret;
-> +
-> +       ret = READ_ONCE(*p32);
-> +       do {
-> +               old32.w = ret;
-> +               if (old32.b[i] != old)
-> +                       return old32.b[i];
-> +               new32.w = old32.w;
-> +               new32.b[i] = new;
-> +               instrument_atomic_read_write(p, 1);
-> +               ret = data_race(cmpxchg(p32, old32.w, new32.w));
-> +       } while (ret != old32.w);
-> +       return old;
-> +}
-> +EXPORT_SYMBOL_GPL(cmpxchg_emu_u8);
-> +
-> +union u16_32 {
-> +       u16 h[2];
-> +       u32 w;
-> +};
-> +
-> +/* Emulate two-byte cmpxchg() in terms of 4-byte cmpxchg. */
-> +uintptr_t cmpxchg_emu_u16(volatile u16 *p, uintptr_t old, uintptr_t new)
-> +{
-> +       u32 *p32 = (u32 *)(((uintptr_t)p) & ~0x3);
-> +       int i = (((uintptr_t)p) & 0x2) / 2;
-> +       union u16_32 old32;
-> +       union u16_32 new32;
-> +       u32 ret;
-> +
-> +       WARN_ON_ONCE(((uintptr_t)p) & 0x1);
-> +       ret = READ_ONCE(*p32);
-> +       do {
-> +               old32.w = ret;
-> +               if (old32.h[i] != old)
-> +                       return old32.h[i];
-> +               new32.w = old32.w;
-> +               new32.h[i] = new;
-> +               instrument_atomic_read_write(p, 2);
-> +               ret = data_race(cmpxchg(p32, old32.w, new32.w));
-> +       } while (ret != old32.w);
-> +       return old;
-> +}
-> +EXPORT_SYMBOL_GPL(cmpxchg_emu_u16);
-> --
-> 2.40.1
->
+ROHM BD96801 is a highly configurable automotive grade PMIC. Introduce
+DT bindings for the BD96801 core.
+
+Signed-off-by: Matti Vaittinen <mazziesaccount@gmail.com>
+---
+ .../bindings/mfd/rohm,bd96801-pmic.yaml       | 155 ++++++++++++++++++
+ 1 file changed, 155 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mfd/rohm,bd96801-pmic=
+=2Eyaml
+
+diff --git a/Documentation/devicetree/bindings/mfd/rohm,bd96801-pmic.yaml b=
+/Documentation/devicetree/bindings/mfd/rohm,bd96801-pmic.yaml
+new file mode 100644
+index 000000000000..0d512fe19081
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mfd/rohm,bd96801-pmic.yaml
+@@ -0,0 +1,155 @@
++# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/mfd/rohm,bd96801-pmic.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: ROHM BD96801 Scalable Power Management Integrated Circuit
++
++maintainers:
++  - Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
++
++description: |
++  BD96801 is an automotive grade single-chip power management IC.
++  It integrates 4 buck converters and 3 LDOs with safety features like
++  over-/under voltage and over current detection and a watchdog.
++
++properties:
++  compatible:
++    const: rohm,bd96801
++
++  reg:
++    description:
++      I2C slave address.
++    maxItems: 1
++
++  interrupts:
++    description:
++      The PMIC provides intb and errb IRQ lines. The errb IRQ line is used
++      for fatal IRQs which will cause the PMIC to shut down power outputs.
++      In many systems this will shut down the SoC contolling the PMIC and
++      connecting/handling the errb can be omitted. However, there are cases
++      where the SoC is not powered by the PMIC. In that case it may be
++      useful to connect the errb and handle errb events.
++    minItems: 1
++    maxItems: 2
++
++  interrupt-names:
++    minItems: 1
++    items:
++      - enum: [intb, errb]
++      - const: errb
++
++  regulators:
++    $ref: ../regulator/rohm,bd96801-regulator.yaml
++    description:
++      List of child nodes that specify the regulators.
++
++required:
++  - compatible
++  - reg
++  - interrupts
++  - interrupt-names
++  - regulators
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/interrupt-controller/irq.h>
++    #include <dt-bindings/leds/common.h>
++    i2c {
++        #address-cells =3D <1>;
++        #size-cells =3D <0>;
++        pmic: pmic@60 {
++            reg =3D <0x60>;
++            compatible =3D "rohm,bd96801";
++            interrupt-parent =3D <&gpio1>;
++            interrupts =3D <29 IRQ_TYPE_LEVEL_LOW>, <6 IRQ_TYPE_LEVEL_LOW>;
++            interrupt-names =3D "intb", "errb";
++
++            regulators {
++                buck1: BUCK1 {
++                    regulator-name =3D "buck1";
++                    regulator-ramp-delay =3D <1250>;
++                    /* 0.5V min INITIAL - 150 mV tune */
++                    regulator-min-microvolt =3D <350000>;
++                    /* 3.3V + 150mV tune */
++                    regulator-max-microvolt =3D <3450000>;
++
++                    /* These can be set only when PMIC is in STBY */
++                    rohm,initial-voltage-microvolt =3D <500000>;
++                    regulator-ov-error-microvolt =3D <230000>;
++                    regulator-uv-error-microvolt =3D <230000>;
++                    regulator-temp-protection-kelvin =3D <1>;
++                    regulator-temp-warn-kelvin =3D <0>;
++                };
++                buck2: BUCK2 {
++                    regulator-name =3D "buck2";
++                    regulator-min-microvolt =3D <350000>;
++                    regulator-max-microvolt =3D <3450000>;
++
++                    rohm,initial-voltage-microvolt =3D <3000000>;
++                    regulator-ov-error-microvolt =3D <18000>;
++                    regulator-uv-error-microvolt =3D <18000>;
++                    regulator-temp-protection-kelvin =3D <1>;
++                    regulator-temp-warn-kelvin =3D <1>;
++                };
++                buck3: BUCK3 {
++                    regulator-name =3D "buck3";
++                    regulator-min-microvolt =3D <350000>;
++                    regulator-max-microvolt =3D <3450000>;
++
++                    rohm,initial-voltage-microvolt =3D <600000>;
++                    regulator-ov-warn-microvolt =3D <18000>;
++                    regulator-uv-warn-microvolt =3D <18000>;
++                    regulator-temp-protection-kelvin =3D <1>;
++                    regulator-temp-error-kelvin =3D <0>;
++                };
++                buck4: BUCK4 {
++                    regulator-name =3D "buck4";
++                    regulator-min-microvolt =3D <350000>;
++                    regulator-max-microvolt =3D <3450000>;
++
++                    rohm,initial-voltage-microvolt =3D <600000>;
++                    regulator-ov-warn-microvolt =3D <18000>;
++                    regulator-uv-warn-microvolt =3D <18000>;
++                    regulator-temp-protection-kelvin =3D <1>;
++                    regulator-temp-error-kelvin =3D <0>;
++                };
++                ldo5: LDO5 {
++                    regulator-name =3D "ldo5";
++                    regulator-min-microvolt =3D <300000>;
++                    regulator-max-microvolt =3D <3300000>;
++
++                    rohm,initial-voltage-microvolt =3D <500000>;
++                    regulator-ov-error-microvolt =3D <36000>;
++                    regulator-uv-error-microvolt =3D <34000>;
++                    regulator-temp-protection-kelvin =3D <1>;
++                    regulator-temp-warn-kelvin =3D <0>;
++                };
++                ldo6: LDO6 {
++                    regulator-name =3D "ldo6";
++                    regulator-min-microvolt =3D <300000>;
++                    regulator-max-microvolt =3D <3300000>;
++
++                    rohm,initial-voltage-microvolt =3D <300000>;
++                    regulator-ov-error-microvolt =3D <36000>;
++                    regulator-uv-error-microvolt =3D <34000>;
++                    regulator-temp-protection-kelvin =3D <1>;
++                    regulator-temp-warn-kelvin =3D <0>;
++                };
++                ldo7: LDO7 {
++                    regulator-name =3D "ldo7";
++                    regulator-min-microvolt =3D <300000>;
++                    regulator-max-microvolt =3D <3300000>;
++
++                    rohm,initial-voltage-microvolt =3D <500000>;
++                    regulator-ov-error-microvolt =3D <36000>;
++                    regulator-uv-error-microvolt =3D <34000>;
++                    regulator-temp-protection-kelvin =3D <1>;
++                    regulator-temp-warn-kelvin =3D <0>;
++                };
++            };
++        };
++    };
+--=20
+2.43.2
+
+
+--=20
+Matti Vaittinen, Linux device drivers
+ROHM Semiconductors, Finland SWDC
+Kiviharjunlenkki 1E
+90220 OULU
+FINLAND
+
+~~~ "I don't think so," said Rene Descartes. Just then he vanished ~~~
+Simon says - in Latin please.
+~~~ "non cogito me" dixit Rene Descarte, deinde evanescavit ~~~
+Thanks to Simon Glass for the translation =3D]=20
+
+--kn48Aktgc7gzaBgr
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEEIx+f8wZb28fLKEhTeFA3/03aocUFAmYMAzcACgkQeFA3/03a
+ocX3MAf/Qf+vOy42SjIZtY2zn09nxHIaMt0idD6pxSHgciWxUX1dKU/nYHb+tLN9
+ImcnW9W7sfzmcNVPSZ6hPuv6e2aAuO6J4LOpvR3pjhtM3SCzDcKCrU2LiB33MyQW
+cAh513Nz1JUuuerq3JprSQvnZ0i4iqxyrjqpQnraADDDMM9gd6Cnui6w35Bqm22y
+9Hritrs6uoZbU5jc0kl2so1knhYQOnt0IEIvF8+MfgMpGOyuRA5nymVh75LBfllW
+a4jcejz3OESMe6c5rLW4RdHY7Bgswi8TTjSrc/7ZODmMui6KnZMMNAhmUmEAkmVU
+OKllkvNa5EK221nv5vo0p4T+UWNklA==
+=Jnsb
+-----END PGP SIGNATURE-----
+
+--kn48Aktgc7gzaBgr--
