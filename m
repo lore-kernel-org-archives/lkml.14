@@ -1,182 +1,238 @@
-Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
+Received: from mail-oi1-f173.google.com (mail-oi1-f173.google.com [209.85.167.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDE3F133293
-	for <linux-kernel@vger.kernel.org>; Tue,  2 Apr 2024 13:07:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 783A584FD3
+	for <linux-kernel@vger.kernel.org>; Tue,  2 Apr 2024 13:08:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712063278; cv=none; b=OfQksYEWm5ssldZAOCjWei1bRLCtboN3UqdPOdA3Mtbk2Zm+aS+7YOa7qRsGqP3ed+dzgiyEE4HsRyda1zUN+lv3YfJZmIwjXm5cf9s7hMQY9f4EHdvwHxWOZKF7+VxGV5Ir6OlCR83hYyeDdDUmy8l2JkExVuWQSdPQD0eRCTE=
+	t=1712063283; cv=none; b=fkB9VLt2BWHTvd+zxPGaxJ15l5mJFJjJXtZSIhnJXhPq3EdDzkriZ91o9D0Uow6f2kK3RFLlDXGrLFHRA0KIajV1sHDcPQ/6ON/uTnDiK6DiovcjLQytABdzlxKDrtQF6gQR7CR4M+kLXO5I9veBZHdS/Ryc55N/xwb+QpRX6/M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712063278; c=relaxed/simple;
-	bh=PxWww9p0ux8jd+JTBng4iPUbmo/WqC7WSl9rYFjrBmE=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=sR5ivMe/A23FXF7vbZ/lRDiIMxRE6j6ebv8ix9FMobyux2/KlOG80XKpVF74IGGl0cyITJiz0dWWVgdfqWjsQwTGNY1RoSj3pWsl0jbS7FyhI8K+wtYjQluyJCDCf8sh/7kVjZIGjmUJgdJQ4LIrCDa0hELRMTkX8Gc7+qEGxEg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=KSOwag+5; arc=none smtp.client-ip=209.85.219.202
+	s=arc-20240116; t=1712063283; c=relaxed/simple;
+	bh=vgP+36VWKafj4cVC7SyOoL9SCfau5bABFyH+Csakpn0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=b9rq1kGQUsDUknpXNxjxiTNe8jkpjk6cqkD3uCxyxyyf3nGzFiCIIY/o+75NU8qyASmMyhq+PlbYwNmSa9zDRXokpXXZ3p2cuBZDaFXDyBNYTeqoq1QKB+ECPmlkADIMvtYlqY3t1Q/XVTL0bxzH2cmafoPmWvFxBsAfq69/ZkI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=m0EBIbrR; arc=none smtp.client-ip=209.85.167.173
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="KSOwag+5"
-Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-dc6b26ce0bbso9371077276.1
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Apr 2024 06:07:56 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="m0EBIbrR"
+Received: by mail-oi1-f173.google.com with SMTP id 5614622812f47-3c4f55a1bd6so329867b6e.0
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Apr 2024 06:08:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1712063276; x=1712668076; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=YK0IVBzGw2YL7NaImcW2IKkPiMomILZlbIQFdtxNZRc=;
-        b=KSOwag+5uEFIu8LnIUZz2zwJXh6m78qArTPnQjHSjlZx2PegFcPGLdSuEi7gCN3kDt
-         CpnLFrI7p9sWNiKp830ksXN2Tqvyzc7h472mk8tDT/z6Wmx8ZtiuWPEWGpudTz8MH3sS
-         veFRNB9Zkye+65IZCucmM+oSgQnFFaIPiISzCg2adb59/jULB2hSPqexeGIOiYCOJBBM
-         yI3mzM4uCJBEZYBdVJM/gmNRI0bN8HqmNqoLKw9q2rQJoTbi/Lc9yXn0Ls/xNzmWvk2+
-         dX5/5cUiVVpOVjpSWbSFa2T+FZvfcNHHjCWx6vVsUOrsU6g3CDxKpTeIO6ylFNTXehPU
-         9wiQ==
+        d=google.com; s=20230601; t=1712063280; x=1712668080; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=lwz+te3v25y+UIyojEIFe5So3l8Pl+raR0jXQRZwL4g=;
+        b=m0EBIbrRo2aNG3nZVIb2tMspivbN+KZS3njoFjN1mf343kOEkVlYfc4JUGFuRcYUWm
+         jwpHFyOPJ5LxYONiIWZxr92uUbAPqMXpn0N2Vo7YRj8XDTeiS5RIWyaDDO9Zns3s0sh+
+         zleHL5NXKjRmX2MBcsLga2nXl6RDH4EpD8Bwn3nElV7t+6Cjc3gedndiSXNKegEfIkdd
+         s6+UB95VAdRVZzStBT/AokHkIhiKQWIl6QAXzeoT/J7GqIXg7wCoCdzl6GvDwZGgaiqF
+         6g6XQz6WToQiGl1FVZQnWXpcaIxSfmh+doj97Jv9gtbE3XcFskjd29IcgjL+QifaJajM
+         nOSQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712063276; x=1712668076;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=YK0IVBzGw2YL7NaImcW2IKkPiMomILZlbIQFdtxNZRc=;
-        b=M5xcqR8mGzTrwFRYHvGPlGOZBvBaRRuKA40CPEBXpHOSVMUGjILiJJ5Ef6883nKSFs
-         VqSshcWN2iE4acCpMRX8Z2eaLK1kl3QDTair77ichEU9PEyRvnSOy1RygDHL2mnGz8iA
-         2pwYL8ZMVYeFimd2701sYq0GPf6wolU9fXSrT9eBiO2pGeRs8vUO0K2poijJH31FW5Is
-         F5d/+3OpnWX5mF2UFnyzA33CsAawwvsPu88joGc++AQxTEaJMHmlcnaWj1LOuv/Rskcn
-         2RSkPAsBbl8O8AFQxrlWkuMslqDsfNoStVwhAoCymz/QeBD7Acn8VDt9MVXavXKGbcFo
-         Ss2w==
-X-Forwarded-Encrypted: i=1; AJvYcCX9Y7Gr+AlyOPGITzOLWh+kz9EdWD0GQphurVwk1EU6vVGEdr1Fj1dxg9q85/F0EnTn3QwppfMZx0n1Tl5Wj0pcH4hSTFYACCGNtyLh
-X-Gm-Message-State: AOJu0YxLq/LZxJapHdiQaTy4BmbG+PKb6IWbsI/z8maO+IFS46Q14z5a
-	hmA7DsDWD4SbWqvEXbbuHRiEcDyNOf6VFXacdEvSsNgSAnadEmZw/xgJPQrq6vFS1yXx9f2mJox
-	HYYRc0PANsL+DbQ==
-X-Google-Smtp-Source: AGHT+IF/7TWz8RhJGovksUMInwr3/uIEtPnnFR2PdQlpU82yszqL3urfPIBkm64cCgKqtH8UZcQCTWDKraB9HAo=
-X-Received: from aliceryhl2.c.googlers.com ([fda3:e722:ac3:cc00:68:949d:c0a8:572])
- (user=aliceryhl job=sendgmr) by 2002:a05:6902:1601:b0:dca:33b8:38d7 with SMTP
- id bw1-20020a056902160100b00dca33b838d7mr3956005ybb.11.1712063276019; Tue, 02
- Apr 2024 06:07:56 -0700 (PDT)
-Date: Tue, 02 Apr 2024 13:07:43 +0000
-In-Reply-To: <20240402-arc-for-list-v4-0-54db6440a9a9@google.com>
+        d=1e100.net; s=20230601; t=1712063280; x=1712668080;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=lwz+te3v25y+UIyojEIFe5So3l8Pl+raR0jXQRZwL4g=;
+        b=kgeKO+9qwmCXpxtcql1lmkESZ64A1v82XXyXEr9yVmj6EqDNUN3yuMHZvbAV3CZ+ZV
+         1GWYX+pWy0cVvaCpMJDn6isIdUrrJ6uCpaB1ISB4zJI+5hSb821xfIuI2SUHsuLEH6iL
+         G89Jlr3nVelGMA5qrIzr4N9F1ZgIJaw8L3kJUP06tUTA48ELwEesk36zlaTx7WdOzkBC
+         qwu6mkwkcATS+NWYCzgAPyzEdN4cQtzLC0klK5RUMKF/ZRaNAxe12ys7NTVHN6FIcSv2
+         chaozhxxKeWf6+RfcvyQjvPcEKvc/O4gVElN5lv8DkK3aQHQ6hnub5xc8OHXJk/SSCfz
+         zE0g==
+X-Gm-Message-State: AOJu0Ywq4Bkn4NohSjl6wevxsMfjB2cdwmH3z+VcpyG/c8x17ExiKDrv
+	u4KG42+i0kajwg4vi0GDSv/v3S1XfEpuIalADQ+ghxOlIlBHIzMxAB3pLdLu1+NxalyjdWbMjxp
+	ae4Ox4d7tzqsxfLBg40un0xGNR/IZhzNxI8qF
+X-Google-Smtp-Source: AGHT+IFfjHomY9Q1pqJvyjMwrOtxO9qwBxdriDeV+1TZPmKhKqftTRLWP/h8EQ6LJ6NPd7qWAALGTCn/qXfM/KNFjPs=
+X-Received: by 2002:a05:6808:1707:b0:3c4:f08d:544d with SMTP id
+ bc7-20020a056808170700b003c4f08d544dmr4327794oib.17.1712063280344; Tue, 02
+ Apr 2024 06:08:00 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20240402-arc-for-list-v4-0-54db6440a9a9@google.com>
-X-Developer-Key: i=aliceryhl@google.com; a=openpgp; fpr=49F6C1FAA74960F43A5B86A1EE7A392FDE96209F
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3818; i=aliceryhl@google.com;
- h=from:subject:message-id; bh=PxWww9p0ux8jd+JTBng4iPUbmo/WqC7WSl9rYFjrBmE=;
- b=owEBbQKS/ZANAwAKAQRYvu5YxjlGAcsmYgBmDAMjnQQUU7VFbOJ68s6w4F893DduCep4a6HWD
- eY5S2s02p2JAjMEAAEKAB0WIQSDkqKUTWQHCvFIvbIEWL7uWMY5RgUCZgwDIwAKCRAEWL7uWMY5
- RvnND/9Ou7OIhLaUM33tvAUZQnucWJkibYoGR+SICJqUOF/aoIOn71jr+11PoGT5XBaEdO+Yjg0
- zATsPm7VsQdy/BB7ioZzttGcd8FQjmWz7ZRotTagEUe3DEwwiPlHze58I9liXvEUrDtRMHkBbC+
- el4heWgkp2ESqynmTCsUT3xWACsjj6S7MheF2wPRBP3fRwcW/4DSxYd6RU6sAZ47k2TObo7jsFU
- 3D7DDeXkjVGrpAowqAJWJ3BZaJYVcEha1vbkV8D8nWalHtqziHLTFl8CHskZKMsu5US1z657vhw
- INjmVLODp8jMrwwPA3LuUlDEepvBazpY5lc4vIy6Jo0n+zAkhssN7ji2wPCbggcUGiB96zBDTZK
- SEYm63rnKTCk8838Py+j6aQWvvM/moOLzR0PaFfJ6Iu81QOFkOA8p9qyRSdEaUOOi5/TFrTCiBo
- H1ATY8x0XsNbPk9/b8EJsw+s/Wuld2dxoV66Y5jeTSl+Piw+JLirBd3QIiQkPlYvZVXgVIidaMe
- BmITg4qDV4+AJrNziwLKTNNdwlFn+x5VYnk6nrx82nfAoC4uCSILMhfKEocL0O4XkTeiH9/vcVE
- TWQ0lRs/d7WffnS+Pe5uNRb4atWRcUBCz5yRGzJPf69qBh3BzPFqVU1u84zTxuwh1bYhn8dRhfh 79NYDU8wNjnqkTQ==
-X-Mailer: b4 0.13-dev-26615
-Message-ID: <20240402-arc-for-list-v4-2-54db6440a9a9@google.com>
-Subject: [PATCH v4 2/2] rust: sync: add `Arc::into_unique_or_drop`
-From: Alice Ryhl <aliceryhl@google.com>
-To: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Wedson Almeida Filho <wedsonaf@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	"=?utf-8?q?Bj=C3=B6rn_Roy_Baron?=" <bjorn3_gh@protonmail.com>, Benno Lossin <benno.lossin@proton.me>, 
-	Andreas Hindborg <a.hindborg@samsung.com>
-Cc: rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Alice Ryhl <aliceryhl@google.com>
-Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+References: <31c82dcc-e203-48a9-aadd-f2fcd57d94c1@paulmck-laptop> <20240401213950.3910531-1-paulmck@kernel.org>
+In-Reply-To: <20240401213950.3910531-1-paulmck@kernel.org>
+From: Marco Elver <elver@google.com>
+Date: Tue, 2 Apr 2024 15:07:22 +0200
+Message-ID: <CANpmjNNSCWSndpf-N7=ifSUFhLWjYJibRf58hETjHeW25RzWYg@mail.gmail.com>
+Subject: Re: [PATCH RFC cmpxchg 1/8] lib: Add one-byte and two-byte cmpxchg()
+ emulation functions
+To: "Paul E. McKenney" <paulmck@kernel.org>
+Cc: linux-kernel@vger.kernel.org, kernel-team@meta.com, 
+	Andrew Morton <akpm@linux-foundation.org>, Thomas Gleixner <tglx@linutronix.de>, 
+	"Peter Zijlstra (Intel)" <peterz@infradead.org>, Douglas Anderson <dianders@chromium.org>, 
+	Petr Mladek <pmladek@suse.com>, linux-arch@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-Decrement the refcount of an `Arc`, but handle the case where it hits
-zero by taking ownership of the now-unique `Arc`, instead of destroying
-and deallocating it.
+On Mon, 1 Apr 2024 at 23:39, Paul E. McKenney <paulmck@kernel.org> wrote:
+>
+> Architectures are required to provide four-byte cmpxchg() and 64-bit
+> architectures are additionally required to provide eight-byte cmpxchg().
+> However, there are cases where one-byte and two-byte cmpxchg()
+> would be extremely useful.  Therefore, provide cmpxchg_emu_u8() and
+> cmpxchg_emu_u16() that emulate one-byte and two-byte cmpxchg() in terms
+> of four-byte cmpxchg().
+>
+> Note that these emulations are fully ordered, and can (for example)
+> cause one-byte cmpxchg_relaxed() to incur the overhead of full ordering.
+> If this causes problems for a given architecture, that architecture is
+> free to provide its own lighter-weight primitives.
+>
+> [ paulmck: Apply Marco Elver feedback. ]
+> [ paulmck: Apply kernel test robot feedback. ]
+>
+> Link: https://lore.kernel.org/all/0733eb10-5e7a-4450-9b8a-527b97c842ff@paulmck-laptop/
+>
+> Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
+> Cc: Marco Elver <elver@google.com>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: "Peter Zijlstra (Intel)" <peterz@infradead.org>
+> Cc: Douglas Anderson <dianders@chromium.org>
+> Cc: Petr Mladek <pmladek@suse.com>
+> Cc: <linux-arch@vger.kernel.org>
 
-This is a dependency of the linked list that Rust Binder uses. The
-linked list uses this method as part of its `ListArc` abstraction [1].
+Acked-by: Marco Elver <elver@google.com>
 
-Boqun Feng has authored the examples.
-
-Reviewed-by: Benno Lossin <benno.lossin@proton.me>
-Reviewed-by: Boqun Feng <boqun.feng@gmail.com>
-Link: https://lore.kernel.org/r/20240402-linked-list-v1-1-b1c59ba7ae3b@google.com [1]
-Co-developed-by: Boqun Feng <boqun.feng@gmail.com>
-Signed-off-by: Boqun Feng <boqun.feng@gmail.com>
-Signed-off-by: Alice Ryhl <aliceryhl@google.com>
----
- rust/kernel/sync/arc.rs | 62 +++++++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 62 insertions(+)
-
-diff --git a/rust/kernel/sync/arc.rs b/rust/kernel/sync/arc.rs
-index 53addb8876c2..30777241d8cf 100644
---- a/rust/kernel/sync/arc.rs
-+++ b/rust/kernel/sync/arc.rs
-@@ -290,6 +290,68 @@ pub fn as_arc_borrow(&self) -> ArcBorrow<'_, T> {
-     pub fn ptr_eq(this: &Self, other: &Self) -> bool {
-         core::ptr::eq(this.ptr.as_ptr(), other.ptr.as_ptr())
-     }
-+
-+    /// Converts this [`Arc`] into a [`UniqueArc`], or destroys it if it is not unique.
-+    ///
-+    /// When this destroys the `Arc`, it does so while properly avoiding races. This means that
-+    /// this method will never call the destructor of the value.
-+    ///
-+    /// # Examples
-+    ///
-+    /// ```
-+    /// use kernel::sync::{Arc, UniqueArc};
-+    ///
-+    /// let arc = Arc::try_new(42)?;
-+    /// let unique_arc = arc.into_unique_or_drop();
-+    ///
-+    /// // The above conversion should succeed since refcount of `arc` is 1.
-+    /// assert!(unique_arc.is_some());
-+    ///
-+    /// assert_eq!(*(unique_arc.unwrap()), 42);
-+    ///
-+    /// # Ok::<(), Error>(())
-+    /// ```
-+    ///
-+    /// ```
-+    /// use kernel::sync::{Arc, UniqueArc};
-+    ///
-+    /// let arc = Arc::try_new(42)?;
-+    /// let another = arc.clone();
-+    ///
-+    /// let unique_arc = arc.into_unique_or_drop();
-+    ///
-+    /// // The above conversion should fail since refcount of `arc` is >1.
-+    /// assert!(unique_arc.is_none());
-+    ///
-+    /// # Ok::<(), Error>(())
-+    /// ```
-+    pub fn into_unique_or_drop(self) -> Option<Pin<UniqueArc<T>>> {
-+        // We will manually manage the refcount in this method, so we disable the destructor.
-+        let me = ManuallyDrop::new(self);
-+        // SAFETY: We own a refcount, so the pointer is still valid.
-+        let refcount = unsafe { me.ptr.as_ref() }.refcount.get();
-+
-+        // If the refcount reaches a non-zero value, then we have destroyed this `Arc` and will
-+        // return without further touching the `Arc`. If the refcount reaches zero, then there are
-+        // no other arcs, and we can create a `UniqueArc`.
-+        //
-+        // SAFETY: We own a refcount, so the pointer is not dangling.
-+        let is_zero = unsafe { bindings::refcount_dec_and_test(refcount) };
-+        if is_zero {
-+            // SAFETY: We have exclusive access to the arc, so we can perform unsynchronized
-+            // accesses to the refcount.
-+            unsafe { core::ptr::write(refcount, bindings::REFCOUNT_INIT(1)) };
-+
-+            // INVARIANT: We own the only refcount to this arc, so we may create a `UniqueArc`. We
-+            // must pin the `UniqueArc` because the values was previously in an `Arc`, and they pin
-+            // their values.
-+            Some(Pin::from(UniqueArc {
-+                inner: ManuallyDrop::into_inner(me),
-+            }))
-+        } else {
-+            None
-+        }
-+    }
- }
- 
- impl<T: 'static> ForeignOwnable for Arc<T> {
-
--- 
-2.44.0.478.gd926399ef9-goog
-
+> ---
+>  arch/Kconfig                |  3 ++
+>  include/linux/cmpxchg-emu.h | 16 ++++++++
+>  lib/Makefile                |  1 +
+>  lib/cmpxchg-emu.c           | 74 +++++++++++++++++++++++++++++++++++++
+>  4 files changed, 94 insertions(+)
+>  create mode 100644 include/linux/cmpxchg-emu.h
+>  create mode 100644 lib/cmpxchg-emu.c
+>
+> diff --git a/arch/Kconfig b/arch/Kconfig
+> index ae4a4f37bbf08..01093c60952a5 100644
+> --- a/arch/Kconfig
+> +++ b/arch/Kconfig
+> @@ -1609,4 +1609,7 @@ config CC_HAS_SANE_FUNCTION_ALIGNMENT
+>         # strict alignment always, even with -falign-functions.
+>         def_bool CC_HAS_MIN_FUNCTION_ALIGNMENT || CC_IS_CLANG
+>
+> +config ARCH_NEED_CMPXCHG_1_2_EMU
+> +       bool
+> +
+>  endmenu
+> diff --git a/include/linux/cmpxchg-emu.h b/include/linux/cmpxchg-emu.h
+> new file mode 100644
+> index 0000000000000..fee8171fa05eb
+> --- /dev/null
+> +++ b/include/linux/cmpxchg-emu.h
+> @@ -0,0 +1,16 @@
+> +/* SPDX-License-Identifier: GPL-2.0+ */
+> +/*
+> + * Emulated 1-byte and 2-byte cmpxchg operations for architectures
+> + * lacking direct support for these sizes.  These are implemented in terms
+> + * of 4-byte cmpxchg operations.
+> + *
+> + * Copyright (C) 2024 Paul E. McKenney.
+> + */
+> +
+> +#ifndef __LINUX_CMPXCHG_EMU_H
+> +#define __LINUX_CMPXCHG_EMU_H
+> +
+> +uintptr_t cmpxchg_emu_u8(volatile u8 *p, uintptr_t old, uintptr_t new);
+> +uintptr_t cmpxchg_emu_u16(volatile u16 *p, uintptr_t old, uintptr_t new);
+> +
+> +#endif /* __LINUX_CMPXCHG_EMU_H */
+> diff --git a/lib/Makefile b/lib/Makefile
+> index ffc6b2341b45a..1d93b61a7ecbe 100644
+> --- a/lib/Makefile
+> +++ b/lib/Makefile
+> @@ -236,6 +236,7 @@ obj-$(CONFIG_FUNCTION_ERROR_INJECTION) += error-inject.o
+>  lib-$(CONFIG_GENERIC_BUG) += bug.o
+>
+>  obj-$(CONFIG_HAVE_ARCH_TRACEHOOK) += syscall.o
+> +obj-$(CONFIG_ARCH_NEED_CMPXCHG_1_2_EMU) += cmpxchg-emu.o
+>
+>  obj-$(CONFIG_DYNAMIC_DEBUG_CORE) += dynamic_debug.o
+>  #ensure exported functions have prototypes
+> diff --git a/lib/cmpxchg-emu.c b/lib/cmpxchg-emu.c
+> new file mode 100644
+> index 0000000000000..a88c4f3c88430
+> --- /dev/null
+> +++ b/lib/cmpxchg-emu.c
+> @@ -0,0 +1,74 @@
+> +/* SPDX-License-Identifier: GPL-2.0+ */
+> +/*
+> + * Emulated 1-byte and 2-byte cmpxchg operations for architectures
+> + * lacking direct support for these sizes.  These are implemented in terms
+> + * of 4-byte cmpxchg operations.
+> + *
+> + * Copyright (C) 2024 Paul E. McKenney.
+> + */
+> +
+> +#include <linux/types.h>
+> +#include <linux/export.h>
+> +#include <linux/instrumented.h>
+> +#include <linux/atomic.h>
+> +#include <linux/panic.h>
+> +#include <linux/bug.h>
+> +#include <asm-generic/rwonce.h>
+> +#include <linux/cmpxchg-emu.h>
+> +
+> +union u8_32 {
+> +       u8 b[4];
+> +       u32 w;
+> +};
+> +
+> +/* Emulate one-byte cmpxchg() in terms of 4-byte cmpxchg. */
+> +uintptr_t cmpxchg_emu_u8(volatile u8 *p, uintptr_t old, uintptr_t new)
+> +{
+> +       u32 *p32 = (u32 *)(((uintptr_t)p) & ~0x3);
+> +       int i = ((uintptr_t)p) & 0x3;
+> +       union u8_32 old32;
+> +       union u8_32 new32;
+> +       u32 ret;
+> +
+> +       ret = READ_ONCE(*p32);
+> +       do {
+> +               old32.w = ret;
+> +               if (old32.b[i] != old)
+> +                       return old32.b[i];
+> +               new32.w = old32.w;
+> +               new32.b[i] = new;
+> +               instrument_atomic_read_write(p, 1);
+> +               ret = data_race(cmpxchg(p32, old32.w, new32.w));
+> +       } while (ret != old32.w);
+> +       return old;
+> +}
+> +EXPORT_SYMBOL_GPL(cmpxchg_emu_u8);
+> +
+> +union u16_32 {
+> +       u16 h[2];
+> +       u32 w;
+> +};
+> +
+> +/* Emulate two-byte cmpxchg() in terms of 4-byte cmpxchg. */
+> +uintptr_t cmpxchg_emu_u16(volatile u16 *p, uintptr_t old, uintptr_t new)
+> +{
+> +       u32 *p32 = (u32 *)(((uintptr_t)p) & ~0x3);
+> +       int i = (((uintptr_t)p) & 0x2) / 2;
+> +       union u16_32 old32;
+> +       union u16_32 new32;
+> +       u32 ret;
+> +
+> +       WARN_ON_ONCE(((uintptr_t)p) & 0x1);
+> +       ret = READ_ONCE(*p32);
+> +       do {
+> +               old32.w = ret;
+> +               if (old32.h[i] != old)
+> +                       return old32.h[i];
+> +               new32.w = old32.w;
+> +               new32.h[i] = new;
+> +               instrument_atomic_read_write(p, 2);
+> +               ret = data_race(cmpxchg(p32, old32.w, new32.w));
+> +       } while (ret != old32.w);
+> +       return old;
+> +}
+> +EXPORT_SYMBOL_GPL(cmpxchg_emu_u16);
+> --
+> 2.40.1
+>
