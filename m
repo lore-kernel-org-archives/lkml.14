@@ -1,49 +1,49 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E002A15D5B8;
-	Tue,  2 Apr 2024 19:53:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D09715DBB7;
+	Tue,  2 Apr 2024 19:53:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712087599; cv=none; b=mQBHouv6b1U6jjMgnL0RaAxt1YjrJEl+GmLivVYoKWYW3PjPWOrg/PAyLOiRNAZOw4fAz/QmYUcenQc6sTDiTaeKFKZFF9jBG4UD4VtkcXcru+TdFHAcVnJ7+49BGUMRwUZ/BCdU00gs2gsP14vOPYAwxLMEtyT2mZCECZv4Bkg=
+	t=1712087600; cv=none; b=Q7LfTgSfuhgoZw+v7DKUgjRruQ0zV+6ZdAenBf93iswJgw7PsTvM+D/ROfXykJP6/DImwqvxZiEusFGaOoaDDU8XcnrlsGx6EL0qA1nrgjoXZH6+gHOCLDRSwi2f74te5jpTmLt8zvEtTOZonDA40Fhdh+YKpzobPbuSdxyYCjc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712087599; c=relaxed/simple;
-	bh=hwX0VzHlci8kWHYHJbr2yCODKUvNYIYEx+UfyWdrKX8=;
+	s=arc-20240116; t=1712087600; c=relaxed/simple;
+	bh=7uF+Ni2y2wMkDzn7LDrpsM+dIWXMZVCj7KGProB4/7U=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Kq7kxxNm+EIFJQ9Hlg7MV9P752adNqo0EdUqBxCnL2O/zaccMGwQRfRyNsf7WSbFR7QR52cpQJrIXKRiHgJrBnxszmiIizsCMkaYBTefJho2b0CbemiUiQ4m4fajPs/m+rDGQmmwTFd6rlkr02G2KeRukfFtWD42i9wEtqi0wuA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=BNJr2Bbh; arc=none smtp.client-ip=192.198.163.17
+	 MIME-Version; b=mfXpe6AGmAn6cdlYGvhK5IvHSUXaP6mOJP/lsOEAzWqMEOmm4EkR0rpl6Nqw49S+0dbZ5LTzKJGH3oRmt6gnuDF0uFEI/tUn+a2v7qoPZsb4Mfj9YucKCdCWVP1cqwCpTKDv7jwAK6w1FLAcaps7+jenPlc9yxg35sRURDq4Yo8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=a/10wS2Y; arc=none smtp.client-ip=192.198.163.17
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BNJr2Bbh"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="a/10wS2Y"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1712087598; x=1743623598;
+  t=1712087599; x=1743623599;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=hwX0VzHlci8kWHYHJbr2yCODKUvNYIYEx+UfyWdrKX8=;
-  b=BNJr2Bbh18ucT38TSxHMn+eIeqiNZ2BuVAhTTujb6lizETRqkCoCEzF9
-   JWz+EAxVq6VoEkbvOLADYEHt5KWwcpEWxoUqb8cHD6ilolBzBKbRG/qQE
-   XJOfsKYrESeMCqMyMtHPDnmn2YES7fdyrCc3VsCspKi+prKnQntYJ2h1T
-   EjJ6gqTaYkg9LHhcrY+6uniiShifZYKxEqPCsJ8Oiz8SMBEFzh3lcNfza
-   SPwwQlu1zNgwcfnq1QHoSccS8LM9rp0IWIYI2gRGCA0fDLvgsoS5UXulu
-   A6gKvnIsA/qEEbs3T/Ipe471M/AnNnAYmQP4MTqJFmKWAKS8yBa9J8LZU
+  bh=7uF+Ni2y2wMkDzn7LDrpsM+dIWXMZVCj7KGProB4/7U=;
+  b=a/10wS2Ysnn2QwnJzXKi7euUh9maBiUhRmfRmTynxG2gNOOB1lzrIet/
+   KBBpS0pwkhcOVP8FwZIpXBkwwDS/rJrTFdeRRhJSZXKJ01aPOXVBDyz1L
+   aNzuI0Ji5Nqt/SpZzXSs81MfXinczpJO7dItPYooVY2xXP9Bo18lphT/n
+   FTtziBoIrr1vRzo08Nj0/UyZ0XcrDJOWbiGOwn+sdxVS4vFwaYgI93HMa
+   6eH8K9pXS2hc0NZrTmRoN9S11nAfACGCvY8/2jjr3MJtcyTFFlMjUiC0+
+   g2L+99hlpPUJtaNBI8VCDIy+76HuPJJJ7t6UZDqdaP7FSXAE3L8BaXsp+
    g==;
-X-CSE-ConnectionGUID: 0RX3wz2/TDy8VJ/4Oca2Yg==
-X-CSE-MsgGUID: RfqLUULlTWC6Tia9unzrXg==
-X-IronPort-AV: E=McAfee;i="6600,9927,11032"; a="7151003"
+X-CSE-ConnectionGUID: ZWslMqamT4iYaWrjBCnzgg==
+X-CSE-MsgGUID: /zNIbKQ4SIy6Fk52gcyUzA==
+X-IronPort-AV: E=McAfee;i="6600,9927,11032"; a="7151013"
 X-IronPort-AV: E=Sophos;i="6.07,175,1708416000"; 
-   d="scan'208";a="7151003"
+   d="scan'208";a="7151013"
 Received: from fmsmga001.fm.intel.com ([10.253.24.23])
   by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2024 12:53:15 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,11032"; a="937083787"
+X-IronPort-AV: E=McAfee;i="6600,9927,11032"; a="937083792"
 X-IronPort-AV: E=Sophos;i="6.07,175,1708416000"; 
-   d="scan'208";a="937083787"
+   d="scan'208";a="937083792"
 Received: from black.fi.intel.com ([10.237.72.28])
   by fmsmga001.fm.intel.com with ESMTP; 02 Apr 2024 12:53:13 -0700
 Received: by black.fi.intel.com (Postfix, from userid 1003)
-	id DD04128A; Tue,  2 Apr 2024 22:53:09 +0300 (EEST)
+	id 5159C16A1; Tue,  2 Apr 2024 22:53:10 +0300 (EEST)
 From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
 	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
@@ -51,9 +51,9 @@ To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
 	linux-serial@vger.kernel.org
 Cc: Jiri Slaby <jirislaby@kernel.org>,
 	Hugo Villeneuve <hugo@hugovil.com>
-Subject: [PATCH v2 05/16] serial: max3100: Remove custom HW shutdown support
-Date: Tue,  2 Apr 2024 22:50:32 +0300
-Message-ID: <20240402195306.269276-6-andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v2 14/16] serial: max3100: Remove unneeded forward declaration
+Date: Tue,  2 Apr 2024 22:50:41 +0300
+Message-ID: <20240402195306.269276-15-andriy.shevchenko@linux.intel.com>
 X-Mailer: git-send-email 2.43.0.rc1.1.gbec44491f096
 In-Reply-To: <20240402195306.269276-1-andriy.shevchenko@linux.intel.com>
 References: <20240402195306.269276-1-andriy.shevchenko@linux.intel.com>
@@ -65,148 +65,65 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-While there is no user of this callback in the kernel, it also breaks
-the relationship in the driver model. The correct implementation should
-be done via GPIO or regulator framework.
+There is no code using max3100_work() before the definition of it.
+Remove unneeded forward declaration.
 
-Remove custom HW shutdown support for good and, if needed, we will
-implement it correctly later on.
+While at it, move max3100_dowork() and max3100_timeout() down in
+the code to be after actual max3100_work() implementation.
 
 Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
- drivers/tty/serial/max3100.c | 42 ++++++------------------------------
- 1 file changed, 7 insertions(+), 35 deletions(-)
+ drivers/tty/serial/max3100.c | 30 ++++++++++++++----------------
+ 1 file changed, 14 insertions(+), 16 deletions(-)
 
 diff --git a/drivers/tty/serial/max3100.c b/drivers/tty/serial/max3100.c
-index 031803a5da58..c31e4a96cc72 100644
+index b068175ef9c3..5a28df2564b2 100644
 --- a/drivers/tty/serial/max3100.c
 +++ b/drivers/tty/serial/max3100.c
-@@ -34,8 +34,6 @@
-  * struct plat_max3100 - MAX3100 SPI UART platform data
-  * @loopback:            force MAX3100 in loopback
-  * @crystal:             1 for 3.6864 Mhz, 0 for 1.8432
-- * @max3100_hw_suspend:  MAX3100 has a shutdown pin. This is a hook
-- *                       called on suspend and resume to activate it.
-  * @poll_time:           poll time for CTS signal in ms, 0 disables (so no hw
-  *                       flow ctrl is possible but you have less CPU usage)
-  *
-@@ -45,7 +43,6 @@
- struct plat_max3100 {
- 	int loopback;
- 	int crystal;
--	void (*max3100_hw_suspend) (int suspend);
- 	int poll_time;
- };
- 
-@@ -125,9 +122,6 @@ struct max3100_port {
- 	/* need to know we are suspending to avoid deadlock on workqueue */
- 	int suspending;
- 
--	/* hook for suspending MAX3100 via dedicated pin */
--	void (*max3100_hw_suspend) (int suspend);
--
- 	/* poll time (in ms) for ctrl lines */
- 	int poll_time;
- 	/* and its timer */
-@@ -553,6 +547,7 @@ static void max3100_shutdown(struct uart_port *port)
- 	struct max3100_port *s = container_of(port,
- 					      struct max3100_port,
- 					      port);
-+	u16 rx;
- 
- 	dev_dbg(&s->spi->dev, "%s\n", __func__);
- 
-@@ -572,14 +567,7 @@ static void max3100_shutdown(struct uart_port *port)
- 		free_irq(s->irq, s);
- 
- 	/* set shutdown mode to save power */
--	if (s->max3100_hw_suspend)
--		s->max3100_hw_suspend(1);
--	else  {
--		u16 tx, rx;
--
--		tx = MAX3100_WC | MAX3100_SHDN;
--		max3100_sr(s, tx, &rx);
--	}
-+	max3100_sr(s, MAX3100_WC | MAX3100_SHDN, &rx);
+@@ -150,22 +150,6 @@ static void max3100_calc_parity(struct max3100_port *s, u16 *c)
+ 		*c |= max3100_do_parity(s, *c) << 8;
  }
  
- static int max3100_startup(struct uart_port *port)
-@@ -625,8 +613,6 @@ static int max3100_startup(struct uart_port *port)
- 		max3100_sr(s, tx, &rx);
- 	}
- 
--	if (s->max3100_hw_suspend)
--		s->max3100_hw_suspend(0);
- 	s->conf_commit = 1;
- 	max3100_dowork(s);
- 	/* wait for clock to settle */
-@@ -745,7 +731,7 @@ static int max3100_probe(struct spi_device *spi)
+-static void max3100_work(struct work_struct *w);
+-
+-static void max3100_dowork(struct max3100_port *s)
+-{
+-	if (!s->force_end_work && !freezing(current) && !s->suspending)
+-		queue_work(s->workqueue, &s->work);
+-}
+-
+-static void max3100_timeout(struct timer_list *t)
+-{
+-	struct max3100_port *s = from_timer(s, t, timer);
+-
+-	max3100_dowork(s);
+-	mod_timer(&s->timer, jiffies + uart_poll_timeout(&s->port));
+-}
+-
+ static int max3100_sr(struct max3100_port *s, u16 tx, u16 *rx)
  {
- 	int i, retval;
- 	struct plat_max3100 *pdata;
--	u16 tx, rx;
-+	u16 rx;
- 
- 	mutex_lock(&max3100s_lock);
- 
-@@ -786,7 +772,6 @@ static int max3100_probe(struct spi_device *spi)
- 	max3100s[i]->poll_time = msecs_to_jiffies(pdata->poll_time);
- 	if (pdata->poll_time > 0 && max3100s[i]->poll_time == 0)
- 		max3100s[i]->poll_time = 1;
--	max3100s[i]->max3100_hw_suspend = pdata->max3100_hw_suspend;
- 	max3100s[i]->minor = i;
- 	timer_setup(&max3100s[i]->timer, max3100_timeout, 0);
- 
-@@ -806,12 +791,7 @@ static int max3100_probe(struct spi_device *spi)
- 			 i, retval);
- 
- 	/* set shutdown mode to save power. Will be woken-up on open */
--	if (max3100s[i]->max3100_hw_suspend)
--		max3100s[i]->max3100_hw_suspend(1);
--	else {
--		tx = MAX3100_WC | MAX3100_SHDN;
--		max3100_sr(max3100s[i], tx, &rx);
--	}
-+	max3100_sr(max3100s[i], MAX3100_WC | MAX3100_SHDN, &rx);
- 	mutex_unlock(&max3100s_lock);
- 	return 0;
+ 	struct spi_message message;
+@@ -313,6 +297,20 @@ static void max3100_work(struct work_struct *w)
+ 		tty_flip_buffer_push(&s->port.state->port);
  }
-@@ -853,6 +833,7 @@ static void max3100_remove(struct spi_device *spi)
- static int max3100_suspend(struct device *dev)
+ 
++static void max3100_dowork(struct max3100_port *s)
++{
++	if (!s->force_end_work && !freezing(current) && !s->suspending)
++		queue_work(s->workqueue, &s->work);
++}
++
++static void max3100_timeout(struct timer_list *t)
++{
++	struct max3100_port *s = from_timer(s, t, timer);
++
++	max3100_dowork(s);
++	mod_timer(&s->timer, jiffies + uart_poll_timeout(&s->port));
++}
++
+ static irqreturn_t max3100_irq(int irqno, void *dev_id)
  {
- 	struct max3100_port *s = dev_get_drvdata(dev);
-+	u16 rx;
- 
- 	dev_dbg(&s->spi->dev, "%s\n", __func__);
- 
-@@ -861,15 +842,8 @@ static int max3100_suspend(struct device *dev)
- 	s->suspending = 1;
- 	uart_suspend_port(&max3100_uart_driver, &s->port);
- 
--	if (s->max3100_hw_suspend)
--		s->max3100_hw_suspend(1);
--	else {
--		/* no HW suspend, so do SW one */
--		u16 tx, rx;
--
--		tx = MAX3100_WC | MAX3100_SHDN;
--		max3100_sr(s, tx, &rx);
--	}
-+	/* no HW suspend, so do SW one */
-+	max3100_sr(s, MAX3100_WC | MAX3100_SHDN, &rx);
- 	return 0;
- }
- 
-@@ -879,8 +853,6 @@ static int max3100_resume(struct device *dev)
- 
- 	dev_dbg(&s->spi->dev, "%s\n", __func__);
- 
--	if (s->max3100_hw_suspend)
--		s->max3100_hw_suspend(0);
- 	uart_resume_port(&max3100_uart_driver, &s->port);
- 	s->suspending = 0;
- 
+ 	struct max3100_port *s = dev_id;
 -- 
 2.43.0.rc1.1.gbec44491f096
 
