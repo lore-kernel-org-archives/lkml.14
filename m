@@ -1,119 +1,116 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 187CA5A4C7
-	for <linux-kernel@vger.kernel.org>; Tue,  2 Apr 2024 11:20:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+Received: from mx10.didiglobal.com (mx10.didiglobal.com [111.202.70.125])
+	by smtp.subspace.kernel.org (Postfix) with SMTP id 19F6B604BB;
+	Tue,  2 Apr 2024 11:21:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=111.202.70.125
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712056841; cv=none; b=E7ZVdsDgOYGEQaGWXe5IfGLipvvBkApwTz8d7H4BFiKOSG8ikLxri6kQhGTDZhorWYalegOzwr/dQy6io0UVGg0HoxqTuzKsCIuQNDQwXa+mBTiylQ1GoPD+4YA2WyeTmLoUfm5VXiQdMueYp4GLAZcDIu23dYhLx1OTFcOzrbk=
+	t=1712056895; cv=none; b=fbxFy63flNCAvbNmNohAWMiD121uF8l4V+IT7BN6wZQ98clBJVh0bMlLQ4OuJ3rJmwT/dioT5mY8Mqh5DEJjkKeBrdN55JY0eoUc7vMdIjsTnsEsrKVT0tHv5I6TSHLOE0gW7IvaFZEPbJjHbONaryKI9HtP49je4y/zCmaRB5I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712056841; c=relaxed/simple;
-	bh=I6RChiJFjQVbbUTWSKLmo+I28HKacpVxofusIsEVe24=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=i/TK3W0rcN4SFZDU8pLltMy7pzSkqPlxPiXV13OEIq5YwCMdRQmozhOLVBLLqFpe9q5rxkwpQ3+2RidL2vWBpeIVVYZeOrpySl9DdLHNNnOEU//lt8w1EVbi+dL5g8xlEJ9xq8mhblIzCRcvB3NFF8Jms/7eRzK9MOD9PRli8u8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=NnExroUT; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=lBv/XW6m; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="NnExroUT";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="lBv/XW6m"
-Received: from imap2.dmz-prg2.suse.org (imap2.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:98])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 52C6622419;
-	Tue,  2 Apr 2024 11:20:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1712056838; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=apA0Uu4D1AgfLqcwFbImK2prYt2oHJJeyB/JlM/93O4=;
-	b=NnExroUT5vh/JpIUPeU+/Mg0nEpSEqcSvofpvlMqhpkjGO4a0AX6onoxENkOrRCFsVB/ED
-	J9tPeDE/m2BGDSM8cy/dnPENfLIaFlF/k1zxagj0zvUK4XNCpiRbWb+tf35M3W6NYJqudo
-	CWY0Jxa0580cCwhVAZVDNefnfTvIQLo=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1712056838;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=apA0Uu4D1AgfLqcwFbImK2prYt2oHJJeyB/JlM/93O4=;
-	b=lBv/XW6mYKDUmkY/I0LALpdkywTpCO8tOoTCxrk/8M+0QNllVNsDrpjXe7tF7t9OwBr9HZ
-	vTSo5OjReWMd82Cg==
-Authentication-Results: smtp-out1.suse.de;
-	dkim=none
-Received: from imap2.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap2.dmz-prg2.suse.org (Postfix) with ESMTPS id D3E5B13357;
-	Tue,  2 Apr 2024 11:20:37 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap2.dmz-prg2.suse.org with ESMTPSA
-	id UYQtMQXqC2YVKAAAn2gu4w
-	(envelope-from <osalvador@suse.de>); Tue, 02 Apr 2024 11:20:37 +0000
-Date: Tue, 2 Apr 2024 13:22:02 +0200
-From: Oscar Salvador <osalvador@suse.de>
-To: Vlastimil Babka <vbabka@suse.cz>
-Cc: Andrew Morton <akpm@linux-foundation.org>, linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org, Michal Hocko <mhocko@suse.com>,
-	Marco Elver <elver@google.com>,
-	Andrey Konovalov <andreyknvl@gmail.com>,
-	Alexander Potapenko <glider@google.com>
-Subject: Re: [PATCH v3 3/3] mm,page_owner: Fix accounting of pages when
- migrating
-Message-ID: <ZgvqWoZsYJLenSE_@localhost.localdomain>
-References: <20240326063036.6242-1-osalvador@suse.de>
- <20240326063036.6242-4-osalvador@suse.de>
- <50f31489-b5c3-480e-a7db-20edbbb2c9c2@suse.cz>
+	s=arc-20240116; t=1712056895; c=relaxed/simple;
+	bh=gIE+7/6wqpyt6IYxNKkaCiQY+GCr5s9o467ORrHzAmo=;
+	h=Date:From:To:CC:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=SOVjVOHocBKlMj46Myr8AdKus5XLUPNy3hKCFNxE7XRj5CqzgBaZSc33BCikSDNuULuVDiYXxOlMpdMmCew9kN8VnN7FIhj2FCcCzxJ/ti1iwKkM1M4AJz2ja7tr1QK4x72qqJuysTcra5mha2afaxF4nJrgq5zdLycbyofxo2Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=didiglobal.com; spf=pass smtp.mailfrom=didiglobal.com; arc=none smtp.client-ip=111.202.70.125
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=didiglobal.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=didiglobal.com
+Received: from mail.didiglobal.com (unknown [10.79.65.12])
+	by mx10.didiglobal.com (MailData Gateway V2.8.8) with ESMTPS id C4A8118097DE69;
+	Tue,  2 Apr 2024 19:21:19 +0800 (CST)
+Received: from didi-ThinkCentre-M930t-N000 (10.79.64.101) by
+ ZJY02-ACTMBX-02.didichuxing.com (10.79.65.12) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Tue, 2 Apr 2024 19:21:19 +0800
+Date: Tue, 2 Apr 2024 19:21:12 +0800
+X-MD-Sfrom: tiozhang@didiglobal.com
+X-MD-SrcIP: 10.79.65.12
+From: Tio Zhang <tiozhang@didiglobal.com>
+To: <mingo@redhat.com>, <peterz@infradead.org>, <juri.lelli@redhat.com>,
+	<vincent.guittot@linaro.org>, <rostedt@goodmis.org>, <bsingharora@gmail.com>,
+	<corbet@lwn.net>, <akpm@linux-foundation.org>
+CC: <linux-kernel@vger.kernel.org>, <linux-doc@vger.kernel.org>,
+	<dietmar.eggemann@arm.com>, <bsegall@google.com>, <mgorman@suse.de>,
+	<bristot@redhat.com>, <vschneid@redhat.com>, <tiozhang@didiglobal.com>,
+	<zyhtheonly@gmail.com>, <zyhtheonly@yeah.net>, <fuyuanli@didiglobal.com>
+Subject: [PATCHSET] sched/delayacct: get task SOFTIRQ delay
+Message-ID: <20240402112112.GA17370@didi-ThinkCentre-M930t-N000>
+Mail-Followup-To: mingo@redhat.com, peterz@infradead.org,
+	juri.lelli@redhat.com, vincent.guittot@linaro.org,
+	rostedt@goodmis.org, bsingharora@gmail.com, corbet@lwn.net,
+	akpm@linux-foundation.org, linux-kernel@vger.kernel.org,
+	linux-doc@vger.kernel.org, dietmar.eggemann@arm.com,
+	bsegall@google.com, mgorman@suse.de, bristot@redhat.com,
+	vschneid@redhat.com, zyhtheonly@gmail.com, zyhtheonly@yeah.net,
+	fuyuanli@didiglobal.com
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <50f31489-b5c3-480e-a7db-20edbbb2c9c2@suse.cz>
-X-Spam-Score: 0.31
-X-Spamd-Bar: /
-X-Spam-Flag: NO
-X-Spamd-Result: default: False [0.31 / 50.00];
-	 ARC_NA(0.00)[];
-	 RCVD_VIA_SMTP_AUTH(0.00)[];
-	 FROM_HAS_DN(0.00)[];
-	 TO_DN_SOME(0.00)[];
-	 FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	 TO_MATCH_ENVRCPT_ALL(0.00)[];
-	 MIME_GOOD(-0.10)[text/plain];
-	 RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	 NEURAL_HAM_LONG(-1.00)[-0.995];
-	 RCVD_COUNT_THREE(0.00)[3];
-	 DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	 MX_GOOD(-0.01)[];
-	 NEURAL_HAM_SHORT(-0.20)[-1.000];
-	 RCPT_COUNT_SEVEN(0.00)[8];
-	 FUZZY_BLOCKED(0.00)[rspamd.com];
-	 FROM_EQ_ENVFROM(0.00)[];
-	 R_DKIM_NA(2.20)[];
-	 MIME_TRACE(0.00)[0:+];
-	 FREEMAIL_CC(0.00)[linux-foundation.org,vger.kernel.org,kvack.org,suse.com,google.com,gmail.com];
-	 RCVD_TLS_ALL(0.00)[];
-	 BAYES_HAM(-0.59)[81.59%];
-	 RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:98:from]
-X-Spam-Level: 
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Rspamd-Queue-Id: 52C6622419
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-ClientProxiedBy: ZJY01-PUBMBX-01.didichuxing.com (10.79.64.32) To
+ ZJY02-ACTMBX-02.didichuxing.com (10.79.65.12)
 
-On Tue, Apr 02, 2024 at 12:26:51PM +0200, Vlastimil Babka wrote:
-> Can the migration still fail after __folio_copy_owner()? That goes again to
-> the comment you changed in patch 1/3. If it can, this will kinda create a
-> mess with the old folio's handles not reflecting reality? (although
-> refcounts will be ok)
+We can only get IRQ/SOFTIRQ delay in total now in Delay accounting, but
+getting SOFTIRQ delay and IRQ delay separetely would help users reduce
+such delays in a more convenient way.
+For IRQ delay, we can tuning irq CPU affinity or using threaded-irq.
+For SOFTIRQ delay, we can tuning rps/xps or using kernel threads for NAPI.
+And this is an example stack a task is delayed mainly by SOFTIRQ(delay
+by receiving packets when sending packets):
+	...
+	ip_rcv
+	__netif_receive_skb_core
+	__netif_receive_skb
+	process_backlog
+	net_rx_action
+	do_softirq
+	__local_bh_enable_ip
+	ip_finish_output2
+	ip_finish_output
+	ip_output
+	ip_local_out
+	ip_send_skb
+	udp_send_skb
+	udp_sendmsg
+	inet_sendmsg
+	sock_sendmsg
+	__sys_sendto
+	do_syscall_64
+	__libc_sendto
+	...
 
-According to my research (I replied in patch#1), no, migration cannot
-fail after __folio_copy_owner(), so we are safe here (Tm).
+So this patchset tries to make SOFTIRQ delay observeable in Delay
+accounting and available in taskstats.
+(also update tools/accounting/getdelays.c)
 
+Also for backward compatibility, we dont want to change the meaning of
+origin IRQ/SOFTIRQ delay, instead we can get real IRQ(interrupt) delay by
+the origin IRQ/SOFTIRQ delay minus SOFTIRQ delay added by this patch.
 
--- 
-Oscar Salvador
-SUSE Labs
+With this patch, the example above results by getdelays.c:
+	# ./getdelays -t 4600 -d
+	print delayacct stats ON
+	TGID	4600
+	
+	CPU             count     real total  virtual total    delay total  delay average
+                 	3973    10700014780    10698803222   312345815813         78.617ms
+	IO              count    delay total  delay average
+                    	0              0              0.000ms
+	SWAP            count    delay total  delay average
+                    	0              0              0.000ms
+	RECLAIM         count    delay total  delay average
+                    	0              0              0.000ms
+	THRASHING       count    delay total  delay average
+                    	0              0              0.000ms
+	COMPACT         count    delay total  delay average
+                    	0              0              0.000ms
+	WPCOPY          count    delay total  delay average
+                   	40         266859             0.007ms
+	IRQ             count    delay total  delay average
+                	13450    17756373906          1.320ms
+	SOFTIRQ         count    delay total  delay average
+        	        13450    17639154300          1.311ms
+
+We find out SOFTIRQ impact the delay most, then tune RPS to reduce this.
