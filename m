@@ -1,89 +1,145 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE39A15AABA;
-	Tue,  2 Apr 2024 17:46:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C0E715AAB3;
+	Tue,  2 Apr 2024 17:47:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712079983; cv=none; b=MPf8pfl4n4F7E8cNy8jFMeUtiXXYM2XmyrZlZvdgkfZY8cjMOT64i6+G/LXk4KJnXYnCrJxPgc1FN5si7eVE1TTyzA9CBlLaJs37SWKD9M4VycSo3vlNnmBMWIW00ZDBUrSFB5FXNVwB1zdM8aosustcBcUIvxtKUx/7wn0G80M=
+	t=1712080023; cv=none; b=psJ+rT9Zlg4+A1NyYDuDGZIX8rZXyqWBzZIi4CkpmWzhRbVyRNnhLkjwcUSflDdux7VoyYqdgqYYidTWz2cZgkLacXzwywJzJAzSnb6hAgVBDQTTRnOFp61UHmeuzKTGNNLnseBDrVAes27ibScgPKVYh7k9jUH/jiCLuD8e/O4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712079983; c=relaxed/simple;
-	bh=pAUFdiwIlE1ioQQwbu0Wim5W+f/P5B5pF1oot4QK2eU=;
+	s=arc-20240116; t=1712080023; c=relaxed/simple;
+	bh=6qtbcXbgPT258MwDHIMMVnVJMOfvk/DPTeiD+9wwTxE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BaaSUy3GcR1kbBRhznIfMsX+luAWxEA7HxxGL5PwRhvGeeXcWbSmfRQvhaQDrlsY1+j7AXHucfW5mFmSX6fbOBP8l/mrHAOPP8iSQMe98fHcxdRWEBdz7W2aGjs8fsjDUm0PHjxvXxgxtxzVthU1+VJwbgj9YXkEY1UUtHFSXe4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=TwyZmeRJ; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	 Content-Type:Content-Disposition:In-Reply-To; b=sWPtgO78HxTzn/IwED12ZjFqOEd4KMvb8QWHUFNdyVnIrfChzfpd13EBWyWqX7V6QzPTfY4PA1IVptELpTaBZcr8SKezVOJPmoxDMnhZ81QtLfKd8ejD/FeibiHKN6VJ2nc3mPeFp4CSHE5X7ujNwd7XsLPnAzBkx4r0AgHJftY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fi/8z9ry; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="TwyZmeRJ"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 25AEE40E01A8;
-	Tue,  2 Apr 2024 17:46:12 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id gbEdqk9YiJaJ; Tue,  2 Apr 2024 17:46:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1712079954; bh=wHbaVNqGVy1LWaXB4BlrvHPuKVAKWB8nGYxe0uVjbuI=;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fi/8z9ry"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ADB79C433C7;
+	Tue,  2 Apr 2024 17:46:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1712080022;
+	bh=6qtbcXbgPT258MwDHIMMVnVJMOfvk/DPTeiD+9wwTxE=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=TwyZmeRJFGNxqKzSbhpLs/WgSCPjZJHB3+etEoq5jacr1kcnmsu/jrKIVarlUZHPX
-	 mA3BCHiCaIDCpbyEvwdDZLGK28wHQ01iUpc8NgZpobz6YD5KKAs50FcsI6N9AAyrji
-	 mLm/efArrBI6OeF8HS3rRMHf8DkITOuJLD4krNoU7WPAJTGdbJJxPf7ukAe4CyQKN/
-	 GZqvb+FzREkQ7nxpF2HNOXXUmgyQTwde3fgn6S6ZbEP+04jsO0anhfJLEoNCpr438E
-	 JMOIHiQpc5UE0L0o9BZNjXN0m7uaxs3xImbIuDmrTxNzlEMP5MgZ3K+LnUVQA1iW+R
-	 Bx9rso1vn9MKQXiT8jBRTGhPF+fnIYEyuR1EbFye8dGNFiOz3+SyqwyDboqAErSGRZ
-	 /LY2IjpYqBmHRSteX++FShcY4N8D0TZ0/Fn2MhpHIN/7jd9t9ypzDLZ1isLDClGhug
-	 if65NC3Gchk9IkdVb3imb/kiBTx1sHrXG9Rt+i/inQ49cUJFiFpgIRzOlvzfhsqo/B
-	 SdPgFn7pfAmo7bFz2tkBlZbhTGxichcnII5g7yNtCb8hYT9GqvATqxVbmyJt+VdaTZ
-	 BEKwlKrofAyfas277zG+kQuVdePeDpctpQUhtAqem8TNo4w3l4dff9/hgrbemp4y+x
-	 V70/EELTQLcrfI/IcH42zjJI=
-Received: from zn.tnic (p5de8ecf7.dip0.t-ipconnect.de [93.232.236.247])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 8D9F340E01A1;
-	Tue,  2 Apr 2024 17:45:47 +0000 (UTC)
-Date: Tue, 2 Apr 2024 19:45:40 +0200
-From: Borislav Petkov <bp@alien8.de>
-To: "Kalra, Ashish" <ashish.kalra@amd.com>
-Cc: bp@kernel.org, thomas.lendacky@amd.com, linux-kernel@vger.kernel.org,
-	linux-tip-commits@vger.kernel.org, michael.roth@amd.com,
-	x86@kernel.org
-Subject: Re: [PATCH] x86/sev: Apply RMP table fixups for kexec.
-Message-ID: <20240402174540.GAZgxERNxsRJUCb1yp@fat_crate.local>
-References: <2ab14f6f-2690-056b-cf9e-38a12dafd728@amd.com>
- <20240402163412.19325-1-bp@kernel.org>
- <6f0d2ccf-243c-4073-a470-21e2f404595a@amd.com>
- <359264a1-e4ef-438c-8f24-32848e131272@amd.com>
+	b=fi/8z9ryH9DA63j38wP2nPgPrAlEmUb4Q0Y0T69imsrnRqrdzITdr/fahb11gp21z
+	 KKN1E2imygXDCPznJnJs0qFcZ6u0GtXA5S4QR8pMQjPywi5vdYFThIjdkihZ4Lsee3
+	 yosHVJqIi0WM4MlahhuZ4ol6ZR/30P3YjrPX9FK/AeU6gwD5HFkl3OmydvHeI1goQv
+	 g8Uk2J5t3NiwUkA6pkvWyVfvFmK/jV1c3LLFmv/WFdkREZ2hlVAC4ig/eWtW2+yT10
+	 E9XBQNfNr3krf4eJ9C6bRHdXMqJA8OZNTKY3OUnnbAQJaRNEo6LYliSe0QHYwy8Wm0
+	 6w2IpUAJiOfIg==
+Date: Tue, 2 Apr 2024 18:46:57 +0100
+From: Conor Dooley <conor@kernel.org>
+To: Steen Hegelund <steen.hegelund@microchip.com>
+Cc: Krzysztof Kozlowski <krzk@kernel.org>,
+	Nicolas Ferre <nicolas.ferre@microchip.com>,
+	Claudiu Beznea <claudiu.beznea@tuxon.dev>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Lars Povlsen <lars.povlsen@microchip.com>,
+	Daniel Machon <daniel.machon@microchip.com>,
+	UNGLinuxDriver@microchip.com,
+	"David S. Miller" <davem@davemloft.net>,
+	Bjarni Jonasson <bjarni.jonasson@microchip.com>,
+	linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH RFT 01/10] arm64: dts: microchip: sparx5: fix mdio reg
+Message-ID: <20240402-drizzly-risotto-eac556bbe95b@spud>
+References: <20240401153740.123978-1-krzk@kernel.org>
+ <b3d818df8819d2fb3e96fa61b277d49941d9b01b.camel@microchip.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="RilKgIjVf/M7rXnH"
 Content-Disposition: inline
-In-Reply-To: <359264a1-e4ef-438c-8f24-32848e131272@amd.com>
+In-Reply-To: <b3d818df8819d2fb3e96fa61b277d49941d9b01b.camel@microchip.com>
 
-On Tue, Apr 02, 2024 at 12:11:03PM -0500, Kalra, Ashish wrote:
-> > And if you mean the reservation in the kernel page tables (directmap)
-> > then that will not help as kexec uses it's own identity mapped page
-> > tables.
 
-So how hard would it be to *always* reserve the chunk of memory at the
-2M boundary where the RMP table starts and up to the 2M boundary where
-the RMP  table ends?
+--RilKgIjVf/M7rXnH
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-In *every* kernel.
+Hey,
 
-By default.
+On Tue, Apr 02, 2024 at 04:00:32PM +0200, Steen Hegelund wrote:
+> On Mon, 2024-04-01 at 17:37 +0200, Krzysztof Kozlowski wrote:
+> > [Some people who received this message don't often get email from
+> > krzk@kernel.org. Learn why this is important at
+> > https://aka.ms/LearnAboutSenderIdentification=A0]
+> >=20
+> > EXTERNAL EMAIL: Do not click links or open attachments unless you
+> > know the content is safe
+> >=20
+> > Correct the reg address of mdio node to match unit address.=A0 Assume
+> > the
+> > reg is not correct and unit address was correct, because there is
+> > alerady node using the existing reg 0x110102d4.
+> >=20
+> > =A0 sparx5.dtsi:443.25-451.5: Warning (simple_bus_reg):
+> > /axi@600000000/mdio@6110102f8: simple-bus unit address format error,
+> > expected "6110102d4"
+> >=20
+> > Fixes: d0f482bb06f9 ("arm64: dts: sparx5: Add the Sparx5 switch
+> > node")
+> > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> >=20
+> > ---
+> >=20
+> > Not tested on hardware
+> > ---
+> > =A0arch/arm64/boot/dts/microchip/sparx5.dtsi | 2 +-
+> > =A01 file changed, 1 insertion(+), 1 deletion(-)
+> >=20
+> > diff --git a/arch/arm64/boot/dts/microchip/sparx5.dtsi
+> > b/arch/arm64/boot/dts/microchip/sparx5.dtsi
+> > index 24075cd91420..5d820da8c69d 100644
+> > --- a/arch/arm64/boot/dts/microchip/sparx5.dtsi
+> > +++ b/arch/arm64/boot/dts/microchip/sparx5.dtsi
+> > @@ -447,7 +447,7 @@ mdio2: mdio@6110102f8 {
+> > =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 p=
+inctrl-names =3D "default";
+> > =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 #=
+address-cells =3D <1>;
+> > =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 #=
+size-cells =3D <0>;
+> > -=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 reg=
+ =3D <0x6 0x110102d4 0x24>;
+> > +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 reg=
+ =3D <0x6 0x110102f8 0x24>;
+> > =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 };
+> >=20
+> > =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 mdio3: mdio@61101031c {
+> > --
+> > 2.34.1
+> >=20
+>=20
+> I did a check of our current Sparx5 EVBs and none of them uses
+> controller 2 in any revision, so this is probably why it has not come
+> up before, so as it stands we have no platform to test this change on
+> currently.
+>=20
+> Besides that the change looks good to me.
+>=20
+> Best Regards
+> Steen
+>=20
+> Reviewed-by: Steen Hegelund <Steen.Hegelund@microchip.com>
 
-Thx.
+Are you okay with the rest of the series, or have you only looked at
+this one patch?
 
--- 
-Regards/Gruss,
-    Boris.
+--RilKgIjVf/M7rXnH
+Content-Type: application/pgp-signature; name="signature.asc"
 
-https://people.kernel.org/tglx/notes-about-netiquette
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZgxEkQAKCRB4tDGHoIJi
+0lSrAQCZbgAp+hHzEbAZUy5ZEACDMf4lJMuQXFA1tS+/Cwh2vgEA/UsYcqeBcYpx
+rn636eS2o+9iXzVq75hhahrnTAKyjAA=
+=1JM2
+-----END PGP SIGNATURE-----
+
+--RilKgIjVf/M7rXnH--
