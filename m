@@ -1,116 +1,108 @@
-Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0F8758113
-	for <linux-kernel@vger.kernel.org>; Tue,  2 Apr 2024 09:49:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 410DE17C8D;
+	Tue,  2 Apr 2024 09:50:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712051381; cv=none; b=Q/V27fGy6hSKiS/jLbAZJ7UBudntc7tfwI+9d23/eNvgZ1j9chQtFamBInjX2S7+A32fRr7XfFtbxERMKU5YGK871wAo0Gm2tNFDjQ0/FjVGfgIYbG8wqA2eP74ULHfncmyuAwiLSi7zPuA2umPM+fgu7Jh/O8PPnO48weGTayI=
+	t=1712051459; cv=none; b=IpGQ7kY39cna5b8FLxSI4O7VmzFcxuOn2G/jftzZ6ANgZf/dZx6uWA6znTJ5xD3k750Ue8SAykbM7YFMzppASffx5QypaUfh4X8WBIkTSMjzxm9PWoo6ICi6+jB42KH6+fnNyjybeQEN1ss2A82T8jGdCfH196S8QYbBiDhscyA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712051381; c=relaxed/simple;
-	bh=4/EtvWS0lZMV84j65Uy5L17yPmitKMCnx+1V6GM8jWc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=LWZ75R8Wa4a/lwYhZ8ka/MHMy/Y6YZIknnR+bfSronXLE6Z0lPat4DDrbAgp/5mBHt7VI3YHf/FrM7LFeG0FQVxGOdf3DEc7G6Kk1AyT0HcQUqs3DutN7I75zTa93yH9NGgLwHmMTQXprwMSI+xQRIcsV8rMTTTGLW1qlT4XVwg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VbYEZPmW; arc=none smtp.client-ip=209.85.221.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1712051459; c=relaxed/simple;
+	bh=vw9cJNl0LdiDuqpsolVN3qVEokjCyQNhVMfH1BeHA1Y=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=S73zKO9AyYUvIDvL4C9wU0IjDnGXSV1DfvXoV1akSCHaiRHplx+KLLYMmSUbOPPRW8sK6brM3cQImMT6zhqpiPVo23T/bvf71A/+8rSmM/UBesmYhD5OxgILHURqXlXjLPbZ+1GtLLSX+EtI+HGu0ChrJBVGryJrXOoMp3BYjBs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=35rLm1S5; arc=none smtp.client-ip=46.235.227.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VbYEZPmW"
-Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-3436fec6a70so186486f8f.2
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Apr 2024 02:49:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1712051378; x=1712656178; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=khWTrPazDRXs/RM2v0O9wjs2bqj7qxq5S67ky2y7oZw=;
-        b=VbYEZPmWNXs/aGck0WtQb1eAzJbZPyoIxNAnkcL+fYKyT31jicFzEkcBMQZShdGz+D
-         DeAuIy1wdPhBPcWF6r0aSXitYEN9UGg63bVy6fRVohbgu+feUFUtkNLDtC79gHIB9TLf
-         lrCZjDqhbZKA7iunj2REuv+1wnJkel/D5bQ0MBtvCs6D1KPtHZ/7LsmbwX+Zs+W+VqDU
-         RcMwvDFr/oRDZjmc9f7ob5n9HqxtJ4JH5BIHPPaAsrtUFjj/KpH4LK4qJK7AjU9fXDM8
-         I97M7LV4oJkk1aKtUlJmlcy1zIcks3gPjOzSiEY5QR/zUnXpcZuEJX3SEReGvkcycU73
-         D0dw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712051378; x=1712656178;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=khWTrPazDRXs/RM2v0O9wjs2bqj7qxq5S67ky2y7oZw=;
-        b=AgAf4DWKEOjFW0js1VmagGPj3KUl4hTpiZvRB+9+rvT9XRCUGuOGMXXsE3VxcjpF0M
-         WhDs4DBltSEPvYViaqCEbJvNxgvP81HPrez3wA0XXR18a2kQz1uCcz2AHmVs5Uwl285p
-         rKlP8qpOemyb9TUqx5KLdu0LInpxLrsGdHV+uRSq5OPzQPtl0zoq25R6BSltbKzYpWQg
-         sVIoKwtaWyDRmfSG3na94ilB7eqDlfkOn3f0oL7NSsUk+Iyyc2nd18x7wSzAuaZYs9xZ
-         hzT469zwykgIVnDq4cHZaWkC8ELJo5B/06gxvjzfQlKp8mOxGxJPd3Stz+MXkUYUc0DL
-         5bvQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUffaFb6WEpBt0L7viTHSOVDgQILAZ/g1WVR8TB6faavw7L0e+GRwQnFZMLqys/wBinmEK4qBqZxH4agW/61czEU5imZzTdiR7llcfk
-X-Gm-Message-State: AOJu0YzTXo0eYmMNkpkN8A0JppgY5qgzRZDyFEiWaWcinhz7CIUdH3+u
-	8I1LE0H7wRb4L3NVhYh31XyioKZ73sUbz8i5u+SxPSpDL3RVgHUU7rmyFKwd+wBi5fIBUavai5G
-	o3pGA3IdxIjsr3vP+rxupyH0XJnM=
-X-Google-Smtp-Source: AGHT+IENhD8t5MKDpeopK1nj7kc5PGim4v4nlxjclGl5XXLECh7hx+H71FVqbAxoCfJ/OfxlpBVKd9GpIhiZyFZPPbI=
-X-Received: by 2002:a5d:4d07:0:b0:341:cf9b:c8e with SMTP id
- z7-20020a5d4d07000000b00341cf9b0c8emr10357697wrt.50.1712051377736; Tue, 02
- Apr 2024 02:49:37 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="35rLm1S5"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1712051455;
+	bh=vw9cJNl0LdiDuqpsolVN3qVEokjCyQNhVMfH1BeHA1Y=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=35rLm1S57yMgRE+kXJmLpYmkm6SUggu4hiypnYM7pxO4Qzz9MUkxoEoG37wJDSR6Z
+	 I8BjXG4rZv7tpL4/HMeydnOgGt0ywMPEuDn11KRvHZRlJA7NhpvZfYTrjiV5/T/m13
+	 2HD16VV0x41MOn+n1To3JOlICC43sCB0n0bH0hAIRBSAvH16r+yKjZi8o+m/+mavOx
+	 69yABYjYrxphibinRyMHdWhSbfS/EbQaN0yWq2DFey5Kd4xJVO5OEDRCqDu9CYTVIe
+	 gVnRQusPVg3hFVlyOBPtEtBJdiqTGIwN2X4A4JUTkh2jWt+y+9xfXbF3M4ah0i0/gZ
+	 mXMBr2WexXVpQ==
+Received: from [100.113.186.2] (cola.collaboradmins.com [195.201.22.229])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: kholk11)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id D7B0737820EF;
+	Tue,  2 Apr 2024 09:50:53 +0000 (UTC)
+Message-ID: <4949bd54-8c32-4490-ab19-d38796d29ac1@collabora.com>
+Date: Tue, 2 Apr 2024 11:50:53 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231222022741.8223-1-boy.wu@mediatek.com> <ZgvRmhbvVoGHcLqu@FVFF77S0Q05N>
-In-Reply-To: <ZgvRmhbvVoGHcLqu@FVFF77S0Q05N>
-From: Andrey Ryabinin <ryabinin.a.a@gmail.com>
-Date: Tue, 2 Apr 2024 11:48:37 +0200
-Message-ID: <CAPAsAGyzMBgwCTXkBO1xqETt-tvO-gD1=C1Snmu5arhX9SFrXQ@mail.gmail.com>
-Subject: Re: [PATCH] arm: kasan: clear stale stack poison
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: "boy.wu" <boy.wu@mediatek.com>, Russell King <linux@armlinux.org.uk>, 
-	Matthias Brugger <matthias.bgg@gmail.com>, 
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	linux-mediatek@lists.infradead.org, Linus Walleij <linus.walleij@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/3] media: mediatek: vcodec: fix h264 multi statless
+ decoder smatch warning
+To: Yunfei Dong <yunfei.dong@mediatek.com>,
+ =?UTF-8?Q?N=C3=ADcolas_F_=2E_R_=2E_A_=2E_Prado?= <nfraprado@collabora.com>,
+ Nicolas Dufresne <nicolas.dufresne@collabora.com>,
+ Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+ Benjamin Gaignard <benjamin.gaignard@collabora.com>,
+ Nathan Hebert <nhebert@chromium.org>
+Cc: Hsin-Yi Wang <hsinyi@chromium.org>, Fritz Koenig <frkoenig@chromium.org>,
+ Daniel Vetter <daniel@ffwll.ch>, Steve Cho <stevecho@chromium.org>,
+ linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-mediatek@lists.infradead.org,
+ Project_Global_Chrome_Upstream_Group@mediatek.com
+References: <20240229095611.6698-1-yunfei.dong@mediatek.com>
+ <20240229095611.6698-2-yunfei.dong@mediatek.com>
+From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Content-Language: en-US
+In-Reply-To: <20240229095611.6698-2-yunfei.dong@mediatek.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Tue, Apr 2, 2024 at 11:36=E2=80=AFAM Mark Rutland <mark.rutland@arm.com>=
- wrote:
-...
-> It looks like you're specifically referring to what arm64 did in commit:
->
->   0d97e6d8024c71cc ("arm64: kasan: clear stale stack poison")
->
-> Where the commit message explained the problem:
->
-> | Functions which the compiler has instrumented for KASAN place poison on
-> | the stack shadow upon entry and remove this poison prior to returning.
-> |
-> | In the case of cpuidle, CPUs exit the kernel a number of levels deep in
-> | C code.  Any instrumented functions on this critical path will leave
-> | portions of the stack shadow poisoned.
-> |
-> | If CPUs lose context and return to the kernel via a cold path, we
-> | restore a prior context saved in __cpu_suspend_enter are forgotten, and
-> | we never remove the poison they placed in the stack shadow area by
-> | functions calls between this and the actual exit of the kernel.
-> |
-> | Thus, (depending on stackframe layout) subsequent calls to instrumented
-> | functions may hit this stale poison, resulting in (spurious) KASAN
-> | splats to the console.
-> |
-> | To avoid this, clear any stale poison from the idle thread for a CPU
-> | prior to bringing a CPU online.
->
-> ... which we then extended to check for CONFIG_KASAN_STACK in commit:
->
->   d56a9ef84bd0e1e8 ("kasan, arm64: unpoison stack only with CONFIG_KASAN_=
-STACK")
->
-> If you can fold in the description above (i.e. cite commit 0d97e6d8024c71=
-cc and
-> a copy of its commit message):
->
-> Reviewed-by: Mark Rutland <mark.rutland@arm.com>
->
+Il 29/02/24 10:56, Yunfei Dong ha scritto:
+> Fix smatch static checker warning for vdec_h264_req_multi_if.c.
+> Leading to kernel crash when fb is NULL.
+> 
+> Fixes: 397edc703a10 ("media: mediatek: vcodec: add h264 decoder")
+> Signed-off-by: Yunfei Dong <yunfei.dong@mediatek.com>
+> ---
+>   .../vcodec/decoder/vdec/vdec_h264_req_multi_if.c         | 9 +++++++--
+>   1 file changed, 7 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/media/platform/mediatek/vcodec/decoder/vdec/vdec_h264_req_multi_if.c b/drivers/media/platform/mediatek/vcodec/decoder/vdec/vdec_h264_req_multi_if.c
+> index 0e741e0dc8ba..ab8e708e0df1 100644
+> --- a/drivers/media/platform/mediatek/vcodec/decoder/vdec/vdec_h264_req_multi_if.c
+> +++ b/drivers/media/platform/mediatek/vcodec/decoder/vdec/vdec_h264_req_multi_if.c
+> @@ -724,11 +724,16 @@ static int vdec_h264_slice_single_decode(void *h_vdec, struct mtk_vcodec_mem *bs
+>   		return vpu_dec_reset(vpu);
+>   
+>   	fb = inst->ctx->dev->vdec_pdata->get_cap_buffer(inst->ctx);
+> +	if (!fb) {
+> +		mtk_vdec_err(inst->ctx, "fb buffer is NULL");
+> +		return -EBUSY;
+> +	}
+> +
+>   	src_buf_info = container_of(bs, struct mtk_video_dec_buf, bs_buffer);
+>   	dst_buf_info = container_of(fb, struct mtk_video_dec_buf, frame_buffer);
+>   
+> -	y_fb_dma = fb ? (u64)fb->base_y.dma_addr : 0;
+> -	c_fb_dma = fb ? (u64)fb->base_c.dma_addr : 0;
 
-Agreed with the above, feel free to add:
+You're changing the behavior here, can you please explain why this change is valid
+into the commit description?
 
-Acked-by: Andrey Ryabinin <ryabinin.a.a@gmail.com>
+Thanks,
+Angelo
+
+> +	y_fb_dma = (u64)fb->base_y.dma_addr;
+> +	c_fb_dma = (u64)fb->base_c.dma_addr;
+>   	mtk_vdec_debug(inst->ctx, "[h264-dec] [%d] y_dma=%llx c_dma=%llx",
+>   		       inst->ctx->decoded_frame_cnt, y_fb_dma, c_fb_dma);
+>   
+
+
