@@ -1,100 +1,203 @@
-Received: from gate2.alliedtelesis.co.nz (gate2.alliedtelesis.co.nz [202.36.163.20])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E8D815E804
-	for <linux-kernel@vger.kernel.org>; Tue,  2 Apr 2024 21:22:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.36.163.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5141B15E1F5
+	for <linux-kernel@vger.kernel.org>; Tue,  2 Apr 2024 21:23:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712092961; cv=none; b=aRlJzGSbFPFdbzQ8cFHce9OpGUs01Zj0NEtt0GHo4hHQ5GfvN35YO4cyaq6aY1NKk2LCdPOrSAlN/1SEFZNj1uO/DBvQetTmNsBIWDYDdCA6dRgS4X2xDXpr5D1PvqBq2LE42U5WC5ntEz/npeh4s8z1mpnlO7jP48BYWOZg3mQ=
+	t=1712093030; cv=none; b=remqdvZkfRGoSbb+dyHvav2RMfTPyjsj9FWwnwZ/Thlp5aojl4wXDTpdT7DLk2sGXmjP2aHEHI0ZfIkb2xDOWfktSmhF2o/5C4x19pLAe+fB1D0IlNZ7OpL6Ko+P8JHzSqVx19QqglhIBAWQ3cH6JcWAwymjkX6IecPG3v8QTZI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712092961; c=relaxed/simple;
-	bh=QUoOOq239FWfIM+7L2bUVe4hfJusbR6KJkTFIMaw8fg=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=Sev/DJwuMVVYeM60utqPlN+p1cHvXQNpvOWnJWkYZHnRoNwB84eGWg0xI3cVpoI2Ef2ysCcEU0QQl6mlM+4hgmLPegkL3Aaquy9qLG1Z8jTXp52y3/gH4RySfPoLVNv4LgN+sKYysuEHK5udwbS1aPJZj+nUbJI5ssojPRCjlnY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=alliedtelesis.co.nz; spf=pass smtp.mailfrom=alliedtelesis.co.nz; dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b=IKg2GcXA; arc=none smtp.client-ip=202.36.163.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=alliedtelesis.co.nz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alliedtelesis.co.nz
+	s=arc-20240116; t=1712093030; c=relaxed/simple;
+	bh=3LK6BSSSZXPvfQ5gKh7pcQDJMzVxdZHlpkniJicNZyo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=rxLpr0gLYR451zV2IA8/etCLgmeFZCzA3bDxLdv53DNjCET83ZSi+jh/9xCjkkN+yNRJOovIF0ozRy91URYqdOWLd9kQXPvlZsQpgapcbVwJ/3fBw2IIR8LuP/O7KZ79OxAUZe1FssnwGyvg8yc7ShYyVOmujy6VaJioijix4e8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Qw40s9/b; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="IKg2GcXA"
-Received: from svr-chch-seg1.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 9CAC32C02E0;
-	Wed,  3 Apr 2024 10:22:36 +1300 (NZDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
-	s=mail181024; t=1712092956;
-	bh=QUoOOq239FWfIM+7L2bUVe4hfJusbR6KJkTFIMaw8fg=;
-	h=From:To:CC:Subject:Date:References:In-Reply-To:From;
-	b=IKg2GcXAjtxm8/cQX08HescMQYZYJfI9Rkb/9g+swaCT5eXdsabGq1t/woT1ub+oo
-	 kq600bcPbf/OXnvOUcPcgOjZX/PwZ9OhDS1/GXhmX6FaeoOxgOlSPyu6aAJ6dWx3tW
-	 Fei5DVa08UCyW54PsTS64/x6ZRWvM2wav3DB//4a/EMbCuJC0RgXLoA8E8L/SKYmSl
-	 QSBfK3ETZLTNW54j/LU+uZetysNhyslHUqeVoBY+BJa+UwVPQbgGFhCdGhSeYkbwgD
-	 dVZJtXo3ZYc+9SR4/akKIVk6oZXUK0QWIpDaWfGbiRjDcoeo/91NYyYsWhsZRPgYV0
-	 KZ8e13Nqy1QfQ==
-Received: from svr-chch-ex2.atlnz.lc (Not Verified[2001:df5:b000:bc8::76]) by svr-chch-seg1.atlnz.lc with Trustwave SEG (v8,2,6,11305)
-	id <B660c771c0001>; Wed, 03 Apr 2024 10:22:36 +1300
-Received: from svr-chch-ex2.atlnz.lc (2001:df5:b000:bc8::76) by
- svr-chch-ex2.atlnz.lc (2001:df5:b000:bc8::76) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Wed, 3 Apr 2024 10:22:36 +1300
-Received: from svr-chch-ex2.atlnz.lc ([fe80::a9eb:c9b7:8b52:9567]) by
- svr-chch-ex2.atlnz.lc ([fe80::a9eb:c9b7:8b52:9567%15]) with mapi id
- 15.02.1544.009; Wed, 3 Apr 2024 10:22:36 +1300
-From: Chris Packham <Chris.Packham@alliedtelesis.co.nz>
-To: Guenter Roeck <linux@roeck-us.net>
-CC: "jdelvare@suse.com" <jdelvare@suse.com>, "linux-hwmon@vger.kernel.org"
-	<linux-hwmon@vger.kernel.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>
-Subject: Re: hwmon: label vs temp%d_label
-Thread-Topic: hwmon: label vs temp%d_label
-Thread-Index: AQHahTvINn4/LiD+qEqZV7u6Rj72trFUnPeAgAAGZwA=
-Date: Tue, 2 Apr 2024 21:22:36 +0000
-Message-ID: <448b5cfb-b433-4b38-98ae-066bda44f1fd@alliedtelesis.co.nz>
-References: <9a09bf46-d097-4e5b-bdb3-cc9dc6f5d01c@alliedtelesis.co.nz>
- <fdd952dd-2f3c-4f66-8e73-68f1dadde237@roeck-us.net>
-In-Reply-To: <fdd952dd-2f3c-4f66-8e73-68f1dadde237@roeck-us.net>
-Accept-Language: en-NZ, en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <2D3FD5929821634B9CB59D6C5620BFD7@atlnz.lc>
-Content-Transfer-Encoding: base64
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Qw40s9/b"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1712093027;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=sHMZ5ZfjDlzhuCc8wxpi09Fy7l7fXAvEFvPzhQUXtRs=;
+	b=Qw40s9/bQJuBcYOvVKhYeZnfxn8Ax8Lcu8I4an+tQ92w/fYau18Y4V461p+1xfCHxDRg5c
+	2GFu1hYTKDwvGvB3SE4KhFKIaaK8ydaMPNYmq0W4ZvHnKzDdRCukKi+paHv5s/qAfebcZH
+	FkQ0MqnU94dGvqeJxiaSJwVbTq2TZRQ=
+Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
+ [209.85.218.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-490-0o7nbL4QPwqyIizc-gfOaQ-1; Tue, 02 Apr 2024 17:23:46 -0400
+X-MC-Unique: 0o7nbL4QPwqyIizc-gfOaQ-1
+Received: by mail-ej1-f72.google.com with SMTP id a640c23a62f3a-a4751d1e7a2so210107866b.2
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Apr 2024 14:23:45 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712093025; x=1712697825;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=sHMZ5ZfjDlzhuCc8wxpi09Fy7l7fXAvEFvPzhQUXtRs=;
+        b=WMfq35zB1499gnunucXFOq3bYOnVr2p7EsanH5n7JMT0FUV4WI9Bhg9QPZvuOjR5Xo
+         XoGcOJmFTmj6jyyJ5VQTdF8g29p6f4zacHc0D3+FIiQCsT75osH6uG+Bfn5BjzV7Wlpq
+         C0THnL5z3r36iUwJOpacGa4gAHIOP7kJ0plCk96Ock3nISiiQpVRzAzKooVq7trvFGxk
+         C7BqmNXlQXjWBRGsYn/zgBphkjpTb/sDT9VtA4goumTUpeT3cQmD/MTS5OHjbjtfKHlc
+         DNm4NafTOL+bHWIqD3gfOQ8quW833i0b/ESyic19LkCnItqnwK56Jk45816w8l86uguL
+         NHWQ==
+X-Gm-Message-State: AOJu0YzGmFzAihwoX7ff9ud/AsHuPjRG/uThW4YlDgzOS1D/Ojm34z8q
+	LtrAKWtaNBZLwoGRs338Ba2FNqfvuNlm3WC6oGmszYxFPzdb1/KUVXCvZMujv5D1id0QXO2f9p9
+	KsC1+X405I+EdWNqFdGZssOOeAH/UO6OqOIZk7KMybqpTThzzrxjbpytLdCridg==
+X-Received: by 2002:a17:907:7216:b0:a47:34b2:ca4b with SMTP id dr22-20020a170907721600b00a4734b2ca4bmr12327336ejc.50.1712093024798;
+        Tue, 02 Apr 2024 14:23:44 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGULpRIdIbK84GHy/2/ll7SdIhtU9wnGMuoqs/sHVNvE3CjrQ4KprMkJlpjjf3lAtTu+69Nug==
+X-Received: by 2002:a17:907:7216:b0:a47:34b2:ca4b with SMTP id dr22-20020a170907721600b00a4734b2ca4bmr12327323ejc.50.1712093024199;
+        Tue, 02 Apr 2024 14:23:44 -0700 (PDT)
+Received: from redhat.com ([2.52.21.244])
+        by smtp.gmail.com with ESMTPSA id pk26-20020a170906d7ba00b00a46aafc6948sm6915889ejb.74.2024.04.02.14.23.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 02 Apr 2024 14:23:43 -0700 (PDT)
+Date: Tue, 2 Apr 2024 17:23:39 -0400
+From: "Michael S. Tsirkin" <mst@redhat.com>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: linux-kernel@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>,
+	Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@kernel.org>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Zhu Lingshan <lingshan.zhu@intel.com>
+Subject: Re: [PATCH fyi 1/1] perf trace beauty: Sync linux/vhost.h with the
+ kernel sources
+Message-ID: <20240402172151-mutt-send-email-mst@kernel.org>
+References: <ZfybkuM8DKsdX_yO@x1>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-SEG-SpamProfiler-Analysis: v=2.4 cv=KIH5D0Fo c=1 sm=1 tr=0 ts=660c771c a=Xf/6aR1Nyvzi7BryhOrcLQ==:117 a=xqWC_Br6kY4A:10 a=X1bIBW7fO_EA:10 a=75chYTbOgJ0A:10 a=IkcTkHD0fZMA:10 a=raytVjVEu-sA:10 a=VNa-VUgOKwxTY--yjHkA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
-X-SEG-SpamProfiler-Score: 0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZfybkuM8DKsdX_yO@x1>
 
-DQpPbiAzLzA0LzI0IDA5OjU5LCBHdWVudGVyIFJvZWNrIHdyb3RlOg0KPiBPbiBUdWUsIEFwciAw
-MiwgMjAyNCBhdCAwODoyNDozN1BNICswMDAwLCBDaHJpcyBQYWNraGFtIHdyb3RlOg0KPj4gSGkg
-R3VlbnRlciwgSmVhbiwNCj4+DQo+PiBJJ3ZlIGdvdCBhIHJlcXVpcmVtZW50IHRvIGFkZCBzb21l
-IG1lYW5pbmdmdWwgbmFtZXMgdG8gc29tZSBod21vbg0KPj4gc2Vuc29ycyAoTE03NSBzcGVjaWZp
-Y2FsbHkpIHNvIHRoYXQgd2UgY2FuIHByb3ZpZGUgc29tZSBpbmRpY2F0aW9uIG9mDQo+PiB3aGVy
-ZSBvbiBhIGJvYXJkIHRoZSBzZW5zb3IgaXMgbG9jYXRlZCAoZS5nLiAiSW50YWtlIiB2cyAiRXho
-YXVzdCIgdnMNCj4+ICJOZWFyIHRoYXQgcmVhbGx5IGhvdCBjaGlwIikuDQo+Pg0KPj4gSSBzZWUg
-dGhhdCB0aGUgc3lzZnMgQUJJIGRvY3VtZW50cyBib3RoICJsYWJlbCIgZm9yIHRoZSBjaGlwIGFu
-ZA0KPj4gInRlbXBbMS0qXV9sYWJlbCIgKGFzIHdlbGwgYXMgc2ltaWxhciBmYW4gYW5kIFZpbiBh
-dHRyaWJ1dGVzKS4gVGhlDQo+PiBsYXR0ZXIgc2VlbSB0byBiZSBzdXBwb3J0ZWQgYnkgdGhlIGh3
-bW9uIGNvcmUgYnV0IEkgZG9uJ3Qgc2VlIGFueXRoaW5nDQo+PiBmb3IgdGhlIGZvcm1lciAoSSdt
-IHN0cnVnZ2xpbmcgdG8gZmluZCBhbnkgZHJpdmVyIHRoYXQgc3VwcG9ydHMgYQ0KPj4gY2hpcC13
-aWRlIGxhYmVsKS4NCj4+DQo+PiBBc3N1bWluZyBJIHdhbnQgdG8gaGF2ZSBhIGxhYmVsIGFkZGVk
-IGluIHRoZSBkZXZpY2UgdHJlZSB0byBhIGxtNzUgd291bGQNCj4+IHNvbWV0aGluZyBsaWtlIHRo
-ZSBmb2xsb3dpbmcgYmUgYWNjZXB0YWJsZQ0KPj4NCj4+ICAgwqDCoMKgwqDCoCBzZW5zb3JANDgg
-ew0KPj4gICDCoMKgwqDCoMKgwqDCoCBjb21wYXRpYmxlID0gIm5hdGlvbmFsLGxtNzUiOw0KPj4g
-ICDCoMKgwqDCoMKgwqDCoCByZWcgPSA8MHg0OD47DQo+PiAgIMKgwqDCoMKgwqDCoMKgIGxhYmVs
-ID0gIkludGFrZSI7DQo+PiAgIMKgwqDCoMKgwqAgfTsNCj4+DQo+PiBJJ2QgdGhlbiB1cGRhdGUg
-dGhlIGxtNzUgZHJpdmVyIHRvIGdyYWIgdGhhdCBmcm9tIHRoZSBkZXZpY2V0cmVlIGFuZCB1c2UN
-Cj4+IGl0IHRvIHByb3ZpZGUgdGhlIGh3bW9uX3RlbXBfbGFiZWwgYXR0cmlidXRlLg0KPj4NCj4g
-SGF2ZSB5b3UgdHJpZWQganVzdCBkZWNsYXJpbmcgdGhlIGxhYmVsIHByb3BlcnR5IGFzIHlvdSBz
-dWdnZXN0ZWQgYWJvdmUNCj4gaW4geW91ciBzeXN0ZW0gd2l0aG91dCBkb2luZyBhbnl0aGluZyBl
-bHNlLCBhbmQgbG9va2VkIGF0IHRoZSBnZW5lcmF0ZWQNCj4gc3lzZnMgYXR0cmlidXRlcyA/DQoN
-CkkgaGF2ZSBub3QuIEJ1dCBpbiBteSBkZWZlbnNlIEknbSBhbHNvIHVzaW5nIGFuIG9sZGVyIGtl
-cm5lbCBMVFMgdGhhdCANCmRvZXNuJ3QgaGF2ZSBjb21taXQgZTFjOWQ2ZDYxZGRmICgiaHdtb246
-IEFkZCAibGFiZWwiIGF0dHJpYnV0ZSIpLiBCdXQgDQpub3cgdGhhdCBJIGtub3cgaXQgZXhpc3Rz
-IEkgY2FuIGNhcnJ5IGl0IGFzIGEgbG9jYWwgcGF0Y2ggdW50aWwgd2UgbmV4dCANCnVwZGF0ZS4N
-Cg0KVGhhbmtzLA0KQ2hyaXMNCg==
+On Thu, Mar 21, 2024 at 05:41:54PM -0300, Arnaldo Carvalho de Melo wrote:
+> tldr; Just FYI, I'm carrying this on the perf tools tree.
+> 
+> Full explanation:
+> 
+> There used to be no copies, with tools/ code using kernel headers
+> directly. From time to time tools/perf/ broke due to legitimate kernel
+> hacking. At some point Linus complained about such direct usage. Then we
+> adopted the current model.
+> 
+> The way these headers are used in perf are not restricted to just
+> including them to compile something.
+> 
+> There are sometimes used in scripts that convert defines into string
+> tables, etc, so some change may break one of these scripts, or new MSRs
+> may use some different #define pattern, etc.
+> 
+> E.g.:
+> 
+>   $ ls -1 tools/perf/trace/beauty/*.sh | head -5
+>   tools/perf/trace/beauty/arch_errno_names.sh
+>   tools/perf/trace/beauty/drm_ioctl.sh
+>   tools/perf/trace/beauty/fadvise.sh
+>   tools/perf/trace/beauty/fsconfig.sh
+>   tools/perf/trace/beauty/fsmount.sh
+>   $
+>   $ tools/perf/trace/beauty/fadvise.sh
+>   static const char *fadvise_advices[] = {
+>         [0] = "NORMAL",
+>         [1] = "RANDOM",
+>         [2] = "SEQUENTIAL",
+>         [3] = "WILLNEED",
+>         [4] = "DONTNEED",
+>         [5] = "NOREUSE",
+>   };
+>   $
+> 
+> The tools/perf/check-headers.sh script, part of the tools/ build
+> process, points out changes in the original files.
+> 
+> So its important not to touch the copies in tools/ when doing changes in
+> the original kernel headers, that will be done later, when
+> check-headers.sh inform about the change to the perf tools hackers.
+> 
+> To get the changes in:
+> 
+>   1496c47065f9f841 ("vhost-vdpa: uapi to support reporting per vq size")
+> 
+> To pick up these changes and support them:
+> 
+>   $ tools/perf/trace/beauty/vhost_virtio_ioctl.sh > before
+>   $ cp include/uapi/linux/vhost.h tools/perf/trace/beauty/include/uapi/linux/vhost.h
+>   $ tools/perf/trace/beauty/vhost_virtio_ioctl.sh > after
+>   $ diff -u before after
+>   --- before	2024-03-21 17:33:58.878173388 -0300
+>   +++ after	2024-03-21 17:34:07.687563333 -0300
+>   @@ -49,6 +49,7 @@
+>    	[0x7B] = "VDPA_GET_VRING_GROUP",
+>    	[0x7F] = "VDPA_GET_VRING_DESC_GROUP",
+>    	[0x80] = "VDPA_GET_VQS_COUNT",
+>   +	[0x80] = "VDPA_GET_VRING_SIZE",
+>    	[0x81] = "VDPA_GET_GROUP_NUM",
+>    	[0x8] = "NEW_WORKER",
+>    };
+>   $
+> 
+> For instance, see how those 'cmd' ioctl arguments get translated, now
+> VDPA_GET_VRING_SIZE will be as well.
+> 
+>   # perf trace -a -e ioctl --max-events=10
+>        0.000 ( 0.011 ms): pipewire/2261 ioctl(fd: 60, cmd: SNDRV_PCM_HWSYNC, arg: 0x1)                   = 0
+>       21.353 ( 0.014 ms): pipewire/2261 ioctl(fd: 60, cmd: SNDRV_PCM_HWSYNC, arg: 0x1)                   = 0
+>       25.766 ( 0.014 ms): gnome-shell/2196 ioctl(fd: 14, cmd: DRM_I915_IRQ_WAIT, arg: 0x7ffe4a22c740)    = 0
+>       25.845 ( 0.034 ms): gnome-shel:cs0/2212 ioctl(fd: 14, cmd: DRM_I915_IRQ_EMIT, arg: 0x7fd43915dc70) = 0
+>       25.916 ( 0.011 ms): gnome-shell/2196 ioctl(fd: 9, cmd: DRM_MODE_ADDFB2, arg: 0x7ffe4a22c8a0)       = 0
+>       25.941 ( 0.025 ms): gnome-shell/2196 ioctl(fd: 9, cmd: DRM_MODE_ATOMIC, arg: 0x7ffe4a22c840)       = 0
+>       32.915 ( 0.009 ms): gnome-shell/2196 ioctl(fd: 9, cmd: DRM_MODE_RMFB, arg: 0x7ffe4a22cf9c)         = 0
+>       42.522 ( 0.013 ms): gnome-shell/2196 ioctl(fd: 14, cmd: DRM_I915_IRQ_WAIT, arg: 0x7ffe4a22c740)    = 0
+>       42.579 ( 0.031 ms): gnome-shel:cs0/2212 ioctl(fd: 14, cmd: DRM_I915_IRQ_EMIT, arg: 0x7fd43915dc70) = 0
+>       42.644 ( 0.010 ms): gnome-shell/2196 ioctl(fd: 9, cmd: DRM_MODE_ADDFB2, arg: 0x7ffe4a22c8a0)       = 0
+>   #
+> 
+> Cc: Adrian Hunter <adrian.hunter@intel.com>
+> Cc: Ian Rogers <irogers@google.com>
+> Cc: Jiri Olsa <jolsa@kernel.org>
+> Cc: Kan Liang <kan.liang@linux.intel.com>
+> Cc: Michael S. Tsirkin <mst@redhat.com>
+> Cc: Namhyung Kim <namhyung@kernel.org>
+> Cc: Zhu Lingshan <lingshan.zhu@intel.com>
+> Link: https://lore.kernel.org/lkml/
+> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+
+
+Thanks a lot for taking care of this! So given the header is actually
+buggy pls hang on to this change until I merge the fix for the header
+(you were CC'd on the patch).
+It's great we have this redundancy which allowed us to catch the bug
+in time, and many thanks to Namhyung Kim for reporting the issue!
+
+
+> ---
+>  tools/perf/trace/beauty/include/uapi/linux/vhost.h | 7 +++++++
+>  1 file changed, 7 insertions(+)
+> 
+> diff --git a/tools/perf/trace/beauty/include/uapi/linux/vhost.h b/tools/perf/trace/beauty/include/uapi/linux/vhost.h
+> index 649560c685f13b73..bea6973906134656 100644
+> --- a/tools/perf/trace/beauty/include/uapi/linux/vhost.h
+> +++ b/tools/perf/trace/beauty/include/uapi/linux/vhost.h
+> @@ -227,4 +227,11 @@
+>   */
+>  #define VHOST_VDPA_GET_VRING_DESC_GROUP	_IOWR(VHOST_VIRTIO, 0x7F,	\
+>  					      struct vhost_vring_state)
+> +
+> +/* Get the queue size of a specific virtqueue.
+> + * userspace set the vring index in vhost_vring_state.index
+> + * kernel set the queue size in vhost_vring_state.num
+> + */
+> +#define VHOST_VDPA_GET_VRING_SIZE	_IOWR(VHOST_VIRTIO, 0x80,	\
+> +					      struct vhost_vring_state)
+>  #endif
+> -- 
+> 2.44.0
+
