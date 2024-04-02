@@ -1,95 +1,91 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.nppct.ru (mail.nppct.ru [195.133.245.4])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F9B46A8A8
-	for <linux-kernel@vger.kernel.org>; Tue,  2 Apr 2024 11:58:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52C435A4C7
+	for <linux-kernel@vger.kernel.org>; Tue,  2 Apr 2024 11:59:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.133.245.4
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712059128; cv=none; b=ErGN9U8/0l5LazrDwWHUkNIuCgeMKDMEPvWDqUK7m8JI9hPGgilvb9O38qSUBXwL/1lErUtZPL+L+2W5ZBse9Si4V7zlMi6oiWMBGmkUGYPqMO+mn77/KfuD/0c7yFSTRieGlcEL0/qBmwaXREh1ipY59riHHNKb9tBVSW80Lxk=
+	t=1712059182; cv=none; b=rmUGbyTC7LvSEJo1rBF0YIMK2kX0xzTKE6BbMLfnqDXU9dw+tbNX0AKOnBNl6Hdp/NHNrdpeuanxBNi1LEcWrs0i44doqcSr/bHcAIOqyOQO1pRZs90dVC3q9KlgproVkyxksH0ryUultA9A8a5M1F/5PTmf+NIkyObA0vERw6k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712059128; c=relaxed/simple;
-	bh=Hw2vaUWp3gpk6uvfspN8upqqDYFfDn7KHW0rB6j9DgY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gLtRTnvqI+J3p83sMjAx3cwaKec+Z1KBq4Kjb32WIkyx6H7AtJG5qXDJhn5FF4h73VUOxnipjQ6WbP+s6TyfvdMKMJZbfPQTC72/4ftuP41BThdBo0CVq5PUcuDjML1/R6yaK7++UlpGBgjQx3JazXns9XgzNyalvLNo2VFyoME=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LiQw91jq; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1712059182; c=relaxed/simple;
+	bh=dzFzoRjMBaoyQUng2Yecgold2it77CXBKBHEAhjFIc4=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=rNHNrzSiaox8u278NfgLCO4kI+1aG/uaF8d8aeLYZbOwVvEp9jZ23oafO19oaYgDPRMdDi8YQeM4psSMv8u5+O8vVuORhb1fnNNtvg7b8iKoM32UJylm/D1wnxcejwYdEwITcAQD9A3QbevAtMj87O1DZbHUPKACiKh9IlMlaN4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nppct.ru; spf=pass smtp.mailfrom=nppct.ru; dkim=pass (1024-bit key) header.d=nppct.ru header.i=@nppct.ru header.b=Ox6G3NuS; arc=none smtp.client-ip=195.133.245.4
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nppct.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nppct.ru
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LiQw91jq"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8532EC433F1;
-	Tue,  2 Apr 2024 11:58:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712059127;
-	bh=Hw2vaUWp3gpk6uvfspN8upqqDYFfDn7KHW0rB6j9DgY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=LiQw91jqMXzj+GnAus9ZnNmyXuwlBxk79xApuMWpOro87vP8LfnM8Z3F8HZblWQP1
-	 LXco6b2zuavEqtVQyHH5dwiuLIAMHzaYV+qDceHd+uzStg+zRXSln1l1bDW00owuGh
-	 3h5QRf4bF+Or77b7X8UhC5rdcNYw9+rA7M96Ckn0DuUuLwS8XgaNetyb9NDFqq5ws8
-	 6UtbFp6xTNEFLzTCtgkThDbayqqVXzQM3WO90fO0jx6bnqGP/GMZEtWwtzIUSq5xSh
-	 b7Fp51XBVPAm7YX7OJM3Qnv9vpE5vDNCDNh3+rmJ3DTpqp6DDxlyoLtIHIgjEWcb4X
-	 NOMBOfvJwxQ5Q==
-Date: Tue, 2 Apr 2024 12:58:41 +0100
-From: Will Deacon <will@kernel.org>
-To: Seongsu Park <sgsu.park@samsung.com>
-Cc: catalin.marinas@arm.com, ardb@kernel.org, mark.rutland@arm.com,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	Leem ChaeHoon <infinite.run@gmail.com>,
-	Gyeonggeon Choi <gychoi@student.42seoul.kr>,
-	Soomin Cho <to.soomin@gmail.com>, DaeRo Lee <skseofh@gmail.com>,
-	kmasta <kmasta.study@gmail.com>
-Subject: Re: [PATCH] arm64: Fix double TCR_T0SZ_OFFSET shift
-Message-ID: <20240402115841.GA16533@willie-the-truck>
-References: <CGME20240402104955epcas1p3dd15334a1305b99f3e1b82000e3c7c42@epcas1p3.samsung.com>
- <20240402104950.170632-1-sgsu.park@samsung.com>
+	dkim=pass (1024-bit key) header.d=nppct.ru header.i=@nppct.ru header.b="Ox6G3NuS"
+Received: from mail.nppct.ru (localhost [127.0.0.1])
+	by mail.nppct.ru (Postfix) with ESMTP id 4D5E31C1E16
+	for <linux-kernel@vger.kernel.org>; Tue,  2 Apr 2024 14:52:12 +0300 (MSK)
+Authentication-Results: mail.nppct.ru (amavisd-new); dkim=pass (1024-bit key)
+	reason="pass (just generated, assumed good)" header.d=nppct.ru
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=nppct.ru; h=
+	content-transfer-encoding:mime-version:x-mailer:message-id:date
+	:date:subject:subject:to:from:from; s=dkim; t=1712058731; x=
+	1712922732; bh=dzFzoRjMBaoyQUng2Yecgold2it77CXBKBHEAhjFIc4=; b=O
+	x6G3NuSRVjzEFWjk6vnt5xQ0Ut6hQaJd8qZ/5Eh0a09l8xYpr1IgsafoMoUnMuOh
+	PC7Dh7cWHxq5FpqkKFwQXFJuorS13vU7LIvwNljFeGjpghpTpLhLwyGv0sZI6B52
+	MCtJCTn7tR1jtMUyEW1Vtsa2AKjstHJakGty9ipLE0=
+X-Virus-Scanned: Debian amavisd-new at mail.nppct.ru
+Received: from mail.nppct.ru ([127.0.0.1])
+	by mail.nppct.ru (mail.nppct.ru [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id HSN-IraGDnoU for <linux-kernel@vger.kernel.org>;
+	Tue,  2 Apr 2024 14:52:11 +0300 (MSK)
+Received: from localhost.localdomain (mail.dev-ai-melanoma.ru [185.130.227.204])
+	by mail.nppct.ru (Postfix) with ESMTPSA id 5C07C1C1D18;
+	Tue,  2 Apr 2024 14:52:04 +0300 (MSK)
+From: Andrey Shumilin <shum.sdl@nppct.ru>
+To: Juergen Gross <jgross@suse.com>
+Cc: Andrey Shumilin <shum.sdl@nppct.ru>,
+	Stefano Stabellini <sstabellini@kernel.org>,
+	Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>,
+	linux-kernel@vger.kernel.org,
+	lvc-project@linuxtesting.org,
+	khoroshilov@ispras.ru,
+	ykarpov@ispras.ru,
+	vmerzlyakov@ispras.ru,
+	vefanov@ispras.ru
+Subject: [PATCH 4/4] gntdev: Unchecked finction result
+Date: Tue,  2 Apr 2024 14:51:57 +0300
+Message-Id: <20240402115157.672915-1-shum.sdl@nppct.ru>
+X-Mailer: git-send-email 2.30.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240402104950.170632-1-sgsu.park@samsung.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 
-On Tue, Apr 02, 2024 at 07:49:50PM +0900, Seongsu Park wrote:
-> We have already shifted the value of t0sz in TCR_T0SZ by TCR_T0SZ_OFFSET.
-> So, the TCR_T0SZ_OFFSET shift here should be removed.
-> 
-> Co-developed-by: Leem ChaeHoon <infinite.run@gmail.com>
-> Signed-off-by: Leem ChaeHoon <infinite.run@gmail.com>
-> Co-developed-by: Gyeonggeon Choi <gychoi@student.42seoul.kr>
-> Signed-off-by: Gyeonggeon Choi <gychoi@student.42seoul.kr>
-> Co-developed-by: Soomin Cho <to.soomin@gmail.com>
-> Signed-off-by: Soomin Cho <to.soomin@gmail.com>
-> Co-developed-by: DaeRo Lee <skseofh@gmail.com>
-> Signed-off-by: DaeRo Lee <skseofh@gmail.com>
-> Co-developed-by: kmasta <kmasta.study@gmail.com>
-> Signed-off-by: kmasta <kmasta.study@gmail.com>
-> Signed-off-by: Seongsu Park <sgsu.park@samsung.com>
+The dma_coerce_mask_and_coherent function may refuse
+to apply a mask due to incorrectly passed parameters.
+But since this function returns the error -EIO, this
+is an abnormal situation and the error must be written to the log.
+Do not return an error from the function.
 
-heh, that's quite a lot of people. Did you remove three chars each? :p
+Found by Linux Verification Center (linuxtesting.org) with SVACE.
 
-> ---
->  arch/arm64/include/asm/mmu_context.h | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/arch/arm64/include/asm/mmu_context.h b/arch/arm64/include/asm/mmu_context.h
-> index c768d16b81a4..58de99836d2e 100644
-> --- a/arch/arm64/include/asm/mmu_context.h
-> +++ b/arch/arm64/include/asm/mmu_context.h
-> @@ -76,7 +76,7 @@ static inline void __cpu_set_tcr_t0sz(unsigned long t0sz)
->  		return;
->  
->  	tcr &= ~TCR_T0SZ_MASK;
-> -	tcr |= t0sz << TCR_T0SZ_OFFSET;
-> +	tcr |= t0sz;
+Signed-off-by: Andrey Shumilin <shum.sdl@nppct.ru>
 
-Thankfully, TCR_T0SZ_OFFSET is 0 so this isn't as alarming as it looks.
-Even so, if we're going to make the code consistent, then shouldn't the
-earlier conditional be updated too?
+---
+ drivers/xen/gntdev.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-	if ((tcr & TCR_T0SZ_MASK) >> TCR_T0SZ_OFFSET == t0sz)
-		return;
+diff --git a/drivers/xen/gntdev.c b/drivers/xen/gntdev.c
+index 61faea1f0663..8a448dbbca86 100644
+--- a/drivers/xen/gntdev.c
++++ b/drivers/xen/gntdev.c
+@@ -597,7 +597,8 @@ static int gntdev_open(struct inode *inode, struct file *flip)
+ 	flip->private_data = priv;
+ #ifdef CONFIG_XEN_GRANT_DMA_ALLOC
+ 	priv->dma_dev = gntdev_miscdev.this_device;
+-	dma_coerce_mask_and_coherent(priv->dma_dev, DMA_BIT_MASK(64));
++	if (dma_coerce_mask_and_coherent(priv->dma_dev, DMA_BIT_MASK(64)) == -EIO)
++		pr_err("The mask was applied unsuccessfully");
+ #endif
+ 	pr_debug("priv %p\n", priv);
+ 
+-- 
+2.30.2
 
-seems to assume that t0sz is unshifted.
-
-Will
