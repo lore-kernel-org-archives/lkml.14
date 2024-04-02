@@ -1,87 +1,75 @@
-Received: from mout.web.de (mout.web.de [212.227.15.14])
+Received: from relay1-d.mail.gandi.net (relay1-d.mail.gandi.net [217.70.183.193])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4FF23839A;
-	Tue,  2 Apr 2024 07:16:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1FA238DD2
+	for <linux-kernel@vger.kernel.org>; Tue,  2 Apr 2024 07:16:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.193
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712042184; cv=none; b=ii5reXlyQrlszFBiZfEWz8BwgChpNcmVXx1+phDQrjZ8BzwTJUK7Ex5L6YtBrPp669wwMG14FnW5mtsy09Rd+9xDnZwbNwvPCZ8ypsT+rSrLlt4aFPKu4Il1M8K1OrbolyCRbuzZ/MxLYEH+e7nyhSFhFAs8QpC2N/59w27oy7g=
+	t=1712042208; cv=none; b=PWiusAv73Vc4AhW4iO40SdYMegIy1hALxcxb7/DsT/cVtpKVLIC89ARZ+Gprx0tRQ7E4qkKJR24fXi/Nc26O5v5ICJqSNuzp5s6iUwwjJYpIzEQw+mOd5CVJdA40IcMWINt0JwXzrIaK4Q54T4vt636VDOftR+SMn/4DuC6kWBc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712042184; c=relaxed/simple;
-	bh=RDW+zwDa2CBhzAKEQWv7lUSIpXm7MGCiMSp3c7znYCA=;
-	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
-	 In-Reply-To:Content-Type; b=SOH2d4nDPfLyD1NkbNtetL26YtqHVUa7iaRdInvwLdgecnJ+ScohcQtJUwrjG8mDFWkJGTI+vuap/o6xIQBvaXpa2u+QqtPMNmfsbKA1BpW5ElkLzhsS6U736Uz27k28hdyY+fepUDHjsChyXE0oUuUsoKA7Q08tHbRe9Hwkc7o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=klVBU1LA; arc=none smtp.client-ip=212.227.15.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	s=arc-20240116; t=1712042208; c=relaxed/simple;
+	bh=x2F2rU1R2DjIHbCuLiIdKs92iSF6WV6lSUhIxPCUgiM=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=NomNOEsYep3jGFj2OaysLQlIBR3mkap7zDafr+HbLvCNw4tBWFNZTSLmF9FKhigCGnsz+shvrEv6VBnL3lnHIwcf0IsjFSebmJ+FSxFuOujSlp6SXwz0EPhL7kvrFuL7qFHGHqmV4YMXiDhXi+f0+WcTIkflrZXm/3/NTc8Fqpw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=hranGnHn; arc=none smtp.client-ip=217.70.183.193
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="klVBU1LA"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1712042138; x=1712646938; i=markus.elfring@web.de;
-	bh=RDW+zwDa2CBhzAKEQWv7lUSIpXm7MGCiMSp3c7znYCA=;
-	h=X-UI-Sender-Class:Date:To:Cc:References:Subject:From:
-	 In-Reply-To;
-	b=klVBU1LApA5mIHVuMI6quyFsihVv8LzhIcTfdvNXNyI9zDmW9vvyrSPapEuB31IJ
-	 3+gzlmAlKl7UOwV4Ub4j6QZPuQuXEuLDhPpr8bJDsxdJ+c2cnpjGinpA5H6lMfztU
-	 k663VM4upYOUdgzzPS3zBaY8KspXEFYk5XpVufKyOECOz7J8iPfEDlvGBVO8HHrtC
-	 Z097LNP96ylALTvHfvh2x/cY6fQVwHGHAXNEFunpxRYIUJJQZkXXLBNbOBcVW1GPb
-	 EcAKmE3etEOIyz1vs44vj1tNlrGo+UXmPmFhb8wvgvevnSEdimWMCqKhHRjzB+3nG
-	 egtEextJn6dr5IgNcQ==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.21] ([94.31.90.95]) by smtp.web.de (mrweb006
- [213.165.67.108]) with ESMTPSA (Nemesis) id 1MFrxr-1s2nB70qQZ-00HLVA; Tue, 02
- Apr 2024 09:15:38 +0200
-Message-ID: <e4776c82-e255-4eab-b6c4-8087e02f384f@web.de>
-Date: Tue, 2 Apr 2024 09:15:17 +0200
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="hranGnHn"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id C328F240005;
+	Tue,  2 Apr 2024 07:16:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1712042205;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=MalrCMAsx389WOo6kyHlUvcg+zdx5CkaTnrL6g9pek0=;
+	b=hranGnHnGGI9cjRhn8XdbuTzJAYjXYOt+nLNTmTP0XmD3DzvU3hzLjk5DMqnokTEkiYJ3M
+	+OY2t5ofUZP/DFLgG+dZcw1bK4aAhRE+T2ToRhudPKe8omRCuycBcnJMLS/0GY24gjv83d
+	rbnhC0DTCSAHq5IXxUMHxU+Ii/wtc1baWk01FT2lPqIqb6S0Qg4tBYi349yQMGKksjfN2M
+	FzJcRz0ALgHk+8NrHmOjH4tYVOI3HGVOanN1yyFo/V+ghug/eF0aOR9sowTpAlFwZGaTvN
+	gZj+dLxgs+9KFOW/u1i3jAS62+ekcb+cTd4epbETL10sDnGNZiwkU79rgCawcg==
+Date: Tue, 2 Apr 2024 09:16:44 +0200
+From: Miquel Raynal <miquel.raynal@bootlin.com>
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Michael Walle
+ <mwalle@kernel.org>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/3] nvmem: layouts: store owner from modules with
+ nvmem_layout_driver_register()
+Message-ID: <20240402091644.35c7dac6@xps-13>
+In-Reply-To: <20240329-module-owner-nvmem-v1-1-d700685f08e1@linaro.org>
+References: <20240329-module-owner-nvmem-v1-0-d700685f08e1@linaro.org>
+	<20240329-module-owner-nvmem-v1-1-d700685f08e1@linaro.org>
+Organization: Bootlin
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-To: Kevin Tian <kevin.tian@intel.com>, Dan Williams
- <dan.j.williams@intel.com>, linux-doc@vger.kernel.org,
- linux-pci@vger.kernel.org, kernel-janitors@vger.kernel.org
-Cc: Bjorn Helgaas <bhelgaas@google.com>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- Ira Weiny <ira.weiny@intel.com>,
- Jesse Brandeburg <jesse.brandeburg@intel.com>,
- Jonathan Cameron <Jonathan.Cameron@huawei.com>,
- Julia Lawall <Julia.Lawall@inria.fr>, Lukas Wunner <lukas.wunner@intel.com>,
- Matthew Wilcox <willy@infradead.org>, Peter Zijlstra <peterz@infradead.org>,
- Linus Torvalds <torvalds@linux-foundation.org>,
- Jonathan Corbet <corbet@lwn.net>, LKML <linux-kernel@vger.kernel.org>
-References: <BL1PR11MB5271DB63688BF220D0317AC08C3F2@BL1PR11MB5271.namprd11.prod.outlook.com>
-Subject: RE: [v3] cleanup: Add usage and style documentation
-Content-Language: en-GB
-From: Markus Elfring <Markus.Elfring@web.de>
-In-Reply-To: <BL1PR11MB5271DB63688BF220D0317AC08C3F2@BL1PR11MB5271.namprd11.prod.outlook.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Provags-ID: V03:K1:JTNDDC3fQbZw22eedVtgOny1uIqThPnTxOxFVbrDzjp4rYzGaFw
- 3eJP2d0xCDlTZakMdes3GX7bxJ1ofpe9kWhpKILziqx02qyE5lICdlFkefUJaaqo1Pn+Eq+
- viv7ysn21bw6ZfmyNgTMDdwnMNeMf1OEe9Ms4Y6PmRelsZPM2hT/UgyXkfZOI4jscCZi5hQ
- 3pebzI942P5GQrR5Wlr0w==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:wqufEvOOBnU=;3sjX2UJscXMIMeiT2ovpJaBmB2f
- l9zRzPgxe4xxclVIw6AtlLYNXNaIafESCTJXewjjt/mow2bTXaXzulvshkQE4HYLinFSHG0PA
- MYydAQzVF8U/jS2Gctuyeg1hf6EB/kVPPdm5ey1Tm6muUfkSohuqTi7OhdvtK/Ml1Y2buDJoQ
- F0IjWKpOgXbxK8yKoitYUdlU6h4V5nd6O/nTB27NZtNHBa4U2pqSSTOTen4dnmSAXaCjbgLS/
- AzmpbHd3Wc8d3L1zBsY7T6tCjXji++bwKFZUR1OHawXWYQMwJ22OzVpb2zDHIPWT9I6wUfdz6
- VP3yc6Nol2UEsVhMZvjWyYoQHhLqWirsectx4sX8agQ7ipTpUUSVg5CySNY+n64lg7l/VmQN5
- gg3qSDxzuOJtUymIftZcUsJcoEcs5U8+USGYFKipJ+btRIVi0PuaDonTI4Az3MKK3rd/v2h3Z
- 3ToIkQ0HxOVuJyCGCbFWFZJ9qGCyi+wFdhhJxNdic4Cx5J6DGqVmODOp6evwO0KGwTbqk4pWa
- EhT2G6fpzM9T+DzBU79Qy6Wdf2/uOIUNe56A0Qc/dRb6/t6ELKz7A/hT/a0J5mZaDT28Q/SaK
- uE243V8rni1TP8R+S+s6HWC0qQBhgffqdSf1BeHh0jEn2Lbp9u0U/eLhhmmtem+CIltnk7msS
- QRwrTKpC7L/ontclCOCxbABz708USgh7V1mb4Zc/1ZWO8TlWN/RL8SM0X+onI/kMdg5BrxSth
- rFTtF/MWbc9v7A28evW0pemBWGWv22NInEUiwG0OqDshO8rvlMTaZ62o6Ft52qplKpMvXYVLq
- cc9ux5nBbLV09+/xfNJeqBrrSCswsKDCmpxACnPpjjenw=
+Content-Transfer-Encoding: quoted-printable
+X-GND-Sasl: miquel.raynal@bootlin.com
 
-> Reviewed-by: Kevin Tian <kevin.tian@intel.com>
+Hi Krzysztof,
 
-Did you take any of my review comments into account for this patch version so far?
+krzysztof.kozlowski@linaro.org wrote on Fri, 29 Mar 2024 17:13:35 +0100:
 
-Regards,
-Markus
+> Modules registering driver with nvmem_layout_driver_register() might
+> forget to set .owner field.  The field is used by some of other kernel
+> parts for reference counting (try_module_get()), so it is expected that
+> drivers will set it.
+>=20
+> Solve the problem by moving this task away from the drivers to the core
+> code, just like we did for platform_driver in
+> commit 9447057eaff8 ("platform_device: use a macro instead of
+> platform_driver_register").
+>=20
+> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+
+Reviewed-by: Miquel Raynal <miquel.raynal@bootlin.com>
+
+Thanks,
+Miqu=C3=A8l
