@@ -1,139 +1,140 @@
-Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A229F15B962
-	for <linux-kernel@vger.kernel.org>; Tue,  2 Apr 2024 19:39:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4CF515B98D;
+	Tue,  2 Apr 2024 19:40:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712086788; cv=none; b=cstULrYXpuwiA8+xqn9NzpqrqxjLuDREOoDmlSVQR3L3npN098GxAvhqvN4XFOKx6sucx65wgckjPpvGumEY9qLZJEJfHCJjtHzjwqeXsDiCctdsB0onMxM3jPRgtBLR2RzCS6BAmP9sfqZw7wK2thqt4RT1COZRf44yIr4khdI=
+	t=1712086839; cv=none; b=r1zm7h4TnuuqEVJWeMwCUhXb2tXpXwQ1ct8jquhexHurHYkWfqd3PH8PMbjjgpfUEEMuhOTSjJ6E6/1xKH8MbOWjO87GVtXpRKDH8IWr8dWaxsUbRY1EpmiUXKh3qsdI8HtYUmPkl0H9uQHrsqZXXqpNVsPx9hLc6Q60obnWNGs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712086788; c=relaxed/simple;
-	bh=FUitx7MgiMoEaaLuPTTMRh2BBePYzO9uMUChIAgHet4=;
+	s=arc-20240116; t=1712086839; c=relaxed/simple;
+	bh=JjsMiAsMrx1FADRwbTcj5FR+rfAA0/BlPrYl94uuDFI=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=qSI/kl8w9FsQyS4sOYVzpJlJkRrVXrzVRe6IBSKjlBKr0dQXt6zow5XMC5oRzBzJw1M3Qh61Z++52q4p1AWJzRQnFE3YBlQJtvaXgY8vMLbJ2fREl+bB0L2sPdsZKMZKMxyAZYupa+/n+CscOFGFiwiEDaFG5bIUG1B7aVMN6Xg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=P7FTA2jL; arc=none smtp.client-ip=209.85.218.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	 To:Cc:Content-Type; b=V7A8ycHr/0w54IWmAMSwrc6GObEe+ri2wm6HpS6zFsBJc7IRUO3m8co6Uuu6SojlHYBqCgRYA2wpbd+8xT/dM8GSlGh8j1fRr75dHXiCPtKRiOCwxHsf1dw4r6zS8I8mUvNrwwaKKmhcKL1Q78bBUKByRwNvrpIKrvvO3/+NFqg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ue84BwGu; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="P7FTA2jL"
-Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-a4e8904bd71so142809566b.1
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Apr 2024 12:39:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1712086785; x=1712691585; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=0mQeGyOEkrbKK1USpW42EOtHV5nHSHeR2mY3J6ZfsUg=;
-        b=P7FTA2jLoXfsCEtkxUDirRllSwd19LRpNYr/iGBO5t318EPrbrZ39u1tsh47t8Ulo2
-         jLLSfOpozJBe/dazhfqMaB1G8OpvLowTauwQQ2YFZKFfUiPvepG3XlWsqEcWAfzsx8nu
-         FSOKiZGXPGjOb0JnVv0dIIWsYk5w+O1Y38Uic=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712086785; x=1712691585;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=0mQeGyOEkrbKK1USpW42EOtHV5nHSHeR2mY3J6ZfsUg=;
-        b=OZumzTLLAWHeRfeMvB87Ef5rdX+JjgO5xScBnU8183bvpuc0cY2ylQr7LtZNIzjJyB
-         Sjl18NcLcorvzdJCisA3MxT8ej/MfMLIq5AQck0OPIGlNP8QsMjWc8CO9KzAj604QQ+a
-         gVCVY4KBV8b+gLlSDIuT2KMYJkyYSRkThKfW9TkMgR28uutDDU9c0wqEM0iYLiLVR64H
-         J6y4MQoVnErS8Hl0FdqaSVLGbMUZw41q9QSyNCQTstDPZ9V6RDmLPXli8aAhj5rQ5KRk
-         ORlyZG+dx1tPLG3EFnXM4O1aEFFD3K0ecVqWhfzKQ7EDEleTBFQOzOl4b9CBFnfSFuzn
-         5M7Q==
-X-Forwarded-Encrypted: i=1; AJvYcCUjtq9ZwiarDf8+X4BGNCzpJR3LJR9XkByC7tcjcjctBGORzz4VRcTs06O3+WorihIzXH6Y1Uf9at4foPaRaHmlt2VLmIwy08Gtr7Gv
-X-Gm-Message-State: AOJu0YwGDAZmt4szHs2gPuJPvxc9NXsraGAD+ejl7pQR9tUP7ZhE9oDk
-	B7zc4M23x3PxEXYJrdYvqp7KdnRitiuIVh/obR2Cgk3GedBVjyl065mKMY+67mZXTeqO22wJ6mX
-	x8MI=
-X-Google-Smtp-Source: AGHT+IHQsUdIkOotXOMFXq6u1DXx44pQYNnRiTAeyMdoYevb7wlc57/jsOg5TtFtUXHE4aALlYfmWQ==
-X-Received: by 2002:a17:906:bb08:b0:a47:3651:a302 with SMTP id jz8-20020a170906bb0800b00a473651a302mr8473774ejb.42.1712086784719;
-        Tue, 02 Apr 2024 12:39:44 -0700 (PDT)
-Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com. [209.85.208.41])
-        by smtp.gmail.com with ESMTPSA id qk3-20020a170906d9c300b00a473abcb9fdsm6962122ejb.90.2024.04.02.12.39.43
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 02 Apr 2024 12:39:43 -0700 (PDT)
-Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-56845954ffeso8176334a12.2
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Apr 2024 12:39:43 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCXvVctNH7ypGFHtXkAm2T6levq45NF/TKNqwb9NWpnCFSvbvNqUDtdQUV7nWjyrktiVZCykMsoLuZhfB03fX/aghcSAyXHb4xR7v8mF
-X-Received: by 2002:a17:906:2698:b0:a47:4d61:de44 with SMTP id
- t24-20020a170906269800b00a474d61de44mr8673776ejc.55.1712086783205; Tue, 02
- Apr 2024 12:39:43 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ue84BwGu"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A932CC43390;
+	Tue,  2 Apr 2024 19:40:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1712086839;
+	bh=JjsMiAsMrx1FADRwbTcj5FR+rfAA0/BlPrYl94uuDFI=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=ue84BwGuwO8F7y/5bSnkVDiho4U7LPqhLfhO/tV3HemCWFbuML/HabHOr/1Vrf44k
+	 MyCkJQ8NvWpauNVCWjwpMFiSKzQhDp1zXQPrZFvfk1P1hwFiOgAxbluXaNQXG34J26
+	 puJWL5EOOJTa2qHrbqpEqwDjJYODw0xqpII2yC1Hz3KQqSj4Jbezt0Kl97f4tstsRz
+	 zr32TrpT5j7INkNEv33To1HkHKy5pOBrRxjZ4Y0IV6glxD+s0y1JCJfupSo2gL8Uq5
+	 2yeXXpyI8VS/MTogQ77ds6ymrOHnHsLvX+3U7sGOVwe/hEklVQSRHXuV8rS/9v07o6
+	 q2Of1FgJGBsNQ==
+Received: by mail-oo1-f42.google.com with SMTP id 006d021491bc7-5a4930d9c48so1088889eaf.1;
+        Tue, 02 Apr 2024 12:40:39 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCWQxz1Sw4fZKKuC7L11Bo7vhZ1TxI6qHp/1j2Y/mkGkOGreG0KlYGt79pQyfdisO02CiyeX9RBIhHgFN0goGgLsubXGXPTk0Myv+14n1RpopgaS4F7hOZbQL0tJp6EVXmAD9Lt+bQCzQQ==
+X-Gm-Message-State: AOJu0Yxr4L6Ugzw3eOKzDLMPdU238qyA5B+I109iLW+L8iKYguSBTOhO
+	gqoduaP9txlPrZWWYplYMSzziMjVAR11CvFq55x6CxF1HCpjRVHBrEzBifuo0jjJUqr8LOcjQYM
+	c+1tLlGWhxmroMV1cePvvySwIoH8=
+X-Google-Smtp-Source: AGHT+IGFh/PeKcJPPYYo87cIDkTkH10FJMqvAD+DIqZbrEV1a1HQyycrPF7kCmTxHnlFz1L2mu0wPm9H+zv8DnVWH0Q=
+X-Received: by 2002:a05:6820:2289:b0:5a4:6e23:e335 with SMTP id
+ ck9-20020a056820228900b005a46e23e335mr15513677oob.0.1712086838999; Tue, 02
+ Apr 2024 12:40:38 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240402141145.2685631-1-roberto.sassu@huaweicloud.com>
-In-Reply-To: <20240402141145.2685631-1-roberto.sassu@huaweicloud.com>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Tue, 2 Apr 2024 12:39:27 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wgepVMJCYj9s7J50_Tpb5BWq9buBoF0J5HAa1xjet6B8A@mail.gmail.com>
-Message-ID: <CAHk-=wgepVMJCYj9s7J50_Tpb5BWq9buBoF0J5HAa1xjet6B8A@mail.gmail.com>
-Subject: Re: [GIT PULL] security changes for v6.9-rc3
-To: Roberto Sassu <roberto.sassu@huaweicloud.com>
-Cc: linux-integrity@vger.kernel.org, linux-security-module@vger.kernel.org, 
-	linux-fsdevel@vger.kernel.org, linux-cifs@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Roberto Sassu <roberto.sassu@huawei.com>
+References: <SY4P282MB3063A002007A252337A416DEC5382@SY4P282MB3063.AUSP282.PROD.OUTLOOK.COM>
+In-Reply-To: <SY4P282MB3063A002007A252337A416DEC5382@SY4P282MB3063.AUSP282.PROD.OUTLOOK.COM>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Tue, 2 Apr 2024 21:40:27 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0icbgfNbt_5TibMWuxU=+SgdQxy8S0xFQkSY5MoPN77hg@mail.gmail.com>
+Message-ID: <CAJZ5v0icbgfNbt_5TibMWuxU=+SgdQxy8S0xFQkSY5MoPN77hg@mail.gmail.com>
+Subject: Re: [PATCH v2] ACPI: thermal: Continue registering thermal zones even
+ if trip points fail validation
+To: Stephen Horvath <s.horvath@outlook.com.au>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Zhang Rui <rui.zhang@intel.com>, Len Brown <lenb@kernel.org>, 
+	linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, 2 Apr 2024 at 07:12, Roberto Sassu
-<roberto.sassu@huaweicloud.com> wrote:
-> A single bug fix to address a kernel panic in the newly introduced function
-> security_path_post_mknod.
+On Sun, Mar 31, 2024 at 10:37=E2=80=AFAM Stephen Horvath
+<s.horvath@outlook.com.au> wrote:
+>
+> Some laptops where the thermal control is handled by the EC may
+> provide trip points that fail the kernels new validation, but still have
+> working temperature sensors. An example of this is the Framework 13 AMD.
+>
+> This patch allows the thermal zone to still be registered without trip
+> points if the trip points fail validation, allowing the temperature
+> sensor to be viewed and used by the user.
+>
+> Closes: https://bugzilla.kernel.org/show_bug.cgi?id=3D218586
+> Fixes: 9c8647224e9f ("ACPI: thermal: Use library functions to obtain trip=
+ point temperature values")
+> Signed-off-by: Stephen Horvath <s.horvath@outlook.com.au>
+> ---
+>  V1 -> V2: Referenced bug tracker in commit, and switched to using
+>                 `thermal_tripless_zone_device_register` as per the
+>                 suggestion of Rafael J. Wysocki.
+>
+>  drivers/acpi/thermal.c | 20 ++++++++++----------
+>  1 file changed, 10 insertions(+), 10 deletions(-)
+>
+> diff --git a/drivers/acpi/thermal.c b/drivers/acpi/thermal.c
+> index 302dce0b2b50..10044c56b85e 100644
+> --- a/drivers/acpi/thermal.c
+> +++ b/drivers/acpi/thermal.c
+> @@ -662,14 +662,16 @@ static int acpi_thermal_register_thermal_zone(struc=
+t acpi_thermal *tz,
+>  {
+>         int result;
+>
+> -       tz->thermal_zone =3D thermal_zone_device_register_with_trips("acp=
+itz",
+> -                                                                  trip_t=
+able,
+> -                                                                  trip_c=
+ount,
+> -                                                                  tz,
+> -                                                                  &acpi_=
+thermal_zone_ops,
+> -                                                                  NULL,
+> -                                                                  passiv=
+e_delay,
+> -                                                                  tz->po=
+lling_frequency * 100);
+> +       if (trip_count) {
+> +               tz->thermal_zone =3D thermal_zone_device_register_with_tr=
+ips(
+> +                       "acpitz", trip_table, trip_count, tz,
+> +                       &acpi_thermal_zone_ops, NULL, passive_delay,
+> +                       tz->polling_frequency * 100);
+> +       } else {
+> +               tz->thermal_zone =3D thermal_tripless_zone_device_registe=
+r(
+> +                       "acpitz", tz, &acpi_thermal_zone_ops, NULL);
+> +       }
+> +
+>         if (IS_ERR(tz->thermal_zone))
+>                 return PTR_ERR(tz->thermal_zone);
+>
+> @@ -903,8 +905,6 @@ static int acpi_thermal_add(struct acpi_device *devic=
+e)
+>
+>         if (trip =3D=3D trip_table) {
+>                 pr_warn(FW_BUG "No valid trip points!\n");
+> -               result =3D -ENODEV;
+> -               goto free_memory;
+>         }
+>
+>         result =3D acpi_thermal_register_thermal_zone(tz, trip_table,
+>
+> base-commit: 4cece764965020c22cff7665b18a012006359095
+> --
 
-So I've pulled from you before, but I still don't have a signature
-chain for your key (not that I can even find the key itself, much less
-a signature chain).
+Applied as 6.9-rc material under a modified subject ("ACPI: thermal:
+Register thermal zones without valid trip points"), with some
+redundant braces removed and with some white space adjusted.
 
-Last time I pulled, it was after having everybody else just verify the
-actual commit.
-
-This time, the commit looks like a valid "avoid NULL", but I have to
-say that I also think the security layer code in question is ENTIRELY
-WRONG.
-
-IOW, as far as I can tell, the mknod() system call may indeed leave
-the dentry unhashed, and rely on anybody who then wants to use the new
-special file to just do a "lookup()" to actually use it.
-
-HOWEVER.
-
-That also means that the whole notion of "post_path_mknod() is
-complete and utter hoghwash. There is not anything that the security
-layer can possibly validly do.
-
-End result: instead of checking the 'inode' for NULL, I think the
-right fix is to remove that meaningless security hook. It cannot do
-anything sane, since one option is always 'the inode hasn't been
-initialized yet".
-
-Put another way: any security hook that checks inode in
-security_path_post_mknod() seems simply buggy.
-
-But if we really want to do this ("if mknod creates a positive dentry,
-I won't see it in lookup, so I want to appraise it now"), then we
-should just deal with this in the generic layer with some hack like
-this:
-
-  --- a/security/security.c
-  +++ b/security/security.c
-  @@ -1801,7 +1801,8 @@ EXPORT_SYMBOL(security_path_mknod);
-    */
-   void security_path_post_mknod(struct mnt_idmap *idmap, struct dentry *dentry)
-   {
-  -     if (unlikely(IS_PRIVATE(d_backing_inode(dentry))))
-  +     struct inode *inode = d_backing_inode(dentry);
-  +     if (unlikely(!inode || IS_PRIVATE(inode)))
-                return;
-        call_void_hook(path_post_mknod, idmap, dentry);
-   }
-
-and IMA and EVM would have to do any validation at lookup() time for
-the cases where the dentry wasn't hashed by ->mknod.
-
-Anyway, all of this is to say that I don't feel like I can pull this without
- (a) more acks by people
-and
- (b) explanations for why the simpler fix to just
-security_path_post_mknod() isn't the right fix.
-
-                 Linus
+Please verify the result at
+https://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git/commit/=
+?h=3Dbleeding-edge&id=3D8a4ff5452dd0cdcc35940460bb777d836bece11c
