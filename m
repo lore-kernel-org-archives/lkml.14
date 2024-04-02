@@ -1,135 +1,81 @@
-Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 373BA7D07A;
-	Tue,  2 Apr 2024 13:06:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.49
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A9A2681721
+	for <linux-kernel@vger.kernel.org>; Tue,  2 Apr 2024 13:06:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712063206; cv=none; b=JwKcETz8a4ZNU59f6XR03VlgN8QF8osMcxkn4LlbHL9oal/lVJTivRMcaKrTl+PBOB9B8HgJbtOJkeyN9ZgcgfBJFnuqBzWN9vBtujQDScu8ehKZe2ipY8W/SvYMbDI1wvQuiHGRNJYL+LomTzBjc3hov1b64ZTPSiV3LItMsKo=
+	t=1712063222; cv=none; b=nZ+kWBlmPKfu9/YxKHOv5e3moM7hhwEeji9eenVJThKK0stA9ia9YBvls5VEc/PEYKkqiJyAyGYEsBcdoWDBb45QJ2pqsz8w2xrPBxmtZdklFWz6PbhDMKXbxBJC5kF+8KEabKg+2JqwzcoSoALgduWSY3Pu9hSimRcGl253qSo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712063206; c=relaxed/simple;
-	bh=iB2gSDbR2dkyx4edtpLxbP9l7fU0ngFgBmwg4Y7zQVk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=aU8tGqBUWAiOQDL65fq955bzmIrn8CS4t2Ce6s6hHS/HoUyUa7CA+sNTrNu3MC25NZBfd2S4PH4rGARdCjMx9L4VLstJvG1L1k7EcWtxYBOYfPujiSjs6105nBOZqKeA2Ra9HiILfPaXAgfev6ufZqbbFCf/dMOnst+6lX4lFB8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ah3OVEvh; arc=none smtp.client-ip=209.85.218.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ah3OVEvh"
-Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-a4a387ff7acso616868266b.2;
-        Tue, 02 Apr 2024 06:06:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1712063203; x=1712668003; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=f65VZK2taIgLTzjNB/2fmY7WG5Qnc3EYR1bvxekrFWY=;
-        b=ah3OVEvhNQxVFJ0es031qCw//Xh8+YF/V7+tlVK6k9Dpda+5j7tKMzQl8zUIBrOMpY
-         aYzMTTrPKqLzkRrSg27XKyC8WXugXbS22igHW6GjfsfOCqbp73VQ+ctqEqbdFW1puMAO
-         Cnfy9brY1WyMzeVkZQPDEKBkZ4K5x35Ju+36k2u7thzkgeDuf4t8O+qMR890YArpYKIW
-         x60BnfHbGtuP0k8FYFGi4zRc03xaZ6fPOiN0paAWPUrDfBzRpdifHq5yKHuWvMz59UHL
-         zRypvKjvPAV5vOSIkMBCZTIH8uO0vRLTKM4kAFYzsw0pMxBLOspzy2KPyFynGa7bAn37
-         NBLA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712063203; x=1712668003;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=f65VZK2taIgLTzjNB/2fmY7WG5Qnc3EYR1bvxekrFWY=;
-        b=CRG3LbQDkcw5oQpsDrbt3BIFvgWTKb7sGjzu/z/VQUBtWBrp9lXubwnTvRBt14yE+4
-         BoC3kLfgFPFXjfS9asCY0IRPNF6brJHby5Pi8TXKF4Bfd9c+jHQPIKdHeOyqo4a8Gf2E
-         xWrP0TgMkeTokzm08hFRIGkMuF1B5hw2nWBUUT6d53AOnuKtq4hEhl5zSrqHf0bluhdU
-         ed+kDkkVGtQuSWU7oO0yA5knTrJNRB5RJXNU0JoE1sG3vqIDQyJvw0VRQR+QKi+eKTBF
-         DkWH+fkql4wIWy8adBqU5qJy7SpizkStOXjCtmAbHlXj0adx99LYDG+tUJQQNoNrA6A/
-         2Elg==
-X-Forwarded-Encrypted: i=1; AJvYcCXvT/OTE83N6VlSnbhYVX5m4oIMuSSUKfI3kQEkXFoZ5fx9llGcgp63Ut01X166bUIP/kewPdIWT2jXMAhnptDHTGPJTSZHV/9jz8gNIVdn8HDOj3+uiEMCENx6J63N4axDm9+10/G558+OLCXcwNrJrn7lNjyjHv/yMfVhkH9X7OsQi4c=
-X-Gm-Message-State: AOJu0YxkaMfqCRaqgNaYTGGvrW5U6G9w75qhEk4CezSohcP9E1IIeKNW
-	0dTh5vaXlWllbKViIfsVPKbKzEwIJKrgbVJkjNVG5s+pNg1c0aNz1rDI4FKulGYOSoj6nhtGpH0
-	Ufxv+vXHmVGR6PeC3GOLNuZDyI/U=
-X-Google-Smtp-Source: AGHT+IGFhidDICd1DuDLTMF6/GRfDHMz7a0kUh4LJPUOf9njSYivo6aIkq7WkYN426AVp/ihVUC3mr9bilSLextXDJg=
-X-Received: by 2002:a17:907:7da0:b0:a4e:6957:de24 with SMTP id
- oz32-20020a1709077da000b00a4e6957de24mr4995499ejc.37.1712063203115; Tue, 02
- Apr 2024 06:06:43 -0700 (PDT)
+	s=arc-20240116; t=1712063222; c=relaxed/simple;
+	bh=2pwW/L80mNXkfO0ONij8M4+gNmy+QVEEYfMISxXbzYc=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=RtDUB3KJGoK9N+yBn+Elx26d7Uj0i+nVvElJs+DJa+0B3qoDq6ohPhgIhwtCWb4aS6UaDPyme6cXegWqlhJmz/1//ZC5lhkhSgY6ficmDpbZ7y54scJVOTwztXJnll/b+xgyDW31dljgXy31LriWYOwSqNP9BNypaLsrr/7QE7M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.20.42.173])
+	by gateway (Coremail) with SMTP id _____8AxafDxAgxmH1UiAA--.14009S3;
+	Tue, 02 Apr 2024 21:06:57 +0800 (CST)
+Received: from [10.20.42.173] (unknown [10.20.42.173])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8AxCBLuAgxmG9hxAA--.13009S3;
+	Tue, 02 Apr 2024 21:06:56 +0800 (CST)
+Subject: Re: [PATCH] LoongArch: KVM: Remove useless MODULE macro for
+ MODULE_DEVICE_TABLE
+To: Wentao Guan <guanwentao@uniontech.com>,
+ zhaotianrui <zhaotianrui@loongson.cn>
+Cc: loongarch <loongarch@lists.linux.dev>,
+ linux-kernel <linux-kernel@vger.kernel.org>, =?UTF-8?B?546L5pix5Yqb?=
+ <wangyuli@uniontech.com>
+References: <20240402103942.20049-1-guanwentao@uniontech.com>
+ <31d39556-79d9-52eb-36aa-5897aea6e28e@loongson.cn>
+ <tencent_0ED20EAF678A7C93309EA4F6@qq.com>
+From: maobibo <maobibo@loongson.cn>
+Message-ID: <2ca6c120-858c-7c52-73c4-71609cd8c10c@loongson.cn>
+Date: Tue, 2 Apr 2024 21:06:54 +0800
+User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240323-pinctrl-scmi-v6-0-a895243257c0@nxp.com>
- <20240323-pinctrl-scmi-v6-3-a895243257c0@nxp.com> <ZgcP4IkTQGks9ehH@surfacebook.localdomain>
- <DU0PR04MB9417E797F4E0F7BB6154B3BE88382@DU0PR04MB9417.eurprd04.prod.outlook.com>
- <Zgu4Tok43W5t8KM0@pluto>
-In-Reply-To: <Zgu4Tok43W5t8KM0@pluto>
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Tue, 2 Apr 2024 16:06:06 +0300
-Message-ID: <CAHp75VdAaTeQ_Ag3gd0s9UfT=kAT2hwibeJ9-YFXJx4z=R3e+g@mail.gmail.com>
-Subject: Re: [PATCH v6 3/4] firmware: arm_scmi: Add SCMI v3.2 pincontrol
- protocol basic support
-To: Cristian Marussi <cristian.marussi@arm.com>
-Cc: Peng Fan <peng.fan@nxp.com>, "Peng Fan (OSS)" <peng.fan@oss.nxp.com>, 
-	Sudeep Holla <sudeep.holla@arm.com>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Linus Walleij <linus.walleij@linaro.org>, Dan Carpenter <dan.carpenter@linaro.org>, 
-	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
-	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, 
-	"linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Oleksii Moisieiev <oleksii_moisieiev@epam.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <tencent_0ED20EAF678A7C93309EA4F6@qq.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:AQAAf8AxCBLuAgxmG9hxAA--.13009S3
+X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
+X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
+	ZEXasCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29K
+	BjDU0xBIdaVrnRJUUUv2b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26c
+	xKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vE
+	j48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxV
+	AFwI0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x02
+	67AKxVWxJr0_GcWle2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44
+	I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2
+	jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCYjI0SjxkI62
+	AI1cAE67vIY487MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E
+	5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAV
+	WUtwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY
+	1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI
+	0_Gr0_Cr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7I
+	U8I38UUUUUU==
 
-On Tue, Apr 2, 2024 at 10:48=E2=80=AFAM Cristian Marussi
-<cristian.marussi@arm.com> wrote:
-> On Sun, Mar 31, 2024 at 01:44:28PM +0000, Peng Fan wrote:
-> > > Sat, Mar 23, 2024 at 08:15:16PM +0800, Peng Fan (OSS) kirjoitti:
 
-...
 
-> > > > +#include <linux/module.h>
-> > > > +#include <linux/scmi_protocol.h>
-> > > > +#include <linux/slab.h>
-> > >
-> > > This is semi-random list of headers. Please, follow IWYU principle (i=
-nclude
-> > > what you use). There are a lot of inclusions I see missing (just in t=
-he context of
-> > > this page I see bits.h, types.h, and  asm/byteorder.h).
-> >
-> > Is there any documentation about this requirement?
-> > Some headers are already included by others.
+On 2024/4/2 下午8:47, Wentao Guan wrote:
+> Hello,Bibo,
+> 
+> I change this that we see other guys use "MODULE_DEVICE_TABLE(cpu,..."
+> without use that MODULE macro,and mark cpu_feature struct "__maybe_unused",
+> do the same way to avoid unused variable compiler warning  :).
 
-The documentation here is called "a common sense".
-The C language is built like this and we expect that nobody will
-invest into the dependency hell that we have already, that's why IWYU
-principle, please follow it.
+yeap, it looks good to me with __maybe_unused added.
 
-> Andy made (mostly) the same remarks on this same patch ~1-year ago on
-> this same patch while it was posted by Oleksii.
->
-> And I told that time that most of the remarks around devm_ usage were
-> wrong due to how the SCMI core handles protocol initialization (using a
-> devres group transparently).
->
-> This is what I answered that time.
->
-> https://lore.kernel.org/linux-arm-kernel/ZJ78hBcjAhiU+ZBO@e120937-lin/#t
->
-> I wont repeat myself, but, in a nutshell the memory allocation like it
-> is now is fine: a bit happens via devm_ at protocol initialization, the
-> other is doe via explicit kmalloc at runtime and freed via kfree at
-> remove time (if needed...i.e. checking the present flag of some structs)
+Regards
+Bibo Mao
+> 
+> BRs
+> Wentao Guan
+> 
 
-This sounds like a mess. devm_ is expected to be used only for the
-->probe() stage, otherwise you may consider cleanup.h (__free() macro)
-to have automatic free at the paths where memory is not needed.
-
-And the function naming doesn't suggest that you have a probe-remove
-pair. Moreover, if the init-deinit part is called in the probe-remove,
-the devm_ must not be mixed with non-devm ones, as it breaks the order
-and leads to subtle mistakes.
-
-> I'll made further remarks on v7 that you just posted.
-
---=20
-With Best Regards,
-Andy Shevchenko
