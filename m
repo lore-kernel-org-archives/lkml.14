@@ -1,132 +1,165 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from relay7-d.mail.gandi.net (relay7-d.mail.gandi.net [217.70.183.200])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A69CB5731E;
-	Tue,  2 Apr 2024 09:21:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2B515820C
+	for <linux-kernel@vger.kernel.org>; Tue,  2 Apr 2024 09:21:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.200
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712049677; cv=none; b=ocA8csYsvtxWUMyU8EFGWtatZphPE+1K70d0SkKk1acj/zMpve64tuLwP3lPJSXMX9Z35PQ368BDzLOVsXpwMC8A7rIUSpgTF/HcTZYNjJtDTHLCr/wyQ+UrBt9wW/jvn7brPTMDH8TEkZhqJQJcFXkYeJV1oVwDK/Lek4hE0Lc=
+	t=1712049682; cv=none; b=pS0bIXzR1boyD1tBDL3FMQr9AYEF6hLjMM2RUqO4M7lJimimRq6oWqNpsXp/kRexJNj+GcSq8BEpvf2kK3HEYm3VKK2B56OOn1rrYtHy8HNRhJ4F9HNXACAFTKW7hLfXqZ8LC/2kAuWRa26VRRFH5yrg24Tx0c2Q0jPxbFlllHk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712049677; c=relaxed/simple;
-	bh=Eqv+J/G8QDaPSz4YHEzz2rEQqjnD/zYLA18kwsleRu4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=XDIGw9KkurDgkyfhfdNnn1CjNs7QIn7+YVztiGnfsW5hRQNKbL90YAQsYsfdLAXP94KnlHg4BwHV63IV8HNsrWyJOLq9XYBRcgUTXpE5woqun0Um2KeJUtjY4pb5sMZEGce0rbA/KdosLNdDXOnH+BSOVjA+e5Ei1z7/bj62s2Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=hM5vBdEX; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="hM5vBdEX"
-Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 4328MSfU014330;
-	Tue, 2 Apr 2024 09:21:06 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	message-id:date:mime-version:subject:to:cc:references:from
-	:in-reply-to:content-type:content-transfer-encoding; s=
-	qcppdkim1; bh=pwVN48TC02wisPlvjwOGCqrWo60YyF0/BsQFmG2idY0=; b=hM
-	5vBdEX5ISE2GbzpWdDFGBL9sPfuomnuQH8/qqtqiynripjeXvr5yNYLo8A7wr2Ng
-	1p8jVVFbC2tSPDhaMktmoSV17YSR+BxtcOgpdHeTOv/GLo2f/0dtN4HoezQoE4hE
-	+i3p94RSoBuGV166CTLUtXffC7cnGGwdfivLQj3gvYKxL9ALcq4BlxAywa6UnKo6
-	s0s2H+66tuXQgGeHZznV0yteIHoqt6P6g30URmL+/Ve7akgwEJQfBmWLdTRXSmya
-	Nco2IiHEKecirUKvIt0OxeW3gGhxBtq0cSoSP7mnqDjikUQ13sq+FY1ugag6gnpX
-	UulcClPda1pJdOiQsTmw==
-Received: from nasanppmta02.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3x81wdhheq-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 02 Apr 2024 09:21:05 +0000 (GMT)
-Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
-	by NASANPPMTA02.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 4329L3wn001578
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 2 Apr 2024 09:21:03 GMT
-Received: from [10.216.25.199] (10.80.80.8) by nasanex01c.na.qualcomm.com
- (10.45.79.139) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Tue, 2 Apr 2024
- 02:20:59 -0700
-Message-ID: <7cd89939-e0d0-c43b-fa2a-224bf60f4166@quicinc.com>
-Date: Tue, 2 Apr 2024 14:50:56 +0530
+	s=arc-20240116; t=1712049682; c=relaxed/simple;
+	bh=y2QAjuzhl0wYCv7YC1D+Cg98zpUgHm0vHk75GViP87E=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=tLJZrwwZ5Fgiy/5sry4jtRiYhI35Dz6FqPofy1/x7THm1on1YbbvoWuwzJm37i54HdGfTguW/KKoPo4HzmOdTPX3k1Y/byNKlG88K8T+tZsS6aQedtsYA5hY9OvRNNwMfyudGE54czjbObA5YcvOCX94P8LpAlCj86ss7TADd2k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr; spf=pass smtp.mailfrom=ghiti.fr; arc=none smtp.client-ip=217.70.183.200
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ghiti.fr
+Received: by mail.gandi.net (Postfix) with ESMTPSA id DDC2F20002;
+	Tue,  2 Apr 2024 09:21:15 +0000 (UTC)
+Message-ID: <7312eb06-c9dd-4a0e-98bc-ea4e8ace7b10@ghiti.fr>
+Date: Tue, 2 Apr 2024 11:21:15 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.9.1
-Subject: Re: [PATCH v1 2/2] ASoC: qcom: qcm6490: Add machine driver for
- qcm6490
+User-Agent: Mozilla Thunderbird
+Subject: Re: [External] [PATCH] riscv: process: Fix kernel gp leakage
 Content-Language: en-US
-To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-CC: <srinivas.kandagatla@linaro.org>, <bgoswami@quicinc.com>,
-        <broonie@kernel.org>, <krzysztof.kozlowski+dt@linaro.org>,
-        <andersson@kernel.org>, <konrad.dybcio@linaro.org>,
-        <lgirdwood@gmail.com>, <tiwai@suse.com>, <quic_rohkumar@quicinc.com>,
-        <linux-kernel@vger.kernel.org>, <alsa-devel@alsa-project.org>,
-        <linux-sound@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>
-References: <20240327113228.1706975-1-quic_mohs@quicinc.com>
- <20240327113228.1706975-3-quic_mohs@quicinc.com>
- <CAA8EJpqh0emOFUPSj8rPaKr2hZRWwOh9NNTco8fyJCtwXe9sSA@mail.gmail.com>
- <92b449da-1569-40f9-d8c9-48949c986853@quicinc.com>
- <CAA8EJprLB6+i4H5tK9LbJYOEH8v9QF78u-+HMmqPqfpvz5J8zw@mail.gmail.com>
-From: Mohammad Rafi Shaik <quic_mohs@quicinc.com>
-In-Reply-To: <CAA8EJprLB6+i4H5tK9LbJYOEH8v9QF78u-+HMmqPqfpvz5J8zw@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01c.na.qualcomm.com (10.45.79.139)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: 53sTLWqDduGBXBvpBpergwhhBHBrJl1w
-X-Proofpoint-GUID: 53sTLWqDduGBXBvpBpergwhhBHBrJl1w
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-04-02_03,2024-04-01_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 priorityscore=1501
- malwarescore=0 bulkscore=0 spamscore=0 suspectscore=0 mlxlogscore=750
- phishscore=0 adultscore=0 clxscore=1015 lowpriorityscore=0 impostorscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2403210001
- definitions=main-2404020065
+To: Stefan O'Rear <sorear@fastmail.com>, yunhui cui <cuiyunhui@bytedance.com>
+Cc: linux-riscv@lists.infradead.org, Paul Walmsley
+ <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>,
+ Albert Ou <aou@eecs.berkeley.edu>, linux-kernel@vger.kernel.org
+References: <20240327061258.2370291-1-sorear@fastmail.com>
+ <CAEEQ3w=yNEktgUucmKuUvqfwDYYztVX+jofi5Q7hG-yQWcLbTA@mail.gmail.com>
+ <234c458c-15f1-423f-a2fd-0abfc6232c66@app.fastmail.com>
+From: Alexandre Ghiti <alex@ghiti.fr>
+In-Reply-To: <234c458c-15f1-423f-a2fd-0abfc6232c66@app.fastmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-GND-Sasl: alex@ghiti.fr
 
-On 3/30/2024 12:09 AM, Dmitry Baryshkov wrote:
-> Hi,
-> 
-> On Fri, 29 Mar 2024 at 17:20, Mohammad Rafi Shaik <quic_mohs@quicinc.com> wrote:
+Hi Stefan,
+
+On 27/03/2024 17:53, Stefan O'Rear wrote:
+> On Wed, Mar 27, 2024, at 4:43 AM, yunhui cui wrote:
+>> Hi Stefan,
 >>
->>
->> On 3/27/2024 6:39 PM, Dmitry Baryshkov wrote:
->>
->> On Wed, 27 Mar 2024 at 13:34, Mohammad Rafi Shaik <quic_mohs@quicinc.com> wrote:
-> 
-> Please turn off HTML mail composition and never ever send HTML email
-> to OSS mailing lists.
-> Now quotation levels are broken...
-> 
->>
->> Add machine driver for qcm6490 SoC.
->>
->> This initial supports which includes WSA883x Speakers with onboard DMIC
->> connected to internal LPASS codec via VA macros respectively and also
->> WCD937x based headset.
->>
->> Add compatible for sound card on Qualcomm qcs6490 boards.
->>
->> Granted that qcm6490 is similar to sc7280, is there any reason why you
->> can not use one of the existing sound card drivers? Like sc7280.c or
->> sc8280xp.c?
->>
->> The qcs6490/qcm6490 has additional interfaces like MI2S, which requires additional machine driver modification.
->>
->> Example : Required new DAPM widget change in machine driver for MI2S interface which is specific to qcs6490/qcm6490.
->>
->> So, using new qcm6490 machine driver.
->>
->> Will try to use existing sc8280xp.c machine driver.
-> 
-> What about sc7280? In the end, qcm6490 is sc7280 with different firmware / spin.
-> 
+>> On Wed, Mar 27, 2024 at 2:14 PM Stefan O'Rear <sorear@fastmail.com> wrote:
+>>> childregs represents the registers which are active for the new thread
+>>> in user context. For a kernel thread, childregs->gp is never used since
+>>> the kernel gp is not touched by switch_to. For a user mode helper, the
+>>> gp value can be observed in user space after execve or possibly by other
+>>> means.
+>>>
+>>> Fixes: 7db91e57a0ac ("RISC-V: Task implementation")
+>>> Signed-off-by: Stefan O'Rear <sorear@fastmail.com>
+>>> ---
+>>>   arch/riscv/kernel/process.c | 3 ---
+>>>   1 file changed, 3 deletions(-)
+>>>
+>>> diff --git a/arch/riscv/kernel/process.c b/arch/riscv/kernel/process.c
+>>> index 92922dbd5b5c..51042f48da17 100644
+>>> --- a/arch/riscv/kernel/process.c
+>>> +++ b/arch/riscv/kernel/process.c
+>>> @@ -27,8 +27,6 @@
+>>>   #include <asm/vector.h>
+>>>   #include <asm/cpufeature.h>
+>>>
+>>> -register unsigned long gp_in_global __asm__("gp");
+>>> -
+>>>   #if defined(CONFIG_STACKPROTECTOR) && !defined(CONFIG_STACKPROTECTOR_PER_TASK)
+>>>   #include <linux/stackprotector.h>
+>>>   unsigned long __stack_chk_guard __read_mostly;
+>>> @@ -207,7 +205,6 @@ int copy_thread(struct task_struct *p, const struct kernel_clone_args *args)
+>>>          if (unlikely(args->fn)) {
+>>>                  /* Kernel thread */
+>>>                  memset(childregs, 0, sizeof(struct pt_regs));
+>>> -               childregs->gp = gp_in_global;
+>>>                  /* Supervisor/Machine, irqs on: */
+>>>                  childregs->status = SR_PP | SR_PIE;
+>>>
+>>> --
+>>> 2.40.1
+>>>
+>>>
+>> Can you help express in more detail what the problem was before fixing it?
+> It's a KASLR bypass, since gp_in_global is the address of the kernel symbol
+> __global_pointer$.
 >
+> The /* Kernel thread */ comment is somewhat inaccurate in that it is also used
+> for user_mode_helper threads, which exec a user process, e.g. /sbin/init or
+> when /proc/sys/kernel/core_pattern is a pipe. Such threads do not have
+> PF_KTHREAD set and are valid targets for ptrace etc. even before they exec.
+>
+> childregs is the *user* context during syscall execution and it is observable
+> from userspace in at least five ways:
+>
+> 1. kernel_execve does not currently clear integer registers, so the starting
+>     register state for PID 1 and other user processes started by the kernel has
+>     sp = user stack, gp = kernel __global_pointer$, all other integer registers
+>     zeroed by the memset in the patch comment.
 
-The sc7280 is tightly linked with realtek codec. which will only support 
-for chrome.
 
-The sc8280xp.c machine driver is more suitable for qcm6490, will use 
-same sc8280xp.
+So as I  did not this know this path really well, I played a bit and I 
+can confirm that usermode processes reach userspace with the gp = kernel:
 
+Thread 1 hit Breakpoint 12, 0x00007fff82487fc4 in ?? ()
+1: x/i $pc
+=> 0x7fff82487fc4:    mv    a0,sp
+3: /x $gp = 0xffffffff817fee50
+
+
+>
+>     This is a bug in its own right, but I'm unwilling to bet that it is the only
+>     way to exploit the issue addressed by this patch.
+>
+> 2. ptrace(PTRACE_GETREGSET): you can PTRACE_ATTACH to a user_mode_helper thread
+>     before it execs, but ptrace requires SIGSTOP to be delivered which can only
+>     happen at user/kernel boundaries.
+>
+> 3. /proc/*/task/*/syscall: this is perfectly happy to read pt_regs for
+>     user_mode_helpers before the exec completes, but gp is not one of the
+>     registers it returns.
+>
+> 4. PERF_SAMPLE_REGS_USER: LOCKDOWN_PERF normally prevents access to kernel
+>     addresses via PERF_SAMPLE_REGS_INTR, but due to this bug kernel addresses
+>     are also exposed via PERF_SAMPLE_REGS_USER which is permitted under
+>     LOCKDOWN_PERF. I have not attempted to write exploit code.
+>
+> 5. Much of the tracing infrastructure allows access to user registers. I have
+>     not attempted to determine which forms of tracing allow access to user
+>     registers without already allowing access to kernel registers.
+>
+> Does this help? How much of this should be in the commit message?
+
+
+I'd put them all, but up to you, at least the first usecase that I was 
+able to reproduce should be added to the commit log.
+
+You can add:
+
+Reviewed-by: Alexandre Ghiti <alexghiti@rivosinc.com>
+
+And this should go to -fixes.
+
+Thanks,
+
+Alex
+
+
+>
+> -s
+>
+>> Thanks,
+>> Yunhui
+>>
+>> _______________________________________________
+>> linux-riscv mailing list
+>> linux-riscv@lists.infradead.org
+>> http://lists.infradead.org/mailman/listinfo/linux-riscv
+> _______________________________________________
+> linux-riscv mailing list
+> linux-riscv@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-riscv
