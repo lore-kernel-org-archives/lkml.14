@@ -1,44 +1,44 @@
-Received: from APC01-TYZ-obe.outbound.protection.outlook.com (mail-tyzapc01olkn2074.outbound.protection.outlook.com [40.92.107.74])
+Received: from APC01-PSA-obe.outbound.protection.outlook.com (mail-psaapc01olkn2017.outbound.protection.outlook.com [40.92.52.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0446605B6;
-	Tue,  2 Apr 2024 10:50:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.107.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84FCC5FDDB;
+	Tue,  2 Apr 2024 10:50:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.52.17
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712055009; cv=fail; b=RrBBhbNk4bn9mDo09R8kOwZo/ZILFnVYd8uzlIwHSDg7pW8N+fUKC1zNVOjLXy9E+fvAuWRJUzZA6KnlkKN+dPabnc6Of2oiaCBj2IMTamxGwuDfQwcRscxN4ZbcPKAdRbSgyQ1YAg/XeVUpGiWPMJYm4XltO81TC+Rbt9m+f+0=
+	t=1712055020; cv=fail; b=dQACchtaVCEb3EgdAAq+Tlhe9FVetJah1kMW7wfOtQAdT+N1cHZUUyEbkCVVhsRy4joL1oznKdxgI/3hDJN23t1WNuBdryYUZ7l7G+OlqMbtxL76CxY+wXY3OOZYMHQlFTQG7itqr7auLl6iHxRCEbMW3QNueuKA8SlVao2N0VI=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712055009; c=relaxed/simple;
-	bh=jCTMoJQjnbuB2X3DycG5cnYK3Hme4YNYsdrxf3XDJ/g=;
+	s=arc-20240116; t=1712055020; c=relaxed/simple;
+	bh=CE9rJ6YqiZIptrf0u8T9LOLW+ImUjKp8wbTlBvnPwUg=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=PYyBDDzKVSHj2zvPEv+6y/fpgaE1Cgv3j7rDlXhmFYjkz0sbClcQBLSaIVx8x/Xsyc76+JKmIkfH9eCUGtH6BIrmBBEyiYsdzdBDdnchPbyZkzWrROcSyIeopkzeMmG8rOyC2v+NEDHGLBdDNOJ/EJA9nBwY0u3rFxu79PFms1Q=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hotmail.com; spf=pass smtp.mailfrom=hotmail.com; dkim=pass (2048-bit key) header.d=hotmail.com header.i=@hotmail.com header.b=umlzAGxE; arc=fail smtp.client-ip=40.92.107.74
+	 Content-Type:MIME-Version; b=YeVaILlhvfcj2lY4IBV3uRaj3zXAkDl2WM5r0d6bzrSIpy6HqngZHCpqdviXSS+CzPM2C3gbepTR5R6FWVPBXl7FloB59215yPUZ/aQsH0bwdCDokMgzMMVhhrPoKQj/COnTx61Uece7FTLPPcEor6JZYp/ovI6Va4hInAVXE6c=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hotmail.com; spf=pass smtp.mailfrom=hotmail.com; dkim=pass (2048-bit key) header.d=hotmail.com header.i=@hotmail.com header.b=tULaxgsK; arc=fail smtp.client-ip=40.92.52.17
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hotmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hotmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=hotmail.com header.i=@hotmail.com header.b="umlzAGxE"
+	dkim=pass (2048-bit key) header.d=hotmail.com header.i=@hotmail.com header.b="tULaxgsK"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=LG5WZdNZ2LWimLHDmnECnt5zzJm9ALdzocomTcrgPzql17CAgoekKipyFM6zEH4CoRpgsDdERkL3OdPkM0kHt0Z6VCPVUDPJXRLBd5jKoq1Oymym7xsbuAR+Oq2BmwrMGaeWlKIclIIFcSe5PXntsFQaJ96oBHJaMQlGo5bxJvo9PmmecI7h5ZRndWDpedkrx96aVbL8DQtdrKsWo79AxFWlahHQ672u15ubsBFAg/jR9O5TipvkRC1bOkhVa/u+dMW2pYphjsUhxF0bbUK5Q8KbEDV5RzbTEcQ4cJQkOb9kX9tZeQDUKhZbMe/Tgi3vULQG9uqy4zjuLOLvny/TKw==
+ b=O2JDDWQ+SRSQWWbzfCiBXlUNAW2qcgeT3b1z/uV77zd8uEqLjlf/sXB+9mCH7khYabjTEyIIHLwCz/3jau56wyYyxCsZBn//vURatwtdJ3wzljHHWSJKomiSWoSSKSvIXbFachQOmNd17VEa8wH1iEIeg0xLRzR8+lMeyIepMpTTEnrzUebkniCoIssS9+xe/g5KAQnALkfaLsea2JMbdYWLnJUmEdA03bdmLyXvFEdiJVD3eV9JXVD1cIE1EZrbPxvCi4Lnm7eH5mpjRiA0aiTk/a7/qHEFNBfNUg38yzl/h2BC39R9bbag3STcb/noRn6b5s+/HYb4CMyfc3jjxA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=ZAJ/Bo+VRExAfvHYPdxG54EZGxUNoZ5ZWBsdzxxhroQ=;
- b=beTOPBjFDttjXDeY/wqrcokqnvFnohhrBa87ROJw9FteI+Tl1gY2L2AooRQnSihiiTGKEivDa5KtLymBU4mbU1k/Nv4ei0W6r1g5Ee0Lh6BXhkyL/gQJUnK0fyUa90JCrpBhL5x9QjXs6b0DVqLGlwqu0CMHvOo5nqiYk6L+KTvIo4HhB9aDVKfHCbbW54ehSOtHIsiZX18Gc52agS8/BgGGzO0fiGr/a8kDXfYpAodC8C5QlPR2NIM6LaDfrDPJp0plUX4H+Bt3YNskaMEFNRieK+Q7xssuXBIrJAFnA/YZBbj9V7/S6JV3BWleLljw5NSiRJsN6qBZIjbHmVlsrA==
+ bh=pQJyGZPwRlVI7ReqM3YuMwvJE6Hi08CgUoAmyBY8io8=;
+ b=WNUVCHiWbApgs7T43fMfiazTUvz30YZNPkqPpDGwaG0t18RpXkNcNQgnW6H2MQbmVwxI4m+Ml+l8m8fAFvyjFG82W9MsQUBIyNEghOLnvA8VrJ8TIrWo7zHQt3U4kuUijbNvvQzXR4nfg82v36k+yRkg25YJKOQttuwUvoc6sK+ujekfBQ2JB7BbDmW9LdvP8WgNHvTWZy64euYnrMAeYhEfTaQawTiJ5CdRYQXa+X1BcZ+qoWQC7HGUeie/k1JfzxUSg/YaZCK69spPvbwBzpPY1KhY5/CshFXNPmmmlpvrrxRuuaSmNoKL0cxcH+8IWAVar58RRRmjfr5gyuQ3Yg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
  dkim=none; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hotmail.com;
  s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ZAJ/Bo+VRExAfvHYPdxG54EZGxUNoZ5ZWBsdzxxhroQ=;
- b=umlzAGxEpIhFOoQ5MIvqEAVf+NqXYQr6jxcIK09GQXfxIB0abyfM18AYKZWuK1PldMPelzW/3jZZ5uahlk8zivAr3ugSffObaYdEdUj1PP1pR4DeMYQoyjwH1oqqC9heZ7cuaUHNIa5192D0UnrTC5ZkMOubO/dA5hu+YG9pF2myng3rLzloxpBoJuCXlu7SuSVeq8cT+tdYHbRBcukECSbWHYfw4MZJplB9mnJx0PYLT4KKwFyFdS6aeyJ33NWS7MWE7MlD43rX2iibVcKSXRxrbei+F2qEIGdXK9M9Cs5lKqVuU8F83Fj4jNKt858lxLdE7XsGAsAbAe7i0HnR6Q==
+ bh=pQJyGZPwRlVI7ReqM3YuMwvJE6Hi08CgUoAmyBY8io8=;
+ b=tULaxgsKmayDXFDY6RCVVN3ciDeFGOXY4LQuxFjzaV16mE/rSDez7RkmExmrK3SHWO5GZm5aJwH5hY71KjNZCuhVBP4vZ3Q6hXrZwmzCcJC/sCIRNW6zEmLDWzB7qwSjZITH722Suj+KCDgq2/Z9q5qJeVblFw8BJXTm4CoYaQHzqcu4xrX4ibzdmmY4j2cOpGWisyvwcQboBRm8gI6RgLNBVfZFaO2mA/9xoigOtTYXZWCsh+uS6yPWmcIIDeGndxrJXfrSFWlCdUDs4xtQqE14ENRgPk2L7ihI5lbCQcMxDT/F9ocIZnshD9MoFy3cpU3EOLR/utg/b9HXkTyMYA==
 Received: from TY0PR06MB5611.apcprd06.prod.outlook.com (2603:1096:400:31e::8)
  by KL1PR06MB6964.apcprd06.prod.outlook.com (2603:1096:820:121::11) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.46; Tue, 2 Apr
- 2024 10:50:04 +0000
+ 2024 10:50:11 +0000
 Received: from TY0PR06MB5611.apcprd06.prod.outlook.com
  ([fe80::d57a:9f0e:1ee7:85bf]) by TY0PR06MB5611.apcprd06.prod.outlook.com
  ([fe80::d57a:9f0e:1ee7:85bf%5]) with mapi id 15.20.7409.042; Tue, 2 Apr 2024
- 10:50:04 +0000
+ 10:50:11 +0000
 From: Allen_Lin <allencl_lin@hotmail.com>
 To: dmitry.torokhov@gmail.com,
 	robh@kernel.org,
@@ -50,21 +50,21 @@ To: dmitry.torokhov@gmail.com,
 	devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org
 Cc: Allen_Lin <allencl_lin@hotmail.com>
-Subject: [PATCH v2 1/4] dt-bindings: input: Add Himax HX83102J touchscreen
-Date: Tue,  2 Apr 2024 18:49:27 +0800
+Subject: [PATCH v2 3/4] HID: Add DRM panel follower function
+Date: Tue,  2 Apr 2024 18:49:29 +0800
 Message-ID:
- <TY0PR06MB5611C37640AA40B2B7716ABE9E3E2@TY0PR06MB5611.apcprd06.prod.outlook.com>
+ <TY0PR06MB5611D2A2675DF1D021ED30DE9E3E2@TY0PR06MB5611.apcprd06.prod.outlook.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20240402104930.1053016-1-allencl_lin@hotmail.com>
 References: <20240402104930.1053016-1-allencl_lin@hotmail.com>
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-TMN: [Qxv13yMcFL/mP+t9E2SGz3lG5huSO6Vf]
+X-TMN: [k++IVqfsyqAuCcDwHd1UvUQqDgLH7aBG]
 X-ClientProxiedBy: PS2PR02CA0031.apcprd02.prod.outlook.com
  (2603:1096:300:59::19) To TY0PR06MB5611.apcprd06.prod.outlook.com
  (2603:1096:400:31e::8)
 X-Microsoft-Original-Message-ID:
- <20240402104930.1053016-2-allencl_lin@hotmail.com>
+ <20240402104930.1053016-4-allencl_lin@hotmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -74,39 +74,39 @@ MIME-Version: 1.0
 X-MS-Exchange-MessageSentRepresentingType: 1
 X-MS-PublicTrafficType: Email
 X-MS-TrafficTypeDiagnostic: TY0PR06MB5611:EE_|KL1PR06MB6964:EE_
-X-MS-Office365-Filtering-Correlation-Id: f83b2aff-e932-4cdf-479a-08dc5302a736
+X-MS-Office365-Filtering-Correlation-Id: 0647b671-9b50-47d2-6444-08dc5302ab69
 X-Microsoft-Antispam: BCL:0;
 X-Microsoft-Antispam-Message-Info:
-	Tbk36P0Jsgmf0CwojoyiRpEyUD0SyA/zDbsmkOHNd6lozfgikdXX/nz/g6zQaFx9mAU8C9hr+k2xVjyzWbsXz3gOnYD6YLV9wksSZUkWJnjaUTSQ4+S2yvnokDSKGRPbhbrGdieCjkB0y3iM9yx5D9FjIP7FaKmPM/7jZjV0y1pfynNR7rgEt0e1Qg9luTN2jPRMjlG8zB8kiQEJm2Rt31k/jYqDKiF0NUxpB8o538oJxk2Y15ICVbNAptdPc3btOMAmnI4Hi0uKo/NleA3pRQR/O5GrFhDV9jFmjRXTVEBYA3feASxwB0m6c7h5AeyUcFCG4HxbPHueIYrug+bxHh+SL4vMfRrBHaTAtOCUF0stbbjQ0Ak2ihm7IvcnXih60sXtWojjLut+9+ICYgFEpI8n48yn7JLRq27Dihk6ZeYQ7e2qkjn2lTQ7MzYaaOpK4zQZQauwv4mHZ8LCvQkOxzW/yY5pNtPM8w6mNLadMMYZrxjLMYbj/MsTEDZ7R4EmhoGXqpm0fDGhoBr1kLrJ4vKSS445cbbRMJjhoL85EtQgVyqEpVdTbAUnkDjyQs1MDM6ZsAn31WD08aA6St6e1li+0vvzX0Rl59yv9zW7lkVpo65iboseeNIbbtV4TqOWQjdVqq1sat8rptMVq15rna7V88vH/M0MVYpFuQeLdL7Zqo3lkhvPB6JVkfkG31Xz
+	gPrN+4I2tpGvJAwL7+je9xVEGLj7f/2CyQulriHLvNWPeD73r8SwGaI7sLho2jf7C2mhgkBOXQZPyy1urKcdcU3txwnHH9NO8uhCckadCJ8g6oCeBoSxHgNsZ9Mf9RSERPw4oJiSnBiPjvQl5/3xWicyIPup4/e132BOZ91uRNChsOXHWov6RedfMfL9tbkXMVuWKNpNaK19+s3/ogE7xrQYVF4636jVbmTrsNgIs7zvuboMjFLnlAWAQmpiEc1eqA0u+hLe1QYEb7dhv04fOnoFoK3cfX+4qKlX/xqal9DXngiy6wTDK67s6Yu+KZkqpZIh/n/wOecDytORS2s6zefbjMyRbTKCYi2tJpHJmOcnI9tj1l/6JiESPtkhnfxWjHWkCsR3C8pwNKlv6GeG6CM6hvcQeCXnowUpZ3p481G95Ta4eUjtaKZt5Vx7ZpE6MEv2Y7HF/eo4Fyv846WLKQ03D+aBXDyGZq2VeEArvojC88aDIv6YTxFKGL/CaSBHxIVoFa3ttwYXRJ+bf36f8xKOV+yQv1tLCz5h01fHwmhmf4/lAylh/A6W40Bm0AyA7VPe//aAMmOcnyrLiWIVRjbuCo8EESS5rH19TuMjpBI/idgSv7e17BqyW+FWQTGSAP/wKPgECQ2/yFfH6b/wnDug5sYZrZvDwNbwQDqP/NcmvLfJ72X3P4HToFeTjqYa
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?qQJoUNKIuIPsafIZJF1eUTfqXASowBAoPxftF/F5CrHMluLDDA4gKBg7PMi6?=
- =?us-ascii?Q?vSma7WwHApdd1ZemTZWqnFipYiaZ+5cIYLtA550fpTxfL5o0ZQDhEIdRUQkx?=
- =?us-ascii?Q?TKobYxRAkfISzNicVWFJSLPTC+Vj3kfbEA3T0Jrhh8VbZSAcHg2fuC0d8hkN?=
- =?us-ascii?Q?oQi/4HTb5gpR7ThYd4xSqb8EH4Kpj5oUVGI8Sfs0vkC/0oeL6B69xgW/BDNy?=
- =?us-ascii?Q?POlfzjAtDIpBvpSgS9EZVXS+tXG2ba0n2CRkCZ/v/1B74SAtNsi253qu2Nqo?=
- =?us-ascii?Q?9r/tqqqZ66hR13xz61CVNqEVN2tJ6Uh8wcnSRnkQEfptT6cqkVGeIictuAyg?=
- =?us-ascii?Q?qvgW+0mdUy7Nzwoi9Su6sOurG3/3yT5csolyFdqVEe1nxUQG0PpK3/WPxSLr?=
- =?us-ascii?Q?/nIVHJCbZnujpOP/YEbXPTL3TmGmIzh5vSiYEgjI9JYZELdUYYT9I+vm0QVY?=
- =?us-ascii?Q?FE/H3nRT2tK5k+MGT2q/1WMFN9b1Wd7UQyinnijs1fa66fJ2p0eGxzAu4Mdt?=
- =?us-ascii?Q?vvB0SN9QWr5y9qgDR9KNeidMWhDN0QqLLlUst8jdvdQqhwWpVSTt2GKU8VXU?=
- =?us-ascii?Q?cKcpNi4xnkYOuMQQlq/aTeMd7pIO2bHD/oOnh7AXsgnjNNWDRpVc70QK9Zob?=
- =?us-ascii?Q?r2/M9miCMMEcyMw3f661ZrY8Q1CCPZNGtIIBEoPxfsfKMg6UQokq9ZIQllxf?=
- =?us-ascii?Q?HH152Bc1kgna7LjW4s3OAdNG+5uOIYJN+mL1tWxV9tSIxaK6iWPPhGK6LjkS?=
- =?us-ascii?Q?Tll9EoULku0q3qc9B1TdrPLd0N74vSkHtAOwuis5kmL6OYHMdzFyHPxym9nP?=
- =?us-ascii?Q?ELKzXaD3IvhSpDkHpiFCztjmz/ayfnLe27nK92F13tzgMuibkfymFNDqL5Mp?=
- =?us-ascii?Q?J3g9X6MyzZlRdKhVe9KpKY9NO31uz+I9JNbiCyFKOOSsn1HDpPbXrIaBfcSA?=
- =?us-ascii?Q?/qkhj/Pp/SCTVeRtvTuI3AjJ66Lq6vJ64eGHtTkl6DPzjCQbFyXkE7x9j/Q0?=
- =?us-ascii?Q?COVWhxPRTes3FdvF3esi3xTWPM7OFZoJIWJh13jg+9woIo5RbqJNEXU5bcLu?=
- =?us-ascii?Q?Tq/tUGHn9BrTfEmNvEkinBLT2bsua33ddSuyoXmQxQvx6ddVn016/OigKZOY?=
- =?us-ascii?Q?OkbLX2eLcr34S7DhAhyU0TEvSHCOr7YjmYYpp7gEhF7MzaJaUDO8jeWcgRTZ?=
- =?us-ascii?Q?zcRBqFTmJ7t/3tqnABZqApGchGULw9vhccwMJ6czEsokieyDyFFAcRNzu6c?=
+	=?us-ascii?Q?Oysl8BxOn2rY0Dcm5/dZCQ0TAQ8cuvbA/qd0Voq8b4N7cZoTVAqDSZRWRjNE?=
+ =?us-ascii?Q?2Hs0sSxRmSZRz4dQdGKSjosH2TZVGrgES50nembvk4rxXIKOuk/Kd5jqHCBD?=
+ =?us-ascii?Q?PIHQJTbzg7nAFS08vKcGw3Jt3x9RPVrfIc8SxrYVp9qu7V2bz2H/ZdW0CrXg?=
+ =?us-ascii?Q?TqHi4pl3v/zwrTzDnGD2NCSxTyr6YiDqRpbKo5fuyZbXFzimrYHzzahAyPym?=
+ =?us-ascii?Q?XlPQfkq5Pyo+N4QVz/MPxraoAI0dg81654/vjDrxuY7PnLEwnzINctgdLYd/?=
+ =?us-ascii?Q?Qx5iuPft3HVReHkFVsIddGPDL6DyNKRXfLainzdwwMu2mI91PunfjRjajRkC?=
+ =?us-ascii?Q?sNKIVrr+Ew+GFhDjGaYUNCO+Ch94xDVZjjH/oW5RBA0OA6pu9Vq37+krL7el?=
+ =?us-ascii?Q?3RQP/DKRDOnQ02a2ZoRig/uP8QPN8syXuu9rUNynmKMOMSoR8PZMHyYHGiEv?=
+ =?us-ascii?Q?l2mihjgAdSYG2i5CRs/HQxbGJl3YFcnCToYa5CrnnS3C7O909Z72QUKhbGzo?=
+ =?us-ascii?Q?rgYAq2W5CDKuUrnxNCuaU1DQoWAyVn7ihdUcKQTKynNopIwuQvWoqxC/so2q?=
+ =?us-ascii?Q?f52jiePHNIEX7X9ZXXHu0XhCD8M+NysWBWu4q4zotFCyJZZ2gCSgjWfI6qpF?=
+ =?us-ascii?Q?7laaB2hdakayGdSkF5EiJ53sAojEDfrdL9CpC3Gb9shCuthoLW4il9Lg6BFd?=
+ =?us-ascii?Q?2AhcSq5qy17p4J5DmOr9WGU30XJISo7jjEsov+1kso9IDZmUAKO8AZryY000?=
+ =?us-ascii?Q?TlEItRHp8Oi2E0GcO0bmEUfJvhTLAAq+UTU/OmZ+vp4J6q7RfG7hUVHCl4mW?=
+ =?us-ascii?Q?Uuh924alCOPVmxSYiDYAW3dtJqq2iFwpKgMlNhNMyHt7KhvP5N7/oHOk4TXR?=
+ =?us-ascii?Q?9XxOJNx2P0MH9cS7OmNnqurSZtwsrOaQCqho5/nN0pUZtRc2OICGQybtQ/vn?=
+ =?us-ascii?Q?bEyOx4m1cHhILSbuJlSjtYStTA84JExDHJllzwCxfNm7alW/ijeiEHwXemZt?=
+ =?us-ascii?Q?Pn13tlAjIEOSUAYaeywgFoFZFGLFVFs7C93QYg2WbS3yFtEDDTZAMC/YF6Nr?=
+ =?us-ascii?Q?xZ6E13DeYLvdTJRQ2bjciWIXbIrLAIhAWfypk2VgBggeBH0Ew57Dfv2khfy+?=
+ =?us-ascii?Q?H5JRTpp36JJgfk+MbsHn4o33gkNLtE/gPEIGvVECdLALpn3unbBvnLRGzLjh?=
+ =?us-ascii?Q?EPPCYxYIBshxAN876N1X7q9gsg4PFKfUvKwyuEtd/Rmr0vmTa0JugWDfyBQ?=
  =?us-ascii?Q?=3D?=
 X-OriginatorOrg: sct-15-20-4755-11-msonline-outlook-3208f.templateTenant
-X-MS-Exchange-CrossTenant-Network-Message-Id: f83b2aff-e932-4cdf-479a-08dc5302a736
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0647b671-9b50-47d2-6444-08dc5302ab69
 X-MS-Exchange-CrossTenant-AuthSource: TY0PR06MB5611.apcprd06.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Apr 2024 10:50:04.3251
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Apr 2024 10:50:11.3923
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
@@ -114,142 +114,390 @@ X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
 	00000000-0000-0000-0000-000000000000
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: KL1PR06MB6964
 
-Add the HX83102j touchscreen device tree bindings documents.
-HX83102j is a Himax TDDI touchscreen controller.
-It's power sequence should be bound with a lcm driver, thus it
-needs to be a panel follower. Others are the same as normal SPI
-touchscreen controller.
+Add DRM panel follower[1] to trigger suspend/resume due to TDDI nature,
+TP need to follow panel power sequence.
+
+[1]:
+https://lore.kernel.org/all/20230727171750.633410-1-dianders@chromium.org
 
 Signed-off-by: Allen_Lin <allencl_lin@hotmail.com>
 ---
- .../input/touchscreen/himax,hx83102j.yaml     | 100 ++++++++++++++++++
- MAINTAINERS                                   |   6 ++
- 2 files changed, 106 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/input/touchscreen/himax,hx83102j.yaml
+ drivers/hid/hid-himax-83102j.c | 289 +++++++++++++++++++++++++++++++--
+ drivers/hid/hid-himax-83102j.h |  10 ++
+ 2 files changed, 283 insertions(+), 16 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/input/touchscreen/himax,hx83102j.yaml b/Documentation/devicetree/bindings/input/touchscreen/himax,hx83102j.yaml
-new file mode 100644
-index 000000000000..fe79129f704a
---- /dev/null
-+++ b/Documentation/devicetree/bindings/input/touchscreen/himax,hx83102j.yaml
-@@ -0,0 +1,100 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/input/touchscreen/himax,hx83102j.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Himax hx83102j touchscreen
-+
-+maintainers:
-+  - Allen Lin <allencl_lin@hotmail.com>
-+
-+description:
-+  This Himax hx83102j touchscreen uses the spi protocol.
-+
-+allOf:
-+  - $ref: /schemas/input/touchscreen/touchscreen.yaml#
-+  - $ref: /schemas/spi/spi-peripheral-props.yaml#
-+
-+properties:
-+  compatible:
-+    const: himax,hx83102j
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  reset-gpios:
-+    maxItems: 1
-+
-+  vccd-supply:
-+    description: A phandle for the regualtor supplying IO power.
-+ 
-+  vsn-supply:
-+    description: Negative supply regulator.
-+ 
-+  vsp-supply:
-+    description: Positive supply regulator.
-+
-+  ddreset-gpios:
-+    description: A phandle of gpio for display reset controlled by the LCD driver.
-+      This is the master reset, if this reset is triggered, the TP reset will 
-+      also be triggered.
-+  
-+  spi-cpha: true
-+
-+  spi-cpol: true
-+
-+  spi-max-frequency: true
-+
-+  panel: true
-+
-+  himax,firmware-name:
-+    $ref: /schemas/types.yaml#/definitions/string
-+    description:
-+      Specify the file name for firmware loading.
-+
-+  himax,pid:
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+    description:
-+      PID for HID device, used to validate firmware.
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - reset-gpios
-+  - panel
-+  - vccd-supply
-+  - vsn-supply
-+  - vsp-supply
-+  - ddreset-gpios
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/gpio/gpio.h>
-+    #include <dt-bindings/interrupt-controller/irq.h>
-+    spi {
-+      #address-cells = <1>;
-+      #size-cells = <0>;
-+      ap_ts: touchscreen@0 {
-+        compatible = "himax,hx83102j";
-+        reg = <0>;
-+        pinctrl-names = "default";
-+        pinctrl-0 = <&touch_int0 &touch_reset>;
-+        reset-gpios = <&gpio1 8 GPIO_ACTIVE_LOW>;
-+        spi-cpha;
-+        spi-cpol;
-+        interrupt-parent = <&gpio1>;
-+        interrupts = <7 IRQ_TYPE_LEVEL_LOW>;
-+        panel = <&panel>;
-+        vccd-supply = <&regulator>;
-+        vsn-supply = <&regulator>;
-+        vsp-supply = <&regulator>;
-+        ddreset-gpios = <&gpio1>;
-+      };
-+    };
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 43b39956694a..aa51c60fd66d 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -9669,6 +9669,12 @@ L:	linux-kernel@vger.kernel.org
- S:	Maintained
- F:	drivers/misc/hisi_hikey_usb.c
+diff --git a/drivers/hid/hid-himax-83102j.c b/drivers/hid/hid-himax-83102j.c
+index aa8d0b6677bb..0a2be071a6c4 100644
+--- a/drivers/hid/hid-himax-83102j.c
++++ b/drivers/hid/hid-himax-83102j.c
+@@ -8,6 +8,7 @@
+ #include "hid-himax-83102j.h"
  
-+HIMAX HID HX83102J TOUCHSCREEN
-+M:	Allen Lin <allencl_lin@hotmail.com>
-+L:	linux-input@vger.kernel.org
-+S:	Maintained
-+F:	Documentation/devicetree/bindings/input/touchscreen/himax,hx83102j.yaml
+ static int himax_chip_init(struct himax_ts_data *ts);
++static int himax_platform_init(struct himax_ts_data *ts);
+ static void himax_ts_work(struct himax_ts_data *ts);
+ 
+ /**
+@@ -1135,7 +1136,6 @@ static int himax_hid_probe(struct himax_ts_data *ts)
+ 
+ 	hid = ts->hid;
+ 	if (hid) {
+-		dev_warn(ts->dev, "%s: hid device already exist!\n", __func__);
+ 		hid_destroy_device(hid);
+ 		hid = NULL;
+ 	}
+@@ -1443,6 +1443,151 @@ static int himax_load_config(struct himax_ts_data *ts)
+ 	return -EINVAL;
+ }
+ 
++/**
++ * himax_ap_notify_fw_suspend() - Notify the FW of AP suspend status
++ * @ts: Himax touch screen data
++ * @suspend: Suspend status, true for suspend, false for resume
++ *
++ * This function is used to notify the FW of AP suspend status. It will write
++ * the suspend status to the DSRAM and read the status back to check if the
++ * status is written successfully. If IC is powered off when suspend, this
++ * function will only be used when resume.
++ *
++ * Return: None
++ */
++static void himax_ap_notify_fw_suspend(struct himax_ts_data *ts, bool suspend)
++{
++	int ret;
++	u32 retry_cnt;
++	const u32 retry_limit = 10;
++	union himax_dword_data rdata, data;
 +
- HIMAX HX83112B TOUCHSCREEN SUPPORT
- M:	Job Noorman <job@noorman.info>
- L:	linux-input@vger.kernel.org
++	if (suspend)
++		data.dword = cpu_to_le32(HIMAX_DSRAM_DATA_AP_NOTIFY_FW_SUSPEND);
++	else
++		data.dword = cpu_to_le32(HIMAX_DSRAM_DATA_AP_NOTIFY_FW_RESUME);
++
++	for (retry_cnt = 0; retry_cnt < retry_limit; retry_cnt++) {
++		ret = himax_mcu_register_write(ts, HIMAX_DSRAM_ADDR_AP_NOTIFY_FW_SUSPEND,
++					       data.byte, 4);
++		if (ret) {
++			dev_err(ts->dev, "%s: write suspend status failed!\n", __func__);
++			return;
++		}
++		usleep_range(1000, 1100);
++		ret = himax_mcu_register_read(ts, HIMAX_DSRAM_ADDR_AP_NOTIFY_FW_SUSPEND,
++					      rdata.byte, 4);
++		if (ret) {
++			dev_err(ts->dev, "%s: read suspend status failed!\n", __func__);
++			return;
++		}
++
++		if (rdata.dword == data.dword)
++			break;
++	}
++}
++
++/**
++ * himax_resume_proc() - Chip resume procedure of touch screen
++ * @ts: Himax touch screen data
++ *
++ * This function is used to resume the touch screen. It will call the
++ * himax_ap_notify_fw_suspend() to notify the FW of AP resume status.
++ *
++ * Return: None
++ */
++static void himax_resume_proc(struct himax_ts_data *ts)
++{
++	himax_ap_notify_fw_suspend(ts, false);
++}
++
++/**
++ * himax_chip_suspend() - Suspend the touch screen
++ * @ts: Himax touch screen data
++ *
++ * This function is used to suspend the touch screen. It will disable the
++ * interrupt and set the reset pin to activate state. Remove the HID at
++ * the end, to prevent stuck finger when resume.
++ *
++ * Return: 0 on success, negative error code on failure
++ */
++static int himax_chip_suspend(struct himax_ts_data *ts)
++{
++	himax_int_enable(ts, false);
++	gpiod_set_value(ts->pdata.gpiod_rst, 1);
++	himax_hid_remove(ts);
++
++	return 0;
++}
++
++/**
++ * himax_chip_resume() - Setup flags, I/O and resume
++ * @ts: Himax touch screen data
++ *
++ * This function is used to resume the touch screen. It will set the resume
++ * success flag to false, and disable reset pin. Then call the himax_resume_proc()
++ * to process detailed resume procedure.
++ *
++ * Return: 0 on success, negative error code on failure
++ */
++static int himax_chip_resume(struct himax_ts_data *ts)
++{
++	gpiod_set_value(ts->pdata.gpiod_rst, 0);
++	himax_resume_proc(ts);
++	himax_hid_probe(ts);
++	himax_int_enable(ts, true);
++
++	return 0;
++}
++
++/**
++ * himax_suspend() - Suspend the touch screen
++ * @dev: Device structure
++ *
++ * Wrapper function for himax_chip_suspend() to be called by the PM or
++ * the DRM panel notifier.
++ *
++ * Return: 0 on success, negative error code on failure
++ */
++static int himax_suspend(struct device *dev)
++{
++	struct himax_ts_data *ts = dev_get_drvdata(dev);
++
++	if (!ts->initialized) {
++		dev_err(ts->dev, "%s: init not ready, skip!\n", __func__);
++		return -ECANCELED;
++	}
++	himax_chip_suspend(ts);
++
++	return 0;
++}
++
++/**
++ * himax_resume() - Resume the touch screen
++ * @dev: Device structure
++ *
++ * Wrapper function for himax_chip_resume() to be called by the PM or
++ * the DRM panel notifier.
++ *
++ * Return: 0 on success, negative error code on failure
++ */
++static int himax_resume(struct device *dev)
++{
++	int ret;
++	struct himax_ts_data *ts = dev_get_drvdata(dev);
++
++	if (!ts->initialized) {
++		if (himax_chip_init(ts))
++			return -ECANCELED;
++	}
++
++	ret = himax_chip_resume(ts);
++	if (ret < 0)
++		dev_err(ts->dev, "%s: resume failed!\n", __func__);
++
++	return ret;
++}
++
+ /**
+  * himax_chip_init() - Initialize the Himax touch screen
+  * @ts: Himax touch screen data
+@@ -1473,6 +1618,130 @@ static int himax_chip_init(struct himax_ts_data *ts)
+ 	return 0;
+ }
+ 
++/**
++ * __himax_initial_power_up() - Initial power up of the Himax touch screen
++ * @ts: Himax touch screen data
++ *
++ * This function is used to perform the initial power up sequence of the Himax
++ * touch screen for DRM panel notifier.
++ *
++ * Return: 0 on success, negative error code on failure
++ */
++static int __himax_initial_power_up(struct himax_ts_data *ts)
++{
++	int ret;
++
++	ret = himax_platform_init(ts);
++	if (ret) {
++		dev_err(ts->dev, "%s: platform init failed\n", __func__);
++		return ret;
++	}
++
++	ret = hx83102j_chip_detect(ts);
++	if (ret) {
++		dev_err(ts->dev, "%s: IC detect failed\n", __func__);
++		return ret;
++	}
++
++	ret = himax_chip_init(ts);
++	if (ret) {
++		dev_err(ts->dev, "%s: chip init failed\n", __func__);
++		return ret;
++	}
++	ts->probe_finish = true;
++
++	return 0;
++}
++
++/**
++ * himax_panel_prepared() - Panel prepared callback
++ * @follower: DRM panel follower
++ *
++ * This function is called when the panel is prepared. It will call the
++ * __himax_initial_power_up() when the probe is not finished which means
++ * the first time driver start. Otherwise, it will call the himax_resume()
++ * to performed resume process.
++ *
++ * Return: 0 on success, negative error code on failure
++ */
++static int himax_panel_prepared(struct drm_panel_follower *follower)
++{
++	struct himax_platform_data *pdata =
++		container_of(follower, struct himax_platform_data, panel_follower);
++	struct himax_ts_data *ts = container_of(pdata, struct himax_ts_data, pdata);
++
++	if (!ts->probe_finish)
++		return __himax_initial_power_up(ts);
++	else
++		return himax_resume(ts->dev);
++}
++
++/**
++ * himax_panel_unpreparing() - Panel unpreparing callback
++ * @follower: DRM panel follower
++ *
++ * This function is called when the panel is unpreparing. It will call the
++ * himax_suspend() to perform the suspend process.
++ *
++ * Return: 0 on success, negative error code on failure
++ */
++static int himax_panel_unpreparing(struct drm_panel_follower *follower)
++{
++	struct himax_platform_data *pdata =
++		container_of(follower, struct himax_platform_data, panel_follower);
++	struct himax_ts_data *ts = container_of(pdata, struct himax_ts_data, pdata);
++
++	return himax_suspend(ts->dev);
++}
++
++/* Panel follower function table */
++static const struct drm_panel_follower_funcs himax_panel_follower_funcs = {
++	.panel_prepared = himax_panel_prepared,
++	.panel_unpreparing = himax_panel_unpreparing,
++};
++
++/**
++ * himax_register_panel_follower() - Register the panel follower
++ * @ts: Himax touch screen data
++ *
++ * This function is used to register the panel follower. It will set the
++ * pdata.is_panel_follower to true and register the panel follower.
++ *
++ * Return: 0 on success, negative error code on failure
++ */
++static int himax_register_panel_follower(struct himax_ts_data *ts)
++{
++	struct device *dev = ts->dev;
++
++	ts->pdata.is_panel_follower = true;
++	ts->pdata.panel_follower.funcs = &himax_panel_follower_funcs;
++
++	if (device_can_wakeup(dev)) {
++		dev_warn(ts->dev, "Can't wakeup if following panel");
++		device_set_wakeup_capable(dev, false);
++	}
++
++	return drm_panel_add_follower(dev, &ts->pdata.panel_follower);
++}
++
++/**
++ * himax_initial_power_up() - Initial power up of the Himax touch screen
++ * @ts: Himax touch screen data
++ *
++ * This function checks if the device is a panel follower and calls
++ * himax_register_panel_follower() if it is. Otherwise, it calls
++ * __himax_initial_power_up().
++ *
++ * Return: 0 on success, negative error code on failure
++ */
++static int himax_initial_power_up(struct himax_ts_data *ts)
++{
++	if (drm_is_panel_follower(ts->dev))
++		return himax_register_panel_follower(ts);
++	else
++		return __himax_initial_power_up(ts);
++}
++
+ /**
+  * himax_platform_deinit() - Deinitialize the platform related settings
+  * @ts: Pointer to the himax_ts_data structure
+@@ -1588,25 +1857,13 @@ static int himax_spi_drv_probe(struct spi_device *spi)
+ 	ts->initialized = false;
+ 	ts->ic_boot_done = false;
+ 
+-	ret = himax_platform_init(ts);
+-	if (ret) {
+-		dev_err(ts->dev, "%s: platform init failed\n", __func__);
+-		return ret;
+-	}
+-
+-	ret = hx83102j_chip_detect(ts);
++	ret = himax_initial_power_up(ts);
+ 	if (ret) {
+-		dev_err(ts->dev, "%s: IC detect failed\n", __func__);
+-		return ret;
++		dev_err(ts->dev, "%s: initial power up failed\n", __func__);
++		return -ENODEV;
+ 	}
+ 
+-	ret = himax_chip_init(ts);
+-	if (ret < 0)
+-		return ret;
+-	ts->probe_finish = true;
+-
+ 	return ret;
+-	himax_platform_deinit(ts);
+ }
+ 
+ /**
+diff --git a/drivers/hid/hid-himax-83102j.h b/drivers/hid/hid-himax-83102j.h
+index 1b8e8904e9ab..eef55c45b1d4 100644
+--- a/drivers/hid/hid-himax-83102j.h
++++ b/drivers/hid/hid-himax-83102j.h
+@@ -9,6 +9,7 @@
+ #define __HID_HIMAX_83102J_H__
+ // #define HX_PWR_CONFIG
+ 
++#include <drm/drm_panel.h>
+ #include <linux/delay.h>
+ #include <linux/hid.h>
+ #include <linux/interrupt.h>
+@@ -69,6 +70,11 @@
+ #define HIMAX_AHB_CMD_INCR4				0x10
+ #define HIMAX_AHB_CMD_INCR4_ADD_4_BYTE			0x01
+ #define HIMAX_AHB_CMD_LEAVE_SAFE_MODE			0x0000
++/* DSRAM flag addresses */
++#define HIMAX_DSRAM_ADDR_AP_NOTIFY_FW_SUSPEND		0x10007fd0
++/* dsram flag data */
++#define HIMAX_DSRAM_DATA_AP_NOTIFY_FW_SUSPEND		0xa55aa55a
++#define HIMAX_DSRAM_DATA_AP_NOTIFY_FW_RESUME		0x00000000
+ /* hx83102j-specific register/dsram flags/data */
+ #define HIMAX_HX83102J_REG_ADDR_TCON_RST		0x80020004
+ /* hardware register addresses */
+@@ -219,11 +225,15 @@ struct himax_hid_desc {
+ 
+ /**
+  * struct himax_platform_data - Platform data holder
++ * @is_panel_follower: Is panel follower enabled
++ * @panel_follower: DRM panel follower
+  * @gpiod_rst: GPIO reset
+  *
+  * This structure is used to hold the platform related data.
+  */
+ struct himax_platform_data {
++	bool is_panel_follower;
++	struct drm_panel_follower panel_follower;
+ 	struct gpio_desc *gpiod_rst;
+ };
+ 
 -- 
 2.34.1
 
