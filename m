@@ -1,52 +1,53 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64E0D15EFB7
-	for <linux-kernel@vger.kernel.org>; Tue,  2 Apr 2024 22:11:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAAF415F32D
+	for <linux-kernel@vger.kernel.org>; Tue,  2 Apr 2024 22:11:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712095901; cv=none; b=T8Hp8h2FD2prrR4+zZFkKlmmMQi6Oe/u7nCvHXayz6ZoZVEELnjt9tM692fza2JaVbdD1Qr8djO6rS5WUQaQTRHIOpEdKxLFH1WlQa+BpMhHeIsJa/ONnqzcjMjpYDvPWDB3e8yAozUoVFaw6759QQCbVD10y+7RgytBkEyB5Bo=
+	t=1712095902; cv=none; b=Oezi26pN+FypG3Dqr13ZH4XIKNcdMH9F7TUDmbQ93F0VG/SgJQ4+ELykDN1oKm6iSUfy4wunWymr3xd6vIl+ngi+XTg7vQk4LV18W1dHxYvXK+A916Zm52LbrvAtG8gMZpMK6SH2aFlBlhNfo3ESUIqqd7Q/saA9ShdrVz0mcxA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712095901; c=relaxed/simple;
-	bh=BL7aciVtdhyBPsYEVBpNHekCxnl1nHBbTv2QZkJVau0=;
+	s=arc-20240116; t=1712095902; c=relaxed/simple;
+	bh=qgbf7wzyZyP2i2kvRkavpANgVDXSmqKEab0lXkm1WnQ=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=nV04oZr2CJhBDsl500KCPTU+Sqk/ZSC5H6+7vfY86q5vj7DUWp1wTCYhvVn8VYyLAC4vGkXuEUABeHUCXmyQ1M+xfc//JqSTCg6TlqFKEMIhkWdKjsA7yUGDTKiAoFGjMvn8FFBVkw96Xl6j5P7PnQI4a7z8duThkmdKx95hquA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=MgmJroNo; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=nd11a3Qd; arc=none smtp.client-ip=193.142.43.55
+	 MIME-Version; b=FsKApNnaNDhXGEIJBS8BHdX/JKPE46nChZHseKdjtLglr751XYBPdcTyf7phVvlRi1I/DGp13PqKm3A7Bw8/dksdzF3FAcYWTo+1T0fJOOgLQodWnUlLu/hr5R+u8XqnWdiESHH/GYrIIUF0stuZtytthdP+amK1cG8C7OkRNfg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=vIVPjn+w; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=XpvPlopo; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="MgmJroNo";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="nd11a3Qd"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="vIVPjn+w";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="XpvPlopo"
 From: John Ogness <john.ogness@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1712095896;
+	s=2020; t=1712095899;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=OvqMC7tvfcOdwAxpMAcwYIY/7Ftke4WwpmbtwMe36rM=;
-	b=MgmJroNoSgntuBNnk/JNtvXlfv3FMAZUrKbSLeSvFPZzWLOpd/17SGZI7TuNfcNCo1lfFk
-	KKTqsCxyG81tjTZho05NXObJ3yN/xVUK9OZ8hC7eRzlS9NvMcaAUFqn/fNTdr2bC5/RzkA
-	SDltAEJv2/iTa09JCyR4cgkzCmqVugogoiCvt8SWnx0f1JIVHswHcrkOeA2u+mEKruyb04
-	5zVB/7rx6opKg4F9CM6wLTZA2WqQ7/BIbjKHWYqPm303bpKG07DHgMFWq8B1n6wTNdCTQh
-	EsQsUmRmp2gWp5rxltXlvyG23pywBY3viPe+9iElbnXzCLJwnsChZyahxEEihQ==
+	bh=0GzrUUzQwt9A0JfUhizcLMvUJMEtY0MSYaFGPPBVIb4=;
+	b=vIVPjn+wUo/v3OmdzfNEc8Ag3X5youcZKjz9r8Y/LjVq3m4Y7i3BvL4PRSZO4yo6UL+Ixh
+	m39MjS7PH+iWeaL/GePtooNLcgMtMB2QkkkIC8FcutCOP8VUPiirloEzxDSTyrKPUsvkr0
+	y5tZM0YZLt85/xifyNHMjqoEJMKYrWVG98I67LUC3lrFysZXDqnFH4EC80GlLCqG4/oF56
+	KZ/HG/U4uT0RePpCAQicDsNOjODdQj0H7urnHscZYaO6rAubFNk83NmFiJ4VzzyEWehxIo
+	tSOTH1/7ybywI3VhYQ6PQES4xJBB4hgkEpqabkshz88Y7kPAvAs5BzUDIzDVlQ==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1712095896;
+	s=2020e; t=1712095899;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=OvqMC7tvfcOdwAxpMAcwYIY/7Ftke4WwpmbtwMe36rM=;
-	b=nd11a3QdIaOP1bHTF1XOOKFa0cyJUpm3KinO1YHj6UEo8NmZGcSBbyZ3vO5D8+on5l2Bcx
-	3VkcScatHskklcCw==
+	bh=0GzrUUzQwt9A0JfUhizcLMvUJMEtY0MSYaFGPPBVIb4=;
+	b=XpvPlopog8JXD/+Q7a622mIt9ySj1HKTo8ih2revZoWzg48eXZq2jshfDqDkYpa58MaF1b
+	eY+SebAjyO8884AQ==
 To: Petr Mladek <pmladek@suse.com>
 Cc: Sergey Senozhatsky <senozhatsky@chromium.org>,
 	Steven Rostedt <rostedt@goodmis.org>,
 	Thomas Gleixner <tglx@linutronix.de>,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH printk v4 07/27] printk: nbcon: Use driver synchronization while registering
-Date: Wed,  3 Apr 2024 00:17:09 +0206
-Message-Id: <20240402221129.2613843-8-john.ogness@linutronix.de>
+	linux-kernel@vger.kernel.org,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [PATCH printk v4 10/27] printk: nbcon: Do not rely on proxy headers
+Date: Wed,  3 Apr 2024 00:17:12 +0206
+Message-Id: <20240402221129.2613843-11-john.ogness@linutronix.de>
 In-Reply-To: <20240402221129.2613843-1-john.ogness@linutronix.de>
 References: <20240402221129.2613843-1-john.ogness@linutronix.de>
 Precedence: bulk
@@ -57,69 +58,92 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Depending on if an nbcon console is registered, a driver may
-handle its internal locking differently. If a driver is holding
-its internal lock while the nbcon console is registered, there
-may be a risk that two different contexts access the hardware
-simultaneously without synchronization. (For example, if the
-printk subsystem invokes atomic printing while another driver
-context acquired the internal lock without considering the
-atomic console.)
+The headers kernel.h, serial_core.h, and console.h allow for the
+definitions of many types and functions from other headers.
+Rather than relying on these as proxy headers, explicitly
+include all headers providing needed definitions. Also sort the
+list alphabetically to be able to easily detect duplicates.
 
-Use the driver synchronization while a registering nbcon console
-transitions to being registered. This guarantees that if the
-driver acquires its internal lock when the nbcon console was not
-registered, it will remain unregistered until that context
-releases the lock.
-
+Suggested-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Signed-off-by: John Ogness <john.ogness@linutronix.de>
 ---
- kernel/printk/printk.c | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
+ kernel/printk/internal.h          |  8 ++++++--
+ kernel/printk/nbcon.c             | 12 +++++++++++-
+ kernel/printk/printk_ringbuffer.h |  2 ++
+ 3 files changed, 19 insertions(+), 3 deletions(-)
 
-diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c
-index b7e52b3f3e96..cd32648372a0 100644
---- a/kernel/printk/printk.c
-+++ b/kernel/printk/printk.c
-@@ -3448,6 +3448,7 @@ void register_console(struct console *newcon)
- 	struct console *con;
- 	bool bootcon_registered = false;
- 	bool realcon_registered = false;
-+	unsigned long flags;
- 	int err;
+diff --git a/kernel/printk/internal.h b/kernel/printk/internal.h
+index 4e0edcb3c311..c040fc8f1fd9 100644
+--- a/kernel/printk/internal.h
++++ b/kernel/printk/internal.h
+@@ -2,11 +2,12 @@
+ /*
+  * internal.h - printk internal definitions
+  */
+-#include <linux/percpu.h>
+ #include <linux/console.h>
+-#include "printk_ringbuffer.h"
++#include <linux/percpu.h>
++#include <linux/types.h>
  
- 	console_list_lock();
-@@ -3539,6 +3540,19 @@ void register_console(struct console *newcon)
- 		newcon->seq = 0;
- 	}
+ #if defined(CONFIG_PRINTK) && defined(CONFIG_SYSCTL)
++struct ctl_table;
+ void __init printk_sysctl_init(void);
+ int devkmsg_sysctl_set_loglvl(struct ctl_table *table, int write,
+ 			      void *buffer, size_t *lenp, loff_t *ppos);
+@@ -43,6 +44,9 @@ enum printk_info_flags {
+ 	LOG_CONT	= 8,	/* text is a fragment of a continuation line */
+ };
  
-+	/*
-+	 * If another context is actively using the hardware of this new
-+	 * console, it will not be aware of the nbcon synchronization. This
-+	 * is a risk that two contexts could access the hardware
-+	 * simultaneously if this new console is used for atomic printing
-+	 * and the other context is still using the hardware.
-+	 *
-+	 * Use the driver synchronization to ensure that the hardware is not
-+	 * in use while this new console transitions to being registered.
-+	 */
-+	if ((newcon->flags & CON_NBCON) && newcon->write_atomic)
-+		newcon->device_lock(newcon, &flags);
++struct printk_ringbuffer;
++struct dev_printk_info;
 +
- 	/*
- 	 * Put this console in the list - keep the
- 	 * preferred driver at the head of the list.
-@@ -3563,6 +3577,10 @@ void register_console(struct console *newcon)
- 	 * register_console() completes.
- 	 */
+ extern struct printk_ringbuffer *prb;
  
-+	/* This new console is now registered. */
-+	if ((newcon->flags & CON_NBCON) && newcon->write_atomic)
-+		newcon->device_unlock(newcon, flags);
-+
- 	console_sysfs_notify();
+ __printf(4, 0)
+diff --git a/kernel/printk/nbcon.c b/kernel/printk/nbcon.c
+index 38328cf0fd5c..1de6062d4ce3 100644
+--- a/kernel/printk/nbcon.c
++++ b/kernel/printk/nbcon.c
+@@ -2,14 +2,24 @@
+ // Copyright (C) 2022 Linutronix GmbH, John Ogness
+ // Copyright (C) 2022 Intel, Thomas Gleixner
  
- 	/*
+-#include <linux/kernel.h>
++#include <linux/atomic.h>
+ #include <linux/bug.h>
+ #include <linux/console.h>
+ #include <linux/delay.h>
++#include <linux/errno.h>
+ #include <linux/export.h>
++#include <linux/init.h>
++#include <linux/irqflags.h>
++#include <linux/minmax.h>
++#include <linux/percpu.h>
++#include <linux/preempt.h>
+ #include <linux/slab.h>
++#include <linux/smp.h>
++#include <linux/stddef.h>
+ #include <linux/string.h>
++#include <linux/types.h>
+ #include "internal.h"
++#include "printk_ringbuffer.h"
+ /*
+  * Printk console printing implementation for consoles which does not depend
+  * on the legacy style console_lock mechanism.
+diff --git a/kernel/printk/printk_ringbuffer.h b/kernel/printk/printk_ringbuffer.h
+index 52626d0f1fa3..bd2a892deac1 100644
+--- a/kernel/printk/printk_ringbuffer.h
++++ b/kernel/printk/printk_ringbuffer.h
+@@ -5,6 +5,8 @@
+ 
+ #include <linux/atomic.h>
+ #include <linux/dev_printk.h>
++#include <linux/stddef.h>
++#include <linux/types.h>
+ 
+ /*
+  * Meta information about each stored message.
 -- 
 2.39.2
 
