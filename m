@@ -1,2191 +1,1120 @@
-Received: from APC01-PSA-obe.outbound.protection.outlook.com (mail-psaapc01olkn2017.outbound.protection.outlook.com [40.92.52.17])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 008EA69979;
-	Tue,  2 Apr 2024 10:50:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.52.17
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712055024; cv=fail; b=e5TZPDPbrPB/eQKI3525LPXJNXwmW0sEE23vxNpguRjzpYh7k2Sb4FSqcCdDZFVUtjh+975KQf/6PgtJEMfiauLqMa+CMxZmanVJg1+MkjaddMDyD+Q1QUdFwPJiSFXDbIJtHwx8DhPOAPioZghT8e8JupZnKbepEpgGiIzzQtA=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712055024; c=relaxed/simple;
-	bh=edDCafLcLl65gFMDXKfX5S4Fja1pk5kgNIJI7XXQPTc=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=tnDjGcLwlODb//R9cgSRiQKM60Me8VfJzmROR4yow0S3AXHglEegDtUuAiGdspkszZQvoJBd9TzYtmHSmzDYRPZ5CCB7GYeowY+EH7jr27xEyc1tAzpBcs96ZCfj7LLgaQ3Q1x559Nn8+NrhMdALYPiaYg2QT/+Uo7MqUmW7ZoQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hotmail.com; spf=pass smtp.mailfrom=hotmail.com; dkim=pass (2048-bit key) header.d=hotmail.com header.i=@hotmail.com header.b=alODJ22B; arc=fail smtp.client-ip=40.92.52.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hotmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99C775F873;
+	Tue,  2 Apr 2024 10:51:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.54
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1712055093; cv=none; b=JPMZSH/lA6MWGWhABEAzv+RbpdwH38FpoCElXgOHz1miEZjyYY537Znhwn3eC+zhq6VT6/NgMxzOg/TfAdDMjLZpWDjIxHijexN3ZNJom+ohQwTcLwfeCzH7QRl1bAo2UOHR9Mhl2KcEU/93Q+lbIjyJj2sc6bXID/tLzSaCNRs=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1712055093; c=relaxed/simple;
+	bh=QRObyKBYDLpvGf4SkVcB1YY26VA1G94YGJpzm6GNEfQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=PmrJiW/AsYTbQr3cbWhkAHDGjArW/ljFZM1+f5Zp3hKP5s3us8L2KdoAH9CKltuU6H4dCgEi/Al6oWtoLsbXC5INxyE2MTeoF6n2xe7tztuHkFXpbqdjb65RYGJVfgf/Oo85UUobyjPd0K1/SkS58/FJhY3ckvUYSvaG4sC00Is=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fSTsAQW3; arc=none smtp.client-ip=209.85.208.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=hotmail.com header.i=@hotmail.com header.b="alODJ22B"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=OZzYbzpSnQXbLxzoaPjm3xIVxfnKZ5JYal5Qsr6qFGt9Z8PDQY8goPUhYVdSfUMAxolg1WuK/5B+flUpS03um4BwaiRh/9wDEBMJL+20pL//jKJ/0k3CMT6xqZXQdp3GxC/5ks0X4xhLApm8J2wrF426aCGZYvt4L7t93cdEXCcn9ISZu4+C8n5KP0BbivqhR4f8BMSfrnRU7V2nTxe/QlOiB3da8+JN2rTZPmscEC51MWPyar1deC5mulNIO2Rc3YYwouxs0FmpMfi1FXe46WKJ4WTZEKlfosCD9x3JxF3yuRVdZRVRNj1LbVFWBfR9MDg1GUaw/kIIgF97ZM+XHQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=6c0sZXMDtobf0JkosPqUTB1hsSwQ3O4MjGmtVBvOKZQ=;
- b=ISSeVP83kTVn//AgXg6e96fNqFLgGU9T9wtjfJep8N0XxSNGJ415rRwvcIIIdXlSn++TlhAjNM/l2LaYg3wO8gR1wSUSlgg8f4NlUShuoK3LUOExlB5fbRgWTHTHtuKhZ8mpxde2W43N76EG+EhLRykqab1cqPIoIEc+5lkpLRTllu8fmU/zd92lg0sp1FhjuwwomhGCNVxCYrfhfs/4qFa3zpsD7VDYL+uFaUpznVW8Ci17mgrxQH+7V8cCdHeK6yFYEQ37qQ3O67fSFL3II1DWW7U1KYEctoV67ycbTOTydZCJf1m2ff2/cKoGrbre+dJzGO5grmkD1FoNXkiR+g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hotmail.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=6c0sZXMDtobf0JkosPqUTB1hsSwQ3O4MjGmtVBvOKZQ=;
- b=alODJ22BPEpvQl2lGsDM5PhN+LX5lpJiQWW3LhN9WYfeo0G+ofPmyZcKkWuB1cy0p9t1JaM9fxyensFiy6gAF6l1RzQ4AUTkhG0m5Yn7Tv/5RljsB+6mBJAmTxfxcwMESu5jtGZD0UiSHhU+l6WrP78vpMifCTRy48dSvzzPXWGm5/lPNygyAfBEhV684uRYtC2DfPzbSot3HMqbkGk3e6YxL5uZPBS3JL4cmuOBHWU4xxKktLT5Tu7YnNuy43tv3mDb2k2oWW1dLOYXSOniKNDuw55iNqua0DDSuK2i/34txWuoTsGSUwuRjJhHYWC2pCxSe8PWoziHgbWVXiX5Cg==
-Received: from TY0PR06MB5611.apcprd06.prod.outlook.com (2603:1096:400:31e::8)
- by KL1PR06MB6964.apcprd06.prod.outlook.com (2603:1096:820:121::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.46; Tue, 2 Apr
- 2024 10:50:15 +0000
-Received: from TY0PR06MB5611.apcprd06.prod.outlook.com
- ([fe80::d57a:9f0e:1ee7:85bf]) by TY0PR06MB5611.apcprd06.prod.outlook.com
- ([fe80::d57a:9f0e:1ee7:85bf%5]) with mapi id 15.20.7409.042; Tue, 2 Apr 2024
- 10:50:15 +0000
-From: Allen_Lin <allencl_lin@hotmail.com>
-To: dmitry.torokhov@gmail.com,
-	robh@kernel.org,
-	krzysztof.kozlowski+dt@linaro.org,
-	conor@kernel.org,
-	jikos@kernel.org,
-	benjamin.tissoires@redhat.com,
-	linux-input@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Allen_Lin <allencl_lin@hotmail.com>
-Subject: [PATCH v2 4/4] HID: Load firmware directly from file to IC
-Date: Tue,  2 Apr 2024 18:49:30 +0800
-Message-ID:
- <TY0PR06MB5611D36BFF6DD29506A807EC9E3E2@TY0PR06MB5611.apcprd06.prod.outlook.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240402104930.1053016-1-allencl_lin@hotmail.com>
-References: <20240402104930.1053016-1-allencl_lin@hotmail.com>
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-TMN: [4GlzUCwOXlL3duKHqyBVCfwNNwltSbBO]
-X-ClientProxiedBy: PS2PR02CA0031.apcprd02.prod.outlook.com
- (2603:1096:300:59::19) To TY0PR06MB5611.apcprd06.prod.outlook.com
- (2603:1096:400:31e::8)
-X-Microsoft-Original-Message-ID:
- <20240402104930.1053016-5-allencl_lin@hotmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fSTsAQW3"
+Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-56bf6591865so7239752a12.0;
+        Tue, 02 Apr 2024 03:51:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1712055088; x=1712659888; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=siG88n1H19g8GWod/0z+EKACNA0oGaIy+1N8DU9AEcg=;
+        b=fSTsAQW3GbtGHCaOJS7KPQjPRCxwgFo2JinJKNFwPAWnasVutuZD7e3HJF/mDROOs6
+         l5swX6gIeKDeWCb6Tc2LWB+Cfgf94OlsKTsH8zdD6+RhmbclLTdrY/MnwwjGnGuEB3yW
+         7PucFUmc8cKFjV4GClhN1YuW4RBrm/4cD5FzHS26//mI0BOtXrnSk0Z91cNpPH+NtMqq
+         362RwpAOdSZ/rG3P0RmglXBDaNCb7NcrZRDGC2gquX6PRSEQf5tOBWIaBIwvUtGH06Yi
+         zDndTVvsSb4iRTnt0dpeT1mnW/rSSwAAj8gEIuylGBVSa9WHJfACYSfYeBpR43w8zYn6
+         vURA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712055088; x=1712659888;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=siG88n1H19g8GWod/0z+EKACNA0oGaIy+1N8DU9AEcg=;
+        b=bHm+57kmUMVLAJSb63Fb7zE4KNRIHnJf23VATEGctw/UdoZ483zdHXhyedHWPn/iw5
+         TnHZQNC+XfXaJrlHDIrKnD7qGV8PTW+YcZOH/sn6t3xOs3F1+acUZwBXmbCnx8NIAKqi
+         eNDsIqOJL1HoZzrXvCk6Ov0qdzwKRRzA6CuyuWM8RXeeAh5EkX578y8WQfSzYI87HIkG
+         AnJw44KLFnsQpFwm7iMnJiQ0vSKerBOWu/MEgNAIWUDvLO0RqFia1J48CETXO6zUnv4T
+         hDOpX9SAhJoJMDzSji8lXPrfdNsNyCx7XplxcbPD21m1JtaNkeNfjQHsNYyGXNzJ3I+n
+         Oftg==
+X-Forwarded-Encrypted: i=1; AJvYcCWoyNr0NpMALyyxIFhK3HuYr+R+/x6iO3ZtL0BY3KLCcAJt5n4mOBQfFzhjf2sjL+vloFMk8HUquHvF9OE/1bd1jm1WQ+quflr2uS3QjCN+rAW3SnsVyn+T7xeWFwo2skoMhrs6VZVfIgCwxUo8mfYz4dh+UY7fK60omvwY0AcC1fVc/dEKLv0HSZpJ41MzfimPrXot0XFL5RmpO8xcTc8=
+X-Gm-Message-State: AOJu0YzsB+gIkX3x4vpMqqjlg12o9bqCnA7CPHBRsvJswDHS0WrjsiXN
+	8ImD7o6AG6YwjNebWdGAT7xpSlgi/cIHzFSh/NEyYu/TNHPXa2dmlj2zrG/eZmsYQuzZmQunWAC
+	vWhCy/mXwXl0QKjTUcOMebxFJvnE=
+X-Google-Smtp-Source: AGHT+IEcViv6lDVB8Y0J2jbZwQrlRsqBMjdz7BMO5P/3YeCehofmXIegc8Mof5KarpMVq3IwjJ0MbP9y/K6fVUl2/X4=
+X-Received: by 2002:a05:6402:3591:b0:56d:f937:9656 with SMTP id
+ y17-20020a056402359100b0056df9379656mr33567edc.9.1712055087459; Tue, 02 Apr
+ 2024 03:51:27 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: TY0PR06MB5611:EE_|KL1PR06MB6964:EE_
-X-MS-Office365-Filtering-Correlation-Id: 2af4630c-0097-4fa4-c84e-08dc5302ada7
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	r/wMSXA+PV9PClI5hYLyH1LvuTfJHa2Np5DWjBYZ7SIFrBa15hDpQWQSW0lAZkPksuqkUQjZr2C5vyMPUk1kzexApVOYXVIIDws1sEqkodDnEnxWo61ynYYLzefqLmDgFBS14HQYliqmLkxj7bumo5GdB/IWf6wD1XGpTo69Aa4L3CfQyO2044Xn8ZwzV9xNpo/nwRAADZ9jcixuye/6IOG1MBji2/JEmDHSx/f/lBhUBRbIE4pGwloPnz8L2TRK4kJxmdv2b9Zt8vuA64c4mLbVpkaoN05/bhTgkWUGKN9cmK4NyeFhBx6iDqeD6dSguTrdMJy8BvcKDtnHaWWqQ+JxAhQsg04ZNUw9D+sizXLNX+JFCId3TgsFzylwxOXQXbzq/AtbI0MnK8oskvHd+jxjp6nG+W6Ysrt8uUrap41F2jtoFoVd/tQ2DvJwgwL7n26N0vGf9eaIYyNKM+BoeYUNlViINMimjfKHg630RvUkrb1AtMR8AeizP5GtvAtO5NQlVicSoqDxYNQKCZGCfbdRY2ZF51+rB8tUgytJpMuKcZuhwCHk6FKvh41JKn8yXhNf4s+dpxU6eel0TTktKtBun8n7qTkr0u8ROKBpZBk6JdvxXL2WKOba22hwgRLY
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?xyGMwEw1uMLTaR6bDBFLHkre6TUJ0SgqvEebbTQ3XDVgtoV9jGzIHQTRZg+x?=
- =?us-ascii?Q?VtYZM9U+bEP1/5uivHs8zmxoMw5zBVeot+mR5MhDYuP27l0a4K2cXHRiUaEE?=
- =?us-ascii?Q?SWk6tTouX2HywLiOlfkwnlG0gqCPXj7IO/9KTLAGGP1j52p/WRE1BcVsUHuC?=
- =?us-ascii?Q?9X5W9eGfMljfyq0iVbMi94A7HtBiADG0sYPxWrtetx7VeAxTmd4NgPpSnpE2?=
- =?us-ascii?Q?t46aych3H7bnjzxdIkxcCrZS/F3D1Y39WwDJu2DCAk/WgEHfM+91xP+gH9dB?=
- =?us-ascii?Q?zBZqXQs1KYZBRHoApvNjP5bTqjh9bJrSwHZV+SyViom0svBwchuAiz4xfygF?=
- =?us-ascii?Q?44qflUA6BVGg2NFE0zSwOsX/ouWVxGNkaIZ0bOBUeZWElUZ2abQDuU5iICoL?=
- =?us-ascii?Q?P9gyPbQ3niV/IHufrv9jtkjfXIAbpPqccCydk4RKWqOWzv6LEkix1UuuaEvb?=
- =?us-ascii?Q?mxQ00rFpVK9UgGSOeKOlp39LytsBBlQeGYNMd69+meEG16uohycAMhNEVaWR?=
- =?us-ascii?Q?Uw3TLFkmjQVDtT5bhyonKHJpdgfzKXOdKNY5PiOdOe2lgKQbR9v4ykH89QcM?=
- =?us-ascii?Q?mixSiUfjY91yrH8m6P5GIgrsLzWjaDtjobgc0rpJgvSgPey/w33d5NnBUN3h?=
- =?us-ascii?Q?jZ3V/6gKOUK8wGL7S+F5irHmQmccPUolBh9H4m8LLi6G9+li8whrCaXq8G5I?=
- =?us-ascii?Q?3WlNsdgpYZuA28FQoyeX/gaNN152jv+oStVbCgietbN+23uvXZxgv0I4YlXp?=
- =?us-ascii?Q?YHLf5boDUFIOlwoZCl5Um4eGoV9rCLwQfMReGcCYGUoGP+YrtxPCBeTu/kWL?=
- =?us-ascii?Q?IiuXqxRstKGHRkhAHd0TIdFdMGhuymeoBuwLXR524p3AMRCVWYeBHqO8EBQe?=
- =?us-ascii?Q?4CxYTiXFwzmrtJ/Oa2lV2e6tgpsKRRKJ/eHuZUxMesBNCfIHq0WUZQxc9Hud?=
- =?us-ascii?Q?iZ+ZVpzBeRZW49EcxMUUJoEjXtsPvtsJ3lP2ZpeHllZdqyOpkYstHRrYdNS4?=
- =?us-ascii?Q?s+yTdGDITZuWF6N2Zbk3b33oOpkgHKzoJMa27KBEck8rlVq6BwdiZmheNKAu?=
- =?us-ascii?Q?hDcBMSKRIAw3c3qOPSCd8sHwSYxJcdg9dYfFPz/qpSe8+kE0MBf6w5/mKef/?=
- =?us-ascii?Q?m2osYk5YymXJhyjoLM7WttMwekK8sUoS8hgDEkA0teta0GXY5MAGyT+zHTAd?=
- =?us-ascii?Q?ihDa8zyNnTSJmuHs8SVWnSVnZxJiix1ONAb+szSbpomXMt0opGPT90jyQvo?=
- =?us-ascii?Q?=3D?=
-X-OriginatorOrg: sct-15-20-4755-11-msonline-outlook-3208f.templateTenant
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2af4630c-0097-4fa4-c84e-08dc5302ada7
-X-MS-Exchange-CrossTenant-AuthSource: TY0PR06MB5611.apcprd06.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Apr 2024 10:50:15.3550
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
-	00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: KL1PR06MB6964
+References: <20240329-loongson1-dma-v7-0-37db58608de5@gmail.com>
+ <20240329-loongson1-dma-v7-2-37db58608de5@gmail.com> <CAAhV-H6gG5KGxku+aZPwfmqAVF9zfL-9-nNqCd2Z_swxgCe_HA@mail.gmail.com>
+ <CAJhJPsXutxdZkhjWdc-JuJOaC_6+6zsDjbYT1Bg6Yuk8AQX1ug@mail.gmail.com>
+ <CAAhV-H63wMMhVng=kn+XOHFL8sTchtGAMae0v50FEN6TO1kAhw@mail.gmail.com>
+ <CAJhJPsUW14vMAAhGTobCkSnYytwtUbdsZ5V9p33fzdnr3=L2Ag@mail.gmail.com>
+ <CAAhV-H4TH+DbC2XsvysS7yH+M99qhHdpADACGdM0Q83FztSvFg@mail.gmail.com>
+ <CAJhJPsU6agzBR1jOw73SpMoogUMYu0qQT2VaBa+z1DXw2ZPNvw@mail.gmail.com> <CAAhV-H5uLcfaNYb7GAF17ruhJ02Wv71VZYEnxM_a642cuYaSBw@mail.gmail.com>
+In-Reply-To: <CAAhV-H5uLcfaNYb7GAF17ruhJ02Wv71VZYEnxM_a642cuYaSBw@mail.gmail.com>
+From: Keguang Zhang <keguang.zhang@gmail.com>
+Date: Tue, 2 Apr 2024 18:50:50 +0800
+Message-ID: <CAJhJPsWNuFMPEgDGsjdUdE1gYO3eVWLQ0QbYMXRTaMHv5bz9Ug@mail.gmail.com>
+Subject: Re: [PATCH v7 2/2] dmaengine: Loongson1: Add Loongson-1 APB DMA driver
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: Vinod Koul <vkoul@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
+	linux-mips@vger.kernel.org, dmaengine@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-For HX83102J, often shipped without flash for costdown purpose.
-This patch implement the function to load firmware file from
-user-space, write into IC sram and make it running.
+On Tue, Apr 2, 2024 at 5:04=E2=80=AFPM Huacai Chen <chenhuacai@kernel.org> =
+wrote:
+>
+> On Tue, Apr 2, 2024 at 9:56=E2=80=AFAM Keguang Zhang <keguang.zhang@gmail=
+.com> wrote:
+> >
+> > On Mon, Apr 1, 2024 at 9:24=E2=80=AFPM Huacai Chen <chenhuacai@kernel.o=
+rg> wrote:
+> > >
+> > > On Mon, Apr 1, 2024 at 7:10=E2=80=AFPM Keguang Zhang <keguang.zhang@g=
+mail.com> wrote:
+> > > >
+> > > > On Mon, Apr 1, 2024 at 5:06=E2=80=AFPM Huacai Chen <chenhuacai@kern=
+el.org> wrote:
+> > > > >
+> > > > > On Mon, Apr 1, 2024 at 10:45=E2=80=AFAM Keguang Zhang <keguang.zh=
+ang@gmail.com> wrote:
+> > > > > >
+> > > > > > Hi Huacai,
+> > > > > >
+> > > > > > On Sat, Mar 30, 2024 at 9:59=E2=80=AFPM Huacai Chen <chenhuacai=
+@kernel.org> wrote:
+> > > > > > >
+> > > > > > > Hi, Keguang,
+> > > > > > >
+> > > > > > > On Fri, Mar 29, 2024 at 7:28=E2=80=AFPM Keguang Zhang via B4 =
+Relay
+> > > > > > > <devnull+keguang.zhang.gmail.com@kernel.org> wrote:
+> > > > > > > >
+> > > > > > > > From: Keguang Zhang <keguang.zhang@gmail.com>
+> > > > > > > >
+> > > > > > > > This patch adds APB DMA driver for Loongson-1 SoCs.
+> > > > > > > >
+> > > > > > > > Signed-off-by: Keguang Zhang <keguang.zhang@gmail.com>
+> > > > > > > > ---
+> > > > > > > > Changes in v7:
+> > > > > > > > - Change the comptible to 'loongson,ls1*-apbdma'
+> > > > > > > > - Update Kconfig and Makefile accordingly
+> > > > > > > > - Rename the file to loongson1-apb-dma.c to keep the consis=
+tency
+> > > > > > > >
+> > > > > > > > Changes in v6:
+> > > > > > > > - Implement .device_prep_dma_cyclic for Loongson1 audio dri=
+ver,
+> > > > > > > > - as well as .device_pause and .device_resume.
+> > > > > > > > - Set the limitation LS1X_DMA_MAX_DESC and put all descript=
+ors
+> > > > > > > > - into one page to save memory
+> > > > > > > > - Move dma_pool_zalloc() into ls1x_dma_alloc_desc()
+> > > > > > > > - Drop dma_slave_config structure
+> > > > > > > > - Use .remove_new instead of .remove
+> > > > > > > > - Use KBUILD_MODNAME for the driver name
+> > > > > > > > - Improve the debug information
+> > > > > > > >
+> > > > > > > > Changes in v5:
+> > > > > > > > - Add DT support
+> > > > > > > > - Use DT data instead of platform data
+> > > > > > > > - Use chan_id of struct dma_chan instead of own id
+> > > > > > > > - Use of_dma_xlate_by_chan_id() instead of ls1x_dma_filter(=
+)
+> > > > > > > > - Update the author information to my official name
+> > > > > > > >
+> > > > > > > > Changes in v4:
+> > > > > > > > - Use dma_slave_map to find the proper channel.
+> > > > > > > > - Explicitly call devm_request_irq() and tasklet_kill().
+> > > > > > > > - Fix namespace issue.
+> > > > > > > > - Some minor fixes and cleanups.
+> > > > > > > >
+> > > > > > > > Changes in v3:
+> > > > > > > > - Rename ls1x_dma_filter_fn to ls1x_dma_filter.
+> > > > > > > >
+> > > > > > > > Changes in v2:
+> > > > > > > > - Change the config from 'DMA_LOONGSON1' to 'LOONGSON1_DMA'=
+,
+> > > > > > > > - and rearrange it in alphabetical order in Kconfig and Mak=
+efile.
+> > > > > > > > - Fix comment style.
+> > > > > > > > ---
+> > > > > > > >  drivers/dma/Kconfig             |   9 +
+> > > > > > > >  drivers/dma/Makefile            |   1 +
+> > > > > > > >  drivers/dma/loongson1-apb-dma.c | 665 ++++++++++++++++++++=
+++++++++++++++++++++
+> > > > > > > >  3 files changed, 675 insertions(+)
+> > > > > > > >
+> > > > > > > > diff --git a/drivers/dma/Kconfig b/drivers/dma/Kconfig
+> > > > > > > > index 002a5ec80620..f7b06c4cdf3f 100644
+> > > > > > > > --- a/drivers/dma/Kconfig
+> > > > > > > > +++ b/drivers/dma/Kconfig
+> > > > > > > > @@ -369,6 +369,15 @@ config K3_DMA
+> > > > > > > >           Support the DMA engine for Hisilicon K3 platform
+> > > > > > > >           devices.
+> > > > > > > >
+> > > > > > > > +config LOONGSON1_APB_DMA
+> > > > > > > > +       tristate "Loongson1 APB DMA support"
+> > > > > > > > +       depends on MACH_LOONGSON32 || COMPILE_TEST
+> > > > > > > > +       select DMA_ENGINE
+> > > > > > > > +       select DMA_VIRTUAL_CHANNELS
+> > > > > > > > +       help
+> > > > > > > > +         This selects support for the APB DMA controller i=
+n Loongson1 SoCs,
+> > > > > > > > +         which is required by Loongson1 NAND and audio sup=
+port.
+> > > > > > > Why not rename to LS1X_APB_DMA and put it just before LS2X_AP=
+B_DMA
+> > > > > > > (and also the driver file name)?
+> > > > > > >
+> > > > > > So far all Kconfig entries of Loongson-1 drivers are named with=
+ the
+> > > > > > keyword "LOONGSON1".
+> > > > > > The same is true for these file names.
+> > > > > > Therefore, I need to keep the consistency.
+> > > > > But I see LS1X_IRQ in drivers/irqchip/Kconfig
+> > > > >
+> > > > Indeed, that's an exception, which was submitted by Jiaxun several =
+years ago.
+> > > > Actually, most drivers of Loongson family use the keyword "LOONGSON=
+"
+> > > > for Kconfig and "loongson" for filename.
+> > > > Thus I take this keywork as the naming convention.
+> > > But I think keeping consistency in a same subsystem is better than
+> > > keeping consistency in a same SoC (but cross subsystems).
+> > >
+> > In my opinion, "LS*X" is too short and may be confused with other SoCs.
+> > Meanwhile, there are only four drivers that use this keyword.
+> >   config I2C_LS2X
+> >   config LS2K_RESET
+> >   config LS2X_APB_DMA
+> >   config LS1X_IRQ
+> > Then, my suggestion is to change these "LS*X" to "LOONGSON*" to get a
+> > clear meaning.
+> We have made a naming conversion some years before with Jiaxun.
+> 1, Use "Loongson" for CPU in arch code;
+> 2, Use "LS7A" or something like this for bridges and devices.
+> 3, For drivers in SoC, if the driver is specific to Loongson-1, use
+> LS1X, if it is to Loongson-2, use LS2X, if it is shared by both
+> Loongson-1 and Loongson-2, use LOONGSON.
+>
+OK. But the doesn't the answer the question of confusion, such as
+"Freescale LS1021A".
+The same problem happens to the filenames.
+  ./drivers/gpu/drm/nouveau/nvkm/nvfw/ls.c
+  ./drivers/gpu/drm/nouveau/nvkm/subdev/acr/lsfw.c
+  ./drivers/gpu/drm/amd/amdgpu/lsdma_v6_0.c
+  ./drivers/gpu/drm/amd/amdgpu/lsdma_v7_0.c
+  ./arch/powerpc/platforms/embedded6xx/ls_uart.c
+Regarding "LS*X" itself, it contains the wildcard character "X" which
+itself is confusing.
+Therefore, I don't think "LS*X" is clear enough.
 
-The procedure as following:
-1. Check OF to get FW PID specified: himax_parse_dt
-2. Load PID specified FW: i_get_FW, upload process use workqueue
-   himax_boot_upgrade
-3. Write FW into IC sram: i_update_FW
-3-1. FW file contain a mapping table to indicate various section,
-     such code, data, version info and HID info
-3-2. Call update process himax_mcu_firmware_update_0f, which stop
-     the internal MCU: i. system reset. ii. hx83102j_sense_off
-3-3. Parsing FW and upload file: himax_zf_part_info. info[0] contain
-     the code section and will upload to ISRAM. Other info[x] are
-     data sections will be combined and upload to DSRAM separately.
-     After upload FW, driver will use crc to check integrity:
-     himax_sram_write_crc_check for code(HW CRC result must be 0),
-     himax_mcu_calculate_crc_with_ap for pre-calculate data CRC[1],
-     Upload data section by himax_mcu_register_write,
-     himax_mcu_check_crc use HW calculate CRC and compared with [1]
-4. Disable HW reload FW from flash function before MCU start running:
-   himax_disable_fw_reload
-5. Start running the FW: himax_mcu_power_on_init
-5-1. Setting varies FW settings before FW start running
-5-2. Start FW: hx83102j_sense_on
-5-3. Wait until FW initial process complete: Read 0x72C0 from IC
-6. Read HID info from FW
-7. Read TP properties from IC: himax_mcu_tp_info_check
-8. Read FW information fromIC: himax_mcu_read_FW_ver
-9. Release FW, IC initial complete
+On the other hand, I see "LOONGSON2_*" strings are still there.
+In addition, some of "LOONGSON_" definitions are not applicable for
+Loongson-1 at all, which breaks your convention.
+  config SND_SOC_LOONGSON_I2S_PCI  /* Loongson-1 doesn't support I2S */
+  config SND_SOC_LOONGSON_CARD
+  config DWMAC_LOONGSON1
+  config DWMAC_LOONGSON  /* This glue layer doesn't support Loongson-1 */
+  config COMMON_CLK_LOONGSON2
+  config RTC_DRV_LOONGSON
+  config SPI_LOONGSON_CORE
+  config SPI_LOONGSON_PCI  /* N/A for Loongson-1 */
+  config SPI_LOONGSON_PLATFORM
+  config LOONGSON2_CPUFREQ
+  config DRM_LOONGSON  /* N/A for Loongson-1 */
+  config LOONGSON1_WDT
+  config CLKSRC_LOONGSON1_PWM
+  config LOONGSON_LIOINTC  /* N/A for Loongson-1 */
+  config LOONGSON_EIOINTC  /* N/A for Loongson-1 */
+  config LOONGSON_HTPIC  /* N/A for Loongson-1 */
+  config LOONGSON_HTVEC  /* N/A for Loongson-1 */
+  config LOONGSON_PCH_PIC  /* N/A for Loongson-1 */
+  config LOONGSON_PCH_MSI  /* N/A for Loongson-1 */
+  config LOONGSON_PCH_LPC  /* N/A for Loongson-1 */
+  config PINCTRL_LOONGSON2
+  config LOONGSON2_THERMAL
+  config LOONGSON2_GUTS
+  config LOONGSON2_PM
+  config LOONGSON_LAPTOP  /* N/A for Loongson-1 */
+  config GPIO_LOONGSON
+  config GPIO_LOONGSON_64BIT  -> N/A for Loongson-1
+  config GPIO_LOONGSON1
+  config PCI_LOONGSON
 
-The resume procedure do part of boot process, it also need to reload
-FW from user-space into IC sram: himax_0f_op_file_dirly
-1. Request FW
-2. Upload FW: himax_mcu_firmware_update_0f
-3. Disable HW reload FW from flash function: himax_disable_fw_reload
-4. Start running the FW: himax_mcu_power_on_init
+What's your plan about the above Kconfig entries?
+Why can't we use LOONGSON1/LOONGSON2 for drivers?
 
-Signed-off-by: Allen_Lin <allencl_lin@hotmail.com>
----
- drivers/hid/hid-himax-83102j.c | 1515 +++++++++++++++++++++++++++-----
- drivers/hid/hid-himax-83102j.h |  168 +++-
- 2 files changed, 1483 insertions(+), 200 deletions(-)
 
-diff --git a/drivers/hid/hid-himax-83102j.c b/drivers/hid/hid-himax-83102j.c
-index 0a2be071a6c4..5cae979a3052 100644
---- a/drivers/hid/hid-himax-83102j.c
-+++ b/drivers/hid/hid-himax-83102j.c
-@@ -532,6 +532,92 @@ static void himax_mcu_ic_reset(struct himax_ts_data *ts, bool int_off)
- 		himax_int_enable(ts, true);
- }
- 
-+/**
-+ * hx83102j_reload_to_active() - Reload to active mode
-+ * @ts: Himax touch screen data
-+ *
-+ * This function is used to write a flag to the IC register to make MCU restart without
-+ * reload the firmware.
-+ *
-+ * Return: 0 on success, negative error code on failure
-+ */
-+static int hx83102j_reload_to_active(struct himax_ts_data *ts)
-+{
-+	int ret;
-+	u32 retry_cnt;
-+	const u32 addr = HIMAX_REG_ADDR_RELOAD_TO_ACTIVE;
-+	const u32 reload_to_active_cmd = 0xec;
-+	const u32 reload_to_active_done = 0x01ec;
-+	const u32 retry_limit = 5;
-+	union himax_dword_data data;
-+
-+	for (retry_cnt = 0; retry_cnt < retry_limit; retry_cnt++) {
-+		data.dword = cpu_to_le32(reload_to_active_cmd);
-+		ret = himax_mcu_register_write(ts, addr, data.byte, 4);
-+		if (ret < 0)
-+			return ret;
-+		usleep_range(1000, 1100);
-+		ret = himax_mcu_register_read(ts, addr, data.byte, 4);
-+		if (ret < 0)
-+			return ret;
-+		data.dword = le32_to_cpu(data.dword);
-+		if (data.word[0] == reload_to_active_done)
-+			break;
-+	}
-+
-+	if (data.word[0] != reload_to_active_done) {
-+		dev_err(ts->dev, "%s: Reload to active failed!\n", __func__);
-+		return -EINVAL;
-+	}
-+
-+	return 0;
-+}
-+
-+/**
-+ * hx83102j_en_hw_crc() - Enable/Disable HW CRC
-+ * @ts: Himax touch screen data
-+ * @en: true for enable, false for disable
-+ *
-+ * This function is used to enable or disable the HW CRC. The HW CRC
-+ * is used to protect the SRAM data.
-+ *
-+ * Return: 0 on success, negative error code on failure
-+ */
-+static int hx83102j_en_hw_crc(struct himax_ts_data *ts, bool en)
-+{
-+	int ret;
-+	u32 retry_cnt;
-+	const u32 addr = HIMAX_HX83102J_REG_ADDR_HW_CRC;
-+	const u32 retry_limit = 5;
-+	union himax_dword_data data, wrt_data;
-+
-+	if (en)
-+		data.dword = cpu_to_le32(HIMAX_HX83102J_REG_DATA_HW_CRC);
-+	else
-+		data.dword = cpu_to_le32(HIMAX_HX83102J_REG_DATA_HW_CRC_DISABLE);
-+
-+	wrt_data.dword = data.dword;
-+	for (retry_cnt = 0; retry_cnt < retry_limit; retry_cnt++) {
-+		ret = himax_mcu_register_write(ts, addr, data.byte, 4);
-+		if (ret < 0)
-+			return ret;
-+		usleep_range(1000, 1100);
-+		ret = himax_mcu_register_read(ts, addr, data.byte, 4);
-+		if (ret < 0)
-+			return ret;
-+
-+		if (data.word[0] == wrt_data.word[0])
-+			break;
-+	}
-+
-+	if (data.word[0] != wrt_data.word[0]) {
-+		dev_err(ts->dev, "%s: ECC fail!\n", __func__);
-+		return -EINVAL;
-+	}
-+
-+	return 0;
-+}
-+
- /**
-  * hx83102j_sense_off() - Stop MCU and enter safe mode
-  * @ts: Himax touch screen data
-@@ -641,6 +727,56 @@ static int hx83102j_sense_off(struct himax_ts_data *ts, bool check_en)
- 	return -EIO;
- }
- 
-+/**
-+ * hx83102j_sense_on() - Sense on the touch chip
-+ * @ts: Himax touch screen data
-+ * @sw_reset: true for software reset, false for hardware reset
-+ *
-+ * This function is used to sense on the touch chip, which means to start running the
-+ * FW. The process begin with wakeup the IC bus interface, then write a flag to the IC
-+ * register to make MCU restart running the FW. When sw_reset is true, the function will
-+ * send a command to the IC to leave safe mode. Otherwise, the function will call
-+ * himax_mcu_ic_reset() to reset the touch chip by hardware pin.
-+ * Then enable the HW CRC to protect sram data, and reload to active to make the MCU
-+ * start running without reload the firmware.
-+ *
-+ * Return: 0 on success, negative error code on failure
-+ */
-+static int hx83102j_sense_on(struct himax_ts_data *ts, bool sw_reset)
-+{
-+	int ret;
-+	const union himax_dword_data re_init = {
-+		.dword = cpu_to_le32(HIMAX_REG_DATA_FW_RE_INIT)
-+	};
-+	union himax_dword_data data;
-+
-+	dev_info(ts->dev, "%s: software reset %s\n", __func__, sw_reset ? "true" : "false");
-+	ret = himax_mcu_interface_on(ts);
-+	if (ret < 0)
-+		return ret;
-+
-+	ret = himax_mcu_register_write(ts, HIMAX_REG_ADDR_CTRL_FW, re_init.byte, 4);
-+	if (ret < 0)
-+		return ret;
-+	usleep_range(10000, 11000);
-+	if (!sw_reset) {
-+		himax_mcu_ic_reset(ts, false);
-+	} else {
-+		data.word[0] = cpu_to_le16(HIMAX_AHB_CMD_LEAVE_SAFE_MODE);
-+		ret = himax_write(ts, HIMAX_AHB_ADDR_PSW_LB, NULL, data.byte, 2);
-+		if (ret < 0)
-+			return ret;
-+	}
-+	ret = hx83102j_en_hw_crc(ts, true);
-+	if (ret < 0)
-+		return ret;
-+	ret = hx83102j_reload_to_active(ts);
-+	if (ret < 0)
-+		return ret;
-+
-+	return 0;
-+}
-+
- /**
-  * hx83102j_chip_detect() - Check if the touch chip is HX83102J
-  * @ts: Himax touch screen data
-@@ -783,166 +919,980 @@ static int hx83102j_read_event_stack(struct himax_ts_data *ts, u8 *buf, u32 leng
- 	int ret;
- 	const u32 max_trunk_sz = ts->spi_xfer_max_sz - HIMAX_BUS_R_HLEN;
- 
--	for (i = 0; i < length; i += max_trunk_sz) {
--		ret = himax_read(ts, HIMAX_AHB_ADDR_EVENT_STACK, buf + i,
--				 min(length - i, max_trunk_sz));
-+	for (i = 0; i < length; i += max_trunk_sz) {
-+		ret = himax_read(ts, HIMAX_AHB_ADDR_EVENT_STACK, buf + i,
-+				 min(length - i, max_trunk_sz));
-+		if (ret) {
-+			dev_err(ts->dev, "%s: read event stack error!\n", __func__);
-+			return ret;
-+		}
-+	}
-+
-+	return 0;
-+}
-+
-+/**
-+ * hx83102j_chip_init_data() - Initialize the touch chip data
-+ * @ts: Himax touch screen data
-+ *
-+ * This function is used to initialize hx83102j touch specific data in himax_ts_data.
-+ * The chip_max_dsram_size is the maximum size of the DSRAM of hx83102j.
-+ *
-+ * Return: None
-+ */
-+static void hx83102j_chip_init_data(struct himax_ts_data *ts)
-+{
-+	ts->chip_max_dsram_size = HIMAX_HX83102J_DSRAM_SZ;
-+}
-+
-+/**
-+ * himax_touch_get() - Get touch data from touch chip
-+ * @ts: Himax touch screen data
-+ * @buf: Buffer to store the data
-+ *
-+ * This function is a wrapper to call hx83102j_read_event_stack() to read the touch
-+ * data from the touch chip. The touch_data_sz is the size of the touch data to read,
-+ * which is calculated by hid report descriptor provided by the firmware.
-+ *
-+ * Return: HIMAX_TS_SUCCESS on success, negative error code on failure. We categorize
-+ * the error code into HIMAX_TS_GET_DATA_FAIL when the read fails, and HIMAX_TS_SUCCESS
-+ * when the read is successful. The reason is that the may need special handling when
-+ * the read fails.
-+ */
-+static int himax_touch_get(struct himax_ts_data *ts, u8 *buf)
-+{
-+	if (hx83102j_read_event_stack(ts, buf, ts->touch_data_sz)) {
-+		dev_err(ts->dev, "can't read data from chip!");
-+		return HIMAX_TS_GET_DATA_FAIL;
-+	}
-+
-+	return HIMAX_TS_SUCCESS;
-+}
-+
-+/**
-+ * himax_mcu_assign_sorting_mode() - Write sorting mode to dsram and verify
-+ * @ts: Himax touch screen data
-+ * @tmp_data_in: password to write
-+ *
-+ * This function is used to write the sorting mode password to dsram and verify the
-+ * password is written correctly. The sorting mode password is used as a flag to
-+ * FW to let it know which mode the touch chip is working on.
-+ *
-+ * Return: 0 on success, negative error code on failure
-+ */
-+static int himax_mcu_assign_sorting_mode(struct himax_ts_data *ts, u8 *tmp_data_in)
-+{
-+	int ret;
-+	u8 rdata[4];
-+	u32 retry_cnt;
-+	const u32 retry_limit = 3;
-+
-+	for (retry_cnt = 0; retry_cnt < retry_limit; retry_cnt++) {
-+		ret = himax_mcu_register_write(ts, HIMAX_DSRAM_ADDR_SORTING_MODE_EN,
-+					       tmp_data_in, HIMAX_REG_SZ);
-+		if (ret < 0) {
-+			dev_err(ts->dev, "%s: write sorting mode fail\n", __func__);
-+			return ret;
-+		}
-+		usleep_range(1000, 1100);
-+		ret = himax_mcu_register_read(ts, HIMAX_DSRAM_ADDR_SORTING_MODE_EN,
-+					      rdata, HIMAX_REG_SZ);
-+		if (ret < 0) {
-+			dev_err(ts->dev, "%s: read sorting mode fail\n", __func__);
-+			return ret;
-+		}
-+
-+		if (!memcmp(tmp_data_in, rdata, HIMAX_REG_SZ))
-+			return 0;
-+	}
-+	dev_err(ts->dev, "%s: fail to write sorting mode\n", __func__);
-+
-+	return -EINVAL;
-+}
-+
-+/**
-+ * himax_mcu_read_FW_status() - Read FW status from touch chip
-+ * @ts: Himax touch screen data
-+ *
-+ * This function is used to read the FW status from the touch chip. The FW status is
-+ * values from dsram and register from TPIC. Which shows the FW vital working status
-+ * for developer debug.
-+ *
-+ * Return: 0 on success, negative error code on failure
-+ */
-+static int himax_mcu_read_FW_status(struct himax_ts_data *ts)
-+{
-+	int i;
-+	int ret;
-+	size_t len;
-+	u8 data[4];
-+	const char * const reg_name[] = {
-+		"DBG_MSG",
-+		"FW_STATUS",
-+		"DD_STATUS",
-+		"RESET_FLAG"
-+	};
-+	const u32 dbg_reg_array[] = {
-+		HIMAX_DSRAM_ADDR_DBG_MSG,
-+		HIMAX_REG_ADDR_FW_STATUS,
-+		HIMAX_REG_ADDR_DD_STATUS,
-+		HIMAX_REG_ADDR_RESET_FLAG
-+	};
-+
-+	len = ARRAY_SIZE(dbg_reg_array);
-+
-+	for (i = 0; i < len; i++) {
-+		ret = himax_mcu_register_read(ts, dbg_reg_array[i], data, HIMAX_REG_SZ);
-+		if (ret < 0) {
-+			dev_err(ts->dev, "%s: read FW status fail\n", __func__);
-+			return ret;
-+		}
-+
-+		dev_info(ts->dev, "%s: %10s(0x%08X) = 0x%02X, 0x%02X, 0x%02X, 0x%02X\n",
-+			 __func__, reg_name[i], dbg_reg_array[i],
-+			 data[0], data[1], data[2], data[3]);
-+	}
-+
-+	return 0;
-+}
-+
-+/**
-+ * himax_mcu_power_on_init() - Power on initialization
-+ * @ts: Himax touch screen data
-+ *
-+ * This function is used to do the power on initialization after firmware has been
-+ * loaded to sram. The process initialize varies IC register and dsram to make sure
-+ * FW start running correctly. When all set, sense on the touch chip to make the FW
-+ * start running and wait for the FW reload done password.
-+ *
-+ * Return: 0 on success, negative error code on failure
-+ */
-+static int himax_mcu_power_on_init(struct himax_ts_data *ts)
-+{
-+	int ret;
-+	u32 retry_cnt;
-+	const u32 retry_limit = 30;
-+	union himax_dword_data data;
-+
-+	/* RawOut select initial */
-+	data.dword = cpu_to_le32(HIMAX_DATA_CLEAR);
-+	ret = himax_mcu_register_write(ts, HIMAX_HX83102J_DSRAM_ADDR_RAW_OUT_SEL, data.byte, 4);
-+	if (ret < 0) {
-+		dev_err(ts->dev, "%s: set RawOut select fail\n", __func__);
-+		return ret;
-+	}
-+	/* Initial sorting mode password to normal mode */
-+	ret = himax_mcu_assign_sorting_mode(ts, data.byte);
-+	if (ret < 0) {
-+		dev_err(ts->dev, "%s: assign sorting mode fail\n", __func__);
-+		return ret;
-+	}
-+	/* N frame initial */
-+	/* reset N frame back to default value 1 for normal mode */
-+	data.dword = cpu_to_le32(1);
-+	ret = himax_mcu_register_write(ts, HIMAX_DSRAM_ADDR_SET_NFRAME, data.byte, 4);
-+	if (ret < 0) {
-+		dev_err(ts->dev, "%s: set N frame fail\n", __func__);
-+		return ret;
-+	}
-+	/* Initial FW reload status */
-+	data.dword = cpu_to_le32(HIMAX_DATA_CLEAR);
-+	ret = himax_mcu_register_write(ts, HIMAX_DSRAM_ADDR_2ND_FLASH_RELOAD, data.byte, 4);
-+	if (ret < 0) {
-+		dev_err(ts->dev, "%s: initial FW reload status fail\n", __func__);
-+		return ret;
-+	}
-+
-+	ret = hx83102j_sense_on(ts, false);
-+	if (ret < 0) {
-+		dev_err(ts->dev, "%s: sense on fail\n", __func__);
-+		return ret;
-+	}
-+
-+	dev_info(ts->dev, "%s: waiting for FW reload data\n", __func__);
-+	for (retry_cnt = 0; retry_cnt < retry_limit; retry_cnt++) {
-+		ret = himax_mcu_register_read(ts, HIMAX_DSRAM_ADDR_2ND_FLASH_RELOAD, data.byte, 4);
-+		if (ret < 0) {
-+			dev_err(ts->dev, "%s: read FW reload status fail\n", __func__);
-+			return ret;
-+		}
-+
-+		/* use all 4 bytes to compare */
-+		if (le32_to_cpu(data.dword) == HIMAX_DSRAM_DATA_FW_RELOAD_DONE) {
-+			dev_info(ts->dev, "%s: FW reload done\n", __func__);
-+			break;
-+		}
-+		dev_info(ts->dev, "%s: wait FW reload %u times\n", __func__, retry_cnt);
-+		ret = himax_mcu_read_FW_status(ts);
-+		if (ret < 0)
-+			dev_err(ts->dev, "%s: read FW status fail\n", __func__);
-+
-+		usleep_range(10000, 11000);
-+	}
-+
-+	if (retry_cnt == retry_limit) {
-+		dev_err(ts->dev, "%s: FW reload fail!\n", __func__);
-+		return -EINVAL;
-+	}
-+
-+	return 0;
-+}
-+
-+/**
-+ * himax_mcu_calculate_crc() - Calculate CRC-32 of given data
-+ * @data: Data to calculate CRC
-+ * @len: Length of data
-+ *
-+ * This function is used to calculate the CRC-32 of the given data. The function
-+ * calculate the CRC-32 value by the polynomial 0x82f63b78.
-+ *
-+ * Return: CRC-32 value
-+ */
-+static u32 himax_mcu_calculate_crc(const u8 *data, int len)
-+{
-+	int i, j, length;
-+	u32 crc = GENMASK(31, 0);
-+	u32 current_data;
-+	u32 tmp;
-+	const u32 mask = GENMASK(30, 0);
-+
-+	length = len / 4;
-+
-+	for (i = 0; i < length; i++) {
-+		current_data = data[i * 4];
-+
-+		for (j = 1; j < 4; j++) {
-+			tmp = data[i * 4 + j];
-+			current_data += (tmp) << (8 * j);
-+		}
-+		crc = current_data ^ crc;
-+		for (j = 0; j < 32; j++) {
-+			if ((crc % 2) != 0)
-+				crc = ((crc >> 1) & mask) ^ CRC32C_POLY_LE;
-+			else
-+				crc = (((crc >> 1) & mask));
-+		}
-+	}
-+
-+	return crc;
-+}
-+
-+/**
-+ * himax_mcu_check_crc() - Let TPIC check CRC itself
-+ * @ts: Himax touch screen data
-+ * @start_addr: Start address of the data in sram to check
-+ * @reload_length: Length of the data to check
-+ * @crc_result: CRC result for return
-+ *
-+ * This function is used to let TPIC check the CRC of the given data in sram. The
-+ * function write the start address and length of the data to the TPIC, and wait for
-+ * the TPIC to finish the CRC check. When the CRC check is done, the function read
-+ * the CRC result from the TPIC.
-+ *
-+ * Return: 0 on success, negative error code on failure
-+ */
-+static int himax_mcu_check_crc(struct himax_ts_data *ts, u32 start_addr,
-+			       int reload_length, u32 *crc_result)
-+{
-+	int ret;
-+	int length = reload_length / HIMAX_REG_SZ;
-+	u32 retry_cnt;
-+	const u32 retry_limit = 100;
-+	union himax_dword_data data, addr;
-+
-+	addr.dword = cpu_to_le32(start_addr);
-+	ret = himax_mcu_register_write(ts, HIMAX_REG_ADDR_RELOAD_ADDR_FROM, addr.byte, 4);
-+	if (ret < 0) {
-+		dev_err(ts->dev, "%s: write reload start address fail\n", __func__);
-+		return ret;
-+	}
-+
-+	data.word[1] = cpu_to_le16(HIMAX_REG_DATA_RELOAD_PASSWORD);
-+	data.word[0] = cpu_to_le16(length);
-+	ret = himax_mcu_register_write(ts, HIMAX_REG_ADDR_RELOAD_ADDR_CMD_BEAT, data.byte, 4);
-+	if (ret < 0) {
-+		dev_err(ts->dev, "%s: write reload length and password fail!\n", __func__);
-+		return ret;
-+	}
-+
-+	ret = himax_mcu_register_read(ts, HIMAX_REG_ADDR_RELOAD_ADDR_CMD_BEAT, data.byte, 4);
-+	if (ret < 0) {
-+		dev_err(ts->dev, "%s: read reload length and password fail!\n", __func__);
-+		return ret;
-+	}
-+
-+	if (le16_to_cpu(data.word[0]) != length) {
-+		dev_err(ts->dev, "%s: length verify failed!\n", __func__);
-+		return -EINVAL;
-+	}
-+
-+	for (retry_cnt = 0; retry_cnt < retry_limit; retry_cnt++) {
-+		ret = himax_mcu_register_read(ts, HIMAX_REG_ADDR_RELOAD_STATUS, data.byte, 4);
-+		if (ret < 0) {
-+			dev_err(ts->dev, "%s: read reload status fail!\n", __func__);
-+			return ret;
-+		}
-+
-+		data.dword = le32_to_cpu(data.dword);
-+		if ((data.byte[0] & HIMAX_REG_DATA_RELOAD_DONE) != HIMAX_REG_DATA_RELOAD_DONE) {
-+			ret = himax_mcu_register_read(ts, HIMAX_REG_ADDR_RELOAD_CRC32_RESULT,
-+						      data.byte, HIMAX_REG_SZ);
-+			if (ret < 0) {
-+				dev_err(ts->dev, "%s: read crc32 result fail!\n", __func__);
-+				return ret;
-+			}
-+			*crc_result = le32_to_cpu(data.dword);
-+			return 0;
-+		}
-+
-+		dev_info(ts->dev, "%s: Waiting for HW ready!\n", __func__);
-+		usleep_range(1000, 1100);
-+	}
-+
-+	if (retry_cnt == retry_limit) {
-+		ret = himax_mcu_read_FW_status(ts);
-+		if (ret < 0)
-+			dev_err(ts->dev, "%s: read FW status fail\n", __func__);
-+	}
-+
-+	return -EINVAL;
-+}
-+
-+/**
-+ * himax_mcu_read_FW_ver() - Read varies version from touch chip
-+ * @ts: Himax touch screen data
-+ *
-+ * This function is used to read the firmware version, config version, touch config
-+ * version, display config version, customer ID, customer info, and project info from
-+ * the touch chip. The function will call himax_mcu_register_read() to read the data
-+ * from the TPIC, and store the data to the IC data in himax_ts_data.
-+ *
-+ * Return: 0 on success, negative error code on failure
-+ */
-+static int himax_mcu_read_FW_ver(struct himax_ts_data *ts)
-+{
-+	int ret;
-+	u8 data[HIMAX_TP_INFO_STR_LEN];
-+
-+	ret = himax_mcu_register_read(ts, HIMAX_DSRAM_ADDR_FW_VER, data, 4);
-+	if (ret < 0) {
-+		dev_err(ts->dev, "%s: read FW version fail\n", __func__);
-+		return ret;
-+	}
-+	ts->ic_data.vendor_panel_ver =  data[0];
-+	ts->ic_data.vendor_fw_ver = data[1] << 8 | data[2];
-+	dev_info(ts->dev, "%s: PANEL_VER: %X\n", __func__, ts->ic_data.vendor_panel_ver);
-+	dev_info(ts->dev, "%s: FW_VER: %X\n", __func__, ts->ic_data.vendor_fw_ver);
-+
-+	ret = himax_mcu_register_read(ts, HIMAX_DSRAM_ADDR_CFG, data, 4);
-+	if (ret < 0) {
-+		dev_err(ts->dev, "%s: read CFG version fail\n", __func__);
-+		return ret;
-+	}
-+	ts->ic_data.vendor_config_ver = data[2] << 8 | data[3];
-+	ts->ic_data.vendor_touch_cfg_ver = data[2];
-+	dev_info(ts->dev, "%s: TOUCH_VER: %X\n", __func__, ts->ic_data.vendor_touch_cfg_ver);
-+	ts->ic_data.vendor_display_cfg_ver = data[3];
-+	dev_info(ts->dev, "%s: DISPLAY_VER: %X\n", __func__, ts->ic_data.vendor_display_cfg_ver);
-+
-+	ret = himax_mcu_register_read(ts, HIMAX_DSRAM_ADDR_VENDOR, data, 4);
-+	if (ret < 0) {
-+		dev_err(ts->dev, "%s: read customer ID fail\n", __func__);
-+		return ret;
-+	}
-+	ts->ic_data.vendor_cid_maj_ver = data[2];
-+	ts->ic_data.vendor_cid_min_ver = data[3];
-+	dev_info(ts->dev, "%s: CID_VER: %X\n", __func__, (ts->ic_data.vendor_cid_maj_ver << 8
-+		 | ts->ic_data.vendor_cid_min_ver));
-+
-+	ret = himax_mcu_register_read(ts, HIMAX_DSRAM_ADDR_CUS_INFO, data, HIMAX_TP_INFO_STR_LEN);
-+	if (ret < 0) {
-+		dev_err(ts->dev, "%s: read customer info fail\n", __func__);
-+		return ret;
-+	}
-+	memcpy(ts->ic_data.vendor_cus_info, data, HIMAX_TP_INFO_STR_LEN);
-+	dev_info(ts->dev, "%s: Cusomer ID : %s\n", __func__, ts->ic_data.vendor_cus_info);
-+
-+	ret = himax_mcu_register_read(ts, HIMAX_DSRAM_ADDR_PROJ_INFO, data, HIMAX_TP_INFO_STR_LEN);
-+	if (ret < 0) {
-+		dev_err(ts->dev, "%s: read project info fail\n", __func__);
-+		return ret;
-+	}
-+	memcpy(ts->ic_data.vendor_proj_info, data, HIMAX_TP_INFO_STR_LEN);
-+	dev_info(ts->dev, "%s: Project ID : %s\n", __func__, ts->ic_data.vendor_proj_info);
-+
-+	return 0;
-+}
-+
-+/**
-+ * himax_bin_desc_data_get() - Parse descriptor data from firmware token
-+ * @ts: Himax touch screen data
-+ * @addr: Address of the data in firmware image
-+ * @descript_buf: token for parsing
-+ *
-+ * This function is used to parse the descriptor data from the firmware token. The
-+ * descriptors are mappings of information in the firmware image. The function will
-+ * check checksum of each token first, and then parse the token to get the related
-+ * data. The data includes CID version, FW version, CFG version, touch config table,
-+ * HID table, HID descriptor, and HID read descriptor.
-+ *
-+ * Return: true on success, false on failure
-+ */
-+static bool himax_bin_desc_data_get(struct himax_ts_data *ts, u32 addr, u8 *descript_buf)
-+{
-+	u16 chk_end;
-+	u16 chk_sum;
-+	u32 hid_table_addr;
-+	u32 i, j;
-+	u32 image_offset;
-+	u32 map_code;
-+	const u32 data_sz = 16;
-+	const u32 report_desc_offset = 24;
-+	union {
-+		u8 *buf;
-+		u32 *word;
-+	} map_data;
-+
-+	/* looking for mapping in page, each mapping is 16 bytes */
-+	for (i = 0; i < HIMAX_HX83102J_PAGE_SIZE; i = i + data_sz) {
-+		chk_end = 0;
-+		chk_sum = 0;
-+		for (j = i; j < (i + data_sz); j++) {
-+			chk_end |= descript_buf[j];
-+			chk_sum += descript_buf[j];
-+		}
-+		if (!chk_end) { /* 1. Check all zero */
-+			return false;
-+		} else if (chk_sum % 0x100) { /* 2. Check sum */
-+			dev_warn(ts->dev, "%s: chk sum failed in %X\n", __func__, i + addr);
-+		} else { /* 3. get data */
-+			map_data.buf = &descript_buf[i];
-+			map_code = le32_to_cpup(map_data.word);
-+			map_data.buf = &descript_buf[i + 4];
-+			image_offset = le32_to_cpup(map_data.word);
-+			/* 4. load info from FW image by specified mapping offset */
-+			switch (map_code) {
-+			/* Config ID */
-+			case HIMAX_FW_CID:
-+				ts->fw_info_table.addr_cid_ver_major = image_offset;
-+				ts->fw_info_table.addr_cid_ver_minor = image_offset + 1;
-+				break;
-+			/* FW version */
-+			case HIMAX_FW_VER:
-+				ts->fw_info_table.addr_fw_ver_major = image_offset;
-+				ts->fw_info_table.addr_fw_ver_minor = image_offset + 1;
-+				break;
-+			/* Config version */
-+			case HIMAX_CFG_VER:
-+				ts->fw_info_table.addr_cfg_ver_major = image_offset;
-+				ts->fw_info_table.addr_cfg_ver_minor = image_offset + 1;
-+				break;
-+			/* Touch config table */
-+			case HIMAX_TP_CONFIG_TABLE:
-+				ts->fw_info_table.addr_cfg_table = image_offset;
-+				break;
-+			/* HID table */
-+			case HIMAX_HID_TABLE:
-+				ts->fw_info_table.addr_hid_table = image_offset;
-+				hid_table_addr = image_offset;
-+				ts->fw_info_table.addr_hid_desc = hid_table_addr;
-+				ts->fw_info_table.addr_hid_rd_desc =
-+					hid_table_addr + report_desc_offset;
-+				break;
-+			}
-+		}
-+	}
-+
-+	return true;
-+}
-+
-+/**
-+ * himax_mcu_bin_desc_get() - Check and get the bin description from the data
-+ * @fw: Firmware data
-+ * @ts: Himax touch screen data
-+ * @max_sz: Maximum size to check
-+ *
-+ * This function is used to check and get the bin description from the firmware data.
-+ * It will check the given data to see if it match the bin description format, and
-+ * call himax_bin_desc_data_get() to get the related data.
-+ *
-+ * Return: true on mapping_count > 0, false on otherwise
-+ */
-+static bool himax_mcu_bin_desc_get(unsigned char *fw, struct himax_ts_data *ts, u32 max_sz)
-+{
-+	bool keep_on_flag;
-+	u32 addr;
-+	u32 mapping_count;
-+	unsigned char *fw_buf;
-+	const u8 header_id = 0x87;
-+	const u8 header_id_loc = 0x0e;
-+	const u8 header_sz = 8;
-+	const u8 header[8] = {
-+		0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
-+	};
-+
-+	/* Check bin is with description table or not */
-+	if (!(memcmp(fw, header, header_sz) == 0 && fw[header_id_loc] == header_id)) {
-+		dev_err(ts->dev, "%s: No description table\n", __func__);
-+		return false;
-+	}
-+
-+	for (addr = 0, mapping_count = 0; addr < max_sz; addr += HIMAX_HX83102J_PAGE_SIZE) {
-+		fw_buf = &fw[addr];
-+		/* Get related data */
-+		keep_on_flag = himax_bin_desc_data_get(ts, addr, fw_buf);
-+		if (keep_on_flag)
-+			mapping_count++;
-+		else
-+			break;
-+	}
-+
-+	return mapping_count > 0;
-+}
-+
-+/**
-+ * himax_mcu_tp_info_check() - Read touch information from touch chip
-+ * @ts: Himax touch screen data
-+ *
-+ * This function is used to read the touch information from the touch chip. The
-+ * information includes the touch resolution, touch point number, interrupt type,
-+ * button number, stylus function, stylus version, and stylus ratio. These information
-+ * is filled by FW after the FW initialized, so it must be called after FW finish
-+ * loading.
-+ *
-+ * Return: 0 on success, negative error code on failure
-+ */
-+static int himax_mcu_tp_info_check(struct himax_ts_data *ts)
-+{
-+	int ret;
-+	char data[HIMAX_REG_SZ];
-+	u8 stylus_ratio;
-+	u32 button_num;
-+	u32 max_pt;
-+	u32 rx_num;
-+	u32 tx_num;
-+	u32 x_res;
-+	u32 y_res;
-+	const u32 button_num_mask = 0x03;
-+	const u32 interrupt_type_mask = 0x01;
-+	const u32 interrupt_type_edge = 0x01;
-+	bool int_is_edge;
-+	bool stylus_func;
-+	bool stylus_id_v2;
-+
-+	ret = himax_mcu_register_read(ts, HIMAX_DSRAM_ADDR_RXNUM_TXNUM, data, 4);
-+	if (ret < 0) {
-+		dev_err(ts->dev, "%s: read rx/tx num fail\n", __func__);
-+		return ret;
-+	}
-+	rx_num = data[2];
-+	tx_num = data[3];
-+
-+	ret = himax_mcu_register_read(ts, HIMAX_DSRAM_ADDR_MAXPT_XYRVS, data, 4);
-+	if (ret < 0) {
-+		dev_err(ts->dev, "%s: read max touch point fail\n", __func__);
-+		return ret;
-+	}
-+	max_pt = data[0];
-+
-+	ret = himax_mcu_register_read(ts, HIMAX_DSRAM_ADDR_X_Y_RES, data, 4);
-+	if (ret < 0) {
-+		dev_err(ts->dev, "%s: read x/y resolution fail\n", __func__);
-+		return ret;
-+	}
-+	y_res = be16_to_cpup((u16 *)&data[0]);
-+	x_res = be16_to_cpup((u16 *)&data[2]);
-+
-+	ret = himax_mcu_register_read(ts, HIMAX_DSRAM_ADDR_INT_IS_EDGE, data, 4);
-+	if (ret < 0) {
-+		dev_err(ts->dev, "%s: read interrupt type fail\n", __func__);
-+		return ret;
-+	}
-+	if ((data[1] & interrupt_type_mask) == interrupt_type_edge)
-+		int_is_edge = true;
-+	else
-+		int_is_edge = false;
-+
-+	ret = himax_mcu_register_read(ts, HIMAX_DSRAM_ADDR_MKEY, data, 4);
-+	if (ret < 0) {
-+		dev_err(ts->dev, "%s: read button number fail\n", __func__);
-+		return ret;
-+	}
-+	button_num = data[0] & button_num_mask;
-+
-+	ret = himax_mcu_register_read(ts, HIMAX_DSRAM_ADDR_STYLUS_FUNCTION, data, 4);
-+	if (ret < 0) {
-+		dev_err(ts->dev, "%s: read stylus function fail\n", __func__);
-+		return ret;
-+	}
-+	stylus_func = data[3] ? true : false;
-+
-+	if (stylus_func) {
-+		ret = himax_mcu_register_read(ts, HIMAX_DSRAM_ADDR_STYLUS_VERSION, data, 4);
-+		if (ret < 0) {
-+			dev_err(ts->dev, "%s: read stylus version fail\n", __func__);
-+			return ret;
-+		}
-+		/* dsram_addr_stylus_version + 2 : 0=off 1=on */
-+		stylus_id_v2 = data[2] ? true : false;
-+		/* dsram_addr_stylus_version + 3 : 0=ratio_1 10=ratio_10 */
-+		stylus_ratio = data[3];
-+	}
-+
-+	ts->ic_data.button_num = button_num;
-+	ts->ic_data.stylus_function = stylus_func;
-+	ts->ic_data.rx_num = rx_num;
-+	ts->ic_data.tx_num = tx_num;
-+	ts->ic_data.x_res = x_res;
-+	ts->ic_data.y_res = y_res;
-+	ts->ic_data.max_point = max_pt;
-+	ts->ic_data.interrupt_is_edge = int_is_edge;
-+	if (stylus_func) {
-+		ts->ic_data.stylus_v2 = stylus_id_v2;
-+		ts->ic_data.stylus_ratio = stylus_ratio;
-+	} else {
-+		ts->ic_data.stylus_v2 = false;
-+		ts->ic_data.stylus_ratio = 0;
-+	}
-+
-+	dev_info(ts->dev, "%s: rx_num = %u, tx_num = %u\n", __func__,
-+		 ts->ic_data.rx_num, ts->ic_data.tx_num);
-+	dev_info(ts->dev, "%s: max_point = %u\n", __func__, ts->ic_data.max_point);
-+	dev_info(ts->dev, "%s: interrupt_is_edge = %s, stylus_function = %s\n", __func__,
-+		 ts->ic_data.interrupt_is_edge ? "true" : "false",
-+		 ts->ic_data.stylus_function ? "true" : "false");
-+	dev_info(ts->dev, "%s: stylus_v2 = %s, stylus_ratio = %u\n", __func__,
-+		 ts->ic_data.stylus_v2 ? "true" : "false", ts->ic_data.stylus_ratio);
-+	dev_info(ts->dev, "%s: TOUCH INFO updated\n", __func__);
-+
-+	return 0;
-+}
-+
-+/**
-+ * himax_disable_fw_reload() - Disable the FW reload data from flash
-+ * @ts: Himax touch screen data
-+ *
-+ * This function is used to tell FW not to reload data from flash. It needs to be
-+ * set before FW start running.
-+ *
-+ * return: 0 on success, negative error code on failure
-+ */
-+static int himax_disable_fw_reload(struct himax_ts_data *ts)
-+{
-+	union himax_dword_data data = {
-+		/*
-+		 * HIMAX_DSRAM_ADDR_FLASH_RELOAD: 0x10007f00
-+		 * 0x10007f00 <= 0x9aa9, let FW know there's no flash
-+		 *	      <= 0x5aa5, there has flash, but not reload
-+		 *	      <= 0x0000, there has flash, and reload
-+		 */
-+		.dword = cpu_to_le32(HIMAX_DSRAM_DATA_DISABLE_FLASH_RELOAD)
-+	};
-+
-+	/* Disable Flash Reload */
-+	return himax_mcu_register_write(ts, HIMAX_DSRAM_ADDR_FLASH_RELOAD, data.byte, 4);
-+}
-+
-+/**
-+ * himax_sram_write_crc_check() - Write the data to SRAM and check the CRC by hardware
-+ * @ts: Himax touch screen data
-+ * @addr: Address to write to
-+ * @data: Data to write
-+ * @len: Length of data
-+ *
-+ * This function is use to write FW code/data to SRAM and check the CRC by hardware to make
-+ * sure the written data is correct. The FW code is designed to be CRC result 0, so if the
-+ * CRC result is not 0, it means the written data is not correct.
-+ *
-+ * return: 0 on success, negative error code on failure
-+ */
-+static int himax_sram_write_crc_check(struct himax_ts_data *ts, u32 addr, const u8 *data, u32 len)
-+{
-+	int ret;
-+	u32 crc;
-+	u32 retry_cnt;
-+	const u32 retry_limit = 3;
-+
-+	for (retry_cnt = 0; retry_cnt < retry_limit; retry_cnt++) {
-+		dev_info(ts->dev, "%s: Write FW to SRAM - total write size = %u\n", __func__, len);
-+		ret = himax_mcu_register_write(ts, addr, data, len);
-+		if (ret) {
-+			dev_err(ts->dev, "%s: write FW to SRAM fail\n", __func__);
-+			return ret;
-+		}
-+		ret = himax_mcu_check_crc(ts, addr, len, &crc);
-+		if (ret) {
-+			dev_err(ts->dev, "%s: check CRC fail\n", __func__);
-+			return ret;
-+		}
-+		dev_info(ts->dev, "%s: HW CRC %s in %u time\n", __func__,
-+			 crc == 0 ? "OK" : "Fail", retry_cnt);
-+
-+		if (crc == 0)
-+			break;
-+	}
-+
-+	if (crc != 0) {
-+		dev_err(ts->dev, "%s: HW CRC fail\n", __func__);
-+		return -EINVAL;
-+	}
-+
-+	return 0;
-+}
-+
-+/**
-+ * himax_zf_part_info() - Get and write the partition from the firmware to SRAM
-+ * @fw: Firmware data
-+ * @ts: Himax touch screen data
-+ *
-+ * This function is used to get the partition information from the firmware and write
-+ * the partition to SRAM. The partition information includes the DSRAM address, the
-+ * firmware offset, and the write size. The function will get the partition information
-+ * into a table, and then write the partition to SRAM according to the table. After
-+ * writing the partition to SRAM, the function will check the CRC by hardware to make
-+ * sure the written data is correct.
-+ *
-+ * return: 0 on success, negative error code on failure
-+ */
-+static int himax_zf_part_info(const struct firmware *fw, struct himax_ts_data *ts)
-+{
-+	int i;
-+	int i_max = -1;
-+	int i_min = -1;
-+	int pnum;
-+	int ret;
-+	u8 buf[HIMAX_ZF_PARTITION_DESC_SZ];
-+	u32 cfg_crc_sw;
-+	u32 cfg_crc_hw;
-+	u32 cfg_sz;
-+	u32 dsram_base = 0xffffffff;
-+	u32 dsram_max = 0;
-+	u32 retry_cnt = 0;
-+	u32 sram_min;
-+	const u32 retry_limit = 3;
-+	const u32 table_addr = ts->fw_info_table.addr_cfg_table;
-+	struct himax_zf_info *info;
-+
-+	/* 1. initial check */
-+	ret = hx83102j_en_hw_crc(ts, true);
-+	if (ret < 0) {
-+		dev_err(ts->dev, "%s: Failed to enable HW CRC\n", __func__);
-+		return ret;
-+	}
-+	pnum = fw->data[table_addr + HIMAX_ZF_PARTITION_AMOUNT_OFFSET];
-+	if (pnum < 2) {
-+		dev_err(ts->dev, "%s: partition number is not correct\n", __func__);
-+		return -EINVAL;
-+	}
-+
-+	info = kcalloc(pnum, sizeof(struct himax_zf_info), GFP_KERNEL);
-+	if (!info)
-+		return -ENOMEM;
-+
-+	memset(info, 0, pnum * sizeof(struct himax_zf_info));
-+
-+	/*
-+	 * 2. record partition information:
-+	 * partition 0: FW main code
-+	 */
-+	memcpy(buf, &fw->data[table_addr], HIMAX_ZF_PARTITION_DESC_SZ);
-+	memcpy(info[0].sram_addr, buf, 4);
-+	info[0].write_size = le32_to_cpup((u32 *)&buf[4]);
-+	info[0].fw_addr = le32_to_cpup((u32 *)&buf[8]);
-+
-+	/* partition 1 ~ n: config data */
-+	for (i = 1; i < pnum; i++) {
-+		memcpy(buf, &fw->data[i * HIMAX_ZF_PARTITION_DESC_SZ + table_addr],
-+		       HIMAX_ZF_PARTITION_DESC_SZ);
-+		memcpy(info[i].sram_addr, buf, 4);
-+		info[i].write_size = le32_to_cpup((u32 *)&buf[4]);
-+		info[i].fw_addr = le32_to_cpup((u32 *)&buf[8]);
-+		info[i].cfg_addr = le32_to_cpup((u32 *)&info[i].sram_addr[0]);
-+
-+		/* Write address must be multiple of 4 */
-+		if (info[i].cfg_addr % 4 != 0) {
-+			info[i].cfg_addr -= (info[i].cfg_addr % 4);
-+			info[i].fw_addr -= (info[i].cfg_addr % 4);
-+			info[i].write_size += (info[i].cfg_addr % 4);
-+		}
-+
-+		if (dsram_base > info[i].cfg_addr) {
-+			dsram_base = info[i].cfg_addr;
-+			i_min = i;
-+		}
-+		if (dsram_max < info[i].cfg_addr) {
-+			dsram_max = info[i].cfg_addr;
-+			i_max = i;
-+		}
-+	}
-+
-+	if (i_min < 0 || i_max < 0) {
-+		dev_err(ts->dev, "%s: DSRAM address invalid!\n", __func__);
-+		return -EINVAL;
-+	}
-+
-+	/* 3. prepare data to update */
-+	sram_min = info[i_min].cfg_addr;
-+
-+	cfg_sz = (dsram_max - dsram_base) + info[i_max].write_size;
-+	/* Wrtie size must be multiple of 4 */
-+	if (cfg_sz % 4 != 0)
-+		cfg_sz = cfg_sz + 4 - (cfg_sz % 4);
-+
-+	dev_info(ts->dev, "%s: main code sz = %d, config sz = %d\n", __func__,
-+		 info[0].write_size, cfg_sz);
-+	/* config size should be smaller than DSRAM size */
-+	if (cfg_sz > ts->chip_max_dsram_size) {
-+		dev_err(ts->dev, "%s: config size error[%d, %u]!!\n", __func__,
-+			cfg_sz, ts->chip_max_dsram_size);
-+		ret = -EINVAL;
-+		goto alloc_cfg_buffer_failed;
-+	}
-+
-+	memset(ts->zf_update_cfg_buffer, 0x00,
-+	       ts->chip_max_dsram_size * sizeof(u8));
-+
-+	/* Collect all partition in FW for DSRAM in a cfg buffer */
-+	for (i = 1; i < pnum; i++)
-+		memcpy(&ts->zf_update_cfg_buffer[info[i].cfg_addr - dsram_base],
-+		       &fw->data[info[i].fw_addr], info[i].write_size);
-+
-+	/*
-+	 * 4. write to sram
-+	 * First, write FW main code and check CRC by HW
-+	 */
-+	ret = himax_sram_write_crc_check(ts, le32_to_cpup((u32 *)info[0].sram_addr),
-+					 &fw->data[info[0].fw_addr], info[0].write_size);
-+	if (ret < 0) {
-+		dev_err(ts->dev, "%s: HW CRC fail\n", __func__);
-+		goto write_main_code_failed;
-+	}
-+
-+	/*
-+	 * Second, FW config data: Calculate CRC of CFG data which is going to write.
-+	 * CFG data don't have CRC pre-defined in FW and need to be calculated by driver.
-+	 */
-+	cfg_crc_sw = himax_mcu_calculate_crc(ts->zf_update_cfg_buffer, cfg_sz);
-+	for (retry_cnt = 0; retry_cnt < retry_limit; retry_cnt++) {
-+		/* Write hole cfg data to DSRAM */
-+		dev_info(ts->dev, "%s: Write cfg to SRAM - total write size = %d\n",
-+			 __func__, cfg_sz);
-+		ret = himax_mcu_register_write(ts, sram_min, ts->zf_update_cfg_buffer, cfg_sz);
-+		if (ret < 0) {
-+			dev_err(ts->dev, "%s: write cfg to SRAM fail\n", __func__);
-+			goto write_cfg_failed;
-+		}
-+		/*
-+		 * Check CRC: Tell HW to calculate CRC from CFG start address in SRAM and check
-+		 * size is equal to size of CFG buffer written. Then we compare the two CRC data
-+		 * make sure data written is correct.
-+		 */
-+		ret = himax_mcu_check_crc(ts, sram_min, cfg_sz, &cfg_crc_hw);
- 		if (ret) {
--			dev_err(ts->dev, "%s: read event stack error!\n", __func__);
--			return ret;
-+			dev_err(ts->dev, "%s: check CRC failed!\n", __func__);
-+			goto crc_failed;
- 		}
--	}
- 
--	return 0;
--}
-+		if (cfg_crc_hw != cfg_crc_sw)
-+			dev_err(ts->dev, "%s: Cfg CRC FAIL, HWCRC = %X, SWCRC = %X, retry = %u\n",
-+				__func__, cfg_crc_hw, cfg_crc_sw, retry_cnt);
-+		else
-+			break;
-+	}
- 
--/**
-- * himax_touch_get() - Get touch data from touch chip
-- * @ts: Himax touch screen data
-- * @buf: Buffer to store the data
-- *
-- * This function is a wrapper to call hx83102j_read_event_stack() to read the touch
-- * data from the touch chip. The touch_data_sz is the size of the touch data to read,
-- * which is calculated by hid report descriptor provided by the firmware.
-- *
-- * Return: HIMAX_TS_SUCCESS on success, negative error code on failure. We categorize
-- * the error code into HIMAX_TS_GET_DATA_FAIL when the read fails, and HIMAX_TS_SUCCESS
-- * when the read is successful. The reason is that the may need special handling when
-- * the read fails.
-- */
--static int himax_touch_get(struct himax_ts_data *ts, u8 *buf)
--{
--	if (hx83102j_read_event_stack(ts, buf, ts->touch_data_sz)) {
--		dev_err(ts->dev, "can't read data from chip!");
--		return HIMAX_TS_GET_DATA_FAIL;
-+	if (retry_cnt == retry_limit && cfg_crc_hw != cfg_crc_sw) {
-+		dev_err(ts->dev, "%s: Write cfg to SRAM fail\n", __func__);
-+		ret = -EINVAL;
-+		goto crc_not_match;
- 	}
- 
--	return HIMAX_TS_SUCCESS;
-+crc_not_match:
-+crc_failed:
-+write_cfg_failed:
-+write_main_code_failed:
-+alloc_cfg_buffer_failed:
-+	kfree(info);
-+
-+	return ret;
- }
- 
- /**
-- * himax_bin_desc_data_get() - Parse descriptor data from firmware token
-+ * himax_mcu_firmware_update_zf() - Update the firmware to the touch chip
-+ * @fw: Firmware data
-  * @ts: Himax touch screen data
-- * @addr: Address of the data in firmware image
-- * @descript_buf: token for parsing
-  *
-- * This function is used to parse the descriptor data from the firmware token. The
-- * descriptors are mappings of information in the firmware image. The function will
-- * check checksum of each token first, and then parse the token to get the related
-- * data. The data includes CID version, FW version, CFG version, touch config table,
-- * HID table, HID descriptor, and HID read descriptor.
-+ * This function is used to update the firmware to the touch chip. The first step is
-+ * to reset the touch chip, stop the MCU and then write the firmware to the touch chip.
-  *
-- * Return: true on success, false on failure
-+ * return: 0 on success, negative error code on failure
-  */
--static bool himax_bin_desc_data_get(struct himax_ts_data *ts, u32 addr, u8 *descript_buf)
-+static int himax_mcu_firmware_update_zf(const struct firmware *fw, struct himax_ts_data *ts)
- {
--	u16 chk_end;
--	u16 chk_sum;
--	u32 hid_table_addr;
--	u32 i, j;
--	u32 image_offset;
--	u32 map_code;
--	const u32 data_sz = 16;
--	const u32 report_desc_offset = 24;
--	union {
--		u8 *buf;
--		u32 *word;
--	} map_data;
-+	int ret;
-+	union himax_dword_data data_system_reset = {
-+		.dword = cpu_to_le32(HIMAX_REG_DATA_SYSTEM_RESET)
-+	};
- 
--	/* looking for mapping in page, each mapping is 16 bytes */
--	for (i = 0; i < HIMAX_HX83102J_PAGE_SIZE; i = i + data_sz) {
--		chk_end = 0;
--		chk_sum = 0;
--		for (j = i; j < (i + data_sz); j++) {
--			chk_end |= descript_buf[j];
--			chk_sum += descript_buf[j];
--		}
--		if (!chk_end) { /* 1. Check all zero */
--			return false;
--		} else if (chk_sum % 0x100) { /* 2. Check sum */
--			dev_warn(ts->dev, "%s: chk sum failed in %X\n", __func__, i + addr);
--		} else { /* 3. get data */
--			map_data.buf = &descript_buf[i];
--			map_code = le32_to_cpup(map_data.word);
--			map_data.buf = &descript_buf[i + 4];
--			image_offset = le32_to_cpup(map_data.word);
--			/* 4. load info from FW image by specified mapping offset */
--			switch (map_code) {
--			/* Config ID */
--			case HIMAX_FW_CID:
--				ts->fw_info_table.addr_cid_ver_major = image_offset;
--				ts->fw_info_table.addr_cid_ver_minor = image_offset + 1;
--				break;
--			/* FW version */
--			case HIMAX_FW_VER:
--				ts->fw_info_table.addr_fw_ver_major = image_offset;
--				ts->fw_info_table.addr_fw_ver_minor = image_offset + 1;
--				break;
--			/* Config version */
--			case HIMAX_CFG_VER:
--				ts->fw_info_table.addr_cfg_ver_major = image_offset;
--				ts->fw_info_table.addr_cfg_ver_minor = image_offset + 1;
--				break;
--			/* Touch config table */
--			case HIMAX_TP_CONFIG_TABLE:
--				ts->fw_info_table.addr_cfg_table = image_offset;
--				break;
--			/* HID table */
--			case HIMAX_HID_TABLE:
--				ts->fw_info_table.addr_hid_table = image_offset;
--				hid_table_addr = image_offset;
--				ts->fw_info_table.addr_hid_desc = hid_table_addr;
--				ts->fw_info_table.addr_hid_rd_desc =
--					hid_table_addr + report_desc_offset;
--				break;
--			}
--		}
-+	dev_info(ts->dev, "%s: Updating FW - total FW size = %u\n", __func__, (u32)fw->size);
-+	ret = himax_mcu_register_write(ts, HIMAX_REG_ADDR_SYSTEM_RESET, data_system_reset.byte, 4);
-+	if (ret < 0) {
-+		dev_err(ts->dev, "%s: system reset fail\n", __func__);
-+		return ret;
- 	}
- 
--	return true;
-+	ret = hx83102j_sense_off(ts, false);
-+	if (ret)
-+		return ret;
-+
-+	ret = himax_zf_part_info(fw, ts);
-+
-+	return ret;
- }
- 
- /**
-- * himax_mcu_bin_desc_get() - Check and get the bin description from the data
-- * @fw: Firmware data
-+ * himax_zf_reload_from_file() - Complete firmware update sequence
-+ * @file_name: File name of the firmware
-  * @ts: Himax touch screen data
-- * @max_sz: Maximum size to check
-  *
-- * This function is used to check and get the bin description from the firmware data.
-- * It will check the given data to see if it match the bin description format, and
-- * call himax_bin_desc_data_get() to get the related data.
-+ * This function process the full sequence of updating the firmware to the touch chip.
-+ * It will first check if the other thread is updating now, if not, it will request the
-+ * firmware from user space and then call himax_mcu_firmware_update_zf() to update the
-+ * firmware, and then tell firmware not to reload data from flash and initial the touch
-+ * chip by calling himax_mcu_power_on_init().
-  *
-- * Return: true on mapping_count > 0, false on otherwise
-+ * return: 0 on success, negative error code on failure
-  */
--static bool himax_mcu_bin_desc_get(unsigned char *fw, struct himax_ts_data *ts, u32 max_sz)
-+static int himax_zf_reload_from_file(char *file_name, struct himax_ts_data *ts)
- {
--	bool keep_on_flag;
--	u32 addr;
--	u32 mapping_count;
--	unsigned char *fw_buf;
--	const u8 header_id = 0x87;
--	const u8 header_id_loc = 0x0e;
--	const u8 header_sz = 8;
--	const u8 header[8] = {
--		0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
--	};
-+	int ret;
-+	const struct firmware *fw;
- 
--	/* Check bin is with description table or not */
--	if (!(memcmp(fw, header, header_sz) == 0 && fw[header_id_loc] == header_id)) {
--		dev_err(ts->dev, "%s: No description table\n", __func__);
--		return false;
-+	if (!mutex_trylock(&ts->zf_update_lock)) {
-+		dev_warn(ts->dev, "%s: Other thread is updating now!\n", __func__);
-+		return 0;
- 	}
-+	dev_info(ts->dev, "%s: Preparing to update %s!\n", __func__, file_name);
- 
--	for (addr = 0, mapping_count = 0; addr < max_sz; addr += HIMAX_HX83102J_PAGE_SIZE) {
--		fw_buf = &fw[addr];
--		/* Get related data */
--		keep_on_flag = himax_bin_desc_data_get(ts, addr, fw_buf);
--		if (keep_on_flag)
--			mapping_count++;
--		else
--			break;
-+	ret = request_firmware(&fw, file_name, ts->dev);
-+	if (ret < 0) {
-+		dev_err(ts->dev, "%s: request firmware fail, code[%d]!!\n", __func__, ret);
-+		goto load_firmware_error;
- 	}
- 
--	return mapping_count > 0;
-+	ret = himax_mcu_firmware_update_zf(fw, ts);
-+	release_firmware(fw);
-+	if (ret < 0)
-+		goto load_firmware_error;
-+
-+	ret = himax_disable_fw_reload(ts);
-+	if (ret < 0)
-+		goto load_firmware_error;
-+	ret = himax_mcu_power_on_init(ts);
-+
-+load_firmware_error:
-+	mutex_unlock(&ts->zf_update_lock);
-+
-+	return ret;
- }
- 
- /**
-@@ -1238,6 +2188,7 @@ static int himax_ts_operation(struct himax_ts_data *ts)
-  * This function is used to handle interrupt bottom half work. It will
-  * call the himax_ts_operation() to get the touch data, dispatch the data
-  * to HID core. If the touch data is not valid, it will reset the TPIC.
-+ * It will also call the hx83102j_reload_to_active() after the reset action.
-  *
-  * Return: void
-  */
-@@ -1246,7 +2197,38 @@ static void himax_ts_work(struct himax_ts_data *ts)
- 	if (himax_ts_operation(ts) == HIMAX_TS_GET_DATA_FAIL) {
- 		dev_info(ts->dev, "%s: Now reset the Touch chip\n", __func__);
- 		himax_mcu_ic_reset(ts, true);
-+		if (hx83102j_reload_to_active(ts))
-+			dev_warn(ts->dev, "%s: Reload to active failed\n", __func__);
-+	}
-+}
-+
-+/**
-+ * himax_update_fw() - update firmware using firmware structure
-+ * @ts: Himax touch screen data
-+ *
-+ * This function use already initialize firmware structure in ts to update
-+ * firmware.
-+ *
-+ * Return: 0 on success, negative error code on failure
-+ */
-+static int himax_update_fw(struct himax_ts_data *ts)
-+{
-+	int ret;
-+	u32 retry_cnt;
-+	const u32 retry_limit = 3;
-+
-+	for (retry_cnt = 0; retry_cnt < retry_limit; retry_cnt++) {
-+		ret = himax_mcu_firmware_update_zf(ts->himax_fw, ts);
-+		if (ret < 0) {
-+			dev_err(ts->dev, "%s: TP upgrade error, upgrade_times = %d\n", __func__,
-+				retry_cnt);
-+		} else {
-+			dev_info(ts->dev, "%s: TP FW upgrade OK\n", __func__);
-+			return 0;
-+		}
- 	}
-+
-+	return -EIO;
- }
- 
- /**
-@@ -1279,9 +2261,8 @@ static int himax_hid_rd_init(struct himax_ts_data *ts)
- 			if (!ts->hid_rd_data.rd_data)
- 				return -ENOMEM;
- 		}
--		/* Copy the base RD from firmware table */
- 		memcpy((void *)ts->hid_rd_data.rd_data,
--		       &ts->himax_fw_data[ts->fw_info_table.addr_hid_rd_desc],
-+		       &ts->himax_fw->data[ts->fw_info_table.addr_hid_rd_desc],
- 		       ts->hid_desc.report_desc_length);
- 		ts->hid_rd_data.rd_length = ts->hid_desc.report_desc_length;
- 	}
-@@ -1343,81 +2324,105 @@ static int himax_hid_report_data_init(struct himax_ts_data *ts)
- 	return 0;
- }
- 
--/* load firmware data from flash, parse HID info and register HID */
- /**
-- * himax_load_config() - Load the firmware from the flash
-- * @ts: Himax touch screen data
-+ * himax_initial_work() - Initial work for the touch screen
-+ * @work: Work structure
-+ *
-+ * This function is used to do the initial work for the touch screen. It will
-+ * call the request_firmware() to get the firmware from the file system, and parse the
-+ * mapping table in 1k header. If the headers are parsed successfully, it will
-+ * call the himax_update_fw() to update the firmware and power on the touch screen.
-+ * If the power on action is successful, it will load the hid descriptor and
-+ * check the touch panel information. If the touch panel information is correct,
-+ * it will call the himax_hid_rd_init() to initialize the HID report descriptor,
-+ * and call the himax_hid_register() to register the HID device. After all is done,
-+ * it will release the firmware and enable the interrupt.
-  *
-- * This function is used to load the firmware from the flash. It will read
-- * the firmware from the flash and parse the HID info. If the HID info is
-- * valid, it will initialize the HID report descriptor and register the HID
-- * device. If the HID device is probed, it will initialize the report data
-- * and enable the interrupt.
-- *
-- * Return: 0 on success, negative error code on failure
-+ * Return: None
-  */
--static int himax_load_config(struct himax_ts_data *ts)
-+static void himax_initial_work(struct work_struct *work)
- {
-+	struct himax_ts_data *ts = container_of(work, struct himax_ts_data,
-+						initial_work.work);
- 	int ret;
--	s32 i;
--	s32 page_sz = (s32)HIMAX_HX83102J_PAGE_SIZE;
--	s32 flash_sz = (s32)HIMAX_HX83102J_FLASH_SIZE;
--	bool fw_load_status = false;
-+	bool fw_load_status;
- 	const u32 fw_bin_header_sz = 1024;
- 
- 	ts->ic_boot_done = false;
--
--	ts->himax_fw_data = devm_kzalloc(ts->dev, HIMAX_HX83102J_FLASH_SIZE, GFP_KERNEL);
--	if (!ts->himax_fw_data)
--		return -ENOMEM;
--
--	for (i = 0; i < flash_sz; i += page_sz) {
--		ret = himax_mcu_register_read(ts, i, ts->himax_fw_data + i,
--					      (flash_sz - i) > page_sz ? page_sz : (flash_sz - i));
--		if (ret < 0) {
--			dev_err(ts->dev, "%s: read FW from flash fail!\n", __func__);
--			return ret;
--		}
-+	dev_info(ts->dev, "%s: request file %s\n", __func__, ts->firmware_name);
-+	ret = request_firmware(&ts->himax_fw, ts->firmware_name, ts->dev);
-+	if (ret < 0) {
-+		dev_err(ts->dev, "%s: request firmware failed, error code = %d\n", __func__, ret);
-+		return;
- 	}
--	/* Search mapping table in 1k header */
--	fw_load_status = himax_mcu_bin_desc_get((unsigned char *)ts->himax_fw_data,
-+	/* Parse the mapping table in 1k header */
-+	fw_load_status = himax_mcu_bin_desc_get((unsigned char *)ts->himax_fw->data,
- 						ts, fw_bin_header_sz);
- 	if (!fw_load_status) {
--		dev_err(ts->dev, "%s: FW load status fail!\n", __func__);
--		return -EINVAL;
-+		dev_err(ts->dev, "%s: Failed to parse the mapping table!\n", __func__);
-+		goto err_load_bin_descriptor;
- 	}
- 
--	if (ts->fw_info_table.addr_hid_desc != 0) {
--		memcpy(&ts->hid_desc,
--		       &ts->himax_fw_data[ts->fw_info_table.addr_hid_desc],
--		       sizeof(struct himax_hid_desc));
--		ts->hid_desc.desc_length =
--			le16_to_cpu(ts->hid_desc.desc_length);
--		ts->hid_desc.bcd_version =
--			le16_to_cpu(ts->hid_desc.bcd_version);
--		ts->hid_desc.report_desc_length =
--			le16_to_cpu(ts->hid_desc.report_desc_length);
--		ts->hid_desc.max_input_length =
--			le16_to_cpu(ts->hid_desc.max_input_length);
--		ts->hid_desc.max_output_length =
--			le16_to_cpu(ts->hid_desc.max_output_length);
--		ts->hid_desc.max_fragment_length =
--			le16_to_cpu(ts->hid_desc.max_fragment_length);
--		ts->hid_desc.vendor_id =
--			le16_to_cpu(ts->hid_desc.vendor_id);
--		ts->hid_desc.product_id =
--			le16_to_cpu(ts->hid_desc.product_id);
--		ts->hid_desc.version_id =
--			le16_to_cpu(ts->hid_desc.version_id);
--		ts->hid_desc.flags =
--			le16_to_cpu(ts->hid_desc.flags);
-+	if (himax_update_fw(ts)) {
-+		dev_err(ts->dev, "%s: Update FW fail\n", __func__);
-+		goto err_update_fw_failed;
- 	}
- 
-+	dev_info(ts->dev, "%s: Update FW success\n", __func__);
-+	/* write flag to sram to stop fw reload again. */
-+	if (himax_disable_fw_reload(ts))
-+		goto err_disable_fw_reload;
-+	if (himax_mcu_power_on_init(ts))
-+		goto err_power_on_init;
-+	/* get hid descriptors */
-+	if (!ts->fw_info_table.addr_hid_desc) {
-+		dev_err(ts->dev, "%s: No HID descriptor! Wrong FW!\n", __func__);
-+		goto err_wrong_firmware;
-+	}
-+	memcpy(&ts->hid_desc,
-+	       &ts->himax_fw->data[ts->fw_info_table.addr_hid_desc],
-+	       sizeof(struct himax_hid_desc));
-+	ts->hid_desc.desc_length =
-+		le16_to_cpu(ts->hid_desc.desc_length);
-+	ts->hid_desc.bcd_version =
-+		le16_to_cpu(ts->hid_desc.bcd_version);
-+	ts->hid_desc.report_desc_length =
-+		le16_to_cpu(ts->hid_desc.report_desc_length);
-+	ts->hid_desc.max_input_length =
-+		le16_to_cpu(ts->hid_desc.max_input_length);
-+	ts->hid_desc.max_output_length =
-+		le16_to_cpu(ts->hid_desc.max_output_length);
-+	ts->hid_desc.max_fragment_length =
-+		le16_to_cpu(ts->hid_desc.max_fragment_length);
-+	ts->hid_desc.vendor_id =
-+		le16_to_cpu(ts->hid_desc.vendor_id);
-+	ts->hid_desc.product_id =
-+		le16_to_cpu(ts->hid_desc.product_id);
-+	ts->hid_desc.version_id =
-+		le16_to_cpu(ts->hid_desc.version_id);
-+	ts->hid_desc.flags =
-+		le16_to_cpu(ts->hid_desc.flags);
-+
-+	if (himax_mcu_tp_info_check(ts))
-+		goto err_tp_info_failed;
-+	if (himax_mcu_read_FW_ver(ts))
-+		goto err_read_fw_ver;
-+	if (ts->pdata.pid) {
-+		if (ts->pdata.pid != ts->hid_desc.product_id) {
-+			dev_err(ts->dev, "%s: PID mismatch, dtsi PID = 0x%x, fw PID = 0x%x\n",
-+				__func__, ts->pdata.pid, ts->hid_desc.product_id);
-+			goto err_pid_match_failed;
-+		} else {
-+			dev_info(ts->dev, "%s: PID match, dtsi PID = 0x%x, fw PID = 0x%x\n",
-+				 __func__, ts->pdata.pid, ts->hid_desc.product_id);
-+		}
-+	}
- 	if (himax_hid_rd_init(ts)) {
- 		dev_err(ts->dev, "%s: hid rd init fail\n", __func__);
- 		goto err_hid_rd_init_failed;
- 	}
- 
-+	usleep_range(1000000, 1000100);
- 	himax_hid_register(ts);
- 	if (!ts->hid_probed) {
- 		goto err_hid_probe_failed;
-@@ -1428,19 +2433,29 @@ static int himax_load_config(struct himax_ts_data *ts)
- 		}
- 	}
- 
--	ts->himax_fw_data = NULL;
-+	release_firmware(ts->himax_fw);
-+	ts->himax_fw = NULL;
-+
- 	ts->ic_boot_done = true;
- 	himax_int_enable(ts, true);
- 
--	return 0;
-+	return;
- 
- err_report_data_init_failed:
- 	himax_hid_remove(ts);
- 	ts->hid_probed = false;
- err_hid_probe_failed:
- err_hid_rd_init_failed:
--
--	return -EINVAL;
-+err_pid_match_failed:
-+err_read_fw_ver:
-+err_tp_info_failed:
-+err_wrong_firmware:
-+err_power_on_init:
-+err_disable_fw_reload:
-+err_update_fw_failed:
-+err_load_bin_descriptor:
-+	release_firmware(ts->himax_fw);
-+	ts->himax_fw = NULL;
- }
- 
- /**
-@@ -1492,12 +2507,22 @@ static void himax_ap_notify_fw_suspend(struct himax_ts_data *ts, bool suspend)
-  * @ts: Himax touch screen data
-  *
-  * This function is used to resume the touch screen. It will call the
-+ * himax_zf_reload_from_file() to reload the firmware. And call the
-  * himax_ap_notify_fw_suspend() to notify the FW of AP resume status.
-  *
-  * Return: None
-  */
- static void himax_resume_proc(struct himax_ts_data *ts)
- {
-+	int ret;
-+
-+	ret = himax_zf_reload_from_file(ts->firmware_name, ts);
-+	if (ret) {
-+		dev_err(ts->dev, "%s: update FW fail, code[%d]!!\n", __func__, ret);
-+		return;
-+	}
-+	ts->resume_succeeded = true;
-+
- 	himax_ap_notify_fw_suspend(ts, false);
- }
- 
-@@ -1527,15 +2552,23 @@ static int himax_chip_suspend(struct himax_ts_data *ts)
-  * This function is used to resume the touch screen. It will set the resume
-  * success flag to false, and disable reset pin. Then call the himax_resume_proc()
-  * to process detailed resume procedure.
-+ * If the resume action is succeeded, it will call the himax_hid_probe() to restore
-+ * the HID device and enable the interrupt.
-  *
-  * Return: 0 on success, negative error code on failure
-  */
- static int himax_chip_resume(struct himax_ts_data *ts)
- {
-+	ts->resume_succeeded = false;
- 	gpiod_set_value(ts->pdata.gpiod_rst, 0);
- 	himax_resume_proc(ts);
--	himax_hid_probe(ts);
--	himax_int_enable(ts, true);
-+	if (ts->resume_succeeded) {
-+		himax_hid_probe(ts);
-+		himax_int_enable(ts, true);
-+	} else {
-+		dev_err(ts->dev, "%s: resume failed!\n", __func__);
-+		return -ECANCELED;
-+	}
- 
- 	return 0;
- }
-@@ -1596,8 +2629,7 @@ static int himax_resume(struct device *dev)
-  * initialize interrupt lock, register the interrupt, and disable the
-  * interrupt. If later part of initialization succeed, then interrupt will
-  * be enabled.
-- * It will also load the firmware from the flash, parse the HID info, and
-- * register the HID device by calling the himax_load_config().
-+ * And initialize varies flags, workqueue and delayed work for later use.
-  *
-  * Return: 0 on success, negative error code on failure
-  */
-@@ -1605,18 +2637,96 @@ static int himax_chip_init(struct himax_ts_data *ts)
- {
- 	int ret;
- 
-+	hx83102j_chip_init_data(ts);
- 	if (himax_ts_register_interrupt(ts)) {
- 		dev_err(ts->dev, "%s: register interrupt failed\n", __func__);
- 		return -EIO;
- 	}
- 	himax_int_enable(ts, false);
--	ret = himax_load_config(ts);
--	if (ret < 0)
--		return ret;
-+	ts->zf_update_cfg_buffer = devm_kzalloc(ts->dev, ts->chip_max_dsram_size, GFP_KERNEL);
-+	if (!ts->zf_update_cfg_buffer) {
-+		ret = -ENOMEM;
-+		goto err_update_cfg_buf_alloc_failed;
-+	}
-+	INIT_DELAYED_WORK(&ts->initial_work, himax_initial_work);
-+	schedule_delayed_work(&ts->initial_work, msecs_to_jiffies(HIMAX_DELAY_BOOT_UPDATE_MS));
- 	ts->initialized = true;
- 
-+	return 0;
-+	cancel_delayed_work_sync(&ts->initial_work);
-+err_update_cfg_buf_alloc_failed:
-+
-+	return ret;
-+}
-+
-+/**
-+ * himax_chip_deinit() - Deinitialize the Himax touch screen
-+ * @ts: Himax touch screen data
-+ *
-+ * This function is used to deinitialize the Himax touch screen.
-+ *
-+ * Return: None
-+ */
-+static void himax_chip_deinit(struct himax_ts_data *ts)
-+{
-+	cancel_delayed_work_sync(&ts->initial_work);
-+}
-+
-+#if defined(CONFIG_OF)
-+/**
-+ * himax_parse_dt() - Parse the device tree
-+ * @dt: Device node
-+ * @pdata: Himax platform data
-+ *
-+ * This function is used to parse the device tree. If "himax,pid" is found,
-+ * it will parse the PID value and set it to the platform data. The firmware
-+ * name will set to himax_i2chid_$PID.bin if the PID is found, or
-+ * himax_i2chid.bin if the PID is not found.
-+ *
-+ * Return: 0 on success, negative error code on failure
-+ */
-+static int himax_parse_dt(struct device_node *dt, struct himax_platform_data *pdata)
-+{
-+	u32 data;
-+	const char default_fw_name[] = HIMAX_BOOT_UPGRADE_FWNAME;
-+	/*
-+	 * Maximum length of a firmware name size:
-+	 * (default_name) + _XXXX(PID) + .bin + null terminator
-+	 */
-+	static char pid_fw_name[ARRAY_SIZE(default_fw_name) + 5 + 4 + 1] = {0};
-+	struct himax_ts_data *ts;
-+
-+	if (!dt || !pdata)
-+		return -EINVAL;
-+
-+	ts = container_of(pdata, struct himax_ts_data, pdata);
-+	/* Set default firmware name, without PID */
-+	strscpy(ts->firmware_name, HIMAX_BOOT_UPGRADE_FWNAME HIMAX_FW_EXT_NAME,
-+		sizeof(HIMAX_BOOT_UPGRADE_FWNAME HIMAX_FW_EXT_NAME));
-+
-+	/*
-+	 * check himax,pid first, if exist then get the value.
-+	 * himax,pid = <0x1002>; 0x1002 is PID value
-+	 */
-+	if (of_get_property(dt, "himax,pid", &data)) {
-+		if (of_property_read_u32(dt, "himax,pid", &data)) {
-+			pdata->pid = 0;
-+			return -EINVAL;
-+		}
-+
-+		pdata->pid = data;
-+		snprintf(pid_fw_name, sizeof(pid_fw_name), "%s_%04X%s", HIMAX_BOOT_UPGRADE_FWNAME,
-+			 pdata->pid, HIMAX_FW_EXT_NAME);
-+		dev_info(ts->dev, "%s: DT:himax,pid = %04X, fw_name = %s\n", __func__,
-+			 pdata->pid, pid_fw_name);
-+		strscpy(ts->firmware_name, pid_fw_name, sizeof(pid_fw_name));
-+	} else {
-+		pdata->pid = 0;
-+	}
-+
- 	return 0;
- }
-+#endif
- 
- /**
-  * __himax_initial_power_up() - Initial power up of the Himax touch screen
-@@ -1820,6 +2930,13 @@ static int himax_spi_drv_probe(struct spi_device *spi)
- 		dev_err(ts->dev, "%s: gpio-rst value is not valid\n", __func__);
- 		return -EIO;
- 	}
-+#if defined(CONFIG_OF)
-+	if (himax_parse_dt(spi->dev.of_node, pdata) < 0) {
-+		dev_err(ts->dev, "%s:  parse OF data failed!\n", __func__);
-+		ts->dev = NULL;
-+		return -ENODEV;
-+	}
-+#endif
- 
- 	spi->bits_per_word = 8;
- 	spi->mode = SPI_MODE_3;
-@@ -1850,6 +2967,7 @@ static int himax_spi_drv_probe(struct spi_device *spi)
- 	spin_lock_init(&ts->irq_lock);
- 	mutex_init(&ts->rw_lock);
- 	mutex_init(&ts->reg_lock);
-+	mutex_init(&ts->zf_update_lock);
- 	dev_set_drvdata(&spi->dev, ts);
- 	spi_set_drvdata(spi, ts);
- 
-@@ -1885,6 +3003,7 @@ static void himax_spi_drv_remove(struct spi_device *spi)
- 			if (ts->hid_probed)
- 				himax_hid_remove(ts);
- 		}
-+		himax_chip_deinit(ts);
- 		himax_platform_deinit(ts);
- 	}
- }
-diff --git a/drivers/hid/hid-himax-83102j.h b/drivers/hid/hid-himax-83102j.h
-index eef55c45b1d4..6a41ff680478 100644
---- a/drivers/hid/hid-himax-83102j.h
-+++ b/drivers/hid/hid-himax-83102j.h
-@@ -10,7 +10,9 @@
- // #define HX_PWR_CONFIG
- 
- #include <drm/drm_panel.h>
-+#include <linux/crc32poly.h>
- #include <linux/delay.h>
-+#include <linux/firmware.h>
- #include <linux/hid.h>
- #include <linux/interrupt.h>
- #include <linux/module.h>
-@@ -41,6 +43,13 @@
- 							 HIMAX_BUS_W_HLEN + HIMAX_REG_SZ)
- /* SPI CS setup time */
- #define HIMAX_SPI_CS_SETUP_TIME				300
-+/* Clear 4 bytes data */
-+#define HIMAX_DATA_CLEAR				0x00000000
-+/* boot update start delay */
-+#define HIMAX_DELAY_BOOT_UPDATE_MS			2000
-+#define HIMAX_TP_INFO_STR_LEN				12U
-+#define HIMAX_ZF_PARTITION_AMOUNT_OFFSET		12
-+#define HIMAX_ZF_PARTITION_DESC_SZ			16U
- /* HIDRAW report header size */
- #define HIMAX_HID_REPORT_HDR_SZ				2U
- /* hx83102j IC parameters */
-@@ -71,17 +80,48 @@
- #define HIMAX_AHB_CMD_INCR4_ADD_4_BYTE			0x01
- #define HIMAX_AHB_CMD_LEAVE_SAFE_MODE			0x0000
- /* DSRAM flag addresses */
-+#define HIMAX_DSRAM_ADDR_VENDOR				0x10007000
-+#define HIMAX_DSRAM_ADDR_FW_VER				0x10007004
-+#define HIMAX_DSRAM_ADDR_CUS_INFO			0x10007008
-+#define HIMAX_DSRAM_ADDR_PROJ_INFO			0x10007014
-+#define HIMAX_DSRAM_ADDR_CFG				0x10007084
-+#define HIMAX_DSRAM_ADDR_INT_IS_EDGE			0x10007088
-+#define HIMAX_DSRAM_ADDR_MKEY				0x100070e8
-+#define HIMAX_DSRAM_ADDR_RXNUM_TXNUM			0x100070f4
-+#define HIMAX_DSRAM_ADDR_MAXPT_XYRVS			0x100070f8
-+#define HIMAX_DSRAM_ADDR_X_Y_RES			0x100070fc
-+#define HIMAX_DSRAM_ADDR_STYLUS_FUNCTION		0x1000719c
-+#define HIMAX_DSRAM_ADDR_STYLUS_VERSION			0x100071fc
-+#define HIMAX_DSRAM_ADDR_SET_NFRAME			0x10007294
-+#define HIMAX_DSRAM_ADDR_2ND_FLASH_RELOAD		0x100072c0
-+#define HIMAX_DSRAM_ADDR_FLASH_RELOAD			0x10007f00
-+#define HIMAX_DSRAM_ADDR_SORTING_MODE_EN		0x10007f04
-+#define HIMAX_DSRAM_ADDR_DBG_MSG			0x10007f40
- #define HIMAX_DSRAM_ADDR_AP_NOTIFY_FW_SUSPEND		0x10007fd0
- /* dsram flag data */
- #define HIMAX_DSRAM_DATA_AP_NOTIFY_FW_SUSPEND		0xa55aa55a
- #define HIMAX_DSRAM_DATA_AP_NOTIFY_FW_RESUME		0x00000000
-+#define HIMAX_DSRAM_DATA_DISABLE_FLASH_RELOAD		0x00009aa9
-+#define HIMAX_DSRAM_DATA_FW_RELOAD_DONE			0x000072c0
- /* hx83102j-specific register/dsram flags/data */
-+#define HIMAX_HX83102J_DSRAM_ADDR_RAW_OUT_SEL		0x100072ec
-+#define HIMAX_HX83102J_REG_ADDR_HW_CRC			0x80010000
- #define HIMAX_HX83102J_REG_ADDR_TCON_RST		0x80020004
-+#define HIMAX_HX83102J_REG_DATA_HW_CRC			0x0000ecce
-+#define HIMAX_HX83102J_REG_DATA_HW_CRC_DISABLE		0x00000000
- /* hardware register addresses */
- #define HIMAX_REG_ADDR_SPI200_DATA			0x8000002c
-+#define HIMAX_REG_ADDR_RELOAD_STATUS			0x80050000
-+#define HIMAX_REG_ADDR_RELOAD_CRC32_RESULT		0x80050018
-+#define HIMAX_REG_ADDR_RELOAD_ADDR_FROM			0x80050020
-+#define HIMAX_REG_ADDR_RELOAD_ADDR_CMD_BEAT		0x80050028
-+#define HIMAX_REG_ADDR_SYSTEM_RESET			0x90000018
-+#define HIMAX_REG_ADDR_RELOAD_TO_ACTIVE			0x90000048
- #define HIMAX_REG_ADDR_CTRL_FW				0x9000005c
- #define HIMAX_REG_ADDR_FW_STATUS			0x900000a8
- #define HIMAX_REG_ADDR_ICID				0x900000d0
-+#define HIMAX_REG_ADDR_RESET_FLAG			0x900000e4
-+#define HIMAX_REG_ADDR_DD_STATUS			0x900000e8
- /* hardware reg data/flags */
- #define HIMAX_REG_DATA_FW_STATE_RUNNING			0x05
- #define HIMAX_REG_DATA_FW_STATE_SAFE_MODE		0x0c
-@@ -89,6 +129,9 @@
- #define HIMAX_REG_DATA_FW_GO_SAFEMODE			0xa5
- #define HIMAX_REG_DATA_FW_IN_SAFEMODE			0x87
- #define HIMAX_REG_DATA_ICID				0x83102900
-+#define HIMAX_REG_DATA_RELOAD_DONE			0x01
-+#define HIMAX_REG_DATA_RELOAD_PASSWORD			0x99
-+#define HIMAX_REG_DATA_SYSTEM_RESET			0x00000055
- #define HIMAX_REG_DATA_TCON_RST				0x00000000
- /* HIMAX SPI function select, 1st byte of any SPI command sequence */
- #define HIMAX_SPI_FUNCTION_READ				0xf3
-@@ -100,6 +143,8 @@
- #define HIMAX_CFG_VER					0x10000600
- #define HIMAX_HID_TABLE					0x30000100
- #define HIMAX_FW_BIN_DESC				0x10000000
-+#define HIMAX_BOOT_UPGRADE_FWNAME			"himax_i2chid"
-+#define HIMAX_FW_EXT_NAME				".bin"
- 
- /**
-  * enum himax_hidraw_id_function - HIDRAW report IDs
-@@ -119,6 +164,20 @@ enum himax_touch_report_status {
- 	HIMAX_TS_SUCCESS = 0,
- };
- 
-+/**
-+ * struct himax_zf_info - Zero flash update information
-+ * @sram_addr: SRAM address byte array buffer
-+ * @write_size: Write size of each chunk
-+ * @fw_addr: Offset in firmware file
-+ * @cfg_addr: target sram address
-+ */
-+struct himax_zf_info {
-+	u8 sram_addr[4];
-+	int write_size;
-+	u32 fw_addr;
-+	u32 cfg_addr;
-+};
-+
- /**
-  * struct himax_fw_address_table - address/offset in firmware image
-  * @addr_fw_ver_major: Address to Major version of firmware
-@@ -170,9 +229,21 @@ union himax_dword_data {
- /**
-  * struct himax_ic_data - IC information holder
-  * @stylus_ratio: Stylus ratio
-+ * @vendor_cus_info: Vendor customer information
-+ * @vendor_proj_info: Vendor project information
-+ * @vendor_fw_ver: Vendor firmware version
-+ * @vendor_config_ver: Vendor config version
-+ * @vendor_touch_cfg_ver: Vendor touch config version
-+ * @vendor_display_cfg_ver: Vendor display config version
-+ * @vendor_cid_maj_ver: Vendor CID major version
-+ * @vendor_cid_min_ver: Vendor CID minor version
-+ * @vendor_panel_ver: Vendor panel version
-+ * @vendor_sensor_id: Vendor sensor ID
-  * @rx_num: Number of RX
-  * @tx_num: Number of TX
-  * @button_num: Number of buttons
-+ * @x_res: X resolution
-+ * @y_res: Y resolution
-  * @max_point: Maximum touch point
-  * @icid: IC ID
-  * @interrupt_is_edge: Interrupt is edge otherwise level
-@@ -181,9 +252,21 @@ union himax_dword_data {
-  */
- struct himax_ic_data {
- 	u8 stylus_ratio;
-+	u8 vendor_cus_info[12];
-+	u8 vendor_proj_info[12];
-+	int vendor_fw_ver;
-+	int vendor_config_ver;
-+	int vendor_touch_cfg_ver;
-+	int vendor_display_cfg_ver;
-+	int vendor_cid_maj_ver;
-+	int vendor_cid_min_ver;
-+	int vendor_panel_ver;
-+	int vendor_sensor_id;
- 	u32 rx_num;
- 	u32 tx_num;
- 	u32 button_num;
-+	u32 x_res;
-+	u32 y_res;
- 	u32 max_point;
- 	u32 icid;
- 	bool interrupt_is_edge;
-@@ -191,6 +274,38 @@ struct himax_ic_data {
- 	bool stylus_v2;
- };
- 
-+/**
-+ * struct himax_bin_desc - Firmware binary descriptor
-+ * @passwd: Password to indicate the binary is valid
-+ * @cid: Customer ID
-+ * @panel_ver: Panel version
-+ * @fw_ver: Firmware version
-+ * @ic_sign: IC signature
-+ * @customer: Customer name
-+ * @project: Project name
-+ * @fw_major: Major version of firmware
-+ * @fw_minor: Minor version of firmware
-+ * @date: Generate date of firmware
-+ * @ic_sign_2: IC signature 2
-+ *
-+ * This structure is used to hold the firmware binary descriptor.
-+ * It directly maps to a sequence of bytes in firmware image,
-+ * thus need to be packed.
-+ */
-+struct himax_bin_desc {
-+	u16 passwd;
-+	u16 cid;
-+	u8 panel_ver;
-+	u16 fw_ver;
-+	u8 ic_sign;
-+	char customer[12];
-+	char project[12];
-+	char fw_major[12];
-+	char fw_minor[12];
-+	char date[12];
-+	char ic_sign_2[12];
-+} __packed;
-+
- /**
-  * struct himax_hid_desc - HID descriptor
-  * @desc_length: Length of HID descriptor
-@@ -223,8 +338,42 @@ struct himax_hid_desc {
- 	u32 reserved;
- } __packed;
- 
-+/**
-+ * struct himax_hid_info - IC information holder for HIDRAW function
-+ * @vid: Vendor ID
-+ * @pid: Product ID
-+ * @cfg_info: Configuration information
-+ * @cfg_version: Configuration version
-+ * @disp_version: Display version
-+ * @rx: Number of RX
-+ * @tx: Number of TX
-+ * @y_res: Y resolution
-+ * @x_res: X resolution
-+ * @pt_num: Number of touch points
-+ * @mkey_num: Number of mkey
-+ * @debug_info: Debug information
-+ *
-+ * This structure is used to hold the IC config information for HIDRAW.
-+ * The format is binary fixed, thus need to be packed.
-+ */
-+struct himax_hid_info {
-+	u16 vid;
-+	u16 pid;
-+	u8 cfg_info[32];
-+	u8 cfg_version;
-+	u8 disp_version;
-+	u8 rx;
-+	u8 tx;
-+	u16 y_res;
-+	u16 x_res;
-+	u8 pt_num;
-+	u8 mkey_num;
-+	u8 debug_info[78];
-+} __packed;
-+
- /**
-  * struct himax_platform_data - Platform data holder
-+ * @pid: Product ID
-  * @is_panel_follower: Is panel follower enabled
-  * @panel_follower: DRM panel follower
-  * @gpiod_rst: GPIO reset
-@@ -232,6 +381,7 @@ struct himax_hid_desc {
-  * This structure is used to hold the platform related data.
-  */
- struct himax_platform_data {
-+	u16 pid;
- 	bool is_panel_follower;
- 	struct drm_panel_follower panel_follower;
- 	struct gpio_desc *gpiod_rst;
-@@ -242,8 +392,9 @@ struct himax_platform_data {
-  * @xfer_buf: Interrupt data buffer
-  * @xfer_rx_data: SPI Transfer receive data buffer
-  * @xfer_tx_data: SPI Transfer transmit data buffer
-- * @himax_fw_data: Firmware data holder from flash
-+ * @zf_update_cfg_buffer: Zero flash update configuration buffer
-  * @himax_irq: IRQ number
-+ * @chip_max_dsram_size: Maximum size of DSRAM
-  * @spi_xfer_max_sz: Size of SPI controller max transfer size
-  * @xfer_buf_sz: Size of interrupt data buffer
-  * @irq_state: IRQ state
-@@ -252,24 +403,30 @@ struct himax_platform_data {
-  * @probe_finish: Indicate the driver probe is finished
-  * @ic_boot_done: Indicate the IC boot is done
-  * @hid_probed: Indicate the HID device is probed
-+ * @resume_succeeded: Indicate the resume is succeeded
-+ * @firmware_name: Firmware name
-  * @touch_data_sz: Size of each interrupt data from IC
-+ * @himax_fw: Firmware data holder from user space
-  * @dev: Device pointer
-  * @spi: SPI device pointer
-  * @hid: HID device pointer
-  * @reg_lock: Mutex lock for reg access
-  * @rw_lock: Mutex lock for read/write action
-+ * @zf_update_lock: Mutex lock for zero-flash FW update
-  * @ic_data: IC information holder
-  * @pdata: Platform data holder
-  * @fw_info_table: Firmware information address table of firmware image
-  * @hid_desc: HID descriptor
-  * @hid_rd_data: HID report descriptor data
-+ * @initial_work: Delayed work for TP initialization
-  */
- struct himax_ts_data {
- 	u8 *xfer_buf;
- 	u8 *xfer_rx_data;
- 	u8 *xfer_tx_data;
--	u8 *himax_fw_data;
-+	u8 *zf_update_cfg_buffer;
- 	s32 himax_irq;
-+	u32 chip_max_dsram_size;
- 	u32 spi_xfer_max_sz;
- 	u32 xfer_buf_sz;
- 	atomic_t irq_state;
-@@ -279,7 +436,11 @@ struct himax_ts_data {
- 	bool probe_finish;
- 	bool ic_boot_done;
- 	bool hid_probed;
-+	bool resume_succeeded;
-+	bool zf_update_flag;
-+	char firmware_name[64];
- 	int touch_data_sz;
-+	const struct firmware *himax_fw;
- 	struct device *dev;
- 	struct spi_device *spi;
- 	struct hid_device *hid;
-@@ -287,10 +448,13 @@ struct himax_ts_data {
- 	struct mutex reg_lock;
- 	/* lock for bus read/write action */
- 	struct mutex rw_lock;
-+	/* lock for zero-flash FW update */
-+	struct mutex zf_update_lock;
- 	struct himax_ic_data ic_data;
- 	struct himax_platform_data pdata;
- 	struct himax_fw_address_table fw_info_table;
- 	struct himax_hid_desc hid_desc;
- 	struct himax_hid_rd_data hid_rd_data;
-+	struct delayed_work initial_work;
- };
- #endif
--- 
-2.34.1
+> Huacai
+>
+> >
+> > > Huacai
+> > >
+> > > >
+> > > > > Huacai
+> > > > >
+> > > > > >
+> > > > > >
+> > > > > > > Huacai
+> > > > > > >
+> > > > > > > > +
+> > > > > > > >  config LPC18XX_DMAMUX
+> > > > > > > >         bool "NXP LPC18xx/43xx DMA MUX for PL080"
+> > > > > > > >         depends on ARCH_LPC18XX || COMPILE_TEST
+> > > > > > > > diff --git a/drivers/dma/Makefile b/drivers/dma/Makefile
+> > > > > > > > index dfd40d14e408..b26f6677978a 100644
+> > > > > > > > --- a/drivers/dma/Makefile
+> > > > > > > > +++ b/drivers/dma/Makefile
+> > > > > > > > @@ -47,6 +47,7 @@ obj-$(CONFIG_INTEL_IDMA64) +=3D idma64.o
+> > > > > > > >  obj-$(CONFIG_INTEL_IOATDMA) +=3D ioat/
+> > > > > > > >  obj-y +=3D idxd/
+> > > > > > > >  obj-$(CONFIG_K3_DMA) +=3D k3dma.o
+> > > > > > > > +obj-$(CONFIG_LOONGSON1_APB_DMA) +=3D loongson1-apb-dma.o
+> > > > > > > >  obj-$(CONFIG_LPC18XX_DMAMUX) +=3D lpc18xx-dmamux.o
+> > > > > > > >  obj-$(CONFIG_LS2X_APB_DMA) +=3D ls2x-apb-dma.o
+> > > > > > > >  obj-$(CONFIG_MILBEAUT_HDMAC) +=3D milbeaut-hdmac.o
+> > > > > > > > diff --git a/drivers/dma/loongson1-apb-dma.c b/drivers/dma/=
+loongson1-apb-dma.c
+> > > > > > > > new file mode 100644
+> > > > > > > > index 000000000000..d474a2601e6e
+> > > > > > > > --- /dev/null
+> > > > > > > > +++ b/drivers/dma/loongson1-apb-dma.c
+> > > > > > > > @@ -0,0 +1,665 @@
+> > > > > > > > +// SPDX-License-Identifier: GPL-2.0-or-later
+> > > > > > > > +/*
+> > > > > > > > + * Driver for Loongson-1 APB DMA Controller
+> > > > > > > > + *
+> > > > > > > > + * Copyright (C) 2015-2024 Keguang Zhang <keguang.zhang@gm=
+ail.com>
+> > > > > > > > + */
+> > > > > > > > +
+> > > > > > > > +#include <linux/dmapool.h>
+> > > > > > > > +#include <linux/dma-mapping.h>
+> > > > > > > > +#include <linux/init.h>
+> > > > > > > > +#include <linux/interrupt.h>
+> > > > > > > > +#include <linux/iopoll.h>
+> > > > > > > > +#include <linux/module.h>
+> > > > > > > > +#include <linux/of.h>
+> > > > > > > > +#include <linux/of_dma.h>
+> > > > > > > > +#include <linux/platform_device.h>
+> > > > > > > > +#include <linux/slab.h>
+> > > > > > > > +
+> > > > > > > > +#include "dmaengine.h"
+> > > > > > > > +#include "virt-dma.h"
+> > > > > > > > +
+> > > > > > > > +/* Loongson-1 DMA Control Register */
+> > > > > > > > +#define DMA_CTRL                       0x0
+> > > > > > > > +
+> > > > > > > > +/* DMA Control Register Bits */
+> > > > > > > > +#define DMA_STOP                       BIT(4)
+> > > > > > > > +#define DMA_START                      BIT(3)
+> > > > > > > > +#define DMA_ASK_VALID                  BIT(2)
+> > > > > > > > +
+> > > > > > > > +#define DMA_ADDR_MASK                  GENMASK(31, 6)
+> > > > > > > > +
+> > > > > > > > +/* DMA Next Field Bits */
+> > > > > > > > +#define DMA_NEXT_VALID                 BIT(0)
+> > > > > > > > +
+> > > > > > > > +/* DMA Command Field Bits */
+> > > > > > > > +#define DMA_RAM2DEV                    BIT(12)
+> > > > > > > > +#define DMA_INT                                BIT(1)
+> > > > > > > > +#define DMA_INT_MASK                   BIT(0)
+> > > > > > > > +
+> > > > > > > > +#define LS1X_DMA_MAX_CHANNELS          3
+> > > > > > > > +
+> > > > > > > > +/* Size of allocations for hardware descriptors */
+> > > > > > > > +#define LS1X_DMA_DESCS_SIZE            PAGE_SIZE
+> > > > > > > > +#define LS1X_DMA_MAX_DESC              \
+> > > > > > > > +       (LS1X_DMA_DESCS_SIZE / sizeof(struct ls1x_dma_hwdes=
+c))
+> > > > > > > > +
+> > > > > > > > +struct ls1x_dma_hwdesc {
+> > > > > > > > +       u32 next;               /* next descriptor address =
+*/
+> > > > > > > > +       u32 saddr;              /* memory DMA address */
+> > > > > > > > +       u32 daddr;              /* device DMA address */
+> > > > > > > > +       u32 length;
+> > > > > > > > +       u32 stride;
+> > > > > > > > +       u32 cycles;
+> > > > > > > > +       u32 cmd;
+> > > > > > > > +       u32 stats;
+> > > > > > > > +};
+> > > > > > > > +
+> > > > > > > > +struct ls1x_dma_desc {
+> > > > > > > > +       struct virt_dma_desc vdesc;
+> > > > > > > > +       enum dma_transfer_direction dir;
+> > > > > > > > +       enum dma_transaction_type type;
+> > > > > > > > +       unsigned int bus_width;
+> > > > > > > > +
+> > > > > > > > +       unsigned int nr_descs;  /* number of descriptors */
+> > > > > > > > +
+> > > > > > > > +       struct ls1x_dma_hwdesc *hwdesc;
+> > > > > > > > +       dma_addr_t hwdesc_phys;
+> > > > > > > > +};
+> > > > > > > > +
+> > > > > > > > +struct ls1x_dma_chan {
+> > > > > > > > +       struct virt_dma_chan vchan;
+> > > > > > > > +       struct dma_pool *desc_pool;
+> > > > > > > > +       phys_addr_t src_addr;
+> > > > > > > > +       phys_addr_t dst_addr;
+> > > > > > > > +       enum dma_slave_buswidth src_addr_width;
+> > > > > > > > +       enum dma_slave_buswidth dst_addr_width;
+> > > > > > > > +
+> > > > > > > > +       void __iomem *reg_base;
+> > > > > > > > +       int irq;
+> > > > > > > > +
+> > > > > > > > +       struct ls1x_dma_desc *desc;
+> > > > > > > > +
+> > > > > > > > +       struct ls1x_dma_hwdesc *curr_hwdesc;
+> > > > > > > > +       dma_addr_t curr_hwdesc_phys;
+> > > > > > > > +};
+> > > > > > > > +
+> > > > > > > > +struct ls1x_dma {
+> > > > > > > > +       struct dma_device ddev;
+> > > > > > > > +       void __iomem *reg_base;
+> > > > > > > > +
+> > > > > > > > +       unsigned int nr_chans;
+> > > > > > > > +       struct ls1x_dma_chan chan[];
+> > > > > > > > +};
+> > > > > > > > +
+> > > > > > > > +#define to_ls1x_dma_chan(dchan)                \
+> > > > > > > > +       container_of(dchan, struct ls1x_dma_chan, vchan.cha=
+n)
+> > > > > > > > +
+> > > > > > > > +#define to_ls1x_dma_desc(vd)           \
+> > > > > > > > +       container_of(vd, struct ls1x_dma_desc, vdesc)
+> > > > > > > > +
+> > > > > > > > +/* macros for registers read/write */
+> > > > > > > > +#define chan_readl(chan, off)          \
+> > > > > > > > +       readl((chan)->reg_base + (off))
+> > > > > > > > +
+> > > > > > > > +#define chan_writel(chan, off, val)    \
+> > > > > > > > +       writel((val), (chan)->reg_base + (off))
+> > > > > > > > +
+> > > > > > > > +static inline struct device *chan2dev(struct dma_chan *cha=
+n)
+> > > > > > > > +{
+> > > > > > > > +       return &chan->dev->device;
+> > > > > > > > +}
+> > > > > > > > +
+> > > > > > > > +static inline int ls1x_dma_query(struct ls1x_dma_chan *cha=
+n,
+> > > > > > > > +                                dma_addr_t *hwdesc_phys)
+> > > > > > > > +{
+> > > > > > > > +       struct dma_chan *dchan =3D &chan->vchan.chan;
+> > > > > > > > +       int val, ret;
+> > > > > > > > +
+> > > > > > > > +       val =3D *hwdesc_phys & DMA_ADDR_MASK;
+> > > > > > > > +       val |=3D DMA_ASK_VALID;
+> > > > > > > > +       val |=3D dchan->chan_id;
+> > > > > > > > +       chan_writel(chan, DMA_CTRL, val);
+> > > > > > > > +       ret =3D readl_poll_timeout_atomic(chan->reg_base + =
+DMA_CTRL, val,
+> > > > > > > > +                                       !(val & DMA_ASK_VAL=
+ID), 0, 3000);
+> > > > > > > > +       if (ret)
+> > > > > > > > +               dev_err(chan2dev(dchan), "failed to query D=
+MA\n");
+> > > > > > > > +
+> > > > > > > > +       return ret;
+> > > > > > > > +}
+> > > > > > > > +
+> > > > > > > > +static inline int ls1x_dma_start(struct ls1x_dma_chan *cha=
+n,
+> > > > > > > > +                                dma_addr_t *hwdesc_phys)
+> > > > > > > > +{
+> > > > > > > > +       struct dma_chan *dchan =3D &chan->vchan.chan;
+> > > > > > > > +       int val, ret;
+> > > > > > > > +
+> > > > > > > > +       dev_dbg(chan2dev(dchan), "cookie=3D%d, starting hwd=
+esc=3D%x\n",
+> > > > > > > > +               dchan->cookie, *hwdesc_phys);
+> > > > > > > > +
+> > > > > > > > +       val =3D *hwdesc_phys & DMA_ADDR_MASK;
+> > > > > > > > +       val |=3D DMA_START;
+> > > > > > > > +       val |=3D dchan->chan_id;
+> > > > > > > > +       chan_writel(chan, DMA_CTRL, val);
+> > > > > > > > +       ret =3D readl_poll_timeout(chan->reg_base + DMA_CTR=
+L, val,
+> > > > > > > > +                                !(val & DMA_START), 0, 300=
+0);
+> > > > > > > > +       if (ret)
+> > > > > > > > +               dev_err(chan2dev(dchan), "failed to start D=
+MA\n");
+> > > > > > > > +
+> > > > > > > > +       return ret;
+> > > > > > > > +}
+> > > > > > > > +
+> > > > > > > > +static inline void ls1x_dma_stop(struct ls1x_dma_chan *cha=
+n)
+> > > > > > > > +{
+> > > > > > > > +       chan_writel(chan, DMA_CTRL, chan_readl(chan, DMA_CT=
+RL) | DMA_STOP);
+> > > > > > > > +}
+> > > > > > > > +
+> > > > > > > > +static void ls1x_dma_free_chan_resources(struct dma_chan *=
+dchan)
+> > > > > > > > +{
+> > > > > > > > +       struct ls1x_dma_chan *chan =3D to_ls1x_dma_chan(dch=
+an);
+> > > > > > > > +
+> > > > > > > > +       dma_free_coherent(chan2dev(dchan), sizeof(struct ls=
+1x_dma_hwdesc),
+> > > > > > > > +                         chan->curr_hwdesc, chan->curr_hwd=
+esc_phys);
+> > > > > > > > +       vchan_free_chan_resources(&chan->vchan);
+> > > > > > > > +       dma_pool_destroy(chan->desc_pool);
+> > > > > > > > +       chan->desc_pool =3D NULL;
+> > > > > > > > +}
+> > > > > > > > +
+> > > > > > > > +static int ls1x_dma_alloc_chan_resources(struct dma_chan *=
+dchan)
+> > > > > > > > +{
+> > > > > > > > +       struct ls1x_dma_chan *chan =3D to_ls1x_dma_chan(dch=
+an);
+> > > > > > > > +
+> > > > > > > > +       chan->desc_pool =3D dma_pool_create(dma_chan_name(d=
+chan),
+> > > > > > > > +                                         chan2dev(dchan),
+> > > > > > > > +                                         sizeof(struct ls1=
+x_dma_hwdesc),
+> > > > > > > > +                                         __alignof__(struc=
+t ls1x_dma_hwdesc),
+> > > > > > > > +                                         0);
+> > > > > > > > +       if (!chan->desc_pool)
+> > > > > > > > +               return -ENOMEM;
+> > > > > > > > +
+> > > > > > > > +       /* allocate memory for querying current HW descript=
+or */
+> > > > > > > > +       dma_set_coherent_mask(chan2dev(dchan), DMA_BIT_MASK=
+(32));
+> > > > > > > > +       chan->curr_hwdesc =3D dma_alloc_coherent(chan2dev(d=
+chan),
+> > > > > > > > +                                              sizeof(struc=
+t ls1x_dma_hwdesc),
+> > > > > > > > +                                              &chan->curr_=
+hwdesc_phys,
+> > > > > > > > +                                              GFP_KERNEL);
+> > > > > > > > +       if (!chan->curr_hwdesc)
+> > > > > > > > +               return -ENOMEM;
+> > > > > > > > +
+> > > > > > > > +       return 0;
+> > > > > > > > +}
+> > > > > > > > +
+> > > > > > > > +static void ls1x_dma_free_desc(struct virt_dma_desc *vdesc=
+)
+> > > > > > > > +{
+> > > > > > > > +       struct ls1x_dma_desc *desc =3D to_ls1x_dma_desc(vde=
+sc);
+> > > > > > > > +       struct ls1x_dma_chan *chan =3D to_ls1x_dma_chan(vde=
+sc->tx.chan);
+> > > > > > > > +
+> > > > > > > > +       dma_pool_free(chan->desc_pool, desc->hwdesc, desc->=
+hwdesc_phys);
+> > > > > > > > +       chan->desc =3D NULL;
+> > > > > > > > +       kfree(desc);
+> > > > > > > > +}
+> > > > > > > > +
+> > > > > > > > +static struct ls1x_dma_desc *
+> > > > > > > > +ls1x_dma_alloc_desc(struct dma_chan *dchan, int sg_len,
+> > > > > > > > +                   enum dma_transfer_direction direction,
+> > > > > > > > +                   enum dma_transaction_type type)
+> > > > > > > > +{
+> > > > > > > > +       struct ls1x_dma_chan *chan =3D to_ls1x_dma_chan(dch=
+an);
+> > > > > > > > +       struct ls1x_dma_desc *desc;
+> > > > > > > > +
+> > > > > > > > +       if (sg_len > LS1X_DMA_MAX_DESC) {
+> > > > > > > > +               dev_err(chan2dev(dchan), "sg_len %u exceeds=
+ limit %lu",
+> > > > > > > > +                       sg_len, LS1X_DMA_MAX_DESC);
+> > > > > > > > +               return NULL;
+> > > > > > > > +       }
+> > > > > > > > +
+> > > > > > > > +       desc =3D kzalloc(sizeof(*desc), GFP_NOWAIT);
+> > > > > > > > +       if (!desc)
+> > > > > > > > +               return NULL;
+> > > > > > > > +
+> > > > > > > > +       /* allocate HW descriptors */
+> > > > > > > > +       desc->hwdesc =3D dma_pool_zalloc(chan->desc_pool, G=
+FP_NOWAIT,
+> > > > > > > > +                                      &desc->hwdesc_phys);
+> > > > > > > > +       if (!desc->hwdesc) {
+> > > > > > > > +               dev_err(chan2dev(dchan), "failed to alloc H=
+W descriptors\n");
+> > > > > > > > +               ls1x_dma_free_desc(&desc->vdesc);
+> > > > > > > > +               return NULL;
+> > > > > > > > +       }
+> > > > > > > > +
+> > > > > > > > +       desc->dir =3D direction;
+> > > > > > > > +       desc->type =3D type;
+> > > > > > > > +       desc->nr_descs =3D sg_len;
+> > > > > > > > +
+> > > > > > > > +       return desc;
+> > > > > > > > +}
+> > > > > > > > +
+> > > > > > > > +static int ls1x_dma_setup_hwdescs(struct dma_chan *dchan,
+> > > > > > > > +                                 struct ls1x_dma_desc *des=
+c,
+> > > > > > > > +                                 struct scatterlist *sgl, =
+unsigned int sg_len)
+> > > > > > > > +{
+> > > > > > > > +       struct ls1x_dma_chan *chan =3D to_ls1x_dma_chan(dch=
+an);
+> > > > > > > > +       dma_addr_t next_hwdesc_phys =3D desc->hwdesc_phys;
+> > > > > > > > +
+> > > > > > > > +       struct scatterlist *sg;
+> > > > > > > > +       unsigned int dev_addr, cmd, i;
+> > > > > > > > +
+> > > > > > > > +       switch (desc->dir) {
+> > > > > > > > +       case DMA_MEM_TO_DEV:
+> > > > > > > > +               dev_addr =3D chan->dst_addr;
+> > > > > > > > +               desc->bus_width =3D chan->dst_addr_width;
+> > > > > > > > +               cmd =3D DMA_RAM2DEV | DMA_INT;
+> > > > > > > > +               break;
+> > > > > > > > +       case DMA_DEV_TO_MEM:
+> > > > > > > > +               dev_addr =3D chan->src_addr;
+> > > > > > > > +               desc->bus_width =3D chan->src_addr_width;
+> > > > > > > > +               cmd =3D DMA_INT;
+> > > > > > > > +               break;
+> > > > > > > > +       default:
+> > > > > > > > +               dev_err(chan2dev(dchan), "unsupported DMA d=
+irection: %s\n",
+> > > > > > > > +                       dmaengine_get_direction_text(desc->=
+dir));
+> > > > > > > > +               return -EINVAL;
+> > > > > > > > +       }
+> > > > > > > > +
+> > > > > > > > +       /* setup HW descriptors */
+> > > > > > > > +       for_each_sg(sgl, sg, sg_len, i) {
+> > > > > > > > +               dma_addr_t buf_addr =3D sg_dma_address(sg);
+> > > > > > > > +               size_t buf_len =3D sg_dma_len(sg);
+> > > > > > > > +               struct ls1x_dma_hwdesc *hwdesc =3D &desc->h=
+wdesc[i];
+> > > > > > > > +
+> > > > > > > > +               if (!is_dma_copy_aligned(dchan->device, buf=
+_addr, 0, buf_len)) {
+> > > > > > > > +                       dev_err(chan2dev(dchan), "buffer is=
+ not aligned!\n");
+> > > > > > > > +                       return -EINVAL;
+> > > > > > > > +               }
+> > > > > > > > +
+> > > > > > > > +               hwdesc->saddr =3D buf_addr;
+> > > > > > > > +               hwdesc->daddr =3D dev_addr;
+> > > > > > > > +               hwdesc->length =3D buf_len / desc->bus_widt=
+h;
+> > > > > > > > +               hwdesc->stride =3D 0;
+> > > > > > > > +               hwdesc->cycles =3D 1;
+> > > > > > > > +               hwdesc->cmd =3D cmd;
+> > > > > > > > +
+> > > > > > > > +               if (i) {
+> > > > > > > > +                       next_hwdesc_phys +=3D sizeof(*hwdes=
+c);
+> > > > > > > > +                       desc->hwdesc[i - 1].next =3D next_h=
+wdesc_phys
+> > > > > > > > +                           | DMA_NEXT_VALID;
+> > > > > > > > +               }
+> > > > > > > > +       }
+> > > > > > > > +
+> > > > > > > > +       if (desc->type =3D=3D DMA_CYCLIC)
+> > > > > > > > +               desc->hwdesc[i - 1].next =3D desc->hwdesc_p=
+hys | DMA_NEXT_VALID;
+> > > > > > > > +
+> > > > > > > > +       for_each_sg(sgl, sg, sg_len, i) {
+> > > > > > > > +               struct ls1x_dma_hwdesc *hwdesc =3D &desc->h=
+wdesc[i];
+> > > > > > > > +
+> > > > > > > > +               print_hex_dump_debug("HW DESC: ", DUMP_PREF=
+IX_OFFSET, 16, 4,
+> > > > > > > > +                                    hwdesc, sizeof(*hwdesc=
+), false);
+> > > > > > > > +       }
+> > > > > > > > +
+> > > > > > > > +       return 0;
+> > > > > > > > +}
+> > > > > > > > +
+> > > > > > > > +static struct dma_async_tx_descriptor *
+> > > > > > > > +ls1x_dma_prep_slave_sg(struct dma_chan *dchan,
+> > > > > > > > +                      struct scatterlist *sgl, unsigned in=
+t sg_len,
+> > > > > > > > +                      enum dma_transfer_direction directio=
+n,
+> > > > > > > > +                      unsigned long flags, void *context)
+> > > > > > > > +{
+> > > > > > > > +       struct ls1x_dma_chan *chan =3D to_ls1x_dma_chan(dch=
+an);
+> > > > > > > > +       struct ls1x_dma_desc *desc;
+> > > > > > > > +
+> > > > > > > > +       dev_dbg(chan2dev(dchan), "sg_len=3D%u flags=3D0x%lx=
+ dir=3D%s\n",
+> > > > > > > > +               sg_len, flags, dmaengine_get_direction_text=
+(direction));
+> > > > > > > > +
+> > > > > > > > +       desc =3D ls1x_dma_alloc_desc(dchan, sg_len, directi=
+on, DMA_SLAVE);
+> > > > > > > > +       if (!desc)
+> > > > > > > > +               return NULL;
+> > > > > > > > +
+> > > > > > > > +       if (ls1x_dma_setup_hwdescs(dchan, desc, sgl, sg_len=
+)) {
+> > > > > > > > +               ls1x_dma_free_desc(&desc->vdesc);
+> > > > > > > > +               return NULL;
+> > > > > > > > +       }
+> > > > > > > > +
+> > > > > > > > +       return vchan_tx_prep(&chan->vchan, &desc->vdesc, fl=
+ags);
+> > > > > > > > +}
+> > > > > > > > +
+> > > > > > > > +static struct dma_async_tx_descriptor *
+> > > > > > > > +ls1x_dma_prep_dma_cyclic(struct dma_chan *dchan,
+> > > > > > > > +                        dma_addr_t buf_addr, size_t buf_le=
+n, size_t period_len,
+> > > > > > > > +                        enum dma_transfer_direction direct=
+ion,
+> > > > > > > > +                        unsigned long flags)
+> > > > > > > > +{
+> > > > > > > > +       struct ls1x_dma_chan *chan =3D to_ls1x_dma_chan(dch=
+an);
+> > > > > > > > +       struct ls1x_dma_desc *desc;
+> > > > > > > > +       struct scatterlist *sgl;
+> > > > > > > > +       unsigned int sg_len;
+> > > > > > > > +       unsigned int i;
+> > > > > > > > +
+> > > > > > > > +       dev_dbg(chan2dev(dchan),
+> > > > > > > > +               "buf_len=3D%d period_len=3D%zu flags=3D0x%l=
+x dir=3D%s\n", buf_len,
+> > > > > > > > +               period_len, flags, dmaengine_get_direction_=
+text(direction));
+> > > > > > > > +
+> > > > > > > > +       sg_len =3D buf_len / period_len;
+> > > > > > > > +       desc =3D ls1x_dma_alloc_desc(dchan, sg_len, directi=
+on, DMA_CYCLIC);
+> > > > > > > > +       if (!desc)
+> > > > > > > > +               return NULL;
+> > > > > > > > +
+> > > > > > > > +       /* allocate the scatterlist */
+> > > > > > > > +       sgl =3D kmalloc_array(sg_len, sizeof(*sgl), GFP_NOW=
+AIT);
+> > > > > > > > +       if (!sgl)
+> > > > > > > > +               return NULL;
+> > > > > > > > +
+> > > > > > > > +       sg_init_table(sgl, sg_len);
+> > > > > > > > +       for (i =3D 0; i < sg_len; ++i) {
+> > > > > > > > +               sg_set_page(&sgl[i], pfn_to_page(PFN_DOWN(b=
+uf_addr)),
+> > > > > > > > +                           period_len, offset_in_page(buf_=
+addr));
+> > > > > > > > +               sg_dma_address(&sgl[i]) =3D buf_addr;
+> > > > > > > > +               sg_dma_len(&sgl[i]) =3D period_len;
+> > > > > > > > +               buf_addr +=3D period_len;
+> > > > > > > > +       }
+> > > > > > > > +
+> > > > > > > > +       if (ls1x_dma_setup_hwdescs(dchan, desc, sgl, sg_len=
+)) {
+> > > > > > > > +               ls1x_dma_free_desc(&desc->vdesc);
+> > > > > > > > +               return NULL;
+> > > > > > > > +       }
+> > > > > > > > +
+> > > > > > > > +       kfree(sgl);
+> > > > > > > > +
+> > > > > > > > +       return vchan_tx_prep(&chan->vchan, &desc->vdesc, fl=
+ags);
+> > > > > > > > +}
+> > > > > > > > +
+> > > > > > > > +static int ls1x_dma_slave_config(struct dma_chan *dchan,
+> > > > > > > > +                                struct dma_slave_config *c=
+onfig)
+> > > > > > > > +{
+> > > > > > > > +       struct ls1x_dma_chan *chan =3D to_ls1x_dma_chan(dch=
+an);
+> > > > > > > > +
+> > > > > > > > +       chan->src_addr =3D config->src_addr;
+> > > > > > > > +       chan->src_addr_width =3D config->src_addr_width;
+> > > > > > > > +       chan->dst_addr =3D config->dst_addr;
+> > > > > > > > +       chan->dst_addr_width =3D config->dst_addr_width;
+> > > > > > > > +
+> > > > > > > > +       return 0;
+> > > > > > > > +}
+> > > > > > > > +
+> > > > > > > > +static int ls1x_dma_pause(struct dma_chan *dchan)
+> > > > > > > > +{
+> > > > > > > > +       struct ls1x_dma_chan *chan =3D to_ls1x_dma_chan(dch=
+an);
+> > > > > > > > +       unsigned long flags;
+> > > > > > > > +       int ret;
+> > > > > > > > +
+> > > > > > > > +       spin_lock_irqsave(&chan->vchan.lock, flags);
+> > > > > > > > +       ret =3D ls1x_dma_query(chan, &chan->curr_hwdesc_phy=
+s);
+> > > > > > > > +       if (!ret)
+> > > > > > > > +               ls1x_dma_stop(chan);
+> > > > > > > > +       spin_unlock_irqrestore(&chan->vchan.lock, flags);
+> > > > > > > > +
+> > > > > > > > +       return ret;
+> > > > > > > > +}
+> > > > > > > > +
+> > > > > > > > +static int ls1x_dma_resume(struct dma_chan *dchan)
+> > > > > > > > +{
+> > > > > > > > +       struct ls1x_dma_chan *chan =3D to_ls1x_dma_chan(dch=
+an);
+> > > > > > > > +       unsigned long flags;
+> > > > > > > > +       int ret;
+> > > > > > > > +
+> > > > > > > > +       spin_lock_irqsave(&chan->vchan.lock, flags);
+> > > > > > > > +       ret =3D ls1x_dma_start(chan, &chan->curr_hwdesc_phy=
+s);
+> > > > > > > > +       spin_unlock_irqrestore(&chan->vchan.lock, flags);
+> > > > > > > > +
+> > > > > > > > +       return ret;
+> > > > > > > > +}
+> > > > > > > > +
+> > > > > > > > +static int ls1x_dma_terminate_all(struct dma_chan *dchan)
+> > > > > > > > +{
+> > > > > > > > +       struct ls1x_dma_chan *chan =3D to_ls1x_dma_chan(dch=
+an);
+> > > > > > > > +       unsigned long flags;
+> > > > > > > > +       LIST_HEAD(head);
+> > > > > > > > +
+> > > > > > > > +       spin_lock_irqsave(&chan->vchan.lock, flags);
+> > > > > > > > +       ls1x_dma_stop(chan);
+> > > > > > > > +       vchan_get_all_descriptors(&chan->vchan, &head);
+> > > > > > > > +       spin_unlock_irqrestore(&chan->vchan.lock, flags);
+> > > > > > > > +
+> > > > > > > > +       vchan_dma_desc_free_list(&chan->vchan, &head);
+> > > > > > > > +
+> > > > > > > > +       return 0;
+> > > > > > > > +}
+> > > > > > > > +
+> > > > > > > > +static enum dma_status ls1x_dma_tx_status(struct dma_chan =
+*dchan,
+> > > > > > > > +                                         dma_cookie_t cook=
+ie,
+> > > > > > > > +                                         struct dma_tx_sta=
+te *state)
+> > > > > > > > +{
+> > > > > > > > +       struct ls1x_dma_chan *chan =3D to_ls1x_dma_chan(dch=
+an);
+> > > > > > > > +       struct virt_dma_desc *vdesc;
+> > > > > > > > +       enum dma_status status;
+> > > > > > > > +       size_t bytes =3D 0;
+> > > > > > > > +       unsigned long flags;
+> > > > > > > > +
+> > > > > > > > +       status =3D dma_cookie_status(dchan, cookie, state);
+> > > > > > > > +       if (status =3D=3D DMA_COMPLETE)
+> > > > > > > > +               return status;
+> > > > > > > > +
+> > > > > > > > +       spin_lock_irqsave(&chan->vchan.lock, flags);
+> > > > > > > > +       vdesc =3D vchan_find_desc(&chan->vchan, cookie);
+> > > > > > > > +       if (chan->desc && cookie =3D=3D chan->desc->vdesc.t=
+x.cookie) {
+> > > > > > > > +               struct ls1x_dma_desc *desc =3D chan->desc;
+> > > > > > > > +               int i;
+> > > > > > > > +
+> > > > > > > > +               if (ls1x_dma_query(chan, &chan->curr_hwdesc=
+_phys))
+> > > > > > > > +                       return status;
+> > > > > > > > +
+> > > > > > > > +               /* locate the current HW descriptor */
+> > > > > > > > +               for (i =3D 0; i < desc->nr_descs; i++)
+> > > > > > > > +                       if (desc->hwdesc[i].next =3D=3D cha=
+n->curr_hwdesc->next)
+> > > > > > > > +                               break;
+> > > > > > > > +
+> > > > > > > > +               /* count the residues */
+> > > > > > > > +               for (; i < desc->nr_descs; i++)
+> > > > > > > > +                       bytes +=3D desc->hwdesc[i].length *=
+ desc->bus_width;
+> > > > > > > > +
+> > > > > > > > +               dma_set_residue(state, bytes);
+> > > > > > > > +       }
+> > > > > > > > +       spin_unlock_irqrestore(&chan->vchan.lock, flags);
+> > > > > > > > +
+> > > > > > > > +       return status;
+> > > > > > > > +}
+> > > > > > > > +
+> > > > > > > > +static void ls1x_dma_issue_pending(struct dma_chan *dchan)
+> > > > > > > > +{
+> > > > > > > > +       struct ls1x_dma_chan *chan =3D to_ls1x_dma_chan(dch=
+an);
+> > > > > > > > +       struct virt_dma_desc *vdesc;
+> > > > > > > > +       unsigned long flags;
+> > > > > > > > +
+> > > > > > > > +       spin_lock_irqsave(&chan->vchan.lock, flags);
+> > > > > > > > +       if (vchan_issue_pending(&chan->vchan) && !chan->des=
+c) {
+> > > > > > > > +               vdesc =3D vchan_next_desc(&chan->vchan);
+> > > > > > > > +               if (!vdesc) {
+> > > > > > > > +                       chan->desc =3D NULL;
+> > > > > > > > +                       return;
+> > > > > > > > +               }
+> > > > > > > > +               chan->desc =3D to_ls1x_dma_desc(vdesc);
+> > > > > > > > +               ls1x_dma_start(chan, &chan->desc->hwdesc_ph=
+ys);
+> > > > > > > > +       }
+> > > > > > > > +       spin_unlock_irqrestore(&chan->vchan.lock, flags);
+> > > > > > > > +}
+> > > > > > > > +
+> > > > > > > > +static irqreturn_t ls1x_dma_irq_handler(int irq, void *dat=
+a)
+> > > > > > > > +{
+> > > > > > > > +       struct ls1x_dma_chan *chan =3D data;
+> > > > > > > > +       struct ls1x_dma_desc *desc =3D chan->desc;
+> > > > > > > > +       struct dma_chan *dchan =3D &chan->vchan.chan;
+> > > > > > > > +
+> > > > > > > > +       if (!desc) {
+> > > > > > > > +               dev_warn(chan2dev(dchan),
+> > > > > > > > +                        "IRQ %d with no active descriptor =
+on channel %d\n",
+> > > > > > > > +                        irq, dchan->chan_id);
+> > > > > > > > +               return IRQ_NONE;
+> > > > > > > > +       }
+> > > > > > > > +
+> > > > > > > > +       dev_dbg(chan2dev(dchan), "DMA IRQ %d on channel %d\=
+n", irq,
+> > > > > > > > +               dchan->chan_id);
+> > > > > > > > +
+> > > > > > > > +       spin_lock(&chan->vchan.lock);
+> > > > > > > > +
+> > > > > > > > +       if (desc->type =3D=3D DMA_CYCLIC) {
+> > > > > > > > +               vchan_cyclic_callback(&desc->vdesc);
+> > > > > > > > +       } else {
+> > > > > > > > +               list_del(&desc->vdesc.node);
+> > > > > > > > +               vchan_cookie_complete(&desc->vdesc);
+> > > > > > > > +               chan->desc =3D NULL;
+> > > > > > > > +       }
+> > > > > > > > +
+> > > > > > > > +       spin_unlock(&chan->vchan.lock);
+> > > > > > > > +       return IRQ_HANDLED;
+> > > > > > > > +}
+> > > > > > > > +
+> > > > > > > > +static int ls1x_dma_chan_probe(struct platform_device *pde=
+v,
+> > > > > > > > +                              struct ls1x_dma *dma, int ch=
+an_id)
+> > > > > > > > +{
+> > > > > > > > +       struct device *dev =3D &pdev->dev;
+> > > > > > > > +       struct ls1x_dma_chan *chan =3D &dma->chan[chan_id];
+> > > > > > > > +       char pdev_irqname[4];
+> > > > > > > > +       char *irqname;
+> > > > > > > > +       int ret;
+> > > > > > > > +
+> > > > > > > > +       sprintf(pdev_irqname, "ch%u", chan_id);
+> > > > > > > > +       chan->irq =3D platform_get_irq_byname(pdev, pdev_ir=
+qname);
+> > > > > > > > +       if (chan->irq < 0)
+> > > > > > > > +               return -ENODEV;
+> > > > > > > > +
+> > > > > > > > +       irqname =3D devm_kasprintf(dev, GFP_KERNEL, "%s:%s"=
+,
+> > > > > > > > +                                dev_name(dev), pdev_irqnam=
+e);
+> > > > > > > > +       if (!irqname)
+> > > > > > > > +               return -ENOMEM;
+> > > > > > > > +
+> > > > > > > > +       ret =3D devm_request_irq(dev, chan->irq, ls1x_dma_i=
+rq_handler,
+> > > > > > > > +                              IRQF_SHARED, irqname, chan);
+> > > > > > > > +       if (ret)
+> > > > > > > > +               return dev_err_probe(dev, ret,
+> > > > > > > > +                                    "failed to request IRQ=
+ %u!\n", chan->irq);
+> > > > > > > > +
+> > > > > > > > +       chan->reg_base =3D dma->reg_base;
+> > > > > > > > +       chan->vchan.desc_free =3D ls1x_dma_free_desc;
+> > > > > > > > +       vchan_init(&chan->vchan, &dma->ddev);
+> > > > > > > > +       dev_info(dev, "%s (irq %d) initialized\n", pdev_irq=
+name, chan->irq);
+> > > > > > > > +
+> > > > > > > > +       return 0;
+> > > > > > > > +}
+> > > > > > > > +
+> > > > > > > > +static void ls1x_dma_chan_remove(struct ls1x_dma *dma, int=
+ chan_id)
+> > > > > > > > +{
+> > > > > > > > +       struct device *dev =3D dma->ddev.dev;
+> > > > > > > > +       struct ls1x_dma_chan *chan =3D &dma->chan[chan_id];
+> > > > > > > > +
+> > > > > > > > +       devm_free_irq(dev, chan->irq, chan);
+> > > > > > > > +       list_del(&chan->vchan.chan.device_node);
+> > > > > > > > +       tasklet_kill(&chan->vchan.task);
+> > > > > > > > +}
+> > > > > > > > +
+> > > > > > > > +static int ls1x_dma_probe(struct platform_device *pdev)
+> > > > > > > > +{
+> > > > > > > > +       struct device *dev =3D &pdev->dev;
+> > > > > > > > +       struct dma_device *ddev;
+> > > > > > > > +       struct ls1x_dma *dma;
+> > > > > > > > +       int nr_chans, ret, i;
+> > > > > > > > +
+> > > > > > > > +       nr_chans =3D platform_irq_count(pdev);
+> > > > > > > > +       if (nr_chans <=3D 0)
+> > > > > > > > +               return nr_chans;
+> > > > > > > > +       if (nr_chans > LS1X_DMA_MAX_CHANNELS)
+> > > > > > > > +               return dev_err_probe(dev, -EINVAL,
+> > > > > > > > +                                    "nr_chans=3D%d exceeds=
+ the maximum\n",
+> > > > > > > > +                                    nr_chans);
+> > > > > > > > +
+> > > > > > > > +       dma =3D devm_kzalloc(dev, struct_size(dma, chan, nr=
+_chans), GFP_KERNEL);
+> > > > > > > > +       if (!dma)
+> > > > > > > > +               return -ENOMEM;
+> > > > > > > > +
+> > > > > > > > +       /* initialize DMA device */
+> > > > > > > > +       dma->reg_base =3D devm_platform_ioremap_resource(pd=
+ev, 0);
+> > > > > > > > +       if (IS_ERR(dma->reg_base))
+> > > > > > > > +               return PTR_ERR(dma->reg_base);
+> > > > > > > > +
+> > > > > > > > +       ddev =3D &dma->ddev;
+> > > > > > > > +       ddev->dev =3D dev;
+> > > > > > > > +       ddev->copy_align =3D DMAENGINE_ALIGN_4_BYTES;
+> > > > > > > > +       ddev->src_addr_widths =3D BIT(DMA_SLAVE_BUSWIDTH_1_=
+BYTE) |
+> > > > > > > > +           BIT(DMA_SLAVE_BUSWIDTH_2_BYTES) | BIT(DMA_SLAVE=
+_BUSWIDTH_4_BYTES);
+> > > > > > > > +       ddev->dst_addr_widths =3D BIT(DMA_SLAVE_BUSWIDTH_1_=
+BYTE) |
+> > > > > > > > +           BIT(DMA_SLAVE_BUSWIDTH_2_BYTES) | BIT(DMA_SLAVE=
+_BUSWIDTH_4_BYTES);
+> > > > > > > > +       ddev->directions =3D BIT(DMA_DEV_TO_MEM) | BIT(DMA_=
+MEM_TO_DEV);
+> > > > > > > > +       ddev->max_sg_burst =3D LS1X_DMA_MAX_DESC;
+> > > > > > > > +       ddev->residue_granularity =3D DMA_RESIDUE_GRANULARI=
+TY_SEGMENT;
+> > > > > > > > +       ddev->device_alloc_chan_resources =3D ls1x_dma_allo=
+c_chan_resources;
+> > > > > > > > +       ddev->device_free_chan_resources =3D ls1x_dma_free_=
+chan_resources;
+> > > > > > > > +       ddev->device_prep_slave_sg =3D ls1x_dma_prep_slave_=
+sg;
+> > > > > > > > +       ddev->device_prep_dma_cyclic =3D ls1x_dma_prep_dma_=
+cyclic;
+> > > > > > > > +       ddev->device_config =3D ls1x_dma_slave_config;
+> > > > > > > > +       ddev->device_pause =3D ls1x_dma_pause;
+> > > > > > > > +       ddev->device_resume =3D ls1x_dma_resume;
+> > > > > > > > +       ddev->device_terminate_all =3D ls1x_dma_terminate_a=
+ll;
+> > > > > > > > +       ddev->device_tx_status =3D ls1x_dma_tx_status;
+> > > > > > > > +       ddev->device_issue_pending =3D ls1x_dma_issue_pendi=
+ng;
+> > > > > > > > +
+> > > > > > > > +       dma_cap_set(DMA_SLAVE, ddev->cap_mask);
+> > > > > > > > +       INIT_LIST_HEAD(&ddev->channels);
+> > > > > > > > +
+> > > > > > > > +       /* initialize DMA channels */
+> > > > > > > > +       for (i =3D 0; i < nr_chans; i++) {
+> > > > > > > > +               ret =3D ls1x_dma_chan_probe(pdev, dma, i);
+> > > > > > > > +               if (ret)
+> > > > > > > > +                       return ret;
+> > > > > > > > +       }
+> > > > > > > > +       dma->nr_chans =3D nr_chans;
+> > > > > > > > +
+> > > > > > > > +       ret =3D dmaenginem_async_device_register(ddev);
+> > > > > > > > +       if (ret) {
+> > > > > > > > +               dev_err(dev, "failed to register DMA device=
+! %d\n", ret);
+> > > > > > > > +               return ret;
+> > > > > > > > +       }
+> > > > > > > > +
+> > > > > > > > +       ret =3D
+> > > > > > > > +           of_dma_controller_register(dev->of_node, of_dma=
+_xlate_by_chan_id,
+> > > > > > > > +                                      ddev);
+> > > > > > > > +       if (ret) {
+> > > > > > > > +               dev_err(dev, "failed to register DMA contro=
+ller! %d\n", ret);
+> > > > > > > > +               return ret;
+> > > > > > > > +       }
+> > > > > > > > +
+> > > > > > > > +       platform_set_drvdata(pdev, dma);
+> > > > > > > > +       dev_info(dev, "Loongson1 DMA driver registered\n");
+> > > > > > > > +
+> > > > > > > > +       return 0;
+> > > > > > > > +}
+> > > > > > > > +
+> > > > > > > > +static void ls1x_dma_remove(struct platform_device *pdev)
+> > > > > > > > +{
+> > > > > > > > +       struct ls1x_dma *dma =3D platform_get_drvdata(pdev)=
+;
+> > > > > > > > +       int i;
+> > > > > > > > +
+> > > > > > > > +       of_dma_controller_free(pdev->dev.of_node);
+> > > > > > > > +
+> > > > > > > > +       for (i =3D 0; i < dma->nr_chans; i++)
+> > > > > > > > +               ls1x_dma_chan_remove(dma, i);
+> > > > > > > > +}
+> > > > > > > > +
+> > > > > > > > +static const struct of_device_id ls1x_dma_match[] =3D {
+> > > > > > > > +       { .compatible =3D "loongson,ls1b-apbdma" },
+> > > > > > > > +       { .compatible =3D "loongson,ls1c-apbdma" },
+> > > > > > > > +       { /* sentinel */ }
+> > > > > > > > +};
+> > > > > > > > +MODULE_DEVICE_TABLE(of, ls1x_dma_match);
+> > > > > > > > +
+> > > > > > > > +static struct platform_driver ls1x_dma_driver =3D {
+> > > > > > > > +       .probe =3D ls1x_dma_probe,
+> > > > > > > > +       .remove_new =3D ls1x_dma_remove,
+> > > > > > > > +       .driver =3D {
+> > > > > > > > +               .name =3D KBUILD_MODNAME,
+> > > > > > > > +               .of_match_table =3D ls1x_dma_match,
+> > > > > > > > +       },
+> > > > > > > > +};
+> > > > > > > > +
+> > > > > > > > +module_platform_driver(ls1x_dma_driver);
+> > > > > > > > +
+> > > > > > > > +MODULE_AUTHOR("Keguang Zhang <keguang.zhang@gmail.com>");
+> > > > > > > > +MODULE_DESCRIPTION("Loongson-1 APB DMA Controller driver")=
+;
+> > > > > > > > +MODULE_LICENSE("GPL");
+> > > > > > > >
+> > > > > > > > --
+> > > > > > > > 2.40.1
+> > > > > > > >
+> > > > > > > >
+> > > > > >
+> > > > > >
+> > > > > >
+> > > > > > --
+> > > > > > Best regards,
+> > > > > >
+> > > > > > Keguang Zhang
+> > > > > >
+> > > >
+> > > >
+> > > >
+> > > > --
+> > > > Best regards,
+> > > >
+> > > > Keguang Zhang
+> >
+> >
+> >
+> > --
+> > Best regards,
+> >
+> > Keguang Zhang
 
+
+
+--
+Best regards,
+
+Keguang Zhang
