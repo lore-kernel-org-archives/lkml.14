@@ -1,156 +1,137 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from outpost1.zedat.fu-berlin.de (outpost1.zedat.fu-berlin.de [130.133.4.66])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA6FB86259;
-	Tue,  2 Apr 2024 14:13:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C55385466B;
+	Tue,  2 Apr 2024 14:14:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=130.133.4.66
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712067230; cv=none; b=db0Plv7fct2Jz2osOdOnziEY7Rg4j0svbRpmDT1N4KXhhs+Chu4sCO1pIOAM/nJx6/4Jhv/9aFXybJOPc00LaoT6FEWaYzccnfC0kTOHiIiHrM4s29+D3JT6xhe+ISQcX4wj6UdNIBXcflShbHOUEqeRnVbIpM5E04pJzCY3gpQ=
+	t=1712067271; cv=none; b=QL52B4kTSW/O7FYv1DqiBVxkF/p++gyjUJkTy7+VVhqIiAXumsvE1RaeDhFKKcC6syAfA302HdBKJKD/aJI7/i8xN9cuB7ld5ljsqruozygoBMhUOS+/P/0bnqiJbm6XBKxm8nJZpCwJZkkNS09gxFmGZCXm9KAkOxMlOaP+2B8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712067230; c=relaxed/simple;
-	bh=36P1uOtujsizwW2usw7mfkPhuqvi59s5Nt+PgGGqx0c=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LcEW63i967IIA9Khq0BAlyAeMZNST+wDFXPISvneQIwhUhgAYWF93Jq01L9LldYNIiMcyCoMl2pTRbzPcrY9sNmBXRJLiGjyRdfgjwjLTtPaEBR9MzeXFiLAlIj3L5/WMNo9pEJoaTzNSfMQlP/LhOVoQIofUHIcFpg1gN8z5qE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=Y2B+7rff; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1712067271; c=relaxed/simple;
+	bh=xGBS8087o4E2OFVrwhMP2Fd9XpiplM/rOINlshOr56M=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=PoIfIuUvne2l0Dhggb7w+uJhDu61LKh/+8i9b/sz2g2yiPmV2bPSftMb7sAlx09Cj+AtEOPVBifYX4dHuLClVxafX8JZV0aZaCTmu0Hpd5wKCnbivxTAV7JpaBxt+hftTkCa6kZfLPwxG1Uc3dnk5b04LXPJImRKgguhAFyzTyw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=physik.fu-berlin.de; spf=pass smtp.mailfrom=zedat.fu-berlin.de; dkim=pass (2048-bit key) header.d=fu-berlin.de header.i=@fu-berlin.de header.b=OIojHHSc; arc=none smtp.client-ip=130.133.4.66
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=physik.fu-berlin.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zedat.fu-berlin.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="Y2B+7rff"
-Received: from imap2.dmz-prg2.suse.org (imap2.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:98])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id DDFFA5BE2C;
-	Tue,  2 Apr 2024 14:13:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1712067226; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=KA7AVUof0UCDazD9kIzVR9xQgcPzIYUy3fkudyiEwWk=;
-	b=Y2B+7rffqbEm69uPQnaA7mdz2w0eK/38jkGPgDQNkMcQKA374UbUoeFc45NFeiLZyw3USB
-	LOnnWKV3sfhN0kfcSC946P9eJTPVNi6U3gYFCnc5aixSwPz2vhlDAxN1/XGc10nBRVDsys
-	F6ICdlUQn+ZzhTJsur2HWshIBvDb604=
-Authentication-Results: smtp-out2.suse.de;
-	dkim=none
-Received: from imap2.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap2.dmz-prg2.suse.org (Postfix) with ESMTPS id C9C1A13A90;
-	Tue,  2 Apr 2024 14:13:46 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap2.dmz-prg2.suse.org with ESMTPSA
-	id GiIRMZoSDGboYwAAn2gu4w
-	(envelope-from <mkoutny@suse.com>); Tue, 02 Apr 2024 14:13:46 +0000
-Date: Tue, 2 Apr 2024 16:13:41 +0200
-From: Michal =?utf-8?Q?Koutn=C3=BD?= <mkoutny@suse.com>
-To: Waiman Long <longman@redhat.com>
-Cc: Tejun Heo <tj@kernel.org>, Zefan Li <lizefan.x@bytedance.com>, 
-	Johannes Weiner <hannes@cmpxchg.org>, Thomas Gleixner <tglx@linutronix.de>, 
-	Peter Zijlstra <peterz@infradead.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>, Shuah Khan <shuah@kernel.org>, 
-	linux-kernel@vger.kernel.org, cgroups@vger.kernel.org, linux-pm@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org, Frederic Weisbecker <frederic@kernel.org>, 
-	"Paul E. McKenney" <paulmck@kernel.org>, Ingo Molnar <mingo@kernel.org>, 
-	Valentin Schneider <vschneid@redhat.com>, Anna-Maria Behnsen <anna-maria@linutronix.de>, 
-	Alex Shi <alexs@kernel.org>, Vincent Guittot <vincent.guittot@linaro.org>, 
-	Barry Song <song.bao.hua@hisilicon.com>
-Subject: Re: [PATCH 1/2] cgroup/cpuset: Make cpuset hotplug processing
- synchronous
-Message-ID: <kce74bx6aafxfuw5yovaschym4ze4kommfk74eq5totojytest@mdxnfvl2kdol>
-References: <20240401145858.2656598-1-longman@redhat.com>
- <20240401145858.2656598-2-longman@redhat.com>
+	dkim=pass (2048-bit key) header.d=fu-berlin.de header.i=@fu-berlin.de header.b="OIojHHSc"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=fu-berlin.de; s=fub01; h=MIME-Version:Content-Transfer-Encoding:
+	Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=7FYEajHHZNrGHETCR6Q3fzJ6HNWJWU4r/hKJctcIepI=; t=1712067267; x=1712672067; 
+	b=OIojHHScqszIjU2KfVSb6eKfmUZQH0X+pj1tdpiI1K4mkXSrbysLEmAJJaUH7xlzFZMjTaFgqr7
+	4RoFGFsVfJuYcdtapDnnPw0w2DnxyPdjPO0JBcBewOl0Nfdfmzzahf+XdGq4Sq1QvIZpei35OlC6J
+	idjnrkUOkXMNTL94NGj3Hld93DiGmmxGsW4JC47SzDX/lBwpMTHdk/CpncC2EpXeAu6MOGURentPD
+	ue1qqauoBEKjc4Y6RvBHKbU/rUPEhKyoPnhC3zc8O7C8KIOOutYhOkNWaLVnVIFzfvtYKaz8SBawz
+	P9GgsxTBOE6z3X+X6wyjlTZ009wIb3SzAJ4Q==;
+Received: from inpost2.zedat.fu-berlin.de ([130.133.4.69])
+          by outpost.zedat.fu-berlin.de (Exim 4.97)
+          with esmtps (TLS1.3)
+          tls TLS_AES_256_GCM_SHA384
+          (envelope-from <glaubitz@zedat.fu-berlin.de>)
+          id 1rrepN-00000001CzR-2fhC; Tue, 02 Apr 2024 16:09:29 +0200
+Received: from p57bd9555.dip0.t-ipconnect.de ([87.189.149.85] helo=[192.168.178.20])
+          by inpost2.zedat.fu-berlin.de (Exim 4.97)
+          with esmtpsa (TLS1.3)
+          tls TLS_AES_256_GCM_SHA384
+          (envelope-from <glaubitz@physik.fu-berlin.de>)
+          id 1rrepN-00000000Hav-1nB3; Tue, 02 Apr 2024 16:09:29 +0200
+Message-ID: <1e77ade4fb1d924ffaf226cb946ba3314ba59a1d.camel@physik.fu-berlin.de>
+Subject: Re: [PATCH] Revert "sh: Handle calling csum_partial with misaligned
+ data"
+From: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
+To: Guenter Roeck <linux@roeck-us.net>, Yoshinori Sato
+	 <ysato@users.sourceforge.jp>
+Cc: Rich Felker <dalias@libc.org>, linux-sh@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Date: Tue, 02 Apr 2024 16:09:28 +0200
+In-Reply-To: <cb8d3d2a-b843-49d5-a219-10a29b5877d0@roeck-us.net>
+References: <20240324231804.841099-1-linux@roeck-us.net>
+	 <059d03a5da257660fa0bc188c6cc8d0152e97704.camel@physik.fu-berlin.de>
+	 <a9ac59cd-82db-45a0-9f85-ec3880c54dbf@roeck-us.net>
+	 <cb8d3d2a-b843-49d5-a219-10a29b5877d0@roeck-us.net>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.0 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="m3jtt4lb3pupq4nw"
-Content-Disposition: inline
-In-Reply-To: <20240401145858.2656598-2-longman@redhat.com>
-X-Spam-Score: -1.19
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Spam-Flag: NO
-X-Spamd-Result: default: False [-1.19 / 50.00];
-	 ARC_NA(0.00)[];
-	 RCVD_VIA_SMTP_AUTH(0.00)[];
-	 FROM_HAS_DN(0.00)[];
-	 TO_DN_SOME(0.00)[];
-	 TO_MATCH_ENVRCPT_ALL(0.00)[];
-	 NEURAL_HAM_LONG(-0.96)[-0.965];
-	 MIME_GOOD(-0.20)[multipart/signed,text/plain];
-	 MID_RHS_NOT_FQDN(0.50)[];
-	 RCVD_COUNT_THREE(0.00)[3];
-	 DKIM_SIGNED(0.00)[suse.com:s=susede1];
-	 MX_GOOD(-0.01)[];
-	 NEURAL_HAM_SHORT(-0.20)[-0.999];
-	 RCPT_COUNT_TWELVE(0.00)[22];
-	 SIGNED_PGP(-2.00)[];
-	 FUZZY_BLOCKED(0.00)[rspamd.com];
-	 FROM_EQ_ENVFROM(0.00)[];
-	 R_DKIM_NA(2.20)[];
-	 MIME_TRACE(0.00)[0:+,1:+,2:~];
-	 RCVD_TLS_ALL(0.00)[];
-	 BAYES_HAM(-0.52)[80.23%];
-	 RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:98:from]
-X-Spam-Level: 
-X-Rspamd-Queue-Id: DDFFA5BE2C
+X-Original-Sender: glaubitz@physik.fu-berlin.de
+X-ZEDAT-Hint: PO
 
+On Tue, 2024-04-02 at 07:06 -0700, Guenter Roeck wrote:
+> Hi,
+>=20
+> On Mon, Mar 25, 2024 at 07:34:00AM -0700, Guenter Roeck wrote:
+> > On 3/25/24 00:39, John Paul Adrian Glaubitz wrote:
+> > > Hi Guenter,
+> > >=20
+> > > On Sun, 2024-03-24 at 16:18 -0700, Guenter Roeck wrote:
+> > > > This reverts commit cadc4e1a2b4d20d0cc0e81f2c6ba0588775e54e5.
+> > > >=20
+> > > > Commit cadc4e1a2b4d ("sh: Handle calling csum_partial with misalign=
+ed
+> > > > data") causes bad checksum calculations on unaligned data. Revertin=
+g
+> > > > it fixes the problem.
+> > > >=20
+> > > >      # Subtest: checksum
+> > > >      # module: checksum_kunit
+> > > >      1..5
+> > > >      # test_csum_fixed_random_inputs: ASSERTION FAILED at lib/check=
+sum_kunit.c:500
+> > > >      Expected ( u64)result =3D=3D ( u64)expec, but
+> > > >          ( u64)result =3D=3D 53378 (0xd082)
+> > > >          ( u64)expec =3D=3D 33488 (0x82d0)
+> > > >      # test_csum_fixed_random_inputs: pass:0 fail:1 skip:0 total:1
+> > > >      not ok 1 test_csum_fixed_random_inputs
+> > > >      # test_csum_all_carry_inputs: ASSERTION FAILED at lib/checksum=
+_kunit.c:525
+> > > >      Expected ( u64)result =3D=3D ( u64)expec, but
+> > > >          ( u64)result =3D=3D 65281 (0xff01)
+> > > >          ( u64)expec =3D=3D 65280 (0xff00)
+> > > >      # test_csum_all_carry_inputs: pass:0 fail:1 skip:0 total:1
+> > > >      not ok 2 test_csum_all_carry_inputs
+> > > >      # test_csum_no_carry_inputs: ASSERTION FAILED at lib/checksum_=
+kunit.c:573
+> > > >      Expected ( u64)result =3D=3D ( u64)expec, but
+> > > >          ( u64)result =3D=3D 65535 (0xffff)
+> > > >          ( u64)expec =3D=3D 65534 (0xfffe)
+> > > >      # test_csum_no_carry_inputs: pass:0 fail:1 skip:0 total:1
+> > > >      not ok 3 test_csum_no_carry_inputs
+> > > >      # test_ip_fast_csum: pass:1 fail:0 skip:0 total:1
+> > > >      ok 4 test_ip_fast_csum
+> > > >      # test_csum_ipv6_magic: pass:1 fail:0 skip:0 total:1
+> > > >      ok 5 test_csum_ipv6_magic
+> > > >   # checksum: pass:2 fail:3 skip:0 total:5
+> > > >   # Totals: pass:2 fail:3 skip:0 total:5
+> > > > not ok 22 checksum
+> > >=20
+> > > Can you tell me how the tests are run so I can try to verify this on =
+real hardware?
+> > >=20
+> >=20
+> > Enabling CONFIG_KUNIT and CHECKSUM_KUNIT and booting with those tests e=
+nabled
+> > should do it.
+> >=20
+>=20
+> Did you have time to test this on real hardware ?
 
---m3jtt4lb3pupq4nw
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Not yet. I just returned from Easter holidays and need to get synced with w=
+ork first.
 
-Hello Waiman.
+Adrian
 
-(I have no opinion on the overall locking reworks, only the bits about
-v1 migrations caught my attention.)
-
-On Mon, Apr 01, 2024 at 10:58:57AM -0400, Waiman Long <longman@redhat.com> wrote:
-...
-> @@ -4383,12 +4377,20 @@ hotplug_update_tasks_legacy(struct cpuset *cs,
->  	/*
->  	 * Move tasks to the nearest ancestor with execution resources,
->  	 * This is full cgroup operation which will also call back into
-> -	 * cpuset. Should be done outside any lock.
-> +	 * cpuset. Execute it asynchronously using workqueue.
-
-                   ...to avoid deadlock on cpus_read_lock
-
-Is this the reason?
-Also, what happens with the tasks in the window till the migration
-happens?
-Is it handled gracefully that their cpu is gone?
-
-
-> -	if (is_empty) {
-> -		mutex_unlock(&cpuset_mutex);
-> -		remove_tasks_in_empty_cpuset(cs);
-> -		mutex_lock(&cpuset_mutex);
-> +	if (is_empty && css_tryget_online(&cs->css)) {
-> +		struct cpuset_remove_tasks_struct *s;
-> +
-> +		s = kzalloc(sizeof(*s), GFP_KERNEL);
-
-Is there a benefit of having a work for each cpuset?
-Instead of traversing whole top_cpuset once in the async work.
-
-
-Thanks,
-Michal
-
-
---m3jtt4lb3pupq4nw
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQQpEWyjXuwGT2dDBqAGvrMr/1gcjgUCZgwSkwAKCRAGvrMr/1gc
-jku7AP4wunT3qTbn0gNfnNlgS+aZURi7eScVHpxboPBoGEeorgEA0EEpGH79hJUs
-C5xcOZLm/5ZRgE5MXKIx0kiWKBGt9QY=
-=8lGP
------END PGP SIGNATURE-----
-
---m3jtt4lb3pupq4nw--
+--=20
+ .''`.  John Paul Adrian Glaubitz
+: :' :  Debian Developer
+`. `'   Physicist
+  `-    GPG: 62FF 8A75 84E0 2956 9546  0006 7426 3B37 F5B5 F913
