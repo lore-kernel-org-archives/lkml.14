@@ -1,155 +1,174 @@
-Received: from mail.wantyapps.xyz (mail.wantyapps.xyz [66.135.5.160])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EF001E480;
-	Tue,  2 Apr 2024 15:56:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=66.135.5.160
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1ADA41E480;
+	Tue,  2 Apr 2024 15:58:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712073396; cv=none; b=Na3wTjCURBdRKJygXb0+J01/YjbmlZ2AnuvMRXk/3ZnBTuMyioyxtheB/g0oK54z4YtVG6xseCbpzy5t8A8Y+14+ZHcIwZeCyQ5gTZ6dbziHa/kcwNAykzuqTnjduZQ/gQ7QCwTfL3NCfgSbB08AGV89RK/wCZSkr4fplHtS0Ws=
+	t=1712073531; cv=none; b=HAVaW9WkdeMwNrvYLH19BPUkxIEuO4L/LxTjx91eu4aUgu/6VNbJmeXx7v9R8ZehfMZS752wMg3FxTRJNaf4hRS/Lre2Z6B5zxPdMdxVVdVmXmjgO3/qBc8s1SEE8TnYHxv9W2/03VzlR+pggTZPSJPBtGxzN/OIzMBAiq3Cur8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712073396; c=relaxed/simple;
-	bh=3uUdxpNMJCSv/whZqF+Y9KRjEax86QarR254jAZl9Yk=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=n0sk6NRkc54MQXVJag8yyyWNzoNZ7MXdEHUr6txJEVMIgDJ7qqxpfbCsrFrvlLaAgdE56s5i611aFkdUtdDG2zlnvHTP4+5Fa8h/F8ngxwP6VigA57cd8ozUop+3Z3i2UaC9fxYz8lZZlzui+wZCCi4c9fcR+nJWf37wb6PP8nk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=wantyapps.xyz; spf=pass smtp.mailfrom=wantyapps.xyz; dkim=pass (2048-bit key) header.d=wantyapps.xyz header.i=@wantyapps.xyz header.b=QfVU6kTu; arc=none smtp.client-ip=66.135.5.160
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=wantyapps.xyz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wantyapps.xyz
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wantyapps.xyz header.i=@wantyapps.xyz header.b="QfVU6kTu"
-Received: from multivac.localdomain (unknown [147.235.205.62])
-	by mail.wantyapps.xyz (Postfix) with ESMTPSA id 511EE93B8D;
-	Tue,  2 Apr 2024 15:56:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=wantyapps.xyz;
-	s=mail; t=1712073388;
-	bh=3uUdxpNMJCSv/whZqF+Y9KRjEax86QarR254jAZl9Yk=;
-	h=From:To:Cc:Subject:Date:From;
-	b=QfVU6kTuNxAmCn40yRCWmwiXs5oahcAAdwl6+mD5HGXHiPqbuuMc5Qi30vucXyPnB
-	 RzxEreWWA2qmbt15BSjFox8EV6Y4Qh2KX1t1Cz1bg0o2/P21j1MsTcCPj+fewPLjhO
-	 Oizd914Iem9wFMdpDgZZjL1xCUeKbD+GHMA3mmuRWEiATrm297T6nV1wyyTRoteUPV
-	 Nb/nMWqV4h7Rc5Ug5VpK1HTCCUdyk2x2D/bzJWNzrScR4zG32r8zlTuXmssdwL6Qrl
-	 YdjPkZVy7QYUc2cVcyUKFbZK34jj21aDnPOcn5mQLTyLplNi3qtSZco6dmWDh8xwOv
-	 jU6X5vSSrGCdg==
-From: me@wantyapps.xyz
-To: 
-Cc: me@wantyapps.xyz,
-	Marcel Holtmann <marcel@holtmann.org>,
-	Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
-	linux-bluetooth@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] Bluetooth: hci_intel: Fix multiple issues reported by checkpatch.pl
-Date: Tue,  2 Apr 2024 18:55:38 +0300
-Message-ID: <20240402155543.36856-1-me@wantyapps.xyz>
-X-Mailer: git-send-email 2.44.0
+	s=arc-20240116; t=1712073531; c=relaxed/simple;
+	bh=Gidpon3Z5DPHUkBqcS5U3KP9v3VSp4F1/+bnIqyCBYY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=pMyepY4zZ0x5zbMuBk+4Q5/VClr35VOgtPtxSxpBhXUvdyN2CCduI+9G0uCLLvEaAkBPFD0RSgsAPCgfi9S4262F7jMt01T4CrQ0U1UcA6M3me0cwcjVtvDKWzrNKhzWKeE3nMDYSuCKRRlFW6JKY8FADZR5rcEsSNbWJS9snb8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 654971007;
+	Tue,  2 Apr 2024 08:59:19 -0700 (PDT)
+Received: from pluto (unknown [172.31.20.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CA8863F7F5;
+	Tue,  2 Apr 2024 08:58:44 -0700 (PDT)
+Date: Tue, 2 Apr 2024 16:58:34 +0100
+From: Cristian Marussi <cristian.marussi@arm.com>
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Peng Fan <peng.fan@nxp.com>, "Peng Fan (OSS)" <peng.fan@oss.nxp.com>,
+	Sudeep Holla <sudeep.holla@arm.com>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Dan Carpenter <dan.carpenter@linaro.org>,
+	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+	"linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+	Oleksii Moisieiev <oleksii_moisieiev@epam.com>
+Subject: Re: [PATCH v6 3/4] firmware: arm_scmi: Add SCMI v3.2 pincontrol
+ protocol basic support
+Message-ID: <ZgwrKnx3hb59OG77@pluto>
+References: <20240323-pinctrl-scmi-v6-0-a895243257c0@nxp.com>
+ <20240323-pinctrl-scmi-v6-3-a895243257c0@nxp.com>
+ <ZgcP4IkTQGks9ehH@surfacebook.localdomain>
+ <DU0PR04MB9417E797F4E0F7BB6154B3BE88382@DU0PR04MB9417.eurprd04.prod.outlook.com>
+ <Zgu4Tok43W5t8KM0@pluto>
+ <CAHp75VdAaTeQ_Ag3gd0s9UfT=kAT2hwibeJ9-YFXJx4z=R3e+g@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAHp75VdAaTeQ_Ag3gd0s9UfT=kAT2hwibeJ9-YFXJx4z=R3e+g@mail.gmail.com>
 
-From: Uri Arev <me@wantyapps.xyz>
+On Tue, Apr 02, 2024 at 04:06:06PM +0300, Andy Shevchenko wrote:
+> On Tue, Apr 2, 2024 at 10:48 AM Cristian Marussi
+> <cristian.marussi@arm.com> wrote:
+> > On Sun, Mar 31, 2024 at 01:44:28PM +0000, Peng Fan wrote:
+> > > > Sat, Mar 23, 2024 at 08:15:16PM +0800, Peng Fan (OSS) kirjoitti:
+> 
+> ...
+> 
+> > > > > +#include <linux/module.h>
+> > > > > +#include <linux/scmi_protocol.h>
+> > > > > +#include <linux/slab.h>
+> > > >
+> > > > This is semi-random list of headers. Please, follow IWYU principle (include
+> > > > what you use). There are a lot of inclusions I see missing (just in the context of
+> > > > this page I see bits.h, types.h, and  asm/byteorder.h).
+> > >
+> > > Is there any documentation about this requirement?
+> > > Some headers are already included by others.
+> 
+> The documentation here is called "a common sense".
+> The C language is built like this and we expect that nobody will
+> invest into the dependency hell that we have already, that's why IWYU
+> principle, please follow it.
+> 
 
-This fixes the following CHECKs, WARNINGs, and ERRORs reported in
-hci_intel.c
+Yes, but given that we have a growing number of SCMI protocols there is a
+common local protocols.h header to group all includes needed by any
+protocols: the idea behind this (and the devm_ saga down below) was to ease
+development of protocols, since there are lots of them and growing, given
+the SCMI spec is extensible.
 
-Reported by checkpatch.pl:
------------
-hci_intel.c
------------
-WARNING: Prefer using '"%s...", __func__' to using 'intel_setup', this function's name, in a string
-+	bt_dev_dbg(hdev, "start intel_setup");
+> > Andy made (mostly) the same remarks on this same patch ~1-year ago on
+> > this same patch while it was posted by Oleksii.
+> >
+> > And I told that time that most of the remarks around devm_ usage were
+> > wrong due to how the SCMI core handles protocol initialization (using a
+> > devres group transparently).
+> >
+> > This is what I answered that time.
+> >
+> > https://lore.kernel.org/linux-arm-kernel/ZJ78hBcjAhiU+ZBO@e120937-lin/#t
+> >
+> > I wont repeat myself, but, in a nutshell the memory allocation like it
+> > is now is fine: a bit happens via devm_ at protocol initialization, the
+> > other is doe via explicit kmalloc at runtime and freed via kfree at
+> > remove time (if needed...i.e. checking the present flag of some structs)
+> 
+> This sounds like a mess. devm_ is expected to be used only for the
+> ->probe() stage, otherwise you may consider cleanup.h (__free() macro)
+> to have automatic free at the paths where memory is not needed.
+> 
 
-ERROR: code indent should use tabs where possible
-+        /* Check for supported iBT hardware variants of this firmware$
+Indeed, this protocol_init code is called by the SCMI core once for all when
+an SCMI driver tries at first to use this specific protocol by 'getting' its
+protocol_ops, so it is indeed called inside the probe chain of the driver:
+at this point you *can* decide to use devres to allocate memory and be assured
+that if the init fails, or when the driver cease to use this protocol (calling
+its remove()) and no other driver is using it, all the stuff that have been
+allocated related to this protocol will be released by the core for you.
+(using an internal devres group)
 
-ERROR: code indent should use tabs where possible
-+         * loading method.$
+Without this you should handle manually all the deallocation manually on
+the init error-paths AND also provide all the cleanup explicitly when
+the protocol is no more used by any driver (multiple users of the same
+protocol instance are possible)...for all protocols.
 
-ERROR: code indent should use tabs where possible
-+         *$
+This is/was handy since, till now, all the SCMI querying and resources
+allocation happened anyway all at once at init time...
 
-ERROR: code indent should use tabs where possible
-+         * This check has been put in place to ensure correct forward$
+...the mess, as you kindly called it, derives from the fact that this specific
+protocol is the first and only one that does NOT allocate all that it needs
+during the initialization (to minimize needless allocs for a lot of possibly
+unused resources) and this lazy-initialization phase, done after init at runtime,
+must be handled manually since it cannot be managed by the devres group that is
+open/clsoed around init by the SCMI core.
 
-ERROR: code indent should use tabs where possible
-+         * compatibility options when newer hardware variants come along.$
+I dont like particularly this split allocation but it has a reason and any
+other solution seems more messy to me at the moment.
 
-ERROR: code indent should use tabs where possible
-+         */$
+And I dont feel like changing all the SCMI protocol initialziation core code
+(that address a lot more under the hood) is a desirable solution to address a
+non-existent problem really.
 
-CHECK: No space is necessary after a cast
-+	duration = (unsigned long long) ktime_to_ns(delta) >> 10;
+> And the function naming doesn't suggest that you have a probe-remove
+> pair. Moreover, if the init-deinit part is called in the probe-remove,
+> the devm_ must not be mixed with non-devm ones, as it breaks the order
+> and leads to subtle mistakes.
+> 
 
-CHECK: No space is necessary after a cast
-+	duration = (unsigned long long) ktime_to_ns(delta) >> 10;
+Initialization order is enforced by SCMI core like this:
 
-WARNING: Missing a blank line after declarations
-+		int err = PTR_ERR(intel->rx_skb);
-+		bt_dev_err(hu->hdev, "Frame reassembly failed (%d)", err);
+ @driver_probe->get_protocol_ops()
+  @core/get_protocol_ops
+     -> devres_group_open()
+     -> protocol_init->devm_*()
+     -> devres_group_close()
+     -> driver_probing
 
-Signed-off-by: Uri Arev <me@wantyapps.xyz>
----
- drivers/bluetooth/hci_intel.c | 19 ++++++++++---------
- 1 file changed, 10 insertions(+), 9 deletions(-)
-
-diff --git a/drivers/bluetooth/hci_intel.c b/drivers/bluetooth/hci_intel.c
-index 78afb9a348e7..44731de1a2d6 100644
---- a/drivers/bluetooth/hci_intel.c
-+++ b/drivers/bluetooth/hci_intel.c
-@@ -537,7 +537,7 @@ static int intel_setup(struct hci_uart *hu)
- 	int speed_change = 0;
- 	int err;
+   @runtime optional explicit_lazy_kmallocs inside the protocol
  
--	bt_dev_dbg(hdev, "start intel_setup");
-+	bt_dev_dbg(hdev, "start %s", __func__);
- 
- 	hu->hdev->set_diag = btintel_set_diag;
- 	hu->hdev->set_bdaddr = btintel_set_bdaddr;
-@@ -591,12 +591,12 @@ static int intel_setup(struct hci_uart *hu)
- 		return -EINVAL;
- 	}
- 
--        /* Check for supported iBT hardware variants of this firmware
--         * loading method.
--         *
--         * This check has been put in place to ensure correct forward
--         * compatibility options when newer hardware variants come along.
--         */
-+	/* Check for supported iBT hardware variants of this firmware
-+	 * loading method.
-+	 *
-+	 * This check has been put in place to ensure correct forward
-+	 * compatibility options when newer hardware variants come along.
-+	 */
- 	switch (ver.hw_variant) {
- 	case 0x0b:	/* LnP */
- 	case 0x0c:	/* WsP */
-@@ -777,7 +777,7 @@ static int intel_setup(struct hci_uart *hu)
- 
- 	rettime = ktime_get();
- 	delta = ktime_sub(rettime, calltime);
--	duration = (unsigned long long) ktime_to_ns(delta) >> 10;
-+	duration = (unsigned long long)ktime_to_ns(delta) >> 10;
- 
- 	bt_dev_info(hdev, "Firmware loaded in %llu usecs", duration);
- 
-@@ -822,7 +822,7 @@ static int intel_setup(struct hci_uart *hu)
- 
- 	rettime = ktime_get();
- 	delta = ktime_sub(rettime, calltime);
--	duration = (unsigned long long) ktime_to_ns(delta) >> 10;
-+	duration = (unsigned long long)ktime_to_ns(delta) >> 10;
- 
- 	bt_dev_info(hdev, "Device booted in %llu usecs", duration);
- 
-@@ -977,6 +977,7 @@ static int intel_recv(struct hci_uart *hu, const void *data, int count)
- 				    ARRAY_SIZE(intel_recv_pkts));
- 	if (IS_ERR(intel->rx_skb)) {
- 		int err = PTR_ERR(intel->rx_skb);
-+
- 		bt_dev_err(hu->hdev, "Frame reassembly failed (%d)", err);
- 		intel->rx_skb = NULL;
- 		return err;
--- 
-2.44.0
+ @driver_remove->put_protocol_ops()
+   @core/put_protocol_ops()
+     -> protocol_denit->optional_explicit_kfree_of_the_above
+     -> devres_group_release()
+   -> driver_removing
+
+... dont think there's an ordering problem.
+
+...note that the ph->dev provided in the protocol_init and used by devm_
+is NOT the dev of the SCMI driver probe/remove that uses the get_protocol_ops,
+it is an internal SCMI device associated with the core SCMI stack probing and
+allocations, within which a devres group for the specific protocol is created
+when that specific protocol is initialized...protocols are not fully
+fledged drivers are just bits of the SCMI stack that are initialized when needed
+(and possibly also loaded when needed for vendor protocols) and
+de-initialzed when no more SCMI driver users exist for that protocol.
+
+Thanks,
+Cristian
 
