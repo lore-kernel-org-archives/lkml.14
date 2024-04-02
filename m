@@ -1,319 +1,135 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE294224F2;
-	Tue,  2 Apr 2024 06:21:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC54218654
+	for <linux-kernel@vger.kernel.org>; Tue,  2 Apr 2024 06:23:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712038912; cv=none; b=tZT2Ud9nEhAaTbv8ALRnh4Xj4iVZu4f+PsfQpiy0lHmbKX5nM+TBIqwVus4ZDc7yAEOkLzzjcOvZpcewckPYoKXCFImGwbNhSX5EN28IzMWS9oC95erwsZK0V/gwQ3Dqu3BKxrKK9/Z3TbOienrmcy+1M1G6qg7NkOK6DuZy6o8=
+	t=1712039027; cv=none; b=HxHvTRyMWVlQFW11OBF5e0JFIyJeEaox727bMDkOwu2aj/4GLo+vzUsBIat4Frf3HDoyZ54WVMY6ZU3iqRnLYhlah1UGjDGiBlecKyK2qXuHLsw8fFwGxCNzhheW45FizA6ziZ3QhNAwxh0s1ZleksTCJJOVKIYspWpGS+oyO6I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712038912; c=relaxed/simple;
-	bh=GkqNJasuDn4TR8A0A0ShB3YK57TMnp9gvDs1CBvhYnY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=RBDl71hr7+hXvbycwhnmPL7eUrbc0847ijxVF+9ADn1X7baCfPyTapcN/br3auakOyfgtI7PjEoubAWOj19KO0AoOQ8/oxpiY+X2+hxY5+36HNJM/+fHlgRxPpJsfZOrwD7Ygw5TjfdtJBBSAuu7edj5u2gsnWxJ1H0vMzgLnDI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=AYW9we1Y; arc=none smtp.client-ip=192.198.163.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="AYW9we1Y"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1712038910; x=1743574910;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=GkqNJasuDn4TR8A0A0ShB3YK57TMnp9gvDs1CBvhYnY=;
-  b=AYW9we1Y823vkrqdzuewdHAHZGNia1weyme2tOszYjg3RGzuqGAxLRXy
-   ov44cFE9+1YqeRxpnH+T3J0xwUwgaaVcTJfUgFu/kXZO0aRmZy6YTcApa
-   N4nzMcmTzXiGhNTW8GvwrA3yCpUK1kVYtkiSy2nPVwbeSq7agkc6+X+1p
-   9NPqD4auQnJ4AW0PB0jQcWSfAwECyRWdqwDWkZMGA6TaV+opu5oWI1zFj
-   9VXFYRoLRWvMBrRS/ELUdH603prCFZ1GeYp5/04BO79eM3KymX8ImYM0c
-   dFL5kVgKb5DW+yBQUuSV3blGMfkIrxUKJyk5FozftlwZOmAmZ2UQVFgNs
-   g==;
-X-CSE-ConnectionGUID: /XovSydaSG2ZRKWf9R+VNw==
-X-CSE-MsgGUID: WOR67Jb5QLmY5E4S9MaXNQ==
-X-IronPort-AV: E=McAfee;i="6600,9927,11031"; a="7029334"
-X-IronPort-AV: E=Sophos;i="6.07,174,1708416000"; 
-   d="scan'208";a="7029334"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Apr 2024 23:21:48 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,174,1708416000"; 
-   d="scan'208";a="22436583"
-Received: from binbinwu-mobl.ccr.corp.intel.com (HELO [10.238.10.225]) ([10.238.10.225])
-  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Apr 2024 23:21:43 -0700
-Message-ID: <bd862ee4-7513-4880-b6e5-466dcfb08f1a@linux.intel.com>
-Date: Tue, 2 Apr 2024 14:21:41 +0800
+	s=arc-20240116; t=1712039027; c=relaxed/simple;
+	bh=PPPuY5Hg0Y0DNWRkltz48L7HE6kprcKtqSFqK38Z/U0=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=IMpqe77ats0fdDIF2a2O5O3QYslSJg7cHI95+yRWwG+jHmwg0MHBUa46MLlUWjgDgqRI8Ajgrkm6gkn0H1OZCV+NniTuhRjVh4ATy5bVTMVZMQjxAEDT+OZ0Ult0+WNJ8Pzy571bryP58cikd5Z75kCIPKVfe+FDI8XVN2YuUhg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <m.grzeschik@pengutronix.de>)
+	id 1rrXYe-0004sT-20; Tue, 02 Apr 2024 08:23:44 +0200
+Received: from [2a0a:edc0:0:1101:1d::ac] (helo=dude04.red.stw.pengutronix.de)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <m.grzeschik@pengutronix.de>)
+	id 1rrXYd-009vdf-Fz; Tue, 02 Apr 2024 08:23:43 +0200
+Received: from localhost ([::1] helo=dude04.red.stw.pengutronix.de)
+	by dude04.red.stw.pengutronix.de with esmtp (Exim 4.96)
+	(envelope-from <m.grzeschik@pengutronix.de>)
+	id 1rrXYd-00EkSU-1P;
+	Tue, 02 Apr 2024 08:23:43 +0200
+From: Michael Grzeschik <m.grzeschik@pengutronix.de>
+Date: Tue, 02 Apr 2024 08:23:43 +0200
+Subject: [PATCH] usb: chipidea: move ci_ulpi_init after the phy
+ initialization
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v19 070/130] KVM: TDX: TDP MMU TDX support
-To: isaku.yamahata@intel.com, kvm@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Cc: isaku.yamahata@gmail.com, Paolo Bonzini <pbonzini@redhat.com>,
- erdemaktas@google.com, Sean Christopherson <seanjc@google.com>,
- Sagi Shahar <sagis@google.com>, Kai Huang <kai.huang@intel.com>,
- chen.bo@intel.com, hang.yuan@intel.com, tina.zhang@intel.com
-References: <cover.1708933498.git.isaku.yamahata@intel.com>
- <56cdb0da8bbf17dc293a2a6b4ff74f6e3e034bbd.1708933498.git.isaku.yamahata@intel.com>
-From: Binbin Wu <binbin.wu@linux.intel.com>
-In-Reply-To: <56cdb0da8bbf17dc293a2a6b4ff74f6e3e034bbd.1708933498.git.isaku.yamahata@intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+Message-Id: <20240328-chipidea-phy-misc-v1-1-907d9de5d4df@pengutronix.de>
+X-B4-Tracking: v=1; b=H4sIAG6kC2YC/x2N0QqDMAwAf0XyvIDWwsp+RXxoY1wDrisNE4f47
+ wt7vIPjTlBuwgqP7oTGu6i8i8Fw64ByLE9GWYzB9c73owtIWaosHLHmL75ECdO4ukRh8Pfgwbo
+ UlTG1WChbWT7bZrI2XuX4j6b5un6FV/z7eAAAAA==
+To: Peter Chen <peter.chen@kernel.org>, 
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Michael Grzeschik <m.grzeschik@pengutronix.de>
+X-Mailer: b4 0.12.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1878;
+ i=m.grzeschik@pengutronix.de; h=from:subject:message-id;
+ bh=PPPuY5Hg0Y0DNWRkltz48L7HE6kprcKtqSFqK38Z/U0=;
+ b=owEBbQKS/ZANAwAKAb9pWET5cfSrAcsmYgBmC6RvfNzHPWGSTzAesud7hzhjuUOv2iCGDHlgz
+ +WMmsbz4gqJAjMEAAEKAB0WIQQV2+2Fpbqd6fvv0Gi/aVhE+XH0qwUCZgukbwAKCRC/aVhE+XH0
+ q7+YEACkOuX13NKcmJGgkose0F3MPD8UJZETRgJUxU+eZEKIenMN4a6uAsKhgOnGDp9rjQ16LWP
+ VoeaQwlRLty0VzpPswjJsouoDeMmMZWw1Um+qab6E8yLhGxEvp7PjsED5i0Gq6VyBEBCm1iocOu
+ PIDOsmZkP8Wk/aTwTeMZ3UPzDhuzpKZPPpdzN3uvKebh2YaOkFxCv5MiSulqJMC9LJ6Towv4jNM
+ nnXZ2p3w4VeMNlm8kS3oIeegL6pkbrix2v14LxhFxZRlP8HtDxBgC6v0HnBFj5IRk8wDwvLUh44
+ gwkGsZeEUjNSmvU3VQ07UjL8w21rAOhD+AiUxLIFe9e1kdYX7TYVQlzhsa7VGgga8/9MMuUoXsW
+ vVPqvztqt0EgMBU9zm1heazA+inRPSIZxsdoj86cUouRT8H80n48T31p5gwmMaGOPT7V+D/lgaJ
+ qj1XkdX3IuYhCSmrR82OV1EzsdU4N334yhb8nZTxkMfy/gValRXfJu+n0enYVFHOLtEalq1vu8P
+ xuwghYlomD2ODkNB2NJ/EHehP+ZDpF2+EWmobAdNPpnHv5aabnBQTKnsLyXt1h1dj38owPiG29r
+ ETiyyiR2eKEvKCOgWyfxY7K8+W702lBeT1IwRGCM3poAc95f+3gYNb+LvQlY86DX8qmb6FPCWfg
+ KvysDv7McMG188A==
+X-Developer-Key: i=m.grzeschik@pengutronix.de; a=openpgp;
+ fpr=957BC452CE953D7EA60CF4FC0BE9E3157A1E2C64
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: m.grzeschik@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
+The function ci_usb_phy_init is already handling the
+hw_phymode_configure path which is also only possible after we have
+a valid phy. So we move the ci_ulpi_init after the phy initialization
+to be really sure to be able to communicate with the ulpi phy.
 
+Signed-off-by: Michael Grzeschik <m.grzeschik@pengutronix.de>
+---
+ drivers/usb/chipidea/core.c | 8 ++++----
+ drivers/usb/chipidea/ulpi.c | 5 -----
+ 2 files changed, 4 insertions(+), 9 deletions(-)
 
-On 2/26/2024 4:26 PM, isaku.yamahata@intel.com wrote:
-> From: Isaku Yamahata <isaku.yamahata@intel.com>
->
-> Implement hooks of TDP MMU for TDX backend.  TLB flush, TLB shootdown,
-> propagating the change private EPT entry to Secure EPT and freeing Secure
-> EPT page. TLB flush handles both shared EPT and private EPT.  It flushes
-> shared EPT same as VMX.  It also waits for the TDX TLB shootdown.  For the
-> hook to free Secure EPT page, unlinks the Secure EPT page from the Secure
-> EPT so that the page can be freed to OS.
->
-> Propagate the entry change to Secure EPT.  The possible entry changes are
-> present -> non-present(zapping) and non-present -> present(population).  On
-> population just link the Secure EPT page or the private guest page to the
-> Secure EPT by TDX SEAMCALL. Because TDP MMU allows concurrent
-> zapping/population, zapping requires synchronous TLB shoot down with the
-> frozen EPT entry.
+diff --git a/drivers/usb/chipidea/core.c b/drivers/usb/chipidea/core.c
+index 835bf2428dc6e..bada13f704b62 100644
+--- a/drivers/usb/chipidea/core.c
++++ b/drivers/usb/chipidea/core.c
+@@ -1084,10 +1084,6 @@ static int ci_hdrc_probe(struct platform_device *pdev)
+ 		return -ENODEV;
+ 	}
+ 
+-	ret = ci_ulpi_init(ci);
+-	if (ret)
+-		return ret;
+-
+ 	if (ci->platdata->phy) {
+ 		ci->phy = ci->platdata->phy;
+ 	} else if (ci->platdata->usb_phy) {
+@@ -1142,6 +1138,10 @@ static int ci_hdrc_probe(struct platform_device *pdev)
+ 		goto ulpi_exit;
+ 	}
+ 
++	ret = ci_ulpi_init(ci);
++	if (ret)
++		return ret;
++
+ 	ci->hw_bank.phys = res->start;
+ 
+ 	ci->irq = platform_get_irq(pdev, 0);
+diff --git a/drivers/usb/chipidea/ulpi.c b/drivers/usb/chipidea/ulpi.c
+index dfec07e8ae1d2..89fb51e2c3ded 100644
+--- a/drivers/usb/chipidea/ulpi.c
++++ b/drivers/usb/chipidea/ulpi.c
+@@ -68,11 +68,6 @@ int ci_ulpi_init(struct ci_hdrc *ci)
+ 	if (ci->platdata->phy_mode != USBPHY_INTERFACE_MODE_ULPI)
+ 		return 0;
+ 
+-	/*
+-	 * Set PORTSC correctly so we can read/write ULPI registers for
+-	 * identification purposes
+-	 */
+-	hw_phymode_configure(ci);
+ 
+ 	ci->ulpi_ops.read = ci_ulpi_read;
+ 	ci->ulpi_ops.write = ci_ulpi_write;
 
-But for private memory, zapping holds write lock, right?
+---
+base-commit: 5bab5dc780c9ed0c69fc2f828015532acf4a7848
+change-id: 20240328-chipidea-phy-misc-b3f2bc814784
 
+Best regards,
+-- 
+Michael Grzeschik <m.grzeschik@pengutronix.de>
 
->    It zaps the secure entry, increments TLB counter, sends
-> IPI to remote vcpus to trigger TLB flush, and then unlinks the private
-> guest page from the Secure EPT. For simplicity, batched zapping with
-> exclude lock is handled as concurrent zapping.
-
-exclude lock -> exclusive lock
-
-How to understand this sentence?
-Since it's holding exclusive lock, how it can be handled as concurrent 
-zapping?
-Or you want to describe the current implementation prevents concurrent 
-zapping?
-
-
-> Although it's inefficient,
-> it can be optimized in the future.
->
-> For MMIO SPTE, the spte value changes as follows.
-> initial value (suppress VE bit is set)
-> -> Guest issues MMIO and triggers EPT violation
-> -> KVM updates SPTE value to MMIO value (suppress VE bit is cleared)
-> -> Guest MMIO resumes.  It triggers VE exception in guest TD
-> -> Guest VE handler issues TDG.VP.VMCALL<MMIO>
-> -> KVM handles MMIO
-> -> Guest VE handler resumes its execution after MMIO instruction
->
-> Signed-off-by: Isaku Yamahata <isaku.yamahata@intel.com>
->
-> ---
-> v19:
-> - Compile fix when CONFIG_HYPERV != y.
->    It's due to the following patch.  Catch it up.
->    https://lore.kernel.org/all/20231018192325.1893896-1-seanjc@google.com/
-> - Add comments on tlb shootdown to explan the sequence.
-> - Use gmem_max_level callback, delete tdp_max_page_level.
->
-> v18:
-> - rename tdx_sept_page_aug() -> tdx_mem_page_aug()
-> - checkpatch: space => tab
->
-> v15 -> v16:
-> - Add the handling of TD_ATTR_SEPT_VE_DISABLE case.
->
-> v14 -> v15:
-> - Implemented tdx_flush_tlb_current()
-> - Removed unnecessary invept in tdx_flush_tlb().  It was carry over
->    from the very old code base.
->
-> Signed-off-by: Isaku Yamahata <isaku.yamahata@intel.com>
-> ---
->   arch/x86/kvm/mmu/spte.c    |   3 +-
->   arch/x86/kvm/vmx/main.c    |  91 ++++++++-
->   arch/x86/kvm/vmx/tdx.c     | 372 +++++++++++++++++++++++++++++++++++++
->   arch/x86/kvm/vmx/tdx.h     |   2 +-
->   arch/x86/kvm/vmx/tdx_ops.h |   6 +
->   arch/x86/kvm/vmx/x86_ops.h |  13 ++
->   6 files changed, 481 insertions(+), 6 deletions(-)
->
-[...]
-> +
-> +static int tdx_mem_page_aug(struct kvm *kvm, gfn_t gfn,
-> +			    enum pg_level level, kvm_pfn_t pfn)
-> +{
-> +	int tdx_level = pg_level_to_tdx_sept_level(level);
-> +	struct kvm_tdx *kvm_tdx = to_kvm_tdx(kvm);
-> +	union tdx_sept_level_state level_state;
-> +	hpa_t hpa = pfn_to_hpa(pfn);
-> +	gpa_t gpa = gfn_to_gpa(gfn);
-> +	struct tdx_module_args out;
-> +	union tdx_sept_entry entry;
-> +	u64 err;
-> +
-> +	err = tdh_mem_page_aug(kvm_tdx->tdr_pa, gpa, hpa, &out);
-> +	if (unlikely(err == TDX_ERROR_SEPT_BUSY)) {
-> +		tdx_unpin(kvm, pfn);
-> +		return -EAGAIN;
-> +	}
-> +	if (unlikely(err == (TDX_EPT_ENTRY_STATE_INCORRECT | TDX_OPERAND_ID_RCX))) {
-> +		entry.raw = out.rcx;
-> +		level_state.raw = out.rdx;
-> +		if (level_state.level == tdx_level &&
-> +		    level_state.state == TDX_SEPT_PENDING &&
-> +		    entry.leaf && entry.pfn == pfn && entry.sve) {
-> +			tdx_unpin(kvm, pfn);
-> +			WARN_ON_ONCE(!(to_kvm_tdx(kvm)->attributes &
-> +				       TDX_TD_ATTR_SEPT_VE_DISABLE));
-
-to_kvm_tdx(kvm) -> kvm_tdx
-
-Since the implementation requires attributes.TDX_TD_ATTR_SEPT_VE_DISABLE is set, should it check the value passed from userspace?
-And the reason should be described somewhere in changelog or/and comment.
-
-
-
-> +			return -EAGAIN;
-> +		}
-> +	}
-> +	if (KVM_BUG_ON(err, kvm)) {
-> +		pr_tdx_error(TDH_MEM_PAGE_AUG, err, &out);
-> +		tdx_unpin(kvm, pfn);
-> +		return -EIO;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int tdx_sept_set_private_spte(struct kvm *kvm, gfn_t gfn,
-> +				     enum pg_level level, kvm_pfn_t pfn)
-> +{
-> +	struct kvm_tdx *kvm_tdx = to_kvm_tdx(kvm);
-> +
-> +	/* TODO: handle large pages. */
-> +	if (KVM_BUG_ON(level != PG_LEVEL_4K, kvm))
-> +		return -EINVAL;
-> +
-> +	/*
-> +	 * Because restricted mem
-
-The term "restricted mem" is not used anymore, right? Should update the 
-comment.
-
-> doesn't support page migration with
-> +	 * a_ops->migrate_page (yet), no callback isn't triggered for KVM on
-
-no callback isn't -> no callback is
-
-> +	 * page migration.  Until restricted mem supports page migration,
-
-"restricted mem" -> guest_mem
-
-
-> +	 * prevent page migration.
-> +	 * TODO: Once restricted mem introduces callback on page migration,
-
-ditto
-
-> +	 * implement it and remove get_page/put_page().
-> +	 */
-> +	get_page(pfn_to_page(pfn));
-> +
-> +	if (likely(is_td_finalized(kvm_tdx)))
-> +		return tdx_mem_page_aug(kvm, gfn, level, pfn);
-> +
-> +	/* TODO: tdh_mem_page_add() comes here for the initial memory. */
-> +
-> +	return 0;
-> +}
-> +
-> +static int tdx_sept_drop_private_spte(struct kvm *kvm, gfn_t gfn,
-> +				       enum pg_level level, kvm_pfn_t pfn)
-> +{
-> +	int tdx_level = pg_level_to_tdx_sept_level(level);
-> +	struct kvm_tdx *kvm_tdx = to_kvm_tdx(kvm);
-> +	struct tdx_module_args out;
-> +	gpa_t gpa = gfn_to_gpa(gfn);
-> +	hpa_t hpa = pfn_to_hpa(pfn);
-> +	hpa_t hpa_with_hkid;
-> +	u64 err;
-> +
-> +	/* TODO: handle large pages. */
-> +	if (KVM_BUG_ON(level != PG_LEVEL_4K, kvm))
-> +		return -EINVAL;
-> +
-> +	if (unlikely(!is_hkid_assigned(kvm_tdx))) {
-> +		/*
-> +		 * The HKID assigned to this TD was already freed and cache
-> +		 * was already flushed. We don't have to flush again.
-> +		 */
-> +		err = tdx_reclaim_page(hpa);
-> +		if (KVM_BUG_ON(err, kvm))
-> +			return -EIO;
-> +		tdx_unpin(kvm, pfn);
-> +		return 0;
-> +	}
-> +
-> +	do {
-> +		/*
-> +		 * When zapping private page, write lock is held. So no race
-> +		 * condition with other vcpu sept operation.  Race only with
-> +		 * TDH.VP.ENTER.
-> +		 */
-> +		err = tdh_mem_page_remove(kvm_tdx->tdr_pa, gpa, tdx_level, &out);
-> +	} while (unlikely(err == TDX_ERROR_SEPT_BUSY));
-> +	if (KVM_BUG_ON(err, kvm)) {
-> +		pr_tdx_error(TDH_MEM_PAGE_REMOVE, err, &out);
-> +		return -EIO;
-> +	}
-> +
-> +	hpa_with_hkid = set_hkid_to_hpa(hpa, (u16)kvm_tdx->hkid);
-> +	do {
-> +		/*
-> +		 * TDX_OPERAND_BUSY can happen on locking PAMT entry.  Because
-> +		 * this page was removed above, other thread shouldn't be
-> +		 * repeatedly operating on this page.  Just retry loop.
-> +		 */
-> +		err = tdh_phymem_page_wbinvd(hpa_with_hkid);
-> +	} while (unlikely(err == (TDX_OPERAND_BUSY | TDX_OPERAND_ID_RCX)));
-> +	if (KVM_BUG_ON(err, kvm)) {
-> +		pr_tdx_error(TDH_PHYMEM_PAGE_WBINVD, err, NULL);
-> +		return -EIO;
-> +	}
-> +	tdx_clear_page(hpa);
-> +	tdx_unpin(kvm, pfn);
-> +	return 0;
-> +}
-> +
-> +static int tdx_sept_link_private_spt(struct kvm *kvm, gfn_t gfn,
-> +				     enum pg_level level, void *private_spt)
-> +{
-> +	int tdx_level = pg_level_to_tdx_sept_level(level);
-> +	struct kvm_tdx *kvm_tdx = to_kvm_tdx(kvm);
-> +	gpa_t gpa = gfn_to_gpa(gfn);
-> +	hpa_t hpa = __pa(private_spt);
-> +	struct tdx_module_args out;
-> +	u64 err;
-> +
-> +	err = tdh_mem_sept_add(kvm_tdx->tdr_pa, gpa, tdx_level, hpa, &out);
-
-kvm_tdx is only used here, can drop the local var.
-
-> +	if (unlikely(err == TDX_ERROR_SEPT_BUSY))
-> +		return -EAGAIN;
-> +	if (KVM_BUG_ON(err, kvm)) {
-> +		pr_tdx_error(TDH_MEM_SEPT_ADD, err, &out);
-> +		return -EIO;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
->
