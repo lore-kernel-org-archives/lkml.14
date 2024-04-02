@@ -1,298 +1,129 @@
-Received: from thorn.bewilderbeest.net (thorn.bewilderbeest.net [71.19.156.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4304B5914D;
-	Tue,  2 Apr 2024 23:39:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=71.19.156.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C14292260B
+	for <linux-kernel@vger.kernel.org>; Tue,  2 Apr 2024 23:46:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712101194; cv=none; b=iO+4HlrjJVhK+9Yrj2PrXX9OM34tUE71JjHBGprlwID8bLw7R5vOK5ryMPT5K9r16wbzHfTQdwBQZq2KMc0wyf/3MtWel8AJ8hWkUvUW4CRLDajORYP2Pac528sgDniP+fhiQDgWUTMaeJo/UaO6myx4cABLdt4JeH3sOPcqHrk=
+	t=1712101582; cv=none; b=MPs8Oc/TZ/bkkoUMTruyNmJ0F8z1z26B+Nso7ajMDW+LQe82vWTucmgTsH81KVHeA5t2oD0z3kqkLQtwvJ8RFDS7UkHoe80TK10iDMibLDRA815UsHS/boNqyzIQdhueunUaD8YtaBo5NKyXAt0Ge9afGGoXi4BG+rRZKgJju3E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712101194; c=relaxed/simple;
-	bh=9ciK0WFlkwxLrJYfGaqE48QR269wBp49zV2proQBWmw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=brNgEwsorXpqw7q4TucEoM5L6r7ROaV4ye8R9RxEaKtKykZGn3QPtvDCTurXcmHkV4rskUT32Yv4M755zuit3ZevZtqYeei0ysW3njPZCcHk8qC36QC3cKdBIoRWueLVQEhgMtsr2VStKSkR/9DYddI3uIXYq8/XNvqf+YOuzBE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bewilderbeest.net; spf=pass smtp.mailfrom=bewilderbeest.net; dkim=pass (1024-bit key) header.d=bewilderbeest.net header.i=@bewilderbeest.net header.b=aiGqJ/ZD; arc=none smtp.client-ip=71.19.156.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bewilderbeest.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bewilderbeest.net
+	s=arc-20240116; t=1712101582; c=relaxed/simple;
+	bh=8rjYFhZ2XZOMdRtdKWh5HY7bv+xevdxUD/lIqWYydlc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=foOCczAMF0qLz+M1TiMk34b8B9AcbIqriZwNOe6Ht9e1H6VQ5yTQrvx9AVeZgcUywMxP/4rT7sL2SjevFJZBwA8lKnuScE4eQBOoq5YpdYOzS8UAL6DMz6Kr9kxCR/NQGSOV/PZndQIizESCw4IeSnfWlW2CetjarI/dzdzigog=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=avX4J5MT; arc=none smtp.client-ip=209.85.128.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=bewilderbeest.net header.i=@bewilderbeest.net header.b="aiGqJ/ZD"
-Received: from hatter.bewilderbeest.net (unknown [IPv6:2602:61:712b:6300::2])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: zev)
-	by thorn.bewilderbeest.net (Postfix) with ESMTPSA id 4FCB3634;
-	Tue,  2 Apr 2024 16:30:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bewilderbeest.net;
-	s=thorn; t=1712100638;
-	bh=4U8xqwY5U+BvijTvs9foSSCeaMMprSgbvDP6CtRfqd0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=aiGqJ/ZD20iv4mVGF5l+BNy2lgszhmXCBQMW5/x3kuebd+BGAa7gKQ8f3oOonzG/w
-	 qklknmlA9tw+zi0VMenVdtIM2FljaBCMFk4A6ByMIUD7hZhc5UzCGOD99HwJoayBk5
-	 tA03W84mzVS7Jq8sCUuqv6BCFhHAQ+EKCUEz4eSU=
-Date: Tue, 2 Apr 2024 16:30:37 -0700
-From: Zev Weiss <zev@bewilderbeest.net>
-To: Andrew Jeffery <andrew@codeconstruct.com.au>
-Cc: wim@linux-watchdog.org, linux@roeck-us.net, robh@kernel.org,
-	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
-	joel@jms.id.au, linux-watchdog@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] dt-bindings: watchdog: Convert Aspeed binding to DT
- schema
-Message-ID: <65722a59-2e94-4616-81e1-835615b0e600@hatter.bewilderbeest.net>
-References: <20240402120118.282035-1-andrew@codeconstruct.com.au>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="avX4J5MT"
+Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-41549a13fabso17505e9.1
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Apr 2024 16:46:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1712101579; x=1712706379; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=YUNb1EO5EhlkTVd2eVYclB+K26JgugQcOcoodC1uf8I=;
+        b=avX4J5MT5tpRpo+mrOOp5qYjieJknCfCkWEpOXPVzT7uS5tSueI/7kIvZmdSLxBfYS
+         Gi6tg+dO3RRNiOVNpy20RDGc4BsrfOBmyfGS83/q6HwZ3LNzQqYF67v48+qZEzjKZuP6
+         rpsMDD1e765ATdJpnC+Jgk4dpfMW1T0Tv3isrpamg2GdkT9im6mr+5ay1ygyAFIz7//G
+         EERbK4P2SlzymvLhJEKj1K+swWUsxjS3xsbs9sFIavKvwYkiJYwienhSSKM0dE18gMO9
+         oQB5RUgg2fv72nXr0qdgvZrvBQ7riADWpMGCyBE1oDeJHlQFJn7HAElkT3NisVQkmlnK
+         FyPg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712101579; x=1712706379;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=YUNb1EO5EhlkTVd2eVYclB+K26JgugQcOcoodC1uf8I=;
+        b=L+X8o3u45/Mj5Y2YaWU+zaPWLvtV3LDyQP3jjLy56gWauLxfKQYb7nHYW3Vh4lXcC7
+         8z38YNb3h9gkqqS7TyR1b56/bfGNqFn7uROiEQXao8QbGTWPKekq7IZPIrhytlXylpW5
+         4SSeJ1nP+kv2HdEpRYeD4VcH+Kw/kvrpHGsbu7ObQ9eiicWXNDHpTQwObt55WzL9MxAl
+         I6R9LK/3YH/ZQKB+mzHrOhQ2lGZaRLbNlv8VyLMgGvZ21Ed90t/XNOtyRgddk662SeGh
+         ZUcWQ9yPR3uFcIdDyYE4xtNcXMaYXWy9p5VPn3vATM82rwnuxZthI1u6My22wOrfjQpp
+         QmKw==
+X-Forwarded-Encrypted: i=1; AJvYcCUvEAxxW7TNNWfyAcICqOhhz3z1ozd4lyOHcLJUiT8lsBIohWGKC/dNw1pBAeeOA+vP5hOnHbsUzxx/pUZeBhJHSGmQS9eDDwlLj8tE
+X-Gm-Message-State: AOJu0Ywpjn+rTziBPIFXLdPHIg3zhbd5pY8xKqlaFft/thw/UaBVRMVB
+	aO1Tdo4e5/kzKYYo1DAtA6Beh+hXY4kL+xAaL22CQDP12Rl+hk7oHJEORVkKbsCNnhwtquk04CS
+	PtTn7xbDbF2GOSNwys317Lsu5lwGI/asQFxU=
+X-Google-Smtp-Source: AGHT+IEmYVbIjpVLK/TMJN0yY1My4fZGvskmgZhqDxCmuone6eq2XC2v7DwNW4m9fNY6Q0NitdNoOS1JB5uIbrqrtbU=
+X-Received: by 2002:a05:600c:1c12:b0:415:615c:b98b with SMTP id
+ j18-20020a05600c1c1200b00415615cb98bmr38387wms.5.1712101579027; Tue, 02 Apr
+ 2024 16:46:19 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20240402120118.282035-1-andrew@codeconstruct.com.au>
+References: <CGME20230901010734epcas2p4aadced02d68d3db407fda23de34601d2@epcas2p4.samsung.com>
+ <20230901010704.18493-1-bongkyu7.kim@samsung.com>
+In-Reply-To: <20230901010704.18493-1-bongkyu7.kim@samsung.com>
+From: John Stultz <jstultz@google.com>
+Date: Tue, 2 Apr 2024 16:46:06 -0700
+Message-ID: <CANDhNCoFRr=qizswLm-dzxJK0fHuCx98Z2B1pUspdwGqBEejYg@mail.gmail.com>
+Subject: Re: [PATCH v2 0/2] Make reader optimistic spinning optional
+To: Bongkyu Kim <bongkyu7.kim@samsung.com>
+Cc: peterz@infradead.org, mingo@redhat.com, will@kernel.org, 
+	longman@redhat.com, boqun.feng@gmail.com, linux-kernel@vger.kernel.org, 
+	gregkh@linuxfoundation.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Apr 02, 2024 at 05:01:18AM PDT, Andrew Jeffery wrote:
->Squash warnings such as:
+On Thu, Aug 31, 2023 at 6:07=E2=80=AFPM Bongkyu Kim <bongkyu7.kim@samsung.c=
+om> wrote:
 >
->```
->arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-galaxy100.dtb: /ahb/apb@1e600000/watchdog@1e785000: failed to match any schema with compatible: ['aspeed,ast2400-wdt']
->```
+> This is rework of the following discussed patch.
+> https://lore.kernel.org/all/20230613043308.GA1027@KORCO045595.samsungds.n=
+et/
 >
->Signed-off-by: Andrew Jeffery <andrew@codeconstruct.com.au>
->---
-> .../bindings/watchdog/aspeed,ast2400-wdt.yaml | 130 ++++++++++++++++++
-> .../bindings/watchdog/aspeed-wdt.txt          |  73 ----------
-> 2 files changed, 130 insertions(+), 73 deletions(-)
-> create mode 100644 Documentation/devicetree/bindings/watchdog/aspeed,ast2400-wdt.yaml
-> delete mode 100644 Documentation/devicetree/bindings/watchdog/aspeed-wdt.txt
+> Changes from the previous patch
+> - Split to revert and modify patches
+> - Change according to Waiman Long's review
+>     More wording to documentation part
+>     Change module_param to early_param
+>     Code change by Waiman Long's suggestion
 >
->diff --git a/Documentation/devicetree/bindings/watchdog/aspeed,ast2400-wdt.yaml b/Documentation/devicetree/bindings/watchdog/aspeed,ast2400-wdt.yaml
->new file mode 100644
->index 000000000000..10fcb50c4051
->--- /dev/null
->+++ b/Documentation/devicetree/bindings/watchdog/aspeed,ast2400-wdt.yaml
->@@ -0,0 +1,130 @@
->+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
->+%YAML 1.2
->+---
->+$id: http://devicetree.org/schemas/watchdog/aspeed,ast2400-wdt.yaml#
->+$schema: http://devicetree.org/meta-schemas/core.yaml#
->+
->+title: Aspeed watchdog timer controllers
->+
->+maintainers:
->+  - Andrew Jeffery <andrew@codeconstruct.com.au>
->+
->+properties:
->+  compatible:
->+    enum:
->+      - aspeed,ast2400-wdt
->+      - aspeed,ast2500-wdt
->+      - aspeed,ast2600-wdt
->+
->+  reg:
->+    maxItems: 1
->+
->+  clocks: true
->+
->+  aspeed,reset-type:
->+    enum:
->+      - cpu
->+      - soc
->+      - system
->+      - none
->+    description: |
->+      Reset behaviour - The watchdog can be programmed to generate one of three
->+      different types of reset when a timeout occcurs.
->+
->+      Specifying 'cpu' will only reset the processor on a timeout event.
->+
->+      Specifying 'soc' will reset a configurable subset of the SoC's controllers
-
-Might be worth clarifying that it's configurable only on ast2500 & 
-ast2600, and which property (aspeed,reset-mask) configures it?
-
->+      on a timeout event. Controllers critical to the SoC's operation may remain untouched.
->+
->+      Specifying 'system' will reset all controllers on a timeout event, as if EXTRST had been asserted.
->+      Specifying "none" will cause the timeout event to have no reset effect.
-
-Tiny nit: quoting (single vs. double) is slightly inconsistent between 
-values here.
-
->+      Another watchdog engine on the chip must be used for chip reset operations.
->+
->+      The default reset type is "system"
->+
->+  aspeed,alt-boot:
->+    $ref: /schemas/types.yaml#/definitions/flag
->+    description: |
->+      Direct the watchdog to configure the SoC to boot from the alternative boot
->+      region if a timeout occurs.
->+
->+  aspeed,external-signal:
->+    $ref: /schemas/types.yaml#/definitions/flag
->+    description: |
->+      Assert the timeout event on an external signal pin associated with the
->+      watchdog controller instance. The pin must be muxed appropriately.
->+
->+  aspeed,ext-pulse-duration:
->+    $ref: /schemas/types.yaml#/definitions/uint32
->+    description: |
->+      The duration, in microseconds, of the pulse emitted on the external signal pin
->+
->+  aspeed,ext-push-pull:
->+    $ref: /schemas/types.yaml#/definitions/flag
->+    description: |
->+      If aspeed,external-signal is specified in the node, set the external
->+      signal pin's drive type to push-pull. If aspeed,ext-push-pull is not
->+      specified then the pin is configured as open-drain.
->+
->+  aspeed,ext-active-high:
->+    $ref: /schemas/types.yaml#/definitions/flag
->+    description: |
->+      If both aspeed,external-signal and aspeed,ext-push-pull are specified in
->+      the node, set the pulse polarity to active-high. If aspeed,ext-active-high
->+      is not specified then the pin is configured as active-low.
->+
->+  aspeed,reset-mask:
->+    $ref: /schemas/types.yaml#/definitions/uint32-array
->+    minItems: 1
->+    maxItems: 2
->+    description: |
->+      A bitmaks indicating which peripherals will be reset if the watchdog
-
-Typo: "bitmask"
-
->+      timer expires. On AST2500 SoCs this should be a single word defined using
->+      the AST2500_WDT_RESET_* macros; on AST2600 SoCs this should be a two-word
->+      array with the first word defined using the AST2600_WDT_RESET1_* macros,
->+      and the second word defined using the AST2600_WDT_RESET2_* macros.
->+
->+required:
->+  - compatible
->+  - reg
->+
->+allOf:
->+  - if:
->+      anyOf:
->+        - required:
->+            - aspeed,ext-push-pull
->+        - required:
->+            - aspeed,ext-active-high
->+        - required:
->+            - aspeed,reset-mask
->+    then:
->+      properties:
->+        compatible:
->+          enum:
->+            - aspeed,ast2500-wdt
->+            - aspeed,ast2600-wdt
->+  - if:
->+      required:
->+        - aspeed,ext-active-high
->+    then:
->+      required:
->+        - aspeed,ext-push-pull
->+
->+additionalProperties: false
->+
->+examples:
->+  - |
->+    wdt1: watchdog@1e785000 {
->+        compatible = "aspeed,ast2400-wdt";
->+        reg = <0x1e785000 0x1c>;
->+        aspeed,reset-type = "system";
->+        aspeed,external-signal;
->+    };
->+  - |
->+    #include <dt-bindings/watchdog/aspeed-wdt.h>
->+    wdt2: watchdog@1e785040 {
->+        compatible = "aspeed,ast2600-wdt";
->+        reg = <0x1e785040 0x40>;
->+        aspeed,reset-mask = <AST2600_WDT_RESET1_DEFAULT
->+                            (AST2600_WDT_RESET2_DEFAULT & ~AST2600_WDT_RESET2_LPC)>;
->+    };
->diff --git a/Documentation/devicetree/bindings/watchdog/aspeed-wdt.txt b/Documentation/devicetree/bindings/watchdog/aspeed-wdt.txt
->deleted file mode 100644
->index 3208adb3e52e..000000000000
->--- a/Documentation/devicetree/bindings/watchdog/aspeed-wdt.txt
->+++ /dev/null
->@@ -1,73 +0,0 @@
->-Aspeed Watchdog Timer
->-
->-Required properties:
->- - compatible: must be one of:
->-	- "aspeed,ast2400-wdt"
->-	- "aspeed,ast2500-wdt"
->-	- "aspeed,ast2600-wdt"
->-
->- - reg: physical base address of the controller and length of memory mapped
->-   region
->-
->-Optional properties:
->-
->- - aspeed,reset-type = "cpu|soc|system|none"
->-
->-   Reset behavior - Whenever a timeout occurs the watchdog can be programmed
->-   to generate one of three different, mutually exclusive, types of resets.
->-
->-   Type "none" can be specified to indicate that no resets are to be done.
->-   This is useful in situations where another watchdog engine on chip is
->-   to perform the reset.
->-
->-   If 'aspeed,reset-type=' is not specified the default is to enable system
->-   reset.
->-
->-   Reset types:
->-
->-        - cpu: Reset CPU on watchdog timeout
->-
->-        - soc: Reset 'System on Chip' on watchdog timeout
->-
->-        - system: Reset system on watchdog timeout
->-
->-        - none: No reset is performed on timeout. Assumes another watchdog
->-                engine is responsible for this.
->-
->- - aspeed,alt-boot:    If property is present then boot from alternate block.
->- - aspeed,external-signal: If property is present then signal is sent to
->-			external reset counter (only WDT1 and WDT2). If not
->-			specified no external signal is sent.
->- - aspeed,ext-pulse-duration: External signal pulse duration in microseconds
->-
->-Optional properties for AST2500-compatible watchdogs:
->- - aspeed,ext-push-pull: If aspeed,external-signal is present, set the pin's
->-			 drive type to push-pull. The default is open-drain.
->- - aspeed,ext-active-high: If aspeed,external-signal is present and and the pin
->-			   is configured as push-pull, then set the pulse
->-			   polarity to active-high. The default is active-low.
->-
->-Optional properties for AST2500- and AST2600-compatible watchdogs:
->- - aspeed,reset-mask: A bitmask indicating which peripherals will be reset if
->-		      the watchdog timer expires.  On AST2500 this should be a
->-		      single word defined using the AST2500_WDT_RESET_* macros;
->-		      on AST2600 this should be a two-word array with the first
->-		      word defined using the AST2600_WDT_RESET1_* macros and the
->-		      second word defined using the AST2600_WDT_RESET2_* macros.
->-
->-Examples:
->-
->-	wdt1: watchdog@1e785000 {
->-		compatible = "aspeed,ast2400-wdt";
->-		reg = <0x1e785000 0x1c>;
->-		aspeed,reset-type = "system";
->-		aspeed,external-signal;
->-	};
->-
->-	#include <dt-bindings/watchdog/aspeed-wdt.h>
->-	wdt2: watchdog@1e785040 {
->-		compatible = "aspeed,ast2600-wdt";
->-		reg = <0x1e785040 0x40>;
->-		aspeed,reset-mask = <AST2600_WDT_RESET1_DEFAULT
->-				     (AST2600_WDT_RESET2_DEFAULT & ~AST2600_WDT_RESET2_LPC)>;
->-	};
->-- 
->2.39.2
+> In mobile environment, reader optimistic spinning is still useful
+> because there're not many readers. In my test result at android device,
+> it improves application startup time about 3.8%
+> App startup time is most important factor for android user expriences.
+> So, re-enable reader optimistic spinning by this commit. And,
+> make it optional feature by cmdline.
 >
+> Test result:
+> This is 15 application startup performance in our exynos soc.
+> - Cortex A78*2 + Cortex A55*6
+> - unit: ms (lower is better)
+>
+> Application             base  opt_rspin  Diff  Diff(%)
+> --------------------  ------  ---------  ----  -------
+> * Total(geomean)         343        330   -13    +3.8%
+> --------------------  ------  ---------  ----  -------
+> helloworld               110        108    -2    +1.8%
+> Amazon_Seller            397        388    -9    +2.3%
+> Whatsapp                 311        304    -7    +2.3%
+> Simple_PDF_Reader        500        463   -37    +7.4%
+> FaceApp                  330        317   -13    +3.9%
+> Timestamp_Camera_Free    451        443    -8    +1.8%
+> Kindle                   629        597   -32    +5.1%
+> Coinbase                 243        233   -10    +4.1%
+> Firefox                  425        399   -26    +6.1%
+> Candy_Crush_Soda         552        538   -14    +2.5%
+> Hill_Climb_Racing        245        230   -15    +6.1%
+> Call_Recorder            437        426   -11    +2.5%
+> Color_Fill_3D            190        180   -10    +5.3%
+> eToro                    512        505    -7    +1.4%
+> GroupMe                  281        266   -15    +5.3%
+>
+
+Hey Bongkyu,
+  I wanted to reach out to see what the current status of this patch
+set? I'm seeing other parties trying to work around the loss of the
+optimistic spinning functionality since commit 617f3ef95177
+("locking/rwsem: Remove reader optimistic spinning") as well, with
+their own custom variants (providing some substantial gains), and
+would really like to have a common solution.
+
+thanks
+-john
