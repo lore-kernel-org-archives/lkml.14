@@ -1,221 +1,140 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 768C76A8A8;
-	Tue,  2 Apr 2024 12:02:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.14
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712059341; cv=fail; b=Auy4o/l0cKIg0QdoLV0cTZqw5lwNvlxorzklrWc/eFT04m9i+OPH2YAj8Ue0p4GML6irz4V+nV9I6li+GqkdzAY0g8Wi8ZChjAR70vPNM7vWcvbuhJkZqmHD1AdgRPrlhvtxUqk4HiuRgjMXj2HvS79oy0a54O/42/HF0NzgL6k=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712059341; c=relaxed/simple;
-	bh=O8chSc4EjJpi5Q4nyYua+u+KxG0B0+s9MubOAENzya4=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=jbqGGp4NZhn5wQk07vl1d5o3GOGcJiD/HeiGOKl/FpVFldgZs5MqaS5l9FBfcWI6BxDqDe1BfhT1nT29PiloRYonSbbvxX549VO07nAwbWI3ZADBNqpestJuRaq+7G4loMUHCwoTfOMl/ns+sHUhbrTc848awBPHDZmZkXyZoY4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=F5SbL9Be; arc=fail smtp.client-ip=198.175.65.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="F5SbL9Be"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1712059339; x=1743595339;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-id:content-transfer-encoding:
-   mime-version;
-  bh=O8chSc4EjJpi5Q4nyYua+u+KxG0B0+s9MubOAENzya4=;
-  b=F5SbL9BesqCSsBbVVyyqhTQpgv/QNRCFI69A3/vhI/jHA3G8VBYsSDiC
-   Gchs0iPInlpQlESZOrO1YMj4rmKY39USE6Ca9wFpY56/4lHmXyYara9yk
-   VzQUy2e2nlEsp9fI+qhiRC42WADUTPjWKjTW5NIktOGYTpJ5s7PhXM7d3
-   CX1mjyJWkmQ0MDM6stB++NkeKOU1XY9hShO0d5stHBgwzCoEEqGvuByPk
-   wXMsoroMc3DR8gqBeNv12ZPMaNNrQQJtFGTZgTFRrwMlqaFrzR2kmeGGy
-   mYxiM3d6hqxel4cWOWov1g4/t53RLsAFbnMRCxPjaD0eGG0Xs8Srl07b9
-   A==;
-X-CSE-ConnectionGUID: JehDHc+GRiCqHcmmpJfXGg==
-X-CSE-MsgGUID: /o29wsQgR9ylmQZMhnHLhw==
-X-IronPort-AV: E=McAfee;i="6600,9927,11031"; a="11056737"
-X-IronPort-AV: E=Sophos;i="6.07,174,1708416000"; 
-   d="scan'208";a="11056737"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2024 05:02:18 -0700
-X-CSE-ConnectionGUID: MtY2c6CET/aV51bl4SrOjw==
-X-CSE-MsgGUID: wOoj33t5T2endtictThZxQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,174,1708416000"; 
-   d="scan'208";a="18119683"
-Received: from fmsmsx602.amr.corp.intel.com ([10.18.126.82])
-  by fmviesa007.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 02 Apr 2024 05:02:18 -0700
-Received: from fmsmsx612.amr.corp.intel.com (10.18.126.92) by
- fmsmsx602.amr.corp.intel.com (10.18.126.82) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Tue, 2 Apr 2024 05:02:18 -0700
-Received: from fmsmsx611.amr.corp.intel.com (10.18.126.91) by
- fmsmsx612.amr.corp.intel.com (10.18.126.92) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Tue, 2 Apr 2024 05:02:17 -0700
-Received: from fmsedg602.ED.cps.intel.com (10.1.192.136) by
- fmsmsx611.amr.corp.intel.com (10.18.126.91) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35 via Frontend Transport; Tue, 2 Apr 2024 05:02:17 -0700
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (104.47.57.169)
- by edgegateway.intel.com (192.55.55.71) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Tue, 2 Apr 2024 05:02:17 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=lX9IaqGHMpUJMTRf40AGyAn8A/MvrwBO+yryOHvjjugNQSa16gppdsORCGjNwulV/OvGpSdH9VsH1k26K9O6J9lZggQVbqRFzCgBrazWL809LNqJlB5q5+HoX6lVOggWqKTlcgRM8JxJ739guC4ud2HRcw7scdfNLVCag9nxGg/byNem64L2Zi7ibRkunMIPa6/hx+MD3axk9NblQRrZG+jXBjcP22IDoC9tv68VZpfZWH8LwAld2SIE2C4aNBLJAbmuNpKzKsiejnq3zrupXfJLqM2ySjxAPQtdZYHJHwDCur0NoGJfJYbzasy+X1CUXauUOFSNWKA0WPc/smNRXw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=O8chSc4EjJpi5Q4nyYua+u+KxG0B0+s9MubOAENzya4=;
- b=YOYu2rxmxNWGcJMJKUm9r+KDfmUIXG4+UzZOy7oui5R+lCJaJneLLLhYIdT0TMEZnD0QeuctO6dXFu5Rqpa3xGk2chaZ47Eqf/t2b/ClabG2ZjyLmx40ltLwsDrjjKcVznLeSId1LGKvesAfYMhdHkn2bFkYNtDyRr0NI53BwRFAk+p3g4s3gwhS0ZuQhJ/YopmnvbET2GBlJA68AR4uBN7OKR2sbNI88j/at1M6/nnrgGQtlGtUBWBo+7CCUDrB4m6KXSvbnZMo0qAh28rHOv8wGo2PsH1b1x2dH5UJ+WtDGSPOmhhM+l1XR8wP2jKVhkupbYZNBW0j2TJAv/CGaA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Received: from BL1PR11MB5978.namprd11.prod.outlook.com (2603:10b6:208:385::18)
- by PH7PR11MB6007.namprd11.prod.outlook.com (2603:10b6:510:1e2::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7452.25; Tue, 2 Apr
- 2024 12:02:15 +0000
-Received: from BL1PR11MB5978.namprd11.prod.outlook.com
- ([fe80::ef2c:d500:3461:9b92]) by BL1PR11MB5978.namprd11.prod.outlook.com
- ([fe80::ef2c:d500:3461:9b92%4]) with mapi id 15.20.7452.019; Tue, 2 Apr 2024
- 12:02:15 +0000
-From: "Huang, Kai" <kai.huang@intel.com>
-To: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"linux-tip-commits@vger.kernel.org" <linux-tip-commits@vger.kernel.org>
-CC: "masahiroy@kernel.org" <masahiroy@kernel.org>, "mingo@kernel.org"
-	<mingo@kernel.org>, "x86@kernel.org" <x86@kernel.org>
-Subject: Re: [tip: x86/urgent] x86/build: Use obj-y to descend into
- arch/x86/virt/
-Thread-Topic: [tip: x86/urgent] x86/build: Use obj-y to descend into
- arch/x86/virt/
-Thread-Index: AQHagop9JcOMYN2GuEKqGlkn0Ny+G7FU5hWA
-Date: Tue, 2 Apr 2024 12:02:15 +0000
-Message-ID: <fbcde3d79f6b94447d31b5fac1be7d380605fe10.camel@intel.com>
-References: <20240330060554.18524-1-masahiroy@kernel.org>
-	 <171179263581.10875.12577077230652188795.tip-bot2@tip-bot2>
-In-Reply-To: <171179263581.10875.12577077230652188795.tip-bot2@tip-bot2>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-user-agent: Evolution 3.50.3 (3.50.3-1.fc39) 
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: BL1PR11MB5978:EE_|PH7PR11MB6007:EE_
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: rFleMgS5eOZF6a1ctU7+8Kloi4b/9T4e0foc4oHZSrfk06RYIc1Mupb44upaHl87JmMVt/GJiSQjA4Lonwdg4pj59wSQkiS+5Up1krvhYmymK9KZ1oXekCEyhijwz+TnXkmxHJf8D9z1Orj+uOhxrRXJxv7mqJ/OQ8X7b9wnZqhOZK0v1jWRv2y1cciMgUzRtTB15BK690bAIaF0P4bQjoFFvn8k9FabsHB9t7FOp4joyl7ogWt/NWDPZ63pFyH1pFw2+xwzhIVZBeu0khvos9ZiIgYuFwTUa+0ABe5KveoR1RwAGuzy3jp+5hlRY4hpnf7c0KA7ia+PXNqwTu4izy22PhSYyZ1WHzOE6poeeLd7GgurWtE03MCoKaojzIBHd+lGENHrGSG0otrrTB8BH0sJ0GTAbVTggvYiRAIoXrMBZYjoXhuavCKKx39CVmPwEVo9EB4eQg1/3Msfuq28lEf/pIrLdoEFvyYQQQzni33llZWQC9n9tdtv6Tgs1Mu18MPGVMvVRjjjyQayY61xIfXAt+4/FNe34e54F/qO6FWblfQTVy6/iN5H5hlKIe1iWNlVqGCENEgT7pYCQVpyquB4U5sgTZ1s3Ie7miM3btDR2IUYLpdFEOCM+7k82y9s
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL1PR11MB5978.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(1800799015)(366007)(376005);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?utf-8?B?bnRzL2NZakI1cm92UXZ5cUFkZUpHTWU1UHc1OGtKci9OOWpma2d3a0hKTmJD?=
- =?utf-8?B?aDNyK2dGUGZkSEZRNVp4V1NjVkNGOTZGQmlvOVNabUJ3ano2QlVYTk83STBk?=
- =?utf-8?B?UE9lTlFpR1BFMlJvVkZvU3NYWk1IUHJldUpxN1pHUWpkL0JocVBySkIxWnF2?=
- =?utf-8?B?Q3JTQmRCMkJ5R0c4aDg0ekdnSkVJdTNMZkZNTDZVMnFiV3FxMndsR1NuT0tE?=
- =?utf-8?B?T3pRWmdNSVB3QW5Va1NSMkJIejRwYWpXR2dtN0s1RGxXcWxzaVdVNGV4cGQv?=
- =?utf-8?B?aDVvS1BjZ2Z6MDVhNjdVTUlra1hoQVAraXdJTXh5ZWY2azkzeTFRMUlNSkk3?=
- =?utf-8?B?aWxuYVJ3UFJVeGVKaVB1eHUzRGJ1VlZTRVEwZWRMMCtFY011c094Qkc1cm0z?=
- =?utf-8?B?NzZzOUJvcmpNbWtCMVVHVDZ3d0dJRnIvYzUxZ1FHTzBGWllqcUpNSkZqWEs0?=
- =?utf-8?B?NDlBdi9HWXZnZm1YL2FuRmh1N1J0VVl6MUp0OWs5emp2RitGaHR3VCtOUmFs?=
- =?utf-8?B?WHJ1MlJ1R0lDOXh5aVB3U3lWRGNLbzErWG45MG5McmpINlNEdXg4S1F1NGZ3?=
- =?utf-8?B?Q3lyZ2VvVXV4bTJoM1RXYVpBTXMraWVNUU9BWmNQNFZpd2pZbFhudXNDeitQ?=
- =?utf-8?B?VjJxS3NOa3JUbFAvWGd3MytZMW9WbjdSZ3hJMTJmcjlGQ0pLK3YxRXp1YUVk?=
- =?utf-8?B?bFZzWkZvMTMwR1JuZ2ZZTzFSZDN2Y0N5SE9LMlZQbXp0R3NKYVgvNElReWM4?=
- =?utf-8?B?alhVTWpOKzVtcWdiWE9CNm9YdzVHRG1qN21Xc0gyMUlEV3BBSzNRU1cxcFFD?=
- =?utf-8?B?SERUTU1kM3hrRVF1d3VQZzJneVBBTXZnbVU1RmFlRVBBTWNoU2ZWbnlGSjdp?=
- =?utf-8?B?T001c3RPQVdXeXJxZDFGNUN4Y1V6Zi9sRWxzTndYWXpacDJFSHJkYmhlWGx3?=
- =?utf-8?B?MEdWM1l4VG13RlQ3djFBaUF0ajJ0TXFVWldhVlpoNk05Sm1RWWJYS0EvbGV1?=
- =?utf-8?B?aFBqejcvdk1WdkpybUwxaTZJd2N6dWNYNlJaOFZta1VyMlZNNlBMV0EvcWti?=
- =?utf-8?B?VEFtV2tFNTFpQlpWKy9XWndsMmVEWm41RXpEVTlacGVxYTFHWjEwQXlCNkxL?=
- =?utf-8?B?SGQwbWpuZlRtRWwzcU1lelBHaEVveDRUeE1HVlcvNGI3Q295QkhGMVloank5?=
- =?utf-8?B?QVBtcXhtaG4vV2cxcE9iMmlpNEpiamhjRGM2UFJGRXJJbUx5NGtYYjFPa254?=
- =?utf-8?B?STJEckRHK2RjWmQ4OGRTaTdVSEltN1JmRzZGdHNpZVVwcDNZdWJTcEFSUm5T?=
- =?utf-8?B?UnN3aFZLYnlVOTJ5blhNOTlRT1RVbGRXRVc2UVh1aGtFOWZTYWN0NWp0SGF6?=
- =?utf-8?B?dHNrMkkxYzZFeUhPc1NLZ3pRZ2M5eDRtTHNoZEN2U0E1OE5oMmp0K01QdzRV?=
- =?utf-8?B?czEwb01aWXZsSUNsMERlOEhwQVg1QmVBZTBVNXpxL1V3eTd2citjbzMweTVu?=
- =?utf-8?B?cWs3RVkzUkZRTW5DN2ROb3diNStxTlFRRVIrTHpmSiswdmdLSWVva0lqc2la?=
- =?utf-8?B?b3hDbUlpY2d0blhXL2xRTWp1U096eFZmSmdTTE1MVnU2c3JHNWpKWXoxZ2Vn?=
- =?utf-8?B?TjNrTERUWE1OUit2WkJyYnhlbGFBOXVVSUNsZ0NyTUR6QzF5OE02b2JRSkNR?=
- =?utf-8?B?bXdsUmY2enpKdlEwM2FYWGV2OU93V216SE9aL09Kbi9oS1pmdFNRTnp1SUFi?=
- =?utf-8?B?MzZucFlYN0FRNWtucTVpRUdDL1loSUN6c2ZQaGZad0ttWXFPemVaSmYyWHpy?=
- =?utf-8?B?OVNaeGpXZDBIVk54ajN0a0twOWhiT0ZKSzVoNGRUajFWREw2UE9MLzVKMy9q?=
- =?utf-8?B?NitoWVJYVFVVc0tiSXA2ZG9CN25IbVFhT29oTTBvYUNCSzdzWFJ5RnRGRERR?=
- =?utf-8?B?SkNFQ0p3QzBienlwRnJnajYvdGtKSVhIZ3pjenhXWmxqd2lHZlN3SG5Zd2xy?=
- =?utf-8?B?bnF3OGxjRTFwV3hZdmpQU2F3M2NuY2syVVdlQW41MXpoRGl5VWtnbDh1Vm4x?=
- =?utf-8?B?cHBKSEt0THoxcnJPRW9UbWhGT1Y3V2tiTUduMjFwUjk1NWpzd3daWXFORWUx?=
- =?utf-8?B?anlxc3VYT3RHMzNUMVlPYVFxNnZ3WFNrWHI3SFI3ak01YVl5dlgxZUlMVHBr?=
- =?utf-8?B?TUE9PQ==?=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <FE355457F3BE40478FDEBCD3F4DB1CB2@namprd11.prod.outlook.com>
-Content-Transfer-Encoding: base64
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E61126996C;
+	Tue,  2 Apr 2024 12:04:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1712059491; cv=none; b=hHhdp4TVShFwO1W3YQt/MzGEmLX/s+2ADUXCB8ONX8QuB0mpAjWUqdr2LUsvFEwp049qRDGY9eXraTrktBzFI8x0+F3SQium9px05oEyW7BKzXaOZNeCaClTan8dBMcWzPeL/v56baQ5X9fMbNjP3ubHp1NrCN0sxlriiLRtfuQ=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1712059491; c=relaxed/simple;
+	bh=I64Eqs7ZEABJML3rrVIwNYOOdTZWWqMoWl+DY44H0dU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=lVvWJOzA8YMoTTx8m4O/ClfO8Q6RFi4a/xsSqxF7IFzXuUvSa68gYtITjEXpIpJlo8hK9Ye76xZPZun2V+qdnhur8gnmChGslqmhwLuYGxo8ZVNZBE/p22GdGXYw0xWr2bMSG4erZDPVkOq4PPimWGy43N1ECCgRQswy6aM0cEc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [112.20.109.80])
+	by gateway (Coremail) with SMTP id _____8AxDOtd9AtmGVEiAA--.3617S3;
+	Tue, 02 Apr 2024 20:04:45 +0800 (CST)
+Received: from [192.168.100.8] (unknown [112.20.109.80])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8DxdRFa9AtmvtBxAA--.12917S3;
+	Tue, 02 Apr 2024 20:04:43 +0800 (CST)
+Message-ID: <d5baa094-94e7-4898-a559-c2f89787e8e1@loongson.cn>
+Date: Tue, 2 Apr 2024 20:04:42 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: BL1PR11MB5978.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6a06970a-3148-4c50-52f9-08dc530cbcf6
-X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Apr 2024 12:02:15.4342
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: ZiN9nvRsS8jVzRuCNA4SkJbOLD8INCxL+7lDod5qP6KAFP7w3EFSOKN5Z26wvgIEW+9ZYxLzDEBFndnkco7TLw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR11MB6007
-X-OriginatorOrg: intel.com
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] docs/zh: Fix Cc, Co-developed-by, and Signed-off-by tags
+To: Alex Shi <seakeel@gmail.com>, Geert Uytterhoeven
+ <geert+renesas@glider.be>, Alex Shi <alexs@kernel.org>,
+ Jonathan Corbet <corbet@lwn.net>, Hu Haowen <2023002089@link.tyut.edu.cn>
+Cc: linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <22892a8ab5c17d7121ef5b85f7d18d8b1f41e434.1711715655.git.geert+renesas@glider.be>
+ <339b5603-c09a-41de-af75-cf0f196a6310@gmail.com>
+Content-Language: en-US
+From: Yanteng Si <siyanteng@loongson.cn>
+In-Reply-To: <339b5603-c09a-41de-af75-cf0f196a6310@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:AQAAf8DxdRFa9AtmvtBxAA--.12917S3
+X-CM-SenderInfo: pvl1t0pwhqwqxorr0wxvrqhubq/
+X-Coremail-Antispam: 1Uk129KBj93XoW3Wr45Cry8ZF47ZFyxuF18tFc_yoW7Kr4fpF
+	nI9ry3JF1xJF1UC3yxKFy8XryUKa9rAFsxKFy0yw1Sqr1vvrWSyFn0yr9a9F9xW34fKFyU
+	CFs3AFy8Cr4UZrgCm3ZEXasCq-sJn29KB7ZKAUJUUUU7529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUU9jb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
+	xVWxJr0_GcWln4kS14v26r1Y6r17M2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12
+	xvs2x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r12
+	6r1DMcIj6I8E87Iv67AKxVWxJVW8Jr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI4
+	8JMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMxCIbckI1I0E14v26r1Y
+	6r17MI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7
+	AF67AKxVWUAVWUtwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE
+	2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcV
+	C2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2Kfnx
+	nUUI43ZEXa7IU8rsqJUUUUU==
 
-T24gU2F0LCAyMDI0LTAzLTMwIGF0IDA5OjU3ICswMDAwLCB0aXAtYm90MiBmb3IgTWFzYWhpcm8g
-WWFtYWRhIHdyb3RlOg0KPiBUaGUgZm9sbG93aW5nIGNvbW1pdCBoYXMgYmVlbiBtZXJnZWQgaW50
-byB0aGUgeDg2L3VyZ2VudCBicmFuY2ggb2YgdGlwOg0KPiANCj4gQ29tbWl0LUlEOiAgICAgM2Yx
-YTliYzVkODc4MDA0ZWQ0YmMzOTA0ZTVjYjliN2ZiMzE3ZmJlMg0KPiBHaXR3ZWI6ICAgICAgICBo
-dHRwczovL2dpdC5rZXJuZWwub3JnL3RpcC8zZjFhOWJjNWQ4NzgwMDRlZDRiYzM5MDRlNWNiOWI3
-ZmIzMTdmYmUyDQo+IEF1dGhvcjogICAgICAgIE1hc2FoaXJvIFlhbWFkYSA8bWFzYWhpcm95QGtl
-cm5lbC5vcmc+DQo+IEF1dGhvckRhdGU6ICAgIFNhdCwgMzAgTWFyIDIwMjQgMTU6MDU6NTQgKzA5
-OjAwDQo+IENvbW1pdHRlcjogICAgIEluZ28gTW9sbmFyIDxtaW5nb0BrZXJuZWwub3JnPg0KPiBD
-b21taXR0ZXJEYXRlOiBTYXQsIDMwIE1hciAyMDI0IDEwOjQxOjQ5ICswMTowMA0KPiANCj4geDg2
-L2J1aWxkOiBVc2Ugb2JqLXkgdG8gZGVzY2VuZCBpbnRvIGFyY2gveDg2L3ZpcnQvDQo+IA0KPiBD
-b21taXQgYzMzNjIxYjRjNWFkICgieDg2L3ZpcnQvdGR4OiBXaXJlIHVwIGJhc2ljIFNFQU1DQUxM
-IGZ1bmN0aW9ucyIpDQo+IGludHJvZHVjZWQgYSBuZXcgaW5zdGFuY2Ugb2YgY29yZS15IGluc3Rl
-YWQgb2YgdGhlIHN0YW5kYXJkaXplZCBvYmoteQ0KPiBzeW50YXguDQo+IA0KPiBYODYgTWFrZWZp
-bGVzIGRlc2NlbmQgaW50byBzdWJkaXJlY3RvcmllcyBvZiBhcmNoL3g4Ni92aXJ0IGluY29uc2lz
-dGVudGx5Ow0KPiBpbnRvIGFyY2gveDg2L3ZpcnQvIHZpYSBjb3JlLXkgZGVmaW5lZCBpbiBhcmNo
-L3g4Ni9NYWtlZmlsZSwgYnV0IGludG8NCj4gYXJjaC94ODYvdmlydC9zdm0vIHZpYSBvYmoteSBk
-ZWZpbmVkIGluIGFyY2gveDg2L0tidWlsZC4NCj4gDQo+IFRoaXMgaXMgcHJvYmxlbWF0aWMgd2hl
-biB5b3UgYnVpbGQgYSBzaW5nbGUgb2JqZWN0IGluIHBhcmFsbGVsIGJlY2F1c2UNCj4gbXVsdGlw
-bGUgdGhyZWFkcyBhdHRlbXB0IHRvIGJ1aWxkIHRoZSBzYW1lIGZpbGUuDQo+IA0KPiAgICQgbWFr
-ZSAtaiQobnByb2MpIGFyY2gveDg2L3ZpcnQvdm14L3RkeC9zZWFtY2FsbC5vDQo+ICAgICBbIHNu
-aXAgXQ0KPiAgICAgQVMgICAgICBhcmNoL3g4Ni92aXJ0L3ZteC90ZHgvc2VhbWNhbGwubw0KPiAg
-ICAgQVMgICAgICBhcmNoL3g4Ni92aXJ0L3ZteC90ZHgvc2VhbWNhbGwubw0KPiAgIGZpeGRlcDog
-ZXJyb3Igb3BlbmluZyBmaWxlOiBhcmNoL3g4Ni92aXJ0L3ZteC90ZHgvLnNlYW1jYWxsLm8uZDog
-Tm8gc3VjaCBmaWxlIG9yIGRpcmVjdG9yeQ0KPiAgIG1ha2VbNF06ICoqKiBbc2NyaXB0cy9NYWtl
-ZmlsZS5idWlsZDozNjI6IGFyY2gveDg2L3ZpcnQvdm14L3RkeC9zZWFtY2FsbC5vXSBFcnJvciAy
-DQo+IA0KPiBVc2UgdGhlIG9iai15IHN5bnRheCwgYXMgaXQgd29ya3MgY29ycmVjdGx5Lg0KPiAN
-Cj4gU2lnbmVkLW9mZi1ieTogTWFzYWhpcm8gWWFtYWRhIDxtYXNhaGlyb3lAa2VybmVsLm9yZz4N
-Cj4gU2lnbmVkLW9mZi1ieTogSW5nbyBNb2xuYXIgPG1pbmdvQGtlcm5lbC5vcmc+DQo+IExpbms6
-IGh0dHBzOi8vbG9yZS5rZXJuZWwub3JnL3IvMjAyNDAzMzAwNjA1NTQuMTg1MjQtMS1tYXNhaGly
-b3lAa2VybmVsLm9yZw0KDQpUaGFua3MuICBTaG91bGQgdGhpcyBiZSBpbmNsdWRlZCBpbnRvIHN0
-YWJsZSBrZXJuZWw/DQoNCkFzIHN0YXRlZCBpbiB0aGUgY2hhbmdlbG9nLCB0aGUgcHJvYmxlbSBz
-dGFydHMgdG8gZXhpc3Qgc2luY2UgY29tbWl0DQoNCiAgYzMzNjIxYjRjNWFkICgieDg2L3ZpcnQv
-dGR4OiBXaXJlIHVwIGJhc2ljIFNFQU1DQUxMIGZ1bmN0aW9ucyIpDQoNCj4gLS0tDQo+ICBhcmNo
-L3g4Ni9LYnVpbGQgICAgICAgIHwgMiArLQ0KPiAgYXJjaC94ODYvTWFrZWZpbGUgICAgICB8IDIg
-LS0NCj4gIGFyY2gveDg2L3ZpcnQvTWFrZWZpbGUgfCAyICstDQo+ICAzIGZpbGVzIGNoYW5nZWQs
-IDIgaW5zZXJ0aW9ucygrKSwgNCBkZWxldGlvbnMoLSkNCj4gDQo+IGRpZmYgLS1naXQgYS9hcmNo
-L3g4Ni9LYnVpbGQgYi9hcmNoL3g4Ni9LYnVpbGQNCj4gaW5kZXggNmExZjM2ZC4uY2YwYWQ4OSAx
-MDA2NDQNCj4gLS0tIGEvYXJjaC94ODYvS2J1aWxkDQo+ICsrKyBiL2FyY2gveDg2L0tidWlsZA0K
-PiBAQCAtMjgsNyArMjgsNyBAQCBvYmoteSArPSBuZXQvDQo+ICANCj4gIG9iai0kKENPTkZJR19L
-RVhFQ19GSUxFKSArPSBwdXJnYXRvcnkvDQo+ICANCj4gLW9iai15ICs9IHZpcnQvc3ZtLw0KPiAr
-b2JqLXkgKz0gdmlydC8NCj4gIA0KPiAgIyBmb3IgY2xlYW5pbmcNCj4gIHN1YmRpci0gKz0gYm9v
-dCB0b29scw0KPiBkaWZmIC0tZ2l0IGEvYXJjaC94ODYvTWFrZWZpbGUgYi9hcmNoL3g4Ni9NYWtl
-ZmlsZQ0KPiBpbmRleCA2NjJkOWQ0Li41YWI5M2ZjIDEwMDY0NA0KPiAtLS0gYS9hcmNoL3g4Ni9N
-YWtlZmlsZQ0KPiArKysgYi9hcmNoL3g4Ni9NYWtlZmlsZQ0KPiBAQCAtMjUxLDggKzI1MSw2IEBA
-IGFyY2hoZWFkZXJzOg0KPiAgDQo+ICBsaWJzLXkgICs9IGFyY2gveDg2L2xpYi8NCj4gIA0KPiAt
-Y29yZS15ICs9IGFyY2gveDg2L3ZpcnQvDQo+IC0NCj4gICMgZHJpdmVycy15IGFyZSBsaW5rZWQg
-YWZ0ZXIgY29yZS15DQo+ICBkcml2ZXJzLSQoQ09ORklHX01BVEhfRU1VTEFUSU9OKSArPSBhcmNo
-L3g4Ni9tYXRoLWVtdS8NCj4gIGRyaXZlcnMtJChDT05GSUdfUENJKSAgICAgICAgICAgICs9IGFy
-Y2gveDg2L3BjaS8NCj4gZGlmZiAtLWdpdCBhL2FyY2gveDg2L3ZpcnQvTWFrZWZpbGUgYi9hcmNo
-L3g4Ni92aXJ0L01ha2VmaWxlDQo+IGluZGV4IDFlMzY1MDIuLmVhMzQzZmMgMTAwNjQ0DQo+IC0t
-LSBhL2FyY2gveDg2L3ZpcnQvTWFrZWZpbGUNCj4gKysrIGIvYXJjaC94ODYvdmlydC9NYWtlZmls
-ZQ0KPiBAQCAtMSwyICsxLDIgQEANCj4gICMgU1BEWC1MaWNlbnNlLUlkZW50aWZpZXI6IEdQTC0y
-LjAtb25seQ0KPiAtb2JqLXkJKz0gdm14Lw0KPiArb2JqLXkJKz0gc3ZtLyB2bXgvDQo+IA0KDQoN
-Cg==
+
+在 2024/4/1 09:40, Alex Shi 写道:
+>
+> On 3/29/24 8:35 PM, Geert Uytterhoeven wrote:
+>> The updates from commit ae67ee6c5e1d5b6a ("docs: fix Co-Developed-by
+>> docs") in v5.0 were never applied to the Chinese translations.
+>> In addition:
+>>    - "Cc" used wrong case,
+>>    - "Co-developed-by" lacked a dash,
+>>    - "Signed-off-by" was misspelled.
+>>
+>> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> LGTM
+> Reviewed-by: Alex Shi <alexs@kernel.org>
+Reviewed-by: Yanteng Si  <siyanteng@loongson.cn>
+>
+>
+>> ---
+>>   .../translations/zh_CN/process/submitting-patches.rst     | 8 ++++----
+>>   .../translations/zh_TW/process/submitting-patches.rst     | 8 ++++----
+>>   2 files changed, 8 insertions(+), 8 deletions(-)
+>>
+>> diff --git a/Documentation/translations/zh_CN/process/submitting-patches.rst b/Documentation/translations/zh_CN/process/submitting-patches.rst
+>> index f8978f02057c164c..7864107e60a85c58 100644
+>> --- a/Documentation/translations/zh_CN/process/submitting-patches.rst
+>> +++ b/Documentation/translations/zh_CN/process/submitting-patches.rst
+>> @@ -333,10 +333,10 @@ Linus 和其他的内核开发者需要阅读和评论你提交的改动。对
+>>   未参与其开发。签署链应当反映补丁传播到维护者并最终传播到Linus所经过的 **真实**
+>>   路径，首个签署指明单个作者的主要作者身份。
+>>   
+>> -何时使用Acked-by:，CC:，和Co-Developed by:
+>> +何时使用Acked-by:，Cc:，和Co-developed-by:
+>>   ------------------------------------------
+>>   
+>> -Singed-off-by: 标签表示签名者参与了补丁的开发，或者他/她在补丁的传递路径中。
+>> +Signed-off-by: 标签表示签名者参与了补丁的开发，或者他/她在补丁的传递路径中。
+>>   
+>>   如果一个人没有直接参与补丁的准备或处理，但希望表示并记录他们对补丁的批准/赞成，
+>>   那么他们可以要求在补丁的变更日志中添加一个Acked-by:。
+>> @@ -358,8 +358,8 @@ Acked-by：不一定表示对整个补丁的确认。例如，如果一个补丁
+>>   Co-developed-by: 声明补丁是由多个开发人员共同创建的；当几个人在一个补丁上工
+>>   作时，它用于给出共同作者（除了From:所给出的作者之外）。因为Co-developed-by:
+>>   表示作者身份，所以每个Co-developed-by:必须紧跟在相关合作作者的签署之后。标准
+>> -签署程序要求Singed-off-by:标签的顺序应尽可能反映补丁的时间历史，无论作者是通
+>> -过From:还是Co-developed-by:表明。值得注意的是，最后一个Singed-off-by:必须是
+>> +签署程序要求Signed-off-by:标签的顺序应尽可能反映补丁的时间历史，无论作者是通
+>> +过From:还是Co-developed-by:表明。值得注意的是，最后一个Signed-off-by:必须是
+>>   提交补丁的开发人员。
+>>   
+>>   注意，如果From:作者也是电子邮件标题的From:行中列出的人，则From:标签是可选的。
+>> diff --git a/Documentation/translations/zh_TW/process/submitting-patches.rst b/Documentation/translations/zh_TW/process/submitting-patches.rst
+>> index 99fa0f2fe6f414e1..f12f2f193f855cfb 100644
+>> --- a/Documentation/translations/zh_TW/process/submitting-patches.rst
+>> +++ b/Documentation/translations/zh_TW/process/submitting-patches.rst
+>> @@ -334,10 +334,10 @@ Linus 和其他的內核開發者需要閱讀和評論你提交的改動。對
+>>   未參與其開發。簽署鏈應當反映補丁傳播到維護者並最終傳播到Linus所經過的 **真實**
+>>   路徑，首個簽署指明單個作者的主要作者身份。
+>>   
+>> -何時使用Acked-by:，CC:，和Co-Developed by:
+>> +何時使用Acked-by:，Cc:，和Co-developed-by:
+>>   ------------------------------------------
+>>   
+>> -Singed-off-by: 標籤表示簽名者參與了補丁的開發，或者他/她在補丁的傳遞路徑中。
+>> +Signed-off-by: 標籤表示簽名者參與了補丁的開發，或者他/她在補丁的傳遞路徑中。
+>>   
+>>   如果一個人沒有直接參與補丁的準備或處理，但希望表示並記錄他們對補丁的批准/贊成，
+>>   那麼他們可以要求在補丁的變更日誌中添加一個Acked-by:。
+>> @@ -359,8 +359,8 @@ Acked-by：不一定表示對整個補丁的確認。例如，如果一個補丁
+>>   Co-developed-by: 聲明補丁是由多個開發人員共同創建的；當幾個人在一個補丁上工
+>>   作時，它用於給出共同作者（除了From:所給出的作者之外）。因爲Co-developed-by:
+>>   表示作者身份，所以每個Co-developed-by:必須緊跟在相關合作作者的簽署之後。標準
+>> -簽署程序要求Singed-off-by:標籤的順序應儘可能反映補丁的時間歷史，無論作者是通
+>> -過From:還是Co-developed-by:表明。值得注意的是，最後一個Singed-off-by:必須是
+>> +簽署程序要求Signed-off-by:標籤的順序應儘可能反映補丁的時間歷史，無論作者是通
+>> +過From:還是Co-developed-by:表明。值得注意的是，最後一個Signed-off-by:必須是
+>>   提交補丁的開發人員。
+>>   
+>>   注意，如果From:作者也是電子郵件標題的From:行中列出的人，則From:標籤是可選的。
+
