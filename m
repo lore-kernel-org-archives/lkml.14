@@ -1,81 +1,98 @@
-Received: from out203-205-251-84.mail.qq.com (unknown [203.205.251.84])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C614175BD
-	for <linux-kernel@vger.kernel.org>; Tue,  2 Apr 2024 04:16:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.251.84
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02149175A1
+	for <linux-kernel@vger.kernel.org>; Tue,  2 Apr 2024 04:17:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712031371; cv=none; b=hQL9I6gxO//xqgtnFXAOWyA8ZGwG+At8wmrD1HtyMSo72Hgchz1hjDGrkbdEg5wl7xI5uaTm0BhIeZyp0tf04R9arjgiySwavm47R7ArhBgn6RbNtvp81G4pctWQLCaMrNyfv3xvrU3r1eCJD0siWhNB8kIMbHqPKEDjJrPONZs=
+	t=1712031443; cv=none; b=GIr+PX9VyIln8cY5kFPTobosuvDrce8Wm25I9tGd3oVrm9hO4memawl9dgoHI7Vdd2pNOXCDLICMAHNzkFIUW2NBk/jAI6p3UNHzyH8Obga18cHHt1bQpUlcql1BCuEiib8RxZoQO18XC1dLWO1MXe98zS8z8ggbGtI0OMRYUlc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712031371; c=relaxed/simple;
-	bh=s/HHnwD+SmkKVBqoUGGKKDAzr0kT/JyFkYQoA4a1XBU=;
-	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
-	 MIME-Version; b=jCbH2gHcZ3FfTi36C1f3uzfNXRvlZrDE3C0NILDn5UxlqmXXWpLcq4Mbt+Tx4YXvJKN6buWM/yZLSP0nv5yOXqmqAw2kgEj9k3kMwjQaAnaKbmXS4fskoGpVyBNcwfN87OaifhV+vF3cqVUhf2MnGOkXnCCeeixc6snKemlm1NM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=gRT3Fs+v; arc=none smtp.client-ip=203.205.251.84
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
+	s=arc-20240116; t=1712031443; c=relaxed/simple;
+	bh=zikIRY2LADiHW5H6P0zhROk8X9vd5W4L+25Lpd005h4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=rhnmlx+gcYADclILB979u9bZ+5rmBjwE7g+5K1BBz/ghsPOTjpHhrScHbGsKXn6BOkwlBIKHXgfhmJU8d6NmMi9IY9HEdOZAooTdfRCMtURs0puNHYDewfqrt+ntCQTd8Sj3EPnSDSDtlkxoZFQJU16odqephmutqdVkTDI37i4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jj2/etcD; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="gRT3Fs+v"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
-	t=1712031059; bh=MXUyitxU3QQUntbz7v+tHoLVPwTiSCKPD9XlMVmmt+Y=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=gRT3Fs+vnfscAUkZSPnnZ9O9mvH8C8MueYFaOrjg9M3jRAv+G4SOS7L06UYSCr1ri
-	 MeAlxkcB0VgU29LPFRxGD4jJoSpgXlWUj6VrwV4gy4nrzZbTpIvdMtx2Iha8QTPzP4
-	 S3n5C8lxWwMJdHuGWwzpNcwB9ppRdTa0m9yOgsbc=
-Received: from pek-lxu-l1.wrs.com ([111.198.228.153])
-	by newxmesmtplogicsvrszc5-1.qq.com (NewEsmtp) with SMTP
-	id 2B9AE89D; Tue, 02 Apr 2024 12:10:57 +0800
-X-QQ-mid: xmsmtpt1712031057trjz466f6
-Message-ID: <tencent_1F326FF82C456F509544E992ECBECE087A0A@qq.com>
-X-QQ-XMAILINFO: NvxNySBpH0QlOg07ENiPGFyGyemJSpSmZEAM3Hy7bSDkiyrqiePYBB69d+DAJj
-	 sttNSzSM6PDb5FPqIzAyQheZQ1FeQLP7BJcF5t2Dq1hgQXc+HxPbDYJkFI7m0qvrqvCqPRsiPUiN
-	 NUEK/PYl/YTJ9xxekA0FuEDVEdV2V9hAKTtrNroPRFbAQxNAvw1VGe824WjELlNxbFPEwQThIWcx
-	 MJkZLQMybwt/iXm6NbYy2ywuuxsyO0EH9tEMmzqEZV6He05RkoTusP8Y7NgNlZB8jnAXaQAqE2aF
-	 98BykFREaP0wJp0Kd0y7KmwMxWHiz4Zx/gEhPt2sR8ntAWdiy3nxqPSSCmPxBNbWxjOyYe8g9zim
-	 omyhT076YY8K6BzwZB/T/o5Ajgcv4u1mxrwpgEhFAw/zGmZdUXScU3J0kr5NDQSdYyepqeMz49At
-	 T4k8e7OiVO2FiSPlFjY0XEcVwH4kbIDfS+MJ6t6mzfdrnHVzzovF8RQFNv5vP4QpN4vsKQY/tbTH
-	 vggGs+D29fd9t3f5B44UypY+LKH/yK+BxkNtr4EVkpJMPCN/K4taW4sOogtbkOg63v9/ss2GVFcH
-	 u0935tzhHb/gzPQD8O9ErIzXaYMYT5xW3tct0GDSUXQhbjiIPGxbn8QToqWElcdOxr0DqwX/z7io
-	 qHzTsvekD9sl4uzku3roiP2vpPETdSaGgZ53m/te/H0PzeYUJMqJ1OHbdFoqgCV6J9n1Fj63FrKN
-	 7uXM+wxnrtg6T/IcUmaugUpJDfszkaZDFJONtQpXCQmeyn+GMZp5JZm7hhFVuVsyRB922BZGRXjp
-	 EeyED+CImwJdz6ZuCO6NWOm97XFzwXMXMGTJthIIclVpesUAoaS9O60Z8Cyma7F7u7S7AIMFsTRI
-	 XyZojY5UfxaxA3CVUnO7eoCvdvnkZbi4GBdaEvQVgRYZWS38Jyp5NndQbEpdL7cS8SN9/NZo8p2u
-	 2vzT6kbb0=
-X-QQ-XMRINFO: NS+P29fieYNw95Bth2bWPxk=
-From: Edward Adam Davis <eadavis@qq.com>
-To: syzbot+f516089d7815b10197c9@syzkaller.appspotmail.com
-Cc: linux-kernel@vger.kernel.org,
-	syzkaller-bugs@googlegroups.com
-Subject: Re: [syzbot] [mtd?] WARNING: zero-size vmalloc in ubi_read_volume_table
-Date: Tue,  2 Apr 2024 12:10:58 +0800
-X-OQ-MSGID: <20240402041057.1873314-2-eadavis@qq.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <000000000000a7f84306150bc9d5@google.com>
-References: <000000000000a7f84306150bc9d5@google.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jj2/etcD"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 865E4C433F1;
+	Tue,  2 Apr 2024 04:17:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1712031442;
+	bh=zikIRY2LADiHW5H6P0zhROk8X9vd5W4L+25Lpd005h4=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+	b=jj2/etcDaDV9TohgThB0sd3IZddvUH176n8Kq6Vl+8kPi7DChO0SkDAG3xffXuvBW
+	 5yIX6QFHc5VRgxo8YvTU2Krtu+pS0Uk5EwGZhD1e5kkEjSCXLakfS9suA1beXQtu+G
+	 xF5vsLgBRb+4nQjj6H8O9xyEb2aLRIOWqeS7yB3LbMVPMND4wEfrA/AnDdGk/LavO7
+	 iwN+B7N/6cX6XMV2ypeILfHU7ZtaIXNrBqB6fqpWhBq2XcZRcTj45ThHs2qgeABzBX
+	 JC4fUxqLyq3KlutUiMOpvyQXLVHQ/wej9/U1BnRpFSATNnnWNjcwed181uwQ1/xbno
+	 tqfm7sn4SYGeg==
+Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
+	id 28E91CE074C; Mon,  1 Apr 2024 21:17:22 -0700 (PDT)
+Date: Mon, 1 Apr 2024 21:17:22 -0700
+From: "Paul E. McKenney" <paulmck@kernel.org>
+To: Al Viro <viro@zeniv.linux.org.uk>
+Cc: linux-kernel@vger.kernel.org, kernel-team@meta.com,
+	"David S. Miller" <davem@davemloft.net>,
+	Andreas Larsson <andreas@gaisler.com>,
+	Palmer Dabbelt <palmer@rivosinc.com>, Arnd Bergmann <arnd@arndb.de>,
+	Marco Elver <elver@google.com>
+Subject: Re: [PATCH RFC cmpxchg 2/8] sparc: Emulate one-byte and two-byte
+ cmpxchg
+Message-ID: <1d1bc9d7-ff7d-4554-9c07-90d4e210a91d@paulmck-laptop>
+Reply-To: paulmck@kernel.org
+References: <31c82dcc-e203-48a9-aadd-f2fcd57d94c1@paulmck-laptop>
+ <20240401213950.3910531-2-paulmck@kernel.org>
+ <20240401223803.GZ538574@ZenIV>
+ <114dc62e-e0fb-41c8-bf9c-a9fda8b19eb6@paulmck-laptop>
+ <20240402000758.GC538574@ZenIV>
+ <20240402033753.GE538574@ZenIV>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240402033753.GE538574@ZenIV>
 
-please test zs in ubi_read_volume_table
+On Tue, Apr 02, 2024 at 04:37:53AM +0100, Al Viro wrote:
+> On Tue, Apr 02, 2024 at 01:07:58AM +0100, Al Viro wrote:
+> 
+> > It does, IIRC.
+> > 
+> > > Would you like to do that patch?  If so, I would be happy to drop mine
+> > > in favor of yours.  If not, could I please have your Signed-off-by so
+> > > I can do the Co-developed-by dance?
+> > 
+> > Will do once I dig my way from under the pile of mail (sick for a week
+> > and subscribed to l-k, among other lists)...
+> 
+> FWIW, parisc is in the same situation - atomics-by-cached-spinlocks.
+> 've a candidate branch, will post if it survives build...
 
-#syz test https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+I am sure that it seemed like a good idea at the time.  ;-)
 
-diff --git a/drivers/mtd/ubi/vtbl.c b/drivers/mtd/ubi/vtbl.c
-index f700f0e4f2ec..e3b337afdb4f 100644
---- a/drivers/mtd/ubi/vtbl.c
-+++ b/drivers/mtd/ubi/vtbl.c
-@@ -791,7 +791,8 @@ int ubi_read_volume_table(struct ubi_device *ubi, struct ubi_attach_info *ai)
- 	 * The number of supported volumes is limited by the eraseblock size
- 	 * and by the UBI_MAX_VOLUMES constant.
- 	 */
--	ubi->vtbl_slots = ubi->leb_size / UBI_VTBL_RECORD_SIZE;
-+	ubi->vtbl_slots = ubi->leb_size > UBI_VTBL_RECORD_SIZE ? 
-+			  ubi->leb_size / UBI_VTBL_RECORD_SIZE : 1;
- 	if (ubi->vtbl_slots > UBI_MAX_VOLUMES)
- 		ubi->vtbl_slots = UBI_MAX_VOLUMES;
- 
+> Re parisc: why does it bother with arch_cmpxchg_local()?  Default is
+> 	* save and disable local interrupts
+> 	* read the current value, compare to old
+> 	* if equal, store new there
+> 	* restore local interrupts
+> For 32bit case parisc goes for __cmpxchg_u32(), which is
+> 	* if (SMP) choose the spinlock (indexed by hash of address)
+> 	* save and disable local interrupes
+> 	* if (SMP) arch_spin_lock(spinlock)
+> 	* read the current value, compare to old
+> 	* if equal, store new there
+> 	* if (SMP) arch_spin_unlock(spinlock)
+> 	* restore local interrupts
+> In UP case it's identical to generic; on SMP it's strictly more work.
+> Unless I'm very confused about cmpxchg_local() semantics, the
+> callers do not expect atomicity wrt other CPUs, so why do we bother?
 
+;-) ;-) ;-)
+
+In any case, happy to replace my patches with yours whenever you have
+them ready.
+
+							Thanx, Paul
