@@ -1,169 +1,357 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C2A283CB9;
-	Tue,  2 Apr 2024 12:55:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A4218289C
+	for <linux-kernel@vger.kernel.org>; Tue,  2 Apr 2024 12:55:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712062561; cv=none; b=fnLAOp+OE8e9Vyx2J0UgyUdOaiw3m+vb45Cs9u9f+NsFSbvcN3ZarQ3bYPcyGL+DbbkCNnnYUuWdrOW1nSNAK28xeCLnqBNZ54cT+Hyz5lzuShsKWvCKdu5pgtCCDpQqIcpTxLPVP1zdqo3gOJcGukwOB9SosheATxdNWD80zFk=
+	t=1712062560; cv=none; b=StfbtqOO287uSkvNsLrJLKwwbmtbIlF6vZbG0dxNAhKq0uyyDSM2oVUZOaMGXDq7fAgAlICD1iZGfSSxNGHCgxHNOnypVIRBsSMAqXzAs1eDfNJBI1AABvPVTes1f0HbiQUtb+mDO1RKsBZ3YJW4hCpFW2+D0oR55BjVYzkYx+0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712062561; c=relaxed/simple;
-	bh=TtZLtq8Hz8doC1J37xg6YqY30LO/H0F9ybpVFSesKt0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HaEjgy62JpE8YuLIZry/MAS+qnQRJNrYEPGylBd3bPN0elis6rkzifg3qY5u6zRMclkGCLSiy7jzzBzFtGKyKQeBwmF+MCrMmzjQoGQpaau9bIGUOkJyUx+euJ6pBQFIJ5Gb7Lm0C32XycXAXu2E/aCo/zoxzDsAjoJpNwK4qH4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=Or4i/ENo; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=9YvGzYa7; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	s=arc-20240116; t=1712062560; c=relaxed/simple;
+	bh=v9mkatNzYJqa0aDsv7IqQC4sIWtC4aGOcuHM0jbI/hE=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=dZpbbVmVAktiQluk1JTzrd51M+Itef8mUDFDsObFlsSWpCiyV4bYfP8WM1E8y6+TsER1vUPW/R90uNDZ+m947SvNvurCV9xgQjyPXNplUr1Q/KmgX9Nlf7cT5KicrCnmWeD48dFKcGov71LH7pAl23XaW1nqcpq5lOa9yBBeuAo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=QzonwRFM; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="Or4i/ENo";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="9YvGzYa7"
-Received: from imap2.dmz-prg2.suse.org (imap2.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:98])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 17ADD5BD3D;
-	Tue,  2 Apr 2024 12:55:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1712062556; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QzonwRFM"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1712062557;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=QVwsTL4VXfxmQnjRGfaT+5S6pqQmO4IL8cSJr05k2/4=;
-	b=Or4i/ENo7CiiZ589iN6rMHL38JcSTi9UPmnJ2Rjvx4aLBY7fBvcKc70W44UE4rMjJ0tFjv
-	lCiYvXQHjkbQTMbBvDqudo58qLeRQo5HkaQVha9hv3VX5Mg789mR4wNM0tPSobF0yHIYR7
-	c1nENf7lzNgIBhNNbRT76JFgQ0wB884=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1712062556;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=QVwsTL4VXfxmQnjRGfaT+5S6pqQmO4IL8cSJr05k2/4=;
-	b=9YvGzYa7eQPk5x2MdCr3lPY3PCCb3v4ndrCCWR+POUOJaK3EaZSIL3SfMeXX1m93x/QKzj
-	1Vj617lGCLCjM0DA==
-Authentication-Results: smtp-out2.suse.de;
-	dkim=none
-Received: from imap2.dmz-prg2.suse.org (localhost [127.0.0.1])
+	bh=KmiZaiwFptHJMHSw9D0x+FrvfCn7jycw2VvcIKklrLE=;
+	b=QzonwRFMRIMOtpOYH/YcpStHwzWpSKEy1NkMbc4A6f7k+ItiJ+SBvfGo2Oehf6Oypv/Iqs
+	QX6jcUmxeJB5OeKyW92aC+7ezow/of0au1cX+ZSU+PawSuIfVGqLPjLFZnOLF78SETGQ1Y
+	PvuVTrycmAGkfZ6N61EheojI4RznsPI=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-611-rIpFy6zPP_6Tg6et4qWd4w-1; Tue, 02 Apr 2024 08:55:51 -0400
+X-MC-Unique: rIpFy6zPP_6Tg6et4qWd4w-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.rdu2.redhat.com [10.11.54.1])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by imap2.dmz-prg2.suse.org (Postfix) with ESMTPS id 0CC3413357;
-	Tue,  2 Apr 2024 12:55:56 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap2.dmz-prg2.suse.org with ESMTPSA
-	id MQ4aA1wADGZnSQAAn2gu4w
-	(envelope-from <jack@suse.cz>); Tue, 02 Apr 2024 12:55:56 +0000
-Received: by quack3.suse.cz (Postfix, from userid 1000)
-	id 9CE09A0813; Tue,  2 Apr 2024 14:55:55 +0200 (CEST)
-Date: Tue, 2 Apr 2024 14:55:55 +0200
-From: Jan Kara <jack@suse.cz>
-To: "yebin (H)" <yebin10@huawei.com>
-Cc: "Darrick J. Wong" <djwong@kernel.org>, tytso@mit.edu,
-	adilger.kernel@dilger.ca, linux-ext4@vger.kernel.org,
-	linux-kernel@vger.kernel.org, jack@suse.cz
-Subject: Re: [PATCH] jbd2: use shrink_type type instead of bool type for
- __jbd2_journal_clean_checkpoint_list()
-Message-ID: <20240402125555.kqxsfmzeaeqbsmdp@quack3>
-References: <20240401011614.3650958-1-yebin10@huawei.com>
- <20240401024417.GA739535@frogsfrogsfrogs>
- <660A5535.7080005@huawei.com>
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id BBE5A805A65;
+	Tue,  2 Apr 2024 12:55:50 +0000 (UTC)
+Received: from t14s.redhat.com (unknown [10.39.194.247])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id CD7A13C21;
+	Tue,  2 Apr 2024 12:55:46 +0000 (UTC)
+From: David Hildenbrand <david@redhat.com>
+To: linux-kernel@vger.kernel.org
+Cc: linux-mm@kvack.org,
+	David Hildenbrand <david@redhat.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Mike Rapoport <rppt@kernel.org>,
+	Jason Gunthorpe <jgg@nvidia.com>,
+	John Hubbard <jhubbard@nvidia.com>,
+	Peter Xu <peterx@redhat.com>,
+	linux-arm-kernel@lists.infradead.org,
+	loongarch@lists.linux.dev,
+	linux-mips@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org,
+	linux-s390@vger.kernel.org,
+	linux-sh@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org,
+	linux-riscv@lists.infradead.org,
+	x86@kernel.org
+Subject: [PATCH v1 2/3] mm/treewide: rename CONFIG_HAVE_FAST_GUP to CONFIG_HAVE_GUP_FAST
+Date: Tue,  2 Apr 2024 14:55:15 +0200
+Message-ID: <20240402125516.223131-3-david@redhat.com>
+In-Reply-To: <20240402125516.223131-1-david@redhat.com>
+References: <20240402125516.223131-1-david@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <660A5535.7080005@huawei.com>
-X-Rspamd-Queue-Id: 17ADD5BD3D
-X-Spamd-Result: default: False [-2.81 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	MID_RHS_NOT_FQDN(0.50)[];
-	NEURAL_HAM_SHORT(-0.20)[-0.998];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	MISSING_XM_UA(0.00)[];
-	ARC_NA(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RCVD_COUNT_THREE(0.00)[3];
-	R_DKIM_NA(0.00)[];
-	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:98:from];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[7];
-	RCVD_TLS_LAST(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:email,imap2.dmz-prg2.suse.org:rdns,imap2.dmz-prg2.suse.org:helo,huawei.com:email]
-X-Rspamd-Action: no action
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Spam-Score: -2.81
-X-Spam-Level: 
-X-Spam-Flag: NO
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.1
 
-On Mon 01-04-24 14:33:25, yebin (H) wrote:
-> On 2024/4/1 10:44, Darrick J. Wong wrote:
-> > On Mon, Apr 01, 2024 at 09:16:14AM +0800, Ye Bin wrote:
-> > > "enum shrink_type" can clearly express the meaning of the parameter of
-> > > __jbd2_journal_clean_checkpoint_list(), and there is no need to use the
-> > > bool type.
-> > > 
-> > > Signed-off-by: Ye Bin <yebin10@huawei.com>
-> > > ---
-> > >   fs/jbd2/checkpoint.c | 9 +++------
-> > >   fs/jbd2/commit.c     | 2 +-
-> > >   include/linux/jbd2.h | 4 +++-
-> > >   3 files changed, 7 insertions(+), 8 deletions(-)
-> > > 
-> > > diff --git a/fs/jbd2/checkpoint.c b/fs/jbd2/checkpoint.c
-> > > index 1c97e64c4784..d6e8b80a4078 100644
-> > > --- a/fs/jbd2/checkpoint.c
-> > > +++ b/fs/jbd2/checkpoint.c
-> > > @@ -337,8 +337,6 @@ int jbd2_cleanup_journal_tail(journal_t *journal)
-> > >   /* Checkpoint list management */
-> > > -enum shrink_type {SHRINK_DESTROY, SHRINK_BUSY_STOP, SHRINK_BUSY_SKIP};
-> > > -
-> > >   /*
-> > >    * journal_shrink_one_cp_list
-> > >    *
-> > > @@ -476,17 +474,16 @@ unsigned long jbd2_journal_shrink_checkpoint_list(journal_t *journal,
-> > >    *
-> > >    * Called with j_list_lock held.
-> > >    */
-> > > -void __jbd2_journal_clean_checkpoint_list(journal_t *journal, bool destroy)
-> > > +void __jbd2_journal_clean_checkpoint_list(journal_t *journal,
-> > > +					  enum shrink_type type)
+Nowadays, we call it "GUP-fast", the external interface includes
+functions like "get_user_pages_fast()", and we renamed all internal
+functions to reflect that as well.
 
-The comment above this function needs updating after this change.
+Let's make the config option reflect that.
 
-> > >   {
-> > >   	transaction_t *transaction, *last_transaction, *next_transaction;
-> > > -	enum shrink_type type;
-> > >   	bool released;
-> > >   	transaction = journal->j_checkpoint_transactions;
-> > >   	if (!transaction)
-> > >   		return;
-> > > -	type = destroy ? SHRINK_DESTROY : SHRINK_BUSY_STOP;
-> > What is supposed to happen if the caller passes in SHRINK_BUSY_SKIP?
-> > 
-> > --D
-> 
-> If SHRING_BUSY_SKIP is passed, the buffers in use will be skipped during traversal
-> and release.Currently, SHRINKING_BUSY_SKIP is used in the memory reclamation process.
+Reviewed-by: Mike Rapoport (IBM) <rppt@kernel.org>
+Signed-off-by: David Hildenbrand <david@redhat.com>
+---
+ arch/arm/Kconfig       |  2 +-
+ arch/arm64/Kconfig     |  2 +-
+ arch/loongarch/Kconfig |  2 +-
+ arch/mips/Kconfig      |  2 +-
+ arch/powerpc/Kconfig   |  2 +-
+ arch/riscv/Kconfig     |  2 +-
+ arch/s390/Kconfig      |  2 +-
+ arch/sh/Kconfig        |  2 +-
+ arch/x86/Kconfig       |  2 +-
+ include/linux/rmap.h   |  8 ++++----
+ kernel/events/core.c   |  4 ++--
+ mm/Kconfig             |  2 +-
+ mm/gup.c               | 10 +++++-----
+ mm/internal.h          |  2 +-
+ 14 files changed, 22 insertions(+), 22 deletions(-)
 
-I guess Darrick was wondering whether there's some usefulness in calling
-__jbd2_journal_clean_checkpoint_list() with SHRINKING_BUSY_SKIP. I agree it
-does no harm but as we have seen in the past, it just wastes CPU cycles
-scanning the buffer list in some cases so that's why we created
-SHRINKING_BUSY_STOP. I also agree the 'bool' argument isn't great and the
-enum is actually explaining more so I'm in favor of switching to enum but
-perhaps we can have WARN_ON_ONCE(type == SHRINKING_BUSY_SKIP) (perhaps with
-a short explanation in the comment above the function) to see if we
-accidentally didn't grow unexpected use.
-
-									Honza
+diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
+index b14aed3a17ab..817918f6635a 100644
+--- a/arch/arm/Kconfig
++++ b/arch/arm/Kconfig
+@@ -99,7 +99,7 @@ config ARM
+ 	select HAVE_DYNAMIC_FTRACE_WITH_REGS if HAVE_DYNAMIC_FTRACE
+ 	select HAVE_EFFICIENT_UNALIGNED_ACCESS if (CPU_V6 || CPU_V6K || CPU_V7) && MMU
+ 	select HAVE_EXIT_THREAD
+-	select HAVE_FAST_GUP if ARM_LPAE
++	select HAVE_GUP_FAST if ARM_LPAE
+ 	select HAVE_FTRACE_MCOUNT_RECORD if !XIP_KERNEL
+ 	select HAVE_FUNCTION_ERROR_INJECTION
+ 	select HAVE_FUNCTION_GRAPH_TRACER
+diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+index 7b11c98b3e84..de076a191e9f 100644
+--- a/arch/arm64/Kconfig
++++ b/arch/arm64/Kconfig
+@@ -205,7 +205,7 @@ config ARM64
+ 	select HAVE_SAMPLE_FTRACE_DIRECT
+ 	select HAVE_SAMPLE_FTRACE_DIRECT_MULTI
+ 	select HAVE_EFFICIENT_UNALIGNED_ACCESS
+-	select HAVE_FAST_GUP
++	select HAVE_GUP_FAST
+ 	select HAVE_FTRACE_MCOUNT_RECORD
+ 	select HAVE_FUNCTION_TRACER
+ 	select HAVE_FUNCTION_ERROR_INJECTION
+diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
+index a5f300ec6f28..cd642eefd9e5 100644
+--- a/arch/loongarch/Kconfig
++++ b/arch/loongarch/Kconfig
+@@ -119,7 +119,7 @@ config LOONGARCH
+ 	select HAVE_EBPF_JIT
+ 	select HAVE_EFFICIENT_UNALIGNED_ACCESS if !ARCH_STRICT_ALIGN
+ 	select HAVE_EXIT_THREAD
+-	select HAVE_FAST_GUP
++	select HAVE_GUP_FAST
+ 	select HAVE_FTRACE_MCOUNT_RECORD
+ 	select HAVE_FUNCTION_ARG_ACCESS_API
+ 	select HAVE_FUNCTION_ERROR_INJECTION
+diff --git a/arch/mips/Kconfig b/arch/mips/Kconfig
+index 516dc7022bd7..f1aa1bf11166 100644
+--- a/arch/mips/Kconfig
++++ b/arch/mips/Kconfig
+@@ -68,7 +68,7 @@ config MIPS
+ 	select HAVE_DYNAMIC_FTRACE
+ 	select HAVE_EBPF_JIT if !CPU_MICROMIPS
+ 	select HAVE_EXIT_THREAD
+-	select HAVE_FAST_GUP
++	select HAVE_GUP_FAST
+ 	select HAVE_FTRACE_MCOUNT_RECORD
+ 	select HAVE_FUNCTION_GRAPH_TRACER
+ 	select HAVE_FUNCTION_TRACER
+diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
+index 1c4be3373686..e42cc8cd415f 100644
+--- a/arch/powerpc/Kconfig
++++ b/arch/powerpc/Kconfig
+@@ -236,7 +236,7 @@ config PPC
+ 	select HAVE_DYNAMIC_FTRACE_WITH_REGS	if ARCH_USING_PATCHABLE_FUNCTION_ENTRY || MPROFILE_KERNEL || PPC32
+ 	select HAVE_EBPF_JIT
+ 	select HAVE_EFFICIENT_UNALIGNED_ACCESS
+-	select HAVE_FAST_GUP
++	select HAVE_GUP_FAST
+ 	select HAVE_FTRACE_MCOUNT_RECORD
+ 	select HAVE_FUNCTION_ARG_ACCESS_API
+ 	select HAVE_FUNCTION_DESCRIPTORS	if PPC64_ELF_ABI_V1
+diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
+index be09c8836d56..3ee60ddef93e 100644
+--- a/arch/riscv/Kconfig
++++ b/arch/riscv/Kconfig
+@@ -132,7 +132,7 @@ config RISCV
+ 	select HAVE_FUNCTION_GRAPH_RETVAL if HAVE_FUNCTION_GRAPH_TRACER
+ 	select HAVE_FUNCTION_TRACER if !XIP_KERNEL && !PREEMPTION
+ 	select HAVE_EBPF_JIT if MMU
+-	select HAVE_FAST_GUP if MMU
++	select HAVE_GUP_FAST if MMU
+ 	select HAVE_FUNCTION_ARG_ACCESS_API
+ 	select HAVE_FUNCTION_ERROR_INJECTION
+ 	select HAVE_GCC_PLUGINS
+diff --git a/arch/s390/Kconfig b/arch/s390/Kconfig
+index 8f01ada6845e..d9aed4c93ee6 100644
+--- a/arch/s390/Kconfig
++++ b/arch/s390/Kconfig
+@@ -174,7 +174,7 @@ config S390
+ 	select HAVE_DYNAMIC_FTRACE_WITH_REGS
+ 	select HAVE_EBPF_JIT if HAVE_MARCH_Z196_FEATURES
+ 	select HAVE_EFFICIENT_UNALIGNED_ACCESS
+-	select HAVE_FAST_GUP
++	select HAVE_GUP_FAST
+ 	select HAVE_FENTRY
+ 	select HAVE_FTRACE_MCOUNT_RECORD
+ 	select HAVE_FUNCTION_ARG_ACCESS_API
+diff --git a/arch/sh/Kconfig b/arch/sh/Kconfig
+index 2ad3e29f0ebe..7292542f75e8 100644
+--- a/arch/sh/Kconfig
++++ b/arch/sh/Kconfig
+@@ -38,7 +38,7 @@ config SUPERH
+ 	select HAVE_DEBUG_BUGVERBOSE
+ 	select HAVE_DEBUG_KMEMLEAK
+ 	select HAVE_DYNAMIC_FTRACE
+-	select HAVE_FAST_GUP if MMU
++	select HAVE_GUP_FAST if MMU
+ 	select HAVE_FUNCTION_GRAPH_TRACER
+ 	select HAVE_FUNCTION_TRACER
+ 	select HAVE_FTRACE_MCOUNT_RECORD
+diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+index 4fff6ed46e90..222b42941cf3 100644
+--- a/arch/x86/Kconfig
++++ b/arch/x86/Kconfig
+@@ -221,7 +221,7 @@ config X86
+ 	select HAVE_EFFICIENT_UNALIGNED_ACCESS
+ 	select HAVE_EISA
+ 	select HAVE_EXIT_THREAD
+-	select HAVE_FAST_GUP
++	select HAVE_GUP_FAST
+ 	select HAVE_FENTRY			if X86_64 || DYNAMIC_FTRACE
+ 	select HAVE_FTRACE_MCOUNT_RECORD
+ 	select HAVE_FUNCTION_GRAPH_RETVAL	if HAVE_FUNCTION_GRAPH_TRACER
+diff --git a/include/linux/rmap.h b/include/linux/rmap.h
+index b7944a833668..9bf9324214fc 100644
+--- a/include/linux/rmap.h
++++ b/include/linux/rmap.h
+@@ -284,7 +284,7 @@ static inline int hugetlb_try_share_anon_rmap(struct folio *folio)
+ 	VM_WARN_ON_FOLIO(!PageAnonExclusive(&folio->page), folio);
+ 
+ 	/* Paired with the memory barrier in try_grab_folio(). */
+-	if (IS_ENABLED(CONFIG_HAVE_FAST_GUP))
++	if (IS_ENABLED(CONFIG_HAVE_GUP_FAST))
+ 		smp_mb();
+ 
+ 	if (unlikely(folio_maybe_dma_pinned(folio)))
+@@ -295,7 +295,7 @@ static inline int hugetlb_try_share_anon_rmap(struct folio *folio)
+ 	 * This is conceptually a smp_wmb() paired with the smp_rmb() in
+ 	 * gup_must_unshare().
+ 	 */
+-	if (IS_ENABLED(CONFIG_HAVE_FAST_GUP))
++	if (IS_ENABLED(CONFIG_HAVE_GUP_FAST))
+ 		smp_mb__after_atomic();
+ 	return 0;
+ }
+@@ -541,7 +541,7 @@ static __always_inline int __folio_try_share_anon_rmap(struct folio *folio,
+ 	 */
+ 
+ 	/* Paired with the memory barrier in try_grab_folio(). */
+-	if (IS_ENABLED(CONFIG_HAVE_FAST_GUP))
++	if (IS_ENABLED(CONFIG_HAVE_GUP_FAST))
+ 		smp_mb();
+ 
+ 	if (unlikely(folio_maybe_dma_pinned(folio)))
+@@ -552,7 +552,7 @@ static __always_inline int __folio_try_share_anon_rmap(struct folio *folio,
+ 	 * This is conceptually a smp_wmb() paired with the smp_rmb() in
+ 	 * gup_must_unshare().
+ 	 */
+-	if (IS_ENABLED(CONFIG_HAVE_FAST_GUP))
++	if (IS_ENABLED(CONFIG_HAVE_GUP_FAST))
+ 		smp_mb__after_atomic();
+ 	return 0;
+ }
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index 724e6d7e128f..c5a0dc1f135f 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -7539,7 +7539,7 @@ static u64 perf_get_pgtable_size(struct mm_struct *mm, unsigned long addr)
+ {
+ 	u64 size = 0;
+ 
+-#ifdef CONFIG_HAVE_FAST_GUP
++#ifdef CONFIG_HAVE_GUP_FAST
+ 	pgd_t *pgdp, pgd;
+ 	p4d_t *p4dp, p4d;
+ 	pud_t *pudp, pud;
+@@ -7587,7 +7587,7 @@ static u64 perf_get_pgtable_size(struct mm_struct *mm, unsigned long addr)
+ 	if (pte_present(pte))
+ 		size = pte_leaf_size(pte);
+ 	pte_unmap(ptep);
+-#endif /* CONFIG_HAVE_FAST_GUP */
++#endif /* CONFIG_HAVE_GUP_FAST */
+ 
+ 	return size;
+ }
+diff --git a/mm/Kconfig b/mm/Kconfig
+index f0ed3168db00..50df323eaece 100644
+--- a/mm/Kconfig
++++ b/mm/Kconfig
+@@ -473,7 +473,7 @@ config ARCH_WANT_OPTIMIZE_HUGETLB_VMEMMAP
+ config HAVE_MEMBLOCK_PHYS_MAP
+ 	bool
+ 
+-config HAVE_FAST_GUP
++config HAVE_GUP_FAST
+ 	depends on MMU
+ 	bool
+ 
+diff --git a/mm/gup.c b/mm/gup.c
+index f1ac2c5a7f6d..929eb89c2e04 100644
+--- a/mm/gup.c
++++ b/mm/gup.c
+@@ -501,7 +501,7 @@ static inline void mm_set_has_pinned_flag(unsigned long *mm_flags)
+ 
+ #ifdef CONFIG_MMU
+ 
+-#if defined(CONFIG_ARCH_HAS_HUGEPD) || defined(CONFIG_HAVE_FAST_GUP)
++#if defined(CONFIG_ARCH_HAS_HUGEPD) || defined(CONFIG_HAVE_GUP_FAST)
+ static int record_subpages(struct page *page, unsigned long sz,
+ 			   unsigned long addr, unsigned long end,
+ 			   struct page **pages)
+@@ -515,7 +515,7 @@ static int record_subpages(struct page *page, unsigned long sz,
+ 
+ 	return nr;
+ }
+-#endif	/* CONFIG_ARCH_HAS_HUGEPD || CONFIG_HAVE_FAST_GUP */
++#endif	/* CONFIG_ARCH_HAS_HUGEPD || CONFIG_HAVE_GUP_FAST */
+ 
+ #ifdef CONFIG_ARCH_HAS_HUGEPD
+ static unsigned long hugepte_addr_end(unsigned long addr, unsigned long end,
+@@ -2785,7 +2785,7 @@ EXPORT_SYMBOL(get_user_pages_unlocked);
+  *
+  * This code is based heavily on the PowerPC implementation by Nick Piggin.
+  */
+-#ifdef CONFIG_HAVE_FAST_GUP
++#ifdef CONFIG_HAVE_GUP_FAST
+ 
+ /*
+  * Used in the GUP-fast path to determine whether GUP is permitted to work on
+@@ -3364,7 +3364,7 @@ static inline void gup_fast_pgd_range(unsigned long addr, unsigned long end,
+ 		unsigned int flags, struct page **pages, int *nr)
+ {
+ }
+-#endif /* CONFIG_HAVE_FAST_GUP */
++#endif /* CONFIG_HAVE_GUP_FAST */
+ 
+ #ifndef gup_fast_permitted
+ /*
+@@ -3384,7 +3384,7 @@ static unsigned long gup_fast(unsigned long start, unsigned long end,
+ 	int nr_pinned = 0;
+ 	unsigned seq;
+ 
+-	if (!IS_ENABLED(CONFIG_HAVE_FAST_GUP) ||
++	if (!IS_ENABLED(CONFIG_HAVE_GUP_FAST) ||
+ 	    !gup_fast_permitted(start, end))
+ 		return 0;
+ 
+diff --git a/mm/internal.h b/mm/internal.h
+index 3df06a152ff0..be432314af3e 100644
+--- a/mm/internal.h
++++ b/mm/internal.h
+@@ -1249,7 +1249,7 @@ static inline bool gup_must_unshare(struct vm_area_struct *vma,
+ 	}
+ 
+ 	/* Paired with a memory barrier in folio_try_share_anon_rmap_*(). */
+-	if (IS_ENABLED(CONFIG_HAVE_FAST_GUP))
++	if (IS_ENABLED(CONFIG_HAVE_GUP_FAST))
+ 		smp_rmb();
+ 
+ 	/*
 -- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+2.44.0
+
