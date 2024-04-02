@@ -1,78 +1,91 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08DBF74262;
-	Tue,  2 Apr 2024 14:10:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6E7998405F;
+	Tue,  2 Apr 2024 14:12:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712067028; cv=none; b=I2DHBof16wX7+5GF+Jot3nwdpcA2CV81s+DWQWZzpVC6IY6GS/F262YfzFzw3+id4uzLNR8IlZ8JtG6Vog/lKMhsKwQ2X3xqisHo24s3nmp4MD4wjoDI3scWSwiQXhHMl0Kb5UixrliSZX1ktSYs/7lg8qMCTGJMgxBEr7ktCCk=
+	t=1712067131; cv=none; b=N0YIKZ8DghqKfwsmFfsafLdrveWTA497EuvQkcV5rLjLCqwtZCnmf1BKEaq4arQ1dGs+Z39OF3OeGX1tjwuw3I8w0swYwT0qDnK9x3cGTm4dm97fImz1RkSP11tRDRjnRK4MI+FTtXEYMjC26yS3RZvtE9AGteRgnH2Ch7u8RNg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712067028; c=relaxed/simple;
-	bh=6/gaVejmho+6gxtK4B1sWMwBKvhxjxSbV/MyNET8rRw=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=QfJK2BCkSNAGOi1vmVUc4pzr7OTgq5pDlN9DSK0apn4Qfms12aPSzeEcGFLTxIjrYwaX+EkYEn+gY3Z/Q/p3pK4YMIqRGa/6UQua1xTQhJ39gahaX1IdR62YvvbDhhMvKSR0FbGia+Q+bpBBNqFt3RzkPB4BM7k8H3oI2pZuSRo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=E9ejCqdl; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="E9ejCqdl"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 9370DC433F1;
-	Tue,  2 Apr 2024 14:10:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712067027;
-	bh=6/gaVejmho+6gxtK4B1sWMwBKvhxjxSbV/MyNET8rRw=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=E9ejCqdlolfsY80nizbS0Awh8t/GWEyC6EIf3L+vmEsiLa/VuNWGZHEW4oULhqS4H
-	 pgmLIkUVnlOvgDNVdg08Kz4QwZuSYwGggIq+aimDZZ1lh0/6DZp6pbrDA70RZ7e25S
-	 60up/ZHuB+m3Tgnsjmy/nVIeUZ7rJfGebZceZ2SCSNshzHasHXRAVzfxXtTYQRyKr7
-	 Gnys4jEPmrhXMjRn2TcadPymvzcEBrurUBqvV4sEzUppwdESoCwNUf+sggwPyL9M80
-	 fCHasAtWfLsanxmPSrpCJieHVasJDzJ9E0hS0Eep+6BaP9fxriEeMRnWMptCcX022B
-	 svffvgz8rqdYw==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 80279D9A158;
-	Tue,  2 Apr 2024 14:10:27 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	s=arc-20240116; t=1712067131; c=relaxed/simple;
+	bh=sBOdmheLZ2gGf5kKDBuAKPcg2oBCHcIwa/Kgod/gHsM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=oB9iZ/Qmn1MBjFyOB5xPSAlc/nW5vPnwDntfsPpPp9EEUcJHfe9NaT3ViWJ/ibA71WClVfAsz9TMvF8CuyUeIMN+X/igl08pJxxf6ziNevovgqb6wiwDRu593yWAZfehDXKMQie+4nQF/20EPLKoyDkUy4F1LjCeIKP1IKChmI4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 75B9A2F4;
+	Tue,  2 Apr 2024 07:12:40 -0700 (PDT)
+Received: from bogus (e103737-lin.cambridge.arm.com [10.1.197.49])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E93503F64C;
+	Tue,  2 Apr 2024 07:12:06 -0700 (PDT)
+Date: Tue, 2 Apr 2024 15:12:04 +0100
+From: Sudeep Holla <sudeep.holla@arm.com>
+To: "Mediouni, Mohamed" <mediou@amazon.de>
+Cc: David Woodhouse <dwmw2@infradead.org>,
+	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Sudeep Holla <sudeep.holla@arm.com>, Will Deacon <will@kernel.org>,
+	Robert Moore <robert.moore@intel.com>,
+	"Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+	Len Brown <lenb@kernel.org>, "Saidi, Ali" <alisaidi@amazon.com>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
+	"acpica-devel@lists.linux.dev" <acpica-devel@lists.linux.dev>,
+	Saket Dumbre <saket.dumbre@intel.com>
+Subject: Re: [PATCH 2/2] arm64: acpi: Honour firmware_signature field of
+ FACS, if it exists
+Message-ID: <ZgwSNLmQw-TrDsaZ@bogus>
+References: <20240312134148.727454-1-dwmw2@infradead.org>
+ <20240312134148.727454-2-dwmw2@infradead.org>
+ <dbd60df4632e5ea9cef13cdc1a406b47bd8629da.camel@infradead.org>
+ <ZgveD6Hb2HbTNYNO@bogus>
+ <70B4B352-08A5-4922-93A0-7F420374A831@amazon.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH] bpf: fix typo in uapi doc comments
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <171206702752.6673.7807180542850602789.git-patchwork-notify@kernel.org>
-Date: Tue, 02 Apr 2024 14:10:27 +0000
-References: <20240329152900.398260-2-dlechner@baylibre.com>
-In-Reply-To: <20240329152900.398260-2-dlechner@baylibre.com>
-To: David Lechner <dlechner@baylibre.com>
-Cc: bpf@vger.kernel.org, ast@kernel.org, daniel@iogearbox.net,
- andrii@kernel.org, martin.lau@linux.dev, eddyz87@gmail.com, song@kernel.org,
- yonghong.song@linux.dev, john.fastabend@gmail.com, kpsingh@kernel.org,
- sdf@google.com, haoluo@google.com, jolsa@kernel.org,
- linux-kernel@vger.kernel.org
+In-Reply-To: <70B4B352-08A5-4922-93A0-7F420374A831@amazon.de>
 
-Hello:
-
-This patch was applied to bpf/bpf-next.git (master)
-by Daniel Borkmann <daniel@iogearbox.net>:
-
-On Fri, 29 Mar 2024 10:28:46 -0500 you wrote:
-> In a few places in the bpf uapi headers, EOPNOTSUPP is missing a "P" in
-> the doc comments. This adds the missing "P".
+On Tue, Apr 02, 2024 at 12:17:22PM +0000, Mediouni, Mohamed wrote:
 > 
-> Signed-off-by: David Lechner <dlechner@baylibre.com>
-> ---
->  include/uapi/linux/bpf.h       | 4 ++--
->  tools/include/uapi/linux/bpf.h | 4 ++--
->  2 files changed, 4 insertions(+), 4 deletions(-)
+> > On 2. Apr 2024, at 12:29, Sudeep Holla <sudeep.holla@arm.com> wrote:
+> > 
+> > I think it is OK as a temporary solution for now. But there was some
+> > investigation last year as part of some work in Linaro to enable
+> > "drivers/acpi/sleep.c" into the build cleaning up some x86-ness in there.
+> > acpi_sleep_hibernate_setup() already does this but enabling sleep.c need
+> > some careful investigation so that it doesn't break any existing arm64/x86
+> > platforms and made need some wordings clarification in the ACPI spec.
+> > Today system suspend work via psci std path bypassing the ACPI paths which
+> > may not be ideal as none of the ACPI methods are honoured. Some arm64
+> > platforms may implement them and expect to be executed in the future,
+> > maybe ?
+> Current Windows on Arm platforms (seen on SC8280XP) don’t have _GTS
+> or _PTS methods, and don’t have sleeping objects either.
+>
 
-Here is the summary with links:
-  - bpf: fix typo in uapi doc comments
-    https://git.kernel.org/bpf/bpf-next/c/ca4ddc26f8ac
+IMO, SC8280XP is not a very good model platform for ACPI firmware reference.
+It uses PEP which Linux doesn't support for good reason and that make it
+hard to follow everything on that platform.
 
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
+> As such, I don’t expect any users for that potential functionality.
 
+I am not 100% sure
 
+> Am I missing something or hibernation signalling to firmware (on ARM64)
+> can be made PSCI only indefinitely?
+
+Also bypassing certain operation taken care in sleep.c might result in
+missing certain features. Few things IIRC(might be missing things myself
+or misunderstood as it has been a while since I looked at the code in
+detail): handing of GPE for wakeup, power resource handling during the
+resume, power button event to mention few.
+
+--
+Regards,
+Sudeep
