@@ -1,209 +1,210 @@
-Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
+Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com [209.85.167.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07A0784FAB
-	for <linux-kernel@vger.kernel.org>; Tue,  2 Apr 2024 13:07:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0CC7131744;
+	Tue,  2 Apr 2024 13:07:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712063275; cv=none; b=NYpce2fkcQ9141Ze2U3JiOJzj4L52lmXuN/6RaMD6zZL8nKwaIafK2ba9sigGID7uDYv3Sx+2ciLYkIuO2LqXjv98Rcl3bPO63Cbasv6fMymue8glpyS0xj76a+xh+L1j/WSm24a5/SWDgG74bTmQdGOlHVcwNnmRMl7Qb5GTYM=
+	t=1712063276; cv=none; b=UY3HfnaYgsfJUGl1NTuVbzooB3on4lJRjFlBRFkyorzYr+iEc1SFE8NtLkiykiLW7J7icPES4fQ3DUqwnlbYs5hRmZbiSHh4URSLoJYlEknkLS0BWnRZZrmWK8jjjdVF/jYI2P348xJi8ZBut+ZNSDvcIUuLh4xUsVrfCwNzIAA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712063275; c=relaxed/simple;
-	bh=/9JDOXGk30s1zhUrSl6X9Tci1HrlBOvd/yZB9RRxUxQ=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=HA6Yf771PR3JyoC3gql8bQupSsDko1B5+vistSnxOBZnpal26hQSox8nOSpUOs5UTdyvkMGQ1ahsA1OHZRd6cFpy2QbHVuV2W+2KFhZ9TFpJS0roah5TqMJjyDSuPRtpFR+dXXO/sl6vne/YrCYbapAGxwLTWjoUFstifczL+qM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=TOVUduO5; arc=none smtp.client-ip=209.85.128.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com
+	s=arc-20240116; t=1712063276; c=relaxed/simple;
+	bh=jSExc+bfhwvc3TVACAWci39MQQHyOqSgQzVhowlTL1I=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ESPnCiNWk0qWs8TZslEyy4wznON8f1xtNqrYz0MNw6LbDKf9XeeJ8zg0tIiWr6qpmc8QM2+kc5O1CiVIbK0quvjlUL+41fAs5eckZGbDHnKDiXG2XO0ibyMKytlk5ECJR05nT2oDYBmFYUVWMjNbBgXLIM522neCxvunToGahqQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kOhdeQlT; arc=none smtp.client-ip=209.85.167.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="TOVUduO5"
-Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-615272125c6so9364767b3.3
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Apr 2024 06:07:53 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kOhdeQlT"
+Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-513e134f73aso6645024e87.2;
+        Tue, 02 Apr 2024 06:07:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1712063273; x=1712668073; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=uCfbKJeKL+mMpegNJFQm0U53hM3icUzLYitSMM1i5xQ=;
-        b=TOVUduO5YcfmYimBFM4IFFkMvkfiwemchLAw+Q9M/sfO6KssGbySco295j8yd5UmKm
-         69BlPHrr2SnZTe9UIFdl8NvnD6YQdcr5YVm4PCdIzYJS8LEhDrHePgdDb+t+9vXG+YX+
-         zQr0aB0e+/sUZ8B+nVUsn6ZWlcceHIt/LyiYKniWdS+Nij65lpsizUGugmWhiIKsM6Ky
-         OOclTovscbv7lmDEKeTmBnHnDyAVURiIaKA7MCmD5Ei3U+q0I0IbiMX0iMfWHdwADILE
-         9UalMvVZNsfIJClEgLbtJU+VxSkfCI67alsfYb3f7huls/c+HRsYCMjcN1lswRi3/f0d
-         eNRQ==
+        d=gmail.com; s=20230601; t=1712063273; x=1712668073; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=rDgivGpeRN3oqnhK6lo1QGQ9bOAakNzOyMutrOBIkVQ=;
+        b=kOhdeQlTkFqNYlYnP2k/97pycdcwCoeVQJ3qMZua4PiPsrZ78FuF7IZ4yP/LxrXRR8
+         YjFBtl1ZqSJ0byoQNTLX5MH0U+4/xNxqlJf3IkzL9uPrvgSQ5fnsbYbKiEBwtfgDxwua
+         Hh+tx9LJheKi+7Un+lGcSLCHdqzXbTsti3GqaxtR2yzYqmeFM/m85UtGx1yQ/2B8i9rl
+         T1THwJDzG5nceBpVoW8OuM/pzEMMMqihnGTE3VX+dxh2kqIJVc3lMJaru4TdckSUsqpI
+         GDHcs1FBnf02xSpWj5b6i9pzVCu1XmrBitZtzps/IwLl4IdsLn3tw53maOw8Ef5ynT9p
+         JHtQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20230601; t=1712063273; x=1712668073;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=uCfbKJeKL+mMpegNJFQm0U53hM3icUzLYitSMM1i5xQ=;
-        b=DoOQxeFb/3ZVGm0BVQWsvyU93lQ+4jkPfT+V2SzKoZ2PSgGs6kNVZ0gOkscKBzJqel
-         gDOMA6R4PhtRMd0vWmTpMb6Q3NfOv2+HGqf+2iKeQQ6740hnZnRt4BAEQ2xCqzN4/5Gz
-         UAxfuvEV46ZFW6B+hFGKA2dMNkYF6IKHQzqm14qNn07wI2BQK6Q+HnXQz/mGbYKvBuci
-         A212IZKGxWa7UpFXOHcrNBKAPqPhSmbBu7BOAjoULq3zAld5BnpqjKqtzDplwB9QYFzl
-         kvkiaCR96YiuLsAaLdm6uuVIyI+i+TxKEYs5BHN/4Mk0TZIxdEMK4rlGoza+ug6pu0E6
-         j7dQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXTmwl5D+UfAbIcDB4F5CYDw6TYKuPPgxEo6cM297hMcHDsawhVLo1qpgOV06OHYuLCezuWiVq/XlrIZ1+Pp3nx1wC1pCEsZ/jRd8zE
-X-Gm-Message-State: AOJu0YxBEtxvVCy8puys6N+tI00/M9CwfNFA0io1Gc59rJkb0wFaE74k
-	MYi6f/ISwVdikF+yMKcrdfm2RAMnyWfTYJU9PbJYCmYpMndc8lU0Nz01hD1lMqtr8PCiWP98eXW
-	MentrZ7O8GNC/rA==
-X-Google-Smtp-Source: AGHT+IFTNtTzq05jAqkEcUoOP2m9NmtC712kZNLdleaPaLZtBNZULhvOTJfmsV+6eF5xRaLa6BWYI+zX2UdVKTI=
-X-Received: from aliceryhl2.c.googlers.com ([fda3:e722:ac3:cc00:68:949d:c0a8:572])
- (user=aliceryhl job=sendgmr) by 2002:a05:690c:b9c:b0:611:747a:daac with SMTP
- id ck28-20020a05690c0b9c00b00611747adaacmr3425087ywb.0.1712063273111; Tue, 02
- Apr 2024 06:07:53 -0700 (PDT)
-Date: Tue, 02 Apr 2024 13:07:42 +0000
-In-Reply-To: <20240402-arc-for-list-v4-0-54db6440a9a9@google.com>
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=rDgivGpeRN3oqnhK6lo1QGQ9bOAakNzOyMutrOBIkVQ=;
+        b=BbVpUFFu73DeWuCmQ0TQdjSNvXFCjYIdET20hw7mlN2yLqFi7ySixOjeIVVCe7GWg3
+         8WL0dMpp0izpPr2nQQ/J937Gnu8XI7FOn0kTfl42ZO2KqaEVdyDV8WVBQkqBR8Vra2/b
+         n2319eD81JtR6hQwpsOKWQdLTsDfRHd2rWV05ozNdhMFy7XLw9eOsMpP3hlrKtZtxf/2
+         8Z3OdWUJbdkIOjNazDlbKmxgASUbJJbMFBmkQJL5nTZ2vrLEb6ZsputizZDIy4vlUfJ8
+         YzR7Rnou9AyYrDX6S9N38BJz81/OaL9+5zW8IYmc7KB9uvynaHk8oA8iCaiQ1TM/nVq3
+         UfEQ==
+X-Forwarded-Encrypted: i=1; AJvYcCX+V3qC++ieQFTr7Yd4/Pu5oSkdeHj0cpYSD0adsBuL7Uzz4CLliH3vskYouInO0Q+Bj/ns+Lvk8+f6YM5zmeSakKhs+aN8eqIDf7cL9l3GzZb5SiJcScIaoA/TFOxBFQZz4rgLWyUYU0G78lH3RS0r/a2qEr8XotFVDlKeBf8uvCN6abxFjWuc
+X-Gm-Message-State: AOJu0Yy0dlD3iXyoJgvgHNdSOUUzQfl79FGDx0/J6mnC/8cptXr417kf
+	JWZys4BzokvxyPW0ldnj04rcscs7r8ZnH7b9Jdh+1FcN6xiHbgd9
+X-Google-Smtp-Source: AGHT+IGMEPGj2cIdFSZx3F7l0nPa4xyjP/mdcUh76FVWdqfna8LOCIYLXNM660MLXRwUKYLZyzRolA==
+X-Received: by 2002:ac2:4570:0:b0:515:d5dc:8fad with SMTP id k16-20020ac24570000000b00515d5dc8fadmr6363968lfm.9.1712063272672;
+        Tue, 02 Apr 2024 06:07:52 -0700 (PDT)
+Received: from fedora ([213.255.186.46])
+        by smtp.gmail.com with ESMTPSA id a22-20020a19ca16000000b00515ac4ead56sm1742183lfg.271.2024.04.02.06.07.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 02 Apr 2024 06:07:52 -0700 (PDT)
+Date: Tue, 2 Apr 2024 16:07:48 +0300
+From: Matti Vaittinen <mazziesaccount@gmail.com>
+To: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
+	Matti Vaittinen <mazziesaccount@gmail.com>
+Cc: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Liam Girdwood <lgirdwood@gmail.com>,
+	Mark Brown <broonie@kernel.org>,
+	Matti Vaittinen <mazziesaccount@gmail.com>,
+	Wim Van Sebroeck <wim@linux-watchdog.org>,
+	Guenter Roeck <linux@roeck-us.net>, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-watchdog@vger.kernel.org
+Subject: [RFC PATCH 1/6] dt-bindings: ROHM BD96801 PMIC regulators
+Message-ID: <293f0dabaa9fb3c070d72617c59a4f69e4e2d5cb.1712058690.git.mazziesaccount@gmail.com>
+References: <cover.1712058690.git.mazziesaccount@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20240402-arc-for-list-v4-0-54db6440a9a9@google.com>
-X-Developer-Key: i=aliceryhl@google.com; a=openpgp; fpr=49F6C1FAA74960F43A5B86A1EE7A392FDE96209F
-X-Developer-Signature: v=1; a=openpgp-sha256; l=6048; i=aliceryhl@google.com;
- h=from:subject:message-id; bh=/9JDOXGk30s1zhUrSl6X9Tci1HrlBOvd/yZB9RRxUxQ=;
- b=owEBbQKS/ZANAwAKAQRYvu5YxjlGAcsmYgBmDAMixpuDE0siAIZuQRVnjCVfT7h2isQxSwP93
- P0Hsav0ZYaJAjMEAAEKAB0WIQSDkqKUTWQHCvFIvbIEWL7uWMY5RgUCZgwDIgAKCRAEWL7uWMY5
- RlVgD/wI7HslZbYDfwDmdp5pDS8YLnfCI5YgZIepsCEoJG3+rSkjRUfjPeq1XrKtCTBDuS+/jP5
- IsGATvF0Lvb+spKZo3r0XV0P93mseg7xVDm7xhtkbfCU0rI4zmHRhBrRPQrjzCLWQi9a55jTRf5
- gqhBCVtDg/DJ8zkUvt8IaqWRFl7q/MZj3PdV+KyzT1OyqoS8+fAjYsPBBXWzAsLUbWpu18GYHQA
- xJMY+MOGcJrOof3oH32lq9rwt4Qmswqx9gxvm6+Pysuzp/Gfatq70s09uTND++mrxmLEU+qfRKx
- radkwXbP4+2Z8Uljh1wfVlT6yJaBKej3daVOIFyAyKiXJsxNgDJYFW/C2uY5XbZqSx2IF4aISTz
- tNO6slIj6ue43Gmonmra5ceI6dQX8ZzXEEuQMJF0k4LmsCSpG67SNx5xjKoSuD2HL5svccQmDtG
- d1xDV0gAliDr0EwVvCxJjdYXdRFuixUSfUyuzhGyIUbUHkB6v8vVullP65xlxazHATn2XIJvxKb
- ReI0NLruA+OEsAJfpNlhfHUlE+f4PcbBMu1S4tAQCxPhgM/N9XXNUcuY9rM9Ec5BNvVSEgNyzF4
- 2HXvsEs2BiMVka2rzwWadP93jhGvcb2eJ96RheqS3A5vs2vc8gL11cvY7RhxIjlvUooKq6hGbzd Rqpa2UosUJT0K3g==
-X-Mailer: b4 0.13-dev-26615
-Message-ID: <20240402-arc-for-list-v4-1-54db6440a9a9@google.com>
-Subject: [PATCH v4 1/2] rust: sync: add `ArcBorrow::from_raw`
-From: Alice Ryhl <aliceryhl@google.com>
-To: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Wedson Almeida Filho <wedsonaf@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	"=?utf-8?q?Bj=C3=B6rn_Roy_Baron?=" <bjorn3_gh@protonmail.com>, Benno Lossin <benno.lossin@proton.me>, 
-	Andreas Hindborg <a.hindborg@samsung.com>
-Cc: rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Alice Ryhl <aliceryhl@google.com>
-Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="3q8f6Dnc4ryHwvkZ"
+Content-Disposition: inline
+In-Reply-To: <cover.1712058690.git.mazziesaccount@gmail.com>
 
-Allows access to a value in an `Arc` that is currently held as a raw
-pointer due to use of `Arc::into_raw`, without destroying or otherwise
-consuming that raw pointer.
 
-This is a dependency of the linked list that Rust Binder uses. The
-linked list uses this method when iterating over the linked list [1].
+--3q8f6Dnc4ryHwvkZ
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Reviewed-by: Benno Lossin <benno.lossin@proton.me>
-Reviewed-by: Boqun Feng <boqun.feng@gmail.com>
-Link: https://lore.kernel.org/r/20240402-linked-list-v1-6-b1c59ba7ae3b@google.com [1]
-Signed-off-by: Alice Ryhl <aliceryhl@google.com>
+ROHM BD96801 is a highly configurable automotive grade PMIC. Introduce
+DT bindings for the BD96801 regulators.
+
+Signed-off-by: Matti Vaittinen <mazziesaccount@gmail.com>
 ---
- rust/kernel/sync/arc.rs | 76 +++++++++++++++++++++++++++++++++++++------------
- 1 file changed, 58 insertions(+), 18 deletions(-)
+ .../regulator/rohm,bd96801-regulator.yaml     | 69 +++++++++++++++++++
+ 1 file changed, 69 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/regulator/rohm,bd9680=
+1-regulator.yaml
 
-diff --git a/rust/kernel/sync/arc.rs b/rust/kernel/sync/arc.rs
-index 7d4c4bf58388..53addb8876c2 100644
---- a/rust/kernel/sync/arc.rs
-+++ b/rust/kernel/sync/arc.rs
-@@ -137,6 +137,39 @@ struct ArcInner<T: ?Sized> {
-     data: T,
- }
- 
-+impl<T: ?Sized> ArcInner<T> {
-+    /// Converts a pointer to the contents of an [`Arc`] into a pointer to the [`ArcInner`].
-+    ///
-+    /// # Safety
-+    ///
-+    /// `ptr` must have been returned by a previous call to [`Arc::into_raw`], and the `Arc` must
-+    /// not yet have been destroyed.
-+    unsafe fn container_of(ptr: *const T) -> NonNull<ArcInner<T>> {
-+        let refcount_layout = Layout::new::<bindings::refcount_t>();
-+        // SAFETY: The caller guarantees that the pointer is valid.
-+        let val_layout = Layout::for_value(unsafe { &*ptr });
-+        // SAFETY: We're computing the layout of a real struct that existed when compiling this
-+        // binary, so its layout is not so large that it can trigger arithmetic overflow.
-+        let val_offset = unsafe { refcount_layout.extend(val_layout).unwrap_unchecked().1 };
+diff --git a/Documentation/devicetree/bindings/regulator/rohm,bd96801-regul=
+ator.yaml b/Documentation/devicetree/bindings/regulator/rohm,bd96801-regula=
+tor.yaml
+new file mode 100644
+index 000000000000..4015802a3d84
+--- /dev/null
++++ b/Documentation/devicetree/bindings/regulator/rohm,bd96801-regulator.ya=
+ml
+@@ -0,0 +1,69 @@
++# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/regulator/rohm,bd96801-regulator.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+        // Pointer casts leave the metadata unchanged. This is okay because the metadata of `T` and
-+        // `ArcInner<T>` is the same since `ArcInner` is a struct with `T` as its last field.
-+        //
-+        // This is documented at:
-+        // <https://doc.rust-lang.org/std/ptr/trait.Pointee.html>.
-+        let ptr = ptr as *const ArcInner<T>;
++title: ROHM BD96801 Power Management Integrated Circuit regulators
 +
-+        // SAFETY: The pointer is in-bounds of an allocation both before and after offsetting the
-+        // pointer, since it originates from a previous call to `Arc::into_raw` on an `Arc` that is
-+        // still valid.
-+        let ptr = unsafe { ptr.byte_sub(val_offset) };
++maintainers:
++  - Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
 +
-+        // SAFETY: The pointer can't be null since you can't have an `ArcInner<T>` value at the null
-+        // address.
-+        unsafe { NonNull::new_unchecked(ptr.cast_mut()) }
-+    }
-+}
++description: |
++  This module is part of the ROHM BD96801 MFD device. For more details
++  see Documentation/devicetree/bindings/mfd/rohm,bd96801-pmic.yaml.
 +
- // This is to allow [`Arc`] (and variants) to be used as the type of `self`.
- impl<T: ?Sized> core::ops::Receiver for Arc<T> {}
- 
-@@ -232,27 +265,13 @@ pub fn into_raw(self) -> *const T {
-     /// `ptr` must have been returned by a previous call to [`Arc::into_raw`]. Additionally, it
-     /// must not be called more than once for each previous call to [`Arc::into_raw`].
-     pub unsafe fn from_raw(ptr: *const T) -> Self {
--        let refcount_layout = Layout::new::<bindings::refcount_t>();
--        // SAFETY: The caller guarantees that the pointer is valid.
--        let val_layout = Layout::for_value(unsafe { &*ptr });
--        // SAFETY: We're computing the layout of a real struct that existed when compiling this
--        // binary, so its layout is not so large that it can trigger arithmetic overflow.
--        let val_offset = unsafe { refcount_layout.extend(val_layout).unwrap_unchecked().1 };
--
--        // Pointer casts leave the metadata unchanged. This is okay because the metadata of `T` and
--        // `ArcInner<T>` is the same since `ArcInner` is a struct with `T` as its last field.
--        //
--        // This is documented at:
--        // <https://doc.rust-lang.org/std/ptr/trait.Pointee.html>.
--        let ptr = ptr as *const ArcInner<T>;
--
--        // SAFETY: The pointer is in-bounds of an allocation both before and after offsetting the
--        // pointer, since it originates from a previous call to `Arc::into_raw` and is still valid.
--        let ptr = unsafe { ptr.byte_sub(val_offset) };
-+        // SAFETY: The caller promises that this pointer originates from a call to `into_raw` on an
-+        // `Arc` that is still valid.
-+        let ptr = unsafe { ArcInner::container_of(ptr) };
- 
-         // SAFETY: By the safety requirements we know that `ptr` came from `Arc::into_raw`, so the
-         // reference count held then will be owned by the new `Arc` object.
--        unsafe { Self::from_inner(NonNull::new_unchecked(ptr.cast_mut())) }
-+        unsafe { Self::from_inner(ptr) }
-     }
- 
-     /// Returns an [`ArcBorrow`] from the given [`Arc`].
-@@ -453,6 +472,27 @@ unsafe fn new(inner: NonNull<ArcInner<T>>) -> Self {
-             _p: PhantomData,
-         }
-     }
++  The regulator controller is represented as a sub-node of the PMIC node
++  on the device tree.
 +
-+    /// Creates an [`ArcBorrow`] to an [`Arc`] that has previously been deconstructed with
-+    /// [`Arc::into_raw`].
-+    ///
-+    /// # Safety
-+    ///
-+    /// * The provided pointer must originate from a call to [`Arc::into_raw`].
-+    /// * For the duration of the lifetime annotated on this `ArcBorrow`, the reference count must
-+    ///   not hit zero.
-+    /// * For the duration of the lifetime annotated on this `ArcBorrow`, there must not be a
-+    ///   [`UniqueArc`] reference to this value.
-+    pub unsafe fn from_raw(ptr: *const T) -> Self {
-+        // SAFETY: The caller promises that this pointer originates from a call to `into_raw` on an
-+        // `Arc` that is still valid.
-+        let ptr = unsafe { ArcInner::container_of(ptr) };
++  Regulator nodes should be named to BUCK_<number> and LDO_<number>.
++  The valid names for BD96801 regulator nodes are
++  BUCK1, BUCK2, BUCK3, BUCK4, LDO5, LDO6, LDO7
 +
-+        // SAFETY: The caller promises that the value remains valid since the reference count must
-+        // not hit zero, and no mutable reference will be created since that would involve a
-+        // `UniqueArc`.
-+        unsafe { Self::new(ptr) }
-+    }
- }
- 
- impl<T: ?Sized> From<ArcBorrow<'_, T>> for Arc<T> {
++patternProperties:
++  "^LDO[5-7]$":
++    type: object
++    description:
++      Properties for single LDO regulator.
++    $ref: regulator.yaml#
++
++    properties:
++      regulator-name:
++        pattern: "^ldo[5-7]$"
++        description:
++          Name of the regulator. Should be "ldo5", ..., "ldo7"
++      rohm,initial-voltage-microvolt:
++        description:
++          Initial voltage for regulator. Voltage can be tuned +/-150 mV fr=
+om
++          this value. NOTE, This can be modified via I2C only when PMIC is=
+ in
++          STBY state.
++        minimum: 300000
++        maximum: 3300000
++
++  "^BUCK[1-4]$":
++    type: object
++    description:
++      Properties for single BUCK regulator.
++    $ref: regulator.yaml#
++
++    properties:
++      regulator-name:
++        pattern: "^buck[1-4]$"
++        description:
++          should be "buck1", ..., "buck4"
++      rohm,initial-voltage-microvolt:
++        description:
++          Initial voltage for regulator. Voltage can be tuned +/-150 mV fr=
+om
++          this value. NOTE, This can be modified via I2C only when PMIC is=
+ in
++          STBY state.
++        minimum: 500000
++        maximum: 3300000
++      rohm,keep-on-stby:
++        description:
++          Keep the regulator powered when PMIC transitions to STBY state.
++        type: boolean
++
++    required:
++      - regulator-name
++  additionalProperties: false
++additionalProperties: false
+--=20
+2.43.2
 
--- 
-2.44.0.478.gd926399ef9-goog
 
+--=20
+Matti Vaittinen, Linux device drivers
+ROHM Semiconductors, Finland SWDC
+Kiviharjunlenkki 1E
+90220 OULU
+FINLAND
+
+~~~ "I don't think so," said Rene Descartes. Just then he vanished ~~~
+Simon says - in Latin please.
+~~~ "non cogito me" dixit Rene Descarte, deinde evanescavit ~~~
+Thanks to Simon Glass for the translation =3D]=20
+
+--3q8f6Dnc4ryHwvkZ
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEEIx+f8wZb28fLKEhTeFA3/03aocUFAmYMAyQACgkQeFA3/03a
+ocX5IAgA0G/xEPK9GYFejv8vqqLDdtdfrzj9EWcdT9+AUEosuzhCmFJcmw5hRSwN
+04hPbvKJw1/zLmQWR3jUBvRfyVtlNxQyjz67VCTPElmUu/ZeOMrA+iwz/D9WhGf4
+Sqr6dMCkXHNTPxkE270VcSP9pkihb/lT5sYrWnUNEjjpxrQcp4yT8u82OmhVmM9j
+mz9AQHP9XpqdKdBh3WGa0X4/aP5yUaNYEWSKri9bVrEPgLJbeYbnDbIOI1c1XpId
+5f3AyGY7CITkWE1vHgAH4Fdb0o+IRUTK1618xKqxbF5CdmrF0xw+h+UQ1IQi71+s
+o2HEQVNM2ns9Vm6q4wjUm/rueSANMA==
+=0uvN
+-----END PGP SIGNATURE-----
+
+--3q8f6Dnc4ryHwvkZ--
