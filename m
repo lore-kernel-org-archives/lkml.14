@@ -1,70 +1,67 @@
 Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1897583CD5;
-	Tue,  2 Apr 2024 13:42:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B166883CDF;
+	Tue,  2 Apr 2024 13:42:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712065364; cv=none; b=SxcvEtoDP3NrR1e+AtsVFBD4TRTq77RDgwvveO5Ayt0Q435EOSModMhjpjr1l5EX3kC3fgalNl07Z5CrE+zltFLfOUiq0L7kMdsS585mhJCEwRiXty4DqM3bvcmBsNuwKw2ZxFHk7iLKn6PsOGK5ZiPvDd/cCuJL0E5gTbbQTx4=
+	t=1712065365; cv=none; b=HuaGzInCNJsZKTXgMP6PDQ6ydA9jOwHiYTwi2+XMPrO7iHfHQG8lbVhEDbWMe81/LF45scm/fJbFvmLiEdiOfEPp7Qhgh0y18o9m260m+8D3b2nA8DgqeuLPm0yDeG28VXiB74hGH+eWUMOZbOVLn0SoTIaCniwEJQh2+pZEX9k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712065364; c=relaxed/simple;
-	bh=MlUycxdS6lVRK2S85U44UNUostkZFlkZoAURLsGl2bk=;
+	s=arc-20240116; t=1712065365; c=relaxed/simple;
+	bh=KCpoKnmdTz0VAHWww95Y90FoR+Y0HSgHboUU+hzpLgo=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RH5L/gyHI/oN/pNXbKHGNkKgOYQQFK5u4AOXp10ZodZIA4z8pSZvIE7hZiEegufss6MbDcB1i1vm/XFuRivRARlA8NjYy085oGTuezZa39QFdXHrKiidWS0f8bNTirhTDgB7Me1DHJFBLzGYGmYYlRu2iL2yy8OtMJVg/vO+NaM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=zd/YRuxa; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=Cs4X7DBl; arc=none smtp.client-ip=195.135.223.131
+	 Content-Type:Content-Disposition:In-Reply-To; b=sCIX9PwoU857aZEqZbscetJ5/Wi4aQprtfkCIePmbsbFFJXaeoIJ7e+w9VZt0mAXdLN8xeIXQlIaoSuxtuaI89E0L4a+F+OzVcxpHwefsUOP2STw2telUv1QnQgaw9BO/DFhWRihUXYmByTI2caE7HiZ6T2ma74YEDhnMMpdutU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=Rbhe9tJX; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=LSxPVE3W; arc=none smtp.client-ip=195.135.223.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="zd/YRuxa";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="Cs4X7DBl"
-Received: from imap2.dmz-prg2.suse.org (imap2.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:98])
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="Rbhe9tJX";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="LSxPVE3W"
+Received: from imap2.dmz-prg2.suse.org (imap2.dmz-prg2.suse.org [10.150.64.98])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 3C11121019;
-	Tue,  2 Apr 2024 13:42:39 +0000 (UTC)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 1760F5BDCC;
+	Tue,  2 Apr 2024 13:42:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1712065359;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
+	t=1712065361; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=MRUafwF6yROA4D7wJATslOW8UadIrcpth9o6WHeqWmg=;
-	b=zd/YRuxat3eux15NUNS1MrFs0RCvA67w232Ra+Fz0LqdG6wVl1p72TutzvOu+YWtaI8URp
-	7iC7ITRyNSf6vjaG+ZXoQUcw09RSoSlTYRbupJuKwdCQNV32Ku39rljqlylZyeoBKL2yGg
-	LNp7qXxgnTljR2j9OvN8dcb3MKQeVSE=
+	bh=tJ17AaD59GXqdePGVIdcSs+8v2xjngNqmcDlQWQ/U5s=;
+	b=Rbhe9tJXpu3ONq4Et9gW1KyAzCDTOClH6GhDH0+0KO0kTISQP6pl1FiBpebwvJsznX1fqg
+	edqw+AYdRXLYNoXs/DKbDu7E4vghLRfALaPszEtEUDdYigtLw1lBKaH00+gvIrsjaC2i3S
+	LCtiNKxxm4XVmTQ8T71o9Y/prwOwZYs=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1712065359;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
+	s=susede2_ed25519; t=1712065361;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=MRUafwF6yROA4D7wJATslOW8UadIrcpth9o6WHeqWmg=;
-	b=Cs4X7DBlEb1Vkr3FffQ8jiwpEihkd16OrV22I8ip1Q+pzc1bGMcEfY8Q0gDWt7tQDwVARt
-	D0nTJgWbj5gesDAg==
+	bh=tJ17AaD59GXqdePGVIdcSs+8v2xjngNqmcDlQWQ/U5s=;
+	b=LSxPVE3WYtQKQsgWRLDqXLr6bksmCVdqtYPM+CUWzHwQvBVTF7BnetTnt2MvwhYgX9tVQ+
+	eWjtlRfp9pWuiKDA==
 Authentication-Results: smtp-out2.suse.de;
-	dkim=none
+	none
 Received: from imap2.dmz-prg2.suse.org (localhost [127.0.0.1])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by imap2.dmz-prg2.suse.org (Postfix) with ESMTPS id 1650813A90;
-	Tue,  2 Apr 2024 13:42:39 +0000 (UTC)
+	by imap2.dmz-prg2.suse.org (Postfix) with ESMTPS id 0E18D13A90;
+	Tue,  2 Apr 2024 13:42:41 +0000 (UTC)
 Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
 	by imap2.dmz-prg2.suse.org with ESMTPSA
-	id 1x5KBU8LDGaDWQAAn2gu4w
-	(envelope-from <dsterba@suse.cz>); Tue, 02 Apr 2024 13:42:39 +0000
-Date: Tue, 2 Apr 2024 15:35:18 +0200
-From: David Sterba <dsterba@suse.cz>
-To: Sasha Levin <sashal@kernel.org>
-Cc: linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-	Filipe Manana <fdmanana@suse.com>,
-	Josef Bacik <josef@toxicpanda.com>, David Sterba <dsterba@suse.com>,
-	clm@fb.com, linux-btrfs@vger.kernel.org
-Subject: Re: [PATCH AUTOSEL 6.8 59/68] btrfs: preallocate temporary extent
- buffer for inode logging when needed
-Message-ID: <20240402133518.GD14596@suse.cz>
-Reply-To: dsterba@suse.cz
-References: <20240329122652.3082296-1-sashal@kernel.org>
- <20240329122652.3082296-59-sashal@kernel.org>
+	id jelrA1ELDGaIWQAAn2gu4w
+	(envelope-from <jack@suse.cz>); Tue, 02 Apr 2024 13:42:41 +0000
+Received: by quack3.suse.cz (Postfix, from userid 1000)
+	id B3E24A0813; Tue,  2 Apr 2024 15:42:40 +0200 (CEST)
+Date: Tue, 2 Apr 2024 15:42:40 +0200
+From: Jan Kara <jack@suse.cz>
+To: Ye Bin <yebin10@huawei.com>
+Cc: tytso@mit.edu, adilger.kernel@dilger.ca, linux-ext4@vger.kernel.org,
+	linux-kernel@vger.kernel.org, jack@suse.cz
+Subject: Re: [PATCH] jbd2: avoid mount failed when commit block is partial
+ submitted
+Message-ID: <20240402134240.5he4mxei3nvzolb3@quack3>
+References: <20240402090951.527619-1-yebin10@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -73,133 +70,113 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240329122652.3082296-59-sashal@kernel.org>
-User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
-X-Spam-Score: -1.29
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Spam-Flag: NO
-X-Spamd-Result: default: False [-1.29 / 50.00];
-	 HAS_REPLYTO(0.30)[dsterba@suse.cz];
-	 RCVD_VIA_SMTP_AUTH(0.00)[];
-	 TO_DN_SOME(0.00)[];
-	 REPLYTO_ADDR_EQ_FROM(0.00)[];
-	 RCVD_COUNT_THREE(0.00)[3];
-	 MX_GOOD(-0.01)[];
-	 NEURAL_HAM_SHORT(-0.20)[-0.999];
-	 RCPT_COUNT_SEVEN(0.00)[8];
-	 FROM_EQ_ENVFROM(0.00)[];
-	 R_DKIM_NA(2.20)[];
-	 MIME_TRACE(0.00)[0:+];
-	 MID_RHS_MATCH_FROM(0.00)[];
-	 BAYES_HAM(-3.00)[100.00%];
-	 ARC_NA(0.00)[];
-	 FROM_HAS_DN(0.00)[];
-	 TO_MATCH_ENVRCPT_ALL(0.00)[];
-	 NEURAL_HAM_LONG(-0.48)[-0.481];
-	 MIME_GOOD(-0.10)[text/plain];
-	 DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	 DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:email];
-	 FUZZY_BLOCKED(0.00)[rspamd.com];
-	 RCVD_TLS_ALL(0.00)[];
-	 RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:98:from]
+In-Reply-To: <20240402090951.527619-1-yebin10@huawei.com>
+X-Spamd-Result: default: False [-2.80 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	MID_RHS_NOT_FQDN(0.50)[];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	ARC_NA(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	MISSING_XM_UA(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCVD_COUNT_THREE(0.00)[3];
+	FROM_HAS_DN(0.00)[];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	FROM_EQ_ENVFROM(0.00)[];
+	RCPT_COUNT_FIVE(0.00)[6];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	RCVD_TLS_LAST(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[huawei.com:email,imap2.dmz-prg2.suse.org:rdns,imap2.dmz-prg2.suse.org:helo,suse.com:email]
+X-Spam-Score: -2.80
 X-Spam-Level: 
-X-Rspamd-Queue-Id: 3C11121019
+X-Spam-Flag: NO
 
-On Fri, Mar 29, 2024 at 08:25:55AM -0400, Sasha Levin wrote:
-> From: Filipe Manana <fdmanana@suse.com>
+On Tue 02-04-24 17:09:51, Ye Bin wrote:
+> We encountered a problem that the file system could not be mounted in
+> the power-off scenario. The analysis of the file system mirror shows that
+> only part of the data is written to the last commit block.
+> To solve above issue, if commit block checksum is incorrect, check the next
+> block if has valid magic and transaction ID. If next block hasn't valid
+> magic or transaction ID then just drop the last transaction ignore checksum
+> error. Theoretically, the transaction ID maybe occur loopback, which may cause
+> the mounting failure.
 > 
-> [ Upstream commit e383e158ed1b6abc2d2d3e6736d77a46393f80fa ]
-> 
-> When logging an inode and we require to copy items from subvolume leaves
-> to the log tree, we clone each subvolume leaf and than use that clone to
-> copy items to the log tree. This is required to avoid possible deadlocks
-> as stated in commit 796787c978ef ("btrfs: do not modify log tree while
-> holding a leaf from fs tree locked").
-> 
-> The cloning requires allocating an extent buffer (struct extent_buffer)
-> and then allocating pages (folios) to attach to the extent buffer. This
-> may be slow in case we are under memory pressure, and since we are doing
-> the cloning while holding a read lock on a subvolume leaf, it means we
-> can be blocking other operations on that leaf for significant periods of
-> time, which can increase latency on operations like creating other files,
-> renaming files, etc. Similarly because we're under a log transaction, we
-> may also cause extra delay on other tasks doing an fsync, because syncing
-> the log requires waiting for tasks that joined a log transaction to exit
-> the transaction.
-> 
-> So to improve this, for any inode logging operation that needs to copy
-> items from a subvolume leaf ("full sync" or "copy everything" bit set
-> in the inode), preallocate a dummy extent buffer before locking any
-> extent buffer from the subvolume tree, and even before joining a log
-> transaction, add it to the log context and then use it when we need to
-> copy items from a subvolume leaf to the log tree. This avoids making
-> other operations get extra latency when waiting to lock a subvolume
-> leaf that is used during inode logging and we are under heavy memory
-> pressure.
-> 
-> The following test script with bonnie++ was used to test this:
-> 
->   $ cat test.sh
->   #!/bin/bash
-> 
->   DEV=/dev/sdh
->   MNT=/mnt/sdh
->   MOUNT_OPTIONS="-o ssd"
-> 
->   MEMTOTAL_BYTES=`free -b | grep Mem: | awk '{ print $2 }'`
->   NR_DIRECTORIES=20
->   NR_FILES=20480
->   DATASET_SIZE=$((MEMTOTAL_BYTES * 2 / 1048576))
->   DIRECTORY_SIZE=$((MEMTOTAL_BYTES * 2 / NR_FILES))
->   NR_FILES=$((NR_FILES / 1024))
-> 
->   echo "performance" | \
->       tee /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor
-> 
->   umount $DEV &> /dev/null
->   mkfs.btrfs -f $MKFS_OPTIONS $DEV
->   mount $MOUNT_OPTIONS $DEV $MNT
-> 
->   bonnie++ -u root -d $MNT \
->       -n $NR_FILES:$DIRECTORY_SIZE:$DIRECTORY_SIZE:$NR_DIRECTORIES \
->       -r 0 -s $DATASET_SIZE -b
-> 
->   umount $MNT
-> 
-> The results of this test on a 8G VM running a non-debug kernel (Debian's
-> default kernel config), were the following.
-> 
-> Before this change:
-> 
->   Version 2.00a       ------Sequential Output------ --Sequential Input- --Random-
->                       -Per Chr- --Block-- -Rewrite- -Per Chr- --Block-- --Seeks--
->   Name:Size etc        /sec %CP  /sec %CP  /sec %CP  /sec %CP  /sec %CP  /sec %CP
->   debian0       7501M  376k  99  1.4g  96  117m  14 1510k  99  2.5g  95 +++++ +++
->   Latency             35068us   24976us    2944ms   30725us   71770us   26152us
->   Version 2.00a       ------Sequential Create------ --------Random Create--------
->   debian0             -Create-- --Read--- -Delete-- -Create-- --Read--- -Delete--
->   files:max:min        /sec %CP  /sec %CP  /sec %CP  /sec %CP  /sec %CP  /sec %CP
->   20:384100:384100/20 20480  32 20480  58 20480  48 20480  39 20480  56 20480  61
->   Latency               411ms   11914us     119ms     617ms   10296us     110ms
-> 
-> After this change:
-> 
->   Version 2.00a       ------Sequential Output------ --Sequential Input- --Random-
->                       -Per Chr- --Block-- -Rewrite- -Per Chr- --Block-- --Seeks--
->   Name:Size etc        /sec %CP  /sec %CP  /sec %CP  /sec %CP  /sec %CP  /sec %CP
->   debian0       7501M  375k  99  1.4g  97  117m  14 1546k  99  2.3g  98 +++++ +++
->   Latency             35975us  20945us    2144ms   10297us    2217us    6004us
->   Version 2.00a       ------Sequential Create------ --------Random Create--------
->   debian0             -Create-- --Read--- -Delete-- -Create-- --Read--- -Delete--
->   files:max:min        /sec %CP  /sec %CP  /sec %CP  /sec %CP  /sec %CP  /sec %CP
->   20:384100:384100/20 20480  35 20480  58 20480  48 20480  40 20480  57 20480  59
->   Latency               320ms   11237us   77779us     518ms    6470us   86389us
-> 
-> Reviewed-by: Josef Bacik <josef@toxicpanda.com>
-> Signed-off-by: Filipe Manana <fdmanana@suse.com>
-> Reviewed-by: David Sterba <dsterba@suse.com>
-> Signed-off-by: David Sterba <dsterba@suse.com>
-> Signed-off-by: Sasha Levin <sashal@kernel.org>
+> Signed-off-by: Ye Bin <yebin10@huawei.com>
 
-This is a performance improvement, how does this qualify for stable? I
-read only about notable perfromance fixes but this is not one.
+So this is curious. The commit block data is fully within one sector and
+the expectation of the journaling is that either full sector or nothing is
+written. So what kind of storage were you using that it breaks these
+expectations?
+
+								Honza
+
+> ---
+>  fs/jbd2/recovery.c | 39 +++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 39 insertions(+)
+> 
+> diff --git a/fs/jbd2/recovery.c b/fs/jbd2/recovery.c
+> index 1f7664984d6e..0a09f1a5fd1e 100644
+> --- a/fs/jbd2/recovery.c
+> +++ b/fs/jbd2/recovery.c
+> @@ -463,6 +463,41 @@ static int jbd2_block_tag_csum_verify(journal_t *j, journal_block_tag_t *tag,
+>  		return tag->t_checksum == cpu_to_be16(csum32);
+>  }
+>  
+> +static int check_incomplete_commit(journal_t *journal, unsigned long next_block,
+> +				   unsigned int next_commit_ID)
+> +{
+> +	journal_header_t *tmp;
+> +	struct buffer_head *bh;
+> +	int err = 0;
+> +
+> +	err = jread(&bh, journal, next_block);
+> +	if (err)
+> +		return err;
+> +
+> +	tmp = (journal_header_t *)bh->b_data;
+> +	/*
+> +	 * If the next block does not contain consecutive transactions, it can
+> +	 * be considered that the checksum error of the current commit block
+> +	 * is caused by incomplete commit. Ignore the checksum error and drop
+> +	 * the last transaction.
+> +	 */
+> +	if (tmp->h_magic != cpu_to_be32(JBD2_MAGIC_NUMBER) ||
+> +	    be32_to_cpu(tmp->h_sequence) != next_commit_ID) {
+> +		jbd2_debug("JBD2: will drop incomplete transaction %u commit block %lu\n",
+> +			   next_commit_ID - 1, next_block - 1);
+> +		goto out;
+> +	}
+> +
+> +	pr_err("JBD2: potential continuous transaction detected %u at %lu, "
+> +	       "likely invalid checksum in transaction %u\n",
+> +	       next_commit_ID,  next_block, next_commit_ID - 1);
+> +
+> +	err = -EFSBADCRC;
+> +out:
+> +	brelse(bh);
+> +	return err;
+> +}
+> +
+>  static int do_one_pass(journal_t *journal,
+>  			struct recovery_info *info, enum passtype pass)
+>  {
+> @@ -810,6 +845,10 @@ static int do_one_pass(journal_t *journal,
+>  			if (pass == PASS_SCAN &&
+>  			    !jbd2_commit_block_csum_verify(journal,
+>  							   bh->b_data)) {
+> +				if (!check_incomplete_commit(journal,
+> +							     next_log_block,
+> +							     next_commit_ID + 1))
+> +					goto ignore_crc_mismatch;
+>  			chksum_error:
+>  				if (commit_time < last_trans_commit_time)
+>  					goto ignore_crc_mismatch;
+> -- 
+> 2.31.1
+> 
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
