@@ -1,117 +1,105 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 905B8657B5;
-	Tue,  2 Apr 2024 10:34:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C92C35FDD3;
+	Tue,  2 Apr 2024 10:34:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.165.32
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712054063; cv=none; b=m2hvFWAELyyWeLqWv4TuU4CKNI0lNclI+EM3N7JQ+KatEPKKZl9tyMes1G43K4EJRffTQxLZ6emY0d82BbqjWCIwJpF5oYzy95WOKKh1mFatafontaAsSUaiSQXkRwkA1tOP8aBXFfGhynnlbpfOhJngSSaI+rj5ObPRRGsD0d8=
+	t=1712054072; cv=none; b=ODC730hv/heg3kUTBskHQl0887nSs4kaOzV5l9x7BcYT0cLMxpwVoyQvWdVHzKQXm+WiiUar8Qu2rngIK2Lw/mEJ4mY1+ziMyn30v3pqGprFwS1hPIzO0hinSILqiseDIV4PRV6pan38LWoXnt4wQJfZKMM4/EmKhDejDkV1+5o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712054063; c=relaxed/simple;
-	bh=Q4MlAhRm+AkBxTUeVkfth/yvDYTiPwojE4biBVagZF4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KjImjdoG4AuCJgfJusTzNBCCWhnKx/h43/HJK401KHH1kTkywfT4ThjHE0mDNETU3mCkmcek7GxGuiphFU6foUo1W6T6FRWB0/tZ1grsXZQj++uHD3nzxePyYqMP0SNe8ZPnGf5KZnCbFHyqwRaW0VtVDvoc7tyouBSwNE1Wjlo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=P+wvg4Xr; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=DU0xq7e6; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1712054072; c=relaxed/simple;
+	bh=MtHCuL1dh9NAzjU2nv4D1ZXmRiiRxmcJ91zi476pkWI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=jn0teP5PZn1FvRs2G6NJP7xh36xHyS2X/0RZMNCOA8aC7T9bw4cyvYerINLUGTUd2t/X+q1RCReMtZsDrhHinsDKzzSLI8uhVNRjeWszglGEpJ8n0UnOt7ptO9qGJzUcgAVLwTvhAn9q8toTsLFf+cAnOt5RQ/FmBWplzpLRlXM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=aU+AJi5M; arc=none smtp.client-ip=205.220.165.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="P+wvg4Xr";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="DU0xq7e6"
-Date: Tue, 2 Apr 2024 12:34:14 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1712054056;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=STfe/Rz3uPOTuqu4DrUcO9QjfwomKLwaXdLP6m2yfFc=;
-	b=P+wvg4XrkSa8qrUqLFplrxzRc04v5G0AvSoJPkYGlnle/rjdCGNtOirGpbAtrYWaEZXYxt
-	4MJNjH23Yd4yTmtC6fiUTr4j0YItovd5T8MM6bnEgHMaQd3WCYoVcqZJt98XClr1A2bQe2
-	86VQaBn4BpbWfcBmBxUvBtS0TWVcPjz5xNjJ68Yg7zn5kErEW5RBvG/JnPBoNim7zKkTLj
-	78kAn6brpoybVRsNrDCx9Yjbb2U7LYCZj13nQI4+NPCiAshU7C4wpu64BBEUVwNmIsEIhu
-	MbcWc1vc4KSf48ABCVdipi6cgNLlfjGLDXIDQQNwJeOtHVrG4JrSXM0zo9pt4Q==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1712054056;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=STfe/Rz3uPOTuqu4DrUcO9QjfwomKLwaXdLP6m2yfFc=;
-	b=DU0xq7e60IJtZQNOzYay7B8VjNffiXJvrNL+NVaf3TXBUWY82qsg3vKThsIZFpW6m3IDhW
-	k+pyEg7w0w0dUpDQ==
-From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To: "John B. Wyatt IV" <jwyatt@redhat.com>
-Cc: John Ogness <john.ogness@linutronix.de>, Petr Mladek <pmladek@suse.com>,
-	Clark Williams <williams@redhat.com>,
-	Juri Lelli <jlelli@redhat.com>, Derek Barbosa <debarbos@redhat.com>,
-	Bruno Goncalves <bgoncalv@redhat.com>,
-	"John B. Wyatt IV" <sageofredondo@gmail.com>,
-	LKML <linux-kernel@vger.kernel.org>,
-	linux-rt-users <linux-rt-users@vger.kernel.org>
-Subject: Re: NMIs reported by console_blast.sh with 6.6.20-rt25
-Message-ID: <20240402103414.KkkX5RuV@linutronix.de>
-References: <ZfSfrzak9WS0ZFv7@thinkpad2021>
- <20240322122921.U3WRsO4X@linutronix.de>
- <ZgSvVCDja6yFCC0Y@thinkpad2021>
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="aU+AJi5M"
+Received: from pps.filterd (m0246629.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 4327iiOs004794;
+	Tue, 2 Apr 2024 10:34:05 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id : mime-version : content-transfer-encoding;
+ s=corp-2023-11-20; bh=doURrX6cOIUJ979xtncnfOLcxqEuol0zMJzFfxCbUk4=;
+ b=aU+AJi5MFCodAk/sE0HwPxZduCE1+urSGSR7GQB3QWmLFxnI9TNyzhteQjRqx2V4z4rg
+ 5VWPZ6uNo7+Yr6BCQC+xIKw5SxRQa8b3gHAJsI0UV/emKu05CWwCUFy9dRQJcpgR9ZIg
+ TR3pEaR09yw0+rT7Dd2+/X4XEVFQq/Iy5d+eYrcevzUmQGlWPlMqYRX+jag9exft4sdP
+ 1ew653avEVE6amuk2YgsQgOJSTLVDVdjwOXK0cvBiTzKl4BakSz+RHNe2VD3sm1AOQYa
+ cKRbBMDp+Xy/BZzfPoa/aznsmbW1c/9iZUokQpZU9QpCcVlfvAbjlDetPzdNZHbV4/j2 tQ== 
+Received: from iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta01.appoci.oracle.com [130.35.100.223])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3x6ambcap8-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 02 Apr 2024 10:34:05 +0000
+Received: from pps.filterd (iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 432AIud9018642;
+	Tue, 2 Apr 2024 10:34:03 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3x696cv055-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 02 Apr 2024 10:34:03 +0000
+Received: from iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 432ATveP027893;
+	Tue, 2 Apr 2024 10:34:02 GMT
+Received: from ca-dev112.us.oracle.com (ca-dev112.us.oracle.com [10.129.136.47])
+	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTP id 3x696cv03w-1;
+	Tue, 02 Apr 2024 10:34:02 +0000
+From: Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>
+To: Boris Brezillon <boris.brezillon@collabora.com>,
+        Steven Price <steven.price@arm.com>, Liviu Dudau <liviu.dudau@arm.com>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
+        Heiko Stuebner <heiko@sntech.de>, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org
+Cc: dan.carpenter@linaro.org, kernel-janitors@vger.kernel.org,
+        error27@gmail.com, harshit.m.mogalapalli@oracle.com
+Subject: [PATCH] drm/panthor: Fix NULL vs IS_ERR() bug in panthor_ioctl_tiler_heap_destroy()
+Date: Tue,  2 Apr 2024 03:33:58 -0700
+Message-ID: <20240402103358.1689379-1-harshit.m.mogalapalli@oracle.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <ZgSvVCDja6yFCC0Y@thinkpad2021>
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-04-02_04,2024-04-01_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 phishscore=0 spamscore=0
+ bulkscore=0 adultscore=0 mlxlogscore=999 suspectscore=0 malwarescore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2403210000
+ definitions=main-2404020076
+X-Proofpoint-ORIG-GUID: eNjiaX-TyA1zHTP2tDJYuaKaSAl0CL5e
+X-Proofpoint-GUID: eNjiaX-TyA1zHTP2tDJYuaKaSAl0CL5e
 
-On 2024-03-27 19:44:20 [-0400], John B. Wyatt IV wrote:
-> > where is this output from? The `ret' opcode usually does not cause a
-> > trap. My guess is that the machine has been interrupted by an external
-> > user at this position.
->=20
-> Just before the sysrq that crashes the system.
+panthor_vm_get_heap_pool() returns ERR_PTR on failure.
 
-so this is intentional.
+Fixes: 4bdca1150792 ("drm/panthor: Add the driver frontend block")
+Signed-off-by: Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>
+---
+This is spotted by smatch and the patch is only compile tested
+---
+ drivers/gpu/drm/panthor/panthor_drv.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-=E2=80=A6
-> > Side note: This is using early_printk, correct?
->=20
-> I believe so, but it might be preempted? This is the part it stopped in.
->=20
-> static void io_serial_out(unsigned long addr, int offset, int value)
-> {
-> 	outb(value, addr + offset);
-> }
+diff --git a/drivers/gpu/drm/panthor/panthor_drv.c b/drivers/gpu/drm/panthor/panthor_drv.c
+index 11b3ccd58f85..050b905b0453 100644
+--- a/drivers/gpu/drm/panthor/panthor_drv.c
++++ b/drivers/gpu/drm/panthor/panthor_drv.c
+@@ -1090,8 +1090,8 @@ static int panthor_ioctl_tiler_heap_destroy(struct drm_device *ddev, void *data,
+ 		return -EINVAL;
+ 
+ 	pool = panthor_vm_get_heap_pool(vm, false);
+-	if (!pool) {
+-		ret = -EINVAL;
++	if (IS_ERR(pool)) {
++		ret = PTR_ERR(pool);
+ 		goto out_put_vm;
+ 	}
+ 
+-- 
+2.39.3
 
-The function is invoked in NMU context so it can't be preempted.
-
-> > According to this, someone issued a `crash' via sysrq. Why?
-> >=20
->=20
-> This is part of the console_blast.sh script that John Ogness sent me.
->=20
-> Please see below:
-=E2=80=A6
-
-Okay. Then everything works as it should=E2=80=A6
-
-> > > NMI Backtrace for 6.6.20-rt25 no forced preemption with tuned through=
-put-performance profile
-> > > -----------------------------
-> >=20
-> > This and the following backtrace shows the same picture: The CPU is
-> > crashing due to proc/sysrq request and does CPU-backtraces via NMI and
-> > polls in early_printk, waiting for the UART to become idle (probably).
-> >=20
-> > I don't see an issue here so far.
->=20
-> Luis Goncalves discussed it with me after reading your response. Thank
-> you for your help. The NMI was needed to flush the buffers upon the
-> system crashing itself. Does this part about NMI watchdog need to be
-> documented?
-
-Not sure about that one. There is an _a_ _lot_ to be printed from NMI
-and the NMI watchdog might trigger if nothing is triggering the
-NMI-watchdog during the print job. Also, the crash was requested.
-
-Sebastian
