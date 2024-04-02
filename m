@@ -1,863 +1,290 @@
-Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CB5012DD96
-	for <linux-kernel@vger.kernel.org>; Tue,  2 Apr 2024 15:24:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7854912E1C1
+	for <linux-kernel@vger.kernel.org>; Tue,  2 Apr 2024 15:26:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712071446; cv=none; b=sothU6o4BNVcQuDQUcsRt+9IF688yumLc91w/1o0PrusUZLV3Q8YbCrX/KCQ4kv0MLrNwvh7MJHmnREP8eJit8KJg2A3qtTYkn8g+Pr2IbsqZNEGmjgXar5F8iCP7tmf3tRI8fqTe7/nnGn6HS0twzQTz98Lup3Ie7jVoUhJFxw=
+	t=1712071597; cv=none; b=r9ZOjnPd1QZayopMpmb8i9U0L7Jke52ehYbZPFg3/ByvA2LdwO5ScOov40ThOqLZY2VMzdkOheblWS0a7Ozs1UcZNO5JucQg751xJHqHLCRvvYhdTMsyuV3uO5l3DNajhsNJk4+VuNavIwmFO8q6oR4CV3rQadj1cuAS2nCyc04=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712071446; c=relaxed/simple;
-	bh=1M2+1fHTbE4BGab5alhNtx18H8TXNZJVoDlm0390GVw=;
-	h=References:From:To:Cc:Subject:Date:In-reply-to:Message-ID:
-	 MIME-Version:Content-Type; b=AibHieJ874kkUSCR2EkdN9QRswXcn59s8gXACcqeZhqRGRRyCtpwBN6sZ4/OKIUeYiRlGW0Wrcu+8mm5Uw3VQKc1OD/q25KPOcGxKHrzP86viV651ggQjeRhKNi9reFVZiRtxCSM9RSkT7niAacnPdSQb0Yx0xAd9WNunEh+kMQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=IuXJHT3G; arc=none smtp.client-ip=209.85.128.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1712071597; c=relaxed/simple;
+	bh=E0A2lgk54sv3MhBYSpBeens9YutKvatDYbJYgr+fU0w=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=CedshDekpSkrvPO/W6x7BohK3b2OG+KoGnVzj/rAsoQpJRgiosX20gdXoEBN3CnFur+r1E6LEBRYJAC8Y5jB212fq8cQpnxI7TlPlWi15ZiV6oSQrg8CnQozKzwRSMnt/uOINCzaV002gR28mrFpvGsLQW2vT0DvVD4tbaRADzA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=IPpGzZ3b; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="IuXJHT3G"
-Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-41569f1896dso12322705e9.2
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Apr 2024 08:24:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1712071441; x=1712676241; darn=vger.kernel.org;
-        h=mime-version:message-id:in-reply-to:date:subject:cc:to:from
-         :user-agent:references:from:to:cc:subject:date:message-id:reply-to;
-        bh=Pim+YfmfddT/qIJMU9rCYtoixiw9gqS6DJ6vUktt9MM=;
-        b=IuXJHT3GmoDJZEigzgMSRwLsG5RIvln4AuSIyiIvKxGuud1QJ5eHW4z+boFM0uLr1i
-         uU10Xwh/BstfV2a2u9Vdrfxhd8fHzRH5XXIgJoqi50W6tnAwEJ34nD57IUaRBG5SspUW
-         zH/VO4sQPczPSplWque8J/X92ubjQ+ysVMj87Mg5MtNeU1iHZvZNljHeu67+8Sxd6PBh
-         9tCwYiYRkJS5VZ3PErTEvkytoVGhEfzg3Z3/2zlHcdOl4QILalulDqoVgCTVILZfO9y+
-         ILCJt7cO6A5caUiJZfeUbPK4lWAaiMHzukAsJ0cvs+O7HrVq8HV/CjWfv4Ba5Ex/W0yY
-         7VjA==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IPpGzZ3b"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1712071594;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=7z79/IwwmLCGU8YotNChJ6Ql1s/A3SEmP5H2/HA6uBA=;
+	b=IPpGzZ3bjF1d2CHKsakCGR5OF6LolWo3gxXzD24F7bkVIz/tzErITGxymwkf0kdgc5mreI
+	17GqPie3lvsAoAP9vGTLgv8lW1oWQe/mbkzCJ+uHHnAH2dDHhHsZTD7jwmONLk9rUBfK6w
+	FgEFFe/CfWzCdbIIDRdyUaLrfcFKi7Q=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-175-9MHioANnPDKW9ISNps6NAw-1; Tue, 02 Apr 2024 11:26:32 -0400
+X-MC-Unique: 9MHioANnPDKW9ISNps6NAw-1
+Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-34356b6e988so652531f8f.0
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Apr 2024 08:26:32 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712071441; x=1712676241;
-        h=mime-version:message-id:in-reply-to:date:subject:cc:to:from
-         :user-agent:references:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Pim+YfmfddT/qIJMU9rCYtoixiw9gqS6DJ6vUktt9MM=;
-        b=TWASLPl5lCBASfhvmk69HlxjzDM8CaiARVsQZrdax2H5CiCFbDvQn2bnxPzsfLcIaw
-         myFbRHCJD+4Hf5qmxpwZnDeySmxoXqHb+fPcGxj7MSGMZJdYVW7zjHD/qPpZzdNeb98T
-         lCAhWRqsd8x1e5ur2ZtzigXRERaJpvJOUf5CXWjkWX3nNx1hs2sujh+YltVM7qxzFQhT
-         9uJFT2yAhhO/vax9/t5XPeEwniDWQESiQ4APPwwV/6RIuQMN7OQg05+S4kU+6zIrVo6a
-         8AYgnKZsCAevvGpjyTU9Imp3fkPDfVfMhVTF/h6N/0W9lZWhzj9wAgxZiP/49afUol+8
-         JsKw==
-X-Forwarded-Encrypted: i=1; AJvYcCUj8Lx84EAW8OrBySLsMrY74zpeWjKvoQFsLOgqLju1fTGMx16orEor84NA+NsJcUQW/RQBMllmsOSOvYKECtqsALIWVd9KcGTsXCzn
-X-Gm-Message-State: AOJu0Yx9bJzwaboFIpBZ8nHq5lBZeXj6EDPP7ikpZKVJqODf3pGn5s//
-	7yrJwskss9XlPGb3e+BPURz/Tm8dXsBFFrjPznOyEhHsdHok8DgbVo/3+l/mRDc=
-X-Google-Smtp-Source: AGHT+IE9Tqi4MFTLVO1ogxbsSjVeE0U5M+J+lYMAS1SJsyBQTTwA73zU3kbGCR4J6KUFjPVWNvngQg==
-X-Received: by 2002:a05:600c:1ca7:b0:414:216:2cd1 with SMTP id k39-20020a05600c1ca700b0041402162cd1mr8134600wms.5.1712071440546;
-        Tue, 02 Apr 2024 08:24:00 -0700 (PDT)
-Received: from localhost ([2a01:e0a:3c5:5fb1:2b3:4f20:7b45:be58])
-        by smtp.gmail.com with ESMTPSA id iv11-20020a05600c548b00b00412e5f32591sm18334001wmb.28.2024.04.02.08.23.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 02 Apr 2024 08:23:59 -0700 (PDT)
-References: <20240328010831.884487-1-jan.dakinevich@salutedevices.com>
- <20240328010831.884487-5-jan.dakinevich@salutedevices.com>
-User-agent: mu4e 1.10.8; emacs 29.2
-From: Jerome Brunet <jbrunet@baylibre.com>
-To: Jan Dakinevich <jan.dakinevich@salutedevices.com>
-Cc: Neil Armstrong <neil.armstrong@linaro.org>, Jerome Brunet
- <jbrunet@baylibre.com>, Michael  Turquette <mturquette@baylibre.com>,
- Stephen Boyd <sboyd@kernel.org>, Rob  Herring <robh@kernel.org>, Krzysztof
- Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley
- <conor+dt@kernel.org>, Kevin Hilman <khilman@baylibre.com>, Martin
- Blumenstingl <martin.blumenstingl@googlemail.com>, Philipp Zabel
- <p.zabel@pengutronix.de>, linux-amlogic@lists.infradead.org,
- linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [RFC PATCH v2 4/5] clk: meson: a1: add the audio clock
- controller driver
-Date: Tue, 02 Apr 2024 17:11:03 +0200
-In-reply-to: <20240328010831.884487-5-jan.dakinevich@salutedevices.com>
-Message-ID: <1j34s3iy9c.fsf@starbuckisacylon.baylibre.com>
+        d=1e100.net; s=20230601; t=1712071591; x=1712676391;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=7z79/IwwmLCGU8YotNChJ6Ql1s/A3SEmP5H2/HA6uBA=;
+        b=DN4e19AFzhGwi24obqSTNtZ7udUXZ0qn8wm42fupS72gPP3Cbq0JILOS3MMneF37cp
+         RFLU8c5ICRlVf2K+dXPrTuZ3S6ROJ4269P2ZsHx8ErdPGXAc0L2+yUuOPrIeMS5LB8ac
+         +zwrT8RZsYTMFTUyJNmR0clyjFDXorPWM6xmEhqW7gt5IlRNpFHDFcFApYgDQhejEwgi
+         hAwrIyD13sUF06XI5ddoZdKpFF2LAlgDsxDVShV4ORkzVak3r56xPgkB9TACwS1omdpX
+         kjBrcxBLYKQrZ7arxNecKQRlvVo0jx2OIOHzzzAtfMdmEZse+TsIl90f2+bxBrCq3OWF
+         luEA==
+X-Forwarded-Encrypted: i=1; AJvYcCUWU1gubkdy3JmZF9GEUYOnxLGNwBzIsoW2B2NVytKmlniPduzp1cFuteDz3Zs8emSLLDZxCJxU6dSMDVv9q/csdTJj2hOlhYoW5nKP
+X-Gm-Message-State: AOJu0YwG44pZJI4eD5+82+LTD0k26ulLFRC0Ugb6I4Z4o16zW68M1LpW
+	qZte2/qN6bHUa8+m2QdTp/IXXjXJv+qEt0MK3YdBbtrzfFFF9TS+LTxROa7qFkzJ3LvSx4DB2SI
+	GmNcLn7MqPQxpkguAVBAK86uvDIMSJ8Lnq9A1fhnQAQQ5rlznUFQtp38+kIISEw==
+X-Received: by 2002:a5d:474b:0:b0:343:6b09:653c with SMTP id o11-20020a5d474b000000b003436b09653cmr1611340wrs.43.1712071591412;
+        Tue, 02 Apr 2024 08:26:31 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IF8SQOIZIZWhyBPTQm8MQ4jJTitAgfdzsVz9+NbSlk8sRvUDLsA7jSkSjvpJpo4JPfjy/OfOQ==
+X-Received: by 2002:a5d:474b:0:b0:343:6b09:653c with SMTP id o11-20020a5d474b000000b003436b09653cmr1611299wrs.43.1712071590903;
+        Tue, 02 Apr 2024 08:26:30 -0700 (PDT)
+Received: from ?IPV6:2003:cb:c732:e600:4982:2903:710f:f20a? (p200300cbc732e60049822903710ff20a.dip0.t-ipconnect.de. [2003:cb:c732:e600:4982:2903:710f:f20a])
+        by smtp.gmail.com with ESMTPSA id m19-20020a056000025300b0033e7de97214sm14353604wrz.40.2024.04.02.08.26.29
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 02 Apr 2024 08:26:30 -0700 (PDT)
+Message-ID: <5d9dd9a7-e544-4741-944c-469b79c2c649@redhat.com>
+Date: Tue, 2 Apr 2024 17:26:28 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 13/13] mm/gup: Handle hugetlb in the generic
+ follow_page_mask code
+To: Ryan Roberts <ryan.roberts@arm.com>, peterx@redhat.com,
+ linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Cc: Yang Shi <shy828301@gmail.com>, "Kirill A . Shutemov"
+ <kirill@shutemov.name>, Mike Kravetz <mike.kravetz@oracle.com>,
+ John Hubbard <jhubbard@nvidia.com>, Michael Ellerman <mpe@ellerman.id.au>,
+ Andrew Jones <andrew.jones@linux.dev>, Muchun Song <muchun.song@linux.dev>,
+ linux-riscv@lists.infradead.org, linuxppc-dev@lists.ozlabs.org,
+ Christophe Leroy <christophe.leroy@csgroup.eu>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Christoph Hellwig <hch@infradead.org>, Lorenzo Stoakes <lstoakes@gmail.com>,
+ Matthew Wilcox <willy@infradead.org>, Rik van Riel <riel@surriel.com>,
+ linux-arm-kernel@lists.infradead.org, Andrea Arcangeli
+ <aarcange@redhat.com>, "Aneesh Kumar K . V" <aneesh.kumar@kernel.org>,
+ Vlastimil Babka <vbabka@suse.cz>, James Houghton <jthoughton@google.com>,
+ Jason Gunthorpe <jgg@nvidia.com>, Mike Rapoport <rppt@kernel.org>,
+ Axel Rasmussen <axelrasmussen@google.com>
+References: <20240327152332.950956-1-peterx@redhat.com>
+ <20240327152332.950956-14-peterx@redhat.com>
+ <adfdd89b-ee56-4758-836e-c66a0be7de25@arm.com>
+From: David Hildenbrand <david@redhat.com>
+Content-Language: en-US
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <adfdd89b-ee56-4758-836e-c66a0be7de25@arm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
+On 02.04.24 16:48, Ryan Roberts wrote:
+> Hi Peter,
+> 
+> On 27/03/2024 15:23, peterx@redhat.com wrote:
+>> From: Peter Xu <peterx@redhat.com>
+>>
+>> Now follow_page() is ready to handle hugetlb pages in whatever form, and
+>> over all architectures.  Switch to the generic code path.
+>>
+>> Time to retire hugetlb_follow_page_mask(), following the previous
+>> retirement of follow_hugetlb_page() in 4849807114b8.
+>>
+>> There may be a slight difference of how the loops run when processing slow
+>> GUP over a large hugetlb range on cont_pte/cont_pmd supported archs: each
+>> loop of __get_user_pages() will resolve one pgtable entry with the patch
+>> applied, rather than relying on the size of hugetlb hstate, the latter may
+>> cover multiple entries in one loop.
+>>
+>> A quick performance test on an aarch64 VM on M1 chip shows 15% degrade over
+>> a tight loop of slow gup after the path switched.  That shouldn't be a
+>> problem because slow-gup should not be a hot path for GUP in general: when
+>> page is commonly present, fast-gup will already succeed, while when the
+>> page is indeed missing and require a follow up page fault, the slow gup
+>> degrade will probably buried in the fault paths anyway.  It also explains
+>> why slow gup for THP used to be very slow before 57edfcfd3419 ("mm/gup:
+>> accelerate thp gup even for "pages != NULL"") lands, the latter not part of
+>> a performance analysis but a side benefit.  If the performance will be a
+>> concern, we can consider handle CONT_PTE in follow_page().
+>>
+>> Before that is justified to be necessary, keep everything clean and simple.
+>>
+>> Reviewed-by: Jason Gunthorpe <jgg@nvidia.com>
+>> Signed-off-by: Peter Xu <peterx@redhat.com>
+> 
+> Afraid I'm seeing an oops when running gup_longterm test on arm64 with current mm-unstable. Git bisect blames this patch. The oops reproduces for me every time on 2 different machines:
+> 
+> 
+> [    9.340416] kernel BUG at mm/gup.c:778!
+> [    9.340746] Internal error: Oops - BUG: 00000000f2000800 [#1] PREEMPT SMP
+> [    9.341199] Modules linked in:
+> [    9.341481] CPU: 1 PID: 1159 Comm: gup_longterm Not tainted 6.9.0-rc2-00210-g910ff1a347e4 #11
+> [    9.342232] Hardware name: linux,dummy-virt (DT)
+> [    9.342647] pstate: 60400005 (nZCv daif +PAN -UAO -TCO -DIT -SSBS BTYPE=--)
+> [    9.343195] pc : follow_page_mask+0x4d4/0x880
+> [    9.343580] lr : follow_page_mask+0x4d4/0x880
+> [    9.344018] sp : ffff8000898b3aa0
+> [    9.344345] x29: ffff8000898b3aa0 x28: fffffdffc53973e8 x27: 00003c0005d08000
+> [    9.345028] x26: ffff00014e5cfd08 x25: ffffd3513a40c000 x24: fffffdffc5d08000
+> [    9.345682] x23: ffffc1ffc0000000 x22: 0000000000080101 x21: ffff8000898b3ba8
+> [    9.346337] x20: 0000fffff4200000 x19: ffff00014e52d508 x18: 0000000000000010
+> [    9.347005] x17: 5f656e6f7a5f7369 x16: 2120262620296567 x15: 6170286461654865
+> [    9.347713] x14: 6761502128454741 x13: 2929656761702865 x12: 6761705f65636976
+> [    9.348371] x11: 65645f656e6f7a5f x10: ffffd3513b31d6e0 x9 : ffffd3513852f090
+> [    9.349062] x8 : 00000000ffffefff x7 : ffffd3513b31d6e0 x6 : 0000000000000000
+> [    9.349753] x5 : ffff00017ff98cc8 x4 : 0000000000000fff x3 : 0000000000000000
+> [    9.350397] x2 : 0000000000000000 x1 : ffff000190e8b480 x0 : 0000000000000052
+> [    9.351097] Call trace:
+> [    9.351312]  follow_page_mask+0x4d4/0x880
+> [    9.351700]  __get_user_pages+0xf4/0x3e8
+> [    9.352089]  __gup_longterm_locked+0x204/0xa70
+> [    9.352516]  pin_user_pages+0x88/0xc0
+> [    9.352873]  gup_test_ioctl+0x860/0xc40
+> [    9.353249]  __arm64_sys_ioctl+0xb0/0x100
+> [    9.353648]  invoke_syscall+0x50/0x128
+> [    9.354022]  el0_svc_common.constprop.0+0x48/0xf8
+> [    9.354488]  do_el0_svc+0x28/0x40
+> [    9.354822]  el0_svc+0x34/0xe0
+> [    9.355128]  el0t_64_sync_handler+0x13c/0x158
+> [    9.355489]  el0t_64_sync+0x190/0x198
+> [    9.355793] Code: aa1803e0 d000d8e1 91220021 97fff560 (d4210000)
+> [    9.356280] ---[ end trace 0000000000000000 ]---
+> [    9.356651] note: gup_longterm[1159] exited with irqs disabled
+> [    9.357141] note: gup_longterm[1159] exited with preempt_count 2
+> [    9.358033] ------------[ cut here ]------------
+> [    9.358800] WARNING: CPU: 1 PID: 0 at kernel/context_tracking.c:128 ct_kernel_exit.constprop.0+0x108/0x120
+> [    9.360157] Modules linked in:
+> [    9.360541] CPU: 1 PID: 0 Comm: swapper/1 Tainted: G      D            6.9.0-rc2-00210-g910ff1a347e4 #11
+> [    9.361626] Hardware name: linux,dummy-virt (DT)
+> [    9.362087] pstate: 204003c5 (nzCv DAIF +PAN -UAO -TCO -DIT -SSBS BTYPE=--)
+> [    9.362758] pc : ct_kernel_exit.constprop.0+0x108/0x120
+> [    9.363306] lr : ct_idle_enter+0x10/0x20
+> [    9.363845] sp : ffff8000801abdc0
+> [    9.364222] x29: ffff8000801abdc0 x28: 0000000000000000 x27: 0000000000000000
+> [    9.364961] x26: 0000000000000000 x25: ffff00014149d780 x24: 0000000000000000
+> [    9.365557] x23: 0000000000000000 x22: ffffd3513b299d48 x21: ffffd3513a785730
+> [    9.366239] x20: ffffd3513b299c28 x19: ffff00017ffa7da0 x18: 0000fffff5ffffff
+> [    9.366869] x17: 0000000000000000 x16: 1fffe0002a21a8c1 x15: 0000000000000000
+> [    9.367524] x14: 0000000000000000 x13: 0000000000000000 x12: 0000000000000002
+> [    9.368207] x11: 0000000000000001 x10: 0000000000000ad0 x9 : ffffd35138589230
+> [    9.369123] x8 : ffff00014149e2b0 x7 : 0000000000000000 x6 : 000000000f8c0fb2
+> [    9.370403] x5 : 4000000000000002 x4 : ffff2cb045825000 x3 : ffff8000801abdc0
+> [    9.371170] x2 : ffffd3513a782da0 x1 : 4000000000000000 x0 : ffffd3513a782da0
+> [    9.372279] Call trace:
+> [    9.372519]  ct_kernel_exit.constprop.0+0x108/0x120
+> [    9.373216]  ct_idle_enter+0x10/0x20
+> [    9.373562]  default_idle_call+0x3c/0x160
+> [    9.374055]  do_idle+0x21c/0x280
+> [    9.374394]  cpu_startup_entry+0x3c/0x50
+> [    9.374797]  secondary_start_kernel+0x140/0x168
+> [    9.375220]  __secondary_switched+0xb8/0xc0
+> [    9.375875] ---[ end trace 0000000000000000 ]---
+> 
+> 
+> The oops trigger is at mm/gup.c:778:
+> VM_BUG_ON_PAGE(!PageHead(page) && !is_zone_device_page(page), page);
+> 
+> 
+> This is the output of gup_longterm (last output is just before oops):
+> 
+> # [INFO] detected hugetlb page size: 2048 KiB
+> # [INFO] detected hugetlb page size: 32768 KiB
+> # [INFO] detected hugetlb page size: 64 KiB
+> # [INFO] detected hugetlb page size: 1048576 KiB
+> TAP version 13
+> 1..70
+> # [RUN] R/W longterm GUP pin in MAP_SHARED file mapping ... with memfd
+> ok 1 Should have worked
+> # [RUN] R/W longterm GUP pin in MAP_SHARED file mapping ... with tmpfile
+> ok 2 Should have failed
+> # [RUN] R/W longterm GUP pin in MAP_SHARED file mapping ... with local tmpfile
+> ok 3 Should have failed
+> # [RUN] R/W longterm GUP pin in MAP_SHARED file mapping ... with memfd hugetlb (2048 kB)
+> ok 4 Should have worked
+> # [RUN] R/W longterm GUP pin in MAP_SHARED file mapping ... with memfd hugetlb (32768 kB)
+> 
+> 
+> So 2M passed ok, and its failing for 32M, which is cont-pmd. I'm guessing you're trying to iterate 2M into a cont-pmd folio and ending up with an unexpected tail page?
 
-On Thu 28 Mar 2024 at 04:08, Jan Dakinevich <jan.dakinevich@salutedevices.com> wrote:
+I assume we find the expected tail page, it's just that the check
 
-> This controller provides clocks and reset functionality for audio
-> peripherals on Amlogic A1 SoC family.
->
-> The driver is almost identical to 'axg-audio', however it would be better
-> to keep it separate due to following reasons:
->
->  - significant amount of bits has another definition. I will bring there
->    a mess of new defines with A1_ suffixes.
->
->  - registers of this controller are located in two separate regions. It
->    will give a lot of complications for 'axg-audio' to support this.
->
-> Signed-off-by: Jan Dakinevich <jan.dakinevich@salutedevices.com>
-> ---
->  drivers/clk/meson/Kconfig    |  13 +
->  drivers/clk/meson/Makefile   |   1 +
->  drivers/clk/meson/a1-audio.c | 624 +++++++++++++++++++++++++++++++++++
->  drivers/clk/meson/a1-audio.h |  45 +++
->  4 files changed, 683 insertions(+)
->  create mode 100644 drivers/clk/meson/a1-audio.c
->  create mode 100644 drivers/clk/meson/a1-audio.h
->
-> diff --git a/drivers/clk/meson/Kconfig b/drivers/clk/meson/Kconfig
-> index d6a2fa5f7e88..80c4a18c83d2 100644
-> --- a/drivers/clk/meson/Kconfig
-> +++ b/drivers/clk/meson/Kconfig
-> @@ -133,6 +133,19 @@ config COMMON_CLK_A1_PERIPHERALS
->  	  device, A1 SoC Family. Say Y if you want A1 Peripherals clock
->  	  controller to work.
->  
-> +config COMMON_CLK_A1_AUDIO
-> +	tristate "Amlogic A1 SoC Audio clock controller support"
-> +	depends on ARM64
-> +	select COMMON_CLK_MESON_REGMAP
-> +	select COMMON_CLK_MESON_CLKC_UTILS
-> +	select COMMON_CLK_MESON_PHASE
-> +	select COMMON_CLK_MESON_SCLK_DIV
-> +	select COMMON_CLK_MESON_AUDIO_RSTC
-> +	help
-> +	  Support for the Audio clock controller on Amlogic A113L based
-> +	  device, A1 SoC Family. Say Y if you want A1 Audio clock controller
-> +	  to work.
-> +
->  config COMMON_CLK_G12A
->  	tristate "G12 and SM1 SoC clock controllers support"
->  	depends on ARM64
-> diff --git a/drivers/clk/meson/Makefile b/drivers/clk/meson/Makefile
-> index 88d94921a4dc..4968fc7ad555 100644
-> --- a/drivers/clk/meson/Makefile
-> +++ b/drivers/clk/meson/Makefile
-> @@ -20,6 +20,7 @@ obj-$(CONFIG_COMMON_CLK_AXG) += axg.o axg-aoclk.o
->  obj-$(CONFIG_COMMON_CLK_AXG_AUDIO) += axg-audio.o
->  obj-$(CONFIG_COMMON_CLK_A1_PLL) += a1-pll.o
->  obj-$(CONFIG_COMMON_CLK_A1_PERIPHERALS) += a1-peripherals.o
-> +obj-$(CONFIG_COMMON_CLK_A1_AUDIO) += a1-audio.o
->  obj-$(CONFIG_COMMON_CLK_GXBB) += gxbb.o gxbb-aoclk.o
->  obj-$(CONFIG_COMMON_CLK_G12A) += g12a.o g12a-aoclk.o
->  obj-$(CONFIG_COMMON_CLK_MESON8B) += meson8b.o meson8-ddr.o
-> diff --git a/drivers/clk/meson/a1-audio.c b/drivers/clk/meson/a1-audio.c
-> new file mode 100644
-> index 000000000000..bd2b6dde75d4
-> --- /dev/null
-> +++ b/drivers/clk/meson/a1-audio.c
-> @@ -0,0 +1,624 @@
-> +// SPDX-License-Identifier: (GPL-2.0 OR MIT)
-> +/*
-> + * Copyright (c) 2024, SaluteDevices. All Rights Reserved.
-> + *
-> + * Author: Jan Dakinevich <jan.dakinevich@salutedevices.com>
-> + */
-> +
-> +#include <linux/clk.h>
-> +#include <linux/clk-provider.h>
-> +#include <linux/init.h>
-> +#include <linux/of_device.h>
-> +#include <linux/module.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/regmap.h>
-> +#include <linux/reset.h>
-> +#include <linux/reset-controller.h>
-> +#include <linux/slab.h>
-> +
-> +#include "meson-clkc-utils.h"
-> +#include "meson-audio-rstc.h"
-> +#include "meson-audio.h"
-> +#include "clk-regmap.h"
-> +#include "clk-phase.h"
-> +#include "sclk-div.h"
-> +#include "a1-audio.h"
-> +
-> +static const struct clk_parent_data a1_pclk_pdata[] = {
-> +	{ .fw_name = "pclk" },
-> +};
+VM_BUG_ON_PAGE(!PageHead(page) && !is_zone_device_page(page), page);
 
-Shouldn't you go through AUD2_CLKID_AUDIOTOP instead ?
+Doesn't make sense with hugetlb folios. We might have a tail page mapped 
+in a cont-pmd entry. As soon as we call follow_huge_pmd() on "not the 
+first cont-pmd entry", we trigger this check.
 
-> +
-> +#define AUD_PCLK_GATE(_name, _reg, _bit) {				\
-> +	.data = &(struct clk_regmap_gate_data){				\
-> +		.offset = (_reg),					\
-> +		.bit_idx = (_bit),					\
-> +	},								\
-> +	.hw.init = &(struct clk_init_data) {				\
-> +		.name = "aud_"#_name,					\
-> +		.ops = &clk_regmap_gate_ops,				\
-> +		.parent_data = a1_pclk_pdata,				\
-> +		.num_parents = 1,					\
-> +	},								\
-> +}
-> +
-> +struct clk_regmap aud_ddr_arb =
-> +	AUD_PCLK_GATE(ddr_arb, AUDIO_CLK_GATE_EN0, 0);
-> +struct clk_regmap aud_tdmin_a =
-> +	AUD_PCLK_GATE(tdmin_a, AUDIO_CLK_GATE_EN0, 1);
-> +struct clk_regmap aud_tdmin_b =
-> +	AUD_PCLK_GATE(tdmin_b, AUDIO_CLK_GATE_EN0, 2);
-> +struct clk_regmap aud_tdmin_lb =
-> +	AUD_PCLK_GATE(tdmin_lb, AUDIO_CLK_GATE_EN0, 3);
-> +struct clk_regmap aud_loopback =
-> +	AUD_PCLK_GATE(loopback, AUDIO_CLK_GATE_EN0, 4);
-> +struct clk_regmap aud_tdmout_a =
-> +	AUD_PCLK_GATE(tdmout_a, AUDIO_CLK_GATE_EN0, 5);
-> +struct clk_regmap aud_tdmout_b =
-> +	AUD_PCLK_GATE(tdmout_b, AUDIO_CLK_GATE_EN0, 6);
-> +struct clk_regmap aud_frddr_a =
-> +	AUD_PCLK_GATE(frddr_a, AUDIO_CLK_GATE_EN0, 7);
-> +struct clk_regmap aud_frddr_b =
-> +	AUD_PCLK_GATE(frddr_b, AUDIO_CLK_GATE_EN0, 8);
-> +struct clk_regmap aud_toddr_a =
-> +	AUD_PCLK_GATE(toddr_a, AUDIO_CLK_GATE_EN0, 9);
-> +struct clk_regmap aud_toddr_b =
-> +	AUD_PCLK_GATE(toddr_b, AUDIO_CLK_GATE_EN0, 10);
-> +struct clk_regmap aud_spdifin =
-> +	AUD_PCLK_GATE(spdifin, AUDIO_CLK_GATE_EN0, 11);
-> +struct clk_regmap aud_resample =
-> +	AUD_PCLK_GATE(resample, AUDIO_CLK_GATE_EN0, 12);
-> +struct clk_regmap aud_eqdrc =
-> +	AUD_PCLK_GATE(eqdrc, AUDIO_CLK_GATE_EN0, 13);
-> +struct clk_regmap aud_audiolocker =
-> +	AUD_PCLK_GATE(audiolocker, AUDIO_CLK_GATE_EN0, 14);
-> +
-> +struct clk_regmap aud2_ddr_arb =
-> +	AUD_PCLK_GATE(2_ddr_arb, AUDIO2_CLK_GATE_EN0, 0);
-> +struct clk_regmap aud2_pdm =
-> +	AUD_PCLK_GATE(2_pdm, AUDIO2_CLK_GATE_EN0, 1);
-> +struct clk_regmap aud2_tdmin_vad =
-> +	AUD_PCLK_GATE(2_tdmin_vad, AUDIO2_CLK_GATE_EN0, 2);
-> +struct clk_regmap aud2_toddr_vad =
-> +	AUD_PCLK_GATE(2_toddr_vad, AUDIO2_CLK_GATE_EN0, 3);
-> +struct clk_regmap aud2_vad =
-> +	AUD_PCLK_GATE(2_vad, AUDIO2_CLK_GATE_EN0, 4);
-> +struct clk_regmap aud2_audiotop =
-> +	AUD_PCLK_GATE(2_audiotop, AUDIO2_CLK_GATE_EN0, 7);
-> +
-> +static const struct clk_parent_data a1_mst_pdata[] = {
-> +	{ .fw_name = "dds_in" },
-> +	{ .fw_name = "fclk_div2" },
-> +	{ .fw_name = "fclk_div3" },
-> +	{ .fw_name = "hifi_pll" },
-> +	{ .fw_name = "xtal" },
-> +};
-> +
-> +#define AUD_MST_MCLK_MUX(_name, _reg)					\
-> +	AUD_MUX(_name##_sel, _reg, 0x7, 24, CLK_MUX_ROUND_CLOSEST,	\
-> +		a1_mst_pdata, 0)
-> +#define AUD_MST_MCLK_DIV(_name, _reg)					\
-> +	AUD_DIV(_name##_div, _reg, 0, 16, CLK_DIVIDER_ROUND_CLOSEST,	\
-> +		aud_##_name##_sel, CLK_SET_RATE_PARENT)
-> +#define AUD_MST_MCLK_GATE(_name, _reg)					\
-> +	AUD_GATE(_name, _reg, 31, aud_##_name##_div,			\
-> +		 CLK_SET_RATE_PARENT)
-> +
-> +struct clk_regmap aud_mst_a_mclk_mux =
-> +	AUD_MST_MCLK_MUX(mst_a_mclk, AUDIO_MCLK_A_CTRL);
-> +struct clk_regmap aud_mst_a_mclk_div =
-> +	AUD_MST_MCLK_DIV(mst_a_mclk, AUDIO_MCLK_A_CTRL);
-> +struct clk_regmap aud_mst_a_mclk =
-> +	AUD_MST_MCLK_GATE(mst_a_mclk, AUDIO_MCLK_A_CTRL);
-> +
-> +struct clk_regmap aud_mst_b_mclk_mux =
-> +	AUD_MST_MCLK_MUX(mst_b_mclk, AUDIO_MCLK_B_CTRL);
-> +struct clk_regmap aud_mst_b_mclk_div =
-> +	AUD_MST_MCLK_DIV(mst_b_mclk, AUDIO_MCLK_B_CTRL);
-> +struct clk_regmap aud_mst_b_mclk =
-> +	AUD_MST_MCLK_GATE(mst_b_mclk, AUDIO_MCLK_B_CTRL);
-> +
-> +struct clk_regmap aud_mst_c_mclk_mux =
-> +	AUD_MST_MCLK_MUX(mst_c_mclk, AUDIO_MCLK_C_CTRL);
-> +struct clk_regmap aud_mst_c_mclk_div =
-> +	AUD_MST_MCLK_DIV(mst_c_mclk, AUDIO_MCLK_C_CTRL);
-> +struct clk_regmap aud_mst_c_mclk =
-> +	AUD_MST_MCLK_GATE(mst_c_mclk, AUDIO_MCLK_C_CTRL);
-> +
-> +struct clk_regmap aud_mst_d_mclk_mux =
-> +	AUD_MST_MCLK_MUX(mst_d_mclk, AUDIO_MCLK_D_CTRL);
-> +struct clk_regmap aud_mst_d_mclk_div =
-> +	AUD_MST_MCLK_DIV(mst_d_mclk, AUDIO_MCLK_D_CTRL);
-> +struct clk_regmap aud_mst_d_mclk =
-> +	AUD_MST_MCLK_GATE(mst_d_mclk, AUDIO_MCLK_D_CTRL);
-> +
-> +struct clk_regmap aud_spdifin_clk_mux =
-> +	AUD_MST_MCLK_MUX(spdifin_clk, AUDIO_CLK_SPDIFIN_CTRL);
-> +struct clk_regmap aud_spdifin_clk_div =
-> +	AUD_MST_MCLK_DIV(spdifin_clk, AUDIO_CLK_SPDIFIN_CTRL);
-> +struct clk_regmap aud_spdifin_clk =
-> +	AUD_MST_MCLK_GATE(spdifin_clk, AUDIO_CLK_SPDIFIN_CTRL);
-> +
-> +struct clk_regmap aud_eqdrc_clk_mux =
-> +	AUD_MST_MCLK_MUX(eqdrc_clk, AUDIO_CLK_EQDRC_CTRL);
-> +struct clk_regmap aud_eqdrc_clk_div =
-> +	AUD_MST_MCLK_DIV(eqdrc_clk, AUDIO_CLK_EQDRC_CTRL);
-> +struct clk_regmap aud_eqdrc_clk =
-> +	AUD_MST_MCLK_GATE(eqdrc_clk, AUDIO_CLK_EQDRC_CTRL);
-> +
-> +struct clk_regmap aud_resample_clk_mux =
-> +	AUD_MUX(resample_clk_sel, AUDIO_CLK_RESAMPLE_CTRL, 0xf, 24,
-> +		CLK_MUX_ROUND_CLOSEST, a1_mst_pdata, CLK_SET_RATE_PARENT);
-> +struct clk_regmap aud_resample_clk_div =
-> +	AUD_DIV(resample_clk_div, AUDIO_CLK_RESAMPLE_CTRL, 0, 8,
-> +		CLK_DIVIDER_ROUND_CLOSEST, resample_clk_sel, CLK_SET_RATE_PARENT);
-> +struct clk_regmap aud_resample_clk =
-> +	AUD_GATE(resample_clk, AUDIO_CLK_RESAMPLE_CTRL, 31,
-> +		 resample_clk_div, CLK_SET_RATE_PARENT);
-> +
-> +struct clk_regmap aud_locker_in_clk_mux =
-> +	AUD_MUX(locker_in_clk_sel, AUDIO_CLK_LOCKER_CTRL, 0xf, 8,
-> +		CLK_MUX_ROUND_CLOSEST, a1_mst_pdata, CLK_SET_RATE_PARENT);
-> +struct clk_regmap aud_locker_in_clk_div =
-> +	AUD_DIV(locker_in_clk_div, AUDIO_CLK_LOCKER_CTRL, 0, 8,
-> +		CLK_DIVIDER_ROUND_CLOSEST, locker_in_clk_sel, CLK_SET_RATE_PARENT);
-> +struct clk_regmap aud_locker_in_clk =
-> +	AUD_GATE(locker_in_clk, AUDIO_CLK_LOCKER_CTRL, 15,
-> +		 locker_in_clk_div, CLK_SET_RATE_PARENT);
-> +
-> +struct clk_regmap aud_locker_out_clk_mux =
-> +	AUD_MUX(locker_out_clk_sel, AUDIO_CLK_LOCKER_CTRL, 0xf, 24,
-> +		CLK_MUX_ROUND_CLOSEST, a1_mst_pdata, CLK_SET_RATE_PARENT);
-> +struct clk_regmap aud_locker_out_clk_div =
-> +	AUD_DIV(locker_out_clk_div, AUDIO_CLK_LOCKER_CTRL, 16, 8,
-> +		CLK_DIVIDER_ROUND_CLOSEST, locker_out_clk_sel, CLK_SET_RATE_PARENT);
-> +struct clk_regmap aud_locker_out_clk =
-> +	AUD_GATE(locker_out_clk, AUDIO_CLK_LOCKER_CTRL, 31,
-> +		 locker_out_clk_div, CLK_SET_RATE_PARENT);
-> +
-> +struct clk_regmap aud2_vad_mclk_mux =
-> +	AUD_MST_MCLK_MUX(2_vad_mclk, AUDIO2_MCLK_VAD_CTRL);
-> +struct clk_regmap aud2_vad_mclk_div =
-> +	AUD_MST_MCLK_DIV(2_vad_mclk, AUDIO2_MCLK_VAD_CTRL);
-> +struct clk_regmap aud2_vad_mclk =
-> +	AUD_MST_MCLK_GATE(2_vad_mclk, AUDIO2_MCLK_VAD_CTRL);
-> +
-> +struct clk_regmap aud2_vad_clk_mux =
-> +	AUD_MST_MCLK_MUX(2_vad_clk, AUDIO2_CLK_VAD_CTRL);
-> +struct clk_regmap aud2_vad_clk_div =
-> +	AUD_MST_MCLK_DIV(2_vad_clk, AUDIO2_CLK_VAD_CTRL);
-> +struct clk_regmap aud2_vad_clk =
-> +	AUD_MST_MCLK_GATE(2_vad_clk, AUDIO2_CLK_VAD_CTRL);
-> +
-> +struct clk_regmap aud2_pdm_dclk_mux =
-> +	AUD_MST_MCLK_MUX(2_pdm_dclk, AUDIO2_CLK_PDMIN_CTRL0);
-> +struct clk_regmap aud2_pdm_dclk_div =
-> +	AUD_MST_MCLK_DIV(2_pdm_dclk, AUDIO2_CLK_PDMIN_CTRL0);
-> +struct clk_regmap aud2_pdm_dclk =
-> +	AUD_MST_MCLK_GATE(2_pdm_dclk, AUDIO2_CLK_PDMIN_CTRL0);
-> +
-> +struct clk_regmap aud2_pdm_sysclk_mux =
-> +	AUD_MST_MCLK_MUX(2_pdm_sysclk, AUDIO2_CLK_PDMIN_CTRL1);
-> +struct clk_regmap aud2_pdm_sysclk_div =
-> +	AUD_MST_MCLK_DIV(2_pdm_sysclk, AUDIO2_CLK_PDMIN_CTRL1);
-> +struct clk_regmap aud2_pdm_sysclk =
-> +	AUD_MST_MCLK_GATE(2_pdm_sysclk, AUDIO2_CLK_PDMIN_CTRL1);
-> +
-> +#define AUD_MST_SCLK_PRE_EN(_name, _reg, _pname)			\
-> +	AUD_GATE(_name##_pre_en, _reg, 31,				\
-> +		 aud_##_pname, 0)
-> +#define AUD_MST_SCLK_DIV(_name, _reg)					\
-> +	AUD_SCLK_DIV(_name##_div, _reg, 20, 10, 0, 0,			\
-> +		     aud_##_name##_pre_en, CLK_SET_RATE_PARENT)
-> +#define AUD_MST_SCLK_POST_EN(_name, _reg)				\
-> +	AUD_GATE(_name##_post_en, _reg, 30,				\
-> +		 aud_##_name##_div, CLK_SET_RATE_PARENT)
-> +#define AUD_MST_SCLK(_name, _reg)					\
-> +	AUD_TRIPHASE(_name, _reg, 1, 0, 2, 4,				\
-> +		     aud_##_name##_post_en, CLK_SET_RATE_PARENT)
-> +
-> +struct clk_regmap aud_mst_a_sclk_pre_en =
-> +	AUD_MST_SCLK_PRE_EN(mst_a_sclk, AUDIO_MST_A_SCLK_CTRL0, mst_a_mclk);
-> +struct clk_regmap aud_mst_a_sclk_div =
-> +	AUD_MST_SCLK_DIV(mst_a_sclk, AUDIO_MST_A_SCLK_CTRL0);
-> +struct clk_regmap aud_mst_a_sclk_post_en =
-> +	AUD_MST_SCLK_POST_EN(mst_a_sclk, AUDIO_MST_A_SCLK_CTRL0);
-> +struct clk_regmap aud_mst_a_sclk =
-> +	AUD_MST_SCLK(mst_a_sclk, AUDIO_MST_A_SCLK_CTRL1);
-> +
-> +struct clk_regmap aud_mst_b_sclk_pre_en =
-> +	AUD_MST_SCLK_PRE_EN(mst_b_sclk, AUDIO_MST_B_SCLK_CTRL0, mst_b_mclk);
-> +struct clk_regmap aud_mst_b_sclk_div =
-> +	AUD_MST_SCLK_DIV(mst_b_sclk, AUDIO_MST_B_SCLK_CTRL0);
-> +struct clk_regmap aud_mst_b_sclk_post_en =
-> +	AUD_MST_SCLK_POST_EN(mst_b_sclk, AUDIO_MST_B_SCLK_CTRL0);
-> +struct clk_regmap aud_mst_b_sclk =
-> +	AUD_MST_SCLK(mst_b_sclk, AUDIO_MST_B_SCLK_CTRL1);
-> +
-> +struct clk_regmap aud_mst_c_sclk_pre_en =
-> +	AUD_MST_SCLK_PRE_EN(mst_c_sclk, AUDIO_MST_C_SCLK_CTRL0, mst_c_mclk);
-> +struct clk_regmap aud_mst_c_sclk_div =
-> +	AUD_MST_SCLK_DIV(mst_c_sclk, AUDIO_MST_C_SCLK_CTRL0);
-> +struct clk_regmap aud_mst_c_sclk_post_en =
-> +	AUD_MST_SCLK_POST_EN(mst_c_sclk, AUDIO_MST_C_SCLK_CTRL0);
-> +struct clk_regmap aud_mst_c_sclk =
-> +	AUD_MST_SCLK(mst_c_sclk, AUDIO_MST_C_SCLK_CTRL1);
-> +
-> +struct clk_regmap aud_mst_d_sclk_pre_en =
-> +	AUD_MST_SCLK_PRE_EN(mst_d_sclk, AUDIO_MST_D_SCLK_CTRL0, mst_d_mclk);
-> +struct clk_regmap aud_mst_d_sclk_div =
-> +	AUD_MST_SCLK_DIV(mst_d_sclk, AUDIO_MST_D_SCLK_CTRL0);
-> +struct clk_regmap aud_mst_d_sclk_post_en =
-> +	AUD_MST_SCLK_POST_EN(mst_d_sclk, AUDIO_MST_D_SCLK_CTRL0);
-> +struct clk_regmap aud_mst_d_sclk =
-> +	AUD_MST_SCLK(mst_d_sclk, AUDIO_MST_D_SCLK_CTRL1);
-> +
-> +#define AUD_MST_LRCLK_DIV(_name, _reg, _pname)				\
-> +	AUD_SCLK_DIV(_name##_div, _reg, 0, 10, 10, 10,			\
-> +		     aud_##_pname, 0)
-> +#define AUD_MST_LRCLK(_name, _reg)					\
-> +	AUD_TRIPHASE(_name, _reg, 1, 1, 3, 5,				\
-> +		     aud_##_name##_div, CLK_SET_RATE_PARENT)
-> +
-> +struct clk_regmap aud_mst_a_lrclk_div =
-> +	AUD_MST_LRCLK_DIV(mst_a_lrclk, AUDIO_MST_A_SCLK_CTRL0, mst_a_sclk_post_en);
-> +struct clk_regmap aud_mst_a_lrclk =
-> +	AUD_MST_LRCLK(mst_a_lrclk, AUDIO_MST_A_SCLK_CTRL1);
-> +
-> +struct clk_regmap aud_mst_b_lrclk_div =
-> +	AUD_MST_LRCLK_DIV(mst_b_lrclk, AUDIO_MST_B_SCLK_CTRL0, mst_b_sclk_post_en);
-> +struct clk_regmap aud_mst_b_lrclk =
-> +	AUD_MST_LRCLK(mst_b_lrclk, AUDIO_MST_B_SCLK_CTRL1);
-> +
-> +struct clk_regmap aud_mst_c_lrclk_div =
-> +	AUD_MST_LRCLK_DIV(mst_c_lrclk, AUDIO_MST_C_SCLK_CTRL0, mst_c_sclk_post_en);
-> +struct clk_regmap aud_mst_c_lrclk =
-> +	AUD_MST_LRCLK(mst_c_lrclk, AUDIO_MST_C_SCLK_CTRL1);
-> +
-> +struct clk_regmap aud_mst_d_lrclk_div =
-> +	AUD_MST_LRCLK_DIV(mst_d_lrclk, AUDIO_MST_D_SCLK_CTRL0, mst_d_sclk_post_en);
-> +struct clk_regmap aud_mst_d_lrclk =
-> +	AUD_MST_LRCLK(mst_d_lrclk, AUDIO_MST_D_SCLK_CTRL1);
-> +
-> +static const struct clk_parent_data a1_mst_sclk_pdata[] = {
-> +	{ .hw = &aud_mst_a_sclk.hw, .index = -1 },
-> +	{ .hw = &aud_mst_b_sclk.hw, .index = -1 },
-> +	{ .hw = &aud_mst_c_sclk.hw, .index = -1 },
-> +	{ .hw = &aud_mst_d_sclk.hw, .index = -1 },
-> +	{ .fw_name = "slv_sclk0" },
-> +	{ .fw_name = "slv_sclk1" },
-> +	{ .fw_name = "slv_sclk2" },
-> +	{ .fw_name = "slv_sclk3" },
-> +	{ .fw_name = "slv_sclk4" },
-> +	{ .fw_name = "slv_sclk5" },
-> +	{ .fw_name = "slv_sclk6" },
-> +	{ .fw_name = "slv_sclk7" },
-> +	{ .fw_name = "slv_sclk8" },
-> +	{ .fw_name = "slv_sclk9" },
-> +};
-> +
-> +static const struct clk_parent_data a1_mst_lrclk_pdata[] = {
-> +	{ .hw = &aud_mst_a_lrclk.hw, .index = -1 },
-> +	{ .hw = &aud_mst_b_lrclk.hw, .index = -1 },
-> +	{ .hw = &aud_mst_c_lrclk.hw, .index = -1 },
-> +	{ .hw = &aud_mst_d_lrclk.hw, .index = -1 },
-> +	{ .fw_name = "slv_lrclk0" },
-> +	{ .fw_name = "slv_lrclk1" },
-> +	{ .fw_name = "slv_lrclk2" },
-> +	{ .fw_name = "slv_lrclk3" },
-> +	{ .fw_name = "slv_lrclk4" },
-> +	{ .fw_name = "slv_lrclk5" },
-> +	{ .fw_name = "slv_lrclk6" },
-> +	{ .fw_name = "slv_lrclk7" },
-> +	{ .fw_name = "slv_lrclk8" },
-> +	{ .fw_name = "slv_lrclk9" },
-> +};
-> +
-> +#define AUD_TDM_SCLK_MUX(_name, _reg)					\
-> +	AUD_MUX(_name##_sel, _reg, 0xf, 24,				\
-> +		CLK_MUX_ROUND_CLOSEST, a1_mst_sclk_pdata, 0)
-> +#define AUD_TDM_SCLK_PRE_EN(_name, _reg)				\
-> +	AUD_GATE(_name##_pre_en, _reg, 31,				\
-> +		 aud_##_name##_sel, CLK_SET_RATE_PARENT)
-> +#define AUD_TDM_SCLK_POST_EN(_name, _reg)				\
-> +	AUD_GATE(_name##_post_en, _reg, 30,				\
-> +		 aud_##_name##_pre_en, CLK_SET_RATE_PARENT)
-> +#define AUD_TDM_SCLK_WS(_name, _reg)					\
-> +	AUD_SCLK_WS(_name, _reg, 1, 29, 28,				\
-> +		    aud_##_name##_post_en,				\
-> +		    CLK_DUTY_CYCLE_PARENT | CLK_SET_RATE_PARENT)
-> +
-> +#define AUD_TDM_LRLCK(_name, _reg)					\
-> +	AUD_MUX(_name, _reg, 0xf, 20,					\
-> +		CLK_MUX_ROUND_CLOSEST, a1_mst_lrclk_pdata,		\
-> +		CLK_SET_RATE_PARENT)
-> +
-> +struct clk_regmap aud_tdmin_a_sclk_mux =
-> +	AUD_TDM_SCLK_MUX(tdmin_a_sclk, AUDIO_CLK_TDMIN_A_CTRL);
-> +struct clk_regmap aud_tdmin_a_sclk_pre_en =
-> +	AUD_TDM_SCLK_PRE_EN(tdmin_a_sclk, AUDIO_CLK_TDMIN_A_CTRL);
-> +struct clk_regmap aud_tdmin_a_sclk_post_en =
-> +	AUD_TDM_SCLK_POST_EN(tdmin_a_sclk, AUDIO_CLK_TDMIN_A_CTRL);
-> +struct clk_regmap aud_tdmin_a_sclk =
-> +	AUD_TDM_SCLK_WS(tdmin_a_sclk, AUDIO_CLK_TDMIN_A_CTRL);
-> +struct clk_regmap aud_tdmin_a_lrclk =
-> +	AUD_TDM_LRLCK(tdmin_a_lrclk, AUDIO_CLK_TDMIN_A_CTRL);
-> +
-> +struct clk_regmap aud_tdmin_b_sclk_mux =
-> +	AUD_TDM_SCLK_MUX(tdmin_b_sclk, AUDIO_CLK_TDMIN_B_CTRL);
-> +struct clk_regmap aud_tdmin_b_sclk_pre_en =
-> +	AUD_TDM_SCLK_PRE_EN(tdmin_b_sclk, AUDIO_CLK_TDMIN_B_CTRL);
-> +struct clk_regmap aud_tdmin_b_sclk_post_en =
-> +	AUD_TDM_SCLK_POST_EN(tdmin_b_sclk, AUDIO_CLK_TDMIN_B_CTRL);
-> +struct clk_regmap aud_tdmin_b_sclk =
-> +	AUD_TDM_SCLK_WS(tdmin_b_sclk, AUDIO_CLK_TDMIN_B_CTRL);
-> +struct clk_regmap aud_tdmin_b_lrclk =
-> +	AUD_TDM_LRLCK(tdmin_b_lrclk, AUDIO_CLK_TDMIN_B_CTRL);
-> +
-> +struct clk_regmap aud_tdmin_lb_sclk_mux =
-> +	AUD_TDM_SCLK_MUX(tdmin_lb_sclk, AUDIO_CLK_TDMIN_LB_CTRL);
-> +struct clk_regmap aud_tdmin_lb_sclk_pre_en =
-> +	AUD_TDM_SCLK_PRE_EN(tdmin_lb_sclk, AUDIO_CLK_TDMIN_LB_CTRL);
-> +struct clk_regmap aud_tdmin_lb_sclk_post_en =
-> +	AUD_TDM_SCLK_POST_EN(tdmin_lb_sclk, AUDIO_CLK_TDMIN_LB_CTRL);
-> +struct clk_regmap aud_tdmin_lb_sclk =
-> +	AUD_TDM_SCLK_WS(tdmin_lb_sclk, AUDIO_CLK_TDMIN_LB_CTRL);
-> +struct clk_regmap aud_tdmin_lb_lrclk =
-> +	AUD_TDM_LRLCK(tdmin_lb_lrclk, AUDIO_CLK_TDMIN_LB_CTRL);
-> +
-> +struct clk_regmap aud_tdmout_a_sclk_mux =
-> +	AUD_TDM_SCLK_MUX(tdmout_a_sclk, AUDIO_CLK_TDMOUT_A_CTRL);
-> +struct clk_regmap aud_tdmout_a_sclk_pre_en =
-> +	AUD_TDM_SCLK_PRE_EN(tdmout_a_sclk, AUDIO_CLK_TDMOUT_A_CTRL);
-> +struct clk_regmap aud_tdmout_a_sclk_post_en =
-> +	AUD_TDM_SCLK_POST_EN(tdmout_a_sclk, AUDIO_CLK_TDMOUT_A_CTRL);
-> +struct clk_regmap aud_tdmout_a_sclk =
-> +	AUD_TDM_SCLK_WS(tdmout_a_sclk, AUDIO_CLK_TDMOUT_A_CTRL);
-> +struct clk_regmap aud_tdmout_a_lrclk =
-> +	AUD_TDM_LRLCK(tdmout_a_lrclk, AUDIO_CLK_TDMOUT_A_CTRL);
-> +
-> +struct clk_regmap aud_tdmout_b_sclk_mux =
-> +	AUD_TDM_SCLK_MUX(tdmout_b_sclk, AUDIO_CLK_TDMOUT_B_CTRL);
-> +struct clk_regmap aud_tdmout_b_sclk_pre_en =
-> +	AUD_TDM_SCLK_PRE_EN(tdmout_b_sclk, AUDIO_CLK_TDMOUT_B_CTRL);
-> +struct clk_regmap aud_tdmout_b_sclk_post_en =
-> +	AUD_TDM_SCLK_POST_EN(tdmout_b_sclk, AUDIO_CLK_TDMOUT_B_CTRL);
-> +struct clk_regmap aud_tdmout_b_sclk =
-> +	AUD_TDM_SCLK_WS(tdmout_b_sclk, AUDIO_CLK_TDMOUT_B_CTRL);
-> +struct clk_regmap aud_tdmout_b_lrclk =
-> +	AUD_TDM_LRLCK(tdmout_b_lrclk, AUDIO_CLK_TDMOUT_B_CTRL);
-> +
-> +static struct clk_hw *a1_audio_hw_clks[] = {
-> +	[AUD_CLKID_DDR_ARB]		= &aud_ddr_arb.hw,
-> +	[AUD_CLKID_TDMIN_A]		= &aud_tdmin_a.hw,
-> +	[AUD_CLKID_TDMIN_B]		= &aud_tdmin_b.hw,
-> +	[AUD_CLKID_TDMIN_LB]		= &aud_tdmin_lb.hw,
-> +	[AUD_CLKID_LOOPBACK]		= &aud_loopback.hw,
-> +	[AUD_CLKID_TDMOUT_A]		= &aud_tdmout_a.hw,
-> +	[AUD_CLKID_TDMOUT_B]		= &aud_tdmout_b.hw,
-> +	[AUD_CLKID_FRDDR_A]		= &aud_frddr_a.hw,
-> +	[AUD_CLKID_FRDDR_B]		= &aud_frddr_b.hw,
-> +	[AUD_CLKID_TODDR_A]		= &aud_toddr_a.hw,
-> +	[AUD_CLKID_TODDR_B]		= &aud_toddr_b.hw,
-> +	[AUD_CLKID_SPDIFIN]		= &aud_spdifin.hw,
-> +	[AUD_CLKID_RESAMPLE]		= &aud_resample.hw,
-> +	[AUD_CLKID_EQDRC]		= &aud_eqdrc.hw,
-> +	[AUD_CLKID_LOCKER]		= &aud_audiolocker.hw,
-> +	[AUD_CLKID_MST_A_MCLK_SEL]	= &aud_mst_a_mclk_mux.hw,
-> +	[AUD_CLKID_MST_A_MCLK_DIV]	= &aud_mst_a_mclk_div.hw,
-> +	[AUD_CLKID_MST_A_MCLK]		= &aud_mst_a_mclk.hw,
-> +	[AUD_CLKID_MST_B_MCLK_SEL]	= &aud_mst_b_mclk_mux.hw,
-> +	[AUD_CLKID_MST_B_MCLK_DIV]	= &aud_mst_b_mclk_div.hw,
-> +	[AUD_CLKID_MST_B_MCLK]		= &aud_mst_b_mclk.hw,
-> +	[AUD_CLKID_MST_C_MCLK_SEL]	= &aud_mst_c_mclk_mux.hw,
-> +	[AUD_CLKID_MST_C_MCLK_DIV]	= &aud_mst_c_mclk_div.hw,
-> +	[AUD_CLKID_MST_C_MCLK]		= &aud_mst_c_mclk.hw,
-> +	[AUD_CLKID_MST_D_MCLK_SEL]	= &aud_mst_d_mclk_mux.hw,
-> +	[AUD_CLKID_MST_D_MCLK_DIV]	= &aud_mst_d_mclk_div.hw,
-> +	[AUD_CLKID_MST_D_MCLK]		= &aud_mst_d_mclk.hw,
-> +	[AUD_CLKID_RESAMPLE_CLK_SEL]	= &aud_resample_clk_mux.hw,
-> +	[AUD_CLKID_RESAMPLE_CLK_DIV]	= &aud_resample_clk_div.hw,
-> +	[AUD_CLKID_RESAMPLE_CLK]	= &aud_resample_clk.hw,
-> +	[AUD_CLKID_LOCKER_IN_CLK_SEL]	= &aud_locker_in_clk_mux.hw,
-> +	[AUD_CLKID_LOCKER_IN_CLK_DIV]	= &aud_locker_in_clk_div.hw,
-> +	[AUD_CLKID_LOCKER_IN_CLK]	= &aud_locker_in_clk.hw,
-> +	[AUD_CLKID_LOCKER_OUT_CLK_SEL]	= &aud_locker_out_clk_mux.hw,
-> +	[AUD_CLKID_LOCKER_OUT_CLK_DIV]	= &aud_locker_out_clk_div.hw,
-> +	[AUD_CLKID_LOCKER_OUT_CLK]	= &aud_locker_out_clk.hw,
-> +	[AUD_CLKID_SPDIFIN_CLK_SEL]	= &aud_spdifin_clk_mux.hw,
-> +	[AUD_CLKID_SPDIFIN_CLK_DIV]	= &aud_spdifin_clk_div.hw,
-> +	[AUD_CLKID_SPDIFIN_CLK]		= &aud_spdifin_clk.hw,
-> +	[AUD_CLKID_EQDRC_CLK_SEL]	= &aud_eqdrc_clk_mux.hw,
-> +	[AUD_CLKID_EQDRC_CLK_DIV]	= &aud_eqdrc_clk_div.hw,
-> +	[AUD_CLKID_EQDRC_CLK]		= &aud_eqdrc_clk.hw,
-> +	[AUD_CLKID_MST_A_SCLK_PRE_EN]	= &aud_mst_a_sclk_pre_en.hw,
-> +	[AUD_CLKID_MST_A_SCLK_DIV]	= &aud_mst_a_sclk_div.hw,
-> +	[AUD_CLKID_MST_A_SCLK_POST_EN]	= &aud_mst_a_sclk_post_en.hw,
-> +	[AUD_CLKID_MST_A_SCLK]		= &aud_mst_a_sclk.hw,
-> +	[AUD_CLKID_MST_B_SCLK_PRE_EN]	= &aud_mst_b_sclk_pre_en.hw,
-> +	[AUD_CLKID_MST_B_SCLK_DIV]	= &aud_mst_b_sclk_div.hw,
-> +	[AUD_CLKID_MST_B_SCLK_POST_EN]	= &aud_mst_b_sclk_post_en.hw,
-> +	[AUD_CLKID_MST_B_SCLK]		= &aud_mst_b_sclk.hw,
-> +	[AUD_CLKID_MST_C_SCLK_PRE_EN]	= &aud_mst_c_sclk_pre_en.hw,
-> +	[AUD_CLKID_MST_C_SCLK_DIV]	= &aud_mst_c_sclk_div.hw,
-> +	[AUD_CLKID_MST_C_SCLK_POST_EN]	= &aud_mst_c_sclk_post_en.hw,
-> +	[AUD_CLKID_MST_C_SCLK]		= &aud_mst_c_sclk.hw,
-> +	[AUD_CLKID_MST_D_SCLK_PRE_EN]	= &aud_mst_d_sclk_pre_en.hw,
-> +	[AUD_CLKID_MST_D_SCLK_DIV]	= &aud_mst_d_sclk_div.hw,
-> +	[AUD_CLKID_MST_D_SCLK_POST_EN]	= &aud_mst_d_sclk_post_en.hw,
-> +	[AUD_CLKID_MST_D_SCLK]		= &aud_mst_d_sclk.hw,
-> +	[AUD_CLKID_MST_A_LRCLK_DIV]	= &aud_mst_a_lrclk_div.hw,
-> +	[AUD_CLKID_MST_A_LRCLK]		= &aud_mst_a_lrclk.hw,
-> +	[AUD_CLKID_MST_B_LRCLK_DIV]	= &aud_mst_b_lrclk_div.hw,
-> +	[AUD_CLKID_MST_B_LRCLK]		= &aud_mst_b_lrclk.hw,
-> +	[AUD_CLKID_MST_C_LRCLK_DIV]	= &aud_mst_c_lrclk_div.hw,
-> +	[AUD_CLKID_MST_C_LRCLK]		= &aud_mst_c_lrclk.hw,
-> +	[AUD_CLKID_MST_D_LRCLK_DIV]	= &aud_mst_d_lrclk_div.hw,
-> +	[AUD_CLKID_MST_D_LRCLK]		= &aud_mst_d_lrclk.hw,
-> +	[AUD_CLKID_TDMIN_A_SCLK_SEL]	= &aud_tdmin_a_sclk_mux.hw,
-> +	[AUD_CLKID_TDMIN_A_SCLK_PRE_EN]	= &aud_tdmin_a_sclk_pre_en.hw,
-> +	[AUD_CLKID_TDMIN_A_SCLK_POST_EN] = &aud_tdmin_a_sclk_post_en.hw,
-> +	[AUD_CLKID_TDMIN_A_SCLK]	= &aud_tdmin_a_sclk.hw,
-> +	[AUD_CLKID_TDMIN_A_LRCLK]	= &aud_tdmin_a_lrclk.hw,
-> +	[AUD_CLKID_TDMIN_B_SCLK_SEL]	= &aud_tdmin_b_sclk_mux.hw,
-> +	[AUD_CLKID_TDMIN_B_SCLK_PRE_EN]	= &aud_tdmin_b_sclk_pre_en.hw,
-> +	[AUD_CLKID_TDMIN_B_SCLK_POST_EN] = &aud_tdmin_b_sclk_post_en.hw,
-> +	[AUD_CLKID_TDMIN_B_SCLK]	= &aud_tdmin_b_sclk.hw,
-> +	[AUD_CLKID_TDMIN_B_LRCLK]	= &aud_tdmin_b_lrclk.hw,
-> +	[AUD_CLKID_TDMIN_LB_SCLK_SEL]	= &aud_tdmin_lb_sclk_mux.hw,
-> +	[AUD_CLKID_TDMIN_LB_SCLK_PRE_EN] = &aud_tdmin_lb_sclk_pre_en.hw,
-> +	[AUD_CLKID_TDMIN_LB_SCLK_POST_EN] = &aud_tdmin_lb_sclk_post_en.hw,
-> +	[AUD_CLKID_TDMIN_LB_SCLK]	= &aud_tdmin_lb_sclk.hw,
-> +	[AUD_CLKID_TDMIN_LB_LRCLK]	= &aud_tdmin_lb_lrclk.hw,
-> +	[AUD_CLKID_TDMOUT_A_SCLK_SEL]	= &aud_tdmout_a_sclk_mux.hw,
-> +	[AUD_CLKID_TDMOUT_A_SCLK_PRE_EN] = &aud_tdmout_a_sclk_pre_en.hw,
-> +	[AUD_CLKID_TDMOUT_A_SCLK_POST_EN] = &aud_tdmout_a_sclk_post_en.hw,
-> +	[AUD_CLKID_TDMOUT_A_SCLK]	= &aud_tdmout_a_sclk.hw,
-> +	[AUD_CLKID_TDMOUT_A_LRCLK]	= &aud_tdmout_a_lrclk.hw,
-> +	[AUD_CLKID_TDMOUT_B_SCLK_SEL]	= &aud_tdmout_b_sclk_mux.hw,
-> +	[AUD_CLKID_TDMOUT_B_SCLK_PRE_EN] = &aud_tdmout_b_sclk_pre_en.hw,
-> +	[AUD_CLKID_TDMOUT_B_SCLK_POST_EN] = &aud_tdmout_b_sclk_post_en.hw,
-> +	[AUD_CLKID_TDMOUT_B_SCLK]	= &aud_tdmout_b_sclk.hw,
-> +	[AUD_CLKID_TDMOUT_B_LRCLK]	= &aud_tdmout_b_lrclk.hw,
-> +};
-> +
-> +static struct clk_hw *a1_audio2_hw_clks[] = {
-> +	[AUD2_CLKID_DDR_ARB]		= &aud2_ddr_arb.hw,
-> +	[AUD2_CLKID_PDM]		= &aud2_pdm.hw,
-> +	[AUD2_CLKID_TDMIN_VAD]		= &aud2_tdmin_vad.hw,
-> +	[AUD2_CLKID_TODDR_VAD]		= &aud2_toddr_vad.hw,
-> +	[AUD2_CLKID_VAD]		= &aud2_vad.hw,
-> +	[AUD2_CLKID_AUDIOTOP]		= &aud2_audiotop.hw,
-> +	[AUD2_CLKID_VAD_MCLK_SEL]	= &aud2_vad_mclk_mux.hw,
-> +	[AUD2_CLKID_VAD_MCLK_DIV]	= &aud2_vad_mclk_div.hw,
-> +	[AUD2_CLKID_VAD_MCLK]		= &aud2_vad_mclk.hw,
-> +	[AUD2_CLKID_VAD_CLK_SEL]	= &aud2_vad_clk_mux.hw,
-> +	[AUD2_CLKID_VAD_CLK_DIV]	= &aud2_vad_clk_div.hw,
-> +	[AUD2_CLKID_VAD_CLK]		= &aud2_vad_clk.hw,
-> +	[AUD2_CLKID_PDM_DCLK_SEL]	= &aud2_pdm_dclk_mux.hw,
-> +	[AUD2_CLKID_PDM_DCLK_DIV]	= &aud2_pdm_dclk_div.hw,
-> +	[AUD2_CLKID_PDM_DCLK]		= &aud2_pdm_dclk.hw,
-> +	[AUD2_CLKID_PDM_SYSCLK_SEL]	= &aud2_pdm_sysclk_mux.hw,
-> +	[AUD2_CLKID_PDM_SYSCLK_DIV]	= &aud2_pdm_sysclk_div.hw,
-> +	[AUD2_CLKID_PDM_SYSCLK]		= &aud2_pdm_sysclk.hw,
-> +};
+Likely this sanity check must also allow for hugetlb folios. Or we 
+should just remove it completely.
 
-I think you already got that comment but audio2 is a terrible name.
-
-Given that the 2nd controller is mostly about VAD (PDM is there only to
-feed it) and that it is just a name, I'd prefer something like a1_audio_vad.
-
-> +
-> +static int a1_register_clk(struct platform_device *pdev, struct regmap *map,
-> +			   struct clk_hw *hw)
-> +{
-> +	struct clk_regmap *clk = container_of(hw, struct clk_regmap, hw);
-> +
-> +	if (!hw)
-> +		return 0;
-> +
-> +	clk->map = map;
-> +
-> +	return devm_clk_hw_register(&pdev->dev, hw);
-> +}
-
-Why do you have to do that and cannot do it like the rest of the
-modules ?
-
-> +
-> +struct a1_audio_data {
-> +	struct meson_clk_hw_data hw_clks;
-> +	int core_clkid;
-> +	const char *core_fwname;
-> +	unsigned int reset_offset;
-> +	unsigned int reset_num;
-> +};
-> +
-> +static const struct regmap_config a1_audio_regmap_cfg = {
-> +	.reg_bits = 32,
-> +	.val_bits = 32,
-> +	.reg_stride = 4,
-> +};
-> +
-> +static int a1_audio_clkc_probe(struct platform_device *pdev)
-> +{
-> +	const struct a1_audio_data *data;
-> +	struct regmap *map;
-> +	void __iomem *base;
-> +	struct clk *clk;
-> +	unsigned int i;
-> +	int ret;
-> +
-> +	data = of_device_get_match_data(&pdev->dev);
-> +	if (!data)
-> +		return -EINVAL;
-> +
-> +	if (data->core_fwname) {
-
-That is really over-complicated for what it does  ....
-
-> +		clk = devm_clk_get_enabled(&pdev->dev, data->core_fwname);
-
-It does not make a lot of sense that one of the 2 controllers as 2nd
-pclk.
-
-You should consider using the AUD2_CLKID_AUDIOTOP as a parent of audio
-gates instead. You would not have to that.
-
-> +		if (IS_ERR(clk))
-> +			return PTR_ERR(clk);
-> +	}
-
-
-
-> +
-> +	base = devm_platform_ioremap_resource(pdev, 0);
-> +	if (IS_ERR(base))
-> +		return PTR_ERR(base);
-> +
-> +	map = devm_regmap_init_mmio(&pdev->dev, base, &a1_audio_regmap_cfg);
-> +	if (IS_ERR(map))
-> +		return PTR_ERR(map);
-> +
-> +	clk = devm_clk_get_enabled(&pdev->dev, "pclk");
-> +	if (IS_ERR(clk))
-> +		return PTR_ERR(clk);
-> +
-> +	for (i = 0; i < data->hw_clks.num; i++) {
-> +		struct clk_hw *hw = data->hw_clks.hws[i];
-> +
-> +		ret = a1_register_clk(pdev, map, hw);
-> +		if (ret)
-> +			return ret;
-> +	}
-> +
-> +	ret = devm_of_clk_add_hw_provider(&pdev->dev, meson_clk_hw_get,
-> +					  (void *)&data->hw_clks);
-> +	if (ret)
-> +		return ret;
-> +
-> +	if (!data->reset_num)
-> +		return 0;
-> +
-> +	return meson_audio_rstc_register(&pdev->dev, map, data->reset_offset,
-> +					 data->reset_num);
-> +}
-
-Again this is over-complicated.
-Just make an external function for the register, use it for axg, a1,
-a1-vad, then make one file for each controller. That will keep the code
-clean and readable.
-
-keep it simple please.
-
-> +
-> +struct a1_audio_data a1_audio_data = {
-> +	.hw_clks = {
-> +		.hws = a1_audio_hw_clks,
-> +		.num = ARRAY_SIZE(a1_audio_hw_clks),
-> +	},
-> +	.core_fwname = "core",
-> +	.reset_offset = AUDIO_SW_RESET0,
-> +	.reset_num = 32,
-> +};
-> +
-> +struct a1_audio_data a1_audio2_data = {
-> +	.hw_clks = {
-> +		.hws = a1_audio2_hw_clks,
-> +		.num = ARRAY_SIZE(a1_audio2_hw_clks),
-> +	},
-> +};
-> +
-> +static const struct of_device_id a1_audio_clkc_match_table[] = {
-> +	{
-> +		.compatible = "amlogic,a1-audio-clkc",
-> +		.data = &a1_audio_data,
-> +	},
-> +	{
-> +		.compatible = "amlogic,a1-audio2-clkc",
-> +		.data = &a1_audio2_data,
-> +	},
-> +	{}
-> +};
-> +MODULE_DEVICE_TABLE(of, a1_audio_clkc_match_table);
-> +
-> +static struct platform_driver a1_audio_clkc_driver = {
-> +	.probe = a1_audio_clkc_probe,
-> +	.driver = {
-> +		.name = "a1-audio-clkc",
-> +		.of_match_table = a1_audio_clkc_match_table,
-> +	},
-> +};
-> +module_platform_driver(a1_audio_clkc_driver);
-> +
-> +MODULE_DESCRIPTION("Amlogic A1 Audio Clock driver");
-> +MODULE_AUTHOR("Jan Dakinevich <jan.dakinevich@salutedevices.com>");
-> +MODULE_LICENSE("GPL");
-> diff --git a/drivers/clk/meson/a1-audio.h b/drivers/clk/meson/a1-audio.h
-> new file mode 100644
-> index 000000000000..9ea9da21ff9b
-> --- /dev/null
-> +++ b/drivers/clk/meson/a1-audio.h
-> @@ -0,0 +1,45 @@
-> +/* SPDX-License-Identifier: (GPL-2.0 OR MIT) */
-> +/*
-> + * Copyright (c) 2024, SaluteDevices. All Rights Reserved.
-> + *
-> + * Author: Jan Dakinevich <jan.dakinevich@salutedevices.com>
-> + */
-> +
-> +#ifndef __A1_AUDIO_H
-> +#define __A1_AUDIO_H
-> +
-> +#define AUDIO_CLK_GATE_EN0	0x000
-> +#define AUDIO_MCLK_A_CTRL	0x008
-> +#define AUDIO_MCLK_B_CTRL	0x00c
-> +#define AUDIO_MCLK_C_CTRL	0x010
-> +#define AUDIO_MCLK_D_CTRL	0x014
-> +#define AUDIO_MCLK_E_CTRL	0x018
-> +#define AUDIO_MCLK_F_CTRL	0x01c
-> +#define AUDIO_SW_RESET0		0x028
-> +#define AUDIO_MST_A_SCLK_CTRL0	0x040
-> +#define AUDIO_MST_A_SCLK_CTRL1	0x044
-> +#define AUDIO_MST_B_SCLK_CTRL0	0x048
-> +#define AUDIO_MST_B_SCLK_CTRL1	0x04c
-> +#define AUDIO_MST_C_SCLK_CTRL0	0x050
-> +#define AUDIO_MST_C_SCLK_CTRL1	0x054
-> +#define AUDIO_MST_D_SCLK_CTRL0	0x058
-> +#define AUDIO_MST_D_SCLK_CTRL1	0x05c
-> +#define AUDIO_CLK_TDMIN_A_CTRL	0x080
-> +#define AUDIO_CLK_TDMIN_B_CTRL	0x084
-> +#define AUDIO_CLK_TDMIN_LB_CTRL	0x08c
-> +#define AUDIO_CLK_TDMOUT_A_CTRL	0x090
-> +#define AUDIO_CLK_TDMOUT_B_CTRL	0x094
-> +#define AUDIO_CLK_SPDIFIN_CTRL	0x09c
-> +#define AUDIO_CLK_RESAMPLE_CTRL	0x0a4
-> +#define AUDIO_CLK_LOCKER_CTRL	0x0a8
-> +#define AUDIO_CLK_EQDRC_CTRL	0x0c0
-> +
-> +#define AUDIO2_CLK_GATE_EN0	0x00c
-> +#define AUDIO2_MCLK_VAD_CTRL	0x040
-> +#define AUDIO2_CLK_VAD_CTRL	0x044
-> +#define AUDIO2_CLK_PDMIN_CTRL0	0x058
-> +#define AUDIO2_CLK_PDMIN_CTRL1	0x05c
-
-Same remark - header is useless.
-
-> +
-> +#include <dt-bindings/clock/amlogic,a1-audio-clkc.h>
-> +
-> +#endif /* __A1_AUDIO_H */
-
+In the past, we wanted to make sure that we never get tail pages of THP 
+from PMD entries, because something would currently be broken (we don't 
+support THP > PMD).
 
 -- 
-Jerome
+Cheers,
+
+David / dhildenb
+
