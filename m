@@ -1,104 +1,159 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8B948405D
-	for <linux-kernel@vger.kernel.org>; Tue,  2 Apr 2024 13:13:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36E177F7D3;
+	Tue,  2 Apr 2024 13:14:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712063635; cv=none; b=FZDt9QPAnuqlgfEiHu6k/f9jvmA8jndTQMtlZkZg3zLHitdFYkzOEzAK9fnv526CpvhT1zZw+zGoikJALwi7b/i/WkoX4w1YLqabEHPsXjhIMcMF7xkjT24VK8QBt+FL5HuSPEtcqP5pV7Qf5oxGOeVheI2RAdpjJTTyUmNu/aE=
+	t=1712063680; cv=none; b=eeb1zP6iV6oQobFm/w2/g2toUxGubF0MMn5Jn7HxGE0oumjw2Y5b8KrX/joOlDPFDR0a/aRfI4zLr/rWacu0j96trq2hnetjZgLf8osA6KtBZdoqTl2esYRLItTi3igyyqWRG6ZkMwnft45itqkJGtxqRm01NNEopkTzAKeXUyA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712063635; c=relaxed/simple;
-	bh=Xo/L48jvjuEGxvq24DHYX6gDPMmtGeRmKn1eh80C+Kg=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=OAfg71No6o/4cpOENTIPa/iSkpaRxZbgU96Lm6ix33C+IO4Qoac5Ed+V0tzgO1QBZPKJKeE5285WqoD7ijNYqBTwmgPaQzrcRtu0VdgRUh+pyU1menVHwoVXgmVqPjAxG/aL4HKscFDHRQ+6NstgGs60vgmQf22W85Fn1iOPR1Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <ore@pengutronix.de>)
-	id 1rrdxN-0007Ni-MW; Tue, 02 Apr 2024 15:13:41 +0200
-Received: from [2a0a:edc0:0:1101:1d::ac] (helo=dude04.red.stw.pengutronix.de)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <ore@pengutronix.de>)
-	id 1rrdxM-009zW2-El; Tue, 02 Apr 2024 15:13:40 +0200
-Received: from ore by dude04.red.stw.pengutronix.de with local (Exim 4.96)
-	(envelope-from <ore@pengutronix.de>)
-	id 1rrdxM-006Op1-1G;
-	Tue, 02 Apr 2024 15:13:40 +0200
-From: Oleksij Rempel <o.rempel@pengutronix.de>
-To: "David S. Miller" <davem@davemloft.net>,
-	Andrew Lunn <andrew@lunn.ch>,
-	Eric Dumazet <edumazet@google.com>,
-	Florian Fainelli <f.fainelli@gmail.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Vladimir Oltean <olteanv@gmail.com>,
-	Woojung Huh <woojung.huh@microchip.com>,
-	Arun Ramadoss <arun.ramadoss@microchip.com>
-Cc: Oleksij Rempel <o.rempel@pengutronix.de>,
-	kernel@pengutronix.de,
-	linux-kernel@vger.kernel.org,
-	netdev@vger.kernel.org,
-	UNGLinuxDriver@microchip.com,
-	=?UTF-8?q?S=C3=B8ren=20Andersen?= <san@skov.dk>
-Subject: [PATCH net-next v1 2/8] net: dsa: microchip: Make ksz8_r_dyn_mac_table() static
-Date: Tue,  2 Apr 2024 15:13:33 +0200
-Message-Id: <20240402131339.1525330-3-o.rempel@pengutronix.de>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240402131339.1525330-1-o.rempel@pengutronix.de>
-References: <20240402131339.1525330-1-o.rempel@pengutronix.de>
+	s=arc-20240116; t=1712063680; c=relaxed/simple;
+	bh=dNhWs1tSERBEqpT1H1jI1gPA9tR9hFX3rMeei4wKg3I=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=I134HRyrxsSzAy1HGBhTJfHT50fAtJzSYqdzO4v1QonQf1AONYVbrxQRtnf9rzI+vITmzwmlN2hVdWoldxGxCLVs6nNN44+CgclIf3MnWcAqMOK/voc+LfW307o9L4ZqMTc8Tym1dasHZQx5Vdr7ZiZXzUuFdGcHC/FEyDJM+YY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hNvqjAaL; arc=none smtp.client-ip=192.198.163.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hNvqjAaL"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1712063678; x=1743599678;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=dNhWs1tSERBEqpT1H1jI1gPA9tR9hFX3rMeei4wKg3I=;
+  b=hNvqjAaLYDpyPnV29zeS0RCRihuhJ4+iuBXIlRjln1/7L1Izt20oRT1x
+   zfS4hQKklR4w/eDqQvPZUG2y1az0nFdk18TpPbo1ChFVNkGfwUcZWj+KJ
+   FjMuGFNZbOomFEd48FHGJW1kahivd7doYoLiNqs98mHBHYqKH3W1QVtTT
+   5UwWv4WkHQF+F3sqStjAA6v3WAH3auvVwptU5ew672nISWbe7wMsHyYzE
+   WhdoNAMw2nMljMZnbKIYeT2TtqNg88BU9tMslcEgEMAC0i2dwsMUYiVkw
+   2RJxsizkVIdALxc9l7jVrSlzZLUWykfI3UOixapWmu1yEDi+V0muR+gcO
+   g==;
+X-CSE-ConnectionGUID: 5FvuF+rFR/Wd59lPMsobUg==
+X-CSE-MsgGUID: S5p3n9rESEi3PJiQadbSug==
+X-IronPort-AV: E=McAfee;i="6600,9927,11031"; a="32630976"
+X-IronPort-AV: E=Sophos;i="6.07,175,1708416000"; 
+   d="scan'208";a="32630976"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2024 06:14:37 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,11031"; a="915140683"
+X-IronPort-AV: E=Sophos;i="6.07,175,1708416000"; 
+   d="scan'208";a="915140683"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.72.54])
+  by fmsmga002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2024 06:14:33 -0700
+Received: from andy by smile with local (Exim 4.97)
+	(envelope-from <andriy.shevchenko@intel.com>)
+	id 1rrdyB-00000000oc0-1Wc3;
+	Tue, 02 Apr 2024 16:14:31 +0300
+Date: Tue, 2 Apr 2024 16:14:31 +0300
+From: Andy Shevchenko <andriy.shevchenko@intel.com>
+To: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>
+Cc: Sudeep Holla <sudeep.holla@arm.com>,
+	Cristian Marussi <cristian.marussi@arm.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Dan Carpenter <dan.carpenter@linaro.org>,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-gpio@vger.kernel.org,
+	Peng Fan <peng.fan@nxp.com>,
+	Oleksii Moisieiev <oleksii_moisieiev@epam.com>
+Subject: Re: [PATCH v7 3/4] firmware: arm_scmi: Add SCMI v3.2 pincontrol
+ protocol basic support
+Message-ID: <ZgwEtxj-qi6uy_m2@smile.fi.intel.com>
+References: <20240402-pinctrl-scmi-v7-0-3ea519d12cf7@nxp.com>
+ <20240402-pinctrl-scmi-v7-3-3ea519d12cf7@nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ore@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240402-pinctrl-scmi-v7-3-3ea519d12cf7@nxp.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-ksz8_r_dyn_mac_table() is not used outside the source file. Make it
-static.
+On Tue, Apr 02, 2024 at 10:22:23AM +0800, Peng Fan (OSS) wrote:
 
-Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
----
- drivers/net/dsa/microchip/ksz8.h    | 2 --
- drivers/net/dsa/microchip/ksz8795.c | 4 ++--
- 2 files changed, 2 insertions(+), 4 deletions(-)
+...
 
-diff --git a/drivers/net/dsa/microchip/ksz8.h b/drivers/net/dsa/microchip/ksz8.h
-index 5b38cbb7b058b..571c26ce71e47 100644
---- a/drivers/net/dsa/microchip/ksz8.h
-+++ b/drivers/net/dsa/microchip/ksz8.h
-@@ -19,8 +19,6 @@ void ksz8_flush_dyn_mac_table(struct ksz_device *dev, int port);
- void ksz8_port_setup(struct ksz_device *dev, int port, bool cpu_port);
- int ksz8_r_phy(struct ksz_device *dev, u16 phy, u16 reg, u16 *val);
- int ksz8_w_phy(struct ksz_device *dev, u16 phy, u16 reg, u16 val);
--int ksz8_r_dyn_mac_table(struct ksz_device *dev, u16 addr, u8 *mac_addr,
--			 u8 *fid, u8 *src_port, u16 *entries);
- void ksz8_r_mib_cnt(struct ksz_device *dev, int port, u16 addr, u64 *cnt);
- void ksz8_r_mib_pkt(struct ksz_device *dev, int port, u16 addr,
- 		    u64 *dropped, u64 *cnt);
-diff --git a/drivers/net/dsa/microchip/ksz8795.c b/drivers/net/dsa/microchip/ksz8795.c
-index f59a03e6981d2..e407111db6637 100644
---- a/drivers/net/dsa/microchip/ksz8795.c
-+++ b/drivers/net/dsa/microchip/ksz8795.c
-@@ -408,8 +408,8 @@ static int ksz8_valid_dyn_entry(struct ksz_device *dev, u8 *data)
- 	return 0;
- }
- 
--int ksz8_r_dyn_mac_table(struct ksz_device *dev, u16 addr, u8 *mac_addr,
--			 u8 *fid, u8 *src_port, u16 *entries)
-+static int ksz8_r_dyn_mac_table(struct ksz_device *dev, u16 addr, u8 *mac_addr,
-+				u8 *fid, u8 *src_port, u16 *entries)
- {
- 	u32 data_hi, data_lo;
- 	const u8 *shifts;
+> +#include <linux/module.h>
+> +#include <linux/scmi_protocol.h>
+> +#include <linux/slab.h>
+
+Please, follow IWYU principle, a lot of headers are missed.
+
+> +#include "common.h"
+> +#include "protocols.h"
+
+...
+
+> +		ret = scmi_pinctrl_get_pin_info(ph, selector,
+> +						&pi->pins[selector]);
+
+It's netter as a single line.
+
+> +		if (ret)
+> +			return ret;
+> +	}
+
+...
+
+> +static int scmi_pinctrl_protocol_init(const struct scmi_protocol_handle *ph)
+> +{
+> +	int ret;
+> +	u32 version;
+> +	struct scmi_pinctrl_info *pinfo;
+> +
+> +	ret = ph->xops->version_get(ph, &version);
+> +	if (ret)
+> +		return ret;
+> +
+> +	dev_dbg(ph->dev, "Pinctrl Version %d.%d\n",
+> +		PROTOCOL_REV_MAJOR(version), PROTOCOL_REV_MINOR(version));
+> +
+> +	pinfo = devm_kzalloc(ph->dev, sizeof(*pinfo), GFP_KERNEL);
+> +	if (!pinfo)
+> +		return -ENOMEM;
+> +
+> +	ret = scmi_pinctrl_attributes_get(ph, pinfo);
+> +	if (ret)
+> +		return ret;
+> +
+> +	pinfo->pins = devm_kcalloc(ph->dev, pinfo->nr_pins,
+> +				   sizeof(*pinfo->pins), GFP_KERNEL);
+> +	if (!pinfo->pins)
+> +		return -ENOMEM;
+> +
+> +	pinfo->groups = devm_kcalloc(ph->dev, pinfo->nr_groups,
+> +				     sizeof(*pinfo->groups), GFP_KERNEL);
+> +	if (!pinfo->groups)
+> +		return -ENOMEM;
+> +
+> +	pinfo->functions = devm_kcalloc(ph->dev, pinfo->nr_functions,
+> +					sizeof(*pinfo->functions), GFP_KERNEL);
+> +	if (!pinfo->functions)
+> +		return -ENOMEM;
+> +
+> +	pinfo->version = version;
+> +
+> +	return ph->set_priv(ph, pinfo, version);
+
+Same comments as per previous version. devm_ here is simply wrong.
+It breaks the order of freeing resources.
+
+I.o.w. I see *no guarantee* that these init-deinit functions will be properly
+called from the respective probe-remove. Moreover the latter one may also have
+its own devm allocations (which are rightfully placed) and you get completely
+out of control the resource management.
+
+> +}
+
 -- 
-2.39.2
+With Best Regards,
+Andy Shevchenko
+
 
