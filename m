@@ -1,125 +1,128 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 221E615AAAA;
-	Tue,  2 Apr 2024 18:48:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E57EC85C7D
+	for <linux-kernel@vger.kernel.org>; Tue,  2 Apr 2024 18:49:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712083717; cv=none; b=XxgA6SKsQK5Hlb33Kqh2wFAuXsnBPm7HqcvDwET/bPmFdrX+TKCxplh0OsHcBWe0RXm+/cZQl4y9kiLkTSe4Aqv49r+addjZPcJ8muS4RBhCA3UW0OnyQ6D2VAwACMsGCA1gEdlJ09niHlGty/9+poXHElULALgEDWQeocKRfpo=
+	t=1712083784; cv=none; b=Fx0vNmDtO7Mfv6kqscvCPg/K4AdrZ5eTINkhg81vHVd+4wmAxV/1kpRyNeSJL22N+hdcGk7fnxPFspmBiduis+D5WjmmkAlIJpszOSMz9YgW+d5UXb3BUMFHEocdrxXuW/lhTpWQKFDYmPqxjMkBGQxXdUmgwBWJRjT6wPBaRHQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712083717; c=relaxed/simple;
-	bh=mKrjhnY8pVcgEHLKKw5VsWYAh/llZ4ifRJMaYVxScms=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Aupp2iWQMGecgoHCfcdqHNVpTwUemee8ev+05TQfdxoX/g/vEuy5Z+NTgQlo9dQnFn9THckWCHDQsptUZJXF7NNNRj+2ESMdcJ+LvMzNc1al12mcqNZtWUuuO5DBPh4RzMiARbmoQY1MIzlvUmK9VzplUIwxe1xtDbuIhlleG3s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pQCHQU5E; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1712083784; c=relaxed/simple;
+	bh=weISqq2A6RI0H2LbwN7F+0X9UdQ8TvO+tJz9Kd/Hf90=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=iR6ad6qBY4z/5y0DivnTmDg1UAqcJn14fM2HkxXiQj7DMeUzPgEqsc/45livGoV/TbGRJcC+h93lkPvt5Aex9LqjhE/MmGcZyd/i4llvw8JKYx8GQWx3gEtbMDCZJ7XLWj6jKR41jDWtujWOifJbATluw34ArDksmlzNNkeJyiA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Wis1wMJZ; arc=none smtp.client-ip=209.85.214.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pQCHQU5E"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4794BC433C7;
-	Tue,  2 Apr 2024 18:48:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712083716;
-	bh=mKrjhnY8pVcgEHLKKw5VsWYAh/llZ4ifRJMaYVxScms=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=pQCHQU5EecHUloNS1mzyuT76vUsvoHOW8HJUKnliuoM2IRbghFV20xjh4JSmnZDrU
-	 NHAeHggejGhmARM1CeO6eIn+Q0ashBEccumjvC4KtesoTAdt536j68NaubLwBuW35X
-	 gxiHQrFtU/PP+NDvhD586PfmvLOc71bnlJAS0tyUNJLNeM3b1a+QHafG1uct3qGgeC
-	 AyNDZC6eQFBWQp1O6JTvsuirt08Vr+DJVTdGWslII5OpB62srTUFC/Ue3+05JODGGN
-	 ZUHs25oM4sZh/+3h6s/X5hTbcIxmQS57QGOfzkCwBZQejF4KROYn9No29ubTZKj2y1
-	 RQtdbK0MDFkig==
-Date: Tue, 2 Apr 2024 21:48:32 +0300
-From: Leon Romanovsky <leon@kernel.org>
-To: Edward Cree <ecree.xilinx@gmail.com>
-Cc: David Ahern <dsahern@kernel.org>, Jakub Kicinski <kuba@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Jason Gunthorpe <jgg@nvidia.com>,
-	Christoph Hellwig <hch@infradead.org>,
-	Saeed Mahameed <saeed@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
-	Jiri Pirko <jiri@nvidia.com>, Leonid Bloch <lbloch@nvidia.com>,
-	Itay Avraham <itayavr@nvidia.com>,
-	Saeed Mahameed <saeedm@nvidia.com>,
-	Aron Silverton <aron.silverton@oracle.com>,
-	linux-kernel@vger.kernel.org,
-	"netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-	Andy Gospodarek <andrew.gospodarek@broadcom.com>
-Subject: Re: [PATCH V4 0/5] mlx5 ConnectX control misc driver
-Message-ID: <20240402184832.GO11187@unreal>
-References: <20240304160237.GA2909161@nvidia.com>
- <9cc7127f-8674-43bc-b4d7-b1c4c2d96fed@kernel.org>
- <2024032248-ardently-ribcage-a495@gregkh>
- <510c1b6b-1738-4baa-bdba-54d478633598@kernel.org>
- <Zf2n02q0GevGdS-Z@C02YVCJELVCG>
- <20240322135826.1c4655e2@kernel.org>
- <e5c61607-4d66-4cd8-bf45-0aac2b3af126@kernel.org>
- <20240322154027.5555780a@kernel.org>
- <1cd2a70c-17b8-4421-b70b-3c0199a84a6a@kernel.org>
- <0ea32dd4-f408-5870-77eb-f18899f1ad44@gmail.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Wis1wMJZ"
+Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-1e28d7b03e9so9675ad.0
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Apr 2024 11:49:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1712083782; x=1712688582; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=588W+WKWGCHDk22Ud5hS9stI2LC3FAq1GuSxHQ/M9as=;
+        b=Wis1wMJZR1p7IRF3wzWLzAY99c3OMVlVZ1BsD8n3dNZRnv2JH3OoM1UohlshGO673i
+         zNcss4wVhSFndY9Ed5t99BfPy4Q9h7GLrhjnxyD9dns8M23UDz2J7NWW4Nzs34aH5Ldq
+         Lyk4lsF2naiZDlWvvbPDCIZaqxMRRqVANJFQ7w2UYmjmY5Gbas9iYIgGScewVO8g3FZO
+         GLfZr5zjTzFtFIUoMYGp0RXoxI+KpnZ/kwt5qi/jG9L7MNfSwJU6crSWPpk3W7ivxlFh
+         YOn6nl9mdd4pslTDxLNtGw9r5/OvKZ5hSCBQDNjsp6u03lo9jWOaIPUkG4tOYUBzkfHX
+         OBjQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712083782; x=1712688582;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=588W+WKWGCHDk22Ud5hS9stI2LC3FAq1GuSxHQ/M9as=;
+        b=S8n/F36qKQgTstkLn1cMErQa8OFH2GaTFN+hNHXIjFHE2ctDo15nUsj276VdOsUhb5
+         fO7P5JIpjpKRR+OeJX910yLFpifjJZQ5BOEHiMDzDeuVp+QHnhKkCICx8fj3vcfkSbII
+         LfVwLNfinbwbBN83H27W3KAHXk1be6PZAZObtguS5rf/8IlIuLTirFUS5754axkg9Qwh
+         tu3oEUwm3YfuefnFC03zioCMoMGhjo2qiUdy4Iz7MQs0ojA2KSB8C5NSXpVIkuLz6XCG
+         pjkq7IJjVsAFT/+vmAQk8EzECBvmdIjso4JcEDClnktKE0Tqt+SJp1YmA+8hdeVHAnbG
+         AbMw==
+X-Forwarded-Encrypted: i=1; AJvYcCW5gsLsJQUyyElmXgj13K1q2ZPLZ1pmQdXNXrpMG9pvTwv1D4rd5bVrVFbO8BPEexCDDwyoJsp3QQ0aUHJR1WuMQAOHKXQ9LHmKzfzh
+X-Gm-Message-State: AOJu0YwFGsrswliYF1SES3oVVuWYbbi2+vjErOJVD3g4WNYqj29EFu2Y
+	nnYW2C8v12JOSwM3o9HAuf1BCN4H1eCp99d2quIXFbIgNuPAJERKns57iLJVEjnRCOHmcSWVofy
+	GexsRKxcT5Ms+uNF4vuVYHvHjuP2rPS0WAC5f
+X-Google-Smtp-Source: AGHT+IFqE+UQS0RbhVUDfvVWh1jxlaucrKVTE2OWHdxUHvFSzVEw8wbwfhObgRXrJ5KsEFLTxz8yLY320Q5s7zmUQM4=
+X-Received: by 2002:a17:902:f645:b0:1dd:8001:d239 with SMTP id
+ m5-20020a170902f64500b001dd8001d239mr29669plg.14.1712083781959; Tue, 02 Apr
+ 2024 11:49:41 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <0ea32dd4-f408-5870-77eb-f18899f1ad44@gmail.com>
+References: <20240402184543.898923-1-namhyung@kernel.org>
+In-Reply-To: <20240402184543.898923-1-namhyung@kernel.org>
+From: Ian Rogers <irogers@google.com>
+Date: Tue, 2 Apr 2024 11:49:28 -0700
+Message-ID: <CAP-5=fWh+nrZukmvANf0rmG_Fw11hMgm=dPkHCG79F+tdzsTvQ@mail.gmail.com>
+Subject: Re: [PATCH] perf lock contention: Add a missing NULL check
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Kan Liang <kan.liang@linux.intel.com>, 
+	Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, 
+	LKML <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org, 
+	Song Liu <song@kernel.org>, bpf@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Apr 02, 2024 at 05:32:44PM +0100, Edward Cree wrote:
-> On 26/03/2024 14:57, David Ahern wrote:
-> > The proposal is an attempt at a common interface and common tooling to a
-> > degree but independent of any specific subsystem of which many are
-> > supported by the device.
-> 
-> [ Let me prefix this by noting that I'm speaking personally here, and
->   not representing the position of my employer. ]
+On Tue, Apr 2, 2024 at 11:45=E2=80=AFAM Namhyung Kim <namhyung@kernel.org> =
+wrote:
+>
+> I got a report for a failure in BPF verifier on a recent kernel with
+> perf lock contention command.  It checks task->sighand->siglock without
+> checking if sighand is NULL or not.  Let's add one.
+>
+>   ; if (&curr->sighand->siglock =3D=3D (void *)lock)
+>   265: (79) r1 =3D *(u64 *)(r0 +2624)     ; frame1: R0_w=3Dtrusted_ptr_ta=
+sk_struct(off=3D0,imm=3D0) R1_w=3Drcu_ptr_or_null_sighand_struct(off=3D0,im=
+m=3D0)
+>   266: (b7) r2 =3D 0                      ; frame1: R2_w=3D0
+>   267: (0f) r1 +=3D r2
+>   R1 pointer arithmetic on rcu_ptr_or_null_ prohibited, null-check it fir=
+st
+>   processed 164 insns (limit 1000000) max_states_per_insn 1 total_states =
+15 peak_states 15 mark_read 5
+>   -- END PROG LOAD LOG --
+>   libbpf: prog 'contention_end': failed to load: -13
+>   libbpf: failed to load object 'lock_contention_bpf'
+>   libbpf: failed to load BPF skeleton 'lock_contention_bpf': -13
+>   Failed to load lock-contention BPF skeleton
+>   lock contention BPF setup failed
+>   lock contention did not detect any lock contention
+>
+> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 
-<...>
+Reviewed-by: Ian Rogers <irogers@google.com>
 
->  you're getting maintainer pushback.
+Thanks,
+Ian
 
-May I suggest you to take a short break, collect names of people who
-participated in this discussion and check in git history/MAINTAINERS
-file their contribution to the linux kernel?
-
-After you do that, try to ask yourself if your response is still appropriate.
-
-Thanks.
-
-> 
-> Do we need to go all the way back to operating systems 101 and point out
->  that one of the fundamental jobs of a kernel is to *abstract* the
->  hardware, and provide *services* to userspace rather than mere devices?
-> 
-> Frankly, this whole thread reads to me like certain vendors whining that
->  they weren't expecting to have to get their new features *reviewed* by
->  upstream — possibly they thought devlink params would just get rubber-
->  stamped — and now they're finding that the kernel's quality standards
->  still apply.
-> Complaining that devlink params "don't scale" is disingenuous.  Patches
->  aren't languishing for want of reviewer resources; it's just that it
->  takes *submitter* time and effort to bring them up to the quality level
->  that's required, and occasionally the vendor has to (shock! horror!)
->  tell the world what one of their magic knobs actually *does*.
-> 
-> If all the configuration of these Complex Devices™ goes through fwctl
->  backdoors, where exactly is anyone going to discover the commonalities
->  to underlie the generic interfaces of the next generation?  What would
->  configuring plain vanilla netdevs be like today if, instead of a set of
->  well-defined cross-vendor APIs, ethtool (say) had been a mechanism to
->  write arbitrary values to hardware registers on the NIC?
-> These commonalities are key to allowing a product category to mature.  I
->  realise vendors in many cases don't want that to happen, because mature
->  products are largely commoditised and thus don't command huge margins;
->  but Linux isn't here to serve vendors' interests at the expense of
->  users.
-> 
-> On 23/03/2024 01:27, Saeed Mahameed wrote:
-> > It is obvious to everyone that in the AI era, everyone needs
-> > customization
-> 
-> It's always possible to argue that the New Thing is qualitatively
->  different from anything that went before, that these "multibillion
->  gate devices" need to be able to break the rules.
-> But the truth is, you aren't that special.
-> 
-> -e
+> ---
+>  tools/perf/util/bpf_skel/lock_contention.bpf.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/tools/perf/util/bpf_skel/lock_contention.bpf.c b/tools/perf/=
+util/bpf_skel/lock_contention.bpf.c
+> index fb54bd38e7d0..4e5914d7eeaa 100644
+> --- a/tools/perf/util/bpf_skel/lock_contention.bpf.c
+> +++ b/tools/perf/util/bpf_skel/lock_contention.bpf.c
+> @@ -305,7 +305,7 @@ static inline __u32 check_lock_type(__u64 lock, __u32=
+ flags)
+>                 break;
+>         case LCB_F_SPIN:  /* spinlock */
+>                 curr =3D bpf_get_current_task_btf();
+> -               if (&curr->sighand->siglock =3D=3D (void *)lock)
+> +               if (curr->sighand && &curr->sighand->siglock =3D=3D (void=
+ *)lock)
+>                         return LCD_F_SIGHAND_LOCK;
+>                 break;
+>         default:
+> --
+> 2.44.0.478.gd926399ef9-goog
+>
