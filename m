@@ -1,435 +1,231 @@
-Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com [209.85.167.49])
+Received: from aposti.net (aposti.net [89.234.176.197])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AF706341B
-	for <linux-kernel@vger.kernel.org>; Tue,  2 Apr 2024 11:30:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B83960266;
+	Tue,  2 Apr 2024 11:31:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.234.176.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712057429; cv=none; b=fKloXH6JPpp1QQPz84D1RH8t4ha1IK4nOF7aCWk/Bzk8GGT7HzJHhNH3N79X/PmWlq7eTzp4M3nbSSiIHnb9XXcyaKxfe64i+3GF2w17joxX/CqXxshSMxCBAzUsIPZhZzJB/x0W/3VYFvE7HgBSpeEPFawvlSIC/YCVoLGTvLQ=
+	t=1712057493; cv=none; b=q8KewrLXbqvUM7HRYDYyMxKD4kasCzWVdwwxBm4Q4lsIu9DAoTYrQ2UnvOOqvsBgfpEKaN8qy7YWaj9cbEWPal2rIA0oKU5EFBlZX4opOHVVcKY6S985rouZPbNXzgIUUtkRx3d0x0pX2zB5zggG9nxj8YR8zQ3kktqNR7QMPVs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712057429; c=relaxed/simple;
-	bh=FyHiCae21QW9c2qk8EUOXjxYO+7PzU4htDCvkO4JqE0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=qexV55uCVzLBs9SQdpjRjghzKJ7HchVJXGPSLEl5PIZBCtW//f2BP2lRH+lEuhfPvLt/Gu4tJqv74ZdScWnNcuH3hcRfVsC0xT0bvm9AELJYZoUjOaShGD2lUGi1/bL4ipBKI0ubvyCVxRS5SlSBwRId5ni59IZqnSAtWRqkkNU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mSS9gsSi; arc=none smtp.client-ip=209.85.167.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1712057493; c=relaxed/simple;
+	bh=4G0sNbKcdCOvjHdR2aysek6guxhi8tnhqOLrZUNq+Ig=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=cZw0Q3H+8Yttmoo5arm2jTKytAiM9W9pQu1eq/Cc+M3KKWj8nCqUypTNUk/k9W/uVESe1vFKMRzpAsXoTMceE6IUeLJMqVN8KipnuoezZ3CyBHbYLBg6HlTecPlInMBm1oXJXd2AMJQQVuEtcWgNmOBhM7Qq7tpC9hI1ukQvMZs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=crapouillou.net; spf=pass smtp.mailfrom=crapouillou.net; dkim=pass (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b=3+PWiZnt; arc=none smtp.client-ip=89.234.176.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=crapouillou.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=crapouillou.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mSS9gsSi"
-Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-513e134f73aso6496814e87.2
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Apr 2024 04:30:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1712057426; x=1712662226; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=tvLJKayzGhGCWIQRgWMmiuFqAyfV+XipkMVmkcqYEZ4=;
-        b=mSS9gsSiwpia2IquoaTddfO7R8wEN8TaHcxUFy6/LC5Sn+DGy/GVeBt087NcJnhA45
-         5vDmXwu5DrHexUOWdU86vR1b0qEFTkSTdBxEGnvt7hTTbfTwF11ztpVILNvSbFyfYERa
-         hvkuwd+wKNyvWma6QLX+0aZO42KaFV8SaL162soH86vX3/E9sCiTumiCX1/MYKZuY12l
-         +sirF9sYiDYKF/8r6LuHTdS9lCTQIHqQu5rUtNUcUFH7GpnID1Q10be8osamzIslfpzi
-         6lbRiaNcb6ScHlark9PKJQ+1QPvqM+40cuAZhn2szJjMHS57I76FzUeEy/UQMIFPtOx2
-         Dykw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712057426; x=1712662226;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=tvLJKayzGhGCWIQRgWMmiuFqAyfV+XipkMVmkcqYEZ4=;
-        b=fXTChlVFNmel7eRbW1Dww7lGAUDkSI5O0Hg5I/wLUdNH7WCCpIKLl9lwJJELLqd0Mw
-         +s7wQt+xnAmml+3zI8b6HpCleHcXEL/RVpkedGSoSLn7TYlOIJ6ofSSLNtI4Stq9Rkix
-         bax8a6oInIUhZ+lTcuOYI68GrXn49DpBp2W50e6xn7KdiTzl2KL44axquuT/r7fW2BZ+
-         HwdShB8LynkAige3ghAhsR7tsWwPRmSgcGMPk5lH6zq8ew5RinPfz7/TyBjZtet+XNrX
-         A3vvU4mX93U5rILnjeDp7olubIbWbL3nOXZ+v/gKl+CBYFz/8HaVUjHEV28TGeHvUG+W
-         GFcQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUtvhIsEy9zxcbeFL7MvpXCR8ksiJc9A9LssW06mWSnaBwNysTzHkJLc81jlSqSbpMtKxf7vybgtCz9eI/ogBph9/wtZTXuJb6+eGYf
-X-Gm-Message-State: AOJu0YxHCSKqMouhahJYGv8e/v3Y0eMz9J43Lfud+Gm0ugv+w1kokWvY
-	hLnAqrkIRnOgbwrBeB2zM5tBwFYvPDMFvFqsjctZ0yk/CcP/U6nwP+dR3sXTds2D2kx97Cl5fLz
-	YHV+AXfHK9Jt6XGVA5gDL35IbJCw=
-X-Google-Smtp-Source: AGHT+IG4CfnxLbVPc+7VK201cG0D9tzVYq3yiSkvweNt1GPtOsN270C8O0XLt57IhfAo50OYUih6KbzG7fXfKtetwys=
-X-Received: by 2002:a05:6512:21ca:b0:515:8bde:56c3 with SMTP id
- d10-20020a05651221ca00b005158bde56c3mr9309404lft.26.1712057425386; Tue, 02
- Apr 2024 04:30:25 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="3+PWiZnt"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+	s=mail; t=1712057487;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=RACmCVo3oQizc0IV4xsfh1Yt5T/9H2Y8ArFlx9eSREM=;
+	b=3+PWiZntDUNpIPR9lZJONsKTr7S7V+JfwELyvJim7PbDNPejxbk9kNjwARkaSGeRA35wRu
+	V5DfyIBRIglj7tKbU+PHJ+/asCCVIxK5QV+R5y3Erlo69ehIchvfFuPpaCD8kHqTkHZOnB
+	ULIVfZ6QwtCtP+4iRZjRzESWmMKPAqo=
+Message-ID: <599394c0220079b7b42dc732be817ca8a1eb4214.camel@crapouillou.net>
+Subject: Re: [PATCH v9 1/6] dmaengine: Add API function
+ dmaengine_prep_peripheral_dma_vec()
+From: Paul Cercueil <paul@crapouillou.net>
+To: Vinod Koul <vkoul@kernel.org>
+Cc: Jonathan Cameron <jic23@kernel.org>, Christian =?ISO-8859-1?Q?K=F6nig?=
+ <christian.koenig@amd.com>, Jonathan Corbet <corbet@lwn.net>, Lars-Peter
+ Clausen <lars@metafoo.de>, Sumit Semwal <sumit.semwal@linaro.org>, Nuno Sa
+ <nuno.sa@analog.com>,  Michael Hennerich <michael.hennerich@analog.com>,
+ linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ dmaengine@vger.kernel.org, linux-iio@vger.kernel.org, 
+ linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org, 
+ linaro-mm-sig@lists.linaro.org
+Date: Tue, 02 Apr 2024 13:31:25 +0200
+In-Reply-To: <ZgUM1LFEWs3lwoAU@matsya>
+References: <20240310124836.31863-1-paul@crapouillou.net>
+	 <20240310124836.31863-2-paul@crapouillou.net> <ZgUM1LFEWs3lwoAU@matsya>
+Autocrypt: addr=paul@crapouillou.net; prefer-encrypt=mutual;
+ keydata=mQENBF0KhcEBCADkfmrzdTOp/gFOMQX0QwKE2WgeCJiHPWkpEuPH81/HB2dpjPZNW03ZM
+ LQfECbbaEkdbN4YnPfXgcc1uBe5mwOAPV1MBlaZcEt4M67iYQwSNrP7maPS3IaQJ18ES8JJ5Uf5Uz
+ FZaUawgH+oipYGW+v31cX6L3k+dGsPRM0Pyo0sQt52fsopNPZ9iag0iY7dGNuKenaEqkYNjwEgTtN
+ z8dt6s3hMpHIKZFL3OhAGi88wF/21isv0zkF4J0wlf9gYUTEEY3Eulx80PTVqGIcHZzfavlWIdzhe
+ +rxHTDGVwseR2Y1WjgFGQ2F+vXetAB8NEeygXee+i9nY5qt9c07m8mzjABEBAAG0JFBhdWwgQ2VyY
+ 3VlaWwgPHBhdWxAY3JhcG91aWxsb3UubmV0PokBTgQTAQoAOBYhBNdHYd8OeCBwpMuVxnPua9InSr
+ 1BBQJdCoXBAhsDBQsJCAcCBhUKCQgLAgQWAgMBAh4BAheAAAoJEHPua9InSr1BgvIH/0kLyrI3V0f
+ 33a6D3BJwc1grbygPVYGuC5l5eMnAI+rDmLR19E2yvibRpgUc87NmPEQPpbbtAZt8On/2WZoE5OIP
+ dlId/AHNpdgAtGXo0ZX4LGeVPjxjdkbrKVHxbcdcnY+zzaFglpbVSvp76pxqgVg8PgxkAAeeJV+ET
+ 4t0823Gz2HzCL/6JZhvKAEtHVulOWoBh368SYdolp1TSfORWmHzvQiCCCA+j0cMkYVGzIQzEQhX7U
+ rf9N/nhU5/SGLFEi9DcBfXoGzhyQyLXflhJtKm3XGB1K/pPulbKaPcKAl6rIDWPuFpHkSbmZ9r4KF
+ lBwgAhlGy6nqP7O3u7q23hRW5AQ0EXQqFwQEIAMo+MgvYHsyjX3Ja4Oolg1Txzm8woj30ch2nACFC
+ qaO0R/1kLj2VVeLrDyQUOlXx9PD6IQI4M8wy8m0sR4wV2p/g/paw7k65cjzYYLh+FdLNyO7IWYXnd
+ JO+wDPi3aK/YKUYepqlP+QsmaHNYNdXEQDRKqNfJg8t0f5rfzp9ryxd1tCnbV+tG8VHQWiZXNqN70
+ 62DygSNXFUfQ0vZ3J2D4oAcIAEXTymRQ2+hr3Hf7I61KMHWeSkCvCG2decTYsHlw5Erix/jYWqVOt
+ X0roOOLqWkqpQQJWtU+biWrAksmFmCp5fXIg1Nlg39v21xCXBGxJkxyTYuhdWyu1yDQ+LSIUAEQEA
+ AYkBNgQYAQoAIBYhBNdHYd8OeCBwpMuVxnPua9InSr1BBQJdCoXBAhsMAAoJEHPua9InSr1B4wsH/
+ Az767YCT0FSsMNt1jkkdLCBi7nY0GTW+PLP1a4zvVqFMo/vD6uz1ZflVTUAEvcTi3VHYZrlgjcxmc
+ Gu239oruqUS8Qy/xgZBp9KF0NTWQSl1iBfVbIU5VV1vHS6r77W5x0qXgfvAUWOH4gmN3MnF01SH2z
+ McLiaUGF+mcwl15rHbjnT3Nu2399aSE6cep86igfCAyFUOXjYEGlJy+c6UyT+DUylpjQg0nl8MlZ/
+ 7Whg2fAU9+FALIbQYQzGlT4c71SibR9T741jnegHhlmV4WXXUD6roFt54t0MSAFSVxzG8mLcSjR2c
+ LUJ3NIPXixYUSEn3tQhfZj07xIIjWxAYZo=
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240327144537.4165578-1-ryan.roberts@arm.com>
- <20240327144537.4165578-7-ryan.roberts@arm.com> <CAK1f24kON1tLerfYMPUO5vXN2yL9UXozOgACDtSwgGO_zFzTQQ@mail.gmail.com>
- <e0b6fb0e-0ef0-4b58-99ef-3d74fb0e4079@arm.com>
-In-Reply-To: <e0b6fb0e-0ef0-4b58-99ef-3d74fb0e4079@arm.com>
-From: Lance Yang <ioworker0@gmail.com>
-Date: Tue, 2 Apr 2024 19:30:13 +0800
-Message-ID: <CAK1f24mBNUQ8155+TxxR9tBkJmE=GAHW7bi-Z2cpsSw=3FDUtg@mail.gmail.com>
-Subject: Re: [PATCH v5 6/6] mm: madvise: Avoid split during MADV_PAGEOUT and MADV_COLD
-To: Ryan Roberts <ryan.roberts@arm.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>, David Hildenbrand <david@redhat.com>, 
-	Matthew Wilcox <willy@infradead.org>, Huang Ying <ying.huang@intel.com>, Gao Xiang <xiang@kernel.org>, 
-	Yu Zhao <yuzhao@google.com>, Yang Shi <shy828301@gmail.com>, Michal Hocko <mhocko@suse.com>, 
-	Kefeng Wang <wangkefeng.wang@huawei.com>, Barry Song <21cnbao@gmail.com>, 
-	Chris Li <chrisl@kernel.org>, linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
-	Barry Song <v-songbaohua@oppo.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Tue, Apr 2, 2024 at 7:20=E2=80=AFPM Ryan Roberts <ryan.roberts@arm.com> =
-wrote:
->
-> On 01/04/2024 13:25, Lance Yang wrote:
-> > On Wed, Mar 27, 2024 at 10:46=E2=80=AFPM Ryan Roberts <ryan.roberts@arm=
-.com> wrote:
-> >>
-> >> Rework madvise_cold_or_pageout_pte_range() to avoid splitting any larg=
-e
-> >> folio that is fully and contiguously mapped in the pageout/cold vm
-> >> range. This change means that large folios will be maintained all the
-> >> way to swap storage. This both improves performance during swap-out, b=
-y
-> >> eliding the cost of splitting the folio, and sets us up nicely for
-> >> maintaining the large folio when it is swapped back in (to be covered =
-in
-> >> a separate series).
-> >>
-> >> Folios that are not fully mapped in the target range are still split,
-> >> but note that behavior is changed so that if the split fails for any
-> >> reason (folio locked, shared, etc) we now leave it as is and move to t=
-he
-> >> next pte in the range and continue work on the proceeding folios.
-> >> Previously any failure of this sort would cause the entire operation t=
-o
-> >> give up and no folios mapped at higher addresses were paged out or mad=
-e
-> >> cold. Given large folios are becoming more common, this old behavior
-> >> would have likely lead to wasted opportunities.
-> >>
-> >> While we are at it, change the code that clears young from the ptes to
-> >> use ptep_test_and_clear_young(), via the new mkold_ptes() batch helper
-> >> function. This is more efficent than get_and_clear/modify/set,
-> >> especially for contpte mappings on arm64, where the old approach would
-> >> require unfolding/refolding and the new approach can be done in place.
-> >>
-> >> Reviewed-by: Barry Song <v-songbaohua@oppo.com>
-> >> Signed-off-by: Ryan Roberts <ryan.roberts@arm.com>
-> >> ---
-> >>  include/linux/pgtable.h | 30 ++++++++++++++
-> >>  mm/internal.h           | 12 +++++-
-> >>  mm/madvise.c            | 88 ++++++++++++++++++++++++----------------=
--
-> >>  mm/memory.c             |  4 +-
-> >>  4 files changed, 93 insertions(+), 41 deletions(-)
-> >>
-> >> diff --git a/include/linux/pgtable.h b/include/linux/pgtable.h
-> >> index 8185939df1e8..391f56a1b188 100644
-> >> --- a/include/linux/pgtable.h
-> >> +++ b/include/linux/pgtable.h
-> >> @@ -361,6 +361,36 @@ static inline int ptep_test_and_clear_young(struc=
-t vm_area_struct *vma,
-> >>  }
-> >>  #endif
-> >>
-> >> +#ifndef mkold_ptes
-> >> +/**
-> >> + * mkold_ptes - Mark PTEs that map consecutive pages of the same foli=
-o as old.
-> >> + * @vma: VMA the pages are mapped into.
-> >> + * @addr: Address the first page is mapped at.
-> >> + * @ptep: Page table pointer for the first entry.
-> >> + * @nr: Number of entries to mark old.
-> >> + *
-> >> + * May be overridden by the architecture; otherwise, implemented as a=
- simple
-> >> + * loop over ptep_test_and_clear_young().
-> >> + *
-> >> + * Note that PTE bits in the PTE range besides the PFN can differ. Fo=
-r example,
-> >> + * some PTEs might be write-protected.
-> >> + *
-> >> + * Context: The caller holds the page table lock.  The PTEs map conse=
-cutive
-> >> + * pages that belong to the same folio.  The PTEs are all in the same=
- PMD.
-> >> + */
-> >> +static inline void mkold_ptes(struct vm_area_struct *vma, unsigned lo=
-ng addr,
-> >> +               pte_t *ptep, unsigned int nr)
-> >> +{
-> >> +       for (;;) {
-> >> +               ptep_test_and_clear_young(vma, addr, ptep);
-> >
-> > IIUC, if the first PTE is a CONT-PTE, then calling ptep_test_and_clear_=
-young()
-> > will clear the young bit for the entire contig range to avoid having
-> > to unfold. So,
-> > the other PTEs within the range don't need to clear again.
-> >
-> > Maybe we should consider overriding mkold_ptes for arm64?
->
-> Yes completely agree. I was saving this for a separate submission though,=
- to
-> reduce the complexity of this initial series as much as possible. Let me =
-know if
-> you disagree and want to see that change as part of this series.
+Hi Vinod,
 
-Feel free to save the change for a separate submission :)
+Le jeudi 28 mars 2024 =C3=A0 11:53 +0530, Vinod Koul a =C3=A9crit=C2=A0:
+> On 10-03-24, 13:48, Paul Cercueil wrote:
+> > This function can be used to initiate a scatter-gather DMA
+> > transfer,
+> > where the address and size of each segment is located in one entry
+> > of
+> > the dma_vec array.
+> >=20
+> > The major difference with dmaengine_prep_slave_sg() is that it
+> > supports
+> > specifying the lengths of each DMA transfer; as trying to override
+> > the
+> > length of the transfer with dmaengine_prep_slave_sg() is a very
+> > tedious
+> > process. The introduction of a new API function is also justified
+> > by the
+> > fact that scatterlists are on their way out.
+> >=20
+> > Note that dmaengine_prep_interleaved_dma() is not helpful either in
+> > that
+> > case, as it assumes that the address of each segment will be higher
+> > than
+> > the one of the previous segment, which we just cannot guarantee in
+> > case
+> > of a scatter-gather transfer.
+> >=20
+> > Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+> > Signed-off-by: Nuno Sa <nuno.sa@analog.com>
+> >=20
+> > ---
+> > v3: New patch
+> >=20
+> > v5: Replace with function dmaengine_prep_slave_dma_vec(), and
+> > struct
+> > =C2=A0=C2=A0=C2=A0 'dma_vec'.
+> > =C2=A0=C2=A0=C2=A0 Note that at some point we will need to support cycl=
+ic
+> > transfers
+> > =C2=A0=C2=A0=C2=A0 using dmaengine_prep_slave_dma_vec(). Maybe with a n=
+ew "flags"
+> > =C2=A0=C2=A0=C2=A0 parameter to the function?
+> >=20
+> > v7:
+> > =C2=A0 - Renamed *device_prep_slave_dma_vec() ->
+> > device_prep_peripheral_dma_vec();
+> > =C2=A0 - Added a new flag parameter to the function as agreed between
+> > Paul
+> > =C2=A0=C2=A0=C2=A0 and Vinod. I renamed the first parameter to prep_fla=
+gs as it's
+> > supposed to
+> > =C2=A0=C2=A0=C2=A0 be used (I think) with enum dma_ctrl_flags. I'm not =
+really sure
+> > how that API
+> > =C2=A0=C2=A0=C2=A0 can grow but I was thinking in just having a bool cy=
+clic
+> > parameter (as the
+> > =C2=A0=C2=A0=C2=A0 first intention of the flags is to support cyclic tr=
+ansfers)
+> > but ended up
+> > =C2=A0=C2=A0=C2=A0 "respecting" the previously agreed approach.
+> > ---
+> > =C2=A0include/linux/dmaengine.h | 27 +++++++++++++++++++++++++++
+> > =C2=A01 file changed, 27 insertions(+)
+> >=20
+> > diff --git a/include/linux/dmaengine.h b/include/linux/dmaengine.h
+> > index 752dbde4cec1..856df8cd9a4e 100644
+> > --- a/include/linux/dmaengine.h
+> > +++ b/include/linux/dmaengine.h
+> > @@ -160,6 +160,16 @@ struct dma_interleaved_template {
+> > =C2=A0	struct data_chunk sgl[];
+> > =C2=A0};
+> > =C2=A0
+> > +/**
+> > + * struct dma_vec - DMA vector
+> > + * @addr: Bus address of the start of the vector
+> > + * @len: Length in bytes of the DMA vector
+> > + */
+> > +struct dma_vec {
+> > +	dma_addr_t addr;
+> > +	size_t len;
+> > +};
+> > +
+> > =C2=A0/**
+> > =C2=A0 * enum dma_ctrl_flags - DMA flags to augment operation
+> > preparation,
+> > =C2=A0 *=C2=A0 control completion, and communicate status.
+> > @@ -910,6 +920,10 @@ struct dma_device {
+> > =C2=A0	struct dma_async_tx_descriptor
+> > *(*device_prep_dma_interrupt)(
+> > =C2=A0		struct dma_chan *chan, unsigned long flags);
+> > =C2=A0
+> > +	struct dma_async_tx_descriptor
+> > *(*device_prep_peripheral_dma_vec)(
+> > +		struct dma_chan *chan, const struct dma_vec *vecs,
+> > +		size_t nents, enum dma_transfer_direction
+> > direction,
+> > +		unsigned long prep_flags, unsigned long flags);
+> > =C2=A0	struct dma_async_tx_descriptor *(*device_prep_slave_sg)(
+> > =C2=A0		struct dma_chan *chan, struct scatterlist *sgl,
+> > =C2=A0		unsigned int sg_len, enum dma_transfer_direction
+> > direction,
+> > @@ -973,6 +987,19 @@ static inline struct dma_async_tx_descriptor
+> > *dmaengine_prep_slave_single(
+> > =C2=A0						=C2=A0 dir, flags,
+> > NULL);
+> > =C2=A0}
+> > =C2=A0
+> > +static inline struct dma_async_tx_descriptor
+> > *dmaengine_prep_peripheral_dma_vec(
+> > +	struct dma_chan *chan, const struct dma_vec *vecs, size_t
+> > nents,
+> > +	enum dma_transfer_direction dir, unsigned long prep_flags,
+> > +	unsigned long flags)
+> > +{
+> > +	if (!chan || !chan->device || !chan->device-
+> > >device_prep_peripheral_dma_vec)
+> > +		return NULL;
+> > +
+> > +	return chan->device->device_prep_peripheral_dma_vec(chan,
+> > vecs, nents,
+> > +							=C2=A0=C2=A0=C2=A0 dir,
+> > prep_flags,
+> > +							=C2=A0=C2=A0=C2=A0
+> > flags);
+> > +}
+>=20
+> API looks good to me, thanks
+> Few nits though:
+> - Can we add kernel-doc for this new API please
+> - Also update the documentation adding this new api
+> - Lastly, we seem to have two flags, I know you have added a comment
+> but
+> =C2=A0 I dont seem to recall the discussion (looked at old threads for
+> clue
+> =C2=A0 as well), can you please remind me why we need both? And in your
+> case,
+> =C2=A0 what is the intended usage of these flags, i would prefer single
+> =C2=A0 clean one...
+>=20
 
->
-> >
-> > Thanks,
-> > Lance
-> >
-> >> +               if (--nr =3D=3D 0)
-> >> +                       break;
-> >> +               ptep++;
-> >> +               addr +=3D PAGE_SIZE;
-> >> +       }
-> >> +}
-> >> +#endif
-> >> +
-> >>  #ifndef __HAVE_ARCH_PMDP_TEST_AND_CLEAR_YOUNG
-> >>  #if defined(CONFIG_TRANSPARENT_HUGEPAGE) || defined(CONFIG_ARCH_HAS_N=
-ONLEAF_PMD_YOUNG)
-> >>  static inline int pmdp_test_and_clear_young(struct vm_area_struct *vm=
-a,
-> >> diff --git a/mm/internal.h b/mm/internal.h
-> >> index eadb79c3a357..efee8e4cd2af 100644
-> >> --- a/mm/internal.h
-> >> +++ b/mm/internal.h
-> >> @@ -130,6 +130,8 @@ static inline pte_t __pte_batch_clear_ignored(pte_=
-t pte, fpb_t flags)
-> >>   * @flags: Flags to modify the PTE batch semantics.
-> >>   * @any_writable: Optional pointer to indicate whether any entry exce=
-pt the
-> >>   *               first one is writable.
-> >> + * @any_young: Optional pointer to indicate whether any entry except =
-the
-> >> + *               first one is young.
-> >>   *
-> >>   * Detect a PTE batch: consecutive (present) PTEs that map consecutiv=
-e
-> >>   * pages of the same large folio.
-> >> @@ -145,16 +147,18 @@ static inline pte_t __pte_batch_clear_ignored(pt=
-e_t pte, fpb_t flags)
-> >>   */
-> >>  static inline int folio_pte_batch(struct folio *folio, unsigned long =
-addr,
-> >>                 pte_t *start_ptep, pte_t pte, int max_nr, fpb_t flags,
-> >> -               bool *any_writable)
-> >> +               bool *any_writable, bool *any_young)
-> >>  {
-> >>         unsigned long folio_end_pfn =3D folio_pfn(folio) + folio_nr_pa=
-ges(folio);
-> >>         const pte_t *end_ptep =3D start_ptep + max_nr;
-> >>         pte_t expected_pte, *ptep;
-> >> -       bool writable;
-> >> +       bool writable, young;
-> >>         int nr;
-> >>
-> >>         if (any_writable)
-> >>                 *any_writable =3D false;
-> >> +       if (any_young)
-> >> +               *any_young =3D false;
-> >>
-> >>         VM_WARN_ON_FOLIO(!pte_present(pte), folio);
-> >>         VM_WARN_ON_FOLIO(!folio_test_large(folio) || max_nr < 1, folio=
-);
-> >> @@ -168,6 +172,8 @@ static inline int folio_pte_batch(struct folio *fo=
-lio, unsigned long addr,
-> >>                 pte =3D ptep_get(ptep);
-> >>                 if (any_writable)
-> >>                         writable =3D !!pte_write(pte);
-> >> +               if (any_young)
-> >> +                       young =3D !!pte_young(pte);
-> >>                 pte =3D __pte_batch_clear_ignored(pte, flags);
-> >>
-> >>                 if (!pte_same(pte, expected_pte))
-> >> @@ -183,6 +189,8 @@ static inline int folio_pte_batch(struct folio *fo=
-lio, unsigned long addr,
-> >>
-> >>                 if (any_writable)
-> >>                         *any_writable |=3D writable;
-> >> +               if (any_young)
-> >> +                       *any_young |=3D young;
-> >>
-> >>                 nr =3D pte_batch_hint(ptep, pte);
-> >>                 expected_pte =3D pte_advance_pfn(expected_pte, nr);
-> >> diff --git a/mm/madvise.c b/mm/madvise.c
-> >> index 070bedb4996e..bd00b83e7c50 100644
-> >> --- a/mm/madvise.c
-> >> +++ b/mm/madvise.c
-> >> @@ -336,6 +336,7 @@ static int madvise_cold_or_pageout_pte_range(pmd_t=
- *pmd,
-> >>         LIST_HEAD(folio_list);
-> >>         bool pageout_anon_only_filter;
-> >>         unsigned int batch_count =3D 0;
-> >> +       int nr;
-> >>
-> >>         if (fatal_signal_pending(current))
-> >>                 return -EINTR;
-> >> @@ -423,7 +424,8 @@ static int madvise_cold_or_pageout_pte_range(pmd_t=
- *pmd,
-> >>                 return 0;
-> >>         flush_tlb_batched_pending(mm);
-> >>         arch_enter_lazy_mmu_mode();
-> >> -       for (; addr < end; pte++, addr +=3D PAGE_SIZE) {
-> >> +       for (; addr < end; pte +=3D nr, addr +=3D nr * PAGE_SIZE) {
-> >> +               nr =3D 1;
-> >>                 ptent =3D ptep_get(pte);
-> >>
-> >>                 if (++batch_count =3D=3D SWAP_CLUSTER_MAX) {
-> >> @@ -447,55 +449,67 @@ static int madvise_cold_or_pageout_pte_range(pmd=
-_t *pmd,
-> >>                         continue;
-> >>
-> >>                 /*
-> >> -                * Creating a THP page is expensive so split it only i=
-f we
-> >> -                * are sure it's worth. Split it if we are only owner.
-> >> +                * If we encounter a large folio, only split it if it =
-is not
-> >> +                * fully mapped within the range we are operating on. =
-Otherwise
-> >> +                * leave it as is so that it can be swapped out whole.=
- If we
-> >> +                * fail to split a folio, leave it in place and advanc=
-e to the
-> >> +                * next pte in the range.
-> >>                  */
-> >>                 if (folio_test_large(folio)) {
-> >> -                       int err;
-> >> -
-> >> -                       if (folio_likely_mapped_shared(folio))
-> >> -                               break;
-> >> -                       if (pageout_anon_only_filter && !folio_test_an=
-on(folio))
-> >> -                               break;
-> >> -                       if (!folio_trylock(folio))
-> >> -                               break;
-> >> -                       folio_get(folio);
-> >> -                       arch_leave_lazy_mmu_mode();
-> >> -                       pte_unmap_unlock(start_pte, ptl);
-> >> -                       start_pte =3D NULL;
-> >> -                       err =3D split_folio(folio);
-> >> -                       folio_unlock(folio);
-> >> -                       folio_put(folio);
-> >> -                       if (err)
-> >> -                               break;
-> >> -                       start_pte =3D pte =3D
-> >> -                               pte_offset_map_lock(mm, pmd, addr, &pt=
-l);
-> >> -                       if (!start_pte)
-> >> -                               break;
-> >> -                       arch_enter_lazy_mmu_mode();
-> >> -                       pte--;
-> >> -                       addr -=3D PAGE_SIZE;
-> >> -                       continue;
-> >> +                       const fpb_t fpb_flags =3D FPB_IGNORE_DIRTY |
-> >> +                                               FPB_IGNORE_SOFT_DIRTY;
-> >> +                       int max_nr =3D (end - addr) / PAGE_SIZE;
-> >> +                       bool any_young;
-> >> +
-> >> +                       nr =3D folio_pte_batch(folio, addr, pte, ptent=
-, max_nr,
-> >> +                                            fpb_flags, NULL, &any_you=
-ng);
-> >> +                       if (any_young)
-> >> +                               ptent =3D pte_mkyoung(ptent);
-> >> +
-> >> +                       if (nr < folio_nr_pages(folio)) {
-> >> +                               int err;
-> >> +
-> >> +                               if (folio_likely_mapped_shared(folio))
-> >> +                                       continue;
-> >> +                               if (pageout_anon_only_filter && !folio=
-_test_anon(folio))
-> >> +                                       continue;
-> >> +                               if (!folio_trylock(folio))
-> >> +                                       continue;
-> >> +                               folio_get(folio);
-> >> +                               arch_leave_lazy_mmu_mode();
-> >> +                               pte_unmap_unlock(start_pte, ptl);
-> >> +                               start_pte =3D NULL;
-> >> +                               err =3D split_folio(folio);
-> >> +                               folio_unlock(folio);
-> >> +                               folio_put(folio);
-> >> +                               if (err)
-> >> +                                       continue;
-> >> +                               start_pte =3D pte =3D
-> >> +                                       pte_offset_map_lock(mm, pmd, a=
-ddr, &ptl);
-> >> +                               if (!start_pte)
-> >> +                                       break;
-> >> +                               arch_enter_lazy_mmu_mode();
-> >> +                               nr =3D 0;
-> >> +                               continue;
-> >> +                       }
-> >>                 }
-> >>
-> >>                 /*
-> >>                  * Do not interfere with other mappings of this folio =
-and
-> >> -                * non-LRU folio.
-> >> +                * non-LRU folio. If we have a large folio at this poi=
-nt, we
-> >> +                * know it is fully mapped so if its mapcount is the s=
-ame as its
-> >> +                * number of pages, it must be exclusive.
-> >>                  */
-> >> -               if (!folio_test_lru(folio) || folio_mapcount(folio) !=
-=3D 1)
-> >> +               if (!folio_test_lru(folio) ||
-> >> +                   folio_mapcount(folio) !=3D folio_nr_pages(folio))
-> >>                         continue;
-> >>
-> >>                 if (pageout_anon_only_filter && !folio_test_anon(folio=
-))
-> >>                         continue;
-> >>
-> >> -               VM_BUG_ON_FOLIO(folio_test_large(folio), folio);
-> >> -
-> >>                 if (!pageout && pte_young(ptent)) {
-> >> -                       ptent =3D ptep_get_and_clear_full(mm, addr, pt=
-e,
-> >> -                                                       tlb->fullmm);
-> >> -                       ptent =3D pte_mkold(ptent);
-> >> -                       set_pte_at(mm, addr, pte, ptent);
-> >> -                       tlb_remove_tlb_entry(tlb, pte, addr);
-> >> +                       mkold_ptes(vma, addr, pte, nr);
-> >> +                       tlb_remove_tlb_entries(tlb, pte, nr, addr);
-> >>                 }
-> >>
-> >>                 /*
-> >> diff --git a/mm/memory.c b/mm/memory.c
-> >> index 9d844582ba38..b5b48f4cf2af 100644
-> >> --- a/mm/memory.c
-> >> +++ b/mm/memory.c
-> >> @@ -989,7 +989,7 @@ copy_present_ptes(struct vm_area_struct *dst_vma, =
-struct vm_area_struct *src_vma
-> >>                         flags |=3D FPB_IGNORE_SOFT_DIRTY;
-> >>
-> >>                 nr =3D folio_pte_batch(folio, addr, src_pte, pte, max_=
-nr, flags,
-> >> -                                    &any_writable);
-> >> +                                    &any_writable, NULL);
-> >>                 folio_ref_add(folio, nr);
-> >>                 if (folio_test_anon(folio)) {
-> >>                         if (unlikely(folio_try_dup_anon_rmap_ptes(foli=
-o, page,
-> >> @@ -1553,7 +1553,7 @@ static inline int zap_present_ptes(struct mmu_ga=
-ther *tlb,
-> >>          */
-> >>         if (unlikely(folio_test_large(folio) && max_nr !=3D 1)) {
-> >>                 nr =3D folio_pte_batch(folio, addr, pte, ptent, max_nr=
-, fpb_flags,
-> >> -                                    NULL);
-> >> +                                    NULL, NULL);
-> >>
-> >>                 zap_present_folio_ptes(tlb, vma, folio, page, pte, pte=
-nt, nr,
-> >>                                        addr, details, rss, force_flush=
-,
-> >> --
-> >> 2.25.1
-> >>
->
+The "prep_flags" is a mask of "enum dma_ctrl_flags".
+
+The second "flags" was supposed to be specific to this function, and
+was to future-proof the API as we eventually want to have a "cyclic"
+flag, which would emulate a cyclic transfer by linking the SG hardware
+descriptors accordingly.
+
+However - I think we can already do that with DMA_PREP_REPEAT and
+DMA_PREP_LOAD_EOT, right? So we can probably drop the second "flags".
+
+Cheers,
+-Paul
