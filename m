@@ -1,150 +1,90 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 735307A158;
-	Tue,  2 Apr 2024 10:34:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DE577F7EC
+	for <linux-kernel@vger.kernel.org>; Tue,  2 Apr 2024 10:34:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712054087; cv=none; b=JO7kR7JScA0KsKkF5dg63DOxDpQUdmT2WldEWwIr/vS9jZwhXseqNDuyeFdO05flJxp8avXzGlLDVh4LqDX1eELUUujT1HU0m9Lh8+k/jUkDvYXT90mUDDVW1lNcuNDN1FYZ3f08SHNcmJLStYwGWZ98UyPJbZA+GFopxqPLunE=
+	t=1712054091; cv=none; b=YJkL9hXfgffTXu7FmejIjj0Jd7ZcyONlBaQQlcj2Cyr2Zyh5Xfzdg76uEAjp0sZnfQNI1iw8tiL4Slu/Zs9ldVwIpT+U8HZaBB5WPSKsqsBJ6qEuUkjCvZDvcXegaWJCDfniYKAoMXoveirfIziUeahlURBf/6mGcz5Q3dmLj0c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712054087; c=relaxed/simple;
-	bh=IsHGAC/a4AfxW7HAYylRod3GFoL8Dtn6zIFUyqdBu/8=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=PJkOkcWG2gHpFUPtOd8aW6zOTSB3yfGpEydWjWxpK8XpIHSD5+LdIhgGXcj9X9Rs55kW3LYWjZSn1REzqe7fEYwjs7mUKC7YQxZWL36ub9Z7DUO8JX3zwuc6EerJyXb40fgWKtMx2gO+RJQvpAPzDiaBLzon15RrJYC7zn7kOtY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=BH6Vhh6D; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1712054091; c=relaxed/simple;
+	bh=m4o/iU+AQ9jMOTYN6ooaE1NHa4LcKTSx7PoeD5OTS2I=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=urtSJmGRpeIYg51MdZ1xRYYzWc/O4ws6Qk09E2txDfpswa3vShJDaqlLHvmm3iN+3GGCWYFEj6CN/XO3WzSPAw3hoFgglVeiGpHSXBDAf1yiHTycst/P0FNTNJYTgnFtXWzYkzF7lrODRIzqEfQOxpvv+OGTJXQmjWpaclqjmrQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=tNq263To; arc=none smtp.client-ip=209.85.218.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="BH6Vhh6D"
-Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 4321kxl2019378;
-	Tue, 2 Apr 2024 10:34:41 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	from:to:subject:date:message-id:in-reply-to:references
-	:mime-version:content-transfer-encoding:content-type; s=
-	qcppdkim1; bh=ru5AXWrm9k2bxeHJpQZgzgwCH4paww6MPSYb+UW6WOI=; b=BH
-	6Vhh6D/pf7aBGQ0Qpb5w3T8eLzvZ4eaDxBmAOmzuHddbFkJimwMyVNyBuvjx8ql6
-	nl1INFS/qG8sbQt9woytVHsQNCQ+ELYrsPOlolTbIv8qKFAsWdHj7mpiTkX5Shmv
-	GRfNnsWe5q5tmyYGp+Tzxa5RSHHDhz7+gGcKYd2lS7NFDxLxgibfEJf51lYfP3Zx
-	yU1lVn5EkGIbHf4WJpHSY28sPGK1PEL1GThDY2eg+4MRHUKekB60oI/fk2pArbnX
-	UvE2kZB1KGAcRiOPAGw8TEfSQc/1wZRRNsbU8s4IJ005vhrIyVzdBzkLKWqctS4F
-	ZZii7NFWKTGrOgphW4Wg==
-Received: from nasanppmta04.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3x88eh92gy-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 02 Apr 2024 10:34:41 +0000 (GMT)
-Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
-	by NASANPPMTA04.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 432AYekg013411
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 2 Apr 2024 10:34:40 GMT
-Received: from hu-varada-blr.qualcomm.com (10.80.80.8) by
- nasanex01b.na.qualcomm.com (10.46.141.250) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.4; Tue, 2 Apr 2024 03:34:35 -0700
-From: Varadarajan Narayanan <quic_varada@quicinc.com>
-To: <andersson@kernel.org>, <konrad.dybcio@linaro.org>,
-        <mturquette@baylibre.com>, <sboyd@kernel.org>, <robh@kernel.org>,
-        <krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>,
-        <djakov@kernel.org>, <quic_varada@quicinc.com>,
-        <dmitry.baryshkov@linaro.org>, <quic_anusha@quicinc.com>,
-        <linux-arm-msm@vger.kernel.org>, <linux-clk@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-pm@vger.kernel.org>
-Subject: [PATCH v6 3/6] interconnect: icc-clk: Add devm_icc_clk_register
-Date: Tue, 2 Apr 2024 16:04:03 +0530
-Message-ID: <20240402103406.3638821-4-quic_varada@quicinc.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240402103406.3638821-1-quic_varada@quicinc.com>
-References: <20240402103406.3638821-1-quic_varada@quicinc.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="tNq263To"
+Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-a46a7208eedso645168766b.0
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Apr 2024 03:34:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1712054088; x=1712658888; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=G16lC2YSuCH0nQG087sinHXSeTqOMb9VBJ6YVFLPItk=;
+        b=tNq263Toc7VoH3byY7jMhg3jmoiGqblXgMxytf7oSVv5KEnNQFjaPeFJ/uWs71LB6L
+         Hx0Kw635zRy8yJNUpcXeq4aEgfujk4sCvmOOmARsGuFvXo3xRsg01PyI6UW3kSD8T4NZ
+         jGcyGmvSChiQa3HBwNr1RBbmt8SZoAAhk44LSfYpR/l7SmxD9rotpE4ScXFhMvfPG9Y8
+         0Gzg2vVUGnhG3Ad9s8P1ZuvxQf9Ps2+1M5HEtX6xLwHXpkwgQm2tuvgp9/WeXY8NXVD1
+         eP6beIbXA6LYrP94eUzQC7utBl6eVJs+o+vyC/t3szCppWNpO0CjbeiWM2g2iFR+SOd7
+         9I7g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712054088; x=1712658888;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=G16lC2YSuCH0nQG087sinHXSeTqOMb9VBJ6YVFLPItk=;
+        b=fxz/1p4qA42e0BFZKdzUx4rgUBIwO9V1okGUrzYKtEJcaUT4Dfbg44l6iL1Iv3WfRC
+         aWpWGnUVWVk2Mk+Yu4J617p8q6OWlEwAWjDdzZi6CFh5qZxa+nSJyMzKBi6on7VCvROY
+         tFBzRICkhnHzsk2l2VkMF6zQ6tMihVbXVQTru1A/yVN0bBpcSeJjaa69z7UoihOKyE+v
+         AbwJ9lMohUGynRHhpeUCLMP3Kdk/FSpLjoHfD+t15+w3j22VwRAQ9G9FbfASEAQv4mH9
+         ZRiirxxIZ27WeweunZsaQhR6JPE3w6w6Bd5SqqZMsUH+7M62r3oLWOau06vUpDiwyezZ
+         uXww==
+X-Forwarded-Encrypted: i=1; AJvYcCVDSy89/oa7uiX7+cYKUuOGZsW6Tg+8lVjAHHkg5WQ040aCGITD2kMVQ0MDeWGO1WXlK3A838hU4npr83q1fSD/9aTeRvrozGzmBk1T
+X-Gm-Message-State: AOJu0YwrGaO1DsutQk6Otc5MTqh0ZEx+lQJ7YGVTs2fVaAr4cFSZQ+zY
+	4lKDBg+yXD9r7QCf9JutpB13kllKORlU/RudO6hLVvb9JTOXDT/i11wevoRcQsk=
+X-Google-Smtp-Source: AGHT+IH7mjufzReUXPa1rRJkfPuCBfvZvh+cNz4FnNh9ylUnbPbSVtG647+yZI90FUnmu2wp5DzR3Q==
+X-Received: by 2002:a17:906:c413:b0:a4e:904:3c7f with SMTP id u19-20020a170906c41300b00a4e09043c7fmr7047920ejz.50.1712054087537;
+        Tue, 02 Apr 2024 03:34:47 -0700 (PDT)
+Received: from localhost ([102.222.70.76])
+        by smtp.gmail.com with ESMTPSA id an3-20020a17090656c300b00a4e7c2b2070sm1338235ejc.8.2024.04.02.03.34.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 02 Apr 2024 03:34:47 -0700 (PDT)
+Date: Tue, 2 Apr 2024 13:34:43 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: Prasad Pandit <ppandit@redhat.com>
+Cc: Greg KH <gregkh@linuxfoundation.org>, florian.fainelli@broadcom.com,
+	bcm-kernel-feedback-list@broadcom.com,
+	linux-arm-kernel@lists.infradead.org, rjui@broadcom.com,
+	sbranden@broadcom.com, linux-staging@lists.linux.dev,
+	linux-rpi-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	Prasad Pandit <pjp@fedoraproject.org>
+Subject: Re: [PATCH v4] staging: bcm2835-audio: add terminating new line to
+ Kconfig
+Message-ID: <6da2518b-19bd-4ec3-889e-ecf401ba0ee3@moroto.mountain>
+References: <20240330040411.3273337-1-ppandit@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nasanex01b.na.qualcomm.com (10.46.141.250)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: Qfj_QEkYfzIA0ZNR5JKDz9mdrfs7jbFP
-X-Proofpoint-ORIG-GUID: Qfj_QEkYfzIA0ZNR5JKDz9mdrfs7jbFP
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-04-02_04,2024-04-01_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 suspectscore=0
- clxscore=1015 lowpriorityscore=0 impostorscore=0 mlxscore=0 malwarescore=0
- adultscore=0 bulkscore=0 mlxlogscore=999 priorityscore=1501 phishscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2403210001
- definitions=main-2404020076
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240330040411.3273337-1-ppandit@redhat.com>
 
-Wrap icc_clk_register to create devm_icc_clk_register to be
-able to release the resources properly.
+On Sat, Mar 30, 2024 at 09:34:11AM +0530, Prasad Pandit wrote:
+> From: Prasad Pandit <pjp@fedoraproject.org>
+> 
+> Add terminating new line to the Kconfig file. It helps while
+> displaying file with cat(1) command.
+> 
+> Signed-off-by: Prasad Pandit <pjp@fedoraproject.org>
+> ---
 
-Signed-off-by: Varadarajan Narayanan <quic_varada@quicinc.com>
----
-v5: Introduced devm_icc_clk_register
----
- drivers/interconnect/icc-clk.c   | 29 +++++++++++++++++++++++++++++
- include/linux/interconnect-clk.h |  4 ++++
- 2 files changed, 33 insertions(+)
+Acked-by: Dan Carpenter <dan.carpenter@linaro.org>
 
-diff --git a/drivers/interconnect/icc-clk.c b/drivers/interconnect/icc-clk.c
-index d787f2ea36d9..89f11fed8820 100644
---- a/drivers/interconnect/icc-clk.c
-+++ b/drivers/interconnect/icc-clk.c
-@@ -148,6 +148,35 @@ struct icc_provider *icc_clk_register(struct device *dev,
- }
- EXPORT_SYMBOL_GPL(icc_clk_register);
- 
-+static void devm_icc_release(struct device *dev, void *res)
-+{
-+	icc_clk_unregister(res);
-+}
-+
-+struct icc_provider *devm_icc_clk_register(struct device *dev,
-+				      unsigned int first_id,
-+				      unsigned int num_clocks,
-+				      const struct icc_clk_data *data)
-+{
-+	struct icc_provider *prov, **provp;
-+
-+	provp = devres_alloc(devm_icc_release, sizeof(*provp), GFP_KERNEL);
-+	if (!provp)
-+		return ERR_PTR(-ENOMEM);
-+
-+	prov = icc_clk_register(dev, first_id, num_clocks, data);
-+
-+	if (!IS_ERR(prov)) {
-+		*provp = prov;
-+		devres_add(dev, provp);
-+	} else {
-+		devres_free(provp);
-+	}
-+
-+	return prov;
-+}
-+EXPORT_SYMBOL_GPL(devm_icc_clk_register);
-+
- /**
-  * icc_clk_unregister() - unregister a previously registered clk interconnect provider
-  * @provider: provider returned by icc_clk_register()
-diff --git a/include/linux/interconnect-clk.h b/include/linux/interconnect-clk.h
-index 0cd80112bea5..cb7b648eb1c0 100644
---- a/include/linux/interconnect-clk.h
-+++ b/include/linux/interconnect-clk.h
-@@ -17,6 +17,10 @@ struct icc_provider *icc_clk_register(struct device *dev,
- 				      unsigned int first_id,
- 				      unsigned int num_clocks,
- 				      const struct icc_clk_data *data);
-+struct icc_provider *devm_icc_clk_register(struct device *dev,
-+					   unsigned int first_id,
-+					   unsigned int num_clocks,
-+					   const struct icc_clk_data *data);
- void icc_clk_unregister(struct icc_provider *provider);
- 
- #endif
--- 
-2.34.1
+regards,
+dan carpenter
 
