@@ -1,143 +1,321 @@
-Received: from smtp-fw-80007.amazon.com (smtp-fw-80007.amazon.com [99.78.197.218])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DEDA7A13A;
-	Tue,  2 Apr 2024 12:17:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=99.78.197.218
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 299BD79B8E
+	for <linux-kernel@vger.kernel.org>; Tue,  2 Apr 2024 12:17:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712060249; cv=none; b=iAovvF0so57buiGulWg++mWsTxPo9DL4b9PTWhsYN+uqjg1y59GGUCKDvY4SCIedaysmxCoXMpB4TwGrOxSSwZF0V9wSrPUvkdA+9Gl7aq0iXBlgKAc3Afdk3Z/ILaHUxZwqlegHH9irRj6wkLNT2FBvqgXu4ZUOpRcyZY8gTe0=
+	t=1712060248; cv=none; b=C5hxeQ9VGksN0TecjwzR0jrLEWuplVPS3uTimK96VyAG8O1eIf+tbGOAPJvbRyMSA6NpmxvmwcWE2WERYpbf1dDwFuRlee+Qmd/mlRn2zGCIMFdAJdFjtX+N5+pBTNtncw5CIlHidOxribyCCk2Q26FQfTAZ7jpNAeRd/RlzZug=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712060249; c=relaxed/simple;
-	bh=4hEjMOf/NYnnalU9LSz9bSigo7540Wp8lxyJZKstsSo=;
-	h=Subject:From:To:CC:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=njyIFMgUSdfD++xirUo0qP9W06FR1qmFDwIkPVxngokMODipcLbiJvZk6GgQd/cO5tw4hss0RmC+cLD+VLPIbgztxk2SnQwp6kz1JAmE0vZfFULne5u9DkBB2dHf6VQ55jfsV2YUMSXqDF32mnXsP5RKJPV+ZrnWKPiVXTAMUg4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.de; spf=pass smtp.mailfrom=amazon.de; dkim=pass (1024-bit key) header.d=amazon.de header.i=@amazon.de header.b=RA9qqHZW; arc=none smtp.client-ip=99.78.197.218
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.de
+	s=arc-20240116; t=1712060248; c=relaxed/simple;
+	bh=scYXFXHzop4w5nE1MARFBQtsaiUQ99iycS9q58C08AA=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=MoLIQKMLH96M4VmFkh14917XomPsT269lj5sM4DHIfcjxGBIcnJwNacW3vrHCEeJV4MEqllQ44DUiTl+eaGPZMGjrpqNKKB3PyUH9aQPc+eRsFpsSIMtGtn4J6AVe/lc/G9sllJuVLkBP8dWxxyU8dkayk09HXCjW0JSmc4ZMQc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=InAaGKT2; arc=none smtp.client-ip=209.85.128.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.de header.i=@amazon.de header.b="RA9qqHZW"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="InAaGKT2"
+Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-61532249dcbso6012337b3.0
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Apr 2024 05:17:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.de; i=@amazon.de; q=dns/txt; s=amazon201209;
-  t=1712060248; x=1743596248;
-  h=from:to:cc:date:message-id:references:in-reply-to:
-   content-id:mime-version:content-transfer-encoding:subject;
-  bh=4hEjMOf/NYnnalU9LSz9bSigo7540Wp8lxyJZKstsSo=;
-  b=RA9qqHZWl1mPWK1/JrGV5LrOA/1gwaf4bQ+ysY/HJkeJaRfZwc1puM8b
-   U7CLGoKKjUlkMmKqLdRyUD2MF2tSgJVChjJZgmgUDKfuXWxJX96i9PWcy
-   63CEUXF3eymCnsWt4+5tVhlJzzYMRKhFttI1ylQWk4qSRRm2jKKkQER8f
-   o=;
-X-IronPort-AV: E=Sophos;i="6.07,174,1708387200"; 
-   d="scan'208";a="285550647"
-Subject: Re: [PATCH 2/2] arm64: acpi: Honour firmware_signature field of FACS,
- if it exists
-Thread-Topic: [PATCH 2/2] arm64: acpi: Honour firmware_signature field of FACS,
- if it exists
-Received: from pdx4-co-svc-p1-lb2-vlan2.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.25.36.210])
-  by smtp-border-fw-80007.pdx80.corp.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2024 12:17:26 +0000
-Received: from EX19MTAUWA002.ant.amazon.com [10.0.38.20:39814]
- by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.50.222:2525] with esmtp (Farcaster)
- id 5e1056fb-976d-4441-9bbb-62d2328f612c; Tue, 2 Apr 2024 12:17:25 +0000 (UTC)
-X-Farcaster-Flow-ID: 5e1056fb-976d-4441-9bbb-62d2328f612c
-Received: from EX19D002UWA004.ant.amazon.com (10.13.138.230) by
- EX19MTAUWA002.ant.amazon.com (10.250.64.202) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.28; Tue, 2 Apr 2024 12:17:24 +0000
-Received: from EX19D026EUB001.ant.amazon.com (10.252.61.12) by
- EX19D002UWA004.ant.amazon.com (10.13.138.230) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.28; Tue, 2 Apr 2024 12:17:23 +0000
-Received: from EX19D026EUB001.ant.amazon.com ([fe80::461a:a9c3:6352:d9d1]) by
- EX19D026EUB001.ant.amazon.com ([fe80::461a:a9c3:6352:d9d1%4]) with mapi id
- 15.02.1258.028; Tue, 2 Apr 2024 12:17:22 +0000
-From: "Mediouni, Mohamed" <mediou@amazon.de>
-To: Sudeep Holla <sudeep.holla@arm.com>
-CC: David Woodhouse <dwmw2@infradead.org>,
-	"linux-arm-kernel@lists.infradead.org"
-	<linux-arm-kernel@lists.infradead.org>, Catalin Marinas
-	<catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Robert Moore
-	<robert.moore@intel.com>, "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-	Len Brown <lenb@kernel.org>, "Saidi, Ali" <alisaidi@amazon.com>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
-	"acpica-devel@lists.linux.dev" <acpica-devel@lists.linux.dev>, Saket Dumbre
-	<saket.dumbre@intel.com>
-Thread-Index: AQHadIMiZU/jJeIGnU6Fy/VUAgcff7FU16CAgAAQqoCAAB4RAA==
-Date: Tue, 2 Apr 2024 12:17:22 +0000
-Message-ID: <70B4B352-08A5-4922-93A0-7F420374A831@amazon.de>
-References: <20240312134148.727454-1-dwmw2@infradead.org>
- <20240312134148.727454-2-dwmw2@infradead.org>
- <dbd60df4632e5ea9cef13cdc1a406b47bd8629da.camel@infradead.org>
- <ZgveD6Hb2HbTNYNO@bogus>
-In-Reply-To: <ZgveD6Hb2HbTNYNO@bogus>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <78F138E12F3542458D20E71B702575CD@amazon.com>
+        d=google.com; s=20230601; t=1712060245; x=1712665045; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=mTRAKoexW03MplbH5ewhSVmvhGBv9gsHa3B5VmzHdqs=;
+        b=InAaGKT2/ZpUbClvDHQ29hNCr1j/JtH8d65km2x67F3a4aguR2NtfkfiIuZC4f6Uok
+         cIAanEa+mvqudbS3fwBOaSCgbiW0aIUy+oxuf1CbZAVcfh7QjXMomifB96GnF43uS6z3
+         5SP8JcAJARpJfElog6jd9E46jRLARrSjoaNTltx8VY76dffqBxIdAtPKjB7zm358y10y
+         xpuIyvJmNAH1PnC+QDapZvoHIxNjswCIkV69Bmg7kjQr3S5R0mfDjJBtDqwBTa9K8CxI
+         fyA7hq3pH60Ry49j4oEPg/3aiO3eE9LcH/un7tRoy7Lv5GLsL4jw123NgXnUZNQR9mT0
+         YO8g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712060245; x=1712665045;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=mTRAKoexW03MplbH5ewhSVmvhGBv9gsHa3B5VmzHdqs=;
+        b=ZLycWxBOWbtreRRvEdBIGe9ON3VRuk9f9qAfBOzgk0zVK8NAM817jdzFmDC1VQgZF3
+         ptOKlpCSd2ob7JkNJHFJGWvFSsJtYYwntUl48vCWMWX6Zi8HKnhwGOh6sitM/piQpBqk
+         rA3V8OeTqFKAxfQnkLzo1lMYOVliZeVLnNNzozsDdQA72qPT9+Mqh+VSnNZ/wifnzUvJ
+         Qf7QDLDvR3ieELTbbZGhSQ0OGAkSUPZM+mmRdR2G2fTtkS6qtA1Ms/cwfnoGcwH6SgkB
+         4+I/B4sHVlBWh1flQXOf4ihA/y1AdhTWUdyxaT53PA45nADDUZAqEjBKUfkqVAWSX8rt
+         40tA==
+X-Forwarded-Encrypted: i=1; AJvYcCWBXTOgEdZu+LqnBiE4btpRoo9YFvzoQv9o8BNgZ6iWYpHRayEkjV1Z11iPh2fMaCkQWa/ccIITr5KktB0/pa/a24DuCCQXBplEvblb
+X-Gm-Message-State: AOJu0YxVS/nMa1/X1RitXLvJ/0n/XAsEdx0IOJt1pKNldlIDGflsqbhS
+	5x+RZsYGd2gRrUNFS4NeNFoSPoKOR7KjhEoFuKPcLsHOwwoQB5MXC5fPwGeEvEVCY/45pOMs9nl
+	F5ejnXf8i6/z/Wg==
+X-Google-Smtp-Source: AGHT+IHoICpUitAruU1VmY3bIx+xHFNJYUJhCzek3lJKlsTeF4BVcZqIvLGvurW+TGFj1G8b2zaCgyBpYo72Ypg=
+X-Received: from aliceryhl2.c.googlers.com ([fda3:e722:ac3:cc00:68:949d:c0a8:572])
+ (user=aliceryhl job=sendgmr) by 2002:a81:5245:0:b0:615:1b90:d987 with SMTP id
+ g66-20020a815245000000b006151b90d987mr466629ywb.6.1712060245157; Tue, 02 Apr
+ 2024 05:17:25 -0700 (PDT)
+Date: Tue, 02 Apr 2024 12:16:59 +0000
+In-Reply-To: <20240402-linked-list-v1-0-b1c59ba7ae3b@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
+Mime-Version: 1.0
+References: <20240402-linked-list-v1-0-b1c59ba7ae3b@google.com>
+X-Developer-Key: i=aliceryhl@google.com; a=openpgp; fpr=49F6C1FAA74960F43A5B86A1EE7A392FDE96209F
+X-Developer-Signature: v=1; a=openpgp-sha256; l=9552; i=aliceryhl@google.com;
+ h=from:subject:message-id; bh=scYXFXHzop4w5nE1MARFBQtsaiUQ99iycS9q58C08AA=;
+ b=owEBbQKS/ZANAwAKAQRYvu5YxjlGAcsmYgBmC/dIw1Rwk2A9e1u96NJVmWcgv4TpW8F7lomm0
+ PeGbEjH7KCJAjMEAAEKAB0WIQSDkqKUTWQHCvFIvbIEWL7uWMY5RgUCZgv3SAAKCRAEWL7uWMY5
+ Rg8BD/9+xs82n1gZLGSwbD0q2jLJXjlqJ5lvOAULl3kt6zWXP9e8/5Ut7q4HqLIWtScJszSMSRj
+ dbc9s5OsX2X0HnuSOfwye/Fe8wJEtiP5sJbYMJWJuk2MozTX3eoKsRk3qlaAfrOiSRcSk1imKtb
+ LCNBV44srm5q3h1Maey2keGg1nP4mrt0OS+MvIGsynRUkhiyvIvmI6FZj68ppCRM4zEmdbho/01
+ TLrPsvyOXysZhOo6Vh6J2XAsRySr6asx7eRbplGuw3ZAr10T4/pYQ3XY1ErDBBYnLvzkWbFVcNv
+ TDaXbokX3cgl228DfIaBxfXoC6EHkn7vG/M8L6xlanLLCCKVb61dyKJRO7hZyUTtmYj//jSsJ+U
+ xWkxoJ58vTjOsx8Vke1d1LJaZ1BfTxAKujavzC4I+Bwfsooxo8pYd3WV+Xk2wVaoHhXV2M/Iiqg
+ qUfY7fb2Su17es1AaUBxfRcMPe7HypSW5JB5QHN3sTfP2uLPuvp3FRLEDyOsAsTG72bBkK5UXtm
+ jYRpfprGornzkJE68z1440bWzmqRkTXT1Kyz34JZ8IHPOCgDn7sdEHahOBO96tTilEUbNbXud6t
+ EGjUGBHI1lryJ8fy0eIOdo23U5hjeSzQv2FEvnFYCtr+0NRP4B5rTJARVjKsPo3c10oAYiuChNp aIHn/E/1lpGzv/Q==
+X-Mailer: b4 0.13-dev-26615
+Message-ID: <20240402-linked-list-v1-2-b1c59ba7ae3b@google.com>
+Subject: [PATCH 2/9] rust: list: add tracking for ListArc
+From: Alice Ryhl <aliceryhl@google.com>
+To: Miguel Ojeda <ojeda@kernel.org>, Andrew Morton <akpm@linux-foundation.org>
+Cc: Alex Gaynor <alex.gaynor@gmail.com>, Wedson Almeida Filho <wedsonaf@gmail.com>, 
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	"=?utf-8?q?Bj=C3=B6rn_Roy_Baron?=" <bjorn3_gh@protonmail.com>, Benno Lossin <benno.lossin@proton.me>, 
+	Andreas Hindborg <a.hindborg@samsung.com>, Marco Elver <elver@google.com>, 
+	Kees Cook <keescook@chromium.org>, Coly Li <colyli@suse.de>, Paolo Abeni <pabeni@redhat.com>, 
+	Pierre Gondois <pierre.gondois@arm.com>, Ingo Molnar <mingo@kernel.org>, 
+	Jakub Kicinski <kuba@kernel.org>, Wei Yang <richard.weiyang@gmail.com>, 
+	Matthew Wilcox <willy@infradead.org>, linux-kernel@vger.kernel.org, 
+	rust-for-linux@vger.kernel.org, Alice Ryhl <aliceryhl@google.com>
+Content-Type: text/plain; charset="utf-8"
 
-DQoNCj4gT24gMi4gQXByIDIwMjQsIGF0IDEyOjI5LCBTdWRlZXAgSG9sbGEgPHN1ZGVlcC5ob2xs
-YUBhcm0uY29tPiB3cm90ZToNCj4gDQo+IA0KPiBPbiBUdWUsIEFwciAwMiwgMjAyNCBhdCAxMDoy
-OTo1N0FNICswMTAwLCBEYXZpZCBXb29kaG91c2Ugd3JvdGU6DQo+PiBPbiBUdWUsIDIwMjQtMDMt
-MTIgYXQgMTM6NDEgKzAwMDAsIERhdmlkIFdvb2Rob3VzZSB3cm90ZToNCj4+PiBGcm9tOiBEYXZp
-ZCBXb29kaG91c2UgPGR3bXdAYW1hem9uLmNvLnVrPg0KPj4+IA0KPj4+IElmIHRoZSBmaXJtd2Fy
-ZV9zaWduYXR1cmUgY2hhbmdlcyB0aGVuIE9TUE0gc2hvdWxkIG5vdCBhdHRlbXB0IHRvIHJlc3Vt
-ZQ0KPj4+IGZyb20gaGliZXJuYXRlLCBidXQgc2hvdWxkIGluc3RlYWQgcGVyZm9ybSBhIGNsZWFu
-IHJlYm9vdC4gU2V0IHRoZSBnbG9iYWwNCj4+PiBzd3N1c3BfaGFyZHdhcmVfc2lnbmF0dXJlIHRv
-IGFsbG93IHRoZSBnZW5lcmljIGNvZGUgdG8gaW5jbHVkZSB0aGUgdmFsdWUNCj4+PiBpbiB0aGUg
-c3dzdXNwIGhlYWRlciBvbiBkaXNrLCBhbmQgcGVyZm9ybSB0aGUgYXBwcm9wcmlhdGUgY2hlY2sg
-b24gcmVzdW1lLg0KPj4+IA0KPj4+IFNpZ25lZC1vZmYtYnk6IERhdmlkIFdvb2Rob3VzZSA8ZHdt
-d0BhbWF6b24uY28udWs+DQo+PiANCj4+IFBpbmc/DQo+PiANCj4+PiAtLS0NCj4+PiBhcmNoL2Fy
-bTY0L2tlcm5lbC9hY3BpLmMgfCAxMCArKysrKysrKysrDQo+Pj4gMSBmaWxlIGNoYW5nZWQsIDEw
-IGluc2VydGlvbnMoKykNCj4+PiANCj4+PiBkaWZmIC0tZ2l0IGEvYXJjaC9hcm02NC9rZXJuZWwv
-YWNwaS5jIGIvYXJjaC9hcm02NC9rZXJuZWwvYWNwaS5jDQo+Pj4gaW5kZXggZGJhOGZjZWM3ZjMz
-Li5lMGU3YjkzYzE2Y2MgMTAwNjQ0DQo+Pj4gLS0tIGEvYXJjaC9hcm02NC9rZXJuZWwvYWNwaS5j
-DQo+Pj4gKysrIGIvYXJjaC9hcm02NC9rZXJuZWwvYWNwaS5jDQo+Pj4gQEAgLTI2LDYgKzI2LDcg
-QEANCj4+PiAjaW5jbHVkZSA8bGludXgvbGliZmR0Lmg+DQo+Pj4gI2luY2x1ZGUgPGxpbnV4L3Nt
-cC5oPg0KPj4+ICNpbmNsdWRlIDxsaW51eC9zZXJpYWxfY29yZS5oPg0KPj4+ICsjaW5jbHVkZSA8
-bGludXgvc3VzcGVuZC5oPg0KPj4+ICNpbmNsdWRlIDxsaW51eC9wZ3RhYmxlLmg+DQo+Pj4gDQo+
-Pj4gI2luY2x1ZGUgPGFjcGkvZ2hlcy5oPg0KPj4+IEBAIC0yMjcsNiArMjI4LDE1IEBAIHZvaWQg
-X19pbml0IGFjcGlfYm9vdF90YWJsZV9pbml0KHZvaWQpDQo+Pj4gICAgICAgICAgICAgICAgaWYg
-KGVhcmx5Y29uX2FjcGlfc3Bjcl9lbmFibGUpDQo+Pj4gICAgICAgICAgICAgICAgICAgICAgICBl
-YXJseV9pbml0X2R0X3NjYW5fY2hvc2VuX3N0ZG91dCgpOw0KPj4+ICAgICAgICB9IGVsc2Ugew0K
-Pj4+ICsjaWZkZWYgQ09ORklHX0hJQkVSTkFUSU9ODQo+Pj4gKyAgICAgICAgICAgICAgIHN0cnVj
-dCBhY3BpX3RhYmxlX2hlYWRlciAqZmFjcyA9IE5VTEw7DQo+Pj4gKyAgICAgICAgICAgICAgIGFj
-cGlfZ2V0X3RhYmxlKEFDUElfU0lHX0ZBQ1MsIDEsICZmYWNzKTsNCj4+PiArICAgICAgICAgICAg
-ICAgaWYgKGZhY3MpIHsNCj4+PiArICAgICAgICAgICAgICAgICAgICAgICBzd3N1c3BfaGFyZHdh
-cmVfc2lnbmF0dXJlID0NCj4+PiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICgoc3Ry
-dWN0IGFjcGlfdGFibGVfZmFjcyAqKWZhY3MpLT5oYXJkd2FyZV9zaWduYXR1cmU7DQo+Pj4gKyAg
-ICAgICAgICAgICAgICAgICAgICAgYWNwaV9wdXRfdGFibGUoZmFjcyk7DQo+Pj4gKyAgICAgICAg
-ICAgICAgIH0NCj4+PiArI2VuZGlmDQo+IA0KPiBJIHRoaW5rIGl0IGlzIE9LIGFzIGEgdGVtcG9y
-YXJ5IHNvbHV0aW9uIGZvciBub3cuIEJ1dCB0aGVyZSB3YXMgc29tZQ0KPiBpbnZlc3RpZ2F0aW9u
-IGxhc3QgeWVhciBhcyBwYXJ0IG9mIHNvbWUgd29yayBpbiBMaW5hcm8gdG8gZW5hYmxlDQo+ICJk
-cml2ZXJzL2FjcGkvc2xlZXAuYyIgaW50byB0aGUgYnVpbGQgY2xlYW5pbmcgdXAgc29tZSB4ODYt
-bmVzcyBpbiB0aGVyZS4NCj4gYWNwaV9zbGVlcF9oaWJlcm5hdGVfc2V0dXAoKSBhbHJlYWR5IGRv
-ZXMgdGhpcyBidXQgZW5hYmxpbmcgc2xlZXAuYyBuZWVkDQo+IHNvbWUgY2FyZWZ1bCBpbnZlc3Rp
-Z2F0aW9uIHNvIHRoYXQgaXQgZG9lc24ndCBicmVhayBhbnkgZXhpc3RpbmcgYXJtNjQveDg2DQo+
-IHBsYXRmb3JtcyBhbmQgbWFkZSBuZWVkIHNvbWUgd29yZGluZ3MgY2xhcmlmaWNhdGlvbiBpbiB0
-aGUgQUNQSSBzcGVjLg0KPiBUb2RheSBzeXN0ZW0gc3VzcGVuZCB3b3JrIHZpYSBwc2NpIHN0ZCBw
-YXRoIGJ5cGFzc2luZyB0aGUgQUNQSSBwYXRocyB3aGljaA0KPiBtYXkgbm90IGJlIGlkZWFsIGFz
-IG5vbmUgb2YgdGhlIEFDUEkgbWV0aG9kcyBhcmUgaG9ub3VyZWQuIFNvbWUgYXJtNjQNCj4gcGxh
-dGZvcm1zIG1heSBpbXBsZW1lbnQgdGhlbSBhbmQgZXhwZWN0IHRvIGJlIGV4ZWN1dGVkIGluIHRo
-ZSBmdXR1cmUsDQo+IG1heWJlID8NCkN1cnJlbnQgV2luZG93cyBvbiBBcm0gcGxhdGZvcm1zIChz
-ZWVuIG9uIFNDODI4MFhQKSBkb27igJl0IGhhdmUgX0dUUw0Kb3IgX1BUUyBtZXRob2RzLCBhbmQg
-ZG9u4oCZdCBoYXZlIHNsZWVwaW5nIG9iamVjdHMgZWl0aGVyLg0KDQpBcyBzdWNoLCBJIGRvbuKA
-mXQgZXhwZWN0IGFueSB1c2VycyBmb3IgdGhhdCBwb3RlbnRpYWwgZnVuY3Rpb25hbGl0eS4gQW0g
-SSBtaXNzaW5nIHNvbWV0aGluZyANCm9yIGhpYmVybmF0aW9uIHNpZ25hbGxpbmcgdG8gZmlybXdh
-cmUgKG9uIEFSTTY0KSBjYW4gYmUgbWFkZSBQU0NJIG9ubHkgaW5kZWZpbml0ZWx5Pw0KDQpUaGFu
-ayB5b3UsDQotTW9oYW1lZA0KPiBTbywgdW50aWwgdGhhdCBoYXBwZW5zLCBJIHNlZSB0aGlzIGFz
-IGFuIHBvc3NpYmxlIGFsdGVybmF0aXZlIGFuZA0KPiB0ZW1wb3Jhcnkgc29sdXRpb24uDQo+IA0K
-PiBBY2tlZC1ieTogU3VkZWVwIEhvbGxhIDxzdWRlZXAuaG9sbGFAYXJtLmNvbT4NCj4gDQo+IC0t
-DQo+IFJlZ2FyZHMsDQo+IFN1ZGVlcA0KDQoKCgpBbWF6b24gRGV2ZWxvcG1lbnQgQ2VudGVyIEdl
-cm1hbnkgR21iSApLcmF1c2Vuc3RyLiAzOAoxMDExNyBCZXJsaW4KR2VzY2hhZWZ0c2Z1ZWhydW5n
-OiBDaHJpc3RpYW4gU2NobGFlZ2VyLCBKb25hdGhhbiBXZWlzcwpFaW5nZXRyYWdlbiBhbSBBbXRz
-Z2VyaWNodCBDaGFybG90dGVuYnVyZyB1bnRlciBIUkIgMTQ5MTczIEIKU2l0ejogQmVybGluClVz
-dC1JRDogREUgMjg5IDIzNyA4NzkKCgo=
+Add the ability to track whether a ListArc exists for a given value,
+allowing for the creation of ListArcs without going through UniqueArc.
+
+The `impl_list_arc_safe!` macro is extended with a `tracked_by` strategy
+that defers the tracking of ListArcs to a field of the struct.
+Additionally, the AtomicListArcTracker type is introduced, which can
+track whether a ListArc exists using an atomic. By deferring the
+tracking to a field of type AtomicListArcTracker, structs gain the
+ability to create ListArcs without going through a UniqueArc.
+
+Rust Binder uses this for some objects where we want to be able to
+insert them into a linked list at any time. Using the
+AtomicListArcTracker, we are able to check whether an item is already in
+the list, and if not, we can create a `ListArc` and push it.
+
+The macro has the ability to defer the tracking of ListArcs to a field,
+using whatever strategy that field has. Since we don't add any
+strategies other than AtomicListArcTracker, another similar option would
+be to hard-code that the field should be an AtomicListArcTracker.
+However, Rust Binder has a case where the AtomicListArcTracker is not
+stored directly in the struct, but in a sub-struct. Furthermore, the
+outer struct is generic:
+
+struct Wrapper<T: ?Sized> {
+    links: ListLinks,
+    inner: T,
+}
+
+Here, the Wrapper struct implements ListArcSafe with `tracked_by inner`,
+and then the various types used with `inner` also uses the macro to
+implement ListArcSafe. Some of them use the untracked strategy, and some
+of them use tracked_by with an AtomicListArcTracker. This way, Wrapper
+just inherits whichever choice `inner` has made.
+
+Signed-off-by: Alice Ryhl <aliceryhl@google.com>
+---
+ rust/kernel/list.rs     |   4 +-
+ rust/kernel/list/arc.rs | 133 ++++++++++++++++++++++++++++++++++++++++++++++--
+ 2 files changed, 133 insertions(+), 4 deletions(-)
+
+diff --git a/rust/kernel/list.rs b/rust/kernel/list.rs
+index fb16ea43b2ba..c5caa0f6105c 100644
+--- a/rust/kernel/list.rs
++++ b/rust/kernel/list.rs
+@@ -5,4 +5,6 @@
+ //! A linked list implementation.
+ 
+ mod arc;
+-pub use self::arc::{impl_list_arc_safe, ListArc, ListArcSafe};
++pub use self::arc::{
++    impl_list_arc_safe, AtomicListArcTracker, ListArc, ListArcSafe, TryNewListArc,
++};
+diff --git a/rust/kernel/list/arc.rs b/rust/kernel/list/arc.rs
+index 59d43f7a165e..5c27491a5889 100644
+--- a/rust/kernel/list/arc.rs
++++ b/rust/kernel/list/arc.rs
+@@ -8,9 +8,10 @@
+ use crate::prelude::*;
+ use crate::sync::{Arc, ArcBorrow, UniqueArc};
+ use core::alloc::AllocError;
+-use core::marker::Unsize;
++use core::marker::{PhantomPinned, Unsize};
+ use core::ops::Deref;
+ use core::pin::Pin;
++use core::sync::atomic::{AtomicBool, Ordering};
+ 
+ /// Declares that this type has some way to ensure that there is exactly one `ListArc` instance for
+ /// this id.
+@@ -33,19 +34,64 @@ pub trait ListArcSafe<const ID: u64 = 0> {
+     unsafe fn on_drop_list_arc(&self);
+ }
+ 
++/// Declares that this type is able to safely attempt to create `ListArc`s at any time.
++///
++/// # Safety
++///
++/// Implementers must ensure that `try_new_list_arc` does not return `true` if a `ListArc` already
++/// exists.
++pub unsafe trait TryNewListArc<const ID: u64 = 0>: ListArcSafe<ID> {
++    /// Attempts to convert an `Arc<Self>` into an `ListArc<Self>`. Returns `true` if the
++    /// conversion was successful.
++    fn try_new_list_arc(&self) -> bool;
++}
++
+ /// Declares that this type supports [`ListArc`].
+ ///
+-/// When using this macro, it will only be possible to create a [`ListArc`] from a [`UniqueArc`].
++/// When using this macro, you may choose between the `untracked` strategy where it is not tracked
++/// whether a [`ListArc`] exists, and the `tracked_by` strategy where the tracking is deferred to a
++/// field of the struct. The `tracked_by` strategy can be combined with a field of type
++/// [`AtomicListArcTracker`] to track whether a [`ListArc`] exists.
+ #[macro_export]
+ macro_rules! impl_list_arc_safe {
+     (impl$({$($generics:tt)*})? ListArcSafe<$num:tt> for $t:ty { untracked; } $($rest:tt)*) => {
+-        impl$(<$($generics)*>)? $crate::list::ListArcSafe<$num> for $t {
++        impl$(<$($generics)*>)? ListArcSafe<$num> for $t {
+             unsafe fn on_create_list_arc_from_unique(&mut self) {}
+             unsafe fn on_drop_list_arc(&self) {}
+         }
+         $crate::list::impl_list_arc_safe! { $($rest)* }
+     };
+ 
++    (impl$({$($generics:tt)*})? ListArcSafe<$num:tt> for $t:ty {
++        tracked_by $field:ident : $fty:ty;
++    } $($rest:tt)*) => {
++        impl$(<$($generics)*>)? ListArcSafe<$num> for $t {
++            unsafe fn on_create_list_arc_from_unique(&mut self) {
++                let me = self as *mut Self;
++                let field: *mut $fty = unsafe { ::core::ptr::addr_of_mut!((*me).$field) };
++                unsafe { <$fty as $crate::list::ListArcSafe<$num>>::on_create_list_arc_from_unique(
++                        &mut *field
++                ) };
++            }
++            unsafe fn on_drop_list_arc(&self) {
++                let me = self as *const Self;
++                let field: *const $fty = unsafe { ::core::ptr::addr_of!((*me).$field) };
++                unsafe { <$fty as $crate::list::ListArcSafe<$num>>::on_drop_list_arc(&*field) };
++            }
++        }
++        unsafe impl$(<$($generics)*>)? TryNewListArc<$num> for $t
++        where
++            $fty: TryNewListArc<$num>,
++        {
++            fn try_new_list_arc(&self) -> bool {
++                let me = self as *const Self;
++                let field: *const $fty = unsafe { ::core::ptr::addr_of!((*me).$field) };
++                unsafe { <$fty as $crate::list::TryNewListArc<$num>>::try_new_list_arc(&*field) }
++            }
++        }
++        $crate::list::impl_list_arc_safe! { $($rest)* }
++    };
++
+     () => {};
+ }
+ pub use impl_list_arc_safe;
+@@ -166,6 +212,36 @@ pub fn pair_from_pin_unique<const ID2: u64>(
+         Self::pair_from_unique(unsafe { Pin::into_inner_unchecked(unique) })
+     }
+ 
++    /// Try to create a new `ListArc`.
++    ///
++    /// This fails if this value already has a `ListArc`.
++    pub fn try_from_arc(arc: Arc<T>) -> Result<Self, Arc<T>>
++    where
++        T: TryNewListArc<ID>,
++    {
++        if arc.try_new_list_arc() {
++            // SAFETY: The `try_new_list_arc` method returned true, so the tracking now thinks that
++            // a `ListArc` exists, so we can create one.
++            Ok(unsafe { Self::transmute_from_arc(arc) })
++        } else {
++            Err(arc)
++        }
++    }
++
++    /// Try to create a new `ListArc`.
++    ///
++    /// If it's not possible to create a new `ListArc`, then the `Arc` is dropped. This will never
++    /// run the destructor of the value.
++    pub fn try_from_arc_or_drop(arc: Arc<T>) -> Option<Self>
++    where
++        T: TryNewListArc<ID>,
++    {
++        match Self::try_from_arc(arc) {
++            Ok(list_arc) => Some(list_arc),
++            Err(arc) => Arc::into_unique_or_drop(arc).map(Self::from_pin_unique),
++        }
++    }
++
+     /// Transmutes an [`Arc`] into a `ListArc` without updating the tracking inside `T`.
+     ///
+     /// # Safety
+@@ -300,3 +376,54 @@ impl<T, U, const ID: u64> core::ops::DispatchFromDyn<ListArc<U, ID>> for ListArc
+     U: ListArcSafe<ID> + ?Sized,
+ {
+ }
++
++/// A utility for tracking whether a [`ListArc`] exists using an atomic.
++///
++/// # Invariant
++///
++/// If the boolean is `false`, then there is no [`ListArc`] for this value.
++#[repr(transparent)]
++pub struct AtomicListArcTracker<const ID: u64 = 0> {
++    inner: AtomicBool,
++    _pin: PhantomPinned,
++}
++
++impl<const ID: u64> AtomicListArcTracker<ID> {
++    /// Creates a new initializer for this type.
++    pub fn new() -> impl PinInit<Self> {
++        // INVARIANT: Pin-init initializers can't be used on an existing `Arc`, so this value will
++        // not be constructed in an `Arc` that already has a `ListArc`.
++        Self {
++            inner: AtomicBool::new(false),
++            _pin: PhantomPinned,
++        }
++    }
++}
++
++impl<const ID: u64> ListArcSafe<ID> for AtomicListArcTracker<ID> {
++    unsafe fn on_create_list_arc_from_unique(&mut self) {
++        // INVARIANT: We just created a ListArc, so the boolean should be true.
++        *self.inner.get_mut() = true;
++    }
++
++    unsafe fn on_drop_list_arc(&self) {
++        // INVARIANT: We just dropped a ListArc, so the boolean should be false.
++        self.inner.store(false, Ordering::Release);
++    }
++}
++
++// SAFETY: If this method returns `true`, then by the type invariant there is no `ListArc` before
++// this call, so it is okay to create a new `ListArc`.
++//
++// The acquire ordering will synchronize with the release store from the destruction of any
++// previous `ListArc`, so if there was a previous `ListArc`, then the destruction of the previous
++// `ListArc` happens-before the creation of the new `ListArc`.
++unsafe impl<const ID: u64> TryNewListArc<ID> for AtomicListArcTracker<ID> {
++    fn try_new_list_arc(&self) -> bool {
++        // INVARIANT: If this method returns true, then the boolean used to be false, and is no
++        // longer false, so it is okay for the caller to create a new [`ListArc`].
++        self.inner
++            .compare_exchange(false, true, Ordering::Acquire, Ordering::Relaxed)
++            .is_ok()
++    }
++}
+
+-- 
+2.44.0.478.gd926399ef9-goog
 
