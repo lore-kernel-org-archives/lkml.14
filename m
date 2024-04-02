@@ -1,79 +1,101 @@
-Received: from out162-62-57-252.mail.qq.com (out162-62-57-252.mail.qq.com [162.62.57.252])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E63B212E7F
-	for <linux-kernel@vger.kernel.org>; Tue,  2 Apr 2024 02:28:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.62.57.252
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E308310A0C;
+	Tue,  2 Apr 2024 02:29:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712024901; cv=none; b=NyO4ljq20BDSNhMct+Yqn6u65qv/j5nPEyzO5/2zvaEQIvSF0R8mOS/85hDgH9BbaCjCbyGjm8cKcjPQ+6vLHAsMZX3E3H/myb82zNrAHQHJwPcn4xyK0COepwAhB8u9Cf5qcp4DF+Wkn2pXzM6GDCT9jmqkmcrSUFYCy9OZnM0=
+	t=1712024968; cv=none; b=Nv9MrRzFXzGxG8B61uMn/1oZ3swysUV1EXbOsDklxxj2nEvaCrnMDnmIPGu0sT0uerJ16ldUVa0QLn+eGn6tIBmQf2xyjrzbQPb4XKqmrV7yBJtcmfBcwI8kODMEuFxyVyVlhlKfUEwNeosSvn4Z0RfEB/r5WKkB8Fp/Ac9ERnA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712024901; c=relaxed/simple;
-	bh=BcDyjWiD/PMhjv4jQzwRWrn1OjRV4u2EbxQczygQFH8=;
-	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
-	 MIME-Version; b=E567R/bvmsxYYaDCcvF9e7YPZ09PbBbXYg4NRmZbaGWfJk80MM6deB/lJdusu877W3EIeAsnSvYAN7khEX3+zom+2i9QvSb9UIjjaEyyfBguMdmp1t9Hh+DMyQ9PhEC9ZfuM76y+xD7BsT6T2coUU11xx909FdU6188vqGBvXUY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=puJD6xgT; arc=none smtp.client-ip=162.62.57.252
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
+	s=arc-20240116; t=1712024968; c=relaxed/simple;
+	bh=YOK3Vrm/GjP8UTcwVyHRIUVeZFsT2y0pds17HFYM7B0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=d8r8flzyngc6fsUb9JMPfmKpaGLvBo395GwiI9BPoycQn/qQ8GfyQm6O/DZuorokOhLvDrYLRYrxAwj4igKZWJuE+WdAxtO1QjA7OxFkrBMzHtaPvDtPNPD5QZ7mXGj9iDXvjxvSDvPz+rxgeKJAkQE317+RJOLZ+aHIfemt4QA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=i2J4cyQl; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="puJD6xgT"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
-	t=1712024894; bh=3CG1unMDZakglFocFHQP6ra4WgoNtqCAnPS7VPdrMVs=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=puJD6xgTXA50nb0ENV/1nddMzt2VY0jrMDYlVG2NbjUffAEw92qnVuMhfqqfQ+Gm/
-	 YM2mPrf8FDgRTvIInjXJW///UVODsknywD22gND5LnrePulprrNwXK51jK+xcMA1Hh
-	 ir2giidIspdOSsamz1hFDGRxYeR5Yv2wP/f5EDe4=
-Received: from pek-lxu-l1.wrs.com ([111.198.228.153])
-	by newxmesmtplogicsvrsza7-0.qq.com (NewEsmtp) with SMTP
-	id 3E83BC84; Tue, 02 Apr 2024 10:15:40 +0800
-X-QQ-mid: xmsmtpt1712024140t5m2eypdc
-Message-ID: <tencent_5E797A6E302C756D0494D4EAD2EEAACDB40A@qq.com>
-X-QQ-XMAILINFO: NhpLzBn2I3XwSHfcxv1kEwSKIvyZhjEZWpctlG+FvsgQzA40g5+ys0250mMVkr
-	 dQWuKOF9eRXRNIVlfUXyfJUM6AUAcKcksDN8R4gKkEyQaHZLXs2nQCK1u5pmvHCOR5MvSEe3gSCq
-	 sEd7bPgebTReVDUtKCzr/oHzXoisp7j4vcFT1slZyrCL5jj6BsiyCPWUzyj4o6raboMcXH73W6KK
-	 1llXIGly/jc30pyr1tdfGHvquCEzkeea3Zjdb1LppaFTpr3R3RhNRRZtX37yRyai78G78dmR7gpt
-	 AClfRxkc2rGqGrlhdluQ2L2ctXQl2cXd2YaimWb+BmDEavnDbOfmRb0bU+WUwhBMHsHQyXT/nzZS
-	 UtjlX4cy1v3ia8H7t50h+wjAkEu+W+fqrczLhV4INzHiPAvHoPVIQLJPcp9Re5LEq5+yjaw0MkTj
-	 AjVicE++3lX8ggOg+oive+z5z41xF45+CyVXrM/PMTHPhbIKp8FB04CtELsqlNuHjuLOjSKSHllz
-	 F0v8Xwz0bvshy2bvFHqRM17lXE6/Z1AfwByJaBlEleSTVWApIw/ik23OWKBEMZ9Nv0IRidf78sqd
-	 AMZAhDCmug6PXIM+e9W78PPCKSoga9ZvRPZIssWzI0AZOnPobu0Bc7mIngqfc4eZDeehjx+Arc1O
-	 LpjQc0hbkEBajlb7XCD11ASm1+Njd6goQ1F2uy9O4Wy+8lU+WrlSgVmJckgNXKXaTOhzQSSvdQFr
-	 1pb+lPVeEOQs3DHXEjlEXjE9MM1KDLrFWGvWf1Y598tPmhPmx5jec06kTlC8xWykR5xRc7EtwOZd
-	 stWc8DrHeJ/rV2JMS4TaRff2EHICsF4bAau2upvOyjiYEpX0g+2s8trBSi+/cW3Y++ueh+S8YQCi
-	 Lai29VuUTu9p7B8fOoPhEYNyZWooHlZ8hTnQ+sBL3YIw6WrIF9Zo91CVGv735xj42cZi5ZsONk
-X-QQ-XMRINFO: OD9hHCdaPRBwq3WW+NvGbIU=
-From: Edward Adam Davis <eadavis@qq.com>
-To: syzbot+956651316bb16496a837@syzkaller.appspotmail.com
-Cc: linux-kernel@vger.kernel.org,
-	syzkaller-bugs@googlegroups.com
-Subject: Re: [syzbot] [gfs2?] KASAN: slab-use-after-free Write in gfs2_qd_dealloc (2)
-Date: Tue,  2 Apr 2024 10:15:40 +0800
-X-OQ-MSGID: <20240402021539.1724819-2-eadavis@qq.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <000000000000cf534906150d00c1@google.com>
-References: <000000000000cf534906150d00c1@google.com>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="i2J4cyQl"
+Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 4322Ek4p030833;
+	Tue, 2 Apr 2024 02:29:15 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	message-id:date:mime-version:subject:to:cc:references:from
+	:in-reply-to:content-type:content-transfer-encoding; s=
+	qcppdkim1; bh=J0U5+iwHb3WLKeAZmMsk0vPiVfr2dgan3DXVTFIviw0=; b=i2
+	J4cyQllHtOCNDys8BNxI03gVhIGuuOjPIBYWeBueV3/joQkXn+SFnmdEWVPYg88y
+	5wcYgg3cvziMeyPLdO6WIB6RBHU7+KOPEkTGl3d54EG46jpiIMm3HGsNwxW6lpJR
+	55jCUOE8c6yMnT9VYwhuHN1D6BwBELf7N/9Ks48LX7DiQLpoQugBBdc2rZ6XPH/j
+	FJw2Q9Zv8nB22nd4z3uz9XMKFo6MSJnmFuphaJ1WaR4hMBDAFYHUSKgTrzBM+K84
+	YJ+6kpAuSFVctcwqonKDjh2V8t0NUaPblcJv2pbFVd2YwtBQ5y/7TI7HIlACYJMy
+	s3EMUkxu4Yzq7/MxZ7xg==
+Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3x87um04b9-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 02 Apr 2024 02:29:15 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA02.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 4322TEAO024929
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 2 Apr 2024 02:29:14 GMT
+Received: from [10.239.132.204] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Mon, 1 Apr
+ 2024 19:29:08 -0700
+Message-ID: <2d35eb0c-2a89-4e06-bb29-b4a9fc531446@quicinc.com>
+Date: Tue, 2 Apr 2024 10:29:06 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 RESEND 0/4] arm64: qcom: add AIM300 AIoT board support
+To: Trilok Soni <quic_tsoni@quicinc.com>, <andersson@kernel.org>,
+        <konrad.dybcio@linaro.org>, <robh@kernel.org>,
+        <krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>
+CC: <keescook@chromium.org>, <tony.luck@intel.com>, <gpiccoli@igalia.com>,
+        <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-hardening@vger.kernel.org>,
+        <kernel@quicinc.com>
+References: <20240401093843.2591147-1-quic_tengfan@quicinc.com>
+ <31f0b5d2-5b92-cc74-68bd-94fd42527a22@quicinc.com>
+From: Tengfei Fan <quic_tengfan@quicinc.com>
+In-Reply-To: <31f0b5d2-5b92-cc74-68bd-94fd42527a22@quicinc.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: enCqBDIQHpnahHhM2nzKGhjfa96sj9ij
+X-Proofpoint-ORIG-GUID: enCqBDIQHpnahHhM2nzKGhjfa96sj9ij
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-04-01_18,2024-04-01_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=840 adultscore=0
+ bulkscore=0 priorityscore=1501 suspectscore=0 phishscore=0 clxscore=1015
+ malwarescore=0 impostorscore=0 spamscore=0 mlxscore=0 lowpriorityscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2403210001
+ definitions=main-2404020016
 
-please test uaf in gfs2_qd_dealloc
 
-#syz test https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git 18737353cca0
 
-diff --git a/fs/gfs2/ops_fstype.c b/fs/gfs2/ops_fstype.c
-index 572d58e86296..91103e0307ac 100644
---- a/fs/gfs2/ops_fstype.c
-+++ b/fs/gfs2/ops_fstype.c
-@@ -1321,6 +1321,8 @@ static int gfs2_fill_super(struct super_block *sb, struct fs_context *fc)
- fail_delete_wq:
- 	destroy_workqueue(sdp->sd_delete_wq);
- fail_free:
-+	wait_event(sdp->sd_kill_wait,
-+                atomic_read(&sdp->sd_quota_count) == 0);
- 	free_sbd(sdp);
- 	sb->s_fs_info = NULL;
- 	return error;
+On 4/1/2024 11:54 PM, Trilok Soni wrote:
+> On 4/1/2024 2:38 AM, Tengfei Fan wrote:
+>> Here is a diagram of AIM300 AIoT Carrie Board and SoM
+>>   +--------------------------------------------------+
+>>   |             AIM300 AIOT Carrie Board             |
+> 
+> spellcheck
+> 
+> s/Carrie/Carrier ?
 
+Thanks Trilok for pointing out the problem here, I will correct this 
+typo in next version patch series.
+
+> 
+
+-- 
+Thx and BRs,
+Tengfei Fan
