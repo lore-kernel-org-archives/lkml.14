@@ -1,150 +1,251 @@
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AF0360B96;
-	Tue,  2 Apr 2024 13:25:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B1AD60B96;
+	Tue,  2 Apr 2024 13:26:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712064325; cv=none; b=M0UFhFHERvSKG6sprXifxNknz+iBVLWzKAKOrmiP5uUIOqv5Y+g+VfvYwNc1tBEZDDXPBFRlPUEGyejaD/fpXceNu6oHIxu95wcf7AnLmEWT5WPiZyDa7XzkZeb1MFB+FIjCuH5+UI+WNkeMkwCfqebJKO8AXf04BP4VYZ2TVN4=
+	t=1712064400; cv=none; b=C5DtNcgA1AK47FSGSup5SVCrYoqMq+sopbR0bfeKFvGTnmF3rxdwgbONW5vFxfdLyc0J6YqTQS5yGRAMAA2BGzMG9KJZjyaqPBcmQ8l0QxMuJUZqspsGPmQGY86jPldQnp8+QsyOUOTy3Pj1JFY2JdDzSSyk9oqDlb8djMcPpR0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712064325; c=relaxed/simple;
-	bh=1v3QOGppWekBTgTfFoLAKTfSV10L40o6xnBh0P7fjL0=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=FAvuDyFV7ZQWv1T1Q4R2ZZ5faXZnYGsRQLAykrXmfcWsTBF044GMUaUtseDfsfU/rya5f+W2LXPfc00hZEWziFTaMWGznzxds/xUwxvhfG8qYSyd3Qva1txYXSAjV6GzPALpy3wQL3C1/htUE7uhJokfOX+FVGQR7IQAEFZMo4A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=R8R/6ORe; arc=none smtp.client-ip=46.235.227.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1712064400; c=relaxed/simple;
+	bh=hlqVVxyxG9QM5oLoAbqmZw1d52KMspKeP5w+isXcmUU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=nLBcZ9+we1dbJSXInThoDvENohMDzPABVUJUvZtzwsonUMYi9wtqvLSJ5ySnsmR7/7rBwoUA04XiEy4AAZsgbjv7THEQhlGLGwjHCQIcRGdQ4O4zgVXWeVhqEpkadYLPEmROErgcMbneW7RyouHsG3ZCk0+lh2pJ3ewO3/MqQrE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=J0QvUGak; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="R8R/6ORe"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1712064321;
-	bh=1v3QOGppWekBTgTfFoLAKTfSV10L40o6xnBh0P7fjL0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=R8R/6OReSj3ByQgzd3vxsKtogZ5GbkeQBrvpi3a/j0l9wQ+nheeHI6vakJINpccrK
-	 KLaq1HJ4DL7v/yhhbQWgsLF0D6veDhRG7zk1gqspBV8l6To9kHfvSmisv47IH4DQAa
-	 lJ4fTeqBqz/TjNcKDPcmYNDS9Whw9Mv9NmohCu9oVB7yRqkTRNLaEC1cgdpofiCqC1
-	 97jkafuwt1ka6HF/uED/rmxxDpb4WebgrZGuJP7eraFkQT9wVEE6uq8dr6zWxCH1wK
-	 DuyYGVLrGDal4vogDxbHQgC4AGA6mP+YZN7tWWLjuVW4mCejJaCz5SrmC+kp1DPjBU
-	 PMNPH3caza43w==
-Received: from localhost (cola.collaboradmins.com [195.201.22.229])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: bbrezillon)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 6F7F937803EE;
-	Tue,  2 Apr 2024 13:25:20 +0000 (UTC)
-Date: Tue, 2 Apr 2024 15:25:19 +0200
-From: Boris Brezillon <boris.brezillon@collabora.com>
-To: Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>
-Cc: Steven Price <steven.price@arm.com>, Liviu Dudau <liviu.dudau@arm.com>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard
- <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, David Airlie
- <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, Heiko Stuebner
- <heiko@sntech.de>, dri-devel@lists.freedesktop.org,
- linux-kernel@vger.kernel.org, dan.carpenter@linaro.org,
- kernel-janitors@vger.kernel.org, error27@gmail.com
-Subject: Re: [PATCH] drm/panthor: Fix NULL vs IS_ERR() bug in
- panthor_ioctl_tiler_heap_destroy()
-Message-ID: <20240402152519.48857445@collabora.com>
-In-Reply-To: <99b0bc65-a3ce-4522-a1dd-a304498fc453@oracle.com>
-References: <20240402103358.1689379-1-harshit.m.mogalapalli@oracle.com>
-	<20240402143337.38e864e9@collabora.com>
-	<99b0bc65-a3ce-4522-a1dd-a304498fc453@oracle.com>
-Organization: Collabora
-X-Mailer: Claws Mail 4.2.0 (GTK 3.24.41; x86_64-redhat-linux-gnu)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="J0QvUGak"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 71B01C433F1;
+	Tue,  2 Apr 2024 13:26:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1712064399;
+	bh=hlqVVxyxG9QM5oLoAbqmZw1d52KMspKeP5w+isXcmUU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=J0QvUGakpXWyePXz3YTw9UULDkBXS8HtxsPzUwn3eHy3mDLAVRUKrHObi27q2RJvn
+	 bmrgx1/nPFt8iR7FvNti3ADybQDmbXLZqgO3bmEcTihr7zKjZjCrSbocAKlD5S05pQ
+	 VVO41SLuxOzHlVtoVUPLkNquXKs/g3koyxBRPqVuLSmSWYuFnHug0hwYTMGJSiNXms
+	 Mgbnps1L/GRy2pgbMMp31/rcwQghSfhjowzBw5F+PsosXirsDyGWbhZ3lj95Pan0sJ
+	 6MbAagg+umYcYoFBAePZ4JR0c0IIkW5vOtEKVU1yCyJ0Rcu9zdkCB/ze/NOkngD1Z/
+	 5hVV4kbZktECA==
+Date: Tue, 2 Apr 2024 08:26:37 -0500
+From: Rob Herring <robh@kernel.org>
+To: Kory Maincent <kory.maincent@bootlin.com>
+Cc: "David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Luis Chamberlain <mcgrof@kernel.org>,
+	Russ Weight <russ.weight@linux.dev>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Oleksij Rempel <o.rempel@pengutronix.de>,
+	Mark Brown <broonie@kernel.org>,
+	Frank Rowand <frowand.list@gmail.com>, Andrew Lunn <andrew@lunn.ch>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	Russell King <linux@armlinux.org.uk>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-doc@vger.kernel.org, devicetree@vger.kernel.org,
+	Dent Project <dentproject@linuxfoundation.org>
+Subject: Re: [PATCH net-next v6 11/17] dt-bindings: net: pse-pd: Add another
+ way of describing several PSE PIs
+Message-ID: <20240402132637.GA3744978-robh@kernel.org>
+References: <20240326-feature_poe-v6-0-c1011b6ea1cb@bootlin.com>
+ <20240326-feature_poe-v6-11-c1011b6ea1cb@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240326-feature_poe-v6-11-c1011b6ea1cb@bootlin.com>
 
-On Tue, 2 Apr 2024 18:52:12 +0530
-Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com> wrote:
+On Tue, Mar 26, 2024 at 03:04:48PM +0100, Kory Maincent wrote:
+> From: Kory Maincent (Dent Project) <kory.maincent@bootlin.com>
+> 
+> PSE PI setup may encompass multiple PSE controllers or auxiliary circuits
+> that collectively manage power delivery to one Ethernet port.
+> Such configurations might support a range of PoE standards and require
+> the capability to dynamically configure power delivery based on the
+> operational mode (e.g., PoE2 versus PoE4) or specific requirements of
+> connected devices. In these instances, a dedicated PSE PI node becomes
+> essential for accurately documenting the system architecture. This node
+> would serve to detail the interactions between different PSE controllers,
+> the support for various PoE modes, and any additional logic required to
+> coordinate power delivery across the network infrastructure.
+> 
+> The old usage of "#pse-cells" is unsuficient as it carries only the PSE PI
+> index information.
+> 
+> Signed-off-by: Kory Maincent <kory.maincent@bootlin.com>
+> ---
+> 
+> Changes in v3:
+> - New patch
+> 
+> Changes in v4:
+> - Remove $def
+> - Fix pairset-names item list
+> - Upgrade few properties description
+> - Update the commit message
+> 
+> Changes in v5:
+> - Fix yamllint error.
+> - Replace underscore by dash in properties names.
+> - Add polarity-supported property.
+> 
+> Changes in v6:
+> - Reorder the pairset pinout table documentation to shrink the lines size.
+> - Remove pairset and polarity as required fields.
+> - Add vpwr-supply regulator supply.
+> ---
+>  .../bindings/net/pse-pd/pse-controller.yaml        | 102 ++++++++++++++++++++-
+>  1 file changed, 99 insertions(+), 3 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/net/pse-pd/pse-controller.yaml b/Documentation/devicetree/bindings/net/pse-pd/pse-controller.yaml
+> index 2d382faca0e6..03f7f215c162 100644
+> --- a/Documentation/devicetree/bindings/net/pse-pd/pse-controller.yaml
+> +++ b/Documentation/devicetree/bindings/net/pse-pd/pse-controller.yaml
+> @@ -13,6 +13,7 @@ description: Binding for the Power Sourcing Equipment (PSE) as defined in the
+>  
+>  maintainers:
+>    - Oleksij Rempel <o.rempel@pengutronix.de>
+> +  - Kory Maincent <kory.maincent@bootlin.com>
+>  
+>  properties:
+>    $nodename:
+> @@ -22,11 +23,106 @@ properties:
+>      description:
+>        Used to uniquely identify a PSE instance within an IC. Will be
+>        0 on PSE nodes with only a single output and at least 1 on nodes
+> -      controlling several outputs.
+> +      controlling several outputs which are not described in the pse-pis
+> +      subnode. This property is deprecated, please use pse-pis instead.
+>      enum: [0, 1]
+>  
+> -required:
+> -  - "#pse-cells"
+> +  pse-pis:
+> +    type: object
+> +    description:
+> +      Overview of the PSE PIs provided by the controller.
+> +
+> +    properties:
+> +      "#address-cells":
+> +        const: 1
+> +
+> +      "#size-cells":
+> +        const: 0
+> +
+> +    required:
+> +      - "#address-cells"
+> +      - "#size-cells"
+> +
+> +    patternProperties:
+> +      "^pse-pi@[0-9a-f]+$":
+> +        type: object
+> +        description:
+> +          PSE PI for power delivery via pairsets, compliant with IEEE
+> +          802.3-2022, Section 145.2.4. Each pairset comprises a positive and
+> +          a negative VPSE pair, adhering to the pinout configurations
+> +          detailed in the standard.
+> +          See Documentation/networking/pse-pd/pse-pi.rst for details.
+> +
+> +        properties:
+> +          reg:
+> +            description:
+> +              Address describing the PSE PI index.
+> +            maxItems: 1
+> +
+> +          "#pse-cells":
+> +            const: 0
+> +
+> +          pairset-names:
+> +            $ref: /schemas/types.yaml#/definitions/string-array
+> +            description:
+> +              Names of the pairsets as per IEEE 802.3-2022, Section 145.2.4.
+> +              Valid values are "alternative-a" and "alternative-b". Each name
 
-> Hello Boris,
-> 
-> On 02/04/24 18:03, Boris Brezillon wrote:
-> > Hello Harshit,
-> > 
-> > On Tue,  2 Apr 2024 03:33:58 -0700
-> > Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com> wrote:
-> >   
-> >> panthor_vm_get_heap_pool() returns ERR_PTR on failure.
-> >>
-> >> Fixes: 4bdca1150792 ("drm/panthor: Add the driver frontend block")
-> >> Signed-off-by: Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>
-> >> ---
-> >> This is spotted by smatch and the patch is only compile tested
-> >> ---
-> >>   drivers/gpu/drm/panthor/panthor_drv.c | 4 ++--
-> >>   1 file changed, 2 insertions(+), 2 deletions(-)
-> >>
-> >> diff --git a/drivers/gpu/drm/panthor/panthor_drv.c b/drivers/gpu/drm/panthor/panthor_drv.c
-> >> index 11b3ccd58f85..050b905b0453 100644
-> >> --- a/drivers/gpu/drm/panthor/panthor_drv.c
-> >> +++ b/drivers/gpu/drm/panthor/panthor_drv.c
-> >> @@ -1090,8 +1090,8 @@ static int panthor_ioctl_tiler_heap_destroy(struct drm_device *ddev, void *data,
-> >>   		return -EINVAL;
-> >>   
-> >>   	pool = panthor_vm_get_heap_pool(vm, false);
-> >> -	if (!pool) {
-> >> -		ret = -EINVAL;
-> >> +	if (IS_ERR(pool)) {
-> >> +		ret = PTR_ERR(pool);  
-> > 
-> > Actually, panthor_vm_get_heap_pool() will return NULL if there's no
-> > heap pool attached to this VM and create=false, so this was correct.
-> > This being said, I'm fine making that consistent by returning
-> > ERR_PTR(-ENOENT) instead of NULL in that case. This way we don't have
-> > two different semantics based on the 'create' value.
-> >   
-> 
-> Thanks for explaining. I missed the case where create is false and there 
-> is no heap pool attached, so panthor_vm_get_heap_pool() can return NULL.
-> 
-> 1878  *
-> 1879  * Return: A valid pointer on success, an ERR_PTR() otherwise.
-> 1880  */
-> 1881 struct panthor_heap_pool *panthor_vm_get_heap_pool(struct 
-> panthor_vm *vm, bool create)
-> 
-> The documentation says it returns ERR_PTR() on failure, so is it worth 
-> doing something like:
-> 
-> diff --git a/drivers/gpu/drm/panthor/panthor_mmu.c 
-> b/drivers/gpu/drm/panthor/panthor_mmu.c
-> index fdd35249169f..e1285cdb09ff 100644
-> --- a/drivers/gpu/drm/panthor/panthor_mmu.c
-> +++ b/drivers/gpu/drm/panthor/panthor_mmu.c
-> @@ -1893,6 +1893,8 @@ struct panthor_heap_pool 
-> *panthor_vm_get_heap_pool(struct panthor_vm *vm, bool c
->                          vm->heaps.pool = panthor_heap_pool_get(pool);
->          } else {
->                  pool = panthor_heap_pool_get(vm->heaps.pool);
-> +               if (!pool)
-> +                       pool = ERR_PTR(-ENOENT);
->          }
->          mutex_unlock(&vm->heaps.lock);
-> 
-> 
-> and change all callers of panthor_vm_get_heap_pool() to only check for 
-> IS_ERR() ?
+Don't state constraints in prose which are defined as schema 
+constraints.
 
-Yep, that's what I had in mind.
+> +              should correspond to a phandle in the 'pairset' property
+> +              pointing to the power supply for that pairset.
+> +            minItems: 1
+> +            maxItems: 2
+> +            items:
+> +              enum:
+> +                - alternative-a
+> +                - alternative-b
+> +
+> +          pairsets:
+> +            $ref: /schemas/types.yaml#/definitions/phandle-array
+> +            description:
+> +              List of phandles, each pointing to the power supply for the
+> +              corresponding pairset named in 'pairset-names'. This property
+> +              aligns with IEEE 802.3-2022, Section 33.2.3 and 145.2.4.
+> +              PSE Pinout Alternatives (as per IEEE 802.3-2022 Table 145\u20133)
+> +              |-----------|---------------|---------------|---------------|---------------|
+> +              | Conductor | Alternative A | Alternative A | Alternative B | Alternative B |
+> +              |           |    (MDI-X)    |     (MDI)     |      (X)      |      (S)      |
+> +              |-----------|---------------|---------------|---------------|---------------|
+> +              | 1         | Negative VPSE | Positive VPSE | \u2014             | \u2014             |
+> +              | 2         | Negative VPSE | Positive VPSE | \u2014             | \u2014             |
+> +              | 3         | Positive VPSE | Negative VPSE | \u2014             | \u2014             |
+> +              | 4         | \u2014             | \u2014             | Negative VPSE | Positive VPSE |
+> +              | 5         | \u2014             | \u2014             | Negative VPSE | Positive VPSE |
+> +              | 6         | Positive VPSE | Negative VPSE | \u2014             | \u2014             |
+> +              | 7         | \u2014             | \u2014             | Positive VPSE | Negative VPSE |
+> +              | 8         | \u2014             | \u2014             | Positive VPSE | Negative VPSE |
+> +            minItems: 1
+> +            maxItems: 2
 
+"pairsets" does not follow the normal design pattern of foos, foo-names, 
+and #foo-cells. You could add #foo-cells I suppose, but what would cells 
+convey? I don't think it's a good fit for what you need.
+
+The other oddity is the number of entries and the names are fixed. That 
+is usually defined per consumer. 
+
+As each entry is just a power rail, why can't the regulator binding be 
+used here?
+
+> +
+> +          polarity-supported:
+> +            $ref: /schemas/types.yaml#/definitions/string-array
+> +            description:
+> +              Polarity configuration supported by the PSE PI pairsets.
+> +            minItems: 1
+> +            maxItems: 4
+> +            items:
+> +              enum:
+> +                - MDI-X
+> +                - MDI
+> +                - X
+> +                - S
+> +
+> +          vpwr-supply:
+> +            description: Regulator power supply for the PSE PI.
+
+I don't see this being used anywhere.
+
+> +
+> +        required:
+> +          - reg
+> +          - "#pse-cells"
+> +
+> +oneOf:
+> +  - required:
+> +      - "#pse-cells"
+> +  - required:
+> +      - pse-pis
+>  
+>  additionalProperties: true
+>  
 > 
+> -- 
+> 2.25.1
 > 
-> > Oh, and please merge everything into a single patch instead of one patch
-> > per call-site.
-> >   
-> 
-> Sure, I noticed one after the other. I will fix them together in v2.
-
-Great!
-
-Thanks,
-
-Boris
