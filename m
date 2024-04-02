@@ -1,26 +1,26 @@
-Received: from mx.skole.hr (mx1.hosting.skole.hr [161.53.165.185])
+Received: from mx.skole.hr (mx2.hosting.skole.hr [161.53.165.186])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCDE979DD4;
-	Tue,  2 Apr 2024 21:02:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=161.53.165.185
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C85A015E202;
+	Tue,  2 Apr 2024 21:03:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=161.53.165.186
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712091754; cv=none; b=RrORv2d883/B7SjNxDyCCQRmfHCpCX6X3ixuCY0gtabr0UEKMbFAqOqaT2UH4hZTYxrxeSVGbLXltDtO6UrYQKdWiO/HUKhOX8S5/eWmP5GyMQh5vA0jiWi9GeUKOyzD1JSpTEvQLloYEF3Kgeb2AhPJOZ2FgZB/th0O2ebzopE=
+	t=1712091793; cv=none; b=pfbgCSG45M1E4ekLFCVEkqECzZGgZHwTw1KfHQV699OyrO7rrAWN9rUWYR3aaWkWwIlQQoOaV/3sQjLLClI/xL8VxoZ8h6TVaLMLjxkteq5iRmR3mDtyO0yW6iBK4qvNwNihF1VOX1TY8jUPGQrDcnAm/Wz4IOrB5uxmpWxhYgA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712091754; c=relaxed/simple;
-	bh=KkKUaK2SeDyP20scuUXm7oVk+QfHUL3F87v8Iwvt8qk=;
+	s=arc-20240116; t=1712091793; c=relaxed/simple;
+	bh=rBtIaMX/S+mXR29Z1GK6jtLfsrLvd3qrx2yb5nOvyjo=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=SlSsxZfnV8RtyvnAGjmWjRleYZMx4tqtNpHllt0yLT+1WDoc1Mthsuq6+CKSwwwAQkuQ+jf/AtXos18NoPUkXzsrA+KsNuJsckaquxq7F0xWq/9O2ztVm4ERM2PA1JuZGYZEFuETafKNFCj+DsauQyD1/vsOmKfmooNfmbpapLw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=skole.hr; spf=pass smtp.mailfrom=skole.hr; arc=none smtp.client-ip=161.53.165.185
+	 In-Reply-To:To:Cc; b=QXQze6TN7u61KuWyKc1zT3y2L6uQV3R7f17h7dczUhaaSGNm3yFUa/iKayk/6mMhXDBvCPwDtWt7Ln41vDDUMpLdIebEJs+/o/XNckqMKiM+FSo4S1M5ZA+P1uNWvbtBb1N378dd2xZi08PNmsDfCoIDJ5jtN7ZMMrbA9dquLbw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=skole.hr; spf=pass smtp.mailfrom=skole.hr; arc=none smtp.client-ip=161.53.165.186
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=skole.hr
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=skole.hr
-Received: from mx1.hosting.skole.hr (localhost.localdomain [127.0.0.1])
-	by mx.skole.hr (mx.skole.hr) with ESMTP id 0B68886AFD;
-	Tue,  2 Apr 2024 22:55:48 +0200 (CEST)
+Received: from mx2.hosting.skole.hr (localhost.localdomain [127.0.0.1])
+	by mx.skole.hr (mx.skole.hr) with ESMTP id 4263987FF7;
+	Tue,  2 Apr 2024 22:55:53 +0200 (CEST)
 From: =?utf-8?q?Duje_Mihanovi=C4=87?= <duje.mihanovic@skole.hr>
-Date: Tue, 02 Apr 2024 22:55:38 +0200
-Subject: [PATCH v9 2/9] dt-bindings: pinctrl: pinctrl-single: add
- marvell,pxa1908-padconf compatible
+Date: Tue, 02 Apr 2024 22:55:43 +0200
+Subject: [PATCH v9 7/9] arm64: Kconfig.platforms: Add config for Marvell
+ PXA1908 platform
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -29,7 +29,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Message-Id: <20240402-pxa1908-lkml-v9-2-25a003e83c6f@skole.hr>
+Message-Id: <20240402-pxa1908-lkml-v9-7-25a003e83c6f@skole.hr>
 References: <20240402-pxa1908-lkml-v9-0-25a003e83c6f@skole.hr>
 In-Reply-To: <20240402-pxa1908-lkml-v9-0-25a003e83c6f@skole.hr>
 To: Michael Turquette <mturquette@baylibre.com>, 
@@ -49,49 +49,50 @@ Cc: phone-devel@vger.kernel.org, ~postmarketos/upstreaming@lists.sr.ht,
  linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
  linux-arm-kernel@lists.infradead.org
 X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=989;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=855;
  i=duje.mihanovic@skole.hr; h=from:subject:message-id;
- bh=KkKUaK2SeDyP20scuUXm7oVk+QfHUL3F87v8Iwvt8qk=;
- b=owEBbQKS/ZANAwAIAZoRnrBCLZbhAcsmYgBmDHDNa/nqQ1UT/Ixqv8AglmTEwTsijNUNfGKBU
- iJ4TYgwPkeJAjMEAAEIAB0WIQRT351NnD/hEPs2LXiaEZ6wQi2W4QUCZgxwzQAKCRCaEZ6wQi2W
- 4fgYD/4nd8vxZVbYhlynUp5Kb/Oin6wSAX5NVE/7Gl28cwJSDVtyzc6PGXMMpqIDGkvAqd7cDfG
- nuGmuAFQM+zHc430FSAL20wpR96Jerr7MH0FhsBMxfoq/z+3u9KKZyl8n6XRJy/A290efH6tbrg
- c3fBGDuVO+QlzutcH9bJMaABkN6PJHQWvZY2N77nr1BMPD8vOJtaWPJu9MKmuFObiRjVhwfqWf0
- mU0mgd0TfGdpzL52C6WyPIm2D8QFEs+BrB5AS2ZkBSghz180kXPGxAbAwPOjXaI0BM8aQmzse46
- 6FPeUJrm2s9YKfZ2jVwE+YjI/qo8uPOAnLsGzXFn6Mp6CJuDyOOoFpEU6iu0v7dpXc3zC1V6iPX
- OLzsaQBb5txWhQFmcj/1D00P5sWVx/4lAMnEHa3lcZIYD8SW9n4eSbxDcvvBpRep7wVAdi7JP/1
- z0XM5Qa78gtYD2ZR3vW5tCOI8GtCpVctApYcqjr0rQuVK0iLzz6EsxSZT4wERChiqRXmWtWUHIW
- iUUqtXZzRgzSqdk0EekSG8Iup4udjG5l45ZY2Z3XudBxaLUONm5l63Tur+Oo6rHElBCkOQ1sDH2
- qRncgLwc2yW8nc3nFl+m8SIKMDitn9pfRlvhsr2/xzGXIn6SlgzY2OLnm1nDAOOSxn/EgUJeaOc
- aLRRxGAI/J5x5sw==
+ bh=rBtIaMX/S+mXR29Z1GK6jtLfsrLvd3qrx2yb5nOvyjo=;
+ b=owEBbQKS/ZANAwAIAZoRnrBCLZbhAcsmYgBmDHDNm1oHT2XD6K2y04mhc9MQhQ/6vScz04Onv
+ 5N/7wD4ogOJAjMEAAEIAB0WIQRT351NnD/hEPs2LXiaEZ6wQi2W4QUCZgxwzQAKCRCaEZ6wQi2W
+ 4Q+0D/474noNUcTAKGZd19bfGboXkMgSrpFntqJXDASin/Ue7zb3J6bcWzUrCE39Tuin9On7veA
+ 03YcuWQ9FsgSt/NM22581Ly+0R4C0V399WyswhAsyWuRzzzoiOkqn7jU7kW8C9Ltz2iFqcSw4xp
+ Xl26tTc3+RUyrgtZNZsWwnndjOgAkLKSDsc3oMpA85AB866fvNIRLxeCpR5mIsTUElKvhu/IdbU
+ E6u3x0E6aa/FAUSSM+WbWWEhCjRNwdYJdpEeC5h8+bAM+LZ6rAr1v9i2ImRTVH9dczJKKW2YDgD
+ dhlo5cjeLJp+sAkkkULWOnjlWYT8ODZZGgDq+XV/Vhh0vy8+OnzCP2yAud8Lo0NB0rNkBkavPhT
+ 4UQBQz7oxwsGdnmhB7uH1w/kd5G95QvEUAujcQ5Wxn5+6suMXR/9v+XJACC28oLCBHqr3+VptAC
+ 7rAwE8M8Z4l2D1KLpednKgH08QsHtKACb0fSfyXktgiT9QF8kGCDHGldr6D+cPIlx5e1lG5dvhV
+ RmELHnI4FBDKt4xcd61JGY/NWHBI0aCjeSEQGPvS+QzmsToP6DWoPeHJha6QLCwNYbMkPlI78Jl
+ gLzo1NV0Lnv14q/20Qi1QpzSZqECwx2gB4d97o9NoCGk8eq9aLhEXjIRo/h6PFDoVjzkt+0Cobs
+ K5Z/QFZOfkOct8Q==
 X-Developer-Key: i=duje.mihanovic@skole.hr; a=openpgp;
  fpr=53DF9D4D9C3FE110FB362D789A119EB0422D96E1
 
-Add the "marvell,pxa1908-padconf" compatible to allow migrating to a
-separate pinctrl driver later.
+Add ARCH_MMP configuration option for Marvell PXA1908 SoC.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
-Acked-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Duje Mihanović <duje.mihanovic@skole.hr>
 ---
- Documentation/devicetree/bindings/pinctrl/pinctrl-single.yaml | 4 ++++
- 1 file changed, 4 insertions(+)
+ arch/arm64/Kconfig.platforms | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/pinctrl/pinctrl-single.yaml b/Documentation/devicetree/bindings/pinctrl/pinctrl-single.yaml
-index c11495524dd2..1ce24ad8bc73 100644
---- a/Documentation/devicetree/bindings/pinctrl/pinctrl-single.yaml
-+++ b/Documentation/devicetree/bindings/pinctrl/pinctrl-single.yaml
-@@ -33,6 +33,10 @@ properties:
-               - ti,omap5-padconf
-               - ti,j7200-padconf
-           - const: pinctrl-single
-+      - items:
-+          - enum:
-+              - marvell,pxa1908-padconf
-+          - const: pinconf-single
+diff --git a/arch/arm64/Kconfig.platforms b/arch/arm64/Kconfig.platforms
+index 24335565bad5..d71b0b6e75aa 100644
+--- a/arch/arm64/Kconfig.platforms
++++ b/arch/arm64/Kconfig.platforms
+@@ -168,6 +168,14 @@ config ARCH_MESON
+ 	  This enables support for the arm64 based Amlogic SoCs
+ 	  such as the s905, S905X/D, S912, A113X/D or S905X/D2
  
-   reg:
-     maxItems: 1
++config ARCH_MMP
++	bool "Marvell MMP SoC Family"
++	select PINCTRL
++	select PINCTRL_SINGLE
++	help
++	  This enables support for Marvell MMP SoC family, currently
++	  supporting PXA1908 aka IAP140.
++
+ config ARCH_MVEBU
+ 	bool "Marvell EBU SoC Family"
+ 	select ARMADA_AP806_SYSCON
 
 -- 
 2.44.0
