@@ -1,98 +1,101 @@
-Received: from mail-vs1-f46.google.com (mail-vs1-f46.google.com [209.85.217.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED1F33BB21
-	for <linux-kernel@vger.kernel.org>; Tue,  2 Apr 2024 07:09:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DC512C6B3;
+	Tue,  2 Apr 2024 07:09:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712041752; cv=none; b=DRG4+EQInljyRK5BI0IqrM+rqhKzNw/OhE+QEI8Bs2sOQOlXC/MCjg4ojQBOue5k+02ocqLa4dg919nMyPluC6SPQ+Xwh9ZoMWXEgSrBSafY/RAIrdvNLL5pvk+8KLgbMREfGEmUrij4YaeoPvrNtLsjOQpdQwO3tev51A1v+fo=
+	t=1712041765; cv=none; b=NoRaBb1FzBLmf5pw5ie9OIi/kEbHgUwhJE92qcWdBeA8o6yAeZifpQxOVoK5nYJszbQd0w+DiZtyuMk1HdrUmmPfQpDfa1B++7+Nvfqtxt3hi/bkEOrTClaDzbexkEVx3i3xhDCUPxd4+PwcW2W67EvfGBubjIYUu3U2Rizn+hg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712041752; c=relaxed/simple;
-	bh=haQJ60gcyfzT0PPIcpufheaE0XM4vQtB9WG6Oc5rEk0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=UH6/kZ7rhfkFsbLClhS/bX6oPsdLFwR1zi0qt9Ao6WucCjUCAc4T/TOOW1bqJxCP5tqipawr/6gZ06cTIhfvLNM0MP+PYxL7pBqxw1nhp6nb2Voa7RZoVijTCOpOZOeAqfNIXdxpNv7mdWmf8ZJHIKZE/fBOB03kDCPgAYNepUw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=DG31QAiS; arc=none smtp.client-ip=209.85.217.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1712041765; c=relaxed/simple;
+	bh=cIv6Tl+nzFjXY1TztO8FqRhEBSuJAbM93JA4OC3kQNg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ekXwNW+jMHWqoqQjWU0vZKTfTAmFKDT8XOSuHlJSowHtmXXDymepXRiAdWNaaBb77nCszPD651BDaHBk0XDKsNFn+7DllEeR5uXEKbtoY/HL4hH+AqDBh8L68wBHkXfoDqUaCrQG0lpdC+uJ+vlJbXCEBLZUqwb3eD9nSpzsWyk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=GaHxsiTK; arc=none smtp.client-ip=192.198.163.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="DG31QAiS"
-Received: by mail-vs1-f46.google.com with SMTP id ada2fe7eead31-4766e56ccccso1852214137.0
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Apr 2024 00:09:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1712041749; x=1712646549; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=haQJ60gcyfzT0PPIcpufheaE0XM4vQtB9WG6Oc5rEk0=;
-        b=DG31QAiSMDm4KKa5gtnuNa5UgLI8j9aONn9lASmmMdL54yphYTVtvVzvmUhgwMrxy4
-         tROlerAHCBNw0RPMVtLy+QtPE8OpKgvh+4j4XErf4O8q9Cvp1q29v/Fxee7oAJMlB07D
-         kHXeKCNbwFQs1yspIXFJIhSwiVJltclKlF9nlT0yI+rdaJu/VleOVzrANh9zgOt5v9xV
-         8lYb0h7MqpJBNRwXf2xFU/gmxbRGGInzkikDoUJzese0k47PRL0SpzP82391f/91+GKj
-         eAbZgNqvF7bSPsviuXenecw+1i9ykTVsGVyb8a5QNtA73Eslx8936K1OIZ3ZdfpdeYs5
-         4OHA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712041749; x=1712646549;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=haQJ60gcyfzT0PPIcpufheaE0XM4vQtB9WG6Oc5rEk0=;
-        b=bsxQDYBIB6uEIi2YExs4U+UDQSnYtt1kqG+tYnxKl0Rga8h79ZTXr0cM/npRYosGpd
-         TsykVayg4MsHa2sOjI65dehmHY+5IDwvZbUrzIcu8zP8G6eVGScL1fHUFy2MEolCjkMu
-         I18OIYYWA35+MwdP8QoVdtC/o/Sv+9DzFIUk8MT/yQHr064Ym2nYlhPX3besFIOMhfxo
-         wB/9rO8u5Ez8xL40Ls/X+lB1aM/aEjzS68JDEfyl6d2mJOuPCKWTQVkBxJE0jmIa4PHC
-         Qj72W8QJmfQ81mP9I6MDA+c4mUWIn3DjLg4mdYe5JQOJJNEfRfELvlY15Rrchbb2Qw2G
-         QROg==
-X-Forwarded-Encrypted: i=1; AJvYcCUF+r6P1W4tslwj81FPgLZliApLpUknlHCKs+Z7fgO/HIF1uBnU8/1WITVDVyCpTmaA1jk5qopGdwtE54vYaK7SSwAhu02KPOUUrtpC
-X-Gm-Message-State: AOJu0YxPoNosZZePHJIGKJcv1g2McwsjmyMERXYHwLS200apHwWyAT2u
-	2oxTiSuNLXHJCB71TssT+Hf2x+fSAe+7M8Th12TmTvtqRFezB0//QEvZHIclRXqPqDsAKpaTy3/
-	3CCFRA8/XoPqLS8l7DYq9i0SsZfWc+TTaFJRH
-X-Google-Smtp-Source: AGHT+IE2XWNUQP5fyiz0lDixSxBA7dWCXgQaoBsbs3BFpiwhXmOCEUELRrpL2YEHmRxtWGfATq8KbUE+fHeXzNF/yC0=
-X-Received: by 2002:a05:6102:4a11:b0:478:52cc:fc42 with SMTP id
- jw17-20020a0561024a1100b0047852ccfc42mr9301382vsb.10.1712041748682; Tue, 02
- Apr 2024 00:09:08 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GaHxsiTK"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1712041763; x=1743577763;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=cIv6Tl+nzFjXY1TztO8FqRhEBSuJAbM93JA4OC3kQNg=;
+  b=GaHxsiTKll8PSozlewdyvCVNSP0XgL7OyOIyuUPkqviM4dwLt9I++cl1
+   Dn3rHI9BwNQldOBtmtKHG5QgrOib+Iz56ox5MDspswqzk0vaKdzcJB7bP
+   +QmgKzq773CGGyyJ8BbxsrhCK4jWYaKO7Jiv52kuSuO4yPxQITdUHi2Tx
+   vMYqKm4+bjVf/PU70yhT/VZQ94fpXnCKth8bVrhI1xEObWwWTGCKUjUh2
+   b0qicwQh2wLlViQGsRxGWtCdi+MGJF3W1eGxen/eDtS60vObzUpVIbxM4
+   1ad0rTwdtCP0nq1oi5vbQllAP44CEXLr2rwXws7/ytiD5CKGKVKRNhP1h
+   A==;
+X-CSE-ConnectionGUID: TTNmxK9nSI26C4yGrC0pfQ==
+X-CSE-MsgGUID: XP79r+snSde/fhmXGLPGbQ==
+X-IronPort-AV: E=McAfee;i="6600,9927,11031"; a="7061621"
+X-IronPort-AV: E=Sophos;i="6.07,174,1708416000"; 
+   d="scan'208";a="7061621"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2024 00:09:22 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,174,1708416000"; 
+   d="scan'208";a="18059189"
+Received: from ls.sc.intel.com (HELO localhost) ([172.25.112.31])
+  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2024 00:09:22 -0700
+Date: Tue, 2 Apr 2024 00:09:21 -0700
+From: Isaku Yamahata <isaku.yamahata@intel.com>
+To: Chao Gao <chao.gao@intel.com>
+Cc: isaku.yamahata@intel.com, kvm@vger.kernel.org,
+	linux-kernel@vger.kernel.org, isaku.yamahata@gmail.com,
+	Paolo Bonzini <pbonzini@redhat.com>, erdemaktas@google.com,
+	Sean Christopherson <seanjc@google.com>,
+	Sagi Shahar <sagis@google.com>, Kai Huang <kai.huang@intel.com>,
+	chen.bo@intel.com, hang.yuan@intel.com, tina.zhang@intel.com,
+	isaku.yamahata@linux.intel.com
+Subject: Re: [PATCH v19 094/130] KVM: TDX: Implement methods to inject NMI
+Message-ID: <20240402070921.GZ2444378@ls.amr.corp.intel.com>
+References: <cover.1708933498.git.isaku.yamahata@intel.com>
+ <a7ce6023eb8dd824e61023a95475629bd7ae2278.1708933498.git.isaku.yamahata@intel.com>
+ <ZgYjOfkH2p/fSXuw@chao-email>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240402001500.53533-1-pcc@google.com> <b939165e-a227-4b96-bdc8-12afba801c03@suse.cz>
- <CAG_fn=XL7tSuCuBXKf1YDiETkFMte7JyLrSE+saDthtJj==hUQ@mail.gmail.com>
-In-Reply-To: <CAG_fn=XL7tSuCuBXKf1YDiETkFMte7JyLrSE+saDthtJj==hUQ@mail.gmail.com>
-From: Marco Elver <elver@google.com>
-Date: Tue, 2 Apr 2024 09:08:29 +0200
-Message-ID: <CANpmjNOonPXC9JzMJ2spmTU+80pYJJzW90omy2pvF7=0qNJU3Q@mail.gmail.com>
-Subject: Re: [PATCH] stackdepot: Rename pool_index to pool_index_plus_1
-To: Alexander Potapenko <glider@google.com>
-Cc: Vlastimil Babka <vbabka@suse.cz>, Peter Collingbourne <pcc@google.com>, 
-	Andrey Konovalov <andreyknvl@gmail.com>, Oscar Salvador <osalvador@suse.de>, 
-	Andrew Morton <akpm@linux-foundation.org>, linux-kernel@vger.kernel.org, 
-	linux-mm@kvack.org, Michal Hocko <mhocko@suse.com>, Omar Sandoval <osandov@fb.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <ZgYjOfkH2p/fSXuw@chao-email>
 
-On Tue, 2 Apr 2024 at 09:04, Alexander Potapenko <glider@google.com> wrote:
->
-> On Tue, Apr 2, 2024 at 8:54=E2=80=AFAM Vlastimil Babka <vbabka@suse.cz> w=
-rote:
-> >
-> > On 4/2/24 2:14 AM, Peter Collingbourne wrote:
-> > > Commit 3ee34eabac2a ("lib/stackdepot: fix first entry having a
-> > > 0-handle") changed the meaning of the pool_index field to mean "the
-> > > pool index plus 1". This made the code accessing this field less
-> > > self-documenting, as well as causing debuggers such as drgn to not
-> > > be able to easily remain compatible with both old and new kernels,
-> > > because they typically do that by testing for presence of the new
-> > > field. Because stackdepot is a debugging tool, we should make sure
-> > > that it is debugger friendly. Therefore, give the field a different
-> > > name to improve readability as well as enabling debugger backwards
-> > > compatibility.
-> > >
-> > > Signed-off-by: Peter Collingbourne <pcc@google.com>
-> > > Link: https://linux-review.googlesource.com/id/Ib3e70c36c1d230dd0a118=
-dc22649b33e768b9f88
-> >
-> > Acked-by: Vlastimil Babka <vbabka@suse.cz>
-> Reviewed-by: Alexander Potapenko <glider@google.com>
+On Fri, Mar 29, 2024 at 10:11:05AM +0800,
+Chao Gao <chao.gao@intel.com> wrote:
 
-Acked-by: Marco Elver <elver@google.com>
+> >+static void vt_set_nmi_mask(struct kvm_vcpu *vcpu, bool masked)
+> >+{
+> >+	if (is_td_vcpu(vcpu))
+> >+		return;
+> >+
+> >+	vmx_set_nmi_mask(vcpu, masked);
+> >+}
+> >+
+> >+static void vt_enable_nmi_window(struct kvm_vcpu *vcpu)
+> >+{
+> >+	/* Refer the comment in vt_get_nmi_mask(). */
+> >+	if (is_td_vcpu(vcpu))
+> >+		return;
+> >+
+> >+	vmx_enable_nmi_window(vcpu);
+> >+}
+> 
+> The two actually request something to do done for the TD. But we make them nop
+> as TDX module doesn't support VMM to configure nmi mask and nmi window. Do you
+> think they are worth a WARN_ON_ONCE()? or adding WARN_ON_ONCE() requires a lot
+> of code factoring in KVM's NMI injection logics?
+
+Because user space can reach those hooks with KVM_SET_VCPU_EVENTS, we shouldn't
+add WARN_ON_ONCE().  There are two choices.  Ignore the request (the current
+choice) or return error for unsupported request.
+
+It's troublesome to allow error for them because we have to fix up the caller
+up to the user space.  The user space may abort on such error without fix.
+-- 
+Isaku Yamahata <isaku.yamahata@intel.com>
