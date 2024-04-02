@@ -1,72 +1,101 @@
-Received: from szxga05-in.huawei.com (szxga05-in.huawei.com [45.249.212.191])
+Received: from relay5-d.mail.gandi.net (relay5-d.mail.gandi.net [217.70.183.197])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BA3E3D547;
-	Tue,  2 Apr 2024 12:16:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.191
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45C64634EA;
+	Tue,  2 Apr 2024 12:17:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712060221; cv=none; b=n8m5xprMTXXO+Sb4vkwUmgUmnLs+QrO8+XoIgSS8+3vv147ZoexZhNWqaIP6AKzkAmxHQIqJj3KA1ern0EP3ivlnZluMyAcL+zKW+CJVCp0+THyUYh6I1CJThhpO0u3X433Ud5ktfYDG45MKouAGsbnYcysGIkVLKjwrl1bb0/k=
+	t=1712060241; cv=none; b=ZM7mTrDmSWXAMsykE8KZMf9xtl0ZZmc/x2EIfgPZUrPmek7Q2hQCL3RP3Z1WN5EfdBfzniSup58AX+FHD5nboY5hSBkar+SWNLeHPJ1OHJwQ19lfFcoXGd+hVhF72P7KxvYrDL45OrLykfKXIqbcQMiUXbGMwoENQzECjFa201E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712060221; c=relaxed/simple;
-	bh=A7iLegrAwEYBCF7LSMEZXbChtdJdTBbMPN3RLiGEuWs=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=dO5eycJk8MVU7ZaFVphIzcx0SVHEicvib5mi/jSHti1YBZwqncmflC4A0uahPOiBCi2MIQ425plugjbWqmJfHUda2ldcx3AaVcFJJJziMP4VTyXubYNhFkSkiW1rP9yqlkTCGFxYxshFG/HI3D8FniiK7fhvroFzdddO45CpOKY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.191
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.214])
-	by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4V86Hk6WNWz1h4k5;
-	Tue,  2 Apr 2024 20:14:10 +0800 (CST)
-Received: from dggpemd500003.china.huawei.com (unknown [7.185.36.29])
-	by mail.maildlp.com (Postfix) with ESMTPS id A005A1A016C;
-	Tue,  2 Apr 2024 20:16:55 +0800 (CST)
-Received: from localhost.localdomain (10.175.101.6) by
- dggpemd500003.china.huawei.com (7.185.36.29) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.28; Tue, 2 Apr 2024 20:16:55 +0800
-From: gaoxingwang <gaoxingwang1@huawei.com>
-To: <jiri@resnulli.us>, <mkubecek@suse.cz>
-CC: <gaoxingwang1@huawei.com>, <idosch@nvidia.com>, <kuba@kernel.org>,
-	<liaichun@huawei.com>, <linux-kernel@vger.kernel.org>,
-	<netdev@vger.kernel.org>, <yanan@huawei.com>
-Subject: [PATCH ethtool-next] netlink: fix typo in coalesce_reply_cb()
-Date: Tue, 2 Apr 2024 20:16:18 +0800
-Message-ID: <20240402121618.3575706-1-gaoxingwang1@huawei.com>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <ZgvpKNFcBw-39SOD@nanopsycho>
-References: <ZgvpKNFcBw-39SOD@nanopsycho>
+	s=arc-20240116; t=1712060241; c=relaxed/simple;
+	bh=+PJl1XVFLkJu+n5tB+S3CJb6o62Vtp1lY3hBuuDSHnw=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=PaWFKUJ7MnXzMOCehdfePE+DoMwFMwz6Gcuy7cn19AeP5SXpaOAUg/eWpq/dA+cbatI9mrfzhnOQKggUG24UtRfYPpIbcxwFJ9cgRk9VrLhrssAIks43JmLkREXp9Edmpdu1NDAPfRVxNOhARGUfrdlN9cDLhTH3l1W/nW2Ey4o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=WpmdsWL3; arc=none smtp.client-ip=217.70.183.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="WpmdsWL3"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id A94C01C0007;
+	Tue,  2 Apr 2024 12:17:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1712060231;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=hO0hGxLnoN3ueobt18N0TvoV+EUroS8WDZqsXk16514=;
+	b=WpmdsWL3cfrFq4LiSA1QwbtYoo2QKGBVBJfxOOOMABP7CUfGmHJ+1D44xcKhETphd2l2Ks
+	/wQ/GFxkO5M0/pKKD2fR6DF3V76iSpPEL1p2uysdxTzi2TN1pmo0N99jlcRZUc1a9HE8Rg
+	PLB2LocxPOtjQgtnpeVceWvhp0BfPK/UF4mFsgbA6bTWhHUxWOL/RZKkQSydeVKJy6Vsbf
+	qVUzjrbbfgRiTPnHBjqD7IhNop4mZBnJrEKs59oMJ04HUG+QjMIYldjol0xSVu+Bd/nXII
+	1wvCdHiUp4qPyRMGL8Vfcvp4NtGOc8JGbzx5nEmWQGJ/x/NU7QyAcdw5KqWTdw==
+From: Gregory CLEMENT <gregory.clement@bootlin.com>
+To: Andi Shyti <andi.shyti@kernel.org>, Sam Edwards <cfsworks@gmail.com>
+Cc: linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [RESEND v2 RFC 0/5] Enhancements for mv64xxx I2C driver
+In-Reply-To: <gj3bu52qixnf7agreb7olfwmsllr3k6mcybmyhiw76esxoevk7@nmfshpqp55l4>
+References: <65fa7599.5d0a0220.fe5f7.1f9f@mx.google.com>
+ <gj3bu52qixnf7agreb7olfwmsllr3k6mcybmyhiw76esxoevk7@nmfshpqp55l4>
+Date: Tue, 02 Apr 2024 14:17:11 +0200
+Message-ID: <87le5w7yd4.fsf@BLaptop.bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
- dggpemd500003.china.huawei.com (7.185.36.29)
+X-GND-Sasl: gregory.clement@bootlin.com
 
-Add missing colon in coalesce_reply_cb()
+Hello Andi and Sam,
 
-Fixes: ec573f209dfd (netlink: settings: add netlink support for coalesce tx aggr params)
-Signed-off-by: Gao Xingwang <gaoxingwang1@huawei.com>
----
- netlink/coalesce.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> Hi Gregory,
+>
+> On Tue, Mar 19, 2024 at 06:44:56PM -0600, Sam Edwards wrote:
+>> Salutations, Linux I2C team!
+>
+> ...
+>
+>> In anticipation of that, I am preparing this series comprising five patches to
+>> improve the functionality and reliability of the I2C adapter enough to support
+>> this kind of device. I have heavily tested these changes on the Allwinner-style
+>> mv64xxx core, but not the Marvell-style, and have not been able to test 10-bit
+>> addressing. I would greatly appreciate if anyone here could test this series,
+>> especially on non-Allwinner boards and/or boards with 10-bit devices.
+>> 
+>> I'm a bit skeptical of using I2C_M_NOSTART for this purpose. The driver does
+>> not (and cannot) support "just any" use of I2C_M_NOSTART, so it may be
+>> inappropriate to claim the I2C_FUNC_NOSTART capability. On the other hand, I
+>> searched high and low and couldn't find any use of I2C_M_NOSTART that
+>> *wouldn't* be supported by this change, so this could very well be exactly what
+>> clients understand I2C_FUNC_NOSTART to mean. Given that the alternative would
+>> be inventing a new flag ("I2C_M_READEXTRA"?) and figuring out how to supply
+>> input bytes and output bytes in the same i2c_msg, I opted for the NOSTART
+>> route instead.
+>
+> any thought on this series? I believe here we might need a bit
+> more testing on other platforms.
 
-diff --git a/netlink/coalesce.c b/netlink/coalesce.c
-index bc34d3d..bb93f9b 100644
---- a/netlink/coalesce.c
-+++ b/netlink/coalesce.c
-@@ -93,7 +93,7 @@ int coalesce_reply_cb(const struct nlmsghdr *nlhdr, void *data)
- 		 tb[ETHTOOL_A_COALESCE_TX_AGGR_MAX_BYTES]);
- 	show_u32("tx-aggr-max-frames", "tx-aggr-max-frames:\t",
- 		 tb[ETHTOOL_A_COALESCE_TX_AGGR_MAX_FRAMES]);
--	show_u32("tx-aggr-time-usecs", "tx-aggr-time-usecs\t",
-+	show_u32("tx-aggr-time-usecs", "tx-aggr-time-usecs:\t",
- 		 tb[ETHTOOL_A_COALESCE_TX_AGGR_TIME_USECS]);
- 	show_cr();
- 
--- 
-2.27.0
+Sorry for the lack of answer. However I saw the series, I will have a
+closer look on it and give you feednacks.
 
+Regards,
+
+Gregory
+
+>
+> Andi
+>
+>> 
+>> I look forward to any feedback, bug reports, test results, questions, concerns,
+>> commentary, or discussion that you can offer!
+>> 
+>> Best regards,
+>> Sam
+>> 
+>> Sam Edwards (5):
+>>   i2c: mv64xxx: Clear bus errors before transfer
+>>   i2c: mv64xxx: Clean up the private data struct
+>>   i2c: mv64xxx: Refactor FSM
+>>   i2c: mv64xxx: Allow continuing after read
+>>   i2c: mv64xxx: Implement I2C_FUNC_NOSTART
