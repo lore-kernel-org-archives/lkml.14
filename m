@@ -1,71 +1,75 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay.hostedemail.com (smtprelay0013.hostedemail.com [216.40.44.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B82B635;
-	Wed,  3 Apr 2024 00:15:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3E06645
+	for <linux-kernel@vger.kernel.org>; Wed,  3 Apr 2024 00:15:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712103337; cv=none; b=CQXDW0Wpv83riMUjoQyU+Ro8KPU+vOKdMCH4DRCpgSNh2B0v6/3EAhFLw7vlNcwjEnK1+oyJixX3WHYhITfbgZkIXSZj723V3wk9BK5n1v8DEm3ciugTXng2Q2Bve+CKCNBZBSHywGGPGsA8IYatCx54PhkIDlIKT+nrvsqzAho=
+	t=1712103354; cv=none; b=K024gpRgIOV8voKMKRruSSalYT/v3Z0+QcT5LAQXHs3ngSDVu1LFm6Ulld51lCNurLEdtyRyz9ngE5uqnlN65boEDueGy5615zq77DRPHsdH21RnEfvYYEQOEuhc1Xe+/k5UyoprGitRpR+3djwOi92Bdq4ikL5ecXqEOBqVb2c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712103337; c=relaxed/simple;
-	bh=X/dmJ8/MXWMjgbuUgEYfgF9KQYVZX6Z9nJyIkL32R8Q=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=tOGkUAvywDIwAFA6DiIdBSPqqD1Q8XWehFxq4daEMBrygX1MouGelEshaarXvGknP0oxVFKHQIxc4d7+R2pJWU1Z73Apct5k44bWu2T3o1mvjLvso21F7eBgVDdEwixWu7wNgO98hMKe/iRcYVoue1sLFfOWXyqT7fwlkW5UVSQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dRg4vcbe; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dRg4vcbe"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1C048C433C7;
-	Wed,  3 Apr 2024 00:15:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712103336;
-	bh=X/dmJ8/MXWMjgbuUgEYfgF9KQYVZX6Z9nJyIkL32R8Q=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=dRg4vcbest+z0eyhs50imc0OJSJUEqVOXiSHD1+LhfiCZjpaDbpWmMXVnLMatNXRO
-	 cOZJ0gGMj64veGUgLA7R4c0+PVIob5gYxbVnzkk2D2A4X3MnoxcwLp/sf7HzXUDYF2
-	 IjVdnBySgsJq9qNzwZ9tHNuWwyqGx4GBX/nqCkj+BpOdhgO+BNKG8XmKAPzBGgkn5T
-	 9fKLNSgc7HLTJ/5/mtluC3wfqvw7JblOE/plZSpeq7JUGyJuGbLClmPpIQl0l6C9ao
-	 0f1GSRL0vE3/Lk7mY3xiV1490ejkzKiYY8V02zvcLFVUZQssIpXTTr6SzJyZTNE2qx
-	 Ic88akouoPLYQ==
-Date: Tue, 2 Apr 2024 17:15:35 -0700
-From: Jakub Kicinski <kuba@kernel.org>
-To: Jason Gunthorpe <jgg@nvidia.com>
-Cc: Leon Romanovsky <leon@kernel.org>, David Ahern <dsahern@kernel.org>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Christoph Hellwig
- <hch@infradead.org>, Saeed Mahameed <saeed@kernel.org>, Arnd Bergmann
- <arnd@arndb.de>, Jiri Pirko <jiri@nvidia.com>, Leonid Bloch
- <lbloch@nvidia.com>, Itay Avraham <itayavr@nvidia.com>, Saeed Mahameed
- <saeedm@nvidia.com>, Aron Silverton <aron.silverton@oracle.com>,
- linux-kernel@vger.kernel.org, "netdev@vger.kernel.org"
- <netdev@vger.kernel.org>, Andy Gospodarek <andrew.gospodarek@broadcom.com>,
- Junxian Huang <huangjunxian6@hisilicon.com>
-Subject: Re: [PATCH V4 0/5] mlx5 ConnectX control misc driver
-Message-ID: <20240402171535.552c59e5@kernel.org>
-In-Reply-To: <20240402162106.11112e99@kernel.org>
-References: <510c1b6b-1738-4baa-bdba-54d478633598@kernel.org>
-	<Zf2n02q0GevGdS-Z@C02YVCJELVCG>
-	<20240322135826.1c4655e2@kernel.org>
-	<e5c61607-4d66-4cd8-bf45-0aac2b3af126@kernel.org>
-	<20240322154027.5555780a@kernel.org>
-	<1cd2a70c-17b8-4421-b70b-3c0199a84a6a@kernel.org>
-	<20240401123003.GC73174@unreal>
-	<20240401075003.70f5cb4b@kernel.org>
-	<20240402184554.GQ946323@nvidia.com>
-	<20240402143607.0357d71a@kernel.org>
-	<20240402224632.GT946323@nvidia.com>
-	<20240402162106.11112e99@kernel.org>
+	s=arc-20240116; t=1712103354; c=relaxed/simple;
+	bh=6hhE3jkVIfFUl0muZGqLIb+mhsTHD96wVbv+UcDq51I=;
+	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=ZQnMK8FGOx2K/Qs/zihaT5dH29AlqY8sIYv9Ly55IXZV1tCAA7hn4WegZ1WNEzgKHCQJ5MqeD9PPULUj5H/5iE+HpFz4zndqKlIfTorm4J//ieelqdVlVys6P9SLdHizcpo7fF1RXb4W2kWNiq2RHuIc0o8Niy0SsLWQgbF0DsI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=perches.com; spf=pass smtp.mailfrom=perches.com; arc=none smtp.client-ip=216.40.44.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=perches.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=perches.com
+Received: from omf15.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay01.hostedemail.com (Postfix) with ESMTP id C66FD1C0CF7;
+	Tue,  2 Apr 2024 23:58:56 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: joe@perches.com) by omf15.hostedemail.com (Postfix) with ESMTPA id 6EE5E17;
+	Tue,  2 Apr 2024 23:58:54 +0000 (UTC)
+Message-ID: <d02ec26aef6936e07f55a8bda5ae512da8832a73.camel@perches.com>
+Subject: Re: [PATCH 1/4] gpu/drm: Add SPDX-license-Identifier tag
+From: Joe Perches <joe@perches.com>
+To: Nicolas Devos <ndevos-dev@pm.me>, Maarten Lankhorst
+ <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
+ Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>,
+ Daniel Vetter <daniel@ffwll.ch>,  dri-devel@lists.freedesktop.org,
+ linux-kernel@vger.kernel.org
+Date: Tue, 02 Apr 2024 16:58:53 -0700
+In-Reply-To: <20240402224320.12146-2-ndevos-dev@pm.me>
+References: <20240402224320.12146-1-ndevos-dev@pm.me>
+	 <20240402224320.12146-2-ndevos-dev@pm.me>
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.48.4 (3.48.4-1.fc38) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+X-Rspamd-Queue-Id: 6EE5E17
+X-Stat-Signature: 4wmozogddxmk5hfhmmd9479c5odqeeip
+X-Rspamd-Server: rspamout04
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-Session-ID: U2FsdGVkX19NiLFGrVxiJasVrRhQDoiUnMvu4sCsRM8=
+X-HE-Tag: 1712102334-125308
+X-HE-Meta: U2FsdGVkX1/fs3ut+OQjMslc2yAXCaqSV62VOB/hfUAJRhPNYP7hQN+N7MUlEeZGuDOLuc4N6FniN0CLvJS41G3TwpPjMMhl3hKnk9EWMFmtn7B1KRAG86FSj0087yBxKyF/L7BKfRuOAbFDsP+TIcGZIOGG2s3KLu9glSGQ47Yjk3oDucXljkoE/4WZtUGEX5FYTM6EDuVL08uh4jrJhx7B3OHZFkkx4bSyWhN7Ktg1ip47kjBnBX3Iajx6A5Olu8rVYTL9wfKM+iEjOb0Bay6NN16sx02P7+bsM1EVUtJBcTrsUzwdnBaWDzRk+Fgu
 
-On Tue, 2 Apr 2024 16:21:06 -0700 Jakub Kicinski wrote:
-> they carry little weight when netdevs or traffic which ends up in
-> netdev are not involved.
+On Tue, 2024-04-02 at 22:43 +0000, Nicolas Devos wrote:
+> This commit fixes following checkpatch warning:
+> WARNING: Missing or malformed SPDX-License-Identifier tag
 
-Clarification before this goes into "Leon's quote book"
-netdev == code base, traffic == network "packets"
-as opposed to the mailing list and emails.
+NAK without specific agreement from Intel.
+
+The existing license in the file is neither GPL nor MIT
+
+>=20
+> Signed-off-by: Nicolas Devos <ndevos-dev@pm.me>
+> ---
+>  drivers/gpu/drm/drm_connector.c | 1 +
+>  1 file changed, 1 insertion(+)
+>=20
+> diff --git a/drivers/gpu/drm/drm_connector.c b/drivers/gpu/drm/drm_connec=
+tor.c
+> index b0516505f7ae..40350256b1f6 100644
+> --- a/drivers/gpu/drm/drm_connector.c
+> +++ b/drivers/gpu/drm/drm_connector.c
+> @@ -1,3 +1,4 @@
+> +// SPDX-License-Identifier: GPL-2.0 or MIT
+>  /*
+>   * Copyright (c) 2016 Intel Corporation
+>   *
+
