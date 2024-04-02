@@ -1,197 +1,84 @@
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2076.outbound.protection.outlook.com [40.107.94.76])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFB0383CD8;
-	Tue,  2 Apr 2024 13:27:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.94.76
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712064430; cv=fail; b=WNOqIQJhGACTj3ZC464gpmNb7vPm1+rpW4NKTedduslLwjiFVqHBVUKw8HmZHflshKe4N0Q517GUL4U0BqMl0LxDndSnGLt5Pv2Oe4DGuYZOBF03etQUnQ4QaeaQDFUDtqPYEY1mrnhl1WPR21oOpqBFlwxQwb8Bo8g0HiGO0lk=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712064430; c=relaxed/simple;
-	bh=QMQKzCFehsOD10XQhGcRq1hK6JWT9UpiFfXZT3RnkfI=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=expIkpw6z9glAm+D9k8uqs1K1IuVXvliYbTvnF0D8T8UKoOpNT/wFM7ZvIfQfPLYUHklFb8O4MZyPb3MmXwJT5tAbYavNMIwraAk0iAhhRyRAIlgSWxoFo9ngHG53Ak8Lv5w4B29LM72sKTK7hDXmI3Jm6SD9HIeuJ9lpID9Q3k=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=WqMow/Sz; arc=fail smtp.client-ip=40.107.94.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4083483CD8
+	for <linux-kernel@vger.kernel.org>; Tue,  2 Apr 2024 13:27:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.50
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1712064440; cv=none; b=kXU6gv7P8iHxaBAOuF4Uiu6uxXbfg4gYWWokdfT4oTmhSSLd/C7q/rjwMDz5lbxC1BSWxdhJbTrJ2nofeLtcGYi63bAUaOd4jMxlhaGfl8gaONG5LfF8Khojx6rlaeHpcmI/QwDHV7AwLKftl4Wfi8BuEV3iLHwWu52BvLtukug=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1712064440; c=relaxed/simple;
+	bh=uES943BKWDhEtnE6XL0P/eRbUsfOg6fa3QiSJ7bNaRY=;
+	h=From:To:Cc:Subject:Date:Message-Id; b=exB77uOYoMqvwtYNzfQWVuyFEFjGXIQtjo/n1je1mslSHfGk11Oubb1LzDUnqJqEUFi7YOC/YdiTROPHSmjwj2DUoE5pKX0Ux2+CCX1Pz3OB0rxjgphuQIRNvfTA73dOkKWEY7XmrBx5xou+2IKULjkc5EwnGUxz3S/QAV6HCDM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cJNy9Fzo; arc=none smtp.client-ip=209.85.218.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="WqMow/Sz"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Xc9uXHIqwJmotLR18EDPW3EXGJ+R0qXAYiArxYkwILTaoxv6z/iREG41qR7EFx9kDidkDtNGRtisJWqfcElSiFBhkOqrTC3fUeW5sjvLxrh/pVudrDjJk07FwGdjAsvwiDhQck57M5CHLoOcUEmc6cg9+NRbM1QA09wnbujD6Pxj7MPJS11Tq4ta3bWXCgj7nPk3VoHoFn1wxy8kGZEfyfkAqntdC6PWfRelDxyRExabLtvBaHUwjxJujU7ywKSLDi37BhIvJwUUHRhgvTwpVmL7e3BYVENzc3T44Iaz64DRL+FsZxAOCBG6lVuBkvYJPHF3qtzJbRu55bdONp5uzA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=8cvLAK+SPaT42bpp/b+Z2zaLbqrg+dx1sJTHY8vNnWY=;
- b=DQu9UOoPB9CTsa0wVcq+LAolmGX+NwO2vq+qLeCxw1FBjbNheSKCT9HsX3xoq/KKdTf1jOV6TxWylskwwholUUuGFuK19Ng98LU2Z1wsEMKELMPCKkmnI/+iPEuHWovYX+qjLOSRFlChP2x5Rbe9d7b16/xi6Bm1pCIvDqasOOXlUg29aSGKA4p7AEwQkHQSB+V05d2KXsQnmd6TNwG/q8wNaS/Fb53+oUJ+tZUKyzZndIB0zhCYjuuug5kwaZGyiJXShlN8dd5ZEPfXkNLMiM3ZRPP6RvP6IjPTHUKgKfBNXCAN2B8sY5diBjS9Rw5kitd+KVIFm6RxmNC4pOg3qQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.118.233) smtp.rcpttodomain=linaro.org smtp.mailfrom=nvidia.com;
- dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=8cvLAK+SPaT42bpp/b+Z2zaLbqrg+dx1sJTHY8vNnWY=;
- b=WqMow/Sz+o+zY3N5bqvB3iCxXMzpiDP8asocKIun3Sc8KvhARBnIWAJ5WTqNsiHmgxI7LnrCMAyq2QIfAlLeqgyiMFXfHW/YUUZR6fap8zIuT5CA9UrdF96zKfFWFND2XZOWN4iYvxv23suLpS+xthNioGIt5Kt8XnxREdY2poQaC9T6kXyhZf9XwtRm+dkyWKQOpZjWN/C8W2NnDimeOSSSP2rn1KEY9cAKunjfLeMUxay38fbwNbryFYzJ0MWS00yDojM/erLbNfGF0kxBHJmYfyqZ/RHm3uXI5y/yOwfiNN1GWiAY8OuaZTJGQU3tp3/vqwf9y94RqE9Jr900mA==
-Received: from MN2PR15CA0045.namprd15.prod.outlook.com (2603:10b6:208:237::14)
- by IA1PR12MB6209.namprd12.prod.outlook.com (2603:10b6:208:3e7::22) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.46; Tue, 2 Apr
- 2024 13:27:05 +0000
-Received: from MN1PEPF0000ECD8.namprd02.prod.outlook.com
- (2603:10b6:208:237:cafe::7f) by MN2PR15CA0045.outlook.office365.com
- (2603:10b6:208:237::14) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.46 via Frontend
- Transport; Tue, 2 Apr 2024 13:27:05 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.118.233)
- smtp.mailfrom=nvidia.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=nvidia.com;
-Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.118.233 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.118.233; helo=mail.nvidia.com; pr=C
-Received: from mail.nvidia.com (216.228.118.233) by
- MN1PEPF0000ECD8.mail.protection.outlook.com (10.167.242.137) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.7452.22 via Frontend Transport; Tue, 2 Apr 2024 13:27:05 +0000
-Received: from drhqmail201.nvidia.com (10.126.190.180) by mail.nvidia.com
- (10.127.129.6) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.41; Tue, 2 Apr 2024
- 06:26:41 -0700
-Received: from drhqmail202.nvidia.com (10.126.190.181) by
- drhqmail201.nvidia.com (10.126.190.180) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.12; Tue, 2 Apr 2024 06:26:41 -0700
-Received: from sumitg-l4t.nvidia.com (10.127.8.10) by mail.nvidia.com
- (10.126.190.181) with Microsoft SMTP Server id 15.2.1258.12 via Frontend
- Transport; Tue, 2 Apr 2024 06:26:38 -0700
-From: Sumit Gupta <sumitg@nvidia.com>
-To: <krzysztof.kozlowski@linaro.org>, <robh@kernel.org>,
-	<conor+dt@kernel.org>, <maz@kernel.org>, <mark.rutland@arm.com>,
-	<treding@nvidia.com>, <jonathanh@nvidia.com>
-CC: <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-tegra@vger.kernel.org>, <amhetre@nvidia.com>, <bbasu@nvidia.com>,
-	<sumitg@nvidia.com>
-Subject: [Patch v2 1/2] dt-bindings: make sid and broadcast reg optional
-Date: Tue, 2 Apr 2024 18:56:25 +0530
-Message-ID: <20240402132626.24693-2-sumitg@nvidia.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20240402132626.24693-1-sumitg@nvidia.com>
-References: <20240402132626.24693-1-sumitg@nvidia.com>
-X-NVConfidentiality: public
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cJNy9Fzo"
+Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-a4715d4c2cbso683956066b.1
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Apr 2024 06:27:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1712064437; x=1712669237; darn=vger.kernel.org;
+        h=message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=KDwciCZRTQDZapTIDTwTOs3L664qzz8zHC9CYK9t3HE=;
+        b=cJNy9Fzog/o1JxsfU9qvizMlirOM9t/ycpy7QizVz1kt66Rhc6eGxThDYA4J3KJ4xt
+         NuekqMKPHzlPrc1tJEhOTkSGiI9/22krSodBxgQovg+7PdrlsiJ99LEWtorbzLeVF+YN
+         ecmzOmgPpXbu/ZvWQEeVHOa5hx+AUFiCaBCobsTUcVyqHu8+yB5Vha/mmEsokRR8xDom
+         HcPFjyI4c3HLvFVJDa62rspCKQ1F14wHJCTc7PugVxl6CNf1OVnaCUoj/gNx5Ro32FwE
+         t6CXMz85g38y+l0BbPePuSiXd9LX85b0kWpcVB9Jsy+oElkNAfIQBHHyWGNBaPWtO9Yk
+         ppBQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712064437; x=1712669237;
+        h=message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=KDwciCZRTQDZapTIDTwTOs3L664qzz8zHC9CYK9t3HE=;
+        b=UZBdSVtjlzuQqgph+q5dqZt99oPSFPA1cO5fbyOaomivHfww9XXV+xnJ/SInEOOz4N
+         t2ldTH7fB7pYGtRS5qoJsQvac9hQj0DU8cnVlgqro++0GlI8Ad/ih0DHx836Gq0XVPup
+         pgKblZKvOKkTUFpiPjrzbE7ubGaL4fRSLNz4OITmoNJy0zLcNdJ4l885tqsczw1/vxEj
+         OEhTr+a7u08W5ktceF+/wpGyuXSORkYwHo5en5hlPAR5CvC/yC6AcrErcte8PEO9/efR
+         ODfOfK9/Y93qLs64MQ9HhhBhyCP+8khqEJ0yRZrQiAEI1h1iYDGenAcalBvnOcNtomRB
+         DcMw==
+X-Gm-Message-State: AOJu0YxlxR15+KTkX1/dtuc62rPG//bJBEJVwLrmB62Rdfcehv+bZ2Dc
+	xIL15+IG7dwn/k/i3J/7BmvSiESh8Pcbnq5/21mQHIxaKKUULlr6
+X-Google-Smtp-Source: AGHT+IGkeMCYZa7WLQdbvR9cjFU3ygd7CXGHsqO0KYja+biw6uCBH9ckHPRO8FmxbXfhAUNukhHXtA==
+X-Received: by 2002:a17:906:3755:b0:a4e:4336:5550 with SMTP id e21-20020a170906375500b00a4e43365550mr6687741ejc.27.1712064437211;
+        Tue, 02 Apr 2024 06:27:17 -0700 (PDT)
+Received: from localhost ([185.92.221.13])
+        by smtp.gmail.com with ESMTPSA id wy11-20020a170906fe0b00b00a4e4a3e69acsm4216265ejb.71.2024.04.02.06.27.16
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 02 Apr 2024 06:27:16 -0700 (PDT)
+From: Wei Yang <richard.weiyang@gmail.com>
+To: akpm@linux-foundation.org,
+	rppt@kernel.org,
+	rongtao@cestc.cn
+Cc: linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org,
+	Wei Yang <richard.weiyang@gmail.com>
+Subject: [PATCH 0/3] memblock tests: fix build error
+Date: Tue,  2 Apr 2024 13:26:58 +0000
+Message-Id: <20240402132701.29744-1-richard.weiyang@gmail.com>
+X-Mailer: git-send-email 2.11.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain
-X-NV-OnPremToCloud: ExternallySecured
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MN1PEPF0000ECD8:EE_|IA1PR12MB6209:EE_
-X-MS-Office365-Filtering-Correlation-Id: ca37981e-9fcc-4db2-d245-08dc531896e1
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	/3V8fpASSrY5QI4nk8pd8n+IRFZV9WtNzd+6s/nbpLEUpPeOk6LVtY8euVSDukzIOTE70eQIw5d21t9vPVV/V8CZLM1CsXlgJMXjnQPoXdnFUlZdcAxk7kM9sARvhx1jkFAS3wj/x61guzZVbZooUGe92ba7fXOXpf7RYqYw/Jkm1gpvHtr96l+DkfHn6AruQQbMfU6CguvA5yepwHoZKFmIcDVjLmGtyapMJnJ53OYXZ/aqbnSF/vWSDRiJioyYwB0PO3kDJgWMuXmmmSTp8zdG8m0+oxiveBLxRjpozs6A+AillUz0L5rNVFLYP1XSNOtoG58hK1NXfzGc+ix89IRzltst/ZNftAmOWqhko1v+aSf3Bbn7BtDdV3NUooipYOKwinzD33y4vvj0WN2Qi3GuakXiLDGzoU63mchXS9kZPg2c2g0pNEe5IYKtvjHnWYtcgVbXhXz/81TomzaGIHCQIE3asMtp4ls8inIKQ4t+OLpNPRsoO+c1GWja5wfvVJWr++BIYFuS5vq0UQZ4ZEUWmRLR5ZXEMhvFSgr1fK/OWthXgL4bY5kQPF3SmuBpxKoDvuFNYbCQMY4eky62rUZedFu7jRYkM8y+4JtfOeUlR19R5xMIMAnD+yCh9hfE8PlUx5QG9Icc/HX3t+C4UlIRNnfbQzm3REFsaWi12OmnSloalTw8Ds1KzOMMMb95t2nkIKCdib9KUHjMaWjelzrGm6b8vdBh5UO0rwM000JszZVdAxDnQdPEkgJn4sH2
-X-Forefront-Antispam-Report:
-	CIP:216.228.118.233;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc7edge2.nvidia.com;CAT:NONE;SFS:(13230031)(1800799015)(82310400014)(376005)(36860700004);DIR:OUT;SFP:1101;
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Apr 2024 13:27:05.3438
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: ca37981e-9fcc-4db2-d245-08dc531896e1
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.118.233];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	MN1PEPF0000ECD8.namprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR12MB6209
 
-MC SID and Broadbast channel register access is restricted for Guest VM.
-Make both the regions as optional for SoC's from Tegra186 onwards.
-Tegra MC driver will skip access to the restricted registers from Guest
-if the respective regions are not present in the memory-controller node
-of Guest DT.
+Some kernel change break the test build, just fix it.
 
-Signed-off-by: Sumit Gupta <sumitg@nvidia.com>
----
- .../memory-controllers/nvidia,tegra186-mc.yaml | 18 +++++++++---------
- 1 file changed, 9 insertions(+), 9 deletions(-)
+Wei Yang (3):
+  memblock tests: fix undefined reference to `early_pfn_to_nid'
+  memblock tests: fix undefined reference to `panic'
+  memblock tests: fix undefined reference to `BIT'
 
-diff --git a/Documentation/devicetree/bindings/memory-controllers/nvidia,tegra186-mc.yaml b/Documentation/devicetree/bindings/memory-controllers/nvidia,tegra186-mc.yaml
-index 935d63d181d9..c52c259f7ec5 100644
---- a/Documentation/devicetree/bindings/memory-controllers/nvidia,tegra186-mc.yaml
-+++ b/Documentation/devicetree/bindings/memory-controllers/nvidia,tegra186-mc.yaml
-@@ -146,17 +146,17 @@ allOf:
-     then:
-       properties:
-         reg:
--          maxItems: 6
-+          maxItems: 4
-           description: 5 memory controller channels and 1 for stream-id registers
- 
-         reg-names:
-           items:
--            - const: sid
--            - const: broadcast
-             - const: ch0
-             - const: ch1
-             - const: ch2
-             - const: ch3
-+            - const: sid
-+            - const: broadcast
- 
-   - if:
-       properties:
-@@ -165,13 +165,11 @@ allOf:
-     then:
-       properties:
-         reg:
--          minItems: 18
-+          minItems: 16
-           description: 17 memory controller channels and 1 for stream-id registers
- 
-         reg-names:
-           items:
--            - const: sid
--            - const: broadcast
-             - const: ch0
-             - const: ch1
-             - const: ch2
-@@ -188,6 +186,8 @@ allOf:
-             - const: ch13
-             - const: ch14
-             - const: ch15
-+            - const: sid
-+            - const: broadcast
- 
-   - if:
-       properties:
-@@ -196,13 +196,11 @@ allOf:
-     then:
-       properties:
-         reg:
--          minItems: 18
-+          minItems: 16
-           description: 17 memory controller channels and 1 for stream-id registers
- 
-         reg-names:
-           items:
--            - const: sid
--            - const: broadcast
-             - const: ch0
-             - const: ch1
-             - const: ch2
-@@ -219,6 +217,8 @@ allOf:
-             - const: ch13
-             - const: ch14
-             - const: ch15
-+            - const: sid
-+            - const: broadcast
- 
- additionalProperties: false
- 
+ include/linux/gfp_types.h    |  2 ++
+ tools/include/linux/kernel.h |  1 +
+ tools/include/linux/mm.h     |  5 +++++
+ tools/include/linux/panic.h  | 19 +++++++++++++++++++
+ 4 files changed, 27 insertions(+)
+ create mode 100644 tools/include/linux/panic.h
+
 -- 
-2.17.1
+2.34.1
 
