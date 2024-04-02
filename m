@@ -1,148 +1,101 @@
-Received: from mailout2.samsung.com (mailout2.samsung.com [203.254.224.25])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f178.google.com (mail-yb1-f178.google.com [209.85.219.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C014939852
-	for <linux-kernel@vger.kernel.org>; Tue,  2 Apr 2024 10:47:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.25
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C042F4776F
+	for <linux-kernel@vger.kernel.org>; Tue,  2 Apr 2024 10:48:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712054874; cv=none; b=np4iBrE7q7OOtMrxODUg8nYxV+ajpr6zxFGB7BLmM/Sa2ycy8LZlw/kRDXQEYAP2TFPPuGgPMUd1VX3I2ei7H1Sd//wZnjTQc6pDXTFhfq+umlHWYaR+oU3UjOc3KpNrqyttsdStdxSqzE/7P1oFGjEhpYUuoU4QPsngqex5pLQ=
+	t=1712054903; cv=none; b=BnXlKDKmJk0ineZZoFI9AkWyV+DCO9jqUM4UzEGm67LzIdm1sDnuyUqd2DkU31T1JmTLgp3W/9Osx+gHOdwNms9nq5fEevUNeT9EqHpulzm2FC7uWmNVPcC3rvi2FckIZxNqOzHNH0kcyn0wtVytgXnRzlcKXYA71n7ZQr1kCIE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712054874; c=relaxed/simple;
-	bh=ccdrkrf5k7Cp/aHNUer3qGL6Y7sadz5cOWrsywoXdo4=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type:
-	 References; b=Nsr4zIrrK34mUBiJb2kowea3tzPJMb4m3prIM5UNoZP0/FDF6SIPJJVXfLUSsjM1Rpm6z14rFVBXNdCfbFivxdzUjRi+MwCWir4c8G4wZD9lY39hAiV5nDX6UCvwCsNLnAV+TSP+ryVWz7O7uhd7NJvfXBJf6ZaeZGEfrRVps8c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=Ls3Y+rw8; arc=none smtp.client-ip=203.254.224.25
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+	s=arc-20240116; t=1712054903; c=relaxed/simple;
+	bh=qqkptkwBB5jmETqLjS63zlxdb+z5eD6/k+FZmoOcCP0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=pgpbYw5ClnZ9Q2IQZlz1tcrjDROzKG+1frP2IfRabsuE7B+y/mL92unbWIbN+0GXkk72hjwE+C4SShgoT+KnQI99cNMO5wb35IJC78ohRU4a9Fcqh5iMBgfB28isyLKrJ25lUkqfNefNQrcu6E17AXcu4dbPLwH5GN4AdsJoLcg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=u4tCu6Gh; arc=none smtp.client-ip=209.85.219.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="Ls3Y+rw8"
-Received: from epcas1p4.samsung.com (unknown [182.195.41.48])
-	by mailout2.samsung.com (KnoxPortal) with ESMTP id 20240402104743epoutp02021202971bf7cf651f7ce687e3df920f~CcNPun4fw2159521595epoutp02r
-	for <linux-kernel@vger.kernel.org>; Tue,  2 Apr 2024 10:47:43 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20240402104743epoutp02021202971bf7cf651f7ce687e3df920f~CcNPun4fw2159521595epoutp02r
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1712054863;
-	bh=ASstzGlnYxumvkV4PMhGYVoYgNKEFCHa9r2folxaO1A=;
-	h=From:To:Cc:Subject:Date:References:From;
-	b=Ls3Y+rw8IiQdE3NKRvR4AbBKseKX+Ub1k1yIGPvibS0DM1LrhRvOzDJn+oeSxSWTQ
-	 GX0CBVTswTPxeSjz9SkzXL2XRTNR1cQbpvbZY7TUX/Au1YXYBAw0E2s3FABdFm0quZ
-	 ZVEp91Os2CsrDMUyT1kSW7b9isJkglvV/lLw2HrI=
-Received: from epsnrtp1.localdomain (unknown [182.195.42.162]) by
-	epcas1p4.samsung.com (KnoxPortal) with ESMTP id
-	20240402104742epcas1p4d0a83dde284adbe2ea0781c3316aeb65~CcNOkwBud2726527265epcas1p47;
-	Tue,  2 Apr 2024 10:47:42 +0000 (GMT)
-Received: from epsmgec1p1.samsung.com (unknown [182.195.36.225]) by
-	epsnrtp1.localdomain (Postfix) with ESMTP id 4V84My3zg8z4x9Q8; Tue,  2 Apr
-	2024 10:47:42 +0000 (GMT)
-Received: from epcas1p3.samsung.com ( [182.195.41.47]) by
-	epsmgec1p1.samsung.com (Symantec Messaging Gateway) with SMTP id
-	9A.BE.08627.E42EB066; Tue,  2 Apr 2024 19:47:42 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-	epcas1p3.samsung.com (KnoxPortal) with ESMTPA id
-	20240402104742epcas1p306e175348a3a7c1bdba9422ce22284f8~CcNOIrYr12886728867epcas1p3S;
-	Tue,  2 Apr 2024 10:47:42 +0000 (GMT)
-Received: from epsmgmcp1.samsung.com (unknown [182.195.42.82]) by
-	epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-	20240402104742epsmtrp1424e48b7a9ae2c14d44e502289c7545c~CcNOH_Hcd2639526395epsmtrp1b;
-	Tue,  2 Apr 2024 10:47:42 +0000 (GMT)
-X-AuditID: b6c32a33-d59fa700000021b3-18-660be24e7546
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-	epsmgmcp1.samsung.com (Symantec Messaging Gateway) with SMTP id
-	E7.A2.19234.D42EB066; Tue,  2 Apr 2024 19:47:42 +0900 (KST)
-Received: from parkseongsu-desktop.. (unknown [10.252.69.73]) by
-	epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
-	20240402104741epsmtip10984bfa2b2dde39f29a6f7266913b5c8~CcNN4DNc01514115141epsmtip1M;
-	Tue,  2 Apr 2024 10:47:41 +0000 (GMT)
-From: Seongsu Park <sgsu.park@samsung.com>
-To: catalin.marinas@arm.com, will@kernel.org, ardb@kernel.org,
-	mark.rutland@arm.com
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	sgsu.park@samsung.com, Leem ChaeHoon <infinite.run@gamil.com>, Gyeonggeon
-	Choi <gychoi@student.42seoul.kr>, Soomin Cho <to.soomin@gmail.com>, DaeRo
-	Lee <skseofh@gmail.com>, kmasta <kmasta.study@gmail.com>
-Subject: [PATCH] arm64: Fix double TCR_T0SZ_OFFSET shift
-Date: Tue,  2 Apr 2024 19:47:35 +0900
-Message-Id: <20240402104735.170539-1-sgsu.park@samsung.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="u4tCu6Gh"
+Received: by mail-yb1-f178.google.com with SMTP id 3f1490d57ef6-dc6d9a8815fso4837450276.3
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Apr 2024 03:48:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1712054900; x=1712659700; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=+xPQyCvLo53dq7pKGpQQof9V6YZJuIofT5TTwfg8858=;
+        b=u4tCu6GhOY38sRAviEV/tKlL3V3tT2l3fvAV59tynf3dKBVNSfO/RXTM5iS23pXu+7
+         0qvMqTLkTyQqwMB0XwY4ciDrt21N1kbM3QG6YvCZtCoYUGcUiffQDKuSH56LkBwHUhES
+         hOJVE4POJfo4e+7Q02ODEDCgG+/dky/Z1jpgk3nWT99mwem8H4e/cyAPXocjN0ZyW0sG
+         w13myAXscyDancBhQqgM4ply80ZcqpNRp8MWGPTKaRGQfIPjRRBObK7u5Op3wtSAukId
+         c/hAdLOzFkcrrQmRwa+TtxBMj4R5WToq8vDsSc5h3taODFEQh29ntK/JvlLU7IbLeikt
+         sakg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712054900; x=1712659700;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=+xPQyCvLo53dq7pKGpQQof9V6YZJuIofT5TTwfg8858=;
+        b=L3Q59J1pTyBY8uvQoM1clBMj6Ntz83ciOagbt3vDJduS0DqDzeg6JGLjMqlEwpwmli
+         XLzdyuadjRD6cLnK9MJONs8Bcr6LnqffhgOLNgZxZZqoN9X8nCITteaKxj/b3NetyVA4
+         3ztei3ttutuKzHrUAoWi6cYTWqMRIz+I0VQyWuwyjCqK+/MAkTj59Pu+8xz7urYacmjc
+         4afINxA44z6qSZY5bUvY15jVFn6mxTcyoCoB8cE/0kO4aNcjRV5ge95zIHIi3CMnh3yb
+         XxKAmvBPYKMkWYkkvDvRC6cRJSxBKSV6YFhka2uIRgbx/rDwaGVPUoQW9Pdsm21onLSa
+         YrKA==
+X-Forwarded-Encrypted: i=1; AJvYcCXMCiyDRbvZsrMPpHZRvlYsFBwrr3pwrxUQutnaLDG8UvFl3huJaJoS6qBCbBlePpqMzB46bfXhddh1HWdP6w373dm8NoHtqqNXYgJG
+X-Gm-Message-State: AOJu0YyNhMsLpwl6RLpTGJ1iWHksbS/U8DvhVVdEXGfIrWZO0NvzHiDd
+	j6Naocrc9zDTQUKS6l82vPDjjE7vymiXId85nBbNmUCv9JvPumYC61pLm+wYpzRlZ/WeBhTSF92
+	5A61W7IbrcgXoCZ4LIkfReNRt3Zg8BZPpEKnchg==
+X-Google-Smtp-Source: AGHT+IEdThI7DXVCE+YtsqVQ5FfgA2JdRwa/suM7w9m6RjmrZhMB+jlS68lFUGN2ID6qPpnpew/nE9vA5K+Hs04awQo=
+X-Received: by 2002:a25:9a05:0:b0:dcc:9e88:b15 with SMTP id
+ x5-20020a259a05000000b00dcc9e880b15mr10209955ybn.41.1712054899681; Tue, 02
+ Apr 2024 03:48:19 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprGJsWRmVeSWpSXmKPExsWy7bCmvq7fI+40g557chY/v7xntHi/rIfR
-	YlPbfUaL7Q3lFl/+LmW22PT4GqvF5V1z2CyWXr/IZPG+oYvVYtKPLYwW7Z9fsFq03DF14PFY
-	M28No8e85e3MHjtn3WX32LSqk81j85J6j74tqxg9Dp1dwOrxeZNcAEdUtk1GamJKapFCal5y
-	fkpmXrqtkndwvHO8qZmBoa6hpYW5kkJeYm6qrZKLT4CuW2YO0K1KCmWJOaVAoYDE4mIlfTub
-	ovzSklSFjPziElul1IKUnAKzAr3ixNzi0rx0vbzUEitDAwMjU6DChOyM/skzWArecFZcPzWb
-	vYHxKEcXIyeHhICJxNoFi1m6GLk4hAR2MEqs7DkJ5XxilPg/YTU7nPN80W7WLkYOsJbfu6sh
-	4jsZJXpefmCGK1p09RoTyFw2AS2J1f962UFsEYFQidcz1rOB2MwCs5gk2lcogtjCAhYSi9Y9
-	YwGxWQRUJd5c+c4IYvMKWEus37KZBeI+eYn9B88yQ8QFJU7OfMICMUdeonnrbLDFEgKtHBIv
-	nn+GanCR2Hu/iR3CFpZ4dXwLlC0l8bK/Dcoultj3ZQ0zhF0j8WDeHijbXqLjWRsLyJfMApoS
-	63fpQ+zik3j3tQfqeV6JjjYhCFNZ4txWRwhTUuLPAj2IGR4Sl49PAweCkECsRMffXuYJjHKz
-	kNw/C8n9sxBWLWBkXsUollpQnJuemmxYYAiPxuT83E2M4ASqZbyD8fL8f3qHGJk4GA8xSnAw
-	K4nw/vTmTBPiTUmsrEotyo8vKs1JLT7EaAoM0YnMUqLJ+cAUnlcSb2hiaWBiZmRiYWxpbKYk
-	znvmSlmqkEB6YklqdmpqQWoRTB8TB6dUA1P5tcdRVtnZXBpvlGeVHozb5yfUFDNDbn3899Ky
-	NS9rd/1y/CJwxvPrvBpDtRtB8RuVXybO4Dxz0kVH6z/7xgsRO26+6Kzrapav9FjiKv1qutfJ
-	lwv2v1p79F7CPzMn9y1rP75Xf/yyyP/qsTr32j/xk0L8rRX4/dffKmabycJgOcshPvbM/N1f
-	d/CK/D78cmLUI5ZnG1mS564/4r7fPbV9ukTN1J2HL86pCMqWnRKy78P7rsx7+UePnlTvFRCJ
-	C6vrKJzVIrHPk2NL8OGt2vfuV+zN+jVj4rTCkNbuxhL3R6KR4plBG2+6JH90d7hxNmHmF/Gc
-	YOfYxD+WUt/Wvzxt3/mkefvk7qPST/OeXdNTYinOSDTUYi4qTgQA+iURkykEAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrPLMWRmVeSWpSXmKPExsWy7bCSnK7fI+40g74JzBY/v7xntHi/rIfR
-	YlPbfUaL7Q3lFl/+LmW22PT4GqvF5V1z2CyWXr/IZPG+oYvVYtKPLYwW7Z9fsFq03DF14PFY
-	M28No8e85e3MHjtn3WX32LSqk81j85J6j74tqxg9Dp1dwOrxeZNcAEcUl01Kak5mWWqRvl0C
-	V0b/5BksBW84K66fms3ewHiUo4uRg0NCwETi9+7qLkYuDiGB7YwSu7/uZOpi5ASKS0q0v7vM
-	AlEjLHH4cDFEzQdGidmH3jCC1LAJaEms/tfLDmKLCERKnH12kQmkiFlgEZPEixvXWUASwgIW
-	EovWPQOzWQRUJd5c+Q7WzCtgLbF+y2YWiGXyEvsPnmWGiAtKnJz5BCzODBRv3jqbeQIj3ywk
-	qVlIUgsYmVYxiqYWFOem5yYXGOoVJ+YWl+al6yXn525iBIe5VtAOxmXr/+odYmTiYDzEKMHB
-	rCTC+9ObM02INyWxsiq1KD++qDQntfgQozQHi5I4r3JOZ4qQQHpiSWp2ampBahFMlomDU6qB
-	Kde4x3y/iCTbS8X10QuPrSr+4Lbp4omjQVeVNrz2//Wk/IDZm283t0t9W2bzRujrC8vXMyeI
-	pF9VnbN44eNVmj4tHfMiVp95ciDqSOlhfmc+vnsb+9d191+yitJ/f93A+uYf/ldc0jpLWS86
-	JbGvOSPbbRP286jfDFd+szkpzzwWHnFZJpK6ZsohCa5eo4Wattn/F87Uq/sj2SRxVNUqpE85
-	wGC6WmvO77biigXsBcs/WWetZs1sq/h1af/VeJUmnUvKi61zj31a9Fzl443yNUJT5JgW2qzg
-	epfKrnckm+/fyTdHrvK4bstoPpLhEWwk+aqp8/jEMy7n6rmPVf99eaAgKiNypbmMzes1FpPD
-	NymxFGckGmoxFxUnAgAtgi6u4gIAAA==
-X-CMS-MailID: 20240402104742epcas1p306e175348a3a7c1bdba9422ce22284f8
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-CMS-TYPE: 101P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20240402104742epcas1p306e175348a3a7c1bdba9422ce22284f8
-References: <CGME20240402104742epcas1p306e175348a3a7c1bdba9422ce22284f8@epcas1p3.samsung.com>
+References: <20240402103406.3638821-1-quic_varada@quicinc.com>
+ <20240402103406.3638821-4-quic_varada@quicinc.com> <CAA8EJpphk_kqzBE7cKb73ipdpTi29t9ZSOOdSfq7pAGSs5NKeg@mail.gmail.com>
+In-Reply-To: <CAA8EJpphk_kqzBE7cKb73ipdpTi29t9ZSOOdSfq7pAGSs5NKeg@mail.gmail.com>
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Date: Tue, 2 Apr 2024 13:48:08 +0300
+Message-ID: <CAA8EJpo=TMhu+Te+JE0cQzmjLOTDPi-Vv-h5Bch0Wfr_7iVi2w@mail.gmail.com>
+Subject: Re: [PATCH v6 3/6] interconnect: icc-clk: Add devm_icc_clk_register
+To: Varadarajan Narayanan <quic_varada@quicinc.com>
+Cc: andersson@kernel.org, konrad.dybcio@linaro.org, mturquette@baylibre.com, 
+	sboyd@kernel.org, robh@kernel.org, krzysztof.kozlowski+dt@linaro.org, 
+	conor+dt@kernel.org, djakov@kernel.org, quic_anusha@quicinc.com, 
+	linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-pm@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-We have already shifted the value of t0sz in TCR_T0SZ by TCR_T0SZ_OFFSET.
-So, the TCR_T0SZ_OFFSET shift here should be removed.
+On Tue, 2 Apr 2024 at 13:40, Dmitry Baryshkov
+<dmitry.baryshkov@linaro.org> wrote:
+>
+> On Tue, 2 Apr 2024 at 13:34, Varadarajan Narayanan
+> <quic_varada@quicinc.com> wrote:
+> >
+> > Wrap icc_clk_register to create devm_icc_clk_register to be
+> > able to release the resources properly.
+> >
+> > Signed-off-by: Varadarajan Narayanan <quic_varada@quicinc.com>
+> > ---
+> > v5: Introduced devm_icc_clk_register
+> > ---
+> >  drivers/interconnect/icc-clk.c   | 29 +++++++++++++++++++++++++++++
+> >  include/linux/interconnect-clk.h |  4 ++++
+> >  2 files changed, 33 insertions(+)
+>
+> Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 
-Co-developed-by: Leem ChaeHoon <infinite.run@gamil.com>
-Signed-off-by: Leem ChaeHoon <infinite.run@gamil.com>
-Co-developed-by: Gyeonggeon Choi <gychoi@student.42seoul.kr>
-Signed-off-by: Gyeonggeon Choi <gychoi@student.42seoul.kr>
-Co-developed-by: Soomin Cho <to.soomin@gmail.com>
-Signed-off-by: Soomin Cho <to.soomin@gmail.com>
-Co-developed-by: DaeRo Lee <skseofh@gmail.com>
-Signed-off-by: DaeRo Lee <skseofh@gmail.com>
-Co-developed-by: kmasta <kmasta.study@gmail.com>
-Signed-off-by: kmasta <kmasta.study@gmail.com>
-Signed-off-by: Seongsu Park <sgsu.park@samsung.com>
----
- arch/arm64/include/asm/mmu_context.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Wait. Actually,
 
-diff --git a/arch/arm64/include/asm/mmu_context.h b/arch/arm64/include/asm/mmu_context.h
-index c768d16b81a4..58de99836d2e 100644
---- a/arch/arm64/include/asm/mmu_context.h
-+++ b/arch/arm64/include/asm/mmu_context.h
-@@ -76,7 +76,7 @@ static inline void __cpu_set_tcr_t0sz(unsigned long t0sz)
- 		return;
- 
- 	tcr &= ~TCR_T0SZ_MASK;
--	tcr |= t0sz << TCR_T0SZ_OFFSET;
-+	tcr |= t0sz;
- 	write_sysreg(tcr, tcr_el1);
- 	isb();
- }
+Unreviewed-by: me
+
+Please return int from devm_icc_clk_register instead of returning the pointer.
+
 -- 
-2.34.1
-
+With best wishes
+Dmitry
