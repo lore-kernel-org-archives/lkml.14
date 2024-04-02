@@ -1,158 +1,170 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CABF05A4C7;
-	Tue,  2 Apr 2024 11:23:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+Received: from mx10.didiglobal.com (mx10.didiglobal.com [111.202.70.125])
+	by smtp.subspace.kernel.org (Postfix) with SMTP id 63FA664A98;
+	Tue,  2 Apr 2024 11:24:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=111.202.70.125
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712057004; cv=none; b=qsWeHZVz9IoFdTCS11FLxJo+SM2qWPXMLhfu9eX86dYF+UnLuLm4c0z93Iq155QdoP/SCmWljbuVKrAyAtF1G1GW3Z053WQa6MMkSp26UYRBLck3zpZWEHsMwiR/70TuxSL2Fj9nFx/73mjWRDoaHPamvyOqWoKensMT4TCDGcQ=
+	t=1712057067; cv=none; b=VrV9IuzQYD5IaGjRTM2AICU57B+/ZezFCo4BpcPcIgc/3qGez/mY5OSgE6st/wYbKBhGE86GwPKa0BGcbAK37RV5n4+3lfRjLnV92O0Lqk9tpBcUqNhvNyy10HLxjcNXhy5xOgJe8SG5kLlesJa8p0rgyH9Z81wysCWXKgmQH04=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712057004; c=relaxed/simple;
-	bh=kFQafWpdwS8a62X9B+PMGLnjifo/WJdCTGlM47vNwJg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BkVVLKboqWYhb0YfO/b4vipHD64CFtEVMKgsXgGz8qxnNQxedNnz3YbNHsVUILVrYcSfydkUdrXnleQZ0RTVks0dUCps5ZF3AYPOhKrdlFjaVol8v/5z93muvXwhtZJL8/6xjSg+kE2FOn2UZCuFX1mBSc/nWJueYLmfaGzzex8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=cSpaHOMj; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="cSpaHOMj"
-Received: from imap2.dmz-prg2.suse.org (imap2.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:98])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 09885345FD;
-	Tue,  2 Apr 2024 11:23:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1712057001; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=XiA6cT3DACqPDQYZoNSD9fJjMgMwVm21gc3jD1ih9Xs=;
-	b=cSpaHOMjoD2Ebf4+v7HYedKy+DG1tr48ChErsvqd4AaNVDSoQusa/YBFeUurda60RwQlpZ
-	/Jr6F5e4gMqXkzI9bM0MmQpndn6eNZzEfUn1A0mL4+lpj4mt/iFHpa49moPSmBSx58/rmu
-	2jQnp0fFCgkqUP75i+RLAMK01QGdqCc=
-Authentication-Results: smtp-out1.suse.de;
-	dkim=none
-Received: from imap2.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap2.dmz-prg2.suse.org (Postfix) with ESMTPS id DD76913357;
-	Tue,  2 Apr 2024 11:23:20 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap2.dmz-prg2.suse.org with ESMTPSA
-	id QQ7oNajqC2boKAAAn2gu4w
-	(envelope-from <mkoutny@suse.com>); Tue, 02 Apr 2024 11:23:20 +0000
-Date: Tue, 2 Apr 2024 13:23:19 +0200
-From: Michal =?utf-8?Q?Koutn=C3=BD?= <mkoutny@suse.com>
-To: Jarkko Sakkinen <jarkko@kernel.org>
-Cc: Haitao Huang <haitao.huang@linux.intel.com>, 
-	dave.hansen@linux.intel.com, tj@kernel.org, linux-kernel@vger.kernel.org, 
-	linux-sgx@vger.kernel.org, x86@kernel.org, cgroups@vger.kernel.org, tglx@linutronix.de, 
-	mingo@redhat.com, bp@alien8.de, hpa@zytor.com, sohil.mehta@intel.com, 
-	tim.c.chen@linux.intel.com, zhiquan1.li@intel.com, kristen@linux.intel.com, 
-	seanjc@google.com, zhanb@microsoft.com, anakrish@microsoft.com, 
-	mikko.ylinen@linux.intel.com, yangjie@microsoft.com, chrisyan@microsoft.com
-Subject: Re: Re: [PATCH v9 15/15] selftests/sgx: Add scripts for EPC cgroup
- testing
-Message-ID: <htiz5jgsby5v262saphhomcsxtixb2u7ot6jcghpfhvgz65ht6@qlz3gpdwapaa>
-References: <20240205210638.157741-1-haitao.huang@linux.intel.com>
- <20240205210638.157741-16-haitao.huang@linux.intel.com>
- <4be7b291010973c203ed8c7bcd25b626c1290231.camel@kernel.org>
- <D04OVW6I8MUA.1OAIHFQ8943SM@kernel.org>
- <op.2lbjl0oawjvjmi@hhuan26-mobl.amr.corp.intel.com>
- <D071OAFZ80O6.XEDXJ8AF4PK9@kernel.org>
- <D071QIHLW7MP.UM9R3VYETIOK@kernel.org>
+	s=arc-20240116; t=1712057067; c=relaxed/simple;
+	bh=CaTYjj8zdYnlQyXbzA5vWY5G6Z6GdB28oa29n6j0Xqw=;
+	h=Date:From:To:CC:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=AL7bnQchj8u0OStRtRDt0BQtflLopGQqeRcQAYfnNRwwSFDnp2kpwQLz9nq6Fv5dEVNQM276fTXcSX94k6/V/O5UZNGl1sMixOBXsosacEoiJjGtOFuSTgSoPbDtsaE+/TrjF9wtepR20cw5ctiTWCMo5IrOogrQbtsKLiL5dQM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=didiglobal.com; spf=pass smtp.mailfrom=didiglobal.com; arc=none smtp.client-ip=111.202.70.125
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=didiglobal.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=didiglobal.com
+Received: from mail.didiglobal.com (unknown [10.79.65.12])
+	by mx10.didiglobal.com (MailData Gateway V2.8.8) with ESMTPS id E6CB118097DE79;
+	Tue,  2 Apr 2024 19:24:21 +0800 (CST)
+Received: from didi-ThinkCentre-M930t-N000 (10.79.64.101) by
+ ZJY02-ACTMBX-02.didichuxing.com (10.79.65.12) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Tue, 2 Apr 2024 19:24:21 +0800
+Date: Tue, 2 Apr 2024 19:24:15 +0800
+X-MD-Sfrom: tiozhang@didiglobal.com
+X-MD-SrcIP: 10.79.65.12
+From: Tio Zhang <tiozhang@didiglobal.com>
+To: <mingo@redhat.com>, <peterz@infradead.org>, <juri.lelli@redhat.com>,
+	<vincent.guittot@linaro.org>, <rostedt@goodmis.org>, <bsingharora@gmail.com>,
+	<corbet@lwn.net>, <akpm@linux-foundation.org>
+CC: <linux-kernel@vger.kernel.org>, <linux-doc@vger.kernel.org>,
+	<dietmar.eggemann@arm.com>, <bsegall@google.com>, <mgorman@suse.de>,
+	<bristot@redhat.com>, <vschneid@redhat.com>, <tiozhang@didiglobal.com>,
+	<zyhtheonly@gmail.com>, <zyhtheonly@yeah.net>, <fuyuanli@didiglobal.com>
+Subject: [PATCH 1/3] sched: make softirq cputime accounting separately in
+ irqtime
+Message-ID: <20240402112415.GA17946@didi-ThinkCentre-M930t-N000>
+Mail-Followup-To: mingo@redhat.com, peterz@infradead.org,
+	juri.lelli@redhat.com, vincent.guittot@linaro.org,
+	rostedt@goodmis.org, bsingharora@gmail.com, corbet@lwn.net,
+	akpm@linux-foundation.org, linux-kernel@vger.kernel.org,
+	linux-doc@vger.kernel.org, dietmar.eggemann@arm.com,
+	bsegall@google.com, mgorman@suse.de, bristot@redhat.com,
+	vschneid@redhat.com, zyhtheonly@gmail.com, zyhtheonly@yeah.net,
+	fuyuanli@didiglobal.com
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="yhu3ebu6ybc3o4aj"
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <D071QIHLW7MP.UM9R3VYETIOK@kernel.org>
-X-Rspamd-Queue-Id: 09885345FD
-X-Spamd-Result: default: False [-1.91 / 50.00];
-	SIGNED_PGP(-2.00)[];
-	MID_RHS_NOT_FQDN(0.50)[];
-	MIME_GOOD(-0.20)[multipart/signed,text/plain];
-	NEURAL_HAM_SHORT(-0.20)[-0.975];
-	MX_GOOD(-0.01)[];
-	BAYES_HAM(-0.00)[37.54%];
-	ARC_NA(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	MIME_TRACE(0.00)[0:+,1:+,2:~];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[22];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	RCVD_TLS_ALL(0.00)[];
-	TO_DN_SOME(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	R_DKIM_NA(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	DKIM_SIGNED(0.00)[suse.com:s=susede1];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:98:from]
-X-Rspamd-Action: no action
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Spam-Score: -1.91
-X-Spam-Level: 
-X-Spam-Flag: NO
+In-Reply-To: <20240402112112.GA17370@didi-ThinkCentre-M930t-N000>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-ClientProxiedBy: ZJY01-PUBMBX-01.didichuxing.com (10.79.64.32) To
+ ZJY02-ACTMBX-02.didichuxing.com (10.79.65.12)
 
+Currently we account irq{,soft} time in "irqtime.total",
+when CONFIG_IRQ_TIME_ACCOUNTING=y. Since we account them in
+the same path (irq{,soft}_enter{,exit}), we can separately count them
+by filtering the offset.
+In order to not break backward compatibility, we do not change the meaning
+of "total", we only let softirq time to be accounted separately in
+a new field "total_soft".
+So interrupt time could also be calculated by "total" minus "total_soft".
 
---yhu3ebu6ybc3o4aj
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+This patch only let softirq cputime stats available in irqtime, do not
+make it in real usage.
 
-Hello.
+Signed-off-by: Tio Zhang <tiozhang@didiglobal.com>
+---
+ kernel/sched/cputime.c | 18 ++++++++++++++----
+ kernel/sched/sched.h   | 16 ++++++++++++++++
+ 2 files changed, 30 insertions(+), 4 deletions(-)
 
-On Sat, Mar 30, 2024 at 01:26:08PM +0200, Jarkko Sakkinen <jarkko@kernel.or=
-g> wrote:
-> > > It'd be more complicated and less readable to do all the stuff withou=
-t the =20
-> > > cgroup-tools, esp cgexec. I checked dependency, cgroup-tools only dep=
-ends =20
-> > > on libc so I hope this would not cause too much inconvenience.
-> >
-> > As per cgroup-tools, please prove this. It makes the job for more
-> > complicated *for you* and you are making the job more  complicated
-> > to every possible person in the planet running any kernel QA.
-> >
-> > I weight the latter more than the former. And it is exactly the
-> > reason why we did custom user space kselftest in the first place.
-> > Let's keep the tradition. All I can say is that kselftest is=20
-> > unfinished in its current form.
-> >
-> > What is "esp cgexec"?
->=20
-> Also in kselftest we don't drive ultimate simplicity, we drive
-> efficient CI/QA. By open coding something like subset of
-> cgroup-tools needed to run the test you also help us later
-> on to backtrack the kernel changes. With cgroups-tools you
-> would have to use strace to get the same info.
+diff --git a/kernel/sched/cputime.c b/kernel/sched/cputime.c
+index af7952f12e6c..23e4bca1e3e8 100644
+--- a/kernel/sched/cputime.c
++++ b/kernel/sched/cputime.c
+@@ -35,13 +35,14 @@ void disable_sched_clock_irqtime(void)
+ }
+ 
+ static void irqtime_account_delta(struct irqtime *irqtime, u64 delta,
+-				  enum cpu_usage_stat idx)
++				  u64 delta_soft, enum cpu_usage_stat idx)
+ {
+ 	u64 *cpustat = kcpustat_this_cpu->cpustat;
+ 
+ 	u64_stats_update_begin(&irqtime->sync);
+ 	cpustat[idx] += delta;
+ 	irqtime->total += delta;
++	irqtime->total_soft += delta_soft;
+ 	irqtime->tick_delta += delta;
+ 	u64_stats_update_end(&irqtime->sync);
+ }
+@@ -54,7 +55,7 @@ void irqtime_account_irq(struct task_struct *curr, unsigned int offset)
+ {
+ 	struct irqtime *irqtime = this_cpu_ptr(&cpu_irqtime);
+ 	unsigned int pc;
+-	s64 delta;
++	s64 delta, delta_soft = 0;
+ 	int cpu;
+ 
+ 	if (!sched_clock_irqtime)
+@@ -65,6 +66,15 @@ void irqtime_account_irq(struct task_struct *curr, unsigned int offset)
+ 	irqtime->irq_start_time += delta;
+ 	pc = irq_count() - offset;
+ 
++	/*
++	 * We only account softirq time when we are called by
++	 * account_softirq_enter{,exit}
++	 */
++	if ((offset & SOFTIRQ_OFFSET) || (pc & SOFTIRQ_OFFSET)) {
++		delta_soft = sched_clock_cpu(cpu) - irqtime->soft_start_time;
++		irqtime->soft_start_time += delta_soft;
++	}
++
+ 	/*
+ 	 * We do not account for softirq time from ksoftirqd here.
+ 	 * We want to continue accounting softirq time to ksoftirqd thread
+@@ -72,9 +82,9 @@ void irqtime_account_irq(struct task_struct *curr, unsigned int offset)
+ 	 * that do not consume any time, but still wants to run.
+ 	 */
+ 	if (pc & HARDIRQ_MASK)
+-		irqtime_account_delta(irqtime, delta, CPUTIME_IRQ);
++		irqtime_account_delta(irqtime, delta, delta_soft, CPUTIME_IRQ);
+ 	else if ((pc & SOFTIRQ_OFFSET) && curr != this_cpu_ksoftirqd())
+-		irqtime_account_delta(irqtime, delta, CPUTIME_SOFTIRQ);
++		irqtime_account_delta(irqtime, delta, delta_soft, CPUTIME_SOFTIRQ);
+ }
+ 
+ static u64 irqtime_tick_accounted(u64 maxtime)
+diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
+index 001fe047bd5d..f479c61b84b5 100644
+--- a/kernel/sched/sched.h
++++ b/kernel/sched/sched.h
+@@ -2931,8 +2931,10 @@ static inline void nohz_run_idle_balance(int cpu) { }
+ #ifdef CONFIG_IRQ_TIME_ACCOUNTING
+ struct irqtime {
+ 	u64			total;
++	u64			total_soft;
+ 	u64			tick_delta;
+ 	u64			irq_start_time;
++	u64			soft_start_time;
+ 	struct u64_stats_sync	sync;
+ };
+ 
+@@ -2956,6 +2958,20 @@ static inline u64 irq_time_read(int cpu)
+ 
+ 	return total;
+ }
++
++static inline u64 irq_time_read_soft(int cpu)
++{
++	struct irqtime *irqtime = &per_cpu(cpu_irqtime, cpu);
++	unsigned int seq;
++	u64 total_soft;
++
++	do {
++		seq = __u64_stats_fetch_begin(&irqtime->sync);
++		total_soft = irqtime->total_soft;
++	} while (__u64_stats_fetch_retry(&irqtime->sync, seq));
++
++	return total_soft;
++}
+ #endif /* CONFIG_IRQ_TIME_ACCOUNTING */
+ 
+ #ifdef CONFIG_CPU_FREQ
+-- 
+2.17.1
 
-FWIW, see also functions in
-tools/testing/selftests/cgroup/cgroup_util.{h,c}.
-They likely cover what you need already -- if the tests are in C.
-
-(I admit that stuff in tools/testing/selftests/cgroup/ is best
-understood with strace.)
-
-HTH,
-Michal
-
---yhu3ebu6ybc3o4aj
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQQpEWyjXuwGT2dDBqAGvrMr/1gcjgUCZgvqoQAKCRAGvrMr/1gc
-jlAqAP9I+NeX7O9Wk3opsGFG1Fr8xK5z/v51TgzJ8ZmcnNxyHwD/aF7TmuF17oXt
-aq0+sYznVp7gX2pLq4q7YyJ28in9uQM=
-=9sGJ
------END PGP SIGNATURE-----
-
---yhu3ebu6ybc3o4aj--
