@@ -1,124 +1,92 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8CD98595C;
-	Tue,  2 Apr 2024 14:53:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from relmlie5.idc.renesas.com (relmlor1.renesas.com [210.160.252.171])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7402F3398A;
+	Tue,  2 Apr 2024 14:53:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.160.252.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712069617; cv=none; b=IQc5puMsMAKZO99uY5aqVJ+ExfzFV8QAetmlXBGMpR3bodV9UOrFNK1O0cR2i1MN+SlpTOyS2V5IPhVgeDvYUiVJtvw264Za+VnCN4oicacu+Cy9d9dobziRoEzjw6hE/piLuoNTdm2CBoiD34wCqb8aBwHDFl6zkoshzXU4s3Y=
+	t=1712069619; cv=none; b=f2o0lCTOT97UXwEBOtryI5Vw1y/v1R0doqMQ5oR1m93DCD5JLWJmrLW8jIqS4HDbA2mikg/Swhgkv5IDG0t4aybu8GIMgBXaf8rASMp9Y8YoMjBT4kXsX4SHwgYeQ/lb+pdocHq0GdnOv3P+m5Yu11NSuNgitj5agHE3Dp8H7zE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712069617; c=relaxed/simple;
-	bh=vhQsnvRHzwOy3ox3OvUmqvwn0itwQb57/FmYwbndCXU=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=tdhKOhAIJB09r6zXm66mKr7tPndtFmuX2mUgV6t7lsvvA4tCvhYdH6lpOcuCmWes+DYrUWhlY4sBxpm7LPCzWbFklpkx8DCfilIGIS5RzippkjiGbd20mDnpChP3MLrJpGaVbvJYaMtDbScXNrdE782nEfdejQanZYrIjwSGKwU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=u9wM5BM1; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="u9wM5BM1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 509FAC43390;
-	Tue,  2 Apr 2024 14:53:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712069616;
-	bh=vhQsnvRHzwOy3ox3OvUmqvwn0itwQb57/FmYwbndCXU=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=u9wM5BM1zVlflI8QFJDAHZYDZYOnPeNYUCR981yXBTjIUiYAuk/3ukwrzYyE9RB94
-	 ggNYHgQ1aWLaJAIwPMuPzimCq9JWUddvfke5tuHoM0dsQKwtlwps5xe/l4EwBAzHDD
-	 rf1z2ocnPeEVj5O5c+AsMaSSwuS16ukcZIEKrjjEBxANfz4eCcf1IS4sLyBX7WGV4J
-	 X6bfAXGXEkMAukyHifrFowQ8fi42i71UHSa2nc5rdtHTyYs00rXjuHJJ55XSR2HdyJ
-	 0d0USc13F8w/JmKNxjLr8RyCue8Q7EheKu9KzyehW7omtUJefOH2yADQqrus5BNuSp
-	 yCsACeDACsJbQ==
-Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
-	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.95)
-	(envelope-from <maz@kernel.org>)
-	id 1rrfW1-000lX6-Ji;
-	Tue, 02 Apr 2024 15:53:33 +0100
-Date: Tue, 02 Apr 2024 15:53:33 +0100
-Message-ID: <86h6gju87m.wl-maz@kernel.org>
-From: Marc Zyngier <maz@kernel.org>
-To: Mark Brown <broonie@kernel.org>
-Cc: Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Oliver Upton <oliver.upton@linux.dev>,
-	James Morse <james.morse@arm.com>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Shuah Khan <shuah@kernel.org>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	Dave Martin <Dave.Martin@arm.com>,
-	kvmarm@lists.linux.dev,
-	linux-doc@vger.kernel.org,
-	linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH v6 1/5] KVM: arm64: Share all userspace hardened thread data with the hypervisor
-In-Reply-To: <fb54d7b0-9c83-4a0c-a08b-b722c9381ca7@sirena.org.uk>
-References: <20240329-arm64-2023-dpisa-v6-0-ba42db6c27f3@kernel.org>
-	<20240329-arm64-2023-dpisa-v6-1-ba42db6c27f3@kernel.org>
-	<87msqesoty.wl-maz@kernel.org>
-	<fb54d7b0-9c83-4a0c-a08b-b722c9381ca7@sirena.org.uk>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/29.2
- (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+	s=arc-20240116; t=1712069619; c=relaxed/simple;
+	bh=3YQe4QnlUHJrCHfA4ZLPv1MwEhOpdVQet3ppNtXhx/g=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=g1tRUxlGO9tyK2us1VfeXk/+vNou7hbaowM65NyLyEzRsOOCoRrZ7tc4UyUcyDbJZatCkkx4YthAzlvTe5fC/7RaK3I6Mu8HbNgi9++bnCqPPkvS8Y54MyuvpDWbdgql5dGrud4WymYCDnnJZ0fAezrWrMEbgbaxZq4ZzULexoQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com; spf=pass smtp.mailfrom=bp.renesas.com; arc=none smtp.client-ip=210.160.252.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bp.renesas.com
+X-IronPort-AV: E=Sophos;i="6.07,175,1708354800"; 
+   d="scan'208";a="200115238"
+Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
+  by relmlie5.idc.renesas.com with ESMTP; 02 Apr 2024 23:53:29 +0900
+Received: from renesas-deb12.cephei.uk (unknown [10.226.93.98])
+	by relmlir6.idc.renesas.com (Postfix) with ESMTP id 4B20F4254199;
+	Tue,  2 Apr 2024 23:53:24 +0900 (JST)
+From: Paul Barker <paul.barker.ct@bp.renesas.com>
+To: Sergey Shtylyov <s.shtylyov@omp.ru>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	=?UTF-8?q?Niklas=20S=C3=B6derlund?= <niklas.soderlund+renesas@ragnatech.se>
+Cc: Paul Barker <paul.barker.ct@bp.renesas.com>,
+	netdev@vger.kernel.org,
+	linux-renesas-soc@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v2 1/2] net: ravb: Always process TX descriptor ring
+Date: Tue,  2 Apr 2024 15:53:04 +0100
+Message-Id: <20240402145305.82148-1-paul.barker.ct@bp.renesas.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-SA-Exim-Connect-IP: 185.219.108.64
-X-SA-Exim-Rcpt-To: broonie@kernel.org, catalin.marinas@arm.com, will@kernel.org, oliver.upton@linux.dev, james.morse@arm.com, suzuki.poulose@arm.com, corbet@lwn.net, shuah@kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Dave.Martin@arm.com, kvmarm@lists.linux.dev, linux-doc@vger.kernel.org, linux-kselftest@vger.kernel.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-On Tue, 02 Apr 2024 15:34:27 +0100,
-Mark Brown <broonie@kernel.org> wrote:
-> 
-> [1  <text/plain; us-ascii (quoted-printable)>]
-> On Sun, Mar 31, 2024 at 11:00:41AM +0100, Marc Zyngier wrote:
-> > Mark Brown <broonie@kernel.org> wrote:
-> 
-> > > As part of the lazy FPSIMD state transitioning done by the hypervisor we
-> > > currently share the userpsace FPSIMD state in thread->uw.fpsimd_state with
-> > > the host. Since this struct is non-extensible userspace ABI we have to keep
-> 
-> > Using the same representation is just pure convenience, and nothing
-> > requires us to use the it in the kernel/hypervisor.
-> 
-> Indeed, the additional data seemed contained enough that it was a
-> reasonable tradeoff.
-> 
-> > > the definition as is but the addition of FPMR in the 2023 dpISA means that
-> > > we will want to share more storage with the host. To facilitate this
-> > > refactor the current code to share the entire thread->uw rather than just
-> > > the one field.
-> 
-> > So this increase the required sharing with EL2 from 528 bytes to
-> > 560. Not a huge deal, but definitely moving in the wrong direction. Is
-> > there any plans to add more stuff to this structure that wouldn't be
-> > *directly* relevant to the hypervisor?
-> 
-> I'm not aware of any current plans to extend this.
-> 
-> > > @@ -640,7 +641,7 @@ struct kvm_vcpu_arch {
-> > >  	struct kvm_guest_debug_arch vcpu_debug_state;
-> > >  	struct kvm_guest_debug_arch external_debug_state;
-> > >  
-> > > -	struct user_fpsimd_state *host_fpsimd_state;	/* hyp VA */
-> > > +	struct thread_struct_uw *host_uw;	/* hyp VA */
-> > >  	struct task_struct *parent_task;
-> 
-> > Well, this is going away, and you know it.
-> 
-> Sure, those patches are still in flight though.  It does seem reasonable
-> to target the current code.
+The TX queue should be serviced each time the poll function is called,
+even if the full RX work budget has been consumed. This prevents
+starvation of the TX queue when RX bandwidth usage is high.
 
-Sure, if your intent is for this code not to be merged.
+Fixes: c156633f1353 ("Renesas Ethernet AVB driver proper")
+Signed-off-by: Paul Barker <paul.barker.ct@bp.renesas.com>
+---
+Changes from v1:
+  * Use the correct 'Fixes' tag.
+  * Call the new variable 'unmask' and drop the unnecessary initializer,
+    as requested by Sergey.
 
-Because it means this series assumes a different data life cycle, and
-the review effort spent on it will be invalidated once you move to the
-per-CPU state.
+ drivers/net/ethernet/renesas/ravb_main.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-	M.
+diff --git a/drivers/net/ethernet/renesas/ravb_main.c b/drivers/net/ethernet/renesas/ravb_main.c
+index d1be030c8848..48803050abdb 100644
+--- a/drivers/net/ethernet/renesas/ravb_main.c
++++ b/drivers/net/ethernet/renesas/ravb_main.c
+@@ -1324,12 +1324,12 @@ static int ravb_poll(struct napi_struct *napi, int budget)
+ 	int q = napi - priv->napi;
+ 	int mask = BIT(q);
+ 	int quota = budget;
++	bool unmask;
+ 
+ 	/* Processing RX Descriptor Ring */
+ 	/* Clear RX interrupt */
+ 	ravb_write(ndev, ~(mask | RIS0_RESERVED), RIS0);
+-	if (ravb_rx(ndev, &quota, q))
+-		goto out;
++	unmask = !ravb_rx(ndev, &quota, q);
+ 
+ 	/* Processing TX Descriptor Ring */
+ 	spin_lock_irqsave(&priv->lock, flags);
+@@ -1339,6 +1339,9 @@ static int ravb_poll(struct napi_struct *napi, int budget)
+ 	netif_wake_subqueue(ndev, q);
+ 	spin_unlock_irqrestore(&priv->lock, flags);
+ 
++	if (!unmask)
++		goto out;
++
+ 	napi_complete(napi);
+ 
+ 	/* Re-enable RX/TX interrupts */
 
+base-commit: ea2a1cfc3b2019bdea6324acd3c03606b60d71ad
 -- 
-Without deviation from the norm, progress is not possible.
+2.39.2
+
