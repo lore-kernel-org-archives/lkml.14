@@ -1,79 +1,122 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6442B18E29;
-	Tue,  2 Apr 2024 06:25:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65F8C200AE;
+	Tue,  2 Apr 2024 06:25:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712039118; cv=none; b=nnJsYI/BZgHFIMx6XH5uzJHTFH/Pb9f9ScLxHXXpO2RX2rG0xzf7dJHlMNgEBeC1JPpiU7VtwKTd/HrsbHgkfb3yozu9DQRk9l+IiWhL9n+F3WtAk2heVV14eIqhPp+Er8UAYM94ahNEbYbzHg9btWD9PsFaLZhP0onr0iYNvY0=
+	t=1712039124; cv=none; b=LoJTMAWmhBZ52/me3l0EalLOZ6Ts6Qz52+1CXiN50O9EwMNIMKIt9akSzE/kzT3zm0BHwsI5PFEn2Ta6blbQGdozff8/egyUF51yjjbvSWsizAo9nvV50xSaujyjDrEiuSGafMUaGNwFVFVQl848bLcqAl9baOyZFwDoDFcm7tk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712039118; c=relaxed/simple;
-	bh=zKIs5Rjm9Axb/VD3kkOHg5ZttvZfEfpr3Im0059bWQA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bZYs59D3DEzuPCASFdfGYg3abBpajbcxrH4t3qN/mgg9KUhNm82OBQfU4gzXUKMQzBXud57RhBXWH5nEqjxzWX788IEGDYg/aw5MzjZSiGS+yJD0A5wB6pRyYrvcG/Wu+aRSUPXr4PmEbl5QOxTWtAILE7gHK//U8iao4wl8qAg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=BrQAbdrA; arc=none smtp.client-ip=192.198.163.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1712039124; c=relaxed/simple;
+	bh=qWNlzf9hVn7Nq9JKKcMH71MNQcX1Kc7lHC9pZXRDUEw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Yygrqc01Y3vqCam3bKQJUCY1M5dJUoOdSDI8/ziRY85A2mRKhMbcd/L9sS5NopHUsinBuP3RN2TfF1y47wtv5UErVsIIwxXxJn5rBCT7GnEyiu4npS04Su3PHLEAFE4bSCOjTfy+IK+uqzCe9GrIM0mgWUfhrNx/G3PZvc5teII=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pBoduPgq; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BrQAbdrA"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1712039116; x=1743575116;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=zKIs5Rjm9Axb/VD3kkOHg5ZttvZfEfpr3Im0059bWQA=;
-  b=BrQAbdrADySWljbPqWq9/LO4KIStscjK1YMchAeDVMw8jmZYsjVQb9OZ
-   DFHvo3jcG9o6NxxANBrULFzokZzn2O1V4EAISW4QsBuEDKgOUcNKwvJPh
-   XAocKQ900CYq6G1/nmIyqiBB3Pg8tgMrCG0d7V/yZi0OC06VgWSxKBd7+
-   RJ6nqUJQdeWsoiHY2kzCwRyCb+4a0JaXvsWUhlFJ0N/mKFMQATPd6nWfL
-   cvqZImfkfopEWzZ0jqyGoFnctdSD5yQA6WGxmR6ZfyB+YVRRFYsRwKX+V
-   htLaEaSdFl+/VDE6lk6CteQ7b42j5PUn36OqEgeMB2xP5lGIlWR157aD9
-   Q==;
-X-CSE-ConnectionGUID: j4/zo/FfSdGqiA4s0M7YIw==
-X-CSE-MsgGUID: AVaSsbHhTimTsVzyebJ6mg==
-X-IronPort-AV: E=McAfee;i="6600,9927,11031"; a="7774956"
-X-IronPort-AV: E=Sophos;i="6.07,174,1708416000"; 
-   d="scan'208";a="7774956"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Apr 2024 23:25:15 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,174,1708416000"; 
-   d="scan'208";a="17928830"
-Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.165])
-  by orviesa009.jf.intel.com with ESMTP; 01 Apr 2024 23:25:13 -0700
-Date: Tue, 2 Apr 2024 14:20:22 +0800
-From: Xu Yilun <yilun.xu@linux.intel.com>
-To: Marco Pagani <marpagan@redhat.com>
-Cc: Moritz Fischer <mdf@kernel.org>, Wu Hao <hao.wu@intel.com>,
-	Xu Yilun <yilun.xu@intel.com>, Tom Rix <trix@redhat.com>,
-	Russ Weight <russ.weight@linux.dev>, linux-fpga@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] fpga: tests: use KUnit devices instead of platform
- devices
-Message-ID: <ZgujpnLfHTp+WRNL@yilunxu-OptiPlex-7050>
-References: <20240329174849.248243-1-marpagan@redhat.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pBoduPgq"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 316BAC433A6;
+	Tue,  2 Apr 2024 06:25:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1712039124;
+	bh=qWNlzf9hVn7Nq9JKKcMH71MNQcX1Kc7lHC9pZXRDUEw=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=pBoduPgqQBVKrCZGKup28FQzuFNeO+1oV8fiEpigtfVatinFyIgw8ZNeOm9RV9FH6
+	 ntME1QS8fJHbDm3yU08kpeokI284bAUWnhJAhU9MNV1GPhgImTbB9/S8VEEFCAHyC+
+	 dCpQeNnF81SEhQbE183YkYPH5amLNKDUkm//gsoirkR57UMVmIh/0x/L9FAMHqcItg
+	 7jjD8XksSDM72QGw25si1SDxvRsLWlBOJh/LLjmY8TH7Ff3pLkFxOFneDHIkEVGFiD
+	 AlsgRU/PdVJ0T8usj2NDb/5Jf5hde0+VAWtxQbgCg1MXchScoEmSrcTq2wOOqtCAKr
+	 ARDGciy3PXMig==
+Received: by mail-lj1-f174.google.com with SMTP id 38308e7fff4ca-2d6ee6c9945so35341831fa.3;
+        Mon, 01 Apr 2024 23:25:24 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCWRsXm6tH2yvKTAdsimyaejpXNhxdOFLJCc+hPp1PORz3X99RnVokbgM6EztQiNfmGQynOWyOXw/A8urTj2OzPE63rXjHONiGD1oGDmYhEYbzB86eQk1uCT0ENihz3Apuke4YhJkcVu
+X-Gm-Message-State: AOJu0YyI0ZKDWL6JGyC5Yq/AQ9BxWQKdI8Umisn0dj4fjBb1HNYBz3yb
+	ST/GSQvifv1mpaE5OpZopl960HGBnf/EvERXXMOWaTQErnNpN6kFyrwIXUJeSAKZJn+jUPFCW+H
+	BOiukyGCLqT+P+dNAT6bRKQyqpjg=
+X-Google-Smtp-Source: AGHT+IGhyrPVK3HlxK0dcUI85aMquYw1I/ByvFIRl+DehA6Qm3UUsArC6R4U6R5J6xCr3U/WZOdnNH/nN4Vfyncx7ao=
+X-Received: by 2002:a2e:a606:0:b0:2d4:973e:247f with SMTP id
+ v6-20020a2ea606000000b002d4973e247fmr7308348ljp.23.1712039122487; Mon, 01 Apr
+ 2024 23:25:22 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240329174849.248243-1-marpagan@redhat.com>
+References: <20240321150510.GI8211@craftyguy.net> <CAMj1kXGzH4TiwvSF3bZsJpuuWf04Ri_852fUMTdH8pLRaH3+Yg@mail.gmail.com>
+ <a3aae375-5582-46e4-866b-6a81641998af@redhat.com> <CAMj1kXGrWGGv-aXabsn1oRwwMy-Ck1nz85QkEMqQ8LdQxyeBKQ@mail.gmail.com>
+ <749b1cea4fd9e8d8debadc51cf3c0374d9878ae9@craftyguy.net> <CAMj1kXGyKdoLZ9t9_X4diiy9GsqxJ_NkHsm_t+cAJBxhHW7mAA@mail.gmail.com>
+ <20240401154436.GB26633@craftyguy.net>
+In-Reply-To: <20240401154436.GB26633@craftyguy.net>
+From: Ard Biesheuvel <ardb@kernel.org>
+Date: Tue, 2 Apr 2024 09:25:10 +0300
+X-Gmail-Original-Message-ID: <CAMj1kXGDnYoz-rF+8JZoMfhGmGqL0PEdvSK8xWH8F4ELXiJB_Q@mail.gmail.com>
+Message-ID: <CAMj1kXGDnYoz-rF+8JZoMfhGmGqL0PEdvSK8xWH8F4ELXiJB_Q@mail.gmail.com>
+Subject: Re: x86_64 32-bit EFI mixed mode boot broken
+To: Clayton Craft <clayton@craftyguy.net>
+Cc: Hans de Goede <hdegoede@redhat.com>, x86@kernel.org, linux-kernel@vger.kernel.org, 
+	linux-efi@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>, 
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, regressions@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
 
-On Fri, Mar 29, 2024 at 06:48:47PM +0100, Marco Pagani wrote:
-> KUnit now provides helper functions to create fake devices, so use them
-> instead of relying on platform devices.
-> 
-> Other changes: remove an unnecessary white space in the fpga region suite.
-> 
-> Reviewed-by: Russ Weight <russ.weight@linux.dev>
-> Signed-off-by: Marco Pagani <marpagan@redhat.com>
+On Tue, 2 Apr 2024 at 01:44, Clayton Craft <clayton@craftyguy.net> wrote:
+>
+> On Sun, 24 Mar 2024 22:53:47 +0200 Ard Biesheuvel <ardb@kernel.org> wrote:
+> > > > Thanks.
+> > > >
+> > > > I pushed another branch
+> > > >
+> > > > https://git.kernel.org/pub/scm/linux/kernel/git/ardb/linux.git/log/?h=efi-clayton-3
+> > > >
+> > > > which has a proper fix for the issue that you found.
+> > > >
+> > > > As it turns out, the compat mixed mode (with handover protocol) was
+> > > >
+> > > > broken from the beginning, and the change you identified just happened
+> > > >
+> > > > to trigger it on your hardware.
+> > >
+> > >
+> > > Tested and fixes booting on my Bay Trail tablet and NUC. Thanks for fixing this!
+> > >
+> > > Tested-by: Clayton Craft <clayton@craftyguy.net>
+>
+> So... maybe my testing wasn't as thorough as I thought, OR I am experiencing an
+> unrelated problem. In any case, I'm having some difficulty figuring out what to
+> blame. When using this patch on the 6.6 LTS:
+>
+> 1) kernel seems to panic right after displaying `disabling bootcon [efifb0]`. I
+> determined that it's panicking by setting `panic=-1` and seeing it reboot after
+> showing that message. I can work around it by setting `keep_bootcon`, but that's
+> not ideal.
+>
 
-Acked-by: Xu Yilun <yilun.xu@intel.com>
+First of all, if you make it all the way to this point, it is unlikely
+that this is the same issue. The issue that was fixed was preventing
+the boot from proceeding past the very early 32-bit boot stage in the
+decompressor, and by the time you hit this panic, the kernel is up an
+running.
 
-Does this patch has dependency on module owner changes for fpga-mgr/bridge/region?
 
-Thanks,
-Yilun
+> 2) kernel complains about no root (from initrd). I can work around this by
+> passing `initrd=my-initramfs` on the kernel cmdline.
+>
+
+So why is systemd-boot not passing this directly? AFAIK this is the
+default method for systemd-boot, and I don't think it implements any
+other methods.
+
+> I haven't tried any newer kernels yet. The second issue above makes me wonder if
+> your patch related to args might be to blame, but I'm not sure. Any help poking
+> around further would be greatly appreciated :)
+>
+
+You might try this stable -rc
+
+https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git/log/?h=linux-6.6.y
+
+which should get released any day now. It has a couple of EFI related
+fixes, although none of them seem related in particular.
+
+Another thing you might try is to pass efi=noruntime to the boot, to
+check whether EFI is implicated in this to begin with.
