@@ -1,88 +1,129 @@
-Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA7E186251
-	for <linux-kernel@vger.kernel.org>; Tue,  2 Apr 2024 13:42:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17E8C79DD4
+	for <linux-kernel@vger.kernel.org>; Tue,  2 Apr 2024 13:43:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712065378; cv=none; b=nCweMXRFPjY4bPl0LofQj0k8Q4wTfoE202QKkq3wPgA7GvyCS+fPihAu23ESxyhhP+2YaIHQ44CiVbi4FBxntUuFj5TXD+Gm+PWxjnH7UHwA3YtmOwTkdKOpuZ9hzBIfBE05ML8HUjmhFVPtiI5H7/GLPdQL3ltB1Tc1hjd6yEs=
+	t=1712065390; cv=none; b=oOtOsaxR6TkIxWnlPW+wb3zqk1oH4ZTLj4rHactg/2OlpTzH/8A6wFEb/Pwh0jC2A+I76LHi6YQz9DO6Dehb/RW1bHgSXAGBMW6+vHHWcEZJ1oCE6/tlkP8L3TC4bCKwYBfxov/9qL3fmhXDPYEooSbgehSPxZtO1wboVqfy3kk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712065378; c=relaxed/simple;
-	bh=i+b1uHVl9rRn+1rrSUi2nuadkeRDlrk+KQBy0RwN1AE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=YeHmV0gjq24jf3YDQQyQjxJ9NMPGmw0wX0j/kSXHf15GaZp56Tjrjoo50PqPfHyCxC4OyLAIJRiLEcycyTqz1BYg5vIvSJvKKUSuGG4psb14nJHPuVyRtr6NjUTKaUmdX1T9J4Dr1F1pJpvZSQ4Fiu8RmtuNf08UxClxXBYmX+U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=p6r5D6bI; arc=none smtp.client-ip=209.85.208.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1712065390; c=relaxed/simple;
+	bh=lHAIMJbRpkpZnFYxuHbp5mo0756mPGZYrjOw83NTj+A=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=cQ60SsWpjBgTn8BakXs0twLpTACK5ibvpuL7m/Q0OatwSuIlO0+uvs4hMNRQl/WjUVZ9uFId4pJmtVNp6tcWBmvK8smaSlXIuoXoIaCRxuhkIye2OWejjKueGee6ep1B8NxWUYkdhNF4xfAySniHr4BSKolXOxZUW0y93cgMIYE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bsmWv/1V; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="p6r5D6bI"
-Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-56bde8ea904so62867a12.0
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Apr 2024 06:42:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1712065375; x=1712670175; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=i+b1uHVl9rRn+1rrSUi2nuadkeRDlrk+KQBy0RwN1AE=;
-        b=p6r5D6bIPmyLErQhE/9qVAWKOrKo7F9mgPQd18uZsLU/rklwA8TZ1JcU6TbJYkhA6D
-         anim8c7fFnqS5VN9H+naHjjhPPUkwi2nDVM23ljMRWQXqyKOOMGWjmYbV8w2u0GnO09k
-         svVPkq7hw+dIiuVAjKWNB91mQnuucYShfBI/paGHyFtGlaq4sUZ86pPiXRKYF2nFAJod
-         aBcqa7jvkE1+6qCQnHUq7i4kEOGT9KMq8nN5xR0gcBgASH/r2Vu3dTuuQmbiOL6x4luT
-         VBnpD+/4rQT+XH5+VEuLaBZttcxlTNQCJAmZtqYR1EAGunzQ8t821ByZrBxWV6TaoQWz
-         nTFA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712065375; x=1712670175;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=i+b1uHVl9rRn+1rrSUi2nuadkeRDlrk+KQBy0RwN1AE=;
-        b=F98UD5czW/yGTDufyftjJPcAhMct9XaYPMdxWmREhj/OpeNl2buULaZmYlQYzTgEte
-         HTF1/W1AkNI1N/k4ZHdAGkU6+C+wmEeZLM8xTYWFgMxmCF017oDQmh857amMqdIRopiL
-         ao86YJiGF+I3n8H1oMV3OWREd+M64ZfKPlsugc6P8jceyMjH75Ot/hjEqYLJ6cMravSD
-         K8YADR6JIlBUqhiChpTwuJ05IY+nwVqAb6VU0jYfSym2xZToDONEpjx2u+P7URk2jdXJ
-         LvwWeJcumWPybWA8g0MRgolrtVUvMjIPoFmuse7Ov/OEDL7g8/LJYS54bgvTB/t0JqAN
-         WidA==
-X-Forwarded-Encrypted: i=1; AJvYcCV7pHsAnxjkt6AGWQbbiotXTyPNk8I7eoLjZ2+aIVPr56MoiUZ/OaSpsR4v3xKi8GkJGoV+crOl31vIaEnVtb+F+A9N0VEddba2yMu9
-X-Gm-Message-State: AOJu0YwTXHwqziNf8LrdgsbZF+nP++y7w8w/zinVJ4RKb1+474+bpmp5
-	Rdpxjg12c8SO9Z4eiPxv+pl0oo7NoJjC5ggJxgzJNOoDLL6/ZKD+Cn2C75tJPq3oRXcvOndkZkg
-	3IPNY/G6MuldlfHAeU59jNgy3qnWhrRMWJGVR
-X-Google-Smtp-Source: AGHT+IGhJs/xxLuIQ5mlNdSVPp6/sP0TMNItnsrSUwbE9ucDH0CPqmo3gxOVreWdtd51AqX7mTFBgMz53LdQb8hx9z4=
-X-Received: by 2002:aa7:c752:0:b0:56c:522f:6799 with SMTP id
- c18-20020aa7c752000000b0056c522f6799mr552042eds.5.1712065374969; Tue, 02 Apr
- 2024 06:42:54 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bsmWv/1V"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D64C7C433C7;
+	Tue,  2 Apr 2024 13:43:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1712065388;
+	bh=lHAIMJbRpkpZnFYxuHbp5mo0756mPGZYrjOw83NTj+A=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=bsmWv/1V++OheJjcDWeNNUReX6C0aCmibGVpEJA9U5yN6WoRvBC6oL1On5ITORUsx
+	 1Un5hVt/w7qqraTdyo69oy8Elv+a5KIX7+4AD3S2dZdMqpgyryEYXcnISg84V0iG/S
+	 CFApnSqsDWE/TSqcKIEXlShoTNNOCOU8kF3KvMIUNZCgwaVVHuLX7DvQZ4ZihKO4pl
+	 tJX14xWWz2wJKDJIkOndvzGJIlJFA9IEKosWUYXxnLZVCL6KgnG06nOAPdqYBsuZU/
+	 6f+gKeWIP6G4iashmZ+JTLy56P6mwP9/vqq0L5LmcsyraEJ5AqyVUPkhF3rn7OgzhQ
+	 7dfe7s3umVdYg==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
+	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.95)
+	(envelope-from <maz@kernel.org>)
+	id 1rrePq-000jmk-HR;
+	Tue, 02 Apr 2024 14:43:06 +0100
+Date: Tue, 02 Apr 2024 14:43:06 +0100
+Message-ID: <86il0zubh1.wl-maz@kernel.org>
+From: Marc Zyngier <maz@kernel.org>
+To: Tangnianyao <tangnianyao@huawei.com>
+Cc: <tglx@linutronix.de>,
+	<linux-arm-kernel@lists.infradead.org>,
+	<linux-kernel@vger.kernel.org>,
+	<guoyang2@huawei.com>,
+	<wangwudi@hisilicon.com>
+Subject: Re: [PATCH] irqchip/gic-v3-its: Don't need VSYNC if VMAPP with {V, Alloc}=={0, x}
+In-Reply-To: <8532b19b-361e-2234-92db-83f4d56bae19@huawei.com>
+References: <20240402114147.3788881-1-tangnianyao@huawei.com>
+	<86jzlgt014.wl-maz@kernel.org>
+	<8532b19b-361e-2234-92db-83f4d56bae19@huawei.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/29.2
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20240306111157.29327-1-petr@tesarici.cz> <20240311182516.1e2eebd8@meshulam.tesarici.cz>
- <CANn89iKQpSaF5KG5=dT_o=WBeZtCiLcN768eUdYvUew-dLbKaA@mail.gmail.com>
- <20240311192118.31cfc1fb@meshulam.tesarici.cz> <764f2b10-9791-4861-9bef-7160fdb8f3ae@leemhuis.info>
- <72e39571-7122-4f6a-9252-83e663e4b703@leemhuis.info>
-In-Reply-To: <72e39571-7122-4f6a-9252-83e663e4b703@leemhuis.info>
-From: Eric Dumazet <edumazet@google.com>
-Date: Tue, 2 Apr 2024 15:42:44 +0200
-Message-ID: <CANn89iKfMTGyyMB-x74J5bgzhM1RxSvuNhvXyWWv4DO8MZakSQ@mail.gmail.com>
-Subject: Re: [PATCH 1/1] u64_stats: fix u64_stats_init() for lockdep when used
- repeatedly in one file
-To: Linux regressions mailing list <regressions@lists.linux.dev>
-Cc: =?UTF-8?B?UGV0ciBUZXNhxZnDrWs=?= <petr@tesarici.cz>, 
-	"David S. Miller" <davem@davemloft.net>, open list <linux-kernel@vger.kernel.org>, stable@kernel.org, 
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, netdev <netdev@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: tangnianyao@huawei.com, tglx@linutronix.de, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, guoyang2@huawei.com, wangwudi@hisilicon.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
-On Tue, Apr 2, 2024 at 3:40=E2=80=AFPM Linux regression tracking (Thorsten
-Leemhuis) <regressions@leemhuis.info> wrote:
->
-> Hi. Top-posting for once, to make this easily accessible to everyone.
->
-> Hmmm, looks like Petr's patch for a (minor) 6.8 regression didn't make
-> any progress in the past two weeks.
->
-> Does nobody care? Did nobody merge it because no tree feels really
-> appropriate? Or am I missing something obvious and making a fool out of
-> myself by asking these questions? :D
+On Tue, 02 Apr 2024 14:32:40 +0100,
+Tangnianyao <tangnianyao@huawei.com> wrote:
+> 
+> 
+> 
+> On 4/2/2024 20:35, Marc Zyngier wrote:
+> > On Tue, 02 Apr 2024 12:41:47 +0100,
+> > t00849498 <tangnianyao@huawei.com> wrote:
+> >> From GIC spec, a VMAPP with {V, Alloc}=={0, x} is self-synchronizing,
+> > It'd be nice to quote the part of the spec (5.3.19).
+> yes, that's quote from GIC spec.
+> >> This means the ITS command queue does not show the command as
+> >> consumed until all of its effects are completed. A VSYNC with unmapped
+> >> vpeid is not needed.
+> >>
+> >> Signed-off-by: t00849498 <tangnianyao@huawei.com>
+> > Previous contributions with the same email address had the name
+> > "Nianyao Tang" associated with it. Was it wrong in the past? Or is the
+> > above wrong?
+> Sorry, the above name is wrong, should be "Nianyao Tang".
+> >
+> >> ---
+> >>  drivers/irqchip/irq-gic-v3-its.c | 4 ++++
+> >>  1 file changed, 4 insertions(+)
+> >>
+> >> diff --git a/drivers/irqchip/irq-gic-v3-its.c b/drivers/irqchip/irq-gic-v3-its.c
+> >> index fca888b36680..a0ca5dcbb245 100644
+> >> --- a/drivers/irqchip/irq-gic-v3-its.c
+> >> +++ b/drivers/irqchip/irq-gic-v3-its.c
+> >> @@ -789,6 +789,7 @@ static struct its_vpe *its_build_vmapp_cmd(struct its_node *its,
+> >>  	unsigned long vpt_addr, vconf_addr;
+> >>  	u64 target;
+> >>  	bool alloc;
+> >> +	bool unmap_v4_1 = !desc->its_vmapp_cmd.valid && is_v4_1(its);
+> >>
+> >>  	its_encode_cmd(cmd, GITS_CMD_VMAPP);
+> >>  	its_encode_vpeid(cmd, desc->its_vmapp_cmd.vpe->vpe_id);
+> >> @@ -832,6 +833,9 @@ static struct its_vpe *its_build_vmapp_cmd(struct its_node *its,
+> >>  out:
+> >>  	its_fixup_cmd(cmd);
+> >>  
+> >> +	if (unmap_v4_1)
+> >> +		return NULL;
+> >> +
+> >>  	return valid_vpe(its, desc->its_vmapp_cmd.vpe);
+> >>  }
+> >>  
+> > This is a bit ugly. We already have a whole block dedicated to
+> > handling VMAPP with V=0 and GICv4.1, and it'd be more readable to keep
+> > all that code together. Something like the untested patch below.
+> 
+> Thank you for quick fix, it would be great to remove this VSYNC. ITS handling VSYNC unmap
+> vpeid may waste some time, trigger exception and needed to be
+> handled.
 
-It happens, please resend the patch.
+Do you actually see an exception being delivered from this?
+
+In any case, feel free to respin the patch after having tested this
+diff, with the commit message fixed and a Fixes: tag attached to it.
+
+Thanks,
+
+	M.
+
+-- 
+Without deviation from the norm, progress is not possible.
