@@ -1,99 +1,112 @@
-Received: from mail.hugovil.com (mail.hugovil.com [162.243.120.170])
+Received: from finn.localdomain (finn.gateworks.com [108.161.129.64])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7079D15AAAA;
-	Tue,  2 Apr 2024 19:51:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.243.120.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 687F415AAAA;
+	Tue,  2 Apr 2024 19:52:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=108.161.129.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712087480; cv=none; b=ldMFyRj6ye+XR1Zs3OuTtRcIwiJOCZ72CezufrGTiGLfeWQyaVEuPqOQ4FD20tKBwOOpQfYRFMp8/Nk1E7kjG7/9yzYYGgrWBj9EnkIC28MiqW1CdptqzkeTECk3E/t/+1TkKYmVISxJuTj2pBvn7XH7LMZadhnni7qzHqb0gdQ=
+	t=1712087538; cv=none; b=azoT5H8sA1Rq7l8C3Nt6auw4IP8tvoGWrKg2e335hEzT1Uz1XpWGrLVlVwAK17Qqfn4Q+QiG6jb7ak4NlAVCALE9V0DstB8LXIc9PXxFCbepCYnm2Vetalpi+gviK7cjST2wViponlA3dxjyqsJII2m3IlRf5pL2CzvlasAps2U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712087480; c=relaxed/simple;
-	bh=bqXSoYZYpoDOlviSuyY8vu24PrI+70YMdminhVwEYNs=;
-	h=Date:From:To:Cc:Message-Id:In-Reply-To:References:Mime-Version:
-	 Content-Type:Subject; b=Ri9ljOsXjYHNw/E97BPVrpj3qMYwcyYCUyDIffA4byI5w+z/ECFYkyZq1bejT6ZHVy+zKOoVo81pqvfPh7jBHmwd1v5WWBLuj3f/NGCKnGYVd/fPHGn8dy7umcmfnoT9CZoO7pVtVDkClA9b4yLxFqGsdfqb0XmS4a9qrPMRXc8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hugovil.com; spf=pass smtp.mailfrom=hugovil.com; dkim=pass (1024-bit key) header.d=hugovil.com header.i=@hugovil.com header.b=eB4ebqY7; arc=none smtp.client-ip=162.243.120.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hugovil.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hugovil.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=hugovil.com header.i=@hugovil.com header.b="eB4ebqY7"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hugovil.com
-	; s=x; h=Subject:Content-Transfer-Encoding:Mime-Version:Message-Id:Cc:To:From
-	:Date:subject:date:message-id:reply-to;
-	bh=9DaXjULJHLZpzhqzyNkkPkEBR6YCb7iZnUxB3ewIuiM=; b=eB4ebqY77eAy5B+wYMKAXdHm8S
-	/9LoTwYSrV1tP6OlfY4l436g/XkgNzCgeSFPaTfiTtIz64G5L622/trtFRHJpineY7/EDDf47ngBN
-	Va2dUe8AL22iFq5gZE+umzBylvdE20S4I8Wxa9mgwQxXYPZqwupwyXed9yeX8sT8eow0=;
-Received: from modemcable168.174-80-70.mc.videotron.ca ([70.80.174.168]:50794 helo=pettiford)
-	by mail.hugovil.com with esmtpa (Exim 4.92)
-	(envelope-from <hugo@hugovil.com>)
-	id 1rrkA7-0001Hn-JC; Tue, 02 Apr 2024 15:51:15 -0400
-Date: Tue, 2 Apr 2024 15:51:15 -0400
-From: Hugo Villeneuve <hugo@hugovil.com>
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: gregkh@linuxfoundation.org, jirislaby@kernel.org,
- linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org, Hugo Villeneuve
- <hvilleneuve@dimonoff.com>
-Message-Id: <20240402155115.7aa760a4b7a107003e2b411c@hugovil.com>
-In-Reply-To: <CAHp75VedAiB_wSaq+oaNriC3HfLC=ft21O=ZYW_wCARPS7v3QQ@mail.gmail.com>
-References: <20240402174353.256627-1-hugo@hugovil.com>
-	<20240402174353.256627-5-hugo@hugovil.com>
-	<CAHp75VedAiB_wSaq+oaNriC3HfLC=ft21O=ZYW_wCARPS7v3QQ@mail.gmail.com>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1712087538; c=relaxed/simple;
+	bh=zVrwAjUcGsk/Gvd0IQbWlkXCkBrhd705XLqPbvC6bLI=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=W7Et+TADx9XYY3jKrTXrVgFyI796Qip4wrJKcVIygXImrQwzpvAMKOKthDs9lCvD2esZ5MngTqheNXE1sGsmCBpvkwUIZgUsy8Y309qOnaPYjRYdf8mgNPtSOg3vfUfsj6RuKk6eguzD9Oa8W3MznQzURZv9pJrLtF/Br9mne+Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gateworks.com; spf=pass smtp.mailfrom=gateworks.com; arc=none smtp.client-ip=108.161.129.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gateworks.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gateworks.com
+Received: from 068-189-091-139.biz.spectrum.com ([68.189.91.139] helo=tharvey.pdc.gateworks.com)
+	by finn.localdomain with esmtp (Exim 4.95)
+	(envelope-from <tharvey@gateworks.com>)
+	id 1rrjtR-000HwR-Jr;
+	Tue, 02 Apr 2024 19:34:01 +0000
+From: Tim Harvey <tharvey@gateworks.com>
+To: Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	devicetree@vger.kernel.org,
+	imx@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Cc: Tim Harvey <tharvey@gateworks.com>,
+	Lukas Wunner <lukas@wunner.de>
+Subject: [PATCH] arm64: dts: imx8m*-venice-gw7: Fix TPM schema violations
+Date: Tue,  2 Apr 2024 12:33:55 -0700
+Message-Id: <20240402193355.2333597-1-tharvey@gateworks.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 70.80.174.168
-X-SA-Exim-Mail-From: hugo@hugovil.com
-X-Spam-Level: 
-X-Spam-Report: 
-	* -1.0 ALL_TRUSTED Passed through trusted hosts only via SMTP
-	* -0.4 NICE_REPLY_A Looks like a legit reply (A)
-Subject: Re: [PATCH v3 4/5] serial: sc16is7xx: split into core and I2C/SPI
- parts (sc16is7xx_lines)
-X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
-X-SA-Exim-Scanned: Yes (on mail.hugovil.com)
 
-On Tue, 2 Apr 2024 22:28:25 +0300
-Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
+Since commit 26c9d152ebf3 ("dt-bindings: tpm: Consolidate TCG TIS
+bindings"), several issues are reported by "make dtbs_check" for arm64
+devicetrees:
 
-> On Tue, Apr 2, 2024 at 8:45 PM Hugo Villeneuve <hugo@hugovil.com> wrote:
-> >
-> > From: Hugo Villeneuve <hvilleneuve@dimonoff.com>
-> >
-> > Before, sc16is7xx_lines was checked for a free (zero) bit first, and then
-> > later it was set only if UART port registration succeeded. Now that
-> > sc16is7xx_lines is shared for the I2C and SPI drivers, there is a
-> > possibility that the two drivers can simultaneously try to reserve the same
-> > line bit at the same time.
-> >
-> > To prevent this, make sure line allocation is reserved atomically, and use
-> > a new variable to hold the status of UART port regisration.
-> 
-> registration
+The compatible property needs to contain the chip's name in addition to
+the generic "tcg,tpm_tis-spi".
 
-Hi Andy,
-will fix for V4.
+tpm@1: compatible: ['tcg,tpm_tis-spi'] is too short
+	from schema $id:
+http://devicetree.org/schemas/tpm/tcg,tpm_tis-spi.yaml#
 
-> 
-> > Now that we no longer need to search if a bit is set, it is now possible
-> > to simplify sc16is7xx_lines allocation by using the IDA framework.
-> 
-> ...
-> 
-> > -static DECLARE_BITMAP(sc16is7xx_lines, SC16IS7XX_MAX_DEVS);
-> > +static DEFINE_IDA(sc16is7xx_lines);
-> 
-> Don't we need to replace bitmap.h with idr.h with this change in place?
+Fix these schema violations.
 
-Yes, but I will replace bitops.h with idr.h in V4 (bitmap.h was not
-included).
+Gateworks Venice uses an Atmel ATTPM20P:
+https://trac.gateworks.com/wiki/tpm
 
-While at it, I will include an additional patch to replace inlude of 
-<uapi/linux/sched/types.h> with <linux/sched.h>.
+Cc: Lukas Wunner <lukas@wunner.de>
+Signed-off-by: Tim Harvey <tharvey@gateworks.com>
+---
+ arch/arm64/boot/dts/freescale/imx8mm-venice-gw71xx.dtsi | 2 +-
+ arch/arm64/boot/dts/freescale/imx8mm-venice-gw7901.dts  | 2 +-
+ arch/arm64/boot/dts/freescale/imx8mp-venice-gw71xx.dtsi | 2 +-
+ 3 files changed, 3 insertions(+), 3 deletions(-)
 
-Thank you,
-Hugo.
+diff --git a/arch/arm64/boot/dts/freescale/imx8mm-venice-gw71xx.dtsi b/arch/arm64/boot/dts/freescale/imx8mm-venice-gw71xx.dtsi
+index 41c966147b94..429be2bab8a2 100644
+--- a/arch/arm64/boot/dts/freescale/imx8mm-venice-gw71xx.dtsi
++++ b/arch/arm64/boot/dts/freescale/imx8mm-venice-gw71xx.dtsi
+@@ -57,7 +57,7 @@ &ecspi2 {
+ 	status = "okay";
+ 
+ 	tpm@1 {
+-		compatible = "tcg,tpm_tis-spi";
++		compatible = "atmel,attpm20p", "tcg,tpm_tis-spi";
+ 		reg = <0x1>;
+ 		spi-max-frequency = <36000000>;
+ 	};
+diff --git a/arch/arm64/boot/dts/freescale/imx8mm-venice-gw7901.dts b/arch/arm64/boot/dts/freescale/imx8mm-venice-gw7901.dts
+index 5e2cbaf27e0f..35ae0faa815b 100644
+--- a/arch/arm64/boot/dts/freescale/imx8mm-venice-gw7901.dts
++++ b/arch/arm64/boot/dts/freescale/imx8mm-venice-gw7901.dts
+@@ -297,7 +297,7 @@ flash@0 {
+ 	};
+ 
+ 	tpm@1 {
+-		compatible = "tcg,tpm_tis-spi";
++		compatible = "atmel,attpm20p", "tcg,tpm_tis-spi";
+ 		reg = <0x1>;
+ 		spi-max-frequency = <36000000>;
+ 	};
+diff --git a/arch/arm64/boot/dts/freescale/imx8mp-venice-gw71xx.dtsi b/arch/arm64/boot/dts/freescale/imx8mp-venice-gw71xx.dtsi
+index e7bf032265e0..2f740d74707b 100644
+--- a/arch/arm64/boot/dts/freescale/imx8mp-venice-gw71xx.dtsi
++++ b/arch/arm64/boot/dts/freescale/imx8mp-venice-gw71xx.dtsi
+@@ -68,7 +68,7 @@ &ecspi2 {
+ 	status = "okay";
+ 
+ 	tpm@1 {
+-		compatible = "tcg,tpm_tis-spi";
++		compatible = "atmel,attpm20p", "tcg,tpm_tis-spi";
+ 		reg = <0x1>;
+ 		spi-max-frequency = <36000000>;
+ 	};
+-- 
+2.25.1
+
