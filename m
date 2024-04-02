@@ -1,53 +1,62 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0126016192B
-	for <linux-kernel@vger.kernel.org>; Tue,  2 Apr 2024 22:11:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8791916A1E0;
+	Tue,  2 Apr 2024 22:11:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712095911; cv=none; b=bg9a9Y+ipac5XQw8Bf4IzByF47q+zzP7dIEdJz6/evvsCvX7PaqZDnXh6hGOeW7p8MkXqzSbL8jCc6g+O3Z66k6q7vBe6s4yaOIYTSiWHTQHPQ02f0GLep0mBTaLCb396xTSQeqwpFbn5cmV62/V0nBxD+/WmhSdyGbihDuCz68=
+	t=1712095913; cv=none; b=ufCH7A+SAi81/QoI9XfXkwXq+mKWhT1W0JL4hH6AnZ3NDHP4GkNMX18YPN5sOj/P/kE/x//zhdQgrtDtQDYIg4iRrpTzTJDTe+QSDpUMTGbmsC+81QNjpokRSpg0QnqahWaN3nTvdvgKZwKzg82y3ISKDrtEboeWT7FK6/vcpxk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712095911; c=relaxed/simple;
-	bh=PgiKWKAgmNvz35ONRrpILBxwpuOVIu85979RvgYSqls=;
+	s=arc-20240116; t=1712095913; c=relaxed/simple;
+	bh=j2Ps0sUvXa5FFGYYiI49hHUu4c3C8/680t0hKerAtnE=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=YrrYFUJGZ/inz5QAHYqGNW2ILfJMGmyaBONDUPOl4cJF1Fga/iEQNUghHdKPlmOUmE51SLhJPpg0TmiWnmendCWwB1VF+J3rqSYdme7GHkx5vIc9/awrQ3jqpwUX0Q9Yz7IUSu1LKoFpi/pZ8QAkow1QnZ+xoW/7KOvhVzGhCPA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=RiI+QERh; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Ml+zxwoF; arc=none smtp.client-ip=193.142.43.55
+	 MIME-Version; b=lxD9CEzr2fW3C3irAi7nkVfYJCApzIOoD2EL4x4nKfL2hkovSqTmiLrxum6avcbM2XPc/MH5YrGrtV2dmp/PE8u5Zq7Huge5j0ezS2hxGP0VloA6ftNZBVJXRcpBcMtNNQIc+zCpTfWUOCe88OWYxuF72ykgOvST3tJLt7snURI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=dO5zg+CI; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=tJQ7G1rI; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="RiI+QERh";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Ml+zxwoF"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="dO5zg+CI";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="tJQ7G1rI"
 From: John Ogness <john.ogness@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1712095907;
+	s=2020; t=1712095909;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=7YYD1HrU/gCuCLj4UZrPD3LcgwMCesrdxGaUJGV8It8=;
-	b=RiI+QERhnKuEHzcV0IYrB14l/EJjriZYlDOvZdH7oBD8k10U0UJ4b37jgxnzQIYvrqk2zN
-	n1/V8JLxO1qul49bFGz9ZdXuDQg3kwlbJSENhm2+ALd4dFIRvjmsmtbgsDiSdT3FQk/2Za
-	fPQ50S7SLsygepBhZCyLRvn/8Skm6wwMDFpU+33NApkOn3tA0bjhOl3ZYiu65zxqLeOE2u
-	f/ix5JOxXW5OOv/JUgKtgII5sNdEzl3Z0KuAJlecHFib4U1IFAuR4eIJOVY/esDG/OJYrY
-	NolEwmVPoK2pTJwrGgUUgwQ/X26VxA781x6+jL7TJFqWaxc5rOOzEvh3aVqzuA==
+	bh=Oz8b+gVj+4FTYt+4Ek3fAB/5aQD+Yo6GKug3uRyPfAM=;
+	b=dO5zg+CIEKrGHq6Dupt6+7LhUYJm8SL8mpx+fM39W+ss2I4gf69o4rlCBRIb1DlGbLdVt7
+	zRuxtuyTf7992BY+eL2tf6+sihsQOD3mGXtFtS7TtRQu1Waz5+MAgIZKSvqSjVWz93j44M
+	8x+4q2/6NhaJ8z4fw0r9JlQVgFea5lW0E3t4nht/eirqYEYziaD2uxF//KlKBoWZKiz5Eh
+	rYq0dkzhDtx4yoTwZj57jOp/mlOHqDQT1NPhY+CDRf6n+hzUec95YRcOGbFj8UlAbv3Vqj
+	dt7S04iw10YX/sIekI3Z7fmoCvJHrVXrOkl6+vgY5XF2eKmMy//bxFTnf9eXvQ==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1712095907;
+	s=2020e; t=1712095909;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=7YYD1HrU/gCuCLj4UZrPD3LcgwMCesrdxGaUJGV8It8=;
-	b=Ml+zxwoFpCrwkCl8czM0t6TAxS8PDFYb0ZRJIrJevbkB08tTkcIwxwc3e2OW2Ukr7WKdRH
-	BsrOidIyP1/BgIBQ==
+	bh=Oz8b+gVj+4FTYt+4Ek3fAB/5aQD+Yo6GKug3uRyPfAM=;
+	b=tJQ7G1rIEdNc01IoZPTdXpUmpC/eTVUsUntyOQgUHvlfBkOFe1UroCGIagflpVGvGuEmWR
+	JijfC4O3+oaJ4VBA==
 To: Petr Mladek <pmladek@suse.com>
 Cc: Sergey Senozhatsky <senozhatsky@chromium.org>,
 	Steven Rostedt <rostedt@goodmis.org>,
 	Thomas Gleixner <tglx@linutronix.de>,
 	linux-kernel@vger.kernel.org,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH printk v4 23/27] printk: nbcon: Implement emergency sections
-Date: Wed,  3 Apr 2024 00:17:25 +0206
-Message-Id: <20240402221129.2613843-24-john.ogness@linutronix.de>
+	"Paul E. McKenney" <paulmck@kernel.org>,
+	Frederic Weisbecker <frederic@kernel.org>,
+	Neeraj Upadhyay <quic_neeraju@quicinc.com>,
+	Joel Fernandes <joel@joelfernandes.org>,
+	Josh Triplett <josh@joshtriplett.org>,
+	Boqun Feng <boqun.feng@gmail.com>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Lai Jiangshan <jiangshanlai@gmail.com>,
+	Zqiang <qiang.zhang1211@gmail.com>,
+	rcu@vger.kernel.org
+Subject: [PATCH printk v4 26/27] rcu: Mark emergency section in rcu stalls
+Date: Wed,  3 Apr 2024 00:17:28 +0206
+Message-Id: <20240402221129.2613843-27-john.ogness@linutronix.de>
 In-Reply-To: <20240402221129.2613843-1-john.ogness@linutronix.de>
 References: <20240402221129.2613843-1-john.ogness@linutronix.de>
 Precedence: bulk
@@ -58,209 +67,100 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Thomas Gleixner <tglx@linutronix.de>
+Mark emergency sections wherever multiple lines of
+rcu stall information are generated. In an emergency
+section the CPU will not perform console output for the
+printk() calls. Instead, a flushing of the console
+output is triggered when exiting the emergency section.
+This allows the full message block to be stored as
+quickly as possible in the ringbuffer.
 
-In emergency situations (something has gone wrong but the
-system continues to operate), usually important information
-(such as a backtrace) is generated via printk(). Each
-individual printk record has little meaning. It is the
-collection of printk messages that is most often needed by
-developers and users.
-
-In order to help ensure that the collection of printk messages
-in an emergency situation are all stored to the ringbuffer as
-quickly as possible, disable console output for that CPU while
-it is in the emergency situation. The consoles need to be
-flushed when exiting the emergency situation.
-
-Add per-CPU emergency nesting tracking because an emergency
-can arise while in an emergency situation.
-
-Add functions to mark the beginning and end of emergency
-sections where the urgent messages are generated.
-
-Do not print if the current CPU is in an emergency state.
-
-When exiting all emergency nesting, flush nbcon consoles
-directly using their atomic callback. Legacy consoles are
-triggered for flushing via irq_work because it is not known
-if the context was safe for a trylock on the console lock.
-
-Note that the emergency state is not system-wide. While one CPU
-is in an emergency state, another CPU may continue to print
-console messages.
-
-Co-developed-by: John Ogness <john.ogness@linutronix.de>
 Signed-off-by: John Ogness <john.ogness@linutronix.de>
-Signed-off-by: Thomas Gleixner (Intel) <tglx@linutronix.de>
 ---
- include/linux/console.h |  4 ++
- kernel/printk/nbcon.c   | 83 +++++++++++++++++++++++++++++++++++++++++
- kernel/printk/printk.c  | 13 ++++++-
- 3 files changed, 98 insertions(+), 2 deletions(-)
+ kernel/rcu/tree_exp.h   | 7 +++++++
+ kernel/rcu/tree_stall.h | 9 +++++++++
+ 2 files changed, 16 insertions(+)
 
-diff --git a/include/linux/console.h b/include/linux/console.h
-index 5f1758891aec..7712e4145164 100644
---- a/include/linux/console.h
-+++ b/include/linux/console.h
-@@ -559,10 +559,14 @@ static inline bool console_is_registered(const struct console *con)
- 	hlist_for_each_entry(con, &console_list, node)
- 
- #ifdef CONFIG_PRINTK
-+extern void nbcon_cpu_emergency_enter(void);
-+extern void nbcon_cpu_emergency_exit(void);
- extern bool nbcon_can_proceed(struct nbcon_write_context *wctxt);
- extern bool nbcon_enter_unsafe(struct nbcon_write_context *wctxt);
- extern bool nbcon_exit_unsafe(struct nbcon_write_context *wctxt);
- #else
-+static inline void nbcon_cpu_emergency_enter(void) { }
-+static inline void nbcon_cpu_emergency_exit(void) { }
- static inline bool nbcon_can_proceed(struct nbcon_write_context *wctxt) { return false; }
- static inline bool nbcon_enter_unsafe(struct nbcon_write_context *wctxt) { return false; }
- static inline bool nbcon_exit_unsafe(struct nbcon_write_context *wctxt) { return false; }
-diff --git a/kernel/printk/nbcon.c b/kernel/printk/nbcon.c
-index 47f39402a22b..4c852c2e8d89 100644
---- a/kernel/printk/nbcon.c
-+++ b/kernel/printk/nbcon.c
-@@ -936,6 +936,29 @@ static bool nbcon_emit_next_record(struct nbcon_write_context *wctxt)
- 	return nbcon_context_exit_unsafe(ctxt);
- }
- 
-+/* Track the nbcon emergency nesting per CPU. */
-+static DEFINE_PER_CPU(unsigned int, nbcon_pcpu_emergency_nesting);
-+static unsigned int early_nbcon_pcpu_emergency_nesting __initdata;
-+
-+/**
-+ * nbcon_get_cpu_emergency_nesting - Get the per CPU emergency nesting pointer
-+ *
-+ * Return:	Either a pointer to the per CPU emergency nesting counter of
-+ *		the current CPU or to the init data during early boot.
-+ */
-+static __ref unsigned int *nbcon_get_cpu_emergency_nesting(void)
-+{
-+	/*
-+	 * The value of __printk_percpu_data_ready gets set in normal
-+	 * context and before SMP initialization. As a result it could
-+	 * never change while inside an nbcon emergency section.
-+	 */
-+	if (!printk_percpu_data_ready())
-+		return &early_nbcon_pcpu_emergency_nesting;
-+
-+	return this_cpu_ptr(&nbcon_pcpu_emergency_nesting);
-+}
-+
- /**
-  * nbcon_atomic_emit_one - Print one record for an nbcon console using the
-  *				write_atomic() callback
-@@ -977,9 +1000,15 @@ static bool nbcon_atomic_emit_one(struct nbcon_write_context *wctxt)
+diff --git a/kernel/rcu/tree_exp.h b/kernel/rcu/tree_exp.h
+index 6b83537480b1..0a135e94da08 100644
+--- a/kernel/rcu/tree_exp.h
++++ b/kernel/rcu/tree_exp.h
+@@ -7,6 +7,7 @@
+  * Authors: Paul E. McKenney <paulmck@linux.ibm.com>
   */
- enum nbcon_prio nbcon_get_default_prio(void)
- {
-+	unsigned int *cpu_emergency_nesting;
-+
- 	if (this_cpu_in_panic())
- 		return NBCON_PRIO_PANIC;
  
-+	cpu_emergency_nesting = nbcon_get_cpu_emergency_nesting();
-+	if (*cpu_emergency_nesting)
-+		return NBCON_PRIO_EMERGENCY;
-+
- 	return NBCON_PRIO_NORMAL;
- }
++#include <linux/console.h>
+ #include <linux/lockdep.h>
  
-@@ -1146,6 +1175,60 @@ void nbcon_atomic_flush_unsafe(void)
- 	__nbcon_atomic_flush_pending(prb_next_reserve_seq(prb), true);
- }
- 
-+/**
-+ * nbcon_cpu_emergency_enter - Enter an emergency section where printk()
-+ *	messages for that CPU are only stored
-+ *
-+ * Upon exiting the emergency section, all stored messages are flushed.
-+ *
-+ * Context:	Any context. Disables preemption.
-+ *
-+ * When within an emergency section, no printing occurs on that CPU. This
-+ * is to allow all emergency messages to be dumped into the ringbuffer before
-+ * flushing the ringbuffer. The actual printing occurs when exiting the
-+ * outermost emergency section.
-+ */
-+void nbcon_cpu_emergency_enter(void)
-+{
-+	unsigned int *cpu_emergency_nesting;
+ static void rcu_exp_handler(void *unused);
+@@ -571,6 +572,9 @@ static void synchronize_rcu_expedited_wait(void)
+ 			return;
+ 		if (rcu_stall_is_suppressed())
+ 			continue;
 +
-+	preempt_disable();
++		nbcon_cpu_emergency_enter();
 +
-+	cpu_emergency_nesting = nbcon_get_cpu_emergency_nesting();
-+	(*cpu_emergency_nesting)++;
-+}
+ 		j = jiffies;
+ 		rcu_stall_notifier_call_chain(RCU_STALL_NOTIFY_EXP, (void *)(j - jiffies_start));
+ 		trace_rcu_stall_warning(rcu_state.name, TPS("ExpeditedStall"));
+@@ -624,6 +628,9 @@ static void synchronize_rcu_expedited_wait(void)
+ 			rcu_exp_print_detail_task_stall_rnp(rnp);
+ 		}
+ 		jiffies_stall = 3 * rcu_exp_jiffies_till_stall_check() + 3;
 +
-+/**
-+ * nbcon_cpu_emergency_exit - Exit an emergency section and flush the
-+ *	stored messages
-+ *
-+ * Flushing only occurs when exiting all nesting for the CPU.
-+ *
-+ * Context:	Any context. Enables preemption.
-+ */
-+void nbcon_cpu_emergency_exit(void)
-+{
-+	unsigned int *cpu_emergency_nesting;
-+	bool do_trigger_flush = false;
++		nbcon_cpu_emergency_exit();
 +
-+	cpu_emergency_nesting = nbcon_get_cpu_emergency_nesting();
-+
-+	WARN_ON_ONCE(*cpu_emergency_nesting == 0);
-+
-+	if (*cpu_emergency_nesting == 1) {
-+		nbcon_atomic_flush_pending();
-+		do_trigger_flush = true;
-+	}
-+
-+	/* Undo the nesting count of nbcon_cpu_emergency_enter(). */
-+	(*cpu_emergency_nesting)--;
-+
-+	preempt_enable();
-+
-+	if (do_trigger_flush)
-+		printk_trigger_flush();
-+}
-+
- /**
-  * nbcon_alloc - Allocate buffers needed by the nbcon console
-  * @con:	Console to allocate buffers for
-diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c
-index e3fd157d7ba3..ab5dade1352d 100644
---- a/kernel/printk/printk.c
-+++ b/kernel/printk/printk.c
-@@ -2412,16 +2412,25 @@ asmlinkage int vprintk_emit(int facility, int level,
- 		 * printing of all remaining records to all consoles so that
- 		 * this context can return as soon as possible. Hopefully
- 		 * another printk() caller will take over the printing.
-+		 *
-+		 * Also, nbcon_get_default_prio() requires migration disabled.
- 		 */
- 		preempt_disable();
-+
- 		/*
- 		 * Try to acquire and then immediately release the console
- 		 * semaphore. The release will print out buffers. With the
- 		 * spinning variant, this context tries to take over the
- 		 * printing from another printing context.
-+		 *
-+		 * Skip it in EMERGENCY priority. The console will be
-+		 * explicitly flushed when exiting the emergency section.
- 		 */
--		if (console_trylock_spinning())
--			console_unlock();
-+		if (nbcon_get_default_prio() != NBCON_PRIO_EMERGENCY) {
-+			if (console_trylock_spinning())
-+				console_unlock();
-+		}
-+
- 		preempt_enable();
+ 		panic_on_rcu_stall();
  	}
+ }
+diff --git a/kernel/rcu/tree_stall.h b/kernel/rcu/tree_stall.h
+index 5d666428546b..f4d73ca20c76 100644
+--- a/kernel/rcu/tree_stall.h
++++ b/kernel/rcu/tree_stall.h
+@@ -7,6 +7,7 @@
+  * Author: Paul E. McKenney <paulmck@linux.ibm.com>
+  */
  
++#include <linux/console.h>
+ #include <linux/kvm_para.h>
+ #include <linux/rcu_notifier.h>
+ 
+@@ -604,6 +605,8 @@ static void print_other_cpu_stall(unsigned long gp_seq, unsigned long gps)
+ 	if (rcu_stall_is_suppressed())
+ 		return;
+ 
++	nbcon_cpu_emergency_enter();
++
+ 	/*
+ 	 * OK, time to rat on our buddy...
+ 	 * See Documentation/RCU/stallwarn.rst for info on how to debug
+@@ -655,6 +658,8 @@ static void print_other_cpu_stall(unsigned long gp_seq, unsigned long gps)
+ 	rcu_check_gp_kthread_expired_fqs_timer();
+ 	rcu_check_gp_kthread_starvation();
+ 
++	nbcon_cpu_emergency_exit();
++
+ 	panic_on_rcu_stall();
+ 
+ 	rcu_force_quiescent_state();  /* Kick them all. */
+@@ -675,6 +680,8 @@ static void print_cpu_stall(unsigned long gps)
+ 	if (rcu_stall_is_suppressed())
+ 		return;
+ 
++	nbcon_cpu_emergency_enter();
++
+ 	/*
+ 	 * OK, time to rat on ourselves...
+ 	 * See Documentation/RCU/stallwarn.rst for info on how to debug
+@@ -703,6 +710,8 @@ static void print_cpu_stall(unsigned long gps)
+ 			   jiffies + 3 * rcu_jiffies_till_stall_check() + 3);
+ 	raw_spin_unlock_irqrestore_rcu_node(rnp, flags);
+ 
++	nbcon_cpu_emergency_exit();
++
+ 	panic_on_rcu_stall();
+ 
+ 	/*
 -- 
 2.39.2
 
