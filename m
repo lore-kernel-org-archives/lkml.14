@@ -1,140 +1,82 @@
-Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C89E15B54B
-	for <linux-kernel@vger.kernel.org>; Tue,  2 Apr 2024 18:50:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF86615B977;
+	Tue,  2 Apr 2024 18:51:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712083857; cv=none; b=IG7sriOtbCSNkPWjkoA7uhAvKk70rGM1taJgnTxDZBbIKKwhqcEhtIM1mY+eWoFiPzy61fLAEqZh65RSHRregj1rYc2Fdo2T7n3Mj1RVQuxL7gWeKJjsvEamNtXpb9Pgv07yE8XFrgnbblwFZKuiJwJk0AXrl4RXF0MYqclRaCA=
+	t=1712083863; cv=none; b=MGElJ4gyrnXUZH7R0RjJQKXofXTZz6Vqa+MOICFAsNV7CcSKRFVW7mXJbH3iuxA0gEe0IXM7AB9wlja+me3ofSVTmKU4m44QTXnE+W+sGDvAEZlWWjZTwbuSUhqRcyIUfACJ+I/CLSJZrT8lzkE5Iov4qnl0f9UaxUlrPC1zZ3o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712083857; c=relaxed/simple;
-	bh=vHE3t0v0uJDbSjef7CvRAdHduwYUH2/WlskUw+Mt/ME=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=jSjkLwllNlGEnYiHHqsxcF0jH81B6JShsl45B+8ArQxHC4ZAC6B1zCQNviFzgRMIO6e5JlJWjvmBySkp9OKxrQJkRxbtcG5YYZH85w8seNQj9ad/iolCrvDSbHay14UA6M8vc9HqrzrdRORRFS+1Y+xTyMGwG9G9N1z5k82GsCQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=blackwall.org; spf=none smtp.mailfrom=blackwall.org; dkim=pass (2048-bit key) header.d=blackwall-org.20230601.gappssmtp.com header.i=@blackwall-org.20230601.gappssmtp.com header.b=xJYhnlJD; arc=none smtp.client-ip=209.85.128.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=blackwall.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=blackwall.org
+	s=arc-20240116; t=1712083863; c=relaxed/simple;
+	bh=LyOcqjehe0C8GdNEtYBxd/yH9A8diXghTfIfxOpO63E=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=h3ISaf5FTTNPZwkjquA0ti4ed53DzR3s/ZVI3VAh+FHnLwI7us8t6pFaF6MrqgO8fUqaULueLarsdwVCc/VgB2q5Weh5nSWtcjwRUKVHqX7krvENpd0L+ueu+iNbLYiU4w0wg5pGaiBLohv4gnknaBoPQBfQ8ze0Q5Qwbmr0WHI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=bdORgrfQ; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=blackwall-org.20230601.gappssmtp.com header.i=@blackwall-org.20230601.gappssmtp.com header.b="xJYhnlJD"
-Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-4161bd0a4ecso7205365e9.1
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Apr 2024 11:50:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=blackwall-org.20230601.gappssmtp.com; s=20230601; t=1712083854; x=1712688654; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=LIEcfz25WWX1hRcC//+GqxXzgFgNZ4EfTxo56dpiUx4=;
-        b=xJYhnlJDeDWcKbQ9VzQGWG0xFWJY6GN0P+fZmF3irpcmVqxQd9lHvbQn+/FTpXPc5f
-         GmQLIuTQfLg7oEyFM/OJwTciw+/0DOQE751QlKexzQ7ueYQOA8Glc/s7+OFChUjE2Zvl
-         CGkOoRIgPkhNnjoJcYRQMkyYjtW6woULPWFa/1nmT+DzAdasjgaYgC7CcceZm9VKP5Z4
-         c1CHDgeSpfHMuM+3v/5HLHwVFqLwSx/oIduyHAe6gnHQDNPpnzpynGhlrikVxyTGhuC4
-         AwQsaq1o18LNa0f6d0cbMcl7EEdEbOwn1+E0LnZjC7OtUXi6EueLOUhB3NGS7C2oV6t7
-         o2IQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712083854; x=1712688654;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=LIEcfz25WWX1hRcC//+GqxXzgFgNZ4EfTxo56dpiUx4=;
-        b=C5F5cYfxpcTpJueHgAZB2iJer+BLSbY6iGeBUKXRPwC05kIEx+sfvV+VEDPGaCBeBb
-         whSX01xFemHDDXe0q6FkiwpHhzplWlTdYprjy933QBmqxUMzK1HeLLqlvx+QxlUDK28t
-         vIuwYWMJrYhofB+MBLFSGapg8iLjx7a+6bU3vqQVH05nx9X+VhiZnt0U61AIjIey+f1l
-         wTUjj1Rnb6YAW6Ltdt+XmbzLmDb4yat3aBCs9d4C9+eKWT2XM5yPUx3gr/gw9MOvPiPA
-         nNbocHoEprhoOtP/qVRfFyPBrN2CcHaqsqrG8pVMXPpnrAwj0n3gDY1TkdLVb/bMrWLn
-         W9jQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXpC2tuXdb8qMRCuB4mriGS6ycysxJBFhqbMokcYNbAtIv6+vNTMGA7pwvrqyPkDd8ThsPkJXujhrW1ay+dwaPVme5GPFrBZpu7LkmC
-X-Gm-Message-State: AOJu0Yw0cNHRdc/TjLF3sdW3f0S/AHj9rEOQSKwKdeRUKzXR7cLj//1d
-	1POSdR++kcfH87ejnBNXQ9d1sXf3dwNQN7vRW2aR1+Lnc9g7Kv1De4Mm6ljY0Ak=
-X-Google-Smtp-Source: AGHT+IHG2reakJAyifG34eCuPd2NY3AzmwK7mxJCbjBZSYQSbzpq8u6Qjn1bt7FV9hXw5WZDvMX8ZQ==
-X-Received: by 2002:a05:600c:3393:b0:414:9463:d4c3 with SMTP id o19-20020a05600c339300b004149463d4c3mr504116wmp.0.1712083853740;
-        Tue, 02 Apr 2024 11:50:53 -0700 (PDT)
-Received: from [192.168.0.106] (176.111.182.227.kyiv.volia.net. [176.111.182.227])
-        by smtp.gmail.com with ESMTPSA id q18-20020a05600c46d200b0041488978873sm22171138wmo.44.2024.04.02.11.50.52
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 02 Apr 2024 11:50:53 -0700 (PDT)
-Message-ID: <a8968719-a63b-4969-a971-173c010d708f@blackwall.org>
-Date: Tue, 2 Apr 2024 21:50:51 +0300
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="bdORgrfQ"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 3AC8E40E0177;
+	Tue,  2 Apr 2024 18:50:58 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id MANSbN9D6sRd; Tue,  2 Apr 2024 18:50:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1712083854; bh=osp4RXlfR2Zjt46qGea4CEBzROK//B6RdJtuh3E1oGY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=bdORgrfQR2c3Usx1QsvOn0mA7z6QhW1KrcHF6SrDfojPDla7c1No/qkjM5F6nlLwW
+	 JPVC30y07kQkyxZ63iKHhbZMwUwzAmmUJq+QbJbHFNOx7kg3BJy370Sv00bWqcZFZz
+	 K7zg2Nhrk33f1ib3q/4EYv4N7tX2fP5KUc/vDJ/tgY3JZMXvVZuEXYDxujsyuKKscY
+	 QbvgGlfpCNMsS0yMpIC/z+xF92q59nkKFvqp1VRvl9hpzn8oOE0x9OdMKw8cN5lmbA
+	 3DUeE/5561v0oTRvi3qkLsmu5IdC8z/2UZyTtzjJTXiAJcCpIzcsnHN96G4pJlfJBI
+	 IfoF/Ywnj1uqhalU2PPEc4ZXvm82BnblONRE2ShkqQeRSZgTaNZjLwBlWcRcdxoDAK
+	 xg4GIz0xBNIqKDRASskIOQ1gRGa5fXhS6/aLuZsmS31eTOnfoug4BPMO8yorxGq++1
+	 UHi7NWUR27YppnK7RBnEXLGtB4GYP8orFTL0gzD14nf52Ob/hDD5A1UOCGb6UbmDfz
+	 R5cYh/Ti06hXtnlJBmnpZ1e2pMumPRvy3pgfgSX4Bu/mznUvmN/PEIv1ZxjkoPbRMB
+	 DSuMOQURtMkRyCb+nw88NQgMHujxiYqofh6BlFhqNgyuhZ0fQygA6sTFH47a1k3f5I
+	 fwceZP5SCvMG1Pyp/axXdgB4=
+Received: from zn.tnic (p5de8ecf7.dip0.t-ipconnect.de [93.232.236.247])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 091B740E00B2;
+	Tue,  2 Apr 2024 18:50:46 +0000 (UTC)
+Date: Tue, 2 Apr 2024 20:50:39 +0200
+From: Borislav Petkov <bp@alien8.de>
+To: "Kalra, Ashish" <ashish.kalra@amd.com>
+Cc: bp@kernel.org, thomas.lendacky@amd.com, linux-kernel@vger.kernel.org,
+	linux-tip-commits@vger.kernel.org, michael.roth@amd.com,
+	x86@kernel.org
+Subject: Re: [PATCH] x86/sev: Apply RMP table fixups for kexec.
+Message-ID: <20240402185039.GBZgxTfwvEP45OxVjm@fat_crate.local>
+References: <2ab14f6f-2690-056b-cf9e-38a12dafd728@amd.com>
+ <20240402163412.19325-1-bp@kernel.org>
+ <6f0d2ccf-243c-4073-a470-21e2f404595a@amd.com>
+ <359264a1-e4ef-438c-8f24-32848e131272@amd.com>
+ <20240402174540.GAZgxERNxsRJUCb1yp@fat_crate.local>
+ <37321af9-aee4-4ba6-81ac-0df4cef38644@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH RFC net-next 00/10] MC Flood disable and snooping
-Content-Language: en-US
-To: Vladimir Oltean <olteanv@gmail.com>
-Cc: Joseph Huang <Joseph.Huang@garmin.com>, netdev@vger.kernel.org,
- Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- Roopa Prabhu <roopa@nvidia.com>, =?UTF-8?Q?Linus_L=C3=BCssing?=
- <linus.luessing@c0d3.blue>, linux-kernel@vger.kernel.org,
- bridge@lists.linux.dev
-References: <20240402001137.2980589-1-Joseph.Huang@garmin.com>
- <7fc8264a-a383-4682-a144-8d91fe3971d9@blackwall.org>
- <20240402174348.wosc37adyub5o7xu@skbuf>
-From: Nikolay Aleksandrov <razor@blackwall.org>
-In-Reply-To: <20240402174348.wosc37adyub5o7xu@skbuf>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <37321af9-aee4-4ba6-81ac-0df4cef38644@amd.com>
 
-On 4/2/24 20:43, Vladimir Oltean wrote:
-> Hi Nikolai,
-> 
-> On Tue, Apr 02, 2024 at 12:28:38PM +0300, Nikolay Aleksandrov wrote:
->> For the bridge patches:
->> Nacked-by: Nikolay Aleksandrov <razor@blackwall.org>
->>
->> You cannot break the multicast flood flag to add support for a custom
->> use-case. This is unacceptable. The current bridge behaviour is correct
->> your patch 02 doesn't fix anything, you should configure the bridge
->> properly to avoid all those problems, not break protocols.
->>
->> Your special use case can easily be solved by a user-space helper or
->> eBPF and nftables. You can set the mcast flood flag and bypass the
->> bridge for these packets. I basically said the same in 2021, if this is
->> going to be in the bridge it should be hidden behind an option that is
->> default off. But in my opinion adding an option to solve such special
->> cases is undesirable, they can be easily solved with what's currently
->> available.
-> 
-> I appreciate your time is limited, but could you please translate your
-> suggestion, and detail your proposed alternative a bit, for those of us
-> who are not very familiar with IP multicast snooping?
-> 
+On Tue, Apr 02, 2024 at 01:41:05PM -0500, Kalra, Ashish wrote:
+> But, that's what the e820 table fixup is doing,
 
-My suggestion is not related to snooping really, but to the goal of
-patches 01-03. The bridge patches in this set are trying to forward
-traffic that is not supposed to be forwarded with the proposed
-configuration, so that can be done by a user-space helper that installs
-rules to bypass the bridge specifically for those packets while
-monitoring the bridge state to implement a policy and manage these rules
-in order to keep snooping working.
+And can it be doing it in snp_probe_rmptable_info() where all the RMP
+table stuff is being done?
 
-> Bypass the bridge for which packets? General IGMP/MLD queries? Wouldn't
-> that break snooping? And then do what with the packets, forward them in
-> another software layer than the bridge?
-> 
+-- 
+Regards/Gruss,
+    Boris.
 
-The ones that are not supposed to be forwarded in the proposed config
-and are needed for this use case (control traffic and link-local). 
-Obviously to have proper snooping you'd need to manage these bypass
-rules and use them only while needed.
-
-> I also don't quite understand the suggestion of turning on mcast flooding:
-> isn't Joseph saying that he wants it off for the unregistered multicast
-> data traffic?
-
-Ah my bad, I meant to turn off flooding and bypass the bridge for those
-packets and ports while necessary, under necessary can be any policy
-that the user-space helper wants to implement.
-
-In any case, if this is going to be yet another kernel solution then it
-must be a new option that is default off, and doesn't break current 
-mcast flood flag behaviour.
-
-In general my opinion is that the whole snooping control must be in
-user-space and only have the dataplane in the kernel, but that is beyond
-the scope of this set.
-
+https://people.kernel.org/tglx/notes-about-netiquette
