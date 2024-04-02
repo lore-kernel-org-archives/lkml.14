@@ -1,204 +1,130 @@
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2130.outbound.protection.outlook.com [40.107.244.130])
+Received: from anarch128.org (anarch128.org [23.253.174.110])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FCE515E802;
-	Tue,  2 Apr 2024 20:53:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.244.130
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712091184; cv=fail; b=ISZFv2tUQKz5nR9go43/hQcYrRuK5JWA+nQA7BBNbnoWj4m3D62ffJgk90hqtDwNaiEEHnvx+kgwnK+tGoJgY4PdtqFLijH3B5SSoQXVlhjy2olmYKPrjD1Cw5b4iBgKJZhint5T3GB8vLO1GVvJUpXN1UMnB3SANKvJEIoGFKI=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712091184; c=relaxed/simple;
-	bh=WcARV9EEmygFik7TxeEZLEIAzAFkt5zRbts9fcuh/9c=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=qEypD53XFBnUPJ4cnCmmafLkZKkFPB1yQpuccgvCoe+EFZ1Sm1jaCn5KuJSZ/7NcYRGCaEoZwY4GqLIoxycZ6vmXbxamMRMWYjvp/IomToKNofmCEwi6vf0e5UEdgo+1tVgY26QsEz+bHYQ3jVWe74nVn+3irI8911UWVBKHgQY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=jL23Jaut; arc=fail smtp.client-ip=40.107.244.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 735E915E1ED
+	for <linux-kernel@vger.kernel.org>; Tue,  2 Apr 2024 20:54:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=23.253.174.110
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1712091277; cv=none; b=GZlLwuqm75Y/JSfPQfZOFFGookZX//T4R0Y+W1DRPL/pIa0cOoK/S16CAfAVl0G+1owdaudlq2cdh6pgmoD6GjVg44ceefyO5QCIEgZhq2oBzEpnoHydk2OC06dK+B/D7y7v5mSk6sn3iyDhiYbO0cL6VNSEPj+RfWzkpl6h9oE=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1712091277; c=relaxed/simple;
+	bh=ItRqQxRVa/m81QrwLlyILDa0UEZoouUYVtvYXJrTq84=;
+	h=Message-ID:Date:MIME-Version:To:From:Subject:Content-Type; b=W7XWjEscTKYWIUCAJHtBmi9JwYMQeOA3aJzExQLh/F9/GGfbKg+j1jmSLaT7IkFyqc/VYb4X1zJiO/vwhI246pEPfR487ezj8Y0Qzjur0xLW/x8wj3d4hbYvzwI2wCLC7NrGlcfqD56HSyOXwJBtNTmQbM1/d49fCb8vqGkVo/I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=metaparadigm.com; spf=pass smtp.mailfrom=metaparadigm.com; dkim=fail (2048-bit key) header.d=metaparadigm.com header.i=@metaparadigm.com header.b=PUn6dMCQ reason="signature verification failed"; arc=none smtp.client-ip=23.253.174.110
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=metaparadigm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=metaparadigm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="jL23Jaut"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=bzLRO8tj8r1mTzqCckVB9Nahoyrk/TdxrvP/vZ5XP/OS4kUK8pnEhQUpRIFLQCzbdvsi2l1srm5nN6GXnCZgXVjROnbfvxq9Qycg5DKR54I1UaM3DHSa/kW8recDmoJ853qwvhCYRl5Dz4RYpQ7rPR210lHLD9U0tcZTwCg20UvlTOAIFHD+wpTGjO8wIllO16B1kKqi7eTiRMbLg2/Z6ZGCmLlGqKNbE14LmdPexknFeEdUdzIJZPWTIUGvIhmfjhuNDvAln6iEohCxrkOlcc2Kq9Kk+ez6Kt3RwWryAtRzxBRInoG5MdDT/dTVXAC2oqJJw7o+X9D1t+Daoj/vgA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=yzu2h7owJYfaBza9LYpvZJNzfQg78YM7Kwm33ootnEo=;
- b=jIW9cji/1TPZ5iFMO+muWw0G6eV5BjXUmkEUQvr7NVP5F5bwm9Pm8bvWdDtT5t3I4XnI/ycXdlCiNbofA6xwg64eUnX22RWUAK1aR/4o2Vr4i29bV5PBSawnyjHHXMuAU4vetxqnx86latVVBSs2RvF9dVrl9Bh3A0wyjI89XrG0PH/+/0CQLyU5NnqzWfUk8Zjg+514lyz+wPmmCGbvGvD0OV9aNFWwA5kLymGHlnL4mRYGgGiLkZTzqJzgLHiRbJIOzq58AU6+6XnFpaPkCbUtX2J2UJ8E0slp6jiXcIASw+o7it3JwGRCCbszFYdHdefSnNc/r2czF5tZIK9bBg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=yzu2h7owJYfaBza9LYpvZJNzfQg78YM7Kwm33ootnEo=;
- b=jL23JautuNSCJYFNY7SXmf+lraaWU5mmN7GeIspmZe9/yoAxOqA120Lzbbpujmf0dSaC559EWp5wJI1xfLQ3HZIQSTo4p5QK61Dk96ydDemfRYyEslYbO3dNbJNLMgiyI2hM2731qNRFJj8hrNrdV25PNgmQzV9OCdkboCDoh5LaEPtk3gGAhBIlpr7SpFifMgOknhmz1goIe7WxBUtemqnqfYpMKAfyDE+3ivi2jIcfN7eCQfo1DuFTA5wJnq+S7+UZo+dtPzLUty630wA3UaDfQ/pS1zM6HXXdLn0BtdmeL2GCkXCnsYjz6ZETBXUBRnjt2KLT4/ScVsgpkgUqeg==
-Received: from BYAPR12MB2743.namprd12.prod.outlook.com (2603:10b6:a03:61::28)
- by MW3PR12MB4393.namprd12.prod.outlook.com (2603:10b6:303:2c::22) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.46; Tue, 2 Apr
- 2024 20:52:31 +0000
-Received: from BYAPR12MB2743.namprd12.prod.outlook.com
- ([fe80::459b:b6fe:a74c:5fbf]) by BYAPR12MB2743.namprd12.prod.outlook.com
- ([fe80::459b:b6fe:a74c:5fbf%6]) with mapi id 15.20.7409.042; Tue, 2 Apr 2024
- 20:52:31 +0000
-From: Rahul Rameshbabu <rrameshbabu@nvidia.com>
-To: netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-doc@vger.kernel.org
-Cc: ahmed.zaki@intel.com,
-	aleksander.lobakin@intel.com,
-	alexandre.torgue@foss.st.com,
-	andrew@lunn.ch,
-	cjubran@nvidia.com,
-	corbet@lwn.net,
-	davem@davemloft.net,
-	dtatulea@nvidia.com,
-	edumazet@google.com,
-	gal@nvidia.com,
-	hkallweit1@gmail.com,
-	jacob.e.keller@intel.com,
-	jiri@resnulli.us,
-	joabreu@synopsys.com,
-	justinstitt@google.com,
-	kory.maincent@bootlin.com,
-	kuba@kernel.org,
-	leon@kernel.org,
-	liuhangbin@gmail.com,
-	maxime.chevallier@bootlin.com,
-	pabeni@redhat.com,
-	paul.greenwalt@intel.com,
-	przemyslaw.kitszel@intel.com,
-	rdunlap@infradead.org,
-	richardcochran@gmail.com,
-	saeed@kernel.org,
-	tariqt@nvidia.com,
-	vadim.fedorenko@linux.dev,
-	vladimir.oltean@nxp.com,
-	wojciech.drewek@intel.com,
-	Rahul Rameshbabu <rrameshbabu@nvidia.com>
-Subject: [PATCH net-next v1 6/6] tools: ynl: ethtool.py: Output timestamping statistics from tsinfo-get operation
-Date: Tue,  2 Apr 2024 13:52:06 -0700
-Message-ID: <20240402205223.137565-7-rrameshbabu@nvidia.com>
-X-Mailer: git-send-email 2.42.0
-In-Reply-To: <20240402205223.137565-1-rrameshbabu@nvidia.com>
-References: <20240402205223.137565-1-rrameshbabu@nvidia.com>
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: BYAPR08CA0047.namprd08.prod.outlook.com
- (2603:10b6:a03:117::24) To BYAPR12MB2743.namprd12.prod.outlook.com
- (2603:10b6:a03:61::28)
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=metaparadigm.com header.i=@metaparadigm.com header.b="PUn6dMCQ"
+Received: from [192.168.1.5] (default-rdns.vocus.co.nz [202.150.110.104] (may be forged))
+	(authenticated bits=0)
+	by anarch128.org (8.15.2/8.15.2/Debian-22) with ESMTPSA id 432Kres7305610
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
+	Tue, 2 Apr 2024 20:53:43 GMT
+Authentication-Results: anarch128.org;
+    auth=pass;
+    dkim=pass (2048-bit rsa key sha256) header.d=metaparadigm.com header.i=@metaparadigm.com header.b=PUn6dMCQ header.a=rsa-sha256 header.s=100043;
+    x-return-mx=pass header.domain=metaparadigm.com policy.is_org=yes (MX Records found: mail.anarch128.org);
+    x-return-mx=pass smtp.domain=metaparadigm.com policy.is_org=yes (MX Records found: mail.anarch128.org)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=metaparadigm.com;
+	s=100043; t=1712091227;
+	bh=ItRqQxRVa/m81QrwLlyILDa0UEZoouUYVtvYXJrTq84=;
+	h=Date:To:From:Subject:From;
+	b=PUn6dMCQn2mU3DsTfuPGuqL0pJlpQS1McPZeld8JHbMmpePBaX1Ia4/f6ip9/dN4c
+	 XLawcUrgIcUxcuo1cxOnNgx90VzjYCtTEljXbFWEKdevozx9YSV7HO6IeKnnoBpWs3
+	 woQSgtLeCQb6MnYilyrynw7QbcXx6aEC4ddbD53+1c7bkScKLlaTeEeSq7aZR+nSfB
+	 2VfeG3QFpiVoTB4B9eEXklMfbva/ul65XMRGJ1e06mihWRyzeWP3HNjEk3eowRz2nq
+	 rYdtqdxig/Y+BPAtF9vEBNEcUAQFPHD6upDD0p2LT+hedB/x1jCyifPmWkf87qOc3a
+	 IZPEhqKEzyPvg==
+Message-ID: <969ccc0f-d909-4b45-908e-e98279777733@metaparadigm.com>
+Date: Wed, 3 Apr 2024 09:53:34 +1300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BYAPR12MB2743:EE_|MW3PR12MB4393:EE_
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	aFZ102qLer7g+aZs04VCB8gtGekLpdfAQ4B0RIXkLtdkV3ouKCdy2Xby6vXusYRC6LO6WBg5C7JRkH/BnuHvVqqRvmY7j7Jiguf6WSDlxKF/VHqrGJ8H0sZQ6iaoFT9LPlec8ZGXpBb3U11U/VrypjraYUbFoeXZtk/Rr0KoKBGZExAZdNLKLG+VFOVewemGA2/T2uBZ5UojvRDUPC4xaCyOP9UB2jJE1t59s8m/Qw5c3Q+B/wYPkaD7CxcqaI/Q5aBTeVWNUomQMqrsmYRAAOJxaJo0HnPK/cNvWj51rXac5RR/t9gWAFLth590NH2xzWMNtfoj/Blt5PpcZlJeFybAK4ZJeiw8AaXKkloJyo3MCmTe0fvFZTioHOeXHPg6ADKHXTR7bhYs6UZsuB6b+a7UiK2rUNOlsRQv1/7wHcjC5fb4mP4ddpg4nsfz7ooj/dKZJnWGhA6fanVpuUbbeisRh1evY+vzJa40vgVB7H0Wf+k9ynEMM6NxDOuqNT6J+PsCEgq/IPIEKfmWTBdc0R0np1pW7SSAltcz6gSHScDW16sGLReUPqlD2Ei6k9ckTpWps3mdEy8YrD/6sB/l9gzJ6t18jvv4Pws2KeHPB8AuI4ZbLskISa5jmEXlYojLvFjWzFfGlNen+ecJrhAT/ioE2c2jxiuz2swFZ/1yxmE=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR12MB2743.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376005)(1800799015)(7416005)(366007);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?RkXVXk3v8gLz8kEvj9CDwFmgjot0h/TpkG/YYL1F/0IMQwKVjZM5HEHvZWo8?=
- =?us-ascii?Q?h+BGj8fJ42qln2vtumJTqsxg2ZXtoHfW5lAl5OYnpB1eqlC7ZUR+pGXoUHBN?=
- =?us-ascii?Q?ff838Bg5wDcdTWcDsrI0m12irw38uCMigSUlqzudouvZBwUK6RsaQa2CKEuP?=
- =?us-ascii?Q?IH2P/WtZi3Tq707K0YiZinUJ9lLTrLBvwGL5X3tjQhIoRFcy+MuQ6JFg7vC7?=
- =?us-ascii?Q?qwF2kB70HxNulNK+dXr0/oqS/nbCS/4wIkTlvi2rvWwQTI+xYx/m3YjN0JZK?=
- =?us-ascii?Q?6H2wAJbLGftIyI+9cZbuv2vEjJMfn3xmytY//UDSRvEStahZu4ofez9kUML7?=
- =?us-ascii?Q?UozqJcLmyO2RDr44P+6YSQN491ZRL3t2TAQNMnay6yONaD7vtwIdYzVmpb2Z?=
- =?us-ascii?Q?Qr4FURHcpFnGDTCKqFTSv6QowkqVs1hcizV71ROkFxFQu8ovNkBpEkV5E0Fy?=
- =?us-ascii?Q?kgkxp5DtnQ1DM4ekFLkv9L0T3r/ps5Le4OvkGc00N/M42Bb0CypLZR87Zn9+?=
- =?us-ascii?Q?FpfqRCnoGANN4OeVHmWsiM+c8Eiik7h+hzLBpLCGUIhbcwEIIZ2vnC7Krp3G?=
- =?us-ascii?Q?la15QyqIeE5f7PxTQJ7VLXHxfp/DHgeo0wE3CE4zH+7uixH3raMElnExQMks?=
- =?us-ascii?Q?VzteJUDL8kwW7XetnzN1YCFsTlQeLCEzsBCiX8qZDX2EXH/pCQ9i87WlOlxn?=
- =?us-ascii?Q?w1GJd+SEhSNxoXO68rSb+r3WSqDrtkG6PicMTyEZEZKbweFqI1xYn2e26EL+?=
- =?us-ascii?Q?dB9SOyRuXUQ9Ms4BVr3p4PVx0yVRWYwUGc1zHBOSoHiPLAvo2GMOjNyHGQuW?=
- =?us-ascii?Q?7FP0DP3bqDVZ1CG03Xxwobl2WF5rPz+aEzM+jjWAbAzY4ru+Tryu3pkvEz27?=
- =?us-ascii?Q?fBn8ncTaY87koliAfSap3hDofQNOab5UqabyR+61FqaHtX5m3KrS29LUUSHJ?=
- =?us-ascii?Q?QxcOhHGuIrb581NKbN9qjWqgl1E2RVoGRAruzMWWY1hcA1S7PhgBix4K3oQE?=
- =?us-ascii?Q?pZAELc2G40WNI3i8X+5i4zD57TQ0fqiC0qE9o/CYYesZ1Dg+bQhm8BVlEX11?=
- =?us-ascii?Q?yMegv6EqHUe96TSNKkV+nCltowVaYFDe8JJDZFZcGbwfAXPKRYJr2WyxmUT4?=
- =?us-ascii?Q?mSmX4CexGQYJIl+FW04o6Q4RuMXr+urYQrUyjnnHV+azVCYUPDHFIKAnlbgl?=
- =?us-ascii?Q?ksPcFdc589kYlWHn8Rs8eNRjyiowVZKPUQUyHeM1aEAej1ZHWnXaiTLcHkhS?=
- =?us-ascii?Q?zDSLBSpr3gadDbhkViujVRdHgq55SD0PCUe9W74Tm8CJOK0wBtc2FItj9BKG?=
- =?us-ascii?Q?s42cvPZb2MN7q6o6t5aAyodlrU/8HjTVAVC2X/DvaI+F5K1ku7/E944iQI9v?=
- =?us-ascii?Q?X1xqO4mEVHU1ZMIasYfLZAHgElVlOsLiqRKEKONWS6bn/wfQccY+ElNrKbjg?=
- =?us-ascii?Q?QXzbl3JpBqvjyJbR2xbOapSSTa8eRUSgupL9/MoYiSXAqyGIl3LM5JeGmkt/?=
- =?us-ascii?Q?WFk5Cm5widTUdVnVIngTLhFdRm2+9yrBYw3ZBQw2x/huEfXhGissAVK5wSed?=
- =?us-ascii?Q?r/4VySUS/b1wiM1KzcaFqMUEK+zXX0LBpAhFn/ua7CbEKDggWCyRdLESk7wq?=
- =?us-ascii?Q?+A=3D=3D?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c4e3427b-f110-45c1-3f08-08dc5356d0a8
-X-MS-Exchange-CrossTenant-AuthSource: BYAPR12MB2743.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Apr 2024 20:52:31.4234
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: +nfJil5YMKqEuBNA+dkQvY7PSL3y9atvV3P70fHfNZPqAKFFfeQ8v8TBgFC/HosvX8mWGI8N3mhXvSSGjHDz/A==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW3PR12MB4393
+User-Agent: Mozilla Thunderbird
+Content-Language: en-US
+To: Linus Torvalds <torvalds@linux-foundation.org>,
+        Jens Axboe <axboe@kernel.dk>, Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>, linux-kernel@vger.kernel.org
+From: Michael Clark <michael@metaparadigm.com>
+Organization: Metaparadigm
+Subject: user-space concurrent pipe buffer scheduler interactions
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Print the nested stats attribute containing timestamping statistics when
-the --show-time-stamping flag is used.
+Folks,
 
-  [root@binary-eater-vm-01 linux-ethtool-ts]# ./tools/net/ynl/ethtool.py --show-time-stamping mlx5_1
-  Time stamping parameters for mlx5_1:
-  Capabilities:
-    hardware-transmit
-    hardware-receive
-    hardware-raw-clock
-  PTP Hardware Clock: 0
-  Hardware Transmit Timestamp Modes:
-    off
-    on
-  Hardware Receive Filter Modes:
-    none
-    all
-  Statistics:
-    tx-pkts: 8
-    tx-lost: 0
-    tx-err: 0
+I am working on a low latency cross-platform concurrent pipe buffer 
+using C11 threads and atomics. It is portable code using a <stdatomic.h> 
+polyfill on Windows that wraps the intrinsics that Microsoft provides. 
+There is a detailed write up with implementation details, source code, 
+tests and benchmark results in the URL here:
 
-Signed-off-by: Rahul Rameshbabu <rrameshbabu@nvidia.com>
-Reviewed-by: Dragos Tatulea <dtatulea@nvidia.com>
----
- tools/net/ynl/ethtool.py | 11 ++++++++++-
- 1 file changed, 10 insertions(+), 1 deletion(-)
+- https://github.com/michaeljclark/cpipe/
 
-diff --git a/tools/net/ynl/ethtool.py b/tools/net/ynl/ethtool.py
-index 6c9f7e31250c..47264ae20036 100755
---- a/tools/net/ynl/ethtool.py
-+++ b/tools/net/ynl/ethtool.py
-@@ -320,7 +320,13 @@ def main():
-         return
- 
-     if args.show_time_stamping:
--        tsinfo = dumpit(ynl, args, 'tsinfo-get')
-+        req = {
-+          'header': {
-+            'flags': 'stats',
-+          },
-+        }
-+
-+        tsinfo = dumpit(ynl, args, 'tsinfo-get', req)
- 
-         print(f'Time stamping parameters for {args.device}:')
- 
-@@ -334,6 +340,9 @@ def main():
- 
-         print('Hardware Receive Filter Modes:')
-         [print(f'\t{v}') for v in bits_to_dict(tsinfo['rx-filters'])]
-+
-+        print('Statistics:')
-+        [print(f'\t{k}: {v}') for k, v in tsinfo['stats'].items()]
-         return
- 
-     print(f'Settings for {args.device}:')
--- 
-2.42.0
+I have been eagerly following the work of Jens on io_uring which is why 
+I am including him as he may be interested in these scheduler findings, 
+because I am currently using busy memory polling for synchronization.
 
+The reason why I am writing here, is that I think I now have a pretty 
+decent test case to test the Windows and Linux schedulers side-by-side. 
+Let's just say it has been an eye opening process and I think folks here 
+might be interested in what I am seeing and what we could predict should 
+happen based on Amdahl's Law and low-level cache ping-pong on atomics.
+
+Let me cut to the chase. What I am observing is a situation where when I 
+add threads on Windows, performance increases, but when I add threads on 
+Linux, performance decreases. I don't know exactly why. I am wondering 
+if Windows is doing some topologically affine scheduling? or if it is 
+using performance counters to intuit scheduling decisions? I have 
+checked the codegen and it is basically two LOCK CMPXCHG instructions.
+
+I ran bare metal tests on Kaby Lake and Skylake processors on both OSes:
+
+- `Windows 11 Version 23H2 Build 22631.3296`
+- `Linux 6.5.0-25-generic #25~22.04.1-Ubuntu`
+
+In any case, here are numbers. I will let them speak for themselves:
+
+# Minimum Latency (nanoseconds)
+
+|                      | cpipe win11 | cpipe linux | linux pipes |
+|:---------------------|------------:|------------:|------------:|
+| Kaby Lake (i7-8550U) |      ~219ns |      ~362ns |     ~7692ns |
+| Skylake (i9-7980XE)  |      ~404ns |      ~425ns |     ~9183ns |
+
+# Message Rate (messages per second)
+
+|                      | cpipe win11 | cpipe linux | linux pipes |
+|:---------------------|------------:|------------:|------------:|
+| Kaby Lake (i7-8550U) |       4.55M |       2.71M |     129.62K |
+| Skylake (i9-7980XE)  |       2.47M |       2.35M |     108.89K |
+
+# Bandwidth 32KB buffer (1-thread)
+
+|                      | cpipe win11 | cpipe linux | linux pipes |
+|:---------------------|------------:|------------:|------------:|
+| Kaby Lake (i7-8550U) |  2.91GB/sec |  1.36GB/sec |  1.72GB/sec |
+| Skylake (i9-7980XE)  |  2.98GB/sec |  1.44GB/sec |  1.67GB/sec |
+
+# Bandwidth 32KB buffer (4-threads)
+
+|                      | cpipe win11 | cpipe linux |
+|:---------------------|------------:|------------:|
+| Kaby Lake (i7-8550U) |  5.56GB/sec |  0.79GB/sec |
+| Skylake (i9-7980XE)  |  7.11GB/sec |  0.89GB/sec |
+
+I think we have a very useful test case here for the Linux scheduler. I 
+have been working on a generalization of memory polled user-space queue 
+and this is about the 5th iteration where I have been very careful about 
+modulo arithmetic and overflow as the normal case.
+
+I know it is a little unfair to compare latency with Linux pipes and 
+also we waste a lot of time spinning on queue full. This is where we 
+would really like to use something like SENDUIPI, UMONITOR and UMWAIT 
+but I don't have access to silicon that supports those yet.
+
+Regards,
+Michael Clark
