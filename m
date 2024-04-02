@@ -1,291 +1,119 @@
-Received: from wfhigh1-smtp.messagingengine.com (wfhigh1-smtp.messagingengine.com [64.147.123.152])
+Received: from mail-40136.proton.ch (mail-40136.proton.ch [185.70.40.136])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA84045008;
-	Tue,  2 Apr 2024 23:30:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=64.147.123.152
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D5E9446B6
+	for <linux-kernel@vger.kernel.org>; Tue,  2 Apr 2024 23:32:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.40.136
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712100614; cv=none; b=hdDRw+on5uVfgJ/WwgjSgnEZhfuPv72SdqS2+WbDucPOSNA6IOyzrnGwrqngkcJKxU3lyYzyy+xHgRvi8rYI45/hI34RnVdvcxarnSSpL+0I1kOZvRHyLp+SMrZp9rVF/CxZOcALCyJpcvJjd9QVzwUCRCaN4JTA3kNb/fly+Co=
+	t=1712100757; cv=none; b=GW6hFsi05lr2w9Ihd90hh/bEOQClYBlbZ7RsEC8x3zjpK2tkEq9jCvseOO/8n4Ib65W3h3XftcEhnNmWnFFWX2Xz8iKavBW3Uh4RxUNBgzKvMkWnk4fOMkZZbwzTNAk0BD59G7qlVQpc4bjr888Ik3nZl6lNpkYbWySCt0nesPg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712100614; c=relaxed/simple;
-	bh=cFSfbfbs/FxtWhmNg4PvI3AYQoSaWqEX17A1nJklR/k=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=kNeCavXkySKFhE5pd8UcDN5lM1GNmvlUSKZdSa3/h3b4tiulbfwX+gY9+qi9VmGv5uE8aXcBhDyJnoiYjR8xlRh0gAJi1OozdhDWSSEBI0ANDrDe2iVpvvBXw1025Q+D56Jw4EcoTcS4PpD8Ba78gOGdbmrEN8JHURj6L5a7eos=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ljones.dev; spf=none smtp.mailfrom=ljones.dev; dkim=pass (2048-bit key) header.d=ljones.dev header.i=@ljones.dev header.b=c9CPifCG; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=MaevhlRD; arc=none smtp.client-ip=64.147.123.152
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ljones.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ljones.dev
+	s=arc-20240116; t=1712100757; c=relaxed/simple;
+	bh=Miy8h+46r9L1yli6HXvFolWZmx7sqZ1TBD8yhEMAhbg=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=sLULCfNOhre2bTKQw1lxPmSV+z2nxpjsXtj5c//9yg3Klsao5JS49izGI6BQ+S2hDlzFoozLtYVMaY6yu5ZqHdLLH4KHcXyIrMCkwHZA1UKBfTl61QZ/8UCz4HI4bCzpAR+FjjWCffYJca21JfmMjk+UBazA7OpauoCGuLZZAX0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=thefossguy.com; spf=pass smtp.mailfrom=thefossguy.com; dkim=pass (2048-bit key) header.d=thefossguy.com header.i=@thefossguy.com header.b=jiJebc2i; arc=none smtp.client-ip=185.70.40.136
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=thefossguy.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=thefossguy.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ljones.dev header.i=@ljones.dev header.b="c9CPifCG";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="MaevhlRD"
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-	by mailfhigh.west.internal (Postfix) with ESMTP id 7387D18000AD;
-	Tue,  2 Apr 2024 19:30:10 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute5.internal (MEProxy); Tue, 02 Apr 2024 19:30:10 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ljones.dev; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm3; t=1712100609;
-	 x=1712187009; bh=qd2C6+m9JTrL/24cDYciB5SBNyUCz9EdnJ+XcRcM3oQ=; b=
-	c9CPifCGQtG6QwzP+cWQ1vlZFT3pqnkykmJbtaorG+nZev+yBK0evWNo28DXdeIX
-	1Rur2yVaT5H+CFUSff/7j38eP7ge7lFvMH8J5rwZK/eeKe8yE2qAELT5GzDIPqnn
-	HXMbk9VdCrk92NavxxEQb/iLxN3Xc48AWP9cDKjVpMAx8w2/pj0yjBeoR0GTpf/O
-	Mh5gIVxP5HCcvUMcqlguSTOihurqwZvT0KBiPP2wRrHXzWL9aneVswys0hl7oeiV
-	NARzOOHlif10t3Mxx/zHERmdGbK+VWgbDTdZxUNmEewClMhp+PkJ9Ya5nP0S47iu
-	EUPun4aEL8yC9Nw/pw78ww==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1712100609; x=
-	1712187009; bh=qd2C6+m9JTrL/24cDYciB5SBNyUCz9EdnJ+XcRcM3oQ=; b=M
-	aevhlRD9pAayxRWPFdbIQmtxjWrEj8TpOJBvRLp+fTwEMmCtb8uyBq2CEiH5yL1a
-	TCxI2k4CP7/zGoVj5TVvuoRScRehUbbccmCGLQavoIDpr3yeyETVoPFF935XvVUC
-	Kxsjg8DUM2emzZITIw2yfUcJLHIL8+YaLS67rhkpnfblbULNuIVB9s1YXL96Si3y
-	58EGyKIs/kkgcUNyDUKFkFlXGVUQqJ5e4nN5yaXVHGJZ2eGmFn5DLes9kjOlRcN2
-	38qvyfuXc49mNfJaWu+W4JKdbxoe9quHMqEl63v91OwjqrinrFXM4CHoAh4qgJ4N
-	zXhDewiVCZ1Svvih1HjdQ==
-X-ME-Sender: <xms:AZUMZt4VhDVPukWekfSsdTms5POgWQt9NVCsebqMRWvWooNZ_abQ9g>
-    <xme:AZUMZq7fgGkQdvxIAaUTJufzPxWmVpkfRUzi9A1yP8F2IPu34vLZKD0eXym66LblC
-    D82u9PxPdyO2XmmSSw>
-X-ME-Received: <xmr:AZUMZkfpncRXk5Wm4bJdFlkV1_uXAQ1AFYlkaEvxPR7MuSbznGMbMvEmWyUAaQCZCmHoVw>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrudeffedgvdefucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhephffvvefufffkjghfggfgtgesthhqredttddtjeenucfhrhhomhepnfhukhgv
-    ucflohhnvghsuceolhhukhgvsehljhhonhgvshdruggvvheqnecuggftrfgrthhtvghrnh
-    ephfeugfegvdeitdefgeevvdelgedutdejueefkeffieevueduhedtueektdffjeeunecu
-    vehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheplhhukhgvse
-    hljhhonhgvshdruggvvh
-X-ME-Proxy: <xmx:AZUMZmKJKXvhAv5f4hTxFJNWNUNLtBSaWe80Ab2iN1iV7UbrEcEp1Q>
-    <xmx:AZUMZhJPuaBP1nLl5vHDuycgVPLvavJYqvHRC6gNxjCsD73QlwVomQ>
-    <xmx:AZUMZvxyb-07T6xpQAs1SmLU5PpfGxjSCajbYUJCzkfXgkRTMAy8pw>
-    <xmx:AZUMZtLurzQKGa8elXV61DOaZul5_zECoe66sX7H1yAUdcFB7lyLNg>
-    <xmx:AZUMZvhcmskKm2MVYygu9WxiZwNl822ZO9S3lX8009FXDBuQdpx5Bpyk>
-Feedback-ID: i5ec1447f:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
- 2 Apr 2024 19:30:07 -0400 (EDT)
-From: Luke Jones <luke@ljones.dev>
-To: Ilpo =?ISO-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: Hans de Goede <hdegoede@redhat.com>, corentin.chary@gmail.com,
- platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-Subject:
- Re: [PATCH v2 8/9] platform/x86: asus-wmi: Add support for MCU powersave
-Date: Wed, 03 Apr 2024 12:30:05 +1300
-Message-ID: <24071185.4csPzL39Zc@fedora>
-In-Reply-To: <71426f4c-a44a-cf87-7045-b3f2b3fc240e@linux.intel.com>
-References:
- <20240402022607.34625-1-luke@ljones.dev>
- <20240402022607.34625-9-luke@ljones.dev>
- <71426f4c-a44a-cf87-7045-b3f2b3fc240e@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=thefossguy.com header.i=@thefossguy.com header.b="jiJebc2i"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=thefossguy.com;
+	s=protonmail; t=1712100746; x=1712359946;
+	bh=eYfJr8KvAv/8O8BAWI9vNpWVyP4tpL6uvttbF+aIVu4=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
+	 Message-ID:BIMI-Selector;
+	b=jiJebc2iTvQ7DqOGLbq51xyXRi2Fq7r/KJfvy/87mOd0Q3kz5GOdh5yR0T5/6r0xt
+	 9/eNq3T+lJk4ongASmJANrlCUliuVgdo3nKQn6TFJ4j09ZJF927p0HVx5Y/g6qsrr8
+	 4gpXnqaAealF68SfLtAH5CFJQ99uRiwHG9RSTjqjLJ6G7m9J33/vh6W1bAC+3O7iy6
+	 GRet7xPum1GiyuF+pHJ4HhLW5XqkJfUTZoOA3bRrY0yNn9OMw7/Q9OeKIZh/u8HmJn
+	 rhaZRUfbMjYtMApSBWSv+yAnqxU6RoPO46G1xtHwkFjtVqO9tVQyD4hp0ZQKS1J9qn
+	 /XfTWWMaA7CxQ==
+Date: Tue, 02 Apr 2024 23:32:19 +0000
+To: Saravana Kannan <saravanak@google.com>, Dragan Simic <dsimic@manjaro.org>
+From: Pratham Patel <prathampatel@thefossguy.com>
+Cc: sebastian.reichel@collabora.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, regressions@lists.linux.dev, stable@vger.kernel.org
+Subject: Re: Fixing the devicetree of Rock 5 Model B (and possibly others)
+Message-ID: <D0A122WK7CB9.33B2TP6UCMJBJ@thefossguy.com>
+In-Reply-To: <CAGETcx89V5CJrAq6XwuGiusQnkR804pTgYAtS94v7Q+v=Cv+qA@mail.gmail.com>
+References: <tQ0L3-34g4t-mzfQIP6KDe5OYelGnEo6Udzq6Kb_nEcljppSQUXOktpE__nL-CdLOu9gW-4tIIbjtSbqrdCrjEkdhZLPiiHTqRcCB6WORuM=@thefossguy.com> <ac4246bf3786230eb9ca85b329e7d0df@manjaro.org> <CAGETcx89V5CJrAq6XwuGiusQnkR804pTgYAtS94v7Q+v=Cv+qA@mail.gmail.com>
+Feedback-ID: 104309535:user:proton
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="utf-8"
 
-On Wednesday, 3 April 2024 12:01:15=E2=80=AFAM NZDT Ilpo J=C3=A4rvinen wrot=
-e:
-> On Tue, 2 Apr 2024, Luke D. Jones wrote:
-> > Add support for an MCU powersave WMI call. This is intended to set the
-> > MCU in to a low-power mode when sleeping. This mode can cut sleep power
-> > use by around half.
-> >=20
-> > Signed-off-by: Luke D. Jones <luke@ljones.dev>
->=20
-> Hi,
->=20
-> I fail to follow the logic of the patch here. This patch makes it
-> configurable which is not bad in itself but what is the reason why a user
-> would not always want to cut sleep power usage down? So this sounds like a
-> feature that the user wants always enabled if available.
->=20
-> So what are the downsides of enabling it if it's supported?
+On Tue Apr 2, 2024 at 4:54 AM IST, Saravana Kannan wrote:
+> On Sat, Mar 23, 2024 at 10:10=E2=80=AFAM Dragan Simic <dsimic@manjaro.org=
+> wrote:
+> >
+> > Hello Pratham,
+> >
+> > On 2024-03-23 18:02, Pratham Patel wrote:
+> > > I looked at the patch and tried several things, neither resulted in
+> > > anything that would point me to the core issue. Then I tried this:
+> >
+> > Could you, please, clarify a bit what's the actual issue you're
+> > experiencing on your Rock 5B?
+>
+> Pratham, can you reply to this please? I don't really understand what
+> your issue is for me to be able to help.
 
-Honestly, I'm not sure. Previously it was a source of issues but with recen=
-t=20
-bios and more work in the various gaming-handheld distros it's much less of=
- a=20
-problem. The issue before was that the MCU would appear every second suspen=
-d=20
-due to the suspend sequence being more parallel compared to windows being=20
-sequential - the acpi calls related to this would "unplug" the USB devices=
-=20
-that are related to the n-key (keyboard, same internal dev as laptops) and =
-not=20
-complete it before suspend. And then on resume it was unreliable.
+Hi,
 
-I worked around this by calling the unplug very early, and trying to "plug"=
-=20
-super early also so that subsystems wouldn't notice the absence of the devi=
-ce=20
-and create new devices + paths on add. Most of the requirement for that cam=
-e=20
-from some userspace programs unable to handle the unplug/plug part, but als=
-o=20
-bad device state occurring.
+I apologize for not replying. Somehow, I did not notice the reply from
+Dragan. :(
 
-But now with the forced wait for the device to finish its task, and then th=
-e=20
-forced wait before letting it add itself back everything is fine - although=
- it=20
-does mean everything sees a device properly unplugged and plugged.
+Since this patch was applied, an issue in the Rock 5B's DT has been
+unearthed which now results in the kernel being unable to boot properly.
 
-All of the above is to say that the "powersave" function was also part of t=
-he=20
-issue as delayed things further and we couldn't add the device back before=
-=20
-subsystems noticed.
+Following is the relevant call trace from the UART capture:
 
-Distros like bazzite and chimeraOS are now using this patch, and I'd like t=
-o=20
-leave it to them to set a default for now. If it turns out everything is=20
-indeed safe as houses then we can adjust the kernel default.
+[   21.595068] Call trace:
+[   21.595288]  smp_call_function_many_cond+0x174/0x5f8
+[   21.595728]  on_each_cpu_cond_mask+0x2c/0x40
+[   21.596109]  cpuidle_register_driver+0x294/0x318
+[   21.596524]  cpuidle_register+0x24/0x100
+[   21.596875]  psci_cpuidle_probe+0x2e4/0x490
+[   21.597247]  platform_probe+0x70/0xd0
+[   21.597575]  really_probe+0x18c/0x3d8
+[   21.597905]  __driver_probe_device+0x84/0x180
+[   21.598294]  driver_probe_device+0x44/0x120
+[   21.598669]  __device_attach_driver+0xc4/0x168
+[   21.599063]  bus_for_each_drv+0x8c/0xf0
+[   21.599408]  __device_attach+0xa4/0x1c0
+[   21.599748]  device_initial_probe+0x1c/0x30
+[   21.600118]  bus_probe_device+0xb4/0xc0
+[   21.600462]  device_add+0x68c/0x888
+[   21.600775]  platform_device_add+0x19c/0x270
+[   21.601154]  platform_device_register_full+0xdc/0x178
+[   21.601602]  psci_idle_init+0xa0/0xc8
+[   21.601934]  do_one_initcall+0x60/0x290
+[   21.602275]  kernel_init_freeable+0x20c/0x3e0
+[   21.602664]  kernel_init+0x2c/0x1f8
+[   21.602979]  ret_from_fork+0x10/0x20
 
-A side-note I think is that because there is a forced wait time due to unab=
-le=20
-to use the right acpi path, the old excuse of "but users might want the dev=
-ice=20
-to wake faster by turning off powersave" doesn't really apply now.
+> Also, can you give the output of <debugfs>/devices_deferred for the
+> good vs bad case?
 
-I will discuss with the main stakeholders, but for now can we accept as is?=
- If=20
-changes are required we'll get them done before the merge window.
+I can't provide you with requested output from the bad case, since the
+kernel never moves past this to an initramfs rescue shell, but following
+is the output from v6.8.1 (**with aforementioned patch reverted**).
 
->=20
-> > ---
-> >=20
-> >  .../ABI/testing/sysfs-platform-asus-wmi       | 11 +++-
-> >  drivers/platform/x86/asus-wmi.c               | 50 +++++++++++++++++++
-> >  2 files changed, 60 insertions(+), 1 deletion(-)
-> >=20
-> > diff --git a/Documentation/ABI/testing/sysfs-platform-asus-wmi
-> > b/Documentation/ABI/testing/sysfs-platform-asus-wmi index
-> > 41b92e53e88a..28144371a0f1 100644
-> > --- a/Documentation/ABI/testing/sysfs-platform-asus-wmi
-> > +++ b/Documentation/ABI/testing/sysfs-platform-asus-wmi
-> > @@ -202,4 +202,13 @@ Contact:	"Luke Jones" <luke@ljones.dev>
-> >=20
-> >  Description:
-> >  		Set if the BIOS POST sound is played on boot.
-> >  	=09
-> >  			* 0 - False,
-> >=20
-> > -			* 1 - True
-> > \ No newline at end of file
-> > +			* 1 - True
-> > +
-> > +What:		/sys/devices/platform/<platform>/mcu_powersave
-> > +Date:		Apr 2024
-> > +KernelVersion:	6.10
-> > +Contact:	"Luke Jones" <luke@ljones.dev>
-> > +Description:
-> > +		Set if the MCU can go in to low-power mode on system=20
-sleep
-> > +			* 0 - False,
-> > +			* 1 - True
-> > diff --git a/drivers/platform/x86/asus-wmi.c
-> > b/drivers/platform/x86/asus-wmi.c index ddf568ef8c5e..cf872eed0986 1006=
-44
-> > --- a/drivers/platform/x86/asus-wmi.c
-> > +++ b/drivers/platform/x86/asus-wmi.c
-> > @@ -1292,6 +1292,53 @@ static ssize_t nv_temp_target_show(struct device
-> > *dev,>=20
-> >  }
-> >  static DEVICE_ATTR_RW(nv_temp_target);
-> >=20
-> > +/* Ally MCU Powersave
-> > ********************************************************/ +static ssize=
-_t
-> > mcu_powersave_show(struct device *dev,
-> > +				   struct device_attribute *attr,=20
-char *buf)
-> > +{
-> > +	struct asus_wmi *asus =3D dev_get_drvdata(dev);
-> > +	int result;
-> > +
-> > +	result =3D asus_wmi_get_devstate_simple(asus,
-> > ASUS_WMI_DEVID_MCU_POWERSAVE); +	if (result < 0)
-> > +		return result;
-> > +
-> > +	return sysfs_emit(buf, "%d\n", result);
-> > +}
-> > +
-> > +static ssize_t mcu_powersave_store(struct device *dev,
-> > +				    struct device_attribute *attr,
-> > +				    const char *buf, size_t count)
-> > +{
-> > +	int result, err;
-> > +	u32 enable;
-> > +
-> > +	struct asus_wmi *asus =3D dev_get_drvdata(dev);
-> > +
-> > +	result =3D kstrtou32(buf, 10, &enable);
-> > +	if (result)
-> > +		return result;
-> > +
-> > +	if (enable > 1)
-> > +		return -EINVAL;
-> > +
-> > +	err =3D asus_wmi_set_devstate(ASUS_WMI_DEVID_MCU_POWERSAVE, enable,
-> > &result); +	if (err) {
-> > +		pr_warn("Failed to set MCU powersave: %d\n", err);
-> > +		return err;
-> > +	}
-> > +
-> > +	if (result > 1) {
-> > +		pr_warn("Failed to set MCU powersave (result): 0x%x\n",=20
-result);
-> > +		return -EIO;
-> > +	}
-> > +
-> > +	sysfs_notify(&asus->platform_device->dev.kobj, NULL,=20
-"mcu_powersave");
-> > +
-> > +	return count;
-> > +}
-> > +static DEVICE_ATTR_RW(mcu_powersave);
-> > +
-> >=20
-> >  /* Battery
-> >  ********************************************************************/
-> > =20
-> >  /* The battery maximum charging percentage */
-> >=20
-> > @@ -4299,6 +4346,7 @@ static struct attribute *platform_attributes[] =
-=3D {
-> >=20
-> >  	&dev_attr_ppt_platform_sppt.attr,
-> >  	&dev_attr_nv_dynamic_boost.attr,
-> >  	&dev_attr_nv_temp_target.attr,
-> >=20
-> > +	&dev_attr_mcu_powersave.attr,
-> >=20
-> >  	&dev_attr_boot_sound.attr,
-> >  	&dev_attr_panel_od.attr,
-> >  	&dev_attr_mini_led_mode.attr,
-> >=20
-> > @@ -4352,6 +4400,8 @@ static umode_t asus_sysfs_is_visible(struct kobje=
-ct
-> > *kobj,>=20
-> >  		devid =3D ASUS_WMI_DEVID_NV_DYN_BOOST;
-> >  =09
-> >  	else if (attr =3D=3D &dev_attr_nv_temp_target.attr)
-> >  =09
-> >  		devid =3D ASUS_WMI_DEVID_NV_THERM_TARGET;
-> >=20
-> > +	else if (attr =3D=3D &dev_attr_mcu_powersave.attr)
-> > +		devid =3D ASUS_WMI_DEVID_MCU_POWERSAVE;
-> >=20
-> >  	else if (attr =3D=3D &dev_attr_boot_sound.attr)
-> >  =09
-> >  		devid =3D ASUS_WMI_DEVID_BOOT_SOUND;
-> >  =09
-> >  	else if (attr =3D=3D &dev_attr_panel_od.attr)
+# cat /sys/kernel/debug/devices_deferred
+fc400000.usb    platform: wait for supplier /phy@fed90000/usb3-port
+1-0022  typec_fusb302: cannot register tcpm port
+fc000000.usb    platform: wait for supplier /phy@fed80000/usb3-port
 
+It seems that v6.8.2 works _without needing to revert the patch_. I will
+have to look into this sometime this week but it seems like
+a8037ceb8964 (arm64: dts: rockchip: drop rockchip,trcm-sync-tx-only from rk=
+3588 i2s)
+seems to be the one that fixed the root issue. I will have to test it
+sometime later this week.
 
+ -- Pratham Patel
 
