@@ -1,192 +1,104 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FE9259B4B;
-	Tue,  2 Apr 2024 10:52:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF5C860EC3
+	for <linux-kernel@vger.kernel.org>; Tue,  2 Apr 2024 10:52:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712055157; cv=none; b=l6+5qg08F6XjRddufl5IEcaNh95Q0y2QWdJZ8lVOhYdo7Haks74gKu5u6XmW9nSAzf4rT2dA4wXi64BpD1I48i3GvtdItSgfbFEtb9ieGsPWGPGPAWiUSpwoxNI1pKpjpgXSgxbaqzx7gMRReT0h5hEm/mJJfWOptBpEj+S2riQ=
+	t=1712055159; cv=none; b=b5ezapt/oNNel8N4CmEqpmlBYcjBbB8xYc8ToQrm9lAKb+G7vFckhZLgPGe16gBMMwYicY7RmN/pU3gI0L/BhwBH+wM7+6z18WllcKyL7aXsPFLdHGZK+Xcl9GJrsvvdc8t804NZo7Nog/CiElSNHUoDEM3qHT0TTp7LCAAI/d8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712055157; c=relaxed/simple;
-	bh=Rb+hNv5+Ci1pY2u0k8EeFRCGNtH1Uphv2LjDF2WhGqw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=eB+F913hulAGmPTIdChkuulM+CQBCnBwC4Jt4J8H+XdQnBztYnMwzB3+AkH6XtCtpMRb0aipKmNb1TbkO1HzbzjAzUzVhNKkH6xJ0NQ+5vWHuzk04p1TeXjsYdIkXAYkzdO/5Laoq10WQ0nR5/bSj4DtNLVq6zMsVhP/CovLoNw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EFuMHxPX; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1712055159; c=relaxed/simple;
+	bh=FxRmJZ9KL9xpBpm4pOBuIBWeWydQ+wxCpl14xHng60Q=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=XILOihbCJVz1CxQ8oDACI5k6Uoi6Xv9TsSE1VFcCLJS5OFP/oUVRRiGjOgMkLbXPeBu7fwUyt8oOoRs77kBtQyzerT3VJJUeeBbD2BZjFjEVZ8YbTGf7Huv8oWyFIH6TwCHOzYFmYUF7dxbejG7HG2ngHYcSJZqgpTTD98S/z1k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com; spf=none smtp.mailfrom=toblux.com; dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b=mMFzxVgl; arc=none smtp.client-ip=209.85.208.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=toblux.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EFuMHxPX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 92BB7C433C7;
-	Tue,  2 Apr 2024 10:52:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712055156;
-	bh=Rb+hNv5+Ci1pY2u0k8EeFRCGNtH1Uphv2LjDF2WhGqw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=EFuMHxPXdZEw+2X92ofgaFNQe9XdX5NFSeGZ1D2yRcE4DEFEMLxzTcQVdhDMOa3om
-	 mvR9XunA1a5fMefvqQkzkCXerWs2P13DQ1RznNz0heTsHp4h53btYix9lh8IKJkSeD
-	 +jPFkBaSYci05eU1yf6IICQ3fqCo1FTDrPXlvcLBswadTsCDtFMBXg7yaaoSVj/89i
-	 DfwV3LM3viBxnHUHMeBaEpu3h5zJc30pHi7em+jIKCifiRU+dpZLSG0xgVGzlvbH/2
-	 zos19Bv6bvC1laMAOa1zpQn2z8nHpH4YCS9XE0cuAYi9ah0n9Hy3UlvKPXW8QmSQcn
-	 zSUcEdPIEA2oQ==
-Date: Tue, 2 Apr 2024 12:52:30 +0200
-From: Niklas Cassel <cassel@kernel.org>
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	Thierry Reding <thierry.reding@gmail.com>,
-	Jonathan Hunter <jonathanh@nvidia.com>,
-	Jingoo Han <jingoohan1@gmail.com>, linux-pci@vger.kernel.org,
-	linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-	mhi@lists.linux.dev, linux-tegra@vger.kernel.org
-Subject: Re: [PATCH v2 07/10] PCI: dwc: ep: Add a generic
- dw_pcie_ep_linkdown() API to handle Link Down event
-Message-ID: <Zgvjbig89Wuw2bX-@ryzen>
-References: <20240401-pci-epf-rework-v2-0-970dbe90b99d@linaro.org>
- <20240401-pci-epf-rework-v2-7-970dbe90b99d@linaro.org>
+	dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b="mMFzxVgl"
+Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-568c714a9c7so5843847a12.2
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Apr 2024 03:52:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=toblux-com.20230601.gappssmtp.com; s=20230601; t=1712055156; x=1712659956; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=cTP+C6xMYT5Qm5c+52geS7X5NPkIi5DsshiYl5+1cnQ=;
+        b=mMFzxVglnO1eGpcECFfrzGp0UvKcvtdECusQp0QDQ1n/FgfiGjSl4CSngVUEFKW2qD
+         uoj0mJulw+/++cz2u0Dm+jR7S/mEIKkfqKpN0qskd02mTLGarFtdv44+w3qbXIady89W
+         NGmUik6LdAVEEA04XnybbmSy3PrJjwIgk9fsPFM5mOQycaG5CQ/mV1js5TA3csNz5cdQ
+         QcrtmZB4158iP76umfgb4JWn0TBaEzFN99/Uw0mE3Lt4jFIo8rFZQvX9d0GFYghNZabr
+         WKID1aEl39obIzPKjGBG5al6H/cmEIUrVcL+8OwyskHaghxWIsxQK6MfAo3Wc9/0pOh0
+         wrsA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712055156; x=1712659956;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=cTP+C6xMYT5Qm5c+52geS7X5NPkIi5DsshiYl5+1cnQ=;
+        b=qpOZlTsmoFY7400ua5qyyEFWa6LQjnDgRqT4N61oqvdj3FaIAGnhu4uMoaEfAy8WnV
+         a/3n+tuxl1Y5lwX76lFl9cRFml2kZg6FxFJfCsrBfWDa5P5bFvbwZEqrbbIDgXYxq6hs
+         fpy8hpLO4tglNroO3BNQGO4c8VNbGX2twEbGuOIK6I0zpGM155GB8JMVYr31y5g/tYef
+         eamNRen6UFfYXVVpsSyvu0wlNSCBmYp6pLQNokNGDeQN9z9o/qtSsMPjxioFKN6ICz7d
+         jYf1unHcMNeeIbgZnOulnf9s1jjpeGq32HBsDtUk9PYesB4iJRMRKC7D98WX5oLUVBQa
+         QbxA==
+X-Forwarded-Encrypted: i=1; AJvYcCX0iFzhKd5LsMes4HvD9S3Dzo3ZNPfBjkB1OacAh0drcKtdblQtndOMM+pvVnngKwy1iGONB8pwdpkznY0nqXgkjS1xzPUq2jjkq7Ui
+X-Gm-Message-State: AOJu0Yy+i+LrfN0BcJ5IWHqzsjmSwg1j3+IYURvBmtCgJXcrF/tXgm+0
+	WIoQvoCPjcipDRGLokOH7ij2QzpQ1uqBQjqCQOiVTgntcihr4DqL2u2bFV3/P4c=
+X-Google-Smtp-Source: AGHT+IEPB4lf+7AgxzD2ZzI90EcqqarZcmw7DFa1Hl54/l1ZvwyGEvz/POzaHyV9FGreF9kuK/Z3OA==
+X-Received: by 2002:a17:907:7e9a:b0:a47:4ae0:3bb9 with SMTP id qb26-20020a1709077e9a00b00a474ae03bb9mr9289912ejc.23.1712055156147;
+        Tue, 02 Apr 2024 03:52:36 -0700 (PDT)
+Received: from fedora.fritz.box (aftr-82-135-80-212.dynamic.mnet-online.de. [82.135.80.212])
+        by smtp.gmail.com with ESMTPSA id c3-20020a170906340300b00a4739efd7cesm6435520ejb.60.2024.04.02.03.52.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 02 Apr 2024 03:52:35 -0700 (PDT)
+From: Thorsten Blum <thorsten.blum@toblux.com>
+To: "Theodore Ts'o" <tytso@mit.edu>,
+	Jan Kara <jack@suse.com>
+Cc: linux-ext4@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Thorsten Blum <thorsten.blum@toblux.com>
+Subject: [PATCH] jbd2: Use str_plural() to fix Coccinelle warning
+Date: Tue,  2 Apr 2024 12:51:58 +0200
+Message-ID: <20240402105157.254389-2-thorsten.blum@toblux.com>
+X-Mailer: git-send-email 2.44.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240401-pci-epf-rework-v2-7-970dbe90b99d@linaro.org>
+Content-Transfer-Encoding: 8bit
 
-On Mon, Apr 01, 2024 at 09:20:33PM +0530, Manivannan Sadhasivam wrote:
-> As per the PCIe base spec r5.0, section 5.2, Link Down event can happen
-> under any of the following circumstances:
-> 
-> 1. Fundamental/Hot reset
-> 2. Link disable transmission by upstream component
-> 3. Moving from L2/L3 to L0
-> 
-> In those cases, Link Down causes some non-sticky DWC registers to loose the
-> state (like REBAR, etc...). So the drivers need to reinitialize them to
-> function properly once the link comes back again.
-> 
-> This is not a problem for drivers supporting PERST# IRQ, since they can
-> reinitialize the registers in the PERST# IRQ callback. But for the drivers
-> not supporting PERST#, there is no way they can reinitialize the registers
-> other than relying on Link Down IRQ received when the link goes down. So
-> let's add a DWC generic API dw_pcie_ep_linkdown() that reinitializes the
-> non-sticky registers and also notifies the EPF drivers about link going
-> down.
-> 
-> This API can also be used by the drivers supporting PERST# to handle the
-> scenario (2) mentioned above.
-> 
-> NOTE: For the sake of code organization, move the dw_pcie_ep_linkup()
-> definition just above dw_pcie_ep_linkdown().
-> 
-> Reviewed-by: Niklas Cassel <cassel@kernel.org>
-> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> ---
->  drivers/pci/controller/dwc/pcie-designware-ep.c | 98 ++++++++++++++++---------
->  drivers/pci/controller/dwc/pcie-designware.h    |  5 ++
->  2 files changed, 68 insertions(+), 35 deletions(-)
-> 
-> diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
-> index 2063cf2049e5..56b34267850e 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware-ep.c
-> +++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
-> @@ -15,18 +15,6 @@
->  #include <linux/pci-epc.h>
->  #include <linux/pci-epf.h>
->  
-> -/**
-> - * dw_pcie_ep_linkup - Notify EPF drivers about Link Up event
-> - * @ep: DWC EP device
-> - */
-> -void dw_pcie_ep_linkup(struct dw_pcie_ep *ep)
-> -{
-> -	struct pci_epc *epc = ep->epc;
-> -
-> -	pci_epc_linkup(epc);
-> -}
-> -EXPORT_SYMBOL_GPL(dw_pcie_ep_linkup);
-> -
->  /**
->   * dw_pcie_ep_init_notify - Notify EPF drivers about EPC initialization complete
->   * @ep: DWC EP device
-> @@ -673,6 +661,29 @@ static unsigned int dw_pcie_ep_find_ext_capability(struct dw_pcie *pci, int cap)
->  	return 0;
->  }
->  
-> +static void dw_pcie_ep_init_non_sticky_registers(struct dw_pcie *pci)
-> +{
-> +	unsigned int offset;
-> +	unsigned int nbars;
-> +	u32 reg, i;
-> +
-> +	offset = dw_pcie_ep_find_ext_capability(pci, PCI_EXT_CAP_ID_REBAR);
-> +
-> +	dw_pcie_dbi_ro_wr_en(pci);
-> +
-> +	if (offset) {
-> +		reg = dw_pcie_readl_dbi(pci, offset + PCI_REBAR_CTRL);
-> +		nbars = (reg & PCI_REBAR_CTRL_NBAR_MASK) >>
-> +			PCI_REBAR_CTRL_NBAR_SHIFT;
-> +
-> +		for (i = 0; i < nbars; i++, offset += PCI_REBAR_CTRL)
-> +			dw_pcie_writel_dbi(pci, offset + PCI_REBAR_CAP, 0x0);
-> +	}
-> +
-> +	dw_pcie_setup(pci);
-> +	dw_pcie_dbi_ro_wr_dis(pci);
-> +}
-> +
->  /**
->   * dw_pcie_ep_init_registers - Initialize DWC EP specific registers
->   * @ep: DWC EP device
-> @@ -687,13 +698,11 @@ int dw_pcie_ep_init_registers(struct dw_pcie_ep *ep)
->  	struct dw_pcie_ep_func *ep_func;
->  	struct device *dev = pci->dev;
->  	struct pci_epc *epc = ep->epc;
-> -	unsigned int offset, ptm_cap_base;
-> -	unsigned int nbars;
-> +	u32 ptm_cap_base, reg;
->  	u8 hdr_type;
->  	u8 func_no;
-> -	int i, ret;
->  	void *addr;
-> -	u32 reg;
-> +	int ret;
->  
->  	hdr_type = dw_pcie_readb_dbi(pci, PCI_HEADER_TYPE) &
->  		   PCI_HEADER_TYPE_MASK;
-> @@ -756,25 +765,8 @@ int dw_pcie_ep_init_registers(struct dw_pcie_ep *ep)
->  	if (ep->ops->init)
->  		ep->ops->init(ep);
->  
-> -	offset = dw_pcie_ep_find_ext_capability(pci, PCI_EXT_CAP_ID_REBAR);
->  	ptm_cap_base = dw_pcie_ep_find_ext_capability(pci, PCI_EXT_CAP_ID_PTM);
->  
-> -	dw_pcie_dbi_ro_wr_en(pci);
-> -
-> -	if (offset) {
-> -		reg = dw_pcie_readl_dbi(pci, offset + PCI_REBAR_CTRL);
-> -		nbars = (reg & PCI_REBAR_CTRL_NBAR_MASK) >>
-> -			PCI_REBAR_CTRL_NBAR_SHIFT;
-> -
-> -		/*
-> -		 * PCIe r6.0, sec 7.8.6.2 require us to support at least one
-> -		 * size in the range from 1 MB to 512 GB. Advertise support
-> -		 * for 1 MB BAR size only.
-> -		 */
+Fixes the following Coccinelle/coccicheck warning reported by
+string_choices.cocci:
 
-Here you remove the above comment, but you don't seem to (re-)add the comment
-when moving this code to dw_pcie_ep_init_non_sticky_registers().
-(I assume that this is a simple rebase mistake.)
+	opportunity for str_plural(dropped)
 
+Signed-off-by: Thorsten Blum <thorsten.blum@toblux.com>
+---
+ fs/jbd2/recovery.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-Kind regards,
-Niklas
+diff --git a/fs/jbd2/recovery.c b/fs/jbd2/recovery.c
+index 1f7664984d6e..af930c3d0d97 100644
+--- a/fs/jbd2/recovery.c
++++ b/fs/jbd2/recovery.c
+@@ -19,6 +19,7 @@
+ #include <linux/errno.h>
+ #include <linux/crc32.h>
+ #include <linux/blkdev.h>
++#include <linux/string_choices.h>
+ #endif
+ 
+ /*
+@@ -374,7 +375,7 @@ int jbd2_journal_skip_recovery(journal_t *journal)
+ 			be32_to_cpu(journal->j_superblock->s_sequence);
+ 		jbd2_debug(1,
+ 			  "JBD2: ignoring %d transaction%s from the journal.\n",
+-			  dropped, (dropped == 1) ? "" : "s");
++			  dropped, str_plural(dropped));
+ #endif
+ 		journal->j_transaction_sequence = ++info.end_transaction;
+ 		journal->j_head = info.head_block;
+-- 
+2.44.0
 
-> -		for (i = 0; i < nbars; i++, offset += PCI_REBAR_CTRL)
-> -			dw_pcie_writel_dbi(pci, offset + PCI_REBAR_CAP, BIT(4));
-> -	}
-> -
->  	/*
->  	 * PTM responder capability can be disabled only after disabling
->  	 * PTM root capability.
