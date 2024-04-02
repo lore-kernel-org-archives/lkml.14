@@ -1,116 +1,125 @@
-Received: from szxga05-in.huawei.com (szxga05-in.huawei.com [45.249.212.191])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86D3315E96;
-	Tue,  2 Apr 2024 03:31:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.191
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F3C614286;
+	Tue,  2 Apr 2024 03:33:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712028686; cv=none; b=DJjoCCDBx5Txfh8RyQTNGesurp/palOlud5ruO4ciekCC4Kyxrxwtr79sQ+ss14zBniJdz71E6KA5AK1/KMdBeKpkmKqFD68Xe+IJ/cCdDlrZ40UqqRb9DXEmUy1NiG7+d9su0199cUoCdrkPyq9PLVZ0vqE95sVTYXPXsBQsMM=
+	t=1712028836; cv=none; b=hkXcCpXk199KxtRCRGKUBt8rdT7T3q5IP2GWmJOTr/kEryOoIb9Zy/dxNRPq0tNxF2fpeDchq5WzkCVuB+RIjIXdQ1dONr3T9gvR3dpAZV+qpRyB/QsDic8EQ/Ug0KiFMlsZvFSFKeoysP8+PM33sBGaThw8Ufpjdihjux2Lw4c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712028686; c=relaxed/simple;
-	bh=KcYFY0/J5LOE7gAjhMCVRdrkwkV0VBKNTOFoF6PhQ9Y=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=FZMP+ZPI7IecU948cRqM4cSyDkeuvvr/NeyGT2mauomicckHt7b0XBgVUJJsB8wqNp+xpswR/mXFPWSU7IUPICaAvdliY9JPj0BuKmjbRtnaVVTHHNc9HmyZFoX9vrkBDQcek6+qWj2b7Gx0OcK7qFFqeIfcMC80fhxvBug5cTE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.191
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.17])
-	by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4V7tdK4xZ5z1h5BL;
-	Tue,  2 Apr 2024 11:28:37 +0800 (CST)
-Received: from kwepemm600005.china.huawei.com (unknown [7.193.23.191])
-	by mail.maildlp.com (Postfix) with ESMTPS id 131DC1A0172;
-	Tue,  2 Apr 2024 11:31:22 +0800 (CST)
-Received: from huawei.com (10.50.165.33) by kwepemm600005.china.huawei.com
- (7.193.23.191) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.35; Tue, 2 Apr
- 2024 11:31:21 +0800
-From: Longfang Liu <liulongfang@huawei.com>
-To: <alex.williamson@redhat.com>, <jgg@nvidia.com>,
-	<shameerali.kolothum.thodi@huawei.com>, <jonathan.cameron@huawei.com>
-CC: <kvm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linuxarm@openeuler.org>, <liulongfang@huawei.com>
-Subject: [PATCH v4 4/4] Documentation: add debugfs description for hisi migration
-Date: Tue, 2 Apr 2024 11:24:32 +0800
-Message-ID: <20240402032432.41004-5-liulongfang@huawei.com>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20240402032432.41004-1-liulongfang@huawei.com>
-References: <20240402032432.41004-1-liulongfang@huawei.com>
+	s=arc-20240116; t=1712028836; c=relaxed/simple;
+	bh=nm+nAlqpw3ca2xRqXTLmgegLhY4MxsydF/vxsaUw2M0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=PAU++oRdk8LUPi5Gpsc8DlvZKzHXDhjCYx0lhhgMBRWNuHk2AoDs1YfQ81DMBRJ9iXzKC+5IhpqcX8nwZekLQkwdt8eI/vB6H8NQhyhSW6b1anGFNnxlqZGGKjL61xxTpdp7xwSrSnksCXmy0WRKj+HYGa4z0K+HRbS/1rAnhK8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=VJYsoJ+V; arc=none smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="VJYsoJ+V"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1712028835; x=1743564835;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=nm+nAlqpw3ca2xRqXTLmgegLhY4MxsydF/vxsaUw2M0=;
+  b=VJYsoJ+VfIuaCv5r9auzCwKTzQOA8AxZZiy2DOP6dibSnqjl94erSl/u
+   5KJn9USDVJ7CQaXCWqqBnsEEgkdzj8j1q3YXnfV46w6/JlWAGbBHXRQrD
+   6hjTYQCuTCkL21FX5DkLAoEaG38v25e9SeRZ+zvUVFh6qf11IHU20xd0K
+   uWt6ZQ18/CQC4o9TiV/LCpnZGkLz1yPUmeML34xr6a9we3IQ4xohw59g0
+   UX/D+MTqtKueAg+PyjFlUDyXaZENF4DZiM77vPNtrEq2Oy/XPGldoMoNt
+   VqNdO7I1mPhL3Q/5qt3od+hZlgV6IXs+tgC77wQOEBjyIaKjTPojIrwK5
+   Q==;
+X-CSE-ConnectionGUID: cOJwGq+CSjW5IU63M5OqUQ==
+X-CSE-MsgGUID: 1UUT7MF/QJS/IqMqBbUcvA==
+X-IronPort-AV: E=McAfee;i="6600,9927,11031"; a="10997135"
+X-IronPort-AV: E=Sophos;i="6.07,173,1708416000"; 
+   d="scan'208";a="10997135"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Apr 2024 20:33:54 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,173,1708416000"; 
+   d="scan'208";a="22587250"
+Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.165])
+  by fmviesa004.fm.intel.com with ESMTP; 01 Apr 2024 20:33:51 -0700
+Date: Tue, 2 Apr 2024 11:29:00 +0800
+From: Xu Yilun <yilun.xu@linux.intel.com>
+To: Peter Colberg <peter.colberg@intel.com>
+Cc: Wu Hao <hao.wu@intel.com>, Tom Rix <trix@redhat.com>,
+	Moritz Fischer <mdf@kernel.org>, Xu Yilun <yilun.xu@intel.com>,
+	linux-fpga@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Russ Weight <russ.weight@linux.dev>,
+	Marco Pagani <marpagan@redhat.com>,
+	Matthew Gerlach <matthew.gerlach@linux.intel.com>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: Re: [PATCH RESEND] fpga: dfl: omit unneeded casts of u64 values for
+ dev_dbg()
+Message-ID: <Zgt7fA/Jfks/iKYi@yilunxu-OptiPlex-7050>
+References: <20240329000429.7493-1-peter.colberg@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
- kwepemm600005.china.huawei.com (7.193.23.191)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240329000429.7493-1-peter.colberg@intel.com>
 
-Add a debugfs document description file to help users understand
-how to use the hisilicon accelerator live migration driver's
-debugfs.
+On Thu, Mar 28, 2024 at 08:04:29PM -0400, Peter Colberg wrote:
+> Omit unneeded casts of u64 values to unsigned long long for use with
+> printk() format specifier %llx. Unlike user space, the kernel defines
+> u64 as unsigned long long for all architectures; see commit 2a7930bd77fe
+> ("Documentation/printk-formats.txt: No casts needed for u64/s64").
 
-Update the file paths that need to be maintained in MAINTAINERS
+The change is OK. But I suggest just delete the unnecessary dev_dbg()
+since now people normally don't want these "Hello, I'm here!" info.
 
-Signed-off-by: Longfang Liu <liulongfang@huawei.com>
----
- .../ABI/testing/debugfs-hisi-migration        | 34 +++++++++++++++++++
- MAINTAINERS                                   |  1 +
- 2 files changed, 35 insertions(+)
- create mode 100644 Documentation/ABI/testing/debugfs-hisi-migration
+> 
+> These changes are cosmetic only; no functional changes.
+> 
+> Suggested-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Signed-off-by: Peter Colberg <peter.colberg@intel.com>
+> ---
+> This is an unmodified resend of the second patch only from the series
+> "fpga: dfl: clean up string formatting for sysfs_emit() and dev_dbg()".
 
-diff --git a/Documentation/ABI/testing/debugfs-hisi-migration b/Documentation/ABI/testing/debugfs-hisi-migration
-new file mode 100644
-index 000000000000..3d7339276e6f
---- /dev/null
-+++ b/Documentation/ABI/testing/debugfs-hisi-migration
-@@ -0,0 +1,34 @@
-+What:		/sys/kernel/debug/vfio/<device>/migration/hisi_acc/data
-+Date:		Apr 2024
-+KernelVersion:  6.9
-+Contact:	Longfang Liu <liulongfang@huawei.com>
-+Description:	Read the live migration data of the vfio device.
-+		These data include device status data, queue configuration
-+		data and some task configuration data.
-+		The output format of the data is defined by the live
-+		migration driver.
-+
-+What:		/sys/kernel/debug/vfio/<device>/migration/hisi_acc/attr
-+Date:		Apr 2024
-+KernelVersion:  6.9
-+Contact:	Longfang Liu <liulongfang@huawei.com>
-+Description:	Read the live migration attributes of the vfio device.
-+		it include device status attributes and data length attributes
-+		The output format of the attributes is defined by the live
-+		migration driver.
-+
-+What:		/sys/kernel/debug/vfio/<device>/migration/hisi_acc/cmd_state
-+Date:		Apr 2024
-+KernelVersion:  6.9
-+Contact:	Longfang Liu <liulongfang@huawei.com>
-+Description:	Used to obtain the device command sending and receiving
-+		channel status. If successful, returns the command value.
-+		If failed, return error log.
-+
-+What:		/sys/kernel/debug/vfio/<device>/migration/hisi_acc/save
-+Date:		Apr 2024
-+KernelVersion:  6.9
-+Contact:	Longfang Liu <liulongfang@huawei.com>
-+Description:	Trigger the Hisilicon accelerator device to perform
-+		the state saving operation of live migration through the read
-+		operation, and output the operation log results.
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 7625911ec2f1..8c2d13b13273 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -23072,6 +23072,7 @@ M:	Longfang Liu <liulongfang@huawei.com>
- M:	Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>
- L:	kvm@vger.kernel.org
- S:	Maintained
-+F:	Documentation/ABI/testing/debugfs-hisi-migration
- F:	drivers/vfio/pci/hisilicon/
- 
- VFIO MEDIATED DEVICE DRIVERS
--- 
-2.24.0
+Why only pick this patch out of the series?
 
+[...]
+
+> diff --git a/drivers/fpga/dfl-fme-mgr.c b/drivers/fpga/dfl-fme-mgr.c
+> index ab228d8837a0..da3cb9c35de5 100644
+> --- a/drivers/fpga/dfl-fme-mgr.c
+> +++ b/drivers/fpga/dfl-fme-mgr.c
+> @@ -150,7 +150,7 @@ static int fme_mgr_write_init(struct fpga_manager *mgr,
+>  	priv->pr_error = fme_mgr_pr_error_handle(fme_pr);
+>  	if (priv->pr_error)
+>  		dev_dbg(dev, "previous PR error detected %llx\n",
+> -			(unsigned long long)priv->pr_error);
+> +			priv->pr_error);
+
+I'm not sure if this is an real problem. Maybe we could keep it.
+
+>  
+>  	dev_dbg(dev, "set PR port ID\n");
+>  
+> @@ -242,8 +242,7 @@ static int fme_mgr_write_complete(struct fpga_manager *mgr,
+>  	dev_dbg(dev, "PR operation complete, checking status\n");
+>  	priv->pr_error = fme_mgr_pr_error_handle(fme_pr);
+>  	if (priv->pr_error) {
+> -		dev_dbg(dev, "PR error detected %llx\n",
+> -			(unsigned long long)priv->pr_error);
+> +		dev_dbg(dev, "PR error detected %llx\n", priv->pr_error);
+
+This is a real problem, is it? Change to dev_err()?
+
+Thanks,
+Yilun
+
+>  		return -EIO;
+>  	}
+>  
+> -- 
+> 2.44.0
+> 
+> 
