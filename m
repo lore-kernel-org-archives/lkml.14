@@ -1,127 +1,131 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D93A4501C;
-	Tue,  2 Apr 2024 08:46:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F9C0481C2;
+	Tue,  2 Apr 2024 08:46:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712047568; cv=none; b=Y5jhffmfXR9KrioEaUAMhSYXAhfZ6J97HErmywm6H4+PPq9TuwrU6Yz1Yo7raZDT3WAJMVD6BrAauY/oJX4O3ha/JKzCvSV6fOvMM0RFLGnRjc6qiuvudDzF/2zuoqEVxp+ZgW7Y9OT3vj79X3/eLnFMoz1kI9yiDY0bhKF43Gw=
+	t=1712047584; cv=none; b=QtR5b19cZuZE072lmfEfV9ZTy74DinjEko4i5cYYcs17hfcOCZIFFdxiWTxDu7oHDO0hg9yo/k3mWik5icgTRjLDrmQ0LkvDzzvtSbmrcofFckZjneT9hpS++3nZ8IqVmNj9e34d6YYQIjfrqkqM9rZsWiQYiMSfbGeDynowOe8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712047568; c=relaxed/simple;
-	bh=Fh4xaBSV/7KMplnOoseILgEOyANlTljnCuikIBL5YzE=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=Eo89vudUdm5Tu1Ixde8HtVkfDEA9pvTTH5VX1TPdzJbfAbodK8y7htnYpBqGbqdTmzEIz/4Z78y4/+AuTd5UZb3v2SQiAdRx0JU2ADMkWsp49whXB86At7MiBxqw/to6WLQYGm4kSaedJPhnPHpYt9b75GWErEM0khlS3o3KDyY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Wl3U/pMq; arc=none smtp.client-ip=198.175.65.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1712047584; c=relaxed/simple;
+	bh=VkBHRfvSSY64YEIMMUm3e85GngUDObcOmq5K7WEvjEI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=rcX4Wkj/UpjecepMhnANuKqnC8C/ECewogyCNuiJbpvF4T1X1zKjIusv5HsY8TBTRgiNxF27gyoRMZOUQ7W4saq/y1hv/yog5qPCBUDPeUHTvZP5JgskNu4rFGJp2wFC8AcNadmtsZI/vAflUdcSgiNqa4S81OkRobigWTcwrSQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=V883+4pJ; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Wl3U/pMq"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1712047566; x=1743583566;
-  h=message-id:subject:from:to:cc:date:in-reply-to:
-   references:content-transfer-encoding:mime-version;
-  bh=Fh4xaBSV/7KMplnOoseILgEOyANlTljnCuikIBL5YzE=;
-  b=Wl3U/pMqKxjKP71jo63XFFK4GXgw9YupQZ2KsMyrxad5VB9irM4CAyDC
-   KMs1pi/ROhPtT4R25yC6dF2rL6WMjSkjW6RkI7i87B/mHysjgWVqs21GH
-   DAJUpSXKsTMiIFfKHfQfZqiYsHDilQf9MYo559K4rwnkZuMQWkSdABHp9
-   18XtBsLatiRYXqZj9eSDjT/dpPVwPtU5fQ8tYQ/XROWVQYQzjRWMGWwJ+
-   CdH5CF3PkpWEJmgLJzLjEZGyF2+fwQjkVkMzP7tCb8UVuMVSdHZBGoik/
-   Tv644hEkqkA0aqfZlUtaFaEuFbfTLzf/B2XWdTnnwviPXOravHIzBFo1I
-   A==;
-X-CSE-ConnectionGUID: Ox1ritnBS/+7t4Gtg/t/Ag==
-X-CSE-MsgGUID: wFDtkneSQeWrcU/ttCVEAw==
-X-IronPort-AV: E=McAfee;i="6600,9927,11031"; a="7361897"
-X-IronPort-AV: E=Sophos;i="6.07,174,1708416000"; 
-   d="scan'208";a="7361897"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2024 01:46:06 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,174,1708416000"; 
-   d="scan'208";a="18067477"
-Received: from spandruv-desk1.amr.corp.intel.com ([10.209.67.49])
-  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2024 01:46:05 -0700
-Message-ID: <2a3e223f3f248e8b02a8aeb47ab2ab15a6225889.camel@linux.intel.com>
-Subject: Re: [PATCH v1 0/6] intel_pstate: Turbo disabled handling rework
-From: srinivas pandruvada <srinivas.pandruvada@linux.intel.com>
-To: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Linux PM
- <linux-pm@vger.kernel.org>
-Cc: LKML <linux-kernel@vger.kernel.org>
-Date: Tue, 02 Apr 2024 01:46:04 -0700
-In-Reply-To: <13494237.uLZWGnKmhe@kreacher>
-References: <13494237.uLZWGnKmhe@kreacher>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.48.4 (3.48.4-1.fc38) 
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="V883+4pJ"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
+	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
+	In-Reply-To:References; bh=UOKR97xWJsCzeiNSwUpoZzyukhRCG3SAXSValTgdpjo=;
+	t=1712047582; x=1712479582; b=V883+4pJc6LtnMgoRsNevh2Zv4dhZ7lXDR41MjMdSYn/zOV
+	/kaRt/Vc7VtsadMgcg0tyoG1W0c6L2vZU23HcuMKYgiIUFHovvXHxDLLzQgaam6AVcKdiAJSmuVzn
+	wjRJ4Pt5qDOCNuUmzRn2CfAei26R1oENIlkFE2ULevEcmS8doW3HCzds/DlLf0SJf8zwiUZbjpFMq
+	y83n+zrMR6tVX4y6KtFqu0A3YwP2GcF3A2Qnua/iCqNmc+zHEiaekRtXZqCMzaiOOpC5zhup80cK8
+	vxNCTdP7FCaTVkGyKaiF86mufswDa/tDXzC/bk0Lg83U/U166q2YMGqA4E8Z7BrA==;
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1rrZmW-0000jW-Qi; Tue, 02 Apr 2024 10:46:12 +0200
+Message-ID: <ecc8bd98-0dac-4f17-abb3-ebc8b10fd0f7@leemhuis.info>
+Date: Tue, 2 Apr 2024 10:46:11 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [REGRESSION] external monitor+Dell dock in 6.8
+To: Imre Deak <imre.deak@intel.com>
+Cc: regressions@lists.linux.dev, Andrei Gaponenko <beamflash@quaintcat.com>,
+ LKML <linux-kernel@vger.kernel.org>,
+ intel-gfx <intel-gfx@lists.freedesktop.org>,
+ Jani Nikula <jani.nikula@linux.intel.com>,
+ Rodrigo Vivi <rodrigo.vivi@intel.com>,
+ Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+ Tvrtko Ursulin <tursulin@ursulin.net>,
+ ML dri-devel <dri-devel@lists.freedesktop.org>
+References: <22aa3878-62c7-9a2c-cfcc-303f373871f6@quaintcat.com>
+From: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+Content-Language: en-US, de-DE
+In-Reply-To: <22aa3878-62c7-9a2c-cfcc-303f373871f6@quaintcat.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1712047582;8e22cf2f;
+X-HE-SMSGID: 1rrZmW-0000jW-Qi
 
-On Mon, 2024-03-25 at 18:00 +0100, Rafael J. Wysocki wrote:
-> Hi Everyone,
->=20
-> This series reworks the handling of disabling turbo in intel_pstate
-> on top of the previous series of cleanups
->=20
-> https://lore.kernel.org/linux-pm/12409658.O9o76ZdvQC@kreacher/
->=20
-> The underlying problem is that disabling turbo is handled quite
-> consistently
-> in intel_pstate and basically it can get disabled at any time
-> (through
-> MSR_IA32_MISC_ENABLE_TURBO_DISABLE) without much coordination with
-> the
-> cpufreq core or anything else.
->=20
-> Disabling turbo through the "no_turbo" sysfs attribute is more
-> consistent,
-> but it has issues too (for example, if turbo is disabled via
-> "no_turbo",
-> the frequency-invariance code gets notified on the turbo status
-> change,
-> but the actual maximum frequency of the CPU is only updated if the
-> MSR_IA32_MISC_ENABLE_TURBO_DISABLE value changes either, which need
-> not
-> happen at the same time or even at all).
->=20
-> The first patch is not really related to the rest of the series, it's
-> just a cleanup and can be applied separately.
->=20
-> Patch [2/6] uses the observation that it should be necessary to read
-> MSR_IA32_MISC_ENABLE_TURBO_DISABLE after driver initialization to
-> remove
-> in-flight reads on that MSR and turbo state updates related to them.
->=20
-> Patch [3/6] builds on top of the previous one to adjust the
-> "no_turbo"
-> attribute "store" and "show" callbacks.
->=20
-> Patch [4/6] adds READ_ONCE() annotations to global.no_turbo accesses
-> and
-> makes some related simplifications.
->=20
-> Patch [5/6] replaces the cached MSR_IA32_MISC_ENABLE_TURBO_DISABLE
-> value in some checks with global.no_turbo for consistency.
->=20
-> Patch [6/6] makes all of the code paths where the maximum CPU
-> frequency
-> can change to do that consistently by using the same set of
-> functions.
->=20
-> Details are described in the individual patch changelogs.
->=20
+[Adding a few folks and list while dropping the stable list, as this is
+unrelated to it]
 
-Acked-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+On 31.03.24 07:59, Andrei Gaponenko wrote:
+> 
+> I noticed a regression with the mailine kernel pre-compiled by EPEL.
+> I have just tried linux-6.9-rc1.tar.gz from kernel.org, and it still
+> misbehaves.
+> 
+> The default setup: a laptop is connected to a dock, Dell WD22TB4, via
+> a USB-C cable.  The dock is connected to an external monitor via a
+> Display Port cable.  With a "good" kernel everything works.  With a
+> "broken" kernel, the external monitor is still correctly identified by
+> the system, and is shown as enabled in plasma systemsettings. The
+> system also behaves like the monitor is working, for example, one can
+> move the mouse pointer off the laptop screen.  However the external
+> monitor screen stays black, and it eventually goes to sleep.
 
-Thanks,
-Srinivas
+Just a quick heads up to ensure people are aware of it:
 
-> Thanks!
->=20
->=20
->=20
->=20
+Imre Deak, turns out this is caused by a patch of yours: 55eaef16417448
+("drm/i915/dp_mst: Handle the Synaptics HBlank expansion quirk"). Andrei
+Gaponenko meanwhile filed a ticket about it here:
 
+https://gitlab.freedesktop.org/drm/intel/-/issues/10637
+
+Ciao, Thorsten
+
+> Everything worked with EPEL mainline kernels up to and including
+> kernel-ml-6.7.9-1.el9.elrepo.x86_64
+> 
+> The breakage is observed in
+> 
+> kernel-ml-6.8.1-1.el9.elrepo.x86_64
+> kernel-ml-6.8.2-1.el9.elrepo.x86_64
+> linux-6.9-rc1.tar.gz from kernel.org (with olddefconfig)
+> 
+> Other tests: using an HDMI cable instead of the Display Port cable
+> between the monitor and the dock does not change things, black screen
+> with the newer kernels.
+> 
+> Using a small HDMI-to-USB-C adapter instead of the dock results in a
+> working system, even with the newer kernels.  So the breakage appears
+> to be specific to the Dell WD22TB4 dock.
+> 
+> Operating System: AlmaLinux 9.3 (Shamrock Pampas Cat)
+> 
+> uname -mi: x86_64 x86_64
+> 
+> Laptop: Dell Precision 5470/02RK6V
+> 
+> lsusb |grep dock
+> Bus 003 Device 007: ID 413c:b06e Dell Computer Corp. Dell dock
+> Bus 003 Device 008: ID 413c:b06f Dell Computer Corp. Dell dock
+> Bus 003 Device 006: ID 0bda:5413 Realtek Semiconductor Corp. Dell dock
+> Bus 003 Device 005: ID 0bda:5487 Realtek Semiconductor Corp. Dell dock
+> Bus 002 Device 004: ID 0bda:0413 Realtek Semiconductor Corp. Dell dock
+> Bus 002 Device 003: ID 0bda:0487 Realtek Semiconductor Corp. Dell dock
+> 
+> dmesg and kernel config are attached to 
+> https://bugzilla.kernel.org/show_bug.cgi?id=218663
+> 
+> #regzbot introduced: v6.7.9..v6.8.1
+
+P.S.:
+
+#regzbot duplicate: https://bugzilla.kernel.org/show_bug.cgi?id=218663
+#regzbot duplicate: https://gitlab.freedesktop.org/drm/intel/-/issues/10637
+#regzbot title: drm/i915/dp_mst: external monitor on Dell dock broke
