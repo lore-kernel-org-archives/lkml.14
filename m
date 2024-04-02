@@ -1,85 +1,114 @@
-Received: from relay4-d.mail.gandi.net (relay4-d.mail.gandi.net [217.70.183.196])
+Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.153.233])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9505D383A4
-	for <linux-kernel@vger.kernel.org>; Tue,  2 Apr 2024 07:17:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.196
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AA3A2BD00;
+	Tue,  2 Apr 2024 07:18:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.153.233
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712042253; cv=none; b=ApvTX1GjowzMb3+pSC0OF2AO+CFHV54Abq3JjB8cGL1tv8kLQMM9hiGGoRkOs87KfWwlGpR430LPva52MTXTUA1Xf5ojRSlDEM+CCj1b9w26ptLrUpZNhuNPLX5yyw5YNtqL6VSLbBRd4pRkOAy6j4XAcnCWckPiZy1jP4dA6Ok=
+	t=1712042288; cv=none; b=ay63G4QzhoF/NTY4R9E4ye8TOzdnU9rmkihHkOi5EdyZv1sovt/oZx0peFfq8BvRu1T2xbWrZpDMHzVVfx2BV+AUiSCwHRJ4hMnvuIXYmILIpx9FlzdJzZsbA9NZf9Yzpvfc29tkbh6/o8TI3aZJiqx3i/XJBFCCfgzcw6WiqMc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712042253; c=relaxed/simple;
-	bh=eN+1HKdl2zbDnDnFxj0qA5MUBSn6KCCqGxvqIEzcWOU=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=oWVL8mgMaIa1W5x7tZJUWnLYBSMqTbC6x5Igz+GM8vampvxpXaZEfdLhiu61X6RF7ZZtTmIf05VhYs+wWQjI+mUnukoWVHGu/JbubNoUJm93dbb2FrszyHu1fFfDb+hKGsx5tm3/j3CnVZd1Vfft8g8a3WLHWK6KsblyJPVNxb8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=Uh40wk5f; arc=none smtp.client-ip=217.70.183.196
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1712042288; c=relaxed/simple;
+	bh=AIIUnIQYVsm7lRDeuM3Eiv+P07h/G4w5XeAzewovPAM=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=EVbOwr52kg9pV0B3P1COBCX0WJdq5yLpJX90mdVS4IyDSmS2OuPZhg+yg5VBxA7MkYniTS+8eIYcYczMBAqsDUOP2Te6Sdt6PcyzvAbI0UIy6fuDPaqLdlEGwjqb/nSNcBZYYpYLtDQZkYZUsh8jrpkJqAne5bYuP5VpzJ31Drw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=IAtvSeqI; arc=none smtp.client-ip=68.232.153.233
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="Uh40wk5f"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id E15E5E0012;
-	Tue,  2 Apr 2024 07:17:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1712042244;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=CyiqMn8iq2POB6jW9ztBdA/Viq5fYoh35k7L3HoZwIg=;
-	b=Uh40wk5fU8+Okrt7gbO/UybeRHjE7GG08Zt7oV8jypkMnxeZwDGQ1It108zB+pE9T77D7E
-	SfsJsj2wH4DV7bXz6JkvKcXyHVFMYC9SWqYB5Q65Kf/yZ10beck4+iQVNgZ9YpwC6UDuiz
-	y/0WrjM4muYdQqWwAKGOpA2F1kNfQcavQMIigkRZCgBh95OlHeFtJ+lTrCUjPpknikZtNL
-	QxmDUXPtX0vcmvdtwGuSLjH3pmYeQnL/TtSLj7JZ78FPOozZVIGwP8SbHWyqCi9Qn/2vpq
-	BSiA8O/wlu5P/Nr5Xrdi/CBp/Pz8oMIOzEu3EuEa2/tghhWWMNRmlaoDexjv6Q==
-Date: Tue, 2 Apr 2024 09:17:23 +0200
-From: Miquel Raynal <miquel.raynal@bootlin.com>
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Michael Walle
- <mwalle@kernel.org>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 3/3] nvmem: layouts: sl28vpd: drop driver owner
- initialization
-Message-ID: <20240402091723.1923c13c@xps-13>
-In-Reply-To: <20240329-module-owner-nvmem-v1-3-d700685f08e1@linaro.org>
-References: <20240329-module-owner-nvmem-v1-0-d700685f08e1@linaro.org>
-	<20240329-module-owner-nvmem-v1-3-d700685f08e1@linaro.org>
-Organization: Bootlin
-X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="IAtvSeqI"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1712042286; x=1743578286;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=AIIUnIQYVsm7lRDeuM3Eiv+P07h/G4w5XeAzewovPAM=;
+  b=IAtvSeqIrAM7p+VEDzBHvQ8V+w1q3OJKxgvYsZc0xu8iO7m1rIV48UHs
+   6v25Bk4x6aGEqosrcMvPwjMqDt1Eoi93WkTuiN+q4IQ+cOpOG1eZ3yF8q
+   fXrTBj4BBwPFKYwTjy264ybc62wT9eGvnOIQ3YeACvNGwnR+SEtEZnDkI
+   gg2jhpv2fVVAUUahengX2DoMdkUjpIFdvLNsR5ZZST1KXSunRqrIXd3g/
+   iHH0Ts/pUR3o6KfblnRYm8a8xaF0/EZTIQmbmNREyyP3UKswPrc66baZb
+   fCp6JogOQVbJy15NGcFonl0tDCw3CzlXZb0YxFQJnhuXOWMrv3WEIP2r3
+   A==;
+X-CSE-ConnectionGUID: YYBWl9GrQb6mGB1zAkjL6g==
+X-CSE-MsgGUID: f6W66RxjRf+27EMubxg8/A==
+X-IronPort-AV: E=Sophos;i="6.07,174,1708412400"; 
+   d="scan'208";a="19119228"
+X-Amp-Result: SKIPPED(no attachment in message)
+Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
+  by esa3.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 02 Apr 2024 00:18:05 -0700
+Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
+ chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Tue, 2 Apr 2024 00:17:46 -0700
+Received: from DEN-DL-M31836.microsemi.net (10.10.85.11) by
+ chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server id
+ 15.1.2507.35 via Frontend Transport; Tue, 2 Apr 2024 00:17:44 -0700
+From: Horatiu Vultur <horatiu.vultur@microchip.com>
+To: <andrew@lunn.ch>, <hkallweit1@gmail.com>, <linux@armlinux.org.uk>,
+	<davem@davemloft.net>, <edumazet@google.com>, <kuba@kernel.org>,
+	<pabeni@redhat.com>, <richardcochran@gmail.com>,
+	<Divya.Koppera@microchip.com>
+CC: <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<UNGLinuxDriver@microchip.com>, Horatiu Vultur <horatiu.vultur@microchip.com>
+Subject: [PATCH net] net: phy: micrel: lan8814: Fix when enabling/disabling 1-step timestamping
+Date: Tue, 2 Apr 2024 09:16:34 +0200
+Message-ID: <20240402071634.2483524-1-horatiu.vultur@microchip.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-GND-Sasl: miquel.raynal@bootlin.com
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 
-Hi Krzysztof,
+There are 2 issues with the blamed commit.
+1. When the phy is initialized, it would enable the disabled of UDPv4
+   checksums. The UDPv6 checksum is already enabled by default. So when
+   1-step is configured then it would clear these flags.
+2. After the 1-step is configured, then if 2-step is configured then the
+   1-step would be still configured because it is not clearing the flag.
+   So the sync frames will still have origin timestamps set.
 
-krzysztof.kozlowski@linaro.org wrote on Fri, 29 Mar 2024 17:13:37 +0100:
+Fix this by reading first the value of the register and then
+just change bit 12 as this one determines if the timestamp needs to
+be inserted in the frame, without changing any other bits.
 
-> Core in nvmem_layout_driver_register() already sets the .owner, so
-> driver does not need to.
->=20
+Fixes: ece19502834d ("net: phy: micrel: 1588 support for LAN8814 phy")
+Signed-off-by: Horatiu Vultur <horatiu.vultur@microchip.com>
+---
+ drivers/net/phy/micrel.c | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
 
-Reviewed-by: Miquel Raynal <miquel.raynal@bootlin.com>
+diff --git a/drivers/net/phy/micrel.c b/drivers/net/phy/micrel.c
+index 8b8634600c519..242f433d9184d 100644
+--- a/drivers/net/phy/micrel.c
++++ b/drivers/net/phy/micrel.c
+@@ -2431,6 +2431,7 @@ static int lan8814_hwtstamp(struct mii_timestamper *mii_ts,
+ 	struct lan8814_ptp_rx_ts *rx_ts, *tmp;
+ 	int txcfg = 0, rxcfg = 0;
+ 	int pkt_ts_enable;
++	int tx_mod;
+ 
+ 	ptp_priv->hwts_tx_type = config->tx_type;
+ 	ptp_priv->rx_filter = config->rx_filter;
+@@ -2477,9 +2478,14 @@ static int lan8814_hwtstamp(struct mii_timestamper *mii_ts,
+ 	lanphy_write_page_reg(ptp_priv->phydev, 5, PTP_RX_TIMESTAMP_EN, pkt_ts_enable);
+ 	lanphy_write_page_reg(ptp_priv->phydev, 5, PTP_TX_TIMESTAMP_EN, pkt_ts_enable);
+ 
+-	if (ptp_priv->hwts_tx_type == HWTSTAMP_TX_ONESTEP_SYNC)
++	tx_mod = lanphy_read_page_reg(ptp_priv->phydev, 5, PTP_TX_MOD);
++	if (ptp_priv->hwts_tx_type == HWTSTAMP_TX_ONESTEP_SYNC) {
+ 		lanphy_write_page_reg(ptp_priv->phydev, 5, PTP_TX_MOD,
+-				      PTP_TX_MOD_TX_PTP_SYNC_TS_INSERT_);
++				      tx_mod | PTP_TX_MOD_TX_PTP_SYNC_TS_INSERT_);
++	} else if (ptp_priv->hwts_tx_type == HWTSTAMP_TX_ON) {
++		lanphy_write_page_reg(ptp_priv->phydev, 5, PTP_TX_MOD,
++				      tx_mod & ~PTP_TX_MOD_TX_PTP_SYNC_TS_INSERT_);
++	}
+ 
+ 	if (config->rx_filter != HWTSTAMP_FILTER_NONE)
+ 		lan8814_config_ts_intr(ptp_priv->phydev, true);
+-- 
+2.34.1
 
-> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-> ---
->  drivers/nvmem/layouts/sl28vpd.c | 1 -
->  1 file changed, 1 deletion(-)
->=20
-> diff --git a/drivers/nvmem/layouts/sl28vpd.c b/drivers/nvmem/layouts/sl28=
-vpd.c
-> index 53fa50f17dca..e93b020b0836 100644
-> --- a/drivers/nvmem/layouts/sl28vpd.c
-> +++ b/drivers/nvmem/layouts/sl28vpd.c
-> @@ -156,7 +156,6 @@ MODULE_DEVICE_TABLE(of, sl28vpd_of_match_table);
-> =20
->  static struct nvmem_layout_driver sl28vpd_layout =3D {
->  	.driver =3D {
-> -		.owner =3D THIS_MODULE,
->  		.name =3D "kontron-sl28vpd-layout",
->  		.of_match_table =3D sl28vpd_of_match_$
-
-Thanks,
-Miqu=C3=A8l
