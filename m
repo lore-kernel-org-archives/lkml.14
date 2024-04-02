@@ -1,46 +1,42 @@
-Received: from mail-177132.yeah.net (mail-177132.yeah.net [123.58.177.132])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E94041758C;
-	Tue,  2 Apr 2024 03:04:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=123.58.177.132
+Received: from mail-177131.yeah.net (mail-177131.yeah.net [123.58.177.131])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6C429111A3;
+	Tue,  2 Apr 2024 03:08:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=123.58.177.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712027092; cv=none; b=UJYLRkkQJUdH18A3TBIu8utJkhuOs5bFz2Qhg6s9RZ/Ss2xF1YwxZuWrGymzDNLym/+FLXvTMGfkVlmbyDKVIUoBMMUK8juPrpbxYLbHBz/qcNgghybYXeR/8Gc9m8w0AKWn5AhrlMgSda6D4iT5erEg+rhhBm1uJbaxjBrvNy8=
+	t=1712027309; cv=none; b=Mq+Mc7IM93s9q9v8LJs4JiexF6Z+yr6ZEdCVIjNLOD9MW3PgYWKUrNUDQ5QK3gVpm6hpw4Z/er2rRTFLlJBUMhiKuWLf+W8BNJDJIyIBE0SG3xlwRG3bWeJGzuDSHuOfmkDFXbqBi9B5ABVRCP/+cNvKEN0EhL4Vl1XkVDN9V1Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712027092; c=relaxed/simple;
-	bh=eAXc09xEKhzdLACdh70tJItL4IIbJf5hovpipkhS+KA=;
+	s=arc-20240116; t=1712027309; c=relaxed/simple;
+	bh=THQJhfCI3NV5s3qjkmDdRQIp/h1O0ux7I5EUAKOnlPg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=THCzNkHqdIrNlVQwKT+ShjaTn/CFdzmKIePRaOQLYqnExSpIQkJ+b7YeM3Q0Vu5bjY7/586WUX4ZUlPz78NyDaQjs7jwVPE5BCFwr6RyHqUJW7ojAwmM+DMqpGXDPKvyNrHtKamsmW3y1iVOq9qMeSZaYC6isd3JXdBkbFUC5RM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yeah.net; spf=pass smtp.mailfrom=yeah.net; dkim=pass (1024-bit key) header.d=yeah.net header.i=@yeah.net header.b=UWogBxFD; arc=none smtp.client-ip=123.58.177.132
+	 Content-Type:Content-Disposition:In-Reply-To; b=tIAsGqiPU5ezaSWXgriQtDhHz3bwPeAOdYivM75kChJA4R/AK+bXZ9Hu2tMFyoIdA+pgIAAEz7UkNqzEvvUPjmQWs3AqhBq3MwecBZ6TJzAnGdeHV30zfsbVqdh35kSXRdlYLvjmG58O+7EGF0DjY4gOPZ3yVJC06yhvpAUpAc4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yeah.net; spf=pass smtp.mailfrom=yeah.net; dkim=pass (1024-bit key) header.d=yeah.net header.i=@yeah.net header.b=iUoylHQ8; arc=none smtp.client-ip=123.58.177.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yeah.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yeah.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=yeah.net header.i=@yeah.net header.b="UWogBxFD"
+	dkim=pass (1024-bit key) header.d=yeah.net header.i=@yeah.net header.b="iUoylHQ8"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yeah.net;
 	s=s110527; h=Date:From:Subject:Message-ID:MIME-Version:
-	Content-Type; bh=jZdmlIK9BLALrTRQhLlnaYBmJtd1g54qxC+APchnqLQ=;
-	b=UWogBxFDIp1JPn5zvSMptp7eRGlQUyMCv5Ni9qMmF6t9Rn+li5HeD8dWMvg808
-	mBwR6AKsfYhyB6PMlKFVUB7+yJFILDyikTanniuoDaLcNKnElj2TJ14RTENFaLLa
-	n1LBiFKLozkZt4caM65z2Ecvt8yqs3R0qssE3/5/zXiq0=
+	Content-Type; bh=W6kztPF8aGTaXEy+y3D7Q11qG0J7JfUXpshpfWhBdVE=;
+	b=iUoylHQ8JHjmTiqSGgUuCITSuEb+xlWu2gRbtA2mMmYeHL12YeppOYvXSEcUkh
+	eL5W2tCt9ChwKKraPstlr+LmIpKWXszKtHLjIHDQALwQkYgfI+bT+I4YTGwD1H5Z
+	hEMwdO4SV/c7bV64bTtT51wrkVNj/o9WH/iglbwZkp0sk=
 Received: from dragon (unknown [223.68.79.243])
-	by smtp2 (Coremail) with SMTP id C1UQrAD332ijdQtmQAejAg--.52779S3;
-	Tue, 02 Apr 2024 11:04:04 +0800 (CST)
-Date: Tue, 2 Apr 2024 11:04:03 +0800
+	by smtp1 (Coremail) with SMTP id ClUQrAC3v0N8dgtmfdWdAQ--.42632S3;
+	Tue, 02 Apr 2024 11:07:42 +0800 (CST)
+Date: Tue, 2 Apr 2024 11:07:40 +0800
 From: Shawn Guo <shawnguo2@yeah.net>
-To: Marek Vasut <marex@denx.de>
-Cc: linux-arm-kernel@lists.infradead.org,
-	Conor Dooley <conor+dt@kernel.org>,
-	Fabio Estevam <festevam@gmail.com>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	NXP Linux Team <linux-imx@nxp.com>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Rob Herring <robh+dt@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Shawn Guo <shawnguo@kernel.org>, devicetree@vger.kernel.org,
-	imx@lists.linux.dev, kernel@dh-electronics.com,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] arm64: dts: imx8mp: Describe CSI2 GPIO expander on
- i.MX8MP DHCOM PDK3 board
-Message-ID: <Zgt1o/CT29hPBvOP@dragon>
-References: <20240319043733.134728-1-marex@denx.de>
+To: Joy Zou <joy.zou@nxp.com>
+Cc: frank.li@nxp.com, ping.bai@nxp.com, lgirdwood@gmail.com,
+	broonie@kernel.org, robh+dt@kernel.org,
+	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
+	shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
+	festevam@gmail.com, linux-imx@nxp.com, devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	imx@lists.linux.dev
+Subject: Re: [PATCH v6 3/3] arm64: dts: imx93-11x11-evk: add pca9451a support
+Message-ID: <Zgt2fFO43Bi2Kl7s@dragon>
+References: <20240320062849.1321423-1-joy.zou@nxp.com>
+ <20240320062849.1321423-4-joy.zou@nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -49,20 +45,17 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240319043733.134728-1-marex@denx.de>
-X-CM-TRANSID:C1UQrAD332ijdQtmQAejAg--.52779S3
+In-Reply-To: <20240320062849.1321423-4-joy.zou@nxp.com>
+X-CM-TRANSID:ClUQrAC3v0N8dgtmfdWdAQ--.42632S3
 X-Coremail-Antispam: 1Uf129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
-	VFW2AGmfu7bjvjm3AaLaJ3UbIYCTnIWIevJa73UjIFyTuYvjxUxCJmUUUUU
-X-CM-SenderInfo: pvkd40hjxrjqh1hdxhhqhw/1tbiGAW0ZV6NnqdSYgAAsW
+	VFW2AGmfu7bjvjm3AaLaJ3UbIYCTnIWIevJa73UjIFyTuYvjxUISfOUUUUU
+X-CM-SenderInfo: pvkd40hjxrjqh1hdxhhqhw/1tbiDx+0ZVnxcmVXzgAAsn
 
-On Tue, Mar 19, 2024 at 05:37:09AM +0100, Marek Vasut wrote:
-> The production PDK3 carrier board rev.200 contains additional GPIO
-> expander to control power and reset signals for each CSI2 plug
-> separately. Describe this expander in the carrier board DT. The
-> label is used by sensor DTOs to reference the expander and its
-> signals.
+On Wed, Mar 20, 2024 at 02:28:49PM +0800, Joy Zou wrote:
+> Support pca9451a on imx93-11x11-evk.
 > 
-> Signed-off-by: Marek Vasut <marex@denx.de>
+> Signed-off-by: Joy Zou <joy.zou@nxp.com>
+> Reviewed-by: Frank Li <Frank.Li@nxp.com>
 
 Applied, thanks!
 
