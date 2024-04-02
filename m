@@ -1,176 +1,756 @@
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2106.outbound.protection.outlook.com [40.107.94.106])
+Received: from mx.skole.hr (mx1.hosting.skole.hr [161.53.165.185])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BC1A15E5CF;
-	Tue,  2 Apr 2024 21:17:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.94.106
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712092650; cv=fail; b=e+V+q+hYXJ5ssVppyAOGtSMLp4HyL3lTAInrNZp9PhdiAU1Xi6K++3S3sRDijo9B7uCpERe4rG3CjHsdgh2IwKzWxC/5c0AFm8tGqAYSwoLVVVU3JUdKIUZNf+MT8zP7cmAnVYIAQpCApR1xJjtwZvBKZf126fn/t2VbcNihPr0=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712092650; c=relaxed/simple;
-	bh=Rs9Y8DxLbF6N9W/cQ3iG7vxhYnnYQlU6VRM8xfx7jt4=;
-	h=Message-ID:Date:Subject:From:To:Cc:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=LLSnroGqD58cJjExRmUaQoRpds83EmP1ziYnR7x4W/I3+zfdAxcAncCjHfHDoiDT/0VS+MLu03bneFuip6mfhM1f7RohNkqDPG7ivbTrVIbuQg1Mpd0squFvNfK/NpAfYhxj+F/xtksbVoGcs79XhoLX1XNqx/Jq2QKTBGkXUJs=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=Q/0sJDcy; arc=fail smtp.client-ip=40.107.94.106
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="Q/0sJDcy"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=DBTBUR0zUz8chmDrJAVhyFPXVjvnhgn/fvldvE/dL8OYFxZ/ZQfbuHzCBVUt/OUiMdwqVd53ywxCpCSuTaN4v0kCgQ1JnQv0NRXK+MstKJzyeHOnbqvcGmjhYG9fEshtIoo+bpVqSa6E/6kI8RkuRfnH+LPufvw4R/x0YjIoLTQY4B2VmbXsTRMw9miqwznWCcVKwbOxlgfe1ljbkHGXxeSU4Nm4CH5Zezpq8oK+pB8pHYdRp75KlK6S87pa0+lwevNgNrN5V45RHNCtD9jOwKJhdD5cGSzYNcjzmnNxlAz/6nchXj11AR7FbdAsaUhuwe7F8PcSMqdE8RTBokUcwQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=vJ7XAmuzqEcsApU3h7y8VKF+I/XIzQC02mAWbySiVEk=;
- b=KFvDm151LyeatgFlvhRJ9fNElSiAbggZXrGXVWq/yRJPQkc8aceZBLhoE1uLT/SEJLtiMGXFnmDYGU9S/qkzC1DQpM9NnYDFo9DhcjFShXdySQnSKvY9nNmUJsE7zzsNkxmEAtnFZU+oW8iLML7IHwqxU6rh2urvVAPLfvQLWzj3EEQKH7Sm7lEK+ebiMhSgwI23BqcvSL8SmeJnGhYHKkhdLseajX7xsu7MtgnPq/6RRv2UKENRuuyqrMPxO2eRteU6v5kWdGdHD/Q6QQrKU3E3X4j3aAeK8pj1V9QmpsUtcAm4XBE6P0GTkhiJ+0BUrLhXTdU1zXQD+62Rhjiayw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=vJ7XAmuzqEcsApU3h7y8VKF+I/XIzQC02mAWbySiVEk=;
- b=Q/0sJDcyDo0EI6MRnuf761CZh+dsd3wGv+IBvurmXlyEuMb6P3ZoktVlWL20paMVAROvfyLTCPemTgp5uukcIHtnAmbW7Bt0aB3unrasd5dPXn+AX6ZRaX2UEkj4xstxsus3ap8pP7LDmf1Kay194cHUkp6mZdATI2NiHhRGdfM=
-Received: from SN6PR12MB2767.namprd12.prod.outlook.com (2603:10b6:805:75::23)
- by CY8PR12MB7708.namprd12.prod.outlook.com (2603:10b6:930:87::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.46; Tue, 2 Apr
- 2024 21:17:26 +0000
-Received: from SN6PR12MB2767.namprd12.prod.outlook.com
- ([fe80::3cc5:f552:44ae:1f26]) by SN6PR12MB2767.namprd12.prod.outlook.com
- ([fe80::3cc5:f552:44ae:1f26%7]) with mapi id 15.20.7409.042; Tue, 2 Apr 2024
- 21:17:25 +0000
-Message-ID: <7e15ccf9-1461-44b0-bc26-ede086bc4f25@amd.com>
-Date: Tue, 2 Apr 2024 16:17:23 -0500
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] x86/sev: Apply RMP table fixups for kexec.
-Content-Language: en-US
-From: "Kalra, Ashish" <ashish.kalra@amd.com>
-To: Borislav Petkov <bp@alien8.de>
-Cc: bp@kernel.org, thomas.lendacky@amd.com, linux-kernel@vger.kernel.org,
- linux-tip-commits@vger.kernel.org, michael.roth@amd.com, x86@kernel.org
-References: <2ab14f6f-2690-056b-cf9e-38a12dafd728@amd.com>
- <20240402163412.19325-1-bp@kernel.org>
- <6f0d2ccf-243c-4073-a470-21e2f404595a@amd.com>
- <359264a1-e4ef-438c-8f24-32848e131272@amd.com>
- <20240402174540.GAZgxERNxsRJUCb1yp@fat_crate.local>
- <37321af9-aee4-4ba6-81ac-0df4cef38644@amd.com>
- <20240402185039.GBZgxTfwvEP45OxVjm@fat_crate.local>
- <8daf448f-eb52-4b1f-9f98-099a83665321@amd.com>
- <20240402202118.GCZgxovu-pgPKYvner@fat_crate.local>
- <6fdb98f8-b4e2-474d-b8e9-c3092e77e56e@amd.com>
-In-Reply-To: <6fdb98f8-b4e2-474d-b8e9-c3092e77e56e@amd.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SA9PR13CA0069.namprd13.prod.outlook.com
- (2603:10b6:806:23::14) To SN6PR12MB2767.namprd12.prod.outlook.com
- (2603:10b6:805:75::23)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A820215E1ED;
+	Tue,  2 Apr 2024 21:17:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=161.53.165.185
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1712092661; cv=none; b=PGXvYywbOrjt8nVUrlIYiReoPjsp/WB/EwsmWonHQ8zqHc/BbrpraP/YQlW1/6fJPkB7vuqP3Thz7odDYq6o53TicnqXVFLhq1tz0r+97Gu2iVzV3oykji/8fZdfM4Gg2eQ0E+Ch+3GG7+HxAUngx8iLAOkWNlQ8CKv1FkOrQCw=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1712092661; c=relaxed/simple;
+	bh=kDeS9YJgJwzf3Nm1t0qMMmY+USRFo9T46E+PTM3XLiA=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=QHTiN4XZjyIs81qSXegg0kUKPalNHXYWAQjOmwklz41996wAK/NfPJutztWW/Rnf1QT2URMH6z05wO9Rz/KnblsNaalVsJgrK1lg+Ze3kl57TJp0Dot3It5HcFWPyxfjmy7qx/E7SwzsJ+S8drIPNzLO/ddWS0mUpTAEF+Q+7DM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=skole.hr; spf=pass smtp.mailfrom=skole.hr; arc=none smtp.client-ip=161.53.165.185
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=skole.hr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=skole.hr
+Received: from mx1.hosting.skole.hr (localhost.localdomain [127.0.0.1])
+	by mx.skole.hr (mx.skole.hr) with ESMTP id 95E3B86B46;
+	Tue,  2 Apr 2024 23:17:36 +0200 (CEST)
+From: =?UTF-8?q?Duje=20Mihanovi=C4=87?= <duje.mihanovic@skole.hr>
+To: Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Tony Lindgren <tony@atomide.com>,
+	Haojian Zhuang <haojian.zhuang@linaro.org>,
+	=?UTF-8?q?Duje=20Mihanovi=C4=87?= <duje.mihanovic@skole.hr>,
+	Lubomir Rintel <lkundrak@v3.sk>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Kees Cook <keescook@chromium.org>,
+	Tony Luck <tony.luck@intel.com>,
+	"Guilherme G . Piccoli" <gpiccoli@igalia.com>,
+	Rob Herring <robh@kernel.org>
+Cc: phone-devel@vger.kernel.org,
+	~postmarketos/upstreaming@lists.sr.ht,
+	Karel Balej <balejk@matfyz.cz>,
+	David Wronek <david@mainlining.org>,
+	linux-clk@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-gpio@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org
+Subject: [PATCH v9 8/9] arm64: dts: Add DTS for Marvell PXA1908 and samsung,coreprimevelte
+Date: Tue,  2 Apr 2024 23:16:43 +0200
+Message-ID: <20240402211643.4749-1-duje.mihanovic@skole.hr>
+X-Mailer: git-send-email 2.44.0
+In-Reply-To: <20240402-pxa1908-lkml-v9-0-25a003e83c6f@skole.hr>
+References: <20240402-pxa1908-lkml-v9-0-25a003e83c6f@skole.hr>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SN6PR12MB2767:EE_|CY8PR12MB7708:EE_
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	IIh2Qq97FbdMGxFx2Hu30nzKVsoHnJsBO9DsEUUFi94F+3hCntHttZLP6/w6rhBu8ry5JdR2Jkux5RfTPXtrAEKBq73Fzffw7lvY/XvUHt31KTZKfi1Nmc0VK8ls7btEDIFk5G/OGs5trWAul/Ur/r/SIgrbSufkY75+w04OlgKv38pNxZDv2fDiXUiJR+2BoZiKrPjyAb81V9mbC91tY0ociVaov7gCs+tvwIIDilsGn4fUNBYvB43lr8e3m9Bh+wckb5GbqgpV5cQUBco7IJVR3Pc1dIvaCECAjEHwWYm8cL6X3RAhrI2M4RN50xxdsKUutG0ToNAxU/HBlLfDqZ++D7HvHkUDBnDhGm4Mxs5E3nsorxhiAwD8XqpdksVc78IYsM+GYfOH+Za72ll+R7LUeAk+EmsIhQuBqLLoJiWBUmB1V7avS8RdGnr6x06L9EvGOGfuAAkF9Vi1xJHxhFvYpeYfvt7iqEmFZzkGbLzXrsy7Sqa4ZZ5MoDAkbeK8QQwyMc+WIkKSY1Cb0wIfeo4nqJH542vXjfnTHiSGgrSo95D1+itM2h49GotE1/hs9gqBEa1Pcb8irQJoGyFwTRjLTUm4saRjVq4+ZKyq5NnJYLIqqAtFp1PVx/z1Asy97p9Cc5CvraCTrUxxXPk8zvGSpjZQeTYWJ9q/FTf+0N4=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN6PR12MB2767.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366007)(1800799015)(376005);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?emFUbmd2aENBdzFpYXpnV0liMGZaeVkycUxBSTZFVDBNVGZ6QWU4Sml3c1ZY?=
- =?utf-8?B?aE81WmlpdHA3WUFKL2RjaWVNMytlNkNMQTF4MTlUbE0rdVluTXdoVEZYUGRY?=
- =?utf-8?B?bno2cU5NK093WXhwWk9kNm4vcWh1NkJ3NzRXaWFtUWlhTzhnMHl2RGhlZkhk?=
- =?utf-8?B?eHNxdW4rYkcxVHJURlFRb0x0cURWR3V5d3ZpTHJJdGhPd0tUd3lOL2FIU2dO?=
- =?utf-8?B?VFFqakdiU2NrYWViakpPeGRLZ1FKa090K2JVbW5wclhXSUwwaFFKcWNMR3JF?=
- =?utf-8?B?VUp6S1RTQ0NoUWkxNU83MHZYNVFjRVRBUEhnT2V1THZyQm1PQXJYNTlpdytZ?=
- =?utf-8?B?WHp2R1pIcjRNR0ZaRXlTb1RsNENnQncvNHZOd0xtNGlMMy9iSEJiMjNVZEdx?=
- =?utf-8?B?QzcxQm00ZE5DejE2UG5QdXE3OEpFUmtWeEFsUDFaT3VqT2VuNTR0Z0FPbnJH?=
- =?utf-8?B?VmNxbWZ2ZHhRaXk1YmVKWUxqTnhpM1dkbHY2ekd0d1oxM0t5SldDVTg4U2h6?=
- =?utf-8?B?WkpOemIzVzQwUGZEWTRnUWE2OElteHNYM09ZUnFLZFlGQVVSb0ozUktDN1JT?=
- =?utf-8?B?NkJzQzRFRm1Fc1BsMUlHeXpTOVdUejAxaURwMFVxWVBiZVlnWnI1RG9sbHQ0?=
- =?utf-8?B?TVJnUkJWVHE2dVErYWFSQXBZelowQmxaa0dlOUtBV2czcVRPREFwai91WVhw?=
- =?utf-8?B?YmdaMEo2djBqY3IwWHp4Q0V6Q3Z4ZTg0bElSTFFBaDdCM2xLNERYaGtJTkcv?=
- =?utf-8?B?bi9WTWg1bHJhWUJSWlFLMlNLa0tiaUYyWXRNd0t4bmpDenNuS25neEI3dW1x?=
- =?utf-8?B?MnFyZnlKRTcxWHJRSTVNRVJHYmVSM0NRdjFSMmJicjNjS25OcGJLVGhWSEd5?=
- =?utf-8?B?UlRmek44Q0pFZmhFZXpGZHBucnkveDZWd3J5dDRvY3RoZ3U3QzRZRG9PSUtY?=
- =?utf-8?B?MTFxKzVBM0JPL1VkQm5RN2pCVVNkNCtRYmlYYUJQOGRTSGtWcnVuZnNrMXZx?=
- =?utf-8?B?NHgrZlZmYmswOGFtZGQ5djd1WWxEa204UHhKampwcDQvVnFtVWNLYzc1a0xr?=
- =?utf-8?B?K0dSNG8zZUhCL3RpL3pNWTBJRG4rTnNCcUNuYW9XM3diS3E2WnZKZXZsY2Q5?=
- =?utf-8?B?ay9pZDR6b3N3KzhQWVhoajNpbGlJaitFNktIUFNsQ1d2TE9ZNkU3bS9vWFh4?=
- =?utf-8?B?eHZGL2dJMDlnWkRPR3E3TGE3SEpBaWl4akFjWWRzRnVJRUNnV2lQMUJsbWFw?=
- =?utf-8?B?NzZDSXY2TTFrY1FSMzFYbWhrdUpIN3RLRnk3R2dJRlh5UWdqSkxRaXVpdWlL?=
- =?utf-8?B?RzVCUEJrRktOWXJ2NWt2RHpOcVJXNDZycjEzOU0yYUZSSFRDVVFJRDBrR0Yw?=
- =?utf-8?B?dGFaWWY4VnZkSUZHYy80ZHFoSlBVYXUxeUJZUEpGRW1XNW1zSk1jSkFqUFRj?=
- =?utf-8?B?TWpScG9aUmxGK1cwdGw0eWZ4YzJ1RkFSSkxjeXdBeGZEWDlOaHhndEpBenRD?=
- =?utf-8?B?V2oreldHUmRUZ3lmRnJKaGc5SFVXQ2lWemtsaHVaMWRwNkhTNVZ1ZE53Witi?=
- =?utf-8?B?QTVZTjk0aWJ5cHowSEZyVWluOStGMTAxQm5meUJ0dEQzUXl4YldBLzlOM3pn?=
- =?utf-8?B?RzhSWVBrSlFuSkZIYUcxNm5JeXJJdDBXSFRTY3NqUFBZWHN3bklmSzdQbEdB?=
- =?utf-8?B?dHlYYm9wT0lFVUkxZEVIajE1K3g1a0pJTUgwUHVUYTczeTQvUGFac1ZyQ0Jy?=
- =?utf-8?B?R0VNWkJNeUg0dEFTVFFhSFlLL2xRZVdsUVdabEpOaE5IZmZXN1cwZmFFanFx?=
- =?utf-8?B?dzRBY2pwUkdnL1J2WHpFRTdCQ3RmQUQyK3RXdzkvL3BXSThNcDJVdy9CQTRj?=
- =?utf-8?B?VjVPajl3eERFdTlHalhRbXBXRHpmUnhvQUYxcFlwTWd6NjcrekowdzdyY0tU?=
- =?utf-8?B?R2huRnNTWXR6NjJWOXZzejhIc0FiOW5jV0Y4SzlGbGk1NWw3bG1Vay9NOE4v?=
- =?utf-8?B?RGJXaVgyWVdUcDBBV2xSWlhZSjV4TkNjbkJjeDM1ODAyZ0ViK3VYN0JJcWUx?=
- =?utf-8?B?eFdOaE1nTkIvWkN4bndqbHgwRUltNWRIVFcrdVlMQUtYcXNDbzNwK1FJNjBG?=
- =?utf-8?Q?VxrswX71a4nfjKH8E75rJ7Fit?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2d8650d0-2641-44ce-89c9-08dc535a4b66
-X-MS-Exchange-CrossTenant-AuthSource: SN6PR12MB2767.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Apr 2024 21:17:25.7938
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: ndmHeAm6OsyGBjHR142tLQaDKnn1WGZRju1qFHUbIK6ZBqtzbtuEFJxU6RlkF1ltZOa4f6BeiMYpHSvezrW85g==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY8PR12MB7708
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
+Add DTS for Marvell PXA1908 SoC and Samsung Galaxy Core Prime Value
+Edition LTE, a smartphone based on said SoC.
 
-On 4/2/2024 4:00 PM, Kalra, Ashish wrote:
->
-> On 4/2/2024 3:21 PM, Borislav Petkov wrote:
->> On Tue, Apr 02, 2024 at 02:33:44PM -0500, Kalra, Ashish wrote:
->>> And we can't do this in snp_rmptable_init() as e820_table_firmware 
->>> can't be
->>> fixed at that point and by that time this table has been mapped into 
->>> sysfs
->>> (/sys/firmware) which is used by kexec -c variant.
->> Well, you have to do something here because if snp_rmptable_init()
->> late-disables SNP, your RMP table fixups are moot and invalid.
->>
->> Which means, your RMP table fixups need to happen at the *very* *late*
->> step after we know that SNP is enabled and won't get disabled anymore.
->>
->> I.e., in snp_rmptable_init().
->
-> The main issue with doing that in snp_rmptable_init() is that there is 
-> no e820 API interfaces available to update the e820_table_kexec and 
-> e820_table_firmware and e820_table_firmware has already been exposed 
-> to sysfs.
->
-> The e820 API only exports e820__range_update() which *only* fixes 
-> e820_table.
->
-> The important point to note here is that in most cases BIOS would have 
-> reserved RMP table start and end aligned to 2M boundary and setup the 
-> e820 table which the BIOS passes to the kernel as such, so even if the 
-> kernel does not enable SNP or disables SNP later, these reservations 
-> will remain aligned as such. So what we are doing here in-kernel 
-> fixups is doing the same alignment fixups which the BIOS would have 
-> done. The summary here is that e820 table adjustments for RMP table 
-> done either by BIOS and/or kernel will exist/remain even if SNP is not 
-> enabled by the kernel.
->
-Again, to reiterate here, RMP table memory is reserved by BIOS 
-regardless of the kernel enabling SNP (and also passed on the e820 map 
-to ensure that kernel does not map anything in that memory), so any 
-adjustments/fixups on top of that reserved memory should not matter, 
-after all we don't free this reserved RMP table memory if kernel does 
-not enable SNP.
+Signed-off-by: Duje Mihanović <duje.mihanovic@skole.hr>
 
-Thanks, Ashish
+To: Michael Turquette <mturquette@baylibre.com>, 
+ Stephen Boyd <sboyd@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, 
+ Rob Herring <robh+dt@kernel.org>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Tony Lindgren <tony@atomide.com>, 
+ Haojian Zhuang <haojian.zhuang@linaro.org>, 
+ =?utf-8?q?Duje_Mihanovi=C4=87?= <duje.mihanovic@skole.hr>, 
+ Lubomir Rintel <lkundrak@v3.sk>, Catalin Marinas <catalin.marinas@arm.com>, 
+ Will Deacon <will@kernel.org>, Kees Cook <keescook@chromium.org>, 
+ Tony Luck <tony.luck@intel.com>, 
+ "Guilherme G. Piccoli" <gpiccoli@igalia.com>, Rob Herring <robh@kernel.org>
+Cc: phone-devel@vger.kernel.org, ~postmarketos/upstreaming@lists.sr.ht, 
+ Karel Balej <balejk@matfyz.cz>, David Wronek <david@mainlining.org>, 
+ linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-arm-kernel@lists.infradead.org
+---
+ arch/arm64/boot/dts/marvell/Makefile          |   3 +
+ .../pxa1908-samsung-coreprimevelte.dts        | 336 ++++++++++++++++++
+ arch/arm64/boot/dts/marvell/pxa1908.dtsi      | 304 ++++++++++++++++
+ 3 files changed, 643 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/marvell/pxa1908-samsung-coreprimevelte.dts
+ create mode 100644 arch/arm64/boot/dts/marvell/pxa1908.dtsi
+
+diff --git a/arch/arm64/boot/dts/marvell/Makefile b/arch/arm64/boot/dts/marvell/Makefile
+index 99b8cb3c49e1..687c256d95fe 100644
+--- a/arch/arm64/boot/dts/marvell/Makefile
++++ b/arch/arm64/boot/dts/marvell/Makefile
+@@ -28,3 +28,6 @@ dtb-$(CONFIG_ARCH_MVEBU) += cn9130-crb-A.dtb
+ dtb-$(CONFIG_ARCH_MVEBU) += cn9130-crb-B.dtb
+ dtb-$(CONFIG_ARCH_MVEBU) += ac5x-rd-carrier-cn9131.dtb
+ dtb-$(CONFIG_ARCH_MVEBU) += ac5-98dx35xx-rd.dtb
++
++# MMP SoC Family
++dtb-$(CONFIG_ARCH_MMP) += pxa1908-samsung-coreprimevelte.dtb
+diff --git a/arch/arm64/boot/dts/marvell/pxa1908-samsung-coreprimevelte.dts b/arch/arm64/boot/dts/marvell/pxa1908-samsung-coreprimevelte.dts
+new file mode 100644
+index 000000000000..4aac4c120087
+--- /dev/null
++++ b/arch/arm64/boot/dts/marvell/pxa1908-samsung-coreprimevelte.dts
+@@ -0,0 +1,336 @@
++// SPDX-License-Identifier: GPL-2.0-only
++#include "pxa1908.dtsi"
++#include <dt-bindings/gpio/gpio.h>
++#include <dt-bindings/input/linux-event-codes.h>
++
++/ {
++	model = "Samsung Galaxy Core Prime VE LTE";
++	compatible = "samsung,coreprimevelte", "marvell,pxa1908";
++
++	aliases {
++		mmc0 = &sdh2; /* eMMC */
++		mmc1 = &sdh0; /* SD card */
++		serial0 = &uart0;
++	};
++
++	chosen {
++		#address-cells = <2>;
++		#size-cells = <2>;
++		ranges;
++
++		stdout-path = "serial0:115200n8";
++
++		/* S-Boot places the initramfs here */
++		linux,initrd-start = <0x4d70000>;
++		linux,initrd-end = <0x5000000>;
++
++		fb0: framebuffer@17177000 {
++			compatible = "simple-framebuffer";
++			reg = <0 0x17177000 0 (480 * 800 * 4)>;
++			width = <480>;
++			height = <800>;
++			stride = <(480 * 4)>;
++			format = "a8r8g8b8";
++		};
++	};
++
++	/* Bootloader fills this in */
++	memory {
++		device_type = "memory";
++		reg = <0 0 0 0>;
++	};
++
++	reserved-memory {
++		#address-cells = <2>;
++		#size-cells = <2>;
++		ranges;
++
++		framebuffer@17000000 {
++			reg = <0 0x17000000 0 0x1800000>;
++			no-map;
++		};
++
++		gpu@9000000 {
++			reg = <0 0x9000000 0 0x1000000>;
++		};
++
++		/* Communications processor, aka modem */
++		cp@5000000 {
++			reg = <0 0x5000000 0 0x3000000>;
++		};
++
++		cm3@a000000 {
++			reg = <0 0xa000000 0 0x80000>;
++		};
++
++		seclog@8000000 {
++			reg = <0 0x8000000 0 0x100000>;
++		};
++
++		ramoops@8100000 {
++			compatible = "ramoops";
++			reg = <0 0x8100000 0 0x40000>;
++			record-size = <0x8000>;
++			console-size = <0x20000>;
++			max-reason = <5>;
++		};
++	};
++
++
++	i2c-muic {
++		compatible = "i2c-gpio";
++		sda-gpios = <&gpio 30 (GPIO_ACTIVE_HIGH|GPIO_OPEN_DRAIN)>;
++		scl-gpios = <&gpio 29 (GPIO_ACTIVE_HIGH|GPIO_OPEN_DRAIN)>;
++		i2c-gpio,delay-us = <3>;
++		i2c-gpio,timeout-ms = <100>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&i2c_muic_pins>;
++
++		muic: extcon@14 {
++			compatible = "siliconmitus,sm5504-muic";
++			reg = <0x14>;
++			interrupt-parent = <&gpio>;
++			interrupts = <0 IRQ_TYPE_EDGE_FALLING>;
++		};
++	};
++
++	gpio-keys {
++		compatible = "gpio-keys";
++		pinctrl-names = "default";
++		pinctrl-0 = <&gpio_keys_pins>;
++		autorepeat;
++
++		key-home {
++			label = "Home";
++			linux,code = <KEY_HOME>;
++			gpios = <&gpio 50 GPIO_ACTIVE_LOW>;
++		};
++
++		key-volup {
++			label = "Volume Up";
++			linux,code = <KEY_VOLUMEUP>;
++			gpios = <&gpio 16 GPIO_ACTIVE_LOW>;
++		};
++
++		key-voldown {
++			label = "Volume Down";
++			linux,code = <KEY_VOLUMEDOWN>;
++			gpios = <&gpio 17 GPIO_ACTIVE_LOW>;
++		};
++	};
++};
++
++&smmu {
++	status = "okay";
++};
++
++&pmx {
++	pinctrl-single,gpio-range = <&range 55 55 0>,
++				    <&range 110 32 0>,
++				    <&range 52 1 0>;
++
++	pinctrl-names = "default";
++	pinctrl-0 = <&board_pins_1 &board_pins_2 &board_pins_3>;
++
++	board_pins_1: pinmux-board-1 {
++		pinctrl-single,pins = <
++			0x160 0
++			0x164 0
++			0x168 0
++			0x16c 0
++		>;
++		pinctrl-single,drive-strength = <0x1000 0x1800>;
++		pinctrl-single,bias-pullup = <0x8000 0x8000 0 0xc000>;
++		pinctrl-single,bias-pulldown = <0x8000 0x8000 0 0xa000>;
++		pinctrl-single,input-schmitt = <0 0x30>;
++		pinctrl-single,input-schmitt-enable = <0x40 0 0x40 0x40>;
++		pinctrl-single,low-power-mode = <0x288 0x388>;
++	};
++
++	board_pins_2: pinmux-board-2 {
++		pinctrl-single,pins = <
++			0x44 1
++			0x48 1
++			0x20 1
++			0x18 1
++			0x14 1
++			0x10 1
++			0xc 1
++			0x8 1
++			0x68 1
++			0x58 0
++			0x54 0
++			0x7c 0
++			0x6c 0
++			0x70 0
++			0x4c 1
++			0x50 1
++			0xac 0
++			0x90 0
++			0x8c 0
++			0x88 0
++			0x84 0
++			0xc8 0
++			0x128 0
++			0x190 0
++			0x194 0
++			0x1a0 0
++			0x114 0
++			0x118 0
++			0x1d8 0
++			0x1e4 0
++			0xe8 0
++			0x100 0
++			0x204 0
++			0x210 0
++			0x218 0
++		>;
++		pinctrl-single,bias-pullup = <0xc000 0xc000 0 0xc000>;
++		pinctrl-single,bias-pulldown = <0x8000 0xa000 0x8000 0xc000>;
++		pinctrl-single,low-power-mode = <0x288 0x388>;
++	};
++
++	board_pins_3: pinmux-board-3 {
++		pinctrl-single,pins = <
++			0x260 0
++			0x264 0
++			0x268 0
++			0x26c 0
++			0x270 0
++			0x274 0
++			0x78 0
++			0x74 0
++			0xb0 1
++		>;
++		pinctrl-single,drive-strength = <0x1000 0x1800>;
++		pinctrl-single,bias-pullup = <0 0xc000 0 0xc000>;
++		pinctrl-single,bias-pulldown = <0 0xa000 0 0xa000>;
++		pinctrl-single,input-schmitt = <0 0x30>;
++		pinctrl-single,input-schmitt-enable = <0x40 0 0x40 0x40>;
++		pinctrl-single,low-power-mode = <0 0x388>;
++	};
++
++	uart0_pins: pinmux-uart0 {
++		pinctrl-single,pins = <
++			0x198 6
++			0x19c 6
++		>;
++		pinctrl-single,drive-strength = <0x1000 0x1800>;
++		pinctrl-single,bias-pullup = <0 0xc000 0 0xc000>;
++		pinctrl-single,bias-pulldown = <0 0xa000 0 0xa000>;
++		pinctrl-single,input-schmitt = <0 0x30>;
++		pinctrl-single,input-schmitt-enable = <0x40 0 0x40 0x40>;
++		pinctrl-single,low-power-mode = <0 0x388>;
++	};
++
++	gpio_keys_pins: pinmux-gpio-keys {
++		pinctrl-single,pins = <
++			0x11c 0
++			0x120 0
++			0x1a4 0
++		>;
++		pinctrl-single,drive-strength = <0x1000 0x1800>;
++		pinctrl-single,bias-pullup = <0xc000 0xc000 0 0xc000>;
++		pinctrl-single,bias-pulldown = <0x8000 0xa0000 0x8000 0xa000>;
++		pinctrl-single,input-schmitt = <0 0x30>;
++		pinctrl-single,input-schmitt-enable = <0x40 0 0x40 0x40>;
++		pinctrl-single,low-power-mode = <0 0x388>;
++	};
++
++	i2c_muic_pins: pinmux-i2c-muic {
++		pinctrl-single,pins = <
++			0x154 0
++			0x150 0
++		>;
++		pinctrl-single,drive-strength = <0x1000 0x1800>;
++		pinctrl-single,bias-pullup = <0 0xc000 0 0xc000>;
++		pinctrl-single,bias-pulldown = <0 0xa000 0 0xa000>;
++		pinctrl-single,input-schmitt = <0 0x30>;
++		pinctrl-single,input-schmitt-enable = <0x40 0 0x40 0x40>;
++		pinctrl-single,low-power-mode = <0x288 0x388>;
++	};
++
++	sdh0_pins_1: pinmux-sdh0-1 {
++		pinctrl-single,pins = <
++			0x108 0
++		>;
++		pinctrl-single,drive-strength = <0x1000 0x1800>;
++		pinctrl-single,bias-pullup = <0xc000 0xc000 0 0xc000>;
++		pinctrl-single,bias-pulldown = <0x8000 0xa000 0x8000 0xa000>;
++		pinctrl-single,input-schmitt = <0 0x30>;
++		pinctrl-single,input-schmitt-enable = <0x40 0 0x40 0x40>;
++		pinctrl-single,low-power-mode = <0 0x388>;
++	};
++
++	sdh0_pins_2: pinmux-sdh0-2 {
++		pinctrl-single,pins = <
++			0x94 0
++			0x98 0
++			0x9c 0
++			0xa0 0
++			0xa4 0
++		>;
++		pinctrl-single,drive-strength = <0x800 0x1800>;
++		pinctrl-single,bias-pullup = <0xc000 0xc000 0 0xc000>;
++		pinctrl-single,bias-pulldown = <0x8000 0xa000 0x8000 0xa000>;
++		pinctrl-single,input-schmitt = <0 0x30>;
++		pinctrl-single,input-schmitt-enable = <0x40 0 0x40 0x40>;
++		pinctrl-single,low-power-mode = <0 0x388>;
++	};
++
++	sdh0_pins_3: pinmux-sdh0-3 {
++		pinctrl-single,pins = <
++			0xa8 0
++		>;
++		pinctrl-single,drive-strength = <0x1000 0x1800>;
++		pinctrl-single,bias-pullup = <0 0xc000 0 0xc000>;
++		pinctrl-single,bias-pulldown = <0 0xa000 0 0xa000>;
++		pinctrl-single,input-schmitt = <0 0x30>;
++		pinctrl-single,input-schmitt-enable = <0x40 0 0x40 0x40>;
++		pinctrl-single,low-power-mode = <0x208 0x388>;
++	};
++};
++
++&uart0 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&uart0_pins>;
++};
++
++&twsi0 {
++	status = "okay";
++};
++
++&twsi1 {
++	status = "okay";
++};
++
++&twsi2 {
++	status = "okay";
++};
++
++&twsi3 {
++	status = "okay";
++};
++
++&usb {
++	extcon = <&muic>, <&muic>;
++};
++
++&sdh2 {
++	/* Disabled for now because initialization fails with -ETIMEDOUT. */
++	status = "disabled";
++	bus-width = <8>;
++	non-removable;
++	mmc-ddr-1_8v;
++};
++
++&sdh0 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&sdh0_pins_1 &sdh0_pins_2 &sdh0_pins_3>;
++	cd-gpios = <&gpio 11 0>;
++	cd-inverted;
++	bus-width = <4>;
++	wp-inverted;
++};
+diff --git a/arch/arm64/boot/dts/marvell/pxa1908.dtsi b/arch/arm64/boot/dts/marvell/pxa1908.dtsi
+new file mode 100644
+index 000000000000..9933cec5b7d2
+--- /dev/null
++++ b/arch/arm64/boot/dts/marvell/pxa1908.dtsi
+@@ -0,0 +1,304 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/dts-v1/;
++
++#include <dt-bindings/interrupt-controller/arm-gic.h>
++#include <dt-bindings/clock/marvell,pxa1908.h>
++
++/ {
++	model = "Marvell Armada PXA1908";
++	compatible = "marvell,pxa1908";
++	#address-cells = <2>;
++	#size-cells = <2>;
++	interrupt-parent = <&gic>;
++
++	cpus {
++		#address-cells = <2>;
++		#size-cells = <0>;
++
++		cpu0: cpu@0 {
++			device_type = "cpu";
++			compatible = "arm,cortex-a53";
++			reg = <0 0>;
++			enable-method = "psci";
++		};
++
++		cpu1: cpu@1 {
++			device_type = "cpu";
++			compatible = "arm,cortex-a53";
++			reg = <0 1>;
++			enable-method = "psci";
++		};
++
++		cpu2: cpu@2 {
++			device_type = "cpu";
++			compatible = "arm,cortex-a53";
++			reg = <0 2>;
++			enable-method = "psci";
++		};
++
++		cpu3: cpu@3 {
++			device_type = "cpu";
++			compatible = "arm,cortex-a53";
++			reg = <0 3>;
++			enable-method = "psci";
++		};
++	};
++
++	pmu {
++		compatible = "arm,cortex-a53-pmu";
++		interrupts = <GIC_SPI 84 IRQ_TYPE_LEVEL_HIGH>,
++			<GIC_SPI 85 IRQ_TYPE_LEVEL_HIGH>,
++			<GIC_SPI 86 IRQ_TYPE_LEVEL_HIGH>,
++			<GIC_SPI 87 IRQ_TYPE_LEVEL_HIGH>;
++		interrupt-affinity = <&cpu0>, <&cpu1>, <&cpu2>, <&cpu3>;
++	};
++
++	psci {
++		compatible = "arm,psci-0.2";
++		method = "smc";
++	};
++
++	timer {
++		compatible = "arm,armv8-timer";
++		interrupts = <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
++			<GIC_PPI 14 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
++			<GIC_PPI 11 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
++			<GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>;
++	};
++
++	soc {
++		compatible = "simple-bus";
++		#address-cells = <2>;
++		#size-cells = <2>;
++		ranges;
++
++		smmu: iommu@c0010000 {
++			compatible = "arm,mmu-400";
++			reg = <0 0xc0010000 0 0x10000>;
++			#global-interrupts = <1>;
++			#iommu-cells = <1>;
++			interrupts = <GIC_SPI 78 IRQ_TYPE_LEVEL_HIGH>,
++				<GIC_SPI 78 IRQ_TYPE_LEVEL_HIGH>;
++			status = "disabled";
++		};
++
++		gic: interrupt-controller@d1df9000 {
++			compatible = "arm,gic-400";
++			reg = <0 0xd1df9000 0 0x1000>,
++				<0 0xd1dfa000 0 0x2000>,
++				/* The subsequent registers are guesses. */
++				<0 0xd1dfc000 0 0x2000>,
++				<0 0xd1dfe000 0 0x2000>;
++			interrupts = <GIC_PPI 9 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>;
++			interrupt-controller;
++			#interrupt-cells = <3>;
++		};
++
++		apb@d4000000 {
++			compatible = "simple-bus";
++			reg = <0 0xd4000000 0 0x200000>;
++			#address-cells = <1>;
++			#size-cells = <1>;
++			ranges = <0 0 0xd4000000 0x200000>;
++
++			pdma: dma-controller@0 {
++				compatible = "marvell,pdma-1.0";
++				reg = <0 0x10000>;
++				interrupts = <GIC_SPI 47 IRQ_TYPE_LEVEL_HIGH>;
++				dma-channels = <30>;
++				#dma-cells = <2>;
++			};
++
++			twsi1: i2c@10800 {
++				compatible = "mrvl,mmp-twsi";
++				#address-cells = <1>;
++				#size-cells = <0>;
++				reg = <0x10800 0x64>;
++				interrupts = <GIC_SPI 33 IRQ_TYPE_LEVEL_HIGH>;
++				clocks = <&apbc PXA1908_CLK_TWSI1>;
++				mrvl,i2c-fast-mode;
++				status = "disabled";
++			};
++
++			twsi0: i2c@11000 {
++				compatible = "mrvl,mmp-twsi";
++				#address-cells = <1>;
++				#size-cells = <0>;
++				reg = <0x11000 0x64>;
++				interrupts = <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>;
++				clocks = <&apbc PXA1908_CLK_TWSI0>;
++				mrvl,i2c-fast-mode;
++				status = "disabled";
++			};
++
++			twsi3: i2c@13800 {
++				compatible = "mrvl,mmp-twsi";
++				#address-cells = <1>;
++				#size-cells = <0>;
++				reg = <0x13800 0x64>;
++				interrupts = <GIC_SPI 93 IRQ_TYPE_LEVEL_HIGH>;
++				clocks = <&apbc PXA1908_CLK_TWSI3>;
++				mrvl,i2c-fast-mode;
++				status = "disabled";
++			};
++
++			apbc: clock-controller@15000 {
++				compatible = "marvell,pxa1908-apbc";
++				reg = <0x15000 0x1000>;
++				#clock-cells = <1>;
++			};
++
++			uart0: serial@17000 {
++				compatible = "mrvl,mmp-uart", "intel,xscale-uart";
++				reg = <0x17000 0x1000>;
++				interrupts = <GIC_SPI 27 IRQ_TYPE_LEVEL_HIGH>;
++				clocks = <&apbc PXA1908_CLK_UART0>;
++				reg-shift = <2>;
++			};
++
++			uart1: serial@18000 {
++				compatible = "mrvl,mmp-uart", "intel,xscale-uart";
++				reg = <0x18000 0x1000>;
++				interrupts = <GIC_SPI 28 IRQ_TYPE_LEVEL_HIGH>;
++				clocks = <&apbc PXA1908_CLK_UART1>;
++				reg-shift = <2>;
++			};
++
++			gpio: gpio@19000 {
++				compatible = "marvell,mmp-gpio";
++				reg = <0x19000 0x800>;
++				#address-cells = <1>;
++				#size-cells = <1>;
++				gpio-controller;
++				#gpio-cells = <2>;
++				clocks = <&apbc PXA1908_CLK_GPIO>;
++				interrupts = <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>;
++				interrupt-names = "gpio_mux";
++				interrupt-controller;
++				#interrupt-cells = <2>;
++				ranges = <0 0x19000 0x800>;
++
++				gpio@0 {
++					reg = <0x0 0x4>;
++				};
++
++				gpio@4 {
++					reg = <0x4 0x4>;
++				};
++
++				gpio@8 {
++					reg = <0x8 0x4>;
++				};
++
++				gpio@100 {
++					reg = <0x100 0x4>;
++				};
++			};
++
++			pmx: pinmux@1e000 {
++				compatible = "marvell,pxa1908-padconf", "pinconf-single";
++				reg = <0x1e000 0x330>;
++				#address-cells = <1>;
++				#size-cells = <1>;
++				#gpio-range-cells = <3>;
++				ranges;
++
++				#pinctrl-cells = <1>;
++				pinctrl-single,register-width = <32>;
++				pinctrl-single,function-mask = <7>;
++
++				range: gpio-range {
++					#pinctrl-single,gpio-range-cells = <3>;
++				};
++			};
++
++			uart2: serial@36000 {
++				compatible = "mrvl,mmp-uart", "intel,xscale-uart";
++				reg = <0x36000 0x1000>;
++				interrupts = <GIC_SPI 59 IRQ_TYPE_LEVEL_HIGH>;
++				clocks = <&apbcp PXA1908_CLK_UART2>;
++				reg-shift = <2>;
++			};
++
++			twsi2: i2c@37000 {
++				compatible = "mrvl,mmp-twsi";
++				#address-cells = <1>;
++				#size-cells = <0>;
++				reg = <0x37000 0x64>;
++				interrupts = <GIC_SPI 54 IRQ_TYPE_LEVEL_HIGH>;
++				clocks = <&apbcp PXA1908_CLK_TWSI2>;
++				mrvl,i2c-fast-mode;
++				status = "disabled";
++			};
++
++			apbcp: clock-controller@3b000 {
++				compatible = "marvell,pxa1908-apbcp";
++				reg = <0x3b000 0x1000>;
++				#clock-cells = <1>;
++			};
++
++			mpmu: clock-controller@50000 {
++				compatible = "marvell,pxa1908-mpmu";
++				reg = <0x50000 0x1000>;
++				#clock-cells = <1>;
++			};
++		};
++
++		axi@d4200000 {
++			compatible = "simple-bus";
++			reg = <0 0xd4200000 0 0x200000>;
++			#address-cells = <1>;
++			#size-cells = <1>;
++			ranges = <0 0 0xd4200000 0x200000>;
++
++			usbphy: phy@7000 {
++				compatible = "marvell,pxa1928-usb-phy";
++				reg = <0x7000 0x200>;
++				clocks = <&apmu PXA1908_CLK_USB>;
++				#phy-cells = <0>;
++			};
++
++			usb: usb@8000 {
++				compatible = "chipidea,usb2";
++				reg = <0x8000 0x200>;
++				interrupts = <GIC_SPI 44 IRQ_TYPE_LEVEL_HIGH>;
++				clocks = <&apmu PXA1908_CLK_USB>;
++				phys = <&usbphy>;
++				phy-names = "usb-phy";
++			};
++
++			sdh0: mmc@80000 {
++				compatible = "mrvl,pxav3-mmc";
++				reg = <0x80000 0x120>;
++				interrupts = <GIC_SPI 39 IRQ_TYPE_LEVEL_HIGH>;
++				clocks = <&apmu PXA1908_CLK_SDH0>;
++				clock-names = "io";
++				mrvl,clk-delay-cycles = <31>;
++			};
++
++			sdh1: mmc@80800 {
++				compatible = "mrvl,pxav3-mmc";
++				reg = <0x80800 0x120>;
++				interrupts = <GIC_SPI 39 IRQ_TYPE_LEVEL_HIGH>;
++				clocks = <&apmu PXA1908_CLK_SDH1>;
++				clock-names = "io";
++				mrvl,clk-delay-cycles = <31>;
++			};
++
++			sdh2: mmc@81000 {
++				compatible = "mrvl,pxav3-mmc";
++				reg = <0x81000 0x120>;
++				interrupts = <GIC_SPI 39 IRQ_TYPE_LEVEL_HIGH>;
++				clocks = <&apmu PXA1908_CLK_SDH2>;
++				clock-names = "io";
++				mrvl,clk-delay-cycles = <31>;
++			};
++
++			apmu: clock-controller@82800 {
++				compatible = "marvell,pxa1908-apmu";
++				reg = <0x82800 0x400>;
++				#clock-cells = <1>;
++			};
++		};
++	};
++};
+-- 
+2.44.0
+
 
