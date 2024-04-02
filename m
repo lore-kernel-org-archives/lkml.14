@@ -1,113 +1,164 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f197.google.com (mail-il1-f197.google.com [209.85.166.197])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F75D2C18D;
-	Tue,  2 Apr 2024 06:57:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4347F22096
+	for <linux-kernel@vger.kernel.org>; Tue,  2 Apr 2024 06:58:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712041071; cv=none; b=jrOFkM3fJKDjBHvcGnwRprJG/qk+IxhL33yP/38ayGIh99PR7qstZJiPxJ7eBJ6F4Rs/Pq7tspBIOjfrYJJL/J/lbGmUmaV1VhJsxk7jlg+/JYGvVkgY0KfaiO/5W1HKTXk3gdl7x673EjIIJ7O9S5t3i4M78g7anEVtDwSlapc=
+	t=1712041102; cv=none; b=anVWLa9SN/2NiGYip0evnpYRKFnfjRbk+bycRhdU+aKq/hnV1BliRfai2/B+wTM3xoz2/XAaKs24YYRtKx8oBWQvkhgAg8GQ3IS+FNoqo8d09yMdvbsDfsReazY+sjBUqwOHsdIHQdUjfYaHYNrYPs74vSuxqJa6tXwdZsSYvrs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712041071; c=relaxed/simple;
-	bh=C9VufDIku+v7A3R5bMpDMYs7kJPjF5QoKcrVsdVl56I=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=piR0eC07d8BxM3VMC4ME457EDkG0+uEjX8CfdyM2i41uMVESmwG7ukpdk+//VG8y+eqSfoxjKjA1nq58KwLHqyLkQ1UhH0s2nePL47iv5YyspM1QVo/jtGp7CQyA0FBh6GXkvSUUGpeIqXO89E79aAOizdI8HK+VwEvnYYzwLrY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=W98QVcbY; arc=none smtp.client-ip=192.198.163.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="W98QVcbY"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1712041069; x=1743577069;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=C9VufDIku+v7A3R5bMpDMYs7kJPjF5QoKcrVsdVl56I=;
-  b=W98QVcbYcj7bmpBX2nQtQ1aTYf3WEXZ4W1XRE5g56QJaI8p24eIeD67y
-   Xe3jYUd9vWgvseJheeR46Et5faQn7Wmpg4Qi7BPiGRQ+ACqg/CCJyZHYc
-   JJpESWNkVpLNox5R7Tq6Q9dDpuaFeblTpjbLtwXO1umBWUSj4QyKKKMV0
-   opu9l6Y2zVSIjDig9ub0iStD0DL65Op3t7uJOQ0ZDipLtVrohJd5KEQ/F
-   pAxdckazB2QPs/10RuEhl3vsfOH7XQZz6Tl2C96Chz6sDZldOBghREg3z
-   zrevPeBQX89Q/prjyvVgozCyN2WkBnjEZW4Dvz4EHtYL9OeLMmE9Q583l
-   A==;
-X-CSE-ConnectionGUID: KdII90wSTe2CmLF8Ate07A==
-X-CSE-MsgGUID: tOC8/gaoT3G/chtI3mR+Lw==
-X-IronPort-AV: E=McAfee;i="6600,9927,11031"; a="32592787"
-X-IronPort-AV: E=Sophos;i="6.07,174,1708416000"; 
-   d="scan'208";a="32592787"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Apr 2024 23:57:42 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,174,1708416000"; 
-   d="scan'208";a="18044671"
-Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.165])
-  by fmviesa007.fm.intel.com with ESMTP; 01 Apr 2024 23:57:39 -0700
-Date: Tue, 2 Apr 2024 14:52:48 +0800
-From: Xu Yilun <yilun.xu@linux.intel.com>
-To: Russ Weight <russ.weight@linux.dev>
-Cc: Peter Colberg <peter.colberg@intel.com>,
-	Moritz Fischer <mdf@kernel.org>, Wu Hao <hao.wu@intel.com>,
-	Xu Yilun <yilun.xu@intel.com>, Tom Rix <trix@redhat.com>,
-	Lee Jones <lee@kernel.org>, linux-fpga@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Marco Pagani <marpagan@redhat.com>,
-	Matthew Gerlach <matthew.gerlach@linux.intel.com>,
-	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>,
-	Russ Weight <russell.h.weight@intel.com>
-Subject: Re: [PATCH] mfd: intel-m10-bmc: Change staging size to a variable
-Message-ID: <ZgurQETbga0Q/PVE@yilunxu-OptiPlex-7050>
-References: <20240328233559.6949-1-peter.colberg@intel.com>
- <ZgqCdfCSatazEkIj@yilunxu-OptiPlex-7050>
- <20240401170905.v2xin3fzoe3m3tmz@4VRSMR2-DT.corp.robot.car>
- <20240401171947.dncdvc3gxna33nxq@4VRSMR2-DT.corp.robot.car>
+	s=arc-20240116; t=1712041102; c=relaxed/simple;
+	bh=KOBiFFdOgu+G4YhGzStdHddK7U5EAKUtPaUgIuYJXF8=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=YKQYlfN3TBudP4AoWNB6tsebnvBSEG9MUQXUksxoBK4pu3GRBmGoviYMbrWeSfSJQt6LC2Yjj8eObm0HI8WQFZvjueC3eInSms6NgFEf+jllqSpNhIa4N39RwNS08yLz3fJZXxFycsnhavKOshUwPpgVlBdfOdBuri0QFEvrfOI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f197.google.com with SMTP id e9e14a558f8ab-368a72042b9so46460945ab.1
+        for <linux-kernel@vger.kernel.org>; Mon, 01 Apr 2024 23:58:21 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712041100; x=1712645900;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=EQZ9CndAaskPdqnzv8xsN4+oHdlqmMTeeJQ9uYMCKpo=;
+        b=LGj73fXskcMUAugxokck3cOvFt0t8uwE42GO4oBzJLPDouAtSIkn6M4iOHr3jPaozE
+         TRJbnH3I2R6F/JAUrUWMd4P3I8g/JdBcQAnLQhlLBDuPrKyyZWdnqChjtip+1t0UJ2JC
+         c0ONqJ9zqqcIKvRJzPWg3chfDcl1n9NditDDr6J9Htf+tzKZ/vPmOGkmEcn9SzUpHSST
+         Ggk+MNai3i5kfUEL+3yAreFK8kHGklodW+l/9g2SIkUiERtZzg6/p2dkvDWFr1m2cShq
+         CMl77NAm9ZsT4PSTdqISqr1QBRgW0bKs8yO44VF08+7ECVf30r/pEzE8kBHR0GKG3dEk
+         VmaA==
+X-Forwarded-Encrypted: i=1; AJvYcCVmXmtKpnQMs3FqWhLrfg8mA5doLOSmIuyTkMxxdkM04RMp5rjVFUh3zQxEmUcgJrUns1R6HQrVAaIV29tmrUvSRjQYQdOw9nBZ068y
+X-Gm-Message-State: AOJu0YwZnIBKQ0JPEEPi1LyyBeBroupFv+bLtXgGHuuRvEcUOTTgsG1t
+	LOE+WnONOcrNRL/BTRt3TDXoHr7nzEVsorW5nKEfUxTDBKHKMQuN3Psm/WDcpyJTIwtQ7qdbXHn
+	2oILC4QoJrF010yxgl35XExvcC9RkfTZ5+At5fMJsUEcZSnCypjdUDJw=
+X-Google-Smtp-Source: AGHT+IHTHffaJgvHvpBhPg7KMnAEdaJhXSjZJt4HPNPHyxTT966CHDWDtzdZgYNAW7Z6My93h89gNHXHll2a+AL0AI5z93pfidq3
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240401171947.dncdvc3gxna33nxq@4VRSMR2-DT.corp.robot.car>
+X-Received: by 2002:a05:6e02:1fee:b0:369:95dc:e4e5 with SMTP id
+ dt14-20020a056e021fee00b0036995dce4e5mr423341ilb.3.1712041100437; Mon, 01 Apr
+ 2024 23:58:20 -0700 (PDT)
+Date: Mon, 01 Apr 2024 23:58:20 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000a1ff78061517a148@google.com>
+Subject: [syzbot] [mm?] general protection fault in shmem_get_next_id
+From: syzbot <syzbot+05e63c0981a31f35f3fa@syzkaller.appspotmail.com>
+To: akpm@linux-foundation.org, linux-kernel@vger.kernel.org, 
+	linux-mm@kvack.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-On Mon, Apr 01, 2024 at 10:19:47AM -0700, Russ Weight wrote:
-> 
-> On Mon, Apr 01, 2024 at 10:09:05AM -0700, Russ Weight wrote:
-> > On Mon, Apr 01, 2024 at 05:46:29PM +0800, Xu Yilun wrote:
-> > > On Thu, Mar 28, 2024 at 07:35:59PM -0400, Peter Colberg wrote:
-> > > > From: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
-> > > > 
-> > > > The size of the staging area in FLASH for FPGA updates is dependent on the
-> > > > size of the FPGA. Currently, the staging size is defined as a constant.
-> > > > Larger FPGAs are coming soon and it will soon be necessary to support
-> > > 
-> > > Soon? When? You cannot add some feature without a user case. If you do
-> > > have a use case, put the patch in the same patchset.
-> > 
-> > There may never be an up-streamed use-case. This is a very small
-> > change intended to make it easier for a third-party vendor to
-> > build a card that requires a larger staging area in FLASH. They
-> > would have to add a new "struct m10bmc_csr_map", but they
-> > wouldn't have to refactor this code as part of the change
+Hello,
 
-I'm OK with this description.
+syzbot found the following issue on:
 
-Peter, is that what you mean? Or you do have a board type to follow, in
-which case you need to submit the new board type as well.
+HEAD commit:    fe46a7dd189e Merge tag 'sound-6.9-rc1' of git://git.kernel..
+git tree:       upstream
+console+strace: https://syzkaller.appspot.com/x/log.txt?x=10c90795180000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=fe78468a74fdc3b7
+dashboard link: https://syzkaller.appspot.com/bug?extid=05e63c0981a31f35f3fa
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=17f51129180000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=150d3cee180000
 
-> > 
-> > This change does not introduce an unused function or variable.
-> > It is more of a clean-up, making the code more flexible.
-> > 
-> > Can it not be taken as is?
-> 
-> Would it be acceptable to just change the commit message to something
-> like:
-> 
-> Do not hardwire the staging size in the secure update driver. Move
-> the staging size to the m10bmc_csr_map structure to make the size
-> assignment more flexible.
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/0f7abe4afac7/disk-fe46a7dd.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/82598d09246c/vmlinux-fe46a7dd.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/efa23788c875/bzImage-fe46a7dd.xz
 
-That would be much better.
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+05e63c0981a31f35f3fa@syzkaller.appspotmail.com
 
-Thanks,
-Yilun
+general protection fault, probably for non-canonical address 0xdffffc0000000000: 0000 [#1] PREEMPT SMP KASAN NOPTI
+KASAN: null-ptr-deref in range [0x0000000000000000-0x0000000000000007]
+CPU: 0 PID: 5070 Comm: syz-executor253 Not tainted 6.8.0-syzkaller-08951-gfe46a7dd189e #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 03/27/2024
+RIP: 0010:shmem_get_next_id+0x92/0x5c0 mm/shmem_quota.c:119
+Code: 04 db 49 8d 9c c6 90 02 00 00 48 89 d8 48 c1 e8 03 42 80 3c 38 00 74 08 48 89 df e8 f8 66 1b 00 48 8b 1b 48 89 d8 48 c1 e8 03 <42> 80 3c 38 00 74 08 48 89 df e8 df 66 1b 00 4c 8b 23 48 8d 5d 07
+RSP: 0018:ffffc900043a7be0 EFLAGS: 00010256
+RAX: 0000000000000000 RBX: 0000000000000000 RCX: ffff8880266c8000
+RDX: 0000000000000000 RSI: 0000000000000001 RDI: 0000000000000004
+RBP: ffffc900043a7d00 R08: ffffffff81dcdd47 R09: ffffffff822e7d5a
+R10: 0000000000000003 R11: ffffffff81dcdcf0 R12: 1ffff92000874fa0
+R13: ffff888022110000 R14: ffff888022110000 R15: dffffc0000000000
+FS:  0000555578677380(0000) GS:ffff8880b9400000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000000020001000 CR3: 000000007a384000 CR4: 0000000000350ef0
+Call Trace:
+ <TASK>
+ dquot_get_next_dqblk+0x75/0x3a0 fs/quota/dquot.c:2705
+ quota_getnextquota+0x2c7/0x6c0 fs/quota/quota.c:250
+ __do_sys_quotactl_fd fs/quota/quota.c:1002 [inline]
+ __se_sys_quotactl_fd+0x2a1/0x440 fs/quota/quota.c:973
+ do_syscall_64+0xfd/0x240
+ entry_SYSCALL_64_after_hwframe+0x6d/0x75
+RIP: 0033:0x7f5c0349b329
+Code: 48 83 c4 28 c3 e8 37 17 00 00 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b8 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007ffc39d71138 EFLAGS: 00000246 ORIG_RAX: 00000000000001bb
+RAX: ffffffffffffffda RBX: 0031656c69662f2e RCX: 00007f5c0349b329
+RDX: 0000000000000000 RSI: ffffffff80000901 RDI: 0000000000000003
+RBP: 00007f5c0350e610 R08: 0000000000000000 R09: 00007ffc39d71308
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000001
+R13: 00007ffc39d712f8 R14: 0000000000000001 R15: 0000000000000001
+ </TASK>
+Modules linked in:
+---[ end trace 0000000000000000 ]---
+RIP: 0010:shmem_get_next_id+0x92/0x5c0 mm/shmem_quota.c:119
+Code: 04 db 49 8d 9c c6 90 02 00 00 48 89 d8 48 c1 e8 03 42 80 3c 38 00 74 08 48 89 df e8 f8 66 1b 00 48 8b 1b 48 89 d8 48 c1 e8 03 <42> 80 3c 38 00 74 08 48 89 df e8 df 66 1b 00 4c 8b 23 48 8d 5d 07
+RSP: 0018:ffffc900043a7be0 EFLAGS: 00010256
+RAX: 0000000000000000 RBX: 0000000000000000 RCX: ffff8880266c8000
+RDX: 0000000000000000 RSI: 0000000000000001 RDI: 0000000000000004
+RBP: ffffc900043a7d00 R08: ffffffff81dcdd47 R09: ffffffff822e7d5a
+R10: 0000000000000003 R11: ffffffff81dcdcf0 R12: 1ffff92000874fa0
+R13: ffff888022110000 R14: ffff888022110000 R15: dffffc0000000000
+FS:  0000555578677380(0000) GS:ffff8880b9400000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000000020001000 CR3: 000000007a384000 CR4: 0000000000350ef0
+----------------
+Code disassembly (best guess):
+   0:	04 db                	add    $0xdb,%al
+   2:	49 8d 9c c6 90 02 00 	lea    0x290(%r14,%rax,8),%rbx
+   9:	00
+   a:	48 89 d8             	mov    %rbx,%rax
+   d:	48 c1 e8 03          	shr    $0x3,%rax
+  11:	42 80 3c 38 00       	cmpb   $0x0,(%rax,%r15,1)
+  16:	74 08                	je     0x20
+  18:	48 89 df             	mov    %rbx,%rdi
+  1b:	e8 f8 66 1b 00       	call   0x1b6718
+  20:	48 8b 1b             	mov    (%rbx),%rbx
+  23:	48 89 d8             	mov    %rbx,%rax
+  26:	48 c1 e8 03          	shr    $0x3,%rax
+* 2a:	42 80 3c 38 00       	cmpb   $0x0,(%rax,%r15,1) <-- trapping instruction
+  2f:	74 08                	je     0x39
+  31:	48 89 df             	mov    %rbx,%rdi
+  34:	e8 df 66 1b 00       	call   0x1b6718
+  39:	4c 8b 23             	mov    (%rbx),%r12
+  3c:	48 8d 5d 07          	lea    0x7(%rbp),%rbx
+
+
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
+
+If you want syzbot to run the reproducer, reply with:
+#syz test: git://repo/address.git branch-or-commit-hash
+If you attach or paste a git patch, syzbot will apply it before testing.
+
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
