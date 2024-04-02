@@ -1,123 +1,120 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08BFA1E4AE;
-	Tue,  2 Apr 2024 20:47:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E984012BF20
+	for <linux-kernel@vger.kernel.org>; Tue,  2 Apr 2024 20:52:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712090882; cv=none; b=a6IYda1M4pYHXHM49NbLyPXxRhNhYEcBJAHRSTAsbP1/PqVmH8JTL87eYWsAPnqftAZ/O49Nz3aZdI9VqWhGxXFnVgrOVtiSYo0skHZPswPuU/wpo/P2HKZ0Ne+y/o6KlxMaNjq4bXqY9u6LuTn4LrfuiKnufJ+1V697Jk/WAjs=
+	t=1712091133; cv=none; b=ldaewKXHzu0u4z/xpKpxGa3EBN3d8U0Fn5S5ZpvQKAJIG/I+OZ1CsYjsz3+tPxLDwxBkMCQdkx60+hbaEtsWIt62ZtopYoUcksYP8+XRb+IFt0qMMTJPULcHGnrBuPZHt7WhD4XYwjaq7V+y0S8/eLK5JT2FpXcGVmwlrLfg2aw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712090882; c=relaxed/simple;
-	bh=O4EE+8JYmgEDbA6Lqhv249ruqQwRW5Y8TLOMHMU3C+A=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=AevVpg88FbQqUk9XFMCb2Nn6qTzewNmqVH9/DUQscycu4P86r1u+zTVTjW2aAFxkCXIGGn9/Mnfa6QRQgvTGhDX+9kIvfEAQdwM+piRHDvDCdfaVJ+X82VL4ay8/hg21NEdONIID9gWBE9q/cowiKvDr4VdFNmTgLDzqMCDnLf0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=g3Qs0mFP; arc=none smtp.client-ip=198.175.65.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1712091133; c=relaxed/simple;
+	bh=R3Vv/DIHvrty2Q1jbRGDUHTqjO0wMc/8gqvhtFZSArw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=rkxz83AU/OOSx6I9mFBKXgScNgMEjD8APOFAUMtU64H/bVNfZl4/l1bsG7tAyJoeQLBUkFX9zhuRoqgljmVvYnOXTScB7zrzCutpyhz3NW2/rzkoymOv5SjJX9HSzzbdegPJWipEiId0Yuy3bqTcaYLzM3b9WNA/S80b0X/PUnE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WVZcjuEZ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="g3Qs0mFP"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1712090880; x=1743626880;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=O4EE+8JYmgEDbA6Lqhv249ruqQwRW5Y8TLOMHMU3C+A=;
-  b=g3Qs0mFPPAP43zvVo+xMmA2XsItASNbzwi91wNiRFkbldx+Z9uxY2t/p
-   dYmC9BPa80AmZu01eYqbC+xPhMFQVn90FF9k+ZzkiGxr/CSxXLmtmhEh5
-   f7uqqN0ihP7uONXklOUZpvJ/fOMEmqbwsdMMSQ4pRYtFNoeuzaXXef5Fi
-   DkOYh4hmV1gQ/GVF9OyIa5mu/yBLsktGxMGPMYzlTZK3DEQsABqlwbnGD
-   jghCiCaMR14ZfD7QMi4/P1G/AHbjxLbxj5TeKgELRGpOSWhKAN/ELVntC
-   3lpKohHRubPekHndbPzyrbp8wCDIFmXyhsT2DPmybwAJVk91pzSdNmh7u
-   A==;
-X-CSE-ConnectionGUID: ecvDZd2GTf+6l04+SFEVow==
-X-CSE-MsgGUID: JdBsFWU+QtSBpiyAwTD06Q==
-X-IronPort-AV: E=McAfee;i="6600,9927,11032"; a="7217060"
-X-IronPort-AV: E=Sophos;i="6.07,176,1708416000"; 
-   d="scan'208";a="7217060"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2024 13:47:59 -0700
-X-CSE-ConnectionGUID: 7/Qh/N4PQ2ubLJuGzHCiYg==
-X-CSE-MsgGUID: SpK/FaZ+QtKGexKHXPoagQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,176,1708416000"; 
-   d="scan'208";a="18099330"
-Received: from sj-4150-psse-sw-opae-dev3.sj.intel.com ([10.233.115.74])
-  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2024 13:47:59 -0700
-From: Peter Colberg <peter.colberg@intel.com>
-To: Wu Hao <hao.wu@intel.com>,
-	Tom Rix <trix@redhat.com>,
-	Moritz Fischer <mdf@kernel.org>,
-	Xu Yilun <yilun.xu@intel.com>,
-	Alan Tull <atull@kernel.org>,
-	Shiva Rao <shiva.rao@intel.com>,
-	Kang Luwei <luwei.kang@intel.com>,
-	Enno Luebbers <enno.luebbers@intel.com>,
-	linux-fpga@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Russ Weight <russ.weight@linux.dev>,
-	Marco Pagani <marpagan@redhat.com>,
-	Matthew Gerlach <matthew.gerlach@linux.intel.com>,
-	kernel test robot <lkp@intel.com>,
-	Peter Colberg <peter.colberg@intel.com>
-Subject: [PATCH v2] fpga: dfl: fme: revise kernel-doc comments for some functions
-Date: Tue,  2 Apr 2024 16:47:43 -0400
-Message-ID: <20240402204743.1069624-1-peter.colberg@intel.com>
-X-Mailer: git-send-email 2.44.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WVZcjuEZ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 84274C433F1;
+	Tue,  2 Apr 2024 20:52:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1712091132;
+	bh=R3Vv/DIHvrty2Q1jbRGDUHTqjO0wMc/8gqvhtFZSArw=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+	b=WVZcjuEZ43WvEIfkaiwrdoMx0BOJsj+4l1u0IMMqul4n5rMgxWUUQl0Sy3ObQmMg2
+	 Gu5ByVQvRCjwYaokcOhGlFTiQ2LxjWqe/b3+iD1b4B+RI+pI+Tfo5TT4s3IljE0tGw
+	 eagYeop4H0txl4QzDYxv0F1cRhK0sQ8+LhEBEe/zqMginFsRmW4fGtO3MQd0D98GPK
+	 IUPpzmEAkQ4u2ZIe4A8qLcqnEOllBaOOH4M8VUSMgTYEWAKy+Zr48LsNiCmRB/l4Wt
+	 XJGMUNaWztZ9C0x650VLDFXs5bZjhICMpqnGdVH8MGNQjD660bhZmGxHY0Sgqo2J9F
+	 agr8e4KeuOM4w==
+Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
+	id 1B64ACE0FF2; Tue,  2 Apr 2024 13:52:12 -0700 (PDT)
+Date: Tue, 2 Apr 2024 13:52:12 -0700
+From: "Paul E. McKenney" <paulmck@kernel.org>
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: linux-kernel@vger.kernel.org, kernel-team@meta.com,
+	Vineet Gupta <vgupta@kernel.org>,
+	Andi Shyti <andi.shyti@linux.intel.com>,
+	Andrzej Hajda <andrzej.hajda@intel.com>,
+	Palmer Dabbelt <palmer@rivosinc.com>,
+	linux-snps-arc@lists.infradead.org
+Subject: Re: [PATCH RFC cmpxchg 3/8] ARC: Emulate one-byte and two-byte
+ cmpxchg
+Message-ID: <8d92aab3-a3d0-4625-8b97-e336c0c7a2e8@paulmck-laptop>
+Reply-To: paulmck@kernel.org
+References: <31c82dcc-e203-48a9-aadd-f2fcd57d94c1@paulmck-laptop>
+ <20240401213950.3910531-3-paulmck@kernel.org>
+ <836df0c7-51a7-4786-8a65-a70efe9b6eec@app.fastmail.com>
+ <32936b57-f451-460b-a2df-e74293e44f5c@paulmck-laptop>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <32936b57-f451-460b-a2df-e74293e44f5c@paulmck-laptop>
 
-From: Xu Yilun <yilun.xu@intel.com>
+On Tue, Apr 02, 2024 at 10:06:14AM -0700, Paul E. McKenney wrote:
+> On Tue, Apr 02, 2024 at 10:14:08AM +0200, Arnd Bergmann wrote:
+> > On Mon, Apr 1, 2024, at 23:39, Paul E. McKenney wrote:
+> > > Use the new cmpxchg_emu_u8() and cmpxchg_emu_u16() to emulate one-byte
+> > > and two-byte cmpxchg() on arc.
+> > >
+> > > Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
+> > 
+> > I'm missing the context here, is it now mandatory to have 16-bit
+> > cmpxchg() everywhere? I think we've historically tried hard to
+> > keep this out of common code since it's expensive on architectures
+> > that don't have native 16-bit load/store instructions (alpha, armv3)
+> > and or sub-word atomics (armv5, riscv, mips).
+> 
+> I need 8-bit, and just added 16-bit because it was easy to do so.
+> I would be OK dropping the 16-bit portions of this series, assuming
+> that no-one needs it.  And assuming that it is easier to drop it than
+> to explain why it is not available.  ;-)
+> 
+> > Does the code that uses this rely on working concurrently with
+> > non-atomic stores to part of the 32-bit word? If we want to
+> > allow that, we need to merge my alpha ev4/45/5 removal series
+> > first.
+> 
+> For 8-but cmpxchg(), yes.  There are potentially concurrent
+> smp_load_acquire() and smp_store_release() operations to this same byte.
+> 
+> Or is your question specific to the 16-bit primitives?  (Full disclosure:
+> I have no objection to removing Alpha ev4/45/5, having several times
+> suggested removing Alpha entirely.  And having the scars to prove it.)
+> 
+> > For the cmpxchg() interface, I would prefer to handle the
+> > 8-bit and 16-bit versions the same way as cmpxchg64() and
+> > provide separate cmpxchg8()/cmpxchg16()/cmpxchg32() functions
+> > by architectures that operate on fixed-size integer values
+> > but not compounds or pointers, and a generic cmpxchg() wrapper
+> > in common code that can handle the abtraction for pointers,
+> > long and (if absolutely necessary) compounds by multiplexing
+> > between cmpxchg32() and cmpxchg64() where needed.
+> 
+> So as to support _acquire(), _relaxed(), and _release()?
+> 
+> If so, I don't have any use cases for other than full ordering.
 
-This amends commit 782d8e61b5d6 ("fpga: dfl: kernel-doc corrections"),
-which separately addressed the kernel-doc warnings below. Add a more
-precise description of the feature argument to dfl_fme_create_mgr(),
-and also use plural in the description of dfl_fme_destroy_bridges().
+Nor any use cases other than integers.  (In case another thing you are
+after here is good type-checking for non-integers combined with allowing
+C-language implicit conversions for integers.)
 
-lkp reported 2 build warnings:
+						Thanx, Paul
 
-   drivers/fpga/dfl/dfl-fme-pr.c:175: warning: Function parameter or member 'feature' not described in 'dfl_fme_create_mgr'
-
->> drivers/fpga/dfl/dfl-fme-pr.c:280: warning: expecting prototype for
->> dfl_fme_destroy_bridge(). Prototype was for dfl_fme_destroy_bridges()
->> instead
-
-Fixes: 29de76240e86 ("fpga: dfl: fme: add partial reconfiguration sub feature support")
-Reported-by: kernel test robot <lkp@intel.com>
-Signed-off-by: Xu Yilun <yilun.xu@intel.com>
-Signed-off-by: Peter Colberg <peter.colberg@intel.com>
----
-v2:
-- Correctly rebase patch onto commit 782d8e61b5d6.
----
- drivers/fpga/dfl-fme-pr.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/fpga/dfl-fme-pr.c b/drivers/fpga/dfl-fme-pr.c
-index cdcf6dea4cc9..b66f2c1e10a9 100644
---- a/drivers/fpga/dfl-fme-pr.c
-+++ b/drivers/fpga/dfl-fme-pr.c
-@@ -164,7 +164,7 @@ static int fme_pr(struct platform_device *pdev, unsigned long arg)
- 
- /**
-  * dfl_fme_create_mgr - create fpga mgr platform device as child device
-- * @feature: sub feature info
-+ * @feature: the dfl fme PR sub feature
-  * @pdata: fme platform_device's pdata
-  *
-  * Return: mgr platform device if successful, and error code otherwise.
-@@ -273,7 +273,7 @@ static void dfl_fme_destroy_bridge(struct dfl_fme_bridge *fme_br)
- }
- 
- /**
-- * dfl_fme_destroy_bridges - destroy all fpga bridge platform device
-+ * dfl_fme_destroy_bridges - destroy all fpga bridge platform devices
-  * @pdata: fme platform device's pdata
-  */
- static void dfl_fme_destroy_bridges(struct dfl_feature_platform_data *pdata)
--- 
-2.44.0
-
+> > I did a prototype a few years ago and found that there is
+> > probably under a dozen users of the sub-word atomics in
+> > the tree, so this mostly requires changes to architecture
+> > code and less to drivers and core code.
+> 
+> Given this approach, the predominance of changes to architecture code
+> seems quite likely to me.
+> 
+> But do we really wish to invest that much work into architectures that
+> might not be all that long for the world?  (Quickly donning my old
+> asbestos suit, the one with the tungsten pinstripes...)
+> 
+> 							Thanx, Paul
