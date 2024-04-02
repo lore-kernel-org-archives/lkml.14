@@ -1,446 +1,185 @@
-Received: from EUR03-DBA-obe.outbound.protection.outlook.com (mail-dbaeur03on2102.outbound.protection.outlook.com [40.107.104.102])
+Received: from mail.savoirfairelinux.com (mail.savoirfairelinux.com [208.88.110.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 959A284FA5;
-	Tue,  2 Apr 2024 14:04:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.104.102
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712066668; cv=fail; b=IRbve1lu96tX6hgwkG/gLf8W8k4bsqGmY5DB5UKvXnUG0OlQpS46dyojmAQnZc/YGJLPhvIAy5AKLeCFU68RFuSWCdraCedprNgz+ewE2vb9LxjouAVONyO/kxWPpwjqos4RNp5K2OVuBHUorERrOHInoz98CHJJ4hbBdUFnIEs=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712066668; c=relaxed/simple;
-	bh=KVdvfxPs8KDUHrwpzAKY8oElAorkwAZ/w1+DOHS1iEc=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=mQMaTjwa4EjqQxmBeWFHawIyDpoFNPsXaXtnBTZwgrODnlPPAn7HIY3sgfEhlHK4UnXdCWkbL/fVCoqmv+HJTjqX3zsPEJalRX0C441HX7rFEGc66KFtvK5qXW7CCLSHwsscvm2VG0w9583zxdmUKBNBhvXqKMXqkqI+hOnC5Fc=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b=Rc6xvA6C; arc=fail smtp.client-ip=40.107.104.102
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5997F84FA5;
+	Tue,  2 Apr 2024 14:05:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=208.88.110.44
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1712066710; cv=none; b=HmMrL8/FolsKtML/oieq8C5cpjcWsYHxV7+cWlnhlKPmVuPgyLzqw2POCvm4QVeRKDAvimYX2OFMO+Nc/5jvFDzJnQMLyX6q3YZ0j++td3eM4+NpxZQ67nWLEL2FOfX3j82s5bMYy+fR8nGn40/ybqh94s52oVslBBunegBcHb8=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1712066710; c=relaxed/simple;
+	bh=1KQpE/wKkfNXVZjIY5YSWJ0L+8xMoq5VTVkgItzgIGA=;
+	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
+	 MIME-Version:Content-Type; b=XeKXYSiEyIujVK2pET5icZWGiMe7978r88Bk4A1ewgGXXDXXzkmjgCK1Yn9EegFsI4DmfFYALHWLVmkxUDNp2rqfGbv0OlvPJjtyHvBd4bNeqGnvBqJve/yeU6FFLcSM/i7y2eitcUeF5XNVtiAur/D4uOQpg6JJIV72F1Jfk8s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=savoirfairelinux.com; spf=pass smtp.mailfrom=savoirfairelinux.com; dkim=pass (2048-bit key) header.d=savoirfairelinux.com header.i=@savoirfairelinux.com header.b=lS+FaL/p; arc=none smtp.client-ip=208.88.110.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=savoirfairelinux.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=savoirfairelinux.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="Rc6xvA6C"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Kzuo3ERRrxqM/3Y9/j7aqX0cPJ4uef3N6nRfn/59KEzVE8lTGTttiI+JDVtVJOuqW/RvwDmmqpFK+qnFkZt7o7kvGjhblCr3Hm181c4ew004d82uY4dAktSDZwNULcskfFbrcMojYSKSI84DVG/UNMKKX5h0osI4PbmjW1ATcF5AZ0jfGJbp7OHFMRoOYRCe62DgxyRRndffEH0+hwbimOaKuZuRhriLTTyFLMNUY68NrjkrVb4EJZm9gGwjET0ZL2hfD6/Gou33To9XNZ6X37X2tu5VxeQG4GABFw3qD5gynUgL4F2X2ewdtQRRrsLNCvvmSQAm1IeTPCmG7Da3MQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=DDwyO0IhlYqqrKMF3YIlp3jFUaq70ex1y70tRoPjgFs=;
- b=a0Sa9lMZL74geWB5vjiiTjcaIx6Qw+CaWs35FJ1wDfA+TdqWDZqHuYlHATotFy7+rO10cJkMgkrH+hMtSnXqFnI+i/6sGdVeuiTVrCPqb/C+S9UJ6Z0w7EEFoaAQAvZJbaMF/JUYOf6CtRyBBCsXt17dGn0k9D87idaO4t3Vva1cv6uOUnLdJkYLL0QtY2t1Lt098zzG/QlZEZ/dA2CK6QdZ62k+9Oxze3N797UZAeG4Pr2Htp5qDmm9Jh2YNpRH8J4stpEogvaM7L4ekKOzTFdrlcvnApvCOII8Opk0gQqULolsf1l1oq3kDEwMgqEhMCiGAspRNzYP/1okYYRNbg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=DDwyO0IhlYqqrKMF3YIlp3jFUaq70ex1y70tRoPjgFs=;
- b=Rc6xvA6CHkpWJV9ZzH8QEGpQKNzX3G1sYr/IUOw8uutttxyjtupwM0Gpew/0os2cp6EI4Hi46OrY+LN+6yowb+ALII5gok/WXEg5sU3rqr2j+1/jqlPACcvKEb5qxTB1J8ovph6jPaE0D6D/u5UoKwthV3BiGYrl/eCv5+bfN38=
-Received: from DU0PR04MB9417.eurprd04.prod.outlook.com (2603:10a6:10:358::11)
- by DB9PR04MB8411.eurprd04.prod.outlook.com (2603:10a6:10:24c::9) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.46; Tue, 2 Apr
- 2024 14:04:23 +0000
-Received: from DU0PR04MB9417.eurprd04.prod.outlook.com
- ([fe80::d30b:44e7:e78e:662d]) by DU0PR04MB9417.eurprd04.prod.outlook.com
- ([fe80::d30b:44e7:e78e:662d%4]) with mapi id 15.20.7386.037; Tue, 2 Apr 2024
- 14:04:23 +0000
-From: Peng Fan <peng.fan@nxp.com>
-To: Cristian Marussi <cristian.marussi@arm.com>, "Peng Fan (OSS)"
-	<peng.fan@oss.nxp.com>
-CC: Sudeep Holla <sudeep.holla@arm.com>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley
-	<conor+dt@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Dan
- Carpenter <dan.carpenter@linaro.org>, "linux-arm-kernel@lists.infradead.org"
-	<linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org"
-	<devicetree@vger.kernel.org>, "linux-gpio@vger.kernel.org"
-	<linux-gpio@vger.kernel.org>, Oleksii Moisieiev <oleksii_moisieiev@epam.com>
-Subject: RE: [PATCH v7 3/4] firmware: arm_scmi: Add SCMI v3.2 pincontrol
- protocol basic support
-Thread-Topic: [PATCH v7 3/4] firmware: arm_scmi: Add SCMI v3.2 pincontrol
- protocol basic support
-Thread-Index: AQHahKOBYTQv1KoiVkioSbRA3lNLQLFUx+IAgAA7aVA=
-Date: Tue, 2 Apr 2024 14:04:23 +0000
-Message-ID:
- <DU0PR04MB941718594983D668A418879C883E2@DU0PR04MB9417.eurprd04.prod.outlook.com>
-References: <20240402-pinctrl-scmi-v7-0-3ea519d12cf7@nxp.com>
- <20240402-pinctrl-scmi-v7-3-3ea519d12cf7@nxp.com> <Zgvd7npz1jdJSu-b@pluto>
-In-Reply-To: <Zgvd7npz1jdJSu-b@pluto>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: DU0PR04MB9417:EE_|DB9PR04MB8411:EE_
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info:
- iFgpgjmol2Caljo9kaUzuMBV3EW3IToj0CKp432EempKOuCs5igKflhhqielwPS0gbqimquNI5AUuoXVBom50crqDH/hPPtBkK0HxkGfOzaQA/2+q06D83D01ih3O9zAIKn7jmzsDRm6ox/+Sd1OJrb8RM8jV4udDDx0oDUDzjqoBGZglseVqeN52hC31fReL2Yyp0kkvi0Y4DzJX5YrHcSAaUdqrsC0A13dZoRxCdu0dBLml14GFfdRiMhZV0l26R7gzxfdEo9QujoQT7t9rd1r/OT/La9JI+F0ucNbSuZolN8JXXkRWHRiqIyiQ9+bCITbxkoRJeEcNbncyFyL7KBJcwRmAKqVFpU8mgwzKYfcEROOelWDYtmKDaed4f8Ihz0i9UbSUHZfWSPzRXznbjUBURDDgc7vTSUWG2OyFqsbtapEVOXsc6UEmIMD+eTgr2vYJw8+vgn580eS5KuxaWsQp2t/aUR1s9rpXMphgzEoMTsICnQSPl8WxNDAG1mCyMxHhQyd0Wmdxyq/FaZq7Ac42eN1WRtR7c5PxPoyhkAnjnauAfDDpbQ3vhdIWj5Igt75Tt1KGaRtRZlq8qWSIUTrA+WSU3PcgwPF4P2PIX8IOPTjHAwRAIPDeyVIQcXBsXYCFF3cJwViRCZIggJ9HREVuGtGmXwKBVPx8sGLMR4=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DU0PR04MB9417.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376005)(7416005)(1800799015)(366007);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?uL40QnGqWlu3WJqw5BwZxf88IdCrp3CsV4LWJ0ysFxaWxDENjSJJpbbliYF2?=
- =?us-ascii?Q?Crq1HMp5SJ9eWRqikyqA0A/9B1qBWvJQduxeGQ4Qj5b/I9GbcvjIE8revKvr?=
- =?us-ascii?Q?Ip/mQBJX4xvv6raGs1+LbGBxWArIEb/r5kzat1wQsv/H89blmgjA9uBGVty4?=
- =?us-ascii?Q?m/6Q6X40E1VNKEWC3TRhOI0tPv4EFBJ0RtlND/SpNvp7+u6T5ghFbvkKB+Mn?=
- =?us-ascii?Q?1/az4dMlfazYSMEcnFk4nqy8bQy+gZfmk+yRAnZSgxR5c9vtW19jus69BZDc?=
- =?us-ascii?Q?OJQmKZRonwa0vqffBVwzbozih2djnrhUW0rNqhXu1ghWN6l2B6WmdZ7AtJOB?=
- =?us-ascii?Q?08l5g8jFkTh9BDWkW7T5DZkm5ZkM9eHLSXOm9suUueQEapudyRAdIN8UkQbF?=
- =?us-ascii?Q?G0RjygVcI4YeBW8OljOzEBzGlZOsD+4pOcCeNFqLqvNHjtqJjucsvs/5UyCy?=
- =?us-ascii?Q?TJ9Bp4OI8LoVrFX0f/PPYVXXZQh3AsZRh+LFiLgDG/7ktK0akQZdkLIbRsNl?=
- =?us-ascii?Q?Hp0SeQ8KmoEyT56/DwJ90Jw7uGnt49l+K7WryaeQXuUUyZ9w5hHnoCDUD9Eo?=
- =?us-ascii?Q?yn4mfnq80jo7q+d7OQvSu1bwHn/TWuScIiOz/4nRx8sTf9vUSvWGGY5z2/tb?=
- =?us-ascii?Q?AuFsG9hf6p8zfE8jc/ekx2MmSPLlSQq4kT+MF5ZpqPdsOnrIaNxhsNZEEz96?=
- =?us-ascii?Q?1oltPAU3M05mg+94qI/Rn/jp47UvTVkGk4gUAx6DqHlH6xTwXHmyhBrcc2be?=
- =?us-ascii?Q?h32TjvxSzE1oslyVJqqeEqllK3xh53vRnuuBgBegPM/fS6wdudUcU1czjDly?=
- =?us-ascii?Q?baaeOYZHRpuBL+6I9XW8C9Ug4/fBN4W8EMKbjHlCjIP4Jy6ir/7zesXKdjTY?=
- =?us-ascii?Q?YOZELrBQKAn/NbIJtFMOSXLDbzycE3qmSSWg4D2zj5aonMHniQYGTKGNBNSz?=
- =?us-ascii?Q?/TXfQEvxTidOPknoZ5dZTBLOV9uzKSEAABATPjJr/YGH1eLmNxnul9cifjpg?=
- =?us-ascii?Q?m8BqAcgtUjGKInv+CuyFRjOAXb5FcRguQ2hzi7yktzDZ0nYvsYu5ay0SEWrJ?=
- =?us-ascii?Q?8SjKWMYBLcAQlXak9PbTXCRCkB1mXqM0W5bRnxVms592Q40fSzrVJOufpOgI?=
- =?us-ascii?Q?G7BQi8txb/c6TvjjSYCVp1Dn8xZackXPHDctQ/c/nvtRwxb6cmwQflQ2D9Xa?=
- =?us-ascii?Q?Ez9lfsKW53t4TxoZ9rqKe+qByrxNGDzl8NiYumAJHEI/ipZ+v++RnwjlxP0b?=
- =?us-ascii?Q?IfFhIH8L2MANs1pY8xA2qGweA3M3A2C7G2KVAADgF7XA4fB2EutPMSRCZpU8?=
- =?us-ascii?Q?huWOdZHqj96I92q28xxdYaaAAb6ZnTUye2CZlKvEzhGNvc8JitR2uEJ55RLB?=
- =?us-ascii?Q?DTTIlejIsCn+x+VkLqSMZZ+ghLiodAt12kKO4nf0wD12UzQssGC2mWdjqyeA?=
- =?us-ascii?Q?z85TkaEzq8vco+AR35HDCUIae7gKP9SZOZGAnOZqAeEoxmCiQErmaxAIVITy?=
- =?us-ascii?Q?p4phSsK+6cDgjB/fty3kZjqYTQonT1tqZLwDcZpZA9xXoh6N6Qk2G01Rpmf3?=
- =?us-ascii?Q?+maIVjEx0J01MYOh7Ng=3D?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (2048-bit key) header.d=savoirfairelinux.com header.i=@savoirfairelinux.com header.b="lS+FaL/p"
+Received: from localhost (localhost [127.0.0.1])
+	by mail.savoirfairelinux.com (Postfix) with ESMTP id 2D0559C48A7;
+	Tue,  2 Apr 2024 09:57:14 -0400 (EDT)
+Received: from mail.savoirfairelinux.com ([127.0.0.1])
+ by localhost (mail.savoirfairelinux.com [127.0.0.1]) (amavis, port 10032)
+ with ESMTP id VcCNgTxHjS3s; Tue,  2 Apr 2024 09:57:13 -0400 (EDT)
+Received: from localhost (localhost [127.0.0.1])
+	by mail.savoirfairelinux.com (Postfix) with ESMTP id D375F9C5513;
+	Tue,  2 Apr 2024 09:57:12 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.savoirfairelinux.com D375F9C5513
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=savoirfairelinux.com; s=DFC430D2-D198-11EC-948E-34200CB392D2;
+	t=1712066232; bh=ALDYI6XuaPNWtm94gEWunCW8yXYfE1h1vT+jsdoUx/w=;
+	h=Date:From:To:Message-ID:MIME-Version;
+	b=lS+FaL/pA8mxzosDbxfotWTwNjY+id7g17zK2cbkhvolCl1IVqe5FRmEZ+sT7ZkU4
+	 kvtTX3OmQ6qJlngTz0Emk//t+eIY+zHnEHvOr8uknpByLCWQ/7fLYR+x9W4j5+idKp
+	 gFDYQndiBlHZJMpkGVFmHmOEMB72KUbEDQ1VxruHwhX06bjurxNq9Z9lH42MhysG6t
+	 /pxsJMEXyWmmFYj07t+VeQRmO0QMa7pd4iWUjm+yrJlVCfpcWtjtra9nzPqw6RnlkQ
+	 hgkw5GYw/VpoK+6pZxC69qHbjV6KA9JCPmOTqSmsdGBlWlqy1VDL7l+hDLJuhvfBn4
+	 u0z9Ho4+cSZsg==
+X-Virus-Scanned: amavis at mail.savoirfairelinux.com
+Received: from mail.savoirfairelinux.com ([127.0.0.1])
+ by localhost (mail.savoirfairelinux.com [127.0.0.1]) (amavis, port 10026)
+ with ESMTP id S17stuCxxIkB; Tue,  2 Apr 2024 09:57:12 -0400 (EDT)
+Received: from mail.savoirfairelinux.com (mail.savoirfairelinux.com [192.168.48.237])
+	by mail.savoirfairelinux.com (Postfix) with ESMTP id 9780E9C48A7;
+	Tue,  2 Apr 2024 09:57:12 -0400 (EDT)
+Date: Tue, 2 Apr 2024 09:57:12 -0400 (EDT)
+From: Charles Perry <charles.perry@savoirfairelinux.com>
+To: Xu Yilun <yilun.xu@linux.intel.com>
+Cc: mdf <mdf@kernel.org>, Allen VANDIVER <avandiver@markem-imaje.com>, 
+	Brian CODY <bcody@markem-imaje.com>, hao wu <hao.wu@intel.com>, 
+	yilun xu <yilun.xu@intel.com>, Tom Rix <trix@redhat.com>, 
+	Rob Herring <robh+dt@kernel.org>, 
+	krzysztof kozlowski+dt <krzysztof.kozlowski+dt@linaro.org>, 
+	Conor Dooley <conor+dt@kernel.org>, 
+	Michal Simek <michal.simek@amd.com>, 
+	linux-fpga <linux-fpga@vger.kernel.org>, 
+	devicetree <devicetree@vger.kernel.org>, 
+	linux-kernel <linux-kernel@vger.kernel.org>, 
+	linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Message-ID: <1609084823.2225067.1712066232087.JavaMail.zimbra@savoirfairelinux.com>
+In-Reply-To: <Zgl4I6rykg7shI2K@yilunxu-OptiPlex-7050>
+References: <20240321220447.3260065-1-charles.perry@savoirfairelinux.com> <Zgl4I6rykg7shI2K@yilunxu-OptiPlex-7050>
+Subject: Re: [PATCH v6 0/4] fpga: xilinx-selectmap: add new driver
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: DU0PR04MB9417.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 17fa617d-1e0a-451f-6c49-08dc531dcc8e
-X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Apr 2024 14:04:23.0661
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: BRKUYE6luq8zWsamHjz94bLBmQSrtFOJc6glD3DaVJ8OSvN3cqCBvuylbqB+H7OtwzpDIB1Jp+YxV+9+cnwDCA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB9PR04MB8411
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+X-Mailer: Zimbra 8.8.15_GA_4581 (ZimbraWebClient - FF120 (Linux)/8.8.15_GA_4581)
+Thread-Topic: fpga: xilinx-selectmap: add new driver
+Thread-Index: TMcs+RZQxoWgE3ur0JfiynebDmdisQ==
 
-> Subject: Re: [PATCH v7 3/4] firmware: arm_scmi: Add SCMI v3.2 pincontrol
-> protocol basic support
->=20
-> On Tue, Apr 02, 2024 at 10:22:23AM +0800, Peng Fan (OSS) wrote:
-> > From: Peng Fan <peng.fan@nxp.com>
-> >
-> > Add basic implementation of the SCMI v3.2 pincontrol protocol.
-> >
->=20
-> Hi,
->=20
->=20
-> > Co-developed-by: Oleksii Moisieiev <oleksii_moisieiev@epam.com>
-> > Signed-off-by: Oleksii Moisieiev <oleksii_moisieiev@epam.com>
-> > Signed-off-by: Peng Fan <peng.fan@nxp.com>
-> > ---
->=20
-> [snip]
->=20
->=20
-> > +struct scmi_settings_get_ipriv {
-> > +	u32 selector;
-> > +	enum scmi_pinctrl_selector_type type;
-> > +	bool get_all;
-> > +	enum scmi_pinctrl_conf_type *config_types;
-> > +	u32 *config_values;
-> > +};
-> > +
-> > +static void
-> > +iter_pinctrl_settings_get_prepare_message(void *message, u32 desc_inde=
-x,
-> > +					  const void *priv)
-> > +{
-> > +	struct scmi_msg_settings_get *msg =3D message;
-> > +	const struct scmi_settings_get_ipriv *p =3D priv;
-> > +	u32 attributes;
-> > +
-> > +	attributes =3D FIELD_PREP(SELECTOR_MASK, p->type);
-> > +
-> > +	if (p->get_all) {
-> > +		attributes |=3D FIELD_PREP(CONFIG_FLAG_MASK, 1) |
-> > +			FIELD_PREP(SKIP_CONFIGS_MASK, desc_index);
-> > +	} else {
-> > +		attributes |=3D FIELD_PREP(CONFIG_TYPE_MASK, p-
-> >config_types[0]);
-> > +	}
-> > +
-> > +	msg->attributes =3D cpu_to_le32(attributes);
-> > +	msg->identifier =3D cpu_to_le32(p->selector); }
-> > +
-> > +static int
-> > +iter_pinctrl_settings_get_update_state(struct scmi_iterator_state *st,
-> > +				       const void *response, void *priv) {
-> > +	const struct scmi_resp_settings_get *r =3D response;
-> > +	struct scmi_settings_get_ipriv *p =3D priv;
-> > +
-> > +	if (p->get_all) {
-> > +		st->num_returned =3D le32_get_bits(r->num_configs,
-> GENMASK(7, 0));
-> > +		st->num_remaining =3D le32_get_bits(r->num_configs,
-> GENMASK(31, 24));
-> > +	} else {
-> > +		st->num_returned =3D 1;
-> > +		st->num_remaining =3D 0;
-> > +	}
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static int
-> > +iter_pinctrl_settings_get_process_response(const struct
-> scmi_protocol_handle *ph,
-> > +					   const void *response,
-> > +					   struct scmi_iterator_state *st,
-> > +					   void *priv)
-> > +{
-> > +	const struct scmi_resp_settings_get *r =3D response;
-> > +	struct scmi_settings_get_ipriv *p =3D priv;
-> > +	u32 type =3D le32_get_bits(r->configs[st->loop_idx * 2], GENMASK(7,
-> 0));
-> > +	u32 val =3D le32_to_cpu(r->configs[st->loop_idx * 2 + 1]);
-> > +
-> > +	if (p->get_all) {
-> > +		p->config_types[st->desc_index + st->loop_idx] =3D type;
-> > +	} else {
-> > +		if (p->config_types[0] !=3D type)
-> > +			return -EINVAL;
-> > +	}
-> > +
-> > +	p->config_values[st->desc_index + st->loop_idx] =3D val;
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static int
-> > +scmi_pinctrl_settings_get(const struct scmi_protocol_handle *ph, u32
-> selector,
-> > +			  enum scmi_pinctrl_selector_type type,
-> > +			  enum scmi_pinctrl_conf_type config_type,
-> > +			  u32 *config_value, bool get_all) {
-> > +	int ret;
-> > +	void *iter;
-> > +	struct scmi_iterator_ops ops =3D {
-> > +		.prepare_message =3D
-> iter_pinctrl_settings_get_prepare_message,
-> > +		.update_state =3D iter_pinctrl_settings_get_update_state,
-> > +		.process_response =3D
-> iter_pinctrl_settings_get_process_response,
-> > +	};
-> > +	struct scmi_settings_get_ipriv ipriv =3D {
-> > +		.selector =3D selector,
-> > +		.type =3D type,
-> > +		.get_all =3D get_all,
-> > +		.config_types =3D &config_type,
-> > +		.config_values =3D config_value,
-> > +	};
-> > +
-> > +	if (!config_value || type =3D=3D FUNCTION_TYPE)
-> > +		return -EINVAL;
-> > +
-> > +	ret =3D scmi_pinctrl_validate_id(ph, selector, type);
-> > +	if (ret)
-> > +		return ret;
-> > +
-> > +	iter =3D ph->hops->iter_response_init(ph, &ops, SCMI_PIN_OEM_END,
-> > +					    PINCTRL_SETTINGS_GET,
-> > +					    sizeof(struct
-> scmi_msg_settings_get),
-> > +					    &ipriv);
-> > +	if (IS_ERR(iter))
-> > +		return PTR_ERR(iter);
-> > +
-> > +	return ph->hops->iter_response_run(iter);
-> > +}
-> > +
-> > +static int scmi_pinctrl_settings_get_one(const struct scmi_protocol_ha=
-ndle
-> *ph,
-> > +					 u32 selector,
-> > +					 enum scmi_pinctrl_selector_type
-> type,
-> > +					 enum scmi_pinctrl_conf_type
-> config_type,
-> > +					 u32 *config_value)
-> > +{
-> > +	return scmi_pinctrl_settings_get(ph, selector, type, config_type,
-> > +					 config_value, false);
-> > +}
-> > +
-> > +static int scmi_pinctrl_settings_get_all(const struct scmi_protocol_ha=
-ndle
-> *ph,
-> > +					 u32 selector,
-> > +					 enum scmi_pinctrl_selector_type
-> type,
-> > +					 enum scmi_pinctrl_conf_type
-> config_type,
-> > +					 u32 *config_value)
-> > +{
-> > +	return scmi_pinctrl_settings_get(ph, selector, type, config_type,
-> > +					 config_value, true);
-> > +}
-> > +
->=20
-> If you generalize the scmi_pinctrl_settings_get() and reintroduce a
-> .settings_get_all() ops (even though unused by pinctrl driver, I am fine =
-with
-> this..), you should take care to pass as an input parameter NOT only the =
-array
-> of config_values BUT also an array of config_types since you could get ba=
-ck
-> up to 256 OEM types: for this reason you will need also to pass to
-> scmi_pinctrl_settings_get() an input param that specifies the sizes of th=
-e
-> 2 array input params (in order to avoid oveflows) AND use that same inout
-> param also as an output param to report at the end how many OEM types
-> were effectively found and returned....
->=20
-> IOW, I did this on top of your V7 to make the settings_get_all work:
->=20
-> ---8<---
-> diff --git a/drivers/firmware/arm_scmi/pinctrl.c
-> b/drivers/firmware/arm_scmi/pinctrl.c
-> index b75af1dd75fa..f4937af66c4d 100644
-> --- a/drivers/firmware/arm_scmi/pinctrl.c
-> +++ b/drivers/firmware/arm_scmi/pinctrl.c
-> @@ -317,6 +317,7 @@ struct scmi_settings_get_ipriv {
->  	u32 selector;
->  	enum scmi_pinctrl_selector_type type;
->  	bool get_all;
-> +	unsigned int *nr_configs;
->  	enum scmi_pinctrl_conf_type *config_types;
->  	u32 *config_values;
->  };
-> @@ -379,6 +380,7 @@ iter_pinctrl_settings_get_process_response(const
-> struct scmi_protocol_handle *ph
->  	}
->=20
->  	p->config_values[st->desc_index + st->loop_idx] =3D val;
-> +	++*p->nr_configs;
->=20
->  	return 0;
->  }
-> @@ -386,11 +388,13 @@ iter_pinctrl_settings_get_process_response(const
-> struct scmi_protocol_handle *ph  static int  scmi_pinctrl_settings_get(co=
-nst
-> struct scmi_protocol_handle *ph, u32 selector,
->  			  enum scmi_pinctrl_selector_type type,
-> -			  enum scmi_pinctrl_conf_type config_type,
-> -			  u32 *config_value, bool get_all)
-> +			  unsigned int *nr_configs,
-> +			  enum scmi_pinctrl_conf_type *config_types,
-> +			  u32 *config_values)
->  {
->  	int ret;
->  	void *iter;
-> +	unsigned int max_configs =3D *nr_configs;
->  	struct scmi_iterator_ops ops =3D {
->  		.prepare_message =3D
-> iter_pinctrl_settings_get_prepare_message,
->  		.update_state =3D iter_pinctrl_settings_get_update_state,
-> @@ -399,19 +403,22 @@ scmi_pinctrl_settings_get(const struct
-> scmi_protocol_handle *ph, u32 selector,
->  	struct scmi_settings_get_ipriv ipriv =3D {
->  		.selector =3D selector,
->  		.type =3D type,
-> -		.get_all =3D get_all,
-> -		.config_types =3D &config_type,
-> -		.config_values =3D config_value,
-> +		.get_all =3D (max_configs > 1),
-> +		.nr_configs =3D nr_configs,
-> +		.config_types =3D config_types,
-> +		.config_values =3D config_values,
->  	};
->=20
-> -	if (!config_value || type =3D=3D FUNCTION_TYPE)
-> +	if (!config_types || !config_values || type =3D=3D FUNCTION_TYPE)
->  		return -EINVAL;
->=20
->  	ret =3D scmi_pinctrl_validate_id(ph, selector, type);
->  	if (ret)
->  		return ret;
->=20
-> -	iter =3D ph->hops->iter_response_init(ph, &ops, SCMI_PIN_OEM_END,
-> +	/* Prepare to count returned configs */
-> +	*nr_configs =3D 0;
-> +	iter =3D ph->hops->iter_response_init(ph, &ops, max_configs,
->  					    PINCTRL_SETTINGS_GET,
->  					    sizeof(struct
-> scmi_msg_settings_get),
->  					    &ipriv);
-> @@ -427,18 +434,24 @@ static int scmi_pinctrl_settings_get_one(const
-> struct scmi_protocol_handle *ph,
->  					 enum scmi_pinctrl_conf_type
-> config_type,
->  					 u32 *config_value)
->  {
-> -	return scmi_pinctrl_settings_get(ph, selector, type, config_type,
-> -					 config_value, false);
-> +	unsigned int nr_configs =3D 1;
-> +
-> +	return scmi_pinctrl_settings_get(ph, selector, type, &nr_configs,
-> +					 &config_type, config_value);
->  }
->=20
->  static int scmi_pinctrl_settings_get_all(const struct scmi_protocol_hand=
-le
-> *ph,
->  					 u32 selector,
->  					 enum scmi_pinctrl_selector_type
-> type,
-> -					 enum scmi_pinctrl_conf_type
-> config_type,
-> -					 u32 *config_value)
-> +					 unsigned int *nr_configs,
-> +					 enum scmi_pinctrl_conf_type
-> *config_types,
-> +					 u32 *config_values)
->  {
-> -	return scmi_pinctrl_settings_get(ph, selector, type, config_type,
-> -					 config_value, true);
-> +	if (!nr_configs || *nr_configs =3D=3D 0)
-> +		return -EINVAL;
-> +
-> +	return scmi_pinctrl_settings_get(ph, selector, type, nr_configs,
-> +					 config_types, config_values);
->  }
->=20
->  static int
-> diff --git a/include/linux/scmi_protocol.h b/include/linux/scmi_protocol.=
-h
-> index abaf6122ea37..7915792efd81 100644
-> --- a/include/linux/scmi_protocol.h
-> +++ b/include/linux/scmi_protocol.h
-> @@ -882,8 +882,9 @@ struct scmi_pinctrl_proto_ops {
->  	int (*settings_get_all)(const struct scmi_protocol_handle *ph,
->  				u32 selector,
->  				enum scmi_pinctrl_selector_type type,
-> -				enum scmi_pinctrl_conf_type config_type,
-> -				u32 *config_value);
-> +				unsigned int *nr_configs,
-> +				enum scmi_pinctrl_conf_type *config_types,
-> +				u32 *config_values);
->  	int (*settings_conf)(const struct scmi_protocol_handle *ph,
->  			     u32 selector, enum scmi_pinctrl_selector_type
-> type,
->  			     unsigned int nr_configs,
-> --->8-----
->=20
-> Please check if this addition sounds good to you and integrate into v8
-> eventually...
 
-Thanks for helping on this, I will included your changes, and your
-Co-developed-by tag if you not mind.
-
-Thanks,
-Peng.
-
->=20
+On Mar 31, 2024, at 10:50 AM, Xu Yilun yilun.xu@linux.intel.com wrote:
+> On Thu, Mar 21, 2024 at 06:04:32PM -0400, Charles Perry wrote:
+>> Hello,
+>> 
+>> This patchset adds a new driver for the 7 series FPGA's SelectMAP
+>> interface.
+>> 
+>> The SelectMAP interface shares a common GPIO protocol with the SPI
+>> interface which is already in the kernel (drivers/fpga/xilinx-spi.c).
+>> The approach proposed in this patchset is to refactor xilinx-spi.c into
+>> xilinx-core.c which would handle the common GPIO protocol. This is then
+>> used to build two drivers, the already existing xilinx-spi.c driver and
+>> a newly added xilinx-selectmap.c driver.
+>> 
+>> The SelectMAP driver proposed only supports 8 bit mode. This is because
+>> the 16 and 32 bits mode have limitations with regards to compressed
+>> bitstream support as well as introducing endianness considerations.
+>> 
+>> I'm testing xilinx-selectmap.c on a custom i.MX6 board connected to an
+>> Artix 7 FPGA. Flashing a 913K bitstream takes 0.44 seconds.
+>> 
+>> Changes since v5: (from Yilun review)
+>>  * xilinx-core.h: remove private fields kernel-doc
+>>  * xilinx-spi.c: rename conf into core in xilinx_spi_probe
+>>  * xilinx-core.c: introduce the new gpio names in patch 4/4
+>>  * xilinx-core.c: remove kernel-doc on xilinx_core_devm_gpiod_get()
+>>  * xilinx-selectmap.c:
+>>    * reorder includes in alphabetical order
+>>    * xilinx_selectmap_probe(): remove unused resource *r variable
+>>    * xilinx_selectmap_probe(): use a single gpio_desc* temporary
+>>    * xilinx_selectmap_probe(): declare variables in reverse xmas tree
+>> 
+>> Changes since v4: (from Yilun and Krzysztof review)
+>>  * xilinx-core: use sizeof() instead of hardcoded immediate
+>>  * xilinx-core: fix module compilation (EXPORT_SYMBOL_GPL, MODULE_LICENSE,
+>>    MODULE_AUTHOR, MODULE_DESCRIPTION)
+>>  * xilinx-core: add private/public qualifiers for struct xilinx_fpga_core
+>>  * xilinx-spi: remove struct xilinx_spi_conf. This struct isn't needed as
+>>    the struct spi_device* can be retrieved from the struct device*.
+>>  * dt-bindings: remove usage of "_b" and "-b" for the new driver. We
+>>    agreed that the spi and selectmap driver will use different bindings
+>>    which will be handled by the driver core and that the legacy names will
+>>    be used only for the spi compatible.
+>>  * xilinx-core: select between prog/init and prog_b/init-b
+>> 
+>> Changes since v3: (from Rob Herring review)
+>>  * Fix an error in the DT binding example compatible.
+>>  * Drop the renaming of "prog_b" to "prog" and "init-b" to "init".
+>>    Patches 2 and 3 are removed.
+>> 
+>> Changes since v2:
+>>  * Inserted patch 2 and 3 which rename "prog_b" and "init-b" into "prog"
+>>    and "init" for the SPI driver.
+>>  * From Krzysztof Kozlowski review's:
+>>    * Use more specific compatible names
+>>    * Remove other missing occurences of the slave word missed in v2.
+>>  * From Xu Yilun review's:
+>>    * Fix vertical whitespace in get_done_gpio().
+>>    * Combine write() and write_one_dummy_byte() together.
+>>    * Eliminate most of the xilinx_core_probe() arguments, the driver
+>>      needs to populate those directly into the xilinx_fpga_core struct.
+>>      Added some documentation to struct xilinx_fpga_core to clarify
+>>      this.
+>>    * Removed typedefs from xilinx-core.h.
+>>    * Moved null checks in xilinx_core_probe() to first patch.
+>>    * Move csi_b and rdwr_b out of xilinx_selectmap_conf as they are not
+>>      used out of the probe function.
+>> 
+>> Changes since v1: (from Krzysztof Kozlowski review's)
+>>   * Use more conventional names for gpio DT bindings
+>>   * fix example in DT bindings
+>>   * add mc-peripheral-props.yaml to DT bindings
+>>   * fix various formatting mistakes
+>>   * Remove all occurences of the "slave" word.
+>> 
+>> Charles Perry (4):
+>>   fpga: xilinx-spi: extract a common driver core
+>>   dt-bindings: fpga: xlnx,fpga-selectmap: add DT schema
+>>   fpga: xilinx-selectmap: add new driver
+>>   xilinx-core: add new gpio names for prog and init
+>> 
+>>  .../bindings/fpga/xlnx,fpga-selectmap.yaml    |  86 +++++++
+>>  drivers/fpga/Kconfig                          |  12 +
+>>  drivers/fpga/Makefile                         |   2 +
+>>  drivers/fpga/xilinx-core.c                    | 229 ++++++++++++++++++
+>>  drivers/fpga/xilinx-core.h                    |  27 +++
+>>  drivers/fpga/xilinx-selectmap.c               |  95 ++++++++
+>>  drivers/fpga/xilinx-spi.c                     | 224 ++---------------
+>>  7 files changed, 466 insertions(+), 209 deletions(-)
+>>  create mode 100644
+>>  Documentation/devicetree/bindings/fpga/xlnx,fpga-selectmap.yaml
+>>  create mode 100644 drivers/fpga/xilinx-core.c
+>>  create mode 100644 drivers/fpga/xilinx-core.h
+>>  create mode 100644 drivers/fpga/xilinx-selectmap.c
+> 
+> Applied this series to for-next with a nit.
+> 
 > Thanks,
-> Cristian
+> Yilun
+> 
+
+Thanks again for all the good reviews Yilun.
+
+Regards,
+Charles
+
+>> 
+>> --
+>> 2.43.0
