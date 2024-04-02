@@ -1,46 +1,35 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67D5D132C19;
-	Tue,  2 Apr 2024 14:09:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08DBF74262;
+	Tue,  2 Apr 2024 14:10:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712066995; cv=none; b=rF9QeiAAtsD2pW5tDNHee6DwTAY3IWK7j3PKx31Ihe4zNmajrqien493qGooWR7zMuUgd1NEnzMRxjLUpUR164JVmsamLuV9XcrYRYgB+luZBwAQSlZU1tcujXnXafFf5HITTYiLe/bnGrQxtAgxETM3iZ3zPS6mtEDF5sGKzuc=
+	t=1712067028; cv=none; b=I2DHBof16wX7+5GF+Jot3nwdpcA2CV81s+DWQWZzpVC6IY6GS/F262YfzFzw3+id4uzLNR8IlZ8JtG6Vog/lKMhsKwQ2X3xqisHo24s3nmp4MD4wjoDI3scWSwiQXhHMl0Kb5UixrliSZX1ktSYs/7lg8qMCTGJMgxBEr7ktCCk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712066995; c=relaxed/simple;
-	bh=l2R2+ukhGeOdEK5zvxB/TuakwAbZuTzRFW/X96M+/RM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Q4Cdh3ajQTCji5dbSNbB4DeiYKdavZdKjo6h3x339jgJzqTlSTRFi/tsARvvMW1u0oWeVzMDuT4nr3e8Dq6suJHXKR2qS4F/nCtyf2w1/VoI5IRPS6Gz3y4CF+mtDf6964FlAvr6wLhhH9oqYEKbxOPF9AMTbbNf8oaNVXw0eck=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=CKjMS+lz; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+	s=arc-20240116; t=1712067028; c=relaxed/simple;
+	bh=6/gaVejmho+6gxtK4B1sWMwBKvhxjxSbV/MyNET8rRw=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=QfJK2BCkSNAGOi1vmVUc4pzr7OTgq5pDlN9DSK0apn4Qfms12aPSzeEcGFLTxIjrYwaX+EkYEn+gY3Z/Q/p3pK4YMIqRGa/6UQua1xTQhJ39gahaX1IdR62YvvbDhhMvKSR0FbGia+Q+bpBBNqFt3RzkPB4BM7k8H3oI2pZuSRo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=E9ejCqdl; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="CKjMS+lz"
-Received: from umang.jain (unknown [103.86.18.232])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 238C266F;
-	Tue,  2 Apr 2024 16:09:12 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1712066955;
-	bh=l2R2+ukhGeOdEK5zvxB/TuakwAbZuTzRFW/X96M+/RM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=CKjMS+lz+fDspYkMfyRDBZ+4nFEidcAp8zasjQ/IB5cgjdlUYHPFVm1c05bAc91o3
-	 RsJ7uWSGTOPB7S2deXS6/uSHMFEnzlpCDXJX2S/LyN2s2i/Gx+mqVH9WTRJRx7aNJ8
-	 GgZO/0Zhfl70FO7Zcz7/vQbuhJhk/BU79tb1602U=
-From: Umang Jain <umang.jain@ideasonboard.com>
-To: linux-media@vger.kernel.org
-Cc: Alexander Shiyan <eagle.alexander923@gmail.com>,
-	Kieran Bingham <kieran.bingham@ideasonboard.com>,
-	Sakari Ailus <sakari.ailus@linux.intel.com>,
-	open list <linux-kernel@vger.kernel.org>,
-	Dave Stevenson <dave.stevenson@raspberrypi.com>,
-	Umang Jain <umang.jain@ideasonboard.com>,
-	Tommaso Merciai <tomm.merciai@gmail.com>
-Subject: [PATCH v4 6/6] media: imx335: Limit analogue gain value
-Date: Tue,  2 Apr 2024 19:39:24 +0530
-Message-ID: <20240402140924.10009-7-umang.jain@ideasonboard.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240402140924.10009-1-umang.jain@ideasonboard.com>
-References: <20240402140924.10009-1-umang.jain@ideasonboard.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="E9ejCqdl"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 9370DC433F1;
+	Tue,  2 Apr 2024 14:10:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1712067027;
+	bh=6/gaVejmho+6gxtK4B1sWMwBKvhxjxSbV/MyNET8rRw=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=E9ejCqdlolfsY80nizbS0Awh8t/GWEyC6EIf3L+vmEsiLa/VuNWGZHEW4oULhqS4H
+	 pgmLIkUVnlOvgDNVdg08Kz4QwZuSYwGggIq+aimDZZ1lh0/6DZp6pbrDA70RZ7e25S
+	 60up/ZHuB+m3Tgnsjmy/nVIeUZ7rJfGebZceZ2SCSNshzHasHXRAVzfxXtTYQRyKr7
+	 Gnys4jEPmrhXMjRn2TcadPymvzcEBrurUBqvV4sEzUppwdESoCwNUf+sggwPyL9M80
+	 fCHasAtWfLsanxmPSrpCJieHVasJDzJ9E0hS0Eep+6BaP9fxriEeMRnWMptCcX022B
+	 svffvgz8rqdYw==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 80279D9A158;
+	Tue,  2 Apr 2024 14:10:27 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -48,51 +37,42 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH] bpf: fix typo in uapi doc comments
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <171206702752.6673.7807180542850602789.git-patchwork-notify@kernel.org>
+Date: Tue, 02 Apr 2024 14:10:27 +0000
+References: <20240329152900.398260-2-dlechner@baylibre.com>
+In-Reply-To: <20240329152900.398260-2-dlechner@baylibre.com>
+To: David Lechner <dlechner@baylibre.com>
+Cc: bpf@vger.kernel.org, ast@kernel.org, daniel@iogearbox.net,
+ andrii@kernel.org, martin.lau@linux.dev, eddyz87@gmail.com, song@kernel.org,
+ yonghong.song@linux.dev, john.fastabend@gmail.com, kpsingh@kernel.org,
+ sdf@google.com, haoluo@google.com, jolsa@kernel.org,
+ linux-kernel@vger.kernel.org
 
-The sensor gain (both analog and digital) are controlled by a
-single gain value where:
-- 0dB to 30dB correspond to analog gain
-- 30.3dB to 72dB correspond to digital gain
-  (with 0.3dB step)
+Hello:
 
-Hence, limit the analogue gain value to 100.
-For digital gain, support can be added later if needed.
+This patch was applied to bpf/bpf-next.git (master)
+by Daniel Borkmann <daniel@iogearbox.net>:
 
-Signed-off-by: Umang Jain <umang.jain@ideasonboard.com>
-Reviewed-by: Kieran Bingham <kieran.bingham@ideasonboard.com>
-Reviewed-by: Tommaso Merciai <tomm.merciai@gmail.com>
----
- drivers/media/i2c/imx335.c | 10 +++++++++-
- 1 file changed, 9 insertions(+), 1 deletion(-)
+On Fri, 29 Mar 2024 10:28:46 -0500 you wrote:
+> In a few places in the bpf uapi headers, EOPNOTSUPP is missing a "P" in
+> the doc comments. This adds the missing "P".
+> 
+> Signed-off-by: David Lechner <dlechner@baylibre.com>
+> ---
+>  include/uapi/linux/bpf.h       | 4 ++--
+>  tools/include/uapi/linux/bpf.h | 4 ++--
+>  2 files changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/media/i2c/imx335.c b/drivers/media/i2c/imx335.c
-index dfc24783dc34..aed3efa9f590 100644
---- a/drivers/media/i2c/imx335.c
-+++ b/drivers/media/i2c/imx335.c
-@@ -52,7 +52,7 @@
- /* Analog gain control */
- #define IMX335_REG_AGAIN		CCI_REG8(0x30e8)
- #define IMX335_AGAIN_MIN		0
--#define IMX335_AGAIN_MAX		240
-+#define IMX335_AGAIN_MAX		100
- #define IMX335_AGAIN_STEP		1
- #define IMX335_AGAIN_DEFAULT		0
- 
-@@ -1175,6 +1175,14 @@ static int imx335_init_controls(struct imx335 *imx335)
- 					     IMX335_EXPOSURE_STEP,
- 					     IMX335_EXPOSURE_DEFAULT);
- 
-+	/*
-+	 * The sensor has an analog gain and a digital gain, both controlled
-+	 * through a single gain value, expressed in 0.3dB increments. Values
-+	 * from 0.0dB (0) to 30.0dB (100) apply analog gain only, higher values
-+	 * up to 72.0dB (240) add further digital gain. Limit the range to
-+	 * analog gain only, support for digital gain can be added separately
-+	 * if needed.
-+	 */
- 	imx335->again_ctrl = v4l2_ctrl_new_std(ctrl_hdlr,
- 					       &imx335_ctrl_ops,
- 					       V4L2_CID_ANALOGUE_GAIN,
+Here is the summary with links:
+  - bpf: fix typo in uapi doc comments
+    https://git.kernel.org/bpf/bpf-next/c/ca4ddc26f8ac
+
+You are awesome, thank you!
 -- 
-2.43.0
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
 
