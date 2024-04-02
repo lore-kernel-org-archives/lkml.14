@@ -1,103 +1,83 @@
-Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com [209.85.208.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5BBE15B55A;
-	Tue,  2 Apr 2024 19:29:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 131CC15B55A;
+	Tue,  2 Apr 2024 19:30:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712086145; cv=none; b=dVrkbamxmgTcsubJea2pdHn0xVhgM0U0qRWgtJnXeqb/Fbp5aqcUJpLpy2ia3hrUzOAnHoKt0fv4wskWBH6we+i1C125OxzKQzlu+3moejYD+JmWiHr4Qd4VH6oPHMk363yeAp/xpOBiv+iN7l0dIhakjvmV4C3nRJF8MfX3H6k=
+	t=1712086204; cv=none; b=nRjpRCBU54Na9qvZbQJDengsaJsLk5IkwcNAgubgeJMBUuUNIQD2UQo6X8BpDFodZTvHCa/SEgZbG9RHd7FOzVbWff09b9lqJZsloAWHvdbYzSNfBoR7Vgy3nUiwz/Q1Mrn+UgZaHZbSLIMR32q/r2T4Eox5OFf5xTqp5TmJcfE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712086145; c=relaxed/simple;
-	bh=EhAHyl9cP3nWJoJwRMyp31F4H83JzTgrt3TBLtATRPM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=OF5vwr1a/4zYTlv3gh4zpkzgLEyCzVy426NrEE6JEd1w3shn9YEvK4qs0JlzEpd3IKGORtXpyijYTvWp0ES7WzZr96psFLWmUqMlDCyQXO2ul49t+y+/qbvO+a0f91Jcx5PIX5W/BGfn5X7dopI6XkG5WRFXjI5amJHyPs+AlTI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CYqD8REK; arc=none smtp.client-ip=209.85.208.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1712086204; c=relaxed/simple;
+	bh=sOk+iFeGrB7RJDCmCXpr4eaC6JFEv4sFYHZVkhAL1qA=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=W4zf6KELMCHLPPeTDBWRGKd5QZSjaoxAP38k/xF8L5n3PZIhYjVM8bmZn0IwJpArbRqiH0qnuaDepr7LoWMpSpECHFFC2mVPGXiHsGSbY0ZVu2kHzyJdnArei6i1g8wLyM597FxX/y1Sq1rdODM/nbY3RJAv+9oTzUmdVEdJpF0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DrqzinkJ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CYqD8REK"
-Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-2d82713f473so24118701fa.3;
-        Tue, 02 Apr 2024 12:29:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1712086142; x=1712690942; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=EhAHyl9cP3nWJoJwRMyp31F4H83JzTgrt3TBLtATRPM=;
-        b=CYqD8REKN8s0bzShPPTrMUmPTaJ5yO8+2g6JTiBSnULraNLy0jpDcdpJoqJZ/pgEB6
-         GVy53m0kTATygm+BTxaf9mjWaWmWLMxeCSF1c2KWi/n5rG/o9nF9m256aj/qGN6mlp1p
-         OHcCUxFU+CtYD7Mfs/wjJiafUn5Q0Hrr7OG/L9eme/oG4LEYGgRRSOGhpSjNNe7U3e8C
-         4/Qnj2o4XgSS993XNyQHrl2/4uFjDpd38FQuybLJMoBTk+RgI3tUzSnnVkb6qK2aJOoT
-         hJVCIFiKs9sDw8pXb4TFPLsHg8ZlZnT57PTTzEkk09EC1THkvydErx9pboqlU4IaODCA
-         wkgQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712086142; x=1712690942;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=EhAHyl9cP3nWJoJwRMyp31F4H83JzTgrt3TBLtATRPM=;
-        b=UCn4bEuPNVosP/arRS/nSZxSAzKImNWeQSPSYieuUD1FvnnqOQn9Rt65oHSR5MtOiD
-         Vi+Cg93Ckv3vLViRjyKy45uYy1L64B6K4oNKiOpsmCFKa35LEWWMmN7Ast+dQ90Mb3zM
-         HSwg+evYUUIMIo2Hfah7Z/BE+JnE0KMgC0PVvFwjbRBeTo2WD2wntQYNoyDDD0uJ89rn
-         tYZMHfRnh2pfsraWr6fTTCt8dLDw0N3aqWWtHUWSgUEuY098dRWvLXnjowYEGO+mywfd
-         9zJISZXZTyN2r4LQeGIf83bZbnJhPZV5NCJkjJ1xzYyQ82HVxGJwVrUVKGcCgUzUqPzO
-         I4zA==
-X-Forwarded-Encrypted: i=1; AJvYcCVbzJ7Q/sn74rQkxhnou+FVd93kQIL31KJijDy6zZ9go2Z8v6/e1kCm/yseEAISa4uKfkJf3PYd2tIs0PqXK8Nfpx9O9WA6cUlTfRJRti3LvTgOFuF397BSYXko+nyu08qhZpPPT3MOmcKY
-X-Gm-Message-State: AOJu0YxnSYae94H0hN/YeP95AsoF/TOzqSBYAB11+rpV9IXyEqfUnZqU
-	GAXfoyGfJeDBcZLGr/8q8S0pPJ7z7RtkpBgu05GpR/Pf5s2eIkU76xSQcvIqqSwBuupHBe/A7+1
-	WBDVuCKLd1CYv2aieDICziB4ZDxI=
-X-Google-Smtp-Source: AGHT+IG12UrZ+tZaBT8KWaGbUc2/tzG6TFzFBRGcHZSyJ3RrVBGA7RdiJS8Yv9Q/NVxawbm/Yyjoo42Z52vQNS2I/q0=
-X-Received: by 2002:a2e:a783:0:b0:2d4:132b:9f21 with SMTP id
- c3-20020a2ea783000000b002d4132b9f21mr3160289ljf.6.1712086141578; Tue, 02 Apr
- 2024 12:29:01 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DrqzinkJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1DBDDC433C7;
+	Tue,  2 Apr 2024 19:30:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1712086203;
+	bh=sOk+iFeGrB7RJDCmCXpr4eaC6JFEv4sFYHZVkhAL1qA=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=DrqzinkJCwbtPSjQcw1FiH2Yl+aWDrNmmeOSvZGQyDCTEFu4X/Y1FTMeiDcnOg8Gc
+	 pEXBsEPOpUnQEIY0oHXqGwCM+/ehzi7dyV4/U6vWEarsM15r/WY+uUz/Lq8sMJTIqB
+	 FqWGmx6g7NGJpXtO1eFieK8HFfBRlC8VfVY8ZTsjRyA7nBggMrhhSCvrnf2td3+NM0
+	 xUEMNM71ReXaXzi9FJqpE0TZQbU8qUCSnp75u9s/B3YxNuHaMb205t8dkc4pD53KyB
+	 h3/GzV/ElUPqNWrk5cYPI8IMOJ2aGv/8AQ/MHVQn1TgCc64jIWha0ODZG+XUYXlq7V
+	 Qf64pHr1DrGUQ==
+From: Mark Brown <broonie@kernel.org>
+To: lgirdwood@gmail.com, Seven Lee <wtli@nuvoton.com>
+Cc: perex@perex.cz, tiwai@suse.com, linux-sound@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, YHCHuang@nuvoton.com, KCHSU0@nuvoton.com, 
+ CTLIN0@nuvoton.com, SJLIN0@nuvoton.com, scott6986@gmail.com, 
+ supercraig0719@gmail.com, dardar923@gmail.com
+In-Reply-To: <20240401104753.3432507-1-wtli@nuvoton.com>
+References: <20240401104753.3432507-1-wtli@nuvoton.com>
+Subject: Re: [PATCH] ASoC: nau8325: Revise soc_enum structure definition.
+Message-Id: <171208620085.89523.17981494000577046407.b4-ty@kernel.org>
+Date: Tue, 02 Apr 2024 20:30:00 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240402174353.256627-1-hugo@hugovil.com> <20240402174353.256627-5-hugo@hugovil.com>
-In-Reply-To: <20240402174353.256627-5-hugo@hugovil.com>
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Tue, 2 Apr 2024 22:28:25 +0300
-Message-ID: <CAHp75VedAiB_wSaq+oaNriC3HfLC=ft21O=ZYW_wCARPS7v3QQ@mail.gmail.com>
-Subject: Re: [PATCH v3 4/5] serial: sc16is7xx: split into core and I2C/SPI
- parts (sc16is7xx_lines)
-To: Hugo Villeneuve <hugo@hugovil.com>
-Cc: gregkh@linuxfoundation.org, jirislaby@kernel.org, 
-	linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org, 
-	Hugo Villeneuve <hvilleneuve@dimonoff.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.14-dev
 
-On Tue, Apr 2, 2024 at 8:45=E2=80=AFPM Hugo Villeneuve <hugo@hugovil.com> w=
-rote:
->
-> From: Hugo Villeneuve <hvilleneuve@dimonoff.com>
->
-> Before, sc16is7xx_lines was checked for a free (zero) bit first, and then
-> later it was set only if UART port registration succeeded. Now that
-> sc16is7xx_lines is shared for the I2C and SPI drivers, there is a
-> possibility that the two drivers can simultaneously try to reserve the sa=
-me
-> line bit at the same time.
->
-> To prevent this, make sure line allocation is reserved atomically, and us=
-e
-> a new variable to hold the status of UART port regisration.
+On Mon, 01 Apr 2024 18:47:53 +0800, Seven Lee wrote:
+> This patch is modified nau8325_dac_oversampl_enum enumerated.
+> Use SOC_VALUE_ENUM instead to hide empty (presumably invalid) options.
+> 
+> 
 
-registration
+Applied to
 
-> Now that we no longer need to search if a bit is set, it is now possible
-> to simplify sc16is7xx_lines allocation by using the IDA framework.
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
 
-...
+Thanks!
 
-> -static DECLARE_BITMAP(sc16is7xx_lines, SC16IS7XX_MAX_DEVS);
-> +static DEFINE_IDA(sc16is7xx_lines);
+[1/1] ASoC: nau8325: Revise soc_enum structure definition.
+      commit: 91ebd32eee6cd7714b49ca4463a0f315bc26ce0e
 
-Don't we need to replace bitmap.h with idr.h with this change in place?
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
 
---=20
-With Best Regards,
-Andy Shevchenko
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
