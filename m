@@ -1,181 +1,126 @@
-Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com [209.85.167.49])
+Received: from mail-lf1-f73.google.com (mail-lf1-f73.google.com [209.85.167.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 818357FBBF;
-	Tue,  2 Apr 2024 13:07:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 504901304B9
+	for <linux-kernel@vger.kernel.org>; Tue,  2 Apr 2024 13:07:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712063251; cv=none; b=kTL+xH9cvd5Ijv8fR2L1TxVoxZN6FZp785weeh6N87e7vSmxRhBVXxwnIfWIkUFGoWC9fn+/qqxqcdz8y8/R/n4d2xTfwmHAevcqX4Ev/q6RNvgPp7e2N3wdw9W+XW1yOY6Tf8AeXnPKa+5YGUT2D9ehVOgvNf1vTORDA3Hyhkc=
+	t=1712063274; cv=none; b=mNVrH4kt6tOG8j794eVYyU/tPqAvhbwa5ceRTqY2+n5ezUT5VYbasVTJd+C5m1K15LvMIPgSqhIilXAg0pc330S4oZGJ3KcHpV7opvkbsb6QXyCMuCd92IqomDtta6vhxIQT7tGJeD72kARbICGUEuSCGuNEs4lxCACmcYxaJec=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712063251; c=relaxed/simple;
-	bh=+D1Ro3T40iXb4snfq1uLijK7/Bj8tezfUol7C0P/buc=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=bQcEKJT8ha0f+GSQmyxJt8rLpV7DmiQx429EI1u1WsdYtbSfZf4fCAZPPuBlS4CbOgqOJQrcrmwVn+8YpKBC+f8o50tIR8BPgZgaoZ/d9nlgWuuCCS6pd+iMJlbpXGFTow6o77+ILYQ3UmcU7svPMGW5OBnVUbRwTCDEiT88AwA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=D/4IMe0g; arc=none smtp.client-ip=209.85.167.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1712063274; c=relaxed/simple;
+	bh=lyj9rQgplD+L52AIH4//Rop9h+61rr6z+GVA4WWRqDk=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=OLDxbhgD7xi9Ke/pDWvsr+uihTmHUmCg8+xrO30SVLH48GKrrgfcAaGeY56RNfgYt1jpkS/n3VFc8HTODQwfPraiiyB3mX2b8JFas6d3xR+Dc8chHFCE0cLvzgiedGcVR791iaFL2rx6McGWxFIeqCeLc11hZByviOCrlQnuSVk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=TWkwVce6; arc=none smtp.client-ip=209.85.167.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D/4IMe0g"
-Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-515a81928faso6313107e87.1;
-        Tue, 02 Apr 2024 06:07:29 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="TWkwVce6"
+Received: by mail-lf1-f73.google.com with SMTP id 2adb3069b0e04-513e45ab9a8so4030228e87.2
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Apr 2024 06:07:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1712063247; x=1712668047; darn=vger.kernel.org;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=NKU9jx20LVZGBMlMQd/cCeXupmo6LvEXs+isiI8gkiY=;
-        b=D/4IMe0g/5wY9yNbpHeEuYpWQFu1C3fpo69K4LYfv4iK2U1HXp2xI62j4D9PmwrneA
-         AE4DcOLjkFJsowP8buo45Fq7CBHQc6jkhhIjYu1SBC1vaBBnyd3jvQyMaBEcBUtPN+AU
-         nDiZYPuyVA9utfCW8kPxP4Cs6poVvAZTsPWyl9Vu+H5QBozw894DGr4BGxt3uEdpBaMf
-         FiKmf16O9Uy3miIKobLMz/yblMdKgq6Y7y3XdYGsCRVYPW7NaRMuDl8OfjVyI8DA1vpH
-         H4f0DFsdrjToCBlCTAIC3qFhl/5h5qME6AKiTbGQPC0ZMxrAWYueRU0jRf+w6xmYjU2Y
-         2x3w==
+        d=google.com; s=20230601; t=1712063270; x=1712668070; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=Opxy4mF0J6kZG6tL42Jk92+MjrMyqgpiq33iCQEXdz8=;
+        b=TWkwVce6JJlX4QCBhisuQJzI9cPnRlF7tEPTy2Z0thw/D+h/E4TsnJTubU+T5aSr3g
+         qPZuTEGFSdvtXJveIae8cUGsxiYho1ngGlPuqFN57pjI2Rpa+YhEwM5FGAcyee0MXlo7
+         Wah67Ce3wU7ibchgODBgxsp71vCVo+QMsrFdJRWCGLT7bHxx7y+KNh1bFIT/EdXoOsOo
+         sAB+S3JxDh5LQ0GdZT7pxkhhQtQtl/pNcLm2GXXczmifUXMStt0prH5a+S4dj6HUlC78
+         xXGTtl0KM/TR+hAeVH3Hdt7iVbrclkAwWhEhSr1d4GOzf1brVRq8jBl0Kp2WndkBtWaj
+         7viw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712063247; x=1712668047;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=NKU9jx20LVZGBMlMQd/cCeXupmo6LvEXs+isiI8gkiY=;
-        b=kmVu7CYsoWvO3SuwlM6Y2kH6tCupTS2ZlSX8YODMMXHv3Qf3ZBxOBjLNJbdPDL5B3n
-         Cu2jrx2Mv8YOnktirx7fGftxLKhY1bVlcCXCkIZgLtOc5EB2KyX1ei/dPixZnqZ9vUfv
-         jz1xYLOYcbBGYdkBTGVgC7wVNV/RIK6j8NIeqJ8YBPAFAAgojjXgIgml60HvqaES8X9W
-         NWc1Stu0ZnxVgl2DQhdi88CrkoW2CX3SNEIrBj9Vzc5McofcUc1/iGSa516M7uoG3fpM
-         izwFZKE2FReQYiYwgTIOQ99HZCdmoamyAZASiZ4i3HgskPWdAd4b/5eP7QAsU6EhBUfj
-         cMDA==
-X-Forwarded-Encrypted: i=1; AJvYcCXlXCY92saJY9WQozmG0itzlZWcgc43J6hDLR04mWm622wvH0DfMIwwqKEqoBa45SkoPsPE2ZuRnyrW/rWhc7n46vG4MdPDYqlpIw1gdWrGPQL2/HYXokon0XJOIxQ1DFW1GamjBmTMQOuqzi17/dxDJ/NArl2uAMizjznDZqkvxE1m6TK0zMH5
-X-Gm-Message-State: AOJu0YzMZO27IFGrgelV9W8O0kkU62fVcgETte/M1sE9VmLQLcaIadMg
-	PIeF/5fQwqvpvHa3MDKn9RG43Gp+YOx5R6PMfnFdSwD86MwOHmdQ
-X-Google-Smtp-Source: AGHT+IFXRtAcfIYkcYjCj1CcDNrWBA3RpHGKgypg6iet93/LvdqOTpHmcVe4ODKD1p4AmLbDRANqJg==
-X-Received: by 2002:ac2:58fb:0:b0:515:8159:788d with SMTP id v27-20020ac258fb000000b005158159788dmr7676502lfo.64.1712063247164;
-        Tue, 02 Apr 2024 06:07:27 -0700 (PDT)
-Received: from fedora ([213.255.186.46])
-        by smtp.gmail.com with ESMTPSA id bi15-20020a0565120e8f00b00515aa366202sm1706770lfb.274.2024.04.02.06.07.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 02 Apr 2024 06:07:26 -0700 (PDT)
-Date: Tue, 2 Apr 2024 16:07:18 +0300
-From: Matti Vaittinen <mazziesaccount@gmail.com>
-To: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
-	Matti Vaittinen <mazziesaccount@gmail.com>
-Cc: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Mark Brown <broonie@kernel.org>,
-	Matti Vaittinen <mazziesaccount@gmail.com>,
-	Wim Van Sebroeck <wim@linux-watchdog.org>,
-	Guenter Roeck <linux@roeck-us.net>, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-watchdog@vger.kernel.org
-Subject: [RFC PATCH 0/6] Support ROHM BD96801 scalable PMIC
-Message-ID: <cover.1712058690.git.mazziesaccount@gmail.com>
+        d=1e100.net; s=20230601; t=1712063270; x=1712668070;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Opxy4mF0J6kZG6tL42Jk92+MjrMyqgpiq33iCQEXdz8=;
+        b=P5P79L86xOSsmJisBJ5rydn7cKLEYk8OvnB+VQwbup1DvAPHWdPow3v54kKlVX0Xre
+         4+gFRQNuQguGT10LS/ngjYWrkAzijVGJSiqKbIdMVWeQy1/iSexFfRtq7ARZz6MixQjY
+         dQJeYXX5N2bn2+3MoVC/dHZcge31GZIOA13zJwwldCGStoC89jUq+OsjEuZexeELtbFg
+         wBDmSBCs7p6faTV9X5LdeHBZ2tGLTA/JHmitSa2kCH5xXTfYiKq/iD3O1Yv+g94lintj
+         rYOy+Xt+atzdGn7YQn8PVm8xMWO9ZJj4tyjqaE14+hB3v69av3FLoj2fHHJjzF+LaKst
+         5CtQ==
+X-Forwarded-Encrypted: i=1; AJvYcCX/cVSi66xMAUMm6Vr3I1PMvY9NR/y6eprxQbnIoAdeX2GPURj/+T2yNVybd6u3RlYu+5N9AkFKqwBl8hZ4a4CfeGWBDPFvPdYJ+9y/
+X-Gm-Message-State: AOJu0Yy/YCRa+1cCqXpVCAU7IAQFdsWZZuI/V9hgqhANWvP894KTWMhh
+	eer2hPvGvhA24kUflYhkPTsZug2PNnt3Y28/klhu9sve4JxuRW8ws3l3Nq4Ztfyu/w44UapmmCu
+	ZQ5JuQ/6b9a+4bA==
+X-Google-Smtp-Source: AGHT+IGCfml/ws+Ix/yq7ne790NhdAwdZ6g6baAUadHXRTJOlSweA2VffEenHi2FnM8I9sQdwzfaYZ7jy7hmUDk=
+X-Received: from aliceryhl2.c.googlers.com ([fda3:e722:ac3:cc00:68:949d:c0a8:572])
+ (user=aliceryhl job=sendgmr) by 2002:a05:6512:ba6:b0:516:a8c2:af64 with SMTP
+ id b38-20020a0565120ba600b00516a8c2af64mr6219lfv.0.1712063269960; Tue, 02 Apr
+ 2024 06:07:49 -0700 (PDT)
+Date: Tue, 02 Apr 2024 13:07:41 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="WaiMjVoaQWIfNz5i"
-Content-Disposition: inline
+Mime-Version: 1.0
+X-B4-Tracking: v=1; b=H4sIAB0DDGYC/2XN0QrCIBTG8VcJrzP0aOa66j2iC3d0m7BmaEgx9
+ u65EVTr8jv4+zuS5KJ3iRw3I4ku++TDUIbcbgh2Zmgd9bZsAgwkA1ZRE5E2IdLepzs1gBwUgrF
+ 7JIXcomv8Y8mdL2V35VGIz6We+Xx9h/gqlDll1FYabQV4UKw+tSG0vdthuJK5lOFLg15pKNq4S gDjElQt/7T4aMH5SouisTZca4EK3O/f0zS9AEe9yA4lAQAA
+X-Developer-Key: i=aliceryhl@google.com; a=openpgp; fpr=49F6C1FAA74960F43A5B86A1EE7A392FDE96209F
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1607; i=aliceryhl@google.com;
+ h=from:subject:message-id; bh=lyj9rQgplD+L52AIH4//Rop9h+61rr6z+GVA4WWRqDk=;
+ b=owEBbQKS/ZANAwAKAQRYvu5YxjlGAcsmYgBmDAMhcMJg4WIxZUn1iUD5xTR6V4w1nBvl5uTmC
+ /L9DSYuInOJAjMEAAEKAB0WIQSDkqKUTWQHCvFIvbIEWL7uWMY5RgUCZgwDIQAKCRAEWL7uWMY5
+ RsL5D/9SsK0KWpa3czLrFPN2OpewDpKcMQi4frManaixbiNVCREJasPh+SibIBBMRBEDbUFNWT1
+ h3idLFa/ULaNz80MigFrolvVYsP8p3zmT98aJQsNwxKYKniz81XI/MMGB8B0uE2dodIwAZMpDf9
+ ENVH17+AW/54fFSTx+Ez1TmswQkkgp3IJCeHV6BD/REtGflE5+VEKYS7dtGkYABhTAQivFM9CNs
+ fUEzusL+0+W67UWjQZrZMFwdoCxhberFwuC8P6gc4yl6d7CbIg5hw+C8J8Ez3LkvHQ8M3OYSVP9
+ /npvjMlVRDI7hD9ECR0+IaO1+3GlCc7BSKf6kk9J6JYZ1HRQioSi7c6hlRMf2G5LsRJYwRYDhx2
+ wU6hslDvM25nS7fZ4xXO3I++UBd+blIEjN6Ovht4KvINV6r57jDICn3BaD8AZYnLDCIdyaBc4MZ
+ J9l8U38NEenk8jeSItsD47ETW16gK2+jgNtsprlyC7voBzie4T1ViGr3YAppZhPhjl2RHhsEGQR
+ 3avwdYyhn1pSRj62iS8odyK74RaFZnklLnSAWAe4s8X6CYXruBLsDvf55/g9jm2HRmI/iy4AbLw
+ MY5tE6PKMDLFNbeHElEEgjP45JaZ231+uquXP4XpkUU6lz9jg2rKLlMjp0KtVysh2+Gocyqv4mJ vo6uRbC4OEnAkCw==
+X-Mailer: b4 0.13-dev-26615
+Message-ID: <20240402-arc-for-list-v4-0-54db6440a9a9@google.com>
+Subject: [PATCH v4 0/2] Arc methods for linked list
+From: Alice Ryhl <aliceryhl@google.com>
+To: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+	Wedson Almeida Filho <wedsonaf@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	"=?utf-8?q?Bj=C3=B6rn_Roy_Baron?=" <bjorn3_gh@protonmail.com>, Benno Lossin <benno.lossin@proton.me>, 
+	Andreas Hindborg <a.hindborg@samsung.com>
+Cc: rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Alice Ryhl <aliceryhl@google.com>
+Content-Type: text/plain; charset="utf-8"
 
+This patchset contains two useful methods for the Arc type. They will be
+used in my Rust linked list implementation [1], which Rust Binder uses. See
+the Rust Binder RFC [2] for more information.
 
---WaiMjVoaQWIfNz5i
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Link: https://lore.kernel.org/rust-for-linux/20240402-linked-list-v1-0-b1c59ba7ae3b@google.com/ [1]
+Link: https://lore.kernel.org/rust-for-linux/20231101-rust-binder-v1-0-08ba9197f637@google.com/ [2]
+Signed-off-by: Alice Ryhl <aliceryhl@google.com>
+---
+Changes in v4:
+- Add Boqun's example.
+- Fix rustfmt issue.
+- Add Reviewed-by tags.
+- Link to v3: https://lore.kernel.org/r/20240311-arc-for-list-v3-0-cba1883c62eb@google.com
 
-Support ROHM BD96801 "scalable" PMIC.
+Changes in v3:
+- No changes to `ArcBorrow::from_raw`, or than adding a Reviewed-by.
+- Update SAFETY comment on `refcount_dec_and_test` call.
+- Simplify the creation of the `UniqueArc` in `into_unique_or_drop`.
+- Link to v2: https://lore.kernel.org/r/20240228-arc-for-list-v2-0-ae93201426b4@google.com
 
-The ROHM BD96801 is automotive grade PMIC, intended to be usable in
-multiple solutions. The BD96801 can be used as a stand-alone, or together
-with separate 'companion PMICs'. This modular approach aims to make this
-PMIC suitable for various use-cases.
+Changes in v2:
+- Move raw_to_inner_ptr to ArcInner and rename to container_of.
+- Reword safety conditions for raw_to_inner_ptr to match its users.
+- Link to v1: https://lore.kernel.org/r/20240219-arc-for-list-v1-0-d98cd92c760b@google.com
 
-This RFC series is a product of a _long_ process. The product has been
-re-designed a few times and this series has been sitting in my git
-forgotten for long periods of time, then been re-worked when new design
-has been available, after which it has again been forgotten. Last week I
-finally received the word that this product should've been stabilized,
-digged up my last set of patches (from Nov 2021 - cover letter
-reminding me the driver development had been done during 3 years...)
+---
+Alice Ryhl (2):
+      rust: sync: add `ArcBorrow::from_raw`
+      rust: sync: add `Arc::into_unique_or_drop`
 
-I think this is valid information for reviewers as it's good to keep an
-eye on obsoleted practices - even though I tried updating this series.
-
-This is sent as an RFC because of the regulator features which can be
-configured only when the PMIC is in STBY state. This is described more
-detailed in the regulator patch.
-
-Another "oddity" is that the PMIC has two physical IRQ lines. When I
-last wrote this patch in 2021 I had some naming collison in debugfs for
-the IRQ domains. Back then I used:
-irq_domain_update_bus_token(intb_domain, DOMAIN_BUS_WIRED);
-to work-around the issue. Now, when rebasing to v6.9-rc1 the naming
-collision was gone and things seemed to work. However, it'd be great if
-the IRQ code in MFD driver was reviewed by greater minds :)
-
-Rest of the series ought to be business as usual.
-
-Matti Vaittinen (6):
-  dt-bindings: ROHM BD96801 PMIC regulators
-  dt-bindings: mfd: bd96801 PMIC core
-  mfd: support ROHM BD96801 PMIC core
-  regulator: bd96801: ROHM BD96801 PMIC regulators
-  watchdog: ROHM BD96801 PMIC WDG driver
-  MAINTAINERS: Add ROHM BD96801 'scalable PMIC' entries
-
- .../bindings/mfd/rohm,bd96801-pmic.yaml       |  155 ++
- .../regulator/rohm,bd96801-regulator.yaml     |   69 +
- MAINTAINERS                                   |    4 +
- drivers/mfd/Kconfig                           |   13 +
- drivers/mfd/Makefile                          |    1 +
- drivers/mfd/rohm-bd96801.c                    |  454 ++++
- drivers/regulator/Kconfig                     |   12 +
- drivers/regulator/Makefile                    |    2 +
- drivers/regulator/bd96801-regulator.c         | 2109 +++++++++++++++++
- drivers/watchdog/Kconfig                      |   13 +
- drivers/watchdog/Makefile                     |    1 +
- drivers/watchdog/bd96801_wdt.c                |  375 +++
- include/linux/mfd/rohm-bd96801.h              |  212 ++
- include/linux/mfd/rohm-generic.h              |    1 +
- 14 files changed, 3421 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mfd/rohm,bd96801-pmic=
-=2Eyaml
- create mode 100644 Documentation/devicetree/bindings/regulator/rohm,bd9680=
-1-regulator.yaml
- create mode 100644 drivers/mfd/rohm-bd96801.c
- create mode 100644 drivers/regulator/bd96801-regulator.c
- create mode 100644 drivers/watchdog/bd96801_wdt.c
- create mode 100644 include/linux/mfd/rohm-bd96801.h
-
-
+ rust/kernel/sync/arc.rs | 138 +++++++++++++++++++++++++++++++++++++++++-------
+ 1 file changed, 120 insertions(+), 18 deletions(-)
+---
 base-commit: 4cece764965020c22cff7665b18a012006359095
---=20
-2.43.2
+change-id: 20240209-arc-for-list-a2c126c2ad5c
 
+Best regards,
+-- 
+Alice Ryhl <aliceryhl@google.com>
 
---=20
-Matti Vaittinen, Linux device drivers
-ROHM Semiconductors, Finland SWDC
-Kiviharjunlenkki 1E
-90220 OULU
-FINLAND
-
-~~~ "I don't think so," said Rene Descartes. Just then he vanished ~~~
-Simon says - in Latin please.
-~~~ "non cogito me" dixit Rene Descarte, deinde evanescavit ~~~
-Thanks to Simon Glass for the translation =3D]=20
-
---WaiMjVoaQWIfNz5i
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEEIx+f8wZb28fLKEhTeFA3/03aocUFAmYMAwIACgkQeFA3/03a
-ocUrcQf8DQhFPJC1Qb61QJNRcbPGRFMvtn7Yv/pHPTaI1DKVZ9dp5plAx9ekzRD9
-AYFQkt1K+PyjAMFsdwKPUGMqkD40zsE5S77bXpBL5db1w2++jgDdz432BLggTsDS
-EaK779RB0mCuRPwbcnWi0b6WFD89u+8GiSEbOtpT3LfoYsoGhA2ljIsEKDMNK/m4
-+SIXf/d3NOhcQcqyqUkQRWMEloVz9X7rpBviVdBhcKdPZsy2x82yhbUq0igkgCOw
-N71roCet4uS6MD7QYSb7iHGOqG2E/abymy1mNkTwednH/HmREgxiTWuBpf/Rstgg
-EUewKKY1Yd3ieFHg3U/YSYryW2G1fA==
-=nQLo
------END PGP SIGNATURE-----
-
---WaiMjVoaQWIfNz5i--
