@@ -1,89 +1,100 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+Received: from ms.lwn.net (ms.lwn.net [45.79.88.28])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6858E13175D;
-	Tue,  2 Apr 2024 15:30:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4813C134750;
+	Tue,  2 Apr 2024 15:30:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.79.88.28
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712071803; cv=none; b=LPc1L+utBfnbnUATdlWB4s1A9K1MyRxAKTJA+KLgwdSnJJT0cCN8kjVrLcgSJzIg2muCnMeh+4pXdJlMBB7YG5PSSQbg7C95+7M93NHFI+u1SxrYtP3YXe2gTvSl6IcfODeCNb5L/Vo+a0BajtT3tJhsepUc92j0wiTuPpNdEbk=
+	t=1712071811; cv=none; b=d/b3MbDU62UpXPiKnFzfUaqFzMefwNaCY/4TE7tb+IhXJ4zgBth4h0kQpt/2WAObJ7ttM0mdgUjgAgl5C5rJU32JElPD9R3sfLiOSsSGqbuTOeXrdeQhKe/2BqgmeJGXusaN/ErBqQlENyeY2T7uSRMoulEbbSUk/dpp5qk/zPE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712071803; c=relaxed/simple;
-	bh=rqVurMiCivJ0gWGCbPcucCSz51pxMDQmeUQYco0dJ5o=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=mgobCEpr6o1CBPPutEkqDKDwsbTj6WL6fGCv2Vqua7tP/M4a3Mzhw7h7/yzF46drO1TymFGdJuJdt55SZzhASfRmEKdPPs0XEKxxQDBJSyD1HiBWEf9DWRGS4rQ7gyL3yCjtQ2MOy/hxZNr346Y71zWNDGSUQBaHQ19WvlDWmaU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=WmBBI6y8; arc=none smtp.client-ip=192.198.163.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1712071811; c=relaxed/simple;
+	bh=Mg63hoWgyu1emHztvlNxc4m7lNkXFrtqWqUTYT7EolU=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=Br24p420GIpiAogL53EiZ6Wnuy2RdIrOiva0EiVorcIy4xspkqAjgTwAZarLYNQMtSip84YeZF/gOeZjHCqcjhQ1gOiMlTJOX5m3MGswOdGEZqLYdwt3ad/k4wXO1nHoq22mjONl81pwVnFpjUDohwjmzSUlL3JhQMAXpFlse9U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net; spf=pass smtp.mailfrom=lwn.net; dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b=taUuDJWC; arc=none smtp.client-ip=45.79.88.28
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lwn.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WmBBI6y8"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1712071802; x=1743607802;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=rqVurMiCivJ0gWGCbPcucCSz51pxMDQmeUQYco0dJ5o=;
-  b=WmBBI6y81cEeJ3czfSEaIhYBygTomMOetKalwfvY5Ezs8zMVF+Wbn9w+
-   rpOJHqoEX7Hhxq80gQ8daTr4/nulmv8+ZLRy6tj2i9QKAzj6GoG5zy82l
-   SuR8Xwb/VgKgOkFRrhTXyz6n75C2ImJx2O5PNCsCJMO4vRVRtmskFJAoe
-   SaI74O8XahTLAwwzuMx+3K4frSFUZM+55gfx3FUOEwiOexuVAkYRJcQ9z
-   umYOfcfVSkLJ7aS0m9B/Di407FoVEH8jbw/0oqZryhbivekCvPrl0VY3o
-   ca+XWrpp+ebVsUvpalgKRdox5JX3vWQ243tY0Ao3LjGpEclSlusUIOj1k
-   w==;
-X-CSE-ConnectionGUID: mUYlgKelR2atBTAqUnEagw==
-X-CSE-MsgGUID: 425KLKtkQN6enZzSPVnYpA==
-X-IronPort-AV: E=McAfee;i="6600,9927,11032"; a="17867553"
-X-IronPort-AV: E=Sophos;i="6.07,175,1708416000"; 
-   d="scan'208";a="17867553"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2024 08:29:59 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,11032"; a="937083614"
-X-IronPort-AV: E=Sophos;i="6.07,175,1708416000"; 
-   d="scan'208";a="937083614"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga001.fm.intel.com with ESMTP; 02 Apr 2024 08:29:57 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-	id 385DB506; Tue,  2 Apr 2024 18:29:56 +0300 (EEST)
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-	linux-acpi@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>,
-	Len Brown <lenb@kernel.org>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH v1 2/2] ACPI: LPSS: Advertise number of chip selects via property
-Date: Tue,  2 Apr 2024 18:28:53 +0300
-Message-ID: <20240402152952.3578659-3-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.43.0.rc1.1.gbec44491f096
-In-Reply-To: <20240402152952.3578659-1-andriy.shevchenko@linux.intel.com>
-References: <20240402152952.3578659-1-andriy.shevchenko@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b="taUuDJWC"
+DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net 9544647C1D
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lwn.net; s=20201203;
+	t=1712071808; bh=4J0PiXaFUEU/W3BdK9lcYY6frY80SRk/ZG3pwh+Rm64=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=taUuDJWCrpZlU8jTnqUYUaVQOpYy+qCmcyYYeTm+l/UWyE6+a2dvQZ3xahSdTOcZ2
+	 P3imBxmlYYhcbuf5NyKHSimE+BgsLsCJ23aqosTDgoz4wBog7nJUtiYQsJxLvNvxHf
+	 ZIf6tnsoPEwQxeEjusmealuOSlQDealbt1nv44KW9mj0LoUhD8dp+aau9EQrlglHrg
+	 x//jx/jg+WfAeLMJV9Z5tm54niTm1X1as5YrjSSuWJV/Ue8g8ge3yuHU+crnn62+vc
+	 vVjWj0W2smkiqL4ymza6wHI044jrclw0o8LtDScKILZl30VHEzxy95WoTwO3aF8dHX
+	 wOLkikqWyLX2g==
+Received: from localhost (unknown [IPv6:2601:280:5e00:625::646])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by ms.lwn.net (Postfix) with ESMTPSA id 9544647C1D;
+	Tue,  2 Apr 2024 15:30:08 +0000 (UTC)
+From: Jonathan Corbet <corbet@lwn.net>
+To: Thorsten Blum <thorsten.blum@toblux.com>, Mauro Carvalho Chehab
+ <mchehab@kernel.org>
+Cc: linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, Thorsten Blum
+ <thorsten.blum@toblux.com>
+Subject: Re: [PATCH] scripts: sphinx-pre-install: Add pyyaml hint to other
+ distros
+In-Reply-To: <20240323125837.2022-2-thorsten.blum@toblux.com>
+References: <20240323125837.2022-2-thorsten.blum@toblux.com>
+Date: Tue, 02 Apr 2024 09:30:07 -0600
+Message-ID: <87ttkjwznk.fsf@meer.lwn.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 
-Advertise number of chip selects via property for Intel Braswell.
+Thorsten Blum <thorsten.blum@toblux.com> writes:
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- drivers/acpi/acpi_lpss.c | 1 +
- 1 file changed, 1 insertion(+)
+> Extend commit 84b4cc8189f2 ("docs: scripts: sphinx-pre-install: Fix
+> building docs with pyyaml package") and add pyyaml as an optional
+> package to Mageia, ArchLinux, and Gentoo.
+>
+> The Python module pyyaml is required to build the docs, but it is only
+> listed in Documentation/sphinx/requirements.txt and is therefore missing
+> when Sphinx is installed as a package and not via pip/pypi.
+>
+> Signed-off-by: Thorsten Blum <thorsten.blum@toblux.com>
+> ---
+>  scripts/sphinx-pre-install | 3 +++
+>  1 file changed, 3 insertions(+)
+>
+> diff --git a/scripts/sphinx-pre-install b/scripts/sphinx-pre-install
+> index 4c781617ffe6..d4f05216ca23 100755
+> --- a/scripts/sphinx-pre-install
+> +++ b/scripts/sphinx-pre-install
+> @@ -514,6 +514,7 @@ sub give_mageia_hints()
+>  {
+>  	my %map = (
+>  		"python-sphinx"		=> "python3-sphinx",
+> +		"yaml"			=> "python3-yaml",
+>  		"virtualenv"		=> "python3-virtualenv",
+>  		"dot"			=> "graphviz",
+>  		"convert"		=> "ImageMagick",
+> @@ -557,6 +558,7 @@ sub give_mageia_hints()
+>  sub give_arch_linux_hints()
+>  {
+>  	my %map = (
+> +		"yaml"			=> "python-yaml",
+>  		"virtualenv"		=> "python-virtualenv",
+>  		"dot"			=> "graphviz",
+>  		"convert"		=> "imagemagick",
+> @@ -587,6 +589,7 @@ sub give_arch_linux_hints()
+>  sub give_gentoo_hints()
+>  {
+>  	my %map = (
+> +		"yaml"			=> "dev-python/pyyaml",
+>  		"virtualenv"		=> "dev-python/virtualenv",
+>  		"dot"			=> "media-gfx/graphviz",
+>  		"convert"		=> "media-gfx/imagemagick",
 
-diff --git a/drivers/acpi/acpi_lpss.c b/drivers/acpi/acpi_lpss.c
-index 5b56f198d005..a3d2d94be5c0 100644
---- a/drivers/acpi/acpi_lpss.c
-+++ b/drivers/acpi/acpi_lpss.c
-@@ -325,6 +325,7 @@ static const struct lpss_device_desc bsw_i2c_dev_desc = {
- 
- static const struct property_entry bsw_spi_properties[] = {
- 	PROPERTY_ENTRY_U32("intel,spi-pxa2xx-type", LPSS_BSW_SSP),
-+	PROPERTY_ENTRY_U32("num-cs", 2),
- 	{ }
- };
- 
--- 
-2.43.0.rc1.1.gbec44491f096
+Applied, thanks.
 
+jon
