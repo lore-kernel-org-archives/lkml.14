@@ -1,132 +1,134 @@
-Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65F8315E5DE;
-	Tue,  2 Apr 2024 21:47:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54C0015E215
+	for <linux-kernel@vger.kernel.org>; Tue,  2 Apr 2024 21:51:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712094455; cv=none; b=u7pJvVLlCOJBB/RLYQrwCOCy+c2JthcDEjEUDvGvZoEVN/c+xz0XcA1MS+0snTSOdXpV7b0kvuDxJEgjeClPfVJ4p8cWA7t/ZTC4c2g+6FSbChemsfT/z7QpjZZt3Dlm6ej3Txv1/xTxGZvsqeg86Qsv7cMmwgghge6eHJJN0I0=
+	t=1712094719; cv=none; b=gOK25GlC5Eus8EZ7i1938QPN5rcR+WGwkQ2YffujQa+xQL84HGtcyzZbnv5mw03JFoSHVXR6U6O4hpS3ZuLjDclnpFobjFziFkf4KerJ9S+OVU/skCfY8EnHy1hd+3Rtwa88EGn63f/ALrPu78fe4uvYQqUIZfnsbqvDG67CBMA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712094455; c=relaxed/simple;
-	bh=ThzxJ0+1nzXQr5OOSAlfmCAsA1NCAF05FUR+WWzEho0=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=iOzHUGQ81owmwrb7YSQuZmRG6XLk1UCxQli+WL7HEzOrA8CihipoZwDmJfVLO2I+wilb7R21Q6Ele1xiesSD0qXJffupfVVEKihCIm0jedwGxOIJFNkPwrOsQgUkVAHMohTXXAH4VxxJBwglviteIxwAHP04ApLkiHgikU4mAss=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Er0R8I9P; arc=none smtp.client-ip=209.85.128.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Er0R8I9P"
-Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-416200b3caaso3121575e9.1;
-        Tue, 02 Apr 2024 14:47:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1712094452; x=1712699252; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=xDdWgOjBMl1tMJjRaoCRravRU0WRe5hMbvpkOwO9lZs=;
-        b=Er0R8I9PW4MBn0Ec0nRoVXOqK/Trpoxs9lcz1cRkrFcmGTmy+z/YKxDKoLIX8P4a5D
-         sMzB4vQ1iPFfLAR/BdTn8N45b8NbjdR8q43+/WXlkG2CsMVfrmPQsw2uXWVp5FftGuF2
-         TqIwYB9JQSoMdz6uyaSf8A9vp9N0rQFUARKiRYVan+amgS3Y8xkeeV7VJZ6MGi0anqFI
-         9KXoJjfzywJLa+AAgfYkGR2ug5YXAvNXZHt8HiA7sgQb56fgSiHS8d+8g+GqnIJSHmB1
-         cdN2+Amd+k13qitD+HX8y7I5a6IqdfQ4Ae/WmBGmA6lCj1YzVZX9GYKwAvyR+YTetGlg
-         b0ug==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712094452; x=1712699252;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=xDdWgOjBMl1tMJjRaoCRravRU0WRe5hMbvpkOwO9lZs=;
-        b=BVzJcbirnWF/ICSnJin8mf8cgmcAyXWmxSRpkEYKrGRsEjsbAbq4uZ3RLEwJzQTjhA
-         JJf8M+bVIi1oWGR4HVgBRSWXqtEJq2GE+8CLAeB1E3yq2i4FX8J4Lc9xANRTczGk83oM
-         08lepOUQ8xaFpwrDMj2AgemLOt0WZrL3Aj/62zDAAhqgNfsURav9jHWe4EXHV5wJE0JM
-         zbzsDSY3KX3bqSYzGLXn8RFe0tetP0l42WFVzAUDZ+sEGHah5Gxsf3u5vafvje+4z6Wb
-         +a+YRHVH8Jscb/mmxfdyk6cHLHqR85mMosBCjZ4NYa1MlhyrLTfMEYkuUleGk4R72bak
-         FamA==
-X-Forwarded-Encrypted: i=1; AJvYcCVAEL0GwrXZI/h1vaX6DeCThwxeOTiX3/+8+Jle1sMvHiHGz+cToro8R+cwLg8LKuAlf0dXu0rzl4Ojg8AUym1F3ymMxCmbJmgjuhDWpX5EX2KYY2cyMvy9FXlHOe0lPq9a1BcBVLORwMhsAjtSGrxkkscoNxjeyTPIFkiD2By4ZErRTQ==
-X-Gm-Message-State: AOJu0YwuK3Do8NGmb6Wt5AygiM/MXELPyxdFGSnx9I4tkRdNyTgBgXM5
-	11jVe0+j00xF63szy9mB5lxRQ+i5YC20xV5nNt0GTse6Hfv0EnfN
-X-Google-Smtp-Source: AGHT+IH8HHuydEJoGrgEKUlbvYjlnQraEID5+on1377b8OsiGIjc1yd6tOz6uo4tcmYGXArYVCuLJg==
-X-Received: by 2002:a05:600c:1ca2:b0:416:1d2e:62f1 with SMTP id k34-20020a05600c1ca200b004161d2e62f1mr1600676wms.5.1712094451446;
-        Tue, 02 Apr 2024 14:47:31 -0700 (PDT)
-Received: from localhost.localdomain (host-79-35-252-101.retail.telecomitalia.it. [79.35.252.101])
-        by smtp.googlemail.com with ESMTPSA id c2-20020a05600c0a4200b0041563096e15sm8812630wmq.5.2024.04.02.14.47.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 02 Apr 2024 14:47:31 -0700 (PDT)
-From: Christian Marangi <ansuelsmth@gmail.com>
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Miquel Raynal <miquel.raynal@bootlin.com>,
-	Richard Weinberger <richard@nod.at>,
-	Vignesh Raghavendra <vigneshr@ti.com>,
-	Sricharan Ramabadhran <quic_srichara@quicinc.com>,
-	Md Sadre Alam <quic_mdalam@quicinc.com>,
-	linux-mtd@lists.infradead.org,
-	linux-arm-msm@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Christian Marangi <ansuelsmth@gmail.com>,
-	stable@vger.kernel.org
-Subject: [PATCH v3] mtd: rawnand: qcom: Fix broken misc_cmd_type in exec_op
-Date: Tue,  2 Apr 2024 23:41:34 +0200
-Message-ID: <20240402214136.29237-1-ansuelsmth@gmail.com>
-X-Mailer: git-send-email 2.43.0
+	s=arc-20240116; t=1712094719; c=relaxed/simple;
+	bh=GJekezZDtgCEvDeDtRZqLACpKI5JpZybjW4NWiVqyDo=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=oTVlcEXttOfU/WSbF/shtzfRibsjiVO7igAFaSCB7S8NXETHg9dxD9GONodMaHJnGLuk3i8B0d/BUjunAbT5vqXUDJ/vZRtr82E0zDfFUdUUGb3OXk7jgYc4+0L7Ac6ETxHt4aBf1QSg+v8mM2TahNQNYEd++hQ4IeTbpc8Gwmw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <m.grzeschik@pengutronix.de>)
+	id 1rrm2r-0000zx-4z; Tue, 02 Apr 2024 23:51:53 +0200
+Received: from [2a0a:edc0:0:1101:1d::ac] (helo=dude04.red.stw.pengutronix.de)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <m.grzeschik@pengutronix.de>)
+	id 1rrm2p-00A3YA-HR; Tue, 02 Apr 2024 23:51:51 +0200
+Received: from localhost ([::1] helo=dude04.red.stw.pengutronix.de)
+	by dude04.red.stw.pengutronix.de with esmtp (Exim 4.96)
+	(envelope-from <m.grzeschik@pengutronix.de>)
+	id 1rrm2p-007wHT-1Y;
+	Tue, 02 Apr 2024 23:51:51 +0200
+From: Michael Grzeschik <m.grzeschik@pengutronix.de>
+Date: Tue, 02 Apr 2024 23:51:49 +0200
+Subject: [PATCH v2] usb: dwc3: gadget: check drained isoc ep
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240307-dwc3-gadget-complete-irq-v2-1-8c5e9b35f7b9@pengutronix.de>
+X-B4-Tracking: v=1; b=H4sIAPR9DGYC/42NQQ6DIBREr2JY9zeIJrZd9R6Niw98kMSCBbQ2x
+ ruXeoIu32Rm3sYSRUeJ3aqNRVpccsEXEKeKqQG9JXC6MBNctLzhHei3asCitpRBhec0Ui6d+II
+ aL8Zg03ZG16zMJSYCGdGroRz4eRxLOEUybj18j77w4FIO8XPol/qX/mFaauDQGrqi4hKF7O4Te
+ TvnGLxbz5pYv+/7F57TXaPaAAAA
+To: Thinh Nguyen <Thinh.Nguyen@synopsys.com>, 
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Michael Grzeschik <m.grzeschik@pengutronix.de>
+X-Mailer: b4 0.12.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2553;
+ i=m.grzeschik@pengutronix.de; h=from:subject:message-id;
+ bh=GJekezZDtgCEvDeDtRZqLACpKI5JpZybjW4NWiVqyDo=;
+ b=owEBbQKS/ZANAwAKAb9pWET5cfSrAcsmYgBmDH33hQZUD5UIVhMspw3/9bywzxBfG63O32KHY
+ O4ssVULc9CJAjMEAAEKAB0WIQQV2+2Fpbqd6fvv0Gi/aVhE+XH0qwUCZgx99wAKCRC/aVhE+XH0
+ qxK3EAC3RWWNm716U2+StddrkQhnyoQMcMDScnBXr2H1GROnO5PDXDRsTa29ACJTQ7McI8JTG9D
+ 9X2+9mV7biOoiSl7A9Jg8OeRZn5PCcbSuZY4wYO3FhvX6J+rTHAwkmpcHIc/emwIhEzezh6kbUc
+ l/D8tvJOPJkVt5AzUztcqE8YiAVdsFc91gQ1/vQY6BAWjhxQRa1to3D492IPtq8puAKJDQy8E+L
+ Z/MANplf0F0ivhHG/2lY0X/pwrnC1OsneTt0CwSNBHu6OSqE8SbnPgmjHY2WZICPN+TTLz6e6wx
+ IMBNV4qndkGDbt3UU3PCzMRMxXYyLEBgXeykCDG0sWttsFVcdWgOTt+DmzgrKUdDaf4/+CXwMhU
+ vwYzotgaUExBuwmcMQUG4kyL6LJ8KJ2AKAXc9FSi00g3VlTqE1+nyve1yppjmAU7fzFmpS6jeoI
+ AWZ5ugQpP9V9w18ZBMpe502uHMakt4pHGLCk4Wa7fryBGkU1gO0+CIiNRhMP6lVq4eChEa1zw3M
+ 3in/5MOvVqItwBqeOArWQgwwHYpb4akPNAMcKkRQAN3DLqhB5Q3HpJXRGDcQqI6r2blWhAPgw09
+ mmny9U5j5aN4GQKXrrul5qkPnLwayxA9UK9gZqvEmIlU0ctTJ33waPIgs7WJ62t+4sqdSvfOV9B
+ X2rurwSimd1t1CA==
+X-Developer-Key: i=m.grzeschik@pengutronix.de; a=openpgp;
+ fpr=957BC452CE953D7EA60CF4FC0BE9E3157A1E2C64
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: m.grzeschik@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-misc_cmd_type in exec_op have multiple problems. With commit a82990c8a409
-("mtd: rawnand: qcom: Add read/read_start ops in exec_op path") it was
-reworked and generalized but actually dropped the handling of the
-OP_RESET_DEVICE command.
+To avoid a potential underrun of an currently drained transfer
+we add a check for that scenario in the dwc3_gadget_endpoint_trbs_complete
+function. In the case of an empty trb ring, we call the stop_transfer
+cmd and avoid the underrun to occur.
 
-The rework itself was correct with supporting case where a single misc
-command is handled, but became problematic by the addition of exiting
-early if we didn't had an OP_BLOCK_ERASE or an OP_PROGRAM_PAGE operation.
-
-Also additional logic was added without clear explaination causing the
-OP_RESET_DEVICE command to be broken on testing it on a ipq806x nandc.
-
-Add some additional logic to restore OP_RESET_DEVICE command handling
-restoring original functionality.
-
-Fixes: a82990c8a409 ("mtd: rawnand: qcom: Add read/read_start ops in exec_op path")
-Cc: stable@vger.kernel.org
-Signed-off-by: Christian Marangi <ansuelsmth@gmail.com>
+Signed-off-by: Michael Grzeschik <m.grzeschik@pengutronix.de>
 ---
-Changes v3:
-- Merge patches
-- Rework commit description
-Changes v2:
-- Split patches
+Changes in v2:
+- dropped patch "usb: dwc3: gadget: reclaim the whole started list when request was missed"
+- fixed patch "usb: dwc3: gadget: check drained isoc ep"
+- dropped patch "usb: dwc3: gadget: check the whole started queue for missed requests in complete"
+- Link to v1: https://lore.kernel.org/r/20240307-dwc3-gadget-complete-irq-v1-0-4fe9ac0ba2b7@pengutronix.de
+---
+ drivers/usb/dwc3/gadget.c | 23 ++++++++++++++++++-----
+ 1 file changed, 18 insertions(+), 5 deletions(-)
 
- drivers/mtd/nand/raw/qcom_nandc.c | 7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
+diff --git a/drivers/usb/dwc3/gadget.c b/drivers/usb/dwc3/gadget.c
+index 4df2661f66751..3e9c67799259a 100644
+--- a/drivers/usb/dwc3/gadget.c
++++ b/drivers/usb/dwc3/gadget.c
+@@ -3582,13 +3582,26 @@ static bool dwc3_gadget_endpoint_trbs_complete(struct dwc3_ep *dep,
+ 	if (!dep->endpoint.desc)
+ 		return no_started_trb;
+ 
+-	if (usb_endpoint_xfer_isoc(dep->endpoint.desc) &&
+-		list_empty(&dep->started_list) &&
+-		(list_empty(&dep->pending_list) || status == -EXDEV))
+-		dwc3_stop_active_transfer(dep, true, true);
+-	else if (dwc3_gadget_ep_should_continue(dep))
++	if (usb_endpoint_xfer_isoc(dep->endpoint.desc)) {
++		/* It is possible that the interrupt thread was delayed
++		 * by scheduling in the system, and therefor the HW has
++		 * already run dry. In that case the last trb in the
++		 * queue is already handled by the hw. By checking the
++		 * HWO bit we know to restart the whole transfer. The
++		 * condition to appear is more likely if not every req
++		 * has the IOC bit set and therefor does not trigger the
++		 * interrupt thread frequently.
++		 */
++		struct dwc3_trb *trb = dwc3_ep_prev_trb(dep, dep->trb_enqueue);
++		unsigned int transfer_in_flight = trb->ctrl & DWC3_TRB_CTRL_HWO;
++
++		if ((list_empty(&dep->started_list) || !transfer_in_flight) &&
++		    (list_empty(&dep->pending_list) || status == -EXDEV))
++			dwc3_stop_active_transfer(dep, true, true);
++	} else if (dwc3_gadget_ep_should_continue(dep)) {
+ 		if (__dwc3_gadget_kick_transfer(dep) == 0)
+ 			no_started_trb = false;
++	}
+ 
+ out:
+ 	/*
 
-diff --git a/drivers/mtd/nand/raw/qcom_nandc.c b/drivers/mtd/nand/raw/qcom_nandc.c
-index b079605c84d3..b8cff9240b28 100644
---- a/drivers/mtd/nand/raw/qcom_nandc.c
-+++ b/drivers/mtd/nand/raw/qcom_nandc.c
-@@ -2815,7 +2815,7 @@ static int qcom_misc_cmd_type_exec(struct nand_chip *chip, const struct nand_sub
- 			      host->cfg0_raw & ~(7 << CW_PER_PAGE));
- 		nandc_set_reg(chip, NAND_DEV0_CFG1, host->cfg1_raw);
- 		instrs = 3;
--	} else {
-+	} else if (q_op.cmd_reg != OP_RESET_DEVICE) {
- 		return 0;
- 	}
- 
-@@ -2830,9 +2830,8 @@ static int qcom_misc_cmd_type_exec(struct nand_chip *chip, const struct nand_sub
- 	nandc_set_reg(chip, NAND_EXEC_CMD, 1);
- 
- 	write_reg_dma(nandc, NAND_FLASH_CMD, instrs, NAND_BAM_NEXT_SGL);
--	(q_op.cmd_reg == OP_BLOCK_ERASE) ? write_reg_dma(nandc, NAND_DEV0_CFG0,
--	2, NAND_BAM_NEXT_SGL) : read_reg_dma(nandc,
--	NAND_FLASH_STATUS, 1, NAND_BAM_NEXT_SGL);
-+	if (q_op.cmd_reg == OP_BLOCK_ERASE)
-+		write_reg_dma(nandc, NAND_DEV0_CFG0, 2, NAND_BAM_NEXT_SGL);
- 
- 	write_reg_dma(nandc, NAND_EXEC_CMD, 1, NAND_BAM_NEXT_SGL);
- 	read_reg_dma(nandc, NAND_FLASH_STATUS, 1, NAND_BAM_NEXT_SGL);
+---
+base-commit: 5bab5dc780c9ed0c69fc2f828015532acf4a7848
+change-id: 20240307-dwc3-gadget-complete-irq-1a8ffa347fd1
+
+Best regards,
 -- 
-2.43.0
+Michael Grzeschik <m.grzeschik@pengutronix.de>
 
