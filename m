@@ -1,67 +1,64 @@
-Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
+Received: from mail-oo1-f52.google.com (mail-oo1-f52.google.com [209.85.161.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2B4D80BFE;
-	Tue,  2 Apr 2024 13:44:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 221F784FC5
+	for <linux-kernel@vger.kernel.org>; Tue,  2 Apr 2024 13:44:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712065456; cv=none; b=AojUp0HP95vRKq8LQB9A/Oia7b0I4kk3uFYxaWhz4CjY+mFbaoz9QygjZm7zPsyZqHiLefXcqi9TEAbk7O09AnWdQZG3eh4W115HOjW6XYYR7onqAc1qjkzNq/5Lhp+LTRtxSAdV4tj6RMGoM5sSG7PQ3yr+msQDU7nGoC20ppw=
+	t=1712065497; cv=none; b=WMOgDYbb337guoxj6HJxVjyjqcg3ed4fOeFIs/9wX8YDNLYwiC4A0y6JynfO4E8hMrE1jwDL+cEt3GKI1c+2P59a8s6QnmrP5HME4Ffs00mcfHqlxvkexQQdkcYGH+FnQ/9WnH66ueaOju2IjELU/IZ+Jovi+gUImrUdJcYNSAE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712065456; c=relaxed/simple;
-	bh=fX4wdNLj4mpJXnKy6OYwufs3fuHwSvr3osAkiv/d/rw=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Yr8ant2V9zyeEZPSe3F7Up6VSYzQz0Z4des2hf+67DKTJlLmDiK5U9L7qJHVQB13ttxz11N2icf8gTuGOsK9ppAKgy/gAoZDrDTn9nJdz41ArAG7MrGCi3eIY+WWw1eJ8hTXA3eC/2YOEjAhWX/KZf/LZnPDyzPx9baZJcYgOb8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=P+Frg/IV; arc=none smtp.client-ip=209.85.208.49
+	s=arc-20240116; t=1712065497; c=relaxed/simple;
+	bh=j6HnrewUXXcVCrmagzRk/1sPsI6ZmP64l2r7EUbkgpo=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=QzRmaRg0p0ns6kv2VcPHTF1Dpo3huvIgmcsmWkEDH+YIcW7aQfaEG9Yh529LEGmn1L2P2ZyVHj2NdQLlMxuY2t/sf9bQ8Vs8KiTpDL0JHY2urcCxTqCYnJY7i7c8Cm6/ohS5lLEjrwPCM5f6Cvme+ddl3ji2+HUrMTKqCNC68yk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SUg/kpgg; arc=none smtp.client-ip=209.85.161.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="P+Frg/IV"
-Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-56c583f5381so6880387a12.1;
-        Tue, 02 Apr 2024 06:44:14 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SUg/kpgg"
+Received: by mail-oo1-f52.google.com with SMTP id 006d021491bc7-5a47cecb98bso3471184eaf.0
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Apr 2024 06:44:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1712065453; x=1712670253; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1712065495; x=1712670295; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=h8hhkZTFbU/vuzsYhmShVWNS4yGIt56q5tjAp6Vay20=;
-        b=P+Frg/IVXg7zGK6l+IfhBCRwKX9D/ZFduPX/wcdu7qeRYgrKAxr0mHu/4GXMfWMRVa
-         RZrBS2iq8rne/DIui0NQQfhea1TbNem0M3C5bJOy91Xqy1iPJV8PxoQpFmWzn9qUkGRO
-         1gCAPqnmMJTKancMzRg2izyRP/3EsFdJlujnzKi46VwlSpNWDTUkY8739PNxB8kqvTrC
-         VuWpkzrvpY+I1VvrwGnyNtq0Ld96A1Mx8HzNCPBAFJyR7VCsGgheW50UaRkhFZjQ6zNj
-         h5If2aE5BACDI80E8iq9sNRIc872610zgl1Y1NnyNi3rvPJKvnLajVV2qKtB9x85lJ8p
-         3xuw==
+        bh=zq1akPhp53NDLWfVI14XtR64kJ44Ez5rZRNB3dsutTI=;
+        b=SUg/kpgg5aUzzL5sLOvcgAICzHsvLeIqcX4E/w2+xdSbK9vM3epkVJ87gs7Ic2PGli
+         0ksHhsDYYVeru/Zxg8B0/yKhpr/4XCeb1ob6BTV0F06v58Bup55OR2/LUBLI16uLv6Eq
+         nRaGDTtf7/Abc+V6XGIN2vrpR5RUO9o7/81kTcf50efkfJzgbCdV5k5RDHg8sL47rzdY
+         VNCwPC/43EnKxSyATOrc5osn2cqg8MSd5K57278XRr2Mn242JqV5/mem0ajxmElyPCVf
+         2X/FQYvGfuqWFmcRTGvdMzyBGIDdCzujlecbFaAlIUx8OQzOVqXSpYxvk/Z6SORbBXMW
+         ZpqA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712065453; x=1712670253;
+        d=1e100.net; s=20230601; t=1712065495; x=1712670295;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=h8hhkZTFbU/vuzsYhmShVWNS4yGIt56q5tjAp6Vay20=;
-        b=NvpBkf+u9BuLNHjNDpwRTOlhWzntzotkeGWOdoKcIXbOfctT/4HWjhmYXheMGEk36T
-         ZV7vjgkVENi2V6C4OTFjZ3lhKiKqPw2Vh9tumUuchkZ6oknB4coiwpnXSKcMVfkOK7ZS
-         3cYRG1gDomXSU5K20M53HLNcs/S5gyKgST5jhecnUhSAb+dGwM7t7vNp2+g3WVjXLjvj
-         LdiWZ04YHzRVJzYVJnybhJoZN6uSw8K9uovbXRYMDmaP/TmXlV7dRblfQnUqaJP2ggju
-         qWVZ/DSzjpMKPuLwWqjIG5FvizsKy8T7VemSoMZhnlCBhDpvwQ/9ZekZwVCPQl56Nb2D
-         /exA==
-X-Forwarded-Encrypted: i=1; AJvYcCXePWJJN5Ha3EYcQ+BDly/dKs58o9AFBCALnhyw+aXcpPjt3WXry5uxmxA68Z4qQUZs6qqupOEehjjsaNqCEg5eeuXvd8drrGQEhsOZqvgI1CnIfkRa9uagk5NzZGZYL7ciCjUiKQP52Gg=
-X-Gm-Message-State: AOJu0YyETpkB3cZHjhjTsRobFP2EuhvCe7wtIV3y/oP1qk1We0Ja9uwY
-	1TTd92A4oIMz47w+OCj0AriwzuXldotSZhOa/PPMuehDnpgkSyya
-X-Google-Smtp-Source: AGHT+IHbYAQ9hfvj++/l//lkX9k97qC+cvPqgA97/D4BDSsfP170cjxSJc20nAEgUjLrcC6M+pSGXw==
-X-Received: by 2002:a05:6402:3590:b0:56b:ddcb:bb67 with SMTP id y16-20020a056402359000b0056bddcbbb67mr12994163edc.2.1712065452859;
-        Tue, 02 Apr 2024 06:44:12 -0700 (PDT)
-Received: from lola.. ([178.25.29.59])
-        by smtp.gmail.com with ESMTPSA id g28-20020a056402321c00b0056c1c2b851esm6818177eda.0.2024.04.02.06.44.12
+        bh=zq1akPhp53NDLWfVI14XtR64kJ44Ez5rZRNB3dsutTI=;
+        b=AmsH+RtnVsFUIzTkuYcK/JwQn3NOSOYfum+IQ/pKqwcC6SiML+4C7nQQfE7kQpDqHw
+         t5Cdi1ZeDm6zH0EDpys4tPW1/QOLfhGh3glsxTN3V2a+0PE4UCYH2Cb4pmrDUo34GFj+
+         YWYZkvdftKmZbHeLvZgfYiyMWpgzA/gml/ZCm/1IHS8mHJbImkVAs2PtBmoWeASr+SsN
+         nmJYVJ3LI6swtgIv/XSF/Mg6VAPidHG7+/iow8QplAFnAAZDoBqynIMS9d9hv8E+/RFV
+         h6NnvGwpKm+KLQ8iaO5irSxoPxyhobE3y0se5PEa+jxvDEUEv9irfK+uzFal5Ol+EihH
+         h7iw==
+X-Forwarded-Encrypted: i=1; AJvYcCUr736zExSe0AIdUA21ox/XK/YPhbC6F0o5fUG1jRltLOBrutRI+CDY2/1SHulPFthf93buT/d7yYioRyD0RexTNDYBwi4iAENMpMcN
+X-Gm-Message-State: AOJu0Ywu/8JCXtm1FC53EFhpee2qIVsTWRrOvlBOQnaJgdBCxdadRYxF
+	EEK6SQylaY29LOe3Em0KEQU5CvEzqc6MZDTyNcU5Z9+5r3m8D/ZQ
+X-Google-Smtp-Source: AGHT+IFRuGf1HWoBJxQ/xpQxoFYymCpwGo8HPPrz9dIuAsckTdfswSQlbIStO45l4SMnToWJ0lpafA==
+X-Received: by 2002:a05:6358:883:b0:183:6537:8781 with SMTP id m3-20020a056358088300b0018365378781mr16790759rwj.26.1712065495122;
+        Tue, 02 Apr 2024 06:44:55 -0700 (PDT)
+Received: from lab.. ([140.116.245.168])
+        by smtp.gmail.com with ESMTPSA id x8-20020a656aa8000000b005b7dd356f75sm8546349pgu.32.2024.04.02.06.44.53
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 02 Apr 2024 06:44:12 -0700 (PDT)
-From: Lukas Bulwahn <lukas.bulwahn@gmail.com>
-To: Jean Delvare <jdelvare@suse.com>,
-	Guenter Roeck <linux@roeck-us.net>,
-	Radu Sabau <radu.sabau@analog.com>,
-	linux-hwmon@vger.kernel.org
-Cc: kernel-janitors@vger.kernel.org,
+        Tue, 02 Apr 2024 06:44:54 -0700 (PDT)
+From: Yu-Cheng Chen <otteryc210@gmail.com>
+To: akpm@linux-foundation.org
+Cc: linux-mm@kvack.org,
 	linux-kernel@vger.kernel.org,
-	Lukas Bulwahn <lukas.bulwahn@gmail.com>
-Subject: [PATCH] MAINTAINERS: repair file entry in ADP1050 HARDWARE MONITOR DRIVER
-Date: Tue,  2 Apr 2024 15:42:03 +0200
-Message-ID: <20240402134203.8297-1-lukas.bulwahn@gmail.com>
-X-Mailer: git-send-email 2.44.0
+	Yu-Cheng Chen <otteryc210@gmail.com>
+Subject: [PATCH] mm/ksm: fix missing comma in comment
+Date: Tue,  2 Apr 2024 21:44:44 +0800
+Message-Id: <20240402134444.77498-1-otteryc210@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -70,33 +67,27 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Commit 4e1008d8aae5 ("dt-bindings: hwmon: pmbus: adp1050: add bindings")
-adds the ADP1050 HARDWARE MONITOR DRIVER section, but slips in a typo in
-its file entry.
+This commit added an omitted comma to separate clauses, to ensure
+grammatical correctness.
 
-Fortunately, ./scripts/get_maintainer.pl --self-test=patterns complains
-about this broken reference.
-
-Remove the typo in ADP1050 HARDWARE MONITOR DRIVER.
-
-Signed-off-by: Lukas Bulwahn <lukas.bulwahn@gmail.com>
+Signed-off-by: Yu-Cheng Chen <otteryc210@gmail.com>
 ---
- MAINTAINERS | 2 +-
+ mm/ksm.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 13ac7ce270b3..272b238d5488 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -506,7 +506,7 @@ M:	Radu Sabau <radu.sabau@analog.com>
- L:	linux-hwmon@vger.kernel.org
- S:	Supported
- W:	https://ez.analog.com/linux-software-drivers
--F:	Dcumentation/devicetree/bindings/hwmon/pmbus/adi,adp1050.yaml
-+F:	Documentation/devicetree/bindings/hwmon/pmbus/adi,adp1050.yaml
- 
- ADP1653 FLASH CONTROLLER DRIVER
- M:	Sakari Ailus <sakari.ailus@iki.fi>
+diff --git a/mm/ksm.c b/mm/ksm.c
+index 8c001819c..b4de5a9ed 100644
+--- a/mm/ksm.c
++++ b/mm/ksm.c
+@@ -385,7 +385,7 @@ static unsigned long ewma(unsigned long prev, unsigned long curr)
+  *
+  *      new_pages_to_scan = pages_to_scan * (scan_time / target_scan_time)
+  *
+- * To avoid perturbations it calculates a change factor of previous changes.
++ * To avoid perturbations, it calculates a change factor of previous changes.
+  * A new change factor is calculated for each iteration and it uses an
+  * exponentially weighted moving average. The new pages_to_scan value is
+  * multiplied with that change factor:
 -- 
-2.44.0
+2.34.1
 
