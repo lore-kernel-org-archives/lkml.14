@@ -1,120 +1,147 @@
-Received: from omta34.uswest2.a.cloudfilter.net (omta34.uswest2.a.cloudfilter.net [35.89.44.33])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 909A7175A9
-	for <linux-kernel@vger.kernel.org>; Tue,  2 Apr 2024 05:10:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=35.89.44.33
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCCD017C95;
+	Tue,  2 Apr 2024 05:12:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712034653; cv=none; b=jl2tafNXqedaBYD50+gjBudh4BhtiEdDvJuH40YJQh2PVoTKPiIwK2WUXwsfHbxxEB/pOFcQkOH3l183DbCaClQhStKguWohDUf12Fi/24QL4JtKtUoGNGwtbJhT8HonlS7ADYUIO+WN28NJfiiZxuY4QEjvWwVG4iJzY3hWymI=
+	t=1712034756; cv=none; b=ul8yfQtdYiKcd4APLURSVLYmNDlEP9aZQxG4AlH7+AVm4MrSF7VTJLR+ZklU2xrhefmmoHWvg3U7LE0LZE7rBxavPngMYdcooRRoH72xlvq3P8qyVWRBIWbhsiDUwjNZOfkwmbmAXEi+6sKZ4Wx0tWD8MQoDf8Jwkh7fYawSrxI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712034653; c=relaxed/simple;
-	bh=ucHI+h0QKrsfQJZtrnHjksCf4dCj9ZlxAFIgimGve3E=;
-	h=Subject:To:Cc:References:In-Reply-To:From:Message-ID:Date:
-	 MIME-Version:Content-Type; b=W4Bjyes75KgGPCdYr4YfLZ9RjeV8C83O4bXx+aA+Z3iLMVjnN10wAqO6PGOTazFL8Ai4yRkUjxcm0FwskYJaY8l6oj+kqTq4E/VZ27K9fU9I/kBODkqU4YRiFoRVJKWEZgFG/M4mdkytGfJ8lG60P/7rvy00LaLKHNdGwK73zXE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=w6rz.net; spf=pass smtp.mailfrom=w6rz.net; dkim=pass (2048-bit key) header.d=w6rz.net header.i=@w6rz.net header.b=DzT0D7dK; arc=none smtp.client-ip=35.89.44.33
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=w6rz.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=w6rz.net
+	s=arc-20240116; t=1712034756; c=relaxed/simple;
+	bh=vPvthpF8xyKUQtB9kB8Eu+RGmNNQbLUr594u4ov342Q=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=WBIXHMPRXYqOBna08Tu/mGaCbPGQhKdSg0hkllFEQVelwZHpZi4rL6kfRntjTJ+XTG5bkEqkfHeKnmr2jmE5smDZ+5/HTnqLQpgdBP1duONx7pAhjSzqyjSwLS5qCjV3/re/dWLARRaQmVZQ+KuSu6wXnROjkXOt4xurdvfBQHA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tepFiF6k; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=w6rz.net header.i=@w6rz.net header.b="DzT0D7dK"
-Received: from eig-obgw-5002a.ext.cloudfilter.net ([10.0.29.215])
-	by cmsmtp with ESMTPS
-	id r9Nxr6JnVHXmArWPwrjZp1; Tue, 02 Apr 2024 05:10:41 +0000
-Received: from box5620.bluehost.com ([162.241.219.59])
-	by cmsmtp with ESMTPS
-	id rWPvrdTZHybtzrWPwrt6qe; Tue, 02 Apr 2024 05:10:40 +0000
-X-Authority-Analysis: v=2.4 cv=RsAOLzmK c=1 sm=1 tr=0 ts=660b9350
- a=30941lsx5skRcbJ0JMGu9A==:117 a=30941lsx5skRcbJ0JMGu9A==:17
- a=IkcTkHD0fZMA:10 a=raytVjVEu-sA:10 a=-Ou01B_BuAIA:10 a=VwQbUJbxAAAA:8
- a=HaFmDPmJAAAA:8 a=9UvB61DyQ3Ym7K8-slIA:9 a=QEXdDO2ut3YA:10
- a=AjGcO6oz07-iQ99wixmX:22 a=nmWuMzfKamIsx3l42hEX:22
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=w6rz.net;
-	s=default; h=Content-Transfer-Encoding:Content-Type:MIME-Version:Date:
-	Message-ID:From:In-Reply-To:References:Cc:To:Subject:Sender:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=FpV/3ClAKOxmgVoq0icnKK8oa8JjVBeRg9PeFMRZpl0=; b=DzT0D7dKQ5ikZAtXnW7uX926jC
-	vrZibmZysPJWCkVRRnHnz+FRrTQ+Td1uW+QjwTrKQDKQIvjG0oHgBHqN1IwNXw8YAOWV+9Zm0mQne
-	5LLpZsdS+YbVcW601+yfnKk0gVg1RHn9HI3qCSMoU4ETYS6U0g6d4MuOnWBQZIYdYX3wPf8eLV50n
-	ZXsU5w2NjJNgGvmn0gLFa8AeP+ztJyyaltlj6CsuId4B6WLZZ5JCgiWizkVRLkjhR9lcaMNF0bUlH
-	aaTlWzq0CX2nMUjDf41z8J0EUOZ7tMrAbLMHS216qbsnJPUZUD13oZwEaBjoGMsGciEu9fEE7oinV
-	r2iOWSeA==;
-Received: from c-98-207-139-8.hsd1.ca.comcast.net ([98.207.139.8]:55186 helo=[10.0.1.47])
-	by box5620.bluehost.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.96.2)
-	(envelope-from <re@w6rz.net>)
-	id 1rrWKr-001slT-1j;
-	Mon, 01 Apr 2024 23:05:25 -0600
-Subject: Re: [PATCH 6.7 000/432] 6.7.12-rc1 review
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
-Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
- torvalds@linux-foundation.org, akpm@linux-foundation.org,
- linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
- lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
- f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, srw@sladewatkins.net,
- rwarsow@gmx.de, conor@kernel.org, allen.lkml@gmail.com, broonie@kernel.org
-References: <20240401152553.125349965@linuxfoundation.org>
-In-Reply-To: <20240401152553.125349965@linuxfoundation.org>
-From: Ron Economos <re@w6rz.net>
-Message-ID: <52cdea78-7bee-5a9b-cd5e-a5f77b39da30@w6rz.net>
-Date: Mon, 1 Apr 2024 22:05:23 -0700
-User-Agent: Mozilla/5.0 (X11; Linux armv7l; rv:78.0) Gecko/20100101
- Thunderbird/78.14.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tepFiF6k"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7682AC433F1;
+	Tue,  2 Apr 2024 05:12:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1712034756;
+	bh=vPvthpF8xyKUQtB9kB8Eu+RGmNNQbLUr594u4ov342Q=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=tepFiF6kxq1eG2O4h2mWo0OK5S3J3gtg1Al/3kbvKR3dbH6H/t/mFKmX5+dkgy9FM
+	 zn3xG5I8WNe9XxCDa8u4EemaESfQDeuj6/cuwbEPXnvMndFUJUp7XO3JZZeVYhlNH9
+	 5/VDnmaHW5nZBEpnnUP0BsZy0y46oYYZW3sWRXgWQlpPE9+ljiUTkA6UsiVfuCKqGi
+	 +Almp2k/t1Wyy4nOApKJi6HKXDZThno/tAjxwUhteDlliI9g5r1cDkKDojcc/kiciO
+	 h1bXfL8DQk+BCU/VFL1yLf2g7OD5Qriwscz/U27UXxgDpXZyFB0IV7JF7iCCxhwMGp
+	 uD+XsBDsC680g==
+Date: Tue, 2 Apr 2024 10:42:28 +0530
+From: Manivannan Sadhasivam <mani@kernel.org>
+To: Niklas Cassel <cassel@kernel.org>
+Cc: Bjorn Helgaas <helgaas@kernel.org>, Frank Li <Frank.Li@nxp.com>,
+	niklas.cassel@wdc.com, bhelgaas@google.com,
+	gustavo.pimentel@synopsys.com, imx@lists.linux.dev,
+	jdmason@kudzu.us, jingoohan1@gmail.com, kw@linux.com,
+	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+	lpieralisi@kernel.org, robh@kernel.org
+Subject: Re: [PATCH v2 1/1] PCI: dwc: Fix index 0 incorrectly being
+ interpreted as a free ATU slot
+Message-ID: <20240402051228.GH2933@thinkpad>
+References: <20240321171345.GA2385@thinkpad>
+ <20240321180732.GA1329092@bhelgaas>
+ <20240322052623.GA4092@thinkpad>
+ <Zf0i1X5fg-E59NWx@ryzen>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - box5620.bluehost.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - w6rz.net
-X-BWhitelist: no
-X-Source-IP: 98.207.139.8
-X-Source-L: No
-X-Exim-ID: 1rrWKr-001slT-1j
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: c-98-207-139-8.hsd1.ca.comcast.net ([10.0.1.47]) [98.207.139.8]:55186
-X-Source-Auth: re@w6rz.net
-X-Email-Count: 23
-X-Org: HG=bhshared;ORG=bluehost;
-X-Source-Cap: d3NpeHJ6bmU7d3NpeHJ6bmU7Ym94NTYyMC5ibHVlaG9zdC5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfB+G38V1hpG283ucxLZB0PDhnNztMwc1ohx8KazbDI4DoK2rKN1Cgu262Z6QlVguNiRFUhzYc8WpoqZ0B1mLKef73UOPlzIULO9AiPlUmm/kcr3T0rH5
- dZXjd+Uj2KQJqqYAT0XAZzatwVkHlWZ29aE8RotxB0SZsvet184Or5dendOBrHedx0cMD5u01hnY8xT+YQxaWGkXlVVn2Hu2rbU=
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <Zf0i1X5fg-E59NWx@ryzen>
 
-On 4/1/24 8:39 AM, Greg Kroah-Hartman wrote:
-> Note, this will be the LAST 6.7.y kernel release.  After this one it
-> will be end-of-life.  Please move to 6.8.y now.
->
-> ------------------------------------------
->
-> This is the start of the stable review cycle for the 6.7.12 release.
-> There are 432 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Wed, 03 Apr 2024 15:24:46 +0000.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.7.12-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.7.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
+On Fri, Mar 22, 2024 at 07:19:01AM +0100, Niklas Cassel wrote:
+> On Fri, Mar 22, 2024 at 10:56:23AM +0530, Manivannan Sadhasivam wrote:
+> > On Thu, Mar 21, 2024 at 01:07:32PM -0500, Bjorn Helgaas wrote:
+> > > On Thu, Mar 21, 2024 at 10:43:45PM +0530, Manivannan Sadhasivam wrote:
+> > > > On Mon, Mar 04, 2024 at 05:46:16PM -0500, Frank Li wrote:
+> > > > > dw_pcie_ep_inbound_atu()
+> > > > > {
+> > > > > 	...
+> > > > > 	if (!ep->bar_to_atu[bar])
+> > > > > 		free_win = find_first_zero_bit(ep->ib_window_map, pci->num_ib_windows);
+> > > > > 	else
+> > > > > 		free_win = ep->bar_to_atu[bar];
+> > > > > 	...
+> > > > > }
+> > > > > 
+> > > > > The atu index 0 is valid case for atu number. The find_first_zero_bit()
+> > > > > will return 6 when second time call into this function if atu is 0. Suppose
+> > > > > it should use branch 'free_win = ep->bar_to_atu[bar]'.
+> > > > > 
+> > > > > Change 'bar_to_atu' to free_win + 1. Initialize bar_to_atu as 0 to indicate
+> > > > > it have not allocate atu to the bar.
+> > > > 
+> > > > I'd rewrite the commit message as below:
+> > > > 
+> > > > "The mapping between PCI BAR and iATU inbound window are maintained in the
+> > > > dw_pcie_ep::bar_to_atu[] array. While allocating a new inbound iATU map for a
+> > > > BAR, dw_pcie_ep_inbound_atu() API will first check for the availability of the
+> > > > existing mapping in the array and if it is not found (i.e., value in the array
+> > > > indexed by the BAR is found to be 0), then it will allocate a new map value
+> > > > using find_first_zero_bit().
+> > > > 
+> > > > The issue here is, the existing logic failed to consider the fact that the map
+> > > > value '0' is a valid value for BAR0. Because, find_first_zero_bit() will return
+> > > > '0' as the map value for BAR0 (note that it returns the first zero bit
+> > > > position).
+> > > > 
+> > > > Due to this, when PERST# assert + deassert happens on the PERST# supported
+> > > > platforms, the inbound window allocation restarts from BAR0 and the existing
+> > > > logic to find the BAR mapping will return '6' for BAR0 instead of '0' due to the
+> > > > fact that it considers '0' as an invalid map value.
+> > > > 
+> > > > So fix this issue by always incrementing the map value before assigning to
+> > > > bar_to_atu[] array and then decrementing it while fetching. This will make sure
+> > > > that the map value '0' always represents the invalid mapping."
+> > > 
+> > > This translates C code to English in great detail, but still doesn't
+> > > tell me what's broken from a user's point of view, how urgent the fix
+> > > is, or how it should be handled.
+> > > 
+> > > DMA doesn't work because ATU setup is wrong?  Driver MMIO access to
+> > > the device doesn't work?  OS crashes?  How?  Incorrectly routed access
+> > > causes UR response?  Happens on every boot?  Only after a reboot or
+> > > controller reset?  What platforms are affected?  "PERST# supported
+> > > platforms" is not actionable without a lot of research or pre-existing
+> > > knowledge.  Should this be backported to -stable?
+> > > 
+> > 
+> > Severity is less for the bug fixed by this patch. We have 8 inbound iATU windows
+> > on almost all of the platforms and after PERST# assert + deassert, BAR0 uses map
+> > '6' instead of '0'.
+> > 
+> > This has no user visibility since the mapping will go fine and we have only 6
+> > BARs. So I'd not mark this as as critical fix that needs special attention.
+> 
+> So we will have 6 mappings configured, but only 5 BARs, so two mappings for
+> BAR0. The iATU looks at them in order, so index 0 will override index 6.
+> 
+> We are lucky that the endpoint subsystem does not clean up allocations properly
+> right now (you have an outstanding series which fixes this).
+> 
+> If the endpoint subsystem did clean up resources properly, we would DMA to the
+> area that was previously allocated for BAR0, instead of the new area for BAR0.
+> 
 
-Built and booted successfully on RISC-V RV64 (HiFive Unmatched).
+How would DMA happen to the previously allocated area? When the BARs are cleared
+properly and then allocated again, BAR0 will get the map of 0 again and then the
+iATU will map window 0 with BAR0. Only if we don't clear the BARs properly (as
+like now), then it will result in BAR0 having 2 identical mappings and even with
+that there won't be any issue since both map 0 and 6 are valid.
 
-Tested-by: Ron Economos <re@w6rz.net>
+Am I missing anything?
 
+> Perhaps just include this fix in your series that actually cleans up the BARs?
+> 
+
+Yeah, makes sense. Once we agree on a finalized commit message in this thread,
+I'll include this patch in my series.
+
+- Mani
+
+-- 
+மணிவண்ணன் சதாசிவம்
