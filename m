@@ -1,88 +1,85 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7108D15B963;
-	Tue,  2 Apr 2024 19:27:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CFF415B55A;
+	Tue,  2 Apr 2024 19:28:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712086030; cv=none; b=gRZWAIGoGNxcLa9n6PO6uDSdnhiqRXE+ImM3r5ASA0ogBwXJbPP+D/P+NumJXPGweM7PRxaATXF7SKJ1/SfmLn1aT7UA3cF/M8+L3QpUa2Gl/eVcd7hM19liZsp7kONnaVKVSz8wOu7WT03WBLnVmNNEvUP2s6c3MXSF7FIIWpw=
+	t=1712086129; cv=none; b=Pv3wwKN13ukDRbMl6EKreLPJCd+2n0EaEIyJ6dVY7xKdRyrKslSXPbwx3S/CdLGAYCWklPfgRTwag+tm9e6RipI+fIalcIncj2xaZj7UTshKqBCen5HzfHDAbmWfDtq1dTBb4u3fVtDlKh51dUT3UlqBwLdJRFPZ+MKgla9TUhE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712086030; c=relaxed/simple;
-	bh=hg49FgYaH4GuMBzIb8C7D7yRNHB16wAyclAyJ4VU55A=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=abqXDlh0QuHxJOH62DSfWLY2xS5GmIR+3nxdVAZeGp74ECZgiSNJ7S7ZsaOY2J5sU/KfHav8xUzT0BRPsu6zZOfZNIVCWcd/7v6Ic65K+U1CVEygJsaFuGuFauY89sKP2Bak7to+rhxLF51WTm5KgLduiVsxdDb8KaSPbJA9B/s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=IAMIajiP; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+	s=arc-20240116; t=1712086129; c=relaxed/simple;
+	bh=NAIlNAyqZ5xFb7S0Rck0DUTBUV83tvWCe1Tb0Ugx5hA=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=K3VHsOKvWUpUvCC58MK2s3nPNo1m+RVpZeQi7WjpOG8dFbobf1yaxj7BDEyOl9AgDjJXkuuBNfjcJo4zOcLkCh/z5Sspo8x1XGlUc4/bBEVX5684Ll1LcuLwK5m7Ad1xTCiblAQuMTZ2Yd9nzJUNWYJlZ9F5wXjdG9YWOLPqgWw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Y7rGORmk; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="IAMIajiP"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=2IvxhZTeRGMzJtd2ZyOSnbmig+nTZ2hJJ3tE10xMgUk=; b=IAMIajiPWl4V8UpSiU0IzV5Cer
-	M197q8FTSCL5rAG9aEpZq39W0vV0WjuTvyg4kESmQ+V14cuO2Ckt65/r/5HL55E1WuY6fgnZCKUO9
-	G7zEMAMR4TSeaRPDynLkn6mEiCnEgIOoYvIRLXPQj7CpCHwdGVbr9vTm0B1+fMcVpm+0=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1rrjme-00Byla-Io; Tue, 02 Apr 2024 21:27:00 +0200
-Date: Tue, 2 Apr 2024 21:27:00 +0200
-From: Andrew Lunn <andrew@lunn.ch>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Y7rGORmk"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 50FECC433C7;
+	Tue,  2 Apr 2024 19:28:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1712086129;
+	bh=NAIlNAyqZ5xFb7S0Rck0DUTBUV83tvWCe1Tb0Ugx5hA=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=Y7rGORmknipAl9T3i3EjAhORqJ7u26iZykkth0KDXI2iGCw7LBLmRiisGZkTxGEpA
+	 bWo/jp375JwcJoLaV3qJ84540XCe1wyyhuNBo3J9ISJnV14eWVlpzUyZazWaXKTm5X
+	 1cqqvqOIVQAuyoohD6gQ369KZX0VRLWBY4fbKV6MiBwCyuGFeOSiloTQk/GfS98LSk
+	 9nYG6J+CjD09+8QNU9GtH8byaDMG/6qOFBlUjz1lJdB58BEOEvU8mb3X7xJ7A628pf
+	 UtPhPVg9NEc+9WavbS4UlPrpbX2FivqOHcaoXhqFF2BAMR1GNfyYMFA6Y9fi6/2ddw
+	 a4EuESHZGQvxA==
+Date: Tue, 2 Apr 2024 21:28:36 +0200
+From: Marek =?UTF-8?B?QmVow7pu?= <kabel@kernel.org>
 To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Robert Marko <robert.marko@sartura.hr>,
-	Gregory Clement <gregory.clement@bootlin.com>,
-	Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 3/3] arm64: dts: marvell: espressobin-ultra: fix Ethernet
- Switch unit address
-Message-ID: <09201a97-7e7b-4d72-8ada-f58f85887349@lunn.ch>
+Cc: Robert Marko <robert.marko@sartura.hr>, Andrew Lunn <andrew@lunn.ch>,
+ Gregory Clement <gregory.clement@bootlin.com>, Sebastian Hesselbarth
+ <sebastian.hesselbarth@gmail.com>, Rob Herring <robh@kernel.org>, Krzysztof
+ Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley
+ <conor+dt@kernel.org>, linux-arm-kernel@lists.infradead.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/3] arm64: dts: marvell: turris-mox: drop unneeded
+ flash address/size-cells
+Message-ID: <20240402212836.13d7cf11@thinkpad>
+In-Reply-To: <20240402183240.49193-2-krzk@kernel.org>
 References: <20240402183240.49193-1-krzk@kernel.org>
- <20240402183240.49193-3-krzk@kernel.org>
+	<20240402183240.49193-2-krzk@kernel.org>
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.39; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240402183240.49193-3-krzk@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Apr 02, 2024 at 08:32:40PM +0200, Krzysztof Kozlowski wrote:
-> The Espressobin Ultra DTS includes Espressobin DTSI which defines
-> ethernet-switch@1 node.  The Ultra DTS overrides "reg" to 3, but that
-> leaves still old unit address which conflicts with the new phy@1 node
-> (W=1 dtc warning):
-> 
->   armada-3720-espressobin.dtsi:148.29-203.4: Warning (unique_unit_address_if_enabled): /soc/internal-regs@d0000000/mdio@32004/ethernet-switch@1: duplicate unit-address (also used in node /soc/internal-regs@d0000000/mdio@32004/ethernet-phy@1)
-> 
-> Fix this by deleting ethernet-switch@1 node and merging original node
-> with code from Ultra DTS into new ethernet-switch@3.
+On Tue,  2 Apr 2024 20:32:39 +0200
+Krzysztof Kozlowski <krzk@kernel.org> wrote:
 
-That is a bit ugly, having the exact same code twice.
+> Flash node uses single "partition" node to describe partitions, so
+> remove deprecated address/size-cells properties to also fix dtc W=3D1
+> warnings:
+>=20
+>   armada-3720-turris-mox.dts:218.10-255.4: Warning (avoid_unnecessary_add=
+r_size): /soc/internal-regs@d0000000/spi@10600/flash@0: unnecessary #addres=
+s-cells/#size-cells without "ranges" or child "reg" property
+>=20
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> ---
+>  arch/arm64/boot/dts/marvell/armada-3720-turris-mox.dts | 2 --
+>  1 file changed, 2 deletions(-)
+>=20
+> diff --git a/arch/arm64/boot/dts/marvell/armada-3720-turris-mox.dts b/arc=
+h/arm64/boot/dts/marvell/armada-3720-turris-mox.dts
+> index f1a9f2234359..54453b0a91f9 100644
+> --- a/arch/arm64/boot/dts/marvell/armada-3720-turris-mox.dts
+> +++ b/arch/arm64/boot/dts/marvell/armada-3720-turris-mox.dts
+> @@ -216,8 +216,6 @@ &spi0 {
+>  	assigned-clock-rates =3D <20000000>;
+> =20
+>  	flash@0 {
+> -		#address-cells =3D <1>;
+> -		#size-cells =3D <1>;
+>  		compatible =3D "jedec,spi-nor";
+>  		reg =3D <0>;
+>  		spi-max-frequency =3D <20000000>;
 
-Could the bulk of the switch node be put into a .dtsi file, and then
-included as needed
-
-&mdio {
-        switch0: ethernet-switch@1 {
-		reg = <1>;        
-		include "armada-3720-espressobin-switch.dtsi"
-
-        }
-}
-
-&mdio {
-        switch0: ethernet-switch@3 {
-		reg = <3>;        
-		include "armada-3720-espressobin-switch.dtsi"
-
-        }
-}
-
-	Andrew
+Reviewed-by: Marek Beh=C3=BAn <kabel@kernel.org>
