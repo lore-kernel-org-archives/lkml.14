@@ -1,78 +1,96 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from zeniv.linux.org.uk (zeniv.linux.org.uk [62.89.141.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E90C315E96;
-	Tue,  2 Apr 2024 04:10:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69D49175BF
+	for <linux-kernel@vger.kernel.org>; Tue,  2 Apr 2024 04:11:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.89.141.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712031029; cv=none; b=crEknnn/UISmW6tyxBT4biKpk9m+o+z376Q0T7i5tygQ6HmXsGE51Xx9X/girIBnuvQ9zVsQAfPoshVFbVdMQceJsKUli3JjLCY6WXpPdaMIf0qzoMsgb0C3tH4Vk/aR7sXWhJL57Q9FbvcJSJE2otDH4ashP2Klkv4gaA+JfDY=
+	t=1712031104; cv=none; b=rkBy0kuOmO40twcYH0V5fEjpeW53CZWAf3exrH4dUSxuCSx4irfNfCUqNWbAyc2kioU5QNZh3/u9dU2N930j/+9+CZ5Kb3zxeh70oN3IOKrLVbWQ3bsAqbFdr8IdIbPU9pSA/1Chy19PZDcVkrNVogfGu+Ed2o1It++f4l2J+kY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712031029; c=relaxed/simple;
-	bh=SBs90Y5ttoDDVvNSham9+zrWHG5GensFCQ441PcbOOw=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=mfdtZQuaPkmjI+WhIONbE48ObTY8eOmbq1C+6FX9kqa2T8Z7xgRicVT4yLEMlQT8K0TQgcLEm7cHxiaHXlT2xBmzFCi86AocJeSEzU++YLK/sjFQXSktMqpZnN9AvsPwtlEqLClSTJbj1/R+OHB20/knccwnVAV/YZsFA6f7htI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iZLi/Jis; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1712031104; c=relaxed/simple;
+	bh=HKrpCf5hdJblYPSdAfn+r9vPyscHYwnAwcdvv9YswjU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Zje3LYNwDEDtC0bCP69rSaV3d9HO3D181H3wz29AfqWSqBBSm3j1VMS7OqxXAGgvqKNtMZ3Zq+eT7vop/vjauEgry2JdgOGRWV98jLhs3WdPI5F1M4DQs3+heZWmYVWRbNb3hWlLRpoqKTz/1CYoVcS5cwABwMQC8hE4WWNVjvQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk; spf=none smtp.mailfrom=ftp.linux.org.uk; dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b=jLVoQk3b; arc=none smtp.client-ip=62.89.141.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ftp.linux.org.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iZLi/Jis"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 652A4C433F1;
-	Tue,  2 Apr 2024 04:10:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712031028;
-	bh=SBs90Y5ttoDDVvNSham9+zrWHG5GensFCQ441PcbOOw=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=iZLi/Jis0uM+dXR7kvhNquGpUPnEILCB2aiy/A4O+gOyHATDQk1/xm2Bva5EdHM50
-	 t9AcCQpA/8m1Fqiji0Z/Qw0gz+IFPcya4MDA7Qq4fOjgA9IT4zmGmUrz+6+Uh3xpqZ
-	 r+471FAqVanIZZJHRpiHorxT+8OPZJbMiob6248x23Bz+zowkp9Yj6CUaBGzkxGEZO
-	 VrvAN3JbXbvtrrXYu9Amw259sWz4A9h5KuOk5qPQakOggXFDo6rAwubO8v85JU19gY
-	 MmFypySYM7xY+72K2gymZlp5VJwJaSO4Swm5F6KitePUXv4j2rCNI9fPUomGo3mabA
-	 QBooaQTB7abKA==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 55282D9A156;
-	Tue,  2 Apr 2024 04:10:28 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b="jLVoQk3b"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=linux.org.uk; s=zeniv-20220401; h=Sender:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=on2uDY9xoIExekB3f+wnsHvu22s4kf//goF/Vx2reRk=; b=jLVoQk3b5lSeuqEwMknDHFsIn8
+	PIQmigKY348kr3rXQm1//TK18+YPP6Zhk4BGb6Hg2XcEKx+0ubXYuCwaa8eIm33wGez9mERw6f+cR
+	qo25ki1lliNH/2gmaaEl1Lz2nG09oEZCU1+1CVUVX+EymhEJmEnF+akdZdeAai9U3M08+X+1uo3Yl
+	5hR7Fpvfb3NH7MZ+Z61djHheRXx1/6SdjRY5oCACeD9cby9b4LzL5MrDEVn0kqv9lQbiVCNPEvOoo
+	gDyGmb6HVzJkKWuY9TYbILyj76vZWQGz18FbVmzJjE3rCu57KSMy/rOFL7QrARNwhEVSuyTUElUfT
+	T0mB6iew==;
+Received: from viro by zeniv.linux.org.uk with local (Exim 4.96 #2 (Red Hat Linux))
+	id 1rrVUo-003w0T-1B;
+	Tue, 02 Apr 2024 04:11:38 +0000
+Date: Tue, 2 Apr 2024 05:11:38 +0100
+From: Al Viro <viro@zeniv.linux.org.uk>
+To: "Paul E. McKenney" <paulmck@kernel.org>
+Cc: linux-kernel@vger.kernel.org, kernel-team@meta.com,
+	"David S. Miller" <davem@davemloft.net>,
+	Andreas Larsson <andreas@gaisler.com>,
+	Palmer Dabbelt <palmer@rivosinc.com>, Arnd Bergmann <arnd@arndb.de>,
+	Marco Elver <elver@google.com>
+Subject: Re: [PATCH RFC cmpxchg 2/8] sparc: Emulate one-byte and two-byte
+ cmpxchg
+Message-ID: <20240402041138.GF538574@ZenIV>
+References: <31c82dcc-e203-48a9-aadd-f2fcd57d94c1@paulmck-laptop>
+ <20240401213950.3910531-2-paulmck@kernel.org>
+ <20240401223803.GZ538574@ZenIV>
+ <114dc62e-e0fb-41c8-bf9c-a9fda8b19eb6@paulmck-laptop>
+ <20240402000758.GC538574@ZenIV>
+ <20240402033753.GE538574@ZenIV>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH RESEND bpf v2 0/2] x86/bpf: Fixes for the BPF JIT with
- retbleed=stuff
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <171203102833.24910.7566029980709800852.git-patchwork-notify@kernel.org>
-Date: Tue, 02 Apr 2024 04:10:28 +0000
-References: <20240401185821.224068-1-ubizjak@gmail.com>
-In-Reply-To: <20240401185821.224068-1-ubizjak@gmail.com>
-To: Uros Bizjak <ubizjak@gmail.com>
-Cc: x86@kernel.org, bpf@vger.kernel.org, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, ast@kernel.org, daniel@iogearbox.net
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240402033753.GE538574@ZenIV>
+Sender: Al Viro <viro@ftp.linux.org.uk>
 
-Hello:
-
-This series was applied to bpf/bpf.git (master)
-by Alexei Starovoitov <ast@kernel.org>:
-
-On Mon,  1 Apr 2024 20:55:28 +0200 you wrote:
-> From: Joan Bruguera Micó <joanbrugueram@gmail.com>
+On Tue, Apr 02, 2024 at 04:37:53AM +0100, Al Viro wrote:
+> On Tue, Apr 02, 2024 at 01:07:58AM +0100, Al Viro wrote:
 > 
-> Fixes two issues that cause kernels panic when using the BPF JIT with
-> the call depth tracking / stuffing mitigation for Skylake processors
-> (`retbleed=stuff`). Both issues can be triggered by running simple
-> BPF programs (e.g. running the test suite should trigger both).
+> > It does, IIRC.
+> > 
+> > > Would you like to do that patch?  If so, I would be happy to drop mine
+> > > in favor of yours.  If not, could I please have your Signed-off-by so
+> > > I can do the Co-developed-by dance?
+> > 
+> > Will do once I dig my way from under the pile of mail (sick for a week
+> > and subscribed to l-k, among other lists)...
 > 
-> [...]
+> FWIW, parisc is in the same situation - atomics-by-cached-spinlocks.
+> 've a candidate branch, will post if it survives build...
 
-Here is the summary with links:
-  - [RESEND,bpf,v2,1/2] x86/bpf: Fix IP after emitting call depth accounting
-    https://git.kernel.org/bpf/bpf/c/9d98aa088386
-  - [RESEND,bpf,v2,2/2] x86/bpf: Fix IP for relocating call depth accounting
-    https://git.kernel.org/bpf/bpf/c/6a537453000a
+Seems to survive.  See
+git://git.kernel.org:/pub/scm/linux/kernel/git/viro/vfs.git misc.cmpxchg
 
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
+Completely untested; builds on several configs, but that's it.
+Al Viro (8):
+      sparc32: make __cmpxchg_u32() return u32
+      sparc32: make the first argument of __cmpxchg_u64() volatile u64 *
+      sparc32: unify __cmpxchg_u{32,64}
+      sparc32: add __cmpxchg_u{8,16}() and teach __cmpxchg() to handle those sizes
+      parisc: __cmpxchg_u32(): lift conversion into the callers
+      parisc: unify implementations of __cmpxchg_u{8,32,64}
+      parisc: add missing export of __cmpxchg_u8()
+      parisc: add u16 support to cmpxchg()
 
+ arch/parisc/include/asm/cmpxchg.h   | 16 ++++++------
+ arch/parisc/kernel/parisc_ksyms.c   |  2 ++
+ arch/parisc/lib/bitops.c            | 52 ++++++++++++-------------------------
+ arch/sparc/include/asm/cmpxchg_32.h | 11 +++++---
+ arch/sparc/lib/atomic32.c           | 45 ++++++++++++++------------------
+ 5 files changed, 55 insertions(+), 71 deletions(-)
 
+Individual patches in followups.
