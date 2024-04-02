@@ -1,169 +1,110 @@
-Received: from out162-62-58-216.mail.qq.com (out162-62-58-216.mail.qq.com [162.62.58.216])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98C472D047;
-	Tue,  2 Apr 2024 06:49:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.62.58.216
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E35C62BD18
+	for <linux-kernel@vger.kernel.org>; Tue,  2 Apr 2024 06:49:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712040575; cv=none; b=SrH0cdX+ug8OkNsK7S60QxrnurSGkv/KpELnQ/AO7a1md0t0zzQVeldS/BHj1ymZFi5JbaKuNHDTlMSM1W+WJLF+6CLV49bbJetparEerMVDZPAHHaBOwBWeBMhqRS2oJQaO3jByg4pimdyCB7vruF9KCZvFdjUqeXWQH6etObA=
+	t=1712040599; cv=none; b=BHiO2bx2H5xApwXcgFpmAKuMP0uzoZBd6Mn5XbN8EHozMIUtTLG5ccsYUxGsVq6649VQSHl+VJLwdK9FYSKldPTCcnQTlMY4KzjMm8ez03y39lDfN8GS3HK/gLpXNJ31j7httZLgO0M+ncqB5uWocrHU2haIvmKmEIwCBwGl4Ig=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712040575; c=relaxed/simple;
-	bh=FX1mhRPjrQcVo6/MwRTXpGujzWFlQHWn2tP9zw5Zpo0=;
-	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
-	 MIME-Version; b=XygfKTAKkNjrXVYYm2qEcZ5gD0dC8SooFXzyW4GpDbxydOkqJkbAHmd5U0RzkRgg0DZO2Zhp2nB0DGIBEVH45QKFgY5nvVdBvp0XA4/f6EkZrFfdmjzhBzLOoVV5o3BjFpTCP8teK4Wul4iN64O+6eOXk3hWUpNX2KF99rcJJzo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=OXUppOut; arc=none smtp.client-ip=162.62.58.216
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
+	s=arc-20240116; t=1712040599; c=relaxed/simple;
+	bh=eiNouxOE5/rBXeDv+m/p4E72cospl88ziAJcUPNip/c=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=IdtSkbPmE1bQE6ZxbPlPJrA5EeWbxD83TyUF6F908BqtgYO9Pn1cKS6ZX8dmqBJF1v7eYHo0IDcU+nfzCbN9lCid0tG44bvfIK6llUM8mCm/FIqEvI6VFa3eu722LDZNGbZSEfq5nSWkwRNmW6R7vos3WCZx83OwPTwJQSMznpA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=A8J8HsXY; arc=none smtp.client-ip=209.85.208.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="OXUppOut"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
-	t=1712040567; bh=oupitrM2yejVC+b6Kh6tNCCOKCcRagrln1bhHAMnUp4=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=OXUppOutvWLamMNAIjpkBJliAyFjht/RG7QLudA9h/id5lDLo6sOf9SG6LbaWsaiw
-	 SkLw6SlPxjAWs/64IjQ9uJhHLt810MIh+D+CLY5Sdw7u4bid1IHWeJ2OaWxklW2vO7
-	 eAvcNXP7zW+pyvgkBffKaklecquom3nHkcKh2BG4=
-Received: from pek-lxu-l1.wrs.com ([111.198.228.153])
-	by newxmesmtplogicsvrsza7-0.qq.com (NewEsmtp) with SMTP
-	id BD7246B6; Tue, 02 Apr 2024 14:47:23 +0800
-X-QQ-mid: xmsmtpt1712040443t0ex17cyl
-Message-ID: <tencent_44291B84257ABAB7BB7B33C49E0E1BC74B08@qq.com>
-X-QQ-XMAILINFO: NPwBlS1YPCihBRUi30VSRvMAtQcxCWcrLxmJqxAl64AOrThjPBv8h6ySZkVfVD
-	 kluoIhQoxqL2lpQCok1hZGHQlsv/DT354resDxeYv7eJovDlLjojYVbnLBGpKcWbclgxitGx7WUK
-	 ExF8mUg56zzntPsJKTCbzdzfJx+zRPg3LNJts3tvunRz8Ij8ZFlNgczNIoONLPKe45Yusuf/s+8z
-	 ofxslIuSjNh0gqDUatcIvzhJD4LmJ3Su/k8ZuDvrWmaBMDuB9Qeq8YAWs3dcsHnaVzc9qebQh1WA
-	 /A7e7+hGraUDKhErEzGowcGr8phS09b2BoZIPnWwTd7yk1lFjBbgC7Mem4KxUxEhyE4XBXD/Pt72
-	 6paaaox8xoUb4Htyu/D5JDBfNERSnj62hJVjM3gtoqAlVFVGH0WThIDVd0qrlkwdFVNs6SuYUejl
-	 6EqJrYFpxGQ/BFDOBeKs5p2BzVVTCoKvWzXdKf4T9sfE3frVhcRskTidtFiyYZ/D4lAHNEOE2VwN
-	 LFfWCiJ4qgu/M6rwA2L+VUrWLTOejKEuMMTepL4T1bOl/WnDQZ3x5nJSlle0tkI4ToMuh8EaQIm2
-	 62Xn2kJXNLeZ86B0ye9qSwvp5pj09Z5VO3egp+TP5NZK8rKqYV2TL7ryy9xEEhEHg6CUDdl3w/zW
-	 Pfp1K4sN3KEV8fk6aip63Iz6dTRj7UfbR+UgB94k5DGMs7mqPqu/PtD3SxdJmb+nihV/X566Icjj
-	 LW670M6+On9B7EDelcbeUQRPRrHmr27EcsY9ZaaRz5CaR2SHQacaNFFF1oBDBFuWr4wV0UjE5K5z
-	 T+q2YnIgBVYVqo6eSXTvr1m4SzY0zsqs6J7IAA4p28aEETJg9dLlQcd0nEUzbpPVZEsExmuwx3Xh
-	 V2/afV9xGfKk4V6TZ9kWW4lNgUJsYAgVqeJp8zcu57zPCWFA2NEObW9Fb1G5AR6fnNYKCGlD38jn
-	 amuYDmn10=
-X-QQ-XMRINFO: Mp0Kj//9VHAxr69bL5MkOOs=
-From: Edward Adam Davis <eadavis@qq.com>
-To: syzbot+7fb05ccf7b3d2f9617b3@syzkaller.appspotmail.com
-Cc: linux-kernel@vger.kernel.org,
-	linux-sound@vger.kernel.org,
-	linux-usb@vger.kernel.org,
-	perex@perex.cz,
-	syzkaller-bugs@googlegroups.com,
-	tiwai@suse.com
-Subject: [PATCH] ALSA: line6: fix uninit-value in line6_pod_process_message
-Date: Tue,  2 Apr 2024 14:47:24 +0800
-X-OQ-MSGID: <20240402064723.2153044-2-eadavis@qq.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <00000000000084b18706150bcca5@google.com>
-References: <00000000000084b18706150bcca5@google.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="A8J8HsXY"
+Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-56df3d94cf1so64634a12.3
+        for <linux-kernel@vger.kernel.org>; Mon, 01 Apr 2024 23:49:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1712040596; x=1712645396; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=pPqjVRbAXgeGN1lA/Onn5A9KAG7ZFxViPCHqpcaB3vk=;
+        b=A8J8HsXYk9KkkJ6nUAzxypAba015TY1OsU7s7lvhjxw6wXEadxqAbPxq44vq0GW7AN
+         fnKL9h80BeJwDQVfoJmBGUn/svzepQCPT7r7qUZOq3BLC8KTsdeziVhzq6w2Oy6lGUw6
+         0Ifav6TkFJg735X4DCCuqFsySEjcI3kcYPWkXaP1AcNz1M0T7z/YxdTWLbW3rvij+lxu
+         2Y8eRb7hHTDizlraYYdIT3kuVkw1UTkwfhUN8XVoQUww/HJwIb9THlL5UgpUryWRraju
+         ahgsirWTAanF88K4Erq615kk/thmwxUemNzbdbrPcYVxmy95Y0Y3YIxOCFyp9nWdq1Q9
+         GLqQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712040596; x=1712645396;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=pPqjVRbAXgeGN1lA/Onn5A9KAG7ZFxViPCHqpcaB3vk=;
+        b=d9N0BjiytLzrQOpIkmMaOLKpGZfNOO7TS+A3RHUZiDuxfaaBkr0p15ScPnU9OJbCWd
+         cVk0mH5AKgnjbk/jNRvkoNMtyK7H1AO0dm8j0VxftuI+Ju0fUt23BhqByf8AVGjZZJuJ
+         1Er5/K2y+gTTh0lvgGQY23UXHA+86sN7OwLX4kqHlwKA6fM3InFflD5pLHYlhElAJqWg
+         QoRptMollEsCOB8jsnrgeqfiO8BEh+LjTtsaucpEV7RcK6L6yv8Lg5krIMHUUFrIdF2H
+         +Yhiqty58DPV8DB+HemmKN+iAzRX/5bPgSCqb+BOLjTrMamj2LRfC19jT2AxoaaGx9St
+         huaQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWs+0CkHYeiIeGpO7RdOS9GsjW1Ei9rOwj3meYhyRrO6+c0BUtebWppk6NRGWzX8nAwpuTaFlf6IeP1orDrHAVMhGLXv5i24Owq5gal
+X-Gm-Message-State: AOJu0YwKHTwVKM5hJauEHjDOV/WMobmRguqnGCuvp+Oof6vOCWkVn8/5
+	8Dau5GxEKGVJ4Gd1b8B78emRnoKIDVm7ca17cI9bcPjmcFWxYToazZ57Jdf3o1vCPKRwA2x+WB/
+	9
+X-Google-Smtp-Source: AGHT+IGu1POPDiPVv+vHKQ69u63fSHZ3ugYq99osz195dbi2X3kVADg2wwCDwA62w7Y7hOSFs5PWpg==
+X-Received: by 2002:a50:9e87:0:b0:56c:189f:cf2f with SMTP id a7-20020a509e87000000b0056c189fcf2fmr6578870edf.32.1712040595959;
+        Mon, 01 Apr 2024 23:49:55 -0700 (PDT)
+Received: from localhost ([102.222.70.76])
+        by smtp.gmail.com with ESMTPSA id q14-20020a056402248e00b0056c5515c183sm6052986eda.13.2024.04.01.23.49.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 01 Apr 2024 23:49:55 -0700 (PDT)
+Date: Tue, 2 Apr 2024 09:49:51 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: TaheraFahimi <fahimitahera@gmail.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	linux-staging@lists.linux.dev, linux-kernel@vger.kernel.org,
+	outreachy@lists.linux.dev
+Subject: Re: [PATCH] staging: gdm724x: Align descendant argument to the open
+ parenthesis
+Message-ID: <56072f1a-6cca-4c11-9fbd-4081387afdfc@moroto.mountain>
+References: <ZgXupx0nXwIOjy7F@tahera-OptiPlex-5000>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZgXupx0nXwIOjy7F@tahera-OptiPlex-5000>
 
-[Syzbot reported]
-BUG: KMSAN: uninit-value in line6_pod_process_message+0x72f/0x7b0 sound/usb/line6/pod.c:201
- line6_pod_process_message+0x72f/0x7b0 sound/usb/line6/pod.c:201
- line6_data_received+0x5db/0x7e0 sound/usb/line6/driver.c:317
- __usb_hcd_giveback_urb+0x508/0x770 drivers/usb/core/hcd.c:1648
- usb_hcd_giveback_urb+0x157/0x720 drivers/usb/core/hcd.c:1732
- dummy_timer+0xd93/0x6b10 drivers/usb/gadget/udc/dummy_hcd.c:1987
- call_timer_fn+0x49/0x580 kernel/time/timer.c:1793
- expire_timers kernel/time/timer.c:1844 [inline]
- __run_timers kernel/time/timer.c:2418 [inline]
- __run_timer_base+0x84e/0xe90 kernel/time/timer.c:2429
- run_timer_base kernel/time/timer.c:2438 [inline]
- run_timer_softirq+0x3a/0x70 kernel/time/timer.c:2448
- __do_softirq+0x1c0/0x7d7 kernel/softirq.c:554
- invoke_softirq kernel/softirq.c:428 [inline]
- __irq_exit_rcu kernel/softirq.c:633 [inline]
- irq_exit_rcu+0x6a/0x130 kernel/softirq.c:645
- instr_sysvec_apic_timer_interrupt arch/x86/kernel/apic/apic.c:1043 [inline]
- sysvec_apic_timer_interrupt+0x83/0x90 arch/x86/kernel/apic/apic.c:1043
- asm_sysvec_apic_timer_interrupt+0x1f/0x30 arch/x86/include/asm/idtentry.h:702
- native_safe_halt arch/x86/include/asm/irqflags.h:48 [inline]
- arch_safe_halt arch/x86/include/asm/irqflags.h:86 [inline]
- acpi_safe_halt+0x25/0x30 drivers/acpi/processor_idle.c:112
- acpi_idle_do_entry+0x22/0x40 drivers/acpi/processor_idle.c:573
- acpi_idle_enter+0xa1/0xc0 drivers/acpi/processor_idle.c:707
- cpuidle_enter_state+0xcb/0x250 drivers/cpuidle/cpuidle.c:267
- cpuidle_enter+0x7f/0xf0 drivers/cpuidle/cpuidle.c:388
- call_cpuidle kernel/sched/idle.c:155 [inline]
- cpuidle_idle_call kernel/sched/idle.c:236 [inline]
- do_idle+0x551/0x750 kernel/sched/idle.c:332
- cpu_startup_entry+0x65/0x80 kernel/sched/idle.c:430
- rest_init+0x1e8/0x260 init/main.c:732
- start_kernel+0x927/0xa70 init/main.c:1074
- x86_64_start_reservations+0x2e/0x30 arch/x86/kernel/head64.c:507
- x86_64_start_kernel+0x98/0xa0 arch/x86/kernel/head64.c:488
- common_startup_64+0x12c/0x137
+On Thu, Mar 28, 2024 at 04:26:47PM -0600, TaheraFahimi wrote:
+> Mute the following checkpatch error:
+> 	CHECK: Alignment should match open parenthesis
 
-Uninit was created at:
- slab_post_alloc_hook mm/slub.c:3804 [inline]
- slab_alloc_node mm/slub.c:3845 [inline]
- kmalloc_trace+0x578/0xba0 mm/slub.c:3992
- kmalloc include/linux/slab.h:628 [inline]
- line6_init_cap_control+0x4f1/0x770 sound/usb/line6/driver.c:700
- line6_probe+0xeae/0x1120 sound/usb/line6/driver.c:797
- pod_probe+0x79/0x90 sound/usb/line6/pod.c:522
- usb_probe_interface+0xd6f/0x1350 drivers/usb/core/driver.c:399
- really_probe+0x4db/0xd90 drivers/base/dd.c:656
- __driver_probe_device+0x2ab/0x5d0 drivers/base/dd.c:798
- driver_probe_device+0x72/0x890 drivers/base/dd.c:828
- __device_attach_driver+0x568/0x9e0 drivers/base/dd.c:956
- bus_for_each_drv+0x403/0x620 drivers/base/bus.c:457
- __device_attach+0x3c1/0x650 drivers/base/dd.c:1028
- device_initial_probe+0x32/0x40 drivers/base/dd.c:1077
- bus_probe_device+0x3dc/0x5c0 drivers/base/bus.c:532
- device_add+0x1475/0x1c90 drivers/base/core.c:3705
- usb_set_configuration+0x31c9/0x38d0 drivers/usb/core/message.c:2210
- usb_generic_driver_probe+0x109/0x2a0 drivers/usb/core/generic.c:254
- usb_probe_device+0x3a7/0x690 drivers/usb/core/driver.c:294
- really_probe+0x4db/0xd90 drivers/base/dd.c:656
- __driver_probe_device+0x2ab/0x5d0 drivers/base/dd.c:798
- driver_probe_device+0x72/0x890 drivers/base/dd.c:828
- __device_attach_driver+0x568/0x9e0 drivers/base/dd.c:956
- bus_for_each_drv+0x403/0x620 drivers/base/bus.c:457
- __device_attach+0x3c1/0x650 drivers/base/dd.c:1028
- device_initial_probe+0x32/0x40 drivers/base/dd.c:1077
- bus_probe_device+0x3dc/0x5c0 drivers/base/bus.c:532
- device_add+0x1475/0x1c90 drivers/base/core.c:3705
- usb_new_device+0x15ff/0x2470 drivers/usb/core/hub.c:2643
- hub_port_connect drivers/usb/core/hub.c:5512 [inline]
- hub_port_connect_change drivers/usb/core/hub.c:5652 [inline]
- port_event drivers/usb/core/hub.c:5812 [inline]
- hub_event+0x4ff8/0x72d0 drivers/usb/core/hub.c:5894
- process_one_work kernel/workqueue.c:3254 [inline]
- process_scheduled_works+0xa81/0x1bd0 kernel/workqueue.c:3335
- worker_thread+0xea5/0x1560 kernel/workqueue.c:3416
- kthread+0x3e2/0x540 kernel/kthread.c:388
- ret_from_fork+0x6d/0x90 arch/x86/kernel/process.c:147
- ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:243
-[Fix]
-Let's clear all the content of the buffer message during alloc.
+It's not aligned either before or after.  It should have been:
 
-Reported-and-tested-by: syzbot+7fb05ccf7b3d2f9617b3@syzkaller.appspotmail.com
-Signed-off-by: Edward Adam Davis <eadavis@qq.com>
----
- sound/usb/line6/driver.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+[tab][tab][tab][tab][tab][space][space][space][space][space][space]TTY_DRIVER_...
 
-diff --git a/sound/usb/line6/driver.c b/sound/usb/line6/driver.c
-index b67617b68e50..8fd9d42aa8e2 100644
---- a/sound/usb/line6/driver.c
-+++ b/sound/usb/line6/driver.c
-@@ -697,7 +697,7 @@ static int line6_init_cap_control(struct usb_line6 *line6)
- 		return -ENOMEM;
- 
- 	if (line6->properties->capabilities & LINE6_CAP_CONTROL_MIDI) {
--		line6->buffer_message = kmalloc(LINE6_MIDI_MESSAGE_MAXLEN, GFP_KERNEL);
-+		line6->buffer_message = kzalloc(LINE6_MIDI_MESSAGE_MAXLEN, GFP_KERNEL);
- 		if (!line6->buffer_message)
- 			return -ENOMEM;
- 
--- 
-2.43.0
+> 
+> Signed-off-by: Tahera Fahimi <fahimitahera@gmail.com>
+> ---
+>  drivers/staging/gdm724x/gdm_tty.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/staging/gdm724x/gdm_tty.c b/drivers/staging/gdm724x/gdm_tty.c
+> index 15c246d3b1a3..bd80cd48fb44 100644
+> --- a/drivers/staging/gdm724x/gdm_tty.c
+> +++ b/drivers/staging/gdm724x/gdm_tty.c
+> @@ -272,8 +272,8 @@ int register_lte_tty_driver(void)
+>  	int ret;
+>  
+>  	for (i = 0; i < TTY_MAX_COUNT; i++) {
+> -		tty_driver = tty_alloc_driver(GDM_TTY_MINOR,
+> -				TTY_DRIVER_REAL_RAW | TTY_DRIVER_DYNAMIC_DEV);
+> +		tty_driver = tty_alloc_driver(GDM_TTY_MINOR, TTY_DRIVER_REAL_RAW |
+> +						TTY_DRIVER_DYNAMIC_DEV);
+
+"TTY_DRIVER_REAL_RAW | TTY_DRIVER_DYNAMIC_DEV" goes together.  Don't
+split that up over two lines.  Checkpatch is a tool which is supposed to
+help readability.  It's not a ruler which must be obeyed.  If checkpatch
+tells you to do something which makes the code less readable then just
+ignore it.
+
+regards,
+dan carpenter
 
