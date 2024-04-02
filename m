@@ -1,427 +1,155 @@
-Received: from mx.skole.hr (mx2.hosting.skole.hr [161.53.165.186])
+Received: from EUR04-DB3-obe.outbound.protection.outlook.com (mail-db3eur04on2123.outbound.protection.outlook.com [40.107.6.123])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C84CE79DD4;
-	Tue,  2 Apr 2024 21:03:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=161.53.165.186
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712091794; cv=none; b=Tc56ErObf3ul8CKlVWFXnQYaW1t/LCCSbL53iWPJnf+76kpUF/+NNKuM3BS4YH9Wf5/3QWlG5Sqj/G1hjiGfLMgx6ukOc41i7/BcPXBeOnLxSjjP7rBnV9S3q/OGTwVRcxtgYOEs4aUZwsdDEte1RyFBLEFqQCfphQXz79gx6rY=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712091794; c=relaxed/simple;
-	bh=GKxSVHl41N3PI8aUaTk6GbH7PZMe9l+sFayphAmGjVs=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=GZsEDUhiaG18OSDX0ubfsuz8rNYy3ZDenuLPtcecZ1kqEbBrCDm04cz7428L6w8sbYqlQjzTZimfDkKebq0keP/654FSnIrhIRpKWNJXg6ZEHewIs3h1CE5/R+byihlAfkcDL0rKsmuYqNxulcu38yIyqRKIbWfmfd18RIKi+8A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=skole.hr; spf=pass smtp.mailfrom=skole.hr; arc=none smtp.client-ip=161.53.165.186
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=skole.hr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=skole.hr
-Received: from mx2.hosting.skole.hr (localhost.localdomain [127.0.0.1])
-	by mx.skole.hr (mx.skole.hr) with ESMTP id E059387FFA;
-	Tue,  2 Apr 2024 22:55:51 +0200 (CEST)
-From: =?utf-8?q?Duje_Mihanovi=C4=87?= <duje.mihanovic@skole.hr>
-Date: Tue, 02 Apr 2024 22:55:41 +0200
-Subject: [PATCH v9 5/9] clk: mmp: Add Marvell PXA1908 clock driver
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CA0879DD4;
+	Tue,  2 Apr 2024 21:03:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.6.123
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1712091815; cv=fail; b=RS9vSNbGBkkL3nnygw/ZXbXAEZC1V86BsBXkAPFHkQoJsfoLuTX5AbQNKSDwXwspkim5eh8ywgSp3PYYLbZduaIfoX8CeEeSfdnfglHkUtoOzbrjl7hNyZx+FVA88qBKQmnOaGB5Us9jrwf9+B/cpm+zGqEOjvjJGb/RnI4i4R4=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1712091815; c=relaxed/simple;
+	bh=6EzLhbi6fJjnWXOgqAJg6Ww1frl14zBM6XLR20QIV8A=;
+	h=From:Subject:Date:Message-Id:Content-Type:To:Cc:MIME-Version; b=gW2jEh6s8+hN+tvWnnige9v2NiI1WGq4DAFLjPXD1Xkg7AzK25oMh7IuGP2PC7I6HkkZ2+ly5+Mpzg3O3HFYzO8HUquw8ogALuCf5tBH6mKWibq9gV+mr/Vj8mD9SOs4UhpIxcPww+rYuDnjo9WHpGCOSYljku2DhSctZtiUSRc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b=cVaP2EZ2; arc=fail smtp.client-ip=40.107.6.123
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="cVaP2EZ2"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=KB0P8ADZWGLmNjFFg3/6LUClZI7DAiWUblVM8iaaVIDae86xe86rXbI680X9f/5WSsZJbuwyrzcoK3tEUTkd6miEANZKz7kfCWFjGL9SpULb5KqOlZHM3KuyWQlfceEofTdJDwT+dMdG+1qZ69ray0d68nvFiCGsJx0oUfLeNpFdHvi6VJUiTjSJZiLz8ki0hDPbYxwaJu3RcrqOnFjpKI0lghdtIjs0VOT99WWINrq3H3BslWqIDeggONP8MvmHpIaQ/lUNKE4DpKv8Gl3lPXwe0nQIn7mM2i0jizubqDPVygzFgK0rsvsM+VcO23snvMVqcEu5FXxEemSfVJ5tKQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=sBq1pdX7Xvppgo1/88zar2lC5ihojOPbImqkbX0OloM=;
+ b=DqeGPaPf+QqSO9N347LZ0WUcHHOqbE9BHMi2k/5Ti+BDzdhNqy5N76GQpc50dy/K1gcPRqVU5dsP1//ej2H7ZIz676jEcwTAifG1Gc4hmFTcYov8m3nLZ0GO56212HkAWj4VtREO2MT7Tfsng7Vlg5hoR90orydmw2Pqw3IKlrHmNswKXJ9voKyDKvIvKvA1t0BWjvVCA+vhKMSwa888SD2cZx2Ngco93slRnqXNrkWlStl33X4FdhbCD6ZFJCqa/2Ky/i2V69Mf28sfCUIV/G84lv/NOs+8n1riPRBsHi2oJd2QhNstDzBLqmaP0mW+EqNNvqqL4ZBGA+AQX8vLnw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=sBq1pdX7Xvppgo1/88zar2lC5ihojOPbImqkbX0OloM=;
+ b=cVaP2EZ2CTndEEGI3QLui4r6E/bFa4tssA85JexjQdkaer+dIcoat4YxK4XHuT0bC6rWJDsyv97rzRQDqzNnjYKYiANCfFn12T+dUW12cuhfQ3uRJEx7VWwCRKCInv4Yu/Pn0MX1PwvHiRt8aSZ5LT2bltKsmLPMQMME6Srz1ZM=
+Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
+ by DU2PR04MB8648.eurprd04.prod.outlook.com (2603:10a6:10:2df::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.46; Tue, 2 Apr
+ 2024 21:03:30 +0000
+Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
+ ([fe80::3168:91:27c6:edf6]) by PAXPR04MB9642.eurprd04.prod.outlook.com
+ ([fe80::3168:91:27c6:edf6%3]) with mapi id 15.20.7409.042; Tue, 2 Apr 2024
+ 21:03:30 +0000
+From: Frank Li <Frank.Li@nxp.com>
+Subject: [PATCH 0/3] arm64: dts: imx8dxl: add audio support for imx8dxl
+Date: Tue, 02 Apr 2024 17:02:27 -0400
+Message-Id: <20240402-b4-dts_dxl_audio-v1-0-d26d25b84a08@nxp.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAGNyDGYC/x3MQQqAIBBA0avErBOmSQi6SkRoTjUQGlohRHdPW
+ r7F/w8kjsIJ+uqByLckCb6gqSuYN+NXVuKKgZA0aiRltXJnmlzeJ3M5CarT1iBhi6YjKNkReZH
+ 8L4fxfT+lij7oYgAAAA==
+To: Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>, 
+ Sascha Hauer <s.hauer@pengutronix.de>, 
+ Pengutronix Kernel Team <kernel@pengutronix.de>, 
+ Fabio Estevam <festevam@gmail.com>
+Cc: devicetree@vger.kernel.org, imx@lists.linux.dev, 
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+ Frank Li <Frank.Li@nxp.com>
+X-Mailer: b4 0.13-dev-e586c
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1712091807; l=716;
+ i=Frank.Li@nxp.com; s=20240130; h=from:subject:message-id;
+ bh=6EzLhbi6fJjnWXOgqAJg6Ww1frl14zBM6XLR20QIV8A=;
+ b=n+in6f6s38g3diqA0/XR4E/UAwS3o6MXQtMgMs5xzihaACuGECIFBkBaOr4KwaHBa4Sh65QQ0
+ WDtjrjMPYovDIG14wYu9+8DNxbgOZdHorUh9fFYEFQfsNtOlJ6QhA3R
+X-Developer-Key: i=Frank.Li@nxp.com; a=ed25519;
+ pk=I0L1sDUfPxpAkRvPKy7MdauTuSENRq+DnA+G4qcS94Q=
+X-ClientProxiedBy: BY5PR03CA0018.namprd03.prod.outlook.com
+ (2603:10b6:a03:1e0::28) To PAXPR04MB9642.eurprd04.prod.outlook.com
+ (2603:10a6:102:240::14)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-Id: <20240402-pxa1908-lkml-v9-5-25a003e83c6f@skole.hr>
-References: <20240402-pxa1908-lkml-v9-0-25a003e83c6f@skole.hr>
-In-Reply-To: <20240402-pxa1908-lkml-v9-0-25a003e83c6f@skole.hr>
-To: Michael Turquette <mturquette@baylibre.com>, 
- Stephen Boyd <sboyd@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, 
- Rob Herring <robh+dt@kernel.org>, 
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
- Conor Dooley <conor+dt@kernel.org>, Tony Lindgren <tony@atomide.com>, 
- Haojian Zhuang <haojian.zhuang@linaro.org>, 
- =?utf-8?q?Duje_Mihanovi=C4=87?= <duje.mihanovic@skole.hr>, 
- Lubomir Rintel <lkundrak@v3.sk>, Catalin Marinas <catalin.marinas@arm.com>, 
- Will Deacon <will@kernel.org>, Kees Cook <keescook@chromium.org>, 
- Tony Luck <tony.luck@intel.com>, 
- "Guilherme G. Piccoli" <gpiccoli@igalia.com>, Rob Herring <robh@kernel.org>
-Cc: phone-devel@vger.kernel.org, ~postmarketos/upstreaming@lists.sr.ht, 
- Karel Balej <balejk@matfyz.cz>, David Wronek <david@mainlining.org>, 
- linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-arm-kernel@lists.infradead.org
-X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=13438;
- i=duje.mihanovic@skole.hr; h=from:subject:message-id;
- bh=GKxSVHl41N3PI8aUaTk6GbH7PZMe9l+sFayphAmGjVs=;
- b=owEBbQKS/ZANAwAIAZoRnrBCLZbhAcsmYgBmDHDNh6Ka+INvVk3b264qx3QL3yXH2kyRcz0v/
- i58bempi3iJAjMEAAEIAB0WIQRT351NnD/hEPs2LXiaEZ6wQi2W4QUCZgxwzQAKCRCaEZ6wQi2W
- 4e6FD/9a/E3n/O9GgsUvAR4VVjRAkLslHbJ2BWgYqrqMcMIzdRn8M10yMHwRm17FWcaU/s0kVWl
- pqrlcjpZmbN0dRC5TWRexou+poV5fjC9ryrNXhk5gEmJpqiikzkS8WUJQ7gzvAYuWRe+rqTtaQx
- l+5ERNWSEEWlJIH1YyI7/v9FVjHYJw6Euley3PD4DK4Zwhia5IvD4TjFMBXUd7UXfnhqAIQZLyx
- n8HCHj217euyHQdthqqPvU0RKAZNZk0mWQm+pHqFCmQP7RSi7qw6zHjVzbfRWWMVoADfiwvTk/7
- FUT7sJlLlQasifLsISOjiqfo2vhsglziTjZDI07EmhMvPk7xAOGpaeVT8ikEXvvXbI2HaabWHtu
- /q4RphowbrZaOGDKCoo9dszYQ0NR+8hobp054WLcPzRrA+F9hsN4rBTKKXU14tJMGayQ+WVAqE1
- lYuLvzJzoPZlu/jg3i0kKmTUZ5/GPl1lV2Vel55bAZEOqSf5/mTwZYqZyjthDzEqEqmhfGbbR0W
- znlDoWpvTr7aT3ebpmrfoIYFbv63t4dn9qxWqMkztk/sLHvtDVXLpq6f1X0pr3RGr4kdA9qqzPX
- z5+Sspu3zxvrtCEGEMSkf7SgaugL1c9/U+AczwDzMU2ARcXozr9kF14Q/Nqsh68KKnUoxqvOIiR
- cUx1R4ttY9cOGFA==
-X-Developer-Key: i=duje.mihanovic@skole.hr; a=openpgp;
- fpr=53DF9D4D9C3FE110FB362D789A119EB0422D96E1
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|DU2PR04MB8648:EE_
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	wLSGV8vIILiHBQJRWO74zXr6e4753aAfL4seBQ2osC9FLK5DqqzYJ5Vv8PN8BuwnFRNlAfp3QIpcZm9YsEna8PXTFTTFxMU3k3z5nWpkCGNv2ls6Hy+isM6TBl68fO9XzKtS6RrXRMZfmXzkjewGY1E+Y0MDbWrj9/5O3g138XdouoUci9Rw4x5Nh5WJxDIe13mUSzjnZ21crqaD4/rk3F4y7lxmIqlCjd+WCf2nnPU4jffod+mWfB5bjlTrdbY6na1ChfqUNza7gf7cc22CZ63WDj3J8ZCg2Cz36H0y3mJt/KZlutBtjP8TsgkIHyfR6e3SeGPE/NDf3d1W7wWcK+CK3ytt47hUNywH83qZX2nFMLZIAxa8QhEg/HuoxTxLf4DEk7KlXZwNTtR/72JVu29qDStqW6u0ytthHvtqxzeLqeMjXbC6h2DXS5nBnpG7xiIuDe4PK1aeuawLjY0NRvsr/ya8ksFunXTsG94FJgazXyfKkiSZbuvkbGNHzYgKc1EZJdUlfslhsEkSsxx/fpECGIhecLjUEZcKvJjELJQHRPY+Ino5kzR6UqPUVnP5Tvq2kSxA+7nEy0nw9tUSMfyuhsM/etAgnT8YIqvSKpxZ4UGuEXY0XZBtNK1e3QfmYQor9jcBvJprimhJ6xAXmy2CeoztBMoz2fYP5KnDZAU=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(1800799015)(52116005)(376005)(7416005)(366007)(38350700005);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?emFOV24vdTU3cE9PcFVFUlhZSmM1RUlmb0kxZEUrL3FXbzhST0pWQ0pPTnZR?=
+ =?utf-8?B?UVJkOVFvUjV6VGlYM0hqcmpWSUZZYkhYTUhlM3AzSjNyQkFPMTlCWlFFcVhw?=
+ =?utf-8?B?RWpFc2tMQzRROTVOdFJORFpOb2xtSzVpazFlVDU5eWJmcHBmV3k1akR5dG1X?=
+ =?utf-8?B?eVl1TkVSTm51dUE4NDlSekI5NUV3aXJzbEgwZEpyeUd0b1pkL0QyKzA0VjVj?=
+ =?utf-8?B?cWRBWVNOQkVsdDVEWDVXZVd6cWU0SmZuZHVESUVaNU9YbGxuTWdyL1lsaXJa?=
+ =?utf-8?B?YmpwQkZsY2ZJNmlXYThaOWtMdWV5YWwwQUM2ckNNSFdTOTBSNTZFMmdKTXJ3?=
+ =?utf-8?B?cm1oN2dLVWFMaUdxTG5wN2Z6b3Z3c3FsZkowUHdVbGJ0QVFkRW9VK3BKaDJD?=
+ =?utf-8?B?Z2JnTWt6R2kzc0dnZ3cxQ2JIZmZkVkNQS01KM2RkTWQzZVFHaFh0K2I0cU9J?=
+ =?utf-8?B?N3EydkhTdEk3WVJhbDllMW5acUV3Y2xFaHVQbHlnWk9UQWxtMy9mTVFJUlFp?=
+ =?utf-8?B?ZzA1VDV2Ym9zRjFMUmVIdFRic3RuUnlQdXJpdzBjckRxSEIyVnc3WDRyQWh1?=
+ =?utf-8?B?UGx0YWdKSEdYMGVrRWpyV1cxNFBhenFWdkZOSEM2aU9GMVdGSmlGUEZEQVhQ?=
+ =?utf-8?B?c0twVnFjeHBtY1NLTkFBanhMbGsrOS9yWCs1QktXc0tjdDFpSnlZOURwMGEz?=
+ =?utf-8?B?RGNCRlNWdTR3aWptb0ZTY2EzS01EY3JSV3NFSzNZcnJEWitQZVlrUjB0Q05j?=
+ =?utf-8?B?VzBIY2dyV1pjcWJ6bCs3VGJMOC9VRDl0QmVYNStEQ3hRYWJLS2pMd2Jqbk1v?=
+ =?utf-8?B?MCtNVGZSNk9PMkZiNDE4MmxJSCtVVHJtc2haQnpVTzA1SVI3YVYwcVN1MDFz?=
+ =?utf-8?B?RU9UdjcrOFg2WEdiQjNwbG9EUkdBYVJxSWdHQjZ3amhmVVVQTnBRTXFpNnB2?=
+ =?utf-8?B?aG5MaWxvUlBzbTFqNFFudVJlVFYvRjJIdndOMkNIS29qTHh3cjRob1paNG9m?=
+ =?utf-8?B?cUhHc0U3bVUzZUE4WXVEamRNWlVRTUFrUzJqRTFPQjBjUXQ2S2VCUVJPTTJW?=
+ =?utf-8?B?MmxVbnZNUjZHR1VYdjE5bzRobkVoTWpwcnVtb2ZCcGtjWjN1RGRTK0pFdndR?=
+ =?utf-8?B?YUh4YUNjNmdubzA1TWJ5TnFVY2tGTklsYW1WVGVReG1sWkxIRE8wcU1ZNVU0?=
+ =?utf-8?B?cC95dnNzdjdDK3dDajhYMXdZN0hUV3g1bGpZL0pnMTZISXpwK2RySHJzdS9Y?=
+ =?utf-8?B?RUphMTlmTnE2b0FhM2I1THMvdzJ6WWlMSVh0T3ZtMWE5Sm9sOVhlVG0vY1Bz?=
+ =?utf-8?B?ME9Cc3ZhTXVhd053UnBxMm5ZZzhKTWQ1alBMQjZ2dkdFbitpdVpuM1hZSVlh?=
+ =?utf-8?B?SHlIZ2JHUXBrQlMzUEo4TEZBM3Z0VnU2LzQyWURMeEE0WDZqcW4yWkw2YU1T?=
+ =?utf-8?B?RGQ0WWpoN3cyVG9VVTN3NFFlYjZlZHdrYmMrNnFxb25NZkhUVVdUMDZqRmR4?=
+ =?utf-8?B?RVJlVXdqK2RDNWlsbUo2VWFNQTdyRGg4YkVHZUE2cUgvR01tUFRUdmlNYUhC?=
+ =?utf-8?B?Mnc2MWtuOHZrcmhPWXBEYjhFQ3ZkTlhkM3VUUGk3YkdxaGV1QVBEY2ViMGFV?=
+ =?utf-8?B?MVFMeDYwQ3Bjci9kVklOU2E0RXRWUkhKZDJhYzZ1cERrWmpYTW5UZkYrd1ha?=
+ =?utf-8?B?NjhZMERkRW02bDZmdmxmZU5qMFZLMnNUOCtTcDVJak9PTHdRVjhoeEZURmJP?=
+ =?utf-8?B?MWxrTUdHWC9HaEljYUZsWG5JZWh4YS9zbm9pYmpoTzdwZnNzcnJ5S1dDY3Nj?=
+ =?utf-8?B?RkpKQVRQVzRlUm1QNWNncWV2T3R1K2tMaDF3QXdXRU5UTFh6RjcyWnNFbkQ0?=
+ =?utf-8?B?eGRYZk4wVXhVUUJON21tRUlwV2lEVUsrZHFkZCtUVGFhVFdyQ3lENlpaQ2ls?=
+ =?utf-8?B?WE1DSklyMlpkNzZlQk04eC9ZSjBDMks0R3U4dFFVUkdzOEJmbDNRdWJKR2px?=
+ =?utf-8?B?NStpUGIzYWt3SmRtUGZ0bE9waTBBREhFT1hnU3RkREIvTTRFb2V6ZzVGQThr?=
+ =?utf-8?B?TWZBY2pCdThQbVpYOFV1Um1XcjVVRFhkaXV4UFVuVEhGOWFmdmxYWUZqWTJn?=
+ =?utf-8?Q?wwGs=3D?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 77c07390-5549-4ef0-f429-08dc53585982
+X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Apr 2024 21:03:30.5303
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 7ce5PBu7JkWFa0EbBqGxhgjxLnsNI+dm18rXhWIwhY9IRChjiT7ni10nlmKY5lNFv9+vmxAGfAEUmfRIpVLqTA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DU2PR04MB8648
 
-Add driver for Marvell PXA1908 clock controller blocks. The SoC has
-numerous clock controller blocks, currently supporting APBC, APBCP, MPMU
-and APMU.
+This patches depend on dts part in
+https://lore.kernel.org/imx/20240328-asrc_8qxp-v8-0-801cd6bb5be2@nxp.com/T/#t
 
-Signed-off-by: Duje Mihanović <duje.mihanovic@skole.hr>
+Signed-off-by: Frank Li <Frank.Li@nxp.com>
 ---
- drivers/clk/mmp/Makefile         |   2 +-
- drivers/clk/mmp/clk-of-pxa1908.c | 328 +++++++++++++++++++++++++++++++++++++++
- 2 files changed, 329 insertions(+), 1 deletion(-)
+Frank Li (3):
+      arm64: dts: imx8dxl-ss-adma: delete unused node
+      arm64: dts: imx8dxl-ss-adma: update audio node power domains and IRQ number
+      arm64: dts: imx8dxl-evk: add audio nodes
 
-diff --git a/drivers/clk/mmp/Makefile b/drivers/clk/mmp/Makefile
-index 441bf83080a1..69f9c3afde83 100644
---- a/drivers/clk/mmp/Makefile
-+++ b/drivers/clk/mmp/Makefile
-@@ -11,4 +11,4 @@ obj-$(CONFIG_MACH_MMP_DT) += clk-of-pxa168.o clk-of-pxa910.o
- obj-$(CONFIG_COMMON_CLK_MMP2) += clk-of-mmp2.o clk-pll.o pwr-island.o
- obj-$(CONFIG_COMMON_CLK_MMP2_AUDIO) += clk-audio.o
- 
--obj-y += clk-of-pxa1928.o
-+obj-$(CONFIG_ARCH_MMP) += clk-of-pxa1928.o clk-of-pxa1908.o
-diff --git a/drivers/clk/mmp/clk-of-pxa1908.c b/drivers/clk/mmp/clk-of-pxa1908.c
-new file mode 100644
-index 000000000000..6f1f6e25a718
---- /dev/null
-+++ b/drivers/clk/mmp/clk-of-pxa1908.c
-@@ -0,0 +1,328 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+#include <linux/bits.h>
-+#include <linux/clk-provider.h>
-+#include <linux/of_address.h>
-+#include <linux/slab.h>
-+#include <linux/spinlock.h>
-+#include <linux/units.h>
-+
-+#include <dt-bindings/clock/marvell,pxa1908.h>
-+
-+#include "clk.h"
-+
-+#define APMU_CLK_GATE_CTRL	0x40
-+#define MPMU_UART_PLL		0x14
-+
-+#define APBC_UART0		0x0
-+#define APBC_UART1		0x4
-+#define APBC_GPIO		0x8
-+#define APBC_PWM0		0xc
-+#define APBC_PWM1		0x10
-+#define APBC_PWM2		0x14
-+#define APBC_PWM3		0x18
-+#define APBC_SSP0		0x1c
-+#define APBC_SSP1		0x20
-+#define APBC_IPC_RST		0x24
-+#define APBC_RTC		0x28
-+#define APBC_TWSI0		0x2c
-+#define APBC_KPC		0x30
-+#define APBC_SWJTAG		0x40
-+#define APBC_SSP2		0x4c
-+#define APBC_TWSI1		0x60
-+#define APBC_THERMAL		0x6c
-+#define APBC_TWSI3		0x70
-+
-+#define APBCP_UART2		0x1c
-+#define APBCP_TWSI2		0x28
-+#define APBCP_AICER		0x38
-+
-+#define APMU_CCIC1		0x24
-+#define APMU_ISP		0x38
-+#define APMU_DSI1		0x44
-+#define APMU_DISP1		0x4c
-+#define APMU_CCIC0		0x50
-+#define APMU_SDH0		0x54
-+#define APMU_SDH1		0x58
-+#define APMU_USB		0x5c
-+#define APMU_NF			0x60
-+#define APMU_VPU		0xa4
-+#define APMU_GC			0xcc
-+#define APMU_SDH2		0xe0
-+#define APMU_GC2D		0xf4
-+#define APMU_TRACE		0x108
-+#define APMU_DVC_DFC_DEBUG	0x140
-+
-+#define MPMU_NR_CLKS		39
-+#define APBC_NR_CLKS		19
-+#define APBCP_NR_CLKS		4
-+#define APMU_NR_CLKS		17
-+
-+struct pxa1908_clk_unit {
-+	struct mmp_clk_unit unit;
-+	void __iomem *mpmu_base;
-+	void __iomem *apmu_base;
-+	void __iomem *apbc_base;
-+	void __iomem *apbcp_base;
-+	void __iomem *apbs_base;
-+	void __iomem *ciu_base;
-+};
-+
-+static struct mmp_param_fixed_rate_clk fixed_rate_clks[] = {
-+	{PXA1908_CLK_CLK32, "clk32", NULL, 0, 32768},
-+	{PXA1908_CLK_VCTCXO, "vctcxo", NULL, 0, 26 * HZ_PER_MHZ},
-+	{PXA1908_CLK_PLL1_624, "pll1_624", NULL, 0, 624 * HZ_PER_MHZ},
-+	{PXA1908_CLK_PLL1_416, "pll1_416", NULL, 0, 416 * HZ_PER_MHZ},
-+	{PXA1908_CLK_PLL1_499, "pll1_499", NULL, 0, 499 * HZ_PER_MHZ},
-+	{PXA1908_CLK_PLL1_832, "pll1_832", NULL, 0, 832 * HZ_PER_MHZ},
-+	{PXA1908_CLK_PLL1_1248, "pll1_1248", NULL, 0, 1248 * HZ_PER_MHZ},
-+};
-+
-+static struct mmp_param_fixed_factor_clk fixed_factor_clks[] = {
-+	{PXA1908_CLK_PLL1_D2, "pll1_d2", "pll1_624", 1, 2, 0},
-+	{PXA1908_CLK_PLL1_D4, "pll1_d4", "pll1_d2", 1, 2, 0},
-+	{PXA1908_CLK_PLL1_D6, "pll1_d6", "pll1_d2", 1, 3, 0},
-+	{PXA1908_CLK_PLL1_D8, "pll1_d8", "pll1_d4", 1, 2, 0},
-+	{PXA1908_CLK_PLL1_D12, "pll1_d12", "pll1_d6", 1, 2, 0},
-+	{PXA1908_CLK_PLL1_D13, "pll1_d13", "pll1_624", 1, 13, 0},
-+	{PXA1908_CLK_PLL1_D16, "pll1_d16", "pll1_d8", 1, 2, 0},
-+	{PXA1908_CLK_PLL1_D24, "pll1_d24", "pll1_d12", 1, 2, 0},
-+	{PXA1908_CLK_PLL1_D48, "pll1_d48", "pll1_d24", 1, 2, 0},
-+	{PXA1908_CLK_PLL1_D96, "pll1_d96", "pll1_d48", 1, 2, 0},
-+	{PXA1908_CLK_PLL1_32, "pll1_32", "pll1_d13", 2, 3, 0},
-+	{PXA1908_CLK_PLL1_208, "pll1_208", "pll1_d2", 2, 3, 0},
-+	{PXA1908_CLK_PLL1_117, "pll1_117", "pll1_624", 3, 16, 0},
-+};
-+
-+static struct mmp_clk_factor_masks uart_factor_masks = {
-+	.factor = 2,
-+	.num_mask = GENMASK(12, 0),
-+	.den_mask = GENMASK(12, 0),
-+	.num_shift = 16,
-+	.den_shift = 0,
-+};
-+
-+static struct u32_fract uart_factor_tbl[] = {
-+	{.numerator = 8125, .denominator = 1536},	/* 14.745MHz */
-+};
-+
-+static DEFINE_SPINLOCK(pll1_lock);
-+static struct mmp_param_general_gate_clk pll1_gate_clks[] = {
-+	{PXA1908_CLK_PLL1_D2_GATE, "pll1_d2_gate", "pll1_d2", 0, APMU_CLK_GATE_CTRL, 29, 0, &pll1_lock},
-+	{PXA1908_CLK_PLL1_416_GATE, "pll1_416_gate", "pll1_416", 0, APMU_CLK_GATE_CTRL, 27, 0, &pll1_lock},
-+	{PXA1908_CLK_PLL1_624_GATE, "pll1_624_gate", "pll1_624", 0, APMU_CLK_GATE_CTRL, 26, 0, &pll1_lock},
-+	{PXA1908_CLK_PLL1_832_GATE, "pll1_832_gate", "pll1_832", 0, APMU_CLK_GATE_CTRL, 30, 0, &pll1_lock},
-+	{PXA1908_CLK_PLL1_1248_GATE, "pll1_1248_gate", "pll1_1248", 0, APMU_CLK_GATE_CTRL, 28, 0, &pll1_lock},
-+};
-+
-+static void pxa1908_pll_init(struct pxa1908_clk_unit *pxa_unit)
-+{
-+	struct mmp_clk_unit *unit = &pxa_unit->unit;
-+
-+	mmp_register_fixed_rate_clks(unit, fixed_rate_clks,
-+					ARRAY_SIZE(fixed_rate_clks));
-+
-+	mmp_register_fixed_factor_clks(unit, fixed_factor_clks,
-+					ARRAY_SIZE(fixed_factor_clks));
-+
-+	mmp_clk_register_factor("uart_pll", "pll1_d4",
-+			CLK_SET_RATE_PARENT,
-+			pxa_unit->mpmu_base + MPMU_UART_PLL,
-+			&uart_factor_masks, uart_factor_tbl,
-+			ARRAY_SIZE(uart_factor_tbl), NULL);
-+
-+}
-+
-+static DEFINE_SPINLOCK(pwm0_lock);
-+static DEFINE_SPINLOCK(pwm2_lock);
-+
-+static DEFINE_SPINLOCK(uart0_lock);
-+static DEFINE_SPINLOCK(uart1_lock);
-+static DEFINE_SPINLOCK(uart2_lock);
-+
-+static const char * const uart_parent_names[] = {"pll1_117", "uart_pll"};
-+static const char * const ssp_parent_names[] = {"pll1_d16", "pll1_d48", "pll1_d24", "pll1_d12"};
-+
-+static struct mmp_param_gate_clk apbc_gate_clks[] = {
-+	{PXA1908_CLK_TWSI0, "twsi0_clk", "pll1_32", CLK_SET_RATE_PARENT, APBC_TWSI0, 0x7, 3, 0, 0, NULL},
-+	{PXA1908_CLK_TWSI1, "twsi1_clk", "pll1_32", CLK_SET_RATE_PARENT, APBC_TWSI1, 0x7, 3, 0, 0, NULL},
-+	{PXA1908_CLK_TWSI3, "twsi3_clk", "pll1_32", CLK_SET_RATE_PARENT, APBC_TWSI3, 0x7, 3, 0, 0, NULL},
-+	{PXA1908_CLK_GPIO, "gpio_clk", "vctcxo", CLK_SET_RATE_PARENT, APBC_GPIO, 0x7, 3, 0, 0, NULL},
-+	{PXA1908_CLK_KPC, "kpc_clk", "clk32", CLK_SET_RATE_PARENT, APBC_KPC, 0x7, 3, 0, MMP_CLK_GATE_NEED_DELAY, NULL},
-+	{PXA1908_CLK_RTC, "rtc_clk", "clk32", CLK_SET_RATE_PARENT, APBC_RTC, 0x87, 0x83, 0, MMP_CLK_GATE_NEED_DELAY, NULL},
-+	{PXA1908_CLK_PWM0, "pwm0_clk", "pwm01_apb_share", CLK_SET_RATE_PARENT, APBC_PWM0, 0x2, 2, 0, 0, &pwm0_lock},
-+	{PXA1908_CLK_PWM1, "pwm1_clk", "pwm01_apb_share", CLK_SET_RATE_PARENT, APBC_PWM1, 0x6, 2, 0, 0, NULL},
-+	{PXA1908_CLK_PWM2, "pwm2_clk", "pwm23_apb_share", CLK_SET_RATE_PARENT, APBC_PWM2, 0x2, 2, 0, 0, NULL},
-+	{PXA1908_CLK_PWM3, "pwm3_clk", "pwm23_apb_share", CLK_SET_RATE_PARENT, APBC_PWM3, 0x6, 2, 0, 0, NULL},
-+	{PXA1908_CLK_UART0, "uart0_clk", "uart0_mux", CLK_SET_RATE_PARENT, APBC_UART0, 0x7, 3, 0, 0, &uart0_lock},
-+	{PXA1908_CLK_UART1, "uart1_clk", "uart1_mux", CLK_SET_RATE_PARENT, APBC_UART1, 0x7, 3, 0, 0, &uart1_lock},
-+};
-+
-+static struct mmp_param_mux_clk apbc_mux_clks[] = {
-+	{0, "uart0_mux", uart_parent_names, ARRAY_SIZE(uart_parent_names), CLK_SET_RATE_PARENT, APBC_UART0, 4, 3, 0, &uart0_lock},
-+	{0, "uart1_mux", uart_parent_names, ARRAY_SIZE(uart_parent_names), CLK_SET_RATE_PARENT, APBC_UART1, 4, 3, 0, &uart1_lock},
-+	{0, "ssp0_mux", ssp_parent_names, ARRAY_SIZE(ssp_parent_names), 0, APBC_SSP0, 4, 3, 0, NULL},
-+	{0, "ssp2_mux", ssp_parent_names, ARRAY_SIZE(ssp_parent_names), 0, APBC_SSP2, 4, 3, 0, NULL},
-+};
-+
-+static void pxa1908_apb_periph_clk_init(struct pxa1908_clk_unit *pxa_unit)
-+{
-+	struct mmp_clk_unit *unit = &pxa_unit->unit;
-+
-+	mmp_clk_register_gate(NULL, "pwm01_apb_share", "pll1_d48",
-+			CLK_SET_RATE_PARENT,
-+			pxa_unit->apbc_base + APBC_PWM0,
-+			0x5, 1, 0, 0, &pwm0_lock);
-+	mmp_clk_register_gate(NULL, "pwm23_apb_share", "pll1_d48",
-+			CLK_SET_RATE_PARENT,
-+			pxa_unit->apbc_base + APBC_PWM2,
-+			0x5, 1, 0, 0, &pwm2_lock);
-+	mmp_register_mux_clks(unit, apbc_mux_clks, pxa_unit->apbc_base,
-+			ARRAY_SIZE(apbc_mux_clks));
-+	mmp_register_gate_clks(unit, apbc_gate_clks, pxa_unit->apbc_base,
-+			ARRAY_SIZE(apbc_gate_clks));
-+}
-+
-+static struct mmp_param_gate_clk apbcp_gate_clks[] = {
-+	{PXA1908_CLK_UART2, "uart2_clk", "uart2_mux", CLK_SET_RATE_PARENT, APBCP_UART2, 0x7, 0x3, 0x0, 0, &uart2_lock},
-+	{PXA1908_CLK_TWSI2, "twsi2_clk", "pll1_32", CLK_SET_RATE_PARENT, APBCP_TWSI2, 0x7, 0x3, 0x0, 0, NULL},
-+	{PXA1908_CLK_AICER, "ripc_clk", NULL, 0, APBCP_AICER, 0x7, 0x2, 0x0, 0, NULL},
-+};
-+
-+static struct mmp_param_mux_clk apbcp_mux_clks[] = {
-+	{0, "uart2_mux", uart_parent_names, ARRAY_SIZE(uart_parent_names), CLK_SET_RATE_PARENT, APBCP_UART2, 4, 3, 0, &uart2_lock},
-+};
-+
-+static void pxa1908_apb_p_periph_clk_init(struct pxa1908_clk_unit *pxa_unit)
-+{
-+	struct mmp_clk_unit *unit = &pxa_unit->unit;
-+
-+	mmp_register_mux_clks(unit, apbcp_mux_clks, pxa_unit->apbcp_base,
-+			ARRAY_SIZE(apbcp_mux_clks));
-+	mmp_register_gate_clks(unit, apbcp_gate_clks, pxa_unit->apbcp_base,
-+			ARRAY_SIZE(apbcp_gate_clks));
-+}
-+
-+static DEFINE_SPINLOCK(sdh0_lock);
-+static DEFINE_SPINLOCK(sdh1_lock);
-+static DEFINE_SPINLOCK(sdh2_lock);
-+
-+static const char * const sdh_parent_names[] = {"pll1_416", "pll1_624"};
-+
-+static struct mmp_clk_mix_config sdh_mix_config = {
-+	.reg_info = DEFINE_MIX_REG_INFO(3, 8, 2, 6, 11),
-+};
-+
-+static struct mmp_param_gate_clk apmu_gate_clks[] = {
-+	{PXA1908_CLK_USB, "usb_clk", NULL, 0, APMU_USB, 0x9, 0x9, 0x1, 0, NULL},
-+	{PXA1908_CLK_SDH0, "sdh0_clk", "sdh0_mix_clk", CLK_SET_RATE_PARENT | CLK_SET_RATE_UNGATE, APMU_SDH0, 0x12, 0x12, 0x0, 0, &sdh0_lock},
-+	{PXA1908_CLK_SDH1, "sdh1_clk", "sdh1_mix_clk", CLK_SET_RATE_PARENT | CLK_SET_RATE_UNGATE, APMU_SDH1, 0x12, 0x12, 0x0, 0, &sdh1_lock},
-+	{PXA1908_CLK_SDH2, "sdh2_clk", "sdh2_mix_clk", CLK_SET_RATE_PARENT | CLK_SET_RATE_UNGATE, APMU_SDH2, 0x12, 0x12, 0x0, 0, &sdh2_lock}
-+};
-+
-+static void pxa1908_axi_periph_clk_init(struct pxa1908_clk_unit *pxa_unit)
-+{
-+	struct mmp_clk_unit *unit = &pxa_unit->unit;
-+
-+	mmp_register_general_gate_clks(unit, pll1_gate_clks,
-+			pxa_unit->apmu_base, ARRAY_SIZE(pll1_gate_clks));
-+
-+	sdh_mix_config.reg_info.reg_clk_ctrl = pxa_unit->apmu_base + APMU_SDH0;
-+	mmp_clk_register_mix(NULL, "sdh0_mix_clk", sdh_parent_names,
-+			ARRAY_SIZE(sdh_parent_names), CLK_SET_RATE_PARENT,
-+			&sdh_mix_config, &sdh0_lock);
-+	sdh_mix_config.reg_info.reg_clk_ctrl = pxa_unit->apmu_base + APMU_SDH1;
-+	mmp_clk_register_mix(NULL, "sdh1_mix_clk", sdh_parent_names,
-+			ARRAY_SIZE(sdh_parent_names), CLK_SET_RATE_PARENT,
-+			&sdh_mix_config, &sdh1_lock);
-+	sdh_mix_config.reg_info.reg_clk_ctrl = pxa_unit->apmu_base + APMU_SDH2;
-+	mmp_clk_register_mix(NULL, "sdh2_mix_clk", sdh_parent_names,
-+			ARRAY_SIZE(sdh_parent_names), CLK_SET_RATE_PARENT,
-+			&sdh_mix_config, &sdh2_lock);
-+
-+	mmp_register_gate_clks(unit, apmu_gate_clks, pxa_unit->apmu_base,
-+			ARRAY_SIZE(apmu_gate_clks));
-+}
-+
-+static void __init pxa1908_apbc_clk_init(struct device_node *np)
-+{
-+	struct pxa1908_clk_unit *pxa_unit;
-+
-+	pxa_unit = kzalloc(sizeof(*pxa_unit), GFP_KERNEL);
-+	if (!pxa_unit)
-+		return;
-+
-+	pxa_unit->apbc_base = of_iomap(np, 0);
-+	if (!pxa_unit->apbc_base) {
-+		pr_err("failed to map apbc registers\n");
-+		kfree(pxa_unit);
-+		return;
-+	}
-+
-+	mmp_clk_init(np, &pxa_unit->unit, APBC_NR_CLKS);
-+
-+	pxa1908_apb_periph_clk_init(pxa_unit);
-+}
-+CLK_OF_DECLARE(pxa1908_apbc, "marvell,pxa1908-apbc", pxa1908_apbc_clk_init);
-+
-+static void __init pxa1908_apbcp_clk_init(struct device_node *np)
-+{
-+	struct pxa1908_clk_unit *pxa_unit;
-+
-+	pxa_unit = kzalloc(sizeof(*pxa_unit), GFP_KERNEL);
-+	if (!pxa_unit)
-+		return;
-+
-+	pxa_unit->apbcp_base = of_iomap(np, 0);
-+	if (!pxa_unit->apbcp_base) {
-+		pr_err("failed to map apbcp registers\n");
-+		kfree(pxa_unit);
-+		return;
-+	}
-+
-+	mmp_clk_init(np, &pxa_unit->unit, APBCP_NR_CLKS);
-+
-+	pxa1908_apb_p_periph_clk_init(pxa_unit);
-+}
-+CLK_OF_DECLARE(pxa1908_apbcp, "marvell,pxa1908-apbcp", pxa1908_apbcp_clk_init);
-+
-+static void __init pxa1908_mpmu_clk_init(struct device_node *np)
-+{
-+	struct pxa1908_clk_unit *pxa_unit;
-+
-+	pxa_unit = kzalloc(sizeof(*pxa_unit), GFP_KERNEL);
-+	if (!pxa_unit)
-+		return;
-+
-+	pxa_unit->mpmu_base = of_iomap(np, 0);
-+	if (!pxa_unit->mpmu_base) {
-+		pr_err("failed to map mpmu registers\n");
-+		kfree(pxa_unit);
-+		return;
-+	}
-+
-+	mmp_clk_init(np, &pxa_unit->unit, MPMU_NR_CLKS);
-+
-+	pxa1908_pll_init(pxa_unit);
-+}
-+CLK_OF_DECLARE(pxa1908_mpmu, "marvell,pxa1908-mpmu", pxa1908_mpmu_clk_init);
-+
-+static void __init pxa1908_apmu_clk_init(struct device_node *np)
-+{
-+	struct pxa1908_clk_unit *pxa_unit;
-+
-+	pxa_unit = kzalloc(sizeof(*pxa_unit), GFP_KERNEL);
-+	if (!pxa_unit)
-+		return;
-+
-+	pxa_unit->apmu_base = of_iomap(np, 0);
-+	if (!pxa_unit->apmu_base) {
-+		pr_err("failed to map apmu registers\n");
-+		kfree(pxa_unit);
-+		return;
-+	}
-+
-+	mmp_clk_init(np, &pxa_unit->unit, APMU_NR_CLKS);
-+
-+	pxa1908_axi_periph_clk_init(pxa_unit);
-+}
-+CLK_OF_DECLARE(pxa1908_apmu, "marvell,pxa1908-apmu", pxa1908_apmu_clk_init);
+ arch/arm64/boot/dts/freescale/imx8dxl-evk.dts      | 234 +++++++++++++++++++++
+ arch/arm64/boot/dts/freescale/imx8dxl-ss-adma.dtsi |  78 +++++++
+ 2 files changed, 312 insertions(+)
+---
+base-commit: 2d13a7797c3970a4eea160844d8905c93065634f
+change-id: 20240402-b4-dts_dxl_audio-74ba02030a72
 
--- 
-2.44.0
-
+Best regards,
+---
+Frank Li <Frank.Li@nxp.com>
 
