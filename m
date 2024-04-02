@@ -1,116 +1,121 @@
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
+Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8ABA5A0E6;
-	Tue,  2 Apr 2024 10:15:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4423A59B4B
+	for <linux-kernel@vger.kernel.org>; Tue,  2 Apr 2024 10:15:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712052924; cv=none; b=QKRfKGrmREFwkF18p6R3OQ7regcIIQtcWkR/UJGFPDJDHT/BhX6sh9S5UTE7HswerzBTN8LkhqWyPKshq8QUQiECfmz8UqjX+lKJhFRnIH9f0s6N8anqkuZoDq0s4q1qgdy247i4WkacJ2JeVDgM8cgF1UOzwzOeJK4/Q8dzbKI=
+	t=1712052936; cv=none; b=RemSn9pNRH9M3y+pW1DQwvRCaSgXonu7l03ClWfEJA7Zg9iSgopGSjEqOEVU+hvIVsXzWX61ZbbSvgL3P0YQCoOUiZ4ofYoUQKIobhC2NHvUXWUs2nDTq2ARMt+TEOv9H9y68ILwgjOVw8a2udgQIJ77YOxb2NMcv+55oI1CyiI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712052924; c=relaxed/simple;
-	bh=37Nx+JVFdZC7dJV7jOp/MYWR3xwxYi0DR8iWjs0SXzE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mk2whE9U7KwHGFzSneukEbbWQbhSqCYrKOfKyqQG8KGSXMuxjbBQ5H/PSHMj/Dr8tdzO6cf3B4XGG2GDlVSwDteVHY05xu1cAfRujEol60bgi/5to7xpFxFNpq+UtkzbVL+Mm07KBUQz8Tmin3Xw22HVVLcP1Q1AWOq7+GpbWwo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=0beqMXVt; arc=none smtp.client-ip=78.32.30.218
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="0beqMXVt"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=XcKQ6bjR8juooJeYFkyQvyoAYNtxrPcLEvnKdMTyFu8=; b=0beqMXVtPisgfQmEG2UBAidiVW
-	84+j9DAP25fOyTv08R6Sq+HES71u81tNt/O07QPZpGE3DDCsc5eMDgt27vYLJKa2vSrJUB6eGdSO5
-	2xJ8YAqid3EnAbCdEchOKgHRM6mT8Bh3x+TWFOFRLkGQzi1oOeTn/i76rfyD4ZQeL3NsvKLN8q0IY
-	fmtkpkXyq/aOlrrjHPexBzYFjdJw+8l6k3zqUvOk8FwKv5fXbzYrdOiDxKW9wPtZl12nlrQHZ1Neq
-	o2r6Pw+BMVTmSwN/IzPOC6ts0Evl8M5cISIt3onDGFUXRkQ7YQLJ8mm2VQ6+4UBLk83BeUAyaQGe6
-	90zRLFdQ==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:35944)
-	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <linux@armlinux.org.uk>)
-	id 1rrbAc-0006J4-1Y;
-	Tue, 02 Apr 2024 11:15:10 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.94.2)
-	(envelope-from <linux@shell.armlinux.org.uk>)
-	id 1rrbAb-0006t6-9b; Tue, 02 Apr 2024 11:15:09 +0100
-Date: Tue, 2 Apr 2024 11:15:09 +0100
-From: "Russell King (Oracle)" <linux@armlinux.org.uk>
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc: Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Mike Leach <mike.leach@linaro.org>,
-	James Clark <james.clark@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-	Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Andi Shyti <andi.shyti@kernel.org>,
-	Olivia Mackall <olivia@selenic.com>,
-	Herbert Xu <herbert@gondor.apana.org.au>,
-	Vinod Koul <vkoul@kernel.org>,
-	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-	Miquel Raynal <miquel.raynal@bootlin.com>,
-	Michal Simek <michal.simek@amd.com>,
-	Eric Auger <eric.auger@redhat.com>,
-	Alex Williamson <alex.williamson@redhat.com>,
-	linux-kernel@vger.kernel.org, coresight@lists.linaro.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-stm32@st-md-mailman.stormreply.com, linux-i2c@vger.kernel.org,
-	linux-crypto@vger.kernel.org, dmaengine@vger.kernel.org,
-	linux-input@vger.kernel.org, kvm@vger.kernel.org
-Subject: Re: [PATCH 00/19] amba: store owner from modules with
- amba_driver_register()
-Message-ID: <ZgvarVCRBam9anOm@shell.armlinux.org.uk>
-References: <20240326-module-owner-amba-v1-0-4517b091385b@linaro.org>
- <f514d9e1-61fa-4c55-aea1-d70c955bb96a@linaro.org>
- <ZgvIMRDfeQaeVxYt@shell.armlinux.org.uk>
- <324e9c02-c005-4e18-9872-8408695fb1fe@linaro.org>
- <ZgvWfhSEYIUaIn6h@shell.armlinux.org.uk>
- <65f0ed39-4c2f-4cea-b488-2a8ba6fdbeff@linaro.org>
- <ZgvaFNLTqgQrPeiO@shell.armlinux.org.uk>
+	s=arc-20240116; t=1712052936; c=relaxed/simple;
+	bh=0xWnBySin3hvFWM+Gg+lPth7dwJaIqmVEkA7v93kco4=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=hI+rbgPV1IDnojobyW9Ok/3P/Gn63FUb5pcidZLTc/KmDlAsv/c5vUHfipADv7Xumhm9KcuTgCY7RwHixTAuk07cXhVOak3NsFpTD1p0DtIczZiUvyX/J5o10dErUaNNuQ/RknCD0Jx80MzEXuR8GDRKxpXyLAo9EiRnWXSpnDc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
+X-UUID: d83da598f0d411eeaf09c5092e5928d1-20240402
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.37,REQID:4be312ba-0d57-473e-9cf3-0be3798783b4,IP:25,
+	URL:0,TC:0,Content:0,EDM:0,RT:0,SF:-1,FILE:0,BULK:0,RULE:Release_Ham,ACTIO
+	N:release,TS:24
+X-CID-INFO: VERSION:1.1.37,REQID:4be312ba-0d57-473e-9cf3-0be3798783b4,IP:25,UR
+	L:0,TC:0,Content:0,EDM:0,RT:0,SF:-1,FILE:0,BULK:0,RULE:Release_Ham,ACTION:
+	release,TS:24
+X-CID-META: VersionHash:6f543d0,CLOUDID:c582b24fc3314ef5df3245e2b4f54bab,BulkI
+	D:24040217390781IC21SF,BulkQuantity:0,Recheck:0,SF:38|25|72|19|44|66|102,T
+	C:nil,Content:0,EDM:-3,IP:-2,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil
+	,COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0
+X-CID-BVR: 0
+X-CID-BAS: 0,_,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_FSD,TF_CID_SPAM_FSI
+X-CTIC-Tags:
+	HR_CC_COUNT, HR_CC_DOMAIN_COUNT, HR_CC_NO_NAME, HR_CTE_8B, HR_CTT_TXT
+	HR_DATE_H, HR_DATE_WKD, HR_DATE_ZONE, HR_FROM_NAME, HR_SJ_LANG
+	HR_SJ_LEN, HR_SJ_LETTER, HR_SJ_NOR_SYM, HR_SJ_PHRASE, HR_SJ_PHRASE_LEN
+	HR_SJ_WS, HR_TO_COUNT, HR_TO_DOMAIN_COUNT, HR_TO_NO_NAME, IP_TRUSTED
+	SRC_TRUSTED, DN_TRUSTED, SA_UNTRUSTED, SA_UNFAMILIAR, SN_UNTRUSTED
+	SN_UNFAMILIAR, SPF_NOPASS, DKIM_NOPASS, DMARC_NOPASS, CIE_BAD
+	CIE_GOOD_SPF, GTI_FG_BS, GTI_RG_INFO, GTI_C_BU, AMN_T1
+	AMN_GOOD, AMN_C_TI, AMN_C_BU, ABX_MISS_RDNS, ZHF_RECV_LOCALHOST
+X-UUID: d83da598f0d411eeaf09c5092e5928d1-20240402
+X-User: liweishi@kylinos.cn
+Received: from localhost.localdomain [(116.128.244.171)] by mailgw
+	(envelope-from <liweishi@kylinos.cn>)
+	(Generic MTA)
+	with ESMTP id 1972772985; Tue, 02 Apr 2024 17:39:04 +0800
+From: Weishi Li <liweishi@kylinos.cn>
+To: airlied@redhat.com,
+	kraxel@redhat.com,
+	gurchetansingh@chromium.org,
+	olvaffe@gmail.com,
+	maarten.lankhorst@linux.intel.com,
+	mripard@kernel.org,
+	tzimmermann@suse.de,
+	daniel@ffwll.ch
+Cc: dri-devel@lists.freedesktop.org,
+	virtualization@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	liweishi@kylinos.cn
+Subject: [PATCH] drm/virtio: fix memory leak of vbuf
+Date: Tue,  2 Apr 2024 17:39:22 +0800
+Message-Id: <20240402093922.268368-1-liweishi@kylinos.cn>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZgvaFNLTqgQrPeiO@shell.armlinux.org.uk>
-Sender: Russell King (Oracle) <linux@armlinux.org.uk>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Tue, Apr 02, 2024 at 11:12:36AM +0100, Russell King (Oracle) wrote:
-> On Tue, Apr 02, 2024 at 12:04:07PM +0200, Krzysztof Kozlowski wrote:
-> > You brought no argument for keeping the kernel-version-header
-> > requirement nowadays, yet you call me of not working constructively. I
-> 
-> So add inability to read to your failings, because I _did_ state that
-> _I_ still _use_ it.
-> 
-> End of discussion, I'm not engaging with you in your current
-> confrontational mood where you clearly don't want to understand
-> anything (or intentionally misinterpreting) I'm writing - making it
-> pointless to continue.
-> 
-> I even think you're intentionally misinterpreting the responses
-> from the patch system.
-> 
-> Overall, I can only draw the conclusion that you are playing politics
-> and want the patch system gone, and you want me to use "standard"
-> tooling that will _increase_ the amount of effort I need to put in.
-> No, that's not going to happen.
+Both virtio_gpu_queue_ctrl_buffer and virtio_gpu_queue_cursor use
+virtqueue_add_sgs to upload the structure virtio_gpu_vbuffer * vbuf
+to virtqueue. However, when virtqueue_add_sgs returns -EIO or -ENOMEM,
+it means vbuf upload failed, and vbuf will not be able to be
+free by virtio_gpu_dequeue_*_func, resulting in a continuous increase
+in memory allocated to vgdev ->vbufs.
 
-... and this is your final chance to change to a constructive discourse,
-if not, you are going to end up in my kill file. Whether you do is
-entirely up to the tone of your reply to this email.
+Therefore, when upload fails，vbuf needs to be free directly.
 
-I am always more than willing to work with a submitter to diagnose
-what the problem is, but the tone of your emails make me want to
-ignore you.
+Signed-off-by: Weishi Li <liweishi@kylinos.cn>
+---
+ drivers/gpu/drm/virtio/virtgpu_vq.c | 14 +++++++++-----
+ 1 file changed, 9 insertions(+), 5 deletions(-)
 
+diff --git a/drivers/gpu/drm/virtio/virtgpu_vq.c b/drivers/gpu/drm/virtio/virtgpu_vq.c
+index b1a00c0c25a7..26f2e45635c1 100644
+--- a/drivers/gpu/drm/virtio/virtgpu_vq.c
++++ b/drivers/gpu/drm/virtio/virtgpu_vq.c
+@@ -356,12 +356,14 @@ static int virtio_gpu_queue_ctrl_sgs(struct virtio_gpu_device *vgdev,
+ 
+ 	ret = virtqueue_add_sgs(vq, sgs, outcnt, incnt, vbuf, GFP_ATOMIC);
+ 	WARN_ON(ret);
++	if (ret < 0 && ret != -ENOSPC) {
++		free_vbuf(vgdev, vbuf);
++	} else {
++		vbuf->seqno = ++vgdev->ctrlq.seqno;
++		trace_virtio_gpu_cmd_queue(vq, virtio_gpu_vbuf_ctrl_hdr(vbuf), vbuf->seqno);
+ 
+-	vbuf->seqno = ++vgdev->ctrlq.seqno;
+-	trace_virtio_gpu_cmd_queue(vq, virtio_gpu_vbuf_ctrl_hdr(vbuf), vbuf->seqno);
+-
+-	atomic_inc(&vgdev->pending_commands);
+-
++		atomic_inc(&vgdev->pending_commands);
++	}
+ 	spin_unlock(&vgdev->ctrlq.qlock);
+ 
+ 	drm_dev_exit(idx);
+@@ -469,6 +471,8 @@ static void virtio_gpu_queue_cursor(struct virtio_gpu_device *vgdev,
+ 		wait_event(vgdev->cursorq.ack_queue, vq->num_free >= outcnt);
+ 		spin_lock(&vgdev->cursorq.qlock);
+ 		goto retry;
++	else if (ret < 0) {
++		free_vbuf(vgdev, vbuf);
+ 	} else {
+ 		vbuf->seqno = ++vgdev->cursorq.seqno;
+ 		trace_virtio_gpu_cmd_queue(vq,
 -- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
+2.25.1
+
