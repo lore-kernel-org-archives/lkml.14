@@ -1,41 +1,62 @@
-Received: from finn.localdomain (finn.gateworks.com [108.161.129.64])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 687F415AAAA;
-	Tue,  2 Apr 2024 19:52:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=108.161.129.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C56715B96A;
+	Tue,  2 Apr 2024 19:53:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712087538; cv=none; b=azoT5H8sA1Rq7l8C3Nt6auw4IP8tvoGWrKg2e335hEzT1Uz1XpWGrLVlVwAK17Qqfn4Q+QiG6jb7ak4NlAVCALE9V0DstB8LXIc9PXxFCbepCYnm2Vetalpi+gviK7cjST2wViponlA3dxjyqsJII2m3IlRf5pL2CzvlasAps2U=
+	t=1712087595; cv=none; b=PPlsb+OS1Bz6ibCO38R5/8vwf5a+G4Q1mmU5zZ8pF6gJa+qc9RLNoCauIYQriYsCAkE2lMHVJoZB4fNpQZ8l+k/mASmuZeOl3EAy69lfKtM+Pe7miJoIEtVxsWehHemlkBwO5D6uysJAEwMdPe4eZYKdtT/WqaGt9po15smDWdo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712087538; c=relaxed/simple;
-	bh=zVrwAjUcGsk/Gvd0IQbWlkXCkBrhd705XLqPbvC6bLI=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=W7Et+TADx9XYY3jKrTXrVgFyI796Qip4wrJKcVIygXImrQwzpvAMKOKthDs9lCvD2esZ5MngTqheNXE1sGsmCBpvkwUIZgUsy8Y309qOnaPYjRYdf8mgNPtSOg3vfUfsj6RuKk6eguzD9Oa8W3MznQzURZv9pJrLtF/Br9mne+Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gateworks.com; spf=pass smtp.mailfrom=gateworks.com; arc=none smtp.client-ip=108.161.129.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gateworks.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gateworks.com
-Received: from 068-189-091-139.biz.spectrum.com ([68.189.91.139] helo=tharvey.pdc.gateworks.com)
-	by finn.localdomain with esmtp (Exim 4.95)
-	(envelope-from <tharvey@gateworks.com>)
-	id 1rrjtR-000HwR-Jr;
-	Tue, 02 Apr 2024 19:34:01 +0000
-From: Tim Harvey <tharvey@gateworks.com>
-To: Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	devicetree@vger.kernel.org,
-	imx@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Cc: Tim Harvey <tharvey@gateworks.com>,
-	Lukas Wunner <lukas@wunner.de>
-Subject: [PATCH] arm64: dts: imx8m*-venice-gw7: Fix TPM schema violations
-Date: Tue,  2 Apr 2024 12:33:55 -0700
-Message-Id: <20240402193355.2333597-1-tharvey@gateworks.com>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1712087595; c=relaxed/simple;
+	bh=1UzMmpdJ3SyH/zn8EcKQjxnq5OJVXRSw4sEYO55O31c=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=FLHjTKxehULA3+5L9nmfwWHkXDBzySPDhJWRW3Ten9uWvoUTHDZmmUub13Wdla7+/fOfuK1DRU/9P+9kQOTcZGea8bg6D95KJqkNlYnh/EKb0DU/vJnmJ+LPJZIshLoUuuqwj53mNOvnh6nck3YqU4MrYcLOHBes+86Tf0LdWeQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NxigBuYs; arc=none smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NxigBuYs"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1712087594; x=1743623594;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=1UzMmpdJ3SyH/zn8EcKQjxnq5OJVXRSw4sEYO55O31c=;
+  b=NxigBuYs/KhhLDd99ZK1ij3qrZp3GxRQthng8XKsGclOwa2AWHrH6NwH
+   LY4LcNpUIvNVls/5LfFhLFlBpIlWB/8V8qos3zEBYMcaFPCL1y1Nv+oh7
+   iGjpdgQVZuMEHbbJ614zYTKM8LI9x6GPSPqny8zOlAlYDm/ZEJq3qORnR
+   +uNzsCJqDbvtko+UEIrwX4IV6jZewIoZcLdhQzSFd9vKpd7CNQZZzPI7d
+   bTGyiZQV2u5qPtx4prY7aALaAwiqjQt+xCUGQFyhGelEefUr3zaVfbeTD
+   qZVsBbBHGmin2YxI0ltgsQX6FwdOBgmLgwAPcxAZ7+O92nHJcUPBs06A5
+   A==;
+X-CSE-ConnectionGUID: qA3a4RotSDORZNgf9VvLpw==
+X-CSE-MsgGUID: dSTH3/2ASRK6DUSxNkWeDA==
+X-IronPort-AV: E=McAfee;i="6600,9927,11032"; a="7150988"
+X-IronPort-AV: E=Sophos;i="6.07,175,1708416000"; 
+   d="scan'208";a="7150988"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2024 12:53:13 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,11032"; a="937083782"
+X-IronPort-AV: E=Sophos;i="6.07,175,1708416000"; 
+   d="scan'208";a="937083782"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmsmga001.fm.intel.com with ESMTP; 02 Apr 2024 12:53:10 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+	id D746957D; Tue,  2 Apr 2024 22:53:09 +0300 (EEST)
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	linux-kernel@vger.kernel.org,
+	linux-serial@vger.kernel.org
+Cc: Jiri Slaby <jirislaby@kernel.org>,
+	Hugo Villeneuve <hugo@hugovil.com>
+Subject: [PATCH v2 04/16] serial: max3100: Make struct plat_max3100 local
+Date: Tue,  2 Apr 2024 22:50:31 +0300
+Message-ID: <20240402195306.269276-5-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.43.0.rc1.1.gbec44491f096
+In-Reply-To: <20240402195306.269276-1-andriy.shevchenko@linux.intel.com>
+References: <20240402195306.269276-1-andriy.shevchenko@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -44,69 +65,133 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Since commit 26c9d152ebf3 ("dt-bindings: tpm: Consolidate TCG TIS
-bindings"), several issues are reported by "make dtbs_check" for arm64
-devicetrees:
+There is no user of the struct plat_max3100 outside the driver.
+Inline its contents into the driver. While at it, drop outdated
+example in the comment.
 
-The compatible property needs to contain the chip's name in addition to
-the generic "tcg,tpm_tis-spi".
-
-tpm@1: compatible: ['tcg,tpm_tis-spi'] is too short
-	from schema $id:
-http://devicetree.org/schemas/tpm/tcg,tpm_tis-spi.yaml#
-
-Fix these schema violations.
-
-Gateworks Venice uses an Atmel ATTPM20P:
-https://trac.gateworks.com/wiki/tpm
-
-Cc: Lukas Wunner <lukas@wunner.de>
-Signed-off-by: Tim Harvey <tharvey@gateworks.com>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
- arch/arm64/boot/dts/freescale/imx8mm-venice-gw71xx.dtsi | 2 +-
- arch/arm64/boot/dts/freescale/imx8mm-venice-gw7901.dts  | 2 +-
- arch/arm64/boot/dts/freescale/imx8mp-venice-gw71xx.dtsi | 2 +-
- 3 files changed, 3 insertions(+), 3 deletions(-)
+ drivers/tty/serial/max3100.c   | 38 +++++++++++++--------------
+ include/linux/serial_max3100.h | 48 ----------------------------------
+ 2 files changed, 18 insertions(+), 68 deletions(-)
+ delete mode 100644 include/linux/serial_max3100.h
 
-diff --git a/arch/arm64/boot/dts/freescale/imx8mm-venice-gw71xx.dtsi b/arch/arm64/boot/dts/freescale/imx8mm-venice-gw71xx.dtsi
-index 41c966147b94..429be2bab8a2 100644
---- a/arch/arm64/boot/dts/freescale/imx8mm-venice-gw71xx.dtsi
-+++ b/arch/arm64/boot/dts/freescale/imx8mm-venice-gw71xx.dtsi
-@@ -57,7 +57,7 @@ &ecspi2 {
- 	status = "okay";
+diff --git a/drivers/tty/serial/max3100.c b/drivers/tty/serial/max3100.c
+index 3d2b83d6ab51..031803a5da58 100644
+--- a/drivers/tty/serial/max3100.c
++++ b/drivers/tty/serial/max3100.c
+@@ -1,6 +1,5 @@
+ // SPDX-License-Identifier: GPL-2.0+
+ /*
+- *
+  *  Copyright (C) 2008 Christian Pellegrin <chripell@evolware.org>
+  *
+  * Notes: the MAX3100 doesn't provide an interrupt on CTS so we have
+@@ -8,24 +7,6 @@
+  * writing conf clears FIFO buffer and we cannot have this interrupt
+  * always asking us for attention.
+  *
+- * Example platform data:
+-
+- static struct plat_max3100 max3100_plat_data = {
+- .loopback = 0,
+- .crystal = 0,
+- .poll_time = 100,
+- };
+-
+- static struct spi_board_info spi_board_info[] = {
+- {
+- .modalias	= "max3100",
+- .platform_data	= &max3100_plat_data,
+- .irq		= IRQ_EINT12,
+- .max_speed_hz	= 5*1000*1000,
+- .chip_select	= 0,
+- },
+- };
+-
+  * The initial minor number is 209 in the low-density serial port:
+  * mknod /dev/ttyMAX0 c 204 209
+  */
+@@ -49,7 +30,24 @@
  
- 	tpm@1 {
--		compatible = "tcg,tpm_tis-spi";
-+		compatible = "atmel,attpm20p", "tcg,tpm_tis-spi";
- 		reg = <0x1>;
- 		spi-max-frequency = <36000000>;
- 	};
-diff --git a/arch/arm64/boot/dts/freescale/imx8mm-venice-gw7901.dts b/arch/arm64/boot/dts/freescale/imx8mm-venice-gw7901.dts
-index 5e2cbaf27e0f..35ae0faa815b 100644
---- a/arch/arm64/boot/dts/freescale/imx8mm-venice-gw7901.dts
-+++ b/arch/arm64/boot/dts/freescale/imx8mm-venice-gw7901.dts
-@@ -297,7 +297,7 @@ flash@0 {
- 	};
+ #include <asm/unaligned.h>
  
- 	tpm@1 {
--		compatible = "tcg,tpm_tis-spi";
-+		compatible = "atmel,attpm20p", "tcg,tpm_tis-spi";
- 		reg = <0x1>;
- 		spi-max-frequency = <36000000>;
- 	};
-diff --git a/arch/arm64/boot/dts/freescale/imx8mp-venice-gw71xx.dtsi b/arch/arm64/boot/dts/freescale/imx8mp-venice-gw71xx.dtsi
-index e7bf032265e0..2f740d74707b 100644
---- a/arch/arm64/boot/dts/freescale/imx8mp-venice-gw71xx.dtsi
-+++ b/arch/arm64/boot/dts/freescale/imx8mp-venice-gw71xx.dtsi
-@@ -68,7 +68,7 @@ &ecspi2 {
- 	status = "okay";
+-#include <linux/serial_max3100.h>
++/**
++ * struct plat_max3100 - MAX3100 SPI UART platform data
++ * @loopback:            force MAX3100 in loopback
++ * @crystal:             1 for 3.6864 Mhz, 0 for 1.8432
++ * @max3100_hw_suspend:  MAX3100 has a shutdown pin. This is a hook
++ *                       called on suspend and resume to activate it.
++ * @poll_time:           poll time for CTS signal in ms, 0 disables (so no hw
++ *                       flow ctrl is possible but you have less CPU usage)
++ *
++ * You should use this structure in your machine description to specify
++ * how the MAX3100 is connected.
++ */
++struct plat_max3100 {
++	int loopback;
++	int crystal;
++	void (*max3100_hw_suspend) (int suspend);
++	int poll_time;
++};
  
- 	tpm@1 {
--		compatible = "tcg,tpm_tis-spi";
-+		compatible = "atmel,attpm20p", "tcg,tpm_tis-spi";
- 		reg = <0x1>;
- 		spi-max-frequency = <36000000>;
- 	};
+ #define MAX3100_C    (1<<14)
+ #define MAX3100_D    (0<<14)
+diff --git a/include/linux/serial_max3100.h b/include/linux/serial_max3100.h
+deleted file mode 100644
+index befd55c08a7c..000000000000
+--- a/include/linux/serial_max3100.h
++++ /dev/null
+@@ -1,48 +0,0 @@
+-/* SPDX-License-Identifier: GPL-2.0-or-later */
+-/*
+- *
+- *  Copyright (C) 2007 Christian Pellegrin
+- */
+-
+-
+-#ifndef _LINUX_SERIAL_MAX3100_H
+-#define _LINUX_SERIAL_MAX3100_H 1
+-
+-
+-/**
+- * struct plat_max3100 - MAX3100 SPI UART platform data
+- * @loopback:            force MAX3100 in loopback
+- * @crystal:             1 for 3.6864 Mhz, 0 for 1.8432
+- * @max3100_hw_suspend:  MAX3100 has a shutdown pin. This is a hook
+- *                       called on suspend and resume to activate it.
+- * @poll_time:           poll time for CTS signal in ms, 0 disables (so no hw
+- *                       flow ctrl is possible but you have less CPU usage)
+- *
+- * You should use this structure in your machine description to specify
+- * how the MAX3100 is connected. Example:
+- *
+- * static struct plat_max3100 max3100_plat_data = {
+- *  .loopback = 0,
+- *  .crystal = 0,
+- *  .poll_time = 100,
+- * };
+- *
+- * static struct spi_board_info spi_board_info[] = {
+- * {
+- *  .modalias	= "max3100",
+- *  .platform_data	= &max3100_plat_data,
+- *  .irq		= IRQ_EINT12,
+- *  .max_speed_hz	= 5*1000*1000,
+- *  .chip_select	= 0,
+- * },
+- * };
+- *
+- **/
+-struct plat_max3100 {
+-	int loopback;
+-	int crystal;
+-	void (*max3100_hw_suspend) (int suspend);
+-	int poll_time;
+-};
+-
+-#endif
 -- 
-2.25.1
+2.43.0.rc1.1.gbec44491f096
 
