@@ -1,85 +1,65 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 55BEE59176;
-	Tue,  2 Apr 2024 11:10:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from aposti.net (aposti.net [89.234.176.197])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE8EF60DEA;
+	Tue,  2 Apr 2024 11:10:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.234.176.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712056205; cv=none; b=fCytmf6ZaBnEECZg4HLBXymatwC9bEI5V/oIVFcWNEtE2GhTiTeUl4+/or6p2c2nzHaoE6aGW9G6odYsmTpwk8HSmaKcaA9fli4cXSy6ZE06vXcnGX8ObpWY4MOilhe/xTvaEtxvRfGic4XggusnsdImliyTKL/MeuQO86/zrM8=
+	t=1712056207; cv=none; b=EPCOE8RQ4ovu9dXIPJiDM9f8kqa0UbYuKsXZ4kfMcVEg+jslle9CeCzQqou9rkuozWTBLabrcqJDYITvcpUq196AbJn7W0yR+NYVLnAi3EbcITbikQDS6wTHi23LvRREAdFxwlEanOlC2MtjsfJi1lCP9NRcAaxGY95tzOy8JKg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712056205; c=relaxed/simple;
-	bh=4ZBPmkQjIatLE1GDGNdFvrhnCif2h0CoGIHWile2u0w=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jvam0uO6pkKaJbbBSX70zozxR5Xrbli8vKpe6UCRSBiKMtQhtZ4zzuyCLzYcAz6XxpOGAlLzsljH7pYPdFxJmxWIZf9JlN1w/YvmisFw4U+iaxNDWulOhOOMmNTjD1SPcTCSE51a5XHSY0mGVoymsprpo6rw8l2U5V27MoTw5hs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7E066FEC;
-	Tue,  2 Apr 2024 04:10:35 -0700 (PDT)
-Received: from bogus (e103737-lin.cambridge.arm.com [10.1.197.49])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8F7B43F766;
-	Tue,  2 Apr 2024 04:10:01 -0700 (PDT)
-Date: Tue, 2 Apr 2024 12:09:59 +0100
-From: Sudeep Holla <sudeep.holla@arm.com>
-To: Sibi Sankar <quic_sibis@quicinc.com>
-Cc: <cristian.marussi@arm.com>, <andersson@kernel.org>,
-	<konrad.dybcio@linaro.org>, <jassisinghbrar@gmail.com>,
-	<robh+dt@kernel.org>, <krzysztof.kozlowski+dt@linaro.org>,
-	<linux-kernel@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
-	<devicetree@vger.kernel.org>, <quic_rgottimu@quicinc.com>,
-	<quic_kshivnan@quicinc.com>, <conor+dt@kernel.org>,
-	<quic_gkohli@quicinc.com>, <quic_nkela@quicinc.com>,
-	Ulf Hansson <ulf.hansson@linaro.org>, <quic_psodagud@quicinc.com>
-Subject: Re: [PATCH 5/5] arm64: dts: qcom: x1e80100: Enable cpufreq
-Message-ID: <Zgvnh0J2a_fBH0bR@bogus>
-References: <20240328095044.2926125-1-quic_sibis@quicinc.com>
- <20240328095044.2926125-6-quic_sibis@quicinc.com>
+	s=arc-20240116; t=1712056207; c=relaxed/simple;
+	bh=jgpgoq/QTgIKErhMo7+aVkeA14DdQgDE837Qa3gLBKs=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=rzF5mr2if/igi/sRXdMWcIy+ZkOsEC+TqNptkq7xhIdiIUvS+rzrtssiK/pG6KtfSeGk5UE9XjxSCobLy3av7T1cPntlyTn6JSpaTPiQrOHx+IGspoUFEg9dgMqklQiF6FUqKq8RU06DEfiAEfBjczKJW6KnghXpqtijEUMwtas=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=crapouillou.net; spf=pass smtp.mailfrom=crapouillou.net; dkim=pass (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b=xHcrk9dh; arc=none smtp.client-ip=89.234.176.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=crapouillou.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=crapouillou.net
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="xHcrk9dh"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+	s=mail; t=1712056197;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=9qjDrVhPABDqcButy64rrklBE4MPlj4eblWi/uVSPtc=;
+	b=xHcrk9dhMFWjShvEyQC94PfUCBu0ubhIl3Rs6L2ICTtjLNaVd0ronZkDkZM/BWAWFOv8g8
+	Yyu19L/qDFf8gJxbzCB6+zQ7ewCvhWX+lBr1tEzV5u8vzjMCLJjGVZ3EsDuaT4C24vhuo5
+	aJLkXWDFCIXUSipX2n1Ipoo0qfrxFj8=
+From: Paul Cercueil <paul@crapouillou.net>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+	Daniel Vetter <daniel.vetter@ffwll.ch>,
+	linux-usb@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Paul Cercueil <paul@crapouillou.net>
+Subject: [PATCH 0/2][5.9-rc] USB FunctionFS DMABUF interface fixes
+Date: Tue,  2 Apr 2024 13:09:49 +0200
+Message-ID: <20240402110951.16376-1-paul@crapouillou.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240328095044.2926125-6-quic_sibis@quicinc.com>
+Content-Transfer-Encoding: 8bit
 
-On Thu, Mar 28, 2024 at 03:20:44PM +0530, Sibi Sankar wrote:
-> Enable cpufreq on X1E80100 SoCs through the SCMI perf protocol node.
-> 
-> Signed-off-by: Sibi Sankar <quic_sibis@quicinc.com>
-> ---
->  arch/arm64/boot/dts/qcom/x1e80100.dtsi | 27 ++++++++++++++++++++++++++
->  1 file changed, 27 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/qcom/x1e80100.dtsi b/arch/arm64/boot/dts/qcom/x1e80100.dtsi
-> index 4e0ec859ed61..d1d232cd1f25 100644
-> --- a/arch/arm64/boot/dts/qcom/x1e80100.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/x1e80100.dtsi
-> @@ -68,6 +68,7 @@ CPU0: cpu@0 {
->  			compatible = "qcom,oryon";
->  			reg = <0x0 0x0>;
->  			enable-method = "psci";
-> +			clocks = <&scmi_dvfs 0>;
->  			next-level-cache = <&L2_0>;
->  			power-domains = <&CPU_PD0>;
->  			power-domain-names = "psci";
+Hi Greg,
 
+Here are two patches that address issues that were noticed by Christian
+when reviewing the very similar IIO DMABUF interface (but the FunctionFS
+patchset was already merged at that point).
 
-Any reason why you wouldn't want to use the new genpd based perf controls.
-IIRC it was added based on mainly Qcom platform requirements.
+Based on 5.9-rc2.
 
--                     clocks = <&scmi_dvfs 0>;
-		      next-level-cache = <&L2_0>;
--  		      power-domains = <&CPU_PD0>;
--  		      power-domain-names = "psci";
-+                     power-domains = <&CPU_PD0>, <&scmi_dvfs 0>;
-+                     power-domain-names = "psci", "perf";
+Cheers,
+-Paul
 
+Paul Cercueil (2):
+  usb: gadget: functionfs: Fix inverted DMA fence direction
+  usb: gadget: functionfs: Wait for fences before enqueueing DMABUF
 
-And the associated changes in the scmi dvfs node for cells property.
+ drivers/usb/gadget/function/f_fs.c | 29 ++++++++++++++++-------------
+ 1 file changed, 16 insertions(+), 13 deletions(-)
 
-This change is OK but just wanted to check the reasoning for the choice.
+-- 
+2.43.0
 
---
-Regards,
-Sudeep
