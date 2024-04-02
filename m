@@ -1,91 +1,105 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6E7998405F;
-	Tue,  2 Apr 2024 14:12:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from frasgout11.his.huawei.com (frasgout11.his.huawei.com [14.137.139.23])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0D0674262;
+	Tue,  2 Apr 2024 14:12:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=14.137.139.23
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712067131; cv=none; b=N0YIKZ8DghqKfwsmFfsafLdrveWTA497EuvQkcV5rLjLCqwtZCnmf1BKEaq4arQ1dGs+Z39OF3OeGX1tjwuw3I8w0swYwT0qDnK9x3cGTm4dm97fImz1RkSP11tRDRjnRK4MI+FTtXEYMjC26yS3RZvtE9AGteRgnH2Ch7u8RNg=
+	t=1712067134; cv=none; b=R2b5WHGtlZsriBXZY2cBR4P05AeFyv/qyk6hnODZ/MRqOeFX4iW3WDOiRETneA6fStVBljhLjrfmIpJKM6jH1X21WIR4nJzwMjSONFNl0O+fRRI9784HEk17M+RxQLmcICjGEr8CL1ESU+5KSUs8tQ6/m/MxkbNrCwbG0/lf+zs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712067131; c=relaxed/simple;
-	bh=sBOdmheLZ2gGf5kKDBuAKPcg2oBCHcIwa/Kgod/gHsM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oB9iZ/Qmn1MBjFyOB5xPSAlc/nW5vPnwDntfsPpPp9EEUcJHfe9NaT3ViWJ/ibA71WClVfAsz9TMvF8CuyUeIMN+X/igl08pJxxf6ziNevovgqb6wiwDRu593yWAZfehDXKMQie+4nQF/20EPLKoyDkUy4F1LjCeIKP1IKChmI4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 75B9A2F4;
-	Tue,  2 Apr 2024 07:12:40 -0700 (PDT)
-Received: from bogus (e103737-lin.cambridge.arm.com [10.1.197.49])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E93503F64C;
-	Tue,  2 Apr 2024 07:12:06 -0700 (PDT)
-Date: Tue, 2 Apr 2024 15:12:04 +0100
-From: Sudeep Holla <sudeep.holla@arm.com>
-To: "Mediouni, Mohamed" <mediou@amazon.de>
-Cc: David Woodhouse <dwmw2@infradead.org>,
-	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Sudeep Holla <sudeep.holla@arm.com>, Will Deacon <will@kernel.org>,
-	Robert Moore <robert.moore@intel.com>,
-	"Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-	Len Brown <lenb@kernel.org>, "Saidi, Ali" <alisaidi@amazon.com>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
-	"acpica-devel@lists.linux.dev" <acpica-devel@lists.linux.dev>,
-	Saket Dumbre <saket.dumbre@intel.com>
-Subject: Re: [PATCH 2/2] arm64: acpi: Honour firmware_signature field of
- FACS, if it exists
-Message-ID: <ZgwSNLmQw-TrDsaZ@bogus>
-References: <20240312134148.727454-1-dwmw2@infradead.org>
- <20240312134148.727454-2-dwmw2@infradead.org>
- <dbd60df4632e5ea9cef13cdc1a406b47bd8629da.camel@infradead.org>
- <ZgveD6Hb2HbTNYNO@bogus>
- <70B4B352-08A5-4922-93A0-7F420374A831@amazon.de>
+	s=arc-20240116; t=1712067134; c=relaxed/simple;
+	bh=cSAge/wSYO66R2MvS0YwjZezD9EUijLuG5ypGN/S9KE=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=LvgIpFnL/feIsV7ik+GLGYBHje7fWvL07OGreETHnAAnTNpsoBJulannbyNfB8FXntCNG7FfAvzEzawcLsOpVq3kDla3DxYCzjQVsfxhTfAxtamGh58eM1N7wLzkZz+4tARoqSOOInJ83pC9bi4rsXcDsXe/KLhrxqVZwDiutdk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=14.137.139.23
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.18.186.51])
+	by frasgout11.his.huawei.com (SkyGuard) with ESMTP id 4V88Y02kwNz9ttD2;
+	Tue,  2 Apr 2024 21:55:48 +0800 (CST)
+Received: from mail02.huawei.com (unknown [7.182.16.47])
+	by mail.maildlp.com (Postfix) with ESMTP id D4AFA140413;
+	Tue,  2 Apr 2024 22:11:56 +0800 (CST)
+Received: from huaweicloud.com (unknown [10.204.63.22])
+	by APP1 (Coremail) with SMTP id LxC2BwCnnhcmEgxm0992BQ--.41018S2;
+	Tue, 02 Apr 2024 15:11:56 +0100 (CET)
+From: Roberto Sassu <roberto.sassu@huaweicloud.com>
+To: torvalds@linux-foundation.org
+Cc: linux-integrity@vger.kernel.org,
+	linux-security-module@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org,
+	linux-cifs@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Roberto Sassu <roberto.sassu@huawei.com>
+Subject: [GIT PULL] security changes for v6.9-rc3
+Date: Tue,  2 Apr 2024 16:11:45 +0200
+Message-Id: <20240402141145.2685631-1-roberto.sassu@huaweicloud.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <70B4B352-08A5-4922-93A0-7F420374A831@amazon.de>
+X-CM-TRANSID:LxC2BwCnnhcmEgxm0992BQ--.41018S2
+X-Coremail-Antispam: 1UD129KBjvJXoW7CF1UKryDGFyfKw4furWkCrg_yoW8GrykpF
+	sxKF17Ar15JFyxGFn5AF17CrW0krWrG3WUJan8Gr18AFy3Ar1UZr1qyryF9ryUG347Jr1x
+	tw1UZFn8Gw1DAr7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUySb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k2
+	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
+	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7Cj
+	xVAFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxV
+	AFwI0_Gr0_Gr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40E
+	x7xfMcIj6xIIjxv20xvE14v26r106r15McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x
+	0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Y
+	z7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zV
+	AF1VAY17CE14v26r126r1DMIIYY7kG6xAYrwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE
+	14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4v20x
+	vaj40_Zr0_Wr1UMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_
+	Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07b5KsUUUUUU=
+X-CM-SenderInfo: purev21wro2thvvxqx5xdzvxpfor3voofrz/1tbiAQABBF1jj5wGkQAAs+
 
-On Tue, Apr 02, 2024 at 12:17:22PM +0000, Mediouni, Mohamed wrote:
-> 
-> > On 2. Apr 2024, at 12:29, Sudeep Holla <sudeep.holla@arm.com> wrote:
-> > 
-> > I think it is OK as a temporary solution for now. But there was some
-> > investigation last year as part of some work in Linaro to enable
-> > "drivers/acpi/sleep.c" into the build cleaning up some x86-ness in there.
-> > acpi_sleep_hibernate_setup() already does this but enabling sleep.c need
-> > some careful investigation so that it doesn't break any existing arm64/x86
-> > platforms and made need some wordings clarification in the ACPI spec.
-> > Today system suspend work via psci std path bypassing the ACPI paths which
-> > may not be ideal as none of the ACPI methods are honoured. Some arm64
-> > platforms may implement them and expect to be executed in the future,
-> > maybe ?
-> Current Windows on Arm platforms (seen on SC8280XP) don’t have _GTS
-> or _PTS methods, and don’t have sleeping objects either.
->
+From: Roberto Sassu <roberto.sassu@huawei.com>
 
-IMO, SC8280XP is not a very good model platform for ACPI firmware reference.
-It uses PEP which Linux doesn't support for good reason and that make it
-hard to follow everything on that platform.
+Hi Linus,
 
-> As such, I don’t expect any users for that potential functionality.
+A single bug fix to address a kernel panic in the newly introduced function
+security_path_post_mknod.
 
-I am not 100% sure
+PS: sorry for the email mismatch, @huawei.com emails resent from the
+    mailing list are classified by Gmail as spam, we are working on
+    fixing it.
 
-> Am I missing something or hibernation signalling to firmware (on ARM64)
-> can be made PSCI only indefinitely?
+Thanks,
 
-Also bypassing certain operation taken care in sleep.c might result in
-missing certain features. Few things IIRC(might be missing things myself
-or misunderstood as it has been a while since I looked at the code in
-detail): handing of GPE for wakeup, power resource handling during the
-resume, power button event to mention few.
+Roberto
 
---
-Regards,
-Sudeep
+
+The following changes since commit 39cd87c4eb2b893354f3b850f916353f2658ae6f:
+
+  Linux 6.9-rc2 (2024-03-31 14:32:39 -0700)
+
+are available in the Git repository at:
+
+  https://github.com/linux-integrity/linux.git tags/security-mknod-6.9-rc3
+
+for you to fetch changes up to 991c999d8dc76261623c44f9076e427045053427:
+
+  security: Handle dentries without inode in security_path_post_mknod() (2024-04-02 15:27:46 +0200)
+
+----------------------------------------------------------------
+security-mknod-6.9-rc3
+
+Fixes a kernel panic in the newly introduced function
+security_path_post_mknod(). (Not all dentries have an inode attached to
+them.)
+
+----------------------------------------------------------------
+Roberto Sassu (1):
+      security: Handle dentries without inode in security_path_post_mknod()
+
+ security/integrity/evm/evm_main.c | 6 ++++--
+ security/integrity/ima/ima_main.c | 5 +++--
+ security/security.c               | 5 ++++-
+ 3 files changed, 11 insertions(+), 5 deletions(-)
+
