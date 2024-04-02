@@ -1,92 +1,97 @@
-Received: from mail-yb1-f178.google.com (mail-yb1-f178.google.com [209.85.219.178])
+Received: from mail-yb1-f171.google.com (mail-yb1-f171.google.com [209.85.219.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96E5A757EA
-	for <linux-kernel@vger.kernel.org>; Tue,  2 Apr 2024 12:27:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 393D91EB37
+	for <linux-kernel@vger.kernel.org>; Tue,  2 Apr 2024 12:30:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712060869; cv=none; b=r33irGETRyejYEunUlEOx3uF81BFlPE+oANX8MtuII+jqA6jO4KU9La2hqbV/9zAs5GZeS6v+swUOe3r5RJaQRyAxmPkTCOhJXJdPnK4me4LR31uMg72qMcF2jyNjlNYwrJMSm3Vb4YV5ENVzul5HZxQLcSsGcXKYDF6VnzwpdM=
+	t=1712061018; cv=none; b=SpYlPdBL8HWX6fy7ddpHSXeg9/YfPVVFF5fm0r4rEYgo4nSV8gDKJVg7p0VTyhKXb7+MphtGTt0Fnh3WEWMwVLy1ilyvHocS64V1id3Be/lpM33UdGcqwqWon7mPU04sEcOvKEkCjPLVgQlqJg2vBRIszR1R5p8wA5d96LuRRW8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712060869; c=relaxed/simple;
-	bh=OX9aAE+rsyjd9rU04bvDW0rrl1vTrXrygAuB19dKSeA=;
+	s=arc-20240116; t=1712061018; c=relaxed/simple;
+	bh=Zs7RYzJuxbghkdLPqGTx29qLDxS9pI02mK9pwl5L2Vc=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=QNEYfVZBP16ak5fqj74BDnyi1UfNM4gIjmqndEYkpgrt1ut7i+2R6P3UXB8KihrK3IR1FAHOP1d6ao9dCKXXLHnu0B4nuGKdUots0hkf3B8AaUJeb9zz5JYG7zZ5h3M75OR7YygrYLexSQk5kKtGMU2s4DtdG+YhNAfyyH7ougo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=J9MOySxE; arc=none smtp.client-ip=209.85.219.178
+	 To:Cc:Content-Type; b=DFyfteqtt+ZIf4BCLZJUSn6FEj27hc2grQEj95VX4DB9Jp7w2iTwf+wX6lGvJnmVgW7mAexWW34B6VI7O54Z1AfibqCzfb9SivRZA7xJgDLdOVbis28foWxTkm/Z3EtKUqKTOi57U5UX8mYwI41H7AMwojvOgW0akpsLSoLCRus=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Mc3r2EQe; arc=none smtp.client-ip=209.85.219.171
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="J9MOySxE"
-Received: by mail-yb1-f178.google.com with SMTP id 3f1490d57ef6-dc25e12cc63so5376999276.0
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Apr 2024 05:27:47 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Mc3r2EQe"
+Received: by mail-yb1-f171.google.com with SMTP id 3f1490d57ef6-dcc4de7d901so4051371276.0
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Apr 2024 05:30:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1712060866; x=1712665666; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1712061016; x=1712665816; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=7aFDDEzPr4uOdZH6qoLKZ/lmr4EJ2hpeblGOksnU/bU=;
-        b=J9MOySxEEL9t6SlReuknbNGO9TmlIEGngR/GFkyLTQKxRmAy9bWCjJY0qj9s311EG5
-         xK0Ah35Qq7RTxzq3yPADvaLX1r52trw9phx46DEnP8EGfjm/621gCkRYUyOPm2Dj6oHj
-         T/5w9M2v0X9vYeD6xMCTGxcC/rESI5NlK3+Of8NWdJbIUV9ifKz5My6kUUUmK+bOG8O9
-         GWWGj+ExmttxKtIdFGRmO4XXzeodR2z46Y4baYQhsq6i8/RkkXOBIhfMMExHFKJCF+eO
-         +fstjoY8ZVdYvvjiShUTRSQgkgy2Jysl4VmZuhiFxjA/LxhT9VEuVSXeYCNt8CfledRs
-         2F7Q==
+        bh=mIcPIkXXOlhDttAffO2gh5drI+8AQ9cgDL80itbQeww=;
+        b=Mc3r2EQef3j/j0PJ/EZzAut1j/h+so5o6H2qGqCvmQ9aDQody/BCsAQjCJhBOnUe6M
+         wIDXLuZcHFW4IHuhdHEL5uBbHM3RcvQqd1RGxD1qUwAa+3c2sOHpn713S0D8DwCMhhmK
+         nqfVaYTcbW+T3VGDELI/a0BAPdPB7ApZr8m6a6k/Sto7kJvZMh9Uw7Jkm5HVhW4gWZWS
+         5OwVvoYdi9/rGZYHT8dIvOIg8/KINo8b8GG54u1tgZvqyzwJEngCRYJKBBxBPLkwcDxp
+         Q/N7+2D+PuIMgqmGdnViYq0phkFdTSVkePeFodMIovaYkUc/6jCUmn43nNy8yyIhb8A7
+         PWpA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712060866; x=1712665666;
+        d=1e100.net; s=20230601; t=1712061016; x=1712665816;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=7aFDDEzPr4uOdZH6qoLKZ/lmr4EJ2hpeblGOksnU/bU=;
-        b=XgBIiCquRYZhRVTYmnpCTFL+5WtJxoDf7hdbSKm4qMTXVlvl1FUXYQyvrFKWJBuk6d
-         LElc5st+V8LvPbiIchZAI7PbRB4JEZRvUqO/Bf1fatZxs4AMaQATo/mK71EjnnbmfLbB
-         C69RjdxS1tdl0ctbGuWuHQHv3ghzlLek0wWdB23IDzkiHR8fVUHDzfazMyjB2kpTYHwj
-         Mohhc+zfvuLWiZMk7EDaslsRgbAk1hwzMQYYrGjJz5jsEwf2QA9Lwiw/manLT26e87Fs
-         B3msYd+qrwbBFDeQZflAbd/Ol9pBOib30+ajncPp74ybg8JNzywMyPjZhYNoW7RswXIj
-         oCZw==
-X-Forwarded-Encrypted: i=1; AJvYcCUx5r2XwBo8EWmUfjmVX+ZwhhkAmb8O4fq8nxRDz45bP8qeztzZIhQ3ebm0cEbLmadR1KzLBmf03NdqofjtdoDjD36/rXDxJylLFnrh
-X-Gm-Message-State: AOJu0YyT5ZoTiMvFWasj1QMOCTILujYDuB9Ss/pj2ck8lh1zMGXk9nNz
-	Vv4Hd1veXgJb3tcN6QLF9O4PJsDdga47uCb77Ku5nN6WssyLH0UHKDqbMp93qoApcbH8DN4OyS8
-	aFAKt0UmsaZLhsGp5P8DjXZPfro7bh5+lIjGWRQ==
-X-Google-Smtp-Source: AGHT+IF/MgDhH+cqpcl2n6iWdzGYhkD+F2Phv53TFG/u/SQ3SKg1xPykdw8tq9fQIh8eQPfxN74uIlXMMNpMJt8xVUE=
-X-Received: by 2002:a25:820d:0:b0:dcb:df38:1c20 with SMTP id
- q13-20020a25820d000000b00dcbdf381c20mr8434209ybk.24.1712060866715; Tue, 02
- Apr 2024 05:27:46 -0700 (PDT)
+        bh=mIcPIkXXOlhDttAffO2gh5drI+8AQ9cgDL80itbQeww=;
+        b=ibXRgBi6wBO/mGiOA5JtXWSh/lS76KQ6v1grDAQWXw8ilyW2DjQrKFYir8vcTm9+b4
+         xg83LIfVoqnGkeg76gVTc5aQNDoLPLzZEZnE6f4SdPHXrJfPbj5MGH9NXFqguUmemQIE
+         n/6doNWJ+kShLUXRuQN3tV4GF6wtowdxrT4L3+tIPy4wzpK+9HFEUU7oFcRgGfmNgrqO
+         51udVpZOo8YfQG703kIA+gHqs/igA7BfSECzbYX5fDiInxNVmV3NWAPIB5mc0j2KENIX
+         P4vjba/ktPEkRdjuaykAJ7f7Ok1Xdn236zz1gFb+9rG8vAsn0uOk6uJdZIMJMN6Ex+QN
+         As8w==
+X-Forwarded-Encrypted: i=1; AJvYcCWYUWxNL+MemkIrMmppW0OZg6yW54EpwLMtIidBo+vJzEwt9HMKa8JzTUep8Dvl+Gi/ikDqCx43XGb/Sd2t56XYOLZoAC6pANOeSnJw
+X-Gm-Message-State: AOJu0YxEneGEqUZxf1HZ7+U33V30nM1j2XJhIa6Pvgi3w0RYPSkvCJhN
+	WnjQYT3V02dlm4Gasxb6hs9HMX/PAttqmzqeixwPpPEdXrViuAzHgHjYOztQiPpxW+H+qqcrvNG
+	JEJBNchh+7ugFnPxZy6rt2SuHGNzhm5SqaoT2cA==
+X-Google-Smtp-Source: AGHT+IErRszW5P64U+kk4mUR3NVbU4m6Fv323kf9eS0aVuwmDLT5AdRvQYEQHF2q6E575YZZsy2hpqyd64ENJXefK/g=
+X-Received: by 2002:a25:807:0:b0:dcc:a446:553 with SMTP id 7-20020a250807000000b00dcca4460553mr9476757ybi.57.1712061016321;
+ Tue, 02 Apr 2024 05:30:16 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240322132205.906729-1-arnd@kernel.org>
-In-Reply-To: <20240322132205.906729-1-arnd@kernel.org>
+References: <20240322-gpiolib-find-by-fwnode-stub-v1-1-05a0ceee2123@kernel.org>
+In-Reply-To: <20240322-gpiolib-find-by-fwnode-stub-v1-1-05a0ceee2123@kernel.org>
 From: Linus Walleij <linus.walleij@linaro.org>
-Date: Tue, 2 Apr 2024 14:27:36 +0200
-Message-ID: <CACRpkdbUZvAHSCD5C73rLize6XnPuPY1BCGFiTW_t_rM8sSngg@mail.gmail.com>
-Subject: Re: [PATCH] pinctrl: armada-37xx: remove an unused variable
-To: Arnd Bergmann <arnd@kernel.org>
-Cc: Andrew Lunn <andrew@lunn.ch>, Gregory Clement <gregory.clement@bootlin.com>, 
-	Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Arnd Bergmann <arnd@arndb.de>, 
-	linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
+Date: Tue, 2 Apr 2024 14:30:05 +0200
+Message-ID: <CACRpkdZn+eZEa62ZjttxS3sgT63t5bRtpueFmrG3fsrqDw=xSQ@mail.gmail.com>
+Subject: Re: [PATCH] gpiolib: Add stubs for GPIO lookup functions
+To: Mark Brown <broonie@kernel.org>
+Cc: Bartosz Golaszewski <brgl@bgdev.pl>, Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, 
+	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Mar 22, 2024 at 2:22=E2=80=AFPM Arnd Bergmann <arnd@kernel.org> wro=
+On Fri, Mar 22, 2024 at 5:14=E2=80=AFPM Mark Brown <broonie@kernel.org> wro=
 te:
 
-> From: Arnd Bergmann <arnd@arndb.de>
+> The gpio_device_find_by_() functions do not have stubs which means that i=
+f
+> they are referenced from code with an optiona dependency on gpiolib then
+> the code will fail to link. Add stubs for lookups via fwnode and label. I
+> have not added a stub for plain gpio_device_find() since it seems harder =
+to
+> see a use case for that which does not depend on gpiolib.
 >
-> This variable has never been used and can be removed to avoid a W=3D1 war=
-ning:
+> With the addition of the GPIO reset controller (which lacks a gpiolib
+> dependency) to the arm64 defconfig this is causing build breaks for arm64
+> virtconfig in -next:
 >
-> drivers/pinctrl/mvebu/pinctrl-armada-37xx.c:837:6: error: variable 'i' se=
-t but not used [-Werror,-Wunused-but-set-variable]
->   837 |         int i =3D 0;
+> aarch64-linux-gnu-ld: drivers/reset/core.o: in function `__reset_add_rese=
+t_gpio_lookup':
+>  /build/stage/linux/drivers/reset/core.c:861:(.text+0xccc): undefined ref=
+erence to `gpio_device_find_by_fwnode'
 >
-> Fixes: 87466ccd9401 ("pinctrl: armada-37xx: Add pin controller support fo=
-r Armada 37xx")
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> Signed-off-by: Mark Brown <broonie@kernel.org>
 
-Patch applied!
+Since we have already exposed the innards of gpiolib as much
+as we have I guess it's a must:
+Acked-by: Linus Walleij <linus.walleij@linaro.org>
 
 Yours,
 Linus Walleij
