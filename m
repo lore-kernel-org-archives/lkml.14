@@ -1,125 +1,90 @@
-Received: from mail-yb1-f173.google.com (mail-yb1-f173.google.com [209.85.219.173])
+Received: from mail-yb1-f175.google.com (mail-yb1-f175.google.com [209.85.219.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 057475D749
-	for <linux-kernel@vger.kernel.org>; Tue,  2 Apr 2024 10:39:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C45CD3EA72
+	for <linux-kernel@vger.kernel.org>; Tue,  2 Apr 2024 10:40:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712054389; cv=none; b=u8sg+vC7OYyzhfujamGXP4kw6GowH81vfiPjJWa7NmtDkFJacZvc49jFdsl/BRzU1k2Ovsb9VNDHK3TE//J1IMCjEMeoyCI8d51TZkia/0lHK/504BQoXC4qbh7qPb2G+XTe+xVeRzCVsagouCVl9XOCQUWHczvrk/Wu/mRB3vs=
+	t=1712054447; cv=none; b=dbrXSf3g77pKwpUsE/WV7F+otN9x1mswVyOr99re0byFRqXwsKcC2IQjXfq5njxZswcY0JQw0+OcZowrcnK2vbzj20aLsl4CoPRLNkQP0nHc3WK5JY35jg75w6bquFlMzDRXv2Eh1kcgYLb0NyOT5GVLv4LEJjSzXWJXlzdXmiQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712054389; c=relaxed/simple;
-	bh=HhEFB0IGRWmX+BEHDfO8KYBrrkkM8mY4tpZ16mAQ2nU=;
+	s=arc-20240116; t=1712054447; c=relaxed/simple;
+	bh=UsPusJ70z/hTGNwQRA1c0DtkXeRzoz/bLJ9nq3UmtYo=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=r5m+IFcA6GSqwLf/9LpDnkilnygc8q4qguSZCLyi3IVf/oBqBZkQrLFGL8nsqtUG4LRxRwG0yHGgghW+SBPrRxf4yq8tQMynHtgegc7CifRfqAOBpVgUUvtkLt8gVp+IaBLJIGqLeE95k0AawHdJM/+Str9mbThYoaFJxALb1pc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=n8Vzfiqs; arc=none smtp.client-ip=209.85.219.173
+	 To:Cc:Content-Type; b=Pqfc4Co9V3RlcJgAubSlGjsVVtE5mGDBqGiKkbaR4MrouFL7oP1rXKMSj0zZKB9YPVqoXWRmNgskaPmwgqeLKwpQx8zxNYWGjdTplfZ8J+MRsnXSBSRBtKngQkNX7RCcx3oKz+GkgzP/f+YOiWgmCIaOnMKsEnxtfY9g7oNUqXc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=GE9/grAw; arc=none smtp.client-ip=209.85.219.175
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="n8Vzfiqs"
-Received: by mail-yb1-f173.google.com with SMTP id 3f1490d57ef6-dc6dcd9124bso4663965276.1
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Apr 2024 03:39:46 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="GE9/grAw"
+Received: by mail-yb1-f175.google.com with SMTP id 3f1490d57ef6-dc74435c428so4777896276.2
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Apr 2024 03:40:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1712054386; x=1712659186; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1712054444; x=1712659244; darn=vger.kernel.org;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=N+1mQHP/C9wtu+pPXviceegNYIKTTtoExeoBTWfttgk=;
-        b=n8VzfiqsuWOr93E0ssGrVoPf/59FBcfuZMN3XmPUEZdGoRrJ4WtKwbJqg0X6vqn7wj
-         5c2nPYP3QUagIBWBAGIrXb7rZF5mSmE8lUuedV+tXmbi3iokOFQ/gegSoddd/wo0vAaw
-         u0cCCvRjOuKITkzfl05CwtyJm0AQG5T6x3Qg4QAjbq2+p4+i5j8+JXqtNc96aU7UEham
-         cjhg3OUgnY7hmoKQdABZtbi5ykfUnD6QtdA4NxeFwyujSU5PkvnNIgBc3B5H6D78M9RX
-         OGGrPNILVGPstrLEjpvMc7qN6IPG4FkANwxNt9J/HxyKiEWt+VDBPcQGY0shMNsK4ezh
-         n7vw==
+        bh=9PYIxF4j0xg6PPKY6bKCHDAb7yDnCos1Y4nrGksgbb4=;
+        b=GE9/grAwXjS3vyGcP3xO2p7aY4SQE7kknB7whhEJj+RZknboC7Fkvp5M0xLcp1w1YF
+         9VpuKcerKq53qlB3n6JQSIHAjOlswb4uYVhXhsR6Ja9wE/rPHMag0KbrooFWPEMq+hLH
+         P7hhUzKBJNjEmLbY+0YEbZUL/slxVBYtziKTaXOC98GLtnQuknFdZYcC58bEU3+fj+W2
+         IWMHarmeQM/wegnsXs/iykS1bPnSwd1fzwdYT3pVsAfNRgxk2Eitfk8A7n60Oc/8jjkj
+         5aK16Le0kSOPc7dZXxF6fxVp/iJlt2UiWq0n4uKZsaqagXfsnZfC1fXvzH/ekK3lzCGj
+         xzbw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712054386; x=1712659186;
+        d=1e100.net; s=20230601; t=1712054444; x=1712659244;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=N+1mQHP/C9wtu+pPXviceegNYIKTTtoExeoBTWfttgk=;
-        b=gnjdtKPtxXAuhwfe+ljhFueAj3jmdPtPW8OVrf+37VjdE/ashwakU3rMLnHqktAcBl
-         q3JdQ5V4K+DgJYUJ79exi76ukqDZP8a8yzUKxlLUSy5VwvVgB8uI40RQ4eaGu2e/k2vS
-         rTgkizIr7Kaq4vZbKOi7W+fJ6uuO8cZji+Jur+eTLXanI+xVXHFHL1YrWboPgFO4TaDa
-         2tkXgveDUBEUwH7PPo2Fp8nG1NqmdSOZ9m+gPPGvW/y6P8mSQDU6w5VRqX0UdNsQyrbN
-         lqHEBOlixit774ep93txrA2TkLDLDpDFI3LWVfXjI4PG3+G33RDEedTWuEg8avE86QbE
-         YfNA==
-X-Forwarded-Encrypted: i=1; AJvYcCXFXFc/WfV1QitO/uUIc6Z9W59YQFzVolhCGq0wekjYb7UcTI5aiB5ohndc7sX6/kZZJIX9iZIiM/onH4o9Su6QXtlf+u20Xbxrbogl
-X-Gm-Message-State: AOJu0Yz+tPXBV4ZA3payN4uC+l+Y7p7Y5JFo/r0EtdSA2yl6tOfnixEe
-	M5QXLLOAIJF1sgHbR2TAaoBDKkOobZovmqmsSYmNtjSXg3nT29n+M9/12zAe8GcH9C8YXN+tZKR
-	alkq+C7r9LfRnLimzbP8GEMhBIbx0E5+/bBbqRg==
-X-Google-Smtp-Source: AGHT+IFBCL4yjfbf9P6S4J9vEGaxrXR9oX+B1iTse1Th7FUTQ5eAJxtybDGU8x6mh7uftc+KDUharfT5L6xDsM1B8Ic=
-X-Received: by 2002:a25:aa89:0:b0:dc6:dc58:8785 with SMTP id
- t9-20020a25aa89000000b00dc6dc588785mr10269779ybi.62.1712054386067; Tue, 02
- Apr 2024 03:39:46 -0700 (PDT)
+        bh=9PYIxF4j0xg6PPKY6bKCHDAb7yDnCos1Y4nrGksgbb4=;
+        b=Q18JCMRYmFlMn/BBnv/UOErzl5Ugm+RbvX97y/Kn/IydSpAYoDM3BkQf8fNHhZRzzJ
+         Ny9vlROztTs8SbJTuZJBCr0r4Jh8lx5DhRQuxW1suXE8g9f+Evdg7cpP9KmXL8YaVaiz
+         RMdBVGue13KKsOAoAU1joyMewCucL13IoRkeyzJdsCXcqSwDfbYXPByA0TLxVTLGRc9x
+         1LtXwaXRTGIP5aVPqEEUIUIreskU++mYr57WBjyCoseg0UfF5mrdtb9CULZaVbn95qkb
+         Mlj5ftA6e8QirWka+6GmME5P66pCUmhiRvZvwQDWLbAjliLDz5ZmJiAPJv8d4vfHuJqz
+         2hvQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVSZBarbgyo5YPmvwMxfaRonJhlKe/WqmsVc84CvtFn+RXgm1a3e8vMo9Rw1jw0f+EmiqNFkmVsi2dsvf7FTyVULusDlOSFV+8nsrKa
+X-Gm-Message-State: AOJu0Yyk7us43C50BkTIyqvCZbqBZQAsW0LJ/kC3NZbN3KknuGJML8Qp
+	SZQ0LBvgi88RW//uGXIXPD9bllnC9f/Byx6cBdbk7vLNXBnJrCYBJZNjBGQRIEy9xQvajMAwRwF
+	V4UHtyF+RCWpHZiY/L6vYk7+N8C+3g7gxFPJ91g==
+X-Google-Smtp-Source: AGHT+IFJm9l+G9UEBddm5xRcgxHteNtcPg5V78UGOHmM+aa84AtnvwUHGqb/sEXQfiCIWlOZaAm0r9DYyPYH6p7uu4g=
+X-Received: by 2002:a5b:ccc:0:b0:dc6:de64:f74 with SMTP id e12-20020a5b0ccc000000b00dc6de640f74mr9783364ybr.9.1712054443883;
+ Tue, 02 Apr 2024 03:40:43 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240402103406.3638821-1-quic_varada@quicinc.com> <20240402103406.3638821-3-quic_varada@quicinc.com>
-In-Reply-To: <20240402103406.3638821-3-quic_varada@quicinc.com>
+References: <20240402103406.3638821-1-quic_varada@quicinc.com> <20240402103406.3638821-4-quic_varada@quicinc.com>
+In-Reply-To: <20240402103406.3638821-4-quic_varada@quicinc.com>
 From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Date: Tue, 2 Apr 2024 13:39:34 +0300
-Message-ID: <CAA8EJppyuagb5zkP4LCjjJwConw3mw3iS-+dO7YB01=7-waRTw@mail.gmail.com>
-Subject: Re: [PATCH v6 2/6] interconnect: icc-clk: Remove tristate from INTERCONNECT_CLK
+Date: Tue, 2 Apr 2024 13:40:32 +0300
+Message-ID: <CAA8EJpphk_kqzBE7cKb73ipdpTi29t9ZSOOdSfq7pAGSs5NKeg@mail.gmail.com>
+Subject: Re: [PATCH v6 3/6] interconnect: icc-clk: Add devm_icc_clk_register
 To: Varadarajan Narayanan <quic_varada@quicinc.com>
 Cc: andersson@kernel.org, konrad.dybcio@linaro.org, mturquette@baylibre.com, 
 	sboyd@kernel.org, robh@kernel.org, krzysztof.kozlowski+dt@linaro.org, 
 	conor+dt@kernel.org, djakov@kernel.org, quic_anusha@quicinc.com, 
 	linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org, 
 	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-pm@vger.kernel.org, kernel test robot <lkp@intel.com>
+	linux-pm@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
 On Tue, 2 Apr 2024 at 13:34, Varadarajan Narayanan
 <quic_varada@quicinc.com> wrote:
 >
-> drivers/clk/qcom/common.c uses devm_icc_clk_register under
-> IS_ENABLED(CONFIG_INTERCONNECT_CLK). However, in kernel bot
-> random config build test, with the following combination
+> Wrap icc_clk_register to create devm_icc_clk_register to be
+> able to release the resources properly.
 >
->         CONFIG_COMMON_CLK_QCOM=y
->                 and
->         CONFIG_INTERCONNECT_CLK=m
->
-> the following error is seen as devm_icc_clk_register is in a
-> module and being referenced from vmlinux.
->
->         powerpc64-linux-ld: drivers/clk/qcom/common.o: in function `qcom_cc_really_probe':
->         >> common.c:(.text+0x980): undefined reference to `devm_icc_clk_register'
->
-> Hence, ensure INTERCONNECT_CLK is not selected as a module.
-
-NAK. Please use `depends on INTERCONNECT_CLK || !INTERCONNECT_CLK` in
-your Kconfig dependencies.
-
-
->
-> Reported-by: kernel test robot <lkp@intel.com>
-> Closes: https://lore.kernel.org/oe-kbuild-all/202404012258.MFriF5BV-lkp@intel.com/
-> Fixes: 0ac2a08f42ce ("interconnect: add clk-based icc provider support")
 > Signed-off-by: Varadarajan Narayanan <quic_varada@quicinc.com>
 > ---
->  drivers/interconnect/Kconfig | 1 -
->  1 file changed, 1 deletion(-)
->
-> diff --git a/drivers/interconnect/Kconfig b/drivers/interconnect/Kconfig
-> index 5faa8d2aecff..f44be5469382 100644
-> --- a/drivers/interconnect/Kconfig
-> +++ b/drivers/interconnect/Kconfig
-> @@ -16,7 +16,6 @@ source "drivers/interconnect/qcom/Kconfig"
->  source "drivers/interconnect/samsung/Kconfig"
->
->  config INTERCONNECT_CLK
-> -       tristate
->         depends on COMMON_CLK
->         help
->           Support for wrapping clocks into the interconnect nodes.
-> --
-> 2.34.1
->
+> v5: Introduced devm_icc_clk_register
+> ---
+>  drivers/interconnect/icc-clk.c   | 29 +++++++++++++++++++++++++++++
+>  include/linux/interconnect-clk.h |  4 ++++
+>  2 files changed, 33 insertions(+)
 
+Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 
---
+-- 
 With best wishes
-
 Dmitry
