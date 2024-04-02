@@ -1,85 +1,61 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E49E8F7D;
-	Tue,  2 Apr 2024 02:21:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from mail.nfschina.com (unknown [42.101.60.195])
+	by smtp.subspace.kernel.org (Postfix) with SMTP id C1502DDA9;
+	Tue,  2 Apr 2024 02:23:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=42.101.60.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712024496; cv=none; b=GaXLlehkWXxBzVMpVjlDFysSUCj+xjq5mvLoz2kVwns/D7rh4cuZdVTk0N4kHqMo7yXPLJ5Yxk4L9Jv8HwWp4XzBUmi/CbyTVC67X6eQQ8D+fAAyIAhXFwexG4Vndw972mwrllR2IIK3bL11f3GxNJW3HGjs3B387xtUTu+qKbo=
+	t=1712024598; cv=none; b=esrQQqlnUobQuzzLwCiPtjcdZbgQ5EeYhpbXl8gdsjkYHqpW5dHPv1/ZbTrHcos7Gf6fxqw0jSP7G0z/2C0PMwGeIVWKLXTy96G4/NRhH/Q4+Tz5wmbpmOtbe1hwab9xeEuTDGlhuLoAfoUrTBwpCnrHp/w3/Gv5am2KTCBAyac=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712024496; c=relaxed/simple;
-	bh=CV8kIvJyEvkQbvLwnjBjosZJzgYcjJearDgYKOb9sCA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=qTIfZuIrwzhEYDWuedC3F+tSDqSuLtY/LAIezZ3mgyp1TnsNVYHoPQsxw1dbyEZk+LmnE6rfULGtkR/mJ5cgvVfOxoJMQAJzcw8XpeJvRBMPOEz/9l/xjVXzSXViIhCYHgt9SpX3kwEHivOAh1MV3U4Jmc2CkzX8K1zWZMz4BEA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qzBf82vT; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qzBf82vT"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 06870C433F1;
-	Tue,  2 Apr 2024 02:21:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712024496;
-	bh=CV8kIvJyEvkQbvLwnjBjosZJzgYcjJearDgYKOb9sCA=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=qzBf82vThUOQZ6GfSZxFiPh6FmaD6RWqTT+1BqHXKf+Lk+btUKu4FE0vmh23Yx7t0
-	 cL7lU3BgmdwjOKx97WU3uZDJDyi2UXtMBekXdDox2gj9ZWmwHGtNsiYjc9M7SWmxAC
-	 bKNgxqa8C6pf+WgLVbsrfjUsg9f8w//dywF987W/9cUO4fp6oT3N/CWgnNMBQrAvV5
-	 qAtBnRWC8Wx33HZ+QXcD7aY/j3JoS88BqCNvfOB9gbEamYTM2Hc3vcR4hxYfJUDgy3
-	 R1pDhqdHIxU35I1PkEUKYSnsvSiQ0Z0s/0ecDE/RBfe4VC0JTvlYbAHj2yCXBZJJiH
-	 9wP2hyN2HF9vw==
-From: Andrii Nakryiko <andrii@kernel.org>
-To: x86@kernel.org,
-	peterz@infradead.org,
-	mingo@redhat.com,
-	tglx@linutronix.de
-Cc: bpf@vger.kernel.org,
+	s=arc-20240116; t=1712024598; c=relaxed/simple;
+	bh=lK3dB+eY3hL7m93zgy5ec2mL/lUb+/06ViM6WyDGPNc=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=pZn65deEiZ1I5aFAC9/TxnRSbFMJ0GGgv0BXo4EeohJl57/nT/qcQvRw+Xcj6bmtMU8oFRRGo0MixshyZK2wW+7E70/JQcYWDxf5kz9IulajcXfh1uC4/6GzStu2LlJuoioUNOpw7ibKYlnUGS8RxHAUqSsU+szZk07pHPLWFf0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nfschina.com; spf=pass smtp.mailfrom=nfschina.com; arc=none smtp.client-ip=42.101.60.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nfschina.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nfschina.com
+Received: from localhost.localdomain (unknown [219.141.250.2])
+	by mail.nfschina.com (Maildata Gateway V2.8.8) with ESMTPA id 999C46055052C;
+	Tue,  2 Apr 2024 10:23:07 +0800 (CST)
+X-MD-Sfrom: zeming@nfschina.com
+X-MD-SrcIP: 219.141.250.2
+From: Li zeming <zeming@nfschina.com>
+To: tytso@mit.edu,
+	adilger.kernel@dilger.ca
+Cc: linux-ext4@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	jolsa@kernel.org,
-	song@kernel.org,
-	kernel-team@meta.com,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Sandipan Das <sandipan.das@amd.com>
-Subject: [PATCH v5 4/4] perf/x86/amd: don't reject non-sampling events with configured LBR
-Date: Mon,  1 Apr 2024 19:21:18 -0700
-Message-ID: <20240402022118.1046049-5-andrii@kernel.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240402022118.1046049-1-andrii@kernel.org>
-References: <20240402022118.1046049-1-andrii@kernel.org>
+	Li zeming <zeming@nfschina.com>
+Subject: [PATCH] =?UTF-8?q?ext4:=20block=5Fvalidity:=20Remove=20unnecessar?= =?UTF-8?q?y=20=E2=80=98NULL=E2=80=99=20values=20from=20new=5Fnode?=
+Date: Tue,  2 Apr 2024 10:23:00 +0800
+Message-Id: <20240402022300.25858-1-zeming@nfschina.com>
+X-Mailer: git-send-email 2.18.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Now that it's possible to capture LBR on AMD CPU from BPF at arbitrary
-point, there is no reason to artificially limit this feature to just
-sampling events. So corresponding check is removed. AFAIU, there is no
-correctness implications of doing this (and it was possible to bypass
-this check by just setting perf_event's sample_period to 1 anyways, so
-it doesn't guard all that much).
+new_node is assigned first, so it does not need to initialize the
+assignment.
 
-Reviewed-by: Sandipan Das <sandipan.das@amd.com>
-Signed-off-by: Andrii Nakryiko <andrii@kernel.org>
+Signed-off-by: Li zeming <zeming@nfschina.com>
 ---
- arch/x86/events/amd/lbr.c | 4 ----
- 1 file changed, 4 deletions(-)
+ fs/ext4/block_validity.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/x86/events/amd/lbr.c b/arch/x86/events/amd/lbr.c
-index 33d0a45c0cd3..19c7b76e21bc 100644
---- a/arch/x86/events/amd/lbr.c
-+++ b/arch/x86/events/amd/lbr.c
-@@ -310,10 +310,6 @@ int amd_pmu_lbr_hw_config(struct perf_event *event)
+diff --git a/fs/ext4/block_validity.c b/fs/ext4/block_validity.c
+index 6fe3c941b5651..87ee3a17bd29c 100644
+--- a/fs/ext4/block_validity.c
++++ b/fs/ext4/block_validity.c
+@@ -72,7 +72,7 @@ static int add_system_zone(struct ext4_system_blocks *system_blks,
  {
- 	int ret = 0;
+ 	struct ext4_system_zone *new_entry, *entry;
+ 	struct rb_node **n = &system_blks->root.rb_node, *node;
+-	struct rb_node *parent = NULL, *new_node = NULL;
++	struct rb_node *parent = NULL, *new_node;
  
--	/* LBR is not recommended in counting mode */
--	if (!is_sampling_event(event))
--		return -EINVAL;
--
- 	ret = amd_pmu_lbr_setup_filter(event);
- 	if (!ret)
- 		event->attach_state |= PERF_ATTACH_SCHED_CB;
+ 	while (*n) {
+ 		parent = *n;
 -- 
-2.43.0
+2.18.2
 
