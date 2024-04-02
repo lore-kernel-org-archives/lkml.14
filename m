@@ -1,90 +1,84 @@
-Received: from mail-yb1-f170.google.com (mail-yb1-f170.google.com [209.85.219.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9906FDF6C
-	for <linux-kernel@vger.kernel.org>; Tue,  2 Apr 2024 10:33:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2D8640876;
+	Tue,  2 Apr 2024 10:33:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712053993; cv=none; b=ZlCqwDGsN7wuuS3Maj80h8JHAX7O2vXriQeEEHUr27n2o4kaRYTFzzkiZCPGYY70wtaCqnHad21JeBOZVxw/6qgEy51pngtY4mX5iKq5QZYXGWQGl3rNQNpe3DthTRJcuvE6JPP94CmEPKnYG6+npwwl25suu/ptIIE/nBSOBjQ=
+	t=1712054038; cv=none; b=M3++QXcxqVacBZ/Wk6/q7EzQ/h/ERILiY0HAPJH60Q7U21Q63TIIBbRxDflieGS4co5NDyytfjELUcpFiVyWKdKFx7qadySOzCipmDn98dX4cG13yJFo2JsTgMvH2nccZZiuuM7KEhrgT216gU3wtW1Ed/8KS0szweyYoT33FKc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712053993; c=relaxed/simple;
-	bh=bTjAP1Oa79bQY5vP296y5F3oGcaiNBrkRdnRZD3ar3c=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=pp1SZLHajY00ae42J5IPLDvDFTVcV2XNRRp4AU7foqHEUc4VQeExd9Gfr/tJYGgFSaKjhlImSn+q64oWi2YeM9paS7mYYglx4dfeSP6zlk/eqI4Ai/EXnM4QjXJunOCb6X6i1Z11n3mUGjUf94WWg8hVM+NWBzYSkfYVNC5yaHQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=q6xSpSc1; arc=none smtp.client-ip=209.85.219.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1712054038; c=relaxed/simple;
+	bh=yQyyvLBf6qblD2zMLzpTiUQ5VLhVLtMWd/58b3xOqH8=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=dnMsOcgK79h4Iu8zNdboNoL6YLAFYQ3yEfXNvw+LCaiLIU7nn7O/lPDSe7udE7/7OMtXu6SG1PSrqtB7d1fbQ9j5lAxXn3Ibmn4KjH5ajEVgjVJF7R4LJ10oVwZhdhM1rYrKD6AQ8v5imaSf/IXgGcwNVBMFq3hAZyCdF9ECTV8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sqqrE//5; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="q6xSpSc1"
-Received: by mail-yb1-f170.google.com with SMTP id 3f1490d57ef6-dc74e33fe1bso4562624276.0
-        for <linux-kernel@vger.kernel.org>; Tue, 02 Apr 2024 03:33:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1712053990; x=1712658790; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=bTjAP1Oa79bQY5vP296y5F3oGcaiNBrkRdnRZD3ar3c=;
-        b=q6xSpSc1Cw5xmO4pUFJFgdUgI77Uu2zsSViYGYXVVys3ODKTZnxf5GabeyacgJzVRE
-         lGcLUeGrDc4YksDAkMV7fMvwkAF092vm7/vdDKNI1V3amGanXVzUz8jGYh8wtaoIqQ9v
-         N2UdQiVgPsWX4nIaRraShUKC6ahIGsG+3JSBN8JwOAfFv/8kqiOgfMQtwvQgMCaJlKVG
-         KWMfCYTpotS+pNAffil4oES3IkqAAgQUioS+XBafeEq8vJU3pKIS2H8tKdvd90xgewll
-         1p8BqxXNZk5af/3Jr8QYiNZekZ4xLL4cPKiN3S7Ml7vJryPlHWRtARXVCAJig7w09OVr
-         i23g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712053990; x=1712658790;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=bTjAP1Oa79bQY5vP296y5F3oGcaiNBrkRdnRZD3ar3c=;
-        b=NQjiqYT4Nk+Bbz5Q2GbO00XhJgUTyyIqLlN3NhIkTKO58HrC6aXf95l1vecVOH9O1C
-         9kU91+FnXUSh0z6xemt39dic/NxlQWrMJbkwxMoEJIvVWi8DGTK6G0gHLUYeK8eWiqPI
-         wX6ymnAu7f8yq3pLaJTuwust0nDsOZsS0IRhCH3yuLOBB6y/WJ04tnotKRXhBIncNBBA
-         uSWtkG76lrWkAcaJHXUDuMeoT3XCQcBto9+JwwY5RK1V7vreg9vSlEVXxxc8FGn9wg8+
-         977hcdlWdOyj1vAswWgzUjbBiMIgNplAs5EUSCILuyVqTpdEagHToE+Y8AZf/pstiG8A
-         4Rgg==
-X-Forwarded-Encrypted: i=1; AJvYcCUcraFV+it3GoHqEJ/EyWJwwPnrB8BC0iagknfxcAmCCfh6d4yjOXoa3nE7mZoY7BM5Bq4iiUVBjO89VsE+jil9Q3XXLNWzuPCGkPS2
-X-Gm-Message-State: AOJu0YzWazT5A046QS3N6hbbvc0tOmbNRCW/SoqmSHRZgsLq9IMBXvsy
-	+Omq+qsrpUJZzyWcl/q13FKND/e7rqizQ+hx9B/6kjdl4G27xCO72q2yE4GVmxM3CFx3wr0nezf
-	tFN3ESf2Yl1DgLaCsCG5/F3Oy05+z7coEZ/vySw==
-X-Google-Smtp-Source: AGHT+IElYHGm6fwXhBEqIk71kCbbQLnWRlQW5xHkW2oi+F/hIWeOy7TrU7S6sLaD7XQSTD+RZgjjCe8le7UVlrObhE8=
-X-Received: by 2002:a25:2688:0:b0:dcc:3a3:9150 with SMTP id
- m130-20020a252688000000b00dcc03a39150mr10863236ybm.22.1712053989458; Tue, 02
- Apr 2024 03:33:09 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sqqrE//5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D805AC433F1;
+	Tue,  2 Apr 2024 10:33:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1712054037;
+	bh=yQyyvLBf6qblD2zMLzpTiUQ5VLhVLtMWd/58b3xOqH8=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=sqqrE//5SJDwMvCp7dcysivY9PxZ3BLYjLA0F7XvCFrOolIJn+W5qpGVdVeLCm5BD
+	 0dkdtB/G7edTOEdRoG595l19Q1F6CAt/oysQowWnyoApE0RalMaglp4GEhd6pKPeHX
+	 Pcb0hOpU07Hn8Od0a8Uv6CFnS8p67uwJ0yusCVlgVzCyocrxxoW+P9QDJecLeXkJSf
+	 GzzZTfHhMfZfwgOd86LXptC4U3zM3qEQbSSYyUCN9b56CBpnz7adFvYwzqykDzuXC1
+	 c3VopP4P4Dzw/5W95ot/HH2Zxf7TKmbVuhNplVbr8Nr5SLEDYBEewa6d7hdVL37ReE
+	 sMysE3HSW3/Ew==
+From: Alexey Gladkov <legion@kernel.org>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Jiri Slaby <jirislaby@kernel.org>
+Cc: LKML <linux-kernel@vger.kernel.org>,
+	kbd@lists.linux.dev,
+	linux-api@vger.kernel.org,
+	linux-fbdev@vger.kernel.org,
+	linux-serial@vger.kernel.org
+Subject: [RESEND PATCH v3 0/2] VT: Add ability to get font requirements
+Date: Tue,  2 Apr 2024 12:32:55 +0200
+Message-ID: <cover.1712053848.git.legion@kernel.org>
+X-Mailer: git-send-email 2.44.0
+In-Reply-To: <cover.1710252966.git.legion@kernel.org>
+References: <cover.1710252966.git.legion@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231222022741.8223-1-boy.wu@mediatek.com>
-In-Reply-To: <20231222022741.8223-1-boy.wu@mediatek.com>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Tue, 2 Apr 2024 12:32:58 +0200
-Message-ID: <CACRpkdZJpoHZ9DwV4R5NBSDXTwVjWVU7a1_qh8tHCtxPWPMTnw@mail.gmail.com>
-Subject: Re: [PATCH] arm: kasan: clear stale stack poison
-To: "boy.wu" <boy.wu@mediatek.com>
-Cc: Russell King <linux@armlinux.org.uk>, Matthias Brugger <matthias.bgg@gmail.com>, 
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	linux-mediatek@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Fri, Dec 22, 2023 at 3:28=E2=80=AFAM boy.wu <boy.wu@mediatek.com> wrote:
+We now have KD_FONT_OP_SET_TALL, but in fact such large fonts cannot be
+loaded. No console driver supports tall fonts. Unfortunately, userspace
+cannot distinguish the lack of support in the driver from errors in the
+font itself. In all cases, EINVAL will be returned.
 
-> From: Boy Wu <boy.wu@mediatek.com>
->
-> We found below OOB crash:
-(...)
-> We find the root cause of this OOB is that arm does not clear stale stack
-> poison in the case of cpuidle.
->
-> This patch refer to arch/arm64/kernel/sleep.S to resolve this issue.
->
-> Signed-off-by: Boy Wu <boy.wu@mediatek.com>
+This patchset adds a separate ioctl to obtain the font parameters
+supported by the console driver.
 
-With the commit context pointed out by Mark Rutland:
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+v3:
+* Added the use of the in_range macro.
+* Squashed the commits that add ioctl to console divers.
 
-Yours,
-Linus Walleij
+v2:
+* Instead of the KDFONTOP extension, a new ioctl has been added to
+  obtain font information.
+
+Alexey Gladkov (2):
+  VT: Add KDFONTINFO ioctl
+  VT: Allow to get max font width and height
+
+ drivers/tty/vt/vt.c                 | 24 ++++++++++++++++++++++++
+ drivers/tty/vt/vt_ioctl.c           | 13 +++++++++++++
+ drivers/video/console/newport_con.c | 21 +++++++++++++++++----
+ drivers/video/console/sticon.c      | 25 +++++++++++++++++++++++--
+ drivers/video/console/vgacon.c      | 21 ++++++++++++++++++++-
+ drivers/video/fbdev/core/fbcon.c    | 22 +++++++++++++++++++++-
+ include/linux/console.h             |  2 ++
+ include/linux/vt_kern.h             |  1 +
+ include/uapi/linux/kd.h             | 13 ++++++++++++-
+ 9 files changed, 133 insertions(+), 9 deletions(-)
+
+-- 
+2.44.0
+
