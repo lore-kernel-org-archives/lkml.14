@@ -1,103 +1,95 @@
-Received: from mail-177131.yeah.net (mail-177131.yeah.net [123.58.177.131])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B86F6605BA;
-	Tue,  2 Apr 2024 10:56:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=123.58.177.131
+Received: from fllv0016.ext.ti.com (fllv0016.ext.ti.com [198.47.19.142])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFC025D8EB;
+	Tue,  2 Apr 2024 10:57:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.142
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712055396; cv=none; b=qCvLL8SxaWToRjG8DYTaWnzPdG1CV5VwwTN4/foX1P1FL10recUxnlPIu5mL/02yZsCn+SrAbr/RRgVPJ6tUHtwy77oVaMkxHvgarJJlNlc4w3yDtxcPxPGi8UbQkfMs69BYFO4pY87PIFAj/fujeI+4D0Gch6q0O82R9P0zlHA=
+	t=1712055446; cv=none; b=RBqEOJSGwTQISxWTHNszY1f4sAxThrW/uc4zbQNgQDkqcp+lmop5/iFYjPUlHycK3tJK7GYy/IRTiLYyasAvjZ4sKGMv00a2oSJY96KaWfbrLT/muPSeuUOzpwq7a9wvNMMhhsFp+WxvHH85PQct40tSox4rQeGuY3Cm3WTHlhs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712055396; c=relaxed/simple;
-	bh=ZsQBIyXKKSheuF7mF3S6XPB3YrTCv+P0r+MuG3O/sww=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=I/px1oBa4HdlOGejlsfOQhSUM+BPuT0Pk80fQxbnC+kKx1pxn/08QgT6LmkzzDvHuWGk8OdGO+GII6+n2DoppJiiQ9iUDSQLmRAYI8k99oZspy2G01N1/Y+m7zI7r16CKp7Kdz18eLlg9hEECe+Qi1kl0H4zzpC96u4ymmDtTy4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yeah.net; spf=pass smtp.mailfrom=yeah.net; dkim=pass (1024-bit key) header.d=yeah.net header.i=@yeah.net header.b=VNu7cS6I; arc=none smtp.client-ip=123.58.177.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yeah.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yeah.net
+	s=arc-20240116; t=1712055446; c=relaxed/simple;
+	bh=kkb/d6x0v4T0ES9p7ItJaUk4MCCN+fKCo/y2LIHmje4=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Yy4MZmG/vuGEFwRepcFiq4Wy5eIowkSjqbROoRmh/Iksz5Sdcke3UvD0yokYd9fSkykidifIl3fS4h4A0XlzwotzeIMjhuUMT0iEczU3kqD9jEz9j3odpOAP6OHRLoD0CxBgy1akXj85X/0rYKmIPbEgURPOAtzkPEk4ullg11Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=PympfZDR; arc=none smtp.client-ip=198.47.19.142
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=yeah.net header.i=@yeah.net header.b="VNu7cS6I"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yeah.net;
-	s=s110527; h=Date:From:Subject:Message-ID:MIME-Version:
-	Content-Type; bh=HL6yYIAfmTq4orQz8KSraMu08Ey5PkjYaek7rExViLg=;
-	b=VNu7cS6INVdcwM+6pNaYKAjz3A2GHUDmyqhZWbK0VIuHzo3qOD2TYP6ttmW+WW
-	5G48e74VnTMRoqYxj503QRPPyOYOO2x1V4SqFTj2ev6EzArNOowif4jDTu27L7hS
-	Or5iqK9IVHUewtXmEY/uHA73Qu626ycrTUftGDkl05PNk=
-Received: from dragon (unknown [223.68.79.243])
-	by smtp1 (Coremail) with SMTP id ClUQrAD3HyBE5AtmXiWkAQ--.64379S3;
-	Tue, 02 Apr 2024 18:56:05 +0800 (CST)
-Date: Tue, 2 Apr 2024 18:56:04 +0800
-From: Shawn Guo <shawnguo2@yeah.net>
-To: Frank Li <Frank.Li@nxp.com>
-Cc: Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	Dong Aisheng <aisheng.dong@nxp.com>,
-	"open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>,
-	"open list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <imx@lists.linux.dev>,
-	"moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>,
-	open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/1] arm64: dts: imx8-ss-conn: fix usdhc wrong lpcg clock
- order
-Message-ID: <ZgvkRFxkNzQ2Z8re@dragon>
-References: <20240322164706.2626088-1-Frank.Li@nxp.com>
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="PympfZDR"
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+	by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 432AvCTw019888;
+	Tue, 2 Apr 2024 05:57:12 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1712055432;
+	bh=3uB2rYs0bDJqtCFhZGoEKJlA5lhJ6eLDa3FK1xtCCOQ=;
+	h=From:To:CC:Subject:Date;
+	b=PympfZDRP5XV6H9VmNkyi3K3gNEdqWHUz9gLRJ+eRJ56xE6e7gRxgKIh1k/sb6ml+
+	 ssAtUZOcSwB2ohzPvpbSWP9o9Bx7tISheFD/bjizaueC2mma6FLRbnu+2xJvanKmW8
+	 3NqEg3uEY8IZXJdHPkUF8fouXV0lFXGkLg/S7FSA=
+Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
+	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 432AvCHJ080312
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Tue, 2 Apr 2024 05:57:12 -0500
+Received: from DFLE102.ent.ti.com (10.64.6.23) by DFLE114.ent.ti.com
+ (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Tue, 2
+ Apr 2024 05:57:12 -0500
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE102.ent.ti.com
+ (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Tue, 2 Apr 2024 05:57:12 -0500
+Received: from uda0492258.dhcp.ti.com (uda0492258.dhcp.ti.com [172.24.227.9])
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 432Av8Gr078370;
+	Tue, 2 Apr 2024 05:57:09 -0500
+From: Siddharth Vadapalli <s-vadapalli@ti.com>
+To: <lee@kernel.org>, <robh@kernel.org>, <krzk+dt@kernel.org>,
+        <conor+dt@kernel.org>
+CC: <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <srk@ti.com>,
+        <s-vadapalli@ti.com>
+Subject: [PATCH] dt-bindings: mfd: syscon: Add ti,am62p-cpsw-mac-efuse compatible
+Date: Tue, 2 Apr 2024 16:27:08 +0530
+Message-ID: <20240402105708.4114146-1-s-vadapalli@ti.com>
+X-Mailer: git-send-email 2.40.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240322164706.2626088-1-Frank.Li@nxp.com>
-X-CM-TRANSID:ClUQrAD3HyBE5AtmXiWkAQ--.64379S3
-X-Coremail-Antispam: 1Uf129KBjvdXoW7GF1rZr43Aw4DJryfAFWrKrg_yoWkKwb_Xw
-	18Xrn5KFZrurZayF95ArWxu3y8K3W7Ar1UJas2yr4xXF98G3yUCr1UJ3yrurn8WFnFqws8
-	AF4DJrWkJryS9jkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUvcSsGvfC2KfnxnUUI43ZEXa7IU0kwIDUUUUU==
-X-CM-SenderInfo: pvkd40hjxrjqh1hdxhhqhw/1tbiDQe0ZVszXX2VXgAAsY
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-On Fri, Mar 22, 2024 at 12:47:05PM -0400, Frank Li wrote:
-> The actual clock show wrong frequency:
-> 
->    echo on >/sys/devices/platform/bus\@5b000000/5b010000.mmc/power/control
->    cat /sys/kernel/debug/mmc0/ios
-> 
->    clock:          200000000 Hz
->    actual clock:   166000000 Hz
->                    ^^^^^^^^^
->    .....
-> 
-> According to
-> 
-> sdhc0_lpcg: clock-controller@5b200000 {
->                 compatible = "fsl,imx8qxp-lpcg";
->                 reg = <0x5b200000 0x10000>;
->                 #clock-cells = <1>;
->                 clocks = <&clk IMX_SC_R_SDHC_0 IMX_SC_PM_CLK_PER>,
->                          <&conn_ipg_clk>, <&conn_axi_clk>;
->                 clock-indices = <IMX_LPCG_CLK_0>, <IMX_LPCG_CLK_4>,
->                                 <IMX_LPCG_CLK_5>;
->                 clock-output-names = "sdhc0_lpcg_per_clk",
->                                      "sdhc0_lpcg_ipg_clk",
->                                      "sdhc0_lpcg_ahb_clk";
->                 power-domains = <&pd IMX_SC_R_SDHC_0>;
->         }
-> 
-> "per_clk" should be IMX_LPCG_CLK_0 instead of IMX_LPCG_CLK_5.
-> 
-> After correct clocks order:
-> 
->    echo on >/sys/devices/platform/bus\@5b000000/5b010000.mmc/power/control
->    cat /sys/kernel/debug/mmc0/ios
-> 
->    clock:          200000000 Hz
->    actual clock:   198000000 Hz
->                    ^^^^^^^^
->    ...
-> 
-> Fixes: 16c4ea7501b1 ("arm64: dts: imx8: switch to new lpcg clock binding")
-> Signed-off-by: Frank Li <Frank.Li@nxp.com>
+The CTRLMMR_MAC_IDx registers within the CTRL_MMR space of TI's AM62p SoC
+contain the MAC Address programmed in the eFuse. Add compatible for
+allowing the CPSW driver to obtain a regmap for the CTRLMMR_MAC_IDx
+registers within the System Controller device-tree node. The default MAC
+Address for the interface corresponding to the first MAC port will be set
+to the value programmed in the eFuse.
 
-Applied, thanks!
+Signed-off-by: Siddharth Vadapalli <s-vadapalli@ti.com>
+---
+
+This patch is based on linux-next tagged next-20240402.
+
+Regards,
+Siddharth.
+
+ Documentation/devicetree/bindings/mfd/syscon.yaml | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/Documentation/devicetree/bindings/mfd/syscon.yaml b/Documentation/devicetree/bindings/mfd/syscon.yaml
+index 9d55bee155ce..4936ac0b5936 100644
+--- a/Documentation/devicetree/bindings/mfd/syscon.yaml
++++ b/Documentation/devicetree/bindings/mfd/syscon.yaml
+@@ -73,6 +73,7 @@ properties:
+               - rockchip,rv1126-qos
+               - starfive,jh7100-sysmain
+               - ti,am62-usb-phy-ctrl
++              - ti,am62p-cpsw-mac-efuse
+               - ti,am654-dss-oldi-io-ctrl
+               - ti,am654-serdes-ctrl
+               - ti,j784s4-pcie-ctrl
+-- 
+2.40.1
 
