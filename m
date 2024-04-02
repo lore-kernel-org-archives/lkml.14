@@ -1,109 +1,125 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 590B915E5D5;
-	Tue,  2 Apr 2024 21:45:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C36115AAA7
+	for <linux-kernel@vger.kernel.org>; Tue,  2 Apr 2024 21:45:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712094346; cv=none; b=L9nQ09AJz/fUNd8S9BJiAevVVM3L7TQa3EJQX3hJ6GGDPP73YvRTt59xwwGND9FRqFcqfJ6I8mGsN+rLTYBeQpmll9d71fcGeUYQThhk3p/iHreSrk6Oor3RCDN1hiky13PInID+aji11keDUXzsVtcPKT34y9d5rk7zw4LcEpU=
+	t=1712094360; cv=none; b=THnXLf/k3el7mV4jYkicKRbzeEhiOapYV47hWnFq/y+kyJcQLvhZXga1mkS06AYb6/eLJdFRge2vlCfesSUuhZjYDuJP0eG/4H2DPsW6zD+Q87sY02GCF1ir16lu3RuF51F9Ie/Xb3NFNsd5ukJZaCj4HpPGoqhISV4W9Iw7r5g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712094346; c=relaxed/simple;
-	bh=wuM3QGEWiNElGXaP4/VJAD12VO/Zng+KWQq+AWUQPeE=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=WVhobv927ZXZ6NOY52PwRLYseo/XDlD258bb/rQFZl0dORnsqasBCeQROcaF4xNI+y/Wdxn/a0pU7DSABRicDVAnKdyg5j5qdBxx45YVxeuBTXgJVFrdjU44dwuxpPXJ27zaDWFESZjU5JLahx902H84FfWSCiIDGzmzHrAw4TI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=UleE0SbI; arc=none smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="UleE0SbI"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1712094345; x=1743630345;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=wuM3QGEWiNElGXaP4/VJAD12VO/Zng+KWQq+AWUQPeE=;
-  b=UleE0SbIOdel1ICpr9teRpaU+ndrjyoTjSuv0na5cmITOQWxzzw0cpi6
-   r8NcYloD8Eg8AIOXT+d8/lVUsQJtqXMwEyOVrqf/dmaEDpNh/wt2W+XmS
-   qFLLLxuXH8r+Wyz7sqqN/V3r85415kdfnYtFgRgxrCuiRS6S50oMoSana
-   WLWKKZwY2IvkWzOx62mgnNNzKjLonFVoILpBLwDunDZsWlowhUoq3cx4I
-   XVpACq+JqqE+976REARgxG/mf7uy4GX3IqeuqXpG63THW3nbk3oiMm5QM
-   qZvAelIfyJSqGzSeclZIlK2SpzrnueQikbsyS4Ow9Nj919T7X5By6rTpr
-   w==;
-X-CSE-ConnectionGUID: p78YnM1jTl+hC3uERUXR5Q==
-X-CSE-MsgGUID: CMWbr/z5QcStFBqflrdf7A==
-X-IronPort-AV: E=McAfee;i="6600,9927,11032"; a="18019997"
-X-IronPort-AV: E=Sophos;i="6.07,176,1708416000"; 
-   d="scan'208";a="18019997"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2024 14:45:03 -0700
-X-CSE-ConnectionGUID: wK9kq6GISk2XPCSgLU3cgQ==
-X-CSE-MsgGUID: UqzJJAhoQOOFLL8B8trqWw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,176,1708416000"; 
-   d="scan'208";a="22849052"
-Received: from fl31ca102ks0602.deacluster.intel.com (HELO gnr-bkc.deacluster.intel.com) ([10.75.133.163])
-  by fmviesa004.fm.intel.com with ESMTP; 02 Apr 2024 14:45:01 -0700
-From: weilin.wang@intel.com
-To: weilin.wang@intel.com,
-	Namhyung Kim <namhyung@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Kan Liang <kan.liang@linux.intel.com>
-Cc: linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Perry Taylor <perry.taylor@intel.com>,
-	Samantha Alt <samantha.alt@intel.com>,
-	Caleb Biggers <caleb.biggers@intel.com>
-Subject: [RFC PATCH v7 0/6] TPEBS counting mode support
-Date: Tue,  2 Apr 2024 17:44:30 -0400
-Message-ID: <20240402214436.1409476-1-weilin.wang@intel.com>
-X-Mailer: git-send-email 2.43.0
+	s=arc-20240116; t=1712094360; c=relaxed/simple;
+	bh=ocxDqJuKRDai7rPDRIaTxB1XkMPaImpG6NfuIj5DBO4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Ro7wjNh37C/m3BQ3V2encEh7Wjt5W9cLfMaYUOexGAx72SEnn6OidxqUS/rmpO58Cpe0nH4LNZmAsbmKIweD2lMZb9gPMe6zSRLXfOwEOilHq3f/E5ptsfZgFELU9ezF2trB8YQBrRe2k8ux1rOsnLYfoojSl9GqvJMMDomjHDs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <mgr@pengutronix.de>)
+	id 1rrlx1-00009Z-B1; Tue, 02 Apr 2024 23:45:51 +0200
+Received: from [2a0a:edc0:2:b01:1d::c5] (helo=pty.whiteo.stw.pengutronix.de)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <mgr@pengutronix.de>)
+	id 1rrlx0-00A3Xa-3M; Tue, 02 Apr 2024 23:45:50 +0200
+Received: from mgr by pty.whiteo.stw.pengutronix.de with local (Exim 4.96)
+	(envelope-from <mgr@pengutronix.de>)
+	id 1rrlx0-00Aws9-04;
+	Tue, 02 Apr 2024 23:45:50 +0200
+Date: Tue, 2 Apr 2024 23:45:50 +0200
+From: Michael Grzeschik <mgr@pengutronix.de>
+To: Thinh Nguyen <Thinh.Nguyen@synopsys.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/3] usb: dwc3: gadget: improve abbort transfer abort by
+ adding more conditions
+Message-ID: <Zgx8jh_Tz_dgmI1v@pengutronix.de>
+References: <20240307-dwc3-gadget-complete-irq-v1-0-4fe9ac0ba2b7@pengutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="tWQpvqhZ3A9Ayrjv"
+Content-Disposition: inline
+In-Reply-To: <20240307-dwc3-gadget-complete-irq-v1-0-4fe9ac0ba2b7@pengutronix.de>
+X-Sent-From: Pengutronix Hildesheim
+X-URL: http://www.pengutronix.de/
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: mgr@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-From: Weilin Wang <weilin.wang@intel.com>
 
-Changes in v7:
-- Update code and comments for better code quality [Namhyung]
-- Add a separate commit for perf data [Namhyung]
-- Update retire latency print function to improve alignment [Namhyung]
+--tWQpvqhZ3A9Ayrjv
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-v6: https://lore.kernel.org/all/20240329191224.1046866-1-weilin.wang@intel.com/
+On Thu, Mar 07, 2024 at 04:22:02PM +0100, Michael Grzeschik wrote:
+>The dwc3 gadget driver is correctly checking the prepare and started
+>request lists for potential underruns and will stop the running transfer
+>in that case. However it is possible that the running pipeline will lead
+>into more underrun scenarios, which can be avoided and be detected. This
+>series is adding the corresponding code to ensure that an underrun
+>transfer will be handled properly.
+>
+>Signed-off-by: Michael Grzeschik <m.grzeschik@pengutronix.de>
+>---
+>Michael Grzeschik (3):
+>      usb: dwc3: gadget: reclaim the whole started list when request was m=
+issed
+>      usb: dwc3: gadget: check drained isoc ep
+>      usb: dwc3: gadget: check the whole started queue for missed requests=
+ in complete
+>
+> drivers/usb/dwc3/gadget.c | 38 ++++++++++++++++++++++++++++++++++++--
+> 1 file changed, 36 insertions(+), 2 deletions(-)
+>---
+>base-commit: dfea18989aa7beb42c2cb6344fe8787de35d9471
+>change-id: 20240307-dwc3-gadget-complete-irq-1a8ffa347fd1
+>
+>Best regards,
 
-Weilin Wang (6):
-  perf stat: Parse and find tpebs events when parsing metrics to prepare
-    for perf record sampling
-  perf data: Allow to use given fd in data->file.fd
-  perf stat: Fork and launch perf record when perf stat needs to get
-    retire latency value for a metric.
-  perf stat: Add retire latency values into the expr_parse_ctx to
-    prepare for final metric calculation
-  perf stat: Add retire latency print functions to print out at the very
-    end of print out
-  perf vendor events intel: Add MTL metric json files
+Since it is not right to fully stop the ep after one missed transfer was
+detected, this series is not correct anymore. We solve the overall issue
+in the upper layer now.
 
- tools/perf/builtin-stat.c                     |  249 +-
- .../arch/x86/meteorlake/metricgroups.json     |  127 +
- .../arch/x86/meteorlake/mtl-metrics.json      | 2551 +++++++++++++++++
- tools/perf/util/data.c                        |    7 +-
- tools/perf/util/metricgroup.c                 |   87 +-
- tools/perf/util/metricgroup.h                 |   22 +-
- tools/perf/util/stat-display.c                |   69 +
- tools/perf/util/stat-shadow.c                 |   19 +
- tools/perf/util/stat.h                        |    4 +
- 9 files changed, 3115 insertions(+), 20 deletions(-)
- create mode 100644 tools/perf/pmu-events/arch/x86/meteorlake/metricgroups.json
- create mode 100644 tools/perf/pmu-events/arch/x86/meteorlake/mtl-metrics.json
+Besides the patch "usb: dwc3: gadget: check drained isoc ep" is not
+completely wrong, I will resend that one in another veriant.
 
---
-2.43.0
+mgr
 
+--=20
+Pengutronix e.K.                           |                             |
+Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
+31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+
+--tWQpvqhZ3A9Ayrjv
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEElXvEUs6VPX6mDPT8C+njFXoeLGQFAmYMfIsACgkQC+njFXoe
+LGTZFhAAv0rquu74k9lZ78qiepcQVo6Qoq8z3Awh2HIvs28vVvJ5GlRD19yeoWnF
+FupjFur3kFfw+xAa1CU3zNJtDnlKiW+t9klJ/MipLhRPR9GpAjkCVXVriJGNEfpS
+Y7hhB7iOZjr0nGJ/b/Wld4OZroDCjFPoF3BGxm/tISucusCuoswjLwewJF3tmAGf
+q8yeOq6MQKHbbPpFQlNFEMibMWMqacgjWsKdC8ngrwcfUgF87pbxqdunF6TXwwYf
+Xu+2iZUn87SiwlueUf21RjXMC498rh3hZ1qzbvDpNwjCRJIyypIK60YubHOasSsF
++uFkleYZpfJCZbENlsDBvvYpP6LqP47oFIjBsWDHYGTNuJVA+78iV26mw/Ayjdor
+gY5QW79O8wnP0IjbYEuQE5w7KeMP09clWEM2s2k/hj17c3eIoqvp882iaCVXJBne
+CRjNVy/WPIh4TV4jHY1vc4dk1ezX+2hJlaQtwHvoiiwMGiRv3vFSEga29ITywqpX
+4zexzC05NR70ARWHrddKF32BhYgLIHuiksPUeWpnmRq3UCEfp1yFm2ka9D3HCUAL
+fYpnebv/npQ0rWPmV+0r4QPPypPzSXBOLsyObeEj/AM83eonUNy+zY9YvWpIft+z
+yjSNKZfc8gUSjhIQ/vsVEIKIXxY0UVVCYEB1bS/JeaGLk2IAmzc=
+=P9jq
+-----END PGP SIGNATURE-----
+
+--tWQpvqhZ3A9Ayrjv--
