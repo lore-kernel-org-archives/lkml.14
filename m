@@ -1,159 +1,131 @@
-Received: from mail-yw1-f175.google.com (mail-yw1-f175.google.com [209.85.128.175])
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34BF2CA6F
-	for <linux-kernel@vger.kernel.org>; Tue,  2 Apr 2024 05:48:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67B09323D;
+	Tue,  2 Apr 2024 05:56:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712036895; cv=none; b=bfWggioQ8iNOEc4RvQQqYhazCxBRp+EoA12xh9cIkqLa11aTMTF3Gs4aI5qCmVaWeRT9l3VtafvTE7IVJBTpu5f92In9yuXpRL6m1a71efygY1BI3+QBZzr9O52jnS/95MWJiGvFj+JeQjmT6p8FfP/sl/WHc09FnSAW4Pn4qww=
+	t=1712037405; cv=none; b=NwCC/J7xlzOC6s8bmq+bDwnDjCqiOpmgqZjJfJPCJqU+CZCflMQe2mF/xX8FnoLCGX4ZSL2oNwTHxFvoTJiE+ctfmNnMWAjsJdw8Oun6lZIaBI4120F8RgkQg22uYbxHekHBPnqwn8DNXP5on8XLRw3NL+5evp0LTbGVzRoZXYQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712036895; c=relaxed/simple;
-	bh=Y78rJj8+C6yXAfWJEDvmRi7jXwsL00HBbfbNEJA7KZI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ePZsVhlGRkxSvrPzRL234dJzgpqNwF8uwrkBhc0IH8IYOCUyLgjkj/eS9R+GJvSLFnkoUEwO+fSOJhdqQ6seVHMsvVpJRXqAr9tjRPMqpgbRlxpDn06n315QiWEWgsOu6+OL2SDPHN70AozIl9+hK53JadZ7cvAyHmMJGlaeARU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KdESN32f; arc=none smtp.client-ip=209.85.128.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1712037405; c=relaxed/simple;
+	bh=r7CQo84lhaY6GlXs0N/ZHRxC5QyLD18tpZWa2eEQUHI=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=a+CpGV6yswSQmFLLafFhQRj4VZvXKPoRQnbI6ke2VAhWXBOgP661OEw2X6whPydLNA6bA1lGo5rG6PgxILmAvADx0tnjA5r7CUgDSf5YcMrcqWR1S69Ln1qRD508G5TZORDh7imzbFlg/y3Aq4xw5ROeo/x2FJwzSihAeX3gqmI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=XVP4myHD; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=6RwV7fUM; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KdESN32f"
-Received: by mail-yw1-f175.google.com with SMTP id 00721157ae682-60a104601dcso49217017b3.2
-        for <linux-kernel@vger.kernel.org>; Mon, 01 Apr 2024 22:48:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1712036893; x=1712641693; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=LicSR3wkx45YuxnJnubGsVzsBl0pkMbBOEPlM15UIC8=;
-        b=KdESN32fiI69wYH7cOn+QfyL9IMsT5fFtEjO3072n8II2r337rQGjtOCFJ52/NqvE+
-         ZJQzKbWYGSf2BPUwWpMaS2W4gGDXoQdewBpC68NMzDPzhlicfCMLP5lsGvuo54CipMmB
-         NALNmq6nfNoUNV77jdwvTyetgAFO4wpeok/Cu/avUsQxG7QjiaB9aGO2j1OKEJc8bMpz
-         QE36diFKDbKkwDt9L51TfR4Rht/6Bmqp2ifTHOjUdWfTgkY73iHK8peTLBFSYhSjikxB
-         Ont3G6hgwqFa1qXG+pA//qtHSrK9XoRnWoi4WuG48Tj0WjX6vO474YEkWZsCWGUTy0wc
-         S34w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712036893; x=1712641693;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=LicSR3wkx45YuxnJnubGsVzsBl0pkMbBOEPlM15UIC8=;
-        b=Y7bldNNof5F/dVwSvl1lKl/fGTUTWkUN+VZRaEZpvSXNBSNyTxp74N/PnwX3IVYeI4
-         2wm+7BTmgaNYMVLVdsTa8zJLBrNrb5cH7WxZers+Khudp+Fu17sZ3/Ifon7FeAOjJAxX
-         x2WXgFp6UY+VlKNN4fAYYSgCQiKLMvKxTo2CVmdwJIjp8D/kUO7R2FP93K/x8LO4w9ih
-         f/aVjaPTd/24GK+j4K4Nyzlqr2e1RQFNhJmLxVyRT+yJC0328spyS9C3RcClZd1ZmbGw
-         qEkNszrsf7ulMeLZIgp1LRGY6PiTCCPogE5EKpQ6CwbLhtTN9wP3wbxfe68uJthiC3Zf
-         Qz6w==
-X-Forwarded-Encrypted: i=1; AJvYcCUnKiT6LlR6K2BPD/h89FWDlyGsLpVK4PNkcWYzmbSjLFJ5FNSy0PVIZX5+++1SkzXXxTi0m9OKNCWZcC4PG+NRo/9cvlmelhH4a0T1
-X-Gm-Message-State: AOJu0YxU+XLkLD2iNibqCTJdrEUC1e1Cn0LYLCiBXdiRtjnThS9uhl8Z
-	56H38w7cQOCZ7Xy2xTGdhzLvbfZrbko7vKjvnJGS5B1CbQO4ye6lRGz8zOOcu4/hKqYWb06WSMv
-	Aa3PobIJoDAPeuuT6I4uTk/99uu4=
-X-Google-Smtp-Source: AGHT+IG5Hprc/YKZPrz9z9DNyqCunX7nvKsdHb6/htJV8OMRfMj0gK1ecgmP6p3JaYSFs6Eu6bT3XrWt/+r3mP1gME8=
-X-Received: by 2002:a05:6902:34b:b0:db9:9537:2c39 with SMTP id
- e11-20020a056902034b00b00db995372c39mr9318049ybs.2.1712036893108; Mon, 01 Apr
- 2024 22:48:13 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="XVP4myHD";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="6RwV7fUM"
+Received: from imap2.dmz-prg2.suse.org (imap2.dmz-prg2.suse.org [10.150.64.98])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 7C47C220AE;
+	Tue,  2 Apr 2024 05:56:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1712037401; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=5hWpiDi37HOrtYFnr82tOTQamP5ZS+re5rb82xsc3So=;
+	b=XVP4myHDewzSK5T6rbT8RpTY448N9+sCppFUFZAXDpSMFSKSrfIakA8B1nTC1sKWLFjGCI
+	Lj9YF8of2lca4ZDLOhD0Zg1CpalWqapjLF3NCeHIbk87XGr4o8zBNIu76Lztw48a0bwsWD
+	ieL8sW9T8gxBTCRIHrLT4NxLXAjWm0Y=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1712037401;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=5hWpiDi37HOrtYFnr82tOTQamP5ZS+re5rb82xsc3So=;
+	b=6RwV7fUMu6okdcSOK0ZZZPFie+L5R2AQZ/4JiGCGx9bUB3WXqfBkfrAJRJup5BhEzpIJIL
+	e8h+TMJ71xVHy5AQ==
+Authentication-Results: smtp-out1.suse.de;
+	none
+Received: from imap2.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap2.dmz-prg2.suse.org (Postfix) with ESMTPS id 3DBC013A90;
+	Tue,  2 Apr 2024 05:56:41 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap2.dmz-prg2.suse.org with ESMTPSA
+	id uqibDRmeC2bQMQAAn2gu4w
+	(envelope-from <tiwai@suse.de>); Tue, 02 Apr 2024 05:56:41 +0000
+Date: Tue, 02 Apr 2024 07:56:45 +0200
+Message-ID: <878r1wtihu.wl-tiwai@suse.de>
+From: Takashi Iwai <tiwai@suse.de>
+To: Stephen Rothwell <sfr@canb.auug.org.au>
+Cc: Takashi Iwai <tiwai@suse.de>,
+	Oswald Buddenhagen <oswald.buddenhagen@gmx.de>,
+	Linux Kernel Mailing
+ List <linux-kernel@vger.kernel.org>,
+	Linux Next Mailing List
+ <linux-next@vger.kernel.org>
+Subject: Re: linux-next: Fixes tag needs some work in the sound-current tree
+In-Reply-To: <20240402075853.4e5a61cf@canb.auug.org.au>
+References: <20240402075853.4e5a61cf@canb.auug.org.au>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20240315015916.21545-1-daweilics@gmail.com> <ZgqOEJ5sCANkkk5N@linux.ibm.com>
-In-Reply-To: <ZgqOEJ5sCANkkk5N@linux.ibm.com>
-From: Dawei Li <daweilics@gmail.com>
-Date: Mon, 1 Apr 2024 22:47:36 -0700
-Message-ID: <CAG5MgCq3GT=CVj7Hz8rUMfNG1c9ypVsTSDKNESHV9tY_qWSt2g@mail.gmail.com>
-Subject: Re: [PATCH v2] sched/fair: fix initial util_avg calculation
-To: Vishal Chourasia <vishalc@linux.ibm.com>
-Cc: Ingo Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Juri Lelli <juri.lelli@redhat.com>, Vincent Guittot <vincent.guittot@linaro.org>, 
-	Dietmar Eggemann <dietmar.eggemann@arm.com>, Steven Rostedt <rostedt@goodmis.org>, 
-	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>, 
-	Daniel Bristot de Oliveira <bristot@redhat.com>, Valentin Schneider <vschneid@redhat.com>, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-Spam-Score: -0.30
+X-Spamd-Result: default: False [-0.30 / 50.00];
+	 ARC_NA(0.00)[];
+	 RCVD_VIA_SMTP_AUTH(0.00)[];
+	 FROM_HAS_DN(0.00)[];
+	 FREEMAIL_ENVRCPT(0.00)[gmx.de];
+	 TO_MATCH_ENVRCPT_ALL(0.00)[];
+	 MIME_GOOD(-0.10)[text/plain];
+	 NEURAL_HAM_LONG(-1.00)[-1.000];
+	 RCPT_COUNT_FIVE(0.00)[5];
+	 RCVD_COUNT_THREE(0.00)[3];
+	 DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	 TO_DN_ALL(0.00)[];
+	 NEURAL_HAM_SHORT(-0.20)[-0.997];
+	 MID_CONTAINS_FROM(1.00)[];
+	 FUZZY_BLOCKED(0.00)[rspamd.com];
+	 FROM_EQ_ENVFROM(0.00)[];
+	 MIME_TRACE(0.00)[0:+];
+	 FREEMAIL_CC(0.00)[suse.de,gmx.de,vger.kernel.org];
+	 RCVD_TLS_ALL(0.00)[];
+	 BAYES_HAM(-0.00)[41.99%]
+X-Spam-Level: 
+X-Spam-Flag: NO
 
-Hi Vishal
+On Mon, 01 Apr 2024 22:58:53 +0200,
+Stephen Rothwell wrote:
+> 
+> Hi all,
+> 
+> In commit
+> 
+>   e1d8acf35ce7 ("Revert "ALSA: emu10k1: fix synthesizer sample playback position and caching"")
+> 
+> Fixes tag
+> 
+>   Fixes: df335e9a8b (ALSA: emu10k1: fix synthesizer sample playback position and caching, 2023-05-18)
+> 
+> has these problem(s):
+> 
+>   - SHA1 should be at least 12 digits long
+>     This can be fixed for the future by setting core.abbrev to 12 (or
+>     more) or (for git v2.11 or later) just making sure it is not set
+>     (or set to "auto").
+>   - Subject does not match target commit subject
+>     Just use
+>         git log -1 --format='Fixes: %h ("%s")'
+> 
+> The date field adds nothing.
+> 
+> Thus:
+> 
+> Fixes: df335e9a8bcb ("ALSA: emu10k1: fix synthesizer sample playback position and caching")
 
-Thanks for the comment!
-Do you suggest using scale_load_down() in place of se_weight()?
-It's a soft bug we should fix one way or another before what the
-comment mentions really happens.
-I am actually confused that we have both se_weight() and
-scale_load_down(), and they do the same thing.
+The commit is corrected now.  Thanks.
 
-Best regards,
-Dawei
 
-On Mon, Apr 1, 2024 at 3:36=E2=80=AFAM Vishal Chourasia <vishalc@linux.ibm.=
-com> wrote:
->
-> On Thu, Mar 14, 2024 at 06:59:16PM -0700, Dawei Li wrote:
-> > Change se->load.weight to se_weight(se) in the calculation for the
-> > initial util_avg to avoid unnecessarily inflating the util_avg by 1024
-> > times.
-> >
-> > The reason is that se->load.weight has the unit/scale as the scaled-up
-> > load, while cfs_rg->avg.load_avg has the unit/scale as the true task
-> > weight (as mapped directly from the task's nice/priority value). With
-> > CONFIG_32BIT, the scaled-up load is equal to the true task weight. With
-> > CONFIG_64BIT, the scaled-up load is 1024 times the true task weight.
-> > Thus, the current code may inflate the util_avg by 1024 times. The
-> > follow-up capping will not allow the util_avg value to go wild. But the
-> > calculation should have the correct logic.
-> >
-> > Signed-off-by: Dawei Li <daweilics@gmail.com>
-> > ---
-> > Changes in v2:
-> > - update the commit message
-> > ---
-> >  kernel/sched/fair.c | 5 +++--
-> >  1 file changed, 3 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-> > index a19ea290b790..5f98f639bdb9 100644
-> > --- a/kernel/sched/fair.c
-> > +++ b/kernel/sched/fair.c
-> > @@ -1031,7 +1031,8 @@ void init_entity_runnable_average(struct sched_en=
-tity *se)
-> >   * With new tasks being created, their initial util_avgs are extrapola=
-ted
-> >   * based on the cfs_rq's current util_avg:
-> >   *
-> > - *   util_avg =3D cfs_rq->util_avg / (cfs_rq->load_avg + 1) * se.load.=
-weight
-> > + *   util_avg =3D cfs_rq->avg.util_avg / (cfs_rq->avg.load_avg + 1)
-> > + *           * se_weight(se)
-> >   *
-> >   * However, in many cases, the above util_avg does not give a desired
-> >   * value. Moreover, the sum of the util_avgs may be divergent, such
-> > @@ -1078,7 +1079,7 @@ void post_init_entity_util_avg(struct task_struct=
- *p)
-> >
-> >       if (cap > 0) {
-> >               if (cfs_rq->avg.util_avg !=3D 0) {
-> > -                     sa->util_avg  =3D cfs_rq->avg.util_avg * se->load=
-.weight;
-> > +                     sa->util_avg  =3D cfs_rq->avg.util_avg * se_weigh=
-t(se);
-> Hi,
->
-> The comment above the declaration of se_weight function says we should be
-> using full load resolution and get rid of this helper.
->
-> Should we be adding new user of the helper?
->
-> /*
->  * XXX we want to get rid of these helpers and use the full load resoluti=
-on.
->  */
-> static inline long se_weight(struct sched_entity *se)
-> {
->         return scale_load_down(se->load.weight);
-> }
->
->
-> >                       sa->util_avg /=3D (cfs_rq->avg.load_avg + 1);
-> >
-> >                       if (sa->util_avg > cap)
-> > --
-> > 2.40.1
-> >
+Takashi
