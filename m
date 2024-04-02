@@ -1,317 +1,225 @@
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 227C91803A;
-	Tue,  2 Apr 2024 05:44:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EC8C323D;
+	Tue,  2 Apr 2024 05:45:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712036682; cv=none; b=hGKJWphmnt60eEMFd3R/faewPALQo9PqHbQ/II6bQZh8MioIGTh+NXDTUtuaXOJF2sChfi4vX265r20pol5O68z5VtriDHT3ytwOLj8aEj96q2jZiBWKklB6f9U8nwxAN+GIrF8AcVUhCKpmOBmLF30gh6p4vsCIam4A7fi4+ME=
+	t=1712036747; cv=none; b=oxa4QvaEeJvxIfff0IXOKaeWinRxknLUnRpDbMqwbX1imC8nKjyZLFsdzpgU0Rt0d1Tuyl7ej8+psS927cQBCzQVB/mK9oClIydzKTB65Ub4sQy0J55WUUZc2H+CPXFtSPP72lpdsxGQyOCyjjN/YFOm/KnW9tiukcIrHABNJJw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712036682; c=relaxed/simple;
-	bh=dESIgQbdtYd3N4yNgthDMABPtH2hgaswv7cOW4tUTRs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=HtS84NqV1GSouq2wMa7PjK+sxAW1jhc6VbmS410nPlAB5RrRg1cjX3M2j7yJl+IKNyBgZOuigDJd7QyfqBcaHQSrGjbkikCX+J7uws4z5/GiQlNrHTBUAB1tdd+cXE3B2uTBksWdwpsbcD2fCyP4/YTb1IwBgQ2n6Rlw1Z0wcRg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KG0Xe/q0; arc=none smtp.client-ip=209.85.128.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1712036747; c=relaxed/simple;
+	bh=adZ7sJPl/Yy9PlJ2BUlKHOYalm+hH3gkDLFFb7Fweps=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ET4p6r0I7KGVGWkUvh7Xy4JUiEKKGsA0Qh0FT5GObyqTbyzqcQyOTsuOG5Fa0iSy0NMAi9Fjk1CIFh2mtou1TFCRMvRpkDNI/PcLthZTQWEZn6ycSZ9ZZXbDbbmaLNDukBR1UGjtq90VaDOZTq6irNbl3fJMvxn1N+B9ii+1E3k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IKROSwI0; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KG0Xe/q0"
-Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-4148c6132b4so31179335e9.1;
-        Mon, 01 Apr 2024 22:44:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1712036678; x=1712641478; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=HapPy0wGVgdmqgUe2fujV1jw2EA/8wMr8AnIhAWmrtg=;
-        b=KG0Xe/q0uGc3TELK2kB8RvsyCKAI2tL+rpQ46g/tllVMKJYxdSNil1kUOEe0ouitqF
-         qv2qYgZNYqNtvxr4e7e87b6Gtgf5tul7/1goU3KOZl1v6k3imBJcyv3IVn9RF+hrihYy
-         CD0FSmkD0LWQMCvW27DgWoRLPXwd+o6ur745OD1QhG7QdATFwEd5nWxupwAoYne3lbaY
-         pbIZNLhoZf1sLcNThlle3XcXyMmkfmqIXIT5gou2uF5IMQBnzCN8UQJYSo0hE5CB7jIZ
-         g0pBjg4Q7OoU+1Dg5QRNGrUBDxG8XwjldgPW1ppBqL9VCB9yPJ9G0mi7b1bh1kgZNMah
-         r3Sg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712036678; x=1712641478;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=HapPy0wGVgdmqgUe2fujV1jw2EA/8wMr8AnIhAWmrtg=;
-        b=GZYM3fWWp3Yg8q9PE3hsMevJMu7JpaBi/8so8IKv6QPBvZgHe/pXm2TcSjkgx9boFO
-         RsEJ0bWaZMv7Mm9BL6fDd+Iy/pZZXkbhssUDZOgpqpzwz9gwlEDwoJ6D2lOoqL3x2Aqp
-         FfP+LqTFDOo38ManphtSpR0pjrfUksB4fmEfzueMRSllPPDAE3vNVHcOnLsg90F+tKm5
-         UncVm3fJKlwB7m9yL3ZDb9jTczmhiR/q8QC1xux9jHC5KST8gl37txR6mV+diUZLkO3T
-         xc+IyAt+ehzSNCbjhTvbl6CZyIFQiYcwSDOpiIEgX+elfp/E3nH6dBHndQ5CiTsyENZI
-         6F4Q==
-X-Forwarded-Encrypted: i=1; AJvYcCXO5jnRc0lKDlKjX3FFv3mkUZfJGuvwPUwQm+L+/nb78xBXnEObQ2RN4pXpLazDrnlU2A7hnsgS1yxphH9svygtWZFbgKnpQTCQWGSFSedXgS8O09RuZyF5GzeMCbq1L3Oq1yuT8tJGt8o=
-X-Gm-Message-State: AOJu0YyrgxhxumsZ6mt2bakuXfkaBmydKfwzXZ5DMZTPyEby3WJp9BuQ
-	6qg8hsu40UOH7SCB0tTegM6BNPpg77AMp0eL+ZcJxufn5QDZmnX6BQp4AJNRXeZL19dwCxA9kRR
-	KanIzfvMor8WokXV+qxAaL7tpbxqVvDuXl8I=
-X-Google-Smtp-Source: AGHT+IGwCF7sVhH1lPYYZ9dSvYpS+nLV9sKrN34iTwyfSnF5llXkCQIDqSyEhA6V4Wisrp07yZKuVNZOHwq6ABpHeH0=
-X-Received: by 2002:a05:600c:1911:b0:414:7fc6:e482 with SMTP id
- j17-20020a05600c191100b004147fc6e482mr9193558wmq.0.1712036678150; Mon, 01 Apr
- 2024 22:44:38 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IKROSwI0"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F1971C433C7;
+	Tue,  2 Apr 2024 05:45:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1712036747;
+	bh=adZ7sJPl/Yy9PlJ2BUlKHOYalm+hH3gkDLFFb7Fweps=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=IKROSwI0Nc17lvfclyAxTW8vPcWoxxzdHOkvkxdcW7nQPxagM0ZU8YBdQZvkFl1TV
+	 u0LPVkyif7CTVr/NsZenIUddtckeZ7fW7nW3HHpFdBZ/KAtsRVygghvryqu+au+xXY
+	 wrhXtP/HEPCtN26Z6tyUJecE/FgHR/kpK3+m7fYHBQ0MrIDT6wuwAVJ1L8p3w3M7wn
+	 rWtF8poAJvlqB3LryETSqKoNKNZfZbtftXoU7CghODF7DjVf4r2Vy1XNDtzH9TLJTQ
+	 7RlRFH2/yORRSXT+rmoUoRxUB0MuwU3H70ilSQwApagssruJQ1MMuwO3rYXgzdwOhk
+	 d12FH5CzUepvg==
+Date: Tue, 2 Apr 2024 11:15:38 +0530
+From: Manivannan Sadhasivam <mani@kernel.org>
+To: Shashank Babu Chinta Venkata <quic_schintav@quicinc.com>
+Cc: agross@kernel.org, andersson@kernel.org, konrad.dybcio@linaro.org,
+	quic_msarkar@quicinc.com, quic_kraravin@quicinc.com,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	Jingoo Han <jingoohan1@gmail.com>,
+	Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+	Serge Semin <fancer.lancer@gmail.com>,
+	Conor Dooley <conor.dooley@microchip.com>,
+	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+	linux-arm-msm@vger.kernel.org
+Subject: Re: [PATCH v2 2/3] PCI: qcom: Add equalization settings for gen4
+Message-ID: <20240402054538.GJ2933@thinkpad>
+References: <20240320071527.13443-1-quic_schintav@quicinc.com>
+ <20240320071527.13443-3-quic_schintav@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <1711680261-5789-1-git-send-email-zhiguo.niu@unisoc.com>
- <890bd06d-2a94-4138-9854-4a7ed74e0e51@acm.org> <CAHJ8P3K9OL6MHNrSrqmf0esbr2h1HJ3mVRmxDNVpf95ZMHQcqg@mail.gmail.com>
- <92e45c93-e2ff-4d34-b70f-7772f0596e68@acm.org>
-In-Reply-To: <92e45c93-e2ff-4d34-b70f-7772f0596e68@acm.org>
-From: Zhiguo Niu <niuzhiguo84@gmail.com>
-Date: Tue, 2 Apr 2024 13:44:27 +0800
-Message-ID: <CAHJ8P3KgU-tFDAgCNc5GcPbUBtDDyFmcfza2HsoD9TJ3h1DS=Q@mail.gmail.com>
-Subject: Re: [PATCH] block/mq-deadline: Fix WARN when set async_depth by sysfs
-To: Bart Van Assche <bvanassche@acm.org>
-Cc: Zhiguo Niu <zhiguo.niu@unisoc.com>, axboe@kernel.dk, linux-kernel@vger.kernel.org, 
-	linux-block@vger.kernel.org, ke.wang@unisoc.com, hongyu.jin@unisoc.com, 
-	Damien Le Moal <dlemoal@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240320071527.13443-3-quic_schintav@quicinc.com>
 
-On Tue, Apr 2, 2024 at 5:23=E2=80=AFAM Bart Van Assche <bvanassche@acm.org>=
- wrote:
->
-> On 3/31/24 17:58, Zhiguo Niu wrote:
-> > On Sat, Mar 30, 2024 at 2:08=E2=80=AFAM Bart Van Assche <bvanassche@acm=
-.org> wrote:
-> >>
-> >> On 3/28/24 7:44 PM, Zhiguo Niu wrote:
-> >>> diff --git a/block/mq-deadline.c b/block/mq-deadline.c
-> >>> index 02a916b..89c516e 100644
-> >>> --- a/block/mq-deadline.c
-> >>> +++ b/block/mq-deadline.c
-> >>> @@ -646,10 +646,12 @@ static void dd_depth_updated(struct blk_mq_hw_c=
-tx *hctx)
-> >>>        struct request_queue *q =3D hctx->queue;
-> >>>        struct deadline_data *dd =3D q->elevator->elevator_data;
-> >>>        struct blk_mq_tags *tags =3D hctx->sched_tags;
-> >>> +     unsigned int shift =3D tags->bitmap_tags.sb.shift;
-> >>> +     unsigned int dd_min_depth =3D max(1U, 3 * (1U << shift)  / 4);
-> >>>
-> >>>        dd->async_depth =3D max(1UL, 3 * q->nr_requests / 4);
-> >>>
-> >>> -     sbitmap_queue_min_shallow_depth(&tags->bitmap_tags, dd->async_d=
-epth);
-> >>> +     sbitmap_queue_min_shallow_depth(&tags->bitmap_tags, dd_min_dept=
-h);
-> >>>    }
-> >>
-> >> The above patch sets min_shallow_depth to the same value as commit
-> >> d47f9717e5cf ("block/mq-deadline: use correct way to throttling write
-> >> requests"). That commit got reverted because it was causing performanc=
-e
-> >> problems. So the above patch reintroduces the performance problem that
-> >> has been fixed by commit 256aab46e316 ("Revert "block/mq-deadline: use
-> >> correct way to throttling write requests"").
-> > Hi Bart Van Assche,
-> >
-> > This  patch only modifies the initial minimum value of
-> > min_shallow_depth and does not change "dd->async_depth",
-> > so it will not cause performance problems like the previous patch
-> > (d47f9717e5cf ("block/mq-deadline: use correct way to throttling write
-> > requests")).
->
-Hi Bart Van Assche,
-thanks for your reply.
+On Wed, Mar 20, 2024 at 12:14:46AM -0700, Shashank Babu Chinta Venkata wrote:
 
-> Oops, I misread your patch. After having taken another look, my
-> conclusions are as follows:
-> * sbitmap_queue_min_shallow_depth() is called. This causes
->    sbq->wake_batch to be modified but I don't think that it is a proper
->    fix for dd_limit_depth().
-yes, it will affect sbq->wake_batch,  But judging from the following code:
-wake_batch =3D clamp_t(unsigned int, depth / SBQ_WAIT_QUEUES, 1, SBQ_WAKE_B=
-ATCH);
-wake_batch will be between 1~8. and my experiment result is:
-1. hw conditions:  8 cpus,emmc flash, one hw queue, and
-queue_depth=3D64, sched_tag/nr_request=3D128, init dd->async_depth=3D96
---before this patch, get sched_tag infor from
-sys/kernel/debug/block/mmcblk0/hctx0
----depth=3D128
----bits_per_word=3D32
----map_nr=3D4
----wake_batch=3D8
----min_shallow_depth=3D96
---after this patch, get sched_tag infor from
-sys/kernel/debug/block/mmcblk0/hctx0
----bits_per_word=3D32
----map_nr=3D4
----wake_batch=3D8
----min_shallow_depth=3D24
-wake_batch not changed.
+Here, you are referring to 16 GT/s as the Gen4 datarate. So please mention that
+explicitly.
 
-2. hw conditions:  8 cpus,ufs flash, one hw queue, and queue_depth=3D31,
-sched_tag/nr_request=3D62, init dd->async_depth=3D46
---before this patch, get sched_tag infor from sys/kernel/debug/block/sda/hc=
-tx0
----depth=3D62
----bits_per_word=3D8
----map_nr=3D8
----wake_batch=3D7
----min_shallow_depth=3D46
---after this patch, get sched_tag infor from sys/kernel/debug/block/sda/hct=
-x0
----bits_per_word=3D8
----map_nr=3D8
----wake_batch=3D6
----min_shallow_depth=3D6
-wake_batch changed from 7 to 6, so it seems the patch  have little
-impact on wake_batch?
+> GEN3_RELATED_OFFSET is being used as shadow register for generation4 and
 
-> * dd_limit_depth() still assigns a number in the range 1..nr_requests to
->    data->shallow_depth while a number in the range 1..(1<<bt->sb.shift)
->    should be assigned.
-yes, In order to avoid the performance regression problem that Harshit
-Mogalapalli reported, this patch will not directly modify
-dd->async_depth,
-but user can modify dd->async_depth from sysfs according to user's
-request. which will modify data->shallow_depth after user modify it by
-sysfs.
->
-> > So what are your suggestions for fixing the warning shown in commit
-> > msg if dd->async_depth is set by the user from sysfs?
-> > thanks
->
-> How about the two untested patches below?
->
-> Thanks,
->
-> Bart.
->
->
-> Subject: [PATCH 1/2] block: Call .limit_depth() after .hctx has been set
->
-> Prepare for using .hctx in dd_limit_depth().
->
-> Signed-off-by: Bart Van Assche <bvanassche@acm.org>
+What is 'GEN3_RELATED_OFFSET' register? Where it is defined? More info on this
+register would be helpful.
+
+> generation5 data rates based on rate select mask settings on this register.
+
+Please reword this sentence to make it more readable.
+
+> Select relevant mask and equalization settings for generation4 operation.
+> 
+> Signed-off-by: Shashank Babu Chinta Venkata <quic_schintav@quicinc.com>
 > ---
->   block/blk-mq.c | 8 +++++---
->   1 file changed, 5 insertions(+), 3 deletions(-)
->
-> diff --git a/block/blk-mq.c b/block/blk-mq.c
-> index 34060d885c5a..d0db9252bb71 100644
-> --- a/block/blk-mq.c
-> +++ b/block/blk-mq.c
-> @@ -435,6 +435,7 @@ __blk_mq_alloc_requests_batch(struct
-> blk_mq_alloc_data *data)
->   static struct request *__blk_mq_alloc_requests(struct
-> blk_mq_alloc_data *data)
->   {
->         struct request_queue *q =3D data->q;
-> +       struct elevator_mq_ops *ops =3D NULL;
->         u64 alloc_time_ns =3D 0;
->         struct request *rq;
->         unsigned int tag;
-> @@ -459,13 +460,11 @@ static struct request
-> *__blk_mq_alloc_requests(struct blk_mq_alloc_data *data)
->                  */
->                 if ((data->cmd_flags & REQ_OP_MASK) !=3D REQ_OP_FLUSH &&
->                     !blk_op_is_passthrough(data->cmd_flags)) {
-> -                       struct elevator_mq_ops *ops =3D &q->elevator->typ=
-e->ops;
-> +                       ops =3D &q->elevator->type->ops;
->
->                         WARN_ON_ONCE(data->flags & BLK_MQ_REQ_RESERVED);
->
->                         data->rq_flags |=3D RQF_USE_SCHED;
-> -                       if (ops->limit_depth)
-> -                               ops->limit_depth(data->cmd_flags, data);
->                 }
->         }
->
-> @@ -478,6 +477,9 @@ static struct request
-> *__blk_mq_alloc_requests(struct blk_mq_alloc_data *data)
->         if (data->flags & BLK_MQ_REQ_RESERVED)
->                 data->rq_flags |=3D RQF_RESV;
->
-> +       if (ops && ops->limit_depth)
-> +               ops->limit_depth(data->cmd_flags, data);
+>  drivers/pci/controller/dwc/pcie-designware.h | 15 ++++++++
+>  drivers/pci/controller/dwc/pcie-qcom-cmn.c   | 36 ++++++++++++++++++++
+>  drivers/pci/controller/dwc/pcie-qcom-cmn.h   |  5 +++
+>  drivers/pci/controller/dwc/pcie-qcom-ep.c    |  3 ++
+>  drivers/pci/controller/dwc/pcie-qcom.c       |  3 ++
+>  5 files changed, 62 insertions(+)
+> 
+> diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
+> index 26dae4837462..064744bfe35a 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware.h
+> +++ b/drivers/pci/controller/dwc/pcie-designware.h
+> @@ -122,6 +122,21 @@
+>  #define GEN3_RELATED_OFF_RATE_SHADOW_SEL_SHIFT	24
+>  #define GEN3_RELATED_OFF_RATE_SHADOW_SEL_MASK	GENMASK(25, 24)
+>  
+> +#define GEN3_EQ_CONTROL_OFF			0x8a8
+> +#define GEN3_EQ_CONTROL_OFF_FB_MODE_MASK        GENMASK(3, 0)
+> +#define GEN3_EQ_CONTROL_OFF_PHASE23_EXIT_MODE   BIT(4)
+> +#define GEN3_EQ_CONTROL_OFF_PSET_REQ_VEC_MASK	GENMASK(23, 8)
+> +#define GEN3_EQ_CONTROL_OFF_FOM_INC_INITIAL_EVAL	BIT(24)
 > +
->         /*
->          * Try batched alloc if we want more than 1 tag.
->          */
->
->
->
-I think this part is OK .
-> Subject: [PATCH 2/2] block/mq-deadline: Fix the tag reservation code
->
-> Fixes: 07757588e507 ("block/mq-deadline: Reserve 25% of scheduler tags
-> for synchronous requests")
-> ---
->   block/mq-deadline.c | 18 ++++++++++++++++--
->   1 file changed, 16 insertions(+), 2 deletions(-)
->
-> diff --git a/block/mq-deadline.c b/block/mq-deadline.c
-> index 02a916ba62ee..8e780069d91b 100644
-> --- a/block/mq-deadline.c
-> +++ b/block/mq-deadline.c
-> @@ -621,6 +621,20 @@ static struct request *dd_dispatch_request(struct
-> blk_mq_hw_ctx *hctx)
->         return rq;
->   }
->
-> +/*
-> + * 'depth' is a number in the range 0..q->nr_requests. Convert it to a
-> number
-> + * in the range 0..(1 << bt->sb.shift) since that is the range expected =
-by
-> + * sbitmap_get_shallow().
-> + */
-> +static int dd_to_word_depth(struct blk_mq_hw_ctx *hctx, unsigned int
-> qdepth)
+> +#define GEN3_EQ_FB_MODE_DIR_CHANGE_OFF          0x8ac
+> +#define GEN3_EQ_FMDC_T_MIN_PHASE23_MASK         GENMASK(4, 0)
+> +#define GEN3_EQ_FMDC_N_EVALS_MASK               GENMASK(9, 5)
+> +#define GEN3_EQ_FMDC_MAX_PRE_CUSROR_DELTA_MASK  GENMASK(13, 10)
+> +#define GEN3_EQ_FMDC_MAX_POST_CUSROR_DELTA_MASK	GENMASK(17, 14)
+> +#define GEN3_EQ_FMDC_N_EVALS_SHIFT			5
+> +#define GEN3_EQ_FMDC_MAX_PRE_CUSROR_DELTA_SHIFT		10
+> +#define GEN3_EQ_FMDC_MAX_POST_CUSROR_DELTA_SHIFT	14
+> +
+
+You are adding the definitions in designware header, but funtion definitions in
+Qcom driver. Does this mean, this configuration is specific to Qcom and not
+applicable to other DWC drivers?
+
+>  #define PCIE_PORT_MULTI_LANE_CTRL	0x8C0
+>  #define PORT_MLTI_UPCFG_SUPPORT		BIT(7)
+>  
+> diff --git a/drivers/pci/controller/dwc/pcie-qcom-cmn.c b/drivers/pci/controller/dwc/pcie-qcom-cmn.c
+> index 64fa412ec293..208a55e8e9a1 100644
+> --- a/drivers/pci/controller/dwc/pcie-qcom-cmn.c
+> +++ b/drivers/pci/controller/dwc/pcie-qcom-cmn.c
+> @@ -17,6 +17,42 @@
+>  #define QCOM_PCIE_LINK_SPEED_TO_BW(speed) \
+>  		Mbps_to_icc(PCIE_SPEED2MBS_ENC(pcie_link_speed[speed]))
+>  
+> +void qcom_pcie_cmn_set_16gt_eq_settings(struct dw_pcie *pci)
 > +{
-> +       struct sbitmap_queue *bt =3D &hctx->sched_tags->bitmap_tags;
-> +       const unsigned int nrr =3D hctx->queue->nr_requests;
+> +	u32 reg;
 > +
-> +       return max(((qdepth << bt->sb.shift) + nrr - 1) / nrr,
-> +                  bt->min_shallow_depth);
-will this still  cause the performance regression mentioned by Harshit
-Mogalapalli?
-this will change data->shallow_depth value that is less than
-dd->async_depth " dd->async_depth =3D max(1UL, 3 * q->nr_requests /
-4);".
-> +}
-> +
->   /*
->    * Called by __blk_mq_alloc_request(). The shallow_depth value set by t=
-his
->    * function is used by __blk_mq_get_tag().
-> @@ -637,7 +651,7 @@ static void dd_limit_depth(blk_opf_t opf, struct
-> blk_mq_alloc_data *data)
->          * Throttle asynchronous requests and writes such that these requ=
-ests
->          * do not block the allocation of synchronous requests.
->          */
-> -       data->shallow_depth =3D dd->async_depth;
-> +       data->shallow_depth =3D dd_to_word_depth(data->hctx, dd->async_de=
-pth);
->   }
->
->   /* Called by blk_mq_update_nr_requests(). */
-> @@ -649,7 +663,7 @@ static void dd_depth_updated(struct blk_mq_hw_ctx *hc=
-tx)
->
->         dd->async_depth =3D max(1UL, 3 * q->nr_requests / 4);
->
-> -       sbitmap_queue_min_shallow_depth(&tags->bitmap_tags, dd->async_dep=
-th);
-> +       sbitmap_queue_min_shallow_depth(&tags->bitmap_tags, 1);
-this will also change  min_shallow_depth and affect wake_batch?
+> +	/*
+> +	 * GEN3_RELATED_OFF is repurposed to be used with GEN4(16GT/s) rate
+> +	 * as well based on RATE_SHADOW_SEL_MASK settings on this register.
+> +	 */
+> +	reg = dw_pcie_readl_dbi(pci, GEN3_RELATED_OFF);
+> +	reg &= ~GEN3_RELATED_OFF_GEN3_ZRXDC_NONCOMPL;
+> +	reg &= ~GEN3_RELATED_OFF_RATE_SHADOW_SEL_MASK;
+> +	reg |= (0x1 << GEN3_RELATED_OFF_RATE_SHADOW_SEL_SHIFT);
 
-My personal opinion is to keep the current dd->aync_depth unchanged to
-avoid causing performance regression,
-but it should  allow users to set it by sysfs, and the WARN mentioned
-best to be solved.
-and just only change this part?
- -       sbitmap_queue_min_shallow_depth(&tags->bitmap_tags, dd->async_dept=
-h);
- +       sbitmap_queue_min_shallow_depth(&tags->bitmap_tags, 1);
-thanks!
->   }
->
->   /* Called by blk_mq_init_hctx() and blk_mq_init_sched(). */
->
+Please use FIELD_* macros where applicable.
+
+> +	dw_pcie_writel_dbi(pci, GEN3_RELATED_OFF, reg);
+> +
+> +	reg = dw_pcie_readl_dbi(pci, GEN3_EQ_FB_MODE_DIR_CHANGE_OFF);
+> +	reg &= ~GEN3_EQ_FMDC_T_MIN_PHASE23_MASK;
+> +	reg &= ~GEN3_EQ_FMDC_N_EVALS_MASK;
+> +	reg |= (GEN3_EQ_FMDC_N_EVALS_16GT_VAL <<
+> +		GEN3_EQ_FMDC_N_EVALS_SHIFT);
+> +	reg &= ~GEN3_EQ_FMDC_MAX_PRE_CUSROR_DELTA_MASK;
+> +	reg |= (GEN3_EQ_FMDC_MAX_PRE_CUSROR_DELTA_16GT_VAL <<
+> +		GEN3_EQ_FMDC_MAX_PRE_CUSROR_DELTA_SHIFT);
+> +	reg &= ~GEN3_EQ_FMDC_MAX_POST_CUSROR_DELTA_MASK;
+> +	reg |= (GEN3_EQ_FMDC_MAX_POST_CUSROR_DELTA_16GT_VAL <<
+> +		GEN3_EQ_FMDC_MAX_POST_CUSROR_DELTA_SHIFT);
+> +	dw_pcie_writel_dbi(pci, GEN3_EQ_FB_MODE_DIR_CHANGE_OFF, reg);
+> +
+> +	reg = dw_pcie_readl_dbi(pci, GEN3_EQ_CONTROL_OFF);
+> +	reg &= ~GEN3_EQ_CONTROL_OFF_FB_MODE_MASK;
+> +	reg &= ~GEN3_EQ_CONTROL_OFF_PHASE23_EXIT_MODE;
+> +	reg &= ~GEN3_EQ_CONTROL_OFF_FOM_INC_INITIAL_EVAL;
+> +	reg &= ~GEN3_EQ_CONTROL_OFF_PSET_REQ_VEC_MASK;
+> +	dw_pcie_writel_dbi(pci, GEN3_EQ_CONTROL_OFF, reg);
+> +}
+> +EXPORT_SYMBOL_GPL(qcom_pcie_cmn_set_16gt_eq_settings);
+> +
+>  int qcom_pcie_cmn_icc_get_resource(struct dw_pcie *pci, struct icc_path *icc_mem)
+>  {
+>  	if (IS_ERR(pci))
+> diff --git a/drivers/pci/controller/dwc/pcie-qcom-cmn.h b/drivers/pci/controller/dwc/pcie-qcom-cmn.h
+> index 845eda23ae59..97302e8fafa8 100644
+> --- a/drivers/pci/controller/dwc/pcie-qcom-cmn.h
+> +++ b/drivers/pci/controller/dwc/pcie-qcom-cmn.h
+> @@ -9,6 +9,11 @@
+>  #include "../../pci.h"
+>  #include "pcie-designware.h"
+>  
+> +#define GEN3_EQ_FMDC_MAX_PRE_CUSROR_DELTA_16GT_VAL   0x5
+> +#define GEN3_EQ_FMDC_MAX_POST_CUSROR_DELTA_16GT_VAL  0x5
+> +#define GEN3_EQ_FMDC_N_EVALS_16GT_VAL          0xD
+> +
+
+So these settings are Qcom specific? I'd expect this to be documented in commit
+message.
+
+>  int qcom_pcie_cmn_icc_get_resource(struct dw_pcie *pci, struct icc_path *icc_mem);
+>  int qcom_pcie_cmn_icc_init(struct dw_pcie *pci, struct icc_path *icc_mem);
+>  void qcom_pcie_cmn_icc_update(struct dw_pcie *pci, struct icc_path *icc_mem);
+> +void qcom_pcie_cmn_set_16gt_eq_settings(struct dw_pcie *pci);
+> diff --git a/drivers/pci/controller/dwc/pcie-qcom-ep.c b/drivers/pci/controller/dwc/pcie-qcom-ep.c
+> index ce6343426de8..b6bcab21bb9f 100644
+> --- a/drivers/pci/controller/dwc/pcie-qcom-ep.c
+> +++ b/drivers/pci/controller/dwc/pcie-qcom-ep.c
+> @@ -438,6 +438,9 @@ static int qcom_pcie_perst_deassert(struct dw_pcie *pci)
+>  		goto err_disable_resources;
+>  	}
+>  
+> +	if (pcie_link_speed[pci->link_gen] == PCIE_SPEED_16_0GT)
+> +		qcom_pcie_cmn_set_16gt_eq_settings(pci);
+
+So this relies on the optional 'max-link-speed' DT property, but not mentioned
+in the commit message :/
+
+- Mani
+
+> +
+>  	/*
+>  	 * The physical address of the MMIO region which is exposed as the BAR
+>  	 * should be written to MHI BASE registers.
+> diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
+> index 57a08294c561..b0a22a000fa3 100644
+> --- a/drivers/pci/controller/dwc/pcie-qcom.c
+> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
+> @@ -263,6 +263,9 @@ static int qcom_pcie_start_link(struct dw_pcie *pci)
+>  {
+>  	struct qcom_pcie *pcie = to_qcom_pcie(pci);
+>  
+> +	if (pcie_link_speed[pci->link_gen] == PCIE_SPEED_16_0GT)
+> +		qcom_pcie_cmn_set_16gt_eq_settings(pci);
+> +
+>  	/* Enable Link Training state machine */
+>  	if (pcie->cfg->ops->ltssm_enable)
+>  		pcie->cfg->ops->ltssm_enable(pcie);
+> -- 
+> 2.43.2
+> 
+
+-- 
+மணிவண்ணன் சதாசிவம்
