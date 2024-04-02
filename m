@@ -1,123 +1,198 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from lelv0143.ext.ti.com (lelv0143.ext.ti.com [198.47.23.248])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A0B71EA8D;
-	Tue,  2 Apr 2024 11:44:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C1DE1EA8D;
+	Tue,  2 Apr 2024 11:44:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.248
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712058257; cv=none; b=fGzAEjT/u+RPHqPBMtIEY7Ee7iriLqe/fFkjtjPmFTfufx119PIRXsIAZSoqgb5CHkkUMs+HrMJHYf4790+/80RjQexYqp3xh30yKuc6eiIZQG/Vlh4QCJxlUCr0xK3wipuj76jcnhSEXFHZSbgbHzYtUDFwTWDeL3tbTyv924k=
+	t=1712058264; cv=none; b=ly6VXfW73Bxzi3HWUSnZw0yHHUu/26Dx0ySRZv0qe7mZouTVG9PPPk1qjFH+EBlcLrcb5iFO0Z007Kotc6NoU1P3qeJcSFVrUvTZHL2rdbuBWYCvEQTb29DpW5jxpOewmL8F23xc44k1eEbxQAUBQrgqGrypfDC7X1Amn1NfoMU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712058257; c=relaxed/simple;
-	bh=DpQ1x3R3SARZhczID3H+l6QkUcoWZQNWBI3Aop4zjd4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sr5tSKqmxPUA1RAqyWbDvhscOD2twTAjnVq/+8RToSiAMraj0O71OcosxA6/dEVZIDgErECUu3/27D06CddbVaWTC2Huvwh48SzJ0QLe3Skc2EFYFxhIjPWDprHpFFBHHrczQH2n6uk9P8OYyK8Dwu7qzS7qKT89tyytpsjWbn0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=keTjQP/T; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1712058264; c=relaxed/simple;
+	bh=ILrB+6cz6HZFHUW7pA1V7BBA5dKWSCPCbqLKdvup/hY=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=ILDwGojlWa/jOvyrJOciN8Ke4KDgSQcXOKgV3F5IaiZuxgQT4Yg0p/M/PtfDBpmtS71GQo3ExNUsGEmn4YJB1mlLs8jlW4J/kkfopjhiLWo4usbj563U72vt9MeC48jKHAXVKP2b+TcCmEAsm6TqDYAvj7QackNRh8xbew8mztA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=NXQ8dNS3; arc=none smtp.client-ip=198.47.23.248
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="keTjQP/T"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E0A7EC43390;
-	Tue,  2 Apr 2024 11:44:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1712058256;
-	bh=DpQ1x3R3SARZhczID3H+l6QkUcoWZQNWBI3Aop4zjd4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=keTjQP/TuNEFmuDJ/ndqUWVWzKYfOvgfFKfqNN1VFR3mFZpD/bcMF19oRva66l40J
-	 TP/WZx/xGTr8svgzpHSpdKh5uRIaL6B1pdxeAPF1TKw+E7yTlclI8Iukm0ycrapwyk
-	 tHj9SQQbNxN8roAmHWpZH3e6duGhE77ioZFxRHhk=
-Date: Tue, 2 Apr 2024 13:44:12 +0200
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Dan Carpenter <dan.carpenter@linaro.org>
-Cc: Alexander Wetzel <alexander@wetzel-home.de>,
-	Naresh Kamboju <naresh.kamboju@linaro.org>, stable@vger.kernel.org,
-	patches@lists.linux.dev, linux-kernel@vger.kernel.org,
-	torvalds@linux-foundation.org, akpm@linux-foundation.org,
-	linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
-	lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
-	f.fainelli@gmail.com, sudipm.mukherjee@gmail.com,
-	srw@sladewatkins.net, rwarsow@gmx.de, conor@kernel.org,
-	allen.lkml@gmail.com, broonie@kernel.org,
-	Bart Van Assche <bvanassche@acm.org>,
-	"Martin K. Petersen" <martin.petersen@oracle.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Anders Roxell <anders.roxell@linaro.org>,
-	LTP List <ltp@lists.linux.it>
-Subject: Re: [PATCH 6.6 000/396] 6.6.24-rc1 review
-Message-ID: <2024040258-disk-smokiness-5baf@gregkh>
-References: <20240401152547.867452742@linuxfoundation.org>
- <CA+G9fYvewkbwR_i07HHTM=8E2yS-0wRhOT-C45LP3SNtzgd+4Q@mail.gmail.com>
- <29a7a1e5-da67-47fc-b1fd-ef65902ec252@wetzel-home.de>
- <1d1071f3-641a-4b7c-bd35-a629ba8d5a7b@moroto.mountain>
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="NXQ8dNS3"
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+	by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 432Bi9G4106111;
+	Tue, 2 Apr 2024 06:44:09 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1712058249;
+	bh=X1oB/j3d+75cWGMAk7/UR4+QxjPZ19nCKrN63qf/K+8=;
+	h=From:To:CC:Subject:Date:In-Reply-To:References;
+	b=NXQ8dNS31WX4G2oraq4RBp59Yyealfi5cqx9Jjf4BBXIuHBMd7i1FqvG9/hQ0tEpj
+	 uSttSD7CQ8cbs2JAncNxH1Dg/fK2rhqsFnM4v+ISheGzI3P7fLGE1LIGLcKozdGbbw
+	 g6NPxohSGZAhdxq4swDGdpDU0j57mFVh5sG3fRGM=
+Received: from DLEE114.ent.ti.com (dlee114.ent.ti.com [157.170.170.25])
+	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 432Bi9w5019638
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Tue, 2 Apr 2024 06:44:09 -0500
+Received: from DLEE109.ent.ti.com (157.170.170.41) by DLEE114.ent.ti.com
+ (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Tue, 2
+ Apr 2024 06:44:09 -0500
+Received: from fllvsmtp7.itg.ti.com (10.64.40.31) by DLEE109.ent.ti.com
+ (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Tue, 2 Apr 2024 06:44:09 -0500
+Received: from localhost (chintan-thinkstation-p360-tower.dhcp.ti.com [172.24.227.220])
+	by fllvsmtp7.itg.ti.com (8.15.2/8.15.2) with ESMTP id 432Bi8Zl126388;
+	Tue, 2 Apr 2024 06:44:09 -0500
+From: Chintan Vankar <c-vankar@ti.com>
+To: Dan Carpenter <dan.carpenter@linaro.org>,
+        Siddharth Vadapalli
+	<s-vadapalli@ti.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Chintan Vankar
+	<c-vankar@ti.com>, Andrew Lunn <andrew@lunn.ch>,
+        Roger Quadros
+	<rogerq@kernel.org>,
+        Richard Cochran <richardcochran@gmail.com>,
+        Paolo Abeni
+	<pabeni@redhat.com>, Jakub Kicinski <kuba@kernel.org>,
+        Eric Dumazet
+	<edumazet@google.com>,
+        "David S. Miller" <davem@davemloft.net>
+CC: <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>
+Subject: [PATCH net-next v5 1/2] net: ethernet: ti: am65-cpts: Enable RX HW timestamp for PTP packets using CPTS FIFO
+Date: Tue, 2 Apr 2024 17:14:04 +0530
+Message-ID: <20240402114405.219100-2-c-vankar@ti.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240402114405.219100-1-c-vankar@ti.com>
+References: <20240402114405.219100-1-c-vankar@ti.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1d1071f3-641a-4b7c-bd35-a629ba8d5a7b@moroto.mountain>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-On Tue, Apr 02, 2024 at 01:37:50PM +0300, Dan Carpenter wrote:
-> On Mon, Apr 01, 2024 at 09:22:52PM +0200, Alexander Wetzel wrote:
-> > 
-> > > Following kernel warnings have been noticed on qemu-x86_64 while running LTP
-> > > cve ioctl_sg01 tests the kernel with stable-rc 6.6.24-rc1, 6.7.12-rc1 and
-> > > 6.8.3-rc1.
-> > > 
-> > > We have started bi-secting this issue.
-> > > Always reproduced.
-> > > 
-> > > Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
-> > > 
-> > > ioctl_sg01.c:81: TINFO: Found SCSI device /dev/sg0
-> > > ------------[ cut here ]------------
-> > > [   36.606841] WARNING: CPU: 0 PID: 8 at drivers/scsi/sg.c:2237
-> > > sg_remove_sfp_usercontext+0x145/0x150
-> > > [   36.609445] Modules linked in:
-> > > [   36.610793] CPU: 0 PID: 8 Comm: kworker/0:0 Not tainted 6.6.24-rc1 #1
-> > > [   36.611568] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009),
-> > > BIOS 1.16.3-debian-1.16.3-2~bpo12+1 04/01/2014
-> > > [   36.612872] Workqueue: events sg_remove_sfp_usercontext
-> > > [   36.613691] RIP: 0010:sg_remove_sfp_usercontext+0x145/0x150
-> > > 
-> > > <trim>
-> > > 
-> > > [   36.621539] Call Trace:
-> > > [   36.621953]  <TASK>
-> > > [   36.622444]  ? show_regs+0x69/0x80
-> > > [   36.622819]  ? __warn+0x8d/0x150
-> > > [   36.623078]  ? sg_remove_sfp_usercontext+0x145/0x150
-> > > [   36.623558]  ? report_bug+0x171/0x1a0
-> > > [   36.623881]  ? handle_bug+0x42/0x80
-> > > [   36.624070]  ? exc_invalid_op+0x1c/0x70
-> > > [   36.624491]  ? asm_exc_invalid_op+0x1f/0x30
-> > > [   36.624897]  ? sg_remove_sfp_usercontext+0x145/0x150
-> > > [   36.625408]  process_one_work+0x141/0x300
-> > > [   36.625769]  worker_thread+0x2f6/0x430
-> > > [   36.626073]  ? __pfx_worker_thread+0x10/0x10
-> > > [   36.626529]  kthread+0x105/0x140
-> > > [   36.626778]  ? __pfx_kthread+0x10/0x10
-> > > [   36.627059]  ret_from_fork+0x41/0x60
-> > > [   36.627441]  ? __pfx_kthread+0x10/0x10
-> > > [   36.627735]  ret_from_fork_asm+0x1b/0x30
-> > > [   36.628293]  </TASK>
-> > > [   36.628604] ---[ end trace 0000000000000000 ]---
-> > > ioctl_sg01.c:122: TPASS: Output buffer is empty, no data leaked
-> > > 
-> > > Suspecting commit:
-> > > -----
-> > > scsi: sg: Avoid sg device teardown race
-> > > commit 27f58c04a8f438078583041468ec60597841284d upstream.
-> > > 
-> > 
-> > Correct. The issue is already been worked on.
-> > 
-> > commit 27f58c04a8f4 ("scsi: sg: Avoid sg device teardown race") fixed a real
-> > issue. But also added an incorrect WARN_ON_ONCE(). Thus the scary - but
-> > otherwise harmless - error message.
-> 
-> If you have Reboot on Oops turned on (apparently Android enables this)
-> then WARN() will reboot the system so it can be pretty annoying.
+Add a new function "am65_cpts_rx_timestamp()" which checks for PTP
+packets from header and timestamps them.
 
-Agreed, I've dropped this stable change for now because of this.
+Add another function "am65_cpts_find_rx_ts()" which finds CPTS FIFO
+Event to get the timestamp of received PTP packet.
 
-greg k-h
+Signed-off-by: Chintan Vankar <c-vankar@ti.com>
+---
+
+Link to v4:
+https://lore.kernel.org/r/20240327054234.1906957-1-c-vankar@ti.com/
+
+Changes from v4 to v5:
+- Updated commit message.
+- Replaced "list_del_entry()" and "list_add()" functions with equivalent
+  "list_move()" function.
+
+ drivers/net/ethernet/ti/am65-cpts.c | 64 +++++++++++++++++++++++++++++
+ drivers/net/ethernet/ti/am65-cpts.h |  6 +++
+ 2 files changed, 70 insertions(+)
+
+diff --git a/drivers/net/ethernet/ti/am65-cpts.c b/drivers/net/ethernet/ti/am65-cpts.c
+index c66618d91c28..bc0bfda1db12 100644
+--- a/drivers/net/ethernet/ti/am65-cpts.c
++++ b/drivers/net/ethernet/ti/am65-cpts.c
+@@ -906,6 +906,70 @@ static int am65_skb_get_mtype_seqid(struct sk_buff *skb, u32 *mtype_seqid)
+ 	return 1;
+ }
+ 
++static u64 am65_cpts_find_rx_ts(struct am65_cpts *cpts, u32 skb_mtype_seqid)
++{
++	struct list_head *this, *next;
++	struct am65_cpts_event *event;
++	unsigned long flags;
++	u32 mtype_seqid;
++	u64 ns = 0;
++
++	am65_cpts_fifo_read(cpts);
++	spin_lock_irqsave(&cpts->lock, flags);
++	list_for_each_safe(this, next, &cpts->events) {
++		event = list_entry(this, struct am65_cpts_event, list);
++		if (time_after(jiffies, event->tmo)) {
++			list_del_init(&event->list);
++			list_add(&event->list, &cpts->pool);
++			continue;
++		}
++
++		mtype_seqid = event->event1 &
++			      (AM65_CPTS_EVENT_1_MESSAGE_TYPE_MASK |
++			       AM65_CPTS_EVENT_1_SEQUENCE_ID_MASK |
++			       AM65_CPTS_EVENT_1_EVENT_TYPE_MASK);
++
++		if (mtype_seqid == skb_mtype_seqid) {
++			ns = event->timestamp;
++			list_move(&event->list, &cpts->pool);
++			break;
++		}
++	}
++	spin_unlock_irqrestore(&cpts->lock, flags);
++
++	return ns;
++}
++
++void am65_cpts_rx_timestamp(struct am65_cpts *cpts, struct sk_buff *skb)
++{
++	struct am65_cpts_skb_cb_data *skb_cb = (struct am65_cpts_skb_cb_data *)skb->cb;
++	struct skb_shared_hwtstamps *ssh;
++	int ret;
++	u64 ns;
++
++	/* am65_cpts_rx_timestamp() is called before eth_type_trans(), so
++	 * skb MAC Hdr properties are not configured yet. Hence need to
++	 * reset skb MAC header here
++	 */
++	skb_reset_mac_header(skb);
++	ret = am65_skb_get_mtype_seqid(skb, &skb_cb->skb_mtype_seqid);
++	if (!ret)
++		return; /* if not PTP class packet */
++
++	skb_cb->skb_mtype_seqid |= (AM65_CPTS_EV_RX << AM65_CPTS_EVENT_1_EVENT_TYPE_SHIFT);
++
++	dev_dbg(cpts->dev, "%s mtype seqid %08x\n", __func__, skb_cb->skb_mtype_seqid);
++
++	ns = am65_cpts_find_rx_ts(cpts, skb_cb->skb_mtype_seqid);
++	if (!ns)
++		return;
++
++	ssh = skb_hwtstamps(skb);
++	memset(ssh, 0, sizeof(*ssh));
++	ssh->hwtstamp = ns_to_ktime(ns);
++}
++EXPORT_SYMBOL_GPL(am65_cpts_rx_timestamp);
++
+ /**
+  * am65_cpts_tx_timestamp - save tx packet for timestamping
+  * @cpts: cpts handle
+diff --git a/drivers/net/ethernet/ti/am65-cpts.h b/drivers/net/ethernet/ti/am65-cpts.h
+index 6e14df0be113..90296968a75c 100644
+--- a/drivers/net/ethernet/ti/am65-cpts.h
++++ b/drivers/net/ethernet/ti/am65-cpts.h
+@@ -22,6 +22,7 @@ void am65_cpts_release(struct am65_cpts *cpts);
+ struct am65_cpts *am65_cpts_create(struct device *dev, void __iomem *regs,
+ 				   struct device_node *node);
+ int am65_cpts_phc_index(struct am65_cpts *cpts);
++void am65_cpts_rx_timestamp(struct am65_cpts *cpts, struct sk_buff *skb);
+ void am65_cpts_tx_timestamp(struct am65_cpts *cpts, struct sk_buff *skb);
+ void am65_cpts_prep_tx_timestamp(struct am65_cpts *cpts, struct sk_buff *skb);
+ void am65_cpts_rx_enable(struct am65_cpts *cpts, bool en);
+@@ -48,6 +49,11 @@ static inline int am65_cpts_phc_index(struct am65_cpts *cpts)
+ 	return -1;
+ }
+ 
++static inline void am65_cpts_rx_timestamp(struct am65_cpts *cpts,
++					  struct sk_buff *skb)
++{
++}
++
+ static inline void am65_cpts_tx_timestamp(struct am65_cpts *cpts,
+ 					  struct sk_buff *skb)
+ {
+-- 
+2.34.1
+
