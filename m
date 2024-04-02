@@ -1,84 +1,94 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f178.google.com (mail-yw1-f178.google.com [209.85.128.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2D8640876;
-	Tue,  2 Apr 2024 10:33:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 985223EA72
+	for <linux-kernel@vger.kernel.org>; Tue,  2 Apr 2024 10:33:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712054038; cv=none; b=M3++QXcxqVacBZ/Wk6/q7EzQ/h/ERILiY0HAPJH60Q7U21Q63TIIBbRxDflieGS4co5NDyytfjELUcpFiVyWKdKFx7qadySOzCipmDn98dX4cG13yJFo2JsTgMvH2nccZZiuuM7KEhrgT216gU3wtW1Ed/8KS0szweyYoT33FKc=
+	t=1712054038; cv=none; b=EyaUpaIVSKcR5tHer4RF1LSgnlt9Fk0B7mMRVUa0pdgqPZimkwcLoGBj3ppdEiV8/s242BlyjgNz4O1cDdCVOjS2szaOwlmfHS700TyTv/1MIiUZhMzb/L1kT4k1iAugOTxmIz9s+sw4gd7AeqXs4+Ubk3hpCGT3KTikvpW1vKA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1712054038; c=relaxed/simple;
-	bh=yQyyvLBf6qblD2zMLzpTiUQ5VLhVLtMWd/58b3xOqH8=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=dnMsOcgK79h4Iu8zNdboNoL6YLAFYQ3yEfXNvw+LCaiLIU7nn7O/lPDSe7udE7/7OMtXu6SG1PSrqtB7d1fbQ9j5lAxXn3Ibmn4KjH5ajEVgjVJF7R4LJ10oVwZhdhM1rYrKD6AQ8v5imaSf/IXgGcwNVBMFq3hAZyCdF9ECTV8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sqqrE//5; arc=none smtp.client-ip=10.30.226.201
+	bh=qu9ShLrPQMIkNvbhjhLBUtPyucHuzPdWe9LUMWcl8vo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=s23tkW+/VxRpKxZ7M2WhZ+/Qy4xU07PdVK1MDWIY1arnipOzVzUaGTpYmc0ShVhAoqzDU9CrdxeIjDIXrW6OL0WeiT0MV9iVmINvRU3SHaUJ8ZMdVz5dqyf+W9LcRM1wV1PbmYSM50rOlZpy87OA9krztBxYd1gY3uvNkzNUUsQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=GI7y1VqX; arc=none smtp.client-ip=209.85.128.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sqqrE//5"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D805AC433F1;
-	Tue,  2 Apr 2024 10:33:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712054037;
-	bh=yQyyvLBf6qblD2zMLzpTiUQ5VLhVLtMWd/58b3xOqH8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=sqqrE//5SJDwMvCp7dcysivY9PxZ3BLYjLA0F7XvCFrOolIJn+W5qpGVdVeLCm5BD
-	 0dkdtB/G7edTOEdRoG595l19Q1F6CAt/oysQowWnyoApE0RalMaglp4GEhd6pKPeHX
-	 Pcb0hOpU07Hn8Od0a8Uv6CFnS8p67uwJ0yusCVlgVzCyocrxxoW+P9QDJecLeXkJSf
-	 GzzZTfHhMfZfwgOd86LXptC4U3zM3qEQbSSYyUCN9b56CBpnz7adFvYwzqykDzuXC1
-	 c3VopP4P4Dzw/5W95ot/HH2Zxf7TKmbVuhNplVbr8Nr5SLEDYBEewa6d7hdVL37ReE
-	 sMysE3HSW3/Ew==
-From: Alexey Gladkov <legion@kernel.org>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Jiri Slaby <jirislaby@kernel.org>
-Cc: LKML <linux-kernel@vger.kernel.org>,
-	kbd@lists.linux.dev,
-	linux-api@vger.kernel.org,
-	linux-fbdev@vger.kernel.org,
-	linux-serial@vger.kernel.org
-Subject: [RESEND PATCH v3 0/2] VT: Add ability to get font requirements
-Date: Tue,  2 Apr 2024 12:32:55 +0200
-Message-ID: <cover.1712053848.git.legion@kernel.org>
-X-Mailer: git-send-email 2.44.0
-In-Reply-To: <cover.1710252966.git.legion@kernel.org>
-References: <cover.1710252966.git.legion@kernel.org>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="GI7y1VqX"
+Received: by mail-yw1-f178.google.com with SMTP id 00721157ae682-6151d2489b4so6960337b3.0
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Apr 2024 03:33:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1712054035; x=1712658835; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=MWwVzYWrWmvvKy3bQx9GVyakGKirqAQ+7eqOMn8Hdd4=;
+        b=GI7y1VqXg4mxS1WS9UbTNigScyb9HKWlCrAZoIFEwQgJDrZOzTmw72WIqVNLr8hgVF
+         WrWLNB8I6F5Voy4HEY4a0yJhxASfX+b8NfoTHWq/Icj/+6+P6KUcn9yIEnJc1DhX42kx
+         SollTLK4n2WItiwpzZxzmxdaSKkdKVdgVtE3syjrl40VjGNV9lnjjTX0bVTd+d06QSQC
+         x8IKzjyeiBLADYaUXLFJExFm36MzwvcB6V3yeYgPi8ucSMcf2DYDFZRrrHU2MEu9MuoA
+         S1Y668159TQgu5xpF2TwCfKntztLIyLDqVpvYDTu/kOizjr19I1KX8QwDj7f7NyfiLo8
+         1E7A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712054035; x=1712658835;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=MWwVzYWrWmvvKy3bQx9GVyakGKirqAQ+7eqOMn8Hdd4=;
+        b=Can6LpG55D7jdRIjPJxKVB/5CnQP4cuNR11U11+/pwy0BFDhBbMUnLF1J3pD2yV9oR
+         EuyUDW+lvVDAyiqKyEf1/CSfS9mAI9HyLaAQzeRZgAIjlQJIZ4jx9A5sGZ//W+kTTf47
+         cglnH8B3MB6yunYtKD+8PKwxVf0M2ylZvyUIZG9F7DHuPImIQ0Y9r1e7IkGOXaebYrjl
+         X+QIB3WGcNSE481vt80uCEVcosfSfu0OFI0V+E5Jm0KvPTB3oq+UbIo8qffFrHVycZe9
+         2yPokQW3F04iX7wOt/0tWcwAO+HcPyoHPC4Tw1/IJXGBKV3ffP1kHtXuOI9UWKb87hhj
+         W7BA==
+X-Forwarded-Encrypted: i=1; AJvYcCUg4qh515220Hr0F4ab+3nHnAxqhXykVbgRi+roQgiya+gzGN057SkzUCyOs3z3HNtqIXykxWG0S6+OJWtT96qa11KD5bjLOeZy4L0w
+X-Gm-Message-State: AOJu0YwpbGrNK3/iPmjF7qbjdzt5Ez6xpJMDMHo75eCTfpepOHXG4a+v
+	4UWqksWIPDpIxsmQKAedGH+VwF/+AIfwOrpCKOtwURPs4t2eSjT6Ame/3CrU/Q85h5XEIqvls49
+	Jx9Oo/mtZ/v+ZKCtkb3vVW2Bd47Ueoz6DK7RTQ2i9MuMEsCN5
+X-Google-Smtp-Source: AGHT+IGdA7+Mw3wgNp+BztbolUTPAWjuEexFLMEyJS8XuGlLJbUGAceuF7Y90mTButztt/iNjInqR50NU+ZERpjg38U=
+X-Received: by 2002:a25:870e:0:b0:dc7:3165:2db1 with SMTP id
+ a14-20020a25870e000000b00dc731652db1mr9075771ybl.49.1712054035607; Tue, 02
+ Apr 2024 03:33:55 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20240401-typec-fix-sm8250-v3-0-604dce3ad103@linaro.org>
+ <20240401-typec-fix-sm8250-v3-3-604dce3ad103@linaro.org> <7088e678-dd0a-4a5d-bef3-e0816a38ce60@linaro.org>
+In-Reply-To: <7088e678-dd0a-4a5d-bef3-e0816a38ce60@linaro.org>
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Date: Tue, 2 Apr 2024 13:33:44 +0300
+Message-ID: <CAA8EJpqdevzsN12m-EnxdFbCa5WgiSDMDhtjyf80th1NZwoD6Q@mail.gmail.com>
+Subject: Re: [PATCH v3 3/9] arm64: dts: qcom: sm8250: describe HS signals properly
+To: "Bryan O'Donoghue" <bryan.odonoghue@linaro.org>
+Cc: Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konrad.dybcio@linaro.org>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
+	Conor Dooley <conor+dt@kernel.org>, linux-arm-msm@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Luca Weiss <luca.weiss@fairphone.com>
+Content-Type: text/plain; charset="UTF-8"
 
-We now have KD_FONT_OP_SET_TALL, but in fact such large fonts cannot be
-loaded. No console driver supports tall fonts. Unfortunately, userspace
-cannot distinguish the lack of support in the driver from errors in the
-font itself. In all cases, EINVAL will be returned.
+On Tue, 2 Apr 2024 at 12:42, Bryan O'Donoghue
+<bryan.odonoghue@linaro.org> wrote:
+>
+> On 01/04/2024 21:33, Dmitry Baryshkov wrote:
+> > Instead
+> > there is a HighSpeed signal lane between DWC3 controller and the USB-C
+> > connector.
+>
+> I still don't think this is an accurate statement. The upstream names
+> and labels should be followed for consistency but role-switching and the
+> DP/DN lines on the type-c port are not related.
 
-This patchset adds a separate ioctl to obtain the font parameters
-supported by the console driver.
+I fully agree with you. And that's why I'm replacing the labels. If
+you open the bindings for usb-c-connector and for the snps,dwc3 host,
+you will see that both bindings describe HS/SS ports. DWC3 also
+describes a single port for usb-data-role switching, which can be used
+instead of HS/SS ports, but usb-c-connector doesn't have this option.
 
-v3:
-* Added the use of the in_range macro.
-* Squashed the commits that add ioctl to console divers.
-
-v2:
-* Instead of the KDFONTOP extension, a new ioctl has been added to
-  obtain font information.
-
-Alexey Gladkov (2):
-  VT: Add KDFONTINFO ioctl
-  VT: Allow to get max font width and height
-
- drivers/tty/vt/vt.c                 | 24 ++++++++++++++++++++++++
- drivers/tty/vt/vt_ioctl.c           | 13 +++++++++++++
- drivers/video/console/newport_con.c | 21 +++++++++++++++++----
- drivers/video/console/sticon.c      | 25 +++++++++++++++++++++++--
- drivers/video/console/vgacon.c      | 21 ++++++++++++++++++++-
- drivers/video/fbdev/core/fbcon.c    | 22 +++++++++++++++++++++-
- include/linux/console.h             |  2 ++
- include/linux/vt_kern.h             |  1 +
- include/uapi/linux/kd.h             | 13 ++++++++++++-
- 9 files changed, 133 insertions(+), 9 deletions(-)
 
 -- 
-2.44.0
-
+With best wishes
+Dmitry
