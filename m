@@ -1,157 +1,155 @@
-Received: from mail-vk1-f179.google.com (mail-vk1-f179.google.com [209.85.221.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D9AF44C97
-	for <linux-kernel@vger.kernel.org>; Wed,  3 Apr 2024 12:49:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BEE444C97;
+	Wed,  3 Apr 2024 12:50:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712148565; cv=none; b=GdGadXlO+IyeOXpK+ZGQ01iu+IxUBKTtmwna5CqacDXn5bbFwg7wMl7X/FnOjpa4POCPnLl3wOkiFXDKEcvyuHL7Fw5CIJOkZdseEj9uDRRn/N5G4mM1IB1gTKOD/uhHErBnM+HcOMaGqcKmiCeef24yZ+7Y4fqC5EM7bUn0+BE=
+	t=1712148624; cv=none; b=sLa1yWhwy7W8BRLKqeyj9IVoNAPljOpY+EwjZmQVRM6v0qHkHI9xlseSsUMWhdPCfwVQyt2N9JFxXhY9YXAbY1pDgB3CnXqHBEbNCVR8pCnJodpg2MArKxnur1nwfwYSay5yXMTspbVJKPhw64L7EkROFryn7ZN/Mq6jcNPaqFM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712148565; c=relaxed/simple;
-	bh=ROVG0xiHSnIs7KwRvfSwwYBgADFkDIzMA1GXsgZfjG8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=gONXJKHeJKnWdIGqpnolKuuODe2lW7VCntJHUtNk/8VHBULHGcIpGIRVVs2QZx5J22yb3zJGjXxdLjj8qvykVSYo7q5ryAwVUy4pLHX29bHFFPfx+YH1NRxPY1WPoC3bbxNEGpUYv+nlzOYyeKkOlWurXdyf91wgZPdm8mMZW9Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=cL+MwWSw; arc=none smtp.client-ip=209.85.221.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1712148624; c=relaxed/simple;
+	bh=rhp7e6puQyVUMErtQ1wrKsDuOwsFw8HjdJrVLLq+GRo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=LPgI8W444QcA7qWQ38FKyiIMojUHDDAjaGcexJE2/46Dwb/u462DS15nDGAGx39Uqa8FkWzcWXMnzZizzX5s4mHLWPRYK0hCW0j8EQ59QjucFP+c3tBnF/i+NWHqc82uXabD5NDlorIExDEn2iyckO/CPnU/LC8lPKLucRknB78=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=KkvbsMi0; arc=none smtp.client-ip=198.175.65.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="cL+MwWSw"
-Received: by mail-vk1-f179.google.com with SMTP id 71dfb90a1353d-4d44f565284so1974251e0c.2
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Apr 2024 05:49:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1712148562; x=1712753362; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=t2Ars11R43M3g3ak506J2E1E1SdVC3fdtd6pwR1tGRQ=;
-        b=cL+MwWSwzNVWBigFR/rg1aENaXWlU2/dlbDGdjYhVZW5Md+8KiJAU0rwpLnO/YWTal
-         oYOb93BREIVbIeYolIynQu9QeeEG+6oVT0DQUVRCcka1a9lsKzGUJuAN7PUGA8bd4HEI
-         EALQUfUI68jY14LaDwlkc4ZZtVE9ICyQSTTEbqVYXk1pp0PXK6ov9iceae/+t0z0mAU3
-         qOCqS+HHnY3nKoeeVE3WAzvbIKBO1LyDAeYlqCD7BWDWt6BMd4xGpWzy0MVR5eHVy2+q
-         bYF3pM/9+3gWkVJpfZDwIjyq3TGaRD9Oi04GTE7F8iXFGptS7t6s3ltSyowuaBQ/WVbw
-         +eYg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712148562; x=1712753362;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=t2Ars11R43M3g3ak506J2E1E1SdVC3fdtd6pwR1tGRQ=;
-        b=t9TWZapKiqEjjRsxZJaO0y7fmpCORqbnB+yYW6bVxghBZnADfSwpjzvW2MexQijThd
-         NGf36H8AJmxdIr5WG9JGQxUusDRwR4NQDuLc+/39GYztdd91rTa6zw4nCvCue7mhTWv4
-         2G8y6R0duceLObcBee2rnjFbZ16ZfybVcqD/TaMm/uXi21X5fHe7h9u/Z40dkbXD49Ml
-         ASqwPEQQO0FopPcKdHqXGheAuFw/b4ibqq/1IbnzAKswDhr1DQliyYT/nIzH2ibzHja/
-         71+XwyHfC4Kr4KWw63FhGU7gsLYg6Pa9xyb9doXEJod1euJejxddX6y78f+6hRDUPndP
-         xqhQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWQZ2+ckF5kxOg3SW8rD5Cgh1c/iqAGDq9tbMSmSCoAoRSdmLCqNUrni8GebwDpd5tScmPcFB7IUZtMa09cTzTbbohKc85i/220rD+F
-X-Gm-Message-State: AOJu0Yz2nYi7eUdlWn8F7e6trR0rJmTK18ZDN+ENGkRFt5pgI0lLiyl3
-	0SY2dXdzp0dEBgWq6FHuFUHFqIJF8Zkbdx7C22ovZpQHwEN7y6YiLVLQSVSOdfPapSxZsYEDgmJ
-	lPEd82yxJrDqt/F5R0RcPLV2TZ61PwxDbD3X8
-X-Google-Smtp-Source: AGHT+IGpGV6qmNqrrvcbmVo3EjMPGgz6/E5lSHMdShUkmEzO4ELmFUZsaP3K2B+eJuIeKzDyPL73JKf/NC1FkGRyx1o=
-X-Received: by 2002:a1f:cdc2:0:b0:4d3:36b9:2c26 with SMTP id
- d185-20020a1fcdc2000000b004d336b92c26mr2131961vkg.14.1712148562485; Wed, 03
- Apr 2024 05:49:22 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KkvbsMi0"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1712148623; x=1743684623;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=rhp7e6puQyVUMErtQ1wrKsDuOwsFw8HjdJrVLLq+GRo=;
+  b=KkvbsMi0a3GwZQH6OS4qDkK6GKzMItf+9mMJQrlpnAi+meTSbsOpwtnP
+   FrSQJtA+D8R+fGZLlKi413OBM0d2wxX2d0lcMbdI3Xcf3x3UHIzwKGWMa
+   7QyqBahdXupDHXm+T9LRIA6BxqfPBAkL//QX8cuYRQRKr2Lc79jNTlGWM
+   7fCDKhToPD8wPp5EcPOImuBBgtO7EvHAd007FxI6BdVsZAeMU5U+AQ0f6
+   +o+PUOxWUIZCKnQtKtR4WYBmQWOfW7i/EC+Dklt+O0XhTn8fv+NXQIaeJ
+   8j1Ycl9ci1pAUy3adZT1gwjFLO+U4HDJWY2SQlWTpmT7Q9Xvh5Bdy3zPM
+   g==;
+X-CSE-ConnectionGUID: v9EQG/HkTBuqCVkMznfwog==
+X-CSE-MsgGUID: tsE9gVh+SEKW4sMbKWWVYQ==
+X-IronPort-AV: E=McAfee;i="6600,9927,11033"; a="7539277"
+X-IronPort-AV: E=Sophos;i="6.07,177,1708416000"; 
+   d="scan'208";a="7539277"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2024 05:50:23 -0700
+X-CSE-ConnectionGUID: 1/2JH2STQ7WDV9dzV2GDbw==
+X-CSE-MsgGUID: R5MUllpuTCKa7NQ8b3XutA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,177,1708416000"; 
+   d="scan'208";a="18343201"
+Received: from makulkar-mobl1.amr.corp.intel.com (HELO [10.212.52.18]) ([10.212.52.18])
+  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2024 05:50:21 -0700
+Message-ID: <ef510647-c409-4da6-9cd4-ff4e54cbee74@linux.intel.com>
+Date: Tue, 2 Apr 2024 08:57:14 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240402-linked-list-v1-0-b1c59ba7ae3b@google.com>
- <20240402-linked-list-v1-7-b1c59ba7ae3b@google.com> <4aaf7fd7-49ed-4b3e-b691-0d8d7d426d3a@proton.me>
-In-Reply-To: <4aaf7fd7-49ed-4b3e-b691-0d8d7d426d3a@proton.me>
-From: Alice Ryhl <aliceryhl@google.com>
-Date: Wed, 3 Apr 2024 14:49:11 +0200
-Message-ID: <CAH5fLghEg37m_PhJxE8FVORHGROE9rd1CJttaWBGc7cXZCX+yQ@mail.gmail.com>
-Subject: Re: [PATCH 7/9] rust: list: add cursor
-To: Benno Lossin <benno.lossin@proton.me>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, 
-	Alex Gaynor <alex.gaynor@gmail.com>, Wedson Almeida Filho <wedsonaf@gmail.com>, 
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Andreas Hindborg <a.hindborg@samsung.com>, Marco Elver <elver@google.com>, 
-	Kees Cook <keescook@chromium.org>, Coly Li <colyli@suse.de>, Paolo Abeni <pabeni@redhat.com>, 
-	Pierre Gondois <pierre.gondois@arm.com>, Ingo Molnar <mingo@kernel.org>, 
-	Jakub Kicinski <kuba@kernel.org>, Wei Yang <richard.weiyang@gmail.com>, 
-	Matthew Wilcox <willy@infradead.org>, linux-kernel@vger.kernel.org, 
-	rust-for-linux@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: =?UTF-8?B?UmU6IOWbnuWkjTogW1BBVENIIHYyIDIvMl0gQVNvQzogY2RuczogQWRk?=
+ =?UTF-8?Q?_drivers_of_Cadence_Multi-Channel_I2S_Controller?=
+To: Xingyu Wu <xingyu.wu@starfivetech.com>,
+ Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
+ Claudiu Beznea <Claudiu.Beznea@microchip.com>,
+ Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
+ Rob Herring <robh+dt@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor.dooley@microchip.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
+ "linux-sound@vger.kernel.org" <linux-sound@vger.kernel.org>
+References: <20240320090239.168743-1-xingyu.wu@starfivetech.com>
+ <20240320090239.168743-3-xingyu.wu@starfivetech.com>
+ <1d0399d2-684f-490e-8711-f636e987a0b8@linux.intel.com>
+ <NTZPR01MB0956BFADB4B3DA507D938F669F35A@NTZPR01MB0956.CHNPR01.prod.partner.outlook.cn>
+Content-Language: en-US
+From: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+In-Reply-To: <NTZPR01MB0956BFADB4B3DA507D938F669F35A@NTZPR01MB0956.CHNPR01.prod.partner.outlook.cn>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Wed, Apr 3, 2024 at 2:19=E2=80=AFPM Benno Lossin <benno.lossin@proton.me=
-> wrote:
->
-> On 02.04.24 14:17, Alice Ryhl wrote:
-> > diff --git a/rust/kernel/list.rs b/rust/kernel/list.rs
-> > index 892705dd0571..47e52818c7bd 100644
-> > --- a/rust/kernel/list.rs
-> > +++ b/rust/kernel/list.rs
-> > @@ -408,6 +408,20 @@ pub fn push_all_back(&mut self, other: &mut List<T=
-, ID>) {
-> >          other.first =3D ptr::null_mut();
-> >      }
-> >
-> > +    /// Returns a cursor to the first element of the list.
-> > +    ///
-> > +    /// If the list is empty, this returns `None`.
-> > +    pub fn cursor_front(&mut self) -> Option<Cursor<'_, T, ID>> {
-> > +        if self.first.is_null() {
-> > +            None
-> > +        } else {
-> > +            Some(Cursor {
->
-> Missing INVARIANT comment.
->
-> > +                current: self.first,
-> > +                list: self,
-> > +            })
-> > +        }
-> > +    }
-> > +
-> >      /// Creates an iterator over the list.
-> >      pub fn iter(&self) -> Iter<'_, T, ID> {
-> >          // INVARIANT: If the list is empty, both pointers are null. Ot=
-herwise, both pointers point
-> > @@ -476,6 +490,69 @@ fn next(&mut self) -> Option<ArcBorrow<'a, T>> {
-> >      }
-> >  }
-> >
-> > +/// A cursor into a [`List`].
-> > +///
-> > +/// # Invariants
-> > +///
-> > +/// The `current` pointer points a value in `list`.
-> > +pub struct Cursor<'a, T: ?Sized + ListItem<ID>, const ID: u64 =3D 0> {
-> > +    current: *mut ListLinksFields,
-> > +    list: &'a mut List<T, ID>,
-> > +}
-> > +
-> > +impl<'a, T: ?Sized + ListItem<ID>, const ID: u64> Cursor<'a, T, ID> {
-> > +    /// Access the current element of this cursor.
-> > +    pub fn current(&self) -> ArcBorrow<'_, T> {
-> > +        // SAFETY: The `current` pointer points a value in the list.
-> > +        let me =3D unsafe { T::view_value(ListLinks::from_fields(self.=
-current)) };
-> > +        // SAFETY:
-> > +        // * All values in a list are stored in an `Arc`.
-> > +        // * The value cannot be removed from the list for the duratio=
-n of the lifetime annotated
-> > +        //   on the returned `ArcBorrow`, because removing it from the=
- list would require mutable
-> > +        //   access to the cursor or the list. However, the `ArcBorrow=
-` holds an immutable borrow
-> > +        //   on the cursor, which in turn holds an immutable borrow on=
- the list, so any such
->
-> The cursor has a mutable borrow on the list.
->
->
-> > +        //   mutable access requires first releasing the immutable bor=
-row on the cursor.
-> > +        // * Values in a list never have a `UniqueArc` reference.
->
-> Is there some type invariant guaranteeing this?
 
-The List owns a ListArc reference to the value. It would be unsound
-for there to also be a UniqueArc reference to it.
+>>
+>>> +#define PERIODS_MIN		2
+>>> +
+>>> +static unsigned int cdns_i2s_pcm_tx(struct cdns_i2s_dev *dev,
+>>> +				    struct snd_pcm_runtime *runtime,
+>>> +				    unsigned int tx_ptr, bool *period_elapsed,
+>>> +				    snd_pcm_format_t format)
+>>> +{
+>>> +	unsigned int period_pos = tx_ptr % runtime->period_size;
+>>
+>> not following what the modulo is for, usually it's modulo the buffer size?
+> 
+> This is to see if the new data is divisible by period_size and to determine whether
+> it is enough for a period_size in the later loop.
 
-Alice
+That didn't answer to my question, the position is usually between
+0..buffer_size.1.
+
+Doing increments on a modulo value then comparisons as done below seems
+rather questionable.
+	
+>>> +
+>>> +		iowrite32(data[0], dev->base + CDNS_FIFO_MEM);
+>>> +		iowrite32(data[1], dev->base + CDNS_FIFO_MEM);
+>>> +		period_pos++;
+>>> +		if (++tx_ptr >= runtime->buffer_size)
+>>> +			tx_ptr = 0;
+>>> +	}
+>>> +
+>>> +	*period_elapsed = period_pos >= runtime->period_size;
+>>> +	return tx_ptr;
+>>> +}
+
+>>> +	pm_runtime_enable(&pdev->dev);
+>>> +	if (pm_runtime_enabled(&pdev->dev))
+>>> +		cdns_i2s_runtime_suspend(&pdev->dev);
+>>
+>> that sequence looks suspicious.... Why would you suspend immediately during the
+>> probe? You're probably missing all the autosuspend stuff?
+> 
+> Since I have enabled clocks before, and the device is in the suspend state after
+> pm_runtime_enable(), I need to disable clocks in cdns_i2s_runtime_suspend()
+> to match the suspend state.
+
+That is very odd on two counts
+a) if you haven't enabled the clocks, why do you need to disbale them?
+b) if you do a pm_runtime_enable(), then the branch if
+(pm_runtime_enabled) is always true.
+
+
+> 
+>>
+>>> +
+>>> +	dev_dbg(&pdev->dev, "I2S supports %d stereo channels with %s.\n",
+>>> +		i2s->max_channels, ((i2s->irq < 0) ? "dma" : "interrupt"));
+>>> +
+>>> +	return 0;
+>>> +
+>>> +err:
+>>> +	return ret;
+>>> +}
+>>> +
+>>> +static int cdns_i2s_remove(struct platform_device *pdev) {
+>>> +	pm_runtime_disable(&pdev->dev);
+>>> +	if (!pm_runtime_status_suspended(&pdev->dev))
+>>> +		cdns_i2s_runtime_suspend(&pdev->dev);
+>>
+>> ... and this one too. Once you've disabled pm_runtime, checking the status is
+>> irrelevant...
+> 
+> I think the clocks need to be always enabled after probe if disable pm_runtime,
+> and should be disabled when remove. This will do that.
+
+if you are disabling pm_runtime, then the pm_runtime state becames invalid.
+When pm_runtime_disable() is added in remove operations, it's mainly to
+prevent the device from suspending.
+
