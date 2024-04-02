@@ -1,91 +1,110 @@
-Received: from mail.nppct.ru (mail.nppct.ru [195.133.245.4])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52C435A4C7
-	for <linux-kernel@vger.kernel.org>; Tue,  2 Apr 2024 11:59:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.133.245.4
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38D676996E;
+	Tue,  2 Apr 2024 12:00:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712059182; cv=none; b=rmUGbyTC7LvSEJo1rBF0YIMK2kX0xzTKE6BbMLfnqDXU9dw+tbNX0AKOnBNl6Hdp/NHNrdpeuanxBNi1LEcWrs0i44doqcSr/bHcAIOqyOQO1pRZs90dVC3q9KlgproVkyxksH0ryUultA9A8a5M1F/5PTmf+NIkyObA0vERw6k=
+	t=1712059213; cv=none; b=rgfzLO63gyPzp5I8VlamDxem8UOzBGJhIwbbBAND0NDT3hZn9gGwefsw9KQvSiQK84NJUo8+v+VIAFr0NqW3QXCpkjIo4G91CBFWG6T6eBqjAguB7pttRMsMpUwv371WoddhB+CdF9zO4CXHjmWLet7NLgbtig7uL9uMILBlxaI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712059182; c=relaxed/simple;
-	bh=dzFzoRjMBaoyQUng2Yecgold2it77CXBKBHEAhjFIc4=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=rNHNrzSiaox8u278NfgLCO4kI+1aG/uaF8d8aeLYZbOwVvEp9jZ23oafO19oaYgDPRMdDi8YQeM4psSMv8u5+O8vVuORhb1fnNNtvg7b8iKoM32UJylm/D1wnxcejwYdEwITcAQD9A3QbevAtMj87O1DZbHUPKACiKh9IlMlaN4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nppct.ru; spf=pass smtp.mailfrom=nppct.ru; dkim=pass (1024-bit key) header.d=nppct.ru header.i=@nppct.ru header.b=Ox6G3NuS; arc=none smtp.client-ip=195.133.245.4
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nppct.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nppct.ru
+	s=arc-20240116; t=1712059213; c=relaxed/simple;
+	bh=TihMgljaYWhrRL55MuklbfScnzu4gTRlCt/ctqEhRvU=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=WzmTX083BWl4ws63lgqRDIbZKb+v8zPKYGULaWksv8D02Cr79dTjTCdMqBEFuQcAnJKSp+FNhxrFP/bXVEjWO3+7X24qjYnAYU5qpD1urDfb7/W8ffpePU4yjTLhdGr7FxwlbZEQJGBRZe4I5EwXfW6aBYEN4tXL5yu+LStJZx4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=e7fkZB5N; arc=none smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=nppct.ru header.i=@nppct.ru header.b="Ox6G3NuS"
-Received: from mail.nppct.ru (localhost [127.0.0.1])
-	by mail.nppct.ru (Postfix) with ESMTP id 4D5E31C1E16
-	for <linux-kernel@vger.kernel.org>; Tue,  2 Apr 2024 14:52:12 +0300 (MSK)
-Authentication-Results: mail.nppct.ru (amavisd-new); dkim=pass (1024-bit key)
-	reason="pass (just generated, assumed good)" header.d=nppct.ru
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=nppct.ru; h=
-	content-transfer-encoding:mime-version:x-mailer:message-id:date
-	:date:subject:subject:to:from:from; s=dkim; t=1712058731; x=
-	1712922732; bh=dzFzoRjMBaoyQUng2Yecgold2it77CXBKBHEAhjFIc4=; b=O
-	x6G3NuSRVjzEFWjk6vnt5xQ0Ut6hQaJd8qZ/5Eh0a09l8xYpr1IgsafoMoUnMuOh
-	PC7Dh7cWHxq5FpqkKFwQXFJuorS13vU7LIvwNljFeGjpghpTpLhLwyGv0sZI6B52
-	MCtJCTn7tR1jtMUyEW1Vtsa2AKjstHJakGty9ipLE0=
-X-Virus-Scanned: Debian amavisd-new at mail.nppct.ru
-Received: from mail.nppct.ru ([127.0.0.1])
-	by mail.nppct.ru (mail.nppct.ru [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id HSN-IraGDnoU for <linux-kernel@vger.kernel.org>;
-	Tue,  2 Apr 2024 14:52:11 +0300 (MSK)
-Received: from localhost.localdomain (mail.dev-ai-melanoma.ru [185.130.227.204])
-	by mail.nppct.ru (Postfix) with ESMTPSA id 5C07C1C1D18;
-	Tue,  2 Apr 2024 14:52:04 +0300 (MSK)
-From: Andrey Shumilin <shum.sdl@nppct.ru>
-To: Juergen Gross <jgross@suse.com>
-Cc: Andrey Shumilin <shum.sdl@nppct.ru>,
-	Stefano Stabellini <sstabellini@kernel.org>,
-	Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>,
-	linux-kernel@vger.kernel.org,
-	lvc-project@linuxtesting.org,
-	khoroshilov@ispras.ru,
-	ykarpov@ispras.ru,
-	vmerzlyakov@ispras.ru,
-	vefanov@ispras.ru
-Subject: [PATCH 4/4] gntdev: Unchecked finction result
-Date: Tue,  2 Apr 2024 14:51:57 +0300
-Message-Id: <20240402115157.672915-1-shum.sdl@nppct.ru>
-X-Mailer: git-send-email 2.30.2
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="e7fkZB5N"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1712059211; x=1743595211;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=TihMgljaYWhrRL55MuklbfScnzu4gTRlCt/ctqEhRvU=;
+  b=e7fkZB5NjWBGuH8okkQIiFX4vUamjw4tePSMWS7ZtoLy2ApbYDGR1deN
+   tyZXXqsLP1r6/l50grYPIKxCsjd1qLwzkK5Uub4n2VQC+Qoqcm8Sk7nvc
+   Am/uaI+AMfuFLOSmuzPh5Okg0MsG208GyjtbTpOIe8AX+NeL8bzLWbfvb
+   V7nLWyEHB2DAftLYg/61ohK4ikc7Y71CzotUcPO1UaFqjAfhlVUHB0dwD
+   wxj54obG3pdkrEotPIPcopMk8bQg2mH/iDhGhd8CUrTCpfxW2acGbKdX9
+   HiQ0J+circb34TsfeAzWfcRjd8hwMljgGjH1i79bjEdqNomVKGEJ8ZteN
+   A==;
+X-CSE-ConnectionGUID: CxirSfzFQ6C5P3ylP8ZPFg==
+X-CSE-MsgGUID: hqrGO+DuR8y1j57yCl6QKg==
+X-IronPort-AV: E=McAfee;i="6600,9927,11031"; a="11044368"
+X-IronPort-AV: E=Sophos;i="6.07,174,1708416000"; 
+   d="scan'208";a="11044368"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2024 05:00:10 -0700
+X-CSE-ConnectionGUID: JwktAXk0Q7OIz94r54PrFw==
+X-CSE-MsgGUID: jx4iutLKR4qpiKbdT2sFCA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,174,1708416000"; 
+   d="scan'208";a="22762281"
+Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.247.23])
+  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2024 05:00:09 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Tue, 2 Apr 2024 15:00:05 +0300 (EEST)
+To: =?ISO-8859-15?Q?Bernhard_Rosenkr=E4nzer?= <bero@baylibre.com>
+cc: platform-driver-x86@vger.kernel.org, jlee@suse.com, 
+    Hans de Goede <hdegoede@redhat.com>, onenowy@gmail.com, 
+    LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] platform/x86: acer-wmi: Add support for Acer PH18-71
+In-Reply-To: <20240329152800.29393-1-bero@baylibre.com>
+Message-ID: <4edff788-8a2a-ac94-f299-7d613a1c360b@linux.intel.com>
+References: <20240329152800.29393-1-bero@baylibre.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/mixed; boundary="8323328-1863880464-1712059205=:1019"
 
-The dma_coerce_mask_and_coherent function may refuse
-to apply a mask due to incorrectly passed parameters.
-But since this function returns the error -EIO, this
-is an abnormal situation and the error must be written to the log.
-Do not return an error from the function.
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-Found by Linux Verification Center (linuxtesting.org) with SVACE.
+--8323328-1863880464-1712059205=:1019
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 
-Signed-off-by: Andrey Shumilin <shum.sdl@nppct.ru>
+On Fri, 29 Mar 2024, Bernhard Rosenkr=C3=A4nzer wrote:
 
----
- drivers/xen/gntdev.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+> Add Acer Predator PH18-71 to acer_quirks with predator_v4
+> to support mode button and fan speed sensor.
+>=20
+> Signed-off-by: Bernhard Rosenkr=C3=A4nzer <bero@baylibre.com>
+> ---
+>  drivers/platform/x86/acer-wmi.c | 9 +++++++++
+>  1 file changed, 9 insertions(+)
+>=20
+> diff --git a/drivers/platform/x86/acer-wmi.c b/drivers/platform/x86/acer-=
+wmi.c
+> index ee2e164f86b9c..38c932df6446a 100644
+> --- a/drivers/platform/x86/acer-wmi.c
+> +++ b/drivers/platform/x86/acer-wmi.c
+> @@ -597,6 +597,15 @@ static const struct dmi_system_id acer_quirks[] __in=
+itconst =3D {
+>  =09=09},
+>  =09=09.driver_data =3D &quirk_acer_predator_v4,
+>  =09},
+> +=09{
+> +=09=09.callback =3D dmi_matched,
+> +=09=09.ident =3D "Acer Predator PH18-71",
+> +=09=09.matches =3D {
+> +=09=09=09DMI_MATCH(DMI_SYS_VENDOR, "Acer"),
+> +=09=09=09DMI_MATCH(DMI_PRODUCT_NAME, "Predator PH18-71"),
+> +=09=09},
+> +=09=09.driver_data =3D &quirk_acer_predator_v4,
+> +=09},
+>  =09{
+>  =09=09.callback =3D set_force_caps,
+>  =09=09.ident =3D "Acer Aspire Switch 10E SW3-016",
+>=20
 
-diff --git a/drivers/xen/gntdev.c b/drivers/xen/gntdev.c
-index 61faea1f0663..8a448dbbca86 100644
---- a/drivers/xen/gntdev.c
-+++ b/drivers/xen/gntdev.c
-@@ -597,7 +597,8 @@ static int gntdev_open(struct inode *inode, struct file *flip)
- 	flip->private_data = priv;
- #ifdef CONFIG_XEN_GRANT_DMA_ALLOC
- 	priv->dma_dev = gntdev_miscdev.this_device;
--	dma_coerce_mask_and_coherent(priv->dma_dev, DMA_BIT_MASK(64));
-+	if (dma_coerce_mask_and_coherent(priv->dma_dev, DMA_BIT_MASK(64)) == -EIO)
-+		pr_err("The mask was applied unsuccessfully");
- #endif
- 	pr_debug("priv %p\n", priv);
- 
--- 
-2.30.2
+Reviewed-by: Ilpo J=C3=A4rvinen <ilpo.jarvinen@linux.intel.com>
 
+--=20
+ i.
+
+--8323328-1863880464-1712059205=:1019--
