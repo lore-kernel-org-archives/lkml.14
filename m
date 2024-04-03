@@ -1,136 +1,100 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 299EA14C5B1;
-	Wed,  3 Apr 2024 15:15:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED59426292;
+	Wed,  3 Apr 2024 15:16:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712157328; cv=none; b=ggDY2dGhIg7yC2cNdAdMHd8OpCyqwU2y98Nqi/ZKYIP1LMbpUX3S2ivD9U4CyJELkF/Bq2WTlHMAltDKZO/fbCr4EDXG2mJwQIMvVt5VUa+LQf/E9U738FIGpVaa6U8k1cDeJpLSZlrHLPqOxsThGvHuloQJRWhopMnFuDcjbT0=
+	t=1712157376; cv=none; b=LFdBtmH2Aasco3G8YtTRb1bNNKJ7ewBS8MuE9kVQDpGbJhwJUp0S78sRtxh/QaHVsfcbXN1SePd2Hoss4V5ur2hogNxqw4435MwJlh63Jbs5KfrwMnrjW8faY266B51vX62oYnDlqtiXk0szczfLnucQgryzQLU7hw1sIF+0Zt8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712157328; c=relaxed/simple;
-	bh=G+3dp7VGKvmjKZ/6zX13Wl3Vat/CB+UfkoJwKhp3mSY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WjsqBtgw/dxThM/eqQ3TzKU9anzWpBgYjAVFRo9jxiYchozjN/hesICzzoXInYa87qTyQ+WtrO5e287DUnKdOMwa/gihBHLB6fpIIKZu+mJyHZU+lBzBi6n/To5fMs7wpQ7JAvmQtzt6Zd1IH+OjSbffgwX5AxDVNNtV69w9OY8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YUJF5+Iy; arc=none smtp.client-ip=192.198.163.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1712157376; c=relaxed/simple;
+	bh=z3lQD5lgMachfwYyNrVW8WJbO2hEjtLyQulbSy5ojU0=;
+	h=Mime-Version:Content-Type:Date:Message-Id:To:Cc:Subject:From:
+	 References:In-Reply-To; b=DYlKycI1y45RrXS7BT6oeGRRJoVB6yMRWA9YObiPIPSZZgwcFXB4AdBLM/6DnN+2QsMvm3GHBtcpfk7wjp5wPyeDAKNzP7nDN9PT3wZ2Yg/UQgEIDnv435OHGfnOVT9LYJNknLM0HHecTwhLapArQX+YzQFcSnoXHX91BaQk+r4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Nm0Ybv9G; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YUJF5+Iy"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1712157327; x=1743693327;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=G+3dp7VGKvmjKZ/6zX13Wl3Vat/CB+UfkoJwKhp3mSY=;
-  b=YUJF5+IyjV/9VQfs8QiDXqP7wRLQUcbbLbefkODv4zMEM0O0fu4y4d8n
-   7oQQDjkt42Z06VNFleXLANJMpiIEZrTQGWpYw7j49Lukd/obeej4lx8DY
-   4iAsv8CRO6zZ7ylB6KJV3OB6wTqvNOzCa1RSFp9Ieb55GiLPiIoDyhjHw
-   LGVa8MueWYd06uzmCmaqkKSsiqK1YM742hRoyWqo8Ce5OSQpaDyqljqqi
-   kWzTrb6JRomJaxyTqIWiNIOcX3p0p2f+lUukFfhHkrfgLy/0v6xRqGp4T
-   e0xK8Wewa+4HR1EXHPoO2UG0Xl5vUvcCylK0nPKUnoc7mQ0QN+sUNFYSQ
-   A==;
-X-CSE-ConnectionGUID: 3QvqVeL1TKCbGcZGnaiGpw==
-X-CSE-MsgGUID: IL3KToesS7yhQpbbMaczVQ==
-X-IronPort-AV: E=McAfee;i="6600,9927,11033"; a="24897304"
-X-IronPort-AV: E=Sophos;i="6.07,177,1708416000"; 
-   d="scan'208";a="24897304"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2024 08:15:26 -0700
-X-CSE-ConnectionGUID: 8raQbmlSSfugqpi13Ne8wQ==
-X-CSE-MsgGUID: W0lH8cfyQcSDz9K7UddVRQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,177,1708416000"; 
-   d="scan'208";a="22936198"
-Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.165])
-  by fmviesa005.fm.intel.com with ESMTP; 03 Apr 2024 08:15:24 -0700
-Date: Wed, 3 Apr 2024 23:10:31 +0800
-From: Xu Yilun <yilun.xu@linux.intel.com>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Tom Rix <trix@redhat.com>, Moritz Fischer <mdf@kernel.org>,
-	Matthew Gerlach <matthew.gerlach@linux.intel.com>,
-	linux-fpga@vger.kernel.org,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	Wu Hao <hao.wu@intel.com>, Xu Yilun <yilun.xu@intel.com>
-Subject: Re: [PATCH v1 1/1] fpga: dfl: pci: Use pci_find_vsec_capability()
- when looking for DFL
-Message-ID: <Zg1xZ+k8eZJwOs41@yilunxu-OptiPlex-7050>
-References: <20211109154127.18455-1-andriy.shevchenko@linux.intel.com>
- <8ccc133a-fb47-4548-fee3-d57775a5166d@redhat.com>
- <YYq4fSRoyzFE4Vei@smile.fi.intel.com>
- <39ac1f40-66ab-6c7e-0042-8fcdc062ed00@redhat.com>
- <YYuBz0tdduAk1c/6@smile.fi.intel.com>
- <3106bd57-9144-6a4d-8ad9-3ebf804018ab@redhat.com>
- <CAHp75Vf16mH4KQ232rip9MPLoSE1TmJ_jeiwVUzqxOH5b0RFJQ@mail.gmail.com>
- <Zg03BTubHLslIi_P@smile.fi.intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Nm0Ybv9G"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EBF34C433C7;
+	Wed,  3 Apr 2024 15:16:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1712157375;
+	bh=z3lQD5lgMachfwYyNrVW8WJbO2hEjtLyQulbSy5ojU0=;
+	h=Date:To:Cc:Subject:From:References:In-Reply-To:From;
+	b=Nm0Ybv9GSWZkkgEyiuULaleJd2ST6xA9OgSewczf9SKZakwdUVS3HboknHyllu8MF
+	 kFWTjqejWXJP5RVnNMHDah5KRw5glDItlYj6dxIHJhrAPxzGUfV5hFZ2wROKzcXdco
+	 /6V6VTQqeYAtpQsjsbW8/rZd8ucVXgjwUEleGnhAVreBRcNBT9XjaB8W+JCwh1lC57
+	 ndzmd97Xo/T2tZ3OwqWvn24On1MYKNGFXjQTzcu3PLTEk3fq2W7ZuZFSwGUuevTZQs
+	 RZLLShcGwPfNq+Cm1oXQSmPikS9CYW6NsME3Kl7vUXUlIMa2oB+D6Jq+hpAWgSt6T1
+	 CYBrKO5DCVIjA==
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Zg03BTubHLslIi_P@smile.fi.intel.com>
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Wed, 03 Apr 2024 18:16:09 +0300
+Message-Id: <D0AL4STCYS9S.2F0HJSH4E3M3B@kernel.org>
+To: "Dave Hansen" <dave.hansen@intel.com>, "Haitao Huang"
+ <haitao.huang@linux.intel.com>, <dave.hansen@linux.intel.com>,
+ <tj@kernel.org>, <mkoutny@suse.com>, <linux-kernel@vger.kernel.org>,
+ <linux-sgx@vger.kernel.org>, <x86@kernel.org>, <cgroups@vger.kernel.org>,
+ <tglx@linutronix.de>, <mingo@redhat.com>, <bp@alien8.de>, <hpa@zytor.com>,
+ <sohil.mehta@intel.com>, <tim.c.chen@linux.intel.com>
+Cc: <zhiquan1.li@intel.com>, <kristen@linux.intel.com>, <seanjc@google.com>,
+ <zhanb@microsoft.com>, <anakrish@microsoft.com>,
+ <mikko.ylinen@linux.intel.com>, <yangjie@microsoft.com>,
+ <chrisyan@microsoft.com>
+Subject: Re: [PATCH v9 15/15] selftests/sgx: Add scripts for EPC cgroup
+ testing
+From: "Jarkko Sakkinen" <jarkko@kernel.org>
+X-Mailer: aerc 0.17.0
+References: <20240205210638.157741-1-haitao.huang@linux.intel.com>
+ <20240205210638.157741-16-haitao.huang@linux.intel.com>
+ <4be7b291010973c203ed8c7bcd25b626c1290231.camel@kernel.org>
+ <D04OVW6I8MUA.1OAIHFQ8943SM@kernel.org>
+ <op.2lbjl0oawjvjmi@hhuan26-mobl.amr.corp.intel.com>
+ <D071OAFZ80O6.XEDXJ8AF4PK9@kernel.org>
+ <18e84d04-0b75-4188-a94d-6b033f4edbf0@intel.com>
+In-Reply-To: <18e84d04-0b75-4188-a94d-6b033f4edbf0@intel.com>
 
-On Wed, Apr 03, 2024 at 02:01:25PM +0300, Andy Shevchenko wrote:
-> On Wed, Nov 10, 2021 at 06:59:25PM +0200, Andy Shevchenko wrote:
-> > On Wed, Nov 10, 2021 at 2:28 PM Tom Rix <trix@redhat.com> wrote:
-> > > On 11/10/21 12:24 AM, Andy Shevchenko wrote:
-> > > > On Tue, Nov 09, 2021 at 10:27:58AM -0800, Tom Rix wrote:
-> > > >> On 11/9/21 10:05 AM, Andy Shevchenko wrote:
-> > > >>> On Tue, Nov 09, 2021 at 07:55:43AM -0800, Tom Rix wrote:
-> > > >>>> On 11/9/21 7:41 AM, Andy Shevchenko wrote:
-> 
-> ...
-> 
-> > > >>>>> + voff = pci_find_vsec_capability(dev, PCI_VENDOR_ID_INTEL, PCI_VSEC_ID_INTEL_DFLS);
-> > > >>>> This may be a weakness in the origin code, but intel isn't the exclusive
-> > > >>>> user of DFL.
-> > > >>> This does not change the original code. If you think so, this can be extended
-> > > >>> later on.
-> > > >> I would rather see this fixed now or explained why this isn't a problem.
-> > > > This is out of scope of this change in a few ways:
-> > > >   - we don't do 2+ things in one patch
-> > > >   - the change doesn't change behaviour
-> > > >   - the change is a simple cleanup
-> > > >   - another vendor may well have quite different VSEC ID for DFL
-> > > >
-> > > > If you think that it should be needed, one can come up with it later on.
-> > >
-> > > Fixing a problem is more useful than a cleanup. The fix should come first.
-> > 
-> > What do you mean by that? The original code never worked with what you
-> > are suggesting. There is nothing to fix in terms of "fix". What you
-> > are proposing is a feature. And as we know the features are going into
-> > the kernel in a natural order, means fixes - priority 1, cleanups /
-> > refactoring as prerequisites to the feature enabling - priority 2,
-> > feature - priority 3, other cleanups and code improvements - priority
-> > 4.
-> > 
-> > That said, the proposed change definitely falls into category 2. It
-> > makes the proposed feature to be easily realized.
-> > 
-> > Also, do not forget that vendor specific stuff is _by definition_
-> > vendor specific, and the proposed feature is doubtful until you prove
-> > there is another vendor-id pair.
-> 
-> Interestingly that you included
-> 8607d9c1bd57 ("fpga: dfl-pci: Use pci_find_vsec_capability() to simplify the code")
-> without even letting me know...
+On Tue Apr 2, 2024 at 6:42 PM EEST, Dave Hansen wrote:
+> On 3/30/24 04:23, Jarkko Sakkinen wrote:
+> >>> I also wonder is cgroup-tools dependency absolutely required or could
+> >>> you just have a function that would interact with sysfs?
+> >> I should have checked email before hit the send button for v10 =F0=9F=
+=99=82.
+> >>
+> >> It'd be more complicated and less readable to do all the stuff without=
+ the =20
+> >> cgroup-tools, esp cgexec. I checked dependency, cgroup-tools only depe=
+nds =20
+> >> on libc so I hope this would not cause too much inconvenience.
+> > As per cgroup-tools, please prove this. It makes the job for more
+> > complicated *for you* and you are making the job more  complicated
+> > to every possible person in the planet running any kernel QA.
+>
+> I don't see any other use of cgroup-tools in testing/selftests.
+>
+> I *DO* see a ton of /bin/bash use though.  I wouldn't go to much trouble
+> to make the thing ash-compatible.
+>
+> That said, the most important thing is to get some selftests in place.
+> If using cgroup-tools means we get actual, runnable tests in place,
+> that's a heck of a lot more important than making them perfect.
+> Remember, almost nobody uses SGX.  It's available on *VERY* few systems
+> from one CPU vendor and only in very specific hardware configurations.
 
-I'm sorry. Apparently I forgot what we've discussed in 2021.
+Ash-compatible is good enough for me, so let's draw the line there.
 
-In 2021, I was waiting for some more comments although I was already
-good at your patch, but sadly I didn't follow up and missed it. In
-2023, I was pretty sure no more comment and I could just apply.
+Ash-compatibility does not cause any major hurdle as can we seen from
+Haitao's patch. Earlier version was not even POSIX-compatible, given
+that it used hard-coded path.
 
-Thanks,
-Yilun
+Most of the added stuff come open coding the tools but in the test
+code that is not the big deal, and helps with debugging in the future.
+Even right now it helps reviewing kernel patches because it documents
+exactly how the feature is seen from user space.
 
-> 
-> -- 
-> With Best Regards,
-> Andy Shevchenko
-> 
-> 
-> 
+BR, Jarkko
