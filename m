@@ -1,129 +1,129 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F1C4B149E0A
-	for <linux-kernel@vger.kernel.org>; Wed,  3 Apr 2024 15:07:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CC98149C68
+	for <linux-kernel@vger.kernel.org>; Wed,  3 Apr 2024 15:07:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712156830; cv=none; b=CXR+3PhdlcY904SSaygKOrhTCAoBj3Rli4KBNvuGfowZYoKvhqrche0S/aNJWE3Uzx72FEvmJtIHtmSI0FGQJGLM//GDi6ixkKTDNBMYZ8Y3hlRAOGbimsHkgmTClpgXufYoF6S46NngErqL0DdUNAOdEbZLeJfYOT+u4RS2s5I=
+	t=1712156847; cv=none; b=nlHoRlQILfqF9MWwIp8s0K2JD6Cs2U6wM0+YnfK4Ye5JzVE5xPzGSTih6ZhJGSdtg9s2K+C+P0BTCFlAzEMX1N/p9cI6yQeXQ9hs/Q/GPNYNaaZWmWHf0leCKff4aVDz4oSHE4Sp0H8yNeEhKcSmM3yCfrBZSUBz9kBAAetPlyU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712156830; c=relaxed/simple;
-	bh=W3JT2si9ImtOXLQWk2Xzg1pUyMSMDml9LjW4wwC97aw=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=nTuC6jyOIJGZpP8M5Wz/FMYBMkdP6qOYBp4Dm3YCfXdQ5BpPazQk/WvuEpL9fb0WETRSJsIfQ+0EF3JS5OI5oP/DTPmReVXJQUFeJGiMI9sFeFC2F8O2X4K3qi6ubv2Q4zFH/GQxcnHX1kygtJMPJHszU//Uply/DpvryLfwPUc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AF09F1691;
-	Wed,  3 Apr 2024 08:07:39 -0700 (PDT)
-Received: from e126645.arm.com (unknown [10.57.74.15])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 4DFCF3F7B4;
-	Wed,  3 Apr 2024 08:07:04 -0700 (PDT)
-From: Pierre Gondois <pierre.gondois@arm.com>
-To: linux-kernel@vger.kernel.org
-Cc: Aaron Lu <aaron.lu@intel.com>,
-	Rui Zhang <rui.zhang@intel.com>,
-	Pierre Gondois <pierre.gondois@arm.com>,
-	Anna-Maria Behnsen <anna-maria@linutronix.de>,
-	Frederic Weisbecker <frederic@kernel.org>,
-	Ingo Molnar <mingo@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Juri Lelli <juri.lelli@redhat.com>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Ben Segall <bsegall@google.com>,
-	Mel Gorman <mgorman@suse.de>,
-	Daniel Bristot de Oliveira <bristot@redhat.com>,
-	Valentin Schneider <vschneid@redhat.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Waiman Long <longman@redhat.com>,
-	Tejun Heo <tj@kernel.org>
-Subject: [PATCH 7/7] sched/fair: Clear idle_cpus_mask for CPUs with NULL sd
-Date: Wed,  3 Apr 2024 17:05:39 +0200
-Message-Id: <20240403150543.2793354-8-pierre.gondois@arm.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240403150543.2793354-1-pierre.gondois@arm.com>
-References: <20240403150543.2793354-1-pierre.gondois@arm.com>
+	s=arc-20240116; t=1712156847; c=relaxed/simple;
+	bh=mCL4lyiZ3+TYVCezPLM4+q2eTMEGLTs2ek5mU230kBU=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=nSlphkLCaGnOcVWBg2Fzl2JviWEtxXbfIuwRcPYgqKONKAnTYcktTDXBGbgnuriuoBX2Tr9H9Mj1r58+ZblUepwc4HRuxxYGrbGzdqcTNbzPCp8ygY5K60UrCb/cQFFHB+4psn/n8P+Zu4maY/bOZgJu2lEuuPAVPyeYsmWw7XQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=b0rjqOJM; arc=none smtp.client-ip=209.85.219.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="b0rjqOJM"
+Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-dc743cc50a6so7516935276.2
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Apr 2024 08:07:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1712156845; x=1712761645; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=JtZ4iRSe88P1k/ODDADPoGeQTC06aIWlJ9ytym//wPk=;
+        b=b0rjqOJMbSWAaVWcSDITyB9FPrWMFOVLw3ablHb7S2rMtOEqC2k8YEi0twHWa4iTqk
+         7zs5Es2H1cZT9VUYkXoW2XFwsqYQYq+uNRPORyhuk1qhKZNbAD0IagvarFWotcCVkCu6
+         6KehG7g1G/8YOMtQg/p30xZVY5H8S8+2zOPooYu3b/enMw7u8ZXqUXS54ULV/17K+Pnp
+         za+zASn83Ug6CxnM2Z2Bzk2T2Jgei5Ubz1j/cQgSlAtGWpAhcV5Ij5zCL1o14HPJvlRM
+         F+jATsEF8U+rPYtU5aJzlkM9zonEQG63JMbawHklVwsMxz28N3Dg9ZmFMmFhwSU5NXIj
+         Yxww==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712156845; x=1712761645;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=JtZ4iRSe88P1k/ODDADPoGeQTC06aIWlJ9ytym//wPk=;
+        b=HA9vrCchu8KWGZProAFJgQ0MpU/2S8/YlMlXcKzuWlT3EYV9Xa3MD3IQ3K9gGZgoeu
+         Ao1LQXkK4/YjCcqGIielccT8anp09dp/4r2XX3qmz30Bt1F9U3v0IANN0soiflrdD8jZ
+         0mpeUYbVX6j/2c2sdJBWl1PMxIi5Y3szFobsyE3Iwbb+f7/QTQpKuwZXsNCmEIBShMQe
+         vCm3JYEz5MqkfOtDCTLx5mAxfFZGsW1dx05XD4i9k0GBdNfr8mfk4/H4g6MrgZeqUAfh
+         CjFUdzp0Z9UsiTpi2a92g4hMVVLlKOFvDYQks4K0X1JQDfnoOpG+Naqzn6n8OZhY09NE
+         SZGQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVqajIG3sR0yu0G/kI8Yd1XDIZlDe72XWfYfqH52PIS+CF9Cm+9mSPB0rUPKrBni/q8Nditw3UMgfGxg2/4fHX/cbDxfbg1Jdqv7WT9
+X-Gm-Message-State: AOJu0Yz4Zf3UBgIyvJ5LFj6Pvx7CcuxLgdcvT0LODK31HdNy8bzx2svF
+	Itlu83a7BZSPVD/ELelKPEuDEZUg9maxxyj1QSC3ef7UQIijr5RmjaHHw87ueMeVawXIeROgWXR
+	N/A==
+X-Google-Smtp-Source: AGHT+IHUMg7l8Ba/eQMW6xc0LCY8Jqv8pilOK03SFH3Rgyd1QKq6aljjldttrmb86ym4lPSeUmJKzCzcmAs=
+X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
+ (user=seanjc job=sendgmr) by 2002:a05:6902:1006:b0:dcc:94b7:a7a3 with SMTP id
+ w6-20020a056902100600b00dcc94b7a7a3mr1065852ybt.12.1712156845316; Wed, 03 Apr
+ 2024 08:07:25 -0700 (PDT)
+Date: Wed, 3 Apr 2024 08:07:23 -0700
+In-Reply-To: <Zgz8YFgD1CysKaDl@chao-email>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+References: <cover.1708933498.git.isaku.yamahata@intel.com>
+ <62f8890cb90e49a3e0b0d5946318c0267b80c540.1708933498.git.isaku.yamahata@intel.com>
+ <Zgz8YFgD1CysKaDl@chao-email>
+Message-ID: <Zg1wqxSHF-RyLihQ@google.com>
+Subject: Re: [PATCH v19 111/130] KVM: TDX: Implement callbacks for MSR
+ operations for TDX
+From: Sean Christopherson <seanjc@google.com>
+To: Chao Gao <chao.gao@intel.com>
+Cc: isaku.yamahata@intel.com, kvm@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, isaku.yamahata@gmail.com, 
+	Paolo Bonzini <pbonzini@redhat.com>, erdemaktas@google.com, Sagi Shahar <sagis@google.com>, 
+	Kai Huang <kai.huang@intel.com>, chen.bo@intel.com, hang.yuan@intel.com, 
+	tina.zhang@intel.com
+Content-Type: text/plain; charset="us-ascii"
 
-As reported in [1], an isolated CPU keeps the values of:
-- rq->nohz_tick_stopped
-- nohz.idle_cpus_mask
-- nohz.nr_cpus
-when a NULL sd is attached to the CPU. Clear the values.
+On Wed, Apr 03, 2024, Chao Gao wrote:
+> On Mon, Feb 26, 2024 at 12:26:53AM -0800, isaku.yamahata@intel.com wrote:
+> >+bool tdx_has_emulated_msr(u32 index, bool write)
+> >+{
+> >+	switch (index) {
+> >+	case MSR_IA32_UCODE_REV:
+> >+	case MSR_IA32_ARCH_CAPABILITIES:
+> >+	case MSR_IA32_POWER_CTL:
+> >+	case MSR_IA32_CR_PAT:
+> >+	case MSR_IA32_TSC_DEADLINE:
+> >+	case MSR_IA32_MISC_ENABLE:
+> >+	case MSR_PLATFORM_INFO:
+> >+	case MSR_MISC_FEATURES_ENABLES:
+> >+	case MSR_IA32_MCG_CAP:
+> >+	case MSR_IA32_MCG_STATUS:
+> >+	case MSR_IA32_MCG_CTL:
+> >+	case MSR_IA32_MCG_EXT_CTL:
+> >+	case MSR_IA32_MC0_CTL ... MSR_IA32_MCx_CTL(KVM_MAX_MCE_BANKS) - 1:
+> >+	case MSR_IA32_MC0_CTL2 ... MSR_IA32_MCx_CTL2(KVM_MAX_MCE_BANKS) - 1:
+> >+		/* MSR_IA32_MCx_{CTL, STATUS, ADDR, MISC, CTL2} */
+> >+		return true;
+> >+	case APIC_BASE_MSR ... APIC_BASE_MSR + 0xff:
+> >+		/*
+> >+		 * x2APIC registers that are virtualized by the CPU can't be
+> >+		 * emulated, KVM doesn't have access to the virtual APIC page.
+> >+		 */
+> >+		switch (index) {
+> >+		case X2APIC_MSR(APIC_TASKPRI):
+> >+		case X2APIC_MSR(APIC_PROCPRI):
+> >+		case X2APIC_MSR(APIC_EOI):
+> >+		case X2APIC_MSR(APIC_ISR) ... X2APIC_MSR(APIC_ISR + APIC_ISR_NR):
+> >+		case X2APIC_MSR(APIC_TMR) ... X2APIC_MSR(APIC_TMR + APIC_ISR_NR):
+> >+		case X2APIC_MSR(APIC_IRR) ... X2APIC_MSR(APIC_IRR + APIC_ISR_NR):
+> >+			return false;
+> >+		default:
+> >+			return true;
+> >+		}
+> >+	case MSR_IA32_APICBASE:
+> >+	case MSR_EFER:
+> >+		return !write;
+> >+	case 0x4b564d00 ... 0x4b564dff:
+> >+		/* KVM custom MSRs */
+> >+		return tdx_is_emulated_kvm_msr(index, write);
+> >+	default:
+> >+		return false;
+> >+	}
+> 
+> The only call site with a non-Null KVM parameter is:
+> 
+> 	r = static_call(kvm_x86_has_emulated_msr)(kvm, MSR_IA32_SMBASE);
+> 
+> Only MSR_IA32_SMBASE needs to be handled. So, this function is much more
+> complicated than it should be.
 
-[1] https://lore.kernel.org/all/20230804090858.7605-1-rui.zhang@intel.com/
-
-Signed-off-by: Pierre Gondois <pierre.gondois@arm.com>
----
- include/linux/sched/nohz.h |  2 ++
- kernel/sched/fair.c        | 11 +++++++++++
- kernel/sched/topology.c    |  6 ++++--
- 3 files changed, 17 insertions(+), 2 deletions(-)
-
-diff --git a/include/linux/sched/nohz.h b/include/linux/sched/nohz.h
-index 6d67e9a5af6b..18e620715c9d 100644
---- a/include/linux/sched/nohz.h
-+++ b/include/linux/sched/nohz.h
-@@ -9,8 +9,10 @@
- #if defined(CONFIG_SMP) && defined(CONFIG_NO_HZ_COMMON)
- extern void nohz_balance_enter_idle(int cpu);
- extern int get_nohz_timer_target(void);
-+extern void nohz_clear_state(int cpu);
- #else
- static inline void nohz_balance_enter_idle(int cpu) { }
-+static void nohz_clear_state(int cpu) { }
- #endif
- 
- #ifdef CONFIG_NO_HZ_COMMON
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index 9657c8f2176b..6786d4d78e41 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -12014,6 +12014,17 @@ static void nohz_balancer_kick(struct rq *rq)
- 		kick_ilb(flags);
- }
- 
-+void nohz_clear_state(int cpu)
-+{
-+	struct rq *rq = cpu_rq(cpu);
-+
-+	if (rq->nohz_tick_stopped) {
-+		rq->nohz_tick_stopped = 0;
-+		cpumask_clear_cpu(cpu, nohz.idle_cpus_mask);
-+		atomic_dec(&nohz.nr_cpus);
-+	}
-+}
-+
- static void set_cpu_sd_state_busy(int cpu)
- {
- 	struct sched_domain *sd;
-diff --git a/kernel/sched/topology.c b/kernel/sched/topology.c
-index b4fc212ccfb0..e8e40b7d964b 100644
---- a/kernel/sched/topology.c
-+++ b/kernel/sched/topology.c
-@@ -775,10 +775,12 @@ cpu_attach_domain(struct sched_domain *sd, struct root_domain *rd, int cpu)
- 
- 	sched_domain_debug(sd, cpu);
- 
--	if (sd)
-+	if (sd) {
- 		housekeeping_runtime_set_cpu(cpu, HKR_TYPE_SCHED);
--	else
-+	} else {
- 		housekeeping_runtime_clear_cpu(cpu, HKR_TYPE_SCHED);
-+		nohz_clear_state(cpu);
-+	}
- 
- 	rq_attach_root(rq, rd);
- 	tmp = rq->sd;
--- 
-2.25.1
-
+No, because it's also used by tdx_{g,s}et_msr().
