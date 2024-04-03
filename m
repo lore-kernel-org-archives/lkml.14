@@ -1,170 +1,94 @@
-Received: from dggsgout12.his.huawei.com (unknown [45.249.212.56])
+Received: from out203-205-221-205.mail.qq.com (out203-205-221-205.mail.qq.com [203.205.221.205])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 302F4168DA;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0FB914F70;
 	Wed,  3 Apr 2024 02:16:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.221.205
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712110591; cv=none; b=TdTAzjSzTcollk/7Rgu6hvsYzLYwXMucy8BbaMwVQw3HnqNTj8bsccJb85BmRJysu58REZ+SfZsWOE0tubLI+b6hcVvFGayYmEDyLIQVaSFTXbuxOz4TUBn6gdj718ZUtMAeC6y45thTsirNczSTwXPjXT9rEE5qxUthb5Kcu68=
+	t=1712110590; cv=none; b=a91UvHuOO3SdHyS1WhohOJR36j90D9CHk9hw/eLcBTpevmA4OLG7MlUQJVEZZGAeSn87vE7grNLWBHHYkUfft4UzoEHfke1Q1T4TwP+hgSSmk2FpYaG3XLbBHc8ux1gP87jvAEBFDAEzgSZDveLKUgcckeIT+8dm+Yke4GIdPLo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712110591; c=relaxed/simple;
-	bh=/harYmdcmE4WTbyR7q+2wKYBbOjJgq8gcNlGXufYIkM=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=aR9LLOTCSX0yxmS7/8BRmsQ7NhpxCqHmpFF1o6eNG8+4545m5xdVVLa4h8kK+xlptvPIpgD2e4bnmku792pMViy38Sl167x1dRKsunjI/RFsnjjZ4QV7ruTsefAO0GmQrEgVHzibo9HDpmP884i+RaS8LJ7AE5cloRDr4QbLvSo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.93.142])
-	by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4V8SzQ2PWXz4f3khh;
-	Wed,  3 Apr 2024 10:16:18 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.112])
-	by mail.maildlp.com (Postfix) with ESMTP id D04941A0176;
-	Wed,  3 Apr 2024 10:16:24 +0800 (CST)
-Received: from [10.174.178.129] (unknown [10.174.178.129])
-	by APP1 (Coremail) with SMTP id cCh0CgAXMgv2uwxmq02RIw--.21036S2;
-	Wed, 03 Apr 2024 10:16:24 +0800 (CST)
-Subject: Re: [PATCH v2 1/6] writeback: protect race between bdi release and
- bdi_debug_stats_show
-To: Brian Foster <bfoster@redhat.com>
-Cc: akpm@linux-foundation.org, willy@infradead.org, jack@suse.cz,
- tj@kernel.org, dsterba@suse.com, mjguzik@gmail.com, dhowells@redhat.com,
- linux-kernel@vger.kernel.org, linux-mm@kvack.org,
- linux-fsdevel@vger.kernel.org
-References: <20240327155751.3536-1-shikemeng@huaweicloud.com>
- <20240327155751.3536-2-shikemeng@huaweicloud.com> <ZgWum7SWr44w0rie@bfoster>
-From: Kemeng Shi <shikemeng@huaweicloud.com>
-Message-ID: <7232e82a-5073-003c-539f-f4627a9ee688@huaweicloud.com>
-Date: Wed, 3 Apr 2024 10:16:22 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.0
+	s=arc-20240116; t=1712110590; c=relaxed/simple;
+	bh=/mxN8H4HfV7JABW4Te432WPH6daYeWBceHea3twjMLM=;
+	h=Message-ID:From:To:Cc:Subject:Date:MIME-Version; b=omoiahcPBevfnmSlFDAgaegJ3zJ936fM76pvBxZdehlLClzor26zotvfAr7uUa4pGEJwnGSm/L5aBQH+SmeW0877qC54plABbQkCuXU5Zp943d7NYPvGN+k59Fq/e43ASvjn0+UynrgN7EpJZPagHp7nk5fkRky0DwLbhq/sF9A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=aAaHfe5b; arc=none smtp.client-ip=203.205.221.205
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="aAaHfe5b"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
+	t=1712110580; bh=ayMG5kPQyrq+8jbtAodeuRBjRi8R0ZuYWiPfYDs0A34=;
+	h=From:To:Cc:Subject:Date;
+	b=aAaHfe5b5gUJG5SLXJdPdLM5+JJSV6qDXhowhdgzoqg5YOksjxp74ppb74tTYNTGH
+	 6afNCoeyui6dRjew6BkBHgcUA70gIx7NcN2otvjv5WbP06nkCixxLOFCSYrjGpva+1
+	 goJCLpAahBUmI0it/yB+VLY5HLVFtI3tSdAXsn6g=
+Received: from localhost.localdomain ([153.3.164.50])
+	by newxmesmtplogicsvrsza1-0.qq.com (NewEsmtp) with SMTP
+	id 28B83A6E; Wed, 03 Apr 2024 10:10:11 +0800
+X-QQ-mid: xmsmtpt1712110211t0yxkh2ev
+Message-ID: <tencent_5E187BD0A61BA28605E85405F15228254D0A@qq.com>
+X-QQ-XMAILINFO: OZsapEVPoiO6vlv/ICY8TgGx/eAkz6B+6WYW0Fyip6dA9nbTAMktxVIHkJVNf7
+	 /qgVBr13Tr0pnzOGDRUO+imITOgybbwGqCPCWx1l5sNIMBN030FXqhXIcuyCPy+U2wWLCA6Y//a1
+	 X+pPp2bwvopAsl7+YcseK/bZ8YIL1a9WRUYfgUlFXDRjVvPnsCoRyXsywRCSygAeuh+rheiBjr8n
+	 e3GNL44yiWYtMSA/z0QlB4oDUN3CZdZvxgQ8KwQ7DJ3lvcd5VWZOOGTJqtbLX2w5pvvRBdQz3/cF
+	 6JfhQpgnlDxadKmaCtgFC0akIXzmR6cXopvN8zU/VhziGWk2GtFim2Rfz0OrXWaPeaxUvU0c0D5E
+	 hTGv3imEXzbGBmgcQje1xS360PoFRhRCjMpPxpOHizK55Od5SaWMPWUJIQJIFJI6H+Daq7foK0k/
+	 aOO84kOtSJySjk/AMDu5bMFlr8v+l3YnHf+HxMA80amXsbupS1R7Hi+eyUvv3XZX/5bcHzBGRII5
+	 pPb92Nz+Brv/wOg4GIuwCiGh8DCi0sJQyJ17ruHxc3I5JhPGr+TDe157nPTfZfYT36z+JyG4GoOX
+	 Tz7ctL6pYeksRLp6lNheZlbmMlt0ZtlkAFQpDy9Sfvt4Rr6G8fQUnZQ1G9AS2P+OtNGBswgWxNux
+	 5JdGzlXVwbXJIiUKUrTmZgVob5nb7Luy2lelKBCuSrWqfoORJu0yBNWkzCu6smrYp3LhUD8KYVtc
+	 cXTv/k/aReGTc2OuX9bRWa3kjQxhbxivFC3FUQTwBb+tbWZYPBBzK4XPMGRbfYZwEl4UyMZRTzjK
+	 UoYWmeHxaeSrGvzXtYr7yoAEbMFTeoX74HQsXXcq0JwjDECWB7o5j0jyWGa6j9xs/LYnmLZdEWky
+	 r45NTgljWNl6RmL1a7752NElIFnswoFi3tdvSXa5sN4YUa991fPARneISEx96bW/xisMfbH79Tml
+	 b0hARrFd7tzRZfnYj6XdZt+gnkcJcGNlvWpYTG5Yq+w3qJcijaYl42u5My6mCsIhaor54BL9M=
+X-QQ-XMRINFO: NI4Ajvh11aEj8Xl/2s1/T8w=
+From: linke li <lilinke99@qq.com>
+To: 
+Cc: xujianhao01@gmail.com,
+	linke li <lilinke99@qq.com>,
+	Alexander Viro <viro@zeniv.linux.org.uk>,
+	Christian Brauner <brauner@kernel.org>,
+	Jan Kara <jack@suse.cz>,
+	linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] fs/dcache: Re-use value stored to dentry->d_flags instead of re-reading
+Date: Wed,  3 Apr 2024 10:10:08 +0800
+X-OQ-MSGID: <20240403021008.47028-1-lilinke99@qq.com>
+X-Mailer: git-send-email 2.39.3 (Apple Git-146)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <ZgWum7SWr44w0rie@bfoster>
-Content-Type: text/plain; charset=gbk
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:cCh0CgAXMgv2uwxmq02RIw--.21036S2
-X-Coremail-Antispam: 1UD129KBjvJXoWxCF4fWF47CF18JFW3Ww15urg_yoW5ArW8pa
-	15Ga98Kr48X34agr13ZayDur9aqw40qrnrWF97ua1rAr1kCr1SkFyIkryj9r95ZrZ7Cw1Y
-	va15Ar9rC3yDAaDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUvIb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k2
-	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
-	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7Cj
-	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
-	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
-	6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
-	Cjc4AY6r1j6r4UM4x0Y48IcVAKI48JM4IIrI8v6xkF7I0E8cxan2IY04v7Mxk0xIA0c2IE
-	e2xFo4CEbIxvr21l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxV
-	Aqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q
-	6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6x
-	kF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWrZr1j6s0DMIIF0xvEx4A2jsIE
-	14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf
-	9x07UWE__UUUUU=
-X-CM-SenderInfo: 5vklyvpphqwq5kxd4v5lfo033gof0z/
+Content-Transfer-Encoding: 8bit
+
+Currently, the __d_clear_type_and_inode() writes the value flags to
+dentry->d_flags, then immediately re-reads it in order to use it in a if
+statement. This re-read is useless because no other update to 
+dentry->d_flags can occur at this point.
+
+This commit therefore re-use flags in the if statement instead of
+re-reading dentry->d_flags.
 
 
+Signed-off-by: linke li <lilinke99@qq.com>
+---
+ fs/dcache.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-on 3/29/2024 1:53 AM, Brian Foster wrote:
-> On Wed, Mar 27, 2024 at 11:57:46PM +0800, Kemeng Shi wrote:
->> There is a race between bdi release and bdi_debug_stats_show:
->> /* get debug info */		/* bdi release */
->> bdi_debug_stats_show
->>   bdi = m->private;
->>   wb = &bdi->wb;
->> 				bdi_unregister
->> 				bdi_put
->> 				  release_bdi
->> 				    kfree(bdi)
->>   /* use after free */
->>   spin_lock(&wb->list_lock);
->>
-> 
-> Maybe I'm missing something, but it looks to me that
-> bdi_unregister_debug() can't complete until active readers of associated
-> debugfs files have completed. For example, see __debugfs_file_removed()
-> and use of ->active_users[_drained]. Once the dentry is unlinked,
-> further reads fail (I think) via debugfs_file_get(). Hm?
-Sorry for missing this. The race seems not possible if debugfs could prevent
-this. Thanks for the information. I will drop this in next version.
-
-Kemeng
-
-> 
-> Brian
-> 
->> Search bdi on bdi_list under rcu lock in bdi_debug_stats_show to ensure
->> the bdi is not freed to fix the issue.
->>
->> Signed-off-by: Kemeng Shi <shikemeng@huaweicloud.com>
->> ---
->>  mm/backing-dev.c | 33 +++++++++++++++++++++++++++++++--
->>  1 file changed, 31 insertions(+), 2 deletions(-)
->>
->> diff --git a/mm/backing-dev.c b/mm/backing-dev.c
->> index 5f2be8c8df11..70f02959f3bd 100644
->> --- a/mm/backing-dev.c
->> +++ b/mm/backing-dev.c
->> @@ -46,16 +46,44 @@ static void bdi_debug_init(void)
->>  	bdi_debug_root = debugfs_create_dir("bdi", NULL);
->>  }
->>  
->> -static int bdi_debug_stats_show(struct seq_file *m, void *v)
->> +static struct backing_dev_info *lookup_bdi(struct seq_file *m)
->>  {
->> +	const struct file *file = m->file;
->>  	struct backing_dev_info *bdi = m->private;
->> -	struct bdi_writeback *wb = &bdi->wb;
->> +	struct backing_dev_info *exist;
->> +
->> +	list_for_each_entry_rcu(exist, &bdi_list, bdi_list) {
->> +		if (exist != bdi)
->> +			continue;
->> +
->> +		if (exist->debug_dir == file->f_path.dentry->d_parent)
->> +			return bdi;
->> +		else
->> +			return NULL;
->> +	}
->> +
->> +	return NULL;
->> +}
->> +
->> +
->> +static int bdi_debug_stats_show(struct seq_file *m, void *v)
->> +{
->> +	struct backing_dev_info *bdi;
->> +	struct bdi_writeback *wb;
->>  	unsigned long background_thresh;
->>  	unsigned long dirty_thresh;
->>  	unsigned long wb_thresh;
->>  	unsigned long nr_dirty, nr_io, nr_more_io, nr_dirty_time;
->>  	struct inode *inode;
->>  
->> +	rcu_read_lock();
->> +	bdi = lookup_bdi(m);
->> +	if (!bdi) {
->> +		rcu_read_unlock();
->> +		return -EEXIST;
->> +	}
->> +
->> +	wb = &bdi->wb;
->>  	nr_dirty = nr_io = nr_more_io = nr_dirty_time = 0;
->>  	spin_lock(&wb->list_lock);
->>  	list_for_each_entry(inode, &wb->b_dirty, i_io_list)
->> @@ -101,6 +129,7 @@ static int bdi_debug_stats_show(struct seq_file *m, void *v)
->>  		   nr_dirty_time,
->>  		   !list_empty(&bdi->bdi_list), bdi->wb.state);
->>  
->> +	rcu_read_unlock();
->>  	return 0;
->>  }
->>  DEFINE_SHOW_ATTRIBUTE(bdi_debug_stats);
->> -- 
->> 2.30.0
->>
-> 
-> 
+diff --git a/fs/dcache.c b/fs/dcache.c
+index b813528fb147..79da415d7995 100644
+--- a/fs/dcache.c
++++ b/fs/dcache.c
+@@ -355,7 +355,7 @@ static inline void __d_clear_type_and_inode(struct dentry *dentry)
+ 	flags &= ~DCACHE_ENTRY_TYPE;
+ 	WRITE_ONCE(dentry->d_flags, flags);
+ 	dentry->d_inode = NULL;
+-	if (dentry->d_flags & DCACHE_LRU_LIST)
++	if (flags & DCACHE_LRU_LIST)
+ 		this_cpu_inc(nr_dentry_negative);
+ }
+ 
+-- 
+2.39.3 (Apple Git-146)
 
