@@ -1,149 +1,159 @@
-Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from CHN02-BJS-obe.outbound.protection.partner.outlook.cn (mail-bjschn02on2091.outbound.protection.partner.outlook.cn [139.219.17.91])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F770135A6A
-	for <linux-kernel@vger.kernel.org>; Wed,  3 Apr 2024 10:21:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.52
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712139671; cv=none; b=UR5khuscRodUco2Kxh6RKk5dH1sd4ADyLhEiyUDDJGxNMcL0c6LWMfr1u5Ukd/jjlg1fljHh8SUTwWdQcZoQ4K9n2ZRJzB+CYklQ+vOdCOnwVU36qegdbvyFzE8Cqm148NlbiamJmmaSVN6JE4MXtZ88QmcIC0Wi2F4exSfuVrU=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712139671; c=relaxed/simple;
-	bh=j9OWD1Egg+9iI5w7d3WeI7AlB92++uzCxocuqyXnMNk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=F1ILjgOpbA66PwSsz8XvQEHEUwYERS86YUIeBWiNNR0M2or36/JP2oBPsEizjLK2VgVXQaKKDInRp7u/reL5XbvzNui2F8wY2JBh3bMwRNS5BNq7g2r7EroxWJOIgSjcrKEXxj9KfegCGx66B8OqTDG6QKO8WaF6D6thBh6zdCI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=GY9YnPLK; arc=none smtp.client-ip=209.85.208.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="GY9YnPLK"
-Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-56829f41f81so8973998a12.2
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Apr 2024 03:21:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1712139668; x=1712744468; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=4lrg9u1DWO3N7iNCPwEbpDmzDHx9LenQFb2AaTvmxYY=;
-        b=GY9YnPLKZXBE+iUca2K7y4lMCLid4LK3ssU/bWG/X5IppxYMAHeSQGNpCUStDGl8II
-         gL0dFi9tyJLVZPPfUc27RrezDkWeXIXiKaySQyJHGXW5LzRQiBCSqPPemmQd4qeGxh3j
-         6G/bBM4mUUowbAGHvPyEBDEiCP7dG9tMcFmUfpMvDOSiFEODSozogYBcG+/+gkiGMEnP
-         qSrgncD1zXdRaZY0A0uniplIviabsc0syHr2bGJv3gRs4BlSrZ1jDmLfcoIA0CfxBsbu
-         5k/LbFLKlmUri56mLUy8F/A2m1zmQKPrPFsET5HzIJD7d4LD0gCMIcz5xrm4sLZ8rleZ
-         liDw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712139668; x=1712744468;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=4lrg9u1DWO3N7iNCPwEbpDmzDHx9LenQFb2AaTvmxYY=;
-        b=ODhXU6nlYK8va6CR+/T0414qTsCi25ivYiOPJIAFfkyO2ri3FxP0vcd3xAwAQySbhS
-         8UiKCICZygB0wv3WRFYFbBpRaU/lAtNbWxaQPn62R/oi11TB/iPc5z/yOAha//g0vD6v
-         WuxUG24vjvivrNijb0lCP6hL1yI3qYalprUUnakDcDt8mUdhjZrU1VImwpspkw/oZvMM
-         rbtgQqnqAa8Y64NhrJNzStpNn2kGnpTOtjuPvSu9n+VCWjsx+wStuMR5IiLhEjXomgaX
-         dSIuP90ocYKpidBCXKCdrh+uG35zoU7nq/p2P1wnCOugQEQmnPipRVzOfDy64qIgbQUA
-         jOCw==
-X-Forwarded-Encrypted: i=1; AJvYcCXEFdLNdoxz3P2Vhh/VMqy6VQtu5M9ahhFbRQYHl7qUI1IuUlAMHXbsE1UlyFYB64MuPDmInE9M5TZCroEhafi0utdrFlKbPBiOHCKJ
-X-Gm-Message-State: AOJu0YyZW4r/Wovp7gYr0CM2m4yGp1yO1Ks62F2x422hjp/ks/pZQvpS
-	YxEHOF6dlm8dDZtZ78P6RuhtXYqOZNuvTYsJbCeWBN1iUSm/v63WUlaWwHGf1YY=
-X-Google-Smtp-Source: AGHT+IEP4Gm/j49EiS5w8Osi5IxulbUu7dmYZSs8UZrCWXoYjgFHKV6WkLihgHu5HCaYyGuLMqf+SQ==
-X-Received: by 2002:a17:907:11cd:b0:a4e:2d1e:6914 with SMTP id va13-20020a17090711cd00b00a4e2d1e6914mr9439566ejb.11.1712139667716;
-        Wed, 03 Apr 2024 03:21:07 -0700 (PDT)
-Received: from [192.168.1.20] ([178.197.223.16])
-        by smtp.gmail.com with ESMTPSA id bj7-20020a17090736c700b00a4e696e613esm3583799ejc.153.2024.04.03.03.21.06
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 03 Apr 2024 03:21:07 -0700 (PDT)
-Message-ID: <a2f88176-b4e1-4202-843c-a00c5a2b1622@linaro.org>
-Date: Wed, 3 Apr 2024 12:21:05 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58854135A6A;
+	Wed,  3 Apr 2024 10:21:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=139.219.17.91
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1712139712; cv=fail; b=kiKEvneFUqAXH13U5XfZUVQ4eLTz/urglOtm+lLgP2AB+lr36uT5YGr/4oMTBrOp+TsOst/9y/Z5TF+RSfJjz9h1EhJgv5/zpGLVs8Xwwt2RtaIb22xhstyXEsmLJ/ueMpasD95ePLepINmikmJZIbo9zyfjcnDemFXWAaXQiGg=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1712139712; c=relaxed/simple;
+	bh=/v/u2S9EUffNpZkb2/0vzfN/t3CGblBSo829BrbDz5s=;
+	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=R2LLzadp+DXibsoVm66EmR95Ixre+QUDus8nABtlKTBt3iyjk4z/JwqcpjgjC0ovBZ7dMX653x20N4roehigLH34oczCXINszkRmNbPkIFmNfcR3XN2FqVQTERqZ4pL66p59OWLLlmy8oUui5VOgviD4uLfGkPMQMzEQUnnxgI8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com; spf=pass smtp.mailfrom=starfivetech.com; arc=fail smtp.client-ip=139.219.17.91
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=starfivetech.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=jbiDNWR3i+ryAkBjHphgzfIZwFDo3ydnzTTrc4aBgL25OgP7DMDvewLMnZulWwXSStabqz0pw2mzne3oZCmZrgBHPptduiE3cUpv2XxJgobhk24aiRQ06e1Ykhf6G2iWfuNmMLM3CLCmEzWwjN1c5l1otM5TYQCJW2GpMn4bxySeDrDv2QdKi6kTXmLmI3MN2pp4QwgsKt7b12k6T31gxyhdHU+LhZN124J/OE1MZiqK590E6Xln47iSfJay69L/Yxcx2uQJBMCvLjG3wlTzexlyny5bKCz9FxspxbHwfDnBfAqhIZgsi6FneBDcW01KVA9XTU9uH+jg2wkgy2DZPg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Uwm7Yj1rJiKXjQ3qngQdNPFDVu+bsIFE5QcYP1PAZSY=;
+ b=Wltd5dod1JaG9nbkd7sguX0Ocn/ORwg7eGNwywW4ETwjwTAZN3gwHznS1kV3CbH5BDdTCSbn1FdCDRhe0GawPTeTmB/COW7LXaV9YzLnt8yAD50Q9bjp7IVtdH7hFvubf9ZyGpa1GejZIa19grCj5SLloWBdhlDhO7jvtmcF3nKcgf7Mxl40ldn21SpUvQWvg/Y53mD4wzZ6DUgQc2U6qctd18aFWu38enhEF+C+pevK1UK9ivnZGTsfw9ZnpwhNDhett0n0/E+ovRgtM2Vk/qt/MZtfggtisWV/tBm1A3okbVGRBDXn4xOXEMLpEiz0JyRYK4Tja1X+Pk3IVD9maw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=starfivetech.com; dmarc=pass action=none
+ header.from=starfivetech.com; dkim=pass header.d=starfivetech.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=starfivetech.com;
+Received: from BJSPR01MB0595.CHNPR01.prod.partner.outlook.cn
+ (2406:e500:c211:e::20) by BJSPR01MB0675.CHNPR01.prod.partner.outlook.cn
+ (2406:e500:c211:1c::11) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.46; Wed, 3 Apr
+ 2024 10:06:06 +0000
+Received: from BJSPR01MB0595.CHNPR01.prod.partner.outlook.cn
+ ([fe80::d0cf:5e2e:fd40:4aef]) by
+ BJSPR01MB0595.CHNPR01.prod.partner.outlook.cn ([fe80::d0cf:5e2e:fd40:4aef%4])
+ with mapi id 15.20.7409.042; Wed, 3 Apr 2024 10:06:06 +0000
+From: Tan Chun Hau <chunhau.tan@starfivetech.com>
+To: "David S . Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Rob Herring <robh+dt@kernel.org>,
+	Emil Renner Berthing <kernel@esmil.dk>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+	Alexandre Torgue <alexandre.torgue@foss.st.com>,
+	Simon Horman <horms@kernel.org>,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	Andrew Halaney <ahalaney@redhat.com>,
+	Jisheng Zhang <jszhang@kernel.org>,
+	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
+	Russell King <rmk+kernel@armlinux.org.uk>
+Cc: Ley Foon Tan <leyfoon.tan@starfivetech.com>,
+	Jee Heng Sia <jeeheng.sia@starfivetech.com>,
+	netdev@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-stm32@st-md-mailman.stormreply.com,
+	linux-arm-kernel@lists.infradead.org,
+	linux-riscv@lists.infradead.org
+Subject: [PATCH v6 0/1] Add StarFive JH8100 dwmac support
+Date: Wed,  3 Apr 2024 03:05:48 -0700
+Message-Id: <20240403100549.78719-1-chunhau.tan@starfivetech.com>
+X-Mailer: git-send-email 2.25.1
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: ZQ0PR01CA0020.CHNPR01.prod.partner.outlook.cn
+ (2406:e500:c550:2::9) To BJSPR01MB0595.CHNPR01.prod.partner.outlook.cn
+ (2406:e500:c211:e::20)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 0/6] Add Synopsys DesignWare HDMI RX Controller
-To: Shreeya Patel <shreeya.patel@collabora.com>, mchehab@kernel.org,
- hverkuil@xs4all.nl, hverkuil-cisco@xs4all.nl
-Cc: heiko@sntech.de, robh@kernel.org, krzysztof.kozlowski+dt@linaro.org,
- conor+dt@kernel.org, mturquette@baylibre.com, sboyd@kernel.org,
- p.zabel@pengutronix.de, shawn.wen@rock-chips.com, kernel@collabora.com,
- linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
- devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-rockchip@lists.infradead.org, linux-clk@vger.kernel.org,
- linux-arm@lists.infradead.org
-References: <20240327225057.672304-1-shreeya.patel@collabora.com>
- <35e566-660d2080-1-7eb9eb00@16488675>
-Content-Language: en-US
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
- 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
- D2GYIS41Kv4Isx2dEFh+/Q==
-In-Reply-To: <35e566-660d2080-1-7eb9eb00@16488675>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BJSPR01MB0595:EE_|BJSPR01MB0675:EE_
+X-MS-Office365-Filtering-Correlation-Id: 1c63ce0c-943f-47b9-7cbd-08dc53c5ad29
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	Q9C2VbeiJZlOIhkJj28trMIye2qahyrDBHfJ4AwzlvLwWNC1MXx4NrWV7KJ9baKAmV2V8yTKb1AaTHHVC8I2ulDeFQQSC1ZgQEhs7+FdkDE3s+9acB3glTrJin75hdUgMLKSLrbY1RfAZqizHLfkLbEvWI+141KbvP21tBBsQvCuSJpldMymXPpJWW7WGUhKJj3OmhBmvU1+cFGIjvlchW/SgApRfjCdR7lmEnxaJa7FJ9BGtTJIMynbnuw8T01s9qHY26zaxiYpoNuOEUz9eZ38wDO32Mqp1D5jQk3l0RNo9jgU8ri6rmjSJEP9xS+FRvoKw3Anj4CiWbwoxIwa2ZOISSoqT/GzGmUN1MkfqI67E/nnTKqmGBsx/WzbvDUFKaidimu3TLqFIioAgTWr9Dbg1RCnDCs6CvOXN+GCWqCSUiY0lAYy/CI6lNfGI8ULmSdRk9ddB8ZiTDv/nnMnOLAV4lSOT5hHZRDHvabRbKfrSAEFF4vRd+V0za26LziBqTnh7nr47Yg0SiV/THu13dtm087Q9MJK7q+/vfS3pIoHdd1ttb0vQsveBA3UQuxkcao9ifrDhR6j6vp5QK+BoMACHP2sQjq1OQsVDvHur6ptTP9HNR63NdxzVdZyLjq+y5L3YcCrox1sRfLxwNO8eA==
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BJSPR01MB0595.CHNPR01.prod.partner.outlook.cn;PTR:;CAT:NONE;SFS:(13230031)(366007)(41320700004)(7416005)(1800799015)(52116005)(38350700005)(921011);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?hBhU2EtEB/3Zsf5Hgx05tBbWrOGKkEwvJgF+MiaK8uporgb5HylFVGq44gde?=
+ =?us-ascii?Q?vRdeqoUZP0TWB/WZB3FuCbtc+bzvk7exy6FbA5OfM/d5S5PWMGoyrtWHWEVF?=
+ =?us-ascii?Q?ZVBe0t2+llmPi317hWp5Skzw8MmmtInyKMFy22ArTmktIEoV3ZXe7odx2vvL?=
+ =?us-ascii?Q?19ypVHUpnCJFLN4TsV5ZXABDRXFan8X3ES8yr6WuZuiGO0E+ck+H2vGCTQqn?=
+ =?us-ascii?Q?p0Ftvm0Bx03YFAEfJDWOcOg3mknGXhMKoGTvrVeCXj2MA2WHCijjGltXuj+9?=
+ =?us-ascii?Q?s0LiIeycFtPcegOQ9I789RZQiPXaoQlf5/EjHqQFn9vJju6gu285A4bHGOUw?=
+ =?us-ascii?Q?AxIo1mig4b4awhj4KUT1ske714vM2+TgdLX8lKD/Knegk3IbCrpRMrIk9JXX?=
+ =?us-ascii?Q?9oSJwG55LevJ5I9Xw3ZZvqkeJnYv1fQK5tmT51o2FBRKlfyBd/EaAWpntzh1?=
+ =?us-ascii?Q?7RgOuIN2Cj2yJVtrWYCeBx3fz5vGlixyERDZOzBpwu/OB4Texw+zOGqYw/+t?=
+ =?us-ascii?Q?5yvcOQdefUIeyqtN15abYu0iTNBu8NZJoR3wLHueOCYh3ZsBwawutQCTfLNG?=
+ =?us-ascii?Q?OFfdtm+rGNhEDz+RIcGw5CPcDfSwcvbZ+KrmsevEZuEaNe5e3GtIzKmk6+u3?=
+ =?us-ascii?Q?3+A/TAz2Da4G+uXkQ8oIhwl+u2sBTKQpTBrvUtuap5EG90q6A90jbIZXiKy4?=
+ =?us-ascii?Q?AeVPQWqTQpakrGflpwNwMDe+Oi1dYsVV8mi/fSfreeazSFI1en9NKgGy/ZYv?=
+ =?us-ascii?Q?0YvbXX7uDUL9xQBjx0hunFCAHcfbnCSBQhcEnDvLm2C2ayynB3PY+ZucZZ1B?=
+ =?us-ascii?Q?wmT8vG/7i/3pCJI9yiM+SCtx47dYnSzitF04zQSazpKYwCeRunUMrdVfl7QX?=
+ =?us-ascii?Q?zMdpgru9uD2bDEmBJub5t83AD7rGebA27MxpTebNGvvT/sdR9p3VwN9JsuVd?=
+ =?us-ascii?Q?jOXOs7ehxlXjN+I16aOADJajKf9BeQFrRw7nc2O1L2JCeYAFPGQi3uG5uUer?=
+ =?us-ascii?Q?3fV/9/ACTgYa55IH99U7wum4ajUf04zp9D0cCPG1rdGULRSk8OdAzZ41DPfz?=
+ =?us-ascii?Q?bJvUU1u4ArGxQuy8GrsrKBfyrg4Jd5xXqDIwhrV/8/ih2T/ZbjQdYdsjGK65?=
+ =?us-ascii?Q?KHTBmvX+f2ZHpvub/RuqzUwnJdlezZY8b+pItHfWyhaJM/3Fyy8cTL3iuo28?=
+ =?us-ascii?Q?07y9Vd26ZOboJlAC59qvIpMrn+jUCax1jNnI7ScgV2LQZHRQVSLRxH8b2u+E?=
+ =?us-ascii?Q?1XM5N9LH/lKwH0a34uSkA7B/e8ReL5r7rUCRB+KozX9X0Iq8txjj9Dictqej?=
+ =?us-ascii?Q?s9hNIkXxBzbTGHlqHAI6bM+5aeNPY29nBljMqI31JlLAhMeRN23pq+FWW6+I?=
+ =?us-ascii?Q?Wl3iE8M8oUSJFZqwAmqkqjdDBzQMovlrcWr5ehE1JCmHo+AwppYtgv+tVLAm?=
+ =?us-ascii?Q?ecMk0DSymt9CFb0/GKt3mJv88aR1FP8/aQnj3HCP30N//b5Kxk0OU0alAj4g?=
+ =?us-ascii?Q?e0hp/mNmMV+iAQ5svN6nRSZhgVasGvSJdGI2uI9QiKHf4vQq3CGpo1fnHa/L?=
+ =?us-ascii?Q?cD7tA4pb6BjaNFuGyHS4a8oJNMUFUc8aVLShAYFG/0fB3DIkZ4ZlpRRkXIlJ?=
+ =?us-ascii?Q?qA=3D=3D?=
+X-OriginatorOrg: starfivetech.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1c63ce0c-943f-47b9-7cbd-08dc53c5ad29
+X-MS-Exchange-CrossTenant-AuthSource: BJSPR01MB0595.CHNPR01.prod.partner.outlook.cn
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Apr 2024 10:06:05.9534
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 06fe3fa3-1221-43d3-861b-5a4ee687a85c
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: rxEqWtCX/FEvar5n/BW0a3ZbuEaMl/xqM3jzh6oT8Wvah2mfSvMVc/36CKUtCkZHYZ3VQkuaVOfobNolFzBmjpxTCqTS4AZe3uLD18HHULc=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BJSPR01MB0675
 
-On 03/04/2024 11:24, Shreeya Patel wrote:
-> On Thursday, March 28, 2024 04:20 IST, Shreeya Patel <shreeya.patel@collabora.com> wrote:
-> 
->> This series implements support for the Synopsys DesignWare
->> HDMI RX Controller, being compliant with standard HDMI 1.4b
->> and HDMI 2.0.
->>
-> 
-> Hi Mauro and Hans,
-> 
-> I haven't received any reviews so far. Hence, this is just a gentle reminder to review this patch series.
+Add StarFive JH8100 dwmac support.
+The JH8100 dwmac shares the same driver code as the JH7110 dwmac
+and has only one reset signal.
+    
+Please refer to below:
+    
+  JH8100: reset-names = "stmmaceth";
+  JH7110: reset-names = "stmmaceth", "ahb";
+  JH7100: reset-names = "ahb";
+    
+Example usage of JH8100 in the device tree:
+    
+gmac0: ethernet@16030000 {
+        compatible = "starfive,jh8100-dwmac",
+                     "starfive,jh7110-dwmac",
+                     "snps,dwmac-5.20";
+        ...
+};
 
-Why did you put clk changes here? These go via different subsystem. That
-might be one of obstacles for your patchset.
+Changes in v6:
+- Removed unnecessary enum "starfive,jh8100-dwmac".
 
-Also, you sent it just a week ago and you already ping. Please relax,
-and help out by reviewing other patches on the mailing lists in order to
-relieve the burden of maintainers and move your patches higher up the list.
+Tan Chun Hau (1):
+  dt-bindings: net: starfive,jh7110-dwmac: Add StarFive JH8100 support
 
+ .../bindings/net/starfive,jh7110-dwmac.yaml   | 28 +++++++++++++++----
+ 1 file changed, 23 insertions(+), 5 deletions(-)
 
-Best regards,
-Krzysztof
+-- 
+2.25.1
 
