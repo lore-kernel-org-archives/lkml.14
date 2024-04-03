@@ -1,92 +1,100 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCC5914C5B3;
-	Wed,  3 Apr 2024 21:02:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99A0614C5B3
+	for <linux-kernel@vger.kernel.org>; Wed,  3 Apr 2024 21:03:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712178154; cv=none; b=XpoDmGCWuCWJa8xnwxap2xPUPjB0JGATHKuqcsSGH2UlW4DKKhflwq2G8eR5QpufonrndrNDBbZQkVV431b/michwFFu8OanMEWnlqrx7L/KJizsR363fFGVXao/nbAySZhXnekk6KUnnS1RoxQCn2TQnuQ+p3sjio6dumDf0XI=
+	t=1712178236; cv=none; b=sMIkrJnr5nzwilvoeU5BTljOcuDhl4rFftheSD7RTaM0q2NJdIraEp49cjDuVUY4QTK020sNkfVeXGHwjoVgi6Sfk6hnYYwDT8g8vLgUYBwg8KP9YWuiq+KXw0pWYmvVdUPLeqnEiSTKxdgYsRPaDzy2O5U3xKKme1+tUcO6des=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712178154; c=relaxed/simple;
-	bh=Ka5S/o+PuGXyYozTDCBhkrVTP/HWO8pnb/sg7I29qMg=;
+	s=arc-20240116; t=1712178236; c=relaxed/simple;
+	bh=2nXvlcysOJppAiAzRe5dRfX+OiQFH1nMTizntZ0g8qI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MrnI1OMPCUjb9paKZZKpSrEVrnq3azvu+lzHv00uZP746tBm64Iiiz2oYS06l/rqp9haN8u0AzPoR0d4AWQ5v8P9RTJw2UhAFQSlXMHrV0XRqHrBepYEhyukkrRsyiev+9iAZCYET2MGD5acVzj0mkWE1pqVtMEv2vF5+adfXSc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pyqIxHKF; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=XYmiPrvITkMdtLQkKk8Fmf49Z3gm5NiZTmOQEhWIELephdUIQ/SVsQQ2B7tfogovlGJr4h7Q08DesSG+IxAWUdnF/tMGBGfycdZe+vVmyYuI36bIkaSliW/12IglqDfmIkv0O2iCroklK3pecWtocAi0s/jW2/tcITpbZz5/yRQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dTFRA8wC; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pyqIxHKF"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 776C5C43390;
-	Wed,  3 Apr 2024 21:02:33 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dTFRA8wC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 804F1C43390;
+	Wed,  3 Apr 2024 21:03:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712178153;
-	bh=Ka5S/o+PuGXyYozTDCBhkrVTP/HWO8pnb/sg7I29qMg=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-	b=pyqIxHKFIrJmnwzJixTb2gwdLbGae7ctqEU2pSE+3GmE1HMfrTFCKNE2oz7JLigJp
-	 XSn+jNUK4BDExZcbmUjbdaqvIlf39WboGln5Dnn0ixqpmGzkxnY9z5Yco05r0z9wC6
-	 OA5C1uSVCQbr57fzOLMwB3WgnbIwRqB5eV4Wrn3xacrFiHxgnHBNLfImbQ/eGoZYNo
-	 fuwMVmfOued93xgR38LDNysGMjrAbbaFtP8PbNp5sMCS9kU4QJdU4O8/vbvebzxm2N
-	 5Gfl01ShCY+fGkV8zFEcW4ixD82M7m7nRfjbohTpblkEDj3GAW6FAiiW+zpOkeH+lK
-	 r7t61sYgvFAvw==
-Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
-	id 11AA7CE109B; Wed,  3 Apr 2024 14:02:33 -0700 (PDT)
-Date: Wed, 3 Apr 2024 14:02:33 -0700
-From: "Paul E. McKenney" <paulmck@kernel.org>
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: Naresh Kamboju <naresh.kamboju@linaro.org>,
-	open list <linux-kernel@vger.kernel.org>,
-	Linux Regressions <regressions@lists.linux.dev>,
-	lkft-triage@lists.linaro.org,
-	linux-parisc <linux-parisc@vger.kernel.org>,
-	Linux-sh list <linux-sh@vger.kernel.org>,
-	Mel Gorman <mgorman@techsingularity.net>,
-	Rik van Riel <riel@surriel.com>,
-	"Matthew Wilcox (Oracle)" <willy@infradead.org>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Dan Carpenter <dan.carpenter@linaro.org>,
-	Anders Roxell <anders.roxell@linaro.org>
-Subject: Re: sh4: parisc: asm/cmpxchg.h:60:24: error: implicit declaration of
- function 'cmpxchg_emu_u8' [-Werror=implicit-function-declaration]
-Message-ID: <7357cf3e-0a46-4672-bc8b-ee896ffacb87@paulmck-laptop>
-Reply-To: paulmck@kernel.org
-References: <CA+G9fYvUwyf-5yB=xZVAPXrF3C9z==7bbhDYBnX9jdJ1PxzPnQ@mail.gmail.com>
- <20240403135205.7673001add2216e63db02d1e@linux-foundation.org>
+	s=k20201202; t=1712178236;
+	bh=2nXvlcysOJppAiAzRe5dRfX+OiQFH1nMTizntZ0g8qI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=dTFRA8wCT+yBFtsOhYovAhWVriVq2017qU3+2eJmvWk6YL1oi/9AWW8P89MUISr8H
+	 A1kdnXKnYYKHyTBAjgr7iSVqWRdI6/DJEJW3rapiJ4+lbHvCJTCc3/cRHla3dXQwOu
+	 DWNjih7q/G1rZiXNxpGIIlK3+iBmiHWtgsMLy1ZfVtPyfVlInPRcjjXWzaDrztrZw2
+	 V2FpkBzaAMXJPCTCaV7hx+5Ufj0YYI2DGX500uQ4xo4ujoxXtqkkWD0VZq6nQUAWoV
+	 xV4RISDoMkyDTqLFESk3zOqoGRLPXAwEIx0RffQYKGQ90IgFztfDoM2lOeBdbuDTko
+	 v6fFmaZmRRh7A==
+Date: Wed, 3 Apr 2024 18:03:52 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Ian Rogers <irogers@google.com>
+Cc: Namhyung Kim <namhyung@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 1/1] perf annotate: Initialize 'arch' variable not to
+ trip some -Werror=maybe-uninitialized
+Message-ID: <Zg3EOP7ovDge_F-I@x1>
+References: <Zg1ywF7uRsfXYfYS@x1>
+ <CAP-5=fUqtjxAsmdGrnkjhUTLHs-JvV10TtxyocpYDJK_+LYTiQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20240403135205.7673001add2216e63db02d1e@linux-foundation.org>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAP-5=fUqtjxAsmdGrnkjhUTLHs-JvV10TtxyocpYDJK_+LYTiQ@mail.gmail.com>
 
-On Wed, Apr 03, 2024 at 01:52:05PM -0700, Andrew Morton wrote:
-> On Wed, 3 Apr 2024 13:23:23 +0530 Naresh Kamboju <naresh.kamboju@linaro.org> wrote:
+On Wed, Apr 03, 2024 at 09:01:56AM -0700, Ian Rogers wrote:
+> On Wed, Apr 3, 2024 at 8:16 AM Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
+> >
+> > In some older distros the build is failing due to
+> > -Werror=maybe-uninitialized, in this case we know that this isn't the
+> > case because 'arch' gets initialized by evsel__get_arch(), so just init
+> > it to NULL to silence those cases.
+> >
+> > E.g.:
+> >
+> >     32    17.12 opensuse:15.5                 : FAIL gcc version 7.5.0 (SUSE Linux)
+> >         util/annotate.c: In function 'hist_entry__get_data_type':
+> >     util/annotate.c:2269:15: error: 'arch' may be used uninitialized in this function [-Werror=maybe-uninitialized]
+> >       struct arch *arch;
+> >                    ^~~~
+> >     cc1: all warnings being treated as errors
+> >
+> >       43     7.30 ubuntu:18.04-x-powerpc64el    : FAIL gcc version 7.5.0 (Ubuntu 7.5.0-3ubuntu1~18.04)
+> >     util/annotate.c: In function 'hist_entry__get_data_type':
+> >     util/annotate.c:2351:36: error: 'arch' may be used uninitialized in this function [-Werror=maybe-uninitialized]
+> >        if (map__dso(ms->map)->kernel && arch__is(arch, "x86") &&
+> >                                         ^~~~~~~~~~~~~~~~~~~~~
+> >     cc1: all warnings being treated as errors
+> >
+> > Cc: Adrian Hunter <adrian.hunter@intel.com>
+> > Cc: Ian Rogers <irogers@google.com>
+> > Cc: Jiri Olsa <jolsa@kernel.org>
+> > Cc: Namhyung Kim <namhyung@kernel.org>
+> > Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 > 
-> > The parisc and sh defconfig builds failed due to following build warnings
-> > and errors on Linux next-20240402.
-> > 
-> > Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
-> > 
-> > parisc:
-> >   build:
-> >     * gcc-11-tinyconfig - Failed
-> >     * gcc-11-allnoconfig - Failed
-> >     * gcc-11-defconfig - Failed
-> > 
-> > sh:
-> >   build:
-> >     * gcc-11-defconfig - Failed
-> >     * gcc-11-dreamcast_defconfig - Failed
-> >     * gcc-11-tinyconfig - Failed
-> >     * gcc-11-shx3_defconfig - Failed
-> >     * gcc-11-allnoconfig - Failed
+> This looks fine but I couldn't line up the errors with code in the
+> tree. I was curious why the "maybe-uninitialized" was failing. Perhaps
+> evsel__get_arch should set the out argument to NULL when an error
+> occurs. This fix is also good but may potentially need repeating for
+> other evsel__get_arch cases, so a fix in evsel__get_arch may be
+> preferable.
 > 
-> Is this a new failure?  If so, can we please identify a suitable Fixes: target?
+> Reviewed-by: Ian Rogers <irogers@google.com>
 
-This one is already fixed, but I am pulling the offending commits out
-of -next for a few days in order to fix some additional casting issues
-identified by kernel test robot.
+Yeah, your suggestion is better and I just tested, satisfies the
+compilers that were emitting this warning.
 
-Apologies for the hassle!
+I stamped a:
 
-							Thanx, Paul
+Suggested-by: Ian Rogers <irogers@google.com>
+
+and kept your Reviewed-by, ok?
+
+- Arnaldo
