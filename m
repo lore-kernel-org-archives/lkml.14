@@ -1,188 +1,121 @@
-Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3165C149C65;
-	Wed,  3 Apr 2024 10:38:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26D587317F;
+	Wed,  3 Apr 2024 10:41:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712140723; cv=none; b=DAwFf9E3uGIhk85unAH6cmEfPz7ncmDTZB3wdifAJYcY5Dgu4Wwc9y7Mynl6X1ex+8vzOa8tPLfjUU1n0JQO7YrI/k1ZxJ+DmTHKA5refUKD+ec1l4JQESe0eQZuf577PqZRRDgiPa6PDq3RxXXHNx/sFMAydpywbUtBNeyz74o=
+	t=1712140909; cv=none; b=GBN7FkYx8ujFY9YNJwUoQ6a0uuE/1yxpchAqDvyhs2w0YPTT+JLI25V95D4ZywAl0PJyeBDu45v5wZhqUvMP877tVqqFWyCcJ7QhVLml6tXJCLnTQf2mvIN6iBpSQKXqhSqJawvXvXxOy/Fls61BsUWTPNq67C4Am09u5OWcSaM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712140723; c=relaxed/simple;
-	bh=lsJZYamIb7pKWq/pJ2WHv4Qhp7DutSf4JF7cAzPEE8c=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=TrUXljxSktSSDH03COuAMCTKDR8pFL5ujWmd3lsP7R28MjPZt+K7FcJ6rVID4EjCbV/DlKzI0AA1G2mFpFN7oH4i42QylJ/L+119TbQndijbNFduSgJx6jJv0ckJF57eyNJZjrrn94uZX7AwVhBUkQ6PgezpHif8JFJhIBODHwk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZyR2CME8; arc=none smtp.client-ip=209.85.218.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1712140909; c=relaxed/simple;
+	bh=cHoh/mCyG8gbipvFz56gKADMWpWhqnpXGRpDRvSto80=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=EwJ/i7kNAo3TOdNxonnJO8L3rMAaajQD1NgVjXJUGfivrQHvHGArhg87Kv0YlXfQPcmaPjLuSJMtdYgfwnJIqnUbH2q6wf3+H6xuG4Yv75rG+m1KfeJtnPASbUARIlkBITN85N9D0c4tmQJzXolxeySyhvHrvxo/X27jT066ZUA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=ZZmDoIIM; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZyR2CME8"
-Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-a47385a4379so153289066b.0;
-        Wed, 03 Apr 2024 03:38:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1712140720; x=1712745520; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=dwXfSiRRYMgELktuVNuW2aivXcVrEj4Wx7dt2BW3WIo=;
-        b=ZyR2CME8VEb+TJKtlinza6Uy4kNatfywPFv+uf+NuiV0pp/jLk0TvAdmd/hlMdrdyN
-         XziREP7zHJB/ady3k9qQE3i3wOGlmWgwSB+edpkKXGJgzRM5Y1w9G9HzO7Dm6UzvDKwz
-         IKWWfymlDU/0QzXxY2pTWMgrqZVIHHf2krGUVBRBi+Trx7clYcx8Zb/sBxG0T0jmaElC
-         IRt8eWxDJC8+pt/WZ2JyC/kKlryBNUtKlDo/CnwD8JSroz69YOlhhW+oVQIJt6AiGsQL
-         7pGU9nMheDPAnQpVIZX4r3GV5HzIvhGC6HVDFYM3X35OHAeV3juu+Rrtth8Qg0cgV7cl
-         LWXQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712140720; x=1712745520;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=dwXfSiRRYMgELktuVNuW2aivXcVrEj4Wx7dt2BW3WIo=;
-        b=vfcLgI/CuQ46AzNLCnzy5yaqHppudoBAGWb22FvP5XQbeWRixEO9tQe/ojsYTmh0Eh
-         Utndpdcky6kPq3tUsd4omBBD/519OzGd2/kEjrwDN21fO2HQHj8KfYrF4dVZdcEO24y/
-         ZwK4YwssDXWa4Zr5ZCqnJ+srIXeF1XRqB6R2XvSYAklSHivpxV4f5eSSjbhJix6PUrIo
-         YB2J9EhHP/w829h8d0XJHtHz6iBcS4afYNCvll0QumHyqwpLzpBzU8YGbMw0VYIiLxmL
-         tmYFO8RjEPYmJ0O6d6K4RKE7NV32fqSxlytEMioMHWv9zIR6Hka1VOz4O+nEUde+APhH
-         bofQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWNs6pzIq9b2v06Sf44vd5A8umjpVnvt8pdUjklxbaLNpQndjBRlYDKyFJSwc3xyIui0AaaC0ICB/4QXuzmU60CWcSBzr8B+F07MMiZ
-X-Gm-Message-State: AOJu0YyqbDPWhV0tbuZT1rD/3mZGUsD3r/JnoizbZSXFK/Mh430xb9OR
-	s21yGe+cI/9ZJ78bOfxFJcwkA878asl9+yXGvOf5nYIvFsLVkH7Y6W7ctoVphIg=
-X-Google-Smtp-Source: AGHT+IG+QtCZKqPMzZNQVwNyVKDtHDuBSBbJvPN37rAVDUNJjrkTWV1iD5+oITX8pfXlygCN+jhd8g==
-X-Received: by 2002:a17:906:e2c9:b0:a51:6386:2a5b with SMTP id gr9-20020a170906e2c900b00a5163862a5bmr448387ejb.0.1712140720276;
-        Wed, 03 Apr 2024 03:38:40 -0700 (PDT)
-Received: from WBEC325.dom.lan ([185.188.71.122])
-        by smtp.gmail.com with ESMTPSA id xd2-20020a170907078200b00a4e2e16805bsm6858169ejb.11.2024.04.03.03.38.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 03 Apr 2024 03:38:40 -0700 (PDT)
-From: Pawel Dembicki <paweldembicki@gmail.com>
-To: netdev@vger.kernel.org
-Cc: Linus Walleij <linus.walleij@linaro.org>,
-	Simon Horman <horms@kernel.org>,
-	Pawel Dembicki <paweldembicki@gmail.com>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Vladimir Oltean <olteanv@gmail.com>,
-	Andrew Lunn <andrew@lunn.ch>,
-	Florian Fainelli <f.fainelli@gmail.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Claudiu Manoil <claudiu.manoil@nxp.com>,
-	Alexandre Belloni <alexandre.belloni@bootlin.com>,
-	UNGLinuxDriver@microchip.com,
-	Russell King <linux@armlinux.org.uk>,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH net-next v8 16/16] net: dsa: vsc73xx: start treating the BR_LEARNING flag
-Date: Wed,  3 Apr 2024 12:37:32 +0200
-Message-Id: <20240403103734.3033398-17-paweldembicki@gmail.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240403103734.3033398-1-paweldembicki@gmail.com>
-References: <20240403103734.3033398-1-paweldembicki@gmail.com>
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="ZZmDoIIM"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 765E140E019C;
+	Wed,  3 Apr 2024 10:41:43 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id YQ_zvYeI4oPH; Wed,  3 Apr 2024 10:41:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1712140899; bh=UzSO7Jsp105welFJNWCbRP4AatEptaub1c50MMxUNFY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ZZmDoIIMGNqv7EUCTpd7QdLG6HLKRWT3K3iNOjkn/oZo1Fyr2uQ2L/wM9IvjkRqCc
+	 5ykgW2lz7lQwAwsKNYc9wZOQtFN3BuleIXiN7qWsE6ggLsWPtU6bEi1VU4GDdyuN62
+	 pPK4d/CkMbM3GRSPtgUF8JBV/NXJrz2lVplv1VmcIoKyBV7n2BT3wjKexlGo97Qfy5
+	 8EWV+W1z+jYmq5C1L79SyyeCZWZzGnZwfqIvv+rpQJYpn8sFg6KBcMDcoyFaH6SU8C
+	 hjZPdnztDvR1/2q8PGHMaZTlIg5Ou3USmIS0bGPBZO+fQkYEKJnEUURQxMjmFdusoQ
+	 bL4vZm1QF8ypb+2VHAx3oft5O1YHSH8iMspV59AbfovmcAh94yk+9hvhHe4AG9LM06
+	 5LU/6BY/QTTwTLR5abHs3nv5N73pznAv9DleR1MdZhodBtcd+Ue2wPcJGtYxmDdBRF
+	 AOJ4xWKrLbZsIyNdVCacgcZEX98jz9pNpI0nW3XtOTwXWOwsjPz0yuaJ/pggaHAM9d
+	 SE4bfMeWLuQQshO3xZKOxWjtXMq9UKGBF7FUGnkg0a0t5aafj/tZxHX2imYs/tKizS
+	 d2QO3FR1DA5j94nQxhlYqIMRRnM+QavBWs9wOcSvjtJnuHHgzkqcbpZESn2sZK6Xr8
+	 rjIM/oahcos7rGLy3uLF63Kg=
+Received: from zn.tnic (p5de8ecf7.dip0.t-ipconnect.de [93.232.236.247])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 703FB40E019B;
+	Wed,  3 Apr 2024 10:41:25 +0000 (UTC)
+Date: Wed, 3 Apr 2024 12:41:19 +0200
+From: Borislav Petkov <bp@alien8.de>
+To: Zeng Heng <zengheng4@huawei.com>
+Cc: linux-tip-commits@vger.kernel.org,
+	Jun'ichi Nomura <junichi.nomura@nec.com>,
+	Derek Barbosa <debarbos@redhat.com>, Ingo Molnar <mingo@kernel.org>,
+	Kees Cook <keescook@chromium.org>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	"Paul E. McKenney" <paulmck@kernel.org>,
+	Andy Lutomirski <luto@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>,
+	Peter Zijlstra <peterz@infradead.org>, x86@kernel.org,
+	linux-kernel@vger.kernel.org, "liwei (GF)" <liwei391@huawei.com>
+Subject: Re: [tip: x86/boot] x86/boot: Ignore NMIs during very early boot
+Message-ID: <20240403104119.GAZg0yTyTAGe65FoxF@fat_crate.local>
+References: <170133478498.398.5261666675868615202.tip-bot2@tip-bot2>
+ <20231130103339.GCZWhlA196uRklTMNF@fat_crate.local>
+ <95f416eb-a0ea-acba-6427-2a38d431ba8d@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <95f416eb-a0ea-acba-6427-2a38d431ba8d@huawei.com>
 
-This patch implements .port_pre_bridge_flags() and .port_bridge_flags(),
-which are required for properly treating the BR_LEARNING flag. Also,
-.port_stp_state_set() is tweaked and now disables learning for standalone
-ports.
+Hi Zeng Heng,
 
-Disabling learning for standalone ports is required to avoid situations
-where one port sees traffic originating from another, which could cause
-packet drops.
+On Wed, Apr 03, 2024 at 02:32:45PM +0800, Zeng Heng wrote:
+> Until just now, I saw your completely different responses to the same patch.
 
-Signed-off-by: Pawel Dembicki <paweldembicki@gmail.com>
-Acked-by: Linus Walleij <linus.walleij@linaro.org>
-Reviewed-by: Florian Fainelli <florian.fainelli@broadcom.com>
-Reviewed-by: Vladimir Oltean <olteanv@gmail.com>
----
-v8:
-  - resend only
-v7:
-  - added 'Acked-by' and 'Reviewed-by' and improve  commit message
-v6:
-  - fix arranging local variables in reverse xmas tree order
-v5:
-  - introduce patch
+Lemme explain how I see the situation.
 
- drivers/net/dsa/vitesse-vsc73xx-core.c | 41 ++++++++++++++++++++++----
- 1 file changed, 35 insertions(+), 6 deletions(-)
+You sent a patch:
 
-diff --git a/drivers/net/dsa/vitesse-vsc73xx-core.c b/drivers/net/dsa/vitesse-vsc73xx-core.c
-index 87922804d1c1..90ca791add06 100644
---- a/drivers/net/dsa/vitesse-vsc73xx-core.c
-+++ b/drivers/net/dsa/vitesse-vsc73xx-core.c
-@@ -1588,6 +1588,31 @@ static int vsc73xx_tag_8021q_vlan_del(struct dsa_switch *ds, int port, u16 vid)
- 	return vsc73xx_update_vlan_table(vsc, port, vid, false);
- }
- 
-+static int vsc73xx_port_pre_bridge_flags(struct dsa_switch *ds, int port,
-+					 struct switchdev_brport_flags flags,
-+					 struct netlink_ext_ack *extack)
-+{
-+	if (flags.mask & ~BR_LEARNING)
-+		return -EINVAL;
-+
-+	return 0;
-+}
-+
-+static int vsc73xx_port_bridge_flags(struct dsa_switch *ds, int port,
-+				     struct switchdev_brport_flags flags,
-+				     struct netlink_ext_ack *extack)
-+{
-+	if (flags.mask & BR_LEARNING) {
-+		u32 val = flags.val & BR_LEARNING ? BIT(port) : 0;
-+		struct vsc73xx *vsc = ds->priv;
-+
-+		return vsc73xx_update_bits(vsc, VSC73XX_BLOCK_ANALYZER, 0,
-+					   VSC73XX_LEARNMASK, BIT(port), val);
-+	}
-+
-+	return 0;
-+}
-+
- static int vsc73xx_port_bridge_join(struct dsa_switch *ds, int port,
- 				    struct dsa_bridge bridge,
- 				    bool *tx_fwd_offload,
-@@ -1693,19 +1718,21 @@ static void vsc73xx_refresh_fwd_map(struct dsa_switch *ds, int port, u8 state)
- static void vsc73xx_port_stp_state_set(struct dsa_switch *ds, int port,
- 				       u8 state)
- {
-+	struct dsa_port *dp = dsa_to_port(ds, port);
- 	struct vsc73xx *vsc = ds->priv;
--	u32 val;
-+	u32 val = 0;
-+
-+	if (state == BR_STATE_LEARNING || state == BR_STATE_FORWARDING)
-+		val = dp->learning ? BIT(port) : 0;
-+
-+	vsc73xx_update_bits(vsc, VSC73XX_BLOCK_ANALYZER, 0,
-+			    VSC73XX_LEARNMASK, BIT(port), val);
- 
- 	val = (state == BR_STATE_BLOCKING || state == BR_STATE_DISABLED) ?
- 	      0 : BIT(port);
- 	vsc73xx_update_bits(vsc, VSC73XX_BLOCK_ANALYZER, 0,
- 			    VSC73XX_RECVMASK, BIT(port), val);
- 
--	val = (state == BR_STATE_LEARNING || state == BR_STATE_FORWARDING) ?
--	      BIT(port) : 0;
--	vsc73xx_update_bits(vsc, VSC73XX_BLOCK_ANALYZER, 0,
--			    VSC73XX_LEARNMASK, BIT(port), val);
--
- 	/* CPU Port should always forward packets when user ports are forwarding
- 	 * so let's configure it from other ports only.
- 	 */
-@@ -1727,6 +1754,8 @@ static const struct dsa_switch_ops vsc73xx_ds_ops = {
- 	.port_setup = vsc73xx_port_setup,
- 	.port_enable = vsc73xx_port_enable,
- 	.port_disable = vsc73xx_port_disable,
-+	.port_pre_bridge_flags = vsc73xx_port_pre_bridge_flags,
-+	.port_bridge_flags = vsc73xx_port_bridge_flags,
- 	.port_bridge_join = vsc73xx_port_bridge_join,
- 	.port_bridge_leave = vsc73xx_port_bridge_leave,
- 	.port_change_mtu = vsc73xx_change_mtu,
+https://lore.kernel.org/all/20230110102745.2514694-1-zengheng4@huawei.com/
+
+which had a commit message which tried to explain what happens. And
+I tried to parse your commit message and understand what you're trying
+to do but there never was a clear explanation.
+
+When I read "If kdump is enabled, when using mce_inject to inject
+errors..." then I think, oh great, more experiments. ;-\
+
+And no, I don't want to add code to early boot just to make some weird
+experiments happy.
+
+Yeah yeah, an MCE can happen very early but until a real reproducer, I'm
+not convinced.
+
+Now that other patch's commit message has at least a bit more clear
+explanation how you can *actually* cause this. And I still would've
+asked how *exactly* this happens but it is kinda clear: you can run perf
+and generate an NMI storm and then have two back-to-back NMIs.
+
+And I'm still not crazy about having an empty early NMI handler either
+thus I suggested to make it at least say something so that we're aware
+that early NMIs have happened.
+
+So if it is not clear *why* a patch is being done, then it goes nowhere.
+Because you'll go your merry way and "develop driver software based on
+arm64 features" or whatever else you get to do but the maintainers will
+be left to be dealing with your code indefinitely.
+
+I hope this makes it more clear.
+
+Thx.
+
 -- 
-2.34.1
+Regards/Gruss,
+    Boris.
 
+https://people.kernel.org/tglx/notes-about-netiquette
