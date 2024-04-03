@@ -1,40 +1,40 @@
-Received: from mail-108-mta254.mxroute.com (mail-108-mta254.mxroute.com [136.175.108.254])
+Received: from mail-108-mta144.mxroute.com (mail-108-mta144.mxroute.com [136.175.108.144])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4C1414A61B
-	for <linux-kernel@vger.kernel.org>; Wed,  3 Apr 2024 15:08:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=136.175.108.254
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 209E114D6F3
+	for <linux-kernel@vger.kernel.org>; Wed,  3 Apr 2024 15:08:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=136.175.108.144
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712156936; cv=none; b=DlUEtgn3kuctJESGDxAaH0+NIqN/nqkRX1taR3k/+QIlSoPTee5NsOg6rhdiFV1yTcY0WS8yIMCAhp+1bZ1QO6K+9JNGf1IePtZ6V7sYH1MlLber6csgIsWQU7PYyx4AqGd2tjdC5VAuFWCmGoy5NWfDhEceTYHNvJzcOxBhoww=
+	t=1712156941; cv=none; b=U4BsI+mh//+wWexYL3EhrL5eSavzcetaeIH6msTP5J1TntaEUSxJI37FDL+qbndwrfd9IW6pLfLinzJm+E4AaJBsuL9hZ/IPXejZs503BU5O0Abbjx0cGa3LpXv4PCh+JqRKw+INXodl4rGjpG0up66FPQYDC65UIvliX3GOZvY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712156936; c=relaxed/simple;
-	bh=orKRL9k3h4MQbuG4dRP6H2viAfkBXdURmtZNsy+EARg=;
+	s=arc-20240116; t=1712156941; c=relaxed/simple;
+	bh=SZKceW7XhiaFkOM1tmAN0wp1PM47pjw3iJvgmSOm5o0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=LqwvWcy67uOuyAQKJqjsIFE6r9rNZeL3R+oJ7Ll0Mo9U1HM/ZspoagPxZ+m6py0rf5efeuPPD2SW91Ps7eiwj/UW3p5kDeEM6+GreDhUr9CKhTHfZtpbTggFf8ZUReQuehkllfuaIVqI0CefH6NFJtz5jtgyp78LgxwA45ZxHc8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=luigi311.com; spf=pass smtp.mailfrom=luigi311.com; dkim=pass (2048-bit key) header.d=luigi311.com header.i=@luigi311.com header.b=yhQ0Igzq; arc=none smtp.client-ip=136.175.108.254
+	 MIME-Version; b=ESZ+0njo3hgxnVtemNzZfrZEJuDHRSP5Wa8+aEr6dv3fz3hiu1PKSXX57xSv8K9I9bislAPZPPb1Ep8iCckh76vNFFNOSbbS1vMUaHDPf62ocwSoZuY67TXCa41UVT0sK9xPYaFQH1QFP9OhU3mvMDE9/4ddz/XVYU83VZJXsT4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=luigi311.com; spf=pass smtp.mailfrom=luigi311.com; dkim=pass (2048-bit key) header.d=luigi311.com header.i=@luigi311.com header.b=o7l8zwQ6; arc=none smtp.client-ip=136.175.108.144
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=luigi311.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=luigi311.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=luigi311.com header.i=@luigi311.com header.b="yhQ0Igzq"
+	dkim=pass (2048-bit key) header.d=luigi311.com header.i=@luigi311.com header.b="o7l8zwQ6"
 Received: from filter006.mxroute.com ([136.175.111.2] filter006.mxroute.com)
  (Authenticated sender: mN4UYu2MZsgR)
- by mail-108-mta254.mxroute.com (ZoneMTA) with ESMTPSA id 18ea4807e200003bea.010
+ by mail-108-mta144.mxroute.com (ZoneMTA) with ESMTPSA id 18ea4809fcc0003bea.010
  for <linux-kernel@vger.kernel.org>
  (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384);
- Wed, 03 Apr 2024 15:07:48 +0000
-X-Zone-Loop: 67d2db673e63ebb065ae01d1621e75d9db726cb87034
+ Wed, 03 Apr 2024 15:07:56 +0000
+X-Zone-Loop: 72260621b4f8ffe5973d9a6b2b8a5e58654f9f622fc3
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=luigi311.com; s=x; h=Content-Transfer-Encoding:MIME-Version:References:
 	In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
 	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
 	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
 	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=um6Hj3+66bt6kjL5BKukA1fuuXmDo6jHd9WAJeM/FZM=; b=yhQ0IgzqM+a20jFZcASsvQ5ncx
-	EMiRWEP5cGixlUh+70Z6ymKyvMOMtTlpsNHm+OQ3DSSKkvCbsKbP2JnmUvXeAQkiMf2TlesAkd6/h
-	mZdcpPDFWE5Jh67T8CoeNe5WB4/jVIPNa1VgLtUHmZt48pVB3WDMntqgH/Q99lFzOrZXTwAZ6cbqH
-	+U0q18W+/c04ecmR8UnwHr2Lrq1IH3NDTcTWbEzsf1v0ugvxYUf6TJxzas9wfClobp9mwQqFbjzmY
-	HlOld8pueeoRTacIuXL10sIwK7AEk0WpjaDYYPqrdmQjIZZQSCi+aCJqaXmxC6vXq5u6ZhEPSAvl5
-	nPKQwLMQ==;
+	bh=89UYSwemjH72oCJkImoj3GYITxzLE07DmWICqE+PSTA=; b=o7l8zwQ6frYkmj0OJGZtK64NUa
+	h7YAI85vmWCxIqCkNZwSlU48WtNJ10P3xewp+Q2rppA9GinKIwNxsMlGiEbxOFDuUzZHyiEK50+rf
+	DsA4rie9qVKkAfCqnIKEduBqzYB4Aq7TCrxe+NUS82k0nbb0oXu7f1UOCmtQplw1f6k7XmYNoovjL
+	tcAgUflDknJevPd0PXBSBZ9Uz6lSyMD6px3QHzHiAOeGe4cc3+lGEWC0YfK0TvWtfXDBDLY8KFn3f
+	qv+sJHTA4o1i0mxukWtzS8zVKyaC55Bnb94BNPc7I/HCEZjF1XyTxembR4KkQk3rSD77nrTvCX0ih
+	5md5ucdg==;
 From: git@luigi311.com
 To: linux-media@vger.kernel.org
 Cc: dave.stevenson@raspberrypi.com,
@@ -55,9 +55,9 @@ Cc: dave.stevenson@raspberrypi.com,
 	pavel@ucw.cz,
 	phone-devel@vger.kernel.org,
 	Luis Garcia <git@luigi311.com>
-Subject: [PATCH v3 15/25] media: i2c: imx258: Set pixel_rate range to the same as the value
-Date: Wed,  3 Apr 2024 09:03:44 -0600
-Message-ID: <20240403150355.189229-16-git@luigi311.com>
+Subject: [PATCH v3 19/25] media: i2c: imx258: Change register settings for variants of the sensor
+Date: Wed,  3 Apr 2024 09:03:48 -0600
+Message-ID: <20240403150355.189229-20-git@luigi311.com>
 In-Reply-To: <20240403150355.189229-1-git@luigi311.com>
 References: <20240403150355.189229-1-git@luigi311.com>
 Precedence: bulk
@@ -71,64 +71,130 @@ X-Authenticated-Id: personal@luigi311.com
 
 From: Dave Stevenson <dave.stevenson@raspberrypi.com>
 
-With a read only control there is limited point in advertising
-a minimum and maximum for the control, so change to set the
-value, min, and max all to the selected pixel rate.
+Sony have advised that there are variants of the IMX258 sensor which
+require slightly different register configuration to the mainline
+imx258 driver defaults.
+
+There is no available run-time detection for the variant, so add
+configuration via the DT compatible string.
+
+The Vision Components imx258 module supports PDAF, so add the
+register differences for that variant
 
 Signed-off-by: Dave Stevenson <dave.stevenson@raspberrypi.com>
-Reviewed-by: Jacopo Mondi <jacopo.mondi@ideasonboard.com>
 Signed-off-by: Luis Garcia <git@luigi311.com>
 ---
- drivers/media/i2c/imx258.c | 19 +++++++------------
- 1 file changed, 7 insertions(+), 12 deletions(-)
+ drivers/media/i2c/imx258.c | 48 ++++++++++++++++++++++++++++++++++----
+ 1 file changed, 44 insertions(+), 4 deletions(-)
 
 diff --git a/drivers/media/i2c/imx258.c b/drivers/media/i2c/imx258.c
-index c242e318be11..7d434bc12c6a 100644
+index 775d957c9b87..fa48da212037 100644
 --- a/drivers/media/i2c/imx258.c
 +++ b/drivers/media/i2c/imx258.c
-@@ -971,7 +971,8 @@ static int imx258_set_pad_format(struct v4l2_subdev *sd,
+@@ -6,6 +6,7 @@
+ #include <linux/delay.h>
+ #include <linux/i2c.h>
+ #include <linux/module.h>
++#include <linux/of_device.h>
+ #include <linux/pm_runtime.h>
+ #include <linux/regulator/consumer.h>
+ #include <media/v4l2-ctrls.h>
+@@ -321,8 +322,6 @@ static const struct imx258_reg mipi_642mbps_24mhz_4l[] = {
  
- 		link_freq = imx258->link_freq_menu_items[mode->link_freq_index];
- 		pixel_rate = link_freq_to_pixel_rate(link_freq, imx258->nlanes);
--		__v4l2_ctrl_s_ctrl_int64(imx258->pixel_rate, pixel_rate);
-+		__v4l2_ctrl_modify_range(imx258->pixel_rate, pixel_rate,
-+					 pixel_rate, 1, pixel_rate);
- 		/* Update limits and set FPS to default */
- 		vblank_def = imx258->cur_mode->vts_def -
- 			     imx258->cur_mode->height;
-@@ -1262,8 +1263,7 @@ static int imx258_init_controls(struct imx258 *imx258)
- 	struct v4l2_ctrl *vflip, *hflip;
- 	s64 vblank_def;
- 	s64 vblank_min;
--	s64 pixel_rate_min;
--	s64 pixel_rate_max;
-+	s64 pixel_rate;
- 	int ret;
+ static const struct imx258_reg mode_common_regs[] = {
+ 	{ 0x3051, 0x00 },
+-	{ 0x3052, 0x00 },
+-	{ 0x4E21, 0x14 },
+ 	{ 0x6B11, 0xCF },
+ 	{ 0x7FF0, 0x08 },
+ 	{ 0x7FF1, 0x0F },
+@@ -345,7 +344,6 @@ static const struct imx258_reg mode_common_regs[] = {
+ 	{ 0x7FA8, 0x03 },
+ 	{ 0x7FA9, 0xFE },
+ 	{ 0x7B24, 0x81 },
+-	{ 0x7B25, 0x00 },
+ 	{ 0x6564, 0x07 },
+ 	{ 0x6B0D, 0x41 },
+ 	{ 0x653D, 0x04 },
+@@ -460,6 +458,33 @@ static const struct imx258_reg mode_1048_780_regs[] = {
+ 	{ 0x034F, 0x0C },
+ };
  
- 	ctrl_hdlr = &imx258->ctrl_handler;
-@@ -1294,18 +1294,13 @@ static int imx258_init_controls(struct imx258 *imx258)
- 	if (vflip)
- 		vflip->flags |= V4L2_CTRL_FLAG_READ_ONLY;
++struct imx258_variant_cfg {
++	const struct imx258_reg *regs;
++	unsigned int num_regs;
++};
++
++static const struct imx258_reg imx258_cfg_regs[] = {
++	{ 0x3052, 0x00 },
++	{ 0x4E21, 0x14 },
++	{ 0x7B25, 0x00 },
++};
++
++static const struct imx258_variant_cfg imx258_cfg = {
++	.regs = imx258_cfg_regs,
++	.num_regs = ARRAY_SIZE(imx258_cfg_regs),
++};
++
++static const struct imx258_reg imx258_pdaf_cfg_regs[] = {
++	{ 0x3052, 0x01 },
++	{ 0x4E21, 0x10 },
++	{ 0x7B25, 0x01 },
++};
++
++static const struct imx258_variant_cfg imx258_pdaf_cfg = {
++	.regs = imx258_pdaf_cfg_regs,
++	.num_regs = ARRAY_SIZE(imx258_pdaf_cfg_regs),
++};
++
+ static const char * const imx258_test_pattern_menu[] = {
+ 	"Disabled",
+ 	"Solid Colour",
+@@ -637,6 +662,8 @@ struct imx258 {
+ 	struct v4l2_subdev sd;
+ 	struct media_pad pad;
  
--	pixel_rate_max =
--		link_freq_to_pixel_rate(imx258->link_freq_menu_items[0],
--					imx258->nlanes);
--	pixel_rate_min =
--		link_freq_to_pixel_rate(imx258->link_freq_menu_items[1],
--					imx258->nlanes);
-+	pixel_rate = link_freq_to_pixel_rate(imx258->link_freq_menu_items[0],
-+					     imx258->nlanes);
- 	/* By default, PIXEL_RATE is read only */
- 	imx258->pixel_rate = v4l2_ctrl_new_std(ctrl_hdlr, &imx258_ctrl_ops,
- 				V4L2_CID_PIXEL_RATE,
--				pixel_rate_min, pixel_rate_max,
--				1, pixel_rate_max);
--
-+				pixel_rate, pixel_rate,
-+				1, pixel_rate);
++	const struct imx258_variant_cfg *variant_cfg;
++
+ 	struct v4l2_ctrl_handler ctrl_handler;
+ 	/* V4L2 Controls */
+ 	struct v4l2_ctrl *link_freq;
+@@ -1104,6 +1131,14 @@ static int imx258_start_streaming(struct imx258 *imx258)
+ 		return ret;
+ 	}
  
- 	vblank_def = imx258->cur_mode->vts_def - imx258->cur_mode->height;
- 	vblank_min = imx258->cur_mode->vts_min - imx258->cur_mode->height;
++	ret = imx258_write_regs(imx258, imx258->variant_cfg->regs,
++				imx258->variant_cfg->num_regs);
++	if (ret) {
++		dev_err(&client->dev, "%s failed to set variant config\n",
++			__func__);
++		return ret;
++	}
++
+ 	ret = imx258_write_reg(imx258, IMX258_CLK_BLANK_STOP,
+ 			       IMX258_REG_VALUE_08BIT,
+ 			       imx258->csi2_flags & V4L2_MBUS_CSI2_NONCONTINUOUS_CLOCK ?
+@@ -1492,6 +1527,10 @@ static int imx258_probe(struct i2c_client *client)
+ 
+ 	imx258->csi2_flags = ep.bus.mipi_csi2.flags;
+ 
++	imx258->variant_cfg = of_device_get_match_data(&client->dev);
++	if (!imx258->variant_cfg)
++		imx258->variant_cfg = &imx258_cfg;
++
+ 	/* Initialize subdev */
+ 	v4l2_i2c_subdev_init(&imx258->sd, client, &imx258_subdev_ops);
+ 
+@@ -1579,7 +1618,8 @@ MODULE_DEVICE_TABLE(acpi, imx258_acpi_ids);
+ #endif
+ 
+ static const struct of_device_id imx258_dt_ids[] = {
+-	{ .compatible = "sony,imx258" },
++	{ .compatible = "sony,imx258", .data = &imx258_cfg },
++	{ .compatible = "sony,imx258-pdaf", .data = &imx258_pdaf_cfg },
+ 	{ /* sentinel */ }
+ };
+ MODULE_DEVICE_TABLE(of, imx258_dt_ids);
 -- 
 2.42.0
 
