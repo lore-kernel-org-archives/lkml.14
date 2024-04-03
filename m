@@ -1,45 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6552B161324;
-	Wed,  3 Apr 2024 17:19:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C6FA161908;
+	Wed,  3 Apr 2024 17:19:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712164772; cv=none; b=A2/6fQQ8CvFGB1+o/8jzIoSDALkJ1fX9tM5Y3ujFLWc1xpSEkeM2jTOW/CxggMkZLMaFoQDhsUcjMxrRZ0mplA0aW1cIo2n0vcFbTM2gLv4JkoekLfYyoFFiEFdD7RLMW6ghr51SRN4dpBlEXCfoZ0RFIZOzJnAIe/lcJipXubs=
+	t=1712164774; cv=none; b=TU0FxUF3bW8cMI4Z09z815PUu0NkGyffZcRO2pKoG2+RZ4I1cIBeH+5CEsdD9UArJnq14TBIfdIY1xXxiSAq+/FmnW+3K4brsVpNx88yl5bgtjwsRI16SFOlqcQoM1v/TYjVps1CEos1jIAuFXnGIe7dfHAgNc3EMbcVW2Qz33E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712164772; c=relaxed/simple;
-	bh=1s7e/iUP+fl2GBm1UpjFeevJLSutEOfjvsGAu3dHY6k=;
+	s=arc-20240116; t=1712164774; c=relaxed/simple;
+	bh=KGum2UiFM/XeeIttcKMIY9uAmatsd+1YLL7DOdMp7+8=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ZqRFOToRJzu+++SRbdEyxtqENn85MiUUTuSRb0/tqXGL/aar9kMTxsAut3X8dRFd+nI3LcQ5xkckUfOv5J9DzBNde/ySxwaGu6c3VYa8OKKLfmn0HHpTYmd0OQM1YER4nmbf6LFvH5/Y5NItnAlLpHGLKMZUtuWTZYZA9RJzFoY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OYjvBBC0; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=Hwf5B/GQHuga9A+bgz/pv44y83QJu6w3n3RCHpwOm5tGvNVo4TWLW6CcgzhcEfhBgFK7Zhgrg6KwnLmJQoflGBhBVl01xI7GXdEEjSss9dhgu/q5hofqYiE/mq44XxpZiWg6z27lH7kZhQ83GtNpNu/smX85tVDL3UOQRP3ZUa8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BxJYywpm; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OYjvBBC0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D2ADCC433A6;
-	Wed,  3 Apr 2024 17:19:29 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BxJYywpm"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 46003C43330;
+	Wed,  3 Apr 2024 17:19:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712164770;
-	bh=1s7e/iUP+fl2GBm1UpjFeevJLSutEOfjvsGAu3dHY6k=;
+	s=k20201202; t=1712164774;
+	bh=KGum2UiFM/XeeIttcKMIY9uAmatsd+1YLL7DOdMp7+8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=OYjvBBC0T8viwe7HErrdbrggZYno+SZBClskogs/PVY8+MOhiQH8fYkRKHxy+tdC8
-	 OkMzZcizBy900siNb+KyZFZ3nDYpkBwNGgH/4g6ZazxfV9L0+XVtNkofYvSWRes6So
-	 Tu3cWsafPyhlr/ECVTb/fRuPpJqdsDEaDlXA6hFHnTPrLBTQ/uv4tyKkPV4BqY4Rf2
-	 CjnYmkwGXN/niAbo+h8pxE5IG8VjNgmeEkPxv+de0v+F98lgqFJODUU8bs7lZXm+Tp
-	 K0le17efAetLz3U1n1xNgq7rK5tFGoE8+KZwZASHrg8ynjFOVZHTzKshbfhumcoUd0
-	 nECzg81XrJRgA==
+	b=BxJYywpmra78Gjn9DYEa57C4jiRZo5Fw9WEcSfmnjczIo32MIM+OXGHiTZmiX3dkS
+	 JID+bJjLG29Bukx6kheSDjeFa1uPFkjBFWkqvKkANLXdjg8IorgnFCNmr+TL9VJB0C
+	 wbIyHITEzW+zR2oFAyKPEOx4xLlokq5r+2Fb4ia/KXpo2mUcIN3cYEP7KqPhGVukz4
+	 OYb/XtVkat2kuwqVSkN+9FNuleLeAnEj3WcnEDKYb2rZzvGC1vj+1ZwX8iPCQgDQm6
+	 FKX0hT0IX0kmz7qVBaPOEimjB3fIsHxbznMkAeop5twpf6NQgTEaCCBvfLNbE6lPyI
+	 s6ZoRwsrQ5tMg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Chancel Liu <chancel.liu@nxp.com>,
-	Zhipeng Wang <zhipeng.wang_1@nxp.com>,
-	Mark Brown <broonie@kernel.org>,
+Cc: Aleksandr Burakov <a.burakov@rosalinux.ru>,
+	Helge Deller <deller@gmx.de>,
 	Sasha Levin <sashal@kernel.org>,
-	lgirdwood@gmail.com,
-	perex@perex.cz,
-	tiwai@suse.com,
-	linux-sound@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.1 10/15] ASoC: soc-core.c: Skip dummy codec when adding platforms
-Date: Wed,  3 Apr 2024 13:18:54 -0400
-Message-ID: <20240403171909.345570-10-sashal@kernel.org>
+	FlorianSchandinat@gmx.de,
+	linux-fbdev@vger.kernel.org,
+	dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 6.1 12/15] fbdev: viafb: fix typo in hw_bitblt_1 and hw_bitblt_2
+Date: Wed,  3 Apr 2024 13:18:56 -0400
+Message-ID: <20240403171909.345570-12-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240403171909.345570-1-sashal@kernel.org>
 References: <20240403171909.345570-1-sashal@kernel.org>
@@ -54,40 +52,45 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.1.84
 Content-Transfer-Encoding: 8bit
 
-From: Chancel Liu <chancel.liu@nxp.com>
+From: Aleksandr Burakov <a.burakov@rosalinux.ru>
 
-[ Upstream commit 23fb6bc2696119391ec3a92ccaffe50e567c515e ]
+[ Upstream commit bc87bb342f106a0402186bcb588fcbe945dced4b ]
 
-When pcm_runtime is adding platform components it will scan all
-registered components. In case of DPCM FE/BE some DAI links will
-configure dummy platform. However both dummy codec and dummy platform
-are using "snd-soc-dummy" as component->name. Dummy codec should be
-skipped when adding platforms otherwise there'll be overflow and UBSAN
-complains.
+There are some actions with value 'tmp' but 'dst_addr' is checked instead.
+It is obvious that a copy-paste error was made here and the value
+of variable 'tmp' should be checked here.
 
-Reported-by: Zhipeng Wang <zhipeng.wang_1@nxp.com>
-Signed-off-by: Chancel Liu <chancel.liu@nxp.com>
-Link: https://msgid.link/r/20240305065606.3778642-1-chancel.liu@nxp.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Found by Linux Verification Center (linuxtesting.org) with SVACE.
+
+Signed-off-by: Aleksandr Burakov <a.burakov@rosalinux.ru>
+Signed-off-by: Helge Deller <deller@gmx.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/soc-core.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/video/fbdev/via/accel.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/sound/soc/soc-core.c b/sound/soc/soc-core.c
-index a409fbed8f34c..6a4101dc15a54 100644
---- a/sound/soc/soc-core.c
-+++ b/sound/soc/soc-core.c
-@@ -1020,6 +1020,9 @@ int snd_soc_add_pcm_runtime(struct snd_soc_card *card,
- 			if (!snd_soc_is_matching_component(platform, component))
- 				continue;
+diff --git a/drivers/video/fbdev/via/accel.c b/drivers/video/fbdev/via/accel.c
+index 0a1bc7a4d7853..1e04026f08091 100644
+--- a/drivers/video/fbdev/via/accel.c
++++ b/drivers/video/fbdev/via/accel.c
+@@ -115,7 +115,7 @@ static int hw_bitblt_1(void __iomem *engine, u8 op, u32 width, u32 height,
  
-+			if (snd_soc_component_is_dummy(component) && component->num_dai)
-+				continue;
-+
- 			snd_soc_rtd_add_component(rtd, component);
- 		}
- 	}
+ 	if (op != VIA_BITBLT_FILL) {
+ 		tmp = src_mem ? 0 : src_addr;
+-		if (dst_addr & 0xE0000007) {
++		if (tmp & 0xE0000007) {
+ 			printk(KERN_WARNING "hw_bitblt_1: Unsupported source "
+ 				"address %X\n", tmp);
+ 			return -EINVAL;
+@@ -260,7 +260,7 @@ static int hw_bitblt_2(void __iomem *engine, u8 op, u32 width, u32 height,
+ 		writel(tmp, engine + 0x18);
+ 
+ 		tmp = src_mem ? 0 : src_addr;
+-		if (dst_addr & 0xE0000007) {
++		if (tmp & 0xE0000007) {
+ 			printk(KERN_WARNING "hw_bitblt_2: Unsupported source "
+ 				"address %X\n", tmp);
+ 			return -EINVAL;
 -- 
 2.43.0
 
