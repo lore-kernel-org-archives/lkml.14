@@ -1,119 +1,175 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 161761411DB;
-	Wed,  3 Apr 2024 10:43:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51062433AD;
+	Wed,  3 Apr 2024 10:44:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712140985; cv=none; b=fTUAHbNaCtWw4zZSYQzdst7kSY8JBH0oFczdQc5RTJFyIitLM7ix8/+BZtJRzqoTbVNbNOEEp9vgAOWgh35R/nT2SEkI4jQVI5nwWypNzdAmsllpSz6VMiDcq8pTBUPQf/cXdbmVtqylT+QFWcaBgID1Ph4dEAxsgNaf0Vf/enE=
+	t=1712141045; cv=none; b=QwQkDKjuEpZIjMHB4hFsekh9sDjEm2qDVGS3PGldb+tpyFiLK6me9IQ5nqZYGmN10Tgxi1sYs0U+KUahsZeB2KAstV/H1ET42yiZKdMndfFidGNZ0LodpsqtX6ht8W5ADM1FUEwAJviKfPVnjxbGZY/qtiAqo4OPkyIOsyXIPA8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712140985; c=relaxed/simple;
-	bh=tWU2BU/VIih2YxAqvdx1kb5sfcozOkwpSjAqB11L+t8=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ZOJFYA/fNMJw2+leq9+PczAq2kgczxEoOt9Xff0H49CLF48BE7x4hjF6oX01OUH2LafXvar/8BbFWljyZ7G4y+Z2R2GXp+1HJEX6StDr8C+R7xBfGhTtqIARsr/wui+j+l4ZUcRs+Enn+jEvLDnIS6p+PVc3xY5O+PDXua3cIFg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=YIfJ2HSc; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1712141045; c=relaxed/simple;
+	bh=gFVgV8VnIJkjPewJOuua6XWcrrzgQB0ahlVwO9D7s08=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=CLZTZEAIiPlG7IFzkF/Thh6LBMffTh4O4w/6/GbaCwgjtJDROVwVSmu2ujYn2/bJ7DW/QqsaHNKn/wxj0VjXkgxYuCPSHxteEAl+KQZCvF6ghWH1iDzleU4dVxsjjsl96KaFqp1kaToNx0j2b0y3/EoaYHu3O8z2UgeNppBHLSU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kqv1XO6/; arc=none smtp.client-ip=192.198.163.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="YIfJ2HSc"
-Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 4337KYhi010215;
-	Wed, 3 Apr 2024 10:43:00 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	from:to:subject:date:message-id:in-reply-to:references
-	:mime-version:content-transfer-encoding:content-type; s=
-	qcppdkim1; bh=GRKvny6x6M4OyXmACjGVGBDoz6g3KofbC8eaFeoyW5A=; b=YI
-	fJ2HScmBWfuZsLYpCwXxB2sOMOyUM3w+uziXTKj3mExkw0dYghjoHTmol3D6jQZT
-	jYtfav4HGNG2YAHfhUgmvz6SOTcs3E8GnMEk/Zf3Rc8jFHj2EEFw/hyuSb2TwQxT
-	RJlRXL0hCWEnDV+d10i6w5UXPo+kuEBiVUZfhv8X+AmoWntM0ErHXc3ZOSO9e15H
-	cDQsh+uqQnHIib2jgUd52qAtFj64/zWs1x53MVX7XabCUkfPed7Mtc1+1B9tEjh6
-	Xz034qniEOzi0clGBq/YyWz7dB4070/nkPdg1X9oK0yZtysfqzYpvD0EaPNQUzQ/
-	WuYoyw+csM5e1dNba6IA==
-Received: from nasanppmta02.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3x92hb0eam-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 03 Apr 2024 10:42:59 +0000 (GMT)
-Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
-	by NASANPPMTA02.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 433AgxYR014810
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 3 Apr 2024 10:42:59 GMT
-Received: from hu-varada-blr.qualcomm.com (10.80.80.8) by
- nasanex01b.na.qualcomm.com (10.46.141.250) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.4; Wed, 3 Apr 2024 03:42:54 -0700
-From: Varadarajan Narayanan <quic_varada@quicinc.com>
-To: <andersson@kernel.org>, <konrad.dybcio@linaro.org>,
-        <mturquette@baylibre.com>, <sboyd@kernel.org>, <robh@kernel.org>,
-        <krzk+dt@kernel.org>, <conor+dt@kernel.org>, <djakov@kernel.org>,
-        <dmitry.baryshkov@linaro.org>, <quic_varada@quicinc.com>,
-        <quic_anusha@quicinc.com>, <linux-arm-msm@vger.kernel.org>,
-        <linux-clk@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-pm@vger.kernel.org>
-Subject: [PATCH v7 5/5] arm64: dts: qcom: ipq9574: Add icc provider ability to gcc
-Date: Wed, 3 Apr 2024 16:12:20 +0530
-Message-ID: <20240403104220.1092431-6-quic_varada@quicinc.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240403104220.1092431-1-quic_varada@quicinc.com>
-References: <20240403104220.1092431-1-quic_varada@quicinc.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kqv1XO6/"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1712141044; x=1743677044;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=gFVgV8VnIJkjPewJOuua6XWcrrzgQB0ahlVwO9D7s08=;
+  b=kqv1XO6/jE3QAq96Y1dUPF/V+hncVfDZ0b5boI8aDShPnewRZWYD+NSQ
+   0R6P+OfMHGq0+PpmhY7B6FJa/VAzGDQrqP97oGyR4KtS76cHg61ipEKMi
+   yq9rj1VkxLJsmE+eycT01nqQ00urIb8h7d5NQ+1trS02hkiYPLALn7p5b
+   msn6htThA84T0RAieeMlX8MERozl6aLrUlunsHjeViIVc8BUD42oyDNCq
+   SPXdR8/3LkH3Zu6II49saTCV2fvwR5d7v86A983dMIiOQOVa+OcQjJz7K
+   u7iPr3rD+EeUx1TApUHYdu/yxlWjUH4lDOzy0LDT24qGkdz4ZGoah4LYs
+   A==;
+X-CSE-ConnectionGUID: m/gP52CeSF6dal/sMK+SqA==
+X-CSE-MsgGUID: SLHEopTtS9yYtBrRqcrIog==
+X-IronPort-AV: E=McAfee;i="6600,9927,11032"; a="10331690"
+X-IronPort-AV: E=Sophos;i="6.07,177,1708416000"; 
+   d="scan'208";a="10331690"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2024 03:40:50 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,11032"; a="937084845"
+X-IronPort-AV: E=Sophos;i="6.07,177,1708416000"; 
+   d="scan'208";a="937084845"
+Received: from kuha.fi.intel.com ([10.237.72.185])
+  by fmsmga001.fm.intel.com with SMTP; 03 Apr 2024 03:40:45 -0700
+Received: by kuha.fi.intel.com (sSMTP sendmail emulation); Wed, 03 Apr 2024 13:40:45 +0300
+Date: Wed, 3 Apr 2024 13:40:45 +0300
+From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+To: "Christian A. Ehrhardt" <lk@c--e.de>
+Cc: linux-kernel@vger.kernel.org,
+	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+	Diogo Ivo <diogo.ivo@tecnico.ulisboa.pt>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Prashant Malani <pmalani@chromium.org>,
+	Jameson Thies <jthies@google.com>,
+	Abhishek Pandit-Subedi <abhishekpandit@chromium.org>,
+	Neil Armstrong <neil.armstrong@linaro.org>,
+	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>,
+	Samuel =?utf-8?B?xIxhdm9q?= <samuel@cavoj.net>,
+	linux-usb@vger.kernel.org
+Subject: Re: [PATCH 3/3] usb: typec: ucsi_acpi: Remove Dell quirk
+Message-ID: <Zg0yLXfVa0wmA2GZ@kuha.fi.intel.com>
+References: <20240327224554.1772525-1-lk@c--e.de>
+ <20240327224554.1772525-4-lk@c--e.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01b.na.qualcomm.com (10.46.141.250)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: ZKYd1kVV_UJKBG-uucpiuwN6okylxd7W
-X-Proofpoint-ORIG-GUID: ZKYd1kVV_UJKBG-uucpiuwN6okylxd7W
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-04-03_09,2024-04-01_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=988 mlxscore=0
- clxscore=1015 adultscore=0 spamscore=0 lowpriorityscore=0 phishscore=0
- malwarescore=0 priorityscore=1501 bulkscore=0 suspectscore=0
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2403210001 definitions=main-2404030073
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240327224554.1772525-4-lk@c--e.de>
 
-IPQ SoCs dont involve RPM in managing NoC related clocks and
-there is no NoC scaling. Linux itself handles these clocks.
-However, these should not be exposed as just clocks and align
-with other Qualcomm SoCs that handle these clocks from a
-interconnect provider.
+On Wed, Mar 27, 2024 at 11:45:54PM +0100, Christian A. Ehrhardt wrote:
+> The Dell quirk from ucsi_acpi.c. The quirk is no longer
+> necessary as we no longer send lone connector change acks.
+> 
+> Signed-off-by: Christian A. Ehrhardt <lk@c--e.de>
 
-Hence include icc provider capability to the gcc node so that
-peripherals can use the interconnect facility to enable these
-clocks.
+Reviewed-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
 
-Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Signed-off-by: Varadarajan Narayanan <quic_varada@quicinc.com>
----
- arch/arm64/boot/dts/qcom/ipq9574.dtsi | 2 ++
- 1 file changed, 2 insertions(+)
+> ---
+>  drivers/usb/typec/ucsi/ucsi_acpi.c | 53 +-----------------------------
+>  1 file changed, 1 insertion(+), 52 deletions(-)
+> 
+> diff --git a/drivers/usb/typec/ucsi/ucsi_acpi.c b/drivers/usb/typec/ucsi/ucsi_acpi.c
+> index cc03a49c589c..8d112c3edae5 100644
+> --- a/drivers/usb/typec/ucsi/ucsi_acpi.c
+> +++ b/drivers/usb/typec/ucsi/ucsi_acpi.c
+> @@ -23,7 +23,6 @@ struct ucsi_acpi {
+>  	void *base;
+>  	struct completion complete;
+>  	unsigned long flags;
+> -#define UCSI_ACPI_SUPPRESS_EVENT	0
+>  #define UCSI_ACPI_COMMAND_PENDING	1
+>  #define UCSI_ACPI_ACK_PENDING		2
+>  	guid_t guid;
+> @@ -129,49 +128,6 @@ static const struct ucsi_operations ucsi_zenbook_ops = {
+>  	.async_write = ucsi_acpi_async_write
+>  };
+>  
+> -/*
+> - * Some Dell laptops don't like ACK commands with the
+> - * UCSI_ACK_CONNECTOR_CHANGE but not the UCSI_ACK_COMMAND_COMPLETE
+> - * bit set. To work around this send a dummy command and bundle the
+> - * UCSI_ACK_CONNECTOR_CHANGE with the UCSI_ACK_COMMAND_COMPLETE
+> - * for the dummy command.
+> - */
+> -static int
+> -ucsi_dell_sync_write(struct ucsi *ucsi, unsigned int offset,
+> -		     const void *val, size_t val_len)
+> -{
+> -	struct ucsi_acpi *ua = ucsi_get_drvdata(ucsi);
+> -	u64 cmd = *(u64 *)val;
+> -	u64 dummycmd = UCSI_GET_CAPABILITY;
+> -	int ret;
+> -
+> -	if (cmd == (UCSI_ACK_CC_CI | UCSI_ACK_CONNECTOR_CHANGE)) {
+> -		cmd |= UCSI_ACK_COMMAND_COMPLETE;
+> -
+> -		/*
+> -		 * The UCSI core thinks it is sending a connector change ack
+> -		 * and will accept new connector change events. We don't want
+> -		 * this to happen for the dummy command as its response will
+> -		 * still report the very event that the core is trying to clear.
+> -		 */
+> -		set_bit(UCSI_ACPI_SUPPRESS_EVENT, &ua->flags);
+> -		ret = ucsi_acpi_sync_write(ucsi, UCSI_CONTROL, &dummycmd,
+> -					   sizeof(dummycmd));
+> -		clear_bit(UCSI_ACPI_SUPPRESS_EVENT, &ua->flags);
+> -
+> -		if (ret < 0)
+> -			return ret;
+> -	}
+> -
+> -	return ucsi_acpi_sync_write(ucsi, UCSI_CONTROL, &cmd, sizeof(cmd));
+> -}
+> -
+> -static const struct ucsi_operations ucsi_dell_ops = {
+> -	.read = ucsi_acpi_read,
+> -	.sync_write = ucsi_dell_sync_write,
+> -	.async_write = ucsi_acpi_async_write
+> -};
+> -
+>  static const struct dmi_system_id ucsi_acpi_quirks[] = {
+>  	{
+>  		.matches = {
+> @@ -180,12 +136,6 @@ static const struct dmi_system_id ucsi_acpi_quirks[] = {
+>  		},
+>  		.driver_data = (void *)&ucsi_zenbook_ops,
+>  	},
+> -	{
+> -		.matches = {
+> -			DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
+> -		},
+> -		.driver_data = (void *)&ucsi_dell_ops,
+> -	},
+>  	{ }
+>  };
+>  
+> @@ -199,8 +149,7 @@ static void ucsi_acpi_notify(acpi_handle handle, u32 event, void *data)
+>  	if (ret)
+>  		return;
+>  
+> -	if (UCSI_CCI_CONNECTOR(cci) &&
+> -	    !test_bit(UCSI_ACPI_SUPPRESS_EVENT, &ua->flags))
+> +	if (UCSI_CCI_CONNECTOR(cci))
+>  		ucsi_connector_change(ua->ucsi, UCSI_CCI_CONNECTOR(cci));
+>  
+>  	if (cci & UCSI_CCI_ACK_COMPLETE &&
+> -- 
+> 2.40.1
 
-diff --git a/arch/arm64/boot/dts/qcom/ipq9574.dtsi b/arch/arm64/boot/dts/qcom/ipq9574.dtsi
-index c5abadf94975..0aba4c60e850 100644
---- a/arch/arm64/boot/dts/qcom/ipq9574.dtsi
-+++ b/arch/arm64/boot/dts/qcom/ipq9574.dtsi
-@@ -8,6 +8,7 @@
- 
- #include <dt-bindings/clock/qcom,apss-ipq.h>
- #include <dt-bindings/clock/qcom,ipq9574-gcc.h>
-+#include <dt-bindings/interconnect/qcom,ipq9574.h>
- #include <dt-bindings/interrupt-controller/arm-gic.h>
- #include <dt-bindings/reset/qcom,ipq9574-gcc.h>
- #include <dt-bindings/clock/qcom,ipq9574-nsscc.h>
-@@ -457,6 +458,7 @@ gcc: clock-controller@1800000 {
- 			#clock-cells = <1>;
- 			#reset-cells = <1>;
- 			#power-domain-cells = <1>;
-+			#interconnect-cells = <1>;
- 		};
- 
- 		tcsr_mutex: hwlock@1905000 {
 -- 
-2.34.1
-
+heikki
