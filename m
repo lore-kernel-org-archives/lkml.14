@@ -1,78 +1,105 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C46B153597;
-	Wed,  3 Apr 2024 18:00:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9427F152E07
+	for <linux-kernel@vger.kernel.org>; Wed,  3 Apr 2024 18:00:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712167218; cv=none; b=TLQRuQkHb5ovvLO4h0v5/aiwryfVMPbiz8ocWOJjmL2X+ChrqJ7y/89ILhA2vy9WM+rPKoyLHiKoVRGCpfeD/cQTVuuko0bG2FMmWQMIsopvC7vCA85I6F4XEf+ju0oIKlxcY/pV4XN/WVWs2/6noQutTJ2B0oszJsZRw2CfdU0=
+	t=1712167231; cv=none; b=K5YvDCKMR9A4R0G2l4jRL2QTaYXxv2NH3+2sK//rIgGvI6FcxynaXpQ8U1/4aVyaZMkF8wqjgeq0vXGv0s45/zohAG2fLpU/IJeE06t8cVlhLQAZxe7BuJ+vUEg1uZoE3svPFcxViZzZ8T9fVHbEHSRpWF5q9Yt+/nN1yVKYpzw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712167218; c=relaxed/simple;
-	bh=VqGrJmgUqHkU2achafaEzEb7xtlhP6ee/PmCCK6EUE0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kVn78zxOawH2hQvlFX5yJrg8VN4GQNSnezhdJT678dSOgBZhIKAAdk/6ENc6vfR/0yIbRnuihcGJ4nF+VB4APXGRGHCnjcJzvwLIawyUuFboC5Q8ckV11hukIdj32wNOI8EhP3kes0l6G22493KbT+pSMf+4nOf3PxlXVhIjaME=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=dynqlT9j; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	s=arc-20240116; t=1712167231; c=relaxed/simple;
+	bh=ESa69bYpC8ijbm9tNxC6w6CKWUsMZjRn0lH9e8ZPGiE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=LAb/9pEB/6HN8bp2Rq2LGAiMy2E47w2UqHcVQRx8fdqtMSjUt+n4BkL70wEZjXf1grGTusUKkiXt8gKEw+w17C/QILj44eFYyxJQviWkSdY3HF7nrSiWkxrCNeBnIVDDkeP4aacA38QEp/owQ+Umf1BjXMY75V7+Pw0t2KyzUF0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=gCna67lP; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="dynqlT9j"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 890A540E01A2;
-	Wed,  3 Apr 2024 18:00:08 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id 5d1qRHPWTj3J; Wed,  3 Apr 2024 18:00:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1712167204; bh=OHMjQM2vpY+riS5KwQTOhuL5twECwVPIrdHEm8svf7E=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=dynqlT9jQmHLQR6wkVHMyVBZc0pG6NkJz7KMh8IALQ8wVBVVajFqXVDkSq3iBB4Rl
-	 +iGBE710dkVHlrN6FQByE5C/fqdzHlhuTQEMGNiPYIvruXIH0XG51T29mchRS9+ham
-	 /TBMyPcBauV/4akz8loNGrtYzBBCV0YJwzsUc6jEn8B0bPystKvZugHwsppWGPYnzh
-	 jTUfSB9Zbr+Ibhj2lbUfbaX2Qjfbm50WOADKiVpEt9Pcz/53m+xl/i0Np66gM6uSz0
-	 yfA2w4bYj6eHpilZ6ubSO0E+JaNqVOQxASHDjvll45EGnhrYD+7LoPxNpXv5PNLvlI
-	 1MHodiuF0Sauge5Pcrd2lAzaAoLaP9VNWQycJ2SYm+JfTb/6n9uaUs0GqW21v9S/7a
-	 SuIX/i7J4H3Ui/glh8Pi7DlywlQGiSu3X1tAJkk0W56g4fUUy2VB4Cvumv/KWWeeqs
-	 VIVYf0hyXG9fFZ3hz193dm0wjeucJNzsJZTwfqCqiBx7n7huuEGKTzJ+vgRR/TUMDs
-	 Ei4tU7o9CslwuLJnSwzw2jy9aeQuddxMZeulYV6b4pQ26DrW3fCgJKri9Gtr3z4QE9
-	 Wu+IvQe1CcZuPOHgWfk/MfknWWVnIVyyBSEH2ta2vw9UD4+BgCBH/BXMqn8dHq1uxB
-	 IpDPTsIWPIABrbKmrpNOLbpU=
-Received: from zn.tnic (p5de8ecf7.dip0.t-ipconnect.de [93.232.236.247])
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gCna67lP"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1712167228;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=NOWzWds8cVKHQdlc47r4G0/HKNJbns4J1HuoS3oJPb0=;
+	b=gCna67lPAH03volTn4GnBj/XGNP89gBzAgmzo+OjKbxHuawuF8dvG5PdjGVPvy/T7gVce7
+	slNIDuG9amH5BONPRqs9yPHORrjAeTDm0LaNnhYo0F/bQfqWQEs63wom3vwCjYm/Q7Pynb
+	J4lltnmTDNof+wr5mfRhWfSeVjkWiPQ=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-628-TrN30FAFMYOnb6-VNGny2Q-1; Wed, 03 Apr 2024 14:00:25 -0400
+X-MC-Unique: TrN30FAFMYOnb6-VNGny2Q-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.rdu2.redhat.com [10.11.54.3])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 7198C40E019C;
-	Wed,  3 Apr 2024 17:59:56 +0000 (UTC)
-Date: Wed, 3 Apr 2024 19:59:50 +0200
-From: Borislav Petkov <bp@alien8.de>
-To: Nikolay Borisov <nik.borisov@suse.com>
-Cc: X86 ML <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-	KVM <kvm@vger.kernel.org>, Ashish Kalra <ashish.kalra@amd.com>,
-	Joerg Roedel <joro@8bytes.org>, Michael Roth <michael.roth@amd.com>,
-	Tom Lendacky <thomas.lendacky@amd.com>
-Subject: Re: [PATCH 2/5] x86/alternatives: Catch late X86_FEATURE modifiers
-Message-ID: <20240403175950.GKZg2ZFnCaE1BeRpTQ@fat_crate.local>
-References: <20240327154317.29909-1-bp@alien8.de>
- <20240327154317.29909-3-bp@alien8.de>
- <540c12cb-f42d-469d-b3de-a52155298dda@suse.com>
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 86597101A535;
+	Wed,  3 Apr 2024 18:00:23 +0000 (UTC)
+Received: from fedora.redhat.com (unknown [10.22.9.72])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 69BE71121313;
+	Wed,  3 Apr 2024 18:00:23 +0000 (UTC)
+From: Audra Mitchell <audra@redhat.com>
+To: corbet@lwn.net
+Cc: tj@kernel.org,
+	jiangshanlai@gmail.com,
+	linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	raquini@redhat.com,
+	rdunlap@infradead.org,
+	aros@gmx.com
+Subject: [PATCH] Documentation/core-api: Update events_freezable_power references.
+Date: Wed,  3 Apr 2024 14:00:22 -0400
+Message-ID: <20240403180022.16248-1-audra@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <540c12cb-f42d-469d-b3de-a52155298dda@suse.com>
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.3
 
-On Wed, Mar 27, 2024 at 05:57:01PM +0200, Nikolay Borisov wrote:
-> nit: While cleaning this bit mind if you also switch alternatives_patched to
-> a bool?
+Due to commit 8318d6a6362f ("workqueue: Shorten
+events_freezable_power_efficient name") we now have some stale
+references in the workqeueue documentation, so updating those
+references accordingly.
 
-Busy as hell right now. But I take patches ontop. :-)
+Signed-off-by: Audra Mitchell <audra@redhat.com>
+---
+ Documentation/core-api/workqueue.rst | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
+diff --git a/Documentation/core-api/workqueue.rst b/Documentation/core-api/workqueue.rst
+index ed73c612174d..bcc370c876be 100644
+--- a/Documentation/core-api/workqueue.rst
++++ b/Documentation/core-api/workqueue.rst
+@@ -671,7 +671,7 @@ configuration, worker pools and how workqueues map to the pools: ::
+   events_unbound           unbound  9  9 10 10  8
+   events_freezable         percpu   0  2  4  6
+   events_power_efficient   percpu   0  2  4  6
+-  events_freezable_power_  percpu   0  2  4  6
++  events_freezable_pwr_ef  percpu   0  2  4  6
+   rcu_gp                   percpu   0  2  4  6
+   rcu_par_gp               percpu   0  2  4  6
+   slub_flushwq             percpu   0  2  4  6
+@@ -694,7 +694,7 @@ Use tools/workqueue/wq_monitor.py to monitor workqueue operations: ::
+   events_unbound              38306     0      0.1       -       7       -       -
+   events_freezable                0     0      0.0       0       0       -       -
+   events_power_efficient      29598     0      0.2       0       0       -       -
+-  events_freezable_power_        10     0      0.0       0       0       -       -
++  events_freezable_pwr_ef        10     0      0.0       0       0       -       -
+   sock_diag_events                0     0      0.0       0       0       -       -
+ 
+                               total  infl  CPUtime  CPUhog CMW/RPR  mayday rescued
+@@ -704,7 +704,7 @@ Use tools/workqueue/wq_monitor.py to monitor workqueue operations: ::
+   events_unbound              38322     0      0.1       -       7       -       -
+   events_freezable                0     0      0.0       0       0       -       -
+   events_power_efficient      29603     0      0.2       0       0       -       -
+-  events_freezable_power_        10     0      0.0       0       0       -       -
++  events_freezable_pwr_ef        10     0      0.0       0       0       -       -
+   sock_diag_events                0     0      0.0       0       0       -       -
+ 
+   ...
 -- 
-Regards/Gruss,
-    Boris.
+2.44.0
 
-https://people.kernel.org/tglx/notes-about-netiquette
