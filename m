@@ -1,40 +1,37 @@
-Received: from szxga05-in.huawei.com (szxga05-in.huawei.com [45.249.212.191])
+Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CD3F6CDC2
-	for <linux-kernel@vger.kernel.org>; Wed,  3 Apr 2024 08:27:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.191
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5A216FE2A
+	for <linux-kernel@vger.kernel.org>; Wed,  3 Apr 2024 08:27:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712132826; cv=none; b=AFdhHAR26Y1g4XXXiW2PwMdedlIke86B7fkoWm1r8CbVCe9K3QHpufqt4kwOggecFHvyDNIRxt3RDnveaJQY9tkGnQmVG3KpNjo3j1HpKIcRzGviOSlnh3SGfaKAMPMj7dGEkLteKBbjDUCslSx2q2f+O2z/KcW9m/5DJ8+xrbg=
+	t=1712132829; cv=none; b=NIkNKwgHT/j5G9ZdBAujvk7JJlLC81J4KXkwTaPSikLADgMvM6xbCpiJshrr4YPRu7u9YxgjT58lGeHNpRzgMNANnHK/+X7vkW/IH/vW6N5hvCjl7NSwnR9hXOEvqt2FpEbdsvkKVJ9/o/grxONxlGFjdJGedNH0emXAG9Sq4+w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712132826; c=relaxed/simple;
-	bh=kugs8ESmC1pdY+BI2C3ANeHjBPI72ZntlRu16FxY+qk=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=s4gXZ9LpVudKzvvQF0j2N+UafAU4iChuuoZ2Il/j1ToUSVHd/T8Bmu1KprC2kdzKkozFe/K1jcDJn4tOB3+Ydc4UGfY5HXmHHQOiZPa6VRm4Bp4jnZSTZCN9+yqU7/ce6ISPFNF7gbjJQG9cOLJ8pb1Gu4eRZFsGecU6tnLDVfY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.191
+	s=arc-20240116; t=1712132829; c=relaxed/simple;
+	bh=Bk4xlZ9YVF21xjG7yoZVHEcBlCbnDiO2HyLUyJ4kfUo=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=nZgeJYj5OfqO2hMUSI10GStWLtDGb+Mh9ZrZCrlKrP1GC9zku3vuhJnYSUIiGIAPMyonRJE6EO5XA9/vF4eFdnidwFa7tfoMQY+qgjG61xafzXkgbRdVp/Kq9OCI5pRm0tp2UhKGfdYOy46cCpu/YZ2PdHG4saofzvUSBsu8SR8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.44])
-	by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4V8d7z1mhcz1h5X0;
-	Wed,  3 Apr 2024 16:24:15 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.19.88.194])
+	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4V8d7k3KdmzXkbf;
+	Wed,  3 Apr 2024 16:24:02 +0800 (CST)
 Received: from kwepemm600004.china.huawei.com (unknown [7.193.23.242])
-	by mail.maildlp.com (Postfix) with ESMTPS id AC148140133;
-	Wed,  3 Apr 2024 16:27:00 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id E53121402C7;
+	Wed,  3 Apr 2024 16:26:59 +0800 (CST)
 Received: from localhost.localdomain (10.28.79.22) by
  kwepemm600004.china.huawei.com (7.193.23.242) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Wed, 3 Apr 2024 16:27:00 +0800
+ 15.1.2507.35; Wed, 3 Apr 2024 16:26:59 +0800
 From: Huisong Li <lihuisong@huawei.com>
 To: <xuwei5@hisilicon.com>
 CC: <linux-kernel@vger.kernel.org>, <soc@kernel.org>,
 	<linux-arm-kernel@lists.infradead.org>, <Jonathan.Cameron@Huawei.com>,
 	<liuyonglong@huawei.com>, <lihuisong@huawei.com>
-Subject: [PATCH 2/2] soc: hisilicon: kunpeng_hccs: replace MAILBOX dependency with PCC
-Date: Wed, 3 Apr 2024 16:19:35 +0800
-Message-ID: <20240403081935.24308-3-lihuisong@huawei.com>
+Subject: [PATCH 0/2] soc: hisilicon: kunpeng_hccs: add dependency and enhance verification
+Date: Wed, 3 Apr 2024 16:19:33 +0800
+Message-ID: <20240403081935.24308-1-lihuisong@huawei.com>
 X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20240403081935.24308-1-lihuisong@huawei.com>
-References: <20240403081935.24308-1-lihuisong@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -46,29 +43,17 @@ Content-Type: text/plain
 X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
  kwepemm600004.china.huawei.com (7.193.23.242)
 
-The kunpeng_hccs driver depands on Platform Communication Channel Driver.
-If PCC driver is not enabled, this driver fails to probe.
-Seeing as how PCC driver depands on MAILBOX. so replace MAILBOX dependency
-with PCC.
+Add PCC dependency and enhance verification during the probe phase.
 
-Signed-off-by: Huisong Li <lihuisong@huawei.com>
----
- drivers/soc/hisilicon/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Huisong Li (2):
+  soc: hisilicon: kunpeng_hccs: Add the check for obtaining complete
+    port attribute
+  soc: hisilicon: kunpeng_hccs: replace MAILBOX dependency with PCC
 
-diff --git a/drivers/soc/hisilicon/Kconfig b/drivers/soc/hisilicon/Kconfig
-index 0ab688af308f..4b0a099b28cc 100644
---- a/drivers/soc/hisilicon/Kconfig
-+++ b/drivers/soc/hisilicon/Kconfig
-@@ -6,7 +6,7 @@ menu "Hisilicon SoC drivers"
- config KUNPENG_HCCS
- 	tristate "HCCS driver on Kunpeng SoC"
- 	depends on ACPI
--	depends on MAILBOX
-+	depends on PCC
- 	depends on ARM64 || COMPILE_TEST
- 	help
- 	  The Huawei Cache Coherence System (HCCS) is a multi-chip
+ drivers/soc/hisilicon/Kconfig        | 2 +-
+ drivers/soc/hisilicon/kunpeng_hccs.c | 6 ++++++
+ 2 files changed, 7 insertions(+), 1 deletion(-)
+
 -- 
 2.22.0
 
