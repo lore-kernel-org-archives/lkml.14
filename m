@@ -1,38 +1,72 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B27D973506
-	for <linux-kernel@vger.kernel.org>; Wed,  3 Apr 2024 11:20:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03A4873506;
+	Wed,  3 Apr 2024 11:21:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712143247; cv=none; b=Zc7QThrhFjRCYPuFsbEx38wnAZJ4DPrhYjgXH9aiU/Kc3ytdupQdWGxHlZQJ35LyDkX1h2HEN0UNmgLy/gfwLIdSrSaLG5f0QZ8dwOQ5DweDVGmYyLuJJAr4RoGO0/ONPhhfAlsmOM4/AJkcyF1jX+kWvMtIJ3A7VUdkIhE9Rgc=
+	t=1712143275; cv=none; b=tG/m0yvnXEYd987PITA0XXaLSBa0pJpD+GWEfplxZwPA+uRIuekDQF8uB43Xr8vqXKpcyUekEYc8cxV1OVIojkRTjvMQl2VfJc0qvAy1ZmoOWkPUM6CoAw7B+EwPsDre5h1nb9t8PTCblfTIj9TI6tOoDhWCP9OaU2QxDsQ8f4Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712143247; c=relaxed/simple;
-	bh=S6kayVt4WvqiDLd16zycrRONGPF78Qx9a0MeQPkyGFg=;
+	s=arc-20240116; t=1712143275; c=relaxed/simple;
+	bh=Jy+6GamBtq0hLgPSbZPDgX1ADQqu8LXnkOWPtwPWOJE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=evOkM84Lu4gVXMxaRgOgv10u8JKtNIE9BfJfanMb/adffQt7b/tNr0HrnwTHkT0iEEreWm+Tky8AP9rOGZVCRnVLMINUc27stAnEei9M3fPfvWY7C4qLJlaMbcSiRb5vaFRkBbplgWgMJjY9lt/0pBdsYaGKAwzOVwOJmC8HoHQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 132641007;
-	Wed,  3 Apr 2024 04:21:16 -0700 (PDT)
-Received: from FVFF77S0Q05N (unknown [10.57.16.212])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 84A8A3F64C;
-	Wed,  3 Apr 2024 04:20:41 -0700 (PDT)
-Date: Wed, 3 Apr 2024 12:20:38 +0100
-From: Mark Rutland <mark.rutland@arm.com>
-To: linux-kernel@vger.kernel.org
-Cc: agordeev@linux.ibm.com, anil.s.keshavamurthy@intel.com,
-	aou@eecs.berkeley.edu, bp@alien8.de, catalin.marinas@arm.com,
-	dave.hansen@linux.intel.com, davem@davemloft.net, gor@linux.ibm.com,
-	hca@linux.ibm.com, jarkko@kernel.org, jcalvinowens@gmail.com,
-	linux-arm-kernel@lists.infradead.org, mhiramat@kernel.org,
-	mingo@redhat.com, mpe@ellerman.id.au, naveen.n.rao@linux.ibm.com,
-	palmer@dabbelt.com, paul.walmsley@sifive.com, tglx@linutronix.de,
-	will@kernel.org
-Subject: Re: [PATCH 4/4] kprobes: Remove core dependency on modules
-Message-ID: <Zg07hrb_RMUu2tq7@FVFF77S0Q05N>
-References: <20240326163624.3253157-1-mark.rutland@arm.com>
- <20240326163624.3253157-5-mark.rutland@arm.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=SNFFaw5iEPXIE7ovD7+N/WrNytLQ90mdQuIrKDVSqQyMyaOKh8WmueOrw4WuafsA0SrElHsfU5MjrsHmQr4PlWX8o/DAC5afQxJyz6hP6rfH6zmiKuzTXWfvkbhBWWJHaZ1880z492R0nN3GEBKDQDWVeNufq8r4BzSHtCZOjjY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=f/dqBOHw; arc=none smtp.client-ip=209.85.208.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="f/dqBOHw"
+Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-56e0a8733d8so456717a12.2;
+        Wed, 03 Apr 2024 04:21:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1712143272; x=1712748072; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=Jy+6GamBtq0hLgPSbZPDgX1ADQqu8LXnkOWPtwPWOJE=;
+        b=f/dqBOHwN8My/Kojoh4LPW4ngaGiOdP+bydMi0QiKpoHpqD0fKFfEpbKRDxMlTMBvR
+         c3pDyLh+g2VUCpCYR9FaWSEAPy0dL6UbuTukAAzUHe/Ea8V8HbRphc4tdNaGyLq9M5cI
+         uChpnz9tJAtfT7mRzJxH3Xa2X+RwPkUpsCjJviXiQbPdvD1CcNvpTevBuNqAK/XRQNf2
+         /2KK+vIx8v145SRKQlljfOQ6C7coDjPrUEXpOwUevOl5TANCsyS7FMz6C6kaGPPZ864J
+         ajQCuxO4PqWCihWlRbPZDX4A3Nwcg5l/3wMxn8FeFJsmX+MpnHZ/D/+F0hT7Js5cVH4y
+         Xs/g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712143272; x=1712748072;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Jy+6GamBtq0hLgPSbZPDgX1ADQqu8LXnkOWPtwPWOJE=;
+        b=L0bAW2+n9Fr91DFFrJr7LL+yyGOSsVrmDSL2TRANEltRMenT5IjH9o6IwNyzR2ecCv
+         4VyPCYdBcokCBbK9Q5uCZa1OQmdwoYgZEWZVlksYQdY1VA7B0dkHUkclhO2zTh0DbI73
+         bDj6NU9/9cSuckAeb+rGBoti0J2jXD4OxLpVGbLQhA4Ws6rfA0UeuJE6Cj+6ZtEb/BJg
+         f17dDbJC6byVKadRYvP2Xc3eunQ9TtkSuklbKEB6X1P81sNpMJ77hJLubZa0w9IP8BAM
+         JfjhyoS+3FQCCH9QrcL2hGmz9GCzvNgpvbMgR6+pfBF7eXYgPdnI10JOCnwKYcSth8eU
+         6Ceg==
+X-Forwarded-Encrypted: i=1; AJvYcCU40WkEfPsB1oFNPFUUt9mFqZTtLfZQXzA9IxDnPAZAt6riFFP4345H2Z/8EWnVUHVHUPd7bB/2xwFfd3Z0ShpwD4VPKwKixqATmjtNd8wgNH7RovcGR08fzrzzTc0WpGtMh+zi
+X-Gm-Message-State: AOJu0YwS1L8kgKCtSplUdtEF6d97Qq0KBNMXdT4Ul/F1YbHFOuUcViPu
+	ILSg/GVk4o+XRTte5f7Aoy7AedYJehznSrm631kMy5iNKe1W6bMY
+X-Google-Smtp-Source: AGHT+IFmaulq//kjt9mR8n46ACLE6OYiDvcuC/qqqpFWh3/kElE10ARa3IH+VSgoRPdFICK8OkzpEQ==
+X-Received: by 2002:a50:a6d7:0:b0:56d:eef3:31af with SMTP id f23-20020a50a6d7000000b0056deef331afmr2362447edc.38.1712143272229;
+        Wed, 03 Apr 2024 04:21:12 -0700 (PDT)
+Received: from skbuf ([2a02:2f04:d700:2000::b2c])
+        by smtp.gmail.com with ESMTPSA id p12-20020a50c94c000000b005689bfe2688sm7869709edh.39.2024.04.03.04.21.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 03 Apr 2024 04:21:11 -0700 (PDT)
+Date: Wed, 3 Apr 2024 14:21:08 +0300
+From: Vladimir Oltean <olteanv@gmail.com>
+To: Oleksij Rempel <o.rempel@pengutronix.de>
+Cc: "David S. Miller" <davem@davemloft.net>, Andrew Lunn <andrew@lunn.ch>,
+	Eric Dumazet <edumazet@google.com>,
+	Florian Fainelli <f.fainelli@gmail.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Woojung Huh <woojung.huh@microchip.com>,
+	Arun Ramadoss <arun.ramadoss@microchip.com>, kernel@pengutronix.de,
+	linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+	UNGLinuxDriver@microchip.com,
+	=?utf-8?B?U8O4cmVu?= Andersen <san@skov.dk>
+Subject: Re: [PATCH net-next v1 0/8] net: dsa: microchip: ksz8: refactor FDB
+ dump path
+Message-ID: <20240403112108.tdxwyyih5kt4fhp7@skbuf>
+References: <20240402131339.1525330-1-o.rempel@pengutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,61 +75,11 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240326163624.3253157-5-mark.rutland@arm.com>
+In-Reply-To: <20240402131339.1525330-1-o.rempel@pengutronix.de>
 
-On Tue, Mar 26, 2024 at 04:36:24PM +0000, Mark Rutland wrote:
-> From: Jarkko Sakkinen <jarkko@kernel.org>
-> 
-> Tracing with kprobes while running a monolithic kernel is currently
-> impossible because KPROBES depends on MODULES. While this dependency is
-> necessary when KPROBES_USE_MODULE_ALLOC=y, all the other module-specific
-> code only exist to handle the case when MODULES=y, and can be hidden
-> behind ifdeffery.
-> 
-> Add the necessary ifdeffery, and remove the dependency on MODULES=N when
-> KPROBES_USE_MODULE_ALLOC=n.
-> 
-> Currently this allows kprobes to be used when CONFIG_MODULES=n on arm64
-> and riscv, and other architectures can enable support by implementing
-> their own kprobes_alloc_insn_page() and kprobes_free_insn_page() which
-> do not depend on MODULES.
-> 
-> Signed-off-by: Jarkko Sakkinen <jarkko@kernel.org>
-> Link: https://lore.kernel.org/all/20240326012102.27438-1-jarkko@kernel.org/
-> [Mark: Remove execmem changes, depend on !KPROBES_USE_MODULE_ALLOC]
-> Signed-off-by: Mark Rutland <mark.rutland@arm.com>
-> Cc: Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>
-> Cc: David S. Miller <davem@davemloft.net>
-> Cc: Jarkko Sakkinen <jarkko@kernel.org>
-> Cc: Masami Hiramatsu <mhiramat@kernel.org>
-> Cc: Naveen N. Rao <naveen.n.rao@linux.ibm.com>
-> ---
->  arch/Kconfig                |  2 +-
->  kernel/kprobes.c            | 12 +++++++++++-
->  kernel/trace/trace_kprobe.c | 15 +++++++++++++--
->  3 files changed, 25 insertions(+), 4 deletions(-)
-> 
-> diff --git a/arch/Kconfig b/arch/Kconfig
-> index 85bb59f7b8c07..cf43de9ffb5b9 100644
-> --- a/arch/Kconfig
-> +++ b/arch/Kconfig
-> @@ -52,7 +52,7 @@ config GENERIC_ENTRY
->  
->  config KPROBES
->  	bool "Kprobes"
-> -	depends on MODULES
-> +	depends on MODULES || !KPROBES_USE_MODULE_ALLOC
+On Tue, Apr 02, 2024 at 03:13:31PM +0200, Oleksij Rempel wrote:
+> Refactor FDB dump code path for Microchip KSZ8xxx series. This series
+> mostly makes some cosmetic reworks and allows to forward errors detected
+> by the regmap.
 
-Whoops; that should be:
-
-	depends on MODULES || HAVE_KPROBES_ALLOC
-
-... with similar fixups in the commit message to describe HAVE_KPROBES_ALLOC
-rather than KPROBES_USE_MODULE_ALLOC (which does not exist in any version of
-the series that got sent to the list).
-
-I'll send a v2 with that fixed (and the other changes from Jarkko's v7 base
-patch) once I've locally tested that for architectures with and without
-HAVE_KPROBES_ALLOC.
-
-Mark.
+Reviewed-by: Vladimir Oltean <olteanv@gmail.com>
