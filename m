@@ -1,108 +1,281 @@
-Received: from mail-vs1-f45.google.com (mail-vs1-f45.google.com [209.85.217.45])
+Received: from mail-lj1-f181.google.com (mail-lj1-f181.google.com [209.85.208.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0BD4148FE8;
-	Wed,  3 Apr 2024 15:40:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EE0414A0A4
+	for <linux-kernel@vger.kernel.org>; Wed,  3 Apr 2024 15:40:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712158837; cv=none; b=ar1lCuvfR9IbpgvN36uvEUzAfQSTFYE48pXS7+cLz9LkeFgTdwZGi+ZRvxRzYAOSLqWaZMduf1VH45ENZRzcnOMKEYyH5MINazXbc7b0vzCdfn2yOR4MCtWRsCb9nS4v7k0nnOJLBefoJ+ZVmOxeVeIQOacSvVfdJNy+ZVkXtbY=
+	t=1712158855; cv=none; b=rDTAXFxvSBJ65eLpSXxNC9zu9pOjQNm62WpdFa8P7zuBxgc3nOlYanf2teZWqUDegFKHTY3kBLCqTIwdayXlucpJi3DtXKJuWWaBkCmqTRy/RJLAhXxXe9GiufgFDsLkDqf/4cTBo5lLzNj7nQ7vnBszWT51xpU4uumnOLAlFuw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712158837; c=relaxed/simple;
-	bh=iwmjTT/6rEUQaG5l9ogq24KennjjjlW/3aoTHTjys/E=;
+	s=arc-20240116; t=1712158855; c=relaxed/simple;
+	bh=71HGpz3bu1XDU0ChqyX7V270qylnWQI/CQmlprroP9Y=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=TJakUkJ+vSKxvAhAW1vY0gmociF4buCdUSIKyn/J8aDFWOp0SPH08rKNgrHYhY/m6CsF293BFVyWWPJMTTBqHbqgOF3Y5Q2w6ajV3tNkwbf2kE4LWbL72vOfJwLZLe9ztG24J+i+OKgdBFEJpeSsWqwVHXgdlyzmUc5mkkyss1I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=j51gbiUb; arc=none smtp.client-ip=209.85.217.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 To:Cc:Content-Type; b=ZW5nbTocZJMoy6DZKTZMydCKc+x6juoG+8kkK1JE1BeMQBQU3YYqJ5qmEdCH4Qa7StjE3wy9OAEEYemgNciBOl5+eASPrCnyK5q/jBYliJdHVh2tGEOFD0jH0bHwspBaXvNwa4s44D3lPC1+N99+Fb4wISMgJ88GMUSkMmFvihw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=JNVpZrHT; arc=none smtp.client-ip=209.85.208.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="j51gbiUb"
-Received: by mail-vs1-f45.google.com with SMTP id ada2fe7eead31-476cec93716so1960937137.2;
-        Wed, 03 Apr 2024 08:40:35 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="JNVpZrHT"
+Received: by mail-lj1-f181.google.com with SMTP id 38308e7fff4ca-2d4360ab3daso86061401fa.3
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Apr 2024 08:40:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1712158835; x=1712763635; darn=vger.kernel.org;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1712158851; x=1712763651; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=fyFZ+qeRNtDYji6u+zsHWjmzts/cBXhgw6vv+4+a4/I=;
-        b=j51gbiUbOdIsDiCnCS05iT6+MwQm0WUbCo7TEoVGn2CviSWnIqboWyjyoHH4zHKg+V
-         OhbRt7qDmimepmAIKjoNLx2mI7WorF7H+ig2sMFNEZPZtiS2Ocanr5gnmcVX2lRn6AS+
-         3VqhMi/v6beuAJazyS1meP+QdyzMN1vVWQ75zhsDyRjCO8n1wjdcgsolIjXtmzV+rRhf
-         MScZjxNDxbf9x8z38Dn1VQJbxC9u2Exu2RmHww143h0x/OV58jqMK+G3AGbBfJrbVOSt
-         HPKf6FeghND3SDCisKU/SgIqWrHuCI8JSHDnEhXWMvTCd6YXPSFFXpfzRgABoQuDYcFy
-         ADew==
+        bh=sEfL+KtRzP5VGoQFCUbE4sa/jrpJAy8sRsW3/DJwOpQ=;
+        b=JNVpZrHTqiLRern+TappnwIRBenKhCr+Y2IYUg7PhBk05gU7mq0L4T/WHaSyd5jccu
+         10v4wIZhHPCg0VsmbkfsfgiHhxxNAGf0wfZy57hDz3XzCGdVLWW3yXRdBalUyWRG5FQ6
+         ltd1bhNa5sSuMN+7atN2FFID+eVW0UTC+zRkLUwHNZOrsRdPXvxjS7Tx/Q9dZ0RkJ8df
+         PTfiYQ+Yw6XfLUQozIKf15QAEL5GkZ/5TC5D/hiGv90rtRzUmu07P98Op22lpjoL22s/
+         C0gS/n7nSNcJUeYQ6wPJOYZUbvdRE6++Yvdr8Vyzr2HCwCIDv+j8tPaaNy+lVf6hGSyo
+         h4/g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712158835; x=1712763635;
+        d=1e100.net; s=20230601; t=1712158851; x=1712763651;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=fyFZ+qeRNtDYji6u+zsHWjmzts/cBXhgw6vv+4+a4/I=;
-        b=gFezZ8omN4BNHzGevXQ+eQw4kd9lW8mtTkP6YhxswpJNFTodJXiSoNULJxFVKYckrd
-         B+ZpVT5K2HC2f8iYgl4CkL+YRpA4P12XEzzjpX/X2XLZl9a7JoF+mosnr1iLKFwMGh1s
-         vBom4tcV/f3eOFHzBPirllcGfk0lRpSn3vQg0NHHkAaB+NipIZgDziEzWEBbnrcyjfUW
-         49vvoICBS0/RpnvNCiwnrYp0Cp4zNmAfBnTpJD1uUtrHTF9nfKlmKhQ8KPj0QLVlFRqZ
-         lrksHv7fGM/kaijohTkJYAMGzzkE+QJW3KOb5/QFOcPenxLrc9xoQrc4TSMmXXpLwlPh
-         OQEg==
-X-Forwarded-Encrypted: i=1; AJvYcCX4LgWsLrXck1fCy81iDsuUBg0MIXIdc2YFGDo2pasL8VqdzxUYah7PMmelDisOzJnTyJnYmuVbuQN9YEc00v2WlIZQERBeERqOXBbhIvnViKKGcdNEQtPqQBaGJ02Ft4YxLwO7GXeo
-X-Gm-Message-State: AOJu0YynCP+XMroFsQkM1phdIDRiqQJcIK66VSgSkFx9+AkPHXvl6iVL
-	MfT1tr1aNn27uXKEKtIuHL4H8LswGbTUsqsi10pVcFDALHrHBmi1qJPqDQ6gzzKIh4FPPBAGXjs
-	kc0TkgaSe7BLKDG3no0pKOJ6on/w=
-X-Google-Smtp-Source: AGHT+IFFn7bvTeZOH9kjBg5JoFvzOQY0G6JUyk5XmsTPCIgTSDqlT4WG3B5RcLFYTdJxFWbOJpzWbXvBOh6LejVNhuA=
-X-Received: by 2002:a05:6102:5124:b0:479:b553:ce16 with SMTP id
- bm36-20020a056102512400b00479b553ce16mr1935617vsb.20.1712158834832; Wed, 03
- Apr 2024 08:40:34 -0700 (PDT)
+        bh=sEfL+KtRzP5VGoQFCUbE4sa/jrpJAy8sRsW3/DJwOpQ=;
+        b=EO9SyD1tCGwMNfwF8D7IdxH/xzHJLrVDJ9XLkpKnnNOJKyh5OJt5LgMekhNoCEgzKJ
+         qYfYs/UR1wyeKSSoZ7n2Y8q7ruSb1WvwfduWsthzLl4JOz4QfF+RlhVZm/kvE19P2DPa
+         yetbY9R+6tbs5YRy3asTZbvfbfIcwzbnd7S27K+K8Dd3V6mkIHHjYQJw42Hoybl0Nzx2
+         ulekt75lXMUDs8XIMfmjYj/YuiMPwRnmueKhvsvtrWGE/p8o917t7e0vCkFQWHWyNPuH
+         BOlVv8x0lKv/r/PwkFDypQMQQLGrmMjrTKfu8QpeqGXC/4ifrlY527/uVpggf1fjVCSl
+         DRJw==
+X-Forwarded-Encrypted: i=1; AJvYcCXL5hb+uL3fjL6LKwLVivfBXcYFYC8EesrumrGyWpWYazo/sgnr6cURi1vLJHUmGtfzJaRKRatAOkxsnH7+mWwQ/Qu4409WlkHlzszl
+X-Gm-Message-State: AOJu0YxovLX+0qrHbU5/kF2GB89RGiz5+W2aPldNazX8cBNFyz4MqMAG
+	yublU9vZq09Li0aiAvkmzYpCZVQdDJ3vXmBCEtUVwEK+3wAxubD9VcCXUNsMg7HIbTpnkDOX3bT
+	4M8JbVv3ZG00DZPPw8SKXKI3PuzqekBsZrXZGexiSF7NNfEaJ+PM=
+X-Google-Smtp-Source: AGHT+IFPoZ5LKOh6VIQyxGEDW1MJSsgvKWiqYEr33OpuO+5YGw2wi8BAE5xhL2PmHMYV6XsvdtZC/+qNSzSfLhGHfNs=
+X-Received: by 2002:a2e:8004:0:b0:2d6:c7eb:8837 with SMTP id
+ j4-20020a2e8004000000b002d6c7eb8837mr1883ljg.46.1712158851383; Wed, 03 Apr
+ 2024 08:40:51 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240403143852.13175-1-apais@linux.microsoft.com> <2024040314-unbuckled-botanist-1afc@gregkh>
-In-Reply-To: <2024040314-unbuckled-botanist-1afc@gregkh>
-From: Allen <allen.lkml@gmail.com>
-Date: Wed, 3 Apr 2024 08:40:23 -0700
-Message-ID: <CAOMdWS+Z1ZS2VPBXiYbtOyYBuCCx1i8M1aVMYHGhMRTv259xaA@mail.gmail.com>
-Subject: Re: [PATCH v2] USB: Convert from tasklet to BH workqueue
-To: Greg KH <gregkh@linuxfoundation.org>
-Cc: Allen Pais <apais@linux.microsoft.com>, linux-kernel@vger.kernel.org, tj@kernel.org, 
-	keescook@chromium.org, duncan.sands@free.fr, stern@rowland.harvard.edu, 
-	mathias.nyman@intel.com, oneukum@suse.com, linux-usb@vger.kernel.org
+References: <20240401-ad4111-v1-0-34618a9cc502@analog.com> <20240401-ad4111-v1-1-34618a9cc502@analog.com>
+ <CAMknhBHeKAQ45=5-dL1T1tv-mZcPN+bNo3vxWJYgWpEPE+8p3Q@mail.gmail.com> <25cb3514-1281-49a8-9e9b-40ead9b050dc@gmail.com>
+In-Reply-To: <25cb3514-1281-49a8-9e9b-40ead9b050dc@gmail.com>
+From: David Lechner <dlechner@baylibre.com>
+Date: Wed, 3 Apr 2024 10:40:39 -0500
+Message-ID: <CAMknhBHu8DveBgV3cor8RP2Up4Zs-+QRx7S2aoHZ_3iKiErVjg@mail.gmail.com>
+Subject: Re: [PATCH 1/6] dt-bindings: adc: ad7173: add support for ad411x
+To: "Ceclan, Dumitru" <mitrutzceclan@gmail.com>
+Cc: dumitru.ceclan@analog.com, Lars-Peter Clausen <lars@metafoo.de>, 
+	Michael Hennerich <Michael.Hennerich@analog.com>, Jonathan Cameron <jic23@kernel.org>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
+	Conor Dooley <conor+dt@kernel.org>, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Apr 3, 2024 at 8:02=E2=80=AFAM Greg KH <gregkh@linuxfoundation.org>=
- wrote:
+On Wed, Apr 3, 2024 at 2:43=E2=80=AFAM Ceclan, Dumitru <mitrutzceclan@gmail=
+.com> wrote:
 >
-> On Wed, Apr 03, 2024 at 02:38:52PM +0000, Allen Pais wrote:
-> > The only generic interface to execute asynchronously in the BH context =
-is
-> > tasklet; however, it's marked deprecated and has some design flaws. To
-> > replace tasklets, BH workqueue support was recently added. A BH workque=
-ue
-> > behaves similarly to regular workqueues except that the queued work ite=
-ms
-> > are executed in the BH context.
-> >
-> > This patch converts drivers/usb/* from tasklet to BH workqueue.
-> >
-> > Based on the work done by Tejun Heo <tj@kernel.org>
-> > Branch: https://git.kernel.org/pub/scm/linux/kernel/git/tj/wq.git for-6=
-.10
-> >
-> > Changes in v2:
-> >  - Update code comments and commit message.
-> >       Suggested by Greg K h
-> >  - Retain local variable name(hcd.c).
-> >       Suggested by Alan Stern
-> >
-> > Link to v1:https://lore.kernel.org/all/20240327160314.9982-1
-> > -apais@linux.microsoft.com/T/#m2ec7868fbf102f1551ebe4c92d200848b94af3b1
+> On 01/04/2024 22:37, David Lechner wrote:
+> > On Mon, Apr 1, 2024 at 10:10=E2=80=AFAM Dumitru Ceclan via B4 Relay
+> > <devnull+dumitru.ceclan.analog.com@kernel.org> wrote:
+> >>
+> >> From: Dumitru Ceclan <dumitru.ceclan@analog.com>
 >
-> Why the line-wrap?
+> ...
 >
-> And v2 info should all go below the --- line, right?
+> >>      properties:
+> >>        reg:
+> >> +        description:
+> >> +          Reg values 16-19 are only permitted for ad4111/ad4112 curre=
+nt channels.
+> >>          minimum: 0
+> >> -        maximum: 15
+> >> +        maximum: 19
+> >
+> > This looks wrong. Isn't reg describing the number of logical channels
+> > (# of channel config registers)?
+> >
+> > After reviewing the driver, I see that > 16 is used as a way of
+> > flagging current inputs, but still seems like the wrong way to do it.
+> > See suggestion below.
+> >
 >
-> v3 perhaps?
+> This was a suggestion from Jonathan, maybe I implemented it wrong.
+> Other alternative that came to my mind: attribute "adi,current-channel".
 
- I missed that bit. I will send out a v3.
+Having a boolean flag like this would make more sense to me if we
+don't agree that the suggestion below is simpler.
 
-Thank you.
+> >>
+> >>        diff-channels:
+> >> +        description:
+> >> +          For using current channels specify only the positive channe=
+l.
+> >> +            (IIN2+, IIN2=E2=88=92) -> diff-channels =3D <2 0>
+> >
+> > I find this a bit confusing since 2 is already VIN2 and 0 is already
+> > VIN0. I think it would make more sense to assign unique channel
+> > numbers individually to the negative and positive current inputs.
+> > Also, I think it makes sense to use the same numbers that the
+> > registers in the datasheet use (8 - 11 for negative and 12 to 15 for
+> > positive).
+> >
+> > So: (IIN2+, IIN2=E2=88=92) -> diff-channels =3D <13 10>
+> >
+> >
+> It would mean for the user to look in the datasheet at the possible
+> channel INPUT configurations values, decode the bit field into two
+> integer values and place it here (0110101010) -> 13 10. This is
+> cumbersome for just choosing current input 2.
+
+It could be documented in the devicetree bindings, just as it is done
+in adi,ad4130.yaml so that users of the bindings don't have to
+decipher the datasheet.
+
+>
+> >> +
+> >> +          Family AD411x supports a dedicated VCOM voltage input.
+> >> +          To select it set the second channel to 16.
+> >> +            (VIN2, VCOM) -> diff-channels =3D <2 16>
+> >
+> > The 411x datasheets call this pin VINCOM so calling it VCOM here is a
+> > bit confusing.
+> >
+>
+> Sure, I'll rename to VINCOM.
+>
+> > Also, do we need to add a vincom-supply to get this voltage? Or is it
+> > safe to assume it is always connected to AVSS? The datasheet seems to
+> > indicate that the latter is the case. But then it also has this
+> > special case (at least for AD4116, didn't check all datasheets)
+> > "VIN10, VINCOM (single-ended or differential pair)". If it can be used
+> > as part of a fully differential input, we probably need some extra
+> > flag to indicate that case.
+> >
+>
+> I cannot see any configuration options for these use cases. All inputs
+> are routed to the same mux and routed to the differential positive and
+> negative ADC inputs.
+>
+> "VIN10, VINCOM (single-ended or differential pair)" the only difference
+> between these two use cases is if you connected VINCOM to AVSS (with
+> unipolar coding) or not with bipolar encoding. The channel is still
+> measuring the difference between the two selected inputs and comparing
+> to the selected reference.
+>
+> > Similarly, do we need special handling for ADCIN15 on AD4116? It has a
+> > "(pseudo differential or differential pair)" notation that other
+> > inputs don't. In other words, it is more like VINCOM than it is to the
+> > other ADCINxx pins. So we probably need an adcin15-supply for this pin
+> > to properly get the right channel configuration. I.e. the logic in the
+> > IIO driver would be if adcin15-supply is present, any channels that
+> > use this input are pseudo-differential, otherwise any channels that
+> > use it are fully differential.
+> >
+>
+> I cannot seem to understand what would a adcin15-supply be needed for.
+> This input, the same as all others, enters the mux and is routed to
+> either positive or negative input of the ADC.
+>
+> The voltage on the ADCIN15 pin is not important to the user, just the
+> difference in voltage between that pin and the other one selected.
+>
+
+These suggestions come from some recent discussion about
+pseudo-differential vs. fully differential inputs (e.g. search the IIO
+mailing list for AD7380).
+
+So what I suggested here might be more technically correct according
+to what I got out of that discussion. But for this specific case, I
+agree it is good enough to just treat all inputs as always
+fully-differential to keep things from getting too unwieldy.
+
+> >>          items:
+> >>            minimum: 0
+> >>            maximum: 31
+> >> @@ -166,7 +191,6 @@ allOf:
+> >>    - $ref: /schemas/spi/spi-peripheral-props.yaml#
+> >>
+> >>    # Only ad7172-4, ad7173-8 and ad7175-8 support vref2
+> >> -  # Other models have [0-3] channel registers
+> >
+> > Did you forget to remove
+> >
+> >             reg:
+> >               maximum: 3
+> >
+> > from this if statement that this comment is referring to?
+> >
+> >
+>
+>
+> Other way around, forgot in a previous patch to remove the comment.
+> I'll move this change to a precursor patch.
+>
+> >>    - if:
+> >>        properties:
+> >>          compatible:
+> >> @@ -187,6 +211,37 @@ allOf:
+> >>                  - vref
+> >>                  - refout-avss
+> >>                  - avdd
+> >> +
+> >> +  - if:
+> >> +      properties:
+> >> +        compatible:
+> >> +          contains:
+> >> +            enum:
+> >> +              - adi,ad4114
+> >> +              - adi,ad4115
+> >> +              - adi,ad4116
+> >> +              - adi,ad7173-8
+> >> +              - adi,ad7175-8
+> >> +    then:
+> >> +      patternProperties:
+> >> +        "^channel@[0-9a-f]$":
+> >> +          properties:
+> >> +            reg:
+> >> +              maximum: 15
+> >
+> > As with the previous reg comment, this if statement should not be
+> > needed since maximum should not be changed to 19.
+> >
+>
+> We'll see what is the best approach regarding the current channels,
+> perhaps the one you mentioned in the later reply with always configuring
+> like the temp channel.
+>
+> >> +
+> >> +  - if:
+> >> +      properties:
+> >> +        compatible:
+> >> +          contains:
+> >> +            enum:
+> >> +              - adi,ad7172-2
+> >> +              - adi,ad7175-2
+> >> +              - adi,ad7176-2
+> >> +              - adi,ad7177-2
+> >> +    then:
+> >> +      patternProperties:
+> >> +        "^channel@[0-9a-f]$":
+> >> +          properties:
+> >>              reg:
+> >>                maximum: 3
+> >
+> > It looks to me like AD7172-4 actually has 8 possible channels rather
+> > than 16. So it would need a special condition as well. But that is a
+> > bug in the previous bindings and should therefore be fixed in a
+> > separate patch.
+>
+> It is addressed already in the binding:
+> "
+>   - if:
+>       properties:
+>         compatible:
+>           contains:
+>             const: adi,ad7172-4
+> [...]
+>               maximum: 7
+> "
+
+Ah, I missed it hiding with adi,reference-select overrides.
