@@ -1,133 +1,142 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D62CF14E2F9;
-	Wed,  3 Apr 2024 17:56:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 424221DFD6;
+	Wed,  3 Apr 2024 17:57:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712167003; cv=none; b=hWRXeBHlW+jK8qgmm4uzhesitpzseJt4DWg6KzCwczj0yvaXG7jqHVw3wL3jYr/ATmQ0X224keOz/zLWUzzNtC1psMtk/VJ4BmWlZdgwrbu+DOuzQJT8kOiyexQZJJITXgd0mSrRRAgYDj3r2764m9fFuFfkJaRoS382PWbBzH8=
+	t=1712167046; cv=none; b=UE24PMMsTN6kWzCDeoiSl2SB4eJE+pgjlOSTQehEUwdY9yNOZAsLLMfhq2bIkL811whDWtdDpfjpq+rSInMb2hiwBUJoQhK8yA8z3qMumbE8oCRjUrxNDjBArBTbWWqvHyu3GPNWMObuvBQZIZBGqsr92/9xcJK2FjH/AnjBv+I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712167003; c=relaxed/simple;
-	bh=IFDV1xb914cHALB3Pl3nf2SP1HjqdcJS3i04MrHq1c0=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=DM2dQNYIB99shzcIX5B2c6KYuyLmP8EGDEVzYMBuJJ6OB8EZB0apYwWlLL/pO9P6C7dn7W+PSD3ynOzDbnRWr+j+6WDKoy0tNq61fLe9C93zT2Jo+VRhdGDAKvb7zHynu1oDxQ5z1bUkiioHb41LSH7d1TdoGidn6FVKCKHogOg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=NmDDOIpl; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1712167046; c=relaxed/simple;
+	bh=d+ZUMUm1KAc8rkyq6ddYBLNSuuaZzHkrsJHewdp8CGc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=YClaAySQJpoP1jcxva1w3EXgG/Lnfr/oIZxo3nC/FfRpbad9fDTsgN1Jyynd210RCh9TlUEhj5NPa7AZbVYf/2WDHMcUHLI/hONw1+pedrd3bnqaz8vlS/dDGfoh6EqwjoL4ceiUdEEvniCbdRhY7Ts5xbxsA3Y8X/3HByZ9Knw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ybs71K4C; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="NmDDOIpl"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CDA2AC433C7;
-	Wed,  3 Apr 2024 17:56:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1712167003;
-	bh=IFDV1xb914cHALB3Pl3nf2SP1HjqdcJS3i04MrHq1c0=;
-	h=From:To:Cc:Subject:Date:From;
-	b=NmDDOIplg9Yo/WqbBOuE0eVjopT1v1ikqn8H45deJhZRopFA0WUqez8r6NquUsUuf
-	 12BcNMy/9XrERdZVc7SYe1THid1zPjFenM3lhFIujgKsMp2uSeFVSLVVJZrTgXX+eK
-	 APu06ohtkUnPUFvrOTHs5czfVyquY+SxhbugBWPc=
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: stable@vger.kernel.org
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	patches@lists.linux.dev,
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ybs71K4C"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1EF24C433F1;
+	Wed,  3 Apr 2024 17:57:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1712167045;
+	bh=d+ZUMUm1KAc8rkyq6ddYBLNSuuaZzHkrsJHewdp8CGc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Ybs71K4CaHKCzezTzi0rrbC9vZx7neRUWRqt0aX2rOcjTwvDoefIzHsDVku6laGq7
+	 uMP5K+CXvfXbI5o1I/ywjXvdPXxOWxkisQwEODDMRC1ggUb76Nf5ZnlZ5dYrNaNwAr
+	 H8rBZRb9iAdZGfr1wTRJ8Kw39dNDmcDLFW2juM1zHafyo4Nx3KuQ3ldxH4piv0Cd8w
+	 VU5iHl0yU8wHyQJg2aR4g/w2IKiOwhTK+EDAwgvUt6gjsAPEvZ3YjYVtqp65oAbz9Y
+	 Irsm/lDhIrVYlVVk8QBeI65oL0h5mgEYc7s4WrdLVZN1q12s/YPasYkhGEinwr/fCq
+	 fwxyPPYmRu75w==
+Date: Wed, 3 Apr 2024 10:57:23 -0700
+From: Nathan Chancellor <nathan@kernel.org>
+To: Uros Bizjak <ubizjak@gmail.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	kernel test robot <lkp@intel.com>, oe-kbuild-all@lists.linux.dev,
 	linux-kernel@vger.kernel.org,
-	torvalds@linux-foundation.org,
-	akpm@linux-foundation.org,
-	linux@roeck-us.net,
-	shuah@kernel.org,
-	patches@kernelci.org,
-	lkft-triage@lists.linaro.org,
-	pavel@denx.de,
-	jonathanh@nvidia.com,
-	f.fainelli@gmail.com,
-	sudipm.mukherjee@gmail.com,
-	srw@sladewatkins.net,
-	rwarsow@gmx.de,
-	conor@kernel.org,
-	allen.lkml@gmail.com,
-	broonie@kernel.org
-Subject: [PATCH 6.6 00/11] 6.6.25-rc1 review
-Date: Wed,  3 Apr 2024 19:55:49 +0200
-Message-ID: <20240403175126.839589571@linuxfoundation.org>
-X-Mailer: git-send-email 2.44.0
+	Arjan van de Ven <arjan@linux.intel.com>, x86@kernel.org,
+	Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
+	Sparse Mailing-list <linux-sparse@vger.kernel.org>,
+	"Paul E. McKenney" <paulmck@kernel.org>, llvm@lists.linux.dev
+Subject: Re: arch/x86/include/asm/processor.h:698:16: sparse: sparse:
+ incorrect type in initializer (different address spaces)
+Message-ID: <20240403175723.GA2667607@dev-arch.thelio-3990X>
+References: <CAHk-=wiWhfdc4Sw2VBq_2nL2NDxmZS32xG4P7mBVwABGqUoJnw@mail.gmail.com>
+ <87edcruvja.ffs@tglx>
+ <CAFULd4bVEUBEidTLbHNzRaJbSjXm99yC8LT=jdzFWb7xnuFH7g@mail.gmail.com>
+ <87bk7vuldh.ffs@tglx>
+ <CAFULd4arHT+_fy9_oUNpmsvyfVPGaeB_pdeuqVS3UTpP5R757A@mail.gmail.com>
+ <CAFULd4b0HN6eUJsOW6po8Hf16T3eMhjdKUvw-TS8yncNn-+Vyw@mail.gmail.com>
+ <87bk7ux4e9.ffs@tglx>
+ <CAFULd4aEe2KU=UXEt2=GeLQq2uTSFvydBiwAdSa7B6T61Am=5w@mail.gmail.com>
+ <878r2ywk3k.ffs@tglx>
+ <CAFULd4YG21NdF_qNVBGDtXO6xnaYFeRPvKicB=gpgUUqYE=4jw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: quilt/0.67
-X-stable: review
-X-Patchwork-Hint: ignore
-X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.6.25-rc1.gz
-X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-X-KernelTest-Branch: linux-6.6.y
-X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
-X-KernelTest-Version: 6.6.25-rc1
-X-KernelTest-Deadline: 2024-04-05T17:51+00:00
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAFULd4YG21NdF_qNVBGDtXO6xnaYFeRPvKicB=gpgUUqYE=4jw@mail.gmail.com>
 
-This is the start of the stable review cycle for the 6.6.25 release.
-There are 11 patches in this series, all will be posted as a response
-to this one.  If anyone has any issues with these being applied, please
-let me know.
+On Tue, Apr 02, 2024 at 01:43:00PM +0200, Uros Bizjak wrote:
+> On Mon, Mar 4, 2024 at 8:07 AM Thomas Gleixner <tglx@linutronix.de> wrote:
+> >
+> > On Mon, Mar 04 2024 at 06:42, Uros Bizjak wrote:
+> >
+> > > On Mon, Mar 4, 2024 at 12:49 AM Thomas Gleixner <tglx@linutronix.de> wrote:
+> > >>
+> > >> On Sun, Mar 03 2024 at 21:24, Uros Bizjak wrote:
+> > >> > On Sun, Mar 3, 2024 at 9:21 PM Uros Bizjak <ubizjak@gmail.com> wrote:
+> > >> >> On Sun, Mar 3, 2024 at 9:10 PM Thomas Gleixner <tglx@linutronix.de> wrote:
+> > >> >> > That's so sad because it would provide us compiler based __percpu
+> > >> >> > validation.
+> > >> >>
+> > >> >> Unfortunately, the c compiler can't strip qualifiers, so typeof() is
+> > >> >> of limited use also when const and volatile qualifiers are used.
+> > >> >> Perhaps some extension could be introduced to c standard to provide an
+> > >> >> unqualified type, e.g. typeof_unqual().
+> > >> >
+> > >> > Oh, there is one in C23 [1].
+> > >>
+> > >> Yes. I found it right after ranting.
+> > >>
+> > >> gcc >= 14 and clang >= 16 have support for it of course only when adding
+> > >> -std=c2x to the command line.
+> > >>
+> > >> Sigh. The name space qualifiers are non standard and then the thing
+> > >> which makes them more useful is hidden behind a standard.
+> > >
+> > > With GCC, you can use __typeof_unqual__ (please note underscores)
+> > > without -std=c2x [1]:
+> > >
+> > > "... Alternate spelling __typeof_unqual__ is available in all C modes
+> > > and provides non-atomic unqualified version of what __typeof__
+> > > operator returns..."
+> > >
+> > > Please also see the example in my last post. It can be compiled without -std=...
+> >
+> > With gcc >= 14. Not so with clang...
+> 
+> Please note that clang-17.0.6 currently fails to compile kernel with
+> named address spaces [1]. So perhaps kernel can use __typeof_unqual__
+> (available without -std=c2x) in the hope that clang implements
+> __typeof_unqual__ in one of its next releases, following the examples
+> of GCC [2] and MSVC[3].
 
-Responses should be made by Fri, 05 Apr 2024 17:51:13 +0000.
-Anything received after that time might be too late.
+This is now supported in clang 19.0.0 (main):
 
-The whole patch series can be found in one patch at:
-	https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.6.25-rc1.gz
-or in the git tree and branch at:
-	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.6.y
-and the diffstat can be found below.
+https://github.com/llvm/llvm-project/commit/cc308f60d41744b5920ec2e2e5b25e1273c8704b
 
-thanks,
+I have inquired about applying this to the 18.x series, such that it
+would either make 18.1.3 or 18.1.4, but that is still open for
+discussion.
 
-greg k-h
+I think the error that I mentioned at [1] is resolved with using
+__typeof_unqual__, I tested this diff, which is likely incorrect but
+allows me to continue testing without that warning/error due to -Werror:
 
--------------
-Pseudo-Shortlog of commits:
+diff --git a/arch/x86/include/asm/percpu.h b/arch/x86/include/asm/percpu.h
+index 20696df5d567..fc77c99d2e80 100644
+--- a/arch/x86/include/asm/percpu.h
++++ b/arch/x86/include/asm/percpu.h
+@@ -95,7 +95,7 @@
+ 
+ #endif /* CONFIG_SMP */
+ 
+-#define __my_cpu_type(var)	typeof(var) __percpu_seg_override
++#define __my_cpu_type(var)	__typeof_unqual__(var) __percpu_seg_override
+ #define __my_cpu_ptr(ptr)	(__my_cpu_type(*ptr)*)(__force uintptr_t)(ptr)
+ #define __my_cpu_var(var)	(*__my_cpu_ptr(&(var)))
+ #define __percpu_arg(x)		__percpu_prefix "%" #x
 
-Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-    Linux 6.6.25-rc1
+However, I get a crash in LLVM's backend with that diff applied on top
+of commit 034dd140a6d8 ("Merge branch into tip/master: 'x86/shstk'"),
+which appears to be another tangential issue. I've filed
+https://github.com/ClangBuiltLinux/linux/issues/2013 so that we don't
+lose track of this.
 
-Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-    Revert "workqueue.c: Increase workqueue name length"
-
-Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-    Revert "workqueue: Move pwq->max_active to wq->max_active"
-
-Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-    Revert "workqueue: Factor out pwq_is_empty()"
-
-Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-    Revert "workqueue: Replace pwq_activate_inactive_work() with [__]pwq_activate_work()"
-
-Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-    Revert "workqueue: Move nr_active handling into helpers"
-
-Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-    Revert "workqueue: Make wq_adjust_max_active() round-robin pwqs while activating"
-
-Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-    Revert "workqueue: RCU protect wq->dfl_pwq and implement accessors for it"
-
-Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-    Revert "workqueue: Introduce struct wq_node_nr_active"
-
-Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-    Revert "workqueue: Implement system-wide nr_active enforcement for unbound workqueues"
-
-Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-    Revert "workqueue: Don't call cpumask_test_cpu() with -1 CPU in wq_update_node_max_active()"
-
-Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-    Revert "workqueue: Shorten events_freezable_power_efficient name"
-
-
--------------
-
-Diffstat:
-
- Makefile                  |   4 +-
- include/linux/workqueue.h |  35 +--
- kernel/workqueue.c        | 757 ++++++++--------------------------------------
- 3 files changed, 132 insertions(+), 664 deletions(-)
-
-
+Cheers,
+Nathan
