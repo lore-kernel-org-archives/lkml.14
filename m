@@ -1,107 +1,115 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C60EE14A0B4;
-	Wed,  3 Apr 2024 15:49:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78FA7146A96;
+	Wed,  3 Apr 2024 15:49:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712159368; cv=none; b=n17Vt0m60lcVu8roovDjd7QTYBlJNP16t/V7eNCuC/rFCFgV0khX6Gr/QdFPNTw2bnwNmPanuCfj8K0JTKAlZquB0Ui5fvdaEbUHozFtPErgJWHDWygxN4IWVOVer4ngBa4+vHKcY5C0jAW8FMgeRI/bXVUbipc9ywHXFeqsO9Q=
+	t=1712159367; cv=none; b=fBVZYjRnpzjMwAcAuwk5HEs4uerdXqr0VGtE9c7xkne9JiMozv2iYF/f08wqdkZAsoF0o9xdidi4WTiPwBVYw87OT9Jq7MqetyCReW7PZVtcLv1tMyy+4zMnpDVsRNwtvHPoPdRih69iZMVCIqflDTWEl8zXzxDNBENO7QOydHE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712159368; c=relaxed/simple;
-	bh=ubUVS5S6mpXJBVwqb+wtd1l3uI9l3+kshLrYYVibeGY=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=tcSiwI8EY++YVd/VVscwAea3Li97OsEmI0LXqKZ8bOW+ZssjzfZg7R+YbDucsy4pE0JDXDoMlnSt6QX/RpBDUAmuN+T0o//ihqdKVhQFHXgWVLTcjV3pxwG8pkq+0A3N/7hTbtI0316yk9no8+Z2lCW8O6mYO9N5KbxeTV8XGXA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CFCDC1007;
-	Wed,  3 Apr 2024 08:49:55 -0700 (PDT)
-Received: from e129166.arm.com (unknown [10.57.72.191])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 553313F7B4;
-	Wed,  3 Apr 2024 08:49:22 -0700 (PDT)
-From: Lukasz Luba <lukasz.luba@arm.com>
-To: linux-kernel@vger.kernel.org,
-	linux-pm@vger.kernel.org,
-	rafael@kernel.org
-Cc: lukasz.luba@arm.com,
-	dietmar.eggemann@arm.com,
+	s=arc-20240116; t=1712159367; c=relaxed/simple;
+	bh=UzhIYoxj/GeUq1Zwp8VWt8eQlrVFRAAjBbLXufD7S1A=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=crFPkYf6Osf1uFXoi3kIdz4TET6L/pF73tFvYwzJpfhVkpviCWbRdRL/faTG6i8kp4gsyPFtDpWDXbniisODW0xiGJ0LDHkOFKx8A2e+CCr2QAaWwuxKDHbiuHYWv0r5czF//L6vP+ZVyD2xRgQq2KbPg9TSYRGU7xQLe6stxF8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iokMOfxM; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iokMOfxM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2ECF8C433C7;
+	Wed,  3 Apr 2024 15:49:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1712159367;
+	bh=UzhIYoxj/GeUq1Zwp8VWt8eQlrVFRAAjBbLXufD7S1A=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=iokMOfxMA3K/TB6FKWFIK0O7s2zq9aTtls09nLxeUk6PRr6Z60BQud79hycqKEjQS
+	 F2HF0BeyukIj5qydY11CNYd3p1AQY5H0UJf1+SPKTJYMa91oijQJlPi2iC9x7YoZSv
+	 enYPM4R+oka/GAq9UxpBKwGke/aXce6Xr4CaZbrTt+YooAe/ataCz/2t2Sq7VaY4/W
+	 wSf4CL8M23uZrbYBJHpaKS78mRBqbwWWHDrdXGSS1kIteJSz5cvTJm+kgSTcn2B6DW
+	 G5Kl7+x/QvP2PTALxe6WIXRScUUhaHfwCHbiGSRKSojnp5dBZARsKUiKKCNphr8Jni
+	 C5BjRi7WSaSMg==
+Date: Wed, 3 Apr 2024 16:49:20 +0100
+From: Conor Dooley <conor@kernel.org>
+To: Tan Chun Hau <chunhau.tan@starfivetech.com>
+Cc: "David S . Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Rob Herring <robh+dt@kernel.org>,
+	Emil Renner Berthing <kernel@esmil.dk>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+	Alexandre Torgue <alexandre.torgue@foss.st.com>,
+	Simon Horman <horms@kernel.org>,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	Andrew Halaney <ahalaney@redhat.com>,
+	Jisheng Zhang <jszhang@kernel.org>,
+	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>,
+	Russell King <rmk+kernel@armlinux.org.uk>,
+	Ley Foon Tan <leyfoon.tan@starfivetech.com>,
+	Jee Heng Sia <jeeheng.sia@starfivetech.com>, netdev@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-stm32@st-md-mailman.stormreply.com,
 	linux-arm-kernel@lists.infradead.org,
-	sboyd@kernel.org,
-	nm@ti.com,
-	linux-samsung-soc@vger.kernel.org,
-	daniel.lezcano@linaro.org,
-	viresh.kumar@linaro.org,
-	krzysztof.kozlowski@linaro.org,
-	alim.akhtar@samsung.com,
-	m.szyprowski@samsung.com,
-	mhiramat@kernel.org
-Subject: [PATCH v5 0/4] Update Energy Model after chip binning adjusted voltages
-Date: Wed,  3 Apr 2024 16:49:03 +0100
-Message-Id: <20240403154907.1420245-1-lukasz.luba@arm.com>
-X-Mailer: git-send-email 2.25.1
+	linux-riscv@lists.infradead.org
+Subject: Re: [PATCH v6 1/1] dt-bindings: net: starfive,jh7110-dwmac: Add
+ StarFive JH8100 support
+Message-ID: <20240403-curfew-baked-a0feef40cd92@spud>
+References: <20240403100549.78719-1-chunhau.tan@starfivetech.com>
+ <20240403100549.78719-2-chunhau.tan@starfivetech.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="5QPyn77z4oCLNx4w"
+Content-Disposition: inline
+In-Reply-To: <20240403100549.78719-2-chunhau.tan@starfivetech.com>
 
-Hi all,
 
-This is a follow-up patch aiming to add EM modification due to chip binning.
-The first RFC and the discussion can be found here [1].
+--5QPyn77z4oCLNx4w
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-It uses Exynos chip driver code as a 1st user. The EM framework has been
-extended to handle this use case easily, when the voltage has been changed
-after setup. On my Odroid-xu4 in some OPPs I can observe ~20% power difference.
-According to that data in driver tables it could be up to ~29%.
+On Wed, Apr 03, 2024 at 03:05:49AM -0700, Tan Chun Hau wrote:
+> Add StarFive JH8100 dwmac support.
+> The JH8100 dwmac shares the same driver code as the JH7110 dwmac
+> and has only one reset signal.
+>=20
+> Please refer to below:
+>=20
+>   JH8100: reset-names =3D "stmmaceth";
+>   JH7110: reset-names =3D "stmmaceth", "ahb";
+>   JH7100: reset-names =3D "ahb";
+>=20
+> Example usage of JH8100 in the device tree:
+>=20
+> gmac0: ethernet@16030000 {
+>         compatible =3D "starfive,jh8100-dwmac",
+>                      "starfive,jh7110-dwmac",
+>                      "snps,dwmac-5.20";
+>         ...
+> };
+>=20
+> Signed-off-by: Tan Chun Hau <chunhau.tan@starfivetech.com>
 
-This chip binning is applicable to a lot of SoCs, so the EM framework should
-make it easy to update. It uses the existing OPP and DT information to
-re-calculate the new power values.
+How come you didn't pick up Rob's r-b?
+https://lore.kernel.org/all/20240328204202.GA308290-robh@kernel.org/
 
-It has dependency on Exynos SoC driver tree.
+Thanks,
+Conor.
 
-Changes:
-v5:
-- adjusted aligning of the function arguments in patch 1/4 (Dietmar)
-- adjusted the in-code comment patch 4/4 (Dietmar)
-- added Reviewed-by to all patches (Dietmar)
-v4:
-- added asterisk in the comment section (test robot)
-- change the patch 2/4 header name and use 'Refactor'
-v3:
-- updated header description patch 2/4 (Dietmar)
-- removed 2 sentences from comment and adjusted in patch 3/4 (Dietmar)
-- patch 4/4 re-phrased code comment (Dietmar)
-- collected tags (Krzysztof, Viresh)
-v2:
-- removed 'ret' from error message which wasn't initialized (Christian)
-v1:
-- exported the OPP calculation function from the OPP/OF so it can be
-  used from EM fwk (Viresh)
-- refactored EM updating function to re-use common code
-- added new EM function which can be used by chip device drivers which
-  modify the voltage in OPPs
-RFC is at [1]
+--5QPyn77z4oCLNx4w
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Regards,
-Lukasz Luba
+-----BEGIN PGP SIGNATURE-----
 
-[1] https://lore.kernel.org/lkml/20231220110339.1065505-1-lukasz.luba@arm.com/
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZg16fwAKCRB4tDGHoIJi
+0rVTAPwPbHnemqIv++C11B6NjvmKObocsG2d4g/9l+VTGUcEcwD/dnqiJI0Edddc
+A2TIMXnBN8NBZKR6OjdPOBQe3BmioQI=
+=ysgy
+-----END PGP SIGNATURE-----
 
-Lukasz Luba (4):
-  OPP: OF: Export dev_opp_pm_calc_power() for usage from EM
-  PM: EM: Refactor em_adjust_new_capacity()
-  PM: EM: Add em_dev_update_chip_binning()
-  soc: samsung: exynos-asv: Update Energy Model after adjusting voltage
-
- drivers/opp/of.c                 |  17 +++--
- drivers/soc/samsung/exynos-asv.c |  10 ++-
- include/linux/energy_model.h     |   5 ++
- include/linux/pm_opp.h           |   8 +++
- kernel/power/energy_model.c      | 106 +++++++++++++++++++++++++------
- 5 files changed, 121 insertions(+), 25 deletions(-)
-
--- 
-2.25.1
-
+--5QPyn77z4oCLNx4w--
