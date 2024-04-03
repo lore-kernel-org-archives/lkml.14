@@ -1,84 +1,84 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 612CF136674
-	for <linux-kernel@vger.kernel.org>; Wed,  3 Apr 2024 10:46:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 715BA13A271
+	for <linux-kernel@vger.kernel.org>; Wed,  3 Apr 2024 10:48:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712141219; cv=none; b=BP3xiYhdChiytyOTAvrBZ7dWR0jB1+qXh3vgEpDNVwJ7tsVY79g1Uiv2b9tcEpSgs/fH/ZmyE2L5n4usRgxXMeEQck6NX1xTHciSkkdhZp/y1swWfVPcg+JLzrIewbt6FEE71CzWZGmN/zeUNVIfgxRQmtilbuFQuHmVeDcqQ/c=
+	t=1712141317; cv=none; b=e7E/h7H1cjYQ8WopJ0CPF/RbrcfjklUMCGz2KuwnwcI/9qwCT8yUJCoqCjAsJCfPSgkGKrk7emp+JFFeduoQSlc1der8KtmheV1SqbvqH7vCcHlEtvPvGZp25IwQfWFK6wCFxd2tgTGEV0gjfq4+Dj4+BelHraYXeV/JxUdo5rI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712141219; c=relaxed/simple;
-	bh=CNEpcz5/OubUYF8ylHtJPsNUYIrlKQyGeuSEe5hO77w=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=k7ZA9SsZgrzsfz30k9kyCYOQ1kdyBIGKPrNO2Zj5sC/YC2v2+mcEW0PejjPhVRceVPvlRanpCFnzMtkCsAvkFeDInQWldDmXZqzU358uqTn4tE/vDC5Sto0Fo8JTnvY2ljurVUsPZhehkj0clnajb54TypFzRJBH5SpNFyVPeIE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hC06IWpH; arc=none smtp.client-ip=192.198.163.8
+	s=arc-20240116; t=1712141317; c=relaxed/simple;
+	bh=TgaXmplyF6t66rHFbdDjB65GlHQAwHbIlXyEF4dI4/Q=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=qMMZuRN2AOWY2ECmCbevGnM+A1iP9Ui6Ld23eX9h+qsrTspD/T6EdLpcctKxon/ccUS/bpzo/GCL19zZg9FRKj/zu98VnQYf52tfMt6X34McwJu7yj4zo5Bk4ujA8gqYQ5v8u0yV1/fXnG8kahJvp6LYdAcwlkRKGuq6ugfdw2M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=aO8u70Dz; arc=none smtp.client-ip=192.198.163.13
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hC06IWpH"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="aO8u70Dz"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1712141217; x=1743677217;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=CNEpcz5/OubUYF8ylHtJPsNUYIrlKQyGeuSEe5hO77w=;
-  b=hC06IWpHUEPwRDndBtchBcHGmF9TuxWh0uVcvbRgfnYOlJZwelOfm9cN
-   VoZUG/dnAmKDX+D46Tl/V2TdW5ZQa02877iCsRRc2qf7Gs7Oowyqs2hlw
-   XW8kQaHbTiybLByoJYiYOET31e+RRsQn6ygoR4fTC44uni6SpkD56a1Ab
-   yAm3FCFAAGpDLmsqyjCe/JGpHdzhido4CdTpIt9xkQLnriwKJNnxWkQGL
-   vo5W9axiPJwdgCAc/5Un3ncJjR/eSFYHk3x4+pY+TcDR83NMTrCILn4vX
-   o+NKgImYovKmL3eFo/q/wSvnvM43qr4h6VZeRQIw3uACDPyt/mOEu+yj9
-   w==;
-X-CSE-ConnectionGUID: jvekmUSySMClU+QDcM+mbw==
-X-CSE-MsgGUID: psMzRsNsQ9mI87LRqm/9hQ==
-X-IronPort-AV: E=McAfee;i="6600,9927,11032"; a="24864473"
+  t=1712141317; x=1743677317;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=TgaXmplyF6t66rHFbdDjB65GlHQAwHbIlXyEF4dI4/Q=;
+  b=aO8u70DzvFWJdocQeTSPKim/1MeBvOVCoRh33CcUeyMtcADsT6SjPVPa
+   p81WeW4an/nSVFlijtNBBEA6cw57lbXHtBv0Bd6XZO4AtDYfyULdTBAt2
+   evc6wNQSermFuuQ9VKhEH0+RkLwYz2zO1j1gYRQsbCDXozwWF5yo0YeCI
+   KGi8IIdHs6xJXwchXFoxTIZGMx2xcWsXQme5KTTY9dGzlN6YqYw1aTcjd
+   APLCZqtOd3HTxWV8rBSMzAEDyD8FZo4osxJr8380tsMcMRMIFgeNFiq7h
+   dk+XrYUMM/49YTVtos+T7diila6h5IEB+MWc4j5fuC0RrUwjnU8ck/lS2
+   g==;
+X-CSE-ConnectionGUID: CvG/rbaqQMWb/qN1Pa/eBw==
+X-CSE-MsgGUID: KDHuL1NCQyKgwcnuU03jbQ==
+X-IronPort-AV: E=McAfee;i="6600,9927,11032"; a="10333406"
 X-IronPort-AV: E=Sophos;i="6.07,177,1708416000"; 
-   d="scan'208";a="24864473"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2024 03:41:24 -0700
+   d="scan'208";a="10333406"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2024 03:48:36 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,11032"; a="915178449"
+X-IronPort-AV: E=McAfee;i="6600,9927,11032"; a="937084883"
 X-IronPort-AV: E=Sophos;i="6.07,177,1708416000"; 
-   d="scan'208";a="915178449"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.72.54])
-  by fmsmga002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2024 03:41:21 -0700
-Received: from andy by smile with local (Exim 4.97)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1rry3T-000000015qz-0hJz;
-	Wed, 03 Apr 2024 13:41:19 +0300
-Date: Wed, 3 Apr 2024 13:41:18 +0300
+   d="scan'208";a="937084883"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmsmga001.fm.intel.com with ESMTP; 03 Apr 2024 03:48:34 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+	id 621BA3E5; Wed,  3 Apr 2024 13:48:33 +0300 (EEST)
 From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Rob Herring <robh@kernel.org>, linuxppc-dev@lists.ozlabs.org,
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Philipp Stanner <pstanner@redhat.com>,
 	linux-kernel@vger.kernel.org
-Cc: Anatolij Gustschin <agust@denx.de>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	"Aneesh Kumar K.V" <aneesh.kumar@kernel.org>,
-	"Naveen N. Rao" <naveen.n.rao@linux.ibm.com>
-Subject: Re: [PATCH v1 1/1] powerpc/52xx: Replace of_gpio.h by proper one
-Message-ID: <Zg0yTnTswS2je9VG@smile.fi.intel.com>
-References: <20240313135645.2066362-1-andriy.shevchenko@linux.intel.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Subject: [PATCH v4 0/2] devres: A couple of cleanups
+Date: Wed,  3 Apr 2024 13:46:55 +0300
+Message-ID: <20240403104820.557487-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.43.0.rc1.1.gbec44491f096
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240313135645.2066362-1-andriy.shevchenko@linux.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Transfer-Encoding: 8bit
 
-On Wed, Mar 13, 2024 at 03:56:45PM +0200, Andy Shevchenko wrote:
-> of_gpio.h is deprecated and subject to remove.
-> The driver doesn't use it directly, replace it
-> with what is really being used.
+A couple of ad-hoc cleanups. No functional changes intended.
 
-Any comments on this?
+v4:
+- rebased on top of the latest vanilla (v6.9-rcX)
+
+v3:
+- rebased on top of driver-core-testing (Philipp)
+- added tags (Philipp)
+
+v2:
+- fixed plural vs. singular "to have" (Philipp)
+
+Andy Shevchenko (2):
+  devres: Switch to use dev_err_probe() for unification
+  devres: Don't use "proxy" headers
+
+ lib/devres.c | 26 +++++++++++++++-----------
+ 1 file changed, 15 insertions(+), 11 deletions(-)
 
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.43.0.rc1.1.gbec44491f096
 
