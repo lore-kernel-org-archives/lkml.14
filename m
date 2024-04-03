@@ -1,104 +1,102 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CDAF1487CC;
-	Wed,  3 Apr 2024 13:41:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EAF114830F
+	for <linux-kernel@vger.kernel.org>; Wed,  3 Apr 2024 13:43:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712151708; cv=none; b=Y0DxoIT7G3BMUpuRdzSKcAkMdJr2kogh0lv3KgIt69lLNM6Ec51YODPmrJ/XEHfJ6QsBAN/bQwsAkjlQMQIGeLdABw5BXad9BTHJcyAvSSP8mLG1upp9+zw/FtTb/FxuZofM0sBRz3igu2amprD1omaj7uFTC3xgn8UEp5qpweE=
+	t=1712151825; cv=none; b=ThggTGGoqnOgGGHp4VveTbOVqJa30CMnuGMRoq2KiUH/F4Y57AHp1BWQLQEkAjhHaGXYvVs0LIwneqNTq35NWSU5jSZGlIL948Jb3HBMNLa+rJcRnxlugqkcoTq5+cZddKEH6B9RLTyanNC0l2/ROVM9DlBWISKyKeslQM8GEi4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712151708; c=relaxed/simple;
-	bh=XHMsc/h/Nm772eO4vH1pvsQEGrFpRDZqz/OY/JDqP8w=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dI35t118PG4hmVesXX8ZVH+Es2TWiEDlyaPepfAhZtkeoBcXMTDLNNESNuywM8wcQ24/SvoTbz8A1GLqn4fK1I3FxYGxQI8nCi0yw6z9boG2axMOM8uH//xPjRVMLdsdDasjfVePxfGZ4sMdcaUN7n4nlJ6m6qoS1B5eCeQiYhk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mKkkZdZ7; arc=none smtp.client-ip=192.198.163.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mKkkZdZ7"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1712151707; x=1743687707;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=XHMsc/h/Nm772eO4vH1pvsQEGrFpRDZqz/OY/JDqP8w=;
-  b=mKkkZdZ7Agd9uvtKU+NND0D+nlMUqvfSbsJx9S0GNqUkG3uarpadtXil
-   EHtUrZAfoBsbzk9+IAgff7rruqOQoTJdU/aykbo3FVkUgQqXt11n55W6T
-   nPtIix18kxIFEf4tUzAJj/Q3V9wDJJ2JtPeEhapn74q6U5bc+Zr5aG4p4
-   BKKEKqJ9Nr7NdoI7FpyELQjQgdhJOFypeyo0CQP8ofmrmRKFIB5GKazji
-   D2XtsohMqLE2jm1XLn/gBb62x4u+kqfn/qrNKJM+Mq0EnPsL5oVoycljQ
-   UnAAyaH1C7PrFjNJWf8SXr+18tBWrlZVvOAj1Hh0wne+3qlzYgvxM0Rq8
-   A==;
-X-CSE-ConnectionGUID: 6rzmfy4URiumpcuqEWwdkw==
-X-CSE-MsgGUID: 3MHezPpETKefc4GXAnTFww==
-X-IronPort-AV: E=McAfee;i="6600,9927,11033"; a="7246709"
-X-IronPort-AV: E=Sophos;i="6.07,177,1708416000"; 
-   d="scan'208";a="7246709"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2024 06:41:46 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,11033"; a="915183828"
-X-IronPort-AV: E=Sophos;i="6.07,177,1708416000"; 
-   d="scan'208";a="915183828"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.72.54])
-  by fmsmga002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2024 06:41:43 -0700
-Received: from andy by smile with local (Exim 4.97)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1rs0s0-000000018GC-47U5;
-	Wed, 03 Apr 2024 16:41:40 +0300
-Date: Wed, 3 Apr 2024 16:41:40 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Mark Brown <broonie@kernel.org>
-Cc: linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	Daniel Mack <daniel@zonque.org>,
-	Haojian Zhuang <haojian.zhuang@gmail.com>,
-	Robert Jarzmik <robert.jarzmik@free.fr>,
-	Russell King <linux@armlinux.org.uk>, Arnd Bergmann <arnd@arndb.de>
-Subject: Re: (subset) [PATCH v2 0/9] spi: pxa2xx: Drop linux/spi/pxa2xx_spi.h
-Message-ID: <Zg1clCuOwkCNzSgy@smile.fi.intel.com>
-References: <20240327193138.2385910-1-andriy.shevchenko@linux.intel.com>
- <171167575036.187521.17547262230962160149.b4-ty@kernel.org>
- <Zg04cWhT_Dl6AUik@smile.fi.intel.com>
- <b7ac20d0-ca45-4e65-92ff-ddf84da6645a@sirena.org.uk>
- <Zg1cAHEkhIf2vpwJ@smile.fi.intel.com>
+	s=arc-20240116; t=1712151825; c=relaxed/simple;
+	bh=pmjTyGe0FsdT8oYkfLE7cOWfangICUybcbS8VHpZY/c=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=o9FhJMcyhajOachIY7yXnoY+z9TRPFxo3yN7FZP2uL6t/p1JfJAbKEF9Aaz4PznpShE+p4ZRqCmjUhfjFwD9OYuiKHpUVAhegPoQa5YOAjDznqS62F0E9adFFsTiJKiGYzVqOzSwzhAm/zIc+qQ7+/AlP997OATsRHNv6PWiQEo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.216])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4V8mC20zpGz67N4y;
+	Wed,  3 Apr 2024 21:42:22 +0800 (CST)
+Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
+	by mail.maildlp.com (Postfix) with ESMTPS id 99097140CB9;
+	Wed,  3 Apr 2024 21:43:38 +0800 (CST)
+Received: from localhost (10.122.247.231) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.35; Wed, 3 Apr
+ 2024 14:43:38 +0100
+Date: Wed, 3 Apr 2024 14:43:37 +0100
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: Guenter Roeck <linux@roeck-us.net>
+CC: Alexey Dobriyan <adobriyan@gmail.com>, Thomas Gleixner
+	<tglx@linutronix.de>, Peter Zijlstra <peterz@infradead.org>,
+	<linux-kernel@vger.kernel.org>, <linuxarm@huawei.com>
+Subject: Re: [PATCH v2] cpu: mark cpu_possible_mask as __ro_after_init
+Message-ID: <20240403144337.00005060@huawei.com>
+In-Reply-To: <7c5dd81f-46ee-43a7-8359-f713a027386d@roeck-us.net>
+References: <41cd78af-92a3-4f23-8c7a-4316a04a66d8@p183>
+	<11d7a34f-909b-4923-a15f-d32015463c35@p183>
+	<20240327181053.0000481d@Huawei.com>
+	<7c5dd81f-46ee-43a7-8359-f713a027386d@roeck-us.net>
+Organization: Huawei Technologies R&D (UK) Ltd.
+X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.29; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Zg1cAHEkhIf2vpwJ@smile.fi.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml500002.china.huawei.com (7.191.160.78) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
 
-On Wed, Apr 03, 2024 at 04:39:13PM +0300, Andy Shevchenko wrote:
-> On Wed, Apr 03, 2024 at 02:29:38PM +0100, Mark Brown wrote:
-> > On Wed, Apr 03, 2024 at 02:07:29PM +0300, Andy Shevchenko wrote:
+On Wed, 27 Mar 2024 11:36:28 -0700
+Guenter Roeck <linux@roeck-us.net> wrote:
+
+> On Wed, Mar 27, 2024 at 06:10:53PM +0000, Jonathan Cameron wrote:
+> > On Thu, 22 Feb 2024 14:19:35 +0300
+> > Alexey Dobriyan <adobriyan@gmail.com> wrote:
+> >   
+> > > cpu_possible_mask is by definition "cpus which could be hotplugged without
+> > > reboot". It's a property which is fixed after kernel enumerates hardware
+> > > configuration.
+> > > 
+> > > Signed-off-by: Alexey Dobriyan <adobriyan@gmail.com>  
 > > 
-> > > Do I need to do anything else to get the rest applied?
-> > 
-> > All the concerns I have with swnodes just being a more complex and less
-> > maintainable way of doing things still stand, I'm not clear that this is
-> > making anything better.
+> > Causes a crash in this path (via CPU HP testing on qemu)
+> > Pretending to be an AMD Genoa, but I doubt that matters.
+> >   
 > 
-> As I explained before it's not less maintainable than device tree sources.
-> The only difference is that we don't have validation tool for in-kernel
-> tables. And I don't see why we need that. The data describes the platforms
-> and in the very same way may come to the driver from elsewhere.
-> How would you validate that? It the same as we trust firmware (boot loader)
-> or not. If we don't than how should we do at all?
+> Can you send me the configuration, qemu command line, and commands
+> executed ? I'd like to add that to my test setup if possible.
 > 
-> Can you point out what the exact aspect is most significant from C language
-> perspective that we miss after conversion? Type checking? Something else?
+> Thanks,
+> Guenter
 
-Also note, after hiding the data structures from that file we open
-the door for the much bigger cleanup, and I have patches already precooked
-(need a bit of time to test, though).
+Hi Guenter,
 
--- 
-With Best Regards,
-Andy Shevchenko
+Great to get some regular tests running on this.
 
+I haven't minimized this that much, so probably don't need most of this
+setup.
 
+qemu-system-x86_64 -M q35,cxl=on,sata=off,smbus=off
+ -m 12g -cpu EPYC-Genoa -smp 2,maxcpus=4,sockets=2 \
+ -kernel bzImage \
+ -drive if=none,file=/mnt/d/images-x86/full2.qcow2,format=qcow2,id=hd \
+ -device ioh3420,id=root_port1 \
+ -device nvme,serial=deadbeef,drive=hd \
+ -nographic -no-reboot -append 'earlycon console=ttyS0 root=/dev/nvme0n1p3 fsck.mode=skip tp_printk maxcpus=4' \
+ -monitor telnet:127.0.0.1:1235,server,nowait \
+ -object memory-backend-ram,size=12G,id=mem0 \
+ -numa node,nodeid=0,memdev=mem0 \
+ -numa node,nodeid=1 \
+ -numa cpu,node-id=0,socket-id=0 \
+ -numa cpu,node-id=0,socket-id=0 \
+ -numa cpu,node-id=1,socket-id=1 \
+ -numa cpu,node-id=1,socket-id=1
+
+telnet 1235
+(qemu) device_add EPYC-Genoa-x86_64-cpu,node-id=1,socket-id=1,core-id=0,thread-id=0 
+
+Jonathan
