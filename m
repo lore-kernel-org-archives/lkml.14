@@ -1,136 +1,109 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C552152505;
-	Wed,  3 Apr 2024 17:13:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 10CF215252E;
+	Wed,  3 Apr 2024 17:14:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712164437; cv=none; b=FX97sW5gC79mLiTBq9I1WEGbsnAymgNbX0tBiT7v7v5+iJ8Z/KjXWPHc+W8TQA0w+c3LDCMEx/T7wsqgh5soTJOHYoUtFnMZCZzsXZB+DF5IX4ZNdIfEXyxNh8KRfI9klHVWSk0JxHBnV6lRVDS5Fy9VYbM937c7NbRsoIWI0kw=
+	t=1712164453; cv=none; b=GygrMe4Welu9keP4knlWqP29yyIOgO07vytzMJ6iGkJnQp6Dzhzse5v5dRwpphS3UxzcrH3iAwei4qxhBiebUxj4Bs1zAfbNyCyj6A3VA05+STAyoMsQ/p+bja07/wp03GzwEUdlVBFzEZpk6xlKfsUK3DIii2oXSyDC/KTLmBI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712164437; c=relaxed/simple;
-	bh=TNkWDibBTEIwV1X2Lgomv9lI/EaSLAXMzptGvnPP67I=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MQfIc961MFSqIlgqYfdXDKJFANl6MPvGr9n0Sp5PNYGNIrj5mV0O093NLBg8EZTiHvbaeJ/PWKKK1tO2CcqnJrVrXpRZlqjbp2dHAS6Nj/NbEsEYT4wyi566FfkRviEAFUjoiTwscNhehFOs7eJ+CM52jvS7a+XJRR+mopm8cy4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dULEcOKS; arc=none smtp.client-ip=198.175.65.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dULEcOKS"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1712164437; x=1743700437;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=TNkWDibBTEIwV1X2Lgomv9lI/EaSLAXMzptGvnPP67I=;
-  b=dULEcOKS15LRXC6fQzjUeQWAqewiEPRD9Ag4DpePk1CKg8IEDsL2kJBl
-   2P1/g3F+RRxq6UXXVN0zCmdXecH6RBGfDXFunoNN3USdYJqxHufC6Ludl
-   U6YXTfvj5Q0RGyeGw8jP6PWH6BLER3nuwfus2NxrzrLoHb2kYw1LlbZC/
-   mzZdkQb8+9ui7JaZhC/Qy1i9mN/KnHFdyozXHVnACLtaQNNVKgoDU6kOx
-   DYCf0ZqMPIHWbUXcVmPZsi7xGqYu01h2FNF6wxJFSRyuRzsVHYrjFIzTw
-   jGmb1SGufGb0EpR3khxgx0CHXkLEAMC962nT3jlKSgnwYEZyKfnvGnopu
-   w==;
-X-CSE-ConnectionGUID: CAl+pwicSgGAkq/p+7542w==
-X-CSE-MsgGUID: qFylQ2p5QSKisEvVjowDNw==
-X-IronPort-AV: E=McAfee;i="6600,9927,11033"; a="7529370"
-X-IronPort-AV: E=Sophos;i="6.07,177,1708416000"; 
-   d="scan'208";a="7529370"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2024 10:13:56 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,11033"; a="915189030"
-X-IronPort-AV: E=Sophos;i="6.07,177,1708416000"; 
-   d="scan'208";a="915189030"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.72.54])
-  by fmsmga002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2024 10:13:52 -0700
-Received: from andy by smile with local (Exim 4.97)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1rs4BK-00000001Ba4-13lW;
-	Wed, 03 Apr 2024 20:13:50 +0300
-Date: Wed, 3 Apr 2024 20:13:50 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Mark Brown <broonie@kernel.org>
-Cc: linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org,
+	s=arc-20240116; t=1712164453; c=relaxed/simple;
+	bh=txrl5wTQjiJ+kaFWoxGMUeFZhH3OpkbBaJ8UqvEQDq0=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=UHg+ANLJBY6/GRMY9Iztd5c6X29kRY4M3gf9NazjmKYzVOYtTboS42jChoNk/geNik4CjDAuEgSYtNd98bCfTD4WLcviCu3b5dTPBuVwo26ClnkHan9j2otjyM2IMBRKccems1ouPTHn4ghqCf4TmUwLspbBiEe2pGmEq+RU1YY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 681831007;
+	Wed,  3 Apr 2024 10:14:42 -0700 (PDT)
+Received: from e120937-lin.. (unknown [172.31.20.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 167563F766;
+	Wed,  3 Apr 2024 10:14:09 -0700 (PDT)
+From: Cristian Marussi <cristian.marussi@arm.com>
+To: linux-kernel@vger.kernel.org,
 	linux-arm-kernel@lists.infradead.org,
-	Daniel Mack <daniel@zonque.org>,
-	Haojian Zhuang <haojian.zhuang@gmail.com>,
-	Robert Jarzmik <robert.jarzmik@free.fr>,
-	Russell King <linux@armlinux.org.uk>, Arnd Bergmann <arnd@arndb.de>
-Subject: Re: (subset) [PATCH v2 0/9] spi: pxa2xx: Drop linux/spi/pxa2xx_spi.h
-Message-ID: <Zg2OTvXCUhsk4KVr@smile.fi.intel.com>
-References: <20240327193138.2385910-1-andriy.shevchenko@linux.intel.com>
- <171167575036.187521.17547262230962160149.b4-ty@kernel.org>
- <Zg04cWhT_Dl6AUik@smile.fi.intel.com>
- <b7ac20d0-ca45-4e65-92ff-ddf84da6645a@sirena.org.uk>
- <Zg1cAHEkhIf2vpwJ@smile.fi.intel.com>
- <Zg1clCuOwkCNzSgy@smile.fi.intel.com>
- <0af775e1-f5f7-4ad4-b336-78834a9e0342@sirena.org.uk>
- <Zg1qmlX78lQGLC3B@smile.fi.intel.com>
- <48793ea5-92ca-4529-bad0-35d8c4e3f0c8@sirena.org.uk>
+	devicetree@vger.kernel.org
+Cc: sudeep.holla@arm.com,
+	cristian.marussi@arm.com,
+	jassisinghbrar@gmail.com,
+	robh+dt@kernel.org,
+	krzysztof.kozlowski+dt@linaro.org,
+	conor+dt@kernel.org
+Subject: [PATCH v2 0/2] Add initial ARM MHUv3 mailbox support
+Date: Wed,  3 Apr 2024 18:13:44 +0100
+Message-Id: <20240403171346.3173843-1-cristian.marussi@arm.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <48793ea5-92ca-4529-bad0-35d8c4e3f0c8@sirena.org.uk>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Transfer-Encoding: 8bit
 
-On Wed, Apr 03, 2024 at 04:50:00PM +0100, Mark Brown wrote:
-> On Wed, Apr 03, 2024 at 05:41:30PM +0300, Andy Shevchenko wrote:
-> 
-> > Linus was long time ago against board files. Yet, we have a few old
-> > (kinda supported) boards left in the tree. The conversion makes the
-> > driver be prepared for the DT conversion when it happens. From maintenance
-> > perspective my patch reduced the code under the maintenance, which reduces
-> > time spent by both contributors and maintainers on this.
-> 
-> > AFAIU all what you are moaning about is type checking. Okay, I got
-> 
-> The type checking is part of it, but it's more a general taste thing
-> with using swnodes like this.  You've not actually removed the board
-> file and it's hard to get enthusiastic about the change to the board
-> file that results, or to see this as a substantial step towards DT
-> conversion for the platform given the trivialness of the single
-> property here.  As a general thing I don't want to encourage people to
-> start randomly converting things to swnode rather than to DT.
+Hi,
 
-Conversion to GPIO lookup tables is also the same in this sense.
-But with it in place, the drivers aren't needed to be touched
-when the real conversion happens. I agree, that _ideally_ we should
-take that shot, but I am not an expert in DT and it will take a lot
-for me to get to the shape, besides the fact of the ARM (platform)
-specifics, which I'm far from. So, I prefer do step-by-step approach
-if one developer can't fulfill the task. I.o.w. perfect is enemy of
-good.
+This series adds support for the new ARM Message Handling Unit v3 mailbox
+controller [1].
 
-> > it, but we have a lot of other places with similar approach done,
-> > e.g. GPIO_LOOKUP*() tables that basically gives something unconnected to the
-> > driver without any platform data being involved and you seems to be fine with
-> > that:
-> 
-> > $ git log --oneline --no-merges --grep 'Mark Brown' -- arch/ | grep 'GPIO desc'
-> 
-> > I randomly took this 366f36e2a ("ASoC: wm1250-ev1: Convert to GPIO descriptors").
-> 
-> > Can you tell how it is different to my proposal?
-> 
-> The main difference with the GPIO lookup tables is that they are
-> structured data specifically for GPIOs rather than the general purpose
-> free for all we have with swnode.
+The ARM MHUv3 can optionally support various extensions, enabling the
+usage of different transport protocols.
 
-Semantically yes, technically they have all the same issues you pointed out
-that swnode has.
+Patch [2/2] adds a platform driver which, as of now, provides support only
+for the Doorbell extension using the combined interrupt.
 
-Nevertheless, I'm about to send a part 2 of cleanup (I decided not mangle
-this series, so it will be on top of this) for you to see how we can go
-forward.
+On the other side, bindings in [1/2] are introduced for all the extensions
+described by the specification, as long as they are of interest to an
+entity running from Normal world, like Linux: as such, Doorbell, FIFO and
+FastChannel extensions are documented.
 
-And thank you for this discussion.
+In these regards, note that the ARM MHUv3 controller can optionally
+implement a considerable number of interrupts to express a great deal of
+events and many of such interrupts are defined as being per-channel: with
+the total maximum amount of possibly implemented channels across all
+extensions being 1216 (1024+128+64), it would mean *a lot* of
+interrupt-names to enumerate in the bindings.
+
+For the sake of simplicity the binding as of now only introduces interrupt
+names for a mere 8-channels in the range (0,7) for each per-channel
+interrupt type: the idea is to leave open the possibility to add more to
+this list of numbered items only when (and if) new real HW appears that
+effectively needs more than 8 channels. (like AMBA, where the maximum
+number of IRQ was progressively increased when needed, AFAIU).
+
+Based on v6.9-rc1, tested on ARM TCS23 [2]
+(TCS23 reference SW stack is still to be made fully publicly available)
+
+Thanks,
+Cristian
+
+[1]: https://developer.arm.com/documentation/aes0072/aa/?lang=en
+[2]: https://community.arm.com/arm-community-blogs/b/tools-software-ides-blog/posts/total-compute-solutions-platform-software-stack-and-fvp
+
+
+---
+v1 -> v2
+ - clarified DT bindings extension descriptions around configurability
+   and discoverability
+ - removed unused labels from the DT example
+ - using pattern properties to define DT interrupt-names
+ - bumped DT interrupt maxItems to 74 (allowing uo to 8 channels per extension)
+ - fixed checkpatch warnings about side-effects on write/read bitfield macros
+ - fixed sparse errors as reported
+   | Reported-by: kernel test robot <lkp@intel.com>
+   | Closes: https://lore.kernel.org/oe-kbuild-all/202403290015.tCLXudqC-lkp@intel.com/
+
+Cristian Marussi (2):
+  dt-bindings: mailbox: arm,mhuv3: Add bindings
+  mailbox: arm_mhuv3: Add driver
+
+ .../bindings/mailbox/arm,mhuv3.yaml           |  217 ++++
+ MAINTAINERS                                   |    9 +
+ drivers/mailbox/Kconfig                       |   11 +
+ drivers/mailbox/Makefile                      |    2 +
+ drivers/mailbox/arm_mhuv3.c                   | 1063 +++++++++++++++++
+ 5 files changed, 1302 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mailbox/arm,mhuv3.yaml
+ create mode 100644 drivers/mailbox/arm_mhuv3.c
 
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.34.1
 
