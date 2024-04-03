@@ -1,92 +1,86 @@
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+Received: from relay05.th.seeweb.it (relay05.th.seeweb.it [5.144.164.166])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBE8513666C;
-	Wed,  3 Apr 2024 10:05:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB5B113AA27;
+	Wed,  3 Apr 2024 10:06:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=5.144.164.166
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712138755; cv=none; b=q749H9rnIGQClnA9djefcE2umHrZZsW0styM1G1An0gtWPdx12P94yU8/1C46AY3smY5q0Ub2A4oXxxeQe1gvDrvDe2guUfH+bJeYXrcL/kuPeDlrBBVFP/Jpo2NeDFtArxwaQPRbOXxzd/MXcW6joRsxY+9bOqT2GQrfPbLWTo=
+	t=1712138769; cv=none; b=nZxZz3VcJGg74fhdqYe/LdWaVed2/g0JbHAcsDi2zU7ne9IOEbuKgFexMPOMpllR/MNic5Brg1Own/H95PmqobVrCklawfEOQqSzRFnUl9cFw6iH0+rYxUylwhigRcZTcodAaYTBFNrS2ZQOhmGQkLKYhEuR7Mc9R0bPgfHnRqo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712138755; c=relaxed/simple;
-	bh=6juDJaoMe0wdCGTDP0uluhcWqVlklCQTZZ0GR81b9kU=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=uv2Cfwzu/TvUmws6aQC1/IevLgCZSyxTF8uUaPWQGumQp6kq9vz/290Gqm0u8tUaaVfpKZYydwNsFRYYUoQsv4etFbMJCaLxWeztchABJhqjYFYWI/t8512SXy4kgc+Ii4b6IH/DmE9KKhbmVYscC2IcfPNrUDjeTiAH971Treo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.174])
-	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4V8gKM1lP5zXkcR;
-	Wed,  3 Apr 2024 18:02:31 +0800 (CST)
-Received: from dggpemd200003.china.huawei.com (unknown [7.185.36.122])
-	by mail.maildlp.com (Postfix) with ESMTPS id DA9B6140F81;
-	Wed,  3 Apr 2024 18:05:28 +0800 (CST)
-Received: from localhost.localdomain (10.67.165.2) by
- dggpemd200003.china.huawei.com (7.185.36.122) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.28; Wed, 3 Apr 2024 18:05:28 +0800
-From: Chenghai Huang <huangchenghai2@huawei.com>
-To: <herbert@gondor.apana.org.au>, <davem@davemloft.net>
-CC: <linux-kernel@vger.kernel.org>, <linux-crypto@vger.kernel.org>,
-	<fanghao11@huawei.com>, <liulongfang@huawei.com>, <shenyang39@huawei.com>,
-	<songzhiqi1@huawei.com>, <qianweili@huawei.com>, <liushangbin@hisilicon.com>,
-	<linwenkai6@hisilicon.com>, <taoqi10@huawei.com>, <wangzhou1@hisilicon.com>,
-	<huangchenghai2@huawei.com>
-Subject: [PATCH 8/9] crypto: hisilicon/debugfs - Resolve the problem of applying for redundant space in sq dump
-Date: Wed, 3 Apr 2024 18:01:01 +0800
-Message-ID: <20240403100102.2735306-9-huangchenghai2@huawei.com>
-X-Mailer: git-send-email 2.30.0
-In-Reply-To: <20240403100102.2735306-1-huangchenghai2@huawei.com>
-References: <20240403100102.2735306-1-huangchenghai2@huawei.com>
+	s=arc-20240116; t=1712138769; c=relaxed/simple;
+	bh=PtsQ7BPoEhJdj1DTbguN0BEbC+PRqVWUfaWeLRN8KX0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=V2BaEO3egs+We93TZMvJBLyI7gS5zK93axSr29PBMWKBBoHSk5zwx34m6qnT+lae8QQdot2qHll1P5YMUlR9EXs2Adz/LNMQxE+FsykabBcasBIBjtZwlEjUtFSwOZ59ZFs3EwtP+lS88rfZo47lLuS+ksE/iAfO0Gc3QojIFQo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=somainline.org; spf=pass smtp.mailfrom=somainline.org; arc=none smtp.client-ip=5.144.164.166
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=somainline.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=somainline.org
+Received: from SoMainline.org (94-211-6-86.cable.dynamic.v4.ziggo.nl [94.211.6.86])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by m-r2.th.seeweb.it (Postfix) with ESMTPSA id C482D3EDD1;
+	Wed,  3 Apr 2024 12:05:57 +0200 (CEST)
+Date: Wed, 3 Apr 2024 12:05:55 +0200
+From: Marijn Suijten <marijn.suijten@somainline.org>
+To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Cc: Sumit Semwal <sumit.semwal@linaro.org>, 
+	Caleb Connolly <caleb.connolly@linaro.org>, Neil Armstrong <neil.armstrong@linaro.org>, 
+	Jessica Zhang <quic_jesszhan@quicinc.com>, Sam Ravnborg <sam@ravnborg.org>, 
+	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, 
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
+	dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-arm-msm@vger.kernel.org, Vinod Koul <vkoul@kernel.org>, 
+	Caleb Connolly <caleb@connolly.tech>
+Subject: Re: [PATCH v3 4/4] drm: panel: Add LG sw43408 panel driver
+Message-ID: <vcxytd7cxmvno3hb7tvxwfbnsupaw3mcqplt7mnrntjhkybklr@lxffwioi2bzn>
+References: <20240402-lg-sw43408-panel-v3-0-144f17a11a56@linaro.org>
+ <20240402-lg-sw43408-panel-v3-4-144f17a11a56@linaro.org>
+ <3hh7nfqflj73422q47p6do7aiormxwspwkfg557epeqn2krtcc@dsufsohfaz4l>
+ <pair66urg2ecqhob5gzzdtzuyofrmcf6rk7v2akggbotcpv7ld@bxhxftbd4xbn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
- dggpemd200003.china.huawei.com (7.185.36.122)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <pair66urg2ecqhob5gzzdtzuyofrmcf6rk7v2akggbotcpv7ld@bxhxftbd4xbn>
 
-When dumping SQ, only the corresponding ID's SQE needs to be
-dumped, and there is no need to apply for the entire SQE
-memory. This is because excessive dump operations can lead to
-memory resource waste.
+On 2024-04-03 05:37:29, Dmitry Baryshkov wrote:
+> On Tue, Apr 02, 2024 at 11:17:52PM +0200, Marijn Suijten wrote:
+> > On 2024-04-02 02:51:15, Dmitry Baryshkov wrote:
+> > > From: Sumit Semwal <sumit.semwal@linaro.org>
+> > > 
+> > > LG SW43408 is 1080x2160, 4-lane MIPI-DSI panel, used in some Pixel3
+> > > phones.
+> > 
+> > @60Hz?
+> 
+> With the current settings and timings I'm only getting 30 Hz. I have to
+> double the mode->clock to get 60.
 
-Therefor apply for the space corresponding to sqe_id separately
-to avoid space waste.
+Still seems useful to mention (here and in Kconfig).  The proposed driver emits
+a mode to userspace of 60Hz, maybe the commit message should say that in the
+current state "something" prevents it from going that fast?
 
-Signed-off-by: Chenghai Huang <huangchenghai2@huawei.com>
----
- drivers/crypto/hisilicon/debugfs.c | 9 ++++-----
- 1 file changed, 4 insertions(+), 5 deletions(-)
+Since I keep forgetting (because it's not mentioned anywhere) that this is a
+cmdmode panel (or at least configured for that with the current driver), I'd
+again suggest to play with sync_cfg_height.  If setting it to 0xfff0 results in
+timeouts, your tear GPIO is misconfigured and not making the MDP aware of the
+actual tick rate.
 
-diff --git a/drivers/crypto/hisilicon/debugfs.c b/drivers/crypto/hisilicon/debugfs.c
-index e9fa42381242..8e259ed4aecd 100644
---- a/drivers/crypto/hisilicon/debugfs.c
-+++ b/drivers/crypto/hisilicon/debugfs.c
-@@ -320,17 +320,16 @@ static int qm_sq_dump(struct hisi_qm *qm, char *s, char *name)
- 	if (ret)
- 		return ret;
- 
--	sqe = kzalloc(qm->sqe_size * sq_depth, GFP_KERNEL);
-+	sqe = kzalloc(qm->sqe_size, GFP_KERNEL);
- 	if (!sqe)
- 		return -ENOMEM;
- 
- 	qp = &qm->qp_array[qp_id];
--	memcpy(sqe, qp->sqe, qm->sqe_size * sq_depth);
--	sqe_curr = sqe + (u32)(sqe_id * qm->sqe_size);
--	memset(sqe_curr + qm->debug.sqe_mask_offset, QM_SQE_ADDR_MASK,
-+	memcpy(sqe, qp->sqe + sqe_id * qm->sqe_size, qm->sqe_size);
-+	memset(sqe + qm->debug.sqe_mask_offset, QM_SQE_ADDR_MASK,
- 	       qm->debug.sqe_mask_len);
- 
--	dump_show(qm, sqe_curr, qm->sqe_size, name);
-+	dump_show(qm, sqe, qm->sqe_size, name);
- 
- 	kfree(sqe);
- 
--- 
-2.30.0
+Otherwise, more likely, just bump up the porches a bit, based on the discussions
+around reduce_pclk_for_compression() /not/ accounting for transfer time in
+cmdmode.  In one of my drivers (pending eternal cleanup hell) I inlined the
+calculation to reverse what the "right" porch should be based on a downstream
+clock rate:
 
+https://github.com/somainline/linux/commit/85978a69cde088a23963c03758dad5f1a2e79bab#diff-a9ac8689e45c59a4fe9aa150e4bd53675687f5c8b4aecb40b5b5b66b864257e0R353-R366
+
+And separately, though I cannot find it, there have been (more accurate?)
+calculations based on downstream `qcom,mdss-dsi-panel-jitter` and friends.
+
+- Marijn
