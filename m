@@ -1,256 +1,207 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mail.hugovil.com (mail.hugovil.com [162.243.120.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E9BA152513
-	for <linux-kernel@vger.kernel.org>; Wed,  3 Apr 2024 17:58:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 035E7152505;
+	Wed,  3 Apr 2024 17:59:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.243.120.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712167133; cv=none; b=oGc0l/GTIEHwVn4jlZCu61pO99WO8yuznR4tVS1O6JUp2XrWCgfDXkmy9Eh6rJe0NaLdw6FAEbHhdIy431NeIBfpD0mnKLxwBPhgiByISNO79ME9fbYYlZXh8DKbetOc6KfUEiHx7dzvhsGKt4ZNwZmzm9VaCfuh3N0RDEmRD78=
+	t=1712167161; cv=none; b=pi+eh2DqxkReHIvNJ7Kah/eKPkBa46EjA3SKULWr28TWs2BTtNvhZm83SrCUnbwppNGi2czRhRNkcYUqGMKBFL3VPLGTczoUxO4TlqIuI1kRup32rlw9a8DZ/N/J7AnaSKfwFNcIvJLF73K07zZXuXW3fhaXRC+5YwO2r5E+vrQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712167133; c=relaxed/simple;
-	bh=rVUr+9Z6zFvc1AIV7RSHph6ecLl/6yxn7os2D1j1n1w=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=n6mawVWZd/vl0rA0b79FiwL3xLHsciZQCiZ4j2fqrjmhbi1Z15bpVmmdxoCagyvR1oGwID0ESvC30TEVC8Lk/1UYlCvpaDunq4BCdgrC5OQ/8QF/NVagQ2UquSpohn+QY8BrdFmxLVramG0w7AdhmAgJ4MrY07dLtH+KneZDiWI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=SllZaHCM; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1712167161; c=relaxed/simple;
+	bh=U7zH5RmAzUWXjSGg3FmmSyJBJmOW5vZMmsgGta3oe9E=;
+	h=Date:From:To:Cc:Message-Id:In-Reply-To:References:Mime-Version:
+	 Content-Type:Subject; b=WZMTPZzW/fsxw7OgqkWr+8UPpiXZ87Qn/xQZaeiaBFBtdN044aqdEbjTip7h2JZTNLGmgDN55mpHxZnh+0PSqUv7eIvjwWjoC0wpUiT+Dhl7hv5skeccVu0iV03J9a4YYmcVha3bdiAumUIXZqSqEAmCgi8kuSjdwg4B6VhynaE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hugovil.com; spf=pass smtp.mailfrom=hugovil.com; dkim=pass (1024-bit key) header.d=hugovil.com header.i=@hugovil.com header.b=Ddh0wnWe; arc=none smtp.client-ip=162.243.120.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hugovil.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hugovil.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SllZaHCM"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1712167130;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=EoWWC9fUfdXuL312/PrgDfdNTqMt9C2B7PqNvW2X5jk=;
-	b=SllZaHCMuFmL4zJ1Y+gkd/hBNEW8Cxi9zp+sa7ly3QrJl838dWAfCG+5T/qXbmFMtpjmn1
-	yTc8Sj3Ic8E1wsXTCA7wRBjQ4mGcb+2BRev2vkJbzrZaGTkOGXpnOIXuTRwKeFDwhCWiH0
-	8SipTDX60F6HBfazj/7qVNxNlyi9Ge4=
-Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
- by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-253-3meuzdLsN1u0ha3OmoqVeg-1; Wed,
- 03 Apr 2024 13:58:45 -0400
-X-MC-Unique: 3meuzdLsN1u0ha3OmoqVeg-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.rdu2.redhat.com [10.11.54.8])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 27F9529AA2CD;
-	Wed,  3 Apr 2024 17:58:45 +0000 (UTC)
-Received: from localhost (unknown [10.39.192.28])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 3DC6EC01600;
-	Wed,  3 Apr 2024 17:58:44 +0000 (UTC)
-Date: Wed, 3 Apr 2024 13:58:38 -0400
-From: Stefan Hajnoczi <stefanha@redhat.com>
-To: Eric Blake <eblake@redhat.com>
-Cc: linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Alasdair Kergon <agk@redhat.com>,
-	Mikulas Patocka <mpatocka@redhat.com>, dm-devel@lists.linux.dev,
-	David Teigland <teigland@redhat.com>,
-	Mike Snitzer <snitzer@kernel.org>, Jens Axboe <axboe@kernel.dk>,
-	Christoph Hellwig <hch@lst.de>, Joe Thornber <ejt@redhat.com>
-Subject: Re: [RFC 4/9] dm: add llseek(SEEK_HOLE/SEEK_DATA) support
-Message-ID: <20240403175838.GB2534900@fedora>
-References: <20240328203910.2370087-1-stefanha@redhat.com>
- <20240328203910.2370087-5-stefanha@redhat.com>
- <6awt5gq36kzwhuobabtye5vhnexc6cufuamy4frymehuv57ky5@esel3f5naqyu>
- <20240403141147.GD2524049@fedora>
- <mi3yp4kel6junjk2corv4hi56s56pmwilnm2bb4gg2tbbvyq2n@zmzaqpdq2rlq>
+	dkim=pass (1024-bit key) header.d=hugovil.com header.i=@hugovil.com header.b="Ddh0wnWe"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hugovil.com
+	; s=x; h=Subject:Content-Transfer-Encoding:Mime-Version:Message-Id:Cc:To:From
+	:Date:subject:date:message-id:reply-to;
+	bh=XsibBNQ48v3ozljfAa2u+QdXR1ArmIMnXcbhbHkVW+8=; b=Ddh0wnWep9wQaBjokHV1drm3fr
+	Ol+7FeY/UnbJuIZdwgs4rdu6W8Ix8llvZ5+x8s6zf5qDdxOmUND2bUa1GkgUPrGHBV0eyzlQ9dA4O
+	P46oDm5X6EafqkmQVj/LEfJ35Onn6FZLkSwpBz0jmadcboPKfcGwTP3aJYAvtRQLrEtA=;
+Received: from modemcable168.174-80-70.mc.videotron.ca ([70.80.174.168]:33886 helo=pettiford)
+	by mail.hugovil.com with esmtpa (Exim 4.92)
+	(envelope-from <hugo@hugovil.com>)
+	id 1rs4tC-0007gl-IW; Wed, 03 Apr 2024 13:59:10 -0400
+Date: Wed, 3 Apr 2024 13:59:10 -0400
+From: Hugo Villeneuve <hugo@hugovil.com>
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: gregkh@linuxfoundation.org, jirislaby@kernel.org,
+ linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org, Hugo Villeneuve
+ <hvilleneuve@dimonoff.com>
+Message-Id: <20240403135910.2ef852670c184927340d08d7@hugovil.com>
+In-Reply-To: <CAHp75VcEj64aFb0nT8uQitkNSdWWqz7pmAqSGaGwy-tA=df0EA@mail.gmail.com>
+References: <20240402174353.256627-1-hugo@hugovil.com>
+	<20240402174353.256627-4-hugo@hugovil.com>
+	<CAHp75VdZ5yYVx7Df7G4X4Y7ZvJ3LAdq=A0fVNzNfMcdywJC-dQ@mail.gmail.com>
+	<20240403123501.8ef5c99f65a40ca2c10f635a@hugovil.com>
+	<CAHp75VcEj64aFb0nT8uQitkNSdWWqz7pmAqSGaGwy-tA=df0EA@mail.gmail.com>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="N31yZm+DVUhVXgFt"
-Content-Disposition: inline
-In-Reply-To: <mi3yp4kel6junjk2corv4hi56s56pmwilnm2bb4gg2tbbvyq2n@zmzaqpdq2rlq>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.8
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 70.80.174.168
+X-SA-Exim-Mail-From: hugo@hugovil.com
+X-Spam-Level: 
+X-Spam-Report: 
+	* -1.0 ALL_TRUSTED Passed through trusted hosts only via SMTP
+	* -0.8 NICE_REPLY_A Looks like a legit reply (A)
+Subject: Re: [PATCH v3 3/5] serial: sc16is7xx: split into core and I2C/SPI
+ parts (core)
+X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
+X-SA-Exim-Scanned: Yes (on mail.hugovil.com)
 
+On Wed, 3 Apr 2024 20:44:05 +0300
+Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
 
---N31yZm+DVUhVXgFt
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Wed, Apr 03, 2024 at 12:02:19PM -0500, Eric Blake wrote:
-> On Wed, Apr 03, 2024 at 10:11:47AM -0400, Stefan Hajnoczi wrote:
+> On Wed, Apr 3, 2024 at 7:35 PM Hugo Villeneuve <hugo@hugovil.com> wrote:
+> > On Tue, 2 Apr 2024 22:40:07 +0300
+> > Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
+> > > On Tue, Apr 2, 2024 at 8:45 PM Hugo Villeneuve <hugo@hugovil.com> wrote:
+> 
 > ...
-> > > > +static loff_t dm_blk_do_seek_hole_data(struct dm_table *table, lof=
-f_t offset,
-> > > > +		int whence)
-> > > > +{
-> > > > +	struct dm_target *ti;
-> > > > +	loff_t end;
-> > > > +
-> > > > +	/* Loop when the end of a target is reached */
-> > > > +	do {
-> > > > +		ti =3D dm_table_find_target(table, offset >> SECTOR_SHIFT);
-> > > > +		if (!ti)
-> > > > +			return whence =3D=3D SEEK_DATA ? -ENXIO : offset;
-> > >=20
-> > > ...but this blindly returns offset for SEEK_HOLE, even when offset is
-> > > beyond the end of the dm.  I think you want 'return -ENXIO;'
-> > > unconditionally here.
-> >=20
-> > If the initial offset is beyond the end of the table, then SEEK_HOLE
-> > should return -ENXIO. I agree that the code doesn't handle this case.
-> >=20
-> > However, returning offset here is correct when there is data at the end
-> > with SEEK_HOLE.
-> >=20
-> > I'll update the code to address the out-of-bounds offset case, perhaps
-> > by checking the initial offset before entering the loop.
->=20
-> You are correct that if we are on the second loop iteration of
-> SEEK_HOLE (because the first iteration saw all data), then we have
-> found the offset of the start of a hole and should return that offset,
-> not -ENXIO.  This may be a case where we just have to be careful on
-> whether the initial pass might have any corner cases different from
-> later times through the loop, and that we end the loop with correct
-> results for both SEEK_HOLE and SEEK_DATA.
->=20
-> >=20
-> > >=20
-> > > > +
-> > > > +		end =3D (ti->begin + ti->len) << SECTOR_SHIFT;
-> > > > +
-> > > > +		if (ti->type->seek_hole_data)
-> > > > +			offset =3D ti->type->seek_hole_data(ti, offset, whence);
-> > >=20
-> > > Are we guaranteed that ti->type->seek_hole_data will not return a
-> > > value exceeding end?  Or can dm be used to truncate the view of an
-> > > underlying device, and the underlying seek_hold_data can now return an
-> > > answer beyond where dm_table_find_target should look for the next part
-> > > of the dm's view?
-> >=20
-> > ti->type->seek_hole_data() must not return a value larger than
-> > (ti->begin + ti->len) << SECTOR_SHIFT.
->=20
-> Worth adding as documentation then.
->=20
-> >=20
-> > >=20
-> > > In which case, should the blkdev_seek_hole_data callback be passed a
-> > > max size parameter everywhere, similar to how fixed_size_llseek does
-> > > things?
-> > >=20
-> > > > +		else
-> > > > +			offset =3D dm_blk_seek_hole_data_default(offset, whence, end);
-> > > > +
-> > > > +		if (whence =3D=3D SEEK_DATA && offset =3D=3D -ENXIO)
-> > > > +			offset =3D end;
-> > >=20
-> > > You have a bug here.  If I have a dm contructed of two underlying tar=
-gets:
-> > >=20
-> > > |A  |B  |
-> > >=20
-> > > and A is all data, then whence =3D=3D SEEK_HOLE will have offset =3D =
--ENXIO
-> > > at this point, and you fail to check whether B is also data.  That is,
-> > > you have silently treated the rest of the block device as data, which
-> > > is semantically not wrong (as that is always a safe fallback), but not
-> > > optimal.
-> > >=20
-> > > I think the correct logic is s/whence =3D=3D SEEK_DATA &&//.
-> >=20
-> > No, with whence =3D=3D SEEK_HOLE and an initial offset in A, the new of=
-fset
-> > will be (A->begin + A->end) << SECTOR_SHIFT. The loop will iterate and
-> > continue seeking into B.
-> >=20
-> > The if statement you commented on ensures that we also continue looping
-> > with whence =3D=3D SEEK_DATA, because that would otherwise prematurely =
-end
-> > with the new offset =3D -ENXIO.
-> >=20
-> > >=20
-> > > > +	} while (offset =3D=3D end);
-> > >=20
-> > > I'm trying to make sure that we can never return the equivalent of
-> > > lseek(dm, 0, SEEK_END).  If you make my above suggested changes, we
-> > > will iterate through the do loop once more at EOF, and
-> > > dm_table_find_target() will then fail to match at which point we do
-> > > get the desired -ENXIO for both SEEK_HOLE and SEEK_DATA.
-> >=20
-> > Wait, lseek() is supposed to return the equivalent of lseek(dm, 0,
-> > SEEK_END) when whence =3D=3D SEEK_HOLE and there is data at the end.
->=20
-> It was confusing enough for me to write my initial review, I apologize
-> if I'm making it harder for you.
+> 
+> > > > -config SERIAL_SC16IS7XX_CORE
+> > > > -       tristate
+> > > > -
+> > > >  config SERIAL_SC16IS7XX
+> > > >         tristate "SC16IS7xx serial support"
+> > > >         select SERIAL_CORE
+> > > > -       depends on (SPI_MASTER && !I2C) || I2C
+> > > > +       depends on SPI_MASTER || I2C
+> > >
+> > > Is it?
+> >
+> > See discussion below, but I would remove the SPI/I2C depends. And I
+> > would rename SERIAL_SC16IS7XX to SERIAL_SC16IS7XX_CORE.
+> >
+> > >
+> > > >         help
+> > > >           Core driver for NXP SC16IS7xx serial ports.
+> > > >           Supported ICs are:
+> > > > @@ -1042,22 +1039,18 @@ config SERIAL_SC16IS7XX
+> > > >           drivers below.
+> > > >
+> > > >  config SERIAL_SC16IS7XX_I2C
+> > > > -       bool "SC16IS7xx for I2C interface"
+> > > > +       tristate "SC16IS7xx for I2C interface"
+> > > >         depends on SERIAL_SC16IS7XX
+> > > >         depends on I2C
+> > > > -       select SERIAL_SC16IS7XX_CORE if SERIAL_SC16IS7XX
+> > > > -       select REGMAP_I2C if I2C
+> > > > -       default y
+> > > > +       select REGMAP_I2C
+> > > >         help
+> > > > -         Enable SC16IS7xx driver on I2C bus,
+> > > > -         enabled by default to support oldconfig.
+> > > > +         Enable SC16IS7xx driver on I2C bus.
+> > > >
+> > > >  config SERIAL_SC16IS7XX_SPI
+> > > > -       bool "SC16IS7xx for spi interface"
+> > > > +       tristate "SC16IS7xx for SPI interface"
+> > > >         depends on SERIAL_SC16IS7XX
+> > > >         depends on SPI_MASTER
+> > > > -       select SERIAL_SC16IS7XX_CORE if SERIAL_SC16IS7XX
+> > > > -       select REGMAP_SPI if SPI_MASTER
+> > > > +       select REGMAP_SPI
+> > > >         help
+> > > >           Enable SC16IS7xx driver on SPI bus.
+> > >
+> > > Hmm... What I was thinking about is more like dropping
+> > >  the SERIAL_SC16IS7XX and having I2C/SPI to select the core.
+> > >
+> > > See many examples under drivers/iio on how it's done.
+> >
+> > Ok, I found this example:
+> > bf96f6e80cef ("iio: accel: kxsd9: Split out SPI transport")
+> >
+> > In it, the SPI part doesn't select the core, but depends on it, similar
+> > to what I have done. I find this approach more interesting for
+> > embedded systems as you can enable/disable I2C or SPI part if you
+> > need only one interface.
+> 
+> Yes, but what I mean is to have i2c/spi symbols visible and if user
+> selects one of them or both the core is automatically being selected.
 
-No worries, if my code is hard to understand I can learn from your
-feedback.
+Ok, I see. But a drawback of doing this is that for each interface
+(I2C/SPI), you would need to list (duplicate) all the devices
+supported. For now, that list is only in one place,
+for the generic SERIAL_SC16IS7XX_CORE section:
 
-> Yes, we want to ensure that:
->=20
-> off1 =3D lseek(fd, -1, SEEK_END);
-> off2 =3D off1 + 1; // =3D=3D lseek(fd, 0, SEEK_END)
->=20
-> if off1 belongs to a data extent:
->   - lseek(fd, off1, SEEK_DATA) =3D=3D off1
->   - lseek(fd, off1, SEEK_HOLE) =3D=3D off2
->   - lseek(fd, off2, SEEK_DATA) =3D=3D -ENXIO
->   - lseek(fd, off2, SEEK_HOLE) =3D=3D -ENXIO
+...
+config SERIAL_SC16IS7XX_CORE
+	tristate "SC16IS7xx serial support"
+	select SERIAL_CORE
+	help
+	  Core driver for NXP SC16IS7xx serial ports.
+	  Supported ICs are:
 
-Agreed.
+	    SC16IS740
+	    SC16IS741
+	    SC16IS750
+...
 
-> if off1 belongs to a hole:
->   - lseek(fd, off1, SEEK_DATA) =3D=3D -ENXIO
->   - lseek(fd, off1, SEEK_HOLE) =3D=3D off1
->   - lseek(fd, off2, SEEK_DATA) =3D=3D -ENXIO
->   - lseek(fd, off2, SEEK_HOLE) =3D=3D -ENXIO
 
-Agreed.
+> 
+> ...
+> 
+> > > > +#include <linux/device.h>
+> > >
+> > > Not used (by this file).
+> >
+> > I was assuming that this file was for "struct device"?
+> 
+> But it does not use it. It uses an opaque pointer, for which the
+> forward declaration is enough to have.
+> 
+> ...
+> 
+> > > > +void sc16is7xx_remove(struct device *dev);
+> > >
+> > > Will require forward declaration
+> > >
+> > > #include ...
+> > >
+> > > struct device;
+> >
+> > Isn't it provided by <linux/device.h> ?
+> 
+> But why? Have you looked into device.h? It's a mess. You don't need it
+> in this header.
 
->=20
-> Anything in my wall of text from the earlier message inconsistent with
-> this table can be ignored; but at the same time, I was not able to
-> quickly convince myself that your code properly had those properties,
-> even after writing up the table.
->=20
-> Reiterating what I said elsewhere, it may be smarter to document that
-> for callbacks, it is wiser to require intermediate behavior that the
-> input value 'offset' is always between the half-open range
-> [ti->begin<<SECTOR_SHIFT, (ti->begin+ti->len)<<SECTOR_SHIFT), and on
-> success, the output must be in the fully-closed range [offset,
-> (ti->begin+ti->len)<<SECTOR_SHIFT], errors like -EIO are permitted but
-> -ENXIO should not be returned; and let the caller worry about
-> synthesizing -ENXIO from that (since the caller knows whether or not
-> there is a successor ti where adjacency concerns come into play).
->=20
-> That is, we can never pass in off2 (beyond the bounds of the table),
-> and when passing in off1, I think this interface may be easier to work
-> with in the intermediate layers, even though it differs from the
-> lseek() interface above.  For off1 in data:
->   - dm_blk_do_seek_hole_data(dm, off1, SEEK_DATA) =3D=3D off1
->   - dm_blk_do_seek_hole_data(dm, off1, SEEK_HOLE) =3D=3D off2
-> and for a hole:
->   - dm_blk_do_seek_hole_data(dm, off1, SEEK_DATA) =3D=3D off2
->   - dm_blk_do_seek_hole_data(dm, off1, SEEK_HOLE) =3D=3D off1
+Yes I have looked at it, and saw that the forward declaration of
+"struct device" opaque pointer is in it, and this is why I was
+including it. But I will remove it if you wish.
 
-I'll take a look again starting from block/fops.c, through dm.c, and
-into dm-linear.c to see how to make things clearest. Although I would
-like to have the same semantics for every seek function, maybe in the
-end your suggestion will make the code clearer. Let's see.
 
-Stefan
+> 
+> ...
+> 
+> > > Follow the IWYU principle (include what you use).
+> >
+> > Ok, I tried to follow it, I do think those 4 includes are required in
+> > this file, no?
+> 
+> I haven't deeply checked, I believe for the next version you will
+> provide a better list.
 
---N31yZm+DVUhVXgFt
-Content-Type: application/pgp-signature; name="signature.asc"
+Ok
 
------BEGIN PGP SIGNATURE-----
+> 
+> > and maybe I can add <linux/string.h> for memcpy().
+> 
+> For sure, yes.
 
-iQEzBAEBCAAdFiEEhpWov9P5fNqsNXdanKSrs4Grc8gFAmYNmM4ACgkQnKSrs4Gr
-c8iAvgf/VrPqldLYrcFp72kYDOeOuDaMtnQx8rd3kAITiBtLHObhWuXOUCa4tb6i
-npUgJhyNkUTfzPjkrbvEVjiGsRcVHTPCCAo1OiGU/na+hb2XpU8vAWi7kaoUWco/
-K2nyJWOH8WLKSnF7/BysPZDlPa9q2mOsdFIndzIHuNwAQfqTdxvM0Qw6S8TnGmsO
-5GAyjMkBQsxssBhymMz9/5HBUdGY1g5mGOJY3d0KB4QZZ3OpnvxcHLynq3RSl+wZ
-2dRwccLASS6HiwCeUnWWpFqpe0/EZKkVeGiIlb2iCWK5VMM2eETRXGj/JXYECZfw
-+JBARUyqNE2uYBGSpws1RS8qdssnMQ==
-=f+tw
------END PGP SIGNATURE-----
+Ok.
 
---N31yZm+DVUhVXgFt--
+Thanks for your comments.
 
+Hugo.
