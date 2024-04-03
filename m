@@ -1,165 +1,125 @@
-Received: from mail-oa1-f51.google.com (mail-oa1-f51.google.com [209.85.160.51])
+Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C16D215357D;
-	Wed,  3 Apr 2024 18:05:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1A911534EB
+	for <linux-kernel@vger.kernel.org>; Wed,  3 Apr 2024 18:05:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712167526; cv=none; b=or+QKFOXWkfV9nHnL83eS6KstS6PQQqlaxXNAoAkqQmbe3DcgkYNfPetsm4o8t/hr4R/lVNfRqoS5fKdOLxS0dmg3Tw5Jei9k8bZPfnvFSxhNBOKQ88TheJhktd6rd9HEiLAbPLa0vWVGRSHVtBcgFnyj4FUatTN2oHCW0iqtZw=
+	t=1712167527; cv=none; b=sAi0v46KDKKewY66agKZW+XUElBRnFD9F/GGeBc9moh7cXadv9VsMqJEmnPUoFU7edi7TgmV2GLKA1+ndII/Wri067BiOnS7p8hL4EDQy+4cOaYbD+YehJ46dsDP9O1aLzU3UN10ewozGiF2Sy5eQva2pgyS6+rc/pY1sNFDP/o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712167526; c=relaxed/simple;
-	bh=yzV8gvMbMG9aYQ19MBzqxr4amKzhod3/glCMw4VGUZE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=oSv9ihzXp+9HPsOhWBzP7ZAqAKVHf/c4V2hKp9cqxndwa0WP3xmzT/1lOf3sIdzN2+govJbdjxcxtKvHqGqXv42SJgOY2clU4zwoqeM2hXCWr2EqHmczzKvBZvPiYXMdQiP6XXZKprzIhflK7ZcybDvNUGcv1vBBfsp1DaZrJBs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ae15G2wK; arc=none smtp.client-ip=209.85.160.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1712167527; c=relaxed/simple;
+	bh=qqGF9xLxJC4LQcm92S4IX/hRHYqAmBrg8Pca6o1qles=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=Ty5gak8hJb/N6s91Ht2h5ruvE3TO1VfyZb4bFzUt5up2litPIUmVK1jOgKZq6RyeHJgEX0MdyNy+0gSuTJiwNaB+DLSDmxfFpKV5wSlSmXhmNQrIk6uHvFbvC/OFWPOUXM5vZsgD94gwCZg092FSQhraObNccl0pH3oVP6VD8yA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=J+Y7l8XR; arc=none smtp.client-ip=209.85.210.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ae15G2wK"
-Received: by mail-oa1-f51.google.com with SMTP id 586e51a60fabf-229661f57cbso70050fac.1;
-        Wed, 03 Apr 2024 11:05:24 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="J+Y7l8XR"
+Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-6ecd957f949so85541b3a.0
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Apr 2024 11:05:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1712167524; x=1712772324; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=fZ75uqyXcKd8R5Pz7Ws9tVG0bayyM9hJ1Z1pvbSQndY=;
-        b=Ae15G2wK/YEC5vvYpf5FwQ/xNHB/FDO57tazsJYrpr+3JucPRuVBzAx2QQDyIJ6knf
-         hVn4YJr+jG9UKaNC4thE5A3TPrXg75PgSqEfYyaqNdMa2yxW5hU4AeGlhtoLCQ2xW09N
-         V5n2TdP8fe2OV9Zb9mQlT6lbG433DDg2KCM9Z9KPskRmEV5xy7qsWa6wXo0FdLkWYP+Y
-         BahQJvOPjRuHQDpWszrY5zLUPr/mrV582COYrQWqQ6IgqnYX7xE1B5vlC2WE5qx9hPPa
-         1clp9ErbkLzfPCXnRDr4rh4RM/EDOBW5lUkdGVxZdi/cNA2dWz5/1QpKdi7ogGcKSzmj
-         t3kg==
+        d=chromium.org; s=google; t=1712167525; x=1712772325; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=FJlHPBrdTvEXRp/sm58R6lF6ryZ2TinFdRAYOgnph1w=;
+        b=J+Y7l8XR01iEcTEgPlbV4DyD4bhKAEyvrEqV42SBrtzGl6AtuidQdxPr6vPw278ycb
+         xMiUFnyeDWb7hBfhiEaZHKGBJsie3n3e7gtcV6F19LDl6FGxL2a3HMA7bfAbuA1Yzou+
+         AR/T1uOcMMdPPprYydhfC/Y0R7Lq0XtkRomYI=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712167524; x=1712772324;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=fZ75uqyXcKd8R5Pz7Ws9tVG0bayyM9hJ1Z1pvbSQndY=;
-        b=lWJylmC9Y3HHD9KCaNpToIP0B38y59bK3eDBj+r6v8sdWkRNKaNle9ZKSUTG06kmc8
-         5QLkOf/I/5YRQsGOojY+ROQlow0xg96vhn6r/FMbImPRKgwMyZmJv0gS+QbGlnH2qKHF
-         EQ3sEoRQWp+k/tf8jLK2NQ4n5S5kd4a73zZidSziK5xlXT21EoZ7s84C2zCn4Obgpu6t
-         Rt18P1zQn2DrOhQO9xIfW2ffvaQiPdMaLAxK/S3u9X7W+hM0JUPQH+b5qlmCWf7OfZGm
-         FYXpfG1jEucu/BX14GBklTw2/Ir8c7G5oYJdMA/bz0JUcVihYNE/cNjkmTul9XDYTVwH
-         +gqg==
-X-Forwarded-Encrypted: i=1; AJvYcCXLOq92sWpzuAoX794TV7Cnod+VvRG8k1XCOXth/UTbPUyuTaBjggdSmmqGytaNQn4oYIwk7+Ng6XLqV8wPziVvJxeVcc7oJpez+yWud1PuUyJMDfJXaoT4Rv+Hw6cHGcvIQ/oznfFcW+f5SHoq47K3skOEzKbtx75uJMSK8w+oYU8k3DLOx4kaq6u3n4mLj4KLwu6hMlHvPLdkUVPNz96v/kU=
-X-Gm-Message-State: AOJu0YxItEXlZBQyJAtKbuRRFojbeYlWK4WTpi52tJfyB5LWPXhGXaiO
-	zEfjwMrq7D+1kiWE+2zWAqmMXOIxUGSd1/Jy1DO9A1W/ex4angmm
-X-Google-Smtp-Source: AGHT+IEtjndM4TcXGUt3GAQI11LA8n53NRmJwToTDskQZ/GbUK0jGW4KyyBCURII9akrd7cabDnLTA==
-X-Received: by 2002:a05:6870:5d85:b0:22a:b3cd:1d7e with SMTP id fu5-20020a0568705d8500b0022ab3cd1d7emr82627oab.27.1712167523575;
-        Wed, 03 Apr 2024 11:05:23 -0700 (PDT)
-Received: from [192.168.7.169] (c-98-197-58-203.hsd1.tx.comcast.net. [98.197.58.203])
-        by smtp.gmail.com with ESMTPSA id hi27-20020a056870c99b00b0022e9bd70567sm317220oab.31.2024.04.03.11.05.22
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 03 Apr 2024 11:05:23 -0700 (PDT)
-Message-ID: <d35c96ca-24af-fbad-74fe-ad85a433caa2@gmail.com>
-Date: Wed, 3 Apr 2024 13:05:22 -0500
+        d=1e100.net; s=20230601; t=1712167525; x=1712772325;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=FJlHPBrdTvEXRp/sm58R6lF6ryZ2TinFdRAYOgnph1w=;
+        b=mGizRmRSymjnZv5qzwRvjc98G59Zw/ovwOjM1ncALUjdhYehbmDZcK+4RLpTHhB74B
+         j3uwyuWay4PlBXoUwNVXv/IsuZ1Xu4xd2eqT1ZyFDYDHXSyoSIMv3SIxYK3TOy3n56x+
+         r7hjAfkQLvrgeD/c9xLT4pAhFwsc1bA7MbAp4qXhYzPUWGUJlC7k0WHYMyNT+XihXQuC
+         fnmirsJqxuaVWYQ9pNbsew56H6SHoYH79SsverkGMSxcgZmXink2Us2GB9LpbxiaVzDd
+         dUUk9dejcmw7/tay1/M20/tHX8k+EBUVH2CoOfRZAQpCSxYvURHrX8CHhd012yoH2m9m
+         NfRQ==
+X-Gm-Message-State: AOJu0YxfzWzxc1qsEC1znvhxNJoKWPXDXFjqqRaot9+WU3rQ5DCSoZEE
+	Zp9iGbWAayIZpXvd015wcoAjP+hpKiTUZUDizfNL5nsYRg+4x1y+buYANEw9Hg==
+X-Google-Smtp-Source: AGHT+IFofluak2TNyaj7l3kg/C527840RBEHus7enJda2FbDDZHU7/jIXCY5rcY2cES7AC48lbdI3A==
+X-Received: by 2002:a05:6a00:3912:b0:6ea:74d4:a01c with SMTP id fh18-20020a056a00391200b006ea74d4a01cmr310246pfb.14.1712167524934;
+        Wed, 03 Apr 2024 11:05:24 -0700 (PDT)
+Received: from pholla1.c.googlers.com (210.73.125.34.bc.googleusercontent.com. [34.125.73.210])
+        by smtp.gmail.com with ESMTPSA id n16-20020aa79850000000b006e64ddfa71asm12359162pfq.170.2024.04.03.11.05.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 03 Apr 2024 11:05:24 -0700 (PDT)
+From: Pavan Holla <pholla@chromium.org>
+Date: Wed, 03 Apr 2024 18:05:21 +0000
+Subject: [PATCH v3 1/2] platform/chrome: Update ChromeOS EC header for UCSI
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.15.1
-Subject: Re: [PATCH 3/7] dt-bindings: PCI: qcom: Add IPQ9574 PCIe controller
-Content-Language: en-US
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
- Bjorn Andersson <andersson@kernel.org>,
- Konrad Dybcio <konrad.dybcio@linaro.org>, Bjorn Helgaas
- <bhelgaas@google.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>,
- =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
- Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>,
- Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc: ansuelsmth@gmail.com, robimarko@gmail.com, linux-arm-msm@vger.kernel.org,
- linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20240402192555.1955204-1-mr.nuke.me@gmail.com>
- <20240402192555.1955204-3-mr.nuke.me@gmail.com>
- <bad88189-cf70-4200-9fa3-650ea923b4b8@linaro.org>
-From: mr.nuke.me@gmail.com
-In-Reply-To: <bad88189-cf70-4200-9fa3-650ea923b4b8@linaro.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+Message-Id: <20240403-public-ucsi-h-v3-1-f848e18c8ed2@chromium.org>
+References: <20240403-public-ucsi-h-v3-0-f848e18c8ed2@chromium.org>
+In-Reply-To: <20240403-public-ucsi-h-v3-0-f848e18c8ed2@chromium.org>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+ Heikki Krogerus <heikki.krogerus@linux.intel.com>, 
+ Benson Leung <bleung@chromium.org>, Tzung-Bi Shih <tzungbi@kernel.org>, 
+ Guenter Roeck <groeck@chromium.org>
+Cc: linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, 
+ Abhishek Pandit-Subedi <abhishekpandit@chromium.org>, 
+ chrome-platform@lists.linux.dev, Pavan Holla <pholla@chromium.org>
+X-Mailer: b4 0.12.4
 
+Add EC host commands for reading and writing UCSI structures
+in the EC. The corresponding kernel driver is cros-ec-ucsi.
 
+Also update PD events supported by the EC.
 
-On 4/3/24 02:14, Krzysztof Kozlowski wrote:
-> On 02/04/2024 21:25, Alexandru Gagniuc wrote:
->> IPQ9574 has PCIe controllers which are almost identical to IPQ6018.
->> The only difference is that the "iface" clock is not required.
->> Document this difference along with the compatible string.
->>
->> Signed-off-by: Alexandru Gagniuc <mr.nuke.me@gmail.com>
->> ---
->>   .../devicetree/bindings/pci/qcom,pcie.yaml    | 32 +++++++++++++++++++
->>   1 file changed, 32 insertions(+)
->>
->> diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie.yaml b/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
->> index cf9a6910b542..6eb29547c18e 100644
->> --- a/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
->> +++ b/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
->> @@ -26,6 +26,7 @@ properties:
->>             - qcom,pcie-ipq8064-v2
->>             - qcom,pcie-ipq8074
->>             - qcom,pcie-ipq8074-gen3
->> +          - qcom,pcie-ipq9574
->>             - qcom,pcie-msm8996
->>             - qcom,pcie-qcs404
->>             - qcom,pcie-sdm845
->> @@ -383,6 +384,35 @@ allOf:
->>               - const: axi_s # AXI Slave clock
->>               - const: axi_bridge # AXI bridge clock
->>               - const: rchng
->> +
->> +  - if:
->> +      properties:
->> +        compatible:
->> +          contains:
->> +            enum:
->> +              - qcom,pcie-ipq9574
->> +    then:
->> +      properties:
->> +        clocks:
->> +          minItems: 4
->> +          maxItems: 4
->> +        clock-names:
->> +          items:
->> +            - const: axi_m # AXI Master clock
->> +            - const: axi_s # AXI Slave clock
->> +            - const: axi_bridge # AXI bridge clock
->> +            - const: rchng
->> +
->> +  - if:
->> +      properties:
->> +        compatible:
->> +          contains:
->> +            enum:
->> +              - qcom,pcie-ipq6018
->> +              - qcom,pcie-ipq8074-gen3
->> +              - qcom,pcie-ipq9574
->> +    then:
-> 
-> Do not introduce inconsistent style. All if:then: define both clocks and
-> resets, right? And after your patch not anymore?
-> 
-I kept the resets in one place because they are the same cross the ipq* 
-variants.
+Signed-off-by: Pavan Holla <pholla@chromium.org>
+---
+ include/linux/platform_data/cros_ec_commands.h | 20 ++++++++++++++++++++
+ 1 file changed, 20 insertions(+)
 
-Do I understand correctly that you wish me to split up the resets as well?
+diff --git a/include/linux/platform_data/cros_ec_commands.h b/include/linux/platform_data/cros_ec_commands.h
+index ecc47d5fe239..c0f6d054a566 100644
+--- a/include/linux/platform_data/cros_ec_commands.h
++++ b/include/linux/platform_data/cros_ec_commands.h
+@@ -4933,6 +4933,8 @@ struct ec_response_pd_status {
+ #define PD_EVENT_POWER_CHANGE      BIT(1)
+ #define PD_EVENT_IDENTITY_RECEIVED BIT(2)
+ #define PD_EVENT_DATA_SWAP         BIT(3)
++#define PD_EVENT_TYPEC             BIT(4)
++#define PD_EVENT_PPM               BIT(5)
+ struct ec_response_host_event_status {
+ 	uint32_t status;      /* PD MCU host event status */
+ } __ec_align4;
+@@ -5994,6 +5996,24 @@ struct ec_response_typec_vdm_response {
+ 
+ #undef VDO_MAX_SIZE
+ 
++/*
++ * Read/write interface for UCSI OPM <-> PPM communication.
++ */
++#define EC_CMD_UCSI_PPM_SET 0x0140
++
++/* The data size is stored in the host command protocol header. */
++struct ec_params_ucsi_ppm_set {
++	uint16_t offset;
++	uint8_t data[];
++} __ec_align2;
++
++#define EC_CMD_UCSI_PPM_GET 0x0141
++
++struct ec_params_ucsi_ppm_get {
++	uint16_t offset;
++	uint8_t size;
++} __ec_align2;
++
+ /*****************************************************************************/
+ /* The command range 0x200-0x2FF is reserved for Rotor. */
+ 
 
-     if ipq8074 ipq6018
-         clocks
-         resets
+-- 
+2.44.0.478.gd926399ef9-goog
 
-     if ipq9754
-         clocks
-         resets
-
-Alex
-
-> Best regards,
-> Krzysztof
-> 
