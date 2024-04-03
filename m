@@ -1,138 +1,117 @@
-Received: from smtpbgau2.qq.com (smtpbgau2.qq.com [54.206.34.216])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 877973D96B;
-	Wed,  3 Apr 2024 16:13:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.206.34.216
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 795A914D433;
+	Wed,  3 Apr 2024 16:14:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712160807; cv=none; b=MwLJqFrPMp6SG2Bcl1ouO+sg1VhBonULxIlhFxR+JbSHCPrBb+QTONKbXnXANPFNeNhi5tAmQT+sKsPP19MsdqGmShkBEn5a/zvFEZwObN3h+na3bb0+8CLQYTCMyjI8ZpTYFoq5L3yYIfazztoNvssV7eoRAZoZKb5sEA6AUDs=
+	t=1712160895; cv=none; b=CMeKmWubor/TFTUeyQPhTTTlSupRw9TRY9ns68CLg/Lh6yAB7+buTFaqfld1N9Gj7deCLCMNMLjQq4UoWm5T8QQlEJCjMHgOeit1u9DDEqq35HW/p1tG5H0BbXnlqOJPUDvDtXP36f24AWRsPcXU25cQKfgUAyyOg5wxNCb4pIY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712160807; c=relaxed/simple;
-	bh=U2g+9sCqmUZQJJQi6TnXCI2sXHoZ1gVewHiZfEHydQk=;
+	s=arc-20240116; t=1712160895; c=relaxed/simple;
+	bh=Dw4TMcgMCYmhY8DkUmtF9XK+klTwM7RxE/GPJ5ycJF0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tKHgPCcBgx3XT40q0HO60ZZXHBl+VpONUhlCeMAA33LtFn0D7F3NpB+AePZGt6Ko4PCmDagmdd0cGCdiadTeI16CzvWjfCt/QlQT7XsDwanV5Xh2OtIKu7aSZH3GOnS3CC0trn1sW5Lc5RigIqnCvQ00I2Gfq91sRJybX6UXnl0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=shingroup.cn; spf=pass smtp.mailfrom=shingroup.cn; arc=none smtp.client-ip=54.206.34.216
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=shingroup.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=shingroup.cn
-X-QQ-mid: bizesmtpsz12t1712160713tbgjzf
-X-QQ-Originating-IP: +cdGCqhc9XLXPV1xZHXG+yJaAHZ4lfeDteMTgsseDHM=
-Received: from localhost ( [112.0.147.175])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Thu, 04 Apr 2024 00:11:52 +0800 (CST)
-X-QQ-SSF: 01400000000000704000000A0000000
-X-QQ-FEAT: DoD8xN2rKow7K9mxo9zdVlLyDzzKK6iu8xNUc/iF96AuScOXF4+/sBdF/a9hz
-	IhLjBwMhjiYP2CQE+gZvlO3r0le/JduQCVeA1LslTnrTZ3mxRqr6Hrblcl5Nl6sP81I35UI
-	2mr6A9kWQR2TzF4iFX47dR1pUfybV23GVonLPgJYQZC6WATR0qBO7vF2rz15Hp3aEwV6RVl
-	Rw4HExZVMEy012Z/EoWKRl4JXk/LJkvTuHW/BCGOHnhAqPyQqvwUZ1iEAS5w+26tkyYujg0
-	AnR/BfrBs9jlbtHtsV4OH/rL46183JtGluUDwM6yAmTnMyh8VVDNgMJr38rD06wqZJrzHcv
-	Wot9SLoaSTD6ABtuqrtpW+oRTNnBBdEVf/5H3AaskpwLD7/1r9x/ffLlSY2SA==
-X-QQ-GoodBg: 2
-X-BIZMAIL-ID: 13472035299235303404
-Date: Thu, 4 Apr 2024 00:11:51 +0800
-From: Dawei Li <dawei.li@shingroup.cn>
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: will@kernel.org, yury.norov@gmail.com, linux@rasmusvillemoes.dk,
-	xueshuai@linux.alibaba.com, renyu.zj@linux.alibaba.com,
-	yangyicong@hisilicon.com, jonathan.cameron@huawei.com,
-	andersson@kernel.org, konrad.dybcio@linaro.org,
+	 Content-Type:Content-Disposition:In-Reply-To; b=t2ku/qIfqaKY1E6dMhrNgD/EYFks25O20WFI1dIAPUWL4D4/hidTC5E4m2fsYTbxcnngYG/qeerJQ0vh2J5pmbBRCfAeAx9uSCtqP8uXvL0APVvfaTCGzjN3ceFq98313xahJazfYI61xgfcbC7DvLc17sIcXTeOjzU5BpD3DjQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Q+LnZsIa; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Q+LnZsIa"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B015DC433F1;
+	Wed,  3 Apr 2024 16:14:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1712160895;
+	bh=Dw4TMcgMCYmhY8DkUmtF9XK+klTwM7RxE/GPJ5ycJF0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Q+LnZsIa2JGGoV12cX3ZMFQhd29l75NesZeX4wzM5ZgtWKEXLDNztOOzWr/GFhev1
+	 tE1H+SaIbAdpnugrYIgh6WzbcOp6E++9hG5TeVmT08B589T+ncsXxX68JxxZ80XJIT
+	 qAym+sr7rBOxZWGcWmPQPZXd1+F+lodeNob5iXBbn2aLh3XHAY/Mc6nLnnN9RSmFWD
+	 dSocGzn7mou1RMW/gV5GCp3DPFDxCi4EO5Y9QU50YdMEu4XHD4Lll9+xBJBA4jurGO
+	 ocpL8tD168CUWyUqz7acBtK5wIm2oe/mOcVoypANl6/J4V6Fk0Q6RJpl0wVl8HiSA+
+	 fdh54vM0/5inA==
+Date: Wed, 3 Apr 2024 17:14:49 +0100
+From: Conor Dooley <conor@kernel.org>
+To: git@luigi311.com
+Cc: linux-media@vger.kernel.org, dave.stevenson@raspberrypi.com,
+	jacopo.mondi@ideasonboard.com, mchehab@kernel.org, robh@kernel.org,
+	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
+	shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
+	festevam@gmail.com, sakari.ailus@linux.intel.com,
+	devicetree@vger.kernel.org, imx@lists.linux.dev,
 	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-arm-msm@vger.kernel.org
-Subject: Re: [PATCH v2 00/10] perf: Avoid placing cpumask var on stack
-Message-ID: <5BCB924A8FA6320A+Zg1/xw9C493rZ868@centos8>
-References: <20240403125109.2054881-1-dawei.li@shingroup.cn>
- <Zg1qgxqrEi3sX3CA@FVFF77S0Q05N>
+	pavel@ucw.cz, phone-devel@vger.kernel.org
+Subject: Re: [PATCH v3 18/25] dt-bindings: media: imx258: Add alternate
+ compatible strings
+Message-ID: <20240403-vista-defendant-ebadbaa52059@spud>
+References: <20240403150355.189229-1-git@luigi311.com>
+ <20240403150355.189229-19-git@luigi311.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="dTboEyzG/5e2UTpE"
+Content-Disposition: inline
+In-Reply-To: <20240403150355.189229-19-git@luigi311.com>
+
+
+--dTboEyzG/5e2UTpE
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <Zg1qgxqrEi3sX3CA@FVFF77S0Q05N>
-X-QQ-SENDSIZE: 520
-Feedback-ID: bizesmtpsz:shingroup.cn:qybglogicsvrgz:qybglogicsvrgz5a-1
+Content-Transfer-Encoding: quoted-printable
 
-Hi Mark,
+On Wed, Apr 03, 2024 at 09:03:47AM -0600, git@luigi311.com wrote:
+> From: Dave Stevenson <dave.stevenson@raspberrypi.com>
+>=20
+> There are a number of variants of the imx258 modules that can not
+> be differentiated at runtime, so add compatible strings for the
+> PDAF variant.
+>=20
+> Signed-off-by: Dave Stevenson <dave.stevenson@raspberrypi.com>
+> Signed-off-by: Luis Garcia <git@luigi311.com>
+> ---
+>  .../devicetree/bindings/media/i2c/sony,imx258.yaml       | 9 +++++++--
+>  1 file changed, 7 insertions(+), 2 deletions(-)
+>=20
+> diff --git a/Documentation/devicetree/bindings/media/i2c/sony,imx258.yaml=
+ b/Documentation/devicetree/bindings/media/i2c/sony,imx258.yaml
+> index bee61a443b23..c978abc0cdb3 100644
+> --- a/Documentation/devicetree/bindings/media/i2c/sony,imx258.yaml
+> +++ b/Documentation/devicetree/bindings/media/i2c/sony,imx258.yaml
+> @@ -13,11 +13,16 @@ description: |-
+>    IMX258 is a diagonal 5.867mm (Type 1/3.06) 13 Mega-pixel CMOS active p=
+ixel
+>    type stacked image sensor with a square pixel array of size 4208 x 312=
+0. It
+>    is programmable through I2C interface.  Image data is sent through MIPI
+> -  CSI-2.
+> +  CSI-2. The sensor exists in two different models, a standard variant
+> +  (IMX258) and a variant with phase detection autofocus (IMX258-PDAF).
+> +  The camera module does not expose the model through registers, so the
+> +  exact model needs to be specified.
+> =20
+>  properties:
+>    compatible:
+> -    const: sony,imx258
+> +    enum:
+> +      - sony,imx258
+> +      - sony,imx258-pdaf
 
-On Wed, Apr 03, 2024 at 03:41:07PM +0100, Mark Rutland wrote:
-> On Wed, Apr 03, 2024 at 08:50:59PM +0800, Dawei Li wrote:
-> > Hi all,
-> 
-> Hi,
-> 
-> > This is v2 of [1] and [2] which basically eliminate cpumask var allocation
-> > on stack for perf subsystem.
-> > 
-> > Change since v1:
-> > - Change from dynamic allocation to a temporary var free helper:
-> >   cpumask_any_and_but().	[Mark]
-> > 
-> > - Some minor coding style improvements, reverse chrismas tree e.g.
-> > 
-> > - For cpumask_any_and_but() itself:
-> >   - Moved to cpumask.h, just like other helpers.
-> >   - Return value converted to unsigned int.
-> >   - Remove EXPORT_SYMBOL, for obvious reason.
-> 
-> Thanks for this!
-> 
-> The logic all looks good; if you can spin a v3 with the updated commit messages
-> I reckon we can queue this up shortly.
+Does the pdaf variant support all of the features/is it register
+compatible with the regular variant? If it is, the regular variant
+should be a fallback compatible.
 
-Thanks for review.
+Cheers,
+Conor.
 
-v3 respinned:
-https://lore.kernel.org/lkml/20240403155950.2068109-1-dawei.li@shingroup.cn/
+--dTboEyzG/5e2UTpE
+Content-Type: application/pgp-signature; name="signature.asc"
 
-If it's going through perf tree, do we need Acked-by from bitmap
-maintainers for patch[1]?
+-----BEGIN PGP SIGNATURE-----
 
-Thanks,
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZg2AeQAKCRB4tDGHoIJi
+0g9GAP9MN2G2glo0Nhr4UByr3u4eG2VrUcxCMe2B4Uzd1ErwTQEA7j5t7hgUL0mU
+pr1/uez8k5GMNQNEpwMErPYIlusOjw8=
+=KKOZ
+-----END PGP SIGNATURE-----
 
-    Dawei
-
-> 
-> Mark.
-> 
-> > 
-> > [1]:
-> > https://lore.kernel.org/lkml/20240402105610.1695644-1-dawei.li@shingroup.cn/
-> > 
-> > [2]:
-> > https://lore.kernel.org/lkml/1486381132-5610-1-git-send-email-mark.rutland@arm.com/
-> > 
-> > Dawei Li (9):
-> >   perf/alibaba_uncore_drw: Avoid placing cpumask var on stack
-> >   perf/arm-cmn: Avoid placing cpumask var on stack
-> >   perf/arm_cspmu: Avoid placing cpumask var on stack
-> >   perf/arm_dsu: Avoid placing cpumask var on stack
-> >   perf/dwc_pcie: Avoid placing cpumask var on stack
-> >   perf/hisi_pcie: Avoid placing cpumask var on stack
-> >   perf/hisi_uncore: Avoid placing cpumask var on stack
-> >   perf/qcom_l2: Avoid placing cpumask var on stack
-> >   perf/thunderx2: Avoid placing cpumask var on stack
-> > 
-> > Mark Rutland (1):
-> >   cpumask: add cpumask_any_and_but()
-> > 
-> >  drivers/perf/alibaba_uncore_drw_pmu.c    | 10 +++-------
-> >  drivers/perf/arm-cmn.c                   | 10 +++++-----
-> >  drivers/perf/arm_cspmu/arm_cspmu.c       |  8 +++-----
-> >  drivers/perf/arm_dsu_pmu.c               | 19 ++++++-------------
-> >  drivers/perf/dwc_pcie_pmu.c              | 10 ++++------
-> >  drivers/perf/hisilicon/hisi_pcie_pmu.c   |  9 ++++-----
-> >  drivers/perf/hisilicon/hisi_uncore_pmu.c |  6 ++----
-> >  drivers/perf/qcom_l2_pmu.c               |  8 +++-----
-> >  drivers/perf/thunderx2_pmu.c             | 10 +++-------
-> >  include/linux/cpumask.h                  | 23 +++++++++++++++++++++++
-> >  10 files changed, 56 insertions(+), 57 deletions(-)
-> > 
-> > Thanks,
-> > 
-> >     Dawei
-> > 
-> > -- 
-> > 2.27.0
-> > 
-> 
+--dTboEyzG/5e2UTpE--
