@@ -1,306 +1,378 @@
-Received: from SG2PR03CU006.outbound.protection.outlook.com (mail-southeastasiaazolkn19010001.outbound.protection.outlook.com [52.103.65.1])
+Received: from mx07-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4183F17C64;
-	Wed,  3 Apr 2024 07:01:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.65.1
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712127690; cv=fail; b=iL5bcTKy+aiDPTF/FXDYImFVk99zWHfOElVRFbekZLfkKIbnV0oL9pwEJvKtL8qK5xDu6lsWTQanp/ISEq+q6Xc+5JkK/uYmqPF+qGWjU2D8zfql3KK+acJtIw7BWedBwGuKrnq/aTP20DsOGe79QKIUKfH56cfOa7MZqSME2dQ=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712127690; c=relaxed/simple;
-	bh=H60V+0kWIwupyfX8LiuhZW+j3UzDmQE/vZc2Ic8yR3k=;
-	h=References:In-Reply-To:From:Date:Message-ID:Subject:To:Cc:
-	 Content-Type:MIME-Version; b=gDGLY65Qevip7oQNaiWOepoTHoFno4ttAtUt4tPz8wixuVBOnE433aryPDxBWaB1ZpWw37n4P4TAlmuEGOjnvT4WpA6dI6J4kfsuc28Y5Marxddi/sPoeal9bgv6oaQ+2tYvCV+qaUURQPiHPRF8Lpc9Z6/ZYdXV90jbn43Q8Is=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hotmail.com; spf=pass smtp.mailfrom=hotmail.com; dkim=pass (2048-bit key) header.d=hotmail.com header.i=@hotmail.com header.b=sJ17JrcO; arc=fail smtp.client-ip=52.103.65.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hotmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 378C017BC2;
+	Wed,  3 Apr 2024 07:05:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1712127953; cv=none; b=C1LHnf0ShPv7CaG6Eie9AdPNYkYj9IjB8n66IxmP4tlZQEfRAuzCbn7i0qrFV4fFlUBrtgkdQg8BkYbw+oOqsOjedEwVSUJ3YM3DuyRZiyHAkfRkJnoKYNUV4//niMVEAT/d7dI9adkSZVWFd1VbFfPs6rJ4EDORf2qpnzhVcwk=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1712127953; c=relaxed/simple;
+	bh=JX3xv30Fh/dlb45h1AhPGtNRiRdxzdUrMYjjSgZdUH8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=W+8JfnpS0s777T/Mn3aYYNGtdOuQNfZ4oa0q/N7QMUlDGwgFvDbfAC64kzal5WaBBKNgcKFH/GJoWHHFPL5aq15Macc5oWxVcm3IKqooXLDCiE7Z3F4dInOIJIBoer9D3na80T1Nrqv6cQk3zaG/oqKYrwVyP3WbKoSpuQimm+w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=BxEU8nsi; arc=none smtp.client-ip=91.207.212.93
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=hotmail.com header.i=@hotmail.com header.b="sJ17JrcO"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=j3MjU8sZfb7wRJQdEgixCNKdvRnFKY5/6f0ARO68+PWoJJUHag8rD6hTI7mGThKK0cx/sJwok/Lg09sXpS3uJm4IrzRfc6X00qQJSXqGMwoVnJuTJKxYVGafPzkG0jI2j0imCWPUIVFm7KYdu8HTsWzp/jHaD/yOFG3OXvF2QqMEMNIONR1DujbkBHA7y488QnIH9Tfa+NWQ/82V9egbNRK/EHPtP0SkUw0Gn/VBUhKFHsxUQLLgHzAFYieL/xeojs1FNYqdGCxJhb0aXKlDLBGiY8NwkEv7s2cg9z7Sl5e1eVa8hdZDCojglDqBBHWARN3Z4g4a7/Mx0lEylVCp5A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=gKGTi1ZgvXJbZ7IBc9CNYpo9oehRZlmlZ4pQi9FlzT0=;
- b=KpbP5UEg3t7vBRBh2RyJQXkyjkMezV1eg4fZKSk20hhIiA3FJ/+XIBewMLDJbvn9HQm4cbS7ZvDVvZQnFT4pMRQQ5QwZ/fqQG1JMiI6pC35y9WsVVREkgUB4E97cGoyd7JDfQhOPPDj84uR3JujhVd0GjFQajdHkPhTEqDPLhPSvUHMBPm+YP6BjbdhqtGY0ll1od7AdKQqyLyP/1EjoQHTXRHua9O8Qd/9YzH61azmignPkT9cqy48PtdsqZzxHVzJke8J609IeNpOqJbqWgy/sip6/QxbjqTx6QyQ8UGbcHQCrmiuDbhkjQuXy9tIR2MEqShfwHOcX//AxDrX1rw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hotmail.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=gKGTi1ZgvXJbZ7IBc9CNYpo9oehRZlmlZ4pQi9FlzT0=;
- b=sJ17JrcOoy4EFg9NvgL7SbWQ8bF/JKCH1pLnlULUjVb/hlpcN6G0At9UOaUhspOPlLOX3EHXESGnoADsA3KWM9Sh3FYP1udAAg0Sx399ZvVC5Ex4LIYo9KrSSQCXBSsqOetELzEj2+ZoAQyiePQYxdE6tuj728Np1H+Dp8cZl26tQGE/JdWzgqAuS6bq/9LSFRw/Ua+TYveHuEQ3DNXl3dUOUOwDr1qGrggT6STcjQ3SlgdiNCqtV55JqQZe1IR0l0K3TUM4ynCBOsmLZK2E6HXaPOycBOHifvhcKgXJ/MVHA6DmqdThyG8mpH6Y4OMNiQfZHxD4EPZ+ZiLmzfjDRA==
-Received: from TY0PR06MB5611.apcprd06.prod.outlook.com (2603:1096:400:31e::8)
- by SG2PR06MB5106.apcprd06.prod.outlook.com (2603:1096:4:1c9::7) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.46; Wed, 3 Apr
- 2024 07:01:24 +0000
-Received: from TY0PR06MB5611.apcprd06.prod.outlook.com
- ([fe80::d57a:9f0e:1ee7:85bf]) by TY0PR06MB5611.apcprd06.prod.outlook.com
- ([fe80::d57a:9f0e:1ee7:85bf%5]) with mapi id 15.20.7409.042; Wed, 3 Apr 2024
- 07:01:24 +0000
-X-Forwarded-Encrypted: i=1; AJvYcCWnMCspvVFyBDsidQi0s8mqMN05MJodJP0IcEvBm5BxFeUtIBHYptA8TIC9Hd7QMGAiDKuhNHDFAd6oir3LmvX6YwlaNRXpq8BZmubZWrxpvSKIqQYz2hw6CqHLDtEmT8nOwWRH3VcFdatgwSHfQIh3z4ae9FG9neynXNB1DYL7GabLeunw
-X-Gm-Message-State: AOJu0YwYbtKSuLisgJERhlVVKbOOomAJDO74ldHgzMXpPARiFZ3BHEaS
-	300+WIqF8xL/ZjJcj9FbmIsAm723uOmoYbq74mQ7wH+7+YYBh2KR6SCTA6I1yHH3GgkG61dHy5d
-	bxDuJDb0SF0CMkixybemou5AfVbk=
-X-Google-Smtp-Source: AGHT+IG9fQgqqTrzxdlhtlz4B9nRtzrY/gbDlxx/zNcwmdUHvwxuBujVSYzkUK8n/9nqlsHKIhI8bmjUTnm41AZwAso=
-X-Received: by 2002:a17:906:1390:b0:a4e:3a09:4854 with SMTP id
- f16-20020a170906139000b00a4e3a094854mr1194787ejc.61.1712127199729; Tue, 02
- Apr 2024 23:53:19 -0700 (PDT)
-References: <20240402104930.1053016-1-allencl_lin@hotmail.com>
- <TY0PR06MB5611C37640AA40B2B7716ABE9E3E2@TY0PR06MB5611.apcprd06.prod.outlook.com>
- <20240402-doable-routine-8e8cb4f07ffb@spud>
-In-Reply-To: <20240402-doable-routine-8e8cb4f07ffb@spud>
-From: Allen Lin <allencl_lin@hotmail.com>
-Date: Wed, 3 Apr 2024 14:53:08 +0800
-X-Gmail-Original-Message-ID: <CAEr79DWDD2rxnpgSAHiXYaO_cGpPr1d747PYFUxUsEP8cYA1tg@mail.gmail.com>
-Message-ID:
- <TY0PR06MB561132CACFD67235EFC76C219E3D2@TY0PR06MB5611.apcprd06.prod.outlook.com>
-Subject: Re: [PATCH v2 1/4] dt-bindings: input: Add Himax HX83102J touchscreen
-To: Conor Dooley <conor@kernel.org>
-Cc: dmitry.torokhov@gmail.com, robh@kernel.org, 
-	krzysztof.kozlowski+dt@linaro.org, jikos@kernel.org, 
-	benjamin.tissoires@redhat.com, linux-input@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-TMN: [Xuj2PbHvyVyWj8ITJFyGWMdroB6KGA8t]
-X-ClientProxiedBy: AS4P195CA0049.EURP195.PROD.OUTLOOK.COM
- (2603:10a6:20b:65a::25) To TY0PR06MB5611.apcprd06.prod.outlook.com
- (2603:1096:400:31e::8)
-X-Microsoft-Original-Message-ID:
- <CAEr79DWDD2rxnpgSAHiXYaO_cGpPr1d747PYFUxUsEP8cYA1tg@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="BxEU8nsi"
+Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 4336x1Vn017098;
+	Wed, 3 Apr 2024 09:05:21 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+	message-id:date:mime-version:subject:to:cc:references:from
+	:in-reply-to:content-type:content-transfer-encoding; s=
+	selector1; bh=DCUbKNbF474gC8lSGkhmcz5s3IeyLZ0AClzAIHxg1FI=; b=Bx
+	EU8nsi6DU64tznn8b2K4Ofd6OEfjKTmmTuvyiPn6a9seHJ1JkmOwT9wM74I0sBwY
+	edU2UjRsXbao30fSddAQnHboyDtG87H2GX7zuN7EM4IrY2MSFKQigjK6F5dLLt0v
+	sR7JsZqRS+v71LRUGq52fmFG6YWZK5/4kpX7J7kLnGzlcXzJM3KrAUJuQLz2wXNJ
+	+ljO5f8f+Y/Ih1XIU6YF19tBCnhw7+sootbgLNaAgvMie6TRHo30Wa2TO9+LhbWV
+	1HmqYIle5pdGrEE1Ozrc4ZylRlsmxLAe9UOCy9jdxh6j6GkyCJJR0E3YRKwHyVKJ
+	LsioAICav4OdSTne1FCw==
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3x6aggygkn-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 03 Apr 2024 09:05:21 +0200 (MEST)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id A2DF24002D;
+	Wed,  3 Apr 2024 09:05:16 +0200 (CEST)
+Received: from Webmail-eu.st.com (eqndag1node6.st.com [10.75.129.135])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 20FF32105B0;
+	Wed,  3 Apr 2024 09:04:27 +0200 (CEST)
+Received: from SAFDAG1NODE1.st.com (10.75.90.17) by EQNDAG1NODE6.st.com
+ (10.75.129.135) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Wed, 3 Apr
+ 2024 09:04:26 +0200
+Received: from [10.201.21.20] (10.201.21.20) by SAFDAG1NODE1.st.com
+ (10.75.90.17) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Wed, 3 Apr
+ 2024 09:04:26 +0200
+Message-ID: <7080443a-e06b-45e1-a57a-3f90b2fad07f@foss.st.com>
+Date: Wed, 3 Apr 2024 09:04:25 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: TY0PR06MB5611:EE_|SG2PR06MB5106:EE_
-X-MS-Office365-Filtering-Correlation-Id: 262654f8-7630-4bc3-a65c-08dc53abdfcf
-X-MS-Exchange-SLBlob-MailProps:
-	P1EfU6pZOd/JEwNiiJD34Jowu7eWn6ZGMFRCnmooCN08X5nZjL8UgRvkEIheGt09Rwmun5hB4IbKTQmCVyNt6+/5ejAN/bSO51WVzZ7zqpqB6KY/dJuclH5GmBcaDYRrlq23hY0D1wQzS4E6dpCEwpUn2Em8Azmz8fwwmlZ66IQ9IkU+0MjETiIRiCCfqmhrP2sxDZQHzoz7v7doXYOUPw2niu0KzEpBJ9PzOjoejmD23KWyUl1BKPBT+/3ET4ukDkUn/EliD8YImL+0s5739yKVNrt6AHGu/wizU3OoIVA+fTljrf8pCNO9G8FU2qk514SmRBEE8eS05V5Lf92Ffl6Y6XDntPFyT6DV5bj3b4hfjDuDoHsZMNlFlPbkKB6ihxwUETiuYUAH9HMIPZKHOAPBE/3hy4beimpcoy9a+DZDECk0Qudg7ysMq9InaqWmTrk4yOGEjfP4BE7W6QPSVs4xAaAn8Dtt+1CCrjwwVazyAHbRo9BC9aR1xfEr45gSqFMDzw1sBrYx4rCvlLKgIl5ikXOwF+cVQPNrGPbBmz7se9O12cN8OC+gf5d52jwdp1Xm+UffyzQT8g59RnFUuXic3oSol12tcdxPjyviQLkH83OGQI8MX3PL2msHvb/bgQjb5D/AoZ1vk0vTap0dMRgqKKelGiW54lSiQ0gOeaDEXOyrItkd8gpWPmh0+ZCt7hYFHaqS9UQAuq1I/b7lEL64gTBoNrwv+1/7izozu4BO2r313JvpaJkwq227xavPjv+CMKwWUpOOewBntwsn/rU+0Fr6ZVjQBPgfztR2mWJnEJjaWQIWow==
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	8ZZt4AmFdmL8gOoHIFFO3nM/NZWdtNA62mvrIN3w6GygBnCBySMN2c03h6zjcolkCRrfmUP12S0KfE0kfLiEPW7CQcjUq9cklWFeul2ARtWcD+kogifeMo98aOHZ5GFVh2q6yRg/FMVxLOMZai8l/3OB8yaE4J+LApcjnh7T1yz7LjrKSRq0lLRNW9T0G1IDvoJv8BrGq92vE6jvnk/tpyuCoM/5tSC6AinbPgARVjcQwWZs2VkXm6ZHpmNKIQoRfCDvE0z93A1Tu15aEdjXgh9eZWNwCRkA9tDgnVZrkyVpqaco+WToWIjnfft1c1JHaMw79Ql3/ITlFgTOAtFAkt603lC/XgWBGHb5u0FPnvtNwriCH0p4j9pLdVFcZfA6o0SwEsLbtBseZgWTVU+Z7PBMKS2mVX7IrZiw2ldr85bd3OefgSHz59/1IaEbFOydY1Rsrq597AD1heiqmAB67dpz9JU3KAMiKAdLl0Vbnc9e7BY7z5qC8XtZl3XqW8TXqI/1ggij19LxddLeauy35oQbomyHxfxrIhmPcg8cnuTjR5yVyWE6BMALo8laXaXkZIqMgEvUI76Jw/3Nm6oHSjpgnKmdEHDfz1NXlKCqtjhJ5ex2/0tDQf3pjSM8P/Hi2jerQQxFkLObZFCPIAk2BYus4RGeKFrolWRtUY9BGS4=
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?NitLeUhLS1JibmRwN29DNm92YktreEU5STlVaUtucnJIQllwK3oxa3NQS1NR?=
- =?utf-8?B?VlczTkdrM2ZrL1JpQTk2RmFpR1ZLVGtzUm5BaHpQdFF0MjIrbFFDYWF0QllI?=
- =?utf-8?B?QkNiTXBVbTh6QmJnWFMxVlQxUU41MnBrUlV5MlVjOEp0eHlKeFBKK1EwMk9P?=
- =?utf-8?B?dSs0M3o5U2JPc0YydHBQa1YrWlRoaHorZUlqOVdJdWd1MnRsR0VIbmlpU0Uz?=
- =?utf-8?B?b21JMVp3bTRXRlhtK0VSaFlsbmpaSzgxQkxQaXhQVWlZa2R3alMyRHhBdkUy?=
- =?utf-8?B?SlZJVnhjbU9TdFYweGRPNlEyb29Gc0kyTitFQVR2aDFjR0xtMjNwOGRJSVpk?=
- =?utf-8?B?R2FBamtJLzk3ZktWckVDL29RWVBiRW5zbWc1bmZyaDFIMVNoa3V4Y1kzTUMr?=
- =?utf-8?B?Vm93SDdMZVNUdlBCK1drNkxTeGJvWkljMnpzbTV5YTlFZ1pudmErbTFYY1hW?=
- =?utf-8?B?eWVnbWQ0WXpabDJGQlJ2M2lDcElZM2U3N2VGQWYwTHA2ajlUamVJZW1xME9u?=
- =?utf-8?B?YjhiVGViWk9hZjIrMlNoOUU2ZTNKdUN2R2UyVnhNWFlackxSRFJkZkRseUQ4?=
- =?utf-8?B?aHRKc0FlQjJhQUJoREF2Y0FrZ01YSVFiNnk5MVJxeHQxVXg2K2ZMVlJmYm01?=
- =?utf-8?B?K3l2MndEVnFBQmZ4RFBBTWFtbkxZam03dzRsZlZhSkw2T1R6dWptbEFGMWxJ?=
- =?utf-8?B?aEh1SHJ6NUlzOVFPb05oVjJGam41Tm5DZ29XOFhuSjhubld6c2lHUksyOGhj?=
- =?utf-8?B?NDk3UXdGQ0dDczFQc2IrSWJTWStBMmx3dVR5NFFEcExmYzVKTjB1U0cwc0tv?=
- =?utf-8?B?WWtndGs4citmSjEvbTQ0VWZMZkVxOC9NR3lMQ3F5YnhBd08xandIY2hIM1pq?=
- =?utf-8?B?N1JUT09FODBORmFDRGswYS94eWpLTlg3Ny9vSGtlUUQ2TytNSXVWdWJFNTdW?=
- =?utf-8?B?V2pSVlFZQXozWS9JeGZVRHRISDNFZE1xK0QvWjhWS1lMQnIxQm41eFAxZjIz?=
- =?utf-8?B?aFZDNGhBWC9YN0NFTXA4SFFnamRtZ0Y3QnM0c0lhalN5azlxWS96YzcrWHE2?=
- =?utf-8?B?VzZUUTI0OHFNREZkMjdKeEg4RHNNTlpOTnoveXU5UzVOU0ViN1BaVUovUU9o?=
- =?utf-8?B?bFNhclh0cG1XMC9iVUQ4emdFQXFSNTY4UlZUdlJpTE5FK2FjRW5MaUNnZURG?=
- =?utf-8?B?OTNDdWgrM0xSNG1PZ3VTcnJibld5RFN1Y2NLOXZnRjRjSXNsK0JpUDdlQktu?=
- =?utf-8?B?clpQaW5EZlBSaGh1N3M3c1ZSSDRsbENkeFNZdEJ4bWJTbHVVNy90TERDd3pq?=
- =?utf-8?B?KzYxd2Q3TTF6R0tQY1k1akJEbldwN0NRdm5kNFpicTV1bzdwTWpWK2p4ckVk?=
- =?utf-8?B?allhYjBJbWJRYnhuSDJwQVhHMmZGVUJZRVE4ZlMxN2J2QnVvWWlYWUdFWklu?=
- =?utf-8?B?RzcrUVp4MXJsNWtFK1hFbkU0ZHZPNTVaU2FvWVg2Ymg5aENGVEwrL0dkOUtk?=
- =?utf-8?B?QTl5aHFhcXdOdkJmVEs0ejdSNHl5K3NUYTBRalBEYnFHZzgxU0N0YjFvSTNX?=
- =?utf-8?B?UGc0ZWo2YVdUODdIWCtUa0pBWHVzR2J6QVBJR21qRXdXaHNqOFUrWFE5aE44?=
- =?utf-8?B?bHhNZHc5NnA0RmFUOFZKdThzRjN5NS8xazFRbTJNOGc1Q2VFcXNLV2FFQ0gv?=
- =?utf-8?Q?N38m0p8fTJLivtyLxdGg?=
-X-OriginatorOrg: sct-15-20-4755-11-msonline-outlook-3208f.templateTenant
-X-MS-Exchange-CrossTenant-Network-Message-Id: 262654f8-7630-4bc3-a65c-08dc53abdfcf
-X-MS-Exchange-CrossTenant-AuthSource: TY0PR06MB5611.apcprd06.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Apr 2024 07:01:24.4034
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
-	00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SG2PR06MB5106
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 4/4] remoteproc: stm32: Add support of an OP-TEE TA to
+ load the firmware
+Content-Language: en-US
+To: Mathieu Poirier <mathieu.poirier@linaro.org>
+CC: Bjorn Andersson <andersson@kernel.org>,
+        Jens Wiklander
+	<jens.wiklander@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        "Krzysztof
+ Kozlowski" <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley
+	<conor+dt@kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-remoteproc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <op-tee@lists.trustedfirmware.org>, <devicetree@vger.kernel.org>
+References: <20240308144708.62362-1-arnaud.pouliquen@foss.st.com>
+ <20240308144708.62362-5-arnaud.pouliquen@foss.st.com> <ZgGrnkcebcIQQic6@p14s>
+ <a08add21-b8ff-434a-9689-6af8b05b1965@foss.st.com> <ZgRT7PtzIogAWc50@p14s>
+ <2cd23e93-1a3a-4128-b947-35fe2b04ccab@foss.st.com> <ZgrW2avODv29vWNP@p14s>
+From: Arnaud POULIQUEN <arnaud.pouliquen@foss.st.com>
+Organization: STMicroelectronics
+In-Reply-To: <ZgrW2avODv29vWNP@p14s>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: EQNCAS1NODE4.st.com (10.75.129.82) To SAFDAG1NODE1.st.com
+ (10.75.90.17)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-04-03_06,2024-04-01_01,2023-05-22_02
 
-Conor Dooley <conor@kernel.org> =E6=96=BC 2024=E5=B9=B44=E6=9C=883=E6=97=A5=
- =E9=80=B1=E4=B8=89 =E4=B8=8A=E5=8D=882:09=E5=AF=AB=E9=81=93=EF=BC=9A
->
-> On Tue, Apr 02, 2024 at 06:49:27PM +0800, Allen_Lin wrote:
-> > Add the HX83102j touchscreen device tree bindings documents.
-> > HX83102j is a Himax TDDI touchscreen controller.
-> > It's power sequence should be bound with a lcm driver, thus it
-> > needs to be a panel follower. Others are the same as normal SPI
-> > touchscreen controller.
-> >
-> > Signed-off-by: Allen_Lin <allencl_lin@hotmail.com>
-> > ---
-> >  .../input/touchscreen/himax,hx83102j.yaml     | 100 ++++++++++++++++++
-> >  MAINTAINERS                                   |   6 ++
-> >  2 files changed, 106 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/input/touchscreen=
-/himax,hx83102j.yaml
-> >
-> > diff --git a/Documentation/devicetree/bindings/input/touchscreen/himax,=
-hx83102j.yaml b/Documentation/devicetree/bindings/input/touchscreen/himax,h=
-x83102j.yaml
-> > new file mode 100644
-> > index 000000000000..fe79129f704a
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/input/touchscreen/himax,hx83102=
-j.yaml
-> > @@ -0,0 +1,100 @@
-> > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/input/touchscreen/himax,hx83102j.ya=
-ml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: Himax hx83102j touchscreen
-> > +
-> > +maintainers:
-> > +  - Allen Lin <allencl_lin@hotmail.com>
-> > +
-> > +description:
-> > +  This Himax hx83102j touchscreen uses the spi protocol.
-> > +
-> > +allOf:
-> > +  - $ref: /schemas/input/touchscreen/touchscreen.yaml#
-> > +  - $ref: /schemas/spi/spi-peripheral-props.yaml#
-> > +
-> > +properties:
-> > +  compatible:
-> > +    const: himax,hx83102j
-> > +
-> > +  reg:
-> > +    maxItems: 1
-> > +
-> > +  interrupts:
-> > +    maxItems: 1
-> > +
-> > +  reset-gpios:
-> > +    maxItems: 1
-> > +
-> > +  vccd-supply:
-> > +    description: A phandle for the regualtor supplying IO power.
->
-> nit: regulator
->
-> > +
-> > +  vsn-supply:
-> > +    description: Negative supply regulator.
-> > +
-> > +  vsp-supply:
-> > +    description: Positive supply regulator.
->
-> Cool, thanks for adding these.
->
-> > +
-> > +  ddreset-gpios:
-> > +    description: A phandle of gpio for display reset controlled by the=
- LCD driver.
-> > +      This is the master reset, if this reset is triggered, the TP res=
-et will
-> > +      also be triggered.
-> > +
-> > +  spi-cpha: true
-> > +
-> > +  spi-cpol: true
-> > +
-> > +  spi-max-frequency: true
-> > +
-> > +  panel: true
-> > +
-> > +  himax,firmware-name:
->
-> firmware-name is a standard property, you don't need to vendor prefix it.
->
-> > +    $ref: /schemas/types.yaml#/definitions/string
-> > +    description:
-> > +      Specify the file name for firmware loading.
-> > +
-> > +  himax,pid:
-> > +    $ref: /schemas/types.yaml#/definitions/uint32
-> > +    description:
-> > +      PID for HID device, used to validate firmware.
->
-> Why do you need this _and_ firmware-name? You should be able to trust
-> the firmware that the dt has told you to use, no?
->
-> Cheers,
-> Conor.
 
-OK, I should trust the dt document and fix these issues in next patch
-1. fix "regulator" spelling
-2. himax,firmware-name ->firmware-name
-3. remove himax,pid
 
-Thanks
-Allen
+On 4/1/24 17:46, Mathieu Poirier wrote:
+> On Fri, Mar 29, 2024 at 11:57:43AM +0100, Arnaud POULIQUEN wrote:
+>>
+>>
+>> On 3/27/24 18:14, Mathieu Poirier wrote:
+>>> On Tue, Mar 26, 2024 at 08:31:33PM +0100, Arnaud POULIQUEN wrote:
+>>>>
+>>>>
+>>>> On 3/25/24 17:51, Mathieu Poirier wrote:
+>>>>> On Fri, Mar 08, 2024 at 03:47:08PM +0100, Arnaud Pouliquen wrote:
+>>>>>> The new TEE remoteproc device is used to manage remote firmware in a
+>>>>>> secure, trusted context. The 'st,stm32mp1-m4-tee' compatibility is
+>>>>>> introduced to delegate the loading of the firmware to the trusted
+>>>>>> execution context. In such cases, the firmware should be signed and
+>>>>>> adhere to the image format defined by the TEE.
+>>>>>>
+>>>>>> Signed-off-by: Arnaud Pouliquen <arnaud.pouliquen@foss.st.com>
+>>>>>> ---
+>>>>>> Updates from V3:
+>>>>>> - remove support of the attach use case. Will be addressed in a separate
+>>>>>>   thread,
+>>>>>> - add st_rproc_tee_ops::parse_fw ops,
+>>>>>> - inverse call of devm_rproc_alloc()and tee_rproc_register() to manage cross
+>>>>>>   reference between the rproc struct and the tee_rproc struct in tee_rproc.c.
+>>>>>> ---
+>>>>>>  drivers/remoteproc/stm32_rproc.c | 60 +++++++++++++++++++++++++++++---
+>>>>>>  1 file changed, 56 insertions(+), 4 deletions(-)
+>>>>>>
+>>>>>> diff --git a/drivers/remoteproc/stm32_rproc.c b/drivers/remoteproc/stm32_rproc.c
+>>>>>> index 8cd838df4e92..13df33c78aa2 100644
+>>>>>> --- a/drivers/remoteproc/stm32_rproc.c
+>>>>>> +++ b/drivers/remoteproc/stm32_rproc.c
+>>>>>> @@ -20,6 +20,7 @@
+>>>>>>  #include <linux/remoteproc.h>
+>>>>>>  #include <linux/reset.h>
+>>>>>>  #include <linux/slab.h>
+>>>>>> +#include <linux/tee_remoteproc.h>
+>>>>>>  #include <linux/workqueue.h>
+>>>>>>  
+>>>>>>  #include "remoteproc_internal.h"
+>>>>>> @@ -49,6 +50,9 @@
+>>>>>>  #define M4_STATE_STANDBY	4
+>>>>>>  #define M4_STATE_CRASH		5
+>>>>>>  
+>>>>>> +/* Remote processor unique identifier aligned with the Trusted Execution Environment definitions */
+>>>>>
+>>>>> Why is this the case?  At least from the kernel side it is possible to call
+>>>>> tee_rproc_register() with any kind of value, why is there a need to be any
+>>>>> kind of alignment with the TEE?
+>>>>
+>>>>
+>>>> The use of the proc_id is to identify a processor in case of multi co-processors.
+>>>>
+>>>
+>>> That is well understood.
+>>>
+>>>> For instance we can have a system with A DSP and a modem. We would use the same
+>>>> TEE service, but
+>>>
+>>> That too.
+>>>
+>>>> the TEE driver will probably be different, same for the signature key.
+>>>
+>>> What TEE driver are we talking about here?
+>>
+>> In OP-TEE remoteproc frameork is divided in 2 or  3 layers:
+>>
+>> - the remoteproc Trusted Application (TA) [1] which is platform agnostic
+>> - The remoteproc Pseudo Trusted Application (PTA) [2] which is platform
+>> dependent and can rely on the proc ID to retrieve the context.
+>> - the remoteproc driver (optional for some platforms) [3], which is in charge
+>>  of DT parsing and platform configuration.
+>>
+> 
+> That part makes sense.
+> 
+>> Here TEE driver can be interpreted by remote PTA and/or platform driver.
+>>
+> 
+> I have to guess PTA means "Platform Trusted Application" but I have no
+> guarantee, adding to the level of (already high) confusion brought on by this
+> patchset.
 
->
-> > +
-> > +required:
-> > +  - compatible
-> > +  - reg
-> > +  - interrupts
-> > +  - reset-gpios
-> > +  - panel
-> > +  - vccd-supply
-> > +  - vsn-supply
-> > +  - vsp-supply
-> > +  - ddreset-gpios
-> > +
-> > +additionalProperties: false
-> > +
-> > +examples:
-> > +  - |
-> > +    #include <dt-bindings/gpio/gpio.h>
-> > +    #include <dt-bindings/interrupt-controller/irq.h>
-> > +    spi {
-> > +      #address-cells =3D <1>;
-> > +      #size-cells =3D <0>;
-> > +      ap_ts: touchscreen@0 {
-> > +        compatible =3D "himax,hx83102j";
-> > +        reg =3D <0>;
-> > +        pinctrl-names =3D "default";
-> > +        pinctrl-0 =3D <&touch_int0 &touch_reset>;
-> > +        reset-gpios =3D <&gpio1 8 GPIO_ACTIVE_LOW>;
-> > +        spi-cpha;
-> > +        spi-cpol;
-> > +        interrupt-parent =3D <&gpio1>;
-> > +        interrupts =3D <7 IRQ_TYPE_LEVEL_LOW>;
-> > +        panel =3D <&panel>;
-> > +        vccd-supply =3D <&regulator>;
-> > +        vsn-supply =3D <&regulator>;
-> > +        vsp-supply =3D <&regulator>;
-> > +        ddreset-gpios =3D <&gpio1>;
-> > +      };
-> > +    };
-> > diff --git a/MAINTAINERS b/MAINTAINERS
-> > index 43b39956694a..aa51c60fd66d 100644
-> > --- a/MAINTAINERS
-> > +++ b/MAINTAINERS
-> > @@ -9669,6 +9669,12 @@ L:     linux-kernel@vger.kernel.org
-> >  S:   Maintained
-> >  F:   drivers/misc/hisi_hikey_usb.c
-> >
-> > +HIMAX HID HX83102J TOUCHSCREEN
-> > +M:   Allen Lin <allencl_lin@hotmail.com>
-> > +L:   linux-input@vger.kernel.org
-> > +S:   Maintained
-> > +F:   Documentation/devicetree/bindings/input/touchscreen/himax,hx83102=
-j.yaml
-> > +
-> >  HIMAX HX83112B TOUCHSCREEN SUPPORT
-> >  M:   Job Noorman <job@noorman.info>
-> >  L:   linux-input@vger.kernel.org
-> > --
-> > 2.34.1
-> >
+As mentioned above, PTA is Pseudo Trusted Application. It is an interface
+exposed by OP-TEE core to the OP-TEE application.
+In this case PTA is used to implement the platform part.
+If you need more details about the remoteproc framework in OP-TEE, there is a
+link in the to a presentation in the cover letter.
+
+> 
+>> [1]
+>> https://elixir.bootlin.com/op-tee/latest/source/ta/remoteproc/src/remoteproc_core.c
+>> [2]
+>> https://elixir.bootlin.com/op-tee/latest/source/core/pta/stm32mp/remoteproc_pta.c
+>> [3]
+>> https://elixir.bootlin.com/op-tee/latest/source/core/drivers/remoteproc/stm32_remoteproc.c
+>>
+>>>
+>>>> In such case the proc ID allows to identify the the processor you want to address.
+>>>>
+>>>
+>>> That too is well understood, but there is no alignment needed with the TEE, i.e
+>>> the TEE application is not expecting a value of '0'.  We could set
+>>> STM32_MP1_M4_PROC_ID to 0xDEADBEEF and things would work.  This driver won't go
+>>> anywhere for as long as it is not the case.
+>>
+>>
+>> Here I suppose that you do not challenge the rproc_ID use in general, but for
+>> the stm32mp1 platform as we have only one remote processor. I'm right?
+> 
+> That is correct - I understand the need for an rproc_ID.  The problem is with
+> the comment that states that '0' is aligned with the TEE definitions, which in
+> my head means hard coded value and a big red flag.  What it should say is
+> "aligned with the TEE device tree definition". 
+> 
+>>
+>> In OP-TEE the check is done here:
+>> https://elixir.bootlin.com/op-tee/latest/source/core/drivers/remoteproc/stm32_remoteproc.c#L64
+>>
+>> If driver does not register the proc ID an error is returned indicating that the
+>> feature is not supported.
+>>
+>> In case of stm32mp1 yes we could consider it as useless as we have only one
+>> remote proc.
+>>
+>> Nevertheless I can not guaranty that a customer will not add an external
+>> companion processor that uses OP-TEE to authenticate the associated firmware. As
+>> the trusted Application is the unique entry point. he will need the proc_id to
+>> identify the target at PTA level.
+>>
+>> So from my point of view having a proc ID on stm32MP1 (and on stm32mp2 that will
+>> reuse same driver) aligned between Linux and OP-TEE is useful.
+> 
+> I agree, for as long as it is not hard coded.  The way remote processors are
+> discovered in the DT is perfectly acceptable, i.e the first remote processor is
+> for application X, the second for application Y...
+> 
+>>
+>> That said using a TEE_REMOTEPROC_DEFAULT_ID is something that could be
+>> more generic (for linux and OP-TEE). This ID could be reuse in the stm32mp
+>> driver and platform drivers with an unique internal remote processor.
+>>
+> 
+> I can't find the definition of TEE_REMOTEPROC_DEFAULT_ID anywhere, something
+> that doesn't help the confusion I referred to above.
+
+The TEE_REMOTEPROC_DEFAULT_ID does not yet exist; it is a proposal.
+
+Nevertheless I also had in mind the addition of a "proc ID" property in the DT.
+I will proceed in this way
+
+I think I now have all the information needed to prepare a new revision.
+Thanks for the time passed on this series and your advises
+Regards,
+Arnaud
+
+
+> 
+>> It that solution would be ok for you?
+>>
+>> Regards,
+>> Arnaud
+>>
+>>
+>>>
+>>>>
+>>>>>
+>>>>>> +#define STM32_MP1_M4_PROC_ID    0
+>>>>>> +
+>>>>>>  struct stm32_syscon {
+>>>>>>  	struct regmap *map;
+>>>>>>  	u32 reg;
+>>>>>> @@ -257,6 +261,19 @@ static int stm32_rproc_release(struct rproc *rproc)
+>>>>>>  	return 0;
+>>>>>>  }
+>>>>>>  
+>>>>>> +static int stm32_rproc_tee_stop(struct rproc *rproc)
+>>>>>> +{
+>>>>>> +	int err;
+>>>>>> +
+>>>>>> +	stm32_rproc_request_shutdown(rproc);
+>>>>>> +
+>>>>>> +	err = tee_rproc_stop(rproc);
+>>>>>> +	if (err)
+>>>>>> +		return err;
+>>>>>> +
+>>>>>> +	return stm32_rproc_release(rproc);
+>>>>>> +}
+>>>>>> +
+>>>>>>  static int stm32_rproc_prepare(struct rproc *rproc)
+>>>>>>  {
+>>>>>>  	struct device *dev = rproc->dev.parent;
+>>>>>> @@ -693,8 +710,19 @@ static const struct rproc_ops st_rproc_ops = {
+>>>>>>  	.get_boot_addr	= rproc_elf_get_boot_addr,
+>>>>>>  };
+>>>>>>  
+>>>>>> +static const struct rproc_ops st_rproc_tee_ops = {
+>>>>>> +	.prepare	= stm32_rproc_prepare,
+>>>>>> +	.start		= tee_rproc_start,
+>>>>>> +	.stop		= stm32_rproc_tee_stop,
+>>>>>> +	.kick		= stm32_rproc_kick,
+>>>>>> +	.load		= tee_rproc_load_fw,
+>>>>>> +	.parse_fw	= tee_rproc_parse_fw,
+>>>>>> +	.find_loaded_rsc_table = tee_rproc_find_loaded_rsc_table,
+>>>>>> +};
+>>>>>> +
+>>>>>>  static const struct of_device_id stm32_rproc_match[] = {
+>>>>>> -	{ .compatible = "st,stm32mp1-m4" },
+>>>>>> +	{.compatible = "st,stm32mp1-m4",},
+>>>>>> +	{.compatible = "st,stm32mp1-m4-tee",},
+>>>>>>  	{},
+>>>>>>  };
+>>>>>>  MODULE_DEVICE_TABLE(of, stm32_rproc_match);
+>>>>>> @@ -853,6 +881,7 @@ static int stm32_rproc_probe(struct platform_device *pdev)
+>>>>>>  	struct device *dev = &pdev->dev;
+>>>>>>  	struct stm32_rproc *ddata;
+>>>>>>  	struct device_node *np = dev->of_node;
+>>>>>> +	struct tee_rproc *trproc = NULL;
+>>>>>>  	struct rproc *rproc;
+>>>>>>  	unsigned int state;
+>>>>>>  	int ret;
+>>>>>> @@ -861,9 +890,26 @@ static int stm32_rproc_probe(struct platform_device *pdev)
+>>>>>>  	if (ret)
+>>>>>>  		return ret;
+>>>>>>  
+>>>>>> -	rproc = devm_rproc_alloc(dev, np->name, &st_rproc_ops, NULL, sizeof(*ddata));
+>>>>>> -	if (!rproc)
+>>>>>> -		return -ENOMEM;
+>>>>>> +	if (of_device_is_compatible(np, "st,stm32mp1-m4-tee")) {
+>>>>>> +		/*
+>>>>>> +		 * Delegate the firmware management to the secure context.
+>>>>>> +		 * The firmware loaded has to be signed.
+>>>>>> +		 */
+>>>>>> +		rproc = devm_rproc_alloc(dev, np->name, &st_rproc_tee_ops, NULL, sizeof(*ddata));
+>>>>>> +		if (!rproc)
+>>>>>> +			return -ENOMEM;
+>>>>>> +
+>>>>>> +		trproc = tee_rproc_register(dev, rproc, STM32_MP1_M4_PROC_ID);
+>>>>>> +		if (IS_ERR(trproc)) {
+>>>>>> +			dev_err_probe(dev, PTR_ERR(trproc),
+>>>>>> +				      "signed firmware not supported by TEE\n");
+>>>>>> +			return PTR_ERR(trproc);
+>>>>>> +		}
+>>>>>> +	} else {
+>>>>>> +		rproc = devm_rproc_alloc(dev, np->name, &st_rproc_ops, NULL, sizeof(*ddata));
+>>>>>> +		if (!rproc)
+>>>>>> +			return -ENOMEM;
+>>>>>> +	}
+>>>>>>  
+>>>>>>  	ddata = rproc->priv;
+>>>>>>  
+>>>>>> @@ -915,6 +961,9 @@ static int stm32_rproc_probe(struct platform_device *pdev)
+>>>>>>  		dev_pm_clear_wake_irq(dev);
+>>>>>>  		device_init_wakeup(dev, false);
+>>>>>>  	}
+>>>>>> +	if (trproc)
+>>>>>
+>>>>>         if (rproc->tee_interface)
+>>>>>
+>>>>>
+>>>>> I am done reviewing this set.
+>>>>
+>>>> Thank for your review!
+>>>> Arnaud
+>>>>
+>>>>>
+>>>>> Thanks,
+>>>>> Mathieu
+>>>>>
+>>>>>> +		tee_rproc_unregister(trproc);
+>>>>>> +
+>>>>>>  	return ret;
+>>>>>>  }
+>>>>>>  
+>>>>>> @@ -935,6 +984,9 @@ static void stm32_rproc_remove(struct platform_device *pdev)
+>>>>>>  		dev_pm_clear_wake_irq(dev);
+>>>>>>  		device_init_wakeup(dev, false);
+>>>>>>  	}
+>>>>>> +	if (rproc->tee_interface)
+>>>>>> +		tee_rproc_unregister(rproc->tee_interface);
+>>>>>> +
+>>>>>>  }
+>>>>>>  
+>>>>>>  static int stm32_rproc_suspend(struct device *dev)
+>>>>>> -- 
+>>>>>> 2.25.1
+>>>>>>
