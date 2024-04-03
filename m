@@ -1,61 +1,68 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f51.google.com (mail-pj1-f51.google.com [209.85.216.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56D8D1401C
-	for <linux-kernel@vger.kernel.org>; Wed,  3 Apr 2024 19:41:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 256B52F24;
+	Wed,  3 Apr 2024 19:42:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712173276; cv=none; b=cNHAwZnYjDvcoAh/K94gLTmNztzFXUmwMSAm+Zma2Zs1LVCRNsv1c9slNj2bThOnAFRD6NhNObpZGz9xog6V/yEiv8g3hd8kYsfhL9wAtzyAQGlVgvyWtV6eD09kNFRWJdiatccgtbP+LBQwhQRD9MijsR3mr2RFBrVvplFjhSU=
+	t=1712173378; cv=none; b=JSxb9bfzDSFz+e1TWcYuNoHFXzttCw9KtmlWt5XHr87uN+Cb0DLeVC1g7gFu6smk4rYrQSkG08LANBuG2KP7VsrDdfIoRysxvN4VihFtHXJl6ywotz5A8STz1d/QU6rlgl2Qm5ZBRLby1XXf5iv3heWKSItaNpMwWyvehpIkM54=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712173276; c=relaxed/simple;
-	bh=wtgsOTWcDcU1QVgdYyI9WTvp94IoEhdztTk9LKgRQ5o=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=rKhEqWBTfVHL56sM93VPRJebcvLdT/DAFEG4NOJDRQ21Ujqgt9zNafnOMq41tDrxDnlaq/r2dS68YTT+Ee0eobnapl1k/H+I1YreJZlV4HsdXwDD383dwR0d2f7mBdYPZYtMskCKqv3wNqiRe2Lqbk/Ur8AuQeRkCZLE5yqHtIw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=aFP1pcpT; arc=none smtp.client-ip=192.198.163.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1712173378; c=relaxed/simple;
+	bh=3WUH9SubfwYcKxvgcz+D1M4r1DIyiUItWr+37jMl3Vw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=exzdnVnn1PlQh3YExmyxlRg8WKqMUmmovjhSR8YAnULyv7QyjH52XZTUivkGmWYB0Pzg75iRgnaZw2TeOmfBNK7wzLwwxMwueB0jrSxZzcbONxeuLqanVYQoDmuEOc3lfYzYzAwuVUEpoqkbFbIoCDXJ2BMoQbF8w/+rDtGmhB4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OZJT+mgl; arc=none smtp.client-ip=209.85.216.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="aFP1pcpT"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1712173274; x=1743709274;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=wtgsOTWcDcU1QVgdYyI9WTvp94IoEhdztTk9LKgRQ5o=;
-  b=aFP1pcpTnOUM0R8ml9pGp8Y+h6H1iY/uUAyvo1gnPKiS2DSvWUWMtIaJ
-   Css8JfHjCw2b6cqqvO5K8r1qofWf/wtzAaUlaPOtRdG2a8tYKm3siJqVl
-   L6AxpCfq2qVyoy8QEuq6FAzaF3RZZMfkV9JS8vhc2J85pCKm2vppFcygk
-   PEOTn85IHxHW6hvPE9/YNAEVVeiax/uFaXdCTjtIdKvfTQSsdIhvwMOor
-   B7CtQFWtE0xBXDpXrReSgrBXJ05lCt+559jS7uJpK6y1z2Besvahchx7B
-   vScrgZNsdDUotoVhVbCDSaH+LLoxDdzWp9NmSyyURCzUyMIsbssqQi8zb
-   w==;
-X-CSE-ConnectionGUID: XoHyOXoAR2a5fxwOAU1SkQ==
-X-CSE-MsgGUID: 5rEsUEr7SLaoMEPsA+yxDQ==
-X-IronPort-AV: E=McAfee;i="6600,9927,11033"; a="7618104"
-X-IronPort-AV: E=Sophos;i="6.07,177,1708416000"; 
-   d="scan'208";a="7618104"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2024 12:41:13 -0700
-X-CSE-ConnectionGUID: 5iv+8BkpSdqtG4B9arNTIQ==
-X-CSE-MsgGUID: 6+8/0VDnRaO+EoncGVhshA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,177,1708416000"; 
-   d="scan'208";a="19147943"
-Received: from lkp-server01.sh.intel.com (HELO e61807b1d151) ([10.239.97.150])
-  by orviesa008.jf.intel.com with ESMTP; 03 Apr 2024 12:41:11 -0700
-Received: from kbuild by e61807b1d151 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1rs6Ts-0000Ao-31;
-	Wed, 03 Apr 2024 19:41:08 +0000
-Date: Thu, 4 Apr 2024 03:40:24 +0800
-From: kernel test robot <lkp@intel.com>
-To: Liming Sun <limings@nvidia.com>
-Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
-	Hans de Goede <hdegoede@redhat.com>,
-	Vadim Pasternak <vadimp@nvidia.com>,
-	David Thompson <davthompson@nvidia.com>
-Subject: drivers/platform/mellanox/mlxbf-tmfifo.c:275:38: sparse: sparse:
- incorrect type in assignment (different base types)
-Message-ID: <202404040339.S7CUIgf3-lkp@intel.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OZJT+mgl"
+Received: by mail-pj1-f51.google.com with SMTP id 98e67ed59e1d1-2a28b11db68so110749a91.2;
+        Wed, 03 Apr 2024 12:42:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1712173376; x=1712778176; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=MUae7FX57GCbhwQ8NWUH2pJwsLTvGchJ6LyegeiE4d0=;
+        b=OZJT+mglv8j4K+Q6smrVixru9z92cltp74WDeoxWjcbgJ3dqUZv1rA3XSO4xBe0vlA
+         JDwRcHniqTXgh6JcTvUfTqhrm0v+5tYURVq++tp+za6Wn+Bb1puKuUiTVNUn3vgCfInb
+         ftFBhiQJYiujhiYJ+TeEEBplguAw4hUxZnzxZw/qJY5Qg9peeViri3CT/mN87Ma8N0Ie
+         ac6FLeVEu+fmpxRu05RxMkKI7H0VLsCkVqmw5V27adNMOmR74NM4oeXwcpIjG00/XwRQ
+         61EhcHsxveDHlv1bqZKeDPL5y6NaOSDWbnEOvroMp3AOrnTOMmK1N+aJGj7AfnKIJxYR
+         51AA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712173376; x=1712778176;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=MUae7FX57GCbhwQ8NWUH2pJwsLTvGchJ6LyegeiE4d0=;
+        b=WjkX1YyyEotKyhkd1hyxqPczeiuopidwA0YQInwgSawyAf/L6adJ4WJJ8CywmFX0xN
+         wqzYm+YMT+EOY3tdOfsqijCmX/MuFHSes2mg1SlDxy8j/XpgStvHbcgOYW5BfP8wOhGC
+         3KKTpygFDSWxVcUJvfKorczaoM1Xol2nTeWtI+VPWAJA+VIXYeeuyo1YmR7ysivIYI+s
+         s3xrx/jAvjP2qu7W7n++8wtYbmtKYnRtgcuHn6iPLzX58tRuqLHAJH6RRJs8vMlIn8Ct
+         xp79eBEqRQzVIg/XvNVudW3tkpRVG7OURzRu1/hu5XMFcpYs1XqKV42oHTxBEtSPlLff
+         ICig==
+X-Forwarded-Encrypted: i=1; AJvYcCULJHWELfRobEGZYa8xhlRuslmKt/FmGucqlwFvSVtJ/3unKWs8DA6CN+s850/7WZFqWVTHSs9RHfcEpGh94Vqki0MVLLYk9+wGZGM//H+zNBpT5MpbQqBhuphWbrKsZzbu2Jv/OHLE3g==
+X-Gm-Message-State: AOJu0Yxv5SqHKVeofOLzEbJYuNHyz5WzRnSwkAx/qtZ33LMSzCCMOgm2
+	Cy4jkfCYpCudGaqbXJ0k70ZXmoazp1bOg54Vw0aS5v6WSXRXFsVj
+X-Google-Smtp-Source: AGHT+IEVXZX4Q2IoMb+hEcs5wG+rtM60qFsELk5WmIi68s8cL1mTcSnvyfYFxW/wOCpaOy2eQGQZBg==
+X-Received: by 2002:a17:90a:43c5:b0:29b:2268:3349 with SMTP id r63-20020a17090a43c500b0029b22683349mr508502pjg.18.1712173376438;
+        Wed, 03 Apr 2024 12:42:56 -0700 (PDT)
+Received: from localhost ([2620:10d:c090:400::5:25ab])
+        by smtp.gmail.com with ESMTPSA id nh12-20020a17090b364c00b0029c61521eb5sm64786pjb.43.2024.04.03.12.42.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 03 Apr 2024 12:42:56 -0700 (PDT)
+Sender: Tejun Heo <htejun@gmail.com>
+Date: Wed, 3 Apr 2024 09:42:54 -1000
+From: Tejun Heo <tj@kernel.org>
+To: Tianchen Ding <dtcccc@linux.alibaba.com>
+Cc: linux-kernel@vger.kernel.org, Zefan Li <lizefan.x@bytedance.com>,
+	Johannes Weiner <hannes@cmpxchg.org>, Shuah Khan <shuah@kernel.org>,
+	cgroups@vger.kernel.org, linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH] selftests: cgroup: skip test_cgcore_lesser_ns_open when
+ cgroup2 mounted without nsdelegate
+Message-ID: <Zg2xPtwFvT-lsSJX@slm.duckdns.org>
+References: <20240327024437.3196-1-dtcccc@linux.alibaba.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -64,64 +71,22 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <20240327024437.3196-1-dtcccc@linux.alibaba.com>
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-head:   c85af715cac0a951eea97393378e84bb49384734
-commit: 78034cbece79c2d730ad0770b3b7f23eedbbecf5 platform/mellanox: mlxbf-tmfifo: Drop the Rx packet if no more descriptors
-date:   7 months ago
-config: arm64-randconfig-r112-20240404 (https://download.01.org/0day-ci/archive/20240404/202404040339.S7CUIgf3-lkp@intel.com/config)
-compiler: clang version 19.0.0git (https://github.com/llvm/llvm-project 546dc2245ffc4cccd0b05b58b7a5955e355a3b27)
-reproduce: (https://download.01.org/0day-ci/archive/20240404/202404040339.S7CUIgf3-lkp@intel.com/reproduce)
+On Wed, Mar 27, 2024 at 10:44:37AM +0800, Tianchen Ding wrote:
+> The test case test_cgcore_lesser_ns_open only tasks effect when cgroup2
+> is mounted with "nsdelegate" mount option. If it misses this option, or
+> is remounted without "nsdelegate", the test case will fail. For example,
+> running bpf/test_cgroup_storage first, and then run cgroup/test_core will
+> fail on test_cgcore_lesser_ns_open. Skip it if "nsdelegate" is not
+> detected in cgroup2 mount options.
+> 
+> Fixes: bf35a7879f1d ("selftests: cgroup: Test open-time cgroup namespace usage for migration checks")
+> Signed-off-by: Tianchen Ding <dtcccc@linux.alibaba.com>
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202404040339.S7CUIgf3-lkp@intel.com/
+Applied to cgroup/for-6.10.
 
-sparse warnings: (new ones prefixed by >>)
->> drivers/platform/mellanox/mlxbf-tmfifo.c:275:38: sparse: sparse: incorrect type in assignment (different base types) @@     expected restricted __virtio32 [usertype] len @@     got unsigned long @@
-   drivers/platform/mellanox/mlxbf-tmfifo.c:275:38: sparse:     expected restricted __virtio32 [usertype] len
-   drivers/platform/mellanox/mlxbf-tmfifo.c:275:38: sparse:     got unsigned long
-
-vim +275 drivers/platform/mellanox/mlxbf-tmfifo.c
-
-   257	
-   258	/* Allocate vrings for the FIFO. */
-   259	static int mlxbf_tmfifo_alloc_vrings(struct mlxbf_tmfifo *fifo,
-   260					     struct mlxbf_tmfifo_vdev *tm_vdev)
-   261	{
-   262		struct mlxbf_tmfifo_vring *vring;
-   263		struct device *dev;
-   264		dma_addr_t dma;
-   265		int i, size;
-   266		void *va;
-   267	
-   268		for (i = 0; i < ARRAY_SIZE(tm_vdev->vrings); i++) {
-   269			vring = &tm_vdev->vrings[i];
-   270			vring->fifo = fifo;
-   271			vring->num = MLXBF_TMFIFO_VRING_SIZE;
-   272			vring->align = SMP_CACHE_BYTES;
-   273			vring->index = i;
-   274			vring->vdev_id = tm_vdev->vdev.id.device;
- > 275			vring->drop_desc.len = VRING_DROP_DESC_MAX_LEN;
-   276			dev = &tm_vdev->vdev.dev;
-   277	
-   278			size = vring_size(vring->num, vring->align);
-   279			va = dma_alloc_coherent(dev->parent, size, &dma, GFP_KERNEL);
-   280			if (!va) {
-   281				mlxbf_tmfifo_free_vrings(fifo, tm_vdev);
-   282				dev_err(dev->parent, "dma_alloc_coherent failed\n");
-   283				return -ENOMEM;
-   284			}
-   285	
-   286			vring->va = va;
-   287			vring->dma = dma;
-   288		}
-   289	
-   290		return 0;
-   291	}
-   292	
+Thanks.
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+tejun
