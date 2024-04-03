@@ -1,67 +1,69 @@
-Received: from mail-pf1-f176.google.com (mail-pf1-f176.google.com [209.85.210.176])
+Received: from mail-pf1-f181.google.com (mail-pf1-f181.google.com [209.85.210.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26DEC1534F2
-	for <linux-kernel@vger.kernel.org>; Wed,  3 Apr 2024 18:22:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 230B0153593
+	for <linux-kernel@vger.kernel.org>; Wed,  3 Apr 2024 18:22:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712168527; cv=none; b=dnmSaP+cl1xg28lD/Moy1WHuNr95MAbZelnE7TDiF2OI2iAnORtW18BFg63RACB+mvs69zEwUn3k2zFqgr7KWTnz/QkYS6LlrYhDghUvS3Vq1vyHQi5manOE1CYkrwacIT0pH06uUU/8VlJOy2HVi3IcbvMCNgxnADHIaBwCCvc=
+	t=1712168530; cv=none; b=mNekSalGbmugKaW9nwVxUHm0jm40TheEOdJpI2ZzqZBiPKrxbd3kqWBLf/ZLEugj44X+BU2tw52AocanwIXHh2ByMG9Q4/Bl4PzHbKUS6ZgE8iaYd5D09ag9TreCo5Hm3j4NgRK2JLf4Qw5ZbraZGOU+gsMkhhYjFOHDJPsbv4w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712168527; c=relaxed/simple;
-	bh=6+2nrIGa61dq0/VeelCYA2bW5+YZa0WC5m2ANvBtBis=;
+	s=arc-20240116; t=1712168530; c=relaxed/simple;
+	bh=YLQ5ks3ozTKHgLjWeRoai9T7IQizj8Dx9UVCzQpSmEY=;
 	h=Date:Subject:In-Reply-To:CC:From:To:Message-ID:Mime-Version:
-	 Content-Type; b=nBB+EuzefO9MfjCLE57g/OlNhl+gWFYfAD5nOq7OJ/suNv4gP9CWgrEqeHMNd1naJjS7T1XJ3u+9A5u8Je9p3MOqOZfkJjo4aBFEItMRj2Ycs+r7eosuFUYfBKRP93eH19Y6hzxu8a8IrD9oFBEhlhaR47Ds+Pgv/mDw5tFnPMs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dabbelt.com; spf=pass smtp.mailfrom=dabbelt.com; dkim=pass (2048-bit key) header.d=dabbelt-com.20230601.gappssmtp.com header.i=@dabbelt-com.20230601.gappssmtp.com header.b=kH8CMOU9; arc=none smtp.client-ip=209.85.210.176
+	 Content-Type; b=tgJBfi4bw2mJQQp1M2584cQE1WaurHypsd3myV5PIkzz4PL5iTHyG26RAbA+PyjCx5KbyFlnpRHcsZ+EV+ILMre+Y0UAKUe/zRREHZttQe1Y9egeuPuXTbIivBknrmSDHRdVrjuhI2IA6kj6+V8srj65W6/WtHzSV40ymrH0fYc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dabbelt.com; spf=pass smtp.mailfrom=dabbelt.com; dkim=pass (2048-bit key) header.d=dabbelt-com.20230601.gappssmtp.com header.i=@dabbelt-com.20230601.gappssmtp.com header.b=ZwCD8duL; arc=none smtp.client-ip=209.85.210.181
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dabbelt.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dabbelt.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=dabbelt-com.20230601.gappssmtp.com header.i=@dabbelt-com.20230601.gappssmtp.com header.b="kH8CMOU9"
-Received: by mail-pf1-f176.google.com with SMTP id d2e1a72fcca58-6eafbcc5392so88788b3a.1
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Apr 2024 11:22:04 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=dabbelt-com.20230601.gappssmtp.com header.i=@dabbelt-com.20230601.gappssmtp.com header.b="ZwCD8duL"
+Received: by mail-pf1-f181.google.com with SMTP id d2e1a72fcca58-6e6f4ad4c57so75467b3a.2
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Apr 2024 11:22:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=dabbelt-com.20230601.gappssmtp.com; s=20230601; t=1712168524; x=1712773324; darn=vger.kernel.org;
+        d=dabbelt-com.20230601.gappssmtp.com; s=20230601; t=1712168527; x=1712773327; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:message-id:to:from:cc
          :in-reply-to:subject:date:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=P+Kf1VtrPbxx/AIfqj2WJbrl2k9+u/D2i3gfwNLRUnA=;
-        b=kH8CMOU96ebcbVpq2GeI07d1Wtg+wghMC6HXmp/DhhqNalxStujc+HueIngwe2s+hB
-         cXldia5binjQzZxnqYN8Bf9527lL1DO5w9xgfJaMY0B6YRY3Gvq8348Y1YMxmL+2k/L0
-         teHuivnw5vZflVpByEpu5EpnkIl1BHedDL3qwxpDCGJ4JMC5ckfM52PWReXVUWHG0OTc
-         lI6P40zoHiK7+SHa5gIXS0E8fGz8kVX3OZs6j7FU/Bb9es2F5mqUjWD7bTPLCag10Bml
-         etrnJgsULAsgJxQn15YzB3AVlvF37B1N1IoYHn2yjU7FfdhW1wkqrxDXjkSH1ZiRinkX
-         rgAA==
+        bh=LoPxyy6ZZevKYMVQQwthSJ0EL7SyRC2E5s9/TcAwzlA=;
+        b=ZwCD8duLiCKuvl/u7C9SdR5KA7kiEXzgg9lxw5OSzEdw1T/wGKr5yIscD1y5u8+1Jb
+         rEiSIY56Ll0uhQLmfdAoYDC2Lnttb2XuguTUokKOEAkOSgyPOVOeTbfdqd+d1/f0AuVo
+         h8r9YkjwWATqXl4T36os3jswsTUuZ5CfYf4W4jAwrW70gP0R98mB3cW2EL1Lv7GwSJ+u
+         IGStBP4q+9l/L56Zy1gtiAKzSTq4eu/zZP/Mgi9eROxXuNemHFjFOFK6sdKFwtKQP6NY
+         JiCveokbXC5BI6xt1xgStRdF5YPEeiOsqUFpFv+xZ9FBnstn8e8UP3lxmzylyZu/pqXh
+         +gSw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712168524; x=1712773324;
+        d=1e100.net; s=20230601; t=1712168527; x=1712773327;
         h=content-transfer-encoding:mime-version:message-id:to:from:cc
          :in-reply-to:subject:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=P+Kf1VtrPbxx/AIfqj2WJbrl2k9+u/D2i3gfwNLRUnA=;
-        b=wERQTTJ6IzSghxUFg01gMiF/DkAqSs175N8R5IQvSiGKSj0cSDie2GwaQCJGJXxLTh
-         zmONx0jqpQtpbjOcC23r70R11gvYpIk6u7mlgBbrYVa8ChAopgPhZFRteKUdgGcZIebT
-         mT0+AXyO7Awvm0eDLrJNbXfPV6oAA4uqRyQs9zCVbluwOxwwSiDk+palWq+ldnlaMNeR
-         Ka83JnT4jiqlMym21ICYsgOUeKWNTfwPyQgigMmWMTCm0wm/VvOLCISotTfB4Fm0UPT8
-         MU7JMuCfy2G4RGEZzDviEDrupJgOP0DCk1U/LgR6f3pweCwirYKPXe3G4hRes/AFkH/i
-         idCA==
-X-Forwarded-Encrypted: i=1; AJvYcCVdX6oj0kPnOdcWudx8d430R+fuCXuGIUZ6t09KRvqwei9nYSirBpQLma9y2wFKmmhPAmLFCuKzC6EjuOqTSl0OIGqQpiqsjxF+5M7V
-X-Gm-Message-State: AOJu0YwfxCCRQFXPtOb27M3BpZrIKhoEcxl+r7ZxZDw9HbUcjiwCoRHT
-	I7kL2GjjVLdDeMwDE9kes69AlKqir9HLbwzFIcc8QCeTSe6Hv7hRAhb1bCKw6XU=
-X-Google-Smtp-Source: AGHT+IGty08VcqdEljCIJkfJOB8iEizvRWz0FfAsjUhmWizntDOrlClCKtIX4KMfuzGZun6DYHreSw==
-X-Received: by 2002:a05:6a20:7d88:b0:1a3:af38:31de with SMTP id v8-20020a056a207d8800b001a3af3831demr579540pzj.4.1712168524117;
-        Wed, 03 Apr 2024 11:22:04 -0700 (PDT)
+        bh=LoPxyy6ZZevKYMVQQwthSJ0EL7SyRC2E5s9/TcAwzlA=;
+        b=nL+oVsbTW7WcGGY0HdObzfXzuJk50tUHcqfEnr89lOOXFcCEgSUOFsT7endfVKC/Cu
+         933kQhhdfzbsiT9LR9p4XkP3QuqXvhVUp9LVWoVPEifjJ196L7ouUTqbi8wW/MjjpTDh
+         DkAnIGOXt8XjVc3ymtvH5Byzf6fpudLumljm9YwlVbiG+46ZpOeGLYKcWEyGv1bhY2As
+         0/rlyajnFPO5I3uMkg6eVKdryRgvN6JkrNYmOFrYBzWuHqvRvVSHqKplmiC2W7DqiiSd
+         +87TduRHyRaJsrVeYVZC2BpK3fRDy1G7C6W+5vMpw6YnPWjDLrhYqsYhZsfcMataahJA
+         91Ng==
+X-Forwarded-Encrypted: i=1; AJvYcCVCug5nhyookxfK0+s8QLxPEbuQqgwu0xvGzvDg1MJz8Bhvex9R6rUFH67cLPPW1gubhmiKUbwov97ct3STJRpgigSlsJsIJi6LeX2/
+X-Gm-Message-State: AOJu0YwfrsC8L1FfdXEj7bIK0HuHXMSnGftoS2vgejZR90q9iUJwFaq/
+	fyXo8lNJnbSPkyAqaKAwIABbnb7bIEnIx5fORu8SaKKqvpoWIIZR409x784wOm8=
+X-Google-Smtp-Source: AGHT+IE8xKPk+Cg4ycXY4vSQCypFZ4Jw5ScQiKmu4H6BcqJa4Y6mRodZymA7cXolnlaayPoU0XPjww==
+X-Received: by 2002:a05:6a20:734b:b0:1a3:48da:1090 with SMTP id v11-20020a056a20734b00b001a348da1090mr568998pzc.14.1712168527301;
+        Wed, 03 Apr 2024 11:22:07 -0700 (PDT)
 Received: from localhost ([192.184.165.199])
-        by smtp.gmail.com with ESMTPSA id y2-20020a170902864200b001e2602fd756sm4966719plt.95.2024.04.03.11.22.03
+        by smtp.gmail.com with ESMTPSA id d9-20020a17090ad3c900b0029b77fbeb7fsm14038311pjw.16.2024.04.03.11.22.06
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 03 Apr 2024 11:22:03 -0700 (PDT)
-Date: Wed, 03 Apr 2024 11:22:03 -0700 (PDT)
-X-Google-Original-Date: Wed, 03 Apr 2024 11:21:32 PDT (-0700)
-Subject:     Re: [PATCH v1 1/2] RISC-V: drop SOC_SIFIVE for ARCH_SIFIVE
-In-Reply-To: <20240305-praying-clad-c4fbcaa7ed0a@spud>
+        Wed, 03 Apr 2024 11:22:06 -0700 (PDT)
+Date: Wed, 03 Apr 2024 11:22:06 -0700 (PDT)
+X-Google-Original-Date: Wed, 03 Apr 2024 11:21:50 PDT (-0700)
+Subject:     Re: [PATCH v6 00/11] riscv: add initial support for Canaan Kendryte K230
+In-Reply-To: <tencent_F76EB8D731C521C18D5D7C4F8229DAA58E08@qq.com>
 CC: linux-riscv@lists.infradead.org, Conor Dooley <conor@kernel.org>,
-  Conor Dooley <conor.dooley@microchip.com>, Paul Walmsley <paul.walmsley@sifive.com>, aou@eecs.berkeley.edu,
-  linux-kernel@vger.kernel.org
+  dlemoal@kernel.org, robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
+  Paul Walmsley <paul.walmsley@sifive.com>, aou@eecs.berkeley.edu, guoren@kernel.org, mturquette@baylibre.com,
+  sboyd@kernel.org, linus.walleij@linaro.org, p.zabel@pengutronix.de, linux-gpio@vger.kernel.org,
+  linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, cyy@cyyself.name
 From: Palmer Dabbelt <palmer@dabbelt.com>
-To: Conor Dooley <conor@kernel.org>
-Message-ID: <mhng-44dd5bcd-50fe-4f09-bf3e-d2ba2e6cfc74@palmer-ri-x1c9>
+To: cyy@cyyself.name
+Message-ID: <mhng-08e43080-8679-43f8-80c5-b73304e4e680@palmer-ri-x1c9>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -71,51 +73,91 @@ Mime-Version: 1.0 (MHng)
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-On Tue, 05 Mar 2024 10:37:05 PST (-0800), Conor Dooley wrote:
-> From: Conor Dooley <conor.dooley@microchip.com>
+On Sat, 23 Mar 2024 05:09:42 PDT (-0700), cyy@cyyself.name wrote:
+> K230 is an ideal chip for RISC-V Vector 1.0 evaluation now. Add initial
+> support for it to allow more people to participate in building drivers
+> to mainline for it.
 >
-> All the users in the kernel are gone and generated .config files from
-> previous LTS kernels will contain ARCH_SIFIVE. Drop SOC_SIFIVE and
-> update the defconfig.
+> This kernel has been tested upon factory SDK [1] with
+> k230_evb_only_linux_defconfig and patched mainline opensbi [2] to skip
+> locked pmp and successfully booted to busybox on initrd with this log [3].
 >
-> Signed-off-by: Conor Dooley <conor.dooley@microchip.com>
-> ---
-> CC: Paul Walmsley <paul.walmsley@sifive.com>
-> CC: Palmer Dabbelt <palmer@dabbelt.com>
-> CC: Albert Ou <aou@eecs.berkeley.edu>
-> CC: linux-riscv@lists.infradead.org
-> CC: linux-kernel@vger.kernel.org
-> ---
->  arch/riscv/Kconfig.socs      | 3 ---
->  arch/riscv/configs/defconfig | 2 +-
->  2 files changed, 1 insertion(+), 4 deletions(-)
+> [1] https://github.com/kendryte/k230_sdk
+> [2] https://github.com/cyyself/opensbi/tree/k230
+> [3] https://gist.github.com/cyyself/b9445f38cc3ba1094924bd41c9086176
 >
-> diff --git a/arch/riscv/Kconfig.socs b/arch/riscv/Kconfig.socs
-> index e08e91c49abe..e85ffb63c48d 100644
-> --- a/arch/riscv/Kconfig.socs
-> +++ b/arch/riscv/Kconfig.socs
-> @@ -14,9 +14,6 @@ config ARCH_RENESAS
->  	  This enables support for the RISC-V based Renesas SoCs.
+> Changes since v5:
+> - Deprecate SOC_CANAAN and use SOC_CANAAN_K210 for K210 SoCs
+> - Modify existing K210 drivers depends on SOC_CANAAN_K210 symbol
+> - Reword dts commit message
+> - Modify dts to use Full 512MB memory
+> - Rebase to linux mainline master
 >
->  config ARCH_SIFIVE
-> -	def_bool SOC_SIFIVE
-> -
-> -config SOC_SIFIVE
->  	bool "SiFive SoCs"
->  	select ERRATA_SIFIVE if !XIP_KERNEL
->  	help
-> diff --git a/arch/riscv/configs/defconfig b/arch/riscv/configs/defconfig
-> index 89a009a580fe..ab3bab313d56 100644
-> --- a/arch/riscv/configs/defconfig
-> +++ b/arch/riscv/configs/defconfig
-> @@ -27,7 +27,7 @@ CONFIG_EXPERT=y
->  CONFIG_PROFILING=y
->  CONFIG_SOC_MICROCHIP_POLARFIRE=y
->  CONFIG_ARCH_RENESAS=y
-> -CONFIG_SOC_SIFIVE=y
-> +CONFIG_ARCH_SIFIVE=y
->  CONFIG_ARCH_SOPHGO=y
->  CONFIG_SOC_STARFIVE=y
->  CONFIG_ARCH_SUNXI=y
+> Changes since v4:
+> - Reword commit message on dts that the B-ext version of c908 is 1.0 rather
+>   than 1.0-rc1
+>
+> v4: https://lore.kernel.org/linux-riscv/tencent_587730262984A011834F42D0563BC6B10405@qq.com/
+>
+> Changes since v3:
+> - Refactor Kconfig.soc which uses ARCH_CANAAN for regular Canaan SoCs and
+>   rename SOC_CANAAN to SOC_CANAAN_K210 for K210 in patch [5/7]
+> - Sort dt-binding stings on Cannan SoCs in alphanumerical order
+>
+> v3: https://lore.kernel.org/linux-riscv/tencent_BB2364BBF1812F4E304F7BDDD11E57356605@qq.com/
+>
+> Changes since v2:
+> - Add MIT License to dts file
+> - Sort dt-binding stings in alphanumerical order
+> - Sort filename in dts Makefile in alphanumerical order
+> - Rename canmv-k230.dts to k230-canmv.dts
+>
+> v2: https://lore.kernel.org/linux-riscv/tencent_64A9B4B31C2D70D5633042461AC9F80C0509@qq.com/
+>
+> Changes since v1:
+> - Patch dt-bindings in clint and plic
+> - Use enum in K230 compatible dt bindings
+> - Fix dts to pass `make dtbs_check`
+> - Add more details in commit message
+>
+> v1: https://lore.kernel.org/linux-riscv/tencent_E15F8FE0B6769E6338AE690C7F4844A31706@qq.com/
+>
+> Yangyu Chen (11):
+>   dt-bindings: riscv: Add T-HEAD C908 compatible
+>   dt-bindings: add Canaan K230 boards compatible strings
+>   dt-bindings: timer: Add Canaan K230 CLINT
+>   dt-bindings: interrupt-controller: Add Canaan K230 PLIC
+>   riscv: Kconfig.socs: Split ARCH_CANAAN and SOC_CANAAN_K210
+>   soc: canaan: Deprecate SOC_CANAAN and use SOC_CANAAN_K210 for K210
+>   clk: k210: Deprecate SOC_CANAAN and use SOC_CANAAN_K210
+>   pinctrl: k210: Deprecate SOC_CANAAN and use SOC_CANAAN_K210
+>   reset: k210: Deprecate SOC_CANAAN and use SOC_CANAAN_K210
+>   riscv: dts: add initial canmv-k230 and k230-evb dts
+>   riscv: config: enable ARCH_CANAAN in defconfig
+>
+>  .../sifive,plic-1.0.0.yaml                    |   1 +
+>  .../devicetree/bindings/riscv/canaan.yaml     |   8 +-
+>  .../devicetree/bindings/riscv/cpus.yaml       |   1 +
+>  .../bindings/timer/sifive,clint.yaml          |   1 +
+>  arch/riscv/Kconfig.socs                       |   8 +-
+>  arch/riscv/Makefile                           |   2 +-
+>  arch/riscv/boot/dts/canaan/Makefile           |   2 +
+>  arch/riscv/boot/dts/canaan/k230-canmv.dts     |  24 +++
+>  arch/riscv/boot/dts/canaan/k230-evb.dts       |  24 +++
+>  arch/riscv/boot/dts/canaan/k230.dtsi          | 140 ++++++++++++++++++
+>  arch/riscv/configs/defconfig                  |   1 +
+>  arch/riscv/configs/nommu_k210_defconfig       |   3 +-
+>  .../riscv/configs/nommu_k210_sdcard_defconfig |   3 +-
+>  drivers/clk/Kconfig                           |   4 +-
+>  drivers/pinctrl/Kconfig                       |   4 +-
+>  drivers/reset/Kconfig                         |   4 +-
+>  drivers/soc/Makefile                          |   2 +-
+>  drivers/soc/canaan/Kconfig                    |   4 +-
+>  18 files changed, 220 insertions(+), 16 deletions(-)
+>  create mode 100644 arch/riscv/boot/dts/canaan/k230-canmv.dts
+>  create mode 100644 arch/riscv/boot/dts/canaan/k230-evb.dts
+>  create mode 100644 arch/riscv/boot/dts/canaan/k230.dtsi
+>
+> base-commit: 8e938e39866920ddc266898e6ae1fffc5c8f51aa
 
 Acked-by: Palmer Dabbelt <palmer@rivosinc.com>
