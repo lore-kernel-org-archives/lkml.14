@@ -1,111 +1,79 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [217.70.183.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B00F13FD7E;
-	Wed,  3 Apr 2024 08:11:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7394312EBD0;
+	Wed,  3 Apr 2024 08:11:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712131881; cv=none; b=tzMb6HW6q+vRMHyyypMM7q7AtxV0/igkzveFSR+oX+ZgtNdzQ2bzOR+UGSfKbUH9qhxQgz27N8JSwKhpzD2c/OAcOzQqZ/UuqjG66RU359x1C+u9oEasLGq3hIiP3t4KKldZxbCSA+rFHS0rjtldY4qONBuxOu3TF5MMG67Fip0=
+	t=1712131885; cv=none; b=oB0eHvGY+HmqoucRLD7LxgJYhzBIQGCwkwOrKtOsCfLJgs3nDnb1xEykMVI7uSUB+mSzAzykv6Da0gHK6DXpCVGlCVZlzHmrFvdZD0ISLAY4PgGLtGIk+Qw0YJd0uUusylOJia5iMF4UAg2XeytQEygdiHdxc84orad24iK4n44=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712131881; c=relaxed/simple;
-	bh=0liwis3knuJplIlsLI48oLG63cRfb9QsB+onh6JK9F0=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=qd+fXwYgisTj935RvDXOzJQifb+k24in4rC1nl6zvRQo10Dlt4UvCI92zL1C0jg0nWw5ztUflz7XbOgVLTlN6Q0YNn1ejlvau4RNGUsW4RQQGjTMhoYg2fPemLv8J41FChR4m4ANBIAEP8weOD3q6Aayysp74SoEkFL+UFsOqiQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KA2BvgOZ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1712131885; c=relaxed/simple;
+	bh=e7kLGjTCap1sBGPBufjFVpeA82zNLXCUOPl7MnZqlss=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=XtMXLlBr+7ifyDD4M4YBIBZj1SxMBaKjmmWO1FK8XBuVNQkRigEVulkczuR2AK+uxNBrh+v0WFTQpGx1aZl0KpAxSJIv3XzRquY8Gvzy1ayyMn9HEV05pv6xeLRaRyMHyx5V9HXTqLJtNndX1HpWfEy1iIYrLjQPQ+KFpo9LLtA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=M7LkaR3E; arc=none smtp.client-ip=217.70.183.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KA2BvgOZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4CCDDC433C7;
-	Wed,  3 Apr 2024 08:11:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712131880;
-	bh=0liwis3knuJplIlsLI48oLG63cRfb9QsB+onh6JK9F0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=KA2BvgOZ0aKADiJYSLZEt38u+ZxvwcPS5kbp9hKULRkrMO30PMZkChHNsikGdAPSZ
-	 a4fT2buKxH39mNkm+K3hGG6YhApMU1tf+Pk3MYGngKqYCXkbjwETYFG3pPDdEI7Bym
-	 lqTXztk2Y495V4EqJQ7TXXN37sIsRumgW3wyA/ao2JjdJrIBQZGY6qQSiZIKewOWyN
-	 pvaPlJVASLhLMBJ3MyWl8GmjN7Yip72P137ky2jfTjB7xkl1KNNIT/HACG9tRlkrSy
-	 gMlm/mD5ZJZ3bR7bhh/pL+K9zNAbDXUHqGwzAiZMqu8MuPRlw5AB/jnm3O50fdvmPZ
-	 DvRo3K+1oIfdw==
-From: Arnd Bergmann <arnd@kernel.org>
-To: linux-kernel@vger.kernel.org,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Arnd Bergmann <arnd@arndb.de>,
-	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
-	Aaro Koskinen <aaro.koskinen@iki.fi>,
-	linux-usb@vger.kernel.org
-Subject: [PATCH 25/34] usb: gadget: omap_udc: remove unused variable
-Date: Wed,  3 Apr 2024 10:06:43 +0200
-Message-Id: <20240403080702.3509288-26-arnd@kernel.org>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240403080702.3509288-1-arnd@kernel.org>
-References: <20240403080702.3509288-1-arnd@kernel.org>
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="M7LkaR3E"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 2AEFA1BF207;
+	Wed,  3 Apr 2024 08:11:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1712131875;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=4KOOUEfgcRxydGIT+hu+sFi4XdO06GJeHmXwYX2lypA=;
+	b=M7LkaR3EMeFWW33WuZx7RPKzUEW9x4ARBxuj9e22nltCjpukWqFMQPO2eFza3A4vAoyi38
+	bDK8U0jS5FypVpnbXZN3Kig9plQ+NBBuHcoJCsZH62HrD/SlwgHkiLW2ajWhivmCJ2HcUX
+	y9ha5Fk2ROIYhz8AE1llwHI517TtNLkash1gGqkudlFaQFtM8hSf5DRUPRWMge6aF/SIvH
+	ebsvO4s/cVE67SiwTAORoSVS6cqcqmuJkSUkb+kM/ueZviWeHoL7SLd6VFed5EWc159fkq
+	SHI79yug6C2IskaNDXNW6jj+gHPwiq7CeQe87WjAmL5nwzsdM5wGCkp+JNxlog==
+Date: Wed, 3 Apr 2024 10:11:11 +0200
+From: Maxime Chevallier <maxime.chevallier@bootlin.com>
+To: "Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>
+Cc: Romain Gantois <romain.gantois@bootlin.com>, Rob Herring
+ <robh@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Maxime Coquelin
+ <mcoquelin.stm32@gmail.com>, Geert Uytterhoeven <geert+renesas@glider.be>,
+ devicetree@vger.kernel.org, Thomas Petazzoni
+ <thomas.petazzoni@bootlin.com>, netdev@vger.kernel.org,
+ linux-stm32@st-md-mailman.stormreply.com, Magnus Damm
+ <magnus.damm@gmail.com>, linux-kernel@vger.kernel.org,
+ linux-renesas-soc@vger.kernel.org, Eric Dumazet <edumazet@google.com>, Jose
+ Abreu <joabreu@synopsys.com>, Krzysztof Kozlowski
+ <krzysztof.kozlowski+dt@linaro.org>, Jakub Kicinski <kuba@kernel.org>,
+ Paolo Abeni <pabeni@redhat.com>, =?UTF-8?B?Q2zDqW1lbnQgTMOpZ2Vy?=
+ <clement.leger@bootlin.com>, "David S. Miller" <davem@davemloft.net>,
+ linux-arm-kernel@lists.infradead.org
+Subject: Re: [Linux-stm32] [PATCH net-next 1/2] net: stmmac: introduce
+ pcs_init/pcs_exit stmmac operations
+Message-ID: <20240403101111.2e3f0749@device-28.home>
+In-Reply-To: <E1rrgQJ-005ZO4-GB@rmk-PC.armlinux.org.uk>
+References: <ZgwoygldsA1V8fs9@shell.armlinux.org.uk>
+	<E1rrgQJ-005ZO4-GB@rmk-PC.armlinux.org.uk>
+Organization: Bootlin
+X-Mailer: Claws Mail 4.2.0 (GTK 3.24.41; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-GND-Sasl: maxime.chevallier@bootlin.com
 
-From: Arnd Bergmann <arnd@arndb.de>
+Hello Russell,
 
-The driver_desc variable is only used in some configurations:
+On Tue, 02 Apr 2024 16:51:43 +0100
+"Russell King (Oracle)" <rmk+kernel@armlinux.org.uk> wrote:
 
-drivers/usb/gadget/udc/omap_udc.c:113:19: error: unused variable 'driver_desc' [-Werror,-Wunused-const-variable]
+> Introduce a mechanism whereby platforms can create their PCS instances
+> prior to the network device being published to userspace, but after
+> some of the core stmmac initialisation has been completed. This means
+> that the data structures that platforms need will be available.
+> 
+> Signed-off-by: Russell King (Oracle) <rmk+kernel@armlinux.org.uk>
 
-Since there is only ever one user of it, just open-code the string in place
-and remove the global variable and the macro behind it. This also helps
-grep for the MODULE_DESCRIPTION string.
-
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- drivers/usb/gadget/udc/omap_udc.c | 10 +++-------
- 1 file changed, 3 insertions(+), 7 deletions(-)
-
-diff --git a/drivers/usb/gadget/udc/omap_udc.c b/drivers/usb/gadget/udc/omap_udc.c
-index f90eeecf27de..e13b8ec8ef8a 100644
---- a/drivers/usb/gadget/udc/omap_udc.c
-+++ b/drivers/usb/gadget/udc/omap_udc.c
-@@ -56,7 +56,6 @@
- /* ISO too */
- #define	USE_ISO
- 
--#define	DRIVER_DESC	"OMAP UDC driver"
- #define	DRIVER_VERSION	"4 October 2004"
- 
- #define OMAP_DMA_USB_W2FC_TX0		29
-@@ -110,7 +109,6 @@ MODULE_PARM_DESC(use_dma, "enable/disable DMA");
- 
- 
- static const char driver_name[] = "omap_udc";
--static const char driver_desc[] = DRIVER_DESC;
- 
- /*-------------------------------------------------------------------------*/
- 
-@@ -2299,13 +2297,11 @@ static int proc_udc_show(struct seq_file *s, void *_)
- 
- 	spin_lock_irqsave(&udc->lock, flags);
- 
--	seq_printf(s, "%s, version: " DRIVER_VERSION
-+	seq_printf(s, "OMAP UDC driver, version: " DRIVER_VERSION
- #ifdef	USE_ISO
- 		" (iso)"
- #endif
--		"%s\n",
--		driver_desc,
--		use_dma ?  " (dma)" : "");
-+		"%s\n", use_dma ?  " (dma)" : "");
- 
- 	tmp = omap_readw(UDC_REV) & 0xff;
- 	seq_printf(s,
-@@ -2994,6 +2990,6 @@ static struct platform_driver udc_driver = {
- 
- module_platform_driver(udc_driver);
- 
--MODULE_DESCRIPTION(DRIVER_DESC);
-+MODULE_DESCRIPTION("OMAP UDC driver");
- MODULE_LICENSE("GPL");
- MODULE_ALIAS("platform:omap_udc");
--- 
-2.39.2
-
+Reviewed-by: Maxime Chevallier <maxime.chevallier@bootlin.com>
