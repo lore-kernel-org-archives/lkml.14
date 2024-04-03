@@ -1,34 +1,34 @@
-Received: from smtpbgeu1.qq.com (smtpbgeu1.qq.com [52.59.177.22])
+Received: from smtpbg154.qq.com (smtpbg154.qq.com [15.184.224.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC0771482EC;
-	Wed,  3 Apr 2024 12:53:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=52.59.177.22
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8A214F613;
+	Wed,  3 Apr 2024 12:54:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=15.184.224.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712148831; cv=none; b=jdXtfhxornDM5N7ob6xBCleVIOlcAASf8ai9U3Eo5ZSzjOO7kdfnPQ3H4P20X22xRv1yhZQd5Bdi3ew+P8GX/yTudnpbKsn0Qv56I1h5Ze45U9kXuNBLMWOfKlnCam4Yj1GmtQkKJSgPNY+nKLVtROsJeak/7BAGuhMdom+fu7A=
+	t=1712148856; cv=none; b=aggEJW+tGuEEgnFDymsGJnMiu2GvVHM8ZaoQ5chr6t9KndWKjmg25XqnujVOpNSgQyOChhSnncnOtDZcKR7+m9J18OIn5JVwmchF+BvoWIrOs+/NT7fA94TPC8cuimDg7PvVrWSmtleB5c5M+LbtJBLwy5UHExbQxQMrzwST9Xw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712148831; c=relaxed/simple;
-	bh=+44ocduMZ3arrVTyEvNGTfJn/pXNlZB4i16mdgLoFoY=;
+	s=arc-20240116; t=1712148856; c=relaxed/simple;
+	bh=eD3mfKYgc+nRUPkrE3ZTzbALwXtkGiDfBxjh0ZWxoIU=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=qk/yc9V6ECXRJhb/hXPI9FR0RJ54nFHQtjN0ucKt7xnK54lyXG1XLIIpv6lowKFOk9CsM4c9FRaHHKE3fCucII7Q5x5hgXMxs87O5wpbxUvu8TCs9ojPV9QSLluA+b6M+I1dAs6qyJrwuIsxB8CPS3yw+/OILl47KHRlwBZ7L8U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=shingroup.cn; spf=pass smtp.mailfrom=shingroup.cn; arc=none smtp.client-ip=52.59.177.22
+	 MIME-Version; b=XuA2ugI9STldshcrKDQcoUbFUOaeX2nfG8Zcxx5puFNBFG2bc/DKubvxzsXO9wHJ8MRN2YiSf2YaJ1FQqXoz7FsbZn3eZJdVygSu2B2P6Bcftc79+POzcIs8Wqj6mpeZqele5xOVdZlTWXjPCl7nDSEb3aSLei+9BqES0VFHVTk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=shingroup.cn; spf=pass smtp.mailfrom=shingroup.cn; arc=none smtp.client-ip=15.184.224.54
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=shingroup.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=shingroup.cn
-X-QQ-mid: bizesmtpsz5t1712148745t2zdelq
-X-QQ-Originating-IP: gtG85rrBFgYquVhBEXaQuedD1lYsKNbDnucmL+QbTUs=
+X-QQ-mid: bizesmtpsz14t1712148757trdpo7
+X-QQ-Originating-IP: DSTvJb15+fliyf2zWUZJBYnhPlXY5kA800cxsWCzZAk=
 Received: from localhost ( [112.0.147.175])
 	by bizesmtp.qq.com (ESMTP) with 
-	id ; Wed, 03 Apr 2024 20:52:23 +0800 (CST)
+	id ; Wed, 03 Apr 2024 20:52:36 +0800 (CST)
 X-QQ-SSF: 01400000000000704000000A0000000
-X-QQ-FEAT: 3M0okmaRx3hYBn6c6xv94OOmj7QRwjjI90PZMYk07rq6fUKYPq7jtfpesKrxM
-	Hp/NCAse2sa30t5lFPhi4nzJDvtpqAREDZEm9kXuZkZBS54HuzXSTNSOoqy+N7OMGmwZJvB
-	W4N/IGrBxUN2fvl664QjB8Nn2vfTBlWIpxRgfSormkTkhdKMO/jcas8amuGmvm04xhg3JSV
-	GveXZ3D3mDREigPfWnjS+QZuH1I4fZz2QQbba9y4ssVNmO7eka9dFoEPA3d8nZtXlUfC4c6
-	A/9fdw9FWHqe/O7A13cNIGAhKa/a14mzCAXCc9BTO2seoQFWrVqVRfqFZu8wNV6hlamFZnK
-	SgfFscX3PpNOc+ZCkoVTmrJtTuqoNuht8yQd+/JeuhBz2e9W1wGkyCbwwmommR9Au9KdFWq
-	GQcGDvL6aPh2ZQeszSbdeH0WMml+cW0m
+X-QQ-FEAT: DoD8xN2rKoyVx7iKxegRViP9yMHQO4PaK1xU/ZRFnWvi6EHTmFXXoEI0Tq+YG
+	VGPFDOfLxJqbT+UZl66iAoaeAMjri+NbDF9MK+kIvkjGPQu5hREf2A4wLewIUWa5U7TNPVf
+	vSDKXMrntzyaD6bwhCpjQiIPt2Rtz+gxZRQnirHyzS/Lz3XfECT1b902pBjGETAHk+t5qp5
+	DILh6DAT2KGSocqoB4sJWqzKV0DB4YcD4ObXhuKmANDEkGX7yrae25xH7MV8443POuc0gYP
+	wFtLo4KuUmtHU2GlaaqqHmRsYYJa360fBY4jnCVDfGkSh5NSP/Z9q3m0aKWGamL4BZKY/WG
+	iqFFIoZ/4qTBWDH5G7aez/K0eOcIN6qjoohy70tTEsOWkSuqey5Kmata83VI9Ox9Ijj0J2H
+	79lmb0hIr7MukC8G8+W7D4iY7ei5TGnN
 X-QQ-GoodBg: 2
-X-BIZMAIL-ID: 8972781227681254528
+X-BIZMAIL-ID: 15651604539771351507
 From: Dawei Li <dawei.li@shingroup.cn>
 To: will@kernel.org,
 	mark.rutland@arm.com,
@@ -44,9 +44,9 @@ Cc: xueshuai@linux.alibaba.com,
 	linux-kernel@vger.kernel.org,
 	linux-arm-msm@vger.kernel.org,
 	Dawei Li <dawei.li@shingroup.cn>
-Subject: [PATCH v2 05/10] perf/arm_dsu: Avoid placing cpumask var on stack
-Date: Wed,  3 Apr 2024 20:51:04 +0800
-Message-Id: <20240403125109.2054881-6-dawei.li@shingroup.cn>
+Subject: [PATCH v2 07/10] perf/hisi_pcie: Avoid placing cpumask var on stack
+Date: Wed,  3 Apr 2024 20:51:06 +0800
+Message-Id: <20240403125109.2054881-8-dawei.li@shingroup.cn>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20240403125109.2054881-1-dawei.li@shingroup.cn>
 References: <20240403125109.2054881-1-dawei.li@shingroup.cn>
@@ -82,50 +82,36 @@ the cpumask var is allocated.
 Suggested-by: Mark Rutland <mark.rutland@arm.com>
 Signed-off-by: Dawei Li <dawei.li@shingroup.cn>
 ---
- drivers/perf/arm_dsu_pmu.c | 19 ++++++-------------
- 1 file changed, 6 insertions(+), 13 deletions(-)
+ drivers/perf/hisilicon/hisi_pcie_pmu.c | 9 ++++-----
+ 1 file changed, 4 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/perf/arm_dsu_pmu.c b/drivers/perf/arm_dsu_pmu.c
-index bae3ca37f846..adc0bbb5fafe 100644
---- a/drivers/perf/arm_dsu_pmu.c
-+++ b/drivers/perf/arm_dsu_pmu.c
-@@ -230,15 +230,6 @@ static const struct attribute_group *dsu_pmu_attr_groups[] = {
- 	NULL,
- };
- 
--static int dsu_pmu_get_online_cpu_any_but(struct dsu_pmu *dsu_pmu, int cpu)
--{
--	struct cpumask online_supported;
--
--	cpumask_and(&online_supported,
--			 &dsu_pmu->associated_cpus, cpu_online_mask);
--	return cpumask_any_but(&online_supported, cpu);
--}
--
- static inline bool dsu_pmu_counter_valid(struct dsu_pmu *dsu_pmu, u32 idx)
+diff --git a/drivers/perf/hisilicon/hisi_pcie_pmu.c b/drivers/perf/hisilicon/hisi_pcie_pmu.c
+index 5d1f0e9fdb08..06b192cc31d5 100644
+--- a/drivers/perf/hisilicon/hisi_pcie_pmu.c
++++ b/drivers/perf/hisilicon/hisi_pcie_pmu.c
+@@ -673,7 +673,6 @@ static int hisi_pcie_pmu_offline_cpu(unsigned int cpu, struct hlist_node *node)
  {
- 	return (idx < dsu_pmu->num_counters) ||
-@@ -827,14 +818,16 @@ static int dsu_pmu_cpu_online(unsigned int cpu, struct hlist_node *node)
+ 	struct hisi_pcie_pmu *pcie_pmu = hlist_entry_safe(node, struct hisi_pcie_pmu, node);
+ 	unsigned int target;
+-	cpumask_t mask;
+ 	int numa_node;
  
- static int dsu_pmu_cpu_teardown(unsigned int cpu, struct hlist_node *node)
- {
--	int dst;
--	struct dsu_pmu *dsu_pmu = hlist_entry_safe(node, struct dsu_pmu,
--						   cpuhp_node);
-+	struct dsu_pmu *dsu_pmu;
-+	unsigned int dst;
+ 	/* Nothing to do if this CPU doesn't own the PMU */
+@@ -684,10 +683,10 @@ static int hisi_pcie_pmu_offline_cpu(unsigned int cpu, struct hlist_node *node)
+ 
+ 	/* Choose a local CPU from all online cpus. */
+ 	numa_node = dev_to_node(&pcie_pmu->pdev->dev);
+-	if (cpumask_and(&mask, cpumask_of_node(numa_node), cpu_online_mask) &&
+-	    cpumask_andnot(&mask, &mask, cpumask_of(cpu)))
+-		target = cpumask_any(&mask);
+-	else
 +
-+	dsu_pmu = hlist_entry_safe(node, struct dsu_pmu, cpuhp_node);
++	target = cpumask_any_and_but(cpumask_of_node(numa_node),
++				     cpu_online_mask, cpu);
++	if (target >= nr_cpu_ids)
+ 		target = cpumask_any_but(cpu_online_mask, cpu);
  
- 	if (!cpumask_test_and_clear_cpu(cpu, &dsu_pmu->active_cpu))
- 		return 0;
- 
--	dst = dsu_pmu_get_online_cpu_any_but(dsu_pmu, cpu);
-+	dst = cpumask_any_and_but(&dsu_pmu->associated_cpus,
-+				  cpu_online_mask, cpu);
- 	/* If there are no active CPUs in the DSU, leave IRQ disabled */
- 	if (dst >= nr_cpu_ids)
- 		return 0;
+ 	if (target >= nr_cpu_ids) {
 -- 
 2.27.0
 
