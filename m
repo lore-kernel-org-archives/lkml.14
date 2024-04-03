@@ -1,181 +1,148 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from szxga06-in.huawei.com (szxga06-in.huawei.com [45.249.212.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 023266DCE8
-	for <linux-kernel@vger.kernel.org>; Wed,  3 Apr 2024 08:58:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712134684; cv=none; b=iXy/gMonMvCuQDufxvZRRMNu5HQL8uPS/2Fa5MljirjSW5Dn1rJtzmGzppd9UsGnx4RP4znxXB46E0ia2mMDTTjheXWcnNJVCA/FltbM7+1rtHPxVjUOk49V90kGMaCaML8FKX2AnSfp97KBza+K+mMpFpdDeNGAe41wipRHtm8=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712134684; c=relaxed/simple;
-	bh=ZAIxO5z+o29M+kH6syBeb8pWBi2QGdZ/xqTOqqX+69U=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=aoga4B/7/5cfMRWPr1BPuYDe1dFduE7SU6054aEGf7kUix9VCIlFglcylQm7K81r6sSXpHY27d/qMiU+R5OJYttfILLYCujZ++LgtMthAxr7d3NuMmHJIaoxYR5iqpr5e1/3Uy5rD/cpmfBXcyZGZWTT4kHKhU+gATbSgkLenBw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TvVHdHIt; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TvVHdHIt"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8A705C433F1;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C6E454675;
 	Wed,  3 Apr 2024 08:58:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712134683;
-	bh=ZAIxO5z+o29M+kH6syBeb8pWBi2QGdZ/xqTOqqX+69U=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=TvVHdHIt0Vhh680xjUkrJGcZ9+qyaXdxeojcZXMFfJCmFx3lGzuDSq9rWE5VZawKM
-	 uD+TVKWb3DclzG26NMCTWVOGykIvRq8UHILyGtStHGecB1HVQbSJbexWIm3+o5dSw2
-	 nPiOLC8oBQN0FTnISTDECrkG29rPNw67SGKACNiruTvXZq9E5EHBo2hXxrJhLoZWHq
-	 i0/ZDcCDWvF7NEek92UTlzGthkrM/73Le2kwTOb9a7g3fXLUdmzJaQPrO+w9S94rq9
-	 6e3yVGH+xHog2tMmxRHuZ0+sXcAnwaoIie1yTqAgzm+cEMkD5t94tlZ4r6/E32e+Jm
-	 4FL/Cy0ZqUcdg==
-Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
-	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.95)
-	(envelope-from <maz@kernel.org>)
-	id 1rrwRU-00112V-Mi;
-	Wed, 03 Apr 2024 09:58:00 +0100
-Date: Wed, 03 Apr 2024 09:58:00 +0100
-Message-ID: <86edbmu8kn.wl-maz@kernel.org>
-From: Marc Zyngier <maz@kernel.org>
-To: Gavin Shan <gshan@redhat.com>
-Cc: linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	catalin.marinas@arm.com,
-	will@kernel.org,
-	akpm@linux-foundation.org,
-	apopple@nvidia.com,
-	mark.rutland@arm.com,
-	ryan.roberts@arm.com,
-	rananta@google.com,
-	yangyicong@hisilicon.com,
-	v-songbaohua@oppo.com,
-	yezhenyu2@huawei.com,
-	yihyu@redhat.com,
-	shan.gavin@gmail.com
-Subject: Re: [PATCH] arm64: tlb: Fix TLBI RANGE operand
-In-Reply-To: <20240403064929.1438475-1-gshan@redhat.com>
-References: <20240403064929.1438475-1-gshan@redhat.com>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/29.2
- (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.32
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1712134686; cv=none; b=kbfHn0sH9hKWp58tGeXf14CvuiiyQS6C4Fp2Vj5w/lHAhXnRfOlDAjEdj0btifoIcVDSY7f4BYF+K7YvALsKwG91degOSm3ehxRh3O535VzB+xNet0bnrFQeVqyXGUTbgUNIdFu5a6fOLp6iRKByKPr7WIPjPA1cCP1rUs51Bvs=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1712134686; c=relaxed/simple;
+	bh=WzH0xSfIPWd+YCnXQz2pzuGn0FYWidLKKiCFdrtgfFs=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=qHmCmwwNKg5A3zEKyumzCnjiZSQxhKPvh1ILCS9az07eVKDmEQNOLdCNS2JhZt2I0HUVDPP4ZoPvFbBgelWKsuxlXFLx8RDN/f4uCxNTSIJGrx53V3ZZvfR/wiHktSSm2jRZuvyYot6SRzE4G2OGqZFbX3GU/AWpNUQG3k8mlOw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.88.214])
+	by szxga06-in.huawei.com (SkyGuard) with ESMTP id 4V8dsw5gp7z17MyP;
+	Wed,  3 Apr 2024 16:57:08 +0800 (CST)
+Received: from kwepemd100013.china.huawei.com (unknown [7.221.188.163])
+	by mail.maildlp.com (Postfix) with ESMTPS id 24C9F1A016F;
+	Wed,  3 Apr 2024 16:58:01 +0800 (CST)
+Received: from huawei.com (10.67.174.121) by kwepemd100013.china.huawei.com
+ (7.221.188.163) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1258.28; Wed, 3 Apr
+ 2024 16:58:00 +0800
+From: Chen Ridong <chenridong@huawei.com>
+To: <longman@redhat.com>, <lizefan.x@bytedance.com>, <tj@kernel.org>,
+	<hannes@cmpxchg.org>, <daniel.m.jordan@oracle.com>
+CC: <peterz@infradead.org>, <cgroups@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <wangweiyang2@huawei.com>,
+	<lujialin4@huawei.com>, <xiujianfeng@huawei.com>, <caixinchen1@huawei.com>,
+	<chenridong@huawei.com>
+Subject: [PATCH] cpuset: fix race between rebuild scheduler domains and hotplug work
+Date: Wed, 3 Apr 2024 08:52:45 +0000
+Message-ID: <20240403085245.335072-1-chenridong@huawei.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-SA-Exim-Connect-IP: 185.219.108.64
-X-SA-Exim-Rcpt-To: gshan@redhat.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, catalin.marinas@arm.com, will@kernel.org, akpm@linux-foundation.org, apopple@nvidia.com, mark.rutland@arm.com, ryan.roberts@arm.com, rananta@google.com, yangyicong@hisilicon.com, v-songbaohua@oppo.com, yezhenyu2@huawei.com, yihyu@redhat.com, shan.gavin@gmail.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
+ kwepemd100013.china.huawei.com (7.221.188.163)
 
-On Wed, 03 Apr 2024 07:49:29 +0100,
-Gavin Shan <gshan@redhat.com> wrote:
-> 
-> KVM/arm64 relies on TLBI RANGE feature to flush TLBs when the dirty
-> bitmap is collected by VMM and the corresponding PTEs need to be
-> write-protected again. Unfortunately, the operand passed to the TLBI
-> RANGE instruction isn't correctly sorted out by commit d1d3aa98b1d4
-> ("arm64: tlb: Use the TLBI RANGE feature in arm64"). It leads to
-> crash on the destination VM after live migration because some of the
-> dirty pages are missed.
-> 
-> For example, I have a VM where 8GB memory is assigned, starting from
-> 0x40000000 (1GB). Note that the host has 4KB as the base page size.
-> All TLBs for VM can be covered by one TLBI RANGE operation. However,
-> I receives 0xffff708000040000 as the operand, which is wrong and the
-> correct one should be 0x00007f8000040000. From the wrong operand, we
-> have 3 and 1 for SCALE (bits[45:44) and NUM (bits943:39], only 1GB
-> instead of 8GB memory is covered.
-> 
-> Fix the macro __TLBI_RANGE_NUM() so that the correct NUM and TLBI
-> RANGE operand are provided.
-> 
-> Fixes: d1d3aa98b1d4 ("arm64: tlb: Use the TLBI RANGE feature in arm64")
-> Cc: stable@kernel.org # v5.10+
-> Reported-by: Yihuang Yu <yihyu@redhat.com>
-> Signed-off-by: Gavin Shan <gshan@redhat.com>
-> ---
->  arch/arm64/include/asm/tlbflush.h | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/arch/arm64/include/asm/tlbflush.h b/arch/arm64/include/asm/tlbflush.h
-> index 3b0e8248e1a4..07c4fb4b82b4 100644
-> --- a/arch/arm64/include/asm/tlbflush.h
-> +++ b/arch/arm64/include/asm/tlbflush.h
-> @@ -166,7 +166,7 @@ static inline unsigned long get_trans_granule(void)
->   */
->  #define TLBI_RANGE_MASK			GENMASK_ULL(4, 0)
->  #define __TLBI_RANGE_NUM(pages, scale)	\
-> -	((((pages) >> (5 * (scale) + 1)) & TLBI_RANGE_MASK) - 1)
-> +	((((pages) >> (5 * (scale) + 1)) - 1) & TLBI_RANGE_MASK)
->  
->  /*
->   *	TLB Invalidation
+When offlining cpus, it holds cpu_hotplug_lock and call
+cpuset_hotplug_workfn asynchronously, which holds and releases
+cpuset_mutex repeatly to update cpusets, and it will release
+cpu_hotplug_lock before cpuset_hotplug_workfn finish. It means that some
+interfaces like cpuset_write_resmask holding two locks may rebuild
+scheduler domains when some cpusets are not refreshed, which may lead to
+generate domains with offlining cpus and will panic.
 
-This looks pretty wrong, by the very definition of the comment that's
-just above:
+As commit 406100f3da08 ("cpuset: fix race between hotplug work and later
+ CPU offline")  mentioned. This problem happen in cgroup v2:
 
-<quote>
-/*
- * Generate 'num' values from -1 to 30 with -1 rejected by the
- * __flush_tlb_range() loop below.
- */
-</quote>
+This problem can also happen in cgroup v1 pressure test, which onlines
+and offlines cpus, and sets cpuset.cpus to rebuild domains with
+sched_load_balance off.
 
-With your change, num can't ever be negative, and that breaks
-__flush_tlb_range_op():
+smpboot: CPU 1 is now offline
+BUG: unable to handle page fault for address: 0000342bad598668
+PGD 0 P4D 0
+Oops: 0000 [#1] PREEMPT SMP NOPTI
+CPU: 54 PID: 9966 Comm: sh Kdump: loaded Tainted: G S         OE      6.8.0-rc7+ #5
+Hardware name: Powerleader PR2715P3/T1DM-E2, BIOS OEM57.22 11/23/2021
+RIP: 0010:sd_init+0x204/0x390
+Code: 00 02 00 00 a8 80 0f 84 ad 00 00 00 41 c7 44 24 2c 6e 00 00 00 85 d2 74 2f 48 63 54 24 18 49 8b 45 20 48 8b 14 d5 60 0b 79 ab <48> 8b 04 02 49 89 84 24 10 01 00 00 f0 ff 00 49 8b 84 24 10 01 00
+RSP: 0018:ffff9f90669afc18 EFLAGS: 00010206
+RAX: 0000342c00e62668 RBX: 0000000000000000 RCX: 00000000ffffffa0
+RDX: ffffffffac736000 RSI: 0000000000000060 RDI: ffff8b24b8143930
+RBP: ffff8b24b8143920 R08: 0000000000000060 R09: ffff8b2635783670
+R10: 0000000000000001 R11: 0000000000000001 R12: ffff8b24b8143800
+R13: ffff8ae687511600 R14: ffffffffabc6b9b0 R15: ffff8b25c0040ea0
+FS:  00007fd93c734740(0000) GS:ffff8b24bca00000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000342bad598668 CR3: 00000001e0934005 CR4: 00000000007706f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+PKRU: 55555554
+Call Trace:
+ <TASK>
+ ? __die+0x24/0x70
+ ? page_fault_oops+0x82/0x150
+ ? local_clock_noinstr+0xf/0xb0
+ ? exc_page_fault+0x69/0x1b0
+ ? asm_exc_page_fault+0x26/0x30
+ ? sd_init+0x204/0x390
+ ? sd_init+0x11c/0x390
+ build_sched_domains+0x171/0x640
+ partition_sched_domains_locked+0x2a1/0x3c0
+ rebuild_sched_domains_locked+0x14f/0x200
+ update_cpumask+0x27c/0x5f0
+ cpuset_write_resmask+0x423/0x530
+ kernfs_fop_write_iter+0x160/0x220
+ vfs_write+0x355/0x480
+ ksys_write+0x69/0xf0
+ do_syscall_64+0x66/0x180
+ entry_SYSCALL_64_after_hwframe+0x6e/0x76
+RIP: 0033:0x7fd93c4fc907
+Code: 0f 00 f7 d8 64 89 02 48 c7 c0 ff ff ff ff eb b7 0f 1f 00 f3 0f 1e fa 64 8b 04 25 18 00 00 00 85 c0 75 10 b8 01 00 00 00 0f 05 <48> 3d 00 f0 ff ff 77 51 c3 48 83 ec 28 48 89 54 24 18 48 89 74 24
+RSP: 002b:00007fff153c7f08 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
+RAX: ffffffffffffffda RBX: 0000000000000002 RCX: 00007fd93c4fc907
+RDX: 0000000000000002 RSI: 000055d055679900 RDI: 0000000000000001
+RBP: 000055d055679900 R08: 00007fd93c5b01e0 R09: 00007fd93c5b0260
+R10: 00007fd93c5b0160 R11: 0000000000000246 R12: 0000000000000002
+R13: 00007fd93c5f25a0 R14: 0000000000000002 R15: 00007fd93c5f27a0
 
-<quote>
-		num = __TLBI_RANGE_NUM(pages, scale);			\
-		if (num >= 0) {						\
-			addr = __TLBI_VADDR_RANGE(start >> shift, asid, \
-						scale, num, tlb_level);	\
-			__tlbi(r##op, addr);				\
-			if (tlbi_user)					\
-				__tlbi_user(r##op, addr);		\
-			start += __TLBI_RANGE_PAGES(num, scale) << PAGE_SHIFT; \
-			pages -= __TLBI_RANGE_PAGES(num, scale);	\
-		}							\
-		scale--;						\
-</quote>
+It must guarantee that cpus in domains passing to
+partition_and_rebuild_sched_domains must be active. So the domains should
+be checked after generate_sched_domains.
 
-We'll then shove whatever value we've found in the TLBI operation,
-leading to unknown results instead of properly adjusting the scale to
-issue a smaller invalidation.
+Fixes: 0ccea8feb980 ("cpuset: Make generate_sched_domains() work with partition")
+Signed-off-by: Chen Ridong <chenridong@huawei.com>
+---
+ kernel/cgroup/cpuset.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-I think the problem is that you are triggering NUM=31 and SCALE=3,
-which the current code cannot handle as per the comment above
-__flush_tlb_range_op() (we can't do NUM=30 and SCALE=4, obviously).
-
-Can you try the untested patch below?
-
-Thanks,
-
-	M.
-
-diff --git a/arch/arm64/include/asm/tlbflush.h b/arch/arm64/include/asm/tlbflush.h
-index 3b0e8248e1a4..b71a1cece802 100644
---- a/arch/arm64/include/asm/tlbflush.h
-+++ b/arch/arm64/include/asm/tlbflush.h
-@@ -379,10 +379,6 @@ static inline void arch_tlbbatch_flush(struct arch_tlbflush_unmap_batch *batch)
-  * 3. If there is 1 page remaining, flush it through non-range operations. Range
-  *    operations can only span an even number of pages. We save this for last to
-  *    ensure 64KB start alignment is maintained for the LPA2 case.
-- *
-- * Note that certain ranges can be represented by either num = 31 and
-- * scale or num = 0 and scale + 1. The loop below favours the latter
-- * since num is limited to 30 by the __TLBI_RANGE_NUM() macro.
-  */
- #define __flush_tlb_range_op(op, start, pages, stride,			\
- 				asid, tlb_level, tlbi_user, lpa2)	\
-@@ -407,6 +403,7 @@ do {									\
- 									\
- 		num = __TLBI_RANGE_NUM(pages, scale);			\
- 		if (num >= 0) {						\
-+			num += 1;					\
- 			addr = __TLBI_VADDR_RANGE(start >> shift, asid, \
- 						scale, num, tlb_level);	\
- 			__tlbi(r##op, addr);				\
-
+diff --git a/kernel/cgroup/cpuset.c b/kernel/cgroup/cpuset.c
+index 927bef3a598a..0e0d469c2591 100644
+--- a/kernel/cgroup/cpuset.c
++++ b/kernel/cgroup/cpuset.c
+@@ -1210,6 +1210,7 @@ static void rebuild_sched_domains_locked(void)
+ 	cpumask_var_t *doms;
+ 	struct cpuset *cs;
+ 	int ndoms;
++	int i;
+ 
+ 	lockdep_assert_cpus_held();
+ 	lockdep_assert_held(&cpuset_mutex);
+@@ -1251,6 +1252,12 @@ static void rebuild_sched_domains_locked(void)
+ 	/* Generate domain masks and attrs */
+ 	ndoms = generate_sched_domains(&doms, &attr);
+ 
++	/* guarantee no CPU offlining in doms */
++	for (i = 0; i < ndoms; ++i) {
++		if (!cpumask_subset(doms[i], cpu_active_mask))
++			return;
++	}
++
+ 	/* Have scheduler rebuild the domains */
+ 	partition_and_rebuild_sched_domains(ndoms, doms, attr);
+ }
 -- 
-Without deviation from the norm, progress is not possible.
+2.34.1
+
