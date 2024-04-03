@@ -1,205 +1,175 @@
-Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 049177172C
-	for <linux-kernel@vger.kernel.org>; Wed,  3 Apr 2024 09:11:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 777E856471;
+	Wed,  3 Apr 2024 09:14:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712135514; cv=none; b=TFUY/QQ4GNOWMtpD4qSqnXdhIEjLLU/476Ohgj8SR70FkdIhGK6DSL8vagDBGlc7fIP+BmIR925nqbuispcVASqJL6EtMoPH/OGY2mMIFVPYySnI3UzJXNx/DeedvOJt9+5wORFJmFEOH3sA3MAqPGZd2FcY8Os1UPT0gAR9SY4=
+	t=1712135651; cv=none; b=mHv5v2BuiULx457c6/qLuQtnSCzvszDyavWJvx75MZmwOTSHe5TliriwKfs9iKHpziRVXNmyQ74UfWfd/EDjqwVKkH08POP+9jDrWDp1XIjNWNN5zi56bH7qLarJI+kRTriplcs9atvQu70taT3PDe15ATRjvPZr9SBVL4W1v44=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712135514; c=relaxed/simple;
-	bh=1XtJXIGk14lZrEJ9Tlq+RINoht3cGrh52Xe3iqyl35I=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=H4HgZM5PzKL091ehf10OL+fHx78WeHKnNsXnRfC81+6ZBLOVVcws2P7fDugGdPrRAzHsmEEpyoqQgLUeBC54Dl4S7XqlIpw6u0Im/IbdvMX1t+XMqolRvTybc/hgVaiOCGxVMk4pcINwV/yRy+Pdk005gQ5v1qdrqLyh61gokEo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=HIlU6+2w; arc=none smtp.client-ip=209.85.214.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1712135651; c=relaxed/simple;
+	bh=bZq0rD5KiJxbGyvQb/XEzn9LUcVm4yswpSv88dX9nmI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=sX5dP8NHjpVy4kZHIBeVNrcq1GBE9O9W42DQ8DxeyqahvIh4LMhm7l4wHBcXcvGdDPsUXeAKHMckmBWlL0+ikIHZj8NN0NzwgkF++NjmAk9oL6rxj2XqmC4pzC7OJRJnPGFJlO7CWbKcdYWh+iJpZEepTBJYF8rHxz4952bsFOY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=G1rSTq2g; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HIlU6+2w"
-Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-1e0d82d441bso55087655ad.3
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Apr 2024 02:11:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1712135511; x=1712740311; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=+nFa+DoX75Gh3LGa/SLXrbw1YnZbOgzc+2X5SVpsYKU=;
-        b=HIlU6+2wyFc4KSxDcw+VKgRUdgvSOHiJDkzPu0KlrnJxO9mYxk/U3Sv+lvEeSJ2BxI
-         Qt5etAYsGXS/Oj+B0M+TsU89kdS1KyfOd8qh68TK/EKAsNPR5IC1u8ZaHBjdd/R5vf1a
-         /AalUHkxzBVLRDsE+l4GaESGJ51pPvCbRg+Zrn+jZYQTREpSbBK2dGL60Ybgy6S5JlTi
-         uflmDpGDbXyT+bqYL4OQMoWw9tYZ6JWXE85UmA4sdP+isXpP2m+w1JxQ3iuvDhkZpADe
-         fh4tZBCgDmkqsYZpVXhD0nJnnh7ed34YYGObDUOtrWzMJcKuxsF+62/f+WrkfZUf7X6e
-         uX3Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712135511; x=1712740311;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=+nFa+DoX75Gh3LGa/SLXrbw1YnZbOgzc+2X5SVpsYKU=;
-        b=HwV/qw7xcbfikEVnRnVScvY8Afo8IMHWhATUOB/uXHE7Un5OE03o3QV1KAMVKsfecf
-         gtL/ZTf0ZLO3rQj++alzItTS1cSS+o5fLiMW5OrtJengIcepj5KFf5DLPEl39PIc/Vgg
-         9RKl3FoHFAdC6KsrsiuZpCnsc421qcZU2X3z/A6A9S3wXGfx2Ct3AB+nh4ipsOsydZOu
-         4IfdIAnKKNpqUXfY/nrnYcoz4KWUc8fpholmgg40woCumumjQRNs4GtvZ//vk+ag0hkq
-         k8Hjly0K6AkJRbEJCPfYFWquRcMmn0MaZ0PNnLoBFAHaQ4gDKQ7xQlE2dAfMqq59jw5i
-         AGsA==
-X-Forwarded-Encrypted: i=1; AJvYcCXIx6WAyE7u6nHtw2+uncU52gYoShYeZ1xJ+VpuB/LZA+ghvC4lQoExW/WdHVjfHbpJ73dbRAm97t1851DvfitUj2d6P13YrntWH5fg
-X-Gm-Message-State: AOJu0YyCxX/2wo0j168fVXJID1c31FwnY+v/IkZOK/IdP6CdN0lr6O4r
-	XgYUb73nC3qyx8/50jlWl7m0wlRTSFqQylqB9lDqv1WgD0ptSKo+OJYpfJ9RzXe5iPRmU4FDVJ7
-	ZQllCVA==
-X-Google-Smtp-Source: AGHT+IGDKZpi6IzWPwxcA3gkwURqgiirh03g+6YOT47tXCPNep36CItbq3BtloN4WYOSIhk1Xi88sQ==
-X-Received: by 2002:a17:903:18f:b0:1e2:920a:4add with SMTP id z15-20020a170903018f00b001e2920a4addmr1179553plg.16.1712135511328;
-        Wed, 03 Apr 2024 02:11:51 -0700 (PDT)
-Received: from [127.0.1.1] ([112.65.12.66])
-        by smtp.gmail.com with ESMTPSA id lo14-20020a170903434e00b001e0aded0ca7sm12688087plb.239.2024.04.03.02.11.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 03 Apr 2024 02:11:50 -0700 (PDT)
-From: Jun Nie <jun.nie@linaro.org>
-Date: Wed, 03 Apr 2024 17:11:02 +0800
-Subject: [PATCH v3 6/6] drm/msm/dsi: support DSC configurations with
- slice_per_pkt > 1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="G1rSTq2g"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7BC9BC433C7;
+	Wed,  3 Apr 2024 09:13:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1712135651;
+	bh=bZq0rD5KiJxbGyvQb/XEzn9LUcVm4yswpSv88dX9nmI=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=G1rSTq2gywOxFwfLMdqh7qECus3WHP07qERZ0GtkigtronOFreYYbj2DY7o4GJAuf
+	 oZcWqYuX9S+yINjNot/Bp8IG/Vi80ILjCS2//Ok2dQJAT6HaTBOFMamLWGUliYxUPA
+	 8BVbBtudthBAzSBfr4+Y4azAlGCuU+iRCMYsvOKYoUSZTcQ7PfGs/HopPAE4pcoQU+
+	 BbJhflh1B4w4H2blhxzV6+JjWy5ghyw29+l1oTVl0f9DGG94s9opUckIyY0h5WleuU
+	 3Bq427YWzfKwCbID07SgygmaByiWT5aDeupc6m3NnvqJSnGpeOlcXf+zMqgHPhs136
+	 haNwFSyBb+J4A==
+Message-ID: <f68a9bef-cbd8-4d85-afd4-55516d9925ed@kernel.org>
+Date: Wed, 3 Apr 2024 11:13:50 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 33/34] drivers: remove incorrect of_match_ptr/ACPI_PTR
+ annotations
+To: Arnd Bergmann <arnd@kernel.org>, linux-kernel@vger.kernel.org,
+ Corey Minyard <minyard@acm.org>, Peter Huewe <peterhuewe@gmx.de>,
+ Jarkko Sakkinen <jarkko@kernel.org>, Vinod Koul <vkoul@kernel.org>,
+ Moritz Fischer <mdf@kernel.org>, Wu Hao <hao.wu@intel.com>,
+ Xu Yilun <yilun.xu@intel.com>, Jiri Kosina <jikos@kernel.org>,
+ Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+ Michael Hennerich <michael.hennerich@analog.com>,
+ Peter Rosin <peda@axentia.se>, Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+ Iyappan Subramanian <iyappan@os.amperecomputing.com>,
+ Keyur Chudgar <keyur@os.amperecomputing.com>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ Yisen Zhuang <yisen.zhuang@huawei.com>, Salil Mehta
+ <salil.mehta@huawei.com>, Tony Lindgren <tony@atomide.com>,
+ Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
+ Alexandre Belloni <alexandre.belloni@bootlin.com>,
+ Xiang Chen <chenxiang66@hisilicon.com>,
+ "James E.J. Bottomley" <jejb@linux.ibm.com>,
+ "Martin K. Petersen" <martin.petersen@oracle.com>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Russell King <linux@armlinux.org.uk>, Jiri Slaby <jirislaby@kernel.org>,
+ Jacky Huang <ychuang3@nuvoton.com>, Shan-Chun Hung <schung@nuvoton.com>
+Cc: Arnd Bergmann <arnd@arndb.de>, Jason Gunthorpe <jgg@ziepe.ca>,
+ Tom Rix <trix@redhat.com>, =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?=
+ <u.kleine-koenig@pengutronix.de>, Randy Dunlap <rdunlap@infradead.org>,
+ Rob Herring <robh@kernel.org>, Linus Walleij <linus.walleij@linaro.org>,
+ openipmi-developer@lists.sourceforge.net, linux-integrity@vger.kernel.org,
+ dmaengine@vger.kernel.org, linux-fpga@vger.kernel.org,
+ linux-input@vger.kernel.org, linux-i2c@vger.kernel.org,
+ netdev@vger.kernel.org, linux-omap@vger.kernel.org,
+ linux-rtc@vger.kernel.org, linux-scsi@vger.kernel.org,
+ linux-staging@lists.linux.dev, linux-serial@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org
+References: <20240403080702.3509288-1-arnd@kernel.org>
+ <20240403080702.3509288-34-arnd@kernel.org>
+Content-Language: en-US
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <20240403080702.3509288-34-arnd@kernel.org>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240403-msm-drm-dsc-dsi-video-upstream-v1-6-db5036443545@linaro.org>
-References: <20240403-msm-drm-dsc-dsi-video-upstream-v1-0-db5036443545@linaro.org>
-In-Reply-To: <20240403-msm-drm-dsc-dsi-video-upstream-v1-0-db5036443545@linaro.org>
-To: Rob Clark <robdclark@gmail.com>, 
- Abhinav Kumar <quic_abhinavk@quicinc.com>, 
- Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, Sean Paul <sean@poorly.run>, 
- Marijn Suijten <marijn.suijten@somainline.org>, 
- David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, 
- Jessica Zhang <quic_jesszhan@quicinc.com>, Vinod Koul <vkoul@kernel.org>
-Cc: linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org, 
- freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
- Jun Nie <jun.nie@linaro.org>, Jonathan Marek <jonathan@marek.ca>
-X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1712135460; l=4300;
- i=jun.nie@linaro.org; s=20240403; h=from:subject:message-id;
- bh=KdBFnUu2Qm6ZZ65hBcXTk+Bm1tsC1DSuVU4sJTWGxzk=;
- b=0c+GOay4d8sYuEfmKXCY3qnC69M5LNKT/bdL1VuwVHTTHSJMUP6DvEIlrEPtXbRf7brwZBC9G
- THfCXQuOr93AkNUmqicPhAO7A7LuE1Xr9W6EM3TZrI+KgKHpwS6Ti1a
-X-Developer-Key: i=jun.nie@linaro.org; a=ed25519;
- pk=MNiBt/faLPvo+iJoP1hodyY2x6ozVXL8QMptmsKg3cc=
 
-From: Jonathan Marek <jonathan@marek.ca>
+On 03/04/2024 10:06, Arnd Bergmann wrote:
+> From: Arnd Bergmann <arnd@arndb.de>
+> 
+> When building with CONFIG_OF and/or CONFIG_ACPI disabled but W=1 extra
+> warnings enabled, a lot of driver cause a warning about an unused
+> ID table:
+> 
+> drivers/char/tpm/tpm_ftpm_tee.c:356:34: error: unused variable 'of_ftpm_tee_ids' [-Werror,-Wunused-const-variable]
+> drivers/dma/img-mdc-dma.c:863:34: error: unused variable 'mdc_dma_of_match' [-Werror,-Wunused-const-variable]
+> drivers/fpga/versal-fpga.c:62:34: error: unused variable 'versal_fpga_of_match' [-Werror,-Wunused-const-variable]
+> drivers/i2c/muxes/i2c-mux-ltc4306.c:200:34: error: unused variable 'ltc4306_of_match' [-Werror,-Wunused-const-variable]
+> drivers/i2c/muxes/i2c-mux-reg.c:242:34: error: unused variable 'i2c_mux_reg_of_match' [-Werror,-Wunused-const-variable]
+> drivers/memory/pl353-smc.c:62:34: error: unused variable 'pl353_smc_supported_children' [-Werror,-Wunused-const-variable]
+> drivers/regulator/pbias-regulator.c:136:34: error: unused variable 'pbias_of_match' [-Werror,-Wunused-const-variable]
+> drivers/regulator/twl-regulator.c:552:34: error: unused variable 'twl_of_match' [-Werror,-Wunused-const-variable]
+> drivers/regulator/twl6030-regulator.c:645:34: error: unused variable 'twl_of_match' [-Werror,-Wunused-const-variable]
+> drivers/scsi/hisi_sas/hisi_sas_v2_hw.c:3635:36: error: unused variable 'sas_v2_acpi_match' [-Werror,-Wunused-const-variable]
+> drivers/staging/pi433/pi433_if.c:1359:34: error: unused variable 'pi433_dt_ids' [-Werror,-Wunused-const-variable]
+> drivers/tty/serial/amba-pl011.c:2945:34: error: unused variable 'sbsa_uart_of_match' [-Werror,-Wunused-const-variable]
+> 
+> The fix is always to just remove the of_match_ptr() and ACPI_PTR() wrappers
+> that remove the reference, rather than adding another #ifdef just for build
+> testing for a configuration that doesn't matter in practice.
+> 
+> I considered splitting up the large patch into per subsystem patches, but since
+> it's really just the same thing everywhere it feels better to do it all at once.
+> 
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> ---
+>  drivers/char/ipmi/ipmb_dev_int.c          | 2 +-
+>  drivers/char/tpm/tpm_ftpm_tee.c           | 2 +-
+>  drivers/dma/img-mdc-dma.c                 | 2 +-
+>  drivers/fpga/versal-fpga.c                | 2 +-
+>  drivers/hid/hid-google-hammer.c           | 6 ++----
+>  drivers/i2c/muxes/i2c-mux-ltc4306.c       | 2 +-
+>  drivers/i2c/muxes/i2c-mux-reg.c           | 2 +-
+>  drivers/input/touchscreen/wdt87xx_i2c.c   | 2 +-
+>  drivers/mux/adg792a.c                     | 2 +-
+>  drivers/net/ethernet/apm/xgene-v2/main.c  | 2 +-
+>  drivers/net/ethernet/hisilicon/hns_mdio.c | 2 +-
+>  drivers/regulator/pbias-regulator.c       | 2 +-
+>  drivers/regulator/twl-regulator.c         | 2 +-
+>  drivers/regulator/twl6030-regulator.c     | 2 +-
 
-Support slice_per_pkt in msm driver.
+I covered regulators here the same way:
+https://lore.kernel.org/all/20230310214553.275450-5-krzysztof.kozlowski@linaro.org/
 
-Note that the removed "pkt_per_line = slice_per_intf * slice_per_pkt"
-comment is incorrect.
+but just like SPI and ASoC, Mark did not agree to pick them up.
 
-Also trim the code to simplify the dsc reference.
-
-Signed-off-by: Jonathan Marek <jonathan@marek.ca>
-Signed-off-by: Jun Nie <jun.nie@linaro.org>
----
- drivers/gpu/drm/msm/dsi/dsi_host.c | 35 ++++++++++++++---------------------
- 1 file changed, 14 insertions(+), 21 deletions(-)
-
-diff --git a/drivers/gpu/drm/msm/dsi/dsi_host.c b/drivers/gpu/drm/msm/dsi/dsi_host.c
-index b0507a42ee6a..0c6f40dbd25c 100644
---- a/drivers/gpu/drm/msm/dsi/dsi_host.c
-+++ b/drivers/gpu/drm/msm/dsi/dsi_host.c
-@@ -866,17 +866,10 @@ static void dsi_update_dsc_timing(struct msm_dsi_host *msm_host, bool is_cmd_mod
- 	slice_per_intf = msm_dsc_get_slices_per_intf(dsc, hdisplay);
- 
- 	total_bytes_per_intf = dsc->slice_chunk_size * slice_per_intf;
--	bytes_per_pkt = dsc->slice_chunk_size; /* * slice_per_pkt; */
--
-+	bytes_per_pkt = dsc->slice_chunk_size * dsc->slice_per_pkt;
- 	eol_byte_num = total_bytes_per_intf % 3;
- 
--	/*
--	 * Typically, pkt_per_line = slice_per_intf * slice_per_pkt.
--	 *
--	 * Since the current driver only supports slice_per_pkt = 1,
--	 * pkt_per_line will be equal to slice per intf for now.
--	 */
--	pkt_per_line = slice_per_intf;
-+	pkt_per_line = slice_per_intf / dsc->slice_per_pkt;
- 
- 	if (is_cmd_mode) /* packet data type */
- 		reg = DSI_COMMAND_COMPRESSION_MODE_CTRL_STREAM0_DATATYPE(MIPI_DSI_DCS_LONG_WRITE);
-@@ -916,6 +909,7 @@ static void dsi_update_dsc_timing(struct msm_dsi_host *msm_host, bool is_cmd_mod
- static void dsi_timing_setup(struct msm_dsi_host *msm_host, bool is_bonded_dsi)
- {
- 	struct drm_display_mode *mode = msm_host->mode;
-+	struct drm_dsc_config *dsc = msm_host->dsc;
- 	u32 hs_start = 0, vs_start = 0; /* take sync start as 0 */
- 	u32 h_total = mode->htotal;
- 	u32 v_total = mode->vtotal;
-@@ -947,8 +941,7 @@ static void dsi_timing_setup(struct msm_dsi_host *msm_host, bool is_bonded_dsi)
- 		hdisplay /= 2;
- 	}
- 
--	if (msm_host->dsc) {
--		struct drm_dsc_config *dsc = msm_host->dsc;
-+	if (dsc) {
- 		u32 bytes_per_pclk;
- 
- 		/* update dsc params with timing params */
-@@ -988,14 +981,14 @@ static void dsi_timing_setup(struct msm_dsi_host *msm_host, bool is_bonded_dsi)
- 		else
- 			bytes_per_pclk = 3;
- 
--		hdisplay = DIV_ROUND_UP(msm_dsc_get_bytes_per_line(msm_host->dsc), bytes_per_pclk);
-+		hdisplay = DIV_ROUND_UP(msm_dsc_get_bytes_per_line(dsc), bytes_per_pclk);
- 
- 		h_total += hdisplay;
- 		ha_end = ha_start + hdisplay;
- 	}
- 
- 	if (msm_host->mode_flags & MIPI_DSI_MODE_VIDEO) {
--		if (msm_host->dsc)
-+		if (dsc)
- 			dsi_update_dsc_timing(msm_host, false, mode->hdisplay);
- 
- 		dsi_write(msm_host, REG_DSI_ACTIVE_H,
-@@ -1016,21 +1009,17 @@ static void dsi_timing_setup(struct msm_dsi_host *msm_host, bool is_bonded_dsi)
- 			DSI_ACTIVE_VSYNC_VPOS_START(vs_start) |
- 			DSI_ACTIVE_VSYNC_VPOS_END(vs_end));
- 	} else {		/* command mode */
--		if (msm_host->dsc)
-+		if (dsc)
- 			dsi_update_dsc_timing(msm_host, true, mode->hdisplay);
- 
- 		/* image data and 1 byte write_memory_start cmd */
--		if (!msm_host->dsc)
-+		if (!dsc)
- 			wc = hdisplay * mipi_dsi_pixel_format_to_bpp(msm_host->format) / 8 + 1;
- 		else
- 			/*
- 			 * When DSC is enabled, WC = slice_chunk_size * slice_per_pkt + 1.
--			 * Currently, the driver only supports default value of slice_per_pkt = 1
--			 *
--			 * TODO: Expand mipi_dsi_device struct to hold slice_per_pkt info
--			 *       and adjust DSC math to account for slice_per_pkt.
- 			 */
--			wc = msm_host->dsc->slice_chunk_size + 1;
-+			wc = dsc->slice_chunk_size * dsc->slice_per_pkt + 1;
- 
- 		dsi_write(msm_host, REG_DSI_CMD_MDP_STREAM0_CTRL,
- 			DSI_CMD_MDP_STREAM0_CTRL_WORD_COUNT(wc) |
-@@ -1657,8 +1646,12 @@ static int dsi_host_attach(struct mipi_dsi_host *host,
- 	msm_host->lanes = dsi->lanes;
- 	msm_host->format = dsi->format;
- 	msm_host->mode_flags = dsi->mode_flags;
--	if (dsi->dsc)
-+	if (dsi->dsc) {
- 		msm_host->dsc = dsi->dsc;
-+		/* for backwards compatibility, assume 1 if not set */
-+		if (!dsi->dsc->slice_per_pkt)
-+			dsi->dsc->slice_per_pkt = 1;
-+	}
- 
- 	/* Some gpios defined in panel DT need to be controlled by host */
- 	ret = dsi_host_init_panel_gpios(msm_host, &dsi->dev);
-
--- 
-2.34.1
+Best regards,
+Krzysztof
 
