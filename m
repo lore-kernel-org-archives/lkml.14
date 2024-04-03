@@ -1,104 +1,129 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFF096FE38;
-	Wed,  3 Apr 2024 08:51:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 587C66EB5A
+	for <linux-kernel@vger.kernel.org>; Wed,  3 Apr 2024 08:51:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712134262; cv=none; b=dT+/MeTJR1s5HO0w+eksDX3i/Aewmpyj2CmMrwjfhbaGm5G1c49s+xRXZ/4piabaQU77m+0yxYvV2DCRTQZTo9LKjIceQLMjKJbBilqnt6kCZpimcJRM5cixCUex7Ap3FyUgUxKy+jbgnAn7V0NsJQMciChmcgKiitdH6VGOt0E=
+	t=1712134271; cv=none; b=Byh6baN+B+R+jS/OujBFnn73wHDM6rFKuFyK88/7hZ+eORVhy5zBfhitbQjQ3ExbZopLz84a+pkA8/ybRe9EBnXTQkivoLVTaMvuk54z2vCNQO8+mzAhji9F4dW5Lp9/7JLxIcgSPUvdgAwdDCcrSeN0cylvX7zchtyOlt0A75s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712134262; c=relaxed/simple;
-	bh=R9D1+elmOmrZeynx4Rov9K9jGhBvCyfaXLdimDufyJU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CkvV0l5ULgdEWGLJc+AumAz4wSl8bKUimR7fG+1q47a0fQYI8pJMRoBUITD8W7l+P5tD2VCf77hmueYEON4HQmtxNdCiQ+cc3CHLDFc8OJyK6rFqctTAMNght5WoLx/ef3GBRD6VibPywaVkixktAkHPBFBhp0OeJaokQquRiHM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=L0Po71sp; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1712134271; c=relaxed/simple;
+	bh=yNeV4z/PWJVyzzzivGAxNQiXug1KMK16UfKr4VpFu10=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=PINmUKNy/EJgG/8wYpQWBEv42Ohmn6E2QkSqNcwiTEyXDdfTv8H9vYz/CjsMiU5Pp0R2fGztahytb46SCdTubcTVKE+r/JlTUsJAMjnVtVp85u9fenWyD/FvZKglKa97FPRewMT2dsxORY5LC489f9lFr7WT7i6z0TxLHt/M0dw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=aFjr2V9x; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="L0Po71sp"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B0434C43399;
-	Wed,  3 Apr 2024 08:50:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712134262;
-	bh=R9D1+elmOmrZeynx4Rov9K9jGhBvCyfaXLdimDufyJU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=L0Po71spXlZPgaNBqPSdKQy6XlDjR98o191JsfZhlyj7lm0qm4cFpUs6qITUDPpd5
-	 433H036omrV8RPf0d++00swNJu7LztP/r8MBz2dwY7NiW3qsE7QmbqPWLTtP37sqm2
-	 NSo419J1WHhnsEwofUgUTRTssmVYlGl4BuELzCQXzdZkCV4DmrLeS9wB2SFg31BgbM
-	 pgz1Ty9KAi5fWBouX5MeNnSUQzKOufuy9Y1wxQRoU+nwQKod7MUF4in7Xrud7Wj1B1
-	 SxjO3PY/FLG2gscBhS5qhyLN26ZMi1SAlKixgbDylGyEpPfA3A3bTzBTa19osQtKEO
-	 PcHTyIIfYrdFA==
-Date: Wed, 3 Apr 2024 10:50:55 +0200
-From: Christian Brauner <brauner@kernel.org>
-To: Jeff Layton <jlayton@kernel.org>
-Cc: Edward Adam Davis <eadavis@qq.com>, 
-	syzbot+4139435cb1b34cf759c2@syzkaller.appspotmail.com, amir73il@gmail.com, chuck.lever@oracle.com, jack@suse.cz, 
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, linux-nfs@vger.kernel.org, 
-	syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk, 
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>
-Subject: Re: [PATCH next] fs: fix oob in do_handle_open
-Message-ID: <20240403-radau-trubel-97587e8799c4@brauner>
-References: <000000000000f075b9061520cbbe@google.com>
- <tencent_A7845DD769577306D813742365E976E3A205@qq.com>
- <72d7604e38ee9a37bcb33a6a537758e4412488ee.camel@kernel.org>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="aFjr2V9x"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1712134267;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ftwTQ4DomVP4vKswlA/sGzSPQmPFYykxxeMk1bR9OoQ=;
+	b=aFjr2V9xAoYygLImlXWr5gCTolJoAbPXCaLr6V0rCAZxumBzjgdxJMNAK76JsbzpBRFSJ3
+	eYaiZOhstz2qNKt4j15PqECpYg1Vxr4sY2i6rxmNsMj8dSxZA9mnEKYHkZWInXrRVV9zGu
+	sWGO6fCaqPDyS2KyQZB3Fos7eSKMGMg=
+Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
+ [209.85.218.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-562-SXWDFNqaMFKOprtYjdzJrA-1; Wed, 03 Apr 2024 04:51:05 -0400
+X-MC-Unique: SXWDFNqaMFKOprtYjdzJrA-1
+Received: by mail-ej1-f71.google.com with SMTP id a640c23a62f3a-a4698fc37dfso394823066b.2
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Apr 2024 01:51:05 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712134265; x=1712739065;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ftwTQ4DomVP4vKswlA/sGzSPQmPFYykxxeMk1bR9OoQ=;
+        b=jlsgm0F7IQk4UTzbuGwSkEnPeTWr3LeG+tfebqars/wYGTKXAuFYl0rEH3w7K7zxnc
+         6wd4LzFoBiNpwAJMGfyiECLdojqaTVDU3MZ3P+p6Y5+s9tYeWgdLEf5gWIvMRM+nUZJv
+         naRX9LzPlMvqjWaI3lgXTiI16Tqir+7CLEDoNGJR9ZQ/V0WUnJwsALBqcrQpkhe6ef72
+         6enpHLFMoX4CP0PlvlEl5LE+ZhF8dPlP1XfVesa9i0cPKfIQ0RwvJEm6TtrHAwpTat88
+         GoiQCNsqCDHeF6AOZ+1jBysgJUAWe2i0++dv3NVloFNAMYG+J7FuBzHm4hU08RUsevow
+         uv3w==
+X-Forwarded-Encrypted: i=1; AJvYcCW1jpMtnuquL/AqoFbn4gF9832TGq/UQYCvxuHp/bn5FkQFaYi2AlBU14UF52K6VFxNUkHOgexAuIKeoN8rpt4m40hv+nEErldW12AA
+X-Gm-Message-State: AOJu0YwJEg/s1+gzba0AVuEkSg74DJ2KyLW9w3lh5d/AR2eDgv9EtOYt
+	el5mn7t4rDuOjIQ7itVjv1FDInCUg0wI3RfuF+5RtyV21wpEaZ4ENeSbLv1/ekZ8HRU/bO/3EUZ
+	M6d3gS5B4yHAXBKDq7y3/5cVGlPA6HvkLhHRln0aFsG6/LtY+LGn4umKZii914A==
+X-Received: by 2002:a50:9550:0:b0:56d:f375:29a8 with SMTP id v16-20020a509550000000b0056df37529a8mr2256046eda.36.1712134264875;
+        Wed, 03 Apr 2024 01:51:04 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEwT6tT+kScrk/JwtM/C4YQ4Oeghtzd6zvvvgwsKFGDFynobYE/66/6Tw6MA36U5g1BHNJNXA==
+X-Received: by 2002:a50:9550:0:b0:56d:f375:29a8 with SMTP id v16-20020a509550000000b0056df37529a8mr2256031eda.36.1712134264599;
+        Wed, 03 Apr 2024 01:51:04 -0700 (PDT)
+Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
+        by smtp.gmail.com with ESMTPSA id i23-20020a05640200d700b0056ddc4415eesm2723204edu.14.2024.04.03.01.51.03
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 03 Apr 2024 01:51:04 -0700 (PDT)
+Message-ID: <98229bf5-791f-4914-82de-7cee15bc41ce@redhat.com>
+Date: Wed, 3 Apr 2024 10:51:03 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <72d7604e38ee9a37bcb33a6a537758e4412488ee.camel@kernel.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/3] dt-bindings: leds: add LED_FUNCTION_FNLOCK
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+ Gergo Koteles <soyer@irl.hu>, Ike Panhc <ike.pan@canonical.com>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ Pavel Machek <pavel@ucw.cz>, Lee Jones <lee@kernel.org>,
+ Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-leds@vger.kernel.org, devicetree@vger.kernel.org
+References: <cover.1712063200.git.soyer@irl.hu>
+ <8ac95e85a53dc0b8cce1e27fc1cab6d19221543b.1712063200.git.soyer@irl.hu>
+ <6b47886e-09ac-4cb9-ab53-ca64f5320005@linaro.org>
+ <39acb3b9-a69f-4654-9749-a9af42fea39e@redhat.com>
+ <368e9817-0000-4f69-9f09-568827466121@linaro.org>
+ <4956933c-49c4-49ab-a91a-7e0efcc211d5@redhat.com>
+ <17a700a7-44f0-4e46-9a0c-4c2da44c9e27@linaro.org>
+Content-Language: en-US, nl
+From: Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <17a700a7-44f0-4e46-9a0c-4c2da44c9e27@linaro.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Wed, Apr 03, 2024 at 04:48:17AM -0400, Jeff Layton wrote:
-> On Wed, 2024-04-03 at 14:54 +0800, Edward Adam Davis wrote:
-> > [Syzbot reported]
-> > BUG: KASAN: slab-out-of-bounds in instrument_copy_from_user_before include/linux/instrumented.h:129 [inline]
-> > BUG: KASAN: slab-out-of-bounds in _copy_from_user+0x7b/0xe0 lib/usercopy.c:22
-> > Write of size 48 at addr ffff88802b8cbc88 by task syz-executor333/5090
-> > 
-> > CPU: 0 PID: 5090 Comm: syz-executor333 Not tainted 6.9.0-rc2-next-20240402-syzkaller #0
-> > Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 03/27/2024
-> > Call Trace:
-> >  <TASK>
-> >  __dump_stack lib/dump_stack.c:88 [inline]
-> >  dump_stack_lvl+0x241/0x360 lib/dump_stack.c:114
-> >  print_address_description mm/kasan/report.c:377 [inline]
-> >  print_report+0x169/0x550 mm/kasan/report.c:488
-> >  kasan_report+0x143/0x180 mm/kasan/report.c:601
-> >  kasan_check_range+0x282/0x290 mm/kasan/generic.c:189
-> >  instrument_copy_from_user_before include/linux/instrumented.h:129 [inline]
-> >  _copy_from_user+0x7b/0xe0 lib/usercopy.c:22
-> >  copy_from_user include/linux/uaccess.h:183 [inline]
-> >  handle_to_path fs/fhandle.c:203 [inline]
-> >  do_handle_open+0x204/0x660 fs/fhandle.c:226
-> >  do_syscall_64+0xfb/0x240
-> >  entry_SYSCALL_64_after_hwframe+0x72/0x7a
-> > [Fix] 
-> > When copying data to f_handle, the length of the copied data should not include
-> > the length of "struct file_handle".
-> > 
-> > Reported-by: syzbot+4139435cb1b34cf759c2@syzkaller.appspotmail.com
-> > Signed-off-by: Edward Adam Davis <eadavis@qq.com>
-> > ---
-> >  fs/fhandle.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > 
-> > diff --git a/fs/fhandle.c b/fs/fhandle.c
-> > index 53ed54711cd2..8a7f86c2139a 100644
-> > --- a/fs/fhandle.c
-> > +++ b/fs/fhandle.c
-> > @@ -202,7 +202,7 @@ static int handle_to_path(int mountdirfd, struct file_handle __user *ufh,
-> >  	*handle = f_handle;
-> >  	if (copy_from_user(&handle->f_handle,
-> >  			   &ufh->f_handle,
-> > -			   struct_size(ufh, f_handle, f_handle.handle_bytes))) {
-> > +			   f_handle.handle_bytes)) {
-> >  		retval = -EFAULT;
-> >  		goto out_handle;
-> >  	}
+Hi,
+
+On 4/3/24 10:46 AM, Krzysztof Kozlowski wrote:
+> On 03/04/2024 10:39, Hans de Goede wrote:
+>>>>
+>>>> must have a dts user before being approved too ? Since
+>>>> that file is included from include/dt-bindings/input/input.h ?
+>>>
+>>> Wait, that's UAPI :) and we just share the constants. That's kind of
+>>> special case, but I get what you mean.
+>>>
+>>>>
+>>>> TL;DR: not only is this patch fine, this is actually
+>>>> the correct place to add such a define according to
+>>>> the docs in Documentation/leds/leds-class.rst :
+>>>>
+>>>> Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+>>>
+>>> Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+>>
+>> Thanks. Is it ok for me to merge this through the pdx86
+>> tree (once I've reviewed the other 2 patches) ?
 > 
-> cc'ing Gustavo, since it looks like his patch in -next is what broke
-> this.
+> You need to sync (ack) with LED folks, because by default this should go
+> via LED subsystem.
 
-I'ved folded the fix into Gustavo's patch. Please see
-https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git/commit/?h=vfs.misc&id=02426828cde24cd5b6cf5f30467cea085118f657
+Ok, will do.
+
+Pavel, Lee can you give me an ack for merging this through the pdx86 tree?
+
+Regards,
+
+Hans
+
+
+
+
