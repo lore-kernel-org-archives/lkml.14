@@ -1,63 +1,34 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC7EB6FE00;
-	Wed,  3 Apr 2024 09:36:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9A0E6F085;
+	Wed,  3 Apr 2024 09:36:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712136977; cv=none; b=S2iGwhbcCQZsXfICa3dyrldYCXHaiOh+eTGNZUI8GaR9BbHmVYGxnq2cs2F294TdRMXSuX36KvMOcbqABYUdYK+WqXg1XjinKdwSU2XCve2XkWskB8r5a2gphF9szcG4lrxmtB5oNqR/lLGXF67qhi+QLptBDwlPwNdzKAxnAME=
+	t=1712136979; cv=none; b=DqGmaQh6c1dQyGPLGLtuHyQ8gPX39VtrVwKm5rUXCHlJKgApmVMecWFManJSALz3GP9Upa8zh2UERT1NB25b+AoJuP4tlfJv/40HyWWt7Fg/nk/PNm/yJVAEfwc0djJOH+3+kRYTdiVUf58PM65DJJHbHoE8cYA7TU98YUIn9r4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712136977; c=relaxed/simple;
-	bh=J4/4Z/KbRHhQpBPL6z/aGYydGWTMJbsDXjqRAbKjEZM=;
+	s=arc-20240116; t=1712136979; c=relaxed/simple;
+	bh=72yeARj0IOdQyuSCgecazU8IKrp+Hx1+NQJZD1evZ8A=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jdJ7fCJLveJdxtHAN544bbimVNjPKQ4S2Gg+ZO4BDiw3KsPYTzgyxmACCLiA4A5hptXdOR7mb1+SPrFtdB1FWjm++G8SeApcOR3yr4opbkRfxHKAYHPMBYp9pzCJj/HOagmXs4D2iJUef3gf0znaBfZNfVQMUoq8p2Q1hZmIyAw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=EEWnWSyl; arc=none smtp.client-ip=192.198.163.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="EEWnWSyl"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1712136976; x=1743672976;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=J4/4Z/KbRHhQpBPL6z/aGYydGWTMJbsDXjqRAbKjEZM=;
-  b=EEWnWSylOKhhopQMk7DNhthF2S/HaZjaBYtnFwpTPZqkea7nJL2jCUwf
-   /yN3nrizHaD6qXn49jUG3rPeUuaUVEmxStIBa8ddESXs4ODmfL/BF8jDC
-   /8suW9QMQDD4OVTKk9Zya0Hg3fXwdrZamaiUAtGPczK+hEDCwKMdR8NNn
-   LGKCAPxgbRoogvwY6IoWnJTCI2SkfhZCUX+fcUcr9QAMCE6X5HT92vd0y
-   0MWL397CDmaSJN3pLMzYnl6mjeb/pD3383rK7PgnTUmh7UiYbH72oofzE
-   gK5ZUHpO0rCCsbiynj3bftrgYMHYi/7x5EC/0fbC07c11jO9aa/IsDQLr
-   w==;
-X-CSE-ConnectionGUID: BVAbgaSjRFqYtOUodZ3JLw==
-X-CSE-MsgGUID: aHZNuR9XQn+RunVOAjP+Gg==
-X-IronPort-AV: E=McAfee;i="6600,9927,11032"; a="7219125"
-X-IronPort-AV: E=Sophos;i="6.07,177,1708416000"; 
-   d="scan'208";a="7219125"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2024 02:36:15 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,11032"; a="915176150"
-X-IronPort-AV: E=Sophos;i="6.07,177,1708416000"; 
-   d="scan'208";a="915176150"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.72.54])
-  by fmsmga002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2024 02:36:13 -0700
-Received: from andy by smile with local (Exim 4.97)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1rrx2R-000000014m4-15PG;
-	Wed, 03 Apr 2024 12:36:11 +0300
-Date: Wed, 3 Apr 2024 12:36:11 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Arnd Bergmann <arnd@kernel.org>
-Cc: linux-kernel@vger.kernel.org, Lars-Peter Clausen <lars@metafoo.de>,
-	Michael Hennerich <Michael.Hennerich@analog.com>,
-	Jonathan Cameron <jic23@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
-	linux-iio@vger.kernel.org
-Subject: Re: [PATCH 16/34] iio: ad5755: hook up of_device_id lookup to
- platform driver
-Message-ID: <Zg0jC0R39CTLsrg0@smile.fi.intel.com>
-References: <20240403080702.3509288-1-arnd@kernel.org>
- <20240403080702.3509288-17-arnd@kernel.org>
+	 Content-Type:Content-Disposition:In-Reply-To; b=eWarLOTZN+0DZaIhCoFQCeImFSCzE12HDVnEAbgesmCc8CGaz26kjJf0qSXKeNCkV0SsMnS42renH1Ih/3SR22wyzhaG3pnXlT2ugCM6XVVFWOw2yMPoVDqy+QVvg/W4XLQDBUOQktXE5+mQ7rc2qwxLCqeIhGN4w4BCC4vblKA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; arc=none smtp.client-ip=144.6.53.87
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
+Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
+	by formenos.hmeau.com with smtp (Exim 4.94.2 #2 (Debian))
+	id 1rrx2H-00EXf9-F1; Wed, 03 Apr 2024 17:36:02 +0800
+Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Wed, 03 Apr 2024 17:36:18 +0800
+Date: Wed, 3 Apr 2024 17:36:18 +0800
+From: Herbert Xu <herbert@gondor.apana.org.au>
+To: syzbot <syzbot+0cb5bb0f4bf9e79db3b3@syzkaller.appspotmail.com>
+Cc: davem@davemloft.net, linux-crypto@vger.kernel.org,
+	linux-kernel@vger.kernel.org, luto@kernel.org, peterz@infradead.org,
+	syzkaller-bugs@googlegroups.com, tglx@linutronix.de,
+	Daniel Jordan <daniel.m.jordan@oracle.com>,
+	Steffen Klassert <steffen.klassert@secunet.com>
+Subject: [PATCH] padata: Disable BH when taking works lock on MT path
+Message-ID: <Zg0jEu5OsZaUFzn0@gondor.apana.org.au>
+References: <0000000000001963d306150986f9@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -66,28 +37,71 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240403080702.3509288-17-arnd@kernel.org>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <0000000000001963d306150986f9@google.com>
 
-On Wed, Apr 03, 2024 at 10:06:34AM +0200, Arnd Bergmann wrote:
-> From: Arnd Bergmann <arnd@arndb.de>
+On Mon, Apr 01, 2024 at 07:08:28AM -0700, syzbot wrote:
 > 
-> When the driver is built-in, 'make W=1' warns about an unused
-> ID table:
+> syzbot found the following issue on:
 > 
-> drivers/iio/dac/ad5755.c:866:34: error: 'ad5755_of_match' defined but not used [-Werror=unused-const-variable=]
->   866 | static const struct of_device_id ad5755_of_match[] = {
-> 
-> While the data is duplicated in the spi_device_id, it's common
-> to use the actual OF compatible strings in the driver.
-> 
-> Since there are no in-tree users of plain platform devices, the
-> spi_device_id table could actually be dropped entirely with this.
+> HEAD commit:    18737353cca0 Merge tag 'edac_urgent_for_v6.9_rc2' of git:/..
+> git tree:       upstream
+> console output: https://syzkaller.appspot.com/x/log.txt?x=15d605e5180000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=f64ec427e98bccd7
+> dashboard link: https://syzkaller.appspot.com/bug?extid=0cb5bb0f4bf9e79db3b3
+> compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
 
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Strictly speaking this can't happen because for the time being
+padata_do_multithreaded cannot run at the same time as the old
+padata which occurs in BH context.
 
+But the simplest fix is to just disable BH:
+
+---8<---
+As the old padata code can execute in softirq context, disable
+softirqs for the new padata_do_mutithreaded code too as otherwise
+lockdep will get antsy.
+
+Reported-by: syzbot+0cb5bb0f4bf9e79db3b3@syzkaller.appspotmail.com
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+
+diff --git a/kernel/padata.c b/kernel/padata.c
+index e3f639ff1670..53f4bc912712 100644
+--- a/kernel/padata.c
++++ b/kernel/padata.c
+@@ -106,7 +106,7 @@ static int __init padata_work_alloc_mt(int nworks, void *data,
+ {
+ 	int i;
+ 
+-	spin_lock(&padata_works_lock);
++	spin_lock_bh(&padata_works_lock);
+ 	/* Start at 1 because the current task participates in the job. */
+ 	for (i = 1; i < nworks; ++i) {
+ 		struct padata_work *pw = padata_work_alloc();
+@@ -116,7 +116,7 @@ static int __init padata_work_alloc_mt(int nworks, void *data,
+ 		padata_work_init(pw, padata_mt_helper, data, 0);
+ 		list_add(&pw->pw_list, head);
+ 	}
+-	spin_unlock(&padata_works_lock);
++	spin_unlock_bh(&padata_works_lock);
+ 
+ 	return i;
+ }
+@@ -134,12 +134,12 @@ static void __init padata_works_free(struct list_head *works)
+ 	if (list_empty(works))
+ 		return;
+ 
+-	spin_lock(&padata_works_lock);
++	spin_lock_bh(&padata_works_lock);
+ 	list_for_each_entry_safe(cur, next, works, pw_list) {
+ 		list_del(&cur->pw_list);
+ 		padata_work_free(cur);
+ 	}
+-	spin_unlock(&padata_works_lock);
++	spin_unlock_bh(&padata_works_lock);
+ }
+ 
+ static void padata_parallel_worker(struct work_struct *parallel_work)
 -- 
-With Best Regards,
-Andy Shevchenko
-
-
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
