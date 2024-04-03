@@ -1,138 +1,153 @@
-Received: from mail-il1-f176.google.com (mail-il1-f176.google.com [209.85.166.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68F4C1D54B
-	for <linux-kernel@vger.kernel.org>; Wed,  3 Apr 2024 18:31:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79A05DDBE;
+	Wed,  3 Apr 2024 18:34:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712169113; cv=none; b=teqPrzGVD3QymasnM4LVut9/TKGpWg60D0o/OU7HjRbUNfKUiJ0GURrbqUzIaVMdDG2rRpvotlnVRMIfhXTvXjhCBpsWGyLBbn35bn5QplhBrTfYp1hIc0LPdyHHEKcyW+GNR8yZ5IQURj6a4EHb9K3MzhnFlNnTj3KG/0n5dRQ=
+	t=1712169277; cv=none; b=IIdcFeBplFDpgcRxzkRqbzK5O7CcYjefBgt/59XDgArzvGuwKCo+fz1TedHi0RUE9LGvTqMFliMliDW8sbjwOIxvPl5R4SSIKDAvvXwCB2azNMJGFA5JWme6dld+qgPfHEmOfbI+LI9/hrzJnvCwXAhMgwOF/4Lh2bOio1bfQrU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712169113; c=relaxed/simple;
-	bh=VZ5Lpg28bRGxX9u8+FU6dh/DzQK2KQ4a90DWVcKqgV0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Laxti18cqoXAJ6hTVCCVRwNOh9DBTajOpzUzWINs1JlZimc14UOEdpKsxgxxJFJBpRYT375B0cod9E2D7gZNWf1zpftXQYDU/w0whJ5Ztz7lAvLXgNTB4EYsCG8gT5hZf21V7jmaEIY4l0zp7GNpxGi7Lvl1I3FyXxf/cDNutGk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=wUg0FBYi; arc=none smtp.client-ip=209.85.166.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1712169277; c=relaxed/simple;
+	bh=tUu+PzesiWg5M8wz+DmngwjAFVy6Jz0rQ0YvK8Qn7p4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=fwFuaPRirojOVkF8CpoMtPMurs4PTMfjk2Cm66NjHypoIVlfWsgxrx/55E/M7NopulV7U/a+Q4v/QfnCftXrXCUdMK0fBzfUl/pnSWJOSHhv22CdlWMYFbjDG8/Q3QHxTbvNE7XJvjajsWGAE1yetTZcBBwBZv3ZuPd3FvMLJwQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=WyNGf1J0; arc=none smtp.client-ip=192.198.163.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="wUg0FBYi"
-Received: by mail-il1-f176.google.com with SMTP id e9e14a558f8ab-369de5d5833so12525ab.1
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Apr 2024 11:31:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1712169111; x=1712773911; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=DavZa0Vn131W4AwpDx3XJiiYAXVAyTt4Vn1WSk/2RBw=;
-        b=wUg0FBYiIaCHTzI16fW1hrLsqj+qYUAp/KuopK7qaz04sdU/r7a833Bk7HkX9m90vm
-         nyft8M/U1OrqYDtIZi+fJGIZoZ8IHiZpy63FRj61EZmlsFS/LMZ8ZZST2QVlU6AnsFrq
-         uNft4DbcDqlm0ouOBZn9hhmGJzVYM8y8Is2tXQR8CVzuB2sOLlEfpaSnZrSa8yWoiZws
-         UgiiEhk4CB3+w+kNIJgzwt7Wdr6uCXe3JVI4x7lWLskcAEr4eQD6ywziyiqrpGQFuntC
-         LHfKnVWMkst1bB23wugI3i/OuIITrogC6rQR3ami6p1/PmBV+a59z6pt6NIZJNiJqBPQ
-         hZ8g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712169111; x=1712773911;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=DavZa0Vn131W4AwpDx3XJiiYAXVAyTt4Vn1WSk/2RBw=;
-        b=CTaZjl4N4DYe55vipgAdea/6LMJv6ZpeojLK3j9ZIbGPEimEcFxDOd0dr0ztqW9g54
-         AsNGKgQM8igoK9RsqrHWljU1O3b73dxb53cpdLhkdJjvJqnKSwf1aJ5exOGXFiu9r185
-         StoBV+fl5Fn+vEJRc18s2PxiUKl/Uk2j5udwD7/jQUw+EbdbHs41Gd+jImfKUXf9DCLl
-         kaTOJC86A67TpmU6jytzubJ1S76DDPYlo/2Q1zWB1zbfK2C+0Cube4vTiPuRTXQuj92R
-         C8MtsdTJAbcUhnQl6g9puXuuMZi3fU60bei+PyJ//gTO6VW10y4Kg6vN1BheBHKesGW7
-         veCA==
-X-Forwarded-Encrypted: i=1; AJvYcCVRpaP1N7CNlyDGmTHWv5Oss6Cyq85gP5PmdSrY5b8d3OiK8aubKeu2SJXzr559ycxbBWHlLVGCCkDPY5mTT410zNxOmQkJw66/DsuH
-X-Gm-Message-State: AOJu0YyxtRXJCEbGHaFQIUhXbEu9iGP6jbI2iFMda4E8LHjW6fE9abm1
-	+783LuqJ4N68a5VMvJrChw6a9eMiwRCbUExXdWguDdwKStV5byQ7+8QJCRdne3Al9cROhJGdqFK
-	NHmMeZf85hLdHKxvHP8rEKdGRbFnbD5DN0YgH
-X-Google-Smtp-Source: AGHT+IFSczYbfUmSrLqLilwtVGK/wXjsQZ0QwQoQ1RfLw9H4GIEwV1Ih4fz/tCxv28G5UcAZGFQ4gsbnTfiSnyHKs4Y=
-X-Received: by 2002:a92:c750:0:b0:369:a2ae:2634 with SMTP id
- y16-20020a92c750000000b00369a2ae2634mr271505ilp.12.1712169111299; Wed, 03 Apr
- 2024 11:31:51 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WyNGf1J0"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1712169274; x=1743705274;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=tUu+PzesiWg5M8wz+DmngwjAFVy6Jz0rQ0YvK8Qn7p4=;
+  b=WyNGf1J0Z16Md3y/f75uHQPPqIYS3kTxWjBLjMdqK9lp1IIXOrD4V6y8
+   agMIPUZfkrYKwWn75Oot4K0i0WHBhMIrUozK0gjg8OBXpmu1/m2z/SCGJ
+   LXfbFCwA65jO+KK6YB6zr+Hf7EYi7AEdAJ/z3JxyMjdTk36GCJXg05/RQ
+   MjfVJI1NeU7rBNOnb5AAEObBqglxG9qOeSm+9OvTNT6VVquSvJSR6KZUw
+   4gGvJ5Ruad8tUL8h0yVx74qiR8isrXkNuoZ668vNPOVcveHtqYTBHVyiN
+   8H1MNxJT9Gix2PeIo+sTkJFtlIne+hS6HwOOMnXPkm1EVuRE7Btcj1VMa
+   g==;
+X-CSE-ConnectionGUID: H4Wh3NtBQL6zEfqCLzTOtA==
+X-CSE-MsgGUID: cO9lYeNMTkKK7aYyu8pfTg==
+X-IronPort-AV: E=McAfee;i="6600,9927,11033"; a="7610579"
+X-IronPort-AV: E=Sophos;i="6.07,177,1708416000"; 
+   d="scan'208";a="7610579"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2024 11:34:21 -0700
+X-CSE-ConnectionGUID: DRhErx83QeaXAYWFT52Q6A==
+X-CSE-MsgGUID: 8DjnPZYtQqymkub4D4qL2A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,177,1708416000"; 
+   d="scan'208";a="18373627"
+Received: from ls.sc.intel.com (HELO localhost) ([172.25.112.31])
+  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2024 11:34:21 -0700
+Date: Wed, 3 Apr 2024 11:34:20 -0700
+From: Isaku Yamahata <isaku.yamahata@intel.com>
+To: Chao Gao <chao.gao@intel.com>
+Cc: isaku.yamahata@intel.com, kvm@vger.kernel.org,
+	linux-kernel@vger.kernel.org, isaku.yamahata@gmail.com,
+	Paolo Bonzini <pbonzini@redhat.com>, erdemaktas@google.com,
+	Sean Christopherson <seanjc@google.com>,
+	Sagi Shahar <sagis@google.com>, Kai Huang <kai.huang@intel.com>,
+	chen.bo@intel.com, hang.yuan@intel.com, tina.zhang@intel.com,
+	Sean Christopherson <sean.j.christopherson@intel.com>,
+	isaku.yamahata@linux.intel.com
+Subject: Re: [PATCH v19 097/130] KVM: x86: Split core of hypercall emulation
+ to helper function
+Message-ID: <20240403183420.GI2444378@ls.amr.corp.intel.com>
+References: <cover.1708933498.git.isaku.yamahata@intel.com>
+ <d6547bd0c1eccdfb4a4908e330cc56ad39535f5e.1708933498.git.isaku.yamahata@intel.com>
+ <ZgY0hy6Io72yZ9dF@chao-email>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240403164636.3429091-1-irogers@google.com> <dcb0121f-611d-4104-80b9-941d535c5fd2@linux.intel.com>
-In-Reply-To: <dcb0121f-611d-4104-80b9-941d535c5fd2@linux.intel.com>
-From: Ian Rogers <irogers@google.com>
-Date: Wed, 3 Apr 2024 11:31:37 -0700
-Message-ID: <CAP-5=fUgiafmLEKEUJ5r5_tK+jqv30P0TGFCMvR8DkW7J4qYsQ@mail.gmail.com>
-Subject: Re: [PATCH v1] perf metrics: Remove the "No_group" metric group
-To: "Liang, Kan" <kan.liang@linux.intel.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Andi Kleen <ak@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <ZgY0hy6Io72yZ9dF@chao-email>
 
-On Wed, Apr 3, 2024 at 10:59=E2=80=AFAM Liang, Kan <kan.liang@linux.intel.c=
-om> wrote:
->
->
->
-> On 2024-04-03 12:46 p.m., Ian Rogers wrote:
-> > Rather than place metrics without a metric group in "No_group" place
-> > them in a a metric group that is their name. Still allow such metrics
-> > to be selected if "No_group" is passed, this change just impacts perf
-> > list.
->
-> So it looks like the "No_group" is not completely removed.
-> They are just not seen in the perf list, but users can still use it via
-> perf stat -M No_group, right?
->
-> If so, why we want to remove it from perf list? Where can the end user
-> know which metrics are included in the No_group?
->
-> If the No_group is useless, why not completely remove it?
+On Fri, Mar 29, 2024 at 11:24:55AM +0800,
+Chao Gao <chao.gao@intel.com> wrote:
 
-Agreed. For command line argument deprecation we usually keep the
-option but hide it from help with PARSE_OPT_HIDDEN, so I was trying to
-follow that pattern albeit that a metric group isn't a command line
-option it's an option to an option.
+> On Mon, Feb 26, 2024 at 12:26:39AM -0800, isaku.yamahata@intel.com wrote:
+> >@@ -10162,18 +10151,49 @@ int kvm_emulate_hypercall(struct kvm_vcpu *vcpu)
+> > 
+> > 		WARN_ON_ONCE(vcpu->run->hypercall.flags & KVM_EXIT_HYPERCALL_MBZ);
+> > 		vcpu->arch.complete_userspace_io = complete_hypercall_exit;
+> >+		/* stat is incremented on completion. */
+> 
+> Perhaps we could use a distinct return value to signal that the request is redirected
+> to userspace. This way, more cases can be supported, e.g., accesses to MTRR
+> MSRs, requests to service TDs, etc. And then ...
 
-Thanks,
-Ian
+The convention here is the one for exit_handler vcpu_enter_guest() already uses.
+If we introduce something like KVM_VCPU_CONTINUE=1, KVM_VCPU_EXIT_TO_USER=0, it
+will touch many places.  So if we will (I'm not sure it's worthwhile), the
+cleanup should be done as independently.
 
-> Thanks,
-> Kan
->
+
+> > 		return 0;
+> > 	}
+> > 	default:
+> > 		ret = -KVM_ENOSYS;
+> > 		break;
+> > 	}
+> >+
+> > out:
+> >+	++vcpu->stat.hypercalls;
+> >+	return ret;
+> >+}
+> >+EXPORT_SYMBOL_GPL(__kvm_emulate_hypercall);
+> >+
+> >+int kvm_emulate_hypercall(struct kvm_vcpu *vcpu)
+> >+{
+> >+	unsigned long nr, a0, a1, a2, a3, ret;
+> >+	int op_64_bit;
+> >+	int cpl;
+> >+
+> >+	if (kvm_xen_hypercall_enabled(vcpu->kvm))
+> >+		return kvm_xen_hypercall(vcpu);
+> >+
+> >+	if (kvm_hv_hypercall_enabled(vcpu))
+> >+		return kvm_hv_hypercall(vcpu);
+> >+
+> >+	nr = kvm_rax_read(vcpu);
+> >+	a0 = kvm_rbx_read(vcpu);
+> >+	a1 = kvm_rcx_read(vcpu);
+> >+	a2 = kvm_rdx_read(vcpu);
+> >+	a3 = kvm_rsi_read(vcpu);
+> >+	op_64_bit = is_64_bit_hypercall(vcpu);
+> >+	cpl = static_call(kvm_x86_get_cpl)(vcpu);
+> >+
+> >+	ret = __kvm_emulate_hypercall(vcpu, nr, a0, a1, a2, a3, op_64_bit, cpl);
+> >+	if (nr == KVM_HC_MAP_GPA_RANGE && !ret)
+> >+		/* MAP_GPA tosses the request to the user space. */
+> 
+> no need to check what the request is. Just checking the return value will suffice.
+
+This is needed to avoid updating rax etc.  KVM_HC_MAP_GPA_RANGE is only an
+exception to go to the user space.  This check is a bit weird, but I couldn't
+find a good way.
+
+> 
+> >+		return 0;
+> >+
+> > 	if (!op_64_bit)
+> > 		ret = (u32)ret;
+> > 	kvm_rax_write(vcpu, ret);
+> > 
+> >-	++vcpu->stat.hypercalls;
+> > 	return kvm_skip_emulated_instruction(vcpu);
+> > }
+> > EXPORT_SYMBOL_GPL(kvm_emulate_hypercall);
+> >-- 
+> >2.25.1
 > >
-> > Signed-off-by: Ian Rogers <irogers@google.com>
-> > ---
-> >  tools/perf/util/metricgroup.c | 4 ++--
-> >  1 file changed, 2 insertions(+), 2 deletions(-)
 > >
-> > diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgrou=
-p.c
-> > index 79ef6095ab28..6ec083af14a1 100644
-> > --- a/tools/perf/util/metricgroup.c
-> > +++ b/tools/perf/util/metricgroup.c
-> > @@ -455,7 +455,7 @@ static int metricgroup__add_to_mep_groups(const str=
-uct pmu_metric *pm,
-> >       const char *g;
-> >       char *omg, *mg;
-> >
-> > -     mg =3D strdup(pm->metric_group ?: "No_group");
-> > +     mg =3D strdup(pm->metric_group ?: pm->metric_name);
-> >       if (!mg)
-> >               return -ENOMEM;
-> >       omg =3D mg;
-> > @@ -466,7 +466,7 @@ static int metricgroup__add_to_mep_groups(const str=
-uct pmu_metric *pm,
-> >               if (strlen(g))
-> >                       me =3D mep_lookup(groups, g, pm->metric_name);
-> >               else
-> > -                     me =3D mep_lookup(groups, "No_group", pm->metric_=
-name);
-> > +                     me =3D mep_lookup(groups, pm->metric_name, pm->me=
-tric_name);
-> >
-> >               if (me) {
-> >                       me->metric_desc =3D pm->desc;
+> 
+-- 
+Isaku Yamahata <isaku.yamahata@intel.com>
