@@ -1,216 +1,166 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from NAM04-DM6-obe.outbound.protection.outlook.com (mail-dm6nam04on2107.outbound.protection.outlook.com [40.107.102.107])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B4A242ABE;
-	Wed,  3 Apr 2024 05:45:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712123129; cv=none; b=lSE2vhGoF/HF1Dhy9qtyqXBjBmndHECsgOYXCMk+rE3W+6oq8HJDuQBkGI+uhVSy03AQPlrKl0pRbXKwyfQ9XoqqVmanZkD/vA+JAx/RYK1BTCKNJr0s/Cb1aGFPn7VF1mOYmr8YmkilPmp83/nQlGC5O/gfvyHTsUXx+wXNz/4=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712123129; c=relaxed/simple;
-	bh=CV/Q7uxFMcZZPnqAzTvveXT/5dY3w+tWrPjnVQAT/Tk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=PV6bIi7YQaYWrcNkjeLaP0oSrvT/TueAv7ps+s3pLj0nCNf7cajiI7u13qDtGJZjx/rcc7Ir9M1VPeEDziihZHf1+2fOgQJmsN42J2/qochaI6A+gXIvg2I+iH12iEIx0RnLmGWEWv5KNXrufAzrXB/YbkRlviHQVHacd0f4Fto=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=E7QvwmVU; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CF54645;
+	Wed,  3 Apr 2024 05:46:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.102.107
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1712123219; cv=fail; b=htRFVF9+SfU2Db/gVUL5IL1xE++9pj0TKVa6lz2Ew5ghlu54B8Q6NPL0W7Gk4RioZoSWa1veg+ugxcd9oqJqvNNp36kgVdv78YwHihmvkOCcMWpzjweuHSt5zxZD0DRIVVAsHOuF+rG/XyE5TDdNOkybz6XdsLFMoPvOuV3tSaI=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1712123219; c=relaxed/simple;
+	bh=OJudV+n1tKL2PiLEQo2+gi91BGv4SCkTWJstbzJUUVY=;
+	h=References:From:To:Cc:Subject:Date:In-reply-to:Message-ID:
+	 Content-Type:MIME-Version; b=FLkmjJlifacFk3jisZCu7UH8gQgaZVCwmxNkZUHerkNHSA6qWOsZOOBScqmrd2Q4UBp6RBViK+Cn9rz18tzjMLZ5hAagQqGUq3vocXE6u6tmDhV7mchrj4nFRusivI+iqNIM6jCsbY4ifO6oYNvdkKERvghPQrGxb4o3z5KFjII=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=NcesQ6EC; arc=fail smtp.client-ip=40.107.102.107
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="E7QvwmVU"
-Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 4333Hx1u019594;
-	Wed, 3 Apr 2024 05:45:24 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	message-id:date:mime-version:subject:to:cc:references:from
-	:in-reply-to:content-type:content-transfer-encoding; s=
-	qcppdkim1; bh=/ApTQr+jnvdGaKzYxs7CtdoBNOkj0HTduDfaBoyIizQ=; b=E7
-	QvwmVUwhEkRZ60VUDNwK2cNX9bnZKmE1Y+8QvKaua+C3pWwYkSVNW+FFufh6YpBb
-	tC08LSlQ/hzgc/9yAEWVSugv4xQ2r+06oeMlu61LIC3Krq6+XPyuwlClVT6Hmr1g
-	PlDlT+5BkxcA9SgXw5ltlXRJ1oPj+fLh89k9pf98OxvoDLiKJjL8BGttKKjHulp1
-	eh7xfrCU5s0qfQGlza95B5l+Ww8i55nGQKvD7QRzY3rXC65dE2MXShnDyP8WtlZq
-	1tn+SsrRdIgnMb5vF33WWcHiV8N16AT56Zof+ApjinUMY2gzWLOeCxAZOF6/tfZU
-	HWJaoj3abRUr7Y1vJitA==
-Received: from nasanppmta01.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3x8pj4h7e9-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 03 Apr 2024 05:45:23 +0000 (GMT)
-Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
-	by NASANPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 4335j3mv003047
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 3 Apr 2024 05:45:03 GMT
-Received: from [10.239.29.179] (10.80.80.8) by nasanex01b.na.qualcomm.com
- (10.46.141.250) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Tue, 2 Apr 2024
- 22:45:01 -0700
-Message-ID: <fca73905-c6c7-4db1-88bd-fd8bc2d3b3b0@quicinc.com>
-Date: Wed, 3 Apr 2024 13:44:58 +0800
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="NcesQ6EC"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=KPScQHjuPfjPWoIxVRaV0q6ghXJLDXFI4zlHfgd41ZAvNS8u9FX/imcoUPLcnQ83W+szSU/Lg6QcXE5JjdmVxFcsFVZfxuCkcybyIOLQiIrBxcf9sLWsBhslWHwu8AU8ey8n0Y0Nb5HbtZKnbrsYkeM4kfAjwSriLEuTE3s2A/4YCgDYyH2BhQVJu2TGXBYEBRymLCkfn2fVP8TiiDJ1d6dSJn8C2WVtGCjTpLYmmpDgwyxiEcNVFfVYTGSip3KRhRXr6UgD7zBv4mi2TsqU2PXuBRrIv0pWTST8EB7eqGXgP22gyYv1AhUgWm4mijCadRHBOUFtjxc63+4LoanQFg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=ZDLk5HZw+fSKx+VIXuFdhZN6iMwF9y+6ha0jWrUWf5o=;
+ b=Y+1eFRaw5ngh4+CNwqTP5awAD0FsVzu73FLWPBzsOLfJRShFaJTxLmK7iIbFL5uLYPyVR2pUSt++oDaoffPOo7jdeTR1KiemzrlVoAs1yQUfUvrXsTvWB6Oy96sm3ODcbpOWK3L9XPXNZye+pQ/MOHdkFjo8LJ9ckKHuwcJh+Wgrpfyjw0Eybdqf/OaBl9SuZgRt3F/2njidm7IIK8NtbQCFEv6DGd7CUG8pfNKA1oJLNzFJ98v+FaErnGagJDaqtFE2u0l7V94d0JfssSsUNeGY5Ur5jKgajSkSFPCCrezHQpzU3mofyNNhP9Y/qji1nbYEgLk12p+qdo6n1JdHCA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ZDLk5HZw+fSKx+VIXuFdhZN6iMwF9y+6ha0jWrUWf5o=;
+ b=NcesQ6ECrZiH20fyjxfrmIpitA+zPAlgjO57tFFDQr4GG4EW5IXqfQCInwpRR+hWjSLT6AZ1w97URVKWT3tW9iSSyzlaTKO4CgcegVpHlR+lCjoh1P7P7lRKVFL24lAS69jnRKNVKrJD7QDxLIn8t7XLkwy5JV9UPLr/MQzWRee0KoSm0reW4++HoqASY+G3rLrSooeB14hyN60zuUKpLs5CHxzZBbjzi5tJ8rLa0Fw88Daq9S/5WyaLJmb1Olg5++uAZB0wN9EjzQLS2QvnaHk9w5TUZjKQqK/hejfjc8XWoLrYCmGoeGOR8RM3sILWni+vAQcvUWrgkVlw0F8FeA==
+Received: from BYAPR12MB2743.namprd12.prod.outlook.com (2603:10b6:a03:61::28)
+ by DM6PR12MB4044.namprd12.prod.outlook.com (2603:10b6:5:21d::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.46; Wed, 3 Apr
+ 2024 05:46:54 +0000
+Received: from BYAPR12MB2743.namprd12.prod.outlook.com
+ ([fe80::459b:b6fe:a74c:5fbf]) by BYAPR12MB2743.namprd12.prod.outlook.com
+ ([fe80::459b:b6fe:a74c:5fbf%6]) with mapi id 15.20.7409.042; Wed, 3 Apr 2024
+ 05:46:54 +0000
+References: <20240402205223.137565-1-rrameshbabu@nvidia.com>
+ <20240402205223.137565-2-rrameshbabu@nvidia.com>
+ <20240402191842.66decfd3@kernel.org>
+User-agent: mu4e 1.10.8; emacs 28.2
+From: Rahul Rameshbabu <rrameshbabu@nvidia.com>
+To: Jakub Kicinski <kuba@kernel.org>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-doc@vger.kernel.org, ahmed.zaki@intel.com,
+ aleksander.lobakin@intel.com, alexandre.torgue@foss.st.com,
+ andrew@lunn.ch, cjubran@nvidia.com, corbet@lwn.net, davem@davemloft.net,
+ dtatulea@nvidia.com, edumazet@google.com, gal@nvidia.com,
+ hkallweit1@gmail.com, jacob.e.keller@intel.com, jiri@resnulli.us,
+ joabreu@synopsys.com, justinstitt@google.com, kory.maincent@bootlin.com,
+ leon@kernel.org, liuhangbin@gmail.com, maxime.chevallier@bootlin.com,
+ pabeni@redhat.com, paul.greenwalt@intel.com, przemyslaw.kitszel@intel.com,
+ rdunlap@infradead.org, richardcochran@gmail.com, saeed@kernel.org,
+ tariqt@nvidia.com, vadim.fedorenko@linux.dev, vladimir.oltean@nxp.com,
+ wojciech.drewek@intel.com
+Subject: Re: [PATCH net-next v1 1/6] ethtool: add interface to read Tx
+ hardware timestamping statistics
+Date: Tue, 02 Apr 2024 22:14:38 -0700
+In-reply-to: <20240402191842.66decfd3@kernel.org>
+Message-ID: <87r0fn2e2b.fsf@nvidia.com>
+Content-Type: text/plain
+X-ClientProxiedBy: BY3PR05CA0018.namprd05.prod.outlook.com
+ (2603:10b6:a03:254::23) To BYAPR12MB2743.namprd12.prod.outlook.com
+ (2603:10b6:a03:61::28)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] bus: mhi: host: Add sysfs entry to force device to enter
- EDL
-Content-Language: en-US
-To: Jeffrey Hugo <quic_jhugo@quicinc.com>,
-        Manivannan Sadhasivam
-	<mani@kernel.org>
-CC: <mhi@lists.linux.dev>, <linux-arm-msm@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <quic_cang@quicinc.com>,
-        <quic_mrana@quicinc.com>, Bhaumik Bhatt <quic_bbhatt@quicinc.com>
-References: <1703490474-84730-1-git-send-email-quic_qianyu@quicinc.com>
- <cff4b828-9566-a2bd-287a-138d74a76a59@quicinc.com>
- <20240102165229.GC4917@thinkpad>
- <90c0a654-a02f-46e2-96a9-34f6a30c95a0@quicinc.com>
- <a10439f1-0fcd-834c-12a3-677976529cf1@quicinc.com>
- <e78382b5-428e-4de8-be0d-b319534238f1@quicinc.com>
- <0cfac65c-8b71-4900-88a3-631c93aebc17@quicinc.com>
- <024549ba-4522-d8d0-08ea-c42966f850af@quicinc.com>
-From: Qiang Yu <quic_qianyu@quicinc.com>
-In-Reply-To: <024549ba-4522-d8d0-08ea-c42966f850af@quicinc.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01b.na.qualcomm.com (10.46.141.250)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: dtS9jR-hEmYrdpKDW4IFAZPXEw6v2gop
-X-Proofpoint-GUID: dtS9jR-hEmYrdpKDW4IFAZPXEw6v2gop
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-04-03_04,2024-04-01_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501 mlxscore=0
- bulkscore=0 impostorscore=0 clxscore=1015 spamscore=0 malwarescore=0
- lowpriorityscore=0 mlxlogscore=999 suspectscore=0 phishscore=0
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2403210001 definitions=main-2404030037
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BYAPR12MB2743:EE_|DM6PR12MB4044:EE_
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	pkpZMeGS9rxC1AkjYwpnuYgc9r6LxhN3+HZqdyGZHiu5HIDOkMDw/jaXkv1/cl01twrYJ+7+o4c5fTlV5GiP8f5khyQXpqM4WTK+tMc5kv82naI2pkZ3uLoNLaiWrv1HcK6ZcaDza2aYyEwwuwWuR17iLLNY4POyvfe/ME9v2h/sfczqm0UnY23JRDvAJp8MgLf9VoA9dYGsouOeeqFv6CSipkDB/jOz/+SnPgvWxGBSgAAQQf584UG9mDV8ol6J7v4/Y6JRq9O5upIOf8KfpxidLO52IlDoD1v/y4ATcREi8UBPxCGGgzrw3rvvBy9/TiNqLre0FNveKzjkw6iPVU5ZwCwh4JRSxAmdUnqpje9s45SXH3iPO98A9GKj/SeZJZnoRguFH9XDo5+gjQf3e4cejF+N/RdRwe8V2dzl2Oxn/DOdxAXuE+9O3WuHJsVoPA0muCQ7O75NWoqhyneGwxs8RuR6ZLBWD7FWoQwmxfTD53bAS6sKAOmXsqnkHD6pr9EjyOpnySNp01N3a3yd9xCHaKCEzArXLsixBcFqEQAPnqc7VtV+61OBkjEchHhAdXOzQkbhlZPCOU32fZ7cMfuQKZCuteVKlXkUQQ3lmzhFWQIeyn/pMxk4vxEoCDQ8tgFjy6o6zpbCC9aA8/R1mRYWxSl0mZoiJZxs07C4BRg=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR12MB2743.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366007)(7416005)(376005)(1800799015);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?JJ7xOmvuUZQ2fv6IPHu7mllDxAPhOUEbVo5nxUud3LjspBKeozBwaFsVpg9E?=
+ =?us-ascii?Q?ZC1aj5kZf39XiwH4gbJFcJ+LOWZpHdTkvIG4uhQoIbXUzlFmIRZfOzljcSeH?=
+ =?us-ascii?Q?wmVy9J5DtFnjl4aFe6DZHPpMi4ihm6k+6Fcd4zsVErhYyLREzkHnqmFYTr1P?=
+ =?us-ascii?Q?+NS4onu+JR2PpJ1pQnn+Gl3Vw5MBB1lj/c2O+mkHXOoT1Z0JZxgX5A3WSW0A?=
+ =?us-ascii?Q?twNXSwJsqXAi3QgLWsT46QjENJfDMN6vly59eSLlHLEDnhrlScgaCp1aKzi9?=
+ =?us-ascii?Q?b2TqTQ+Rx1zbTPG09HbEY+bItMrS9o1eOrjVPq+9qLEwD1MwA7MzDhLtLtVK?=
+ =?us-ascii?Q?06msDmpsCxNJ4Pu/vRSEOQI1/cJcStHZap+/3TlWyMhmCtGrhp+w1BOUrxMa?=
+ =?us-ascii?Q?ztOOhukEzEmlUEBM0Ua6ahLsXp8Lgoe2dFnbq08/Aj/O6FRh86cEvVVvti7d?=
+ =?us-ascii?Q?LEftBW4Pj7cQj0PJ+czm2X/xKVykDkQViElWKTm8ex3oY7qFTFkjPzjdHW38?=
+ =?us-ascii?Q?TpXMvDFaN4xMi//ZkvEyb51wAInFqhKh542ZnD7gb75rL5R7Vrq/ZZWhOv7u?=
+ =?us-ascii?Q?l1NQLYyoIu0VmRpoJPeayZv/IhoK8J3WJ66PmMXBa3S4zHn6NyogoaioHADg?=
+ =?us-ascii?Q?cFbAwfh7zCbsL3Vu45Pwoh8EawD8Scg+BbKuL6xT9zYNNDNSVnXommuSqw4k?=
+ =?us-ascii?Q?hj4q/h5WAoV/P8dYx+ZV9dVxel8BxRxSbJYrbkQTR5tk9YdrmOXdvnVptAK1?=
+ =?us-ascii?Q?0oMy07baNXNfCipZYsq/igO+NdeTu2DYxxtyXW43wibQFzEO0rrVOsjOlJUq?=
+ =?us-ascii?Q?pEDKaKEofPJIZmnMekgk5x7buiFYjwoKDLAn/CnldoUTZWwDTqFkybhdsjtT?=
+ =?us-ascii?Q?67lQZt0eHRhyvqKkxPLWrBBPrjav5ET7VeeYYgcroIedURhcWRJB150fER0g?=
+ =?us-ascii?Q?0XhUOR8bKO316r8rZAKMjsEYM9ZcU8ookg4RywArjgbuYZSSqnxShnhslqIF?=
+ =?us-ascii?Q?39smW4/eLOMa70LAMOdPL2M14PQqBtWPF8mmOoB6kJ0KQBhGA3ovdQRLjXQl?=
+ =?us-ascii?Q?Kb+eNdYJWIMnYwJa+Yp2uKoPrLGttRBXWEiEEV3IR40VZM5H5zbwGWKX2btY?=
+ =?us-ascii?Q?5L9+FVeEtcSwBdPdhhnm9RuUCIKy1mOMkTdwiJgOVXqZS2wl4woeuvwnALmq?=
+ =?us-ascii?Q?2x1whM+sxBwE6YRe3kupaR3qqu8c/IL7pt33TzAqruhwiRVhazx8jgyMva72?=
+ =?us-ascii?Q?PTD7v1RWs2oUaF1q8c0gVZU2qCnEIUNMhFwS/lWMa6PEMlUK8R3O8joxjeHv?=
+ =?us-ascii?Q?5VVFpbhMVJNesUARrBdypzsRacGQvY9pMxCfKbOUCMfbwjlpobZknPy28gnv?=
+ =?us-ascii?Q?cYUH5F1Rz8eo506uIMeURwP1dUspHuEEGEF6T0fo959PCF4mJpKDgLU29ML4?=
+ =?us-ascii?Q?C3KPX7V80Roxe7QjI2Ms0IdsTA2WRdxnEhPwOwHY90uoBnLzy438AMbW/sQx?=
+ =?us-ascii?Q?ZAbiG/UWqaS/6nEmqwe8hEDM/JAUWz8mdS5nNKuWmb2mhl4JQWcV1PZe9jM/?=
+ =?us-ascii?Q?H5nJ4S3kXCt7bmGNo3N2u+pd5xC9L4X6ZV4iw5U1fZFXcs1tT1v7UXwtWcwr?=
+ =?us-ascii?Q?Ig=3D=3D?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: bbbb3d8b-ed68-46ac-bc42-08dc53a17766
+X-MS-Exchange-CrossTenant-AuthSource: BYAPR12MB2743.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Apr 2024 05:46:53.9310
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: CXsOx7T8CAoETY5ek3bsB2y2m0cFKsrqXO2MKzhj7mfBXok47xwXF5KU9ofddh+5JWjuGbWh8iPfmCZrDCDlJw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB4044
 
-
-On 4/2/2024 11:33 PM, Jeffrey Hugo wrote:
-> On 4/2/2024 7:52 AM, Qiang Yu wrote:
->>
->> On 4/2/2024 12:34 PM, Qiang Yu wrote:
->>>
->>> On 1/12/2024 3:08 AM, Jeffrey Hugo wrote:
->>>> On 1/9/2024 2:20 AM, Qiang Yu wrote:
->>>>>
->>>>> On 1/3/2024 12:52 AM, Manivannan Sadhasivam wrote:
->>>>>> On Tue, Jan 02, 2024 at 08:31:15AM -0700, Jeffrey Hugo wrote:
->>>>>>> On 12/25/2023 12:47 AM, Qiang Yu wrote:
->>>>>>>> From: Bhaumik Bhatt <quic_bbhatt@quicinc.com>
->>>>>>>>
->>>>>>>> Forcing the device (eg. SDX75) to enter Emergency Download Mode 
->>>>>>>> involves
->>>>>>>> writing the 0xEDEDEDED cookie to the channel 91 doorbell 
->>>>>>>> register and
->>>>>>>> forcing an SOC reset afterwards. Allow users of the MHI bus to 
->>>>>>>> exercise the
->>>>>>>> sequence using a sysfs entry.
->>>>>>> I don't see this documented in the spec anywhere.  Is this 
->>>>>>> standard behavior
->>>>>>> for all MHI devices?
->>>>>>>
->>>>>>> What about devices that don't support EDL mode?
->>>>>>>
->>>>>>> How should the host avoid using this special cookie when EDL 
->>>>>>> mode is not
->>>>>>> desired?
->>>>>>>
->>>>>> All points raised by Jeff are valid. I had discussions with 
->>>>>> Hemant and Bhaumik
->>>>>> previously on allowing the devices to enter EDL mode in a generic 
->>>>>> manner and we
->>>>>> didn't conclude on one final approach.
->>>>>>
->>>>>> Whatever way we come up with, it should be properly described in 
->>>>>> the MHI spec
->>>>>> and _should_ be backwards compatible.
->>>>>
->>>>> Hi Mani, Jeff. The method of entering EDL mode is documented in 
->>>>> MHI spec v1.2, Chapter 13.2.
->>>>>
->>>>> Could you please check once?
->>>>
->>>> I do see it listed there.  However that was a FR for SDX55, so 
->>>> devices prior to that would not support this.  AIC100 predates this 
->>>> change and would not support the functionality.  I verified the 
->>>> AIC100 implementation is not aware of this cookie.
->>>>
->>>> Also, that functionality depends on channel 91 being reserved per 
->>>> the table 9-2, however that table only applies to modem class 
->>>> devices as it is under chapter 9 "Modem protocols over PCIe". 
->>>> Looking at the ath11k and ath12k implementations in upstream, it 
->>>> looks like they partially comply.  Other devices have different MHI 
->>>> channel definitions.
->>>>
->>>> Chapter 9 doesn't appear to be in older versions of the spec that I 
->>>> have, so it is unclear if this functionality is backwards 
->>>> compatible (was channel 91 used for another purpose in pre-SDX55 
->>>> modems).
->>>>
->>>> I'm not convinced this belongs in the MHI core.  At a minimum, the 
->>>> MHI controller(s) for the applicable devices needs to opt-in to this.
->>>>
->>>> -Jeff
->>> Hi Jeff
->>>
->>> Sorry for reply so late. In older versions of the spec, there is no 
->>> description about EDL doorbell. However, in MHI spec v1.2, section 
->>> 13.2,
->>> It explicitly says "To set the EDL cookie, the host writes 
->>> 0xEDEDEDED to channel doorbell 91." So I think every device based on 
->>> MHI spec v1.2
->>> should reserve channel doorbell 91 for EDL mode.
->>>
->>> So can we add another flag called mhi_ver in mhi controller to 
->>> indicate its mhi version and then we can add mhi_ver checking to 
->>> determine if this
->>> device supports EDL sysfs operation?
->>>
->>> Thanks,
->>> Qiang
->>
->> I discussed with internal team, look like devices that reserve 
->> channel doorbell 91 for EDL, thier MHIVER register value can still be 
->> 1.0 instead
->> of 1.2. So even if we add a flag called mhi_ver to store the value 
->> read from the MHIVER register. We still can not do EDL support check 
->> depend on it.
->>
->> But I still think enter EDL mode by writing EDL cookie to channel 
->> doorbell is a standard way. At least it's a standard way from MHI 
->> spec V1.2.
->>
->> In mhi_controller, we have a variable edl_image representing the name 
->> and path of firmware. But We still can not determine if the device 
->> reserve
->> channel doorbell 91 by checking this because some devices may enter 
->> EDL mode in different way. Mayebe we have to add a flag in 
->> mhi_controller
->> called edl_support to do the check.
+On Tue, 02 Apr, 2024 19:18:42 -0700 Jakub Kicinski <kuba@kernel.org> wrote:
+> On Tue,  2 Apr 2024 13:52:01 -0700 Rahul Rameshbabu wrote:
+>> +/**
+>> + * struct ethtool_ts_stats - HW timestamping statistics
+>> + * @tx_stats: struct group for TX HW timestamping
+>> + *	@pkts: Number of packets successfully timestamped by the hardware.
+>> + *	@lost: Number of hardware timestamping requests where the timestamping
+>> + *		information from the hardware never arrived for submission with
+>> + *		the skb.
+>> + *	@err: Number of arbitrary timestamp generation error events that the
+>> + *		hardware encountered, exclusive of @lost statistics. Cases such
+>> + *		as resource exhaustion, unavailability, firmware errors, and
+>> + *		detected illogical timestamp values not submitted with the skb
+>> + *		are inclusive to this counter.
+>> + */
+>> +struct ethtool_ts_stats {
+>> +	struct_group(tx_stats,
 >
-> So, not all devices support EDL mode (even v1.2 devices, which I know 
-> of one in development).  Of the devices that support EDL mode, not all 
-> of them use the same mechanism to enter EDL mode.
+> Doesn't seem like the group should be documented:
 >
-> It appears all of this needs to be shoved to the controller.
->
-> At best, I think the controller can provide an optional EDL callback. 
-> If the callback is provided, then MHI creates a sysfs entry (similar 
-> to soc_reset) for the purpose of entering EDL mode.  If the sysfs 
-> entry is called, all MHI does is call the controller's callback.
->
-> -Jeff
+> include/linux/ethtool.h:503: warning: Excess struct member 'tx_stats' description in 'ethtool_ts_stats'
 
+Was looking into why our internal verification did not catch this. We
+run W=1 with clang, but looks like the warning does not get triggered
+unless explicitly run with scripts/kernel-doc.
 
-Hi Jeff
+  https://www.kernel.org/doc/html/latest/doc-guide/kernel-doc.html#how-to-format-kernel-doc-comments
 
-This idea looks good. We can add edl call back in mhi_pci_dev_info and 
-assgin it to mhi controller during probe.
-Meanwhile, we can get edl doorbell address in this callback instead of 
-mhi_init_mmio.
+I have debugged using strace that the way the kernel doc checking works
+when W=1 is set is that the matching source file that is being compiled
+is passed to scripts/kernel-doc, so include files are missed from the
+doc check. I think this is worth adding to the kernel documentation.
 
-Mani, what do you think about it? Can I implement the EDL sysfs entry 
-like this?
+Anyway, I will send out a v2 with this fixed but wait for potentially
+more feedback on v1.
 
+--
+Thanks,
+
+Rahul Rameshbabu
