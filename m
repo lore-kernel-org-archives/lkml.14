@@ -1,252 +1,104 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E41C814A4FF
-	for <linux-kernel@vger.kernel.org>; Wed,  3 Apr 2024 15:02:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-yb1-f176.google.com (mail-yb1-f176.google.com [209.85.219.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A599F148FE8
+	for <linux-kernel@vger.kernel.org>; Wed,  3 Apr 2024 15:03:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712156533; cv=none; b=SyhBU6XooknX3gRuOs07zHRVRzMh7beuuGIVNFGhqr4AGLLjwWgsfYxBrYypDjMoeQYb0qz2IA9MTNCecHKUKhtNn2Xjs0MZRI6/3zXBoQvk4CPurN2jgH0HyktAasXbtv5z5SqXkmne20yUuvU6JYsWNDiWLBjuFkhqOCHscpg=
+	t=1712156586; cv=none; b=qOd4VhlBDDfOFiTj4xI0IWtZpwDGnOvQk5Km+50Awr+zoe8p9QOQG0VVKoU8QC5asoSyygxmyA/UbDacHeWKdX8oAYhU4S992dzGtNFFJr/z8Qxv2c9AM4qJMM2hn4ysLgJx7c/THyx8Ov6AYmktTI2OlI2yz9KJR7Pod4SEmZg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712156533; c=relaxed/simple;
-	bh=3TQz803SJKKWWDXdmpXJtdnVe8cb7gnbBOh1swoHYpo=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=YDabxlZjnFFywA5AoD5XMKphluFc0PVraBOvrG0HJx0t3MnqIOuA1OkRyG9UByAThMO4+mVbo9FtG/NSmcNeYM/Q9oFbi/dkJr9wlOzavyDjJPTn+rU1EFSc0ADzbaYscqVKMjFyA3oWtNHum4rroabTRbpmjAoESR+o6YgU/k8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9E98A1595;
-	Wed,  3 Apr 2024 08:02:42 -0700 (PDT)
-Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id F00113F7B4;
-	Wed,  3 Apr 2024 08:02:09 -0700 (PDT)
-From: Mark Rutland <mark.rutland@arm.com>
-To: linux-kernel@vger.kernel.org
-Cc: anil.s.keshavamurthy@intel.com,
-	aou@eecs.berkeley.edu,
-	catalin.marinas@arm.com,
-	davem@davemloft.net,
-	jarkko@kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	mark.rutland@arm.com,
-	mhiramat@kernel.org,
-	naveen.n.rao@linux.ibm.com,
-	palmer@dabbelt.com,
-	paul.walmsley@sifive.com,
-	will@kernel.org
-Subject: [PATCH v2 4/4] kprobes: Remove core dependency on modules
-Date: Wed,  3 Apr 2024 16:01:54 +0100
-Message-Id: <20240403150154.667649-5-mark.rutland@arm.com>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20240403150154.667649-1-mark.rutland@arm.com>
-References: <20240403150154.667649-1-mark.rutland@arm.com>
+	s=arc-20240116; t=1712156586; c=relaxed/simple;
+	bh=a7mNqaALJyPq3YdKVXicKQwMMqVLcFYOt4aFmY79KZk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=WHw9ZFAJNp45wf0AJnDOaL8Sor+eCcT/9CYRUwI8rDSSvV8PnG3AsT7y+X4CWkyQSoaFivKnWacNuJZxtbV2sQXETqeN/GEixieGI5CRPC4VgyocsKS/ZdPp6H2gX0mDLeeHmObuF/x5uKFBdHqn3BMey/RCRWTKLiNtN/4Zso4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com; spf=pass smtp.mailfrom=paul-moore.com; dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b=GMcWIfYr; arc=none smtp.client-ip=209.85.219.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=paul-moore.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b="GMcWIfYr"
+Received: by mail-yb1-f176.google.com with SMTP id 3f1490d57ef6-dc742543119so6354346276.0
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Apr 2024 08:03:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=paul-moore.com; s=google; t=1712156584; x=1712761384; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=oB/QZCIJNsw+4xmf5zobnrRWsDWTsJXOON4ReH8dtVg=;
+        b=GMcWIfYrscgAst0DD1198oNQcsFMfoJUezrKRuFuSkBeRfUlhe12r/FugLlhXrhjeu
+         kVcDqPEqIJjtPihBsbmlxgtpqxFdeAS8D2EFqLTdvi+V/MTKMlJFWDTV+NxXb3Urstno
+         uHlDgkqMs9Py7j+iWmqbI7uTWyplzVeREnbJSH/hzqEUBusyomTt1uikCuT7VIIC2d1J
+         ZCOhc352kmpbiZNf+/IPd5HgyMPOcDEEBP5Ki7v8Y8I4K8j8jgs25mAVXv6c34bMHG31
+         D8MOcddtf/gRfQB4MxTLnLUarjmPwHenM+wRP/AlZk1tMTTjjU6rrOrdnN3EQr7ZMfpD
+         Y9AA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712156584; x=1712761384;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=oB/QZCIJNsw+4xmf5zobnrRWsDWTsJXOON4ReH8dtVg=;
+        b=UmYHZ9bFkGlZGlWjYncs9Fo/wrwmNHmDaVSs0xWN2/DLZjCDr7Kovwm3ZtcUwZrr2g
+         JjOoDQSDL5ZU1Ylo1PaRxd302X/0ci+4KlWlLDDe+FcN8KZdYyflYdlULuqVg1wNjzDc
+         Zk+XWxZgnC7ssVG+D5SlQUMyaEnwzRmuIvWOza5WyrgnYTp0egj+kQFTR4xwJ8O5+iDq
+         XI707rOnmhMFD1b7KI4gUMndUGXAT92DYAmomo8TsbvBSstOYMCY+c91zz1TsiwKpUmy
+         LsSjGtLdXud+cAtFQNTn591cAv8e6ntvmgwyiQTnNnhnun64CI45XF4t1rBz8SdA1eiz
+         Nw7w==
+X-Forwarded-Encrypted: i=1; AJvYcCXDuJyabgZWJhzjD2P2jQmb3O9CMr12sMfiWukDLxvC2tuIZJbqbagXBiHlP2QnpCUgLlBUVnWUqES+HJDqulQpHUYcTCo1xPfCrLpc
+X-Gm-Message-State: AOJu0Yyf9nE17YZ2PRZ7X/7QB/0zDKCVOYPza8n6QVrCDpmcLwjBb4NA
+	V0S7nxYghVLV9c2xFt5YAE/fE5C9yrdVjG25XF2XcyivbBLKFQ5QVpLCxH/06Pw7cq0+f0g/pVN
+	ED/Uf2XXLI1s0BLS3tBDe3bQz3ukvWNFCkWLg
+X-Google-Smtp-Source: AGHT+IFT4d6bpRvDAVa07rux2sG1s5ZKLWz6hKyaoKXTEtvPIEVh93oEV7NIJATmjfw8W0YvP4+xkMNiV5GnCLoztN0=
+X-Received: by 2002:a05:6902:2b87:b0:dca:c369:fac8 with SMTP id
+ fj7-20020a0569022b8700b00dcac369fac8mr3635102ybb.1.1712156583732; Wed, 03 Apr
+ 2024 08:03:03 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20240403090749.2929667-1-roberto.sassu@huaweicloud.com> <6d3b9d8a5f5a2ca010a5a701d7826e47912fec89.camel@linux.ibm.com>
+In-Reply-To: <6d3b9d8a5f5a2ca010a5a701d7826e47912fec89.camel@linux.ibm.com>
+From: Paul Moore <paul@paul-moore.com>
+Date: Wed, 3 Apr 2024 11:02:53 -0400
+Message-ID: <CAHC9VhQjcvRBo30Y346p5Tbo3pspxnnmrLj6nvv1g=e_52SQUg@mail.gmail.com>
+Subject: Re: [RESEND][PATCH v3] security: Place security_path_post_mknod()
+ where the original IMA call was
+To: Mimi Zohar <zohar@linux.ibm.com>
+Cc: Roberto Sassu <roberto.sassu@huaweicloud.com>, viro@zeniv.linux.org.uk, 
+	brauner@kernel.org, jack@suse.cz, jmorris@namei.org, serge@hallyn.com, 
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-security-module@vger.kernel.org, linux-cifs@vger.kernel.org, 
+	linux-integrity@vger.kernel.org, pc@manguebit.com, 
+	torvalds@linux-foundation.org, Roberto Sassu <roberto.sassu@huawei.com>, 
+	Steve French <smfrench@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Jarkko Sakkinen <jarkko@kernel.org>
+On Wed, Apr 3, 2024 at 9:11=E2=80=AFAM Mimi Zohar <zohar@linux.ibm.com> wro=
+te:
+> On Wed, 2024-04-03 at 11:07 +0200, Roberto Sassu wrote:
+> >
+> > However, as reported by VFS maintainers, successful mknod operation doe=
+s
+> > not mean that the dentry always has an inode attached to it (for exampl=
+e,
+> > not for FIFOs on a SAMBA mount).
+> >
+> > If that condition happens, the kernel crashes when
+> > security_path_post_mknod() attempts to verify if the inode associated t=
+o
+> > the dentry is private.
+>
+> This is an example of why making the LSM hook more generic than needed di=
+dn't
+> work.  Based on the discussion there is no valid reason for making the ho=
+ok more
+> generic.
 
-Tracing with kprobes while running a monolithic kernel is currently
-impossible because KPROBES depends on MODULES. While this dependency is
-necessary when HAVE_KPROBES_ALLOC=n and the core kprobes code allocates
-memory using module_alloc(), all the other module-specific code only
-exist to handle the case when MODULES=y, and can be hidden behind
-ifdeffery.
+I agree, I think we all do, but I don't think we want to get into
+process discussions in the patch description.  The description
+explains the original motivation for the buggy commit, the problem it
+caused, and the solution; that's enough IMHO.
 
-Add the necessary ifdeffery, and remove the dependency on MODULES=y when
-HAVE_KPROBES_ALLOC=y.
-
-As of this patch kprobes can be used when MODULES=n on arm64 and
-riscv. All other architectures still depend on MODULES, either by virtue
-of the core dependency on MODULES when HAVE_KPROBES_ALLOC=n, or by
-virtue of an explciit dependency on MODULES in arch code.
-
-Other architectures can enable support by implementing their own
-kprobes_alloc_insn_page() and kprobes_free_insn_page() which do not
-depend on MODULES.
-
-Signed-off-by: Jarkko Sakkinen <jarkko@kernel.org>
-Link: https://lore.kernel.org/lkml/20240326134616.7691-1-jarkko@kernel.org/
-[Mark: Remove execmem changes, depend on HAVE_KPROBES_ALLOC]
-Signed-off-by: Mark Rutland <mark.rutland@arm.com>
-Cc: Albert Ou <aou@eecs.berkeley.edu>
-Cc: Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>
-Cc: Catalin Marinas <catalin.marinas@arm.com>
-Cc: David S. Miller <davem@davemloft.net>
-Cc: Jarkko Sakkinen <jarkko@kernel.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Naveen N. Rao <naveen.n.rao@linux.ibm.com>
-Cc: Palmer Dabbelt <palmer@dabbelt.com>
-Cc: Paul Walmsley <paul.walmsley@sifive.com>
-Cc: Will Deacon <will@kernel.org>
----
- arch/Kconfig                |  2 +-
- kernel/kprobes.c            | 46 ++++++++++++++++++++++---------------
- kernel/trace/trace_kprobe.c | 15 ++++++++++--
- 3 files changed, 41 insertions(+), 22 deletions(-)
-
-diff --git a/arch/Kconfig b/arch/Kconfig
-index 85bb59f7b8c07..0df2c88547b3c 100644
---- a/arch/Kconfig
-+++ b/arch/Kconfig
-@@ -52,7 +52,7 @@ config GENERIC_ENTRY
- 
- config KPROBES
- 	bool "Kprobes"
--	depends on MODULES
-+	depends on MODULES || HAVE_KPROBES_ALLOC
- 	depends on HAVE_KPROBES
- 	select KALLSYMS
- 	select TASKS_RCU if PREEMPTION
-diff --git a/kernel/kprobes.c b/kernel/kprobes.c
-index fa2ee4e59eca2..ec4493a41b505 100644
---- a/kernel/kprobes.c
-+++ b/kernel/kprobes.c
-@@ -1594,6 +1594,7 @@ static int check_kprobe_address_safe(struct kprobe *p,
- 			goto out;
- 		}
- 
-+#ifdef CONFIG_MODULES
- 		/*
- 		 * If the module freed '.init.text', we couldn't insert
- 		 * kprobes in there.
-@@ -1604,7 +1605,9 @@ static int check_kprobe_address_safe(struct kprobe *p,
- 			*probed_mod = NULL;
- 			ret = -ENOENT;
- 		}
-+#endif /* CONFIG_MODULES */
- 	}
-+
- out:
- 	preempt_enable();
- 	jump_label_unlock();
-@@ -2484,24 +2487,6 @@ int kprobe_add_area_blacklist(unsigned long start, unsigned long end)
- 	return 0;
- }
- 
--/* Remove all symbols in given area from kprobe blacklist */
--static void kprobe_remove_area_blacklist(unsigned long start, unsigned long end)
--{
--	struct kprobe_blacklist_entry *ent, *n;
--
--	list_for_each_entry_safe(ent, n, &kprobe_blacklist, list) {
--		if (ent->start_addr < start || ent->start_addr >= end)
--			continue;
--		list_del(&ent->list);
--		kfree(ent);
--	}
--}
--
--static void kprobe_remove_ksym_blacklist(unsigned long entry)
--{
--	kprobe_remove_area_blacklist(entry, entry + 1);
--}
--
- int __weak arch_kprobe_get_kallsym(unsigned int *symnum, unsigned long *value,
- 				   char *type, char *sym)
- {
-@@ -2566,6 +2551,25 @@ static int __init populate_kprobe_blacklist(unsigned long *start,
- 	return ret ? : arch_populate_kprobe_blacklist();
- }
- 
-+#ifdef CONFIG_MODULES
-+/* Remove all symbols in given area from kprobe blacklist */
-+static void kprobe_remove_area_blacklist(unsigned long start, unsigned long end)
-+{
-+	struct kprobe_blacklist_entry *ent, *n;
-+
-+	list_for_each_entry_safe(ent, n, &kprobe_blacklist, list) {
-+		if (ent->start_addr < start || ent->start_addr >= end)
-+			continue;
-+		list_del(&ent->list);
-+		kfree(ent);
-+	}
-+}
-+
-+static void kprobe_remove_ksym_blacklist(unsigned long entry)
-+{
-+	kprobe_remove_area_blacklist(entry, entry + 1);
-+}
-+
- static void add_module_kprobe_blacklist(struct module *mod)
- {
- 	unsigned long start, end;
-@@ -2662,6 +2666,9 @@ static int kprobes_module_callback(struct notifier_block *nb,
- 	mutex_unlock(&kprobe_mutex);
- 	return NOTIFY_DONE;
- }
-+#else
-+#define kprobes_module_callback	(NULL)
-+#endif /* CONFIG_MODULES */
- 
- static struct notifier_block kprobe_module_nb = {
- 	.notifier_call = kprobes_module_callback,
-@@ -2726,7 +2733,8 @@ static int __init init_kprobes(void)
- 	err = arch_init_kprobes();
- 	if (!err)
- 		err = register_die_notifier(&kprobe_exceptions_nb);
--	if (!err)
-+
-+	if (!err && IS_ENABLED(CONFIG_MODULES))
- 		err = register_module_notifier(&kprobe_module_nb);
- 
- 	kprobes_initialized = (err == 0);
-diff --git a/kernel/trace/trace_kprobe.c b/kernel/trace/trace_kprobe.c
-index 14099cc17fc9e..c509ba776e679 100644
---- a/kernel/trace/trace_kprobe.c
-+++ b/kernel/trace/trace_kprobe.c
-@@ -111,6 +111,7 @@ static nokprobe_inline bool trace_kprobe_within_module(struct trace_kprobe *tk,
- 	return strncmp(module_name(mod), name, len) == 0 && name[len] == ':';
- }
- 
-+#ifdef CONFIG_MODULES
- static nokprobe_inline bool trace_kprobe_module_exist(struct trace_kprobe *tk)
- {
- 	char *p;
-@@ -129,6 +130,9 @@ static nokprobe_inline bool trace_kprobe_module_exist(struct trace_kprobe *tk)
- 
- 	return ret;
- }
-+#else
-+#define trace_kprobe_module_exist(tk) false /* aka a module never exists */
-+#endif /* CONFIG_MODULES */
- 
- static bool trace_kprobe_is_busy(struct dyn_event *ev)
- {
-@@ -670,6 +674,7 @@ static int register_trace_kprobe(struct trace_kprobe *tk)
- 	return ret;
- }
- 
-+#ifdef CONFIG_MODULES
- /* Module notifier call back, checking event on the module */
- static int trace_kprobe_module_callback(struct notifier_block *nb,
- 				       unsigned long val, void *data)
-@@ -699,6 +704,9 @@ static int trace_kprobe_module_callback(struct notifier_block *nb,
- 
- 	return NOTIFY_DONE;
- }
-+#else
-+#define trace_kprobe_module_callback (NULL)
-+#endif /* CONFIG_MODULES */
- 
- static struct notifier_block trace_kprobe_module_nb = {
- 	.notifier_call = trace_kprobe_module_callback,
-@@ -1933,8 +1941,11 @@ static __init int init_kprobe_trace_early(void)
- 	if (ret)
- 		return ret;
- 
--	if (register_module_notifier(&trace_kprobe_module_nb))
--		return -EINVAL;
-+	if (IS_ENABLED(CONFIG_MODULES)) {
-+		ret = register_module_notifier(&trace_kprobe_module_nb);
-+		if (ret)
-+			return -EINVAL;
-+	}
- 
- 	return 0;
- }
--- 
-2.30.2
-
+--=20
+paul-moore.com
