@@ -1,170 +1,280 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.hugovil.com (mail.hugovil.com [162.243.120.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9673B147C79;
-	Wed,  3 Apr 2024 16:32:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C5E817C98;
+	Wed,  3 Apr 2024 16:35:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.243.120.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712161947; cv=none; b=uqiCzyp7uWZFwIiRZrfcqtOkAkzhDoCG+n3w/JpzZVdSCuYnwwB3XNqAC9YmnhiZWu5b/qiC0FKT2um+mTAM4Zi1Y5YjFpJGfE2zF+LA6wLkO5Er93iZEbG7Xg9KqQh9tVa/10R+esUOQZ5boLKQ9RychDDVxjEgqw0UOQzzSdE=
+	t=1712162108; cv=none; b=dHr0oIz1nrmarOMT+t9aCth4XAlDrFhaxT2uCpE8WpCoVZP0F7maZSQSmdZeKJ2mdvafvcirAEls1bg0iHO3Wzn3DvyK3S2trOs0g1k6bBM7aJdbiNe5WeT8gdVGSk7N9Xv7LlKr35P0KkLRAnozkqGJhUD6UT0qmvd+HCoUnCs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712161947; c=relaxed/simple;
-	bh=0XnUl7dj6Ea6m99gt6Fm1hxbMTZDNcxsfZFaaTdkK5c=;
-	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
-	 Subject:Content-Type; b=bgsIb4RWa875sCyUeyQYSPziT6n/qlhAMpBP4NQchd8AcKuk4/9gGZzCIEs6XVfYwNChl4DJ7uM0iB96JdbZLr63vSokKfEQaiWYY0J4x/boqDd9OTBr87Im7+6MRKzhM+kK0Ya3khmMeTcHw9esdWLW4kCd6/vCqKFO5pY3JWk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QW0wEMDg; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1712162108; c=relaxed/simple;
+	bh=zD4Yiw7OCi5fgq+RCSzBtrA4K1iq312b2H72yW8lIT4=;
+	h=Date:From:To:Cc:Message-Id:In-Reply-To:References:Mime-Version:
+	 Content-Type:Subject; b=tQwxAVWXv1PLrDC6wB+obMHQA1QjZ8i7YvW21ztFoc+PUTUOS8oSzVOerjIi3AOOi3aya+3hpUgGT0rd3EmRJ4dMv1Wcp7mDczAYo1gdvNxLKSTD7cFYweMC4+s5QutP+1vg50dytazXLBVJONIR7r+WzRqVLPRic/CxkHjknIo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hugovil.com; spf=pass smtp.mailfrom=hugovil.com; dkim=pass (1024-bit key) header.d=hugovil.com header.i=@hugovil.com header.b=OiUSB7tm; arc=none smtp.client-ip=162.243.120.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hugovil.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hugovil.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QW0wEMDg"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F2C6DC43390;
-	Wed,  3 Apr 2024 16:32:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712161947;
-	bh=0XnUl7dj6Ea6m99gt6Fm1hxbMTZDNcxsfZFaaTdkK5c=;
-	h=In-Reply-To:References:Date:From:To:Cc:Subject:From;
-	b=QW0wEMDgMWUZ79xdJoYkLiIHXuRzTAb74DDl4+KTGBNms5tjbS3/Dq+NcDc/zM9pO
-	 6ZMVHRwU4f/KsH8hhp8YWGgsPfB2hJNE/zW10M9fNJGwioTTI5RXj9LCK+4kHdpVm7
-	 56pe0foBhqSV/IedS0ZRo0OM98CPRLAZ0exUkyl4t19cXWE+Na+N4g157rMIWwR/+a
-	 Jcd3P4AfBQbMfSwsNHWa4ynpqUPezzrEo0T5J8uagcJ/oCtRjq5w5FwG4qL0dwkbtX
-	 JqxgjIMslOOZNAxqEP/MmDLPJKxFjR8PAcnLi14nzPRradUx/1PaspPsqJ02egM7eE
-	 u7cRF7RLttn6g==
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-	by mailfauth.nyi.internal (Postfix) with ESMTP id F06881200066;
-	Wed,  3 Apr 2024 12:32:24 -0400 (EDT)
-Received: from imap48 ([10.202.2.98])
-  by compute3.internal (MEProxy); Wed, 03 Apr 2024 12:32:25 -0400
-X-ME-Sender: <xms:l4QNZnVTcmmcBj3cETMIjQPFeKyW216HWK1kyHvk5ak3_YuBQfomfQ>
-    <xme:l4QNZvnCeko_j7aVMCevTqwRM7_fqcU20j_wDEsVTZHCnw-dG_YTuNPcHDSTz9Ieb
-    ylCWq3tLYhNGdj3CNQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrudefiedgheekucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepofgfggfkjghffffhvfevufgtgfesthhqredtreerjeenucfhrhhomhepfdet
-    nhguhicunfhuthhomhhirhhskhhifdcuoehluhhtoheskhgvrhhnvghlrdhorhhgqeenuc
-    ggtffrrghtthgvrhhnpeduveffvdegvdefhfegjeejlefgtdffueekudfgkeduvdetvddu
-    ieeluefgjeeggfenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfh
-    hrohhmpegrnhguhidomhgvshhmthhprghuthhhphgvrhhsohhnrghlihhthidqudduiedu
-    keehieefvddqvdeifeduieeitdekqdhluhhtoheppehkvghrnhgvlhdrohhrgheslhhinh
-    hugidrlhhuthhordhush
-X-ME-Proxy: <xmx:l4QNZjYSXaRfEAGTNz9O5uebk2fHJnste73pfQtv3vctGbwaC10s2w>
-    <xmx:l4QNZiWxqHyVWKJiF4QUUEAo6lm2WIE1scUUV-YakZ7XqTXsCRovhg>
-    <xmx:l4QNZhlvWkMn1SVoZn4CWHqQr0aqpqET5Ga7LXEkXKUWMws0gzMLpw>
-    <xmx:l4QNZvdfRIc7OON-ak6PhAoHg4sCtKcl0fcLZQFhY7peszixkio4Ng>
-    <xmx:mIQNZpOteF69teRpNuPDyBpLmH21WrVMM4syyjzPzuEhN6UyjV9zI2Zh>
-Feedback-ID: ieff94742:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-	id 0360131A0064; Wed,  3 Apr 2024 12:32:22 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.11.0-alpha0-333-gbfea15422e-fm-20240327.001-gbfea1542
+	dkim=pass (1024-bit key) header.d=hugovil.com header.i=@hugovil.com header.b="OiUSB7tm"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hugovil.com
+	; s=x; h=Subject:Content-Transfer-Encoding:Mime-Version:Message-Id:Cc:To:From
+	:Date:subject:date:message-id:reply-to;
+	bh=Be+U0t7VcjuBlMtDw/ENxuCcQmZcFzNETa3Sysptv4M=; b=OiUSB7tmeIR8B2uvc6IKt9wse4
+	T+kulL5ySz0S0BP3YJzh74XtCh6sABHlnWlFn0Q+BMy+r4EuV5y2DtUjaSpUAO15xh4gabHZQ9hjW
+	K9i6Ti1p0F9P0bwLzL3+iRQcObSYrxHPFkn7UzhImg2KSTNyiLie+FZWjH6cqlGix+x4=;
+Received: from modemcable168.174-80-70.mc.videotron.ca ([70.80.174.168]:45874 helo=pettiford)
+	by mail.hugovil.com with esmtpa (Exim 4.92)
+	(envelope-from <hugo@hugovil.com>)
+	id 1rs3Zn-0006aZ-0r; Wed, 03 Apr 2024 12:35:03 -0400
+Date: Wed, 3 Apr 2024 12:35:01 -0400
+From: Hugo Villeneuve <hugo@hugovil.com>
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: gregkh@linuxfoundation.org, jirislaby@kernel.org,
+ linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org, Hugo Villeneuve
+ <hvilleneuve@dimonoff.com>
+Message-Id: <20240403123501.8ef5c99f65a40ca2c10f635a@hugovil.com>
+In-Reply-To: <CAHp75VdZ5yYVx7Df7G4X4Y7ZvJ3LAdq=A0fVNzNfMcdywJC-dQ@mail.gmail.com>
+References: <20240402174353.256627-1-hugo@hugovil.com>
+	<20240402174353.256627-4-hugo@hugovil.com>
+	<CAHp75VdZ5yYVx7Df7G4X4Y7ZvJ3LAdq=A0fVNzNfMcdywJC-dQ@mail.gmail.com>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Message-Id: <10db421c-77da-4a1c-a25e-2374a7a2ef79@app.fastmail.com>
-In-Reply-To: <20240223183004.GE1112@sol.localdomain>
-References: <20240214221847.2066632-1-ross.philipson@oracle.com>
- <20240214221847.2066632-7-ross.philipson@oracle.com>
- <CAMj1kXEmMBY_jc0uM5UgZbuZ3-C7NPKzg5AScaunyu9XzLgzZA@mail.gmail.com>
- <98ad92bb-ef17-4c15-88ba-252db2a2e738@citrix.com>
- <CAMj1kXFTu+bV2kQhAyu15hrYai20NcBLb4Zu8XG2Y-XjL0f+rw@mail.gmail.com>
- <1a8e69a7-89eb-4d36-94d6-0da662d8b72f@citrix.com>
- <CAMj1kXEvmGy9RJo4s8tECsFj2dufZ8jBPoJOEtkcGUoj+x2qsw@mail.gmail.com>
- <431a0b3a-47e5-4e61-a7fc-31cdf56f4e4c@citrix.com>
- <20240223175449.GA1112@sol.localdomain>
- <e641e2f1-16cf-4717-8a1f-8afac2644efe@citrix.com>
- <20240223183004.GE1112@sol.localdomain>
-Date: Wed, 03 Apr 2024 09:32:02 -0700
-From: "Andy Lutomirski" <luto@kernel.org>
-To: "Eric Biggers" <ebiggers@kernel.org>,
- "Andrew Cooper" <andrew.cooper3@citrix.com>
-Cc: "Ard Biesheuvel" <ardb@kernel.org>,
- "Ross Philipson" <ross.philipson@oracle.com>,
- "Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>,
- "the arch/x86 maintainers" <x86@kernel.org>, linux-integrity@vger.kernel.org,
- linux-doc@vger.kernel.org,
- "Linux Crypto Mailing List" <linux-crypto@vger.kernel.org>,
- kexec@lists.infradead.org, linux-efi@vger.kernel.org,
- dpsmith@apertussolutions.com, "Thomas Gleixner" <tglx@linutronix.de>,
- "Ingo Molnar" <mingo@redhat.com>, "Borislav Petkov" <bp@alien8.de>,
- "H. Peter Anvin" <hpa@zytor.com>,
- "Dave Hansen" <dave.hansen@linux.intel.com>,
- "Matthew Garrett" <mjg59@srcf.ucam.org>,
- James.Bottomley@hansenpartnership.com, peterhuewe@gmx.de, jarkko@kernel.org,
- "Jason Gunthorpe" <jgg@ziepe.ca>,
- "luto@amacapital.net" <luto@amacapital.net>,
- "Arvind Sankar" <nivedita@alum.mit.edu>,
- "Herbert Xu" <herbert@gondor.apana.org.au>, davem@davemloft.net,
- kanth.ghatraju@oracle.com, trenchboot-devel@googlegroups.com
-Subject: Re: [PATCH v8 06/15] x86: Add early SHA support for Secure Launch early
- measurements
-Content-Type: text/plain;charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 70.80.174.168
+X-SA-Exim-Mail-From: hugo@hugovil.com
+X-Spam-Level: 
+X-Spam-Report: 
+	* -1.0 ALL_TRUSTED Passed through trusted hosts only via SMTP
+	* -0.8 NICE_REPLY_A Looks like a legit reply (A)
+Subject: Re: [PATCH v3 3/5] serial: sc16is7xx: split into core and I2C/SPI
+ parts (core)
+X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
+X-SA-Exim-Scanned: Yes (on mail.hugovil.com)
 
-On Fri, Feb 23, 2024, at 10:30 AM, Eric Biggers wrote:
-> On Fri, Feb 23, 2024 at 06:20:27PM +0000, Andrew Cooper wrote:
->> On 23/02/2024 5:54 pm, Eric Biggers wrote:
->> > On Fri, Feb 23, 2024 at 04:42:11PM +0000, Andrew Cooper wrote:
->> >> Yes, and I agree.=C2=A0 We're not looking to try and force this in=
- with
->> >> underhand tactics.
->> >>
->> >> But a blind "nack to any SHA-1" is similarly damaging in the oppos=
-ite
->> >> direction.
->> >>
->> > Well, reviewers have said they'd prefer that SHA-1 not be included =
-and given
->> > some thoughtful reasons for that.  But also they've given suggestio=
-ns on how to
->> > make the SHA-1 support more palatable, such as splitting it into a =
-separate
->> > patch and giving it a proper justification.
->> >
->> > All suggestions have been ignored.
->>=20
->> The public record demonstrates otherwise.
->>=20
->> But are you saying that you'd be happy if the commit message read
->> something more like:
->>=20
->> ---8<---
->> For better or worse, Secure Launch needs SHA-1 and SHA-256.
->>=20
->> The choice of hashes used lie with the platform firmware, not with
->> software, and is often outside of the users control.
->>=20
->> Even if we'd prefer to use SHA-256-only, if firmware elected to start=
- us
->> with the SHA-1 and SHA-256 backs active, we still need SHA-1 to parse
->> the TPM event log thus far, and deliberately cap the SHA-1 PCRs in or=
-der
->> to safely use SHA-256 for everything else.
->> ---
->
-> Please take some time to read through the comments that reviewers have=
- left on
-> previous versions of the patchset.
+On Tue, 2 Apr 2024 22:40:07 +0300
+Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
 
-So I went and read through the old comments, and I'm lost.  In brief sum=
-mary:
+Hi Andy,
 
-If the hardware+firmware only supports SHA-1, then some reviewers would =
-prefer Linux not to support DRTM.  I personally think this is a bit sill=
-y, but it's not entirely unreasonable.  Maybe it should be a config opti=
-on?
+> On Tue, Apr 2, 2024 at 8:45 PM Hugo Villeneuve <hugo@hugovil.com> wrote:
+> >
+> > From: Hugo Villeneuve <hvilleneuve@dimonoff.com>
+> >
+> > Split the common code from sc16is7xx driver and move the I2C and SPI bus
+> > parts into interface-specific source files.
+> >
+> > sc16is7xx becomes the core functions which can support multiple bus
+> > interfaces like I2C and SPI.
+> >
+> > No functional change intended.
+> 
+> ...
+> 
+> > -config SERIAL_SC16IS7XX_CORE
+> > -       tristate
+> > -
+> >  config SERIAL_SC16IS7XX
+> >         tristate "SC16IS7xx serial support"
+> >         select SERIAL_CORE
+> > -       depends on (SPI_MASTER && !I2C) || I2C
+> > +       depends on SPI_MASTER || I2C
+> 
+> Is it?
 
-If the hardware+firmware does support SHA-256, then it sounds (to me, re=
-ading this -- I haven't dug into the right spec pages) that, for optimal=
- security, something still needs to effectively turn SHA-1 *off* at runt=
-ime by capping the event log properly.  And that requires computing a SH=
-A-1 hash.  And, to be clear, (a) this is only on systems that already su=
-pport SHA-256 and that we should support and (b) *not* doing so leaves u=
-s potentially more vulnerable to SHA-1 attacks than doing so.  And no SH=
-A-256-supporting tooling will actually be compromised by a SHA-1 comprom=
-ise if we cap the event log.
+See discussion below, but I would remove the SPI/I2C depends. And I
+would rename SERIAL_SC16IS7XX to SERIAL_SC16IS7XX_CORE.
 
-So is there a way forward?  Just saying "read through the comments" seem=
-s like a dead end.
+> 
+> >         help
+> >           Core driver for NXP SC16IS7xx serial ports.
+> >           Supported ICs are:
+> > @@ -1042,22 +1039,18 @@ config SERIAL_SC16IS7XX
+> >           drivers below.
+> >
+> >  config SERIAL_SC16IS7XX_I2C
+> > -       bool "SC16IS7xx for I2C interface"
+> > +       tristate "SC16IS7xx for I2C interface"
+> >         depends on SERIAL_SC16IS7XX
+> >         depends on I2C
+> > -       select SERIAL_SC16IS7XX_CORE if SERIAL_SC16IS7XX
+> > -       select REGMAP_I2C if I2C
+> > -       default y
+> > +       select REGMAP_I2C
+> >         help
+> > -         Enable SC16IS7xx driver on I2C bus,
+> > -         enabled by default to support oldconfig.
+> > +         Enable SC16IS7xx driver on I2C bus.
+> >
+> >  config SERIAL_SC16IS7XX_SPI
+> > -       bool "SC16IS7xx for spi interface"
+> > +       tristate "SC16IS7xx for SPI interface"
+> >         depends on SERIAL_SC16IS7XX
+> >         depends on SPI_MASTER
+> > -       select SERIAL_SC16IS7XX_CORE if SERIAL_SC16IS7XX
+> > -       select REGMAP_SPI if SPI_MASTER
+> > +       select REGMAP_SPI
+> >         help
+> >           Enable SC16IS7xx driver on SPI bus.
+> 
+> Hmm... What I was thinking about is more like dropping
+>  the SERIAL_SC16IS7XX and having I2C/SPI to select the core.
+> 
+> See many examples under drivers/iio on how it's done.
 
-Thanks,
-Andy
+Ok, I found this example:
+bf96f6e80cef ("iio: accel: kxsd9: Split out SPI transport")
+
+In it, the SPI part doesn't select the core, but depends on it, similar
+to what I have done. I find this approach more interesting for
+embedded systems as you can enable/disable I2C or SPI part if you
+need only one interface.
+
+> 
+> ...
+> 
+> > +EXPORT_SYMBOL_GPL(sc16is74x_devtype);
+> 
+> Is it namespaced? Please make sure we are not polluting the global
+> namespace with these.
+
+Ok, will add namespace support to all exports.
+
+
+> 
+> ...
+> 
+> > +#ifndef _SC16IS7XX_H_
+> > +#define _SC16IS7XX_H_
+> > +
+> > +#include <linux/device.h>
+> 
+> Not used (by this file).
+
+I was assuming that this file was for "struct device"?
+
+
+> 
+> > +#include <linux/mod_devicetable.h>
+> 
+> > +#include <linux/regmap.h>
+> 
+> > +#include <linux/serial_core.h>
+> 
+> Not used.
+
+Ok, will drop for V4.
+
+
+> 
+> > +#include <linux/types.h>
+> 
+> > +extern const struct of_device_id __maybe_unused sc16is7xx_dt_ids[];
+> 
+> No __maybe_unused. Just have it always be added.
+
+Ok.
+
+
+> 
+> > +const char *sc16is7xx_regmap_name(u8 port_id);
+> > +
+> > +unsigned int sc16is7xx_regmap_port_mask(unsigned int port_id);
+> > +
+> > +int sc16is7xx_probe(struct device *dev, const struct sc16is7xx_devtype *devtype,
+> > +                   struct regmap *regmaps[], int irq);
+> 
+> > +void sc16is7xx_remove(struct device *dev);
+> 
+> Will require forward declaration
+> 
+> #include ...
+> 
+> struct device;
+
+Isn't it provided by <linux/device.h> ?
+
+
+> 
+> > +#endif /* _SC16IS7XX_H_ */
+> 
+> ...
+> 
+> > +#include <linux/i2c.h>
+> > +#include <linux/mod_devicetable.h>
+> > +#include <linux/module.h>
+> > +#include <linux/regmap.h>
+> 
+> Follow the IWYU principle (include what you use).
+
+Ok, I tried to follow it, I do think those 4 includes are required in
+this file, no?
+
+and maybe I can add <linux/string.h> for memcpy().
+
+
+> 
+> ...
+> 
+> > +               return dev_err_probe(&i2c->dev, -ENODEV, "Failed to match device\n");
+> 
+> + dev_printk.h
+
+Ok.
+
+
+> 
+> ...
+> 
+> > +static int __init sc16is7xx_i2c_init(void)
+> > +{
+> > +       return i2c_add_driver(&sc16is7xx_i2c_driver);
+> > +}
+> > +module_init(sc16is7xx_i2c_init);
+> > +
+> > +static void __exit sc16is7xx_i2c_exit(void)
+> > +{
+> > +       i2c_del_driver(&sc16is7xx_i2c_driver);
+> > +}
+> > +module_exit(sc16is7xx_i2c_exit);
+> 
+> This is now module_i2c_driver().
+
+Ok. Great, simplifies things.
+
+
+> 
+> ...
+> 
+> > +MODULE_LICENSE("GPL");
+> > +MODULE_DESCRIPTION("SC16IS7xx I2C interface driver");
+> 
+> + MODULE_IMPORT_NS()
+
+Ok.
+
+
+> 
+> ...
+> 
+> > +++ b/drivers/tty/serial/sc16is7xx_spi.c
+> 
+> Similar/same comments as per i2c counterpart.
+
+Ok.
+
+
+> 
+> -- 
+> With Best Regards,
+> Andy Shevchenko
+> 
+
+
+-- 
+Hugo Villeneuve
