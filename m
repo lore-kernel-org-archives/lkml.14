@@ -1,89 +1,108 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from smtpbgau2.qq.com (smtpbgau2.qq.com [54.206.34.216])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E289514A0A0;
-	Wed,  3 Apr 2024 16:02:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4E2914A0A0;
+	Wed,  3 Apr 2024 16:03:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.206.34.216
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712160180; cv=none; b=F+/Yml+WyzQj6NoHi9CfPEG7mdEtwdehKIZv2myVP4imvde/A9/anHAsbWjrutEErIExU9z6EVHvYmuaOHXesZ5qr3cfW21JO4Vby9wHqTYAs0Llp6QDZ9Gkf8tq+2rs6xAg32jnTBi89qmq6fzZgaQ776b+r9ZRCJR9sRrAXEE=
+	t=1712160190; cv=none; b=OG4n2JH7MoMg2djXUEsGEM7FR3cQ+ezSjwT0bwRzXj4Kf4uf0J0ElkeOoYsSt8RROBQ24PC4IvwmjmXEmkJ0qgn0XMkP9YVYrZuMdVle40ACQecRzrIFO+HR2HdsATFgQWzOeHi7d83ZJNmtlGqO7+1thBhh4xY/VXxt0+W6c88=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712160180; c=relaxed/simple;
-	bh=ZLGaUAlxN/MigLlqe2ufbLD2YOZsHZFp4bFiSC6MH6w=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hhkM8JTCSPO9NdZcvPu0H3x/jc5ybdcNjvuy90PhXX3ot/zZhmUMrFHlCxEOhzABXUT7wbtomq6lL5Ih6pCojaWHtqdhcYjXb24Uyf6Z1Fjvpgkq9q5oiqawj/0usdKs1NhXIk3AYncywzBNmshPeWndl9/XVngNe1BSrW0KL9g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qKAjOElX; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qKAjOElX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2043CC433C7;
-	Wed,  3 Apr 2024 16:02:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712160179;
-	bh=ZLGaUAlxN/MigLlqe2ufbLD2YOZsHZFp4bFiSC6MH6w=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=qKAjOElXcZoBLG39OjeFDtAe2thsVwavvdRrcX1AjPU+cqi9PmtBpCEYzLrwih/oR
-	 eSU0wk+bz2v+2LK3+f6q9dxRqhSHvOfgKBGaRYuQfUqLWxCNgH1g9fvIZhfMbd8PA/
-	 +iu8advVlG1DA5wyhnTkclFCV8CFeiayaSUVYV+VRsU2O6tUfOrFv62opxuBTlod56
-	 ZM/3RekTzbklkBfKriSNPUDOeSNvscNothpVnVLxuvUVtJM2+Of5n6O8tHHb3O3i8A
-	 5lGWkKZ77j3MG2BX+BwMoDP09Km1X821j4Zp2crONXSYIkxsJaLZH2Jwswv3VUE/Ou
-	 1wQaQo8ITmUuQ==
-Date: Wed, 3 Apr 2024 17:02:53 +0100
-From: Conor Dooley <conor@kernel.org>
-To: Alexandru Ardelean <alex@shruggie.ro>
-Cc: linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-	devicetree@vger.kernel.org, adrien.grassein@gmail.com,
-	andrzej.hajda@intel.com, neil.armstrong@linaro.org,
-	rfoss@kernel.org, Laurent.pinchart@ideasonboard.com,
-	jonas@kwiboo.se, jernej.skrabec@gmail.com, airlied@gmail.com,
-	daniel@ffwll.ch, maarten.lankhorst@linux.intel.com,
-	mripard@kernel.org, tzimmermann@suse.de, robh@kernel.org,
-	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
-	stefan.eichenberger@toradex.com, francesco.dolcini@toradex.com,
-	marius.muresan@mxt.ro, irina.muresan@mxt.ro
-Subject: Re: [PATCH 2/2] dt-bindings: display: bridge: lt8912b: document
- 'lontium,pn-swap' property
-Message-ID: <20240403-cadmium-pasta-eadfdf62f387@spud>
-References: <20240402105925.905144-1-alex@shruggie.ro>
- <20240402105925.905144-2-alex@shruggie.ro>
- <20240402-sheet-retread-025759b22faf@spud>
- <CAH3L5QooAXDYAxOdMkPrW1mx04ZgTv_kMU5VSAby9J3Hb_RFOg@mail.gmail.com>
+	s=arc-20240116; t=1712160190; c=relaxed/simple;
+	bh=S39NoN5D0Hm8QiQxAKgAXeUp14vOeOUWvb++HDsIF1g=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=rRpDxGFcPAeOWVQxurh1F5SM7IgvKoOwS1Z7WnC2LhGuqqxp2OydVmhxlO9BUeI5K0vF3ZlNfa1TWXDu8m60d0DVTVAQn42ExYdpkf9OwArp8Lwr2BLdHYqvHplecSfc43BE1DXA3nfeOH8DzekRJ7gIGU+ENj/VSXlXt6h4brU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=shingroup.cn; spf=pass smtp.mailfrom=shingroup.cn; arc=none smtp.client-ip=54.206.34.216
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=shingroup.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=shingroup.cn
+X-QQ-mid: bizesmtp88t1712160093t0p9khxu
+X-QQ-Originating-IP: 2nxMMCc9CfFM/lEjKxNDtkIzxIqbGNNbRtoULXceEGQ=
+Received: from localhost ( [112.0.147.175])
+	by bizesmtp.qq.com (ESMTP) with 
+	id ; Thu, 04 Apr 2024 00:01:31 +0800 (CST)
+X-QQ-SSF: 01400000000000704000000A0000000
+X-QQ-FEAT: t5mnTZTTCFcAs6dFSwwoQTaGRdI1+4sbY8k14dO6qQg5QLCHB4Z7+0DzdXCUA
+	PeL8atqprX3BRbff92nalknyUi9FR8I0mcEO1ifGBht1sFnhlt0E/UX1pHeIjPxi4Xvfarz
+	WwZeTUBPS4DiR22ywLMUr/eFyw5bMCT9kdeWmkUTsmed/veHPathu8vPxUZGw0TbTs+mcl8
+	vuwKHB0hNMRwzWwnuHcwPqsWraqEmOaWkHDwGSZ3wEB1x7mgrXnq5N+YUd5ttS+ROfjxM0C
+	LbsIJc55RPqGXIRsqgPrQ5ppR/vdYRPGhMETVAlYSjRVFfj4GMOE8zqlkjbpBarMg3N9C7q
+	CYrGXIjzpPjYZZzlcd3bPNm/ECf5BmreZxoOXMeBpHk7B2d4wOksk4FabPzAputzkhdLgKu
+	MGVdchYXQUA=
+X-QQ-GoodBg: 2
+X-BIZMAIL-ID: 17890806519002536568
+From: Dawei Li <dawei.li@shingroup.cn>
+To: will@kernel.org,
+	mark.rutland@arm.com,
+	yury.norov@gmail.com,
+	linux@rasmusvillemoes.dk
+Cc: xueshuai@linux.alibaba.com,
+	renyu.zj@linux.alibaba.com,
+	yangyicong@hisilicon.com,
+	jonathan.cameron@huawei.com,
+	andersson@kernel.org,
+	konrad.dybcio@linaro.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	linux-arm-msm@vger.kernel.org,
+	Dawei Li <dawei.li@shingroup.cn>
+Subject: [PATCH v3 10/10] perf/thunderx2: Avoid placing cpumask on the stack
+Date: Wed,  3 Apr 2024 23:59:50 +0800
+Message-Id: <20240403155950.2068109-11-dawei.li@shingroup.cn>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20240403155950.2068109-1-dawei.li@shingroup.cn>
+References: <20240403155950.2068109-1-dawei.li@shingroup.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="OIKG09sfb1D7G0KQ"
-Content-Disposition: inline
-In-Reply-To: <CAH3L5QooAXDYAxOdMkPrW1mx04ZgTv_kMU5VSAby9J3Hb_RFOg@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
+X-QQ-SENDSIZE: 520
+Feedback-ID: bizesmtp:shingroup.cn:qybglogicsvrgz:qybglogicsvrgz5a-1
 
+In general it's preferable to avoid placing cpumasks on the stack, as
+for large values of NR_CPUS these can consume significant amounts of
+stack space and make stack overflows more likely.
 
---OIKG09sfb1D7G0KQ
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Use cpumask_any_and_but() to avoid the need for a temporary cpumask on
+the stack.
 
-On Wed, Apr 03, 2024 at 09:16:31AM +0300, Alexandru Ardelean wrote:
+Suggested-by: Mark Rutland <mark.rutland@arm.com>
+Reviewed-by: Mark Rutland <mark.rutland@arm.com>
+Signed-off-by: Dawei Li <dawei.li@shingroup.cn>
+---
+ drivers/perf/thunderx2_pmu.c | 10 +++-------
+ 1 file changed, 3 insertions(+), 7 deletions(-)
 
-> >
-> > > +    type: boolean
-> >
-> > The type here should be flag.
->=20
-> ack; i'll change the type
+diff --git a/drivers/perf/thunderx2_pmu.c b/drivers/perf/thunderx2_pmu.c
+index e16d10c763de..b3377b662ffc 100644
+--- a/drivers/perf/thunderx2_pmu.c
++++ b/drivers/perf/thunderx2_pmu.c
+@@ -932,9 +932,8 @@ static int tx2_uncore_pmu_online_cpu(unsigned int cpu,
+ static int tx2_uncore_pmu_offline_cpu(unsigned int cpu,
+ 		struct hlist_node *hpnode)
+ {
+-	int new_cpu;
+ 	struct tx2_uncore_pmu *tx2_pmu;
+-	struct cpumask cpu_online_mask_temp;
++	unsigned int new_cpu;
+ 
+ 	tx2_pmu = hlist_entry_safe(hpnode,
+ 			struct tx2_uncore_pmu, hpnode);
+@@ -945,11 +944,8 @@ static int tx2_uncore_pmu_offline_cpu(unsigned int cpu,
+ 	if (tx2_pmu->hrtimer_callback)
+ 		hrtimer_cancel(&tx2_pmu->hrtimer);
+ 
+-	cpumask_copy(&cpu_online_mask_temp, cpu_online_mask);
+-	cpumask_clear_cpu(cpu, &cpu_online_mask_temp);
+-	new_cpu = cpumask_any_and(
+-			cpumask_of_node(tx2_pmu->node),
+-			&cpu_online_mask_temp);
++	new_cpu = cpumask_any_and_but(cpumask_of_node(tx2_pmu->node),
++				      cpu_online_mask, cpu);
+ 
+ 	tx2_pmu->cpu = new_cpu;
+ 	if (new_cpu >= nr_cpu_ids)
+-- 
+2.27.0
 
-I prob shoulda said, its "$ref: /schemas/types.yaml#/definitions/flag"
-instead of "type: boolean".
-
---OIKG09sfb1D7G0KQ
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZg19rAAKCRB4tDGHoIJi
-0oqRAP4hwY3sOX9ShDng3WIfjEJxfjKASqN3casNhSiE07qADAD/aGzpCVx8FUez
-kIQGC+Nx5ySg7iMHlwiZt2/u7rE24AI=
-=xnpK
------END PGP SIGNATURE-----
-
---OIKG09sfb1D7G0KQ--
