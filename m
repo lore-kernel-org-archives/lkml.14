@@ -1,38 +1,37 @@
 Received: from mail.rnplus.nl (mail.rnplus.nl [178.251.25.70])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F69E1487F6
-	for <linux-kernel@vger.kernel.org>; Wed,  3 Apr 2024 13:40:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F48F148850
+	for <linux-kernel@vger.kernel.org>; Wed,  3 Apr 2024 13:40:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.251.25.70
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712151639; cv=none; b=YRBSYgUsoZKIb0HHPUzmymEG6ku9oFiDmoc7neD/2po0iTehDR1jSjr+zLxNOWEzgH1+RYw8OFAEUptobSYtI0dx4Etv6MKHYf+Xf/69S2pi+nc84Ko8Jnnkn8CdKf/GxkFXROsb1Uee04hTcyaHUKQHId98hnlIvAkz5IYpqYs=
+	t=1712151643; cv=none; b=U64cb5TAemly1Z9cn4bkBKc6P5EQmaSRjvPRLcwISGk/3r+Q/atbrzPcTJXD68yFH1PGr748cJc2mvYb3qNijY7xlHhKRR8rwLf5SRsmS2D9b99FOUiTkorSR34MA4vWGWFGtVFeWHoefPW7T3OErhUfzCCKXX0iAXxvam1RQmE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712151639; c=relaxed/simple;
-	bh=J3x6v1j8NItiPEP2ALslVPQ+eLcuXH6rDPyikVVJs7U=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Kmm1JNrUK4BpMUCXduJpikorasZYs8KoQp2G7pd424aeQyWBiSemRBMTv8tRUqh0r3mOpjRNa31zz4AwfR2SoJ/n3GAvbOrHdPOl9eCYstP+6odI//PC2eDIjiBY1F9vTeI044wv4J1syxM6NndDlrlCDTk6epsef7wZZP91ULs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rnplus.nl; spf=pass smtp.mailfrom=rnplus.nl; dkim=pass (1024-bit key) header.d=rnplus.nl header.i=@rnplus.nl header.b=Z26dLVSh; arc=none smtp.client-ip=178.251.25.70
+	s=arc-20240116; t=1712151643; c=relaxed/simple;
+	bh=FqNyiUeqU0Pi3/GSVu8yFgj/1p765NCY3NVehafqT10=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version; b=gpHPFVhKcwP18rn9OsipBfGC+wDYu47iPdFt1OjfEuSChyd5srRjY5q8Kb/qjq+1mhcljeccZCwJj7qLB3KUW3SJgE5SRy3oO2k4UTrsyGZiZZmiP3iO8AC620XgdBvJ4FzhSqHbqW091klcLBt1jfEd3lftlYNmaBhiXRF0CS4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rnplus.nl; spf=pass smtp.mailfrom=rnplus.nl; dkim=pass (1024-bit key) header.d=rnplus.nl header.i=@rnplus.nl header.b=Wdbmf0PS; arc=none smtp.client-ip=178.251.25.70
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rnplus.nl
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rnplus.nl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=rnplus.nl header.i=@rnplus.nl header.b="Z26dLVSh"
+	dkim=pass (1024-bit key) header.d=rnplus.nl header.i=@rnplus.nl header.b="Wdbmf0PS"
 Received: from localhost (unknown [127.0.0.1])
-	by mail.rnplus.nl (Postfix) with ESMTP id AD67037945A
-	for <linux-kernel@vger.kernel.org>; Wed,  3 Apr 2024 13:37:39 +0000 (UTC)
+	by mail.rnplus.nl (Postfix) with ESMTP id 6104E379482
+	for <linux-kernel@vger.kernel.org>; Wed,  3 Apr 2024 13:37:34 +0000 (UTC)
 X-Virus-Scanned: amavisd-new at rnplus.nl
 Received: from mail.rnplus.nl ([127.0.0.1])
 	by localhost (mail.rnplus.nl [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id YG9MYdbFrW8M for <linux-kernel@vger.kernel.org>;
-	Wed,  3 Apr 2024 15:37:38 +0200 (CEST)
+	with ESMTP id Umjv_2W_s1S8 for <linux-kernel@vger.kernel.org>;
+	Wed,  3 Apr 2024 15:37:34 +0200 (CEST)
 Received: from localhost.localdomain (184-179-179-143.ftth.glasoperator.nl [143.179.179.184])
-	by mail.rnplus.nl (Postfix) with ESMTPSA id CBDE337947A;
-	Wed,  3 Apr 2024 15:37:31 +0200 (CEST)
+	by mail.rnplus.nl (Postfix) with ESMTPSA id 7CD69379443;
+	Wed,  3 Apr 2024 15:37:29 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=rnplus.nl; s=dkim;
-	t=1712151453; bh=J3x6v1j8NItiPEP2ALslVPQ+eLcuXH6rDPyikVVJs7U=;
-	h=From:To:Subject:Date:In-Reply-To:References;
-	b=Z26dLVShrOqZaVWeKDgn4w32mfSkcvgNAkOzrO3X9xDzIkQIu66+cACZmAdvbrv86
-	 kjr6bffH0ynPQYYIyKPNwQN3B+4GBGuok9EkXfnQORJWkEPYozDDcDaQh61F3YxYbG
-	 VMCxGa1Nm6fuT3UzR9LBOMwRqrUOitlAZI+IGJ1E=
+	t=1712151450; bh=FqNyiUeqU0Pi3/GSVu8yFgj/1p765NCY3NVehafqT10=;
+	h=From:To:Subject:Date;
+	b=Wdbmf0PSAjMBK1k8e50gyXubKjLSTqiAFqXXSasBGIjuLMSPlTy+wci0jMXX9dca3
+	 ph80GzB/yb8rBfheED55l2O8AqLrCVDLyKbKV61Wso338InwQE+/8SuclWq0XlBwkh
+	 NCTS69t5KOjgsy6YSVZjIqukolrdEoNo+XWz7bLw=
 From: Renze Nicolai <renze@rnplus.nl>
 To: renze@rnplus.nl,
 	linux-arm-kernel@lists.infradead.org,
@@ -46,12 +45,10 @@ To: renze@rnplus.nl,
 	krzysztof.kozlowski+dt@linaro.org,
 	joel@jms.id.au,
 	andrew@aj.id.au
-Subject: [PATCH v2 2/3] ARM: dts: Disable unused ADC channels for Asrock X570D4U BMC
-Date: Wed,  3 Apr 2024 15:28:52 +0200
-Message-ID: <20240403133037.37782-3-renze@rnplus.nl>
+Subject: [PATCH v2 0/3] ARM: dts: Update devicetree of Asrock X570D4U BMC
+Date: Wed,  3 Apr 2024 15:28:50 +0200
+Message-ID: <20240403133037.37782-1-renze@rnplus.nl>
 X-Mailer: git-send-email 2.44.0
-In-Reply-To: <20240403133037.37782-1-renze@rnplus.nl>
-References: <20240403133037.37782-1-renze@rnplus.nl>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -60,51 +57,27 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Additionally adds labels describing the ADC channels.
+These patches change the GPIO table, ADC channel configuration and
+I2C bus configuration of the devicetree for the X570D4U BMC as part of
+ongoing efforts to support OpenBMC on this platform.
 
-Signed-off-by: Renze Nicolai <renze@rnplus.nl>
----
- .../dts/aspeed/aspeed-bmc-asrock-x570d4u.dts  | 29 +++++++++----------
- 1 file changed, 13 insertions(+), 16 deletions(-)
+Changes since v1:
+ - Fixed warnings indicated by checkpatch.pl
+ - Change commit message of ADC channels commit to match imperative mood
+ - Restructure GPIO table to better match other ASPEED devices
+ - Clarify naming scheme better
 
-diff --git a/arch/arm/boot/dts/aspeed/aspeed-bmc-asrock-x570d4u.dts b/arch/arm/boot/dts/aspeed/aspeed-bmc-asrock-x570d4u.dts
-index dff69d6ff146..66318ef8caae 100644
---- a/arch/arm/boot/dts/aspeed/aspeed-bmc-asrock-x570d4u.dts
-+++ b/arch/arm/boot/dts/aspeed/aspeed-bmc-asrock-x570d4u.dts
-@@ -337,20 +337,17 @@ fan@5 {
- &adc {
- 	status = "okay";
- 	pinctrl-names = "default";
--	pinctrl-0 = <&pinctrl_adc0_default
--				&pinctrl_adc1_default
--				&pinctrl_adc2_default
--				&pinctrl_adc3_default
--				&pinctrl_adc4_default
--				&pinctrl_adc5_default
--				&pinctrl_adc6_default
--				&pinctrl_adc7_default
--				&pinctrl_adc8_default
--				&pinctrl_adc9_default
--				&pinctrl_adc10_default
--				&pinctrl_adc11_default
--				&pinctrl_adc12_default
--				&pinctrl_adc13_default
--				&pinctrl_adc14_default
--				&pinctrl_adc15_default>;
-+	pinctrl-0 = <&pinctrl_adc0_default       /* 3VSB */
-+			&pinctrl_adc1_default    /* 5VSB */
-+			&pinctrl_adc2_default    /* VCPU */
-+			&pinctrl_adc3_default    /* VSOC */
-+			&pinctrl_adc4_default    /* VCCM */
-+			&pinctrl_adc5_default    /* APU-VDDP */
-+			&pinctrl_adc6_default    /* PM-VDD-CLDO */
-+			&pinctrl_adc7_default    /* PM-VDDCR-S5 */
-+			&pinctrl_adc8_default    /* PM-VDDCR */
-+			&pinctrl_adc9_default    /* VBAT */
-+			&pinctrl_adc10_default   /* 3V */
-+			&pinctrl_adc11_default   /* 5V */
-+			&pinctrl_adc12_default>; /* 12V */
- };
+Best regards,
+Renze Nicolai
+
+Renze Nicolai (3):
+  ARM: dts: Modify GPIO table for Asrock X570D4U BMC
+  ARM: dts: Disable unused ADC channels for Asrock X570D4U BMC
+  ARM: dts: Modify I2C bus configuration
+
+ .../dts/aspeed/aspeed-bmc-asrock-x570d4u.dts  | 131 ++++++++----------
+ 1 file changed, 57 insertions(+), 74 deletions(-)
+
 -- 
 2.44.0
 
