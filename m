@@ -1,159 +1,169 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f178.google.com (mail-qk1-f178.google.com [209.85.222.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7ECA5C61C;
-	Wed,  3 Apr 2024 08:13:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D6FC6D1A0;
+	Wed,  3 Apr 2024 08:15:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712132001; cv=none; b=I/S5wx1DU0QNv0acmmBaht+efjhutOaBBvC/MqWiiGx3TfFW1zcpK8eVrcwTmcRu15WC/Kt2PpgyAo//bmG60DsjsWXVB/ClNSK8qa/q6M/tkez2vCf0LkSmnMos+0yQjabfZj/OTA1pxashDo87n8g/drg5t34TqgpOaqhPntM=
+	t=1712132110; cv=none; b=Y1KNL6f+h7Pai9XM5scZYQMl/pLpp6yUdEwUT6M8QWDXmP15d7hVmCO42zPDWSWAPg4FkeqMesnZfmNG0ncVAW/b0xW31zpW4RQStd7zMB64Kr2Gwuvr6KI0RupixMV1HerkKcPhFTGOuIAOTta5eXdt45ENl5BV0t7LLPCMClY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712132001; c=relaxed/simple;
-	bh=cHRmsqunH9hP/qtXbd35N4JkMuQoGtu0x3hJ4tAgdrY=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=mDOtYeAq4SKBvWonitmtqvd7rnFfKFv4jHqVO+hi24byVjhsAAxeyvZkvg9w/0F4tIThyxZlTQbDBO2CX5D2w6Fpvmr1gLTzaKQtTiBjPhZmG8WXPYTMM9yim15xRxF7gJaEOmIAh0PRDKf+Zx0XyDPCDrOVnBMWa9tZ0HSdet0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mL4FfJyz; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1712132110; c=relaxed/simple;
+	bh=79GzaC/wpL41mVe8DAzcTk67Vg58jXpGHfv9U5F10FM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=qp7vhHxeMTLypETXk+78+SFZqN/8cpIaXaydIlfTmPWuRhNoAhKyMNRT6YVp46gbesV/6yO9BWM4tY4LdqVughha5Bv13O0GKuvK289eTBcT5UiAKFlTEkbpAlWq50/FmvoUXtWAl8dVRUR/x3GxITnVKE6byZ3KhxgqcnHOap8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VnuixuCh; arc=none smtp.client-ip=209.85.222.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mL4FfJyz"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 95395C433C7;
-	Wed,  3 Apr 2024 08:13:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712132000;
-	bh=cHRmsqunH9hP/qtXbd35N4JkMuQoGtu0x3hJ4tAgdrY=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=mL4FfJyzLl9gsq+QwjOIrerxmGhTo6GDqw+UdiO+FN1TNPbQ1HU4hUHSq50YrgXyO
-	 hXHcEM4a1AfR/UMk2OlDEdOtkZ7hLM16HAr75p42zC3E/fZmTMFFvDziVxgFQIRCfO
-	 0qPx53oM278y1D0ZnnomrHkf/8qt46zlW41rrmspumuSLR/CwOXBD8PAekA0tR4SV5
-	 n6RyEQgcFzrrp4y18VqL/jxAFRC0t2QR05D1FAIqEsfiAca752UIyw7Aktq+IPx3TC
-	 n1oRUic3ZgN8V1orOq8yfxAiWatGMFmTrfPdsjirFu3CT0SmC51Inan5tHzb3m4Wdy
-	 OZORH7MZL3gMw==
-From: Arnd Bergmann <arnd@kernel.org>
-To: linux-kernel@vger.kernel.org,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Mark Brown <broonie@kernel.org>,
-	Jaroslav Kysela <perex@perex.cz>,
-	Takashi Iwai <tiwai@suse.com>,
-	Claudiu Beznea <claudiu.beznea@tuxon.dev>,
-	Nicolas Ferre <nicolas.ferre@microchip.com>,
-	Alexandre Belloni <alexandre.belloni@bootlin.com>,
-	Oder Chiou <oder_chiou@realtek.com>,
-	Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-	Banajit Goswami <bgoswami@quicinc.com>,
-	Sylwester Nawrocki <s.nawrocki@samsung.com>
-Cc: Arnd Bergmann <arnd@arndb.de>,
-	Alper Nebi Yasak <alpernebiyasak@gmail.com>,
-	Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-	Akihiko Odaki <akihiko.odaki@daynix.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Yinchuan Guo <guoych37@mail2.sysu.edu.cn>,
-	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
-	Rob Herring <robh@kernel.org>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-	linux-sound@vger.kernel.org,
-	alsa-devel@alsa-project.org,
-	linux-arm-kernel@lists.infradead.org
-Subject: [PATCH 32/34] ASoC: remove incorrect of_match_ptr/ACPI_PTR annotations
-Date: Wed,  3 Apr 2024 10:06:50 +0200
-Message-Id: <20240403080702.3509288-33-arnd@kernel.org>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240403080702.3509288-1-arnd@kernel.org>
-References: <20240403080702.3509288-1-arnd@kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VnuixuCh"
+Received: by mail-qk1-f178.google.com with SMTP id af79cd13be357-789fb1f80f5so396349285a.3;
+        Wed, 03 Apr 2024 01:15:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1712132108; x=1712736908; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=s/y2MMICNyue6gWd8hqMT90GtZtiQiQJemVpU+jOY2c=;
+        b=VnuixuChz3al4xn9YzKvuYPA19zOh7KhePgBd6cVKTpduzmByr3hs5U8+qbsG/+GDd
+         6HVgKwg/V30tNuG+TUShMd9tAElCzoADvULPGPUlpajSDcv7k9L2SwuXLJpKFhrKsBlW
+         5IYOtXMnGdrnl3mCQUxiQmwz2QbywHTEYjNIwHGR+2CYROM3z7YI6pj6eaJL/wmUSM6B
+         VHJHZ0AVpWz3hgPpB3BoRD6hAIas8N68giXcM7lvYue8Gve1jXZiWsC8tINMg80QVVSL
+         dDctUfc7sPqZsCT7AuLjdFHjUZ4tV22Az6zKNJbWobMu5uO2aREw3e7Ilm2whMI3jZIy
+         TR0Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712132108; x=1712736908;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=s/y2MMICNyue6gWd8hqMT90GtZtiQiQJemVpU+jOY2c=;
+        b=M3ZEgknhuv4XFsAv2EAW45FNtD6f8ivHDfEClugG41DvYTWStqcZYuAOn+BMHe6atV
+         dYUzjG+jFlNFD4GLn1m9LkKvmFy2S4G8arvnKmozjV9wKPTo3Md+5z2n+EH8lg9vCvRl
+         heQoSsJTtpgFUYZhF+40sdX+FTP31M1EpD3dPFbDjcB/gZDyCzEy2urlptNYgV/FDsfp
+         08KNEgACflElmik9T4gpldrw3plqt0lcacajE/r6dFcrByrosuY1Nokp0fldHrRah3hh
+         DNkLUrz1+x3LQXBFb3lbNLH6lEzJA+5BLFVj/HzIxEf04jxDNcXya7AFClrdocp6fvUp
+         jQfQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWZU2WmVV6BuLoyfA1QqIhgdiIRuzy57XmyS3/mijgXYVh2T3kWvRxjc76RDcB5WrMPP2bzlAxtlM1CPEvVYFt6KRBVMpXBZGnvVZTwXcdTYgWcMQTNL7fxbijVMBM4DxPrHf/FFN+BJiftMfM66nM6CWeiyhUv736dSf3vVOQ2uS5VuA==
+X-Gm-Message-State: AOJu0YzYY22D6x9ntyHjc4FNcAnG9vE9rQLAr8LXa+k5v5uXQhgv+58z
+	GCzkNviZntJBWmHMNZMDCbTd76wpB0BKp42XC7TipAtCYFDf5S9w
+X-Google-Smtp-Source: AGHT+IHhStCUqTQ4sURggWKUyR75zMC8OhVbI0+OQ+WlbDB0d6z2beYwUbOhPoPpY6zUZ1oesxm8qg==
+X-Received: by 2002:a05:620a:55ac:b0:78b:eac4:a023 with SMTP id vr12-20020a05620a55ac00b0078beac4a023mr5447001qkn.39.1712132107971;
+        Wed, 03 Apr 2024 01:15:07 -0700 (PDT)
+Received: from [10.76.84.174] ([5.2.194.157])
+        by smtp.gmail.com with ESMTPSA id p11-20020a05620a056b00b0078a210372fasm4909954qkp.86.2024.04.03.01.15.05
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 03 Apr 2024 01:15:07 -0700 (PDT)
+Message-ID: <77064a96-c195-4f34-a323-ac01137e448d@gmail.com>
+Date: Wed, 3 Apr 2024 11:15:04 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 6/6] iio: adc: ad7173: Add support for AD411x devices
+To: David Lechner <dlechner@baylibre.com>, dumitru.ceclan@analog.com
+Cc: Lars-Peter Clausen <lars@metafoo.de>,
+ Michael Hennerich <Michael.Hennerich@analog.com>,
+ Jonathan Cameron <jic23@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>, linux-iio@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20240401-ad4111-v1-0-34618a9cc502@analog.com>
+ <20240401-ad4111-v1-6-34618a9cc502@analog.com>
+ <CAMknhBH-YmFrqNTQCB_KafCTxEqSL+36pkE0O44NqiL89hm64Q@mail.gmail.com>
+Content-Language: en-US
+From: "Ceclan, Dumitru" <mitrutzceclan@gmail.com>
+In-Reply-To: <CAMknhBH-YmFrqNTQCB_KafCTxEqSL+36pkE0O44NqiL89hm64Q@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-From: Arnd Bergmann <arnd@arndb.de>
+On 02/04/2024 00:53, David Lechner wrote:
+> On Mon, Apr 1, 2024 at 10:10 AM Dumitru Ceclan via B4 Relay
+> <devnull+dumitru.ceclan.analog.com@kernel.org> wrote:
+>>
+>> From: Dumitru Ceclan <dumitru.ceclan@analog.com>
+>>
+>> Add support for AD4111/AD4112/AD4114/AD4115/AD4116.
+>>
+>> The AD411X family encompasses a series of low power, low noise, 24-bit,
+>> sigma-delta analog-to-digital converters that offer a versatile range of
+>> specifications.
+>>
+>> This family of ADCs integrates an analog front end suitable for processing
+>> both fully differential and single-ended, bipolar voltage inputs
+>> addressing a wide array of industrial and instrumentation requirements.
+>>
+>> - All ADCs have inputs with a precision voltage divider with a division
+>>   ratio of 10.
+>> - AD4116 has 5 low level inputs without a voltage divider.
+>> - AD4111 and AD4112 support current inputs (0 mA to 20 mA) using a 50ohm
+>>   shunt resistor.
+>>
+>> Signed-off-by: Dumitru Ceclan <dumitru.ceclan@analog.com>
+>> ---
+> 
+> ...
+> 
+>> @@ -951,7 +1117,7 @@ static int ad7173_fw_parse_channel_config(struct iio_dev *indio_dev)
+>>         struct device *dev = indio_dev->dev.parent;
+>>         struct iio_chan_spec *chan_arr, *chan;
+>>         unsigned int ain[2], chan_index = 0;
+>> -       int ref_sel, ret, num_channels;
+>> +       int ref_sel, ret, reg, num_channels;
+>>
+>>         num_channels = device_get_child_node_count(dev);
+>>
+> 
+> Another thing that is missing in this function both for the chips
+> being added here and the existing chips are channels for _all_
+> possible inputs. The driver is adding a fixed input channel for the
+> temperature sensor, as it should. But all of the chips also have a
+> similar input channel configuration that measures the reference
+> voltage. Currently, there doesn't seem to be a way to make use of this
+> feature. I would expect a hard-coded voltage input channel that is
+> always added for this reference voltage similar to the temperature
+> channel.
+> 
 
-When building with CONFIG_OF and/or CONFIG_ACPI disabled but W=1 extra
-warnings enabled, a lot of driver cause a warning about an unused
-ID table:
+AD7173-8:
+ Channel input configs:
+AINPOS0: REF+ 10101: 21
+AINNEG0: REF- 10110: 22
 
-sound/soc/atmel/sam9x5_wm8731.c:187:34: error: unused variable 'sam9x5_wm8731_of_match' [-Werror,-Wunused-const-variable]
-sound/soc/codecs/rt5514-spi.c:496:34: error: unused variable 'rt5514_of_match' [-Werror,-Wunused-const-variable]
-sound/soc/samsung/aries_wm8994.c:524:34: error: unused variable 'samsung_wm8994_of_match' [-Werror,-Wunused-const-variable]
+For the user to define the REF measurement channel:
+ diff-channels = <21 22>;
+So it is possible from the binding side. It would just need support from
+the driver as currently any value above the stated number of inputs is
+rejected. Maybe document this in a comment like you suggested below.
 
-The fix is always to just remove the of_match_ptr() and ACPI_PTR() wrappers
-that remove the reference, rather than adding another #ifdef just for build
-testing for a configuration that doesn't matter in practice.
+I really do not agree with using up channels without letting the user
+decide. I can accept to dedicate one for the temp where applicable but
+more than that and it feels like we are restricting the usage too much.
 
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- sound/soc/amd/acp3x-rt5682-max9836.c | 2 +-
- sound/soc/atmel/sam9x5_wm8731.c      | 2 +-
- sound/soc/codecs/rt5514-spi.c        | 2 +-
- sound/soc/qcom/lpass-sc7280.c        | 2 +-
- sound/soc/samsung/aries_wm8994.c     | 2 +-
- 5 files changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/sound/soc/amd/acp3x-rt5682-max9836.c b/sound/soc/amd/acp3x-rt5682-max9836.c
-index d6cdb6d9fdd6..ffc105759994 100644
---- a/sound/soc/amd/acp3x-rt5682-max9836.c
-+++ b/sound/soc/amd/acp3x-rt5682-max9836.c
-@@ -543,7 +543,7 @@ MODULE_DEVICE_TABLE(acpi, acp3x_audio_acpi_match);
- static struct platform_driver acp3x_audio = {
- 	.driver = {
- 		.name = "acp3x-alc5682-max98357",
--		.acpi_match_table = ACPI_PTR(acp3x_audio_acpi_match),
-+		.acpi_match_table = acp3x_audio_acpi_match,
- 		.pm = &snd_soc_pm_ops,
- 	},
- 	.probe = acp3x_probe,
-diff --git a/sound/soc/atmel/sam9x5_wm8731.c b/sound/soc/atmel/sam9x5_wm8731.c
-index d1c1f370a9cd..95c8c37478a3 100644
---- a/sound/soc/atmel/sam9x5_wm8731.c
-+++ b/sound/soc/atmel/sam9x5_wm8731.c
-@@ -193,7 +193,7 @@ MODULE_DEVICE_TABLE(of, sam9x5_wm8731_of_match);
- static struct platform_driver sam9x5_wm8731_driver = {
- 	.driver = {
- 		.name = DRV_NAME,
--		.of_match_table = of_match_ptr(sam9x5_wm8731_of_match),
-+		.of_match_table = sam9x5_wm8731_of_match,
- 	},
- 	.probe = sam9x5_wm8731_driver_probe,
- 	.remove_new = sam9x5_wm8731_driver_remove,
-diff --git a/sound/soc/codecs/rt5514-spi.c b/sound/soc/codecs/rt5514-spi.c
-index f475c8cfadae..da397db8d7d5 100644
---- a/sound/soc/codecs/rt5514-spi.c
-+++ b/sound/soc/codecs/rt5514-spi.c
-@@ -503,7 +503,7 @@ static struct spi_driver rt5514_spi_driver = {
- 	.driver = {
- 		.name = "rt5514",
- 		.pm = &rt5514_pm_ops,
--		.of_match_table = of_match_ptr(rt5514_of_match),
-+		.of_match_table = rt5514_of_match,
- 	},
- 	.probe = rt5514_spi_probe,
- };
-diff --git a/sound/soc/qcom/lpass-sc7280.c b/sound/soc/qcom/lpass-sc7280.c
-index 47c622327a8d..c91620128fd4 100644
---- a/sound/soc/qcom/lpass-sc7280.c
-+++ b/sound/soc/qcom/lpass-sc7280.c
-@@ -441,7 +441,7 @@ MODULE_DEVICE_TABLE(of, sc7280_lpass_cpu_device_id);
- static struct platform_driver sc7280_lpass_cpu_platform_driver = {
- 	.driver = {
- 		.name = "sc7280-lpass-cpu",
--		.of_match_table = of_match_ptr(sc7280_lpass_cpu_device_id),
-+		.of_match_table = sc7280_lpass_cpu_device_id,
- 		.pm = &sc7280_lpass_pm_ops,
- 	},
- 	.probe = asoc_qcom_lpass_cpu_platform_probe,
-diff --git a/sound/soc/samsung/aries_wm8994.c b/sound/soc/samsung/aries_wm8994.c
-index a548ac33dd94..9f7318c4ee33 100644
---- a/sound/soc/samsung/aries_wm8994.c
-+++ b/sound/soc/samsung/aries_wm8994.c
-@@ -689,7 +689,7 @@ static int aries_audio_probe(struct platform_device *pdev)
- static struct platform_driver aries_audio_driver = {
- 	.driver		= {
- 		.name	= "aries-audio-wm8994",
--		.of_match_table = of_match_ptr(samsung_wm8994_of_match),
-+		.of_match_table = samsung_wm8994_of_match,
- 		.pm	= &snd_soc_pm_ops,
- 	},
- 	.probe		= aries_audio_probe,
--- 
-2.39.2
+> The ad717x chips (except AD7173-8 and AD7176-2) also have a common
+> mode voltage input ("((AVDD1 − AVSS)/5)") that could work the same.
+> 
+
+Again, would be resolved if I added support from the driver.
+
+> In the case of the ad717x chips though, it looks like these channels
+> are not "fixed" like they are in ad411x. It looks like these inputs
+> can be mixed and matched with AINx inputs and/or each other as
+> differential pairs. So if that is actually the case, I would expect
+> the DT bindings for ad717x to look like adi,ad4130.yaml where these
+> additional input sources are listed in the diff-channels property
+> instead of having hard-coded channels in the driver like I have
+> suggested above.
+> 
+
+Yep, agree.
+
+> But, as always, fixes for ad717x should be in a separate patch series.
+> Still, I think adding a hard-coded channel for the reference voltage
+> input for ad411x chips in this patch makes sense.
+
+As stated above, not comfortable with using up channels with hard-coded
+values.
 
