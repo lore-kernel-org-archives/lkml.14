@@ -1,95 +1,86 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
+Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70E60137903
-	for <linux-kernel@vger.kernel.org>; Wed,  3 Apr 2024 10:04:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE081135A44;
+	Wed,  3 Apr 2024 10:05:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.255
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712138699; cv=none; b=iwdl/WG8DNFIkla4Xxl3PC8+H4HbLwiyjprtPcm+onMCxQwMgnn2C9AdHxOaQsccv9NuFBga0aMOCDzgb2I1wVACDzoeZGHWZLVdnnaK6CfB18sCBjTUfyvcKHIje2fWyqgTBzTp725VhiUMNeSDqpE5TQEes+mVd0muSzz9z+o=
+	t=1712138731; cv=none; b=aSn5w3t19kTxvxmqpL5Y6gokG+MA5fCpZjvpftuQ4+bRUxHX6F3C17HPwGoUzEOpVRQfJyyGNOt8x/95c390+qpvJFBZlPG20TWI7aCv0/Ac0voaoOpaMKJyc2vDlgbHGgnPrOnfV8s4WIrEQCiEDtBMqRoWUl0TwK3Es/VnpVk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712138699; c=relaxed/simple;
-	bh=Y7WN2tYAYpmCgOP1gQPKV9jeKqkz0Te+qM3j90UOY1g=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=n1kHK9xwcZkQJCxlPECZzz5ohK3m5XiZFX6o6Mzlz+VuYmhR7GJHlb63uQy4U7Nl5LKIdmWf+CwiRLd1glCsShwBh7hY/QD/byEcI2fzSeHOLs7Wsyvfo/4zIeVC2B8Q0RlSQg7LUTZlWPYHMdLIk/3zGWBDeYCRZzwOvixloGQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jGWrFOWb; arc=none smtp.client-ip=198.175.65.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jGWrFOWb"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1712138698; x=1743674698;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=Y7WN2tYAYpmCgOP1gQPKV9jeKqkz0Te+qM3j90UOY1g=;
-  b=jGWrFOWbq9GlnbLaZx4a5DmcOSk6PQHsXLWRaz/dDdam/aIXny97YnQ/
-   5Q0ObyJMa3jBNIPexv3X9WfEagu5JMm0ksxkAXxcf53bWLFqgfW/Fg4YZ
-   f/nmxRnjJo+ZkgRc8Md5IrQ70ba+1j7wlzozkrUHKX4T59W+KDc2TyW9X
-   lgpHnocBKGEykY7SxI3xP59TeHYr5aKFDlf0LMnVfp2yXOTOQDGAnyGq9
-   5gVhQSQlYUSheeZbdSH3tD2i5WHOigfI3jRAiOrdammMksvfKD6qeqRLb
-   pwjVwI/z116hqQP11uE5qFQhyg2AaCGh1tQRNndfCh8Iu9avra1WQ6fBX
-   Q==;
-X-CSE-ConnectionGUID: akVAuESrQK2VrLTv3ZzFeg==
-X-CSE-MsgGUID: BFW7YwQUQwehjv4UNpA3tg==
-X-IronPort-AV: E=McAfee;i="6600,9927,11032"; a="7485602"
-X-IronPort-AV: E=Sophos;i="6.07,177,1708416000"; 
-   d="scan'208";a="7485602"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2024 03:04:57 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,11032"; a="915177205"
-X-IronPort-AV: E=Sophos;i="6.07,177,1708416000"; 
-   d="scan'208";a="915177205"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.72.54])
-  by fmsmga002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2024 03:04:53 -0700
-Received: from andy by smile with local (Exim 4.97)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1rrxUA-000000015H8-1gdE;
-	Wed, 03 Apr 2024 13:04:50 +0300
-Date: Wed, 3 Apr 2024 13:04:50 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Shenghao Ding <shenghao-ding@ti.com>
-Cc: broonie@kernel.org, lgirdwood@gmail.com, perex@perex.cz,
-	pierre-louis.bossart@linux.intel.com, 13916275206@139.com,
-	alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
-	liam.r.girdwood@intel.com, bard.liao@intel.com,
-	yung-chuan.liao@linux.intel.com, kevin-lu@ti.com, tiwai@suse.de,
-	baojun.xu@ti.com, soyer@irl.hu, Baojun.Xu@fpt.com, navada@ti.com,
-	v-po@ti.com
-Subject: Re: [PATCH v1] ALSA: hda/tas2781: correct the register for pow
- calibrated data
-Message-ID: <Zg0pwtuQ9gfeXwxd@smile.fi.intel.com>
-References: <20240402231300.362-1-shenghao-ding@ti.com>
+	s=arc-20240116; t=1712138731; c=relaxed/simple;
+	bh=59QhSJcBaUPchWNL7bHjebEqRTh9j7wS95eCWvo0nRg=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=YEz3YYTaRaPO0X2PmA6RMHsFXyS8drUO0oGxWcxGcCjjBXw/APyl/COSphoTGJD6Y/L94POq2B4vm9QEeCsnK7byYNpVZAdSkXXhZzNZxdrNKI0+TrBXZILLBBl5JkGnuosWN+sJZc27ghbAMgW6BxFgmu01q6WucMRApPPHJQ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.255
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.48])
+	by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4V8gKn6y5Nz1QCDj;
+	Wed,  3 Apr 2024 18:02:53 +0800 (CST)
+Received: from dggpemd200003.china.huawei.com (unknown [7.185.36.122])
+	by mail.maildlp.com (Postfix) with ESMTPS id 20CB818005D;
+	Wed,  3 Apr 2024 18:05:28 +0800 (CST)
+Received: from localhost.localdomain (10.67.165.2) by
+ dggpemd200003.china.huawei.com (7.185.36.122) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1258.28; Wed, 3 Apr 2024 18:05:27 +0800
+From: Chenghai Huang <huangchenghai2@huawei.com>
+To: <herbert@gondor.apana.org.au>, <davem@davemloft.net>
+CC: <linux-kernel@vger.kernel.org>, <linux-crypto@vger.kernel.org>,
+	<fanghao11@huawei.com>, <liulongfang@huawei.com>, <shenyang39@huawei.com>,
+	<songzhiqi1@huawei.com>, <qianweili@huawei.com>, <liushangbin@hisilicon.com>,
+	<linwenkai6@hisilicon.com>, <taoqi10@huawei.com>, <wangzhou1@hisilicon.com>,
+	<huangchenghai2@huawei.com>
+Subject: [PATCH 4/9] crypto: hisilicon/debugfs - Fix the processing logic issue in the debugfs creation
+Date: Wed, 3 Apr 2024 18:00:57 +0800
+Message-ID: <20240403100102.2735306-5-huangchenghai2@huawei.com>
+X-Mailer: git-send-email 2.30.0
+In-Reply-To: <20240403100102.2735306-1-huangchenghai2@huawei.com>
+References: <20240403100102.2735306-1-huangchenghai2@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240402231300.362-1-shenghao-ding@ti.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
+ dggpemd200003.china.huawei.com (7.185.36.122)
 
-On Wed, Apr 03, 2024 at 07:12:59AM +0800, Shenghao Ding wrote:
-> fixed tas2781 calibrated data - pow was written into a wrong register.
+There is a scenario where the file directory is created but the
+file attribute is not set. In this case, if a user accesses the
+file, an error occurs.
 
-fixed --> Fix
+So adjust the processing logic in the debugfs creation to
+prevent the file from being accessed before the file attributes
+such as the index are set.
 
-Fixes tag?
+Signed-off-by: Chenghai Huang <huangchenghai2@huawei.com>
+---
+ drivers/crypto/hisilicon/debugfs.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-> Signed-off-by: Shenghao Ding <shenghao-ding@ti.com>
-
-...
-
-> +		0x17, 0x18, 0x18, 0x13, 0x18
-> +		0x74, 0x0c, 0x14, 0x70, 0x7c
-
-While at it, can you add a trailing comma?
-It will help in case of extending this in the future.
-
+diff --git a/drivers/crypto/hisilicon/debugfs.c b/drivers/crypto/hisilicon/debugfs.c
+index 6351a452878d..e9fa42381242 100644
+--- a/drivers/crypto/hisilicon/debugfs.c
++++ b/drivers/crypto/hisilicon/debugfs.c
+@@ -1090,12 +1090,12 @@ static void qm_create_debugfs_file(struct hisi_qm *qm, struct dentry *dir,
+ {
+ 	struct debugfs_file *file = qm->debug.files + index;
+ 
+-	debugfs_create_file(qm_debug_file_name[index], 0600, dir, file,
+-			    &qm_debug_fops);
+-
+ 	file->index = index;
+ 	mutex_init(&file->lock);
+ 	file->debug = &qm->debug;
++
++	debugfs_create_file(qm_debug_file_name[index], 0600, dir, file,
++			    &qm_debug_fops);
+ }
+ 
+ static int qm_debugfs_atomic64_set(void *data, u64 val)
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.30.0
 
