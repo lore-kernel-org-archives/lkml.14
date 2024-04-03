@@ -1,80 +1,94 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+Received: from jabberwock.ucw.cz (jabberwock.ucw.cz [46.255.230.98])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E72B1153BCB;
-	Wed,  3 Apr 2024 18:44:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FC381D54B;
+	Wed,  3 Apr 2024 18:44:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.255.230.98
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712169851; cv=none; b=rqmGDWDTejKwKRL9Zgd/d+pWvvEiuwzHssHnitRR1Gv4gRENMJi5CnWzhkYhtLfWMQsp7V6e0bEFKJfKSfmAwrjpUFTXFl0LnYzvb/3Ie8k5sBsk7uK7wReeESpVfGaem0A9+96uhRZlYBg7XABjv+cPybZxWgMMt8OB3ev0txM=
+	t=1712169870; cv=none; b=e+u1L2012zVgBJd9nAdPe2k5kVsYZ8VKJHpmjIsNz7nQnvyuIbPvUboAc87g2Srh7nztN0vMXgArbR+dKwBWzNQYeWRmA9t9XR/20Zflsb0nyoBG2jIkF3xtfoJeBdIUs66dH4Agz09u4n4VUxp/jdBjgyuivDgHu0CS1+dQAVI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712169851; c=relaxed/simple;
-	bh=asBWHNsOxuFsIUGvryGVvV6AmuzfPwokHExbMcGi0ws=;
+	s=arc-20240116; t=1712169870; c=relaxed/simple;
+	bh=1EkD6J6ZXdEoxa2rk1uEMRnFWIrrNOpvsjrJATOctzw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=I1AaSCiFOLKsvzXDqTOq8yDUpWj2gt44yTCNa90rX/zvTWn30/5oPHV37M2bQbc7/gz1Y+5zRq4M2WSdA2/BlIXfp9HgyALOhlUzdB0eqbByuy9NrlqF1IZVkHF6aK7pMrFJGMxJHSgwlhPnAeHf7H69JhfX/QCLEbsqpVLZ4BM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=i2JI47Kk; arc=none smtp.client-ip=192.198.163.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=hpPGhJRs3cnsGwehAZSV9uPd4lAnlykH7T+ihOvzokXgZjwjy36t3PKwE8Zrghsa3PjPkd4KWApP9aW5oJw6hXl/9Gzp9EKWZ+zH8PTXRsYrohswFwZU3EQA9GS4wgfEyXWN0UxKNuvdVJy9MfVd28MtVAOc+m3P5/Sei+VOHWs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ucw.cz; spf=pass smtp.mailfrom=ucw.cz; dkim=pass (1024-bit key) header.d=ucw.cz header.i=@ucw.cz header.b=UXk5clxU; arc=none smtp.client-ip=46.255.230.98
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ucw.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ucw.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="i2JI47Kk"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1712169850; x=1743705850;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=asBWHNsOxuFsIUGvryGVvV6AmuzfPwokHExbMcGi0ws=;
-  b=i2JI47Kk14Y2sQCrwpstEDHJeCZDDoypW5OMaQ6FYftz1TdSqLuFQTKe
-   +1H8lQk1rYRbnJk/UPCf7Lt3qHHZLK0bmQBvnBDXYG61hcsoMnOvnlqUm
-   bR9qy54XCcXYja+gL6H0kzOH3MPBZccdUahZz85i8UxgNj+dP9cgbTQUe
-   3zJ/CuT1ZwM1tv/glGT148jL0tDvcRrLBxo7g0cD7hCYrAlisiMlFWiIv
-   7PD59mqXifIAsUrTq9fei35R2xhDLQBPOY4vDHiJ4KefGWjtQKvzCy6dZ
-   DMez4GW0Uxp3s8EQaiIoQdaXWx6hr9Qo9Qo15QA4utT7WQYcyRXw5hoJu
-   w==;
-X-CSE-ConnectionGUID: ikdN9vWRTLSrTwpW5hx4bg==
-X-CSE-MsgGUID: fzRIry+PRBGdgvPofYEOFg==
-X-IronPort-AV: E=McAfee;i="6600,9927,11033"; a="7268001"
-X-IronPort-AV: E=Sophos;i="6.07,177,1708416000"; 
-   d="scan'208";a="7268001"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2024 11:44:06 -0700
-X-CSE-ConnectionGUID: Vc2mcmdFQSyfVE95KdJWzA==
-X-CSE-MsgGUID: 9VRwHznbR9+3xhJ6WRYGdQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,177,1708416000"; 
-   d="scan'208";a="23179345"
-Received: from tassilo.jf.intel.com (HELO tassilo) ([10.54.38.190])
-  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2024 11:44:05 -0700
-Date: Wed, 3 Apr 2024 11:44:04 -0700
-From: Andi Kleen <ak@linux.intel.com>
-To: Ian Rogers <irogers@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1] perf metrics: Remove the "No_group" metric group
-Message-ID: <Zg2jdJ3-LNRkL95T@tassilo>
-References: <20240403164636.3429091-1-irogers@google.com>
+	dkim=pass (1024-bit key) header.d=ucw.cz header.i=@ucw.cz header.b="UXk5clxU"
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+	id 508411C007F; Wed,  3 Apr 2024 20:44:19 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ucw.cz; s=gen1;
+	t=1712169859;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=aHQCuvhMEh7H83JBQJudhosI61BGysrG7OtmjAOZ5xo=;
+	b=UXk5clxUqDzVZJJMscF+lK21IIOKV+kpj5+ZBGVSWLmfVowENY57Q7QW0g0diN2QjJ67AB
+	d9kj242B1vQNV+Xw1YG6SYuAlapyD6xT3LuwrDol+te5KdPVpsJnrYAxwi0yT3FG4j+c6g
+	euehjMJ7If2ojxZbxRNoS4XlGMjNIyo=
+Date: Wed, 3 Apr 2024 20:44:18 +0200
+From: Pavel Machek <pavel@ucw.cz>
+To: git@luigi311.com
+Cc: linux-media@vger.kernel.org, dave.stevenson@raspberrypi.com,
+	jacopo.mondi@ideasonboard.com, mchehab@kernel.org, robh@kernel.org,
+	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
+	shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
+	festevam@gmail.com, sakari.ailus@linux.intel.com,
+	devicetree@vger.kernel.org, imx@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	phone-devel@vger.kernel.org
+Subject: Re: [PATCH v3 05/25] media: i2c: imx258: Add regulator control
+Message-ID: <Zg2jgmmqw0nXDYcF@duo.ucw.cz>
+References: <20240403150355.189229-1-git@luigi311.com>
+ <20240403150355.189229-6-git@luigi311.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="O21qkBwoedtlBEgw"
+Content-Disposition: inline
+In-Reply-To: <20240403150355.189229-6-git@luigi311.com>
+
+
+--O21qkBwoedtlBEgw
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240403164636.3429091-1-irogers@google.com>
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Apr 03, 2024 at 09:46:36AM -0700, Ian Rogers wrote:
-> Rather than place metrics without a metric group in "No_group" place
-> them in a a metric group that is their name. Still allow such metrics
-> to be selected if "No_group" is passed, this change just impacts perf
-> list.
+Hi!
 
-But what's the point of it? It will just make perf list more verbose,
-but I don't see any advantage.
+> The device tree bindings define the relevant regulators for the
+> sensor, so update the driver to request the regulators and control
+> them at the appropriate times.
 
--Andi
+> @@ -995,9 +1007,19 @@ static int imx258_power_on(struct device *dev)
+>  	struct imx258 *imx258 =3D to_imx258(sd);
+>  	int ret;
+> =20
+> +	ret =3D regulator_bulk_enable(IMX258_NUM_SUPPLIES,
+> +				    imx258->supplies);
+> +	if (ret) {
+
+Will this make it fail for all current users?
+
+Best regards,
+								Pavel
+							=09
+--=20
+People of Russia, stop Putin before his war on Ukraine escalates.
+
+--O21qkBwoedtlBEgw
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCZg2jggAKCRAw5/Bqldv6
+8hP5AKCepr5aI0IdUd8z6pbcafo2ln1O4QCeKiMkegDwZZl1QHdwdT3bX0OqjyQ=
+=Juic
+-----END PGP SIGNATURE-----
+
+--O21qkBwoedtlBEgw--
