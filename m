@@ -1,45 +1,46 @@
-Received: from lelv0142.ext.ti.com (lelv0142.ext.ti.com [198.47.23.249])
+Received: from lelv0143.ext.ti.com (lelv0143.ext.ti.com [198.47.23.248])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 910DAD27D;
-	Wed,  3 Apr 2024 00:33:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.249
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CBC214A9D;
+	Wed,  3 Apr 2024 00:33:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.248
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712104407; cv=none; b=q5AZjwyxnGlpfiNvT9k016WIv8KdAQd8yrx1GRUkZGBjEBISjqIywn2pH8yq11Pob5scsFZHai8kP4kKcz6bDqJPSWs2zvx2tPSYS+gl6KOg3lXvAkvobSVQxgonZWXgRU3y9aH8WACSII0EFq3oiU/T652WE4NRaJIot4bOYWw=
+	t=1712104413; cv=none; b=WEns22XCvPi1RByDU2Vh58iWDoKts6bOr1NTlAeu6g5XS6ZcsCZWbU6NKYTYybvL3s9lfXeELgdSjO114DoqKqxh/EnmESM0sokBt62LCApVixdGnHZ17VHZhCIsii2WMGBhrQHpuO22VDApCp/sdI4mFZrGHzFWD903FxY9SVo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712104407; c=relaxed/simple;
-	bh=wlqbS0iWcvDOtnH6Up89ddhadh8mmCeV/H+ekQX1rjQ=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Vi2sSDWtOsci+mllQVgKXqcc7DSumr0EClN1iPV49O2GJ7aXpiLB35NcOjloYEaqcll3JYczOUP56kIY+6zXA3G54r4iwF3oYi8jDcK6CsVHWjpO2AylNICVQzoTYcvV2FfzuI5i456aroxJbQ2HQLOBKEvgPkBz0KIim6ViIyw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=Nlf0t3H9; arc=none smtp.client-ip=198.47.23.249
+	s=arc-20240116; t=1712104413; c=relaxed/simple;
+	bh=rHWDHL1i/IvJcRqLw+SJNY2wbffLubgOnS2NLVPbBbo=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=H2xCHN60M0mZ6M4tvXd+j+mS1mQzSEpsUCsbh2T8s+v/s4JRBruYeykppECQPPXZ0y/q0YuLtQ6jH2qmS3Uck7PsEhyh7omZorjEK00lbrHTTMT9gwpM82hehm5Cn5sxFdhYg6BqWGiAEk08iXuFGsxorXdjtBtFpAeNM/vvzOs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=HPfplfJY; arc=none smtp.client-ip=198.47.23.248
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Nlf0t3H9"
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-	by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 4330WBTN012514;
-	Tue, 2 Apr 2024 19:32:11 -0500
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="HPfplfJY"
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+	by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 4330WdxB033944;
+	Tue, 2 Apr 2024 19:32:39 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1712104331;
-	bh=U5jePWUlmko66C4akO7oCc9+oDZxq85XB30Qa3gIcr4=;
-	h=From:To:CC:Subject:Date;
-	b=Nlf0t3H9Fndpe8T+m1xcyjwJbZa2dWKdi3WFrfvrZeGSj69Awth6+fvWwUq+ROQX/
-	 CXTWTfuZO+zZr75w4Pf7AL0NPEaNzGxaekNGFJxJPXoA+1XucTqtGGSXyv19fwKFTm
-	 1DlYt3mnEeLwJsCsg0DD1oAcpG4gIcUUIFl3/IPA=
-Received: from DLEE105.ent.ti.com (dlee105.ent.ti.com [157.170.170.35])
-	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 4330WBnk008565
+	s=ti-com-17Q1; t=1712104359;
+	bh=GVrr+F2p0WJZ3urc9o+Df04rBukw2qRLjEQV2Y/wL88=;
+	h=From:To:CC:Subject:Date:In-Reply-To:References;
+	b=HPfplfJYN8YTQ+CokXkMlxwRAdwkPJNtXiyf57p9t6f1dnRWjm+iXSv3bPc2nzX8g
+	 Q92OMxjKgmbJgYtPJYy9/NP0OLgavz7L8+CFbc2YhILy+GWwdD2fmf2KOBPmmYRpG6
+	 C0sU7APL+vHzEYF0NnaAaqFFI9KLX3xwbvmxPaVg=
+Received: from DLEE108.ent.ti.com (dlee108.ent.ti.com [157.170.170.38])
+	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 4330WdSs058870
 	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Tue, 2 Apr 2024 19:32:11 -0500
-Received: from DLEE112.ent.ti.com (157.170.170.23) by DLEE105.ent.ti.com
- (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
+	Tue, 2 Apr 2024 19:32:39 -0500
+Received: from DLEE103.ent.ti.com (157.170.170.33) by DLEE108.ent.ti.com
+ (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Tue, 2
- Apr 2024 19:32:11 -0500
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DLEE112.ent.ti.com
- (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
+ Apr 2024 19:32:38 -0500
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DLEE103.ent.ti.com
+ (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Tue, 2 Apr 2024 19:32:11 -0500
+ Frontend Transport; Tue, 2 Apr 2024 19:32:38 -0500
 Received: from LT5CG31242FY.dhcp.ti.com ([10.250.160.249])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 4330W2J9079729;
-	Tue, 2 Apr 2024 19:32:03 -0500
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 4330W2JC079729;
+	Tue, 2 Apr 2024 19:32:30 -0500
 From: Shenghao Ding <shenghao-ding@ti.com>
 To: <linux-kernel@vger.kernel.org>
 CC: <lgirdwood@gmail.com>, <broonie@kernel.org>, <robh+dt@kernel.org>,
@@ -51,10 +52,12 @@ CC: <lgirdwood@gmail.com>, <broonie@kernel.org>, <robh+dt@kernel.org>,
         <aviel@ti.com>, <hnagalla@ti.com>, <praneeth@ti.com>,
         <Baojun.Xu@fpt.com>, Shenghao Ding
 	<shenghao-ding@ti.com>
-Subject: [PATCH v8 0/4] ASoc: PCM6240: mixer-test report
-Date: Wed, 3 Apr 2024 08:31:54 +0800
-Message-ID: <20240403003159.389-1-shenghao-ding@ti.com>
+Subject: [PATCH v8 3/4] ASoc: PCM6240: Add compile item for PCM6240 Family driver
+Date: Wed, 3 Apr 2024 08:31:57 +0800
+Message-ID: <20240403003159.389-4-shenghao-ding@ti.com>
 X-Mailer: git-send-email 2.33.0.windows.2
+In-Reply-To: <20240403003159.389-1-shenghao-ding@ti.com>
+References: <20240403003159.389-1-shenghao-ding@ti.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -65,40 +68,69 @@ Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
 X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-mixer-test report:
- root@am335x-evm:/bin# mixer-test
- TAP version 13
- # Card 0 - TI BeagleBone Black (TI BeagleBone Black)
- 1..7
- ok 1 get_value.0.0
- # 0.0 pcmd3180-i2c-2 Profile id
- ok 2 name.0.0
- ok 3 write_default.0.0
- ok 4 write_valid.0.0
- ok 5 write_invalid.0.0
- ok 6 event_missing.0.0
- ok 7 event_spurious.0.0
- # Totals: pass:7 fail:0 xfail:0 xpass:0 skip:0 error:0
- root@am335x-evm:/bin#
+PCM6240 driver implements a flexible and configurable setting for register
+and filter coefficients, to one, two or even multiple PCM6240 Family Audio
+chips.
 
 Signed-off-by: Shenghao Ding <shenghao-ding@ti.com>
+
 ---
-Shenghao Ding (4):
-  ASoc: PCM6240: Create PCM6240 Family driver code
-  ASoc: PCM6240: Create header file for PCM6240 Family driver code
-  ASoc: PCM6240: Add compile item for PCM6240 Family driver
-  ASoc: dt-bindings: PCM6240: Add initial DT binding
+v8:
+ - use some reasonable format of changelog.
+ - Link to v2: https://lore.kernel.org/all/20240126035855.1785-3-shenghao-ding@ti.com/
+---
+ sound/soc/codecs/Kconfig  | 10 ++++++++++
+ sound/soc/codecs/Makefile |  2 ++
+ 2 files changed, 12 insertions(+)
 
- .../devicetree/bindings/sound/ti,pcm6240.yaml |  177 ++
- sound/soc/codecs/Kconfig                      |   10 +
- sound/soc/codecs/Makefile                     |    2 +
- sound/soc/codecs/pcm6240.c                    | 2070 +++++++++++++++++
- sound/soc/codecs/pcm6240.h                    |  236 ++
- 5 files changed, 2495 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/sound/ti,pcm6240.yaml
- create mode 100644 sound/soc/codecs/pcm6240.c
- create mode 100644 sound/soc/codecs/pcm6240.h
-
+diff --git a/sound/soc/codecs/Kconfig b/sound/soc/codecs/Kconfig
+index f78ea2f86fa6..0c35cdfd4a47 100644
+--- a/sound/soc/codecs/Kconfig
++++ b/sound/soc/codecs/Kconfig
+@@ -179,6 +179,7 @@ config SND_SOC_ALL_CODECS
+ 	imply SND_SOC_PCM5102A
+ 	imply SND_SOC_PCM512x_I2C
+ 	imply SND_SOC_PCM512x_SPI
++	imply SND_SOC_PCM6240
+ 	imply SND_SOC_PEB2466
+ 	imply SND_SOC_RK3328
+ 	imply SND_SOC_RK817
+@@ -1422,6 +1423,15 @@ config SND_SOC_PCM512x_SPI
+ 	select SND_SOC_PCM512x
+ 	select REGMAP_SPI
+ 
++config SND_SOC_PCM6240
++	tristate "Texas Instruments PCM6240 Family Audio chips based on I2C"
++	depends on I2C
++	help
++	  Enable support for Texas Instruments PCM6240 Family Audio chips.
++	  Note the PCM6240 driver implements a flexible and configurable
++	  setting for register and filter coefficients, to one, two or
++	  even multiple PCM6240 Family Audio chips.
++
+ config SND_SOC_PEB2466
+ 	tristate "Infineon PEB2466 quad PCM codec"
+ 	depends on SPI
+diff --git a/sound/soc/codecs/Makefile b/sound/soc/codecs/Makefile
+index 7c075539dc47..5553155b843b 100644
+--- a/sound/soc/codecs/Makefile
++++ b/sound/soc/codecs/Makefile
+@@ -204,6 +204,7 @@ snd-soc-pcm5102a-objs := pcm5102a.o
+ snd-soc-pcm512x-objs := pcm512x.o
+ snd-soc-pcm512x-i2c-objs := pcm512x-i2c.o
+ snd-soc-pcm512x-spi-objs := pcm512x-spi.o
++snd-soc-pcm6240-objs := pcm6240.o
+ snd-soc-peb2466-objs := peb2466.o
+ snd-soc-rk3328-objs := rk3328_codec.o
+ snd-soc-rk817-objs := rk817_codec.o
+@@ -594,6 +595,7 @@ obj-$(CONFIG_SND_SOC_PCM5102A)	+= snd-soc-pcm5102a.o
+ obj-$(CONFIG_SND_SOC_PCM512x)	+= snd-soc-pcm512x.o
+ obj-$(CONFIG_SND_SOC_PCM512x_I2C)	+= snd-soc-pcm512x-i2c.o
+ obj-$(CONFIG_SND_SOC_PCM512x_SPI)	+= snd-soc-pcm512x-spi.o
++obj-$(CONFIG_SND_SOC_PCM6240)	+= snd-soc-pcm6240.o
+ obj-$(CONFIG_SND_SOC_PEB2466)	+= snd-soc-peb2466.o
+ obj-$(CONFIG_SND_SOC_RK3328)	+= snd-soc-rk3328.o
+ obj-$(CONFIG_SND_SOC_RK817)	+= snd-soc-rk817.o
 -- 
 2.34.1
 
