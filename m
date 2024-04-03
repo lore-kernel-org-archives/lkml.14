@@ -1,119 +1,130 @@
-Received: from smtpbgau2.qq.com (smtpbgau2.qq.com [54.206.34.216])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A88E14900F;
-	Wed,  3 Apr 2024 12:54:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.206.34.216
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14CF9146A9D
+	for <linux-kernel@vger.kernel.org>; Wed,  3 Apr 2024 12:56:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712148889; cv=none; b=OUXBnnmTn9hPCRNj8yv0oE2XW87uo2hb338t/23YAzVurpC+bANO+sA8UPNG1p9PakelgCtwYP6g5UTlgiqMNkh0LW+9W37nvmy8PMPcPlehiIkIoWzZHvHygMcQq6RfvVTLNLGxC0uOz9FBLjA9EBk63Kd71uibf9pIdEVkIG8=
+	t=1712149001; cv=none; b=PfOKu6NlpOVr8aNIdwWd0Ezi1Ehh5TZoHm/Hf+FMbO4Zm4wyfWaZdoQCRHrRGTmzGrRWRL3zBMpWRIvYS7NanxDxwa1La0ixXGFxpjzHhg+63J9743dd+DMuaoQwlrNyY7dlGQzYTEiUeS572S4kS6H9fB0Svxrk5zMmjFZWaZU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712148889; c=relaxed/simple;
-	bh=xXJvc27158uMzeJNX4bgx6mUDVSgnlq9ce9aZe5v3B4=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=IlYhUpU2w0C4JRLtPrXLij458ZEHLIltfTx0VH6eDn2MK7D/kDeza49HLXhKmxtppc8Vf8RydM4Ut9udDFOaXUKlbXA06Qd/U3U3J9ghKRYpPFEHIKwsVpnIiGDXqpjHPZlymczP0Gt2TvHlOomqxFzxHWuFm1bEoKmLwQ4KC5Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=shingroup.cn; spf=pass smtp.mailfrom=shingroup.cn; arc=none smtp.client-ip=54.206.34.216
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=shingroup.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=shingroup.cn
-X-QQ-mid: bizesmtpsz1t1712148785t9jh8zy
-X-QQ-Originating-IP: glNtj0eRp0IOBFLCOi1CaGqaaEumMkerNThHocu9b+k=
-Received: from localhost ( [112.0.147.175])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Wed, 03 Apr 2024 20:53:04 +0800 (CST)
-X-QQ-SSF: 01400000000000704000000A0000000
-X-QQ-FEAT: +ynUkgUhZJkR1+2Xpbw3pa6lG4d42cKOBYOKy4eBM/Jbqbkv0AiQwK85DK9n1
-	983cnBzJioQLx2jW5n10h586uD5pFDBsC+v12PpxJYaKBi3CSH/AmSm88+X9mOQQH8/QZ63
-	PG3ju17FiN2Dd4TWCF7X1iXJfg63o8upsKBrlHBlhEbSbLEySN06aN/oYGc5jgiBcG8X5Bp
-	1lABsa0QVpzkBNFCbrjCZcdBy7xoNDq1ADjdWQkMU0CNhITXi0yskRVq33PqVBthi6fTNSt
-	IzpNnzIqNNQRwXPQN80AGwyXXnm3YBgOIxP8o71LF5W4AFOgcKSD/GXhC0ne4Zx83dF2qUs
-	DVPirTGQv4Rbo7GV7MzZpG3r4bkNn+xF135c0YgkOHUZKhO9xWOsAz+OjtOg5jvd7rZuX1h
-	qA68Tfvh8S+vNUKQNWDDAAbW7BaVf2NZ
-X-QQ-GoodBg: 2
-X-BIZMAIL-ID: 17308809335922861107
-From: Dawei Li <dawei.li@shingroup.cn>
-To: will@kernel.org,
-	mark.rutland@arm.com,
-	yury.norov@gmail.com,
-	linux@rasmusvillemoes.dk
-Cc: xueshuai@linux.alibaba.com,
-	renyu.zj@linux.alibaba.com,
-	yangyicong@hisilicon.com,
-	jonathan.cameron@huawei.com,
-	andersson@kernel.org,
-	konrad.dybcio@linaro.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	linux-arm-msm@vger.kernel.org,
-	Dawei Li <dawei.li@shingroup.cn>
-Subject: [PATCH v2 10/10] perf/thunderx2: Avoid placing cpumask var on stack
-Date: Wed,  3 Apr 2024 20:51:09 +0800
-Message-Id: <20240403125109.2054881-11-dawei.li@shingroup.cn>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20240403125109.2054881-1-dawei.li@shingroup.cn>
-References: <20240403125109.2054881-1-dawei.li@shingroup.cn>
+	s=arc-20240116; t=1712149001; c=relaxed/simple;
+	bh=k75X6e+xXR/2CHetkCcWpWKqu9lH9n9uyWfcUV8by6c=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=L2CHaerYTKmKWZNX63IWb9Vay+ZezMwFieeG1/ghquQFq7FnPSTXN+SJuugwS0Mr7H6WcvkNoqwAP3blsirsuJwBPIQ2w9MaizN09zK4vDmEEFsazJ7vzhdgn2EyoGk2g2FLNYkdi7Uq21zQyrGkgOU0ic6cLYx3Bk20z4PM1xg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=fSZBEQOv; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fSZBEQOv"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1712148999;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=8yewPQMR0S+4mdQyXSXgCBzYxRYzMDeDenPXpOjBMmY=;
+	b=fSZBEQOvTc0wfYf0KXWHfNGI8sImRmBBDuHVj2nAs4CJ1LAudBlDctCdQx45y61a1zzeNd
+	v9euQ2ATcxDfxfKciRK5TdKspHEcJsTEr+blmT4vEe5rooEwHsJQIpzMRKKlOuStz6+60B
+	YfND0lCs7lROtGgzMjx5rgKx/E1YvPo=
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
+ [209.85.221.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-621-psCWXIyzOb2h_kKiSYNUhw-1; Wed, 03 Apr 2024 08:56:38 -0400
+X-MC-Unique: psCWXIyzOb2h_kKiSYNUhw-1
+Received: by mail-wr1-f70.google.com with SMTP id ffacd0b85a97d-33d8d208be9so4109359f8f.2
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Apr 2024 05:56:37 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712148997; x=1712753797;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=8yewPQMR0S+4mdQyXSXgCBzYxRYzMDeDenPXpOjBMmY=;
+        b=s9dtrFbBTKnIfhnPGIor2jonfsmvSL6fzUyMnSoCiSLJTVEmjVIu6GxlIEn7kkyyBD
+         v4H8smdXKhc9J948i3qckLoHSdBvtq0h6AncVQJwTzhZyuSlYLHir3d/79hA1Oi4CjKM
+         HRIdKd+EsvkZ+/wdIDHpYxMF5Nr2U1zYeNs3khkfFLtW8kZy0DUjpDkVRsE84Quh+Dsw
+         Yh6prDfps7U1+njwgYV37ZoY6qWcgn4eVY/mxbaVoFnL0DW6/QEF6G0k2GCohCbdc0gM
+         ysGtrVlBQh3d57wLDyn/XVzNMvlx0qfhm411RUHZJE0SnXm85+00V/nEs1iL89fCIGeD
+         XUsw==
+X-Forwarded-Encrypted: i=1; AJvYcCUj5Rg6MoL+sz8oFGzsqef/BnD+d8aE6jdcNhMsr5CjkZqKOqLZz9+gkQmjZz5CXuhiUb6Hg6oMgonMF8esef8dTuB8WAJ5gn02Q5kC
+X-Gm-Message-State: AOJu0YwjSN5o5oCCjGFUdk9ftLnNVGSee4CxuymQ/tKCPOVbRr5kkucQ
+	C0TOERYCUzy74RcgnwbucmL60MhsjplKMy0FfOebEHYfDjNZEAFvrjbkm5Yd7H8579WXupfchgC
+	TX9OjcPzSV2aKA1jiDMgM5h+i1q8bBZjV5VVpxhxWoIwkB7KNJmtAeOdv7E68pA8ctg5OlQzSwl
+	Txz76qutiK4xFZ3qoYLoJYot5AASdRnJRcvVHS
+X-Received: by 2002:a5d:6585:0:b0:343:8551:8d90 with SMTP id q5-20020a5d6585000000b0034385518d90mr2514213wru.34.1712148996811;
+        Wed, 03 Apr 2024 05:56:36 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFE6EvC96kkgT6mLgn0vUrYteEazg+ord6iBHG8W1WaPauUUkwzs1ek0iVVbDOhQrMvTDS6MXHEqaCEHyYWr0U=
+X-Received: by 2002:a5d:6585:0:b0:343:8551:8d90 with SMTP id
+ q5-20020a5d6585000000b0034385518d90mr2514173wru.34.1712148996414; Wed, 03 Apr
+ 2024 05:56:36 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-QQ-SENDSIZE: 520
-Feedback-ID: bizesmtpsz:shingroup.cn:qybglogicsvrgz:qybglogicsvrgz5a-1
+References: <20240329225835.400662-1-michael.roth@amd.com> <20240329225835.400662-13-michael.roth@amd.com>
+ <40382494-7253-442b-91a8-e80c38fb4f2c@redhat.com> <20240401231731.kjvse7m7oqni7uyg@amd.com>
+In-Reply-To: <20240401231731.kjvse7m7oqni7uyg@amd.com>
+From: Paolo Bonzini <pbonzini@redhat.com>
+Date: Wed, 3 Apr 2024 14:56:25 +0200
+Message-ID: <CABgObfYPT8yLvCDdc0B+4t4xCbk8deZg_G0_QVY_DcR_7--xSw@mail.gmail.com>
+Subject: Re: [PATCH v12 12/29] KVM: SEV: Add KVM_SEV_SNP_LAUNCH_FINISH command
+To: Michael Roth <michael.roth@amd.com>
+Cc: kvm@vger.kernel.org, linux-coco@lists.linux.dev, linux-mm@kvack.org, 
+	linux-crypto@vger.kernel.org, x86@kernel.org, linux-kernel@vger.kernel.org, 
+	tglx@linutronix.de, mingo@redhat.com, jroedel@suse.de, 
+	thomas.lendacky@amd.com, hpa@zytor.com, ardb@kernel.org, seanjc@google.com, 
+	vkuznets@redhat.com, jmattson@google.com, luto@kernel.org, 
+	dave.hansen@linux.intel.com, slp@redhat.com, pgonda@google.com, 
+	peterz@infradead.org, srinivas.pandruvada@linux.intel.com, 
+	rientjes@google.com, dovmurik@linux.ibm.com, tobin@ibm.com, bp@alien8.de, 
+	vbabka@suse.cz, kirill@shutemov.name, ak@linux.intel.com, tony.luck@intel.com, 
+	sathyanarayanan.kuppuswamy@linux.intel.com, alpergun@google.com, 
+	jarkko@kernel.org, ashish.kalra@amd.com, nikunj.dadhania@amd.com, 
+	pankaj.gupta@amd.com, liam.merwick@oracle.com, 
+	Brijesh Singh <brijesh.singh@amd.com>, Harald Hoyer <harald@profian.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-For CONFIG_CPUMASK_OFFSTACK=y kernel, explicit allocation of cpumask
-variable on stack is not recommended since it can cause potential stack
-overflow.
+On Tue, Apr 2, 2024 at 1:18=E2=80=AFAM Michael Roth <michael.roth@amd.com> =
+wrote:
+>
+> On Sat, Mar 30, 2024 at 09:41:30PM +0100, Paolo Bonzini wrote:
+> > On 3/29/24 23:58, Michael Roth wrote:
+> > >
+> > > +           /* Handle boot vCPU first to ensure consistent measuremen=
+t of initial state. */
+> > > +           if (!boot_vcpu_handled && vcpu->vcpu_id !=3D 0)
+> > > +                   continue;
+> > > +
+> > > +           if (boot_vcpu_handled && vcpu->vcpu_id =3D=3D 0)
+> > > +                   continue;
+> >
+> > Why was this not necessary for KVM_SEV_LAUNCH_UPDATE_VMSA?  Do we need =
+it
+> > now?
+>
+> I tried to find the original discussion for more context, but can't seem =
+to
+> locate it. But AIUI, there are cases where a VMM may create AP vCPUs earl=
+ier
+> than it does the BSP, in which case kvm_for_each_vcpu() might return an A=
+P
+> as it's first entry and cause that VMSA to get measured before, leading
+> to a different measurement depending on the creation ordering.
 
-Instead, kernel code should always use *cpumask_var API(s) to allocate
-cpumask var in config-neutral way, leaving allocation strategy to
-CONFIG_CPUMASK_OFFSTACK.
+I think that would be considered a bug in either the VMM or the
+"thing" that computes the measurement.
 
-But dynamic allocation in cpuhp's teardown callback is somewhat problematic
-for if allocation fails(which is unlikely but still possible):
-- If -ENOMEM is returned to caller, kernel crashes for non-bringup
-  teardown;
-- If callback pretends nothing happened and returns 0 to caller, it may
-  trap system into an in-consisitent/compromised state;
+If that hasn't been a problem for SEV-ES, I'd rather keep the code simple.
 
-Use newly-introduced cpumask_any_and_but() to address all issues above.
-It eliminates usage of temporary cpumask var in generic way, no matter how
-the cpumask var is allocated.
+> We could however limit the change to KVM_X86_SEV_ES_VM and
+> document that as part of KVM_SEV_INIT2, since there is similarly chance
+> for measurement changes their WRT to the new FPU/XSAVE sync'ing that was
+> added.
 
-Suggested-by: Mark Rutland <mark.rutland@arm.com>
-Signed-off-by: Dawei Li <dawei.li@shingroup.cn>
----
- drivers/perf/thunderx2_pmu.c | 10 +++-------
- 1 file changed, 3 insertions(+), 7 deletions(-)
+Hmm, I need to double check that the FPU/XSAVE syncing doesn't break
+existing measurements, too.
 
-diff --git a/drivers/perf/thunderx2_pmu.c b/drivers/perf/thunderx2_pmu.c
-index e16d10c763de..b3377b662ffc 100644
---- a/drivers/perf/thunderx2_pmu.c
-+++ b/drivers/perf/thunderx2_pmu.c
-@@ -932,9 +932,8 @@ static int tx2_uncore_pmu_online_cpu(unsigned int cpu,
- static int tx2_uncore_pmu_offline_cpu(unsigned int cpu,
- 		struct hlist_node *hpnode)
- {
--	int new_cpu;
- 	struct tx2_uncore_pmu *tx2_pmu;
--	struct cpumask cpu_online_mask_temp;
-+	unsigned int new_cpu;
- 
- 	tx2_pmu = hlist_entry_safe(hpnode,
- 			struct tx2_uncore_pmu, hpnode);
-@@ -945,11 +944,8 @@ static int tx2_uncore_pmu_offline_cpu(unsigned int cpu,
- 	if (tx2_pmu->hrtimer_callback)
- 		hrtimer_cancel(&tx2_pmu->hrtimer);
- 
--	cpumask_copy(&cpu_online_mask_temp, cpu_online_mask);
--	cpumask_clear_cpu(cpu, &cpu_online_mask_temp);
--	new_cpu = cpumask_any_and(
--			cpumask_of_node(tx2_pmu->node),
--			&cpu_online_mask_temp);
-+	new_cpu = cpumask_any_and_but(cpumask_of_node(tx2_pmu->node),
-+				      cpu_online_mask, cpu);
- 
- 	tx2_pmu->cpu = new_cpu;
- 	if (new_cpu >= nr_cpu_ids)
--- 
-2.27.0
+Paolo
 
