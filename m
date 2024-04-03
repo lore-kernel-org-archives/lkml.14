@@ -1,119 +1,103 @@
-Received: from anarch128.org (anarch128.org [23.253.174.110])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FA5915538C
-	for <linux-kernel@vger.kernel.org>; Wed,  3 Apr 2024 20:52:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=23.253.174.110
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CE7D1E493
+	for <linux-kernel@vger.kernel.org>; Wed,  3 Apr 2024 20:57:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712177562; cv=none; b=JlknZwdmmhpV+i3NMpC34x1/OgKndBrWEkJtjx/D96uQKeAou3il0gYrJlf3nUVP7rr0uO33T05IUSo3Xo/GG1LHul8kY9sSaaws4rISKzeGdeiJXzxTpZnmu90oulnVjc+IkJ+YW67vNQcjba5oZIJ8lhKhGar16UIN6sXT0L8=
+	t=1712177853; cv=none; b=I5P/Rmsp+dsup/CkMCnnB3pK5op35/mwk94THqLR3vKDSVAp1LAPHzsmUEWB9OCJfUPHi2GSdSQNC2mOAovNwYDtRDyvB3ej3BZgBUNiSIj48RUiDmldyntxabOXlpANhYiFxM/PFaOULC34P3OmW+jHj88UxBcBieDbDR7KKZw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712177562; c=relaxed/simple;
-	bh=AMc1I2TaKoVWjxsT9qjIO65Tk4eOlaXInyGoGKhCZD4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=CTgnuaL4npo5wlw9rQfBtt0bEs7F9YcIY8wVSPc8jMAUSEcApeQwZ9P+VbqB9zSxkJ1RyKZA+pbGYBVIRLGv254Oc8In3VXjpKxOmsKwfkvFhAi4nWA6cRorBubmQ/nYIUCKEI+YBoF8BSdv6SXNkmPgQfnvWc+zkI9Bx++TxVI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=metaparadigm.com; spf=pass smtp.mailfrom=metaparadigm.com; dkim=fail (2048-bit key) header.d=metaparadigm.com header.i=@metaparadigm.com header.b=nnBiZ33m reason="signature verification failed"; arc=none smtp.client-ip=23.253.174.110
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=metaparadigm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=metaparadigm.com
+	s=arc-20240116; t=1712177853; c=relaxed/simple;
+	bh=MtipjY1rhcZmd8ECzBFU2sU+RH7NZQPVwYxqI/OhKf4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=LlfAwYktW1kCGyhaihtk+5I6qc/84+ujXqveDHPP9MWzA21+nznngEo+b8p7wKqGJgNIV3QsqKHlp2QkrbvG0e7XiP4lfoA/UMdpeFljK7OgnvsuXjbnXmdvoROvNGxrj4i/X4jXX1qCT4sZFC5a/G3dZmtN1lrfs41LolhFn+4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=WTSw+Vf0; arc=none smtp.client-ip=209.85.218.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=metaparadigm.com header.i=@metaparadigm.com header.b="nnBiZ33m"
-Received: from [192.168.1.8] (default-rdns.vocus.co.nz [202.150.110.104] (may be forged))
-	(authenticated bits=0)
-	by anarch128.org (8.15.2/8.15.2/Debian-22) with ESMTPSA id 433KdslA381233
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
-	Wed, 3 Apr 2024 20:39:57 GMT
-Authentication-Results: anarch128.org;
-    auth=pass;
-    dkim=pass (2048-bit rsa key sha256) header.d=metaparadigm.com header.i=@metaparadigm.com header.b=nnBiZ33m header.a=rsa-sha256 header.s=100043;
-    x-return-mx=pass header.domain=metaparadigm.com policy.is_org=yes (MX Records found: mail.anarch128.org);
-    x-return-mx=pass smtp.domain=metaparadigm.com policy.is_org=yes (MX Records found: mail.anarch128.org)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=metaparadigm.com;
-	s=100043; t=1712176799;
-	bh=AMc1I2TaKoVWjxsT9qjIO65Tk4eOlaXInyGoGKhCZD4=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=nnBiZ33mwWx1v2SFfOue0yNpwV4LGKHxPLl2QNGdOj0v/xZN5uNgQ0mR4wWNzatSO
-	 sHVSc3t4YvJNC76KvLFCdYNd9CqpSeIG+4KotVeoXfADmuWn/gtOtSpMBCzCvOcKDm
-	 kFBBob/RQrel3c6umtwiwfrNw6BpUfDakdI3bF4QlyNLMejngTdXhD7LTVioCCWRMW
-	 6YLsji47JclD8XqCvwSYs2jQ7hBYG2PDgredtALIugMPbTvmTH0qfTOiPwDIWelmZE
-	 KzA75DuLY5UGo4IIQOubwjFReTjlili6YYuTQM7ki55Ef2euqFDzsJV3VSPnDQogRx
-	 m0THBL2lFS3Hw==
-Message-ID: <1a116a43-fd2e-4f03-8a17-75816fc62717@metaparadigm.com>
-Date: Thu, 4 Apr 2024 09:39:48 +1300
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="WTSw+Vf0"
+Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-a4644bde1d4so42305566b.3
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Apr 2024 13:57:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google; t=1712177849; x=1712782649; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=uhsxa7DGICZrrNGGAE/sbQuG+sYkkKkFMYbdqORjHlQ=;
+        b=WTSw+Vf0CUyumHgE80ABzcAxCFE8R2EKw/7qTfcEZHsduefBewh/Ro+m9YjK8UfeOT
+         Kd4kZc7Eny8T6HZuCwOuavrxrtlBDIknYfdyfEtY+s/14DzcY+OsINzRYJdQMYWot3JD
+         /S5Y70JYVSQ6IDIc/DVVVRbmLqftk1/MPzyQ0=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712177849; x=1712782649;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=uhsxa7DGICZrrNGGAE/sbQuG+sYkkKkFMYbdqORjHlQ=;
+        b=MOryqJPA2nyEZChsiL3Q8rynee/ne668Httmian82DYH9Dtj/zT1QbPp45xMi0L99G
+         IeBNYvP1hjCvgPowjNZ31yOefqMkaA5BYDRnypWr/jjc7vyI4HEgsBoeemPDLZbUDEGf
+         RVdGWtv5+86ik3BYYshJpCctaSMzzBsN90l5RuOAvkBaR+16zA6v5zcJ0l8e/LJWZfW1
+         3htLPTmv4b0BmxBJ8pzbAQ+pY3q/OH9cQIcKlCx7Nudh0eNQozLxbgfh9/oH7PReKFtO
+         9QBYGvE2NAYl9qTt0yqkzbGiygLEVFMvy94YGNkjQ7Anr0+3/Ch3YpCYTpmBpsCWHh1N
+         Rmqg==
+X-Forwarded-Encrypted: i=1; AJvYcCVlRxcfuibmvHbLXpgIiWGaXh9bszBm0j0/w9YAL56FylL1D0kP+ekE6+OKckeZhihHjtbwsiZKQdslYo5MurMKQo+y7fwMETit05n2
+X-Gm-Message-State: AOJu0YwzawKprlE6OTf2DnihrVnJfi5+o7ektmrayx8Wfce35EFcGC+q
+	ZNRwoavUumx+uSK65KE8IlXqOu1cbngYTXKSLVo3b3DaXQP3n0dgf43sGKD+0NlEBvVVaB70vEG
+	wpYmc5w==
+X-Google-Smtp-Source: AGHT+IE5HbSwhkBToqCqz9vEinVfEXjup+ekppXCr5pkcomNVUlkT4NeMnCZZyNvnycStxkWHREgxQ==
+X-Received: by 2002:a17:906:4fca:b0:a46:cc87:12f3 with SMTP id i10-20020a1709064fca00b00a46cc8712f3mr302256ejw.75.1712177848933;
+        Wed, 03 Apr 2024 13:57:28 -0700 (PDT)
+Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com. [209.85.208.47])
+        by smtp.gmail.com with ESMTPSA id wg1-20020a17090705c100b00a4e393b6349sm6627788ejb.5.2024.04.03.13.57.28
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 03 Apr 2024 13:57:28 -0700 (PDT)
+Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-56829f41f81so367191a12.2
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Apr 2024 13:57:28 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVTfltx5n2LwsJXCY1yM/AprKHEPT14HR2J19AR6EONttcbal4WdZ75R3xM7PQj+tV0As2xP5AYPDawrwoqoYfeEFanJwDUeIGVaDTL
+X-Received: by 2002:a17:907:2d8f:b0:a4e:2ad3:60ff with SMTP id
+ gt15-20020a1709072d8f00b00a4e2ad360ffmr339680ejc.47.1712177847931; Wed, 03
+ Apr 2024 13:57:27 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: user-space concurrent pipe buffer scheduler interactions
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Jens Axboe <axboe@kernel.dk>, Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>, linux-kernel@vger.kernel.org
 References: <969ccc0f-d909-4b45-908e-e98279777733@metaparadigm.com>
- <CAHk-=wj3khqjXnHmShPj+tZvC=SyUitTZ7BkDO-rqu_aCVPrXA@mail.gmail.com>
-Content-Language: en-US
-From: Michael Clark <michael@metaparadigm.com>
-Organization: Metaparadigm
-In-Reply-To: <CAHk-=wj3khqjXnHmShPj+tZvC=SyUitTZ7BkDO-rqu_aCVPrXA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+ <CAHk-=wj3khqjXnHmShPj+tZvC=SyUitTZ7BkDO-rqu_aCVPrXA@mail.gmail.com> <1a116a43-fd2e-4f03-8a17-75816fc62717@metaparadigm.com>
+In-Reply-To: <1a116a43-fd2e-4f03-8a17-75816fc62717@metaparadigm.com>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Wed, 3 Apr 2024 13:57:11 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wiOqTAX7nwQqHJ2Ti3dbxM-HrUJq3FD_Gjua5qW=QAoTg@mail.gmail.com>
+Message-ID: <CAHk-=wiOqTAX7nwQqHJ2Ti3dbxM-HrUJq3FD_Gjua5qW=QAoTg@mail.gmail.com>
+Subject: Re: user-space concurrent pipe buffer scheduler interactions
+To: Michael Clark <michael@metaparadigm.com>
+Cc: Jens Axboe <axboe@kernel.dk>, Ingo Molnar <mingo@redhat.com>, 
+	Peter Zijlstra <peterz@infradead.org>, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On 4/4/24 05:56, Linus Torvalds wrote:
-> On Tue, 2 Apr 2024 at 13:54, Michael Clark <michael@metaparadigm.com> wrote:
->>
->> I am working on a low latency cross-platform concurrent pipe buffer
->> using C11 threads and atomics.
-> 
-> You will never get good performance doing spinlocks in user space
-> unless you actually tell the scheduler about the spinlocks, and have
-> some way to actually sleep on contention.
-> 
-> Which I don't see you as having.
+On Wed, 3 Apr 2024 at 13:52, Michael Clark <michael@metaparadigm.com> wrote:
+>
+> On 4/4/24 05:56, Linus Torvalds wrote:
+> > On Tue, 2 Apr 2024 at 13:54, Michael Clark <michael@metaparadigm.com> wrote:
+> >>
+> >> I am working on a low latency cross-platform concurrent pipe buffer
+> >> using C11 threads and atomics.
+> >
+> > You will never get good performance doing spinlocks in user space
+> > unless you actually tell the scheduler about the spinlocks, and have
+> > some way to actually sleep on contention.
+> >
+> > Which I don't see you as having.
+>
+> We can work on this.
 
-We can work on this.
+It's been tried.
 
-So maybe it is possible to look at how many LOCK instructions were 
-retired in the last scheduler quantum ideally with retired-success, 
-retired-failed for interlocked-compare-and-swap. Maybe it is just a 
-performance counter and doesn't require perf tracing switched on?
+Nobody ever found a use-case that is sufficiently convincing, but see
+the write-up at
 
-Then you can probably make a queue of processes in lock contention but 
-the hard part is deducing who had contention with who. I will need to 
-think about this for a while. We know the latency when things are not 
-contended because these critical sections are usually small. It's about 
-~200-400ns and you can get these numbers in a loop at boot up.
+   https://lwn.net/Articles/944895/
 
-But I don't know how we can see spinning on acquires. It makes me think 
-that the early relaxed/acquire comparison before the LOCK op is bad. I 
-got a very minor performance boost but it would break the strategy I 
-just mentioned because we wouldn't have a LOCK CMPXCHG in our spin loop. 
-We would know for certain "that" process had a failed LOCK CMPXCHG.
+for a pointer to at least attempts.
 
-So I would need to delete this line and other lines like this:
-
-https://github.com/michaeljclark/cpipe/blob/13c0ad1a865b9cc0174fc8f61d76f37bdbf11d4d/include/buffer.h#L317
-
-I also want a user-space wrapper for futexes for a waitlist_t that 
-rechecks conditions and uses cond_timeout on old broken POSIX systems so 
-that we won't deadlock due to a missed wake-up. FreeBSD, macOS and 
-Windows are starting to look like they might have something we can use.
-
-WaitOnAddress in Windows has a compare not-equals, and supports 8, 16, 
-32, and 64 bit words, but when used to construct equals, which is what I 
-need, or less-than or greater-than it could suffer from thundering herd 
-if used in a decentralized way in user-space. Maybe we would need an 
-address waiter list for an address stashed in a CPU struct for the lead 
-waiter, then centrally recheck the condition and when appropriate 
-reschedule those sleeping in the queue for events on that address?
-
-Sorry I don't know how the Linux scheduler and futexes work internally.
-I just want to use this stuff in user-space. I want a POSIX waitlist_t.
-
-I am working on a tiny emulator for the Windows Hypervisor which is how 
-I justify the present "embedded" version which spins. This pipe buffer 
-is for a tiny test kernel to get rid of a janky lock around printf.
-
-- https://github.com/michaeljclark/emu
-
-Thanks,
-Michael.
+               Linus
