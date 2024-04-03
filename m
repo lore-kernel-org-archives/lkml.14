@@ -1,154 +1,112 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E21D85788B
-	for <linux-kernel@vger.kernel.org>; Wed,  3 Apr 2024 07:25:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0095C54BF9;
+	Wed,  3 Apr 2024 07:26:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712129137; cv=none; b=bkrBZppTk61a/DzP/nP7fmLJg0x71eg96XHGsBwzIE2GbBzAzrsU2V+e3t/qOouhdwTDecoOEnWWrDA20yOx1D6iKZEwe3aDUGoS73sblqctrzlMFTlEE5Brj7+gEZ2d0ZjG5ZL+JP3nqpVlj1YaPFUIx/yoSdGQzv4zBIcxijw=
+	t=1712129210; cv=none; b=kintW5nLGisJ3E4Se5SUmWE/KO29WO09E2FfAdR3IYMSKS4vyyqWDvZKDqIVlvzCGrxGSnhDhi6sKD/djzs2yag5zP/FVDiSmKStLvTYysdQZUVX6bUbu4va0r4+/YA1IE9piu3UyOolQRfpB/ijtG+9Q02qrcFOI3IID+ekbKU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712129137; c=relaxed/simple;
-	bh=TDdJ48dLCUTKzs7HsWggw5VnDEvxhN+2CybpDBCgj6g=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=URdGlVweSqIxhQzHh+w00ECqTC2uJhP3ERG83dRrcGjv3nqCt1JR+Ns2nYtyPpxV+TQSrwq42t7uVHwPaJ7QlhULCrB4fpKb+I8SQw2nAj9H3p+cs81nfNTRh8+GTQCBmE1E6EJjbgD/+v2+fA/OdvcyVMuTn0zQT1mVLrWHhG8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=BrMBw/y2; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=Qk53FNww; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	s=arc-20240116; t=1712129210; c=relaxed/simple;
+	bh=h73eG0u0YShaUH2j9win7hL7ENNiYpL6Iy/Qlt7wZHA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=in7JMEd2Uvzk/9Za7oHwsnh8Emk3c0v1ZbTnVsJHJYG1bAmqjSI5xKlmBvSxjrKZx0wAtZeq1NgUZ6b+Y6ZiLAO+Gt4KmqjEd9JuW6UoUlPjCup777+vjx3ZVRy4Mlkx8SvtpvnM1/7btEbuWyseU+VB7Io37o0Kh7I3EkxFrBw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Zxih+029; arc=none smtp.client-ip=209.85.208.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="BrMBw/y2";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="Qk53FNww"
-Received: from imap2.dmz-prg2.suse.org (imap2.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:98])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 2EB4034A82;
-	Wed,  3 Apr 2024 07:25:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1712129134; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=/RebLxOd0SLgMFmqgXlOCl+1mBGrTi8YMNEDZ3aS5lI=;
-	b=BrMBw/y296S+yDp5eEuAIEdehd9g8k5Y4UZFuYhZ8CbyeTHpohF5jBXnXOqszQZ7EjirSY
-	twp/EMr3hf8UVCMgk9fs4KKXmF+jx2GEjtbq/G8mMTQSxrfpQxrEumAcfxB60i8Vgf5Llq
-	vryJnhpZDoZAqqfXWZMIu7tWNx3cTbA=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1712129134;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=/RebLxOd0SLgMFmqgXlOCl+1mBGrTi8YMNEDZ3aS5lI=;
-	b=Qk53FNwwIt1w2w1juNT1iBf1eretN6pBw0m2pmx0NOAdoalY7TkmR5yr8d7d80c3gXEL/E
-	lUDa1aEtxpY04mDA==
-Authentication-Results: smtp-out1.suse.de;
-	dkim=none
-Received: from imap2.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap2.dmz-prg2.suse.org (Postfix) with ESMTPS id 164661331E;
-	Wed,  3 Apr 2024 07:25:34 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap2.dmz-prg2.suse.org with ESMTPSA
-	id lsojBW4EDWYGFwAAn2gu4w
-	(envelope-from <vbabka@suse.cz>); Wed, 03 Apr 2024 07:25:34 +0000
-Message-ID: <2cab01ce-7c5f-46d6-b8a4-c2a24c3f9a32@suse.cz>
-Date: Wed, 3 Apr 2024 09:25:33 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Zxih+029"
+Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-56e030624d1so960471a12.2;
+        Wed, 03 Apr 2024 00:26:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1712129207; x=1712734007; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:sender
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=y8gbtEBqWb/AkwR61G4KI9Q1rpsfxIg0StBFMmMIVEI=;
+        b=Zxih+029g7c7ZoJw78bRhRwSjA+wqklDZqYc+MwVNcq4lnEr8Wg6UjOeHwDugzB5TF
+         c9AH9sSbdJ7sg8EuBe0hJGjLZhj4FZOBmK/ReY4Q+YQZnSmDCpo5BmK3nN8R6a0jYFhT
+         MldKZYe3zK6IH7UK7bN7nRxljCWx3Y2q7fZ1YrSry2JpCy314XjvUNx+8Llmd2afmexE
+         z7+KUIn3iIFXeVL4f2aZ7qyQ0boEtx7N+wdvcZ6jWs+mN/TKbigOKrqv6BMyRR6M3Adn
+         TiW+Wy0hEW6vZ48fiu6yUpOiiutSMFW88a3FdDU49PQ+/3skWQWyex74XUsCKfPgsnt1
+         G6Ug==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712129207; x=1712734007;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:sender
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=y8gbtEBqWb/AkwR61G4KI9Q1rpsfxIg0StBFMmMIVEI=;
+        b=EzUmEgAwBlbw/7d8iOSIFSsWSGdpYin3AxRrOMeDMk9hZjVVmEHzM1y1Z6RlSfDq2D
+         rQbV1ime+GNfEQX7Dzs+NR8S6ZehvOggXbmvWGqCDsFeo3pNC5VIxk9woovj1gehQuOw
+         8qCyGC2YdJ544BvPnnRcowOqE6rTv0HH80Q3yFKNPuF/XUuhZ6N/uJOSe5UNPVcCdfPX
+         xKjyxJ2Ih2gn45L2RmbxchCFb+BUEr3/WR682U2bfBj7EKBXCamyu6OOkyioQqOVlI85
+         dMK2b+3nq1cDKf5Y6Ze+dzKYMkcA++y87796Efh7mkqJvC4c/KXbbYaLNousgi7ADcHX
+         dmfA==
+X-Forwarded-Encrypted: i=1; AJvYcCV7KBYnysRfcPEatrtY81t/eCn6+IBgmk1P5S6h2N/61wyK7YHlSu+y7kpTPiQqqFavpULHuotZ58TztK58FQpKOmnUet9U92IgTjgprBQRJcqqDLH5DeNRPS617NqbzdisEkHryNJRJfjdKMKDc58vokvcQUTldDwC
+X-Gm-Message-State: AOJu0YyWk0UsgehmIlTMK7cJAHl5jeGoFNnUzFaCB19ANKCjFWsXDn6P
+	TI2cvbhusWhJO8d3B9srPMnSWKhU89Z0KbnN6OLLVmrGk629kpyeu+iCeXby88Q=
+X-Google-Smtp-Source: AGHT+IFks+nIAsP739PPBv3VJz+PZVgG1YU/0oeyvSk5uzthzR4qBmu3iWi8OIBxQZkac7yJC3wANw==
+X-Received: by 2002:a50:d48d:0:b0:567:824:e36c with SMTP id s13-20020a50d48d000000b005670824e36cmr9866650edi.14.1712129206838;
+        Wed, 03 Apr 2024 00:26:46 -0700 (PDT)
+Received: from gmail.com (84-236-113-97.pool.digikabel.hu. [84.236.113.97])
+        by smtp.gmail.com with ESMTPSA id a17-20020a05640233d100b0056ded9bc62esm1515843edc.43.2024.04.03.00.26.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 03 Apr 2024 00:26:46 -0700 (PDT)
+Sender: Ingo Molnar <mingo.kernel.org@gmail.com>
+Date: Wed, 3 Apr 2024 09:26:44 +0200
+From: Ingo Molnar <mingo@kernel.org>
+To: patchwork-bot+netdevbpf@kernel.org, ast@kernel.org,
+	daniel@iogearbox.net
+Cc: Uros Bizjak <ubizjak@gmail.com>, x86@kernel.org, bpf@vger.kernel.org,
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+	ast@kernel.org, daniel@iogearbox.net
+Subject: Re: [PATCH RESEND bpf v2 0/2] x86/bpf: Fixes for the BPF JIT with
+ retbleed=stuff
+Message-ID: <Zg0EtEkIIA45cuPT@gmail.com>
+References: <20240401185821.224068-1-ubizjak@gmail.com>
+ <171203102833.24910.7566029980709800852.git-patchwork-notify@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 3/4] mm/slub: simplify get_partial_node()
-To: "Song, Xiongwei" <Xiongwei.Song@windriver.com>,
- "rientjes@google.com" <rientjes@google.com>, "cl@linux.com" <cl@linux.com>,
- "penberg@kernel.org" <penberg@kernel.org>,
- "iamjoonsoo.kim@lge.com" <iamjoonsoo.kim@lge.com>,
- "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
- "roman.gushchin@linux.dev" <roman.gushchin@linux.dev>,
- "42.hyeyoo@gmail.com" <42.hyeyoo@gmail.com>
-Cc: "linux-mm@kvack.org" <linux-mm@kvack.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "chengming.zhou@linux.dev" <chengming.zhou@linux.dev>
-References: <20240331021926.2732572-1-xiongwei.song@windriver.com>
- <20240331021926.2732572-4-xiongwei.song@windriver.com>
- <69089796-9a3b-41a1-9b7c-18c773b96aa2@suse.cz>
- <PH0PR11MB5192C3A3806D89D0CACC2CEEEC3D2@PH0PR11MB5192.namprd11.prod.outlook.com>
-Content-Language: en-US
-From: Vlastimil Babka <vbabka@suse.cz>
-In-Reply-To: <PH0PR11MB5192C3A3806D89D0CACC2CEEEC3D2@PH0PR11MB5192.namprd11.prod.outlook.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Spam-Flag: NO
-X-Rspamd-Action: no action
-X-Spamd-Result: default: False [0.49 / 50.00];
-	SUSPICIOUS_RECIPS(1.50)[];
-	BAYES_HAM(-0.71)[83.47%];
-	NEURAL_HAM_SHORT(-0.20)[-0.999];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	XM_UA_NO_VERSION(0.01)[];
-	MIME_TRACE(0.00)[0:+];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	TO_DN_SOME(0.00)[];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:98:from];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	TO_DN_EQ_ADDR_SOME(0.00)[];
-	ARC_NA(0.00)[];
-	FREEMAIL_TO(0.00)[windriver.com,google.com,linux.com,kernel.org,lge.com,linux-foundation.org,linux.dev,gmail.com];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	RCVD_TLS_ALL(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	R_DKIM_NA(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:98:from];
-	RCPT_COUNT_SEVEN(0.00)[11];
-	MID_RHS_MATCH_FROM(0.00)[];
-	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TAGGED_RCPT(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap2.dmz-prg2.suse.org:rdns,imap2.dmz-prg2.suse.org:helo]
-X-Spam-Level: 
-X-Spam-Score: 0.49
-X-Spamd-Bar: /
-X-Rspamd-Queue-Id: 2EB4034A82
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <171203102833.24910.7566029980709800852.git-patchwork-notify@kernel.org>
 
-On 4/3/24 2:37 AM, Song, Xiongwei wrote:
->> 
->> 
->> It could be tempting to use >= instead of > to achieve the same effect but
->> that would have unintended performance effects that would best be evaluated
->> separately.
-> 
-> I can run a test to measure Amean changes. But in terms of x86 assembly, there 
-> should not be extra  instructions with ">=".
-> 
-> Did a simple test, for ">=" it uses "jle" instruction, while "jl" instruction is used for ">".
-> No more instructions involved. So there should not be performance effects on x86.
 
-Right, I didn't mean the code of the test, but how the difference of the
-comparison affects how many cpu partial slabs would be put on the cpu
-partial list here.
+* patchwork-bot+netdevbpf@kernel.org <patchwork-bot+netdevbpf@kernel.org> wrote:
 
-> Thanks,
-> Xiongwei
+> Hello:
 > 
->> 
->> >
->> > +             put_cpu_partial(s, slab, 0);
->> > +             stat(s, CPU_PARTIAL_NODE);
->> > +             partial_slabs++;
->> > +
->> > +             if (partial_slabs > slub_get_cpu_partial(s) / 2)
->> > +                     break;
->> >       }
->> >       spin_unlock_irqrestore(&n->list_lock, flags);
->> >       return partial;
+> This series was applied to bpf/bpf.git (master)
+> by Alexei Starovoitov <ast@kernel.org>:
 > 
+> On Mon,  1 Apr 2024 20:55:28 +0200 you wrote:
+> > From: Joan Bruguera Micó <joanbrugueram@gmail.com>
+> > 
+> > Fixes two issues that cause kernels panic when using the BPF JIT with
+> > the call depth tracking / stuffing mitigation for Skylake processors
+> > (`retbleed=stuff`). Both issues can be triggered by running simple
+> > BPF programs (e.g. running the test suite should trigger both).
+> > 
+> > [...]
+> 
+> Here is the summary with links:
+>   - [RESEND,bpf,v2,1/2] x86/bpf: Fix IP after emitting call depth accounting
+>     https://git.kernel.org/bpf/bpf/c/9d98aa088386
+>   - [RESEND,bpf,v2,2/2] x86/bpf: Fix IP for relocating call depth accounting
+>     https://git.kernel.org/bpf/bpf/c/6a537453000a
 
+Just wondering, which kernel version is this targeted for?
+
+The bug is upstream as well, so a fix needs to be sent to Linus.
+
+I can pick all of this up into tip:x86/urgent, if that accelerates 
+things.
+
+Thanks,
+
+	Ingo
