@@ -1,78 +1,102 @@
-Received: from box.fidei.email (box.fidei.email [71.19.144.250])
+Received: from mail-108-mta117.mxroute.com (mail-108-mta117.mxroute.com [136.175.108.117])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83314149C68;
-	Wed,  3 Apr 2024 15:11:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=71.19.144.250
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0E0D14A0AA
+	for <linux-kernel@vger.kernel.org>; Wed,  3 Apr 2024 15:12:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=136.175.108.117
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712157077; cv=none; b=uRDL6zYqYytWimYypl8GkZACEtP+lqlWPRdCb8Cn9RYxKCBTWA6wIa2H1oxi1s/FVIYQQdNQQyTzQG64610quSlBv7Nj8NKzSpyAybgs+PGwDa/d7ovX8xqHWBe80/7YyPw+zpAqywIwBdAhKeq0u5X4Vm16ClWi9urxxPU5zBM=
+	t=1712157152; cv=none; b=o9AzvqSIhxOJG/CzXh5GAsTsrDje/nqV8ojA4O5GMO2P4Dlj+TdQn06BqXh9wMb3jboSN2b+mqO8CuLDwra4Rpm15WTHmjOEuoe8kYMFfuHad7LSQ8Nh3cxThYUR2eKMBNrZUqzCTheX9D1vtEGTmnkXWh4Zif/yNYP9zrFxWfE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712157077; c=relaxed/simple;
-	bh=Odp4+WIqG+c5wEGAPagzT5gQT9nbqeYbXQ72Yo9uYoU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=jZJr+0ZqewlybuZ4QE5pZl1pu1aqbZoZUgRZaYKOBvHi4gwMzLT3kTCB0qoJpABC35I/7cG29pGw9OcK+a582/SmzZDH2FnZJgeJDXCIJbwA25esOViIYa53uzTVYdNy/rc09cA76F9f9qlGn+OLfvU6IoSePwZHstU7qQxWHVY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=dorminy.me; spf=pass smtp.mailfrom=dorminy.me; dkim=pass (2048-bit key) header.d=dorminy.me header.i=@dorminy.me header.b=Teetk3dJ; arc=none smtp.client-ip=71.19.144.250
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=dorminy.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dorminy.me
+	s=arc-20240116; t=1712157152; c=relaxed/simple;
+	bh=3Laptewi9idxYAPvCcw03AREMUZKkgAIxYIhuwWtPu0=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=iIACN+FNhrCEr5XAQZjYvDFEylf0djBvyLAtuv0Wyk5/zRztPpPTiPjynC7+yVnj8yHM9DjyrhAowjoADzc85xoAavTi8/Hiq24qhZF0xlKAQqhdz13hwrJzZn409MlRjzwgk94K4sMNiESMeXDA+vTfJcKt+ez0vkjiccEjj+o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=luigi311.com; spf=pass smtp.mailfrom=luigi311.com; dkim=pass (2048-bit key) header.d=luigi311.com header.i=@luigi311.com header.b=PIxmbL3D; arc=none smtp.client-ip=136.175.108.117
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=luigi311.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=luigi311.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=dorminy.me header.i=@dorminy.me header.b="Teetk3dJ"
-Received: from authenticated-user (box.fidei.email [71.19.144.250])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits))
-	(No client certificate requested)
-	by box.fidei.email (Postfix) with ESMTPSA id 9E9A98068F;
-	Wed,  3 Apr 2024 11:11:12 -0400 (EDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=dorminy.me; s=mail;
-	t=1712157074; bh=Odp4+WIqG+c5wEGAPagzT5gQT9nbqeYbXQ72Yo9uYoU=;
-	h=Date:Subject:To:References:From:In-Reply-To:From;
-	b=Teetk3dJDqxv6IZpDiiE1yqMyVo5lpVBmpgKIoGsMvJlhe8wzCtov+FNZhHMh+u0n
-	 C/T7oYMSweYLdhjMkxpI6SH5+rA2lve24BIZK0OhqRuRHxjfIvhNWBDTPznhBLdSzL
-	 fc0Pdt0ULyDDbIMhpRN1H8L96QO+2HsyNsInfp/Pa5rIHZkOmjDSiW5LoEO/kyVYQ/
-	 H7wKdTnealHMtxs/uFpdatUzptr69ZSg1HxBKob5KrqVXE6plX3QCQ7bfA03wD1u5V
-	 FjDjF6goAehukPPNrJKmem+Xbg74zfrABmSH2VfH/I7WhoioqV3Xn2EhaWzKg7uaz5
-	 KXmaIVLa4y0ew==
-Message-ID: <2896ee5a-b381-45eb-abc0-54e914605e46@dorminy.me>
-Date: Wed, 3 Apr 2024 11:11:10 -0400
+	dkim=pass (2048-bit key) header.d=luigi311.com header.i=@luigi311.com header.b="PIxmbL3D"
+Received: from filter006.mxroute.com ([136.175.111.2] filter006.mxroute.com)
+ (Authenticated sender: mN4UYu2MZsgR)
+ by mail-108-mta117.mxroute.com (ZoneMTA) with ESMTPSA id 18ea4800b1a0003bea.010
+ for <linux-kernel@vger.kernel.org>
+ (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384);
+ Wed, 03 Apr 2024 15:07:18 +0000
+X-Zone-Loop: 4f2060f713ef438f40e8166628de97fb245224df4a7e
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=luigi311.com; s=x; h=Content-Transfer-Encoding:MIME-Version:References:
+	In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+	List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=OQd9ziTB3dSRjnJwf4kFBkxYgfp1dPLFgv0kI44LNjs=; b=PIxmbL3DJYG3DZ5zY61t55Hna6
+	3XyBgAtLjMvXuC4dPrLLTfbidR0eDGehPJ09CyohkU3/RGeKLI6jYbsS0koQACOFUF9wR+YrqHkBA
+	NKHFfCfyAtLo+UCz11lU0cuieftmGJwJnIZiqAZjO7Q+xo7KNW8K5acHp6dMT+NWGVqQKw4rpudP0
+	o7H/jlP1eDK9rClRel/7Cc6vhChiDowxCr5wDdSqzJrBkNCa8hwuOiALWjlh4wUPfY+3IiLMhN/9u
+	VK+fxTDLclC7l1YUwsnYPU5EkSx98GBNYRozVm/IA4QRmSG5w1fYJ60CpVzw17/w1LjPrvPLmnaFF
+	d2HtUckQ==;
+From: git@luigi311.com
+To: linux-media@vger.kernel.org
+Cc: dave.stevenson@raspberrypi.com,
+	jacopo.mondi@ideasonboard.com,
+	mchehab@kernel.org,
+	robh@kernel.org,
+	krzysztof.kozlowski+dt@linaro.org,
+	conor+dt@kernel.org,
+	shawnguo@kernel.org,
+	s.hauer@pengutronix.de,
+	kernel@pengutronix.de,
+	festevam@gmail.com,
+	sakari.ailus@linux.intel.com,
+	devicetree@vger.kernel.org,
+	imx@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	pavel@ucw.cz,
+	phone-devel@vger.kernel.org,
+	Luis Garcia <git@luigi311.com>
+Subject: [PATCH v3 01/25] media: i2c: imx258: Remove unused defines
+Date: Wed,  3 Apr 2024 09:03:30 -0600
+Message-ID: <20240403150355.189229-2-git@luigi311.com>
+In-Reply-To: <20240403150355.189229-1-git@luigi311.com>
+References: <20240403150355.189229-1-git@luigi311.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH v3 00/13] fiemap extension for more physical information
-Content-Language: en-US
-To: Gao Xiang <hsiangkao@linux.alibaba.com>, Jonathan Corbet
- <corbet@lwn.net>, Kent Overstreet <kent.overstreet@linux.dev>,
- Brian Foster <bfoster@redhat.com>, Chris Mason <clm@fb.com>,
- Josef Bacik <josef@toxicpanda.com>, David Sterba <dsterba@suse.com>,
- Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <chao@kernel.org>,
- Alexander Viro <viro@zeniv.linux.org.uk>,
- Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
- =?UTF-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>,
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-bcachefs@vger.kernel.org, linux-btrfs@vger.kernel.org,
- linux-f2fs-devel@lists.sourceforge.net, linux-fsdevel@vger.kernel.org,
- kernel-team@meta.com
-References: <cover.1712126039.git.sweettea-kernel@dorminy.me>
- <dce83785-af96-4ff8-9552-56d73b5daf98@linux.alibaba.com>
-From: Sweet Tea Dorminy <sweettea-kernel@dorminy.me>
-In-Reply-To: <dce83785-af96-4ff8-9552-56d73b5daf98@linux.alibaba.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Authenticated-Id: personal@luigi311.com
 
+From: Dave Stevenson <dave.stevenson@raspberrypi.com>
 
-> 
-> I'm not sure why here iomap was excluded technically or I'm missing some
-> previous comments?
-> 
-> 
-> Could you also make iomap support new FIEMAP physical extent information?
-> since compressed EROFS uses iomap FIEMAP interface to report compressed
-> extents ("z_erofs_iomap_report_ops") but there is no way to return
-> correct compressed lengths, that is unexpected.
-> 
+The IMX258_FLL_* defines are unused. Remove them.
 
-I'll add iomap support in v4, I'd skipped it since I was worried it'd be 
-an expansive additional part not necessary initially. Thank you for 
-noting it!
+Signed-off-by: Dave Stevenson <dave.stevenson@raspberrypi.com>
+Reviewed-by: Jacopo Mondi <jacopo.mondi@ideasonboard.com>
+Signed-off-by: Luis Garcia <git@luigi311.com>
+---
+ drivers/media/i2c/imx258.c | 6 ------
+ 1 file changed, 6 deletions(-)
 
-Sweet Tea
+diff --git a/drivers/media/i2c/imx258.c b/drivers/media/i2c/imx258.c
+index a577afb530b7..2dbafd21dd70 100644
+--- a/drivers/media/i2c/imx258.c
++++ b/drivers/media/i2c/imx258.c
+@@ -29,12 +29,6 @@
+ #define IMX258_VTS_30FPS_VGA		0x034c
+ #define IMX258_VTS_MAX			0xffff
+ 
+-/*Frame Length Line*/
+-#define IMX258_FLL_MIN			0x08a6
+-#define IMX258_FLL_MAX			0xffff
+-#define IMX258_FLL_STEP			1
+-#define IMX258_FLL_DEFAULT		0x0c98
+-
+ /* HBLANK control - read only */
+ #define IMX258_PPL_DEFAULT		5352
+ 
+-- 
+2.42.0
+
