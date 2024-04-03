@@ -1,192 +1,220 @@
-Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
+Received: from mail-io1-f71.google.com (mail-io1-f71.google.com [209.85.166.71])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC9D415351B
-	for <linux-kernel@vger.kernel.org>; Wed,  3 Apr 2024 18:22:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A1E81534F2
+	for <linux-kernel@vger.kernel.org>; Wed,  3 Apr 2024 18:23:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.71
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712168530; cv=none; b=XxAF8A2hAU00X7ZPKzDXkE1IG4+sUlKrXNE5c2HNvoRV8i+yHTr/xveWj62iJwZmHvTs+/T1+lkWLeejSPaFWwuRbblrFRVqNt59cepgzkqXis1642AT6ir30Jau8Bsg9dEDkAa04ltVfYQivykoZtOGqGldW9/qQnziNMX0gX8=
+	t=1712168609; cv=none; b=LHT0bvp00DoyxbLUq0s5LNjUd8uOn6f/qXQvA85dvp407/EqsfdhZ0/bwv8RtJKZIkt1duC62MF/eWuYMSqTl8Ehz3wqQiwNhIUVfaMMHudTrkmDUYJfBj0eY+WCbVfwpOR6VLdld3WcPbDsTquPoHrFZFcCmfbSID4UgXkXg60=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712168530; c=relaxed/simple;
-	bh=mPQ6aDx/DzkRZiI7UzFAti6c8odqszdQXKvBp/uj47A=;
-	h=Date:Subject:In-Reply-To:CC:From:To:Message-ID:Mime-Version:
-	 Content-Type; b=iKMKKQLp3s/vxlOn2hNK8wwHY9+hgHUSRv7Gvxerdc68K4kd22/0tjZKiuswAQYiS1QMKrn2CtXirFo4WLNSKWb+JfOx032oXfO+R3UCzoE+zd5s3Qyz8S+0ijFRM13jgqYARnTrOLq1Ph7dxrZ/Spe0nbEl3/wx+HD1Eom7sjs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dabbelt.com; spf=pass smtp.mailfrom=dabbelt.com; dkim=pass (2048-bit key) header.d=dabbelt-com.20230601.gappssmtp.com header.i=@dabbelt-com.20230601.gappssmtp.com header.b=WS1lcdtt; arc=none smtp.client-ip=209.85.214.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dabbelt.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dabbelt.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=dabbelt-com.20230601.gappssmtp.com header.i=@dabbelt-com.20230601.gappssmtp.com header.b="WS1lcdtt"
-Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-1e29328289eso949635ad.0
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Apr 2024 11:22:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=dabbelt-com.20230601.gappssmtp.com; s=20230601; t=1712168526; x=1712773326; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:to:from:cc
-         :in-reply-to:subject:date:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=b+6ScChiC8zS3o9tbiOgcc1DiBxz6xvmMgS5MbEqCVk=;
-        b=WS1lcdttwByvBL81FDxCR9c9ohzcIBrEwgU8WykpdmMwgb72x4x1Vq5CwVOtTW6qEL
-         /U4s/ibFdFNF+gwkTlu+OXDesuZwLTPsVYF+24swBnSk5MMBbTtWAZ+q+cf3tdExrjbZ
-         Xh/oaV/2YgirVkzL/ngg1aBit6RKOFJ4KoOSZX4puydzTZtUKZ9CTiB/6PF+tgqsmgiF
-         pMvSysELXIGSPttBEbRvph76C3mGHB8D57OZ43vUyPiy21tE/Ae+30tvmSNjFtN4cJbY
-         siv6Cnf+vLkrBVeQOECUd0FJLZUqla/oU10n1LpCE1z814xlNsddY0i/c6Cdn909/jAi
-         fBZQ==
+	s=arc-20240116; t=1712168609; c=relaxed/simple;
+	bh=9ZAfUM4Ih8PAKVbOYgGDM6fvh/L2tQk0e82atFHToLc=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=djTxXfzyDD6K36kqwvjRszO/anNjA5fxy5BhPAL5pEdSYPt9tKknLrhUZtUOV+8OQCo58zswg8eAllVRthBfQ9/H2hWbTgs56l/6e891ISOtMADx4M1ikiLp0T/WtTYyr5N97+fRuLtS3cnshZFnKJXuNPgWMCaBJm0VhPH43T8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.71
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f71.google.com with SMTP id ca18e2360f4ac-7cf265b30e2so16872939f.1
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Apr 2024 11:23:27 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712168526; x=1712773326;
-        h=content-transfer-encoding:mime-version:message-id:to:from:cc
-         :in-reply-to:subject:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=b+6ScChiC8zS3o9tbiOgcc1DiBxz6xvmMgS5MbEqCVk=;
-        b=YPhtcFo2EEMJt5D0ffBYln/MLJB7liWzAKKQnsVsGK79hYvn3jXyElRgAJmZukaCsA
-         aNhXdxBckuR9Q53V819KYaAlLBj1Ixgn/wMftSjkLCnnlGBM9uN/RMGzCaF1TdpNWkxo
-         m2WS9sYOluHTk3azt0AhKSzmvQTbchQEjGnW7Yds6gVlnpi4CdAJHZMFbHrpeZsxConp
-         dHfsltIaMKBckdt5nc7QCJ2kfBvaDkTrlynnygIa42wV5oeXZROs1LRyZ+fBSt964dZT
-         pY7e21cfUCoka3U/yZfwFM0w7CPZQZqA2znLWgSjmlrCkFiOh/tLo6nwdgZKs832ouNS
-         21vQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUJoO22kMwrjarf5ZYU0K9ByZxAI29JiT0XAQSrYF9lOueR60bAh+pc8kz+5zNTNu7UQy5eaBHxj/rbwuW6VyUpdZj6/S/BgKdchYTG
-X-Gm-Message-State: AOJu0YxytQMXciZPg46Sk8tILWF3DLXhHpM6LMMd47x/V6+M+Mb1hyar
-	om2iGTlfuJptx4jf7oaFF9LA3ZJJ47ttoUoGY3deLSFP5g9wOf8TIadDxNclFNo=
-X-Google-Smtp-Source: AGHT+IFlUXGV4chig6oJvZqV4vGOgLfE+s5gAYd5D5SfvJ7gnZEYS1RqOGC2YxcHgRm7Hvepr5Q2zg==
-X-Received: by 2002:a17:902:c14b:b0:1e0:a7c5:b5a5 with SMTP id 11-20020a170902c14b00b001e0a7c5b5a5mr67760plj.37.1712168525743;
-        Wed, 03 Apr 2024 11:22:05 -0700 (PDT)
-Received: from localhost ([192.184.165.199])
-        by smtp.gmail.com with ESMTPSA id c2-20020a170902d48200b001dd652ef8d6sm13572476plg.152.2024.04.03.11.22.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 03 Apr 2024 11:22:04 -0700 (PDT)
-Date: Wed, 03 Apr 2024 11:22:04 -0700 (PDT)
-X-Google-Original-Date: Wed, 03 Apr 2024 11:21:38 PDT (-0700)
-Subject:     Re: [PATCH v1 2/2] RISC-V: drop SOC_VIRT for ARCH_VIRT
-In-Reply-To: <20240305-stress-earflap-d7ddb8655a4d@spud>
-CC: linux-riscv@lists.infradead.org, Conor Dooley <conor@kernel.org>,
-  Conor Dooley <conor.dooley@microchip.com>, Paul Walmsley <paul.walmsley@sifive.com>, aou@eecs.berkeley.edu,
-  linux-kernel@vger.kernel.org, brendan.higgins@linux.dev, davidgow@google.com, rmoar@google.com,
-  Jason@zx2c4.com, shuah@kernel.org, linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com,
-  wireguard@lists.zx2c4.com, netdev@vger.kernel.org
-From: Palmer Dabbelt <palmer@dabbelt.com>
-To: Conor Dooley <conor@kernel.org>
-Message-ID: <mhng-170f61cd-c3b7-413b-8279-9d50d55dbebe@palmer-ri-x1c9>
+        d=1e100.net; s=20230601; t=1712168606; x=1712773406;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=LSqRu5v298RfSB0Z/j1bnkPaJO9LM9Ank65vu8EKmZQ=;
+        b=VbrDCotZChULldSQW5HuhfudlvKVShQmAlqHL+4cqs4z4NesQKJZ4O4+MZn7lRi1oN
+         kun8/nfD4NpwzWNu/PxjIp3WLahE/QD4ZmrLBhwhmB72KxA9zlCSW9eodcbfK2VlOb5c
+         NNLU7mPWzRiVMywoVGhp1AxDwW5J7VNo26RyKITUMf3hrStj/IaBNHVhoVEtM9p+RSdS
+         DcDDYPbmInCU1kEDiOBWie9j2GTPwrVHYLfhijWHA3ojDISrWbyvqFzBC/fv3Iw4pdkL
+         GPXe/GlzL49mTyJ9gs+7t4dXecgGSiI/egpyWov/MbStXEC6Xkwrmhl84nuATyIUGAA8
+         ApNg==
+X-Forwarded-Encrypted: i=1; AJvYcCUpWj2Rqw1V7PFqiowKUdwOXwmF3o9oA7rQ+PGJAiVxyPiCOHObpossEStTtnTczUNIVC5PbFUcfNui0h/aM1auk8gcLJZwMfR6CQKl
+X-Gm-Message-State: AOJu0YyNOOSdtZ4JY2Gs2kWYj/WkoGq18gk+f0cirgJajCHlcQjAY4ej
+	UnMV68u3RBB0QjOs2OzeG0bIpNifcjMYG4WZjOHhHRsp7soIou1G8A8zwqiKiHJI1L/lh3vOV0v
+	K7GEVnILp3YLhJGqdLP+Xs2zbdcnKvMNW+fMt8dzae3LWLAwSggro15g=
+X-Google-Smtp-Source: AGHT+IHW4ryJ74XFijYLrPEqALfrybmEmLpHsHpTQzHFv0O460XS7kSdwlUlOiOh6GAVuDL2HmpuW5RYLOLjwi98HEMXLWCygWQd
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (MHng)
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+MIME-Version: 1.0
+X-Received: by 2002:a05:6602:1347:b0:7cc:66b1:fa95 with SMTP id
+ i7-20020a056602134700b007cc66b1fa95mr11827iov.3.1712168606688; Wed, 03 Apr
+ 2024 11:23:26 -0700 (PDT)
+Date: Wed, 03 Apr 2024 11:23:26 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000098f75506153551a1@google.com>
+Subject: [syzbot] [kernfs?] possible deadlock in kernfs_fop_llseek
+From: syzbot <syzbot+9a5b0ced8b1bfb238b56@syzkaller.appspotmail.com>
+To: gregkh@linuxfoundation.org, linux-fsdevel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com, tj@kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Tue, 05 Mar 2024 10:37:06 PST (-0800), Conor Dooley wrote:
-> From: Conor Dooley <conor.dooley@microchip.com>
->
-> The ARCH_ and SOC_ versions of this symbol have persisted for quite a
-> while now in parallel. Generated .config files from previous LTS kernels
-> should have both. Finally remove SOC_VIRT and update all config files
-> using it.
->
-> Signed-off-by: Conor Dooley <conor.dooley@microchip.com>
-> ---
-> I had a 1.5 year old ack from Jason that I dropped due to the passage of
-> time.
->
-> CC: Paul Walmsley <paul.walmsley@sifive.com>
-> CC: Palmer Dabbelt <palmer@dabbelt.com>
-> CC: Albert Ou <aou@eecs.berkeley.edu>
-> CC: Brendan Higgins <brendan.higgins@linux.dev>
-> CC: David Gow <davidgow@google.com>
-> CC: Rae Moar <rmoar@google.com>
-> CC: "Jason A. Donenfeld" <Jason@zx2c4.com>
-> CC: Shuah Khan <shuah@kernel.org>
-> CC: linux-riscv@lists.infradead.org
-> CC: linux-kernel@vger.kernel.org
-> CC: linux-kselftest@vger.kernel.org
-> CC: kunit-dev@googlegroups.com
-> CC: wireguard@lists.zx2c4.com
-> CC: netdev@vger.kernel.org
-> ---
->  arch/riscv/Kconfig.socs                                    | 3 ---
->  arch/riscv/configs/defconfig                               | 2 +-
->  arch/riscv/configs/nommu_virt_defconfig                    | 2 +-
->  tools/testing/kunit/qemu_configs/riscv.py                  | 2 +-
->  tools/testing/selftests/wireguard/qemu/arch/riscv32.config | 2 +-
->  tools/testing/selftests/wireguard/qemu/arch/riscv64.config | 2 +-
->  6 files changed, 5 insertions(+), 8 deletions(-)
->
-> diff --git a/arch/riscv/Kconfig.socs b/arch/riscv/Kconfig.socs
-> index e85ffb63c48d..dcbfb659839c 100644
-> --- a/arch/riscv/Kconfig.socs
-> +++ b/arch/riscv/Kconfig.socs
-> @@ -52,9 +52,6 @@ config ARCH_THEAD
->  	  This enables support for the RISC-V based T-HEAD SoCs.
->
->  config ARCH_VIRT
-> -	def_bool SOC_VIRT
-> -
-> -config SOC_VIRT
->  	bool "QEMU Virt Machine"
->  	select CLINT_TIMER if RISCV_M_MODE
->  	select POWER_RESET
-> diff --git a/arch/riscv/configs/defconfig b/arch/riscv/configs/defconfig
-> index ab3bab313d56..8d46a9137b1e 100644
-> --- a/arch/riscv/configs/defconfig
-> +++ b/arch/riscv/configs/defconfig
-> @@ -32,7 +32,7 @@ CONFIG_ARCH_SOPHGO=y
->  CONFIG_SOC_STARFIVE=y
->  CONFIG_ARCH_SUNXI=y
->  CONFIG_ARCH_THEAD=y
-> -CONFIG_SOC_VIRT=y
-> +CONFIG_ARCH_VIRT=y
->  CONFIG_SMP=y
->  CONFIG_HOTPLUG_CPU=y
->  CONFIG_PM=y
-> diff --git a/arch/riscv/configs/nommu_virt_defconfig b/arch/riscv/configs/nommu_virt_defconfig
-> index b794e2f8144e..de8143d1f738 100644
-> --- a/arch/riscv/configs/nommu_virt_defconfig
-> +++ b/arch/riscv/configs/nommu_virt_defconfig
-> @@ -24,7 +24,7 @@ CONFIG_EXPERT=y
->  CONFIG_SLUB=y
->  CONFIG_SLUB_TINY=y
->  # CONFIG_MMU is not set
-> -CONFIG_SOC_VIRT=y
-> +CONFIG_ARCH_VIRT=y
->  CONFIG_NONPORTABLE=y
->  CONFIG_SMP=y
->  CONFIG_CMDLINE="root=/dev/vda rw earlycon=uart8250,mmio,0x10000000,115200n8 console=ttyS0"
-> diff --git a/tools/testing/kunit/qemu_configs/riscv.py b/tools/testing/kunit/qemu_configs/riscv.py
-> index 12a1d525978a..c87758030ff7 100644
-> --- a/tools/testing/kunit/qemu_configs/riscv.py
-> +++ b/tools/testing/kunit/qemu_configs/riscv.py
-> @@ -13,7 +13,7 @@ if not os.path.isfile(OPENSBI_PATH):
->
->  QEMU_ARCH = QemuArchParams(linux_arch='riscv',
->  			   kconfig='''
-> -CONFIG_SOC_VIRT=y
-> +CONFIG_ARCH_VIRT=y
->  CONFIG_SERIAL_8250=y
->  CONFIG_SERIAL_8250_CONSOLE=y
->  CONFIG_SERIAL_OF_PLATFORM=y
-> diff --git a/tools/testing/selftests/wireguard/qemu/arch/riscv32.config b/tools/testing/selftests/wireguard/qemu/arch/riscv32.config
-> index 2fc36efb166d..2500eaa9b469 100644
-> --- a/tools/testing/selftests/wireguard/qemu/arch/riscv32.config
-> +++ b/tools/testing/selftests/wireguard/qemu/arch/riscv32.config
-> @@ -2,7 +2,7 @@ CONFIG_NONPORTABLE=y
->  CONFIG_ARCH_RV32I=y
->  CONFIG_MMU=y
->  CONFIG_FPU=y
-> -CONFIG_SOC_VIRT=y
-> +CONFIG_ARCH_VIRT=y
->  CONFIG_SERIAL_8250=y
->  CONFIG_SERIAL_8250_CONSOLE=y
->  CONFIG_SERIAL_OF_PLATFORM=y
-> diff --git a/tools/testing/selftests/wireguard/qemu/arch/riscv64.config b/tools/testing/selftests/wireguard/qemu/arch/riscv64.config
-> index dc266f3b1915..29a67ac67766 100644
-> --- a/tools/testing/selftests/wireguard/qemu/arch/riscv64.config
-> +++ b/tools/testing/selftests/wireguard/qemu/arch/riscv64.config
-> @@ -1,7 +1,7 @@
->  CONFIG_ARCH_RV64I=y
->  CONFIG_MMU=y
->  CONFIG_FPU=y
-> -CONFIG_SOC_VIRT=y
-> +CONFIG_ARCH_VIRT=y
->  CONFIG_SERIAL_8250=y
->  CONFIG_SERIAL_8250_CONSOLE=y
->  CONFIG_SERIAL_OF_PLATFORM=y
+Hello,
 
-Acked-by: Palmer Dabbelt <palmer@rivosinc.com>
+syzbot found the following issue on:
+
+HEAD commit:    fe46a7dd189e Merge tag 'sound-6.9-rc1' of git://git.kernel..
+git tree:       upstream
+console+strace: https://syzkaller.appspot.com/x/log.txt?x=136eb2f6180000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=4d90a36f0cab495a
+dashboard link: https://syzkaller.appspot.com/bug?extid=9a5b0ced8b1bfb238b56
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=17f1d93d180000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=15c38139180000
+
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/72ab73815344/disk-fe46a7dd.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/2d6d6b0d7071/vmlinux-fe46a7dd.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/48e275e5478b/bzImage-fe46a7dd.xz
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+9a5b0ced8b1bfb238b56@syzkaller.appspotmail.com
+
+======================================================
+WARNING: possible circular locking dependency detected
+6.8.0-syzkaller-08951-gfe46a7dd189e #0 Not tainted
+------------------------------------------------------
+syz-executor250/5062 is trying to acquire lock:
+ffff888022c36888 (&of->mutex){+.+.}-{3:3}, at: kernfs_fop_llseek+0x7e/0x2a0 fs/kernfs/file.c:867
+
+but task is already holding lock:
+ffff88807edeadd8 (&ovl_i_lock_key[depth]){+.+.}-{3:3}, at: ovl_inode_lock fs/overlayfs/overlayfs.h:649 [inline]
+ffff88807edeadd8 (&ovl_i_lock_key[depth]){+.+.}-{3:3}, at: ovl_llseek+0x26b/0x470 fs/overlayfs/file.c:214
+
+which lock already depends on the new lock.
+
+
+the existing dependency chain (in reverse order) is:
+
+-> #2 (&ovl_i_lock_key[depth]){+.+.}-{3:3}:
+       lock_acquire+0x1e4/0x530 kernel/locking/lockdep.c:5754
+       __mutex_lock_common kernel/locking/mutex.c:608 [inline]
+       __mutex_lock+0x136/0xd70 kernel/locking/mutex.c:752
+       ovl_inode_lock_interruptible fs/overlayfs/overlayfs.h:654 [inline]
+       ovl_nlink_start+0xdc/0x390 fs/overlayfs/util.c:1162
+       ovl_do_remove+0x1fa/0xd90 fs/overlayfs/dir.c:893
+       vfs_rmdir+0x367/0x4c0 fs/namei.c:4209
+       do_rmdir+0x3b5/0x580 fs/namei.c:4268
+       __do_sys_rmdir fs/namei.c:4287 [inline]
+       __se_sys_rmdir fs/namei.c:4285 [inline]
+       __x64_sys_rmdir+0x49/0x60 fs/namei.c:4285
+       do_syscall_64+0xfb/0x240
+       entry_SYSCALL_64_after_hwframe+0x6d/0x75
+
+-> #1 (&ovl_i_mutex_dir_key[depth]){++++}-{3:3}:
+       lock_acquire+0x1e4/0x530 kernel/locking/lockdep.c:5754
+       down_read+0xb1/0xa40 kernel/locking/rwsem.c:1526
+       inode_lock_shared include/linux/fs.h:803 [inline]
+       lookup_slow+0x45/0x70 fs/namei.c:1708
+       walk_component+0x2e1/0x410 fs/namei.c:2004
+       lookup_last fs/namei.c:2461 [inline]
+       path_lookupat+0x16f/0x450 fs/namei.c:2485
+       filename_lookup+0x256/0x610 fs/namei.c:2514
+       kern_path+0x35/0x50 fs/namei.c:2622
+       lookup_bdev+0xc5/0x290 block/bdev.c:1072
+       resume_store+0x1a0/0x710 kernel/power/hibernate.c:1235
+       kernfs_fop_write_iter+0x3a4/0x500 fs/kernfs/file.c:334
+       call_write_iter include/linux/fs.h:2108 [inline]
+       new_sync_write fs/read_write.c:497 [inline]
+       vfs_write+0xa84/0xcb0 fs/read_write.c:590
+       ksys_write+0x1a0/0x2c0 fs/read_write.c:643
+       do_syscall_64+0xfb/0x240
+       entry_SYSCALL_64_after_hwframe+0x6d/0x75
+
+-> #0 (&of->mutex){+.+.}-{3:3}:
+       check_prev_add kernel/locking/lockdep.c:3134 [inline]
+       check_prevs_add kernel/locking/lockdep.c:3253 [inline]
+       validate_chain+0x18cb/0x58e0 kernel/locking/lockdep.c:3869
+       __lock_acquire+0x1346/0x1fd0 kernel/locking/lockdep.c:5137
+       lock_acquire+0x1e4/0x530 kernel/locking/lockdep.c:5754
+       __mutex_lock_common kernel/locking/mutex.c:608 [inline]
+       __mutex_lock+0x136/0xd70 kernel/locking/mutex.c:752
+       kernfs_fop_llseek+0x7e/0x2a0 fs/kernfs/file.c:867
+       ovl_llseek+0x314/0x470 fs/overlayfs/file.c:218
+       vfs_llseek fs/read_write.c:289 [inline]
+       ksys_lseek fs/read_write.c:302 [inline]
+       __do_sys_lseek fs/read_write.c:313 [inline]
+       __se_sys_lseek fs/read_write.c:311 [inline]
+       __x64_sys_lseek+0x153/0x1e0 fs/read_write.c:311
+       do_syscall_64+0xfb/0x240
+       entry_SYSCALL_64_after_hwframe+0x6d/0x75
+
+other info that might help us debug this:
+
+Chain exists of:
+  &of->mutex --> &ovl_i_mutex_dir_key[depth] --> &ovl_i_lock_key[depth]
+
+ Possible unsafe locking scenario:
+
+       CPU0                    CPU1
+       ----                    ----
+  lock(&ovl_i_lock_key[depth]);
+                               lock(&ovl_i_mutex_dir_key[depth]);
+                               lock(&ovl_i_lock_key[depth]);
+  lock(&of->mutex);
+
+ *** DEADLOCK ***
+
+1 lock held by syz-executor250/5062:
+ #0: ffff88807edeadd8 (&ovl_i_lock_key[depth]){+.+.}-{3:3}, at: ovl_inode_lock fs/overlayfs/overlayfs.h:649 [inline]
+ #0: ffff88807edeadd8 (&ovl_i_lock_key[depth]){+.+.}-{3:3}, at: ovl_llseek+0x26b/0x470 fs/overlayfs/file.c:214
+
+stack backtrace:
+CPU: 1 PID: 5062 Comm: syz-executor250 Not tainted 6.8.0-syzkaller-08951-gfe46a7dd189e #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 03/27/2024
+Call Trace:
+ <TASK>
+ __dump_stack lib/dump_stack.c:88 [inline]
+ dump_stack_lvl+0x241/0x360 lib/dump_stack.c:114
+ check_noncircular+0x36a/0x4a0 kernel/locking/lockdep.c:2187
+ check_prev_add kernel/locking/lockdep.c:3134 [inline]
+ check_prevs_add kernel/locking/lockdep.c:3253 [inline]
+ validate_chain+0x18cb/0x58e0 kernel/locking/lockdep.c:3869
+ __lock_acquire+0x1346/0x1fd0 kernel/locking/lockdep.c:5137
+ lock_acquire+0x1e4/0x530 kernel/locking/lockdep.c:5754
+ __mutex_lock_common kernel/locking/mutex.c:608 [inline]
+ __mutex_lock+0x136/0xd70 kernel/locking/mutex.c:752
+ kernfs_fop_llseek+0x7e/0x2a0 fs/kernfs/file.c:867
+ ovl_llseek+0x314/0x470 fs/overlayfs/file.c:218
+ vfs_llseek fs/read_write.c:289 [inline]
+ ksys_lseek fs/read_write.c:302 [inline]
+ __do_sys_lseek fs/read_write.c:313 [inline]
+ __se_sys_lseek fs/read_write.c:311 [inline]
+ __x64_sys_lseek+0x153/0x1e0 fs/read_write.c:311
+ do_syscall_64+0xfb/0x240
+ entry_SYSCALL_64_after_hwframe+0x6d/0x75
+RIP: 0033:0x7f0e2bdfd219
+Code: 48 83 c4 28 c3 e8 67 17 00 00 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b8 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007ffd2f80f3f8 EFLAGS: 00000246 ORIG_RAX: 0000000000000008
+RAX: ffffffffffffffda RBX: 00007ffd2f80f400 RCX: 00007f0e2bdfd219
+RDX: 0000000000000003 RSI: 0000000000000000 RDI: 0000000000000005
+RBP: 00007ffd2f80f408 R08: 00007f0e2bdca000 R09: 00007f0e2bdca000
+R10: 00007f0e2bdca000 R11: 0000000000000246 R12: 0000000000000000
+R13: 00007ffd2f80f668 R14: 0000000000000001 R15: 0000000000000001
+
+
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
+
+If you want syzbot to run the reproducer, reply with:
+#syz test: git://repo/address.git branch-or-commit-hash
+If you attach or paste a git patch, syzbot will apply it before testing.
+
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
