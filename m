@@ -1,85 +1,136 @@
-Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com [209.85.167.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A943D152521
-	for <linux-kernel@vger.kernel.org>; Wed,  3 Apr 2024 17:13:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C552152505;
+	Wed,  3 Apr 2024 17:13:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712164415; cv=none; b=DkVSV8OKU3YYDqMX9YrePdRXBFwOnbX7l/9TMYEf1TqjzCHJiSe208IcqmYixWjTAfDzcDmoTL4sDQRUWsOn3DceWEZXbZ565obYPWxGDAR2x3Gzz8OsODl78wWNFtVrYVJW/0GlmEXhPY3xuVvd6ZT9kjUuS93x2iW8fHYlUXk=
+	t=1712164437; cv=none; b=FX97sW5gC79mLiTBq9I1WEGbsnAymgNbX0tBiT7v7v5+iJ8Z/KjXWPHc+W8TQA0w+c3LDCMEx/T7wsqgh5soTJOHYoUtFnMZCZzsXZB+DF5IX4ZNdIfEXyxNh8KRfI9klHVWSk0JxHBnV6lRVDS5Fy9VYbM937c7NbRsoIWI0kw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712164415; c=relaxed/simple;
-	bh=ATkEd5SFVajpuoZ2rqVnvccmk3MpJlIfcLl6fpKsCsU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=iF7goRcWU9Lca28Mfotojc1vdwsLOd2Ki+o3TWyHOLoquwsUk7k+ae1LcWt/6+FIngcTmY0H7HApnGmEY4HAXY1ToF15P9oVRy33tXPj8rp/sDppO5yO+wuIb60SLtzdeIYuFz282T6iewsQhd95GhjLs/TIetbwMfAxStfCWCw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=Qu28Gqe/; arc=none smtp.client-ip=209.85.167.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1712164437; c=relaxed/simple;
+	bh=TNkWDibBTEIwV1X2Lgomv9lI/EaSLAXMzptGvnPP67I=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=MQfIc961MFSqIlgqYfdXDKJFANl6MPvGr9n0Sp5PNYGNIrj5mV0O093NLBg8EZTiHvbaeJ/PWKKK1tO2CcqnJrVrXpRZlqjbp2dHAS6Nj/NbEsEYT4wyi566FfkRviEAFUjoiTwscNhehFOs7eJ+CM52jvS7a+XJRR+mopm8cy4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dULEcOKS; arc=none smtp.client-ip=198.175.65.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="Qu28Gqe/"
-Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-516c403cc46so152211e87.3
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Apr 2024 10:13:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1712164411; x=1712769211; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=1h8tWfpp+qoRNsUGmPIOTJfrPR4EipvLdehDBLGG8i4=;
-        b=Qu28Gqe/qV2lMqxfGt7VyaDiMDck2eIswRVZwU3jf2zlOubuClbSMa6XxR/3t/Rtcn
-         wMGBsFsyrCvy8AAF/FF/gI4/PTQJbkbp9BqbXthbrgMsMJc7EyhdBb48GRju8r4zaa7D
-         40XauIHXHOrwRMYyg8ny9Dz/IqDVAcXStv5wI=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712164411; x=1712769211;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=1h8tWfpp+qoRNsUGmPIOTJfrPR4EipvLdehDBLGG8i4=;
-        b=HhHChCERekf37xYhQ0vRNz9yUHaIiSghiVjubsxDrviN4DFBElFPmJktwSLhT0+lcg
-         ASUrcF3v0WTCbQBexECB7wo9RyYIwTZFKrlWw6AheOZZTffrq4ka5gl1axgwiciBMIYq
-         859cNf3Th5vXEMktJ6xNCziQKd3XHJnetJMbi8XCPAbZzrhpYW7E7+Z5uj4acOHGzhD/
-         x3LvbE7DnsMwCgUsdxDxRvbXqk2/3pdLoaZcJJzKN4fMge33WijVLeAusE7kjRplxjud
-         3v2BYPUKRRQC1V72IJvwF1GYV+BzbQJP1Z3paHF/0AIINjbZjbYHcUqZzjaaryzluan8
-         OyIw==
-X-Forwarded-Encrypted: i=1; AJvYcCV7s9doRWtIrxY/14AKO6HyyAuve7vBkjWYv69DkkBVplH/ATSA8k7mCv4SmCO9JDro4xX3da+ja1t9ZP2NQIG6Y3wTze/IPMlM7RRy
-X-Gm-Message-State: AOJu0YyLjkAkjHqtGFV9W/+L4dWrM6bxOMiIos1dVgd7kGQhPsplIRJs
-	NsjO3d+3JLwPioHpF29jt6dFttXkHS+krJg9qEwQSgY4qzGp0t9NRTEXLevDsz69bvPq41UGk1g
-	c8gqznQ==
-X-Google-Smtp-Source: AGHT+IH5ULaQgikbBB3iS4+hTaY53SODh0KALXeaa8kK+GbVRLjP9pBQLDsGkY4ranFpRs1defpPbg==
-X-Received: by 2002:a19:8c5d:0:b0:516:a4f1:d01a with SMTP id i29-20020a198c5d000000b00516a4f1d01amr93482lfj.53.1712164411561;
-        Wed, 03 Apr 2024 10:13:31 -0700 (PDT)
-Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com. [209.85.167.50])
-        by smtp.gmail.com with ESMTPSA id q27-20020a19431b000000b005139c3c584bsm2094955lfa.241.2024.04.03.10.13.31
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 03 Apr 2024 10:13:31 -0700 (PDT)
-Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-516c403cc46so152136e87.3
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Apr 2024 10:13:31 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVqFkj5lqfTlr99VUpt23f0LFBgq+R/11zBJjztfEWlrYi+TwdsQWwe+0QRld46YxqEQeDB7EIyMu3eWdUQmKOyLqzVYChm8RrGQ/z8
-X-Received: by 2002:ac2:551c:0:b0:515:acda:77f0 with SMTP id
- j28-20020ac2551c000000b00515acda77f0mr110424lfk.29.1712164410669; Wed, 03 Apr
- 2024 10:13:30 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dULEcOKS"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1712164437; x=1743700437;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=TNkWDibBTEIwV1X2Lgomv9lI/EaSLAXMzptGvnPP67I=;
+  b=dULEcOKS15LRXC6fQzjUeQWAqewiEPRD9Ag4DpePk1CKg8IEDsL2kJBl
+   2P1/g3F+RRxq6UXXVN0zCmdXecH6RBGfDXFunoNN3USdYJqxHufC6Ludl
+   U6YXTfvj5Q0RGyeGw8jP6PWH6BLER3nuwfus2NxrzrLoHb2kYw1LlbZC/
+   mzZdkQb8+9ui7JaZhC/Qy1i9mN/KnHFdyozXHVnACLtaQNNVKgoDU6kOx
+   DYCf0ZqMPIHWbUXcVmPZsi7xGqYu01h2FNF6wxJFSRyuRzsVHYrjFIzTw
+   jGmb1SGufGb0EpR3khxgx0CHXkLEAMC962nT3jlKSgnwYEZyKfnvGnopu
+   w==;
+X-CSE-ConnectionGUID: CAl+pwicSgGAkq/p+7542w==
+X-CSE-MsgGUID: qFylQ2p5QSKisEvVjowDNw==
+X-IronPort-AV: E=McAfee;i="6600,9927,11033"; a="7529370"
+X-IronPort-AV: E=Sophos;i="6.07,177,1708416000"; 
+   d="scan'208";a="7529370"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2024 10:13:56 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,11033"; a="915189030"
+X-IronPort-AV: E=Sophos;i="6.07,177,1708416000"; 
+   d="scan'208";a="915189030"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.72.54])
+  by fmsmga002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2024 10:13:52 -0700
+Received: from andy by smile with local (Exim 4.97)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1rs4BK-00000001Ba4-13lW;
+	Wed, 03 Apr 2024 20:13:50 +0300
+Date: Wed, 3 Apr 2024 20:13:50 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Mark Brown <broonie@kernel.org>
+Cc: linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	Daniel Mack <daniel@zonque.org>,
+	Haojian Zhuang <haojian.zhuang@gmail.com>,
+	Robert Jarzmik <robert.jarzmik@free.fr>,
+	Russell King <linux@armlinux.org.uk>, Arnd Bergmann <arnd@arndb.de>
+Subject: Re: (subset) [PATCH v2 0/9] spi: pxa2xx: Drop linux/spi/pxa2xx_spi.h
+Message-ID: <Zg2OTvXCUhsk4KVr@smile.fi.intel.com>
+References: <20240327193138.2385910-1-andriy.shevchenko@linux.intel.com>
+ <171167575036.187521.17547262230962160149.b4-ty@kernel.org>
+ <Zg04cWhT_Dl6AUik@smile.fi.intel.com>
+ <b7ac20d0-ca45-4e65-92ff-ddf84da6645a@sirena.org.uk>
+ <Zg1cAHEkhIf2vpwJ@smile.fi.intel.com>
+ <Zg1clCuOwkCNzSgy@smile.fi.intel.com>
+ <0af775e1-f5f7-4ad4-b336-78834a9e0342@sirena.org.uk>
+ <Zg1qmlX78lQGLC3B@smile.fi.intel.com>
+ <48793ea5-92ca-4529-bad0-35d8c4e3f0c8@sirena.org.uk>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <202404020901.da75a60f-oliver.sang@intel.com> <20240403122350.GEZg1KVvsyc-Z3bwro@fat_crate.local>
- <CAHk-=wj+Q_LXV0Y5+kBvv-5sTxT3Y7E=8wJ2sX4vzWksd3LWzA@mail.gmail.com> <20240403170534.GHZg2MXmwFRv-x8usY@fat_crate.local>
-In-Reply-To: <20240403170534.GHZg2MXmwFRv-x8usY@fat_crate.local>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Wed, 3 Apr 2024 10:13:14 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wjernNvgonRC-W=_OF116facZf--vaYZ+QUnOkXm99M9Q@mail.gmail.com>
-Message-ID: <CAHk-=wjernNvgonRC-W=_OF116facZf--vaYZ+QUnOkXm99M9Q@mail.gmail.com>
-Subject: Re: [PATCH] x86/retpoline: Fix a missing return thunk warning (was:
- Re: [linus:master] [x86/bugs] 4535e1a417: WARNING:at_arch/x86/kernel/alternative.c:#apply_returns)
-To: Borislav Petkov <bp@alien8.de>
-Cc: kernel test robot <oliver.sang@intel.com>, oe-lkp@lists.linux.dev, lkp@intel.com, 
-	linux-kernel@vger.kernel.org, Ingo Molnar <mingo@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <48793ea5-92ca-4529-bad0-35d8c4e3f0c8@sirena.org.uk>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Wed, 3 Apr 2024 at 10:05, Borislav Petkov <bp@alien8.de> wrote:
->
-> Can you pls replace it with the below one?
+On Wed, Apr 03, 2024 at 04:50:00PM +0100, Mark Brown wrote:
+> On Wed, Apr 03, 2024 at 05:41:30PM +0300, Andy Shevchenko wrote:
+> 
+> > Linus was long time ago against board files. Yet, we have a few old
+> > (kinda supported) boards left in the tree. The conversion makes the
+> > driver be prepared for the DT conversion when it happens. From maintenance
+> > perspective my patch reduced the code under the maintenance, which reduces
+> > time spent by both contributors and maintainers on this.
+> 
+> > AFAIU all what you are moaning about is type checking. Okay, I got
+> 
+> The type checking is part of it, but it's more a general taste thing
+> with using swnodes like this.  You've not actually removed the board
+> file and it's hard to get enthusiastic about the change to the board
+> file that results, or to see this as a substantial step towards DT
+> conversion for the platform given the trivialness of the single
+> property here.  As a general thing I don't want to encourage people to
+> start randomly converting things to swnode rather than to DT.
 
-Ok, done.
+Conversion to GPIO lookup tables is also the same in this sense.
+But with it in place, the drivers aren't needed to be touched
+when the real conversion happens. I agree, that _ideally_ we should
+take that shot, but I am not an expert in DT and it will take a lot
+for me to get to the shape, besides the fact of the ARM (platform)
+specifics, which I'm far from. So, I prefer do step-by-step approach
+if one developer can't fulfill the task. I.o.w. perfect is enemy of
+good.
 
-              Linus
+> > it, but we have a lot of other places with similar approach done,
+> > e.g. GPIO_LOOKUP*() tables that basically gives something unconnected to the
+> > driver without any platform data being involved and you seems to be fine with
+> > that:
+> 
+> > $ git log --oneline --no-merges --grep 'Mark Brown' -- arch/ | grep 'GPIO desc'
+> 
+> > I randomly took this 366f36e2a ("ASoC: wm1250-ev1: Convert to GPIO descriptors").
+> 
+> > Can you tell how it is different to my proposal?
+> 
+> The main difference with the GPIO lookup tables is that they are
+> structured data specifically for GPIOs rather than the general purpose
+> free for all we have with swnode.
+
+Semantically yes, technically they have all the same issues you pointed out
+that swnode has.
+
+Nevertheless, I'm about to send a part 2 of cleanup (I decided not mangle
+this series, so it will be on top of this) for you to see how we can go
+forward.
+
+And thank you for this discussion.
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
