@@ -1,109 +1,99 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E1042F28
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C283458AA1
 	for <linux-kernel@vger.kernel.org>; Wed,  3 Apr 2024 14:51:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712155865; cv=none; b=IrXQ50dc+tOeQYxSR+j6uam2T4r/geGghQNOVL+Ogf4yAvW1Q5Rt/pQNY1BqCJY9tw92JuosHSHs0gavOOxUFL0ESQCflH7mvPe7myPUfn9EqNNyCwhgXUyuHrtBIUc3JOvGtf4Yvsrnoyh50g3Iqq+iL09sw9EhzCl/Dk3adpA=
+	t=1712155867; cv=none; b=nDlF30Sl2SXBcV/cJ4ufOMGr57KwbyurRnJcRgQx85ey/FjVThwracvozoMKbT5Mk551dGlYO3yK7G8McRWV1Ei1E80S4afUjswxjj+Vj8d3Zwr9jJEALl3sHMgr6zidgfrdwCgQ5I0Q3sqYvtxJlxYZefpv6czI0WMvV7Db2Wk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712155865; c=relaxed/simple;
-	bh=92SXfEvrtPp+vOlUAxFGaSiGP4/h7INh9sOZhfYOXOs=;
+	s=arc-20240116; t=1712155867; c=relaxed/simple;
+	bh=ZkRnyB/YnuaaTK+xWc7oWNIUrU8WkJW9xQUUiAZbCB4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WWVmrjXV4XkKpYYUBqAf/RF/w7EkKEieiKTAncQKEU8IoigsNk189WoTiF9dzHDc1FALaIwcHT3vh2k7cbwpG08HdLgpXAso2d3bQLpAPaiyM2baiAWugRINMjynJ/8U9eXHTmJ8onZ1ajKsiMjUNRK6g+j4YLZr0pZOOCP3raQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=X+PGu/D8; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=tj4GV2590h0G2qTOc5qqpyBkOasxxRKmi5R9ed17rZZdkA4YYnyKLrz5q4wr4Nhm9m0mJvUBKKxwVkUtQUcrhBqjO/GsLBMhODp5SsK5ar0l+KkmbE65hG2Dyowr4wjO+EhL0/aEiATfdvBONaGt3K5wCtAoYYUc/mLIugcsLGo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=e8OZTXtX; arc=none smtp.client-ip=198.175.65.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="X+PGu/D8"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1712155863;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=92SXfEvrtPp+vOlUAxFGaSiGP4/h7INh9sOZhfYOXOs=;
-	b=X+PGu/D8kf4b96u/jOKK9cp3QaARr7I/Ox2gCcanqizSo9QpDyUcKYyHtPJhU95hHAWTJD
-	q0d5qjM375TaKdda87li8MjesSGtHnwC8AHRoCH2/03DgywsSjVQlL6I4Kdkkvj5q2rwbt
-	u4Ml0DTtZg0cNnaelIn4WhoGDgf9mbA=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-349-cqVAc2OTMwiuhbvn4k-66Q-1; Wed, 03 Apr 2024 10:50:59 -0400
-X-MC-Unique: cqVAc2OTMwiuhbvn4k-66Q-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.rdu2.redhat.com [10.11.54.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id A1F9B101A521;
-	Wed,  3 Apr 2024 14:50:58 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.224.49])
-	by smtp.corp.redhat.com (Postfix) with SMTP id 4928237FC;
-	Wed,  3 Apr 2024 14:50:55 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Wed,  3 Apr 2024 16:49:34 +0200 (CEST)
-Date: Wed, 3 Apr 2024 16:49:10 +0200
-From: Oleg Nesterov <oleg@redhat.com>
-To: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Jiri Olsa <olsajiri@gmail.com>, Steven Rostedt <rostedt@goodmis.org>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Andrii Nakryiko <andrii@kernel.org>, linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org,
-	Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-	John Fastabend <john.fastabend@gmail.com>,
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="e8OZTXtX"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1712155865; x=1743691865;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=ZkRnyB/YnuaaTK+xWc7oWNIUrU8WkJW9xQUUiAZbCB4=;
+  b=e8OZTXtX7LvtFzM91PK/1MdPDpQ/8nAyuAJxb/cQ4M15ymOdhNGRl9Fe
+   27DtOfIoaT4givWXtV/CBTh+FrIqWoJ8vkk+DIbqqFRFMlkBe698KO+BN
+   Ioc0mIT5OnH7uSEsbtZrvuCoJ+SQI6BczhBZ1kEl5sixotz/tU9eu0X5H
+   FnojAN2Y8/rnch1PshNGzCNrdoh7UMR5QkAVGPt9eA0Hlc/oJMvBJWxIC
+   rKs5bZXKf0YaAjFOJGMnW9gXjH5qY4bGELP8LpVfP4Mr+bWZymXaDDy6p
+   4Y2PyVnLapaLfAzAg9b0zvqB4BjitDfu2C9ZvXjS+3a1pYdS21hQBzjob
+   w==;
+X-CSE-ConnectionGUID: nvIWfhsuTzKC9MYSQl6nAg==
+X-CSE-MsgGUID: qR97bOtRSiygFpYZHpjLqQ==
+X-IronPort-AV: E=McAfee;i="6600,9927,11033"; a="7312775"
+X-IronPort-AV: E=Sophos;i="6.07,177,1708416000"; 
+   d="scan'208";a="7312775"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2024 07:51:04 -0700
+X-CSE-ConnectionGUID: iXyKyI6tQWCtmJOLwTuhnA==
+X-CSE-MsgGUID: moX61vCdR9augfl/WRglXw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,177,1708416000"; 
+   d="scan'208";a="49431593"
+Received: from chintaku-mobl.amr.corp.intel.com (HELO desk) ([10.209.34.133])
+  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2024 07:51:04 -0700
+Date: Wed, 3 Apr 2024 07:50:49 -0700
+From: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
+To: Nikolay Borisov <nik.borisov@suse.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Borislav Petkov <bp@alien8.de>,
 	Peter Zijlstra <peterz@infradead.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	"Borislav Petkov (AMD)" <bp@alien8.de>, x86@kernel.org
-Subject: Re: [PATCHv2 1/3] uprobe: Add uretprobe syscall to speed up return
- probe
-Message-ID: <20240403144910.GB31764@redhat.com>
-References: <20240402093302.2416467-1-jolsa@kernel.org>
- <20240402093302.2416467-2-jolsa@kernel.org>
- <20240403100708.233575a8ac2a5bac2192d180@kernel.org>
- <Zg0lvUIB4WdRUGw_@krava>
- <20240403230937.c3bd47ee47c102cd89713ee8@kernel.org>
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Daniel Sneddon <daniel.sneddon@linux.intel.com>,
+	antonio.gomez.iglesias@linux.intel.com,
+	alyssa.milburn@linux.intel.com, andrew.cooper3@citrix.com,
+	linux-kernel@vger.kernel.org,
+	Alyssa Milburn <alyssa.milburn@intel.com>, stable@kernel.org
+Subject: Re: [PATCH v3] x86/bugs: Default retbleed to =stuff when retpoline
+ is enabled
+Message-ID: <20240403145049.ab7v436ntlw7xtty@desk>
+References: <20240402-retbleed-auto-stuff-v3-1-e65f275a8ec8@linux.intel.com>
+ <6ffcc9bd-039a-4ab4-a84d-eeedbc6fa1cc@suse.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20240403230937.c3bd47ee47c102cd89713ee8@kernel.org>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.1
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <6ffcc9bd-039a-4ab4-a84d-eeedbc6fa1cc@suse.com>
 
-Again, I leave this to you and Jiri, but
+On Wed, Apr 03, 2024 at 05:32:40PM +0300, Nikolay Borisov wrote:
+> 
+> 
+> On 3.04.24 г. 8:54 ч., Pawan Gupta wrote:
+> > On Intel systems when retpoline mitigation is enabled for spectre-v2,
+> > retbleed=auto does not enable RSB stuffing. This may make the system
+> > vulnerable to retbleed. Retpoline is not the default mitigation when
+> > IBRS is present, but in virtualized cases a VMM can hide IBRS from
+> > guests, resulting in guest deploying retpoline by default. Even if IBRS
+> > is enumerated, a user can still select spectre_v2=retpoline.
+> > 
+> > As with other mitigations, mitigate retbleed by default. On Intel
+> > systems when retpoline is enabled, and retbleed mitigation is set to
+> > auto, enable Call Depth Tracking and RSB stuffing i.e. retbleed=stuff
+> > mitigation. For AMD/Hygon auto mode already selects the appropriate
+> > mitigation.
+> > 
+> > Reported-by: Alyssa Milburn <alyssa.milburn@intel.com>
+> > Cc: stable@kernel.org
+> > Signed-off-by: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
+> 
+> Reviewed-by: Nikolay Borisov <nik.borisov@suse.com>
 
-On 04/03, Masami Hiramatsu wrote:
->
-> On Wed, 3 Apr 2024 11:47:41 +0200
-> > > set in the user function, what happen if the user function directly
-> > > calls this syscall? (maybe it consumes shadow stack?)
-> >
-> > the process should receive SIGILL if there's no pending uretprobe for
-> > the current task, or it will trigger uretprobe if there's one pending
->
-> No, that is too aggressive and not safe. Since the syscall is exposed to
-> user program, it should return appropriate error code instead of SIGILL.
-
-...
-
-> Since the syscall is always exposed to the user program, it should
-> - Do nothing and return an error unless it is properly called.
-> - check the prerequisites for operation strictly.
-
-We have sys_munmap(). should it check if the caller is going to unmap
-the code region which contains regs->ip and do nothing?
-
-I don't think it should. Userspace should blame itself, SIGSEGV is not
-"too aggressive" in this case.
-
-> I concern that new system calls introduce vulnerabilities.
-
-Yes, we need to ensure that sys_uretprobe() can only damage the malicious
-caller and nothing else.
-
-Oleg.
-
+Thanks.
