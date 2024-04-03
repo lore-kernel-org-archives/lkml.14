@@ -1,148 +1,91 @@
-Received: from out-179.mta1.migadu.com (out-179.mta1.migadu.com [95.215.58.179])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 537BD1514DB
-	for <linux-kernel@vger.kernel.org>; Wed,  3 Apr 2024 17:02:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77FA91411FD;
+	Wed,  3 Apr 2024 17:03:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712163781; cv=none; b=gTWFnCgDlco5b/3UHRW5LIPltTtmOkVtkG5DUsW4aU9tk1f3riss5BT0SGzJ5iKJiIHYam8Nyx8pG2sC+sts/6HZDy6LmW4bJTEpuMpPFVVIvqeUpxtbO8mNH2+xqn7ZnDxMYEbBONoTbgQBxOeIFhBnXNUrlUmrQ1dVU1wXuvs=
+	t=1712163790; cv=none; b=PDM0pqRURgdm2dPh6zOouLAvKIIPAD9BWVSyIE8xUwHecG/K1o5ySYjmp3LO4SW5KGuJIG935R3GCywA+W9SFMM38IMX4b28BesccB10nVKCFV+YTH17EOrxHZkKAPI9HjHDd7I32NtyfIJhgbs2Q44JNIZNBKoYiIj5kDz+l6M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712163781; c=relaxed/simple;
-	bh=uy0uR4KNWQjTyhStmbFe7CExzINwuvct04FOVMIe8G0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FY3BTaiaZtMytRGWDDzOuZoS2peiClREhjgOV67zFXVBkW2U0uryPHezxKuKgaVwpyPHOO3HlxnRtfBJqUMVkvypxL9Bmw9ScADJohM0lnLOqeS6wtBKJixe+rd04sGcXfw7bsU5wQXiY3s2sfykDMnt9KRsBFsqcxU+maGDNh4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=hZoh+pO+; arc=none smtp.client-ip=95.215.58.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1712163790; c=relaxed/simple;
+	bh=LdNs8VOby8bDx1XcYP9bF2KiEG2zVFeFUbQ0GcT6uEs=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=h/gQ4dbrKm1GSzb8OoIX3mDgNGhi46LaQTPOmcrtT0mzU4fEZvBdJ7OHGIUbINqFPAOp1PSYZY098Vgz3XU58AVfy+a8nLhqdM+HYnwsuXAHki6IAyOUERsOU/lweCVwb33R/kPMPAki0urhZ+VrcD3a+tX8Bi1Xhk0hiXOxMuo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gmyhAYwV; arc=none smtp.client-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="hZoh+pO+"
-Date: Wed, 3 Apr 2024 10:02:40 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1712163777;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=l2xgd3X9t4EgBaNAFDJVjvxOH1jxFC0KojtDFbkugeQ=;
-	b=hZoh+pO+l0APIgPQISDmnLTHEmqpxabM1zSle/bXSt0Rv0Hu5Vb48tN7QWGsBv2nWTDfZB
-	PfmejjrzTBt5G7M7FpBZ7m1h684jEvO4ylLhoT46tLRwJrbcun1U5Bi2j0KgR41qRLra/o
-	k172DDMShT0o2CtvIZmeFyo3MVW6cyk=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Roman Gushchin <roman.gushchin@linux.dev>
-To: Vlastimil Babka <vbabka@suse.cz>
-Cc: Aishwarya TCV <aishwarya.tcv@arm.com>,
-	Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org, cgroups@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org,
-	Chengming Zhou <chengming.zhou@linux.dev>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Josh Poimboeuf <jpoimboe@kernel.org>,
-	Jeff Layton <jlayton@kernel.org>,
-	Chuck Lever <chuck.lever@oracle.com>, Kees Cook <kees@kernel.org>,
-	Christoph Lameter <cl@linux.com>, Pekka Enberg <penberg@kernel.org>,
-	David Rientjes <rientjes@google.com>,
-	Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-	Hyeonggon Yoo <42.hyeyoo@gmail.com>,
-	Johannes Weiner <hannes@cmpxchg.org>,
-	Michal Hocko <mhocko@kernel.org>,
-	Muchun Song <muchun.song@linux.dev>,
-	Alexander Viro <viro@zeniv.linux.org.uk>,
-	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
-	Shakeel Butt <shakeel.butt@linux.dev>,
-	Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v2 1/2] mm, slab: move memcg charging to post-alloc hook
-Message-ID: <Zg2LsNm6twOmG69l@P9FQF9L96D.corp.robot.car>
-References: <20240325-slab-memcg-v2-0-900a458233a6@suse.cz>
- <20240325-slab-memcg-v2-1-900a458233a6@suse.cz>
- <30df7730-1b37-420d-b661-e5316679246f@arm.com>
- <4af50be2-4109-45e5-8a36-2136252a635e@suse.cz>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gmyhAYwV"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1712163789; x=1743699789;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=LdNs8VOby8bDx1XcYP9bF2KiEG2zVFeFUbQ0GcT6uEs=;
+  b=gmyhAYwVO3tSbug+aBBYWueYjB1KyYLpNInlL8n3x2BEVK5vcw37YtHT
+   wyjaHoK+EW+A5ZREh3UP6l/PDR/sqQ6wuceMnVE4kiSPzvrpf0iWYklFg
+   u1qkTY8dJZcCStR3/MLNKfJAPfHGy868z4u8Sxjm0UgdeEW0E0qbuYIcu
+   /52A600/yKH9aTy42SAgJCKTiXzJyTlZ3sDCSGTEI9yeHAlSf29JJmW4G
+   3+oAWOUNrbFbNYImNUjlRZcawNmewtrA3doAtzKUUhQP4bqcYiEs7mrL6
+   aFlg8INDDmEAbFr1fyfrUYjEPpUufSLV7KheUlvx+HWNkzFB5ld6e5qkl
+   g==;
+X-CSE-ConnectionGUID: +swq/hKdT7iCCw8Q06O8Jw==
+X-CSE-MsgGUID: bHpFys3bTEKp3PnN8N6Crg==
+X-IronPort-AV: E=McAfee;i="6600,9927,11033"; a="18861486"
+X-IronPort-AV: E=Sophos;i="6.07,177,1708416000"; 
+   d="scan'208";a="18861486"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2024 10:03:08 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,11033"; a="937085328"
+X-IronPort-AV: E=Sophos;i="6.07,177,1708416000"; 
+   d="scan'208";a="937085328"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmsmga001.fm.intel.com with ESMTP; 03 Apr 2024 10:03:06 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+	id E4421192; Wed,  3 Apr 2024 20:03:04 +0300 (EEST)
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Zhang Rui <rui.zhang@intel.com>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	linux-kernel@vger.kernel.org,
+	linux-acpi@vger.kernel.org
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>,
+	Len Brown <lenb@kernel.org>
+Subject: [PATCH v1 0/4] ACPI: x86: Move x86 stuff into dedicated folder
+Date: Wed,  3 Apr 2024 19:54:34 +0300
+Message-ID: <20240403170302.1073841-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.43.0.rc1.1.gbec44491f096
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <4af50be2-4109-45e5-8a36-2136252a635e@suse.cz>
-X-Migadu-Flow: FLOW_OUT
+Content-Transfer-Encoding: 8bit
 
-On Wed, Apr 03, 2024 at 05:48:24PM +0200, Vlastimil Babka wrote:
-> On 4/3/24 1:39 PM, Aishwarya TCV wrote:
-> > 
-> > 
-> > On 25/03/2024 08:20, Vlastimil Babka wrote:
-> >> The MEMCG_KMEM integration with slab currently relies on two hooks
-> >> during allocation. memcg_slab_pre_alloc_hook() determines the objcg and
-> >> charges it, and memcg_slab_post_alloc_hook() assigns the objcg pointer
-> >> to the allocated object(s).
-> >> 
-> >> As Linus pointed out, this is unnecessarily complex. Failing to charge
-> >> due to memcg limits should be rare, so we can optimistically allocate
-> >> the object(s) and do the charging together with assigning the objcg
-> >> pointer in a single post_alloc hook. In the rare case the charging
-> >> fails, we can free the object(s) back.
-> >> 
-> >> This simplifies the code (no need to pass around the objcg pointer) and
-> >> potentially allows to separate charging from allocation in cases where
-> >> it's common that the allocation would be immediately freed, and the
-> >> memcg handling overhead could be saved.
-> >> 
-> >> Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
-> >> Link: https://lore.kernel.org/all/CAHk-=whYOOdM7jWy5jdrAm8LxcgCMFyk2bt8fYYvZzM4U-zAQA@mail.gmail.com/
-> >> Reviewed-by: Roman Gushchin <roman.gushchin@linux.dev>
-> >> Reviewed-by: Chengming Zhou <chengming.zhou@linux.dev>
-> >> Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
-> >> ---
-> >>  mm/slub.c | 180 +++++++++++++++++++++++++++-----------------------------------
-> >>  1 file changed, 77 insertions(+), 103 deletions(-)
-> > 
-> > Hi Vlastimil,
-> > 
-> > When running the LTP test "memcg_limit_in_bytes" against next-master
-> > (next-20240402) kernel with Arm64 on JUNO, oops is observed in our CI. I
-> > can send the full logs if required. It is observed to work fine on
-> > softiron-overdrive-3000.
-> > 
-> > A bisect identified 11bb2d9d91627935c63ea3e6a031fd238c846e1 as the first
-> > bad commit. Bisected it on the tag "next-20240402" at repo
-> > "https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git".
-> > 
-> > This works fine on  Linux version v6.9-rc2
-> 
-> Oops, sorry, can you verify that this fixes it?
-> Thanks.
-> 
-> ----8<----
-> From b0597c220624fef4f10e26079a3ff1c86f02a12b Mon Sep 17 00:00:00 2001
-> From: Vlastimil Babka <vbabka@suse.cz>
-> Date: Wed, 3 Apr 2024 17:45:15 +0200
-> Subject: [PATCH] fixup! mm, slab: move memcg charging to post-alloc hook
-> 
-> The call to memcg_alloc_abort_single() is wrong, it expects a pointer to
-> single object, not an array.
-> 
-> Reported-by: Aishwarya TCV <aishwarya.tcv@arm.com>
-> Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
+Move x86 related modules (which are solely for x86) to the dedicated
+folder.
 
-Oh, indeed.
-Reviewed-by: Roman Gushchin <roman.gushchin@linux.dev>
+Note, there are more modules, but they are related to tables and
+potentially might be used for other architectures in the future.
+Hence touched only non-table related code.
 
-Vlastimil, here is another small comments fixup for the same original patch:
+Andy Shevchenko (4):
+  ACPI: x86: Introduce a Makefile
+  ACPI: x86: Move acpi_cmos_rtc to x86 folder
+  ACPI: x86: Move blacklist to x86 folder
+  ACPI: x86: Move LPSS to x86 folder
 
-diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-index 0745a28782de..9bd0ffd4c547 100644
---- a/mm/memcontrol.c
-+++ b/mm/memcontrol.c
-@@ -353,7 +353,7 @@ static void memcg_reparent_objcgs(struct mem_cgroup *memcg,
+ drivers/acpi/Makefile                            | 7 +------
+ drivers/acpi/x86/Makefile                        | 8 ++++++++
+ drivers/acpi/{ => x86}/blacklist.c               | 2 +-
+ drivers/acpi/{acpi_cmos_rtc.c => x86/cmos_rtc.c} | 2 +-
+ drivers/acpi/{acpi_lpss.c => x86/lpss.c}         | 2 +-
+ 5 files changed, 12 insertions(+), 9 deletions(-)
+ create mode 100644 drivers/acpi/x86/Makefile
+ rename drivers/acpi/{ => x86}/blacklist.c (99%)
+ rename drivers/acpi/{acpi_cmos_rtc.c => x86/cmos_rtc.c} (98%)
+ rename drivers/acpi/{acpi_lpss.c => x86/lpss.c} (99%)
 
- /*
-  * A lot of the calls to the cache allocation functions are expected to be
-- * inlined by the compiler. Since the calls to memcg_slab_pre_alloc_hook() are
-+ * inlined by the compiler. Since the calls to memcg_slab_post_alloc_hook() are
-  * conditional to this static branch, we'll have to allow modules that does
-  * kmem_cache_alloc and the such to see this symbol as well
-  */
+-- 
+2.43.0.rc1.1.gbec44491f096
 
-
-
-Thanks!
