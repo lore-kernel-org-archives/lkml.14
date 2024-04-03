@@ -1,104 +1,107 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2EC213A272
-	for <linux-kernel@vger.kernel.org>; Wed,  3 Apr 2024 15:05:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4369114A093;
+	Wed,  3 Apr 2024 15:05:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712156740; cv=none; b=UoUsfkve9KIcKbud+n1L04JzyG/rYAY/TfxXkcfLFDlYj47gZg3P4qIjbmc5oKjU6WXOZYiEZRfjEkdBSfVvGm92SlWSwUO5PZ/r0Yct0P/FJS5PUQ4irP1r1B8Wwly+nnfMsR3xV8aBmP9A09aJnSdP7JKGZ+bBZgAqy2e8w1c=
+	t=1712156744; cv=none; b=ZyWoqkOY5SroJ1jEZdHawBjkKRDo/64TPbu/s6LrXiAdzQQ/n0WZbnYQhgtjL7VJg0K6X6vIu9fuwl96KEiNVENJQBvQXNET4m+i3GPkzNMzml3Rq9F+Y+Zxx38i35O415Ql9freRKcq6L19uYcKdTFlj2ell68owebaW2Pvxd4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712156740; c=relaxed/simple;
-	bh=deMENPl+c6MSxW2hu/QZ8GYeKyym0U74jnDvIEZWRPE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=eqzDp03Sgy0mnf0O8CmrPJJw8ODuyWhOdwcz5vC4uHNC23O8PmqCiGObqb+G2ke9SR2BBWg0Y4dM1Y8qn36RvVmYmYFslphSA+gvBSYXH2Itoq0EYYD9fVKzUjpJhuSFV6IxAgq00caAaA98pJ5xWzP5+8+p4wiuFE1F/MK5ktU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=YDvrYiSK; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1712156744; c=relaxed/simple;
+	bh=vKEnA46LNIYBD/r4zg6POqJ9fE49+HQ7ou3GmwNLpXk=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=eZczvBqgoI6/UT+wSGkZdEbgVI3xIpXBGSksYakzjPTDSGpyLCEtT8CmfoDHR5FS5K0hjYF8Pi+0zCufSXwWxC2lkFiNik/JnpKzo6W+oGurPYgjl3jCt8PimH+xcm2Hplx5iGkttduVU1U44ds54AHHmw+A8hAt+iGRH/xuoBo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IxuxGcA6; arc=none smtp.client-ip=209.85.218.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YDvrYiSK"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1712156738;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=UdTf2pSCOIaYn7Otxzx3C9HDo/HSUaFRAsJWaqzhTKw=;
-	b=YDvrYiSKp7Br8a3FVMdmAGwDHx842NlZ0CN0qm8azdv2YzzN8Z4JI9InYQr35JPLWj+avm
-	N0KHfWuqcGT5tSH1J9SbIxPmvUL4R0wjY7GA9bOW+opUNh8tnGCviMoLFG+Pxt1VuuLwhS
-	YevJZBSTZOWqCfXVGHQbA5Wmjo6JzEo=
-Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
- by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-568-vxjWNBbPPnOwkeIjxQ0Jyw-1; Wed,
- 03 Apr 2024 11:05:32 -0400
-X-MC-Unique: vxjWNBbPPnOwkeIjxQ0Jyw-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.rdu2.redhat.com [10.11.54.2])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id B3B773822552;
-	Wed,  3 Apr 2024 15:05:31 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.224.49])
-	by smtp.corp.redhat.com (Postfix) with SMTP id B6D1C4073487;
-	Wed,  3 Apr 2024 15:05:28 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Wed,  3 Apr 2024 17:04:07 +0200 (CEST)
-Date: Wed, 3 Apr 2024 17:03:43 +0200
-From: Oleg Nesterov <oleg@redhat.com>
-To: Thomas Gleixner <tglx@linutronix.de>
-Cc: John Stultz <jstultz@google.com>, Marco Elver <elver@google.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>,
-	"Eric W. Biederman" <ebiederm@xmission.com>,
-	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-	Dmitry Vyukov <dvyukov@google.com>, kasan-dev@googlegroups.com,
-	Edward Liaw <edliaw@google.com>,
-	Carlos Llamas <cmllamas@google.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH v6 1/2] posix-timers: Prefer delivery of signals to the
- current thread
-Message-ID: <20240403150343.GC31764@redhat.com>
-References: <20230316123028.2890338-1-elver@google.com>
- <CANDhNCqBGnAr_MSBhQxWo+-8YnPPggxoVL32zVrDB+NcoKXVPQ@mail.gmail.com>
- <87frw3dd7d.ffs@tglx>
- <CANDhNCqbJHTNcnBj=twHQqtLjXiGNeGJ8tsbPrhGFq4Qz53c5w@mail.gmail.com>
- <874jcid3f6.ffs@tglx>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IxuxGcA6"
+Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-a466e53f8c0so854401566b.1;
+        Wed, 03 Apr 2024 08:05:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1712156741; x=1712761541; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=nxHB0J6rX43HE9ciPEpBOcvr3yTZZIhFw+viwUxDb3A=;
+        b=IxuxGcA6CaqMjulWV2+hdE06+hvFAjv/sXCj0+Z4UUSd+sbZo5xbj/QUQ3C0UBo7eO
+         T0nIVli4XD6lcXk7jhyCSp/6B+sI4+FnVaf0a2eD29RStzdKgXdq766tiUWkGWJEnGji
+         VWJVgwYZCxwyGXASKfOd0+mDSEH8Ge3d4d7zFyAdrIdIQrNviUNBDSuJ7cIGeAr5Aotu
+         U3RsK0ci8vMewyBmHEFIIbG5nlMPvu0Lb7/aUGcsWWjVv0mZ78lnS9YD6YxA2BVC1jWv
+         vZZ/jYuhxPUL73c+CD9Ya+xqwVjmx59hUEV7Ro86xs82F4Mu8cZ7GFE8DoU7n3/IGgJY
+         mu1w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712156741; x=1712761541;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=nxHB0J6rX43HE9ciPEpBOcvr3yTZZIhFw+viwUxDb3A=;
+        b=lBKdMgVP2TEPbM7MzRSEzHqlrxouFC8uiT+6H7xLrqZhBhwncxpPLwm9fpWISBCWGv
+         CSrn1j7s2ro2accplFkGRUx/ABlqXnant8U16nAFciwMo5nalvJ0R+iOyYCXYZRk+k+N
+         kTtkVgoCreev/op272qGODtRMsRUOZSTgUWwgRQgB2d87mJ1G7wWGjUxEuI0gsMUASCn
+         pHROL8j0OLC7qZD3lLn0yjt59Lj0UKe6hwdhOyrUy2aR8WlY97GCEw3NF/Z2YMu3QBZy
+         R64DafTad2ZltwaJzsxZ3AxcsSsnj8o8wI/dBLazbcbyVAm8uIXHuU74jYDJwHooC2/s
+         oygQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWsJrVwuFZez+CpifIYVfhSm04hjBYpXMFEqtCPxhVPW/oATrGMQh1NORLbSVrPHgiujO9WGYqwtvULCUSNabd2izCJxep9qVFPSNOaxzngcqPCOR0fGnU3jHAbX/VCvghVL1bAud9u2us=
+X-Gm-Message-State: AOJu0Yzbx+wgXpc+ZEyavgeKYZ5sIIQoqx2I0DfHZ5rNoOVq5Js5UOeu
+	G5UD9mRuwtADVbNz/EXub+kpoHCQMTw8s2LQFRnnIMOTCG7N+RIc
+X-Google-Smtp-Source: AGHT+IEncL4sraW/La3SvP9mabjQkzry8cXX1FpqbfCr6j+zWLCdOGzW7WkLTPeOPIEB55ulkuJhZQ==
+X-Received: by 2002:a17:906:52d1:b0:a44:51c1:733c with SMTP id w17-20020a17090652d100b00a4451c1733cmr12217795ejn.39.1712156741170;
+        Wed, 03 Apr 2024 08:05:41 -0700 (PDT)
+Received: from localhost.localdomain ([84.32.202.14])
+        by smtp.gmail.com with ESMTPSA id bw17-20020a170906c1d100b00a46b4544da2sm7777241ejb.125.2024.04.03.08.05.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 03 Apr 2024 08:05:40 -0700 (PDT)
+From: Yaroslav Furman <yaro330@gmail.com>
+X-Google-Original-From: Yaroslav Furman <Yaroslav.Furman@softeq.com>
+To: Jiri Kosina <jikos@kernel.org>,
+	Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Cc: Lucas Zampieri <lzampier@redhat.com>,
+	Yaraslau Furman <yaro330@gmail.com>,
+	=?UTF-8?q?Filipe=20La=C3=ADns?= <lains@riseup.net>,
+	linux-input@vger.kernel.org (open list:HID LOGITECH DRIVERS),
+	linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH v2] HID: logitech-dj: allow mice to report multimedia keycodes
+Date: Wed,  3 Apr 2024 18:05:14 +0300
+Message-ID: <20240403150514.18058-1-Yaroslav.Furman@softeq.com>
+X-Mailer: git-send-email 2.44.0
+In-Reply-To: <7e34dc43-b70b-4a50-86fd-f021f2de4845@redhat.com>
+References: <7e34dc43-b70b-4a50-86fd-f021f2de4845@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <874jcid3f6.ffs@tglx>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.2
+Content-Transfer-Encoding: 8bit
 
-On 04/03, Thomas Gleixner wrote:
->
-> The test if fragile as hell as there is absolutely no guarantee that the
-> signal target distribution is as expected. The expectation is based on a
-> statistical assumption which does not really hold.
+From: Yaraslau Furman <yaro330@gmail.com>
 
-Agreed. I too never liked this test-case.
+So, I think this should work fine for now, but IMO we should see if it's
+possible to allow the driver to receive all events that a keyboard can send,
+since Windows application can assign pretty much any keycode to any mouse
+button (perhaps not the main ones though), and then we might see the same situation again.
 
-I forgot everything about this patch and test-case, I can't really read
-your patch right now (sorry), so I am sure I missed something, but
+I tried doing that on my system but the driver stopped working completely.
+---
+ drivers/hid/hid-logitech-dj.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
->  static void *distribution_thread(void *arg)
->  {
-> -	while (__atomic_load_n(&remain, __ATOMIC_RELAXED));
-> -	return NULL;
-> +	while (__atomic_load_n(&remain, __ATOMIC_RELAXED) && !done) {
-> +		if (got_signal)
-> +			usleep(10);
-> +	}
-> +
-> +	return (void *)got_signal;
->  }
-
-Why distribution_thread() can't simply exit if got_signal != 0 ?
-
-See https://lore.kernel.org/all/20230128195641.GA14906@redhat.com/
-
-Oleg.
+diff --git a/drivers/hid/hid-logitech-dj.c b/drivers/hid/hid-logitech-dj.c
+index e6a8b6d8eab7..3c3c497b6b91 100644
+--- a/drivers/hid/hid-logitech-dj.c
++++ b/drivers/hid/hid-logitech-dj.c
+@@ -965,9 +965,7 @@ static void logi_hidpp_dev_conn_notif_equad(struct hid_device *hdev,
+ 		}
+ 		break;
+ 	case REPORT_TYPE_MOUSE:
+-		workitem->reports_supported |= STD_MOUSE | HIDPP;
+-		if (djrcv_dev->type == recvr_type_mouse_only)
+-			workitem->reports_supported |= MULTIMEDIA;
++		workitem->reports_supported |= STD_MOUSE | HIDPP | MULTIMEDIA;
+ 		break;
+ 	}
+ }
+-- 
+2.44.0
 
