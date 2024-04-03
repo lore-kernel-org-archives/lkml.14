@@ -1,175 +1,115 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51062433AD;
-	Wed,  3 Apr 2024 10:44:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFF8F136674;
+	Wed,  3 Apr 2024 10:44:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712141045; cv=none; b=QwQkDKjuEpZIjMHB4hFsekh9sDjEm2qDVGS3PGldb+tpyFiLK6me9IQ5nqZYGmN10Tgxi1sYs0U+KUahsZeB2KAstV/H1ET42yiZKdMndfFidGNZ0LodpsqtX6ht8W5ADM1FUEwAJviKfPVnjxbGZY/qtiAqo4OPkyIOsyXIPA8=
+	t=1712141069; cv=none; b=tuFtn8rM2VgAKWmm3Ys6pSNCq+ia1wzesqMdQW6q1zjvnLvFMAk9F4Hqq+0G+lsYEoUi+c6jOIMHIE3TGotuGe4HvJ69bwucO5es+qOzS4EOn65eJkbDLr/tKy5pHvTdoG3eKJOOwhabu61S0m2woCyOlJfJ4TqWNXH1ZMFKwDI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712141045; c=relaxed/simple;
-	bh=gFVgV8VnIJkjPewJOuua6XWcrrzgQB0ahlVwO9D7s08=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CLZTZEAIiPlG7IFzkF/Thh6LBMffTh4O4w/6/GbaCwgjtJDROVwVSmu2ujYn2/bJ7DW/QqsaHNKn/wxj0VjXkgxYuCPSHxteEAl+KQZCvF6ghWH1iDzleU4dVxsjjsl96KaFqp1kaToNx0j2b0y3/EoaYHu3O8z2UgeNppBHLSU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kqv1XO6/; arc=none smtp.client-ip=192.198.163.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1712141069; c=relaxed/simple;
+	bh=G8yYzb4bH382K5cAZ8WYPN+tPG2XPoQcoJ98SS0UuqI=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GTl6ficv/z7C9nhaal0YP7p58LLeaVHkEBZFzJl6W9WMmyWO3+/y5b3J6fksJvYrMhCte05l6skvaSKuBa/3t3jQ40nu6Js4mlj4ZujPRFR9vAlebfQzf/VrFVcz5/z72xMcbw3osFshuSHWPmGWs91vx/eNuJiEJiypmkKWg3U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=UbBbnanI; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kqv1XO6/"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1712141044; x=1743677044;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=gFVgV8VnIJkjPewJOuua6XWcrrzgQB0ahlVwO9D7s08=;
-  b=kqv1XO6/jE3QAq96Y1dUPF/V+hncVfDZ0b5boI8aDShPnewRZWYD+NSQ
-   0R6P+OfMHGq0+PpmhY7B6FJa/VAzGDQrqP97oGyR4KtS76cHg61ipEKMi
-   yq9rj1VkxLJsmE+eycT01nqQ00urIb8h7d5NQ+1trS02hkiYPLALn7p5b
-   msn6htThA84T0RAieeMlX8MERozl6aLrUlunsHjeViIVc8BUD42oyDNCq
-   SPXdR8/3LkH3Zu6II49saTCV2fvwR5d7v86A983dMIiOQOVa+OcQjJz7K
-   u7iPr3rD+EeUx1TApUHYdu/yxlWjUH4lDOzy0LDT24qGkdz4ZGoah4LYs
-   A==;
-X-CSE-ConnectionGUID: m/gP52CeSF6dal/sMK+SqA==
-X-CSE-MsgGUID: SLHEopTtS9yYtBrRqcrIog==
-X-IronPort-AV: E=McAfee;i="6600,9927,11032"; a="10331690"
-X-IronPort-AV: E=Sophos;i="6.07,177,1708416000"; 
-   d="scan'208";a="10331690"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2024 03:40:50 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,11032"; a="937084845"
-X-IronPort-AV: E=Sophos;i="6.07,177,1708416000"; 
-   d="scan'208";a="937084845"
-Received: from kuha.fi.intel.com ([10.237.72.185])
-  by fmsmga001.fm.intel.com with SMTP; 03 Apr 2024 03:40:45 -0700
-Received: by kuha.fi.intel.com (sSMTP sendmail emulation); Wed, 03 Apr 2024 13:40:45 +0300
-Date: Wed, 3 Apr 2024 13:40:45 +0300
-From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-To: "Christian A. Ehrhardt" <lk@c--e.de>
-Cc: linux-kernel@vger.kernel.org,
-	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-	Diogo Ivo <diogo.ivo@tecnico.ulisboa.pt>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Prashant Malani <pmalani@chromium.org>,
-	Jameson Thies <jthies@google.com>,
-	Abhishek Pandit-Subedi <abhishekpandit@chromium.org>,
-	Neil Armstrong <neil.armstrong@linaro.org>,
-	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>,
-	Samuel =?utf-8?B?xIxhdm9q?= <samuel@cavoj.net>,
-	linux-usb@vger.kernel.org
-Subject: Re: [PATCH 3/3] usb: typec: ucsi_acpi: Remove Dell quirk
-Message-ID: <Zg0yLXfVa0wmA2GZ@kuha.fi.intel.com>
-References: <20240327224554.1772525-1-lk@c--e.de>
- <20240327224554.1772525-4-lk@c--e.de>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="UbBbnanI"
+Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 4339w2W6024001;
+	Wed, 3 Apr 2024 10:44:24 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	date:from:to:cc:subject:message-id:references:mime-version
+	:content-type:in-reply-to; s=qcppdkim1; bh=zXvMpXPiE678AdxOhY/ii
+	dMD3WTsnnVZPX/wSxQze3o=; b=UbBbnanIzx0WJ9pmLun/7HX5MQBmgSvMNOhi4
+	IZ6NlauKeF+RMgsqY1SBHWg/DlF1cMV3fe+yKLwr2ypICzCQQ4oWpOadVA/AoT9o
+	A58PytNJEHfVsqcfkYxQsn994grz180kB4kUOg9PGJVngo/Q1Ta1Eg7EMrpJAkaw
+	rptUoEyx8YS8+4iQAjP1NAlkqtDK9of354z1uVEna007kxLGnzM2V2aXsmkccNnh
+	On9D8MtADglqIh3FO0aXbPuPRezgHODaAJqemq2Omt1JvxLOJEnKLLn5quxhacHZ
+	0INksA5MPgigJUFjJ84yShxluXyWYvBR68S07fe6/zM1HaA3Q==
+Received: from nasanppmta02.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3x93pw899t-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 03 Apr 2024 10:44:23 +0000 (GMT)
+Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
+	by NASANPPMTA02.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 433AiMfh016294
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 3 Apr 2024 10:44:22 GMT
+Received: from hu-varada-blr.qualcomm.com (10.80.80.8) by
+ nasanex01b.na.qualcomm.com (10.46.141.250) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.4; Wed, 3 Apr 2024 03:44:18 -0700
+Date: Wed, 3 Apr 2024 16:14:14 +0530
+From: Varadarajan Narayanan <quic_varada@quicinc.com>
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+CC: <andersson@kernel.org>, <konrad.dybcio@linaro.org>,
+        <mturquette@baylibre.com>, <sboyd@kernel.org>, <robh@kernel.org>,
+        <krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>,
+        <djakov@kernel.org>, <dmitry.baryshkov@linaro.org>,
+        <quic_anusha@quicinc.com>, <linux-arm-msm@vger.kernel.org>,
+        <linux-clk@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-pm@vger.kernel.org>
+Subject: Re: [PATCH v6 1/6] dt-bindings: interconnect: Add Qualcomm IPQ9574
+ support
+Message-ID: <Zg0y/pihFpqU3v6m@hu-varada-blr.qualcomm.com>
+References: <20240402103406.3638821-1-quic_varada@quicinc.com>
+ <20240402103406.3638821-2-quic_varada@quicinc.com>
+ <1a6fccd3-452c-423f-b73e-cef5f9d01633@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <20240327224554.1772525-4-lk@c--e.de>
+In-Reply-To: <1a6fccd3-452c-423f-b73e-cef5f9d01633@linaro.org>
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nasanex01b.na.qualcomm.com (10.46.141.250)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: k7ycNh9ZqvOdxgEBzoJVFehihnn-Yjlh
+X-Proofpoint-ORIG-GUID: k7ycNh9ZqvOdxgEBzoJVFehihnn-Yjlh
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-04-03_09,2024-04-01_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 suspectscore=0
+ phishscore=0 adultscore=0 mlxscore=0 lowpriorityscore=0 priorityscore=1501
+ spamscore=0 malwarescore=0 bulkscore=0 impostorscore=0 mlxlogscore=698
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2403210001
+ definitions=main-2404030074
 
-On Wed, Mar 27, 2024 at 11:45:54PM +0100, Christian A. Ehrhardt wrote:
-> The Dell quirk from ucsi_acpi.c. The quirk is no longer
-> necessary as we no longer send lone connector change acks.
-> 
-> Signed-off-by: Christian A. Ehrhardt <lk@c--e.de>
+On Wed, Apr 03, 2024 at 09:09:15AM +0200, Krzysztof Kozlowski wrote:
+> On 02/04/2024 12:34, Varadarajan Narayanan wrote:
+> > +#define ICC_NSSNOC_NSSCC	10
+> > +#define ICC_NSSNOC_SNOC_0	11
+> > +#define ICC_NSSNOC_SNOC_1	12
+> > +#define ICC_NSSNOC_PCNOC_1	13
+> > +#define ICC_NSSNOC_QOSGEN_REF	14
+> > +#define ICC_NSSNOC_TIMEOUT_REF	15
+> > +#define ICC_NSSNOC_XO_DCD	16
+> > +#define ICC_NSSNOC_ATB		17
+> > +#define ICC_MEM_NOC_NSSNOC	18
+> > +#define ICC_NSSNOC_MEMNOC	19
+> > +#define ICC_NSSNOC_MEM_NOC_1	20
+> > +
+> > +#define ICC_NSSNOC_PPE		0
+> > +#define ICC_NSSNOC_PPE_CFG	1
+> > +#define ICC_NSSNOC_NSS_CSR	2
+> > +#define ICC_NSSNOC_IMEM_QSB	3
+> > +#define ICC_NSSNOC_IMEM_AHB	4
+> > +
+> > +#define MASTER(x)	((ICC_ ## x) * 2)
+> > +#define SLAVE(x)	(MASTER(x) + 1)
+>
+> You already received comment to make your bindings consistent with other
+> Qualcomm bindings. Now you repeat the same mistake.
+>
+> No, that is neither consistent nor greppble.
 
-Reviewed-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Sorry. Have restored the naming and posted v7.
+Kindly take a look.
 
-> ---
->  drivers/usb/typec/ucsi/ucsi_acpi.c | 53 +-----------------------------
->  1 file changed, 1 insertion(+), 52 deletions(-)
-> 
-> diff --git a/drivers/usb/typec/ucsi/ucsi_acpi.c b/drivers/usb/typec/ucsi/ucsi_acpi.c
-> index cc03a49c589c..8d112c3edae5 100644
-> --- a/drivers/usb/typec/ucsi/ucsi_acpi.c
-> +++ b/drivers/usb/typec/ucsi/ucsi_acpi.c
-> @@ -23,7 +23,6 @@ struct ucsi_acpi {
->  	void *base;
->  	struct completion complete;
->  	unsigned long flags;
-> -#define UCSI_ACPI_SUPPRESS_EVENT	0
->  #define UCSI_ACPI_COMMAND_PENDING	1
->  #define UCSI_ACPI_ACK_PENDING		2
->  	guid_t guid;
-> @@ -129,49 +128,6 @@ static const struct ucsi_operations ucsi_zenbook_ops = {
->  	.async_write = ucsi_acpi_async_write
->  };
->  
-> -/*
-> - * Some Dell laptops don't like ACK commands with the
-> - * UCSI_ACK_CONNECTOR_CHANGE but not the UCSI_ACK_COMMAND_COMPLETE
-> - * bit set. To work around this send a dummy command and bundle the
-> - * UCSI_ACK_CONNECTOR_CHANGE with the UCSI_ACK_COMMAND_COMPLETE
-> - * for the dummy command.
-> - */
-> -static int
-> -ucsi_dell_sync_write(struct ucsi *ucsi, unsigned int offset,
-> -		     const void *val, size_t val_len)
-> -{
-> -	struct ucsi_acpi *ua = ucsi_get_drvdata(ucsi);
-> -	u64 cmd = *(u64 *)val;
-> -	u64 dummycmd = UCSI_GET_CAPABILITY;
-> -	int ret;
-> -
-> -	if (cmd == (UCSI_ACK_CC_CI | UCSI_ACK_CONNECTOR_CHANGE)) {
-> -		cmd |= UCSI_ACK_COMMAND_COMPLETE;
-> -
-> -		/*
-> -		 * The UCSI core thinks it is sending a connector change ack
-> -		 * and will accept new connector change events. We don't want
-> -		 * this to happen for the dummy command as its response will
-> -		 * still report the very event that the core is trying to clear.
-> -		 */
-> -		set_bit(UCSI_ACPI_SUPPRESS_EVENT, &ua->flags);
-> -		ret = ucsi_acpi_sync_write(ucsi, UCSI_CONTROL, &dummycmd,
-> -					   sizeof(dummycmd));
-> -		clear_bit(UCSI_ACPI_SUPPRESS_EVENT, &ua->flags);
-> -
-> -		if (ret < 0)
-> -			return ret;
-> -	}
-> -
-> -	return ucsi_acpi_sync_write(ucsi, UCSI_CONTROL, &cmd, sizeof(cmd));
-> -}
-> -
-> -static const struct ucsi_operations ucsi_dell_ops = {
-> -	.read = ucsi_acpi_read,
-> -	.sync_write = ucsi_dell_sync_write,
-> -	.async_write = ucsi_acpi_async_write
-> -};
-> -
->  static const struct dmi_system_id ucsi_acpi_quirks[] = {
->  	{
->  		.matches = {
-> @@ -180,12 +136,6 @@ static const struct dmi_system_id ucsi_acpi_quirks[] = {
->  		},
->  		.driver_data = (void *)&ucsi_zenbook_ops,
->  	},
-> -	{
-> -		.matches = {
-> -			DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
-> -		},
-> -		.driver_data = (void *)&ucsi_dell_ops,
-> -	},
->  	{ }
->  };
->  
-> @@ -199,8 +149,7 @@ static void ucsi_acpi_notify(acpi_handle handle, u32 event, void *data)
->  	if (ret)
->  		return;
->  
-> -	if (UCSI_CCI_CONNECTOR(cci) &&
-> -	    !test_bit(UCSI_ACPI_SUPPRESS_EVENT, &ua->flags))
-> +	if (UCSI_CCI_CONNECTOR(cci))
->  		ucsi_connector_change(ua->ucsi, UCSI_CCI_CONNECTOR(cci));
->  
->  	if (cci & UCSI_CCI_ACK_COMPLETE &&
-> -- 
-> 2.40.1
-
--- 
-heikki
+Thanks
+Varada
