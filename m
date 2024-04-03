@@ -1,95 +1,179 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF6DC152DE8;
-	Wed,  3 Apr 2024 17:15:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 738A515253C;
+	Wed,  3 Apr 2024 17:15:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712164525; cv=none; b=JKRKpD/vpxjQKCQ9tnfxsKu0da8ZkibS/423UFAae3iQvZPUpsXUMhfHSU6tD8tXWcbcujWhlzNWfqu8IH+pSj+jltbFsqdMCLVEvGyC00ey99n+hP+J/73X5AyLLOW8PYQ3SohTnQJGbmtSS10kC0n1OD/MIbynvNvLeXrG1hg=
+	t=1712164558; cv=none; b=U5Iv3c18Tt13cLHV9EBoPIX2yp+x/A5nBH45goeGVWsAAP1/FKRqz4R+AmuVLik9nIUFIrCBm/9cQZhlNBDx76w5/78XiRMRcSOtDc1qpmchaBEJxWwmky5G2s5g5vbNhg0ILGUAy95Jixz3eobOWkHvU1nHsbm5ciclH+CC3sk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712164525; c=relaxed/simple;
-	bh=LU4Fr44tzUgk3hAyzANG0d2RG8nR6qdxsxdjqxB5zO4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QIRnyQP0duexhbvY8OvijZjC64hjLsUoY1ILFIEzEHQgtpKN+8MTjIRhoc6Cm/yl5SwY34H642N66VqdI4idUoOHZQpDsvLiOTJKsMaBkLkvk+8H/YUqL0v3eSKjsQ4gqfL2ocxfPSv98FdfqZ93T/zm3zeZD1wWLOmOedMVgts=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Crn2Bypv; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1712164558; c=relaxed/simple;
+	bh=QAzx1E0qxAXDPG02iR8YPBeHMYqiPk9cu41jsTna2jo=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=dirdWXerbtEx2GOnucsNxjln3m0oW+YpxlghwDBI68g9vSvEqc5lK1XCHu7dLyt3sO7Hi6QoibZxirx9yGlS67hwmyxPK28BaGVIjCTcrqG6QTZ0HiBRrc1XCQlTgW8FwCxtS0p4u0OKPNvGH1oOcpdUgfpuQgHsbk6q7mGv3nQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=SDAAOw2Q; arc=none smtp.client-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Crn2Bypv"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0E04CC43399;
-	Wed,  3 Apr 2024 17:15:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712164525;
-	bh=LU4Fr44tzUgk3hAyzANG0d2RG8nR6qdxsxdjqxB5zO4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Crn2Bypvo3Kv0F/G3kczzQFESKl58l7QIP+KlF5HW2ukxnJddUqfeWcVj2sibhi6r
-	 Wd4pAC48+U3CzabQU/ScGSwvstLaVOAenqS+JANq9rVVusFqiX8CZsZz9Yu7IQE06P
-	 dN61bJcHFau91VNy3QNbrlcU5t2RpnRl22f2UaWjMoMqKUuTPMNOxL8vgYtFaj4Qah
-	 mD+UlGcjt9JtvGnhOe6FDnxJK10I1bP/zZQOPKLhLrIaWjD8/L1yWpxm7e33T26IV5
-	 /FPvSBI+GIFCJPeP6n2EDA5WlPj8vgjmsy0twk/tcWyBo6Vr6TY9o1opeuGt+O40yd
-	 SRup2Djue5aSg==
-Date: Wed, 3 Apr 2024 12:15:23 -0500
-From: Rob Herring <robh@kernel.org>
-To: Tan Chun Hau <chunhau.tan@starfivetech.com>
-Cc: Andrew Halaney <ahalaney@redhat.com>,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-	Simon Horman <horms@kernel.org>, netdev@vger.kernel.org,
-	Ley Foon Tan <leyfoon.tan@starfivetech.com>,
-	"David S . Miller" <davem@davemloft.net>,
-	Jakub Kicinski <kuba@kernel.org>,
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SDAAOw2Q"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1712164558; x=1743700558;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=QAzx1E0qxAXDPG02iR8YPBeHMYqiPk9cu41jsTna2jo=;
+  b=SDAAOw2QamXNc/6LU5lbUbWv8EIqbKRtyjwuMdkqYiihoCwAvvlS3MEd
+   r3YVR+Yz/8Yc2xN4g2EKqXpL47txGpn0qim1eSP6ilQ5NqTpGd8NB5bFu
+   iXAtrIuyLQnf2oKXrKevbp3OSx38L3/8JhyxSC15+V2yZmWre14AAGYya
+   HRVenAIqiIIvH3596T76s07r+UGx0lrZOAnPnUTwrffUhhHRE8SMU4m41
+   wG10UWqGL4YGbP7ZaeZNPkf/aZkrFakKjh/68Ny8uHvJDP+BfX+5DK/x+
+   +7rLCDcLsG/eT5AprnmkwRZvfqoc4/Su8BwUnwBQciIbpDaKY7NbvtAqw
+   g==;
+X-CSE-ConnectionGUID: yuc1hlB/TIGqew0/HUF1/Q==
+X-CSE-MsgGUID: Hc18hjsmRJquoCW/EaW+pw==
+X-IronPort-AV: E=McAfee;i="6600,9927,11033"; a="18863544"
+X-IronPort-AV: E=Sophos;i="6.07,177,1708416000"; 
+   d="scan'208";a="18863544"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2024 10:15:57 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,11033"; a="937085337"
+X-IronPort-AV: E=Sophos;i="6.07,177,1708416000"; 
+   d="scan'208";a="937085337"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmsmga001.fm.intel.com with ESMTP; 03 Apr 2024 10:15:54 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+	id A8DAB57D; Wed,  3 Apr 2024 20:15:53 +0300 (EEST)
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
 	linux-arm-kernel@lists.infradead.org,
-	Jisheng Zhang <jszhang@kernel.org>,
-	Russell King <rmk+kernel@armlinux.org.uk>,
-	Emil Renner Berthing <kernel@esmil.dk>,
-	Rob Herring <robh+dt@kernel.org>,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	Jee Heng Sia <jeeheng.sia@starfivetech.com>,
-	Paolo Abeni <pabeni@redhat.com>, linux-riscv@lists.infradead.org,
-	linux-stm32@st-md-mailman.stormreply.com,
-	Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	Eric Dumazet <edumazet@google.com>, devicetree@vger.kernel.org,
-	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>,
-	linux-kernel@vger.kernel.org, Conor Dooley <conor+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
-Subject: Re: [PATCH v6 1/1] dt-bindings: net: starfive,jh7110-dwmac: Add
- StarFive JH8100 support
-Message-ID: <171216452060.4016592.7318363130745016894.robh@kernel.org>
-References: <20240403100549.78719-1-chunhau.tan@starfivetech.com>
- <20240403100549.78719-2-chunhau.tan@starfivetech.com>
+	linux-spi@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Daniel Mack <daniel@zonque.org>,
+	Haojian Zhuang <haojian.zhuang@gmail.com>,
+	Robert Jarzmik <robert.jarzmik@free.fr>,
+	Mark Brown <broonie@kernel.org>
+Subject: [PATCH v1 2/5] spi: pxa2xx: Drop struct pxa2xx_spi_chip
+Date: Wed,  3 Apr 2024 20:06:36 +0300
+Message-ID: <20240403171550.1074644-3-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.43.0.rc1.1.gbec44491f096
+In-Reply-To: <20240403171550.1074644-1-andriy.shevchenko@linux.intel.com>
+References: <20240403171550.1074644-1-andriy.shevchenko@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240403100549.78719-2-chunhau.tan@starfivetech.com>
+Content-Transfer-Encoding: 8bit
 
+No more users.
 
-On Wed, 03 Apr 2024 03:05:49 -0700, Tan Chun Hau wrote:
-> Add StarFive JH8100 dwmac support.
-> The JH8100 dwmac shares the same driver code as the JH7110 dwmac
-> and has only one reset signal.
-> 
-> Please refer to below:
-> 
->   JH8100: reset-names = "stmmaceth";
->   JH7110: reset-names = "stmmaceth", "ahb";
->   JH7100: reset-names = "ahb";
-> 
-> Example usage of JH8100 in the device tree:
-> 
-> gmac0: ethernet@16030000 {
->         compatible = "starfive,jh8100-dwmac",
->                      "starfive,jh7110-dwmac",
->                      "snps,dwmac-5.20";
->         ...
-> };
-> 
-> Signed-off-by: Tan Chun Hau <chunhau.tan@starfivetech.com>
-> ---
->  .../bindings/net/starfive,jh7110-dwmac.yaml   | 28 +++++++++++++++----
->  1 file changed, 23 insertions(+), 5 deletions(-)
-> 
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+ drivers/spi/spi-pxa2xx-dma.c |  9 ++-------
+ drivers/spi/spi-pxa2xx.c     | 25 -------------------------
+ drivers/spi/spi-pxa2xx.h     | 14 --------------
+ 3 files changed, 2 insertions(+), 46 deletions(-)
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+diff --git a/drivers/spi/spi-pxa2xx-dma.c b/drivers/spi/spi-pxa2xx-dma.c
+index 751cb0f77b62..d77279c3acd8 100644
+--- a/drivers/spi/spi-pxa2xx-dma.c
++++ b/drivers/spi/spi-pxa2xx-dma.c
+@@ -231,16 +231,11 @@ int pxa2xx_spi_set_dma_burst_and_threshold(struct chip_data *chip,
+ 					   u8 bits_per_word, u32 *burst_code,
+ 					   u32 *threshold)
+ {
+-	struct pxa2xx_spi_chip *chip_info = spi->controller_data;
+ 	struct driver_data *drv_data = spi_controller_get_devdata(spi->controller);
+ 	u32 dma_burst_size = drv_data->controller_info->dma_burst_size;
+ 
+-	/*
+-	 * If the DMA burst size is given in chip_info we use that,
+-	 * otherwise we use the default. Also we use the default FIFO
+-	 * thresholds for now.
+-	 */
+-	*burst_code = chip_info ? chip_info->dma_burst_size : dma_burst_size;
++	/* We use the default the DMA burst size and FIFO thresholds for now */
++	*burst_code = dma_burst_size;
+ 	*threshold = SSCR1_RxTresh(RX_THRESH_DFLT)
+ 		   | SSCR1_TxTresh(TX_THRESH_DFLT);
+ 
+diff --git a/drivers/spi/spi-pxa2xx.c b/drivers/spi/spi-pxa2xx.c
+index cc0e54f8d2c3..00aa33c937bf 100644
+--- a/drivers/spi/spi-pxa2xx.c
++++ b/drivers/spi/spi-pxa2xx.c
+@@ -1154,7 +1154,6 @@ static int pxa2xx_spi_unprepare_transfer(struct spi_controller *controller)
+ 
+ static int setup(struct spi_device *spi)
+ {
+-	struct pxa2xx_spi_chip *chip_info;
+ 	struct chip_data *chip;
+ 	const struct lpss_config *config;
+ 	struct driver_data *drv_data =
+@@ -1218,25 +1217,6 @@ static int setup(struct spi_device *spi)
+ 		chip->timeout = TIMOUT_DFLT;
+ 	}
+ 
+-	/*
+-	 * Protocol drivers may change the chip settings, so...
+-	 * if chip_info exists, use it.
+-	 */
+-	chip_info = spi->controller_data;
+-
+-	/* chip_info isn't always needed */
+-	if (chip_info) {
+-		if (chip_info->timeout)
+-			chip->timeout = chip_info->timeout;
+-		if (chip_info->tx_threshold)
+-			tx_thres = chip_info->tx_threshold;
+-		if (chip_info->tx_hi_threshold)
+-			tx_hi_thres = chip_info->tx_hi_threshold;
+-		if (chip_info->rx_threshold)
+-			rx_thres = chip_info->rx_threshold;
+-		chip->dma_threshold = 0;
+-	}
+-
+ 	chip->cr1 = 0;
+ 	if (spi_controller_is_target(drv_data->controller)) {
+ 		chip->cr1 |= SSCR1_SCFR;
+@@ -1256,11 +1236,6 @@ static int setup(struct spi_device *spi)
+ 		chip->lpss_tx_threshold = tx_thres;
+ 	}
+ 
+-	/*
+-	 * Set DMA burst and threshold outside of chip_info path so that if
+-	 * chip_info goes away after setting chip->enable_dma, the burst and
+-	 * threshold can still respond to changes in bits_per_word.
+-	 */
+ 	if (chip->enable_dma) {
+ 		/* Set up legal burst and threshold for DMA */
+ 		if (pxa2xx_spi_set_dma_burst_and_threshold(chip, spi,
+diff --git a/drivers/spi/spi-pxa2xx.h b/drivers/spi/spi-pxa2xx.h
+index f1097c96c50f..ae9c99bc9f6c 100644
+--- a/drivers/spi/spi-pxa2xx.h
++++ b/drivers/spi/spi-pxa2xx.h
+@@ -35,20 +35,6 @@ struct pxa2xx_spi_controller {
+ 	struct ssp_device ssp;
+ };
+ 
+-/*
+- * The controller specific data for SPI target devices
+- * (resides in spi_board_info.controller_data),
+- * copied to spi_device.platform_data ... mostly for
+- * DMA tuning.
+- */
+-struct pxa2xx_spi_chip {
+-	u8 tx_threshold;
+-	u8 tx_hi_threshold;
+-	u8 rx_threshold;
+-	u8 dma_burst_size;
+-	u32 timeout;
+-};
+-
+ struct spi_controller;
+ struct spi_device;
+ struct spi_transfer;
+-- 
+2.43.0.rc1.1.gbec44491f096
 
