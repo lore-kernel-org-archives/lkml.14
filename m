@@ -1,81 +1,155 @@
-Received: from cstnet.cn (smtp84.cstnet.cn [159.226.251.84])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com [209.85.167.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E01D544C87;
-	Wed,  3 Apr 2024 03:43:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.84
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3006B3D967
+	for <linux-kernel@vger.kernel.org>; Wed,  3 Apr 2024 03:43:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712115828; cv=none; b=p3Fo07ZnyBkabxYeuVohnZD8SI0REMz+5omgB/3mKNZ1TJib2iHNc/3W3QJKOvLCA5lruwDPuxnrGQkpkLg/tAoV2ehjuLyvZ+0L6PHhrmgw5DZoT82PFL/5eTYh/bYmMVAHr8q3vyWO7BKUOFU/ruASkboHtcqB6v8GtMQbiYU=
+	t=1712115841; cv=none; b=E7sabk/qxiV2Aw2Nz63BdwMsZ9c8tuWHu68JC8UhULjipVm4TQW31vy4vHqg7oFEDrOSerZ4yRq+EA6lnisQA2BxB6075EjXWaGhGC6v+pqmVURvozfFrqgDQj+ZB4uMV3yltLsAdriJk4okZEqpvWeEjYkBi/ziMRAX8TGlk7Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712115828; c=relaxed/simple;
-	bh=cCZHvqKkhlOhXtkzMr3sHyNUhpsIPdpG23hP2ekDxno=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=F40tHsOy6o43/UpYhPKLM8O6PjQY87sCysoJLaPdnaXqVy8O+eO0fSRORLAPduHtHAjOVFT3pPiOWw/o0ju/nbrgT3ch2vWRwBzXc415QRCbFQARGvgyiK6JTGeaee5DQgX6S0R3n9fHGqQ8gApFy0VCux5uvnIGYausvBInzq4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.84
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
-Received: from localhost (unknown [124.16.138.129])
-	by APP-05 (Coremail) with SMTP id zQCowAC3RBJr0Axm87geAQ--.6190S2;
-	Wed, 03 Apr 2024 11:43:40 +0800 (CST)
-From: Chen Ni <nichen@iscas.ac.cn>
-To: linus.walleij@linaro.org,
-	dlemoal@kernel.org,
-	cassel@kernel.org
-Cc: linux-ide@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Chen Ni <nichen@iscas.ac.cn>
-Subject: [PATCH] ata: sata_gemini: Add check for clk_enable
-Date: Wed,  3 Apr 2024 03:43:14 +0000
-Message-Id: <20240403034314.3623830-1-nichen@iscas.ac.cn>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1712115841; c=relaxed/simple;
+	bh=rSrTFe62I9QM/1EhNPjLmXRF/kaFAIciPwvaSniEBGQ=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=XTGGTfCMHExTBdJg/cyTOC1W8v3XuNNhpaIyH0XsNNoV0MufnUyLxEs49Yy1aCXHyuMO1FSp+gHfZB3O4AwKGIuEbG+3YhXFMZ4ObwZZ11rCZ7LaVyKU0MYoN30nfd817T7mmBdqiPy0h4xwzjfTCsuKsBPuiWCq/e6ixkXNAOM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Ed5zLmT0; arc=none smtp.client-ip=209.85.167.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Ed5zLmT0"
+Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-515ac73c516so471943e87.0
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Apr 2024 20:43:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1712115837; x=1712720637; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=XS0Lxu+/FVxjACw8JTLACxUWz4uzZ8rlXWaKKTuNDJE=;
+        b=Ed5zLmT0t7vr3aQVd1/cThzSG2DJ1Jlpoch1q3SqFNM097NosUAHpbVU4AuKeqJAF5
+         tytI4w8Fch3RNYb3wlldb61TLIOiWMLcano9DwG3tBRuh9SSqXkQcTPKHGt92U+pjNxn
+         ftW965xTJLKCK0ik241qyd2QHchllEUNv/TZSPq4bmloBS4NoeNl14HKaUZ+2YnYbbjr
+         rhbJukgvpnBdvLO8BlPW1nK8s54hThn+5O0axM7bBcrgSjqamxEFmiFknBDemVXzetYJ
+         2amtgu0TJ7zxPPlor6DuXXYffsD6boCqUhEJna0QI1ruEV/r7n89oZr+H9GjO10gjkvk
+         H4XQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712115837; x=1712720637;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=XS0Lxu+/FVxjACw8JTLACxUWz4uzZ8rlXWaKKTuNDJE=;
+        b=meHpjUNgfNhZDj3sE/rmlo8lK8fKWPJc8eR3UWi/lMXhOtD8U97DSZovc1TvTdiRYb
+         zDMidOJn7fZrI7VeYo7LKTBP7xbeU6TZfgLxHEMl3p6MnXZ5wB/SEIYastNzDSEb15mQ
+         CZRBHft/xnPnzVzMqlPYT3zvXtQmiTHdrZO4EUE4HAuHBiUt5UDJRzfH0mIgn7szt2pU
+         l6TjNwWg17wNnX+Wkztcg0NDcLcGI9TlGsZROSBNPYO0K/cNqZEKYGLr5CH8JPHaMKOH
+         WIcFpDf2QEcr5hucvl9Yst0ZE+OZRTDTmmIphe810Jmh39ZwQmx8CjmhAC9o28uRG5oV
+         /aWg==
+X-Forwarded-Encrypted: i=1; AJvYcCVTDE26f+Bbwzed/F7n5syQSP2Po6OrrJwMObj45oL1oWnR35c6J4Ejnx1vg0j4mOfJ5qOnTeY2lZr3b5oCD7F7F6NMXKCthESxspyN
+X-Gm-Message-State: AOJu0YxUnucsU9+bhBjrpdGyQaGmz+GfJSHaHh8oNrYsjb/UTq8DV413
+	dK7r/637Ro2NbHAoI5yab/vThcD9vY8W2QPDD5tVJFVLd+Jc5k8OUQBmAeEo5ZE=
+X-Google-Smtp-Source: AGHT+IF9aIbDAcgO+2JkWLWVyE3Aa+9e7603ybY0IFrdKHtsB5NLBU4SZqZufrVWel33AjNRcwKlYw==
+X-Received: by 2002:a05:6512:3d92:b0:515:c0cb:3ca2 with SMTP id k18-20020a0565123d9200b00515c0cb3ca2mr306804lfv.16.1712115837026;
+        Tue, 02 Apr 2024 20:43:57 -0700 (PDT)
+Received: from umbar.lan ([192.130.178.91])
+        by smtp.gmail.com with ESMTPSA id br31-20020a056512401f00b00516a69b1dcbsm940985lfb.78.2024.04.02.20.43.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 02 Apr 2024 20:43:56 -0700 (PDT)
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Subject: [PATCH v4 0/4] drm/panel: add support for LG SW43408 panel
+Date: Wed, 03 Apr 2024 06:43:54 +0300
+Message-Id: <20240403-lg-sw43408-panel-v4-0-a386d5d3b0c6@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:zQCowAC3RBJr0Axm87geAQ--.6190S2
-X-Coremail-Antispam: 1UD129KBjvdXoW7Xr47tF1xGF13Gw4UArWrXwb_yoW3Grc_Ca
-	y7XwnavryYgr4UK3W7Wry5ZFy0kw4vvrn7ua4IgFZxt3yUJr4kXrWjvwn8Aw1qgr18Wr9I
-	yF4DJ3sYkryfujkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUIcSsGvfJTRUUUbz8FF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2IYs7xG
-	6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
-	A2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_
-	Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AKxVWxJr
-	0_GcWle2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
-	2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
-	W8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1l42xK82IYc2Ij64vI
-	r41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8Gjc
-	xK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE2Ix0
-	cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8V
-	AvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E
-	14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjfU5WlkUUUUU
-X-CM-SenderInfo: xqlfxv3q6l2u1dvotugofq/
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAHrQDGYC/4XNQQ7CIBCF4as0rMUwDFjqynsYF7SFlqShDRjUN
+ L27tBtjNLr8XzLfzCSa4Ewkx2ImwSQX3ehziF1Bml77zlDX5iacccEQGR06Gm8CBVN00t4MtJa
+ SWwHQSDQkn03BWHffyPMld+/idQyP7UOCdf2BJaCMWikVs01leatPg/M6jPsxdGTVEv8n8CzwC
+ rVUJZQ1qg8BX4Jg/IuAWQAhLJQaQMvDm7AsyxMCbYOBNQEAAA==
+To: Sumit Semwal <sumit.semwal@linaro.org>, 
+ Caleb Connolly <caleb.connolly@linaro.org>, 
+ Neil Armstrong <neil.armstrong@linaro.org>, 
+ Jessica Zhang <quic_jesszhan@quicinc.com>, Sam Ravnborg <sam@ravnborg.org>, 
+ David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, 
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+ Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
+ Conor Dooley <conor+dt@kernel.org>
+Cc: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
+ Vinod Koul <vkoul@kernel.org>, Caleb Connolly <caleb@connolly.tech>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, 
+ Marijn Suijten <marijn.suijten@somainline.org>
+X-Mailer: b4 0.13.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2546;
+ i=dmitry.baryshkov@linaro.org; h=from:subject:message-id;
+ bh=rSrTFe62I9QM/1EhNPjLmXRF/kaFAIciPwvaSniEBGQ=;
+ b=owEBbQGS/pANAwAKAYs8ij4CKSjVAcsmYgBmDNB7zhW4VN0Mt3Ykhe6mHxo5gmToVRRcty6L/
+ 96qwd8KEIOJATMEAAEKAB0WIQRMcISVXLJjVvC4lX+LPIo+Aiko1QUCZgzQewAKCRCLPIo+Aiko
+ 1dVYCAClZrnyDMoReMxsjxTCAr/g/ubBgEsq1nJgZqpasnETIH5l5OYfw0UyhSXvud3I3ZcTSJh
+ DbErxRU911vMObQNS6sOz+RFRKMlHsRlrqRC7N4qgsz1I66c9qYWy3Ptqzl0iuZtbw1zoDmkPG7
+ cKivUpmPkgC/VEpCnwZ7/3kJB7zPSV85vrpdlksU/uoXvf2V43wpW2RSq9rDZA0v30hHzZpnRsU
+ eYTJJk7ZNoHPyJIjXeJJIp+mKGhsWwSdT1s7M9HI8m+u8uqVRkN3v2ABOB3MIkqyeOXi1VlbKN7
+ V+qSIsXcZSIzug52vGfCWnQR+VeXJLLKz+n0zQo67XWCrRcx
+X-Developer-Key: i=dmitry.baryshkov@linaro.org; a=openpgp;
+ fpr=8F88381DD5C873E4AE487DA5199BF1243632046A
 
-As the potential failure of the clk_enable(), it should be better to
-check it and return error if fails.
+The LG SW43408 panel is used on Google Pixel3 devices. For a long time
+we could not submit the driver, as the panel was not coming up from the
+reset. The panel seems to be picky about some of the delays during init
+and it also uses non-standard payload for MIPI_DSI_COMPRESSION_MODE.
 
-Signed-off-by: Chen Ni <nichen@iscas.ac.cn>
+Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 ---
- drivers/ata/sata_gemini.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+Changes in v4:
+- Fix order of mipi_dsi_compression_mode_ext() args (Marijn)
+- Expanded kerneldoc coments for this function (Marijn)
+- And added arguments validation (Marijn)
+- In the panel driver send the COMPRESSION_MODE in LPM mode like it was
+  done originally
+- Expanded the .clock maths to show the reason behind the value (Marijn)
+- Moved the mode out of the match data (Marijn)
+- Link to v3: https://lore.kernel.org/r/20240402-lg-sw43408-panel-v3-0-144f17a11a56@linaro.org
 
-diff --git a/drivers/ata/sata_gemini.c b/drivers/ata/sata_gemini.c
-index 400b22ee99c3..4c270999ba3c 100644
---- a/drivers/ata/sata_gemini.c
-+++ b/drivers/ata/sata_gemini.c
-@@ -200,7 +200,10 @@ int gemini_sata_start_bridge(struct sata_gemini *sg, unsigned int bridge)
- 		pclk = sg->sata0_pclk;
- 	else
- 		pclk = sg->sata1_pclk;
--	clk_enable(pclk);
-+	ret = clk_enable(pclk);
-+	if (ret)
-+		return ret;
-+
- 	msleep(10);
- 
- 	/* Do not keep clocking a bridge that is not online */
+Changes in v3:
+- Fixed return type of MIPI DSC functions
+- Replaced mipi_dsi_compression_mode_raw() with
+  mipi_dsi_compression_mode_ext() (Marijn)
+- Link to v2: https://lore.kernel.org/r/20240330-lg-sw43408-panel-v2-0-293a58717b38@linaro.org
+
+Changes in v2:
+- Removed formatting char from schema (Krzysztof)
+- Moved additionalProperties after required (Krzysztof)
+- Added example to the schema (Krzysztof)
+- Removed obsolete comment in the commit message (Marijn)
+- Moved DSC params to the panel struct (Marijn)
+- Changed dsc_en to be an array (Marijn)
+- Added comment regiarding slice_width and slice_count (Marijn)
+- Link to v1: https://lore.kernel.org/r/20240330-lg-sw43408-panel-v1-0-f5580fc9f2da@linaro.org
+
+---
+Dmitry Baryshkov (2):
+      drm/mipi-dsi: use correct return type for the DSC functions
+      drm/mipi-dsi: add mipi_dsi_compression_mode_ext()
+
+Sumit Semwal (2):
+      dt-bindings: panel: Add LG SW43408 MIPI-DSI panel
+      drm: panel: Add LG sw43408 panel driver
+
+ .../bindings/display/panel/lg,sw43408.yaml         |  62 ++++
+ MAINTAINERS                                        |   8 +
+ drivers/gpu/drm/drm_mipi_dsi.c                     |  45 ++-
+ drivers/gpu/drm/panel/Kconfig                      |  11 +
+ drivers/gpu/drm/panel/Makefile                     |   1 +
+ drivers/gpu/drm/panel/panel-lg-sw43408.c           | 323 +++++++++++++++++++++
+ include/drm/drm_mipi_dsi.h                         |  15 +-
+ 7 files changed, 453 insertions(+), 12 deletions(-)
+---
+base-commit: a6bd6c9333397f5a0e2667d4d82fef8c970108f2
+change-id: 20240330-lg-sw43408-panel-b552f411c53e
+
+Best regards,
 -- 
-2.25.1
+Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 
