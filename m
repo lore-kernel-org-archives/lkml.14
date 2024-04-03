@@ -1,94 +1,91 @@
-Received: from eu-smtp-delivery-151.mimecast.com (eu-smtp-delivery-151.mimecast.com [185.58.85.151])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69CFE6F520
-	for <linux-kernel@vger.kernel.org>; Wed,  3 Apr 2024 08:23:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.58.85.151
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EAFF6F524;
+	Wed,  3 Apr 2024 08:23:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712132584; cv=none; b=UmlYI4iFr7lqrITJveJ4GBJ00xbXYSy0Wl57yohpXtj/4aDbVS7yKkMpIsD8fAhLIEMACGztDfhmB3HDoipBtt9YGwHxVQerLOrgXe4L2/OFlodcI7PJlHEKAotzxGAZWeFpc7bvGUUw7XHQefiCbMuklSEel5PJWJBf5pFWuOc=
+	t=1712132602; cv=none; b=t3vZ8E4RiOfH5A/OYveTFObZF8qFMSgWMO8+pPSZh6bX1Pv5GHYsnhZzB9LGt3ZGpAS+qI0Sma3yTNfmxW0cQ0pjgXX176TDZN1hGHCfRUwTwA4qKStCkFak9710EU2BQnNC5bf/XuLQF7aISlOJMD/a+c6JHn/0S81qGpt6Ce8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712132584; c=relaxed/simple;
-	bh=/xd3hpbu+Zi9SGSjwWRNxiGqByXLHzVBCsLyu3K7PJI=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 MIME-Version:Content-Type; b=sA6x7lsO6WxQPlzo3QpuG2U+0dwU6+QNFhApwCn18BvdcayeQYLKEBVE2NO2IgojcLoLGEqg4mBgRPh0nXf9w5x0Db4iyL97PA75Eot2q6//jBZhF8HyAup49bdbhCET2qB7XJ6A4he61kYxg1J7/1ntXR6EEXySIJ82eJ5VE24=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ACULAB.COM; spf=pass smtp.mailfrom=aculab.com; arc=none smtp.client-ip=185.58.85.151
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ACULAB.COM
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aculab.com
-Received: from AcuMS.aculab.com (156.67.243.121 [156.67.243.121]) by
- relay.mimecast.com with ESMTP with both STARTTLS and AUTH (version=TLSv1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- uk-mta-201-xd3CvAPlOiKWi4y9JosihA-1; Wed, 03 Apr 2024 09:12:35 +0100
-X-MC-Unique: xd3CvAPlOiKWi4y9JosihA-1
-Received: from AcuMS.Aculab.com (10.202.163.4) by AcuMS.aculab.com
- (10.202.163.4) with Microsoft SMTP Server (TLS) id 15.0.1497.48; Wed, 3 Apr
- 2024 09:12:10 +0100
-Received: from AcuMS.Aculab.com ([::1]) by AcuMS.aculab.com ([::1]) with mapi
- id 15.00.1497.048; Wed, 3 Apr 2024 09:12:10 +0100
-From: David Laight <David.Laight@ACULAB.COM>
-To: 'Eric Biggers' <ebiggers@kernel.org>, Ard Biesheuvel <ardb@kernel.org>
-CC: "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
-	"x86@kernel.org" <x86@kernel.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, Andy Lutomirski <luto@kernel.org>, "Chang S .
- Bae" <chang.seok.bae@intel.com>
-Subject: RE: [PATCH 0/6] Faster AES-XTS on modern x86_64 CPUs
-Thread-Topic: [PATCH 0/6] Faster AES-XTS on modern x86_64 CPUs
-Thread-Index: AQHaf518oZDDPKfpuUWrj9ZpRMjHLrFWPMWw
-Date: Wed, 3 Apr 2024 08:12:09 +0000
-Message-ID: <6629b8120807458ab76e1968056f5e10@AcuMS.aculab.com>
-References: <20240326080305.402382-1-ebiggers@kernel.org>
- <CAMj1kXH4fNevFzrbazJptadxh_spEY3W91FZni5eMqD+UKrSUQ@mail.gmail.com>
- <20240326164755.GB1524@sol.localdomain>
-In-Reply-To: <20240326164755.GB1524@sol.localdomain>
-Accept-Language: en-GB, en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
+	s=arc-20240116; t=1712132602; c=relaxed/simple;
+	bh=3UEaKcNQCsquDKRqA9/0D7BIcxSP6v8eFK/FMp1INVc=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=nN+Mpk4ygjAHlBfDhA8IOMq76CNH+oHu0Oa1JomXrMIMRmd5bWgGiqeJTPCmm15U/U0jx1GvEVS0yMWhk9nCOKnzsBsXltUlIFrpthou/8kKIY7C0IYEyZXCMayPvGIs095v7FCdYBBVVqXmW5SYYUWYYkm2Dp6PT0vEbYFmowU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Ll5hSGia; arc=none smtp.client-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Ll5hSGia"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1712132601; x=1743668601;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=3UEaKcNQCsquDKRqA9/0D7BIcxSP6v8eFK/FMp1INVc=;
+  b=Ll5hSGiaCKtHgmhOWru4tgNX0tRCcQqUmaosqH6MMhopDPlCVAqW7SOo
+   BV/pHon2GpQILaY9JEK/2OdPVl8z39aanLGOAPz2pQhlN87pSjvmp1wep
+   jNAAYnvnEggLHBA71aoIvRmUZTUvtryXvbt63Xo6JNu0iBwJtH48l9YNt
+   1Ti9F3tlpDXG3X4cBZK4sdubVQmPXdj+K13uPuSlLq1kvd9eY5sytAtpT
+   MAffuwpXS4FL6aF+bVagWsJRMgFMMpWh3pA2FYI5ApHnz4Sj3Sa68joVQ
+   MUKtwWjK53m1gvLc9oOazVMIT7VpbFg37ZN/O6c6hIYNVy96UWXMzEeov
+   Q==;
+X-CSE-ConnectionGUID: iqaKRxWYSvi6gE/3dhz1KQ==
+X-CSE-MsgGUID: AJXqprGVQcKNR+f1cLpHBg==
+X-IronPort-AV: E=McAfee;i="6600,9927,11032"; a="18791915"
+X-IronPort-AV: E=Sophos;i="6.07,176,1708416000"; 
+   d="scan'208";a="18791915"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2024 01:23:21 -0700
+X-CSE-ConnectionGUID: HYAhQ03pSvOjkl+4zUDbvA==
+X-CSE-MsgGUID: GYBqKbDeTWyCFtZFS+SXSQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,176,1708416000"; 
+   d="scan'208";a="41492900"
+Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.247.24])
+  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2024 01:23:18 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Wed, 3 Apr 2024 11:23:14 +0300 (EEST)
+To: "Luke D. Jones" <luke@ljones.dev>
+cc: Hans de Goede <hdegoede@redhat.com>, corentin.chary@gmail.com, 
+    platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3 5/9] platform/x86: asus-wmi: store a min default for
+ ppt options
+In-Reply-To: <20240403002917.2870959-6-luke@ljones.dev>
+Message-ID: <e48c5226-9a25-ff24-45d8-5cc73d7d914e@linux.intel.com>
+References: <20240403002917.2870959-1-luke@ljones.dev> <20240403002917.2870959-6-luke@ljones.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: aculab.com
-Content-Language: en-US
+Content-Type: multipart/mixed; boundary="8323328-1375749286-1712132594=:1449"
+
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
+
+--8323328-1375749286-1712132594=:1449
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 
-From: Eric Biggers
-> Sent: 26 March 2024 16:48
-....
-> Consider Intel Ice Lake for example, these are the AES-256-XTS encryption=
- speeds
-> on 4096-byte messages in MB/s I'm seeing:
+On Wed, 3 Apr 2024, Luke D. Jones wrote:
+
+> Laptops with any of the ppt or nv tunables default to the minimum setting
+> on boot so we can safely assume a stored value is correct.
 >=20
->     xts-aes-aesni                  5136
->     xts-aes-aesni-avx              5366
->     xts-aes-vaes-avx2              9337
->     xts-aes-vaes-avx10_256         9876
->     xts-aes-vaes-avx10_512         10215
+> This patch adds storing of those values in the local struct, and enables
+> reading of those values back. To prevent creating a series of byte holes
+> in the struct the "<name>_available" bool is removed and
+> `asus_sysfs_is_visible()` uses the `ASUS_WMI_DEVID_<name>` directly.
 >=20
-> So yes, on that CPU the biggest boost comes just from VAES, staying on AV=
-X2.
-> But taking advantage of AVX512 does help a bit more, first from the parts=
- other
-> than 512-bit registers, then a bit more from 512-bit registers.
+> Reviewed-by: Ilpo J=C3=A4rvinen <ilpo.jarvinen@linux.intel.com>
+> Signed-off-by: Luke D. Jones <luke@ljones.dev>
 
-How much does the kernel_fpu_begin() cost on real workloads?
-(ie when the registers are live and it forces an extra save/restore)
+Reviewed-by: Ilpo J=C3=A4rvinen <ilpo.jarvinen@linux.intel.com>
 
-I've not looked at the code but I often see what looks like
-excessive inlining in crypto code.
-This will speed up benchmarks but can have a negative effect
-on real code both because of the time taken to load the
-code and the effect of displacing other code.
+(I know it is already among the tags but I had not given it until now.)
 
-It might be that this code is a simple loop....
+--=20
+ i.
 
-=09David
-
--
-Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1=
-PT, UK
-Registration No: 1397386 (Wales)
-
+--8323328-1375749286-1712132594=:1449--
