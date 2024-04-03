@@ -1,224 +1,153 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23B5C433AD;
-	Wed,  3 Apr 2024 10:42:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E622B143874;
+	Wed,  3 Apr 2024 10:42:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712140960; cv=none; b=c9SeKcU18GOaLayelyt1pexsoXRBpNY4LS2zBA5KXzO3vpBl6MERqe2jKvx4lDKGNM/5h2K9IAynCWEjcBDWAdLjDIoaMsrzXkEAg6eRp43DBbsA0BvCUd4iq2kvLAv9m2N9i26KZPBdxf/Buz4vKH8+jveFvse8Bb0rVbR17f4=
+	t=1712140962; cv=none; b=aF0UaTPT6V7qDHAx6a3P5C8l+LXHzxp2d9LdQH7mOcRZIl7zjVQcp8AppiBRW+pXDnhqfu95D7JnFCyrGBPbVGfD/e0r6lyo+4Ij1CBxnqmZKwZ7JFJL/++Knm9nNbG883syqIf5kkQEWTAgP+uEuTeqf7eyqWk52gqAYao0rRU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712140960; c=relaxed/simple;
-	bh=kvLrjtLhhqRjyJ49Iqe9d/QUUJr5eILfFsPRFkbQOxs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GCE4AEqneFQPY9qLFv+i90dTxy1DDYCawS3RLB6ToLOj/iuaE5f6aXIZD/oxJBCKfi2MxLHYuSz19yUVoa5GW3dMZ51C6MBe8KI6l2vq1LR0snTU4f7E3uArZntI+/hHbDSNIjG6+78LM2WZki8hsbZzinu1Ip7Jw4vJIeb4KBk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Vb31bbcJ; arc=none smtp.client-ip=192.198.163.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1712140962; c=relaxed/simple;
+	bh=e4j6cfrHaaHCrFec1tqnvuZ8iYnYtRh9G16FJOoCfS0=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type; b=J+1dZzh5guf2oDaUAcsTXVMSGePUbmFaFN002uw0Zu9vQ/DVznZ4SRzELqKo/uaBAFhOKSOOqWy2fhvI42PiyiwUD14JJB8Zh/Fky5GZjTUE10w25YQ5WxBT00KTPcolGzm6HjwycOL8pKH7G0tNWWoa3HrqAaxcYO8xOUAeBP8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=pMqWthw/; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Vb31bbcJ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1712140958; x=1743676958;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=kvLrjtLhhqRjyJ49Iqe9d/QUUJr5eILfFsPRFkbQOxs=;
-  b=Vb31bbcJm+1NGj1Ocv9JIfgjYTmEb549fZJc1aXIneoRxRzZ4HKKC2h+
-   fAHBO/U3FMcz7paMqhB3jUmC1B72scZfwcQq8eD/pt3B4wLDIoI6MSjp4
-   qGEBHmyAdhuwhvl1mClUlx6Mrh8xnT4TXQGjNuyxS5kZu82e85kqtL8ju
-   qNmKBU0l0+8WYZZMKvF9h0SsMziSvKI5nBXfY3Pe22BwExh4kzqdt1Smc
-   i1S6xHq7Gf16MnjggelP/nIYfLuLKo/kXsejGGNiHZsV3wCKO21EWh8QW
-   zeKPKmIXVLSuVoVRqRf9QtDSPhzJuOX7V1Tas3hYbbujlYu6R+7PlPkIA
-   A==;
-X-CSE-ConnectionGUID: 7t1qyyPlQr28lnRI2q6QKQ==
-X-CSE-MsgGUID: M6AQ987kRYiFHzg+lzlo2A==
-X-IronPort-AV: E=McAfee;i="6600,9927,11032"; a="10331114"
-X-IronPort-AV: E=Sophos;i="6.07,177,1708416000"; 
-   d="scan'208";a="10331114"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2024 03:40:07 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,11032"; a="937084844"
-X-IronPort-AV: E=Sophos;i="6.07,177,1708416000"; 
-   d="scan'208";a="937084844"
-Received: from kuha.fi.intel.com ([10.237.72.185])
-  by fmsmga001.fm.intel.com with SMTP; 03 Apr 2024 03:40:02 -0700
-Received: by kuha.fi.intel.com (sSMTP sendmail emulation); Wed, 03 Apr 2024 13:40:01 +0300
-Date: Wed, 3 Apr 2024 13:40:01 +0300
-From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-To: "Christian A. Ehrhardt" <lk@c--e.de>
-Cc: linux-kernel@vger.kernel.org,
-	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-	Diogo Ivo <diogo.ivo@tecnico.ulisboa.pt>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Prashant Malani <pmalani@chromium.org>,
-	Jameson Thies <jthies@google.com>,
-	Abhishek Pandit-Subedi <abhishekpandit@chromium.org>,
-	Neil Armstrong <neil.armstrong@linaro.org>,
-	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>,
-	Samuel =?utf-8?B?xIxhdm9q?= <samuel@cavoj.net>,
-	linux-usb@vger.kernel.org
-Subject: Re: [PATCH 2/3] usb: typec: ucsi: Never send a lone connector change
- ack
-Message-ID: <Zg0yAfuhoOT0XrX+@kuha.fi.intel.com>
-References: <20240327224554.1772525-1-lk@c--e.de>
- <20240327224554.1772525-3-lk@c--e.de>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="pMqWthw/"
+Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 43386MEr015094;
+	Wed, 3 Apr 2024 10:42:37 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	from:to:subject:date:message-id:mime-version
+	:content-transfer-encoding:content-type; s=qcppdkim1; bh=JpieIyE
+	kDxsw3072e1J13lEaIa/3khLxcjiUmz1Ptjg=; b=pMqWthw/72gLoncYjf2zHhj
+	2V5S/GdLrWv8EKCL/Z5IgH04JVKmdeSVVkhhqXFAbDIYaeX3FxbfWQGuxnAlHux4
+	gV69dFWOMT/6TdDTuKw7fX4qmLPYc6ftjFTsRNFrABwYPcWOU9nkIoZs2IwJemos
+	aYtw8zg7I7Tt0Cb0Qm7ffKVdaTBGWslPfZP7NEJZqWwj3/uXqAAghGtg/NMcrEAf
+	V+qWz5C3xhd847dpLoFiXrv1euPc4elhSFhPUpjqcRB5Eo7Ut1p5f2fGS1Svm8R/
+	EBLui2i1pVn3tI355qYpl5OnUNmdYwyQNLDEwtkkZClgQ2pBQ7agU58S0F0QJlg=
+	=
+Received: from nasanppmta01.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3x93a5gbhg-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 03 Apr 2024 10:42:36 +0000 (GMT)
+Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
+	by NASANPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 433Agapm026194
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 3 Apr 2024 10:42:36 GMT
+Received: from hu-varada-blr.qualcomm.com (10.80.80.8) by
+ nasanex01b.na.qualcomm.com (10.46.141.250) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.4; Wed, 3 Apr 2024 03:42:31 -0700
+From: Varadarajan Narayanan <quic_varada@quicinc.com>
+To: <andersson@kernel.org>, <konrad.dybcio@linaro.org>,
+        <mturquette@baylibre.com>, <sboyd@kernel.org>, <robh@kernel.org>,
+        <krzk+dt@kernel.org>, <conor+dt@kernel.org>, <djakov@kernel.org>,
+        <dmitry.baryshkov@linaro.org>, <quic_varada@quicinc.com>,
+        <quic_anusha@quicinc.com>, <linux-arm-msm@vger.kernel.org>,
+        <linux-clk@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-pm@vger.kernel.org>
+Subject: [PATCH v7 0/5] Add interconnect driver for IPQ9574 SoC
+Date: Wed, 3 Apr 2024 16:12:15 +0530
+Message-ID: <20240403104220.1092431-1-quic_varada@quicinc.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240327224554.1772525-3-lk@c--e.de>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nasanex01b.na.qualcomm.com (10.46.141.250)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: wQW29ViqT1UpRccDJglcqQ5GhGrHEc1u
+X-Proofpoint-ORIG-GUID: wQW29ViqT1UpRccDJglcqQ5GhGrHEc1u
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-04-03_09,2024-04-01_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 malwarescore=0
+ bulkscore=0 priorityscore=1501 lowpriorityscore=0 mlxscore=0
+ impostorscore=0 phishscore=0 clxscore=1011 suspectscore=0 mlxlogscore=980
+ spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2403210001 definitions=main-2404030074
 
-On Wed, Mar 27, 2024 at 11:45:53PM +0100, Christian A. Ehrhardt wrote:
-> Some PPM implementation do not like UCSI_ACK_CONNECTOR_CHANGE
-> without UCSI_ACK_COMMAND_COMPLETE. Moreover, doing this is racy
-> as it requires sending two UCSI_ACK_CC_CI commands in a row and
-> the second one will be started with UCSI_CCI_ACK_COMPLETE already
-> set in CCI.
-> 
-> Bundle the UCSI_ACK_CONNECTOR_CHANGE with the UCSI_ACK_COMMAND_COMPLETE
-> for the UCSI_GET_CONNECTOR_STATUS command that is sent while
-> handling a connector change event.
-> 
-> Signed-off-by: Christian A. Ehrhardt <lk@c--e.de>
+MSM platforms manage NoC related clocks and scaling from RPM.
+However, in IPQ SoCs, RPM is not involved in managing NoC
+related clocks and there is no NoC scaling.
 
-Reviewed-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+However, there is a requirement to enable some NoC interface
+clocks for the accessing the peripherals present in the
+system. Hence add a minimalistic interconnect driver that
+establishes a path from the processor/memory to those peripherals
+and vice versa.
 
-> ---
->  drivers/usb/typec/ucsi/ucsi.c | 48 +++++++++++++++--------------------
->  1 file changed, 21 insertions(+), 27 deletions(-)
-> 
-> diff --git a/drivers/usb/typec/ucsi/ucsi.c b/drivers/usb/typec/ucsi/ucsi.c
-> index 31d8a46ae5e7..48f093a1dc09 100644
-> --- a/drivers/usb/typec/ucsi/ucsi.c
-> +++ b/drivers/usb/typec/ucsi/ucsi.c
-> @@ -49,22 +49,16 @@ static int ucsi_read_message_in(struct ucsi *ucsi, void *buf,
->  	return ucsi->ops->read(ucsi, UCSI_MESSAGE_IN, buf, buf_size);
->  }
->  
-> -static int ucsi_acknowledge_command(struct ucsi *ucsi)
-> +static int ucsi_acknowledge(struct ucsi *ucsi, bool conn_ack)
->  {
->  	u64 ctrl;
->  
->  	ctrl = UCSI_ACK_CC_CI;
->  	ctrl |= UCSI_ACK_COMMAND_COMPLETE;
-> -
-> -	return ucsi->ops->sync_write(ucsi, UCSI_CONTROL, &ctrl, sizeof(ctrl));
-> -}
-> -
-> -static int ucsi_acknowledge_connector_change(struct ucsi *ucsi)
-> -{
-> -	u64 ctrl;
-> -
-> -	ctrl = UCSI_ACK_CC_CI;
-> -	ctrl |= UCSI_ACK_CONNECTOR_CHANGE;
-> +	if (conn_ack) {
-> +		clear_bit(EVENT_PENDING, &ucsi->flags);
-> +		ctrl |= UCSI_ACK_CONNECTOR_CHANGE;
-> +	}
->  
->  	return ucsi->ops->sync_write(ucsi, UCSI_CONTROL, &ctrl, sizeof(ctrl));
->  }
-> @@ -77,7 +71,7 @@ static int ucsi_read_error(struct ucsi *ucsi)
->  	int ret;
->  
->  	/* Acknowledge the command that failed */
-> -	ret = ucsi_acknowledge_command(ucsi);
-> +	ret = ucsi_acknowledge(ucsi, false);
->  	if (ret)
->  		return ret;
->  
-> @@ -89,7 +83,7 @@ static int ucsi_read_error(struct ucsi *ucsi)
->  	if (ret)
->  		return ret;
->  
-> -	ret = ucsi_acknowledge_command(ucsi);
-> +	ret = ucsi_acknowledge(ucsi, false);
->  	if (ret)
->  		return ret;
->  
-> @@ -152,7 +146,7 @@ static int ucsi_exec_command(struct ucsi *ucsi, u64 cmd)
->  		return -EIO;
->  
->  	if (cci & UCSI_CCI_NOT_SUPPORTED) {
-> -		if (ucsi_acknowledge_command(ucsi) < 0)
-> +		if (ucsi_acknowledge(ucsi, false) < 0)
->  			dev_err(ucsi->dev,
->  				"ACK of unsupported command failed\n");
->  		return -EOPNOTSUPP;
-> @@ -165,15 +159,15 @@ static int ucsi_exec_command(struct ucsi *ucsi, u64 cmd)
->  	}
->  
->  	if (cmd == UCSI_CANCEL && cci & UCSI_CCI_CANCEL_COMPLETE) {
-> -		ret = ucsi_acknowledge_command(ucsi);
-> +		ret = ucsi_acknowledge(ucsi, false);
->  		return ret ? ret : -EBUSY;
->  	}
->  
->  	return UCSI_CCI_LENGTH(cci);
->  }
->  
-> -int ucsi_send_command(struct ucsi *ucsi, u64 command,
-> -		      void *data, size_t size)
-> +static int ucsi_send_command_common(struct ucsi *ucsi, u64 command,
-> +				    void *data, size_t size, bool conn_ack)
->  {
->  	u8 length;
->  	int ret;
-> @@ -192,7 +186,7 @@ int ucsi_send_command(struct ucsi *ucsi, u64 command,
->  			goto out;
->  	}
->  
-> -	ret = ucsi_acknowledge_command(ucsi);
-> +	ret = ucsi_acknowledge(ucsi, conn_ack);
->  	if (ret)
->  		goto out;
->  
-> @@ -201,6 +195,12 @@ int ucsi_send_command(struct ucsi *ucsi, u64 command,
->  	mutex_unlock(&ucsi->ppm_lock);
->  	return ret;
->  }
-> +
-> +int ucsi_send_command(struct ucsi *ucsi, u64 command,
-> +		      void *data, size_t size)
-> +{
-> +	return ucsi_send_command_common(ucsi, command, data, size, false);
-> +}
->  EXPORT_SYMBOL_GPL(ucsi_send_command);
->  
->  /* -------------------------------------------------------------------------- */
-> @@ -1168,7 +1168,9 @@ static void ucsi_handle_connector_change(struct work_struct *work)
->  	mutex_lock(&con->lock);
->  
->  	command = UCSI_GET_CONNECTOR_STATUS | UCSI_CONNECTOR_NUMBER(con->num);
-> -	ret = ucsi_send_command(ucsi, command, &con->status, sizeof(con->status));
-> +
-> +	ret = ucsi_send_command_common(ucsi, command, &con->status,
-> +				       sizeof(con->status), true);
->  	if (ret < 0) {
->  		dev_err(ucsi->dev, "%s: GET_CONNECTOR_STATUS failed (%d)\n",
->  			__func__, ret);
-> @@ -1225,14 +1227,6 @@ static void ucsi_handle_connector_change(struct work_struct *work)
->  	if (con->status.change & UCSI_CONSTAT_CAM_CHANGE)
->  		ucsi_partner_task(con, ucsi_check_altmodes, 1, 0);
->  
-> -	mutex_lock(&ucsi->ppm_lock);
-> -	clear_bit(EVENT_PENDING, &con->ucsi->flags);
-> -	ret = ucsi_acknowledge_connector_change(ucsi);
-> -	mutex_unlock(&ucsi->ppm_lock);
-> -
-> -	if (ret)
-> -		dev_err(ucsi->dev, "%s: ACK failed (%d)", __func__, ret);
-> -
->  out_unlock:
->  	mutex_unlock(&con->lock);
->  }
-> -- 
-> 2.40.1
+---
+v7:	Fix macro names in dt-bindings header
+	Do clock get in icc driver
+
+v6:	Removed 'Reviewed-by: Krzysztof' from dt-bindings patch
+	Remove clock get from ICC driver as suggested by Stephen Boyd
+	so that the actual peripheral can do the clock get
+	first_id -> icc_first_node_id
+	Remove tristate from INTERCONNECT_CLK
+v5:
+	Split gcc-ipq9574.c and common.c changes into separate patches
+	Introduce devm_icc_clk_register
+	Fix error handling
+v4:
+gcc-ipq9574.c
+	Use clk_hw instead of indices
+common.c
+	Do icc register in qcom_cc_probe() call stream
+common.h
+	Add icc clock info to qcom_cc_desc structure
+
+v3:
+qcom,ipq9574.h
+	Move 'first id' define to clock driver
+gcc-ipq9574.c:
+	Use indexed identifiers here to avoid confusion
+	Fix error messages and move code to common.c as it can be
+	shared with future SoCs
+
+v2:
+qcom,ipq9574.h
+	Fix license identifier
+	Rename macros
+qcom,ipq9574-gcc.yaml
+	Include interconnect-cells
+gcc-ipq9574.c
+	Update commit log
+	Remove IS_ENABLED(CONFIG_INTERCONNECT) and auto select it from Kconfig
+ipq9574.dtsi
+	Moved to separate patch
+	Include interconnect-cells to clock controller node
+drivers/clk/qcom/Kconfig:
+	Auto select CONFIG_INTERCONNECT & CONFIG_INTERCONNECT_CLK
+
+Varadarajan Narayanan (5):
+  dt-bindings: interconnect: Add Qualcomm IPQ9574 support
+  interconnect: icc-clk: Add devm_icc_clk_register
+  clk: qcom: common: Add interconnect clocks support
+  clk: qcom: ipq9574: Use icc-clk for enabling NoC related clocks
+  arm64: dts: qcom: ipq9574: Add icc provider ability to gcc
+
+ .../bindings/clock/qcom,ipq9574-gcc.yaml      |  3 +
+ arch/arm64/boot/dts/qcom/ipq9574.dtsi         |  2 +
+ drivers/clk/qcom/Kconfig                      |  2 +
+ drivers/clk/qcom/common.c                     | 31 ++++++-
+ drivers/clk/qcom/common.h                     |  3 +
+ drivers/clk/qcom/gcc-ipq9574.c                | 30 +++++++
+ drivers/interconnect/icc-clk.c                | 18 ++++
+ .../dt-bindings/interconnect/qcom,ipq9574.h   | 87 +++++++++++++++++++
+ include/linux/interconnect-clk.h              |  2 +
+ 9 files changed, 177 insertions(+), 1 deletion(-)
+ create mode 100644 include/dt-bindings/interconnect/qcom,ipq9574.h
 
 -- 
-heikki
+2.34.1
+
