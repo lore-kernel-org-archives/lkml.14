@@ -1,137 +1,164 @@
-Received: from mail-il1-f178.google.com (mail-il1-f178.google.com [209.85.166.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7319715F411
-	for <linux-kernel@vger.kernel.org>; Wed,  3 Apr 2024 17:19:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24E2915FCE3;
+	Wed,  3 Apr 2024 17:19:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712164758; cv=none; b=UyHbd+xyN4LAa1rwJMeykFsQkkgEicnzHzw+Qvqgcl0lTyDACZQQHWKNh+AjPH5gmR85589GppRgdmieVccOVUh2EP8MNhUDpPPt1C1DNNcEXt1Lvt56eJmQUBvpF+f/JkP/uwtiWxQN6uG3qgUND5EXMjoq63nS8U2tSJG3fm8=
+	t=1712164762; cv=none; b=RYwe3aakjp1/EIFHAzZLYzT4ZX9PMNidRwc0MsCE6E9JXAiMYy5YQxgS1FHQD3usClJNYhki2c7B8tKpugY8DjD82X77EC1mgGu6OygAbqURD6sDcrWmbW1xjDNCsGiuNiIGO149ssaGBXRx/MBc6ncOIdkzXFCJLTPsqXAIYNo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712164758; c=relaxed/simple;
-	bh=7WCygVy7w74ejcPOlh+nPVv7g5gmJJBdDz9sW2iRKLU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=eOQJKBz+cr8Gak5iaBEVG4qJ1eBusOlkx6stlgWO7zv2Fu1oKlxOxf68oVSWVFMsxGXnkPAO5kqqNpRA2gsIHkMg4S4tNMSB2rPaQEadhB1v/nJHZBhFucAuYvP4AjB/bK1+CHI+kzlYSHLTxyOnb6GTTdE0yldMxcGkb4KawYA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brainfault.org; spf=none smtp.mailfrom=brainfault.org; dkim=pass (2048-bit key) header.d=brainfault-org.20230601.gappssmtp.com header.i=@brainfault-org.20230601.gappssmtp.com header.b=qzOhqNad; arc=none smtp.client-ip=209.85.166.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brainfault.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=brainfault.org
+	s=arc-20240116; t=1712164762; c=relaxed/simple;
+	bh=GV/QxceMDpKd3Dxll4jqgxB//sdf5/98x2xoNhBaPLY=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=LxLhPJ5E3bvkf8Mslos49FJ1A1w6HnuC3X9N9V3c/b+tFO1CjZBb1ch6uMgrrA/4DsINdPfRwc75vEF96cqna6SKLKmU5mws2x7BE6vbUlVAheA1PeRmqCIzdhesZqcmB7q5xpOthGyrPuT2opiQj/t5q8mUUVcJT0vWH5KfAvs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=s4ipyB47; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=brainfault-org.20230601.gappssmtp.com header.i=@brainfault-org.20230601.gappssmtp.com header.b="qzOhqNad"
-Received: by mail-il1-f178.google.com with SMTP id e9e14a558f8ab-369fe4e650aso83005ab.2
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Apr 2024 10:19:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brainfault-org.20230601.gappssmtp.com; s=20230601; t=1712164756; x=1712769556; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=4Z7t0uImy7n5WDw0eNkAk8ksvRGRviUSYCwUauyh+YE=;
-        b=qzOhqNadpwW+2ttN0BLBUPYhZddfZHmbEX2zUPRzcd1wNslvUmCWuqELD9V6UeaNP9
-         TlOQyop41+IaMKJisBabTGL2re3rFG2YavekoOylWDw7EJJGSCF83jI0Kr8TroFeh/8N
-         8cpUsTZ4Y72Ybt51FEu0+kZn7CS8Wc2u8464GjogmcYDnpGHZxZDI8OJVloYiV9iYKou
-         diwf+t9u3B4jPZ8i0qQPDu3oSZ7ZCNBPz1XUYHcMN0U89RctPqIXRI9GwaMWJcKvQk3G
-         gAyAmyenovUGRQu4wrX97Q1uWKwCirsZVd3ed/AfdhQbwk3HicXNUr1rohkPtHssbrW2
-         p6CQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712164756; x=1712769556;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=4Z7t0uImy7n5WDw0eNkAk8ksvRGRviUSYCwUauyh+YE=;
-        b=Oayb8IyVJ/uvHxIzfyG98CbiBwqqZa/q+nk1zD1RH6ND1Vxi27ojLueNj674il1YUR
-         WyIaTIeTGCPsE/lZE3jpe7hEZotY7USypnDybIzVbBs92lbvZ3ZvaorJROMOUYc8Izrx
-         oNKLqZoA9FW7c9ngZQZiUSuiidM0d7+4rSMpB9d9mf9fv3ftNZpbgIKMmoO/9T26IhzD
-         CTW7RnhlXoBNkCAEunFajrYO/VjaHD3bdJ7igsi1V9FNFFED7LTXAtrJx34JcMaou2U/
-         9J3zdZVegPGqJmyp9ccAxlXjY1P5rWrVmL/meX8gFZ5lrNqAzT/ZW4unMa+5oei/idq6
-         QDtg==
-X-Forwarded-Encrypted: i=1; AJvYcCVOjFPsnORzx5ljf6tQ5yBPDOZ0kyu3pTCkxKCbqzfILZNOQS9j9A5sa0gXhhZUThnkPXslko+ORq3Lb9DKy0eksseGAxMpp7AY+9Hn
-X-Gm-Message-State: AOJu0YzSsfyxaDiq5Zd8gL6nGnMAWJa+J4zWooaTQ4UeepYnr1BAN1/v
-	upTzmoc/Zmrwekja+zMxl/OscD+0YHChiOYzfVjrDpD4a8wYECPAbMzo577HMt3MMW0VHQSbGNL
-	mu0wBYdZ2E9psN3h2NkeDWjA8ri9SCRAkjVKcNg==
-X-Google-Smtp-Source: AGHT+IEqVdgnXbdDh9CbZVI24256r9T+FVR5QXVTF8fAn05s0ucQcU9MTtFkNFbC1NNm0uzSG/hflw+wi5+kai0kSMY=
-X-Received: by 2002:a05:6e02:12eb:b0:368:96d2:7cdc with SMTP id
- l11-20020a056e0212eb00b0036896d27cdcmr440484iln.10.1712164756522; Wed, 03 Apr
- 2024 10:19:16 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="s4ipyB47"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 433FFC43390;
+	Wed,  3 Apr 2024 17:19:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1712164761;
+	bh=GV/QxceMDpKd3Dxll4jqgxB//sdf5/98x2xoNhBaPLY=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=s4ipyB47032QhvkOl/gebd9i5vqnwKFOCIoOoRtf6wE93BC/LxvSsH+yHAXgszLQE
+	 8P0nibw00yblO0LN266NE9Ou6QiJI+KMRfTh6PRKS6209oZZfJusYeYU1QxmKsx8VC
+	 b5WnuNTqB7kqHdCJykZuN4CZwnJibrq5+OzhKLpc7THtFISO/x3gByiuwT5eiEFXq3
+	 4BDZuy14HHXSzy8xfRziOdE0IfXkv+itN7UqYYX9gSp7qx+JI8gnVBQRTR6s/EooXv
+	 COi1VW6+D5O5NUMCLOPzqe65viwjh7v/aGjdPMh1lBiMfUytFKW0TkR5f0Wa9aHG41
+	 i8pLaZpQ6SwQQ==
+From: Sasha Levin <sashal@kernel.org>
+To: linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Cc: Abhishek Pandit-Subedi <abhishekpandit@chromium.org>,
+	Neil Armstrong <neil.armstrong@linaro.org>,
+	Prashant Malani <pmalani@chromium.org>,
+	Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Sasha Levin <sashal@kernel.org>,
+	lk@c--e.de,
+	jthies@google.com,
+	bleung@chromium.org,
+	saranya.gopal@intel.com,
+	dmitry.baryshkov@linaro.org,
+	linux-usb@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.1 05/15] usb: typec: ucsi: Limit read size on v1.2
+Date: Wed,  3 Apr 2024 13:18:49 -0400
+Message-ID: <20240403171909.345570-5-sashal@kernel.org>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240403171909.345570-1-sashal@kernel.org>
+References: <20240403171909.345570-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240222094006.1030709-1-apatel@ventanamicro.com>
- <20240222094006.1030709-2-apatel@ventanamicro.com> <CA+V-a8tGucbJ87hsMQDEgcor5BzDmB_WnRsEn6c9F_HzucWLXQ@mail.gmail.com>
- <CAK9=C2VgiRcQjBEPmZjdcMf221omKS8ntdcenSE7G__4xYcCUA@mail.gmail.com> <CA+V-a8ser=hDmst6+XSeOWaEoOd+iY3Ys6bYBWDa5UYPfT+Pug@mail.gmail.com>
-In-Reply-To: <CA+V-a8ser=hDmst6+XSeOWaEoOd+iY3Ys6bYBWDa5UYPfT+Pug@mail.gmail.com>
-From: Anup Patel <anup@brainfault.org>
-Date: Wed, 3 Apr 2024 22:49:04 +0530
-Message-ID: <CAAhSdy32Lxp-8_wQdZ3oc0yKBqJzurrMr7i30XRA6WTyqTbqmA@mail.gmail.com>
-Subject: Re: [PATCH v14 01/18] irqchip/sifive-plic: Convert PLIC driver into a
- platform driver
-To: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Cc: Anup Patel <apatel@ventanamicro.com>, Geert Uytterhoeven <geert+renesas@glider.be>, 
-	Palmer Dabbelt <palmer@dabbelt.com>, Paul Walmsley <paul.walmsley@sifive.com>, 
-	Thomas Gleixner <tglx@linutronix.de>, Rob Herring <robh+dt@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Frank Rowand <frowand.list@gmail.com>, 
-	Conor Dooley <conor+dt@kernel.org>, Marc Zyngier <maz@kernel.org>, =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn@kernel.org>, 
-	Atish Patra <atishp@atishpatra.org>, Andrew Jones <ajones@ventanamicro.com>, 
-	Sunil V L <sunilvl@ventanamicro.com>, Saravana Kannan <saravanak@google.com>, 
-	linux-riscv@lists.infradead.org, linux-arm-kernel@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 6.1.84
+Content-Transfer-Encoding: 8bit
 
-On Wed, Apr 3, 2024 at 9:19=E2=80=AFPM Lad, Prabhakar
-<prabhakar.csengg@gmail.com> wrote:
->
-> On Wed, Apr 3, 2024 at 3:17=E2=80=AFPM Anup Patel <apatel@ventanamicro.co=
-m> wrote:
-> >
-> > On Wed, Apr 3, 2024 at 2:01=E2=80=AFPM Lad, Prabhakar
-> > <prabhakar.csengg@gmail.com> wrote:
-> > >
-> > > Hi Anup,
-> > >
-> > > On Thu, Feb 22, 2024 at 9:41=E2=80=AFAM Anup Patel <apatel@ventanamic=
-ro.com> wrote:
-> > > >
-> > > > The PLIC driver does not require very early initialization so conve=
-rt
-> > > > it into a platform driver.
-> > > >
-> > > > After conversion, the PLIC driver is probed after CPUs are brought-=
-up
-> > > > so setup cpuhp state after context handler of all online CPUs are
-> > > > initialized otherwise PLIC driver crashes for platforms with multip=
-le
-> > > > PLIC instances.
-> > > >
-> > > > Signed-off-by: Anup Patel <apatel@ventanamicro.com>
-> > > > ---
-> > > >  drivers/irqchip/irq-sifive-plic.c | 101 ++++++++++++++++++--------=
-----
-> > > >  1 file changed, 61 insertions(+), 40 deletions(-)
-> > > >
-> > > This patch seems to have broken things on RZ/Five SoC, after revertin=
-g
-> > > this patch I get to boot it back again on v6.9-rc2. Looks like there
-> > > is some probe order issue after switching to platform driver?
-> >
-> > Yes, this is most likely related to probe ordering based on your DT.
-> >
-> > Can you share the failing boot log and DT ?
->
-> non working case, https://paste.debian.net/1312947/
-> after reverting, https://paste.debian.net/1312948/
-> (attached is the DTB)
+From: Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
 
-One potential problem is that
-drivers/clocksource/renesas-ostm.c is probed early
-using TIMER_OF_DECLARE() but the timer interrupt
-is connected to PLIC which is probed late hence the
-timer probe will fail.
+[ Upstream commit b3db266fb031fba88c423d4bb8983a73a3db6527 ]
 
-We have two possible options:
-1) Disable OSTM nodes
-2) Improve the OSTM driver to probe like a
-    regular platform device on RISC-V
+Between UCSI 1.2 and UCSI 2.0, the size of the MESSAGE_IN region was
+increased from 16 to 256. In order to avoid overflowing reads for older
+systems, add a mechanism to use the read UCSI version to truncate read
+sizes on UCSI v1.2.
 
-Regards,
-Anup
+Tested-by: Neil Armstrong <neil.armstrong@linaro.org>
+Reviewed-by: Prashant Malani <pmalani@chromium.org>
+Reviewed-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Signed-off-by: Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
+Link: https://lore.kernel.org/r/20240209143723.v5.1.Iacf5570a66b82b73ef03daa6557e2fc0db10266a@changeid
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/usb/typec/ucsi/ucsi.c | 26 ++++++++++++++++++++++++--
+ drivers/usb/typec/ucsi/ucsi.h | 11 +++++++++++
+ 2 files changed, 35 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/usb/typec/ucsi/ucsi.c b/drivers/usb/typec/ucsi/ucsi.c
+index 0695ee54ff781..9d4b30bb744cc 100644
+--- a/drivers/usb/typec/ucsi/ucsi.c
++++ b/drivers/usb/typec/ucsi/ucsi.c
+@@ -36,6 +36,19 @@
+  */
+ #define UCSI_SWAP_TIMEOUT_MS	5000
+ 
++static int ucsi_read_message_in(struct ucsi *ucsi, void *buf,
++					  size_t buf_size)
++{
++	/*
++	 * Below UCSI 2.0, MESSAGE_IN was limited to 16 bytes. Truncate the
++	 * reads here.
++	 */
++	if (ucsi->version <= UCSI_VERSION_1_2)
++		buf_size = clamp(buf_size, 0, 16);
++
++	return ucsi->ops->read(ucsi, UCSI_MESSAGE_IN, buf, buf_size);
++}
++
+ static int ucsi_acknowledge_command(struct ucsi *ucsi)
+ {
+ 	u64 ctrl;
+@@ -72,7 +85,7 @@ static int ucsi_read_error(struct ucsi *ucsi)
+ 	if (ret < 0)
+ 		return ret;
+ 
+-	ret = ucsi->ops->read(ucsi, UCSI_MESSAGE_IN, &error, sizeof(error));
++	ret = ucsi_read_message_in(ucsi, &error, sizeof(error));
+ 	if (ret)
+ 		return ret;
+ 
+@@ -170,7 +183,7 @@ int ucsi_send_command(struct ucsi *ucsi, u64 command,
+ 	length = ret;
+ 
+ 	if (data) {
+-		ret = ucsi->ops->read(ucsi, UCSI_MESSAGE_IN, data, size);
++		ret = ucsi_read_message_in(ucsi, data, size);
+ 		if (ret)
+ 			goto out;
+ 	}
+@@ -1403,6 +1416,15 @@ int ucsi_register(struct ucsi *ucsi)
+ 	if (!ucsi->version)
+ 		return -ENODEV;
+ 
++	/*
++	 * Version format is JJ.M.N (JJ = Major version, M = Minor version,
++	 * N = sub-minor version).
++	 */
++	dev_dbg(ucsi->dev, "Registered UCSI interface with version %x.%x.%x",
++		UCSI_BCD_GET_MAJOR(ucsi->version),
++		UCSI_BCD_GET_MINOR(ucsi->version),
++		UCSI_BCD_GET_SUBMINOR(ucsi->version));
++
+ 	queue_delayed_work(system_long_wq, &ucsi->work, 0);
+ 
+ 	return 0;
+diff --git a/drivers/usb/typec/ucsi/ucsi.h b/drivers/usb/typec/ucsi/ucsi.h
+index 60ce9fb6e7450..559cec46e906a 100644
+--- a/drivers/usb/typec/ucsi/ucsi.h
++++ b/drivers/usb/typec/ucsi/ucsi.h
+@@ -22,6 +22,17 @@ struct ucsi_altmode;
+ #define UCSI_CONTROL			8
+ #define UCSI_MESSAGE_IN			16
+ #define UCSI_MESSAGE_OUT		32
++#define UCSIv2_MESSAGE_OUT		272
++
++/* UCSI versions */
++#define UCSI_VERSION_1_2	0x0120
++#define UCSI_VERSION_2_0	0x0200
++#define UCSI_VERSION_2_1	0x0210
++#define UCSI_VERSION_3_0	0x0300
++
++#define UCSI_BCD_GET_MAJOR(_v_)		(((_v_) >> 8) & 0xFF)
++#define UCSI_BCD_GET_MINOR(_v_)		(((_v_) >> 4) & 0x0F)
++#define UCSI_BCD_GET_SUBMINOR(_v_)	((_v_) & 0x0F)
+ 
+ /* Command Status and Connector Change Indication (CCI) bits */
+ #define UCSI_CCI_CONNECTOR(_c_)		(((_c_) & GENMASK(7, 1)) >> 1)
+-- 
+2.43.0
+
