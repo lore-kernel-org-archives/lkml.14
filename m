@@ -1,141 +1,133 @@
-Received: from mail-m49253.qiye.163.com (mail-m49253.qiye.163.com [45.254.49.253])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65E2B147C78;
-	Wed,  3 Apr 2024 13:57:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.254.49.253
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23BAB14830F
+	for <linux-kernel@vger.kernel.org>; Wed,  3 Apr 2024 13:58:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712152638; cv=none; b=oRjSUejf9g9PDn12CwC7SMHLz92s6yAps/cQ2HNmyVqFuw774DyOeZXsbyiFCNgGOXcJlQaGSyrbwlO7SIIBVYh4mwUewhUPrDtIINfQHQeJTytpYLzQSYAlYKw4PDqPgtzXS6JOl+hzdwgX9rLm0dToricFUyVvOvtf2N8TtsU=
+	t=1712152725; cv=none; b=RHRbIptK4J7x4MqEyO3rMxAUJEHQsMYZpoZDqLvu7A5GE4nx+ekVxekHyKeMuKqOma078UH0bbJQkfDACbvpxv+rpC/rLFGlC0jQFX4NwmenrdfHJwqlEOY/umRX7ZZvL+W50m0eKNA1426uy6oOK8VlLnWRH81kJspSh8hgACM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712152638; c=relaxed/simple;
-	bh=Yi2rfy/c/FEfpMRtlXRZ23HDICk1lcPrg8Fy+0GTG60=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=VW9GNYaaB4R3EPQO8S0zPtg1XFfec1mN3MTSOYjnCs0uM0et6XrO6AK7qf/mEwmOMKFh4WH3ZtjxTyj9Ys1/li0PYSvN41lYZwhQFVFHlYBOQhV6EedZkXYjFQ3118XS6c2ShPdlDJMtmHMA3yHcUtmOEUrm85SLgh51c81GQZ8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com; spf=pass smtp.mailfrom=rock-chips.com; dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b=WL9AME1F; arc=none smtp.client-ip=45.254.49.253
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rock-chips.com
+	s=arc-20240116; t=1712152725; c=relaxed/simple;
+	bh=SJSDM1jLJy1+bnkJOfwF5OrMRSMvyL4/cFh8OpRtlao=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=RvRXVgE3rVU6H6f53kSo84qOgMILqv+4zMQyxbsywgBaZCsoX3zGbJf8ZkPeZswtSREZGbeSSuzvxpFZhM5RDwNBDs84LYf+I9V3pqZGerRc7FMERyngtFuzOCvmp25s4r/VR6/F0P9qyaVS9VeodMXbwFhBLTxU6o51A5tTW1A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=gSFdrCeD; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b="WL9AME1F"
-DKIM-Signature: a=rsa-sha256;
-	b=WL9AME1FbN3qwG5Wk/f79Xhi/AskTVfgq4tjVjSPsooez9x8BryWqJeBNcj8nT7Cip+10fOlPiHqsHn8OL6mSsNN5q36mI+y2RXFwcfUM3ELmMp1gzB+DCuJ32O/rK9vlsmI9opkB5wX7NvQcY5vCQd4rypsKVxDSSE7JkQ2MLE=;
-	c=relaxed/relaxed; s=default; d=rock-chips.com; v=1;
-	bh=hVhk+TI4SRZhbF4gUP3nkD3PWMY3UDprkFnGH1+J064=;
-	h=date:mime-version:subject:message-id:from;
-Received: from localhost.localdomain (unknown [58.22.7.114])
-	by smtp.qiye.163.com (Hmail) with ESMTPA id C6D807C03A7;
-	Wed,  3 Apr 2024 21:18:44 +0800 (CST)
-From: Sugar Zhang <sugar.zhang@rock-chips.com>
-To: heiko@sntech.de,
-	vkoul@kernel.org
-Cc: linux-rockchip@lists.infradead.org,
-	Sugar Zhang <sugar.zhang@rock-chips.com>,
-	dmaengine@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 1/2] dmaengine: Add support for audio interleaved transfer
-Date: Wed,  3 Apr 2024 21:18:22 +0800
-Message-Id: <20240403211810.v2.1.I502ea9c86c8403dc5b1f38abf40be8b6ee13c1dc@changeid>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1712150304-60832-1-git-send-email-sugar.zhang@rock-chips.com>
-References: <1712150304-60832-1-git-send-email-sugar.zhang@rock-chips.com>
-X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-	tZV1koWUFDSUNOT01LS0k3V1ktWUFJV1kPCRoVCBIfWUFZQ09IT1ZNHx0aTU8YHksfSh5VEwETFh
-	oSFyQUDg9ZV1kYEgtZQVlOQ1VJSVVMVUpKT1lXWRYaDxIVHRRZQVlPS0hVSk1PSUxOVUpLS1VKQk
-	tLWQY+
-X-HM-Tid: 0a8ea41ca76e09d2kunmc6d807c03a7
-X-HM-MType: 1
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6NjY6CDo*DTMTATUZNTFJHhdD
-	LCoKCR1VSlVKTEpJSk5LSElOT09OVTMWGhIXVQgOHBoJVQETGhUcOwkUGBBWGBMSCwhVGBQWRVlX
-	WRILWUFZTkNVSUlVTFVKSk9ZV1kIAVlBSENJTDcG
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gSFdrCeD"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1712152722;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=SJSDM1jLJy1+bnkJOfwF5OrMRSMvyL4/cFh8OpRtlao=;
+	b=gSFdrCeDPZkb+DS0M20A6QSsp6gR+nA9j5i4RtPDEhVieBHlmybdv3ORmELLTPebgQkPsA
+	QU2Ixan901/eklDwxv1wDuwbwWwbDiZLKvLvri6IHStnLP2q2L2xzxS+wrM28FwgCsHUMA
+	ErkPAPkNpSCN27uuuaZMOlLhSjsUnyo=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-16-814WLSUpN9-gkiUa8lOX-g-1; Wed, 03 Apr 2024 09:58:40 -0400
+X-MC-Unique: 814WLSUpN9-gkiUa8lOX-g-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.rdu2.redhat.com [10.11.54.2])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 77AF8879844;
+	Wed,  3 Apr 2024 13:58:39 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.224.49])
+	by smtp.corp.redhat.com (Postfix) with SMTP id 07B5B40C6CB5;
+	Wed,  3 Apr 2024 13:58:35 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+	oleg@redhat.com; Wed,  3 Apr 2024 15:57:15 +0200 (CEST)
+Date: Wed, 3 Apr 2024 15:56:51 +0200
+From: Oleg Nesterov <oleg@redhat.com>
+To: Jiri Olsa <olsajiri@gmail.com>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Andrii Nakryiko <andrii@kernel.org>, linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org,
+	Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+	John Fastabend <john.fastabend@gmail.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	"Borislav Petkov (AMD)" <bp@alien8.de>, x86@kernel.org
+Subject: Re: [PATCHv2 1/3] uprobe: Add uretprobe syscall to speed up return
+ probe
+Message-ID: <20240403135650.GA31764@redhat.com>
+References: <20240402093302.2416467-1-jolsa@kernel.org>
+ <20240402093302.2416467-2-jolsa@kernel.org>
+ <20240403100708.233575a8ac2a5bac2192d180@kernel.org>
+ <Zg0lvUIB4WdRUGw_@krava>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Zg0lvUIB4WdRUGw_@krava>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.2
 
-This patch add support for interleaved transfer which used
-for interleaved audio or 2d video data transfer.
+I leave this to you and Masami, but...
 
-for audio situation, we add 'nump' for number of period frames.
+On 04/03, Jiri Olsa wrote:
+>
+> On Wed, Apr 03, 2024 at 10:07:08AM +0900, Masami Hiramatsu wrote:
+> >
+> > This is interesting approach. But I doubt we need to add additional
+> > syscall just for this purpose. Can't we use another syscall or ioctl?
+>
+> so the plan is to optimize entry uprobe in a similar way and given
+> the syscall is not a scarce resource I wanted to add another syscall
+> for that one as well
+>
+> tbh I'm not sure sure which syscall or ioctl to reuse for this, it's
+> possible to do that, the trampoline will just have to save one or
+> more additional registers, but adding new syscall seems cleaner to me
 
-e.g. combine 2 stream into a union one by 2D dma.
+Agreed.
 
-DAI0: 16CH
-+-------------------------------------------------------------+
-| Frame-1 | Frame-2 | Frame-3 | Frame-4 | ...... Frame-'numf' |
-+-------------------------------------------------------------+
+> > Also, we should run syzkaller on this syscall. And if uretprobe is
+>
+> right, I'll check on syzkaller
 
-DAI1: 16CH
-+-------------------------------------------------------------+
-| Frame-1 | Frame-2 | Frame-3 | Frame-4 | ...... Frame-'numf' |
-+-------------------------------------------------------------+
+I don't understand this concern...
 
-DAI0 + DAI1: 32CH
+> > set in the user function, what happen if the user function directly
+> > calls this syscall? (maybe it consumes shadow stack?)
+>
+> the process should receive SIGILL if there's no pending uretprobe for
+> the current task,
 
-+-------------------------------------------------------------+
-| DAI0-F1 | DAI1-F1 | DAI0-F2 | DAI1-F2 | ......              |
-+-------------------------------------------------------------+
-|      Frame-1      |      Frame-2      | ...... Frame-'numf' |
+Yes,
 
-For audio situation, we have buffer_size and period_size,
-the 'numf' is the buffer_size. so, we need another one for
-period_size, e.g. 'nump'.
+> or it will trigger uretprobe if there's one pending
 
-| Frame-1 | ~ | Frame-'nump' | ~ | Frame-'nump+1' | ~ |  Frame-'numf' |
-|
+... and corrupt the caller. So what?
 
-As the above shown:
+> but we could limit the syscall to be executed just from the trampoline,
+> that should prevent all the user space use cases, I'll do that in next
+> version and add more tests for that
 
-each DAI0 transfer 1 Frame, should skip a gap size (DAI1-F1)
-each DAI1 transfer 1 Frame, should skip a gap size (DAI0-F1)
+Yes, we can... well, ignoring the race with mremap() from another thread.
 
-So, the interleaved template describe as follows:
+But why should we care?
 
-DAI0:
+Userspace should not call sys_uretprobe(). Likewise, it should not call
+sys_restart_syscall(). Likewise, it should not jump to xol_area.
 
-struct dma_interleaved_template *xt;
+Of course, userspace (especially syzkaller) _can_ do this. So what?
 
-xt->sgl[0].size = DAI0-F1;
-xt->sgl[0].icg =  DAI1-F1;
-xt->nump = nump; //the period_size in frames
-xt->numf = numf; //the buffer_size in frames
+I think the only thing we need to ensure is that the "malicious" task
+which calls sys_uretprobe() can only harm itself, nothing more.
 
-DAI1:
+No?
 
-struct dma_interleaved_template *xt;
-
-xt->sgl[0].size = DAI1-F1;
-xt->sgl[0].icg =  DAI0-F1;
-xt->nump = nump; //the period_size in frames
-xt->numf = numf; //the buffer_size in frames
-
-Signed-off-by: Sugar Zhang <sugar.zhang@rock-chips.com>
----
-
-Changes in v2:
-- Add the pl330 interleaved transfer
-
- include/linux/dmaengine.h | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/include/linux/dmaengine.h b/include/linux/dmaengine.h
-index 752dbde..5263cde 100644
---- a/include/linux/dmaengine.h
-+++ b/include/linux/dmaengine.h
-@@ -144,6 +144,7 @@ struct data_chunk {
-  *		Otherwise, destination is filled contiguously (icg ignored).
-  *		Ignored if dst_inc is false.
-  * @numf: Number of frames in this template.
-+ * @nump: Number of period frames in this template.
-  * @frame_size: Number of chunks in a frame i.e, size of sgl[].
-  * @sgl: Array of {chunk,icg} pairs that make up a frame.
-  */
-@@ -156,6 +157,7 @@ struct dma_interleaved_template {
- 	bool src_sgl;
- 	bool dst_sgl;
- 	size_t numf;
-+	size_t nump;
- 	size_t frame_size;
- 	struct data_chunk sgl[];
- };
--- 
-2.7.4
+Oleg.
 
