@@ -1,150 +1,178 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FAD6200D4;
-	Wed,  3 Apr 2024 13:11:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40F6B200D4
+	for <linux-kernel@vger.kernel.org>; Wed,  3 Apr 2024 13:12:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712149916; cv=none; b=beMQbl1PE/prIpYLya6B7k1r09SbGf5BRXRrN373xXl4sBHeMSHFsNIxAunx0GTu5DZQaAuZ50P8IgKxVVBZyYg/3BWviY1CzCu1QJpp6I614SzEHqjcT+1+pczGd16bsbSssckTqLcjxJqW2pBgcs5Jdg93932KHQcIKIXp9LQ=
+	t=1712149960; cv=none; b=KIyPyObPpOo9MT0y62+GpJzZy0JQYTiuHAgqeGufmknvRPt1rk4aWyLpwhZMGkaKTdFtr5gGwdQQLhrYbi3DDOFnUxhg/tbEzLgU4YY5M1Bjbm+uIfvfxft6BT/a8JinlOpb9QO/BMs3xumUXHfx8oQibu5gB722+sySB0YRCO0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712149916; c=relaxed/simple;
-	bh=988I3Q8yT1g6WpTi1Ga40N32urlSH2QimLrM2LzfSQs=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=ht/SOUW5vc9UYTape6IUgbjMMoPbW35ftH9heAPrL+EGJxhx+CzmFyRZQXGe2zEq1wYhaTX0mOPOD06f8q1v1QtUeLRKOJVY2YoHabJryRkhRsMoBu2JD1izGzNxgIaqRu2Pvjw2tyOTUiyyGJr3umGgJRkc2TuDipJ844SCSXQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=Upl7xRlv; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1712149960; c=relaxed/simple;
+	bh=OXeLQFpYLfKv872kx1DqTxRGattiHdnyN8/e6tdxp0E=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=fRdsgfKqZnxFLz8Wi68cpeIKzf7zN1Dd1IeHkDSQgCNKBU/WWSNQqZlzZg25RAZJZEYCcMkEE5Pf3YycYN2FxbY5+ZTykSpUpBMrAkK8CbleJyTcC1VF7S9y9DrgFu8kzZ+F+uiGi7NNyUyTVbaWEdJ8Y30JRZSTnCCMnBsR40M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dtuSJfLX; arc=none smtp.client-ip=192.198.163.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="Upl7xRlv"
-Received: from pps.filterd (m0353726.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 433CqamI013959;
-	Wed, 3 Apr 2024 13:11:18 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : subject :
- from : to : cc : date : in-reply-to : references : content-type :
- content-transfer-encoding : mime-version; s=pp1;
- bh=cX9BfS1KFfnbnppbxJxElitNCKueMFxijxJrZ6z2zUY=;
- b=Upl7xRlvRndQgXEOukfJD8YvwK8uodvSpontiwuTshTMpllHoYVQIpRAgIV2cHEpF8eL
- wMeO+3N4zGuRYam8thFiH4TYke6zB4CmxU6wxHfdBRUQz+J1b28xIOOtFdtpjLG3aRe2
- hiX1h1hLm4RGqCmnj1jxX8pAFyeVKHllAg5U7iFSCUXkPSB8qULByym6B5I1QICnI3xd
- V3ITFR5yCjMpVUdV77VktwzlX+e2IWuS6MlxIqMhH5rHWe3b/uc8XDCY4ox3D1RNH2qB
- vL/okmm37QDg67D8QXV82a1SyLLbT9qDpuTf0m+xhusxeAujZWsEpgg3++dTsaWWIu4P nw== 
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3x97gd01fg-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 03 Apr 2024 13:11:18 +0000
-Received: from m0353726.ppops.net (m0353726.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 433DBH13013325;
-	Wed, 3 Apr 2024 13:11:17 GMT
-Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3x97gd01f5-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 03 Apr 2024 13:11:17 +0000
-Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma13.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 4339sdpA015214;
-	Wed, 3 Apr 2024 13:11:10 GMT
-Received: from smtprelay03.dal12v.mail.ibm.com ([172.16.1.5])
-	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 3x6y9m5299-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 03 Apr 2024 13:11:10 +0000
-Received: from smtpav01.wdc07v.mail.ibm.com (smtpav01.wdc07v.mail.ibm.com [10.39.53.228])
-	by smtprelay03.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 433DB7Sd393788
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 3 Apr 2024 13:11:09 GMT
-Received: from smtpav01.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 5C3EA5805B;
-	Wed,  3 Apr 2024 13:11:07 +0000 (GMT)
-Received: from smtpav01.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 0A23D58067;
-	Wed,  3 Apr 2024 13:11:06 +0000 (GMT)
-Received: from li-5cd3c5cc-21f9-11b2-a85c-a4381f30c2f3.ibm.com (unknown [9.61.65.3])
-	by smtpav01.wdc07v.mail.ibm.com (Postfix) with ESMTP;
-	Wed,  3 Apr 2024 13:11:05 +0000 (GMT)
-Message-ID: <6d3b9d8a5f5a2ca010a5a701d7826e47912fec89.camel@linux.ibm.com>
-Subject: Re: [RESEND][PATCH v3] security: Place security_path_post_mknod()
- where the original IMA call was
-From: Mimi Zohar <zohar@linux.ibm.com>
-To: Roberto Sassu <roberto.sassu@huaweicloud.com>, viro@zeniv.linux.org.uk,
-        brauner@kernel.org, jack@suse.cz, paul@paul-moore.com,
-        jmorris@namei.org, serge@hallyn.com
-Cc: linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-security-module@vger.kernel.org, linux-cifs@vger.kernel.org,
-        linux-integrity@vger.kernel.org, pc@manguebit.com,
-        torvalds@linux-foundation.org,
-        Roberto Sassu <roberto.sassu@huawei.com>,
-        Steve French <smfrench@gmail.com>
-Date: Wed, 03 Apr 2024 09:11:05 -0400
-In-Reply-To: <20240403090749.2929667-1-roberto.sassu@huaweicloud.com>
-References: <20240403090749.2929667-1-roberto.sassu@huaweicloud.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5 (3.28.5-23.el8_9) 
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: WKsOfMXpW4Ur0rTPFXN01RjMFZxDEYOv
-X-Proofpoint-GUID: grSbjh9SmaV9twxkgVclig21urG8CFOV
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-UnRewURL: 0 URL was un-rewritten
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dtuSJfLX"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1712149958; x=1743685958;
+  h=from:to:cc:subject:in-reply-to:references:date:
+   message-id:mime-version:content-transfer-encoding;
+  bh=OXeLQFpYLfKv872kx1DqTxRGattiHdnyN8/e6tdxp0E=;
+  b=dtuSJfLXdZxFbiGrcZjj6eleskeqXNsBjGqlQZphE6z20wesqie/b1VX
+   L0TwhQJ9/Xdjg5jF52tgOYz4HlS/NpDTq8b/s5IQ8/xaEb1nRlnUgZEkm
+   sJBSwYOLBQv3+f8g7CnpOQz9qDAa8+pRnsWzQw1tJEIyBlHqkrh2kJvwM
+   ApWmQT9+arOXbBrcPBSyvYaTRuxfBy8vVbcHAFYiMGUC/OEKDrTEIG7pd
+   0twdQ7PhTPISExJ4i8eGDl7vv1NmDFZ+1pDUQhS/TCSdTpHOIcdpM2a5G
+   RoB629ZtRghBYPdcXyCc9s0YeAzxwXnKwPyaFhGDrjh+OozAdAJL6o9cX
+   A==;
+X-CSE-ConnectionGUID: 1ZuByDdQQtWZvG30v83baQ==
+X-CSE-MsgGUID: uYjTemcvSRm2a7YkOdjd6g==
+X-IronPort-AV: E=McAfee;i="6600,9927,11033"; a="11153853"
+X-IronPort-AV: E=Sophos;i="6.07,177,1708416000"; 
+   d="scan'208";a="11153853"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2024 06:12:37 -0700
+X-CSE-ConnectionGUID: A//2uME0RfqongT4o59dUA==
+X-CSE-MsgGUID: VTX4EE0JTMmWTl/dAUo75g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,177,1708416000"; 
+   d="scan'208";a="49403701"
+Received: from melsaid-mobl.ger.corp.intel.com (HELO localhost) ([10.252.41.235])
+  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2024 06:12:22 -0700
+From: Jani Nikula <jani.nikula@linux.intel.com>
+To: Ville =?utf-8?B?U3lyasOkbMOk?= <ville.syrjala@linux.intel.com>, Andi
+ Shyti
+ <andi.shyti@linux.intel.com>
+Cc: Easwar Hariharan <eahariha@linux.microsoft.com>, Alex Deucher
+ <alexander.deucher@amd.com>, Christian =?utf-8?Q?K=C3=B6nig?=
+ <christian.koenig@amd.com>,
+ "Pan, Xinhui" <Xinhui.Pan@amd.com>, David Airlie <airlied@gmail.com>,
+ Daniel Vetter <daniel@ffwll.ch>, Harry Wentland <harry.wentland@amd.com>,
+ Leo Li <sunpeng.li@amd.com>, Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>,
+ Evan Quan <evan.quan@amd.com>, Hawking Zhang <Hawking.Zhang@amd.com>,
+ Candice Li <candice.li@amd.com>, Ran Sun <sunran001@208suo.com>, Alexander
+ Richards <electrodeyt@gmail.com>, AngeloGioacchino Del Regno
+ <angelogioacchino.delregno@collabora.com>, Neil Armstrong
+ <neil.armstrong@linaro.org>, Heiner Kallweit <hkallweit1@gmail.com>, Hamza
+ Mahfooz <hamza.mahfooz@amd.com>, Ruan Jinjie <ruanjinjie@huawei.com>, Alan
+ Liu <haoping.liu@amd.com>, Aurabindo Pillai <aurabindo.pillai@amd.com>,
+ Wayne Lin <wayne.lin@amd.com>, Samson Tam <samson.tam@amd.com>, Alvin Lee
+ <alvin.lee2@amd.com>, Charlene Liu <charlene.liu@amd.com>, Sohaib Nadeem
+ <sohaib.nadeem@amd.com>, Lewis Huang <lewis.huang@amd.com>, Tom Chung
+ <chiahsuan.chung@amd.com>, Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>,
+ Meenakshikumar Somasundaram <meenakshikumar.somasundaram@amd.com>, George
+ Shen <george.shen@amd.com>, Aric Cyr <aric.cyr@amd.com>, Jun Lei
+ <jun.lei@amd.com>, Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>,
+ Qingqing Zhuo <Qingqing.Zhuo@amd.com>, Dillon Varone
+ <dillon.varone@amd.com>, Le Ma <Le.Ma@amd.com>, Lijo Lazar
+ <lijo.lazar@amd.com>, Asad kamal <asad.kamal@amd.com>, Kenneth Feng
+ <kenneth.feng@amd.com>, Ma Jun <Jun.Ma2@amd.com>, Mario Limonciello
+ <mario.limonciello@amd.com>, Yang Wang <kevinyang.wang@amd.com>, Darren
+ Powell <darren.powell@amd.com>, Yifan Zhang <yifan1.zhang@amd.com>, "open
+ list:RADEON and AMDGPU DRM DRIVERS" <amd-gfx@lists.freedesktop.org>, "open
+ list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>, open list
+ <linux-kernel@vger.kernel.org>, Wolfram Sang <wsa@kernel.org>
+Subject: Re: [PATCH v0 02/14] drm/amdgpu,drm/radeon: Make I2C terminology
+ more inclusive
+In-Reply-To: <Zg1NW0jqwFn4lvEP@intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <20240329170038.3863998-1-eahariha@linux.microsoft.com>
+ <20240329170038.3863998-3-eahariha@linux.microsoft.com>
+ <Zgb3VYsgLjhJ2HKs@ashyti-mobl2.lan>
+ <ceeaafe1-49d5-4602-8251-eed63a1be2b6@linux.microsoft.com>
+ <Zgb8gieDzZtZmg2q@ashyti-mobl2.lan> <Zg1NW0jqwFn4lvEP@intel.com>
+Date: Wed, 03 Apr 2024 16:12:20 +0300
+Message-ID: <87sf02d1zf.fsf@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-04-03_12,2024-04-03_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0
- impostorscore=0 lowpriorityscore=0 bulkscore=0 priorityscore=1501
- phishscore=0 mlxscore=0 adultscore=0 suspectscore=0 clxscore=1011
- mlxlogscore=999 spamscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2403210000 definitions=main-2404030091
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-Hi Roberto,
+On Wed, 03 Apr 2024, Ville Syrj=C3=A4l=C3=A4 <ville.syrjala@linux.intel.com=
+> wrote:
+> On Fri, Mar 29, 2024 at 06:38:10PM +0100, Andi Shyti wrote:
+>> Hi,
+>>=20
+>> On Fri, Mar 29, 2024 at 10:28:14AM -0700, Easwar Hariharan wrote:
+>> > On 3/29/2024 10:16 AM, Andi Shyti wrote:
+>> > > Hi Easwar,
+>> > >=20
+>> > > On Fri, Mar 29, 2024 at 05:00:26PM +0000, Easwar Hariharan wrote:
+>> > >> I2C v7, SMBus 3.2, and I3C specifications have replaced "master/sla=
+ve"
+>> > >=20
+>> > > I don't understand why we forget that i3c is 1.1.1 :-)
+>> >=20
+>> > That's because it's a copy-paste error from Wolfram's cover letter. :)=
+ I'll update
+>> > next go-around.
+>>=20
+>> not a binding comment, though. Just for completeness, because we
+>> are giving the version to the i2c and smbus, but not i3c.
+>>=20
+>> > >> with more appropriate terms. Inspired by and following on to Wolfra=
+m's
+>> > >> series to fix drivers/i2c/[1], fix the terminology for users of
+>> > >> I2C_ALGOBIT bitbanging interface, now that the approved verbiage ex=
+ists
+>> > >> in the specification.
+>> > >=20
+>> > > The specification talks about:
+>> > >=20
+>> > >  - master -> controller
+>> > >  - slave -> target (and not client)
+>> > >=20
+>> > > But both you and Wolfram have used client. I'd like to reach
+>> > > some more consistency here.
+>> >=20
+>> > I had the impression that remote targets (i.e external to the device) =
+were to be called clients,
+>> > e.g. the QSFP FRUs in drivers/infiniband, and internal ones targets.
+>> > I chose the terminology according to that understanding, but now I can=
+'t find where I got that
+>> > information.
+>>=20
+>> The word "client" does not even appear in the documentation (only
+>> one instance in the i3c document), so that the change is not
+>> related to the document as stated in the commit log. Unless, of
+>> course, I am missing something.
+>>=20
+>> I'm OK with choosing a "customized" naming, but we need to reach
+>> an agreement.
+>>=20
+>> I raised the same question to Wolfram.
+>
+> I don't know where that discussion happened, but my opinion
+> is NAK to "client". Life is already confusing enough with
+> these renames, so let's not make it even more confusing by
+> inventing new names nowhere to be found in the spec.
+>
+> And let's especially not invent names that don't even fit
+> the purpose. "Client" makes me think of "client/server" or
+> some real world analogy. Neither of which seem to have any
+> resemblence to how the term would be used for i2c.
 
-Subject: -> security: Limit security_path_post_mknod() to regular files
+Agreed.
 
-This patch description was written for the previous patch version with minor
-changes.  The discussion was more about making LSM hooks more generic than
-currently needed.  The patch description should somehow reflect that discussion.
+I2C 7.0, I3C 1.1.1, and SMBus 3.2 have all switched to controller/target
+terminology. The SMBus spec has additionally converted generic host
+references to controller.
 
-On Wed, 2024-04-03 at 11:07 +0200, Roberto Sassu wrote:
-> From: Roberto Sassu <roberto.sassu@huawei.com>
-> 
-> Commit 08abce60d63f ("security: Introduce path_post_mknod hook")
-> introduced security_path_post_mknod(), to replace the IMA-specific call to
-> ima_post_path_mknod().
-> 
-> For symmetry with security_path_mknod(), security_path_post_mknod() was
-> called after a successful mknod operation, for any file type, rather than
-> only for regular files at the time there was the IMA call.
+At least for i915 where I have some say in the matter, controller/target
+it shall be.
 
--> rather than only for regular files.
-> 
-> However, as reported by VFS maintainers, successful mknod operation does
-> not mean that the dentry always has an inode attached to it (for example,
-> not for FIFOs on a SAMBA mount).
-> 
-> If that condition happens, the kernel crashes when
-> security_path_post_mknod() attempts to verify if the inode associated to
-> the dentry is private.
 
-This is an example of why making the LSM hook more generic than needed didn't
-work.  Based on the discussion there is no valid reason for making the hook more
-generic.
+BR,
+Jani.
 
-> 
-> Move security_path_post_mknod() where the ima_post_path_mknod() call was,
-> which is obviously correct from IMA/EVM perspective. IMA/EVM are the only
-> in-kernel users, and only need to inspect regular files.
 
--> Move the security_path_post_mknod() back to the original placement of the
-ima_post_path_mknod(), so that it is only called for regular files.
-
-> 
-> Reported-by: Steve French <smfrench@gmail.com>
-> Closes: 
-> https://lore.kernel.org/linux-kernel/CAH2r5msAVzxCUHHG8VKrMPUKQHmBpE6K9_vjhgDa1uAvwx4ppw@mail.gmail.com/
-> Suggested-by: Al Viro <viro@zeniv.linux.org.uk>
-> Fixes: 08abce60d63f ("security: Introduce path_post_mknod hook")
-> Signed-off-by: Roberto Sassu <roberto.sassu@huawei.com>
-
-Reviewed-by: Mimi Zohar <zohar@linux.ibm.com>
-
+--=20
+Jani Nikula, Intel
