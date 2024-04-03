@@ -1,40 +1,40 @@
-Received: from mail-108-mta7.mxroute.com (mail-108-mta7.mxroute.com [136.175.108.7])
+Received: from mail-108-mta163.mxroute.com (mail-108-mta163.mxroute.com [136.175.108.163])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6D1F14A092
-	for <linux-kernel@vger.kernel.org>; Wed,  3 Apr 2024 15:08:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=136.175.108.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 090AB149DE5
+	for <linux-kernel@vger.kernel.org>; Wed,  3 Apr 2024 15:08:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=136.175.108.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712156920; cv=none; b=o7CS4oCZlev486BrgfeOIrxb0DCpmYf9HavIYaaNSfQCb4b/enf/8QOXlIIQTv2viwUMnePFWw7TEE6tDotQxN/LYvT5eJrWd1D/LYNxlwXY7qPpcEjwC4Qg2XyNDqKpVhWmmCfwWvcY1N5kWHd6n355Sv+EgiKgDc+NCquyTuY=
+	t=1712156926; cv=none; b=TrNX/Ji28/51q1ODTN4xwK7itzms5O7dRB5l9iW+JbGpqUJRTAjFtEEcYO98Y5CR2czZ+0zkq9TUcTfyC0+ABiar7AJtYZAF/VT81wr1cHqvsab+BDiD2kxeZ+AoCU1sRBGHk5SxZwMO99v1JGoAn9bhY2nkLA+Xfm0MG+Bq8VM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712156920; c=relaxed/simple;
-	bh=7PlAfVztKQMARKBbcpVjFWXyV1tsnHi7QOOFhMQbxgI=;
+	s=arc-20240116; t=1712156926; c=relaxed/simple;
+	bh=YP2YU+q50j+CbuHVFQ7Q2sHtBliifq6fjUJyisehTWE=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=h/rhx2fFFNPI7ufZ255hPWDk8XQVsyrogsakN7lf9tbgoJdGumqh04Dfg1okLi5PUNCMbaIL0jwclcA//sEI9IBFUa9vv9SN9Oc2hmWwYmbPt7tYin8eIunJYZ60g/upO0v0urCUw5HH76T6T4knU0v2H3RVL1033dxT4jSAeV8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=luigi311.com; spf=pass smtp.mailfrom=luigi311.com; dkim=pass (2048-bit key) header.d=luigi311.com header.i=@luigi311.com header.b=fV06Zg9W; arc=none smtp.client-ip=136.175.108.7
+	 MIME-Version; b=ri4M4JLY2MBMaEadoeuBLkK4/FgUnYZJkLNuixsOTLHeHKixj5+atVrUXiD4ZLX0Id+PhWH0FcNesCTv+GwZR8jC5v3VmP4bf4XPuSRKX8R4IcF+hUkP/6TxckPtSLP1yRqV+aTruqeBOaIJRRTnvcWkCZ7QPLdWvpFjzvMXZDA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=luigi311.com; spf=pass smtp.mailfrom=luigi311.com; dkim=pass (2048-bit key) header.d=luigi311.com header.i=@luigi311.com header.b=nSDBw2o8; arc=none smtp.client-ip=136.175.108.163
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=luigi311.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=luigi311.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=luigi311.com header.i=@luigi311.com header.b="fV06Zg9W"
+	dkim=pass (2048-bit key) header.d=luigi311.com header.i=@luigi311.com header.b="nSDBw2o8"
 Received: from filter006.mxroute.com ([136.175.111.2] filter006.mxroute.com)
  (Authenticated sender: mN4UYu2MZsgR)
- by mail-108-mta7.mxroute.com (ZoneMTA) with ESMTPSA id 18ea4806d450003bea.010
+ by mail-108-mta163.mxroute.com (ZoneMTA) with ESMTPSA id 18ea48075bf0003bea.010
  for <linux-kernel@vger.kernel.org>
  (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384);
- Wed, 03 Apr 2024 15:07:43 +0000
-X-Zone-Loop: 5d8e621380ac9e0b3a21c677ed69a0c455a42ef4a2f6
+ Wed, 03 Apr 2024 15:07:45 +0000
+X-Zone-Loop: 68a81bf7ff5abff1dca1f85586cfca69b8b1dbdfd80a
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=luigi311.com; s=x; h=Content-Transfer-Encoding:MIME-Version:References:
 	In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
 	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
 	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
 	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=A5USQN4/h/HmEuUVVMz6q8rv2sJt6lF+TSZcmadaFDA=; b=fV06Zg9WcJDysEv6YoDTj10Wkb
-	8EbQWsa+xhaFRiNbrerrWg3hcn0p7dt93VMDkYCKxXhGwvsKu7+TSyOse0v9Hg7CphoTZVRStKZIy
-	d9Zncoinm1XODf+3oLTE8n6IHnFVgG3HHnMtwR6xrwSwjN39eSRc65gpwpu2Nb8VIYL4HbXJaoJaA
-	MwjO0HexoawzdiDk0Pow1cD8E0LoVLP8Gn6ARvhW2bh07bpce+s1n3QEw3m/4DAcr8xWguLAOJlBJ
-	3fUuk8+Mie8d1fqYpOdzzASFkZ7tD0eJHdKowPsLIbsolPA6MKpFl+so0qvy4obaT4gdSaJkKXdYs
-	e0XT39Hw==;
+	bh=vV24gh/XiUknGj+/6PBHcigmW60OQcUrTVgV2ZFCgAA=; b=nSDBw2o8qZiHtzGttu4lhL+mzm
+	xUg7GS6gF74J/O4inDzLvqSZVcHM+gS6RUDioKpvYL9KIpzjVOUrPr/ovLyfhAeFNNgmR/0JcBtK0
+	WAny9B81Z4k38CuAbcmgyIzNKyu3qskRQIGLCkjYWq39VydY6qUrSczzo8JWAYX0VcB1soPBgLgY5
+	cVXc7Kqe01oRfNH1RuBKt3wJDWhpz1tQh1CJPhijbnf9ou6KPZE7R3tMjIsb76sf6fvgNqrNhnUgk
+	uOMN7iFhB+/2UaZ3dXglEGLlwiXIz0ATaljweq/FU247lCLZqFWKlN3eHTnCvUHb2llEJ5q2HNqGl
+	ebP4VDYA==;
 From: git@luigi311.com
 To: linux-media@vger.kernel.org
 Cc: dave.stevenson@raspberrypi.com,
@@ -55,9 +55,9 @@ Cc: dave.stevenson@raspberrypi.com,
 	pavel@ucw.cz,
 	phone-devel@vger.kernel.org,
 	Luis Garcia <git@luigi311.com>
-Subject: [PATCH v3 13/25] media: i2c: imx258: Correct max FRM_LENGTH_LINES value
-Date: Wed,  3 Apr 2024 09:03:42 -0600
-Message-ID: <20240403150355.189229-14-git@luigi311.com>
+Subject: [PATCH v3 14/25] media: i2c: imx258: Issue reset before starting streaming
+Date: Wed,  3 Apr 2024 09:03:43 -0600
+Message-ID: <20240403150355.189229-15-git@luigi311.com>
 In-Reply-To: <20240403150355.189229-1-git@luigi311.com>
 References: <20240403150355.189229-1-git@luigi311.com>
 Precedence: bulk
@@ -71,30 +71,46 @@ X-Authenticated-Id: personal@luigi311.com
 
 From: Dave Stevenson <dave.stevenson@raspberrypi.com>
 
-The data sheet states that the maximum value for registers
-0x0340/0x0341 FRM_LENGTH_LINES is 65525(decimal), not the
-0xFFFF defined in this driver. Correct this limit.
+Whilst not documented, register 0x0103 bit 0 is the soft
+reset for the sensor, so send it before trying to configure
+the sensor.
 
 Signed-off-by: Dave Stevenson <dave.stevenson@raspberrypi.com>
-Reviewed-by: Jacopo Mondi <jacopo.mondi@ideasonboard.com>
 Signed-off-by: Luis Garcia <git@luigi311.com>
 ---
- drivers/media/i2c/imx258.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/media/i2c/imx258.c | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
 diff --git a/drivers/media/i2c/imx258.c b/drivers/media/i2c/imx258.c
-index 692a5aeb7941..5a5bf2b25bdf 100644
+index 5a5bf2b25bdf..c242e318be11 100644
 --- a/drivers/media/i2c/imx258.c
 +++ b/drivers/media/i2c/imx258.c
-@@ -28,7 +28,7 @@
- #define IMX258_VTS_30FPS		0x0c50
- #define IMX258_VTS_30FPS_2K		0x0638
- #define IMX258_VTS_30FPS_VGA		0x034c
--#define IMX258_VTS_MAX			0xffff
-+#define IMX258_VTS_MAX			65525
+@@ -20,6 +20,8 @@
+ #define IMX258_MODE_STANDBY		0x00
+ #define IMX258_MODE_STREAMING		0x01
  
- #define IMX258_REG_VTS			0x0340
++#define IMX258_REG_RESET		0x0103
++
+ /* Chip ID */
+ #define IMX258_REG_CHIP_ID		0x0016
+ #define IMX258_CHIP_ID			0x0258
+@@ -1052,6 +1054,16 @@ static int imx258_start_streaming(struct imx258 *imx258)
+ 	const struct imx258_link_freq_config *link_freq_cfg;
+ 	int ret, link_freq_index;
  
++	ret = imx258_write_reg(imx258, IMX258_REG_RESET, IMX258_REG_VALUE_08BIT,
++			       0x01);
++	if (ret) {
++		dev_err(&client->dev, "%s failed to reset sensor\n", __func__);
++		return ret;
++	}
++
++	/* 12ms is required from poweron to standby */
++	fsleep(12000);
++
+ 	/* Setup PLL */
+ 	link_freq_index = imx258->cur_mode->link_freq_index;
+ 	link_freq_cfg = &imx258->link_freq_configs[link_freq_index];
 -- 
 2.42.0
 
