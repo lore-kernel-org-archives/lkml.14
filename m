@@ -1,164 +1,107 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71335155A59
-	for <linux-kernel@vger.kernel.org>; Wed,  3 Apr 2024 20:39:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4341715697E;
+	Wed,  3 Apr 2024 20:40:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712176791; cv=none; b=aQ+LOQ5AOnnzX5XToS4NHSxSNBpqtfw5VuURhgqdhSMTQ2rP+39IaPze9lAsLfYW2Y0ks7LpR2ya7sd1EMHAFBiHbZ8qk4/V9ICTmSOQS6QhKiREE+EF77yPdwLV52e6FMyrO2NLeP4b6atqBf4SsIthKFO6lW4jFHYeJj1Xeh8=
+	t=1712176806; cv=none; b=TMPILrkRuj2JCSILkz4Yf9A0dBNVciEff8BjNHtGlWwWSZ/5MIk9+sQabhZYiDo8r8KiRlVWhbx5xqyaByKFQ5yBF0PFOKnvh65oTXcxBcB7O6A6HEbdg4gg9EMGuuGyY7LYsY6Uq4Nart9+Eua5lOYULkJe02X3boH3Z8qXxpU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712176791; c=relaxed/simple;
-	bh=eOi+5WikSTorjSEPPxKitefyYKeYvbuIEeHrzNbFRQg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RbmdWqrMcs9pJVpTyTELeDWwA5dxHP8sX1XNxVVaDNioCv1PiUy3ud8uvQaLOor2QKLQvVYfz8Kfgk4imFH3QyL4Uvm4U/9vSJJkrqwS3tyDVn9+DwbQ1CZQTn7CaiwWh1EllfUWsDkbsNnHFP/IIb3HquQpH5dbDp4KTmZp5R0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Sfor8slN; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Sfor8slN"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1712176788;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=10W1a6ACeEYknqtbR5jDT5gL3yupRWkQ7v3GNEKtOOo=;
-	b=Sfor8slNidH6RapnnZfX/s1/kwR9H4SCRJ9aqpR1PeSe6p9zqs/6TxrmWDuUlIvcO29U7g
-	HZs9E1koVWdhuunNsLvQcJgfXG7njK4c/0dI6O/drCCMGXnFHeoUUOH9SlVjP4pECe0MrO
-	yWkUKRm84o5erktw/+PZmOxTtqj3Fdg=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-612-EfadVLGUMnSNE28BtlkcVA-1; Wed, 03 Apr 2024 16:39:47 -0400
-X-MC-Unique: EfadVLGUMnSNE28BtlkcVA-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.rdu2.redhat.com [10.11.54.6])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id B4C6D863012;
-	Wed,  3 Apr 2024 20:39:46 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.224.49])
-	by smtp.corp.redhat.com (Postfix) with SMTP id 0E24D2166B32;
-	Wed,  3 Apr 2024 20:39:43 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Wed,  3 Apr 2024 22:38:22 +0200 (CEST)
-Date: Wed, 3 Apr 2024 22:38:14 +0200
-From: Oleg Nesterov <oleg@redhat.com>
-To: Tejun Heo <tj@kernel.org>
-Cc: Leonardo Bras <leobras@redhat.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Lai Jiangshan <jiangshanlai@gmail.com>,
-	linux-kernel@vger.kernel.org, Junyao Zhao <junzhao@redhat.com>,
-	Chris von Recklinghausen <crecklin@redhat.com>,
-	Frederic Weisbecker <frederic@kernel.org>
-Subject: Re: [PATCH v2 1/1] wq: Avoid using isolated cpus' timers on
- queue_delayed_work
-Message-ID: <20240403203814.GD31764@redhat.com>
-References: <20240130010046.2730139-2-leobras@redhat.com>
- <20240402105847.GA24832@redhat.com>
- <Zg2qFinSkAOmRHcM@slm.duckdns.org>
+	s=arc-20240116; t=1712176806; c=relaxed/simple;
+	bh=qgljfKihg3TTZ+DcxNAtMO2QNJhWdpZgN0ADjmVw1dw=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=e9aoZIHDE7JqS+8PZ9YpwILaoboTxlI4ZWRtFQ0ToA3gncR+ym6IwbCw0MS0XMkFaj0Ly0KprFQoV/U+9FNrk74IRV/ngMCzZ+gh/vpl0FmUhyUyg5a0NF+i3Fy2loyuACOXP0gqrjGoF+i5ySmZRKK8JfcTKBvhUian+g5SKU0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.216])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4V8xMZ35Cnz6DBMD;
+	Thu,  4 Apr 2024 04:35:22 +0800 (CST)
+Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
+	by mail.maildlp.com (Postfix) with ESMTPS id 92FDB140B67;
+	Thu,  4 Apr 2024 04:40:00 +0800 (CST)
+Received: from localhost (10.126.171.13) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.35; Wed, 3 Apr
+ 2024 21:39:59 +0100
+Date: Wed, 3 Apr 2024 21:39:58 +0100
+From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To: Ira Weiny <ira.weiny@intel.com>
+CC: fan <nifan.cxl@gmail.com>, Dave Jiang <dave.jiang@intel.com>, Fan Ni
+	<fan.ni@samsung.com>, Navneet Singh <navneet.singh@intel.com>, Dan Williams
+	<dan.j.williams@intel.com>, Davidlohr Bueso <dave@stgolabs.net>, "Alison
+ Schofield" <alison.schofield@intel.com>, Vishal Verma
+	<vishal.l.verma@intel.com>, <linux-btrfs@vger.kernel.org>,
+	<linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>, Chris Mason
+	<clm@fb.com>, Josef Bacik <josef@toxicpanda.com>, David Sterba
+	<dsterba@suse.com>
+Subject: Re: [PATCH 00/26] DCD: Add support for Dynamic Capacity Devices
+ (DCD)
+Message-ID: <20240403213958.00000f0d@Huawei.com>
+In-Reply-To: <6604fe2dae8ea_2089029486@iweiny-mobl.notmuch>
+References: <20240324-dcd-type2-upstream-v1-0-b7b00d623625@intel.com>
+	<ZgHPUggTfSCIx8cI@debian>
+	<6604fe2dae8ea_2089029486@iweiny-mobl.notmuch>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Zg2qFinSkAOmRHcM@slm.duckdns.org>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.6
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml100004.china.huawei.com (7.191.162.219) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
 
-Hi Tejun,
+On Wed, 27 Mar 2024 22:20:45 -0700
+Ira Weiny <ira.weiny@intel.com> wrote:
 
-On 04/03, Tejun Heo wrote:
->
-> (cc'ing Frederic and quoting whole body)
->
-> Hello, Oleg.
->
-> On Tue, Apr 02, 2024 at 12:58:47PM +0200, Oleg Nesterov wrote:
-> > This patch was applied as aae17ebb53cd3da but as Chris reports with this
-> > commit the kernel can crash at boot time because __queue_delayed_work()
-> > doesn't check that housekeeping_any_cpu() returns a valid cpu < nr_cpu_ids.
-> >
-> > Just boot the kernel with nohz_full=mask which includes the boot cpu, say
-> > nohz_full=0-6 on a machine with 8 CPUs. __queue_delayed_work() will use
-> > add_timer_on(timer, NR_CPUS /* returned by housekeeping_any_cpu */) until
-> > start_secondary() brings CPU 7 up.
-> >
-> > The problem is simple, but I do not know what should we do, I know nothing
-> > about CPU isolation.
-> >
-> > We can fix __queue_delayed_work(), this is simple, but other callers of
-> > housekeeping_any_cpu() seem to assume it must always return a valid CPU
-> > too. So perhaps we should change housekeeping_any_cpu()
->
-> Yeah, patching this up from wq side is easy but housekeeping_any_cpu()
-> always being able to pick a housekeeping CPU would be better.
->
-> > -			return cpumask_any_and(housekeeping.cpumasks[type], cpu_online_mask);
-> > +			cpu = cpumask_any_and(housekeeping.cpumasks[type], cpu_online_mask);
-> > +			if (cpu < nr_cpu_ids)
-> > +				return cpu;
-> >
-> > ?
-> >
-> > But I'm afraid this can hide other problems. May be
-> >
-> > -			return cpumask_any_and(housekeeping.cpumasks[type], cpu_online_mask);
-> > +			cpu = cpumask_any_and(housekeeping.cpumasks[type], cpu_online_mask);
-> > +			if (cpu < nr_cpu_ids)
-> > +				return cpu;
-> > +
-> > +			WARN_ON(system_state > SYSTEM_BOOTING);
-> >
-> > ?
-> >
-> > -------------------------------------------------------------------------------
-> > OTOH, Documentation/timers/no_hz.rst says
-> >
-> > 	Therefore, the
-> > 	boot CPU is prohibited from entering adaptive-ticks mode.  Specifying a
-> > 	"nohz_full=" mask that includes the boot CPU will result in a boot-time
-> > 	error message, and the boot CPU will be removed from the mask.
-> >
-> > and this doesn't match the reality.
->
-> Don't some archs allow the boot CPU to go down too tho? If so, this doesn't
-> really solve the problem, right?
+> fan wrote:
+> > On Sun, Mar 24, 2024 at 04:18:03PM -0700, ira.weiny@intel.com wrote:  
+> > > A git tree of this series can be found here:  
+> 
+> [snip]
+> 
+> > >   
+> > 
+> > Hi Ira,
+> > Have not got a chance to check the code yet, but I noticed one thing
+> > when testing with my DCD emulation code.
+> > Currently, if we do partial release, it seems the whole extent will be
+> > removed. Is it designed intentionally?
+> >   
+> 
+> Yes that is my intent.  I specifically called that out in patch 18.
+> 
+> https://lore.kernel.org/all/20240324-dcd-type2-upstream-v1-18-b7b00d623625@intel.com/
+> 
+> I thought we discussed this in one of the collaboration calls.  Mainly
+> this is to simplify by not attempting any split of the extents the host is
+> tracking.  It really is expected that the FM/device is going to keep those
+> extents offered and release them in their entirety.  I understand this may
+> complicate the device because it may see a release of memory prior to the
+> request of that release.  And perhaps this complicates the device.  But in
+> that case it (or the FM really) should not attempt to release partial
+> extents.
 
-I do not know. But I thought about this too.
+It was discussed at some point as you say. Feels like something that might not
+be set in stone for ever, but for now it is a reasonable simplifying assumption.
+The device might not maintain the separation of neighboring extents
+but the FM probably will.  If it turns out real use models are different,
+then we 'guessed' wrong and get to write more complex code. 
 
-In the context of this discussion we do not care if the boot CPU goes down.
-But we need at least one housekeeping CPU after cpu_down(). The comment in
-cpu_down_maps_locked() says
+Device always has to cope with unsolicited release so don't think this adds
+any burden.  That includes a race where the host releases capacity when
+it hasn't yet seen the event the device has sent to release part of the same
+capacity.  There is text about async release always being possible in the
+spec to cover these overlapping cases but upshot of that one is it must be
+permissible to release a containing capacity as you are doing.
 
-	Also keep at least one housekeeping cpu onlined
+Jonathan
 
-but it checks HK_TYPE_DOMAIN, and I do not know (and it is too late for me
-to try to read the code ;) if housekeeping.cpumasks[HK_TYPE_TIMER] can get
-empty or not.
-
-Oleg.	
-
-> > So it seems that we should fix housekeeping_setup() ? see the patch below.
-> >
-> > In any case the usage of cpu_present_mask doesn't look right to me.
-> >
-> > Oleg.
-> >
-> > --- a/kernel/sched/isolation.c
-> > +++ b/kernel/sched/isolation.c
-> > @@ -129,7 +154,7 @@ static int __init housekeeping_setup(char *str, unsigned long flags)
-> >  	cpumask_andnot(housekeeping_staging,
-> >  		       cpu_possible_mask, non_housekeeping_mask);
-> >
-> > -	if (!cpumask_intersects(cpu_present_mask, housekeeping_staging)) {
-> > +	if (!cpumask_test_cpu(smp_processor_id(), housekeeping_staging)) {
-> >  		__cpumask_set_cpu(smp_processor_id(), housekeeping_staging);
-> >  		__cpumask_clear_cpu(smp_processor_id(), non_housekeeping_mask);
-> >  		if (!housekeeping.flags) {
-> >
+> Ira
+> 
+> [snip]
 
