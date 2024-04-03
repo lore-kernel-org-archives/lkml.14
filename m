@@ -1,76 +1,65 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-108-mta230.mxroute.com (mail-108-mta230.mxroute.com [136.175.108.230])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DD02149DFD
-	for <linux-kernel@vger.kernel.org>; Wed,  3 Apr 2024 15:23:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEBF7200D4
+	for <linux-kernel@vger.kernel.org>; Wed,  3 Apr 2024 15:24:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=136.175.108.230
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712157836; cv=none; b=W8qeF1MAzZoVKK1ZFojw86H2/SxdftIIAvHJBCE8BZVAbGmvshP80qOSLQGnwvHYCVgYyvWmQUS5QQ18eo2Pze7Z2mZQN0Wc1tfbh1ze15zsbCHSbqMIgUWpXjo4gbx6kUGOFpgzGBC6PlS4xBHdC6laieKIIQ8aL1HsuHUsNYc=
+	t=1712157858; cv=none; b=ZVdWSykYC7jjQkmEU2Jpop+uBedqq4p+/954vX9QYvusOpEqdwpXsEoU0p0zPdV89PwvKiP0RpKavzAXxD9bme+Nodnab8Ft+zVIp88MLd5ua80ZM5DaTbtv9gxbTHpbPOdTjYkO4VgGl1pwn1ZYPGISx7RC/j2CYbv/VhlupLA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712157836; c=relaxed/simple;
-	bh=c+HYWu5qoda4Xr/d7iNbf5Be/CK/oiDAbZU/Qi/e4y4=;
+	s=arc-20240116; t=1712157858; c=relaxed/simple;
+	bh=P6sFYE2RFyMP+jyTKPG/NPzsohsjE50jpPWJbVR2FnQ=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=T0Kw5j5W2QU1G0zZE5Gti0cgaP9Grj/nnu8AGsSj3yTfaUDq8NZIRLpwBaatomFs6Hz97Ti91dzIthkQI0T4m3tjvxgrBTSGqBnCeT0KW4wWOPwSGvZ6kuMYv2F0lFVRDw7VlhgPkTvivBiRX9Ye31vW/fbzaT8jNlc0CzQ5wgw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.helo=mgamail.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=P9Dkczu4; arc=none smtp.client-ip=198.175.65.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.helo=mgamail.intel.com
+	 MIME-Version; b=kEahYGJTgvpqWy+sLe4VYnN+GZdVNXIjFBzy6yTIxuHgjKdYfsvn8B/ulAVzmgH69k3lXRuZ4vUcYqJLccV3Vkrumgf6l6JtJkMQNV0qjQjd5Wm5mnWmtd1MpmGUzItEyaIg9z8Rg6lUd9nGnmQWOKbeVW02I50PacYK9n6/1cU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=luigi311.com; spf=pass smtp.mailfrom=luigi311.com; dkim=pass (2048-bit key) header.d=luigi311.com header.i=@luigi311.com header.b=QvPdXUFu; arc=none smtp.client-ip=136.175.108.230
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=luigi311.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=luigi311.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="P9Dkczu4"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1712157836; x=1743693836;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=c+HYWu5qoda4Xr/d7iNbf5Be/CK/oiDAbZU/Qi/e4y4=;
-  b=P9Dkczu41FplzeQPvPgcaYLSAvPh8ntcn3sJHNA0x+YGiWW253sj6FOm
-   dcsqKbW8bjzmNsR22C0nGztZw59mvR4hNX6tMxSafldT+dIvhBRhWyDTQ
-   d8JZufTi6+MCFlbsXD9oazLsGHVAiz63dO6f6ut5ImlF1nn1/GcX3krjp
-   WBN2Uuz9c22as2BtkSvKfKhklENoKfsmzmnzjmkq2b9/XAXdwE1AKfZCW
-   z+set9s6jVN8vYpWxMcIIjd3U968cjnaiigLgNwxHmgYuTOfTuPmsTMsB
-   Fj70OUYnYGShThujt6vn6fuR5B+FLmI8YQDjxXCuB5jyaaStXXGvkM1PL
-   w==;
-X-CSE-ConnectionGUID: Vk4JoShgTeeAAPQC5DD8Fw==
-X-CSE-MsgGUID: /4T5hDCSQX2Qsm7wqkcXYg==
-X-IronPort-AV: E=McAfee;i="6600,9927,11033"; a="29877897"
-X-IronPort-AV: E=Sophos;i="6.07,177,1708416000"; 
-   d="scan'208";a="29877897"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2024 08:23:55 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,11033"; a="937085208"
-X-IronPort-AV: E=Sophos;i="6.07,177,1708416000"; 
-   d="scan'208";a="937085208"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga001.fm.intel.com with ESMTP; 03 Apr 2024 08:23:49 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1000)
-	id A9B1D3E5; Wed,  3 Apr 2024 18:23:48 +0300 (EEST)
-From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-To: kirill.shutemov@linux.intel.com
-Cc: adrian.hunter@intel.com,
-	ashish.kalra@amd.com,
-	bhe@redhat.com,
-	bp@alien8.de,
-	dave.hansen@linux.intel.com,
-	elena.reshetova@intel.com,
-	jun.nakajima@intel.com,
-	kai.huang@intel.com,
-	kexec@lists.infradead.org,
-	linux-coco@lists.linux.dev,
+	dkim=pass (2048-bit key) header.d=luigi311.com header.i=@luigi311.com header.b="QvPdXUFu"
+Received: from filter006.mxroute.com ([136.175.111.2] filter006.mxroute.com)
+ (Authenticated sender: mN4UYu2MZsgR)
+ by mail-108-mta230.mxroute.com (ZoneMTA) with ESMTPSA id 18ea48ace6d0003bea.010
+ for <linux-kernel@vger.kernel.org>
+ (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384);
+ Wed, 03 Apr 2024 15:19:04 +0000
+X-Zone-Loop: 145612d79a4fabd7a63fe255e4f0c927b99790ad46e2
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=luigi311.com; s=x; h=Content-Transfer-Encoding:MIME-Version:References:
+	In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+	List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=tn3xRU5mtzTvJZghODMqRw0ULnXG09wTsVZrMIwsFGY=; b=QvPdXUFuy1A7P9ydQKgHJhheqt
+	WkdvfyKXwUD+FqZFlZUYxyspghJF4mEzHneCx7CQ6m4BnYfkMAOF8aZy6D9gArVw5WT09Bhsu8Hlu
+	qrsgyHQrHFvHG20wAUvM88NEktefZ5yqJ8SUgXzlSzCIAaYAEiw0v2z8Lvayn8eNswCrf+7PxdxXp
+	MXgwgvnct48JPZExsc1lGu/vywnnys5hasjdYaO8pXtzcUMya65yu0Yr+JDTuIbE8gKKqJysT6eOe
+	9zW9Amw9H0cCF8OGSzZaMRIYWRMEDTyUAPMcL+EAJ62tC87t+xl5ANGN5r9XDpxSDqpAAzKh4Uhps
+	G0NUIlrA==;
+From: git@luigi311.com
+To: linux-media@vger.kernel.org
+Cc: dave.stevenson@raspberrypi.com,
+	jacopo.mondi@ideasonboard.com,
+	mchehab@kernel.org,
+	robh@kernel.org,
+	krzysztof.kozlowski+dt@linaro.org,
+	conor+dt@kernel.org,
+	shawnguo@kernel.org,
+	s.hauer@pengutronix.de,
+	kernel@pengutronix.de,
+	festevam@gmail.com,
+	sakari.ailus@linux.intel.com,
+	devicetree@vger.kernel.org,
+	imx@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org,
 	linux-kernel@vger.kernel.org,
-	mingo@redhat.com,
-	peterz@infradead.org,
-	rafael@kernel.org,
-	rick.p.edgecombe@intel.com,
-	sathyanarayanan.kuppuswamy@linux.intel.com,
-	seanjc@google.com,
-	tglx@linutronix.de,
-	thomas.lendacky@amd.com
-Subject: [PATCHv9.1 05/17] x86/kexec: Keep CR4.MCE set during kexec for TDX guest
-Date: Wed,  3 Apr 2024 18:23:42 +0300
-Message-ID: <20240403152342.918612-1-kirill.shutemov@linux.intel.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240325103911.2651793-6-kirill.shutemov@linux.intel.com>
-References: <20240325103911.2651793-6-kirill.shutemov@linux.intel.com>
+	pavel@ucw.cz,
+	phone-devel@vger.kernel.org,
+	Luis Garcia <git@luigi311.com>
+Subject: [PATCH v3 25/25] media:i2c: imx258: Use v4l2_link_freq_to_bitmap helper
+Date: Wed,  3 Apr 2024 09:03:54 -0600
+Message-ID: <20240403150355.189229-26-git@luigi311.com>
+In-Reply-To: <20240403150355.189229-1-git@luigi311.com>
+References: <20240403150355.189229-1-git@luigi311.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -78,55 +67,48 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-Authenticated-Id: personal@luigi311.com
 
-Depending on setup, TDX guests might be allowed to clear CR4.MCE.
-Attempt to clear it leads to #VE.
+From: Luis Garcia <git@luigi311.com>
 
-Use alternatives to keep the flag during kexec for TDX guests.
+Use the v4l2_link_freq_to_bitmap() helper to figure out which
+driver-supported link freq can be used on a given system.
 
-The change doesn't affect non-TDX-guest environments.
-
-Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+Signed-off-by: Luis Garcia <git@luigi311.com>
 ---
+ drivers/media/i2c/imx258.c | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-v9.1:
-  - Preserve CR4.MCE instead of setting it unconditionally.
-
----
- arch/x86/kernel/relocate_kernel_64.S | 8 ++++++++
- 1 file changed, 8 insertions(+)
-
-diff --git a/arch/x86/kernel/relocate_kernel_64.S b/arch/x86/kernel/relocate_kernel_64.S
-index 56cab1bb25f5..8e2037d78a1f 100644
---- a/arch/x86/kernel/relocate_kernel_64.S
-+++ b/arch/x86/kernel/relocate_kernel_64.S
-@@ -5,6 +5,8 @@
-  */
+diff --git a/drivers/media/i2c/imx258.c b/drivers/media/i2c/imx258.c
+index 4c117c4829f1..038f40a1f800 100644
+--- a/drivers/media/i2c/imx258.c
++++ b/drivers/media/i2c/imx258.c
+@@ -674,6 +674,7 @@ struct imx258 {
+ 	/* Current mode */
+ 	const struct imx258_mode *cur_mode;
  
- #include <linux/linkage.h>
-+#include <linux/stringify.h>
-+#include <asm/alternative.h>
- #include <asm/page_types.h>
- #include <asm/kexec.h>
- #include <asm/processor-flags.h>
-@@ -145,11 +147,17 @@ SYM_CODE_START_LOCAL_NOALIGN(identity_mapped)
- 	 * Set cr4 to a known state:
- 	 *  - physical address extension enabled
- 	 *  - 5-level paging, if it was enabled before
-+	 *  - Machine check exception on TDX guest, if it was enabled before.
-+	 *    Clearing MCE might not allowed in TDX guests, depending on setup.
- 	 */
- 	movl	$X86_CR4_PAE, %eax
- 	testq	$X86_CR4_LA57, %r13
- 	jz	1f
- 	orl	$X86_CR4_LA57, %eax
-+1:
-+	testq	$X86_CR4_MCE, %r13
-+	jz	1f
-+	ALTERNATIVE "", __stringify(orl $X86_CR4_MCE, %eax), X86_FEATURE_TDX_GUEST
- 1:
- 	movq	%rax, %cr4
++	unsigned long link_freq_bitmap;
+ 	const struct imx258_link_freq_config *link_freq_configs;
+ 	const s64 *link_freq_menu_items;
+ 	unsigned int lane_mode_idx;
+@@ -1533,6 +1534,17 @@ static int imx258_probe(struct i2c_client *client)
+ 		return ret;
+ 	}
  
++	ret = v4l2_link_freq_to_bitmap(&client->dev,
++				ep.link_frequencies,
++				ep.nr_of_link_frequencies,
++				imx258->link_freq_menu_items,
++				ARRAY_SIZE(link_freq_menu_items_19_2),
++				&imx258->link_freq_bitmap);
++	if (ret) {
++		dev_err(&client->dev, "Link frequency not supported\n");
++		goto error_endpoint_free;
++	}
++
+ 	/* Get number of data lanes */
+ 	switch (ep.bus.mipi_csi2.num_data_lanes) {
+ 	case 2:
 -- 
-2.43.0
+2.42.0
 
