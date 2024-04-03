@@ -1,245 +1,114 @@
-Received: from mx1.tq-group.com (mx1.tq-group.com [93.104.207.81])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C908E4DA0C;
-	Wed,  3 Apr 2024 13:47:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.104.207.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99BA94DA0C;
+	Wed,  3 Apr 2024 13:48:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712152082; cv=none; b=kxDhdbzduESAcL306fi5ESehWBKNtrgIOe39lthg90rIVCzzg67go0js3+z6wNjeljIq+3gZJQZkKbvNVNC0xclZVNdj18a/o3RIuQ2I9aouRulQj2cHK0p4/ciuiz6V2bUfh+FmOcNeVq3+a33F9sfuwSHy6PLmmzpxAbY4/4c=
+	t=1712152112; cv=none; b=RD2RHTQOXS/al3D+rW7kc68v7Yx0+3fXE6YohGCY5TrAB0j8TDgqAXSKuRewaiYRShR9ewCL4jYt4wRDrSmICjFrenTWEB46ZyAFlvOqo2dK87bLpmY/lipgrsMRKAg8XkIL5p0b7ET6aEasDup4B5kzWUsOInGwQ0yrwqrnNKg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712152082; c=relaxed/simple;
-	bh=YEVP9YpyH7o2aYsLFiX4m2nl9C+fbyptKQ7J4JphAmU=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=NsGSESbLlFEEMF9heMExtwinqWadcdoCAermwIq7yg+gWpOdHY11p/03c2N9Q/vSiW5KHf4hpLzpHD6dM9KMdR58PBXeY6Wh2VB7Nrc38CFOGU3QlSyaaIbXNloyIBS+BxKG3oU4zyhdn/8wjfGXwDq+B8BHHBJZjfClQTBAPs8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com; spf=pass smtp.mailfrom=ew.tq-group.com; dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b=kHykZO6q; dkim=fail (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b=lXCWb+qd reason="key not found in DNS"; arc=none smtp.client-ip=93.104.207.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ew.tq-group.com
+	s=arc-20240116; t=1712152112; c=relaxed/simple;
+	bh=XQw90a7JGR/+AP6daIo3qRQb2zXpuUyjd+M+ZOxSCgw=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=b3Hid8M3K44LgPGpZT/bdazOsGPgoNrNcPSLoFchrMXUeEN9Vmniv4lnnuH2tIzxQAD6o35tTHQWK/x0P3TxHDqRWPu03CiXdzJDE4byTCSfnv+VQxy2q9gbo2ndW8HgCwZF8wSlA+GD2AoUhfpxGqupDDbjIS4VS+5Kxc88L/I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=PGQMJalj; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b="kHykZO6q";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b="lXCWb+qd"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
-  t=1712152079; x=1743688079;
-  h=from:date:subject:mime-version:content-transfer-encoding:
-   message-id:to:cc;
-  bh=YPy9yfsjAfToG/aF4JhewtXvS/gpl8OBYr5iAdGDwaI=;
-  b=kHykZO6qgPHOhkKQd9U0PsThpje2XU657EHfGlbwskbKy1aqwHTtfMJ9
-   ybCvO6sCwZvQcNa3m4iFUPWdAUx+QRn9qSqSzwE5n3lH076o/KmExU+zL
-   xmfJuJNGkS/7fLmd82Q2rrbqu3k3QNnrKG3g9g8i6nXEqdrllMcIbxxY0
-   vUQb8oN5D/9UG7m405tocc/8Mcq/pg4JbnrDH0YFWYnXMQ03Tj/nfH9D8
-   yBCEuG0RwNVrmRj3omFsuHo/FQnRIs/lAFUnS32mRFFtGgHfOOYcxTX4a
-   mDoWaioaE0wZxvZHDPzEfoQyGnY4gcpvx1SNd6d9u754ij3y5coNJop3P
-   w==;
-X-IronPort-AV: E=Sophos;i="6.07,177,1708383600"; 
-   d="scan'208";a="36230473"
-Received: from vmailcow01.tq-net.de ([10.150.86.48])
-  by mx1.tq-group.com with ESMTP; 03 Apr 2024 15:47:50 +0200
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id B39A7173471;
-	Wed,  3 Apr 2024 15:47:43 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ew.tq-group.com;
-	s=dkim; t=1712152065;
-	h=from:subject:date:message-id:to:cc:mime-version:content-type:
-	 content-transfer-encoding; bh=YPy9yfsjAfToG/aF4JhewtXvS/gpl8OBYr5iAdGDwaI=;
-	b=lXCWb+qdsokxzO81ajEPy3MAV1EsR0sIe0IDdY6/FMuSRRpOsdF/CIJG7QyzN9pu8smZx3
-	MkqzlDTpPRKQQqW9VMd+/aCYEGmPfLSF4vyaZm4FEgLksFRAoWkttJA3cIR6YBfs6OuBMo
-	LG8vY3MCUuhD3J+HLYgzC1CSA2H3lg+8nAELrtYPNun63YOA/jT6jshH8JYaKps3ZiV/y+
-	GM+d4B75L1xnZGWBnSssysCjRNUVm2bLKUwINWUx0ctC7Rq3+LPRNs6iVFkUV4VRLdjryF
-	dMSWm6gWl55434FZRkQSrbJDfMtGw4O8vIMpOn2vNvyT10yNhBQbcPHlrWW7Ow==
-From: Gregor Herburger <gregor.herburger@ew.tq-group.com>
-Date: Wed, 03 Apr 2024 15:45:22 +0200
-Subject: [PATCH] net: phy: marvell-88q2xxx: add support for Rev B1 and B2
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="PGQMJalj"
+Received: from pps.filterd (m0353727.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 433DRLUj028566;
+	Wed, 3 Apr 2024 13:48:27 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : content-transfer-encoding : mime-version; s=pp1;
+ bh=UUgVx7rrXbDM5JrKl3tHqzknPYhLx6bxoiT307vyvcI=;
+ b=PGQMJaljV5o/luqUMASlYbo4ei5x9FM2qboq9XZjNu6pJTYcHRikGSQk8lK7fSGaD5ej
+ GywvxgtkcNALIZPCDDATDIyw4kWT8u7rzuuNAMJc8qT7rDrr1+mpJRCDpEoYtGbubue3
+ I+jpg5ZLOjjwljVeAGOV6xlYullpEn3cp0aQRuReLweTE+DqMCRy1cGmZsB7l69ROeHp
+ 92/HL3x3jf07BB2rhFWSAfRnz5h4kEasK7IAqAbOv3qFi/4+2dcWWSqeFFSNhWgGnd6c
+ etikZpJmAkZFdm6C+y1vUHJ4xFBHTRjfZ4RAvdR9mm9GAL/6rkkyywqcKmghChIbTBfp aA== 
+Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3x980tg1yt-10
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 03 Apr 2024 13:48:26 +0000
+Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma13.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 433D2TbS015241;
+	Wed, 3 Apr 2024 13:24:53 GMT
+Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
+	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 3x6y9m546a-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 03 Apr 2024 13:24:53 +0000
+Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
+	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 433DOlmT47448476
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 3 Apr 2024 13:24:49 GMT
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id C76022004D;
+	Wed,  3 Apr 2024 13:24:47 +0000 (GMT)
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id A54B420043;
+	Wed,  3 Apr 2024 13:24:47 +0000 (GMT)
+Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
+	by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Wed,  3 Apr 2024 13:24:47 +0000 (GMT)
+From: Niklas Schnelle <schnelle@linux.ibm.com>
+To: Brian Cain <bcain@quicinc.com>
+Cc: linux-hexagon@vger.kernel.org, Arnd Bergmann <arnd@kernel.org>,
+        Heiko Carstens <hca@linux.ibm.com>, linux-kernel@vger.kernel.org,
+        Niklas Schnelle <schnelle@linux.ibm.com>
+Subject: [PATCH 0/1] hexagon: Handle HAS_IOPORT dependencies
+Date: Wed,  3 Apr 2024 15:24:46 +0200
+Message-Id: <20240403132447.719833-1-schnelle@linux.ibm.com>
+X-Mailer: git-send-email 2.40.1
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: aj4ESgDpjfjWFRHjLfjg75USY95AjFIl
+X-Proofpoint-GUID: aj4ESgDpjfjWFRHjLfjg75USY95AjFIl
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-UnRewURL: 0 URL was un-rewritten
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-Id: <20240403-mv88q222x-revb1-b2-init-v1-1-48b855464c37@ew.tq-group.com>
-X-B4-Tracking: v=1; b=H4sIAHFdDWYC/x2MSwqAMAwFryJZG2ij+LuKuPATNQurtlIE8e4GN
- wMD894Dgb1wgCZ5wHOUILtTsWkC49q7hVEmdSBDuclNhlusqpOIbtR8sDgQipML67qwE42zogR
- dH55nuf/ntnvfDygSoGhpAAAA
-To: Andrew Lunn <andrew@lunn.ch>, Heiner Kallweit <hkallweit1@gmail.com>, 
- Russell King <linux@armlinux.org.uk>, 
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
- Dimitri Fedrau <dima.fedrau@gmail.com>, 
- Stefan Eichenberger <eichest@gmail.com>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux@ew.tq-group.com, gregor.herburger@ew.tq-group.com, 
- alexander.stein@ew.tq-group.com
-X-Mailer: b4 0.12.3
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1712152063; l=5601;
- i=gregor.herburger@ew.tq-group.com; s=20230829; h=from:subject:message-id;
- bh=YEVP9YpyH7o2aYsLFiX4m2nl9C+fbyptKQ7J4JphAmU=;
- b=LMdt2IUGtR9R6t/rywlx2hmuvxgMn+C7OvPHybfe/Kt56s+8RTL7ZhR4tl71flkURyPwHWc04
- ngUTyKpw26tD6HCkAFSqEVPmW6tgLfyW7ma6fATYA4F3AvshyBByw8n
-X-Developer-Key: i=gregor.herburger@ew.tq-group.com; a=ed25519;
- pk=+eRxwX7ikXwazcRjlOjj2/tbDmfVZdDLoW+xLZbQ4h4=
-X-Last-TLS-Session-Version: TLSv1.3
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-04-03_13,2024-04-03_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 mlxlogscore=997
+ adultscore=0 priorityscore=1501 clxscore=1015 phishscore=0 impostorscore=0
+ lowpriorityscore=0 suspectscore=0 malwarescore=0 spamscore=0 bulkscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2403210000
+ definitions=main-2404030095
 
-Different revisions of the Marvell 88q2xxx phy needs different init
-sequences.
+Hi Brian,
 
-Add init sequence for Rev B1 and Rev B2. Rev B2 init sequence skips one
-register write.
+This is a follow up in my ongoing effort of making inb()/outb() and
+similar I/O port accessors compile-time optional. Previously I sent this
+as a treewide series titled "treewide: Remove I/O port accessors for
+HAS_IOPORT=n" with the latest being its 5th version[0]. With a significant
+subset of patches merged I've changed over to per-subsystem series. These
+series are stand alone and should be merged via the relevant tree such
+that with all subsystems complete we can follow this up with the final
+patch that will make the I/O port accessors compile-time optional.
 
-Signed-off-by: Gregor Herburger <gregor.herburger@ew.tq-group.com>
----
-Hi,
+The current state of the full series with changes to the remaining
+subsystems and the aforementioned final patch can be found for your
+convenience on my git.kernel.org tree in the has_ioport_v6 branch[1] with
+signed tags. As for compile-time vs runtime see Linus' reply to my first
+attempt[2].
 
-as discussed when adding support for Marvell 88Q2220 Revision B0 [1],
-newer revisions need different init sequences. So add support for Rev B1
-and B2 with this patch.
+Thanks,
+Niklas
 
-[1] https://lore.kernel.org/netdev/20240216205302.GC3873@debian/
+[0] https://lore.kernel.org/all/20230522105049.1467313-1-schnelle@linux.ibm.com/
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/niks/linux.git/log/?h=has_ioport_v6
+[2] https://lore.kernel.org/lkml/CAHk-=wg80je=K7madF4e7WrRNp37e3qh6y10Svhdc7O8SZ_-8g@mail.gmail.com/
 
-Best regards
-Gregor
----
- drivers/net/phy/marvell-88q2xxx.c | 86 +++++++++++++++++++++++++++++++++++++--
- 1 file changed, 83 insertions(+), 3 deletions(-)
+Niklas Schnelle (1):
+  hexagon: Don't select GENERIC_IOMAP without HAS_IOPORT support
 
-diff --git a/drivers/net/phy/marvell-88q2xxx.c b/drivers/net/phy/marvell-88q2xxx.c
-index 6b4bd9883304..c4c916eb3195 100644
---- a/drivers/net/phy/marvell-88q2xxx.c
-+++ b/drivers/net/phy/marvell-88q2xxx.c
-@@ -12,6 +12,8 @@
- #include <linux/hwmon.h>
- 
- #define PHY_ID_88Q2220_REVB0	(MARVELL_PHY_ID_88Q2220 | 0x1)
-+#define PHY_ID_88Q2220_REVB1	(MARVELL_PHY_ID_88Q2220 | 0x2)
-+#define PHY_ID_88Q2220_REVB2	(MARVELL_PHY_ID_88Q2220 | 0x3)
- 
- #define MDIO_MMD_AN_MV_STAT			32769
- #define MDIO_MMD_AN_MV_STAT_ANEG		0x0100
-@@ -129,6 +131,43 @@ static const struct mmd_val mv88q222x_revb0_init_seq1[] = {
- 	{ MDIO_MMD_PCS, 0xfe05, 0x755c },
- };
- 
-+static const struct mmd_val mv88q222x_revb1_init_seq0[] = {
-+	{ MDIO_MMD_PCS, 0xFFE4, 0x0007 },
-+	{ MDIO_MMD_AN, MDIO_AN_T1_CTRL, 0x0 },
-+	{ MDIO_MMD_PCS, 0xFFE3, 0x7000 },
-+	{ MDIO_MMD_PMAPMD, MDIO_CTRL1, 0x0840 },
-+};
-+
-+static const struct mmd_val mv88q222x_revb1_init_seq1[] = {
-+	{ MDIO_MMD_PCS, 0xFE07, 0x125A },
-+	{ MDIO_MMD_PCS, 0xFE09, 0x1288 },
-+	{ MDIO_MMD_PCS, 0xFE08, 0x2588 },
-+	{ MDIO_MMD_PCS, 0xFE72, 0x042C },
-+	{ MDIO_MMD_PCS, 0xFFE4, 0x0071 },
-+	{ MDIO_MMD_PCS, 0xFFE4, 0x0001 },
-+	{ MDIO_MMD_PCS, 0xFE1B, 0x0048 },
-+	{ MDIO_MMD_PMAPMD, 0x0000, 0x0000 },
-+	{ MDIO_MMD_PCS, 0x0000, 0x0000 },
-+	{ MDIO_MMD_PCS, 0xFFDB, 0xFC10 },
-+	{ MDIO_MMD_PCS, 0xFE1B, 0x58 },
-+	{ MDIO_MMD_PCS, 0xFCAD, 0x030C },
-+	{ MDIO_MMD_PCS, 0x8032, 0x6001 },
-+	{ MDIO_MMD_PCS, 0xFDFF, 0x05A5 },
-+	{ MDIO_MMD_PCS, 0xFDEC, 0xDBAF },
-+	{ MDIO_MMD_PCS, 0xFCAB, 0x1054 },
-+	{ MDIO_MMD_PCS, 0xFCAC, 0x1483 },
-+	{ MDIO_MMD_PCS, 0x8033, 0xC801 },
-+	{ MDIO_MMD_AN, 0x8032, 0x2020 },
-+	{ MDIO_MMD_AN, 0x8031, 0xA28 },
-+	{ MDIO_MMD_AN, 0x8031, 0xC28 },
-+	{ MDIO_MMD_PCS, 0xFBBA, 0x0CB2 },
-+	{ MDIO_MMD_PCS, 0xFBBB, 0x0C4A },
-+	{ MDIO_MMD_PCS, 0xFE5F, 0xE8 },
-+	{ MDIO_MMD_PCS, 0xFE05, 0x755C },
-+	{ MDIO_MMD_PCS, 0xFA20, 0x002A },
-+	{ MDIO_MMD_PCS, 0xFE11, 0x1105 },
-+};
-+
- static int mv88q2xxx_soft_reset(struct phy_device *phydev)
- {
- 	int ret;
-@@ -712,6 +751,46 @@ static int mv88q222x_revb0_config_init(struct phy_device *phydev)
- 	return mv88q2xxx_config_init(phydev);
- }
- 
-+static int mv88q222x_revb1_revb2_config_init(struct phy_device *phydev)
-+{
-+	bool is_rev_b2 = phydev->c45_ids.device_ids[MDIO_MMD_PMAPMD] == PHY_ID_88Q2220_REVB2;
-+	int ret, i;
-+
-+	for (i = 0; i < ARRAY_SIZE(mv88q222x_revb1_init_seq0); i++) {
-+		/* Rev B2 init sequence differs compared to Rev B1. As noted in Marvell API:
-+		 * Remove the instruction to enable TXDAC setting overwrite bit for Rev B2.
-+		 */
-+		if (is_rev_b2 && mv88q222x_revb1_init_seq1[i].regnum == 0xffe3)
-+			continue;
-+
-+		ret = phy_write_mmd(phydev, mv88q222x_revb1_init_seq0[i].devad,
-+				    mv88q222x_revb1_init_seq0[i].regnum,
-+				    mv88q222x_revb1_init_seq0[i].val);
-+		if (ret < 0)
-+			return ret;
-+	}
-+
-+	usleep_range(3000, 5000);
-+
-+	for (i = 0; i < ARRAY_SIZE(mv88q222x_revb1_init_seq1); i++) {
-+		ret = phy_write_mmd(phydev, mv88q222x_revb1_init_seq1[i].devad,
-+				    mv88q222x_revb1_init_seq1[i].regnum,
-+				    mv88q222x_revb1_init_seq1[i].val);
-+		if (ret < 0)
-+			return ret;
-+	}
-+
-+	return mv88q2xxx_config_init(phydev);
-+}
-+
-+static int mv88q222x_config_init(struct phy_device *phydev)
-+{
-+	if (phydev->c45_ids.device_ids[MDIO_MMD_PMAPMD] == PHY_ID_88Q2220_REVB0)
-+		return mv88q222x_revb0_config_init(phydev);
-+	else
-+		return mv88q222x_revb1_revb2_config_init(phydev);
-+}
-+
- static int mv88q222x_cable_test_start(struct phy_device *phydev)
- {
- 	int ret;
-@@ -810,14 +889,15 @@ static struct phy_driver mv88q2xxx_driver[] = {
- 		.get_sqi_max		= mv88q2xxx_get_sqi_max,
- 	},
- 	{
--		PHY_ID_MATCH_EXACT(PHY_ID_88Q2220_REVB0),
-+		.phy_id			= MARVELL_PHY_ID_88Q2220,
-+		.phy_id_mask		= MARVELL_PHY_ID_MASK,
- 		.name			= "mv88q2220",
- 		.flags			= PHY_POLL_CABLE_TEST,
- 		.probe			= mv88q2xxx_probe,
- 		.get_features		= mv88q2xxx_get_features,
- 		.config_aneg		= mv88q2xxx_config_aneg,
- 		.aneg_done		= genphy_c45_aneg_done,
--		.config_init		= mv88q222x_revb0_config_init,
-+		.config_init		= mv88q222x_config_init,
- 		.read_status		= mv88q2xxx_read_status,
- 		.soft_reset		= mv88q222x_soft_reset,
- 		.config_intr		= mv88q2xxx_config_intr,
-@@ -836,7 +916,7 @@ module_phy_driver(mv88q2xxx_driver);
- 
- static struct mdio_device_id __maybe_unused mv88q2xxx_tbl[] = {
- 	{ MARVELL_PHY_ID_88Q2110, MARVELL_PHY_ID_MASK },
--	{ PHY_ID_MATCH_EXACT(PHY_ID_88Q2220_REVB0), },
-+	{ MARVELL_PHY_ID_88Q2220, MARVELL_PHY_ID_MASK },
- 	{ /*sentinel*/ }
- };
- MODULE_DEVICE_TABLE(mdio, mv88q2xxx_tbl);
+ arch/hexagon/Kconfig | 1 -
+ 1 file changed, 1 deletion(-)
 
----
-base-commit: 1fdad13606e104ff103ca19d2d660830cb36d43e
-change-id: 20240403-mv88q222x-revb1-b2-init-9961d2cf1d27
-
-Best regards,
 -- 
-TQ-Systems GmbH | Mühlstraße 2, Gut Delling | 82229 Seefeld, Germany
-Amtsgericht München, HRB 105018
-Geschäftsführer: Detlef Schneider, Rüdiger Stahl, Stefan Schneider
-https://www.tq-group.com/
+2.40.1
 
