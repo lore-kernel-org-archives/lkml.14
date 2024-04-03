@@ -1,221 +1,240 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C6086EB4B;
-	Wed,  3 Apr 2024 09:25:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0ECF45008
+	for <linux-kernel@vger.kernel.org>; Wed,  3 Apr 2024 09:26:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712136351; cv=none; b=gzLu9BcQKk1p/bKZPZ+3MvxNRyDWPssJFrOXNZ+4gvW/xT319qvP9doZCxRblUjS6NgiI3dbQ/P6o4Qz1gCmYGAaH+kbnIjGpbVi627Go2FB37vVxz1ivTn8HIeTTMvLZJ/vMB7IQYur7vWroPvJKAlOM4GHYGPxzNTw6pKqnpY=
+	t=1712136369; cv=none; b=crhv0v4Cl5qje3S3sZlv2IDvdFaQzvSJmTA2ficZHbbjDSlcevi+nwByFchwd4WRXyrTqgeBtgfAYLJ32KfmPfrSEyGPYwNgZJdKdjOb5m7mWhScg8yFAwkWhFXOBHd/czpnCOTAwDhJi6nJrsFrauI2AZPcnZgRiM92TyqgM68=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712136351; c=relaxed/simple;
-	bh=StVSzN/2Pd+GrzQecKi4mcN8vhhh6CgWGTfZl2xfeFA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=OPdpQCHj9gJasPf2ncddXMdDAgiGE8MvrVDaY6YP6vqCvjScKjxWKAd03tX/UZhp3M4f6DYM+u86IMurSxGDjVZdmjQlO218z0nyXA2qT0Q1FbOrQ38DPWMjMpuJVmmB/yLVJqdb7UFH4BmuZp9lFqQudtzH1wPFtytq1o6XG6U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=EuUBsysc; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+	s=arc-20240116; t=1712136369; c=relaxed/simple;
+	bh=pb0YWNgqLkmxJ6cd3OlQSwF1WGMdPHv4QlL2QgcFn1c=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=eILgEq7OVa/qJ22tRg3+Nn0Utv9mBMk+TPaRh/FZRNzZFxyWouwjCAQsqYqw0UDgCFi2v6zlzD6X4pXlEJ+z/qrXU+pZzo8weRswkX7fSU4JXHgtbRBP0LllqA/K9KYnuP2lT4ejcIB18oOwjZnNoHib/j315mkk8PFS7tcawTg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kLR91GrA; arc=none smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="EuUBsysc"
-Received: from [192.168.88.20] (91-154-34-181.elisa-laajakaista.fi [91.154.34.181])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id E34613A3;
-	Wed,  3 Apr 2024 11:25:10 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1712136311;
-	bh=StVSzN/2Pd+GrzQecKi4mcN8vhhh6CgWGTfZl2xfeFA=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=EuUBsyscF9tO46HLnybDOihads2mdIGRaN2kU8VtWxHYHV64INgdtb67OqLt22y7Z
-	 E288IeH7g51E3ncCVDhUXufWiFNdJxxgirq96TGs6n9W/KVOsz/3lp2L6O9gMgFHwd
-	 rRM23pycIPGzQtiFO4236wEKks5x3hFmkjpZ6PXc=
-Message-ID: <a77160ef-7586-4b9b-8013-daf0872c4ab8@ideasonboard.com>
-Date: Wed, 3 Apr 2024 12:25:44 +0300
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kLR91GrA"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1712136368; x=1743672368;
+  h=date:from:to:cc:subject:message-id;
+  bh=pb0YWNgqLkmxJ6cd3OlQSwF1WGMdPHv4QlL2QgcFn1c=;
+  b=kLR91GrAMblyewe24pHdY0nhuCmUiwVkxy9EybF76y6QNeuk20lvOpBG
+   revdjSiaXLImk661el8+dwrAMvFCXmpRDclp32G3KC6ReXrYX9v3+0W7Q
+   AMEplqUwSpfbVnkSyhBI/VD6iCQKC3I2fhy17F2UMQ2CBhgtn+CaiaD1g
+   2IP7ENHmEyAtDBi/oY31VX1BBGnPS8WkE0O1RKywD6Xj4DGSAK9Z91hVX
+   sP9z33ZrPbtIejEhlvH+t96HvS0+v6zAoTizJuhzt5+ribuv5G8EyrebL
+   ijeBLYn/IPKwXQfYxYqxLm1LcN55jGIOltordldLkjjEynwvzBjwB/XIM
+   w==;
+X-CSE-ConnectionGUID: MMHlLUnFQiSgEYCyp+1QyA==
+X-CSE-MsgGUID: 3I6og2jARjGNKWiAftZmQQ==
+X-IronPort-AV: E=McAfee;i="6600,9927,11032"; a="24812499"
+X-IronPort-AV: E=Sophos;i="6.07,177,1708416000"; 
+   d="scan'208";a="24812499"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2024 02:26:08 -0700
+X-CSE-ConnectionGUID: UTfOH/iPTRey2IyYwpeQoA==
+X-CSE-MsgGUID: DIEJDLV/S+Gc3Ximft+Yxw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,177,1708416000"; 
+   d="scan'208";a="49608752"
+Received: from lkp-server02.sh.intel.com (HELO 90ee3aa53dbd) ([10.239.97.151])
+  by fmviesa001.fm.intel.com with ESMTP; 03 Apr 2024 02:26:06 -0700
+Received: from kbuild by 90ee3aa53dbd with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1rrwsQ-00024B-0c;
+	Wed, 03 Apr 2024 09:25:54 +0000
+Date: Wed, 03 Apr 2024 17:23:24 +0800
+From: kernel test robot <lkp@intel.com>
+To: "x86-ml" <x86@kernel.org>
+Cc: linux-kernel@vger.kernel.org
+Subject: [tip:x86/misc] BUILD SUCCESS
+ bdc42c8b9befcef6368be345004cee3da1ace955
+Message-ID: <202404031723.MzcKXBW9-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] media: v4l2-subdev: Support enable/disable_streams for
- single-pad subdevs
-To: Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
- Mauro Carvalho Chehab <mchehab@kernel.org>, Hans Verkuil
- <hverkuil@xs4all.nl>, Umang Jain <umang.jain@ideasonboard.com>,
- linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20240325-single-pad-enable-streams-v1-1-142e19896a72@ideasonboard.com>
- <20240325125055.GC23988@pendragon.ideasonboard.com>
- <ZgF10EVLrfF7cl57@kekkonen.localdomain>
- <0ad9841d-bb51-4512-9388-f9ce36372677@ideasonboard.com>
- <ZgG5xt07XQ7DJ1_W@kekkonen.localdomain>
- <e497a7a2-a973-4059-8981-1ea83ea3dd30@ideasonboard.com>
- <ZgP5A0sN9FCoIoPs@kekkonen.localdomain>
- <44e3f07f-9374-414e-a6db-a744127477b1@ideasonboard.com>
- <ZgQf_LX1ohYykGjv@kekkonen.localdomain>
- <a338c5a0-3239-4fb1-9af1-a127bcef366a@ideasonboard.com>
- <Zgv0k01IQOFaMdSZ@kekkonen.localdomain>
-Content-Language: en-US
-From: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
-Autocrypt: addr=tomi.valkeinen@ideasonboard.com; keydata=
- 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
-In-Reply-To: <Zgv0k01IQOFaMdSZ@kekkonen.localdomain>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
 
-On 02/04/2024 15:05, Sakari Ailus wrote:
-> On Wed, Mar 27, 2024 at 03:39:31PM +0200, Tomi Valkeinen wrote:
->> On 27/03/2024 15:32, Sakari Ailus wrote:
->>> Heissulivei,
->>>
->>> On Wed, Mar 27, 2024 at 01:06:42PM +0200, Tomi Valkeinen wrote:
->>>> On 27/03/2024 12:46, Sakari Ailus wrote:
->>>>> Heippa,
->>>>>
->>>>> On Mon, Mar 25, 2024 at 07:56:46PM +0200, Tomi Valkeinen wrote:
->>>>>> On 25/03/2024 19:52, Sakari Ailus wrote:
->>>>>>> Moi,
->>>>>>>
->>>>>>> On Mon, Mar 25, 2024 at 03:43:01PM +0200, Tomi Valkeinen wrote:
->>>>>>>> On 25/03/2024 15:02, Sakari Ailus wrote:
->>>>>>>>> Moi,
->>>>>>>>>
->>>>>>>>> Thanks for the patch.
->>>>>>>>>
->>>>>>>>> On Mon, Mar 25, 2024 at 02:50:55PM +0200, Laurent Pinchart wrote:
->>>>>>>>>> Hi Tomi,
->>>>>>>>>>
->>>>>>>>>> On Mon, Mar 25, 2024 at 02:43:23PM +0200, Tomi Valkeinen wrote:
->>>>>>>>>>> Currently a subdevice with a single pad, e.g. a sensor subdevice, must
->>>>>>>>>>> use the v4l2_subdev_video_ops.s_stream op, instead of
->>>>>>>>>>> v4l2_subdev_pad_ops.enable/disable_streams. This is because the
->>>>>>>>>>> enable/disable_streams machinery requires a routing table which a subdev
->>>>>>>>>>> cannot have with a single pad.
->>>>>>>>>>>
->>>>>>>>>>> Implement enable/disable_streams support for these single-pad subdevices
->>>>>>>>>>> by assuming an implicit stream 0 when the subdevice has only one pad.
->>>>>>>>>>>
->>>>>>>>>>> Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
->>>>>>>>>>> ---
->>>>>>>>>>> Even though I did send this patch, I'm not sure if this is necessary.
->>>>>>>>>>> s_stream works fine for the subdevs with a single pad. With the upcoming
->>>>>>>>>>> internal pads, adding an internal pad to the subdev will create a
->>>>>>>>>>> routing table, and enable/disable_streams would get "fixed" that way.
->>>>>>>>>
->>>>>>>>> I'd like to get rid of a redundant way to control streaming.
->>>>>>>>
->>>>>>>> We can't get rid of it anyway, can we? We're not going to convert old
->>>>>>>> drivers to streams.
->>>>>>>
->>>>>>> I'd expect to do that but it'd take a long time. That being said, I think
->>>>>>> we need to consider devices without pads (VCMs) so it may well be this
->>>>>>> would remain after all.
->>>>>>>
->>>>>>>>
->>>>>>>> For new drivers, yes, we shouldn't use s_stream. But is the answer for new
->>>>>>>> sensor drivers this patch, or requiring an internal pad?
->>>>>>>
->>>>>>> For new drivers I'd like to see an internal pad in fact.
->>>>>>> {enable,disable}_streams is still internal to the kernel.
->>>>>>
->>>>>> So, you think this patch should be dropped?
->>>>>
->>>>> No, no. Not all sub-device drivers with pads are camera sensor drivers. :-)
->>>>
->>>> Hmm, alright. So we want to support enable/disable_streams for sub-devices
->>>> with multiple source pads but no routing (so probably no sink pads)?
->>>
->>> That should be allowed indeed, in order to move from s_stream() to
->>> {enable,disable}_streams().
->>>
->>>>
->>>>>>>>>>> So perhaps the question is, do we want to support single-pad subdevs in
->>>>>>>>>>> the future, in which case something like this patch is necessary, or
->>>>>>>>>>> will all modern source subdev drivers have internal pads, in which
->>>>>>>>>>> case this is not needed...
->>>>>>>>>>
->>>>>>>>>> I think the latter would be best. I however can't guarantee we won't
->>>>>>>>>> have valid use cases for (enable|disable)_streams on single-pad subdevs
->>>>>>>>>> though, so you patch could still be interesting.
->>>>>>>>>
->>>>>>>>> Instead of the number of pads, could we use instead the
->>>>>>>>> V4L2_SUBDEV_FL_STREAMS flag or whether g_routing op is supported to
->>>>>>>>> determine the need for this?
->>>>>>>>
->>>>>>>> Maybe, but are they better? Do you see some issue with checking for the
->>>>>>>> number of pads? I considered a few options, but then thought that the most
->>>>>>>> safest test for this case is 1) one pad 2) enable/disable_streams
->>>>>>>> implemented.
->>>>>>>
->>>>>>> I think I'd actually prefer {enable,disable}_streams in fact.
->>>>>>
->>>>>> Hmm, sorry, now I'm confused =). What do you mean with that?
->>>>>
->>>>> I'd use V4L2_SUBDEV_FL_STREAMS flag instead of the number of pads. The
->>>>> number of pads is less related to routing.
->>>>
->>>> Well, with one pad you cannot have routing =).
->>>>
->>>> In this patch I used sd->enabled_streams to track the enabled streams, but
->>>> if we need to support multiple pads, I'll have to invent something new for
->>>> that.
->>>
->>> What exactly do you think needs to be changed? This is just about starting
->>> and stopping streaming using a different sent of callbacks, right?
->>
->> The helpers track which streams are enabled, so we need some place to store
->> the enabled streams.
->>
->> For V4L2_SUBDEV_FL_STREAMS we have that in state->stream_configs for each
->> stream. For the one-source-pad case we have a subdev wide
->> sd->enabled_streams to store that. But we don't have any place at the moment
->> to store if a pad is enabled.
-> 
-> If there are is no support for routing, isn't streaming either enabled or
-> disabled on all of them?
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86/misc
+branch HEAD: bdc42c8b9befcef6368be345004cee3da1ace955  Documentation/maintainer-tip: Clarify merge window policy
 
-Hmm, no, I don't see why that would be the case. If a subdev has two 
-source pads, and it gets an enable_streams() call on the first source 
-pad, why would the second source pad be enabled too?
+elapsed time: 963m
 
-  Tomi
+configs tested: 163
+configs skipped: 3
 
+The following configs have been built successfully.
+More configs may be tested in the coming days.
+
+tested configs:
+alpha                             allnoconfig   gcc  
+alpha                            allyesconfig   gcc  
+alpha                               defconfig   gcc  
+arc                              allmodconfig   gcc  
+arc                               allnoconfig   gcc  
+arc                              allyesconfig   gcc  
+arc                                 defconfig   gcc  
+arc                   randconfig-001-20240403   gcc  
+arc                   randconfig-002-20240403   gcc  
+arm                              allmodconfig   gcc  
+arm                               allnoconfig   clang
+arm                              allyesconfig   gcc  
+arm                                 defconfig   clang
+arm                          pxa910_defconfig   gcc  
+arm                   randconfig-001-20240403   gcc  
+arm                   randconfig-002-20240403   gcc  
+arm                   randconfig-003-20240403   clang
+arm                   randconfig-004-20240403   gcc  
+arm                           sunxi_defconfig   gcc  
+arm64                            allmodconfig   clang
+arm64                             allnoconfig   gcc  
+arm64                            allyesconfig   clang
+arm64                               defconfig   gcc  
+arm64                 randconfig-001-20240403   clang
+arm64                 randconfig-002-20240403   clang
+arm64                 randconfig-003-20240403   gcc  
+arm64                 randconfig-004-20240403   clang
+csky                             allmodconfig   gcc  
+csky                              allnoconfig   gcc  
+csky                             allyesconfig   gcc  
+csky                                defconfig   gcc  
+csky                  randconfig-001-20240403   gcc  
+csky                  randconfig-002-20240403   gcc  
+hexagon                          allmodconfig   clang
+hexagon                           allnoconfig   clang
+hexagon                          allyesconfig   clang
+hexagon                             defconfig   clang
+hexagon               randconfig-001-20240403   clang
+hexagon               randconfig-002-20240403   clang
+i386                             allmodconfig   gcc  
+i386                              allnoconfig   gcc  
+i386                             allyesconfig   gcc  
+i386         buildonly-randconfig-002-20240403   clang
+i386         buildonly-randconfig-003-20240403   clang
+i386         buildonly-randconfig-004-20240403   clang
+i386         buildonly-randconfig-006-20240403   clang
+i386                                defconfig   clang
+i386                  randconfig-002-20240403   clang
+i386                  randconfig-005-20240403   clang
+i386                  randconfig-012-20240403   clang
+i386                  randconfig-014-20240403   clang
+i386                  randconfig-016-20240403   clang
+loongarch                        allmodconfig   gcc  
+loongarch                         allnoconfig   gcc  
+loongarch                           defconfig   gcc  
+loongarch             randconfig-001-20240403   gcc  
+loongarch             randconfig-002-20240403   gcc  
+m68k                             allmodconfig   gcc  
+m68k                              allnoconfig   gcc  
+m68k                             allyesconfig   gcc  
+m68k                                defconfig   gcc  
+m68k                       m5249evb_defconfig   gcc  
+microblaze                       alldefconfig   gcc  
+microblaze                       allmodconfig   gcc  
+microblaze                        allnoconfig   gcc  
+microblaze                       allyesconfig   gcc  
+microblaze                          defconfig   gcc  
+mips                              allnoconfig   gcc  
+mips                             allyesconfig   gcc  
+nios2                            allmodconfig   gcc  
+nios2                             allnoconfig   gcc  
+nios2                            allyesconfig   gcc  
+nios2                               defconfig   gcc  
+nios2                 randconfig-001-20240403   gcc  
+nios2                 randconfig-002-20240403   gcc  
+openrisc                          allnoconfig   gcc  
+openrisc                         allyesconfig   gcc  
+openrisc                            defconfig   gcc  
+parisc                           allmodconfig   gcc  
+parisc                            allnoconfig   gcc  
+parisc                           allyesconfig   gcc  
+parisc                              defconfig   gcc  
+parisc                randconfig-001-20240403   gcc  
+parisc                randconfig-002-20240403   gcc  
+parisc64                            defconfig   gcc  
+powerpc                          allmodconfig   gcc  
+powerpc                           allnoconfig   gcc  
+powerpc                          allyesconfig   clang
+powerpc                     ep8248e_defconfig   gcc  
+powerpc                  iss476-smp_defconfig   gcc  
+powerpc                 mpc832x_rdb_defconfig   gcc  
+powerpc               randconfig-001-20240403   gcc  
+powerpc               randconfig-002-20240403   gcc  
+powerpc               randconfig-003-20240403   clang
+powerpc64             randconfig-001-20240403   gcc  
+powerpc64             randconfig-002-20240403   clang
+powerpc64             randconfig-003-20240403   gcc  
+riscv                            allmodconfig   clang
+riscv                             allnoconfig   gcc  
+riscv                            allyesconfig   clang
+riscv                               defconfig   clang
+riscv                 randconfig-001-20240403   clang
+riscv                 randconfig-002-20240403   clang
+s390                             allmodconfig   clang
+s390                              allnoconfig   clang
+s390                             allyesconfig   gcc  
+s390                                defconfig   clang
+s390                  randconfig-001-20240403   clang
+s390                  randconfig-002-20240403   clang
+sh                               allmodconfig   gcc  
+sh                                allnoconfig   gcc  
+sh                               allyesconfig   gcc  
+sh                                  defconfig   gcc  
+sh                        edosk7760_defconfig   gcc  
+sh                     magicpanelr2_defconfig   gcc  
+sh                            migor_defconfig   gcc  
+sh                    randconfig-001-20240403   gcc  
+sh                    randconfig-002-20240403   gcc  
+sparc                            allmodconfig   gcc  
+sparc                             allnoconfig   gcc  
+sparc                               defconfig   gcc  
+sparc64                          allmodconfig   gcc  
+sparc64                          allyesconfig   gcc  
+sparc64                             defconfig   gcc  
+sparc64               randconfig-001-20240403   gcc  
+sparc64               randconfig-002-20240403   gcc  
+um                               allmodconfig   clang
+um                                allnoconfig   clang
+um                               allyesconfig   gcc  
+um                                  defconfig   clang
+um                             i386_defconfig   gcc  
+um                    randconfig-001-20240403   gcc  
+um                    randconfig-002-20240403   clang
+um                           x86_64_defconfig   clang
+x86_64                            allnoconfig   clang
+x86_64                           allyesconfig   clang
+x86_64       buildonly-randconfig-001-20240403   gcc  
+x86_64       buildonly-randconfig-002-20240403   gcc  
+x86_64       buildonly-randconfig-004-20240403   gcc  
+x86_64       buildonly-randconfig-006-20240403   gcc  
+x86_64                              defconfig   gcc  
+x86_64                randconfig-001-20240403   gcc  
+x86_64                randconfig-003-20240403   gcc  
+x86_64                randconfig-004-20240403   gcc  
+x86_64                randconfig-005-20240403   gcc  
+x86_64                randconfig-011-20240403   gcc  
+x86_64                randconfig-012-20240403   gcc  
+x86_64                randconfig-013-20240403   gcc  
+x86_64                randconfig-014-20240403   gcc  
+x86_64                randconfig-015-20240403   gcc  
+x86_64                randconfig-016-20240403   gcc  
+x86_64                randconfig-072-20240403   gcc  
+x86_64                randconfig-074-20240403   gcc  
+x86_64                randconfig-075-20240403   gcc  
+x86_64                randconfig-076-20240403   gcc  
+x86_64                           rhel-8.3-bpf   gcc  
+x86_64                          rhel-8.3-rust   clang
+x86_64                               rhel-8.3   gcc  
+xtensa                            allnoconfig   gcc  
+xtensa                  cadence_csp_defconfig   gcc  
+xtensa                          iss_defconfig   gcc  
+xtensa                randconfig-001-20240403   gcc  
+xtensa                randconfig-002-20240403   gcc  
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
