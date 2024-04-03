@@ -1,98 +1,152 @@
-Received: from box.fidei.email (box.fidei.email [71.19.144.250])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 369B680C1C;
-	Wed,  3 Apr 2024 07:33:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=71.19.144.250
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32FF082D7C;
+	Wed,  3 Apr 2024 07:33:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712129609; cv=none; b=N0go0bLR5uEGvcwSdob1+jDMHOwXTdqRBMVxWwF9cho8irsiobN+OhBg3Tq2yRMp1fEphvc1q5CIAuiel1WV+dfyhX0f3ymTYld7N5i2N2vqQWkG3ca9tRfSKu7fDYeaJrmxvggXscNCTxR7+XdeqCNneO/K8tAStaF6CCf3LNs=
+	t=1712129618; cv=none; b=VekOKK46ISUV0z0exHFGBu2X9tMI/3JSEDzrf73VBa7s1FsuzfzjLKeC0nhG1ZqgZbTfSr84ao2qhxPFmhcRuh2ibl7G7/ErIvSpiv82sK/MW5jOvQp+ZouHpGwaKuuZ+a2AA6mG1Wa6LlTxXyWaiq7Ilne4H/W2nuVhco/8Vvs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712129609; c=relaxed/simple;
-	bh=F4ceUdWui/mdlAkWe1dY+ZhhuS2I1dZLc64k4/7Uo2Y=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=RtVzZC3iW2pTHVanA0bYOZMWy08C+Oz7qfp7H1Cb8cvERk4oBywWrAtkkM1+2uWnYFI9IEtP0ie0a097/JIVisinAx62mAk0LIS5TS7moDZVOJAPKWFb7g1amA3iswPWetfSA064hSnsDREODoV/g52PuPYS4o1E/GzZ2SgvZpA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=dorminy.me; spf=pass smtp.mailfrom=dorminy.me; dkim=pass (2048-bit key) header.d=dorminy.me header.i=@dorminy.me header.b=hcaS2gkR; arc=none smtp.client-ip=71.19.144.250
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=dorminy.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dorminy.me
+	s=arc-20240116; t=1712129618; c=relaxed/simple;
+	bh=A/OR6DO71iCj8J60e0zgSTpWmgsrZqjY3mHCSsVS3Y8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=dVAL+lr3z2FNzy5PXfaRYajskUpU8KbBIDtgFeSIMjYJQts5kvyMy1V4jQ7AZrQxbQ2dlTOkROxexQIbMVNU521NSj3hnP/Bedc0Ons4rFN5E57Rc5LaQuEcjS4dxOeyt5NNE+Pb2k3VpDAFkMH1OjfwLJOw0/8aM59w1qAsvIg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=iV76gXcb; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=dorminy.me header.i=@dorminy.me header.b="hcaS2gkR"
-Received: from authenticated-user (box.fidei.email [71.19.144.250])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-	(No client certificate requested)
-	by box.fidei.email (Postfix) with ESMTPSA id 2C7F680892;
-	Wed,  3 Apr 2024 03:33:26 -0400 (EDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=dorminy.me; s=mail;
-	t=1712129607; bh=F4ceUdWui/mdlAkWe1dY+ZhhuS2I1dZLc64k4/7Uo2Y=;
-	h=From:To:Subject:Date:In-Reply-To:References:From;
-	b=hcaS2gkRusKnpHkC/vbijCe7K6kF9RnpgEZv+Yk/8S8mIdGMFNwTXjeMXk6Lzd5UC
-	 Hi6eke4x6kTY5FTxTcqF9nhsH8Hr3kFTQUa72oYAdA2naZe/2JZk8LMUs8EZmhcKSY
-	 k/lGHBMstPOaB75DA6K8YXP0rh0o1c3RFZhWnNym3ibZiv3ynGaWsJBeOu7qdzY3TA
-	 kYfAZI95Huok41dLHVC+Ns1ZqhWUMwMY3vTUK+9A3S3+JnYeD8Y4AY5Ve0v1vt+t1v
-	 /GbaAWudyNoOzpYQuXbt5o9acwJnV+NKZdaow2b6f9Pu+wdl7RXj4U/v8OpFOXiJXJ
-	 MGXyDIMLsHiBQ==
-From: Sweet Tea Dorminy <sweettea-kernel@dorminy.me>
-To: Jonathan Corbet <corbet@lwn.net>,
-	Kent Overstreet <kent.overstreet@linux.dev>,
-	Brian Foster <bfoster@redhat.com>,
-	Chris Mason <clm@fb.com>,
-	Josef Bacik <josef@toxicpanda.com>,
-	David Sterba <dsterba@suse.com>,
-	Jaegeuk Kim <jaegeuk@kernel.org>,
-	Chao Yu <chao@kernel.org>,
-	Alexander Viro <viro@zeniv.linux.org.uk>,
-	Christian Brauner <brauner@kernel.org>,
-	Jan Kara <jack@suse.cz>,
-	=?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>,
-	Sweet Tea Dorminy <sweettea-kernel@dorminy.me>,
-	linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-bcachefs@vger.kernel.org,
-	linux-btrfs@vger.kernel.org,
-	linux-f2fs-devel@lists.sourceforge.net,
-	linux-fsdevel@vger.kernel.org,
-	kernel-team@meta.com
-Subject: [PATCH v3 10/13] ocfs2: fiemap: return correct extent physical length
-Date: Wed,  3 Apr 2024 03:22:51 -0400
-Message-ID: <0b492e10a9034c8fb08ca654c06471575e8bb96d.1712126039.git.sweettea-kernel@dorminy.me>
-In-Reply-To: <cover.1712126039.git.sweettea-kernel@dorminy.me>
-References: <cover.1712126039.git.sweettea-kernel@dorminy.me>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="iV76gXcb"
+Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 4334dt9q013313;
+	Wed, 3 Apr 2024 07:33:31 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	message-id:date:mime-version:subject:to:cc:references:from
+	:in-reply-to:content-type:content-transfer-encoding; s=
+	qcppdkim1; bh=+Jw9NbToDRM5ffmq/HmPeRrtpdoCyhAFrW68RwEoAh8=; b=iV
+	76gXcbODyTAEhYpCAF3yVID3NTVT6vNT3VFf4qT0sd8UbZCDsck0OlfNxNpfIkFP
+	QkV/h95eyGtvqNV9VKIrtpHWgh3/Kx8dLNQqbcv9VXiD5VVDR7iU1MdMZ+99ktuf
+	+LfXag/eXd9uVSduXaBWxZJorYFacTmS5XBzNNYfV1v2jNz1r+n0eXwbbJgIX+Z/
+	gmaJL+ujz8uhsMy9Kk4KRzQPDRdPW7HtgtF3iueFn9nAHY6VZMMmPDJ3YMPKdnJI
+	ev2WbsOaJlGZ8nkrX5CHyasnlhcxWjR+Ai1VyDl5Pqe94SjLBEDBuRhpJPadLnpj
+	8/Swf/53OtItQlswyMXw==
+Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3x8xrx0er5-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 03 Apr 2024 07:33:31 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA05.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 4337XUI1021948
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 3 Apr 2024 07:33:30 GMT
+Received: from [10.216.63.221] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Wed, 3 Apr 2024
+ 00:33:24 -0700
+Message-ID: <c30811e6-2a1e-4b26-8b94-7c67000b8568@quicinc.com>
+Date: Wed, 3 Apr 2024 13:03:21 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v18 2/9] usb: dwc3: core: Access XHCI address space
+ temporarily to read port info
+To: Johan Hovold <johan@kernel.org>
+CC: Thinh Nguyen <Thinh.Nguyen@synopsys.com>,
+        Krzysztof Kozlowski
+	<krzysztof.kozlowski+dt@linaro.org>,
+        Rob Herring <robh@kernel.org>,
+        "Bjorn
+ Andersson" <andersson@kernel.org>,
+        Wesley Cheng <quic_wcheng@quicinc.com>,
+        Konrad Dybcio <konrad.dybcio@linaro.org>,
+        Greg Kroah-Hartman
+	<gregkh@linuxfoundation.org>,
+        Conor Dooley <conor+dt@kernel.org>, "Felipe
+ Balbi" <balbi@kernel.org>,
+        "devicetree@vger.kernel.org"
+	<devicetree@vger.kernel.org>,
+        "linux-arm-msm@vger.kernel.org"
+	<linux-arm-msm@vger.kernel.org>,
+        "linux-usb@vger.kernel.org"
+	<linux-usb@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>,
+        "quic_ppratap@quicinc.com"
+	<quic_ppratap@quicinc.com>,
+        "quic_jackp@quicinc.com"
+	<quic_jackp@quicinc.com>,
+        Johan Hovold <johan+linaro@kernel.org>
+References: <20240326113253.3010447-1-quic_kriskura@quicinc.com>
+ <20240326113253.3010447-3-quic_kriskura@quicinc.com>
+ <20240402233218.5kngtj56qellnrmo@synopsys.com>
+ <39010f95-b08f-4a57-b3af-f34eb1069865@quicinc.com>
+ <Zgz_3AspRRfYqOwZ@hovoldconsulting.com>
+Content-Language: en-US
+From: Krishna Kurapati PSSNV <quic_kriskura@quicinc.com>
+In-Reply-To: <Zgz_3AspRRfYqOwZ@hovoldconsulting.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: 0TmoQqVEfHcWGL7ekMy2hSYiQF2HMnKF
+X-Proofpoint-ORIG-GUID: 0TmoQqVEfHcWGL7ekMy2hSYiQF2HMnKF
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-04-03_06,2024-04-01_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 malwarescore=0
+ spamscore=0 adultscore=0 bulkscore=0 suspectscore=0 lowpriorityscore=0
+ phishscore=0 impostorscore=0 priorityscore=1501 mlxscore=0 mlxlogscore=875
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2403210001
+ definitions=main-2404030050
 
-Signed-off-by: Sweet Tea Dorminy <sweettea-kernel@dorminy.me>
----
- fs/ocfs2/extent_map.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/fs/ocfs2/extent_map.c b/fs/ocfs2/extent_map.c
-index eabdf97cd685..229ea45df37b 100644
---- a/fs/ocfs2/extent_map.c
-+++ b/fs/ocfs2/extent_map.c
-@@ -705,7 +705,9 @@ static int ocfs2_fiemap_inline(struct inode *inode, struct buffer_head *di_bh,
- 	unsigned int id_count;
- 	struct ocfs2_dinode *di;
- 	u64 phys;
--	u32 flags = FIEMAP_EXTENT_DATA_INLINE|FIEMAP_EXTENT_LAST;
-+	u32 flags = (FIEMAP_EXTENT_DATA_INLINE|
-+		     FIEMAP_EXTENT_HAS_PHYS_LEN|
-+		     FIEMAP_EXTENT_LAST);
- 	struct ocfs2_inode_info *oi = OCFS2_I(inode);
- 
- 	di = (struct ocfs2_dinode *)di_bh->b_data;
-@@ -782,7 +784,7 @@ int ocfs2_fiemap(struct inode *inode, struct fiemap_extent_info *fieinfo,
- 			continue;
- 		}
- 
--		fe_flags = 0;
-+		fe_flags = FIEMAP_EXTENT_HAS_PHYS_LEN;
- 		if (rec.e_flags & OCFS2_EXT_UNWRITTEN)
- 			fe_flags |= FIEMAP_EXTENT_UNWRITTEN;
- 		if (rec.e_flags & OCFS2_EXT_REFCOUNTED)
--- 
-2.43.0
 
+On 4/3/2024 12:36 PM, Johan Hovold wrote:
+> On Wed, Apr 03, 2024 at 10:54:25AM +0530, Krishna Kurapati PSSNV wrote:
+>   
+>>>> +static int dwc3_read_port_info(struct dwc3 *dwc)
+>>>> +{
+>>>> +	void __iomem *base;
+>>>> +	u8 major_revision;
+>>>> +	u32 offset;
+>>>> +	u32 val;
+>>>> +
+>>>> +	/*
+>>>> +	 * Remap xHCI address space to access XHCI ext cap regs since it is
+>>>> +	 * needed to get information on number of ports present.
+>>>> +	 */
+>>>> +	base = ioremap(dwc->xhci_resources[0].start,
+>>>> +		       resource_size(&dwc->xhci_resources[0]));
+>>>> +	if (IS_ERR(base))
+>>>> +		return PTR_ERR(base);
+>>>
+>>> Looks like you forgot to address some of the comments you said you'd
+>>> update previously if you submit a new version to the series.
+>>>
+>>> [*] https://lore.kernel.org/linux-usb/af73110d-e13e-4183-af11-aed869ac0a31@quicinc.com/
+>>>
+>>
+>> Apologies. I agree. I was too much focused on acpi removal and interrupt
+>> cleanup, I forgot the last comment you gave.
+>>
+>> Can I send in a separate patch for this ?
+> 
+> The series has not been merged yet so you can address both issues in a
+> v19. Perhaps wait a day or two in case Thinh has further comments.
+> 
+
+Sure Johan.
+
+Also after making the following two changes:
+
+1. Rename dwc3_read_port_info(...) to dwc3_get_num_ports(...)
+2. Changing "if (IS_ERR(base))" to "if (!base)"
+
+Can I still retain your RB tag ?
+
+Regards,
+Krishna,
