@@ -1,321 +1,102 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A85C514A4D9
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4630514A4E4
 	for <linux-kernel@vger.kernel.org>; Wed,  3 Apr 2024 15:02:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712156531; cv=none; b=TsogmLoRYkctMDwNic2lhYpahegzq/QSG0G7uuoKpG8e5GjNehnqWr/qJdbLvFzEVj5rRaNaTe3B9ilZ4cRfF9f91i9y6BgEk5PgTmyEDy9ueVnmiS+L/zXJpNQf74PYxV8mZ8qWqEm64ogXF3YrIe7kLrRHYTRFoKVqog7edOE=
+	t=1712156531; cv=none; b=k7AMrQvuxzNTKaF9VrgmbcHuJLsFhb2gZiYFEwsFDh8LJgQrZsijw08I8JxZX4ciGusD2j3TlHijVwWc7raTQi448WX7zVp8o8CDOz5avm2A1j5Sd3RG19Exz6nZiPTAGgKRhLW/sIAZpxy7Hwg1j6zNFTZqxYUpcUKu4HnjAgk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1712156531; c=relaxed/simple;
-	bh=V9CTkZOx/tGYPNlc61sl/gWZULplYRl65rJqks9cElo=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=bIXkgp6Lx0cUO8id9bcWt15wC9fbVpSXYpD9iLiL5cbXK+4YtXuoNrqJKvwFGtcXStPzRCt4eWR161BD0o0CEtHuA6kXgbFMIsTUtm5i+WYMQMaVRlca0bYqIyxUEmRoSAbGQwFUV81MjUi1CLI4trmX7QzkNPZ0ncbtxd3dYm4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2C7C21007;
-	Wed,  3 Apr 2024 08:02:40 -0700 (PDT)
-Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 7DE443F7B4;
-	Wed,  3 Apr 2024 08:02:07 -0700 (PDT)
-From: Mark Rutland <mark.rutland@arm.com>
-To: linux-kernel@vger.kernel.org
-Cc: anil.s.keshavamurthy@intel.com,
-	aou@eecs.berkeley.edu,
-	catalin.marinas@arm.com,
-	davem@davemloft.net,
-	jarkko@kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	mark.rutland@arm.com,
-	mhiramat@kernel.org,
-	naveen.n.rao@linux.ibm.com,
-	palmer@dabbelt.com,
-	paul.walmsley@sifive.com,
-	will@kernel.org
-Subject: [PATCH v2 3/4] kprobes/treewide: Explicitly override alloc/free functions
-Date: Wed,  3 Apr 2024 16:01:53 +0100
-Message-Id: <20240403150154.667649-4-mark.rutland@arm.com>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20240403150154.667649-1-mark.rutland@arm.com>
-References: <20240403150154.667649-1-mark.rutland@arm.com>
+	bh=ioFvbQBkOvvRJTerHaz3kt8URF8buDZfWEZ3pwNg3io=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-type; b=ntmZJWRyG5Rltw5WJkvUMuHa4PY/9+NTvop8kYWgTBqmhHt2eaRs0GQuDFNxqqKxz0WgrqPcuJKsJwRCgfLbnxlXoM1t+Fb46ERZ1md5QkTwWCGHDiXsuB+7VCJhpPB69IDXhHpbt4JJtXUx2U0ST6fVQZMR6H03cnvNY4DKKF0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=L14dHMoT; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="L14dHMoT"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1712156528;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=4HK4/miNnJq7CYq44ZkiuwwHjBixcP9cHfRzM+l+ZEU=;
+	b=L14dHMoTbFHhEo2emSf+DQRQAzhg61t0gAFNv3uUOItmnW9g7n48OaLSWOP7AQNEYc3Rsn
+	95Eq5NdfHBjhjxfpnTdEqK5FsL4rK77n0G0JAeenNm6dZRN9NpPUDOry/nc4chDuLfTT5j
+	ld4zAAQ4L82KbyzZVo8RibxlRWF5VGM=
+Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
+ by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-271-xewL20k3PRaqkTCkhOTtrw-1; Wed,
+ 03 Apr 2024 11:02:03 -0400
+X-MC-Unique: xewL20k3PRaqkTCkhOTtrw-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.rdu2.redhat.com [10.11.54.3])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 1049A1C07F38;
+	Wed,  3 Apr 2024 15:02:03 +0000 (UTC)
+Received: from jmeneghi.bos.com (unknown [10.18.25.182])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id CFFB71121306;
+	Wed,  3 Apr 2024 15:02:02 +0000 (UTC)
+From: John Meneghini <jmeneghi@redhat.com>
+To: skashyap@marvell.com
+Cc: linux-scsi@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	GR-QLogic-Storage-Upstream@marvell.com,
+	martin.petersen@oracle.com,
+	guazhang@redhat.com,
+	njavali@marvell.com
+Subject: [PATCH] scsi: qedf: make qedf_execute_tmf non-preemptible
+Date: Wed,  3 Apr 2024 11:01:55 -0400
+Message-Id: <20240403150155.412954-1-jmeneghi@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-type: text/plain
 Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.3
 
-Currently architectures can override kprobes_alloc_insn_page(), but
-kprobes_free_insn_page() is always implemented using module_memfree(),
-which might not be what an architecture needs, especially as we'd like
-to make it possible to use kprobes without requiring MODULES.
+Stop calling smp_processor_id from preemptible code in qedf_execute_tmf.
+This results in BUGON when running an RT kernel.
 
-It would be nicer if architectures either:
+[ 659.343280] BUG: using smp_processor_id() in preemptible [00000000] code: sg_reset/3646
+[ 659.343282] caller is qedf_execute_tmf+0x8b/0x360 [qedf]
 
-(a) Used only the generic kprobes_alloc_insn_page() and
-    kprobes_free_insn_page(), implicitly depending on MODULES.
-
-(b) Provided their own implementation of both kprobes_alloc_insn_page()
-    and kprobes_free_insn_page(), handling the relevant dependencies
-    themselves.
-
-This patch applies that split treewide:
-
-(a) Architectures using the generic kprobes_free_insn_page() and
-    kprobes_free_insn_page() are left as-is. The __weak annotation is
-    removed from the generic implementations so that accidental
-    overrides/misuse can be detected easily.
-
-(b) Architectures which provide their own kprobes_free_insn_page() are
-    given a matching implementation of kprobes_free_insn_page(), and
-    select HAVE_KPROBES_ALLOC.
-
-    This new Kconfig symbol will allow subsequent patches to relax the
-    dependency on MODULES to (MODULES || HAVE_KPROBES_ALLOC) once other
-    module dependencies in the core kprobes code are cleaned up.
-
-    Architectures which use module_alloc() are given an implementation
-    using module_memfree() along with an explicit dependency on MODULES.
-
-    Architectures using __vmalloc_node_range() are given an
-    implementation using vfree(). This loses the warning for
-    in_interrupt(), but vfree() can handle this via vfree_atomic(), so
-    the warning isn't necessary.
-
-    On riscv, the allocator depends on !XIP_KERNEL, which is already a
-    dependency for HAVE_KPROBES in arch/riscv/Kconfig.
-
-As of this patch arm64 and riscv have kprobe allocation functions which
-do not explicitly depend on MODULES. The core kprobes code still depends
-on MODULES.
-
-Signed-off-by: Mark Rutland <mark.rutland@arm.com>
-Cc: Albert Ou <aou@eecs.berkeley.edu>
-Cc: Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>
-Cc: Catalin Marinas <catalin.marinas@arm.com>
-Cc: David S. Miller <davem@davemloft.net>
-Cc: Jarkko Sakkinen <jarkko@kernel.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Naveen N. Rao <naveen.n.rao@linux.ibm.com>
-Cc: Palmer Dabbelt <palmer@dabbelt.com>
-Cc: Paul Walmsley <paul.walmsley@sifive.com>
-Cc: Will Deacon <will@kernel.org>
+Tested-by: Guangwu Zhang <guazhang@redhat.com>
+Cc: Saurav Kashyap <skashyap@marvell.com>
+Cc: Nilesh Javali <njavali@marvell.com>
+Signed-off-by: John Meneghini <jmeneghi@redhat.com>
 ---
- arch/Kconfig                       | 3 +++
- arch/arm64/Kconfig                 | 1 +
- arch/arm64/kernel/probes/kprobes.c | 5 +++++
- arch/powerpc/Kconfig               | 3 ++-
- arch/powerpc/kernel/kprobes.c      | 5 +++++
- arch/riscv/Kconfig                 | 1 +
- arch/riscv/kernel/probes/kprobes.c | 5 +++++
- arch/s390/Kconfig                  | 3 ++-
- arch/s390/kernel/kprobes.c         | 5 +++++
- arch/x86/Kconfig                   | 3 ++-
- arch/x86/kernel/kprobes/core.c     | 5 +++++
- include/linux/kprobes.h            | 1 +
- kernel/kprobes.c                   | 6 ++++--
- 13 files changed, 41 insertions(+), 5 deletions(-)
+ drivers/scsi/qedf/qedf_io.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/arch/Kconfig b/arch/Kconfig
-index 9f066785bb71d..85bb59f7b8c07 100644
---- a/arch/Kconfig
-+++ b/arch/Kconfig
-@@ -206,6 +206,9 @@ config HAVE_IOREMAP_PROT
- config HAVE_KPROBES
- 	bool
+diff --git a/drivers/scsi/qedf/qedf_io.c b/drivers/scsi/qedf/qedf_io.c
+index bf921caaf6ae..054a51713d55 100644
+--- a/drivers/scsi/qedf/qedf_io.c
++++ b/drivers/scsi/qedf/qedf_io.c
+@@ -2324,9 +2324,6 @@ static int qedf_execute_tmf(struct qedf_rport *fcport, u64 tm_lun,
+ 	io_req->fcport = fcport;
+ 	io_req->cmd_type = QEDF_TASK_MGMT_CMD;
  
-+config HAVE_KPROBES_ALLOC
-+	bool
+-	/* Record which cpu this request is associated with */
+-	io_req->cpu = smp_processor_id();
+-
+ 	/* Set TM flags */
+ 	io_req->io_req_flags = QEDF_READ;
+ 	io_req->data_xfer_len = 0;
+@@ -2349,6 +2346,9 @@ static int qedf_execute_tmf(struct qedf_rport *fcport, u64 tm_lun,
+ 
+ 	spin_lock_irqsave(&fcport->rport_lock, flags);
+ 
++	/* Record which cpu this request is associated with */
++	io_req->cpu = smp_processor_id();
 +
- config HAVE_KRETPROBES
- 	bool
- 
-diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-index 7b11c98b3e84b..bda7913d6c9b8 100644
---- a/arch/arm64/Kconfig
-+++ b/arch/arm64/Kconfig
-@@ -233,6 +233,7 @@ config ARM64
- 	select HAVE_STACKPROTECTOR
- 	select HAVE_SYSCALL_TRACEPOINTS
- 	select HAVE_KPROBES
-+	select HAVE_KPROBES_ALLOC
- 	select HAVE_KRETPROBES
- 	select HAVE_GENERIC_VDSO
- 	select HOTPLUG_CORE_SYNC_DEAD if HOTPLUG_CPU
-diff --git a/arch/arm64/kernel/probes/kprobes.c b/arch/arm64/kernel/probes/kprobes.c
-index 4b6ab7b1fa211..69d19a390cd48 100644
---- a/arch/arm64/kernel/probes/kprobes.c
-+++ b/arch/arm64/kernel/probes/kprobes.c
-@@ -136,6 +136,11 @@ void *kprobes_alloc_insn_page(void)
- 			NUMA_NO_NODE, __builtin_return_address(0));
- }
- 
-+void kprobes_free_insn_page(void *page)
-+{
-+	vfree(page);
-+}
-+
- /* arm kprobe: install breakpoint in text */
- void __kprobes arch_arm_kprobe(struct kprobe *p)
- {
-diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
-index 1c4be33736860..13e0fc51dcdcf 100644
---- a/arch/powerpc/Kconfig
-+++ b/arch/powerpc/Kconfig
-@@ -254,7 +254,8 @@ config PPC
- 	select HAVE_KERNEL_LZMA			if DEFAULT_UIMAGE
- 	select HAVE_KERNEL_LZO			if DEFAULT_UIMAGE
- 	select HAVE_KERNEL_XZ			if PPC_BOOK3S || 44x
--	select HAVE_KPROBES
-+	select HAVE_KPROBES			if MODULES
-+	select HAVE_KPROBES_ALLOC
- 	select HAVE_KPROBES_ON_FTRACE
- 	select HAVE_KRETPROBES
- 	select HAVE_LD_DEAD_CODE_DATA_ELIMINATION if HAVE_OBJTOOL_MCOUNT && (!ARCH_USING_PATCHABLE_FUNCTION_ENTRY || (!CC_IS_GCC || GCC_VERSION >= 110100))
-diff --git a/arch/powerpc/kernel/kprobes.c b/arch/powerpc/kernel/kprobes.c
-index 0b297718d5de6..d0332aaebab09 100644
---- a/arch/powerpc/kernel/kprobes.c
-+++ b/arch/powerpc/kernel/kprobes.c
-@@ -146,6 +146,11 @@ void *kprobes_alloc_insn_page(void)
- 	return NULL;
- }
- 
-+void kprobes_free_insn_page(void *page)
-+{
-+	module_memfree(page);
-+}
-+
- int arch_prepare_kprobe(struct kprobe *p)
- {
- 	int ret = 0;
-diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
-index be09c8836d56b..4e22549a522a5 100644
---- a/arch/riscv/Kconfig
-+++ b/arch/riscv/Kconfig
-@@ -139,6 +139,7 @@ config RISCV
- 	select HAVE_GENERIC_VDSO if MMU && 64BIT
- 	select HAVE_IRQ_TIME_ACCOUNTING
- 	select HAVE_KPROBES if !XIP_KERNEL
-+	select HAVE_KPROBES_ALLOC
- 	select HAVE_KPROBES_ON_FTRACE if !XIP_KERNEL
- 	select HAVE_KRETPROBES if !XIP_KERNEL
- 	# https://github.com/ClangBuiltLinux/linux/issues/1881
-diff --git a/arch/riscv/kernel/probes/kprobes.c b/arch/riscv/kernel/probes/kprobes.c
-index 75201ce721057..37fdfa952d999 100644
---- a/arch/riscv/kernel/probes/kprobes.c
-+++ b/arch/riscv/kernel/probes/kprobes.c
-@@ -112,6 +112,11 @@ void *kprobes_alloc_insn_page(void)
- 				     VM_FLUSH_RESET_PERMS, NUMA_NO_NODE,
- 				     __builtin_return_address(0));
- }
-+
-+void kprobes_free_insn_page(void *page)
-+{
-+	vfree(page);
-+}
- #endif
- 
- /* install breakpoint in text */
-diff --git a/arch/s390/Kconfig b/arch/s390/Kconfig
-index 8f01ada6845e3..635eddc3fce80 100644
---- a/arch/s390/Kconfig
-+++ b/arch/s390/Kconfig
-@@ -193,7 +193,8 @@ config S390
- 	select HAVE_KERNEL_UNCOMPRESSED
- 	select HAVE_KERNEL_XZ
- 	select HAVE_KERNEL_ZSTD
--	select HAVE_KPROBES
-+	select HAVE_KPROBES		if MODULES
-+	select HAVE_KPROBES_ALLOC
- 	select HAVE_KPROBES_ON_FTRACE
- 	select HAVE_KRETPROBES
- 	select HAVE_LIVEPATCH
-diff --git a/arch/s390/kernel/kprobes.c b/arch/s390/kernel/kprobes.c
-index 91ca4d501d4ef..a5b142b8eb0f7 100644
---- a/arch/s390/kernel/kprobes.c
-+++ b/arch/s390/kernel/kprobes.c
-@@ -45,6 +45,11 @@ void *kprobes_alloc_insn_page(void)
- 	return page;
- }
- 
-+void kprobes_free_insn_page(void *page)
-+{
-+	module_memfree(page);
-+}
-+
- static void *alloc_s390_insn_page(void)
- {
- 	if (xchg(&insn_page_in_use, 1) == 1)
-diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-index 4fff6ed46e902..0810cd0bdeca9 100644
---- a/arch/x86/Kconfig
-+++ b/arch/x86/Kconfig
-@@ -240,7 +240,8 @@ config X86
- 	select HAVE_KERNEL_LZO
- 	select HAVE_KERNEL_XZ
- 	select HAVE_KERNEL_ZSTD
--	select HAVE_KPROBES
-+	select HAVE_KPROBES			if MODULES
-+	select HAVE_KPROBES_ALLOC
- 	select HAVE_KPROBES_ON_FTRACE
- 	select HAVE_FUNCTION_ERROR_INJECTION
- 	select HAVE_KRETPROBES
-diff --git a/arch/x86/kernel/kprobes/core.c b/arch/x86/kernel/kprobes/core.c
-index 7f01bbbfa9e2a..5f093b94d9b40 100644
---- a/arch/x86/kernel/kprobes/core.c
-+++ b/arch/x86/kernel/kprobes/core.c
-@@ -508,6 +508,11 @@ void *kprobes_alloc_insn_page(void)
- 	return page;
- }
- 
-+void kprobes_free_insn_page(void *page)
-+{
-+	module_memfree(page);
-+}
-+
- /* Kprobe x86 instruction emulation - only regs->ip or IF flag modifiers */
- 
- static void kprobe_emulate_ifmodifiers(struct kprobe *p, struct pt_regs *regs)
-diff --git a/include/linux/kprobes.h b/include/linux/kprobes.h
-index ad4b561100f9e..651c807727bea 100644
---- a/include/linux/kprobes.h
-+++ b/include/linux/kprobes.h
-@@ -431,6 +431,7 @@ int enable_kprobe(struct kprobe *kp);
- void dump_kprobe(struct kprobe *kp);
- 
- void *kprobes_alloc_insn_page(void);
-+void kprobes_free_insn_page(void *page);
- 
- void *kprobes_alloc_optinsn_page(void);
- void kprobes_free_optinsn_page(void *page);
-diff --git a/kernel/kprobes.c b/kernel/kprobes.c
-index 35adf56430c9b..fa2ee4e59eca2 100644
---- a/kernel/kprobes.c
-+++ b/kernel/kprobes.c
-@@ -110,7 +110,8 @@ enum kprobe_slot_state {
- 	SLOT_USED = 2,
- };
- 
--void __weak *kprobes_alloc_insn_page(void)
-+#ifndef CONFIG_HAVE_KPROBES_ALLOC
-+void *kprobes_alloc_insn_page(void)
- {
- 	/*
- 	 * Use module_alloc() so this page is within +/- 2GB of where the
-@@ -121,10 +122,11 @@ void __weak *kprobes_alloc_insn_page(void)
- 	return module_alloc(PAGE_SIZE);
- }
- 
--static void kprobes_free_insn_page(void *page)
-+void kprobes_free_insn_page(void *page)
- {
- 	module_memfree(page);
- }
-+#endif
- 
- struct kprobe_insn_cache kprobe_insn_slots = {
- 	.mutex = __MUTEX_INITIALIZER(kprobe_insn_slots.mutex),
+ 	sqe_idx = qedf_get_sqe_idx(fcport);
+ 	sqe = &fcport->sq[sqe_idx];
+ 	memset(sqe, 0, sizeof(struct fcoe_wqe));
 -- 
-2.30.2
+2.39.3
 
