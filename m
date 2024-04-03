@@ -1,181 +1,117 @@
-Received: from mx0b-0016f401.pphosted.com (mx0b-0016f401.pphosted.com [67.231.156.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f180.google.com (mail-yb1-f180.google.com [209.85.219.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D09E01B950;
-	Wed,  3 Apr 2024 03:07:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.156.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 133F61B950
+	for <linux-kernel@vger.kernel.org>; Wed,  3 Apr 2024 03:08:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712113649; cv=none; b=b+e5vIlpE/a5dl4FjhxbV2nPf1tqQuRW2h+yqeCqmgb7XzN7fwpd3UxOSdIK3z16Xm6m9G273ylnHJ9umsR9zMNjMLkEDhlHk3daLfrFNE1uucIxtcSMOI30b7nWOV6oCslqr2fPwPBrnd0jTSvre0+bXZpt1xqdl3MQMW3FRO4=
+	t=1712113732; cv=none; b=qEXJTjRyfOt1+6af3sDQCwJROALPezEJkJ7ytd5CnPNzplo448oNkLpaZeSsAoJr9nKcfDjnp1B0fSx2wgL6MW2HgDwejT5F262Cjdd6cAzcE4AZ2lA6jLP1+Tm6WZ5/fQz03tBWWl5JCUXdSx1M8GWzYuszenF7p8v1s/9OAW8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712113649; c=relaxed/simple;
-	bh=ROtb/TdhEhS14cmCDYhPnEoNJ0jX0mNNsCCUwMkC5ks=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XcteU3FEEj2phViZHqXmQCJfBK9DsewYTggSaLHB+WwyOJevjxVS85F9Y32dZOvI/8q1JtYNl/8MVT1VRI7P9izTXriUyOAElqZbKC2gVx0jkfLdEeu8U8ZiiCASt21jxAfhI7ZZZnu3+jhASjsUrWl/fppiZ876i//A5qXkrMk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com; spf=pass smtp.mailfrom=marvell.com; dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b=Y8m7nmA3; arc=none smtp.client-ip=67.231.156.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=marvell.com
+	s=arc-20240116; t=1712113732; c=relaxed/simple;
+	bh=JNaloNg7IAffGuYznhJyHxVMJLnQeiWsK6eJCMSM1lw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ASKiIHliOdeLjuQWHnXjtCVXzw36hU0MGj3rbkFISYxu1Z1puL8Lzk8FCNYV5aKffoDkdgkRagrM6ZiDp9+1WKE0OuYquJ41EloCaKKbnQvgKRiUlZ1FVg+wHoGJfUQgpsHBduQ0vPAK7K7tg2kw2/KzZcxtIHvSuIL107nqT2Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=y0Lo2DMB; arc=none smtp.client-ip=209.85.219.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="Y8m7nmA3"
-Received: from pps.filterd (m0045851.ppops.net [127.0.0.1])
-	by mx0b-0016f401.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 432K39iQ029137;
-	Tue, 2 Apr 2024 20:06:51 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=
-	date:from:to:cc:subject:message-id:references:mime-version
-	:content-type:in-reply-to; s=pfpt0220; bh=cIxSFpufY5nRKyMlIffzzC
-	ralxEiy0TVlswlh++OQgg=; b=Y8m7nmA30w8NYNhiX4YIbCGNGlGZX7dT/8zPJv
-	HlIxSC+6YMvHY21sG5K/WUMfk4V0GdHxba7suvb+SEIHVp3WY+s5BXMLo9KG/s8u
-	mHmnkUyrhTxGHoPLOFUYCaVJJ6nZ4F7q6CLGmCERuXheUKkO202W8HOrFh4owbAV
-	AbV9Db6FzRW0MiP6yruMsD5gxz2bBygAZzpkJaJaQOS6aVlCiOSRY1aYjzjlF3E4
-	Rs9KjqOA0OX2ulNkcVLM6pC+QKUap67aLihgPW69+jx4m5d1kSCR00rZtXs8wptT
-	guwL1M6SCfKq10J/1rFt91BJ+Ez1g+1obP+hbdbT35k4BTLw==
-Received: from dc5-exch05.marvell.com ([199.233.59.128])
-	by mx0b-0016f401.pphosted.com (PPS) with ESMTPS id 3x809fx510-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 02 Apr 2024 20:06:51 -0700 (PDT)
-Received: from DC5-EXCH05.marvell.com (10.69.176.209) by
- DC5-EXCH05.marvell.com (10.69.176.209) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.4; Tue, 2 Apr 2024 20:06:49 -0700
-Received: from maili.marvell.com (10.69.176.80) by DC5-EXCH05.marvell.com
- (10.69.176.209) with Microsoft SMTP Server id 15.2.1544.4 via Frontend
- Transport; Tue, 2 Apr 2024 20:06:49 -0700
-Received: from maili.marvell.com (unknown [10.28.36.165])
-	by maili.marvell.com (Postfix) with SMTP id 134265B694C;
-	Tue,  2 Apr 2024 20:06:43 -0700 (PDT)
-Date: Wed, 3 Apr 2024 08:36:42 +0530
-From: Ratheesh Kannoth <rkannoth@marvell.com>
-To: Justin Stitt <justinstitt@google.com>
-CC: Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann
-	<daniel@iogearbox.net>,
-        John Fastabend <john.fastabend@gmail.com>,
-        Andrii
- Nakryiko <andrii@kernel.org>,
-        Martin KaFai Lau <martin.lau@linux.dev>,
-        Eduard
- Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
-        Yonghong Song
-	<yonghong.song@linux.dev>,
-        KP Singh <kpsingh@kernel.org>, Stanislav Fomichev
-	<sdf@google.com>,
-        Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Nick Desaulniers
-	<ndesaulniers@google.com>,
-        Bill Wendling <morbo@google.com>, <bpf@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <llvm@lists.linux.dev>,
-        <linux-hardening@vger.kernel.org>
-Subject: Re: [PATCH] bpf: replace deprecated strncpy with strscpy
-Message-ID: <20240403030642.GA1652044@maili.marvell.com>
-References: <20240402-strncpy-kernel-bpf-core-c-v1-1-7cb07a426e78@google.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="y0Lo2DMB"
+Received: by mail-yb1-f180.google.com with SMTP id 3f1490d57ef6-dc6dcd9124bso5538562276.1
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Apr 2024 20:08:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1712113730; x=1712718530; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=SLZyQwWsOZDMsjJgKKASz9enfm362tPeU6p67BPPPcA=;
+        b=y0Lo2DMB+RHXQVqn5l7qJxzM67eEoMfTLlb8T1sKG+VsZRT49biWUCwWcKYdTK/v1+
+         KswUEa+ylsVuyX8/kIVx2YVmOnqKfuBl1IOBWMZ9FIUriAQA+7IL5bFtSKqUZqxdl1Cp
+         yBFV5I6z9Qm6AA6jY4pCQVc/KkNRxhypaB9y4M5WzaZo+Vx+adB3KhqviG8f1Wh6r+Kc
+         b0Q4IMrLTkU+qM9pifGelxuv/+UZtugrL33sRTxUPHWkqFurxBF6YK3fOKLK2i4eGUNn
+         FBjrI30NzO+bSXsNXFg+OZLbTAjOOSN1cwKFtFrvo0py+KnDANtLpQRtUiOtnHa2RQpb
+         baqQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712113730; x=1712718530;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=SLZyQwWsOZDMsjJgKKASz9enfm362tPeU6p67BPPPcA=;
+        b=SGR9VLE+PhbfZsaZNiczXO2OlQVxZ+2NxyCVaRvyDNwHz+R6bhrVK/GdNFXrhGvXgZ
+         BdjogmajEesUtR4ZPVc51jbr8A78l49lUANGwDT2XSOhXp3RjSjnNLNFgCA7E1JimUnR
+         Qk3aMW3nkr33WevFVAKrDqDtHOTTDwki/lLSiN+xH3DYaMdptKACeJGbMdR/CccnEwll
+         p2pFkQQvNV72ciZMRLVGSmincAnOwl8RkoPfGswx0BHocv6/+1ewXcRvbnpS25aAqG8e
+         Nb7KOlK9UUaDcQrjQKy6cE6XStC/Rp3KyS5/bc/f4xZtS14e8e9iNm3Y/A12cv7AAE6i
+         obZw==
+X-Forwarded-Encrypted: i=1; AJvYcCXxoptrzG74fQA0tJXNYb6axrJTaKKjLuO5hQ+t4NbcnEMkq/+xF6OJB5jImSuaPr80bHsVDX2MJmvc1NSbdaNtS2NWCxtNRpvrBBYR
+X-Gm-Message-State: AOJu0Ywu+YQsaBekJiU1qdWe0ggtmbDRaclPWiFOL5Tqjkz7N19lTTcD
+	EAiLji79SK+HdWVlPDXcACHCzz96gsronAJPn+EP/WcqYruK6S3YTEDNPoPy2vT1V47eMZWNXOD
+	qut6Na8uCl7OLJVCxnzwwet5DUDNo9rtVHGui/Q==
+X-Google-Smtp-Source: AGHT+IE9EKkUidiGL+XeA4Jbotmjrpuh9J5aIMY1ZE+6LKcfeu03OjvrZFEzBWZxBUNuUXBXoDTkhOq3x4vkxpn0sWI=
+X-Received: by 2002:a05:6902:82:b0:dcc:140a:a71f with SMTP id
+ h2-20020a056902008200b00dcc140aa71fmr11987883ybs.60.1712113730070; Tue, 02
+ Apr 2024 20:08:50 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20240402-strncpy-kernel-bpf-core-c-v1-1-7cb07a426e78@google.com>
-X-Proofpoint-GUID: QmRE6pvh5nsQpJLoK1ntZVKZA9QB3BtZ
-X-Proofpoint-ORIG-GUID: QmRE6pvh5nsQpJLoK1ntZVKZA9QB3BtZ
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-04-03_02,2024-04-01_01,2023-05-22_02
+References: <20240402-pmic-glink-fix-clients-v1-0-885440b81c65@linaro.org>
+ <20240402-pmic-glink-fix-clients-v1-1-885440b81c65@linaro.org> <bnxrstkmjmmbhzrqncfwwnxa5vpx3ioysykqr3sbiirlatneu4@vlewrjturppo>
+In-Reply-To: <bnxrstkmjmmbhzrqncfwwnxa5vpx3ioysykqr3sbiirlatneu4@vlewrjturppo>
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Date: Wed, 3 Apr 2024 06:08:38 +0300
+Message-ID: <CAA8EJpqkU2bBwkdW5aQ=ZKvPBoRWaxFVQAxmg76zhLQqV4C-UQ@mail.gmail.com>
+Subject: Re: [PATCH 1/2] soc: qcom: pmic_glink: don't traverse clients list
+ without a lock
+To: Andrew Halaney <ahalaney@redhat.com>
+Cc: Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konrad.dybcio@linaro.org>, 
+	Neil Armstrong <neil.armstrong@linaro.org>, linux-arm-msm@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On 2024-04-03 at 05:22:50, Justin Stitt (justinstitt@google.com) wrote:
-> strncpy() is deprecated for use on NUL-terminated destination strings
-> [1] and as such we should prefer more robust and less ambiguous string
-> interfaces.
+On Tue, 2 Apr 2024 at 20:56, Andrew Halaney <ahalaney@redhat.com> wrote:
 >
-> bpf sym names get looked up and compared/cleaned with various string
-> apis. This suggests they need to be NUL-terminated (strncpy() suggests
-> this but does not guarantee it).
+> On Tue, Apr 02, 2024 at 08:07:06PM +0300, Dmitry Baryshkov wrote:
+> > Take the client_lock before traversing the clients list at the
+> > pmic_glink_state_notify_clients() function. This is required to keep the
+> > list traversal safe from concurrent modification.
+> >
+> > Fixes: 58ef4ece1e41 ("soc: qcom: pmic_glink: Introduce base PMIC GLINK driver")
+> > Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+> > ---
+> >  drivers/soc/qcom/pmic_glink.c | 2 ++
+> >  1 file changed, 2 insertions(+)
+> >
+> > diff --git a/drivers/soc/qcom/pmic_glink.c b/drivers/soc/qcom/pmic_glink.c
+> > index f913e9bd57ed..c999358771b3 100644
+> > --- a/drivers/soc/qcom/pmic_glink.c
+> > +++ b/drivers/soc/qcom/pmic_glink.c
+> > @@ -168,8 +168,10 @@ static void pmic_glink_state_notify_clients(struct pmic_glink *pg)
+> >       }
 >
-> |	static int compare_symbol_name(const char *name, char *namebuf)
-> |	{
-> |		cleanup_symbol_name(namebuf);
-> |		return strcmp(name, namebuf);
-> |	}
->
-> |	static void cleanup_symbol_name(char *s)
-> |	{
-> |		...
-> |		res = strstr(s, ".llvm.");
-> |		...
-> |	}
->
-> Use strscpy() as this method guarantees NUL-termination on the
-> destination buffer.
->
-> This patch also replaces two uses of strncpy() used in log.c. These are
-> simple replacements as postfix has been zero-initialized on the stack
-> and has source arguments with a size less than the destination's size.
->
-> Note that this patch uses the new 2-argument version of strscpy
-> introduced in Commit e6584c3964f2f ("string: Allow 2-argument
-> strscpy()").
->
-> Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
-> Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html [2]
-> Link: https://github.com/KSPP/linux/issues/90
-> Cc: linux-hardening@vger.kernel.org
-> Signed-off-by: Justin Stitt <justinstitt@google.com>
-> ---
-> Note: build-tested only.
->
-> Found with: $ rg "strncpy\("
-> ---
->  kernel/bpf/core.c | 4 ++--
->  kernel/bpf/log.c  | 4 ++--
->  2 files changed, 4 insertions(+), 4 deletions(-)
->
-> diff --git a/kernel/bpf/core.c b/kernel/bpf/core.c
-> index 696bc55de8e8..8c9078f4549c 100644
-> --- a/kernel/bpf/core.c
-> +++ b/kernel/bpf/core.c
-> @@ -747,7 +747,7 @@ const char *__bpf_address_lookup(unsigned long addr, unsigned long *size,
->  		unsigned long symbol_start = ksym->start;
->  		unsigned long symbol_end = ksym->end;
->
-> -		strncpy(sym, ksym->name, KSYM_NAME_LEN);
-> +		strscpy(sym, ksym->name, KSYM_NAME_LEN);
-You dont have to check return value of strscpy for errors ?
+> Does pmic_glink_rpmsg_callback() deserve similar locking when traversing
+> the clients list?
+
+True. Will fix in v2.
 
 >
->  		ret = sym;
->  		if (size)
-> @@ -813,7 +813,7 @@ int bpf_get_kallsym(unsigned int symnum, unsigned long *value, char *type,
->  		if (it++ != symnum)
->  			continue;
+> >
+> >       if (new_state != pg->client_state) {
+> > +             mutex_lock(&pg->client_lock);
+> >               list_for_each_entry(client, &pg->clients, node)
+> >                       client->pdr_notify(client->priv, new_state);
+> > +             mutex_unlock(&pg->client_lock);
+> >               pg->client_state = new_state;
+> >       }
+> >  }
+> >
+> > --
+> > 2.39.2
+> >
+> >
 >
-> -		strncpy(sym, ksym->name, KSYM_NAME_LEN);
-> +		strscpy(sym, ksym->name, KSYM_NAME_LEN);
->
->  		*value = ksym->start;
->  		*type  = BPF_SYM_ELF_TYPE;
-> diff --git a/kernel/bpf/log.c b/kernel/bpf/log.c
-> index 2a243cf37c60..4bd8f17a9f24 100644
-> --- a/kernel/bpf/log.c
-> +++ b/kernel/bpf/log.c
-> @@ -467,9 +467,9 @@ const char *reg_type_str(struct bpf_verifier_env *env, enum bpf_reg_type type)
->
->  	if (type & PTR_MAYBE_NULL) {
->  		if (base_type(type) == PTR_TO_BTF_ID)
-> -			strncpy(postfix, "or_null_", 16);
-> +			strscpy(postfix, "or_null_");
->  		else
-> -			strncpy(postfix, "_or_null", 16);
-> +			strscpy(postfix, "_or_null");
->  	}
->
->  	snprintf(prefix, sizeof(prefix), "%s%s%s%s%s%s%s",
->
-> ---
-> base-commit: 026e680b0a08a62b1d948e5a8ca78700bfac0e6e
-> change-id: 20240402-strncpy-kernel-bpf-core-c-4d8297f95e18
->
-> Best regards,
-> --
-> Justin Stitt <justinstitt@google.com>
->
+
+
+-- 
+With best wishes
+Dmitry
