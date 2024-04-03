@@ -1,71 +1,48 @@
-Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D565D134418;
-	Wed,  3 Apr 2024 08:06:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D1086608ED;
+	Wed,  3 Apr 2024 08:06:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712131577; cv=none; b=dznOpJHTNZsKGIdZMLt5d/eWLis0d1GjDsV1sJGrFH7csaDpjwQt390gPjMZ+Ed/qVQOO71oQ0CGqlduQZ1Wat/VFQLCLWbmTVysILZMdqT4BTaejlagm0IiO/3fE7Qn+meeFtdki22rV5ytd/9TiiwzcTUQdRcEKPSkdK2cS0s=
+	t=1712131593; cv=none; b=tY5128GtP0ieKlJp37liFR1AS5wHlng9Dso4Xt8FmPT2bWtqT9oSGwLfUy28fHD6ZSDuRmybA/p7785sAVQtUNVGvjOIEQq+u0snkfe/oTBkpjyGTTVg4y54WDkgnKVrVO3zHZtoMUnFvUdRK6GFPfp6W+c7t8CrGmwCFnfYIRc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712131577; c=relaxed/simple;
-	bh=iDWigVh+imkJ9X0D+jZiWMMwXzwCp4g0Qv68aVRNWYI=;
+	s=arc-20240116; t=1712131593; c=relaxed/simple;
+	bh=W0e7wyqop8fzI3z7HiFx+xaKAWPfpCQnW4nvx6iiaXE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rUcCDtei2VmcAKPEYrQ6a19wFb8ouZ6STzn03NT7gVfoS8f0+iTuMtnK8TyZZkQweH9FAlfvcTeFAEf/w3BUAEARUYp29IpcD59LrKW5G8TSJy9PWrUgvYz22XyVnHkfq0zBx43ePFAg+vxo5JcRR5imcuy/iw3CHsnx2JYx+x4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MD3geP9l; arc=none smtp.client-ip=209.85.218.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MD3geP9l"
-Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-a465ddc2c09so336976066b.2;
-        Wed, 03 Apr 2024 01:06:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1712131574; x=1712736374; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:sender
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=6WHGIKD551lF8wTwIhWNInmwZL2Kud7NJUZhv25O5kY=;
-        b=MD3geP9luE5KeWt5kl+xCilZxZANMh59pKZNB0h5HZnrjizK5KSW/eJ6ZQAYNciNa/
-         9o7rvLgNWTI55HwTgkx1qf8KwuqRIGXejRabdxMDRUilixeAFgQ9OtSY/3TRueHTj/3j
-         e5pqrZBWvZ0cPai2nGW2oyxuenTF67+TdAzgbLvttnMOyXrHIGvC1eQjGe12nBaEOMdD
-         Cd+NzKbLQZG1LxWQWUxaU3+kT27+LTi3PIAU1dqW8bCsaQry46W7UVHbT/4AyNHJlxwU
-         OduS7wfNY/YLKLO9bPZRVbAZ3AL+Sw7a2gZtKoa09ZNlbJQ3FLGJx61oFHlSH+tL+Yzv
-         ppOQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712131574; x=1712736374;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:sender
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=6WHGIKD551lF8wTwIhWNInmwZL2Kud7NJUZhv25O5kY=;
-        b=mDe0UFvL1wtw2WrkMRhunROUytPHVNM6j7ViLJnv+s0XIHUM4l6B0wmhef3BBi39/P
-         GgQnfOahH0yaL9rvvD5DF+rg9fQQB4sTqY2YrWw1boGB/XLABMYh7ZhXwS1368cuCSyY
-         p9RH0gdiEWhrog5OYU29ChbfnDVniHRyZ6oH/aG0t7eONuOiN5iKyRPBsVpQhcZlQy/r
-         trS3L5zQdJ4Nj0U7/EnBlxc3NYZkuuxN5L6EirrS2sEf0VLV3pxX816No15uKyVnstSu
-         aFgdHyU1kgBF+IKiUKj4yJXJrYDHjnfunWuVH1k08o2LWzcTTqkFVbuuQTocp6y2o9io
-         Azxw==
-X-Forwarded-Encrypted: i=1; AJvYcCUm3Ho66Ag9shbRxWbtGjVldZF7i3DTKSMhXHXBrCvUd8+0cCqKE5l54VSc1FaULwoUUj8/liCwr4MQOe4zAr9qPvMX/+Q8L1J1qk4+Y7xBMOrfFL17Ho7tc12XGxtmVUn/
-X-Gm-Message-State: AOJu0YzQBgUmsqzX5hlVeEi5ffvsL/9BfrsgNjGF545T5K/YjoFdLN4F
-	yANX1pWVvoKFhIMY0LJZPO6wNwyOYUsHJ0QLaXUas9T05mEGhi+w
-X-Google-Smtp-Source: AGHT+IFepiu4oRgTc8adbzTnLE3AhBosdPeCKzHoE0bIey/qYMU++sVnV8kEwple8BtMzSURM3bu2g==
-X-Received: by 2002:a05:6402:5253:b0:56d:ee15:4925 with SMTP id t19-20020a056402525300b0056dee154925mr3774580edd.0.1712131573804;
-        Wed, 03 Apr 2024 01:06:13 -0700 (PDT)
-Received: from gmail.com (84-236-113-97.pool.digikabel.hu. [84.236.113.97])
-        by smtp.gmail.com with ESMTPSA id f8-20020a056402150800b0056e0988bccesm329848edw.31.2024.04.03.01.06.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 03 Apr 2024 01:06:13 -0700 (PDT)
-Sender: Ingo Molnar <mingo.kernel.org@gmail.com>
-Date: Wed, 3 Apr 2024 10:06:11 +0200
-From: Ingo Molnar <mingo@kernel.org>
-To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Cc: Andrii Nakryiko <andrii@kernel.org>, x86@kernel.org,
-	peterz@infradead.org, mingo@redhat.com, tglx@linutronix.de,
-	bpf@vger.kernel.org, linux-kernel@vger.kernel.org, jolsa@kernel.org,
-	song@kernel.org, kernel-team@meta.com
-Subject: Re: [PATCH v4 0/4] perf/x86/amd: add LBR capture support outside of
- hardware events
-Message-ID: <Zg0N87sfBdB5Cydk@gmail.com>
-References: <20240331041830.2806741-1-andrii@kernel.org>
- <Zgp+lYLOZU3OkO7w@gmail.com>
- <CAEf4BzZEuDRt=dLN79uJ0EwQcxuxCp8LZx1ayNBsw82BytPTqg@mail.gmail.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=dD07EYYPyj7+QauvMmJpF3m+wgpsx6+EkKCEizOpW18mbpzQaisB6+snPaFq2yLs/NhDHDUF596fkqUqJVANFh957qJc1XN9Cyc46gm+7zntDEgKli73gC130OuYbZjsgYrI69sR1AznyvS2rr1lS/xnCsDvQJdBowKeHa6G05Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6AECC1007;
+	Wed,  3 Apr 2024 01:07:02 -0700 (PDT)
+Received: from pluto (unknown [172.31.20.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5A9B03F7B4;
+	Wed,  3 Apr 2024 01:06:29 -0700 (PDT)
+Date: Wed, 3 Apr 2024 09:06:26 +0100
+From: Cristian Marussi <cristian.marussi@arm.com>
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Peng Fan <peng.fan@nxp.com>, "Peng Fan (OSS)" <peng.fan@oss.nxp.com>,
+	Sudeep Holla <sudeep.holla@arm.com>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Dan Carpenter <dan.carpenter@linaro.org>,
+	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+	"linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+	Oleksii Moisieiev <oleksii_moisieiev@epam.com>
+Subject: Re: [PATCH v6 3/4] firmware: arm_scmi: Add SCMI v3.2 pincontrol
+ protocol basic support
+Message-ID: <Zg0N8S05D329BVjN@pluto>
+References: <20240323-pinctrl-scmi-v6-0-a895243257c0@nxp.com>
+ <20240323-pinctrl-scmi-v6-3-a895243257c0@nxp.com>
+ <ZgcP4IkTQGks9ehH@surfacebook.localdomain>
+ <DU0PR04MB9417E797F4E0F7BB6154B3BE88382@DU0PR04MB9417.eurprd04.prod.outlook.com>
+ <Zgu4Tok43W5t8KM0@pluto>
+ <CAHp75VdAaTeQ_Ag3gd0s9UfT=kAT2hwibeJ9-YFXJx4z=R3e+g@mail.gmail.com>
+ <ZgwrKnx3hb59OG77@pluto>
+ <CAHp75VeOB2_ivX5y8YfPEb64YUZBi+3U_1xUdjDVWzLiD=f+nw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -75,58 +52,133 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAEf4BzZEuDRt=dLN79uJ0EwQcxuxCp8LZx1ayNBsw82BytPTqg@mail.gmail.com>
+In-Reply-To: <CAHp75VeOB2_ivX5y8YfPEb64YUZBi+3U_1xUdjDVWzLiD=f+nw@mail.gmail.com>
 
-
-* Andrii Nakryiko <andrii.nakryiko@gmail.com> wrote:
-
-> On Mon, Apr 1, 2024 at 2:30 AM Ingo Molnar <mingo@kernel.org> wrote:
-> >
-> >
-> > * Andrii Nakryiko <andrii@kernel.org> wrote:
-> >
-> > > Add AMD-specific implementation of perf_snapshot_branch_stack static call that
-> > > allows LBR capture from arbitrary points in the kernel. This is utilized by
-> > > BPF programs. See patch #3 for all the details.
-> > >
-> > > Patches #1 and #2 are preparatory steps to ensure LBR freezing is completely
-> > > inlined and have no branches, to minimize LBR snapshot contamination.
-> > >
-> > > Patch #4 removes an artificial restriction on perf events with LBR enabled.
-> > >
-> > > Andrii Nakryiko (4):
-> > >   perf/x86/amd: ensure amd_pmu_core_disable_all() is always inlined
-> > >   perf/x86/amd: avoid taking branches before disabling LBR
-> > >   perf/x86/amd: support capturing LBR from software events
-> > >   perf/x86/amd: don't reject non-sampling events with configured LBR
-> > >
-> > >  arch/x86/events/amd/core.c   | 37 +++++++++++++++++++++++++++++++++++-
-> > >  arch/x86/events/amd/lbr.c    | 11 +----------
-> > >  arch/x86/events/perf_event.h | 11 +++++++++++
-> > >  3 files changed, 48 insertions(+), 11 deletions(-)
-> >
-> > So there's a new conflict with patch #2, probably due to interaction
-> > with this recent fix that is now upstream:
-> >
-> >    598c2fafc06f ("perf/x86/amd/lbr: Use freeze based on availability")
-> >
-> > I don't think it should change the logic of the snapshot feature
-> > materially, X86_FEATURE_AMD_LBR_PMC_FREEZE should be orthogonal to it,
-> > as the LBR snapshot isn't taken from a PMI.
-> >
+On Tue, Apr 02, 2024 at 07:39:44PM +0300, Andy Shevchenko wrote:
+> On Tue, Apr 2, 2024 at 6:58 PM Cristian Marussi
+> <cristian.marussi@arm.com> wrote:
+> > On Tue, Apr 02, 2024 at 04:06:06PM +0300, Andy Shevchenko wrote:
+> > > On Tue, Apr 2, 2024 at 10:48 AM Cristian Marussi
+> > > <cristian.marussi@arm.com> wrote:
+> > > > On Sun, Mar 31, 2024 at 01:44:28PM +0000, Peng Fan wrote:
+> > > > > > Sat, Mar 23, 2024 at 08:15:16PM +0800, Peng Fan (OSS) kirjoitti:
 > 
-> Yep, seems like there was a parallel change to related code in 
-> perf/urgent branch. And yes, you are right that it's orthogonal and 
-> doesn't regress anything as far as branching and whatnot (just 
-> retested everything on real hardware). So I've rebased my patches on 
-> top of perf/urgent, will send v5 momentarily.
+> ...
+> 
+> > > > > > > +#include <linux/module.h>
+> > > > > > > +#include <linux/scmi_protocol.h>
+> > > > > > > +#include <linux/slab.h>
+> > > > > >
+> > > > > > This is semi-random list of headers. Please, follow IWYU principle (include
+> > > > > > what you use). There are a lot of inclusions I see missing (just in the context of
+> > > > > > this page I see bits.h, types.h, and  asm/byteorder.h).
+> > > > >
+> > > > > Is there any documentation about this requirement?
+> > > > > Some headers are already included by others.
+> > >
+> > > The documentation here is called "a common sense".
+> > > The C language is built like this and we expect that nobody will
+> > > invest into the dependency hell that we have already, that's why IWYU
+> > > principle, please follow it.
+> >
+> > Yes, but given that we have a growing number of SCMI protocols there is a
+> > common local protocols.h header to group all includes needed by any
+> > protocols: the idea behind this (and the devm_ saga down below) was to ease
+> > development of protocols, since there are lots of them and growing, given
+> > the SCMI spec is extensible.
+> 
+> Yes, and what you are effectively suggesting is: "Technical debt? Oh,
+> fine, we do not care!" This is not good. I'm in a long term of
+> cleaning up the dependency hell in the kernel (my main focus is
+> kernel.h for now) and I am talking from my experience. I do not like
+> what people are doing in 95% of the code, that's why I really want to
+> stop the bad practices as soon as possible.
+> 
 
-Thank you - it's now all in tip:perf/core and lined up for v6.10.
+Not at all, the aim was exactly the opposite, avoiding that some protocol
+could have been written without all the needed includes: since a basic set
+of headers is definitely common to any protocol you may think to write,
+grouping all there was meant to avoid this...I thought that by moving the
+problem away in one single internal common header was easier to monitor.
 
-> Sorry for an extra round on this.
+I certainly maybe wrong, but I dont see how you can deduce I dont care...
 
-Not your doing really - just crossing patches.
+...and maybe, only maybe, what that 95% of people is trying to do in their
+horrible code is to deliver the best reasonably possible thing within their
+timeline while you are barking at them in chase of never to be released utter
+perfection.
+
+> Last to add, but not least is that your code may be used as an example
+> for others, hence we really have to do our best in order to avoid bad
+> design, practices, and cargo cults. If this requires more refactoring
+> of the existing code, then do it sooner than later.
+> 
+> ...
+> 
+> > > > Andy made (mostly) the same remarks on this same patch ~1-year ago on
+> > > > this same patch while it was posted by Oleksii.
+> > > >
+> > > > And I told that time that most of the remarks around devm_ usage were
+> > > > wrong due to how the SCMI core handles protocol initialization (using a
+> > > > devres group transparently).
+> > > >
+> > > > This is what I answered that time.
+> > > >
+> > > > https://lore.kernel.org/linux-arm-kernel/ZJ78hBcjAhiU+ZBO@e120937-lin/#t
+> > > >
+> > > > I wont repeat myself, but, in a nutshell the memory allocation like it
+> > > > is now is fine: a bit happens via devm_ at protocol initialization, the
+> > > > other is doe via explicit kmalloc at runtime and freed via kfree at
+> > > > remove time (if needed...i.e. checking the present flag of some structs)
+> > >
+> > > This sounds like a mess. devm_ is expected to be used only for the
+> > > ->probe() stage, otherwise you may consider cleanup.h (__free() macro)
+> > > to have automatic free at the paths where memory is not needed.
+> >
+> > Indeed, this protocol_init code is called by the SCMI core once for all when
+> > an SCMI driver tries at first to use this specific protocol by 'getting' its
+> > protocol_ops, so it is indeed called inside the probe chain of the driver:
+> > at this point you *can* decide to use devres to allocate memory and be assured
+> > that if the init fails, or when the driver cease to use this protocol (calling
+> > its remove()) and no other driver is using it, all the stuff that have been
+> > allocated related to this protocol will be released by the core for you.
+> > (using an internal devres group)
+> >
+> > Without this you should handle manually all the deallocation manually on
+> > the init error-paths AND also provide all the cleanup explicitly when
+> > the protocol is no more used by any driver (multiple users of the same
+> > protocol instance are possible)...for all protocols.
+> 
+> Yes. Is it a problem?
+> 
+
+Well, no, but is it not a repetitive and error-prone process ?
+Is it not the exact reason why devres management exist in first place, to avoid
+repetitive manual alloc/free of resources and related pitfalls ? (even though
+certainly it is normally used in a more conventional and straightforward way)
+
+The idea was to give some sort of aid in the SCMI stack for writing protocols,
+so regarding mem_mgmt, I just built on top of devres facilities, not invented
+anything, to try to avoid repetitions and let the core handle mem allocs/free
+during the probe phases as much as possible: in pinctrl case would be
+particularly trivial to instead manually allocate stuff at init (due to many
+lazy delayed allocations) but other protocols need a lot more to be done at init,
+frequently in a loop to allocate multiple resources descriptors, and manually
+undoing all of that on each error-path and on cleanup is definitely error-prone
+and a pain.
+
+Last but not least, this whole thing was designed to address the needs of the
+protocols that existed at that time....it is only now with pinctrl lazy-allocations
+at runtime that the ugly cohexistence of devm_ and non-devm allocations became a
+thing....so clearly the thing needs to be improved/rethinked...even dropped if no
+more fitting...
+
+... or alternatively since devres allocations are anyway optional, you could just
+use regular kmalloc/kfree for this protocol and avoid this dual handling...
+
+...this was just to put things in context...and I'll happily let Sudeep decide
+what he prefers in the immediate for pinctrl or more in general about all the
+scmi devres, that I've got enough of these pleasant interactions for now...
 
 Thanks,
-
-	Ingo
+Cristian
