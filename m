@@ -1,27 +1,27 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F2741552E9;
-	Wed,  3 Apr 2024 17:55:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D62CF14E2F9;
+	Wed,  3 Apr 2024 17:56:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712166955; cv=none; b=CinqlYr/gLMKGKhOSy8Euk8H8MS1yNKiHX1dsGsFadNgLyVqWIvje804g8LpxLRO6NJb6BTI3vlDy3PfiHkJh+ltroAEjPtgywtEjTJHSUnWZTgLADd7Pu1UgZcmvn/UP2ZCYzhCLsbkY8N1SINQozmaMZoIQR6Y+eJb/Q9+PIo=
+	t=1712167003; cv=none; b=hWRXeBHlW+jK8qgmm4uzhesitpzseJt4DWg6KzCwczj0yvaXG7jqHVw3wL3jYr/ATmQ0X224keOz/zLWUzzNtC1psMtk/VJ4BmWlZdgwrbu+DOuzQJT8kOiyexQZJJITXgd0mSrRRAgYDj3r2764m9fFuFfkJaRoS382PWbBzH8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712166955; c=relaxed/simple;
-	bh=J5TfZyKONccTNWMd4sxbl/pluk/b9ke3PXnf0oemFG4=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=eDloQI1duwok8u7jesCTxc4Gl472jRMDZi7bJnkGXeeuCaFbUF6Dbt81qUWfupkCdlFxllXD34ie/SW5IgCIyxHfeaWjBiaD9pCp7+pwht8nPGHG82kvv4nE4TwqsaQ0nPWfCnz56GDCReSoF1x0WoXOh/d9V97/VOQAHQB4yXI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=eQ+NT4TX; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1712167003; c=relaxed/simple;
+	bh=IFDV1xb914cHALB3Pl3nf2SP1HjqdcJS3i04MrHq1c0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=DM2dQNYIB99shzcIX5B2c6KYuyLmP8EGDEVzYMBuJJ6OB8EZB0apYwWlLL/pO9P6C7dn7W+PSD3ynOzDbnRWr+j+6WDKoy0tNq61fLe9C93zT2Jo+VRhdGDAKvb7zHynu1oDxQ5z1bUkiioHb41LSH7d1TdoGidn6FVKCKHogOg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=NmDDOIpl; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="eQ+NT4TX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 72FBCC433C7;
-	Wed,  3 Apr 2024 17:55:54 +0000 (UTC)
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="NmDDOIpl"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CDA2AC433C7;
+	Wed,  3 Apr 2024 17:56:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1712166955;
-	bh=J5TfZyKONccTNWMd4sxbl/pluk/b9ke3PXnf0oemFG4=;
+	s=korg; t=1712167003;
+	bh=IFDV1xb914cHALB3Pl3nf2SP1HjqdcJS3i04MrHq1c0=;
 	h=From:To:Cc:Subject:Date:From;
-	b=eQ+NT4TXJbO2k9h6D/+MkUvv1+CLOXn8T0NxhUhriK2vA6oyNcNiXV6yGZW+JOXRf
-	 XFcbyBjPwjvI1mnqSyhPM7M5Q9iPsm+LKfBSIzdbcm4HakLG9c9w4zWmGyEJ6feB3P
-	 MbRb50TXJV+gJShZ+GjPQSIhFZP9aGh6wkZM5rIQ=
+	b=NmDDOIplg9Yo/WqbBOuE0eVjopT1v1ikqn8H45deJhZRopFA0WUqez8r6NquUsUuf
+	 12BcNMy/9XrERdZVc7SYe1THid1zPjFenM3lhFIujgKsMp2uSeFVSLVVJZrTgXX+eK
+	 APu06ohtkUnPUFvrOTHs5czfVyquY+SxhbugBWPc=
 From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To: stable@vger.kernel.org
 Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -42,9 +42,9 @@ Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
 	conor@kernel.org,
 	allen.lkml@gmail.com,
 	broonie@kernel.org
-Subject: [PATCH 6.8 00/11] 6.8.4-rc1 review
-Date: Wed,  3 Apr 2024 19:55:39 +0200
-Message-ID: <20240403175125.754099419@linuxfoundation.org>
+Subject: [PATCH 6.6 00/11] 6.6.25-rc1 review
+Date: Wed,  3 Apr 2024 19:55:49 +0200
+Message-ID: <20240403175126.839589571@linuxfoundation.org>
 X-Mailer: git-send-email 2.44.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -55,15 +55,15 @@ MIME-Version: 1.0
 User-Agent: quilt/0.67
 X-stable: review
 X-Patchwork-Hint: ignore
-X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.8.4-rc1.gz
+X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.6.25-rc1.gz
 X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-X-KernelTest-Branch: linux-6.8.y
+X-KernelTest-Branch: linux-6.6.y
 X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
-X-KernelTest-Version: 6.8.4-rc1
+X-KernelTest-Version: 6.6.25-rc1
 X-KernelTest-Deadline: 2024-04-05T17:51+00:00
 Content-Transfer-Encoding: 8bit
 
-This is the start of the stable review cycle for the 6.8.4 release.
+This is the start of the stable review cycle for the 6.6.25 release.
 There are 11 patches in this series, all will be posted as a response
 to this one.  If anyone has any issues with these being applied, please
 let me know.
@@ -72,9 +72,9 @@ Responses should be made by Fri, 05 Apr 2024 17:51:13 +0000.
 Anything received after that time might be too late.
 
 The whole patch series can be found in one patch at:
-	https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.8.4-rc1.gz
+	https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.6.25-rc1.gz
 or in the git tree and branch at:
-	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.8.y
+	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.6.y
 and the diffstat can be found below.
 
 thanks,
@@ -85,7 +85,7 @@ greg k-h
 Pseudo-Shortlog of commits:
 
 Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-    Linux 6.8.4-rc1
+    Linux 6.6.25-rc1
 
 Greg Kroah-Hartman <gregkh@linuxfoundation.org>
     Revert "workqueue.c: Increase workqueue name length"
