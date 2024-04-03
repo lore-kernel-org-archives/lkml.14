@@ -1,63 +1,69 @@
-Received: from mail-io1-f42.google.com (mail-io1-f42.google.com [209.85.166.42])
+Received: from mail-il1-f177.google.com (mail-il1-f177.google.com [209.85.166.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C30A14830F
-	for <linux-kernel@vger.kernel.org>; Wed,  3 Apr 2024 14:04:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A45D3148FE0
+	for <linux-kernel@vger.kernel.org>; Wed,  3 Apr 2024 14:04:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712153092; cv=none; b=hMj54UjMcGbTcomRoE4sy6GecVR2BZrtL2QV14c6nho2Qh34XjfoGf5tlwoyHg0cKZdkMndm2v4if0zNt8j9+fbnQgp30XkRiAvKZp0Vu+WIe3wYVG9yc7NcC4pHd52jApf1QfifbJgyviuHucPLu/7mmVfmkUVfxssdUMmFAFQ=
+	t=1712153094; cv=none; b=Uf+z+UR/EfsITUeRvP9fZIkV4lQB6/3TA5ive69jX6VIrtBJPEEOxdVK+8xD/mDxF6YYuLT9Q61B5bLpprTCWLsHdbisJ6lxTjC8Dg3fwFsUxN4o0hTAIH7XSxqnIyOH+x42OSwlnSFqLb9VUe2mLFsFIJyah8H3vokMQ61HUZA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712153092; c=relaxed/simple;
-	bh=9bR9uidFJljssUBEjRj7U4HEyVV6DCBDCUm4+7Tk/SA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=TRKS2qJJcDyg7Z96EJEfvcJL/YrgiBmBKVfz9y2WJ/yTXutESqN0d8mvCPvFPb1Cwz/SCoV+nyVhIIKMIkhX6MOqc3Fwn/JwdFXjH4Nx/9tDZt+D34hw61IwCWhHu6q6UKqkAWyDgUdh/8NQ+DdeoHSW3gi3+KISqAG4Y8LfKw0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=B6KC+At7; arc=none smtp.client-ip=209.85.166.42
+	s=arc-20240116; t=1712153094; c=relaxed/simple;
+	bh=nKnUH95th5iYE+E4iFcTgJ/16TGJIT26Qlwp258+K5s=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=uOyytkQqxx4GWxFzDmQW+NQKHcDmGSsX828yM/iNzmPQhDnwco9ufiPiZJG/OSq5JtzuV1PGHOzJcbPvzABHVpHYfwPi3W0oezgaGQtLeZqn3ZiJ2gNZ4K6uMReSTKT4heKWxn/Iad6/Lg0xkpM6KyQc6z7hQP95VdjeEJMzvHY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=Su8LpXo+; arc=none smtp.client-ip=209.85.166.177
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="B6KC+At7"
-Received: by mail-io1-f42.google.com with SMTP id ca18e2360f4ac-7d341f3dc33so17599539f.1
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Apr 2024 07:04:50 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="Su8LpXo+"
+Received: by mail-il1-f177.google.com with SMTP id e9e14a558f8ab-3688f1b7848so3864815ab.0
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Apr 2024 07:04:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1712153090; x=1712757890; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=60D2dsRaBW+2mEAkcXZIgJC7Rr7l0v2bYCjZOQO3Yxc=;
-        b=B6KC+At7WF3OJYZKD5L4LqM9GCBQCJAZ7c9gcn0fHiffiJw2S0oT0xgIXd24gnpFyK
-         +MaxDfKGYLviqGtoQGd/BOU2pMuh/hvjVEoyqHrBXxmFZ9dGU7tAq3fgC0xwzdagws5+
-         D00u1Elv3rOgZOisvudoVllEt8i6/FHTEflvZL8nDTyl6xifRY50WO4i2y3dciusNi2i
-         6i7lVocnnwmGwczdCDWg83kBS2MuQ6TFeho0m5uFsTQOKL+ka1kWgo5wRFyghHvIO2mX
-         onr1ta5QBPni7FvP9soqjTG0isJTzb1IGVV+eeyGwax1x8SL9ltpvQjXxpI9sarkcQqQ
-         ysOQ==
+        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1712153092; x=1712757892; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=0FZepTNIuSDeEcz8U+UNewgZo+OZhoLKPwuweNfu0j4=;
+        b=Su8LpXo+iaQgc5KHnGAZQxWAVgnI4jhgA6qwGfcN86I2hFcui6Vlxo7YrKANwPqwzs
+         jtNs6+aOAyx0bDE0xyYrgjIIeciXPCTyCemNH5ubb8PkKfHeI8SV0h8hHGJ4pEZwHYph
+         ljhuV7CXvhZmoXxc8cHxaZOwfw5GPdedQjUgPXP1kgqwKDQe2bpArO4wKFmkTMxs4J5g
+         K2bMXk0mBYCOjOMATX+2NDEvchOfkiqXIIyrvrnAl0j0/8QnlgEAs83t4XPXrz9P7jMf
+         +XOCVv9nagwHM28LStvtmjnnqLPFDjbrwGxqxgY+GpVaMmCW3CRf/Dpwy4gvfTrzUxuC
+         K45g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712153090; x=1712757890;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=60D2dsRaBW+2mEAkcXZIgJC7Rr7l0v2bYCjZOQO3Yxc=;
-        b=bzxeJ7MnVAtJ/WPKpCo5DfGOUpcbKmd2MV1txcOeHC/MEwkhcsziLRcYRJw8SA5+w8
-         wgy9DZMl2AaBJeaz4wQHlZamGqXZReGWakGs0QMj043zV4ZgWEsFgzgOFuBGGu++OCxS
-         IfJ3dSZJERcnHjSOKbgymr54xaFAP0IkSMHtDuREeWgp79H43u24sbsCkbwf0DBoMiQp
-         S7CRG7X/FXRS1VCCwWklUvOIF69L2rDz1ZiaLO4vxevtqJu///7LxDbsOur79l4TVUGo
-         NZd1cnRXBU0RIvbWkWkWpivwGiQ4JERwDtZb6GKMju8LK7xzEwNiSspBadN+ROLxEQf4
-         MAkQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU5JSKsczm5FnEBXMdw4mYh0m9ebih5qBhce/givRacPF5FegggG9Kmj+xbjiXbrxDVacx5HsnV505nN6jeXLDzjioULDiaVLhy3i0s
-X-Gm-Message-State: AOJu0YzL3HseYYPpXYZm6YP30fHnd7IfZ1n5sdvWWCoQoUqUFGA4qzoA
-	05evlJwVOLOPbVGUxHH2vkeIrp1e9IpW+dT/AmY+iYTiG7M8FjUdc+9Std4CyLM=
-X-Google-Smtp-Source: AGHT+IFgJ/+EiGZcRaKBxWwIWI7fnIcJtk2PXn3ayYcARmzBtHy0Hs+SNVDALrGNmm4YHf2VTf3zxg==
-X-Received: by 2002:a92:6503:0:b0:368:8d92:3262 with SMTP id z3-20020a926503000000b003688d923262mr14486682ilb.2.1712153089710;
-        Wed, 03 Apr 2024 07:04:49 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1712153092; x=1712757892;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=0FZepTNIuSDeEcz8U+UNewgZo+OZhoLKPwuweNfu0j4=;
+        b=derOrqIwYPncpvjT+ChkYGqKD6/fOO5CtBciLoDKLrVeoXTclYghsbZHVf8KA9TTBK
+         uBtbeHv7vcPIxu/jprlYf+jBLC59D/VIC/2abTTZ+vBHLtkCyM6aFoNqsZD+/GeXtCdA
+         qx6RLCrFJQ6Z1vbciQwS8ojvpO3GUHexNqP6OM66HSUa9eRf5XqLRvRlDwxPbEbv9A5i
+         DtNosV62M/IRSTSlcDZ6+5sTli/aD1RZ469PEClcv73a+XynMpld9TUTFs8PysDb0kTf
+         rdIM7OfuIbcXPUichIE7EwgdKbcUK+dvP9m3fKMsmNs/GlnAssU684gbeQTA1KIJ5PdL
+         wFrA==
+X-Forwarded-Encrypted: i=1; AJvYcCUzw5Rmfm9eeDxkFisVr5WN0RBw4c7E+cOjyZgcG/6kxBNTsoeJ8LoWLDubcETAzTwo5pkZRjruhdF75yPhQNf6CD7kMjoEwe0y1tjt
+X-Gm-Message-State: AOJu0YzXu61gaOr9U9Q2RX22pasYKF7qXf+a7movW5CLZo28VKOoVXhJ
+	PXiALl896pf6QXhHSHDHxD9+NcgHipMfzf3SHoqKoUeRRECqHa3NJz+fP+koMxiaP4iJhxMBd2x
+	K
+X-Google-Smtp-Source: AGHT+IH3lPKHfU1vOwHJ/4ZtYjlERZYHr6v/CLWGbUSbvDeAFa+fQqeqsFzVoIPeJCMXReEoqMi23Q==
+X-Received: by 2002:a05:6e02:2218:b0:365:2bd4:2f74 with SMTP id j24-20020a056e02221800b003652bd42f74mr17975319ilf.0.1712153091747;
+        Wed, 03 Apr 2024 07:04:51 -0700 (PDT)
 Received: from localhost.localdomain ([96.43.243.2])
         by smtp.gmail.com with ESMTPSA id a3-20020a056638164300b0047ef3ea2bdfsm2027098jat.78.2024.04.03.07.04.49
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 03 Apr 2024 07:04:49 -0700 (PDT)
+        Wed, 03 Apr 2024 07:04:50 -0700 (PDT)
 From: Jens Axboe <axboe@kernel.dk>
 To: linux-fsdevel@vger.kernel.org
 Cc: brauner@kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCHSET v2 0/3] Convert fs drivers to ->read_iter()
-Date: Wed,  3 Apr 2024 08:02:51 -0600
-Message-ID: <20240403140446.1623931-1-axboe@kernel.dk>
+	linux-kernel@vger.kernel.org,
+	Jens Axboe <axboe@kernel.dk>
+Subject: [PATCH 1/3] timerfd: convert to ->read_iter()
+Date: Wed,  3 Apr 2024 08:02:52 -0600
+Message-ID: <20240403140446.1623931-2-axboe@kernel.dk>
 X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240403140446.1623931-1-axboe@kernel.dk>
+References: <20240403140446.1623931-1-axboe@kernel.dk>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -66,37 +72,101 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Hi,
+Switch timerfd to using fops->read_iter(), so it can support not just
+O_NONBLOCK but IOCB_NOWAIT as well. With the latter, users like io_uring
+interact with timerfds a lot better, as they can be driven purely
+by the poll trigger.
 
-There are still a few users of fops->read() in the core parts of the
-fs stack. Which is a shame, since it'd be nice to get rid of the
-non-iterator parts of down the line, and reclaim that part of the
-file_operations struct.
+Manually get and install the required fd, so that FMODE_NOWAIT can be
+set before the file is installed into the file table.
 
-Outside of moving in that direction as a cleanup, using ->read_iter()
-enables us to mark them with FMODE_NOWAIT. This is important for users
-like io_uring, where per-IO nonblocking hints make a difference in how
-efficiently IO can be done.
+No functional changes intended in this patch, it's purely a straight
+conversion to using the read iterator method.
 
-Those two things are my main motivation for starting this work, with
-hopefully more to come down the line.
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
+---
+ fs/timerfd.c | 31 ++++++++++++++++++++++---------
+ 1 file changed, 22 insertions(+), 9 deletions(-)
 
-All patches have been booted and tested, and the corresponding test
-cases been run. The timerfd one was sent separately previously, figured
-I'd do a few more and make a smaller series out of it.
-
-Since v1:
-- Include uio.h in userfaultfd, or it fails to see iov_iter_count()
-  on some configs
-- Drop (now) unused siginfo pointer in signalfd and the incrementing of
-  it, we don't use it anymore
-- Add missing put_unused_fd() for userfaultfd error path
-
- fs/signalfd.c    | 46 ++++++++++++++++++++++++++++------------------
- fs/timerfd.c     | 31 ++++++++++++++++++++++---------
- fs/userfaultfd.c | 44 ++++++++++++++++++++++++++++----------------
- 3 files changed, 78 insertions(+), 43 deletions(-)
-
+diff --git a/fs/timerfd.c b/fs/timerfd.c
+index e9c96a0c79f1..b96690b46c1f 100644
+--- a/fs/timerfd.c
++++ b/fs/timerfd.c
+@@ -262,17 +262,18 @@ static __poll_t timerfd_poll(struct file *file, poll_table *wait)
+ 	return events;
+ }
+ 
+-static ssize_t timerfd_read(struct file *file, char __user *buf, size_t count,
+-			    loff_t *ppos)
++static ssize_t timerfd_read_iter(struct kiocb *iocb, struct iov_iter *to)
+ {
++	struct file *file = iocb->ki_filp;
+ 	struct timerfd_ctx *ctx = file->private_data;
+ 	ssize_t res;
+ 	u64 ticks = 0;
+ 
+-	if (count < sizeof(ticks))
++	if (iov_iter_count(to) < sizeof(ticks))
+ 		return -EINVAL;
++
+ 	spin_lock_irq(&ctx->wqh.lock);
+-	if (file->f_flags & O_NONBLOCK)
++	if (file->f_flags & O_NONBLOCK || iocb->ki_flags & IOCB_NOWAIT)
+ 		res = -EAGAIN;
+ 	else
+ 		res = wait_event_interruptible_locked_irq(ctx->wqh, ctx->ticks);
+@@ -313,7 +314,7 @@ static ssize_t timerfd_read(struct file *file, char __user *buf, size_t count,
+ 	}
+ 	spin_unlock_irq(&ctx->wqh.lock);
+ 	if (ticks)
+-		res = put_user(ticks, (u64 __user *) buf) ? -EFAULT: sizeof(ticks);
++		res = copy_to_iter(&ticks, sizeof(ticks), to);
+ 	return res;
+ }
+ 
+@@ -384,7 +385,7 @@ static long timerfd_ioctl(struct file *file, unsigned int cmd, unsigned long arg
+ static const struct file_operations timerfd_fops = {
+ 	.release	= timerfd_release,
+ 	.poll		= timerfd_poll,
+-	.read		= timerfd_read,
++	.read_iter	= timerfd_read_iter,
+ 	.llseek		= noop_llseek,
+ 	.show_fdinfo	= timerfd_show,
+ 	.unlocked_ioctl	= timerfd_ioctl,
+@@ -407,6 +408,7 @@ SYSCALL_DEFINE2(timerfd_create, int, clockid, int, flags)
+ {
+ 	int ufd;
+ 	struct timerfd_ctx *ctx;
++	struct file *file;
+ 
+ 	/* Check the TFD_* constants for consistency.  */
+ 	BUILD_BUG_ON(TFD_CLOEXEC != O_CLOEXEC);
+@@ -443,11 +445,22 @@ SYSCALL_DEFINE2(timerfd_create, int, clockid, int, flags)
+ 
+ 	ctx->moffs = ktime_mono_to_real(0);
+ 
+-	ufd = anon_inode_getfd("[timerfd]", &timerfd_fops, ctx,
+-			       O_RDWR | (flags & TFD_SHARED_FCNTL_FLAGS));
+-	if (ufd < 0)
++	ufd = get_unused_fd_flags(O_RDWR | (flags & TFD_SHARED_FCNTL_FLAGS));
++	if (ufd < 0) {
+ 		kfree(ctx);
++		return ufd;
++	}
++
++	file = anon_inode_getfile("[timerfd]", &timerfd_fops, ctx,
++				    O_RDWR | (flags & TFD_SHARED_FCNTL_FLAGS));
++	if (IS_ERR(file)) {
++		put_unused_fd(ufd);
++		kfree(ctx);
++		return PTR_ERR(file);
++	}
+ 
++	file->f_mode |= FMODE_NOWAIT;
++	fd_install(ufd, file);
+ 	return ufd;
+ }
+ 
 -- 
-Jens Axboe
+2.43.0
 
