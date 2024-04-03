@@ -1,121 +1,139 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26D587317F;
-	Wed,  3 Apr 2024 10:41:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E394C13B2A2;
+	Wed,  3 Apr 2024 10:42:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712140909; cv=none; b=GBN7FkYx8ujFY9YNJwUoQ6a0uuE/1yxpchAqDvyhs2w0YPTT+JLI25V95D4ZywAl0PJyeBDu45v5wZhqUvMP877tVqqFWyCcJ7QhVLml6tXJCLnTQf2mvIN6iBpSQKXqhSqJawvXvXxOy/Fls61BsUWTPNq67C4Am09u5OWcSaM=
+	t=1712140926; cv=none; b=HKD6i1DxS0GAD+N0doGKtUL3XPi/w1zYqJIU2PqbfYJEbTMnrBPYmRSuY+cgnzVBapdD5aykUtmk6Qw4ysozrBwfOz5Iax3Pu7UUl9Tc2r/acRG8OfgDntw0DyyyDc/Dd0Gcl3lIoU4iAeTRwkILG4fpZwMZjrVUk7ItbvR+HXs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712140909; c=relaxed/simple;
-	bh=cHoh/mCyG8gbipvFz56gKADMWpWhqnpXGRpDRvSto80=;
+	s=arc-20240116; t=1712140926; c=relaxed/simple;
+	bh=VyamW3pmzqfesnrQLCpxRniRljIdmqoDlBtM7x6Qkgc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=EwJ/i7kNAo3TOdNxonnJO8L3rMAaajQD1NgVjXJUGfivrQHvHGArhg87Kv0YlXfQPcmaPjLuSJMtdYgfwnJIqnUbH2q6wf3+H6xuG4Yv75rG+m1KfeJtnPASbUARIlkBITN85N9D0c4tmQJzXolxeySyhvHrvxo/X27jT066ZUA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=ZZmDoIIM; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	 Content-Type:Content-Disposition:In-Reply-To; b=AHO4u9+n1xYLJHyps2c7faxS2G4/vqm29SV7zTUN9FRl8CE3aAbA2ssy+vDVHkBZsYW7hv/Jm6hNTQHc3Anq8CU99p+8MXtNIAv5yaWX84mCQknGgBXgIMZdafjrE8D+T0W9gflEJsEvkjdrkHZBM3Lh6/BcnOo7sRus8hZ4oh4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=cin1z96n; arc=none smtp.client-ip=192.198.163.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="ZZmDoIIM"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 765E140E019C;
-	Wed,  3 Apr 2024 10:41:43 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id YQ_zvYeI4oPH; Wed,  3 Apr 2024 10:41:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1712140899; bh=UzSO7Jsp105welFJNWCbRP4AatEptaub1c50MMxUNFY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ZZmDoIIMGNqv7EUCTpd7QdLG6HLKRWT3K3iNOjkn/oZo1Fyr2uQ2L/wM9IvjkRqCc
-	 5ykgW2lz7lQwAwsKNYc9wZOQtFN3BuleIXiN7qWsE6ggLsWPtU6bEi1VU4GDdyuN62
-	 pPK4d/CkMbM3GRSPtgUF8JBV/NXJrz2lVplv1VmcIoKyBV7n2BT3wjKexlGo97Qfy5
-	 8EWV+W1z+jYmq5C1L79SyyeCZWZzGnZwfqIvv+rpQJYpn8sFg6KBcMDcoyFaH6SU8C
-	 hjZPdnztDvR1/2q8PGHMaZTlIg5Ou3USmIS0bGPBZO+fQkYEKJnEUURQxMjmFdusoQ
-	 bL4vZm1QF8ypb+2VHAx3oft5O1YHSH8iMspV59AbfovmcAh94yk+9hvhHe4AG9LM06
-	 5LU/6BY/QTTwTLR5abHs3nv5N73pznAv9DleR1MdZhodBtcd+Ue2wPcJGtYxmDdBRF
-	 AOJ4xWKrLbZsIyNdVCacgcZEX98jz9pNpI0nW3XtOTwXWOwsjPz0yuaJ/pggaHAM9d
-	 SE4bfMeWLuQQshO3xZKOxWjtXMq9UKGBF7FUGnkg0a0t5aafj/tZxHX2imYs/tKizS
-	 d2QO3FR1DA5j94nQxhlYqIMRRnM+QavBWs9wOcSvjtJnuHHgzkqcbpZESn2sZK6Xr8
-	 rjIM/oahcos7rGLy3uLF63Kg=
-Received: from zn.tnic (p5de8ecf7.dip0.t-ipconnect.de [93.232.236.247])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 703FB40E019B;
-	Wed,  3 Apr 2024 10:41:25 +0000 (UTC)
-Date: Wed, 3 Apr 2024 12:41:19 +0200
-From: Borislav Petkov <bp@alien8.de>
-To: Zeng Heng <zengheng4@huawei.com>
-Cc: linux-tip-commits@vger.kernel.org,
-	Jun'ichi Nomura <junichi.nomura@nec.com>,
-	Derek Barbosa <debarbos@redhat.com>, Ingo Molnar <mingo@kernel.org>,
-	Kees Cook <keescook@chromium.org>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	"Paul E. McKenney" <paulmck@kernel.org>,
-	Andy Lutomirski <luto@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>,
-	Peter Zijlstra <peterz@infradead.org>, x86@kernel.org,
-	linux-kernel@vger.kernel.org, "liwei (GF)" <liwei391@huawei.com>
-Subject: Re: [tip: x86/boot] x86/boot: Ignore NMIs during very early boot
-Message-ID: <20240403104119.GAZg0yTyTAGe65FoxF@fat_crate.local>
-References: <170133478498.398.5261666675868615202.tip-bot2@tip-bot2>
- <20231130103339.GCZWhlA196uRklTMNF@fat_crate.local>
- <95f416eb-a0ea-acba-6427-2a38d431ba8d@huawei.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cin1z96n"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1712140924; x=1743676924;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=VyamW3pmzqfesnrQLCpxRniRljIdmqoDlBtM7x6Qkgc=;
+  b=cin1z96nD3GMtwoqf6MMneJ5Fs/+NEmfUj8hGidTXgGkIpwQWYiNDSHN
+   ixl7XZzO+hU8TOQagNrgVd4gDSGGUl54JRBOMynByRnbzuORlwTebPrNV
+   TLYrUUy5qjvh24/srKL/wHPh1iSH+WDpe5DKSuPfGkgjlmocDoP+j4dS/
+   wT1sqFIol59Ac880qINh0iTfqzisgK+Udr6sVuMDapWgSXXNGo90eMiWf
+   /NZ2j1Pa/gkC56NkZ710OibBP8Ee+Wu4UUT3djyXzgxwMz86VJqqYJWZp
+   JoZO9FjJ20VDGmhfdOY+cGiroW9kIKI3yqPNGbRgoLTOp3OBEPq/8GhzP
+   g==;
+X-CSE-ConnectionGUID: jSsXvr9KQHC6c6U7ZSj1Ig==
+X-CSE-MsgGUID: tuWs3oMFScG3r9axp8HFvw==
+X-IronPort-AV: E=McAfee;i="6600,9927,11032"; a="10330861"
+X-IronPort-AV: E=Sophos;i="6.07,177,1708416000"; 
+   d="scan'208";a="10330861"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2024 03:39:49 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,11032"; a="937084843"
+X-IronPort-AV: E=Sophos;i="6.07,177,1708416000"; 
+   d="scan'208";a="937084843"
+Received: from kuha.fi.intel.com ([10.237.72.185])
+  by fmsmga001.fm.intel.com with SMTP; 03 Apr 2024 03:39:45 -0700
+Received: by kuha.fi.intel.com (sSMTP sendmail emulation); Wed, 03 Apr 2024 13:39:44 +0300
+Date: Wed, 3 Apr 2024 13:39:44 +0300
+From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+To: "Christian A. Ehrhardt" <lk@c--e.de>
+Cc: linux-kernel@vger.kernel.org,
+	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+	Diogo Ivo <diogo.ivo@tecnico.ulisboa.pt>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Prashant Malani <pmalani@chromium.org>,
+	Jameson Thies <jthies@google.com>,
+	Abhishek Pandit-Subedi <abhishekpandit@chromium.org>,
+	Neil Armstrong <neil.armstrong@linaro.org>,
+	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>,
+	Samuel =?utf-8?B?xIxhdm9q?= <samuel@cavoj.net>,
+	linux-usb@vger.kernel.org
+Subject: Re: [PATCH 1/3] usb: typec: ucsi: Stop abuse of bit definitions from
+ ucsi.h
+Message-ID: <Zg0x8HKsoJb+phWw@kuha.fi.intel.com>
+References: <20240327224554.1772525-1-lk@c--e.de>
+ <20240327224554.1772525-2-lk@c--e.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <95f416eb-a0ea-acba-6427-2a38d431ba8d@huawei.com>
+In-Reply-To: <20240327224554.1772525-2-lk@c--e.de>
 
-Hi Zeng Heng,
+On Wed, Mar 27, 2024 at 11:45:52PM +0100, Christian A. Ehrhardt wrote:
+> In ucsi.h there are flag definitions for the ->flags field
+> in struct ucsi. Some implementations abuse these bits for
+> their private ->flags fields e.g. in struct ucsi_acpi.
+> 
+> Move the definitions into the backend implementations that
+> still need them. While there fix one instance where the flag
+> name was not converted in a previous change.
+> 
+> No semantic change intended.
+> 
+> Signed-off-by: Christian A. Ehrhardt <lk@c--e.de>
 
-On Wed, Apr 03, 2024 at 02:32:45PM +0800, Zeng Heng wrote:
-> Until just now, I saw your completely different responses to the same patch.
+Reviewed-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
 
-Lemme explain how I see the situation.
-
-You sent a patch:
-
-https://lore.kernel.org/all/20230110102745.2514694-1-zengheng4@huawei.com/
-
-which had a commit message which tried to explain what happens. And
-I tried to parse your commit message and understand what you're trying
-to do but there never was a clear explanation.
-
-When I read "If kdump is enabled, when using mce_inject to inject
-errors..." then I think, oh great, more experiments. ;-\
-
-And no, I don't want to add code to early boot just to make some weird
-experiments happy.
-
-Yeah yeah, an MCE can happen very early but until a real reproducer, I'm
-not convinced.
-
-Now that other patch's commit message has at least a bit more clear
-explanation how you can *actually* cause this. And I still would've
-asked how *exactly* this happens but it is kinda clear: you can run perf
-and generate an NMI storm and then have two back-to-back NMIs.
-
-And I'm still not crazy about having an empty early NMI handler either
-thus I suggested to make it at least say something so that we're aware
-that early NMIs have happened.
-
-So if it is not clear *why* a patch is being done, then it goes nowhere.
-Because you'll go your merry way and "develop driver software based on
-arm64 features" or whatever else you get to do but the maintainers will
-be left to be dealing with your code indefinitely.
-
-I hope this makes it more clear.
-
-Thx.
+> ---
+>  drivers/usb/typec/ucsi/ucsi.h         | 2 --
+>  drivers/usb/typec/ucsi/ucsi_acpi.c    | 3 ++-
+>  drivers/usb/typec/ucsi/ucsi_stm32g0.c | 1 +
+>  3 files changed, 3 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/usb/typec/ucsi/ucsi.h b/drivers/usb/typec/ucsi/ucsi.h
+> index 0e7c92eb1b22..591f734d457b 100644
+> --- a/drivers/usb/typec/ucsi/ucsi.h
+> +++ b/drivers/usb/typec/ucsi/ucsi.h
+> @@ -403,8 +403,6 @@ struct ucsi {
+>  	/* PPM communication flags */
+>  	unsigned long flags;
+>  #define EVENT_PENDING	0
+> -#define COMMAND_PENDING	1
+> -#define ACK_PENDING	2
+>  
+>  	unsigned long quirks;
+>  #define UCSI_NO_PARTNER_PDOS	BIT(0)	/* Don't read partner's PDOs */
+> diff --git a/drivers/usb/typec/ucsi/ucsi_acpi.c b/drivers/usb/typec/ucsi/ucsi_acpi.c
+> index 7b3ac133ef86..cc03a49c589c 100644
+> --- a/drivers/usb/typec/ucsi/ucsi_acpi.c
+> +++ b/drivers/usb/typec/ucsi/ucsi_acpi.c
+> @@ -203,7 +203,8 @@ static void ucsi_acpi_notify(acpi_handle handle, u32 event, void *data)
+>  	    !test_bit(UCSI_ACPI_SUPPRESS_EVENT, &ua->flags))
+>  		ucsi_connector_change(ua->ucsi, UCSI_CCI_CONNECTOR(cci));
+>  
+> -	if (cci & UCSI_CCI_ACK_COMPLETE && test_bit(ACK_PENDING, &ua->flags))
+> +	if (cci & UCSI_CCI_ACK_COMPLETE &&
+> +	    test_bit(UCSI_ACPI_ACK_PENDING, &ua->flags))
+>  		complete(&ua->complete);
+>  	if (cci & UCSI_CCI_COMMAND_COMPLETE &&
+>  	    test_bit(UCSI_ACPI_COMMAND_PENDING, &ua->flags))
+> diff --git a/drivers/usb/typec/ucsi/ucsi_stm32g0.c b/drivers/usb/typec/ucsi/ucsi_stm32g0.c
+> index 93d7806681cf..ac48b7763114 100644
+> --- a/drivers/usb/typec/ucsi/ucsi_stm32g0.c
+> +++ b/drivers/usb/typec/ucsi/ucsi_stm32g0.c
+> @@ -64,6 +64,7 @@ struct ucsi_stm32g0 {
+>  	struct completion complete;
+>  	struct device *dev;
+>  	unsigned long flags;
+> +#define COMMAND_PENDING	1
+>  	const char *fw_name;
+>  	struct ucsi *ucsi;
+>  	bool suspended;
+> -- 
+> 2.40.1
 
 -- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+heikki
