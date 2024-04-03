@@ -1,42 +1,31 @@
-Received: from mail-108-mta238.mxroute.com (mail-108-mta238.mxroute.com [136.175.108.238])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from sxb1plsmtpa01-01.prod.sxb1.secureserver.net (sxb1plsmtpa01-01.prod.sxb1.secureserver.net [188.121.53.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC7AC1514CF
-	for <linux-kernel@vger.kernel.org>; Wed,  3 Apr 2024 19:34:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=136.175.108.238
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9561115530E
+	for <linux-kernel@vger.kernel.org>; Wed,  3 Apr 2024 19:34:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.121.53.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712172869; cv=none; b=SX/6tgx6RtyRU/fHxznYpPqJ7P5kT6M8F+gLNpdr4sMasu6Zvuxctsvu1ckH2S8V2g2g/xHyGeSZRwrC8yB6CJmzkxldJ/TiP3oiEC6d1rFrGee5MlrHzDjiMjYnbYZC89GJyXO0MlVLHSuvFu4VzJdDHfU3nNLcMlju7KLeRdI=
+	t=1712172871; cv=none; b=cCUF8kiTaclFJ0oj8D5Yxznsl5PnZB8WMCet06zECs1+lvb87jfDK0nMr0KMOt9pKq6tBh+pV5Y680j+XdwM5c1uOx++5Je8f/R4d2Z+I6a7CsqsUnFVaZ2SaKXzpdYE510RuekOkubSMN879WK53jb4kmCamuJtlPy+zoHmRYg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712172869; c=relaxed/simple;
-	bh=cANrsz0u60hHFNJQZKvJ4/xJFm9Ch/qceTvDPi+CiFQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=ix0eaR3+IPG1kkDotvEk/57AIcrs83OYlHC7KFqVawuVReJV1xSMA9rUO9YSxvPhm5YsbldASQ4wz0Hx02VnGbBP321Xw2JG8z/vzqULjdsErimxYQXqKAzkuOwhggBlJfiUdkdhsXxViZgQBxN8Z0JAsI4X1MU+ECbuXf0EJYI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=luigi311.com; spf=pass smtp.mailfrom=luigi311.com; dkim=pass (2048-bit key) header.d=luigi311.com header.i=@luigi311.com header.b=1sMyENt+; arc=none smtp.client-ip=136.175.108.238
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=luigi311.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=luigi311.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=luigi311.com header.i=@luigi311.com header.b="1sMyENt+"
-Received: from filter006.mxroute.com ([136.175.111.2] filter006.mxroute.com)
- (Authenticated sender: mN4UYu2MZsgR)
- by mail-108-mta238.mxroute.com (ZoneMTA) with ESMTPSA id 18ea5747e090003bea.011
- for <linux-kernel@vger.kernel.org>
- (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384);
- Wed, 03 Apr 2024 19:34:18 +0000
-X-Zone-Loop: b3223afca6d9dcad25040026afc7ed70ecf40e85aeec
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=luigi311.com; s=x; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:
-	From:References:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:Cc:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=/VJr7xFJj+0rNkOMJVS/zLwSwMJZdRxVNuA6QJGZknw=; b=1sMyENt+XKyQGBnEprQFcuct+x
-	GoWW1GYXqX7UiYycV7x5CHl4+zXrz/B4dbWf23n1VaYP3JAm8j+XCy3ta/ybDzJejeKTg4cQpEZes
-	WbfwqlFgjioV0H6AqxzbH3dODmNihctMun5QSJMOP2RCZgGASD+SuiObWrr5vlp8V26G63CuzkYF+
-	yRCEEvHWKLBJ7EzHou8ngOWzu/b2ZspJ9+iJtRd1um3Hqz7Z6ox/DUIX4EhYu3WJk2QyW2utr00LM
-	axbfmuMMY9YGYj+7ughmnFMPrsUs7+oIwHY0kqI+xyizh6A/rrAplCYpQLKfTJLZ3sjRsIPG0HY8G
-	iDDvdDAQ==;
-Message-ID: <dd0e64c8-5eef-421a-9d9f-8a5865743369@luigi311.com>
-Date: Wed, 3 Apr 2024 13:34:14 -0600
+	s=arc-20240116; t=1712172871; c=relaxed/simple;
+	bh=Gra+M5CB4uOQynVC1KnQiQy8k+PPo+HZFGgQ020BswM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=bw048jJORJFTgVUnsPGxdyi86Sz83CuStoVzdQiX9eK/swYGma9Un5YOCNQyyjEp9JInwDuO2DwrzJ+7Lr94KPtU5C3daE8k8qqKSbxayLJLDxdEYhmJSQW9mpAT5WCAH3aMF+GrI9kB3meaBVwi0nWiB616M7QH2SmogjXtGlg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squashfs.org.uk; spf=pass smtp.mailfrom=squashfs.org.uk; arc=none smtp.client-ip=188.121.53.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squashfs.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=squashfs.org.uk
+Received: from [192.168.178.90] ([82.69.79.175])
+	by :SMTPAUTH: with ESMTPA
+	id s6L2rzWS7NGvls6L4rKxRo; Wed, 03 Apr 2024 12:32:03 -0700
+X-CMAE-Analysis: v=2.4 cv=b5F54cGx c=1 sm=1 tr=0 ts=660daeb4
+ a=84ok6UeoqCVsigPHarzEiQ==:117 a=84ok6UeoqCVsigPHarzEiQ==:17
+ a=IkcTkHD0fZMA:10 a=VwQbUJbxAAAA:8 a=FXvPX3liAAAA:8 a=NEAV23lmAAAA:8
+ a=xNf9USuDAAAA:8 a=1XWaLZrsAAAA:8 a=U6Lr9aP-yIEcLLY-FxMA:9 a=QEXdDO2ut3YA:10
+ a=1F1461vogZIA:10 a=wSuxAcp8fc4A:10 a=5kKzt1m56AEA:10
+ a=AjGcO6oz07-iQ99wixmX:22 a=UObqyxdv-6Yh2QiB9mM_:22 a=SEwjQc04WA-l_NiBhQ7s:22
+X-SECURESERVER-ACCT: phillip@squashfs.org.uk
+Message-ID: <594a6365-5cc6-4778-aec5-c5ad2a4b2930@squashfs.org.uk>
+Date: Wed, 3 Apr 2024 20:31:59 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -44,135 +33,77 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 23/25] drivers: media: i2c: imx258: Add support for
- powerdown gpio
-To: =?UTF-8?Q?Ond=C5=99ej_Jirman?= <megous@megous.com>,
- Sakari Ailus <sakari.ailus@linux.intel.com>, linux-media@vger.kernel.org,
- dave.stevenson@raspberrypi.com, jacopo.mondi@ideasonboard.com,
- mchehab@kernel.org, robh@kernel.org, krzysztof.kozlowski+dt@linaro.org,
- conor+dt@kernel.org, shawnguo@kernel.org, s.hauer@pengutronix.de,
- kernel@pengutronix.de, festevam@gmail.com, devicetree@vger.kernel.org,
- imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org, pavel@ucw.cz, phone-devel@vger.kernel.org
-References: <20240403150355.189229-1-git@luigi311.com>
- <20240403150355.189229-24-git@luigi311.com>
- <Zg2DBasC501hMQSS@kekkonen.localdomain>
- <wjlcde7yoooygj4hhdmiwrdloh6l4p6i2qbmjek5uwsifyzwgu@xjhutvmsdfou>
-Content-Language: en-US
-From: Luigi311 <git@luigi311.com>
-In-Reply-To: <wjlcde7yoooygj4hhdmiwrdloh6l4p6i2qbmjek5uwsifyzwgu@xjhutvmsdfou>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Authenticated-Id: git@luigi311.com
+Subject: Re: [PATCH] Squashfs: replace deprecated strncpy with strscpy
+To: Justin Stitt <justinstitt@google.com>
+Cc: linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+References: <20240328-strncpy-fs-squashfs-namei-c-v1-1-5c7bcbbeb675@google.com>
+Content-Language: en-GB
+From: Phillip Lougher <phillip@squashfs.org.uk>
+In-Reply-To: <20240328-strncpy-fs-squashfs-namei-c-v1-1-5c7bcbbeb675@google.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4xfJJxit0+HRHsEUq/5aS2mkZDiwx38H+++8a4oMEZ6Huc+oyQckaWaErbke77kwdsmlfnzXmOch6vzOYPQY8XJnCBmTxmRnUEZ3JbR0QwEuqOvW6GQ0HT
+ D/wiQojzLZxkhr84Q7jz4fksvWkUfDlNMVux9D1dg6IDRli+Yu0O8RT9YPKz7g/H5pU4QbAPkRgvqIAF8YPGybv7PMsVj4sGHUQ7W6chU6wQ7cg1kqD4ceWU
+ NhO9gHJVo1/ZojmK0/y0Ninxvc/cb8EuGFH1v/DwaTqoP4I2BB5bZ3/pD3KJ86a8
 
-On 4/3/24 10:57, Ondřej Jirman wrote:
-> Hi Sakari and Luis,
+On 28/03/2024 21:52, Justin Stitt wrote:
+> strncpy() is deprecated for use on NUL-terminated destination strings
+> [1] and as such we should prefer more robust and less ambiguous string
+> interfaces.
 > 
-> On Wed, Apr 03, 2024 at 04:25:41PM GMT, Sakari Ailus wrote:
->> Hi Luis, Ondrej,
->>
->> On Wed, Apr 03, 2024 at 09:03:52AM -0600, git@luigi311.com wrote:
->>> From: Luis Garcia <git@luigi311.com>
->>>
->>> On some boards powerdown signal needs to be deasserted for this
->>> sensor to be enabled.
->>>
->>> Signed-off-by: Ondrej Jirman <megi@xff.cz>
->>> Signed-off-by: Luis Garcia <git@luigi311.com>
->>> ---
->>>  drivers/media/i2c/imx258.c | 13 +++++++++++++
->>>  1 file changed, 13 insertions(+)
->>>
->>> diff --git a/drivers/media/i2c/imx258.c b/drivers/media/i2c/imx258.c
->>> index 30352c33f63c..163f04f6f954 100644
->>> --- a/drivers/media/i2c/imx258.c
->>> +++ b/drivers/media/i2c/imx258.c
->>> @@ -679,6 +679,8 @@ struct imx258 {
->>>  	unsigned int lane_mode_idx;
->>>  	unsigned int csi2_flags;
->>>  
->>> +	struct gpio_desc *powerdown_gpio;
->>> +
->>>  	/*
->>>  	 * Mutex for serialized access:
->>>  	 * Protect sensor module set pad format and start/stop streaming safely.
->>> @@ -1213,6 +1215,8 @@ static int imx258_power_on(struct device *dev)
->>>  	struct imx258 *imx258 = to_imx258(sd);
->>>  	int ret;
->>>  
->>> +	gpiod_set_value_cansleep(imx258->powerdown_gpio, 0);
->>
->> What does the spec say? Should this really happen before switching on the
->> supplies below?
-> 
-> There's no powerdown input in the IMX258 manual. The manual only mentions
-> that XCLR (reset) should be held low during power on.
-> 
-> https://megous.com/dl/tmp/15b0992a720ab82d.png
-> 
-> https://megous.com/dl/tmp/f2cc991046d97641.png
-> 
->    This sensor doesn’t have a built-in “Power ON Reset” function. The XCLR pin
->    is set to “LOW” and the power supplies are brought up. Then the XCLR pin
->    should be set to “High” after INCK supplied.
-> 
-> So this input is some feature on camera module itself outside of the
-> IMX258 chip, which I think is used to gate power to the module. Eg. on Pinephone
-> Pro, there are two modules with shared power rails, so enabling supply to
-> one module enables it to the other one, too. So this input becomes the only way
-> to really enable/disable power to the chip when both are used at once at some
-> point, because regulator_bulk_enable/disable becomes ineffective at that point.
-> 
-> Luis, maybe you saw some other datasheet that mentions this input? IMO,
-> it just gates the power rails via some mosfets on the module itself, since
-> there's not power down input to the chip itself.
-> 
-> kind regards,
-> 	o.
+> The previous code took special care of NUL-terminating the destination
+> buffer via a manual assignment. As such, there is no bug in the current
+> implementation. However, in an effort to rid the kernel of strscpy()
+> [2], Let's instead use strscpy() which guarantees this behavior [3]. To
+> ensure we can copy the same number of bytes as before, add 1 to the
+> length argument provided to strscpy().
 > 
 
-Ondrej, I did not see anything else in the datasheet since I'm pretty sure
-I'm looking at the same datasheet as it was supplied to me by Pine64. I'm
-not sure what datasheet Dave has access to since he got his for a
-completely different module than what we are testing with though.
+Squashfs copies the passed string into a temporary buffer to ensure it
+is NUL-terminated.  This however is completely unnecessary as the
+string is already NUL-terminated.
 
->>> +
->>>  	ret = regulator_bulk_enable(IMX258_NUM_SUPPLIES,
->>>  				    imx258->supplies);
->>>  	if (ret) {
->>> @@ -1224,6 +1228,7 @@ static int imx258_power_on(struct device *dev)
->>>  	ret = clk_prepare_enable(imx258->clk);
->>>  	if (ret) {
->>>  		dev_err(dev, "failed to enable clock\n");
->>> +		gpiod_set_value_cansleep(imx258->powerdown_gpio, 1);
->>>  		regulator_bulk_disable(IMX258_NUM_SUPPLIES, imx258->supplies);
->>>  	}
->>>  
->>> @@ -1238,6 +1243,8 @@ static int imx258_power_off(struct device *dev)
->>>  	clk_disable_unprepare(imx258->clk);
->>>  	regulator_bulk_disable(IMX258_NUM_SUPPLIES, imx258->supplies);
->>>  
->>> +	gpiod_set_value_cansleep(imx258->powerdown_gpio, 1);
->>> +
->>>  	return 0;
->>>  }
->>>  
->>> @@ -1541,6 +1548,12 @@ static int imx258_probe(struct i2c_client *client)
->>>  	if (!imx258->variant_cfg)
->>>  		imx258->variant_cfg = &imx258_cfg;
->>>  
->>> +	/* request optional power down pin */
->>> +	imx258->powerdown_gpio = devm_gpiod_get_optional(&client->dev, "powerdown",
->>> +						    GPIOD_OUT_HIGH);
->>> +	if (IS_ERR(imx258->powerdown_gpio))
->>> +		return PTR_ERR(imx258->powerdown_gpio);
->>> +
->>>  	/* Initialize subdev */
->>>  	v4l2_i2c_subdev_init(&imx258->sd, client, &imx258_subdev_ops);
->>>  
->>
->> -- 
->> Regards,
->>
->> Sakari Ailus
+A better way to remove the strncpy() is to remove the unnecessary string
+copy, which I have done in this patch here:
+
+https://lore.kernel.org/lkml/20240403183352.391308-1-phillip@squashfs.org.uk/T/#u
+
+Phillip
+
+> Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
+> Link: https://github.com/KSPP/linux/issues/90 [2]
+> Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html  [3]
+> Cc: linux-hardening@vger.kernel.org
+> Signed-off-by: Justin Stitt <justinstitt@google.com>
+> ---
+> Note: build-tested only.
+> 
+> Found with: $ rg "strncpy\("
+> ---
+>   fs/squashfs/namei.c | 3 +--
+>   1 file changed, 1 insertion(+), 2 deletions(-)
+> 
+> diff --git a/fs/squashfs/namei.c b/fs/squashfs/namei.c
+> index 11e4539b9eae..6c4704ba8f42 100644
+> --- a/fs/squashfs/namei.c
+> +++ b/fs/squashfs/namei.c
+> @@ -80,8 +80,7 @@ static int get_dir_index_using_name(struct super_block *sb,
+>   	}
+>   
+>   	str = &index->name[SQUASHFS_NAME_LEN + 1];
+> -	strncpy(str, name, len);
+> -	str[len] = '\0';
+> +	strscpy(str, name, len + 1);
+>   
+>   	for (i = 0; i < i_count; i++) {
+>   		err = squashfs_read_metadata(sb, index, &index_start,
+> 
+> ---
+> base-commit: 928a87efa42302a23bb9554be081a28058495f22
+> change-id: 20240328-strncpy-fs-squashfs-namei-c-9d01b8975e53
+> 
+> Best regards,
+> --
+> Justin Stitt <justinstitt@google.com>
+> 
 
