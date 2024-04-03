@@ -1,114 +1,126 @@
-Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com [209.85.208.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 118D413E6B6
-	for <linux-kernel@vger.kernel.org>; Wed,  3 Apr 2024 08:10:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 288FE13E8AB
+	for <linux-kernel@vger.kernel.org>; Wed,  3 Apr 2024 08:10:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712131845; cv=none; b=WEQ4yAoGaTgPRUFo8y4o8gSQyX+Ch0qx0SESkGD3JvWQi8Kia2SzQPoVKtBpdsPs/mwnqvyBHpB+qF+NvmQ9qh2w7BI3DPw4HUBF9hL8ty/afueRbX7fzD5naqzZNwh97yZyGY8+x88MQXD5IxijKdt0Hi2d0sgX7aWnzw+XZx4=
+	t=1712131858; cv=none; b=Eui4NkO8kh5T7qS4iOgnSyeFZnf3+/i04uKzglexSWmVMqMTNe3q/sSJzJU49C17M3yfbaLxhqGx1+C8T9botyBsgSpuCDLiZjwuTATtn57m2ZaE6uu7ZYrWwi06E6pdGwL9P9HXugdOVQFWe8mDDsudJyHdgcxw2t2I5Pu9TBQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712131845; c=relaxed/simple;
-	bh=JQej1iAsVr2TqEOU6xUOK3SA6orz4U3TJduit2FBqSI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=FCjVYMah+qf2hA6Grgd1C0rKoQJDPkm++/sA4jMT/1ArD3KNBbVKMVd66UqwlE79MYfTh9/9P/vXBOMMxOM7y8vXDqbGGeLL29AVtUWzl9kmY9rCVjNUnCfRHEu0SCRDrUbItgzJzGpvkAVGSiosyD96lB+auZaoQSmht/5Q530=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=isovalent.com; spf=pass smtp.mailfrom=isovalent.com; dkim=pass (2048-bit key) header.d=isovalent.com header.i=@isovalent.com header.b=K4uUM64U; arc=none smtp.client-ip=209.85.208.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=isovalent.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=isovalent.com
+	s=arc-20240116; t=1712131858; c=relaxed/simple;
+	bh=SG0i7m/Qv+Wgr/oIlICWhiX3c3WYeQZoUHuUuYHJ3Mg=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=PA3R2gdS+CkRohezoq91eSXg0SwWr1Didbx89U9Px43Xt06o+eVMls/+KSeYMXF8pHFDiNVE+L3AeFINiPOCmAs53G0CSljfhegyF+9YVdhqcEROvwswdIMj+R6w7Be4QKR1rdhyCVwtb/ylMkoMBeE9XZtmmoomezZ77CFe2tE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NJRQk4h6; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=isovalent.com header.i=@isovalent.com header.b="K4uUM64U"
-Received: by mail-lj1-f169.google.com with SMTP id 38308e7fff4ca-2d718efedb2so91768441fa.0
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Apr 2024 01:10:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=isovalent.com; s=google; t=1712131842; x=1712736642; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=gqLYHHBoVd2DZSBiZsMfamZXMWNtMZVCVqKJsSa6oQo=;
-        b=K4uUM64UFlfgANoIJWSvhYSvkEGVOob3LufjwZUSk+PZ8X+ZDF7hl9ZQQan+UQ5c/F
-         PcbZEj26LsIobyR64eR6UI294DnaUqF8DaKlQD3T6F9kyrcBT/aB+MAhC3HWPMosZJrp
-         lQq+znn05uQjN+yX6KCTkzA/MxpdrK1C5/V2HQIJy86i5WpN09rqw40luZkObXTAyNnh
-         7lJCHmGbYuBUsRIIPbLT66Q7E8Cfi8itmj9RxGeybI8LRpoTNNPlOYWFCfs02jzP2M3X
-         zGuDubfqgfQdcmIVUWR5KhqbZSHRaF9YlyilHUc0IsO8j24nwNhkycXTUZhwkd0RUSm8
-         Ojzg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712131842; x=1712736642;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=gqLYHHBoVd2DZSBiZsMfamZXMWNtMZVCVqKJsSa6oQo=;
-        b=Ivwuk5bVO6mTAtFa4YRbFjNKAbxbiMicL3bS4RikmW/iP6eR4lB4/rKTt4RC4z9QpG
-         GNOU1j6NhzgbSN4YzTwmj9/f5BTIyNVdPt48enp1ny8WAQqxzUFMDWQuNq3ChDooqxXF
-         IAlKr8npUg576g8SxjKi63j1HGv9+1gghBgU6hFxhRfTGEQ73529s4U0OZ9rtuVUGJFH
-         WXSRap5Zn1KX3SBB3yt5xbdJNSSIHnZxLD1IFR3xJcGFUsF92MmB80XZoZqHFY86o6cC
-         v5jLmXX2Kg82kaENLc1tHlWqYHlrxfpIb3jOXF/KzcRnXWF7+J/57CiR+LVplAbEcrG7
-         WciQ==
-X-Gm-Message-State: AOJu0YzyDghMPRVIW/1GkZjdkGUT38Oymp8MbWfPYI9sq0nb5ZWEvhPk
-	7t/SQKKqmRz835fJNC+M5TpDa22/HTuWWMlAhNxVqzllkYnzyVdItIibVg9BL1DUFAopDLx1tvf
-	9nwajhcNEs32pYitQ2RcLmbJKbu7QH5vdcjZ6Gg==
-X-Google-Smtp-Source: AGHT+IHPLv/xQnUbFIUE+E5TYWgeyNX14zVo3bYPItcgeCHpJd9YtvoRLtdQKSVHg9o25tQy5l1Xqdog/FZOgL7D2E4=
-X-Received: by 2002:a05:651c:503:b0:2d8:2766:d66b with SMTP id
- o3-20020a05651c050300b002d82766d66bmr3707003ljp.3.1712131842238; Wed, 03 Apr
- 2024 01:10:42 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NJRQk4h6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A31ECC433F1;
+	Wed,  3 Apr 2024 08:10:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1712131858;
+	bh=SG0i7m/Qv+Wgr/oIlICWhiX3c3WYeQZoUHuUuYHJ3Mg=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=NJRQk4h6DbL0PRCv2v9sEcKs42xqNz/dxm75KgThlyRajdVuR078RQ02O7Izdo+ZZ
+	 LnK2cN6v+mPmgcHePdMATB3uWETGSzCoSJz5BBh+gbBFtlrzLAOtVzoTK9cKPTD3VX
+	 xoglKUzgdJlNV7lO9y0aBfZDI24awPTqxjbDGUnUTcOZxsNcWxCNIyZ+UqDVyYvmJO
+	 RYoSNwxAs2MVFI6FRMnpM6OyUArbDkXu+BieEVf366sDxQluFmBuH+PruUunNsQ9nZ
+	 NRi1r/PQPL/Svp9zyGT2Mai3oHNv3/DVU/reCWO2S9NvNWzVWNBW42fOs6BC3OmsjV
+	 h5Uy2eh2EdNIA==
+From: Arnd Bergmann <arnd@kernel.org>
+To: linux-kernel@vger.kernel.org,
+	Liviu Dudau <liviu.dudau@arm.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>,
+	Daniel Vetter <daniel@ffwll.ch>,
+	"James Qian Wang (Arm Technology China)" <james.qian.wang@arm.com>
+Cc: Arnd Bergmann <arnd@arndb.de>,
+	Rob Herring <robh@kernel.org>,
+	dri-devel@lists.freedesktop.org
+Subject: [PATCH 22/34] drm/komeda: don't warn for unused debugfs files
+Date: Wed,  3 Apr 2024 10:06:40 +0200
+Message-Id: <20240403080702.3509288-23-arnd@kernel.org>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20240403080702.3509288-1-arnd@kernel.org>
+References: <20240403080702.3509288-1-arnd@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CA+G9fYtsoP51f-oP_Sp5MOq-Ffv8La2RztNpwvE6+R1VtFiLrw@mail.gmail.com>
-In-Reply-To: <CA+G9fYtsoP51f-oP_Sp5MOq-Ffv8La2RztNpwvE6+R1VtFiLrw@mail.gmail.com>
-From: Anton Protopopov <aspsk@isovalent.com>
-Date: Wed, 3 Apr 2024 10:10:31 +0200
-Message-ID: <CAPyNcWeu+bzyQg9S3wDb43jbfk95Su5XcSRFPzUbS2ofZ=+5Fg@mail.gmail.com>
-Subject: Re: include/linux/build_bug.h:78:41: error: static assertion failed:
- "struct bpf_fib_lookup size check"
-To: Naresh Kamboju <naresh.kamboju@linaro.org>
-Cc: open list <linux-kernel@vger.kernel.org>, lkft-triage@lists.linaro.org, 
-	Linux Regressions <regressions@lists.linux.dev>, Arnd Bergmann <arnd@arndb.de>, 
-	Anders Roxell <anders.roxell@linaro.org>, Dan Carpenter <dan.carpenter@linaro.org>, 
-	Daniel Borkmann <daniel@iogearbox.net>, David Ahern <dsahern@kernel.org>, 
-	Alexei Starovoitov <ast@kernel.org>, aleksander.lobakin@intel.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Wed, Apr 3, 2024 at 10:03=E2=80=AFAM Naresh Kamboju
-<naresh.kamboju@linaro.org> wrote:
->
-> The arm footbridge_defconfig failed with gcc-13 and gcc-8 on Linux next
-> starting from next-20240328..next-20240402.
->
-> arm:
->   build:
->     * gcc-8-footbridge_defconfig - Failed
->     * gcc-13-footbridge_defconfig - Failed
->
-> Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
->
-> In file included from include/linux/bitfield.h:10,
->                  from arch/arm/include/asm/ptrace.h:13,
->                  from arch/arm/include/asm/processor.h:14,
->                  from include/linux/prefetch.h:15,
->                  from arch/arm/include/asm/atomic.h:12,
->                  from include/linux/atomic.h:7,
->                  from net/core/filter.c:20:
-> include/linux/build_bug.h:78:41: error: static assertion failed:
-> "struct bpf_fib_lookup size check"
->    78 | #define __static_assert(expr, msg, ...) _Static_assert(expr, msg)
->       |                                         ^~~~~~~~~~~~~~
+From: Arnd Bergmann <arnd@arndb.de>
 
-Thanks, I will take a look today
+With debugfs disabled, the komeda_register debugfs file is unused:
 
-> Steps to reproduce:
-> ------
-> # tuxmake --runtime podman --target-arch arm --toolchain gcc-13
-> --kconfig footbridge_defconfig
->
-> Links:
->  - https://qa-reports.linaro.org/lkft/linux-next-master/build/next-202404=
-02/testrun/23264362/suite/build/test/gcc-13-footbridge_defconfig/details/
->  - https://storage.tuxsuite.com/public/linaro/lkft/builds/2eWtBPKv1yM8gfZ=
-JC8GkEkxN2j8/
->
-> --
-> Linaro LKFT
-> https://lkft.linaro.org
+drivers/gpu/drm/arm/display/komeda/komeda_dev.c:44:1: error: unused variable 'komeda_register_fops' [-Werror,-Wunused-const-variable]
+DEFINE_SHOW_ATTRIBUTE(komeda_register);
+
+The komeda_debugfs_init() function already has a call to debugfs_initialized()
+that ends up eliminating the file as dead code, so just drop the #ifdef
+to get rid of the warning.
+
+Fixes: 576832681891 ("arm/komeda: Compile komeda_debugfs_init() only if CONFIG_DEBUG_FS is enabled")
+Fixes: 7d3cfb70a604 ("drm/komeda: Add debugfs node "register" for register dump")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+ drivers/gpu/drm/arm/display/komeda/komeda_dev.c | 8 --------
+ 1 file changed, 8 deletions(-)
+
+diff --git a/drivers/gpu/drm/arm/display/komeda/komeda_dev.c b/drivers/gpu/drm/arm/display/komeda/komeda_dev.c
+index 14ee79becacb..5ba62e637a61 100644
+--- a/drivers/gpu/drm/arm/display/komeda/komeda_dev.c
++++ b/drivers/gpu/drm/arm/display/komeda/komeda_dev.c
+@@ -12,10 +12,8 @@
+ #include <linux/platform_device.h>
+ #include <linux/pm_runtime.h>
+ #include <linux/dma-mapping.h>
+-#ifdef CONFIG_DEBUG_FS
+ #include <linux/debugfs.h>
+ #include <linux/seq_file.h>
+-#endif
+ 
+ #include <drm/drm_print.h>
+ 
+@@ -43,7 +41,6 @@ static int komeda_register_show(struct seq_file *sf, void *x)
+ 
+ DEFINE_SHOW_ATTRIBUTE(komeda_register);
+ 
+-#ifdef CONFIG_DEBUG_FS
+ static void komeda_debugfs_init(struct komeda_dev *mdev)
+ {
+ 	if (!debugfs_initialized())
+@@ -55,7 +52,6 @@ static void komeda_debugfs_init(struct komeda_dev *mdev)
+ 	debugfs_create_x16("err_verbosity", 0664, mdev->debugfs_root,
+ 			   &mdev->err_verbosity);
+ }
+-#endif
+ 
+ static ssize_t
+ core_id_show(struct device *dev, struct device_attribute *attr, char *buf)
+@@ -265,9 +261,7 @@ struct komeda_dev *komeda_dev_create(struct device *dev)
+ 
+ 	mdev->err_verbosity = KOMEDA_DEV_PRINT_ERR_EVENTS;
+ 
+-#ifdef CONFIG_DEBUG_FS
+ 	komeda_debugfs_init(mdev);
+-#endif
+ 
+ 	return mdev;
+ 
+@@ -286,9 +280,7 @@ void komeda_dev_destroy(struct komeda_dev *mdev)
+ 
+ 	sysfs_remove_group(&dev->kobj, &komeda_sysfs_attr_group);
+ 
+-#ifdef CONFIG_DEBUG_FS
+ 	debugfs_remove_recursive(mdev->debugfs_root);
+-#endif
+ 
+ 	if (mdev->aclk)
+ 		clk_prepare_enable(mdev->aclk);
+-- 
+2.39.2
+
