@@ -1,81 +1,90 @@
-Received: from mail-io1-f74.google.com (mail-io1-f74.google.com [209.85.166.74])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCC8A158A39
-	for <linux-kernel@vger.kernel.org>; Wed,  3 Apr 2024 17:18:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B795158D93;
+	Wed,  3 Apr 2024 17:18:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712164685; cv=none; b=PciEMcZFyOXs/NoIl+6Vc9xt3U9HkpmkY1f+ZFVuLEOL0cvPcyT/wcqXj1VEYAhhTBhUyfpuguCfcaEo6spm9OEvANBtEyf6f8qQ58rrDDGIqjfzWwY3IVeNORWNkSz4d+4EVxQSYjiZAqwBR41pQXkUJgPWj9s0OaWc/d+7pr0=
+	t=1712164696; cv=none; b=iXzowNbEywYy46Ji3emyyZZ9opLre8li0+2NzN1MXsltyUeYWogoT9LqpYuO64YNiqPQM9lwRPIm88fYzhP7ZDk3glgwl8BDCw5ZCKJe9rdJbzfbui+04IMo5iCTe5MGcormrIQb3JziEWEbdwtKsD3BlSiBdTyiP1+yaBEw/xc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712164685; c=relaxed/simple;
-	bh=cgIpFTm99MpdTzyPZYKw3D/coSq1ZoRn4annV/LzkvY=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=S8cma77K/yHfRhuDKQ9QUJuTFm5I/hzkVrX5Fcve/Z5yMh4xLmHWne8i5XW62apyMrRSEXmuQEs42ZPsT+QuKqtSdl6qdPAdmqtOBTXB6UG/hvAnrr4dt0XcHvND1ksnUJUJz68/lyRuPZXZ1aVNdJz6tz3tyLVcsSYV6fxTUf4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--kanepyork.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=LRzAGhJ4; arc=none smtp.client-ip=209.85.166.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--kanepyork.bounces.google.com
+	s=arc-20240116; t=1712164696; c=relaxed/simple;
+	bh=77b04zM3oNqv9H+eXalmP3gDnp2TBRyKL9pr39qzZ0I=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=VDQFP/+RE448+8O7c9sq7axUsB96QSADh2+D5guwhpKAIzCMKxRUhEEyIUUsUIUegc+ttLov3A3cJ2a68KFMF1/c+eW3r/AqMdQeBpAdy88zcD58wH5Ph3c29viCwk6eb/EEV6fSF1shOSA7q+s8I5Y+SSUXrN0A2G+Txz+tDVE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rCWitntS; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="LRzAGhJ4"
-Received: by mail-io1-f74.google.com with SMTP id ca18e2360f4ac-7c8a98e52b5so7708039f.1
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Apr 2024 10:18:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1712164683; x=1712769483; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=ZbkcCXkYZtxutNxWMBfyXkJ46XFZsRUkulK3ZanFA0o=;
-        b=LRzAGhJ4ouI3rFLgWzh4+u2zHBlLtSj5Tqn7OzCfcEJb+bee3qOAYcr6coE6vz6Uzg
-         fXTPYQ0mjJQ1joWv+vz0WG1GvjNtFwsLGA4f3nctSF9s+HMJAoCaM+dnceSCmXusM5un
-         oWRwbre4xLMe4GNq/rLk5ubLxUQYSiPUgx5ZmeUzQH0MR8r/yLgW6wlk1aLox2H36k/x
-         MPYh2Ogsf6ZFt20liE36b+2+ZqBPHYlKz6TMNmq1oMnX91RBdDLK28Ooqn1S71eNPE/m
-         DyUFdkrNaEnRFtc32SZLVO+CUMhgIby/vibpqIV7UgXzy6htrWij0Z9qTebNtw1GXojt
-         g/3Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712164683; x=1712769483;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ZbkcCXkYZtxutNxWMBfyXkJ46XFZsRUkulK3ZanFA0o=;
-        b=fpPpPkJgPTcbkCi/vqy04Th1VT0hpjvgNasbBogfKkvnnuo1b2MVKQpNN/rLdCvlL2
-         k1KB+c28R/RxruSV0h11HrM1sAhoYsFI1ps4v7P5NtdEVJT5irnmpg5qkAumg/WfKmuN
-         foDgK/WA/FxtV2g09EYKeWy27p39WZahin2KfrXjeC3MiP6XPd+b8cVIXD4P8vDcLQiF
-         jAa6m0pNRZVmS+WExMFakfC/aheJsqv606aIf08dk5iRvzJf6dWfICReZYxoYbETIwRH
-         d9znPM8lpUpg2L8ua0R9eYWjKUq+LdBerwBplHwc4z4vYqVWtfQjLhViFOCVFktfYBIT
-         7+2g==
-X-Forwarded-Encrypted: i=1; AJvYcCXicXmPKuq9UwmhN/E1DbalewjKKHk6P/CiRQxJk+zfULWWk0AAMXYTGvpXGclZ7ZgHnjOkPQUpDfBrXtrcBM9CuyBlW9bUXfBRTlfJ
-X-Gm-Message-State: AOJu0YyCse8S3ejFgKLgYSl6wYM6OnCh7E3avEkrI9as4ndJJqt8ZcyC
-	fKQ02kUddXrAl0IonuPNZgzawuRtrmfkb3TKVvpJO/4khABhJR6esNJUJdDSK+c4BY9uoTK1PiP
-	sXS+Zq050OAE+aA==
-X-Google-Smtp-Source: AGHT+IGDgAUSghRSCaSK7FjK7l3p/vhfcyCUDJB3xx9wufV3VhcTqFeASbZhs3nQpc/lW/EtiNCOEuhK8aWBfXs=
-X-Received: from kanepyork-c.c.googlers.com ([fda3:e722:ac3:cc00:2b:ff92:c0a8:1c38])
- (user=kanepyork job=sendgmr) by 2002:a05:6602:27c9:b0:7cf:16d5:181c with SMTP
- id l9-20020a05660227c900b007cf16d5181cmr12816ios.4.1712164683013; Wed, 03 Apr
- 2024 10:18:03 -0700 (PDT)
-Date: Wed,  3 Apr 2024 17:18:01 +0000
-In-Reply-To: <20240402-linked-list-v1-1-b1c59ba7ae3b@google.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rCWitntS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3E764C433F1;
+	Wed,  3 Apr 2024 17:18:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1712164696;
+	bh=77b04zM3oNqv9H+eXalmP3gDnp2TBRyKL9pr39qzZ0I=;
+	h=From:To:Cc:Subject:Date:From;
+	b=rCWitntS/Kmz738F/mtyUAY21cHEMGBwnAdp5x7Ub7Li+c4PcL7jMvmPm0cDcvwT7
+	 AjTbQQqPdkBr3SDGMpMs9/wz61F5Zwg//OaKYdYu89EaoYcHF3AIX8Azvwp/0CNO4R
+	 u94IRdb2suKXOSQyvcerO2qPNUFaplOYboua9dWeWyqqWdNZMCm0L5qFKjVjF/8zh+
+	 qeOlj4QWwq5LXXt8ECfI4rpK6p3SfJMQRk9puwNVVeJTJTjfMNQ6taLHc0tgSI17gr
+	 ITHpiCstm2XeYh7diN0i3OmJ8Y4ix3ZV6iguGyFbD6kpmMl5bOwbjyDBrsqALFzbpK
+	 7Ex6Trc9F1mAQ==
+From: Sasha Levin <sashal@kernel.org>
+To: linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Cc: Petre Rodan <petre.rodan@subdimension.ro>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Sasha Levin <sashal@kernel.org>,
+	jic23@kernel.org,
+	linux-iio@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.6 01/20] tools: iio: replace seekdir() in iio_generic_buffer
+Date: Wed,  3 Apr 2024 13:17:42 -0400
+Message-ID: <20240403171815.342668-1-sashal@kernel.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20240402-linked-list-v1-1-b1c59ba7ae3b@google.com>
-X-Mailer: git-send-email 2.44.0.478.gd926399ef9-goog
-Message-ID: <20240403171801.1774333-1-kanepyork@google.com>
-Subject: Re: [PATCH 1/9] rust: list: add ListArc
-From: Kane York <kanepyork@google.com>
-To: aliceryhl@google.com
-Cc: a.hindborg@samsung.com, akpm@linux-foundation.org, alex.gaynor@gmail.com, 
-	benno.lossin@proton.me, bjorn3_gh@protonmail.com, boqun.feng@gmail.com, 
-	colyli@suse.de, elver@google.com, gary@garyguo.net, keescook@chromium.org, 
-	kuba@kernel.org, linux-kernel@vger.kernel.org, mingo@kernel.org, 
-	ojeda@kernel.org, pabeni@redhat.com, pierre.gondois@arm.com, 
-	richard.weiyang@gmail.com, rust-for-linux@vger.kernel.org, wedsonaf@gmail.com, 
-	willy@infradead.org
-Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 6.6.24
+Content-Transfer-Encoding: 8bit
 
-> +impl<T: ListArcSafe<ID>, const ID: u64> ListArc<T, ID> {
-> +    /// Constructs a new reference counted instance of `T`.
-> +    pub fn try_new(contents: T) -> Result<Self, AllocError> {
-> +        Ok(Self::from_unique(UniqueArc::try_new(contents)?))
-> +    }
+From: Petre Rodan <petre.rodan@subdimension.ro>
 
-This needs to be updated for the `alloc` changes to accept allocator flags.
+[ Upstream commit 4e6500bfa053dc133021f9c144261b77b0ba7dc8 ]
+
+Replace seekdir() with rewinddir() in order to fix a localized glibc bug.
+
+One of the glibc patches that stable Gentoo is using causes an improper
+directory stream positioning bug on 32bit arm. That in turn ends up as a
+floating point exception in iio_generic_buffer.
+
+The attached patch provides a fix by using an equivalent function which
+should not cause trouble for other distros and is easier to reason about
+in general as it obviously always goes back to to the start.
+
+https://sourceware.org/bugzilla/show_bug.cgi?id=31212
+
+Signed-off-by: Petre Rodan <petre.rodan@subdimension.ro>
+Link: https://lore.kernel.org/r/20240108103224.3986-1-petre.rodan@subdimension.ro
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ tools/iio/iio_utils.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/tools/iio/iio_utils.c b/tools/iio/iio_utils.c
+index 6a00a6eecaef0..c5c5082cb24e5 100644
+--- a/tools/iio/iio_utils.c
++++ b/tools/iio/iio_utils.c
+@@ -376,7 +376,7 @@ int build_channel_array(const char *device_dir, int buffer_idx,
+ 		goto error_close_dir;
+ 	}
+ 
+-	seekdir(dp, 0);
++	rewinddir(dp);
+ 	while (ent = readdir(dp), ent) {
+ 		if (strcmp(ent->d_name + strlen(ent->d_name) - strlen("_en"),
+ 			   "_en") == 0) {
+-- 
+2.43.0
+
