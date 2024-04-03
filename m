@@ -1,85 +1,97 @@
-Received: from TWMBX01.aspeed.com (mail.aspeedtech.com [211.20.114.72])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 535EF6CDDB
-	for <linux-kernel@vger.kernel.org>; Wed,  3 Apr 2024 09:07:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.20.114.72
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CF146EB5A
+	for <linux-kernel@vger.kernel.org>; Wed,  3 Apr 2024 09:09:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712135278; cv=none; b=kELzssal+Q0GN/O/m7vHF9Jm+CT4D8PdmeedDRdhMKq3vOrnZskjur6rR2LMcFj0tfgQ+nclS3LaHfdbyZzCouWKPcAdrBqNi1jifhvEnGgJNPpffm0VnT0LhK+hQV///6918Qn3cxuDqoWf8buRit4KRuQCZ5q1y0yz3QhpMJ0=
+	t=1712135343; cv=none; b=AWErVC2tiDK9IQcnEPSY7ZOPoGHqoxIj9kTDcjm3rZQFk7JvqjmQfR/pip+a+x9AhiLBoYqTCpX534pGwHygjKKzY+4tU1a5Xx8hslshx9ic24AjjWjRg2FSiuhsgwSoj1J6VYEPAwveYFQLwH4z+aeo7c0CoEwtlWq4tMGpMhY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712135278; c=relaxed/simple;
-	bh=36gxGJifEXD/hnaYX25hmL9Tijx1egA+ts829G4M6To=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=GTQ2O2aTaOdmOF3+6wtb00uhLSyAp4rNPdestkNC64B3WDj2PgBO++SCExpXvClaPjwmXD+EH/3SerHtKmSoTNvJZ5qcShu4MKLquiOnc0CTIxydRnSHZeBx7n1D6zWlOuUDso5MJA0PZFa5RgwB8VZ7irfXAfvEsNmoGWIi9qY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=aspeedtech.com; spf=pass smtp.mailfrom=aspeedtech.com; arc=none smtp.client-ip=211.20.114.72
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=aspeedtech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aspeedtech.com
-Received: from TWMBX01.aspeed.com (192.168.0.62) by TWMBX01.aspeed.com
- (192.168.0.62) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1258.12; Wed, 3 Apr
- 2024 17:02:46 +0800
-Received: from twmbx01.aspeed.com (192.168.10.10) by TWMBX01.aspeed.com
- (192.168.0.62) with Microsoft SMTP Server id 15.2.1258.12 via Frontend
- Transport; Wed, 3 Apr 2024 17:02:46 +0800
-From: Jammy Huang <jammy_huang@aspeedtech.com>
-To: <tzimmermann@suse.de>, <jfalempe@redhat.com>,
-	<maarten.lankhorst@linux.intel.com>, <mripard@kernel.org>,
-	<airlied@redhat.com>, <airlied@gmail.com>, <daniel@ffwll.ch>
-CC: <dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH v2] drm/ast: Fix soft lockup
-Date: Wed, 3 Apr 2024 17:02:46 +0800
-Message-ID: <20240403090246.1495487-1-jammy_huang@aspeedtech.com>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1712135343; c=relaxed/simple;
+	bh=Yb9QyBiQXo7mWEPBE/uw2+O0Igsh+LJ2Gjdh7jHenow=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Qk5IVCrUqD17ApfcTx2hpLYEuw7OrkuwAuGIFV0f18IA4LpnmpYhliALYamyMv8i3hBGjMylkbL8iwimmOI+k7RLiiL7eHGcZiYyZ5gqbPlnVBGiyeslAVvaBnz4oQyFb9IhKOduFjbwmaWGTKrGu4gm7qdSr9VRscbyt3uwSwg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fgezqj4l; arc=none smtp.client-ip=198.175.65.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fgezqj4l"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1712135341; x=1743671341;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=Yb9QyBiQXo7mWEPBE/uw2+O0Igsh+LJ2Gjdh7jHenow=;
+  b=fgezqj4lrQMqUatGADlebsTNPvM+KtjejFFYIhPWD9iYp+SxVT1JAV68
+   j7P88IaUj95M4avKw45jt4XsZwq2G1SU0miyMeio136nOcrgXW8gxsgUN
+   4JqJPiRjxM44qm84kd5O6sYrDG9M4rokYDM/z8vrO+cWIgO2l8VtyV3jS
+   TnbH8BZmG98ckxWtWoy9nyrvnxNukrvaGxQXoOUHvTOZt7wA1YD76lXPr
+   097gr5Nc/DsIBnUtlxeOwqURaL1j6XWUvBQFoYPtBdCBHQwrhv3VkkoeX
+   9AKm5Jv1UkzZrXUfNARy3bA4xH+GrSSr8fi8YFpeEgrVfMbLrviv9KnrJ
+   A==;
+X-CSE-ConnectionGUID: M0wZR0iFSCWGbceLBsK4rA==
+X-CSE-MsgGUID: /2UH/cG/QEqEKrR/2oxbJA==
+X-IronPort-AV: E=McAfee;i="6600,9927,11032"; a="7480766"
+X-IronPort-AV: E=Sophos;i="6.07,177,1708416000"; 
+   d="scan'208";a="7480766"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2024 02:09:01 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,11032"; a="915175140"
+X-IronPort-AV: E=Sophos;i="6.07,177,1708416000"; 
+   d="scan'208";a="915175140"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.72.54])
+  by fmsmga002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2024 02:08:58 -0700
+Received: from andy by smile with local (Exim 4.97)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1rrwc3-000000014Oy-414i;
+	Wed, 03 Apr 2024 12:08:55 +0300
+Date: Wed, 3 Apr 2024 12:08:55 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Arnd Bergmann <arnd@kernel.org>
+Cc: linux-kernel@vger.kernel.org, Alan Cox <alan@linux.intel.com>,
+	Jason Hu <jia-cheng.hu@intel.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Jin Qian <jinqian@android.com>, Arnd Bergmann <arnd@arndb.de>,
+	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>
+Subject: Re: [PATCH 03/34] platform: goldfish: remove ACPI_PTR() annotations
+Message-ID: <Zg0cpzfAl5dHZWlR@smile.fi.intel.com>
+References: <20240403080702.3509288-1-arnd@kernel.org>
+ <20240403080702.3509288-4-arnd@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240403080702.3509288-4-arnd@kernel.org>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-There is a while-loop in ast_dp_set_on_off() that could lead to
-infinite-loop. This is because the register, VGACRI-Dx, checked in
-this API is a scratch register actually controlled by a MCU, named
-DPMCU, in BMC.
+On Wed, Apr 03, 2024 at 10:06:21AM +0200, Arnd Bergmann wrote:
+> From: Arnd Bergmann <arnd@arndb.de>
+> 
+> On platforms without ACPI support, this causes a W=1 warning from gcc when
+> the driver is built-in:
+> 
+> drivers/platform/goldfish/goldfish_pipe.c:925:36: warning: 'goldfish_pipe_acpi_match' defined but not used [-Wunused-const-variable=]
+>   925 | static const struct acpi_device_id goldfish_pipe_acpi_match[] = {
+>       |                                    ^~~~~~~~~~~~~~~~~~~~~~~~
+> 
+> There is no real harm in just keeping the small table around, so rather
+> than adding more #ifdef checks, just reference it unconditionally to avoid
+> the warning.
 
-These scratch registers are protected by scu-lock. If suc-lock is not
-off, DPMCU can not update these registers and then host will have soft
-lockup due to never updated status.
+With this change you also may replace acpi.h by mod_devicetable.h. Please, also
+check all other conversions that you may replace of*.h/acpi.h by a proper one,
+i.e. mod_devicetable.h.
 
-DPMCU is used to control DP and relative registers to handshake with
-host's VGA driver. Even the most time-consuming task, DP's link
-training, is less than 100ms. 200ms should be enough.
+When addressed, this one
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-Signed-off-by: Jammy Huang <jammy_huang@aspeedtech.com>
-Reviewed-by: Jocelyn Falempe <jfalempe@redhat.com>
----
- drivers/gpu/drm/ast/ast_dp.c | 3 +++
- 1 file changed, 3 insertions(+)
-
-diff --git a/drivers/gpu/drm/ast/ast_dp.c b/drivers/gpu/drm/ast/ast_dp.c
-index ebb6d8ebd44e..1e9259416980 100644
---- a/drivers/gpu/drm/ast/ast_dp.c
-+++ b/drivers/gpu/drm/ast/ast_dp.c
-@@ -180,6 +180,7 @@ void ast_dp_set_on_off(struct drm_device *dev, bool on)
- {
- 	struct ast_device *ast = to_ast_device(dev);
- 	u8 video_on_off = on;
-+	u32 i = 0;
- 
- 	// Video On/Off
- 	ast_set_index_reg_mask(ast, AST_IO_VGACRI, 0xE3, (u8) ~AST_DP_VIDEO_ENABLE, on);
-@@ -192,6 +193,8 @@ void ast_dp_set_on_off(struct drm_device *dev, bool on)
- 						ASTDP_MIRROR_VIDEO_ENABLE) != video_on_off) {
- 			// wait 1 ms
- 			mdelay(1);
-+			if (++i > 200)
-+				break;
- 		}
- 	}
- }
-
-base-commit: b0546776ad3f332e215cebc0b063ba4351971cca
 -- 
-2.25.1
+With Best Regards,
+Andy Shevchenko
+
 
