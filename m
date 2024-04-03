@@ -1,140 +1,83 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D18966CDDB;
-	Wed,  3 Apr 2024 08:07:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6743676F1B
+	for <linux-kernel@vger.kernel.org>; Wed,  3 Apr 2024 08:07:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712131649; cv=none; b=OrVdOvuQ6DQgAmvRW7m9scyyOCHXwaIHOmcnd2DQOMg5SQ7Twn680BFmDm6/wHKBH3rqFV3Of27iJyYxO7ySndSOAMbTINo38YlGdqej+y4KzBo6NNB6RRaBXXU+Z6OahRTo64wLBXJT/NBWXF50VWbiYUIJGRkWLyjleMaOOYc=
+	t=1712131658; cv=none; b=Bj06mgDFnBT9pu2Pa2LFE1IDWeTz3RtAWB5Cv5539zhGAqYyyqUI4AWNLKrP0QW9dLUeikRR/bc+VwembrTIlkuzDfxxbwjXR4tDsSYZBceXe7GMuEHmt6+Pt3Z5P7R0Qfdn3LldcfSNe28DC+EMOtAVmfY0P7/7pLkYN32zs08=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712131649; c=relaxed/simple;
-	bh=K2ePQOaggCQbp9MAuVhX6tyGJTkfITqYlV3FRyD1b2w=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=JezOO/nkq485blJcO79UI2aEI9pmImzeBT9+F0QISHITGX2lbHoyWngZsBhrxLqlLf1/v8KdNrbI+63WxzaC8C7nlJbNGVxW3jBzfjC6WZDiCzaiAyAGd1aofoT/DCmOrN6XeKiyofXkCo60Ys1R/bTTKUO0S5jayMBIONTg1TI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=i9S2rWNS; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1712131658; c=relaxed/simple;
+	bh=9p/a21NS5PRLRt4lKV9MFdnF9ger+P3gJJ0Lhr4IHQg=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=o9Q6oPn+t2NjDbpnbM3854HT6ivPWhOzJlY7imyhF3xND0Cx/ZEeNReu6Gq9Ws2a1DYJ/uFfQBIu/ixKcn+fjvZfQ2VoZKSgItJ3EEF70rSoUIov+ApiaOfLDHwn3WDh2iyzQX/nCufzoGxb6kUhuVnZG6Q0g2K2RXtfX5cGM5M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=TJVxOu56; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="i9S2rWNS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9555FC433C7;
-	Wed,  3 Apr 2024 08:07:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712131648;
-	bh=K2ePQOaggCQbp9MAuVhX6tyGJTkfITqYlV3FRyD1b2w=;
-	h=From:To:Cc:Subject:Date:From;
-	b=i9S2rWNSxBnVceX/PhEYHUL/8obuw7YBD3dJv3NpxgtqFmbZ6YmcytIk5F3iE5aJR
-	 I5RYRukVlaohxFlUlx3DoVo8ioTOKPq24ESuwErVo02d8QkqEyqWnOCLJPy3IIKQQU
-	 hPSJJJ28UFYnjJaOw9nBVZfRfW9z44J6zH3uuTF5it8w/Z071qPjEqTUM2WnMMrizN
-	 fO98GSAxPEoZV8r5mdONzcx9Bk+cWCKiyR3aI2XXY3Z1B5LcdC6almvWr6dDKTwDko
-	 dlyuak8JP+s7GrNn1iYACGO+Vywch0Qm7yXwZNXpNcwyBGG5wOlDd55NN/VlxGiFO6
-	 vEIx/q6HxkU2Q==
-From: Arnd Bergmann <arnd@kernel.org>
-To: linux-kernel@vger.kernel.org
-Cc: Arnd Bergmann <arnd@arndb.de>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Damien Le Moal <dlemoal@kernel.org>,
-	Jiri Kosina <jikos@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Corey Minyard <minyard@acm.org>,
-	Peter Huewe <peterhuewe@gmx.de>,
-	Jarkko Sakkinen <jarkko@kernel.org>,
-	Tero Kristo <kristo@kernel.org>,
-	Stephen Boyd <sboyd@kernel.org>,
-	Ian Abbott <abbotti@mev.co.uk>,
-	H Hartley Sweeten <hsweeten@visionengravers.com>,
-	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-	Len Brown <lenb@kernel.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	John Allen <john.allen@amd.com>,
-	Herbert Xu <herbert@gondor.apana.org.au>,
-	Vinod Koul <vkoul@kernel.org>,
-	Ard Biesheuvel <ardb@kernel.org>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Moritz Fischer <mdf@kernel.org>,
-	Liviu Dudau <liviu.dudau@arm.com>,
-	Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-	Andi Shyti <andi.shyti@kernel.org>,
-	Michael Hennerich <michael.hennerich@analog.com>,
-	Peter Rosin <peda@axentia.se>,
-	Lars-Peter Clausen <lars@metafoo.de>,
-	Jonathan Cameron <jic23@kernel.org>,
-	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-	Markuss Broks <markuss.broks@gmail.com>,
-	Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	Lee Jones <lee@kernel.org>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
-	Iyappan Subramanian <iyappan@os.amperecomputing.com>,
-	Yisen Zhuang <yisen.zhuang@huawei.com>,
-	Stanislaw Gruszka <stf_xl@wp.pl>,
-	Kalle Valo <kvalo@kernel.org>,
-	Sebastian Reichel <sre@kernel.org>,
-	Tony Lindgren <tony@atomide.com>,
-	Mark Brown <broonie@kernel.org>,
-	Alexandre Belloni <alexandre.belloni@bootlin.com>,
-	Xiang Chen <chenxiang66@hisilicon.com>,
-	"Martin K. Petersen" <martin.petersen@oracle.com>,
-	Neil Armstrong <neil.armstrong@linaro.org>,
-	Heiko Stuebner <heiko@sntech.de>,
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-	Vaibhav Hiremath <hvaibhav.linux@gmail.com>,
-	Alex Elder <elder@kernel.org>,
-	Jiri Slaby <jirislaby@kernel.org>,
-	Jacky Huang <ychuang3@nuvoton.com>,
-	Helge Deller <deller@gmx.de>,
-	Christoph Hellwig <hch@lst.de>,
-	Robin Murphy <robin.murphy@arm.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Kees Cook <keescook@chromium.org>,
-	Trond Myklebust <trond.myklebust@hammerspace.com>,
-	Anna Schumaker <anna@kernel.org>,
-	Masahiro Yamada <masahiroy@kernel.org>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Takashi Iwai <tiwai@suse.com>,
-	linuxppc-dev@lists.ozlabs.org,
-	linux-ide@vger.kernel.org,
-	openipmi-developer@lists.sourceforge.net,
-	linux-integrity@vger.kernel.org,
-	linux-omap@vger.kernel.org,
-	linux-clk@vger.kernel.org,
-	linux-pm@vger.kernel.org,
-	linux-crypto@vger.kernel.org,
-	dmaengine@vger.kernel.org,
-	linux-efi@vger.kernel.org,
-	linux-arm-msm@vger.kernel.org,
-	linux-fpga@vger.kernel.org,
-	dri-devel@lists.freedesktop.org,
-	linux-input@vger.kernel.org,
-	linux-i2c@vger.kernel.org,
-	linux-iio@vger.kernel.org,
-	linux-stm32@st-md-mailman.stormreply.com,
-	linux-arm-kernel@lists.infradead.org,
-	netdev@vger.kernel.org,
-	linux-leds@vger.kernel.org,
-	linux-wireless@vger.kernel.org,
-	linux-rtc@vger.kernel.org,
-	linux-scsi@vger.kernel.org,
-	linux-spi@vger.kernel.org,
-	linux-amlogic@lists.infradead.org,
-	linux-rockchip@lists.infradead.org,
-	linux-samsung-soc@vger.kernel.org,
-	greybus-dev@lists.linaro.org,
-	linux-staging@lists.linux.dev,
-	linux-serial@vger.kernel.org,
-	linux-usb@vger.kernel.org,
-	linux-fbdev@vger.kernel.org,
-	iommu@lists.linux.dev,
-	linux-trace-kernel@vger.kernel.org,
-	kasan-dev@googlegroups.com,
-	linux-hardening@vger.kernel.org,
-	linux-nfs@vger.kernel.org,
-	linux-kbuild@vger.kernel.org,
-	alsa-devel@alsa-project.org,
-	linux-sound@vger.kernel.org
-Subject: [PATCH 00/34] address all -Wunused-const warnings
-Date: Wed,  3 Apr 2024 10:06:18 +0200
-Message-Id: <20240403080702.3509288-1-arnd@kernel.org>
-X-Mailer: git-send-email 2.39.2
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TJVxOu56"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1712131655;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=BoLOksgDfWbI16hyJ8yDaTAy/N4I72F11fYMQTrJEvk=;
+	b=TJVxOu56XQxbUzg+ORBe6TBNx5w8IbipOpdDyA991DyrfrNtourp4PUftvXxM50QkbylFT
+	kkfhXZnnQ7Vh7EshzcSjoAN7K7kwi6VoJmxTobnw4zgAkFuEm+HzVqpcEfsIXpxEPFksS2
+	WE8j7UXmMlXacByGAHSEt8qqN++P4l4=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-617-OiBwVbMkO1iTxzUW4CKDKg-1; Wed, 03 Apr 2024 04:07:34 -0400
+X-MC-Unique: OiBwVbMkO1iTxzUW4CKDKg-1
+Received: by mail-wr1-f72.google.com with SMTP id ffacd0b85a97d-34370209778so339211f8f.1
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Apr 2024 01:07:34 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712131653; x=1712736453;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=BoLOksgDfWbI16hyJ8yDaTAy/N4I72F11fYMQTrJEvk=;
+        b=Zfr1BF7Sbci1o2v6gTM5NFcV9uyQFasgzH06Bl2HnbGXUTrJ/0u7IahOqFS7C4jB4N
+         6uVAiCNtxHaufWnyJmc8OCC86v8cQvD53CtbjagcdsB4caGmVpMJBgPX0XVuLB4rYP9g
+         p68EStUMhW77Y0FrRRQvFUyW/nEjQQLI0CQd/GXCeCeXTmo9fZGM+Ihzb3oBFXj6NudO
+         HQE1LodG0m8kHIf/6C9m6yvBMcQL+dfXVfIM5plLOX6e5pnteDFfUqNUaeO7qLt9Whbx
+         NhocuPglcHVlMYoyl7H1lbm47e/hUuO0AbPu8Kc0IQAc6sgd1EaFJhEKZ6vfoliARPw+
+         +itQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUSK3xn0BWIrhSJsRxXmHfyJG7uNwzzoTP1VqSyEtT5sM8UDmG9/9StDKxIxFxIk+eJmlsfN9siMyFPtj0+nBu2IbYQ9cqj59Z9s+kX
+X-Gm-Message-State: AOJu0YwGQ5dFES41BdswmLwBJ4ZzKA6mMjjoIP3EFYMwN6TitGVNlipt
+	+rbVJwZCm3k9San7W8/S30IIn8RZn+LejhFwXtskaHnInZ2Paf2yBGOMP3ZKciximB+uSXHTuRy
+	vClAKQq3aRwSVI96iCVeRa/EBSqSJyuUq6nZido6B/KkaUJd+6/fySVPwdsKZlw==
+X-Received: by 2002:a05:600c:5114:b0:414:8084:a2e7 with SMTP id o20-20020a05600c511400b004148084a2e7mr11598690wms.4.1712131653214;
+        Wed, 03 Apr 2024 01:07:33 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGL1OZqcpCT4lUdvpXOXJzFl5uup5f2oesW1up00E+QvTRHiJaEGrozTM68bu2J6Gv2ppGWaQ==
+X-Received: by 2002:a05:600c:5114:b0:414:8084:a2e7 with SMTP id o20-20020a05600c511400b004148084a2e7mr11598671wms.4.1712131652967;
+        Wed, 03 Apr 2024 01:07:32 -0700 (PDT)
+Received: from pstanner-thinkpadt14sgen1.muc.redhat.com (nat-pool-muc-t.redhat.com. [149.14.88.26])
+        by smtp.gmail.com with ESMTPSA id fa14-20020a05600c518e00b004159df274d5sm5504535wmb.6.2024.04.03.01.07.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 03 Apr 2024 01:07:32 -0700 (PDT)
+From: Philipp Stanner <pstanner@redhat.com>
+To: Hans de Goede <hdegoede@redhat.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>,
+	Daniel Vetter <daniel@ffwll.ch>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Sam Ravnborg <sam@ravnborg.org>,
+	dakr@redhat.com
+Cc: dri-devel@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org,
+	Philipp Stanner <pstanner@redhat.com>
+Subject: [PATCH v5 06/10] PCI: Move pinned status bit to struct pci_dev
+Date: Wed,  3 Apr 2024 10:07:07 +0200
+Message-ID: <20240403080712.13986-9-pstanner@redhat.com>
+X-Mailer: git-send-email 2.44.0
+In-Reply-To: <20240403080712.13986-2-pstanner@redhat.com>
+References: <20240403080712.13986-2-pstanner@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -143,251 +86,92 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Arnd Bergmann <arnd@arndb.de>
+The bit describing whether the PCI device is currently pinned is stored
+in struct pci_devres. To clean up and simplify the PCI devres API, it's
+better if this information is stored in struct pci_dev, because it
+allows for checking that device's pinned-status directly through
+struct pci_dev.
 
-Compilers traditionally warn for unused 'static' variables, but not
-if they are constant. The reason here is a custom for C++ programmers
-to define named constants as 'static const' variables in header files
-instead of using macros or enums.
+This will later permit simplifying  pcim_enable_device().
 
-In W=1 builds, we get warnings only static const variables in C
-files, but not in headers, which is a good compromise, but this still
-produces warning output in at least 30 files. These warnings are
-almost all harmless, but also trivial to fix, and there is no
-good reason to warn only about the non-const variables being unused.
+Move the 'pinned' boolean bit to struct pci_dev.
 
-I've gone through all the files that I found using randconfig and
-allmodconfig builds and created patches to avoid these warnings,
-with the goal of retaining a clean build once the option is enabled
-by default.
+Restructure bits in struct pci_dev so the pm / pme fields are next to
+each other.
 
-Unfortunately, there is one fairly large patch ("drivers: remove
-incorrect of_match_ptr/ACPI_PTR annotations") that touches
-34 individual drivers that all need the same one-line change.
-If necessary, I can split it up by driver or by subsystem,
-but at least for reviewing I would keep it as one piece for
-the moment.
+Signed-off-by: Philipp Stanner <pstanner@redhat.com>
+---
+ drivers/pci/devres.c | 14 ++++----------
+ drivers/pci/pci.h    |  1 -
+ include/linux/pci.h  |  5 +++--
+ 3 files changed, 7 insertions(+), 13 deletions(-)
 
-Please merge the individual patches through subsystem trees.
-I expect that some of these will have to go through multiple
-revisions before they are picked up, so anything that gets
-applied early saves me from resending.
-
-        Arnd
-
-Arnd Bergmann (31):
-  powerpc/fsl-soc: hide unused const variable
-  ubsan: fix unused variable warning in test module
-  platform: goldfish: remove ACPI_PTR() annotations
-  i2c: pxa: hide unused icr_bits[] variable
-  3c515: remove unused 'mtu' variable
-  tracing: hide unused ftrace_event_id_fops
-  Input: synaptics: hide unused smbus_pnp_ids[] array
-  power: rt9455: hide unused rt9455_boost_voltage_values
-  efi: sysfb: don't build when EFI is disabled
-  clk: ti: dpll: fix incorrect #ifdef checks
-  apm-emulation: hide an unused variable
-  sisfb: hide unused variables
-  dma/congiguous: avoid warning about unused size_bytes
-  leds: apu: remove duplicate DMI lookup data
-  iio: ad5755: hook up of_device_id lookup to platform driver
-  greybus: arche-ctrl: move device table to its right location
-  lib: checksum: hide unused expected_csum_ipv6_magic[]
-  sunrpc: suppress warnings for unused procfs functions
-  comedi: ni_atmio: avoid warning for unused device_ids[] table
-  iwlegacy: don't warn for unused variables with DEBUG_FS=n
-  drm/komeda: don't warn for unused debugfs files
-  firmware: qcom_scm: mark qcom_scm_qseecom_allowlist as __maybe_unused
-  crypto: ccp - drop platform ifdef checks
-  usb: gadget: omap_udc: remove unused variable
-  isdn: kcapi: don't build unused procfs code
-  cpufreq: intel_pstate: hide unused intel_pstate_cpu_oob_ids[]
-  net: xgbe: remove extraneous #ifdef checks
-  Input: imagis - remove incorrect ifdef checks
-  sata: mv: drop unnecessary #ifdef checks
-  ASoC: remove incorrect of_match_ptr/ACPI_PTR annotations
-  spi: remove incorrect of_match_ptr annotations
-  drivers: remove incorrect of_match_ptr/ACPI_PTR annotations
-  kbuild: always enable -Wunused-const-variable
-
-Krzysztof Kozlowski (1):
-  Input: stmpe-ts - mark OF related data as maybe unused
-
- arch/powerpc/sysdev/fsl_msi.c                 |  2 +
- drivers/ata/sata_mv.c                         | 64 +++++++++----------
- drivers/char/apm-emulation.c                  |  5 +-
- drivers/char/ipmi/ipmb_dev_int.c              |  2 +-
- drivers/char/tpm/tpm_ftpm_tee.c               |  2 +-
- drivers/clk/ti/dpll.c                         | 10 ++-
- drivers/comedi/drivers/ni_atmio.c             |  2 +-
- drivers/cpufreq/intel_pstate.c                |  2 +
- drivers/crypto/ccp/sp-platform.c              | 14 +---
- drivers/dma/img-mdc-dma.c                     |  2 +-
- drivers/firmware/efi/Makefile                 |  3 +-
- drivers/firmware/efi/sysfb_efi.c              |  2 -
- drivers/firmware/qcom/qcom_scm.c              |  2 +-
- drivers/fpga/versal-fpga.c                    |  2 +-
- .../gpu/drm/arm/display/komeda/komeda_dev.c   |  8 ---
- drivers/hid/hid-google-hammer.c               |  6 +-
- drivers/i2c/busses/i2c-pxa.c                  |  2 +-
- drivers/i2c/muxes/i2c-mux-ltc4306.c           |  2 +-
- drivers/i2c/muxes/i2c-mux-reg.c               |  2 +-
- drivers/iio/dac/ad5755.c                      |  1 +
- drivers/input/mouse/synaptics.c               |  2 +
- drivers/input/touchscreen/imagis.c            |  4 +-
- drivers/input/touchscreen/stmpe-ts.c          |  2 +-
- drivers/input/touchscreen/wdt87xx_i2c.c       |  2 +-
- drivers/isdn/capi/Makefile                    |  3 +-
- drivers/isdn/capi/kcapi.c                     |  7 +-
- drivers/leds/leds-apu.c                       |  3 +-
- drivers/mux/adg792a.c                         |  2 +-
- drivers/net/ethernet/3com/3c515.c             |  3 -
- drivers/net/ethernet/amd/xgbe/xgbe-platform.c |  8 ---
- drivers/net/ethernet/apm/xgene-v2/main.c      |  2 +-
- drivers/net/ethernet/hisilicon/hns_mdio.c     |  2 +-
- drivers/net/wireless/intel/iwlegacy/4965-rs.c | 15 +----
- drivers/net/wireless/intel/iwlegacy/common.h  |  2 -
- drivers/platform/goldfish/goldfish_pipe.c     |  2 +-
- drivers/power/supply/rt9455_charger.c         |  2 +
- drivers/regulator/pbias-regulator.c           |  2 +-
- drivers/regulator/twl-regulator.c             |  2 +-
- drivers/regulator/twl6030-regulator.c         |  2 +-
- drivers/rtc/rtc-fsl-ftm-alarm.c               |  2 +-
- drivers/scsi/hisi_sas/hisi_sas_v1_hw.c        |  2 +-
- drivers/scsi/hisi_sas/hisi_sas_v2_hw.c        |  2 +-
- drivers/spi/spi-armada-3700.c                 |  2 +-
- drivers/spi/spi-img-spfi.c                    |  2 +-
- drivers/spi/spi-meson-spicc.c                 |  2 +-
- drivers/spi/spi-meson-spifc.c                 |  2 +-
- drivers/spi/spi-orion.c                       |  2 +-
- drivers/spi/spi-pic32-sqi.c                   |  2 +-
- drivers/spi/spi-pic32.c                       |  2 +-
- drivers/spi/spi-rockchip.c                    |  2 +-
- drivers/spi/spi-s3c64xx.c                     |  2 +-
- drivers/spi/spi-st-ssc4.c                     |  2 +-
- drivers/staging/greybus/arche-apb-ctrl.c      |  1 +
- drivers/staging/greybus/arche-platform.c      |  9 +--
- drivers/staging/pi433/pi433_if.c              |  2 +-
- drivers/tty/serial/amba-pl011.c               |  6 +-
- drivers/tty/serial/ma35d1_serial.c            |  2 +-
- drivers/usb/gadget/udc/omap_udc.c             | 10 +--
- drivers/video/fbdev/sis/init301.c             |  3 +-
- kernel/dma/contiguous.c                       |  2 +-
- kernel/trace/trace_events.c                   |  4 ++
- lib/checksum_kunit.c                          |  2 +
- lib/test_ubsan.c                              |  2 +-
- net/sunrpc/cache.c                            | 10 +--
- scripts/Makefile.extrawarn                    |  1 -
- sound/soc/atmel/sam9x5_wm8731.c               |  2 +-
- sound/soc/codecs/rt5514-spi.c                 |  2 +-
- sound/soc/qcom/lpass-sc7280.c                 |  2 +-
- sound/soc/samsung/aries_wm8994.c              |  2 +-
- 69 files changed, 121 insertions(+), 169 deletions(-)
-
+diff --git a/drivers/pci/devres.c b/drivers/pci/devres.c
+index 6bf93c6cbb66..076362740791 100644
+--- a/drivers/pci/devres.c
++++ b/drivers/pci/devres.c
+@@ -403,7 +403,7 @@ static void pcim_release(struct device *gendev, void *res)
+ 	if (this->restore_intx)
+ 		pci_intx(dev, this->orig_intx);
+ 
+-	if (!this->pinned)
++	if (!dev->pinned)
+ 		pci_disable_device(dev);
+ }
+ 
+@@ -459,18 +459,12 @@ EXPORT_SYMBOL(pcim_enable_device);
+  * pcim_pin_device - Pin managed PCI device
+  * @pdev: PCI device to pin
+  *
+- * Pin managed PCI device @pdev.  Pinned device won't be disabled on
+- * driver detach.  @pdev must have been enabled with
+- * pcim_enable_device().
++ * Pin managed PCI device @pdev. Pinned device won't be disabled on driver
++ * detach. @pdev must have been enabled with pcim_enable_device().
+  */
+ void pcim_pin_device(struct pci_dev *pdev)
+ {
+-	struct pci_devres *dr;
+-
+-	dr = find_pci_dr(pdev);
+-	WARN_ON(!dr || !pdev->enabled);
+-	if (dr)
+-		dr->pinned = 1;
++	pdev->pinned = true;
+ }
+ EXPORT_SYMBOL(pcim_pin_device);
+ 
+diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+index 2b6c0df133bf..a080efd69e85 100644
+--- a/drivers/pci/pci.h
++++ b/drivers/pci/pci.h
+@@ -823,7 +823,6 @@ static inline pci_power_t mid_pci_get_power_state(struct pci_dev *pdev)
+  * then remove them from here.
+  */
+ struct pci_devres {
+-	unsigned int pinned:1;
+ 	unsigned int orig_intx:1;
+ 	unsigned int restore_intx:1;
+ 	unsigned int mwi:1;
+diff --git a/include/linux/pci.h b/include/linux/pci.h
+index 95cdd1bc73c4..9d85d2181083 100644
+--- a/include/linux/pci.h
++++ b/include/linux/pci.h
+@@ -367,11 +367,12 @@ struct pci_dev {
+ 					   this is D0-D3, D0 being fully
+ 					   functional, and D3 being off. */
+ 	u8		pm_cap;		/* PM capability offset */
+-	unsigned int	enabled:1;	/* Whether this dev is enabled */
+-	unsigned int	imm_ready:1;	/* Supports Immediate Readiness */
+ 	unsigned int	pme_support:5;	/* Bitmask of states from which PME#
+ 					   can be generated */
+ 	unsigned int	pme_poll:1;	/* Poll device's PME status bit */
++	unsigned int	enabled:1;	/* Whether this dev is enabled */
++	unsigned int	pinned:1;	/* Whether this dev is pinned */
++	unsigned int	imm_ready:1;	/* Supports Immediate Readiness */
+ 	unsigned int	d1_support:1;	/* Low power state D1 is supported */
+ 	unsigned int	d2_support:1;	/* Low power state D2 is supported */
+ 	unsigned int	no_d1d2:1;	/* D1 and D2 are forbidden */
 -- 
-2.39.2
+2.44.0
 
-Cc: Michael Ellerman <mpe@ellerman.id.au>
-Cc: Christophe Leroy <christophe.leroy@csgroup.eu>
-Cc: Damien Le Moal <dlemoal@kernel.org>
-Cc: Jiri Kosina <jikos@kernel.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Corey Minyard <minyard@acm.org>
-Cc: Peter Huewe <peterhuewe@gmx.de>
-Cc: Jarkko Sakkinen <jarkko@kernel.org>
-Cc: Tero Kristo <kristo@kernel.org>
-Cc: Stephen Boyd <sboyd@kernel.org>
-Cc: Ian Abbott <abbotti@mev.co.uk>
-Cc: H Hartley Sweeten <hsweeten@visionengravers.com>
-Cc: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Cc: Len Brown <lenb@kernel.org>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: John Allen <john.allen@amd.com>
-Cc: Herbert Xu <herbert@gondor.apana.org.au>
-Cc: Vinod Koul <vkoul@kernel.org>
-Cc: Ard Biesheuvel <ardb@kernel.org>
-Cc: Bjorn Andersson <andersson@kernel.org>
-Cc: Moritz Fischer <mdf@kernel.org>
-Cc: Liviu Dudau <liviu.dudau@arm.com>
-Cc: Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Cc: Andi Shyti <andi.shyti@kernel.org>
-Cc: Michael Hennerich <michael.hennerich@analog.com>
-Cc: Peter Rosin <peda@axentia.se>
-Cc: Lars-Peter Clausen <lars@metafoo.de>
-Cc: Jonathan Cameron <jic23@kernel.org>
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: Markuss Broks <markuss.broks@gmail.com>
-Cc: Alexandre Torgue <alexandre.torgue@foss.st.com>
-Cc: Lee Jones <lee@kernel.org>
-Cc: Jakub Kicinski <kuba@kernel.org>
-Cc: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
-Cc: Iyappan Subramanian <iyappan@os.amperecomputing.com>
-Cc: Yisen Zhuang <yisen.zhuang@huawei.com>
-Cc: Stanislaw Gruszka <stf_xl@wp.pl>
-Cc: Kalle Valo <kvalo@kernel.org>
-Cc: Sebastian Reichel <sre@kernel.org>
-Cc: Tony Lindgren <tony@atomide.com>
-Cc: Mark Brown <broonie@kernel.org>
-Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc: Xiang Chen <chenxiang66@hisilicon.com>
-Cc: "Martin K. Petersen" <martin.petersen@oracle.com>
-Cc: Neil Armstrong <neil.armstrong@linaro.org>
-Cc: Heiko Stuebner <heiko@sntech.de>
-Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc: Vaibhav Hiremath <hvaibhav.linux@gmail.com>
-Cc: Alex Elder <elder@kernel.org>
-Cc: Jiri Slaby <jirislaby@kernel.org>
-Cc: Jacky Huang <ychuang3@nuvoton.com>
-Cc: Helge Deller <deller@gmx.de>
-Cc: Christoph Hellwig <hch@lst.de>
-Cc: Robin Murphy <robin.murphy@arm.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Kees Cook <keescook@chromium.org>
-Cc: Trond Myklebust <trond.myklebust@hammerspace.com>
-Cc: Anna Schumaker <anna@kernel.org>
-Cc: Masahiro Yamada <masahiroy@kernel.org>
-Cc: Nathan Chancellor <nathan@kernel.org>
-Cc: Takashi Iwai <tiwai@suse.com>
-Cc: linuxppc-dev@lists.ozlabs.org
-Cc: linux-kernel@vger.kernel.org
-Cc: linux-ide@vger.kernel.org
-Cc: openipmi-developer@lists.sourceforge.net
-Cc: linux-integrity@vger.kernel.org
-Cc: linux-omap@vger.kernel.org
-Cc: linux-clk@vger.kernel.org
-Cc: linux-pm@vger.kernel.org
-Cc: linux-crypto@vger.kernel.org
-Cc: dmaengine@vger.kernel.org
-Cc: linux-efi@vger.kernel.org
-Cc: linux-arm-msm@vger.kernel.org
-Cc: linux-fpga@vger.kernel.org
-Cc: dri-devel@lists.freedesktop.org
-Cc: linux-input@vger.kernel.org
-Cc: linux-i2c@vger.kernel.org
-Cc: linux-iio@vger.kernel.org
-Cc: linux-stm32@st-md-mailman.stormreply.com
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: netdev@vger.kernel.org
-Cc: linux-leds@vger.kernel.org
-Cc: linux-wireless@vger.kernel.org
-Cc: linux-rtc@vger.kernel.org
-Cc: linux-scsi@vger.kernel.org
-Cc: linux-spi@vger.kernel.org
-Cc: linux-amlogic@lists.infradead.org
-Cc: linux-rockchip@lists.infradead.org
-Cc: linux-samsung-soc@vger.kernel.org
-Cc: greybus-dev@lists.linaro.org
-Cc: linux-staging@lists.linux.dev
-Cc: linux-serial@vger.kernel.org
-Cc: linux-usb@vger.kernel.org
-Cc: linux-fbdev@vger.kernel.org
-Cc: iommu@lists.linux.dev
-Cc: linux-trace-kernel@vger.kernel.org
-Cc: kasan-dev@googlegroups.com
-Cc: linux-hardening@vger.kernel.org
-Cc: linux-nfs@vger.kernel.org
-Cc: linux-kbuild@vger.kernel.org
-Cc: alsa-devel@alsa-project.org
-Cc: linux-sound@vger.kernel.org
