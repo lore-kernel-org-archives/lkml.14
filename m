@@ -1,113 +1,186 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com [209.85.210.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B7DF14900C
-	for <linux-kernel@vger.kernel.org>; Wed,  3 Apr 2024 13:31:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36E351487E2
+	for <linux-kernel@vger.kernel.org>; Wed,  3 Apr 2024 13:32:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712151066; cv=none; b=RCFvhqZQLoAqYUq58dU+ElWQlxRlAqWCXLnul2VFfN5wwI2Kclx5lNOjDUk7PC3+kn2Ff0tKPwarPCMi0g2cDL8WLqb/+pdZPzaw9vAqIglGntRcoznJMQqQKJA582M0bXO20KsGpWq/t52sCknlVjs5perOxvRC73IYtDyPtxU=
+	t=1712151146; cv=none; b=YOcqgKlZ4SJSr6QB4tR0ooSmmFhOseeC+GvGQLsEBHDUm13SBTisQ9Nho00gMUNIRVT+cuVsqtqUUeoD74YdzeMAMIG0VneWBaa1opNEyrK97dgkOinKK9fZBGndh/eT3J8OX43gWm9ZsqwVJYhhFHwK04SXnrRUJ+9auHgiJ5c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712151066; c=relaxed/simple;
-	bh=ysqj/Nahnbkho/0q1SMCzJvSE9C/XUY9B4X632GACzU=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=r8ms+5j4EK9tkoj+gj/2qJlVSZLUDgezm++gOsJXOWPpyBRNL2YH76U7N3VNXhb6uQijhxxyErgNSFi7nObnpxalr8grTQpT7FhL2rjU23mFKv6ri/1XA/a/Dtx2qaQKLECX4D5Fw1IgRDLUB9kOcWAN88SokBtUzW3/kN2hUNw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=Jarh7K/s; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1712151146; c=relaxed/simple;
+	bh=cSygu0lTdsE1mYb8kt8PaIRN/34pMtkOoObkW9tu3zs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=jCNC1CbIj1Gc6vB5c4a82DUAv8aUVvqSHDF5/F4TWcl1XnxCuBZdt/C58dlxBETVOEdT0YNNMMMv9ClH8a3d5V18WwtGbsZ2wrRhKZYp3drv3vvO3DYH0slLnwJ4NLxL1m1fp03mjV6f8A4XjqWpPOoaKth2fKv7JoUDFSULt/c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=gU/enAze; arc=none smtp.client-ip=209.85.210.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="Jarh7K/s"
-Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 433DUhvx007281;
-	Wed, 3 Apr 2024 13:30:54 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : content-transfer-encoding : mime-version; s=pp1;
- bh=KkWFT/+jhv0U959o9d+wWEnRol96GF7q8PvCzsZ4Flg=;
- b=Jarh7K/s1xH/NYR6kMJRjyvXg05Nj9M9Fis8BqhWfXDnQu0S+zddjor8S0jXjPCgDilP
- JrkuAvTMRwI9JYtjsLm1lHnagMmGLNVX8TGLDthns7Mygxfwub45Aw4tOtaLAHzzXjSy
- dyFywhlVXT0oG9+5qGaYGP9EXLcV7U+v2Z0wWJ3xxpFyEfgGm2D0rwm4N+zAySpATOwQ
- G8jyFXOxy4X6XTv/UNjDk5XTKL8LJWw3EIUPjiv/wpVcWJx3RmU95Hc5eGy/v8c/UPbP
- qtmczrUi15BJEoq+Lhc0F7PHJlejT9M22j6GEzXfTIkIcPzB3OD7ma+nst++rjZAeGPr kw== 
-Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3x9826r020-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 03 Apr 2024 13:30:54 +0000
-Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma11.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 433Ar9Vs029593;
-	Wed, 3 Apr 2024 13:25:53 GMT
-Received: from smtprelay02.fra02v.mail.ibm.com ([9.218.2.226])
-	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 3x6ys350v1-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 03 Apr 2024 13:25:53 +0000
-Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
-	by smtprelay02.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 433DPmMn45285688
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 3 Apr 2024 13:25:50 GMT
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 1C9CE20049;
-	Wed,  3 Apr 2024 13:25:48 +0000 (GMT)
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id DD9C920040;
-	Wed,  3 Apr 2024 13:25:47 +0000 (GMT)
-Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
-	by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Wed,  3 Apr 2024 13:25:47 +0000 (GMT)
-From: Niklas Schnelle <schnelle@linux.ibm.com>
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: Arnd Bergmann <arnd@kernel.org>, Heiko Carstens <hca@linux.ibm.com>,
-        linux-kernel@vger.kernel.org, Niklas Schnelle <schnelle@linux.ibm.com>
-Subject: [PATCH 0/1] kgdb: Handle HAS_IOPORT dependencies
-Date: Wed,  3 Apr 2024 15:25:46 +0200
-Message-Id: <20240403132547.762429-1-schnelle@linux.ibm.com>
-X-Mailer: git-send-email 2.40.1
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: iGsXQDKRB3pJ7fioNw3HDo_IpvnrvY9L
-X-Proofpoint-GUID: iGsXQDKRB3pJ7fioNw3HDo_IpvnrvY9L
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-UnRewURL: 0 URL was un-rewritten
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gU/enAze"
+Received: by mail-pf1-f170.google.com with SMTP id d2e1a72fcca58-6ecc9f0bdaaso1205478b3a.1
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Apr 2024 06:32:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1712151143; x=1712755943; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=VgGe+WrjXHejFLqdWYYFDfvaGlNX9pe3wGgL1xVORjQ=;
+        b=gU/enAzegUlw0ZbyaOL3nGUPyIx37Tyh5PD7JY191UEN/H+JYvhFkNN4fPQ1rBtsC7
+         sX5rlTsAxwEzcRvAxkUSg6dEuwDgjLGUPwSfYm/Ig8D04zAlQ6pQPh/TmAIZF+LiN3r2
+         F7spliMW1kHKgKVybhC20rnxosGoYmEhI8uhi3QUNqoV3lRf1Tj/2ReDoHwK3LbxcEtN
+         jnwqKs3jXFcMst4k0MMFC47v9jFTwo3Fgx8Apu74FMLZqEuq0iKthSXoygF8XdSewz9+
+         9KlE8Mc7zGCjtrB9YgvT2fGC38cFbVoF76BpRxx95ojWrGPVASSgV40jyFHVT7MxKL89
+         LyBA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712151143; x=1712755943;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=VgGe+WrjXHejFLqdWYYFDfvaGlNX9pe3wGgL1xVORjQ=;
+        b=QOhwEpa2MgBR6oF3bEXp/3va5RYM+ncZMp2s/CUqFFCgUlyQTGfsOSKjayR680LOLI
+         qvPL4ouBON2/0MMfxhyvPBrQzwZskVAybIs85vAU7HtUgjDkjBk8mi9ZVM54NGW/jx7V
+         1AONtBmYbpHqjlxAI57F8LvRVVbrEMUC8YCkjUyj8hAqhyPaOsUutsmRVGtFRuuYzBqO
+         cSay9YrjI0dAhB2IsEeDn79MF7Auq1jlcrJkfDTqgF4ZaTZrB4XpVldgflGUTreoFkSw
+         Znufk9TpMM50NOFNvxwPa5kMB0W+7oHfSq1yrMPdFUsvxtRJed1KScOf/5wf7jC55M2X
+         FxwA==
+X-Forwarded-Encrypted: i=1; AJvYcCVRbg40srNOuOeBGxzr6kr8Hvcyuh+rqGwdhZYYs4AO4QPtc6XMPhtwEQvmg3SR85jPKk4+9dFGhOcJ/+zJlIgPNLejHUAUUrRziSP/
+X-Gm-Message-State: AOJu0YyPIitXHubSHU8RvHUzXfslX1/561q5gR0anOjDImMzMIAdnEyY
+	nPPbZqC6FC+tKepAd9ZnfxoCrC0ZNnWk9ZdaDFZ46nWFi8+f1D+5lFuXqTEJBg==
+X-Google-Smtp-Source: AGHT+IHd+nfXICNi5snDJqZSl05Xq7tsxxzc7MHxPup9L3i8nMVEIlDZk9E2mY6SCWVq0UJ0c/68VQ==
+X-Received: by 2002:a05:6a21:2d8c:b0:1a7:2d39:51cf with SMTP id ty12-20020a056a212d8c00b001a72d3951cfmr1429986pzb.26.1712151143220;
+        Wed, 03 Apr 2024 06:32:23 -0700 (PDT)
+Received: from thinkpad ([103.28.246.48])
+        by smtp.gmail.com with ESMTPSA id gs5-20020a056a004d8500b006eb3c2bde43sm6479798pfb.205.2024.04.03.06.32.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 03 Apr 2024 06:32:22 -0700 (PDT)
+Date: Wed, 3 Apr 2024 19:02:17 +0530
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Niklas Cassel <cassel@kernel.org>
+Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	Thierry Reding <thierry.reding@gmail.com>,
+	Jonathan Hunter <jonathanh@nvidia.com>,
+	Jingoo Han <jingoohan1@gmail.com>, linux-pci@vger.kernel.org,
+	linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+	mhi@lists.linux.dev, linux-tegra@vger.kernel.org
+Subject: Re: [PATCH v2 10/10] PCI: qcom: Implement shutdown() callback to
+ properly reset the endpoint devices
+Message-ID: <20240403133217.GK25309@thinkpad>
+References: <20240401-pci-epf-rework-v2-0-970dbe90b99d@linaro.org>
+ <20240401-pci-epf-rework-v2-10-970dbe90b99d@linaro.org>
+ <ZgvpnqdjQ39JMRiV@ryzen>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-04-03_12,2024-04-03_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 mlxscore=0
- lowpriorityscore=0 clxscore=1011 phishscore=0 priorityscore=1501
- malwarescore=0 mlxlogscore=999 spamscore=0 adultscore=0 impostorscore=0
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2403210000 definitions=main-2404030093
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <ZgvpnqdjQ39JMRiV@ryzen>
 
-Hi Andrew,
+On Tue, Apr 02, 2024 at 01:18:54PM +0200, Niklas Cassel wrote:
+> On Mon, Apr 01, 2024 at 09:20:36PM +0530, Manivannan Sadhasivam wrote:
+> > PCIe host controller drivers are supposed to properly reset the endpoint
+> > devices during host shutdown/reboot. Currently, Qcom driver doesn't do
+> > anything during host shutdown/reboot, resulting in both PERST# and refclk
+> > getting disabled at the same time. This prevents the endpoint device
+> > firmware to properly reset the state machine. Because, if the refclk is
+> > cutoff immediately along with PERST#, access to device specific registers
+> > within the endpoint will result in a firmware crash.
+> > 
+> > To address this issue, let's call qcom_pcie_host_deinit() inside the
+> > shutdown callback, that asserts PERST# and then cuts off the refclk with a
+> > delay of 1ms, thus allowing the endpoint device firmware to properly
+> > cleanup the state machine.
+> 
+> Hm... a QCOM EP device could be attached to any of the PCIe RC drivers that
+> we have in the kernel, so it seems a bit weird to fix this problem by
+> patching the QCOM RC driver only.
+> 
+> Which DBI call is it that causes this problem during perst assert on EP side?
+> 
+> I assume that it is pci-epf-test:deinit() callback that calls
+> pci_epc_clear_bar(), which calls dw_pcie_ep_clear_bar(), which will both:
+> -clear local data structures, e.g.
+> ep->epf_bar[bar] = NULL;
+> ep->bar_to_atu[bar] = 0;
+> 
+> but also call:
+> __dw_pcie_ep_reset_bar()
+> dw_pcie_disable_atu()
+> 
+> 
+> Do we perhaps need to redesign the .deinit EPF callback?
+> 
+> Considering that we know that .deinit() will only be called on platforms
+> where there will be a fundamental core reset, I guess we could do something
+> like introduce a __dw_pcie_ep_clear_bar() which will only clear the local
+> data structures. (It might not need to do any DBI writes, since the
+> fundamental core reset should have reset all values.)
+> 
+> Or perhaps instead of letting pci_epf_test_epc_deinit() call
+> pci_epf_test_clear_bar()/__pci_epf_test_clear_bar() directly, perhaps let
+> pci_epf_test_epc_deinit() call add a .deinit()/.cleanup() defined in the
+> EPC driver.
+> 
+> This EPC .deinit()/.cleanup() callback would then only clear the
+> local data structures (no DBI writes...).
+> 
+> Something like that?
+> 
 
-This is a follow up in my ongoing effort of making inb()/outb() and
-similar I/O port accessors compile-time optional. Previously I sent this
-as a treewide series titled "treewide: Remove I/O port accessors for
-HAS_IOPORT=n" with the latest being its 5th version[0]. With a significant
-subset of patches merged I've changed over to per-subsystem series. These
-series are stand alone and should be merged via the relevant tree such
-that with all subsystems complete we can follow this up with the final
-patch that will make the I/O port accessors compile-time optional.
+It is not just about the EPF test driver. A function driver may need to do many
+things to properly reset the state machine. Like in the case of MHI driver, it
+needs to reset channel state, mask interrupts etc... and all requires writing to
+some registers. So certainly there should be some time before cutting off the
+refclk.
 
-The current state of the full series with changes to the remaining
-subsystems and the aforementioned final patch can be found for your
-convenience on my git.kernel.org tree in the has_ioport_v6 branch[1] with
-signed tags. As for compile-time vs runtime see Linus' reply to my first
-attempt[2].
+On x86 host machines, I can see that there is enough time before the host cuts
+off the refclk.
 
-Thanks,
-Niklas
+But it is unfortunate that the PCIe spec didn't define it though.
 
-[0] https://lore.kernel.org/all/20230522105049.1467313-1-schnelle@linux.ibm.com/
-[1] https://git.kernel.org/pub/scm/linux/kernel/git/niks/linux.git/log/?h=has_ioport_v6
-[2] https://lore.kernel.org/lkml/CAHk-=wg80je=K7madF4e7WrRNp37e3qh6y10Svhdc7O8SZ_-8g@mail.gmail.com/
+- Mani
 
-Niklas Schnelle (1):
-  kgdb: add HAS_IOPORT dependency
-
- lib/Kconfig.kgdb | 1 +
- 1 file changed, 1 insertion(+)
+> 
+> > 
+> > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> > ---
+> >  drivers/pci/controller/dwc/pcie-qcom.c | 8 ++++++++
+> >  1 file changed, 8 insertions(+)
+> > 
+> > diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
+> > index 14772edcf0d3..b2803978c0ad 100644
+> > --- a/drivers/pci/controller/dwc/pcie-qcom.c
+> > +++ b/drivers/pci/controller/dwc/pcie-qcom.c
+> > @@ -1655,6 +1655,13 @@ static int qcom_pcie_resume_noirq(struct device *dev)
+> >  	return 0;
+> >  }
+> >  
+> > +static void qcom_pcie_shutdown(struct platform_device *pdev)
+> > +{
+> > +	struct qcom_pcie *pcie = platform_get_drvdata(pdev);
+> > +
+> > +	qcom_pcie_host_deinit(&pcie->pci->pp);
+> > +}
+> > +
+> >  static const struct of_device_id qcom_pcie_match[] = {
+> >  	{ .compatible = "qcom,pcie-apq8064", .data = &cfg_2_1_0 },
+> >  	{ .compatible = "qcom,pcie-apq8084", .data = &cfg_1_0_0 },
+> > @@ -1708,5 +1715,6 @@ static struct platform_driver qcom_pcie_driver = {
+> >  		.pm = &qcom_pcie_pm_ops,
+> >  		.probe_type = PROBE_PREFER_ASYNCHRONOUS,
+> >  	},
+> > +	.shutdown = qcom_pcie_shutdown,
+> >  };
+> >  builtin_platform_driver(qcom_pcie_driver);
+> > 
+> > -- 
+> > 2.25.1
+> > 
 
 -- 
-2.40.1
-
+மணிவண்ணன் சதாசிவம்
