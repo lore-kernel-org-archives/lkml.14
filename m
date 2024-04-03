@@ -1,138 +1,210 @@
-Received: from mail-qt1-f170.google.com (mail-qt1-f170.google.com [209.85.160.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A17C14A4FC
-	for <linux-kernel@vger.kernel.org>; Wed,  3 Apr 2024 16:02:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1B8414D2A1
+	for <linux-kernel@vger.kernel.org>; Wed,  3 Apr 2024 16:02:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712160133; cv=none; b=Y0dwv7lIxhkmcgbGwI0I8qP/+efT3Ewth+m6AOfbW0lGqgrvaXEJ4lINibZU0WAL+kzbN3kkxSwEIVhnqJHZJr37do5RRDGSBM3cM0Kw2sO56mkJWeigJVg2VuIb16bvRjJczXkRMdxHQxbMSkUtBDuqdYBmakuwfN/3a7QPAFM=
+	t=1712160142; cv=none; b=KXI9GecbOTnF6bzUO+lWOLHhtwT2T1FjthUyjz9y5go73ymyHDBB0HQbR0Dbnbb4tn4HYPs1WKTwfICBS0j4KTOjL+sknagJyJJ36IXzM23TQw9KG9LoavvVUvBqxjmPfgKIUUzJ9A6l+s1rTUkjKzduOqfTEcmGDtOU+oOsLAw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712160133; c=relaxed/simple;
-	bh=fggrNF/asutMtICgsplQTd2yCftvwfY2ORt4VRhq/9c=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=FXXkvAkZau5dHz4+l6lzOJC9NiZmDDg1uAg5VhIGHmkOE1C2KJcFfMU7F4joUKyw/FI7ohnBWtUhILFheane0hWeNnQANr5q6ALXaybi/gX2IjnauJWned7PfyU51EhFVNMISPZh2oDUUuSdfw7SdAo+FzjGxJ7aF3tUSjWsdnI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=CiX6esBp; arc=none smtp.client-ip=209.85.160.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1712160142; c=relaxed/simple;
+	bh=EtQkIfas5F975pCNmO5rwqnv2ceEeeJPPr3zzLdQc80=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=b4HVkB7KG/MZFYc/qimy9Vngev0yBSHSJCdV7VmE/P20nJF/9rDB2km66NXsgj6Kr8DZLoR74Q2CWhIDauZEcJlWU0CuT2/Zkh4ZBzuJRzDqBSffi2q7aTaU8cn1J/Snawx/FpLjyVSLjGPJ8FFXLChYmJrTsjf9Ipa/0ZLfor8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=UjV6Zyh/; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="CiX6esBp"
-Received: by mail-qt1-f170.google.com with SMTP id d75a77b69052e-430d3fcc511so349241cf.1
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Apr 2024 09:02:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1712160131; x=1712764931; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=DNJPWByWF1sf2cxiFuFQ8vnWOdBcEetEGpATM1VlKMY=;
-        b=CiX6esBpThvPhW1aV6nDa/R4olmPWgwlpgy08y649c7Rlyf8W3bTQHZGMG3FX0vS80
-         2CtzbAVwoP19UufoG7CoKWEtiSM5nK+YryI480c04LKYFFAFZIlZHeTC8emE80dQb59z
-         1Yvzd7lFiSUXFYC7dyHK1kDKZ6alrLDvV6o9tpCN9CVNbZzj+n7J8rqa3P5pVJxj3Mse
-         1OUmVBNyaGhySqOfjtIPGQhfqHoRjCgK4PD7jyIdbp8vw+NyhRD6UhqUND1UmAeUZUWX
-         VHzQxSZFB7FTBl82Zb6nVk66b77eeLJX7F3apgq1X2izbYRn4lpn3K+hsZI7YUY1dmyv
-         AsFA==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UjV6Zyh/"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1712160139;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=zZpJ0IxiRlaFYwJ6F+30f6cESCy9pq69KzZZhi/luDY=;
+	b=UjV6Zyh/QdpDuZWk5mjKYWuLTDX8dZutrXu3KLZVd7xrua3k01giJCMhBlUkmhYC9AqFnT
+	CwbTaQ+S3+XQpc+xXVvPdrNSKGfyqDSh7795Xeafypqva2y64IJJDr7+2rQ6zavIQktV/C
+	zYlF+pXqd+eSfINBqkL6IoL2UZPlXBM=
+Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com
+ [209.85.222.197]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-595-NuSPCKfjM8aEZIePAIsUdg-1; Wed, 03 Apr 2024 12:02:17 -0400
+X-MC-Unique: NuSPCKfjM8aEZIePAIsUdg-1
+Received: by mail-qk1-f197.google.com with SMTP id af79cd13be357-78bd232b170so504950285a.1
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Apr 2024 09:02:17 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712160131; x=1712764931;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1712160135; x=1712764935;
+        h=content-transfer-encoding:mime-version:message-id:date:references
+         :in-reply-to:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=DNJPWByWF1sf2cxiFuFQ8vnWOdBcEetEGpATM1VlKMY=;
-        b=mjbYi18WdAb4yMlbgrhTLwj5mdPddPBEkAVeD35YyeWd++E4SaXjXEyhwjYz84709m
-         YUglAP3RH9pjKIhV0i/UZOfSIxg2pgPtS7C6K4HmfvkSRVyGFW1VEfqe4jt9ElMB0Qb7
-         TccvgyqharwD/klJ1255KG8uGXTBJbtQnezPyDWncYsSdtmkqQg41lGmZtNdsAMSQI0f
-         NrIV38jaInOCzoI3mfntf7jxdieYs1FBjT7N8mh1VdC9YgRO9rve7oKDaPg0QJYU3Fgw
-         P3dj+fmuFAc12DHiLI9pqy2kQM/Qdj4afhyvkvgniRl63EVkg/RI0o0H+i1yg5bfaIvC
-         AsTw==
-X-Forwarded-Encrypted: i=1; AJvYcCXV1CD/arMNOCIdCNHOFi2vOz+rv4mM8mCb4pZnFfBfElPnf8M/NkPyq/Cbr2EWzjE1/zoS57a2wJXJ+rgAXg8OoPsQh1WnVfYKDiyQ
-X-Gm-Message-State: AOJu0YzBbLIDC1nPbIYEeU7X+eR32Iy8+Ne2BXYoQxV9/XoRbm+Kqbwi
-	3LrOxr2T6Jc9ZlzfxrThQ2k0i9TMsN3607hVfoc9/idRDdrM5nDPKX1VoHpw53llnmTiba2M1WE
-	IwvXERNBeA6r21E9VsGhRHNSgtodwCQ7CElVQs30AluBvq5xBuJ80EoY=
-X-Google-Smtp-Source: AGHT+IENWms5jjCWU9j5a5dPOPABkTHq7MDhw3vNngKqO3lbmYYO0VFfdiD+9I6XOWjohuGAZWWLx/KeC8p1iUA4meQ=
-X-Received: by 2002:a05:622a:164d:b0:431:3d25:f699 with SMTP id
- y13-20020a05622a164d00b004313d25f699mr269309qtj.19.1712160130621; Wed, 03 Apr
- 2024 09:02:10 -0700 (PDT)
+        bh=zZpJ0IxiRlaFYwJ6F+30f6cESCy9pq69KzZZhi/luDY=;
+        b=WRVNTOinKrcvZPvL0edCHs1sDvR639XriJmiKrUmFigNCREAF88FQ5oSA1IM5g/BPy
+         LpHA6hqI6aw4vCae7HKuUzrLmUGys95VaK/mqz8WIPmSqmosDDOwtS0AYz8NE8xAO8Xy
+         tp9dpQ30fNP/5uxH/yAeGyJvmcpHeUGYhrd0eAUrOfXNuosbzx+AluRGWyYWNWBXaxzk
+         ZvLNEMTmDAzqmMiVJw9hZOP6AUSX8ksoR4xkUovTqYcNMfg0h2XMXEMQaYJtTe1Jb2XF
+         5Soxx/wUkL3sGtJCsnRXLr+mYMfbUShM6xNq5ECaFI6sPSODiPYaV+qEJVEqGvEYtDOz
+         z6+A==
+X-Forwarded-Encrypted: i=1; AJvYcCVSHvlIhirktWImzgC/59fvBfgkFZHvdpIZckzxs8UW2vFxLLeUCd5h+6O/IxRT1htCG1+dQWzC0178H0vknw2eP0M7Tui152WatwGU
+X-Gm-Message-State: AOJu0YzKBceLWFdvARJM4Jf9zQO3mzczmfyusUyzZbTmGro8ksI4Sy4x
+	bFK5uyv9L2mbNQYCzSnKmIyTjWmVuR04m6dP2P7zsGb5KvZ0QUIcQrp33U0HCzTO0hgELN3VcYF
+	W1sIZXUH3JZMrRLEHlOQuGSyxAGXjzw4llbds5gyM4n0ZR2basa55WuyI584C3lLXKewOkw==
+X-Received: by 2002:a05:620a:5841:b0:78a:69ab:e829 with SMTP id wn1-20020a05620a584100b0078a69abe829mr16850038qkn.68.1712160135677;
+        Wed, 03 Apr 2024 09:02:15 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHdnSbhhYZso0CoMvpl3Y3IaXvHWWX8w91ZynzApMi1NN5iXhRNBBdqMmiccCfrAXTIF7H8gA==
+X-Received: by 2002:a05:620a:5841:b0:78a:69ab:e829 with SMTP id wn1-20020a05620a584100b0078a69abe829mr16849993qkn.68.1712160135251;
+        Wed, 03 Apr 2024 09:02:15 -0700 (PDT)
+Received: from vschneid-thinkpadt14sgen2i.remote.csb (213-44-141-166.abo.bbox.fr. [213.44.141.166])
+        by smtp.gmail.com with ESMTPSA id pe30-20020a05620a851e00b00789f5a04b3esm5123833qkn.58.2024.04.03.09.02.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 03 Apr 2024 09:02:14 -0700 (PDT)
+From: Valentin Schneider <vschneid@redhat.com>
+To: Michal =?utf-8?Q?Koutn=C3=BD?= <mkoutny@suse.com>
+Cc: Waiman Long <longman@redhat.com>, Tejun Heo <tj@kernel.org>, Zefan Li
+ <lizefan.x@bytedance.com>, Johannes Weiner <hannes@cmpxchg.org>, Thomas
+ Gleixner <tglx@linutronix.de>, Peter Zijlstra <peterz@infradead.org>,
+ "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <len.brown@intel.com>,
+ Pavel Machek <pavel@ucw.cz>, Shuah Khan <shuah@kernel.org>,
+ linux-kernel@vger.kernel.org, cgroups@vger.kernel.org,
+ linux-pm@vger.kernel.org, linux-kselftest@vger.kernel.org, Frederic
+ Weisbecker <frederic@kernel.org>, "Paul E. McKenney" <paulmck@kernel.org>,
+ Ingo Molnar <mingo@kernel.org>, Anna-Maria Behnsen
+ <anna-maria@linutronix.de>, Alex Shi <alexs@kernel.org>, Vincent Guittot
+ <vincent.guittot@linaro.org>, Barry Song <song.bao.hua@hisilicon.com>
+Subject: Re: Re: [PATCH 1/2] cgroup/cpuset: Make cpuset hotplug processing
+ synchronous
+In-Reply-To: <mhwbjfm3zsoinm2eozz6d7djtflf6tbpmfzsbbsscv3u5aijtr@p2edxl6voxoa>
+References: <20240401145858.2656598-1-longman@redhat.com>
+ <20240401145858.2656598-2-longman@redhat.com>
+ <kce74bx6aafxfuw5yovaschym4ze4kommfk74eq5totojytest@mdxnfvl2kdol>
+ <548efd52-e45f-41fa-a477-bc5112d7b00c@redhat.com>
+ <u3naomgv34t5rnc7pmyy4zjppgf36skeo45orss2xnqcvtrcez@m74tsl2ws76f>
+ <7e62b37d-6c9c-4e55-a01a-175695475cb5@redhat.com>
+ <xhsmhedbmbjz5.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
+ <mhwbjfm3zsoinm2eozz6d7djtflf6tbpmfzsbbsscv3u5aijtr@p2edxl6voxoa>
+Date: Wed, 03 Apr 2024 18:02:10 +0200
+Message-ID: <xhsmhbk6qbfjx.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <Zg1ywF7uRsfXYfYS@x1>
-In-Reply-To: <Zg1ywF7uRsfXYfYS@x1>
-From: Ian Rogers <irogers@google.com>
-Date: Wed, 3 Apr 2024 09:01:56 -0700
-Message-ID: <CAP-5=fUqtjxAsmdGrnkjhUTLHs-JvV10TtxyocpYDJK_+LYTiQ@mail.gmail.com>
-Subject: Re: [PATCH 1/1] perf annotate: Initialize 'arch' variable not to trip
- some -Werror=maybe-uninitialized
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Namhyung Kim <namhyung@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Jiri Olsa <jolsa@kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Apr 3, 2024 at 8:16=E2=80=AFAM Arnaldo Carvalho de Melo <acme@kerne=
-l.org> wrote:
+On 03/04/24 16:54, Michal Koutn=C3=BD wrote:
+> On Wed, Apr 03, 2024 at 04:26:38PM +0200, Valentin Schneider <vschneid@re=
+dhat.com> wrote:
+>> Also, I gave Michal's patch a try and it looks like it's introducing a
 >
-> In some older distros the build is failing due to
-> -Werror=3Dmaybe-uninitialized, in this case we know that this isn't the
-> case because 'arch' gets initialized by evsel__get_arch(), so just init
-> it to NULL to silence those cases.
+> Thank you.
 >
-> E.g.:
+>>   cgroup_threadgroup_rwsem -> cpuset_mutex
+>> ordering from
+>>   cgroup_transfer_tasks_locked()
+>>   `\
+>>     percpu_down_write(&cgroup_threadgroup_rwsem);
+>>     cgroup_migrate()
+>>     `\
+>>       cgroup_migrate_execute()
+>>       `\
+>>         ss->can_attach() // cpuset_can_attach()
+>>         `\
+>>           mutex_lock(&cpuset_mutex);
+>>
+>> which is invalid, see below.
 >
->     32    17.12 opensuse:15.5                 : FAIL gcc version 7.5.0 (S=
-USE Linux)
->         util/annotate.c: In function 'hist_entry__get_data_type':
->     util/annotate.c:2269:15: error: 'arch' may be used uninitialized in t=
-his function [-Werror=3Dmaybe-uninitialized]
->       struct arch *arch;
->                    ^~~~
->     cc1: all warnings being treated as errors
+> _This_ should be the right order (cpuset_mutex inside
+> cgroup_threadgroup_rwsem), at least in my mental model. Thus I missed
+> that cpuset_mutex must have been taken somewhere higher up in the
+> hotplug code (CPU 0 in the lockdep dump, I can't easily see where from)
+> :-/.
 >
->       43     7.30 ubuntu:18.04-x-powerpc64el    : FAIL gcc version 7.5.0 =
-(Ubuntu 7.5.0-3ubuntu1~18.04)
->     util/annotate.c: In function 'hist_entry__get_data_type':
->     util/annotate.c:2351:36: error: 'arch' may be used uninitialized in t=
-his function [-Werror=3Dmaybe-uninitialized]
->        if (map__dso(ms->map)->kernel && arch__is(arch, "x86") &&
->                                         ^~~~~~~~~~~~~~~~~~~~~
->     cc1: all warnings being treated as errors
->
-> Cc: Adrian Hunter <adrian.hunter@intel.com>
-> Cc: Ian Rogers <irogers@google.com>
-> Cc: Jiri Olsa <jolsa@kernel.org>
-> Cc: Namhyung Kim <namhyung@kernel.org>
-> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-This looks fine but I couldn't line up the errors with code in the
-tree. I was curious why the "maybe-uninitialized" was failing. Perhaps
-evsel__get_arch should set the out argument to NULL when an error
-occurs. This fix is also good but may potentially need repeating for
-other evsel__get_arch cases, so a fix in evsel__get_arch may be
-preferable.
+If I got this right...
 
-Reviewed-by: Ian Rogers <irogers@google.com>
+    cpuset_hotplug_update_tasks()
+    `\
+      mutex_lock(&cpuset_mutex);
+      hotplug_update_tasks_legacy()
+      `\
+        remove_tasks_in_empty_cpuset()
+        `\
+          cgroup_transfer_tasks_locked()
+          `\
+            percpu_down_write(&cgroup_threadgroup_rwsem);
 
-Thanks,
-Ian
+But then that is also followed by:
 
-> ---
->  tools/perf/util/annotate.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
-> index b795f27f26024f35..f316e0b65897957a 100644
-> --- a/tools/perf/util/annotate.c
-> +++ b/tools/perf/util/annotate.c
-> @@ -2266,7 +2266,7 @@ struct annotated_data_type *hist_entry__get_data_ty=
-pe(struct hist_entry *he)
->  {
->         struct map_symbol *ms =3D &he->ms;
->         struct evsel *evsel =3D hists_to_evsel(he->hists);
-> -       struct arch *arch;
-> +       struct arch *arch =3D NULL;
->         struct disasm_line *dl;
->         struct annotated_insn_loc loc;
->         struct annotated_op_loc *op_loc;
-> --
-> 2.44.0
->
+            cgroup_migrate()
+            `\
+              cgroup_migrate_execute()
+              `\
+                ss->can_attach() // cpuset_can_attach()
+                `\
+                  mutex_lock(&cpuset_mutex);
+
+which doesn't look good...
+
+
+Also, I missed that earlier, but this triggers:
+
+  cgroup_transfer_tasks_locked() ~> lockdep_assert_held(&cgroup_mutex);
+
+[   30.773092] WARNING: CPU: 2 PID: 24 at kernel/cgroup/cgroup-v1.c:112 cgr=
+oup_transfer_tasks_locked+0x39f/0x450
+[   30.773807] Modules linked in:
+[   30.774063] CPU: 2 PID: 24 Comm: cpuhp/2 Not tainted 6.9.0-rc1-00042-g84=
+4178b616c7-dirty #25
+[   30.774672] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS =
+rel-1.16.3-0-ga6ed6b701f0a-prebuilt.qemu.org 04/01/2014
+[   30.775457] RIP: 0010:cgroup_transfer_tasks_locked+0x39f/0x450
+[   30.775891] Code: 0f 85 70 ff ff ff 0f 1f 44 00 00 e9 6d ff ff ff be ff =
+ff ff ff 48 c7 c7 48 82 d6 82 e8 5a 6a ec 00 85 c0 0f 85 6d fd ff ff 90 <0f=
+> 0b 90 e9 64 fd ff ff 48 8b bd e8 fe ff ff be 01 00 00 00 e8 78
+[   30.777270] RSP: 0000:ffffc900000e7c20 EFLAGS: 00010246
+[   30.777813] RAX: 0000000000000000 RBX: ffffc900000e7cb0 RCX: 00000000000=
+00000
+[   30.778443] RDX: 0000000000000000 RSI: ffffffff82d68248 RDI: ffff888004a=
+9a300
+[   30.779142] RBP: ffffc900000e7d50 R08: 0000000000000001 R09: 00000000000=
+00000
+[   30.779889] R10: ffffc900000e7d70 R11: 0000000000000001 R12: ffff8880057=
+c6040
+[   30.780420] R13: ffff88800539f800 R14: 0000000000000001 R15: 00000000000=
+00004
+[   30.780951] FS:  0000000000000000(0000) GS:ffff88801f500000(0000) knlGS:=
+0000000000000000
+[   30.781561] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[   30.781989] CR2: 00000000f7e6fe85 CR3: 00000000064ac000 CR4: 00000000000=
+006f0
+[   30.782558] Call Trace:
+[   30.782783]  <TASK>
+[   30.782982]  ? __warn+0x87/0x180
+[   30.783250]  ? cgroup_transfer_tasks_locked+0x39f/0x450
+[   30.783644]  ? report_bug+0x164/0x190
+[   30.783970]  ? handle_bug+0x3b/0x70
+[   30.784288]  ? exc_invalid_op+0x17/0x70
+[   30.784641]  ? asm_exc_invalid_op+0x1a/0x20
+[   30.784992]  ? cgroup_transfer_tasks_locked+0x39f/0x450
+[   30.785375]  ? __lock_acquire+0xe9d/0x16d0
+[   30.785707]  ? cpuset_update_active_cpus+0x15a/0xca0
+[   30.786074]  ? cpuset_update_active_cpus+0x782/0xca0
+[   30.786443]  cpuset_update_active_cpus+0x782/0xca0
+[   30.786816]  sched_cpu_deactivate+0x1ad/0x1d0
+[   30.787148]  ? __pfx_sched_cpu_deactivate+0x10/0x10
+[   30.787509]  cpuhp_invoke_callback+0x16b/0x6b0
+[   30.787859]  ? cpuhp_thread_fun+0x56/0x240
+[   30.788175]  cpuhp_thread_fun+0x1ba/0x240
+[   30.788485]  smpboot_thread_fn+0xd8/0x1d0
+[   30.788823]  ? __pfx_smpboot_thread_fn+0x10/0x10
+[   30.789229]  kthread+0xce/0x100
+[   30.789526]  ? __pfx_kthread+0x10/0x10
+[   30.789876]  ret_from_fork+0x2f/0x50
+[   30.790200]  ? __pfx_kthread+0x10/0x10
+[   30.792341]  ret_from_fork_asm+0x1a/0x30
+[   30.792716]  </TASK>
+
+> Michal
+
