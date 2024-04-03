@@ -1,147 +1,219 @@
-Received: from frasgout11.his.huawei.com (frasgout11.his.huawei.com [14.137.139.23])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EFED6EB46;
-	Wed,  3 Apr 2024 07:57:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=14.137.139.23
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00DF75CDE1
+	for <linux-kernel@vger.kernel.org>; Wed,  3 Apr 2024 07:59:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712131081; cv=none; b=Re33JynRRjvtp4WWwKNK79QhFlW3XCrJgsXFYwvoHUGVCl8H/bnOML7Jc8IYsfLmOyJfMsDZczctj362Tysz4/fktFCBpNsp3o/VkcyVoeMVHZEVrqNTrRyj91xwrD/o/yQxYEOBRNxjKsOjqOB91b4T1a8JU+QR3UHwMdVKtgg=
+	t=1712131157; cv=none; b=f3CNBrBtkcWhGTfPd1Fd1MmkPkjdge5uShS7+uAbw2e7qUEepVjFTj772Q35UwefvuavdmkFm0Xnew8/SHNNE3KVHywQSp+MiKZd+ZX4E+mni4mLhzNI2EfwatHu3spaRIuh/pn2XyCDBw97FM/+j8uWA7NvI2ySdncm2TECVxk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712131081; c=relaxed/simple;
-	bh=QgoE+OfmdPvK6VPzB9LV9LayCaBdrKNtJSdxQEmkaI4=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=LDXBDDPaG8iC6Pqg1RjLsL9rxgAgep9H4zAFGt4Q4yaaKCvpY8AOQR4e3bSmaT43rSB0sg+LIUGBbABzEtxTJJZuXO7js4/sqm/Hi/UHd0j82LDdk9o/8QBH+tU/hQ48bXCsEd3PBmHVOn8csEpyYsggKFpnhatvSvoKOmjuLEU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=14.137.139.23
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.18.186.51])
-	by frasgout11.his.huawei.com (SkyGuard) with ESMTP id 4V8cBr5Jz7z9v7H3;
-	Wed,  3 Apr 2024 15:41:40 +0800 (CST)
-Received: from mail02.huawei.com (unknown [7.182.16.27])
-	by mail.maildlp.com (Postfix) with ESMTP id A54061404FE;
-	Wed,  3 Apr 2024 15:57:47 +0800 (CST)
-Received: from huaweicloud.com (unknown [10.204.63.22])
-	by APP2 (Coremail) with SMTP id GxC2BwC3oyfuCw1mPjx7BQ--.30370S2;
-	Wed, 03 Apr 2024 08:57:46 +0100 (CET)
-From: Roberto Sassu <roberto.sassu@huaweicloud.com>
-To: viro@zeniv.linux.org.uk,
-	brauner@kernel.org,
-	jack@suse.cz,
-	paul@paul-moore.com,
-	jmorris@namei.org,
-	serge@hallyn.com
-Cc: linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-security-module@vger.kernel.org,
-	linux-cifs@vger.kernel.org,
-	pc@manguebit.com,
-	christian@brauner.io,
-	torvalds@linux-foundation.org,
-	Roberto Sassu <roberto.sassu@huawei.com>,
-	Steve French <smfrench@gmail.com>
-Subject: [PATCH v3] security: Place security_path_post_mknod() where the original IMA call was
-Date: Wed,  3 Apr 2024 09:57:29 +0200
-Message-Id: <20240403075729.2888084-1-roberto.sassu@huaweicloud.com>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1712131157; c=relaxed/simple;
+	bh=zLpcfnoJ57ffYoYr0Y6VJ1PdooE3VcsH58nQRkSl5X4=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=kWWi9y2lbTIAyJtxIw97Nz5cn7etqiGNCINVBt52vmU+HEt2m4Ej+jeqCuF8Ip7FMSq6pka/ohmbX06mM0/Pq+I06QR5XMx0HeDJdbJxejdE4FR/GBJXdG3ITNyZRjfjHflgVaBGYtuH3ryoodblMWhvlQUz0oYLJOySLRBB078=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=W/N8NOwy; arc=none smtp.client-ip=209.85.218.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="W/N8NOwy"
+Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-a46ea03c2a5so121492066b.1
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Apr 2024 00:59:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1712131153; x=1712735953; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:message-id:subject:cc
+         :to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=+T8rqtYisNGZqbCq9ZjZi6CQUcb0/miQUSpXbs+uwYc=;
+        b=W/N8NOwyeLC0rPprfcgLqxPXwAtXETSwRhqLQSqdlozJTeZoozxEqeyaap/CV88UWe
+         K29qU24bYSqsx9BjwxlL+VAswIiwLwKEGVMqFunHXdFYVfO6UreIUG15nExCoEy1zjMQ
+         5JEes29Fgntp1pXrhKbji39FYQUxJbS5QJu+4YKIVgC5kLnxL4y1JALgH7HjVomHgQoB
+         0pUqiw7rn1GifNIrNcquv7+6ii/9Ll80rYalQNERqJwj/zWfmDsJBsYxGsKhb76Q2vtc
+         ufEwVpBqkrsT1PvbljfO+N1y44bwMUeu48U3DH6A8XYS5mrMfW1erZ4U0OfuHLjGXxYt
+         Awaw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712131153; x=1712735953;
+        h=in-reply-to:content-disposition:mime-version:message-id:subject:cc
+         :to:from:date:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=+T8rqtYisNGZqbCq9ZjZi6CQUcb0/miQUSpXbs+uwYc=;
+        b=tynNjiNzzKdCAhqJJ3C62bV6kahp70PlkFutVZ+HwSwolOXaxLlCR9xIpsENs0CtN6
+         NpQHaO61FT+gUzWgq7tL2CsI879KKD4Ym7wW3dzjk3z8au1AW9rQzc4XJi4L4O6Dnatl
+         //WF946ylucaeLzWVgjGFZWQJlO57v4fRcmhTjuJrPoJNkuTxohgwFmvtjnzWSOLXoIq
+         N8g4wnRpBd59uWQzXoO7XsighU97yfDlh5/hN9+9WcXi20bowCmqRJHY+86mpcktL34a
+         2voRrMQZALzxNWmmOou/yXVKyeTyn4OQJvhmC0FESai5FiuaV4KQ2W6tAZtcfChIxee7
+         BafQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVK/vA4Ww4XLggZEDdxzmThEcuR8SlNS1BOGXZ+y5o7K16aP9yeEKHUrTQ23X+wgIrnVulZ1Pg2e8563O6eeO6hYRD6r6ZqroCtnUJk
+X-Gm-Message-State: AOJu0YysSpnjtSj+3jO0tW83KPJFw9ngmonKLObo6okevfqyNj32cQWr
+	53lStWhu2jz9ld8B4JKEBxiPDDQdCRhB0sxlihqWohTMRxs+zby08fOn+JZUSs8=
+X-Google-Smtp-Source: AGHT+IFVNKJwf362TZXZQp4WEq/M8FFIkEXworELdBmfJ9zgXCTs2B2ZG1fMBS77cxj/kw2gxvUqBA==
+X-Received: by 2002:a17:906:230d:b0:a4e:9e7d:6588 with SMTP id l13-20020a170906230d00b00a4e9e7d6588mr1156859eja.27.1712131152913;
+        Wed, 03 Apr 2024 00:59:12 -0700 (PDT)
+Received: from localhost ([102.222.70.76])
+        by smtp.gmail.com with ESMTPSA id z3-20020a170906714300b00a4650ec48d0sm7581015ejj.140.2024.04.03.00.59.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 03 Apr 2024 00:59:12 -0700 (PDT)
+Date: Wed, 3 Apr 2024 10:59:08 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: oe-kbuild@lists.linux.dev, Pawel Dembicki <paweldembicki@gmail.com>,
+	netdev@vger.kernel.org
+Cc: lkp@intel.com, oe-kbuild-all@lists.linux.dev,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Simon Horman <horms@kernel.org>,
+	Pawel Dembicki <paweldembicki@gmail.com>,
+	Andrew Lunn <andrew@lunn.ch>,
+	Florian Fainelli <f.fainelli@gmail.com>,
+	Vladimir Oltean <olteanv@gmail.com>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Claudiu Manoil <claudiu.manoil@nxp.com>,
+	Alexandre Belloni <alexandre.belloni@bootlin.com>,
+	UNGLinuxDriver@microchip.com, Russell King <linux@armlinux.org.uk>,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next v7 07/16] net: dsa: vsc73xx: Add vlan filtering
+Message-ID: <9f34498c-f56e-4e16-b0c2-2ad2ae494b40@moroto.mountain>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:GxC2BwC3oyfuCw1mPjx7BQ--.30370S2
-X-Coremail-Antispam: 1UD129KBjvJXoWxXrWrXFyUKr4rJFy3trWrKrg_yoW5AF4kpF
-	4rtF1DK34rJFy3WF1kAFy7CFyIvay5WFW5XFsYgr13AF9Igr1YgF1S9ryY9rZ8KrWUtry0
-	va17KrZxXw4UZrUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUkFb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k2
-	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
-	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7Cj
-	xVAFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVWUJVW8JwA2z4x0Y4vEx4A2jsIEc7CjxV
-	AFwI0_Gr0_Gr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40E
-	x7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x
-	0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lFIxGxcIEc7CjxVA2Y2ka0xkIwI1l42xK82IY
-	c2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s
-	026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF
-	0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0x
-	vE42xK8VAvwI8IcIk0rVWrZr1j6s0DMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2
-	jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07UWE__UUUUU=
-X-CM-SenderInfo: purev21wro2thvvxqx5xdzvxpfor3voofrz/1tbiAgACBF1jj5gK+wACse
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240325204344.2298241-8-paweldembicki@gmail.com>
 
-From: Roberto Sassu <roberto.sassu@huawei.com>
+Hi Pawel,
 
-Commit 08abce60d63f ("security: Introduce path_post_mknod hook")
-introduced security_path_post_mknod(), to replace the IMA-specific call to
-ima_post_path_mknod().
+kernel test robot noticed the following build warnings:
 
-For symmetry with security_path_mknod(), security_path_post_mknod() was
-called after a successful mknod operation, for any file type, rather than
-only for regular files at the time there was the IMA call.
+url:    https://github.com/intel-lab-lkp/linux/commits/Pawel-Dembicki/net-dsa-vsc73xx-use-read_poll_timeout-instead-delay-loop/20240326-053458
+base:   net-next/main
+patch link:    https://lore.kernel.org/r/20240325204344.2298241-8-paweldembicki%40gmail.com
+patch subject: [PATCH net-next v7 07/16] net: dsa: vsc73xx: Add vlan filtering
+config: i386-randconfig-141-20240402 (https://download.01.org/0day-ci/archive/20240403/202404030102.Tv5bGJdv-lkp@intel.com/config)
+compiler: gcc-13 (Ubuntu 13.2.0-4ubuntu3) 13.2.0
 
-However, as reported by VFS maintainers, successful mknod operation does
-not mean that the dentry always has an inode attached to it (for example,
-not for FIFOs on a SAMBA mount).
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
+| Closes: https://lore.kernel.org/r/202404030102.Tv5bGJdv-lkp@intel.com/
 
-If that condition happens, the kernel crashes when
-security_path_post_mknod() attempts to verify if the inode associated to
-the dentry is private.
+smatch warnings:
+drivers/net/dsa/vitesse-vsc73xx-core.c:1455 vsc73xx_port_vlan_add() error: uninitialized symbol 'ret'.
 
-Move security_path_post_mknod() where the ima_post_path_mknod() call was,
-which is obviously correct from IMA/EVM perspective. IMA/EVM are the only
-in-kernel users, and only need to inspect regular files.
+vim +/ret +1455 drivers/net/dsa/vitesse-vsc73xx-core.c
 
-Reported-by: Steve French <smfrench@gmail.com>
-Closes: https://lore.kernel.org/linux-kernel/CAH2r5msAVzxCUHHG8VKrMPUKQHmBpE6K9_vjhgDa1uAvwx4ppw@mail.gmail.com/
-Suggested-by: Al Viro <viro@zeniv.linux.org.uk>
-Fixes: 08abce60d63f ("security: Introduce path_post_mknod hook")
-Signed-off-by: Roberto Sassu <roberto.sassu@huawei.com>
----
- fs/namei.c          | 7 ++-----
- security/security.c | 4 ++--
- 2 files changed, 4 insertions(+), 7 deletions(-)
+cb0eaf3f8563b0 Pawel Dembicki 2024-03-25  1381  static int vsc73xx_port_vlan_add(struct dsa_switch *ds, int port,
+cb0eaf3f8563b0 Pawel Dembicki 2024-03-25  1382  				 const struct switchdev_obj_port_vlan *vlan,
+cb0eaf3f8563b0 Pawel Dembicki 2024-03-25  1383  				 struct netlink_ext_ack *extack)
+cb0eaf3f8563b0 Pawel Dembicki 2024-03-25  1384  {
+cb0eaf3f8563b0 Pawel Dembicki 2024-03-25  1385  	bool untagged = vlan->flags & BRIDGE_VLAN_INFO_UNTAGGED;
+cb0eaf3f8563b0 Pawel Dembicki 2024-03-25  1386  	bool pvid = vlan->flags & BRIDGE_VLAN_INFO_PVID;
+cb0eaf3f8563b0 Pawel Dembicki 2024-03-25  1387  	struct dsa_port *dp = dsa_to_port(ds, port);
+cb0eaf3f8563b0 Pawel Dembicki 2024-03-25  1388  	enum vsc73xx_port_vlan_conf port_vlan_conf;
+cb0eaf3f8563b0 Pawel Dembicki 2024-03-25  1389  	struct vsc73xx_bridge_vlan *vsc73xx_vlan;
+cb0eaf3f8563b0 Pawel Dembicki 2024-03-25  1390  	struct vsc73xx_vlan_summary summary;
+cb0eaf3f8563b0 Pawel Dembicki 2024-03-25  1391  	struct vsc73xx *vsc = ds->priv;
+cb0eaf3f8563b0 Pawel Dembicki 2024-03-25  1392  	bool operate_on_storage;
+cb0eaf3f8563b0 Pawel Dembicki 2024-03-25  1393  	int ret;
+cb0eaf3f8563b0 Pawel Dembicki 2024-03-25  1394  	u16 vid;
+cb0eaf3f8563b0 Pawel Dembicki 2024-03-25  1395  
+cb0eaf3f8563b0 Pawel Dembicki 2024-03-25  1396  	/* Be sure to deny alterations to the configuration done by tag_8021q.
+cb0eaf3f8563b0 Pawel Dembicki 2024-03-25  1397  	 */
+cb0eaf3f8563b0 Pawel Dembicki 2024-03-25  1398  	if (vid_is_dsa_8021q(vlan->vid)) {
+cb0eaf3f8563b0 Pawel Dembicki 2024-03-25  1399  		NL_SET_ERR_MSG_MOD(extack,
+cb0eaf3f8563b0 Pawel Dembicki 2024-03-25  1400  				   "Range 3072-4095 reserved for dsa_8021q operation");
+cb0eaf3f8563b0 Pawel Dembicki 2024-03-25  1401  		return -EBUSY;
+cb0eaf3f8563b0 Pawel Dembicki 2024-03-25  1402  	}
+cb0eaf3f8563b0 Pawel Dembicki 2024-03-25  1403  
+cb0eaf3f8563b0 Pawel Dembicki 2024-03-25  1404  	/* The processed vlan->vid is excluded from the search because the VLAN
+cb0eaf3f8563b0 Pawel Dembicki 2024-03-25  1405  	 * can be re-added with a different set of flags, so it's easiest to
+cb0eaf3f8563b0 Pawel Dembicki 2024-03-25  1406  	 * ignore its old flags from the VLAN database software copy.
+cb0eaf3f8563b0 Pawel Dembicki 2024-03-25  1407  	 */
+cb0eaf3f8563b0 Pawel Dembicki 2024-03-25  1408  	vsc73xx_bridge_vlan_summary(vsc, port, &summary, vlan->vid);
+cb0eaf3f8563b0 Pawel Dembicki 2024-03-25  1409  
+cb0eaf3f8563b0 Pawel Dembicki 2024-03-25  1410  	/* VSC73XX allow only three untagged states: none, one or all */
+cb0eaf3f8563b0 Pawel Dembicki 2024-03-25  1411  	if ((untagged && summary.num_tagged > 0 && summary.num_untagged > 0) ||
+cb0eaf3f8563b0 Pawel Dembicki 2024-03-25  1412  	    (!untagged && summary.num_untagged > 1)) {
+cb0eaf3f8563b0 Pawel Dembicki 2024-03-25  1413  		NL_SET_ERR_MSG_MOD(extack,
+cb0eaf3f8563b0 Pawel Dembicki 2024-03-25  1414  				   "Port can have only none, one or all untagged vlan");
+cb0eaf3f8563b0 Pawel Dembicki 2024-03-25  1415  		return -EBUSY;
+cb0eaf3f8563b0 Pawel Dembicki 2024-03-25  1416  	}
+cb0eaf3f8563b0 Pawel Dembicki 2024-03-25  1417  
+cb0eaf3f8563b0 Pawel Dembicki 2024-03-25  1418  	vsc73xx_vlan = vsc73xx_bridge_vlan_find(vsc, vlan->vid);
+cb0eaf3f8563b0 Pawel Dembicki 2024-03-25  1419  
+cb0eaf3f8563b0 Pawel Dembicki 2024-03-25  1420  	if (!vsc73xx_vlan) {
+cb0eaf3f8563b0 Pawel Dembicki 2024-03-25  1421  		vsc73xx_vlan = kzalloc(sizeof(*vsc73xx_vlan), GFP_KERNEL);
+cb0eaf3f8563b0 Pawel Dembicki 2024-03-25  1422  		if (!vsc73xx_vlan)
+cb0eaf3f8563b0 Pawel Dembicki 2024-03-25  1423  			return -ENOMEM;
+cb0eaf3f8563b0 Pawel Dembicki 2024-03-25  1424  
+cb0eaf3f8563b0 Pawel Dembicki 2024-03-25  1425  		vsc73xx_vlan->vid = vlan->vid;
+cb0eaf3f8563b0 Pawel Dembicki 2024-03-25  1426  		vsc73xx_vlan->portmask = 0;
+cb0eaf3f8563b0 Pawel Dembicki 2024-03-25  1427  		vsc73xx_vlan->untagged = 0;
+cb0eaf3f8563b0 Pawel Dembicki 2024-03-25  1428  
+cb0eaf3f8563b0 Pawel Dembicki 2024-03-25  1429  		INIT_LIST_HEAD(&vsc73xx_vlan->list);
+cb0eaf3f8563b0 Pawel Dembicki 2024-03-25  1430  		list_add_tail(&vsc73xx_vlan->list, &vsc->vlans);
+cb0eaf3f8563b0 Pawel Dembicki 2024-03-25  1431  	}
+cb0eaf3f8563b0 Pawel Dembicki 2024-03-25  1432  
+cb0eaf3f8563b0 Pawel Dembicki 2024-03-25  1433  	vsc73xx_vlan->portmask |= BIT(port);
+cb0eaf3f8563b0 Pawel Dembicki 2024-03-25  1434  
+cb0eaf3f8563b0 Pawel Dembicki 2024-03-25  1435  	if (untagged)
+cb0eaf3f8563b0 Pawel Dembicki 2024-03-25  1436  		vsc73xx_vlan->untagged |= BIT(port);
+cb0eaf3f8563b0 Pawel Dembicki 2024-03-25  1437  	else
+cb0eaf3f8563b0 Pawel Dembicki 2024-03-25  1438  		vsc73xx_vlan->untagged &= ~BIT(port);
+cb0eaf3f8563b0 Pawel Dembicki 2024-03-25  1439  
+cb0eaf3f8563b0 Pawel Dembicki 2024-03-25  1440  	/* CPU port must be always tagged because port separation is based on
+cb0eaf3f8563b0 Pawel Dembicki 2024-03-25  1441  	 * tag_8021q.
+cb0eaf3f8563b0 Pawel Dembicki 2024-03-25  1442  	 */
+cb0eaf3f8563b0 Pawel Dembicki 2024-03-25  1443  	if (port == CPU_PORT)
+cb0eaf3f8563b0 Pawel Dembicki 2024-03-25  1444  		goto update_vlan_table;
+cb0eaf3f8563b0 Pawel Dembicki 2024-03-25  1445  
+cb0eaf3f8563b0 Pawel Dembicki 2024-03-25  1446  	operate_on_storage = vsc73xx_tag_8021q_active(dp);
+cb0eaf3f8563b0 Pawel Dembicki 2024-03-25  1447  
+cb0eaf3f8563b0 Pawel Dembicki 2024-03-25  1448  	if (pvid)
+cb0eaf3f8563b0 Pawel Dembicki 2024-03-25  1449  		ret = vsc73xx_vlan_set_pvid(vsc, port, vlan->vid,
+cb0eaf3f8563b0 Pawel Dembicki 2024-03-25  1450  					    operate_on_storage, false);
+cb0eaf3f8563b0 Pawel Dembicki 2024-03-25  1451  	else if (vsc73xx_port_get_pvid(vsc, port, &vid, false) &&
+cb0eaf3f8563b0 Pawel Dembicki 2024-03-25  1452  		 vid == vlan->vid)
+cb0eaf3f8563b0 Pawel Dembicki 2024-03-25  1453  		ret = vsc73xx_vlan_clear_pvid(vsc, port, operate_on_storage,
+cb0eaf3f8563b0 Pawel Dembicki 2024-03-25  1454  					      false);
 
-diff --git a/fs/namei.c b/fs/namei.c
-index ceb9ddf8dfdd..c5b2a25be7d0 100644
---- a/fs/namei.c
-+++ b/fs/namei.c
-@@ -4050,6 +4050,8 @@ static int do_mknodat(int dfd, struct filename *name, umode_t mode,
- 		case 0: case S_IFREG:
- 			error = vfs_create(idmap, path.dentry->d_inode,
- 					   dentry, mode, true);
-+			if (!error)
-+				security_path_post_mknod(idmap, dentry);
- 			break;
- 		case S_IFCHR: case S_IFBLK:
- 			error = vfs_mknod(idmap, path.dentry->d_inode,
-@@ -4060,11 +4062,6 @@ static int do_mknodat(int dfd, struct filename *name, umode_t mode,
- 					  dentry, mode, 0);
- 			break;
- 	}
--
--	if (error)
--		goto out2;
--
--	security_path_post_mknod(idmap, dentry);
- out2:
- 	done_path_create(&path, dentry);
- 	if (retry_estale(error, lookup_flags)) {
-diff --git a/security/security.c b/security/security.c
-index 7e118858b545..0a9a0ac3f266 100644
---- a/security/security.c
-+++ b/security/security.c
-@@ -1793,11 +1793,11 @@ int security_path_mknod(const struct path *dir, struct dentry *dentry,
- EXPORT_SYMBOL(security_path_mknod);
- 
- /**
-- * security_path_post_mknod() - Update inode security field after file creation
-+ * security_path_post_mknod() - Update inode security after reg file creation
-  * @idmap: idmap of the mount
-  * @dentry: new file
-  *
-- * Update inode security field after a file has been created.
-+ * Update inode security field after a regular file has been created.
-  */
- void security_path_post_mknod(struct mnt_idmap *idmap, struct dentry *dentry)
- {
+"ret" not initialized on else path
+
+cb0eaf3f8563b0 Pawel Dembicki 2024-03-25 @1455  	if (ret)
+cb0eaf3f8563b0 Pawel Dembicki 2024-03-25  1456  		goto err;
+cb0eaf3f8563b0 Pawel Dembicki 2024-03-25  1457  
+cb0eaf3f8563b0 Pawel Dembicki 2024-03-25  1458  	if (operate_on_storage)
+cb0eaf3f8563b0 Pawel Dembicki 2024-03-25  1459  		goto update_vlan_table;
+cb0eaf3f8563b0 Pawel Dembicki 2024-03-25  1460  
+cb0eaf3f8563b0 Pawel Dembicki 2024-03-25  1461  	port_vlan_conf = VSC73XX_VLAN_FILTER;
+cb0eaf3f8563b0 Pawel Dembicki 2024-03-25  1462  
+cb0eaf3f8563b0 Pawel Dembicki 2024-03-25  1463  	if (summary.num_tagged == 0 && untagged)
+cb0eaf3f8563b0 Pawel Dembicki 2024-03-25  1464  		port_vlan_conf = VSC73XX_VLAN_FILTER_UNTAG_ALL;
+cb0eaf3f8563b0 Pawel Dembicki 2024-03-25  1465  	vsc73xx_set_vlan_conf(vsc, port, port_vlan_conf);
+cb0eaf3f8563b0 Pawel Dembicki 2024-03-25  1466  
+cb0eaf3f8563b0 Pawel Dembicki 2024-03-25  1467  	if (port_vlan_conf == VSC73XX_VLAN_FILTER_UNTAG_ALL)
+cb0eaf3f8563b0 Pawel Dembicki 2024-03-25  1468  		goto update_vlan_table;
+cb0eaf3f8563b0 Pawel Dembicki 2024-03-25  1469  
+cb0eaf3f8563b0 Pawel Dembicki 2024-03-25  1470  	if (untagged) {
+cb0eaf3f8563b0 Pawel Dembicki 2024-03-25  1471  		ret = vsc73xx_vlan_set_untagged_hw(vsc, port, vlan->vid);
+cb0eaf3f8563b0 Pawel Dembicki 2024-03-25  1472  	} else if (summary.num_untagged == 1) {
+cb0eaf3f8563b0 Pawel Dembicki 2024-03-25  1473  		vid = vsc73xx_find_first_vlan_untagged(vsc, port);
+cb0eaf3f8563b0 Pawel Dembicki 2024-03-25  1474  		ret = vsc73xx_vlan_set_untagged_hw(vsc, port, vid);
+cb0eaf3f8563b0 Pawel Dembicki 2024-03-25  1475  	}
+cb0eaf3f8563b0 Pawel Dembicki 2024-03-25  1476  	if (ret)
+cb0eaf3f8563b0 Pawel Dembicki 2024-03-25  1477  		goto err;
+cb0eaf3f8563b0 Pawel Dembicki 2024-03-25  1478  
+cb0eaf3f8563b0 Pawel Dembicki 2024-03-25  1479  update_vlan_table:
+cb0eaf3f8563b0 Pawel Dembicki 2024-03-25  1480  	ret = vsc73xx_update_vlan_table(vsc, port, vlan->vid, true);
+cb0eaf3f8563b0 Pawel Dembicki 2024-03-25  1481  	if (!ret)
+cb0eaf3f8563b0 Pawel Dembicki 2024-03-25  1482  		return 0;
+cb0eaf3f8563b0 Pawel Dembicki 2024-03-25  1483  err:
+cb0eaf3f8563b0 Pawel Dembicki 2024-03-25  1484  	list_del(&vsc73xx_vlan->list);
+cb0eaf3f8563b0 Pawel Dembicki 2024-03-25  1485  	kfree(vsc73xx_vlan);
+cb0eaf3f8563b0 Pawel Dembicki 2024-03-25  1486  	return ret;
+cb0eaf3f8563b0 Pawel Dembicki 2024-03-25  1487  }
+
 -- 
-2.34.1
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
