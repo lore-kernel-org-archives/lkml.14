@@ -1,33 +1,33 @@
 Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FC2715218F;
-	Wed,  3 Apr 2024 17:15:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51523152DE7;
+	Wed,  3 Apr 2024 17:15:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712164504; cv=none; b=Gavthn+ZVteJbkM2p+MpnR62E+9E28zK7JEVDbOaxmM4vDlzx2xvSWVarkxPp7fHgcJjUZGNch/mplG9ZJOeIuiZa6MDCySFdRBQVoK/EYEWNP3lJyGTL9oiEkvXZB30Vazmoe9iVwEH4yecgd/0V/6Ona3a6AJ1zHlXrsnO9mE=
+	t=1712164506; cv=none; b=flqBlwsdE4tBp61GnAbVNQ8sUtmR0uilGjVUNy6RdZv4oMTNRL1KzR1wFYLbgBKoOwSvDRuGgiB5oUsFN88vuB6OVfgx4mnrEC75NgsHS4cHOAg0nJCvueZe19V5BMtsnONDIBJKkEm0RJXygr9XAIe0uWAQI0lvknLiY+iJX5w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712164504; c=relaxed/simple;
-	bh=4NQWmwuZTarG2/kHv3KnA3lC4if3hblZ373xS71aU5o=;
+	s=arc-20240116; t=1712164506; c=relaxed/simple;
+	bh=YEZSyj08uAWUgvVNCL0bhk/P8dX/wHCa62h9mJQyDxQ=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=g3asKn8rc/4vwkRHjaUNrcGgjhW8VSFNBq4Gj85b/IM6dP7P33eDCHnUKJgMO2r4Z6fxd7c40STKXkdReFajdD2ksbaVta0xoHBmV/H4b3nI9NOS2qvaNdjGrK3DvEAprgUAyQpMuhy7AIthX8MiZtdGbwaSI73FfJc0DBKHMXU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=EyN7KUC8; arc=none smtp.client-ip=90.155.50.34
+	 MIME-Version; b=EDXrdaiqXHHpWcEYE8XC0dos0rjHpUhm9Vw/ffwwd3/WiES4yFnlCt/JVgwBpkmkrW3vrLBFMMBAVbhfAILLM8QP1w9v3fmCHmw8sYPY9mW60RcZUD3FUl9lD6Z5SNxh2pi7+ibbFZBXRTz5C6ZARJyRneWUsrnRLikEWY9lNgA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=O6+39Y3c; arc=none smtp.client-ip=90.155.50.34
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="EyN7KUC8"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="O6+39Y3c"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
 	References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:
 	Content-Type:Content-ID:Content-Description;
-	bh=zWvUIcsgXfFVuJ3plWmn3jZ25kr2d4+5CtI/6v4IbBA=; b=EyN7KUC8CWA2zAqaLb9X7NG1GP
-	GiSUNPS5vCVIIMlu35ZijnrORpg4bFnx1SG0fwp47fcz0JivmxA4ljepc7FfUUJFStQIsk6geXoHq
-	xuJGMUjuSk0Lsl4pnJ6N9a7wlNslepkcuIjr/DPavSZEIiqrVztxU8O/vh41CBlA27k4kcOvkiS8d
-	5uOUtp8fbCvv6mQcpkbzeJJ2w5WkFqPrXrheTO96txE5EdVCIUxEql5NtRwOOOtNW2Top9YH6kyEJ
-	rWamjBmbFg90mAGxY/MoGrDN13bPd0cHR6ou2rSq0ZiSNiqDAGhEh2O4KpoyWOs27H8B5Ab1kEdAg
-	n26ENKww==;
+	bh=PV5UzSxT44kEb6CXRTq0MrEyiFGg30Ta3X7PuDVeqgc=; b=O6+39Y3cqfq3/j0yYE+/iPXAL0
+	hbwNKgv7dJBqPHYibJqj/20b3p6ucW8gY4agsx4sUkPXoaKMfQUANxQLb3T5GCU5p34NhrbzjoeBq
+	88619o6cVdcdZzPcLHEQIQKpFzlWZzsb3N7X75LAvXw0IEoDzxipLREDBUTGw8PAYheqJOcj2Crut
+	Q6rxT/qcD3pXBfdtaZ9PqyULVT67OS/NwMmBFElvq5Gk0eseYGyD3QOWflvhIT1D3afPn/nVVNhVA
+	Ppgy7ekTjYs5bX3147tEggxSQjgNNvY96EW7042kehl1iFkUzdmjJOxe87S5zOW+8eOnpIVehrAGJ
+	pLRZNwUg==;
 Received: from willy by casper.infradead.org with local (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1rs4CQ-000000063wd-1hvu;
+	id 1rs4CQ-000000063wX-0l0Y;
 	Wed, 03 Apr 2024 17:14:58 +0000
 From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
 To: Andrew Morton <akpm@linux-foundation.org>,
@@ -36,9 +36,9 @@ Cc: "Matthew Wilcox (Oracle)" <willy@infradead.org>,
 	linux-kernel@vger.kernel.org,
 	linux-fsdevel@vger.kernel.org,
 	linux-mm@kvack.org
-Subject: [PATCH 4/4] proc: Convert smaps_pmd_entry to use a folio
-Date: Wed,  3 Apr 2024 18:14:55 +0100
-Message-ID: <20240403171456.1445117-5-willy@infradead.org>
+Subject: [PATCH 1/4] proc: Convert gather_stats to use a folio
+Date: Wed,  3 Apr 2024 18:14:52 +0100
+Message-ID: <20240403171456.1445117-2-willy@infradead.org>
 X-Mailer: git-send-email 2.44.0
 In-Reply-To: <20240403171456.1445117-1-willy@infradead.org>
 References: <20240403171456.1445117-1-willy@infradead.org>
@@ -50,41 +50,54 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Replace two calls to compound_head() with one.
+Replaces six calls to compound_head() with one.  Shrinks the function
+from 5054 bytes to 1756 bytes in an allmodconfig build.
 
 Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
 ---
- fs/proc/task_mmu.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+ fs/proc/task_mmu.c | 13 +++++++------
+ 1 file changed, 7 insertions(+), 6 deletions(-)
 
 diff --git a/fs/proc/task_mmu.c b/fs/proc/task_mmu.c
-index 6d4f60bc8824..8ff79bd427ec 100644
+index e8d1008a838d..5260a2788f74 100644
 --- a/fs/proc/task_mmu.c
 +++ b/fs/proc/task_mmu.c
-@@ -578,6 +578,7 @@ static void smaps_pmd_entry(pmd_t *pmd, unsigned long addr,
- 	struct vm_area_struct *vma = walk->vma;
- 	bool locked = !!(vma->vm_flags & VM_LOCKED);
- 	struct page *page = NULL;
-+	struct folio *folio;
- 	bool migration = false;
+@@ -2549,28 +2549,29 @@ struct numa_maps_private {
+ static void gather_stats(struct page *page, struct numa_maps *md, int pte_dirty,
+ 			unsigned long nr_pages)
+ {
++	struct folio *folio = page_folio(page);
+ 	int count = page_mapcount(page);
  
- 	if (pmd_present(*pmd)) {
-@@ -592,11 +593,12 @@ static void smaps_pmd_entry(pmd_t *pmd, unsigned long addr,
- 	}
- 	if (IS_ERR_OR_NULL(page))
- 		return;
+ 	md->pages += nr_pages;
+-	if (pte_dirty || PageDirty(page))
++	if (pte_dirty || folio_test_dirty(folio))
+ 		md->dirty += nr_pages;
+ 
+-	if (PageSwapCache(page))
++	if (folio_test_swapcache(folio))
+ 		md->swapcache += nr_pages;
+ 
+-	if (PageActive(page) || PageUnevictable(page))
++	if (folio_test_active(folio) || folio_test_unevictable(folio))
+ 		md->active += nr_pages;
+ 
+-	if (PageWriteback(page))
++	if (folio_test_writeback(folio))
+ 		md->writeback += nr_pages;
+ 
 -	if (PageAnon(page))
-+	folio = page_folio(page);
 +	if (folio_test_anon(folio))
- 		mss->anonymous_thp += HPAGE_PMD_SIZE;
--	else if (PageSwapBacked(page))
-+	else if (folio_test_swapbacked(folio))
- 		mss->shmem_thp += HPAGE_PMD_SIZE;
--	else if (is_zone_device_page(page))
-+	else if (folio_is_zone_device(folio))
- 		/* pass */;
- 	else
- 		mss->file_thp += HPAGE_PMD_SIZE;
+ 		md->anon += nr_pages;
+ 
+ 	if (count > md->mapcount_max)
+ 		md->mapcount_max = count;
+ 
+-	md->node[page_to_nid(page)] += nr_pages;
++	md->node[folio_nid(folio)] += nr_pages;
+ }
+ 
+ static struct page *can_gather_numa_stats(pte_t pte, struct vm_area_struct *vma,
 -- 
 2.43.0
 
