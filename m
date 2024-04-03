@@ -1,110 +1,112 @@
-Received: from fgw22-7.mail.saunalahti.fi (fgw22-7.mail.saunalahti.fi [62.142.5.83])
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74B6115664A
-	for <linux-kernel@vger.kernel.org>; Wed,  3 Apr 2024 21:13:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.142.5.83
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 453A0156663;
+	Wed,  3 Apr 2024 21:13:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712178813; cv=none; b=usTUvHBOqZgy6Oq5CYEyR+vluEDjh+l0RGdwP34Np8ecT6hPFO6EFjCDNeOi3UGjSd5wTw0X/gETj+nv1YeL9AiJqvP7J49UtfVZcWG0F8RzMtBX8efOt0SJVkTG0+fkWq13WqrD3qBPaL0hlerT0VMa1Z3dXKfk34V/+EPVYfE=
+	t=1712178829; cv=none; b=qeRTy0JSyeYphvEPhpYUG/F0l1/qiziSJL2kUVrpg3aTom7M3SIjWjxHJnNk/xu/lqYKYQQ3jIcYrXcezNmo9YoRKE4nlYo3RUnhOrBMLXbUBh5elTtfGhYRhdkXikwxeVRYFCtuP4zWiKmc0GfKo8fRIELcyHuYghqdy0WwMxE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712178813; c=relaxed/simple;
-	bh=eupMfwrp+Cz8ikeI7PjS0/ZKJUeLsKmYnSUICd//p3g=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fzNxndlvi40B8bqeJoirsD3fA2ivmlwZAugQO2NsEAfTdo8MI9+vFsYmSzJUaxlEfCIU4ovy4lo2HgAMlsG40vDieFmXhvo/aS5Hqs8lcvMTm9abaMDRE88AP9g10Ny/JdvqwFca9hJWn7h2RltLfrm8OZRtdUdUdZekLVa4iEU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com; spf=fail smtp.mailfrom=gmail.com; arc=none smtp.client-ip=62.142.5.83
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=gmail.com
-Received: from localhost (88-113-26-217.elisa-laajakaista.fi [88.113.26.217])
-	by fgw22.mail.saunalahti.fi (Halon) with ESMTP
-	id 0290e41f-f1ff-11ee-a9de-005056bdf889;
-	Thu, 04 Apr 2024 00:13:28 +0300 (EEST)
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Thu, 4 Apr 2024 00:13:25 +0300
-To: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>
-Cc: Mark Brown <broonie@kernel.org>, Arnd Bergmann <arnd@kernel.org>,
-	linux-kernel@vger.kernel.org,
-	Neil Armstrong <neil.armstrong@linaro.org>,
-	Kevin Hilman <khilman@baylibre.com>,
-	Heiko Stuebner <heiko@sntech.de>,
-	Andi Shyti <andi.shyti@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-	Arnd Bergmann <arnd@arndb.de>, Jerome Brunet <jbrunet@baylibre.com>,
-	Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-	Alim Akhtar <alim.akhtar@samsung.com>,
-	Li Zetao <lizetao1@huawei.com>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Rob Herring <robh@kernel.org>,
-	Yang Yingliang <yangyingliang@huawei.com>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Luis de Arquer <luis.dearquer@inertim.com>,
-	Tudor Ambarus <tudor.ambarus@linaro.org>,
-	Sam Protsenko <semen.protsenko@linaro.org>,
-	Peter Griffin <peter.griffin@linaro.org>,
-	Jaewon Kim <jaewon02.kim@samsung.com>, linux-spi@vger.kernel.org,
+	s=arc-20240116; t=1712178829; c=relaxed/simple;
+	bh=A63swF0NGtwa4y1vtkAq5Zk0Yp4g068uJTxXmn8Afd8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=dCK5xuEud2NM0w4azvYmJ6/vIJYBzwzhtBZeeD5mtqhx59z64+dtf3pWFDRct9UDaNgr2Toov2/1LoFvXa21G5QngEp/EubH7hu/OANDRoxs7a6UQDg81l9Bp3ZjaqhKrHNZC2mE2wDv8ncuVi4e73/rZ+RQDJ8wi8B2x1tFfos=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=qcAhwz51; arc=none smtp.client-ip=46.235.227.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="qcAhwz51"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1712178826;
+	bh=A63swF0NGtwa4y1vtkAq5Zk0Yp4g068uJTxXmn8Afd8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=qcAhwz51NDjcmLMjMRi/zox0xmX5lsI1Rr2tTZrzWWWz/9mA7LSbVYz7Hci7Ew4id
+	 1F7eNbZHsZso1j8597z0gnhOB8G6qhf/bEoC9OWds0qh41gOSYgucuV2xsD/fMBtBq
+	 OUT4w3neJyVb2a/SrrOFqhS/EuYHrGwnz8POAoWXEp0BYpbCkDysX374Ltr6fVCcWR
+	 2UCnKyQUGH4Ux70SdvGPzJxtCnvKogTLbbZe4ZSOWA/hW2oh9jnF983jUT8Jj8KG8N
+	 1bodhTlhcLUDNF/q4hDH4lT9A5jg7ZBffRxgBM/5OB0beTb8wHbhUyQ4qNMqohTONx
+	 AhEn/qVTSBHrA==
+Received: from localhost (cola.collaboradmins.com [195.201.22.229])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: dbrouwer)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id C1DD237813DC;
+	Wed,  3 Apr 2024 21:13:45 +0000 (UTC)
+Date: Wed, 3 Apr 2024 14:13:43 -0700
+From: Deborah Brouwer <deborah.brouwer@collabora.com>
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc: Shreeya Patel <shreeya.patel@collabora.com>, mchehab@kernel.org,
+	hverkuil@xs4all.nl, hverkuil-cisco@xs4all.nl, heiko@sntech.de,
+	robh@kernel.org, krzysztof.kozlowski+dt@linaro.org,
+	conor+dt@kernel.org, mturquette@baylibre.com, sboyd@kernel.org,
+	p.zabel@pengutronix.de, shawn.wen@rock-chips.com,
+	kernel@collabora.com, linux-kernel@vger.kernel.org,
+	linux-media@vger.kernel.org, devicetree@vger.kernel.org,
 	linux-arm-kernel@lists.infradead.org,
-	linux-amlogic@lists.infradead.org,
-	linux-rockchip@lists.infradead.org,
-	linux-samsung-soc@vger.kernel.org
-Subject: Re: [PATCH 31/34] spi: remove incorrect of_match_ptr annotations
-Message-ID: <Zg3GdUtBUKzB6NNZ@surfacebook.localdomain>
-References: <20240403080702.3509288-1-arnd@kernel.org>
- <20240403080702.3509288-32-arnd@kernel.org>
- <b4418ac1-10ba-4932-be6e-93282707024f@sirena.org.uk>
- <5f3qvhasho4mfnf6f7i6djak3ankje375mt4fzvv3gqrlj242o@zdk2ajvha6hx>
+	linux-rockchip@lists.infradead.org, linux-clk@vger.kernel.org,
+	linux-arm@lists.infradead.org
+Subject: Re: [PATCH v3 0/6] Add Synopsys DesignWare HDMI RX Controller
+Message-ID: <Zg3Gh8P97GaBtgAB@mz550>
+References: <20240327225057.672304-1-shreeya.patel@collabora.com>
+ <35e566-660d2080-1-7eb9eb00@16488675>
+ <a2f88176-b4e1-4202-843c-a00c5a2b1622@linaro.org>
+ <35f774-660d3b80-3-513fcf80@97941910>
+ <86150c89-11d5-4d52-987e-974b1a03018f@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <5f3qvhasho4mfnf6f7i6djak3ankje375mt4fzvv3gqrlj242o@zdk2ajvha6hx>
+In-Reply-To: <86150c89-11d5-4d52-987e-974b1a03018f@linaro.org>
 
-Wed, Apr 03, 2024 at 11:05:51PM +0200, Uwe Kleine-König kirjoitti:
-> On Wed, Apr 03, 2024 at 10:56:58AM +0100, Mark Brown wrote:
-> > On Wed, Apr 03, 2024 at 10:06:49AM +0200, Arnd Bergmann wrote:
+On Wed, Apr 03, 2024 at 01:24:05PM +0200, Krzysztof Kozlowski wrote:
+> On 03/04/2024 13:20, Shreeya Patel wrote:
+> > On Wednesday, April 03, 2024 15:51 IST, Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org> wrote:
 > > 
-> > > These appear to all be copied from the same original driver, so fix them at the
-> > > same time by removing the unnecessary of_match_ptr() annotation. As far as I
-> > > can tell, all these drivers are only actually used on configurations that
-> > > have CONFIG_OF enabled.
+> >> On 03/04/2024 11:24, Shreeya Patel wrote:
+> >>> On Thursday, March 28, 2024 04:20 IST, Shreeya Patel <shreeya.patel@collabora.com> wrote:
+> >>>
+> >>>> This series implements support for the Synopsys DesignWare
+> >>>> HDMI RX Controller, being compliant with standard HDMI 1.4b
+> >>>> and HDMI 2.0.
+> >>>>
+> >>>
+> >>> Hi Mauro and Hans,
+> >>>
+> >>> I haven't received any reviews so far. Hence, this is just a gentle reminder to review this patch series.
+> >>
+> >> Why did you put clk changes here? These go via different subsystem. That
+> >> might be one of obstacles for your patchset.
+> >>
 > > 
-> > Why are we not fixing of_match_ptr() here, or at least adding the ifdefs
-> > in case someone does end up wanting to run without OF?
+> > I added clock changes in this patch series because HDMIRX driver depends on it.
+> > I thought it is wrong to send the driver patches which don't even compile?
 > 
-> Fixing of_match_ptr =
+> Hm, why HDMIRX driver depends on clock? How? This sounds really wrong.
+> Please get it reviewed internally first.
 > 
-> diff --git a/include/linux/of.h b/include/linux/of.h
-> index a0bedd038a05..d980bccffda0 100644
-> --- a/include/linux/of.h
-> +++ b/include/linux/of.h
-> @@ -890,7 +890,7 @@ static inline const void *of_device_get_match_data(const struct device *dev)
->  	return NULL;
->  }
->  
-> -#define of_match_ptr(_ptr)	NULL
-> +#define of_match_ptr(_ptr)	(0 ? (_ptr) : NULL)
-
-FWIW, we have PTR_IF() (with a side note to split it from kernel.h in a
-separate header or less twisted one).
-
->  #define of_match_node(_matches, _node)	NULL
->  #endif /* CONFIG_OF */
->  
-> ?
+> > 
+> > Since you are a more experienced developer, can you help me understand what would
+> > be the right way to send patches in such scenarios?
 > 
-> Assuming this helps, I agree this would be the better fix.
+> I am not the substitute for your Collabora engineers and peers. You do
+> not get free work from the community. First, do the work and review
+> internally, to solve all trivial things, like how to submit patches
+> upstream or how to make your driver buildable, and then ask community
+> for the review.
 
-Why? I mean why do we need to even have this API? It's always
-good to know which devices are supported by the module even
-if you have no need in such support or it's not compiled in.
-One of the reasons why is to be able to google for compatible hardware,
-for example.
+I don't think Shreeya was asking for "free" work from the community.
+Her question wasn't trivial or obvious since reasonable people seem to sometimes
+disagree about where to send a patch especially if it's needed to make a series compile.
+I heard the issue was already resolved but had to say something since this accusation
+seemed so unfair.
 
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+> 
+> Best regards,
+> Krzysztof
+> 
+> 
