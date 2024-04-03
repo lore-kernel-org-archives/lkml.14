@@ -1,136 +1,134 @@
-Received: from mail-pf1-f172.google.com (mail-pf1-f172.google.com [209.85.210.172])
+Received: from mail-pf1-f201.google.com (mail-pf1-f201.google.com [209.85.210.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 177531534F2;
-	Wed,  3 Apr 2024 18:26:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AB5E53A7
+	for <linux-kernel@vger.kernel.org>; Wed,  3 Apr 2024 18:30:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712168781; cv=none; b=j8yvTezLRhonC4+9kRAQh9KTg8UMVsoF5gypL22BWYnN06zKGLEzOoqn5w179gZLbaZe5IuiRMrRw1DIBclhLBd6yK6OG8ivw0075UsTO5yRGJkghXhXXZsbKUO0Z39eGT1tUV0+j4zQW6DQZWEicc2pmYAbq/uo1lEf4Hryobo=
+	t=1712169031; cv=none; b=uVOQBd1F1LQSSk1ZNsyWQbCAY2HAlcBHJjh+54ou9rrLcGKa0wF0rdUMrlXmeRb7DRJNB48PDnlZpJ1Nc5hX8yBJj+d13VfBkN0Pm7/e8ZWIRUoHQxIy6hUhB73729KxCjnQZNWysTcopaByUYUx9yjrFDSKiDqT2c8ZWX4JPsQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712168781; c=relaxed/simple;
-	bh=Of2GYAaUswv6LvHoA0UkUvxuxYZ5tgWnA6txjalqaVQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=iEupv8KtqOomDOuY91BcOFIr/VbZVgmCMw9fBcqM1Cf9Gpv88jfqC6XvyfD7v++J638/xEiWLbOCnAbfi8hwKuaCqsFvbAGUnMkX2Nh2qLvMTBaA21q5uUdB+8h+SnrgMboS7z7gSpmqs3OnhewAHbTOMXn/MsSRAgIf0ElEoSY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hTkYfxzS; arc=none smtp.client-ip=209.85.210.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1712169031; c=relaxed/simple;
+	bh=3+9lMpILcT4GrzjklqZThP0A8O5Au3Kt8WUWoV+QX18=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=RmkBaZjR+8Zrm1T0xKMj6aNYaedRxHf+Iy9OxPZ0iOY+VeugbIcxuI6o2OWV/W2IB3QVZYsAAos3qfe9i0ps/KuXRnPU/fNVUVyCcb94TEsmgsBXz+DStRdky7T2cw7/dPJKo5DLw7FGDPNsbDJiyGKtZDXws5g3FRMmaWDHRMg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=O4l5Q98X; arc=none smtp.client-ip=209.85.210.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hTkYfxzS"
-Received: by mail-pf1-f172.google.com with SMTP id d2e1a72fcca58-6ea8ee55812so115405b3a.0;
-        Wed, 03 Apr 2024 11:26:19 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="O4l5Q98X"
+Received: by mail-pf1-f201.google.com with SMTP id d2e1a72fcca58-6ea844bfbb7so98727b3a.0
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Apr 2024 11:30:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1712168779; x=1712773579; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=KbtoEoj4oChBiO+Y87ED1v4ExuftqHcGwPMYfmQNkfA=;
-        b=hTkYfxzSBkzMxBSDsk2ykPM/vOwPUOKkblnOjqQcFsuuJ1jvrWKV6qn/L9PADoQQe5
-         zFh+hDaB93AMoIi/u/8eA+z71fef63BvlMCRnhG9LKJEdEf7SeDiUe56knH/Q97A8EMp
-         4gdoSSdqIOaH4M8bDAZVrkQQn0aOYAMjyCGa3VPCr6G48O/a0hcu5d/ZmspoJeaJtSPk
-         zv8Klh0R3zxsy64+P/mxdOiqX4VIn0SimqTzZp8ljgc2pUpDqXtS7yqh95haAlar7Law
-         FfdBbmA05hKkrAvPLZM/TVpvaHg/RBnSiTK5PK4HMMqgoCR2nMzEBHGxnhPijXo+f3E0
-         Ne0w==
+        d=google.com; s=20230601; t=1712169029; x=1712773829; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=VwSQRZk+BRxb7GZSaFeES/scIy0HPs9KPKeQnP6jNQA=;
+        b=O4l5Q98XSlJ72CMiyfQLVgLeeDoICseHsQPl9PQcQRZEanElc/xhifRioSWN/kmDJ1
+         q4X8YjhIeTuuekY6pg2l1AYn+616tmQRUMbjsdLbxx30h+Y3No4Ox51OHNCLRZgZ0mE1
+         ePAGleNsio1BUflY2SvqlfD9MK1VuJthlBeF6cyPb39o74K4Gue+iiBddBslhhbHTxK4
+         ALJnOaVj3WK4UYNYFiFpVDVvvjozo5SXSy/Uug5CVuUCAK+NgBXWR7QewwZLFGCbz9LB
+         CawLdpfUKxhwLN3A2i7sUlejoOmy/T//l48WU0ESvh1pj8xD/5LEtevm1PJgQdCnBNGN
+         xTjA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712168779; x=1712773579;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=KbtoEoj4oChBiO+Y87ED1v4ExuftqHcGwPMYfmQNkfA=;
-        b=YyCRetmz9GRms93Mfo/15zOXn1w/KlfSONgwgKZyRhRcx7B7vuoXuXYIOmESTl2KT/
-         X+L6Jy0zz9h3Z97S6VbGAH8FdkVjGSAUK93NQAyD8XhKG9giqlfG3pnQ2Yjoo8G3QVJv
-         fWaonDx5zBTfWXMG65aS7tZf/bJdDlVM3tzicjZuZ6oFKa1Q014IJb2z9HWf9sXEF3fo
-         1+HE3iZrABNcDwNbMiM/LzJDqBvMcVeOMXZpI1DMIpC3Xws+/eRpf5cAdobxN+urzw2p
-         bnK+p6OISQINb5aLNOFglfrm/23EBfwka3g8599iLvHO60BalPxfU2SasiRFPVKB1E1m
-         pv0g==
-X-Forwarded-Encrypted: i=1; AJvYcCWteOvDQztVyzmRk54tVABNWzJNC1ccUKRxFXXvqZyI3yrTCE1qzYAFgkrvOkvZtKWNYH8Lm+eCqnqus0mKloyQ94AdNtDIbwexO7KAN2s+BwTL5FUnvky6Y3tx9+zgmYcSE96VWTCjFfMx8wJIoXOiwNjpLEwOL7tQ/GWjU/6xHUqpVEMIVf7eHQ==
-X-Gm-Message-State: AOJu0Yx7kPpNOyynBqGHWwkQ+tAzmup33uUtzTS8WfBYis2E+9JAWf9K
-	DI46jN4E6WPMf2JMGoEbZVV6n81ZQft7jKCXf7jv6X3VQ7rHNqdG
-X-Google-Smtp-Source: AGHT+IHQ9uuUuPoQFrr8foz2IR4qr+5ODebDBIJMqbDQ/OLXs1tkY8YgMX5XpBIC998RHg3OwMlolg==
-X-Received: by 2002:a05:6a00:b81:b0:6ea:92de:3603 with SMTP id g1-20020a056a000b8100b006ea92de3603mr406437pfj.16.1712168779381;
-        Wed, 03 Apr 2024 11:26:19 -0700 (PDT)
-Received: from localhost.localdomain ([113.30.217.222])
-        by smtp.gmail.com with ESMTPSA id kq10-20020a056a004b0a00b006eae3aac040sm10609776pfb.31.2024.04.03.11.26.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 03 Apr 2024 11:26:18 -0700 (PDT)
-From: Anand Moon <linux.amoon@gmail.com>
-To: Chanwoo Choi <cw00.choi@samsung.com>,
-	MyungJoo Ham <myungjoo.ham@samsung.com>,
-	Kyungmin Park <kyungmin.park@samsung.com>,
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-	Alim Akhtar <alim.akhtar@samsung.com>
-Cc: Anand Moon <linux.amoon@gmail.com>,
-	linux-pm@vger.kernel.org,
-	linux-samsung-soc@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 2/2] PM / devfreq: exynos: Switch from CONFIG_PM_SLEEP guards to pm_sleep_ptr()
-Date: Wed,  3 Apr 2024 23:45:05 +0530
-Message-ID: <20240403181517.5993-2-linux.amoon@gmail.com>
-X-Mailer: git-send-email 2.44.0
-In-Reply-To: <20240403181517.5993-1-linux.amoon@gmail.com>
-References: <20240403181517.5993-1-linux.amoon@gmail.com>
+        d=1e100.net; s=20230601; t=1712169029; x=1712773829;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=VwSQRZk+BRxb7GZSaFeES/scIy0HPs9KPKeQnP6jNQA=;
+        b=ii78cFqhcRh1mmiwFpfgA6NjzBxDbWBSQOa/X3TFCs0RdzZTKWC6irFqJtQ0vbkRVy
+         7Atk8aCJdK1RZn+gRtOj/nIweeDCmLynEo/5r85ZNRhOQ24HsmfTFPkg3R9ILrxoexu+
+         oMHGh70MZEnkUvNZwKZv0F/7O9R8o1aYq7M5QhUupGQbCLUyn1uaW37vlLVRYqJX4DNh
+         lUnooFmwPRgopgGpZql3YjW9FXJlSKBewIWxT/Cc7kypiCsMlXDhryd+7pT3+a82KvCp
+         9PHipfcmG25BcB+49K/2RJhVtdnH/nqKyYwUJfjzR4/4c+VA8u2/G3J6o5bNbiqUBcBw
+         a4kQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUMgYsPGsJ9Qlreh0NqiwKknYdbPBLQPXTODp1DvfGaZlHmZGIkv5OHCsuxassS+H72ZIwuOBUKmfV+o3exAVoQC3/S6tOUyG1MWPOb
+X-Gm-Message-State: AOJu0YzAqyxohhCOrHu5rVt/UGPEYtXc9Wp3fKqss05wkkMHCeP9rWVQ
+	OHN4NIsYU9YzpaAufbzKwGjR0PBhiqWEE9mn3fBqPP8nf2MR7fE8zE7k1lxgUsUN4WJoXkZn358
+	9lw==
+X-Google-Smtp-Source: AGHT+IG/dVT1QOvlvL3U4/nwwVAfLf64pBOTR5Elndu+IJvpzi5Oo1x0lhZjKdwFiBZ+AqTPHPDpWYXpEf8=
+X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
+ (user=seanjc job=sendgmr) by 2002:a05:6a00:2d07:b0:6ea:b999:4de1 with SMTP id
+ fa7-20020a056a002d0700b006eab9994de1mr10338pfb.5.1712169028875; Wed, 03 Apr
+ 2024 11:30:28 -0700 (PDT)
+Date: Wed, 3 Apr 2024 11:30:21 -0700
+In-Reply-To: <20240319163309.GG1645738@ls.amr.corp.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+References: <cover.1709288671.git.isaku.yamahata@intel.com>
+ <ZekQFdPlU7RDVt-B@google.com> <20240307020954.GG368614@ls.amr.corp.intel.com> <20240319163309.GG1645738@ls.amr.corp.intel.com>
+Message-ID: <Zg2gPaXWjYxr8woR@google.com>
+Subject: Re: [RFC PATCH 0/8] KVM: Prepopulate guest memory API
+From: Sean Christopherson <seanjc@google.com>
+To: Isaku Yamahata <isaku.yamahata@intel.com>
+Cc: David Matlack <dmatlack@google.com>, kvm@vger.kernel.org, isaku.yamahata@gmail.com, 
+	linux-kernel@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>, 
+	Michael Roth <michael.roth@amd.com>, Federico Parola <federico.parola@polito.it>
+Content-Type: text/plain; charset="us-ascii"
 
-Use the new PM macros for the suspend and resume functions to be
-automatically dropped by the compiler when CONFIG_PM_SLEEP are disabled,
-without having to use #ifdef guards. If CONFIG_PM_SLEEP unused,
-they will simply be discarded by the compiler.
+On Tue, Mar 19, 2024, Isaku Yamahata wrote:
+> On Wed, Mar 06, 2024 at 06:09:54PM -0800,
+> Isaku Yamahata <isaku.yamahata@linux.intel.com> wrote:
+> 
+> > On Wed, Mar 06, 2024 at 04:53:41PM -0800,
+> > David Matlack <dmatlack@google.com> wrote:
+> > 
+> > > On 2024-03-01 09:28 AM, isaku.yamahata@intel.com wrote:
+> > > > From: Isaku Yamahata <isaku.yamahata@intel.com>
+> > > > 
+> > > > Implementation:
+> > > > - x86 KVM MMU
+> > > >   In x86 KVM MMU, I chose to use kvm_mmu_do_page_fault().  It's not confined to
+> > > >   KVM TDP MMU.  We can restrict it to KVM TDP MMU and introduce an optimized
+> > > >   version.
+> > > 
+> > > Restricting to TDP MMU seems like a good idea. But I'm not quite sure
+> > > how to reliably do that from a vCPU context. Checking for TDP being
+> > > enabled is easy, but what if the vCPU is in guest-mode?
+> > 
+> > As you pointed out in other mail, legacy KVM MMU support or guest-mode will be
+> > troublesome.
 
-Signed-off-by: Anand Moon <linux.amoon@gmail.com>
----
-added __maybe_unused to suspend/resume functions
+Why is shadow paging troublesome?  I don't see any obvious issues with effectively
+prefetching into a shadow MMU with read fault semantics.  It might be pointless
+and wasteful, as the guest PTEs need to be in place, but that's userspace's problem.
 
-[0] https://lore.kernel.org/all/20240226183308.4730-1-linux.amoon@gmail.com/
----
- drivers/devfreq/exynos-bus.c | 8 +++-----
- 1 file changed, 3 insertions(+), 5 deletions(-)
+Testing is the biggest gap I see, as using the ioctl() for shadow paging will
+essentially require a live guest, but that doesn't seem like it'd be too hard to
+validate.  And unless we lock down the ioctl() to only be allowed on vCPUs that
+have never done KVM_RUN, we need that test coverage anyways.
 
-diff --git a/drivers/devfreq/exynos-bus.c b/drivers/devfreq/exynos-bus.c
-index 153340b6685f..09822f8fa209 100644
---- a/drivers/devfreq/exynos-bus.c
-+++ b/drivers/devfreq/exynos-bus.c
-@@ -454,8 +454,7 @@ static void exynos_bus_shutdown(struct platform_device *pdev)
- 	devfreq_suspend_device(bus->devfreq);
- }
- 
--#ifdef CONFIG_PM_SLEEP
--static int exynos_bus_resume(struct device *dev)
-+static int __maybe_unused exynos_bus_resume(struct device *dev)
- {
- 	struct exynos_bus *bus = dev_get_drvdata(dev);
- 	int ret;
-@@ -469,7 +468,7 @@ static int exynos_bus_resume(struct device *dev)
- 	return 0;
- }
- 
--static int exynos_bus_suspend(struct device *dev)
-+static int __maybe_unused exynos_bus_suspend(struct device *dev)
- {
- 	struct exynos_bus *bus = dev_get_drvdata(dev);
- 	int ret;
-@@ -482,7 +481,6 @@ static int exynos_bus_suspend(struct device *dev)
- 
- 	return 0;
- }
--#endif
- 
- static const struct dev_pm_ops exynos_bus_pm = {
- 	SET_SYSTEM_SLEEP_PM_OPS(exynos_bus_suspend, exynos_bus_resume)
-@@ -499,7 +497,7 @@ static struct platform_driver exynos_bus_platdrv = {
- 	.shutdown	= exynos_bus_shutdown,
- 	.driver = {
- 		.name	= "exynos-bus",
--		.pm	= &exynos_bus_pm,
-+		.pm	= pm_sleep_ptr(&exynos_bus_pm),
- 		.of_match_table = exynos_bus_of_match,
- 	},
- };
--- 
-2.44.0
+And I don't think it makes sense to try and lock down the ioctl(), because for
+the enforcement to have any meaning, KVM would need to reject the ioctl() if *any*
+vCPU has run, and adding that code would likely add more complexity than it solves.
 
+> > The use case I supposed is pre-population before guest runs, the guest-mode
+> > wouldn't matter. I didn't add explicit check for it, though.
+
+KVM shouldn't have an explicit is_guest_mode() check, the support should be a
+property of the underlying MMU, and KVM can use the TDP MMU for L2 (if L1 is
+using legacy shadow paging, not TDP).
+
+> > Any use case while vcpus running?
+> > 
+> > 
+> > > Perhaps we can just return an error out to userspace if the vCPU is in
+> > > guest-mode or TDP is disabled, and make it userspace's problem to do
+> > > memory mapping before loading any vCPU state.
+> > 
+> > If the use case for default VM or sw-proteced VM is to avoid excessive kvm page
+> > fault at guest boot, error on guest-mode or disabled TDP wouldn't matter.
+> 
+> Any input?  If no further input, I assume the primary use case is pre-population
+> before guest running.
+
+Pre-populating is the primary use case, but that could happen if L2 is active,
+e.g. after live migration.
+
+I'm not necessarily opposed to initially adding support only for the TDP MMU, but
+if the delta to also support the shadow MMU is relatively small, my preference
+would be to add the support right away.  E.g. to give us confidence that the uAPI
+can work for multiple MMUs, and so that we don't have to write documentation for
+x86 to explain exactly when it's legal to use the ioctl().
