@@ -1,121 +1,156 @@
-Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
+Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com [209.85.210.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 247CA1553B3;
-	Wed,  3 Apr 2024 20:11:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12A96BE4D
+	for <linux-kernel@vger.kernel.org>; Wed,  3 Apr 2024 20:15:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712175085; cv=none; b=pnZ54BkaO2HBrUrcm3rXNZNMxtxgACJ7Zo3ndYLv67VgtMfiOs5HWeyjIMeXSTHcNEr7tUd2ID8lzvipH+v/uejeYB/JOv6wFr6EjztvGO3329otym7Q/UzlAK4QkFLmrRh/FN+yL4Pq8Dd8PiUF61bWOkNbkwZ/+4ObrFVRHA4=
+	t=1712175336; cv=none; b=KlkZptzrDekh9Q4js7cbiVPsy47lIKo1hxco6tU/hv1RaxaAP4HiHU/OqX+VVUYw4ITcnmUCAHBVDulCvF8r7O76XhBemm9mLXSOXyeLMslSotDy0NuvWbYjVyP6bzlXwh83SBOJVIhKTNxZfF+Lckh+J+WKhVflGiqyL/d/y+0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712175085; c=relaxed/simple;
-	bh=sun1NsHk2vEsIXt3sZXU+hXzHiz0Ux6ixOcTuUjI7kk=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=uzbamiNV3165kO7Uol0UBmmGW00NjhYE9LRMYvqG2MazWtBQqHam116R1FWo5AKTESvsiixvQ9FYSe5LxpFOPp7eJTRHZJvuC2kkAlVP3kKNgqMl/XpCoUITTiu9HSg0yUHysQUAc7x/iaY11HWOoBCt06M75MufnjXo63PHZ94=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mRYnYMVP; arc=none smtp.client-ip=209.85.128.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+	s=arc-20240116; t=1712175336; c=relaxed/simple;
+	bh=KvOEtLyuXPGn5vvFqMeIvsE64RMxdq6BxREYcuVaCMw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=pB55i6w0+by7qywFwWVTY3m6y58g20DYXDbS3MCFmNy52RUrW3JL8P1GVG5YVig08+urKnPGrqbHVLT6iIgGcOp/MnnXvbXHxwxx0PYwU8bCgwHyO/cIw7NMamM0ckoELnwZ42ndEYS9o5kRt567WxY8qJj0T3DYMfCijIjJ7uY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.210.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mRYnYMVP"
-Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-415523d9824so2141265e9.3;
-        Wed, 03 Apr 2024 13:11:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1712175082; x=1712779882; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=MOcLWgLOgrNtkAnYfPiCGepAqkA5lMiMzdb5KR8b+o0=;
-        b=mRYnYMVPkUR+564YGKX8uEAazIDaS/KePWUhN4a4MYCkl7JTYZvcs+HgQqoFV64OiW
-         Afegr+QkblOYKe7XT5Ma5OwpbL+XBp4V55mKi2wNJswihgmeVvrri9YjdLelGxGhT8Bj
-         eZ1ubR44iZbsK/Nll3btaKZ8WCJ84bF9C/0RGoQ8huruXYyH5fkDXvw9FAAqdsZs8AWP
-         M5mlV14nyYgTbbsNpyvcbSQuMP3wouuS/hrP6xm54xjjLFRYUGFoV9sz7jI9bfPruAO4
-         /cyNiCl9plQo8qkKkqsuY1kiZ9pkKbn+WLXkWpCZWl+s785qmMvrpytmsb8bCd5kjSZn
-         B5aQ==
+Received: by mail-pf1-f180.google.com with SMTP id d2e1a72fcca58-6e782e955adso194885b3a.3
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Apr 2024 13:15:34 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712175082; x=1712779882;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=MOcLWgLOgrNtkAnYfPiCGepAqkA5lMiMzdb5KR8b+o0=;
-        b=aqFQ7VAHugwD+hPTVguiEX9wKE22KfEabBFbDVUb9EXuNKkD23134UkxdWAZD5gSCV
-         GgVDgjwfGCEH8Qc4lFXvvQ5P1vGAjhEEwzv3o24EKifkELmxk3Q3hV7sYPbRqFcY46nw
-         nNSDFAJ+xfRYnVephfK6xkFLJiRNZdrq+0MZHfrn7yrcmT5jzV4RHFl2FBG0vicpvYVS
-         +qbi+d8TI6BMOiHg6Lujy9tZbiasbYkrrgwqR2FRzPJCuoBVVztyHq2ld1KwQwrtg4gT
-         83lKXum8Hysv1SZI5Xhho7KJcFiyaGehfeucKG63bX1Kezr3AHUseonDUIRiq48WvBMy
-         QtdA==
-X-Forwarded-Encrypted: i=1; AJvYcCX3EPyvGGbKyYbIhq3KG1PBk57Zlc00loTDQPLlLuhASPwYPjCwjkOVdjqNDJHfGWLphGROAX9X1ExrKtDLwtgl34ZTC0RxDIc55WJctqQRUQRl/Pqq+bGPgxY1i46K0rOoBQkC5ex/Kd1pzJvJ+9Y=
-X-Gm-Message-State: AOJu0YxPVEccYC5xrehC1PiQfb6Ggajad+cVA6TSNhvzIIgSqctqbns+
-	YFs8gcTyU0uTlkGwvU9utVR7y6gyo+XbHVy7Ox7edCMe7Wbf7VZ//Y68hAwR
-X-Google-Smtp-Source: AGHT+IHtLaUCwwkgS1vtIEW1V174Y94xNXH3nSrut92Q5koJYf4Y2HWj56P76mXN+xJub7xa6PNmqQ==
-X-Received: by 2002:a05:600c:4f91:b0:414:227:fc66 with SMTP id n17-20020a05600c4f9100b004140227fc66mr584172wmq.2.1712175082076;
-        Wed, 03 Apr 2024 13:11:22 -0700 (PDT)
-Received: from prasmi.home ([2a00:23c8:2500:a01:5eb:3d93:f2b6:25e8])
-        by smtp.gmail.com with ESMTPSA id u1-20020a7bcb01000000b004155a32841bsm211197wmj.39.2024.04.03.13.11.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 03 Apr 2024 13:11:21 -0700 (PDT)
-From: Prabhakar <prabhakar.csengg@gmail.com>
-X-Google-Original-From: Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-To: Geert Uytterhoeven <geert+renesas@glider.be>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>
-Cc: linux-clk@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-renesas-soc@vger.kernel.org,
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: [PATCH] clk: renesas: r9a07g043: Add clock and reset entry for PLIC
-Date: Wed,  3 Apr 2024 21:09:52 +0100
-Message-Id: <20240403200952.633084-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
-X-Mailer: git-send-email 2.34.1
+        d=1e100.net; s=20230601; t=1712175334; x=1712780134;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=svGwFWmbfUiAfQcf8SsuBavSqOlyPN+DUVCm92e3kPU=;
+        b=BqAJjttNfz05ZIm7prEYoWiMbLhkIhDqfawUsNczEEE92NA8dlgYD3+nCTmMwx1rFN
+         iW8PGVPfYl4mJ16fiVoxzl61av3fDaNKZn3TH1AI5cXZFtTX8YoUh/eQJK636E8Hlsek
+         ymQLN7ICnWPtAKiA7wRLOJ2oIMxy8zAdV61Bq/SPUjUS3seeRkXfYALzFayr4jm533o4
+         vYVO+fq/l2jnAdGTTAzlP+zUUUkqtIV2Enh4I/Vilm29t/P6oLJjrc7TSX/WZ0kS637g
+         z4AJRlPCvd8F0OSafzajd7uABLeFgm/Sb4BCkhFCuABbCPZIsQRMqvYWKy3NUETWcX2G
+         wrHg==
+X-Forwarded-Encrypted: i=1; AJvYcCVN+6jH9dKiopwgkskYJUFQt2uB4vMSmL4TZaJ4r/RVT+hdSv4sD7W4Ypr7LQIB79KYeWiyEU+17YdhEqCKObCNfA7xwHApHV8oYqsM
+X-Gm-Message-State: AOJu0YxslPZ+v5Ge6U5XPyQo5Ifwn/5krttbL64Jqe7JRhHNjfzll9V4
+	iGVweVwzGRWvA7KWSfSdHQh3shcOQUouAtyiyFPzQ80eGDmA9lV379xC8iSij1+6hndktlJThiZ
+	JwFK0ldCYOT7NRls9UwchljVEGSKpCE8S
+X-Google-Smtp-Source: AGHT+IFHsRB2fVoD7qY7l0X2gxuw4o0MzZbGGeL+LivVrBtsX0npWgPK6fAgrmxiSW/ijcQ/t0m7C+eHwmHKId3pVrk=
+X-Received: by 2002:a05:6a21:8183:b0:1a3:8984:b334 with SMTP id
+ pd3-20020a056a21818300b001a38984b334mr725027pzb.22.1712175334172; Wed, 03 Apr
+ 2024 13:15:34 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <Zg1ywF7uRsfXYfYS@x1> <CAP-5=fUqtjxAsmdGrnkjhUTLHs-JvV10TtxyocpYDJK_+LYTiQ@mail.gmail.com>
+ <Zg2zfKFdGCJaYc36@x1>
+In-Reply-To: <Zg2zfKFdGCJaYc36@x1>
+From: Namhyung Kim <namhyung@kernel.org>
+Date: Wed, 3 Apr 2024 13:15:22 -0700
+Message-ID: <CAM9d7cgPxFS2FRc+FETXV4z7ev-SCesDNcQihs5qdA_KZ2pOew@mail.gmail.com>
+Subject: Re: [PATCH 1/1] perf annotate: Initialize 'arch' variable not to trip
+ some -Werror=maybe-uninitialized
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Jiri Olsa <jolsa@kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+On Wed, Apr 3, 2024 at 12:52=E2=80=AFPM Arnaldo Carvalho de Melo
+<acme@kernel.org> wrote:
+>
+> On Wed, Apr 03, 2024 at 09:01:56AM -0700, Ian Rogers wrote:
+> > On Wed, Apr 3, 2024 at 8:16=E2=80=AFAM Arnaldo Carvalho de Melo <acme@k=
+ernel.org> wrote:
+> > >
+> > > In some older distros the build is failing due to
+> > > -Werror=3Dmaybe-uninitialized, in this case we know that this isn't t=
+he
+> > > case because 'arch' gets initialized by evsel__get_arch(), so just in=
+it
+> > > it to NULL to silence those cases.
+> > >
+> > > E.g.:
+> > >
+> > >     32    17.12 opensuse:15.5                 : FAIL gcc version 7.5.=
+0 (SUSE Linux)
+> > >         util/annotate.c: In function 'hist_entry__get_data_type':
+> > >     util/annotate.c:2269:15: error: 'arch' may be used uninitialized =
+in this function [-Werror=3Dmaybe-uninitialized]
+> > >       struct arch *arch;
+> > >                    ^~~~
+> > >     cc1: all warnings being treated as errors
+> > >
+> > >       43     7.30 ubuntu:18.04-x-powerpc64el    : FAIL gcc version 7.=
+5.0 (Ubuntu 7.5.0-3ubuntu1~18.04)
+> > >     util/annotate.c: In function 'hist_entry__get_data_type':
+> > >     util/annotate.c:2351:36: error: 'arch' may be used uninitialized =
+in this function [-Werror=3Dmaybe-uninitialized]
+> > >        if (map__dso(ms->map)->kernel && arch__is(arch, "x86") &&
+> > >                                         ^~~~~~~~~~~~~~~~~~~~~
+> > >     cc1: all warnings being treated as errors
+> > >
+> > > Cc: Adrian Hunter <adrian.hunter@intel.com>
+> > > Cc: Ian Rogers <irogers@google.com>
+> > > Cc: Jiri Olsa <jolsa@kernel.org>
+> > > Cc: Namhyung Kim <namhyung@kernel.org>
+> > > Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+> >
+> > This looks fine but I couldn't line up the errors with code in the
+> > tree. I was curious why the "maybe-uninitialized" was failing. Perhaps
+> > evsel__get_arch should set the out argument to NULL when an error
+> > occurs. This fix is also good but may potentially need repeating for
+> > other evsel__get_arch cases, so a fix in evsel__get_arch may be
+> > preferable.
+> >
+> > Reviewed-by: Ian Rogers <irogers@google.com>
+>
+> Trying with this on top, i.e. what you suggests:
+>
+> From 70e6fd996ce7f9c9adbb30640ed666025bf6f1e4 Mon Sep 17 00:00:00 2001
+> From: Arnaldo Carvalho de Melo <acme@redhat.com>
+> Date: Wed, 3 Apr 2024 16:49:54 -0300
+> Subject: [PATCH 1/1] WIP
+>
+> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-Add the missing clock and reset entry for PLIC. Also add
-R9A07G043_NCEPLIC_ACLK to critical clocks list.
+Acked-by: Namhyung Kim <namhyung@kernel.org>
 
-Fixes: b3e77da00f1b ("riscv: dts: renesas: Add initial devicetree for Renesas RZ/Five SoC")
-Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
----
- drivers/clk/renesas/r9a07g043-cpg.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
+Thanks,
+Namhyung
 
-diff --git a/drivers/clk/renesas/r9a07g043-cpg.c b/drivers/clk/renesas/r9a07g043-cpg.c
-index e36d2ec2c0f5..16acc95f3c62 100644
---- a/drivers/clk/renesas/r9a07g043-cpg.c
-+++ b/drivers/clk/renesas/r9a07g043-cpg.c
-@@ -280,6 +280,10 @@ static const struct rzg2l_mod_clk r9a07g043_mod_clks[] = {
- 				0x5a8, 1),
- 	DEF_MOD("tsu_pclk",	R9A07G043_TSU_PCLK, R9A07G043_CLK_TSU,
- 				0x5ac, 0),
-+#ifdef CONFIG_RISCV
-+	DEF_MOD("nceplic_aclk",	R9A07G043_NCEPLIC_ACLK, R9A07G043_CLK_P1,
-+				0x608, 0),
-+#endif
- };
- 
- static const struct rzg2l_reset r9a07g043_resets[] = {
-@@ -338,6 +342,10 @@ static const struct rzg2l_reset r9a07g043_resets[] = {
- 	DEF_RST(R9A07G043_ADC_PRESETN, 0x8a8, 0),
- 	DEF_RST(R9A07G043_ADC_ADRST_N, 0x8a8, 1),
- 	DEF_RST(R9A07G043_TSU_PRESETN, 0x8ac, 0),
-+#ifdef CONFIG_RISCV
-+	DEF_RST(R9A07G043_NCEPLIC_ARESETN, 0x908, 0),
-+#endif
-+
- };
- 
- static const unsigned int r9a07g043_crit_mod_clks[] __initconst = {
-@@ -347,6 +355,7 @@ static const unsigned int r9a07g043_crit_mod_clks[] __initconst = {
- #endif
- #ifdef CONFIG_RISCV
- 	MOD_CLK_BASE + R9A07G043_IAX45_CLK,
-+	MOD_CLK_BASE + R9A07G043_NCEPLIC_ACLK,
- #endif
- 	MOD_CLK_BASE + R9A07G043_DMAC_ACLK,
- };
--- 
-2.34.1
 
+> ---
+>  tools/perf/util/annotate.c | 6 ++++--
+>  1 file changed, 4 insertions(+), 2 deletions(-)
+>
+> diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
+> index f316e0b65897957a..35235147b111e788 100644
+> --- a/tools/perf/util/annotate.c
+> +++ b/tools/perf/util/annotate.c
+> @@ -838,8 +838,10 @@ static int evsel__get_arch(struct evsel *evsel, stru=
+ct arch **parch)
+>         struct arch *arch;
+>         int err;
+>
+> -       if (!arch_name)
+> +       if (!arch_name) {
+> +               *parch =3D NULL;
+>                 return errno;
+> +       }
+>
+>         *parch =3D arch =3D arch__find(arch_name);
+>         if (arch =3D=3D NULL) {
+> @@ -2266,7 +2268,7 @@ struct annotated_data_type *hist_entry__get_data_ty=
+pe(struct hist_entry *he)
+>  {
+>         struct map_symbol *ms =3D &he->ms;
+>         struct evsel *evsel =3D hists_to_evsel(he->hists);
+> -       struct arch *arch =3D NULL;
+> +       struct arch *arch;
+>         struct disasm_line *dl;
+>         struct annotated_insn_loc loc;
+>         struct annotated_op_loc *op_loc;
+> --
+> 2.44.0
+>
