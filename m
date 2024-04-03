@@ -1,159 +1,125 @@
-Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E52B141991;
-	Wed,  3 Apr 2024 13:15:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E169C148315
+	for <linux-kernel@vger.kernel.org>; Wed,  3 Apr 2024 13:15:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712150151; cv=none; b=PCuOXxYybnZV9/8cOd3CbPQOJvn/hJ/AHl+sIw57Y3SnS18tMVeM3Obfe/O89iZZkWSQUBXlMAL1tVQNDuTTltFJpTd74L2DlXZsvPZfFvOpZSXyLfcuXXirJcvSa9J5KHAod87dpq6wrYu04QvtJx9uqM8k4hGaNcZQzVWzMN4=
+	t=1712150155; cv=none; b=dPDW9g5ebusRMT+BX0jZBMRma/B2v7Zt/r5nPpuPudX4L1c/p2y09R8acgHtZeOx8lQF5xjnaP9xrPnErZB+FDKVujXYf2o7Mt6iuJoi+ucGGFucyBAr8vA2Vh0IYki6ZT7ELH42WqBUCjhIPp2KhNIVFIDmR15gD39UEpTydaI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712150151; c=relaxed/simple;
-	bh=NwuOgeSZZfuy/bcZe5g5vIbq4ic/8AeLqX7XSqcwRWQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=FPJQiOuqsYUqIqsK47/r3ixUPxDAWeX+wNoGItBoR7KJmc3FIIUFGauJtyUyOaXVsExzHuuycvnmeJ+rTGOywthIWcvjScqs+wAHkQ0dxFC5phUdH7eLbEdOcCikiWV8Y95aJe+BtilygFsxTJJ+Izrak+duxNo5AAzGtgOH6aA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RXWddArO; arc=none smtp.client-ip=209.85.214.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1712150155; c=relaxed/simple;
+	bh=BvY7n2GM32YM2EPuTXqQK41U/DifdKggfolJTvMcnKo=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=R4c7FzwqtCoWiG+3/cS4AaU5bDD6WGw+VHqJfhnbWzmNELywKSBeY3YBCWT7XRFHa5sdBhqr0oKfjeEQfH2tDhaO5aDfa+UeoFYyzV2bTC32zrXJ72xA889FEu9sNgQ9jGqDFMzo/cQQUFyfDsiiz4rmC1+acPCctvAOFRiB3r8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=FiMffq5u; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RXWddArO"
-Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-1e0d8403257so49679435ad.1;
-        Wed, 03 Apr 2024 06:15:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1712150149; x=1712754949; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ZHeGHNpRkBLOu8kBNyEl+Q1XXeuLyPUmsIwfIXB3dAs=;
-        b=RXWddArOFexplIpP3Tv80s8NvUL9Xp9nHfmV6+U1KdM/pJRPjS5BKCnGdTnIq0G3Pg
-         EKAkP6wmJWUvNLrI5XIUi5WnVGKuv8HlAvL0YFIFcKf1ecscNtv+IIyXkh4/ljzkkwHL
-         0Zny/bwzbiW+FyJmnMZ4bC3PiuREaKSx/tWMmwZFwt3krHUNs+1YV4cV1BPvPauePoHa
-         4SFOC2vTKiUagNjfL8qcb93NngRmNtIzo353XcOzQyEeR9xGCMbtKnBRNN5sZtYzJL4C
-         akC6Nd18MizjXSIpUHfAyuPwTjijqBDrjsWxj6rZZetje8rTwcIyacnx7EtiL1RIV5GI
-         w7dg==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FiMffq5u"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1712150152;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=8EVms2YLsDUuCYIw5cPdoEBYXqHd2OjbZnSw2iHHs/8=;
+	b=FiMffq5uCTC9wsfLZ2l5NKeQZ1exSqfJVljGd+vrlLp03ns3ig5wqVwFQG7JnoaG1aswZR
+	R+oI9ReJ4qlJBNQRjtd59eaUK+l+joEJ1MEhFSEnNNfCtOSItjyfVOtOrSta9/DiOg65xo
+	C/qUqBpn0rYhp9FgLw07+jnVspErcls=
+Received: from mail-lj1-f198.google.com (mail-lj1-f198.google.com
+ [209.85.208.198]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-677-2pTYI-tQO6G1atAJuSnDDQ-1; Wed, 03 Apr 2024 09:15:51 -0400
+X-MC-Unique: 2pTYI-tQO6G1atAJuSnDDQ-1
+Received: by mail-lj1-f198.google.com with SMTP id 38308e7fff4ca-2d818a149bbso22847601fa.3
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Apr 2024 06:15:50 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712150149; x=1712754949;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ZHeGHNpRkBLOu8kBNyEl+Q1XXeuLyPUmsIwfIXB3dAs=;
-        b=IsOXx6UgoFi0cWszjUKsnhNLP2fhVKkh1N5BcVPN5qDimKb/0vBIDPFkTSpyvdorMR
-         Q30hCfNwf+pmRBsMr5P9Kgw0uoGKvTxTal07sdK6VMUOGglCO9TEHrpi0uuzurY6sfuw
-         1r8KVZR8ZVe6DdGXv1oOUW4pKALsTp+AT9ZHmZBCXmDMO17lxP9HGvZMGiQnQmo8q8KN
-         Z5zfTc321Ps6P+NZ6d7d5eFl4AEIH0Y9wvr4YB7nLKWIY12fEZNaCV4P1LsoHX7EhMn+
-         yjDXnZCASWvbMBzd0gZBLSozh0mSIob1E/fx9wkswZrSGSGPdbEc2gfegxlfqQpuCeOJ
-         MqBA==
-X-Forwarded-Encrypted: i=1; AJvYcCVTS0RSm7xTo9zh5nXbXhqBd7HuuFuG7rWhGDdVBjG71xs2RLwxJ039f9M5AlySI4V3SMgpMqUbik7nU+zG/wjxdM7E31k0lgKBinfLMG9Gm0sgLIqoSrtR7+XJQZ9+xI2tKw==
-X-Gm-Message-State: AOJu0YwdztzjycjPH0wp7dP2hQmcClapp5ChYdny/5roToxcfLBRFtY/
-	W/85BYdXfPny07khB6VQdARC7tWsM6U4nIHgBNI+ix9tZvJwe9ocVT2DBv9u
-X-Google-Smtp-Source: AGHT+IFTBWsvCk3AK9wrix0ySDyfm5TvC3l3Jo7sBwAiUWtQCDbHSXBu5pKcPVHSwGLKJPaxnEnEBg==
-X-Received: by 2002:a17:902:6546:b0:1e2:6f09:f4da with SMTP id d6-20020a170902654600b001e26f09f4damr4362295pln.50.1712150148673;
-        Wed, 03 Apr 2024 06:15:48 -0700 (PDT)
-Received: from rigel.home.arpa (194-223-186-215.tpgi.com.au. [194.223.186.215])
-        by smtp.gmail.com with ESMTPSA id e14-20020a170902784e00b001e010c1628fsm13417604pln.124.2024.04.03.06.15.45
+        d=1e100.net; s=20230601; t=1712150150; x=1712754950;
+        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=8EVms2YLsDUuCYIw5cPdoEBYXqHd2OjbZnSw2iHHs/8=;
+        b=rtonNrwH15LbWPm0/1Fzn+n5AREMlt9xrUtY/R0pQUGsU1+Mgtbf6YT8+C6NhvnVNL
+         Ee6nroQa5AME8NbqaufLYtvlbqk6EmltCRE/Cm44V1oSjV9zA4gsO7kTQKCqPoe1MsJE
+         ky5cxDd+kVf62Ier0Pbg+8XtNljk+VxD1Rc1Zrgi+c3AuE+9yw3PqGV0UJKZ/LtRpYg7
+         nh8YeZ4fqB9ckx5uM17D70nQmgr2dnHYaUfvIj3L4YJaZeBz10LHJHI2lXnirKQ3pxuK
+         iXhHHAU9JmwoVQUvLvZ8PZpU3oZLrIHBLQleKem+g7aErm72pcU3pP84mDKgjJJV2RAc
+         r33Q==
+X-Gm-Message-State: AOJu0YwqrFsfyUL42oo3KNdEB3eHepTM+F5UA0yb5g4YufUAg2q/nYZD
+	akxs0DkBMeSWxlchRqHDvFgLWTDLC0DiX4j9iD69RoQG8lyM8YM2d1udY2TJ86gTKfG2nsf+/ro
+	cWq3FeIJAthy6JmRCNljLqcIH6wrrOyKCEO29eXlyJb9t6GHaypCoWRsyVAP2Tw==
+X-Received: by 2002:a2e:a795:0:b0:2d8:2cd3:aa51 with SMTP id c21-20020a2ea795000000b002d82cd3aa51mr2201604ljf.53.1712150149818;
+        Wed, 03 Apr 2024 06:15:49 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFflOgcZSGdO/Ti5VsWhuXmDQ+H6zSOAqVtN4QkVE3bUJKOVJce9cVFlwkyt8RksgYYDBkyKg==
+X-Received: by 2002:a2e:a795:0:b0:2d8:2cd3:aa51 with SMTP id c21-20020a2ea795000000b002d82cd3aa51mr2201570ljf.53.1712150149275;
+        Wed, 03 Apr 2024 06:15:49 -0700 (PDT)
+Received: from localhost (205.pool92-176-231.dynamic.orange.es. [92.176.231.205])
+        by smtp.gmail.com with ESMTPSA id n11-20020a05600c500b00b0041624540918sm1692064wmr.9.2024.04.03.06.15.48
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Wed, 03 Apr 2024 06:15:48 -0700 (PDT)
-From: Kent Gibson <warthog618@gmail.com>
-To: linux-kernel@vger.kernel.org,
-	linux-gpio@vger.kernel.org,
-	brgl@bgdev.pl,
-	linus.walleij@linaro.org
-Cc: Kent Gibson <warthog618@gmail.com>,
-	stable@vger.kernel.org
-Subject: [PATCH 1/2] gpio: cdev: fix missed label sanitizing in debounce_setup()
-Date: Wed,  3 Apr 2024 21:15:17 +0800
-Message-Id: <20240403131518.61392-2-warthog618@gmail.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240403131518.61392-1-warthog618@gmail.com>
-References: <20240403131518.61392-1-warthog618@gmail.com>
+From: Javier Martinez Canillas <javierm@redhat.com>
+To: Ard Biesheuvel <ardb@kernel.org>, Arnd Bergmann <arnd@kernel.org>
+Cc: linux-kernel@vger.kernel.org, Randy Dunlap <rdunlap@infradead.org>,
+ Daniel Vetter <daniel.vetter@ffwll.ch>, Arnd Bergmann <arnd@arndb.de>,
+ Ilias Apalodimas <ilias.apalodimas@linaro.org>, "Kirill A. Shutemov"
+ <kirill.shutemov@linux.intel.com>, Tom Lendacky <thomas.lendacky@amd.com>,
+ "Borislav Petkov (AMD)" <bp@alien8.de>, Masahisa Kojima
+ <masahisa.kojima@linaro.org>, "Rafael J. Wysocki" <rafael@kernel.org>, Rob
+ Herring <robh@kernel.org>, Saravana Kannan <saravanak@google.com>, Greg
+ Kroah-Hartman <gregkh@linuxfoundation.org>, linux-efi@vger.kernel.org
+Subject: Re: [PATCH 10/34] efi: sysfb: don't build when EFI is disabled
+In-Reply-To: <CAMj1kXG2kcAmmB5aQRv5VBJ8Ov2fcg5waGpD1r=aOR9rV=dSWg@mail.gmail.com>
+References: <20240403080702.3509288-1-arnd@kernel.org>
+ <20240403080702.3509288-11-arnd@kernel.org>
+ <CAMj1kXG2kcAmmB5aQRv5VBJ8Ov2fcg5waGpD1r=aOR9rV=dSWg@mail.gmail.com>
+Date: Wed, 03 Apr 2024 15:15:48 +0200
+Message-ID: <87jzle1ta3.fsf@minerva.mail-host-address-is-not-set>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 
-When adding sanitization of the label, the path through
-edge_detector_setup() that leads to debounce_setup() was overlooked.
-A request taking this path does not allocate a new label and the
-request label is freed twice when the request is released, resulting
-in memory corruption.
+Ard Biesheuvel <ardb@kernel.org> writes:
 
-Add label sanitization to debounce_setup().
+> On Wed, 3 Apr 2024 at 11:09, Arnd Bergmann <arnd@kernel.org> wrote:
+>>
+>> From: Arnd Bergmann <arnd@arndb.de>
+>>
+>> With 'make W=1', there is a warning when EFI is turned off but sysfb_efi
+>> still gets built:
+>>
+>> drivers/firmware/efi/sysfb_efi.c:188:35: error: unused variable 'efifb_dmi_system_table' [-Werror,-Wunused-const-variable]
+>> static const struct dmi_system_id efifb_dmi_system_table[] __initconst = {
+>>                                   ^
+>> drivers/firmware/efi/sysfb_efi.c:238:35: error: unused variable 'efifb_dmi_swap_width_height' [-Werror,-Wunused-const-variable]
+>> static const struct dmi_system_id efifb_dmi_swap_width_height[] __initconst = {
+>>                                   ^
+>> drivers/firmware/efi/sysfb_efi.c:297:28: error: unused function 'find_pci_overlap_node' [-Werror,-Wunused-function]
+>> static struct device_node *find_pci_overlap_node(void)
+>>
+>> There was an earlier patch to address the duplicate function definitions, but
+>> that missed how we should not be building this file in the first place.
+>>
+>> Fixes: 15d27b15de96 ("efi: sysfb_efi: fix build when EFI is not set")
+>> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+>
+> Acked-by: Ard Biesheuvel <ardb@kernel.org>
+>
 
-Cc: stable@vger.kernel.org
-Fixes: b34490879baa ("gpio: cdev: sanitize the label before requesting the interrupt")
-Signed-off-by: Kent Gibson <warthog618@gmail.com>
----
- drivers/gpio/gpiolib-cdev.c | 31 +++++++++++++++++++------------
- 1 file changed, 19 insertions(+), 12 deletions(-)
+Looks good to me too.
 
-diff --git a/drivers/gpio/gpiolib-cdev.c b/drivers/gpio/gpiolib-cdev.c
-index fa9635610251..f4c2da2041e5 100644
---- a/drivers/gpio/gpiolib-cdev.c
-+++ b/drivers/gpio/gpiolib-cdev.c
-@@ -728,6 +728,16 @@ static u32 line_event_id(int level)
- 		       GPIO_V2_LINE_EVENT_FALLING_EDGE;
- }
- 
-+static inline char *make_irq_label(const char *orig)
-+{
-+	return kstrdup_and_replace(orig, '/', ':', GFP_KERNEL);
-+}
-+
-+static inline void free_irq_label(const char *label)
-+{
-+	kfree(label);
-+}
-+
- #ifdef CONFIG_HTE
- 
- static enum hte_return process_hw_ts_thread(void *p)
-@@ -1015,6 +1025,7 @@ static int debounce_setup(struct line *line, unsigned int debounce_period_us)
- {
- 	unsigned long irqflags;
- 	int ret, level, irq;
-+	char *label;
- 
- 	/* try hardware */
- 	ret = gpiod_set_debounce(line->desc, debounce_period_us);
-@@ -1037,11 +1048,17 @@ static int debounce_setup(struct line *line, unsigned int debounce_period_us)
- 			if (irq < 0)
- 				return -ENXIO;
- 
-+			label = make_irq_label(line->req->label);
-+			if (!label)
-+				return -ENOMEM;
-+
- 			irqflags = IRQF_TRIGGER_FALLING | IRQF_TRIGGER_RISING;
- 			ret = request_irq(irq, debounce_irq_handler, irqflags,
--					  line->req->label, line);
--			if (ret)
-+					  label, line);
-+			if (ret) {
-+				free_irq_label(label);
- 				return ret;
-+			}
- 			line->irq = irq;
- 		} else {
- 			ret = hte_edge_setup(line, GPIO_V2_LINE_FLAG_EDGE_BOTH);
-@@ -1083,16 +1100,6 @@ static u32 gpio_v2_line_config_debounce_period(struct gpio_v2_line_config *lc,
- 	return 0;
- }
- 
--static inline char *make_irq_label(const char *orig)
--{
--	return kstrdup_and_replace(orig, '/', ':', GFP_KERNEL);
--}
--
--static inline void free_irq_label(const char *label)
--{
--	kfree(label);
--}
--
- static void edge_detector_stop(struct line *line)
- {
- 	if (line->irq) {
+Acked-by: Javier Martinez Canillas <javierm@redhat.com>
+
+> or I can take it via the EFI tree if you prefer.
+>
+
+I think that could be merged through your EFI tree. Thanks!
+
 -- 
-2.39.2
+Best regards,
+
+Javier Martinez Canillas
+Core Platforms
+Red Hat
 
