@@ -1,57 +1,57 @@
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
+Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C7E15B698
-	for <linux-kernel@vger.kernel.org>; Wed,  3 Apr 2024 07:21:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8A6E5A0F3
+	for <linux-kernel@vger.kernel.org>; Wed,  3 Apr 2024 07:21:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712128907; cv=none; b=oE3wj+1/Ba+fSm9JtiLUj1DqUyBU0LxhggrJCeUwXnLLqm/Gtj4fC9l29srJDUKAQeuB7e2X8G9KEzHYYv29bPB0udbWPHj2NKIIWHESUW6EHGNAUuo8kwzwvr357PpJ+yeszssjbxhITmFxV9WpRyGr07krmoiUpaGevS5KNqk=
+	t=1712128911; cv=none; b=NTJS5LxbJJxfGwWkszGB9r/GWq4PvcoPM/qM8AtvHKBlQMItsi6P50s0xHHyTHPWeg4gsKBh4oa2gURwmApiGQk464bLd/mpAfX8+OttXxDTvmTAROcXjRlD0UPVttaP/IYKvHw0S/sHVle2I2PpPERfEgsGYVj7/YHsq/8IFoI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712128907; c=relaxed/simple;
-	bh=bRYywF4wQq0rFQo//c05z8eFKnTGTyCsCUjV2hS/RGY=;
+	s=arc-20240116; t=1712128911; c=relaxed/simple;
+	bh=Khyeg1/xj46k+x5xR7s8vWgC8Y2GcoM7MOqDayZ6owQ=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=QvG4PXOCWwZGsNgxWxwZgCAHmHJXa5PDWFUnlIaKEIWboS9zM/vE9VTFSUC9of3Lec3LanzVJzlEc1vnRfVfYw83HW8h9Xu5PSLpqMxgRW/wRZzF7tBvMOdut0YCi5XKorYu4H1sOynEEn6FdJo7sD1dFnhiopl7ixZZOLWXRoY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sigma-star.at; spf=pass smtp.mailfrom=sigma-star.at; dkim=pass (2048-bit key) header.d=sigma-star.at header.i=@sigma-star.at header.b=gnzXb7bf; arc=none smtp.client-ip=209.85.128.54
+	 MIME-Version; b=Aj+Xqmf8pU0FX8BEv6cbL51iE80u4YTw17xhVTykOR1adi/tZrsdP009488geh8OqR/k7+MjwFXWs6Jn50aImdmECG6aXpTw2E46pn1FBIP/k/MvhR8g4vUgLxGTgZAUAOGz+thdXxB+mdOE41LMT2zgV/ho7q5XJLWXwIN2z4g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sigma-star.at; spf=pass smtp.mailfrom=sigma-star.at; dkim=pass (2048-bit key) header.d=sigma-star.at header.i=@sigma-star.at header.b=JdueFn8D; arc=none smtp.client-ip=209.85.128.50
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sigma-star.at
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sigma-star.at
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sigma-star.at header.i=@sigma-star.at header.b="gnzXb7bf"
-Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-41624fe40a3so260715e9.1
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Apr 2024 00:21:45 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=sigma-star.at header.i=@sigma-star.at header.b="JdueFn8D"
+Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-41550858cabso29545565e9.2
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Apr 2024 00:21:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sigma-star.at; s=google; t=1712128903; x=1712733703; darn=vger.kernel.org;
+        d=sigma-star.at; s=google; t=1712128908; x=1712733708; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=ZLnAdyE+lMa8L2TlOW7Lr0VmL77gsDlT8pRhecvobmg=;
-        b=gnzXb7bfcozfwKxTR3/Zpfz8W1YSsUkkrRElgo4StRZfe20jT+VBwQVKuJpNcFc5Co
-         6RbC3CC98I8a0x//t9TpHunevVufZO1PmojCt8ryNBjNsFC9LXdEbJ2gwVVoZgR78/7x
-         4W9Z+FmAcG+D3jmK3TDwCqjKXDQDI6ueZBXEfZca05vWcJqEUp43KUX0FM9DLLjSraGf
-         fHyGB9XKGK20bmikS3CvqXfBo2PcujtZNUH5Z6IHqgPKTEow1I6Da2rB7mJBYOFdLzr2
-         IcWTdAuKlhmVRGiQIMQxdQb3qFY55ri59A9jpLGD5jlnkK/oxelr6wco/n9qXdUJ8IT9
-         7adw==
+        bh=D9xm7Qk02wEciH96RlDxlZxQKfuGKusC1XnJuVX2I7s=;
+        b=JdueFn8DOrllCF00jh7MZOpnWQ1lhXI07HeDguULMBqeUVFmYd0LdOLUnTcaFzDa9A
+         fazroUBnovKNuscyPO4FCLe0JeX3UGKiiFODXPRNspid68bsgjq4/Lbbb6AFzYk6ywQ4
+         SBm4k2Gn32Ge60qG9f0JhMyyag9WvGrF5f08YivMgWXoXtMD+vohf+2i6bOhkJyf4bG0
+         hL3R6ZJp5c8R3WAkDuasakh8HZJPWC5n6iRvPheE6W2A/pkwAyJj2+wb3Dg22p+fIr9k
+         ++8mkLDiq/kTE4jgEWSkkLk3rMbYUuwcbg9BSsKvZGZP6/sy7RT7K+It3kfoOurfgTJ/
+         ZWYg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712128903; x=1712733703;
+        d=1e100.net; s=20230601; t=1712128908; x=1712733708;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=ZLnAdyE+lMa8L2TlOW7Lr0VmL77gsDlT8pRhecvobmg=;
-        b=rIFOAU8A2XCctmhF3G1/YeAOk46RoZ17AasPoW9OlKv0vB12ZmotGRRzoRhtMh8roO
-         2JgbQtWc0OgoiffwmHuvQBLrHUYluN33oclkaHChOqPKhh19lmEk8KFjB7ih0kVkoL6+
-         G142BaAPQ2bKdnfVsmR0NVzwaYRjibcvRu/+wCz+3vfvmMeqCy+g66ELxzHQMjBannnS
-         ysDoQZtcrwgOVSOy2ndhxkHznhow3n8GZopYRM4F6FmOr3RixmTWbOVA34cmlhRHUH0w
-         Xwf5wHDR1ON4gDa2ucc+4bz37yu9NQ0CxtBWm6Jj3OdA4vYSW5rx4MomIyPDSyipJC5b
-         Wlxg==
-X-Forwarded-Encrypted: i=1; AJvYcCUSinwIxu7e0w/gpFBBD/141k24aJWQ/jvRdQFO3mC53+2TNqsSxHNxdS+m7szIRUMt7+qhAd+GS6xSvFS6Z4WV8l59dBpQSd+/x/Wu
-X-Gm-Message-State: AOJu0YxV3esLEThCJTbjXJ5hlqSVQx5thHN1/SqNgZsw3kLxGnMkuuyr
-	On1MRxT8iENxxfdcTj4zNVpT3ggdho+I7Hm/wNSDGX9K12bY0PCBjKHZb7Oxl3k=
-X-Google-Smtp-Source: AGHT+IGBKQFCUXIuGuB/3ITVSTmpwBRNnzhoeJUE1hf5xtsCdWq2cIwS9vpwQ4hO/jWGP/x1CquarA==
-X-Received: by 2002:a05:600c:3c99:b0:414:8e3:d8e0 with SMTP id bg25-20020a05600c3c9900b0041408e3d8e0mr11942948wmb.17.1712128903715;
-        Wed, 03 Apr 2024 00:21:43 -0700 (PDT)
+        bh=D9xm7Qk02wEciH96RlDxlZxQKfuGKusC1XnJuVX2I7s=;
+        b=bV5sxnJg3cxSNPXv0NgOtQiO/7lb3dwAKJlXAOQkQ3QYYQ5j5mqJsZAg2vviBwAihn
+         jrMMYwoLCxXGRM449RLBSsYb4ncYI+7/nWrXZ4XxaIf/SuPzMYTMCOAgQV4EdTu2VSvU
+         cA+PmrEsxwkAQsZAdY2zdWRjrvu8TAUuyvPNoEHcgtsUuQnvr5Z1AxGBW0Y3v84rAvNk
+         5uITka2ph72xvM+tE7cSV3VoAhrB8mOqEYkvWYmVZSDMNl4F1EwPl3SrHcB2OcHDq2xI
+         Ii4gw4rMHK7IuhKisAdFT+K5sapNH0LNqSL5eokW/B001OTpD2eYhUcTrXjzFKEJtm2O
+         AiZg==
+X-Forwarded-Encrypted: i=1; AJvYcCWm0egmaiLwUtphl1UYtdRqPd7hXQnyFQJSNug21QBQeQ/p27qdPuuApWLG8B8isL91Xjcv6GWFG9OsBwW8e8ngakwHhS08oFWQPpuS
+X-Gm-Message-State: AOJu0YxLOJ4HshyP1gDOgfMPjaY5J+25qrFpOdwSufjLS8sMgCo4ldxb
+	QVpr3MOK7+YFVd+jEo+a5ECZ4vBO07vR4JiJMZJCk+yj7IsSfkz/pbyRWl6mM6w=
+X-Google-Smtp-Source: AGHT+IFwfWGPzmjOkZpQ5g13bjj6w//ru+uAqGOIDa7Sctmy6coY4cw7BXdzp+Ags4F/9A/eZ2BqQQ==
+X-Received: by 2002:a05:600c:3c92:b0:416:2181:bcaf with SMTP id bg18-20020a05600c3c9200b004162181bcafmr930669wmb.1.1712128908083;
+        Wed, 03 Apr 2024 00:21:48 -0700 (PDT)
 Received: from localhost ([82.150.214.1])
-        by smtp.gmail.com with UTF8SMTPSA id v13-20020a5d4b0d000000b0034356c434d0sm1436269wrq.117.2024.04.03.00.21.42
+        by smtp.gmail.com with UTF8SMTPSA id n30-20020a05600c501e00b0041621b3cfa8sm1724904wmr.6.2024.04.03.00.21.46
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 03 Apr 2024 00:21:43 -0700 (PDT)
+        Wed, 03 Apr 2024 00:21:47 -0700 (PDT)
 From: David Gstir <david@sigma-star.at>
 To: Mimi Zohar <zohar@linux.ibm.com>,
 	James Bottomley <jejb@linux.ibm.com>,
@@ -86,9 +86,9 @@ Cc: David Gstir <david@sigma-star.at>,
 	linux-arm-kernel@lists.infradead.org,
 	linuxppc-dev@lists.ozlabs.org,
 	linux-security-module@vger.kernel.org
-Subject: [PATCH v8 2/6] KEYS: trusted: improve scalability of trust source config
-Date: Wed,  3 Apr 2024 09:21:18 +0200
-Message-ID: <20240403072131.54935-3-david@sigma-star.at>
+Subject: [PATCH v8 4/6] MAINTAINERS: add entry for DCP-based trusted keys
+Date: Wed,  3 Apr 2024 09:21:20 +0200
+Message-ID: <20240403072131.54935-5-david@sigma-star.at>
 X-Mailer: git-send-email 2.44.0
 In-Reply-To: <20240403072131.54935-1-david@sigma-star.at>
 References: <20240403072131.54935-1-david@sigma-star.at>
@@ -100,65 +100,35 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Enabling trusted keys requires at least one trust source implementation
-(currently TPM, TEE or CAAM) to be enabled. Currently, this is
-done by checking each trust source's config option individually.
-This does not scale when more trust sources like the one for DCP
-are added, because the condition will get long and hard to read.
-
-Add config HAVE_TRUSTED_KEYS which is set to true by each trust source
-once its enabled and adapt the check for having at least one active trust
-source to use this option. Whenever a new trust source is added, it now
-needs to select HAVE_TRUSTED_KEYS.
+This covers trusted keys backed by NXP's DCP (Data Co-Processor) chip
+found in smaller i.MX SoCs.
 
 Signed-off-by: David Gstir <david@sigma-star.at>
-Tested-by: Jarkko Sakkinen <jarkko@kernel.org> # for TRUSTED_KEYS_TPM
-Reviewed-by: Jarkko Sakkinen <jarkko@kernel.org>
+Acked-by: Jarkko Sakkinen <jarkko@kernel.org>
 ---
- security/keys/trusted-keys/Kconfig | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+ MAINTAINERS | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-diff --git a/security/keys/trusted-keys/Kconfig b/security/keys/trusted-keys/Kconfig
-index dbfdd8536468..553dc117f385 100644
---- a/security/keys/trusted-keys/Kconfig
-+++ b/security/keys/trusted-keys/Kconfig
-@@ -1,3 +1,6 @@
-+config HAVE_TRUSTED_KEYS
-+	bool
-+
- config TRUSTED_KEYS_TPM
- 	bool "TPM-based trusted keys"
- 	depends on TCG_TPM >= TRUSTED_KEYS
-@@ -9,6 +12,7 @@ config TRUSTED_KEYS_TPM
- 	select ASN1_ENCODER
- 	select OID_REGISTRY
- 	select ASN1
-+	select HAVE_TRUSTED_KEYS
- 	help
- 	  Enable use of the Trusted Platform Module (TPM) as trusted key
- 	  backend. Trusted keys are random number symmetric keys,
-@@ -20,6 +24,7 @@ config TRUSTED_KEYS_TEE
- 	bool "TEE-based trusted keys"
- 	depends on TEE >= TRUSTED_KEYS
- 	default y
-+	select HAVE_TRUSTED_KEYS
- 	help
- 	  Enable use of the Trusted Execution Environment (TEE) as trusted
- 	  key backend.
-@@ -29,10 +34,11 @@ config TRUSTED_KEYS_CAAM
- 	depends on CRYPTO_DEV_FSL_CAAM_JR >= TRUSTED_KEYS
- 	select CRYPTO_DEV_FSL_CAAM_BLOB_GEN
- 	default y
-+	select HAVE_TRUSTED_KEYS
- 	help
- 	  Enable use of NXP's Cryptographic Accelerator and Assurance Module
- 	  (CAAM) as trusted key backend.
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 976a5cea1577..ca7f42ca9338 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -12019,6 +12019,15 @@ S:	Maintained
+ F:	include/keys/trusted_caam.h
+ F:	security/keys/trusted-keys/trusted_caam.c
  
--if !TRUSTED_KEYS_TPM && !TRUSTED_KEYS_TEE && !TRUSTED_KEYS_CAAM
--comment "No trust source selected!"
-+if !HAVE_TRUSTED_KEYS
-+	comment "No trust source selected!"
- endif
++KEYS-TRUSTED-DCP
++M:	David Gstir <david@sigma-star.at>
++R:	sigma star Kernel Team <upstream+dcp@sigma-star.at>
++L:	linux-integrity@vger.kernel.org
++L:	keyrings@vger.kernel.org
++S:	Supported
++F:	include/keys/trusted_dcp.h
++F:	security/keys/trusted-keys/trusted_dcp.c
++
+ KEYS-TRUSTED-TEE
+ M:	Sumit Garg <sumit.garg@linaro.org>
+ L:	linux-integrity@vger.kernel.org
 -- 
 2.35.3
 
