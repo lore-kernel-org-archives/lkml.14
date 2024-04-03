@@ -1,108 +1,115 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C306A1553BE
-	for <linux-kernel@vger.kernel.org>; Wed,  3 Apr 2024 20:03:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42952154BF0
+	for <linux-kernel@vger.kernel.org>; Wed,  3 Apr 2024 20:03:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712174594; cv=none; b=IX46UoZUXJieU9c58fw2Xf1b9HwiYqN1xabMJ3WEp+0n5NhbzaFA+jmvtxy4MOiOxEagDGFcDiIwwP1k6XwqR1cN8Qr2xdmd+hEfmoEMDqb+XUNaifvjrMLeG18i6pxYMdN01oIS4PRHfUy3ne20dd6WvdTEyl431a6dUR0Vai4=
+	t=1712174612; cv=none; b=Uhaf+V0vVsbDjho7IJKhJMmyxD6t50MNYu0TcHCscFEwxYmBzN+oVEwfMeh3bv7MxU3gewPEBXE3WoJjH7u9Upd3Ui26e45UPRLCEsHXCH7aIyx8LsgFCON0kcbZqYGnONSTOPwOByOtJtEPbBBoN/CBPhWw5Bfb0n+4+gsxoaQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712174594; c=relaxed/simple;
-	bh=eN0BMPJt/yzNeLJkwA6M2eqVeuPw0vmnY2kBYFQl+YE=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=hzZrE9dLrJ9165+0lNXa4mbe8QX0RcTNGYY9UmNOHzfp8rZy84DrcoDfKvI8LWUToZQvKvbT52QNM+CoYfg587El4uSytoS9Yom7gZ0PSpswzqLQV8YbnWo+OoMPWwNpdPQ1ZaK9KqaRNSUU1kIXD0SdgFiuwMyHYKJhq21UyWg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=KcgaR7Nz; arc=none smtp.client-ip=198.175.65.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1712174612; c=relaxed/simple;
+	bh=VSsRNKh5HqVxQxx4n5MB2r6K4OooJ+e1z93k1bNsM/Y=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=eDqC1X0XPAJYaw06ORVy69EWkNjghtd3sFrK5kEtfH+YNEEIRElyFaqEVvRzPKlaQudnDEmEoe+Zro1UPJFT9NqyiK4XSJlwaULgsArkeazR6kv8UwBHvjO57MKeueyspJNbokETWVOP19kjnkAmClzx/q1RYdtnrj6KhbUPlIY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=WIFFF/2K; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KcgaR7Nz"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1712174593; x=1743710593;
-  h=date:from:to:cc:subject:message-id;
-  bh=eN0BMPJt/yzNeLJkwA6M2eqVeuPw0vmnY2kBYFQl+YE=;
-  b=KcgaR7NzDCgMyqnDlKOQ6lJ/HLXCvU9D71XTBHrdTFtnPNi+3/rUyyHL
-   lHDblGiNtQCBbyH9fZ4HtOKtrBYs5iPx2Ddzcmvf1evhbRAukW2+wlQ/c
-   7ZklAhEO8aHj1H7nJh2lJQbzKuGfnpKk3nkinte0N/GuYAlQNS7+QueHa
-   eRcdLJrQGWDhPZ6PnF2UcZFckpoxfvqJp1GZnNLX0DNUR98ImNfZLhLsf
-   nFAXiP71MKONqQD3+z78su8N8tgQMKzvGRBMh5Yo//pnIZS7XDRYVc9/E
-   RmC1gRDqZVpDmye6oaGXGPliJTaj0uDIHcW8x7E58VG48qs2klq9flN+Z
-   w==;
-X-CSE-ConnectionGUID: 2g1QrUJnSwORsA2xTBzESw==
-X-CSE-MsgGUID: 1Wo//m9aRBWDqdaccukRsQ==
-X-IronPort-AV: E=McAfee;i="6600,9927,11033"; a="7544435"
-X-IronPort-AV: E=Sophos;i="6.07,177,1708416000"; 
-   d="scan'208";a="7544435"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2024 13:03:13 -0700
-X-CSE-ConnectionGUID: Rr0clMBCSAya6FYE9/ccDg==
-X-CSE-MsgGUID: zgkS5qy9Rq2Uy0LQQhXfzg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,177,1708416000"; 
-   d="scan'208";a="18395852"
-Received: from lkp-server01.sh.intel.com (HELO e61807b1d151) ([10.239.97.150])
-  by orviesa010.jf.intel.com with ESMTP; 03 Apr 2024 13:03:12 -0700
-Received: from kbuild by e61807b1d151 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1rs6pB-0000BP-0e;
-	Wed, 03 Apr 2024 20:03:09 +0000
-Date: Thu, 04 Apr 2024 04:02:35 +0800
-From: kernel test robot <lkp@intel.com>
-To: "x86-ml" <x86@kernel.org>
-Cc: linux-kernel@vger.kernel.org
-Subject: [tip:x86/urgent] BUILD SUCCESS
- c3eeb1ffc6a88af9b002e22be0f70851759be03a
-Message-ID: <202404040433.FCLrieoq-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WIFFF/2K"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1712174609;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=NQHNmovAOx9ZSifvDIgA24zi3CQm15Ag6TxzIliiHo0=;
+	b=WIFFF/2KN/fjle65YPF8EIm4mZCItCobNelINYAoN51zXI4q4h/mieRlpqfBThIEdrq+T7
+	ehUg7PjpOvF83gBqqnx9hKb/nMfDTQWTQea6JSFEaTLK9W7WY/mMbFMTX3iab1uu0Voigc
+	5MDWqXPsZAj45an4iGBmUHs1FTgklwc=
+Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com
+ [209.85.222.200]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-572-hEz_3EK_MPWz_SPdoYghvQ-1; Wed, 03 Apr 2024 16:03:27 -0400
+X-MC-Unique: hEz_3EK_MPWz_SPdoYghvQ-1
+Received: by mail-qk1-f200.google.com with SMTP id af79cd13be357-78d3cf6aecfso3243785a.0
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Apr 2024 13:03:27 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712174607; x=1712779407;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=NQHNmovAOx9ZSifvDIgA24zi3CQm15Ag6TxzIliiHo0=;
+        b=hgyOB4lInRREKcY6VMuS6MzjplA0CpR0YPiDfsQxIc+cyG0TIYIBsLUWxPBekC37WQ
+         XknhAtvnE+x6thwCiWamZG09Ga3JkjZ0G2dwj9y80QJnrM3+FHM9Xjr1xKjJxAn8XFUF
+         6Tz/qAuQYuVnCPZINet3qJlTXtFr+v3+5c9pUnFhK7kg0Ug7ETS5BcBZxhuDvkzCLz+x
+         gCE0txKtyNRlVNfQM9Afq8xiqvp+myHdatIdH7xLB9iXESqSzpBP9yLrdiEnuKNUznWa
+         b5oT8Zr1pXhLB09QmxuSzMKrFJL0bA7QHvCpYUzzrvPpzZQ7aBvOVXHXauf0H041MoK4
+         SIUg==
+X-Forwarded-Encrypted: i=1; AJvYcCWf4kSfZ4Z1n/l/f8Q1sRADf+CxlT23Zm3fxlZTXhgZqMPoq/VR76lV9MvmgrkjiiC0513mJUkqJrNm99o6ITAEc8IlCQV65owzwRGe
+X-Gm-Message-State: AOJu0YwFKwmaWzCptIYowXziaY36j1cp3a4qQzXhW888sRfEXldpzgtu
+	xmXwmTVAg+E5qW0+HOihseTTZ31fBoaEm8m24n9FP26bcEYdqAhpcEkm8mBm0/OBh9e0cFoSPba
+	s/JA/e+BfNY/EKnTyL4HIujPIo3pvXDS5YCPNT9ELSQ7jrf4W75NAoRILX83K8Q==
+X-Received: by 2002:a05:620a:1087:b0:78c:858b:e30a with SMTP id g7-20020a05620a108700b0078c858be30amr381072qkk.6.1712174607050;
+        Wed, 03 Apr 2024 13:03:27 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHsfkSVeNk/2mrnWcz86/GjcnNn671LJqtU7F+xI8QdLvlfJaXwTro1Uwml2W0IVKJBGait+Q==
+X-Received: by 2002:a05:620a:1087:b0:78c:858b:e30a with SMTP id g7-20020a05620a108700b0078c858be30amr381044qkk.6.1712174606450;
+        Wed, 03 Apr 2024 13:03:26 -0700 (PDT)
+Received: from x1n.redhat.com ([99.254.121.117])
+        by smtp.gmail.com with ESMTPSA id u14-20020a05620a084e00b0078a48172335sm5329727qku.24.2024.04.03.13.03.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 03 Apr 2024 13:03:26 -0700 (PDT)
+From: peterx@redhat.com
+To: linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	peterx@redhat.com,
+	Muhammad Usama Anjum <usama.anjum@collabora.com>,
+	David Hildenbrand <david@redhat.com>,
+	Muchun Song <muchun.song@linux.dev>,
+	Ryan Roberts <ryan.roberts@arm.com>
+Subject: [PATCH] fixup! selftests/mm: run_vmtests.sh: fix hugetlb mem size calculation
+Date: Wed,  3 Apr 2024 16:03:24 -0400
+Message-ID: <20240403200324.1603493-1-peterx@redhat.com>
+X-Mailer: git-send-email 2.44.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86/urgent
-branch HEAD: c3eeb1ffc6a88af9b002e22be0f70851759be03a  x86/resctrl: Fix uninitialized memory read when last CPU of domain goes offline
+From: Peter Xu <peterx@redhat.com>
 
-elapsed time: 730m
+Fix up a breakage on uffd hugetlb test due to removal of a temp variable,
+as reported by Ryan [1].
 
-configs tested: 31
-configs skipped: 134
+Instead of using the previous calculation, use the largest we can
+have (which is put in freepgs) and cut it into half for userfault tests.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+[1] https://lore.kernel.org/r/1c20b717-c5b5-4bdf-8fcd-d46db135b7fa@arm.com
 
-tested configs:
-i386                             allmodconfig   gcc  
-i386                              allnoconfig   gcc  
-i386                             allyesconfig   gcc  
-i386         buildonly-randconfig-001-20240403   gcc  
-i386         buildonly-randconfig-002-20240403   clang
-i386         buildonly-randconfig-003-20240403   clang
-i386         buildonly-randconfig-004-20240403   clang
-i386         buildonly-randconfig-005-20240403   gcc  
-i386         buildonly-randconfig-006-20240403   clang
-i386                                defconfig   clang
-i386                  randconfig-001-20240403   gcc  
-i386                  randconfig-002-20240403   clang
-i386                  randconfig-003-20240403   gcc  
-i386                  randconfig-004-20240403   gcc  
-i386                  randconfig-005-20240403   clang
-i386                  randconfig-006-20240403   gcc  
-i386                  randconfig-011-20240403   gcc  
-i386                  randconfig-012-20240403   clang
-i386                  randconfig-013-20240403   gcc  
-i386                  randconfig-014-20240403   clang
-i386                  randconfig-015-20240403   gcc  
-i386                  randconfig-016-20240403   clang
-x86_64                            allnoconfig   clang
-x86_64                           allyesconfig   clang
-x86_64       buildonly-randconfig-001-20240404   gcc  
-x86_64       buildonly-randconfig-002-20240404   gcc  
-x86_64       buildonly-randconfig-003-20240404   gcc  
-x86_64       buildonly-randconfig-004-20240404   clang
-x86_64                              defconfig   gcc  
-x86_64                          rhel-8.3-rust   clang
-x86_64                               rhel-8.3   gcc  
+Cc: Muhammad Usama Anjum <usama.anjum@collabora.com>
+Cc: David Hildenbrand <david@redhat.com>
+Cc: Muchun Song <muchun.song@linux.dev>
+Reported-by: Ryan Roberts <ryan.roberts@arm.com>
+Signed-off-by: Peter Xu <peterx@redhat.com>
+---
+ tools/testing/selftests/mm/run_vmtests.sh | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
+diff --git a/tools/testing/selftests/mm/run_vmtests.sh b/tools/testing/selftests/mm/run_vmtests.sh
+index b1b78e45d613..223c2304f885 100755
+--- a/tools/testing/selftests/mm/run_vmtests.sh
++++ b/tools/testing/selftests/mm/run_vmtests.sh
+@@ -298,7 +298,8 @@ CATEGORY="userfaultfd" run_test ./uffd-unit-tests
+ uffd_stress_bin=./uffd-stress
+ CATEGORY="userfaultfd" run_test ${uffd_stress_bin} anon 20 16
+ # Hugetlb tests require source and destination huge pages. Pass in half
+-# the size ($half_ufd_size_MB), which is used for *each*.
++# the size of the free pages we have, which is used for *each*.
++half_ufd_size_MB=$((freepgs / 2))
+ CATEGORY="userfaultfd" run_test ${uffd_stress_bin} hugetlb "$half_ufd_size_MB" 32
+ CATEGORY="userfaultfd" run_test ${uffd_stress_bin} hugetlb-private "$half_ufd_size_MB" 32
+ CATEGORY="userfaultfd" run_test ${uffd_stress_bin} shmem 20 16
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.44.0
+
