@@ -1,58 +1,63 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70B5E154C03;
-	Wed,  3 Apr 2024 21:25:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE472154C03
+	for <linux-kernel@vger.kernel.org>; Wed,  3 Apr 2024 21:28:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712179551; cv=none; b=PAHFQDR7hZGRn3JonzKSUSDGo2P8/yjbIyvDVmEFr5xdgs/di9TYnCMSB6mL1DR7spsjmkWZcIBC9o/FVoGE2iiMoe925zgHTvk59KOiLfYG05GW9Jmzczwz2nK/w36Aw4J6n75InC6MPSxaIO6IiF1Q1qpWCqp+DVAfvGaI16k=
+	t=1712179720; cv=none; b=EN0uscYZceQYBrGWtTRynUVPtf8U/C4A/Sju5e3kZH5kl1/PcOYhww3t+S0YZLh0V1oNAek2srE7/rb4sUcvrSEChAXqekfh5h14iPrkj7g+iOv9a7ZgW489BFctuCvK0MPCiuVhNO0oxmk60EpJJkRRrmQzgajb2OJRjbeSaSg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712179551; c=relaxed/simple;
-	bh=QhkKtD1uBAEweDR2IhCb7s3QhV7FjMUyg4DE5gxSXbA=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=Gsrdkzur6WWCu94q/FVuInoxKjoGTcleausQtdcKw1uLnnr6l88KTk9I/rQ7gz2t5jp23j5gPBO/f1t2wYUjmZqattH9yaws+rIH/c97KrQ39hnWOdVGTgyNuNGrRAG0LMZ+yuO0hrMsrwVJij8sa2FYJnyZ58ihN0kQdnBofH0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=BDalylfr; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=vc9TB4Kn; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1712179720; c=relaxed/simple;
+	bh=Ge+rflQ68heO7Dqnl93qWvqW52u05lKmj6Bb7IZgcsI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=CoHfS0G30iE8H3uzRGc5wfQHy0clROjo9djetAIlSqrAKm2qW6sQPG8uADfxx4G5RzDwPR0Xtca+4aFDDySmNcno27iYuaoELIbuICa9z2plGu9gkIzM77lWDMR//S6zQdH/zN8JrodMJUuSg8lDOgOzDhFlhKTlsnrr+yJWIe0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=hz396Yjl; arc=none smtp.client-ip=209.85.214.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="BDalylfr";
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="vc9TB4Kn"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=Content-Type:MIME-Version:Message-ID:
-	Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-	Content-Description:In-Reply-To:References;
-	bh=cPFKl7wUoVzAYU+1z5HHSrJsYx6CbnDKl33923a76CQ=; b=BDalylfrkM9ahJ5DYWKa/KevZM
-	yT2u1EY85g+8Cu3cvQtyNmUovpVpj/2Pb8dGo+LuQb3gschbgnNF4aY4DiIKdmykYywt3KjtkuV+s
-	24RB8ANmh60Hlgw4YycX+3uYbjZ2qrUi0OzJV0x+K3wcDwg/VhaMkbKBn49jjXqCmcLI0DhLDFM2d
-	T8IsNRRgpnmLZcCVeo5rGdudk4Eyn7XbQIWlL5plRdsUIMFieoQAj3AzxTK+ZNHCQIl9bdgdKw4a+
-	OyRffy62OIQR2eBnDIaou93Ww8ivhU4NKHGV8YUvmFnud7+Kt4xY3b/fWxAAb95fySBn0WjCVia1k
-	xLErqrdA==;
-Received: from merlin.infradead.org ([2001:8b0:10b:1234::107])
-	by desiato.infradead.org with esmtps (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1rs86i-00000004R8y-2amM;
-	Wed, 03 Apr 2024 21:25:38 +0000
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=merlin.20170209; h=Content-Type:MIME-Version:Message-ID:
-	Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-	Content-Description:In-Reply-To:References;
-	bh=cPFKl7wUoVzAYU+1z5HHSrJsYx6CbnDKl33923a76CQ=; b=vc9TB4KnejhHEeCBoHtZnOxxql
-	1nuJjE00e19K/yeqwmu0GrF0rccd5RCmc07eBSU+ic6tKes42YiZVLnRfVe+VTWtlbIouParGrXs+
-	rMBeJFXpyYP/0m/oNt9urr5MXzzCXkT12ZXorkXH53+4RldtcV0Sh7tfmkc7mckCAtjU22Bvmpi6G
-	dH4sY4HcRGmY/5+2xZOh80T8UZnugv7KLSuD8zhTHBkukdymX5sGN6D3Xqh+/oHTY7JdASSqXn2e3
-	zzqcl0RwYAm+iPy7veKqLl8+xUVNrbMcRXifsBRoVoRHZZOK2rV81PSaP/Z1W+kkMh3TwvJ5rxdWi
-	lLNE+edg==;
-Received: from kyle by merlin.infradead.org with local (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1rs7vW-00000007HPW-3Mrh;
-	Wed, 03 Apr 2024 21:16:30 +0000
-Date: Wed, 3 Apr 2024 17:13:43 -0400
-From: Kyle McMartin <kyle@infradead.org>
-To: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-Cc: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-	linux-pm@vger.kernel.org, kernel-team@fb.com,
-	linux-kernel@vger.kernel.org
-Subject: [RFC PATCH] therm_throt: test bits as we build
- therm_intr_core_clear_mask
-Message-ID: <Zg3GhhTZotBNvlRR@merlin.infradead.org>
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="hz396Yjl"
+Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-1e0bec01232so2451415ad.3
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Apr 2024 14:28:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1712179718; x=1712784518; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=A7hT1bDm6uwQ8drV4Fteto7D8//xOnGyJfRith5G1SQ=;
+        b=hz396YjlZGrQwEA7LNmgv1z6KbCc0HC1+V1YnCnsy3R2wuUGq106ICp9naxMcZ+lzE
+         AFboxNBKf9/BWoHJH7qIMjcRY2//O1t/lhxVSujEnL3gEipd2tu5P7itRQqkEw8xkHJq
+         /f7rfdmROCoCzt8PihVPit3frIFZn38b1ebbo=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712179718; x=1712784518;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=A7hT1bDm6uwQ8drV4Fteto7D8//xOnGyJfRith5G1SQ=;
+        b=SlQXJlhpheElXSyAibGCzn4mLz1xeiWcQ1NgDjnhajQoOnQfp8K424V4bzYqxEjrn0
+         qBKQ3p4f6BYtk38573Tq8C7E5EVuPvvFGTbWMM25yclVcMeREJ4aj1wxQIa5aeZ8HgOm
+         P1eglefaMoTr+crPVkum9P7wrYi3G926t2mXy0Z0iC7Gky38P013nVwVfHKnnQ3GcIlF
+         MBNO/9XmDlL8dbi/Hn0rsJ86ePEitfGkFLQDYYkJDoKhBgdPRM89M2VHZprVoHpXoIST
+         Q4hZahDDSEXEyinmqasbckfnSLkO1aLzzmavk2/0R+G+2wfnrz/KDPZeTYst/qpFVohP
+         oJhg==
+X-Forwarded-Encrypted: i=1; AJvYcCXrYe7IjYR8nZtCILoKLQqQYs9XsmMn2e54fB13dH+T/HaS3TqgnKqxJSRVk14fTj0uURGrT02bNqTWiPOUdVZRzpgcnyzdSf5h3Iw/
+X-Gm-Message-State: AOJu0YwWPNpCNuIKlVlWY/+QGqAAaFv/XGxGJxALGS01p5QRwg8SAkl7
+	yRlgTIB1MAfCEjXuOMC9M3gB1ZSBkra80utC0sJW/L3wZvCptvt+1AJEuCzDppSm7rhQX374eeU
+	=
+X-Google-Smtp-Source: AGHT+IFHGnpRz+fZSnPJwYSaprPus/wpr7Q3vxnOZ7+XcX+WrDIGVbL7cDPbvGULxW631sH9YEjFiw==
+X-Received: by 2002:a17:902:ecc8:b0:1e2:7ad5:19b3 with SMTP id a8-20020a170902ecc800b001e27ad519b3mr474309plh.43.1712179718159;
+        Wed, 03 Apr 2024 14:28:38 -0700 (PDT)
+Received: from www.outflux.net ([198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id t1-20020a170902e84100b001e0da190a07sm13808692plg.167.2024.04.03.14.28.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 03 Apr 2024 14:28:37 -0700 (PDT)
+Date: Wed, 3 Apr 2024 14:28:36 -0700
+From: Kees Cook <keescook@chromium.org>
+To: Phillip Lougher <phillip@squashfs.org.uk>
+Cc: akpm@linux-foundation.org, linux-kernel@vger.kernel.org,
+	justinstitt@google.com
+Subject: Re: [PATCH] Squashfs: remove deprecated strncpy by not copying the
+ string
+Message-ID: <202404031428.867B90D87D@keescook>
+References: <20240403183352.391308-1-phillip@squashfs.org.uk>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -61,111 +66,26 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <20240403183352.391308-1-phillip@squashfs.org.uk>
 
-X86_FEATURE_HWP appears to be insufficient on some platforms, and
-writing 1 to BIT(13)|BIT(15) results in the wrmsrl trapping and failing
-to clear PROCHOT_LOG.
+On Wed, Apr 03, 2024 at 07:33:52PM +0100, Phillip Lougher wrote:
+> Squashfs copied the passed string (name) into a temporary buffer
+> to ensure it was NUL-terminated.  This however is completely
+> unnecessary as the string is already NUL-terminated.  So remove
+> the deprecated strncpy() by completely removing the string copy.
+> 
+> The background behind this unnecessary string copy is that it
+> dates back to the days when Squashfs was an out of kernel patch.
+> The code deliberately did not assume the string was NUL-terminated
+> in case in future this changed (due to kernel changes).  This
+> would mean the out of tree patches would be broken but still
+> compile OK.
+> 
+> Signed-off-by: Phillip Lougher <phillip@squashfs.org.uk>
 
-Instead, also try to wrmsrl_safe with those bits set in the mask, and
-check if we get -EIO back. If so, those bits will trap and prevent us
-from writing to THERM_STATUS.
+Thanks!
 
-Signed-off-by: Kyle McMartin <jkkm@fb.com>
+Reviewed-by: Kees Cook <keescook@chromium.org>
 
----
-
-We noticed a problem on some of our production hosts while rolling out
-6.4 kernels where we were seeing PROCHOT_LOG set but never cleared,
-along with a warn on once in wrmsr.
-
-I tracked this down to:
-
-commit 930d06bf071aa746db11d68d2d75660b449deff3
-Author: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Date:   Tue Nov 15 18:54:17 2022 -0800
-
-    thermal: intel: Protect clearing of thermal status bits
-
-which started setting some unexpected bits in THERM_STATUS on our
-platform. Previously, the mask had these bits set, but we were masking
-with the MSR which was resulting in them not being written to 1.
-
-Starting with 117e4e5bd9d47b89777dbf6b37a709dcfe59520f, these bits were
-protected by the HWP CPUID flag, but on some of our platforms, this
-doesn't seem sufficient.
-
-On Broadwell and Broadwell-DE, the HWP flag is not set, but writing
-these bits does not trap.
-
-On our Skylake-DE, Skylake, and Cooper Lake platforms, the HWP flag is
-set in CPUID, and writing 1 to these bits traps attempting to write
-0xAAA8 to MSR 0x19C (THERM_STATUS). Writing 0xAA8 from userspace works
-as expected to un-stick PROCHOT_LOG.
-
-On our Sapphire Rapids platforms, the HWP flag is set, and writing 1 to
-these bits is successful.
-
- drivers/thermal/intel/therm_throt.c | 29 ++++++++++++++++++++++-------
- 1 file changed, 22 insertions(+), 7 deletions(-)
-
-diff --git a/drivers/thermal/intel/therm_throt.c b/drivers/thermal/intel/therm_throt.c
-index e69868e868eb..3058d8fcfcef 100644
---- a/drivers/thermal/intel/therm_throt.c
-+++ b/drivers/thermal/intel/therm_throt.c
-@@ -196,8 +196,14 @@ static const struct attribute_group thermal_attr_group = {
- static u64 therm_intr_core_clear_mask;
- static u64 therm_intr_pkg_clear_mask;
- 
-+/* Probe each addition to the mask to ensure that our wrmsrl
-+ * won't fail to clear bits.
-+ */
- static void thermal_intr_init_core_clear_mask(void)
- {
-+	u64 bits = 0;
-+	u64 mask = 0;
-+
- 	if (therm_intr_core_clear_mask)
- 		return;
- 
-@@ -211,25 +217,34 @@ static void thermal_intr_init_core_clear_mask(void)
- 	 * Bit 1, 3, 5: CPUID.01H:EDX[22] = 1. This driver will not
- 	 * enable interrupts, when 0 as it checks for X86_FEATURE_ACPI.
- 	 */
--	therm_intr_core_clear_mask = (BIT(1) | BIT(3) | BIT(5));
-+	mask = (BIT(1) | BIT(3) | BIT(5));
- 
- 	/*
- 	 * Bit 7 and 9: Thermal Threshold #1 and #2 log
- 	 * If CPUID.01H:ECX[8] = 1
- 	 */
--	if (boot_cpu_has(X86_FEATURE_TM2))
--		therm_intr_core_clear_mask |= (BIT(7) | BIT(9));
-+	bits = BIT(7) | BIT(9);
-+	if (boot_cpu_has(X86_FEATURE_TM2) &&
-+	    wrmsrl_safe(MSR_IA32_THERM_STATUS, mask | bits) >= 0)
-+		mask |= bits;
-+
- 
- 	/* Bit 11: Power Limitation log (R/WC0) If CPUID.06H:EAX[4] = 1 */
--	if (boot_cpu_has(X86_FEATURE_PLN))
--		therm_intr_core_clear_mask |= BIT(11);
-+	bits = BIT(11);
-+	if (boot_cpu_has(X86_FEATURE_PLN) &&
-+	    wrmsrl_safe(MSR_IA32_THERM_STATUS, mask | bits) >= 0)
-+		mask |= bits;
- 
- 	/*
- 	 * Bit 13: Current Limit log (R/WC0) If CPUID.06H:EAX[7] = 1
- 	 * Bit 15: Cross Domain Limit log (R/WC0) If CPUID.06H:EAX[7] = 1
- 	 */
--	if (boot_cpu_has(X86_FEATURE_HWP))
--		therm_intr_core_clear_mask |= (BIT(13) | BIT(15));
-+	bits = BIT(13) | BIT(15);
-+	if (boot_cpu_has(X86_FEATURE_HWP) &&
-+	    wrmsrl_safe(MSR_IA32_THERM_STATUS, mask | bits) >= 0)
-+		mask |= bits;
-+
-+	therm_intr_core_clear_mask = mask;
- }
- 
- static void thermal_intr_init_pkg_clear_mask(void)
+-- 
+Kees Cook
