@@ -1,213 +1,261 @@
-Received: from APC01-PSA-obe.outbound.protection.outlook.com (mail-psaapc01olkn2106.outbound.protection.outlook.com [40.92.52.106])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f43.google.com (mail-qv1-f43.google.com [209.85.219.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2C476CDD0;
-	Wed,  3 Apr 2024 07:41:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.52.106
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712130113; cv=fail; b=QrMQPxJfxHlDob3qyxG5Z2RDPJ3bTeLiVbhs8j0o4V5HcAvNhWgJ6odMg0ovcbGe/68q9aih2z5gBi8XC1aPvt0YZ4qL9bW2xvP1kcgrnWPSJRNaY7lnxRgynid9bb4VsGij3W8EEsDSzDCVtmL6hohaHkSCBdfOKY9jhwSKC9o=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712130113; c=relaxed/simple;
-	bh=881NHA0BtZ4tqqs8t1lsBhG7teepmihRPDHe9zK8s40=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=FKlhKuSl/f32+5KUGwoZrw9oaL+T5/L8MjrNqxXdYB54KSFgpOxYAxDyg8veMIFldGgx4DGJeuNXbq74hDBv/IL9Lj2xApAcDY1ET/An5VagPPs5sO7JyPks56A5P5izj6nzjnZVjOCQcbqj3mGvDS0e+aKb+vYKZoJwqJBW2Sc=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=QfAK6B14; arc=fail smtp.client-ip=40.92.52.106
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E97C134B2;
+	Wed,  3 Apr 2024 07:43:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.43
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1712130241; cv=none; b=F4PA/UDjKcME/YeKfU0uXWwM6GUIaqvCs+VvkHt+mZVEp2bWRMvx1feY6TOpmXvgufaVC5Q5BLBcKuAzzawFqN5GNNR3vrFudLgF9lDjYReFeT2zTCRKFiMlekYyWy3n/qjEcPT/2irlyHHC9YxlBXwnlEI/1I64pwX/NoVggAA=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1712130241; c=relaxed/simple;
+	bh=e3t9zjlNN7lMpcgVQa8hVR1LWgE1GZy3kR3rHeZvTng=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Rj9M3vXEZAe/QJ9m2Jpno1WjvfrZk2PNq6DEDwX7wSNZ7woEhohiFZKzV2XolGs+9pl/XiwWiNiCxQ0lJcBbnNlu8cpN6ymhsOMw/1fNSf/r8FpI48nTjd2YY/ba7Xl9qQb94n43zmiK+PGhm2dffjjxjR1oGyR5CB7gb7p0rVs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cbSpXmYi; arc=none smtp.client-ip=209.85.219.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="QfAK6B14"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=MkhnbDOvamyfh/KgcJuQHWuZPw2iX291vBaoPdGndu8EONVYjlxc73U/1SMaqYlXazfEAMdyr/QvLlI7xYb9DfjbY0R80be4XtFFp2o8g2RNc+1VC2Z7UqqklcA6cMTPoN+DrcSUAIRRjnTepIKk4puDGMR4FNAbbZE+AOM9h0//iz+KeJRGyxwye4i56QDCB3oB50YFK+UK8VTTEVUqIP3e+kaA4XOQY4RketvGPLGn1tCq2w3x4/DtFvCeklDdz7EA7a0GC6McPooVG6Yj+PgRJ4szWCBtFLu03nh/iWxgeWJidb3wq+oNfYY/9dR4hLaYZyVaagb/MMgadnKqvg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=XFXfiz9azTt7Z3i5D/gU09G7v3vILofamOdAmxTAR/E=;
- b=njcAnwmLVgs8it16lMnv/o88VjFURiWU6CtS7R550WiHoh3livobiQ4BuVJeKoT8DPp368WCvhxSuGHOee7c9RAjQ5yiH0HqT2b6XtJekCieHJnAKkWzEoR8Jxn+B5wvdFMg1CxoVyd4qMlNqBm+fCx28lOm6I9k9Tb2CJIPy/2zLyXQNUz7MgFu6FzZf313pheIDI3ezhyz42bYRfAvbwztcKXeXEetUPTwp15e9gMq6PXtRzmTE4UHaixbinmDOF2bK20wWBQw/Kb4EsBgUOhPwPSYd5Hjoo9GI4MOmxQyqbWEpnu9IiCWTY4CYwEcyhaieZdXGHh0l7jamR71bA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=XFXfiz9azTt7Z3i5D/gU09G7v3vILofamOdAmxTAR/E=;
- b=QfAK6B14WFdQsOmbQbYfMfJXi7anqeVpVil0IMFZx4PYfEPqk033IwNLy3S9bJVkJBnAIWvJ77JP5ZP0TudLi17Shcnv2fq7WWWwwCe1XnZwxZqyncIseT8OGcQ1n3X2bOKwB7GsIheir+QoaaKYM5GUFzKvoWCgyqXl6LDwNNEl84sueLoR+a8aFqKb9O5ANzxoMS8BLldUME2otbdS370+D+NnD+m1jHFQeolOPhk4jg93mG7L7ZNmpwzQ0xFd9bIKUKQpbXlmhr9C3pPZpcnfDiQngPl08CIAhlXkmTm8qSa8a543gpGokTTC7M5lih/LLZZLrAuyHWn3roCgcA==
-Received: from PSAPR06MB4952.apcprd06.prod.outlook.com (2603:1096:301:a3::11)
- by TYZPR06MB7169.apcprd06.prod.outlook.com (2603:1096:405:b7::9) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.45; Wed, 3 Apr
- 2024 07:41:45 +0000
-Received: from PSAPR06MB4952.apcprd06.prod.outlook.com
- ([fe80::45cb:f62c:d9bc:b12b]) by PSAPR06MB4952.apcprd06.prod.outlook.com
- ([fe80::45cb:f62c:d9bc:b12b%7]) with mapi id 15.20.7409.042; Wed, 3 Apr 2024
- 07:41:45 +0000
-From: Guanbing Huang <albanhuang@outlook.com>
-To: gregkh@linuxfoundation.org,
-	andriy.shevchenko@intel.com,
-	rafael.j.wysocki@intel.com
-Cc: linux-acpi@vger.kernel.org,
-	tony@atomide.com,
-	john.ogness@linutronix.de,
-	yangyicong@hisilicon.com,
-	jirislaby@kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-serial@vger.kernel.org,
-	lvjianmin@loongson.cn,
-	albanhuang@tencent.com,
-	tombinfan@tencent.com
-Subject: [PATCH v4 3/3] serial: 8250_pnp: Support configurable reg shift property
-Date: Wed,  3 Apr 2024 15:41:30 +0800
-Message-ID:
- <PSAPR06MB495296BC1D96B42A60F7C230C93D2@PSAPR06MB4952.apcprd06.prod.outlook.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20240403074130.93811-1-albanhuang@outlook.com>
-References: <20240403074130.93811-1-albanhuang@outlook.com>
-Content-Type: text/plain
-X-TMN: [FPqZb0N4COyFaxYzvNsV6coGt0IBgkb5]
-X-ClientProxiedBy: SI1PR02CA0053.apcprd02.prod.outlook.com
- (2603:1096:4:1f5::8) To PSAPR06MB4952.apcprd06.prod.outlook.com
- (2603:1096:301:a3::11)
-X-Microsoft-Original-Message-ID:
- <20240403074130.93811-4-albanhuang@outlook.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cbSpXmYi"
+Received: by mail-qv1-f43.google.com with SMTP id 6a1803df08f44-6964b1c529cso47876456d6.0;
+        Wed, 03 Apr 2024 00:43:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1712130238; x=1712735038; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=3Ux9k5McjqhlPIuN+KstHyOqxhkxEP4+HV0vR18vMAY=;
+        b=cbSpXmYicUyCtxXtTmcd1wN95IbNEzgDnvFXOFtbgRGpAknDWuUErTtsXeHbk48ZAu
+         eRMzDFzHRB5E5otlAx0U0shNc7r1yOf40P0TXsJXtGruKCiVmtSdmjPUFhBa2OG/VHz2
+         D8QN0/tvzt1UvdvEklYKE7UWyQ/N1Xob5hgXswLJ/3IXE8ZiSe7WAkbXCp5rciFpPuBd
+         /fPi02M1zCENu8iHEygfh8ceLSMqxjICbNrbR450Rm5CnaPKj+b4PZw2v66eHaQK6fem
+         /Vb+tJVMgyhqlDEc0wxBXDO5HzD4Qd0BtgU+FCFfDs6LRFXHXgWNDxy3B7Vjts7+TG2b
+         yGZQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712130238; x=1712735038;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=3Ux9k5McjqhlPIuN+KstHyOqxhkxEP4+HV0vR18vMAY=;
+        b=AnQ5t9aj050+gCiX+C1X++KQHoQ2ZL43TBNzuaZTREhANLj227phZNlb6adLZYwq0i
+         BU/37Xecrbu9sQoMQ8OeI6CDKVtvoJ+OpMXbWs+5KcSPg1UPrz8bGJ+qaWgH9kUSEF++
+         sMm3zEKycc3g5id4XGNVL7SX4PFlNSffrJ4ntfiVBAY2v3dxVaI0tIAlRD8io+kVySvf
+         JXO2cCPskH4jAvtsdyVPHBhWVkdi6CluR+WzutvPR1ZGnUtCpRDIFZWQCVryjriQxXbD
+         ny9HifWkHcEi5KAKDJatYb1gyZ7BqcZCg4YMiHE29wChEp618uMrYFrjC3U9JodbitDy
+         J8WQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUF3TGDqJ8wSd8ScxAOX3xjtB9zJYDrxU6LuI8MUnnQEC1vaRo/P/WMKJZsTs0oYJBoC4IVY/C1RxlEcl/vCuJh2vh4ThrdYPTbrvMRK2rrC/VkKPSy3ogVjHK199lpekBWX1rFkJ5yFaJpV+0hU958JFyNR4UKlt4YsgDVhEls5Qxv1A==
+X-Gm-Message-State: AOJu0YySfUC13b6Oh2HL9LUHSqS7ZHWfMWr5pwYeF3XNy6mmAGOgUqT5
+	CpjylUWuCjbeLQ80paRYk9iRzJJW8j0dnacLfrigMxHtqNQuEWiz
+X-Google-Smtp-Source: AGHT+IF5FzGdZz/vRvTqaJSoRKJCV3p7jBbJbgvySg/1C0YGLk+Ra3JUK0YhO7JLZAbnS20NFHj5Lg==
+X-Received: by 2002:a0c:c591:0:b0:698:f5b6:6595 with SMTP id a17-20020a0cc591000000b00698f5b66595mr13210825qvj.55.1712130238060;
+        Wed, 03 Apr 2024 00:43:58 -0700 (PDT)
+Received: from [10.76.84.174] ([5.2.194.157])
+        by smtp.gmail.com with ESMTPSA id pi10-20020a0562144a8a00b0069903cddc96sm1150539qvb.18.2024.04.03.00.43.56
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 03 Apr 2024 00:43:57 -0700 (PDT)
+Message-ID: <25cb3514-1281-49a8-9e9b-40ead9b050dc@gmail.com>
+Date: Wed, 3 Apr 2024 10:43:54 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PSAPR06MB4952:EE_|TYZPR06MB7169:EE_
-X-MS-Office365-Filtering-Correlation-Id: d3321387-4c5d-4c4f-d2a4-08dc53b18329
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	rbgFUzx9J5/F8hyf/2jHdhnqZno0S7BEsCH5HTug81mY84o3DmsKzRdmfe77WaYPtiIGb9Smh3GKXwI+ZeoB5U2ie3DGrxlq3ZJG83/y9OKTnxO6/b1FT+VaEcL2gAGb/bVFCDRNBWl/rPcDOBQqgSGwinHZuuHldHPB+p45pMjKcXfbT+vkjupvunovJwXnPlFryxr5fG9gF2/rNk0sTTwvM+23ibnYhb1TgToCaVWzTjBDHRZDoyNA5rKUCbDSj7QDNMDP5NwAmk5y/XoDkQaUJc6DqNHmCKlQPVsUDtqDSOp8DVhkUW03PbX1tZ/rPHI27gP3mmprPRQWa/QZUeYoiRRu9fsUrVMzn4RJrPUB8sS4l0J5634y3f1jFOsepcuVoF6s848q1AwR/UGFm0MY77ktovIK0YwJCAYh2cK4Of61Dx/JCX//Pn2XixuDv8UxtpEU6xNzGamW7otsWwZPsqz+wMssec3UvjFJPeWtPEerxRLWjshD/rqQVLmv1NpoU7yxyamlHZYAlWYzfrwX1+UkDwKaK1qVBiVyfPTEXtfwHKxtid2QJwstSkMQ
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?XIHDq6aJbCzNLiWR81YwDxQffoNB1HQhcGi3WYbYRCBiVgajhduS5+DZ91xa?=
- =?us-ascii?Q?5jWW9qX1HIuteewb4oB2BIWZGqS6GSIPeEhcFXup0q50NCnWY7wVXISc4hMN?=
- =?us-ascii?Q?uXGmsItTG6x+VY22ym7t9jX9Y3RrqVwZv/Nl8/pJcuSWDK42VCmL4qKv6B+X?=
- =?us-ascii?Q?DKYNmScO74ksu25Vwmbr8hufIeCh4IhSpyDKX5T6pV/5M17RjX6dds46QDdo?=
- =?us-ascii?Q?a50B39j6JtiFs7afPd/rHrFVNXlceAGV7WxTR3XyY0JutS9q2yiaE2Tpj9ym?=
- =?us-ascii?Q?/H/sOZs+jtssiDWTjAMlaIeyovLrNyCOt4A6SQLS519L22f9kq+UhxwgU+KN?=
- =?us-ascii?Q?BBesRbmCUBPRuXi9deD97TwJcTQZUj8NEbESSVSj3cVCcUaaB+7zle4vp5DG?=
- =?us-ascii?Q?8kLxhz5G++/Ar9yjGwQ2bR1cZXUbasHama1l1LCKBnsPk80szI/aE84/2FpH?=
- =?us-ascii?Q?lhqNthQcW17OzoVNapi9ziK7np0YV6aI5/Qk9TLJmIM5SdjmgHklN/8/7WeL?=
- =?us-ascii?Q?ks3iQzms4slDTlj/nMg/yJlONI33T0ifB9bUDR+jCAe2O4jxySW4xORPU/gU?=
- =?us-ascii?Q?LShFDlh6knYTkkLXlUyL10SN7f7GMTNKW2x5supnvbEpiVs9duenaXsASEUq?=
- =?us-ascii?Q?KQw9vTfyhpaeSjrhNPZpKL7fmKxYFk7VnuWNVrWoIWpjGGOmTfZcIk8bD7mx?=
- =?us-ascii?Q?/Jy4b9pHT//srOmC1tpQ0zzVVrP7SzexQybV+PeRfKHGvscDDlUTLqohNn/Y?=
- =?us-ascii?Q?rGPkZGYJBNdxlTV3BC+o2YtRJfttVjaio0Yuny46mznfnEJ6od0X46/qmMdV?=
- =?us-ascii?Q?r5/EHBJRQRkoJQo4qkXEzJ2LonpP+ttcPhH7q1339oYTZ3VgoLCeOg34xolR?=
- =?us-ascii?Q?gjaj5E924xqtZNLV4CoYjIa/h2JsQaBXIvRfbaXz/jLJgumQ62ugsZPqRuwY?=
- =?us-ascii?Q?j73PTtaFTxrx0VW4z2ZU21OLAo3rep84Dp5esS2Iy/KEoGc7VxxbgcDQp38N?=
- =?us-ascii?Q?445xsl8ULkC1LfI9Uos/cSP6+j9QJ2vO/pF9CIrpMY7uemziow82Pabenxi7?=
- =?us-ascii?Q?WsVfMmTLzmvKOuW/RPo6BU6GaIwe5BtaQJX+nqBXaFGXhtBYRPQugKGjCDgo?=
- =?us-ascii?Q?yG23uZm7C1NZyVSX7cl064yJ0okrgYHX9B5rruJpyoVYOgH9uMRnHTh9pHwj?=
- =?us-ascii?Q?YuQz1GtdDQxfC7+YEak39wstH+VeRfRSkUUiHIAZX6etKBB9LibBRfkLHf8?=
- =?us-ascii?Q?=3D?=
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: d3321387-4c5d-4c4f-d2a4-08dc53b18329
-X-MS-Exchange-CrossTenant-AuthSource: PSAPR06MB4952.apcprd06.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Apr 2024 07:41:45.6137
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
-	00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYZPR06MB7169
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/6] dt-bindings: adc: ad7173: add support for ad411x
+To: David Lechner <dlechner@baylibre.com>, dumitru.ceclan@analog.com
+Cc: Lars-Peter Clausen <lars@metafoo.de>,
+ Michael Hennerich <Michael.Hennerich@analog.com>,
+ Jonathan Cameron <jic23@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>, linux-iio@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20240401-ad4111-v1-0-34618a9cc502@analog.com>
+ <20240401-ad4111-v1-1-34618a9cc502@analog.com>
+ <CAMknhBHeKAQ45=5-dL1T1tv-mZcPN+bNo3vxWJYgWpEPE+8p3Q@mail.gmail.com>
+Content-Language: en-US
+From: "Ceclan, Dumitru" <mitrutzceclan@gmail.com>
+In-Reply-To: <CAMknhBHeKAQ45=5-dL1T1tv-mZcPN+bNo3vxWJYgWpEPE+8p3Q@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-From: Guanbing Huang <albanhuang@tencent.com>
+On 01/04/2024 22:37, David Lechner wrote:
+> On Mon, Apr 1, 2024 at 10:10 AM Dumitru Ceclan via B4 Relay
+> <devnull+dumitru.ceclan.analog.com@kernel.org> wrote:
+>>
+>> From: Dumitru Ceclan <dumitru.ceclan@analog.com>
 
-The 16550a serial port based on the ACPI table requires obtaining the
-reg-shift attribute. In the ACPI scenario, If the reg-shift property
-is not configured like in DTS, the 16550a serial driver cannot read or
-write controller registers properly during initialization.
+...
 
-Signed-off-by: Guanbing Huang <albanhuang@tencent.com>
-Reviewed-by: Bing Fan <tombinfan@tencent.com>
-Tested-by: Linheng Du <dylanlhdu@tencent.com>
----
-v3 -> v4: dependent on two pre patches: "pnp: Add dev_is_pnp() macro" and
-          "serial: 8250_port: Add support of pnp irq to  __uart_read_properties()",
-          the iotype is reserved, the mapsize is initialized, fix the UPF_SHARE_IRQ
-	  flag, check for IRQ being absent
-v2 -> v3: switch to use uart_read_port_properties(), change "Signed-off-by" to "Reviewed-by" and "Tested-by"
-v1 -> v2: change the names after "Signed off by" to the real names
+>>      properties:
+>>        reg:
+>> +        description:
+>> +          Reg values 16-19 are only permitted for ad4111/ad4112 current channels.
+>>          minimum: 0
+>> -        maximum: 15
+>> +        maximum: 19
+> 
+> This looks wrong. Isn't reg describing the number of logical channels
+> (# of channel config registers)?
+> 
+> After reviewing the driver, I see that > 16 is used as a way of
+> flagging current inputs, but still seems like the wrong way to do it.
+> See suggestion below.
+> 
 
- drivers/tty/serial/8250/8250_pnp.c | 36 ++++++++++++++++++++----------
- 1 file changed, 24 insertions(+), 12 deletions(-)
+This was a suggestion from Jonathan, maybe I implemented it wrong.
+Other alternative that came to my mind: attribute "adi,current-channel".
+>>
+>>        diff-channels:
+>> +        description:
+>> +          For using current channels specify only the positive channel.
+>> +            (IIN2+, IIN2−) -> diff-channels = <2 0>
+> 
+> I find this a bit confusing since 2 is already VIN2 and 0 is already
+> VIN0. I think it would make more sense to assign unique channel
+> numbers individually to the negative and positive current inputs.
+> Also, I think it makes sense to use the same numbers that the
+> registers in the datasheet use (8 - 11 for negative and 12 to 15 for
+> positive).
+> 
+> So: (IIN2+, IIN2−) -> diff-channels = <13 10>
+> 
+> 
+It would mean for the user to look in the datasheet at the possible
+channel INPUT configurations values, decode the bit field into two
+integer values and place it here (0110101010) -> 13 10. This is
+cumbersome for just choosing current input 2.
 
-diff --git a/drivers/tty/serial/8250/8250_pnp.c b/drivers/tty/serial/8250/8250_pnp.c
-index 1974bbadc975..292cb8e84b37 100644
---- a/drivers/tty/serial/8250/8250_pnp.c
-+++ b/drivers/tty/serial/8250/8250_pnp.c
-@@ -435,6 +435,7 @@ serial_pnp_probe(struct pnp_dev *dev, const struct pnp_device_id *dev_id)
- {
- 	struct uart_8250_port uart, *port;
- 	int ret, line, flags = dev_id->driver_data;
-+	unsigned char iotype;
- 
- 	if (flags & UNKNOWN_DEV) {
- 		ret = serial_pnp_guess_board(dev);
-@@ -443,25 +444,31 @@ serial_pnp_probe(struct pnp_dev *dev, const struct pnp_device_id *dev_id)
- 	}
- 
- 	memset(&uart, 0, sizeof(uart));
--	if (pnp_irq_valid(dev, 0))
--		uart.port.irq = pnp_irq(dev, 0);
- 	if ((flags & CIR_PORT) && pnp_port_valid(dev, 2)) {
- 		uart.port.iobase = pnp_port_start(dev, 2);
--		uart.port.iotype = UPIO_PORT;
-+		iotype = UPIO_PORT;
- 	} else if (pnp_port_valid(dev, 0)) {
- 		uart.port.iobase = pnp_port_start(dev, 0);
--		uart.port.iotype = UPIO_PORT;
-+		iotype = UPIO_PORT;
- 	} else if (pnp_mem_valid(dev, 0)) {
- 		uart.port.mapbase = pnp_mem_start(dev, 0);
--		uart.port.iotype = UPIO_MEM;
-+		uart.port.mapsize = pnp_mem_end(dev, 0) - pnp_mem_start(dev, 0);
-+		iotype = UPIO_MEM;
- 		uart.port.flags = UPF_IOREMAP;
- 	} else
- 		return -ENODEV;
- 
--	dev_dbg(&dev->dev,
--		 "Setup PNP port: port %#lx, mem %#llx, irq %u, type %u\n",
--		 uart.port.iobase, (unsigned long long)uart.port.mapbase,
--		 uart.port.irq, uart.port.iotype);
-+	uart.port.uartclk = 1843200;
-+	uart.port.dev = &dev->dev;
-+
-+	ret = uart_read_port_properties(&uart.port);
-+	/* no interrupt -> fall back to polling */
-+	if (ret == -ENXIO)
-+		ret = 0;
-+	if (ret)
-+		return ret;
-+
-+	uart.port.iotype = iotype;
- 
- 	if (flags & CIR_PORT) {
- 		uart.port.flags |= UPF_FIXED_PORT | UPF_FIXED_TYPE;
-@@ -471,9 +478,14 @@ serial_pnp_probe(struct pnp_dev *dev, const struct pnp_device_id *dev_id)
- 	uart.port.flags |= UPF_SKIP_TEST | UPF_BOOT_AUTOCONF;
- 	if (pnp_irq_flags(dev, 0) & IORESOURCE_IRQ_SHAREABLE)
- 		uart.port.flags |= UPF_SHARE_IRQ;
--	uart.port.uartclk = 1843200;
--	device_property_read_u32(&dev->dev, "clock-frequency", &uart.port.uartclk);
--	uart.port.dev = &dev->dev;
-+	else
-+		uart.port.flags &= ~UPF_SHARE_IRQ;
-+
-+
-+	dev_dbg(&dev->dev,
-+		 "Setup PNP port: port %#lx, mem %#llx, size %#llx, irq %u, type %u\n",
-+		 uart.port.iobase, (unsigned long long)uart.port.mapbase,
-+		 (unsigned long long)uart.port.mapsize, uart.port.irq, uart.port.iotype);
- 
- 	line = serial8250_register_8250_port(&uart);
- 	if (line < 0 || (flags & CIR_PORT))
--- 
-2.17.1
+>> +
+>> +          Family AD411x supports a dedicated VCOM voltage input.
+>> +          To select it set the second channel to 16.
+>> +            (VIN2, VCOM) -> diff-channels = <2 16>
+> 
+> The 411x datasheets call this pin VINCOM so calling it VCOM here is a
+> bit confusing.
+> 
 
+Sure, I'll rename to VINCOM.
+
+> Also, do we need to add a vincom-supply to get this voltage? Or is it
+> safe to assume it is always connected to AVSS? The datasheet seems to
+> indicate that the latter is the case. But then it also has this
+> special case (at least for AD4116, didn't check all datasheets)
+> "VIN10, VINCOM (single-ended or differential pair)". If it can be used
+> as part of a fully differential input, we probably need some extra
+> flag to indicate that case.
+> 
+
+I cannot see any configuration options for these use cases. All inputs
+are routed to the same mux and routed to the differential positive and
+negative ADC inputs.
+
+"VIN10, VINCOM (single-ended or differential pair)" the only difference
+between these two use cases is if you connected VINCOM to AVSS (with
+unipolar coding) or not with bipolar encoding. The channel is still
+measuring the difference between the two selected inputs and comparing
+to the selected reference.
+
+> Similarly, do we need special handling for ADCIN15 on AD4116? It has a
+> "(pseudo differential or differential pair)" notation that other
+> inputs don't. In other words, it is more like VINCOM than it is to the
+> other ADCINxx pins. So we probably need an adcin15-supply for this pin
+> to properly get the right channel configuration. I.e. the logic in the
+> IIO driver would be if adcin15-supply is present, any channels that
+> use this input are pseudo-differential, otherwise any channels that
+> use it are fully differential.
+> 
+
+I cannot seem to understand what would a adcin15-supply be needed for.
+This input, the same as all others, enters the mux and is routed to
+either positive or negative input of the ADC.
+
+The voltage on the ADCIN15 pin is not important to the user, just the
+difference in voltage between that pin and the other one selected.
+
+>>          items:
+>>            minimum: 0
+>>            maximum: 31
+>> @@ -166,7 +191,6 @@ allOf:
+>>    - $ref: /schemas/spi/spi-peripheral-props.yaml#
+>>
+>>    # Only ad7172-4, ad7173-8 and ad7175-8 support vref2
+>> -  # Other models have [0-3] channel registers
+> 
+> Did you forget to remove
+> 
+>             reg:
+>               maximum: 3
+> 
+> from this if statement that this comment is referring to?
+> 
+> 
+
+
+Other way around, forgot in a previous patch to remove the comment.
+I'll move this change to a precursor patch.
+
+>>    - if:
+>>        properties:
+>>          compatible:
+>> @@ -187,6 +211,37 @@ allOf:
+>>                  - vref
+>>                  - refout-avss
+>>                  - avdd
+>> +
+>> +  - if:
+>> +      properties:
+>> +        compatible:
+>> +          contains:
+>> +            enum:
+>> +              - adi,ad4114
+>> +              - adi,ad4115
+>> +              - adi,ad4116
+>> +              - adi,ad7173-8
+>> +              - adi,ad7175-8
+>> +    then:
+>> +      patternProperties:
+>> +        "^channel@[0-9a-f]$":
+>> +          properties:
+>> +            reg:
+>> +              maximum: 15
+> 
+> As with the previous reg comment, this if statement should not be
+> needed since maximum should not be changed to 19.
+> 
+
+We'll see what is the best approach regarding the current channels,
+perhaps the one you mentioned in the later reply with always configuring
+like the temp channel.
+
+>> +
+>> +  - if:
+>> +      properties:
+>> +        compatible:
+>> +          contains:
+>> +            enum:
+>> +              - adi,ad7172-2
+>> +              - adi,ad7175-2
+>> +              - adi,ad7176-2
+>> +              - adi,ad7177-2
+>> +    then:
+>> +      patternProperties:
+>> +        "^channel@[0-9a-f]$":
+>> +          properties:
+>>              reg:
+>>                maximum: 3
+> 
+> It looks to me like AD7172-4 actually has 8 possible channels rather
+> than 16. So it would need a special condition as well. But that is a
+> bug in the previous bindings and should therefore be fixed in a
+> separate patch.
+
+It is addressed already in the binding:
+"
+  - if:
+      properties:
+        compatible:
+          contains:
+            const: adi,ad7172-4
+[...]
+              maximum: 7
+"
