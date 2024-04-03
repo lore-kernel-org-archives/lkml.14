@@ -1,59 +1,67 @@
-Received: from out203-205-221-205.mail.qq.com (out203-205-221-205.mail.qq.com [203.205.221.205])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0FB914F70;
-	Wed,  3 Apr 2024 02:16:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.221.205
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2E0F17729;
+	Wed,  3 Apr 2024 02:18:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712110590; cv=none; b=a91UvHuOO3SdHyS1WhohOJR36j90D9CHk9hw/eLcBTpevmA4OLG7MlUQJVEZZGAeSn87vE7grNLWBHHYkUfft4UzoEHfke1Q1T4TwP+hgSSmk2FpYaG3XLbBHc8ux1gP87jvAEBFDAEzgSZDveLKUgcckeIT+8dm+Yke4GIdPLo=
+	t=1712110700; cv=none; b=lnS2uzv3JBLad5SNq2Q32kL8rYIljYPAVx5ZCd0yVkiR8shwCAF5Yj8UvtYoH0sRlb7GW344lzUq10bJDOLzO2LG6iv2vOFT7J4t9rMzIKiAUE8EqKBFi76uZ1GDU1tacelNiRKhDMSQNEmdB4WRO1DIdvjnBTFR+cJ9c7vGzOY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712110590; c=relaxed/simple;
-	bh=/mxN8H4HfV7JABW4Te432WPH6daYeWBceHea3twjMLM=;
-	h=Message-ID:From:To:Cc:Subject:Date:MIME-Version; b=omoiahcPBevfnmSlFDAgaegJ3zJ936fM76pvBxZdehlLClzor26zotvfAr7uUa4pGEJwnGSm/L5aBQH+SmeW0877qC54plABbQkCuXU5Zp943d7NYPvGN+k59Fq/e43ASvjn0+UynrgN7EpJZPagHp7nk5fkRky0DwLbhq/sF9A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=aAaHfe5b; arc=none smtp.client-ip=203.205.221.205
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
+	s=arc-20240116; t=1712110700; c=relaxed/simple;
+	bh=LfA8lJ/FXjiJM7DYCf6oASjjWQLu6w7WC/cu6Vexpso=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=Gat43AgAtmkaVVgEkoTFWqiDtPosinF8Hewu8nZ3dHCCO/SL9v9w4fiae/FqoKAUnJqxrXen67xMKo+TfWcUgaw3YRDXcVV4SihBB+KKEBeSWCGLMSFc0n/UaSc8UuOPWAlvxqDk7M/AfHVjFwLY7Wzf2BlzKRz4Zu/hqAlYYy4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lS11qlHy; arc=none smtp.client-ip=192.198.163.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="aAaHfe5b"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
-	t=1712110580; bh=ayMG5kPQyrq+8jbtAodeuRBjRi8R0ZuYWiPfYDs0A34=;
-	h=From:To:Cc:Subject:Date;
-	b=aAaHfe5b5gUJG5SLXJdPdLM5+JJSV6qDXhowhdgzoqg5YOksjxp74ppb74tTYNTGH
-	 6afNCoeyui6dRjew6BkBHgcUA70gIx7NcN2otvjv5WbP06nkCixxLOFCSYrjGpva+1
-	 goJCLpAahBUmI0it/yB+VLY5HLVFtI3tSdAXsn6g=
-Received: from localhost.localdomain ([153.3.164.50])
-	by newxmesmtplogicsvrsza1-0.qq.com (NewEsmtp) with SMTP
-	id 28B83A6E; Wed, 03 Apr 2024 10:10:11 +0800
-X-QQ-mid: xmsmtpt1712110211t0yxkh2ev
-Message-ID: <tencent_5E187BD0A61BA28605E85405F15228254D0A@qq.com>
-X-QQ-XMAILINFO: OZsapEVPoiO6vlv/ICY8TgGx/eAkz6B+6WYW0Fyip6dA9nbTAMktxVIHkJVNf7
-	 /qgVBr13Tr0pnzOGDRUO+imITOgybbwGqCPCWx1l5sNIMBN030FXqhXIcuyCPy+U2wWLCA6Y//a1
-	 X+pPp2bwvopAsl7+YcseK/bZ8YIL1a9WRUYfgUlFXDRjVvPnsCoRyXsywRCSygAeuh+rheiBjr8n
-	 e3GNL44yiWYtMSA/z0QlB4oDUN3CZdZvxgQ8KwQ7DJ3lvcd5VWZOOGTJqtbLX2w5pvvRBdQz3/cF
-	 6JfhQpgnlDxadKmaCtgFC0akIXzmR6cXopvN8zU/VhziGWk2GtFim2Rfz0OrXWaPeaxUvU0c0D5E
-	 hTGv3imEXzbGBmgcQje1xS360PoFRhRCjMpPxpOHizK55Od5SaWMPWUJIQJIFJI6H+Daq7foK0k/
-	 aOO84kOtSJySjk/AMDu5bMFlr8v+l3YnHf+HxMA80amXsbupS1R7Hi+eyUvv3XZX/5bcHzBGRII5
-	 pPb92Nz+Brv/wOg4GIuwCiGh8DCi0sJQyJ17ruHxc3I5JhPGr+TDe157nPTfZfYT36z+JyG4GoOX
-	 Tz7ctL6pYeksRLp6lNheZlbmMlt0ZtlkAFQpDy9Sfvt4Rr6G8fQUnZQ1G9AS2P+OtNGBswgWxNux
-	 5JdGzlXVwbXJIiUKUrTmZgVob5nb7Luy2lelKBCuSrWqfoORJu0yBNWkzCu6smrYp3LhUD8KYVtc
-	 cXTv/k/aReGTc2OuX9bRWa3kjQxhbxivFC3FUQTwBb+tbWZYPBBzK4XPMGRbfYZwEl4UyMZRTzjK
-	 UoYWmeHxaeSrGvzXtYr7yoAEbMFTeoX74HQsXXcq0JwjDECWB7o5j0jyWGa6j9xs/LYnmLZdEWky
-	 r45NTgljWNl6RmL1a7752NElIFnswoFi3tdvSXa5sN4YUa991fPARneISEx96bW/xisMfbH79Tml
-	 b0hARrFd7tzRZfnYj6XdZt+gnkcJcGNlvWpYTG5Yq+w3qJcijaYl42u5My6mCsIhaor54BL9M=
-X-QQ-XMRINFO: NI4Ajvh11aEj8Xl/2s1/T8w=
-From: linke li <lilinke99@qq.com>
-To: 
-Cc: xujianhao01@gmail.com,
-	linke li <lilinke99@qq.com>,
-	Alexander Viro <viro@zeniv.linux.org.uk>,
-	Christian Brauner <brauner@kernel.org>,
-	Jan Kara <jack@suse.cz>,
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lS11qlHy"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1712110699; x=1743646699;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=LfA8lJ/FXjiJM7DYCf6oASjjWQLu6w7WC/cu6Vexpso=;
+  b=lS11qlHyZigDckWgH/Rkgwmzfsem7YdXJrfrDpEo/izMbo0GHOMdFBNP
+   aporuaCGEP8DzWxYBxC4//kTlBzydslY4Hp9h3X/gICdF3NSDCFahPWGN
+   W4cu+QymS5DO4RE48GRpF2t2BpHBQXios1gJLJCBUGkL92atz1Zi4lari
+   RHeaS6bGyaY28jzNuLsb9u7YNZpQlK7CSC6QQZYkDVExf2jDM5MzAEXKg
+   emPqIwLpl4O+I+A+TXNskyNQwwtKUtbUX7O5KxiXQufYwPKH3B+QbR3FD
+   fprSwkWkEi2qwpOJuJLcRWzQF3gAynCXqVmn4MwWPwVmxGF9W50TS9chN
+   g==;
+X-CSE-ConnectionGUID: N7H5K3JLSBCa8Sqx3UUcog==
+X-CSE-MsgGUID: dS6JJyKPTDyf6uZWSC56Gg==
+X-IronPort-AV: E=McAfee;i="6600,9927,11032"; a="7164925"
+X-IronPort-AV: E=Sophos;i="6.07,176,1708416000"; 
+   d="scan'208";a="7164925"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2024 19:18:17 -0700
+X-CSE-ConnectionGUID: EklwzNT3TsGCwZqYxOQMNQ==
+X-CSE-MsgGUID: zT7qdFF0R5aDb5uqNrfpnA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,176,1708416000"; 
+   d="scan'208";a="55718001"
+Received: from unknown (HELO vcostago-mobl3.intel.com) ([10.124.222.184])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2024 19:18:17 -0700
+From: Vinicius Costa Gomes <vinicius.gomes@intel.com>
+To: brauner@kernel.org,
+	amir73il@gmail.com,
+	hu1.chen@intel.com
+Cc: miklos@szeredi.hu,
+	malini.bhandaru@intel.com,
+	tim.c.chen@intel.com,
+	mikko.ylinen@intel.com,
+	lizhen.you@intel.com,
+	linux-unionfs@vger.kernel.org,
 	linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] fs/dcache: Re-use value stored to dentry->d_flags instead of re-reading
-Date: Wed,  3 Apr 2024 10:10:08 +0800
-X-OQ-MSGID: <20240403021008.47028-1-lilinke99@qq.com>
-X-Mailer: git-send-email 2.39.3 (Apple Git-146)
+	linux-kernel@vger.kernel.org,
+	Vinicius Costa Gomes <vinicius.gomes@intel.com>
+Subject: [PATCH v1 1/3] cred: Add a light version of override/revert_creds()
+Date: Tue,  2 Apr 2024 19:18:06 -0700
+Message-ID: <20240403021808.309900-2-vinicius.gomes@intel.com>
+X-Mailer: git-send-email 2.44.0
+In-Reply-To: <20240403021808.309900-1-vinicius.gomes@intel.com>
+References: <20240403021808.309900-1-vinicius.gomes@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -62,33 +70,96 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Currently, the __d_clear_type_and_inode() writes the value flags to
-dentry->d_flags, then immediately re-reads it in order to use it in a if
-statement. This re-read is useless because no other update to 
-dentry->d_flags can occur at this point.
+Add a light version of override/revert_creds(), this should only be
+used when the credentials in question will outlive the critical
+section and the critical section doesn't change the ->usage of the
+credentials.
 
-This commit therefore re-use flags in the if statement instead of
-re-reading dentry->d_flags.
+To make their usage less error prone, introduce cleanup guards to be
+used like this:
 
+     cred_guard(credentials_to_override_and_restore);
 
-Signed-off-by: linke li <lilinke99@qq.com>
+or this:
+
+     cred_scoped_guard(credentials_to_override_and_restore) {
+             /* with credentials overridden */
+     }
+
+Suggested-by: Christian Brauner <brauner@kernel.org>
+Signed-off-by: Vinicius Costa Gomes <vinicius.gomes@intel.com>
 ---
- fs/dcache.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ include/linux/cred.h | 25 +++++++++++++++++++++++++
+ kernel/cred.c        |  6 +++---
+ 2 files changed, 28 insertions(+), 3 deletions(-)
 
-diff --git a/fs/dcache.c b/fs/dcache.c
-index b813528fb147..79da415d7995 100644
---- a/fs/dcache.c
-+++ b/fs/dcache.c
-@@ -355,7 +355,7 @@ static inline void __d_clear_type_and_inode(struct dentry *dentry)
- 	flags &= ~DCACHE_ENTRY_TYPE;
- 	WRITE_ONCE(dentry->d_flags, flags);
- 	dentry->d_inode = NULL;
--	if (dentry->d_flags & DCACHE_LRU_LIST)
-+	if (flags & DCACHE_LRU_LIST)
- 		this_cpu_inc(nr_dentry_negative);
+diff --git a/include/linux/cred.h b/include/linux/cred.h
+index 2976f534a7a3..f4f3d55cd6a2 100644
+--- a/include/linux/cred.h
++++ b/include/linux/cred.h
+@@ -172,6 +172,31 @@ static inline bool cap_ambient_invariant_ok(const struct cred *cred)
+ 					  cred->cap_inheritable));
  }
  
++/*
++ * Override creds without bumping reference count. Caller must ensure
++ * reference remains valid or has taken reference. Almost always not the
++ * interface you want. Use override_creds()/revert_creds() instead.
++ */
++static inline const struct cred *override_creds_light(const struct cred *override_cred)
++{
++	const struct cred *old = current->cred;
++
++	rcu_assign_pointer(current->cred, override_cred);
++	return old;
++}
++
++static inline void revert_creds_light(const struct cred *revert_cred)
++{
++	rcu_assign_pointer(current->cred, revert_cred);
++}
++
++DEFINE_LOCK_GUARD_1(__cred, struct cred,
++		    _T->lock = (struct cred *)override_creds_light(_T->lock),
++		    revert_creds_light(_T->lock));
++
++#define cred_guard(_cred) guard(__cred)(((struct cred *)_cred))
++#define cred_scoped_guard(_cred) scoped_guard(__cred, ((struct cred *)_cred))
++
+ /**
+  * get_new_cred_many - Get references on a new set of credentials
+  * @cred: The new credentials to reference
+diff --git a/kernel/cred.c b/kernel/cred.c
+index 075cfa7c896f..da7da250f7c8 100644
+--- a/kernel/cred.c
++++ b/kernel/cred.c
+@@ -485,7 +485,7 @@ EXPORT_SYMBOL(abort_creds);
+  */
+ const struct cred *override_creds(const struct cred *new)
+ {
+-	const struct cred *old = current->cred;
++	const struct cred *old;
+ 
+ 	kdebug("override_creds(%p{%ld})", new,
+ 	       atomic_long_read(&new->usage));
+@@ -499,7 +499,7 @@ const struct cred *override_creds(const struct cred *new)
+ 	 * visible to other threads under RCU.
+ 	 */
+ 	get_new_cred((struct cred *)new);
+-	rcu_assign_pointer(current->cred, new);
++	old = override_creds_light(new);
+ 
+ 	kdebug("override_creds() = %p{%ld}", old,
+ 	       atomic_long_read(&old->usage));
+@@ -521,7 +521,7 @@ void revert_creds(const struct cred *old)
+ 	kdebug("revert_creds(%p{%ld})", old,
+ 	       atomic_long_read(&old->usage));
+ 
+-	rcu_assign_pointer(current->cred, old);
++	revert_creds_light(old);
+ 	put_cred(override);
+ }
+ EXPORT_SYMBOL(revert_creds);
 -- 
-2.39.3 (Apple Git-146)
+2.44.0
 
