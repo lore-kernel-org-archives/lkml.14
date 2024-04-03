@@ -1,109 +1,139 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f42.google.com (mail-pj1-f42.google.com [209.85.216.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64B6A14882B
-	for <linux-kernel@vger.kernel.org>; Wed,  3 Apr 2024 13:48:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75BCE1487DE
+	for <linux-kernel@vger.kernel.org>; Wed,  3 Apr 2024 13:50:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712152138; cv=none; b=u75ZYPJmDEZW/Hs0MwhwRhzlmKxQdk08dJdlPgkHJHMRUdb29jqY6bhAw475rN1eQefq9P/Ji9PWkoKRwpRvzSnanuhadqk0gnRaS95o6IkO1CiR19reC/hV0vaA46vSJYE9AkmjdaWUnl0D+LGbjfDB+ppV0L4B/Ii6Yleoisc=
+	t=1712152224; cv=none; b=o6ec459fM07ZS6Yui4rMieplEPx3nZGvqbqMNhAYsTZySddWyH75Nrin2YdOX4O8DhqY8U3ckE6keFnI0zaHECFK3RpZ3XJNkvnTNdMmw8Rygvd229xng/lzkp3qZvsy/iCMjmJHGOvrY1rCgQc0njuNyHoZ2Zqo5WMUKvahXsE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712152138; c=relaxed/simple;
-	bh=9YX2yhCzfAJegJoFXC12+a3iew99VIhPK/Z/r6A4cGg=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=aMRqj1roUwFHdPiP0KzuvsvHyJYt4vkZaaYwvEYS4ySB3Ggl1TdYlX4D5hEywx1ahoMCVZhOEfIsxLt24Mq6dr7VVDkjM+NoAlLTNP/9lBVSPU4FzTBCYVpPYTT48OJZKzwJEMawJM81m9L5ozjZSyezoq2FW29FnB9vhFtb2xc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=Vb6APOBp; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1712152224; c=relaxed/simple;
+	bh=X2XAS/oTqinlQY0bqWZ9HdUjhcK3j05vJH/5bNcOweY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=SCm5xQ4MRsOVFDM2Gi9DHqAJQ69efRgbT17qf31DobG+KuT8PSxYfbyXu9cfQtFlV8BOtQiUeBIpPMzcfm0CanWxrLL7+8luGZfR8qs8qQ6IBRqN8blDsIyMBJGxwEIeWq9KTCPNZ0cl/Kgj3SyczN8BMcR8pYKPUSkbijrrPxg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=CfbCHv/6; arc=none smtp.client-ip=209.85.216.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="Vb6APOBp"
-Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 433DUXwT018108;
-	Wed, 3 Apr 2024 13:48:53 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding; s=pp1;
- bh=4W4KUIzxuSN+Xr+nkXb5WLxVOa7Pee4oM+/d+NsVcJ4=;
- b=Vb6APOBpT9c+aFLHPi8pwNWkZ1F0iTG0n4BCrK2PwS57Z343Z1C4jVsDeoAYJUl9s5Jq
- QFoGOYjIhUDZPgYAInwKjWvtoeGjBF8BhqMh+Hz2NPaufx3BO8tmfZjF0ImY0SxvJzM7
- 8/RXYR3dcso4eH3Jsu0n2/+wis/T4W0SRScfso33ff8GE88YQ9sg0pWHgUEH/IYYX6jo
- eHtf7qxHgMU5FdRkFxUXKAR5qfczqLIQ6V5RjfcglWeIcatmFpM8oVWacc4fav9iBEW9
- e9IPFYoQqhDk31amQpPfd51y5UTMO5f6maocAFvAwxurHFM1OKvU39EoAfEJWPKhU0nZ Xw== 
-Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3x9828r1ev-3
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 03 Apr 2024 13:48:51 +0000
-Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma23.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 433CuU7L002249;
-	Wed, 3 Apr 2024 13:25:54 GMT
-Received: from smtprelay02.fra02v.mail.ibm.com ([9.218.2.226])
-	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3x6xjmnasd-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 03 Apr 2024 13:25:53 +0000
-Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
-	by smtprelay02.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 433DPmjQ33095966
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 3 Apr 2024 13:25:50 GMT
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 57E9F20040;
-	Wed,  3 Apr 2024 13:25:48 +0000 (GMT)
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 2532C2004B;
-	Wed,  3 Apr 2024 13:25:48 +0000 (GMT)
-Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
-	by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Wed,  3 Apr 2024 13:25:48 +0000 (GMT)
-From: Niklas Schnelle <schnelle@linux.ibm.com>
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: Arnd Bergmann <arnd@kernel.org>, Heiko Carstens <hca@linux.ibm.com>,
-        linux-kernel@vger.kernel.org, Niklas Schnelle <schnelle@linux.ibm.com>
-Subject: [PATCH 1/1] kgdb: add HAS_IOPORT dependency
-Date: Wed,  3 Apr 2024 15:25:47 +0200
-Message-Id: <20240403132547.762429-2-schnelle@linux.ibm.com>
-X-Mailer: git-send-email 2.40.1
-In-Reply-To: <20240403132547.762429-1-schnelle@linux.ibm.com>
-References: <20240403132547.762429-1-schnelle@linux.ibm.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="CfbCHv/6"
+Received: by mail-pj1-f42.google.com with SMTP id 98e67ed59e1d1-2a2601f0562so1428954a91.0
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Apr 2024 06:50:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1712152223; x=1712757023; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=f7pIzWrkcLxbGwLKhe5BWqkH4QaoGIyBQXlY1niD1ok=;
+        b=CfbCHv/6SIBCP1W72SXIpI4tjNL00nPcURc0KlN7pXRYdfRnQrWcBTC0ARABICVeUQ
+         DJuDL7aC7W6+KpB95X5mGEBTy84QWkRzIoYBEygT3LK5k/GLKYf5/EYQ561R3Px3Vu+G
+         5acaV4S/9j1d3Z2IP+xGbUmqVLds3dt3XLN9GnWwchtdQFPAQFkZhkzwqmpRpK9GWQw/
+         BjqdIy7lkvwxwl5uhI3hCCdIq1uHDpM+YYTBsY555YFKhYZ8UJI6UjiDIPFCAY1GZbly
+         Ij/KfL0GviUiDC4ZgxuE8YYRQ1TTQkJe/2Dc503l5PjJC9rHc9TExb7TmVuLAMJ6a2CN
+         N4cA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712152223; x=1712757023;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=f7pIzWrkcLxbGwLKhe5BWqkH4QaoGIyBQXlY1niD1ok=;
+        b=vix0RWXs/LjvtOHMAC8dbSSmoQGI2Grd27IreVbmCSHNCx31C2jIJHXglQ3nABn436
+         OwsokScgzcyKxsO9g5AL90pOoYIw09UCLdD1OrEiqY3HZ/eLMefs4efy9XBrW+52c3ne
+         U+eUVy5BADyzZRXKnyBEh+si4acXaAh1sj+txLwA/G0NmX+OApVZmRWPrs10qlI5xVNl
+         Uq2bdMSD42XTMFo8khPZoDHXTICPZpdEYnegmjsISKV6nXvTd0kD5LX35jKsk8w7DA9I
+         mY9Bkn2T2RI9f2n5GUc+DlhmcL65K6e+jkyNrFpws7jbwoMmhggpks2cfyAG1yF9ZWUe
+         HQtg==
+X-Forwarded-Encrypted: i=1; AJvYcCVo+NUhQz5fNunLYyPyMk2eNTVJHp1wM28a/lQM7LW8GBRJ6tqZwdzW/XqpEpPC4SPyy4VQFY+sO+I26TA7efDP27KEmVbd804/2N1P
+X-Gm-Message-State: AOJu0Ywf7GWvyEZ3e+aJQ2IzNOw1jrFqmm7s3NVAS+Rhckm6uuvHG7vP
+	VUga0t4wQJukUG0ReLnNuDY6AO239FdYasitXpeerL5lmz9m04vshbZpndsHRQ==
+X-Google-Smtp-Source: AGHT+IFDdfRiUaNJoLcOr55g0unal8pZiJ3WGx9PpUBA19tgVAi/tYPRzvUz9AfJy4wzh0i9HRnXeA==
+X-Received: by 2002:a17:90a:4b8e:b0:2a2:6e60:b53c with SMTP id i14-20020a17090a4b8e00b002a26e60b53cmr3886528pjh.20.1712152222504;
+        Wed, 03 Apr 2024 06:50:22 -0700 (PDT)
+Received: from thinkpad ([103.28.246.48])
+        by smtp.gmail.com with ESMTPSA id m10-20020a17090a34ca00b0029b9954a02asm2196137pjf.0.2024.04.03.06.50.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 03 Apr 2024 06:50:22 -0700 (PDT)
+Date: Wed, 3 Apr 2024 19:20:15 +0530
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Cc: Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konrad.dybcio@linaro.org>,
+	Alim Akhtar <alim.akhtar@samsung.com>,
+	Avri Altman <avri.altman@wdc.com>,
+	Bart Van Assche <bvanassche@acm.org>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>, Andy Gross <agross@kernel.org>,
+	Andy Gross <andy.gross@linaro.org>,
+	"James E.J. Bottomley" <jejb@linux.ibm.com>,
+	"Martin K. Petersen" <martin.petersen@oracle.com>,
+	linux-arm-msm@vger.kernel.org, linux-scsi@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 3/3] arm64: dts: qcom: msm8996: Add missing UFS host
+ controller reset
+Message-ID: <20240403135015.GN25309@thinkpad>
+References: <20240129-ufs-core-reset-fix-v1-0-7ac628aa735f@linaro.org>
+ <20240129-ufs-core-reset-fix-v1-3-7ac628aa735f@linaro.org>
+ <CAA8EJpphzwoCaetGfnM8dE478ic1-BMqXKA3XVLeC9j5BBu3SA@mail.gmail.com>
+ <20240130065550.GF32821@thinkpad>
+ <CAA8EJpqZYp0C8rT8E=LoVo9fispLNhBn8CEgx1-iMqN_2MQXfg@mail.gmail.com>
+ <g4a6gl47kfjx47ww36qnwp7zgvbd5gi5r7d26ibitfrybaa3l4@gvnz2mhsdf4s>
+ <CAA8EJppOPrSfD=VkHm8M0P07=mN_BikT=cGvLe6UFL3OpKVWzA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: f9976-4sLIEDDPovhnRoM57L60Vf9wcQ
-X-Proofpoint-ORIG-GUID: f9976-4sLIEDDPovhnRoM57L60Vf9wcQ
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-04-03_13,2024-04-03_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0 mlxscore=0
- bulkscore=0 malwarescore=0 clxscore=1015 impostorscore=0 adultscore=0
- phishscore=0 mlxlogscore=792 priorityscore=1501 spamscore=0 suspectscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2403210000
- definitions=main-2404030095
+In-Reply-To: <CAA8EJppOPrSfD=VkHm8M0P07=mN_BikT=cGvLe6UFL3OpKVWzA@mail.gmail.com>
 
-In a future patch HAS_IOPORT=n will disable inb()/outb() and friends at
-compile time. We thus need to add HAS_IOPORT as dependency for those
-drivers using them.
+On Tue, Apr 02, 2024 at 10:25:32PM +0300, Dmitry Baryshkov wrote:
+> On Tue, 2 Apr 2024 at 20:35, Bjorn Andersson <andersson@kernel.org> wrote:
+> >
+> > On Fri, Feb 09, 2024 at 10:16:25PM +0200, Dmitry Baryshkov wrote:
+> > > On Tue, 30 Jan 2024 at 08:55, Manivannan Sadhasivam
+> > > <manivannan.sadhasivam@linaro.org> wrote:
+> > > >
+> > > > On Mon, Jan 29, 2024 at 11:44:15AM +0200, Dmitry Baryshkov wrote:
+> > > > > On Mon, 29 Jan 2024 at 09:55, Manivannan Sadhasivam
+> > > > > <manivannan.sadhasivam@linaro.org> wrote:
+> > > > > >
+> > > > > > UFS host controller reset is required for the drivers to properly reset the
+> > > > > > controller. Hence, add it.
+> > > > > >
+> > > > > > Fixes: 57fc67ef0d35 ("arm64: dts: qcom: msm8996: Add ufs related nodes")
+> > > > > > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> > > > >
+> > > > > I think I had issues previously when I attempted to reset the
+> > > > > controller, but it might be because of the incomplete clocks
+> > > > > programming. Let met check whether it works first.
+> > > > >
+> > > >
+> > > > Sure. Please let me know.
+> > >
+> > > With the clocking fixes in place (I'll send them in a few minutes) and
+> > > with this patch the UFS breaks in the following way:
+> > >
+> >
+> > Was this further reviewed/investigated? What would you like me to do
+> > with this patch?
+> 
+> I'd say, hold until we can understand what is going on.
+> 
+> Mani, If you have any ideas what can be causing the issue, I'm open to
+> testing any ideas or any patches from your side.
+> Judging that the UFS breaks after toggling the reset, we might be
+> missing some setup steps.
+> 
 
-Co-developed-by: Arnd Bergmann <arnd@kernel.org>
-Signed-off-by: Arnd Bergmann <arnd@kernel.org>
-Signed-off-by: Niklas Schnelle <schnelle@linux.ibm.com>
----
- lib/Kconfig.kgdb | 1 +
- 1 file changed, 1 insertion(+)
+I've bombarded the Qcom UFS team with too many questions, but didn't get answer
+for all of them. And this is one of those questions.
 
-diff --git a/lib/Kconfig.kgdb b/lib/Kconfig.kgdb
-index b5c0e6576749..537e1b3f5734 100644
---- a/lib/Kconfig.kgdb
-+++ b/lib/Kconfig.kgdb
-@@ -122,6 +122,7 @@ config KDB_DEFAULT_ENABLE
- config KDB_KEYBOARD
- 	bool "KGDB_KDB: keyboard as input device"
- 	depends on VT && KGDB_KDB && !PARISC
-+	depends on HAS_IOPORT
- 	default n
- 	help
- 	  KDB can use a PS/2 type keyboard for an input device
+Let me try to dig further and come back.
+
+- Mani
+
 -- 
-2.40.1
-
+மணிவண்ணன் சதாசிவம்
