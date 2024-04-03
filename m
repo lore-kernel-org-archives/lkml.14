@@ -1,121 +1,134 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 872E914A4CA;
-	Wed,  3 Apr 2024 15:42:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 791451E871;
+	Wed,  3 Apr 2024 15:43:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712158931; cv=none; b=J1p2L4pdEutScCl8TtrUYwGyH3vCnf4TgSCHM4w3PkSHSlMOgnoxpI7xb0c1fCBUvoNT/A/58EdAQF5wMkrzuxl/uWt1vr0ebSTMIc878R/opRQ6v8xHbYkccfbrl6BoBzGFg9FRLqoI5lIzInnedsTwbFE+6pJe/G7UT3egZQ4=
+	t=1712158989; cv=none; b=V3+WCkz9zyzyau20+Gc1FYFY1tYPtUczCjMDVgH0acpAduAIFT7uIsOlsr/J9m9A6z0x1eoxTJeDdwmbjQVq1NFp87KghxmA3MLLgcnXAou5OZBRLSXQFVwsJAapf+H2TyiDfIhYzGVh0ZNez4YXS86FD9VU0xjLHKAtuMGszcQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712158931; c=relaxed/simple;
-	bh=xVqTrV2EOxUSSZan1ZZw8dKzYogFsYUkgkdBUwZAxcg=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=mFsDcp7ZHypIroATLTky5v/HtmigxBG07WMg08Y9TgsS/v5qol7ESVlCekRJAMayUFV024g8n9WGrrisVoR61bRbEpDabqf6iD0Zbd65nhsQAC9s5p/4uQibTT7lDUxUCG0s9jNGkJeJRiYoxMVzpP3OzGO7bu9qehmE/17NkqM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=LbqRo29e; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=itiwUlxd; arc=none smtp.client-ip=193.142.43.55
+	s=arc-20240116; t=1712158989; c=relaxed/simple;
+	bh=E9L0AoozWcOpFf5FTLLdItjWDLarNOox26qfWtRNpNE=;
+	h=Date:From:To:Subject:Cc:MIME-Version:Message-ID:Content-Type; b=XzzLsjjMmiN/sWkaeYjGTkra0TDQo9FlVyGlcfq/D0z1Oh+oc2wKFM0JmwLqg4e7ANVNLIym26z0WnUf6VBWu9MEMRQAUiRK5uUW8j0ueZcI/oBRjpKmnNfqrYZugLswwlQU1qzhdKpsM1sXzQcIUoC09fFQSQLvoHJPqKHxcT0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=4qTC3Ku6; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=oAQntXhr; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="LbqRo29e";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="itiwUlxd"
-From: Thomas Gleixner <tglx@linutronix.de>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="4qTC3Ku6";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="oAQntXhr"
+Date: Wed, 03 Apr 2024 15:43:04 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1712158928;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=zOt0dOO+AFCPf2GAEgYOVi3ktaLl36Jl9BRCEYzmAVA=;
-	b=LbqRo29eSLs0gajWgIU45I87whjhwxMoBUqXlru9Mtkvw9BX5lOHSqHADP+/+gb69QI/GT
-	cutVljl5VhvqxSqWqHBdVX+jNU8V4s3DRcvbjwwMLQk2+QAwsniLFGUfdrct2RNC7y/VU7
-	EHwOg8z++x3Q/zC5+lHmheUWXDHHbgsFuRNNSRsN0dIS7aWZMjydPYuMTgrTSRzeaASBiS
-	F00+XFrToDJ6MbT8BjjR1XJI0Bg5Xkmt8/8+hMNYlwoLA8t16XIToYUJiq5+w923T3pwyG
-	1fNpip141RD/a6XX7kjxaYH5QC+zUveNtPMugEgKf7qKdEW7P2N1UOpizzE45Q==
+	s=2020; t=1712158985;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:  content-transfer-encoding:content-transfer-encoding;
+	bh=s1qXV5ip/IVtxlVDhMWAguiXYThThoOZa2tt7bqgZpw=;
+	b=4qTC3Ku6qVMlPjOlgTsO7gciWCLArdsf+gZt+zNZlkuHvijn9qYaAobGMytRIt/jzIC321
+	0eKKLaFCmQixcXAYr8vRjdSsrdQCZEDRKsq+nuDvXI2xwG0LvlvMmHmJZKQk05PVRl2P+P
+	Svgc6A6kfb6qzklPdGfkz2n/O+YBiBuzGh4UhDcJOFugi7ZBjh2dx/4DliETo0httgilk7
+	CkIiOFWofa9XVQhlpKdSxeoYUU9licMbmaWYOxEui3Xz/ZWI+6gncyi3aTA5mLIoI/eNJ3
+	yB5XMHpX8rmpRAi3T7eIwC0eAJa2yKUFZfWIW6zpHW4LcciQAnk3RPlcQbgsKQ==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1712158928;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=zOt0dOO+AFCPf2GAEgYOVi3ktaLl36Jl9BRCEYzmAVA=;
-	b=itiwUlxdZ9cob1BWZQhY7cl1ZtIot+bgRrFVL003XoxCbPQJyDIJj2augiiFd1SCyTT6+f
-	zkXCWVmYe1WNbTBw==
-To: =?utf-8?B?TWFoZXNoIEJhbmRld2FyICjgpK7gpLngpYfgpLYg4KSs4KSC4KSh4KWH4KS1?=
- =?utf-8?B?4KS+4KSwKQ==?= <maheshb@google.com>
-Cc: Sagi Maimon <maimon.sagi@gmail.com>, richardcochran@gmail.com,
- luto@kernel.org, mingo@redhat.com, bp@alien8.de,
- dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com, arnd@arndb.de,
- geert@linux-m68k.org, peterz@infradead.org, hannes@cmpxchg.org,
- sohil.mehta@intel.com, rick.p.edgecombe@intel.com, nphamcs@gmail.com,
- palmer@sifive.com, keescook@chromium.org, legion@kernel.org,
- mark.rutland@arm.com, mszeredi@redhat.com, casey@schaufler-ca.com,
- reibax@gmail.com, davem@davemloft.net, brauner@kernel.org,
- linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
- linux-arch@vger.kernel.org, netdev@vger.kernel.org
-Subject: Re: [PATCH v7] posix-timers: add clock_compare system call
-In-Reply-To: <871q7md0ak.ffs@tglx>
-References: <CAMuE1bHBky9NGP22PVHKdi2+WniwxiLSmMnwRM6wm36sU8W4jA@mail.gmail.com>
- <878r29hjds.ffs@tglx>
- <CAMuE1bF9ioo39_08Eh26X4WOtnvJ1geJ=WRVt5DhU8gEbYJNdA@mail.gmail.com>
- <87o7asdd65.ffs@tglx>
- <CAF2d9jjA8iM1AoPUhQPK62tdd7gPnCnt51f_NMhOAs546rU3dA@mail.gmail.com>
- <87il10ce1g.ffs@tglx>
- <CAF2d9jj6km7aVSqgcOE-b-A-WDH2TJNGzGy-5MRyw5HrzbqhaA@mail.gmail.com>
- <877chfcrx3.ffs@tglx>
- <CAF2d9jjg0PEgPorXdrBHVkvz-fmUV7UXUPqnpQGVEvgXTpHY0A@mail.gmail.com>
- <871q7md0ak.ffs@tglx>
-Date: Wed, 03 Apr 2024 17:42:07 +0200
-Message-ID: <87v84ybghc.ffs@tglx>
+	s=2020e; t=1712158985;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:  content-transfer-encoding:content-transfer-encoding;
+	bh=s1qXV5ip/IVtxlVDhMWAguiXYThThoOZa2tt7bqgZpw=;
+	b=oAQntXhr3w8EvVZg31nU8H6IPBlSQiXuGQW3l2PIvlKnQtU2A26rP2/oU65X+KcryMSc+7
+	n1FDCzRoBdeyMdBQ==
+From: "tip-bot2 for Thorsten Blum" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject:
+ [tip: x86/apic] x86/apic: Improve data types to fix Coccinelle warnings
+Cc: Thorsten Blum <thorsten.blum@toblux.com>,
+ Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+ linux-kernel@vger.kernel.org
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Message-ID: <171215898459.10875.11580343663413103011.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
-On Wed, Apr 03 2024 at 15:48, Thomas Gleixner wrote:
-> On Tue, Apr 02 2024 at 16:37, Mahesh Bandewar (=E0=A4=AE=E0=A4=B9=E0=A5=
-=87=E0=A4=B6 =E0=A4=AC=E0=A4=82=E0=A4=A1=E0=A5=87=E0=A4=B5=E0=A4=BE=E0=A4=
-=B0) wrote:
-> It is just an implementation detail whether you use a flag or a
-> clockid. You can carry the clockid for the clocks which actually can be
-> read in that context in a reserved field of PTP_SYS_OFFSET_EXTENDED:
->
-> struct ptp_sys_offset_extended {
-> 	unsigned int	n_samples; /* Desired number of measurements. */
-> 	clockid_t	clockid;
-> 	unsigned int	rsv[2];    /* Reserved for future use. */
-> };
->
-> and in the IOCTL:
->
->         if (extoff->clockid !=3D CLOCK_MONOTONIC_RAW)
->         	return -EINVAL;
+The following commit has been merged into the x86/apic branch of tip:
 
-That should obviously be:
+Commit-ID:     0049f04c7dfe977a0f8f6935071db3416e641837
+Gitweb:        https://git.kernel.org/tip/0049f04c7dfe977a0f8f6935071db3416e641837
+Author:        Thorsten Blum <thorsten.blum@toblux.com>
+AuthorDate:    Mon, 18 Mar 2024 11:47:23 +01:00
+Committer:     Dave Hansen <dave.hansen@linux.intel.com>
+CommitterDate: Wed, 03 Apr 2024 08:32:04 -07:00
 
-          switch (extoff->clockid) {
-          case CLOCK_REALTIME:
-          case CLOCK_MONOTONIC_RAW:
-          	break;
-          default:
-                return -EINVAL;
-          }
-=20=20=20=20=20=20=20=20=20=20
-...
+x86/apic: Improve data types to fix Coccinelle warnings
 
-> 	sts.clockid =3D extoff->clockid;
->
-> and it all just works, no?
->
-> I have no problem to decide that PTP_SYS_OFFSET will not get this
-> treatment and the drivers have to be converted over to
-> PTP_SYS_OFFSET_EXTENDED.
->
-> But adding yet another callback just to carry a clockid as argument is a
-> more than pointless exercise as I demonstrated.
->
-> Thanks,
->
->         tglx
+Given that acpi_pm_read_early() returns a u32 (masked to 24 bits), several
+variables that store its return value are improved by adjusting their data
+types from unsigned long to u32. Specifically, change deltapm's type from
+long to u32 because its value fits into 32 bits and it cannot be negative.
+
+These data type improvements resolve the following two Coccinelle/
+coccicheck warnings reported by do_div.cocci:
+
+arch/x86/kernel/apic/apic.c:734:1-7: WARNING: do_div() does a 64-by-32
+division, please consider using div64_long instead.
+
+arch/x86/kernel/apic/apic.c:742:2-8: WARNING: do_div() does a 64-by-32
+division, please consider using div64_long instead.
+
+Signed-off-by: Thorsten Blum <thorsten.blum@toblux.com>
+Signed-off-by: Dave Hansen <dave.hansen@linux.intel.com>
+Reviewed-by: Dave Hansen <dave.hansen@linux.intel.com>
+Link: https://lore.kernel.org/all/20240318104721.117741-3-thorsten.blum%40toblux.com
+---
+ arch/x86/kernel/apic/apic.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/arch/x86/kernel/apic/apic.c b/arch/x86/kernel/apic/apic.c
+index a42d8a6..e5c9cad 100644
+--- a/arch/x86/kernel/apic/apic.c
++++ b/arch/x86/kernel/apic/apic.c
+@@ -631,7 +631,7 @@ void lapic_update_tsc_freq(void)
+ static __initdata int lapic_cal_loops = -1;
+ static __initdata long lapic_cal_t1, lapic_cal_t2;
+ static __initdata unsigned long long lapic_cal_tsc1, lapic_cal_tsc2;
+-static __initdata unsigned long lapic_cal_pm1, lapic_cal_pm2;
++static __initdata u32 lapic_cal_pm1, lapic_cal_pm2;
+ static __initdata unsigned long lapic_cal_j1, lapic_cal_j2;
+ 
+ /*
+@@ -641,7 +641,7 @@ static void __init lapic_cal_handler(struct clock_event_device *dev)
+ {
+ 	unsigned long long tsc = 0;
+ 	long tapic = apic_read(APIC_TMCCT);
+-	unsigned long pm = acpi_pm_read_early();
++	u32 pm = acpi_pm_read_early();
+ 
+ 	if (boot_cpu_has(X86_FEATURE_TSC))
+ 		tsc = rdtsc();
+@@ -666,7 +666,7 @@ static void __init lapic_cal_handler(struct clock_event_device *dev)
+ }
+ 
+ static int __init
+-calibrate_by_pmtimer(long deltapm, long *delta, long *deltatsc)
++calibrate_by_pmtimer(u32 deltapm, long *delta, long *deltatsc)
+ {
+ 	const long pm_100ms = PMTMR_TICKS_PER_SEC / 10;
+ 	const long pm_thresh = pm_100ms / 100;
+@@ -677,7 +677,7 @@ calibrate_by_pmtimer(long deltapm, long *delta, long *deltatsc)
+ 	return -1;
+ #endif
+ 
+-	apic_printk(APIC_VERBOSE, "... PM-Timer delta = %ld\n", deltapm);
++	apic_printk(APIC_VERBOSE, "... PM-Timer delta = %u\n", deltapm);
+ 
+ 	/* Check, if the PM timer is available */
+ 	if (!deltapm)
