@@ -1,61 +1,71 @@
-Received: from verein.lst.de (verein.lst.de [213.95.11.211])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f72.google.com (mail-io1-f72.google.com [209.85.166.72])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB91054F8C;
-	Wed,  3 Apr 2024 10:14:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BF6C135A68
+	for <linux-kernel@vger.kernel.org>; Wed,  3 Apr 2024 10:16:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712139270; cv=none; b=uZa8KMoTShY3tXqr7yNNeRCgyBQBZGk0nXwi9zKHjxKOoArOgm52HtToR1q9o+t+AaTBvcHud2fIVO35jQMrM0cWUKYlmAkNFJMP/o6gBUfOJywVuh5RLtSAzDefn+3Rs1SCluOEkx8+uBVSIPBT37FMIbhpV8O+06jj73w2YvQ=
+	t=1712139365; cv=none; b=V4twE+S2BKYQqScx+HgTlSnh7bFmPGt/IWCJokfVOZsQ85mL0tFGZgRj8OMct0WCU0xVYxPO/xoNa8qV2IKExMprZ7LVeaiza+aTljwk2v9SwH8Wt1RbKFuQBY6HH2mJhYpnoXOEJ4xqZAqlpDvvbE+2WDHnqGl81juB7GCamIQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712139270; c=relaxed/simple;
-	bh=r5zbDD1xPnIx0hjHcD74GYNbkecVM237ZbayTgPGrgY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ONJJdcrrfHK/njyv8lqjFQLjBDbQyuOXi4JOaLtDSkqeu1/byFaZAZ6oYpEiCgpPDYRCZv06xmikDikYgLYZ8o+zKGDvW8KS82EiZ09asqrNq7qO682IHJBiEgC58XKp855P7AhidgFDG5OLdaRKAMxfm1N1ciJSzFTb6ryK9pc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
-Received: by verein.lst.de (Postfix, from userid 2407)
-	id 44E2068BEB; Wed,  3 Apr 2024 12:14:22 +0200 (CEST)
-Date: Wed, 3 Apr 2024 12:14:22 +0200
-From: Christoph Hellwig <hch@lst.de>
-To: David Howells <dhowells@redhat.com>
-Cc: Christoph Hellwig <hch@lst.de>,
-	Christian Brauner <christian@brauner.io>,
-	Jeff Layton <jlayton@kernel.org>,
-	Gao Xiang <hsiangkao@linux.alibaba.com>,
-	Dominique Martinet <asmadeus@codewreck.org>,
-	Matthew Wilcox <willy@infradead.org>,
-	Steve French <smfrench@gmail.com>,
-	Marc Dionne <marc.dionne@auristor.com>,
-	Paulo Alcantara <pc@manguebit.com>,
-	Shyam Prasad N <sprasad@microsoft.com>, Tom Talpey <tom@talpey.com>,
-	Eric Van Hensbergen <ericvh@kernel.org>,
-	Ilya Dryomov <idryomov@gmail.com>, netfs@lists.linux.dev,
-	linux-cachefs@redhat.com, linux-afs@lists.infradead.org,
-	linux-cifs@vger.kernel.org, linux-nfs@vger.kernel.org,
-	ceph-devel@vger.kernel.org, v9fs@lists.linux.dev,
-	linux-erofs@lists.ozlabs.org, linux-fsdevel@vger.kernel.org,
-	linux-mm@kvack.org, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 15/26] mm: Export writeback_iter()
-Message-ID: <20240403101422.GA7285@lst.de>
-References: <20240403085918.GA1178@lst.de> <20240328163424.2781320-1-dhowells@redhat.com> <20240328163424.2781320-16-dhowells@redhat.com> <3235934.1712139047@warthog.procyon.org.uk>
+	s=arc-20240116; t=1712139365; c=relaxed/simple;
+	bh=0m+mEBkWM2xkYT6T032qq1g6LsT4SgFckX7jIzdWo8o=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=fc/pFMtQzXJ85y+OTwRdKVRxoIgBdMHump9aaYxOzQK0AyruXTM5azP2XCSqLJdYYlnQ2g3gguwyDvDxOkyqOMvnNep6NVO1qT+volT9/FLTmIAC+5hq7jwzNyo7jZEk7VIAk3OzU3DuD240lEZcXYm5Cxf0dPW9NaEdYyIFcHk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.72
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f72.google.com with SMTP id ca18e2360f4ac-7cc764c885bso691657239f.3
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Apr 2024 03:16:03 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712139363; x=1712744163;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=V/wM0KdPD3Vm+wRioEoDYjHtqAGzPDviPsshBrGrOn4=;
+        b=sCxL+xqWG2W6WD4FZeEbvt+/40fGtneg2ma+YYibxCpo3zQRdvKnR9eqLTI/7dlr/Z
+         Pq7ozrPnCGrzoD/7FVkIx17KVsCVAQxDjQ/99Iyr3xiY+KrM2kNJ/mqJtyADTa439QUd
+         PhC4vecH4NBdhfUg+nAc/t8wnIHZUA1JktOIZhnqVJa1EON5GGAuMjvD7oGbGZsUYw8J
+         k8VvkUrvmS7edYV3zbLh3O0RACh6AKXO+j3WxP7wLST1vwm4w8WbdL2Vnhi4LjqlzuaU
+         CrQG2k8MYTP4asD40Jrwl8ZLuT9RZdHNjBRWm8SujsAkQpAZ/YoLmLvU8ShQEUSsTX0f
+         +XKQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVxmypj3lW+nW3TueTE7DZoGDDXRSkDL1+FO051CkVvArHgJ2ABgBqeUbWB2LocSiH2hJHLDuV0N3g3X95ggY8JaBfbgTPzVm+wV0TF
+X-Gm-Message-State: AOJu0YxperEEvNh+z/mftl+ReyfZFLp+N3OStknnnlqzmLWKEcFoEEaB
+	6aWGkXYLQ87QWLqKBeMAUUgwXBbvIM/vT84Mpi6mqKOKGYIrnllves8/9+H4lkUyjFiUxWGd9Dw
+	Q97sMhwaeQ9tr7JnWIiVBScQ5nJylOlSRYZWesAb7Dl/5jjT8MCx/DFs=
+X-Google-Smtp-Source: AGHT+IE9rdCcPpwH0d6m6leYvMgeOO+n8O8d5yy58DVGmQh6qnpHbPCpakQGV4SHifN4m+5scYIBrdnjfK8auUqA99EZjweV6AzM
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <3235934.1712139047@warthog.procyon.org.uk>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+X-Received: by 2002:a05:6638:22ca:b0:47e:cf59:7f48 with SMTP id
+ j10-20020a05663822ca00b0047ecf597f48mr739456jat.0.1712139363188; Wed, 03 Apr
+ 2024 03:16:03 -0700 (PDT)
+Date: Wed, 03 Apr 2024 03:16:03 -0700
+In-Reply-To: <20240402130040.3715-1-hdanton@sina.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000008c948706152e82f7@google.com>
+Subject: Re: [syzbot] [mm?] general protection fault in shmem_get_next_id
+From: syzbot <syzbot+05e63c0981a31f35f3fa@syzkaller.appspotmail.com>
+To: hdanton@sina.com, linux-kernel@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-On Wed, Apr 03, 2024 at 11:10:47AM +0100, David Howells wrote:
-> That depends.  You put a comment on write_cache_pages() saying that people
-> should use writeback_iter() instead.  w_c_p() is not marked GPL.  Is it your
-> intention to get rid of it?
+Hello,
 
-Yes.  If you think you're not a derivate work of Linux you have no
-business using either one.
+syzbot has tested the proposed patch and the reproducer did not trigger any issue:
 
+Reported-and-tested-by: syzbot+05e63c0981a31f35f3fa@syzkaller.appspotmail.com
+
+Tested on:
+
+commit:         fe46a7dd Merge tag 'sound-6.9-rc1' of git://git.kernel..
+git tree:       https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
+console output: https://syzkaller.appspot.com/x/log.txt?x=12cb9d29180000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=fe78468a74fdc3b7
+dashboard link: https://syzkaller.appspot.com/bug?extid=05e63c0981a31f35f3fa
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+patch:          https://syzkaller.appspot.com/x/patch.diff?x=1156321d180000
+
+Note: testing is done by a robot and is best-effort only.
