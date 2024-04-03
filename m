@@ -1,262 +1,196 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0BE00156671;
-	Wed,  3 Apr 2024 21:29:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712179746; cv=none; b=TnSVkqhDWejnOhM9hLZAJNZebKV4MlZ6kqkk7gg3k687EKO9rN8ak7XwAPTvBgiTK5VYHTSi9WcSXwZoJmsV96ziwpgnff5z3lQ/8WQASOXHbYCHCRjaNLNSFKizYosxNO6hj003BHGH+aoeZPTrSnhvJ7NkR0b/ljAEqW9XbZQ=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712179746; c=relaxed/simple;
-	bh=w8WRtGLQk0N8W2IHPk9EV4yoJ/5lY4aQbsRyJibJhrs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MrEsjxR0NoVzLpTYXpNMWRvI58jPiYCvNmxziHbUjlOeCBYMABWtXpVLSdi+mNMuAMmh5r4dhMO2aHICttGjqi81ITyCLQKUrR7jOAlXQRo64RZlsfOzK5F/uyy9BAV2fBtU9nmKDo6Kj0BTfF1vceKqKJ+pqI8UHz5ms78/5bc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D91C01007;
-	Wed,  3 Apr 2024 14:29:33 -0700 (PDT)
-Received: from arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D8AF33F7B4;
-	Wed,  3 Apr 2024 14:28:59 -0700 (PDT)
-Date: Wed, 3 Apr 2024 23:28:54 +0200
-From: Beata Michalska <beata.michalska@arm.com>
-To: Sumit Gupta <sumitg@nvidia.com>
-Cc: linux-arm-kernel@lists.infradead.org, ionela.voinescu@arm.com,
-	sudeep.holla@arm.com, will@kernel.org, catalin.marinas@arm.com,
-	vincent.guittot@linaro.org, yang@os.amperecomputing.com,
-	lihuisong@huawei.com, vanshikonda@os.amperecomputing.com,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	linux-tegra <linux-tegra@vger.kernel.org>
-Subject: Re: [PATCH v3 2/3] arm64: Provide an AMU-based version of
- arch_freq_get_on_cpu
-Message-ID: <Zg3KFuHF-rZGdl5Y@arm.com>
-References: <20240312083431.3239989-1-beata.michalska@arm.com>
- <20240312083431.3239989-3-beata.michalska@arm.com>
- <370c98a5-30f7-917e-8fe8-10d2c48e4222@nvidia.com>
+Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2117.outbound.protection.outlook.com [40.107.244.117])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1787156671;
+	Wed,  3 Apr 2024 21:29:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.244.117
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1712179781; cv=fail; b=ivkZsAWbsu9f3QaC6ytH3wN64mfRXJa1Q3F40/YrADU7CzvEHuvQ0U3+vJaVyZsuwv5WHdWPAWdLuywNRQ+o0JvG+cST96YypIU7mIgRYSTMJ/Jx6Pz5uL6l3YfVYHqLIJmwKgLgWomZokI6oGp1nkXu378v2oivY/mLIMV5RW8=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1712179781; c=relaxed/simple;
+	bh=450nthN8ky/dXi9TRRcYJihD44hp1kYAOarNTxbr8oI=;
+	h=From:To:Cc:Subject:Date:Message-ID:Content-Type:MIME-Version; b=i2xJe7728wUtwUzT98JwvreGpxJH5Ag4ODCq/Cer768q/Q9i+y+3gaZtQsJSc+QovE/SpWRXvkpl+ce4zPuPGVDFMcm+BvaVmR4dTE3fFFj2RKv0hOcSZY98/BFT1hfDapSoLCm7Bl/9rSZb7E66RbtYUG8/8bo23pl6HFGylAo=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=f9YHswHz; arc=fail smtp.client-ip=40.107.244.117
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="f9YHswHz"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=lbPWOK6Ql1q7L5jHyM3osPtZHNxs1B4/H6GINVQKr5bp5BrmmgGsl+O3STOiuS9CMszrUGnpihu7tW0qKg0jPn8B7spqjbb1TbKNgdvIGoBwiay/TofRBREgCwxxAknoVzbaP/lwfgRIltP/6kKgX/FS+vFN3Tr7Lzh7JXWrlNOlEpqZl930fsR0tg0dT7JMdwwLVkP1fN8ViLYfD73Oz9igBpaA4slDSFUYTCmt46FejZRJoYMM13mAuqp+89koL/G2g42ntLSSdb/T/CpbGAXlq9O8X8KV9CeA4pYDYYm0VSWoCg/SMOk2OmAnrWUGeA5cyuyQD7giebXf91eRtA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=AzVfSh8ImznuwNaYw7KVOgVp1DXbNoCUeH1YxAUL62U=;
+ b=AkQYIkvlRU8+vFKW6xDkmoXnvkYCCIjCQOoh2FXpDiHUVu2NEiM9I/SihrIXh+9xTD67+omtBPQwomFoXQFz6Ot0ZYImnhHl+l9sNMpmm39pXHdjmEZVnhUQ0CgNrTN7fwrZsybtg98+i7rr63MvC0kL30Di/dePvVkvaHYMKhbIX/vbucOAGwjW/83Kar9WdVGj4L7x3/tORdjMJhING0A6tEsaojw7/gyMBk0xO8ZydTnr5pXwMI9R8HqS+umYmzh6i6hzGjl2qh2WWza46/Qm2qNeWrxeFkblbvH1mU0qybnQT1Q5xVo91Rrk2IGZdGu971buguykniE6wBKVMw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=AzVfSh8ImznuwNaYw7KVOgVp1DXbNoCUeH1YxAUL62U=;
+ b=f9YHswHzUD0wk8x7EIXfmqSoUXeamWlVzrMWTmkphpklpcrvebMsuzXZcgaepEmWJTl4WHZvPdCFG+W/NmQztsZEuyQ2/VGljXBNoY1JgT+JXvRfL9qL+2PMg4BSfY4IdvWIlmY3AobbMVl75ia+Oup1nUncR4T8ItpXVqMBzedZG+ZGCeAHrcXSXTkqVx3hlw8rd1bEFr612nMCv9wd15NAy4xXcsVyCMLgObLTYshwKSYoHcGlkLkVM2aGCGM2yJQeyMWGj4zmfjSfmOr0YB6axuPxPxOXfBrdyqgQ2xT308V+/H/KKe5fgHmQVvHiSTpaYuyS9/eMmCse0MH5jg==
+Received: from BYAPR12MB2743.namprd12.prod.outlook.com (2603:10b6:a03:61::28)
+ by IA1PR12MB8586.namprd12.prod.outlook.com (2603:10b6:208:44e::9) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.46; Wed, 3 Apr
+ 2024 21:29:36 +0000
+Received: from BYAPR12MB2743.namprd12.prod.outlook.com
+ ([fe80::459b:b6fe:a74c:5fbf]) by BYAPR12MB2743.namprd12.prod.outlook.com
+ ([fe80::459b:b6fe:a74c:5fbf%6]) with mapi id 15.20.7409.042; Wed, 3 Apr 2024
+ 21:29:36 +0000
+From: Rahul Rameshbabu <rrameshbabu@nvidia.com>
+To: netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-doc@vger.kernel.org
+Cc: ahmed.zaki@intel.com,
+	aleksander.lobakin@intel.com,
+	alexandre.torgue@foss.st.com,
+	andrew@lunn.ch,
+	cjubran@nvidia.com,
+	corbet@lwn.net,
+	davem@davemloft.net,
+	dtatulea@nvidia.com,
+	edumazet@google.com,
+	gal@nvidia.com,
+	hkallweit1@gmail.com,
+	jacob.e.keller@intel.com,
+	jiri@resnulli.us,
+	joabreu@synopsys.com,
+	justinstitt@google.com,
+	kory.maincent@bootlin.com,
+	kuba@kernel.org,
+	leon@kernel.org,
+	liuhangbin@gmail.com,
+	maxime.chevallier@bootlin.com,
+	pabeni@redhat.com,
+	paul.greenwalt@intel.com,
+	przemyslaw.kitszel@intel.com,
+	rdunlap@infradead.org,
+	richardcochran@gmail.com,
+	saeed@kernel.org,
+	tariqt@nvidia.com,
+	vadim.fedorenko@linux.dev,
+	vladimir.oltean@nxp.com,
+	wojciech.drewek@intel.com,
+	Rahul Rameshbabu <rrameshbabu@nvidia.com>
+Subject: [PATCH net-next v2 0/6] ethtool HW timestamping statistics
+Date: Wed,  3 Apr 2024 14:28:38 -0700
+Message-ID: <20240403212931.128541-1-rrameshbabu@nvidia.com>
+X-Mailer: git-send-email 2.42.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SJ0PR05CA0027.namprd05.prod.outlook.com
+ (2603:10b6:a03:33b::32) To BYAPR12MB2743.namprd12.prod.outlook.com
+ (2603:10b6:a03:61::28)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <370c98a5-30f7-917e-8fe8-10d2c48e4222@nvidia.com>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BYAPR12MB2743:EE_|IA1PR12MB8586:EE_
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	mTdxg98ptDThMfqvCBD58AObc8wtPnOOdSAplE9rDz3xisX09UKvTIjyH2fY9sgk52K/NvuqYtRLp3OI4XmrbnatvqxkXW9Mcrf4bEtJKrO2+44NrnQX+5olHwb8M9K6vuiD9sVrwnsUHlbLy1RcbkVC96PtXlhFkn/UxFdZc3jCArOus3crTYIQSCnOpzOsNeqQfS7fimplhzyEn/f8Z8D2eTF36Ci97sC76JZ5KkBhRB5rFHVp5lKfr0ptc5l/aEI2/dgpT1n6uqJ/ZXjFG1uwNg7yBsjYKcYwXkaAk4FhRdx/0aJEoodPuFTatdzMoKhqYiyoQpuLwrJhoz6kj4HDJixJIDAKrgtS4mbTCFN1cf4DHSJ8WTyjdOrp+UVqgq/NyBOBtAVXEh70/8u71Y00Ma8W1oIXS5NAZ4w5WC6iyoB4PeXSVDy2gbbJqd7iK31rwILaRkEk+Qy2XVoXurdk2UmQC2nNQ/4FBuD7rVAV3jlmF4pLtSQ3fTm9pvhdzqI9ktkYDYsI1X+y1zAalvZPjplDYhcCvTlOpHhZ2km13tL+Y5dTdyL77oLkqq6nGoyYVoiGkwSW+tXEaQr9Tq3b5bKAK/XENcaPjlcsZCl0YQBeMDFtwf3J6YZDrcOEbJHwnImI6C5l1x/CUUeBk2SzTICZQpwZGpVNsEl7As0=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR12MB2743.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(1800799015)(376005)(7416005)(366007);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?sQFWmKpKUx410ZKjHiVU8PeyZgXdA+4R5qi0ocDURjY6SvQKmxaQjwyuAuqV?=
+ =?us-ascii?Q?k6PhVzGjLE1BRTImg78TraodohUBUDV+8nFRTEL5tVl66cLSvlHoYT0mFGTL?=
+ =?us-ascii?Q?oVwSjtxwfAtrvVFbPGj+jJ4ycUAnMPZUJOpQBbiW0oQlVxLW2PhnzKPTuDai?=
+ =?us-ascii?Q?6p55eqrqWTITSJI9xl7yxqHbevuYArWj3aBFlQ66QxgXREHayrEBacW0/UDx?=
+ =?us-ascii?Q?wyzNzgEzgAPhzuqcvBRkWypbpd4P11tWa1AItOhhnpFTHwoe6qnQxIGPjslT?=
+ =?us-ascii?Q?ki/E0NyIMe83A4grToaAli3EHyps0EGsII39ocv7A0asACBB2ehr3+TjS7C8?=
+ =?us-ascii?Q?UZvP9wUZ0kOG6+ut0PzWf2wYxqdxOs5r64bEI4IXb5P8lm3AdlluwNLJApy1?=
+ =?us-ascii?Q?aX6qpBG3A+Q6dc9E2tMO9bRtiFp08L0gc1O0KbwW+NyoxNPEdzneVwioPd0l?=
+ =?us-ascii?Q?U4Tw99YYsziE918VIY+oOWBDaGt/ZtHwFXh+aJcIxsSt7r4va24YxH795Hnn?=
+ =?us-ascii?Q?8yXX3MgPCCyJgw4PJwyNypTfFJ9AsXce1vP6J29rTYoyZe6sbgSkKqNuIq6h?=
+ =?us-ascii?Q?1FuIn5lPzqqJBxHYkG6rVnxQJ3GbIf8y/Yg3qCuTO47+2Vd+ZwAEgGlaDlOx?=
+ =?us-ascii?Q?uvJ7oPquX8zQyHa5Gm9b1W5cN+Un3WcrG4BNbO1UjEOcZkjnergLbP1yuA2L?=
+ =?us-ascii?Q?5tPziD0hjkUczkeSpoqAXiU+M80sXUan4MR0kFZPfs96QODq0zS8oudheu/t?=
+ =?us-ascii?Q?dXPt5ZUV52LBz4tGkKAc1wqssXDInrZr9WCzoWwvdnge0lHYMe7Jd4DY0OWy?=
+ =?us-ascii?Q?jxjlMNNg1+t6WRsdccKdyvtMF1Ykz+i//M33UVEWVijg8+TFhHO81w8a3S6n?=
+ =?us-ascii?Q?AAkXgGg/vkl2KjXiE2u+4IhD9R4aV9iAeDJ70vYSAvMdCyy+/jU+4zQBhCZj?=
+ =?us-ascii?Q?/uOAJLbzynm9IMQAorYxFY0+2+SXcSzAAoDYryfiQyhMDyzEttpwJWDv2F5N?=
+ =?us-ascii?Q?eXa1YYK/FczsYDH+nnCLCCknm3zZS1ifXIY1dJQPHy2kyEBgV9qIgzptSa83?=
+ =?us-ascii?Q?TGayxs/YcHRNQGV1Ll/icihOwu89q4ZMs/6DRaFzbg94LjG5OVJFSdsX7qrI?=
+ =?us-ascii?Q?a+Sa44tIbjVCeNJSomRDu4DirNJvgamjEH4KesslnTCGDtedIYzzFV+7VskG?=
+ =?us-ascii?Q?RlnCSfquTm1LIv0mQjHF9wlkBxZZCgtS0ebMXEdbcoh0ZyCgrod6anOswQtH?=
+ =?us-ascii?Q?6G880sxhv6oYocsr1xT4fwP8pmk5xvmNYOeVCxRMxBIadFxcMU15c/HOoPR4?=
+ =?us-ascii?Q?fbQP6Xpgfq87nqOBoJ9EuuUOOGgxaIYc5MW/jNWPkHtuxegav5o0rSjWbdBM?=
+ =?us-ascii?Q?qKD2QZxKhiTJ0c92f7jkov3hDeTK+6F6FzZRO5vZVUWqkLmOTLFqPZPOAnyH?=
+ =?us-ascii?Q?JDic7rpRBQbC29oYS40a0IZI5a+koMK1ObSK+5BXWW/jTUIpSgTVre5RcCy6?=
+ =?us-ascii?Q?/lCkLtonUcg2n7ibk+K6KvscSxCSlKqayIChvxd2zJ/u28EWm/lJrQhhjeV8?=
+ =?us-ascii?Q?qKk8joM97KdD3TcItxjZ5+Dd6pA3RCVUfxidJBwdjekYOP+HBrOj+5sdtTjk?=
+ =?us-ascii?Q?Qw=3D=3D?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: af72f7f4-ada1-43f1-4066-08dc5425297a
+X-MS-Exchange-CrossTenant-AuthSource: BYAPR12MB2743.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Apr 2024 21:29:36.7345
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: heY9jp2VxZOpj5cpn0NlAI7g1liJ4qyCjk5kUb7x+ent3xnVIIT4pXHiv/q46sTby1pq0DuFtY6lMOO4pMRQ8g==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR12MB8586
 
-On Wed, Mar 20, 2024 at 10:13:18PM +0530, Sumit Gupta wrote:
-> 
-> 
-> On 12/03/24 14:04, Beata Michalska wrote:
-> > External email: Use caution opening links or attachments
-> > 
-> > 
-> > With the Frequency Invariance Engine (FIE) being already wired up with
-> > sched tick and making use of relevant (core counter and constant
-> > counter) AMU counters, getting the current frequency for a given CPU
-> > on supported platforms can be achieved by utilizing the frequency scale
-> > factor which reflects an average CPU frequency for the last tick period
-> > length.
-> > 
-> > The solution is partially based on APERF/MPERF implementation of
-> > arch_freq_get_on_cpu.
-> > 
-> > Suggested-by: Ionela Voinescu <ionela.voinescu@arm.com>
-> > Signed-off-by: Beata Michalska <beata.michalska@arm.com>
-> > ---
-> >   arch/arm64/kernel/topology.c | 103 +++++++++++++++++++++++++++++++----
-> >   1 file changed, 92 insertions(+), 11 deletions(-)
-> > 
-> > diff --git a/arch/arm64/kernel/topology.c b/arch/arm64/kernel/topology.c
-> > index 1a2c72f3e7f8..42cb19c31719 100644
-> > --- a/arch/arm64/kernel/topology.c
-> > +++ b/arch/arm64/kernel/topology.c
-> > @@ -17,6 +17,8 @@
-> >   #include <linux/cpufreq.h>
-> >   #include <linux/init.h>
-> >   #include <linux/percpu.h>
-> > +#include <linux/sched/isolation.h>
-> > +#include <linux/seqlock_types.h>
-> > 
-> >   #include <asm/cpu.h>
-> >   #include <asm/cputype.h>
-> > @@ -88,18 +90,31 @@ int __init parse_acpi_topology(void)
-> >    * initialized.
-> >    */
-> >   static DEFINE_PER_CPU_READ_MOSTLY(unsigned long, arch_max_freq_scale) =  1UL << (2 * SCHED_CAPACITY_SHIFT);
-> > -static DEFINE_PER_CPU(u64, arch_const_cycles_prev);
-> > -static DEFINE_PER_CPU(u64, arch_core_cycles_prev);
-> >   static cpumask_var_t amu_fie_cpus;
-> > 
-> > +struct amu_cntr_sample {
-> > +       u64             arch_const_cycles_prev;
-> > +       u64             arch_core_cycles_prev;
-> > +       unsigned long   last_update;
-> > +       seqcount_t      seq;
-> > +};
-> > +
-> > +static DEFINE_PER_CPU_SHARED_ALIGNED(struct amu_cntr_sample, cpu_amu_samples) = {
-> > +       .seq = SEQCNT_ZERO(cpu_amu_samples.seq)
-> > +};
-> > +
-> >   void update_freq_counters_refs(void)
-> >   {
-> > -       this_cpu_write(arch_core_cycles_prev, read_corecnt());
-> > -       this_cpu_write(arch_const_cycles_prev, read_constcnt());
-> > +       struct amu_cntr_sample *amu_sample = this_cpu_ptr(&cpu_amu_samples);
-> > +
-> > +       amu_sample->arch_core_cycles_prev = read_corecnt();
-> > +       amu_sample->arch_const_cycles_prev = read_constcnt();
-> >   }
-> > 
-> >   static inline bool freq_counters_valid(int cpu)
-> >   {
-> > +       struct amu_cntr_sample *amu_sample = per_cpu_ptr(&cpu_amu_samples, cpu);
-> > +
-> >          if ((cpu >= nr_cpu_ids) || !cpumask_test_cpu(cpu, cpu_present_mask))
-> >                  return false;
-> > 
-> > @@ -108,8 +123,8 @@ static inline bool freq_counters_valid(int cpu)
-> >                  return false;
-> >          }
-> > 
-> > -       if (unlikely(!per_cpu(arch_const_cycles_prev, cpu) ||
-> > -                    !per_cpu(arch_core_cycles_prev, cpu))) {
-> > +       if (unlikely(!amu_sample->arch_const_cycles_prev ||
-> > +                    !amu_sample->arch_core_cycles_prev)) {
-> >                  pr_debug("CPU%d: cycle counters are not enabled.\n", cpu);
-> >                  return false;
-> >          }
-> > @@ -152,20 +167,27 @@ void freq_inv_set_max_ratio(int cpu, u64 max_rate)
-> > 
-> >   static void amu_scale_freq_tick(void)
-> >   {
-> > +       struct amu_cntr_sample *amu_sample = this_cpu_ptr(&cpu_amu_samples);
-> >          u64 prev_core_cnt, prev_const_cnt;
-> >          u64 core_cnt, const_cnt, scale;
-> > 
-> > -       prev_const_cnt = this_cpu_read(arch_const_cycles_prev);
-> > -       prev_core_cnt = this_cpu_read(arch_core_cycles_prev);
-> > +       prev_const_cnt = amu_sample->arch_const_cycles_prev;
-> > +       prev_core_cnt = amu_sample->arch_core_cycles_prev;
-> > +
-> > +       write_seqcount_begin(&amu_sample->seq);
-> > 
-> >          update_freq_counters_refs();
-> > 
-> > -       const_cnt = this_cpu_read(arch_const_cycles_prev);
-> > -       core_cnt = this_cpu_read(arch_core_cycles_prev);
-> > +       const_cnt = amu_sample->arch_const_cycles_prev;
-> > +       core_cnt = amu_sample->arch_core_cycles_prev;
-> > 
-> > +       /*
-> > +        * This should not happen unless the AMUs have been reset and the
-> > +        * counter values have not been resroted - unlikely
-> > +        */
-> >          if (unlikely(core_cnt <= prev_core_cnt ||
-> >                       const_cnt <= prev_const_cnt))
-> > -               return;
-> > +               goto leave;
-> > 
-> >          /*
-> >           *          /\core    arch_max_freq_scale
-> > @@ -182,6 +204,10 @@ static void amu_scale_freq_tick(void)
-> > 
-> >          scale = min_t(unsigned long, scale, SCHED_CAPACITY_SCALE);
-> >          this_cpu_write(arch_freq_scale, (unsigned long)scale);
-> > +
-> > +       amu_sample->last_update = jiffies;
-> > +leave:
-> > +       write_seqcount_end(&amu_sample->seq);
-> >   }
-> > 
-> >   static struct scale_freq_data amu_sfd = {
-> > @@ -189,6 +215,61 @@ static struct scale_freq_data amu_sfd = {
-> >          .set_freq_scale = amu_scale_freq_tick,
-> >   };
-> > 
-> > +#define AMU_SAMPLE_EXP_MS      20
-> > +
-> > +unsigned int arch_freq_get_on_cpu(int cpu)
-> > +{
-> > +       struct amu_cntr_sample *amu_sample;
-> > +       unsigned long last_update;
-> > +       unsigned int seq;
-> > +       unsigned int freq;
-> > +       u64 scale;
-> > +
-> > +       if (!cpumask_test_cpu(cpu, amu_fie_cpus) || !arch_scale_freq_ref(cpu))
-> > +               return 0;
-> > +
-> > +retry:
-> > +       amu_sample = per_cpu_ptr(&cpu_amu_samples, cpu);
-> > +
-> > +       do {
-> > +               seq = raw_read_seqcount_begin(&amu_sample->seq);
-> > +               last_update = amu_sample->last_update;
-> > +       } while (read_seqcount_retry(&amu_sample->seq, seq));
-> > +
-> > +       /*
-> > +        * For those CPUs that are in full dynticks mode,
-> > +        * and those that have not seen tick for a while
-> > +        * try an alternative source for the counters (and thus freq scale),
-> > +        * if available for given policy
-> > +        */
-> > +       if (time_is_before_jiffies(last_update + msecs_to_jiffies(AMU_SAMPLE_EXP_MS))) {
-> > +               struct cpufreq_policy *policy = cpufreq_cpu_get(cpu);
-> > +               int ref_cpu = nr_cpu_ids;
-> > +
-> > +               if (cpumask_intersects(housekeeping_cpumask(HK_TYPE_TICK),
-> > +                                      policy->cpus))
-> > +                       ref_cpu = cpumask_nth_and(cpu, policy->cpus,
-> > +                                                 housekeeping_cpumask(HK_TYPE_TICK));
-> > +
-> 
-> This is looking for any other HK CPU within same policy for counters.
-> AFAIU, cpumask_nth_and() will return small_cpumask_bits/nr_cpu_ids
-> if the number of bits in both masks is different. Could you check
-> again if the current change is fine or needs something like below.
-> BTW, we have one CPU per policy.
-> 
->   cpumask_and(&mask, policy->cpus, housekeeping_cpumask(HK_TYPE_TICK));
->   retry:
-> 	....
-> 	cpumask_andnot(&mask, &mask, cpumask_of(cpu));
-> 	ref_cpu = cpumask_any(&mask);
->
-At this point this is indeed bogus though for a different reason.
-I've rewritten that part a bit, though still, this will bail out for single-cpu
-policies.
+The goal of this patch series is to introduce a common set of ethtool statistics
+for hardware timestamping that a driver implementer can hook into. The
+statistics counters added are based on what I believe are common
+patterns/behaviors found across various hardware timestamping implementations
+seen in the kernel tree today. The mlx5 family of devices is used as the PoC for
+this patch series. Other vendors are more than welcome to chime in on this
+series.
 
+Changes since RFC v1:
+        - Dropped the late statistics counter since that was not general enough
+        - Dropped the layer selection attribute for timestamping statistics
+        - Take Jakub's suggestion and converted to ETHTOOL_FLAG_STATS
+        - Provided a working interface to query these new statistics from
+          tools/net/ynl/ethtool.py
+
+Changes since RFC v2:
+        - Applied suggestion by Jakub for implementing an enumeration for
+          ethtool header flags
+
+Changes since v1:
+        - Fixed scripts/kernel-doc warning in include/linux/ethtool.h
+
+Link: https://lore.kernel.org/netdev/20240402205223.137565-1-rrameshbabu@nvidia.com/
+Link: https://lore.kernel.org/netdev/20240309084440.299358-1-rrameshbabu@nvidia.com/
+Link: https://lore.kernel.org/netdev/20240223192658.45893-1-rrameshbabu@nvidia.com/
+Signed-off-by: Rahul Rameshbabu <rrameshbabu@nvidia.com>
 ---
-BR
-Beata
+Rahul Rameshbabu (6):
+  ethtool: add interface to read Tx hardware timestamping statistics
+  net/mlx5e: Introduce lost_cqe statistic counter for PTP Tx port
+    timestamping CQ
+  net/mlx5e: Introduce timestamps statistic counter for Tx DMA layer
+  net/mlx5e: Implement ethtool hardware timestamping statistics
+  netlink: specs: ethtool: add header-flags enumeration
+  tools: ynl: ethtool.py: Output timestamping statistics from tsinfo-get
+    operation
 
+ Documentation/netlink/specs/ethtool.yaml      | 22 ++++++++
+ .../ethernet/mellanox/mlx5/counters.rst       | 11 ++++
+ Documentation/networking/ethtool-netlink.rst  |  9 ++++
+ .../net/ethernet/mellanox/mlx5/core/en/ptp.c  |  1 +
+ .../ethernet/mellanox/mlx5/core/en_ethtool.c  |  9 ++++
+ .../ethernet/mellanox/mlx5/core/en_stats.c    | 48 +++++++++++++++++
+ .../ethernet/mellanox/mlx5/core/en_stats.h    |  4 ++
+ .../net/ethernet/mellanox/mlx5/core/en_tx.c   |  6 ++-
+ include/linux/ethtool.h                       | 27 +++++++++-
+ include/uapi/linux/ethtool_netlink.h          | 25 ++++++---
+ net/ethtool/tsinfo.c                          | 52 ++++++++++++++++++-
+ tools/net/ynl/ethtool.py                      | 11 +++-
+ 12 files changed, 214 insertions(+), 11 deletions(-)
 
-> Thank you,
-> Sumit Gupta
-> 
-> > +               cpufreq_cpu_put(policy);
-> > +               if (ref_cpu >= nr_cpu_ids || ref_cpu == cpu)
-> > +                       /* No alternative to pull info from */
-> > +                       return 0;
-> > +               cpu = ref_cpu;
-> > +               goto retry;
-> > +       }
-> > +       /*
-> > +        * Reversed computation to the one used to determine
-> > +        * the arch_freq_scale value
-> > +        * (see amu_scale_freq_tick for details)
-> > +        */
-> > +       scale = arch_scale_freq_capacity(cpu);
-> > +       freq = scale * arch_scale_freq_ref(cpu);
-> > +       freq >>= SCHED_CAPACITY_SHIFT;
-> > +
-> > +       return freq;
-> > +}
-> > +
-> >   static void amu_fie_setup(const struct cpumask *cpus)
-> >   {
-> >          int cpu;
-> > --
-> > 2.25.1
-> > 
+-- 
+2.42.0
+
