@@ -1,193 +1,107 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50A9C14A4C4;
-	Wed,  3 Apr 2024 15:49:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C60EE14A0B4;
+	Wed,  3 Apr 2024 15:49:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712159366; cv=none; b=qFdGVQdI9kSmLF2Kjh++Jdz/Rb6Cuku0jUKvqmrA6/vn59JRCbINt3ls+FolCQ+1kcAt754r/ItSzhuxhyb0ETgPRuZqBAq7VO0kfkc4MROd+Zx+dzBSdCYBjACnc2kHtBMbQ848CoQddaizbCx8VQtB3TP6sKyNFptlvwDZXis=
+	t=1712159368; cv=none; b=n17Vt0m60lcVu8roovDjd7QTYBlJNP16t/V7eNCuC/rFCFgV0khX6Gr/QdFPNTw2bnwNmPanuCfj8K0JTKAlZquB0Ui5fvdaEbUHozFtPErgJWHDWygxN4IWVOVer4ngBa4+vHKcY5C0jAW8FMgeRI/bXVUbipc9ywHXFeqsO9Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712159366; c=relaxed/simple;
-	bh=k6dyOhfFQIf9vQIFCpUxUQulSUGcvn1uNJXKGOMIMvU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JHHKtQuljTjbhvI2HP7ur6xxR7/k4iYzq6uJZK8bhbD6OLLfDPVHtKaYyF1FppGZynkaj5rmIdqIbsZ6nK27UdBTa4VyE0sCH6FDE/MRpeFE0qtoseUaKbT1ARyxen4BuTLWOAKXfwHZoRiKiVlFVO6KDFoxUJdxwUJfUWcCn5M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hrBcFKXl; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hrBcFKXl"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 77DC8C43390;
-	Wed,  3 Apr 2024 15:49:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712159366;
-	bh=k6dyOhfFQIf9vQIFCpUxUQulSUGcvn1uNJXKGOMIMvU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=hrBcFKXlV84WvwdXTJ1EywXpIa7TCT7pO8gOx7ssARAppf6BJDhk9Z8sOK7hS9kZr
-	 0ZuW/ZJBRc2RSTi6YMprbytvzjZr2bfZj2k6RpMbi1RgY0CvqLuhiBUlvP3kXoAitd
-	 CHOu1mU9LXMxEvBJoeAzXpWK1zYYnUfDYeMFvgXnDHWFhHUT4hcjCDwThkmlG89/g5
-	 oxJBYofJBMdMkil2p3ADRNxhWBahluV1wuhQnqt0pQAIv3F3Jzp3evB3oyhWOMPVX7
-	 oRLgYSr0FJyH7V7o5mr4nvMyAFdotIUfUpQUXMEtrzMJ47A2EJWRnU+g9QQWyXkjXK
-	 HgjnL2E/3Fsmg==
-Date: Wed, 3 Apr 2024 16:49:21 +0100
-From: Simon Horman <horms@kernel.org>
-To: Joseph Huang <Joseph.Huang@garmin.com>
-Cc: netdev@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>,
-	Florian Fainelli <f.fainelli@gmail.com>,
-	Vladimir Oltean <olteanv@gmail.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Roopa Prabhu <roopa@nvidia.com>,
-	Nikolay Aleksandrov <razor@blackwall.org>,
-	Linus =?utf-8?Q?L=C3=BCssing?= <linus.luessing@c0d3.blue>,
-	linux-kernel@vger.kernel.org, bridge@lists.linux.dev
-Subject: Re: [PATCH RFC net-next 09/10] net: dsa: mv88e6xxx: Enable mc flood
- for mrouter port
-Message-ID: <20240403154921.GN26556@kernel.org>
-References: <20240402001137.2980589-1-Joseph.Huang@garmin.com>
- <20240402001137.2980589-10-Joseph.Huang@garmin.com>
+	s=arc-20240116; t=1712159368; c=relaxed/simple;
+	bh=ubUVS5S6mpXJBVwqb+wtd1l3uI9l3+kshLrYYVibeGY=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=tcSiwI8EY++YVd/VVscwAea3Li97OsEmI0LXqKZ8bOW+ZssjzfZg7R+YbDucsy4pE0JDXDoMlnSt6QX/RpBDUAmuN+T0o//ihqdKVhQFHXgWVLTcjV3pxwG8pkq+0A3N/7hTbtI0316yk9no8+Z2lCW8O6mYO9N5KbxeTV8XGXA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CFCDC1007;
+	Wed,  3 Apr 2024 08:49:55 -0700 (PDT)
+Received: from e129166.arm.com (unknown [10.57.72.191])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 553313F7B4;
+	Wed,  3 Apr 2024 08:49:22 -0700 (PDT)
+From: Lukasz Luba <lukasz.luba@arm.com>
+To: linux-kernel@vger.kernel.org,
+	linux-pm@vger.kernel.org,
+	rafael@kernel.org
+Cc: lukasz.luba@arm.com,
+	dietmar.eggemann@arm.com,
+	linux-arm-kernel@lists.infradead.org,
+	sboyd@kernel.org,
+	nm@ti.com,
+	linux-samsung-soc@vger.kernel.org,
+	daniel.lezcano@linaro.org,
+	viresh.kumar@linaro.org,
+	krzysztof.kozlowski@linaro.org,
+	alim.akhtar@samsung.com,
+	m.szyprowski@samsung.com,
+	mhiramat@kernel.org
+Subject: [PATCH v5 0/4] Update Energy Model after chip binning adjusted voltages
+Date: Wed,  3 Apr 2024 16:49:03 +0100
+Message-Id: <20240403154907.1420245-1-lukasz.luba@arm.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240402001137.2980589-10-Joseph.Huang@garmin.com>
+Content-Transfer-Encoding: 8bit
 
-On Mon, Apr 01, 2024 at 08:11:08PM -0400, Joseph Huang wrote:
-> When a port turns into an mrouter port, enable multicast flooding
-> on that port even if multicast flooding is disabled by user config. This
-> is necessary so that in a distributed system, the multicast packets
-> can be forwarded to the Querier when the multicast source is attached
-> to a Non-Querier bridge.
-> 
-> Consider the following scenario:
-> 
->                  +--------------------+
->                  |                    |
->                  |      Snooping      |    +------------+
->                  |      Bridge 1      |----| Listener 1 |
->                  |     (Querier)      |    +------------+
->                  |                    |
->                  +--------------------+
->                            |
->                            |
->                  +--------------------+
->                  |    | mrouter |     |
-> +-----------+    |    +---------+     |
-> | MC Source |----|      Snooping      |
-> +-----------|    |      Bridge 2      |
->                  |    (Non-Querier)   |
->                  +--------------------+
-> 
-> In this scenario, Listener 1 will never receive multicast traffic
-> from MC Source if multicast flooding is disabled on the mrouter port on
-> Snooping Bridge 2.
-> 
-> Signed-off-by: Joseph Huang <Joseph.Huang@garmin.com>
+Hi all,
 
-...
+This is a follow-up patch aiming to add EM modification due to chip binning.
+The first RFC and the discussion can be found here [1].
 
-> @@ -6849,11 +6864,28 @@ static int mv88e6xxx_port_bridge_flags(struct dsa_switch *ds, int port,
->  
->  	if (flags.mask & BR_MCAST_FLOOD) {
->  		bool multicast = !!(flags.val & BR_MCAST_FLOOD);
-> +		struct mv88e6xxx_bridge *mv_bridge;
-> +		struct mv88e6xxx_port *p;
-> +		bool mrouter;
->  
-> -		err = chip->info->ops->port_set_mcast_flood(chip, port,
-> -							    multicast);
-> -		if (err)
-> -			goto out;
-> +		mv_bridge = mv88e6xxx_bridge_by_port(chip, port);
-> +		if (!mv_bridge)
-> +			return -EINVAL;
+It uses Exynos chip driver code as a 1st user. The EM framework has been
+extended to handle this use case easily, when the voltage has been changed
+after setup. On my Odroid-xu4 in some OPPs I can observe ~20% power difference.
+According to that data in driver tables it could be up to ~29%.
 
-I think that mv88e6xxx_reg_unlock(chip) is needed here.
-So perhaps (completely untested!):
+This chip binning is applicable to a lot of SoCs, so the EM framework should
+make it easy to update. It uses the existing OPP and DT information to
+re-calculate the new power values.
 
-		if (!mv_bridge) {
-			err = -EINVAL;
-			goto out;
-		}
+It has dependency on Exynos SoC driver tree.
 
-Flagged by Smatch
+Changes:
+v5:
+- adjusted aligning of the function arguments in patch 1/4 (Dietmar)
+- adjusted the in-code comment patch 4/4 (Dietmar)
+- added Reviewed-by to all patches (Dietmar)
+v4:
+- added asterisk in the comment section (test robot)
+- change the patch 2/4 header name and use 'Refactor'
+v3:
+- updated header description patch 2/4 (Dietmar)
+- removed 2 sentences from comment and adjusted in patch 3/4 (Dietmar)
+- patch 4/4 re-phrased code comment (Dietmar)
+- collected tags (Krzysztof, Viresh)
+v2:
+- removed 'ret' from error message which wasn't initialized (Christian)
+v1:
+- exported the OPP calculation function from the OPP/OF so it can be
+  used from EM fwk (Viresh)
+- refactored EM updating function to re-use common code
+- added new EM function which can be used by chip device drivers which
+  modify the voltage in OPPs
+RFC is at [1]
 
-> +
-> +		p = &chip->ports[port];
-> +		mrouter = !!(mv_bridge->mrouter_ports & BIT(port));
-> +
-> +		if (!mrouter) {
-> +			err = chip->info->ops->port_set_mcast_flood(chip, port,
-> +								    multicast);
-> +			if (err)
-> +				goto out;
-> +		}
-> +
-> +		if (multicast)
-> +			p->flags |= MV88E6XXX_PORT_FLAG_MC_FLOOD;
-> +		else
-> +			p->flags &= ~MV88E6XXX_PORT_FLAG_MC_FLOOD;
->  	}
->  
->  	if (flags.mask & BR_BCAST_FLOOD) {
-> @@ -6883,6 +6915,51 @@ static int mv88e6xxx_port_bridge_flags(struct dsa_switch *ds, int port,
->  	return err;
->  }
->  
-> +static int mv88e6xxx_port_mrouter(struct dsa_switch *ds, int port,
-> +				  bool mrouter,
-> +				  struct netlink_ext_ack *extack)
-> +{
-> +	struct mv88e6xxx_chip *chip = ds->priv;
-> +	struct mv88e6xxx_bridge *mv_bridge;
-> +	struct mv88e6xxx_port *p;
-> +	bool old_mrouter;
-> +	bool mc_flood;
-> +	int err;
-> +
-> +	if (!chip->info->ops->port_set_mcast_flood)
-> +		return -EOPNOTSUPP;
-> +
-> +	mv_bridge = mv88e6xxx_bridge_by_port(chip, port);
-> +	if (!mv_bridge)
-> +		return -EINVAL;
-> +
-> +	old_mrouter = !!(mv_bridge->mrouter_ports & BIT(port));
-> +	if (mrouter == old_mrouter)
-> +		return 0;
-> +
-> +	p = &chip->ports[port];
-> +	mc_flood = !!(p->flags & MV88E6XXX_PORT_FLAG_MC_FLOOD);
-> +
-> +	mv88e6xxx_reg_lock(chip);
-> +
-> +	if (!mc_flood) {
-> +		err = chip->info->ops->port_set_mcast_flood(chip, port,
-> +							    mrouter);
-> +		if (err)
-> +			goto out;
-> +	}
-> +
-> +	if (mrouter)
-> +		mv_bridge->mrouter_ports |= BIT(port);
-> +	else
-> +		mv_bridge->mrouter_ports &= ~BIT(port);
-> +
-> +out:
-> +	mv88e6xxx_reg_unlock(chip);
+Regards,
+Lukasz Luba
 
-If mc_flood is true then err is uninitialised here.
+[1] https://lore.kernel.org/lkml/20231220110339.1065505-1-lukasz.luba@arm.com/
 
-Flagged by clang-17 W=1 build, and Smatch.
+Lukasz Luba (4):
+  OPP: OF: Export dev_opp_pm_calc_power() for usage from EM
+  PM: EM: Refactor em_adjust_new_capacity()
+  PM: EM: Add em_dev_update_chip_binning()
+  soc: samsung: exynos-asv: Update Energy Model after adjusting voltage
 
-> +
-> +	return err;
-> +}
-> +
->  static bool mv88e6xxx_lag_can_offload(struct dsa_switch *ds,
->  				      struct dsa_lag lag,
->  				      struct netdev_lag_upper_info *info,
+ drivers/opp/of.c                 |  17 +++--
+ drivers/soc/samsung/exynos-asv.c |  10 ++-
+ include/linux/energy_model.h     |   5 ++
+ include/linux/pm_opp.h           |   8 +++
+ kernel/power/energy_model.c      | 106 +++++++++++++++++++++++++------
+ 5 files changed, 121 insertions(+), 25 deletions(-)
 
-...
+-- 
+2.25.1
+
