@@ -1,89 +1,93 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f202.google.com (mail-pg1-f202.google.com [209.85.215.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82AA4156867
-	for <linux-kernel@vger.kernel.org>; Wed,  3 Apr 2024 21:35:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D91D3154431
+	for <linux-kernel@vger.kernel.org>; Wed,  3 Apr 2024 21:36:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712180145; cv=none; b=bJJfe3ppuG5qUKRmbv0cq5epOpgX2q+TVurIkV46W46pwTKVPpGdA8ppUF9HLFHpnkZkSUZBfMwpkNjRZnhWOQxUAUu+Rk8JwsCObr1jiLPp4XohxhkpXia/nDTkGLka8OfbgE7KmhrLBC442dGp3RrzyEZEiTehw4UkkGVxPi8=
+	t=1712180205; cv=none; b=U3KhwPwTz1jRgv7WRS/Z+397g9y+Q8QYm41wIe/28Ft42xba0Ydvp9dOI5u9GrDIFcz37dsj0Nv5ZgZeQ8meRrBPSjGGZg4bRbD7otr2Kxovo3bzGKuSvGBTQTLZY1rXxciw7zIBEmHyztdBbJV06GSMMqfj/gddMbWQHC2VKbk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712180145; c=relaxed/simple;
-	bh=5velOTIExN+yC0MZHPBQnGuRcYai9BnR3d+mvItiUjg=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=FkYv2JAO76xxOnSxT6VZVWPWmrprNInovFDj6bfWOnCzOHAIdzcctS3GZfmYkqw8jakNtN5lLS1LO49qzN5P1iNFtBg9E6pEbPw++ITIYLdX25zr1lI9951wHiGGVR2vEIfs+/w9rFeXVHxbN3ugnz8FEArjXWmVrqPh5fCcna0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DIlZmHm1; arc=none smtp.client-ip=198.175.65.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1712180205; c=relaxed/simple;
+	bh=eW0vjqV7z+PAR1g4tFJb4YbSM8OnjwNtis/IuUJSfjg=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=J7xoGG0UFwT5o5tvWjo/HhxhL+NeWGEOlhV5IzIqoWia0SwLPttnyobbuIvbbvHvN/4jmutiIw3NwsDsNCc5WYdMk3tZUsBnC9+m+06n0aO85oJXRVN9LBJos71n6WBZLQm1lP1RDhmo50g99k9kofgaYSyADfFgMUE0Wjr+cOQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=B+3qWW03; arc=none smtp.client-ip=209.85.215.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DIlZmHm1"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1712180141; x=1743716141;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=5velOTIExN+yC0MZHPBQnGuRcYai9BnR3d+mvItiUjg=;
-  b=DIlZmHm1kYOV27pnD/PsdeM7mwyFYiDJnJdRkHUj2IBrataYKj83QC+k
-   G+Nt+6rtISKL/n6DKhsD2WgUU6zNcDazkL73OqPiuLhutn1CPg49yK7Hl
-   HXHKzsoZXGiUW0e/1znDS5ZamoJiN5PuRSurczRXYSi5NtCkX0a6rB9SV
-   W8iL1bVTi7vRzWGSPjIFzrwsHBA2ug7AoPDzktOhSRuh6vnHTkLlykTTS
-   SII6yZdFqy9LwaflLCn0LRrzxmId8MbzZukUR8B93IxSDsWDW0LUMrKYb
-   mOGdRjGUYGuyF+xWEt1ylqnOODTxtjq5BoDHmGSlgfTj+90n5MKt+k/gi
-   g==;
-X-CSE-ConnectionGUID: RWIJNLLDTp2v1LJIVcTx3A==
-X-CSE-MsgGUID: GxndDhr6TkGKtINF4zufQg==
-X-IronPort-AV: E=McAfee;i="6600,9927,11033"; a="18014660"
-X-IronPort-AV: E=Sophos;i="6.07,178,1708416000"; 
-   d="scan'208";a="18014660"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2024 14:35:40 -0700
-X-CSE-ConnectionGUID: 5SFAvSoTT4u22VlaEsqO8g==
-X-CSE-MsgGUID: ++kFMv6DS9WbzHYa0SquyQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,178,1708416000"; 
-   d="scan'208";a="18681402"
-Received: from jacob-builder.jf.intel.com ([10.54.39.125])
-  by fmviesa008.fm.intel.com with ESMTP; 03 Apr 2024 14:35:42 -0700
-From: Jacob Pan <jacob.jun.pan@linux.intel.com>
-To: LKML <linux-kernel@vger.kernel.org>,
-	iommu@lists.linux.dev,
-	"Lu Baolu" <baolu.lu@linux.intel.com>,
-	Joerg Roedel <joro@8bytes.org>
-Cc: Raj Ashok <ashok.raj@intel.com>,
-	"Tian, Kevin" <kevin.tian@intel.com>,
-	Yi Liu <yi.l.liu@intel.com>,
-	Jacob Pan <jacob.jun.pan@linux.intel.com>
-Subject: [PATCH] iommu/vt-d: Allocate local memory for page request queue
-Date: Wed,  3 Apr 2024 14:40:07 -0700
-Message-Id: <20240403214007.985600-1-jacob.jun.pan@linux.intel.com>
-X-Mailer: git-send-email 2.25.1
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="B+3qWW03"
+Received: by mail-pg1-f202.google.com with SMTP id 41be03b00d2f7-5cdfd47de98so290409a12.1
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Apr 2024 14:36:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1712180203; x=1712785003; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=dPltzAFf6VDIT1wIj8ilrUQtdD5DBvoWePx4BEmHj9U=;
+        b=B+3qWW03vdA1vHywBGdk2grTe0T0ZqqUK4hCDVu4wQoqiiAN6/s2mZvAIEnEyD2A1B
+         fZVDSq7vqk6c8o9sA8AeSKqSwm1CZN0NNKC6V+8wYvlKW8O/jQgVTNroS8vn1NDh19jK
+         LIr+kV3lUNN5g56xRQTY+iLvAJGBF+2NCBWjKUNinBEB7xhgjEXpNCK27Z2VvhvQ4Ppv
+         gRTKPfDAxWfWPwfEJ8w2dYzzDL08gtN36TIfTMhlCBTJXRChGOHCG8U0u6DdrbbNM6oy
+         h1aJvj2EwXipas71HNwbWcO46Zz4iWhL35xPTy1NJpP+QaPhL8Gf1YGkzY0Vt1D3uhbX
+         TGOQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712180203; x=1712785003;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=dPltzAFf6VDIT1wIj8ilrUQtdD5DBvoWePx4BEmHj9U=;
+        b=TySE/Z/eKHQ8kvXyu8Jby+g2zdCLe0oqS6f4Cbmhx7NkItb6Y2pHHLW8++hk0nkWPc
+         +13JAd2hDYysb8j7E2tODadfu+2PUq3uP+w3VSWtO3FYd5u61mtAZIw3dBfH5UpqfNnD
+         JO7GxgKOnhG3WrKa6dCmxzJP6yasDM6fJYIvw4vB/XtkzjozaEdLzyEiIAkqmgYSJmw9
+         IM3Ym++Y4zoNEqv75WeeAlrJRCmoT/awbE+WtFWMn4vIqBTXz5328+0o109CpDtActuC
+         QSiGe3SD1lGz1QKKtzPjRi1yabQr2PYyzZhNR3CXfEJgRtceS0jbuFUv/AlJQQINYOja
+         LxHQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUiEJf85wwhMXbDrmPKmJOwNis9YdtKbFBWn4t2UQxSAIq8Aoi8hse5fgBNreJYeKBo+TNImJrALf1f8uIfwDA6aLaYJ5gexQPN+AcY
+X-Gm-Message-State: AOJu0Yw2xxcMNApaovYOE0lMFdQ5Fc8I4aSEUZJ+rwtldds9N8C5k37b
+	PXEfZTbF6XPpQq50S0FabaYdgKQZvlI46VJwGCiFXp3Ubn4xH7RaIpxWGMt0Y7vhBDC9nVY0QDb
+	cdA==
+X-Google-Smtp-Source: AGHT+IExCGrJPdAW2GeOLG491SIcrLlhsuV3XsGg9Om6QoQqLDgMtfFqtvcSt+vrYfYHgj0J9CVY23pc2dY=
+X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
+ (user=seanjc job=sendgmr) by 2002:a65:434d:0:b0:5d8:bb9d:4fd0 with SMTP id
+ k13-20020a65434d000000b005d8bb9d4fd0mr2015pgq.4.1712180203127; Wed, 03 Apr
+ 2024 14:36:43 -0700 (PDT)
+Date: Wed, 3 Apr 2024 14:36:41 -0700
+In-Reply-To: <70d7a20a-72dc-4ded-a35f-684de44eb6e6@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+References: <cover.1708933498.git.isaku.yamahata@intel.com>
+ <8f64043a6c393c017347bf8954d92b84b58603ec.1708933498.git.isaku.yamahata@intel.com>
+ <e6e8f585-b718-4f53-88f6-89832a1e4b9f@intel.com> <bd21a37560d4d0695425245658a68fcc2a43f0c0.camel@intel.com>
+ <54ae3bbb-34dc-4b10-a14e-2af9e9240ef1@intel.com> <ZfR4UHsW_Y1xWFF-@google.com>
+ <ea85f773-b5ef-4cf6-b2bd-2c0e7973a090@intel.com> <ZfSjvwdJqFJhxjth@google.com>
+ <8d79db2af4e0629ad5dea6d8276fc5cda86a890a.camel@intel.com> <70d7a20a-72dc-4ded-a35f-684de44eb6e6@intel.com>
+Message-ID: <Zg3L6VttYZkb7N1M@google.com>
+Subject: Re: [PATCH v19 007/130] x86/virt/tdx: Export SEAMCALL functions
+From: Sean Christopherson <seanjc@google.com>
+To: Dave Hansen <dave.hansen@intel.com>
+Cc: Kai Huang <kai.huang@intel.com>, Tina Zhang <tina.zhang@intel.com>, 
+	Rick P Edgecombe <rick.p.edgecombe@intel.com>, Hang Yuan <hang.yuan@intel.com>, 
+	"x86@kernel.org" <x86@kernel.org>, Bo2 Chen <chen.bo@intel.com>, 
+	"sagis@google.com" <sagis@google.com>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
+	"isaku.yamahata@gmail.com" <isaku.yamahata@gmail.com>, Erdem Aktas <erdemaktas@google.com>, 
+	"kvm@vger.kernel.org" <kvm@vger.kernel.org>, "pbonzini@redhat.com" <pbonzini@redhat.com>, 
+	Isaku Yamahata <isaku.yamahata@intel.com>
+Content-Type: text/plain; charset="us-ascii"
 
-The page request queue is per IOMMU, its allocation should be made
-NUMA-aware for performance reasons.
+On Wed, Mar 20, 2024, Dave Hansen wrote:
+> On 3/20/24 05:09, Huang, Kai wrote:
+> > I can try to do if you guys believe this should be done, and should be done
+> > earlier than later, but I am not sure _ANY_ optimization around SEAMCALL will
+> > have meaningful performance improvement.
+> 
+> I don't think Sean had performance concerns.
+> 
+> I think he was having a justifiably violent reaction to how much more
+> complicated the generated code is to do a SEAMCALL versus a good ol' KVM
+> hypercall.
 
-Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
----
- drivers/iommu/intel/svm.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/iommu/intel/svm.c b/drivers/iommu/intel/svm.c
-index c1bed89b1026..ee3b469e2da1 100644
---- a/drivers/iommu/intel/svm.c
-+++ b/drivers/iommu/intel/svm.c
-@@ -66,7 +66,7 @@ int intel_svm_enable_prq(struct intel_iommu *iommu)
- 	struct page *pages;
- 	int irq, ret;
- 
--	pages = alloc_pages(GFP_KERNEL | __GFP_ZERO, PRQ_ORDER);
-+	pages = alloc_pages_node(iommu->node, GFP_KERNEL | __GFP_ZERO, PRQ_ORDER);
- 	if (!pages) {
- 		pr_warn("IOMMU: %s: Failed to allocate page request queue\n",
- 			iommu->name);
--- 
-2.25.1
-
+Yep.  The code essentially violates the principle of least surprise.  I genuinely
+thought I was dumping the wrong function(s) when I first looked at the output.
