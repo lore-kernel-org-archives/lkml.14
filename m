@@ -1,40 +1,40 @@
-Received: from mail-108-mta12.mxroute.com (mail-108-mta12.mxroute.com [136.175.108.12])
+Received: from mail-108-mta76.mxroute.com (mail-108-mta76.mxroute.com [136.175.108.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5768A14D2A4
-	for <linux-kernel@vger.kernel.org>; Wed,  3 Apr 2024 15:13:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=136.175.108.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7461514D6EC
+	for <linux-kernel@vger.kernel.org>; Wed,  3 Apr 2024 15:13:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=136.175.108.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712157183; cv=none; b=Wlvkoy8La3Iekfjs7Jj8s6wDtM393IiysH+Yq9pzqIFeFN/6Fs3Nue8kFOqt0jibbjvfRZGUAEqGnhKoDS8vGcpVB6d7FQEpYpXp4ZJmNeCC8Mc7T6fc/3ps8VmnFNhxZKVTNttl3Lz2pQ/CB7G9ik3VXRCEQon7mlv0DYQcUdY=
+	t=1712157193; cv=none; b=Zv4j2zV+RCT1wQL/UEe93MSM+xEgcSiTgDmW7oQhAH6BZeFJKll0E9LI0RUIaHRJJWMMgm2kNe7HJWTbyprQfgty3rrf2tJRXMT8A3ogDTVI6SXBj6J6GQhiTPflGx+GGRGbep7R4FGoiAzAMJakO8tvfJtuZw8xpHR1CsjVbak=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712157183; c=relaxed/simple;
-	bh=4l25b11Fcd1ojpReo0LLvRhKMjS2oSzJM5BnhKrlM8g=;
+	s=arc-20240116; t=1712157193; c=relaxed/simple;
+	bh=VFD26JWsHitZHMcIa+CH9jAdANVV/kh1yrN1SoO8jPo=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=bqcK4VaMkvznLjsW7aWTOFjW7VvuohCGBx3yQjjsE6xi0P0Tjgm5LeDWqyKJdHjAoAPbNEkotx/BRNvALLbqgZ2wcRlu6s52LnGUWvnZfOs5kaJ7/in6lSA9DSjUQzfepKTcD2pRA2xDZwM2wZ2dh2impqjrQN8YolewtRk20uA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=luigi311.com; spf=pass smtp.mailfrom=luigi311.com; dkim=pass (2048-bit key) header.d=luigi311.com header.i=@luigi311.com header.b=ZaQU/yoN; arc=none smtp.client-ip=136.175.108.12
+	 MIME-Version; b=YPH5ZF4uWe8WInPjl4eNma7N0uSYakfj2a5kleiE/AKrmZ0+z+56GXinz/X1InE0f6HcshnSa5TNJP4JUjHfByP5BfpsJREiufuU7tKe0t9WAkDotmTKtpUP6S4KDSIzTDPUB1B4HUPXJ0cXmGC0HSdlsI7S5rrDbQPmrA/lwYU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=luigi311.com; spf=pass smtp.mailfrom=luigi311.com; dkim=pass (2048-bit key) header.d=luigi311.com header.i=@luigi311.com header.b=rk7hSq5h; arc=none smtp.client-ip=136.175.108.76
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=luigi311.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=luigi311.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=luigi311.com header.i=@luigi311.com header.b="ZaQU/yoN"
+	dkim=pass (2048-bit key) header.d=luigi311.com header.i=@luigi311.com header.b="rk7hSq5h"
 Received: from filter006.mxroute.com ([136.175.111.2] filter006.mxroute.com)
  (Authenticated sender: mN4UYu2MZsgR)
- by mail-108-mta12.mxroute.com (ZoneMTA) with ESMTPSA id 18ea4802bee0003bea.010
+ by mail-108-mta76.mxroute.com (ZoneMTA) with ESMTPSA id 18ea4803d380003bea.010
  for <linux-kernel@vger.kernel.org>
  (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384);
- Wed, 03 Apr 2024 15:07:27 +0000
-X-Zone-Loop: 7d8c67663be121e59ed047c53e08703ccaeb9f648036
+ Wed, 03 Apr 2024 15:07:31 +0000
+X-Zone-Loop: 57462f6e774c2e5fb98ad09b4a7b72a961b8aed514a3
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=luigi311.com; s=x; h=Content-Transfer-Encoding:MIME-Version:References:
 	In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
 	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
 	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
 	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=A5kWwvdwdEyuxBlVEZzJFt3zU0Ewr3vkitT5UsHdd40=; b=ZaQU/yoNNdDLSIvxxZWLSxfUMO
-	hXQ3Ap6+bxIXT+jh0T7KMm2VghvUK4genIWrJDlYoLHC4zECr6LeDeR5otNgshT87T6t/rDWMEVrm
-	vI544FXrpmV9Z78UqiTbRvgsDVhibml8Kq3JZNQLOniO46xDZyvq5Nz092/viWAxL2YYApYra/k3c
-	XSfMbdYe7ayojLfEp8ErAO1YUs/15z7IxEnFK0tA0+goDYci7o+reAQD9IcAB0uzAasYUUR9Zf1Pv
-	+T+Rg22eJwhYz3IJt4l44ISDLgZ2ab5u0DLCkrYgokaFH73gYM8y9QBzPOJhMxjDeD2WJXPkOZMqG
-	6jrLJf/w==;
+	bh=AVanrnf9WKtpF/lXCLFB+cot3xTKMWXeny5RAb2sVCk=; b=rk7hSq5hVUTbYzXTxr+jhRGftj
+	+jBlzDtEvC9TWoTEcmSVU6e0BtPdqRltn0Y9x3lYcXZaXLbHZuNspBxEL4tPx3LG9c3wZEIm5VO5g
+	WkZaGva3+xy2P1WmXGQuG6wglYpB4/Kg4NaaHzD+Pg9Wi8bu4v7LokPPAyTZPglanr4PL+hx+8kh4
+	134JygV5qgBsYRms2Yts9pIwVPuarSDC5/VkeCh8hMT+WC8yRYDwuoKKqQPo9FJI2eNg+HYuGxnC9
+	0gTw6pytsp1jNQ4qpuxF4ebfAGWRNpIR0yrrUm+2ZdxTooL68UO4TTSQUwZwYw8fgx+kddJbLHQ8u
+	JJy0l13Q==;
 From: git@luigi311.com
 To: linux-media@vger.kernel.org
 Cc: dave.stevenson@raspberrypi.com,
@@ -55,9 +55,9 @@ Cc: dave.stevenson@raspberrypi.com,
 	pavel@ucw.cz,
 	phone-devel@vger.kernel.org,
 	Luis Garcia <git@luigi311.com>
-Subject: [PATCH v3 05/25] media: i2c: imx258: Add regulator control
-Date: Wed,  3 Apr 2024 09:03:34 -0600
-Message-ID: <20240403150355.189229-6-git@luigi311.com>
+Subject: [PATCH v3 07/25] media: i2c: imx258: Split out common registers from the mode based ones
+Date: Wed,  3 Apr 2024 09:03:36 -0600
+Message-ID: <20240403150355.189229-8-git@luigi311.com>
 In-Reply-To: <20240403150355.189229-1-git@luigi311.com>
 References: <20240403150355.189229-1-git@luigi311.com>
 Precedence: bulk
@@ -71,113 +71,321 @@ X-Authenticated-Id: personal@luigi311.com
 
 From: Dave Stevenson <dave.stevenson@raspberrypi.com>
 
-The device tree bindings define the relevant regulators for the
-sensor, so update the driver to request the regulators and control
-them at the appropriate times.
+Out of all the registers that are defined for each mode, only around
+10 differ between the modes.
+
+Split the table into common and mode specific ones.
 
 Signed-off-by: Dave Stevenson <dave.stevenson@raspberrypi.com>
+Reviewed-by: Jacopo Mondi <jacopo.mondi@ideasonboard.com>
 Signed-off-by: Luis Garcia <git@luigi311.com>
 ---
- drivers/media/i2c/imx258.c | 42 +++++++++++++++++++++++++++++++++++++-
- 1 file changed, 41 insertions(+), 1 deletion(-)
+ drivers/media/i2c/imx258.c | 236 ++++---------------------------------
+ 1 file changed, 21 insertions(+), 215 deletions(-)
 
 diff --git a/drivers/media/i2c/imx258.c b/drivers/media/i2c/imx258.c
-index df7ed4716762..495eaada2945 100644
+index 321b504c6a48..351add1bc5d5 100644
 --- a/drivers/media/i2c/imx258.c
 +++ b/drivers/media/i2c/imx258.c
-@@ -7,6 +7,7 @@
- #include <linux/i2c.h>
- #include <linux/module.h>
- #include <linux/pm_runtime.h>
-+#include <linux/regulator/consumer.h>
- #include <media/v4l2-ctrls.h>
- #include <media/v4l2-device.h>
- #include <media/v4l2-fwnode.h>
-@@ -507,6 +508,16 @@ static const char * const imx258_test_pattern_menu[] = {
- 	"Pseudorandom Sequence (PN9)",
+@@ -151,7 +151,7 @@ static const struct imx258_reg mipi_data_rate_640mbps[] = {
+ 	{ 0x0823, 0x00 },
  };
  
-+/* regulator supplies */
-+static const char * const imx258_supply_name[] = {
-+	/* Supplies can be enabled in any order */
-+	"vana",  /* Analog (2.8V) supply */
-+	"vdig",  /* Digital Core (1.2V) supply */
-+	"vif",  /* IF (1.8V) supply */
+-static const struct imx258_reg mode_4208x3120_regs[] = {
++static const struct imx258_reg mode_common_regs[] = {
+ 	{ 0x0136, 0x13 },
+ 	{ 0x0137, 0x33 },
+ 	{ 0x3051, 0x00 },
+@@ -216,27 +216,17 @@ static const struct imx258_reg mode_4208x3120_regs[] = {
+ 	{ 0x0383, 0x01 },
+ 	{ 0x0385, 0x01 },
+ 	{ 0x0387, 0x01 },
+-	{ 0x0900, 0x00 },
+-	{ 0x0901, 0x11 },
+-	{ 0x0401, 0x00 },
+ 	{ 0x0404, 0x00 },
+-	{ 0x0405, 0x10 },
+ 	{ 0x0408, 0x00 },
+ 	{ 0x0409, 0x00 },
+ 	{ 0x040A, 0x00 },
+ 	{ 0x040B, 0x00 },
+ 	{ 0x040C, 0x10 },
+ 	{ 0x040D, 0x70 },
+-	{ 0x040E, 0x0C },
+-	{ 0x040F, 0x30 },
+ 	{ 0x3038, 0x00 },
+ 	{ 0x303A, 0x00 },
+ 	{ 0x303B, 0x10 },
+ 	{ 0x300D, 0x00 },
+-	{ 0x034C, 0x10 },
+-	{ 0x034D, 0x70 },
+-	{ 0x034E, 0x0C },
+-	{ 0x034F, 0x30 },
+ 	{ 0x0350, 0x01 },
+ 	{ 0x0204, 0x00 },
+ 	{ 0x0205, 0x00 },
+@@ -266,234 +256,43 @@ static const struct imx258_reg mode_4208x3120_regs[] = {
+ 	{ 0x0220, 0x00 },
+ };
+ 
++static const struct imx258_reg mode_4208x3120_regs[] = {
++	{ 0x0900, 0x00 },
++	{ 0x0901, 0x11 },
++	{ 0x0401, 0x00 },
++	{ 0x0405, 0x10 },
++	{ 0x040E, 0x0C },
++	{ 0x040F, 0x30 },
++	{ 0x034C, 0x10 },
++	{ 0x034D, 0x70 },
++	{ 0x034E, 0x0C },
++	{ 0x034F, 0x30 },
 +};
 +
-+#define IMX258_NUM_SUPPLIES ARRAY_SIZE(imx258_supply_name)
-+
- /* Configurations for supported link frequencies */
- #define IMX258_LINK_FREQ_634MHZ	633600000ULL
- #define IMX258_LINK_FREQ_320MHZ	320000000ULL
-@@ -611,6 +622,7 @@ struct imx258 {
- 	struct mutex mutex;
- 
- 	struct clk *clk;
-+	struct regulator_bulk_data supplies[IMX258_NUM_SUPPLIES];
+ static const struct imx258_reg mode_2104_1560_regs[] = {
+-	{ 0x0136, 0x13 },
+-	{ 0x0137, 0x33 },
+-	{ 0x3051, 0x00 },
+-	{ 0x3052, 0x00 },
+-	{ 0x4E21, 0x14 },
+-	{ 0x6B11, 0xCF },
+-	{ 0x7FF0, 0x08 },
+-	{ 0x7FF1, 0x0F },
+-	{ 0x7FF2, 0x08 },
+-	{ 0x7FF3, 0x1B },
+-	{ 0x7FF4, 0x23 },
+-	{ 0x7FF5, 0x60 },
+-	{ 0x7FF6, 0x00 },
+-	{ 0x7FF7, 0x01 },
+-	{ 0x7FF8, 0x00 },
+-	{ 0x7FF9, 0x78 },
+-	{ 0x7FFA, 0x00 },
+-	{ 0x7FFB, 0x00 },
+-	{ 0x7FFC, 0x00 },
+-	{ 0x7FFD, 0x00 },
+-	{ 0x7FFE, 0x00 },
+-	{ 0x7FFF, 0x03 },
+-	{ 0x7F76, 0x03 },
+-	{ 0x7F77, 0xFE },
+-	{ 0x7FA8, 0x03 },
+-	{ 0x7FA9, 0xFE },
+-	{ 0x7B24, 0x81 },
+-	{ 0x7B25, 0x00 },
+-	{ 0x6564, 0x07 },
+-	{ 0x6B0D, 0x41 },
+-	{ 0x653D, 0x04 },
+-	{ 0x6B05, 0x8C },
+-	{ 0x6B06, 0xF9 },
+-	{ 0x6B08, 0x65 },
+-	{ 0x6B09, 0xFC },
+-	{ 0x6B0A, 0xCF },
+-	{ 0x6B0B, 0xD2 },
+-	{ 0x6700, 0x0E },
+-	{ 0x6707, 0x0E },
+-	{ 0x9104, 0x00 },
+-	{ 0x4648, 0x7F },
+-	{ 0x7420, 0x00 },
+-	{ 0x7421, 0x1C },
+-	{ 0x7422, 0x00 },
+-	{ 0x7423, 0xD7 },
+-	{ 0x5F04, 0x00 },
+-	{ 0x5F05, 0xED },
+-	{ 0x0112, 0x0A },
+-	{ 0x0113, 0x0A },
+-	{ 0x0114, 0x03 },
+-	{ 0x0342, 0x14 },
+-	{ 0x0343, 0xE8 },
+-	{ 0x0344, 0x00 },
+-	{ 0x0345, 0x00 },
+-	{ 0x0346, 0x00 },
+-	{ 0x0347, 0x00 },
+-	{ 0x0348, 0x10 },
+-	{ 0x0349, 0x6F },
+-	{ 0x034A, 0x0C },
+-	{ 0x034B, 0x2F },
+-	{ 0x0381, 0x01 },
+-	{ 0x0383, 0x01 },
+-	{ 0x0385, 0x01 },
+-	{ 0x0387, 0x01 },
+ 	{ 0x0900, 0x01 },
+ 	{ 0x0901, 0x12 },
+ 	{ 0x0401, 0x01 },
+-	{ 0x0404, 0x00 },
+ 	{ 0x0405, 0x20 },
+-	{ 0x0408, 0x00 },
+-	{ 0x0409, 0x00 },
+-	{ 0x040A, 0x00 },
+-	{ 0x040B, 0x00 },
+-	{ 0x040C, 0x10 },
+-	{ 0x040D, 0x70 },
+ 	{ 0x040E, 0x06 },
+ 	{ 0x040F, 0x18 },
+-	{ 0x3038, 0x00 },
+-	{ 0x303A, 0x00 },
+-	{ 0x303B, 0x10 },
+-	{ 0x300D, 0x00 },
+ 	{ 0x034C, 0x08 },
+ 	{ 0x034D, 0x38 },
+ 	{ 0x034E, 0x06 },
+ 	{ 0x034F, 0x18 },
+-	{ 0x0350, 0x01 },
+-	{ 0x0204, 0x00 },
+-	{ 0x0205, 0x00 },
+-	{ 0x020E, 0x01 },
+-	{ 0x020F, 0x00 },
+-	{ 0x0210, 0x01 },
+-	{ 0x0211, 0x00 },
+-	{ 0x0212, 0x01 },
+-	{ 0x0213, 0x00 },
+-	{ 0x0214, 0x01 },
+-	{ 0x0215, 0x00 },
+-	{ 0x7BCD, 0x01 },
+-	{ 0x94DC, 0x20 },
+-	{ 0x94DD, 0x20 },
+-	{ 0x94DE, 0x20 },
+-	{ 0x95DC, 0x20 },
+-	{ 0x95DD, 0x20 },
+-	{ 0x95DE, 0x20 },
+-	{ 0x7FB0, 0x00 },
+-	{ 0x9010, 0x3E },
+-	{ 0x9419, 0x50 },
+-	{ 0x941B, 0x50 },
+-	{ 0x9519, 0x50 },
+-	{ 0x951B, 0x50 },
+-	{ 0x3030, 0x00 },
+-	{ 0x3032, 0x00 },
+-	{ 0x0220, 0x00 },
  };
  
- static inline struct imx258 *to_imx258(struct v4l2_subdev *_sd)
-@@ -995,9 +1007,19 @@ static int imx258_power_on(struct device *dev)
- 	struct imx258 *imx258 = to_imx258(sd);
- 	int ret;
+ static const struct imx258_reg mode_1048_780_regs[] = {
+-	{ 0x0136, 0x13 },
+-	{ 0x0137, 0x33 },
+-	{ 0x3051, 0x00 },
+-	{ 0x3052, 0x00 },
+-	{ 0x4E21, 0x14 },
+-	{ 0x6B11, 0xCF },
+-	{ 0x7FF0, 0x08 },
+-	{ 0x7FF1, 0x0F },
+-	{ 0x7FF2, 0x08 },
+-	{ 0x7FF3, 0x1B },
+-	{ 0x7FF4, 0x23 },
+-	{ 0x7FF5, 0x60 },
+-	{ 0x7FF6, 0x00 },
+-	{ 0x7FF7, 0x01 },
+-	{ 0x7FF8, 0x00 },
+-	{ 0x7FF9, 0x78 },
+-	{ 0x7FFA, 0x00 },
+-	{ 0x7FFB, 0x00 },
+-	{ 0x7FFC, 0x00 },
+-	{ 0x7FFD, 0x00 },
+-	{ 0x7FFE, 0x00 },
+-	{ 0x7FFF, 0x03 },
+-	{ 0x7F76, 0x03 },
+-	{ 0x7F77, 0xFE },
+-	{ 0x7FA8, 0x03 },
+-	{ 0x7FA9, 0xFE },
+-	{ 0x7B24, 0x81 },
+-	{ 0x7B25, 0x00 },
+-	{ 0x6564, 0x07 },
+-	{ 0x6B0D, 0x41 },
+-	{ 0x653D, 0x04 },
+-	{ 0x6B05, 0x8C },
+-	{ 0x6B06, 0xF9 },
+-	{ 0x6B08, 0x65 },
+-	{ 0x6B09, 0xFC },
+-	{ 0x6B0A, 0xCF },
+-	{ 0x6B0B, 0xD2 },
+-	{ 0x6700, 0x0E },
+-	{ 0x6707, 0x0E },
+-	{ 0x9104, 0x00 },
+-	{ 0x4648, 0x7F },
+-	{ 0x7420, 0x00 },
+-	{ 0x7421, 0x1C },
+-	{ 0x7422, 0x00 },
+-	{ 0x7423, 0xD7 },
+-	{ 0x5F04, 0x00 },
+-	{ 0x5F05, 0xED },
+-	{ 0x0112, 0x0A },
+-	{ 0x0113, 0x0A },
+-	{ 0x0114, 0x03 },
+-	{ 0x0342, 0x14 },
+-	{ 0x0343, 0xE8 },
+-	{ 0x0344, 0x00 },
+-	{ 0x0345, 0x00 },
+-	{ 0x0346, 0x00 },
+-	{ 0x0347, 0x00 },
+-	{ 0x0348, 0x10 },
+-	{ 0x0349, 0x6F },
+-	{ 0x034A, 0x0C },
+-	{ 0x034B, 0x2F },
+-	{ 0x0381, 0x01 },
+-	{ 0x0383, 0x01 },
+-	{ 0x0385, 0x01 },
+-	{ 0x0387, 0x01 },
+ 	{ 0x0900, 0x01 },
+ 	{ 0x0901, 0x14 },
+ 	{ 0x0401, 0x01 },
+-	{ 0x0404, 0x00 },
+ 	{ 0x0405, 0x40 },
+-	{ 0x0408, 0x00 },
+-	{ 0x0409, 0x00 },
+-	{ 0x040A, 0x00 },
+-	{ 0x040B, 0x00 },
+-	{ 0x040C, 0x10 },
+-	{ 0x040D, 0x70 },
+ 	{ 0x040E, 0x03 },
+ 	{ 0x040F, 0x0C },
+-	{ 0x3038, 0x00 },
+-	{ 0x303A, 0x00 },
+-	{ 0x303B, 0x10 },
+-	{ 0x300D, 0x00 },
+ 	{ 0x034C, 0x04 },
+ 	{ 0x034D, 0x18 },
+ 	{ 0x034E, 0x03 },
+ 	{ 0x034F, 0x0C },
+-	{ 0x0350, 0x01 },
+-	{ 0x0204, 0x00 },
+-	{ 0x0205, 0x00 },
+-	{ 0x020E, 0x01 },
+-	{ 0x020F, 0x00 },
+-	{ 0x0210, 0x01 },
+-	{ 0x0211, 0x00 },
+-	{ 0x0212, 0x01 },
+-	{ 0x0213, 0x00 },
+-	{ 0x0214, 0x01 },
+-	{ 0x0215, 0x00 },
+-	{ 0x7BCD, 0x00 },
+-	{ 0x94DC, 0x20 },
+-	{ 0x94DD, 0x20 },
+-	{ 0x94DE, 0x20 },
+-	{ 0x95DC, 0x20 },
+-	{ 0x95DD, 0x20 },
+-	{ 0x95DE, 0x20 },
+-	{ 0x7FB0, 0x00 },
+-	{ 0x9010, 0x3E },
+-	{ 0x9419, 0x50 },
+-	{ 0x941B, 0x50 },
+-	{ 0x9519, 0x50 },
+-	{ 0x951B, 0x50 },
+-	{ 0x3030, 0x00 },
+-	{ 0x3032, 0x00 },
+-	{ 0x0220, 0x00 },
+ };
  
-+	ret = regulator_bulk_enable(IMX258_NUM_SUPPLIES,
-+				    imx258->supplies);
+ static const char * const imx258_test_pattern_menu[] = {
+@@ -955,6 +754,13 @@ static int imx258_start_streaming(struct imx258 *imx258)
+ 		return ret;
+ 	}
+ 
++	ret = imx258_write_regs(imx258, mode_common_regs,
++				ARRAY_SIZE(mode_common_regs));
 +	if (ret) {
-+		dev_err(dev, "%s: failed to enable regulators\n",
-+			__func__);
++		dev_err(&client->dev, "%s failed to set common regs\n", __func__);
 +		return ret;
 +	}
 +
- 	ret = clk_prepare_enable(imx258->clk);
--	if (ret)
-+	if (ret) {
- 		dev_err(dev, "failed to enable clock\n");
-+		regulator_bulk_disable(IMX258_NUM_SUPPLIES, imx258->supplies);
-+	}
- 
- 	return ret;
- }
-@@ -1008,6 +1030,7 @@ static int imx258_power_off(struct device *dev)
- 	struct imx258 *imx258 = to_imx258(sd);
- 
- 	clk_disable_unprepare(imx258->clk);
-+	regulator_bulk_disable(IMX258_NUM_SUPPLIES, imx258->supplies);
- 
- 	return 0;
- }
-@@ -1220,6 +1243,18 @@ static void imx258_free_controls(struct imx258 *imx258)
- 	mutex_destroy(&imx258->mutex);
- }
- 
-+static int imx258_get_regulators(struct imx258 *imx258,
-+				 struct i2c_client *client)
-+{
-+	unsigned int i;
-+
-+	for (i = 0; i < IMX258_NUM_SUPPLIES; i++)
-+		imx258->supplies[i].supply = imx258_supply_name[i];
-+
-+	return devm_regulator_bulk_get(&client->dev,
-+				    IMX258_NUM_SUPPLIES, imx258->supplies);
-+}
-+
- static int imx258_probe(struct i2c_client *client)
- {
- 	struct imx258 *imx258;
-@@ -1230,6 +1265,11 @@ static int imx258_probe(struct i2c_client *client)
- 	if (!imx258)
- 		return -ENOMEM;
- 
-+	ret = imx258_get_regulators(imx258, client);
-+	if (ret)
-+		return dev_err_probe(&client->dev, ret,
-+				     "failed to get regulators\n");
-+
- 	imx258->clk = devm_clk_get_optional(&client->dev, NULL);
- 	if (IS_ERR(imx258->clk))
- 		return dev_err_probe(&client->dev, PTR_ERR(imx258->clk),
+ 	/* Apply default values of current mode */
+ 	reg_list = &imx258->cur_mode->reg_list;
+ 	ret = imx258_write_regs(imx258, reg_list->regs, reg_list->num_of_regs);
 -- 
 2.42.0
 
