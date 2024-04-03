@@ -1,114 +1,97 @@
-Received: from smtpbgbr1.qq.com (smtpbgbr1.qq.com [54.207.19.206])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 568CC1482E1;
-	Wed,  3 Apr 2024 12:53:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.207.19.206
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2A361494CE;
+	Wed,  3 Apr 2024 12:53:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712148789; cv=none; b=QcQPBQ9YjIY/FZcbFigAnQlfWXYaze9FEKwxNw6uWaR6x7Ghixyp8yxnfH3LO7UeXUF5pj1nPsbBv9S57y/jJ3mq024+w9pZFjBRPlErqqAVYOJ+JIDABBtA2ZoieMr4/cVXeQ+gHD4QJhu4C8HT3UaKSPcJXp2W5ix9U87g4oI=
+	t=1712148806; cv=none; b=lCjyI3vkFG/oC2Ah1xgaEN5MI9d2r4UW+7Olg9Iu0UcmVi3R/bhbhbH30NX+VhEqEZIYMidYUHoJAy2uhbV8dPORho2Icllg7dXZ2RChvlYO5cRgwTC7z5rGJlJNym1yE2xBDPgu9y1MyqLS4Ea7IBcbNwfzGvorNBbOVW+5czw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712148789; c=relaxed/simple;
-	bh=oEllcByHTb5ruy6A9Usqz1VtCeCPw7v0KZkyVRzJ3FY=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=PR+PNDeaLC3aAZfhqCnT3fM3tvTsVZRyC5PM4t60lr86s7pRsVzHRhtL9nTUYxLSBXCmfGsD3pZDQPANWsPH5uyweRSBVpqEtn4gQyYS9W3jECprx28cke0NGKlf256c1AwmjvCmkW4hvqqe22vfsWYUznDoZlYRVvtTnr2SFwc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=shingroup.cn; spf=pass smtp.mailfrom=shingroup.cn; arc=none smtp.client-ip=54.207.19.206
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=shingroup.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=shingroup.cn
-X-QQ-mid: bizesmtpsz11t1712148686tdr3l7
-X-QQ-Originating-IP: SM5s8FAZLkIg0k+zF/ph3vSArsy2doitvdgwni5O9z0=
-Received: from localhost ( [112.0.147.175])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Wed, 03 Apr 2024 20:51:24 +0800 (CST)
-X-QQ-SSF: 01400000000000704000000A0000000
-X-QQ-FEAT: 3M0okmaRx3j5lef41+AwE9Y+CgaUKkKYmVC9Hf7Y5u3aB2n+VoMXvS/oH3NmX
-	CN9ZCNixChYwql3f3fM5oDTW1nlfJ7ur6GPa+OMpaISt8QpYZ3KML+ejjTkle5SChoMBkgB
-	WfWGVyewEtJl6VYASlgkfrQIxq4VAaduXp54kOyVX4zNbMJghsvQkYBQYfi8cBHe5za7UEL
-	rpIWIjPHyvAvgLrR26/oD3TEzfFgc9ReQ/8Uqkt3zOeI8x2Cu35qyHya2Z+AqCdmQCcfrYo
-	HWGcPRgZh4ba2tQlpgXjn6fh2yfZl6dOsND1xR0VcpYdup7f5mWK8CO9qO3ty89A9yfewrJ
-	fsCIZOvws9FjUKVUirxoDWz54Noyvtuf7ij3guUpEAwvlXSkbr+N1toNtijbzkM9eu74dlN
-	OQKCh/y/vMYHRSkIBZDRvA==
-X-QQ-GoodBg: 2
-X-BIZMAIL-ID: 6104082383576056037
-From: Dawei Li <dawei.li@shingroup.cn>
-To: will@kernel.org,
-	mark.rutland@arm.com,
-	yury.norov@gmail.com,
-	linux@rasmusvillemoes.dk
-Cc: xueshuai@linux.alibaba.com,
-	renyu.zj@linux.alibaba.com,
-	yangyicong@hisilicon.com,
-	jonathan.cameron@huawei.com,
-	andersson@kernel.org,
-	konrad.dybcio@linaro.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	linux-arm-msm@vger.kernel.org,
-	Dawei Li <dawei.li@shingroup.cn>
-Subject: [PATCH v2 00/10] perf: Avoid placing cpumask var on stack
-Date: Wed,  3 Apr 2024 20:50:59 +0800
-Message-Id: <20240403125109.2054881-1-dawei.li@shingroup.cn>
-X-Mailer: git-send-email 2.27.0
+	s=arc-20240116; t=1712148806; c=relaxed/simple;
+	bh=UntQTPh+2hrQn/xIlOWJaJgrauzrTj7yswbk+DwsRJs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=A95FNpqmcXNG1e+AhRokIkx0T79pmZtmoXRwAN/absOaGpZE9zGhmQ/mnVUR0bZIe63IdOZAT+fAy9Zdd8kVwyYSHV9Ct+WPaXCS5ak9kPN6t0oFCH78qEug/wNoq0EFJxGlqW8Pu3OyyM9Ppq0KFr8LDhXnuVzZ16Q6pf+GDpE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.218.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-a46a7208eedso824936566b.0;
+        Wed, 03 Apr 2024 05:53:24 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712148803; x=1712753603;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=q4cj6vg+PLMD3bnAnC/7BKVkE+A86qwqaG5PcVTOt18=;
+        b=a9G1Uj1tXvk8mKna/klFrPZDWk3MTIXiHofAmeS/kXnCAHX1DJNsox94yzFekHD3hN
+         HKwBhkQj30AfKNMFcidPs2Mk/+bHx9UyJ2IZ9PVbJWjNjJJmrFmYxrIxK2P67UR0zKEy
+         PO7pW4SAELMqJu0HGjzfUOiBYya+EiGMZ5nMumXYvQyhdAEhd+ipbRB3P48Ygz6nBSCh
+         qSMbh6qFzcFP/g1fSR+8/PU1VnmmeBsvoidXPdCeKT64WXxvbnph2ln6QketlF77D+WA
+         oHqKhLRDxCcIBKZyy4YsqFAdjDue7Q59u2X6Q1Ekb2ZgRuJg3P4nEQ1bRynYG9dv6LzI
+         Sgiw==
+X-Forwarded-Encrypted: i=1; AJvYcCXGLDhsG0YQlcAQXlahybcvDTcB+DqPmdbWXAzIzhT1Av8liaLceCjzug3cTSCDTsIN/J6bHtN6CrpzE0C5q/dkIxpSOunq/mWWOixJ6vNqwAicPXgIms8PYYHKX1L8H/YXeMXP+1+9wUaSAXPUqGKilJHOahCf7F9/S3RM
+X-Gm-Message-State: AOJu0YymaYaD9FcIJ+eGwabKMzk7lvQQzueGAe/tw3IwbyqO9kgxNmKS
+	m1KC+qNxPISMx16mz+eO5DYAeI+jOpK/6eguVJBnLn3FJAnaS/n3
+X-Google-Smtp-Source: AGHT+IG/LZvkvkvKke8uVXcXbrYjZ9FSvr+Pm5+/tdlPUCoe15E1D9VDt24wooC2fGJfQa9Hdwxe2A==
+X-Received: by 2002:a17:906:2284:b0:a4e:39f1:6374 with SMTP id p4-20020a170906228400b00a4e39f16374mr1812470eja.24.1712148803105;
+        Wed, 03 Apr 2024 05:53:23 -0700 (PDT)
+Received: from gmail.com (fwdproxy-lla-007.fbsv.net. [2a03:2880:30ff:7::face:b00c])
+        by smtp.gmail.com with ESMTPSA id an3-20020a17090656c300b00a4e7c2b2070sm2694127ejc.8.2024.04.03.05.53.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 03 Apr 2024 05:53:16 -0700 (PDT)
+Date: Wed, 3 Apr 2024 05:53:12 -0700
+From: Breno Leitao <leitao@debian.org>
+To: "Michael S. Tsirkin" <mst@redhat.com>
+Cc: hengqi@linux.alibaba.com, xuanzhuo@linux.alibaba.com,
+	Jason Wang <jasowang@redhat.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Andrew Melnychenko <andrew@daynix.com>, rbc@meta.com,
+	riel@surriel.com, stable@vger.kernel.org, qemu-devel@nongnu.org,
+	"open list:VIRTIO CORE AND NET DRIVERS" <virtualization@lists.linux.dev>,
+	"open list:NETWORKING DRIVERS" <netdev@vger.kernel.org>,
+	open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH net v3] virtio_net: Do not send RSS key if it is not
+ supported
+Message-ID: <Zg1ROBmnY0jaKvsf@gmail.com>
+References: <20240329171641.366520-1-leitao@debian.org>
+ <20240331160618-mutt-send-email-mst@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-QQ-SENDSIZE: 520
-Feedback-ID: bizesmtpsz:shingroup.cn:qybglogicsvrgz:qybglogicsvrgz5a-1
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240331160618-mutt-send-email-mst@kernel.org>
 
-Hi all,
+On Sun, Mar 31, 2024 at 04:20:30PM -0400, Michael S. Tsirkin wrote:
+> On Fri, Mar 29, 2024 at 10:16:41AM -0700, Breno Leitao wrote:
+> > @@ -3814,13 +3815,24 @@ static int virtnet_set_rxfh(struct net_device *dev,
+> >  		return -EOPNOTSUPP;
+> >  
+> >  	if (rxfh->indir) {
+> > +		if (!vi->has_rss)
+> > +			return -EOPNOTSUPP;
+> > +
+> >  		for (i = 0; i < vi->rss_indir_table_size; ++i)
+> >  			vi->ctrl->rss.indirection_table[i] = rxfh->indir[i];
+> > +		update = true;
+> >  	}
+> > -	if (rxfh->key)
+> > +
+> > +	if (rxfh->key) {
+> > +		if (!vi->has_rss && !vi->has_rss_hash_report)
+> > +			return -EOPNOTSUPP;
+> 
+> 
+> What's the logic here? Is it || or &&? A comment can't hurt.
 
-This is v2 of [1] and [2] which basically eliminate cpumask var allocation
-on stack for perf subsystem.
+If txfh carries a key, then the device needs to has either has_rss or
+has_rss_hash_report "features".
 
-Change since v1:
-- Change from dynamic allocation to a temporary var free helper:
-  cpumask_any_and_but().	[Mark]
+These are basically virtio features VIRTIO_NET_F_HASH_REPORT and
+VIRTIO_NET_F_RSS that are set at virtio_probe.
 
-- Some minor coding style improvements, reverse chrismas tree e.g.
-
-- For cpumask_any_and_but() itself:
-  - Moved to cpumask.h, just like other helpers.
-  - Return value converted to unsigned int.
-  - Remove EXPORT_SYMBOL, for obvious reason.
-
-[1]:
-https://lore.kernel.org/lkml/20240402105610.1695644-1-dawei.li@shingroup.cn/
-
-[2]:
-https://lore.kernel.org/lkml/1486381132-5610-1-git-send-email-mark.rutland@arm.com/
-
-Dawei Li (9):
-  perf/alibaba_uncore_drw: Avoid placing cpumask var on stack
-  perf/arm-cmn: Avoid placing cpumask var on stack
-  perf/arm_cspmu: Avoid placing cpumask var on stack
-  perf/arm_dsu: Avoid placing cpumask var on stack
-  perf/dwc_pcie: Avoid placing cpumask var on stack
-  perf/hisi_pcie: Avoid placing cpumask var on stack
-  perf/hisi_uncore: Avoid placing cpumask var on stack
-  perf/qcom_l2: Avoid placing cpumask var on stack
-  perf/thunderx2: Avoid placing cpumask var on stack
-
-Mark Rutland (1):
-  cpumask: add cpumask_any_and_but()
-
- drivers/perf/alibaba_uncore_drw_pmu.c    | 10 +++-------
- drivers/perf/arm-cmn.c                   | 10 +++++-----
- drivers/perf/arm_cspmu/arm_cspmu.c       |  8 +++-----
- drivers/perf/arm_dsu_pmu.c               | 19 ++++++-------------
- drivers/perf/dwc_pcie_pmu.c              | 10 ++++------
- drivers/perf/hisilicon/hisi_pcie_pmu.c   |  9 ++++-----
- drivers/perf/hisilicon/hisi_uncore_pmu.c |  6 ++----
- drivers/perf/qcom_l2_pmu.c               |  8 +++-----
- drivers/perf/thunderx2_pmu.c             | 10 +++-------
- include/linux/cpumask.h                  | 23 +++++++++++++++++++++++
- 10 files changed, 56 insertions(+), 57 deletions(-)
-
-Thanks,
-
-    Dawei
-
--- 
-2.27.0
-
+I will add the comment and respin the series.
