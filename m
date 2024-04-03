@@ -1,42 +1,47 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B254D156231;
-	Wed,  3 Apr 2024 17:20:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1192316F833;
+	Wed,  3 Apr 2024 17:20:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712164841; cv=none; b=Nqgce4Tz405QOX3d01Sk1gUZ34Iq9SLKc1DZlBRVPkEewUeviIjjokHbAB9/VqKeK8TOstDx0Kzy0CICfbkyR0mYC9uEreu5SOfnmZ3HIu9bk9yneIfRVHU0hPOVUw5kStb5C9KC3mTPyLDwB2e03PuYYVnGCVBbJ6wALpxyxLI=
+	t=1712164843; cv=none; b=tIB/0KHjhfDT9m8/j5QHqoFWwpuw4hTS+D+UbmkoiwvFjRm4Cu2G3FtkbP3ghO+LRDOOepnCsY+PPpbu/D2AWREhle7Ma5k7x0j+aTNfW/w3oCa8bn8BffhXCJOUunBxsu1Pqre4iugBsOayNHls2mpU6b911qM5PJ1xfyFqrL4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712164841; c=relaxed/simple;
-	bh=0FRWAnjUUhfEu3c+uEpE2f2IrF0ulTBcuBoD6QlU87A=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=k9LJY5cMBipY16wuodyZAyfp1Gg0pwA88uv1cVQh78uDFHX0KL1YBKdIES+M6tR8LrYzCErB5EyVJg1B9IWofVb+s1SkNWgslaaY2An6xwNQI3krZJP2apoknHggJDT1VdM3wXhKdmsYjrF1A/SyT6PrkrRhBQznNi+Ak2SEkh4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LpJRWdt3; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1712164843; c=relaxed/simple;
+	bh=zZ5HKyl9SWi+r5ffTIvAaz8buaVqrBX/MaVE9PNjX+Q=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=iP5CzVYihxOFBLDGRiepevBzcAF8VDkdGoytC6yr1Me/7N3VdOjlgvSy/WNFjCgjRmiBqvEaUPZNlvUwt4WA869iX4l0cuTcKq5ljpmMeTqSDxf9J4JkYuibGDdEB7CfbKUp+LisdxUM4kgh0RRVKAk++9HqnwQaN4AjxSrNhLw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JXkA7Q8x; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LpJRWdt3"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BE1BAC433C7;
-	Wed,  3 Apr 2024 17:20:40 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JXkA7Q8x"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E8D21C433F1;
+	Wed,  3 Apr 2024 17:20:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712164841;
-	bh=0FRWAnjUUhfEu3c+uEpE2f2IrF0ulTBcuBoD6QlU87A=;
-	h=From:To:Cc:Subject:Date:From;
-	b=LpJRWdt3/x/bmNNNW/oleY4L9jYqP+GD0D3y0ix/OwQX1DIR4Q0XjP6C1RrUjfepq
-	 s6pWiWk/DtXYx5ygs/qsoWbcns5FGReJTiLgGNCYU22H3x/QuWb12ceao2FsLkVejE
-	 cC/c4ugPVPh3GeTUqFVuNgv9MQob2XxDOthmBPGBij9ipeZh8KdQ5+8GQlCdOxndGl
-	 xdxwcMv8L8hXIc9BZFJzR2sfTCl430+o4F4s6qFHIZ43dfeTGj5Mj8cW9lP3K6Do0F
-	 2v7IXnmxKA4R4tGednHmH404lsWmuz5W1dqTmwMmBKjzo7tcdSFBf0mLP1folLlpev
-	 nX9WT8uVfI0Ng==
+	s=k20201202; t=1712164842;
+	bh=zZ5HKyl9SWi+r5ffTIvAaz8buaVqrBX/MaVE9PNjX+Q=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=JXkA7Q8xNtVYCSKq24EJvbiG8lwFurmIfTrg4Mh/CEdmKh2pNkfcT26EaDjUPHGSd
+	 TJ+L8nFQkxjJIWuPm9WKn+LgNcgad5t4z9IQ1OT4psoZq7oxWA8vDfc/9M5cNVBuwr
+	 Xb+IlWBtjQl2tcuHSY3NFICzHCOGlewLvZOhaud+eUea58t39RhQJnox2CokqixX6n
+	 jLaKU0rZzdDn90eUIVCvdYu73XmmnKH8MH37Ah9Yp+gMZS+ZjCBVl8ZTaToUSHD4W9
+	 pdNLGOXntBxZeOuuMzVD5fe7xrdlDQeaM+BZfE4smT1y9g7Z6j9TvH8SXkNPKJrJIf
+	 115ND60QpGouQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Petre Rodan <petre.rodan@subdimension.ro>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+Cc: Karina Yankevich <k.yankevich@omp.ru>,
+	Sergey Shtylyov <s.shtylyov@omp.ru>,
+	Alan Stern <stern@rowland.harvard.edu>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
 	Sasha Levin <sashal@kernel.org>,
-	jic23@kernel.org,
-	linux-iio@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 1/5] tools: iio: replace seekdir() in iio_generic_buffer
-Date: Wed,  3 Apr 2024 13:20:34 -0400
-Message-ID: <20240403172041.354877-1-sashal@kernel.org>
+	linux-usb@vger.kernel.org,
+	usb-storage@lists.one-eyed-alien.net
+Subject: [PATCH AUTOSEL 4.19 2/5] usb: storage: sddr55: fix sloppy typing in sddr55_{read|write}_data()
+Date: Wed,  3 Apr 2024 13:20:35 -0400
+Message-ID: <20240403172041.354877-2-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240403172041.354877-1-sashal@kernel.org>
+References: <20240403172041.354877-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -48,43 +53,54 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 4.19.311
 Content-Transfer-Encoding: 8bit
 
-From: Petre Rodan <petre.rodan@subdimension.ro>
+From: Karina Yankevich <k.yankevich@omp.ru>
 
-[ Upstream commit 4e6500bfa053dc133021f9c144261b77b0ba7dc8 ]
+[ Upstream commit d6429a3555fb29f380c5841a12f5ac3f7444af03 ]
 
-Replace seekdir() with rewinddir() in order to fix a localized glibc bug.
+In sddr55_{read|write}_data(), the address variables are needlessly typed
+as *unsigned long* -- which is 32-bit type on the 32-bit arches and 64-bit
+type on the 64-bit arches; those variables' value should fit into just 3
+command bytes and consists of 10-bit block # (or at least the max block #
+seems to be 1023) and 4-/5-bit page # within a block, so 32-bit *unsigned*
+*int* type should be more than enough...
 
-One of the glibc patches that stable Gentoo is using causes an improper
-directory stream positioning bug on 32bit arm. That in turn ends up as a
-floating point exception in iio_generic_buffer.
+Found by Linux Verification Center (linuxtesting.org) with the Svace static
+analysis tool.
 
-The attached patch provides a fix by using an equivalent function which
-should not cause trouble for other distros and is easier to reason about
-in general as it obviously always goes back to to the start.
+[Sergey: rewrote the patch subject/description]
 
-https://sourceware.org/bugzilla/show_bug.cgi?id=31212
-
-Signed-off-by: Petre Rodan <petre.rodan@subdimension.ro>
-Link: https://lore.kernel.org/r/20240108103224.3986-1-petre.rodan@subdimension.ro
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Signed-off-by: Karina Yankevich <k.yankevich@omp.ru>
+Signed-off-by: Sergey Shtylyov <s.shtylyov@omp.ru>
+Reviewed-by: Alan Stern <stern@rowland.harvard.edu>
+Link: https://lore.kernel.org/r/4c9485f2-0bfc-591b-bfe7-2059289b554e@omp.ru
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/iio/iio_utils.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/usb/storage/sddr55.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/tools/iio/iio_utils.c b/tools/iio/iio_utils.c
-index d174487b2f226..1ef51c7e7b04f 100644
---- a/tools/iio/iio_utils.c
-+++ b/tools/iio/iio_utils.c
-@@ -376,7 +376,7 @@ int build_channel_array(const char *device_dir,
- 		goto error_close_dir;
- 	}
+diff --git a/drivers/usb/storage/sddr55.c b/drivers/usb/storage/sddr55.c
+index 35306c0559622..dddaac45a0455 100644
+--- a/drivers/usb/storage/sddr55.c
++++ b/drivers/usb/storage/sddr55.c
+@@ -195,7 +195,7 @@ static int sddr55_read_data(struct us_data *us,
+ 	unsigned char *buffer;
  
--	seekdir(dp, 0);
-+	rewinddir(dp);
- 	while (ent = readdir(dp), ent) {
- 		if (strcmp(ent->d_name + strlen(ent->d_name) - strlen("_en"),
- 			   "_en") == 0) {
+ 	unsigned int pba;
+-	unsigned long address;
++	unsigned int address;
+ 
+ 	unsigned short pages;
+ 	unsigned int len, offset;
+@@ -315,7 +315,7 @@ static int sddr55_write_data(struct us_data *us,
+ 
+ 	unsigned int pba;
+ 	unsigned int new_pba;
+-	unsigned long address;
++	unsigned int address;
+ 
+ 	unsigned short pages;
+ 	int i;
 -- 
 2.43.0
 
