@@ -1,124 +1,120 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A5682134CDC
-	for <linux-kernel@vger.kernel.org>; Wed,  3 Apr 2024 09:58:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 985D1134CD4;
+	Wed,  3 Apr 2024 10:01:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712138310; cv=none; b=fAay72RPMWanfSLHdSnllmDR0bdYPDWk9IZXEfFbwvwPALMB2hNiagVmS1MPzn1jIhWKDgWX9pwMehfSPteLrSzzeO1weoBpTkac2nLqpRRMwuPlQfPyp2salDIqQ8visZ7/106IThiBotI7KF0jL6CK07TchgkxLcHY5SJUPrY=
+	t=1712138463; cv=none; b=dXXiGJ7CT0oSUDHgj3mQFk9CImzb1qasNiS8oM++JVpI/Lcp1RHIyBQZN7xVKC4gUr1v+Rayfn5SE9PsFDzYrJTGm+WrKvqul0ygL6JBsbABInfn1V1rOtBzIhZUcZrFZkqDWMmzbeRecqV2t0hY/iP7L2uQaQuNtmoaW+meVAQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712138310; c=relaxed/simple;
-	bh=v6kPPu8AbJZK6mxxZQbhLMHpWRSSYapD027qb+raLG0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=eCBdM505qeCgq8OAXG1nNZ3wZVANbBbXtzZVtrAkjRXYrcTDmNebcrotXIbULUTQfPRPSLGPvlpDHfoyCkyYPwHhsyS0W/JhVMzYo26M77ZpAWByE9YHLBX0q3SsV6lxV/vvbfeY3ccGwaWM5VCUUx/SCIYuh9ycgiqP9eQ5CIM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 02B8A1007;
-	Wed,  3 Apr 2024 02:58:59 -0700 (PDT)
-Received: from [10.57.73.155] (unknown [10.57.73.155])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id F05E63F64C;
-	Wed,  3 Apr 2024 02:58:26 -0700 (PDT)
-Message-ID: <6d90b034-b91a-4e33-b728-b86261c050b0@arm.com>
-Date: Wed, 3 Apr 2024 10:58:31 +0100
+	s=arc-20240116; t=1712138463; c=relaxed/simple;
+	bh=v2WLwND+C3+F4xObkTQOEyrUO8eg3Ifk/UecczhzRQE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=F84f42tSwFu3uk4BUoq7jr6b2/16C+9a0+/+SPu3PLj51YrpUkiD/i0cIHAuJy8N/+9ULKPKh5hs+n4dWGGH0Uhk8uzjn8tFtHRUz/jAVYh886fDlBadyt7lZMtrsmVokkLSO2ixFY+J92QuciENel+EzcBaOzm5YdfgbkTIMKQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Qfl3/8Iw; arc=none smtp.client-ip=198.175.65.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Qfl3/8Iw"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1712138461; x=1743674461;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=v2WLwND+C3+F4xObkTQOEyrUO8eg3Ifk/UecczhzRQE=;
+  b=Qfl3/8IwqDiTabaECD6XRqlHSxxdyTa9HDorZi7w1sLpisYAp7DJoidi
+   rH1gvDZ5BDe3PonOA6Or1Tb3RIuQs2Yp3hDrNlIPOaKs7zxzxAB8iyJ+x
+   USrcZ0ii7EM+ICampd+7P3uM9uE8QykMIuyV8KrB+uK+k5ulqBZEYDIPF
+   kJMGLDWxCjrlnMjA2hHB0wZzpnBpIgVvX3bYf3R/uUWOWUUFkzOYYgqHB
+   /joq9V/qSkenLzYO0RAneSNccBH7PgOb5GhJ8drZt9dqqDIVAok189pCk
+   CvEINzJIbzaGn8ZEW9+uJgDC7mX1jft09mgvUKJeWAMl5hJCLdrmm1QDj
+   g==;
+X-CSE-ConnectionGUID: bqoUeFrdS7W9qLp+DcDVgA==
+X-CSE-MsgGUID: DEFo5Q62QumpDhM6n6341w==
+X-IronPort-AV: E=McAfee;i="6600,9927,11032"; a="7485036"
+X-IronPort-AV: E=Sophos;i="6.07,177,1708416000"; 
+   d="scan'208";a="7485036"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2024 03:00:48 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,11032"; a="915177057"
+X-IronPort-AV: E=Sophos;i="6.07,177,1708416000"; 
+   d="scan'208";a="915177057"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.72.54])
+  by fmsmga002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2024 03:00:44 -0700
+Received: from andy by smile with local (Exim 4.97)
+	(envelope-from <andriy.shevchenko@intel.com>)
+	id 1rrxQA-000000015CA-1Iup;
+	Wed, 03 Apr 2024 13:00:42 +0300
+Date: Wed, 3 Apr 2024 13:00:42 +0300
+From: Andy Shevchenko <andriy.shevchenko@intel.com>
+To: Guanbing Huang <albanhuang@outlook.com>
+Cc: gregkh@linuxfoundation.org, rafael.j.wysocki@intel.com,
+	linux-acpi@vger.kernel.org, tony@atomide.com,
+	john.ogness@linutronix.de, yangyicong@hisilicon.com,
+	jirislaby@kernel.org, linux-kernel@vger.kernel.org,
+	linux-serial@vger.kernel.org, lvjianmin@loongson.cn,
+	albanhuang@tencent.com, tombinfan@tencent.com
+Subject: Re: [PATCH v4 3/3] serial: 8250_pnp: Support configurable reg shift
+ property
+Message-ID: <Zg0oyldGmxbNnSLI@smile.fi.intel.com>
+References: <20240403074130.93811-1-albanhuang@outlook.com>
+ <PSAPR06MB495296BC1D96B42A60F7C230C93D2@PSAPR06MB4952.apcprd06.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] arm64: remove redundant 'extern'
-Content-Language: en-GB
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20240327112439.200455-1-steven.price@arm.com>
- <ZgvXljt6vdlVc1sF@FVFF77S0Q05N>
-From: Steven Price <steven.price@arm.com>
-In-Reply-To: <ZgvXljt6vdlVc1sF@FVFF77S0Q05N>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <PSAPR06MB495296BC1D96B42A60F7C230C93D2@PSAPR06MB4952.apcprd06.prod.outlook.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On 02/04/2024 11:01, Mark Rutland wrote:
-> On Wed, Mar 27, 2024 at 11:24:39AM +0000, Steven Price wrote:
->> It isn't necessary to mark function definitions extern and goes against
->> the kernel coding style. Remove the redundant extern keyword.
->>
->> Signed-off-by: Steven Price <steven.price@arm.com>
+On Wed, Apr 03, 2024 at 03:41:30PM +0800, Guanbing Huang wrote:
+> From: Guanbing Huang <albanhuang@tencent.com>
 > 
-> We (unfortunately) have extern misused in a number of places:
-> 
-> | [mark@lakrids:~/src/linux]% git grep 'extern.*(' -- arch/arm64/include | cut -d: -f 1 | uniq -c
-> |      11 arch/arm64/include/asm/cacheflush.h
-> |       1 arch/arm64/include/asm/checksum.h
-> |       1 arch/arm64/include/asm/cpu_ops.h
-> |       4 arch/arm64/include/asm/cpufeature.h
-> |       2 arch/arm64/include/asm/efi.h
-> |       2 arch/arm64/include/asm/elf.h
-> |       1 arch/arm64/include/asm/exec.h
-> |       1 arch/arm64/include/asm/fixmap.h
-> |      48 arch/arm64/include/asm/fpsimd.h
-> |       3 arch/arm64/include/asm/ftrace.h
-> |      10 arch/arm64/include/asm/hugetlb.h
-> |      11 arch/arm64/include/asm/hw_breakpoint.h
-> |       6 arch/arm64/include/asm/io.h
-> |       4 arch/arm64/include/asm/kexec.h
-> |       1 arch/arm64/include/asm/kgdb.h
-> |      16 arch/arm64/include/asm/kvm_asm.h
-> |       3 arch/arm64/include/asm/kvm_host.h
-> |      11 arch/arm64/include/asm/kvm_hyp.h
-> |       2 arch/arm64/include/asm/kvm_pkvm.h
-> |       2 arch/arm64/include/asm/memory.h
-> |       8 arch/arm64/include/asm/mmu.h
-> |       2 arch/arm64/include/asm/page.h
-> |       1 arch/arm64/include/asm/percpu.h
-> |       2 arch/arm64/include/asm/perf_event.h
-> |       2 arch/arm64/include/asm/pgalloc.h
-> |      18 arch/arm64/include/asm/pgtable.h
-> |       3 arch/arm64/include/asm/pointer_auth.h
-> |       3 arch/arm64/include/asm/proc-fns.h
-> |       2 arch/arm64/include/asm/processor.h
-> |       3 arch/arm64/include/asm/ptrace.h
-> |      12 arch/arm64/include/asm/smp.h
-> |       1 arch/arm64/include/asm/stacktrace.h
-> |      14 arch/arm64/include/asm/string.h
-> |       2 arch/arm64/include/asm/suspend.h
-> |       1 arch/arm64/include/asm/system_misc.h
-> |       6 arch/arm64/include/asm/uaccess.h
-> 
-> ... so it'd probably be best to make the commit title more specific to this
-> instance, and maybe go clean those up in bulk as a series to avoid a steady
-> stream of copycat patches.
+> The 16550a serial port based on the ACPI table requires obtaining the
+> reg-shift attribute. In the ACPI scenario, If the reg-shift property
+> is not configured like in DTS, the 16550a serial driver cannot read or
+> write controller registers properly during initialization.
 
-Ah, I hadn't gone looking that closely - I'll do a series updating the
-arch/arm64/include ones (thanks for the list ;) ), and I'll include an
-updated version of this patch, with a clearly commit title, in the series.
+...
 
-Thanks,
+>  		uart.port.mapbase = pnp_mem_start(dev, 0);
+> +		uart.port.mapsize = pnp_mem_end(dev, 0) - pnp_mem_start(dev, 0);
 
-Steve
+pnp_mem_len()
 
-> Mark.
-> 
->> ---
->>  arch/arm64/include/asm/fixmap.h | 2 +-
->>  1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/arch/arm64/include/asm/fixmap.h b/arch/arm64/include/asm/fixmap.h
->> index 87e307804b99..75b22b89db1a 100644
->> --- a/arch/arm64/include/asm/fixmap.h
->> +++ b/arch/arm64/include/asm/fixmap.h
->> @@ -107,7 +107,7 @@ void __init early_fixmap_init(void);
->>  #define __late_set_fixmap __set_fixmap
->>  #define __late_clear_fixmap(idx) __set_fixmap((idx), 0, FIXMAP_PAGE_CLEAR)
->>  
->> -extern void __set_fixmap(enum fixed_addresses idx, phys_addr_t phys, pgprot_t prot);
->> +void __set_fixmap(enum fixed_addresses idx, phys_addr_t phys, pgprot_t prot);
->>  
->>  #include <asm-generic/fixmap.h>
->>  
->> -- 
->> 2.34.1
->>
->>
+...
+
+Add a comment here to explain that
+
+	/*
+	 * The previous call may not set iotype correctly when reg-io-width
+	 * property is absent and it doesn't support IO port resource.
+	 */
+
+> +	uart.port.iotype = iotype;
+
+
+>  	uart.port.flags |= UPF_SKIP_TEST | UPF_BOOT_AUTOCONF;
+>  	if (pnp_irq_flags(dev, 0) & IORESOURCE_IRQ_SHAREABLE)
+>  		uart.port.flags |= UPF_SHARE_IRQ;
+> -	uart.port.uartclk = 1843200;
+> -	device_property_read_u32(&dev->dev, "clock-frequency", &uart.port.uartclk);
+> -	uart.port.dev = &dev->dev;
+> +	else
+> +		uart.port.flags &= ~UPF_SHARE_IRQ;
+
+This is not needed, just move
+
+	uart.port.flags |= UPF_SKIP_TEST | UPF_BOOT_AUTOCONF;
+
+to be before uart_read_properties().
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
 
