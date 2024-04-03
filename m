@@ -1,64 +1,57 @@
-Received: from mail-177132.yeah.net (mail-177132.yeah.net [123.58.177.132])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CADF417C8;
-	Wed,  3 Apr 2024 00:44:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=123.58.177.132
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98AE812E47;
+	Wed,  3 Apr 2024 00:45:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712105059; cv=none; b=UrfPLBvz/EwTvlZD043Z0A3hwLAvVKazP6+GKJdCtzKNzAI8WZAse35JtUCphagTvR4PRp8McI4oc1rZGA08pMd1TdwvB/UoE6O/5HtmWVIVQWAzNAUvTPdIxNDbISNvr3C9g4tQVMdNWD5cPVCX0kJN2JgSrwOgcBfWHvGUzMg=
+	t=1712105138; cv=none; b=t5JY05QFdqhTypWYWFilaxo5mGDqH8tS+EJcrFHGvdSH1YMntv/hh1szIRWKnH+xf2s85KAVt/hIM5UK9mLoLgsRF2dTURCOXluHBkE0pOJS2Z3PkBpEGhx+b12AZZCsz9V8jYGuTUaTsKc5RbwfLU6alHZNIQ2/+3gWDqaIzHQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712105059; c=relaxed/simple;
-	bh=LR99gG5LNLc23ySSEXkTJVAntBAds+rXUifHCtQe2rM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fCbJ5NHzmkQuOOKvX2u2pdiBOKcUK9s36NCv1wPHLlsvU4GWHFL2bmMR+MnOjQkHUymQoDOMgHj/6FiITFI/5+mCK6sluDDTZlyJ87K+iM60SJDsGVQHoIVKlanN/xH+QY0nOM6RXawcIZ2fqG4grKe6l5KPGmOIevzsQZdQj/w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yeah.net; spf=pass smtp.mailfrom=yeah.net; dkim=pass (1024-bit key) header.d=yeah.net header.i=@yeah.net header.b=EjzsYTj6; arc=none smtp.client-ip=123.58.177.132
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yeah.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yeah.net
+	s=arc-20240116; t=1712105138; c=relaxed/simple;
+	bh=1iP1fkRum/nFXhcUmp2itsi1QhT9K7/xfja8hI0pYKU=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=ZW45sbZpZXrMppPcZRgD6ahaey8+sEce5o5FBKRX03VT1pOqR8DjqhphfUsyroy6ePeBQzCo4mxTXJ8tsBxUnxQnAhWfLAp5VFKEWhDYmKB7CY1UDi5p/C3Gtv8kV/9vwpaEzFgyoI9sB2bfBzAk1Uj84R/3/tKKyyAgUEr0qsE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=o23BVmGE; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=yeah.net header.i=@yeah.net header.b="EjzsYTj6"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yeah.net;
-	s=s110527; h=Date:From:Subject:Message-ID:MIME-Version:
-	Content-Type; bh=V8Qan3vHh6zRqpFSLvYPjs8bOeaOc0YWEP6aFIgm3OI=;
-	b=EjzsYTj6IL2j8EWBlji8fjHVghR5ngdCS0mbH9zznASj8rxb/LxJTV5uZt41DV
-	bM76JwY9zp5fNlZ473qw19nTnDnLjawcMSaQShu8SquK3+XPSTN6enq11QkcxXJF
-	rbbaU5t3VfUkEAbQpXFMCp5/hJ9eeP48fCmcdXbskDpok=
-Received: from dragon (unknown [223.68.79.243])
-	by smtp2 (Coremail) with SMTP id C1UQrAC3n2hHpgxmDFOyAg--.55910S3;
-	Wed, 03 Apr 2024 08:43:52 +0800 (CST)
-Date: Wed, 3 Apr 2024 08:43:47 +0800
-From: Shawn Guo <shawnguo2@yeah.net>
-To: carlos.song@nxp.com
-Cc: shawnguo@kernel.org, robh@kernel.org, krzysztof.kozlowski+dt@linaro.org,
-	conor+dt@kernel.org, frank.li@nxp.com,
-	linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] arm64: dts: lx2160a: add pinmux and i2c gpio to support
- bus recovery
-Message-ID: <ZgymQ8D4JxviBJzP@dragon>
-References: <20240328061419.1956329-1-carlos.song@nxp.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="o23BVmGE"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E208CC433F1;
+	Wed,  3 Apr 2024 00:45:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1712105138;
+	bh=1iP1fkRum/nFXhcUmp2itsi1QhT9K7/xfja8hI0pYKU=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=o23BVmGEARVXMcTI63k8Ku8hl1/4DIdGxDB0thK6nl1dswtD2nxNw5ODAnGs/9IVJ
+	 VCVV+gPtUdXGE/hqCVJuVqym3Rh86EvSH8roe8TzHOswlGR+7UQvy2yacAopZQ9XmQ
+	 NBwkIxJwpJYmZrm3bXrNParV4RxRpeYXpK/x5IGgx19jfdUsmexRZBIsoaH3DAzbB0
+	 lXkLufrVXj0vjWePK5VYtTt4Ad7wPZOOCKSW3i4VZLErqyFurmalKAip6nbAB67f1C
+	 y8y1scvP4sQOmpY6riRUEQUbQOrFK8c4kms2DYpdS4TvOAEQ6deFbyd4oHBDDwU8mV
+	 EFO7kBHoZiJFA==
+Date: Tue, 2 Apr 2024 17:45:36 -0700
+From: Jakub Kicinski <kuba@kernel.org>
+To: Catalin Popescu <catalin.popescu@leica-geosystems.com>
+Cc: andrew@lunn.ch, hkallweit1@gmail.com, linux@armlinux.org.uk,
+ davem@davemloft.net, edumazet@google.com, pabeni@redhat.com,
+ netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+ m.felsch@pengutronix.de, bsp-development.geo@leica-geosystems.com
+Subject: Re: [PATCH net-next v2] net: phy: dp8382x: keep WOL settings across
+ suspends
+Message-ID: <20240402174536.75cbe074@kernel.org>
+In-Reply-To: <20240328133358.30544-1-catalin.popescu@leica-geosystems.com>
+References: <20240328133358.30544-1-catalin.popescu@leica-geosystems.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240328061419.1956329-1-carlos.song@nxp.com>
-X-CM-TRANSID:C1UQrAC3n2hHpgxmDFOyAg--.55910S3
-X-Coremail-Antispam: 1Uf129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
-	VFW2AGmfu7bjvjm3AaLaJ3UbIYCTnIWIevJa73UjIFyTuYvjxUs6pBUUUUU
-X-CM-SenderInfo: pvkd40hjxrjqh1hdxhhqhw/1tbiFQq1ZV6NnBsUdgAAs5
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Thu, Mar 28, 2024 at 02:14:19PM +0800, carlos.song@nxp.com wrote:
-> From: Carlos Song <carlos.song@nxp.com>
-> 
-> I2C bus recovery need a pinmux and gpio. So i2c driver can switch
-> gpio mode to toggle scl to recovery bus.
-> 
-> Add pinctrl-single node to every i2c bus on fsl-ls2160 layerscape
-> platform.
-> 
-> Signed-off-by: Carlos Song <carlos.song@nxp.com>
-> Reviewed-by: Frank Li <frank.li@nxp.com>
+On Thu, 28 Mar 2024 14:33:58 +0100 Catalin Popescu wrote:
+> -static int dp83822_set_wol(struct phy_device *phydev,
+> -			   struct ethtool_wolinfo *wol)
+> +static int _dp83822_set_wol(struct phy_device *phydev,
+> +			    struct ethtool_wolinfo *wol)
 
-Applied, thanks!
-
+Why the underscore, you can all this any number of things maybe
+dp83822_config_wol() or dp83822_apply_wol()?
