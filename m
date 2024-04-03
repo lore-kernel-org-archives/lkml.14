@@ -1,33 +1,42 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-108-mta241.mxroute.com (mail-108-mta241.mxroute.com [136.175.108.241])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E716524DC;
-	Wed,  3 Apr 2024 19:28:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CEEA15530C
+	for <linux-kernel@vger.kernel.org>; Wed,  3 Apr 2024 19:31:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=136.175.108.241
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712172537; cv=none; b=sAhzdc0v6Sy6gin28HdSDtIs5SwVNmAsQYOVwPi5bgHjUMFKg96jHG79yHAp9QeUP4r2mOE32x/6diRzJtTEMl/z1kvl66KKBW06C0MzLCf3cgx6G2f+hmtw7QbzagfK2v1Lvk6B46IoaYvGX1+lSfB2pwAEC4kYXlvWTuOeuBs=
+	t=1712172702; cv=none; b=WkPnBMprLshoVo1IKDvQlPLogcZgcoHIi/T5HqVoqLb2lTIXATAcGnJxUAMzCkIulJQMuwkCM6kkiqBLnnX4taNlFrqELq85zWy6uGI//14BircCwicBrRbzIX7Jh7rMSaiNqG8ms5b6G3r26FLBBs2J5M9uyogm1089gKEIC20=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712172537; c=relaxed/simple;
-	bh=wIDvUumWu/EEWCGpQDOZb7IhXYb40cMmso2xgFWKTHM=;
+	s=arc-20240116; t=1712172702; c=relaxed/simple;
+	bh=76e1lI7VK1Y3AgcsRGYmgm3RKxk+3ajIlh4AMiSSYYw=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=TE4Kj6nFlbATaUjfgkZxKECC4csNlPLXgI4w50mUWUD8S/6uODHHBAS7F8v6eEUbkyJGk4Hj643lpu8y+dKZfCLI85YN4Gc1e/n45+NxWbSnauFqR1BwwdLErTrOpRu+zsK2wR9R0NghIRKfKWdS8T2F2BDyFzWPM56uwVoeiHM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LtyrAN4F; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=Eq27pVGWDSg5FhR8RO7V7pdPZvDAYoWjRjxBD5oXa0nlM11hANKKjF+l6usxNYDnjrbKZ08ICcwBUBkf4bPxaPUvajpAQAMmTwDyFy/JCHaZqRGh4Ryu8Tg6f86AMl4p2pQtdMMsLX0hpgYiiZ3qIt4MbzUvtbrJtj3rrn7l/40=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=luigi311.com; spf=pass smtp.mailfrom=luigi311.com; dkim=pass (2048-bit key) header.d=luigi311.com header.i=@luigi311.com header.b=S3RWZ5Lh; arc=none smtp.client-ip=136.175.108.241
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=luigi311.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=luigi311.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LtyrAN4F"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5C015C433C7;
-	Wed,  3 Apr 2024 19:28:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712172537;
-	bh=wIDvUumWu/EEWCGpQDOZb7IhXYb40cMmso2xgFWKTHM=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=LtyrAN4FdI4WDUhTwLZovWHLjyrIHWDtABVsXdlAGf3KkXof1I6sh9KKqFI1yprVN
-	 Li+qkwbNE4DvixivSVv2b2HmjWyPBaUPsWR//7y9OGFVzPQkw+wkAYQtlOn5FrFZum
-	 ffHx54nXiqrawr7KcBe/I31XnMLnjRwNn74oBl0br5+Rsutna527WgAGxaw2Oyatr+
-	 8IVQMfblxol0W6IQmK01Ln7CqwOu/BAHrHTmG24uLqqkm2yfiWyFFhxFSTb3Xpoo1Y
-	 Ua9KC8GxGZAYVk1F2Z0F5ckEE4IfV+luLVNRU1leZAx2qj8P2fnhDCQoDt9Ld0SDz1
-	 81vnVkjPWn5sQ==
-Message-ID: <6faa47b0-27c3-47f9-94be-1ec671d9543c@kernel.org>
-Date: Wed, 3 Apr 2024 13:28:55 -0600
+	dkim=pass (2048-bit key) header.d=luigi311.com header.i=@luigi311.com header.b="S3RWZ5Lh"
+Received: from filter006.mxroute.com ([136.175.111.2] filter006.mxroute.com)
+ (Authenticated sender: mN4UYu2MZsgR)
+ by mail-108-mta241.mxroute.com (ZoneMTA) with ESMTPSA id 18ea56d55940003bea.010
+ for <linux-kernel@vger.kernel.org>
+ (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384);
+ Wed, 03 Apr 2024 19:26:29 +0000
+X-Zone-Loop: d425c0f111a54e67b3ef750cd397e772d9f8c71a96a5
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=luigi311.com; s=x; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:
+	From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+	List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=prk1k47e+GREA5iKHYPoCAjBnY3md7g8P9MzIfZYATE=; b=S3RWZ5LhYHLgJ+xuWVCEJmvHkf
+	SxOqkj5rgwWtDMB9uguiR5x+S/2TfjJWZ7ZSKZ03ImlbBp31P+q7zoVlDo0pB1FK5UvftgqgZcWpD
+	GVqLXEuXWr177zg411MIN7FdK4a94eg10BgzYMzuf85IfMZdvcl1wQi6JDfVVcu2MjheC506XE3n8
+	W+rrAQkNAD42UxyzAW9Jj5SRaX6zprTrM4LpDzCLGmmYrx/Z2uUIcA2d0xd//XYYNMqf6NBwQr/BW
+	0AL+090ts1F+J9BUDsTleVi4PYwVkykJrkjbAF7aCKie0H7tnAOS3DC19eC4LfhWCW4yCgb3VDnw3
+	vj/vaxJQ==;
+Message-ID: <c5c99f06-cf75-479b-ab1c-a28d1cd7c4e0@luigi311.com>
+Date: Wed, 3 Apr 2024 13:26:25 -0600
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,42 +44,45 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V4 0/5] mlx5 ConnectX control misc driver
+Subject: Re: [PATCH v3 22/25] dt-bindings: media: imx258: Add binding for
+ powerdown-gpio
+To: Pavel Machek <pavel@ucw.cz>
+Cc: linux-media@vger.kernel.org, dave.stevenson@raspberrypi.com,
+ jacopo.mondi@ideasonboard.com, mchehab@kernel.org, robh@kernel.org,
+ krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org, shawnguo@kernel.org,
+ s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
+ sakari.ailus@linux.intel.com, devicetree@vger.kernel.org,
+ imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org, phone-devel@vger.kernel.org,
+ Ondrej Jirman <megi@xff.cz>
+References: <20240403150355.189229-1-git@luigi311.com>
+ <20240403150355.189229-23-git@luigi311.com> <Zg2kn5/5T9ukP4nd@duo.ucw.cz>
 Content-Language: en-US
-To: Jason Gunthorpe <jgg@nvidia.com>
-Cc: Jakub Kicinski <kuba@kernel.org>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Christoph Hellwig <hch@infradead.org>, Saeed Mahameed <saeed@kernel.org>,
- Arnd Bergmann <arnd@arndb.de>, Leon Romanovsky <leonro@nvidia.com>,
- Jiri Pirko <jiri@nvidia.com>, Leonid Bloch <lbloch@nvidia.com>,
- Itay Avraham <itayavr@nvidia.com>, Saeed Mahameed <saeedm@nvidia.com>,
- Aron Silverton <aron.silverton@oracle.com>, linux-kernel@vger.kernel.org,
- "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
- Andy Gospodarek <andrew.gospodarek@broadcom.com>
-References: <20240304160237.GA2909161@nvidia.com>
- <9cc7127f-8674-43bc-b4d7-b1c4c2d96fed@kernel.org>
- <2024032248-ardently-ribcage-a495@gregkh>
- <510c1b6b-1738-4baa-bdba-54d478633598@kernel.org>
- <Zf2n02q0GevGdS-Z@C02YVCJELVCG> <20240322135826.1c4655e2@kernel.org>
- <e5c61607-4d66-4cd8-bf45-0aac2b3af126@kernel.org>
- <20240322154027.5555780a@kernel.org>
- <1cd2a70c-17b8-4421-b70b-3c0199a84a6a@kernel.org>
- <0ea32dd4-f408-5870-77eb-f18899f1ad44@gmail.com>
- <20240402184055.GP946323@nvidia.com>
-From: David Ahern <dsahern@kernel.org>
-In-Reply-To: <20240402184055.GP946323@nvidia.com>
+From: Luigi311 <git@luigi311.com>
+In-Reply-To: <Zg2kn5/5T9ukP4nd@duo.ucw.cz>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
+X-Authenticated-Id: git@luigi311.com
 
-On 4/2/24 12:40 PM, Jason Gunthorpe wrote:
-> and, as Jakub pointed out, a second argument about who gets to have
-> power in our community.
+On 4/3/24 12:49, Pavel Machek wrote:
+> Hi!
+> 
+>> From: Luis Garcia <git@luigi311.com>
+>>
+>> Add powerdown-gpio binding as it is required for some boards
+> 
+> "." at end of sentence.
+> 
+>> Signed-off-by: Ondrej Jirman <megi@xff.cz>
+>> Signed-off-by: Luis Garcia <git@luigi311.com>
+> 
+> If the patch is from Ondrej, he should be in From:, I believe.
+> 
+> Best regards,
+> 							Pavel
 
-I think that is the key summary of this disagreement: this is about
-power over what vendors are allowed to do with in-tree drivers.
-
-Jakub is taking the stance that because the devices have use cases with
-the networking stack, he (as a maintainer of netdev) gets a say on how
-those devices are accessed across the entire Linux code base and its
-various use cases. That the device can be used without a netdev seems to
-be irrelevant.
+Ohh your right, this was broken out from another patch and didn't
+set it to be his actual commit same with the other ones. They
+were based on his downstream changes and just modified to match
+up with what Dave had set the values too. I'll set it to him
+for the next revision. Thanks!
