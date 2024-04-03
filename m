@@ -1,32 +1,33 @@
-Received: from out30-113.freemail.mail.aliyun.com (out30-113.freemail.mail.aliyun.com [115.124.30.113])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF6903E48E;
-	Wed,  3 Apr 2024 08:29:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.113
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0ED0E6EB46;
+	Wed,  3 Apr 2024 08:29:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712132969; cv=none; b=ho6+ijI8R78pxaONgStjw4TUFIkPxn6vGz4Yxltvkzw8nbwGdLlI0EBE3QGakhnH9RZfdxRD1tZr3UKMQumBzzHSsCEl5parC41U1k6dEBkF3Q2PGxPY8YfjH/z1xC6td8SFhudA383whBZjNMWEoKpCEAyerTif96X5kTxmwYA=
+	t=1712132994; cv=none; b=Hz66Ka/o23Aqq8F3NU1fbAO1IU0YvpowjepipqSF0zet6/Gzus9XwCqij8Tpha9KUvdt1TSmrfWj/fRijzMHKBFfrAO/AkJunVRSA69e+fVjvEW0/p2E54duaC3bR6XqIlRwQP2pt8cvlFoTQLnfDf2Zu+Ni60HqpEayp2m2T78=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712132969; c=relaxed/simple;
-	bh=Ldfjw0TveG1bC27L02CGJ1El9aX9iApZ9fZGyu1A5wg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=HQuM189R0MWqJgf153p1wXmA2Lq/2s5TiMbkAmh8H2O3SfOOqiNt3cR2wuWoHaKnvd6S2BgsjlWLR69JtPANyo+Jc1WZVg3oinOXY1M1ic3Z2ZywYbIQs6qACB2V+ZBYG55azUMvi0O1+ey+n7VT5WOWKDgAp93LUu6t1xWIvX4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=R9aXz0Ht; arc=none smtp.client-ip=115.124.30.113
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	s=arc-20240116; t=1712132994; c=relaxed/simple;
+	bh=V7hshp8YwdyzWcNiPKdPqCT3ijnrNapazFii9glTbP4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=V2KJiybwMFC1opsejq3nEQwITxws0VYhPBdw40wXUHI0W1dDzPWXuXPrG7nbZ/dMhKQgX7lP3Ha6/RV8gmfa7GS2MSOb9HK9YnH+Tzsbok/vV+QEW6ZZdE5jat5WqqWOxA64OHACSqT5a3CwOsJYXZy/ufGH+WJvhnu9yFiifJc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lgxLatbc; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="R9aXz0Ht"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1712132958; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=6ARyxKsG7GVlym8JkJymXRlceZpVJP0pu/mDsnbzovQ=;
-	b=R9aXz0HtchVxIj0OkVENOP7cn2AfFizRkz0mdt8mvI73FcWSx0ysGaFPOaN+ZaHguEqXNlsr/eeR24y4bKKSzrI8BZ373JQxfl/fwJPrV4hYPSVbj6wg7FluO1tL1kw8ugKsABUjFoL8ZiB7LZ0EV3h0tQaP03EESXs0Njme5JM=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R191e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045192;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=20;SR=0;TI=SMTPD_---0W3r6Fd3_1712132955;
-Received: from 30.97.48.165(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0W3r6Fd3_1712132955)
-          by smtp.aliyun-inc.com;
-          Wed, 03 Apr 2024 16:29:16 +0800
-Message-ID: <dce83785-af96-4ff8-9552-56d73b5daf98@linux.alibaba.com>
-Date: Wed, 3 Apr 2024 16:29:14 +0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lgxLatbc"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E684CC433C7;
+	Wed,  3 Apr 2024 08:29:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1712132993;
+	bh=V7hshp8YwdyzWcNiPKdPqCT3ijnrNapazFii9glTbP4=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=lgxLatbcHdnbPBulu02mDhoeYzX6ORMNeRanf8a3GGozNvQJV7TIBMp6XJgK39DtT
+	 CpkwECroNXIPfB7GbvZ0ssBYr1ynP1dZa9rzNI/L3hCiPlnqtDLj0g4JCzLxcNUE00
+	 2qq5e85qykfWkuKkep888hWyGo8gRrVYZNS7/fl4pEd98rUA72R8LYYeIwg3Km45Zb
+	 I5/RedOCMSyGm4cI2fjEVPrONG50ELSblLPZIYWPWBOKsQkz94ndCWgUE4Ne+wBqyf
+	 YMiNvv8SctFeIn7W8/IzQ45F2L0wILzHt7S+mLjvJ/TC5AKKeM2SvoOrTHuIgK3HpA
+	 4oH8rfwBirifQ==
+Message-ID: <53e6b7af-1db3-439a-8085-9f0a3be1c3b6@kernel.org>
+Date: Wed, 3 Apr 2024 17:29:50 +0900
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -34,58 +35,149 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 00/13] fiemap extension for more physical information
-To: Sweet Tea Dorminy <sweettea-kernel@dorminy.me>,
- Jonathan Corbet <corbet@lwn.net>, Kent Overstreet
- <kent.overstreet@linux.dev>, Brian Foster <bfoster@redhat.com>,
- Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
- David Sterba <dsterba@suse.com>, Jaegeuk Kim <jaegeuk@kernel.org>,
- Chao Yu <chao@kernel.org>, Alexander Viro <viro@zeniv.linux.org.uk>,
- Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
- =?UTF-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>,
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-bcachefs@vger.kernel.org, linux-btrfs@vger.kernel.org,
- linux-f2fs-devel@lists.sourceforge.net, linux-fsdevel@vger.kernel.org,
- kernel-team@meta.com
-References: <cover.1712126039.git.sweettea-kernel@dorminy.me>
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
-In-Reply-To: <cover.1712126039.git.sweettea-kernel@dorminy.me>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Subject: Re: [PATCH 30/34] sata: mv: drop unnecessary #ifdef checks
+To: Arnd Bergmann <arnd@kernel.org>, linux-kernel@vger.kernel.org,
+ Niklas Cassel <cassel@kernel.org>,
+ Saeed Bishara <saeed@ubuntu-saeed.il.marvell.com>
+Cc: Arnd Bergmann <arnd@arndb.de>, Ma Ke <make_ruc2021@163.com>,
+ =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
+ Sergey Shtylyov <s.shtylyov@omp.ru>,
+ Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+ Jeff Garzik <jeff@garzik.org>, linux-ide@vger.kernel.org
+References: <20240403080702.3509288-1-arnd@kernel.org>
+ <20240403080702.3509288-31-arnd@kernel.org>
+Content-Language: en-US
+From: Damien Le Moal <dlemoal@kernel.org>
+Organization: Western Digital Research
+In-Reply-To: <20240403080702.3509288-31-arnd@kernel.org>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi,
-
-On 2024/4/3 15:22, Sweet Tea Dorminy wrote:
-> For many years, various btrfs users have written programs to discover
-> the actual disk space used by files, using root-only interfaces.
-> However, this information is a great fit for fiemap: it is inherently
-> tied to extent information, all filesystems can use it, and the
-> capabilities required for FIEMAP make sense for this additional
-> information also.
+On 4/3/24 17:06, Arnd Bergmann wrote:
+> From: Arnd Bergmann <arnd@arndb.de>
 > 
-> Hence, this patchset adds various additional information to fiemap,
-> and extends filesystems (but not iomap) to return it.  This uses some of
-> the reserved padding in the fiemap extent structure, so programs unaware
-> of the changes will be unaffected.
+> Building with W=1 shows a warning for an unused variable when CONFIG_PCI
+> is diabled:
 
-I'm not sure why here iomap was excluded technically or I'm missing some
-previous comments?
+s/diabled/disabled
+
+> drivers/ata/sata_mv.c:790:35: error: unused variable 'mv_pci_tbl' [-Werror,-Wunused-const-variable]
+> static const struct pci_device_id mv_pci_tbl[] = {
+> 
+> Move the table into the same block that containsn the pci_driver
+> definition.
+
+s/containsn/contains
+
+But no need to resend, I will fix that when applying.
+
+Thanks !
 
 > 
-> This is based on next-20240403. I've tested the btrfs part of this with
-> the standard btrfs testing matrix locally and manually, and done minimal
-> testing of the non-btrfs parts.
+> Fixes: 7bb3c5290ca0 ("sata_mv: Remove PCI dependency")
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> ---
+>  drivers/ata/sata_mv.c | 64 +++++++++++++++++++++----------------------
+>  1 file changed, 32 insertions(+), 32 deletions(-)
 > 
-> I'm unsure whether btrfs should be returning the entire physical extent
-> referenced by a particular logical range, or just the part of the
-> physical extent referenced by that range. The v2 thread has a discussion
-> of this.
+> diff --git a/drivers/ata/sata_mv.c b/drivers/ata/sata_mv.c
+> index e82786c63fbd..697063890f5d 100644
+> --- a/drivers/ata/sata_mv.c
+> +++ b/drivers/ata/sata_mv.c
+> @@ -787,37 +787,6 @@ static const struct ata_port_info mv_port_info[] = {
+>  	},
+>  };
+>  
+> -static const struct pci_device_id mv_pci_tbl[] = {
+> -	{ PCI_VDEVICE(MARVELL, 0x5040), chip_504x },
+> -	{ PCI_VDEVICE(MARVELL, 0x5041), chip_504x },
+> -	{ PCI_VDEVICE(MARVELL, 0x5080), chip_5080 },
+> -	{ PCI_VDEVICE(MARVELL, 0x5081), chip_508x },
+> -	/* RocketRAID 1720/174x have different identifiers */
+> -	{ PCI_VDEVICE(TTI, 0x1720), chip_6042 },
+> -	{ PCI_VDEVICE(TTI, 0x1740), chip_6042 },
+> -	{ PCI_VDEVICE(TTI, 0x1742), chip_6042 },
+> -
+> -	{ PCI_VDEVICE(MARVELL, 0x6040), chip_604x },
+> -	{ PCI_VDEVICE(MARVELL, 0x6041), chip_604x },
+> -	{ PCI_VDEVICE(MARVELL, 0x6042), chip_6042 },
+> -	{ PCI_VDEVICE(MARVELL, 0x6080), chip_608x },
+> -	{ PCI_VDEVICE(MARVELL, 0x6081), chip_608x },
+> -
+> -	{ PCI_VDEVICE(ADAPTEC2, 0x0241), chip_604x },
+> -
+> -	/* Adaptec 1430SA */
+> -	{ PCI_VDEVICE(ADAPTEC2, 0x0243), chip_7042 },
+> -
+> -	/* Marvell 7042 support */
+> -	{ PCI_VDEVICE(MARVELL, 0x7042), chip_7042 },
+> -
+> -	/* Highpoint RocketRAID PCIe series */
+> -	{ PCI_VDEVICE(TTI, 0x2300), chip_7042 },
+> -	{ PCI_VDEVICE(TTI, 0x2310), chip_7042 },
+> -
+> -	{ }			/* terminate list */
+> -};
+> -
+>  static const struct mv_hw_ops mv5xxx_ops = {
+>  	.phy_errata		= mv5_phy_errata,
+>  	.enable_leds		= mv5_enable_leds,
+> @@ -4303,6 +4272,37 @@ static int mv_pci_init_one(struct pci_dev *pdev,
+>  static int mv_pci_device_resume(struct pci_dev *pdev);
+>  #endif
+>  
+> +static const struct pci_device_id mv_pci_tbl[] = {
+> +	{ PCI_VDEVICE(MARVELL, 0x5040), chip_504x },
+> +	{ PCI_VDEVICE(MARVELL, 0x5041), chip_504x },
+> +	{ PCI_VDEVICE(MARVELL, 0x5080), chip_5080 },
+> +	{ PCI_VDEVICE(MARVELL, 0x5081), chip_508x },
+> +	/* RocketRAID 1720/174x have different identifiers */
+> +	{ PCI_VDEVICE(TTI, 0x1720), chip_6042 },
+> +	{ PCI_VDEVICE(TTI, 0x1740), chip_6042 },
+> +	{ PCI_VDEVICE(TTI, 0x1742), chip_6042 },
+> +
+> +	{ PCI_VDEVICE(MARVELL, 0x6040), chip_604x },
+> +	{ PCI_VDEVICE(MARVELL, 0x6041), chip_604x },
+> +	{ PCI_VDEVICE(MARVELL, 0x6042), chip_6042 },
+> +	{ PCI_VDEVICE(MARVELL, 0x6080), chip_608x },
+> +	{ PCI_VDEVICE(MARVELL, 0x6081), chip_608x },
+> +
+> +	{ PCI_VDEVICE(ADAPTEC2, 0x0241), chip_604x },
+> +
+> +	/* Adaptec 1430SA */
+> +	{ PCI_VDEVICE(ADAPTEC2, 0x0243), chip_7042 },
+> +
+> +	/* Marvell 7042 support */
+> +	{ PCI_VDEVICE(MARVELL, 0x7042), chip_7042 },
+> +
+> +	/* Highpoint RocketRAID PCIe series */
+> +	{ PCI_VDEVICE(TTI, 0x2300), chip_7042 },
+> +	{ PCI_VDEVICE(TTI, 0x2310), chip_7042 },
+> +
+> +	{ }			/* terminate list */
+> +};
+> +
+>  
+>  static struct pci_driver mv_pci_driver = {
+>  	.name			= DRV_NAME,
+> @@ -4315,6 +4315,7 @@ static struct pci_driver mv_pci_driver = {
+>  #endif
+>  
+>  };
+> +MODULE_DEVICE_TABLE(pci, mv_pci_tbl);
+>  
+>  /**
+>   *      mv_print_info - Dump key info to kernel log for perusal.
+> @@ -4487,7 +4488,6 @@ static void __exit mv_exit(void)
+>  MODULE_AUTHOR("Brett Russ");
+>  MODULE_DESCRIPTION("SCSI low-level driver for Marvell SATA controllers");
+>  MODULE_LICENSE("GPL v2");
+> -MODULE_DEVICE_TABLE(pci, mv_pci_tbl);
+>  MODULE_VERSION(DRV_VERSION);
+>  MODULE_ALIAS("platform:" DRV_NAME);
+>  
 
-Could you also make iomap support new FIEMAP physical extent information?
-since compressed EROFS uses iomap FIEMAP interface to report compressed
-extents ("z_erofs_iomap_report_ops") but there is no way to return
-correct compressed lengths, that is unexpected.
-
-Thanks,
-Gao Xiang
+-- 
+Damien Le Moal
+Western Digital Research
 
