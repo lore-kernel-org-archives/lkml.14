@@ -1,16 +1,16 @@
 Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5391B146A99
-	for <linux-kernel@vger.kernel.org>; Wed,  3 Apr 2024 12:50:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA55D146A78
+	for <linux-kernel@vger.kernel.org>; Wed,  3 Apr 2024 12:50:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712148655; cv=none; b=Aq6XwIgixqkS/vrhF49Phzx8p7tCofqQVA5Gmttr1uMicY1fXnOV5OOxJS8+xEuT3bJnMT9aW0B1o2G64BCd/QRJcLAw6quTv64ofcB7ZN14fs2i9XWY2WnfSrcfhHf3E+4gvaNKWxNSyaTz8k7QkpHevbhuBciZmCM/mS/Gjoo=
+	t=1712148655; cv=none; b=WQq48lVwE1n0RLjis8b++HlUlhQzIWjJ7l84wMRGCU/F/moRWqnCO2zNLdrjjwl80BWW+Da5vwPEPhoNT99ONZnLW8mRdvSsbRWvZEQnJ9dFYje06inzU/1RL0c8BIIUyt/EP2NeEuls/Qm/IsBImO6gVkZPK1jTAujaI2bK+z4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1712148655; c=relaxed/simple;
-	bh=nMx4gjGN1qXXT7qNACadIA0e3XqnSWgfBQC/sksnoHg=;
+	bh=Bcc7wC539i7cfCgpBSkB4ImTrUNgqBAy5MoTxbGa6hg=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=DE9q6gDX0Zd74FMeLdqunjtC85ftMrgkYJLdV+uLiil3rgDlegE+qssAazTqxVYEnCSD1Ei4dnNWua4L7Ar52zF/pJKPT5q/3V7yor8yhx6X6WgIDxAmDGiHkrTS/+oX55UgErtA+eXrHye7/lMxsQjzGNgQIefBkimCauhrk9I=
+	 MIME-Version; b=o5e6RqrOtjf/X+x6X3fryrXuG1ttUFI9CKZ9NR86NsJ4kl1AEjmHFyO5mXJcaDnvlC2OASYJjVKBI0pbIGJbWIJErKrDuv9SjqVaIhcl92OKee9os7UjvKwQ8hN/GWCfqanHyAedqBxo/LigAV2BvyaYYwuUToEPPMirhH2P5E4=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
@@ -18,16 +18,16 @@ Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
 	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
 	(Exim 4.92)
 	(envelope-from <ore@pengutronix.de>)
-	id 1rs04h-0005uZ-0a; Wed, 03 Apr 2024 14:50:43 +0200
+	id 1rs04h-0005yV-0Z; Wed, 03 Apr 2024 14:50:43 +0200
 Received: from [2a0a:edc0:0:1101:1d::ac] (helo=dude04.red.stw.pengutronix.de)
 	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
 	(Exim 4.94.2)
 	(envelope-from <ore@pengutronix.de>)
-	id 1rs04e-00ABEU-Th; Wed, 03 Apr 2024 14:50:40 +0200
+	id 1rs04f-00ABEm-Fz; Wed, 03 Apr 2024 14:50:41 +0200
 Received: from ore by dude04.red.stw.pengutronix.de with local (Exim 4.96)
 	(envelope-from <ore@pengutronix.de>)
-	id 1rs04e-00EKWZ-2R;
-	Wed, 03 Apr 2024 14:50:40 +0200
+	id 1rs04f-00EKbB-1F;
+	Wed, 03 Apr 2024 14:50:41 +0200
 From: Oleksij Rempel <o.rempel@pengutronix.de>
 To: "David S. Miller" <davem@davemloft.net>,
 	Andrew Lunn <andrew@lunn.ch>,
@@ -44,9 +44,9 @@ Cc: Oleksij Rempel <o.rempel@pengutronix.de>,
 	netdev@vger.kernel.org,
 	UNGLinuxDriver@microchip.com,
 	=?UTF-8?q?S=C3=B8ren=20Andersen?= <san@skov.dk>
-Subject: [PATCH net-next v2 2/8] net: dsa: microchip: Make ksz8_r_dyn_mac_table() static
-Date: Wed,  3 Apr 2024 14:50:33 +0200
-Message-Id: <20240403125039.3414824-3-o.rempel@pengutronix.de>
+Subject: [PATCH net-next v2 8/8] net: dsa: microchip: ksz8_r_dyn_mac_table(): use entries variable to signal 0 entries
+Date: Wed,  3 Apr 2024 14:50:39 +0200
+Message-Id: <20240403125039.3414824-9-o.rempel@pengutronix.de>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20240403125039.3414824-1-o.rempel@pengutronix.de>
 References: <20240403125039.3414824-1-o.rempel@pengutronix.de>
@@ -62,45 +62,70 @@ X-SA-Exim-Mail-From: ore@pengutronix.de
 X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
 X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-ksz8_r_dyn_mac_table() is not used outside the source file. Make it
-static.
+We already have a variable to provide number of entries. So use it,
+instead of using error number.
 
 Reviewed-by: Vladimir Oltean <olteanv@gmail.com>
 Acked-by: Arun Ramadoss <arun.ramadoss@microchip.com>
 Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
 ---
- drivers/net/dsa/microchip/ksz8.h    | 2 --
- drivers/net/dsa/microchip/ksz8795.c | 4 ++--
- 2 files changed, 2 insertions(+), 4 deletions(-)
+ drivers/net/dsa/microchip/ksz8795.c | 24 +++++++-----------------
+ 1 file changed, 7 insertions(+), 17 deletions(-)
 
-diff --git a/drivers/net/dsa/microchip/ksz8.h b/drivers/net/dsa/microchip/ksz8.h
-index 5b38cbb7b058b..571c26ce71e47 100644
---- a/drivers/net/dsa/microchip/ksz8.h
-+++ b/drivers/net/dsa/microchip/ksz8.h
-@@ -19,8 +19,6 @@ void ksz8_flush_dyn_mac_table(struct ksz_device *dev, int port);
- void ksz8_port_setup(struct ksz_device *dev, int port, bool cpu_port);
- int ksz8_r_phy(struct ksz_device *dev, u16 phy, u16 reg, u16 *val);
- int ksz8_w_phy(struct ksz_device *dev, u16 phy, u16 reg, u16 val);
--int ksz8_r_dyn_mac_table(struct ksz_device *dev, u16 addr, u8 *mac_addr,
--			 u8 *fid, u8 *src_port, u16 *entries);
- void ksz8_r_mib_cnt(struct ksz_device *dev, int port, u16 addr, u64 *cnt);
- void ksz8_r_mib_pkt(struct ksz_device *dev, int port, u16 addr,
- 		    u64 *dropped, u64 *cnt);
 diff --git a/drivers/net/dsa/microchip/ksz8795.c b/drivers/net/dsa/microchip/ksz8795.c
-index f59a03e6981d2..e407111db6637 100644
+index de3d8357da855..ecef6f6f830b3 100644
 --- a/drivers/net/dsa/microchip/ksz8795.c
 +++ b/drivers/net/dsa/microchip/ksz8795.c
-@@ -408,8 +408,8 @@ static int ksz8_valid_dyn_entry(struct ksz_device *dev, u8 *data)
- 	return 0;
+@@ -399,19 +399,11 @@ static int ksz8_valid_dyn_entry(struct ksz_device *dev, u8 *data)
+ 	} while ((*data & masks[DYNAMIC_MAC_TABLE_NOT_READY]) && timeout);
+ 
+ 	/* Entry is not ready for accessing. */
+-	if (*data & masks[DYNAMIC_MAC_TABLE_NOT_READY]) {
++	if (*data & masks[DYNAMIC_MAC_TABLE_NOT_READY])
+ 		return -ETIMEDOUT;
+-	/* Entry is ready for accessing. */
+-	} else {
+-		ret = ksz_read8(dev, regs[REG_IND_DATA_8], data);
+-		if (ret)
+-			return ret;
+ 
+-		/* There is no valid entry in the table. */
+-		if (*data & masks[DYNAMIC_MAC_TABLE_MAC_EMPTY])
+-			return -ENXIO;
+-	}
+-	return 0;
++	/* Entry is ready for accessing. */
++	return ksz_read8(dev, regs[REG_IND_DATA_8], data);
  }
  
--int ksz8_r_dyn_mac_table(struct ksz_device *dev, u16 addr, u8 *mac_addr,
--			 u8 *fid, u8 *src_port, u16 *entries)
-+static int ksz8_r_dyn_mac_table(struct ksz_device *dev, u16 addr, u8 *mac_addr,
-+				u8 *fid, u8 *src_port, u16 *entries)
- {
- 	u32 data_hi, data_lo;
- 	const u8 *shifts;
+ static int ksz8_r_dyn_mac_table(struct ksz_device *dev, u16 addr, u8 *mac_addr,
+@@ -439,13 +431,13 @@ static int ksz8_r_dyn_mac_table(struct ksz_device *dev, u16 addr, u8 *mac_addr,
+ 		goto unlock_alu;
+ 
+ 	ret = ksz8_valid_dyn_entry(dev, &data);
+-	if (ret == -ENXIO) {
+-		*entries = 0;
++	if (ret)
+ 		goto unlock_alu;
+-	}
+ 
+-	if (ret)
++	if (data & masks[DYNAMIC_MAC_TABLE_MAC_EMPTY]) {
++		*entries = 0;
+ 		goto unlock_alu;
++	}
+ 
+ 	ret = ksz_read64(dev, regs[REG_IND_DATA_HI], &buf);
+ 	if (ret)
+@@ -1210,8 +1202,6 @@ int ksz8_fdb_dump(struct ksz_device *dev, int port,
+ 	for (i = 0; i < KSZ8_DYN_MAC_ENTRIES; i++) {
+ 		ret = ksz8_r_dyn_mac_table(dev, i, mac, &fid, &src_port,
+ 					   &entries);
+-		if (ret == -ENXIO)
+-			return 0;
+ 		if (ret)
+ 			return ret;
+ 
 -- 
 2.39.2
 
