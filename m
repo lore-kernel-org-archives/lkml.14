@@ -1,133 +1,92 @@
-Received: from smtpbg150.qq.com (smtpbg150.qq.com [18.132.163.193])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDAE014A60B;
-	Wed,  3 Apr 2024 16:00:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=18.132.163.193
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1EC214A63E
+	for <linux-kernel@vger.kernel.org>; Wed,  3 Apr 2024 16:01:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712160058; cv=none; b=JFBWM7c3nmklLOHq0h6rrTBS7Nb2I8VYQMDq8P4qzWMYCheX23R4r/KsWN6MayoiwFf79AaU1dDmdJ/8Zyhs2lbvVXNqpZTi4rPfHVo6VTnn0MLfXviKKPZICSCPlloFbHQ6+XzHhlaS/PGJBwdqYV6c7jIba+w/t1ndnxHyD7c=
+	t=1712160069; cv=none; b=lKmX/QHoBPvREEyKlBA+kvsxPPfxR+JvEy0CswHJkc93slhH4Zx1HnaGH1C9/NA8ojhFdiNXD4vD1McWXpszpY+5uLrwhbUiNhXV9G04HAAbFssbPXq69mU1TvumZVPCYmBuK703VJamBa3iyjWd+UfdylLN+ZeURN4iTz/aT5s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712160058; c=relaxed/simple;
-	bh=Re5TwhQ0QoFy44j2poIlImy55nEU9kHehFfmXVKdsDQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=jf6QP8V39iUIKmmVfYR/PaVEEBx0esEOh3fVmQaSZ21D54isIpXz8Z4Fr5F/Cxa5vLa8Q4yrsWzJLrjwzZvis6mux8YxDw2GxnyGF2Iq61NWy9L3UAgXLe3KuqGrvPaT4zWoESpoY6zUFVNMmneQNhdNqfepjxMgU//F+6ZYXYA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=shingroup.cn; spf=pass smtp.mailfrom=shingroup.cn; arc=none smtp.client-ip=18.132.163.193
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=shingroup.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=shingroup.cn
-X-QQ-mid: bizesmtp77t1712160023t7n4x2zy
-X-QQ-Originating-IP: NTtCm7ktjbZulINOAFz6JghguX6D2QjGo7ZDoGhqPtU=
-Received: from localhost ( [112.0.147.175])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Thu, 04 Apr 2024 00:00:21 +0800 (CST)
-X-QQ-SSF: 01400000000000704000000A0000000
-X-QQ-FEAT: PsQCk6chbj6H0R2JyVeosBvbfWGGmUV0DIlqOAOud3eD3r83QAu+mqAt4k3eq
-	87D4aIBW4SGST5Lh5/PMmW6bOU9m5TALOHl/WFrBYFJWqAaA/CHtPsy3+Oa0+tYH5M91e6C
-	wWCOwvDrp2Qa2d/jagAdrICWq4eLuTmdviD+63HmJWRFShpXGwpaLJe9xeeEzuBwsZxRuYC
-	n8RRjsPBBwJqNVYA2Hzx1e2coww2GOtuSZZMfRpiKDp9RMmCN7JemJHx+ulZ4hqgVU0lkgN
-	XKlnP2AJCLC6rhJmve3ZSj+DSl7KXTb1nWNULeHhbarqUiFN6UOteUH6Fqu7Lc5WywP+mAF
-	N+8VzmmO6Ij2A1uh8sdyA136HVDJSYcOSrTVjmD90trpfH2Nb8=
-X-QQ-GoodBg: 2
-X-BIZMAIL-ID: 16982553282535320549
-From: Dawei Li <dawei.li@shingroup.cn>
-To: will@kernel.org,
-	mark.rutland@arm.com,
-	yury.norov@gmail.com,
-	linux@rasmusvillemoes.dk
-Cc: xueshuai@linux.alibaba.com,
-	renyu.zj@linux.alibaba.com,
-	yangyicong@hisilicon.com,
-	jonathan.cameron@huawei.com,
-	andersson@kernel.org,
-	konrad.dybcio@linaro.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	linux-arm-msm@vger.kernel.org,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Rusty Russell <rusty@rustcorp.com.au>,
-	Dawei Li <dawei.li@shingroup.cn>
-Subject: [PATCH v3 01/10] cpumask: add cpumask_any_and_but()
-Date: Wed,  3 Apr 2024 23:59:41 +0800
-Message-Id: <20240403155950.2068109-2-dawei.li@shingroup.cn>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20240403155950.2068109-1-dawei.li@shingroup.cn>
-References: <20240403155950.2068109-1-dawei.li@shingroup.cn>
+	s=arc-20240116; t=1712160069; c=relaxed/simple;
+	bh=hD5yDhx3K11qOSGBNDBsF2hWDD99wueNyoFwjeFs7nU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=MJDpC7ObIqEBGH3GMggLq3kmJAHToaGxgMinbMpU+c8AAaQ1hvrkP91dAc1p4ediku7YnJdGPq+7gnc6ku0DF0SECSe3dmLyyscnvzEHLECiyu61z24L2JIcdkUBXNGaiWj6i8tJSPlDAnpNS/lfRoSjOMg3w8J9rYcBigZkE30=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=PiIS8z13; arc=none smtp.client-ip=209.85.208.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="PiIS8z13"
+Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-56e0c7f7ba3so11021a12.0
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Apr 2024 09:01:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1712160066; x=1712764866; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=hD5yDhx3K11qOSGBNDBsF2hWDD99wueNyoFwjeFs7nU=;
+        b=PiIS8z13223ePGsajmfUoutx9n2GPnlrR8QsR7lKnd/nqw7KckVpbjoJnCrXhS28vD
+         nyAYRWgZ+K4LO/T/Ybm4qyiJdx1EWESdN+VLePz9scAt3eIwtz8+q8X1vNZ7GSPKOGTk
+         SOqhts7JbIDTL04yguorV5oAAelpCyEMUgAwS7/SakOtPJdLkYBB4v2WrFJdLRrOB1AX
+         +sfGFRtOGrNDmdhkce+RScjuqrg+Dskf/84KkhrsR+EXvIDq00vwyxQtXXTjEiZzWGYz
+         NoTwG+/w+bgFUzqxevLvjx5ptLytKaHb79djUamFS4syp/dON3cgJnfdU3vQTOnYkOXx
+         o0rQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712160066; x=1712764866;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=hD5yDhx3K11qOSGBNDBsF2hWDD99wueNyoFwjeFs7nU=;
+        b=na+QnWhkM8U1k2iTIBTJfiYXR7grd/2RZs2PPhmi7bsCljMaCv0GI8XFxE15g+g/56
+         9r6x6k16wgbV4kT+KNFA7YhfKa346aevlkHpXwdIVcqapSUJUoBxnS+eoJM46g9IUNPb
+         fLBx9IZ6ZupXnAvxN19s6XurGS3XWjTZlAhJCEsK7UkYmw3PS+BV2z8cOlY9h/y63g/y
+         0t1CixlOLDurxOvG1se+2elbmxOFcIbGA1NpoPcKCYTFe5/KuwqU1QJDab4alID9VWSr
+         ilFmMen/Nr3lXvutydbq5zUzYJWPvHTOVPj/nV0+DrfFcf5mPbhV8EHMGOzr5gwr1U64
+         72kA==
+X-Forwarded-Encrypted: i=1; AJvYcCX5+4y6v0qbPWsO2D/9GW32Tba5UgtQMjMWxB5VKrTz+9eNTH4BPFlRD1+h5vbl2JUzYaVLCfq6D27Agd2Lp/8r9aF9e+hSVIHmnfi6
+X-Gm-Message-State: AOJu0YyYSyyz66Z7jnbVNs2mwjhFG2qn6Zg4WRnvn7AEGY8mb2Y5DeIN
+	TEmeQXXl4rNACYaZwkQIutTs8kBUCNGEI62zKvSX7cp0JhoJtU9ilhUgMiQYB65+0lD7dmmbVuc
+	leA3mhGB3tBKx0P9bINClfrivAvwxtyn74pkxgqVKwwcqgPYoBQ==
+X-Google-Smtp-Source: AGHT+IEUmY9XudXmbpFwSucPJOjKBvKxMo721EBg4Wsq2djPREp76AztlrfJ+3Sjw6qS3cf7aq0MWe0rE1oJJtQ1BJ8=
+X-Received: by 2002:a05:6402:1c87:b0:56d:e27:369c with SMTP id
+ cy7-20020a0564021c8700b0056d0e27369cmr180575edb.3.1712160065956; Wed, 03 Apr
+ 2024 09:01:05 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-QQ-SENDSIZE: 520
-Feedback-ID: bizesmtp:shingroup.cn:qybglogicsvrgz:qybglogicsvrgz5a-1
+References: <20240403152844.4061814-1-almasrymina@google.com> <20240403152844.4061814-2-almasrymina@google.com>
+In-Reply-To: <20240403152844.4061814-2-almasrymina@google.com>
+From: Eric Dumazet <edumazet@google.com>
+Date: Wed, 3 Apr 2024 18:00:52 +0200
+Message-ID: <CANn89iKS2nwhzP-z0xwD4_R21+_7UjY1ajUbA2mFFi_gJpLtzg@mail.gmail.com>
+Subject: Re: [PATCH net-next v4 1/3] net: make napi_frag_unref reuse skb_page_unref
+To: Mina Almasry <almasrymina@google.com>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Ayush Sawal <ayush.sawal@chelsio.com>, "David S. Miller" <davem@davemloft.net>, 
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+	Steffen Klassert <steffen.klassert@secunet.com>, Herbert Xu <herbert@gondor.apana.org.au>, 
+	David Ahern <dsahern@kernel.org>, Boris Pismenny <borisp@nvidia.com>, 
+	John Fastabend <john.fastabend@gmail.com>, Tariq Toukan <tariqt@nvidia.com>, 
+	Dragos Tatulea <dtatulea@nvidia.com>, Simon Horman <horms@kernel.org>, 
+	Sabrina Dubroca <sd@queasysnail.net>, 
+	=?UTF-8?Q?Ahelenia_Ziemia=C5=84ska?= <nabijaczleweli@nabijaczleweli.xyz>, 
+	Pavan Chebbi <pavan.chebbi@broadcom.com>, 
+	Christophe JAILLET <christophe.jaillet@wanadoo.fr>, Yunsheng Lin <linyunsheng@huawei.com>, 
+	Florian Westphal <fw@strlen.de>, David Howells <dhowells@redhat.com>, 
+	Alexander Lobakin <aleksander.lobakin@intel.com>, Lorenzo Bianconi <lorenzo@kernel.org>, 
+	Johannes Berg <johannes.berg@intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Mark Rutland <mark.rutland@arm.com>
+On Wed, Apr 3, 2024 at 5:28=E2=80=AFPM Mina Almasry <almasrymina@google.com=
+> wrote:
+>
+> The implementations of these 2 functions are almost identical. Remove
+> the implementation of napi_frag_unref, and make it a call into
+> skb_page_unref so we don't duplicate the implementation.
+>
+> Signed-off-by: Mina Almasry <almasrymina@google.com>
 
-In some cases, it's useful to be able to select a random cpu from the
-intersection of two masks, excluding a particular CPU.
-
-For example, in some systems an uncore PMU is shared by a subset of
-CPUs, and management of this PMU is assigned to some arbitrary CPU in
-this set. Whenever the management CPU is hotplugged out, we wish to
-migrate responsibility to another arbitrary CPU which is both in this
-set and online.
-
-Today we can use cpumask_any_and() to select an arbitrary CPU in the
-intersection of two masks. We can also use cpumask_any_but() to select
-any arbitrary cpu in a mask excluding, a particular CPU.
-
-To do both, we either need to use a temporary cpumask, which is
-wasteful, or use some lower-level cpumask helpers, which can be unclear.
-
-This patch adds a new cpumask_any_and_but() to cater for these cases.
-
-Signed-off-by: Mark Rutland <mark.rutland@arm.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Rusty Russell <rusty@rustcorp.com.au>
-Cc: linux-kernel@vger.kernel.org
-Signed-off-by: Dawei Li <dawei.li@shingroup.cn>
----
- include/linux/cpumask.h | 23 +++++++++++++++++++++++
- 1 file changed, 23 insertions(+)
-
-diff --git a/include/linux/cpumask.h b/include/linux/cpumask.h
-index 1c29947db848..121f3ac757ff 100644
---- a/include/linux/cpumask.h
-+++ b/include/linux/cpumask.h
-@@ -388,6 +388,29 @@ unsigned int cpumask_any_but(const struct cpumask *mask, unsigned int cpu)
- 	return i;
- }
- 
-+/**
-+ * cpumask_any_and_but - pick a "random" cpu from *mask1 & *mask2, but not this one.
-+ * @mask1: the first input cpumask
-+ * @mask2: the second input cpumask
-+ * @cpu: the cpu to ignore
-+ *
-+ * Returns >= nr_cpu_ids if no cpus set.
-+ */
-+static inline
-+unsigned int cpumask_any_and_but(const struct cpumask *mask1,
-+				 const struct cpumask *mask2,
-+				 unsigned int cpu)
-+{
-+	unsigned int i;
-+
-+	cpumask_check(cpu);
-+	i = cpumask_first_and(mask1, mask2);
-+	if (i != cpu)
-+		return i;
-+
-+	return cpumask_next_and(cpu, mask1, mask2);
-+}
-+
- /**
-  * cpumask_nth - get the Nth cpu in a cpumask
-  * @srcp: the cpumask pointer
--- 
-2.27.0
-
+Reviewed-by: Eric Dumazet <edumazet@google.com>
