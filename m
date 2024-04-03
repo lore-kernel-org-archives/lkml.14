@@ -1,77 +1,105 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f50.google.com (mail-io1-f50.google.com [209.85.166.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3E00142E78;
-	Wed,  3 Apr 2024 13:44:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 833BB1DFCE
+	for <linux-kernel@vger.kernel.org>; Wed,  3 Apr 2024 13:44:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712151856; cv=none; b=pO1HnRYmoFUmkyWSbsCDYLcovusRbmxrSXBjnThO4DYXE7Oba/Bk5IGe+5leO8vSOI3mZG7mhp7GKoMDp1OZ61l9FFYXY4nVTEV3QaBZCDTT6MNFiQ4xWFwUkaeNX2WSpm5Lqn+vS63/bdWSwlM/o0ucTXs6V25Yt+xzmF7k70Q=
+	t=1712151896; cv=none; b=sPJCMK7FT/RUgsrZZs+HjaljgoLdim5BP3o402JhEi+SEO0H5j0ieYFtlxW+3F3VveB8PSTt1s7JdAfAJgG56Gj/2HmduU/JTSZUJaOrlZ7OWpP4dzdKfturbgmNeJMN+uCdnqNlgfEFMbXPutpCbNAirZ5n/LoZ6mupRhk/gWY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712151856; c=relaxed/simple;
-	bh=1mvS+FUBmyvtS+2wLIyVNxxyjhs4XFIhe+lp7x8KcA8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dUiR6jnrkkSD6mP1650GT2yasoIl4n80ew+mBzPdFVXKf66VjD1JcXrsWnc5+UNUhIZpFPvkv/YdMdgnlrj73b5yLs5dEF1l9qEqZ7TbTFt+NsCZH0AgNzJf3CZrqOQS90c1h4KQeHH6H+TX4lIqGsxrODyAwaBsVXQoiVrrXmo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=meEpAEPF; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1712151896; c=relaxed/simple;
+	bh=F75LonjtDwlNXFBva+zn4kv8XePXXdYv9gTZZ/GIFdg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=f7EVWzs6hdQjy1mprC7ERPQZgI9NwIbYzzMZFZt8WCx+POao+cvnJVWfS8INR0AfAPbdDi4/jL1iV5e5omZx/zilTvdVaY7WL018VwOszaC1luahmapen158+/nnGT+kzRjJ0QqnvAigsdEiMpe9qt43X+o01W60+jzVGHtF4Hg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=tb+ReZxg; arc=none smtp.client-ip=209.85.166.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="meEpAEPF"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D06FDC433C7;
-	Wed,  3 Apr 2024 13:44:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712151855;
-	bh=1mvS+FUBmyvtS+2wLIyVNxxyjhs4XFIhe+lp7x8KcA8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=meEpAEPFKNU4Dpjsyte4PeLIcSwKIMeTiIYTq0s+GkW7ul2JAtQLwcsIwS/A0wUm/
-	 wIsMoaLHtefy/uBxSLXnafwXh0sQp91tVT6uGeBbyy9NhbDMIEAIw2nSUir/uFiudi
-	 cIRYyHie8P3R7X2ilLxzHeH9h6HfVxlVfAZcaPEmNIscbNMNV33vQj0p5kBWUED4pv
-	 mZAxEq5QR4wRdi8ZDJf4U+fCDoVzQ3Is+S28IwQOx0c+dggd9PYTtNEGOFOdxUDUi9
-	 VC0rvqMI/KXBTLPD3MBb+P2rMp/IVa6hXseM314/k7ga91vRISWXqo/ykg039L1mui
-	 wMCILSBxRPZDQ==
-Date: Wed, 3 Apr 2024 14:44:09 +0100
-From: Conor Dooley <conor@kernel.org>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: stable@vger.kernel.org, patches@lists.linux.dev,
-	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
-	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de,
-	jonathanh@nvidia.com, f.fainelli@gmail.com,
-	sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de,
-	allen.lkml@gmail.com, broonie@kernel.org
-Subject: Re: [PATCH 6.1 000/272] 6.1.84-rc1 review
-Message-ID: <20240403-component-cuddly-ad80b8dd5db2@spud>
-References: <20240401152530.237785232@linuxfoundation.org>
+	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="tb+ReZxg"
+Received: by mail-io1-f50.google.com with SMTP id ca18e2360f4ac-7cb9dd46babso60478539f.1
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Apr 2024 06:44:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1712151893; x=1712756693; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=XYUiEK8E1sx7xpi6BOcpI2EaSW3yUWioYsWwaMCl5Gg=;
+        b=tb+ReZxgCubJoYxQEetWeeqtoX/BqGePEtWW7IWcckCBgrFdXemkjy+dPV++j2ajSe
+         D9zzhXLURPlYUmtxpHxkUVFUdXdh0efJU3Awxurd/N1ohuskh8jxlVTue28owSPsIVnb
+         OTNygT0K8JexcFBYR16HHfoVnBG1o3cTVlqfEc/GYEbiugGjs1E0a6ulxcrSvWNQqQ7h
+         J2y/rSRgdtoTsHKydNQemVh2bbdl/OFJizOBQSjbTrJYent19jE2n54To06LOdrwjorv
+         noNFQhVRr3zbmbIAEbuByDpIRaq2RTVQdHvt8vxccUydK/NQUC7WNJ0Aqylg5mHj9XLv
+         iQ9w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712151893; x=1712756693;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=XYUiEK8E1sx7xpi6BOcpI2EaSW3yUWioYsWwaMCl5Gg=;
+        b=EyOzRvY3kCVCN0chAvBovVY2cqpXJwgX2UXs1b/cfwtiVKZ2qcLzpleJJnDx4tbKGf
+         40VvH/sw3yRU21Ge6XrslZsQbAgR6GNV9k6tx+Ifygkr4rJZfcCCamHPW+0iimOUuioN
+         YfNgfPYLq2DW7xnG0VW8hG/AOgj7sm26bgw7/z9FP38tgeYU1jOaKuLjyn/Q90DkA+b+
+         SV199+9OJI0jibCdS4b8VlcdjH+ysav3Oxnt1ENonM7OJ2nKc/k4ERr0e4fwjpxBvtAg
+         05Nrj4ozMlb/Zwh6ApeUl8aAbpLmreeRSgjIpmGAO/xdPrZiWMGU40tzfJFwgFyhzZVl
+         yVeA==
+X-Forwarded-Encrypted: i=1; AJvYcCWfnouPqC0g4TErgSgwo+a3hzffVyThjnoJxOEb+vGJYQmMPfB7jn54nPnMMxLlilzGRQTC2xYwVqS/XlDcL/zsz5g4/Jbu84MmIkEl
+X-Gm-Message-State: AOJu0YxLkQJ85Nnl8XMJg8XmC4XwE2LuEY4CiAYZ0wDPsuCtzXTyi4Wm
+	3zYj+p7CuiTspcVlH3ZY2pJvcfbEecKi1Tc+GJo2/Fx/k9MWXzKfEwO/7WtytVE=
+X-Google-Smtp-Source: AGHT+IFiVj2+RbRrFiPSwAJLbcVhGhHRt/GlPoPiS3ctCNlSrvDN2vDkatZJo4osH6z/B6RQkar2kA==
+X-Received: by 2002:a05:6602:3422:b0:7d0:5b47:8f57 with SMTP id n34-20020a056602342200b007d05b478f57mr18956163ioz.1.1712151893563;
+        Wed, 03 Apr 2024 06:44:53 -0700 (PDT)
+Received: from [192.168.1.116] ([96.43.243.2])
+        by smtp.gmail.com with ESMTPSA id w9-20020a056638138900b0047f14f6a3f8sm477987jad.107.2024.04.03.06.44.52
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 03 Apr 2024 06:44:52 -0700 (PDT)
+Message-ID: <8fc38d0e-4138-4624-800e-b503bbd744e1@kernel.dk>
+Date: Wed, 3 Apr 2024 07:44:51 -0600
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="FIzDBGW8upI2VJvK"
-Content-Disposition: inline
-In-Reply-To: <20240401152530.237785232@linuxfoundation.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/3] userfaultfd: convert to ->read_iter()
+Content-Language: en-US
+To: Christian Brauner <brauner@kernel.org>
+Cc: linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20240402202524.1514963-1-axboe@kernel.dk>
+ <20240402202524.1514963-3-axboe@kernel.dk>
+ <20240403-plant-narren-2bbfb61f19f0@brauner>
+From: Jens Axboe <axboe@kernel.dk>
+In-Reply-To: <20240403-plant-narren-2bbfb61f19f0@brauner>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
+On 4/3/24 4:09 AM, Christian Brauner wrote:
+>> @@ -2215,16 +2216,25 @@ static int new_userfaultfd(int flags)
+>>  	init_rwsem(&ctx->map_changing_lock);
+>>  	atomic_set(&ctx->mmap_changing, 0);
+>>  	ctx->mm = current->mm;
+>> -	/* prevent the mm struct to be freed */
+>> -	mmgrab(ctx->mm);
+>> +
+>> +	fd = get_unused_fd_flags(O_RDONLY | (flags & UFFD_SHARED_FCNTL_FLAGS));
+>> +	if (fd < 0)
+>> +		goto err_out;
+>>  
+>>  	/* Create a new inode so that the LSM can block the creation.  */
+>> -	fd = anon_inode_create_getfd("[userfaultfd]", &userfaultfd_fops, ctx,
+>> +	file = anon_inode_create_getfile("[userfaultfd]", &userfaultfd_fops, ctx,
+>>  			O_RDONLY | (flags & UFFD_SHARED_FCNTL_FLAGS), NULL);
+>> -	if (fd < 0) {
+>> -		mmdrop(ctx->mm);
+>> -		kmem_cache_free(userfaultfd_ctx_cachep, ctx);
+>> +	if (IS_ERR(file)) {
+>> +		fd = PTR_ERR(file);
+>> +		goto err_out;
+> 
+> You're leaking the fd you allocated above.
 
---FIzDBGW8upI2VJvK
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Oops yes - thanks, fixed.
 
-On Mon, Apr 01, 2024 at 05:43:10PM +0200, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 6.1.84 release.
-> There are 272 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+-- 
+Jens Axboe
 
-Tested-by: Conor Dooley <conor.dooley@microchip.com>
-
---FIzDBGW8upI2VJvK
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZg1dHwAKCRB4tDGHoIJi
-0rRwAQChthDnZxgjhRFMtKS9jMJ38clP3XUHJdQV3+hKDWG6WQEAuvx7Xz4To90c
-cGZWTzOhSi0MgB2mZby1k9TMXTNuXAQ=
-=2qMD
------END PGP SIGNATURE-----
-
---FIzDBGW8upI2VJvK--
