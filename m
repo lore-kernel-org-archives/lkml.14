@@ -1,64 +1,36 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from exchange.fintech.ru (exchange.fintech.ru [195.54.195.159])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C80B148844;
-	Wed,  3 Apr 2024 14:47:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8470413AA52
+	for <linux-kernel@vger.kernel.org>; Wed,  3 Apr 2024 14:47:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.54.195.159
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712155657; cv=none; b=C3NiWHt4TVcd1wnYynTNtUbF9T/r2Fzv+zCcG1xFBOy3WQLEV+lq5pHhjF0aGqgl69ecGQ76tnzfrguBMbhFK/NmK4pq0RJGAKx2iz2zSDu4xvB5xMFwKq8JiH3HXGx+VNKt0LODUu9OkgOJ+4QYT4oSjF0XvzpDmXL4lvLZAy8=
+	t=1712155659; cv=none; b=m6g0iZLRl+o9iC059ccTy/6vSFAhORfeE0iWlSLlDucHlu1YKKG/ArGfES9jhsUH193W2qRWvi1gIaHVfn6o0mKge981riljb5lW6bkAIdcOq6VbBl6pQmvNc2UsU95rphdEW5Cy8Kwx9fGCdlLEnm2Kv/TtY5nif/L9R5FEV9A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712155657; c=relaxed/simple;
-	bh=S9rwJ5DHZRi91bSNfJSQU+68qy20MCGdSgbhClo+h0U=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=RZNqoNj7nXlGtzzBSpU9xCGg+JQj/O3wL9dVP8qPX5cjZK8jvVwl/6WCKZQJ9B90i8h5CHlucgdZa0ZdYK/Fx5PauqRAujBgiHZG76S4k6PL0M3FW3j2+GV0h6aXM8UyB0FFaj3fnmU6MVNoNbBB4/fuJ15F8Iy/ewllGP7Qu78=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Y2uk5nOo; arc=none smtp.client-ip=198.175.65.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Y2uk5nOo"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1712155654; x=1743691654;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=S9rwJ5DHZRi91bSNfJSQU+68qy20MCGdSgbhClo+h0U=;
-  b=Y2uk5nOomGBUThPtTVrZR0SXM9Aodplo+iVZj0XZpoPJdG2e3mYuXtO/
-   ElY0lGCB15caeJOre6EvHblVmhyRerV7saypWNcoKtor4vV9565w/LG35
-   bQyptoHdsmPk8WzdtTBQ9rgSRN/AabkT+JE+eqA5oiWL/TslIw+x031G8
-   lXG1HWQpbWdy1iudUAqyKOTVxWaEA2DqQiPBZ9u7fSxyYEwXfHOd863VQ
-   3CO1ukmEPyQUlqOnvx69MIeEF8I886eLoQDvEpOAj5yuLTDVQXQu+8qej
-   sxKmgd5CXs7vh/vAqdSIG07QNRL/2GMr41C+xesd2ya9TVoSqjplshMbh
-   Q==;
-X-CSE-ConnectionGUID: bM0E4HkiSEmmEcDMxOQizQ==
-X-CSE-MsgGUID: N3atT5wjRX+q/5Jl7fJE2w==
-X-IronPort-AV: E=McAfee;i="6600,9927,11033"; a="17963785"
-X-IronPort-AV: E=Sophos;i="6.07,177,1708416000"; 
-   d="scan'208";a="17963785"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2024 07:47:31 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,11033"; a="937085163"
-X-IronPort-AV: E=Sophos;i="6.07,177,1708416000"; 
-   d="scan'208";a="937085163"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga001.fm.intel.com with ESMTP; 03 Apr 2024 07:47:29 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-	id E37E33E5; Wed,  3 Apr 2024 17:47:28 +0300 (EEST)
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	linux-kernel@vger.kernel.org,
-	linux-serial@vger.kernel.org
-Cc: Jiri Slaby <jirislaby@kernel.org>,
-	Orson Zhai <orsonzhai@gmail.com>,
-	Baolin Wang <baolin.wang@linux.alibaba.com>,
-	Chunyan Zhang <zhang.lyra@gmail.com>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH v1 1/3] serial: core: Don't count XON/XOFF in the statistics
-Date: Wed,  3 Apr 2024 17:46:15 +0300
-Message-ID: <20240403144722.860258-2-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.43.0.rc1.1.gbec44491f096
-In-Reply-To: <20240403144722.860258-1-andriy.shevchenko@linux.intel.com>
-References: <20240403144722.860258-1-andriy.shevchenko@linux.intel.com>
+	s=arc-20240116; t=1712155659; c=relaxed/simple;
+	bh=8Pid9JdmhrcoZr0ymkIWECXLWqq8N6rDdyO+sMGc29Y=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=PX5ZxfO2Y/J+qS/lzCTf14rh2xF0yvhPJxhsARW0LKOZI9VcKMbN2zpRtwYfhR+00UMiQVDo4GTgFOy+NKkVoOdKMrjb6HUn7/pUlfoo6SGEsgOeqvOk/Q4BWviREGjHOddcJ9bfAxsPOib4LqU94r3JWrzY99K0C91CNjr+7Jg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fintech.ru; spf=pass smtp.mailfrom=fintech.ru; arc=none smtp.client-ip=195.54.195.159
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fintech.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fintech.ru
+Received: from Ex16-01.fintech.ru (10.0.10.18) by exchange.fintech.ru
+ (195.54.195.159) with Microsoft SMTP Server (TLS) id 14.3.498.0; Wed, 3 Apr
+ 2024 17:47:31 +0300
+Received: from localhost (10.0.253.138) by Ex16-01.fintech.ru (10.0.10.18)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2242.4; Wed, 3 Apr 2024
+ 17:47:31 +0300
+From: Nikita Zhandarovich <n.zhandarovich@fintech.ru>
+To: <syzbot+0ae4804973be759fa420@syzkaller.appspotmail.com>
+CC: Nikita Zhandarovich <n.zhandarovich@fintech.ru>,
+	<syzkaller-bugs@googlegroups.com>, <linux-kernel@vger.kernel.org>
+Subject: Re: [syzbot] WARNING in carl9170_usb_send_rx_irq_urb/usb_submit_urb
+Date: Wed, 3 Apr 2024 07:47:24 -0700
+Message-ID: <20240403144724.14960-1-n.zhandarovich@fintech.ru>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <0000000000002592aa05bccabae5@google.com>
+References:
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -66,39 +38,53 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: Ex16-02.fintech.ru (10.0.10.19) To Ex16-01.fintech.ru
+ (10.0.10.18)
 
-Don't count XON/XOFF in the statistics in __uart_port_tx().
-It will make it in align with other serial drivers. With
-this change we may use uart_xmit_advance() API instead of
-open coded analogue.
+Verify endpoints in carl9170_usb_probe, leave with error if any
+are missing.
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+#syz test https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
 ---
- include/linux/serial_core.h | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/net/wireless/ath/carl9170/usb.c | 27 +++++++++++++++++++++++++++
+ 1 file changed, 27 insertions(+)
 
-diff --git a/include/linux/serial_core.h b/include/linux/serial_core.h
-index 0a0f6e21d40e..9579d70a367e 100644
---- a/include/linux/serial_core.h
-+++ b/include/linux/serial_core.h
-@@ -767,7 +767,7 @@ enum UART_TX_FLAGS {
- 	struct circ_buf *xmit = &__port->state->xmit;			      \
- 	unsigned int pending;						      \
- 									      \
--	for (; (for_test) && (tx_ready); (for_post), __port->icount.tx++) {   \
-+	for (; (for_test) && (tx_ready); (for_post)) {			      \
- 		if (__port->x_char) {					      \
- 			(ch) = __port->x_char;				      \
- 			(put_char);					      \
-@@ -780,7 +780,7 @@ enum UART_TX_FLAGS {
- 									      \
- 		(ch) = xmit->buf[xmit->tail];				      \
- 		(put_char);						      \
--		xmit->tail = (xmit->tail + 1) % UART_XMIT_SIZE;		      \
-+		uart_xmit_advance(__port, 1);				      \
- 	}								      \
- 									      \
- 	(tx_done);							      \
--- 
-2.43.0.rc1.1.gbec44491f096
-
+diff --git a/drivers/net/wireless/ath/carl9170/usb.c b/drivers/net/wireless/ath/carl9170/usb.c
+index c4edf8355941..66d2ad561fd3 100644
+--- a/drivers/net/wireless/ath/carl9170/usb.c
++++ b/drivers/net/wireless/ath/carl9170/usb.c
+@@ -1069,6 +1069,33 @@ static int carl9170_usb_probe(struct usb_interface *intf,
+ 			ar->usb_ep_cmd_is_bulk = true;
+ 	}
+ 
++	/* Verify that all expected endpoints are present */
++	if (ar->usb_ep_cmd_is_bulk) {
++		u8 bulk_ep_addr[] = {
++			AR9170_USB_EP_RX | USB_DIR_IN,
++			AR9170_USB_EP_TX | USB_DIR_OUT,
++			AR9170_USB_EP_CMD | USB_DIR_OUT,
++			0};
++		u8 int_ep_addr[] = {
++			AR9170_USB_EP_IRQ | USB_DIR_IN,
++			0};
++		if (!usb_check_bulk_endpoints(intf, bulk_ep_addr) ||
++		    !usb_check_int_endpoints(intf, int_ep_addr))
++			return -ENODEV;
++	} else {
++		u8 bulk_ep_addr[] = {
++			AR9170_USB_EP_RX | USB_DIR_IN,
++			AR9170_USB_EP_TX | USB_DIR_OUT,
++			0};
++		u8 int_ep_addr[] = {
++			AR9170_USB_EP_IRQ | USB_DIR_IN,
++			AR9170_USB_EP_CMD | USB_DIR_OUT,
++			0};
++		if (!usb_check_bulk_endpoints(intf, bulk_ep_addr) ||
++		    !usb_check_int_endpoints(intf, int_ep_addr))
++			return -ENODEV;
++	}
++
+ 	usb_set_intfdata(intf, ar);
+ 	SET_IEEE80211_DEV(ar->hw, &intf->dev);
+ 
