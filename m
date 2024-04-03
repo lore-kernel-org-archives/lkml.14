@@ -1,187 +1,80 @@
-Received: from mail-4322.protonmail.ch (mail-4322.protonmail.ch [185.70.43.22])
+Received: from mail.mleia.com (mleia.com [178.79.152.223])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F012D2F24
-	for <linux-kernel@vger.kernel.org>; Wed,  3 Apr 2024 19:43:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.43.22
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBD571552FA;
+	Wed,  3 Apr 2024 19:48:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.79.152.223
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712173426; cv=none; b=ZqHp8fIZA0VgqYZ4dTTzl3WnaE+boTiepQyDk8oMopd8G1RzmthZANeASuDWH1qP0Q2Ah+1Q6mkTqXACeSXblWE2XK4rqvnxKMwTmAceUqIBDeGgpE8V0aPNTGvU8nBtGN7yPGvE1qTqEdpvlK5emO3x0OWQ24nVTp/vvSSRLTU=
+	t=1712173711; cv=none; b=oqUVSGNlk6sn80DP4DlITnG/qv34yMxVdycBO7Nw8I7op9P5eLRyrldUd61nVL2V/16RvBIVHUgL22FLiX50O+abFUYfgpyy1Unv9x8WZspfhB6M4WMV4cOctM/1GOqgjSov/F1SVVwwxnm6TCLDU133QdPcT8PvvlqFyyXYBKI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712173426; c=relaxed/simple;
-	bh=lzf+ES6yHZZVg6XniA+JFvQLjo8zG+VMBXl7BaaBibs=;
-	h=Date:To:From:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=DBLWRCAbd1qTx9RMgRMlwT0mw8kpAz3yTy8EkILL7qosTczKzilEKcQercbEsxh9dZyEsslSZAaKnzObp2/E2JBwQzqDRvoytd2MhAV7H/NTDaLlR4DamFEKyypiFEIT+6EkgM3Ggfo3BWxcUBWrh0f34hqszw7eYJQ2BmfUxwk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me; spf=pass smtp.mailfrom=proton.me; dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b=CWdGqKKH; arc=none smtp.client-ip=185.70.43.22
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
+	s=arc-20240116; t=1712173711; c=relaxed/simple;
+	bh=YgTe41TFlt+02N95B2a0BKSnw+zW/yykrDi7+gadw4Y=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=lV1IcV1n4p4iNHfxtWAk5hAcaXf2njz+DhY1iszP3jarS0kZMof85aeMcRJjZoHegSgw1ed2QT/yp1U9VFjVRAQBzqtmBuN8pryy+HmR+7if/SReTc8GFco7pgTIU5mKNxEn2mOBVtQjpKRWMN76xxLoz3xs7+vwx8mC9DsxbXw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mleia.com; spf=none smtp.mailfrom=mleia.com; dkim=pass (2048-bit key) header.d=mleia.com header.i=@mleia.com header.b=joOpIze7; dkim=pass (2048-bit key) header.d=mleia.com header.i=@mleia.com header.b=joOpIze7; arc=none smtp.client-ip=178.79.152.223
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mleia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=mleia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b="CWdGqKKH"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
-	s=protonmail; t=1712173422; x=1712432622;
-	bh=Z/cYaiGjtg8Hl/T+kAOXPPgB1Msfoi/aGGBHya0iD3M=;
-	h=Date:To:From:Cc:Subject:Message-ID:Feedback-ID:From:To:Cc:Date:
-	 Subject:Reply-To:Feedback-ID:Message-ID:BIMI-Selector;
-	b=CWdGqKKHsAsyjwmhI5qIPRNj3R979LLdUL13yfBfn2xREbHxs/5Nqcjh2uILvfI5O
-	 JZPJy+Otrd+NutyHe9h+ONVRsSIcKOyBuiuVFYGba+GsQZOau3ZW71NpEozrU/2Z+x
-	 hRaj2IQzTATd50O0EiLt6V546HEYTYe68Od/d9CRFpVqGj93a2ImfgGU9tw0TGQHyL
-	 vC+QA1/BmpAGTnSRjtsFB/UUFtIByWdp6Mm5f1FlbL/Qvnr9rWXpnCOdWkFcmyF65q
-	 7F/PnsO8oMpJD4it0zHRM5+iv2zdkOloAKCXUACNaGtzddHCLsi5ZEbREfo8KUXJUB
-	 npe1RSrkHXkMQ==
-Date: Wed, 03 Apr 2024 19:43:37 +0000
-To: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, Wedson Almeida Filho <wedsonaf@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@samsung.com>, Alice Ryhl <aliceryhl@google.com>, Martin Rodriguez Reboredo <yakoyoku@gmail.com>
-From: Benno Lossin <benno.lossin@proton.me>
-Cc: rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] rust: init: change the generated name of guard variables
-Message-ID: <20240403194321.88716-1-benno.lossin@proton.me>
-Feedback-ID: 71780778:user:proton
+	dkim=pass (2048-bit key) header.d=mleia.com header.i=@mleia.com header.b="joOpIze7";
+	dkim=pass (2048-bit key) header.d=mleia.com header.i=@mleia.com header.b="joOpIze7"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mleia.com; s=mail;
+	t=1712173367; bh=YgTe41TFlt+02N95B2a0BKSnw+zW/yykrDi7+gadw4Y=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=joOpIze7hYPykHqFQpqhIwnodHNIiFwDFrkxh+z2rHAslc7iyqp6+/MNJV6/+jWwX
+	 /yVIzkVhlPU2jeVF70X29QOi6AdeNacrZQrMHSi2EL8F4JbouH2vqQMfrLTaiDA+Rx
+	 5YIaFzKysRKAtHsiPenSBdZ9IQeKFERuRK0m+dZMtp80nfYWBLW3527lJhSmKuXKmi
+	 +S5kWuiZUWWirxWABEE2DeaXyNaAlm0aL21Npjijn+clZPp1SMK4l53//aqUIqJyBj
+	 pHSvh5aIMC2amXQqKFTdKw0gndL2H7Ly83mTmkzt3CTALfVe/dK0aJ0T5UdrygC3Z8
+	 h4wfEH1r0hDQA==
+Received: from mail.mleia.com (localhost [127.0.0.1])
+	by mail.mleia.com (Postfix) with ESMTP id 269AC464922;
+	Wed,  3 Apr 2024 19:42:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mleia.com; s=mail;
+	t=1712173367; bh=YgTe41TFlt+02N95B2a0BKSnw+zW/yykrDi7+gadw4Y=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=joOpIze7hYPykHqFQpqhIwnodHNIiFwDFrkxh+z2rHAslc7iyqp6+/MNJV6/+jWwX
+	 /yVIzkVhlPU2jeVF70X29QOi6AdeNacrZQrMHSi2EL8F4JbouH2vqQMfrLTaiDA+Rx
+	 5YIaFzKysRKAtHsiPenSBdZ9IQeKFERuRK0m+dZMtp80nfYWBLW3527lJhSmKuXKmi
+	 +S5kWuiZUWWirxWABEE2DeaXyNaAlm0aL21Npjijn+clZPp1SMK4l53//aqUIqJyBj
+	 pHSvh5aIMC2amXQqKFTdKw0gndL2H7Ly83mTmkzt3CTALfVe/dK0aJ0T5UdrygC3Z8
+	 h4wfEH1r0hDQA==
+Message-ID: <42ff72e4-e791-4b27-bf17-4f8a950264af@mleia.com>
+Date: Wed, 3 Apr 2024 22:42:45 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] clk: nxp: Remove an unused field in struct lpc18xx_pll
+Content-Language: en-US
+To: Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+ Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>
+Cc: linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
+ linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+References: <6cfb0e5251c3a59a156e70bcf6a0cc74aa764faa.1711985490.git.christophe.jaillet@wanadoo.fr>
+From: Vladimir Zapolskiy <vz@mleia.com>
+In-Reply-To: <6cfb0e5251c3a59a156e70bcf6a0cc74aa764faa.1711985490.git.christophe.jaillet@wanadoo.fr>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-49551924 
+X-CRM114-CacheID: sfid-20240403_194247_182173_86A86778 
+X-CRM114-Status: UNSURE (   5.38  )
+X-CRM114-Notice: Please train this message. 
 
-The initializers created by the `[try_][pin_]init!` macros utilize the
-guard pattern to drop already initialized fields, when initialization
-fails mid-way. These guards are generated to have the same name as the
-field that they handle. To prevent namespacing issues when the field
-name is the same as e.g. a constant name, add `__` as a prefix and
-`_guard` as the suffix.
+On 4/1/24 18:31, Christophe JAILLET wrote:
+> In "struct lpc18xx_pll", the 'lock' field is unused.
+> Remove it.
+> 
+> Found with cppcheck, unusedStructMember.
+> 
+> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 
-Signed-off-by: Benno Lossin <benno.lossin@proton.me>
----
- rust/kernel/init/macros.rs | 28 ++++++++++++++--------------
- 1 file changed, 14 insertions(+), 14 deletions(-)
+Thank you for the change!
 
-diff --git a/rust/kernel/init/macros.rs b/rust/kernel/init/macros.rs
-index cb6e61b6c50b..93bf4c3080f9 100644
---- a/rust/kernel/init/macros.rs
-+++ b/rust/kernel/init/macros.rs
-@@ -250,7 +250,7 @@
- //!                     // error type is `Infallible`) we will need to dro=
-p this field if there
- //!                     // is an error later. This `DropGuard` will drop t=
-he field when it gets
- //!                     // dropped and has not yet been forgotten.
--//!                     let t =3D unsafe {
-+//!                     let __t_guard =3D unsafe {
- //!                         ::pinned_init::__internal::DropGuard::new(::co=
-re::addr_of_mut!((*slot).t))
- //!                     };
- //!                     // Expansion of `x: 0,`:
-@@ -261,14 +261,14 @@
- //!                         unsafe { ::core::ptr::write(::core::addr_of_mu=
-t!((*slot).x), x) };
- //!                     }
- //!                     // We again create a `DropGuard`.
--//!                     let x =3D unsafe {
-+//!                     let __x_guard =3D unsafe {
- //!                         ::kernel::init::__internal::DropGuard::new(::c=
-ore::addr_of_mut!((*slot).x))
- //!                     };
- //!                     // Since initialization has successfully completed=
-, we can now forget
- //!                     // the guards. This is not `mem::forget`, since we=
- only have
- //!                     // `&DropGuard`.
--//!                     ::core::mem::forget(x);
--//!                     ::core::mem::forget(t);
-+//!                     ::core::mem::forget(__x_guard);
-+//!                     ::core::mem::forget(__t_guard);
- //!                     // Here we use the type checker to ensure that eve=
-ry field has been
- //!                     // initialized exactly once, since this is `if fal=
-se` it will never get
- //!                     // executed, but still type-checked.
-@@ -461,16 +461,16 @@
- //!             {
- //!                 unsafe { ::core::ptr::write(::core::addr_of_mut!((*slo=
-t).a), a) };
- //!             }
--//!             let a =3D unsafe {
-+//!             let __a_guard =3D unsafe {
- //!                 ::kernel::init::__internal::DropGuard::new(::core::add=
-r_of_mut!((*slot).a))
- //!             };
- //!             let init =3D Bar::new(36);
- //!             unsafe { data.b(::core::addr_of_mut!((*slot).b), b)? };
--//!             let b =3D unsafe {
-+//!             let __b_guard =3D unsafe {
- //!                 ::kernel::init::__internal::DropGuard::new(::core::add=
-r_of_mut!((*slot).b))
- //!             };
--//!             ::core::mem::forget(b);
--//!             ::core::mem::forget(a);
-+//!             ::core::mem::forget(__b_guard);
-+//!             ::core::mem::forget(__a_guard);
- //!             #[allow(unreachable_code, clippy::diverging_sub_expression=
-)]
- //!             let _ =3D || {
- //!                 unsafe {
-@@ -1192,14 +1192,14 @@ fn assert_zeroable<T: $crate::init::Zeroable>(_: *m=
-ut T) {}
-         // We use `paste!` to create new hygiene for `$field`.
-         ::kernel::macros::paste! {
-             // SAFETY: We forget the guard later when initialization has s=
-ucceeded.
--            let [<$field>] =3D unsafe {
-+            let [< __ $field _guard >] =3D unsafe {
-                 $crate::init::__internal::DropGuard::new(::core::ptr::addr=
-_of_mut!((*$slot).$field))
-             };
-=20
-             $crate::__init_internal!(init_slot($use_data):
-                 @data($data),
-                 @slot($slot),
--                @guards([<$field>], $($guards,)*),
-+                @guards([< __ $field _guard >], $($guards,)*),
-                 @munch_fields($($rest)*),
-             );
-         }
-@@ -1223,14 +1223,14 @@ fn assert_zeroable<T: $crate::init::Zeroable>(_: *m=
-ut T) {}
-         // We use `paste!` to create new hygiene for `$field`.
-         ::kernel::macros::paste! {
-             // SAFETY: We forget the guard later when initialization has s=
-ucceeded.
--            let [<$field>] =3D unsafe {
-+            let [< __ $field _guard >] =3D unsafe {
-                 $crate::init::__internal::DropGuard::new(::core::ptr::addr=
-_of_mut!((*$slot).$field))
-             };
-=20
-             $crate::__init_internal!(init_slot():
-                 @data($data),
-                 @slot($slot),
--                @guards([<$field>], $($guards,)*),
-+                @guards([< __ $field _guard >], $($guards,)*),
-                 @munch_fields($($rest)*),
-             );
-         }
-@@ -1255,14 +1255,14 @@ fn assert_zeroable<T: $crate::init::Zeroable>(_: *m=
-ut T) {}
-         // We use `paste!` to create new hygiene for `$field`.
-         ::kernel::macros::paste! {
-             // SAFETY: We forget the guard later when initialization has s=
-ucceeded.
--            let [<$field>] =3D unsafe {
-+            let [< __ $field _guard >] =3D unsafe {
-                 $crate::init::__internal::DropGuard::new(::core::ptr::addr=
-_of_mut!((*$slot).$field))
-             };
-=20
-             $crate::__init_internal!(init_slot($($use_data)?):
-                 @data($data),
-                 @slot($slot),
--                @guards([<$field>], $($guards,)*),
-+                @guards([< __ $field _guard >], $($guards,)*),
-                 @munch_fields($($rest)*),
-             );
-         }
+Acked-by: Vladimir Zapolskiy <vz@mleia.com>
 
-base-commit: 9ffe2a730313f27cebd0859ea856247ac59c576c
---=20
-2.44.0
-
-
+--
+Best wishes,
+Vladimir
