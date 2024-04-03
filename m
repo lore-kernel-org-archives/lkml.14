@@ -1,363 +1,105 @@
-Received: from mail-m6014.netease.com (mail-m6014.netease.com [210.79.60.14])
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E59C1552FF;
-	Wed,  3 Apr 2024 20:27:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.79.60.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AAE943AB6;
+	Wed,  3 Apr 2024 20:27:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712176028; cv=none; b=shrPSNjZ0FTdg1ij9j3JIGJFOrLftBl5ARZ/JT1PMm0mWrypHJi5MXB8S5jpOMibTj386Euw/qEup0CR9qBlyf3BH30C5pxKwvbEmn6ME4Ol/ib/1Iol8W2ArgVUYGKRGH2YfYc3qA5mX7igaou4QkkVsOvU7d41v4Ac3tejIyI=
+	t=1712176078; cv=none; b=ryQ+vSx5aKmBPYU28d0P7jx0c9LQTCdVvaZu+APQRfktosQ6EOi9ctsS8qZ1zAYn0d1rUE0oieGQrgTbyJ5QCTic67s6OXPfkZ0kLs7PV8f7Nc30P0I/W4H6hJmLv/cTBykXR90hsVYO3Lxsi0G6Hk7D3L8vinMGT0c66foGrcc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712176028; c=relaxed/simple;
-	bh=/fFUjDe76W88FMC5zvU+GYanZ0TGzOUQc4hmIjl9S2Q=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=d27ywi60B982j3vJL3RzjeqXxD/F/ootLqgbI4e5q94e88tI36TxJI19dqn2C5shaJ+PSG67PI/NgfBJOdT8CIz0mroOJXAt0L2eRW8jwO6TYqsqgdClJmEtzDXhyVrZ6JQk/+CXVoDIYVy7O8VJf5alnlBsI1bY6yBtBwznrIE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com; spf=pass smtp.mailfrom=rock-chips.com; dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b=Twxq+8BP; arc=none smtp.client-ip=210.79.60.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rock-chips.com
+	s=arc-20240116; t=1712176078; c=relaxed/simple;
+	bh=XHvAvMoXgu7sPpDI3qeu0ABKCV3BEWhlCfPnZ6zc33o=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=IkT5hQdpsBptP3lZcqJXBrqyC6ejiF+/1rOWh5RoQCuj5jW0VfqOX+QEiBKYfn2TT+Km6WWg8KrYcbOJZZiwudzPDMfH46QHOmSD5PdHwd2mO2dzl/znX2O+P5pmtxtKxc5cBLX7LMSjToROdSyEhOeQoNN4cuFXhOD3AbIz0NU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=Fbni1UMr; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b="Twxq+8BP"
-DKIM-Signature: a=rsa-sha256;
-	b=Twxq+8BPn6Ew6c5IN41J2dg9vFrin0dSix2y8CIvTY1GtleMVkxEpYB/TmfQxC0Z6wYGNC08+CUxJnbOfJu61UpUl/M4b3IwVS4YAeHuCcMh2Q2yeNt8WLYbEfmYZozaPuMiMdJuTi+redM69s7AY2sZytu+/N/UHq/zwYBmg0k=;
-	c=relaxed/relaxed; s=default; d=rock-chips.com; v=1;
-	bh=iQCUiAuXJ8P2qSP0ti96ZUK9aMT1CGaxFKIO+tNeXmE=;
-	h=date:mime-version:subject:message-id:from;
-Received: from localhost.localdomain (unknown [58.22.7.114])
-	by smtp.qiye.163.com (Hmail) with ESMTPA id 321A47C034A;
-	Wed,  3 Apr 2024 21:18:49 +0800 (CST)
-From: Sugar Zhang <sugar.zhang@rock-chips.com>
-To: heiko@sntech.de,
-	vkoul@kernel.org
-Cc: linux-rockchip@lists.infradead.org,
-	Sugar Zhang <sugar.zhang@rock-chips.com>,
-	dmaengine@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 2/2] dmaengine: pl330: Add support for audio interleaved transfer
-Date: Wed,  3 Apr 2024 21:18:23 +0800
-Message-Id: <20240403211810.v2.2.I27a3219694d4d2a43fcfb35e1b069340dc94a5f0@changeid>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1712150304-60832-1-git-send-email-sugar.zhang@rock-chips.com>
-References: <1712150304-60832-1-git-send-email-sugar.zhang@rock-chips.com>
-X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-	tZV1koWUFDSUNOT01LS0k3V1ktWUFJV1kPCRoVCBIfWUFZGklPSVZPS0keQ09LT0tKTU9VEwETFh
-	oSFyQUDg9ZV1kYEgtZQVlOQ1VJSVVMVUpKT1lXWRYaDxIVHRRZQVlPS0hVSk5DTUtIVUpLS1VKQl
-	kG
-X-HM-Tid: 0a8ea41cb89409d2kunm321a47c034a
-X-HM-MType: 1
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6Mio6ECo6ITMKATVKTDc*HhUK
-	CwpPFDBVSlVKTEpJSk5LSElCQkNJVTMWGhIXVQgOHBoJVQETGhUcOwkUGBBWGBMSCwhVGBQWRVlX
-	WRILWUFZTkNVSUlVTFVKSk9ZV1kIAVlBSktOTkM3Bg++
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Fbni1UMr"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
+	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+	Message-ID:Sender:Reply-To:Content-ID:Content-Description;
+	bh=J8OXQtjrrbGAGM1hq+9WwIxNq7gS8NJhOgS52sp/+eo=; b=Fbni1UMrSD0nW1RKHJStNsL6PV
+	I4KXwNid8jwhPQE/gQyvpL8IpHu3Lj143/BqJDNzhGUekgs+Y2xuW6SIb+vD5jn+98pPR024hq71p
+	O6vf0vdEAKT4lzPwhz5kl4iNQBi3WGIgaoolwRmt+9Mw4et1fUo4kUfVi9y5HpdRil8iIQe10Nx1H
+	Vfl6I4Gb6FwOKqcTZDbdDAt1uLgu0sL7VrSVbSfcm+07jUCDaCY64mplxz3OcogXms9gMMM5v7hAl
+	VEgF7jVTOMPOdZiE73ZZ/exSJP4hMC93pBaRwnoAZQKJ2DsOBb1wmP4HHjMJNFU4ZFDeUZKryMJ3Q
+	hIwyi3fQ==;
+Received: from [50.53.2.121] (helo=[192.168.254.15])
+	by bombadil.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1rs7D7-0000000064h-1Oy3;
+	Wed, 03 Apr 2024 20:27:53 +0000
+Message-ID: <9a079670-bbed-4f5d-9ef6-876bb1d82d39@infradead.org>
+Date: Wed, 3 Apr 2024 13:27:50 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] Documentation/core-api: Update events_freezable_power
+ references.
+To: Audra Mitchell <audra@redhat.com>, corbet@lwn.net
+Cc: tj@kernel.org, jiangshanlai@gmail.com, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org, raquini@redhat.com, aros@gmx.com
+References: <20240403180022.16248-1-audra@redhat.com>
+Content-Language: en-US
+From: Randy Dunlap <rdunlap@infradead.org>
+In-Reply-To: <20240403180022.16248-1-audra@redhat.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-This patch add support for interleaved transfer which used
-for interleaved audio or 2d video data transfer.
 
-for audio situation, we add 'nump' for number of period frames.
 
-e.g. combine 2 stream into a union one by 2D dma.
+On 4/3/24 11:00 AM, Audra Mitchell wrote:
+> Due to commit 8318d6a6362f ("workqueue: Shorten
+> events_freezable_power_efficient name") we now have some stale
+> references in the workqeueue documentation, so updating those
+> references accordingly.
+> 
+> Signed-off-by: Audra Mitchell <audra@redhat.com>
 
-DAI0: 16CH
-+-------------------------------------------------------------+
-| Frame-1 | Frame-2 | Frame-3 | Frame-4 | ...... Frame-'numf' |
-+-------------------------------------------------------------+
+Acked-by: Randy Dunlap <rdunlap@infradead.org>
 
-DAI1: 16CH
-+-------------------------------------------------------------+
-| Frame-1 | Frame-2 | Frame-3 | Frame-4 | ...... Frame-'numf' |
-+-------------------------------------------------------------+
+Thanks.
 
-DAI0 + DAI1: 32CH
+> ---
+>  Documentation/core-api/workqueue.rst | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+> 
+> diff --git a/Documentation/core-api/workqueue.rst b/Documentation/core-api/workqueue.rst
+> index ed73c612174d..bcc370c876be 100644
+> --- a/Documentation/core-api/workqueue.rst
+> +++ b/Documentation/core-api/workqueue.rst
+> @@ -671,7 +671,7 @@ configuration, worker pools and how workqueues map to the pools: ::
+>    events_unbound           unbound  9  9 10 10  8
+>    events_freezable         percpu   0  2  4  6
+>    events_power_efficient   percpu   0  2  4  6
+> -  events_freezable_power_  percpu   0  2  4  6
+> +  events_freezable_pwr_ef  percpu   0  2  4  6
+>    rcu_gp                   percpu   0  2  4  6
+>    rcu_par_gp               percpu   0  2  4  6
+>    slub_flushwq             percpu   0  2  4  6
+> @@ -694,7 +694,7 @@ Use tools/workqueue/wq_monitor.py to monitor workqueue operations: ::
+>    events_unbound              38306     0      0.1       -       7       -       -
+>    events_freezable                0     0      0.0       0       0       -       -
+>    events_power_efficient      29598     0      0.2       0       0       -       -
+> -  events_freezable_power_        10     0      0.0       0       0       -       -
+> +  events_freezable_pwr_ef        10     0      0.0       0       0       -       -
+>    sock_diag_events                0     0      0.0       0       0       -       -
+>  
+>                                total  infl  CPUtime  CPUhog CMW/RPR  mayday rescued
+> @@ -704,7 +704,7 @@ Use tools/workqueue/wq_monitor.py to monitor workqueue operations: ::
+>    events_unbound              38322     0      0.1       -       7       -       -
+>    events_freezable                0     0      0.0       0       0       -       -
+>    events_power_efficient      29603     0      0.2       0       0       -       -
+> -  events_freezable_power_        10     0      0.0       0       0       -       -
+> +  events_freezable_pwr_ef        10     0      0.0       0       0       -       -
+>    sock_diag_events                0     0      0.0       0       0       -       -
+>  
+>    ...
 
-+-------------------------------------------------------------+
-| DAI0-F1 | DAI1-F1 | DAI0-F2 | DAI1-F2 | ......              |
-+-------------------------------------------------------------+
-|      Frame-1      |      Frame-2      | ...... Frame-'numf' |
-
-For audio situation, we have buffer_size and period_size,
-the 'numf' is the buffer_size. so, we need another one for
-period_size, e.g. 'nump'.
-
-| Frame-1 | ~ | Frame-'nump' | ~ | Frame-'nump+1' | ~ |  Frame-'numf' |
-|
-
-As the above shown:
-
-each DAI0 transfer 1 Frame, should skip a gap size (DAI1-F1)
-each DAI1 transfer 1 Frame, should skip a gap size (DAI0-F1)
-
-So, the interleaved template describe as follows:
-
-DAI0:
-
-struct dma_interleaved_template *xt;
-
-xt->sgl[0].size = DAI0-F1;
-xt->sgl[0].icg =  DAI1-F1;
-xt->nump = nump; //the period_size in frames
-xt->numf = numf; //the buffer_size in frames
-
-DAI1:
-
-struct dma_interleaved_template *xt;
-
-xt->sgl[0].size = DAI1-F1;
-xt->sgl[0].icg =  DAI0-F1;
-xt->nump = nump; //the period_size in frames
-xt->numf = numf; //the buffer_size in frames
-
-Signed-off-by: Sugar Zhang <sugar.zhang@rock-chips.com>
----
-
-(no changes since v1)
-
- drivers/dma/pl330.c | 169 ++++++++++++++++++++++++++++++++++++++++++++++++++--
- 1 file changed, 163 insertions(+), 6 deletions(-)
-
-diff --git a/drivers/dma/pl330.c b/drivers/dma/pl330.c
-index 5f6d7f1..449ed6b 100644
---- a/drivers/dma/pl330.c
-+++ b/drivers/dma/pl330.c
-@@ -239,6 +239,7 @@ enum pl330_byteswap {
- 
- #define BYTE_TO_BURST(b, ccr)	((b) / BRST_SIZE(ccr) / BRST_LEN(ccr))
- #define BURST_TO_BYTE(c, ccr)	((c) * BRST_SIZE(ccr) * BRST_LEN(ccr))
-+#define BYTE_MOD_BURST_LEN(b, ccr)	(((b) / BRST_SIZE(ccr)) % BRST_LEN(ccr))
- 
- /*
-  * With 256 bytes, we can do more than 2.5MB and 5MB xfers per req
-@@ -545,6 +546,8 @@ struct dma_pl330_desc {
- 	unsigned peri:5;
- 	/* Hook to attach to DMAC's list of reqs with due callback */
- 	struct list_head rqd;
-+	/* interleaved size */
-+	struct data_chunk sgl;
- };
- 
- struct _xfer_spec {
-@@ -577,6 +580,22 @@ static inline u32 get_revision(u32 periph_id)
- 	return (periph_id >> PERIPH_REV_SHIFT) & PERIPH_REV_MASK;
- }
- 
-+static inline u32 _emit_ADDH(unsigned dry_run, u8 buf[],
-+		enum pl330_dst da, u16 val)
-+{
-+	if (dry_run)
-+		return SZ_DMAADDH;
-+
-+	buf[0] = CMD_DMAADDH;
-+	buf[0] |= (da << 1);
-+	*((__le16 *)&buf[1]) = cpu_to_le16(val);
-+
-+	PL330_DBGCMD_DUMP(SZ_DMAADDH, "\tDMAADDH %s %u\n",
-+		da == 1 ? "DA" : "SA", val);
-+
-+	return SZ_DMAADDH;
-+}
-+
- static inline u32 _emit_END(unsigned dry_run, u8 buf[])
- {
- 	if (dry_run)
-@@ -1190,7 +1209,7 @@ static inline int _ldst_peripheral(struct pl330_dmac *pl330,
- 				 const struct _xfer_spec *pxs, int cyc,
- 				 enum pl330_cond cond)
- {
--	int off = 0;
-+	int off = 0, i = 0, burstn = 1;
- 
- 	/*
- 	 * do FLUSHP at beginning to clear any stale dma requests before the
-@@ -1198,12 +1217,36 @@ static inline int _ldst_peripheral(struct pl330_dmac *pl330,
- 	 */
- 	if (!(pl330->quirks & PL330_QUIRK_BROKEN_NO_FLUSHP))
- 		off += _emit_FLUSHP(dry_run, &buf[off], pxs->desc->peri);
-+
-+	if (pxs->desc->sgl.size) {
-+		WARN_ON(BYTE_MOD_BURST_LEN(pxs->desc->sgl.size, pxs->ccr));
-+		burstn = BYTE_TO_BURST(pxs->desc->sgl.size, pxs->ccr);
-+	}
-+
- 	while (cyc--) {
--		off += _emit_WFP(dry_run, &buf[off], cond, pxs->desc->peri);
--		off += _emit_load(dry_run, &buf[off], cond, pxs->desc->rqtype,
--			pxs->desc->peri);
--		off += _emit_store(dry_run, &buf[off], cond, pxs->desc->rqtype,
--			pxs->desc->peri);
-+		for (i = 0; i < burstn; i++) {
-+			off += _emit_WFP(dry_run, &buf[off], cond, pxs->desc->peri);
-+			off += _emit_load(dry_run, &buf[off], cond, pxs->desc->rqtype,
-+				pxs->desc->peri);
-+			off += _emit_store(dry_run, &buf[off], cond, pxs->desc->rqtype,
-+				pxs->desc->peri);
-+		}
-+
-+		switch (pxs->desc->rqtype) {
-+		case DMA_DEV_TO_MEM:
-+			if (pxs->desc->sgl.dst_icg)
-+				off += _emit_ADDH(dry_run, &buf[off], DST,
-+						  pxs->desc->sgl.dst_icg);
-+			break;
-+		case DMA_MEM_TO_DEV:
-+			if (pxs->desc->sgl.src_icg)
-+				off += _emit_ADDH(dry_run, &buf[off], SRC,
-+						  pxs->desc->sgl.src_icg);
-+			break;
-+		default:
-+			WARN_ON(1);
-+			break;
-+		}
- 	}
- 
- 	return off;
-@@ -1382,6 +1425,9 @@ static inline int _setup_loops(struct pl330_dmac *pl330,
- 		BRST_SIZE(ccr);
- 	int off = 0;
- 
-+	if (pxs->desc->sgl.size)
-+		bursts = x->bytes / pxs->desc->sgl.size;
-+
- 	while (bursts) {
- 		c = bursts;
- 		off += _loop(pl330, dry_run, &buf[off], &c, pxs);
-@@ -2624,6 +2670,9 @@ static struct dma_pl330_desc *pl330_get_desc(struct dma_pl330_chan *pch)
- 
- 	desc->peri = peri_id ? pch->chan.chan_id : 0;
- 	desc->rqcfg.pcfg = &pch->dmac->pcfg;
-+	desc->sgl.size = 0;
-+	desc->sgl.src_icg = 0;
-+	desc->sgl.dst_icg = 0;
- 
- 	dma_async_tx_descriptor_init(&desc->txd, &pch->chan);
- 
-@@ -2774,6 +2823,110 @@ static struct dma_async_tx_descriptor *pl330_prep_dma_cyclic(
- 	return &desc->txd;
- }
- 
-+static struct dma_async_tx_descriptor *pl330_prep_interleaved_dma(
-+	struct dma_chan *chan, struct dma_interleaved_template *xt,
-+	unsigned long flags)
-+{
-+	struct dma_pl330_desc *desc = NULL, *first = NULL;
-+	struct dma_pl330_chan *pch = to_pchan(chan);
-+	struct pl330_dmac *pl330 = pch->dmac;
-+	unsigned int i;
-+	dma_addr_t dst;
-+	dma_addr_t src;
-+	size_t size, src_icg, dst_icg, period_bytes, buffer_bytes, full_period_bytes;
-+	size_t nump = 0, numf = 0;
-+
-+	if (!xt->numf || !xt->sgl[0].size || xt->frame_size != 1)
-+		return NULL;
-+	nump = xt->nump;
-+	numf = xt->numf;
-+	size = xt->sgl[0].size;
-+	period_bytes = size * nump;
-+	buffer_bytes = size * numf;
-+
-+	if (flags & DMA_PREP_REPEAT && (!nump || (numf % nump)))
-+		return NULL;
-+
-+	src_icg = dmaengine_get_src_icg(xt, &xt->sgl[0]);
-+	dst_icg = dmaengine_get_dst_icg(xt, &xt->sgl[0]);
-+
-+	pl330_config_write(chan, &pch->slave_config, xt->dir);
-+
-+	if (!pl330_prep_slave_fifo(pch, xt->dir))
-+		return NULL;
-+
-+	for (i = 0; i < numf / nump; i++) {
-+		desc = pl330_get_desc(pch);
-+		if (!desc) {
-+			unsigned long iflags;
-+
-+			dev_err(pch->dmac->ddma.dev, "%s:%d Unable to fetch desc\n",
-+				__func__, __LINE__);
-+
-+			if (!first)
-+				return NULL;
-+
-+			spin_lock_irqsave(&pl330->pool_lock, iflags);
-+
-+			while (!list_empty(&first->node)) {
-+				desc = list_entry(first->node.next,
-+						struct dma_pl330_desc, node);
-+				list_move_tail(&desc->node, &pl330->desc_pool);
-+			}
-+
-+			list_move_tail(&first->node, &pl330->desc_pool);
-+
-+			spin_unlock_irqrestore(&pl330->pool_lock, iflags);
-+
-+			return NULL;
-+		}
-+
-+		switch (xt->dir) {
-+		case DMA_MEM_TO_DEV:
-+			desc->rqcfg.src_inc = 1;
-+			desc->rqcfg.dst_inc = 0;
-+			src = xt->src_start + period_bytes * i;
-+			dst = pch->fifo_dma;
-+			full_period_bytes = (size + src_icg) * nump;
-+			break;
-+		case DMA_DEV_TO_MEM:
-+			desc->rqcfg.src_inc = 0;
-+			desc->rqcfg.dst_inc = 1;
-+			src = pch->fifo_dma;
-+			dst = xt->dst_start + period_bytes * i;
-+			full_period_bytes = (size + dst_icg) * nump;
-+			break;
-+		default:
-+			break;
-+		}
-+
-+		desc->rqtype = xt->dir;
-+		desc->rqcfg.brst_size = pch->burst_sz;
-+		desc->rqcfg.brst_len = pch->burst_len;
-+		desc->bytes_requested = full_period_bytes;
-+		desc->sgl.size = size;
-+		desc->sgl.src_icg = src_icg;
-+		desc->sgl.dst_icg = dst_icg;
-+		fill_px(&desc->px, dst, src, period_bytes);
-+
-+		if (!first)
-+			first = desc;
-+		else
-+			list_add_tail(&desc->node, &first->node);
-+	}
-+
-+	if (!desc)
-+		return NULL;
-+
-+	if (flags & DMA_PREP_REPEAT)
-+		pch->cyclic = true;
-+
-+	dev_dbg(chan->device->dev, "size: %zu, src_icg: %zu, dst_icg: %zu, nump: %zu, numf: %zu\n",
-+		size, src_icg, dst_icg, nump, numf);
-+
-+	return &desc->txd;
-+}
-+
- static struct dma_async_tx_descriptor *
- pl330_prep_dma_memcpy(struct dma_chan *chan, dma_addr_t dst,
- 		dma_addr_t src, size_t len, unsigned long flags)
-@@ -3129,12 +3282,16 @@ pl330_probe(struct amba_device *adev, const struct amba_id *id)
- 		dma_cap_set(DMA_SLAVE, pd->cap_mask);
- 		dma_cap_set(DMA_CYCLIC, pd->cap_mask);
- 		dma_cap_set(DMA_PRIVATE, pd->cap_mask);
-+		dma_cap_set(DMA_INTERLEAVE, pd->cap_mask);
-+		dma_cap_set(DMA_REPEAT, pd->cap_mask);
-+		dma_cap_set(DMA_LOAD_EOT, pd->cap_mask);
- 	}
- 
- 	pd->device_alloc_chan_resources = pl330_alloc_chan_resources;
- 	pd->device_free_chan_resources = pl330_free_chan_resources;
- 	pd->device_prep_dma_memcpy = pl330_prep_dma_memcpy;
- 	pd->device_prep_dma_cyclic = pl330_prep_dma_cyclic;
-+	pd->device_prep_interleaved_dma = pl330_prep_interleaved_dma;
- 	pd->device_tx_status = pl330_tx_status;
- 	pd->device_prep_slave_sg = pl330_prep_slave_sg;
- 	pd->device_config = pl330_config;
 -- 
-2.7.4
-
+#Randy
