@@ -1,90 +1,80 @@
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA70A168A8;
-	Wed,  3 Apr 2024 02:10:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D315F168DE;
+	Wed,  3 Apr 2024 02:10:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712110211; cv=none; b=l1LIINcwNP8bJePwwiBCloe+yaZU4NT66fhPX4426i5/lTLfEX5jYIp7mk5utynWibySCVWhFS610BIW+/VPHCpva+h7EFD5GDshD4woCaY2Ddoc73vdL5xI/2HlwukYPuv+yx/fUh+vIiFppPcU5/D67g8nWBVAIwYQtNK4uTM=
+	t=1712110232; cv=none; b=uDzzqsoIXSKRyvCnx9uAKCsDgHNc++WBMoU3kQBzELeU848uPFqnscA9jLWEw0/xSHsPjZGj4zsmOrIUcN94KZGuK/O/Y4HP0JXkxxgWFXeFNVWD8u4gEd/9EkTmG7bhJ3tiamtjiwdhvGiXiiTc9f2MC7CpjXJO+G1OF+cBnlQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712110211; c=relaxed/simple;
-	bh=zeKYRYohlTStC7Tkr+cr5vBo/cYYssPjfX2YsNmGqco=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=P2y2BerH6VwbfdzRfcLvUQIpyEr7AAg1irzqRVc/2CR275Csb4sMo07zg5TGQjNTDgUW8xxspKsmbMIR5TbTg+FoWFTi5rnb06SoCONd8z2qYtnSdaxi/NxRA/7h4DjyApfWzkwOD5l8duY3Gn9SsNMMmwgYY4cWvtwe8BKtlxM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=IwenuWbj; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1712110232; c=relaxed/simple;
+	bh=y6DvVEooFfS6fE42WhsK/UU1M9fwwEQd4IEC65RgZdk=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=LI2X7P7hnQMYmZaLe28OuoC+Q4cgsFGwOHBDHXkmeKrYYQwTtX5F2o8ez19/0R0JojALfwvMBZzvu13B/imIgiJok6LBiUMmGfrdcj+lO+Wwg6qJcZhppQAhE5Gn/aRQUqNtAtoiPjia/LaaokoI8QgsPZikPXIdKLM57WLq/2k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LCPbcesp; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="IwenuWbj"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
-	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-	Message-ID:Sender:Reply-To:Content-ID:Content-Description;
-	bh=e9SSw5eWjtK7BQOqCZkczD3EG3WrEvANQjFrXS/TIIA=; b=IwenuWbjyX9y5yVq4O0ZlNg1fU
-	XEZnPilzGPfDZkfXI59ii49I5QEpx3RwKL8VstaNNWQzwRfyGHaLzIyh06WjuEAh3L8evSi7oC6oE
-	Y5Sc/6j5ceWyisvNZCYLkx5fU5pUTNwdMnhPh5yJHEHYKx867MXrxGRcoX1bY7MxeFokbFwGYQhW0
-	DRpre5Vwlm+e8MXYPtmjtR+nnek97OPsMgOUIXJ03JB35rbQG1f+Bbt3db86Tfhu6cxEXD8ntK/9p
-	WbKRBj+tdObhPQDNHzCiLMaxmKpkJ1Lyp1iKmBju3r2Dk5XMAMQYuXSiQJosDyeWf3qSQFFF9iG2Z
-	z0WWk4Ug==;
-Received: from [50.53.2.121] (helo=[192.168.254.15])
-	by bombadil.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1rrq4l-0000000DcIO-1RT5;
-	Wed, 03 Apr 2024 02:10:07 +0000
-Message-ID: <b102d460-adbe-4396-ac1b-ad2f2244061c@infradead.org>
-Date: Tue, 2 Apr 2024 19:10:05 -0700
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LCPbcesp"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1D029C433C7;
+	Wed,  3 Apr 2024 02:10:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1712110231;
+	bh=y6DvVEooFfS6fE42WhsK/UU1M9fwwEQd4IEC65RgZdk=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=LCPbcespmCZc8RnSHDEKXToJp4JYVa+JgyFU1TzjuPNUjbSGqIZkhC7AvH3irfGko
+	 u9ECvhb6Do9hyYqsSutp9jVnJHzsQ9xzcHRRIGSXg0e1TMG3uL5UD/rqvFDAPatRlj
+	 Luyg/ct38rckmpYUPG9EtTaVGaOu012+ZPTqKRAyaMko8Auradq9bGeAIeSrW37jBh
+	 V8eZsAOidVQbgbMOUpsN64u4CDZz+3VOMHG66tj+oyHQOr99LHkXZshyCmot2ie9xk
+	 G+em7l80Rl/WPk4duNzgrjwQTuQdfrH8gL35lcrASI2OrO4ZogrEy+KYWNISf6JKnf
+	 D+fIX6/wF0s0Q==
+Date: Tue, 2 Apr 2024 19:10:29 -0700
+From: Jakub Kicinski <kuba@kernel.org>
+To: Mina Almasry <almasrymina@google.com>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-rdma@vger.kernel.org, Ayush Sawal <ayush.sawal@chelsio.com>, "David
+ S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Paolo
+ Abeni <pabeni@redhat.com>, Mirko Lindner <mlindner@marvell.com>, Stephen
+ Hemminger <stephen@networkplumber.org>, Tariq Toukan <tariqt@nvidia.com>,
+ Steffen Klassert <steffen.klassert@secunet.com>, Herbert Xu
+ <herbert@gondor.apana.org.au>, David Ahern <dsahern@kernel.org>, Boris
+ Pismenny <borisp@nvidia.com>, John Fastabend <john.fastabend@gmail.com>,
+ Dragos Tatulea <dtatulea@nvidia.com>, Maxim Mikityanskiy
+ <maxtram95@gmail.com>, Sabrina Dubroca <sd@queasysnail.net>, Simon Horman
+ <horms@kernel.org>, Yunsheng Lin <linyunsheng@huawei.com>, "Ahelenia
+ =?UTF-8?B?WmllbWlhxYRza2E=?=" <nabijaczleweli@nabijaczleweli.xyz>,
+ Christophe JAILLET <christophe.jaillet@wanadoo.fr>, David Howells
+ <dhowells@redhat.com>, Florian Westphal <fw@strlen.de>, Aleksander Lobakin
+ <aleksander.lobakin@intel.com>, Lorenzo Bianconi <lorenzo@kernel.org>,
+ Johannes Berg <johannes.berg@intel.com>, Liang Chen
+ <liangchen.linux@gmail.com>
+Subject: Re: [PATCH net-next v3 0/3] Minor cleanups to skb frag ref/unref
+Message-ID: <20240402191029.321b1609@kernel.org>
+In-Reply-To: <20240401215042.1877541-1-almasrymina@google.com>
+References: <20240401215042.1877541-1-almasrymina@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] Add MO(mod objs) variable to process ext modules with
- subdirs
-To: Valerii Chernous <vchernou@cisco.com>,
- Masahiro Yamada <masahiroy@kernel.org>, Nathan Chancellor
- <nathan@kernel.org>, Nicolas Schier <nicolas@fjasle.eu>
-Cc: xe-linux-external@cisco.com, linux-kbuild@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20240402153028.1378868-1-vchernou@cisco.com>
-Content-Language: en-US
-From: Randy Dunlap <rdunlap@infradead.org>
-In-Reply-To: <20240402153028.1378868-1-vchernou@cisco.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-Hi,
-
-On 4/2/24 8:30 AM, Valerii Chernous wrote:
-> The change allow to build external modules with nested makefiles.
-> With current unofficial way(using "src" variable) it is posible to build
-
-                                                          possible
-
-> external(out of tree) kernel module with separating source and build
-> artifacts dirs but with nested makefiles it doesn't work properly.
-> Build system trap to recursion inside makefiles, articafts output dir
-
-                                                   artifacts
-
-> path grow with each iteration until exceed max path len and build failed
-> Providing "MO" variable and using "override" directive with declaring
-> "src" variable solve the problem
-> Usage example:
-> make -C KERNEL_SOURCE_TREE MO=BUILD_OUT_DIR M=EXT_MOD_SRC_DIR modules
+On Mon,  1 Apr 2024 14:50:36 -0700 Mina Almasry wrote:
+> This series is largely motivated by a recent discussion where there was
+> some confusion on how to properly ref/unref pp pages vs non pp pages:
 > 
-> Cc: xe-linux-external@cisco.com
-> Cc: Valerii Chernous <vchernou@cisco.com>
-> Signed-off-by: Valerii Chernous <vchernou@cisco.com>
-> ---
->  Makefile               | 17 +++++++++++++++++
->  scripts/Makefile.build |  7 +++++++
->  2 files changed, 24 insertions(+)
+> https://lore.kernel.org/netdev/CAHS8izOoO-EovwMwAm9tLYetwikNPxC0FKyVGu1TPJWSz4bGoA@mail.gmail.com/T/#t
 > 
+> There is some subtely there because pp uses page->pp_ref_count for
+> refcounting, while non-pp uses get_page()/put_page() for ref counting.
+> Getting the refcounting pairs wrong can lead to kernel crash.
+> 
+> Additionally currently it may not be obvious to skb users unaware of
+> page pool internals how to properly acquire a ref on a pp frag. It
+> requires checking of skb->pp_recycle & is_pp_page() to make the correct
+> calls and may require some handling at the call site aware of arguable pp
+> internals.
 
-If this code is going to be merged, there should also be a Documentation
-update to Documentation/kbuild/{kbuild.rst,modules.rst}.
-
-Thanks.
+I concluded that Olek's series as good to go in, so you gotta rebase.
 -- 
-#Randy
+pw-bot: cr
