@@ -1,240 +1,288 @@
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2133.outbound.protection.outlook.com [40.107.244.133])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D3B31487F0;
-	Wed,  3 Apr 2024 13:23:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.244.133
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712150627; cv=fail; b=OY2XHoq1jSQcBWeFhWWTmGcv7ZW7aQPNbQB1ge6exiVTGrmSay+WoQndSlyd6rZFb/yu1ke5GPqmAsv2bQ2pwDJeYfbUqRr7POixr/371GyNSWySGHs0xE2bqP4LwMlOCF0O0K0tQwvqxNQuGcaRXcquUdRC2R1ZRetaaGcZGGs=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712150627; c=relaxed/simple;
-	bh=Mdhx/feJYDZMK8ASnd9C6wbjMHQKR6CA9fYPSzIK5do=;
-	h=Message-ID:Date:Cc:Subject:To:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=A9KXGv/19f0J1k7scWVmgM1Tx3H93qyH/zq487Rrbr1IkgEULMNuG9xu49EOwL06yga9pzmx1WayMUQGrhFvdevdFwDvKB2d6bXZ+1hVf8pUX1g9fAQOy3YAt3lZsFTDNpPnI0UNyf7YAwP0JsiqhomEXhdxCvq9PePlGvyMay8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=z/Ra70al; arc=fail smtp.client-ip=40.107.244.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6865E1487F0;
+	Wed,  3 Apr 2024 13:24:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1712150661; cv=none; b=KuWbjCHQfIDU5gTiIHbiK9Z4VFAmZzt/Ky0MNIjvZ1785KArpIssl4FSQplvicrxcvwnz8PDXRDGNrFflKtuXlxrdgzaqPKIhfIdJMjGJLMbpgM6HqpOdeQycEjOgLPzUEuKpWQJEZ7BrFGDI863U0IfnX3xrEdKWOxjQXI4HRM=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1712150661; c=relaxed/simple;
+	bh=xJslVArg1gDtzR4Be2/trZQajf4xXSmqhftr6EV1iZo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=f6o6dXUYbKLHQHnuBbFTn8RCb1IyTG4sN+mpN7+E9xg5csC0je+9z5W4+0LdU8xti+tZXznqaS7jgKhamo2w4YUNx2h6oRP91iqcBvmBW7ycjhkE5m/vGsxqdJGw7dN1BmzSv25FjLLhby9Ua6Yc06J+mgfESkHkbY6wgpQwa2Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PNa/m0VB; arc=none smtp.client-ip=209.85.214.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="z/Ra70al"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=EEuwecab8rJQjlCzo2SwP4IJaVX6xD7N/HRU4MlQO2xNwRIaCmM9ImxqS4QDb+fLTtRf+bQf4ZpIHEPrNtrX1DUQXKoizH8c0lXGlRmDe42Zfc/yKfQgcM07QeObhyvHZya5oPPzLnNxWgNiX7XILygJ1HH3H+xsDobLj1pp8nTsiZkOoA0mGzrvCaUs3cAf5qEwKK3YVJPjRiwXmhhaE7KaIheCDbf/k5Pu9cI0w61J/t8YRC9HOKK2qcPRp8bp8TMFeax/93YeiDLOxh1e1n82R/nY0tUgvurJ3O/HPMKJufCdz2YXAxsyFoD86tUEcgXxLyMGl/Qp04QmEb9uig==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=686seC4eYz66w8msVZl55RSkTtXoqyVccwHWzyoOxGg=;
- b=f7dBCH83pRgqin354WEUBWhdl14l1/vd/uWB6nIOjv85Yz2MNVdKFYB+XF+DgefVMj7vZe5gFZJmtQ4V5mSO6N/qZ8DiaHiiQ8bbnClkjo3y3Rzdv5phD+FGJhrMdv9mNYZO4xrLu5k6xkEhA62xRWKKpg1t0cwo13Roviw20Ps6AfoHRzOh5WSKonkh+ExwspPbU1Qw3vaYVLSNm9IhZLosdcnE3V3lNn5+j7nyQaLfUHSxG5ApDX4NgSKCeTeMj5NsROhsNT7fDgexYb+4rAPa7z+V3L1S7NVGIqQeN81LKAJaIfoIywD1s60U6HdQIwQzfBddgbiSVG4FezaOlA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=686seC4eYz66w8msVZl55RSkTtXoqyVccwHWzyoOxGg=;
- b=z/Ra70alA69OoBiIEr+y7y27CmLAWWu4VRPH47sOyLl7l1jFiP3sPljl7awuuh7mNv22O+flJinkQobyHB+U+T0K3uTTrTOfyFAUfNaLq7tRbQ5nb4836KpG5DzMMvutwQBQU9eEjPVwJTNEUJX45ufD6aR2itjArT+tdBEW44w=
-Received: from DM6PR12MB3116.namprd12.prod.outlook.com (2603:10b6:5:38::12) by
- PH7PR12MB8108.namprd12.prod.outlook.com (2603:10b6:510:2bc::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.46; Wed, 3 Apr
- 2024 13:23:43 +0000
-Received: from DM6PR12MB3116.namprd12.prod.outlook.com
- ([fe80::2d67:ab86:61f6:2afb]) by DM6PR12MB3116.namprd12.prod.outlook.com
- ([fe80::2d67:ab86:61f6:2afb%3]) with mapi id 15.20.7409.042; Wed, 3 Apr 2024
- 13:23:43 +0000
-Message-ID: <4059a8aa-d037-482d-934f-7d113a8f5797@amd.com>
-Date: Tue, 2 Apr 2024 22:03:39 -0400
-User-Agent: Mozilla Thunderbird
-Cc: yazen.ghannam@amd.com, linux-kernel@vger.kernel.org,
- avadhut.naik@amd.com, muralidhara.mk@amd.com
-Subject: Re: [PATCH v2 1/4] RAS/AMD/ATL: Read DRAM hole base early
-To: John Allen <john.allen@amd.com>, bp@alien8.de,
- linux-edac@vger.kernel.org, tony.luck@intel.com
-References: <20240327185222.98998-1-john.allen@amd.com>
- <20240327185222.98998-2-john.allen@amd.com>
-Content-Language: en-US
-From: Yazen Ghannam <yazen.ghannam@amd.com>
-In-Reply-To: <20240327185222.98998-2-john.allen@amd.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: BN8PR15CA0022.namprd15.prod.outlook.com
- (2603:10b6:408:c0::35) To DM6PR12MB3116.namprd12.prod.outlook.com
- (2603:10b6:5:38::12)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PNa/m0VB"
+Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-1e293335cdeso5437895ad.3;
+        Wed, 03 Apr 2024 06:24:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1712150659; x=1712755459; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=rQsFbEjOTqJq35XSrf9t5tKMfoIw0aZp1GIU7FAGSpw=;
+        b=PNa/m0VBsApuPk3Dcq78bJpiZmKtnw0r+ENvIk11GjAdOFUsonz6TlMzQKLUXgXhOC
+         vhT5opeVqv2TDpdKzoA+PMezM+iNUyNtFk88ixnWf0hDH+1UQqC1dhUXUq2NxyBNgRuB
+         IhAR4KQIorpIt1XePFlswOpWpiza6t2jCDc4ZIlLfq0jEVw5D/PbV2WohdBDq/nW4Dfc
+         EzTNQ8PqzMY3/EGtZptxHFYAA4GcpZZQGfEFdb+EbjGY1Yr/le7hzM0z/VlXgkZlHGjN
+         g0zDP6B6gprMjeUrma62E6Oi1MDKQUS6r88NjZKzMT+fywOW1viDrPTE+XbHdn516rcw
+         JCGw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712150659; x=1712755459;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=rQsFbEjOTqJq35XSrf9t5tKMfoIw0aZp1GIU7FAGSpw=;
+        b=o4NTtN/5RaX17n1skNmYkeOCnitTpbwtb7P1Pix++//dl9iJVdJ1UDCRHfDjTPwQAA
+         IZL4Ebo2ma4ZxmO96arKeC76KRSGgeA3Uq73f2yDWthAn04n7RUC3qsI715vUkq30mgR
+         Cr7OEIlW3xNw0+hoND8/k+DMoCgxrFQ9gmiqsQa4I2eNRix8Ai7Kd2DtRCkYYxeswXnR
+         sWJ8A2l4A8DQ6qZJ1sJMNNLj9pom2nA6Foj8if+A/JmwmAMiy/lKGYb15k+5aFFa7M+1
+         XKa9TV1aBFfCRKqQ444voSTVLq2q6Ho9rLQGwIw0ho4CFYzlb5fP7WpqIp6Sc+DudDaQ
+         NAhQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVv/wpoofPVfT8wkRAeR65fqEkWRtuT/OPXwotPUXeXb0aAQBxGKq/1w/CbobHVMxWd0rfbn/7YnNftlVhNPsCQKZzkw1kDHzv6Mb81+dJ1t5LGNkXa3wEutgJ7bWlpyzmCeSK3PKJxdF+nYHORJ9psdbsDy7TKQxsIpDNCLq+Ax7PIQGcTwdcDVKU3SkYPhc29M+ixHD9SdY2ZUZ3qDGlQ6ytvXG4Bdf8icLTN9t6jLb3ZTNWNiOpSjRXBDglHpwLTDOzB86YvM4yjD87AQLX4CpFrTxZ2RreHG16M9GyFFpWv7AmS5A0=
+X-Gm-Message-State: AOJu0YzvPutI4QK0jVjpM0hZPdNi2/Fo5oBlYyDTzZPGT5msGwAjYS3C
+	I/WkNMDLjGhTy3cupSdZ4n2wOhvmGOJPbUOtWDBzDKwIQofXGuVP
+X-Google-Smtp-Source: AGHT+IFatdNBQSb3VrVYeBX6Z2JShOnIrwB6FOsdyOnRBQXn1pgGepQ/A/buywtE61oYlMx80pUAVQ==
+X-Received: by 2002:a17:902:c94f:b0:1e0:a784:f965 with SMTP id i15-20020a170902c94f00b001e0a784f965mr18876173pla.65.1712150658416;
+        Wed, 03 Apr 2024 06:24:18 -0700 (PDT)
+Received: from archie.me ([103.124.138.155])
+        by smtp.gmail.com with ESMTPSA id i15-20020a170902c94f00b001dd02f4c2casm13275916pla.164.2024.04.03.06.24.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 03 Apr 2024 06:24:17 -0700 (PDT)
+Received: by archie.me (Postfix, from userid 1000)
+	id 9178318108E2D; Wed,  3 Apr 2024 20:24:15 +0700 (WIB)
+Date: Wed, 3 Apr 2024 20:24:15 +0700
+From: Bagas Sanjaya <bagasdotme@gmail.com>
+To: David Gstir <david@sigma-star.at>, Mimi Zohar <zohar@linux.ibm.com>,
+	James Bottomley <jejb@linux.ibm.com>,
+	Jarkko Sakkinen <jarkko@kernel.org>,
+	Herbert Xu <herbert@gondor.apana.org.au>,
+	"David S. Miller" <davem@davemloft.net>
+Cc: Shawn Guo <shawnguo@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	NXP Linux Team <linux-imx@nxp.com>,
+	Ahmad Fatoum <a.fatoum@pengutronix.de>,
+	sigma star Kernel Team <upstream+dcp@sigma-star.at>,
+	David Howells <dhowells@redhat.com>, Li Yang <leoyang.li@nxp.com>,
+	Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>,
+	"Serge E. Hallyn" <serge@hallyn.com>,
+	"Paul E. McKenney" <paulmck@kernel.org>,
+	Randy Dunlap <rdunlap@infradead.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	"Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+	Tejun Heo <tj@kernel.org>,
+	"Steven Rostedt (Google)" <rostedt@goodmis.org>,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-integrity@vger.kernel.org, keyrings@vger.kernel.org,
+	linux-crypto@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linuxppc-dev@lists.ozlabs.org,
+	linux-security-module@vger.kernel.org,
+	Richard Weinberger <richard@nod.at>,
+	David Oberhollenzer <david.oberhollenzer@sigma-star.at>
+Subject: Re: [PATCH v8 6/6] docs: trusted-encrypted: add DCP as new trust
+ source
+Message-ID: <Zg1YfyhxO8BwtEfB@archie.me>
+References: <20240403072131.54935-1-david@sigma-star.at>
+ <20240403072131.54935-7-david@sigma-star.at>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM6PR12MB3116:EE_|PH7PR12MB8108:EE_
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	TspCbazwxS3DqSBaSsrjBNFvBTAOgVJteLJcIYEyJjEahGSslYTdl7+PeommeQCZqsRXfF9ThxWlueyF3FNeFRU4j1IVzgskXS/l1fc29koBR8OQY6rl8yKmDnNmgHSc/esAZvtxhxK0sWwQ6v7rfVEJN1iXQGfBPnOgrsc0CCrzIp2UhdLP/cKExBKZgbL7fMt/a/mKgR4iiak8SLNTVvR4ZpCopyv9Wnm0TGGBzbb4jm3ji+N6gvCleoLX+EuObIxSusNjGbIZqK49n91nGKg6S+PkfwS+xewFT9VHGzzmTowVjXE3VKjf2cRsIbEa5im0dL3PypgpFIVMhjtPHDwcIy+hDyzHfWiSrnqkT2KOIkqSqKPSJUEDGnO8T9DK5TeeWm+jR/Oev3GAvgBr0MASSGz0/ltdw8xkzGZ54XLzShow8Zh/vINRtBvOUtJxwuk5nVHXmlCKOoOlQOsDyVqUd6+UvSMl8NB4KA2irSkJLLi/aOL7yVHPGlqwLvWBUHfQsvyxMFjZwu0vROduOfBc1kx44d2Fptd1atmNZVQoXAQ2oidgScKARSnZE94rWmDDENHaitDN4DGORXCczyQ+LhNKn7ZJ+qVkSQR/WmIUTkUqgLnDBL1JTSTqSyX8sAdfHIJRtpstkfA2Q9dWt8OyGdi28LkNBkoPb3ikfyw=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB3116.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(1800799015)(376005)(366007);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?c1JaWnBROCtFOGJJeEkzOExlWEh0N0FQL2VJd2hDNGplT20vb3hDSkRGYmVJ?=
- =?utf-8?B?ZTNtQXByS1BpQ2hPdHRhT0poL0poUnlPTytQVUJsZlpDRkdMNXlVSSt0QUlU?=
- =?utf-8?B?eDZhNTB5czlQVFFBZ2xqdGlvaEl6SCtPQlA0MTJoQm5iZmFjYVk0UEhiM0kw?=
- =?utf-8?B?UjlFL1pveDVrbzl2QS9mWkVsNEExRklPZUtXc2xPZzMydi8wZHpEZEo0MFRs?=
- =?utf-8?B?QlBtcHZqYUIvVlBhM3dUWGxzSFNXUGZQb3RKWlpTZ1g0ZGg0Q093V2JVTDJN?=
- =?utf-8?B?MVVnUFFUcE1BYTlvTDl3RjdWYVU1R2RTOUZPZmc4MU8zUDYzOXdQSkdONm1l?=
- =?utf-8?B?c3ZwSTAxWHVrN1EvNE0zUEg1MloxcXZoVHNuWi9FREc1TEtsemYvQ2FycGoy?=
- =?utf-8?B?KzR0SE5rQnNtdHJWeDF3TThpQVhMWFJKY3hFZVp3N2JSSWR6Sk1DRkhZUmpj?=
- =?utf-8?B?ejlTS2NsZnNrakkvcW0wM3lLSzlDYlVCOW5sM0dxbTJKWG1ON0Q5akRDWkRN?=
- =?utf-8?B?dTNHVGIwTTcxV2hjSWlpbmxMT1NscE9JUXdyelZBRnM1Y1BTTFF0eTZvQ2p3?=
- =?utf-8?B?SlE2aE5kT2VkckxiOWJ3bi9DYTJKeFMveUEvcGhVMTRlWU9aSkRVREJKNUQz?=
- =?utf-8?B?NTlrK3dZUE5rRWZFN3lTSEEzaDloZ05DK3F0aURLQklLRlVYWW8rS0RZWUIv?=
- =?utf-8?B?bFVHT2oweWdjSTVIY0U0blZ2ei94V0ZXMWp4alg5Smw4MzhXZmE0VERoZG1B?=
- =?utf-8?B?TFdkWm5YalZkKzdkTzhiRU91d2gyUTU3NHJua3JTRGtjZkZUQzdsQnlxOHFJ?=
- =?utf-8?B?RlcyQTlBRFhOSTJjT2RQclBNS2JaNWR5TVFQWEdyTzlZVk5OUkl0VDZlSHJH?=
- =?utf-8?B?elpZVzhMellwL1NMVFhTeXdXOU51Q29EMUVQcWt0eGQ1eG5oVzlaUGxRVG9n?=
- =?utf-8?B?VyswaWxWdjdKMFRCbmZzT0ZmUWVEUDAza3o5RkQrSEs1U044T0UzWHo3T1V3?=
- =?utf-8?B?SlcrWDhXZjBYVTVBeUxDZXp1Y28rRFZ2SHJ3VGN6ZllCTXNwbXo1b1Exdy9U?=
- =?utf-8?B?eDJ1dFJza05JNHpTV2xSQnNBR2FUK1FWN1VqTTR6VU5oS3dyRGJWM2VhVzBE?=
- =?utf-8?B?RjVCWVFzWDhJZzVVOTV5dlN6Z1ZTdmRTOHI2TVZzME9LVGhlL1RPTU5wODBY?=
- =?utf-8?B?UFBqNVN3Um1TSmo5V3dWT29JdmptQzRoSDBjdEZTK3FJQS85Z2l0U1p5ZStu?=
- =?utf-8?B?WG9jQ2IxcTQydmFsS1dPUE53M3dtSG9naktUQzB2dHNqZlZOYlZsZnhaajhh?=
- =?utf-8?B?a1JGcnJxZlFSZ2RyRmlrb3pnZkZGWElIZFFaS2d6Z3Nwb01rN093L3dYbmZP?=
- =?utf-8?B?MmhJM3dYR21XVkNTQ3NhNjlPRDk5ejUxQzFQYnZsKysrNUErUUU0azlkMnZz?=
- =?utf-8?B?cm5YMCs2VmVWRTlNejluTmxFa0l2Zk1OdU0vcUl5aEE0SXRjRXhGS3lwQ2tj?=
- =?utf-8?B?a1ErbDFBaFFrYnhteXQxNjJsWUhUaFlDQnVrRWNaTXg2T1QzcVZTT3EzTllm?=
- =?utf-8?B?U0F6UVhzK1RNSjljeWxBMC9tanBRYmJHYlBsQVZiNENRa0c3VXp6WTRHc3ZE?=
- =?utf-8?B?ZVVqMHJrck4xdE41amFOOTJ6TGtIYUllNWZFVDZ4czhOWUU0QTdTaGduc0Ev?=
- =?utf-8?B?bFIxdXlpR1IxNWUyUG9KRnBQM2hHLzB2SjB3U1BPbXN0WnRPa24wSk9IYmhu?=
- =?utf-8?B?YnhnUU4xa2JUZHhPUkhKUlhKOVZPMHhSU09wb2JHaHZhMU43NUZYK1NVZ0Np?=
- =?utf-8?B?YkVlUnJxZ28xeUlWZTRJMFFjNU1KcTU0RHJMZU9Ea2RMbFc1QUtmODgxa3RL?=
- =?utf-8?B?cC9vT0svVW50ZXpoeXNPT00rM3NpVjlvSWc2aE9TbnJscVU5ZVZvYkVrYmVt?=
- =?utf-8?B?cXEwMGRBK0JDT0l5cTFXUG90THpLc0RjS3lYRGFkRXdpeXBianJDaUpDRWRB?=
- =?utf-8?B?Nytkb1hNdjRSZ0FyclJrZUNRYlVWNEk1R3VERVhrM1ZtYlF6QVRsdC9QemUy?=
- =?utf-8?B?czRhYWJneXVYUWtxSTBkcFhvVVF3amh2RXo0bWovUExRT1JZMjlTeUVEMWpD?=
- =?utf-8?Q?URYr7FG2+O46vxxx6bqTg43tK?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e45419c0-4ca2-4368-e949-08dc53e14870
-X-MS-Exchange-CrossTenant-AuthSource: DM6PR12MB3116.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Apr 2024 13:23:42.9956
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 4ulJb0IesdbRUGsMDG2N+hd3OaX5A4diEgtsdz2Hv/MtwF7WLrRcoPZoQB/um9ZHZl3JpwIbJfYh0BQf8yz+zA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB8108
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="naAkpeAgH+6KHC1j"
+Content-Disposition: inline
+In-Reply-To: <20240403072131.54935-7-david@sigma-star.at>
 
 
+--naAkpeAgH+6KHC1j
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On 3/27/24 14:52, John Allen wrote:
-> Read DRAM hole base when constructing the address map as the value will
-> not change during run time.
-> 
-> Signed-off-by: John Allen <john.allen@amd.com>
-> ---
-> v2:
->    - Fix compilation error. ctx->addr should read ctx->ret_addr.
->    - Improve commit description.
-> ---
->   drivers/ras/amd/atl/core.c     | 15 ++-------------
->   drivers/ras/amd/atl/internal.h |  2 ++
->   drivers/ras/amd/atl/system.c   | 21 +++++++++++++++++++++
->   3 files changed, 25 insertions(+), 13 deletions(-)
-> 
-> diff --git a/drivers/ras/amd/atl/core.c b/drivers/ras/amd/atl/core.c
-> index 6dc4e06305f7..63513d972c07 100644
-> --- a/drivers/ras/amd/atl/core.c
-> +++ b/drivers/ras/amd/atl/core.c
-> @@ -51,22 +51,11 @@ static bool legacy_hole_en(struct addr_ctx *ctx)
->   
->   static int add_legacy_hole(struct addr_ctx *ctx)
->   {
-> -	u32 dram_hole_base;
-> -	u8 func = 0;
-> -
->   	if (!legacy_hole_en(ctx))
->   		return 0;
->   
-> -	if (df_cfg.rev >= DF4)
-> -		func = 7;
-> -
-> -	if (df_indirect_read_broadcast(ctx->node_id, func, 0x104, &dram_hole_base))
-> -		return -EINVAL;
-> -
-> -	dram_hole_base &= DF_DRAM_HOLE_BASE_MASK;
-> -
-> -	if (ctx->ret_addr >= dram_hole_base)
-> -		ctx->ret_addr += (BIT_ULL(32) - dram_hole_base);
-> +	if (ctx->ret_addr >= df_cfg.dram_hole_base)
-> +		ctx->ret_addr += (BIT_ULL(32) - df_cfg.dram_hole_base);
->   
->   	return 0;
->   }
-> diff --git a/drivers/ras/amd/atl/internal.h b/drivers/ras/amd/atl/internal.h
-> index 5de69e0bb0f9..1413c8ddc6c5 100644
-> --- a/drivers/ras/amd/atl/internal.h
-> +++ b/drivers/ras/amd/atl/internal.h
-> @@ -132,6 +132,8 @@ struct df_config {
->   	/* Number of DRAM Address maps visible in a Coherent Station. */
->   	u8 num_coh_st_maps;
->   
-> +	u32 dram_hole_base;
+On Wed, Apr 03, 2024 at 09:21:22AM +0200, David Gstir wrote:
+> diff --git a/Documentation/security/keys/trusted-encrypted.rst b/Document=
+ation/security/keys/trusted-encrypted.rst
+> index e989b9802f92..f4d7e162d5e4 100644
+> --- a/Documentation/security/keys/trusted-encrypted.rst
+> +++ b/Documentation/security/keys/trusted-encrypted.rst
+> @@ -42,6 +42,14 @@ safe.
+>           randomly generated and fused into each SoC at manufacturing tim=
+e.
+>           Otherwise, a common fixed test key is used instead.
+> =20
+> +     (4) DCP (Data Co-Processor: crypto accelerator of various i.MX SoCs)
 > +
->   	/* Global flags to handle special cases. */
->   	struct df_flags flags;
->   };
-> diff --git a/drivers/ras/amd/atl/system.c b/drivers/ras/amd/atl/system.c
-> index 701349e84942..6f6fe24dec81 100644
-> --- a/drivers/ras/amd/atl/system.c
-> +++ b/drivers/ras/amd/atl/system.c
-> @@ -223,6 +223,21 @@ static int determine_df_rev(void)
->   	return -EINVAL;
->   }
->   
-> +static int get_dram_hole_base(void)
-> +{
-> +	u8 func = 0;
+> +         Rooted to a one-time programmable key (OTP) that is generally b=
+urnt
+> +         in the on-chip fuses and is accessible to the DCP encryption en=
+gine only.
+> +         DCP provides two keys that can be used as root of trust: the OT=
+P key
+> +         and the UNIQUE key. Default is to use the UNIQUE key, but selec=
+ting
+> +         the OTP key can be done via a module parameter (dcp_use_otp_key=
+).
 > +
-> +	if (df_cfg.rev >= DF4)
-> +		func = 7;
+>    *  Execution isolation
+> =20
+>       (1) TPM
+> @@ -57,6 +65,12 @@ safe.
+> =20
+>           Fixed set of operations running in isolated execution environme=
+nt.
+> =20
+> +     (4) DCP
 > +
-> +	if (df_indirect_read_broadcast(0, func, 0x104, &df_cfg.dram_hole_base))
-> +		return -EINVAL;
+> +         Fixed set of cryptographic operations running in isolated execu=
+tion
+> +         environment. Only basic blob key encryption is executed there.
+> +         The actual key sealing/unsealing is done on main processor/kern=
+el space.
 > +
-> +	df_cfg.dram_hole_base &= DF_DRAM_HOLE_BASE_MASK;
+>    * Optional binding to platform integrity state
+> =20
+>       (1) TPM
+> @@ -79,6 +93,11 @@ safe.
+>           Relies on the High Assurance Boot (HAB) mechanism of NXP SoCs
+>           for platform integrity.
+> =20
+> +     (4) DCP
 > +
-> +	return 0;
-> +}
+> +         Relies on Secure/Trusted boot process (called HAB by vendor) for
+> +         platform integrity.
 > +
->   static void get_num_maps(void)
->   {
->   	switch (df_cfg.rev) {
-> @@ -266,6 +281,7 @@ static void dump_df_cfg(void)
->   
->   	pr_debug("num_coh_st_maps=%u",			df_cfg.num_coh_st_maps);
->   
-> +	pr_debug("dram_hole_base=%x",			df_cfg.dram_hole_base);
+>    *  Interfaces and APIs
+> =20
+>       (1) TPM
+> @@ -94,6 +113,11 @@ safe.
+> =20
+>           Interface is specific to silicon vendor.
+> =20
+> +     (4) DCP
+> +
+> +         Vendor-specific API that is implemented as part of the DCP cryp=
+to driver in
+> +         ``drivers/crypto/mxs-dcp.c``.
+> +
+>    *  Threat model
+> =20
+>       The strength and appropriateness of a particular trust source for a=
+ given
+> @@ -129,6 +153,13 @@ selected trust source:
+>       CAAM HWRNG, enable CRYPTO_DEV_FSL_CAAM_RNG_API and ensure the device
+>       is probed.
+> =20
+> +  *  DCP (Data Co-Processor: crypto accelerator of various i.MX SoCs)
+> +
+> +     The DCP hardware device itself does not provide a dedicated RNG int=
+erface,
+> +     so the kernel default RNG is used. SoCs with DCP like the i.MX6ULL =
+do have
+> +     a dedicated hardware RNG that is independent from DCP which can be =
+enabled
+> +     to back the kernel RNG.
+> +
+>  Users may override this by specifying ``trusted.rng=3Dkernel`` on the ke=
+rnel
+>  command-line to override the used RNG with the kernel's random number po=
+ol.
+> =20
+> @@ -231,6 +262,19 @@ Usage::
+>  CAAM-specific format.  The key length for new keys is always in bytes.
+>  Trusted Keys can be 32 - 128 bytes (256 - 1024 bits).
+> =20
+> +Trusted Keys usage: DCP
+> +-----------------------
+> +
+> +Usage::
+> +
+> +    keyctl add trusted name "new keylen" ring
+> +    keyctl add trusted name "load hex_blob" ring
+> +    keyctl print keyid
+> +
+> +"keyctl print" returns an ASCII hex copy of the sealed key, which is in =
+format
+> +specific to this DCP key-blob implementation.  The key length for new ke=
+ys is
+> +always in bytes. Trusted Keys can be 32 - 128 bytes (256 - 1024 bits).
+> +
+>  Encrypted Keys usage
+>  --------------------
+> =20
+> @@ -426,3 +470,12 @@ string length.
+>  privkey is the binary representation of TPM2B_PUBLIC excluding the
+>  initial TPM2B header which can be reconstructed from the ASN.1 octed
+>  string length.
+> +
+> +DCP Blob Format
+> +---------------
+> +
+> +.. kernel-doc:: security/keys/trusted-keys/trusted_dcp.c
+> +   :doc: dcp blob format
+> +
+> +.. kernel-doc:: security/keys/trusted-keys/trusted_dcp.c
+> +   :identifiers: struct dcp_blob_fmt
+> diff --git a/security/keys/trusted-keys/trusted_dcp.c b/security/keys/tru=
+sted-keys/trusted_dcp.c
+> index 16c44aafeab3..b5f81a05be36 100644
+> --- a/security/keys/trusted-keys/trusted_dcp.c
+> +++ b/security/keys/trusted-keys/trusted_dcp.c
+> @@ -19,6 +19,25 @@
+>  #define DCP_BLOB_VERSION 1
+>  #define DCP_BLOB_AUTHLEN 16
+> =20
+> +/**
+> + * DOC: dcp blob format
+> + *
+> + * The Data Co-Processor (DCP) provides hardware-bound AES keys using its
+> + * AES encryption engine only. It does not provide direct key sealing/un=
+sealing.
+> + * To make DCP hardware encryption keys usable as trust source, we define
+> + * our own custom format that uses a hardware-bound key to secure the se=
+aling
+> + * key stored in the key blob.
+> + *
+> + * Whenever a new trusted key using DCP is generated, we generate a rand=
+om 128-bit
+> + * blob encryption key (BEK) and 128-bit nonce. The BEK and nonce are us=
+ed to
+> + * encrypt the trusted key payload using AES-128-GCM.
+> + *
+> + * The BEK itself is encrypted using the hardware-bound key using the DC=
+P's AES
+> + * encryption engine with AES-128-ECB. The encrypted BEK, generated nonc=
+e,
+> + * BEK-encrypted payload and authentication tag make up the blob format =
+together
+> + * with a version number, payload length and authentication tag.
+> + */
+> +
+>  /**
+>   * struct dcp_blob_fmt - DCP BLOB format.
+>   *
 
-This should include a "0x" prefix to make clear it is a hex value when
-printed.
+The doc LGTM, thanks!
 
->   	pr_debug("flags.legacy_ficaa=%u",		df_cfg.flags.legacy_ficaa);
->   	pr_debug("flags.socket_id_shift_quirk=%u",	df_cfg.flags.socket_id_shift_quirk);
->   }
-> @@ -282,6 +298,11 @@ int get_df_system_info(void)
->   
->   	get_num_maps();
->   
-> +	if (get_dram_hole_base()) {
-> +		pr_warn("amd_atl: Failed to read DRAM hole base");
-> +		return -EINVAL;
-> +	}
-> +
->   	dump_df_cfg();
->   
->   	return 0;
+Reviewed-by: Bagas Sanjaya <bagasdotme@gmail.com>
 
-With the small change above, this looks good to me.
+--=20
+An old man doll... just what I always wanted! - Clara
 
-Reviewed-by: Yazen Ghannam <yazen.ghannam@amd.com>
+--naAkpeAgH+6KHC1j
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Thanks,
-Yazen
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCZg1YegAKCRD2uYlJVVFO
+oyJuAQCZD3vF43N1Kkz1HmEgp7130tCkVQsyOA9E8/KbWap6iAD/QxxL8dI+KNzG
+9SR+i7e0WhL71RpnBvHq6ovdU/G2iAI=
+=lGz1
+-----END PGP SIGNATURE-----
+
+--naAkpeAgH+6KHC1j--
