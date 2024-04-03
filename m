@@ -1,47 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAF5916F287;
-	Wed,  3 Apr 2024 17:20:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B254D156231;
+	Wed,  3 Apr 2024 17:20:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712164836; cv=none; b=dPDipc96Uk/+gglf8nYMbuafPECIhzDf4juHillXG/DSftPDdnlufcjZ1vfkD3ARcSL10ivvJqvT5vcuNXiduX/tRtHNcYSNUWeQ8NwpOQAUgHNZV91e+pWS69IRMx4O0mqjPwV1ncNfXIdC8Ypvchx0clL3HtU/m2OoGcM3Tq4=
+	t=1712164841; cv=none; b=Nqgce4Tz405QOX3d01Sk1gUZ34Iq9SLKc1DZlBRVPkEewUeviIjjokHbAB9/VqKeK8TOstDx0Kzy0CICfbkyR0mYC9uEreu5SOfnmZ3HIu9bk9yneIfRVHU0hPOVUw5kStb5C9KC3mTPyLDwB2e03PuYYVnGCVBbJ6wALpxyxLI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712164836; c=relaxed/simple;
-	bh=C3P9Vy7HFpd4+Ad7XFX1+eAGYT/rSlErX4+p5PG0MSg=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ebWqG+a+eD8jL+zdiJEjCNMktHHUNrSCCNlUCFLe+PSSP8LEKZK1mVlgyd2/KxTQSaQNyBJb7ep3TXgqdKxJfB2t0D9y9t/GnGKOtsTAH+9Ka5eQVQ3aRCZmxqbTSIjGGEwXwEc3p2bNfcO4ra+J6Mm3iPLd003nBQ4Y24r7tGs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=A+O21fnJ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1712164841; c=relaxed/simple;
+	bh=0FRWAnjUUhfEu3c+uEpE2f2IrF0ulTBcuBoD6QlU87A=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=k9LJY5cMBipY16wuodyZAyfp1Gg0pwA88uv1cVQh78uDFHX0KL1YBKdIES+M6tR8LrYzCErB5EyVJg1B9IWofVb+s1SkNWgslaaY2An6xwNQI3krZJP2apoknHggJDT1VdM3wXhKdmsYjrF1A/SyT6PrkrRhBQznNi+Ak2SEkh4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LpJRWdt3; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="A+O21fnJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6906BC43390;
-	Wed,  3 Apr 2024 17:20:35 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LpJRWdt3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BE1BAC433C7;
+	Wed,  3 Apr 2024 17:20:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712164836;
-	bh=C3P9Vy7HFpd4+Ad7XFX1+eAGYT/rSlErX4+p5PG0MSg=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=A+O21fnJLUepNnayolnb/GhYNjSeOewd2eZ9Qk0K48KUKRlXEMdQ+OH3tT1yIZiHK
-	 CmpfFv1C9bWIeZoaRSPERLFKUfHMgZh/02rU1R4h0ZcFZiqaabtuWwaekTbQgAYBXY
-	 UVPPGfwEqlHEFeUkoB2S7f8dVJ3O54kyaTG4qdmDWNEwWK8v3/6puY92PBX6C0Csio
-	 4/DjdVagxFX46Bk7xHFuKgeIp4M3zAIp4culGZD7qnAhT5ZBJj3FRtD5B5jV2o/ZCX
-	 B3wqePjdEjzE97PllJRuUggqpifCZm2bEJcJfsBnoY/WOlofh1WA5N6O8Wd8SC07Kx
-	 BaobqTbRWXomw==
+	s=k20201202; t=1712164841;
+	bh=0FRWAnjUUhfEu3c+uEpE2f2IrF0ulTBcuBoD6QlU87A=;
+	h=From:To:Cc:Subject:Date:From;
+	b=LpJRWdt3/x/bmNNNW/oleY4L9jYqP+GD0D3y0ix/OwQX1DIR4Q0XjP6C1RrUjfepq
+	 s6pWiWk/DtXYx5ygs/qsoWbcns5FGReJTiLgGNCYU22H3x/QuWb12ceao2FsLkVejE
+	 cC/c4ugPVPh3GeTUqFVuNgv9MQob2XxDOthmBPGBij9ipeZh8KdQ5+8GQlCdOxndGl
+	 xdxwcMv8L8hXIc9BZFJzR2sfTCl430+o4F4s6qFHIZ43dfeTGj5Mj8cW9lP3K6Do0F
+	 2v7IXnmxKA4R4tGednHmH404lsWmuz5W1dqTmwMmBKjzo7tcdSFBf0mLP1folLlpev
+	 nX9WT8uVfI0Ng==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Roman Smirnov <r.smirnov@omp.ru>,
-	Sergey Shtylyov <s.shtylyov@omp.ru>,
-	Helge Deller <deller@gmx.de>,
+Cc: Petre Rodan <petre.rodan@subdimension.ro>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
 	Sasha Levin <sashal@kernel.org>,
-	daniel@ffwll.ch,
-	linux-fbdev@vger.kernel.org,
-	dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.4 6/6] fbmon: prevent division by zero in fb_videomode_from_videomode()
-Date: Wed,  3 Apr 2024 13:20:22 -0400
-Message-ID: <20240403172026.353926-6-sashal@kernel.org>
+	jic23@kernel.org,
+	linux-iio@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 1/5] tools: iio: replace seekdir() in iio_generic_buffer
+Date: Wed,  3 Apr 2024 13:20:34 -0400
+Message-ID: <20240403172041.354877-1-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240403172026.353926-1-sashal@kernel.org>
-References: <20240403172026.353926-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -50,52 +45,46 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
-X-stable-base: Linux 5.4.273
+X-stable-base: Linux 4.19.311
 Content-Transfer-Encoding: 8bit
 
-From: Roman Smirnov <r.smirnov@omp.ru>
+From: Petre Rodan <petre.rodan@subdimension.ro>
 
-[ Upstream commit c2d953276b8b27459baed1277a4fdd5dd9bd4126 ]
+[ Upstream commit 4e6500bfa053dc133021f9c144261b77b0ba7dc8 ]
 
-The expression htotal * vtotal can have a zero value on
-overflow. It is necessary to prevent division by zero like in
-fb_var_to_videomode().
+Replace seekdir() with rewinddir() in order to fix a localized glibc bug.
 
-Found by Linux Verification Center (linuxtesting.org) with Svace.
+One of the glibc patches that stable Gentoo is using causes an improper
+directory stream positioning bug on 32bit arm. That in turn ends up as a
+floating point exception in iio_generic_buffer.
 
-Signed-off-by: Roman Smirnov <r.smirnov@omp.ru>
-Reviewed-by: Sergey Shtylyov <s.shtylyov@omp.ru>
-Signed-off-by: Helge Deller <deller@gmx.de>
+The attached patch provides a fix by using an equivalent function which
+should not cause trouble for other distros and is easier to reason about
+in general as it obviously always goes back to to the start.
+
+https://sourceware.org/bugzilla/show_bug.cgi?id=31212
+
+Signed-off-by: Petre Rodan <petre.rodan@subdimension.ro>
+Link: https://lore.kernel.org/r/20240108103224.3986-1-petre.rodan@subdimension.ro
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/video/fbdev/core/fbmon.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ tools/iio/iio_utils.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/video/fbdev/core/fbmon.c b/drivers/video/fbdev/core/fbmon.c
-index 8e2e19f3bf441..dab5fdeafa97d 100644
---- a/drivers/video/fbdev/core/fbmon.c
-+++ b/drivers/video/fbdev/core/fbmon.c
-@@ -1311,7 +1311,7 @@ int fb_get_mode(int flags, u32 val, struct fb_var_screeninfo *var, struct fb_inf
- int fb_videomode_from_videomode(const struct videomode *vm,
- 				struct fb_videomode *fbmode)
- {
--	unsigned int htotal, vtotal;
-+	unsigned int htotal, vtotal, total;
+diff --git a/tools/iio/iio_utils.c b/tools/iio/iio_utils.c
+index d174487b2f226..1ef51c7e7b04f 100644
+--- a/tools/iio/iio_utils.c
++++ b/tools/iio/iio_utils.c
+@@ -376,7 +376,7 @@ int build_channel_array(const char *device_dir,
+ 		goto error_close_dir;
+ 	}
  
- 	fbmode->xres = vm->hactive;
- 	fbmode->left_margin = vm->hback_porch;
-@@ -1344,8 +1344,9 @@ int fb_videomode_from_videomode(const struct videomode *vm,
- 	vtotal = vm->vactive + vm->vfront_porch + vm->vback_porch +
- 		 vm->vsync_len;
- 	/* prevent division by zero */
--	if (htotal && vtotal) {
--		fbmode->refresh = vm->pixelclock / (htotal * vtotal);
-+	total = htotal * vtotal;
-+	if (total) {
-+		fbmode->refresh = vm->pixelclock / total;
- 	/* a mode must have htotal and vtotal != 0 or it is invalid */
- 	} else {
- 		fbmode->refresh = 0;
+-	seekdir(dp, 0);
++	rewinddir(dp);
+ 	while (ent = readdir(dp), ent) {
+ 		if (strcmp(ent->d_name + strlen(ent->d_name) - strlen("_en"),
+ 			   "_en") == 0) {
 -- 
 2.43.0
 
