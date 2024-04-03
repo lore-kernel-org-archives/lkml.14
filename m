@@ -1,119 +1,214 @@
-Received: from mail-108-mta194.mxroute.com (mail-108-mta194.mxroute.com [136.175.108.194])
+Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F30E814A088
-	for <linux-kernel@vger.kernel.org>; Wed,  3 Apr 2024 15:14:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=136.175.108.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7528814A4FF
+	for <linux-kernel@vger.kernel.org>; Wed,  3 Apr 2024 15:14:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712157249; cv=none; b=Qp0tOARB1YidW54Cr05osIHipYfwT1wYTOYWvFhauxJG1D0UmomlBiIiZNKqgkXOOlPjIofFTt8/sdM4Wzrai2Tf4pvuN3fIysVTSiojVVariEoh7qwpqaUXnldLiLuHPpp0yRglCycwNbs1LQhb7G9JZ0l3QtnMMgBT1UhD7uI=
+	t=1712157249; cv=none; b=h5Z3qrXYqR8STZXE3tLtD8yKP/heLzPQjWlfW8u/yzPgfMO/kcFNXf2lRHRsbxEgspRc5XxmFb8aAAjfe3slDkOAUATzfoFYdH0/ZS5WnliOyx1sjuDjS0h5XxPO0vX4Y53je5msDqmbk3w59GPGw1ctUJR10RrizP3HMFN1oi0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1712157249; c=relaxed/simple;
-	bh=0jE//HJz1xD6oEwMFqvK/Pa++yl5s3cJ3Z7S/AY1DqU=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ARh6pHZKTEeM3zLnaEC45lJWWPR1AjTPxHr0LoZV/RYfOo9soHZ9Pj927O/QxRlK+c74CbFfMn8sg4gymQaFtNfOc4Pg4O3990aHRpubfLSMxY3b8XXV2JqzVg3SARo6BjoG5mHzdtYwoDgWXiU1KitZ7jLjS8h0RjysiTErdoY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=luigi311.com; spf=pass smtp.mailfrom=luigi311.com; dkim=pass (2048-bit key) header.d=luigi311.com header.i=@luigi311.com header.b=BsF40tDW; arc=none smtp.client-ip=136.175.108.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=luigi311.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=luigi311.com
+	bh=W6tEz6Zwd/3V0AalPwql2eDmQ/JYHtwljJr2Uh2Zm/A=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=tqAw+p5ENyof8SZRXyvfr2GALPsDQVVyMHF7no5pwf7AGddKoTjGbRTrSFPfjp+HZXoFPIq0IN4bzm33REVKHAls6YAcs5G3aWoAQU9JbfEGDMgIGOlt0UUeCg6X2Gad6qLzQej8AEN14WrlkJ2QLwY/8T/s5MDJp3Qnl4Ztw3c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=qXBK7svH; arc=none smtp.client-ip=209.85.128.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=luigi311.com header.i=@luigi311.com header.b="BsF40tDW"
-Received: from filter006.mxroute.com ([136.175.111.2] filter006.mxroute.com)
- (Authenticated sender: mN4UYu2MZsgR)
- by mail-108-mta194.mxroute.com (ZoneMTA) with ESMTPSA id 18ea4808e990003bea.011
- for <linux-kernel@vger.kernel.org>
- (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384);
- Wed, 03 Apr 2024 15:07:52 +0000
-X-Zone-Loop: 55d262e174615441f264fcf31363f56725c9b8759040
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=luigi311.com; s=x; h=Content-Transfer-Encoding:MIME-Version:References:
-	In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=oBFF6QVe/lpCGu+E2vjs00/Iw1NaooEs+k0vBn8Hy3Y=; b=BsF40tDWZuQoZayFXP4sDxe1sk
-	l3bM1ChEF5QdYv74KE4ucKV9qZ2ElJeu8e39dajwgcPUa1/i99xQmMZRdo/Gc3laO6thHfeR2yeGn
-	Hwo86rX/GMiXYWWSZOmkIfPNhBYIclDuwVrddyG3PRdpb1M3Agosy+NRhvqbK51aG9ymR3El2fCrZ
-	Dp5ATjjxhH9R+4nCigDm5c+YZqIjpharUWi3/UrROXU+Zd8AtmlcX5UWoAfzP+4M0x1worQo0gRy2
-	V3YBKdxA9mNSPNHOYKD1RkZ9BX4TP3/GeYQKxegvngzAc0JUouoPG2U1KZHdIHDejSqIiucWLo0rn
-	+lIxSqJw==;
-From: git@luigi311.com
-To: linux-media@vger.kernel.org
-Cc: dave.stevenson@raspberrypi.com,
-	jacopo.mondi@ideasonboard.com,
-	mchehab@kernel.org,
-	robh@kernel.org,
-	krzysztof.kozlowski+dt@linaro.org,
-	conor+dt@kernel.org,
-	shawnguo@kernel.org,
-	s.hauer@pengutronix.de,
-	kernel@pengutronix.de,
-	festevam@gmail.com,
-	sakari.ailus@linux.intel.com,
-	devicetree@vger.kernel.org,
-	imx@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	pavel@ucw.cz,
-	phone-devel@vger.kernel.org,
-	Conor Dooley <conor.dooley@microchip.com>,
-	Luis Garcia <git@luigi311.com>
-Subject: [PATCH v3 17/25] dt-bindings: media: imx258: Rename to include vendor prefix
-Date: Wed,  3 Apr 2024 09:03:46 -0600
-Message-ID: <20240403150355.189229-18-git@luigi311.com>
-In-Reply-To: <20240403150355.189229-1-git@luigi311.com>
-References: <20240403150355.189229-1-git@luigi311.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qXBK7svH"
+Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-60cc8d4e1a4so117280877b3.3
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Apr 2024 08:14:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1712157246; x=1712762046; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=RERRULEGqmQXPtZTcd/mEGQQNqydbJ8WRO6RWf+KLek=;
+        b=qXBK7svHDvvteHAx6b7gDQlPoakWDN5rEqtG8eCbj4bmlUtyJTBftY1cszauaBtfUw
+         5Oshf3j/WicRyOgxelet21mr93kHtmzu8+fNpqcN21YBSbONutG7eDYKQfIPdXML1VcT
+         ovcDJQ5Hpm0LQ2yA+mrEqZnm5rvA99gs7TcZCxnwFp38qzU+RM3Lu99O6KWnnEoZ4OuB
+         ZY9d0pePNZt4ibQsC56Jgmh3sERl1DmvbuJG98gwbt9zgHe79Y2kWpaRoieVZlpG7CYk
+         qjyEg/Ode2iK8KYhus3znLaa4J8Ro32+CR9u4ru1cOWZNgsXuV3NSIV9BcfHcXb8argO
+         oVrA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712157246; x=1712762046;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=RERRULEGqmQXPtZTcd/mEGQQNqydbJ8WRO6RWf+KLek=;
+        b=TO8aJgwM8KA9HsFfAjI8x0/X7UvT3XNcpfRiKIoqomLfCxZLFoJrW6iuyWHWuibM3b
+         p8Ohb8QdWhh3XYeL+HFpIl+UyyCC5gR0pr55A7/bnN3+ww459tDg45HQ6HUwmP+vAWd2
+         OP/EOVWLlVTEorCE3zo43xPmUPH73D+f3lNHU0HsecIATZOKXv4yKOck3U4BLjKft2bZ
+         t5C5ZU2wvObB5wqcSoHkRwZMIgV9wFuBTuploXnbKQRo3M0UsrKCvxH3CMdLBAAK8FMn
+         1xRX4gmMNjPDzaC9nafG8zTldpcJ6omIcd3h9xddicpNN1/BG3AfSjdVycW/DheS3jbM
+         8rvg==
+X-Forwarded-Encrypted: i=1; AJvYcCV5RMlZDwolwn43DCxhSCfE30YKNR2ubpHYjS82W406XVYD3G1yYFZG76zi4tKRlHotE+3w8iBeIzGEdPHnRhPPzSnfjZlf8XtElhdt
+X-Gm-Message-State: AOJu0Yw2LkU4DnRpBK39KEV42A4t4YjIwjjQMPaQOAnGUWOhFTKwJj4G
+	iZyYfvdfucHgpH2Bbv/nx0JiQZZVVHPXZr0neHHfCWr7IzOpvAC+Qymq65c/4kcSrxuIPg4TrwY
+	CFw==
+X-Google-Smtp-Source: AGHT+IGmfLK0wH6vXigEvfjeTOgWqVBdPAJCvhT6SwqLPJkCtrIm6w6lz8yIYj/1nevhClSMuSxyy2oCynE=
+X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
+ (user=seanjc job=sendgmr) by 2002:a0d:eb82:0:b0:615:378a:73ed with SMTP id
+ u124-20020a0deb82000000b00615378a73edmr979932ywe.8.1712157246357; Wed, 03 Apr
+ 2024 08:14:06 -0700 (PDT)
+Date: Wed, 3 Apr 2024 08:14:04 -0700
+In-Reply-To: <62f8890cb90e49a3e0b0d5946318c0267b80c540.1708933498.git.isaku.yamahata@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Authenticated-Id: personal@luigi311.com
+Mime-Version: 1.0
+References: <cover.1708933498.git.isaku.yamahata@intel.com> <62f8890cb90e49a3e0b0d5946318c0267b80c540.1708933498.git.isaku.yamahata@intel.com>
+Message-ID: <Zg1yPIV6cVJrwGxX@google.com>
+Subject: Re: [PATCH v19 111/130] KVM: TDX: Implement callbacks for MSR
+ operations for TDX
+From: Sean Christopherson <seanjc@google.com>
+To: isaku.yamahata@intel.com
+Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	isaku.yamahata@gmail.com, Paolo Bonzini <pbonzini@redhat.com>, erdemaktas@google.com, 
+	Sagi Shahar <sagis@google.com>, Kai Huang <kai.huang@intel.com>, chen.bo@intel.com, 
+	hang.yuan@intel.com, tina.zhang@intel.com
+Content-Type: text/plain; charset="us-ascii"
 
-From: Dave Stevenson <dave.stevenson@raspberrypi.com>
+On Mon, Feb 26, 2024, isaku.yamahata@intel.com wrote:
+> diff --git a/arch/x86/kvm/vmx/tdx.c b/arch/x86/kvm/vmx/tdx.c
+> index 389bb95d2af0..c8f991b69720 100644
+> --- a/arch/x86/kvm/vmx/tdx.c
+> +++ b/arch/x86/kvm/vmx/tdx.c
+> @@ -1877,6 +1877,76 @@ void tdx_get_exit_info(struct kvm_vcpu *vcpu, u32 *reason,
+>  	*error_code = 0;
+>  }
+>  
+> +static bool tdx_is_emulated_kvm_msr(u32 index, bool write)
+> +{
+> +	switch (index) {
+> +	case MSR_KVM_POLL_CONTROL:
+> +		return true;
+> +	default:
+> +		return false;
+> +	}
+> +}
+> +
+> +bool tdx_has_emulated_msr(u32 index, bool write)
+> +{
+> +	switch (index) {
+> +	case MSR_IA32_UCODE_REV:
+> +	case MSR_IA32_ARCH_CAPABILITIES:
+> +	case MSR_IA32_POWER_CTL:
+> +	case MSR_IA32_CR_PAT:
+> +	case MSR_IA32_TSC_DEADLINE:
+> +	case MSR_IA32_MISC_ENABLE:
+> +	case MSR_PLATFORM_INFO:
+> +	case MSR_MISC_FEATURES_ENABLES:
+> +	case MSR_IA32_MCG_CAP:
+> +	case MSR_IA32_MCG_STATUS:
+> +	case MSR_IA32_MCG_CTL:
+> +	case MSR_IA32_MCG_EXT_CTL:
+> +	case MSR_IA32_MC0_CTL ... MSR_IA32_MCx_CTL(KVM_MAX_MCE_BANKS) - 1:
+> +	case MSR_IA32_MC0_CTL2 ... MSR_IA32_MCx_CTL2(KVM_MAX_MCE_BANKS) - 1:
+> +		/* MSR_IA32_MCx_{CTL, STATUS, ADDR, MISC, CTL2} */
+> +		return true;
+> +	case APIC_BASE_MSR ... APIC_BASE_MSR + 0xff:
+> +		/*
+> +		 * x2APIC registers that are virtualized by the CPU can't be
+> +		 * emulated, KVM doesn't have access to the virtual APIC page.
+> +		 */
+> +		switch (index) {
+> +		case X2APIC_MSR(APIC_TASKPRI):
+> +		case X2APIC_MSR(APIC_PROCPRI):
+> +		case X2APIC_MSR(APIC_EOI):
+> +		case X2APIC_MSR(APIC_ISR) ... X2APIC_MSR(APIC_ISR + APIC_ISR_NR):
+> +		case X2APIC_MSR(APIC_TMR) ... X2APIC_MSR(APIC_TMR + APIC_ISR_NR):
+> +		case X2APIC_MSR(APIC_IRR) ... X2APIC_MSR(APIC_IRR + APIC_ISR_NR):
+> +			return false;
+> +		default:
+> +			return true;
+> +		}
+> +	case MSR_IA32_APICBASE:
+> +	case MSR_EFER:
+> +		return !write;
 
-imx258.yaml doesn't include the vendor prefix of sony, so
-rename to add it.
-Update the id entry and MAINTAINERS to match.
+Meh, for literally two MSRs, just open code them in tdx_set_msr() and drop the
+@write param.  Or alternatively add:
 
-Signed-off-by: Dave Stevenson <dave.stevenson@raspberrypi.com>
-Acked-by: Conor Dooley <conor.dooley@microchip.com>
-Signed-off-by: Luis Garcia <git@luigi311.com>
----
- .../bindings/media/i2c/{imx258.yaml => sony,imx258.yaml}        | 2 +-
- MAINTAINERS                                                     | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
- rename Documentation/devicetree/bindings/media/i2c/{imx258.yaml => sony,imx258.yaml} (97%)
+static bool tdx_is_read_only_msr(u32 msr){
+{
+	return msr == MSR_IA32_APICBASE || msr == MSR_EFER;
+}
 
-diff --git a/Documentation/devicetree/bindings/media/i2c/imx258.yaml b/Documentation/devicetree/bindings/media/i2c/sony,imx258.yaml
-similarity index 97%
-rename from Documentation/devicetree/bindings/media/i2c/imx258.yaml
-rename to Documentation/devicetree/bindings/media/i2c/sony,imx258.yaml
-index 80d24220baa0..bee61a443b23 100644
---- a/Documentation/devicetree/bindings/media/i2c/imx258.yaml
-+++ b/Documentation/devicetree/bindings/media/i2c/sony,imx258.yaml
-@@ -1,7 +1,7 @@
- # SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
- %YAML 1.2
- ---
--$id: http://devicetree.org/schemas/media/i2c/imx258.yaml#
-+$id: http://devicetree.org/schemas/media/i2c/sony,imx258.yaml#
- $schema: http://devicetree.org/meta-schemas/core.yaml#
- 
- title: Sony IMX258 13 Mpixel CMOS Digital Image Sensor
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 8ceb49f1b630..a8c3a531ad39 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -20489,7 +20489,7 @@ M:	Sakari Ailus <sakari.ailus@linux.intel.com>
- L:	linux-media@vger.kernel.org
- S:	Maintained
- T:	git git://linuxtv.org/media_tree.git
--F:	Documentation/devicetree/bindings/media/i2c/imx258.yaml
-+F:	Documentation/devicetree/bindings/media/i2c/sony,imx258.yaml
- F:	drivers/media/i2c/imx258.c
- 
- SONY IMX274 SENSOR DRIVER
--- 
-2.42.0
+> +	case 0x4b564d00 ... 0x4b564dff:
 
+This is silly, just do
+
+	case MSR_KVM_POLL_CONTROL:
+		return false;
+
+and let everything else go through the default statement, no?
+
+> +		/* KVM custom MSRs */
+> +		return tdx_is_emulated_kvm_msr(index, write);
+> +	default:
+> +		return false;
+> +	}
+> +}
+> +
+> +int tdx_get_msr(struct kvm_vcpu *vcpu, struct msr_data *msr)
+> +{
+> +	if (tdx_has_emulated_msr(msr->index, false))
+> +		return kvm_get_msr_common(vcpu, msr);
+> +	return 1;
+
+Please invert these and make the happy path the not-taken path, i.e.
+
+	if (!tdx_has_emulated_msr(msr->index))
+		return 1;
+
+	return kvm_get_msr_common(vcpu, msr);
+
+The standard kernel pattern is
+
+	if (error)
+		return <error thingie>
+
+	return <happy thingie>
+
+> +}
+> +
+> +int tdx_set_msr(struct kvm_vcpu *vcpu, struct msr_data *msr)
+> +{
+> +	if (tdx_has_emulated_msr(msr->index, true))
+
+As above:
+
+	if (tdx_is_read_only_msr(msr->index))
+		return 1;
+
+	if (!tdx_has_emulated_msr(msr->index))
+		return 1;
+
+	return kvm_set_msr_common(vcpu, msr);
+
+> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+> index d5b18cad9dcd..0e1d3853eeb4 100644
+> --- a/arch/x86/kvm/x86.c
+> +++ b/arch/x86/kvm/x86.c
+> @@ -90,7 +90,6 @@
+>  #include "trace.h"
+>  
+>  #define MAX_IO_MSRS 256
+> -#define KVM_MAX_MCE_BANKS 32
+>  
+>  struct kvm_caps kvm_caps __read_mostly = {
+>  	.supported_mce_cap = MCG_CTL_P | MCG_SER_P,
+> diff --git a/arch/x86/kvm/x86.h b/arch/x86/kvm/x86.h
+> index 4e40c23d66ed..c87b7a777b67 100644
+> --- a/arch/x86/kvm/x86.h
+> +++ b/arch/x86/kvm/x86.h
+> @@ -9,6 +9,8 @@
+>  #include "kvm_cache_regs.h"
+>  #include "kvm_emulate.h"
+>  
+> +#define KVM_MAX_MCE_BANKS 32
+
+Split this to a separate.  Yes, it's trivial, but that's _exactly_ why it should
+be in a separate patch.  The more trivial refactoring you split out, the more we
+can apply _now_ and take off your hands.
