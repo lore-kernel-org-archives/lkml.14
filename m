@@ -1,257 +1,226 @@
-Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F2626DD08
-	for <linux-kernel@vger.kernel.org>; Wed,  3 Apr 2024 07:21:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D86158208;
+	Wed,  3 Apr 2024 07:23:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712128915; cv=none; b=s27V2REFwdqgFY9SqjgNYutU/xnFrMDd8v4MwPhpzzHIdixUFmOY+uzS+RFw0KCJcmhx8I/Ak+G2ZiCwV4fZk4Wc85EHM4n4C2C23sufuwr/xGs5FrwSa2h7jyKouUulxQdymhHIGQoHU2idplfdWiMmk9I7fT7Y9IHin5X96kQ=
+	t=1712129022; cv=none; b=G6LJIIAg5whlZEhkTSYCi7zHWe9TgNBR6U9BhH7riPs/vz0uQI6/Q01tTbaAduRueghhAGCeLUION0GoH0WUYlNIhP6P1zP7ApgzFL8eu4iMWdZc561GhftLqEiUv/zQqAhiyXnuzB+WTSZKzoYnXT9lTC6Mu57dSdiIw5Cc/xQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712128915; c=relaxed/simple;
-	bh=YwCTtSxtOVaFrBMehGFPkK05qlCv/3lFORgK1gDJgN4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=LtZzO7bUhNEhGABX+c/tgVvPmIRUzKxH5SPZY8HpZuuXoh/rcT2CZVOOpkMPF5l6ySY2IMsvuQ7Py5xKsUrYykuQZgg37R7PTwpU/dxHFsL6gJjKkgItcWD3jfaPf8tozWgsQaug2hMRre24hno4gafz3PEU3XnFZhzyOK6V6yI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sigma-star.at; spf=pass smtp.mailfrom=sigma-star.at; dkim=pass (2048-bit key) header.d=sigma-star.at header.i=@sigma-star.at header.b=uW854BK8; arc=none smtp.client-ip=209.85.128.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sigma-star.at
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sigma-star.at
+	s=arc-20240116; t=1712129022; c=relaxed/simple;
+	bh=6HqhTpg6hJ6e3zeFzvf8NRUha1X4YypuenPq4riKi2w=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=VqLaeczaygqGsxJ6ZEbp+wg8vF3LX3IV03ctzDBQ8rMwgWYZfFIuGlnIJMIOfCECIWyzwY4AzdD56KK8biuVDd/0HoVuxBeBlBJF3un4Qp35OiQPPGrW/EGWpZPmjCBAHdugT1Sr9OPwcVLuPKQ8xtM5dKUPjH605aSPVupDTLA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JnLFN5iG; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sigma-star.at header.i=@sigma-star.at header.b="uW854BK8"
-Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-41624c40b44so897735e9.0
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Apr 2024 00:21:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sigma-star.at; s=google; t=1712128912; x=1712733712; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ht1KLnNvKBCCICp+Y6JpKOSNrIWAe17k5/lz/+k/t0k=;
-        b=uW854BK8iRab+dLisa+IbHPHJgwWKAKDISQ819SOYm1n3kgAF7WCNlqinyILIpJ2hI
-         TGaQsz83vXduS0LjJAvE/5vDlZjmpGnTcq2/i2obKcAXtecd5iyzhn/HVL0v9CuaIoR+
-         NIgoZQGNZZ6aYzLBkQNOtUajyD5C57G3czNHbSAtIKou8RtsxCbESzp8/Fkm4uPr1h/Q
-         SHfuuM62iVAxN0aybNchd0oj8lS+U3QV9m2sQrQjrDP+VVZJhmR13Fk4FMPhqkHayZUP
-         SXlWNSI6VrBviYkHIBADSh+q2qzJPbK+fVi7zA82Otz95blwYrofBZUHW1ma6NCe7mfC
-         8diA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712128912; x=1712733712;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ht1KLnNvKBCCICp+Y6JpKOSNrIWAe17k5/lz/+k/t0k=;
-        b=loaykPQJPQDPu1MJaZPRX87uARRuqv3xXQdK/R9M/wx3PlzFVzJvYZooOFr3ykpGMm
-         7LaqiBGWlQlsdcSU2qbzw2B1yxpj1GTLyop1bDoDnHCskxoFjh34D3oeiunTYkkI8zcZ
-         GKkpmqWIY/HqFdgGudFaXAxBdOGaCASlYrhYzU+/MLVP8oAlDkeq4P8BqPaX0zxY69zu
-         na+PNBx3C4SR6pPJih0/Ewq7tSUk5+S0XNJmvQeYpfWHXWJ5Nj33DmkrtjRZIsUFfhls
-         IdOccr/snzTXnvzauFHMdKiwhJDJdUzG5aGkPGBv0DlotSkvGizvz7frFT/7+b9YiCSm
-         4uEw==
-X-Forwarded-Encrypted: i=1; AJvYcCUWfUZbOZSdbs4EO9S5uH7rtn1kQSgS8P6ppHl+QS3KTm2Tmb/NtACr2Kl7sI9EzVFdNrsNAdRd21TjfWHO5bpFPKjbOPEVBYrqvct2
-X-Gm-Message-State: AOJu0YzbQxwfYxzzuNL8bHLQNz0Gg9H7ncP/oDDaPl3Cg9EUp8lwBCxf
-	QuiIgIUBvjo+stocFYXovqWdamyR53FJxZWOpJ0+PxGVahANRmeYqPI5eIUw8i0=
-X-Google-Smtp-Source: AGHT+IHxnLJChRG6eyzjNgzPrS0ONsTJ00ZbGMzOG5HnqpNOaErE7IvWFJCS+7/AvipAmrK+4XCdlA==
-X-Received: by 2002:a05:600c:2d06:b0:413:e19:337f with SMTP id x6-20020a05600c2d0600b004130e19337fmr3324441wmf.22.1712128912023;
-        Wed, 03 Apr 2024 00:21:52 -0700 (PDT)
-Received: from localhost ([82.150.214.1])
-        by smtp.gmail.com with UTF8SMTPSA id f11-20020a05600c4e8b00b004154e48bcdesm17187826wmq.14.2024.04.03.00.21.50
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 03 Apr 2024 00:21:51 -0700 (PDT)
-From: David Gstir <david@sigma-star.at>
-To: Mimi Zohar <zohar@linux.ibm.com>,
-	James Bottomley <jejb@linux.ibm.com>,
-	Jarkko Sakkinen <jarkko@kernel.org>,
-	Herbert Xu <herbert@gondor.apana.org.au>,
-	"David S. Miller" <davem@davemloft.net>
-Cc: David Gstir <david@sigma-star.at>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	NXP Linux Team <linux-imx@nxp.com>,
-	Ahmad Fatoum <a.fatoum@pengutronix.de>,
-	sigma star Kernel Team <upstream+dcp@sigma-star.at>,
-	David Howells <dhowells@redhat.com>,
-	Li Yang <leoyang.li@nxp.com>,
-	Paul Moore <paul@paul-moore.com>,
-	James Morris <jmorris@namei.org>,
-	"Serge E. Hallyn" <serge@hallyn.com>,
-	"Paul E. McKenney" <paulmck@kernel.org>,
-	Randy Dunlap <rdunlap@infradead.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	"Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-	Tejun Heo <tj@kernel.org>,
-	"Steven Rostedt (Google)" <rostedt@goodmis.org>,
-	linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-integrity@vger.kernel.org,
-	keyrings@vger.kernel.org,
-	linux-crypto@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linuxppc-dev@lists.ozlabs.org,
-	linux-security-module@vger.kernel.org,
-	Richard Weinberger <richard@nod.at>,
-	David Oberhollenzer <david.oberhollenzer@sigma-star.at>
-Subject: [PATCH v8 6/6] docs: trusted-encrypted: add DCP as new trust source
-Date: Wed,  3 Apr 2024 09:21:22 +0200
-Message-ID: <20240403072131.54935-7-david@sigma-star.at>
-X-Mailer: git-send-email 2.44.0
-In-Reply-To: <20240403072131.54935-1-david@sigma-star.at>
-References: <20240403072131.54935-1-david@sigma-star.at>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JnLFN5iG"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9DA15C433F1;
+	Wed,  3 Apr 2024 07:23:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1712129021;
+	bh=6HqhTpg6hJ6e3zeFzvf8NRUha1X4YypuenPq4riKi2w=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=JnLFN5iG6jR127kBF3VJGNw7pcD+kle+rRfAj4a/YIRawTPNtzjs71teD2VI/d3q8
+	 rbnvy7DLs3lIGJ/rpPUY11FMQ39c0o1WZBFKvl2o6iKe0060p/pxuzKY85jqk3juYr
+	 qs1AEBS0RaMWoU46OYeGUCXQlZNouBf/W6nz0NeNu6DH247T82aIPsAmT3XhzUN7oH
+	 4TKZN7qQLu7ON/kvrdJXyUsCL/aiWPjS6kil+9P6XhJvzEjI6eN81wuOuIRg5pJgKc
+	 gGwRtVbXKFbzlQ9qUhegj5T1P2+vZPfZ5diQUzMqkoDSx1ODiiEAgXFXVJIJ7U7aQB
+	 He5v/QQv4N7sg==
+Message-ID: <bcf12c0b-d569-4d64-adfb-bad053c182a8@kernel.org>
+Date: Wed, 3 Apr 2024 09:23:33 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3] clk: starfive: pll: Fix lower rate of CPUfreq by
+ setting PLL0 rate to 1.5GHz
+To: Xingyu Wu <xingyu.wu@starfivetech.com>,
+ Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
+ <sboyd@kernel.org>, Conor Dooley <conor@kernel.org>,
+ Emil Renner Berthing <emil.renner.berthing@canonical.com>,
+ Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
+Cc: Paul Walmsley <paul.walmsley@sifive.com>,
+ Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
+ Hal Feng <hal.feng@starfivetech.com>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
+ "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+ "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+References: <20240402090920.11627-1-xingyu.wu@starfivetech.com>
+ <8d21b1bc-9402-41d4-bd81-c521c8a33d2d@kernel.org>
+ <NTZPR01MB095662C4A6FCAEB7B35C48FF9F3DA@NTZPR01MB0956.CHNPR01.prod.partner.outlook.cn>
+Content-Language: en-US
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <NTZPR01MB095662C4A6FCAEB7B35C48FF9F3DA@NTZPR01MB0956.CHNPR01.prod.partner.outlook.cn>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Update the documentation for trusted and encrypted KEYS with DCP as new
-trust source:
+On 03/04/2024 09:19, Xingyu Wu wrote:
+> On 03/04/2024 0:18, Krzysztof Kozlowski wrote:
+>>
+>> On 02/04/2024 11:09, Xingyu Wu wrote:
+>>> CPUfreq supports 4 cpu frequency loads on 375/500/750/1500MHz.
+>>> But now PLL0 rate is 1GHz and the cpu frequency loads become
+>>> 333/500/500/1000MHz in fact.
+>>>
+>>> So PLL0 rate should be default set to 1.5GHz. But setting the
+>>> PLL0 rate need certain steps:
+>>>
+>>> 1. Change the parent of cpu_root clock to OSC clock.
+>>> 2. Change the divider of cpu_core if PLL0 rate is higher than
+>>>    1.25GHz before CPUfreq boot.
+>>> 3. Change the parent of cpu_root clock back to PLL0 clock.
+>>>
+>>> Reviewed-by: Hal Feng <hal.feng@starfivetech.com>
+>>> Fixes: e2c510d6d630 ("riscv: dts: starfive: Add cpu scaling for JH7110
+>>> SoC")
+>>> Signed-off-by: Xingyu Wu <xingyu.wu@starfivetech.com>
+>>> ---
+>>>
+>>> Hi Stephen and Emil,
+>>>
+>>> This patch fixes the issue about lower rate of CPUfreq[1] by setting
+>>> PLL0 rate to 1.5GHz.
+>>>
+>>> In order not to affect the cpu operation, setting the PLL0 rate need
+>>> certain steps. The cpu_root's parent clock should be changed first.
+>>> And the divider of the cpu_core clock should be set to 2 so they won't
+>>> crash when setting 1.5GHz without voltage regulation. Due to PLL
+>>> driver boot earlier than SYSCRG driver, cpu_core and cpu_root clocks
+>>> are using by ioremap().
+>>>
+>>> [1]: https://github.com/starfive-tech/VisionFive2/issues/55
+>>>
+>>> Previous patch link:
+>>> v2:
+>>> https://lore.kernel.org/all/20230821152915.208366-1-xingyu.wu@starfive
+>>> tech.com/
+>>> v1:
+>>> https://lore.kernel.org/all/20230811033631.160912-1-xingyu.wu@starfive
+>>> tech.com/
+>>>
+>>> Thanks,
+>>> Xingyu Wu
+>>> ---
+>>>  .../jh7110-starfive-visionfive-2.dtsi         |   5 +
+>>>  .../clk/starfive/clk-starfive-jh7110-pll.c    | 102 ++++++++++++++++++
+>>
+>> Please do not mix DTS and driver code. That's not really portable. DTS is being
+>> exported and used in other projects.
+> 
+> OK, I will submit that in two patches.
+> 
+>>
+>> ...
+>>
+>>>
+>>> @@ -458,6 +535,8 @@ static int jh7110_pll_probe(struct platform_device
+>> *pdev)
+>>>  	struct jh7110_pll_priv *priv;
+>>>  	unsigned int idx;
+>>>  	int ret;
+>>> +	struct device_node *np;
+>>> +	struct resource res;
+>>>
+>>>  	priv = devm_kzalloc(&pdev->dev, sizeof(*priv), GFP_KERNEL);
+>>>  	if (!priv)
+>>> @@ -489,6 +568,29 @@ static int jh7110_pll_probe(struct platform_device
+>> *pdev)
+>>>  			return ret;
+>>>  	}
+>>>
+>>> +	priv->is_first_set = true;
+>>> +	np = of_find_compatible_node(NULL, NULL, "starfive,jh7110-syscrg");
+>>
+>> Your drivers should not do it. It's fragile, hides true link/dependency.
+>> Please use phandles.
+>>
+>>
+>>> +	if (!np) {
+>>> +		ret = PTR_ERR(np);
+>>> +		dev_err(priv->dev, "failed to get syscrg node\n");
+>>> +		goto np_put;
+>>> +	}
+>>> +
+>>> +	ret = of_address_to_resource(np, 0, &res);
+>>> +	if (ret) {
+>>> +		dev_err(priv->dev, "failed to get syscrg resource\n");
+>>> +		goto np_put;
+>>> +	}
+>>> +
+>>> +	priv->syscrg_base = ioremap(res.start, resource_size(&res));
+>>> +	if (!priv->syscrg_base)
+>>> +		ret = -ENOMEM;
+>>
+>> Why are you mapping other device's IO? How are you going to ensure synced
+>> access to registers?
+> 
+> Because setting PLL0 rate need specific steps and use the clocks of SYSCRG.
 
-- Describe security properties of DCP trust source
-- Describe key usage
-- Document blob format
+That's not a reason to map other device's IO. That could be a reason for
+having syscon or some other sort of relationship, like clock or reset.
 
-Co-developed-by: Richard Weinberger <richard@nod.at>
-Signed-off-by: Richard Weinberger <richard@nod.at>
-Co-developed-by: David Oberhollenzer <david.oberhollenzer@sigma-star.at>
-Signed-off-by: David Oberhollenzer <david.oberhollenzer@sigma-star.at>
-Signed-off-by: David Gstir <david@sigma-star.at>
----
- .../security/keys/trusted-encrypted.rst       | 53 +++++++++++++++++++
- security/keys/trusted-keys/trusted_dcp.c      | 19 +++++++
- 2 files changed, 72 insertions(+)
+> But SYSCRG driver also need PLL clock to be clock source when adding clock
+> providers. I tried to add SYSCRG clocks in 'clocks' property in DT and use
+> clk_get() to get the clocks. But it could not run and crash. So I use ioremap()
+> instead.
 
-diff --git a/Documentation/security/keys/trusted-encrypted.rst b/Documentation/security/keys/trusted-encrypted.rst
-index e989b9802f92..f4d7e162d5e4 100644
---- a/Documentation/security/keys/trusted-encrypted.rst
-+++ b/Documentation/security/keys/trusted-encrypted.rst
-@@ -42,6 +42,14 @@ safe.
-          randomly generated and fused into each SoC at manufacturing time.
-          Otherwise, a common fixed test key is used instead.
- 
-+     (4) DCP (Data Co-Processor: crypto accelerator of various i.MX SoCs)
-+
-+         Rooted to a one-time programmable key (OTP) that is generally burnt
-+         in the on-chip fuses and is accessible to the DCP encryption engine only.
-+         DCP provides two keys that can be used as root of trust: the OTP key
-+         and the UNIQUE key. Default is to use the UNIQUE key, but selecting
-+         the OTP key can be done via a module parameter (dcp_use_otp_key).
-+
-   *  Execution isolation
- 
-      (1) TPM
-@@ -57,6 +65,12 @@ safe.
- 
-          Fixed set of operations running in isolated execution environment.
- 
-+     (4) DCP
-+
-+         Fixed set of cryptographic operations running in isolated execution
-+         environment. Only basic blob key encryption is executed there.
-+         The actual key sealing/unsealing is done on main processor/kernel space.
-+
-   * Optional binding to platform integrity state
- 
-      (1) TPM
-@@ -79,6 +93,11 @@ safe.
-          Relies on the High Assurance Boot (HAB) mechanism of NXP SoCs
-          for platform integrity.
- 
-+     (4) DCP
-+
-+         Relies on Secure/Trusted boot process (called HAB by vendor) for
-+         platform integrity.
-+
-   *  Interfaces and APIs
- 
-      (1) TPM
-@@ -94,6 +113,11 @@ safe.
- 
-          Interface is specific to silicon vendor.
- 
-+     (4) DCP
-+
-+         Vendor-specific API that is implemented as part of the DCP crypto driver in
-+         ``drivers/crypto/mxs-dcp.c``.
-+
-   *  Threat model
- 
-      The strength and appropriateness of a particular trust source for a given
-@@ -129,6 +153,13 @@ selected trust source:
-      CAAM HWRNG, enable CRYPTO_DEV_FSL_CAAM_RNG_API and ensure the device
-      is probed.
- 
-+  *  DCP (Data Co-Processor: crypto accelerator of various i.MX SoCs)
-+
-+     The DCP hardware device itself does not provide a dedicated RNG interface,
-+     so the kernel default RNG is used. SoCs with DCP like the i.MX6ULL do have
-+     a dedicated hardware RNG that is independent from DCP which can be enabled
-+     to back the kernel RNG.
-+
- Users may override this by specifying ``trusted.rng=kernel`` on the kernel
- command-line to override the used RNG with the kernel's random number pool.
- 
-@@ -231,6 +262,19 @@ Usage::
- CAAM-specific format.  The key length for new keys is always in bytes.
- Trusted Keys can be 32 - 128 bytes (256 - 1024 bits).
- 
-+Trusted Keys usage: DCP
-+-----------------------
-+
-+Usage::
-+
-+    keyctl add trusted name "new keylen" ring
-+    keyctl add trusted name "load hex_blob" ring
-+    keyctl print keyid
-+
-+"keyctl print" returns an ASCII hex copy of the sealed key, which is in format
-+specific to this DCP key-blob implementation.  The key length for new keys is
-+always in bytes. Trusted Keys can be 32 - 128 bytes (256 - 1024 bits).
-+
- Encrypted Keys usage
- --------------------
- 
-@@ -426,3 +470,12 @@ string length.
- privkey is the binary representation of TPM2B_PUBLIC excluding the
- initial TPM2B header which can be reconstructed from the ASN.1 octed
- string length.
-+
-+DCP Blob Format
-+---------------
-+
-+.. kernel-doc:: security/keys/trusted-keys/trusted_dcp.c
-+   :doc: dcp blob format
-+
-+.. kernel-doc:: security/keys/trusted-keys/trusted_dcp.c
-+   :identifiers: struct dcp_blob_fmt
-diff --git a/security/keys/trusted-keys/trusted_dcp.c b/security/keys/trusted-keys/trusted_dcp.c
-index 16c44aafeab3..b5f81a05be36 100644
---- a/security/keys/trusted-keys/trusted_dcp.c
-+++ b/security/keys/trusted-keys/trusted_dcp.c
-@@ -19,6 +19,25 @@
- #define DCP_BLOB_VERSION 1
- #define DCP_BLOB_AUTHLEN 16
- 
-+/**
-+ * DOC: dcp blob format
-+ *
-+ * The Data Co-Processor (DCP) provides hardware-bound AES keys using its
-+ * AES encryption engine only. It does not provide direct key sealing/unsealing.
-+ * To make DCP hardware encryption keys usable as trust source, we define
-+ * our own custom format that uses a hardware-bound key to secure the sealing
-+ * key stored in the key blob.
-+ *
-+ * Whenever a new trusted key using DCP is generated, we generate a random 128-bit
-+ * blob encryption key (BEK) and 128-bit nonce. The BEK and nonce are used to
-+ * encrypt the trusted key payload using AES-128-GCM.
-+ *
-+ * The BEK itself is encrypted using the hardware-bound key using the DCP's AES
-+ * encryption engine with AES-128-ECB. The encrypted BEK, generated nonce,
-+ * BEK-encrypted payload and authentication tag make up the blob format together
-+ * with a version number, payload length and authentication tag.
-+ */
-+
- /**
-  * struct dcp_blob_fmt - DCP BLOB format.
-  *
--- 
-2.35.3
+So instead of properly model the relationship, you entangle the drivers
+even more.
+
+Please come with a proper design for this. I have no clue about your
+hardware, but that looks like you are asynchronously configuring the
+same hardware in two different places.
+
+Sorry, that's poor code.
+
+Best regards,
+Krzysztof
 
