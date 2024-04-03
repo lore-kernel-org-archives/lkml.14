@@ -1,114 +1,135 @@
-Received: from sxb1plsmtpa01-15.prod.sxb1.secureserver.net (sxb1plsmtpa01-15.prod.sxb1.secureserver.net [92.204.81.245])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oo1-f54.google.com (mail-oo1-f54.google.com [209.85.161.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDE3A1D54B
-	for <linux-kernel@vger.kernel.org>; Wed,  3 Apr 2024 19:18:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=92.204.81.245
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D31D31D54B;
+	Wed,  3 Apr 2024 19:21:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712171941; cv=none; b=kMwwnbwShKYRVg0mBFpdMus5C+QZKHKUdW8kQtzoKlLHRbHBjneOCqpPZzX4DgMxoTFg9xIM/WO+d1+vUZBLm9ARy1Z2xMSESR2oCqRETpikN474zH+eGqqvTJyaEh3O92qkK7Vw1SDse4ZIeJmOYJmhxhgq0Sf4ox/lK4yQ+J0=
+	t=1712172102; cv=none; b=sNJ5IIOcASOElpbQPpXOSwDJ7aHmLepmudENfHQAfz++5lZs5fRej5RAAWRMlpYl5kfFmTeYakmzC68orfRv7Ffp+YuAFIXNFtrZHC9fLf0tvSadGe7C/pePci0vrTvMJWeX7szDlwb9LWuyFRH+1VYYzGrDZ+w7tWOP+gwX3r8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712171941; c=relaxed/simple;
-	bh=NrcmZ271a8xN2jxJj5BFmWWaKucfI/V6Nb0sIwEp+oM=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=XVHWw38N7CQFwtmuzEV97ttuP32kmKf4C3F1PX6EsRa84tvwirHWVJlGkpWkzXDpWPJXjYw+G+qkH+AgdkCCKd1HoM6c+nfcgSsAvZGaotZ8eLidLmY6icHopbOzGTLOpLAWIdD29Dx/1oqrEUX3bNswrsdUSSh2bhiv0nDre3g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squashfs.org.uk; spf=pass smtp.mailfrom=squashfs.org.uk; arc=none smtp.client-ip=92.204.81.245
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squashfs.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=squashfs.org.uk
-Received: from phoenix.fritz.box ([82.69.79.175])
-	by :SMTPAUTH: with ESMTPA
-	id s5QureLOS8TQvs5R7rECRT; Wed, 03 Apr 2024 11:34:14 -0700
-X-CMAE-Analysis: v=2.4 cv=WqXgMsfv c=1 sm=1 tr=0 ts=660da126
- a=84ok6UeoqCVsigPHarzEiQ==:117 a=84ok6UeoqCVsigPHarzEiQ==:17 a=FXvPX3liAAAA:8
- a=hfclLu6IeWhw0SyEGDUA:9 a=UObqyxdv-6Yh2QiB9mM_:22
-X-SECURESERVER-ACCT: phillip@squashfs.org.uk
-From: Phillip Lougher <phillip@squashfs.org.uk>
-To: akpm@linux-foundation.org,
-	linux-kernel@vger.kernel.org
-Cc: justinstitt@google.com,
-	Phillip Lougher <phillip@squashfs.org.uk>
-Subject: [PATCH] Squashfs: remove deprecated strncpy by not copying the string
-Date: Wed,  3 Apr 2024 19:33:52 +0100
-Message-Id: <20240403183352.391308-1-phillip@squashfs.org.uk>
-X-Mailer: git-send-email 2.39.2
+	s=arc-20240116; t=1712172102; c=relaxed/simple;
+	bh=FT1fbad1bza7YjyFyg9rJscq3rr7vUNVyBiRRdR2aNk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=HDGq+k7+HmbRu7HZH/AmiezRS/1Ndgg6OyymDUMqVnmeIK0iT4wM2JGOU5MDYb9GZc5Z6i/3p2hEKviEFMqaRVEzrf+Gr5AqVosOYmy5updVmcg24HXQsVsNSLQ2bObKD8rvl3l113iUqKOu1wgseBFdzCUG5mS4Jq2zMZrXKno=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=daF348jd; arc=none smtp.client-ip=209.85.161.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="daF348jd"
+Received: by mail-oo1-f54.google.com with SMTP id 006d021491bc7-5a480985625so165824eaf.0;
+        Wed, 03 Apr 2024 12:21:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1712172100; x=1712776900; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=71eP4QlMczx2Y4yJ5dvBU+fua5ttQveVgsrybppYBU4=;
+        b=daF348jdUZFfbPB4Q8yX3Ebv1pNgRAV6RBOUAxcqzjgMVoMJcd7p8TYgN1kdrGz/D/
+         m1aNnjUkFNEfUnbT3RnIh56RJU8evSOlDTzhWegA0lLz7VgVkIsvTjnXTz2lpl8ioJF/
+         iytjyIZ7rYiP802fEcQtCYxWKAKa9WIOavUWUnQhzv5+bis2sfV1EmS04BXNZkIBy++f
+         7DUx63P5J2zjiFYVJFvPQjMp22yb2FDlBqCYa5rSUp/ACPuJLKCGcNQBSFAugv/eqUUL
+         lKwfiiFNzFTb/5HluEE3Qy9gqMUvohkXXdxxaIDibRNQvXxCSL17kH0Oz/c6vsz9OGae
+         QC+Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712172100; x=1712776900;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=71eP4QlMczx2Y4yJ5dvBU+fua5ttQveVgsrybppYBU4=;
+        b=H9ELw6clOHUWrgSxeVuWqAcsCUHFo/Cbih0WW8MbB94CaxUFSXpK7NB65fZcRyyR7j
+         b8qdm0f0GVGTbMb1Vh7+T2D33Xa9bcFTn8m1Bjz6kE3sG8cwrUtLMIH7UyaieB2qmWWR
+         PxVZUxThm6DwBtiImHL+ceatv3CGgnE1GuyIsNXcG7rWTKY/HKqkIbASjg50OWPmUyle
+         E3ETI/xHB3GFj1AnKWhgiR4D2yeHSqk9eoXcely+OF7SvYCGXZqMVY7WsCRiesSdK4W1
+         PzXT01k32PnsE4SnVnRhdayvDuuWH+ynpLzzIq9ZkfAe77Zdcj7KRNT6RP4FXvK+6DX9
+         pqaQ==
+X-Forwarded-Encrypted: i=1; AJvYcCV80zxeTN0upq7/QO56jgBM3JS0AR+ylDAJsZ/m/a+FveCzP0s1fdw0kbP0h0wdIHfoVteawXejOzmNpA4alEhbno0ZTahPvQRg7Dna/ZapBi6EAAF4v+1WUDO9w5pS+3qWfLepYJJndwLDCA==
+X-Gm-Message-State: AOJu0YzLdFUdwtzKpnE6c1HQEkb8wEVtsA/oLkH4q3R+T3uf7+snUfHw
+	Hz8Ny+pM0r5wyPVqRcnZv+n8y3W1ly8FYyZgYfUin6ivA53he67no0A8EC66
+X-Google-Smtp-Source: AGHT+IEe45VMj3vsXzq43ZjMpWFWOEnem3jMe583txSo/lZHOb7SmqUEVgxDZIs/8Im/4WJlUGV84Q==
+X-Received: by 2002:a05:6870:238e:b0:22e:9e53:3fd2 with SMTP id e14-20020a056870238e00b0022e9e533fd2mr300149oap.28.1712172099688;
+        Wed, 03 Apr 2024 12:21:39 -0700 (PDT)
+Received: from localhost ([2620:10d:c090:400::5:25ab])
+        by smtp.gmail.com with ESMTPSA id l11-20020a62be0b000000b006e567c81d14sm12115035pff.43.2024.04.03.12.21.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 03 Apr 2024 12:21:39 -0700 (PDT)
+Sender: Tejun Heo <htejun@gmail.com>
+Date: Wed, 3 Apr 2024 09:21:37 -1000
+From: Tejun Heo <tj@kernel.org>
+To: Kent Overstreet <kent.overstreet@linux.dev>
+Cc: Jan Kara <jack@suse.cz>, Kemeng Shi <shikemeng@huaweicloud.com>,
+	akpm@linux-foundation.org, willy@infradead.org, bfoster@redhat.com,
+	dsterba@suse.com, mjguzik@gmail.com, dhowells@redhat.com,
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+	linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH v2 0/6] Improve visibility of writeback
+Message-ID: <Zg2sQTIDom21q4i9@slm.duckdns.org>
+References: <ZgXFrabAqunDctVp@slm.duckdns.org>
+ <n2znv2ioy62rrrzz4nl2x7x5uighuxf2fgozhpfdkj6ialdiqe@a3mnfez7mitl>
+ <ZgXJH9XQNqda7fpz@slm.duckdns.org>
+ <wgec7wbhdn7ilvwddcalkbgxzjutp6h7dgfrijzffb64pwpksz@e6tqcybzfu2f>
+ <ZgXPZ1uJSUCF79Ef@slm.duckdns.org>
+ <qv3vv6355aw5fkzw5yvuwlnyceypcsfl5kkcrvlipxwfl3nuyg@7cqwaqpxn64t>
+ <ZgXXKaZlmOWC-3mn@slm.duckdns.org>
+ <20240403162716.icjbicvtbleiymjy@quack3>
+ <Zg2jdcochRXNdDZX@slm.duckdns.org>
+ <qemects2mglzjdig7y5uufhoqdhoccwlrwrtfhe4jy6gbadj6n@dnnbzymtxpyj>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CMAE-Envelope: MS4xfEWXQMK4iiFZ5Wdc9WmQreTGJMY+VbKNnL2L72ogZI/HQO038k8RfaYooA/XFBzNhqKPt2itSp58GH55M1zH9cHzaHDXAHb30o6YSj+LThoY44mw8qMF
- p8X6pdKENg81Koub31NmQgNmao4GSxSVv2/F4IcF+KS+dRI/AvxYHORbTbiiN4wmsDN6Gxlj+0xxdeA/CPYWl4HD95XjVUyoYeQYY/p8TUOi2dWtohq66p8B
- UDGhk/+uc70xxsQUEgl7MihyjExW/qSrF5F9A7cF5JJIm8GOuHPrFM2gPorts5BA4k4FZzA9b1tFg59g59cRbQ==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <qemects2mglzjdig7y5uufhoqdhoccwlrwrtfhe4jy6gbadj6n@dnnbzymtxpyj>
 
-Squashfs copied the passed string (name) into a temporary buffer
-to ensure it was NUL-terminated.  This however is completely
-unnecessary as the string is already NUL-terminated.  So remove
-the deprecated strncpy() by completely removing the string copy.
+Hello,
 
-The background behind this unnecessary string copy is that it
-dates back to the days when Squashfs was an out of kernel patch.
-The code deliberately did not assume the string was NUL-terminated
-in case in future this changed (due to kernel changes).  This
-would mean the out of tree patches would be broken but still
-compile OK.
+On Wed, Apr 03, 2024 at 03:06:56PM -0400, Kent Overstreet wrote:
+...
+> That's how it should be if you just make a point of making your internal
+> state easy to view and introspect, but when I'm debugging issues that
+> run into the wider block layer, or memory reclaim, we often hit a wall.
 
-Signed-off-by: Phillip Lougher <phillip@squashfs.org.uk>
----
- fs/squashfs/namei.c | 14 ++++----------
- 1 file changed, 4 insertions(+), 10 deletions(-)
+Try drgn:
 
-diff --git a/fs/squashfs/namei.c b/fs/squashfs/namei.c
-index 11e4539b9eae..65aae7e2a859 100644
---- a/fs/squashfs/namei.c
-+++ b/fs/squashfs/namei.c
-@@ -62,27 +62,21 @@
-  */
- static int get_dir_index_using_name(struct super_block *sb,
- 			u64 *next_block, int *next_offset, u64 index_start,
--			int index_offset, int i_count, const char *name,
--			int len)
-+			int index_offset, int i_count, const char *name)
- {
- 	struct squashfs_sb_info *msblk = sb->s_fs_info;
- 	int i, length = 0, err;
- 	unsigned int size;
- 	struct squashfs_dir_index *index;
--	char *str;
- 
- 	TRACE("Entered get_dir_index_using_name, i_count %d\n", i_count);
- 
--	index = kmalloc(sizeof(*index) + SQUASHFS_NAME_LEN * 2 + 2, GFP_KERNEL);
-+	index = kmalloc(sizeof(*index) + SQUASHFS_NAME_LEN + 1, GFP_KERNEL);
- 	if (index == NULL) {
- 		ERROR("Failed to allocate squashfs_dir_index\n");
- 		goto out;
- 	}
- 
--	str = &index->name[SQUASHFS_NAME_LEN + 1];
--	strncpy(str, name, len);
--	str[len] = '\0';
--
- 	for (i = 0; i < i_count; i++) {
- 		err = squashfs_read_metadata(sb, index, &index_start,
- 					&index_offset, sizeof(*index));
-@@ -101,7 +95,7 @@ static int get_dir_index_using_name(struct super_block *sb,
- 
- 		index->name[size] = '\0';
- 
--		if (strcmp(index->name, str) > 0)
-+		if (strcmp(index->name, name) > 0)
- 			break;
- 
- 		length = le32_to_cpu(index->index);
-@@ -153,7 +147,7 @@ static struct dentry *squashfs_lookup(struct inode *dir, struct dentry *dentry,
- 	length = get_dir_index_using_name(dir->i_sb, &block, &offset,
- 				squashfs_i(dir)->dir_idx_start,
- 				squashfs_i(dir)->dir_idx_offset,
--				squashfs_i(dir)->dir_idx_cnt, name, len);
-+				squashfs_i(dir)->dir_idx_cnt, name);
- 
- 	while (length < i_size_read(dir)) {
- 		/*
+  https://drgn.readthedocs.io/en/latest/
+
+I've been adding drgn scripts under tools/ directory for introspection.
+They're easy to write, deploy and ask users to run.
+
+> Writeback throttling was buggy for _months_, no visibility or
+> introspection or concerns for debugging, and that's a small chunk of
+> code. io_uring - had to disable it. I _still_ have people bringing
+> issues to me that are clearly memory reclaim related but I don't have
+> the tools.
+> 
+> It's not like any of this code exports much in the way of useful
+> tracepoints either, but tracepoints often just aren't what you want;
+> what you want just to be able to see internal state (_without_ having to
+> use a debugger, because that's completely impractical outside highly
+> controlled environments) - and tracing is also never the first thing you
+> want to reach for when you have a user asking you "hey, this thing went
+> wonky, what's it doing?" - tracing automatically turns it into a multi
+> step process of decide what you want to look at, run the workload more
+> to collect data, iterate.
+> 
+> Think more about "what would make code easier to debug" and less about
+> "how do I shove this round peg through the square tracing/BPF slot".
+> There's _way_ more we could be doing that would just make our lives
+> easier.
+
+Maybe it'd help classifying visibility into the the following categories:
+
+1. Current state introspection.
+2. Dynamic behavior tracing.
+3. Accumluative behavior profiling.
+
+drgn is great for #1. Tracing and BPF stuff is great for #2 especially when
+things get complicated. #3 is the trickest. Static stuff is useful in a lot
+of cases but BPF can also be useful in other cases.
+
+I agree that it's all about using the right tool for the problem.
+
 -- 
-2.39.2
-
+tejun
