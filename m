@@ -1,129 +1,194 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 812CA1EEF9;
-	Wed,  3 Apr 2024 13:04:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16B6F146D41
+	for <linux-kernel@vger.kernel.org>; Wed,  3 Apr 2024 13:04:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712149443; cv=none; b=XHwMfx8McNs1J775Py6VSd+HeNtyD+u+VIy0Cq20CCWGuHWqxNvRsT/CbkHar6BHgoPvUbPVd3od33+7efGMIzMtlBX1cjGbBg06iVnq23U/JQYWff67U0DZHSM/Nc23GlMa9h8wAXZ9dENNn4KS5sv4FE8GghNINO74KE24s1M=
+	t=1712149467; cv=none; b=YmPpl5H4ChAm9t9z/pWexvTA4ylcrFvD1yIhYLtCHmEKbB4+6XnjYGu08+BdgIYHmU1TWvR8NXAaIYkQ29ehUtBabt62XTKBA08BoWcIU69KUNTCaJZB5Cy+HIPm7qCHorsgckDEQaWssRahhfFhI2P4ZkHaihVFrViGwa1EgPM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712149443; c=relaxed/simple;
-	bh=jAxgzwRTkP59nxfnPjXp9rWsoyhM/O0bfjbLfKVZk40=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=NRmojtEip+UKpKa7Kflmnor0sVhmCgwvnY847CzdV9y2GK21MzX57rSNK3w2TFFdWyVSjqkkzoQ7840e0sly//47aPnh2eOLi9NFVr1XU+2Mw4uvTJg4UqBp3pkeC90av3K3mgZiNccOTygx7Pa2rqdujNd2FzC03iqYaM8frWM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=vBI6VS8p; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1712149467; c=relaxed/simple;
+	bh=3vRLtZdpkmYqJ8NLGKs+nEQLx32bjtZDqMWLPuAUFvA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ZDeSDwJwRYg/02ao9Tvp7shuToW4dftESFdWohUHHjoXmu6Al/TkD56t5TORCTzg1Yrg02Eru5BojCFN4u4ErnQPkdtR8lvCZD6ADOl/AgBqAxiwcKdFGqH05p93xjzRZHP38b1DssdwUlZr35pmGVZmlg0TE9pvqIgYfmdrOXo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=GzfkGazH; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="vBI6VS8p"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 209DFC43394;
-	Wed,  3 Apr 2024 13:04:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712149443;
-	bh=jAxgzwRTkP59nxfnPjXp9rWsoyhM/O0bfjbLfKVZk40=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=vBI6VS8p+fMh7+vTQBD3ictGeDJNrYI5GGa45VGtNi9AL34NobyZc7NVn1S5u0EPo
-	 a4+R2biB55W6W0JfY2NoRcmn2FPM65MLicK80szCGL8a1cuJd/B/O/ER6sY0fcS2Xc
-	 /Npz/cjOs67O1ZDY4bIMUihMIgyoO1Tz/duLeTYiXSdL5OtOi0cNp8bmumKfFDyTrv
-	 dUATXnTMMbg1E7xC6VWOCEWx5yvICP5PbZC2+JepRN15WuICfYWx07TcIiW0ZcIVwz
-	 tcHhXZpyrVTvfvcUK1U61/Xo32GTra8BI/9KXOuua0+gPzCmGOrbVzIqcpicYcoqXm
-	 B2Ejxu849hddw==
-Received: by mail-lj1-f179.google.com with SMTP id 38308e7fff4ca-2d475b6609eso69724641fa.2;
-        Wed, 03 Apr 2024 06:04:03 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCWq8HL1aICeSeBCXXoHFEYZRPsCQjVEUTVH+weQ8+uvzLnEBCDIeUIolsHG2GGlATbzzUHu2UaC9E4AWXXMYSoHhocjjPirY3Bg
-X-Gm-Message-State: AOJu0YwRqgAuwdpswPpA7pkEVSVnDTTn7rCDVny/3pBWNRONza2geglO
-	Fz1RnOa08hmDZp+ulIx5ejjBVO92Gpf4c2eISvQPAIJN8Ue9E/LrNMa1M4yhFlpS/bFulSib/mW
-	d1tETqmcp/napFNUXBoNw2Uia2Mk=
-X-Google-Smtp-Source: AGHT+IHXQaEMys++S96XiBNlaXjAU9VskPXxODEVcvovTePiNNMFtNxf+XvNMPhpxzmDBKgVEKo0kD0osOIbNzPyuP8=
-X-Received: by 2002:a2e:b8d2:0:b0:2d2:42ff:483c with SMTP id
- s18-20020a2eb8d2000000b002d242ff483cmr12406161ljp.33.1712149441487; Wed, 03
- Apr 2024 06:04:01 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GzfkGazH"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1712149463;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=/UUFdKOIgSUdlJyeU9vl+F/Hh52S5plvfkKfHoxr/LQ=;
+	b=GzfkGazHSWl1EbLfgPwszMkLOV7rjVgeomlu+R9806Ntr80t43N3vMLX/OoaGHhR8hWlOA
+	yAhJ77lz9CW9ms9GxGj3QEwnFhhxJpLl7qpDGng4BuPjJB15D0aV9yZ2dJ8zvrJgMCKkxE
+	pvYLUwLREcZKX1tO507awpH0nYwRLyM=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-111--MGrU6-mOUaf3TCtRaKeuQ-1; Wed, 03 Apr 2024 09:04:19 -0400
+X-MC-Unique: -MGrU6-mOUaf3TCtRaKeuQ-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.rdu2.redhat.com [10.11.54.8])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 6251788CC44;
+	Wed,  3 Apr 2024 13:04:19 +0000 (UTC)
+Received: from virtlab701.virt.lab.eng.bos.redhat.com (virtlab701.virt.lab.eng.bos.redhat.com [10.19.152.228])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 43E49C017A0;
+	Wed,  3 Apr 2024 13:04:19 +0000 (UTC)
+From: Paolo Bonzini <pbonzini@redhat.com>
+To: torvalds@linux-foundation.org
+Cc: linux-kernel@vger.kernel.org,
+	kvm@vger.kernel.org
+Subject: [GIT PULL] KVM fixes for Linux 6.9-rc3
+Date: Wed,  3 Apr 2024 09:04:18 -0400
+Message-ID: <20240403130418.3068910-1-pbonzini@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240403080702.3509288-1-arnd@kernel.org> <20240403080702.3509288-11-arnd@kernel.org>
-In-Reply-To: <20240403080702.3509288-11-arnd@kernel.org>
-From: Ard Biesheuvel <ardb@kernel.org>
-Date: Wed, 3 Apr 2024 16:03:48 +0300
-X-Gmail-Original-Message-ID: <CAMj1kXG2kcAmmB5aQRv5VBJ8Ov2fcg5waGpD1r=aOR9rV=dSWg@mail.gmail.com>
-Message-ID: <CAMj1kXG2kcAmmB5aQRv5VBJ8Ov2fcg5waGpD1r=aOR9rV=dSWg@mail.gmail.com>
-Subject: Re: [PATCH 10/34] efi: sysfb: don't build when EFI is disabled
-To: Arnd Bergmann <arnd@kernel.org>
-Cc: linux-kernel@vger.kernel.org, 
-	Javier Martinez Canillas <javierm@redhat.com>, Randy Dunlap <rdunlap@infradead.org>, 
-	Daniel Vetter <daniel.vetter@ffwll.ch>, Arnd Bergmann <arnd@arndb.de>, 
-	Ilias Apalodimas <ilias.apalodimas@linaro.org>, 
-	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>, Tom Lendacky <thomas.lendacky@amd.com>, 
-	"Borislav Petkov (AMD)" <bp@alien8.de>, Masahisa Kojima <masahisa.kojima@linaro.org>, 
-	"Rafael J. Wysocki" <rafael@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Saravana Kannan <saravanak@google.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	linux-efi@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.8
 
-On Wed, 3 Apr 2024 at 11:09, Arnd Bergmann <arnd@kernel.org> wrote:
->
-> From: Arnd Bergmann <arnd@arndb.de>
->
-> With 'make W=1', there is a warning when EFI is turned off but sysfb_efi
-> still gets built:
->
-> drivers/firmware/efi/sysfb_efi.c:188:35: error: unused variable 'efifb_dmi_system_table' [-Werror,-Wunused-const-variable]
-> static const struct dmi_system_id efifb_dmi_system_table[] __initconst = {
->                                   ^
-> drivers/firmware/efi/sysfb_efi.c:238:35: error: unused variable 'efifb_dmi_swap_width_height' [-Werror,-Wunused-const-variable]
-> static const struct dmi_system_id efifb_dmi_swap_width_height[] __initconst = {
->                                   ^
-> drivers/firmware/efi/sysfb_efi.c:297:28: error: unused function 'find_pci_overlap_node' [-Werror,-Wunused-function]
-> static struct device_node *find_pci_overlap_node(void)
->
-> There was an earlier patch to address the duplicate function definitions, but
-> that missed how we should not be building this file in the first place.
->
-> Fixes: 15d27b15de96 ("efi: sysfb_efi: fix build when EFI is not set")
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Linus,
 
-Acked-by: Ard Biesheuvel <ardb@kernel.org>
+The following changes since commit 4cece764965020c22cff7665b18a012006359095:
 
-or I can take it via the EFI tree if you prefer.
+  Linux 6.9-rc1 (2024-03-24 14:10:05 -0700)
 
+are available in the Git repository at:
 
-> ---
->  drivers/firmware/efi/Makefile    | 3 ++-
->  drivers/firmware/efi/sysfb_efi.c | 2 --
->  2 files changed, 2 insertions(+), 3 deletions(-)
->
-> diff --git a/drivers/firmware/efi/Makefile b/drivers/firmware/efi/Makefile
-> index a2d0009560d0..3baf80d8cf81 100644
-> --- a/drivers/firmware/efi/Makefile
-> +++ b/drivers/firmware/efi/Makefile
-> @@ -30,7 +30,8 @@ obj-$(CONFIG_EFI_RCI2_TABLE)          += rci2-table.o
->  obj-$(CONFIG_EFI_EMBEDDED_FIRMWARE)    += embedded-firmware.o
->  obj-$(CONFIG_LOAD_UEFI_KEYS)           += mokvar-table.o
->
-> -obj-$(CONFIG_SYSFB)                    += sysfb_efi.o
-> +sysfb-$(CONFIG_SYSFB)                  += sysfb_efi.o
-> +obj-$(CONFIG_EFI)                      += $(sysfb-y)
->
->  arm-obj-$(CONFIG_EFI)                  := efi-init.o arm-runtime.o
->  obj-$(CONFIG_ARM)                      += $(arm-obj-y)
-> diff --git a/drivers/firmware/efi/sysfb_efi.c b/drivers/firmware/efi/sysfb_efi.c
-> index cc807ed35aed..a8c982475f6b 100644
-> --- a/drivers/firmware/efi/sysfb_efi.c
-> +++ b/drivers/firmware/efi/sysfb_efi.c
-> @@ -346,7 +346,6 @@ static const struct fwnode_operations efifb_fwnode_ops = {
->         .add_links = efifb_add_links,
->  };
->
-> -#ifdef CONFIG_EFI
->  static struct fwnode_handle efifb_fwnode;
->
->  __init void sysfb_apply_efi_quirks(void)
-> @@ -372,4 +371,3 @@ __init void sysfb_set_efifb_fwnode(struct platform_device *pd)
->                 pd->dev.fwnode = &efifb_fwnode;
->         }
->  }
-> -#endif
-> --
-> 2.39.2
->
+  https://git.kernel.org/pub/scm/virt/kvm/kvm.git tags/for-linus
+
+for you to fetch changes up to 9bc60f733839ab6fcdde0d0b15cbb486123e6402:
+
+  Merge tag 'kvm-riscv-fixes-6.9-1' of https://github.com/kvm-riscv/linux into HEAD (2024-04-02 12:29:51 -0400)
+
+----------------------------------------------------------------
+ARM:
+
+- Ensure perf events programmed to count during guest execution
+  are actually enabled before entering the guest in the nVHE
+  configuration.
+
+- Restore out-of-range handler for stage-2 translation faults.
+
+- Several fixes to stage-2 TLB invalidations to avoid stale
+  translations, possibly including partial walk caches.
+
+- Fix early handling of architectural VHE-only systems to ensure E2H is
+  appropriately set.
+
+- Correct a format specifier warning in the arch_timer selftest.
+
+- Make the KVM banner message correctly handle all of the possible
+  configurations.
+
+RISC-V:
+
+- Remove redundant semicolon in num_isa_ext_regs().
+
+- Fix APLIC setipnum_le/be write emulation.
+
+- Fix APLIC in_clrip[x] read emulation.
+
+x86:
+
+- Fix a bug in KVM_SET_CPUID{2,} where KVM looks at the wrong CPUID entries (old
+  vs. new) and ultimately neglects to clear PV_UNHALT from vCPUs with HLT-exiting
+  disabled.
+
+- Documentation fixes for SEV.
+
+- Fix compat ABI for KVM_MEMORY_ENCRYPT_OP.
+
+- Fix a 14-year-old goof in a declaration shared by host and guest; the enabled
+  field used by Linux when running as a guest pushes the size of "struct
+  kvm_vcpu_pv_apf_data" from 64 to 68 bytes.  This is really unconsequential
+  because KVM never consumes anything beyond the first 64 bytes, but the
+  resulting struct does not match the documentation.
+
+Selftests:
+
+- Fix spelling mistake in arch_timer selftest.
+
+----------------------------------------------------------------
+Anup Patel (2):
+      RISC-V: KVM: Fix APLIC setipnum_le/be write emulation
+      RISC-V: KVM: Fix APLIC in_clrip[x] read emulation
+
+Ashish Kalra (1):
+      KVM: SVM: Add support for allowing zero SEV ASIDs
+
+Colin Ian King (2):
+      KVM: selftests: Fix spelling mistake "trigged" -> "triggered"
+      RISC-V: KVM: Remove second semicolon
+
+Marc Zyngier (2):
+      arm64: Fix early handling of FEAT_E2H0 not being implemented
+      KVM: arm64: Rationalise KVM banner output
+
+Oliver Upton (1):
+      KVM: arm64: Fix host-programmed guest events in nVHE
+
+Paolo Bonzini (8):
+      Merge tag 'kvm-x86-svm-6.9' of https://github.com/kvm-x86/linux into HEAD
+      Merge tag 'kvm-x86-asyncpf_abi-6.9' of https://github.com/kvm-x86/linux into HEAD
+      KVM: SEV: fix compat ABI for KVM_MEMORY_ENCRYPT_OP
+      Documentation: kvm/sev: separate description of firmware
+      Documentation: kvm/sev: clarify usage of KVM_MEMORY_ENCRYPT_OP
+      Merge tag 'kvm-x86-pvunhalt-6.9' of https://github.com/kvm-x86/linux into HEAD
+      Merge tag 'kvmarm-fixes-6.9-1' of git://git.kernel.org/pub/scm/linux/kernel/git/kvmarm/kvmarm into HEAD
+      Merge tag 'kvm-riscv-fixes-6.9-1' of https://github.com/kvm-riscv/linux into HEAD
+
+Sean Christopherson (4):
+      KVM: SVM: Set sev->asid in sev_asid_new() instead of overloading the return
+      KVM: SVM: Use unsigned integers when dealing with ASIDs
+      KVM: SVM: Return -EINVAL instead of -EBUSY on attempt to re-init SEV/SEV-ES
+      KVM: selftests: Fix __GUEST_ASSERT() format warnings in ARM's arch timer test
+
+Vitaly Kuznetsov (3):
+      KVM: x86: Introduce __kvm_get_hypervisor_cpuid() helper
+      KVM: x86: Use actual kvm_cpuid.base for clearing KVM_FEATURE_PV_UNHALT
+      KVM: selftests: Check that PV_UNHALT is cleared when HLT exiting is disabled
+
+Will Deacon (4):
+      KVM: arm64: Don't defer TLB invalidation when zapping table entries
+      KVM: arm64: Don't pass a TLBI level hint when zapping table entries
+      KVM: arm64: Use TLBI_TTL_UNKNOWN in __kvm_tlb_flush_vmid_range()
+      KVM: arm64: Ensure target address is granule-aligned for range TLBI
+
+Wujie Duan (1):
+      KVM: arm64: Fix out-of-IPA space translation fault handling
+
+Xiaoyao Li (2):
+      x86/kvm: Use separate percpu variable to track the enabling of asyncpf
+      KVM: x86: Improve documentation of MSR_KVM_ASYNC_PF_EN
+
+ .../virt/kvm/x86/amd-memory-encryption.rst         | 42 +++++++++-------
+ Documentation/virt/kvm/x86/msr.rst                 | 19 ++++---
+ arch/arm64/kernel/head.S                           | 29 ++++++-----
+ arch/arm64/kvm/arm.c                               | 13 ++---
+ arch/arm64/kvm/hyp/nvhe/tlb.c                      |  3 +-
+ arch/arm64/kvm/hyp/pgtable.c                       | 23 ++++++---
+ arch/arm64/kvm/hyp/vhe/tlb.c                       |  3 +-
+ arch/arm64/kvm/mmu.c                               |  2 +-
+ arch/riscv/kvm/aia_aplic.c                         | 37 +++++++++++---
+ arch/riscv/kvm/vcpu_onereg.c                       |  2 +-
+ arch/x86/include/uapi/asm/kvm.h                    | 23 +++++++++
+ arch/x86/include/uapi/asm/kvm_para.h               |  1 -
+ arch/x86/kernel/kvm.c                              | 11 ++--
+ arch/x86/kvm/cpuid.c                               | 44 +++++++++-------
+ arch/x86/kvm/svm/sev.c                             | 58 +++++++++++++---------
+ arch/x86/kvm/trace.h                               | 10 ++--
+ include/kvm/arm_pmu.h                              |  2 +-
+ tools/testing/selftests/kvm/aarch64/arch_timer.c   |  4 +-
+ .../selftests/kvm/include/x86_64/processor.h       | 11 ++++
+ tools/testing/selftests/kvm/riscv/arch_timer.c     |  2 +-
+ tools/testing/selftests/kvm/x86_64/kvm_pv_test.c   | 39 +++++++++++++++
+ 21 files changed, 255 insertions(+), 123 deletions(-)
+
