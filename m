@@ -1,66 +1,153 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 057E7125CC;
-	Wed,  3 Apr 2024 01:32:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AB10134B2
+	for <linux-kernel@vger.kernel.org>; Wed,  3 Apr 2024 01:32:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712107959; cv=none; b=YWRZO12ZmVUQlTbTHhPkFbDs7ptUz/W0Rmkh3FpljZb6SWIRPFkgWI2Mb1APlaQkhSlGXD3Exx8EH6Rzq6fvsYq68F/5PVqmp6dqaoCsv5YnDaEeNNmCsWC6JxC+ia2FhDw+oQg5ykblaSYFzDNWxFr5emM21W/Ns1R2IlHLqpw=
+	t=1712107977; cv=none; b=rhV2BlOEx/OZYBkvwi12lzETeQXNBMcxqppiz3Ny49t+gnZtKXuHa9yoOvy0TcJLIZOtPtUBQ5dDvdVY3THr/QKgezcHzEPsUoCvRCc1ddUN45oVws8Rn6Shf7Gt5+cLcOFl6sKWMvu77s5KP5AOiY0P+5sB1++kDpqv3hmwhBY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712107959; c=relaxed/simple;
-	bh=Oboaa00MtZpqJcZQ4Qg/6jeTJtT/d7JbGLI3XZvpfR0=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=HMEyaH0v1oAHAAaBF3tPgYrVqdp6L/AILc1FRke+yq9qpWlUXr7Qbe8PU+IkwdSa4KnpH4EXkhfZtozl78r/aM/Ph4kUcCLKaTzTu8Euzs4V7ubIfBybb+YGJFGQ4qWVLc5dnb2lx3pw0146FzqYV8ktrbRbCPvEnxqv/4X/dpM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=He5l/yN1; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1712107977; c=relaxed/simple;
+	bh=oqREDFbRsB5mY8hvUf0QtLekrY+T63pjwUoG14JNFrg=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=MqaBQdBrqdKwoAxtUjCJ9suf2txfBOd1+VWPmUxcgHNM59lYGIVPwvobLMiumazi6yZyBh3AS3Aindec4StlkSQYuPRUB+xqeSvd6jAANyI4O1Hq0vUuhXyGp9zQCgeldXZA4RmyEwGfQPLJzLMPHpgVh5IqebXcf8nWqyYPaGU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=SnTw24CG; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="He5l/yN1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1F789C433F1;
-	Wed,  3 Apr 2024 01:32:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712107958;
-	bh=Oboaa00MtZpqJcZQ4Qg/6jeTJtT/d7JbGLI3XZvpfR0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=He5l/yN1ZyEm5maG6+l8s/LFRBCDTt0AY7sH2PPSoULJHn+m/op4bQY9iLI3yXcjD
-	 YmpvCEhrq/bs+bh+lzpkGCWbzcuLEOSD3wm4XyW+IeprpX/Jz/zprpAw3F3xqNZpcm
-	 RFpbyxrUEOEqp0J8T//wUMoae2i7psHmtwJE3VFgpnnI7gmian1VYO8feDGCB/TAFo
-	 WO96VKK9aG+P/1z+5Cm7OdsBsPfufEZbym2+9WWLy87G8VqQhRdjNZsFgnvtTjYlcf
-	 jStSAGuLB9yqBDL0pQJ83urFSbhX6r8hXLXqq5bo+2fdmPyZbrDESQTxEU1xi10A1/
-	 3oRiEH6lA7TOg==
-Date: Tue, 2 Apr 2024 18:32:37 -0700
-From: Jakub Kicinski <kuba@kernel.org>
-To: Jose Ignacio Tornos Martinez <jtornosm@redhat.com>
-Cc: horms@kernel.org, davem@davemloft.net, edumazet@google.com,
- pabeni@redhat.com, linux-usb@vger.kernel.org, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next v3] net: usb: ax88179_178a: non necessary
- second random mac address
-Message-ID: <20240402183237.2eb8398a@kernel.org>
-In-Reply-To: <20240401082746.7654-1-jtornosm@redhat.com>
-References: <20240401082746.7654-1-jtornosm@redhat.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SnTw24CG"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1712107975;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=2ynux/F/qmq0vm7Pu7L1906YdTD8uR3G8JQyOTFf45Q=;
+	b=SnTw24CGlBD2GEd/O0lRbL+TqtSOwWsFb7SDb5byk6WTftMkGYnR0XKQ+QfyKSdWOlJYpX
+	gNYAxP+pJ210eOtg6s9evIs7knx0alS1WM37+WjToeEmKr6hQ14Y+a72zRy/G95rWwIwi5
+	vR7w4u95bvhPpmx5lZvuGhVOl+R1A4c=
+Received: from mail-vk1-f198.google.com (mail-vk1-f198.google.com
+ [209.85.221.198]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-499-Co_-N685O5uFN6fq81JDJw-1; Tue, 02 Apr 2024 21:32:53 -0400
+X-MC-Unique: Co_-N685O5uFN6fq81JDJw-1
+Received: by mail-vk1-f198.google.com with SMTP id 71dfb90a1353d-4d8837d610fso904742e0c.0
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Apr 2024 18:32:53 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712107973; x=1712712773;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=2ynux/F/qmq0vm7Pu7L1906YdTD8uR3G8JQyOTFf45Q=;
+        b=kmatSzGV8KszFpK838VWBvz8q6hOk5OhwLJqjXHkghyTACnjAL4We0R38Xln2zZPgo
+         LehAWrWgM7FuOpcUS+kIakT06XVY13xN6om+lrcMenewbRqbL4+/PuvE++uZajAyAJ/L
+         dz1PLnWPLVE1p8LVEGwBGAeGEVwCqN9A7xy/NCPi7fKPbKrbUCSoCVI3H9jTOFih1TVT
+         vlNLhLei+fb+cHbtvyyBHblz0BL8B3vWx5EbB1mCAF+1E83neK+lykdj0HJ3bb2vfiTU
+         JAxbuBYaaAF/09+mgb7e7VLut2MqsqbJ2W9n4SUHfr/42n7O67St+iweYhiVOnyJdZ8N
+         UFiA==
+X-Forwarded-Encrypted: i=1; AJvYcCVIcA3GwENPX6h26PQjbi4prLmEqyPVYQo6rk+z3tOz59k5qo04UOC9PYHdGXzbNJkbvJhYSx2JgYIARGKYyWWZIIP/mIAb9SGtaNnu
+X-Gm-Message-State: AOJu0YyN/o/q95Ou8u0j8aD/o7lzmI3TqNpilbqELxKKcebclsYkPY36
+	68BESXLq1x37/grpeX8owHkct9wZ0ejrRRC2/ep6FzKNgLHW+WZ2dj5DShhhO6E22hqELIrFpR3
+	GvA9AALRnhSvRFfcjxX1BB9SRtgjnlwXeCr461LsFV8aOw2pZW3WDSwcq3a6UVg==
+X-Received: by 2002:a05:6102:588c:b0:478:9533:a75a with SMTP id ju12-20020a056102588c00b004789533a75amr2155412vsb.1.1712107972841;
+        Tue, 02 Apr 2024 18:32:52 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IE9+hYqxzCimkmspOuHcmCsRdwFLI47CvtrgBTMbK0H1Qo/OVIYE/CpCTqBmVGSH1xwK+vwHQ==
+X-Received: by 2002:a05:6102:588c:b0:478:9533:a75a with SMTP id ju12-20020a056102588c00b004789533a75amr2155389vsb.1.1712107972182;
+        Tue, 02 Apr 2024 18:32:52 -0700 (PDT)
+Received: from x1n.redhat.com ([99.254.121.117])
+        by smtp.gmail.com with ESMTPSA id qm18-20020a056214569200b0068ff8bda6c7sm6031687qvb.92.2024.04.02.18.32.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 02 Apr 2024 18:32:51 -0700 (PDT)
+From: peterx@redhat.com
+To: linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org
+Cc: Huacai Chen <chenhuacai@kernel.org>,
+	peterx@redhat.com,
+	David Hildenbrand <david@redhat.com>,
+	Jason Gunthorpe <jgg@nvidia.com>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Matthew Wilcox <willy@infradead.org>,
+	WANG Xuerui <kernel@xen0n.name>,
+	Ryan Roberts <ryan.roberts@arm.com>,
+	loongarch@lists.linux.dev
+Subject: [PATCH 1/3] mm: Allow anon exclusive check over hugetlb tail pages
+Date: Tue,  2 Apr 2024 21:32:47 -0400
+Message-ID: <20240403013249.1418299-2-peterx@redhat.com>
+X-Mailer: git-send-email 2.44.0
+In-Reply-To: <20240403013249.1418299-1-peterx@redhat.com>
+References: <20240403013249.1418299-1-peterx@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On Mon,  1 Apr 2024 10:27:25 +0200 Jose Ignacio Tornos Martinez wrote:
-> If the mac address can not be read from the device registers or the
-> devicetree, a random address is generated, but this was already done from
-> usbnet_probe, so it is not necessary to call eth_hw_addr_random from here
-> again to generate another random address.
-> 
-> Indeed, when reset was also executed from bind, generate another random mac
-> address invalidated the check from usbnet_probe to configure if the assigned
-> mac address for the interface was random or not, because it is comparing
-> with the initial generated random address. Now, with only a reset from open
-> operation, it is just a harmless simplification.
+From: Peter Xu <peterx@redhat.com>
 
-You need to wait for the other patch to get merged,
-then on Thursday after that the trees will get merged
-together, and then you can post this :(
-Otherwise we'll have a conflict.
+PageAnonExclusive() used to forbid tail pages for hugetlbfs, as that used
+to be called mostly in hugetlb specific paths and the head page was
+guaranteed.
+
+As we move forward towards merging hugetlb paths into generic mm, we may
+start to pass in tail hugetlb pages (when with cont-pte/cont-pmd huge
+pages) for such check.  Allow it to properly fetch the head, in which case
+the anon-exclusiveness of the head will always represents the tail page.
+
+There's already a sign of it when we look at the fast-gup which already
+contain the hugetlb processing altogether: we used to have a specific
+commit 5805192c7b72 ("mm/gup: handle cont-PTE hugetlb pages correctly in
+gup_must_unshare() via GUP-fast") covering that area.  Now with this more
+generic change, that can also go away.
+
+Signed-off-by: Peter Xu <peterx@redhat.com>
+---
+ include/linux/page-flags.h |  8 +++++++-
+ mm/internal.h              | 10 ----------
+ 2 files changed, 7 insertions(+), 11 deletions(-)
+
+diff --git a/include/linux/page-flags.h b/include/linux/page-flags.h
+index 888353c209c0..225357f48a79 100644
+--- a/include/linux/page-flags.h
++++ b/include/linux/page-flags.h
+@@ -1095,7 +1095,13 @@ PAGEFLAG(Isolated, isolated, PF_ANY);
+ static __always_inline int PageAnonExclusive(const struct page *page)
+ {
+ 	VM_BUG_ON_PGFLAGS(!PageAnon(page), page);
+-	VM_BUG_ON_PGFLAGS(PageHuge(page) && !PageHead(page), page);
++	/*
++	 * Allow the anon-exclusive check to work on hugetlb tail pages.
++	 * Here hugetlb pages will always guarantee the anon-exclusiveness
++	 * of the head page represents the tail pages.
++	 */
++	if (PageHuge(page) && !PageHead(page))
++		page = compound_head(page);
+ 	return test_bit(PG_anon_exclusive, &PF_ANY(page, 1)->flags);
+ }
+ 
+diff --git a/mm/internal.h b/mm/internal.h
+index 9512de7398d5..87f6e4fd56a5 100644
+--- a/mm/internal.h
++++ b/mm/internal.h
+@@ -1259,16 +1259,6 @@ static inline bool gup_must_unshare(struct vm_area_struct *vma,
+ 	if (IS_ENABLED(CONFIG_HAVE_FAST_GUP))
+ 		smp_rmb();
+ 
+-	/*
+-	 * During GUP-fast we might not get called on the head page for a
+-	 * hugetlb page that is mapped using cont-PTE, because GUP-fast does
+-	 * not work with the abstracted hugetlb PTEs that always point at the
+-	 * head page. For hugetlb, PageAnonExclusive only applies on the head
+-	 * page (as it cannot be partially COW-shared), so lookup the head page.
+-	 */
+-	if (unlikely(!PageHead(page) && PageHuge(page)))
+-		page = compound_head(page);
+-
+ 	/*
+ 	 * Note that PageKsm() pages cannot be exclusive, and consequently,
+ 	 * cannot get pinned.
 -- 
-pw-bot: defer
+2.44.0
+
