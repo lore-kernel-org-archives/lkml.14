@@ -1,106 +1,97 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29331136989
-	for <linux-kernel@vger.kernel.org>; Wed,  3 Apr 2024 10:53:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C6C2136980
+	for <linux-kernel@vger.kernel.org>; Wed,  3 Apr 2024 10:55:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712141619; cv=none; b=dpAx2m85HdG9NYy2dPXbeuqw6RJw8d30amKSqNNFgVNaNkxG2bIdZWEBRVjDnCcJwW2zZup5oNiEV3rjsytWOxEhqRFKS6QJvYHOeg5rOIgJsp6ypviwrGreG0yaV9Yv5IH8G8dU8f7Rnc9f6sLYgC8y2HP4FgkWX8Q3MM6kOLE=
+	t=1712141710; cv=none; b=l7e304d1JApOCbahv3In6+mb/HU55RAeNUAsaMpmdILjhu1dyE8tIxHaVXjInTIaav7DjkqggkSkRxUBZX7t7IcoQX1+pxQwn0cLUR0fKeTt5rA1kTFVVuW5XfEIiEfuXmyxNyX1QusvKV/ogi9Sbr0eYiIWi4p3Hy5xOVYMcxk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712141619; c=relaxed/simple;
-	bh=8+OO5fg0HbK1fATSGiD8L9xS5yKSj1z9Ff9gG/OGB54=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=iCRuf2EweVAj0W4acr6lBhHxrLDwhC8fe6eFaa8gEDQLQHbE7CWAcp03A8bDj56g3MKM6qM5jKziRLxtAaG+rJkqnPLgXiTE37HAHJxgE9JpZKysM2+BX9Q/64ijPRV3l6BoBOWOEMoKITLDLwKifJrjv6YbR/a2V8rULRXAuTY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=GCzBAQrA; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1712141710; c=relaxed/simple;
+	bh=+zEzKaMWhoPEdYiBNRyCWeVk2M3rTPfRQ1A8hK2rdsk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=kLpOEzrwSAR/hXDQyivWVAgrudhpCesQ5XroqNuhoymBfwi5wbc/sCPimlaeNpS7H6ItlhDMAIvnwC4hKO9yHe38KiQ7kCfitJ+YcH11VMarvp+sGuWw2VbL6SdT5qDa86MuD24c/EklnKzWqeClIAbaaeV4jF4mWoWzDIDf1kQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=djKPriSZ; arc=none smtp.client-ip=192.198.163.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GCzBAQrA"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1712141616;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=8+OO5fg0HbK1fATSGiD8L9xS5yKSj1z9Ff9gG/OGB54=;
-	b=GCzBAQrAd7xSYvzP3WxGcVOfyzM/PL7kjdQOYI02mDeCQAdtPQn/AV1iH+MZLGnikAb0hE
-	tZuUB40Mb/JxXP9ngYsu4CHeD8IpNSNHleVapw2NFZh9g0KL/uWBXL6hN0AikAecnKKDfj
-	MfoTl37DViFk0HCqznHqBB1ulapChAw=
-Received: from mail-lj1-f199.google.com (mail-lj1-f199.google.com
- [209.85.208.199]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-368-ZsM07JpSNECUr9XhDph-Sg-1; Wed, 03 Apr 2024 06:53:25 -0400
-X-MC-Unique: ZsM07JpSNECUr9XhDph-Sg-1
-Received: by mail-lj1-f199.google.com with SMTP id 38308e7fff4ca-2d49590ee73so10474211fa.1
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Apr 2024 03:53:25 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712141604; x=1712746404;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=8+OO5fg0HbK1fATSGiD8L9xS5yKSj1z9Ff9gG/OGB54=;
-        b=oMuv99Ro4ND6X1POpcKXsviCIrOKpXt+RQcFn+/+DtLlTGhHxhI9fqOKy5/u9yiOSk
-         bz1MCBDe2H1mN9N546Z6T3BOpeRhheuLEQqg2jcooZalePEtfb2gJMqcatQjgyJhaDXf
-         GzmWq59aBi0RBKZ67efmDu2mvVFeNGbLrKPXGENOaxMOzGEkZY8J+8FJ3M0dDaVsGm1N
-         l64XLtxw64pG97VZ8A+/tlLesId7F7qwUggCzZD197/y+body6W5FPtBCbcRa3+yDWEN
-         wKl68KF/TJX8CE6R6wLimXU+VuQdUaDqJP04om06iYZaXFEVUuVjMgBLS/P3zJzWU78Z
-         4GNA==
-X-Forwarded-Encrypted: i=1; AJvYcCXAsxk4tAOMDBgvb661RrtafaQ2YhkryMo0gtBGyd1ziq5+R7OOaw/7coVHeftoHtirRfor/CePF9oN6lwhuPqP3nfluGhWehThUUVL
-X-Gm-Message-State: AOJu0YwUqKGJMAnXTmwmGSC+8sp+uNNqyDl8RBILSWDGmHtEcIRfdHKx
-	bOPtV+wbNYbx9mtxKZz7jThk4seD6KPqYWX83un7KMs/8zjBumEI2znYIC3neW8xrUyqV+RUxgR
-	M0Xz9ZM6udUB1aCx2FlIeIRs/MB8Uy1WntG6mrVelsQp9fF5XOekJ+lk0EGv3iPSEJw50Sg==
-X-Received: by 2002:a05:6512:7b:b0:516:ae65:73db with SMTP id i27-20020a056512007b00b00516ae6573dbmr4381289lfo.3.1712141604100;
-        Wed, 03 Apr 2024 03:53:24 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEjn7dG+sxNM/GDupLVuY/mvqIzKlvjQq9VhNhWJkqbmTDC3k9ch7DJcWzRvAmguatrfS3H8w==
-X-Received: by 2002:a05:6512:7b:b0:516:ae65:73db with SMTP id i27-20020a056512007b00b00516ae6573dbmr4381282lfo.3.1712141603723;
-        Wed, 03 Apr 2024 03:53:23 -0700 (PDT)
-Received: from pstanner-thinkpadt14sgen1.remote.csb (nat-pool-muc-t.redhat.com. [149.14.88.26])
-        by smtp.gmail.com with ESMTPSA id z2-20020a05600c0a0200b00415515263b4sm17094709wmp.7.2024.04.03.03.53.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 03 Apr 2024 03:53:23 -0700 (PDT)
-Message-ID: <bf586356686053641b52902bf7928db08baa44ea.camel@redhat.com>
-Subject: Re: [PATCH v4 0/2] devres: A couple of cleanups
-From: Philipp Stanner <pstanner@redhat.com>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="djKPriSZ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1712141709; x=1743677709;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=+zEzKaMWhoPEdYiBNRyCWeVk2M3rTPfRQ1A8hK2rdsk=;
+  b=djKPriSZ85bWrtIQVgTn40q+137LZpBxNseata81QB5bdGWq+fdb4+O+
+   pUz/0eD6WNcAc4OEWdm/vUHZMxnCoBVw9+tkrjl4ahUoe2gFVGYhPxmaV
+   01x3L3gATYoZHr1belxa/8FQbYnPsh1ShmsTaq4yPuuG6RXKa8HvTK3V9
+   Rn6ZgBU45dyuOhELSrAIreitFr5FjkTE9CkphMkXunIoCMxEkFEVPUGKg
+   0wsdlitQo/uWdxvtEIZQxsAGbGWDBqKZK2NMNI88oqRfS+YMt1BgN2Mht
+   4HUb60+AWgkPMrDBHnaWtGQ3awtIm/w8PbpFvw7lXLZ78rFOAGOxClp1N
+   g==;
+X-CSE-ConnectionGUID: fwGLIQLfT/ik+qzfZ/SJmw==
+X-CSE-MsgGUID: hw8blbCyQr2wF72U5dkJYw==
+X-IronPort-AV: E=McAfee;i="6600,9927,11032"; a="10334235"
+X-IronPort-AV: E=Sophos;i="6.07,177,1708416000"; 
+   d="scan'208";a="10334235"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2024 03:55:08 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,11032"; a="937084886"
+X-IronPort-AV: E=Sophos;i="6.07,177,1708416000"; 
+   d="scan'208";a="937084886"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmsmga001.fm.intel.com with ESMTP; 03 Apr 2024 03:55:07 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+	id 117FF3E5; Wed,  3 Apr 2024 13:55:06 +0300 (EEST)
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: chrome-platform@lists.linux.dev,
 	linux-kernel@vger.kernel.org
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Date: Wed, 03 Apr 2024 12:53:22 +0200
-In-Reply-To: <20240403104820.557487-1-andriy.shevchenko@linux.intel.com>
-References: <20240403104820.557487-1-andriy.shevchenko@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.48.4 (3.48.4-1.fc38) 
+Cc: Dan Callaghan <dcallagh@chromium.org>,
+	=?UTF-8?q?Sami=20Ky=C3=B6stil=C3=A4?= <skyostil@chromium.org>,
+	Benson Leung <bleung@chromium.org>,
+	Tzung-Bi Shih <tzungbi@kernel.org>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v1 1/1] platform/chrome: cros_hps_i2c: Replace deprecated UNIVERSAL_DEV_PM_OPS()
+Date: Wed,  3 Apr 2024 13:55:02 +0300
+Message-ID: <20240403105502.558351-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.43.0.rc1.1.gbec44491f096
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-On Wed, 2024-04-03 at 13:46 +0300, Andy Shevchenko wrote:
-> A couple of ad-hoc cleanups. No functional changes intended.
+The UNIVERSAL_DEV_PM_OPS() macro is deprecated. Replace it.
 
-But it seems that since v3 my "Reviewed-by"s have disappeared. Is that
-intentional, should I look through it again?
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+ drivers/platform/chrome/cros_hps_i2c.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-P.
-
->=20
-> v4:
-> - rebased on top of the latest vanilla (v6.9-rcX)
->=20
-> v3:
-> - rebased on top of driver-core-testing (Philipp)
-> - added tags (Philipp)
->=20
-> v2:
-> - fixed plural vs. singular "to have" (Philipp)
->=20
-> Andy Shevchenko (2):
-> =C2=A0 devres: Switch to use dev_err_probe() for unification
-> =C2=A0 devres: Don't use "proxy" headers
->=20
-> =C2=A0lib/devres.c | 26 +++++++++++++++-----------
-> =C2=A01 file changed, 15 insertions(+), 11 deletions(-)
->=20
+diff --git a/drivers/platform/chrome/cros_hps_i2c.c b/drivers/platform/chrome/cros_hps_i2c.c
+index b31313080332..dd14957ec39f 100644
+--- a/drivers/platform/chrome/cros_hps_i2c.c
++++ b/drivers/platform/chrome/cros_hps_i2c.c
+@@ -126,7 +126,7 @@ static int hps_resume(struct device *dev)
+ 	hps_set_power(hps, true);
+ 	return 0;
+ }
+-static UNIVERSAL_DEV_PM_OPS(hps_pm_ops, hps_suspend, hps_resume, NULL);
++static DEFINE_RUNTIME_DEV_PM_OPS(hps_pm_ops, hps_suspend, hps_resume, NULL);
+ 
+ static const struct i2c_device_id hps_i2c_id[] = {
+ 	{ "cros-hps", 0 },
+@@ -148,7 +148,7 @@ static struct i2c_driver hps_i2c_driver = {
+ 	.id_table = hps_i2c_id,
+ 	.driver = {
+ 		.name = "cros-hps",
+-		.pm = &hps_pm_ops,
++		.pm = pm_ptr(&hps_pm_ops),
+ 		.acpi_match_table = ACPI_PTR(hps_acpi_id),
+ 	},
+ };
+-- 
+2.43.0.rc1.1.gbec44491f096
 
