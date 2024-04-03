@@ -1,130 +1,160 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-108-mta94.mxroute.com (mail-108-mta94.mxroute.com [136.175.108.94])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B702E153BFE
-	for <linux-kernel@vger.kernel.org>; Wed,  3 Apr 2024 19:52:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB58E155388
+	for <linux-kernel@vger.kernel.org>; Wed,  3 Apr 2024 19:53:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=136.175.108.94
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712173952; cv=none; b=aT+ExtoiFEhyYPAU0gdwwe6wfymyeSH1qlsRnbOrpZc+oolDFv32OL0ipBrIhGyCC59ntrDGmvEGwN6NSDIoERxuxE/tidKDL3NOngVgUo1R4AlelK+5ZPRaW9gXRl8fXqIoIfhFZw5lSantaGLKq7fds8jel1dtM0h9TbK4GwY=
+	t=1712174041; cv=none; b=lvFyjtePE7MksEHhDWfpZzfdDN/AFxM+iK+L9JsVtc99fM42680O/XOndCwATE0NmGgD+YFarwyAKXAOW9qvxzvx/X0BRvzV3IzS6GEa++3a61PrdE1G4zWEsJTUNphLYmYFhVNeGaNKFL39Ia/QsuDKINKE+OinRY77lKYrYfk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712173952; c=relaxed/simple;
-	bh=O3WqaLqlUSgQE4OdAcJeqrcZ7Ltnz8VmOwxJv1vB65k=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ejLJKszhdDVqo7I6ULMgIqzyaSIT2eWyqWlblGj6lDU2THdlV9Fmbl4ahddwlS0c74eTjxofBShc7v3rlPCKGBBmcdznxeNtBINOAoELL2FvdIi8HraFH/JR+e1RSmMPFJizKWZq8pcDX/hdJAST0PeQcL5hln6m2q7OJyvLJ30=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QU9dWItP; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1712174041; c=relaxed/simple;
+	bh=Kjy6x/NXd4JfxF0RWGjqpeR43/pbqZZRFhcY/LUk/Mk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=ewta3eJxa23mPDgM+Sr+p9ykzZx3GG3tDcDtqxRKvn1KfbEIVN9YLxvbsvkKqdptQvIMj2T5Bxrte6GXiXNjktFlhtpax7XbT3BkTQ9HyXKzAjoMpmIvNC0GCqZEk6OL8Ms2Wf3hXdRzbLOA6p5iR9xS1S+kJ0QRUxhZk4k4UxY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=luigi311.com; spf=pass smtp.mailfrom=luigi311.com; dkim=pass (2048-bit key) header.d=luigi311.com header.i=@luigi311.com header.b=wfCLRkKP; arc=none smtp.client-ip=136.175.108.94
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=luigi311.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=luigi311.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QU9dWItP"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B143EC433C7;
-	Wed,  3 Apr 2024 19:52:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712173952;
-	bh=O3WqaLqlUSgQE4OdAcJeqrcZ7Ltnz8VmOwxJv1vB65k=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=QU9dWItPR6m2v28c9DW2sRnuCe/4j4AKqo1WPwDPQlCKmqKl3Smi7X9tg9z5HGNo8
-	 gqpkXh2N3hUB7QeWrLMJE2UugmZK34AjWu+6TdzHl4hthTpLkZeu3BXbROtU1MQHjS
-	 /10esr6zDb8K466BFd7zmQgVpqXjrXC5o5q9Ni4sWGTJewutdlDlab/kkpk28rX6NS
-	 Nze43t/Whs3tFWwQkJMompkWxrpKCLlf/lwhKdhTo1WgMWWO0FSdZ9gkhZf36iQ4sr
-	 ItSEJMuTtdph6CJavc9HKILQVoekNIPD9OT8xA16DrLiChxMNwHj+wyLbbFNwbCYrr
-	 Ik4k0skB1GXsQ==
-Date: Wed, 3 Apr 2024 16:52:28 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: Namhyung Kim <namhyung@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/1] perf annotate: Initialize 'arch' variable not to
- trip some -Werror=maybe-uninitialized
-Message-ID: <Zg2zfKFdGCJaYc36@x1>
-References: <Zg1ywF7uRsfXYfYS@x1>
- <CAP-5=fUqtjxAsmdGrnkjhUTLHs-JvV10TtxyocpYDJK_+LYTiQ@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=luigi311.com header.i=@luigi311.com header.b="wfCLRkKP"
+Received: from filter006.mxroute.com ([136.175.111.2] filter006.mxroute.com)
+ (Authenticated sender: mN4UYu2MZsgR)
+ by mail-108-mta94.mxroute.com (ZoneMTA) with ESMTPSA id 18ea581c24b0003bea.011
+ for <linux-kernel@vger.kernel.org>
+ (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384);
+ Wed, 03 Apr 2024 19:48:48 +0000
+X-Zone-Loop: 505b19853a64fc195a41a5aa47bcd2f9a369aeb3b301
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=luigi311.com; s=x; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:
+	From:References:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:Cc:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+	List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=WUWgE1DnjMBPuy5PLgN2/f0W38XSumLNGP2rZjB3XuA=; b=wfCLRkKPVOOds6T51nt/KWinGa
+	4P2uvdx2JXMT+k9h6TDeiMKDal9WlFQwPToTSlyuh4s0Rc3s8sF+XjDhED3cgzvAb//vVPOoKfPs6
+	Cszp2qBdHJ4Pl7MT3JFlzZ6vZ7sbK19WCmdWLpMEc+CV5fty/jD2fzdPRW3DTuynVkLG4JvADrTNS
+	GfLGYBa+Lhq+C0x5TFuiFLSJij8w+XfG3rn5kgwRkFWTgeDaDHULwyDavW/72vB3wvAj1/xdu5atj
+	9JP3BzEBqEJKnNYgMxj7cr8Ko6gC+GmH5AtRDwP/hf2yyL3srs4Wi3tChGvR4PbAGARtZBhmCWmco
+	ItAsMfaA==;
+Message-ID: <1080d78d-73f4-41d3-ab72-f2cc1001e184@luigi311.com>
+Date: Wed, 3 Apr 2024 13:48:43 -0600
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 24/25] drivers: media: i2c: imx258: Add support for
+ reset gpio
+To: =?UTF-8?Q?Ond=C5=99ej_Jirman?= <megous@megous.com>,
+ Sakari Ailus <sakari.ailus@linux.intel.com>, linux-media@vger.kernel.org,
+ dave.stevenson@raspberrypi.com, jacopo.mondi@ideasonboard.com,
+ mchehab@kernel.org, robh@kernel.org, krzysztof.kozlowski+dt@linaro.org,
+ conor+dt@kernel.org, shawnguo@kernel.org, s.hauer@pengutronix.de,
+ kernel@pengutronix.de, festevam@gmail.com, devicetree@vger.kernel.org,
+ imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org, pavel@ucw.cz, phone-devel@vger.kernel.org
+References: <20240403150355.189229-1-git@luigi311.com>
+ <20240403150355.189229-25-git@luigi311.com>
+ <Zg2Dy2QBguXQoR3P@kekkonen.localdomain>
+ <vesqdx7w2sobjnx7tmk6s6i5zplbhsphamoalysx625r4aqffq@hos5otov5ids>
+Content-Language: en-US
+From: Luigi311 <git@luigi311.com>
+In-Reply-To: <vesqdx7w2sobjnx7tmk6s6i5zplbhsphamoalysx625r4aqffq@hos5otov5ids>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-5=fUqtjxAsmdGrnkjhUTLHs-JvV10TtxyocpYDJK_+LYTiQ@mail.gmail.com>
+X-Authenticated-Id: git@luigi311.com
 
-On Wed, Apr 03, 2024 at 09:01:56AM -0700, Ian Rogers wrote:
-> On Wed, Apr 3, 2024 at 8:16 AM Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
-> >
-> > In some older distros the build is failing due to
-> > -Werror=maybe-uninitialized, in this case we know that this isn't the
-> > case because 'arch' gets initialized by evsel__get_arch(), so just init
-> > it to NULL to silence those cases.
-> >
-> > E.g.:
-> >
-> >     32    17.12 opensuse:15.5                 : FAIL gcc version 7.5.0 (SUSE Linux)
-> >         util/annotate.c: In function 'hist_entry__get_data_type':
-> >     util/annotate.c:2269:15: error: 'arch' may be used uninitialized in this function [-Werror=maybe-uninitialized]
-> >       struct arch *arch;
-> >                    ^~~~
-> >     cc1: all warnings being treated as errors
-> >
-> >       43     7.30 ubuntu:18.04-x-powerpc64el    : FAIL gcc version 7.5.0 (Ubuntu 7.5.0-3ubuntu1~18.04)
-> >     util/annotate.c: In function 'hist_entry__get_data_type':
-> >     util/annotate.c:2351:36: error: 'arch' may be used uninitialized in this function [-Werror=maybe-uninitialized]
-> >        if (map__dso(ms->map)->kernel && arch__is(arch, "x86") &&
-> >                                         ^~~~~~~~~~~~~~~~~~~~~
-> >     cc1: all warnings being treated as errors
-> >
-> > Cc: Adrian Hunter <adrian.hunter@intel.com>
-> > Cc: Ian Rogers <irogers@google.com>
-> > Cc: Jiri Olsa <jolsa@kernel.org>
-> > Cc: Namhyung Kim <namhyung@kernel.org>
-> > Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+On 4/3/24 11:03, Ondřej Jirman wrote:
+> Hi,
 > 
-> This looks fine but I couldn't line up the errors with code in the
-> tree. I was curious why the "maybe-uninitialized" was failing. Perhaps
-> evsel__get_arch should set the out argument to NULL when an error
-> occurs. This fix is also good but may potentially need repeating for
-> other evsel__get_arch cases, so a fix in evsel__get_arch may be
-> preferable.
+> On Wed, Apr 03, 2024 at 04:28:59PM GMT, Sakari Ailus wrote:
+>> Hi Luis,
+>>
+>> Could you unify the subject prefix for the driver patches, please? E.g.
+>> "media: imx258: " would be fine.
+>>
+>> On Wed, Apr 03, 2024 at 09:03:53AM -0600, git@luigi311.com wrote:
+>>> From: Luis Garcia <git@luigi311.com>
+>>>
+>>> It was documented in DT, but not implemented.
+>>>
+>>> Signed-off-by: Ondrej Jirman <megous@megous.com>
+>>> Signed-off-by: Luis Garcia <git@luigi311.com>
+>>> ---
+>>>  drivers/media/i2c/imx258.c | 14 +++++++++++++-
+>>>  1 file changed, 13 insertions(+), 1 deletion(-)
+>>>
+>>> diff --git a/drivers/media/i2c/imx258.c b/drivers/media/i2c/imx258.c
+>>> index 163f04f6f954..4c117c4829f1 100644
+>>> --- a/drivers/media/i2c/imx258.c
+>>> +++ b/drivers/media/i2c/imx258.c
+>>> @@ -680,6 +680,7 @@ struct imx258 {
+>>>  	unsigned int csi2_flags;
+>>>  
+>>>  	struct gpio_desc *powerdown_gpio;
+>>> +	struct gpio_desc *reset_gpio;
+>>>  
+>>>  	/*
+>>>  	 * Mutex for serialized access:
+>>> @@ -1232,7 +1233,11 @@ static int imx258_power_on(struct device *dev)
+>>>  		regulator_bulk_disable(IMX258_NUM_SUPPLIES, imx258->supplies);
+>>>  	}
+>>>  
+>>> -	return ret;
+>>> +	gpiod_set_value_cansleep(imx258->reset_gpio, 0);
+>>> +
+>>> +	usleep_range(400, 500);
+>>
+>> You could mention this at least in the commit message.
 > 
-> Reviewed-by: Ian Rogers <irogers@google.com>
+> This is T6 in the datasheet: https://megous.com/dl/tmp/92c9223ce877216e.png
+> 
+> 
+>>> +
+>>> +	return 0;
+>>>  }
+>>>  
+>>>  static int imx258_power_off(struct device *dev)
+>>> @@ -1243,6 +1248,7 @@ static int imx258_power_off(struct device *dev)
+>>>  	clk_disable_unprepare(imx258->clk);
+>>>  	regulator_bulk_disable(IMX258_NUM_SUPPLIES, imx258->supplies);
+>>>  
+>>> +	gpiod_set_value_cansleep(imx258->reset_gpio, 1);
+>>
+>> Same question than on the other GPIO: does this belong here?
+> 
+> No, this should be before the regulator_bulk_disable.
+> 
+> See: https://megous.com/dl/tmp/c96180b23d7ce63a.png
+> 
+> kind regards,
+> 	o.
+> 
 
-Trying with this on top, i.e. what you suggests:
+Since I'm supposed to move the reset up should I also
+move the power up with it to match your downstream
+driver?
 
-From 70e6fd996ce7f9c9adbb30640ed666025bf6f1e4 Mon Sep 17 00:00:00 2001
-From: Arnaldo Carvalho de Melo <acme@redhat.com>
-Date: Wed, 3 Apr 2024 16:49:54 -0300
-Subject: [PATCH 1/1] WIP
-
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
----
- tools/perf/util/annotate.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
-
-diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
-index f316e0b65897957a..35235147b111e788 100644
---- a/tools/perf/util/annotate.c
-+++ b/tools/perf/util/annotate.c
-@@ -838,8 +838,10 @@ static int evsel__get_arch(struct evsel *evsel, struct arch **parch)
- 	struct arch *arch;
- 	int err;
- 
--	if (!arch_name)
-+	if (!arch_name) {
-+		*parch = NULL;
- 		return errno;
-+	}
- 
- 	*parch = arch = arch__find(arch_name);
- 	if (arch == NULL) {
-@@ -2266,7 +2268,7 @@ struct annotated_data_type *hist_entry__get_data_type(struct hist_entry *he)
- {
- 	struct map_symbol *ms = &he->ms;
- 	struct evsel *evsel = hists_to_evsel(he->hists);
--	struct arch *arch = NULL;
-+	struct arch *arch;
- 	struct disasm_line *dl;
- 	struct annotated_insn_loc loc;
- 	struct annotated_op_loc *op_loc;
--- 
-2.44.0
+>>>  	gpiod_set_value_cansleep(imx258->powerdown_gpio, 1);
+>>>  
+>>>  	return 0;
+>>> @@ -1554,6 +1560,12 @@ static int imx258_probe(struct i2c_client *client)
+>>>  	if (IS_ERR(imx258->powerdown_gpio))
+>>>  		return PTR_ERR(imx258->powerdown_gpio);
+>>>  
+>>> +	/* request optional reset pin */
+>>> +	imx258->reset_gpio = devm_gpiod_get_optional(&client->dev, "reset",
+>>> +						    GPIOD_OUT_HIGH);
+>>> +	if (IS_ERR(imx258->reset_gpio))
+>>> +		return PTR_ERR(imx258->reset_gpio);
+>>> +
+>>>  	/* Initialize subdev */
+>>>  	v4l2_i2c_subdev_init(&imx258->sd, client, &imx258_subdev_ops);
+>>>  
+>>
+>> -- 
+>> Regards,
+>>
+>> Sakari Ailus
 
