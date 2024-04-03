@@ -1,60 +1,61 @@
-Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
+Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE3DC6BFD5
-	for <linux-kernel@vger.kernel.org>; Wed,  3 Apr 2024 07:46:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 077E060267
+	for <linux-kernel@vger.kernel.org>; Wed,  3 Apr 2024 07:46:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712130410; cv=none; b=uNYYSadbAd4PPE5chaIWW1Xk/arGvlfQCkYT2vCtpY2lxA/+bJt3NKCzvvlIpqgTmdikdK1nYfD9pA1dtSM+fEQgeQqJBlzsh9FWE8G5kCBPS/9GSm+2HekLBG/FUhWIPNa7ES5zRckVJZdJVkrtnzd9KeiHtfX0U/grUr2DFGA=
+	t=1712130409; cv=none; b=BU8Q5qStTh0yBYSAz9v2zEa8TaLy4FtdNZpjEu3sdfWL1MdgGIPfTnBWsZ33hEI+UO2L8eIW7A828YnDHh4aZy24khFXW+97evtG/UCpJUcIiEzSVnJinSQ4+lIzstfBb0Juv72H8YZ5MpQvE3jwaKMnKz4ThQIRZkAN/zMBarM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712130410; c=relaxed/simple;
-	bh=hinQajAEakYqxJaAvUFt65KdqGEthzlwyiYxmTWLSwo=;
+	s=arc-20240116; t=1712130409; c=relaxed/simple;
+	bh=irCtyEdiWY+FGXN7CMU2Nw/2h0kut5W+asx0S/10tnc=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=DwDPsOkdsJjAFQaCt5iwXEWy2bwigm7FLqlxAxBRT9sFmiNlDpqMKZKMr1AOmlqm6N0CAxyCbmW48md4r5UGYSMNGOXkIbnAQwKqhrOfLc8f/jMmr4ESHTyCHkRo7hfjDiB5z3D2Y1yNYyKCqgNE6AfPdveUy+sm21COnHbubFk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=iTcp9PdT; arc=none smtp.client-ip=209.85.221.42
+	 In-Reply-To:To:Cc; b=lZiKPEEPOtC4Qk06KKxYG5Sn7pjjDXxlUyGCpCDRTl9eCR5cKadD1OM3BWflOOlWbJeBTnpE1i474oAaYlWyDFYF6mim7YCPs+qeWyNJn2+S23PdXt+U9UL0vkZH3S0bPzobpcppHHXnPX4kS8BBnFcObJCi4oIXqQHBgEgEMyU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=iPI8wbz0; arc=none smtp.client-ip=209.85.221.49
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="iTcp9PdT"
-Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-3416a975840so4576824f8f.0
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Apr 2024 00:46:48 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="iPI8wbz0"
+Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-34391544c46so357851f8f.0
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Apr 2024 00:46:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1712130407; x=1712735207; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1712130405; x=1712735205; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=c50DZO+Qx5CrKtjcEqrQpx6F5muY2d18uAtSUCAhezE=;
-        b=iTcp9PdTpPtI6MCPDbtOwsWjg9FrHeVCmMDRC7DPhWGvtKKQwbnWkUNsFZU2EaZX0f
-         6CCTXbDX+kunD8qyovqM87pyGwnCA3uNz9sY1f6GFIUjqmuPgfGLQySMYSPzl4CZ5+If
-         kWohxGGDBNznv9dftSbEz9HVv9IGiDLI5NjUoSfY2Hf66lAxxBPW7MUfMU/iNamzjC7v
-         Wmea+N7Qc5igyTyagSxFWuUPb9Q4ZI1w2K0gmpNpMbsAw3PyZPPyNbVo0z+PIWjRRLon
-         D4WqWFOCaUYduCDg5SLcjt32iqrxrVxBlfzWbLRyDDxbdv7A8OErbEeqZqAZXzRNU8fr
-         fBmQ==
+        bh=+IWklISfOEWt9RiBm6q9SNJEHZH2gbUIrSUJFa3+UU4=;
+        b=iPI8wbz0/tcVzIgit3xUEnxm5e3dDsHF6KILd4jicVe+yHM5Kz6YDcT1EYbQNsSi5k
+         KG+zxz5O2z11sE20DFX0sB4fBCJV83dX155UZtOJ7zKd1NXlWyImYrF3EBIkqe/BICcJ
+         +ngp1HA+fPbJpC/w/LzaQfBub0uXLaA5A+daRVAilTCB11VPa+TxbxTOrtmLe++10E9i
+         e/+0Fw4ppY/BeeVzdeVmd/b584xdZdV93qNKUTEx3q2PaIEkfRTH3x9EwdelWQkOf2As
+         dRHh3WV9jD/6MHT7XaJNggbj+i0DLwP/TYJ+ShBjpeOopS62R7BYMCDUCtA/mUc93Q3k
+         PvKQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712130407; x=1712735207;
+        d=1e100.net; s=20230601; t=1712130405; x=1712735205;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=c50DZO+Qx5CrKtjcEqrQpx6F5muY2d18uAtSUCAhezE=;
-        b=gSS7zmrqDWlzYHL8KTjPDRk+JVowidDgbcSBNUmtYQLNJmiNehM0TEGMT05FhAddNy
-         aInkFFVp5pt+D1wONPP5VJcWwRhZF8RGGA1JGb1pSjXJvy+EbUKqfNaXYQx1SE/RupZp
-         FcZUJbKvcwDkL4kB15Cq/qhbVcTNyRRDDOaCx/PQ/h6Y5m9dx5/EB95bCuKyEIFqkCxa
-         tR5DZpZGRL/1VPTbJ6qnpwf0XQob+kcVXu6X+ob42uAO9CNl1e3hW9rFnsWYZeIGTRe9
-         mBDbHxhv4uiecH96L7dYTkGP2dGBjmgdGonjpPW9lwFSVC92bH3MSTp843+jIojnfQYs
-         SUtQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWcAZhWmRR5M1zrVSqN/vo/HzVSkij8mW3zMSb4XcPKSOZ+8+Hw3Bn9Qwvl8S2ygG1pGB/TnVqczJnQf26FlfXV3ibnkZV0eiOc12TW
-X-Gm-Message-State: AOJu0Yxk3REZ80MxfeRWMqociBF2xO/QWztyaTp9rD/L+nOE2w8+SjMu
-	vPP7uZKwKvqAc3n56AlZgoM05/sjOhLHqzJ4d5Pb8vvo4by2gHNhLPYlw2eeymA=
-X-Google-Smtp-Source: AGHT+IGjU+lZi926IGYs70wrtPeJ0AhqDJygL7VcXx4pKvMiavGn02G8DNEATWdaZ39B2zUBl42zVw==
-X-Received: by 2002:a5d:4ac6:0:b0:343:9884:2fe1 with SMTP id y6-20020a5d4ac6000000b0034398842fe1mr531968wrs.68.1712130407112;
-        Wed, 03 Apr 2024 00:46:47 -0700 (PDT)
+        bh=+IWklISfOEWt9RiBm6q9SNJEHZH2gbUIrSUJFa3+UU4=;
+        b=ac7w5RAUXxT5RpU4aNidaA2GhIGKeFuhR5+seFOYU5oCXkaM1KwWkHht0MHqU8k3Nk
+         QPnQGV6Qixw2bTPnWWXU6INjFske6WrHOxoxMvdJX7j0cLq9ox5B1TqZ7ryAw+DbCm+G
+         DULwWSnlGGmBML8eQqg36WXuF5vHDvCKPeYQ6WCO2zXia2flGxgsTBKdDZ/9aRkSwTKv
+         LCFmQ9/k35gGo7Z4yIX6B1aYPCkJVX+nNBJplR4KWyfiFu91dReox81Wk+SuUy8ICpkP
+         LhSgUPcuGs84O4TNjOyeuKqN74mG8UIuoKT8rmCesxo5uwopo2MyEYaJOpqLkgkR9C8O
+         O4fg==
+X-Forwarded-Encrypted: i=1; AJvYcCWhqnJyeGqTPCMLVgQ6ZpClOxKdt3wStkDBmLB9YyI3bh4VSiHf9JZ4ai05zPicFSiEbH3qVy4dOblTCBpId57HW6plo0IjwOVptM5N
+X-Gm-Message-State: AOJu0YwDkSZtuIJ7+5bgY+nVzpNfJ4UevAHB5gp1gbjL2K+anoydrHkU
+	m69yxxgw0sR9nHJPKOjxmg9JtVsb+peYTm3B2ROBLv37BJE4+G62zcEjlv1CqNM=
+X-Google-Smtp-Source: AGHT+IFHSriKTD2J4sXypeAY9EktVA5BVwVRES2S5VQtYrV7puUH/8Y4kftmzpl1rn3D/VpuRpT5OA==
+X-Received: by 2002:a5d:6ac8:0:b0:343:7ae5:5e47 with SMTP id u8-20020a5d6ac8000000b003437ae55e47mr2355486wrw.25.1712130405020;
+        Wed, 03 Apr 2024 00:46:45 -0700 (PDT)
 Received: from arrakeen.starnux.net ([2a01:e0a:982:cbb0:52eb:f6ff:feb3:451a])
-        by smtp.gmail.com with ESMTPSA id cc13-20020a5d5c0d000000b00341b8edbe8csm14021282wrb.87.2024.04.03.00.46.46
+        by smtp.gmail.com with ESMTPSA id cc13-20020a5d5c0d000000b00341b8edbe8csm14021282wrb.87.2024.04.03.00.46.43
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 03 Apr 2024 00:46:46 -0700 (PDT)
+        Wed, 03 Apr 2024 00:46:44 -0700 (PDT)
 From: Neil Armstrong <neil.armstrong@linaro.org>
-Date: Wed, 03 Apr 2024 09:46:36 +0200
-Subject: [PATCH v12 5/7] arm64: meson: g12-common: add the MIPI DSI nodes
+Date: Wed, 03 Apr 2024 09:46:34 +0200
+Subject: [PATCH v12 3/7] clk: meson: g12a: make VCLK2 and ENCL clock path
+ configurable by CCF
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -63,7 +64,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240403-amlogic-v6-4-upstream-dsi-ccf-vim3-v12-5-99ecdfdc87fc@linaro.org>
+Message-Id: <20240403-amlogic-v6-4-upstream-dsi-ccf-vim3-v12-3-99ecdfdc87fc@linaro.org>
 References: <20240403-amlogic-v6-4-upstream-dsi-ccf-vim3-v12-0-99ecdfdc87fc@linaro.org>
 In-Reply-To: <20240403-amlogic-v6-4-upstream-dsi-ccf-vim3-v12-0-99ecdfdc87fc@linaro.org>
 To: Rob Herring <robh@kernel.org>, 
@@ -83,129 +84,304 @@ Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
  linux-arm-kernel@lists.infradead.org, dri-devel@lists.freedesktop.org, 
  Neil Armstrong <neil.armstrong@linaro.org>
 X-Mailer: b4 0.12.4
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3028;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=8347;
  i=neil.armstrong@linaro.org; h=from:subject:message-id;
- bh=hinQajAEakYqxJaAvUFt65KdqGEthzlwyiYxmTWLSwo=;
- b=owEBbQKS/ZANAwAKAXfc29rIyEnRAcsmYgBmDQleCJepZTdvsH5P04FFdj5scoQuo3RrkBu/7LtR
- ovFVFJKJAjMEAAEKAB0WIQQ9U8YmyFYF/h30LIt33NvayMhJ0QUCZg0JXgAKCRB33NvayMhJ0awCD/
- 4lGsqK7ZBrrsYwndwe68AzeslZJrfHIBwgArd/EZLEm4uE0Mimp8KnfGmCjHpv2dh53lDPDO4OyUXW
- TyjZKDngAKfl3cik04pPAisgFPXN1rt4snRJjOwmP6Qdrw00FM3DMJF56wcmsSarNKGCJuP5zEaxrx
- WTxsLsw39sem9jlgmn9lQP3NBr894+saWYaNnihjRjbD28uTZV63ixGtqRZAX0Uv+dr0G60tvufHXx
- aM+lm6S6v/T89y5euV7BUzGniPrwT3gbjnKvtTIZqJDC/V/wdJ2mb+SfXY0M4w5qgjduBycvJGoGVH
- DVEhJrncCQ1+d8MWAg41VRTzaLGhgfAu1bzWlrOTnP6LWtGAOUVGAWv/da/PYg1HvgvFWQBUPfCHsz
- 5aGscOZ8fAPd9DbkEdpW/Hzh2o1TZ3lBJtD/8q0I1TWwEar+co7t25cHPCrcwK1+UoKTaKGwXzbZ7L
- a87Eosy6L3qVChDGjEc5phAj+kTuVae4lVMjJIQiqAZvZsu+6uTZWY49N6g+jYg5n/Z/OsYnNHH5Qy
- oIM/jTwrHykmI9Ay1BR4RRMyk8yciDWmwpwiQxhuaEyRgBXlLkB3C218gFvjV+38kwRb0e81xonfox
- Vl/6+llHRMSy5eR48w4NWI9EDM96hxPfPJyDqbo17HxPpInbEPQUiLqFfLXQ==
+ bh=irCtyEdiWY+FGXN7CMU2Nw/2h0kut5W+asx0S/10tnc=;
+ b=owEBbQKS/ZANAwAKAXfc29rIyEnRAcsmYgBmDQleDSPXTuSsQoM0GoAHrnNTsc6tSDbD2/+j4RN7
+ 4iyUP2OJAjMEAAEKAB0WIQQ9U8YmyFYF/h30LIt33NvayMhJ0QUCZg0JXgAKCRB33NvayMhJ0TgkEA
+ CIy8cFWiC/0oHjJ6hlgZHHl/PlLgbePUaITifqBe27c1Kj0TbQgi35+tOPSVYuFzXZVuj0VYSQ21HF
+ pMGtcQ9z2XVK2/pEfeulW20oHkPAa4LpCxrQsZOqkJy54cKdt5mI92QsbcltcrEj+1U51u1d8Vhm6c
+ DOK8e/xTpmpi5DtgS5zP/XL6BbjmTv2Mh8qvdgkmTpTycy3xvo4YjrLcARZ4jV/3WOoOZzDN+DWdXI
+ SJbJEqRxGNf43eHgDAr9J9kxVuu3/y/W/f21wQCPgBhzo3c8nyFaMLPCVm6IPGyRoLw4peluPIJRMS
+ V6JETXIuVlQQNKQHTdJocdNGRFhvs5k4r3RsNZGmG2tXnLoEh50QW5o69YiiQGVgLaQEKpyhc6F8k2
+ MMMFQYG/BokGq/6JgsU+odjLlQCOjGBvkfXuyVEUdWcz2yys/ge/oD8QD8t68mHXApubLQi//yJ7u3
+ QFjLSvVpL31qxUOn6pMYtrnmHD/3oU9X7EQhWI6A/9lfPzMAQQrJR0jcTA6pdw/om5ftkbaOqWmoob
+ I663jf9p2SgwF3wW7ZCKSTJ2SeO6SnkfbaWFgo0SAFaSCSjRksxf4g/AsrY3KxKIVgrCRpKANGBg+r
+ pv85EqLjG5IGBtnVV/XiKMCE4HLQc9RL3jVJCrFK7KgVGoWaOSY6xPBjq5xA==
 X-Developer-Key: i=neil.armstrong@linaro.org; a=openpgp;
  fpr=89EC3D058446217450F22848169AB7B1A4CFF8AE
 
-Add the MIPI DSI Analog & Digital PHY nodes and the DSI control
-nodes with proper port endpoint to the VPU.
+In order to setup the DSI clock, let's make the unused VCLK2 clock path
+configuration via CCF.
+
+The nocache option is removed from following clocks:
+- vclk2_sel
+- vclk2_input
+- vclk2_div
+- vclk2
+- vclk_div1
+- vclk2_div2_en
+- vclk2_div4_en
+- vclk2_div6_en
+- vclk2_div12_en
+- vclk2_div2
+- vclk2_div4
+- vclk2_div6
+- vclk2_div12
+- cts_encl_sel
+
+vclk2 and vclk2_div uses the newly introduced vclk regmap driver
+to handle the enable and reset bits.
+
+In order to set a rate on cts_encl via the vclk2 clock path,
+the NO_REPARENT flag is set on cts_encl_sel & vclk2_sel in order
+to keep CCF from selection a parent.
+The parents of cts_encl_sel & vclk2_sel are expected to be defined
+in DT or manually set by the display driver at some point.
+
+The following clock scheme is to be used for DSI:
+
+xtal
+\_ gp0_pll_dco
+   \_ gp0_pll
+      |- vclk2_sel
+      |  \_ vclk2_input
+      |     \_ vclk2_div
+      |        \_ vclk2
+      |           \_ vclk2_div1
+      |              \_ cts_encl_sel
+      |                 \_ cts_encl	-> to VPU LCD Encoder
+      |- mipi_dsi_pxclk_sel
+      \_ mipi_dsi_pxclk_div
+         \_ mipi_dsi_pxclk		-> to DSI controller
+
+The mipi_dsi_pxclk_div is set as bypass with a single /1 entry in div_table
+in order to use the same GP0 for mipi_dsi_pxclk and vclk2_input.
+
+The SET_RATE_PARENT is only set on the mipi_dsi_pxclk_sel clock so the
+DSI bitclock is the reference base clock to calculate the vclk2_div value
+when pixel clock is set on the cts_encl endpoint.
 
 Signed-off-by: Neil Armstrong <neil.armstrong@linaro.org>
 ---
- arch/arm64/boot/dts/amlogic/meson-g12-common.dtsi | 70 +++++++++++++++++++++++
- 1 file changed, 70 insertions(+)
+ drivers/clk/meson/Kconfig |  1 +
+ drivers/clk/meson/g12a.c  | 76 ++++++++++++++++++++++++++++++++++-------------
+ 2 files changed, 57 insertions(+), 20 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-g12-common.dtsi b/arch/arm64/boot/dts/amlogic/meson-g12-common.dtsi
-index 9d5eab6595d0..b058ed78faf0 100644
---- a/arch/arm64/boot/dts/amlogic/meson-g12-common.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-g12-common.dtsi
-@@ -1663,9 +1663,28 @@ pwrc: power-controller {
- 								       <250000000>,
- 								       <0>; /* Do Nothing */
- 					};
-+
-+					mipi_analog_dphy: phy {
-+						compatible = "amlogic,g12a-mipi-dphy-analog";
-+						#phy-cells = <0>;
-+						status = "disabled";
-+					};
- 				};
- 			};
+diff --git a/drivers/clk/meson/Kconfig b/drivers/clk/meson/Kconfig
+index 8a9823789fa3..59a40a49f8e1 100644
+--- a/drivers/clk/meson/Kconfig
++++ b/drivers/clk/meson/Kconfig
+@@ -144,6 +144,7 @@ config COMMON_CLK_G12A
+ 	select COMMON_CLK_MESON_EE_CLKC
+ 	select COMMON_CLK_MESON_CPU_DYNDIV
+ 	select COMMON_CLK_MESON_VID_PLL_DIV
++	select COMMON_CLK_MESON_VCLK
+ 	select MFD_SYSCON
+ 	help
+ 	  Support for the clock controller on Amlogic S905D2, S905X2 and S905Y2
+diff --git a/drivers/clk/meson/g12a.c b/drivers/clk/meson/g12a.c
+index 90f4c6103014..df7e17c850d8 100644
+--- a/drivers/clk/meson/g12a.c
++++ b/drivers/clk/meson/g12a.c
+@@ -22,6 +22,7 @@
+ #include "clk-regmap.h"
+ #include "clk-cpu-dyndiv.h"
+ #include "vid-pll-div.h"
++#include "vclk.h"
+ #include "meson-eeclk.h"
+ #include "g12a.h"
  
-+			mipi_dphy: phy@44000 {
-+				compatible = "amlogic,axg-mipi-dphy";
-+				reg = <0x0 0x44000 0x0 0x2000>;
-+				clocks = <&clkc CLKID_MIPI_DSI_PHY>;
-+				clock-names = "pclk";
-+				resets = <&reset RESET_MIPI_DSI_PHY>;
-+				reset-names = "phy";
-+				phys = <&mipi_analog_dphy>;
-+				phy-names = "analog";
-+				#phy-cells = <0>;
-+				status = "disabled";
-+			};
-+
- 			usb3_pcie_phy: phy@46000 {
- 				compatible = "amlogic,g12a-usb3-pcie-phy";
- 				reg = <0x0 0x46000 0x0 0x2000>;
-@@ -2152,6 +2171,15 @@ hdmi_tx_out: endpoint {
- 					remote-endpoint = <&hdmi_tx_in>;
- 				};
- 			};
-+
-+			/* DPI output port */
-+			dpi_port: port@2 {
-+				reg = <2>;
-+
-+				dpi_out: endpoint {
-+					remote-endpoint = <&mipi_dsi_in>;
-+				};
-+			};
- 		};
+@@ -3165,7 +3166,7 @@ static struct clk_regmap g12a_vclk2_sel = {
+ 		.ops = &clk_regmap_mux_ops,
+ 		.parent_hws = g12a_vclk_parent_hws,
+ 		.num_parents = ARRAY_SIZE(g12a_vclk_parent_hws),
+-		.flags = CLK_SET_RATE_NO_REPARENT | CLK_GET_RATE_NOCACHE,
++		.flags = CLK_SET_RATE_NO_REPARENT,
+ 	},
+ };
  
- 		gic: interrupt-controller@ffc01000 {
-@@ -2189,6 +2217,48 @@ gpio_intc: interrupt-controller@f080 {
- 				amlogic,channel-interrupts = <64 65 66 67 68 69 70 71>;
- 			};
+@@ -3193,7 +3194,6 @@ static struct clk_regmap g12a_vclk2_input = {
+ 		.ops = &clk_regmap_gate_ops,
+ 		.parent_hws = (const struct clk_hw *[]) { &g12a_vclk2_sel.hw },
+ 		.num_parents = 1,
+-		.flags = CLK_SET_RATE_PARENT | CLK_IGNORE_UNUSED,
+ 	},
+ };
  
-+			mipi_dsi: dsi@7000 {
-+				compatible = "amlogic,meson-g12a-dw-mipi-dsi";
-+				reg = <0x0 0x7000 0x0 0x1000>;
-+				resets = <&reset RESET_MIPI_DSI_HOST>;
-+				reset-names = "top";
-+				clocks = <&clkc CLKID_MIPI_DSI_HOST>,
-+					 <&clkc CLKID_MIPI_DSI_PXCLK>,
-+					 <&clkc CLKID_CTS_ENCL>;
-+				clock-names = "pclk", "bit", "px";
-+				phys = <&mipi_dphy>;
-+				phy-names = "dphy";
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+				status = "disabled";
+@@ -3215,19 +3215,32 @@ static struct clk_regmap g12a_vclk_div = {
+ };
+ 
+ static struct clk_regmap g12a_vclk2_div = {
+-	.data = &(struct clk_regmap_div_data){
+-		.offset = HHI_VIID_CLK_DIV,
+-		.shift = 0,
+-		.width = 8,
++	.data = &(struct meson_vclk_div_data){
++		.div = {
++			.reg_off = HHI_VIID_CLK_DIV,
++			.shift   = 0,
++			.width   = 8,
++		},
++		.enable = {
++			.reg_off = HHI_VIID_CLK_DIV,
++			.shift   = 16,
++			.width   = 1,
++		},
++		.reset = {
++			.reg_off = HHI_VIID_CLK_DIV,
++			.shift   = 17,
++			.width   = 1,
++		},
++		.flags = CLK_DIVIDER_ROUND_CLOSEST,
+ 	},
+ 	.hw.init = &(struct clk_init_data){
+ 		.name = "vclk2_div",
+-		.ops = &clk_regmap_divider_ops,
++		.ops = &meson_vclk_div_ops,
+ 		.parent_hws = (const struct clk_hw *[]) {
+ 			&g12a_vclk2_input.hw
+ 		},
+ 		.num_parents = 1,
+-		.flags = CLK_GET_RATE_NOCACHE,
++		.flags = CLK_SET_RATE_GATE,
+ 	},
+ };
+ 
+@@ -3246,16 +3259,24 @@ static struct clk_regmap g12a_vclk = {
+ };
+ 
+ static struct clk_regmap g12a_vclk2 = {
+-	.data = &(struct clk_regmap_gate_data){
+-		.offset = HHI_VIID_CLK_CNTL,
+-		.bit_idx = 19,
++	.data = &(struct meson_vclk_gate_data){
++		.enable = {
++			.reg_off = HHI_VIID_CLK_CNTL,
++			.shift   = 19,
++			.width   = 1,
++		},
++		.reset = {
++			.reg_off = HHI_VIID_CLK_CNTL,
++			.shift   = 15,
++			.width   = 1,
++		},
+ 	},
+ 	.hw.init = &(struct clk_init_data) {
+ 		.name = "vclk2",
+-		.ops = &clk_regmap_gate_ops,
++		.ops = &meson_vclk_gate_ops,
+ 		.parent_hws = (const struct clk_hw *[]) { &g12a_vclk2_div.hw },
+ 		.num_parents = 1,
+-		.flags = CLK_SET_RATE_PARENT | CLK_IGNORE_UNUSED,
++		.flags = CLK_SET_RATE_PARENT,
+ 	},
+ };
+ 
+@@ -3339,7 +3360,7 @@ static struct clk_regmap g12a_vclk2_div1 = {
+ 		.ops = &clk_regmap_gate_ops,
+ 		.parent_hws = (const struct clk_hw *[]) { &g12a_vclk2.hw },
+ 		.num_parents = 1,
+-		.flags = CLK_SET_RATE_PARENT | CLK_IGNORE_UNUSED,
++		.flags = CLK_SET_RATE_PARENT,
+ 	},
+ };
+ 
+@@ -3353,7 +3374,7 @@ static struct clk_regmap g12a_vclk2_div2_en = {
+ 		.ops = &clk_regmap_gate_ops,
+ 		.parent_hws = (const struct clk_hw *[]) { &g12a_vclk2.hw },
+ 		.num_parents = 1,
+-		.flags = CLK_SET_RATE_PARENT | CLK_IGNORE_UNUSED,
++		.flags = CLK_SET_RATE_PARENT,
+ 	},
+ };
+ 
+@@ -3367,7 +3388,7 @@ static struct clk_regmap g12a_vclk2_div4_en = {
+ 		.ops = &clk_regmap_gate_ops,
+ 		.parent_hws = (const struct clk_hw *[]) { &g12a_vclk2.hw },
+ 		.num_parents = 1,
+-		.flags = CLK_SET_RATE_PARENT | CLK_IGNORE_UNUSED,
++		.flags = CLK_SET_RATE_PARENT,
+ 	},
+ };
+ 
+@@ -3381,7 +3402,7 @@ static struct clk_regmap g12a_vclk2_div6_en = {
+ 		.ops = &clk_regmap_gate_ops,
+ 		.parent_hws = (const struct clk_hw *[]) { &g12a_vclk2.hw },
+ 		.num_parents = 1,
+-		.flags = CLK_SET_RATE_PARENT | CLK_IGNORE_UNUSED,
++		.flags = CLK_SET_RATE_PARENT,
+ 	},
+ };
+ 
+@@ -3395,7 +3416,7 @@ static struct clk_regmap g12a_vclk2_div12_en = {
+ 		.ops = &clk_regmap_gate_ops,
+ 		.parent_hws = (const struct clk_hw *[]) { &g12a_vclk2.hw },
+ 		.num_parents = 1,
+-		.flags = CLK_SET_RATE_PARENT | CLK_IGNORE_UNUSED,
++		.flags = CLK_SET_RATE_PARENT,
+ 	},
+ };
+ 
+@@ -3461,6 +3482,7 @@ static struct clk_fixed_factor g12a_vclk2_div2 = {
+ 			&g12a_vclk2_div2_en.hw
+ 		},
+ 		.num_parents = 1,
++		.flags = CLK_SET_RATE_PARENT,
+ 	},
+ };
+ 
+@@ -3474,6 +3496,7 @@ static struct clk_fixed_factor g12a_vclk2_div4 = {
+ 			&g12a_vclk2_div4_en.hw
+ 		},
+ 		.num_parents = 1,
++		.flags = CLK_SET_RATE_PARENT,
+ 	},
+ };
+ 
+@@ -3487,6 +3510,7 @@ static struct clk_fixed_factor g12a_vclk2_div6 = {
+ 			&g12a_vclk2_div6_en.hw
+ 		},
+ 		.num_parents = 1,
++		.flags = CLK_SET_RATE_PARENT,
+ 	},
+ };
+ 
+@@ -3500,6 +3524,7 @@ static struct clk_fixed_factor g12a_vclk2_div12 = {
+ 			&g12a_vclk2_div12_en.hw
+ 		},
+ 		.num_parents = 1,
++		.flags = CLK_SET_RATE_PARENT,
+ 	},
+ };
+ 
+@@ -3561,7 +3586,7 @@ static struct clk_regmap g12a_cts_encl_sel = {
+ 		.ops = &clk_regmap_mux_ops,
+ 		.parent_hws = g12a_cts_parent_hws,
+ 		.num_parents = ARRAY_SIZE(g12a_cts_parent_hws),
+-		.flags = CLK_SET_RATE_NO_REPARENT | CLK_GET_RATE_NOCACHE,
++		.flags = CLK_SET_RATE_PARENT | CLK_SET_RATE_NO_REPARENT,
+ 	},
+ };
+ 
+@@ -3717,15 +3742,26 @@ static struct clk_regmap g12a_mipi_dsi_pxclk_sel = {
+ 		.ops = &clk_regmap_mux_ops,
+ 		.parent_hws = g12a_mipi_dsi_pxclk_parent_hws,
+ 		.num_parents = ARRAY_SIZE(g12a_mipi_dsi_pxclk_parent_hws),
+-		.flags = CLK_SET_RATE_NO_REPARENT,
++		.flags = CLK_SET_RATE_NO_REPARENT | CLK_SET_RATE_PARENT,
+ 	},
+ };
+ 
++/*
++ * FIXME: Force as bypass by forcing a single /1 table entry, and doensn't on boot value
++ * when setting a clock whith this node in the clock path, but doesn't garantee the divider
++ * is at /1 at boot until a rate is set.
++ */
++static const struct clk_div_table g12a_mipi_dsi_pxclk_div_table[] = {
++	{ .val = 0, .div = 1 },
++	{ /* sentinel */ },
++};
 +
-+				assigned-clocks = <&clkc CLKID_MIPI_DSI_PXCLK_SEL>,
-+					 <&clkc CLKID_CTS_ENCL_SEL>,
-+					 <&clkc CLKID_VCLK2_SEL>;
-+				assigned-clock-parents = <&clkc CLKID_GP0_PLL>,
-+					 <&clkc CLKID_VCLK2_DIV1>,
-+					 <&clkc CLKID_GP0_PLL>;
-+
-+				ports {
-+					#address-cells = <1>;
-+					#size-cells = <0>;
-+
-+					/* VPU VENC Input */
-+					mipi_dsi_venc_port: port@0 {
-+						reg = <0>;
-+
-+						mipi_dsi_in: endpoint {
-+							remote-endpoint = <&dpi_out>;
-+						};
-+					};
-+
-+					/* DSI Output */
-+					mipi_dsi_panel_port: port@1 {
-+						reg = <1>;
-+					};
-+				};
-+			};
-+
- 			watchdog: watchdog@f0d0 {
- 				compatible = "amlogic,meson-gxbb-wdt";
- 				reg = <0x0 0xf0d0 0x0 0x10>;
+ static struct clk_regmap g12a_mipi_dsi_pxclk_div = {
+ 	.data = &(struct clk_regmap_div_data){
+ 		.offset = HHI_MIPIDSI_PHY_CLK_CNTL,
+ 		.shift = 0,
+ 		.width = 7,
++		.table = g12a_mipi_dsi_pxclk_div_table,
+ 	},
+ 	.hw.init = &(struct clk_init_data){
+ 		.name = "mipi_dsi_pxclk_div",
 
 -- 
 2.34.1
