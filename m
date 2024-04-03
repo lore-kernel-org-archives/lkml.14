@@ -1,126 +1,135 @@
-Received: from mail-yb1-f171.google.com (mail-yb1-f171.google.com [209.85.219.171])
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73EB073506
-	for <linux-kernel@vger.kernel.org>; Wed,  3 Apr 2024 11:21:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DF0A73506;
+	Wed,  3 Apr 2024 11:22:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712143297; cv=none; b=L9f8ykgJIPmUwtrhDeKlCp3ILvoLQ1p0uNq/kFgqgB/wAdRAF73vI7ImW16VJyaKdaFIE7ePZ0/BfbvgVJKX828+ahpXu8FX9UGld1swlrZrBViOlksjW9+o7H33vsfPFQ6L9zm/1eCDyObveKS+xi4o/Yj7jAue2s2+dtGtaNc=
+	t=1712143344; cv=none; b=KO7SXcWzMr9YIU2iZTbL1FVGnGjxzEufu7w5ZLbdxWQxj3kyJVeZGSMafyOGEOcSCLA563yWoJ9FsWJIMjlAI21cAzoSxwiCm7c0iyCL6oeB2t2ntN2X3PmKBy+ylF/0iEfXYDh71yLtd/i9nMp4aGymVU/NaiBWduBOScwMpFA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712143297; c=relaxed/simple;
-	bh=14A2zGvt71HCwM6O6gK42NmYjcKdFxMOyjGXH9M8uaU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=OK7/1dIEEX+jIXjCw2Qqnv0S3JqBs9UdRbm4tSNc40ILPWnbBdgDW5yQDnVzfNPxamMIHKkkNYs6hYc0nlCEtQI9DEP1G8NKOWQa8yQyXBo+d08jx+dm9OQVbBWjKYzKzEImX509+uYDRMTel0TibqiGpRzvHYwZX4nF4lGBCFY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=IyGuMKYC; arc=none smtp.client-ip=209.85.219.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1712143344; c=relaxed/simple;
+	bh=flLoUByLGK4hXv0d7wMX/74B0BBNZZd/sIeSZIip6mY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=jrP/dCrLBgf7l/6lE/EuK0Up6/WPomq78C/4Ad13BVbRfJV8Qn1wauK4DWHDpxWK/tPSwsn7A8mG4YYNPRuaFxsVLzEQYchGETztKsZKBVEeJY4VXWs5NsoCaeLQppu/3XFKUcubHo924T5jBw7f21o7KPnkmJOhSnCg47PAPTo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=DDJfiSBR; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=uoMMMBa/; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="IyGuMKYC"
-Received: by mail-yb1-f171.google.com with SMTP id 3f1490d57ef6-dcc80d6004bso5737886276.0
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Apr 2024 04:21:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1712143294; x=1712748094; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=lF+T4bxnDZj7vHWxhdfHcPO4VDzU3zVkWYi0IqT5ix0=;
-        b=IyGuMKYCNcOdj5zfUJMfwLXjQxs/QumlNmkmfT3cw1Til7Omi0PtrwB/QZHbGgMzKX
-         SjRMQWV+hxVdIFkbklSq+gOhEywIm0JKTe8lKi4D9AHXowyOd4fuR8/kH3CfFgfJpayj
-         LLiUy2+frpgvRV4C8icpjezhPAT5ekYkBpETxXo+4qtTBBTNRkoGBaYQROZYcWRgY1Ay
-         ttB+RYBzWxe6OqOVDXQugdOkbNVbp7Tb9R7UKTUXRAKVWdKDn0l3CiDaeTIRoWusCO+L
-         hvb8jNJ+ML76ZA4v9mRde7zB7y0WpQ7Y1m05K30IqUjnTXFibl3XWOVpjcW23ipUjuxp
-         nZ4A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712143294; x=1712748094;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=lF+T4bxnDZj7vHWxhdfHcPO4VDzU3zVkWYi0IqT5ix0=;
-        b=ulMdw766v6wcKRNwxYtHdLeHUkeakKDnD7qgtOz0LkSU35Gn3viMVhNmEkPqrBRoWl
-         qTS1bIBwozcoE3ETJHP0gdvNhs8uGZIFXGyl1UP+5KJGqCk/rIEAVp1ouX7q8DA3L96k
-         WQWYM41/P2NZpjI7JaUfiZ6GOJ0mFoftdjmU4iQSpwitFv/W97HckGSlBeu4tLw4g1Na
-         CIBKxcJBG0GrLyfboVSAC+E+FkqTiEmyscxxL2zVNmDd8NfHLA9zScd0U9NVs3AYkg6X
-         viY5/CKUPauqRvPOFtd+FtSejvniVgMNmpeZWOTIMF742/hVvYh1sbg68ggxBG6IC9yi
-         Og0A==
-X-Forwarded-Encrypted: i=1; AJvYcCX1BPe/ew+tJa64QUn5S1q+xp3wR1V8XieKvp6HwDPIKcUwblDY3os74kXu5S4VYF/W1mbnnEieKgyzeXCXnLXZzKlDlM4+i6FSiU60
-X-Gm-Message-State: AOJu0Yw4DSHv4gApHllszchx0mpUOjQEUI7HEfRTl9cNsEtQoKzE2M0Q
-	fXfcclJCMjencQa6TwzIg2yta/IAfd3skd9HB61QEc9ATEpPi48izDymBKmBrTvRkiO1L3Uq7Hr
-	N7Mx/8J/uOtC/u5leooa/GjckSPvZ71YnGAsEiA==
-X-Google-Smtp-Source: AGHT+IFtc7mBgFp3kaw9P5n/Or46d3MjVihrSW5DyRrTli9K6KFjlNUz651nVrW1gUHor3EUrMSY621ZfPcAB6Oktbw=
-X-Received: by 2002:a25:b198:0:b0:dcf:56c3:336e with SMTP id
- h24-20020a25b198000000b00dcf56c3336emr13726871ybj.35.1712143294469; Wed, 03
- Apr 2024 04:21:34 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="DDJfiSBR";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="uoMMMBa/"
+Received: from imap2.dmz-prg2.suse.org (imap2.dmz-prg2.suse.org [10.150.64.98])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 3841B35288;
+	Wed,  3 Apr 2024 11:22:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1712143340; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=QUubzZCvH9kKHwxEUHRTCcZPEs1hSs/vSgYqSwznXr4=;
+	b=DDJfiSBRvnRvc0NSrGBWmcDhD8fe7TOALaFjEzp2fpBhtYpI4jGxQKLA3+l1QQzdMRimzX
+	IQEap34DDcTzJQ9Yq3z062vzUdnUQNrGZf8I3Oe/jr3My0RIbNu6t7omRzXWMbpabspnLc
+	PLp6IF8n+5lEVbD2mOAQMSJezSx2cBk=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1712143340;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=QUubzZCvH9kKHwxEUHRTCcZPEs1hSs/vSgYqSwznXr4=;
+	b=uoMMMBa/IrIQ9KZDERsDt9OoPPcUgK86+ANehXQPJPaMYhaZWnL43IEBU2MBLVQBwplHKn
+	5oHScmosS95C5kAg==
+Authentication-Results: smtp-out1.suse.de;
+	none
+Received: from imap2.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap2.dmz-prg2.suse.org (Postfix) with ESMTPS id 28DB813357;
+	Wed,  3 Apr 2024 11:22:20 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap2.dmz-prg2.suse.org with ESMTPSA
+	id hubzCew7DWb0IAAAn2gu4w
+	(envelope-from <jack@suse.cz>); Wed, 03 Apr 2024 11:22:20 +0000
+Received: by quack3.suse.cz (Postfix, from userid 1000)
+	id CBB66A0814; Wed,  3 Apr 2024 13:22:04 +0200 (CEST)
+Date: Wed, 3 Apr 2024 13:22:04 +0200
+From: Jan Kara <jack@suse.cz>
+To: Sweet Tea Dorminy <sweettea-kernel@dorminy.me>
+Cc: Jonathan Corbet <corbet@lwn.net>,
+	Kent Overstreet <kent.overstreet@linux.dev>,
+	Brian Foster <bfoster@redhat.com>, Chris Mason <clm@fb.com>,
+	Josef Bacik <josef@toxicpanda.com>, David Sterba <dsterba@suse.com>,
+	Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <chao@kernel.org>,
+	Alexander Viro <viro@zeniv.linux.org.uk>,
+	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
+	=?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-bcachefs@vger.kernel.org, linux-btrfs@vger.kernel.org,
+	linux-f2fs-devel@lists.sourceforge.net,
+	linux-fsdevel@vger.kernel.org, kernel-team@meta.com
+Subject: Re: [PATCH v3 07/13] ext4: fiemap: return correct extent physical
+ length
+Message-ID: <20240403112204.l5zmyirxueod2o5l@quack3>
+References: <cover.1712126039.git.sweettea-kernel@dorminy.me>
+ <20935230b7513031ac497e3afe8446650d20fb1e.1712126039.git.sweettea-kernel@dorminy.me>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240328095044.2926125-1-quic_sibis@quicinc.com>
- <20240328095044.2926125-6-quic_sibis@quicinc.com> <Zgvnh0J2a_fBH0bR@bogus>
-In-Reply-To: <Zgvnh0J2a_fBH0bR@bogus>
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Date: Wed, 3 Apr 2024 13:20:58 +0200
-Message-ID: <CAPDyKFous+aoopf+=ZRugR78jyekobODqn7tqWRCyirPD+=eYw@mail.gmail.com>
-Subject: Re: [PATCH 5/5] arm64: dts: qcom: x1e80100: Enable cpufreq
-To: Sudeep Holla <sudeep.holla@arm.com>
-Cc: Sibi Sankar <quic_sibis@quicinc.com>, cristian.marussi@arm.com, andersson@kernel.org, 
-	konrad.dybcio@linaro.org, jassisinghbrar@gmail.com, robh+dt@kernel.org, 
-	krzysztof.kozlowski+dt@linaro.org, linux-kernel@vger.kernel.org, 
-	linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
-	quic_rgottimu@quicinc.com, quic_kshivnan@quicinc.com, conor+dt@kernel.org, 
-	quic_gkohli@quicinc.com, quic_nkela@quicinc.com, quic_psodagud@quicinc.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20935230b7513031ac497e3afe8446650d20fb1e.1712126039.git.sweettea-kernel@dorminy.me>
+X-Spam-Score: -1.03
+X-Spamd-Result: default: False [-1.03 / 50.00];
+	 ARC_NA(0.00)[];
+	 RCVD_VIA_SMTP_AUTH(0.00)[];
+	 FROM_HAS_DN(0.00)[];
+	 TO_DN_SOME(0.00)[];
+	 TO_MATCH_ENVRCPT_ALL(0.00)[];
+	 NEURAL_HAM_LONG(-1.00)[-1.000];
+	 MIME_GOOD(-0.10)[text/plain];
+	 RCVD_COUNT_THREE(0.00)[3];
+	 DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	 NEURAL_HAM_SHORT(-0.20)[-0.999];
+	 RCPT_COUNT_TWELVE(0.00)[20];
+	 DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:email];
+	 FUZZY_BLOCKED(0.00)[rspamd.com];
+	 FROM_EQ_ENVFROM(0.00)[];
+	 MIME_TRACE(0.00)[0:+];
+	 MID_RHS_NOT_FQDN(0.50)[];
+	 RCVD_TLS_ALL(0.00)[];
+	 BAYES_HAM(-0.23)[72.57%]
+X-Spam-Level: 
+X-Spam-Flag: NO
 
-On Tue, 2 Apr 2024 at 13:10, Sudeep Holla <sudeep.holla@arm.com> wrote:
->
-> On Thu, Mar 28, 2024 at 03:20:44PM +0530, Sibi Sankar wrote:
-> > Enable cpufreq on X1E80100 SoCs through the SCMI perf protocol node.
-> >
-> > Signed-off-by: Sibi Sankar <quic_sibis@quicinc.com>
-> > ---
-> >  arch/arm64/boot/dts/qcom/x1e80100.dtsi | 27 ++++++++++++++++++++++++++
-> >  1 file changed, 27 insertions(+)
-> >
-> > diff --git a/arch/arm64/boot/dts/qcom/x1e80100.dtsi b/arch/arm64/boot/dts/qcom/x1e80100.dtsi
-> > index 4e0ec859ed61..d1d232cd1f25 100644
-> > --- a/arch/arm64/boot/dts/qcom/x1e80100.dtsi
-> > +++ b/arch/arm64/boot/dts/qcom/x1e80100.dtsi
-> > @@ -68,6 +68,7 @@ CPU0: cpu@0 {
-> >                       compatible = "qcom,oryon";
-> >                       reg = <0x0 0x0>;
-> >                       enable-method = "psci";
-> > +                     clocks = <&scmi_dvfs 0>;
-> >                       next-level-cache = <&L2_0>;
-> >                       power-domains = <&CPU_PD0>;
-> >                       power-domain-names = "psci";
->
->
-> Any reason why you wouldn't want to use the new genpd based perf controls.
-> IIRC it was added based on mainly Qcom platform requirements.
->
-> -                     clocks = <&scmi_dvfs 0>;
->                       next-level-cache = <&L2_0>;
-> -                     power-domains = <&CPU_PD0>;
-> -                     power-domain-names = "psci";
-> +                     power-domains = <&CPU_PD0>, <&scmi_dvfs 0>;
-> +                     power-domain-names = "psci", "perf";
->
->
-> And the associated changes in the scmi dvfs node for cells property.
->
-> This change is OK but just wanted to check the reasoning for the choice.
+On Wed 03-04-24 03:22:48, Sweet Tea Dorminy wrote:
+> Signed-off-by: Sweet Tea Dorminy <sweettea-kernel@dorminy.me>
+> ---
+>  fs/ext4/extents.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/fs/ext4/extents.c b/fs/ext4/extents.c
+> index 2adade3c202a..4874f757e1bd 100644
+> --- a/fs/ext4/extents.c
+> +++ b/fs/ext4/extents.c
+> @@ -2194,7 +2194,7 @@ static int ext4_fill_es_cache_info(struct inode *inode,
+>  
+>  	while (block <= end) {
+>  		next = 0;
+> -		flags = 0;
+> +		flags = FIEMAP_EXTENT_HAS_PHYS_LEN;
 
-To me, it seems reasonable to move to the new binding with
-#power-domain-cells for protocol@13. This becomes more future proof,
-as it can then easily be extended to be used beyond CPUs.
+OK, but we should then pass (__u64)es.es_len << blksize_bits as physical
+extent length below, shouldn't we?
 
-That said, I just submitted a patch [1] to update the examples in the
-scmi DT doc to use  #power-domain-cells in favor of #clock-cells. I
-don't know if there is a better way to promote the new bindings?
-Perhaps moving Juno to use this too?
+>  		if (!ext4_es_lookup_extent(inode, block, &next, &es))
+>  			break;
+>  		if (ext4_es_is_unwritten(&es))
 
-Kind regards
-Uffe
-
-[1]
-https://lore.kernel.org/all/20240403111106.1110940-1-ulf.hansson@linaro.org/
+								Honza
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
