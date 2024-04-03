@@ -1,107 +1,150 @@
-Received: from terminus.zytor.com (terminus.zytor.com [198.137.202.136])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F1434C6C
-	for <linux-kernel@vger.kernel.org>; Wed,  3 Apr 2024 06:30:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B762D259C;
+	Wed,  3 Apr 2024 06:31:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712125853; cv=none; b=QLitmASpi6Afy+cjMegA9hlMBHC8de0sjmgxA27utn+W9p0Z+bOHNQVbvqAbp3B/atFV+BlCvlqZSsMUDIlCbYGnylXckP1oM69lzDrhSYKICeGc6rQCxAqTcAoXKmL65xjbgJpZSLSi7rRKh9jFD1VvHQLhYjvfqANVo/gIS6w=
+	t=1712125892; cv=none; b=OS/RVZQ4rt01Pq7ZJ8bdxqGuV7kcRU3rJjCn0YzC1hTUQjvCJnX4kpS87UGmBewiwfkDfRQ3Uwguu57yOuPrurA9yvvH3eY2Yaojtt+GLFqzCbSgmsF+KGpjRIFwE+Qg+7Vd3a9kwMp6ZhVFEYmIeE996ckys+Jeuf+w2CNZeGI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712125853; c=relaxed/simple;
-	bh=gbtbUqxbaz6VMoeylt37LSG9t554n6QMImJyt1TGVr8=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=kjXLMwt6/ZgBV0+84UDS+4eb6KJlK800VmWmZNyuwzzLs8XC6fk5xruB7zz80h0x4MPCONcWQv4xIfs2bSraUgXr4fik82cvb41Lj5pX4k+mmIQ8YBqnMd3XUPgKiPuNKd43YjUtM77+dyhQ0gLs3TNM06lq80V3pH5u9LKs3l8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=eCVYGEc7; arc=none smtp.client-ip=198.137.202.136
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
+	s=arc-20240116; t=1712125892; c=relaxed/simple;
+	bh=u8yyfyZgaAagm34t7FuX67uRnRyX369M5V0O5ZjBg8E=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=D8VHEEbzlLdd9GW4V/g3Is8+6bl0aFGg9NWSLGY9LKljsIVQB9qEEhVPtKDWn2Rm+iU9xD8i0xIaIYVb9mutnvKzyAQwDalDLOwBPsOUdV+Xq3Lph8PXyjI55CPBepcQDU3zQqAULduc3gTxnnzBbCca/YnBC55j/Wg4Hp+iRt8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NNcFPwNg; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="eCVYGEc7"
-Received: from terminus.zytor.com (terminus.zytor.com [IPv6:2607:7c80:54:3:0:0:0:136])
-	(authenticated bits=0)
-	by mail.zytor.com (8.17.2/8.17.1) with ESMTPSA id 4336O46p2956324
-	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-	Tue, 2 Apr 2024 23:24:08 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 4336O46p2956324
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-	s=2024031401; t=1712125450;
-	bh=oO0Elqz94WP7GY3TrrPoB3tMYCy5mnohKTYdv4otdqc=;
-	h=From:To:Cc:Subject:Date:From;
-	b=eCVYGEc7rjThZC73vxuoL27CYn2WI0ynm0NSY8UPhQsM8s9Y8qgNFeRC47DovJNOK
-	 e4wFkzW7mbjlONSYz3IV/q17wZ8cvNQLd8HToc2o46LcMBT+6FftPyLOIdrfveIh/1
-	 Tt9/0Z9rhqDf35bp58P0aPTBmtk4y2PUrA4ENJ1eFFM12f8PFJAf9Sxc2FUsfaACGf
-	 JNyfhXZY6fX7gr6bhJS+5jVrktoIeZ4l7kwd1QaBv8w9k2qYy+rvVjoeYVXNnRoNXq
-	 7BKPD/v7lhhG2p8I1Du+GTgmryjkM/lKiQus+hOiO142MNqOoM3Vnvhzx2uQxOLZio
-	 HwVwM0wjoNSew==
-From: "Xin Li (Intel)" <xin@zytor.com>
-To: linux-kernel@vger.kernel.org
-Cc: luto@kernel.org, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
-        brgerst@gmail.com
-Subject: [PATCH v1 1/1] x86/entry/64: Skip SYSRET validation tests when FRED is enabled
-Date: Tue,  2 Apr 2024 23:24:03 -0700
-Message-ID: <20240403062404.2956240-1-xin@zytor.com>
-X-Mailer: git-send-email 2.44.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NNcFPwNg"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8E099C433C7;
+	Wed,  3 Apr 2024 06:31:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1712125892;
+	bh=u8yyfyZgaAagm34t7FuX67uRnRyX369M5V0O5ZjBg8E=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=NNcFPwNgUFjquMQDq9pFW+Nd2/hQ/SeCVicQQefTLrr2aVWZO6E0o8KlojPbkMjn/
+	 ddPPTh88swtL9n+xlUMrEu86A0+ldGBXBJxWJYv+TQwQAJpMdCvNZxmGv5yN4PNIxC
+	 v/CeAmoo26L+5gzgbUXPtypYZUPOs91qV8quiQ6Vmt+Vll3gQX19bzhlLoOatImrv4
+	 iR4yUwhIEaH4UJqtZb/2oAUJm4AT6XbYBmMxHScn2WPGs+4wIVoMIEo4KLsFa/8HLx
+	 Oxg/cwrFbICQBxxMv83Vj0y9u4uL/jV4ajjPiaA47VW17u/SBLk/zdptjBPcLoKPqb
+	 PJIMmjslywNrw==
+Message-ID: <a2bdd516-686b-46fc-8991-cc4d553f3b28@kernel.org>
+Date: Wed, 3 Apr 2024 08:31:27 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4] i2c: i2c-qcom-geni: Parse Error correctly in i2c GSI
+ mode
+To: Andi Shyti <andi.shyti@kernel.org>, Vinod Koul <vkoul@kernel.org>
+Cc: konrad.dybcio@linaro.org, andersson@kernel.org, wsa@kernel.org,
+ linux-arm-msm@vger.kernel.org, dmaengine@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org,
+ Mukesh Kumar Savaliya <quic_msavaliy@quicinc.com>,
+ quic_vdadhani@quicinc.com, Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+References: <20240313052639.1747078-1-quic_msavaliy@quicinc.com>
+ <171161140136.2698925.4294566764047886777.b4-ty@kernel.org>
+ <ZgbwJAb7Ffktf554@matsya>
+ <mo7d5ayw4gy2lqb6e5o4ijegodx6a5naytatwmoblujftwdjfg@sc4amlo3va7g>
+Content-Language: en-US
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <mo7d5ayw4gy2lqb6e5o4ijegodx6a5naytatwmoblujftwdjfg@sc4amlo3va7g>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Don't do SYSRET validation tests when FRED is enabled, since ERETU is
-the only legit instruction to return to user level.
+On 30/03/2024 00:54, Andi Shyti wrote:
+> Hi Vinod,
+> 
+> On Fri, Mar 29, 2024 at 10:15:24PM +0530, Vinod Koul wrote:
+>> On 28-03-24, 08:36, Andi Shyti wrote:
+>>> On Wed, 13 Mar 2024 10:56:39 +0530, Mukesh Kumar Savaliya wrote:
+>>>> I2C driver currently reports "DMA txn failed" error even though it's
+>>>> NACK OR BUS_PROTO OR ARB_LOST. Detect NACK error when no device ACKs
+>>>> on the bus instead of generic transfer failure which doesn't give any
+>>>> specific clue.
+>>>>
+>>>> Make Changes inside i2c driver callback handler function
+>>>> i2c_gpi_cb_result() to parse these errors and make sure GSI driver
+>>>> stores the error status during error interrupt.
+>>>>
+>>>> [...]
+>>>
+>>> Applied to i2c/i2c-host-next on
+>>>
+>>> git://git.kernel.org/pub/scm/linux/kernel/git/local tree
+>>
+>> You applied changes to dmaengine driver without my ack! I dont agree to
+>> the approach here, we could do better
+> 
+> This patch has been around for quite some time and there has been
+> time to review it. Altrady two people have approved it.
 
-Signed-off-by: Xin Li (Intel) <xin@zytor.com>
----
- arch/x86/entry/common.c | 12 ++++++++++--
- 1 file changed, 10 insertions(+), 2 deletions(-)
+That's not true. The patch was sent during merge window, so that time
+obviously does not count. Anything not being a fix sent during merge
+window is postponed by many maintainers. Therefore this patch *must be*
+considered as sent on 24th of March. You applied it 4 days later, giving
+Vinod exactly only four days to react.
 
-diff --git a/arch/x86/entry/common.c b/arch/x86/entry/common.c
-index 6356060caaf3..1c3944eb9901 100644
---- a/arch/x86/entry/common.c
-+++ b/arch/x86/entry/common.c
-@@ -72,7 +72,7 @@ static __always_inline bool do_syscall_x32(struct pt_regs *regs, int nr)
- 	return false;
- }
- 
--/* Returns true to return using SYSRET, or false to use IRET */
-+/* Returns true to return using SYSRET, or false to use IRET/ERETU */
- __visible noinstr bool do_syscall_64(struct pt_regs *regs, int nr)
- {
- 	add_random_kstack_offset();
-@@ -88,6 +88,10 @@ __visible noinstr bool do_syscall_64(struct pt_regs *regs, int nr)
- 	instrumentation_end();
- 	syscall_exit_to_user_mode(regs);
- 
-+	/* No test for FRED, which returns to user level with ERETU only */
-+	if (cpu_feature_enabled(X86_FEATURE_FRED))
-+		return false;
-+
- 	/*
- 	 * Check that the register state is valid for using SYSRET to exit
- 	 * to userspace.  Otherwise use the slower but fully capable IRET
-@@ -325,7 +329,7 @@ static noinstr bool __do_fast_syscall_32(struct pt_regs *regs)
- 	return true;
- }
- 
--/* Returns true to return using SYSEXIT/SYSRETL, or false to use IRET */
-+/* Returns true to return using SYSEXIT/SYSRETL, or false to use IRET/ERETU */
- __visible noinstr bool do_fast_syscall_32(struct pt_regs *regs)
- {
- 	/*
-@@ -346,6 +350,10 @@ __visible noinstr bool do_fast_syscall_32(struct pt_regs *regs)
- 	if (!__do_fast_syscall_32(regs))
- 		return false;
- 
-+	/* No test for FRED, which returns to user level with ERETU only */
-+	if (cpu_feature_enabled(X86_FEATURE_FRED))
-+		return false;
-+
- 	/*
- 	 * Check that the register state is valid for using SYSRETL/SYSEXIT
- 	 * to exit to userspace.  Otherwise use the slower but fully capable
+> 
+> This patch has already been merged once via the i2c with the
+> agreement of everyone, but reverted for a trivial failure.
 
-base-commit: 65d1240b6728b38e4d2068d6738a17e4ee4351f5
--- 
-2.44.0
+You need agreement of other maintainers. Or at least ping them. Did it
+happen here?
+
+> 
+> Your review come after I have merged the patch (I did merge it
+> even earlier, but forgot to send the notification, which was
+> anyway sent before your review).
+
+So you applied it during merge window? How anyone can react to this?
+
+
+
+Best regards,
+Krzysztof
 
