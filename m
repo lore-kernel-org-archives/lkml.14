@@ -1,71 +1,66 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D2D6149DE1;
-	Wed,  3 Apr 2024 15:46:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2123143869;
+	Wed,  3 Apr 2024 15:47:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712159217; cv=none; b=DKgZgNlqdoUq3bemhF19nU1lH24s3tkgldD6T9lIKSPxbRXm5qoJS8SDdPNsv++i2/qqWkio1DhV3KiGrrbZG1zGWuIXVxvDtx+PUAWSk/gTJCQZ32gBQfXC/MejQ6i67He4f4S7lCvgY4RV7iEKESe9Uwv1AYlXAKDtFFP4A/w=
+	t=1712159279; cv=none; b=WysVQ44QwEJc9J4QjbI4/PORqp6Zz7kEJTcnGdmew41NM8ZR2WS5j+tHtzJz2aSdLIbQAFrW8WlxYF/a4iyCqFDN3M3Dbmg9p4wh25ECUSVIdFh84Nf0zV7TojfioywbzSJYSRt9faNCi4F29lqdayyv8H7Wv86PpuBBA0/L030=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712159217; c=relaxed/simple;
-	bh=XiYKyw+AJCXchrW+Wi7lqiXPYWcBscqK01H9Iv3gS30=;
+	s=arc-20240116; t=1712159279; c=relaxed/simple;
+	bh=wzzfIE273kK/KSd802a4HQaAZTBLYE4XpaXSQtu0YcQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HG64FuEOiJ3K6w5ENQ5AleX/CO5u2LKhSGZYfxu4CrQkRxB0McmEvjNK81fXVpN5g2jQ6ETrbRfO4JRH26vKX1hPYabuZlNdNMZlL7h/74u/a2wuQ8Pu2/0aqTU0i7AwIAjZvDHL+znh2nPVpVGhrgFx4gmQObqy/UcVfKZm7jg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=oHUUxulc; arc=none smtp.client-ip=198.175.65.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=BOomeMP0keHlgo1rG9LCnF1zGva4jCylnAByYW4Cdi7/Yu/bfJ1uRWdFGY8p5D8BGvFK0q1y9Z4cqM9++QfiJXMT0hrR8RWNTBfHCUTMSYP8V3Wjde96zU+szcdeQjyNrI9HoCh98VYyeOGVcwcIYfk0B+CdS5TTBbeazfImsc4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lSQvN18p; arc=none smtp.client-ip=198.175.65.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="oHUUxulc"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lSQvN18p"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1712159215; x=1743695215;
+  t=1712159279; x=1743695279;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=XiYKyw+AJCXchrW+Wi7lqiXPYWcBscqK01H9Iv3gS30=;
-  b=oHUUxulcunXc19oWfNx0NKZFpMw1euCvoGWDGhDnj9OhyrgkpfMWvEw4
-   YKWrr3/Y3al+3p599ax/io3gmUszdtnt9JnFCqZH6UOObfzC02K1qMygh
-   SrQkd76EZk+IEa65nFtwVyCZMRhdQCWXuPe++7xWtwVF69RCQINudiVp1
-   Mkkrq3YH7QgTOwKe1SM+fo7Wr5TiWQ+8GpOZAmz7S6xjt+vjaKiNGaCqN
-   WuOu6nLNkHXIe0YZ4XgdcrR7eZaSMeOQNttA+CvWNNYhbfUfseJ7CWFc9
-   E8l3+T38AO4Xrq/aXP6wPwb80qMYPIgdgkbfzWG7ovzjkrwdElGT+Vgqs
-   g==;
-X-CSE-ConnectionGUID: S9RLrCehTUKrWXVaYY4+AQ==
-X-CSE-MsgGUID: v16yJMztTtGy3gQZ7g8fpQ==
-X-IronPort-AV: E=McAfee;i="6600,9927,11033"; a="17972612"
+  bh=wzzfIE273kK/KSd802a4HQaAZTBLYE4XpaXSQtu0YcQ=;
+  b=lSQvN18pfmZNZ3cQe6C7SnKzJuLykRjKjBO4ByNAXzelSvsj+wKuVU/V
+   Dedv5/DtBF9R5hBkPIi3UaEbFa4oXMnd040+OeurcTsgfKV2s0xUI08yq
+   L89vhS/2c9Pu39W5wyD3aKWaGi+6/O/JvjXi9RAIQkQsgtUSKT9+NbztM
+   r559e2WZKNqEACYe2NUP7hnIY87G1bees6y87uOzY3Crgn6nOZ+Cu/d8F
+   J+K3IS1SmPHMyI/GEzeUqiKEN2p1JMmAE+kbPP9kieJax1o4bcn4ULO9W
+   BgRYlHjsn3ZOj0zp4NN3Q63Sh3j5GQy/3gbh1WFpWwnonp1KBgQK/uXvf
+   w==;
+X-CSE-ConnectionGUID: UGoyrI8bQwGV7sTXj+muHg==
+X-CSE-MsgGUID: I6q8bCmeTzykcBlCN96BsA==
+X-IronPort-AV: E=McAfee;i="6600,9927,11033"; a="18558390"
 X-IronPort-AV: E=Sophos;i="6.07,177,1708416000"; 
-   d="scan'208";a="17972612"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2024 08:46:31 -0700
+   d="scan'208";a="18558390"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2024 08:47:58 -0700
+X-CSE-ConnectionGUID: xFH3pTNqRYKDyd2CjLd83Q==
+X-CSE-MsgGUID: fkgl5cVSTnqwRuFhVMznNA==
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,11033"; a="915186749"
 X-IronPort-AV: E=Sophos;i="6.07,177,1708416000"; 
-   d="scan'208";a="915186749"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.72.54])
-  by fmsmga002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2024 08:46:30 -0700
-Received: from andy by smile with local (Exim 4.97)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1rs2ol-00000001A3N-3xYM;
-	Wed, 03 Apr 2024 18:46:27 +0300
-Date: Wed, 3 Apr 2024 18:46:27 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Xu Yilun <yilun.xu@linux.intel.com>
-Cc: Tom Rix <trix@redhat.com>, Moritz Fischer <mdf@kernel.org>,
-	Matthew Gerlach <matthew.gerlach@linux.intel.com>,
-	linux-fpga@vger.kernel.org,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	Wu Hao <hao.wu@intel.com>, Xu Yilun <yilun.xu@intel.com>
-Subject: Re: [PATCH v1 1/1] fpga: dfl: pci: Use pci_find_vsec_capability()
- when looking for DFL
-Message-ID: <Zg1506TfukWTGRVa@smile.fi.intel.com>
-References: <20211109154127.18455-1-andriy.shevchenko@linux.intel.com>
- <8ccc133a-fb47-4548-fee3-d57775a5166d@redhat.com>
- <YYq4fSRoyzFE4Vei@smile.fi.intel.com>
- <39ac1f40-66ab-6c7e-0042-8fcdc062ed00@redhat.com>
- <YYuBz0tdduAk1c/6@smile.fi.intel.com>
- <3106bd57-9144-6a4d-8ad9-3ebf804018ab@redhat.com>
- <CAHp75Vf16mH4KQ232rip9MPLoSE1TmJ_jeiwVUzqxOH5b0RFJQ@mail.gmail.com>
- <Zg03BTubHLslIi_P@smile.fi.intel.com>
- <Zg1xZ+k8eZJwOs41@yilunxu-OptiPlex-7050>
+   d="scan'208";a="18397626"
+Received: from lkp-server02.sh.intel.com (HELO 90ee3aa53dbd) ([10.239.97.151])
+  by fmviesa010.fm.intel.com with ESMTP; 03 Apr 2024 08:47:54 -0700
+Received: from kbuild by 90ee3aa53dbd with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1rs2q7-0002Mc-2t;
+	Wed, 03 Apr 2024 15:47:51 +0000
+Date: Wed, 3 Apr 2024 23:40:32 +0800
+From: kernel test robot <lkp@intel.com>
+To: Vinicius Costa Gomes <vinicius.gomes@intel.com>, brauner@kernel.org,
+	amir73il@gmail.com, hu1.chen@intel.com
+Cc: oe-kbuild-all@lists.linux.dev, miklos@szeredi.hu,
+	malini.bhandaru@intel.com, tim.c.chen@intel.com,
+	mikko.ylinen@intel.com, lizhen.you@intel.com,
+	linux-unionfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Vinicius Costa Gomes <vinicius.gomes@intel.com>
+Subject: Re: [PATCH v1 2/3] fs: Optimize credentials reference count for
+ backing file ops
+Message-ID: <202404032344.SKdrnkhI-lkp@intel.com>
+References: <20240403021808.309900-3-vinicius.gomes@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -74,67 +69,66 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <Zg1xZ+k8eZJwOs41@yilunxu-OptiPlex-7050>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <20240403021808.309900-3-vinicius.gomes@intel.com>
 
-On Wed, Apr 03, 2024 at 11:10:31PM +0800, Xu Yilun wrote:
-> On Wed, Apr 03, 2024 at 02:01:25PM +0300, Andy Shevchenko wrote:
-> > On Wed, Nov 10, 2021 at 06:59:25PM +0200, Andy Shevchenko wrote:
-> > > On Wed, Nov 10, 2021 at 2:28 PM Tom Rix <trix@redhat.com> wrote:
-> > > > On 11/10/21 12:24 AM, Andy Shevchenko wrote:
-> > > > > On Tue, Nov 09, 2021 at 10:27:58AM -0800, Tom Rix wrote:
-> > > > >> On 11/9/21 10:05 AM, Andy Shevchenko wrote:
-> > > > >>> On Tue, Nov 09, 2021 at 07:55:43AM -0800, Tom Rix wrote:
-> > > > >>>> On 11/9/21 7:41 AM, Andy Shevchenko wrote:
+Hi Vinicius,
 
-...
+kernel test robot noticed the following build warnings:
 
-> > > > >>>>> + voff = pci_find_vsec_capability(dev, PCI_VENDOR_ID_INTEL, PCI_VSEC_ID_INTEL_DFLS);
-> > > > >>>> This may be a weakness in the origin code, but intel isn't the exclusive
-> > > > >>>> user of DFL.
-> > > > >>> This does not change the original code. If you think so, this can be extended
-> > > > >>> later on.
-> > > > >> I would rather see this fixed now or explained why this isn't a problem.
-> > > > > This is out of scope of this change in a few ways:
-> > > > >   - we don't do 2+ things in one patch
-> > > > >   - the change doesn't change behaviour
-> > > > >   - the change is a simple cleanup
-> > > > >   - another vendor may well have quite different VSEC ID for DFL
-> > > > >
-> > > > > If you think that it should be needed, one can come up with it later on.
-> > > >
-> > > > Fixing a problem is more useful than a cleanup. The fix should come first.
-> > > 
-> > > What do you mean by that? The original code never worked with what you
-> > > are suggesting. There is nothing to fix in terms of "fix". What you
-> > > are proposing is a feature. And as we know the features are going into
-> > > the kernel in a natural order, means fixes - priority 1, cleanups /
-> > > refactoring as prerequisites to the feature enabling - priority 2,
-> > > feature - priority 3, other cleanups and code improvements - priority
-> > > 4.
-> > > 
-> > > That said, the proposed change definitely falls into category 2. It
-> > > makes the proposed feature to be easily realized.
-> > > 
-> > > Also, do not forget that vendor specific stuff is _by definition_
-> > > vendor specific, and the proposed feature is doubtful until you prove
-> > > there is another vendor-id pair.
-> > 
-> > Interestingly that you included
-> > 8607d9c1bd57 ("fpga: dfl-pci: Use pci_find_vsec_capability() to simplify the code")
-> > without even letting me know...
-> 
-> I'm sorry. Apparently I forgot what we've discussed in 2021.
-> 
-> In 2021, I was waiting for some more comments although I was already
-> good at your patch, but sadly I didn't follow up and missed it. In
-> 2023, I was pretty sure no more comment and I could just apply.
+[auto build test WARNING on brauner-vfs/vfs.all]
+[also build test WARNING on linus/master v6.9-rc2 next-20240403]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-The job is done and this is good. Thank you.
-One thing less to carry for me :-)
+url:    https://github.com/intel-lab-lkp/linux/commits/Vinicius-Costa-Gomes/cred-Add-a-light-version-of-override-revert_creds/20240403-101954
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git vfs.all
+patch link:    https://lore.kernel.org/r/20240403021808.309900-3-vinicius.gomes%40intel.com
+patch subject: [PATCH v1 2/3] fs: Optimize credentials reference count for backing file ops
+config: i386-randconfig-061-20240403 (https://download.01.org/0day-ci/archive/20240403/202404032344.SKdrnkhI-lkp@intel.com/config)
+compiler: gcc-13 (Ubuntu 13.2.0-4ubuntu3) 13.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240403/202404032344.SKdrnkhI-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202404032344.SKdrnkhI-lkp@intel.com/
+
+sparse warnings: (new ones prefixed by >>)
+   fs/backing-file.c: note: in included file (through include/linux/sched/signal.h, include/linux/rcuwait.h, include/linux/percpu-rwsem.h, ...):
+>> include/linux/cred.h:182:41: sparse: sparse: incorrect type in initializer (different address spaces) @@     expected struct cred const *old @@     got struct cred const [noderef] __rcu *cred @@
+   include/linux/cred.h:182:41: sparse:     expected struct cred const *old
+   include/linux/cred.h:182:41: sparse:     got struct cred const [noderef] __rcu *cred
+>> include/linux/cred.h:182:41: sparse: sparse: incorrect type in initializer (different address spaces) @@     expected struct cred const *old @@     got struct cred const [noderef] __rcu *cred @@
+   include/linux/cred.h:182:41: sparse:     expected struct cred const *old
+   include/linux/cred.h:182:41: sparse:     got struct cred const [noderef] __rcu *cred
+>> include/linux/cred.h:182:41: sparse: sparse: incorrect type in initializer (different address spaces) @@     expected struct cred const *old @@     got struct cred const [noderef] __rcu *cred @@
+   include/linux/cred.h:182:41: sparse:     expected struct cred const *old
+   include/linux/cred.h:182:41: sparse:     got struct cred const [noderef] __rcu *cred
+>> include/linux/cred.h:182:41: sparse: sparse: incorrect type in initializer (different address spaces) @@     expected struct cred const *old @@     got struct cred const [noderef] __rcu *cred @@
+   include/linux/cred.h:182:41: sparse:     expected struct cred const *old
+   include/linux/cred.h:182:41: sparse:     got struct cred const [noderef] __rcu *cred
+>> include/linux/cred.h:182:41: sparse: sparse: incorrect type in initializer (different address spaces) @@     expected struct cred const *old @@     got struct cred const [noderef] __rcu *cred @@
+   include/linux/cred.h:182:41: sparse:     expected struct cred const *old
+   include/linux/cred.h:182:41: sparse:     got struct cred const [noderef] __rcu *cred
+
+vim +182 include/linux/cred.h
+
+58319057b78476 Andy Lutomirski      2015-09-04  174  
+dd60a254548056 Vinicius Costa Gomes 2024-04-02  175  /*
+dd60a254548056 Vinicius Costa Gomes 2024-04-02  176   * Override creds without bumping reference count. Caller must ensure
+dd60a254548056 Vinicius Costa Gomes 2024-04-02  177   * reference remains valid or has taken reference. Almost always not the
+dd60a254548056 Vinicius Costa Gomes 2024-04-02  178   * interface you want. Use override_creds()/revert_creds() instead.
+dd60a254548056 Vinicius Costa Gomes 2024-04-02  179   */
+dd60a254548056 Vinicius Costa Gomes 2024-04-02  180  static inline const struct cred *override_creds_light(const struct cred *override_cred)
+dd60a254548056 Vinicius Costa Gomes 2024-04-02  181  {
+dd60a254548056 Vinicius Costa Gomes 2024-04-02 @182  	const struct cred *old = current->cred;
+dd60a254548056 Vinicius Costa Gomes 2024-04-02  183  
+dd60a254548056 Vinicius Costa Gomes 2024-04-02  184  	rcu_assign_pointer(current->cred, override_cred);
+dd60a254548056 Vinicius Costa Gomes 2024-04-02  185  	return old;
+dd60a254548056 Vinicius Costa Gomes 2024-04-02  186  }
+dd60a254548056 Vinicius Costa Gomes 2024-04-02  187  
 
 -- 
-With Best Regards,
-Andy Shevchenko
-
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
