@@ -1,108 +1,165 @@
-Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
+Received: from mail-oa1-f51.google.com (mail-oa1-f51.google.com [209.85.160.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C939E153580
-	for <linux-kernel@vger.kernel.org>; Wed,  3 Apr 2024 18:05:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C16D215357D;
+	Wed,  3 Apr 2024 18:05:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712167526; cv=none; b=rLFn1NydRRCcb49dhvUPWjiEnz0qvogv7RtqCbop5eGjvVt1810ZUelrIEyYWvpiblN8RCm9CxkApaYqAtT5BsBL0DKy5mD+9Gf6axxlJ445lHot1F/4Xo2ZU9iCYKqCPBZffXHg9Le9DUnOyMUWLZr4fgG4fRxV6UYU3zXwZGc=
+	t=1712167526; cv=none; b=or+QKFOXWkfV9nHnL83eS6KstS6PQQqlaxXNAoAkqQmbe3DcgkYNfPetsm4o8t/hr4R/lVNfRqoS5fKdOLxS0dmg3Tw5Jei9k8bZPfnvFSxhNBOKQ88TheJhktd6rd9HEiLAbPLa0vWVGRSHVtBcgFnyj4FUatTN2oHCW0iqtZw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1712167526; c=relaxed/simple;
-	bh=KHbE4qgF9Pb8RzBagVrV0DIGGkTehwaPNOTTLF55LQM=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=D30hMc03f3dcDzKMEmeBQ7lwoa1prTapFLWPhn8N/FoLpZiIX//oUXqu5MOht52lEJN5II0V9e9XzwvvJVZM3pl99KKIODFISol/rDxNQOAgnuCPpKick+Vko1Xks8CNfj+Jf+xNwkprD2fVdb+vzhmpAb6iDot/n40pZKqUQSs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=hzwxB1a3; arc=none smtp.client-ip=209.85.210.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	bh=yzV8gvMbMG9aYQ19MBzqxr4amKzhod3/glCMw4VGUZE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=oSv9ihzXp+9HPsOhWBzP7ZAqAKVHf/c4V2hKp9cqxndwa0WP3xmzT/1lOf3sIdzN2+govJbdjxcxtKvHqGqXv42SJgOY2clU4zwoqeM2hXCWr2EqHmczzKvBZvPiYXMdQiP6XXZKprzIhflK7ZcybDvNUGcv1vBBfsp1DaZrJBs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ae15G2wK; arc=none smtp.client-ip=209.85.160.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="hzwxB1a3"
-Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-6ecbe6dc8c6so68489b3a.1
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Apr 2024 11:05:24 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ae15G2wK"
+Received: by mail-oa1-f51.google.com with SMTP id 586e51a60fabf-229661f57cbso70050fac.1;
+        Wed, 03 Apr 2024 11:05:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1712167524; x=1712772324; darn=vger.kernel.org;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=73jxnSRwixN39ko5uxG2odEHWmCrsBBH9PbGB0SZNXo=;
-        b=hzwxB1a3Q7HZeuSy3E+2kdl13TGReqWfwY5tM1HtYBUE4OzbofNbRL8/tkRkDcjqcx
-         4bh9GLDh6sT8VKhRhJO4yR65+bF2NizAX9988NbY7aY0WOKIRSeJyAC8s0TPprTN5ClN
-         UbrBZa3bcJ/ut6V7B4aSCuXe0kYu3M/AMutsY=
+        d=gmail.com; s=20230601; t=1712167524; x=1712772324; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=fZ75uqyXcKd8R5Pz7Ws9tVG0bayyM9hJ1Z1pvbSQndY=;
+        b=Ae15G2wK/YEC5vvYpf5FwQ/xNHB/FDO57tazsJYrpr+3JucPRuVBzAx2QQDyIJ6knf
+         hVn4YJr+jG9UKaNC4thE5A3TPrXg75PgSqEfYyaqNdMa2yxW5hU4AeGlhtoLCQ2xW09N
+         V5n2TdP8fe2OV9Zb9mQlT6lbG433DDg2KCM9Z9KPskRmEV5xy7qsWa6wXo0FdLkWYP+Y
+         BahQJvOPjRuHQDpWszrY5zLUPr/mrV582COYrQWqQ6IgqnYX7xE1B5vlC2WE5qx9hPPa
+         1clp9ErbkLzfPCXnRDr4rh4RM/EDOBW5lUkdGVxZdi/cNA2dWz5/1QpKdi7ogGcKSzmj
+         t3kg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20230601; t=1712167524; x=1712772324;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=73jxnSRwixN39ko5uxG2odEHWmCrsBBH9PbGB0SZNXo=;
-        b=DBMoJdA3K7OhBAfrXXglyajdcLwVoAutgUhWnyvZHda4bv7NPBlCWRGi8DDR1GLn7+
-         p8vpNBEMRtxy5jvEZ7TMS4vBapSoIyPf32Ox4ol3Mf536atBBKlVT7RxPot9UYYlwjCI
-         7PZmQ12FMur274TvwLEAh9onyLwUU4Lli7wgkkByJaPDiVtUpTCk3Jsr1u/RWE4tQGVi
-         5qog4tvzOw81txfbnrDvVZ1ZxTpN1NfpemOnjqzQ1Qxp8L+iQWQjTdGdUvRLjH0dAZrc
-         bjikEx4ZgeeUEd33PKMfjch6MJ/Sg1M0fYzPGz+6bo+yAGXocw6YJQHgpq3CCB03Xvnp
-         grHA==
-X-Gm-Message-State: AOJu0YzYR9Jn/97x/DLrkRda/PUi9W7oCcVBL4Y4OcPzWIIuYVRUKcU0
-	C2Etl7F1dxQS4VuyLSOZLetQ0g91m5V0MVAkqaIdOmoJZyDarPKLsPWAbSJDpg==
-X-Google-Smtp-Source: AGHT+IFhHOx2SSYuRWdbtlNPDL2p7UNMawQSaLN6WdK2MAd2O6Z8hzrzzTKXzbOLl8iJ9hjBhYqUcQ==
-X-Received: by 2002:a05:6a00:1a93:b0:6ea:ab08:683c with SMTP id e19-20020a056a001a9300b006eaab08683cmr290050pfv.1.1712167524078;
-        Wed, 03 Apr 2024 11:05:24 -0700 (PDT)
-Received: from pholla1.c.googlers.com (210.73.125.34.bc.googleusercontent.com. [34.125.73.210])
-        by smtp.gmail.com with ESMTPSA id n16-20020aa79850000000b006e64ddfa71asm12359162pfq.170.2024.04.03.11.05.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=fZ75uqyXcKd8R5Pz7Ws9tVG0bayyM9hJ1Z1pvbSQndY=;
+        b=lWJylmC9Y3HHD9KCaNpToIP0B38y59bK3eDBj+r6v8sdWkRNKaNle9ZKSUTG06kmc8
+         5QLkOf/I/5YRQsGOojY+ROQlow0xg96vhn6r/FMbImPRKgwMyZmJv0gS+QbGlnH2qKHF
+         EQ3sEoRQWp+k/tf8jLK2NQ4n5S5kd4a73zZidSziK5xlXT21EoZ7s84C2zCn4Obgpu6t
+         Rt18P1zQn2DrOhQO9xIfW2ffvaQiPdMaLAxK/S3u9X7W+hM0JUPQH+b5qlmCWf7OfZGm
+         FYXpfG1jEucu/BX14GBklTw2/Ir8c7G5oYJdMA/bz0JUcVihYNE/cNjkmTul9XDYTVwH
+         +gqg==
+X-Forwarded-Encrypted: i=1; AJvYcCXLOq92sWpzuAoX794TV7Cnod+VvRG8k1XCOXth/UTbPUyuTaBjggdSmmqGytaNQn4oYIwk7+Ng6XLqV8wPziVvJxeVcc7oJpez+yWud1PuUyJMDfJXaoT4Rv+Hw6cHGcvIQ/oznfFcW+f5SHoq47K3skOEzKbtx75uJMSK8w+oYU8k3DLOx4kaq6u3n4mLj4KLwu6hMlHvPLdkUVPNz96v/kU=
+X-Gm-Message-State: AOJu0YxItEXlZBQyJAtKbuRRFojbeYlWK4WTpi52tJfyB5LWPXhGXaiO
+	zEfjwMrq7D+1kiWE+2zWAqmMXOIxUGSd1/Jy1DO9A1W/ex4angmm
+X-Google-Smtp-Source: AGHT+IEtjndM4TcXGUt3GAQI11LA8n53NRmJwToTDskQZ/GbUK0jGW4KyyBCURII9akrd7cabDnLTA==
+X-Received: by 2002:a05:6870:5d85:b0:22a:b3cd:1d7e with SMTP id fu5-20020a0568705d8500b0022ab3cd1d7emr82627oab.27.1712167523575;
         Wed, 03 Apr 2024 11:05:23 -0700 (PDT)
-From: Pavan Holla <pholla@chromium.org>
-Subject: [PATCH v3 0/2] usb: typec: Implement UCSI driver for ChromeOS
-Date: Wed, 03 Apr 2024 18:05:20 +0000
-Message-Id: <20240403-public-ucsi-h-v3-0-f848e18c8ed2@chromium.org>
+Received: from [192.168.7.169] (c-98-197-58-203.hsd1.tx.comcast.net. [98.197.58.203])
+        by smtp.gmail.com with ESMTPSA id hi27-20020a056870c99b00b0022e9bd70567sm317220oab.31.2024.04.03.11.05.22
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 03 Apr 2024 11:05:23 -0700 (PDT)
+Message-ID: <d35c96ca-24af-fbad-74fe-ad85a433caa2@gmail.com>
+Date: Wed, 3 Apr 2024 13:05:22 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.15.1
+Subject: Re: [PATCH 3/7] dt-bindings: PCI: qcom: Add IPQ9574 PCIe controller
+Content-Language: en-US
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+ Bjorn Andersson <andersson@kernel.org>,
+ Konrad Dybcio <konrad.dybcio@linaro.org>, Bjorn Helgaas
+ <bhelgaas@google.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>,
+ =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
+ Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>,
+ Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: ansuelsmth@gmail.com, robimarko@gmail.com, linux-arm-msm@vger.kernel.org,
+ linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20240402192555.1955204-1-mr.nuke.me@gmail.com>
+ <20240402192555.1955204-3-mr.nuke.me@gmail.com>
+ <bad88189-cf70-4200-9fa3-650ea923b4b8@linaro.org>
+From: mr.nuke.me@gmail.com
+In-Reply-To: <bad88189-cf70-4200-9fa3-650ea923b4b8@linaro.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAGCaDWYC/33MQQ6CMBCF4auQrq1pC5TqynsYF2UY6SRCSSuNh
- nB3C0sTXf4ved/CIgbCyM7FwgImiuTHHOWhYODs2COnLjdTQlWiVDWf5vZBwGeIxB0vERArKbS
- tDcufKeCdXrt3veV2FJ8+vHc+yW39JSXJBW+gQWMMdiDsBVzwA83D0YeebVhSfwGVAau7RuqTN
- m0rv4B1XT9lsBgm7gAAAA==
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
- Heikki Krogerus <heikki.krogerus@linux.intel.com>, 
- Benson Leung <bleung@chromium.org>, Tzung-Bi Shih <tzungbi@kernel.org>, 
- Guenter Roeck <groeck@chromium.org>
-Cc: linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, 
- Abhishek Pandit-Subedi <abhishekpandit@chromium.org>, 
- chrome-platform@lists.linux.dev, Pavan Holla <pholla@chromium.org>
-X-Mailer: b4 0.12.4
 
-This series implements a UCSI ChromeOS EC transport driver.
-The ChromeOS EC is expected to implement a UCSI PPM.
 
-Signed-off-by: Pavan Holla <pholla@chromium.org>
----
-Changes in v3:
-- Moved driver from platform/chrome to usb/typec/ucsi.
-- Used id_table instead of MODULE_ALIAS.
-- Split EC header changes into seperate commit.
-- Fixes from additional internal reviews and kernel bot warnings.
-- Link to v2: https://lore.kernel.org/r/20240325-public-ucsi-h-v2-0-a6d716968bb1@chromium.org
 
-Changes in v2:
-- No code or commit message changes.
-- Added drivers/platform/chrome maintainers for review.
-- Link to v1: https://lore.kernel.org/r/20240325-public-ucsi-h-v1-0-7c7e888edc0a@chromium.org
+On 4/3/24 02:14, Krzysztof Kozlowski wrote:
+> On 02/04/2024 21:25, Alexandru Gagniuc wrote:
+>> IPQ9574 has PCIe controllers which are almost identical to IPQ6018.
+>> The only difference is that the "iface" clock is not required.
+>> Document this difference along with the compatible string.
+>>
+>> Signed-off-by: Alexandru Gagniuc <mr.nuke.me@gmail.com>
+>> ---
+>>   .../devicetree/bindings/pci/qcom,pcie.yaml    | 32 +++++++++++++++++++
+>>   1 file changed, 32 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie.yaml b/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
+>> index cf9a6910b542..6eb29547c18e 100644
+>> --- a/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
+>> +++ b/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
+>> @@ -26,6 +26,7 @@ properties:
+>>             - qcom,pcie-ipq8064-v2
+>>             - qcom,pcie-ipq8074
+>>             - qcom,pcie-ipq8074-gen3
+>> +          - qcom,pcie-ipq9574
+>>             - qcom,pcie-msm8996
+>>             - qcom,pcie-qcs404
+>>             - qcom,pcie-sdm845
+>> @@ -383,6 +384,35 @@ allOf:
+>>               - const: axi_s # AXI Slave clock
+>>               - const: axi_bridge # AXI bridge clock
+>>               - const: rchng
+>> +
+>> +  - if:
+>> +      properties:
+>> +        compatible:
+>> +          contains:
+>> +            enum:
+>> +              - qcom,pcie-ipq9574
+>> +    then:
+>> +      properties:
+>> +        clocks:
+>> +          minItems: 4
+>> +          maxItems: 4
+>> +        clock-names:
+>> +          items:
+>> +            - const: axi_m # AXI Master clock
+>> +            - const: axi_s # AXI Slave clock
+>> +            - const: axi_bridge # AXI bridge clock
+>> +            - const: rchng
+>> +
+>> +  - if:
+>> +      properties:
+>> +        compatible:
+>> +          contains:
+>> +            enum:
+>> +              - qcom,pcie-ipq6018
+>> +              - qcom,pcie-ipq8074-gen3
+>> +              - qcom,pcie-ipq9574
+>> +    then:
+> 
+> Do not introduce inconsistent style. All if:then: define both clocks and
+> resets, right? And after your patch not anymore?
+> 
+I kept the resets in one place because they are the same cross the ipq* 
+variants.
 
----
-Pavan Holla (2):
-      platform/chrome: Update ChromeOS EC header for UCSI
-      usb: typec: ucsi: Implement ChromeOS UCSI driver
+Do I understand correctly that you wish me to split up the resets as well?
 
- drivers/usb/typec/ucsi/Kconfig                 |  13 ++
- drivers/usb/typec/ucsi/Makefile                |   1 +
- drivers/usb/typec/ucsi/cros_ec_ucsi.c          | 245 +++++++++++++++++++++++++
- include/linux/platform_data/cros_ec_commands.h |  20 ++
- 4 files changed, 279 insertions(+)
----
-base-commit: 4cece764965020c22cff7665b18a012006359095
-change-id: 20240325-public-ucsi-h-3ecee4106a58
+     if ipq8074 ipq6018
+         clocks
+         resets
 
-Best regards,
--- 
-Pavan Holla <pholla@chromium.org>
+     if ipq9754
+         clocks
+         resets
 
+Alex
+
+> Best regards,
+> Krzysztof
+> 
