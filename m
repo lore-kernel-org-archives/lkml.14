@@ -1,72 +1,128 @@
-Received: from anarch128.org (anarch128.org [23.253.174.110])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 303A01514DF
-	for <linux-kernel@vger.kernel.org>; Wed,  3 Apr 2024 21:09:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=23.253.174.110
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DAE75DF0E;
+	Wed,  3 Apr 2024 21:12:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712178559; cv=none; b=H0hjb9dTAFsA3SpMxo+7AG/2cioI51HYbhrju88UQ9rHMpBUJbbHQH61e3RhvXqqUIIYHPYWBYrozcZWuDB3PAtIjm81E4tKstYWhdrvJScRNaLD4/vmE76uqz6elVduEfJLETL820ntm331u4uGVh51ZXk6oOSULkyvnTn51rs=
+	t=1712178766; cv=none; b=Bny2k+UmT8PAEEW3PyRu7QIALA53HYWPTT7j8COy5WUvgI51/IxlVdKvguft1cb/fmbGk+3lg/1c2/GNpD+Ygz0gRvoZq8Rwv1UkvLtWYOeQ5slrAwHs34hoKKfI7fqbBX4p9V/AktHwWNUczrTw2cA3ALR26ZaUEYgH940l3qc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712178559; c=relaxed/simple;
-	bh=nuAESWLU4gI8q+WylOWnOVd3iZvUzYqUM2as5Y3TWqg=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=ho5nulCx6fJjdbSQZaBp88UknhkdIPTGSTKZPn9Ooa2OGCV3Z50hK/Jds0046n8LwacdT9bbe7jmispFdM5PJFMJnOB7/lBMm+rjwKrfwfk0wjl+gBA+6AVmuJCFdljM670CnWyLvIsLB3+2bVvOhdQOX/aZmpRKRO00ZWFHDgI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=metaparadigm.com; spf=pass smtp.mailfrom=metaparadigm.com; dkim=fail (2048-bit key) header.d=metaparadigm.com header.i=@metaparadigm.com header.b=r6MMeVXJ reason="signature verification failed"; arc=none smtp.client-ip=23.253.174.110
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=metaparadigm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=metaparadigm.com
+	s=arc-20240116; t=1712178766; c=relaxed/simple;
+	bh=eAxmNahq0qz4MjguPAZcqC0KPuy9iIiFN/TD17zLp6k=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=LqmLIkAWp+8WuvT6Y1hZED1BHuinEdoe52jifK7r/QahXOpucjCH4WE4ISReD5Ja2gu5TJZC8qM2xatfYZU8D6S8cE1fPKRghRpxpZePciFRyQWHSW4pc/HwPjVoPv6u3u1REOsv5KQvKJ1zgU0XEju4uZtU2k33ZtCHkvs9DL4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AvVi8LMC; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=metaparadigm.com header.i=@metaparadigm.com header.b="r6MMeVXJ"
-Received: from [192.168.1.5] (default-rdns.vocus.co.nz [202.150.110.104] (may be forged))
-	(authenticated bits=0)
-	by anarch128.org (8.15.2/8.15.2/Debian-22) with ESMTPSA id 433L2FEa382974
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
-	Wed, 3 Apr 2024 21:02:18 GMT
-Authentication-Results: anarch128.org;
-    auth=pass;
-    dkim=pass (2048-bit rsa key sha256) header.d=metaparadigm.com header.i=@metaparadigm.com header.b=r6MMeVXJ header.a=rsa-sha256 header.s=100043;
-    x-return-mx=pass header.domain=metaparadigm.com policy.is_org=yes (MX Records found: mail.anarch128.org);
-    x-return-mx=pass smtp.domain=metaparadigm.com policy.is_org=yes (MX Records found: mail.anarch128.org)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=metaparadigm.com;
-	s=100043; t=1712178140;
-	bh=nuAESWLU4gI8q+WylOWnOVd3iZvUzYqUM2as5Y3TWqg=;
-	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
-	b=r6MMeVXJrYh8TU6IvNXWfAJ/jeI0p8AzI0MBiYN24S55BTnH0aE/+ZT6ACEtW6ba6
-	 R8FacpREBQ+MEzthYU4wcIR0PPlVJvctyB0rnvPi4XAJfbJ37GMdNQUneRBVjzlZaK
-	 OoE24hC9Sn2gITNZGv08DXa92LBdEgUSHCA6FDlxYO1712DdMHjVpuHVrtwVFUr5y+
-	 go3+N0FKNjhQ0Za5Nf64eqTy4ZaBAEOtXk7yNe3gbEn+5qiBtuEvC4KvW2VRQItHQT
-	 8sl8fh8XBORNtfjxHl4RaJxjzDU5nGiZOgnZx5HIq9fN2C++110U+HcW4yT12HMMqb
-	 /si3w31lC/Zww==
-Message-ID: <422feb1a-4b4e-45b6-838a-78e394dec9cc@metaparadigm.com>
-Date: Thu, 4 Apr 2024 10:02:10 +1300
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AvVi8LMC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E15A6C433C7;
+	Wed,  3 Apr 2024 21:12:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1712178766;
+	bh=eAxmNahq0qz4MjguPAZcqC0KPuy9iIiFN/TD17zLp6k=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=AvVi8LMCPmD4vtizYlqbbrKdv6QHneAbgdsDhvVCwOCKlEjxORkOrxxsJaVKKe7ib
+	 YfLM/rXrgmOgLEfBvFZMk7h4uuO1i9LQJ8M/6UOuM3j1UhfgLRc8vtGUdYkyvOB7qF
+	 FK0zIrKPLUKf2X5PFEHqblNLkN3++ZGBDxB0Ckhu7GEuMY1ENqC6PtyP4PptCVwaCA
+	 a2tbItT4M2CDmlu7PtN/anCWs0FKgXZEkpfh6sPHkTM077WDUkJUHG5B3YhvYpuPju
+	 xPxmHBxAuN4+ZSpTgL2wp6f5XhRGsP7bV4GU68Ip1Yj2vPHXgYGKnLcD5SyRvdfCp0
+	 PZSDJCo+DH2qQ==
+Date: Wed, 3 Apr 2024 14:12:40 -0700
+From: Nathan Chancellor <nathan@kernel.org>
+To: Suren Baghdasaryan <surenb@google.com>, akpm@linux-foundation.org
+Cc: kent.overstreet@linux.dev, mhocko@suse.com, vbabka@suse.cz,
+	hannes@cmpxchg.org, roman.gushchin@linux.dev, mgorman@suse.de,
+	dave@stgolabs.net, willy@infradead.org, liam.howlett@oracle.com,
+	penguin-kernel@i-love.sakura.ne.jp, corbet@lwn.net,
+	void@manifault.com, peterz@infradead.org, juri.lelli@redhat.com,
+	catalin.marinas@arm.com, will@kernel.org, arnd@arndb.de,
+	tglx@linutronix.de, mingo@redhat.com, dave.hansen@linux.intel.com,
+	x86@kernel.org, peterx@redhat.com, david@redhat.com,
+	axboe@kernel.dk, mcgrof@kernel.org, masahiroy@kernel.org,
+	dennis@kernel.org, jhubbard@nvidia.com, tj@kernel.org,
+	muchun.song@linux.dev, rppt@kernel.org, paulmck@kernel.org,
+	pasha.tatashin@soleen.com, yosryahmed@google.com, yuzhao@google.com,
+	dhowells@redhat.com, hughd@google.com, andreyknvl@gmail.com,
+	keescook@chromium.org, ndesaulniers@google.com, vvvvvv@google.com,
+	gregkh@linuxfoundation.org, ebiggers@google.com, ytcoode@gmail.com,
+	vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
+	rostedt@goodmis.org, bsegall@google.com, bristot@redhat.com,
+	vschneid@redhat.com, cl@linux.com, penberg@kernel.org,
+	iamjoonsoo.kim@lge.com, 42.hyeyoo@gmail.com, glider@google.com,
+	elver@google.com, dvyukov@google.com, songmuchun@bytedance.com,
+	jbaron@akamai.com, aliceryhl@google.com, rientjes@google.com,
+	minchan@google.com, kaleshsingh@google.com, kernel-team@android.com,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	iommu@lists.linux.dev, linux-arch@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+	linux-modules@vger.kernel.org, kasan-dev@googlegroups.com,
+	cgroups@vger.kernel.org
+Subject: Re: [PATCH v6 01/37] fix missing vmalloc.h includes
+Message-ID: <20240403211240.GA307137@dev-arch.thelio-3990X>
+References: <20240321163705.3067592-1-surenb@google.com>
+ <20240321163705.3067592-2-surenb@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: user-space concurrent pipe buffer scheduler interactions
-From: Michael Clark <michael@metaparadigm.com>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Jens Axboe <axboe@kernel.dk>, Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>, linux-kernel@vger.kernel.org
-References: <969ccc0f-d909-4b45-908e-e98279777733@metaparadigm.com>
- <CAHk-=wj3khqjXnHmShPj+tZvC=SyUitTZ7BkDO-rqu_aCVPrXA@mail.gmail.com>
- <1a116a43-fd2e-4f03-8a17-75816fc62717@metaparadigm.com>
-Content-Language: en-US
-Organization: Metaparadigm
-In-Reply-To: <1a116a43-fd2e-4f03-8a17-75816fc62717@metaparadigm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240321163705.3067592-2-surenb@google.com>
 
-On 4/4/24 09:39, Michael Clark wrote:
-> So maybe it is possible to look at how many LOCK instructions were 
-> retired in the last scheduler quantum ideally with retired-success, 
-> retired-failed for interlocked-compare-and-swap. Maybe it is just a 
-> performance counter and doesn't require perf tracing switched on?
+On Thu, Mar 21, 2024 at 09:36:23AM -0700, Suren Baghdasaryan wrote:
+> From: Kent Overstreet <kent.overstreet@linux.dev>
+> 
+> The next patch drops vmalloc.h from a system header in order to fix
+> a circular dependency; this adds it to all the files that were pulling
+> it in implicitly.
+> 
+> Signed-off-by: Kent Overstreet <kent.overstreet@linux.dev>
+> Signed-off-by: Suren Baghdasaryan <surenb@google.com>
+> Reviewed-by: Pasha Tatashin <pasha.tatashin@soleen.com>
 
-just occurred to me that you could stash the address and width of the 
-last failed interlocked-compare-and-swap to deduce wait-on-address or 
-even ask the processor in some circumstances to generate a precise 
-interrupt so that you could reschedule it. an idle thought. like if it 
-is going to fail we might as well jump straight to the scheduler.
+I bisected an error that I see when building ARCH=loongarch allmodconfig
+to commit 302519d9e80a ("asm-generic/io.h: kill vmalloc.h dependency")
+in -next, which tells me that this patch likely needs to contain
+something along the following lines, as LoongArch was getting
+include/linux/sizes.h transitively through the vmalloc.h include in
+include/asm-generic/io.h.
+
+Cheers,
+Nathan
+
+  In file included from arch/loongarch/include/asm/io.h:11,
+                   from include/linux/io.h:13,
+                   from arch/loongarch/mm/mmap.c:6:
+  include/asm-generic/io.h: In function 'ioport_map':
+  arch/loongarch/include/asm/addrspace.h:124:25: error: 'SZ_32M' undeclared (first use in this function); did you mean 'PS_32M'?
+    124 | #define PCI_IOSIZE      SZ_32M
+        |                         ^~~~~~
+  arch/loongarch/include/asm/addrspace.h:126:26: note: in expansion of macro 'PCI_IOSIZE'
+    126 | #define IO_SPACE_LIMIT  (PCI_IOSIZE - 1)
+        |                          ^~~~~~~~~~
+  include/asm-generic/io.h:1113:17: note: in expansion of macro 'IO_SPACE_LIMIT'
+   1113 |         port &= IO_SPACE_LIMIT;
+        |                 ^~~~~~~~~~~~~~
+  arch/loongarch/include/asm/addrspace.h:124:25: note: each undeclared identifier is reported only once for each function it appears in
+    124 | #define PCI_IOSIZE      SZ_32M
+        |                         ^~~~~~
+  arch/loongarch/include/asm/addrspace.h:126:26: note: in expansion of macro 'PCI_IOSIZE'
+    126 | #define IO_SPACE_LIMIT  (PCI_IOSIZE - 1)
+        |                          ^~~~~~~~~~
+  include/asm-generic/io.h:1113:17: note: in expansion of macro 'IO_SPACE_LIMIT'
+   1113 |         port &= IO_SPACE_LIMIT;
+        |                 ^~~~~~~~~~~~~~
+
+diff --git a/arch/loongarch/include/asm/addrspace.h b/arch/loongarch/include/asm/addrspace.h
+index b24437e28c6e..7bd47d65bf7a 100644
+--- a/arch/loongarch/include/asm/addrspace.h
++++ b/arch/loongarch/include/asm/addrspace.h
+@@ -11,6 +11,7 @@
+ #define _ASM_ADDRSPACE_H
+ 
+ #include <linux/const.h>
++#include <linux/sizes.h>
+ 
+ #include <asm/loongarch.h>
+ 
