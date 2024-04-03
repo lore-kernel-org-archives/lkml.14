@@ -1,166 +1,177 @@
-Received: from NAM04-DM6-obe.outbound.protection.outlook.com (mail-dm6nam04on2107.outbound.protection.outlook.com [40.107.102.107])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com [209.85.208.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CF54645;
-	Wed,  3 Apr 2024 05:46:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.102.107
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712123219; cv=fail; b=htRFVF9+SfU2Db/gVUL5IL1xE++9pj0TKVa6lz2Ew5ghlu54B8Q6NPL0W7Gk4RioZoSWa1veg+ugxcd9oqJqvNNp36kgVdv78YwHihmvkOCcMWpzjweuHSt5zxZD0DRIVVAsHOuF+rG/XyE5TDdNOkybz6XdsLFMoPvOuV3tSaI=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712123219; c=relaxed/simple;
-	bh=OJudV+n1tKL2PiLEQo2+gi91BGv4SCkTWJstbzJUUVY=;
-	h=References:From:To:Cc:Subject:Date:In-reply-to:Message-ID:
-	 Content-Type:MIME-Version; b=FLkmjJlifacFk3jisZCu7UH8gQgaZVCwmxNkZUHerkNHSA6qWOsZOOBScqmrd2Q4UBp6RBViK+Cn9rz18tzjMLZ5hAagQqGUq3vocXE6u6tmDhV7mchrj4nFRusivI+iqNIM6jCsbY4ifO6oYNvdkKERvghPQrGxb4o3z5KFjII=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=NcesQ6EC; arc=fail smtp.client-ip=40.107.102.107
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28F811870
+	for <linux-kernel@vger.kernel.org>; Wed,  3 Apr 2024 05:51:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.177
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1712123465; cv=none; b=h5EY3kSLg4RX/FhW9TQocNYUHXXhIt++itVJacEqUKRnn1q+rrvLy6sfMaNjY1v1Noetlh1acM927yp7M0KA7W9EKfINq9Sh5nQvUMfVa1nrw9ozpuanpmzIGAbajhzy6Kmxj3kTj0SSH2Oh6XlQ5QEu97QM9T5J1qqmROPrNXo=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1712123465; c=relaxed/simple;
+	bh=E4FbwUVJWlX4xtcxltOFjRly3b0AT46saRVGRZAwbpU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=bgdEWZd5XKUPRQdqK0qLqTr27H0Mlr9Cohctf37NFDAIpKWGr+a95K+siA4s1DMdDpE3cpUrVxbKHWsWAUswcQ9lVZtniJySIRLIii4lCZqvr7SyJ3IzQLmBq3wTUvMBnI2vG7oM6Vy35JOCMB1JjS/C0qIKMixrSa85CWLTnK0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=msAKyTwB; arc=none smtp.client-ip=209.85.208.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="NcesQ6EC"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=KPScQHjuPfjPWoIxVRaV0q6ghXJLDXFI4zlHfgd41ZAvNS8u9FX/imcoUPLcnQ83W+szSU/Lg6QcXE5JjdmVxFcsFVZfxuCkcybyIOLQiIrBxcf9sLWsBhslWHwu8AU8ey8n0Y0Nb5HbtZKnbrsYkeM4kfAjwSriLEuTE3s2A/4YCgDYyH2BhQVJu2TGXBYEBRymLCkfn2fVP8TiiDJ1d6dSJn8C2WVtGCjTpLYmmpDgwyxiEcNVFfVYTGSip3KRhRXr6UgD7zBv4mi2TsqU2PXuBRrIv0pWTST8EB7eqGXgP22gyYv1AhUgWm4mijCadRHBOUFtjxc63+4LoanQFg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=ZDLk5HZw+fSKx+VIXuFdhZN6iMwF9y+6ha0jWrUWf5o=;
- b=Y+1eFRaw5ngh4+CNwqTP5awAD0FsVzu73FLWPBzsOLfJRShFaJTxLmK7iIbFL5uLYPyVR2pUSt++oDaoffPOo7jdeTR1KiemzrlVoAs1yQUfUvrXsTvWB6Oy96sm3ODcbpOWK3L9XPXNZye+pQ/MOHdkFjo8LJ9ckKHuwcJh+Wgrpfyjw0Eybdqf/OaBl9SuZgRt3F/2njidm7IIK8NtbQCFEv6DGd7CUG8pfNKA1oJLNzFJ98v+FaErnGagJDaqtFE2u0l7V94d0JfssSsUNeGY5Ur5jKgajSkSFPCCrezHQpzU3mofyNNhP9Y/qji1nbYEgLk12p+qdo6n1JdHCA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ZDLk5HZw+fSKx+VIXuFdhZN6iMwF9y+6ha0jWrUWf5o=;
- b=NcesQ6ECrZiH20fyjxfrmIpitA+zPAlgjO57tFFDQr4GG4EW5IXqfQCInwpRR+hWjSLT6AZ1w97URVKWT3tW9iSSyzlaTKO4CgcegVpHlR+lCjoh1P7P7lRKVFL24lAS69jnRKNVKrJD7QDxLIn8t7XLkwy5JV9UPLr/MQzWRee0KoSm0reW4++HoqASY+G3rLrSooeB14hyN60zuUKpLs5CHxzZBbjzi5tJ8rLa0Fw88Daq9S/5WyaLJmb1Olg5++uAZB0wN9EjzQLS2QvnaHk9w5TUZjKQqK/hejfjc8XWoLrYCmGoeGOR8RM3sILWni+vAQcvUWrgkVlw0F8FeA==
-Received: from BYAPR12MB2743.namprd12.prod.outlook.com (2603:10b6:a03:61::28)
- by DM6PR12MB4044.namprd12.prod.outlook.com (2603:10b6:5:21d::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.46; Wed, 3 Apr
- 2024 05:46:54 +0000
-Received: from BYAPR12MB2743.namprd12.prod.outlook.com
- ([fe80::459b:b6fe:a74c:5fbf]) by BYAPR12MB2743.namprd12.prod.outlook.com
- ([fe80::459b:b6fe:a74c:5fbf%6]) with mapi id 15.20.7409.042; Wed, 3 Apr 2024
- 05:46:54 +0000
-References: <20240402205223.137565-1-rrameshbabu@nvidia.com>
- <20240402205223.137565-2-rrameshbabu@nvidia.com>
- <20240402191842.66decfd3@kernel.org>
-User-agent: mu4e 1.10.8; emacs 28.2
-From: Rahul Rameshbabu <rrameshbabu@nvidia.com>
-To: Jakub Kicinski <kuba@kernel.org>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-doc@vger.kernel.org, ahmed.zaki@intel.com,
- aleksander.lobakin@intel.com, alexandre.torgue@foss.st.com,
- andrew@lunn.ch, cjubran@nvidia.com, corbet@lwn.net, davem@davemloft.net,
- dtatulea@nvidia.com, edumazet@google.com, gal@nvidia.com,
- hkallweit1@gmail.com, jacob.e.keller@intel.com, jiri@resnulli.us,
- joabreu@synopsys.com, justinstitt@google.com, kory.maincent@bootlin.com,
- leon@kernel.org, liuhangbin@gmail.com, maxime.chevallier@bootlin.com,
- pabeni@redhat.com, paul.greenwalt@intel.com, przemyslaw.kitszel@intel.com,
- rdunlap@infradead.org, richardcochran@gmail.com, saeed@kernel.org,
- tariqt@nvidia.com, vadim.fedorenko@linux.dev, vladimir.oltean@nxp.com,
- wojciech.drewek@intel.com
-Subject: Re: [PATCH net-next v1 1/6] ethtool: add interface to read Tx
- hardware timestamping statistics
-Date: Tue, 02 Apr 2024 22:14:38 -0700
-In-reply-to: <20240402191842.66decfd3@kernel.org>
-Message-ID: <87r0fn2e2b.fsf@nvidia.com>
-Content-Type: text/plain
-X-ClientProxiedBy: BY3PR05CA0018.namprd05.prod.outlook.com
- (2603:10b6:a03:254::23) To BYAPR12MB2743.namprd12.prod.outlook.com
- (2603:10b6:a03:61::28)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="msAKyTwB"
+Received: by mail-lj1-f177.google.com with SMTP id 38308e7fff4ca-2d715638540so66448441fa.3
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Apr 2024 22:51:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1712123462; x=1712728262; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=pCe99m+lvX3Q9JdwOVipLcUF6ks8hURE2QgW54n2EHA=;
+        b=msAKyTwBL1035beDcwbrXObMP3gITDHOzPZIo35jphL5VQTtApAAcdNNSM1SgAUz1K
+         0wq67t9BURBlSVZYpOX0fx/0D20HyM/FHAMbK0tYdcryaFFIWVvCSLfYi/Ca7oOcsS8i
+         Ljv3Ez7Tn/Vs2XsbvgFbwj40Ybrbwsrw72bge6uPwTkqqW3Q1c3F5b9M/xhwAsq90wzb
+         tUbUtKmLMOtGCANVITMpADDNnJz9l4BE8Fc7FD7UxgNMKtvPKVjzF0lDt9j53tovVNDa
+         qVkBx+li7Hnk6e0OxuNwU84KsmaQTW17jWbl2tKZNN2y9IgmjipUgXPebTAf1ljL30N6
+         AMXA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712123462; x=1712728262;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=pCe99m+lvX3Q9JdwOVipLcUF6ks8hURE2QgW54n2EHA=;
+        b=jarSe+O88ii4G9LcwDL7RrHfhdnXK1Koru0WIsB2RQMHaHORtmesuHm+rlhsPboOex
+         pmYYE5JbJ2EXs5MtSZqD3w+YvQwGSJSNgvywOSTHiyAZ44DsY0kRJ8szdpU3/ehauKbH
+         9yQqrrg/48G9KW5BYFYsQgzlNeAsHiygTN0ZQMVhNE2ZdGxs8lgqCC3XK+Ea2zxRTL+P
+         gqJa5rrHlj8AmbuW8RW/Rk6MTKM8BnsmpYtV5T7i/FtFvIcqzA0Wne4fb9R33bMR26k/
+         eZ5sBx55SiB3n97h0CncMtXfpZyxH7DOo+ZWqeAD9Vw7PuGaWdsJl0g2gWzZSrWQqLs9
+         IpBA==
+X-Forwarded-Encrypted: i=1; AJvYcCWqwLPDZ3PpsT0tO1LKuBJDRiQfw2/tqbXU7JX2YTgOxhSm4hKCwnpUCeV8juZBBFk1cFt8zWmNQYqhVdOWlPGN6BAP/rlxcyr+e0jE
+X-Gm-Message-State: AOJu0YxCHAPkh4LvllIBscZGF9Arl7OsyWNgWg980a8Fzut/AyVZYhuu
+	h5yQvXaYaq2wd8cy5d41peKVjYqpEbVGod8dYp6OEy7enpSpR6obHINb58VIcUmX7frp9LfRgri
+	a85GugiskdqSLca75NTQVk2ZQGr4=
+X-Google-Smtp-Source: AGHT+IHFqmXqlBSd2ZbMViKWG+Z1LzyEnCtR30sIJcynrZM9shhHsPMu9mH9re6Zh+Mf/CW35nLpVb9a2Oyge73CAY8=
+X-Received: by 2002:a2e:b1c9:0:b0:2d4:42da:40fe with SMTP id
+ e9-20020a2eb1c9000000b002d442da40femr9203882lja.17.1712123462056; Tue, 02 Apr
+ 2024 22:51:02 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BYAPR12MB2743:EE_|DM6PR12MB4044:EE_
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	pkpZMeGS9rxC1AkjYwpnuYgc9r6LxhN3+HZqdyGZHiu5HIDOkMDw/jaXkv1/cl01twrYJ+7+o4c5fTlV5GiP8f5khyQXpqM4WTK+tMc5kv82naI2pkZ3uLoNLaiWrv1HcK6ZcaDza2aYyEwwuwWuR17iLLNY4POyvfe/ME9v2h/sfczqm0UnY23JRDvAJp8MgLf9VoA9dYGsouOeeqFv6CSipkDB/jOz/+SnPgvWxGBSgAAQQf584UG9mDV8ol6J7v4/Y6JRq9O5upIOf8KfpxidLO52IlDoD1v/y4ATcREi8UBPxCGGgzrw3rvvBy9/TiNqLre0FNveKzjkw6iPVU5ZwCwh4JRSxAmdUnqpje9s45SXH3iPO98A9GKj/SeZJZnoRguFH9XDo5+gjQf3e4cejF+N/RdRwe8V2dzl2Oxn/DOdxAXuE+9O3WuHJsVoPA0muCQ7O75NWoqhyneGwxs8RuR6ZLBWD7FWoQwmxfTD53bAS6sKAOmXsqnkHD6pr9EjyOpnySNp01N3a3yd9xCHaKCEzArXLsixBcFqEQAPnqc7VtV+61OBkjEchHhAdXOzQkbhlZPCOU32fZ7cMfuQKZCuteVKlXkUQQ3lmzhFWQIeyn/pMxk4vxEoCDQ8tgFjy6o6zpbCC9aA8/R1mRYWxSl0mZoiJZxs07C4BRg=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR12MB2743.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366007)(7416005)(376005)(1800799015);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?JJ7xOmvuUZQ2fv6IPHu7mllDxAPhOUEbVo5nxUud3LjspBKeozBwaFsVpg9E?=
- =?us-ascii?Q?ZC1aj5kZf39XiwH4gbJFcJ+LOWZpHdTkvIG4uhQoIbXUzlFmIRZfOzljcSeH?=
- =?us-ascii?Q?wmVy9J5DtFnjl4aFe6DZHPpMi4ihm6k+6Fcd4zsVErhYyLREzkHnqmFYTr1P?=
- =?us-ascii?Q?+NS4onu+JR2PpJ1pQnn+Gl3Vw5MBB1lj/c2O+mkHXOoT1Z0JZxgX5A3WSW0A?=
- =?us-ascii?Q?twNXSwJsqXAi3QgLWsT46QjENJfDMN6vly59eSLlHLEDnhrlScgaCp1aKzi9?=
- =?us-ascii?Q?b2TqTQ+Rx1zbTPG09HbEY+bItMrS9o1eOrjVPq+9qLEwD1MwA7MzDhLtLtVK?=
- =?us-ascii?Q?06msDmpsCxNJ4Pu/vRSEOQI1/cJcStHZap+/3TlWyMhmCtGrhp+w1BOUrxMa?=
- =?us-ascii?Q?ztOOhukEzEmlUEBM0Ua6ahLsXp8Lgoe2dFnbq08/Aj/O6FRh86cEvVVvti7d?=
- =?us-ascii?Q?LEftBW4Pj7cQj0PJ+czm2X/xKVykDkQViElWKTm8ex3oY7qFTFkjPzjdHW38?=
- =?us-ascii?Q?TpXMvDFaN4xMi//ZkvEyb51wAInFqhKh542ZnD7gb75rL5R7Vrq/ZZWhOv7u?=
- =?us-ascii?Q?l1NQLYyoIu0VmRpoJPeayZv/IhoK8J3WJ66PmMXBa3S4zHn6NyogoaioHADg?=
- =?us-ascii?Q?cFbAwfh7zCbsL3Vu45Pwoh8EawD8Scg+BbKuL6xT9zYNNDNSVnXommuSqw4k?=
- =?us-ascii?Q?hj4q/h5WAoV/P8dYx+ZV9dVxel8BxRxSbJYrbkQTR5tk9YdrmOXdvnVptAK1?=
- =?us-ascii?Q?0oMy07baNXNfCipZYsq/igO+NdeTu2DYxxtyXW43wibQFzEO0rrVOsjOlJUq?=
- =?us-ascii?Q?pEDKaKEofPJIZmnMekgk5x7buiFYjwoKDLAn/CnldoUTZWwDTqFkybhdsjtT?=
- =?us-ascii?Q?67lQZt0eHRhyvqKkxPLWrBBPrjav5ET7VeeYYgcroIedURhcWRJB150fER0g?=
- =?us-ascii?Q?0XhUOR8bKO316r8rZAKMjsEYM9ZcU8ookg4RywArjgbuYZSSqnxShnhslqIF?=
- =?us-ascii?Q?39smW4/eLOMa70LAMOdPL2M14PQqBtWPF8mmOoB6kJ0KQBhGA3ovdQRLjXQl?=
- =?us-ascii?Q?Kb+eNdYJWIMnYwJa+Yp2uKoPrLGttRBXWEiEEV3IR40VZM5H5zbwGWKX2btY?=
- =?us-ascii?Q?5L9+FVeEtcSwBdPdhhnm9RuUCIKy1mOMkTdwiJgOVXqZS2wl4woeuvwnALmq?=
- =?us-ascii?Q?2x1whM+sxBwE6YRe3kupaR3qqu8c/IL7pt33TzAqruhwiRVhazx8jgyMva72?=
- =?us-ascii?Q?PTD7v1RWs2oUaF1q8c0gVZU2qCnEIUNMhFwS/lWMa6PEMlUK8R3O8joxjeHv?=
- =?us-ascii?Q?5VVFpbhMVJNesUARrBdypzsRacGQvY9pMxCfKbOUCMfbwjlpobZknPy28gnv?=
- =?us-ascii?Q?cYUH5F1Rz8eo506uIMeURwP1dUspHuEEGEF6T0fo959PCF4mJpKDgLU29ML4?=
- =?us-ascii?Q?C3KPX7V80Roxe7QjI2Ms0IdsTA2WRdxnEhPwOwHY90uoBnLzy438AMbW/sQx?=
- =?us-ascii?Q?ZAbiG/UWqaS/6nEmqwe8hEDM/JAUWz8mdS5nNKuWmb2mhl4JQWcV1PZe9jM/?=
- =?us-ascii?Q?H5nJ4S3kXCt7bmGNo3N2u+pd5xC9L4X6ZV4iw5U1fZFXcs1tT1v7UXwtWcwr?=
- =?us-ascii?Q?Ig=3D=3D?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: bbbb3d8b-ed68-46ac-bc42-08dc53a17766
-X-MS-Exchange-CrossTenant-AuthSource: BYAPR12MB2743.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Apr 2024 05:46:53.9310
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: CXsOx7T8CAoETY5ek3bsB2y2m0cFKsrqXO2MKzhj7mfBXok47xwXF5KU9ofddh+5JWjuGbWh8iPfmCZrDCDlJw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB4044
+References: <20240401081734.1433755-1-zhaoyang.huang@unisoc.com> <736b982a-57c9-441a-812c-87cdee2e096e@redhat.com>
+In-Reply-To: <736b982a-57c9-441a-812c-87cdee2e096e@redhat.com>
+From: Zhaoyang Huang <huangzhaoyang@gmail.com>
+Date: Wed, 3 Apr 2024 13:50:50 +0800
+Message-ID: <CAGWkznF6NQrB-vwBZCfCF-1WQJv8iwPPrwND7yDsPJw1EbfxQA@mail.gmail.com>
+Subject: Re: [PATCHv2 1/1] mm: fix unproperly folio_put by changing API in read_pages
+To: David Hildenbrand <david@redhat.com>
+Cc: "zhaoyang.huang" <zhaoyang.huang@unisoc.com>, Andrew Morton <akpm@linux-foundation.org>, 
+	NeilBrown <neilb@suse.de>, linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
+	steve.kang@unisoc.com, Matthew Wilcox <willy@infradead.org>, 
+	Christoph Hellwig <hch@infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, 02 Apr, 2024 19:18:42 -0700 Jakub Kicinski <kuba@kernel.org> wrote:
-> On Tue,  2 Apr 2024 13:52:01 -0700 Rahul Rameshbabu wrote:
->> +/**
->> + * struct ethtool_ts_stats - HW timestamping statistics
->> + * @tx_stats: struct group for TX HW timestamping
->> + *	@pkts: Number of packets successfully timestamped by the hardware.
->> + *	@lost: Number of hardware timestamping requests where the timestamping
->> + *		information from the hardware never arrived for submission with
->> + *		the skb.
->> + *	@err: Number of arbitrary timestamp generation error events that the
->> + *		hardware encountered, exclusive of @lost statistics. Cases such
->> + *		as resource exhaustion, unavailability, firmware errors, and
->> + *		detected illogical timestamp values not submitted with the skb
->> + *		are inclusive to this counter.
->> + */
->> +struct ethtool_ts_stats {
->> +	struct_group(tx_stats,
+On Tue, Apr 2, 2024 at 8:58=E2=80=AFPM David Hildenbrand <david@redhat.com>=
+ wrote:
 >
-> Doesn't seem like the group should be documented:
+> On 01.04.24 10:17, zhaoyang.huang wrote:
+> > From: Zhaoyang Huang <zhaoyang.huang@unisoc.com>
+> >
+> > An VM_BUG_ON in step 9 of [1] could happen as the refcnt is dropped
+> > unproperly during the procedure of read_pages()->readahead_folio->folio=
+_put.
+> > This is introduced by commit 9fd472af84ab ("mm: improve cleanup when
+> > ->readpages doesn't process all pages")'.
+> >
+> > key steps of[1] in brief:
+> > 2'. Thread_truncate get folio to its local fbatch by find_get_entry in =
+step 2
+> > 7'. Last refcnt remained which is not as expect as from alloc_pages
+> >      but from thread_truncate's local fbatch in step 7
+> > 8'. Thread_reclaim succeed to isolate the folio by the wrong refcnt(not
+> >      the value but meaning) in step 8
+> > 9'. Thread_truncate hit the VM_BUG_ON in step 9
+> >
+> > [1]
+> > Thread_readahead:
+> > 0. folio =3D filemap_alloc_folio(gfp_mask, 0);
+> >         (refcount 1: alloc_pages)
+> > 1. ret =3D filemap_add_folio(mapping, folio, index + i, gfp_mask);
+> >         (refcount 2: alloc_pages, page_cache)
+> >
+> > Thread_truncate:
+> > 2. folio =3D find_get_entries(&fbatch_truncate);
+> >         (refcount 3: alloc_pages, page_cache, fbatch_truncate))
+> >
+> > Thread_readahead:
+> > 3. Then we call read_pages()
+> >         First we call ->readahead() which for some reason stops early.
+> > 4. Then we call readahead_folio() which calls folio_put()
+> >         (refcount 2: page_cache, fbatch_truncate)
+> > 5. Then we call folio_get()
+> >         (refcount 3: page_cache, fbatch_truncate, read_pages_temp)
+> > 6. Then we call filemap_remove_folio()
+> >         (refcount 2: fbatch_truncate, read_pages_temp)
+> > 7. Then we call folio_unlock() and folio_put()
+> >         (refcount 1: fbatch_truncate)
+> >
+> > Thread_reclaim:
+> > 8. collect the page from LRU and call shrink_inactive_list->isolate_lru=
+_folios
+> >          shrink_inactive_list
+> >          {
+> >              isolate_lru_folios
+> >              {
+> >                 if (!folio_test_lru(folio)) //false
+> >                     bail out;
+> >                 if (!folio_try_get(folio)) //false
+> >                     bail out;
+> >              }
+> >           }
+> >           (refcount 2: fbatch_truncate, reclaim_isolate)
+> >
+> > 9. call shrink_folio_list->__remove_mapping
+> >          shrink_folio_list()
+> >          {
+> >              folio_try_lock(folio);
+> >              __remove_mapping()
+> >              {
+> >                  if (!folio_ref_freeze(2)) //false
+> >                      bail out;
+> >              }
+> >              folio_unlock(folio)
+> >              list_add(folio, free_folios);
+> >          }
+> >          (folio has refcount 0)
+> >
+> > Thread_truncate:
+> > 10. Thread_truncate will hit the refcnt VM_BUG_ON(refcnt =3D=3D 0) in
+> > release_pages->folio_put_testzero
+> >          truncate_inode_pages_range
+> >          {
+> >              folio =3D find_get_entries(&fbatch_truncate);
+> >              truncate_inode_pages(&fbatch_truncate);
+> >              folio_fbatch_release(&fbatch_truncate);
+> >              {
+> >                  folio_put_testzero(folio); //VM_BUG_ON here
+> >              }
+> >          }
+> >
+> > fix: commit 9fd472af84ab ("mm: improve cleanup when ->readpages doesn't=
+ process all pages")'
 >
-> include/linux/ethtool.h:503: warning: Excess struct member 'tx_stats' description in 'ethtool_ts_stats'
+> Something that would help here is an actual reproducer that triggersthis
+> issue.
+>
+> To me, it's unclear at this point if we are talking about an actual
+> issue or a theoretical issue?
+Thanks for feedback. Above callstack is a theoretical issue so far
+which is arised from an ongoing analysis of a practical livelock issue
+generated by folio_try_get_rcu which is related to abnormal folio
+refcnt state. So do you think this callstack makes sense?
 
-Was looking into why our internal verification did not catch this. We
-run W=1 with clang, but looks like the warning does not get triggered
-unless explicitly run with scripts/kernel-doc.
-
-  https://www.kernel.org/doc/html/latest/doc-guide/kernel-doc.html#how-to-format-kernel-doc-comments
-
-I have debugged using strace that the way the kernel doc checking works
-when W=1 is set is that the matching source file that is being compiled
-is passed to scripts/kernel-doc, so include files are missed from the
-doc check. I think this is worth adding to the kernel documentation.
-
-Anyway, I will send out a v2 with this fixed but wait for potentially
-more feedback on v1.
-
---
-Thanks,
-
-Rahul Rameshbabu
+>
+> --
+> Cheers,
+>
+> David / dhildenb
+>
