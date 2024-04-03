@@ -1,132 +1,150 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 066A34120B;
-	Wed,  3 Apr 2024 04:26:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A71796AD7
+	for <linux-kernel@vger.kernel.org>; Wed,  3 Apr 2024 04:34:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712118389; cv=none; b=RsFaRwgxNRlMTxVM9myWwcvoREgbL9vbM23uZsq+pWUOWXRv92Oeu1goWhEV9QOARCzCv3jOGVMatP7GeRV6nHuzHniOID7HCFM9tE0Ik1BieJVrDtVVv0y0gxZsC7+C0moYBsLIbcWhNzpT7RK+4wnyUOdY7+04dsr8Ge7urg4=
+	t=1712118870; cv=none; b=PP7VO/hefEZBfK2xJhgrH5JT5ezPIgmOkS15ASih/w25K4KtDh2Z/sdyk6mBXIJF9aZ0FegcSjBj3m5hkXLk5RUz6F30oKF/+O9zEreSrd+Psp//2dKIr6hqU5zqQF4cqJfXWeZsj48QVC0E/si4DCukDVMWjZZQ9ZPpbqiiuIk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712118389; c=relaxed/simple;
-	bh=GFopZvyivykktQ72jqds+qx9RyJ0KszyGSYlJEDTeuc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=IX3XaEX9ZD78szhQ0HOL6e/IGoT64bXi+6/JMFTcqKKfEgWSer3Jbmm23DbqkRglW6CI1sMfdaVE/Z6JHXp2jpEEh1SWSjQ1b1qOrODREo65kMZyEGkqj8rYED6nU7lnMHT9Ljf4KbwKiMh6ZzUEWvM4bUKRoVSsZiOjggHJzwY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=gZE5dRG/; arc=none smtp.client-ip=80.237.130.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	s=arc-20240116; t=1712118870; c=relaxed/simple;
+	bh=QQOwsJIqbn/sH6QWOe5NAW476GND/Y4m9LnS8t8IvAg=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=FzoJmNlwKwuRY3LZfaJgBwKGhcnhu6Go3+oEkVJLqaPQKeUGYF+X1qIQ3/FEp2VMbjYBzhGJcWT4gttGppjN/z34MEo8DwB2MLHaRiEEgqGNzYAKxeSFFvx7mo5/HuYRSGF778hSKfaWGmVsnt3y5Tbb670R+U6yV4igStNf5LU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=GgmCnxnV; arc=none smtp.client-ip=209.85.214.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="gZE5dRG/"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
-	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
-	In-Reply-To:References; bh=QyVQuuWUk2XuaF7soW3Q/khOH9t0orQsT6WSZbVXx2k=;
-	t=1712118387; x=1712550387; b=gZE5dRG/tMD/U4WVfh0XI/UVHhBN+SCx+1Kox4o5wsdWe61
-	arEgelcyS5/AKBKvk6wsR0cToZczV7dujVd+mslqcekX8KCElai6BsknqjPcWbaeYrcwAzq5wyleS
-	9DinbuEgmN5JPqSJqxxI3J8V5NXqT1xEa6agub+5wMynUNqMUC+YywIWoLz+j0wVJ2iytacgnRbQK
-	n/aKUMs3B9Ha/bbBpJ/6cssGI3uYML/N4xmYgrOcEWq1l+m5BUdCtuRaUAV0EGQdce3PQf1at9YFu
-	IXW1AtWH+mCU9uP4c4IZUHyDWcdl13DpPcstu9wUTj0lqZMQGky+6AyW2UJ8xgnA==;
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1rrsCe-000542-LX; Wed, 03 Apr 2024 06:26:24 +0200
-Message-ID: <b6cdb17f-206c-4dff-bb45-a60317e0a55e@leemhuis.info>
-Date: Wed, 3 Apr 2024 06:26:24 +0200
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="GgmCnxnV"
+Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-1e28be94d32so4975535ad.0
+        for <linux-kernel@vger.kernel.org>; Tue, 02 Apr 2024 21:34:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1712118868; x=1712723668; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=v8PahdsTaxrvJsdtCNtln2KbqBTimvNp7eghq2QDJGQ=;
+        b=GgmCnxnVoxb7hLrs2lO6JMnCUHvkSfnAB2ia0eoJRLLcv1baiWIk/UbHJLctXDthpa
+         eeJBLGAp+o4zLBdEaIXrAGxjgdcosV7WDUwrl5spQApCvJVSrjol2mB/IPjFnlIjHW9a
+         oNrvfJ3G6O8HdlQcztPYhH8/KpGGOplhNEL3VAK4y77OnbU/4rrf9MubOXQjXDAPmuyc
+         zMN8HNqZWNRrGYxCPuh5xj5a+KhKPAYolQnw8aM/1z/Ps3l4fMGzQfY3flWc8gN1AiIv
+         9JNv67al/zJbqlGtKLgsodKrpH6bQKVdy56kLP6KE9lEVy1w8FltCbGGUBoDUPUmlaI9
+         FYUw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712118868; x=1712723668;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=v8PahdsTaxrvJsdtCNtln2KbqBTimvNp7eghq2QDJGQ=;
+        b=Up01sXMmiwEuHrWIm073jB94bPnbSUxFBZhZlQ4ZmsSRingjoENwDdt/NwFatTvlX4
+         TacO+YNnBRoAKe5/PAeHdaDj6whFb/MUCDWe6K/FGP2JYcd/owcY/qbTSDCWjnLc0hMf
+         N6Zg83nWQBBazyzTzoJYov57b7gKFNC0xlFQtkJpK5flgcq92q0mi8jRKn1yLC/NZoih
+         zyRa6eTEncLu6yRndOadGPBd8Jprs7P0xw7FyCNNFQH+DIQQ/0biQ9eIX/eNn78qm+BE
+         zMs+OJGYSqTCoCPGbOoCwzWo9HVU2sXuVWIlJ7xtTWtsLrQ08YWKErY43U4E7jEHZmtn
+         B6BQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUbLe3cDD7pdOY2n+TJHEgnlO1Pwm6XFkqDrBLvPx79yiGmPVAvvkfdkGLoH1Bg7ntC/fx6TsdlmMZnENzBbBVd+4OEJULFtgjt4Hja
+X-Gm-Message-State: AOJu0YwtWJnhUXzxh5g+bHiAM+bmtDH0OAQnYJoMUeb69Zone4IyJDWY
+	FMzGYfUp/6F0YPGSWH1cHTEjmX+31S87CyZcQwmPbWF3mlQmSlz+7ftqI9GxWic=
+X-Google-Smtp-Source: AGHT+IE57hrKWhru0eMdU7jCJ9P/I0eCL8aw23kcrnxVUEU40D8ove2/9CFeHxy1kPDYTiXVaUWLXA==
+X-Received: by 2002:a17:902:d4d0:b0:1e0:d579:91fd with SMTP id o16-20020a170902d4d000b001e0d57991fdmr19430037plg.7.1712118867872;
+        Tue, 02 Apr 2024 21:34:27 -0700 (PDT)
+Received: from sumit-X1.. ([223.178.212.199])
+        by smtp.gmail.com with ESMTPSA id cp12-20020a170902e78c00b001e2059a6386sm12074634plb.12.2024.04.02.21.34.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 02 Apr 2024 21:34:27 -0700 (PDT)
+From: Sumit Garg <sumit.garg@linaro.org>
+To: linux-arm-msm@vger.kernel.org,
+	devicetree@vger.kernel.org
+Cc: andersson@kernel.org,
+	konrad.dybcio@linaro.org,
+	robh+dt@kernel.org,
+	krzysztof.kozlowski+dt@linaro.org,
+	conor+dt@kernel.org,
+	stephan@gerhold.net,
+	caleb.connolly@linaro.org,
+	neil.armstrong@linaro.org,
+	dmitry.baryshkov@linaro.org,
+	laetitia.mariottini@se.com,
+	pascal.eberhard@se.com,
+	abdou.saker@se.com,
+	jimmy.lalande@se.com,
+	benjamin.missey@non.se.com,
+	daniel.thompson@linaro.org,
+	linux-kernel@vger.kernel.org,
+	Sumit Garg <sumit.garg@linaro.org>
+Subject: [PATCH v5 0/3] arm64: dts: qcom: apq8016: Add Schneider HMIBSC board DTS
+Date: Wed,  3 Apr 2024 10:04:13 +0530
+Message-Id: <20240403043416.3800259-1-sumit.garg@linaro.org>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Hibernate stuck after recent kernel/workqueue.c changes in Stable
- 6.6.23
-To: Tejun Heo <tj@kernel.org>,
- Linux regressions mailing list <regressions@lists.linux.dev>
-Cc: Greg KH <gregkh@linuxfoundation.org>, Sasha Levin <sashal@kernel.org>,
- "stable@vger.kernel.org" <stable@vger.kernel.org>,
- LKML <linux-kernel@vger.kernel.org>
-References: <ce4c2f67-c298-48a0-87a3-f933d646c73b@leemhuis.info>
- <ZgylCe48FuOKNWtM@slm.duckdns.org>
-From: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-Content-Language: en-US, de-DE
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <ZgylCe48FuOKNWtM@slm.duckdns.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1712118387;eb609220;
-X-HE-SMSGID: 1rrsCe-000542-LX
+Content-Transfer-Encoding: 8bit
 
-On 03.04.24 02:38, Tejun Heo wrote:
-> On Tue, Apr 02, 2024 at 10:08:11AM +0200, Linux regression tracking (Thorsten Leemhuis) wrote:
->> Hi stable team, there is a report that the recent backport of
->> 5797b1c18919cd ("workqueue: Implement system-wide nr_active enforcement
->> for unbound workqueues") [from Tejun] to 6.6.y (as 5a70baec2294) broke
->> hibernate for a user. 6.6.24-rc1 did not fix this problem; reverting the
->> culprit does.
->>
->>> With kernel 6.6.23 hibernating usually hangs here: the display stays
->>> on but the mouse pointer does not move and the keyboard does not work.
->>> But SysRq REISUB does reboot. Sometimes it seems to hibernate: the
->>> computer powers down and can be waked up and the previous display comes
->>> visible, but it is stuck there.
->>
->> See https://bugzilla.kernel.org/show_bug.cgi?id=218658 for details.
->> Note, you have to use bugzilla to reach the reporter, as I sadly[1] can
->> not CCed them in mails like this.
->>
->> Side note: there is a mainline report about problems due to
->> 5797b1c18919cd ("workqueue: Implement system-wide nr_active enforcement
->> for unbound workqueues") as well, but it's about "nohz_full=0 prevents
->> kernel from booting":
->> https://bugzilla.kernel.org/show_bug.cgi?id=218665; will forward that
->> separately to Tejun.
-> 
-> Sorry about late reply
+Add Schneider Electric HMIBSC board DTS. The HMIBSC board is an IIoT Edge
+Box Core board based on the Qualcomm APQ8016E SoC. For more information
+refer to the product page [1].
 
-No problem at all, really, thx for your reply!
+One of the major difference from db410c is serial port where HMIBSC board
+uses UART1 as the debug console with a default RS232 mode (UART1 mode mux
+configured via gpio99 and gpio100).
 
-> but that commit is not for -stable. It does fix an
-> undesirable behavior from an earlier commit, so it has the Fixes tag but it
-> has a series of dependencies that need to be backported together
+Support for Schneider Electric HMIBSC. Features:
+- Qualcomm Snapdragon 410C SoC - APQ8016 (4xCortex A53, Adreno 306)
+- 1GiB RAM
+- 8GiB eMMC, SD slot
+- WiFi and Bluetooth
+- 2x Host, 1x Device USB port
+- HDMI
+- Discrete TPM2 chip over SPI
+- USB ethernet adaptors (soldered)
 
-Not sure if you know, but the stable team apparently recently backported a
-bunch of other workqueue commits as well; I see 10 from a quick look here:
-https://lore.kernel.org/all/20240326223803.2647796-1-sashal@kernel.org/
+This series is a v2 since v1 of this DTS file has been reviewed on the
+U-Boot mailing list [2].
 
-$ git log --grep='workqueue:' --oneline v6.6.22..stable/linux-6.6.y -- include/linux/workqueue.h kernel/workqueue*
-7df62b8cca38aa workqueue: Don't call cpumask_test_cpu() with -1 CPU in wq_update_node_max_active()
-5a70baec2294e8 workqueue: Implement system-wide nr_active enforcement for unbound workqueues
-b522229a56941a workqueue: Introduce struct wq_node_nr_active
-bd31fb926dfa02 workqueue: RCU protect wq->dfl_pwq and implement accessors for it
-5f99fee6f2dea1 workqueue: Make wq_adjust_max_active() round-robin pwqs while activating
-4023a2d9507691 workqueue: Move nr_active handling into helpers
-6c592f0bb96815 workqueue: Replace pwq_activate_inactive_work() with [__]pwq_activate_work()
-bad184d26a4f68 workqueue: Factor out pwq_is_empty()
-82e098f5bed1ff workqueue: Move pwq->max_active to wq->max_active
-43a181f8f41aca workqueue.c: Increase workqueue name length
+Changes in v5:
+- Addressed another nitpick from Stephen.
+- Collected Stephen's review tag.
+- Warnings reported by Rob's DT check bot aren't related to HMIBSC
+  board DTS but rather they are due to msm8916.dtsi or extcon-usb-gpio.txt
+  still not converted to YAML format.
 
-And there is also "workqueue: Shorten events_freezable_power_efficient name"
-in the queue for the next 6.6.y release:
-https://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git/tree/queue-6.6
+Changes in v4:
+- Dropped IRQ_TYPE_EDGE_FALLING for pm8916_resin given the expectations
+  of Linux kernel driver. Instead depend on systemd workaround suggested
+  by Caleb to get expected HMIBSC reset behaviour.
+- Incorporated further DT coding style comments from Stephen.
+- Warnings reported by Rob's DT check bot aren't related to HMIBSC
+  board DTS but rather they are due to msm8916.dtsi or extcon-usb-gpio.txt
+  still not converted to YAML format.
 
-That leads to the question: what is the better patch forward here: pick
-up what's is missing or back out?
+Changes in v3:
+- Picked up tags.
+- Fixed further DT schema warnings.
+- Configure resin/power button interrupt as falling edge.
+- Incorporate DTS coding style comments from Krzysztof and Konrad.
 
-Side note: I have no idea why the stable team backported those patches
-and no option on whether that was wise, just trying to help finding the best
-solution forward from the current state of things.
+Changes in v2:
+- Fix DT schema warnings.
+- Incorporate suggestions from Stephan.
+- Document UART1 mode GPIOs based mux.
 
-> which would
-> be far too invasive for -stable, thus no Cc: stable.
->
-> I didn't know a Fixes
-> tag automatically triggers backport to -stable. I will keep that in mind for
-> future.
+[1] https://www.se.com/us/en/product/HMIBSCEA53D1L0T/iiot-edge-box-core-harmony-ipc-emmc-dc-linux-tpm/
+[2] https://patchwork.ozlabs.org/project/uboot/patch/20240311111027.44577-6-sumit.garg@linaro.org/
 
-/me fears that more and more developers due to situations like this will
-avoid Fixes: tags and wonders what consequences that might have for the
-kernel as a whole
+Sumit Garg (3):
+  dt-bindings: vendor-prefixes: Add Schneider Electric
+  dt-bindings: arm: qcom: Add Schneider Electric HMIBSC board
+  arm64: dts: qcom: apq8016: Add Schneider HMIBSC board DTS
 
-Ciao, Thorsten
+ .../devicetree/bindings/arm/qcom.yaml         |   1 +
+ .../devicetree/bindings/vendor-prefixes.yaml  |   2 +
+ arch/arm64/boot/dts/qcom/Makefile             |   1 +
+ .../dts/qcom/apq8016-schneider-hmibsc.dts     | 491 ++++++++++++++++++
+ 4 files changed, 495 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/qcom/apq8016-schneider-hmibsc.dts
+
+-- 
+2.34.1
+
