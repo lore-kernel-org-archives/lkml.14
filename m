@@ -1,123 +1,118 @@
-Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com [209.85.208.178])
+Received: from mail-yw1-f182.google.com (mail-yw1-f182.google.com [209.85.128.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 151405C909;
-	Wed,  3 Apr 2024 07:44:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1B155BAD7;
+	Wed,  3 Apr 2024 07:45:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712130243; cv=none; b=jPHESsqv3yF5b/KsYKzzklxKiryckEzROkY8M0UVK389evqSVGCE+MsahUG/gEDACk5R+if1IV+mFzxQcpork+ElR7cpJie/8tzv7f/AWBqlOrJ39alEPz++Fy62hn4VRBJMFG+sfJ2Ydp0wQLF86q1FAtiTD7n5B+BcKUvQUd8=
+	t=1712130314; cv=none; b=Q1VwAY+Zq3vATCW+310sZnkGmvhLM+2sa2fmG9fuZkPKkoKvHDtCIPpFi+/v1Y+vxrspRFxu7GfiErcLnWUkg5uvHFJ2V3WNvCOxzuJtPyTgdyKMSFyF99PujfDGkc8F5JPgaMTnhTeHSOUIjsOIkYFYxBbZ0arBPQfhizET1pg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712130243; c=relaxed/simple;
-	bh=WxT2NrqKc9rZ+AczxjU/VMrhScF5GqxfG8yAuJSLpw4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=aQqS19xs2pTPn1jm2A9xYu+EIq7QPRb4VJFM0pgf3djCrTQsvtlSWfRblsvSNNwo6PcDk9YnPyuOWZLpqGf/rlQ14KqKA2DRafShPm/gfuZNbYKvXsm8UmAqKAQ3KcR47C9tp2p6KNzyWXMFIP3GR90tlGWaLp7OLhoWTHv5bJQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FhqBeS8t; arc=none smtp.client-ip=209.85.208.178
+	s=arc-20240116; t=1712130314; c=relaxed/simple;
+	bh=yQ9j5697fujP7br6avVnORJNRKx7dOB/FgXzi8BqGxE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=sXqVVMzOVONxm4H0aXtEaqjBkaUgQVt1sLY+W2vQ+GDucBrCI8CI3cuUtHyD0a3eMMijR++dzzqpgIHJ14HurxtpB9yIRcderHIk9YZgdXFad+bgd6NsdasHPZpmiCppBw3MUIDi2Nj1houYMB04owp2bT+y8EEJLSzxvAjRy1c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MYM3mDUv; arc=none smtp.client-ip=209.85.128.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FhqBeS8t"
-Received: by mail-lj1-f178.google.com with SMTP id 38308e7fff4ca-2d8129797fcso41177221fa.1;
-        Wed, 03 Apr 2024 00:44:01 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MYM3mDUv"
+Received: by mail-yw1-f182.google.com with SMTP id 00721157ae682-615038fc5baso23994117b3.3;
+        Wed, 03 Apr 2024 00:45:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1712130240; x=1712735040; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=9Aw6SnPFSKMPLWv57SKdwOjvO7+j+ocypSzZRlCpxvg=;
-        b=FhqBeS8tRqnMkBpGjftxwSuPsx44FCris/pSRpDLTY58bokBNi2Bt6jGAokoJvNNcP
-         dLAOrvTvA9dYvtl6j3O+7XJ8uGx03ZXL8J/gfXU61QFot3kxakhTfWBfwDDaTFsikhjo
-         OFYRilcoTsCQ/UoxeXFydkAXoJauNQVCpTHQdxda4FpOtIai/qlRYvCTTgddHbyMbAdr
-         LHeShnPPh9Ev+cOorX+6SFgQtVJ9k/Cw0EARLih68ANi1lteoiSav1cr/h/hBr/vVlEk
-         Sr6EtNXl0pHWASp/++Myg0ADCl5lALrf3d5umwz7S/we2qkpaaA2TvhS/mVdpTrvTyte
-         uUGQ==
+        d=gmail.com; s=20230601; t=1712130312; x=1712735112; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=FRechHCR05RNB+9I0mJA+sFff4tTP4QzQvaYkV3R8fI=;
+        b=MYM3mDUvWSdp52+BSPHQYgtzqaBSv8q3gvTSutXsGECJKNOyLdcHSucanokKukVwFq
+         a6L1G/NJ+73/5a4Y1ojMNFaTpa8rfFF2BtC6QgkoUuz28VjiR1jZNu4jkxl8C9niVZ9h
+         CeND4VhVMgCin+qwPp56JFtPiJW+e6syC3pJOQfo4QdvkUtMb56/WrG3ttY14TcJomqL
+         X+NrKYGs6Pin44Kj3BPAa3qHR+4SBlzaoj047WyM/wCFNjFedp45f8dcQ2+5OiychqYs
+         TZv82SxUgUY5HPyD94GUzqWqcSNTuCNTOWdsmqB5I9lf6u4SaWjTxALaF9G0oon+MV6x
+         wJuw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712130240; x=1712735040;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=9Aw6SnPFSKMPLWv57SKdwOjvO7+j+ocypSzZRlCpxvg=;
-        b=BnSu0/92nuetQZ1hbjCV5D6LSrDY8Krv/nvo0RbAPXIC3Y/LZRzPRqRMAeabSnHEvF
-         csdYdR3NCb3wVdH/KJaruwilmH0JfyBl4Gc2IDVsAMi7xO2KQqA3y6D3mMNtIB2iU4R6
-         Ido+Vt6VyVsVHBrTHHyNigQTB++umcIGvyLNG4OvxDlM5H70S/eeQyUqCsHSFh9AoVcv
-         g0Kja32aBMnjlfrzu6vX+HKh8eVkwI0DjY98p4gcgk6gba4kJS/nLEaftg53GcPNhmXX
-         lxrFH6PteZU1l8JRyr2O0N7PZqyBiXlA70VGJyBCHTRIwL2Q6GWhu3KRG9k4ZBvC0sEZ
-         c2NA==
-X-Forwarded-Encrypted: i=1; AJvYcCUa8VlLDGZt7QoQc0wc+PNmDl6885GZidv6CV0ZU4JkcKiyfA43bsk+HTd18kLmi07qKJdqXV0v8Qe3Gu1Qs2i1QKICjoTZRYebhaJajI9Q/VzJNMCc+LZTXoq3bw0kgq2AUYfI4bQntq8ags+ZXnKnIvdIK0G2ROfb
-X-Gm-Message-State: AOJu0Yww9OuEjgTlLta01bSVNNKQmmydRiDyThVnqgRbY/+Gxq0tQ2cR
-	oKhNQcjjBbzxWBhE++tmAJtf4v2E4zDw+Mx0K6U178u1mlvof7J2gSbqjO7vK1W5qAOrVN8R2aa
-	UPj8fimRGtBv09DHgBEUS700YOVg=
-X-Google-Smtp-Source: AGHT+IEV0+wldfYSrTvITy5YoiQhHmuY2y9giFihTstsngpgLda37H+mQISf5eyBJQsaiP/CU0J3GyNEJuN7h9OKK7w=
-X-Received: by 2002:a2e:8895:0:b0:2d6:c672:b301 with SMTP id
- k21-20020a2e8895000000b002d6c672b301mr8231316lji.50.1712130239881; Wed, 03
- Apr 2024 00:43:59 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1712130312; x=1712735112;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=FRechHCR05RNB+9I0mJA+sFff4tTP4QzQvaYkV3R8fI=;
+        b=QE6t9HkWS0HaExcG8nATEqtV9wsf9CWZIJQ4Zac9IeY2WLENiYtx25tom+WXTGK3IX
+         y6X9nR54r7Jz33q8QOwh/qVjMfAEO2lAQ4+NUgi4c/g5wbHxDhvFGj9uEEFSOS2eRAc+
+         VhrAT2jpgHL9ocgXm3T8tNZ7JbBu241GpBXmt7wDmxOLpIxQ4+e19SoO9YPxP2oprMyi
+         08mnbsd79L4ypQSEh8sAmHccc5TfDi3mHFnvMZbndlqqq2UgBqH9Ar8mDDPIwNJ5rqoX
+         VtruOhKnCt2UnuzB1qmcPsLmwTzRxuz0HpBcp1wLj/Xr4ObDzWEfcrJR/HAKzKYOXQzc
+         x+gA==
+X-Forwarded-Encrypted: i=1; AJvYcCWQ+9X3cURcuqBioPA+XPVs3eQ85kwetBXEAH64aRb9CQFOxTfohxRtCWsaA1XMiqOJoqk1t4RSHyaaqakMKBd6Vl81zJJEJ9Q14dddKQ4pafQUCVkfbuF0xa6rqX9IJ74puD9eMEDHXwuzl0/RmYB+IC+lKGrM9tp5jvDrqPY2iHX5RA==
+X-Gm-Message-State: AOJu0YxAAVwOVsyfY5OtOGQUTkMmfWAePY/u1bAsx1LZiVJuXxUV/ipx
+	BKQbuRQjsbjQr5r+SApqQGgDCNdZEx5NROyp0Um0b/neGj6kvm++
+X-Google-Smtp-Source: AGHT+IE/QkhgF2Px1HEyjKDBosB+4pzg1hyTDH5nbAg4XuIFgRT1cmMNoupSRWgzTb+xdgud/XXlLQ==
+X-Received: by 2002:a25:3307:0:b0:dd1:64e6:2c80 with SMTP id z7-20020a253307000000b00dd164e62c80mr12216913ybz.46.1712130311909;
+        Wed, 03 Apr 2024 00:45:11 -0700 (PDT)
+Received: from [10.76.84.174] ([5.2.194.157])
+        by smtp.gmail.com with ESMTPSA id gc12-20020a05622a59cc00b0043437f34491sm1263349qtb.36.2024.04.03.00.45.10
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 03 Apr 2024 00:45:11 -0700 (PDT)
+Message-ID: <0db40597-0d66-4d5b-8165-d9a4c068a42e@gmail.com>
+Date: Wed, 3 Apr 2024 10:45:08 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240401185821.224068-1-ubizjak@gmail.com> <171203102833.24910.7566029980709800852.git-patchwork-notify@kernel.org>
- <Zg0EtEkIIA45cuPT@gmail.com>
-In-Reply-To: <Zg0EtEkIIA45cuPT@gmail.com>
-From: Uros Bizjak <ubizjak@gmail.com>
-Date: Wed, 3 Apr 2024 09:43:48 +0200
-Message-ID: <CAFULd4Z0RmiWu4Kf0YFBMqA7YFMd65f3J760Do8-h83zWCx9oA@mail.gmail.com>
-Subject: Re: [PATCH RESEND bpf v2 0/2] x86/bpf: Fixes for the BPF JIT with retbleed=stuff
-To: Ingo Molnar <mingo@kernel.org>
-Cc: patchwork-bot+netdevbpf@kernel.org, ast@kernel.org, daniel@iogearbox.net, 
-	x86@kernel.org, bpf@vger.kernel.org, netdev@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/6] dt-bindings: adc: ad7173: add support for ad411x
+To: David Lechner <dlechner@baylibre.com>, dumitru.ceclan@analog.com
+Cc: Lars-Peter Clausen <lars@metafoo.de>,
+ Michael Hennerich <Michael.Hennerich@analog.com>,
+ Jonathan Cameron <jic23@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>, linux-iio@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20240401-ad4111-v1-0-34618a9cc502@analog.com>
+ <20240401-ad4111-v1-1-34618a9cc502@analog.com>
+ <CAMknhBHeKAQ45=5-dL1T1tv-mZcPN+bNo3vxWJYgWpEPE+8p3Q@mail.gmail.com>
+ <CAMknhBGJt1TG0-UXMqqCT6nxJKAX7ZbsPF19eeWqwKsXbKOQoQ@mail.gmail.com>
+Content-Language: en-US
+From: "Ceclan, Dumitru" <mitrutzceclan@gmail.com>
+In-Reply-To: <CAMknhBGJt1TG0-UXMqqCT6nxJKAX7ZbsPF19eeWqwKsXbKOQoQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Wed, Apr 3, 2024 at 9:26=E2=80=AFAM Ingo Molnar <mingo@kernel.org> wrote=
-:
->
->
-> * patchwork-bot+netdevbpf@kernel.org <patchwork-bot+netdevbpf@kernel.org>=
- wrote:
->
-> > Hello:
-> >
-> > This series was applied to bpf/bpf.git (master)
-> > by Alexei Starovoitov <ast@kernel.org>:
-> >
-> > On Mon,  1 Apr 2024 20:55:28 +0200 you wrote:
-> > > From: Joan Bruguera Mic=C3=B3 <joanbrugueram@gmail.com>
-> > >
-> > > Fixes two issues that cause kernels panic when using the BPF JIT with
-> > > the call depth tracking / stuffing mitigation for Skylake processors
-> > > (`retbleed=3Dstuff`). Both issues can be triggered by running simple
-> > > BPF programs (e.g. running the test suite should trigger both).
-> > >
-> > > [...]
-> >
-> > Here is the summary with links:
-> >   - [RESEND,bpf,v2,1/2] x86/bpf: Fix IP after emitting call depth accou=
-nting
-> >     https://git.kernel.org/bpf/bpf/c/9d98aa088386
-> >   - [RESEND,bpf,v2,2/2] x86/bpf: Fix IP for relocating call depth accou=
-nting
-> >     https://git.kernel.org/bpf/bpf/c/6a537453000a
->
-> Just wondering, which kernel version is this targeted for?
+On 01/04/2024 23:22, David Lechner wrote:
+> On Mon, Apr 1, 2024 at 2:37 PM David Lechner <dlechner@baylibre.com> wrote:
+>>
+>> On Mon, Apr 1, 2024 at 10:10 AM Dumitru Ceclan via B4 Relay
+>> <devnull+dumitru.ceclan.analog.com@kernel.org> wrote:
 
-The whole series is intended for the current mainline (v6.9), this is
-why it is developed against the bpf (*not* bpf-next) branch. Please
-note that the kernel panics with retbleed=3Dstuff even without
-%rip-relative changes (patch 1/2 above) [1], so patch 1/2 should be
-backported to stable branches.
+...
 
-[1] https://lore.kernel.org/lkml/20230105214922.250473-1-joanbrugueram@gmai=
-l.com/
+> 
+> Also, I just noticed that AD411x have only one AVDD input instead of
+> AVDD1 and AVDD2. So we need an if statement that says if properties:
+> compatible: enum: - adi,ad411x, then properties: avdd2-supply: false.
 
-Uros.
-
-> The bug is upstream as well, so a fix needs to be sent to Linus.
->
-> I can pick all of this up into tip:x86/urgent, if that accelerates
-> things.
->
-> Thanks,
->
->         Ingo
+Already addressed by this:
+"
+  # Only ad7172-4, ad7173-8 and ad7175-8 support vref2
+  - if:
+      properties:
+        compatible:
+          not:
+            contains:
+              enum:
+                - adi,ad7172-4
+                - adi,ad7173-8
+                - adi,ad7175-8
+    then:
+      properties:
+        vref2-supply: false
+      patternProperties:
+        "^channel@[0-9a-f]$":
+          properties:
+            adi,reference-select:
+              enum:
+                - vref
+                - refout-avss
+                - avdd
+"
