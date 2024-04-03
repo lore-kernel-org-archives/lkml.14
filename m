@@ -1,98 +1,94 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B8E5146D41;
-	Wed,  3 Apr 2024 13:39:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80060145B36
+	for <linux-kernel@vger.kernel.org>; Wed,  3 Apr 2024 13:40:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712151566; cv=none; b=QUiuIIRGu9FjZ2P8fer9+lHJ57I6Y6uVKQjMHcPYDLg57Ueia+3blnThVUMlGKCau5RL6KCdjKC+X2ZGnEE5MGsqV0LOExqBurHHVIsiy9NY+ebWyuv4aBFjCvG8D+LYG5QZCSYlJN9joFuyPThDxHQn/7Whi+owIClT3RVXduw=
+	t=1712151606; cv=none; b=nE7o6VPX6zIAFcdvtpfqMOjf6CzG41iv1VaduKMV8n9anUx3TQFDCglAuWDM2LRXnVUjui9YFlDPGzyOQvK2a2h0Jd4eKQMjfJ5SRanM3lizWFyvR6aiv0GTVKh37NQy9fkm8l7QOeTGNiRRfHFC2iYfCy+TZ+QrmsQGBuoffYw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712151566; c=relaxed/simple;
-	bh=yuwlPgatDVh6zFj152mH2P0uRmArAHNy0sOK7o8mFYI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=D7O7l8L68h3/vM8fm0xup7NQvI9C2aEo0mXdn3mxZ0vRE+pUSwkSg509udsHrYN4FwCycBWmNXmA0ed3rdnkB7viHBLTeIunIqdlsR7URfNwk/6s07unPQbm/8AXrqu1Df2uwAxOOTKuw+f8ABlc27EhClP8jlzEOt5VssezSyU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Qbm2VRLl; arc=none smtp.client-ip=192.198.163.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Qbm2VRLl"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1712151564; x=1743687564;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=yuwlPgatDVh6zFj152mH2P0uRmArAHNy0sOK7o8mFYI=;
-  b=Qbm2VRLll47SnTpAuqQTraf+Rhy0cjNn6yWX890ustW4CK19Aa1m5OtF
-   Yw6FB4I6XrHD94MCGJqxXPsOjghd1meI1nCSoPuiGF98KIqy0woQEBwSV
-   wyB/yIdk6YzUJOKNV4sM4q+rvw5dZFxMBCCuPFhMrEMi2vqa/iI3j3CVW
-   E5v+kspOSl6es5qL3yhYxvizq/U+B8IKiaSepTtNoNW73Pc0QxwToaasA
-   inlOeB+3ZRd+MB9yq8XeRY7yuNdosEpQ4gR7OpBF57wd9OKcclcnXtE3M
-   C/hAL6RnGa/qHrGRDkk79qP2xa7lkYSkrGVdWUKBkZVAPCzvxEzTSYNyD
-   A==;
-X-CSE-ConnectionGUID: s3r4j05eQXCiL6qFXbrf8Q==
-X-CSE-MsgGUID: khJTsiyORn+NFFBvO2e1Vw==
-X-IronPort-AV: E=McAfee;i="6600,9927,11033"; a="7246332"
-X-IronPort-AV: E=Sophos;i="6.07,177,1708416000"; 
-   d="scan'208";a="7246332"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2024 06:39:18 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,11033"; a="915183772"
-X-IronPort-AV: E=Sophos;i="6.07,177,1708416000"; 
-   d="scan'208";a="915183772"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.72.54])
-  by fmsmga002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2024 06:39:15 -0700
-Received: from andy by smile with local (Exim 4.97)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1rs0pd-000000018EQ-04zU;
-	Wed, 03 Apr 2024 16:39:13 +0300
-Date: Wed, 3 Apr 2024 16:39:12 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Mark Brown <broonie@kernel.org>
-Cc: linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	Daniel Mack <daniel@zonque.org>,
-	Haojian Zhuang <haojian.zhuang@gmail.com>,
-	Robert Jarzmik <robert.jarzmik@free.fr>,
-	Russell King <linux@armlinux.org.uk>, Arnd Bergmann <arnd@arndb.de>
-Subject: Re: (subset) [PATCH v2 0/9] spi: pxa2xx: Drop linux/spi/pxa2xx_spi.h
-Message-ID: <Zg1cAHEkhIf2vpwJ@smile.fi.intel.com>
-References: <20240327193138.2385910-1-andriy.shevchenko@linux.intel.com>
- <171167575036.187521.17547262230962160149.b4-ty@kernel.org>
- <Zg04cWhT_Dl6AUik@smile.fi.intel.com>
- <b7ac20d0-ca45-4e65-92ff-ddf84da6645a@sirena.org.uk>
+	s=arc-20240116; t=1712151606; c=relaxed/simple;
+	bh=rZ8RKwrxusezQ6XtZmnAt0t/LoLT/TISBYJDEc/S8WY=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=FF8AWqZ+8fbJ6I30m2ok9AOhQ2GWXczqGm/ES+pQ9F7tvklSfz+yvqsIFYDYfS586yHFGSWe1bqZlb4FibvuV7hSz+IgNZlZ6IpzvORcjrU5tlmMwRm6NMw7+wO5sJbUP3SOSJwbZVsIi6+AgSesP2M8ILrLtqKgN7jJmUx9Bv0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8D8DCC43390;
+	Wed,  3 Apr 2024 13:40:04 +0000 (UTC)
+Date: Wed, 3 Apr 2024 09:42:24 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Vincent Guittot <vincent.guittot@linaro.org>
+Cc: Qais Yousef <qyousef@layalina.io>, Ingo Molnar <mingo@kernel.org>, Peter
+ Zijlstra <peterz@infradead.org>, Juri Lelli <juri.lelli@redhat.com>, Daniel
+ Bristot de Oliveira <bristot@redhat.com>, Thomas Gleixner
+ <tglx@linutronix.de>, "Paul E. McKenney" <paulmck@kernel.org>, Joel
+ Fernandes <joel@joelfernandes.org>, John Stultz <jstultz@google.com>,
+ Dietmar Eggemann <dietmar.eggemann@arm.com>, linux-kernel@vger.kernel.org,
+ Yabin Cui <yabinc@google.com>
+Subject: Re: [PATCH] sched/pi: Reweight fair_policy() tasks when inheriting
+ prio
+Message-ID: <20240403094224.105fdef0@gandalf.local.home>
+In-Reply-To: <CAKfTPtDB8D6bouxJN9q8gXqG+BQYcsrJYEodDWtOB2kQwPH53A@mail.gmail.com>
+References: <20240403005930.1587032-1-qyousef@layalina.io>
+	<CAKfTPtDB8D6bouxJN9q8gXqG+BQYcsrJYEodDWtOB2kQwPH53A@mail.gmail.com>
+X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <b7ac20d0-ca45-4e65-92ff-ddf84da6645a@sirena.org.uk>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Wed, Apr 03, 2024 at 02:29:38PM +0100, Mark Brown wrote:
-> On Wed, Apr 03, 2024 at 02:07:29PM +0300, Andy Shevchenko wrote:
+On Wed, 3 Apr 2024 15:11:06 +0200
+Vincent Guittot <vincent.guittot@linaro.org> wrote:
+
+> On Wed, 3 Apr 2024 at 02:59, Qais Yousef <qyousef@layalina.io> wrote:
+> >
+> > For fair tasks inheriting the priority (nice) without reweighting is
+> > a NOP as the task's share won't change.  
 > 
-> > Do I need to do anything else to get the rest applied?
+> AFAICT, there is no nice priority inheritance with rt_mutex; All nice
+> tasks are sorted with the same "default prio" in the rb waiter tree.
+> This means that the rt top waiter is not the cfs with highest prio but
+> the 1st cfs waiting for the mutex.
+
+I think the issue here is that the running process doesn't update its
+weight and if there are other tasks that are not contending on this mutex,
+they can still starve the lock owner.
+
+IIUC (it's been ages since I looked at the code), high nice values (low
+priority) turn to at lease nice 0 when they are "boosted". It doesn't
+improve their chances of getting the lock though.
+
 > 
-> All the concerns I have with swnodes just being a more complex and less
-> maintainable way of doing things still stand, I'm not clear that this is
-> making anything better.
+> >
+> > This is visible when running with PTHREAD_PRIO_INHERIT where fair tasks
+> > with low priority values are susceptible to starvation leading to PI
+> > like impact on lock contention.
+> >
+> > The logic in rt_mutex will reset these low priority fair tasks into nice
+> > 0, but without the additional reweight operation to actually update the
+> > weights, it doesn't have the desired impact of boosting them to allow
+> > them to run sooner/longer to release the lock.
+> >
+> > Apply the reweight for fair_policy() tasks to achieve the desired boost
+> > for those low nice values tasks. Note that boost here means resetting
+> > their nice to 0; as this is what the current logic does for fair tasks.  
+> 
+> But you can at the opposite decrease the cfs prio of a task
+> and even worse with the comment :
+> /* XXX used to be waiter->prio, not waiter->task->prio */
+> 
+> we use the prio of the top cfs waiter (ie the one waiting for the
+> lock) not the default 0 so it can be anything in the range [-20:19]
+> 
+> Then, a task with low prio (i.e. nice > 0) can get a prio boost even
+> if this task and the waiter are low priority tasks
 
-As I explained before it's not less maintainable than device tree sources.
-The only difference is that we don't have validation tool for in-kernel
-tables. And I don't see why we need that. The data describes the platforms
-and in the very same way may come to the driver from elsewhere.
-How would you validate that? It the same as we trust firmware (boot loader)
-or not. If we don't than how should we do at all?
 
-Can you point out what the exact aspect is most significant from C language
-perspective that we miss after conversion? Type checking? Something else?
+Yeah, I'm all confused to exactly how the inheritance works with
+SCHED_OTHER. I know John Stultz worked on this for a bit recently. He's
+Cc'ed. But may not be paying attention ;-)
 
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+-- Steve
