@@ -1,115 +1,95 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from mout02.posteo.de (mout02.posteo.de [185.67.36.66])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFF8F136674;
-	Wed,  3 Apr 2024 10:44:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2810C139D0A
+	for <linux-kernel@vger.kernel.org>; Wed,  3 Apr 2024 10:44:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.67.36.66
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712141069; cv=none; b=tuFtn8rM2VgAKWmm3Ys6pSNCq+ia1wzesqMdQW6q1zjvnLvFMAk9F4Hqq+0G+lsYEoUi+c6jOIMHIE3TGotuGe4HvJ69bwucO5es+qOzS4EOn65eJkbDLr/tKy5pHvTdoG3eKJOOwhabu61S0m2woCyOlJfJ4TqWNXH1ZMFKwDI=
+	t=1712141097; cv=none; b=FPafKJePTGp74njy/i7UP3a4lDUPLJ2wbGbPkw9bgqprVbWZzD8BWRZA1ydiZfyBSqdUAufM+pIPYmSeyzaUJBU9IFbxePEft0OQL7cZb3gEhU9b8jUSEA7iwhA+QWZaYP3nZRl8GL2giYSeiX+1gM76HqCR31w+bT+lXw8hs1U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712141069; c=relaxed/simple;
-	bh=G8yYzb4bH382K5cAZ8WYPN+tPG2XPoQcoJ98SS0UuqI=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GTl6ficv/z7C9nhaal0YP7p58LLeaVHkEBZFzJl6W9WMmyWO3+/y5b3J6fksJvYrMhCte05l6skvaSKuBa/3t3jQ40nu6Js4mlj4ZujPRFR9vAlebfQzf/VrFVcz5/z72xMcbw3osFshuSHWPmGWs91vx/eNuJiEJiypmkKWg3U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=UbBbnanI; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1712141097; c=relaxed/simple;
+	bh=0S8b1fvqHo8aPEbPXCG10GqehUDxwKWnBk3bILVaB3M=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ccODzIqqYOCL2J848aBNKyuMLoTlZSDq0DWBM/b/t61hSiI0bY0XncWreYiXT/ZJrfd0/nCkjHz57JrJuaNNqYslaGf+DGiWvJzB4upVpRNEjrySAn9SHU6YcAXniGqWhefVefrHFs19c4qUDV28KdN9UCcW21ClHMY8YdUBZW8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.de; spf=pass smtp.mailfrom=posteo.de; dkim=pass (2048-bit key) header.d=posteo.de header.i=@posteo.de header.b=JA9p8GO3; arc=none smtp.client-ip=185.67.36.66
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=posteo.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="UbBbnanI"
-Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 4339w2W6024001;
-	Wed, 3 Apr 2024 10:44:24 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	date:from:to:cc:subject:message-id:references:mime-version
-	:content-type:in-reply-to; s=qcppdkim1; bh=zXvMpXPiE678AdxOhY/ii
-	dMD3WTsnnVZPX/wSxQze3o=; b=UbBbnanIzx0WJ9pmLun/7HX5MQBmgSvMNOhi4
-	IZ6NlauKeF+RMgsqY1SBHWg/DlF1cMV3fe+yKLwr2ypICzCQQ4oWpOadVA/AoT9o
-	A58PytNJEHfVsqcfkYxQsn994grz180kB4kUOg9PGJVngo/Q1Ta1Eg7EMrpJAkaw
-	rptUoEyx8YS8+4iQAjP1NAlkqtDK9of354z1uVEna007kxLGnzM2V2aXsmkccNnh
-	On9D8MtADglqIh3FO0aXbPuPRezgHODaAJqemq2Omt1JvxLOJEnKLLn5quxhacHZ
-	0INksA5MPgigJUFjJ84yShxluXyWYvBR68S07fe6/zM1HaA3Q==
-Received: from nasanppmta02.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3x93pw899t-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 03 Apr 2024 10:44:23 +0000 (GMT)
-Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
-	by NASANPPMTA02.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 433AiMfh016294
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 3 Apr 2024 10:44:22 GMT
-Received: from hu-varada-blr.qualcomm.com (10.80.80.8) by
- nasanex01b.na.qualcomm.com (10.46.141.250) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.4; Wed, 3 Apr 2024 03:44:18 -0700
-Date: Wed, 3 Apr 2024 16:14:14 +0530
-From: Varadarajan Narayanan <quic_varada@quicinc.com>
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-CC: <andersson@kernel.org>, <konrad.dybcio@linaro.org>,
-        <mturquette@baylibre.com>, <sboyd@kernel.org>, <robh@kernel.org>,
-        <krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>,
-        <djakov@kernel.org>, <dmitry.baryshkov@linaro.org>,
-        <quic_anusha@quicinc.com>, <linux-arm-msm@vger.kernel.org>,
-        <linux-clk@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-pm@vger.kernel.org>
-Subject: Re: [PATCH v6 1/6] dt-bindings: interconnect: Add Qualcomm IPQ9574
- support
-Message-ID: <Zg0y/pihFpqU3v6m@hu-varada-blr.qualcomm.com>
-References: <20240402103406.3638821-1-quic_varada@quicinc.com>
- <20240402103406.3638821-2-quic_varada@quicinc.com>
- <1a6fccd3-452c-423f-b73e-cef5f9d01633@linaro.org>
+	dkim=pass (2048-bit key) header.d=posteo.de header.i=@posteo.de header.b="JA9p8GO3"
+Received: from submission (posteo.de [185.67.36.169]) 
+	by mout02.posteo.de (Postfix) with ESMTPS id 4C843240106
+	for <linux-kernel@vger.kernel.org>; Wed,  3 Apr 2024 12:44:52 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=posteo.de; s=2017;
+	t=1712141092; bh=0S8b1fvqHo8aPEbPXCG10GqehUDxwKWnBk3bILVaB3M=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:
+	 Content-Transfer-Encoding:Autocrypt:OpenPGP:From;
+	b=JA9p8GO3GBevnnVCnHQNcx4SbpnrIRO24TjL4IT33GPylQITt5+njniat916/+WKM
+	 R7p04+91TbzknBIhgGw2jXVgnVnrd5RC4E/avFjHTTXGmyTdcTgGSf1Nd9v53SOYAv
+	 j5RsWrgUdA/yc1oAYI98giqKINvByBIYON5PWPdJZVO/sMND/PpF+kxy8+EhJ+HFJk
+	 3t3+ASNJUIap3ZO6z6fj/BZ3vBZgbxre3XTv0yhlW0xyoKLoRGi8aG7wUWWCga9nVa
+	 tDVhXg+oQM3UJkH08Lk1vG1u6QdbefP5Dd4jpGQScSAcr7bqZreNLEA9EjXQSu5CQf
+	 Te83SEmeZ0LZw==
+Received: from customer (localhost [127.0.0.1])
+	by submission (posteo.de) with ESMTPSA id 4V8hGB720hz9rxL;
+	Wed,  3 Apr 2024 12:44:50 +0200 (CEST)
+From: Alexander Reimelt <alexander.reimelt@posteo.de>
+To: andersson@kernel.org,
+	pvorel@suse.cz,
+	konrad.dybcio@linaro.org,
+	robh+dt@kernel.org,
+	krzysztof.kozlowski+dt@linaro.org,
+	conor+dt@kernel.org
+Cc: linux-arm-msm@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 0/2] arm64: Add basic support for LG H815
+Date: Wed,  3 Apr 2024 10:43:28 +0000
+Message-ID: <20240403104415.30636-1-alexander.reimelt@posteo.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <1a6fccd3-452c-423f-b73e-cef5f9d01633@linaro.org>
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nasanex01b.na.qualcomm.com (10.46.141.250)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: k7ycNh9ZqvOdxgEBzoJVFehihnn-Yjlh
-X-Proofpoint-ORIG-GUID: k7ycNh9ZqvOdxgEBzoJVFehihnn-Yjlh
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-04-03_09,2024-04-01_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 suspectscore=0
- phishscore=0 adultscore=0 mlxscore=0 lowpriorityscore=0 priorityscore=1501
- spamscore=0 malwarescore=0 bulkscore=0 impostorscore=0 mlxlogscore=698
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2403210001
- definitions=main-2404030074
+Content-Transfer-Encoding: 8bit
+Autocrypt: addr=alexander.reimelt@posteo.de;
+  keydata=xjMEZg0fSRYJKwYBBAHaRw8BAQdAIcaNTdj3NWDe5HQPCUs6oYyQygAJWP9LCzhr+C7RwMrNG2Fs
+  ZXhhbmRlci5yZWltZWx0QHBvc3Rlby5kZcKZBBMWCgBBFiEEM+Wy6sI/mP5S0zIFHqi3OKk8uRIF
+  AmYNH0kCGwMFCQWjo9cFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AACgkQHqi3OKk8uRJ8ogD9
+  EVg4zgfmC2SqXCgms6LETAzVX4CrAS8yMhyd7Md921cA/R8lhm9B96RYgA7MvFPFJb1T6JFY75Jg
+  QLXrtIE5llwHzjgEZg0fSRIKKwYBBAGXVQEFAQEHQBGDuxZLOTvppxyM4G18fSR6xzT0xkkPOia7
+  Bh6L1vAAAwEIB8J+BBgWCgAmFiEEM+Wy6sI/mP5S0zIFHqi3OKk8uRIFAmYNH0kCGwwFCQWjo9cA
+  CgkQHqi3OKk8uRIa1wD8CZDdCAKXstgXY96eeSSP7MecEF5TBdmWOiVgjlEIpoEA/RnGuDaj06B1
+  F51wyGAjYXSmn5qFoNHu3yXyLUkFz1ME
+OpenPGP: url=https://posteo.de/keys/alexander.reimelt@posteo.de.asc
 
-On Wed, Apr 03, 2024 at 09:09:15AM +0200, Krzysztof Kozlowski wrote:
-> On 02/04/2024 12:34, Varadarajan Narayanan wrote:
-> > +#define ICC_NSSNOC_NSSCC	10
-> > +#define ICC_NSSNOC_SNOC_0	11
-> > +#define ICC_NSSNOC_SNOC_1	12
-> > +#define ICC_NSSNOC_PCNOC_1	13
-> > +#define ICC_NSSNOC_QOSGEN_REF	14
-> > +#define ICC_NSSNOC_TIMEOUT_REF	15
-> > +#define ICC_NSSNOC_XO_DCD	16
-> > +#define ICC_NSSNOC_ATB		17
-> > +#define ICC_MEM_NOC_NSSNOC	18
-> > +#define ICC_NSSNOC_MEMNOC	19
-> > +#define ICC_NSSNOC_MEM_NOC_1	20
-> > +
-> > +#define ICC_NSSNOC_PPE		0
-> > +#define ICC_NSSNOC_PPE_CFG	1
-> > +#define ICC_NSSNOC_NSS_CSR	2
-> > +#define ICC_NSSNOC_IMEM_QSB	3
-> > +#define ICC_NSSNOC_IMEM_AHB	4
-> > +
-> > +#define MASTER(x)	((ICC_ ## x) * 2)
-> > +#define SLAVE(x)	(MASTER(x) + 1)
->
-> You already received comment to make your bindings consistent with other
-> Qualcomm bindings. Now you repeat the same mistake.
->
-> No, that is neither consistent nor greppble.
+Hello,
 
-Sorry. Have restored the naming and posted v7.
-Kindly take a look.
+These patches add initial support for the LG H815.
+They are enough to boot the device on postmarketOS
+and have some basic functionality. Connecting to the
+device over USB networking via ssh, buttons, SD-Card,
+eMMC and regulators work. The dtb_checker shows some
+warnings, but they come from the msm8994.dtsi.
 
-Thanks
-Varada
+For CPU bring up lk2nd is required. The DMA controller
+module fails to load and from time to time the SMD clock
+driver fails.
+
+But I hope to prevent duplicate work and make it more accessible.
+
+Best regards
+Alex
+
+Alexander Reimelt (2):
+  dt-bindings: arm: qcom: Add LG G4 (h815)
+  arm64: dts: qcom: Add basic support for LG G4 (H815)
+
+ .../devicetree/bindings/arm/qcom.yaml         |   1 +
+ arch/arm64/boot/dts/qcom/Makefile             |   1 +
+ arch/arm64/boot/dts/qcom/msm8992-lg-h815.dts  | 422 ++++++++++++++++++
+ 3 files changed, 424 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/qcom/msm8992-lg-h815.dts
+
+-- 
+2.44.0
+
