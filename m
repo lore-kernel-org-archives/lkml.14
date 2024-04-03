@@ -1,288 +1,315 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6E92156886;
-	Wed,  3 Apr 2024 17:24:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BD60153804;
+	Wed,  3 Apr 2024 17:24:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712165061; cv=none; b=jkLF0mzhlGzN7i/taFzbkTIPfLo/sW2jbr50lgVU05lMEUNKq+2E1nhEYgn0WKCE3s3CRmb8oSksnQn8g6qHduxNqy31o497vxG8Cv+GnvuykcsBB795PlfdNyFvZUcp6v35dxRXvw+E5ZVyUWob7nV3SIzHQ6GNyltCNKuZhPc=
+	t=1712165090; cv=none; b=UTdbEC9XfD17VyOKC0pJv5f+JOs++h0+JBd9oNK8f9VL+/kXcxDIEWqWVSTlVpdDJnpLsnv34OSXwhcG2x3UHmiG3NtgF4ZKgNMTsJWFCu2E2QSsDTWN/vJzIXsv9AgC8D28Z2VTjreWx15fmqejWOEEpQ/dpejXwCbUvyXezas=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712165061; c=relaxed/simple;
-	bh=guiIxGTSK6Jw1CTYZifG+HXUJ2jyUvSv+qYpZ0k2AGE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SPbpsO3bYCgrOeOTRDdOsf6Ji4gTSb41Jsb41iEtQE1ZT4BITY5QUiXQ+m/NqsFjyTnqd8/rFSxc4UF0NaGX8VCefqM7LXmLv3sQWjm/RzacgTvYHsct22g064yvV0s/h4NwmDo/Rd4eBr5/KwqF7VcPbQYr5wSuFu3QDeOVtW0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=B0oxLq6H; arc=none smtp.client-ip=198.175.65.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1712165090; c=relaxed/simple;
+	bh=WSl2CWIioYtJLWZUU5CrGm4F+P0W6P1f7WrRIu4Xl+Q=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=LXyyXxPzV9QN0PHXvCx51ZvoRi156SnNkXRtHoxaxgw1Jl64aQr7sPR285yqF3DJr4FCTj7ZAq0mpwpm/jOF2BnBqwIAXAv3seRd4hkCuYT9ZqceB2oTtS06+/gCSTDh3/yeUzCRKBw0G9Bitcy0TVCeh9Ciag7Vq1taaB33f7E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=AH74z72t; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="B0oxLq6H"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1712165059; x=1743701059;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=guiIxGTSK6Jw1CTYZifG+HXUJ2jyUvSv+qYpZ0k2AGE=;
-  b=B0oxLq6Hq1+Gz9rjy/geud+VEa3zIdFXx5yNlAVnrcZMbb7o0Vju9/ke
-   Z24foWqrUb7509Fxf0Ykgm7zRCiOSlgwehQdrlX7h9VFQSM9pj3vcHrBR
-   Q4qC+oWE/14KMevV97ZLty8IlAlDligUloPS3mcImNepy/wXlQNKAkfPa
-   V1cMPmsK7DU/XJt026leOjTJ74tdfj0S97QUhsETFNLgSb6LlExKX+blh
-   PXGzhu0e07pdiePwVqTabfQsFSMEsfmczdSh3/v9qCl2qHwdDtOA1XdLV
-   oJmAMN3S8eeVpQ+MEIqOiJIzHkKRcC7mv5Shg9Rb1xTviK9148sy/90kY
-   Q==;
-X-CSE-ConnectionGUID: 5c8iTgRWS2mIk2BdtmCUCQ==
-X-CSE-MsgGUID: fnNzaGJFSFK3Loaf3pDyWQ==
-X-IronPort-AV: E=McAfee;i="6600,9927,11033"; a="7337333"
-X-IronPort-AV: E=Sophos;i="6.07,177,1708416000"; 
-   d="scan'208";a="7337333"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2024 10:24:18 -0700
-X-CSE-ConnectionGUID: qIjzXJ3GQoG7ygvdxCKZ/w==
-X-CSE-MsgGUID: vV7dlDYUTkyv3asHQNHDBw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,177,1708416000"; 
-   d="scan'208";a="23194376"
-Received: from ls.sc.intel.com (HELO localhost) ([172.25.112.31])
-  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2024 10:24:18 -0700
-Date: Wed, 3 Apr 2024 10:24:17 -0700
-From: Isaku Yamahata <isaku.yamahata@intel.com>
-To: "Huang, Kai" <kai.huang@intel.com>
-Cc: isaku.yamahata@intel.com, kvm@vger.kernel.org,
-	linux-kernel@vger.kernel.org, isaku.yamahata@gmail.com,
-	Paolo Bonzini <pbonzini@redhat.com>, erdemaktas@google.com,
-	Sean Christopherson <seanjc@google.com>,
-	Sagi Shahar <sagis@google.com>, chen.bo@intel.com,
-	hang.yuan@intel.com, tina.zhang@intel.com,
-	Sean Christopherson <sean.j.christopherson@intel.com>,
-	isaku.yamahata@linux.intel.com
-Subject: Re: [PATCH v19 038/130] KVM: TDX: create/destroy VM structure
-Message-ID: <20240403172417.GE2444378@ls.amr.corp.intel.com>
-References: <cover.1708933498.git.isaku.yamahata@intel.com>
- <7a508f88e8c8b5199da85b7a9959882ddf390796.1708933498.git.isaku.yamahata@intel.com>
- <9f5c6259-78e1-4470-a013-91392bf3cea5@intel.com>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="AH74z72t"
+Received: from pps.filterd (m0353727.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 433GxsWX025271;
+	Wed, 3 Apr 2024 17:24:43 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : subject :
+ from : to : cc : date : in-reply-to : references : content-type :
+ content-transfer-encoding : mime-version; s=pp1;
+ bh=EgsLd81nrFvAc2UOfRG3wkL5UTIq3fQxcwLsijO8Pps=;
+ b=AH74z72tniQJjt0ZNSUfJakvXumtwiskiqCLvyVUA8ITSypIycWSRiP12qT2SWhXfdrf
+ WYperHvKwuCWtrTU+APBbQTNMHTbAz6vhJaTVc5wFe4oXcWq1d7UIi6kHYLFoMpaTf9P
+ a0x5wYs5y9jBufASCyBrrQdT/AGRgs4nMsrHeJB9h6eBkNvJIRaseheKI7z2inaU1g1w
+ +MJPlwPyaHMaYkK83YkMX2knOzx0W0oN5UczzCx7PwLkvRthhDgMLOFhMF4Q++1Gjzka
+ 445Bdxhr4lIfd7k6BbzwAsGHb1TGZK36vaJSN1I5RAe/VJYt0sgpWa9kzjukoc5ckOZ8 fg== 
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3x9ass8579-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 03 Apr 2024 17:24:43 +0000
+Received: from m0353727.ppops.net (m0353727.ppops.net [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 433HKcnT003882;
+	Wed, 3 Apr 2024 17:20:39 GMT
+Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3x9ass8571-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 03 Apr 2024 17:20:38 +0000
+Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma11.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 433FjUFo029616;
+	Wed, 3 Apr 2024 17:20:37 GMT
+Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
+	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 3x6ys36baa-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 03 Apr 2024 17:20:37 +0000
+Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
+	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 433HKW2i50987312
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 3 Apr 2024 17:20:34 GMT
+Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 1CD132004B;
+	Wed,  3 Apr 2024 17:20:32 +0000 (GMT)
+Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 368E620040;
+	Wed,  3 Apr 2024 17:20:31 +0000 (GMT)
+Received: from [9.171.60.51] (unknown [9.171.60.51])
+	by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Wed,  3 Apr 2024 17:20:31 +0000 (GMT)
+Message-ID: <9a17268d4046f99b30f3620079b5749a9ddc5cd9.camel@linux.ibm.com>
+Subject: Re: [RFC PATCH net-next v5 05/11] net/smc: implement DMB-related
+ operations of loopback-ism
+From: Gerd Bayer <gbayer@linux.ibm.com>
+To: Wen Gu <guwen@linux.alibaba.com>, wintera@linux.ibm.com,
+        twinkler@linux.ibm.com, hca@linux.ibm.com, gor@linux.ibm.com,
+        agordeev@linux.ibm.com, davem@davemloft.net, edumazet@google.com,
+        kuba@kernel.org, pabeni@redhat.com, wenjia@linux.ibm.com,
+        jaka@linux.ibm.com
+Cc: borntraeger@linux.ibm.com, svens@linux.ibm.com, alibuda@linux.alibaba.com,
+        tonylu@linux.alibaba.com, linux-kernel@vger.kernel.org,
+        linux-s390@vger.kernel.org, netdev@vger.kernel.org
+Date: Wed, 03 Apr 2024 19:20:30 +0200
+In-Reply-To: <20240324135522.108564-6-guwen@linux.alibaba.com>
+References: <20240324135522.108564-1-guwen@linux.alibaba.com>
+	 <20240324135522.108564-6-guwen@linux.alibaba.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.50.4 (3.50.4-2.fc39app4) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <9f5c6259-78e1-4470-a013-91392bf3cea5@intel.com>
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: _k7M7X341RIZlu6Ws_JCrzymVAeJc5bb
+X-Proofpoint-ORIG-GUID: GGVGokz-tYaB_sbZebDOcMVEhJjtyg1y
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-04-03_18,2024-04-03_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 adultscore=0
+ malwarescore=0 suspectscore=0 clxscore=1015 mlxlogscore=999
+ impostorscore=0 priorityscore=1501 bulkscore=0 spamscore=0 phishscore=0
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2403210000 definitions=main-2404030117
 
-On Thu, Mar 28, 2024 at 12:33:35PM +1300,
-"Huang, Kai" <kai.huang@intel.com> wrote:
+On Sun, 2024-03-24 at 21:55 +0800, Wen Gu wrote:
 
-> > +	kvm_tdx->tdr_pa = tdr_pa;
-> > +
-> > +	for_each_online_cpu(i) {
-> > +		int pkg = topology_physical_package_id(i);
-> > +
-> > +		if (cpumask_test_and_set_cpu(pkg, packages))
-> > +			continue;
-> > +
-> > +		/*
-> > +		 * Program the memory controller in the package with an
-> > +		 * encryption key associated to a TDX private host key id
-> > +		 * assigned to this TDR.  Concurrent operations on same memory
-> > +		 * controller results in TDX_OPERAND_BUSY.  Avoid this race by
-> > +		 * mutex.
-> > +		 */
-> 
-> IIUC the race can only happen when you are creating multiple TDX guests
-> simulatenously?  Please clarify this in the comment.
-> 
-> And I even don't think you need all these TDX module details:
-> 
-> 		/*
-> 		 * Concurrent run of TDH.MNG.KEY.CONFIG on the same
-> 		 * package resluts in TDX_OPERAND_BUSY.  When creating
-> 		 * multiple TDX guests simultaneously this can run
-> 		 * concurrently.  Take the per-package lock to
-> 		 * serialize.
-> 		 */
+When I instrumented this to see, why I still see tons of my other
+temporary instrumentation messages from the "ism" driver, I found that
+in my setup loopback-ism is used rather infrequently.
 
-As pointed by Chao, those mutex will be dropped.
-https://lore.kernel.org/kvm/ZfpwIespKy8qxWWE@chao-email/
-Also we would simplify cpu masks to track which package is online/offline,
-which cpu to use for each package somehow.
+I suspect this is due to how the SMC proposals are constructed in
+net/smc/af_smc.c and net/smc/smc_pnet.c - and later evaluated in
+smc_check_ism_v2_match() - where there is a first-come-first-serve
+selection.
 
+I wonder if one should change that to favour loopback-ism over "real"
+ISM devices - and how this could be achieved elegantly.
 
-> > +		mutex_lock(&tdx_mng_key_config_lock[pkg]);
-> > +		ret = smp_call_on_cpu(i, tdx_do_tdh_mng_key_config,
-> > +				      &kvm_tdx->tdr_pa, true);
-> > +		mutex_unlock(&tdx_mng_key_config_lock[pkg]);
-> > +		if (ret)
-> > +			break;
-> > +	}
-> > +	cpus_read_unlock();
-> > +	free_cpumask_var(packages);
-> > +	if (ret) {
-> > +		i = 0;
-> > +		goto teardown;
-> > +	}
-> > +
-> > +	kvm_tdx->tdcs_pa = tdcs_pa;
-> > +	for (i = 0; i < tdx_info->nr_tdcs_pages; i++) {
-> > +		err = tdh_mng_addcx(kvm_tdx->tdr_pa, tdcs_pa[i]);
-> > +		if (err == TDX_RND_NO_ENTROPY) {
-> > +			/* Here it's hard to allow userspace to retry. */
-> > +			ret = -EBUSY;
-> > +			goto teardown;
-> > +		}
-> > +		if (WARN_ON_ONCE(err)) {
-> > +			pr_tdx_error(TDH_MNG_ADDCX, err, NULL);
-> > +			ret = -EIO;
-> > +			goto teardown;
-> > +		}
-> > +	}
-> > +
-> > +	/*
-> > +	 * Note, TDH_MNG_INIT cannot be invoked here.  TDH_MNG_INIT requires a dedicated
-> > +	 * ioctl() to define the configure CPUID values for the TD.
-> > +	 */
-> 
-> Then, how about renaming this function to __tdx_td_create()?
+Just some food for thought... Probably little you can do on x86.
 
-So do we want to rename also ioctl name for consistency?
-i.e. KVM_TDX_INIT_VM => KVM_TDX_CREATE_VM.
+Thanks,
+Gerd
 
-I don't have strong opinion those names. Maybe
-KVM_TDX_{INIT, CREATE, or CONFIG}_VM?
-And we can rename the function name to match it.
+> +static int smc_lo_register_dmb(struct smcd_dev *smcd, struct
+> smcd_dmb *dmb,
+> +			=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 void *client_priv)
+> +{
+> +	struct smc_lo_dmb_node *dmb_node, *tmp_node;
+> +	struct smc_lo_dev *ldev =3D smcd->priv;
+> +	int sba_idx, rc;
+> +
+> +	/* check space for new dmb */
+> +	for_each_clear_bit(sba_idx, ldev->sba_idx_mask,
+> SMC_LO_MAX_DMBS) {
+> +		if (!test_and_set_bit(sba_idx, ldev->sba_idx_mask))
+> +			break;
+> +	}
+> +	if (sba_idx =3D=3D SMC_LO_MAX_DMBS)
+> +		return -ENOSPC;
+> +
+> +	dmb_node =3D kzalloc(sizeof(*dmb_node), GFP_KERNEL);
+> +	if (!dmb_node) {
+> +		rc =3D -ENOMEM;
+> +		goto err_bit;
+> +	}
+> +
+> +	dmb_node->sba_idx =3D sba_idx;
+> +	dmb_node->len =3D dmb->dmb_len;
+> +	dmb_node->cpu_addr =3D kzalloc(dmb_node->len, GFP_KERNEL |
+> +				=C2=A0=C2=A0=C2=A0=C2=A0 __GFP_NOWARN | __GFP_NORETRY |
+> +				=C2=A0=C2=A0=C2=A0=C2=A0 __GFP_NOMEMALLOC);
+> +	if (!dmb_node->cpu_addr) {
+> +		rc =3D -ENOMEM;
+> +		goto err_node;
+> +	}
+> +	dmb_node->dma_addr =3D SMC_DMA_ADDR_INVALID;
+> +
+> +again:
+> +	/* add new dmb into hash table */
+> +	get_random_bytes(&dmb_node->token, sizeof(dmb_node->token));
+> +	write_lock_bh(&ldev->dmb_ht_lock);
+> +	hash_for_each_possible(ldev->dmb_ht, tmp_node, list,
+> dmb_node->token) {
+> +		if (tmp_node->token =3D=3D dmb_node->token) {
+> +			write_unlock_bh(&ldev->dmb_ht_lock);
+> +			goto again;
+> +		}
+> +	}
+> +	hash_add(ldev->dmb_ht, &dmb_node->list, dmb_node->token);
+> +	write_unlock_bh(&ldev->dmb_ht_lock);
+> +
+> +	dmb->sba_idx =3D dmb_node->sba_idx;
+> +	dmb->dmb_tok =3D dmb_node->token;
+> +	dmb->cpu_addr =3D dmb_node->cpu_addr;
+> +	dmb->dma_addr =3D dmb_node->dma_addr;
+> +	dmb->dmb_len =3D dmb_node->len;
+> +
+> +	return 0;
+> +
+> +err_node:
+> +	kfree(dmb_node);
+> +err_bit:
+> +	clear_bit(sba_idx, ldev->sba_idx_mask);
+> +	return rc;
+> +}
+> +
+> +static int smc_lo_unregister_dmb(struct smcd_dev *smcd, struct
+> smcd_dmb *dmb)
+> +{
+> +	struct smc_lo_dmb_node *dmb_node =3D NULL, *tmp_node;
+> +	struct smc_lo_dev *ldev =3D smcd->priv;
+> +
+> +	/* remove dmb from hash table */
+> +	write_lock_bh(&ldev->dmb_ht_lock);
+> +	hash_for_each_possible(ldev->dmb_ht, tmp_node, list, dmb-
+> >dmb_tok) {
+> +		if (tmp_node->token =3D=3D dmb->dmb_tok) {
+> +			dmb_node =3D tmp_node;
+> +			break;
+> +		}
+> +	}
+> +	if (!dmb_node) {
+> +		write_unlock_bh(&ldev->dmb_ht_lock);
+> +		return -EINVAL;
+> +	}
+> +	hash_del(&dmb_node->list);
+> +	write_unlock_bh(&ldev->dmb_ht_lock);
+> +
+> +	clear_bit(dmb_node->sba_idx, ldev->sba_idx_mask);
+> +	kfree(dmb_node->cpu_addr);
+> +	kfree(dmb_node);
+> +
+> +	return 0;
+> +}
+> +
+> =C2=A0static int smc_lo_add_vlan_id(struct smcd_dev *smcd, u64 vlan_id)
+> =C2=A0{
+> =C2=A0	return -EOPNOTSUPP;
+> @@ -75,6 +164,38 @@ static int smc_lo_signal_event(struct smcd_dev
+> *dev, struct smcd_gid *rgid,
+> =C2=A0	return 0;
+> =C2=A0}
+> =C2=A0
+> +static int smc_lo_move_data(struct smcd_dev *smcd, u64 dmb_tok,
+> +			=C2=A0=C2=A0=C2=A0 unsigned int idx, bool sf, unsigned int
+> offset,
+> +			=C2=A0=C2=A0=C2=A0 void *data, unsigned int size)
+> +{
+> +	struct smc_lo_dmb_node *rmb_node =3D NULL, *tmp_node;
+> +	struct smc_lo_dev *ldev =3D smcd->priv;
+> +	struct smc_connection *conn;
+> +
+> +	read_lock_bh(&ldev->dmb_ht_lock);
+> +	hash_for_each_possible(ldev->dmb_ht, tmp_node, list,
+> dmb_tok) {
+> +		if (tmp_node->token =3D=3D dmb_tok) {
+> +			rmb_node =3D tmp_node;
+> +			break;
+> +		}
+> +	}
+> +	if (!rmb_node) {
+> +		read_unlock_bh(&ldev->dmb_ht_lock);
+> +		return -EINVAL;
+> +	}
+> +	memcpy((char *)rmb_node->cpu_addr + offset, data, size);
+> +	read_unlock_bh(&ldev->dmb_ht_lock);
+> +
+> +	if (sf) {
+> +		conn =3D smcd->conn[rmb_node->sba_idx];
+> +		if (conn && !conn->killed)
+> +			tasklet_schedule(&conn->rx_tsklet);
+> +		else
+> +			return -EPIPE;
+> +	}
+> +	return 0;
+> +}
+> +
+> =C2=A0static int smc_lo_supports_v2(void)
+> =C2=A0{
+> =C2=A0	return SMC_LO_V2_CAPABLE;
+> @@ -101,14 +222,14 @@ static struct device *smc_lo_get_dev(struct
+> smcd_dev *smcd)
+> =C2=A0
+> =C2=A0static const struct smcd_ops lo_ops =3D {
+> =C2=A0	.query_remote_gid =3D smc_lo_query_rgid,
+> -	.register_dmb		=3D NULL,
+> -	.unregister_dmb		=3D NULL,
+> +	.register_dmb =3D smc_lo_register_dmb,
+> +	.unregister_dmb =3D smc_lo_unregister_dmb,
+> =C2=A0	.add_vlan_id =3D smc_lo_add_vlan_id,
+> =C2=A0	.del_vlan_id =3D smc_lo_del_vlan_id,
+> =C2=A0	.set_vlan_required =3D smc_lo_set_vlan_required,
+> =C2=A0	.reset_vlan_required =3D smc_lo_reset_vlan_required,
+> =C2=A0	.signal_event =3D smc_lo_signal_event,
+> -	.move_data		=3D NULL,
+> +	.move_data =3D smc_lo_move_data,
+> =C2=A0	.supports_v2 =3D smc_lo_supports_v2,
+> =C2=A0	.get_local_gid =3D smc_lo_get_local_gid,
+> =C2=A0	.get_chid =3D smc_lo_get_chid,
+> @@ -173,6 +294,8 @@ static void smcd_lo_unregister_dev(struct
+> smc_lo_dev *ldev)
+> =C2=A0static int smc_lo_dev_init(struct smc_lo_dev *ldev)
+> =C2=A0{
+> =C2=A0	smc_lo_generate_ids(ldev);
+> +	rwlock_init(&ldev->dmb_ht_lock);
+> +	hash_init(ldev->dmb_ht);
+> =C2=A0	return smcd_lo_register_dev(ldev);
+> =C2=A0}
+> =C2=A0
+> diff --git a/net/smc/smc_loopback.h b/net/smc/smc_loopback.h
+> index 11868e5ac732..6c4a390430f3 100644
+> --- a/net/smc/smc_loopback.h
+> +++ b/net/smc/smc_loopback.h
+> @@ -20,13 +20,26 @@
+> =C2=A0
+> =C2=A0#if IS_ENABLED(CONFIG_SMC_LO)
+> =C2=A0#define SMC_LO_MAX_DMBS		5000
+> +#define SMC_LO_DMBS_HASH_BITS	12
+> =C2=A0#define SMC_LO_RESERVED_CHID	0xFFFF
+> =C2=A0
+> +struct smc_lo_dmb_node {
+> +	struct hlist_node list;
+> +	u64 token;
+> +	u32 len;
+> +	u32 sba_idx;
+> +	void *cpu_addr;
+> +	dma_addr_t dma_addr;
+> +};
+> +
+> =C2=A0struct smc_lo_dev {
+> =C2=A0	struct smcd_dev *smcd;
+> =C2=A0	struct device dev;
+> =C2=A0	u16 chid;
+> =C2=A0	struct smcd_gid local_gid;
+> +	rwlock_t dmb_ht_lock;
+> +	DECLARE_BITMAP(sba_idx_mask, SMC_LO_MAX_DMBS);
+> +	DECLARE_HASHTABLE(dmb_ht, SMC_LO_DMBS_HASH_BITS);
+> =C2=A0};
+> =C2=A0#endif
+> =C2=A0
 
-> > +	return 0;
-> > +
-> > +	/*
-> > +	 * The sequence for freeing resources from a partially initialized TD
-> > +	 * varies based on where in the initialization flow failure occurred.
-> > +	 * Simply use the full teardown and destroy, which naturally play nice
-> > +	 * with partial initialization.
-> > +	 */
-> > +teardown:
-> > +	for (; i < tdx_info->nr_tdcs_pages; i++) {
-> > +		if (tdcs_pa[i]) {
-> > +			free_page((unsigned long)__va(tdcs_pa[i]));
-> > +			tdcs_pa[i] = 0;
-> > +		}
-> > +	}
-> > +	if (!kvm_tdx->tdcs_pa)
-> > +		kfree(tdcs_pa);
-> 
-> The code to "free TDCS pages in a loop and free the array" is done below
-> with duplicated code.  I am wondering whether we have way to eliminate one.
-> 
-> But I have lost track here, so perhaps we can review again after we split
-> the patch to smaller pieces.
-
-Surely we can simplify it.  Originally we had a spin lock and I had to separate
-blocking memory allocation from its usage with this error clean up path.
-Now it's mutex, we mix page allocation with its usage.
-
-
-> > +	tdx_mmu_release_hkid(kvm);
-> > +	tdx_vm_free(kvm);
-> > +	return ret;
-> > +
-> > +free_packages:
-> > +	cpus_read_unlock();
-> > +	free_cpumask_var(packages);
-> > +free_tdcs:
-> > +	for (i = 0; i < tdx_info->nr_tdcs_pages; i++) {
-> > +		if (tdcs_pa[i])
-> > +			free_page((unsigned long)__va(tdcs_pa[i]));
-> > +	}
-> > +	kfree(tdcs_pa);
-> > +	kvm_tdx->tdcs_pa = NULL;
-> > +
-> > +free_tdr:
-> > +	if (tdr_pa)
-> > +		free_page((unsigned long)__va(tdr_pa));
-> > +	kvm_tdx->tdr_pa = 0;
-> > +free_hkid:
-> > +	if (is_hkid_assigned(kvm_tdx))
-> > +		tdx_hkid_free(kvm_tdx);
-> > +	return ret;
-> > +}
-> > +
-> >   int tdx_vm_ioctl(struct kvm *kvm, void __user *argp)
-> >   {
-> >   	struct kvm_tdx_cmd tdx_cmd;
-> > @@ -215,12 +664,13 @@ static int tdx_md_read(struct tdx_md_map *maps, int nr_maps)
-> >   static int __init tdx_module_setup(void)
-> >   {
-> > -	u16 num_cpuid_config;
-> > +	u16 num_cpuid_config, tdcs_base_size;
-> >   	int ret;
-> >   	u32 i;
-> >   	struct tdx_md_map mds[] = {
-> >   		TDX_MD_MAP(NUM_CPUID_CONFIG, &num_cpuid_config),
-> > +		TDX_MD_MAP(TDCS_BASE_SIZE, &tdcs_base_size),
-> >   	};
-> >   	struct tdx_metadata_field_mapping fields[] = {
-> > @@ -273,6 +723,8 @@ static int __init tdx_module_setup(void)
-> >   		c->edx = ecx_edx >> 32;
-> >   	}
-> > +	tdx_info->nr_tdcs_pages = tdcs_base_size / PAGE_SIZE;
-> > +
-> 
-> Round up the 'tdcs_base_size' to make sure you have enough room, or put a
-> WARN() here if not page aligned?
-
-Ok, will add round up. Same for tdvps_base_size.
-I can't find about those sizes and page size in the TDX spec.  Although
-TDH.MNG.ADDCX() and TDH.VP.ADDCX() imply that those sizes are multiple of PAGE
-SIZE, the spec doesn't guarantee it.  I think silent round up is better than
-WARN() because we can do nothing about those values the TDX module provides.
-
-
-
-> >   	return 0;
-> >   error_out:
-> > @@ -319,13 +771,27 @@ int __init tdx_hardware_setup(struct kvm_x86_ops *x86_ops)
-> >   	struct tdx_enabled enable = {
-> >   		.err = ATOMIC_INIT(0),
-> >   	};
-> > +	int max_pkgs;
-> >   	int r = 0;
-> > +	int i;
-> 
-> Nit: you can put the 3 into one line.
-> 
-> > +	if (!cpu_feature_enabled(X86_FEATURE_MOVDIR64B)) {
-> > +		pr_warn("MOVDIR64B is reqiured for TDX\n");
-> 
-> It's better to make it more clear:
-> 
-> "Disable TDX: MOVDIR64B is not supported or disabled by the kernel."
-> 
-> Or, to match below:
-> 
-> "Cannot enable TDX w/o MOVDIR64B".
-
-Ok.
-
-
-> > +		return -EOPNOTSUPP;
-> > +	}
-> >   	if (!enable_ept) {
-> >   		pr_warn("Cannot enable TDX with EPT disabled\n");
-> >   		return -EINVAL;
-> >   	}
-> > +	max_pkgs = topology_max_packages();
-> > +	tdx_mng_key_config_lock = kcalloc(max_pkgs, sizeof(*tdx_mng_key_config_lock),
-> > +				   GFP_KERNEL);
-> > +	if (!tdx_mng_key_config_lock)
-> > +		return -ENOMEM;
-> > +	for (i = 0; i < max_pkgs; i++)
-> > +		mutex_init(&tdx_mng_key_config_lock[i]);
-> > +
-> 
-> Using a per-socket lock looks a little bit overkill to me.  I don't know
-> whether we need to do in the initial version.  Will leave to others.
-> 
-> Please at least add a comment to explain this is for better performance when
-> creating multiple TDX guests IIUC?
-
-Will delete the mutex and simply the related logic.
--- 
-Isaku Yamahata <isaku.yamahata@intel.com>
