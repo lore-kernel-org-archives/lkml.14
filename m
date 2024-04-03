@@ -1,104 +1,82 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E80D70CC5;
-	Wed,  3 Apr 2024 09:11:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E93DA745C3;
+	Wed,  3 Apr 2024 09:11:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712135487; cv=none; b=rSt8eYXxioxQp+gCtktgoHN66wlgLSc/NiWwV50PTYRTV+EaaT+HXq20wAktqJnXwECyKPsrLO8Tz+q62ly1teJmj36kVbpkuc56fN+uk33cxLmrazaH1CqvK0pI+LL1uKpC9GgBSs4XFSVXvCGJ98uEepwdmz02+v8z402BhzE=
+	t=1712135489; cv=none; b=ElVEqhtsZNqHLGNZcJVnsGVMnOUpKRphW8meYrusN98X+A52MA/y1pJyiqH+Zbe3uSt8L4/HsRSJUxhPCKWN6JxKlm9fjNuupCTz69g41Cff5CprhJDfMt+uI0EdzO0PMBMCZwugbrTqlHBrhIqg7vX70xQLUVlUrKOy4x1A4aM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712135487; c=relaxed/simple;
-	bh=IA1OJw345hlCGqk0ccmAtp6JLPgEQh8BAaZtKS7cgWU=;
+	s=arc-20240116; t=1712135489; c=relaxed/simple;
+	bh=a4SU9LeyHasQcuTuvnaPAm2576TUr887qz82fyaiNNw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AiJ0o3IuhbC9Xp/jl90+mnIKwNt86DoKoTLoLAOPO+nSTirxegYaNqVCQsL5wm+88VyS6p4Ek2qJpQSD3KnyQZYC/fcZyt5gVjvZN/cjA+1qwoA5vPdxPhOr8PX2Mm8c4Qxl9MuvZsj6Z9uN/VCNl86ct+ZmxK8KPWbXoMTXnpk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NYfmfX8S; arc=none smtp.client-ip=198.175.65.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=isnBhRbQSNupHqMbm5BeIGXrNa5ajrv2nbleEOV1njF8Yv0U2LdcKZr8BRMnMHCD8V9YIQ2j/q5cc3cqrFKd53bkdMwTqeLnoghswfj7k0jSB+katC4oDCMTEiAXlpIMYSSav8RYHW47xWmOZU5PlYFfINnMd887zAK3bEEdywQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=neCZ9zKn; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NYfmfX8S"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1712135485; x=1743671485;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=IA1OJw345hlCGqk0ccmAtp6JLPgEQh8BAaZtKS7cgWU=;
-  b=NYfmfX8SsRlLodVW/UT/NSE2oHtOkSjtM73lxJ7+jtXVkZ3akWpyWVXJ
-   i1rCLgA8+KeHMFFy+jE4BoryMqZYmLf3jo/cGHK7qJ5AKeWJ4lZNnAtM4
-   GeK43295JUZCd0Y8i/WIMRvgOLF4Rec3yTdMASAaD/cFiNFGl0T9wtzwP
-   POHcrR9QpgTZp/QaaHe9RHQerMyzMcUVfCczvdEqxQ+1nXrkeQpl4Wjh3
-   M860Z+nswh1RBTYtTtdip27z9rfV8xNhLMGjySjNNNmxM0lvmpD0RXthb
-   B40mgJGqWVKYIKbYzIIP9Gbu8zaAsreQ+o1IQ+ilr1LvAQ/zCNpQ8y0sj
-   A==;
-X-CSE-ConnectionGUID: QIEIIAZFRIWqK2kl2F3UOA==
-X-CSE-MsgGUID: RT5m7VNLToSqBZoliyJY7g==
-X-IronPort-AV: E=McAfee;i="6600,9927,11032"; a="7480963"
-X-IronPort-AV: E=Sophos;i="6.07,177,1708416000"; 
-   d="scan'208";a="7480963"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2024 02:11:25 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,11032"; a="915175196"
-X-IronPort-AV: E=Sophos;i="6.07,177,1708416000"; 
-   d="scan'208";a="915175196"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.72.54])
-  by fmsmga002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2024 02:11:21 -0700
-Received: from andy by smile with local (Exim 4.97)
-	(envelope-from <andriy.shevchenko@intel.com>)
-	id 1rrwe9-000000014Qk-0z2Q;
-	Wed, 03 Apr 2024 12:11:05 +0300
-Date: Wed, 3 Apr 2024 12:10:50 +0300
-From: Andy Shevchenko <andriy.shevchenko@intel.com>
-To: Arnd Bergmann <arnd@kernel.org>
-Cc: linux-kernel@vger.kernel.org, Damien Le Moal <dlemoal@kernel.org>,
-	Niklas Cassel <cassel@kernel.org>,
-	Saeed Bishara <saeed@ubuntu-saeed.il.marvell.com>,
-	Arnd Bergmann <arnd@arndb.de>, Ma Ke <make_ruc2021@163.com>,
-	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>,
-	Sergey Shtylyov <s.shtylyov@omp.ru>,
-	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-	Jeff Garzik <jeff@garzik.org>, linux-ide@vger.kernel.org
-Subject: Re: [PATCH 30/34] sata: mv: drop unnecessary #ifdef checks
-Message-ID: <Zg0dGmVC9AFYY_RH@smile.fi.intel.com>
-References: <20240403080702.3509288-1-arnd@kernel.org>
- <20240403080702.3509288-31-arnd@kernel.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="neCZ9zKn"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 51E06C433F1;
+	Wed,  3 Apr 2024 09:11:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1712135488;
+	bh=a4SU9LeyHasQcuTuvnaPAm2576TUr887qz82fyaiNNw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=neCZ9zKndHI2vjnoV80pGunkUnrmdHulqFhGcSD1hX1jINc24Vr+EzvQxtlEhS8n1
+	 8QU8VuWEwBlHzPWbfLIf1tpIOPLk2s8qgoOebsjWa2Xn7zYCcNB83r2QWk10tGRGUa
+	 yYOqogWUM7jHLmSg4V/lbbVrSid6qCz/6DlefXcOhUh/GFKX6ze6WoDm3xJPkwJcDA
+	 cuzJisg6VdNTd0ujPxjAKAfbTln5l48n1qhTZ3TJdx/UKTa2w4gQl7buVXEqMYoaJ4
+	 0C3S4Vt9VIYBk2Mi2+eunbA73z1AQlcTFM55qCBkxjfMfLdWY/iWS0ONyjqj+7Mj3o
+	 x5B4lBGqW+eBw==
+Date: Wed, 3 Apr 2024 11:11:15 +0200
+From: Christian Brauner <brauner@kernel.org>
+To: Roberto Sassu <roberto.sassu@huaweicloud.com>
+Cc: viro@zeniv.linux.org.uk, jack@suse.cz, paul@paul-moore.com, 
+	jmorris@namei.org, serge@hallyn.com, linux-fsdevel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-security-module@vger.kernel.org, 
+	linux-cifs@vger.kernel.org, pc@manguebit.com, christian@brauner.io, 
+	torvalds@linux-foundation.org, Roberto Sassu <roberto.sassu@huawei.com>, 
+	Steve French <smfrench@gmail.com>
+Subject: Re: [PATCH v3] security: Place security_path_post_mknod() where the
+ original IMA call was
+Message-ID: <20240403-darmentleerung-wehen-b3a655cc50b8@brauner>
+References: <20240403075729.2888084-1-roberto.sassu@huaweicloud.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20240403080702.3509288-31-arnd@kernel.org>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <20240403075729.2888084-1-roberto.sassu@huaweicloud.com>
 
-On Wed, Apr 03, 2024 at 10:06:48AM +0200, Arnd Bergmann wrote:
-> From: Arnd Bergmann <arnd@arndb.de>
+On Wed, Apr 03, 2024 at 09:57:29AM +0200, Roberto Sassu wrote:
+> From: Roberto Sassu <roberto.sassu@huawei.com>
 > 
-> Building with W=1 shows a warning for an unused variable when CONFIG_PCI
-> is diabled:
+> Commit 08abce60d63f ("security: Introduce path_post_mknod hook")
+> introduced security_path_post_mknod(), to replace the IMA-specific call to
+> ima_post_path_mknod().
 > 
-> drivers/ata/sata_mv.c:790:35: error: unused variable 'mv_pci_tbl' [-Werror,-Wunused-const-variable]
-> static const struct pci_device_id mv_pci_tbl[] = {
+> For symmetry with security_path_mknod(), security_path_post_mknod() was
+> called after a successful mknod operation, for any file type, rather than
+> only for regular files at the time there was the IMA call.
 > 
-> Move the table into the same block that containsn the pci_driver
-> definition.
+> However, as reported by VFS maintainers, successful mknod operation does
+> not mean that the dentry always has an inode attached to it (for example,
+> not for FIFOs on a SAMBA mount).
+> 
+> If that condition happens, the kernel crashes when
+> security_path_post_mknod() attempts to verify if the inode associated to
+> the dentry is private.
+> 
+> Move security_path_post_mknod() where the ima_post_path_mknod() call was,
+> which is obviously correct from IMA/EVM perspective. IMA/EVM are the only
+> in-kernel users, and only need to inspect regular files.
+> 
+> Reported-by: Steve French <smfrench@gmail.com>
+> Closes: https://lore.kernel.org/linux-kernel/CAH2r5msAVzxCUHHG8VKrMPUKQHmBpE6K9_vjhgDa1uAvwx4ppw@mail.gmail.com/
+> Suggested-by: Al Viro <viro@zeniv.linux.org.uk>
+> Fixes: 08abce60d63f ("security: Introduce path_post_mknod hook")
+> Signed-off-by: Roberto Sassu <roberto.sassu@huawei.com>
+> ---
 
-...
-
-> +	{ }			/* terminate list */
-> +};
-
-> +
-
-Too many blank lines now.
-
->  
->  static struct pci_driver mv_pci_driver = {
->  	.name			= DRV_NAME,
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+Reviewed-by: Christian Brauner <brauner@kernel.org>
