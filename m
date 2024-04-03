@@ -1,142 +1,112 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFD441411D7;
-	Wed,  3 Apr 2024 10:45:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8F43137C47;
+	Wed,  3 Apr 2024 10:46:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712141131; cv=none; b=ldQZ+ZvyLr9vPzPg+OK3LzCUVw41ZTa6fZd7OF3wFqF/I/z4fPtIufXVwJsEEY2pxR1zkY1iuxraVgVzl/+iOHJ8RgMwg9ECqa8ArZlx3XES0Utjc3NtzH7IYkF1J2PNymGEMDYlxwRTUASi0G8oRRqXfHT9jxj9rhqG06k4jIs=
+	t=1712141166; cv=none; b=jY2/rt7GR58JOqIm7VG0e7kajBB5hVnI24f6X7U/RRgwX/6EVNg1c6lEUz0K0uz4GIm62ofDb50wsAjuDkf6wWdJKmLnUIdPAuh/PfjUZA52Ivkp+PF86LqW3FGU/+rLf72JD8t87vZKBiJm0fFgWO82KKHER905s8Dq85HQ7dE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712141131; c=relaxed/simple;
-	bh=NRiJZSAEaHpmWILpkwDOH+Nn0vCmuqhx+Aw5DPhRLnE=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZPMiTw8uhjKLU8ilGrWyIyKceDOJeq1h6tj008vXCgKbOKmPRMrfjCCg/NVUx9tDFhujl0fV5lypuKnAY0uSdsnYULL3B9LptEwEx+32BW6UftCAl90B/FgbvQOnA2ZQMQlIY54pUiCY17WG/vRNBRteiYxYt8WOuXgXkkFo0YE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=E9sQRovm; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1712141166; c=relaxed/simple;
+	bh=J14sLh9bFuqxnc7SY8mcH1I46NF5bOyBXqn1GfbFCjU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZO1iSE1N+G1lgHWDAfDnNoy2s5RMej+eMuGuI05pg19nYEBAVmQNnM+BQolLYVXk3DR98FVf72WeWhxsYSXdk9O7CYadH52G4qzzzyQFAVO7brdRMmpBspWjFOtl/sbbbtn3yJr0YW/mIYGFcjt0TiuuiMQ9BIyUQFrnsIva5R8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lc4xMIj/; arc=none smtp.client-ip=192.198.163.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="E9sQRovm"
-Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 4339sZsG015552;
-	Wed, 3 Apr 2024 10:45:26 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	date:from:to:cc:subject:message-id:references:mime-version
-	:content-type:in-reply-to; s=qcppdkim1; bh=YPFUUtNa1Y1789Hp4DW3f
-	Kfu5cDS7M38VbG/wxejbIs=; b=E9sQRovmrhe+3lR5bvlIjLwu/ACZtLv6MarKi
-	xB8JlXA5oDQj5CL2ZN5Qn15c9VWLJMzoadbwyN2xeE9eihPvh6aR50IzD1Ncsfmy
-	Lq3ilDrW/Qj1qILODC8XvNzmepVaktqvCwTg2XvHVdyHcokBd23W7t5Wpds/VPnn
-	y+xzBK3P0qekgzuLbtXHF1uciA90/EZBATwGtbC0VZzGABR11L0kyDh3FFfLDfsZ
-	8qfFHr5Ll2MEVMNQFngri+l4qC6jCJLxaIiYuQrYGTO/DgvpVmQqzKgZYhdl0a+x
-	Tnvv1iJrOKy+pNBT+PVNdCbiBwKiXf/IazNJn6AaoI+FvtiVw==
-Received: from nasanppmta03.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3x93pw89bx-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 03 Apr 2024 10:45:26 +0000 (GMT)
-Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
-	by NASANPPMTA03.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 433AjP7e019641
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 3 Apr 2024 10:45:25 GMT
-Received: from hu-varada-blr.qualcomm.com (10.80.80.8) by
- nasanex01b.na.qualcomm.com (10.46.141.250) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.4; Wed, 3 Apr 2024 03:45:21 -0700
-Date: Wed, 3 Apr 2024 16:15:17 +0530
-From: Varadarajan Narayanan <quic_varada@quicinc.com>
-To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-CC: <andersson@kernel.org>, <konrad.dybcio@linaro.org>,
-        <mturquette@baylibre.com>, <sboyd@kernel.org>, <robh@kernel.org>,
-        <krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>,
-        <djakov@kernel.org>, <quic_anusha@quicinc.com>,
-        <linux-arm-msm@vger.kernel.org>, <linux-clk@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-pm@vger.kernel.org>
-Subject: Re: [PATCH v6 3/6] interconnect: icc-clk: Add devm_icc_clk_register
-Message-ID: <Zg0zPZ1oRMD+CN6X@hu-varada-blr.qualcomm.com>
-References: <20240402103406.3638821-1-quic_varada@quicinc.com>
- <20240402103406.3638821-4-quic_varada@quicinc.com>
- <CAA8EJpphk_kqzBE7cKb73ipdpTi29t9ZSOOdSfq7pAGSs5NKeg@mail.gmail.com>
- <CAA8EJpo=TMhu+Te+JE0cQzmjLOTDPi-Vv-h5Bch0Wfr_7iVi2w@mail.gmail.com>
- <ZgvlrbvvPNA6HRiL@hu-varada-blr.qualcomm.com>
- <CAA8EJpp2dgy0DcLoUuo6gz-8ee0RRwJ_mvCLGDbdvF-gVhREFg@mail.gmail.com>
- <ZgvqkhF2mTG82Rx2@hu-varada-blr.qualcomm.com>
- <CAA8EJprN3TuMF-v5PeFW_JUKk+a+MxB7poccZbi9biZNniRnTQ@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lc4xMIj/"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1712141163; x=1743677163;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=J14sLh9bFuqxnc7SY8mcH1I46NF5bOyBXqn1GfbFCjU=;
+  b=lc4xMIj/ErGGynXfSfPP0BdJdiQFl/17qLNnIvfU8AbxYiTCME1nlShc
+   aooSh+7uRyuiuZ1yiYT1JOuRwvEOM5LTBinKJqA58fw97b4353rlFndpQ
+   mGYDxnUNzvOtorVrqBzt/0TPOwm/KunAkQehJSXDcas/2MaC069jfZosn
+   ixGgMi9R00o9U0n13+Mv1p4jhNaCiTfhcQAPY0pbdb5WhfRX4nbMEXVtd
+   LS88l/t26c0q8jsn1XDPatEHKPBoIW+trAwvmjp8HkoBoxtd1x/LaeiS6
+   FTfTKQU1WsetOZ7CYpyt2gv2uU+YJm9Xfmj2MrwofY6ZukD4poJ4unzcv
+   A==;
+X-CSE-ConnectionGUID: tpbvA0bOSlaq5P6GCgT0DA==
+X-CSE-MsgGUID: L786OjHCREqIcLOnuY+oaQ==
+X-IronPort-AV: E=McAfee;i="6600,9927,11032"; a="10332529"
+X-IronPort-AV: E=Sophos;i="6.07,177,1708416000"; 
+   d="scan'208";a="10332529"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2024 03:42:31 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,11032"; a="937084846"
+X-IronPort-AV: E=Sophos;i="6.07,177,1708416000"; 
+   d="scan'208";a="937084846"
+Received: from kuha.fi.intel.com ([10.237.72.185])
+  by fmsmga001.fm.intel.com with SMTP; 03 Apr 2024 03:42:26 -0700
+Received: by kuha.fi.intel.com (sSMTP sendmail emulation); Wed, 03 Apr 2024 13:42:26 +0300
+Date: Wed, 3 Apr 2024 13:42:26 +0300
+From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+To: "Christian A. Ehrhardt" <lk@c--e.de>
+Cc: linux-kernel@vger.kernel.org,
+	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, stable@kernel.org,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Prashant Malani <pmalani@chromium.org>,
+	Jameson Thies <jthies@google.com>,
+	Abhishek Pandit-Subedi <abhishekpandit@chromium.org>,
+	Neil Armstrong <neil.armstrong@linaro.org>,
+	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>,
+	Samuel =?utf-8?B?xIxhdm9q?= <samuel@cavoj.net>,
+	linux-usb@vger.kernel.org
+Subject: Re: [PATCH] usb: typec: ucsi: Fix connector check on init
+Message-ID: <Zg0yksaQaGy+ZOaI@kuha.fi.intel.com>
+References: <20240401210515.1902048-1-lk@c--e.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAA8EJprN3TuMF-v5PeFW_JUKk+a+MxB7poccZbi9biZNniRnTQ@mail.gmail.com>
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nasanex01b.na.qualcomm.com (10.46.141.250)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: 1KN1hY6_zceb0XJF0OjAwe7Fuac5WBp0
-X-Proofpoint-ORIG-GUID: 1KN1hY6_zceb0XJF0OjAwe7Fuac5WBp0
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-04-03_10,2024-04-01_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 suspectscore=0
- phishscore=0 adultscore=0 mlxscore=0 lowpriorityscore=0 priorityscore=1501
- spamscore=0 malwarescore=0 bulkscore=0 impostorscore=0 mlxlogscore=946
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2403210001
- definitions=main-2404030074
+In-Reply-To: <20240401210515.1902048-1-lk@c--e.de>
 
-On Tue, Apr 02, 2024 at 03:12:04PM +0300, Dmitry Baryshkov wrote:
-> On Tue, 2 Apr 2024 at 14:23, Varadarajan Narayanan
-> <quic_varada@quicinc.com> wrote:
-> >
-> > On Tue, Apr 02, 2024 at 02:16:56PM +0300, Dmitry Baryshkov wrote:
-> > > On Tue, 2 Apr 2024 at 14:02, Varadarajan Narayanan
-> > > <quic_varada@quicinc.com> wrote:
-> > > >
-> > > > On Tue, Apr 02, 2024 at 01:48:08PM +0300, Dmitry Baryshkov wrote:
-> > > > > On Tue, 2 Apr 2024 at 13:40, Dmitry Baryshkov
-> > > > > <dmitry.baryshkov@linaro.org> wrote:
-> > > > > >
-> > > > > > On Tue, 2 Apr 2024 at 13:34, Varadarajan Narayanan
-> > > > > > <quic_varada@quicinc.com> wrote:
-> > > > > > >
-> > > > > > > Wrap icc_clk_register to create devm_icc_clk_register to be
-> > > > > > > able to release the resources properly.
-> > > > > > >
-> > > > > > > Signed-off-by: Varadarajan Narayanan <quic_varada@quicinc.com>
-> > > > > > > ---
-> > > > > > > v5: Introduced devm_icc_clk_register
-> > > > > > > ---
-> > > > > > >  drivers/interconnect/icc-clk.c   | 29 +++++++++++++++++++++++++++++
-> > > > > > >  include/linux/interconnect-clk.h |  4 ++++
-> > > > > > >  2 files changed, 33 insertions(+)
-> > > > > >
-> > > > > > Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-> > > > >
-> > > > > Wait. Actually,
-> > > > >
-> > > > > Unreviewed-by: me
-> > > > >
-> > > > > Please return int from devm_icc_clk_register instead of returning the pointer.
-> > > >
-> > > > Wouldn't returning int break the general assumption that
-> > > > devm_foo(), returns the same type as foo(). For example
-> > > > devm_clk_hw_get_clk and clk_hw_get_clk return struct clk *?
-> > >
-> > > Not always. The only reason to return icc_provider was to make it
-> > > possible to destroy it. With devres-managed function you don't have to
-> > > do anything.
-> >
-> > Ok. Will change as follows
-> >
-> >         return prov; -> return PTR_ERR_OR_ZERO(prov);
-> >
->
-> I think the code might become simpler if you first allocate the ICC
-> provider and then just 'return devm_add_action_or_reset(dev,
-> your_icc_clk_release, provider)'
+On Mon, Apr 01, 2024 at 11:05:15PM +0200, Christian A. Ehrhardt wrote:
+> Fix issues when initially checking for a connector change:
+> - Use the correct connector number not the entire CCI.
+> - Call ->read under the PPM lock.
+> - Remove a bogus READ_ONCE.
+> 
+> Fixes: 808a8b9e0b87 ("usb: typec: ucsi: Check for notifications after init")
+> Cc: stable@kernel.org
+> Signed-off-by: Christian A. Ehrhardt <lk@c--e.de>
 
-Have posted v7 incorporating these and other feedback.
-Please review.
+Reviewed-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
 
-Thanks
-Varada
+> ---
+>  drivers/usb/typec/ucsi/ucsi.c | 6 ++++--
+>  1 file changed, 4 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/usb/typec/ucsi/ucsi.c b/drivers/usb/typec/ucsi/ucsi.c
+> index 31d8a46ae5e7..bd6ae92aa39e 100644
+> --- a/drivers/usb/typec/ucsi/ucsi.c
+> +++ b/drivers/usb/typec/ucsi/ucsi.c
+> @@ -1736,11 +1736,13 @@ static int ucsi_init(struct ucsi *ucsi)
+>  	ucsi->connector = connector;
+>  	ucsi->ntfy = ntfy;
+>  
+> +	mutex_lock(&ucsi->ppm_lock);
+>  	ret = ucsi->ops->read(ucsi, UCSI_CCI, &cci, sizeof(cci));
+> +	mutex_unlock(&ucsi->ppm_lock);
+>  	if (ret)
+>  		return ret;
+> -	if (UCSI_CCI_CONNECTOR(READ_ONCE(cci)))
+> -		ucsi_connector_change(ucsi, cci);
+> +	if (UCSI_CCI_CONNECTOR(cci))
+> +		ucsi_connector_change(ucsi, UCSI_CCI_CONNECTOR(cci));
+>  
+>  	return 0;
+>  
+> -- 
+> 2.40.1
+
+-- 
+heikki
