@@ -1,117 +1,132 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B36EB1494AE;
-	Wed,  3 Apr 2024 14:13:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E72C014900C;
+	Wed,  3 Apr 2024 14:14:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712153633; cv=none; b=oAH4AgxeY3Gcb/QvK+lpDq4duU36q6JJHBoPRydv5QVJExnzOa3r5P2Ig5Xtq+mKojt9kx0tKxacAANum/ENaFGoT6dOoL1SuZU8E03Al+4fYEJB1QDsFnd2HkraTlgIhB0nlaODWKL+/uu7P3+OzkYJwEkOj0aRFjsfdBmb4TY=
+	t=1712153643; cv=none; b=fs3RfVb6VvVorO1XSf3Kjw5Vzy5qRKbbaH/0lSCOncW8RroT6usF4Yu4mc2vqWjMQfF0Wqgn5uTmJu6dFJhSLE06AsJRUHC9yt8ThmDPBLWFrwu0Oz7UKMtWX0pkL2DecR5Kek+DX95O53fz7OVlZbarqVcYUOPv2s6ggd0ZL3o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712153633; c=relaxed/simple;
-	bh=tR+X7v8fot2nLBblbKMojOdNz6gzNW5K6H6mYWruWOc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=moz78PgVX767UQ1Yzmu4YpIvz+foMas1nIIzcRmR4Toj4InzVWwnDmrVV+UOccikjB0BUz967h+wBi6CpLYAPNF4xZgWYL3g/Aqom2p5UhVFPv7vAJnE7HzqEx7FF0IPmiuN0C179YAt2BgJ53QrUGN8kqVLnyBWcLVExsc2QKs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JNRfkTta; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1712153643; c=relaxed/simple;
+	bh=DwlKSANN19zo2hxwH89sP0PAV6BFj/6aU1fv2ORo6Dc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=Pny23h5cV/Sd63GEkWj32LyZmtqacd325tqxZZTfAR+GAasMq2SoO6nNfT22M2PpLyZ0Vz0lVzHiv/86VbnnGKFGiCP69RUPB1k6zssrkxkbLoXuDMMWQ9BqgnetxVyCdCrZTaAXmfN1Ptkikb1b3OXh9sD+w+bKNq6KSLnVIso=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=FsgdTNda; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JNRfkTta"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 67ED7C433F1;
-	Wed,  3 Apr 2024 14:13:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712153633;
-	bh=tR+X7v8fot2nLBblbKMojOdNz6gzNW5K6H6mYWruWOc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=JNRfkTtaWyKFhIqjnNC9icrsyjULqagS3JSLZjSpQdh2pcmb85BQK0C1s7KAdIAH6
-	 TkLMdhPqhHE0krKTwzw0GWVfp0HBpk3F4u87cUJ3+a9x5d53gIuwYG9nbdRMb2nHH5
-	 UXRGQNiGYaEi1hQ2iDvXmr1OrqhTlE1uu2+cbPFWFwFGrrZm9Q+mTt6YfQvwhYW3Bw
-	 tYG/NKrEvykRp117Lh1I7zfSVguhg06sLc3dAIFSGjHr1F/TBsXUCiprLAYhJjsuPV
-	 C4gJxD4UOCmnvGtgWdvIUPuoS6xewkANPd6AHiDrOnzyDFdbLSoprP2PwiE7EvTl7p
-	 6ldTFKiZsqrhQ==
-Date: Wed, 3 Apr 2024 15:13:48 +0100
-From: Mark Brown <broonie@kernel.org>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	Daniel Mack <daniel@zonque.org>,
-	Haojian Zhuang <haojian.zhuang@gmail.com>,
-	Robert Jarzmik <robert.jarzmik@free.fr>,
-	Russell King <linux@armlinux.org.uk>, Arnd Bergmann <arnd@arndb.de>
-Subject: Re: (subset) [PATCH v2 0/9] spi: pxa2xx: Drop linux/spi/pxa2xx_spi.h
-Message-ID: <0af775e1-f5f7-4ad4-b336-78834a9e0342@sirena.org.uk>
-References: <20240327193138.2385910-1-andriy.shevchenko@linux.intel.com>
- <171167575036.187521.17547262230962160149.b4-ty@kernel.org>
- <Zg04cWhT_Dl6AUik@smile.fi.intel.com>
- <b7ac20d0-ca45-4e65-92ff-ddf84da6645a@sirena.org.uk>
- <Zg1cAHEkhIf2vpwJ@smile.fi.intel.com>
- <Zg1clCuOwkCNzSgy@smile.fi.intel.com>
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="FsgdTNda"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:Reply-To:From:References:To:Subject:MIME-Version:Date:Message-ID:
+	From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
+	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
+	References; bh=s2Hjna+7Gigv0uDBX5QjiFF/xA8CsPgyBJQvKbNatcs=; t=1712153641;
+	x=1712585641; b=FsgdTNdap3z+fS9b1TDqtQ8umiugpRhQZ6NecB2dCrUzEfqtpfAkgtAQbTSnd
+	Ns4SyFDNMdtTV/Kog1UpUz6DjBUQV4ahKqxpCjDftUQdfglfdbHy4Us9eUpYUpsOXAfheaNWkS3aP
+	vNKbog4lim5PxQ5013JfA7iUuue+RMHXPySeY2oKFbHI8tDZ5XXBlTyNBlpK8ZvdxKq/lLccdQgyX
+	9Sw0N6F619STqECYGBb+MSHW/hN7DQpU3qrv7M+s/Aaa6qJPSldaWMnUP/wZJDlc/qXwzXGaL75CU
+	1zqB+JMt2fF+Q2QUkHvm07Nm1Xo6WBT3CQKwgZtRUU73A1F+Jg==;
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1rs1NC-0008IN-EQ; Wed, 03 Apr 2024 16:13:54 +0200
+Message-ID: <3e53f18c-12aa-4bf8-b3f7-7945bbca6882@leemhuis.info>
+Date: Wed, 3 Apr 2024 16:13:53 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="ixvz+Gexv+kCda8n"
-Content-Disposition: inline
-In-Reply-To: <Zg1clCuOwkCNzSgy@smile.fi.intel.com>
-X-Cookie: Knowledge is power.
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/2] docs: *-regressions.rst: unify quoting, add missing
+ word
+To: Karel Balej <balejk@matfyz.cz>, Jonathan Corbet <corbet@lwn.net>,
+ regressions@lists.linux.dev, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org, workflows@vger.kernel.org
+References: <20240328194342.11760-1-balejk@matfyz.cz>
+ <20240328194342.11760-2-balejk@matfyz.cz>
+From: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+Content-Language: en-US, de-DE
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+In-Reply-To: <20240328194342.11760-2-balejk@matfyz.cz>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1712153641;1673022d;
+X-HE-SMSGID: 1rs1NC-0008IN-EQ
+
+On 28.03.24 20:29, Karel Balej wrote:
+> Quoting of the '"no regressions" rule' expression differs between
+> occurrences, sometimes being presented as '"no regressions rule"'. Unify
+> the quoting using the first form which seems semantically correct or is
+> at least used dominantly, albeit marginally.
+> 
+> One of the occurrences is obviously missing the 'rule' part -- add it.
+> 
+> Signed-off-by: Karel Balej <balejk@matfyz.cz>
+
+Thx for this:
+
+Reviewed-by: Thorsten Leemhuis <linux@leemhuis.info>
+
+Ciao, Thorsten
 
 
---ixvz+Gexv+kCda8n
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On Wed, Apr 03, 2024 at 04:41:40PM +0300, Andy Shevchenko wrote:
-> On Wed, Apr 03, 2024 at 04:39:13PM +0300, Andy Shevchenko wrote:
-> > On Wed, Apr 03, 2024 at 02:29:38PM +0100, Mark Brown wrote:
-
-> > > All the concerns I have with swnodes just being a more complex and less
-> > > maintainable way of doing things still stand, I'm not clear that this is
-> > > making anything better.
-
-> > As I explained before it's not less maintainable than device tree sources.
-> > The only difference is that we don't have validation tool for in-kernel
-> > tables. And I don't see why we need that. The data describes the platforms
-> > and in the very same way may come to the driver from elsewhere.
-> > How would you validate that? It the same as we trust firmware (boot loader)
-> > or not. If we don't than how should we do at all?
-
-I don't think we should do this at all, all I see from these changes is
-effort in reviewing them - as far as I can tell they are a solution in
-search of a problem.  DT has some support for validation of the
-formatting of the data supplied by the board and offers the potential
-for distributing the board description separately to the kernel.
-
-> > Can you point out what the exact aspect is most significant from C language
-> > perspective that we miss after conversion? Type checking? Something else?
-
-You're changing the code from supplying data from the board description
-via a simple C structure where the compiler offers at least some
-validation and where we can just supply directly usable values to an
-abstract data structure that's still encoded in C but has less
-validation and requires a bunch of code to parse at runtime.  Platform
-data is unsurprisingly a good solution to the problem of supplying
-platform data.
-
-> Also note, after hiding the data structures from that file we open
-> the door for the much bigger cleanup, and I have patches already precooked
-> (need a bit of time to test, though).
-
-Perhaps those will motivate a change, as things stand I've not seen what
-you're proposing to do here.
-
---ixvz+Gexv+kCda8n
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmYNZBwACgkQJNaLcl1U
-h9A1wgf+LxurOvs9sheuqJ+hJix5cnVJKZp9jwrJKoikmYGAOneGoknFhg9IKMJW
-Olm9K2MQni4UCNgeZNijrzQCnq3YcBtxgblO47r7uVKGurUA5MibG2oEvjeyzfHH
-fUfYZtvjrQsPhx0j73S1gM+jvCC1jgxYDWls8CmnVvUbpA4j69+QTaD8R3rfz2IS
-9Fd9gDa1ak/DQk56CaXCMCb64Qy2LqVYKrrMgGqpDe8ZuTAEwfnY4r9wGqX2UIxv
-5pW+90wfAeK5yPTGzeMe8yRq6nTcygaQwDr1eKqi+nt6jWp3wzD5ZGnOG0TMDfJp
-zzWkP3GCeUdRff7nEK7QyuMftJTMVQ==
-=Wbjd
------END PGP SIGNATURE-----
-
---ixvz+Gexv+kCda8n--
+> ---
+>  Documentation/admin-guide/reporting-regressions.rst | 10 +++++-----
+>  Documentation/process/handling-regressions.rst      |  2 +-
+>  2 files changed, 6 insertions(+), 6 deletions(-)
+> 
+> diff --git a/Documentation/admin-guide/reporting-regressions.rst b/Documentation/admin-guide/reporting-regressions.rst
+> index 76b246ecf21b..946518355a2c 100644
+> --- a/Documentation/admin-guide/reporting-regressions.rst
+> +++ b/Documentation/admin-guide/reporting-regressions.rst
+> @@ -42,12 +42,12 @@ The important basics
+>  --------------------
+>  
+>  
+> -What is a "regression" and what is the "no regressions rule"?
+> +What is a "regression" and what is the "no regressions" rule?
+>  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+>  
+>  It's a regression if some application or practical use case running fine with
+>  one Linux kernel works worse or not at all with a newer version compiled using a
+> -similar configuration. The "no regressions rule" forbids this to take place; if
+> +similar configuration. The "no regressions" rule forbids this to take place; if
+>  it happens by accident, developers that caused it are expected to quickly fix
+>  the issue.
+>  
+> @@ -173,7 +173,7 @@ Additional details about regressions
+>  ------------------------------------
+>  
+>  
+> -What is the goal of the "no regressions rule"?
+> +What is the goal of the "no regressions" rule?
+>  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+>  
+>  Users should feel safe when updating kernel versions and not have to worry
+> @@ -199,8 +199,8 @@ Exceptions to this rule are extremely rare; in the past developers almost always
+>  turned out to be wrong when they assumed a particular situation was warranting
+>  an exception.
+>  
+> -Who ensures the "no regressions" is actually followed?
+> -~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> +Who ensures the "no regressions" rule is actually followed?
+> +~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+>  
+>  The subsystem maintainers should take care of that, which are watched and
+>  supported by the tree maintainers -- e.g. Linus Torvalds for mainline and
+> diff --git a/Documentation/process/handling-regressions.rst b/Documentation/process/handling-regressions.rst
+> index ce6753a674f3..49ba1410cfce 100644
+> --- a/Documentation/process/handling-regressions.rst
+> +++ b/Documentation/process/handling-regressions.rst
+> @@ -284,7 +284,7 @@ What else is there to known about regressions?
+>  Check out Documentation/admin-guide/reporting-regressions.rst, it covers a lot
+>  of other aspects you want might want to be aware of:
+>  
+> - * the purpose of the "no regressions rule"
+> + * the purpose of the "no regressions" rule
+>  
+>   * what issues actually qualify as regression
+>  
