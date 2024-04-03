@@ -1,369 +1,143 @@
-Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com [209.85.210.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp-relay-canonical-0.canonical.com (smtp-relay-canonical-0.canonical.com [185.125.188.120])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90806153583
-	for <linux-kernel@vger.kernel.org>; Wed,  3 Apr 2024 18:05:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D746A152E11;
+	Wed,  3 Apr 2024 18:06:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.188.120
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712167528; cv=none; b=FWwEhGy2UqzOLRO0lNldEGZSS4QNln3Ks6ETW1Iw23NZpxQzCWvk7yh2Zz03aNsYrAKmtcmCmBzh2GlLYui8IZDWGJscMtLkYRsMsYoHOo+aM4C2q5mJ+9Wp08Ci5VxLAFCz6VJUv1CjrLLX6RH2VdT++PQlG/uNEoG6stGa0rE=
+	t=1712167594; cv=none; b=oBcMQz/fTtwoXavhPujNh29Mu2RrIezW1Jd1Nyn6XGMiYx348tDKR26gBYNaL7fA9CD9xQH+KyVWvj+F2C1DyyRl3GwFhbUH4fiCh/4PnGCk2yMk5ym5MqYLmvMh7XE0VlSqO4/Yco8fru/DXetQptKYt4ITbOAsdtXsHgj+8s8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712167528; c=relaxed/simple;
-	bh=TjPIswja+QX4qvchxCXr3vHxHmxScu0iGIwulb7avv0=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=JUuYAgOn3nIbVJb9sZBy0qp3DQ7C8JYs+/M7CCu856ySKrEx8fc8elJhFYR5Y0riVzEU3Tg+STsrXO0EmYVHQT/hPHSQuv4MVZuN0aSEuUgQiQQ8K1iXoudfI/CsZzkZptYOSjwMETNrJIJKk/TdCdOgvkwwslroh+Qap2od6xo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=hrgvY5uk; arc=none smtp.client-ip=209.85.210.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1712167594; c=relaxed/simple;
+	bh=5m6VOcgHOe4SYB/rSBcchnqgOUDENpQXobQNyZKgX0Y=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ZqQ/Lq0nSzoQagDMmzj6Pp6W8MJdnbpKTPy9OiBnQRPQbp/yELiObFluRdJrk3vNF3NYZQcXRusezmKvdgaP7/mDdipaoefVmX6z7XRFc0b+nzqk8xkxrCTHOwkkDDeMBkNTYFT+nWAYi2u7bbWWQkvatEyePTX6QJA5+y4AJQk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b=U3Xj5F9W; arc=none smtp.client-ip=185.125.188.120
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="hrgvY5uk"
-Received: by mail-pf1-f170.google.com with SMTP id d2e1a72fcca58-6e6bee809b8so77487b3a.1
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Apr 2024 11:05:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1712167526; x=1712772326; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=J6r0hXY1mSUAHtmGHu0HIennFYFiBELuGkXbpbjNiGk=;
-        b=hrgvY5ukzs/6SEgFopilyJWD4dhy7TlSdJRFJIA2pfKYqZxTu53vQplTpZ5S3nfshC
-         vSYZmNLYLfFSc6kunzh2y8flo3x3sSQQ+kOY75jBEtMBn2JOniZx25AUomX6AoIzfW1F
-         W+qPTBapu0YEdzoX8Atpdqd/9pOxrK/tSIJYc=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712167526; x=1712772326;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=J6r0hXY1mSUAHtmGHu0HIennFYFiBELuGkXbpbjNiGk=;
-        b=Jmtkmc01IJBTXitqRAcZtgpVbUtUCIG9HM/8ZLDTY2TyKNXBPSngLlMGWysmmkiDbd
-         apcZpLKgTEs2vNLP/kJOj8/P38XyygddaEI5sB2rQHLTUos/Q/776PVivrvTc0rpJhVG
-         ID2i1JriB1qtR6LTYU78JAhUqHFPrJn1xzgCI1Ic9uScxNecqJcOT3adP5OxpFTXyriD
-         0Xlf7kod/aqq5sWIyCvfvioQigY9yMMMBQttghtZX4L/x4b8I7tzNr1PsvmtbRpoadqo
-         PMbubzELnPkPMenykj2iWrxTWE/ESXTkHMckjhNhOPRsyKEa/OS/Qewx5rLPb5W0N/qB
-         GSlA==
-X-Gm-Message-State: AOJu0YzDlJ5mfglhG8sb/LO6uDlVsFUyO+6ArS+qnsBQ/xXV0c9Qzcfg
-	IRdlJb1+Hquo9JVRMaTaqWBJxUJIbrCOJLprN+MKNzqIa5paOut3iGODV5eBfw==
-X-Google-Smtp-Source: AGHT+IGmhAX/WvVTQE/eADsUwzjrcoipMbnmE9q6T8NDVo9+zVJKWosRAEI41wFh4IBQQEP3LKtEAw==
-X-Received: by 2002:a05:6a20:3d1e:b0:1a5:7404:6539 with SMTP id y30-20020a056a203d1e00b001a574046539mr413758pzi.40.1712167525901;
-        Wed, 03 Apr 2024 11:05:25 -0700 (PDT)
-Received: from pholla1.c.googlers.com (210.73.125.34.bc.googleusercontent.com. [34.125.73.210])
-        by smtp.gmail.com with ESMTPSA id n16-20020aa79850000000b006e64ddfa71asm12359162pfq.170.2024.04.03.11.05.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 03 Apr 2024 11:05:25 -0700 (PDT)
-From: Pavan Holla <pholla@chromium.org>
-Date: Wed, 03 Apr 2024 18:05:22 +0000
-Subject: [PATCH v3 2/2] usb: typec: ucsi: Implement ChromeOS UCSI driver
+	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="U3Xj5F9W"
+Received: from [10.172.66.188] (1.general.jsalisbury.us.vpn [10.172.66.188])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-relay-canonical-0.canonical.com (Postfix) with ESMTPSA id 32C6E3F2F9;
+	Wed,  3 Apr 2024 18:06:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
+	s=20210705; t=1712167589;
+	bh=ddwEN/UnUOz25J/Hbmt3w3pE4mBozWKhgJVvL8PNpBM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type;
+	b=U3Xj5F9WCYs+sEEOcYorfKeikV608XJApffKe6tDz41ykVkOSRrgKjZh+tZ0q7prH
+	 DzUj352Ltg6r0LPtug6GzJEgtMgUlhw9jrBu8X12lUwp8M2Sds3nWL1f9ZIEFKc+f3
+	 22lnaYwHjDbnSji/+Hi1ARrDF7O3Evwqw9v/lxUCNbqlC9qFYx/D82oGLQQ6sKsbFi
+	 ebzMTJcfJ2ntsIckVV1MMlIBhyVUY2Lmcj4ORt2B6f6CTjsSWw2IDXpJn7moH2Rox0
+	 osZVuE5Hto0hcdMw9ufa5n4M4TIp4GqWY+FEltZ3FS5K3/gR39hKUl1pP4Nb8IGf7t
+	 dvHm6r1yIXRNg==
+Message-ID: <a0819f54-7469-4c94-b567-71f634c84ac1@canonical.com>
+Date: Wed, 3 Apr 2024 14:06:28 -0400
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240403-public-ucsi-h-v3-2-f848e18c8ed2@chromium.org>
-References: <20240403-public-ucsi-h-v3-0-f848e18c8ed2@chromium.org>
-In-Reply-To: <20240403-public-ucsi-h-v3-0-f848e18c8ed2@chromium.org>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
- Heikki Krogerus <heikki.krogerus@linux.intel.com>, 
- Benson Leung <bleung@chromium.org>, Tzung-Bi Shih <tzungbi@kernel.org>, 
- Guenter Roeck <groeck@chromium.org>
-Cc: linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, 
- Abhishek Pandit-Subedi <abhishekpandit@chromium.org>, 
- chrome-platform@lists.linux.dev, Pavan Holla <pholla@chromium.org>
-X-Mailer: b4 0.12.4
+User-Agent: Mozilla Thunderbird
+Subject: Re: [v5.15 Regression] block: rename GENHD_FL_NO_PART_SCAN to
+ GENHD_FL_NO_PART
+To: Greg KH <gregkh@linuxfoundation.org>
+Cc: hch@lst.de, linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
+ axboe@kernel.dk, sashal@kernel.org, stable@vger.kernel.org,
+ Francis Ginther <francis.ginther@canonical.com>
+References: <924449dc-9b1f-4943-afe3-a68c03aedbb5@canonical.com>
+ <2024040329-unstopped-spelling-64c8@gregkh>
+Content-Language: en-US
+From: Joseph Salisbury <joseph.salisbury@canonical.com>
+Autocrypt: addr=joseph.salisbury@canonical.com; keydata=
+ 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
+ p24lPxLL08SuCEzuBw==
+In-Reply-To: <2024040329-unstopped-spelling-64c8@gregkh>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-Implementation of a UCSI transport driver for ChromeOS.
-This driver will be loaded if the ChromeOS EC implements a PPM.
 
-Signed-off-by: Pavan Holla <pholla@chromium.org>
----
- drivers/usb/typec/ucsi/Kconfig        |  13 ++
- drivers/usb/typec/ucsi/Makefile       |   1 +
- drivers/usb/typec/ucsi/cros_ec_ucsi.c | 245 ++++++++++++++++++++++++++++++++++
- 3 files changed, 259 insertions(+)
 
-diff --git a/drivers/usb/typec/ucsi/Kconfig b/drivers/usb/typec/ucsi/Kconfig
-index bdcb1764cfae..4dceb14a66ee 100644
---- a/drivers/usb/typec/ucsi/Kconfig
-+++ b/drivers/usb/typec/ucsi/Kconfig
-@@ -69,4 +69,17 @@ config UCSI_PMIC_GLINK
- 	  To compile the driver as a module, choose M here: the module will be
- 	  called ucsi_glink.
- 
-+config CROS_EC_UCSI
-+	tristate "UCSI Driver for ChromeOS EC"
-+	depends on MFD_CROS_EC_DEV
-+	depends on CROS_USBPD_NOTIFY
-+	depends on !EXTCON_TCSS_CROS_EC
-+	default MFD_CROS_EC_DEV
-+	help
-+	  This driver enables UCSI support for a ChromeOS EC. The EC is
-+	  expected to implement a PPM.
-+
-+	  To compile the driver as a module, choose M here: the module
-+	  will be called cros_ec_ucsi.
-+
- endif
-diff --git a/drivers/usb/typec/ucsi/Makefile b/drivers/usb/typec/ucsi/Makefile
-index b4679f94696b..cb336eee055c 100644
---- a/drivers/usb/typec/ucsi/Makefile
-+++ b/drivers/usb/typec/ucsi/Makefile
-@@ -21,3 +21,4 @@ obj-$(CONFIG_UCSI_ACPI)			+= ucsi_acpi.o
- obj-$(CONFIG_UCSI_CCG)			+= ucsi_ccg.o
- obj-$(CONFIG_UCSI_STM32G0)		+= ucsi_stm32g0.o
- obj-$(CONFIG_UCSI_PMIC_GLINK)		+= ucsi_glink.o
-+obj-$(CONFIG_CROS_EC_UCSI)		+= cros_ec_ucsi.o
-diff --git a/drivers/usb/typec/ucsi/cros_ec_ucsi.c b/drivers/usb/typec/ucsi/cros_ec_ucsi.c
-new file mode 100644
-index 000000000000..dd46b46d430f
---- /dev/null
-+++ b/drivers/usb/typec/ucsi/cros_ec_ucsi.c
-@@ -0,0 +1,245 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * UCSI driver for ChromeOS EC
-+ *
-+ * Copyright 2024 Google LLC.
-+ */
-+
-+#include <linux/container_of.h>
-+#include <linux/dev_printk.h>
-+#include <linux/mod_devicetable.h>
-+#include <linux/module.h>
-+#include <linux/platform_data/cros_ec_commands.h>
-+#include <linux/platform_data/cros_usbpd_notify.h>
-+#include <linux/platform_data/cros_ec_proto.h>
-+#include <linux/platform_device.h>
-+#include <linux/slab.h>
-+#include <linux/wait.h>
-+
-+#include "ucsi.h"
-+
-+#define DRV_NAME "cros-ec-ucsi"
-+
-+#define MAX_EC_DATA_SIZE 256
-+#define WRITE_TMO_MS 500
-+
-+struct cros_ucsi_data {
-+	struct device *dev;
-+	struct ucsi *ucsi;
-+
-+	struct cros_ec_device *ec;
-+	struct notifier_block nb;
-+	struct work_struct work;
-+
-+	struct completion complete;
-+	unsigned long flags;
-+};
-+
-+static int cros_ucsi_read(struct ucsi *ucsi, unsigned int offset, void *val,
-+			  size_t val_len)
-+{
-+	struct cros_ucsi_data *udata = ucsi_get_drvdata(ucsi);
-+	struct ec_params_ucsi_ppm_get req = {
-+		.offset = offset,
-+		.size = val_len,
-+	};
-+	int ret;
-+
-+	if (val_len > MAX_EC_DATA_SIZE) {
-+		dev_err(udata->dev, "Can't read %zu bytes. Too big.", val_len);
-+		return -EINVAL;
-+	}
-+
-+	ret = cros_ec_cmd(udata->ec, 0, EC_CMD_UCSI_PPM_GET,
-+			  &req, sizeof(req), val, val_len);
-+	if (ret < 0) {
-+		dev_warn(udata->dev, "Failed to send EC message UCSI_PPM_GET: error=%d", ret);
-+		return ret;
-+	}
-+	return 0;
-+}
-+
-+static int cros_ucsi_async_write(struct ucsi *ucsi, unsigned int offset,
-+				 const void *val, size_t val_len)
-+{
-+	struct cros_ucsi_data *udata = ucsi_get_drvdata(ucsi);
-+	uint8_t ec_buffer[MAX_EC_DATA_SIZE + sizeof(struct ec_params_ucsi_ppm_set)];
-+	struct ec_params_ucsi_ppm_set *req = (struct ec_params_ucsi_ppm_set *)ec_buffer;
-+	int ret = 0;
-+
-+	if (val_len > MAX_EC_DATA_SIZE) {
-+		dev_err(udata->dev, "Can't write %zu bytes. Too big.", val_len);
-+		return -EINVAL;
-+	}
-+
-+	memset(req, 0, sizeof(ec_buffer));
-+	req->offset = offset;
-+	memcpy(req->data, val, val_len);
-+	ret = cros_ec_cmd(udata->ec, 0, EC_CMD_UCSI_PPM_SET,
-+			  req, sizeof(struct ec_params_ucsi_ppm_set) + val_len, NULL, 0);
-+
-+	if (ret < 0) {
-+		dev_warn(udata->dev, "Failed to send EC message UCSI_PPM_SET: error=%d", ret);
-+		return ret;
-+	}
-+	return 0;
-+}
-+
-+static int cros_ucsi_sync_write(struct ucsi *ucsi, unsigned int offset,
-+				const void *val, size_t val_len)
-+{
-+	struct cros_ucsi_data *udata = ucsi_get_drvdata(ucsi);
-+	bool ack = UCSI_COMMAND(*(u64 *)val) == UCSI_ACK_CC_CI;
-+	int ret;
-+
-+	if (ack)
-+		set_bit(ACK_PENDING, &udata->flags);
-+	else
-+		set_bit(COMMAND_PENDING, &udata->flags);
-+
-+	ret = cros_ucsi_async_write(ucsi, offset, val, val_len);
-+	if (ret)
-+		goto out;
-+
-+	if (!wait_for_completion_timeout(&udata->complete, WRITE_TMO_MS))
-+		ret = -ETIMEDOUT;
-+
-+out:
-+	if (ack)
-+		clear_bit(ACK_PENDING, &udata->flags);
-+	else
-+		clear_bit(COMMAND_PENDING, &udata->flags);
-+	return ret;
-+}
-+
-+struct ucsi_operations cros_ucsi_ops = {
-+	.read = cros_ucsi_read,
-+	.async_write = cros_ucsi_async_write,
-+	.sync_write = cros_ucsi_sync_write,
-+};
-+
-+static void cros_ucsi_work(struct work_struct *work)
-+{
-+	struct cros_ucsi_data *udata = container_of(work, struct cros_ucsi_data, work);
-+	u32 cci;
-+	int ret;
-+
-+	ret = cros_ucsi_read(udata->ucsi, UCSI_CCI, &cci, sizeof(cci));
-+	if (ret)
-+		return;
-+
-+	if (UCSI_CCI_CONNECTOR(cci))
-+		ucsi_connector_change(udata->ucsi, UCSI_CCI_CONNECTOR(cci));
-+
-+	if (cci & UCSI_CCI_ACK_COMPLETE && test_bit(ACK_PENDING, &udata->flags))
-+		complete(&udata->complete);
-+	if (cci & UCSI_CCI_COMMAND_COMPLETE &&
-+	    test_bit(COMMAND_PENDING, &udata->flags))
-+		complete(&udata->complete);
-+}
-+
-+static int cros_ucsi_event(struct notifier_block *nb,
-+			   unsigned long host_event, void *_notify)
-+{
-+	struct cros_ucsi_data *udata = container_of(nb, struct cros_ucsi_data, nb);
-+
-+	if (!(host_event & PD_EVENT_PPM))
-+		return NOTIFY_OK;
-+
-+	dev_dbg(udata->dev, "UCSI notification received");
-+	flush_work(&udata->work);
-+	schedule_work(&udata->work);
-+
-+	return NOTIFY_OK;
-+}
-+
-+static int cros_ucsi_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct cros_ec_dev *ec_data = dev_get_drvdata(dev->parent);
-+	struct cros_ucsi_data *udata;
-+	int ret;
-+
-+	udata = devm_kzalloc(dev, sizeof(*udata), GFP_KERNEL);
-+	if (!udata)
-+		return -ENOMEM;
-+
-+	udata->dev = dev;
-+
-+	udata->ec = ec_data->ec_dev;
-+	if (!udata->ec) {
-+		dev_err(dev, "couldn't find parent EC device\n");
-+		return -ENODEV;
-+	}
-+
-+	platform_set_drvdata(pdev, udata);
-+
-+	INIT_WORK(&udata->work, cros_ucsi_work);
-+	init_completion(&udata->complete);
-+
-+	udata->ucsi = ucsi_create(udata->dev, &cros_ucsi_ops);
-+	if (IS_ERR(udata->ucsi)) {
-+		dev_err(dev, "failed to allocate UCSI instance\n");
-+		return PTR_ERR(udata->ucsi);
-+	}
-+
-+	ucsi_set_drvdata(udata->ucsi, udata);
-+
-+	ret = ucsi_register(udata->ucsi);
-+	if (ret) {
-+		ucsi_destroy(udata->ucsi);
-+		return ret;
-+	}
-+
-+	udata->nb.notifier_call = cros_ucsi_event;
-+	return cros_usbpd_register_notify(&udata->nb);
-+}
-+
-+static int cros_ucsi_remove(struct platform_device *dev)
-+{
-+	struct cros_ucsi_data *udata = platform_get_drvdata(dev);
-+
-+	ucsi_unregister(udata->ucsi);
-+	ucsi_destroy(udata->ucsi);
-+	return 0;
-+}
-+
-+static int __maybe_unused cros_ucsi_suspend(struct device *dev)
-+{
-+	struct cros_ucsi_data *udata = dev_get_drvdata(dev);
-+
-+	cancel_work_sync(&udata->work);
-+
-+	return 0;
-+}
-+
-+static int __maybe_unused cros_ucsi_resume(struct device *dev)
-+{
-+	struct cros_ucsi_data *udata = dev_get_drvdata(dev);
-+
-+	return ucsi_resume(udata->ucsi);
-+}
-+
-+static SIMPLE_DEV_PM_OPS(cros_ucsi_pm_ops, cros_ucsi_suspend,
-+			 cros_ucsi_resume);
-+
-+static const struct platform_device_id cros_ec_ucsi_id[] = {
-+	{ "cros-ec-ucsi"},
-+	{}
-+};
-+MODULE_DEVICE_TABLE(platform, cros_ec_ucsi_id);
-+
-+static struct platform_driver cros_ucsi_driver = {
-+	.driver = {
-+		.name = DRV_NAME,
-+		.pm = &cros_ucsi_pm_ops,
-+	},
-+	.id_table = cros_ec_ucsi_id,
-+	.probe = cros_ucsi_probe,
-+	.remove = cros_ucsi_remove,
-+};
-+
-+module_platform_driver(cros_ucsi_driver);
-+
-+MODULE_LICENSE("GPL");
-+MODULE_DESCRIPTION("UCSI driver for ChromeOS EC");
+On 4/3/24 13:54, Greg KH wrote:
+> On Wed, Apr 03, 2024 at 01:50:09PM -0400, Joseph Salisbury wrote:
+>> Hi Christoph,
+>>
+>> A kernel bug report was opened against Ubuntu [0].  This bug is a regression
+>> introduced in mainline version v5.17-rc1 and made it's way into v5.15 stable
+>> updates.
+>>
+>> The following commit was identified as the cause of the regression in 5.15:
+>>
+>> c6ce1c5dd327 ("block: rename GENHD_FL_NO_PART_SCAN to GENHD_FL_NO_PART")
+> How is renaming a define a "regression"?
+The "regression" is experienced after upgrading to the kernel to the 
+version that introduced this commit.
+The v5.15.131 kernel works as expected, upgrading the kernel to 
+v5.15.132 breaks behavior that worked in a prior kernel version.
+Reverting commit c6ce1c5dd327 in v5.15.132 allows the experience to be 
+as before in v5.15.131.
 
--- 
-2.44.0.478.gd926399ef9-goog
+>
+>> I was hoping to get your feedback, since you are the patch author. Is the
+>> best approach to revert this commit, since many third parties rely on the
+>> name being GENHD_FL_NO_PART_SCAN in kernel headers?
+> External kernel modules are never an issue.  Is this a userspace thing?
+>
+>>   Is there a specific need that you know of that requires this commit
+>> in the 5.15 and earlier stable kernels?
+> Yes.  And Christoph did not do the backport, so I doubt he cares :)
+>
+> Again, what in-kernel issue is caused by this?
+
+Third party code that relies on the kernel-headers will no longer 
+compile due to the name change.  Should we not care if we break things, 
+even in userspace?
+
+>
+> thanks,
+>
+> greg k-h
 
