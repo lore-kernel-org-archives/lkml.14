@@ -1,96 +1,201 @@
-Received: from 008.lax.mailroute.net (008.lax.mailroute.net [199.89.1.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 864C52F24;
-	Wed,  3 Apr 2024 21:17:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=199.89.1.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5EFC156670
+	for <linux-kernel@vger.kernel.org>; Wed,  3 Apr 2024 21:20:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712179080; cv=none; b=XsH//9nLFO4blr/ygfTxT7EuA976oofN7BPzewum+EqOaXR9X1J+3hBYSN7Q9d93C/gwlxdtWVgm+PvHKlBDoYo4j5L+p3UGjm/sUQDAd1fewIzrl2/PN5yjQq+ceNxCNJbNYhzi0cGJhU/ZiZlTOXA3mi5lZqfem7JrPsQVCeo=
+	t=1712179238; cv=none; b=gda0pSQFJnPJFhBe2EtTZwuvWJl2MxwrlRzsF+bXDeMMrrqFnidiELkv6TCrGlImsLuqiCWkaXbPIUlyWU/Rllv5F+++oIVrabzVb3qf9OklMWNDS+QXpSPOzzIBs0en0dyzDfSbbRuy+CtEK2q3OJofMPFzEcDGaEg4+WVkhm8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712179080; c=relaxed/simple;
-	bh=dNO3G1cmq/dc4uXnd299NV+NJSgPbmV3EuF/+cdW3sg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=jLmRPUoonjwqYjlVicXl+01skEKX1eIqnnU/j14Rtqjdnrc1hBkZ7pKBRTh+ZuOUR4sBK5FXSNDr7cl4Mo532G/6a/6VIpHgfUrQKa7ABybRag37c1nGqsLA1HQLBfYvxcfQNWXbEXIxxGloZX5f6YH5J6JHrvTlib1p6SXzaQo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=acm.org; spf=pass smtp.mailfrom=acm.org; dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b=rJZZhzP/; arc=none smtp.client-ip=199.89.1.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=acm.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=acm.org
+	s=arc-20240116; t=1712179238; c=relaxed/simple;
+	bh=qNCBndGvASRj94i9gCbn2Ois8Kwv0gWWiWeAMOMLgEQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=civ2Xe7YNab3qFZDFK3aSgDwAsrgvGOf47pkI3XDym/qLk8RIVl36COFBNa5DsWERad4UoXVYeQySPael9d0CF/bz98HmZXes532m3WaH+JVKrsc7kxGgGoKE4drunAYKz+OeAooWZBxhIUq6h85vdidxfpvOqIla/OB/dlM6Y4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=Ptx5/DWJ; arc=none smtp.client-ip=209.85.214.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b="rJZZhzP/"
-Received: from localhost (localhost [127.0.0.1])
-	by 008.lax.mailroute.net (Postfix) with ESMTP id 4V8yJj5gSnz6Cnk90;
-	Wed,  3 Apr 2024 21:17:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=acm.org; h=
-	content-transfer-encoding:content-type:content-type:in-reply-to
-	:from:from:content-language:references:subject:subject
-	:user-agent:mime-version:date:date:message-id:received:received;
-	 s=mr01; t=1712179074; x=1714771075; bh=qlJqcWYZ8uLyD/G2oJ0GBpcH
-	FHOQOHmXJ9SlPfBC4Hw=; b=rJZZhzP/tcPcRNimWDA6jZRibk9mYq983mGfaXmG
-	o6YBMEy3GPdO0LTLYe6XIJ4QPBTO5FhJ6OIKHDG1q3JJbNASJi1q1AMqO86YCwzD
-	1+zJWMJaCLYgfOkz1PMbLW+AzeCo6mU3pW+Qfbd0FTRwy742YKy1nOAeTdRjmz3c
-	CmVh/v0hzWQIo+J8EuT9QpS4eqqVzEndkKRyKeDS+eAK8S2RzLE/8+TjMiAcFc9g
-	sXTq/WIH2b8HuOA5edKh6hEK0A32Y5AFK3QrC49pyLtdDMycSse4JMDldejqqfpO
-	sjOGhjK5xehrJQ9tFCmpfUIy0/AK13UCRlA7Ou/tk5Kuyg==
-X-Virus-Scanned: by MailRoute
-Received: from 008.lax.mailroute.net ([127.0.0.1])
- by localhost (008.lax [127.0.0.1]) (mroute_mailscanner, port 10029) with LMTP
- id GHddmEJaR5ZG; Wed,  3 Apr 2024 21:17:54 +0000 (UTC)
-Received: from [100.96.154.173] (unknown [104.132.1.77])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: bvanassche@acm.org)
-	by 008.lax.mailroute.net (Postfix) with ESMTPSA id 4V8yJc1cDWz6Cnk8y;
-	Wed,  3 Apr 2024 21:17:51 +0000 (UTC)
-Message-ID: <4b90d403-b18c-42c9-99b4-013eb7fcf8a8@acm.org>
-Date: Wed, 3 Apr 2024 14:17:49 -0700
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Ptx5/DWJ"
+Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-1e28be94d32so2255245ad.0
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Apr 2024 14:20:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1712179236; x=1712784036; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=gk/7t8bB/vPp5RYyhmHYp9/pKPIZpl1c0Hpc1VIArKM=;
+        b=Ptx5/DWJGOU9bqEoPLyU4ZVnUh9y3Xg9DvWbgEX4H/YrkQLkMUJSAnSiWexQ4Gzw1R
+         647vdzB8MXYOeAzQ/sAS2yYZmG3d071l5agv91Eq+IyAH5kdO42jY6PPSVrRvxB+lNOk
+         xCuL5r/sFUNSFKhut5mZeJ47HjuCvvl+8N89U=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712179236; x=1712784036;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=gk/7t8bB/vPp5RYyhmHYp9/pKPIZpl1c0Hpc1VIArKM=;
+        b=mzTtPYekYyiplaYQeHbGgMc9b/RakvTZ428ZNBNvwgN5OJMv+OSBm5Qdanyaphsx+c
+         GdFiMOjiFfgakCMs8PoTP+DOGo2HyLnUj8mP5dLQ9Y1OtDQeBALKG+Wc3R7/zQhCEZR9
+         Do0Sm7hxl8TRIBqxuLHGAxS5aStrRlYmP1zAquxDjcsJzmn1YIxc0mBV59EInRD08uLu
+         4Z/5Ewqsc8W/MYvR2NQiDEcpC1SLPw98wJr7CrQnQpWGQMYT7sf/daRXgKIKYdAOob+V
+         LmNssoeOZo4z7DUfQ+k9esiwdLq6zuetGrn0SXPM4bLc29iX9gCvhwnVMtQtkh2+2luB
+         h7Bg==
+X-Forwarded-Encrypted: i=1; AJvYcCU9YO57VgaO9wYbXF9rt/WWOvh6W/dBc8Qzj5+093nWEZSXxgl+8nokAWch6fhEo7jwX39VZMsaVGhAcDl2fwZMtmmBYAP4PrA1jjLP
+X-Gm-Message-State: AOJu0YzGboQJv3e/kgxrS/wPCVoI0zE4PoshE/nGX5ifTp31H5OeCj3W
+	Gia+JAhWl+AMcHtz9RG8whGMzcbV8sWECXx4jSqWtKfl8LWwqBdG3nuCPmT0rA==
+X-Google-Smtp-Source: AGHT+IFNWSt+grv0aoo3QXgpCvCZ7QxZ9IBnA1B4gdZs5eLtWkdhNXO9ogb9Q/XDMKHoC6MfZl34Wg==
+X-Received: by 2002:a17:903:110f:b0:1e0:f25b:e795 with SMTP id n15-20020a170903110f00b001e0f25be795mr509491plh.11.1712179236057;
+        Wed, 03 Apr 2024 14:20:36 -0700 (PDT)
+Received: from www.outflux.net ([198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id m16-20020a170902bb9000b001e2a87d7d2dsm163988pls.253.2024.04.03.14.20.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 03 Apr 2024 14:20:35 -0700 (PDT)
+Date: Wed, 3 Apr 2024 14:20:34 -0700
+From: Kees Cook <keescook@chromium.org>
+To: Guenter Roeck <linux@roeck-us.net>
+Cc: linux-kselftest@vger.kernel.org, David Airlie <airlied@gmail.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	=?iso-8859-1?Q?Ma=EDra?= Canal <mcanal@igalia.com>,
+	Dan Carpenter <dan.carpenter@linaro.org>,
+	Daniel Diaz <daniel.diaz@linaro.org>,
+	David Gow <davidgow@google.com>,
+	Arthur Grillo <arthurgrillo@riseup.net>,
+	Brendan Higgins <brendan.higgins@linux.dev>,
+	Naresh Kamboju <naresh.kamboju@linaro.org>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Maxime Ripard <mripard@kernel.org>,
+	Ville =?iso-8859-1?Q?Syrj=E4l=E4?= <ville.syrjala@linux.intel.com>,
+	Daniel Vetter <daniel@ffwll.ch>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	dri-devel@lists.freedesktop.org, kunit-dev@googlegroups.com,
+	linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+	linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
+	linux-sh@vger.kernel.org, loongarch@lists.linux.dev,
+	netdev@vger.kernel.org, x86@kernel.org
+Subject: Re: [PATCH v3 00/15] Add support for suppressing warning backtraces
+Message-ID: <202404031414.645255D868@keescook>
+References: <20240403131936.787234-1-linux@roeck-us.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/1] scsi: ufs: Remove support for old UFSHCI versions
-To: Avri Altman <Avri.Altman@wdc.com>,
- "James E . J . Bottomley" <jejb@linux.ibm.com>,
- "Martin K . Petersen" <martin.petersen@oracle.com>
-Cc: "hch@infradead.org" <hch@infradead.org>, Bean Huo <beanhuo@micron.com>,
- "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <20240327071714.757-1-avri.altman@wdc.com>
- <20240327071714.757-2-avri.altman@wdc.com>
- <66431679-26f0-48eb-8303-35e151481292@acm.org>
- <DM6PR04MB6575BEBF605C9095E62F49E3FC3D2@DM6PR04MB6575.namprd04.prod.outlook.com>
-Content-Language: en-US
-From: Bart Van Assche <bvanassche@acm.org>
-In-Reply-To: <DM6PR04MB6575BEBF605C9095E62F49E3FC3D2@DM6PR04MB6575.namprd04.prod.outlook.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240403131936.787234-1-linux@roeck-us.net>
 
-On 4/3/24 12:24, Avri Altman wrote:
->> On 3/27/24 00:17, Avri Altman wrote:
->>> UFS spec version 2.1 was published more than 10 years ago. It is
->>> vanishingly unlikely that even there are out there platforms that uses
->>> earlier host controllers, let alone that those ancient platforms will
->>> ever run a V6.10 kernel.  Thus, remove support of host controllers prior
->>> to UFS2.1.
->>
->> According to this website, Pixel 1 devices have a UFSHCI 2.0 controller:
->> https://www.gsmarena.com/google_pixel-8346.php. There may be other
->> smartphones that have a UFSHCI 2.0 controller. Hence, I'm not sure we
->> can drop support for UFSHCI 2.0 controllers from the kernel.
-> Actually the Pixel 1 is an excellent example why we can and should -
-> It was announced in 2016, running Android 7 with a v4.4 kernel.
-> Even if you would be able to find a working specimen of that device -
-> It is not realistic it would ever run a 6.10 kernel.
+On Wed, Apr 03, 2024 at 06:19:21AM -0700, Guenter Roeck wrote:
+> Some unit tests intentionally trigger warning backtraces by passing bad
+> parameters to kernel API functions. Such unit tests typically check the
+> return value from such calls, not the existence of the warning backtrace.
+> 
+> Such intentionally generated warning backtraces are neither desirable
+> nor useful for a number of reasons.
+> - They can result in overlooked real problems.
+> - A warning that suddenly starts to show up in unit tests needs to be
+>   investigated and has to be marked to be ignored, for example by
+>   adjusting filter scripts. Such filters are ad-hoc because there is
+>   no real standard format for warnings. On top of that, such filter
+>   scripts would require constant maintenance.
+> 
+> One option to address problem would be to add messages such as "expected
+> warning backtraces start / end here" to the kernel log.  However, that
+> would again require filter scripts, it might result in missing real
+> problematic warning backtraces triggered while the test is running, and
+> the irrelevant backtrace(s) would still clog the kernel log.
+> 
+> Solve the problem by providing a means to identify and suppress specific
+> warning backtraces while executing test code. Support suppressing multiple
+> backtraces while at the same time limiting changes to generic code to the
+> absolute minimum. Architecture specific changes are kept at minimum by
+> retaining function names only if both CONFIG_DEBUG_BUGVERBOSE and
+> CONFIG_KUNIT are enabled.
+> 
+> The first patch of the series introduces the necessary infrastructure.
+> The second patch introduces support for counting suppressed backtraces.
+> This capability is used in patch three to implement unit tests.
+> Patch four documents the new API.
+> The next two patches add support for suppressing backtraces in drm_rect
+> and dev_addr_lists unit tests. These patches are intended to serve as
+> examples for the use of the functionality introduced with this series.
+> The remaining patches implement the necessary changes for all
+> architectures with GENERIC_BUG support.
+> 
+> With CONFIG_KUNIT enabled, image size increase with this series applied is
+> approximately 1%. The image size increase (and with it the functionality
+> introduced by this series) can be avoided by disabling
+> CONFIG_KUNIT_SUPPRESS_BACKTRACE.
+> 
+> This series is based on the RFC patch and subsequent discussion at
+> https://patchwork.kernel.org/project/linux-kselftest/patch/02546e59-1afe-4b08-ba81-d94f3b691c9a@moroto.mountain/
+> and offers a more comprehensive solution of the problem discussed there.
+> 
+> Design note:
+>   Function pointers are only added to the __bug_table section if both
+>   CONFIG_KUNIT_SUPPRESS_BACKTRACE and CONFIG_DEBUG_BUGVERBOSE are enabled
+>   to avoid image size increases if CONFIG_KUNIT is disabled. There would be
+>   some benefits to adding those pointers all the time (reduced complexity,
+>   ability to display function names in BUG/WARNING messages). That change,
+>   if desired, can be made later.
+> 
+> Checkpatch note:
+>   Remaining checkpatch errors and warnings were deliberately ignored.
+>   Some are triggered by matching coding style or by comments interpreted
+>   as code, others by assembler macros which are disliked by checkpatch.
+>   Suggestions for improvements are welcome.
+> 
+> Changes since RFC:
+> - Introduced CONFIG_KUNIT_SUPPRESS_BACKTRACE
+> - Minor cleanups and bug fixes
+> - Added support for all affected architectures
+> - Added support for counting suppressed warnings
+> - Added unit tests using those counters
+> - Added patch to suppress warning backtraces in dev_addr_lists tests
+> 
+> Changes since v1:
+> - Rebased to v6.9-rc1
+> - Added Tested-by:, Acked-by:, and Reviewed-by: tags
+>   [I retained those tags since there have been no functional changes]
+> - Introduced KUNIT_SUPPRESS_BACKTRACE configuration option, enabled by
+>   default.
+> 
+> Changes since v2:
+> - Rebased to v6.9-rc2
+> - Added comments to drm warning suppression explaining why it is needed.
+> - Added patch to move conditional code in arch/sh/include/asm/bug.h
+>   to avoid kerneldoc warning
+> - Added architecture maintainers to Cc: for architecture specific patches
+> - No functional changes
+> 
+> ----------------------------------------------------------------
+> Guenter Roeck (15):
+>       bug/kunit: Core support for suppressing warning backtraces
+>       kunit: bug: Count suppressed warning backtraces
+>       kunit: Add test cases for backtrace warning suppression
+>       kunit: Add documentation for warning backtrace suppression API
+>       drm: Suppress intentional warning backtraces in scaling unit tests
+>       net: kunit: Suppress lock warning noise at end of dev_addr_lists tests
+>       x86: Add support for suppressing warning backtraces
+>       arm64: Add support for suppressing warning backtraces
+>       loongarch: Add support for suppressing warning backtraces
+>       parisc: Add support for suppressing warning backtraces
+>       s390: Add support for suppressing warning backtraces
+>       sh: Add support for suppressing warning backtraces
+>       sh: Move defines needed for suppressing warning backtraces
+>       riscv: Add support for suppressing warning backtraces
+>       powerpc: Add support for suppressing warning backtraces
 
-v4.4 is the kernel version of the kernel included in the original
-software. Multiple users of older smartphones switch to alternative
-distributions once their device is no longer supported by the
-manufacturer. These alternatives often include a more recent kernel.
-See e.g. https://en.wikipedia.org/wiki/List_of_custom_Android_distributions.
+Tested-by: Kees Cook <keescook@chromium.org>
 
-Thanks,
+(for x86 and um)
 
-Bart.
+I was planning to add warning suppression for the "overflow" KUnit
+tests, but it seems the vmalloc routines aren't calling warn_alloc() any
+more for impossible sizes. So, I think, no patches needed for
+lib/overflow_kunit.c, but at the end of the day, I've tested this series
+is working for me. :P
 
+-- 
+Kees Cook
