@@ -1,104 +1,138 @@
-Received: from smtpbgbr2.qq.com (smtpbgbr2.qq.com [54.207.22.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f170.google.com (mail-qt1-f170.google.com [209.85.160.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0133C14BFA7;
-	Wed,  3 Apr 2024 16:02:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.207.22.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A17C14A4FC
+	for <linux-kernel@vger.kernel.org>; Wed,  3 Apr 2024 16:02:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712160130; cv=none; b=hX6eLDFsbO/1KrXbE6hQ9jvxhlm2zQZif3pMbwlhOpg2wW3Qh43TjI8pPKRE4tvQu9kD3dlUCIVgKBuXUWx6joXa1r+TYS1DWQrk9o3szi07DrIULCe2fhcerRjkMTs0dxjVQQpbzFIS6Ri5FKRyZ6oA84Ba+Id+4hcPYn2zHFE=
+	t=1712160133; cv=none; b=Y0dwv7lIxhkmcgbGwI0I8qP/+efT3Ewth+m6AOfbW0lGqgrvaXEJ4lINibZU0WAL+kzbN3kkxSwEIVhnqJHZJr37do5RRDGSBM3cM0Kw2sO56mkJWeigJVg2VuIb16bvRjJczXkRMdxHQxbMSkUtBDuqdYBmakuwfN/3a7QPAFM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712160130; c=relaxed/simple;
-	bh=OuclGvf17Qtp8ZoN6WPGf46/G7p3+QoCFfcQPvbAKEI=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=GGpQ8WUhOztWiXjMS145JxceCksxbR7V4juuyM1/HM7KwcJ3om87vRDT18R4zy6Ij9jjQJ2aHaxNRF3tusDe5M+WXVnY4VsxZKdG6lET3S/P/ufwh5wbfNYtzF/xpNeeZbYhanojx9tHXRErT0icEd7cA0s2rn3TaWRq0Lgk44c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=shingroup.cn; spf=pass smtp.mailfrom=shingroup.cn; arc=none smtp.client-ip=54.207.22.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=shingroup.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=shingroup.cn
-X-QQ-mid: bizesmtp87t1712160029tjvds1fh
-X-QQ-Originating-IP: ZFNF2jA6cUhBsI/Sw6U94tybbGBm1JvJxYu/t+ErlO0=
-Received: from localhost ( [112.0.147.175])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Thu, 04 Apr 2024 00:00:28 +0800 (CST)
-X-QQ-SSF: 01400000000000704000000A0000000
-X-QQ-FEAT: aEYUFldOyMo79sI+i2iQkeP3nF60xbGGh2UOzK77EjojVlrSHRhcR3+A+wTue
-	Vaun393p3G192Wzag0HG9f/pEbpcG8ewZy5sNNFX8ayyUGwKjCrKGPGIBMHVzgpx4+Yd4/d
-	RhZIiiBfiKw2maD0iQxAGLsh6VfshF8K9bHkRnzzGX3vuoee64Qd6RmF7BIQjjBfpc/E1LH
-	J5qD1ZlJmcG+gYnTKg+gh3ihBxtHntQaaNm/2OcuAzHj7oKg3fR/a7YUmgr5Hz2YYcFwYrN
-	zYxa4V6kHNuOpTPQO6Lu00GbO9h5iIlY4YKUCOIdBzhVmONHkdlxtDG24C6Esxgfo7bF8e6
-	saDwSwAFsT31Vl596phE/Ndnfxgx+d2uYk1pDcYl9Ef4gHsf2MzI7MTCHooOQUzoRYnbvFV
-X-QQ-GoodBg: 2
-X-BIZMAIL-ID: 3567389364509929858
-From: Dawei Li <dawei.li@shingroup.cn>
-To: will@kernel.org,
-	mark.rutland@arm.com,
-	yury.norov@gmail.com,
-	linux@rasmusvillemoes.dk
-Cc: xueshuai@linux.alibaba.com,
-	renyu.zj@linux.alibaba.com,
-	yangyicong@hisilicon.com,
-	jonathan.cameron@huawei.com,
-	andersson@kernel.org,
-	konrad.dybcio@linaro.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	linux-arm-msm@vger.kernel.org,
-	Dawei Li <dawei.li@shingroup.cn>
-Subject: [PATCH v3 02/10] perf/alibaba_uncore_drw: Avoid placing cpumask on the stack
-Date: Wed,  3 Apr 2024 23:59:42 +0800
-Message-Id: <20240403155950.2068109-3-dawei.li@shingroup.cn>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20240403155950.2068109-1-dawei.li@shingroup.cn>
-References: <20240403155950.2068109-1-dawei.li@shingroup.cn>
+	s=arc-20240116; t=1712160133; c=relaxed/simple;
+	bh=fggrNF/asutMtICgsplQTd2yCftvwfY2ORt4VRhq/9c=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=FXXkvAkZau5dHz4+l6lzOJC9NiZmDDg1uAg5VhIGHmkOE1C2KJcFfMU7F4joUKyw/FI7ohnBWtUhILFheane0hWeNnQANr5q6ALXaybi/gX2IjnauJWned7PfyU51EhFVNMISPZh2oDUUuSdfw7SdAo+FzjGxJ7aF3tUSjWsdnI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=CiX6esBp; arc=none smtp.client-ip=209.85.160.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="CiX6esBp"
+Received: by mail-qt1-f170.google.com with SMTP id d75a77b69052e-430d3fcc511so349241cf.1
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Apr 2024 09:02:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1712160131; x=1712764931; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=DNJPWByWF1sf2cxiFuFQ8vnWOdBcEetEGpATM1VlKMY=;
+        b=CiX6esBpThvPhW1aV6nDa/R4olmPWgwlpgy08y649c7Rlyf8W3bTQHZGMG3FX0vS80
+         2CtzbAVwoP19UufoG7CoKWEtiSM5nK+YryI480c04LKYFFAFZIlZHeTC8emE80dQb59z
+         1Yvzd7lFiSUXFYC7dyHK1kDKZ6alrLDvV6o9tpCN9CVNbZzj+n7J8rqa3P5pVJxj3Mse
+         1OUmVBNyaGhySqOfjtIPGQhfqHoRjCgK4PD7jyIdbp8vw+NyhRD6UhqUND1UmAeUZUWX
+         VHzQxSZFB7FTBl82Zb6nVk66b77eeLJX7F3apgq1X2izbYRn4lpn3K+hsZI7YUY1dmyv
+         AsFA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712160131; x=1712764931;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=DNJPWByWF1sf2cxiFuFQ8vnWOdBcEetEGpATM1VlKMY=;
+        b=mjbYi18WdAb4yMlbgrhTLwj5mdPddPBEkAVeD35YyeWd++E4SaXjXEyhwjYz84709m
+         YUglAP3RH9pjKIhV0i/UZOfSIxg2pgPtS7C6K4HmfvkSRVyGFW1VEfqe4jt9ElMB0Qb7
+         TccvgyqharwD/klJ1255KG8uGXTBJbtQnezPyDWncYsSdtmkqQg41lGmZtNdsAMSQI0f
+         NrIV38jaInOCzoI3mfntf7jxdieYs1FBjT7N8mh1VdC9YgRO9rve7oKDaPg0QJYU3Fgw
+         P3dj+fmuFAc12DHiLI9pqy2kQM/Qdj4afhyvkvgniRl63EVkg/RI0o0H+i1yg5bfaIvC
+         AsTw==
+X-Forwarded-Encrypted: i=1; AJvYcCXV1CD/arMNOCIdCNHOFi2vOz+rv4mM8mCb4pZnFfBfElPnf8M/NkPyq/Cbr2EWzjE1/zoS57a2wJXJ+rgAXg8OoPsQh1WnVfYKDiyQ
+X-Gm-Message-State: AOJu0YzBbLIDC1nPbIYEeU7X+eR32Iy8+Ne2BXYoQxV9/XoRbm+Kqbwi
+	3LrOxr2T6Jc9ZlzfxrThQ2k0i9TMsN3607hVfoc9/idRDdrM5nDPKX1VoHpw53llnmTiba2M1WE
+	IwvXERNBeA6r21E9VsGhRHNSgtodwCQ7CElVQs30AluBvq5xBuJ80EoY=
+X-Google-Smtp-Source: AGHT+IENWms5jjCWU9j5a5dPOPABkTHq7MDhw3vNngKqO3lbmYYO0VFfdiD+9I6XOWjohuGAZWWLx/KeC8p1iUA4meQ=
+X-Received: by 2002:a05:622a:164d:b0:431:3d25:f699 with SMTP id
+ y13-20020a05622a164d00b004313d25f699mr269309qtj.19.1712160130621; Wed, 03 Apr
+ 2024 09:02:10 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-QQ-SENDSIZE: 520
-Feedback-ID: bizesmtp:shingroup.cn:qybglogicsvrgz:qybglogicsvrgz5a-1
+References: <Zg1ywF7uRsfXYfYS@x1>
+In-Reply-To: <Zg1ywF7uRsfXYfYS@x1>
+From: Ian Rogers <irogers@google.com>
+Date: Wed, 3 Apr 2024 09:01:56 -0700
+Message-ID: <CAP-5=fUqtjxAsmdGrnkjhUTLHs-JvV10TtxyocpYDJK_+LYTiQ@mail.gmail.com>
+Subject: Re: [PATCH 1/1] perf annotate: Initialize 'arch' variable not to trip
+ some -Werror=maybe-uninitialized
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Namhyung Kim <namhyung@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Jiri Olsa <jolsa@kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-In general it's preferable to avoid placing cpumasks on the stack, as
-for large values of NR_CPUS these can consume significant amounts of
-stack space and make stack overflows more likely.
+On Wed, Apr 3, 2024 at 8:16=E2=80=AFAM Arnaldo Carvalho de Melo <acme@kerne=
+l.org> wrote:
+>
+> In some older distros the build is failing due to
+> -Werror=3Dmaybe-uninitialized, in this case we know that this isn't the
+> case because 'arch' gets initialized by evsel__get_arch(), so just init
+> it to NULL to silence those cases.
+>
+> E.g.:
+>
+>     32    17.12 opensuse:15.5                 : FAIL gcc version 7.5.0 (S=
+USE Linux)
+>         util/annotate.c: In function 'hist_entry__get_data_type':
+>     util/annotate.c:2269:15: error: 'arch' may be used uninitialized in t=
+his function [-Werror=3Dmaybe-uninitialized]
+>       struct arch *arch;
+>                    ^~~~
+>     cc1: all warnings being treated as errors
+>
+>       43     7.30 ubuntu:18.04-x-powerpc64el    : FAIL gcc version 7.5.0 =
+(Ubuntu 7.5.0-3ubuntu1~18.04)
+>     util/annotate.c: In function 'hist_entry__get_data_type':
+>     util/annotate.c:2351:36: error: 'arch' may be used uninitialized in t=
+his function [-Werror=3Dmaybe-uninitialized]
+>        if (map__dso(ms->map)->kernel && arch__is(arch, "x86") &&
+>                                         ^~~~~~~~~~~~~~~~~~~~~
+>     cc1: all warnings being treated as errors
+>
+> Cc: Adrian Hunter <adrian.hunter@intel.com>
+> Cc: Ian Rogers <irogers@google.com>
+> Cc: Jiri Olsa <jolsa@kernel.org>
+> Cc: Namhyung Kim <namhyung@kernel.org>
+> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-Use cpumask_any_and_but() to avoid the need for a temporary cpumask on
-the stack.
+This looks fine but I couldn't line up the errors with code in the
+tree. I was curious why the "maybe-uninitialized" was failing. Perhaps
+evsel__get_arch should set the out argument to NULL when an error
+occurs. This fix is also good but may potentially need repeating for
+other evsel__get_arch cases, so a fix in evsel__get_arch may be
+preferable.
 
-Suggested-by: Mark Rutland <mark.rutland@arm.com>
-Reviewed-by: Mark Rutland <mark.rutland@arm.com>
-Signed-off-by: Dawei Li <dawei.li@shingroup.cn>
----
- drivers/perf/alibaba_uncore_drw_pmu.c | 10 +++-------
- 1 file changed, 3 insertions(+), 7 deletions(-)
+Reviewed-by: Ian Rogers <irogers@google.com>
 
-diff --git a/drivers/perf/alibaba_uncore_drw_pmu.c b/drivers/perf/alibaba_uncore_drw_pmu.c
-index a9277dcf90ce..d4d14b65c4a5 100644
---- a/drivers/perf/alibaba_uncore_drw_pmu.c
-+++ b/drivers/perf/alibaba_uncore_drw_pmu.c
-@@ -746,18 +746,14 @@ static int ali_drw_pmu_offline_cpu(unsigned int cpu, struct hlist_node *node)
- 	struct ali_drw_pmu_irq *irq;
- 	struct ali_drw_pmu *drw_pmu;
- 	unsigned int target;
--	int ret;
--	cpumask_t node_online_cpus;
- 
- 	irq = hlist_entry_safe(node, struct ali_drw_pmu_irq, node);
- 	if (cpu != irq->cpu)
- 		return 0;
- 
--	ret = cpumask_and(&node_online_cpus,
--			  cpumask_of_node(cpu_to_node(cpu)), cpu_online_mask);
--	if (ret)
--		target = cpumask_any_but(&node_online_cpus, cpu);
--	else
-+	target = cpumask_any_and_but(cpumask_of_node(cpu_to_node(cpu)),
-+				     cpu_online_mask, cpu);
-+	if (target >= nr_cpu_ids)
- 		target = cpumask_any_but(cpu_online_mask, cpu);
- 
- 	if (target >= nr_cpu_ids)
--- 
-2.27.0
+Thanks,
+Ian
 
+> ---
+>  tools/perf/util/annotate.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
+> index b795f27f26024f35..f316e0b65897957a 100644
+> --- a/tools/perf/util/annotate.c
+> +++ b/tools/perf/util/annotate.c
+> @@ -2266,7 +2266,7 @@ struct annotated_data_type *hist_entry__get_data_ty=
+pe(struct hist_entry *he)
+>  {
+>         struct map_symbol *ms =3D &he->ms;
+>         struct evsel *evsel =3D hists_to_evsel(he->hists);
+> -       struct arch *arch;
+> +       struct arch *arch =3D NULL;
+>         struct disasm_line *dl;
+>         struct annotated_insn_loc loc;
+>         struct annotated_op_loc *op_loc;
+> --
+> 2.44.0
+>
