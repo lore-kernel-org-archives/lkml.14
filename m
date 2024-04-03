@@ -1,169 +1,125 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A68C41514EC
-	for <linux-kernel@vger.kernel.org>; Wed,  3 Apr 2024 16:55:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A480C15219D;
+	Wed,  3 Apr 2024 16:55:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712163349; cv=none; b=jWp80LcKG46PRKwyZ8s0DnPpxXbFMVPkr9Jenoj/GhzerYSm5ZJIlx5Wln/UuWBvMywL7zLjbUGnx59WEuvNErgP9UCMdxEjzIn3aFW8x4kJzVN5A1MxicF+ULc7kuhQMm07CNVqTM58TkItt7Q0MHL0b8oZijo7ec/L8IV2Y7o=
+	t=1712163352; cv=none; b=QTHvu0cyJigLK9UqjvRce6pPypQxWEnQYvt2SncQQoBn3sGIYGPjRYbN3YlE7y5m3bpfdBJxYRJU10377O+VSKw/fiqahDVccg2qsTz9RPlbB90pKvtrEL5tGZO64XZ94IO3PBg7k9ghtzk9iUJIXbskKFf7THyCIN9Zy/iUyIw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712163349; c=relaxed/simple;
-	bh=ER2G/SPYbdhMyH/exF2rzBC3+1Ubd8xN/6vEMjXf8Pk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IZF8Pe1ghTM432cXUZ+EoKng+0ToprEBIkpbhKOOjR8ITeG8erltrpsGl+gmL8gzZNCSJ9yjKfbrebbYpvGOCQfsAY6zQlQ0Jt+M8eVOLjvtWQ4P52t/xv0PuWxpiQDVCcP02Htu0jSCLWP/y9gh5CBt4n9y45ofpcI0+I7QJXU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=cvCVs7iV; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1712163352; c=relaxed/simple;
+	bh=Mt/jdNcizSAPyHYbQE+rZ2V13UBG7PwrsIwZ5NwliAg=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=AHPyUEWxJE07tEXgqsfg4wNwKCfbuMLimM0KX5D4FcHTPzwfyRN6kSiOmNwTHdntnX788m/XdQvO5pj8V+B2wpZSmcBI8Wt4A5YrY0evVdBPHONAtn8jHsIyCdVW1I5I6SxxK3GyGtHDQ++vBkUIuiRaj093docKr81R3a/DeR0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=UxeZRb8Z; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cvCVs7iV"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1712163345;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=qcFGTIgsVpRcFHL+8n4bltIbe5BCiFbcUwE7alUYftc=;
-	b=cvCVs7iV7A+JfWN53Q97HNARkewbq+uFP9e7q05+d/BRkZVgmP3NiTcKsogyHuQIAparZN
-	OmdrhjsbTyziMBDa0TVtNCmXCvHtJ1MfN37/MrjtLjLWZSKzmTE7n7392jQr/E5IgwO+oj
-	Wtwl+lJKq5jEGBGem6rfDHc6e72AmFA=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-434-BbaFp3e6P9SwSkyIW3LFsQ-1; Wed, 03 Apr 2024 12:55:41 -0400
-X-MC-Unique: BbaFp3e6P9SwSkyIW3LFsQ-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.rdu2.redhat.com [10.11.54.4])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 479DF88D4E8;
-	Wed,  3 Apr 2024 16:55:40 +0000 (UTC)
-Received: from bfoster (unknown [10.22.16.57])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 300632024517;
-	Wed,  3 Apr 2024 16:55:39 +0000 (UTC)
-Date: Wed, 3 Apr 2024 12:57:37 -0400
-From: Brian Foster <bfoster@redhat.com>
-To: Sweet Tea Dorminy <sweettea-kernel@dorminy.me>
-Cc: Jonathan Corbet <corbet@lwn.net>,
-	Kent Overstreet <kent.overstreet@linux.dev>,
-	Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
-	David Sterba <dsterba@suse.com>, Jaegeuk Kim <jaegeuk@kernel.org>,
-	Chao Yu <chao@kernel.org>, Alexander Viro <viro@zeniv.linux.org.uk>,
-	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
-	=?iso-8859-1?Q?Micka=EBl_Sala=FCn?= <mic@digikod.net>,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-bcachefs@vger.kernel.org, linux-btrfs@vger.kernel.org,
-	linux-f2fs-devel@lists.sourceforge.net,
-	linux-fsdevel@vger.kernel.org, kernel-team@meta.com
-Subject: Re: [PATCH v3 01/13] fs: fiemap: add physical_length field to extents
-Message-ID: <Zg2Kgdn42odZVUtE@bfoster>
-References: <cover.1712126039.git.sweettea-kernel@dorminy.me>
- <1ba5bfccccbf4ff792f178268badde056797d0c4.1712126039.git.sweettea-kernel@dorminy.me>
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="UxeZRb8Z"
+Received: from apais-vm1.0synte4vioeebbvidf5q0vz2ua.xx.internal.cloudapp.net (unknown [52.183.86.224])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 40FE920E8CB7;
+	Wed,  3 Apr 2024 09:55:50 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 40FE920E8CB7
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1712163350;
+	bh=KCsFQpOryp/rvssUwJ8jG3/+Gvws5tiCogyEPIyhqN4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=UxeZRb8Z0CNIAWXhIXLDGQc08F3fQcDabUoRuJjPN4WWRN0OHmr0eY4YucUwESYTY
+	 GbnQN65udcAkQimhIDXmG/MKDCJaEvTE2vO89mS4rLYW0JJmhEPaX3CC4iV2HBfx6r
+	 tOmXH6EJDLjWi470CE5USJnr5rU/VfRnH3v9HSS0=
+From: Allen Pais <apais@linux.microsoft.com>
+To: linux-kernel@vger.kernel.org
+Cc: tj@kernel.org,
+	keescook@chromium.org,
+	kys@microsoft.com,
+	haiyangz@microsoft.com,
+	wei.liu@kernel.org,
+	decui@microsoft.com,
+	linux-hyperv@vger.kernel.org
+Subject: [PATCH v2 2/2] PCI: hv: Convert from tasklet to BH workqueue
+Date: Wed,  3 Apr 2024 16:55:42 +0000
+Message-Id: <20240403165542.21738-2-apais@linux.microsoft.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20240403165542.21738-1-apais@linux.microsoft.com>
+References: <20240403165542.21738-1-apais@linux.microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1ba5bfccccbf4ff792f178268badde056797d0c4.1712126039.git.sweettea-kernel@dorminy.me>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.4
 
-On Wed, Apr 03, 2024 at 03:22:42AM -0400, Sweet Tea Dorminy wrote:
-> Some filesystems support compressed extents which have a larger logical
-> size than physical, and for those filesystems, it can be useful for
-> userspace to know how much space those extents actually use. For
-> instance, the compsize [1] tool for btrfs currently uses btrfs-internal,
-> root-only ioctl to find the actual disk space used by a file; it would
-> be better and more useful for this information to require fewer
-> privileges and to be usable on more filesystems. Therefore, use one of
-> the padding u64s in the fiemap extent structure to return the actual
-> physical length; and, for now, return this as equal to the logical
-> length.
-> 
-> [1] https://github.com/kilobyte/compsize
-> 
-> Signed-off-by: Sweet Tea Dorminy <sweettea-kernel@dorminy.me>
-> ---
->  Documentation/filesystems/fiemap.rst | 28 +++++++++++++++++-------
->  fs/ioctl.c                           |  3 ++-
->  include/uapi/linux/fiemap.h          | 32 ++++++++++++++++++++++------
->  3 files changed, 47 insertions(+), 16 deletions(-)
-> 
-...
-> diff --git a/fs/ioctl.c b/fs/ioctl.c
-> index 661b46125669..8afd32e1a27a 100644
-> --- a/fs/ioctl.c
-> +++ b/fs/ioctl.c
-> @@ -138,7 +138,8 @@ int fiemap_fill_next_extent(struct fiemap_extent_info *fieinfo, u64 logical,
->  	memset(&extent, 0, sizeof(extent));
->  	extent.fe_logical = logical;
->  	extent.fe_physical = phys;
-> -	extent.fe_length = len;
-> +	extent.fe_logical_length = len;
-> +	extent.fe_physical_length = len;
+The only generic interface to execute asynchronously in the BH context is
+tasklet; however, it's marked deprecated and has some design flaws. To
+replace tasklets, BH workqueue support was recently added. A BH workqueue
+behaves similarly to regular workqueues except that the queued work items
+are executed in the BH context.
 
-Nit: Why start this field out as len if the next patch adds the param
-and defaults to zero? Not that it matters that much due to the next
-patch (which seems logical), but wouldn't it make more sense to set this
-to 0 from the start?
+This patch converts drivers/pci/pci-hyperv.c from tasklet to BH workqueue.
 
-Brian
+Based on the work done by Tejun Heo <tj@kernel.org>
+Branch:https://git.kernel.org/pub/scm/linux/kernel/git/tj/wq.git for-6.10
 
->  	extent.fe_flags = flags;
->  
->  	dest += fieinfo->fi_extents_mapped;
-> diff --git a/include/uapi/linux/fiemap.h b/include/uapi/linux/fiemap.h
-> index 24ca0c00cae3..3079159b8e94 100644
-> --- a/include/uapi/linux/fiemap.h
-> +++ b/include/uapi/linux/fiemap.h
-> @@ -14,14 +14,30 @@
->  
->  #include <linux/types.h>
->  
-> +/*
-> + * For backward compatibility, where the member of the struct was called
-> + * fe_length instead of fe_logical_length.
-> + */
-> +#define fe_length fe_logical_length
-> +
->  struct fiemap_extent {
-> -	__u64 fe_logical;  /* logical offset in bytes for the start of
-> -			    * the extent from the beginning of the file */
-> -	__u64 fe_physical; /* physical offset in bytes for the start
-> -			    * of the extent from the beginning of the disk */
-> -	__u64 fe_length;   /* length in bytes for this extent */
-> -	__u64 fe_reserved64[2];
-> -	__u32 fe_flags;    /* FIEMAP_EXTENT_* flags for this extent */
-> +	/*
-> +	 * logical offset in bytes for the start of
-> +	 * the extent from the beginning of the file
-> +	 */
-> +	__u64 fe_logical;
-> +	/*
-> +	 * physical offset in bytes for the start
-> +	 * of the extent from the beginning of the disk
-> +	 */
-> +	__u64 fe_physical;
-> +	/* logical length in bytes for this extent */
-> +	__u64 fe_logical_length;
-> +	/* physical length in bytes for this extent */
-> +	__u64 fe_physical_length;
-> +	__u64 fe_reserved64[1];
-> +	/* FIEMAP_EXTENT_* flags for this extent */
-> +	__u32 fe_flags;
->  	__u32 fe_reserved[3];
->  };
->  
-> @@ -66,5 +82,7 @@ struct fiemap {
->  						    * merged for efficiency. */
->  #define FIEMAP_EXTENT_SHARED		0x00002000 /* Space shared with other
->  						    * files. */
-> +#define FIEMAP_EXTENT_HAS_PHYS_LEN	0x00004000 /* Physical length is valid
-> +						    * and set by FS. */
->  
->  #endif /* _UAPI_LINUX_FIEMAP_H */
-> -- 
-> 2.43.0
-> 
-> 
+Signed-off-by: Allen Pais <allen.lkml@gmail.com>
+---
+ drivers/pci/controller/pci-hyperv.c | 13 +++++++------
+ 1 file changed, 7 insertions(+), 6 deletions(-)
+
+diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
+index 5992280e8110..2823fd50a69c 100644
+--- a/drivers/pci/controller/pci-hyperv.c
++++ b/drivers/pci/controller/pci-hyperv.c
+@@ -50,6 +50,7 @@
+ #include <linux/irqdomain.h>
+ #include <linux/acpi.h>
+ #include <linux/sizes.h>
++#include <linux/workqueue.h>
+ #include <asm/mshyperv.h>
+ 
+ /*
+@@ -2000,7 +2001,7 @@ static void hv_compose_msi_msg(struct irq_data *data, struct msi_msg *msg)
+ 		udelay(100);
+ 	}
+ 
+-	tasklet_enable(&channel->callback_event);
++	enable_and_queue_work(system_bh_wq, &channel->callback_event);
+ 
+ 	if (comp.comp_pkt.completion_status < 0) {
+ 		dev_err(&hbus->hdev->device,
+@@ -2026,7 +2027,7 @@ static void hv_compose_msi_msg(struct irq_data *data, struct msi_msg *msg)
+ 	return;
+ 
+ enable_tasklet:
+-	tasklet_enable(&channel->callback_event);
++	enable_and_queue_work(system_bh_wq, &channel->callback_event);
+ 	/*
+ 	 * The completion packet on the stack becomes invalid after 'return';
+ 	 * remove the ID from the VMbus requestor if the identifier is still
+@@ -3890,9 +3891,9 @@ static void hv_pci_remove(struct hv_device *hdev)
+ 
+ 	hbus = hv_get_drvdata(hdev);
+ 	if (hbus->state == hv_pcibus_installed) {
+-		tasklet_disable(&hdev->channel->callback_event);
++		disable_work_sync(&hdev->channel->callback_event);
+ 		hbus->state = hv_pcibus_removing;
+-		tasklet_enable(&hdev->channel->callback_event);
++		enable_and_queue_work(system_bh_wq, &hdev->channel->callback_event);
+ 		destroy_workqueue(hbus->wq);
+ 		hbus->wq = NULL;
+ 		/*
+@@ -3948,14 +3949,14 @@ static int hv_pci_suspend(struct hv_device *hdev)
+ 	 * it knows that no new work item can be scheduled, and then it flushes
+ 	 * hbus->wq and safely closes the vmbus channel.
+ 	 */
+-	tasklet_disable(&hdev->channel->callback_event);
++	disable_work_sync(&hdev->channel->callback_event);
+ 
+ 	/* Change the hbus state to prevent new work items. */
+ 	old_state = hbus->state;
+ 	if (hbus->state == hv_pcibus_installed)
+ 		hbus->state = hv_pcibus_removing;
+ 
+-	tasklet_enable(&hdev->channel->callback_event);
++	enable_and_queue_work(system_bh_wq, &hdev->channel->callback_event);
+ 
+ 	if (old_state != hv_pcibus_installed)
+ 		return -EINVAL;
+-- 
+2.17.1
 
