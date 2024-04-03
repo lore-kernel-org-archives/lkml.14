@@ -1,78 +1,66 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DF0A73506;
-	Wed,  3 Apr 2024 11:22:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3F8E135A5F
+	for <linux-kernel@vger.kernel.org>; Wed,  3 Apr 2024 11:23:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712143344; cv=none; b=KO7SXcWzMr9YIU2iZTbL1FVGnGjxzEufu7w5ZLbdxWQxj3kyJVeZGSMafyOGEOcSCLA563yWoJ9FsWJIMjlAI21cAzoSxwiCm7c0iyCL6oeB2t2ntN2X3PmKBy+ylF/0iEfXYDh71yLtd/i9nMp4aGymVU/NaiBWduBOScwMpFA=
+	t=1712143422; cv=none; b=TtMn9PmKqtf8VGxax5d11f4EhWiqiUJot8eDhAG4NHbkFblOFq7MaWm1xlqiJhyIH8Z60gTjv7FAm74lgINcW4lAslws0lCmSr8O2nvGZK5rbbNqwKSemlT8YjqXqNsFbofUXbo4rfw31U+95xW441RJru6+TZrD69SAIaqBANE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712143344; c=relaxed/simple;
-	bh=flLoUByLGK4hXv0d7wMX/74B0BBNZZd/sIeSZIip6mY=;
+	s=arc-20240116; t=1712143422; c=relaxed/simple;
+	bh=qlbIaZmjqq0figKmIY11feeW5X4Q6m2nbl5U2l0zQJI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jrP/dCrLBgf7l/6lE/EuK0Up6/WPomq78C/4Ad13BVbRfJV8Qn1wauK4DWHDpxWK/tPSwsn7A8mG4YYNPRuaFxsVLzEQYchGETztKsZKBVEeJY4VXWs5NsoCaeLQppu/3XFKUcubHo924T5jBw7f21o7KPnkmJOhSnCg47PAPTo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=DDJfiSBR; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=uoMMMBa/; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	 Content-Type:Content-Disposition:In-Reply-To; b=mXtEQ0T9hZSzz8uu0K3zIRzpXiJLBIwskkH/rFYa9jKSeAP023YwSLGiDnMdu2jYouPQSXK0XJD+xV4ps0/NYWFVzd8s8TrdzfXsBVRAxAl8O9lDRsYwS+gsAesDwDga/+0qle0CxNdfoQgv/J84nD/rp0DnVAWmECKyNGshyKQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=lSVHkoUB; arc=none smtp.client-ip=209.85.221.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="DDJfiSBR";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="uoMMMBa/"
-Received: from imap2.dmz-prg2.suse.org (imap2.dmz-prg2.suse.org [10.150.64.98])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 3841B35288;
-	Wed,  3 Apr 2024 11:22:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1712143340; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=QUubzZCvH9kKHwxEUHRTCcZPEs1hSs/vSgYqSwznXr4=;
-	b=DDJfiSBRvnRvc0NSrGBWmcDhD8fe7TOALaFjEzp2fpBhtYpI4jGxQKLA3+l1QQzdMRimzX
-	IQEap34DDcTzJQ9Yq3z062vzUdnUQNrGZf8I3Oe/jr3My0RIbNu6t7omRzXWMbpabspnLc
-	PLp6IF8n+5lEVbD2mOAQMSJezSx2cBk=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1712143340;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=QUubzZCvH9kKHwxEUHRTCcZPEs1hSs/vSgYqSwznXr4=;
-	b=uoMMMBa/IrIQ9KZDERsDt9OoPPcUgK86+ANehXQPJPaMYhaZWnL43IEBU2MBLVQBwplHKn
-	5oHScmosS95C5kAg==
-Authentication-Results: smtp-out1.suse.de;
-	none
-Received: from imap2.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap2.dmz-prg2.suse.org (Postfix) with ESMTPS id 28DB813357;
-	Wed,  3 Apr 2024 11:22:20 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap2.dmz-prg2.suse.org with ESMTPSA
-	id hubzCew7DWb0IAAAn2gu4w
-	(envelope-from <jack@suse.cz>); Wed, 03 Apr 2024 11:22:20 +0000
-Received: by quack3.suse.cz (Postfix, from userid 1000)
-	id CBB66A0814; Wed,  3 Apr 2024 13:22:04 +0200 (CEST)
-Date: Wed, 3 Apr 2024 13:22:04 +0200
-From: Jan Kara <jack@suse.cz>
-To: Sweet Tea Dorminy <sweettea-kernel@dorminy.me>
-Cc: Jonathan Corbet <corbet@lwn.net>,
-	Kent Overstreet <kent.overstreet@linux.dev>,
-	Brian Foster <bfoster@redhat.com>, Chris Mason <clm@fb.com>,
-	Josef Bacik <josef@toxicpanda.com>, David Sterba <dsterba@suse.com>,
-	Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <chao@kernel.org>,
-	Alexander Viro <viro@zeniv.linux.org.uk>,
-	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
-	=?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-bcachefs@vger.kernel.org, linux-btrfs@vger.kernel.org,
-	linux-f2fs-devel@lists.sourceforge.net,
-	linux-fsdevel@vger.kernel.org, kernel-team@meta.com
-Subject: Re: [PATCH v3 07/13] ext4: fiemap: return correct extent physical
- length
-Message-ID: <20240403112204.l5zmyirxueod2o5l@quack3>
-References: <cover.1712126039.git.sweettea-kernel@dorminy.me>
- <20935230b7513031ac497e3afe8446650d20fb1e.1712126039.git.sweettea-kernel@dorminy.me>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="lSVHkoUB"
+Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-3437d3db788so690118f8f.3
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Apr 2024 04:23:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1712143419; x=1712748219; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=c6hgwRkGrrS3Oweenekzl9fFYfPnVmMeLqWDsvPrY+Q=;
+        b=lSVHkoUBtf3duAA0NFtoNWId73Dm3E5d742poLvJelI3O+zsm5EflN2KfjDCg7V5yg
+         qLY7MVdRpG8SoYphwyqXWK50vtpUADh+bWYxPHFc9B1dzhfNEJKvgN7bxa3Yy5iAMqa9
+         wmD24cDh9k4SDwwlesM5CALaCt2QmeJecnzUfDC3YamUAatZdZFlMKUieJ+FaQqvbt0Q
+         fOn78kSrnAnwHneKThEzPVRG88S2yFcgunFyNcQvM7f72Bk3xxEUDfbq3eMM01c4EfoQ
+         tWHGK5VBrW++e2R7rWC/9knxTkjy4pQTJ2t9ToUgTeUG2dtS7fq7KoS3ZDzSGFTpASDv
+         0FJQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712143419; x=1712748219;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=c6hgwRkGrrS3Oweenekzl9fFYfPnVmMeLqWDsvPrY+Q=;
+        b=kqvExT1T3P9doqW3/ecIZ/KQH5nytGwEUtp2HjV7MptXsux9W7g5aRkXyhXjLX9i+B
+         6GOsX9a8FM/44ss7FXG+gxFHVcqBEuCE42TTu4bho6ndGcK6CtdXhUW2WKOak/upEaOW
+         NOOPYfUDWk1hkCWmJgzBfNaDVxJPnK1ksgqAOkTlnaNZbg2mW+4av2Wj1EHLWyybBNo3
+         awUCMT1h1r5+seR9w3L3PpFr4vAjRNkf+9cyuLEgkxQuZOt/Sndz/2wjps6zH4gYqSjZ
+         CGFvtmkG9Yi0E4zd7CHa9Lj5IgO7/shu0obxmu9RK7iXgQ2ppzAn+HHpLHOdjtmGel+v
+         4Fhw==
+X-Forwarded-Encrypted: i=1; AJvYcCWfzlAmGcpR1UwCmIcsUL74jDiGBTn873Z1KvNBw3R3U8KFEbSz1ZWqXwPozC65qRA/9N2xegS6Nyv6vdWQxdD7iVpePS+oza+1sgPW
+X-Gm-Message-State: AOJu0YytRCwkq3otI+xy3FTvW8xYUlhoLaMr2VpPWdc1ATXsCQGj7y5L
+	6WhfpNViq1dQeB1uo1Fgo6zXBPO8FzWhFM24MAeV1UHfJHfH1Y4onaOxqEaP3Vc=
+X-Google-Smtp-Source: AGHT+IHFWDpW0FUgymW8ITy3D3BYi7HZ6Y+HFH0zEcYWOyQNBbE0az1s+xAWdV24ThLFPPOYx/db0g==
+X-Received: by 2002:a5d:678d:0:b0:343:2d43:2b00 with SMTP id v13-20020a5d678d000000b003432d432b00mr9887182wru.62.1712143419223;
+        Wed, 03 Apr 2024 04:23:39 -0700 (PDT)
+Received: from aspen.lan (aztw-34-b2-v4wan-166919-cust780.vm26.cable.virginm.net. [82.37.195.13])
+        by smtp.gmail.com with ESMTPSA id o18-20020adfca12000000b0033ec81ec4aesm17057586wrh.78.2024.04.03.04.23.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 03 Apr 2024 04:23:38 -0700 (PDT)
+Date: Wed, 3 Apr 2024 12:23:36 +0100
+From: Daniel Thompson <daniel.thompson@linaro.org>
+To: Justin Stitt <justinstitt@google.com>
+Cc: Jason Wessel <jason.wessel@windriver.com>,
+	Douglas Anderson <dianders@chromium.org>,
+	kgdb-bugreport@lists.sourceforge.net, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] kdb: replace deprecated strncpy
+Message-ID: <20240403112336.GD25200@aspen.lan>
+References: <20240403-strncpy-kernel-debug-kdb-kdb_io-c-v1-1-7f78a08e9ff4@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -81,55 +69,59 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20935230b7513031ac497e3afe8446650d20fb1e.1712126039.git.sweettea-kernel@dorminy.me>
-X-Spam-Score: -1.03
-X-Spamd-Result: default: False [-1.03 / 50.00];
-	 ARC_NA(0.00)[];
-	 RCVD_VIA_SMTP_AUTH(0.00)[];
-	 FROM_HAS_DN(0.00)[];
-	 TO_DN_SOME(0.00)[];
-	 TO_MATCH_ENVRCPT_ALL(0.00)[];
-	 NEURAL_HAM_LONG(-1.00)[-1.000];
-	 MIME_GOOD(-0.10)[text/plain];
-	 RCVD_COUNT_THREE(0.00)[3];
-	 DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	 NEURAL_HAM_SHORT(-0.20)[-0.999];
-	 RCPT_COUNT_TWELVE(0.00)[20];
-	 DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:email];
-	 FUZZY_BLOCKED(0.00)[rspamd.com];
-	 FROM_EQ_ENVFROM(0.00)[];
-	 MIME_TRACE(0.00)[0:+];
-	 MID_RHS_NOT_FQDN(0.50)[];
-	 RCVD_TLS_ALL(0.00)[];
-	 BAYES_HAM(-0.23)[72.57%]
-X-Spam-Level: 
-X-Spam-Flag: NO
+In-Reply-To: <20240403-strncpy-kernel-debug-kdb-kdb_io-c-v1-1-7f78a08e9ff4@google.com>
 
-On Wed 03-04-24 03:22:48, Sweet Tea Dorminy wrote:
-> Signed-off-by: Sweet Tea Dorminy <sweettea-kernel@dorminy.me>
+On Wed, Apr 03, 2024 at 12:52:36AM +0000, Justin Stitt wrote:
+> All the other cases in this big switch statement use memcpy or other
+> methods for copying string data. Since the lengths are handled manually
+> and carefully, using strncpy() is may be misleading. It doesn't
+> guarantee any sort of NUL-termination on its destination buffer. At any
+> rate, it's deprecated [1] and we want to remove all its uses [2].
+>
+> Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
+> Link: https://github.com/KSPP/linux/issues/90 [2]
+> Cc: linux-hardening@vger.kernel.org
+> Signed-off-by: Justin Stitt <justinstitt@google.com>
 > ---
->  fs/ext4/extents.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/fs/ext4/extents.c b/fs/ext4/extents.c
-> index 2adade3c202a..4874f757e1bd 100644
-> --- a/fs/ext4/extents.c
-> +++ b/fs/ext4/extents.c
-> @@ -2194,7 +2194,7 @@ static int ext4_fill_es_cache_info(struct inode *inode,
->  
->  	while (block <= end) {
->  		next = 0;
-> -		flags = 0;
-> +		flags = FIEMAP_EXTENT_HAS_PHYS_LEN;
+> Note: build-tested only.
+>
+> Found with: $ rg "strncpy\("
+> ---
+>  kernel/debug/kdb/kdb_io.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/kernel/debug/kdb/kdb_io.c b/kernel/debug/kdb/kdb_io.c
+> index 9443bc63c5a2..8bba77b4a39c 100644
+> --- a/kernel/debug/kdb/kdb_io.c
+> +++ b/kernel/debug/kdb/kdb_io.c
+> @@ -368,9 +368,9 @@ static char *kdb_read(char *buffer, size_t bufsize)
+>  			kdb_printf("%s", buffer);
+>  		} else if (tab != 2 && count > 0) {
+>  			len_tmp = strlen(p_tmp);
+> -			strncpy(p_tmp+len_tmp, cp, lastchar-cp+1);
+> +			memcpy(p_tmp+len_tmp, cp, lastchar-cp+1);
 
-OK, but we should then pass (__u64)es.es_len << blksize_bits as physical
-extent length below, shouldn't we?
+The strncpy() here is obviously wrong because it passes the size of the
+source not the destination.
 
->  		if (!ext4_es_lookup_extent(inode, block, &next, &es))
->  			break;
->  		if (ext4_es_is_unwritten(&es))
+For that reason I'm not clear that memcpy() is the correct approach
+here. It's probably not more wrong than what was there before but,
+as mentioned, what was there before is already obviously wrong that
+should provoke a bit of code review ;-) .
 
-								Honza
--- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+In particular are you sure lastchar-cp+1 can never larger than
+buf_size-len_tmp (which is what I think is the remaining space
+at p_tmp+len_tmp)?
+
+
+>  			len_tmp = strlen(p_tmp);
+> -			strncpy(cp, p_tmp+len, len_tmp-len + 1);
+> +			memcpy(cp, p_tmp+len, len_tmp-len + 1);
+
+Roughly the same question here. The original coded is obviously wrong
+so trusting it did the boundary checks properly seems unwise.
+
+Are you sure it is OK to make this copy with checking against bufend?
+
+
+Daniel.
