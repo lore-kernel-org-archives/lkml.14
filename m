@@ -1,262 +1,236 @@
-Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com [209.85.208.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F010514A62A
-	for <linux-kernel@vger.kernel.org>; Wed,  3 Apr 2024 16:38:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.172
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3777150A60
+	for <linux-kernel@vger.kernel.org>; Wed,  3 Apr 2024 16:38:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712162284; cv=none; b=RTGaqP7q95YDzQ5TeoHg+ggSJg0G5Kgcsle3uWN2bCQKSqQvROdOPWKWd3mjmAUk9WWoiqHzw6qhbCar9OYpVMxVECFa/ubzhWYs9i5nwKTgTLx48AsC4qNRK/WRK+BH2cSvLjgAZMfb66YHvW/RWkIw11O7kp7gkHpXjhNOl/s=
+	t=1712162294; cv=none; b=m2KvqmvmGubq5hmYhfXDm9AovcBVG/PHIUikPuvVTpJOOCNv0gBj4sHAPAmeLXfn1as2Sv752XdIqYX55Kqv81GCT8SLvBaJQa5/zgcTkUYhgDgYctGlPpu0pLIozBy60ipuUmaA6lM87EqBYSIEfjcAfohd/XjfBM69ReJ4YAI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712162284; c=relaxed/simple;
-	bh=Giq7R76xZqUySEf7R34j+dGGeGtp38CHprsEw+dSA0E=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=SrYmVeG0ZS1SqxOMYZywQVGhSKyLlw/9f138dd6CjChlQRtr8X1fcXsfOZjBLE4J+9GQvb93SZL7IQpnPPT2QsvjxjGCo+8f8QMQZSV/o5qGo8rRv6a4FNGM4ok2fhFvRPqHSNdFX922S+abvCHt6gelIZ9krb8veBWl+PKNfNM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=mSeckWOl; arc=none smtp.client-ip=209.85.208.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="mSeckWOl"
-Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-2d4360ab3daso87133771fa.3
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Apr 2024 09:38:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1712162280; x=1712767080; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=8VAwBegNB+ejGvlVIKZPfY1+rXl1zIDBpfKpOZezbB0=;
-        b=mSeckWOlwsEz6B2ALe37Mf8yiSWrlNo2sQguc32Mxf3z2SxrWruloNQpoV77xN6F2K
-         3lGd9WBCmDcmhuJFwrRj4rT4034vDoZYpckJwA8kCUpN0E/O+A6rtMGjTLFE66SeYn8X
-         wotKHWm8Sa+KJVrjFLrZKgY2aeNgsAHRwWt6jM7ITTaGLA7SYxUoHqPMSiKOM32+9BRr
-         0noVaKys5HVu4XyMiSoCMDnE57Hc2do83wTn7zDaM981wNb6mckOkpoVE4FmZSkKHG5o
-         JdPhmPBepo0Emo4/eBbcSGZlJQatH3pYodHeQvcORFgqfrHyheObp6k6qKP7UBJVdGSF
-         lElA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712162280; x=1712767080;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=8VAwBegNB+ejGvlVIKZPfY1+rXl1zIDBpfKpOZezbB0=;
-        b=kE39pFFiL+O2xeow+qmC9alBuoj1M/3r8l2+LXHsFbiuu+X+eynSf6bvDhi25JWpt/
-         Xk6ylktPscPR24cY4iU5yEPkwcTtgcE6vcRa/wk+vkoqwyD6kwkrfYVNSSb9fI+DPjJo
-         5q3WxnEalThoMUQVr+A8tOpFOcuZo4A9JnYL4QTFX/sW/iyspmdBOlEnXT73Jn48PxsL
-         CLY73tkE90hQkSEuninY2x9xSwf52yIu2167eanVnfH5MAIA5JOJ16nanbVPZrVcwo6E
-         vmdVgBc1SPzdi11StKUys26VT5nC/d/pL0vvr5h79CETU7jvq9SzfBAnYQEcx8McwA03
-         Ss7w==
-X-Forwarded-Encrypted: i=1; AJvYcCVJ7WgFipPm0/PSSw378piD9+/EKl4pYtYEMtKmSNYpKvvkTzm7UXRkQLEkO5RDymVGW85ZoDojpG6vLWtdXMqZdrWMfC+WG7rEBs2u
-X-Gm-Message-State: AOJu0YwOS+CitcNx0x41HJD3ZLpMxgPxcbyhus+9r1OL9y4L01yPOWV6
-	m1zxqEqQQlX5ZwaHhS9w3ZiSnXp621vzA0F6ChiD+kCh0BJxg8e/ELyxUOXEmTfxW1/N8uGLCy+
-	4sjsJGVWU2JLy9zwbD26+pAGS9W4B5m7kAfH2Sw==
-X-Google-Smtp-Source: AGHT+IGAywR9Uy125qfFJ1X4pBurkesXRwKzT38wdpNo5Q4NTcpbgaRUf5WXVt7SKnHgElyGJALlJ1K6jC7Jdecw+bo=
-X-Received: by 2002:a05:651c:a06:b0:2d8:34ec:54e6 with SMTP id
- k6-20020a05651c0a0600b002d834ec54e6mr159118ljq.33.1712162279945; Wed, 03 Apr
- 2024 09:37:59 -0700 (PDT)
+	s=arc-20240116; t=1712162294; c=relaxed/simple;
+	bh=0uBvKsUXSPr3DSXxjUljvz/Au+xN1WNZFImPxCAyrsw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=qzAk8ygXNJ/CmYonLCeWW8v1a/RaYS9VY1kHNPV80gk6UkWh3OWlADlPLLSycgYsf7nL8wVG8TR+h8tWkjL9krDe56X2UKw7QRc54b0RobTf6+e23DEtxrcuwFVuZ6JP9r0kk52PzqBnbCgaM81M6bBmqq04LBYDSVchIzFVmpI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8B1321007;
+	Wed,  3 Apr 2024 09:38:42 -0700 (PDT)
+Received: from [10.57.72.245] (unknown [10.57.72.245])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7F80F3F7B4;
+	Wed,  3 Apr 2024 09:38:09 -0700 (PDT)
+Message-ID: <0793c3d9-589b-4550-a556-9a4fa5a6cec2@arm.com>
+Date: Wed, 3 Apr 2024 17:38:07 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240401-ad4111-v1-0-34618a9cc502@analog.com> <20240401-ad4111-v1-6-34618a9cc502@analog.com>
- <CAMknhBFdtv84E_S4wa4UW0pO2yiUEk9=jn=_i4F=b8VHdR6v+w@mail.gmail.com> <c7c26d36-ab08-420c-b634-8eb6d9cee9b5@gmail.com>
-In-Reply-To: <c7c26d36-ab08-420c-b634-8eb6d9cee9b5@gmail.com>
-From: David Lechner <dlechner@baylibre.com>
-Date: Wed, 3 Apr 2024 11:37:48 -0500
-Message-ID: <CAMknhBFZKKim4JyXLpHY=EoyW4ZPp03aHte5xy0ZkDnW16sfeA@mail.gmail.com>
-Subject: Re: [PATCH 6/6] iio: adc: ad7173: Add support for AD411x devices
-To: "Ceclan, Dumitru" <mitrutzceclan@gmail.com>
-Cc: dumitru.ceclan@analog.com, Lars-Peter Clausen <lars@metafoo.de>, 
-	Michael Hennerich <Michael.Hennerich@analog.com>, Jonathan Cameron <jic23@kernel.org>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
-	Conor Dooley <conor+dt@kernel.org>, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 1/2] mm/madvise: introduce mkold_clean_ptes() batch
+ helper
+Content-Language: en-GB
+To: Lance Yang <ioworker0@gmail.com>, akpm@linux-foundation.org
+Cc: zokeefe@google.com, 21cnbao@gmail.com, shy828301@gmail.com,
+ david@redhat.com, mhocko@suse.com, fengwei.yin@intel.com,
+ xiehuan09@gmail.com, wangkefeng.wang@huawei.com, songmuchun@bytedance.com,
+ peterx@redhat.com, minchan@kernel.org, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org
+References: <20240402124029.47846-1-ioworker0@gmail.com>
+ <20240402124029.47846-2-ioworker0@gmail.com>
+From: Ryan Roberts <ryan.roberts@arm.com>
+In-Reply-To: <20240402124029.47846-2-ioworker0@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Wed, Apr 3, 2024 at 4:53=E2=80=AFAM Ceclan, Dumitru <mitrutzceclan@gmail=
-.com> wrote:
->
->
-> On 01/04/2024 22:45, David Lechner wrote:
-> > On Mon, Apr 1, 2024 at 10:10=E2=80=AFAM Dumitru Ceclan via B4 Relay
-> > <devnull+dumitru.ceclan.analog.com@kernel.org> wrote:
-> >>
-> >> From: Dumitru Ceclan <dumitru.ceclan@analog.com>
-> >>
->
-> ...
->
-> >>  #define AD7175_2_ID                    0x0cd0
-> >>  #define AD7172_4_ID                    0x2050
-> >>  #define AD7173_ID                      0x30d0
-> >> +#define AD4111_ID                      0x30d0
-> >> +#define AD4112_ID                      0x30d0
-> >> +#define AD4114_ID                      0x30d0
-> >
-> > It might make it a bit more obvious that not all chips have a unique
-> > ID if we rename AD7173_ID to AD7173_AD4111_AD4112_AD4114_ID rather
-> > than introducing multiple macros with the same value.
-> >
-> > Or leave it as AD7173_ID to keep it short and add a comment where it
-> > is used with 411x chips in ad7173_device_info[].
-> >
->
-> Sure
->
-> >> +#define AD4116_ID                      0x34d0
-> >> +#define AD4115_ID                      0x38d0
-> >>  #define AD7175_8_ID                    0x3cd0
-> >>  #define AD7177_ID                      0x4fd0
-> >>  #define AD7173_ID_MASK                 GENMASK(15, 4)
->
-> ...
->
-> >>  struct ad7173_device_info {
-> >>         const unsigned int *sinc5_data_rates;
-> >>         unsigned int num_sinc5_data_rates;
-> >>         unsigned int odr_start_value;
-> >> +       unsigned int num_inputs_with_divider;
-> >>         unsigned int num_channels;
-> >>         unsigned int num_configs;
-> >>         unsigned int num_inputs;
-> >
-> > Probably a good idea to change num_inputs to num_voltage_inputs so it
-> > isn't confused with the total number of inputs.
-> >
-> > Similarly num_voltage_inputs_with_divider instead of num_inputs_with_di=
-vider.
-> >
-> > Also could use a comment to make it clear if num_voltage_inputs
-> > includes num_voltage_inputs_with_divider or not. And that it doesn't
-> > include VINCOM.
-> >
->
-> Alright for these 3 statements above.
->
-> > Probably also need some flag here to differentiate ADCINxx voltage
-> > inputs on AD4116.
-> >
->
-> That is the purpose of num_inputs_with_divider. Mangled some changes
-> when splitting into individual patches. Will include in V2.
-> "
-> if (ain[1] =3D=3D AD411X_VCOM_INPUT &&
->                     ain[0] >=3D st->info->num_inputs_with_divider)
->                         return dev_err_probe(dev, -EINVAL,
->                 "VCOM must be paired with inputs having divider.\n");
-> "
->
-> ...
->
-> >>
-> >> +static unsigned int ad4111_current_channel_config[] =3D {
-> >> +       [AD4111_CURRENT_IN0P_IN0N] =3D 0x1E8,
-> >> +       [AD4111_CURRENT_IN1P_IN1N] =3D 0x1C9,
-> >> +       [AD4111_CURRENT_IN2P_IN2N] =3D 0x1AA,
-> >> +       [AD4111_CURRENT_IN3P_IN3N] =3D 0x18B,
-> >> +};
-> >
-> > As mentioned in the DT bindings review, it would make more sense to
-> > just use the datasheet numbers for the current input channels in the
-> > diff-channels DT property, then we don't need this lookup table.
-> >
-> Yet, the datasheet does not specify the numbers, just a single bitfield
-> for each pair. It is too much of a churn to need to decode that bitfield
-> into individual values when the user just wants to select a single pair.
->
-> ...
->
-> >> +               case IIO_CURRENT:
-> >> +                       *val =3D ad7173_get_ref_voltage_milli(st, ch->=
-cfg.ref_sel);
-> >> +                       *val /=3D AD4111_SHUNT_RESISTOR_OHM;
-> >> +                       *val2 =3D chan->scan_type.realbits - !!(ch->cf=
-g.bipolar);
-> >
-> > Static analysis tools like to complain about using bool as int.
-> > Probably more clear to write it as (ch->cfg.bipolar ? 1 : 0) anyway.
-> >
-> Maybe it does not apply here, but i followed this advice:
->
-> Andy Shevchenko V1 of AD7173 (named initially ad717x)
-> "
-> > +     return (bool)(value & mask);
->
-> This is weird. You have int which you get from bool, wouldn't be better
-> to use
-> !!(...) as other GPIO drivers do?
+On 02/04/2024 13:40, Lance Yang wrote:
+> Change the code that clears young and dirty bits from the PTEs to use
+> ptep_get_and_clear_full() and set_pte_at(), via the new mkold_clean_ptes()
+> batch helper function.
+> 
+> Unfortunately, the per-pte get_and_clear/modify/set approach would result
+> in unfolding/refolding for contpte mappings on arm64. So we need to
+> override mkold_clean_ptes() for arm64 to avoid it.
+> 
+> Suggested-by: David Hildenbrand <david@redhat.com>
+> Suggested-by: Barry Song <21cnbao@gmail.com>
+> Suggested-by: Ryan Roberts <ryan.roberts@arm.com>
+> Signed-off-by: Lance Yang <ioworker0@gmail.com>
+> ---
+>  arch/arm64/include/asm/pgtable.h | 36 ++++++++++++++++++++++++++++++++
+>  arch/arm64/mm/contpte.c          | 10 +++++++++
+>  include/linux/pgtable.h          | 30 ++++++++++++++++++++++++++
+>  3 files changed, 76 insertions(+)
 
-As long as the build bots don't complain, there isn't a reason to
-change it. It is just a matter of personal preference at that point.
+When I suggested splitting out this patch, this wasn't quite what I meant.
+Instead I intended for the first patch to make the MADV_FREE change and as part
+of that introduce mkold_clean_ptes() with a generic implementation. Then a
+second patch would do the arm64-specific specialization of mkold_clean_ptes()
+for an arm64-specific performance boost. In general it is often useful to
+separate core changes from arch changes where practical since they have
+different target audiences.
 
-I got a sparse warning for something like this recently [1], but maybe
-that case was just because it was inside of a FIELD_PREP() using it as
-bit logic instead of addition and we won't get any warnings here.
 
-[1]: https://lore.kernel.org/linux-iio/20240129195611.701611-3-dlechner@bay=
-libre.com/
+> 
+> diff --git a/arch/arm64/include/asm/pgtable.h b/arch/arm64/include/asm/pgtable.h
+> index 9fd8613b2db2..b032c107090c 100644
+> --- a/arch/arm64/include/asm/pgtable.h
+> +++ b/arch/arm64/include/asm/pgtable.h
+> @@ -1086,6 +1086,27 @@ static inline bool pud_user_accessible_page(pud_t pud)
+>  }
+>  #endif
+>  
+> +static inline void __mkold_clean_pte(struct vm_area_struct *vma,
+> +				    unsigned long addr, pte_t *ptep)
+> +{
+> +	pte_t old_pte, pte;
+> +
+> +	pte = __ptep_get(ptep);
+> +	do {
+> +		old_pte = pte;
+> +		pte = pte_mkclean(pte_mkold(pte));
+> +		pte_val(pte) = cmpxchg_relaxed(&pte_val(*ptep),
+> +					       pte_val(old_pte), pte_val(pte));
+> +	} while (pte_val(pte) != pte_val(old_pte));
+> +}
 
->
-> "
->
->
-> >> +               case IIO_CURRENT:
-> >>                         *val =3D -BIT(chan->scan_type.realbits - 1);
-> >
-> > Expecting a special case here, at least when ADCIN15 is configured for
-> > pseudo-differential inputs.
-> >
->
-> And what configuration would that be?
-> The only configurable part is the BI_UNIPOLARx bit in the channel
-> register, which is addressed here.
->
-> There seems to be a confusion similar to what we had with single-ended
-> channels. The ADC is differential. Pseudo-differential in this datasheet
-> just means that you wired a fixed voltage(higher than 0) to the negative
-> analog input.
->
->  Which you can also do on the other inputs with a divider.
->
+I'm not sure how value it is to split this out, given we are only exposing a
+batched version to the core. Perhaps just include the body in mkold_clean_ptes()?
 
-As discussed elsewhere, you can disregard this suggestion.
+> +
+> +static inline void mkold_clean_ptes(struct vm_area_struct *vma,
+> +				    unsigned long addr, pte_t *ptep, unsigned int nr, int full)
+> +{
+> +	for (; nr-- > 0; ptep++, addr += PAGE_SIZE)
+> +		__mkold_clean_pte(vma, addr, ptep);
+> +}
+> +
+>  /*
+>   * Atomic pte/pmd modifications.
+>   */
+> @@ -1379,6 +1400,8 @@ extern void contpte_wrprotect_ptes(struct mm_struct *mm, unsigned long addr,
+>  extern int contpte_ptep_set_access_flags(struct vm_area_struct *vma,
+>  				unsigned long addr, pte_t *ptep,
+>  				pte_t entry, int dirty);
+> +extern void contpte_ptep_mkold_clean(struct vm_area_struct *vma,
+> +				unsigned long addr, pte_t *ptep);
 
-> ...
->
-> >> -               chan_st_priv->ain =3D AD7173_CH_ADDRESS(ain[0], ain[1]=
-);
-> >> +               if (reg >=3D AD4111_CURRENT_CHAN_CUTOFF) {
-> >> +                       chan->type =3D IIO_CURRENT;
-> >> +                       chan->channel =3D ain[0];
-> >> +                       chan_st_priv->ain =3D ad4111_current_channel_c=
-onfig[ain[0]];
-> >> +               } else {
-> >> +                       chan->channel =3D ain[0];
-> >> +                       chan->channel2 =3D ain[1];
-> >> +                       chan->differential =3D true;
-> >
-> > Expecting chan->differential =3D false when ADCIN15 is configured for
-> > pseudo-differential inputs.
-> >
-> > Also, perhaps missed in previous reviews, I would expect
-> > chan->differential =3D false when channels are used as single-ended.
-> >
-> Why?
-> Also, how would one detect if you are using single-ended channels?
->
-> The ADC is still differential. Single ended is represented as connecting
-> AVSS(or another fixed voltage) and only letting the AIN+ input to fluctua=
-te.
->
-> In the IIO framework the only difference this makes is in the naming of
-> the channel:
->  voltage0-voltage1 vs just voltage0
->
-> All channels are differential. Pseudo differential: still differential.
+Let's have this follow the same naming pattern; contpte_mkold_clean_ptes()
 
-In the discussions on the AD7380 patch series, we came to the
-conclusion that pseduo-differential is technically not differential in
-the context of the .differential flag in IIO.
+>  
+>  static __always_inline void contpte_try_fold(struct mm_struct *mm,
+>  				unsigned long addr, pte_t *ptep, pte_t pte)
+> @@ -1603,6 +1626,18 @@ static inline int ptep_set_access_flags(struct vm_area_struct *vma,
+>  	return contpte_ptep_set_access_flags(vma, addr, ptep, entry, dirty);
+>  }
+>  
+> +#define mkold_clean_ptes mkold_clean_ptes
+> +static inline void mkold_clean_ptes(struct vm_area_struct *vma,
+> +				    unsigned long addr, pte_t *ptep, unsigned int nr, int full)
+> +{
+> +	pte_t orig_pte = __ptep_get(ptep);
+> +
+> +	if (likely(!pte_valid_cont(orig_pte)))
+> +		return __mkold_clean_ptes(vma, addr, ptep, nr, full);
+> +
+> +	return contpte_ptep_mkold_clean(vma, addr, ptep);> +}
 
-But as mentioned in my follow up, for this driver it is going to make
-things far simpler if we just ignore that and treat
-pseudo-differential the same as fully differential.
+This function is totally broken as far as I can tell. You are assuming if the
+first pte is not cont, then the whole range is not cont; you can't assume that.
+Then if you decide it is cont, you ignore nr and only fixup a single contpte block.
+
+Take a look at wrprotect_ptes() or another one of the batched helpers and follow
+that pattern.
+
+> +
+>  #else /* CONFIG_ARM64_CONTPTE */
+>  
+>  #define ptep_get				__ptep_get
+> @@ -1622,6 +1657,7 @@ static inline int ptep_set_access_flags(struct vm_area_struct *vma,
+>  #define wrprotect_ptes				__wrprotect_ptes
+>  #define __HAVE_ARCH_PTEP_SET_ACCESS_FLAGS
+>  #define ptep_set_access_flags			__ptep_set_access_flags
+> +#define mkold_clean_ptes			__mkold_clean_ptes
+>  
+>  #endif /* CONFIG_ARM64_CONTPTE */
+>  
+> diff --git a/arch/arm64/mm/contpte.c b/arch/arm64/mm/contpte.c
+> index 1b64b4c3f8bf..560622cfb2a9 100644
+> --- a/arch/arm64/mm/contpte.c
+> +++ b/arch/arm64/mm/contpte.c
+> @@ -322,6 +322,16 @@ int contpte_ptep_test_and_clear_young(struct vm_area_struct *vma,
+>  }
+>  EXPORT_SYMBOL_GPL(contpte_ptep_test_and_clear_young);
+>  
+> +void contpte_ptep_mkold_clean(struct vm_area_struct *vma, unsigned long addr,
+> +			      pte_t *ptep)
+> +{
+> +	ptep = contpte_align_down(ptep);
+> +	addr = ALIGN_DOWN(addr, CONT_PTE_SIZE);
+> +
+> +	__mkold_clean_ptes(vma, addr, ptep, CONT_PTES, 0);
+
+As above, this is broken as is.
+
+> +}
+> +EXPORT_SYMBOL_GPL(contpte_ptep_mkold_clean);
+> +
+>  int contpte_ptep_clear_flush_young(struct vm_area_struct *vma,
+>  					unsigned long addr, pte_t *ptep)
+>  {
+> diff --git a/include/linux/pgtable.h b/include/linux/pgtable.h
+> index fa8f92f6e2d7..fd30779fe487 100644
+> --- a/include/linux/pgtable.h
+> +++ b/include/linux/pgtable.h
+> @@ -391,6 +391,36 @@ static inline void mkold_ptes(struct vm_area_struct *vma, unsigned long addr,
+>  }
+>  #endif
+>  
+> +#ifndef mkold_clean_ptes
+> +/**
+> + * mkold_clean_ptes - Mark PTEs that map consecutive pages of the same folio
+> + *		as old and clean.
+> + * @vma: VMA the pages are mapped into.
+> + * @addr: Address the first page is mapped at.
+> + * @ptep: Page table pointer for the first entry.
+> + * @nr: Number of entries to mark old and clean.
+> + *
+> + * May be overridden by the architecture; otherwise, implemented as a simple
+> + * loop over ptep_get_and_clear_full().
+
+How about "otherwise, implemented by get_and_clear/modify/set for each pte in
+the range."?
+
+> + *
+> + * Note that PTE bits in the PTE range besides the PFN can differ. For example,
+> + * some PTEs might be write-protected.
+> + *
+> + * Context: The caller holds the page table lock.  The PTEs map consecutive
+> + * pages that belong to the same folio.  The PTEs are all in the same PMD.
+> + */
+> +static inline void mkold_clean_ptes(struct vm_area_struct *vma,
+> +				    unsigned long addr, pte_t *ptep, unsigned int nr, int full)
+
+You've included the "full" param in the function but not in the docs. I don't
+think the full param is valuable though; it doesn't make sense to call this
+function when tearing down a process. So drop the parameter and just call
+ptep_get_and_clear().
+
+> +{
+> +	pte_t pte;
+> +
+> +	for (; nr-- > 0; ptep++, addr += PAGE_SIZE) {
+
+nit: This is using a different pattern to all the other batch helpers
+(set_ptes(), wrprotect_ptes() clear_full_ptes()).
+
+> +		pte = ptep_get_and_clear_full(vma->vm_mm, addr, ptep, full);
+> +		set_pte_at(vma->vm_mm, addr, ptep, pte_mkclean(pte_mkold(pte)));
+> +	}
+> +}
+> +#endif
+> +
+>  #ifndef __HAVE_ARCH_PMDP_TEST_AND_CLEAR_YOUNG
+>  #if defined(CONFIG_TRANSPARENT_HUGEPAGE) || defined(CONFIG_ARCH_HAS_NONLEAF_PMD_YOUNG)
+>  static inline int pmdp_test_and_clear_young(struct vm_area_struct *vma,
+
