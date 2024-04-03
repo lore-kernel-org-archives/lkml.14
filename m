@@ -1,247 +1,142 @@
-Received: from dggsgout11.his.huawei.com (unknown [45.249.212.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f174.google.com (mail-yw1-f174.google.com [209.85.128.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE698286A6;
-	Wed,  3 Apr 2024 07:49:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F9B95BAD7;
+	Wed,  3 Apr 2024 07:50:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712130556; cv=none; b=Uj7PFkxI1GpOBkhAP9rykcZWpGCsICAcPHi5BmdAwbQsYJTuXZozWuNptIk7nFij2XXoQgLIgPFXRJlNU0KwlckeE7U6QJTMUXMsCNpGazLW1b04IyF0u1CBS191+bX2QCsxqCLti/k4AH5rJqNt+EnFhcqlctVC7Ge5PmORo+A=
+	t=1712130655; cv=none; b=WACdERSSyh6pi095Jv139G+EzAwIpdcsA2A5VhZpSDSNwE9mi0D/JGY6khthXGcP0v01zDBjpR8kFIlx1oz79F+hz5TeR3XxB3H1/KLOIXeBqivL4JB2XrfGASEWi0rkJ4UCIVlEg2YjEmKvWeDp4us0OLem1fTWkvBkcLc0KEY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712130556; c=relaxed/simple;
-	bh=EPw59Nj1eeTLPR830UfffcQk/hCu65cgSEMB6Rtx9SU=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=W/5dO/PDBhyJ9USnbGIzLLRgjm3KK75r7PCOobrqhLFiSUD4Mb0sC14D6AlUDljDA9/84IvMusrq2W5H/FB7dGqij20cUI+fGsxu443BpRD7DW9ErbJRlXf04ac6Jy7bEEj2mVVh3QkWnz1PuqP74HsiFoxtFtdBTG5XHlYezK0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.216])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4V8cMJ6pFmz4f3m7J;
-	Wed,  3 Apr 2024 15:49:00 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.112])
-	by mail.maildlp.com (Postfix) with ESMTP id 56A551A0BDA;
-	Wed,  3 Apr 2024 15:49:09 +0800 (CST)
-Received: from [10.174.178.129] (unknown [10.174.178.129])
-	by APP1 (Coremail) with SMTP id cCh0CgCnwwzzCQ1m7OeoIw--.47991S2;
-	Wed, 03 Apr 2024 15:49:09 +0800 (CST)
-Subject: Re: [PATCH v2 2/6] writeback: collect stats of all wb of bdi in
- bdi_debug_stats_show
-To: Brian Foster <bfoster@redhat.com>
-Cc: akpm@linux-foundation.org, willy@infradead.org, jack@suse.cz,
- tj@kernel.org, dsterba@suse.com, mjguzik@gmail.com, dhowells@redhat.com,
- linux-kernel@vger.kernel.org, linux-mm@kvack.org,
- linux-fsdevel@vger.kernel.org
-References: <20240327155751.3536-1-shikemeng@huaweicloud.com>
- <20240327155751.3536-3-shikemeng@huaweicloud.com> <Zga8Sf1DIxMevdcw@bfoster>
-From: Kemeng Shi <shikemeng@huaweicloud.com>
-Message-ID: <9a9fe07e-d7f4-19f7-a6fb-28ae0ca4c25e@huaweicloud.com>
-Date: Wed, 3 Apr 2024 15:49:07 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.0
+	s=arc-20240116; t=1712130655; c=relaxed/simple;
+	bh=ywE5qXTnpN8Rz79lOfQlyDcGWljbTKBwTCw6SI9c6J8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=AX93US5AMsg0uSScSUK96XjkOpD8Z60Uh3+BRFPOeTE63h/CDQDd7/1DPRJJOrwMd/cIQPIPjvADnaMuKx1eP5mWbWjjgkg0QN7PajSmXCIihh06kpZWT0SrlI3gbRfZ1yY/wtAwSJ8OITvTchITZtnFwIyQq7z0A9o68eBsSIA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mCw8xAj+; arc=none smtp.client-ip=209.85.128.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mCw8xAj+"
+Received: by mail-yw1-f174.google.com with SMTP id 00721157ae682-6151d79db7bso18555637b3.1;
+        Wed, 03 Apr 2024 00:50:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1712130652; x=1712735452; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=lK1PTLoQ7GWXD/BsL4tn6gD7zAkcDBc9/sDahHls59o=;
+        b=mCw8xAj+vN8eWePg2NLbB9YhNxydNs7leiUa7b4H7c3bpTXor2yd91i+5Dhs7qhZko
+         VydGn5z0QIT2nlsgOwIwWVyx2SwcavyTMBvgzz6ucqK0QOkv0AV8MrZTQ7la3Wreg6Av
+         l6pTYLpE4YHyFuQW4r1vx5ghVw0i2bMnO1VFr7W8o09MVMrX7qb56XFAwT7O5T85pnlw
+         bsZu4ltv9VROCUWuwHSqLMU7PxS3BSA0vvyBGeZNDp0xcxMSQ0aLyJzSDQZB8Uqnmn5l
+         ojLOtcNnHCYCsk37ymHuGuYFKlMHCwJ3FxDaw4+tZsT13P6h6aCoF2O7tRpwTo4sz3Ag
+         tjUg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712130652; x=1712735452;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=lK1PTLoQ7GWXD/BsL4tn6gD7zAkcDBc9/sDahHls59o=;
+        b=h3D/TtRiO6atU4LsW2DFFsRoUUklJ72wTT2d8EFZ0ipvCW8iR3HAN/e4gMZlmwR1Pu
+         qEj55fi/9573Wn8Hlu+/uZGfbGpG6+hOnY28jQLYzdfkKtURT81pYlsigr5l8MaE/H+4
+         LzHPaivm/DAVuHuZ08nWqko63HXWMGJ52FecOw2WXlFK7Lnns24F9uJV3M2dWaXOerHF
+         Om8QnbQtwHC420C6NhwaKz982auK9aowNuF3fG8j3GSz0OoQ1zpkynT/Dj6+wJW/Y3yP
+         NFvFWNf4cukvWBvb5FDFXnAVI32GSUUzRA2R22LOjWRl+Zbf5mX/l88wDEZrvbVoT1Og
+         CJ1Q==
+X-Forwarded-Encrypted: i=1; AJvYcCXk0B+I6flzrM5NzEtasyW9ypkwRkuS4bZwvLOtJz8llR3Wl3OS7AkRegpPcP67fesTibyXKMosKmp8fsWm1m2vhW1/1v9bnRUkTGj3hvYihaca4xOnOupXX/3KkLx70C2x9FqlaUwIeFFWUMFqsRwbNzT1ufKscOYePv3BEwA7YNI+dQ==
+X-Gm-Message-State: AOJu0Yy4tEmi76DTR5WbdlYQFaGGUNv6YZ0cQHtandL5jKcoXzOqvE+i
+	LZkW221dhwQWJFqNDhct0tEMpbFU6WW7b+xdeUQHnfEime8FTltj
+X-Google-Smtp-Source: AGHT+IHbal7o+sY0f692AFbkIvRC2YW9I8e84IO963Mqw6JI1jtvy0DC+7fdPtUYQhCh4UZX9THu/A==
+X-Received: by 2002:a5b:1c1:0:b0:dda:a9f7:4ec2 with SMTP id f1-20020a5b01c1000000b00ddaa9f74ec2mr13547111ybp.56.1712130652434;
+        Wed, 03 Apr 2024 00:50:52 -0700 (PDT)
+Received: from [10.76.84.174] ([5.2.194.157])
+        by smtp.gmail.com with ESMTPSA id bl39-20020a05620a1aa700b0078d3b2511d5sm5031qkb.5.2024.04.03.00.50.50
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 03 Apr 2024 00:50:52 -0700 (PDT)
+Message-ID: <0a72de29-6d25-4d2d-9824-ca407af69153@gmail.com>
+Date: Wed, 3 Apr 2024 10:50:49 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <Zga8Sf1DIxMevdcw@bfoster>
-Content-Type: text/plain; charset=gbk
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:cCh0CgCnwwzzCQ1m7OeoIw--.47991S2
-X-Coremail-Antispam: 1UD129KBjvJXoW3WryfWr17JFykur1rAF4ktFb_yoW7tw47pF
-	ZxGwn3Gr48XF1xWFnxuFWjqryYqw4Sqry7tF9ayFWUCFn8urn0yFyxW345CFy5CrZ7Crya
-	van8uF97C3yktaDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUvIb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k2
-	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
-	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7Cj
-	xVAFwI0_Cr1j6rxdM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I
-	0E14v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40E
-	x7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x
-	0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lFIxGxcIEc7CjxVA2Y2ka0xkIwI1lc7I2V7IY0VAS
-	07AlzVAYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c
-	02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_
-	GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7
-	CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6rWUJVWrZr1UMIIF0xvEx4A2jsIE
-	14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf
-	9x07UWE__UUUUU=
-X-CM-SenderInfo: 5vklyvpphqwq5kxd4v5lfo033gof0z/
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/6] dt-bindings: adc: ad7173: add support for ad411x
+To: David Lechner <dlechner@baylibre.com>, dumitru.ceclan@analog.com
+Cc: Lars-Peter Clausen <lars@metafoo.de>,
+ Michael Hennerich <Michael.Hennerich@analog.com>,
+ Jonathan Cameron <jic23@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>, linux-iio@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20240401-ad4111-v1-0-34618a9cc502@analog.com>
+ <20240401-ad4111-v1-1-34618a9cc502@analog.com>
+ <CAMknhBHeKAQ45=5-dL1T1tv-mZcPN+bNo3vxWJYgWpEPE+8p3Q@mail.gmail.com>
+ <CAMknhBGVuMSg+OpS5QTLWi9vA=Xa33AJ+cVS8ZCDyKsAVEe-ww@mail.gmail.com>
+Content-Language: en-US
+From: "Ceclan, Dumitru" <mitrutzceclan@gmail.com>
+In-Reply-To: <CAMknhBGVuMSg+OpS5QTLWi9vA=Xa33AJ+cVS8ZCDyKsAVEe-ww@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
+On 02/04/2024 00:16, David Lechner wrote:
+> On Mon, Apr 1, 2024 at 2:37 PM David Lechner <dlechner@baylibre.com> wrote:
+>>
+>> On Mon, Apr 1, 2024 at 10:10 AM Dumitru Ceclan via B4 Relay
+>> <devnull+dumitru.ceclan.analog.com@kernel.org> wrote:
+>>>
+>>> From: Dumitru Ceclan <dumitru.ceclan@analog.com>
+>>>
 
+...
 
-on 3/29/2024 9:04 PM, Brian Foster wrote:
-> On Wed, Mar 27, 2024 at 11:57:47PM +0800, Kemeng Shi wrote:
->> /sys/kernel/debug/bdi/xxx/stats is supposed to show writeback information
->> of whole bdi, but only writeback information of bdi in root cgroup is
->> collected. So writeback information in non-root cgroup are missing now.
->> To be more specific, considering following case:
+>>>
+>>>      properties:
+>>>        reg:
+>>> +        description:
+>>> +          Reg values 16-19 are only permitted for ad4111/ad4112 current channels.
+>>>          minimum: 0
+>>> -        maximum: 15
+>>> +        maximum: 19
 >>
->> /* create writeback cgroup */
->> cd /sys/fs/cgroup
->> echo "+memory +io" > cgroup.subtree_control
->> mkdir group1
->> cd group1
->> echo $$ > cgroup.procs
->> /* do writeback in cgroup */
->> fio -name test -filename=/dev/vdb ...
->> /* get writeback info of bdi */
->> cat /sys/kernel/debug/bdi/xxx/stats
->> The cat result unexpectedly implies that there is no writeback on target
->> bdi.
+>> This looks wrong. Isn't reg describing the number of logical channels
+>> (# of channel config registers)?
 >>
->> Fix this by collecting stats of all wb in bdi instead of only wb in
->> root cgroup.
+>> After reviewing the driver, I see that > 16 is used as a way of
+>> flagging current inputs, but still seems like the wrong way to do it.
+>> See suggestion below.
 >>
->> Following domain hierarchy is tested:
->>                 global domain (320G)
->>                 /                 \
->>         cgroup domain1(10G)     cgroup domain2(10G)
->>                 |                 |
->> bdi            wb1               wb2
+>>>
+>>>        diff-channels:
+>>> +        description:
+>>> +          For using current channels specify only the positive channel.
+>>> +            (IIN2+, IIN2−) -> diff-channels = <2 0>
 >>
->> /* all writeback info of bdi is successfully collected */
->> cat stats
->> BdiWriteback:             2912 kB
->> BdiReclaimable:        1598464 kB
->> BdiDirtyThresh:      167479028 kB
->> DirtyThresh:         195038532 kB
->> BackgroundThresh:     32466728 kB
->> BdiDirtied:           19141696 kB
->> BdiWritten:           17543456 kB
->> BdiWriteBandwidth:     1136172 kBps
->> b_dirty:                     2
->> b_io:                        0
->> b_more_io:                   1
->> b_dirty_time:                0
->> bdi_list:                    1
->> state:                       1
+>> I find this a bit confusing since 2 is already VIN2 and 0 is already
+>> VIN0. I think it would make more sense to assign unique channel
+>> numbers individually to the negative and positive current inputs.
+>> Also, I think it makes sense to use the same numbers that the
+>> registers in the datasheet use (8 - 11 for negative and 12 to 15 for
+>> positive).
 >>
->> Signed-off-by: Kemeng Shi <shikemeng@huaweicloud.com>
->> ---
->>  mm/backing-dev.c | 100 +++++++++++++++++++++++++++++++++--------------
->>  1 file changed, 71 insertions(+), 29 deletions(-)
->>
->> diff --git a/mm/backing-dev.c b/mm/backing-dev.c
->> index 70f02959f3bd..8daf950e6855 100644
->> --- a/mm/backing-dev.c
->> +++ b/mm/backing-dev.c
-> ...
->> @@ -65,16 +78,54 @@ static struct backing_dev_info *lookup_bdi(struct seq_file *m)
->>  	return NULL;
->>  }
->>  
->> +static void collect_wb_stats(struct wb_stats *stats,
->> +			     struct bdi_writeback *wb)
->> +{
->> +	struct inode *inode;
->> +
->> +	spin_lock(&wb->list_lock);
->> +	list_for_each_entry(inode, &wb->b_dirty, i_io_list)
->> +		stats->nr_dirty++;
->> +	list_for_each_entry(inode, &wb->b_io, i_io_list)
->> +		stats->nr_io++;
->> +	list_for_each_entry(inode, &wb->b_more_io, i_io_list)
->> +		stats->nr_more_io++;
->> +	list_for_each_entry(inode, &wb->b_dirty_time, i_io_list)
->> +		if (inode->i_state & I_DIRTY_TIME)
->> +			stats->nr_dirty_time++;
->> +	spin_unlock(&wb->list_lock);
->> +
->> +	stats->nr_writeback += wb_stat(wb, WB_WRITEBACK);
->> +	stats->nr_reclaimable += wb_stat(wb, WB_RECLAIMABLE);
->> +	stats->nr_dirtied += wb_stat(wb, WB_DIRTIED);
->> +	stats->nr_written += wb_stat(wb, WB_WRITTEN);
->> +	stats->wb_thresh += wb_calc_thresh(wb, stats->dirty_thresh);
+>> So: (IIN2+, IIN2−) -> diff-channels = <13 10>
 > 
-> Kinda nitty question, but is this a sum of per-wb writeback thresholds?
-> If so, do you consider that useful information vs. the per-wb threshold
-> data presumably exposed in the next patch?
-It's sum of per-wb wirteback thresholds in global domain. For each wb,
-it's threshold is min of threshold in global domain and threshold in
-cgroup domain (if any). As the debug data of bdi existed before writeback
-cgroup was introduced, so it would be better to show bdi threshold in global
-domain which is more compatible.
+> Thinking about this a bit more...
 > 
-> I'm not really that worried about what debug data we expose, it just
-> seems a little odd. How would you document this value in a sentence or
-> two, for example?
-I think it could simply be "threshold of bdi in global domain".
+> Since the current inputs have dedicated pins and aren't mix-and-match
+> with multiple valid wiring configurations like the voltage inputs, do
+> we even need to describe them in the devicetree?
 > 
->> +}
->> +
->> +#ifdef CONFIG_CGROUP_WRITEBACK
->> +static void bdi_collect_stats(struct backing_dev_info *bdi,
->> +			      struct wb_stats *stats)
->> +{
->> +	struct bdi_writeback *wb;
->> +
->> +	list_for_each_entry_rcu(wb, &bdi->wb_list, bdi_node)
->> +		collect_wb_stats(stats, wb);
-> 
-> Depending on discussion on the previous patch and whether the higher
-> level rcu protection in bdi_debug_stats_show() is really necessary, it
-> might make more sense to move it here.
-Sure, will do it in next version.
-> 
-> I'm also wondering if you'd want to check the state of the individual wb
-> (i.e. WB_registered?) before reading it..?
-I think it't better to keep full debug info. The user could filter it out
-with state in debug info anyway.
-> 
->> +}
->> +#else
->> +static void bdi_collect_stats(struct backing_dev_info *bdi,
->> +			      struct wb_stats *stats)
->> +{
->> +	collect_wb_stats(stats, &bdi->wb);
->> +}
->> +#endif
-> ...
->> @@ -115,18 +157,18 @@ static int bdi_debug_stats_show(struct seq_file *m, void *v)
->>  		   "b_dirty_time:       %10lu\n"
->>  		   "bdi_list:           %10u\n"
->>  		   "state:              %10lx\n",
->> -		   (unsigned long) K(wb_stat(wb, WB_WRITEBACK)),
->> -		   (unsigned long) K(wb_stat(wb, WB_RECLAIMABLE)),
->> -		   K(wb_thresh),
->> +		   K(stats.nr_writeback),
->> +		   K(stats.nr_reclaimable),
->> +		   K(stats.wb_thresh),
->>  		   K(dirty_thresh),
->>  		   K(background_thresh),
->> -		   (unsigned long) K(wb_stat(wb, WB_DIRTIED)),
->> -		   (unsigned long) K(wb_stat(wb, WB_WRITTEN)),
->> -		   (unsigned long) K(wb->write_bandwidth),
->> -		   nr_dirty,
->> -		   nr_io,
->> -		   nr_more_io,
->> -		   nr_dirty_time,
->> +		   K(stats.nr_dirtied),
->> +		   K(stats.nr_written),
->> +		   K(tot_bw),
->> +		   stats.nr_dirty,
->> +		   stats.nr_io,
->> +		   stats.nr_more_io,
->> +		   stats.nr_dirty_time,
->>  		   !list_empty(&bdi->bdi_list), bdi->wb.state);
-> 
-> Is it worth showing a list count here rather than list_empty() state?
-Actually, I don't know how this info was supposed to be used. So I keep it in
-old way for compatibility...
-As for bdi count, it would be easy to retrieve by counting the bdi number under
-/sys/kernel/debug/bdi/.
-As for wb count, it would be easy to count with wb_stats.
-So I still prefer to keep it in old way for compatibility or just simply remove
-it if the list_empty() state is not needed.
-Thansk for the review and all advise. Look forward to your reply.
+> In the driver, the current channels would just be hard-coded like the
+> temperature channel since there isn't any application-specific
+> variation.
 
-Kemeng
+ Sure, but we still need to offer the user a way to configure which
+current inputs he wants and if they should use bipolar or unipolar coding.
 
-> 
-> Brian
-> 
->>  
->>  	rcu_read_unlock();
->> -- 
->> 2.30.0
->>
-> 
+ One other issue that arises is the fact that we will reserve 5
+(including temp) channels out of the 15 that the user has the option to
+configure. While the binding will configure only 11 channels for
+example, the driver probe will error out with the message "Too many
+channels specified".
 
