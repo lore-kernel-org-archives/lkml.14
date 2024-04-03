@@ -1,78 +1,91 @@
-Received: from szxga07-in.huawei.com (szxga07-in.huawei.com [45.249.212.35])
+Received: from out30-113.freemail.mail.aliyun.com (out30-113.freemail.mail.aliyun.com [115.124.30.113])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3548C6CDC2
-	for <linux-kernel@vger.kernel.org>; Wed,  3 Apr 2024 08:27:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.35
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF6903E48E;
+	Wed,  3 Apr 2024 08:29:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.113
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712132830; cv=none; b=EIEI4ElgnPzzOVBhRHIzWfDT/1o9nHExe2I4M4nAXxXDB+rF3apSaVTu9kjTwQqDpYIpiwTJjc3U10qrMOHuLz0vHwpcx3u3z13X3aHlGfkHVsXlCDORQzp6vbEE61NLLBDq8gzgS7xHAAhCjNL3xZ3VX/vvT/ESrun/Vry3JBc=
+	t=1712132969; cv=none; b=ho6+ijI8R78pxaONgStjw4TUFIkPxn6vGz4Yxltvkzw8nbwGdLlI0EBE3QGakhnH9RZfdxRD1tZr3UKMQumBzzHSsCEl5parC41U1k6dEBkF3Q2PGxPY8YfjH/z1xC6td8SFhudA383whBZjNMWEoKpCEAyerTif96X5kTxmwYA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712132830; c=relaxed/simple;
-	bh=5Zgoa/lTop3pWi0GPKnDlpM7KZeP+t9NWazbbQD3v/k=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=BsCu8mI07c7xPQSiS6zSL9hYAZri+oRyV1KM/Qj1/FcteVrqELdgS/nOJc1U9+EytSEmaLaCBp9j4yTqx3hEw/KydbceaEZIWAM7Nnjdk1pwHn2rpsAXu73mOGe74a50aQbZ0f5tjcpjZ2jJiwsa9If+aV/Wv7tysbFCIQZG1co=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.35
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.163])
-	by szxga07-in.huawei.com (SkyGuard) with ESMTP id 4V8d7y2YQxz1R8dx;
-	Wed,  3 Apr 2024 16:24:14 +0800 (CST)
-Received: from kwepemm600004.china.huawei.com (unknown [7.193.23.242])
-	by mail.maildlp.com (Postfix) with ESMTPS id 52D0918001A;
-	Wed,  3 Apr 2024 16:27:00 +0800 (CST)
-Received: from localhost.localdomain (10.28.79.22) by
- kwepemm600004.china.huawei.com (7.193.23.242) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Wed, 3 Apr 2024 16:26:59 +0800
-From: Huisong Li <lihuisong@huawei.com>
-To: <xuwei5@hisilicon.com>
-CC: <linux-kernel@vger.kernel.org>, <soc@kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, <Jonathan.Cameron@Huawei.com>,
-	<liuyonglong@huawei.com>, <lihuisong@huawei.com>
-Subject: [PATCH 1/2] soc: hisilicon: kunpeng_hccs: Add the check for obtaining complete port attribute
-Date: Wed, 3 Apr 2024 16:19:34 +0800
-Message-ID: <20240403081935.24308-2-lihuisong@huawei.com>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20240403081935.24308-1-lihuisong@huawei.com>
-References: <20240403081935.24308-1-lihuisong@huawei.com>
+	s=arc-20240116; t=1712132969; c=relaxed/simple;
+	bh=Ldfjw0TveG1bC27L02CGJ1El9aX9iApZ9fZGyu1A5wg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=HQuM189R0MWqJgf153p1wXmA2Lq/2s5TiMbkAmh8H2O3SfOOqiNt3cR2wuWoHaKnvd6S2BgsjlWLR69JtPANyo+Jc1WZVg3oinOXY1M1ic3Z2ZywYbIQs6qACB2V+ZBYG55azUMvi0O1+ey+n7VT5WOWKDgAp93LUu6t1xWIvX4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=R9aXz0Ht; arc=none smtp.client-ip=115.124.30.113
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="R9aXz0Ht"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1712132958; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=6ARyxKsG7GVlym8JkJymXRlceZpVJP0pu/mDsnbzovQ=;
+	b=R9aXz0HtchVxIj0OkVENOP7cn2AfFizRkz0mdt8mvI73FcWSx0ysGaFPOaN+ZaHguEqXNlsr/eeR24y4bKKSzrI8BZ373JQxfl/fwJPrV4hYPSVbj6wg7FluO1tL1kw8ugKsABUjFoL8ZiB7LZ0EV3h0tQaP03EESXs0Njme5JM=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R191e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045192;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=20;SR=0;TI=SMTPD_---0W3r6Fd3_1712132955;
+Received: from 30.97.48.165(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0W3r6Fd3_1712132955)
+          by smtp.aliyun-inc.com;
+          Wed, 03 Apr 2024 16:29:16 +0800
+Message-ID: <dce83785-af96-4ff8-9552-56d73b5daf98@linux.alibaba.com>
+Date: Wed, 3 Apr 2024 16:29:14 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
- kwepemm600004.china.huawei.com (7.193.23.242)
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 00/13] fiemap extension for more physical information
+To: Sweet Tea Dorminy <sweettea-kernel@dorminy.me>,
+ Jonathan Corbet <corbet@lwn.net>, Kent Overstreet
+ <kent.overstreet@linux.dev>, Brian Foster <bfoster@redhat.com>,
+ Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
+ David Sterba <dsterba@suse.com>, Jaegeuk Kim <jaegeuk@kernel.org>,
+ Chao Yu <chao@kernel.org>, Alexander Viro <viro@zeniv.linux.org.uk>,
+ Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
+ =?UTF-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>,
+ linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-bcachefs@vger.kernel.org, linux-btrfs@vger.kernel.org,
+ linux-f2fs-devel@lists.sourceforge.net, linux-fsdevel@vger.kernel.org,
+ kernel-team@meta.com
+References: <cover.1712126039.git.sweettea-kernel@dorminy.me>
+From: Gao Xiang <hsiangkao@linux.alibaba.com>
+In-Reply-To: <cover.1712126039.git.sweettea-kernel@dorminy.me>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-The hccs_get_all_port_attr() is used to obtained the attribute of all
-ports on a specified DIE from firmware. However, this interface doesn't
-ensure whether firmware reports the complete attribute of all ports or not.
-So this patch adds the check for this.
+Hi,
 
-Signed-off-by: Huisong Li <lihuisong@huawei.com>
----
- drivers/soc/hisilicon/kunpeng_hccs.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+On 2024/4/3 15:22, Sweet Tea Dorminy wrote:
+> For many years, various btrfs users have written programs to discover
+> the actual disk space used by files, using root-only interfaces.
+> However, this information is a great fit for fiemap: it is inherently
+> tied to extent information, all filesystems can use it, and the
+> capabilities required for FIEMAP make sense for this additional
+> information also.
+> 
+> Hence, this patchset adds various additional information to fiemap,
+> and extends filesystems (but not iomap) to return it.  This uses some of
+> the reserved padding in the fiemap extent structure, so programs unaware
+> of the changes will be unaffected.
 
-diff --git a/drivers/soc/hisilicon/kunpeng_hccs.c b/drivers/soc/hisilicon/kunpeng_hccs.c
-index 9ff70b38e5e9..bb69a95b5f2d 100644
---- a/drivers/soc/hisilicon/kunpeng_hccs.c
-+++ b/drivers/soc/hisilicon/kunpeng_hccs.c
-@@ -556,6 +556,12 @@ static int hccs_get_all_port_attr(struct hccs_dev *hdev,
- 		start_id = rsp_head.next_id;
- 	}
- 
-+	if (left_buf_len != 0) {
-+		dev_err(hdev->dev, "do not get the expected port number(%u) attribute.\n",
-+			size);
-+		return -EINVAL;
-+	}
-+
- 	return 0;
- }
- 
--- 
-2.22.0
+I'm not sure why here iomap was excluded technically or I'm missing some
+previous comments?
+
+> 
+> This is based on next-20240403. I've tested the btrfs part of this with
+> the standard btrfs testing matrix locally and manually, and done minimal
+> testing of the non-btrfs parts.
+> 
+> I'm unsure whether btrfs should be returning the entire physical extent
+> referenced by a particular logical range, or just the part of the
+> physical extent referenced by that range. The v2 thread has a discussion
+> of this.
+
+Could you also make iomap support new FIEMAP physical extent information?
+since compressed EROFS uses iomap FIEMAP interface to report compressed
+extents ("z_erofs_iomap_report_ops") but there is no way to return
+correct compressed lengths, that is unexpected.
+
+Thanks,
+Gao Xiang
 
