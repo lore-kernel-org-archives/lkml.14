@@ -1,188 +1,115 @@
-Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
+Received: from mail-pj1-f53.google.com (mail-pj1-f53.google.com [209.85.216.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 509C918E20;
-	Wed,  3 Apr 2024 17:00:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3948152162
+	for <linux-kernel@vger.kernel.org>; Wed,  3 Apr 2024 17:01:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712163614; cv=none; b=IZoiXoJstKozalS8WNBefQL3gYlgQkafsqLMQs4PAd/9hv3OG0/4yCxeXRdN/ma94Vrpt46MGwC6mxXYjw/jMj30CwBuNItmgmIB5wv/iA4wdXqEeTLkZ4nUE0vjaa2cCALCwbLfQ+yCIcssKeUS6HpydDYjrlTadMkvKjc3BHo=
+	t=1712163663; cv=none; b=nuDNFGLleJh9+n491TjM9aekgH+rAf/Qg8sUO8yG7yBWq6l0QHpa6AlHsXmiKZSuyGzqosHuxT/QU4bp98IcueIekO0FuY+OrIrpCVDGt+pgbafiqlD/Jx0QMJI1tvyg3I+XzXewMiWlRHNJsun/0ct7860el3zrZKvmJBcCyMQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712163614; c=relaxed/simple;
-	bh=z3FscXihxwpOV4ROqTZ5m0E+vHpG1jkSs+uhYwvMfYI=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=L24nVwndyTKLZ7YqaeLTOMCSfK/Mbkbjeh9GkrwS7UUnTjdhf9mWVvzoUXlhjGM71EJ60ycvK/01I8TpCrIXp1xeqbk7Xb0I/7edxhgIvjIbahAD3WLVlGiyXOAQpycxcurzkiB7aBBbZyGFACZdYtF2DW2UBe9gSp9n8f4QLhA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XM83IQSW; arc=none smtp.client-ip=209.85.210.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1712163663; c=relaxed/simple;
+	bh=pCLNzzLPBjclBQkvMoJ+H7z2bFenb2zAQY9AAvNZjGU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=k2MB4UwZB6d78l2F0Acx14viLLnr26e2NdmbQJ4D0dKeA11arm0Z3C57RfAYPp4O5Y11HD01PMVjh/WTr0nON2+wfXwIGaUXzNoaHcqe9hrScjanzwJsiYzGuxVIiKmg1eMtvcs76UppAQv5efctxk/Y1R0NdFNIwO8tyJhSoVY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=arista.com; spf=pass smtp.mailfrom=arista.com; dkim=fail (1024-bit key) header.d=arista.com header.i=@arista.com header.b=VSsW3yJU reason="signature verification failed"; arc=none smtp.client-ip=209.85.216.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=arista.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arista.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XM83IQSW"
-Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-6e704078860so13892b3a.0;
-        Wed, 03 Apr 2024 10:00:13 -0700 (PDT)
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=arista.com header.i=@arista.com header.b="VSsW3yJU"
+Received: by mail-pj1-f53.google.com with SMTP id 98e67ed59e1d1-29e0a1fd9a7so4333714a91.2
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Apr 2024 10:01:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1712163612; x=1712768412; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=/iqVZ5gA1EsiAAqdiE1q1pz002POsB1V3jfn1PcyLTU=;
-        b=XM83IQSWa7qfNLPwsPoBsXpZSGMdmh0qUJvLGXx3OGN8oH+hY579EKjiZEo4UVj7tb
-         52bYdnvw9tzqII5Roc6KtPLRQGbKKxK5VtXdZDcuko2B4ZuWzu+06zUup/yxqz/tmz3q
-         GR99pCJuqu/rePZ9zOO/v8TBNq7Z85ml9jtUNxzt9qLLdXcciAL+oPsqyC4hRh9eEEQ7
-         Ygq772lCdD/JCDeukDwTyzVaJMLLPxYFYyoON9bO20f3AUMOrKS5FUpKgYNEuRRM0L5T
-         ok2Mo2awpFcQWstxbV/4YhiyOfHc1fklDHyfYSopoKfRSgCqud42Jx4q+W65lTNHKTey
-         FnZQ==
+        d=arista.com; s=google; t=1712163661; x=1712768461; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=eijqq1kellEja2nXJ0nGvTSxawC3HDrhpQA6YnGCSQ4=;
+        b=VSsW3yJUleNGPeqHgxDeDpkKvQ851yLnVQChKjh/WFepnQIKGBr3AcuouwsLt8g3yX
+         qHXUuHrXkCGs3XFGRly7x1uuyS0fjMU90tq1xQyjua5Uu0ZD3WdCRbsYhJLXN7moZp0U
+         sHvBriemOyRI9oHzeT5W13Js9BeZ6o1wHsgORJ0Y23J0HZPfP6uq6smTglkbatOdq9Fy
+         QpNGvvgR8AFbomu0OGmE1P7k52lmVTCM8eqpr0E97PTIAmS9zoePpJPx00F837RbZYRy
+         OsfbWaI/v6usx4fy1GehqG/lwjMs8GiJs5zSUCWYhiXjM+rfnFASwCf1srQiSqjDDIkg
+         7zZg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712163612; x=1712768412;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=/iqVZ5gA1EsiAAqdiE1q1pz002POsB1V3jfn1PcyLTU=;
-        b=oO1ybnP4Og0JMFkjNVAeeydML1t8SB1Mjubr8v9i21vMPcnq2yukX3wSKGDORIv2V1
-         pnFSoVirPrc+azr3V7VzKsQcoIT96ujg94E/55WiygQRzlfje42tX0RYE7pAUq/mtdfU
-         yq0AfV9t7E3Qggq0218vuGcb547WBE50C8fkCS5cbZ4uFGflqjnPf8ofLYoKIC7Pd1a0
-         SvONK4hu0ayz7lSSHaJgRDbVm9lTk3hfRiEISSI8vaq4vREPebor8q886plhrl8/iRv/
-         Kc4gEhGA4i2QvxxBK7vsFmOGKMkX3ISAtZR4ndSO9rVswn5Q6YjMiPZBfPt7daUcHSCz
-         HsbA==
-X-Forwarded-Encrypted: i=1; AJvYcCUdQy4axrM1Dv+pGjnuqUN+bRyuPAPS9d9oUANtIRp7uh54nEyMxNbbRLtXmy7LS/qwQaq6wum6dnKYzFqy6NuS+CjB0I5qgwp9Yc14zagQVzU4Ix90v/hE+5Fqlh78DoLwFjbnInDHeg==
-X-Gm-Message-State: AOJu0YzuiXJdqy90SgRcObRcc5IMytWJhBFe+hzyWKVDIJE64Uq20pbu
-	PSES0PTbfhA/m3CBqVHUoojWfjNWsDadRALrxo/24dJrUc5cqv6S
-X-Google-Smtp-Source: AGHT+IEGnCuTqwRJlWkcslahpnxgW2v/avadB030lgfgF5175R9lm9IIeIXhMbMokkf1DfF6h9e5WA==
-X-Received: by 2002:a05:6a00:21cc:b0:6ea:e31e:dc75 with SMTP id t12-20020a056a0021cc00b006eae31edc75mr121993pfj.5.1712163612561;
-        Wed, 03 Apr 2024 10:00:12 -0700 (PDT)
-Received: from localhost.localdomain ([203.188.229.101])
-        by smtp.gmail.com with ESMTPSA id c2-20020a056a000ac200b006eaf3057352sm8891925pfl.85.2024.04.03.10.00.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 03 Apr 2024 10:00:12 -0700 (PDT)
-From: Mighty <bavishimithil@gmail.com>
-To: 
-Cc: bavishimithil@gmail.com,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Mark Brown <broonie@kernel.org>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	alsa-devel@alsa-project.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] dt-bindings: omap-mcpdm: Convert to DT schema
-Date: Wed,  3 Apr 2024 22:29:50 +0530
-Message-Id: <20240403165950.75-1-bavishimithil@gmail.com>
-X-Mailer: git-send-email 2.34.1
+        d=1e100.net; s=20230601; t=1712163661; x=1712768461;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=eijqq1kellEja2nXJ0nGvTSxawC3HDrhpQA6YnGCSQ4=;
+        b=irAlt0rUTF8VTeX6Q4MplvAFY4H+CRAyuVn1IsIbomNmBi6dc3FBTx4nCm6vMt2xW9
+         xA9gZVpElhiXs4aA3iX+sLpusEzcXFxo4NuYSM40+yIOAdxx6ovSK3USuUAfqyA1fA/D
+         DZUqbDQN7csRG3dytm8ixj2tjq3crBYIHrDZmzRB4CNod0hCvzFMdWafh/enRUry0mKR
+         Q/vKQZ5/fP5+5D41s5im3KrfZ0lyk1vRvh8KGj4dH18OLixf2TdCUI5o1e5CyKhzD4Eo
+         KglNGC30FJIMUdC3054sNEHddg6iynryYVoVvD5sDrd9vpM1rCGn2Ni3Vc+xbKxazshU
+         Ivcw==
+X-Forwarded-Encrypted: i=1; AJvYcCXbhP2IBsdKHQVt1CugDBsn8N5Ox9bTz0sD3IYMcZkwhtbNCAcNXGbrLhlZlVEinMgms1Wtcv/0pNyh5tEgh4ubdkiRvwnbMkweD9pE
+X-Gm-Message-State: AOJu0YwtUnz87QRXGI/YqfHZiWFAYmfilo4T7GYqEbNN1G0lbSQgBOfD
+	oVveclHlEdtjqW4uT9bcuPLz05+ocCVLLEjXb7uzkd5avQI66BtiRiO34Yag6GL+574OF7hu3YB
+	7ZsXuCqYZCXO/Nui+uOogia/iVtNfwpljodG/
+X-Google-Smtp-Source: AGHT+IH+b/yzFFmXkyLOQ8e/HJ2CJOFKEsj8o894ViUToeucMYnGc5Ulmwpl7GyflCzMs9YbMXKZZLY6LiWJ86MkzmM=
+X-Received: by 2002:a17:90a:ce82:b0:2a2:6a52:96f4 with SMTP id
+ g2-20020a17090ace8200b002a26a5296f4mr118745pju.9.1712163660743; Wed, 03 Apr
+ 2024 10:01:00 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20240403132456.41709-1-aleksander.lobakin@intel.com>
+In-Reply-To: <20240403132456.41709-1-aleksander.lobakin@intel.com>
+From: Dmitry Safonov <dima@arista.com>
+Date: Wed, 3 Apr 2024 18:00:49 +0100
+Message-ID: <CAGrbwDQ40DWXZ1AYesdXMXrb3HWW6bs6dAYVaUrwDriCekwg3w@mail.gmail.com>
+Subject: Re: [PATCH net-next] net/tcp: move TCP hash fail messages out of line
+To: Alexander Lobakin <aleksander.lobakin@intel.com>
+Cc: "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+	Francesco Ruggeri <fruggeri@arista.com>, Salam Noureddine <noureddine@arista.com>, 
+	David Ahern <dsahern@kernel.org>, nex.sw.ncis.osdt.itp.upstreaming@intel.com, 
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Convert the OMAP4+ McPDM bindings to DT schema.
+Hi Alexander,
 
-Signed-off-by: Mighty <bavishimithil@gmail.com>
----
- .../devicetree/bindings/sound/omap-mcpdm.txt  | 30 ----------
- .../devicetree/bindings/sound/omap-mcpdm.yaml | 58 +++++++++++++++++++
- 2 files changed, 58 insertions(+), 30 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/sound/omap-mcpdm.txt
- create mode 100644 Documentation/devicetree/bindings/sound/omap-mcpdm.yaml
+On Wed, Apr 3, 2024 at 2:26=E2=80=AFPM Alexander Lobakin
+<aleksander.lobakin@intel.com> wrote:
+>
+> tcp_hash_fail() is used multiple times on hotpath, including static
+> inlines. It contains a couple branches and a lot of code, which all
+> gets inlined into the call sites. For example, one call emits two
+> calls to net_ratelimit() etc.
+> Move as much as we can out of line to a new global function. Use enum
+> to determine the type of failure. Check for net_ratelimit() only once,
+> format common fields only once as well to pass only unique strings to
+> pr_info().
+> The result for vmlinux with Clang 19:
+>
+> add/remove: 2/0 grow/shrink: 0/4 up/down: 773/-4908 (-4135)
+> Function                                     old     new   delta
+> __tcp_hash_fail                                -     757    +757
+> __pfx___tcp_hash_fail                          -      16     +16
+> tcp_inbound_ao_hash                         1819    1062    -757
+> tcp_ao_verify_hash                          1217     451    -766
+> tcp_inbound_md5_hash                        1591     374   -1217
+> tcp_inbound_hash                            3566    1398   -2168
 
-diff --git a/Documentation/devicetree/bindings/sound/omap-mcpdm.txt b/Documentation/devicetree/bindings/sound/omap-mcpdm.txt
-deleted file mode 100644
-index ff98a0cb5..000000000
---- a/Documentation/devicetree/bindings/sound/omap-mcpdm.txt
-+++ /dev/null
-@@ -1,30 +0,0 @@
--* Texas Instruments OMAP4+ McPDM
--
--Required properties:
--- compatible: "ti,omap4-mcpdm"
--- reg: Register location and size as an array:
--       <MPU access base address, size>,
--       <L3 interconnect address, size>;
--- interrupts: Interrupt number for McPDM
--- ti,hwmods: Name of the hwmod associated to the McPDM
--- clocks:  phandle for the pdmclk provider, likely <&twl6040>
--- clock-names: Must be "pdmclk"
--
--Example:
--
--mcpdm: mcpdm@40132000 {
--	compatible = "ti,omap4-mcpdm";
--	reg = <0x40132000 0x7f>, /* MPU private access */
--	      <0x49032000 0x7f>; /* L3 Interconnect */
--	interrupts = <0 112 0x4>;
--	interrupt-parent = <&gic>;
--	ti,hwmods = "mcpdm";
--};
--
--In board DTS file the pdmclk needs to be added:
--
--&mcpdm {
--	clocks = <&twl6040>;
--	clock-names = "pdmclk";
--	status = "okay";
--};
-diff --git a/Documentation/devicetree/bindings/sound/omap-mcpdm.yaml b/Documentation/devicetree/bindings/sound/omap-mcpdm.yaml
-new file mode 100644
-index 000000000..8c9ff9d90
---- /dev/null
-+++ b/Documentation/devicetree/bindings/sound/omap-mcpdm.yaml
-@@ -0,0 +1,58 @@
-+# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/sound/omap-mcpdm.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: OMAP McPDM
-+
-+maintainers:
-+  - Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-+
-+description:
-+  OMAP ALSA SoC DAI driver using McPDM port used by TWL6040
-+
-+properties:
-+  compatible:
-+    const: ti,omap4-mcpdm
-+
-+  reg:
-+    description: 'Register location and size as an array:
-+       <MPU access base address, size>,
-+       <L3 interconnect address, size>;'
-+
-+  interrupts:
-+    description: Interrupt number for McPDM
-+
-+  ti,hwmods:
-+    description: Name of the hwmod associated to the McPDM
-+
-+  clocks:
-+    description: phandle for the pdmclk provider, likely <&twl6040>
-+
-+  clock-names:
-+    description: Must be "pdmclk"
-+
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - ti,hwmods
-+  - clocks
-+  - clock-names
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    mcpdm: mcpdm@40132000 {
-+      compatible = "ti,omap4-mcpdm";
-+      reg = <0x40132000 0x7f>, /* MPU private access */
-+            <0x49032000 0x7f>; /* L3 Interconnect */
-+      interrupts = <0 112 0x4>;
-+      interrupt-parent = <&gic>;
-+      ti,hwmods = "mcpdm";
-+      clocks = <&twl6040>;
-+      clock-names = "pdmclk";
-+    };
--- 
-2.34.1
+I can see that as an improvement, albeit that enum and the resulting switch
+are quite gross, sorry.
+I had patches to convert those messages to tracepoints (by Jakub's suggesti=
+on).
+That seems to work quite nice and will remove this macro entirely:
+https://lore.kernel.org/all/20240224-tcp-ao-tracepoints-v1-0-15f31b7f30a7@a=
+rista.com/
 
+I need to send version 2 for that. Unfortunately, that got delayed by
+me migrating
+from my previous work laptop. That was not my choice, resulting in
+little disruption.
+I'm planning to send the new version optimistically by the end of this week=
+,
+at worst the next week.
+
+Thanks,
+            Dmitry
