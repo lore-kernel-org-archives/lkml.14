@@ -1,69 +1,84 @@
-Received: from mx0b-00823401.pphosted.com (mx0b-00823401.pphosted.com [148.163.152.46])
+Received: from mx0a-00823401.pphosted.com (mx0a-00823401.pphosted.com [148.163.148.104])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61EAC1DFE1
-	for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2024 17:25:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.152.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB0ED1F956;
+	Tue, 16 Apr 2024 17:25:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.148.104
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713288329; cv=none; b=krwdOkG9BY8m6gJEiANDCWIIKmKEZzQc+VMWq9uquds7F9e+mQbJ3BN1L/YGUKJ0IUqfQN12GNWkm8MECw80yxqzE4oEMjAhInpyX/IYfkKsQGDT2HQYp/bARPfirnhB61VotFk0Cr3gF9bMrFH3MxyhJYmhGQVBjsDzmx0AESE=
+	t=1713288338; cv=none; b=lW3mQ1ytAgnN8Xo0f/p9qrjAA6FlJfDoFrj1rlmZUQesXdkoIqv8GhyE+38/w7iUbdCaESQspikaQinF7ikQpRFDrRIeAeDjqtW5wjSSAxz2pnGSA+r2P4rKtB2zHZiA/7n0LGMUhK8qQnnqYD5aQtUxhB8sXB4MRdyNC6r2ZEk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713288329; c=relaxed/simple;
-	bh=zwYrBxkEEYBASiRC8Syy0zLJ4HxZUFqXp9PwVXTB9WQ=;
-	h=Message-Id:To:Cc:From:Date:Subject; b=mJz0aVZ3hgm2DQImWcW3kUlFhlMu038JRPz4V2SH90WAG/DJCzXkNXCg/LakYr+YIg0gRFAwa/Tat2lffWMfLapfs0Vmr5nZLwfykGNugAAB++paljQ0C5WxL/5w2Oe0ElMC93A123QROI+Y7DirhT2p9noZ26t1CtTIDkufr7E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=motorola.com; spf=pass smtp.mailfrom=motorola.com; dkim=pass (2048-bit key) header.d=motorola.com header.i=@motorola.com header.b=SolvqlvV; arc=none smtp.client-ip=148.163.152.46
+	s=arc-20240116; t=1713288338; c=relaxed/simple;
+	bh=5A/wZwvAMjpCBh3rhO1cku9B/yboVsBZLlPIaX5Kru0=;
+	h=Message-Id:In-Reply-To:References:To:Cc:From:Date:Subject; b=DPxzb5Rj0Wm5aAPgHpfib1m4n+LSozss7TCrwJQ2SSEX76bBYkj25ILnj4nf7PFPutgL7b8Z5P4C10muY4xheh4yPgG4y9GA+UIhVIgI92Tj3zoRsVvrGV59J6DJfbA95EsL/xNoR6Dck/oPio4YBW/QZvrkVwrZ8J7fLJyY4h8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=motorola.com; spf=pass smtp.mailfrom=motorola.com; dkim=pass (2048-bit key) header.d=motorola.com header.i=@motorola.com header.b=sw41Pz1c; arc=none smtp.client-ip=148.163.148.104
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=motorola.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=motorola.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=motorola.com header.i=@motorola.com header.b="SolvqlvV"
-Received: from pps.filterd (m0355090.ppops.net [127.0.0.1])
-	by m0355090.ppops.net (8.17.1.24/8.17.1.24) with ESMTP id 43GEXrjS031887;
-	Tue, 16 Apr 2024 17:24:57 GMT
+	dkim=pass (2048-bit key) header.d=motorola.com header.i=@motorola.com header.b="sw41Pz1c"
+Received: from pps.filterd (m0355085.ppops.net [127.0.0.1])
+	by mx0a-00823401.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 43GEh0Zk006822;
+	Tue, 16 Apr 2024 17:24:58 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=motorola.com; h=
-	message-id:to:cc:from:date:subject; s=DKIM202306; bh=2/+dIqzISm4
-	HW8XR6l5FpwwTpbfMt78jX0a3kMrPooU=; b=SolvqlvVeEOjkEw0Mfw/sd/8/ot
-	TsfiEGZZja2kdjDzKEYOW9/aS24NkmlJ6tdI+Cgag2ptvGjbp30Xln2h7funf0gT
-	BLOndgDSy/av5W2JlacRZfEKMPfWmKX+VGLFY8UPm74eDw6DB0NdJHXEt4u0qN1m
-	cQHdsfe+VHO3+k0LVOg8xxeriOjh8wpt7Rt5tkzWSuTlwb28z2IPitn08E3uiFC1
-	0jYRGM31ajc/4yMeBDn1X/MQXTdLgzUqbEJ0THkaFOcXlplfu1FenxPbVSnBKQ9j
-	Ps8ZT9LJ/VqctuMg8lc5IjxObtHrPNs8v5D7WaR12QE9O8AmxlrTl0qAafg==
-Received: from va32lpfpp02.lenovo.com ([104.232.228.22])
-	by m0355090.ppops.net (PPS) with ESMTPS id 3xhrya9dpw-1
+	message-id:in-reply-to:references:to:cc:from:date:subject; s=
+	DKIM202306; bh=WtpkOtfUVklTETlWsQkVzQfkRpaN5YigWXkv8+BPIYU=; b=s
+	w41Pz1cA5VDn6mBbbiYwn9PX+cQjWhh9XdAvz2IOJX7TMz/0Sxn6N2jrLkdOKdYg
+	/whIbQ8ivQ7viekFNKMrGyY9UqFud9GSPI7JYPrckgL+CJ26q4vezQdZVCeNROMb
+	FMPWF5p9rQE7TYFBuFddPpFXAVsUEUhSIP8h2RlIYEzqSzMZ+jp38y+HHs6seeql
+	aYk94e1mJinCaILLf6M4qs6ATWjPC+/2OB/qMzUD2mxOYZjRMCaSWfxu1kwHbkUM
+	FC1R8PRkwUaAcDRVlRTTykk+8VlYvW8Ud/CN7bGBnURWVwBCZ5lLO9btQw/2hxjE
+	qiDJ4vgvm7uZHhIhMdRRg==
+Received: from va32lpfpp04.lenovo.com ([104.232.228.24])
+	by mx0a-00823401.pphosted.com (PPS) with ESMTPS id 3xhea8bv1a-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 16 Apr 2024 17:24:57 +0000 (GMT)
+	Tue, 16 Apr 2024 17:24:58 +0000 (GMT)
 Received: from va32lmmrp01.lenovo.com (va32lmmrp01.mot.com [10.62.177.113])
 	(using TLSv1.2 with cipher ADH-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by va32lpfpp02.lenovo.com (Postfix) with ESMTPS id 4VJrWs0n42z53xyX;
+	by va32lpfpp04.lenovo.com (Postfix) with ESMTPS id 4VJrWs0vh7zj9hF;
 	Tue, 16 Apr 2024 17:24:57 +0000 (UTC)
 Received: from ilclbld243.mot.com (ilclbld243.mot.com [100.64.22.29])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
 	(Authenticated sender: mbland)
-	by va32lmmrp01.lenovo.com (Postfix) with ESMTPSA id 4VJrWs0XQ6z2VZRf;
+	by va32lmmrp01.lenovo.com (Postfix) with ESMTPSA id 4VJrWs0fdFz2VZS6;
 	Tue, 16 Apr 2024 17:24:57 +0000 (UTC)
-Message-Id: <20240416122254.868007168-1-mbland@motorola.com>
-To: linux-mm@kvack.org
+Message-Id: <20240416122254.868007168-3-mbland@motorola.com>
+In-Reply-To: <20240416122254.868007168-1-mbland@motorola.com>
+References: <20240416122254.868007168-1-mbland@motorola.com>
+To: linux-arm-kernel@lists.infradead.org
 Cc: Maxwell Bland <mbland@motorola.com>, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-riscv@lists.infradead.org,
-        linuxppc-dev@lists.ozlabs.org, Mark Rutland <mark.rutland@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>, Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Andrii Nakryiko <andrii@kernel.org>,
+        Martin KaFai Lau <martin.lau@linux.dev>,
+        Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
+        Yonghong Song <yonghong.song@linux.dev>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@google.com>,
+        Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
+        Zi Shen Lim <zlim.lnx@gmail.com>, Mark Rutland <mark.rutland@arm.com>,
+        Ard Biesheuvel <ardb@kernel.org>, Maxwell Bland <mbland@motorola.com>,
+        Kees Cook <keescook@chromium.org>,
+        Sami Tolvanen <samitolvanen@google.com>, Baoquan He <bhe@redhat.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Christoph Hellwig <hch@infradead.org>,
-        Christophe Leroy <christophe.leroy@csgroup.eu>,
-        David Hildenbrand <david@redhat.com>,
-        Conor Dooley <conor.dooley@microchip.com>
+        Ryo Takakura <takakura@valinux.co.jp>,
+        James Morse <james.morse@arm.com>,
+        Christophe Leroy <christophe.leroy@csgroup.eu>, bpf@vger.kernel.org
 From: Maxwell Bland <mbland@motorola.com>
-Date: Mon, 15 Apr 2024 15:16:08 -0500
-Subject: [PATCH 0/5] mm: code and data partitioning improvements
-X-Proofpoint-ORIG-GUID: vSRvg_yzr5e2ij9r_RJZHMk7igMKbit5
-X-Proofpoint-GUID: vSRvg_yzr5e2ij9r_RJZHMk7igMKbit5
+Date: Wed, 3 Apr 2024 16:08:15 -0500
+Subject: [PATCH 2/5] arm64: mm: code and data partitioning for aslr
+X-Proofpoint-GUID: oSkwsmd8buYDKwvkDlsObdQxE94z6XCb
+X-Proofpoint-ORIG-GUID: oSkwsmd8buYDKwvkDlsObdQxE94z6XCb
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
  definitions=2024-04-16_14,2024-04-16_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- suspectscore=0 bulkscore=0 mlxlogscore=999 mlxscore=0 impostorscore=0
- malwarescore=0 spamscore=0 phishscore=0 adultscore=0 clxscore=1015
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0
+ priorityscore=1501 bulkscore=0 phishscore=0 adultscore=0 spamscore=0
+ lowpriorityscore=0 clxscore=1015 mlxlogscore=999 suspectscore=0
+ impostorscore=0 mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.19.0-2404010003 definitions=main-2404160108
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -71,166 +86,308 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 
-Managing allocations to ensure code and data pages are not interleaved
-is not possible prior to this patch, as ASLR requires programming a
-dynamic _text offset while the vmalloc infrastructure maintains static
-VMALLOC_START and VMALLOC_END constants.
-
-In systems where code and data are interleaved at a PTE granularity,
-kernel improvements targeting the prevention of exploit stages which
-modify page tables are inefficient and less effective as individual PTE
-updates occur at high frequency and cannot be coarsely grouped at the
-PMD level or greater.
-
-This patch adds minimal arch-specific callbacks to the initialization of
-vmalloc and when deciding whether to use a specific virtual memory area
-to satisfy a vmalloc request to provide the capability to prevent the
-allocation of specific virtual addresses under specific system states.
-By default these hooks are unimplemented.
-
-To further support the practical use of these callbacks, this patch also
-adds a virtual address parameter to pmd_populate_kernel, so that this
-interface matches the equivalent pte-level interface and architectures
-are not required to perform a reverse page table lookup to determine the
-vaddr being allocated during pmd creation.
-
-To demonstrate the impact and value of these changes, this patch
-implements support for dynamic PXNTable under aarch64 in 71 lines of
-code (a single "if" check during memory allocation), by checking the
-virtual address of a given vmalloc call to determine whether it is code
-or data. From experience in trying to implement kernel page table
-immutability and protections in KVM to prevent recent CVEs, e.g.
-CVE-2024-1086, this is a necessary first step.
-
-To better help maintainers and future developers, this patch expands
-ptdump.c so that non-leaf page table descriptors can be more easily
-noted in debug output by setting a note_non_leaf bool in the ptdump
-state.
+Uses hooks in the vmalloc infrastructure to prevent interleaving code
+and data pages, working to both maintain compatible management
+assumptions made by non-arch-specific code and make management of these
+regions more precise and conformant, allowing, for example, the
+maintenance of PXNTable bits on dynamically allocated memory or the
+immutability of certain page middle directory and higher level
+descriptors.
 
 Signed-off-by: Maxwell Bland <mbland@motorola.com>
-
 ---
-
-First, thank you to a number of maintainers (Mark Rutland, Greg KH,
-Christoph Hellwig, Christophe Leroy, David Hildenbrand, Conor Dooley)
-for their feedback on
-
-<20240220203256.31153-1-mbland@motorola.com>
-and
-<CAP5Mv+ydhk=Ob4b40ZahGMgT-5+-VEHxtmA=-LkJiEOOU+K6hw@mail.gmail.com>
-
-This patch is a further refinement and overhaul of these prior two
-attempts. Also, apologies for the roughly two months delay between patch
-submissions! I had Motorola work to do.
-
-In support of testing this patch (but not included in this patch), I set
-note_non_leaf to true under arch/arm64/mm/ptdump.c and added
-PMD_TABLE_PXN to pte_bits to print out whether the PXNTable bit was set.
-The txt files under the following directory can be diff'ed to see the
-result:
-
-github.com/maxwell-bland/linux-patch-data/tree/main/code_data_parting/ptdump
-
-I also created a script to fetch and cross-compile the kernel for each
-of the 21 subarchitectures which required fixes to provide a virtual
-address to pmd_populate_kernel. I have no idea if it is useful and maybe
-one already exists, but it worked well for me over some alternatives
-(xcross, buildroot):
-
-github.com/maxwell-bland/x-linux
-
-As with the last patchset, I also measured performance using Torvald's 
-test-tlb program on an aarch64 QEMU instance, with results here:
-
-github.com/maxwell-bland/linux-patch-data/tree/main/code_data_parting/tlbperf
-
-As all changes to other arches are effectively no-ops, performance
-impacts in those domains are negligible. 
-
-Maxwell Bland (5):
-  mm: allow arch refinement/skip for vmap alloc
-  arm64: mm: code and data partitioning for aslr
-  mm: add vaddr param to pmd_populate_kernel
-  arm64: dynamic enforcement of PXNTable
-  ptdump: add state parameter for non-leaf callback
-
- arch/alpha/include/asm/pgalloc.h             |  5 +-
- arch/arc/include/asm/pgalloc.h               |  3 +-
- arch/arc/mm/highmem.c                        |  2 +-
- arch/arm/include/asm/kfence.h                |  2 +-
- arch/arm/include/asm/pgalloc.h               |  3 +-
- arch/arm/mm/kasan_init.c                     |  2 +-
- arch/arm/mm/mmu.c                            |  2 +-
- arch/arm64/include/asm/module.h              | 12 ++++
- arch/arm64/include/asm/pgalloc.h             | 15 ++++-
- arch/arm64/include/asm/vmalloc.h             | 17 ++++-
- arch/arm64/kernel/Makefile                   |  2 +-
- arch/arm64/kernel/module.c                   |  7 +-
- arch/arm64/kernel/probes/kprobes.c           |  7 +-
- arch/arm64/kernel/setup.c                    |  4 ++
- arch/arm64/kernel/vmalloc.c                  | 71 ++++++++++++++++++++
- arch/arm64/mm/ptdump.c                       | 10 +--
- arch/arm64/mm/trans_pgd.c                    |  2 +-
- arch/arm64/net/bpf_jit_comp.c                |  8 ++-
- arch/csky/include/asm/pgalloc.h              |  2 +-
- arch/hexagon/include/asm/pgalloc.h           |  2 +-
- arch/loongarch/include/asm/pgalloc.h         |  3 +-
- arch/loongarch/mm/init.c                     |  2 +-
- arch/loongarch/mm/kasan_init.c               |  2 +-
- arch/m68k/include/asm/mcf_pgalloc.h          |  2 +-
- arch/m68k/include/asm/motorola_pgalloc.h     |  3 +-
- arch/m68k/include/asm/sun3_pgalloc.h         |  3 +-
- arch/microblaze/include/asm/pgalloc.h        |  2 +-
- arch/mips/include/asm/pgalloc.h              |  2 +-
- arch/mips/kvm/mmu.c                          |  2 +-
- arch/nios2/include/asm/pgalloc.h             |  2 +-
- arch/openrisc/include/asm/pgalloc.h          |  2 +-
- arch/parisc/include/asm/pgalloc.h            |  5 +-
- arch/parisc/mm/init.c                        |  6 +-
- arch/powerpc/include/asm/book3s/32/pgalloc.h |  2 +-
- arch/powerpc/include/asm/book3s/64/pgalloc.h |  2 +-
- arch/powerpc/include/asm/nohash/32/pgalloc.h |  2 +-
- arch/powerpc/include/asm/nohash/64/pgalloc.h |  2 +-
- arch/powerpc/mm/book3s64/radix_pgtable.c     |  2 +-
- arch/powerpc/mm/kasan/init_32.c              |  4 +-
- arch/powerpc/mm/kasan/init_book3e_64.c       |  9 ++-
- arch/powerpc/mm/kasan/init_book3s_64.c       |  7 +-
- arch/powerpc/mm/nohash/book3e_pgtable.c      |  2 +-
- arch/powerpc/mm/pgtable_32.c                 |  4 +-
- arch/powerpc/mm/ptdump/ptdump.c              |  2 +
- arch/riscv/include/asm/pgalloc.h             |  2 +-
- arch/riscv/kernel/hibernate.c                |  2 +-
- arch/riscv/mm/ptdump.c                       |  6 +-
- arch/s390/include/asm/pgalloc.h              |  2 +-
- arch/s390/mm/dump_pagetables.c               |  6 +-
- arch/sh/include/asm/pgalloc.h                |  2 +-
- arch/sh/mm/init.c                            |  2 +-
- arch/sparc/include/asm/pgalloc_32.h          |  3 +-
- arch/sparc/include/asm/pgalloc_64.h          |  4 +-
- arch/sparc/mm/init_64.c                      |  8 +--
- arch/um/include/asm/pgalloc.h                |  4 +-
- arch/x86/include/asm/pgalloc.h               |  3 +-
- arch/x86/mm/dump_pagetables.c                |  3 +-
- arch/x86/mm/init_64.c                        | 14 +++-
- arch/x86/mm/ioremap.c                        |  2 +-
- arch/x86/mm/kasan_init_64.c                  |  2 +-
- arch/xtensa/include/asm/pgalloc.h            |  2 +-
- include/linux/mm.h                           |  4 +-
- include/linux/ptdump.h                       |  1 +
- include/linux/vmalloc.h                      | 24 +++++++
- mm/hugetlb_vmemmap.c                         |  4 +-
- mm/kasan/init.c                              | 14 ++--
- mm/memory.c                                  |  4 +-
- mm/percpu.c                                  |  2 +-
- mm/pgalloc-track.h                           |  3 +-
- mm/ptdump.c                                  | 13 ++++
- mm/sparse-vmemmap.c                          |  2 +-
- mm/vmalloc.c                                 | 16 +++--
- 72 files changed, 299 insertions(+), 107 deletions(-)
+ arch/arm64/include/asm/module.h    | 12 +++++
+ arch/arm64/include/asm/vmalloc.h   | 17 ++++++-
+ arch/arm64/kernel/Makefile         |  2 +-
+ arch/arm64/kernel/module.c         |  7 ++-
+ arch/arm64/kernel/probes/kprobes.c |  7 +--
+ arch/arm64/kernel/setup.c          |  4 ++
+ arch/arm64/kernel/vmalloc.c        | 71 ++++++++++++++++++++++++++++++
+ arch/arm64/mm/ptdump.c             |  4 +-
+ arch/arm64/net/bpf_jit_comp.c      |  8 ++--
+ 9 files changed, 117 insertions(+), 15 deletions(-)
  create mode 100644 arch/arm64/kernel/vmalloc.c
 
-
-base-commit: 0bbac3facb5d6cc0171c45c9873a2dc96bea9680
+diff --git a/arch/arm64/include/asm/module.h b/arch/arm64/include/asm/module.h
+index 79550b22ba19..e50d7a240ad7 100644
+--- a/arch/arm64/include/asm/module.h
++++ b/arch/arm64/include/asm/module.h
+@@ -65,4 +65,16 @@ static inline const Elf_Shdr *find_section(const Elf_Ehdr *hdr,
+ 	return NULL;
+ }
+ 
++extern u64 module_direct_base __ro_after_init;
++extern u64 module_plt_base __ro_after_init;
++
++int __init module_init_limits(void);
++
++#define MODULES_ASLR_START ((module_plt_base) ? module_plt_base : \
++		module_direct_base)
++#define MODULES_ASLR_END ((module_plt_base) ? module_plt_base + SZ_2G : \
++		module_direct_base + SZ_128M)
++
++void *module_alloc(unsigned long size);
++
+ #endif /* __ASM_MODULE_H */
+diff --git a/arch/arm64/include/asm/vmalloc.h b/arch/arm64/include/asm/vmalloc.h
+index 38fafffe699f..93f8f1e2b1ce 100644
+--- a/arch/arm64/include/asm/vmalloc.h
++++ b/arch/arm64/include/asm/vmalloc.h
+@@ -4,6 +4,9 @@
+ #include <asm/page.h>
+ #include <asm/pgtable.h>
+ 
++struct vmap_area;
++struct kmem_cache;
++
+ #ifdef CONFIG_HAVE_ARCH_HUGE_VMAP
+ 
+ #define arch_vmap_pud_supported arch_vmap_pud_supported
+@@ -23,7 +26,7 @@ static inline bool arch_vmap_pmd_supported(pgprot_t prot)
+ 	return !IS_ENABLED(CONFIG_PTDUMP_DEBUGFS);
+ }
+ 
+-#endif
++#endif /* CONFIG_HAVE_ARCH_HUGE_VMAP */
+ 
+ #define arch_vmap_pgprot_tagged arch_vmap_pgprot_tagged
+ static inline pgprot_t arch_vmap_pgprot_tagged(pgprot_t prot)
+@@ -31,4 +34,16 @@ static inline pgprot_t arch_vmap_pgprot_tagged(pgprot_t prot)
+ 	return pgprot_tagged(prot);
+ }
+ 
++#ifdef CONFIG_RANDOMIZE_BASE
++
++#define arch_skip_va arch_skip_va
++inline bool arch_skip_va(struct vmap_area *va, unsigned long vstart);
++
++#define arch_refine_vmap_space arch_refine_vmap_space
++inline void arch_refine_vmap_space(struct rb_root *root,
++					  struct list_head *head,
++					  struct kmem_cache *cachep);
++
++#endif /* CONFIG_RANDOMIZE_BASE */
++
+ #endif /* _ASM_ARM64_VMALLOC_H */
+diff --git a/arch/arm64/kernel/Makefile b/arch/arm64/kernel/Makefile
+index 763824963ed1..4298a2168544 100644
+--- a/arch/arm64/kernel/Makefile
++++ b/arch/arm64/kernel/Makefile
+@@ -56,7 +56,7 @@ obj-$(CONFIG_ACPI)			+= acpi.o
+ obj-$(CONFIG_ACPI_NUMA)			+= acpi_numa.o
+ obj-$(CONFIG_ARM64_ACPI_PARKING_PROTOCOL)	+= acpi_parking_protocol.o
+ obj-$(CONFIG_PARAVIRT)			+= paravirt.o
+-obj-$(CONFIG_RANDOMIZE_BASE)		+= kaslr.o
++obj-$(CONFIG_RANDOMIZE_BASE)		+= kaslr.o vmalloc.o
+ obj-$(CONFIG_HIBERNATION)		+= hibernate.o hibernate-asm.o
+ obj-$(CONFIG_ELF_CORE)			+= elfcore.o
+ obj-$(CONFIG_KEXEC_CORE)		+= machine_kexec.o relocate_kernel.o	\
+diff --git a/arch/arm64/kernel/module.c b/arch/arm64/kernel/module.c
+index 47e0be610bb6..58329b27624d 100644
+--- a/arch/arm64/kernel/module.c
++++ b/arch/arm64/kernel/module.c
+@@ -26,8 +26,8 @@
+ #include <asm/scs.h>
+ #include <asm/sections.h>
+ 
+-static u64 module_direct_base __ro_after_init = 0;
+-static u64 module_plt_base __ro_after_init = 0;
++u64 module_direct_base __ro_after_init;
++u64 module_plt_base __ro_after_init;
+ 
+ /*
+  * Choose a random page-aligned base address for a window of 'size' bytes which
+@@ -66,7 +66,7 @@ static u64 __init random_bounding_box(u64 size, u64 start, u64 end)
+  * we may fall back to PLTs where they could have been avoided, but this keeps
+  * the logic significantly simpler.
+  */
+-static int __init module_init_limits(void)
++int __init module_init_limits(void)
+ {
+ 	u64 kernel_end = (u64)_end;
+ 	u64 kernel_start = (u64)_text;
+@@ -108,7 +108,6 @@ static int __init module_init_limits(void)
+ 
+ 	return 0;
+ }
+-subsys_initcall(module_init_limits);
+ 
+ void *module_alloc(unsigned long size)
+ {
+diff --git a/arch/arm64/kernel/probes/kprobes.c b/arch/arm64/kernel/probes/kprobes.c
+index 327855a11df2..89968f05177f 100644
+--- a/arch/arm64/kernel/probes/kprobes.c
++++ b/arch/arm64/kernel/probes/kprobes.c
+@@ -131,9 +131,10 @@ int __kprobes arch_prepare_kprobe(struct kprobe *p)
+ 
+ void *alloc_insn_page(void)
+ {
+-	return __vmalloc_node_range(PAGE_SIZE, 1, VMALLOC_START, VMALLOC_END,
+-			GFP_KERNEL, PAGE_KERNEL_ROX, VM_FLUSH_RESET_PERMS,
+-			NUMA_NO_NODE, __builtin_return_address(0));
++	return __vmalloc_node_range(PAGE_SIZE, 1, MODULES_ASLR_START,
++			MODULES_ASLR_END, GFP_KERNEL, PAGE_KERNEL_ROX,
++			VM_FLUSH_RESET_PERMS, NUMA_NO_NODE,
++			__builtin_return_address(0));
+ }
+ 
+ /* arm kprobe: install breakpoint in text */
+diff --git a/arch/arm64/kernel/setup.c b/arch/arm64/kernel/setup.c
+index 65a052bf741f..908ee0ccc606 100644
+--- a/arch/arm64/kernel/setup.c
++++ b/arch/arm64/kernel/setup.c
+@@ -53,6 +53,7 @@
+ #include <asm/efi.h>
+ #include <asm/xen/hypervisor.h>
+ #include <asm/mmu_context.h>
++#include <asm/module.h>
+ 
+ static int num_standard_resources;
+ static struct resource *standard_resources;
+@@ -321,6 +322,7 @@ void __init __no_sanitize_address setup_arch(char **cmdline_p)
+ 
+ 	arm64_memblock_init();
+ 
++
+ 	paging_init();
+ 
+ 	acpi_table_upgrade();
+@@ -366,6 +368,8 @@ void __init __no_sanitize_address setup_arch(char **cmdline_p)
+ 			"This indicates a broken bootloader or old kernel\n",
+ 			boot_args[1], boot_args[2], boot_args[3]);
+ 	}
++
++	module_init_limits();
+ }
+ 
+ static inline bool cpu_can_disable(unsigned int cpu)
+diff --git a/arch/arm64/kernel/vmalloc.c b/arch/arm64/kernel/vmalloc.c
+new file mode 100644
+index 000000000000..00a463f3692f
+--- /dev/null
++++ b/arch/arm64/kernel/vmalloc.c
+@@ -0,0 +1,71 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/*
++ * AArch64 vmap area management code
++ *
++ * Author: Maxwell Bland <mbland@motorola.com>
++ */
++
++#include <linux/vmalloc.h>
++#include <linux/elf.h>
++
++#include <asm/module.h>
++
++/*
++ * Prevents the allocation of new vmap_areas from dynamic code
++ * region if the virtual address requested is not explicitly the
++ * module region.
++ */
++inline bool arch_skip_va(struct vmap_area *va, unsigned long vstart)
++{
++	return (vstart != MODULES_ASLR_START &&
++			va->va_start >= MODULES_ASLR_START &&
++			va->va_end <= MODULES_ASLR_END);
++}
++
++/*
++ * Splits a vmap area in two and allocates a new area if needed
++ */
++inline struct vmap_area *
++try_split_alloc_vmap_area(struct rb_root *root,
++		struct list_head *head,
++		struct kmem_cache *vmap_area_cachep,
++		unsigned long addr)
++{
++	struct vmap_area *va;
++	int ret;
++	struct vmap_area *lva = NULL;
++
++	va = __find_vmap_area(addr, root);
++	if (!va) {
++		pr_err("%s: could not find vmap\n", __func__);
++		return NULL;
++	}
++
++	lva = kmem_cache_alloc(vmap_area_cachep, GFP_NOWAIT);
++	if (!lva) {
++		pr_err("%s: unable to allocate va for range\n", __func__);
++		return NULL;
++	}
++	lva->va_start = addr;
++	lva->va_end = va->va_end;
++	ret = va_clip(root, head, va, addr, va->va_end - addr);
++	if (WARN_ON_ONCE(ret)) {
++		pr_err("%s: unable to clip code base region\n", __func__);
++		kmem_cache_free(vmap_area_cachep, lva);
++		return NULL;
++	}
++	insert_vmap_area_augment(lva, NULL, root, head);
++	return lva;
++}
++
++/*
++ * Run during vmalloc_init, ensures that there exist explicit rb tree
++ * node delineations between code and data
++ */
++inline void arch_refine_vmap_space(struct rb_root *root,
++		struct list_head *head,
++		struct kmem_cache *cachep)
++{
++	try_split_alloc_vmap_area(root, head, cachep, MODULES_ASLR_START);
++	try_split_alloc_vmap_area(root, head, cachep, MODULES_ASLR_END);
++}
+diff --git a/arch/arm64/mm/ptdump.c b/arch/arm64/mm/ptdump.c
+index 6986827e0d64..796231a4fd63 100644
+--- a/arch/arm64/mm/ptdump.c
++++ b/arch/arm64/mm/ptdump.c
+@@ -261,9 +261,7 @@ static void note_page(struct ptdump_state *pt_st, unsigned long addr, int level,
+ 		}
+ 		pt_dump_seq_printf(st->seq, "%9lu%c %s", delta, *unit,
+ 				   pg_level[st->level].name);
+-		if (st->current_prot && pg_level[st->level].bits)
+-			dump_prot(st, pg_level[st->level].bits,
+-				  pg_level[st->level].num);
++		dump_prot(st, pg_level[st->level].bits, pg_level[st->level].num);
+ 		pt_dump_seq_puts(st->seq, "\n");
+ 
+ 		if (addr >= st->marker[1].start_address) {
+diff --git a/arch/arm64/net/bpf_jit_comp.c b/arch/arm64/net/bpf_jit_comp.c
+index 122021f9bdfc..6ed6e00b8b4a 100644
+--- a/arch/arm64/net/bpf_jit_comp.c
++++ b/arch/arm64/net/bpf_jit_comp.c
+@@ -13,6 +13,8 @@
+ #include <linux/memory.h>
+ #include <linux/printk.h>
+ #include <linux/slab.h>
++#include <linux/module.h>
++#include <linux/moduleloader.h>
+ 
+ #include <asm/asm-extable.h>
+ #include <asm/byteorder.h>
+@@ -1790,18 +1792,18 @@ void *bpf_arch_text_copy(void *dst, void *src, size_t len)
+ 
+ u64 bpf_jit_alloc_exec_limit(void)
+ {
+-	return VMALLOC_END - VMALLOC_START;
++	return MODULES_ASLR_END - MODULES_ASLR_START;
+ }
+ 
+ void *bpf_jit_alloc_exec(unsigned long size)
+ {
+ 	/* Memory is intended to be executable, reset the pointer tag. */
+-	return kasan_reset_tag(vmalloc(size));
++	return kasan_reset_tag(module_alloc(size));
+ }
+ 
+ void bpf_jit_free_exec(void *addr)
+ {
+-	return vfree(addr);
++	return module_memfree(addr);
+ }
+ 
+ /* Indicate the JIT backend supports mixing bpf2bpf and tailcalls. */
 -- 
 2.39.2
 
