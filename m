@@ -1,167 +1,189 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7331144C86;
-	Wed,  3 Apr 2024 12:37:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6CD91C683;
+	Wed,  3 Apr 2024 12:39:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712147823; cv=none; b=K+sFs6T1MLJgkCzS/9iW5DwjLyCaVH1bbwhb/8tXy2r4nnSHVLH6RLD9lgrQeNRehe9h4YfHPyegsM2OKScD0+iZoK5AJORtjgRnA2K3CA8hy6ZFk3ElrVxOUYfFv3slk2su/HIZbrE2z37KIcK/qP6xJMECRDmNANU55oODUeU=
+	t=1712147975; cv=none; b=CauaBvQN/sGjmfB26ys+nFkja71njZmAQLaJZm5Us3eSuWw845RUWo+wkrzHAQz/GhK3f2kQ1K/pK7baEknK5AmgAYYiVSP5HAB9Dml7vBefjUzHCSeG7hyLWRAOaDFfP3RynIVJYr+QroWIyhdYdDJVTdRCrJ0O2XMBpWtttDk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712147823; c=relaxed/simple;
-	bh=Gz4IMh43tlqJQMtkQNAmSURtoItRp7LuOPT/d9igbhs=;
+	s=arc-20240116; t=1712147975; c=relaxed/simple;
+	bh=56cFVVN36vdvA9j0k6U4c9Yyi7PsljXwFIP8sKfDAn4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=H97JvUOLkTiPwkgaBhMLQ+EE1mVbQRxgcNgFALR/R2b1keSB9jgu1HarfVZipuu++x5Cm8T/ab+5Lnin84DvBg/Fk0OqpUW4lJaQz6d9wEb2E/crqCPEvJQ8ha3YZ1+jbFRJdlahHKziDcspMdtdpGQxa46ziv6T77hbIpQvbNs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Re8F0gky; arc=none smtp.client-ip=192.198.163.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=RZPIWcFRd3dp1PjmeYMy3nTYvYtoUPLeXR0v4edGJYoDOVsiIJR+sZn6DWS8wFI3lhU3XHQHUINBR0DpTcBzfywvkX3A23qRZqfrO4qzyLJlJYJ4M2OBHs95Tw6qdn5Lc4ZNAptDkNbW26GTqbP5eVgxQJlJJlJ6U6ocoIRlZ3s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=B2u3Aj7J; arc=none smtp.client-ip=46.235.227.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Re8F0gky"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1712147822; x=1743683822;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=Gz4IMh43tlqJQMtkQNAmSURtoItRp7LuOPT/d9igbhs=;
-  b=Re8F0gkyxNMG91bQSCmM+sumsuhc/4ehQlP89bNusxXv2SWnXzgjJPFK
-   CLz9kMrGiZewa9C3EdKrNDfRcCrYpPbsat1ytgRlBd62M2VDY1LD+Ppia
-   NDTPfLXiUyQLLgXOSSqOQNJyk3X5i0ksIV9GXnhbegDabHOVxRjkAl+L9
-   1ZUb0wesnfVDgV3xE0Vkh7pPrQZ9rTHY/OMJpRIVlgvpfqVym6UYOocSe
-   3WRhKo6d+rlL8wZsHZRVd2l+HJsOaVAjR7TIu82r0UCES6uFWFbRoobwk
-   thIu8GRCft8GFjQQxP3XI20hTDJmOw5HsiI8BC9C8GmiaPYY0NQsXtZx4
-   w==;
-X-CSE-ConnectionGUID: RJ1SUX5RTIKQ/0geZv9Uqg==
-X-CSE-MsgGUID: 7oKw8rPVS7qJo5SFlcUbnw==
-X-IronPort-AV: E=McAfee;i="6600,9927,11033"; a="32764456"
-X-IronPort-AV: E=Sophos;i="6.07,177,1708416000"; 
-   d="scan'208";a="32764456"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2024 05:36:58 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,11033"; a="827789899"
-X-IronPort-AV: E=Sophos;i="6.07,177,1708416000"; 
-   d="scan'208";a="827789899"
-Received: from stinkpipe.fi.intel.com (HELO stinkbox) ([10.237.72.74])
-  by orsmga001.jf.intel.com with SMTP; 03 Apr 2024 05:36:43 -0700
-Received: by stinkbox (sSMTP sendmail emulation); Wed, 03 Apr 2024 15:36:43 +0300
-Date: Wed, 3 Apr 2024 15:36:43 +0300
-From: Ville =?iso-8859-1?Q?Syrj=E4l=E4?= <ville.syrjala@linux.intel.com>
-To: Andi Shyti <andi.shyti@linux.intel.com>
-Cc: Easwar Hariharan <eahariha@linux.microsoft.com>,
-	Alex Deucher <alexander.deucher@amd.com>,
-	Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-	"Pan, Xinhui" <Xinhui.Pan@amd.com>,
-	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
-	Harry Wentland <harry.wentland@amd.com>,
-	Leo Li <sunpeng.li@amd.com>,
-	Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>,
-	Evan Quan <evan.quan@amd.com>,
-	Hawking Zhang <Hawking.Zhang@amd.com>,
-	Candice Li <candice.li@amd.com>, Ran Sun <sunran001@208suo.com>,
-	Alexander Richards <electrodeyt@gmail.com>,
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="B2u3Aj7J"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1712147972;
+	bh=56cFVVN36vdvA9j0k6U4c9Yyi7PsljXwFIP8sKfDAn4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=B2u3Aj7JWJ8T2VlEkSysWrQyL+7YwxPLSHmUGGV4BCQp8UFuxEVhBu/+jKSjZtaER
+	 vCqPQtjmwNfKZQbcMUePtxgVz+Kj6lPlMzM07fINBNnFf+6jGU+LlFRayM31Mee6jO
+	 XuvzckZb1w9G7nOLmdyKUFnydK0J1mornC2SEZ+eBKyBG9MGasDoorQ1E6ijzyLNs6
+	 ynJ4qR7K9G5Ho7qktbwUev0m2NHYsNYnU5F7PhHp6POrq4/5xNyXLkKGSkgt0Mib4z
+	 YVajJb6UlXXb08K4lXDsHnTQ0hmKMZpZoRKAcrJ4tXGDyyYDrL77NcPxfclDI4Ercj
+	 shje3a066P9Qw==
+Received: from localhost (cola.collaboradmins.com [195.201.22.229])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: sebastianfricke)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id C26C6378200D;
+	Wed,  3 Apr 2024 12:39:31 +0000 (UTC)
+Date: Wed, 3 Apr 2024 14:39:30 +0200
+From: Sebastian Fricke <sebastian.fricke@collabora.com>
+To: Yunfei Dong <yunfei.dong@mediatek.com>
+Cc: =?utf-8?B?TsOtY29sYXMgRiAuIFIgLiBBIC4=?= Prado <nfraprado@collabora.com>,
+	Nicolas Dufresne <nicolas.dufresne@collabora.com>,
+	Hans Verkuil <hverkuil-cisco@xs4all.nl>,
 	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Neil Armstrong <neil.armstrong@linaro.org>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	Hamza Mahfooz <hamza.mahfooz@amd.com>,
-	Ruan Jinjie <ruanjinjie@huawei.com>, Alan Liu <haoping.liu@amd.com>,
-	Aurabindo Pillai <aurabindo.pillai@amd.com>,
-	Wayne Lin <wayne.lin@amd.com>, Samson Tam <samson.tam@amd.com>,
-	Alvin Lee <alvin.lee2@amd.com>, Charlene Liu <charlene.liu@amd.com>,
-	Sohaib Nadeem <sohaib.nadeem@amd.com>,
-	Lewis Huang <lewis.huang@amd.com>,
-	Tom Chung <chiahsuan.chung@amd.com>,
-	Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>,
-	Meenakshikumar Somasundaram <meenakshikumar.somasundaram@amd.com>,
-	George Shen <george.shen@amd.com>, Aric Cyr <aric.cyr@amd.com>,
-	Jun Lei <jun.lei@amd.com>,
-	Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>,
-	Qingqing Zhuo <Qingqing.Zhuo@amd.com>,
-	Dillon Varone <dillon.varone@amd.com>, Le Ma <Le.Ma@amd.com>,
-	Lijo Lazar <lijo.lazar@amd.com>, Asad kamal <asad.kamal@amd.com>,
-	Kenneth Feng <kenneth.feng@amd.com>, Ma Jun <Jun.Ma2@amd.com>,
-	Mario Limonciello <mario.limonciello@amd.com>,
-	Yang Wang <kevinyang.wang@amd.com>,
-	Darren Powell <darren.powell@amd.com>,
-	Yifan Zhang <yifan1.zhang@amd.com>,
-	"open list:RADEON and AMDGPU DRM DRIVERS" <amd-gfx@lists.freedesktop.org>,
-	"open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>,
-	open list <linux-kernel@vger.kernel.org>,
-	Wolfram Sang <wsa+renesas@sang-engineering
-Subject: Re: [PATCH v0 02/14] drm/amdgpu,drm/radeon: Make I2C terminology
- more inclusive
-Message-ID: <Zg1NW0jqwFn4lvEP@intel.com>
-References: <20240329170038.3863998-1-eahariha@linux.microsoft.com>
- <20240329170038.3863998-3-eahariha@linux.microsoft.com>
- <Zgb3VYsgLjhJ2HKs@ashyti-mobl2.lan>
- <ceeaafe1-49d5-4602-8251-eed63a1be2b6@linux.microsoft.com>
- <Zgb8gieDzZtZmg2q@ashyti-mobl2.lan>
+	Benjamin Gaignard <benjamin.gaignard@collabora.com>,
+	Nathan Hebert <nhebert@chromium.org>,
+	Hsin-Yi Wang <hsinyi@chromium.org>,
+	Fritz Koenig <frkoenig@chromium.org>,
+	Daniel Vetter <daniel@ffwll.ch>, Steve Cho <stevecho@chromium.org>,
+	linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-mediatek@lists.infradead.org,
+	Project_Global_Chrome_Upstream_Group@mediatek.com
+Subject: Re: [PATCH] media: mediatek: vcodec: fix the error sizeimage for
+ 10bit bitstream
+Message-ID: <20240403123930.wkzgxb6lymzb7hng@basti-XPS-13-9310>
+References: <20240403093018.13168-1-yunfei.dong@mediatek.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <Zgb8gieDzZtZmg2q@ashyti-mobl2.lan>
-X-Patchwork-Hint: comment
+In-Reply-To: <20240403093018.13168-1-yunfei.dong@mediatek.com>
 
-On Fri, Mar 29, 2024 at 06:38:10PM +0100, Andi Shyti wrote:
-> Hi,
-> 
-> On Fri, Mar 29, 2024 at 10:28:14AM -0700, Easwar Hariharan wrote:
-> > On 3/29/2024 10:16 AM, Andi Shyti wrote:
-> > > Hi Easwar,
-> > > 
-> > > On Fri, Mar 29, 2024 at 05:00:26PM +0000, Easwar Hariharan wrote:
-> > >> I2C v7, SMBus 3.2, and I3C specifications have replaced "master/slave"
-> > > 
-> > > I don't understand why we forget that i3c is 1.1.1 :-)
-> > 
-> > That's because it's a copy-paste error from Wolfram's cover letter. :) I'll update
-> > next go-around.
-> 
-> not a binding comment, though. Just for completeness, because we
-> are giving the version to the i2c and smbus, but not i3c.
-> 
-> > >> with more appropriate terms. Inspired by and following on to Wolfram's
-> > >> series to fix drivers/i2c/[1], fix the terminology for users of
-> > >> I2C_ALGOBIT bitbanging interface, now that the approved verbiage exists
-> > >> in the specification.
-> > > 
-> > > The specification talks about:
-> > > 
-> > >  - master -> controller
-> > >  - slave -> target (and not client)
-> > > 
-> > > But both you and Wolfram have used client. I'd like to reach
-> > > some more consistency here.
-> > 
-> > I had the impression that remote targets (i.e external to the device) were to be called clients,
-> > e.g. the QSFP FRUs in drivers/infiniband, and internal ones targets.
-> > I chose the terminology according to that understanding, but now I can't find where I got that
-> > information.
-> 
-> The word "client" does not even appear in the documentation (only
-> one instance in the i3c document), so that the change is not
-> related to the document as stated in the commit log. Unless, of
-> course, I am missing something.
-> 
-> I'm OK with choosing a "customized" naming, but we need to reach
-> an agreement.
-> 
-> I raised the same question to Wolfram.
+Hey Yunfei,
 
-I don't know where that discussion happened, but my opinion
-is NAK to "client". Life is already confusing enough with
-these renames, so let's not make it even more confusing by
-inventing new names nowhere to be found in the spec.
+On 03.04.2024 17:30, Yunfei Dong wrote:
+>The sizeimage of each plane are calculated the same way for 8bit and
 
-And let's especially not invent names that don't even fit
-the purpose. "Client" makes me think of "client/server" or
-some real world analogy. Neither of which seem to have any
-resemblence to how the term would be used for i2c.
+s/The sizeimage of each plane are/The sizeimage for each plane is/
 
--- 
-Ville Syrjälä
-Intel
+>10bit bitstream. Need to enlarge the sizeimage with simeimage*5/4 for
+>10bit bitstream when try and set fmt.
+
+s/bitstream/bistreams/
+s/Need to enlarge the sizeimage with simeimage*5/4 for 10bit bitstream when try and set fmt./
+   Scale up the sizeimage by 25% for 10-bit bitstreams in try_fmt./
+
+>
+>Fixes: 9d86be9bda6c ("media: mediatek: vcodec: Add driver to support 10bit")
+>Signed-off-by: Yunfei Dong <yunfei.dong@mediatek.com>
+>---
+> .../mediatek/vcodec/decoder/mtk_vcodec_dec.c  | 47 ++++++++++++++-----
+> 1 file changed, 34 insertions(+), 13 deletions(-)
+>
+>diff --git a/drivers/media/platform/mediatek/vcodec/decoder/mtk_vcodec_dec.c b/drivers/media/platform/mediatek/vcodec/decoder/mtk_vcodec_dec.c
+>index 9107707de6c4..45209894f1fe 100644
+>--- a/drivers/media/platform/mediatek/vcodec/decoder/mtk_vcodec_dec.c
+>+++ b/drivers/media/platform/mediatek/vcodec/decoder/mtk_vcodec_dec.c
+>@@ -259,6 +259,7 @@ static int vidioc_try_fmt(struct mtk_vcodec_dec_ctx *ctx, struct v4l2_format *f,
+> 		pix_fmt_mp->num_planes = 1;
+> 		pix_fmt_mp->plane_fmt[0].bytesperline = 0;
+> 	} else if (f->type == V4L2_BUF_TYPE_VIDEO_CAPTURE_MPLANE) {
+>+		unsigned int dram_y, dram_c, dram_y_10bit, dram_c_10bit;
+> 		int tmp_w, tmp_h;
+>
+> 		/*
+>@@ -280,22 +281,42 @@ static int vidioc_try_fmt(struct mtk_vcodec_dec_ctx *ctx, struct v4l2_format *f,
+> 		    (pix_fmt_mp->height + 64) <= frmsize->max_height)
+> 			pix_fmt_mp->height += 64;
+>
+>-		mtk_v4l2_vdec_dbg(0, ctx,
+>-				  "before resize wxh=%dx%d, after resize wxh=%dx%d, sizeimage=%d",
+>-				  tmp_w, tmp_h, pix_fmt_mp->width, pix_fmt_mp->height,
+>-				  pix_fmt_mp->width * pix_fmt_mp->height);
+>+		dram_y = pix_fmt_mp->width * pix_fmt_mp->height;
+>+		dram_c = dram_y / 2;
+>+
+>+		dram_y_10bit = dram_y * 5 / 4;
+>+		dram_c_10bit = dram_y_10bit / 2;
+
+I'd skip the two 10 bit variables (dram_y_10bit & dram_c_10bit) and
+instead do it like this:
+
+```
+   dram_stride = pix_fmt_mp->width;
+   if (ctx->is_10bit_bitstream)
+     dram_stride = dram_stride * 5 / 4;
+
+   dram_y = dram_stride * pix_fmt_mp->height;
+   dram_c = dram_y / 2;
+
+   if (pix_fmt_mp->num_planes == 1) {
+     pix_fmt_mp->plane_fmt[0].bytesperline = dram_stride;
+     pix_fmt_mp->plane_fmt[0].sizeimage = dram_y + dram_c;
+   } else {
+     pix_fmt_mp->plane_fmt[0].bytesperline = dram_stride;
+     pix_fmt_mp->plane_fmt[1].bytesperline = dram_stride;
+     pix_fmt_mp->plane_fmt[0].sizeimage = dram_y;
+     pix_fmt_mp->plane_fmt[1].sizeimage = dram_c;
+     ...
+   }
+```
+
+Also, why do you call all the variables dram?
+
+Please this isn't tested, but shows the general direction to repeat a
+lot less code.
+
+Greetings,
+Sebastian
+
+>
+> 		pix_fmt_mp->num_planes = fmt->num_planes;
+>-		pix_fmt_mp->plane_fmt[0].sizeimage =
+>-				pix_fmt_mp->width * pix_fmt_mp->height;
+>-		pix_fmt_mp->plane_fmt[0].bytesperline = pix_fmt_mp->width;
+>-
+>-		if (pix_fmt_mp->num_planes == 2) {
+>-			pix_fmt_mp->plane_fmt[1].sizeimage =
+>-				(pix_fmt_mp->width * pix_fmt_mp->height) / 2;
+>-			pix_fmt_mp->plane_fmt[1].bytesperline =
+>-				pix_fmt_mp->width;
+>+		if (pix_fmt_mp->num_planes == 1) {
+>+			if (ctx->is_10bit_bitstream) {
+>+				pix_fmt_mp->plane_fmt[0].bytesperline = pix_fmt_mp->width * 5 / 4;
+>+				pix_fmt_mp->plane_fmt[0].sizeimage = dram_y_10bit + dram_c_10bit;
+>+			} else {
+>+				pix_fmt_mp->plane_fmt[0].bytesperline = pix_fmt_mp->width;
+>+				pix_fmt_mp->plane_fmt[0].sizeimage = dram_y + dram_c;
+>+			}
+>+		} else {
+>+			if (ctx->is_10bit_bitstream) {
+>+				pix_fmt_mp->plane_fmt[0].bytesperline = pix_fmt_mp->width * 5 / 4;
+>+				pix_fmt_mp->plane_fmt[1].bytesperline = pix_fmt_mp->width * 5 / 4;
+>+
+>+				pix_fmt_mp->plane_fmt[0].sizeimage = dram_y_10bit;
+>+				pix_fmt_mp->plane_fmt[1].sizeimage = dram_c_10bit;
+>+			} else {
+>+				pix_fmt_mp->plane_fmt[0].bytesperline = pix_fmt_mp->width;
+>+				pix_fmt_mp->plane_fmt[1].bytesperline = pix_fmt_mp->width;
+>+
+>+				pix_fmt_mp->plane_fmt[0].sizeimage = dram_y;
+>+				pix_fmt_mp->plane_fmt[1].sizeimage = dram_c;
+>+			}
+> 		}
+>+
+>+		mtk_v4l2_vdec_dbg(0, ctx,
+>+				  "before resize:%dx%d, after resize:%dx%d, sizeimage=0x%x_0x%x",
+>+				  tmp_w, tmp_h, pix_fmt_mp->width, pix_fmt_mp->height,
+>+				  pix_fmt_mp->plane_fmt[0].sizeimage,
+>+				  pix_fmt_mp->plane_fmt[1].sizeimage);
+> 	}
+>
+> 	pix_fmt_mp->flags = 0;
+>-- 
+>2.25.1
+>
