@@ -1,16 +1,16 @@
 Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BB2F146D4B
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 695D5146D41
 	for <linux-kernel@vger.kernel.org>; Wed,  3 Apr 2024 12:50:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712148653; cv=none; b=DEIEswld05RcQv9jYMbd4PMHLZvcUi61xQda0we3o07FjBgzn2ghqLXeKfqICmhfgOwkGhDKbk+eYoIRjiiLldDvN1UpElyYOH0S9gEfuotiuP3QLSdLoMtjyfRbMb4IugBb0PLAZx6J6B0BJcr/QjHxmacYMnf9ObYO0u8zu30=
+	t=1712148653; cv=none; b=XbRgRjwh63eDSqhWOpjsJiO9nzS4QTld8fPqQ4QpTLbWL+87ndGZdMudAYdMbeSk9tq1QnliPwIqZR4kDk2isr1Ou8spdpWo9dflZtEJxDBd/rFlzOd0aR7Q3nIv+07dHm/bldrK4lh/jFueEOLIZSPOx9RP2pJfAjKZ0kduOEI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1712148653; c=relaxed/simple;
-	bh=qALA+eklaUZV4thpojugBBndhqcrfO1knNR1ww1Ud0I=;
+	bh=NA2fFPMrmmfDyRMamEZkosSkMFaKXIJpa7uMLU7FeMc=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=dSZv39PPuga4DQ9cNx4gImDdedezwH08aIiXlNLSjFyBNSlB1V6WttaoVJbFW+w8K2h50JUV0e/ZZtxVtNZLv1sujradh54+fVrRqnQYVUlWLKbgw89/z0Rz4lDR2C/6nUH6VD3K5kmDjhixWt1j5bfHKaWo4g5+u+MkjL7n4sM=
+	 MIME-Version; b=eSvC43Ga6UFGJuhYMMsdZufzsjBhWa39HBht4laDuac+pHRHnPpvsUo03nLJ2HYbftznxueTVtKDLkUX5Rz+JDQkSFeG2tNBy6zDmq2E2LzoLuyDksETRWPSROnrAn8fOfzX/Jgl0f/dKGPes4EiFDlWKmAVOd3Q5eBAVD8nfxc=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
@@ -18,16 +18,16 @@ Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
 	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
 	(Exim 4.92)
 	(envelope-from <ore@pengutronix.de>)
-	id 1rs04h-0005uL-0a; Wed, 03 Apr 2024 14:50:43 +0200
+	id 1rs04h-0005yU-0a; Wed, 03 Apr 2024 14:50:43 +0200
 Received: from [2a0a:edc0:0:1101:1d::ac] (helo=dude04.red.stw.pengutronix.de)
 	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
 	(Exim 4.94.2)
 	(envelope-from <ore@pengutronix.de>)
-	id 1rs04e-00ABER-R1; Wed, 03 Apr 2024 14:50:40 +0200
+	id 1rs04f-00ABEk-EC; Wed, 03 Apr 2024 14:50:41 +0200
 Received: from ore by dude04.red.stw.pengutronix.de with local (Exim 4.96)
 	(envelope-from <ore@pengutronix.de>)
-	id 1rs04e-00EKVm-29;
-	Wed, 03 Apr 2024 14:50:40 +0200
+	id 1rs04f-00EKaP-0r;
+	Wed, 03 Apr 2024 14:50:41 +0200
 From: Oleksij Rempel <o.rempel@pengutronix.de>
 To: "David S. Miller" <davem@davemloft.net>,
 	Andrew Lunn <andrew@lunn.ch>,
@@ -44,9 +44,9 @@ Cc: Oleksij Rempel <o.rempel@pengutronix.de>,
 	netdev@vger.kernel.org,
 	UNGLinuxDriver@microchip.com,
 	=?UTF-8?q?S=C3=B8ren=20Andersen?= <san@skov.dk>
-Subject: [PATCH net-next v2 1/8] net: dsa: microchip: Remove unused FDB timestamp support in ksz8_r_dyn_mac_table()
-Date: Wed,  3 Apr 2024 14:50:32 +0200
-Message-Id: <20240403125039.3414824-2-o.rempel@pengutronix.de>
+Subject: [PATCH net-next v2 7/8] net: dsa: microchip: ksz8_r_dyn_mac_table(): return read/write error if we got any
+Date: Wed,  3 Apr 2024 14:50:38 +0200
+Message-Id: <20240403125039.3414824-8-o.rempel@pengutronix.de>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20240403125039.3414824-1-o.rempel@pengutronix.de>
 References: <20240403125039.3414824-1-o.rempel@pengutronix.de>
@@ -62,68 +62,79 @@ X-SA-Exim-Mail-From: ore@pengutronix.de
 X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
 X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-The FDB timestamps are not being utilized. This commit removes the
-unused timestamp support from ksz8_r_dyn_mac_table() function.
+The read/write path may fail. So, return error if we got it.
 
 Reviewed-by: Vladimir Oltean <olteanv@gmail.com>
 Acked-by: Arun Ramadoss <arun.ramadoss@microchip.com>
 Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
 ---
- drivers/net/dsa/microchip/ksz8.h    | 2 +-
- drivers/net/dsa/microchip/ksz8795.c | 7 ++-----
- 2 files changed, 3 insertions(+), 6 deletions(-)
+ drivers/net/dsa/microchip/ksz8795.c | 20 +++++++++++++++-----
+ 1 file changed, 15 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/net/dsa/microchip/ksz8.h b/drivers/net/dsa/microchip/ksz8.h
-index 1a5225264e6a3..5b38cbb7b058b 100644
---- a/drivers/net/dsa/microchip/ksz8.h
-+++ b/drivers/net/dsa/microchip/ksz8.h
-@@ -20,7 +20,7 @@ void ksz8_port_setup(struct ksz_device *dev, int port, bool cpu_port);
- int ksz8_r_phy(struct ksz_device *dev, u16 phy, u16 reg, u16 *val);
- int ksz8_w_phy(struct ksz_device *dev, u16 phy, u16 reg, u16 val);
- int ksz8_r_dyn_mac_table(struct ksz_device *dev, u16 addr, u8 *mac_addr,
--			 u8 *fid, u8 *src_port, u8 *timestamp, u16 *entries);
-+			 u8 *fid, u8 *src_port, u16 *entries);
- void ksz8_r_mib_cnt(struct ksz_device *dev, int port, u16 addr, u64 *cnt);
- void ksz8_r_mib_pkt(struct ksz_device *dev, int port, u16 addr,
- 		    u64 *dropped, u64 *cnt);
 diff --git a/drivers/net/dsa/microchip/ksz8795.c b/drivers/net/dsa/microchip/ksz8795.c
-index 14923535ca7e8..f59a03e6981d2 100644
+index eeb32df0939d1..de3d8357da855 100644
 --- a/drivers/net/dsa/microchip/ksz8795.c
 +++ b/drivers/net/dsa/microchip/ksz8795.c
-@@ -409,7 +409,7 @@ static int ksz8_valid_dyn_entry(struct ksz_device *dev, u8 *data)
- }
+@@ -385,12 +385,16 @@ static int ksz8_valid_dyn_entry(struct ksz_device *dev, u8 *data)
+ 	int timeout = 100;
+ 	const u32 *masks;
+ 	const u16 *regs;
++	int ret;
  
- int ksz8_r_dyn_mac_table(struct ksz_device *dev, u16 addr, u8 *mac_addr,
--			 u8 *fid, u8 *src_port, u8 *timestamp, u16 *entries)
-+			 u8 *fid, u8 *src_port, u16 *entries)
- {
- 	u32 data_hi, data_lo;
- 	const u8 *shifts;
-@@ -454,8 +454,6 @@ int ksz8_r_dyn_mac_table(struct ksz_device *dev, u16 addr, u8 *mac_addr,
- 			shifts[DYNAMIC_MAC_FID];
- 		*src_port = (data_hi & masks[DYNAMIC_MAC_TABLE_SRC_PORT]) >>
- 			shifts[DYNAMIC_MAC_SRC_PORT];
--		*timestamp = (data_hi & masks[DYNAMIC_MAC_TABLE_TIMESTAMP]) >>
--			shifts[DYNAMIC_MAC_TIMESTAMP];
- 
- 		mac_addr[5] = (u8)data_lo;
- 		mac_addr[4] = (u8)(data_lo >> 8);
-@@ -1196,14 +1194,13 @@ int ksz8_fdb_dump(struct ksz_device *dev, int port,
- 	int ret = 0;
- 	u16 i = 0;
- 	u16 entries = 0;
--	u8 timestamp = 0;
- 	u8 fid;
- 	u8 src_port;
- 	u8 mac[ETH_ALEN];
+ 	masks = dev->info->masks;
+ 	regs = dev->info->regs;
  
  	do {
- 		ret = ksz8_r_dyn_mac_table(dev, i, mac, &fid, &src_port,
--					   &timestamp, &entries);
-+					   &entries);
- 		if (!ret && port == src_port) {
- 			ret = cb(mac, fid, false, data);
- 			if (ret)
+-		ksz_read8(dev, regs[REG_IND_DATA_CHECK], data);
++		ret = ksz_read8(dev, regs[REG_IND_DATA_CHECK], data);
++		if (ret)
++			return ret;
++
+ 		timeout--;
+ 	} while ((*data & masks[DYNAMIC_MAC_TABLE_NOT_READY]) && timeout);
+ 
+@@ -399,7 +403,9 @@ static int ksz8_valid_dyn_entry(struct ksz_device *dev, u8 *data)
+ 		return -ETIMEDOUT;
+ 	/* Entry is ready for accessing. */
+ 	} else {
+-		ksz_read8(dev, regs[REG_IND_DATA_8], data);
++		ret = ksz_read8(dev, regs[REG_IND_DATA_8], data);
++		if (ret)
++			return ret;
+ 
+ 		/* There is no valid entry in the table. */
+ 		if (*data & masks[DYNAMIC_MAC_TABLE_MAC_EMPTY])
+@@ -428,7 +434,9 @@ static int ksz8_r_dyn_mac_table(struct ksz_device *dev, u16 addr, u8 *mac_addr,
+ 	ctrl_addr = IND_ACC_TABLE(TABLE_DYNAMIC_MAC | TABLE_READ) | addr;
+ 
+ 	mutex_lock(&dev->alu_mutex);
+-	ksz_write16(dev, regs[REG_IND_CTRL_0], ctrl_addr);
++	ret = ksz_write16(dev, regs[REG_IND_CTRL_0], ctrl_addr);
++	if (ret)
++		goto unlock_alu;
+ 
+ 	ret = ksz8_valid_dyn_entry(dev, &data);
+ 	if (ret == -ENXIO) {
+@@ -439,7 +447,10 @@ static int ksz8_r_dyn_mac_table(struct ksz_device *dev, u16 addr, u8 *mac_addr,
+ 	if (ret)
+ 		goto unlock_alu;
+ 
+-	ksz_read64(dev, regs[REG_IND_DATA_HI], &buf);
++	ret = ksz_read64(dev, regs[REG_IND_DATA_HI], &buf);
++	if (ret)
++		goto unlock_alu;
++
+ 	data_hi = (u32)(buf >> 32);
+ 	data_lo = (u32)buf;
+ 
+@@ -462,7 +473,6 @@ static int ksz8_r_dyn_mac_table(struct ksz_device *dev, u16 addr, u8 *mac_addr,
+ 
+ 	mac_addr[1] = (u8)data_hi;
+ 	mac_addr[0] = (u8)(data_hi >> 8);
+-	ret = 0;
+ 
+ unlock_alu:
+ 	mutex_unlock(&dev->alu_mutex);
 -- 
 2.39.2
 
