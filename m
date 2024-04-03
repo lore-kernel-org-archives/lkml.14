@@ -1,125 +1,121 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 869AD148FF6;
-	Wed,  3 Apr 2024 14:11:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24350148305
+	for <linux-kernel@vger.kernel.org>; Wed,  3 Apr 2024 14:12:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712153494; cv=none; b=eKvW2BJZTWzTDzlRyQ2/0BU/h5QVuzHr9qLpViHGv0vQF4TozkI8PZvU8BN34LCZALEQ/rkiD0IeU0Nr37FKg+9HuulZ4+6REY5sRPcX8eb3+GdaCeAJpeCoHe9XWiz0GZpECRR0far0yuddHmh4qpPFuH4cRIjTsjyMpaHOTZY=
+	t=1712153529; cv=none; b=HSfObUcZCSPr6/bXWYzF5ZmBOe66VdnYDn1hdHR9+SnJQQ0809T6NrZimz7btTBebZMK64JlT/AoG27a1PYQ/rQfa5PPTDx+blk9zB6hiQ0YDlwYHDdKyDmZx+kNtRabLZI1VbEMe6ev8Yko/PRyTL3MhO67LDz0mnDz6Tne9E4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712153494; c=relaxed/simple;
-	bh=qX07ZsCB0EC6H2GFhhQmJ+c5vUY68DX1wal7OOZPv5E=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=mNpPBD3MzWwR3S9zk46IKqJP43chDA38OzQRgsWUiz2ZmsIp3eW8oxcAxWInvMyVUM6KJfrGZOIkt0ipznCfNPlpse0bwYUoW1Fqpv88xjfagSfrC5vT9z62POqLOVvoe0i+0ofTUv79N/cfQkmqRrZTUa16oEBSGitL647Ghtk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4056DC433F1;
-	Wed,  3 Apr 2024 14:11:33 +0000 (UTC)
-Date: Wed, 3 Apr 2024 10:13:52 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Vincent Donnefort <vdonnefort@google.com>
-Cc: mhiramat@kernel.org, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, mathieu.desnoyers@efficios.com,
- kernel-team@android.com, linux-mm@kvack.org
-Subject: Re: [PATCH v19 RESEND 3/5] tracing: Allow user-space mapping of the
- ring-buffer
-Message-ID: <20240403101352.08c83aa4@gandalf.local.home>
-In-Reply-To: <20240329144055.0ae2dd4b@gandalf.local.home>
-References: <20240326100830.1326610-1-vdonnefort@google.com>
-	<20240326100830.1326610-4-vdonnefort@google.com>
-	<20240329144055.0ae2dd4b@gandalf.local.home>
-X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1712153529; c=relaxed/simple;
+	bh=qCIolQRct0+IbGGd6jjPbW1ixYlGS5R/m+dU02mINLc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ebODO0XJS0lUsgCDvJ/5DDxnQaVU4xGJkmDhOdf35yeU8uPa6aFmXNOIpfGMozYpnQq9pu4F34bQGO5kpOS4nxzploTsEx+n1RUSegOUgFwLfue48SX3g8d0rO52V1bXquW4DXaReZnpL2fWdRn262aR7T1QPO8+kShZsjy4pQ4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Lo/tyxa6; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Lo/tyxa6"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1712153527;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=r8o2fhiLcGwGsiCE3v1KVrR6VF/PZtpQmnAxVeKoH1c=;
+	b=Lo/tyxa6QuY93qBcmkitP34oUd//GzJ4Q7kx5TgXIZaiH/2t5qrAfv4NMyBckchG50SRXw
+	pTeoqcQFjG54DDLMISx0oImyMIBovNNbjEb0YYVUmNImyUx3KmkP66gEvQqNoTV0lYuOFU
+	69Ps4nvTdolzmOHmVO4MUn5n6jf0E2k=
+Received: from mail-qv1-f72.google.com (mail-qv1-f72.google.com
+ [209.85.219.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-267-70xOK0IBPOm4OAE5Ru8j-Q-1; Wed, 03 Apr 2024 10:12:06 -0400
+X-MC-Unique: 70xOK0IBPOm4OAE5Ru8j-Q-1
+Received: by mail-qv1-f72.google.com with SMTP id 6a1803df08f44-6962767b1f8so85071746d6.3
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Apr 2024 07:12:06 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712153525; x=1712758325;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=r8o2fhiLcGwGsiCE3v1KVrR6VF/PZtpQmnAxVeKoH1c=;
+        b=rFarEKsblJaoIpoQIPX3esWwYARvQMQ7UCdA3wj6F1s5jqSovxG3aFp++mxM9rslJ4
+         4ezaifag3MDHnTSYXvjpNllQ+O7kV+rTAiaKQMWrUghdRwuYRooSmP+lysWAjrDw9iC+
+         F7xy60u7Q6s86w24GyrXhVXJBVkLh9eSxluPZ1C1b/u9Ukd64dmJJ3Q+3p2g5tHJ+xtm
+         cK5ne2HnOUmqV06ebhkRwnRBmKsWGR3P2q3WrckgNq3aTU42XjoWav3hK2EEvS3x8xZc
+         JvBeu88DMtRTYEy0TY10YO2ZKWEvIr79V4eNZSfUzGY2g5InTF0UaOwKBWhwuGxNg4y+
+         B74w==
+X-Forwarded-Encrypted: i=1; AJvYcCVNpmaAf04OvGE3DKRdDvVfQaqKcKW43TyNqp8GWY4xr5k6E47lxsJv9lQsUzHvaBWU4Dpy8siJXG7kVyUjLbIPChebFaeFleVMKmpR
+X-Gm-Message-State: AOJu0YxHVT9zpCMXShl4tUXcd0W/21g6WltAj4MjE6k2DvT396SaydLq
+	M7uy0C1PA3kdK2qC5cKHfl7goLF3Oj6za2HsKVfUXwMV1XoJ/mdb+1XFMipK5ERibgyuaWBSJTl
+	wCtzuIi+qd+Nl92TfgaStCwVOwfw+aY7RHSUrhbk7sq0LvzUAEQdqYdZ4xXXfag==
+X-Received: by 2002:a0c:aad1:0:b0:699:1ff2:9a09 with SMTP id g17-20020a0caad1000000b006991ff29a09mr4124317qvb.24.1712153525077;
+        Wed, 03 Apr 2024 07:12:05 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEmph9CKAQHSAqdnGjo5kwoTYNhHOASdv2YNX6Z0heyycssEot4MPfxw4tGswUcwCvzRjjiGg==
+X-Received: by 2002:a0c:aad1:0:b0:699:1ff2:9a09 with SMTP id g17-20020a0caad1000000b006991ff29a09mr4124299qvb.24.1712153524689;
+        Wed, 03 Apr 2024 07:12:04 -0700 (PDT)
+Received: from x1gen2nano ([2600:1700:1ff0:d0e0::33])
+        by smtp.gmail.com with ESMTPSA id 11-20020a05621420cb00b006968a6fb010sm6531118qve.91.2024.04.03.07.12.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 03 Apr 2024 07:12:04 -0700 (PDT)
+Date: Wed, 3 Apr 2024 09:12:02 -0500
+From: Andrew Halaney <ahalaney@redhat.com>
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: Bjorn Andersson <andersson@kernel.org>, 
+	Konrad Dybcio <konrad.dybcio@linaro.org>, "James E.J. Bottomley" <jejb@linux.ibm.com>, 
+	"Martin K. Petersen" <martin.petersen@oracle.com>, linux-arm-msm@vger.kernel.org, linux-scsi@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 2/2] scsi: ufs: qcom: Add sanity checks for gear/lane
+ values during ICC scaling
+Message-ID: <ju2shpvxlc5tkazvclggdrqtfxa2r7yqdz7i5lc4hpjlfw7wvg@fp34s6mvncm3>
+References: <20240403-ufs-icc-fix-v2-0-958412a5eb45@linaro.org>
+ <20240403-ufs-icc-fix-v2-2-958412a5eb45@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240403-ufs-icc-fix-v2-2-958412a5eb45@linaro.org>
 
-On Fri, 29 Mar 2024 14:40:55 -0400
-Steven Rostedt <rostedt@goodmis.org> wrote:
+On Wed, Apr 03, 2024 at 06:50:04PM +0530, Manivannan Sadhasivam wrote:
+> Let's add the checks to warn the user if the ICC scaling is not supported
+> for the gear/lane values and also fallback to the max value if that's the
+> case.
+> 
+> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 
-> > +static vm_fault_t tracing_buffers_mmap_fault(struct vm_fault *vmf)
-> > +{
-> > +	return VM_FAULT_SIGBUS;
-> > +}  
-> 
-> If this is all it does, I don't believe it's needed.
-> 
-> > +
-> > +#ifdef CONFIG_TRACER_MAX_TRACE
-> > +static int get_snapshot_map(struct trace_array *tr)
-> > +{
-> > +	int err = 0;
-> > +
-> > +	/*
-> > +	 * Called with mmap_lock held. lockdep would be unhappy if we would now
-> > +	 * take trace_types_lock. Instead use the specific
-> > +	 * snapshot_trigger_lock.
-> > +	 */
-> > +	spin_lock(&tr->snapshot_trigger_lock);
-> > +
-> > +	if (tr->snapshot || tr->mapped == UINT_MAX)
-> > +		err = -EBUSY;
-> > +	else
-> > +		tr->mapped++;
-> > +
-> > +	spin_unlock(&tr->snapshot_trigger_lock);
-> > +
-> > +	/* Wait for update_max_tr() to observe iter->tr->mapped */
-> > +	if (tr->mapped == 1)
-> > +		synchronize_rcu();
-> > +
-> > +	return err;
-> > +
-> > +}
-> > +static void put_snapshot_map(struct trace_array *tr)
-> > +{
-> > +	spin_lock(&tr->snapshot_trigger_lock);
-> > +	if (!WARN_ON(!tr->mapped))
-> > +		tr->mapped--;
-> > +	spin_unlock(&tr->snapshot_trigger_lock);
-> > +}
-> > +#else
-> > +static inline int get_snapshot_map(struct trace_array *tr) { return 0; }
-> > +static inline void put_snapshot_map(struct trace_array *tr) { }
-> > +#endif
-> > +
-> > +static void tracing_buffers_mmap_close(struct vm_area_struct *vma)
-> > +{
-> > +	struct ftrace_buffer_info *info = vma->vm_file->private_data;
-> > +	struct trace_iterator *iter = &info->iter;
-> > +
-> > +	WARN_ON(ring_buffer_unmap(iter->array_buffer->buffer, iter->cpu_file));
-> > +	put_snapshot_map(iter->tr);
-> > +}
-> > +
-> > +static void tracing_buffers_mmap_open(struct vm_area_struct *vma) { }  
-> 
-> Same for the open.
-> 
-> 
-> > +
-> > +static const struct vm_operations_struct tracing_buffers_vmops = {
-> > +	.open		= tracing_buffers_mmap_open,
-> > +	.close		= tracing_buffers_mmap_close,
-> > +	.fault		= tracing_buffers_mmap_fault,
-> > +};  
-> 
-> I replaced this with:
-> 
-> static const struct vm_operations_struct tracing_buffers_vmops = {
-> 	.close		= tracing_buffers_mmap_close,
-> };
-> 
-> And it appears to work just fine. The mm code handles the NULL cases for
-> .open and .fault.
-> 
-> Is there any reason to do something different than the mm defaults?
+Reviewed-by: Andrew Halaney <ahalaney@redhat.com>
 
-Hi Vincent,
+> ---
+>  drivers/ufs/host/ufs-qcom.c | 10 ++++++++++
+>  1 file changed, 10 insertions(+)
+> 
+> diff --git a/drivers/ufs/host/ufs-qcom.c b/drivers/ufs/host/ufs-qcom.c
+> index 696540ca835e..79b4ce05f7c5 100644
+> --- a/drivers/ufs/host/ufs-qcom.c
+> +++ b/drivers/ufs/host/ufs-qcom.c
+> @@ -696,6 +696,16 @@ static struct __ufs_qcom_bw_table ufs_qcom_get_bw_table(struct ufs_qcom_host *ho
+>  	int gear = max_t(u32, p->gear_rx, p->gear_tx);
+>  	int lane = max_t(u32, p->lane_rx, p->lane_tx);
+>  
+> +	if (WARN_ONCE(gear > QCOM_UFS_MAX_GEAR,
+> +		      "ICC scaling for UFS Gear (%d) not supported. Using Gear (%d) bandwidth\n",
+> +		      gear, QCOM_UFS_MAX_GEAR))
+> +		gear = QCOM_UFS_MAX_GEAR;
+> +
+> +	if (WARN_ONCE(lane > QCOM_UFS_MAX_LANE,
+> +		      "ICC scaling for UFS Lane (%d) not supported. Using Lane (%d) bandwidth\n",
+> +		      lane, QCOM_UFS_MAX_LANE))
+> +		lane = QCOM_UFS_MAX_LANE;
+> +
+>  	if (ufshcd_is_hs_mode(p)) {
+>  		if (p->hs_rate == PA_HS_MODE_B)
+>  			return ufs_qcom_bw_table[MODE_HS_RB][gear][lane];
+> 
+> -- 
+> 2.25.1
+> 
+> 
 
-Do you plan on sending out a v20 series?
-
--- Steve
