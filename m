@@ -1,124 +1,113 @@
-Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E7F7152163
-	for <linux-kernel@vger.kernel.org>; Wed,  3 Apr 2024 13:20:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B7FE1482F9;
+	Wed,  3 Apr 2024 13:20:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712150420; cv=none; b=YI/F/uDLapo56mhz8evEDvN2vMxgqKjCqfhsRxRYxI0JeTJ/EsQPWr4QNUYnx/ZqfVh7kHWTUt6GGDJ4tGDbZEMzciEh0F40egXU9CTwR2AgYiBuW7oT++XfL7Vyzvlad10SeNx6gRV6hnl8dr8U5MjvWutJCPfkKRrON8M2NT8=
+	t=1712150442; cv=none; b=IYxzcWtxAtalnQ4+JzkRDVFvj/YrOcs8SECOx1/U/pWhCgFm+kUHeC3zWC6+eyoA3/VsLapzUhI+1WQ/7WTxe+clSQII8V4meTbv3aJ3Z35KuBwSyJDlYsdasxgt2N8WTsSYRp3vvu/g0v3KOxTFX+uOcUf/FdFpX4jf4q9WceM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712150420; c=relaxed/simple;
-	bh=QMLyC7z7wrC4cQg2eqM+Dfe+kl12AbyhXTxgQxg+dJQ=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=pWIlfwP1cAJpDLVmPZ4IazBCOP6/bHf/czegPm9WCDPr1sGVoE1wdKbYXIYSpT9lTEaD/rET7F/fGeEmvP+AYfJ7kcx9M1TlcXyL6Lzd/jPMXGorJKL+QNEj5orc8FnIhaIxDvjlwDQCP9y+yxKLoaCvH7xB+YnTaUgSz87gTWk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=iJ+YzJ1F; arc=none smtp.client-ip=209.85.210.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1712150442; c=relaxed/simple;
+	bh=CCu+4+aVoTTZgu9hej/Pthjpzr3wNcQ1Oyt/g5SypTo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=PRHU/v2IWsgU3sqAHfxgIM+xMpqdaXdOgMwM3xO7sLz5twQh1pcu7NdJO0XlsUJ3zNxYFT65CwEj/K9lM4uA5Eesj58hqv4HLrVyX/AD8eAU/XSPUZenM+P0brzQbei9Ics4QXG73Xn5BVsnehlZhvwaSLVVuhbosA8Cos3OzXQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=BycqVNOR; arc=none smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="iJ+YzJ1F"
-Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-6e8f765146fso5403521b3a.0
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Apr 2024 06:20:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1712150419; x=1712755219; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=KwQhYX2Mz1rNOgNCjbLm4vj/pn57/J/0LzejU91ZMaQ=;
-        b=iJ+YzJ1FnMTnDmmgSP+pBevtno1GL2cOETABb8IZDK3WtbxI2F5HAQNat8wZ0Z08Cj
-         GlgfpFSI87gT5r9iV8b95Fn/8Jd83EfRVtuT49Ixsv8JhSQPz2WWWwWywoyUxBEET35n
-         BHenb1XxJ/uD/tvhMScVHHbeHq3CNIZiuHHutjL8ro3pYV0EnBAf2g2EltTh7fPPqtZR
-         abpg5hXaR0cJNVkD1ftYGKmu+qTKZa5PfackTYsD1FR0vpvCV/rgvCx2IMBbfQK6PlUK
-         q+aJCV6jcocLsMaQxVLoE2pgd2roqIAj2XtyPARozxpFpeOorancxBXWXXUsHgxIZZ7t
-         YXxA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712150419; x=1712755219;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=KwQhYX2Mz1rNOgNCjbLm4vj/pn57/J/0LzejU91ZMaQ=;
-        b=OksB44TJmTxw2RMYMt238ZSfL2UtrZLS8K/RJQILhUGJ1wjbOjFr7xNasyV64RIXor
-         9aVKhNOTrZk2ynIK4lnS/r6hNCyDE3TrFiKOxrQFNbHUXqaY23Nm3qOWFehME0QORG7Q
-         RjVtC2kkiDCuYLS68V1kBWZPhetak5XYgMY9RN66aa3Q0Nj+sbINMMuz5fpql9t0FGIb
-         a+6Ov4cNLguoXhaIr815mBA2Ka1NI2RHsjcTJmubtHhfPfY2zG0tuedGEXqt7dMJrk8o
-         OtUEnK3YRmvrmmfBsuVAm2eclWGPKewsRRHNjZ9jgnAvfuUOQ5PvjcBDNU/e4GFyu8Hw
-         VSlw==
-X-Forwarded-Encrypted: i=1; AJvYcCUoQVCsEo2xz4Bi6QQgjwu9rmQB4SQeLzqunc01+YGMMnIViQQ72qkzHowqJ0oGJpkyxPKxTgV9SmKWbNhOtuc8WTK0XRIRe93pT3Vf
-X-Gm-Message-State: AOJu0YwDF8e+u8IEAyckdsqMsIplILNARZ5/0LT9S3ttrm3SLNiu3tSt
-	QkY8Oahlk3eKU4xA+JOjmtXTkfy17iB4mtKoGWnl7tGZSv+nm3mbIboQ6rP0uA==
-X-Google-Smtp-Source: AGHT+IGpQCGkn5PhcSonCc4+J0cwxJctvKaSt5maet/T2RTVHwqbp8l0HU6o47fJUh/H4LTbscQw3g==
-X-Received: by 2002:a05:6a00:8e06:b0:6e6:8c49:f2f6 with SMTP id io6-20020a056a008e0600b006e68c49f2f6mr16252144pfb.24.1712150418636;
-        Wed, 03 Apr 2024 06:20:18 -0700 (PDT)
-Received: from [127.0.1.1] ([103.28.246.48])
-        by smtp.gmail.com with ESMTPSA id r1-20020aa78441000000b006e69a142458sm11640518pfn.213.2024.04.03.06.20.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 03 Apr 2024 06:20:18 -0700 (PDT)
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Date: Wed, 03 Apr 2024 18:50:04 +0530
-Subject: [PATCH v2 2/2] scsi: ufs: qcom: Add sanity checks for gear/lane
- values during ICC scaling
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BycqVNOR"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1712150441; x=1743686441;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=CCu+4+aVoTTZgu9hej/Pthjpzr3wNcQ1Oyt/g5SypTo=;
+  b=BycqVNOR93WcrkialqUWBTtSdparm1xH1crHQUhgXDehQYYTaA48vZaD
+   IgfQ2Y/5yqQMhAqm9TkI/al8NQOaJ4Tr5EvjYXJq+hjN3aY7u//lm9Gdq
+   Zq1/aHqLWMzSyG7DDLgtKE34rUNe0kBEWNGCb4A7fc8kl0OfPOIoL7K9D
+   QK4TuueaMUv1lPMZWbYs4Z0nb+g2ZNjKCStRNCyGjAoqLtS/Bd1QFiWfV
+   T0ZeC7Y3Kg4jeb/our46WKNNFdCOylOg4G8iRsl7BkRX+iphHFP6ugduU
+   uzPUUED20QUcEs4WJGNQlo1O+Ihh/LVTkH+Mxg1ulEXww9AEu7VnpxK9B
+   A==;
+X-CSE-ConnectionGUID: ArB7kHR4QS6/dJMxzaaqcQ==
+X-CSE-MsgGUID: X6o6AD15QdmpEwuTzl8EEg==
+X-IronPort-AV: E=McAfee;i="6600,9927,11033"; a="7243129"
+X-IronPort-AV: E=Sophos;i="6.07,177,1708416000"; 
+   d="scan'208";a="7243129"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2024 06:20:40 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,11033"; a="915183291"
+X-IronPort-AV: E=Sophos;i="6.07,177,1708416000"; 
+   d="scan'208";a="915183291"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.72.54])
+  by fmsmga002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2024 06:20:37 -0700
+Received: from andy by smile with local (Exim 4.97)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1rs0Xb-000000017y4-0k5R;
+	Wed, 03 Apr 2024 16:20:35 +0300
+Date: Wed, 3 Apr 2024 16:20:34 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	Kent Gibson <warthog618@gmail.com>, linux-gpio@vger.kernel.org,
+	linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Mika Westerberg <mika.westerberg@linux.intel.com>,
+	Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v1 2/2] gpiolib: Up to date the kernel documentation
+Message-ID: <Zg1XoiXTN3dQSNbB@smile.fi.intel.com>
+References: <20240326181247.1419138-1-andriy.shevchenko@linux.intel.com>
+ <20240326181247.1419138-3-andriy.shevchenko@linux.intel.com>
+ <CAMRc=Mf3y4EUSVte9Y5VyTDAFFKHXtM5RSz=MDeHhOVBeqPtmw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240403-ufs-icc-fix-v2-2-958412a5eb45@linaro.org>
-References: <20240403-ufs-icc-fix-v2-0-958412a5eb45@linaro.org>
-In-Reply-To: <20240403-ufs-icc-fix-v2-0-958412a5eb45@linaro.org>
-To: Bjorn Andersson <andersson@kernel.org>, 
- Konrad Dybcio <konrad.dybcio@linaro.org>, 
- "James E.J. Bottomley" <jejb@linux.ibm.com>, 
- "Martin K. Petersen" <martin.petersen@oracle.com>
-Cc: linux-arm-msm@vger.kernel.org, linux-scsi@vger.kernel.org, 
- linux-kernel@vger.kernel.org, 
- Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-X-Mailer: b4 0.12.4
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1242;
- i=manivannan.sadhasivam@linaro.org; h=from:subject:message-id;
- bh=QMLyC7z7wrC4cQg2eqM+Dfe+kl12AbyhXTxgQxg+dJQ=;
- b=owEBbQGS/pANAwAKAVWfEeb+kc71AcsmYgBmDVeJkgfnxTwqt6pwLJcFG/ywaqATm2PYnOmoZ
- 8RiTomJs4KJATMEAAEKAB0WIQRnpUMqgUjL2KRYJ5dVnxHm/pHO9QUCZg1XiQAKCRBVnxHm/pHO
- 9WqlCACHiwIXIUVyW6PYemRimdhM9VGxKicBAzA1Xm4P8Jt7Xrv2D/sBmrrRoQ2ogK400Qpg9/G
- zyg6R9fpCortdbyi1rWC8JVtgeZGaM1GB1XeDq6Mdrtjt2nO41OaktIhw+oqtfSotEyBJCw13jb
- ItvI64Qq6igYPNiMd5WdO9Imo0yJuVQJ9tPcknCAHmzzWqCDDg7HaO03OJEjQf+O4KoU2WS2AOs
- 6pttNv6l5wDwvSzq19R1TG/eypF21m0hvxKRibAiKXO2TzqFtFndSI46tAIJd9zwxt3Kqx8pz/F
- bzI75lQksPSBnACjD+eg0zC78/FKcKIJFv622CeEIvRXX8nf
-X-Developer-Key: i=manivannan.sadhasivam@linaro.org; a=openpgp;
- fpr=C668AEC3C3188E4C611465E7488550E901166008
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAMRc=Mf3y4EUSVte9Y5VyTDAFFKHXtM5RSz=MDeHhOVBeqPtmw@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-Let's add the checks to warn the user if the ICC scaling is not supported
-for the gear/lane values and also fallback to the max value if that's the
-case.
+On Wed, Apr 03, 2024 at 02:59:32PM +0200, Bartosz Golaszewski wrote:
+> On Tue, Mar 26, 2024 at 7:12 PM Andy Shevchenko
+> <andriy.shevchenko@linux.intel.com> wrote:
+> >
+> > There are several issues:
+> >
+> > - Reference to the non-existing or only single functions out of possible
+> >   callees
+> >
+> > - No return section
+> >
+> > $ scripts/kernel-doc -v -none -Wall drivers/gpio/gpiolib* 2>&1 | grep -w warning | wc -l
+> > 67
+> >
+> > - Reference to NULL as %NULL in a few cases
+> >
+> > - Explicit reference to error codes as Exxx or %Exxx and
+> >   numbers with leading %
+> >
+> > - Spelling of gpio, irq, SOC (in different capitalization)
+> >
+> > - Unaligned style of irqchip, gpiochip references
+> >
+> > - Unaligned style of NOTE, FIXME, and TODO
+> >
+> > Fix all these. While at it, fix multi-line comment style as well.
+> >
+> > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> 
+> Could you split it into separate patches by subject (one for
+> capitalization, one for %NULL, etc.)? As is, it's a huge dump that's
+> hard to review.
 
-Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
----
- drivers/ufs/host/ufs-qcom.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
-
-diff --git a/drivers/ufs/host/ufs-qcom.c b/drivers/ufs/host/ufs-qcom.c
-index 696540ca835e..79b4ce05f7c5 100644
---- a/drivers/ufs/host/ufs-qcom.c
-+++ b/drivers/ufs/host/ufs-qcom.c
-@@ -696,6 +696,16 @@ static struct __ufs_qcom_bw_table ufs_qcom_get_bw_table(struct ufs_qcom_host *ho
- 	int gear = max_t(u32, p->gear_rx, p->gear_tx);
- 	int lane = max_t(u32, p->lane_rx, p->lane_tx);
- 
-+	if (WARN_ONCE(gear > QCOM_UFS_MAX_GEAR,
-+		      "ICC scaling for UFS Gear (%d) not supported. Using Gear (%d) bandwidth\n",
-+		      gear, QCOM_UFS_MAX_GEAR))
-+		gear = QCOM_UFS_MAX_GEAR;
-+
-+	if (WARN_ONCE(lane > QCOM_UFS_MAX_LANE,
-+		      "ICC scaling for UFS Lane (%d) not supported. Using Lane (%d) bandwidth\n",
-+		      lane, QCOM_UFS_MAX_LANE))
-+		lane = QCOM_UFS_MAX_LANE;
-+
- 	if (ufshcd_is_hs_mode(p)) {
- 		if (p->hs_rate == PA_HS_MODE_B)
- 			return ufs_qcom_bw_table[MODE_HS_RB][gear][lane];
+Sure.
 
 -- 
-2.25.1
+With Best Regards,
+Andy Shevchenko
+
 
