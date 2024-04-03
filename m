@@ -1,164 +1,146 @@
-Received: from vps.xff.cz (vps.xff.cz [195.181.215.36])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2963A3E487;
-	Wed,  3 Apr 2024 16:58:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.181.215.36
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D4C23E487
+	for <linux-kernel@vger.kernel.org>; Wed,  3 Apr 2024 16:58:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712163488; cv=none; b=NMuEklHoPtU3UfpTFG2SB12MDAgp7OB+0ryhl04agW4HXtP4GvGhpU4LNTFdiM5eX5mBibdy4IHYbVPJtsWFakNobc9+w9mJKL2K9zUQ7EqqXxkcCioCorBmX4Aiv05M3MC7DD4/QN6C5ZRVMiY4nOo1z0r8IH2AOBeC8OLPUOE=
+	t=1712163503; cv=none; b=e5TDfsBDNr+Cw3AGZVL2VGxaWt2+OKQcIOhFib3zAuZ+325gTFiXfkIAYWnz377lQgweq2WiEiUSr+NriZ05Kf9Wk1WsSSZKzM2D78OxeNQWcSOYxgtdG2qr/YYoaEtbdMtJNhJo5SwOwmU0ksIBRYjPCpJ8TNK0fbwQSDIkkMY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712163488; c=relaxed/simple;
-	bh=2G4Q5SYQyElPkNHgWqe4JSo8rDfwCuoyLkkH6dTtzAs=;
+	s=arc-20240116; t=1712163503; c=relaxed/simple;
+	bh=AnaON3b/vCZPnX5n53LzayRcIw1CUYQ6URv93NPOgQI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MLgyGHN6Gaf9DkeZyjtSh+2WcYjtOhDh1XYILOpLNXD8gc/Yo/aulT0jErETDCISlqGMWjQasdriVl++3QC2Gmn0MLp8PpNIdHpPRQzvR5E61YciOqLsEWy/xDzMzT2QYGE8J/91bmqlFRRb/rEkmR7DCA3l4GikYlJhbF4ZPUQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=megous.com; spf=pass smtp.mailfrom=megous.com; dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b=aGWPpAO4; arc=none smtp.client-ip=195.181.215.36
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=megous.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=megous.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=YkYGV2o07HNCRDflB45Xa4yVRPNUm9M7+Yn1tFclQX2s8+nig/V/14bskozi+tSulZgZ4QIDfh+F2bXzKTpWZDfWuMMoEt3O67w78dzpm2s6kBSsuB1jWZ4fDxhDekbTaQwKbHjr1UGtEtHuog+aQ5DVCEr13gr7RBfNVvwy+bQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=fOIBUJBy; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="aGWPpAO4"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
-	t=1712163476; bh=2G4Q5SYQyElPkNHgWqe4JSo8rDfwCuoyLkkH6dTtzAs=;
-	h=Date:From:To:Cc:Subject:X-My-GPG-KeyId:References:From;
-	b=aGWPpAO4EGmkLK+EJPwzMzLQMWWL3m3dZUipkrCENdnh0eDNEuyHm50zbmNnn8Ds/
-	 vDBksoqrLbzk9nnIEPB8TTBK/lh+JLYmm7ZrErL+8C0FpMIvVgYUxDyUko/gFBEMHd
-	 1RmiypFsgbwGYUk/LyDA2fRmDNKuduVhpSAFpgwk=
-Date: Wed, 3 Apr 2024 18:57:56 +0200
-From: =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>
-To: Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc: git@luigi311.com, linux-media@vger.kernel.org, 
-	dave.stevenson@raspberrypi.com, jacopo.mondi@ideasonboard.com, mchehab@kernel.org, 
-	robh@kernel.org, krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org, 
-	shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de, 
-	festevam@gmail.com, devicetree@vger.kernel.org, imx@lists.linux.dev, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, pavel@ucw.cz, 
-	phone-devel@vger.kernel.org
-Subject: Re: [PATCH v3 23/25] drivers: media: i2c: imx258: Add support for
- powerdown gpio
-Message-ID: <wjlcde7yoooygj4hhdmiwrdloh6l4p6i2qbmjek5uwsifyzwgu@xjhutvmsdfou>
-Mail-Followup-To: =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>, 
-	Sakari Ailus <sakari.ailus@linux.intel.com>, git@luigi311.com, linux-media@vger.kernel.org, 
-	dave.stevenson@raspberrypi.com, jacopo.mondi@ideasonboard.com, mchehab@kernel.org, 
-	robh@kernel.org, krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org, 
-	shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de, 
-	festevam@gmail.com, devicetree@vger.kernel.org, imx@lists.linux.dev, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, pavel@ucw.cz, 
-	phone-devel@vger.kernel.org
-X-My-GPG-KeyId: EBFBDDE11FB918D44D1F56C1F9F0A873BE9777ED
- <https://xff.cz/key.txt>
-References: <20240403150355.189229-1-git@luigi311.com>
- <20240403150355.189229-24-git@luigi311.com>
- <Zg2DBasC501hMQSS@kekkonen.localdomain>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fOIBUJBy"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1712163501;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=M0vlp5zqKNWczSf5uwQPJWCYRlyw0wuDQPwNGC+8xK8=;
+	b=fOIBUJByalQSeSW6Fan2gddF9EBLdjZk0PCNbm4jYZ/mR1UHskxMba0IFcFi4vk6kRyqSD
+	FBGwTtN1cwUtFyIMeK5MCtHzqAzC7RD25OZ1SYb9cKaBxFMlxY9HU3Ze+r3/4VyumL2kyE
+	nrO9VYy9wGJqFbdhLQ3z4mmvgjpPYUw=
+Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
+ by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-588-b9Sqe5VQNbSAgN0m4F60cA-1; Wed,
+ 03 Apr 2024 12:58:14 -0400
+X-MC-Unique: b9Sqe5VQNbSAgN0m4F60cA-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.rdu2.redhat.com [10.11.54.2])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 6496A383CD7A;
+	Wed,  3 Apr 2024 16:58:13 +0000 (UTC)
+Received: from bfoster (unknown [10.22.16.57])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id A6F3C40C6CB5;
+	Wed,  3 Apr 2024 16:58:12 +0000 (UTC)
+Date: Wed, 3 Apr 2024 13:00:11 -0400
+From: Brian Foster <bfoster@redhat.com>
+To: Sweet Tea Dorminy <sweettea-kernel@dorminy.me>
+Cc: Jonathan Corbet <corbet@lwn.net>,
+	Kent Overstreet <kent.overstreet@linux.dev>,
+	Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
+	David Sterba <dsterba@suse.com>, Jaegeuk Kim <jaegeuk@kernel.org>,
+	Chao Yu <chao@kernel.org>, Alexander Viro <viro@zeniv.linux.org.uk>,
+	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
+	=?iso-8859-1?Q?Micka=EBl_Sala=FCn?= <mic@digikod.net>,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-bcachefs@vger.kernel.org, linux-btrfs@vger.kernel.org,
+	linux-f2fs-devel@lists.sourceforge.net,
+	linux-fsdevel@vger.kernel.org, kernel-team@meta.com
+Subject: Re: [PATCH v3 11/13] bcachefs: fiemap: return correct extent
+ physical length
+Message-ID: <Zg2LG1_2-ac1GlsG@bfoster>
+References: <cover.1712126039.git.sweettea-kernel@dorminy.me>
+ <b9b795987a485afa0fdb8f0decc09405691d9320.1712126039.git.sweettea-kernel@dorminy.me>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <Zg2DBasC501hMQSS@kekkonen.localdomain>
+In-Reply-To: <b9b795987a485afa0fdb8f0decc09405691d9320.1712126039.git.sweettea-kernel@dorminy.me>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.2
 
-Hi Sakari and Luis,
-
-On Wed, Apr 03, 2024 at 04:25:41PM GMT, Sakari Ailus wrote:
-> Hi Luis, Ondrej,
+On Wed, Apr 03, 2024 at 03:22:52AM -0400, Sweet Tea Dorminy wrote:
+> Signed-off-by: Sweet Tea Dorminy <sweettea-kernel@dorminy.me>
+> ---
+>  fs/bcachefs/fs.c | 18 ++++++++++++------
+>  1 file changed, 12 insertions(+), 6 deletions(-)
 > 
-> On Wed, Apr 03, 2024 at 09:03:52AM -0600, git@luigi311.com wrote:
-> > From: Luis Garcia <git@luigi311.com>
-> > 
-> > On some boards powerdown signal needs to be deasserted for this
-> > sensor to be enabled.
-> > 
-> > Signed-off-by: Ondrej Jirman <megi@xff.cz>
-> > Signed-off-by: Luis Garcia <git@luigi311.com>
-> > ---
-> >  drivers/media/i2c/imx258.c | 13 +++++++++++++
-> >  1 file changed, 13 insertions(+)
-> > 
-> > diff --git a/drivers/media/i2c/imx258.c b/drivers/media/i2c/imx258.c
-> > index 30352c33f63c..163f04f6f954 100644
-> > --- a/drivers/media/i2c/imx258.c
-> > +++ b/drivers/media/i2c/imx258.c
-> > @@ -679,6 +679,8 @@ struct imx258 {
-> >  	unsigned int lane_mode_idx;
-> >  	unsigned int csi2_flags;
-> >  
-> > +	struct gpio_desc *powerdown_gpio;
-> > +
-> >  	/*
-> >  	 * Mutex for serialized access:
-> >  	 * Protect sensor module set pad format and start/stop streaming safely.
-> > @@ -1213,6 +1215,8 @@ static int imx258_power_on(struct device *dev)
-> >  	struct imx258 *imx258 = to_imx258(sd);
-> >  	int ret;
-> >  
-> > +	gpiod_set_value_cansleep(imx258->powerdown_gpio, 0);
-> 
-> What does the spec say? Should this really happen before switching on the
-> supplies below?
+> diff --git a/fs/bcachefs/fs.c b/fs/bcachefs/fs.c
+> index f830578a9cd1..d2793bae842d 100644
+> --- a/fs/bcachefs/fs.c
+> +++ b/fs/bcachefs/fs.c
+> @@ -913,15 +913,17 @@ static int bch2_fill_extent(struct bch_fs *c,
+>  			flags |= FIEMAP_EXTENT_SHARED;
+>  
+>  		bkey_for_each_ptr_decode(k.k, ptrs, p, entry) {
+> -			int flags2 = 0;
+> +			int flags2 = FIEMAP_EXTENT_HAS_PHYS_LEN;
+> +			u64 phys_len = k.k->size << 9;
+>  			u64 offset = p.ptr.offset;
+>  
+>  			if (p.ptr.unwritten)
+>  				flags2 |= FIEMAP_EXTENT_UNWRITTEN;
+>  
+> -			if (p.crc.compression_type)
+> +			if (p.crc.compression_type) {
+>  				flags2 |= FIEMAP_EXTENT_ENCODED;
+> -			else
+> +				phys_len = p.crc.compressed_size << 9;
+> +			} else
+>  				offset += p.crc.offset;
+>  
+>  			if ((offset & (block_sectors(c) - 1)) ||
+> @@ -931,7 +933,7 @@ static int bch2_fill_extent(struct bch_fs *c,
+>  			ret = fiemap_fill_next_extent(info,
+>  						bkey_start_offset(k.k) << 9,
+>  						offset << 9,
+> -						k.k->size << 9, 0,
+> +						k.k->size << 9, phys_len,
+>  						flags|flags2);
+>  			if (ret)
+>  				return ret;
+> @@ -941,14 +943,18 @@ static int bch2_fill_extent(struct bch_fs *c,
+>  	} else if (bkey_extent_is_inline_data(k.k)) {
+>  		return fiemap_fill_next_extent(info,
+>  					       bkey_start_offset(k.k) << 9,
+> -					       0, k.k->size << 9, 0,
+> +					       0, k.k->size << 9,
+> +					       bkey_inline_data_bytes(k.k),
 
-There's no powerdown input in the IMX258 manual. The manual only mentions
-that XCLR (reset) should be held low during power on.
+Question for Kent perhaps, but what's the functional difference between
+bkey_inline_data_bytes() and k->size in this particular case?
 
-https://megous.com/dl/tmp/15b0992a720ab82d.png
+FWIW that and the other couple nitty questions aside, this all LGTM.
+Thanks.
 
-https://megous.com/dl/tmp/f2cc991046d97641.png
+Brian
 
-   This sensor doesn’t have a built-in “Power ON Reset” function. The XCLR pin
-   is set to “LOW” and the power supplies are brought up. Then the XCLR pin
-   should be set to “High” after INCK supplied.
-
-So this input is some feature on camera module itself outside of the
-IMX258 chip, which I think is used to gate power to the module. Eg. on Pinephone
-Pro, there are two modules with shared power rails, so enabling supply to
-one module enables it to the other one, too. So this input becomes the only way
-to really enable/disable power to the chip when both are used at once at some
-point, because regulator_bulk_enable/disable becomes ineffective at that point.
-
-Luis, maybe you saw some other datasheet that mentions this input? IMO,
-it just gates the power rails via some mosfets on the module itself, since
-there's not power down input to the chip itself.
-
-kind regards,
-	o.
-
-> > +
-> >  	ret = regulator_bulk_enable(IMX258_NUM_SUPPLIES,
-> >  				    imx258->supplies);
-> >  	if (ret) {
-> > @@ -1224,6 +1228,7 @@ static int imx258_power_on(struct device *dev)
-> >  	ret = clk_prepare_enable(imx258->clk);
-> >  	if (ret) {
-> >  		dev_err(dev, "failed to enable clock\n");
-> > +		gpiod_set_value_cansleep(imx258->powerdown_gpio, 1);
-> >  		regulator_bulk_disable(IMX258_NUM_SUPPLIES, imx258->supplies);
-> >  	}
-> >  
-> > @@ -1238,6 +1243,8 @@ static int imx258_power_off(struct device *dev)
-> >  	clk_disable_unprepare(imx258->clk);
-> >  	regulator_bulk_disable(IMX258_NUM_SUPPLIES, imx258->supplies);
-> >  
-> > +	gpiod_set_value_cansleep(imx258->powerdown_gpio, 1);
-> > +
-> >  	return 0;
-> >  }
-> >  
-> > @@ -1541,6 +1548,12 @@ static int imx258_probe(struct i2c_client *client)
-> >  	if (!imx258->variant_cfg)
-> >  		imx258->variant_cfg = &imx258_cfg;
-> >  
-> > +	/* request optional power down pin */
-> > +	imx258->powerdown_gpio = devm_gpiod_get_optional(&client->dev, "powerdown",
-> > +						    GPIOD_OUT_HIGH);
-> > +	if (IS_ERR(imx258->powerdown_gpio))
-> > +		return PTR_ERR(imx258->powerdown_gpio);
-> > +
-> >  	/* Initialize subdev */
-> >  	v4l2_i2c_subdev_init(&imx258->sd, client, &imx258_subdev_ops);
-> >  
-> 
+>  					       flags|
+> +					       FIEMAP_EXTENT_HAS_PHYS_LEN|
+>  					       FIEMAP_EXTENT_DATA_INLINE);
+>  	} else if (k.k->type == KEY_TYPE_reservation) {
+>  		return fiemap_fill_next_extent(info,
+>  					       bkey_start_offset(k.k) << 9,
+> -					       0, k.k->size << 9, 0,
+> +					       0, k.k->size << 9,
+> +					       k.k->size << 9,
+>  					       flags|
+> +					       FIEMAP_EXTENT_HAS_PHYS_LEN|
+>  					       FIEMAP_EXTENT_DELALLOC|
+>  					       FIEMAP_EXTENT_UNWRITTEN);
+>  	} else {
 > -- 
-> Regards,
+> 2.43.0
 > 
-> Sakari Ailus
+> 
+
