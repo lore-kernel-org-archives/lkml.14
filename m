@@ -1,69 +1,136 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 129B1156C41
-	for <linux-kernel@vger.kernel.org>; Wed,  3 Apr 2024 23:41:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8866E156C41
+	for <linux-kernel@vger.kernel.org>; Wed,  3 Apr 2024 23:41:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712187687; cv=none; b=JcMOWRmSrJ4eASY0tGnRo4cDO2PtrrwB5FujXdxo4l+ICV12Z69DxHTtyDuaRCfCRWtbOTDk4t7QYJI0t6n66QJ/LxGwas5pH/uiFhqRQBsUJwwDh8fJfVhk+6Ql0r45qj9gg8SGV6DjfEUBheragMq8j7mCZ2h2gkpXFmFkSoc=
+	t=1712187693; cv=none; b=H8wee5pznX7z/UTd8ImMr8COxUx0GyCJeRx2qzTTTVOwGKyMWnZMr2znueMH/rfs16488tUtl6Rs4JbDkEEZwUH+CLtYWfvR96Me36uhvWB5jsUqkoUqUANUnY0liU7uWuTx5NeULgPQ1KBPlt2VbHlyPUyQzZrFdTIIGB6XFZI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712187687; c=relaxed/simple;
-	bh=R0NMhwyttFNi30mNMusJuV2if3D+ISCNB1cUl8jQ7g8=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=M5n06p6zb9VZeidxh3mwCdP2F5THRJkfKEyHuimeKbGY3bFYOdjsblQjWNHIG2soL6nCfTkNsgVaFhshmsQLJRgpJOs++4zkS0pxMM8h1ZfM9vl+Y3KdBBuwB0SycQIpO9yeLRKer5xeexmSee42MGti5qGe6d+8+xja9aYtPsA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=IDOplyGL; arc=none smtp.client-ip=192.198.163.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1712187693; c=relaxed/simple;
+	bh=B9ELv+AlTbjVYoeAK4IUIRfzH1eGLSZ74eq5ShhJDK8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=DcslVrBjo30TgTmdEC/dioeRZS561j7raP6eKkkMHs2beXmyVbJ0lrVw9Ad/kJsWr482jsbKuYRusN2E9OVs7aJFChNJ+k326fmHr+KU0jtSeW28Y6UTtd8vM0siacICDLXeEKPfjujHltAbtdILMTHTY2RtscHRbF4539xgHOg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=GRZqw+R9; arc=none smtp.client-ip=209.85.214.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IDOplyGL"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1712187686; x=1743723686;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=R0NMhwyttFNi30mNMusJuV2if3D+ISCNB1cUl8jQ7g8=;
-  b=IDOplyGLB5a/YoDZvLg77vrfLe6gB1V0t/ksPmsS4y7M1gTzqSdzWn8y
-   E7EZUDDLVo7G9ZVrNis0DHPbevx+MMfBBo3u86puyejOCNBLbUvKm7Hxu
-   E5ABUuQgUJb6v3bb8edPgMj66fWvpxpp6ZH9OJbD9oANVrcHZw/2pxF0I
-   5E/nntEfj7uO+AE2taJsMRS6OB5oWSpSBlwlo9exGheDHtF+1hMGEpLYs
-   jO53PcqplQ5xMs+7R2BhjWKVuDKzkbkav51XrNyuLAvgByEqSzcOk3qGU
-   ZhquRj4QZBz9l30cA0iwNbCcoEBJ757MYmDknEb7hYkzvLEgOz6l4u7gw
-   Q==;
-X-CSE-ConnectionGUID: AUMRkTYaScqyLywQ7yxVIw==
-X-CSE-MsgGUID: TvBA1Va8SrmLJcLQ9hq05w==
-X-IronPort-AV: E=McAfee;i="6600,9927,11033"; a="10419004"
-X-IronPort-AV: E=Sophos;i="6.07,178,1708416000"; 
-   d="scan'208";a="10419004"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2024 16:41:24 -0700
-X-CSE-ConnectionGUID: Q10ReuZnTZe7oJMWgT0BxA==
-X-CSE-MsgGUID: 5abMbITQTraYkx/CpSsmxg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,178,1708416000"; 
-   d="scan'208";a="19052516"
-Received: from jacob-builder.jf.intel.com ([10.54.39.125])
-  by orviesa006.jf.intel.com with ESMTP; 03 Apr 2024 16:41:24 -0700
-From: Jacob Pan <jacob.jun.pan@linux.intel.com>
-To: sivanich@hpe.com,
-	Thomas Gleixner <tglx@linutronix.de>,
-	LKML <linux-kernel@vger.kernel.org>,
-	iommu@lists.linux.dev,
-	"Lu Baolu" <baolu.lu@linux.intel.com>,
-	Joerg Roedel <joro@8bytes.org>
-Cc: "Tian, Kevin" <kevin.tian@intel.com>,
-	Yi Liu <yi.l.liu@intel.com>,
-	steve.wahl@hpe.com,
-	russ.anderson@hpe.com,
-	Peter Zijlstra <peterz@infradead.org>,
-	"Will Deacon" <will@kernel.org>,
-	"Robin Murphy" <robin.murphy@arm.com>,
-	Jacob Pan <jacob.jun.pan@linux.intel.com>
-Subject: [PATCH 2/2] iommu/vt-d: Share DMAR fault IRQ to prevent vector exhaustion
-Date: Wed,  3 Apr 2024 16:45:48 -0700
-Message-Id: <20240403234548.989061-2-jacob.jun.pan@linux.intel.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240403234548.989061-1-jacob.jun.pan@linux.intel.com>
-References: <20240403234548.989061-1-jacob.jun.pan@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="GRZqw+R9"
+Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-1e24c889618so3315335ad.2
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Apr 2024 16:41:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1712187691; x=1712792491; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Rv0B5ns63COKymo1kiAr4r2DGtjIZSKU8HdFj+0IH40=;
+        b=GRZqw+R9vHANT/gMhhVL7l0gGNKGvJteRFGJETcVu3pMozRmmyxZvYU5kT3iaoB13c
+         fYfvK8SidhDZvjOaq6WD9nWyWCjhjH8McmivtakwjRcc/brhzDZZqIaB4T1t7dL7b5Ld
+         8QTLK64niLh69GjzQOd94lzGByDTE+xjoZAnbpZTWhMnCmXcWnN3pZE4Az0ruNqEQkje
+         UfqMRCg/urlJTuC48tUUKAx7uae2Z3gP1u0ypLanh92/zxGoeqmVQ+Y7NaloWPzJoPEg
+         tKeqM4w/umADlkS1z28LgjNGt7nCSZRJ5RbzkOBIX2YkLDWbSbH6Rdm7Bf6eVJDAV7TJ
+         3V9Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712187691; x=1712792491;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Rv0B5ns63COKymo1kiAr4r2DGtjIZSKU8HdFj+0IH40=;
+        b=enruwg+us7JSTVFXjM693ZFUTPt12pNViKZF7FCgKLTinstGlrNcbJ4ppww+odP/j0
+         4fla3Jalkng9tU4emV1i7cofqRtK6cwmH6GfrxeqzOGGi+3FdzZONnVaKzQkJAqXhA0D
+         8yAVp08JVE4CzEPNewmeKAhNTjOxPGYSAbjJY6FhkDpbNQatvM8ytaBUbGzQhTSKDTN/
+         xEsA1YjHHRHdUPgb0cJqQC0O2HwD9NgdK73F4EOJ759VOU4TiSJbRRlc+wVJTeFF1xYx
+         bl7+1aISp2SqT5m6+Df6lf06zd5x35jq8iw0kLGPJV1D2/ihfN6VBDh+2y6yukTZFlv+
+         53pg==
+X-Forwarded-Encrypted: i=1; AJvYcCWacsuHzO2dAEwSkDmIjrS5Fd6+LLbASor7oNu9CP2Bcczvzc4HgVjBzyFaMDb/NYAstjZwu3ODzBUseu/9J2R8sjKyGvQQ9GwMZJMP
+X-Gm-Message-State: AOJu0Yyqssz/f7+qFrOTc7C/t4A4HeLLSc8MFt/Jc0VhRtcGh5ycGa9z
+	DBDb8a+V24FeQ8XvFEZK/EWDUqMIUboRsPeunZzdqNbS4kCoWmbL64XyphpAjOY=
+X-Google-Smtp-Source: AGHT+IG0BMforFKG/Z+mj8l+gwmdkHRGf0wkX6Dm3/AG2fDf6ErYVT/6uGhIGHy46uRoq1WTT9/6ig==
+X-Received: by 2002:a17:902:c402:b0:1dd:c953:cfa0 with SMTP id k2-20020a170902c40200b001ddc953cfa0mr1051389plk.48.1712187690540;
+        Wed, 03 Apr 2024 16:41:30 -0700 (PDT)
+Received: from debug.ba.rivosinc.com ([64.71.180.162])
+        by smtp.gmail.com with ESMTPSA id b18-20020a170902d51200b001deeac592absm13899117plg.180.2024.04.03.16.41.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 03 Apr 2024 16:41:30 -0700 (PDT)
+From: Deepak Gupta <debug@rivosinc.com>
+To: paul.walmsley@sifive.com,
+	rick.p.edgecombe@intel.com,
+	broonie@kernel.org,
+	Szabolcs.Nagy@arm.com,
+	kito.cheng@sifive.com,
+	keescook@chromium.org,
+	ajones@ventanamicro.com,
+	conor.dooley@microchip.com,
+	cleger@rivosinc.com,
+	atishp@atishpatra.org,
+	alex@ghiti.fr,
+	bjorn@rivosinc.com,
+	alexghiti@rivosinc.com,
+	samuel.holland@sifive.com,
+	conor@kernel.org
+Cc: linux-doc@vger.kernel.org,
+	linux-riscv@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-mm@kvack.org,
+	linux-arch@vger.kernel.org,
+	linux-kselftest@vger.kernel.org,
+	corbet@lwn.net,
+	palmer@dabbelt.com,
+	aou@eecs.berkeley.edu,
+	robh+dt@kernel.org,
+	krzysztof.kozlowski+dt@linaro.org,
+	oleg@redhat.com,
+	akpm@linux-foundation.org,
+	arnd@arndb.de,
+	ebiederm@xmission.com,
+	Liam.Howlett@oracle.com,
+	vbabka@suse.cz,
+	lstoakes@gmail.com,
+	shuah@kernel.org,
+	brauner@kernel.org,
+	debug@rivosinc.com,
+	andy.chiu@sifive.com,
+	jerry.shih@sifive.com,
+	hankuan.chen@sifive.com,
+	greentime.hu@sifive.com,
+	evan@rivosinc.com,
+	xiao.w.wang@intel.com,
+	charlie@rivosinc.com,
+	apatel@ventanamicro.com,
+	mchitale@ventanamicro.com,
+	dbarboza@ventanamicro.com,
+	sameo@rivosinc.com,
+	shikemeng@huaweicloud.com,
+	willy@infradead.org,
+	vincent.chen@sifive.com,
+	guoren@kernel.org,
+	samitolvanen@google.com,
+	songshuaishuai@tinylab.org,
+	gerg@kernel.org,
+	heiko@sntech.de,
+	bhe@redhat.com,
+	jeeheng.sia@starfivetech.com,
+	cyy@cyyself.name,
+	maskray@google.com,
+	ancientmodern4@gmail.com,
+	mathis.salmen@matsal.de,
+	cuiyunhui@bytedance.com,
+	bgray@linux.ibm.com,
+	mpe@ellerman.id.au,
+	baruch@tkos.co.il,
+	alx@kernel.org,
+	david@redhat.com,
+	catalin.marinas@arm.com,
+	revest@chromium.org,
+	josh@joshtriplett.org,
+	shr@devkernel.io,
+	deller@gmx.de,
+	omosnace@redhat.com,
+	ojeda@kernel.org,
+	jhubbard@nvidia.com
+Subject: [PATCH v3 00/29] riscv control-flow integrity for usermode
+Date: Wed,  3 Apr 2024 16:34:48 -0700
+Message-ID: <20240403234054.2020347-1-debug@rivosinc.com>
+X-Mailer: git-send-email 2.43.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -72,160 +139,120 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-DMAR fault interrupt is used for per-IOMMU unrecoverable fault reporting,
-it occurs only if there is a kernel programming error or serious hardware
-failure. In other words, they should never occur under normal circumstances.
+Sending out v3 for cpu assisted riscv user mode control flow integrity.
 
-However, we are permanently occupying IRQ vectors per DMAR unit. On a
-dual-socket Saphire Rapids system, DMAR fault interrupts can consume 16
-vectors on BSP, which can lead to vector exhaustion. The effort to spread
-vectors to each socket only partially alleviates the problem.
+v2 [9] was sent a week ago for this riscv usermode control flow integrity
+enabling. RFC patchset was (v1) early this year (January) [7].
 
-This patch leverages the shared IRQ mechanism such that only a single IRQ
-vector is consumed for all the DMAR units on a system. When any DMAR faults
-occur, all DMAR handlers are called to check their own fault records.
+changes in v3
+--------------
+envcfg:
+logic to pick up base envcfg had a bug where `ENVCFG_CBZE` could have been
+picked on per task basis, even though CPU didn't implement it. Fixed in
+this series.
 
-After this patch /proc/interrupts will show the list of DMAR units that share
-the fault interrupt, e.g.
+dt-bindings:
+As suggested, split into separate commit. fixed the messaging that spec is
+in public review
 
-24 DMAR-MSI   14-edge      dmar14, dmar13, dmar12, dmar11, dmar10, dmar9,
-dmar8, dmar7, dmar6, dmar5, dmar4, dmar3, dmar2, dmar1, dmar0, dmar15
+arch_is_shadow_stack change:
+arch_is_shadow_stack changed to vma_is_shadow_stack
 
-Link: https://lore.kernel.org/lkml/20240325115638.342716e5@jacob-builder/t/#mc08892e405456428773bcc3b0bbe8971886c5ab9
+hwprobe:
+zicfiss / zicfilp if present will get enumerated in hwprobe
 
-Reported-by: Dimitri Sivanich <sivanich@hpe.com>
-Originally-by: Thomas Gleixner <tglx@linutronix.de>
-Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
----
- drivers/iommu/intel/dmar.c  | 71 +++++++++++++++++++++++++++++--------
- drivers/iommu/intel/iommu.h |  1 +
- 2 files changed, 57 insertions(+), 15 deletions(-)
+selftests:
+As suggested, added object and binary filenames to .gitignore
+Selftest binary anyways need to be compiled with cfi enabled compiler which
+will make sure that landing pad and shadow stack are enabled. Thus removed
+separate enable/disable tests. Cleaned up tests a bit.
 
-diff --git a/drivers/iommu/intel/dmar.c b/drivers/iommu/intel/dmar.c
-index ab325af93f71..cf68464b3404 100644
---- a/drivers/iommu/intel/dmar.c
-+++ b/drivers/iommu/intel/dmar.c
-@@ -1182,7 +1182,6 @@ static void free_iommu(struct intel_iommu *iommu)
- 			iommu->pr_irq = 0;
- 		}
- 		free_irq(iommu->fault_irq, iommu);
--		dmar_free_hwirq(iommu->fault_irq);
- 		iommu->fault_irq = 0;
- 	}
- 
-@@ -1956,9 +1955,8 @@ void dmar_msi_mask(struct irq_data *data)
- 	raw_spin_unlock_irqrestore(&iommu->register_lock, flag);
- }
- 
--void dmar_msi_write(int irq, struct msi_msg *msg)
-+static void dmar_msi_write_msg(struct intel_iommu *iommu, int irq, struct msi_msg *msg)
- {
--	struct intel_iommu *iommu = irq_get_handler_data(irq);
- 	int reg = dmar_msi_reg(iommu, irq);
- 	unsigned long flag;
- 
-@@ -1969,6 +1967,13 @@ void dmar_msi_write(int irq, struct msi_msg *msg)
- 	raw_spin_unlock_irqrestore(&iommu->register_lock, flag);
- }
- 
-+void dmar_msi_write(int irq, struct msi_msg *msg)
-+{
-+	struct intel_iommu *iommu = irq_get_handler_data(irq);
-+
-+	dmar_msi_write_msg(iommu, irq, msg);
-+}
-+
- void dmar_msi_read(int irq, struct msi_msg *msg)
- {
- 	struct intel_iommu *iommu = irq_get_handler_data(irq);
-@@ -2098,27 +2103,63 @@ irqreturn_t dmar_fault(int irq, void *dev_id)
- 	return IRQ_HANDLED;
- }
- 
-+static inline void dmar_fault_irq_unmask(struct intel_iommu *iommu)
-+{
-+	unsigned long flag;
-+
-+	raw_spin_lock_irqsave(&iommu->register_lock, flag);
-+	writel(0, iommu->reg + DMAR_FECTL_REG);
-+	raw_spin_unlock_irqrestore(&iommu->register_lock, flag);
-+}
-+
- int dmar_set_interrupt(struct intel_iommu *iommu)
- {
--	int irq, ret;
-+	static int dmar_irq;
-+	int ret;
- 
--	/*
--	 * Check if the fault interrupt is already initialized.
--	 */
-+	/* Don't initialize it twice for a given iommu */
- 	if (iommu->fault_irq)
- 		return 0;
-+	/*
-+	 * There is one shared interrupt for all IOMMUs to prevent vector
-+	 * exhaustion.
-+	 */
-+	if (!dmar_irq) {
-+		int irq = dmar_alloc_hwirq(iommu->seq_id, iommu->node, iommu);
- 
--	irq = dmar_alloc_hwirq(iommu->seq_id, iommu->node, iommu);
--	if (irq > 0) {
--		iommu->fault_irq = irq;
-+		if (irq <= 0) {
-+			pr_err("No free IRQ vectors\n");
-+			return -EINVAL;
-+		}
-+		dmar_irq = irq;
-+		iommu->fault_irq = dmar_irq;
-+		iommu->flags |= VTD_FLAG_FAULT_IRQ_OWNER;
- 	} else {
--		pr_err("No free IRQ vectors\n");
--		return -EINVAL;
--	}
-+		struct msi_msg msg;
- 
--	ret = request_irq(irq, dmar_fault, IRQF_NO_THREAD, iommu->name, iommu);
--	if (ret)
-+		/*
-+		 * Get the MSI message from the shared interrupt and write
-+		 * it to the iommu MSI registers. Must assign fault_irq to get
-+		 * the MSI register offset.
-+		 */
-+		iommu->fault_irq = dmar_irq;
-+		dmar_msi_read(dmar_irq, &msg);
-+		dmar_msi_write_msg(iommu, dmar_irq, &msg);
-+	}
-+	ret = request_irq(dmar_irq, dmar_fault, IRQF_NO_THREAD | IRQF_SHARED | IRQF_NOBALANCING, iommu->name, iommu);
-+	if (ret) {
- 		pr_err("Can't request irq\n");
-+		return ret;
-+	}
-+
-+	/*
-+	 * Only the owner IOMMU of the shared IRQ has its fault event
-+	 * interrupt unmasked after request_irq(), the rest are explicitly
-+	 * unmasked.
-+	 */
-+	if (!(iommu->flags & VTD_FLAG_FAULT_IRQ_OWNER))
-+		dmar_fault_irq_unmask(iommu);
-+
- 	return ret;
- }
- 
-diff --git a/drivers/iommu/intel/iommu.h b/drivers/iommu/intel/iommu.h
-index deebd4817d27..128f6cdaebac 100644
---- a/drivers/iommu/intel/iommu.h
-+++ b/drivers/iommu/intel/iommu.h
-@@ -536,6 +536,7 @@ enum {
- #define VTD_FLAG_TRANS_PRE_ENABLED	(1 << 0)
- #define VTD_FLAG_IRQ_REMAP_PRE_ENABLED	(1 << 1)
- #define VTD_FLAG_SVM_CAPABLE		(1 << 2)
-+#define VTD_FLAG_FAULT_IRQ_OWNER	(1 << 3)
- 
- #define sm_supported(iommu)	(intel_iommu_sm && ecap_smts((iommu)->ecap))
- #define pasid_supported(iommu)	(sm_supported(iommu) &&			\
--- 
-2.25.1
+changes in v2
+---------------
+As part of testing effort, compiled a rootfs with shadow stack and landing
+pad enabled (libraries and binaries) and booted to shell. As part of long
+running tests, I have been able to run some spec 2006 benchmarks [8] (here
+link is provided only for list of benchmarks that were tested for long
+running tests, excel sheet provided here actually is for some static stats
+like code size growth on spec binaries). Thus converting from RFC to
+regular patchset.
+
+Securing control-flow integrity for usermode requires following
+
+    - Securing forward control flow : All callsites must reach
+      reach a target that they actually intend to reach.
+
+    - Securing backward control flow : All function returns must
+      return to location where they were called from.
+
+This patch series use riscv cpu extension `zicfilp` [2] to secure forward
+control flow and `zicfiss` [2] to secure backward control flow. `zicfilp`
+enforces that all indirect calls or jmps must land on a landing pad instr
+and label embedded in landing pad instr must match a value programmed in
+`x7` register (at callsite via compiler). `zicfiss` introduces shadow stack
+which can only be writeable via shadow stack instructions (sspush and
+ssamoswap) and thus can't be tampered with via inadvertent stores. More
+details about extension can be read from [2] and there are details in
+documentation as well (in this patch series).
+
+Using config `CONFIG_RISCV_USER_CFI`, kernel support for riscv control flow
+integrity for user mode programs can be compiled in the kernel.
+
+Enabling of control flow integrity for user programs is left to user runtime
+(specifically expected from dynamic loader). There has been a lot of earlier
+discussion on the enabling topic around x86 shadow stack enabling [3, 4, 5] and
+overall consensus had been to let dynamic loader (or usermode) to decide for
+enabling the feature.
+
+This patch series introduces arch agnostic `prctls` to enable shadow stack
+and indirect branch tracking. And implements them on riscv. arm64 is expected
+to implement shadow stack part of these arch agnostic `prctls` [6]
+
+Changes since last time
+***********************
+
+Spec changes
+------------
+- Forward cfi spec has become much simpler. `lpad` instruction is pseudo for
+  `auipc rd, <20bit_imm>`. `lpad` checks x7 against 20bit embedded in instr.
+  Thus label width is 20bit.
+
+- Shadow stack management instructions are reduced to
+    sspush - to push x1/x5 on shadow stack
+    sspopchk - pops from shadow stack and comapres with x1/x5.
+    ssamoswap - atomically swap value on shadow stack.
+    rdssp - reads current shadow stack pointer
+
+- Shadow stack accesses on readonly memory always raise AMO/store page fault.
+  `sspopchk` is load but if underlying page is readonly, it'll raise a store
+  page fault. It simplifies hardware and kernel for COW handling for shadow
+  stack pages.
+
+- riscv defines a new exception type `software check exception` and control flow
+  violations raise software check exception.
+
+- enabling controls for shadow stack and landing are in xenvcfg CSR and controls
+  lower privilege mode enabling. As an example senvcfg controls enabling for U and
+  menvcfg controls enabling for S mode.
+
+core mm shadow stack enabling
+-----------------------------
+Shadow stack for x86 usermode are now in mainline and thus this patch
+series builds on top of that for arch-agnostic mm related changes. Big
+thanks and shout out to Rick Edgecombe for that.
+
+selftests
+---------
+Created some minimal selftests to test the patch series.
+
+
+[1] - https://lore.kernel.org/lkml/20230213045351.3945824-1-debug@rivosinc.com/
+[2] - https://github.com/riscv/riscv-cfi
+[3] - https://lore.kernel.org/lkml/ZWHcBq0bJ+15eeKs@finisterre.sirena.org.uk/T/#mb121cd8b33d564e64234595a0ec52211479cf474
+[4] - https://lore.kernel.org/all/20220130211838.8382-1-rick.p.edgecombe@intel.com/
+[5] - https://lore.kernel.org/lkml/CAHk-=wgP5mk3poVeejw16Asbid0ghDt4okHnWaWKLBkRhQntRA@mail.gmail.com/
+[6] - https://lore.kernel.org/linux-mm/20231122-arm64-gcs-v7-2-201c483bd775@kernel.org/
+[7] - https://lore.kernel.org/lkml/20240125062739.1339782-1-debug@rivosinc.com/
+[8] - https://docs.google.com/spreadsheets/d/1_cHGH4ctNVvFRiS7hW9dEGKtXLAJ3aX4Z_iTSa3Tw2U/edit#gid=0
+[9] - https://lore.kernel.org/lkml/20240329044459.3990638-1-debug@rivosinc.com/
 
