@@ -1,130 +1,114 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com [209.85.208.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8288C6BFB1;
-	Wed,  3 Apr 2024 08:10:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 118D413E6B6
+	for <linux-kernel@vger.kernel.org>; Wed,  3 Apr 2024 08:10:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712131841; cv=none; b=aE8hRn8oxiMLgHCYrPKkYRfZtkc5/wK7F0ad+hDjec/lfSezzzeZ7s5tlOS+BGjVlqhhiyUAG+jRt3Zdn6A/eULcPciezlWWr7tFf/XuoNlXv1i2ubRKpV8DUhTt52++MOzzAQIb2H/ICcHcpBz6/Eexw+zRKchITl4zFDYzI9g=
+	t=1712131845; cv=none; b=WEQ4yAoGaTgPRUFo8y4o8gSQyX+Ch0qx0SESkGD3JvWQi8Kia2SzQPoVKtBpdsPs/mwnqvyBHpB+qF+NvmQ9qh2w7BI3DPw4HUBF9hL8ty/afueRbX7fzD5naqzZNwh97yZyGY8+x88MQXD5IxijKdt0Hi2d0sgX7aWnzw+XZx4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712131841; c=relaxed/simple;
-	bh=scbLLLDqtrB9TaspkSSOEEh23gE81TK8M2IdXp0yn2s=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=HU8O+S0Vc/UjwVto2Q9AQasaJtSqes4fODfai2mxiPJBzehbm39iLefXORHthlwXIdR0M0ZFWFow2pQHYHOhAox/txK2e1zWjyLG/gR7IhSHqCRNecw7JGtMUidye4XvgjeZn2E1bn9kmtqaFVRSd8HV5ZjAmhqHRyvSu1C+Jf4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=h2tCLqZ2; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1712131845; c=relaxed/simple;
+	bh=JQej1iAsVr2TqEOU6xUOK3SA6orz4U3TJduit2FBqSI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=FCjVYMah+qf2hA6Grgd1C0rKoQJDPkm++/sA4jMT/1ArD3KNBbVKMVd66UqwlE79MYfTh9/9P/vXBOMMxOM7y8vXDqbGGeLL29AVtUWzl9kmY9rCVjNUnCfRHEu0SCRDrUbItgzJzGpvkAVGSiosyD96lB+auZaoQSmht/5Q530=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=isovalent.com; spf=pass smtp.mailfrom=isovalent.com; dkim=pass (2048-bit key) header.d=isovalent.com header.i=@isovalent.com header.b=K4uUM64U; arc=none smtp.client-ip=209.85.208.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=isovalent.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=isovalent.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="h2tCLqZ2"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BC647C433C7;
-	Wed,  3 Apr 2024 08:10:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712131841;
-	bh=scbLLLDqtrB9TaspkSSOEEh23gE81TK8M2IdXp0yn2s=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=h2tCLqZ2Mkwj4qfJTjl79pz7c0Tt3i5UN6ga1h8uC00fXrcBHxHzGGRhT6HqpvSgr
-	 IoIWUE80Zo58Or0oBB/b+muUKZUu6HVnTIEIaIXZ0FIGnB2GxRLmeKff0PN5g67z+2
-	 zIYFmkhntrN2+arCH1D8e+p3riteZk2wwdjmZhVLgl/Pxya+dssrpLbeREiqj+z8wQ
-	 ns4ftkDpvpz/uiMNnWkTsaboZ944P5MfndEcfTnCEvjvYIC+Zag+v69V1RbekmcjgI
-	 gcI0yXQWXBt5IhEPBs8ntNzeIOwMgJhTDbU/uxkTjItRkMuf7d3WwgabKyGK1JFiFw
-	 INEG+PwSnHLeg==
-From: Arnd Bergmann <arnd@kernel.org>
-To: linux-kernel@vger.kernel.org,
-	Stanislaw Gruszka <stf_xl@wp.pl>,
-	Kalle Valo <kvalo@kernel.org>
-Cc: Arnd Bergmann <arnd@arndb.de>,
-	linux-wireless@vger.kernel.org
-Subject: [PATCH 21/34] iwlegacy: don't warn for unused variables with DEBUG_FS=n
-Date: Wed,  3 Apr 2024 10:06:39 +0200
-Message-Id: <20240403080702.3509288-22-arnd@kernel.org>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240403080702.3509288-1-arnd@kernel.org>
-References: <20240403080702.3509288-1-arnd@kernel.org>
+	dkim=pass (2048-bit key) header.d=isovalent.com header.i=@isovalent.com header.b="K4uUM64U"
+Received: by mail-lj1-f169.google.com with SMTP id 38308e7fff4ca-2d718efedb2so91768441fa.0
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Apr 2024 01:10:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=isovalent.com; s=google; t=1712131842; x=1712736642; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=gqLYHHBoVd2DZSBiZsMfamZXMWNtMZVCVqKJsSa6oQo=;
+        b=K4uUM64UFlfgANoIJWSvhYSvkEGVOob3LufjwZUSk+PZ8X+ZDF7hl9ZQQan+UQ5c/F
+         PcbZEj26LsIobyR64eR6UI294DnaUqF8DaKlQD3T6F9kyrcBT/aB+MAhC3HWPMosZJrp
+         lQq+znn05uQjN+yX6KCTkzA/MxpdrK1C5/V2HQIJy86i5WpN09rqw40luZkObXTAyNnh
+         7lJCHmGbYuBUsRIIPbLT66Q7E8Cfi8itmj9RxGeybI8LRpoTNNPlOYWFCfs02jzP2M3X
+         zGuDubfqgfQdcmIVUWR5KhqbZSHRaF9YlyilHUc0IsO8j24nwNhkycXTUZhwkd0RUSm8
+         Ojzg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712131842; x=1712736642;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=gqLYHHBoVd2DZSBiZsMfamZXMWNtMZVCVqKJsSa6oQo=;
+        b=Ivwuk5bVO6mTAtFa4YRbFjNKAbxbiMicL3bS4RikmW/iP6eR4lB4/rKTt4RC4z9QpG
+         GNOU1j6NhzgbSN4YzTwmj9/f5BTIyNVdPt48enp1ny8WAQqxzUFMDWQuNq3ChDooqxXF
+         IAlKr8npUg576g8SxjKi63j1HGv9+1gghBgU6hFxhRfTGEQ73529s4U0OZ9rtuVUGJFH
+         WXSRap5Zn1KX3SBB3yt5xbdJNSSIHnZxLD1IFR3xJcGFUsF92MmB80XZoZqHFY86o6cC
+         v5jLmXX2Kg82kaENLc1tHlWqYHlrxfpIb3jOXF/KzcRnXWF7+J/57CiR+LVplAbEcrG7
+         WciQ==
+X-Gm-Message-State: AOJu0YzyDghMPRVIW/1GkZjdkGUT38Oymp8MbWfPYI9sq0nb5ZWEvhPk
+	7t/SQKKqmRz835fJNC+M5TpDa22/HTuWWMlAhNxVqzllkYnzyVdItIibVg9BL1DUFAopDLx1tvf
+	9nwajhcNEs32pYitQ2RcLmbJKbu7QH5vdcjZ6Gg==
+X-Google-Smtp-Source: AGHT+IHPLv/xQnUbFIUE+E5TYWgeyNX14zVo3bYPItcgeCHpJd9YtvoRLtdQKSVHg9o25tQy5l1Xqdog/FZOgL7D2E4=
+X-Received: by 2002:a05:651c:503:b0:2d8:2766:d66b with SMTP id
+ o3-20020a05651c050300b002d82766d66bmr3707003ljp.3.1712131842238; Wed, 03 Apr
+ 2024 01:10:42 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <CA+G9fYtsoP51f-oP_Sp5MOq-Ffv8La2RztNpwvE6+R1VtFiLrw@mail.gmail.com>
+In-Reply-To: <CA+G9fYtsoP51f-oP_Sp5MOq-Ffv8La2RztNpwvE6+R1VtFiLrw@mail.gmail.com>
+From: Anton Protopopov <aspsk@isovalent.com>
+Date: Wed, 3 Apr 2024 10:10:31 +0200
+Message-ID: <CAPyNcWeu+bzyQg9S3wDb43jbfk95Su5XcSRFPzUbS2ofZ=+5Fg@mail.gmail.com>
+Subject: Re: include/linux/build_bug.h:78:41: error: static assertion failed:
+ "struct bpf_fib_lookup size check"
+To: Naresh Kamboju <naresh.kamboju@linaro.org>
+Cc: open list <linux-kernel@vger.kernel.org>, lkft-triage@lists.linaro.org, 
+	Linux Regressions <regressions@lists.linux.dev>, Arnd Bergmann <arnd@arndb.de>, 
+	Anders Roxell <anders.roxell@linaro.org>, Dan Carpenter <dan.carpenter@linaro.org>, 
+	Daniel Borkmann <daniel@iogearbox.net>, David Ahern <dsahern@kernel.org>, 
+	Alexei Starovoitov <ast@kernel.org>, aleksander.lobakin@intel.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Arnd Bergmann <arnd@arndb.de>
+On Wed, Apr 3, 2024 at 10:03=E2=80=AFAM Naresh Kamboju
+<naresh.kamboju@linaro.org> wrote:
+>
+> The arm footbridge_defconfig failed with gcc-13 and gcc-8 on Linux next
+> starting from next-20240328..next-20240402.
+>
+> arm:
+>   build:
+>     * gcc-8-footbridge_defconfig - Failed
+>     * gcc-13-footbridge_defconfig - Failed
+>
+> Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+>
+> In file included from include/linux/bitfield.h:10,
+>                  from arch/arm/include/asm/ptrace.h:13,
+>                  from arch/arm/include/asm/processor.h:14,
+>                  from include/linux/prefetch.h:15,
+>                  from arch/arm/include/asm/atomic.h:12,
+>                  from include/linux/atomic.h:7,
+>                  from net/core/filter.c:20:
+> include/linux/build_bug.h:78:41: error: static assertion failed:
+> "struct bpf_fib_lookup size check"
+>    78 | #define __static_assert(expr, msg, ...) _Static_assert(expr, msg)
+>       |                                         ^~~~~~~~~~~~~~
 
-The reference to il_rate_mcs is inside of an #ifdef, causing a W=1 warning:
+Thanks, I will take a look today
 
-drivers/net/wireless/intel/iwlegacy/4965-rs.c:189:38: error: unused variable 'il_rate_mcs' [-Werror,-Wunused-const-variable]
-static const struct il_rate_mcs_info il_rate_mcs[RATE_COUNT] = {
-
-Replace the #ifdef with a PTR_IF() for better compile time analysis.
-The dead code will still get eliminated, but the warning goes away.
-
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- drivers/net/wireless/intel/iwlegacy/4965-rs.c | 15 ++-------------
- drivers/net/wireless/intel/iwlegacy/common.h  |  2 --
- 2 files changed, 2 insertions(+), 15 deletions(-)
-
-diff --git a/drivers/net/wireless/intel/iwlegacy/4965-rs.c b/drivers/net/wireless/intel/iwlegacy/4965-rs.c
-index 718efb1aa1b0..1aa2cee5d131 100644
---- a/drivers/net/wireless/intel/iwlegacy/4965-rs.c
-+++ b/drivers/net/wireless/intel/iwlegacy/4965-rs.c
-@@ -132,15 +132,8 @@ static void il4965_rs_fill_link_cmd(struct il_priv *il,
- static void il4965_rs_stay_in_table(struct il_lq_sta *lq_sta,
- 				    bool force_search);
- 
--#ifdef CONFIG_MAC80211_DEBUGFS
- static void il4965_rs_dbgfs_set_mcs(struct il_lq_sta *lq_sta,
- 				    u32 *rate_n_flags, int idx);
--#else
--static void
--il4965_rs_dbgfs_set_mcs(struct il_lq_sta *lq_sta, u32 * rate_n_flags, int idx)
--{
--}
--#endif
- 
- /*
-  * The following tables contain the expected throughput metrics for all rates
-@@ -2495,8 +2488,6 @@ il4965_rs_free_sta(void *il_r, struct ieee80211_sta *sta, void *il_sta)
- 	D_RATE("leave\n");
- }
- 
--#ifdef CONFIG_MAC80211_DEBUGFS
--
- static void
- il4965_rs_dbgfs_set_mcs(struct il_lq_sta *lq_sta, u32 * rate_n_flags, int idx)
- {
-@@ -2758,7 +2749,6 @@ il4965_rs_add_debugfs(void *il, void *il_sta, struct dentry *dir)
- 	debugfs_create_u8("tx_agg_tid_enable", 0600, dir,
- 			  &lq_sta->tx_agg_tid_en);
- }
--#endif
- 
- /*
-  * Initialization of rate scaling information is done by driver after
-@@ -2781,9 +2771,8 @@ static const struct rate_control_ops rs_4965_ops = {
- 	.free = il4965_rs_free,
- 	.alloc_sta = il4965_rs_alloc_sta,
- 	.free_sta = il4965_rs_free_sta,
--#ifdef CONFIG_MAC80211_DEBUGFS
--	.add_sta_debugfs = il4965_rs_add_debugfs,
--#endif
-+	.add_sta_debugfs = PTR_IF(IS_ENABLED(CONFIG_DEBUG_FS),
-+				  il4965_rs_add_debugfs),
- };
- 
- int
-diff --git a/drivers/net/wireless/intel/iwlegacy/common.h b/drivers/net/wireless/intel/iwlegacy/common.h
-index 69687fcf963f..b9f1daf0901b 100644
---- a/drivers/net/wireless/intel/iwlegacy/common.h
-+++ b/drivers/net/wireless/intel/iwlegacy/common.h
-@@ -2804,9 +2804,7 @@ struct il_lq_sta {
- 	struct il_scale_tbl_info lq_info[LQ_SIZE];	/* "active", "search" */
- 	struct il_traffic_load load[TID_MAX_LOAD_COUNT];
- 	u8 tx_agg_tid_en;
--#ifdef CONFIG_MAC80211_DEBUGFS
- 	u32 dbg_fixed_rate;
--#endif
- 	struct il_priv *drv;
- 
- 	/* used to be in sta_info */
--- 
-2.39.2
-
+> Steps to reproduce:
+> ------
+> # tuxmake --runtime podman --target-arch arm --toolchain gcc-13
+> --kconfig footbridge_defconfig
+>
+> Links:
+>  - https://qa-reports.linaro.org/lkft/linux-next-master/build/next-202404=
+02/testrun/23264362/suite/build/test/gcc-13-footbridge_defconfig/details/
+>  - https://storage.tuxsuite.com/public/linaro/lkft/builds/2eWtBPKv1yM8gfZ=
+JC8GkEkxN2j8/
+>
+> --
+> Linaro LKFT
+> https://lkft.linaro.org
