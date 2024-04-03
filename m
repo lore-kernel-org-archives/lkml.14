@@ -1,224 +1,160 @@
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10olkn2023.outbound.protection.outlook.com [40.92.42.23])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79EE015356D
-	for <linux-kernel@vger.kernel.org>; Wed,  3 Apr 2024 18:25:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.42.23
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712168708; cv=fail; b=Ri3Nqfkg6nLDIKYXIv6ix2SBHIvUvnPvxSgMORvt4kFrFW/9qT/MTH5yP+3LfgwPXfSZiPMOE7oWjXjKfoG2tnaF7FxCcBg14C6YI6Zg9PMwczvmipifRP+AsYdxv+NhF3wRnt+Fvlf2SiERkznI5k4K1VyJI0v3kgL2BLCT0XE=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712168708; c=relaxed/simple;
-	bh=oiOlpeQ8+pKut2TV6xpH0LS+1v75EqCt50JjtLV3MxE=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=tSf4yBA3+HFZ4OMTkMoYQzywEYjg2k/w3dVBvJ412KyrC0ujnAdYf6qGFwrAPd80MJXLR/Scchfu925VcbeJ8gGOGszuGuznuyPA8GAKhdaj696GyG/p/rkW/PiYqPQnPazrxGitAwiWrguW6NnGv7L7FeRTzSJ6K22jq7daNmw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hotmail.com; spf=pass smtp.mailfrom=hotmail.com; dkim=pass (2048-bit key) header.d=hotmail.com header.i=@hotmail.com header.b=Pu7MBY8a; arc=fail smtp.client-ip=40.92.42.23
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hotmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5516D153597
+	for <linux-kernel@vger.kernel.org>; Wed,  3 Apr 2024 18:25:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1712168728; cv=none; b=nVIm3+NxA0cicc9PuCmLnUctajVO6FY1F5Ssh8mnMoqdhMJ3d+Nz272g05fIsRlPyqXuqpEKrbiaT6kYoxIy15r/m+CFOD9SevgTnvFuDRB025yIig5GepyCDAmRsIFSOuuSKfkNFUoLaWZvrDNhUrALjOPV7bZE0F22/s8M9SQ=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1712168728; c=relaxed/simple;
+	bh=49xRMMJoQJIUdr7zdlVs8BfmW6KWUNR4b9vQnfKmZbA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=d1gqhOby4TxkPyyBlDrDr1ggJfAyb1gBMsi3Lj+sOBfaxrcaogxh7LGm7HLVCN/IiXFF+UNbJZsTJUnTHhYjuYZBu0BEjPiqKFPAzYXHmRdB6JZBhs4tBaVcezDG9IwwIAcN3PKVT//FD+fc/2C0/YXFLLFQ3UaVq2ygnTaGxfo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=P7wQeRaO; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=hotmail.com header.i=@hotmail.com header.b="Pu7MBY8a"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=MTseedk2FxlQFIE0VeR5nbDTz0XSzh0hc9Q+mt089Df9m4EcW/L8I50aGlLWY3G0MiJmT13W/ioUWzl6bF5p6FEX1eZXhkREvLFL+Xqfuihj90MFvTt3Vdynd5qDoQjm+A9kxQr1aLaSvzHfARVQXE6XEfVWiLWHyJnfiysR5FBG73JVNDz1BKAOvLRDfygJtl5NxoypIrWukKhUSsjGrHLAUgseD1hXaliWwRkFhCE/FTgFQxxZKqzaOyfaA327zqhyY0/frdF7x/YABhLJYlrDcSUJ0K8OA4UTf+AmadL1kCQajtUxsk18dw+Wf3VKKA9mkQewhboHjCyJ+/gqPw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=SJOCqS/AvEeq91GY1q5dIHbRScPtPDOQhbsNbWeuIzQ=;
- b=WGJsomLhKsKd6JyENMGiWfBS2fRITzqO6mY3x7sCGa6FPI8sDLxLnjVqGiu9uaBou1Smw0E3CFa3knpOHb8/n8WzEAdXFjS34AwSMkXvwkUm+yhjyRt5UV4i3ait3Jo5mBO3TmXT9HfL1hcoU/ZaZBbTlAADVwR1XXB5UtZ/bBw09/3xDOU2mAlTIrgJLItTs/OZ+uU1M4F8vf6RBMERcn5B9RhLzt/si9I6TydNVHX5taDx+Ipb8KrGBsJkJocoxuvw+vQt4SM+GF8Fvr+Nks4Q3R/Ng/MarRpcykz733Yx5wKlYfFT7oCMfph3DiHF11egSakP7DuW/34mq3MDnA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hotmail.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=SJOCqS/AvEeq91GY1q5dIHbRScPtPDOQhbsNbWeuIzQ=;
- b=Pu7MBY8aIU/4I5CokzEFsYGSvE9D0zBmPVOleTVUCEmwLJXR4h9v0f79X+iGpUYuLPNgaRuWmDs4bclGHTh1iDAsmwT39YUJTLFSSFD0ToUYbxikn3qwvWUZbPOy7lD1WPs3lhiFgsIiaMt8I9YseO0iLt8KAGpjuSfzebl1yfeHvmLZvnux2oU9LelDwO97gsQltHbEQu2Ng9rj0l8QS0M4BiSaeY7ZJzDZL6LKgNXW2b1rxRygwxv+89aJ07sjgMB/pPEp/YHvm+yHzoiu6phBIK5aXPL+hD0zwAVGKLQl/XJlcPAKu2AmDBg9j8xhbqcS97Q33ARtVpt47jIJ/g==
-Received: from LV3P220MB1202.NAMP220.PROD.OUTLOOK.COM (2603:10b6:408:1ac::6)
- by CO3P220MB0783.NAMP220.PROD.OUTLOOK.COM (2603:10b6:303:170::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.46; Wed, 3 Apr
- 2024 18:25:02 +0000
-Received: from LV3P220MB1202.NAMP220.PROD.OUTLOOK.COM
- ([fe80::57aa:102b:db4b:e05]) by LV3P220MB1202.NAMP220.PROD.OUTLOOK.COM
- ([fe80::57aa:102b:db4b:e05%7]) with mapi id 15.20.7409.042; Wed, 3 Apr 2024
- 18:25:01 +0000
-From: Min Li <lnimi@hotmail.com>
-To: lee@kernel.org
-Cc: linux-kernel@vger.kernel.org,
-	Min Li <min.li.xe@renesas.com>
-Subject: [PATCH mfd v1 2/2] mfd: rsmu: add FemtoClock3 support
-Date: Wed,  3 Apr 2024 14:24:36 -0400
-Message-ID:
- <LV3P220MB12028BFE760123BAAC8F351AA03D2@LV3P220MB1202.NAMP220.PROD.OUTLOOK.COM>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240403182436.7353-1-lnimi@hotmail.com>
-References: <20240403182436.7353-1-lnimi@hotmail.com>
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-TMN: [fH+s96B6bivJcazcXY7NFlmKPDeunhtj]
-X-ClientProxiedBy: QB1P288CA0018.CANP288.PROD.OUTLOOK.COM
- (2603:10b6:c00:2d::31) To LV3P220MB1202.NAMP220.PROD.OUTLOOK.COM
- (2603:10b6:408:1ac::6)
-X-Microsoft-Original-Message-ID: <20240403182436.7353-2-lnimi@hotmail.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="P7wQeRaO"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1712168726;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=YXsmqoOHzY6mBushOHoxlZz3TK/EfZqT4lQukaq20AM=;
+	b=P7wQeRaO8pvv+bsOulr62tjYpf9C/Ld0fZFLGcYNPH5EYnIjilLCjxadWI9eW7sFMOz2Sl
+	YOtZmbPJrKk3igLm1q8w23oy+TciBsvtxjKiAoMtSgx1j9gd25lh9l5ZeYbV3Zmx4aZXY2
+	s47pBu5TUZPUCNmoQImKpUIaxAbU+eE=
+Received: from mail-qv1-f69.google.com (mail-qv1-f69.google.com
+ [209.85.219.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-630-ktY1h6jYMaWS_RT1fk0KSA-1; Wed, 03 Apr 2024 14:25:25 -0400
+X-MC-Unique: ktY1h6jYMaWS_RT1fk0KSA-1
+Received: by mail-qv1-f69.google.com with SMTP id 6a1803df08f44-69120b349c9so127216d6.1
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Apr 2024 11:25:24 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712168724; x=1712773524;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=YXsmqoOHzY6mBushOHoxlZz3TK/EfZqT4lQukaq20AM=;
+        b=PTDmGtAPruISxDu+j1J8M4g/dRxASljJkdnisJIbIW/spZf3p3bu7N8qz1fGSI7Bf/
+         q9HAlNzV/4vgr9uCjJcIV5L/6aLtYrHYCqTJrfWr4v4k+qQiM1Fe4+Y3cngIJFL3Zw2J
+         aXhM1NRA319wuCU/xmVM7XY3hma6BUhauJKcZRTWnp8hzFSWb5r6kr0MRwgd3IGBuZpV
+         FnBGHHYsQF0VV1scL7V3vFTK/M9pvpQcVSSLmXaYPrfFBB1I1g/B1xp0LZgVL5RQgltd
+         bSzYhJMbWgc+2QMecV/aPaVNrzHOCWg5E7tsuLPfKJ5UlpdYaj1ZQKVvGiLm7IR8efta
+         m8Gg==
+X-Forwarded-Encrypted: i=1; AJvYcCWyIG6svPUlpsCZCJEBpPWVCiDaWpEaYN16RBSnrNBjgWYCMPwmrT2QaIpE5QkZpE+wIgYBsAgSqvhrLY+T9URqC+EVBO17fMSYto6Q
+X-Gm-Message-State: AOJu0YxnfqAHHYtDBrTcGKnC2XwEkcCd08iaosqewqIZ+M9lfE7hOmgH
+	m4+wBZi199zVqB7xatcoq6g+qxzx1JJxm8b+5nae5lLkUtQdorB2PliBwq1CltouCw2S9PnPfHS
+	EayiyMRCTzBbbPeK+hVMmzNoDLN+vMq5iia001HGIp9V+iOXKkgiETyO2LqDrgw==
+X-Received: by 2002:ad4:5cab:0:b0:699:2242:4ee8 with SMTP id q11-20020ad45cab000000b0069922424ee8mr129105qvh.3.1712168724106;
+        Wed, 03 Apr 2024 11:25:24 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHOuNMZozoa6aScFD4XBgyXphotERni3kWeSwgWQ4wF27W29jsLbCwW0feeq4rwhZfTMS4o4A==
+X-Received: by 2002:ad4:5cab:0:b0:699:2242:4ee8 with SMTP id q11-20020ad45cab000000b0069922424ee8mr129072qvh.3.1712168723495;
+        Wed, 03 Apr 2024 11:25:23 -0700 (PDT)
+Received: from x1n ([99.254.121.117])
+        by smtp.gmail.com with ESMTPSA id s15-20020a0562140caf00b00698fd63d167sm4435500qvs.123.2024.04.03.11.25.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 03 Apr 2024 11:25:23 -0700 (PDT)
+Date: Wed, 3 Apr 2024 14:25:20 -0400
+From: Peter Xu <peterx@redhat.com>
+To: Jason Gunthorpe <jgg@nvidia.com>
+Cc: Nathan Chancellor <nathan@kernel.org>, linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org, Yang Shi <shy828301@gmail.com>,
+	"Kirill A . Shutemov" <kirill@shutemov.name>,
+	Mike Kravetz <mike.kravetz@oracle.com>,
+	John Hubbard <jhubbard@nvidia.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Andrew Jones <andrew.jones@linux.dev>,
+	Muchun Song <muchun.song@linux.dev>,
+	linux-riscv@lists.infradead.org, linuxppc-dev@lists.ozlabs.org,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Christoph Hellwig <hch@infradead.org>,
+	Lorenzo Stoakes <lstoakes@gmail.com>,
+	Matthew Wilcox <willy@infradead.org>,
+	Rik van Riel <riel@surriel.com>,
+	linux-arm-kernel@lists.infradead.org,
+	Andrea Arcangeli <aarcange@redhat.com>,
+	David Hildenbrand <david@redhat.com>,
+	"Aneesh Kumar K . V" <aneesh.kumar@kernel.org>,
+	Vlastimil Babka <vbabka@suse.cz>,
+	James Houghton <jthoughton@google.com>,
+	Mike Rapoport <rppt@kernel.org>,
+	Axel Rasmussen <axelrasmussen@google.com>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>, loongarch@lists.linux.dev
+Subject: Re: [PATCH v4 05/13] mm/arch: Provide pud_pfn() fallback
+Message-ID: <Zg2fEP4eEeLhgDwE@x1n>
+References: <20240327152332.950956-1-peterx@redhat.com>
+ <20240327152332.950956-6-peterx@redhat.com>
+ <20240402190549.GA706730@dev-arch.thelio-3990X>
+ <ZgyKLLVZ4vN56uZE@x1n>
+ <20240402225320.GU946323@nvidia.com>
+ <ZgyWUYVdUsAiXCC4@xz-m1.local>
+ <20240403120841.GB1723999@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: LV3P220MB1202:EE_|CO3P220MB0783:EE_
-X-MS-Office365-Filtering-Correlation-Id: 70493276-9f23-4809-11a0-08dc540b5e94
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	BjhdPCyViRTF1LyqBVEOMPUzsMexosIbHzHOlFeiC5ev22W4tO9mxAZIie6e6MFdeIafEwLDCFALGl+JJBKFfCIiG++g9Lfp0P184HVxk3pzSUBydiOc/dvY/aiFBGo3r0/JSKz0xE/YddDulK0z98x/rl+xWidi8iU/eVPVRdywxXcIKer1mySWf1bBhSE3SbCU4Z1n+g036lK6kw6WWRYVFwJCQCepw0ShdsZQZGRP2RlkZRiqCrfJnMvgikYdUKEikbKN3yR45lfkHXr+OS7Mi5CmMfLdhqDuJR6ma9hBed7OGYJi48RDYDtq8s/P6+e1oAbNe2DowpkTtekqxuJbHRCNOWnAhSTeFU6k0xSwIZ7Hp6Jc09XQFatFxw+IiQDrsx6K0K/pVPtCTr7Yx7mszW+1d/OrWvPXGA3KPZexGcZ/y6zXfOtNV1V7ZbhbjqMOW17JwKH3RwtKxXFSjdHZ5dFTXWKKSYmzZvM9Gk01Xzxl7mUktYx66+xJYw71jl+SdPTz90NBRGjCQG9ZAxHbxYWBch6GUDsy3Ah0Cqs=
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?WNVweHg64VuYglfbY+/YpMvnIECJ7sE82Vm4VwOGMqSLTqPoUuvpOiLyPIU0?=
- =?us-ascii?Q?quXR+prwsJ6ZK9sHx1eS7NTEIRVg/UDxrfSnQQrysfJ1LoOgqGnn3Pnozual?=
- =?us-ascii?Q?6ZGtW3Xu5KHQEw6MlFpfyD0iHkY/4gDpE4ISvtZfQ58aUcrUiMZNSK9OlmHY?=
- =?us-ascii?Q?MBjnf7HwkdIvEzVwIZg1TEpce0jKxHz+ER2g+W7HzRiloyMTUUz/P5Xi6p5R?=
- =?us-ascii?Q?gacgknHB2EVF4uaLnjlhnv93dx2EzIg0vLgKm2tyLuk6lyWrnANVCflG5W+b?=
- =?us-ascii?Q?YqyBGihwYjv+Bi/iUalIWX1oUVCT5GTLtWS+Pwz82jrRuFyGaYr5Jlo/9QwX?=
- =?us-ascii?Q?H91FZoiniD0jCHzx8ktg20zYShCiVuh9D65GAou0g1Yb5Bp3qtJ2p3UYLhq0?=
- =?us-ascii?Q?ls7GyDMEOlfYmBgNkn5uCLVJu8rLX78h9dqP6lX9uiMhxExbyfBOOEj7O6ux?=
- =?us-ascii?Q?qFbZV/7TXXHAKjg/SDoGqRrRBuxiZV3tiRzoXvabVokk/p66yVWMq9VmHfNe?=
- =?us-ascii?Q?T7RZQSSrA0z5tYX/LYM9JeR4er85g85MyRGrN1VbsB4dscxojJAFHdoI7L5y?=
- =?us-ascii?Q?cRhbRpuLNINVzkNyjv+qxBH2k+1yVtONs3z6hvA0wKry2fdtInsiUURpJXHF?=
- =?us-ascii?Q?FxtYBhwx02dD2xwG4dhP8s+Bp5MRlXDeTfqs1nqdodqBi80+Q5r9pUzW7So2?=
- =?us-ascii?Q?avmGrTivWeaYLQjsN1EUcRyZjuGGR2/0FYgFj+d8TobB5BOEMD1p+OXJfjle?=
- =?us-ascii?Q?Ol9xLJ1VtoHFSTcmtvIjiJCEjYuJjYUHhosooJdIueGfFk7Pku3u0OwzN69m?=
- =?us-ascii?Q?wiwumZXHtCSvZevTTe0il/kYEtgQu1I22D7mHTLsd9J/GdzzupElPGhruqv0?=
- =?us-ascii?Q?6RWQZYdhn7acMplNsK/ug8lyrZJ0xKxj3Wy7KYcA/XxAXX+DPEnG0IqFnvFl?=
- =?us-ascii?Q?VdUWGnwj9HcabrdHQexSXGKR9Gy0BHD9id/1FJlflbX96yS/WoNmkmjNNjIP?=
- =?us-ascii?Q?68WBYvwMbHQCq7q6hC8nR4k/cjgxRMnxLlSB/iU5tgHsRHSfoy+tu2lxCOea?=
- =?us-ascii?Q?GtvsnzUZctLOfDF/z6HSoCzWZEIM9IPOjylz774S40wAlI9sLOpCACC6omSV?=
- =?us-ascii?Q?rTHMfAaRuRsSir1zXe0nUWe+zTzD2hjJXRnvx08Tfql56DnPnPQVpqU66g4a?=
- =?us-ascii?Q?DqQtDbWO9zB2ZrwKljkIv7Hx/p/ap57MzdsaCpUzpzCqZXNG/OAKvfguhMw?=
- =?us-ascii?Q?=3D?=
-X-OriginatorOrg: sct-15-20-4755-11-msonline-outlook-3458f.templateTenant
-X-MS-Exchange-CrossTenant-Network-Message-Id: 70493276-9f23-4809-11a0-08dc540b5e94
-X-MS-Exchange-CrossTenant-AuthSource: LV3P220MB1202.NAMP220.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Apr 2024 18:24:59.1170
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
-	00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CO3P220MB0783
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20240403120841.GB1723999@nvidia.com>
 
-From: Min Li <min.li.xe@renesas.com>
+On Wed, Apr 03, 2024 at 09:08:41AM -0300, Jason Gunthorpe wrote:
+> On Tue, Apr 02, 2024 at 07:35:45PM -0400, Peter Xu wrote:
+> > On Tue, Apr 02, 2024 at 07:53:20PM -0300, Jason Gunthorpe wrote:
+> > > On Tue, Apr 02, 2024 at 06:43:56PM -0400, Peter Xu wrote:
+> > > 
+> > > > I actually tested this without hitting the issue (even though I didn't
+> > > > mention it in the cover letter..).  I re-kicked the build test, it turns
+> > > > out my "make alldefconfig" on loongarch will generate a config with both
+> > > > HUGETLB=n && THP=n, while arch/loongarch/configs/loongson3_defconfig has
+> > > > THP=y (which I assume was the one above build used).  I didn't further
+> > > > check how "make alldefconfig" generated the config; a bit surprising that
+> > > > it didn't fetch from there.
+> > > 
+> > > I suspect it is weird compiler variations.. Maybe something is not
+> > > being inlined.
+> > > 
+> > > > (and it also surprises me that this BUILD_BUG can trigger.. I used to try
+> > > >  triggering it elsewhere but failed..)
+> > > 
+> > > As the pud_leaf() == FALSE should result in the BUILD_BUG never being
+> > > called and the optimizer removing it.
+> > 
+> > Good point, for some reason loongarch defined pud_leaf() without defining
+> > pud_pfn(), which does look strange.
+> > 
+> > #define pud_leaf(pud)		((pud_val(pud) & _PAGE_HUGE) != 0)
+> > 
+> > But I noticed at least MIPS also does it..  Logically I think one arch
+> > should define either none of both.
+> 
+> Wow, this is definately an arch issue. You can't define pud_leaf() and
+> not have a pud_pfn(). It makes no sense at all..
+> 
+> I'd say the BUILD_BUG has done it's job and found an issue, fix it by
+> not defining pud_leaf? I don't see any calls to pud_leaf in loongarch
+> at least
 
-The RENESAS FemtoClock3 Wireless is a high-performance
-jitter attenuator, frequency translator, and clock
-synthesizer. This patch only adds support for I2C.
+Yes, that sounds better too to me, however it means we may also risk other
+archs that can fail another defconfig build.. and I worry I bring trouble
+to multiple such cases.  Fundamentally it's indeed my patch that broke
+those builds, so I still sent the change and leave that for arch developers
+to decide the best for the archs.
 
-Signed-off-by: Min Li <min.li.xe@renesas.com>
----
- drivers/mfd/rsmu_core.c  | 10 +++++-----
- drivers/mfd/rsmu_i2c.c   | 16 ++++++++--------
- include/linux/mfd/rsmu.h |  4 ++--
- 3 files changed, 15 insertions(+), 15 deletions(-)
+I think if wanted, we can add that BUILD_BUG() back when we're sure no arch
+will break with it.  So such changes from arch can still be proposed
+alongside of removal of BUILD_BUG() (and I'd guess some other arch will
+start to notice such build issue soon if existed.. so it still more or less
+has similar effect of a reminder..).
 
-diff --git a/drivers/mfd/rsmu_core.c b/drivers/mfd/rsmu_core.c
-index 29437fd0b..951ddd92c 100644
---- a/drivers/mfd/rsmu_core.c
-+++ b/drivers/mfd/rsmu_core.c
-@@ -40,12 +40,12 @@ static struct mfd_cell rsmu_sabre_devs[] = {
- 	},
- };
- 
--static struct mfd_cell rsmu_sl_devs[] = {
-+static struct mfd_cell rsmu_fc3_devs[] = {
- 	[RSMU_PHC] = {
--		.name = "8v19n85x-phc",
-+		.name = "rc38xxx-phc",
- 	},
- 	[RSMU_CDEV] = {
--		.name = "8v19n85x-cdev",
-+		.name = "rc38xxx-cdev",
- 	},
- };
- 
-@@ -61,8 +61,8 @@ int rsmu_core_init(struct rsmu_ddata *rsmu)
- 	case RSMU_SABRE:
- 		cells = rsmu_sabre_devs;
- 		break;
--	case RSMU_SL:
--		cells = rsmu_sl_devs;
-+	case RSMU_FC3:
-+		cells = rsmu_fc3_devs;
- 		break;
- 	default:
- 		dev_err(rsmu->dev, "Unsupported RSMU device type: %d\n", rsmu->type);
-diff --git a/drivers/mfd/rsmu_i2c.c b/drivers/mfd/rsmu_i2c.c
-index cba64f107..a3f50a184 100644
---- a/drivers/mfd/rsmu_i2c.c
-+++ b/drivers/mfd/rsmu_i2c.c
-@@ -262,11 +262,11 @@ static const struct regmap_config rsmu_sabre_regmap_config = {
- 	.can_multi_write = true,
- };
- 
--static const struct regmap_config rsmu_sl_regmap_config = {
-+static const struct regmap_config rsmu_fc3_regmap_config = {
- 	.reg_bits = 16,
- 	.val_bits = 8,
- 	.reg_format_endian = REGMAP_ENDIAN_BIG,
--	.max_register = 0x340,
-+	.max_register = 0xE88,
- 	.cache_type = REGCACHE_NONE,
- 	.can_multi_write = true,
- };
-@@ -302,8 +302,8 @@ static int rsmu_i2c_probe(struct i2c_client *client)
- 	case RSMU_SABRE:
- 		cfg = &rsmu_sabre_regmap_config;
- 		break;
--	case RSMU_SL:
--		cfg = &rsmu_sl_regmap_config;
-+	case RSMU_FC3:
-+		cfg = &rsmu_fc3_regmap_config;
- 		break;
- 	default:
- 		dev_err(rsmu->dev, "Unsupported RSMU device type: %d\n", rsmu->type);
-@@ -336,8 +336,8 @@ static const struct i2c_device_id rsmu_i2c_id[] = {
- 	{ "8a34001",  RSMU_CM },
- 	{ "82p33810", RSMU_SABRE },
- 	{ "82p33811", RSMU_SABRE },
--	{ "8v19n850", RSMU_SL },
--	{ "8v19n851", RSMU_SL },
-+	{ "rc38xxx0", RSMU_FC3 },
-+	{ "rc38xxx1", RSMU_FC3 },
- 	{}
- };
- MODULE_DEVICE_TABLE(i2c, rsmu_i2c_id);
-@@ -347,8 +347,8 @@ static const struct of_device_id rsmu_i2c_of_match[] = {
- 	{ .compatible = "idt,8a34001",  .data = (void *)RSMU_CM },
- 	{ .compatible = "idt,82p33810", .data = (void *)RSMU_SABRE },
- 	{ .compatible = "idt,82p33811", .data = (void *)RSMU_SABRE },
--	{ .compatible = "idt,8v19n850", .data = (void *)RSMU_SL },
--	{ .compatible = "idt,8v19n851", .data = (void *)RSMU_SL },
-+	{ .compatible = "idt,rc38xxx0", .data = (void *)RSMU_FC3 },
-+	{ .compatible = "idt,rc38xxx1", .data = (void *)RSMU_FC3 },
- 	{}
- };
- MODULE_DEVICE_TABLE(of, rsmu_i2c_of_match);
-diff --git a/include/linux/mfd/rsmu.h b/include/linux/mfd/rsmu.h
-index 0379aa207..b4a90fc81 100644
---- a/include/linux/mfd/rsmu.h
-+++ b/include/linux/mfd/rsmu.h
-@@ -11,11 +11,11 @@
- #define RSMU_MAX_WRITE_COUNT	(255)
- #define RSMU_MAX_READ_COUNT	(255)
- 
--/* The supported devices are ClockMatrix, Sabre and SnowLotus */
-+/* The supported devices are ClockMatrix, Sabre and FemtoClock3 */
- enum rsmu_type {
- 	RSMU_CM		= 0x34000,
- 	RSMU_SABRE	= 0x33810,
--	RSMU_SL		= 0x19850,
-+	RSMU_FC3	= 0x38312,
- };
- 
- /**
+Thanks,
+
 -- 
-2.39.2
+Peter Xu
 
