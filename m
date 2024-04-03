@@ -1,135 +1,147 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f71.google.com (mail-io1-f71.google.com [209.85.166.71])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E812142E82;
-	Wed,  3 Apr 2024 11:34:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 479481386A8
+	for <linux-kernel@vger.kernel.org>; Wed,  3 Apr 2024 11:35:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.71
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712144093; cv=none; b=fxZwwF0HcvXNETtj45+2HOvLZi33vUuhNi+AAwt7k08u/2OabGfjPVGSSAcW+M9uBAsA/Kd636L93jAQ0ZEZjFE3eZNBn2Srbm3AIcFN5UU5oUGn00XG+bDICtyzWHZgqgA/nTE4byYG/b+uMwr5TW2rsM/yPm2y4XY9iWmdWpM=
+	t=1712144134; cv=none; b=nVUecSdlr59fjpC24qWj9Rcw1vaSC487Lf0aqEo3n4mvlwP2W/D0JUPxm/wXmNhN8li+l6e5mkGHOM2OeXmusawWkv/M8+XlmTAq64UVdkHoMykuUy4HSdmc+IR0Zt61cslCWo40Fm2nDwBdbY7LHwPBAGNdzpvbkRkNTl06iEs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712144093; c=relaxed/simple;
-	bh=UDYQPhlA5eM2YlkU/4jxQmmyMYA7pLirv/wkMA+a+Ho=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=mPu4lze0biA072mb/yoKE2axXywKHX5AnPf41PVFYMKc07rDO9ltYoBRg3+XN4idhsyyid+vB4fspFfaNtP4mSpnNQOiZdF9SPgWCyfKl2WnyXQiteAK3BUkYMvexXxY+SqSxmIsaSeJsdEaZX0wYNPZFAivjEfWYklMNHwq+TY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gHpTDr9J; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gHpTDr9J"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id BA40CC43390;
-	Wed,  3 Apr 2024 11:34:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712144092;
-	bh=UDYQPhlA5eM2YlkU/4jxQmmyMYA7pLirv/wkMA+a+Ho=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=gHpTDr9J4ABLAfofTIZdmHgcF4X53E+MsA6Kyy0gCDir23w+XUVIYdfO+3xBKjEpU
-	 Xbp9VqWa+vLSSl+HkQPE13x5tjw1UYmm/5USbToax6j4AR6S0Cs2aK84zm20xJ5gaB
-	 IWtpyV016XByzp5mRTBWI1rWgs20lywAc2gnkCF4SymrFD3Z0pFEt/s3hot2gkxMgr
-	 cWgVBJWFiARaE2fy5folobdM26YrABLFjQSkbBVuI7AH261LjHDgL32bwg4KKo0a2+
-	 nLBeTFQSjmzHCOi2gX9ejTwsgj0oWGC1mCJaodOIVeGPNrRKXToFga+gbauU3XLHQ3
-	 y3cgia0J9i4NQ==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AAEEFCD128A;
-	Wed,  3 Apr 2024 11:34:52 +0000 (UTC)
-From: Nikita Travkin via B4 Relay <devnull+nikita.trvn.ru@kernel.org>
-Date: Wed, 03 Apr 2024 16:31:41 +0500
-Subject: [PATCH v2 2/3] thermal: gov_power_allocator: Allow binding without
- trip points
+	s=arc-20240116; t=1712144134; c=relaxed/simple;
+	bh=He2U7fb8aU+EkEyUm/8NshncYf1dEyzTByD9lzAR4Hk=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=j+7FJ1HpZ5532lX5aC6Uay0EFI6eO2+YrsfdskP/Oawv6AB2fzIiZyUdRzETcyU98VabQ9OL4ZXxv0zobyjkQhBm4ICvRIUUXoHZ9yh068Btxv0MXDtAjyroSJFek84gjr76yJeA7MDD+g4IzRMDCPKqYIrsyofgqLQ66fALrGg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.71
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f71.google.com with SMTP id ca18e2360f4ac-7cbfd4781fcso666682439f.3
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Apr 2024 04:35:33 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712144132; x=1712748932;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=W63RUJcvU8oDwlqRPyrIqv2ix8e3Wfp/1qAcWEZ3Qt4=;
+        b=V2N0IMut5XjXQTGtclj4RJPHFmCMt3c07Z/MoJI7TrIiYeQKi9BmYJs2iQJ+k9vc+F
+         aJZT3PoYTOvqKJu95i/JG7gShHIkLvHOvtJWYjRkaA7hTmt8HiEZfWaQkwKMkQZFEsbC
+         NRMK6alV+s33T6362UJNLAHdbJbmZfYnch7RrlRMXwxH6wHw27tcyqKbFLrs4FLGRl5u
+         eElzONOmvpPymK5RMZCwGsJ58g8uEURl+2gWKtZUggkrN1I/Bg1mtw1zdm/A7KpiBX5H
+         RajUoB481G/INwJyWPbpngZxb3JdJ/lNiE0iNySaE7vZzchFfAkCk/u6SyDrEKKDPQPv
+         zg8Q==
+X-Forwarded-Encrypted: i=1; AJvYcCWnT31nisTurbnU4BVhAI9PS+hkQgcYOrF2oNsRInLFq6PQ76Mqtm5zPEKnW6mgTEgxON2awbJKRZacA65YMgb4aClnDu4cAv4rhluz
+X-Gm-Message-State: AOJu0YxTgF55GBm6TrYgyUx3OKvDbii+D0yo3G5K1dNfMkugCyAQl2fd
+	EspuSM5deAijmkhz1beRd6B3gi08xj5ikKh7SEc8nvnEvz7QsXUyRdv5FaNLrxyY3JJzxoi7HEq
+	8Bl7haN11IGF/2bVs1Z0w8Q7vQCcRa5yd4Ro9WHTy72YAw3pSqsBnymM=
+X-Google-Smtp-Source: AGHT+IFHlnuZ227swltfMtmSK2kgOgDDYBW6LWbUccIHDI3QnefoBKXjAowCe6MZ/Vbj2QmQ+AM39ecZtIonUsiCGXcpqa5Db1E2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240403-gpa-no-cooling-devs-v2-2-79bdd8439449@trvn.ru>
-References: <20240403-gpa-no-cooling-devs-v2-0-79bdd8439449@trvn.ru>
-In-Reply-To: <20240403-gpa-no-cooling-devs-v2-0-79bdd8439449@trvn.ru>
-To: Lukasz Luba <lukasz.luba@arm.com>, 
- "Rafael J. Wysocki" <rafael@kernel.org>, 
- Daniel Lezcano <daniel.lezcano@linaro.org>, Zhang Rui <rui.zhang@intel.com>
-Cc: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, 
- linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Nikita Travkin <nikitos.tr@gmail.com>, Nikita Travkin <nikita@trvn.ru>
-X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2101; i=nikita@trvn.ru;
- h=from:subject:message-id;
- bh=aX3XyiCHA+n2cubW1L4ZLcOrqQkfy11LKyh/4X5tJVw=;
- b=owEBbQKS/ZANAwAIAUMc7O4oGb91AcsmYgBmDT7aDjJW3qq1rSoA7iBt+c+AS53Nu9qzgj6L+
- e0DzRUDI5yJAjMEAAEIAB0WIQTAhK9UUj+qg34uxUdDHOzuKBm/dQUCZg0+2gAKCRBDHOzuKBm/
- dcvlD/0VZ9HatTS7LP55/Kje6FO3xvMn0crj+CRHX3Z1csFoUDnlTFaJsyFONaS5LvROuIutiJK
- gObneneKf2549moPVUtubHdi/vHQTdf2MWmxxSjhqyh+cNskIQk8WoRDpYVPrPY1Vma8858G4fb
- uhtSt4ygEXqClScqki9DlizOcWv1qqy3yMPMG/qR/Mi5C+s8rky9kbXaeN57QODSqtweVGD9Egw
- x027zgNdA0z8Tge29DlydmPAug6dAXHNWcSzhge48pXUjyoDTxIqfbxZGcgyV8meRB2nMCJSjXp
- SpJzRltV4m1uMirSDvEpoTrMrjZ1FL4he3D/0iQEcpBkBJTXfJTHiWSmlvsF5y/MFeknm8k6esu
- /2sW2+sD+5YY7h1nf1gPY+rVp+RPh3f10tYGLFvpLaO+6EtOFDxWPeUJJi4OAz2MQNZJbGtA7Sm
- J9uor6qK1GdCY8NYd1aMFRQCk6yytDi/XAkOKCQxQUsqmTPg3R9deMGLwJL5Wu3H98n+2vlWiMP
- lAYXs5mseKe8PKi08v0eWBmXPSmYL8ooqmv2P4nkKAmb9tqSRM/CZWDcHvFDqMLlnjaXGUm1vEY
- Ovppz7SH/mDIs0uu4Se0Exvel+IKYx7GV/ZvxVBI2kfE4zb7PfVLLc9CePlsPv1uzPxD0s6qcrq
- cvLXDNfkIfKxeFg==
-X-Developer-Key: i=nikita@trvn.ru; a=openpgp;
- fpr=C084AF54523FAA837E2EC547431CECEE2819BF75
-X-Endpoint-Received: by B4 Relay for nikita@trvn.ru/default with
- auth_id=151
-X-Original-From: Nikita Travkin <nikita@trvn.ru>
-Reply-To: nikita@trvn.ru
+X-Received: by 2002:a05:6602:3fc4:b0:7c8:c7ec:2b71 with SMTP id
+ fc4-20020a0566023fc400b007c8c7ec2b71mr229344iob.3.1712144132441; Wed, 03 Apr
+ 2024 04:35:32 -0700 (PDT)
+Date: Wed, 03 Apr 2024 04:35:32 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000d19c3a06152f9ee4@google.com>
+Subject: [syzbot] [net?] KMSAN: uninit-value in geneve_xmit (3)
+From: syzbot <syzbot+9ee20ec1de7b3168db09@syzkaller.appspotmail.com>
+To: davem@davemloft.net, edumazet@google.com, kuba@kernel.org, 
+	linux-kernel@vger.kernel.org, netdev@vger.kernel.org, pabeni@redhat.com, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-From: Nikita Travkin <nikita@trvn.ru>
+Hello,
 
-IPA probe function was recently refactored to perform extra error checks
-and make sure the thermal zone has trip points necessary for the IPA
-operation. With this change, if a thermal zone is probed such that it
-has no trip points that IPA can use, IPA will fail and the TZ won't be
-created. This is the case if a platform defines a TZ without cooling
-devices and only with "hot"/"critical" trip points, often found on some
-Qualcomm devices [1].
+syzbot found the following issue on:
 
-Documentation across IPA code (notably get_governor_trips() kerneldoc)
-suggests that IPA is supposed to handle such TZ even if it won't
-actually do anything.
+HEAD commit:    928a87efa423 Merge tag 'gfs2-v6.8-fix' of git://git.kernel..
+git tree:       upstream
+console+strace: https://syzkaller.appspot.com/x/log.txt?x=10c17b4e180000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=e2599baf258ef795
+dashboard link: https://syzkaller.appspot.com/bug?extid=9ee20ec1de7b3168db09
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=16cd6479180000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=16cec009180000
 
-This commit partially reverts the previous change to allow IPA to bind
-to such "empty" thermal zones.
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/7d66fa7ed5c7/disk-928a87ef.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/8b511d64cde0/vmlinux-928a87ef.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/8810588440a2/bzImage-928a87ef.xz
 
-[1] arch/arm64/boot/dts/qcom/sc7180.dtsi#n4776
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+9ee20ec1de7b3168db09@syzkaller.appspotmail.com
 
-Fixes: e83747c2f8e3 ("thermal: gov_power_allocator: Set up trip points earlier")
-Signed-off-by: Nikita Travkin <nikita@trvn.ru>
+=====================================================
+BUG: KMSAN: uninit-value in geneve_xmit_skb drivers/net/geneve.c:910 [inline]
+BUG: KMSAN: uninit-value in geneve_xmit+0x302d/0x5420 drivers/net/geneve.c:1030
+ geneve_xmit_skb drivers/net/geneve.c:910 [inline]
+ geneve_xmit+0x302d/0x5420 drivers/net/geneve.c:1030
+ __netdev_start_xmit include/linux/netdevice.h:4903 [inline]
+ netdev_start_xmit include/linux/netdevice.h:4917 [inline]
+ xmit_one net/core/dev.c:3531 [inline]
+ dev_hard_start_xmit+0x247/0xa20 net/core/dev.c:3547
+ __dev_queue_xmit+0x348d/0x52c0 net/core/dev.c:4335
+ dev_queue_xmit include/linux/netdevice.h:3091 [inline]
+ packet_xmit+0x9c/0x6c0 net/packet/af_packet.c:276
+ packet_snd net/packet/af_packet.c:3081 [inline]
+ packet_sendmsg+0x8bb0/0x9ef0 net/packet/af_packet.c:3113
+ sock_sendmsg_nosec net/socket.c:730 [inline]
+ __sock_sendmsg+0x30f/0x380 net/socket.c:745
+ __sys_sendto+0x685/0x830 net/socket.c:2191
+ __do_sys_sendto net/socket.c:2203 [inline]
+ __se_sys_sendto net/socket.c:2199 [inline]
+ __x64_sys_sendto+0x125/0x1d0 net/socket.c:2199
+ do_syscall_64+0xd5/0x1f0
+ entry_SYSCALL_64_after_hwframe+0x6d/0x75
+
+Uninit was created at:
+ slab_post_alloc_hook mm/slub.c:3804 [inline]
+ slab_alloc_node mm/slub.c:3845 [inline]
+ kmem_cache_alloc_node+0x613/0xc50 mm/slub.c:3888
+ kmalloc_reserve+0x13d/0x4a0 net/core/skbuff.c:577
+ __alloc_skb+0x35b/0x7a0 net/core/skbuff.c:668
+ alloc_skb include/linux/skbuff.h:1318 [inline]
+ alloc_skb_with_frags+0xc8/0xbf0 net/core/skbuff.c:6504
+ sock_alloc_send_pskb+0xa81/0xbf0 net/core/sock.c:2795
+ packet_alloc_skb net/packet/af_packet.c:2930 [inline]
+ packet_snd net/packet/af_packet.c:3024 [inline]
+ packet_sendmsg+0x722d/0x9ef0 net/packet/af_packet.c:3113
+ sock_sendmsg_nosec net/socket.c:730 [inline]
+ __sock_sendmsg+0x30f/0x380 net/socket.c:745
+ __sys_sendto+0x685/0x830 net/socket.c:2191
+ __do_sys_sendto net/socket.c:2203 [inline]
+ __se_sys_sendto net/socket.c:2199 [inline]
+ __x64_sys_sendto+0x125/0x1d0 net/socket.c:2199
+ do_syscall_64+0xd5/0x1f0
+ entry_SYSCALL_64_after_hwframe+0x6d/0x75
+
+CPU: 0 PID: 5033 Comm: syz-executor346 Not tainted 6.9.0-rc1-syzkaller-00005-g928a87efa423 #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 02/29/2024
+=====================================================
+
+
 ---
- drivers/thermal/gov_power_allocator.c | 12 ++++--------
- 1 file changed, 4 insertions(+), 8 deletions(-)
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-diff --git a/drivers/thermal/gov_power_allocator.c b/drivers/thermal/gov_power_allocator.c
-index ec637071ef1f..e25e48d76aa7 100644
---- a/drivers/thermal/gov_power_allocator.c
-+++ b/drivers/thermal/gov_power_allocator.c
-@@ -679,11 +679,6 @@ static int power_allocator_bind(struct thermal_zone_device *tz)
- 		return -ENOMEM;
- 
- 	get_governor_trips(tz, params);
--	if (!params->trip_max) {
--		dev_warn(&tz->device, "power_allocator: missing trip_max\n");
--		kfree(params);
--		return -EINVAL;
--	}
- 
- 	ret = check_power_actors(tz, params);
- 	if (ret < 0) {
-@@ -714,9 +709,10 @@ static int power_allocator_bind(struct thermal_zone_device *tz)
- 	else
- 		params->sustainable_power = tz->tzp->sustainable_power;
- 
--	estimate_pid_constants(tz, tz->tzp->sustainable_power,
--			       params->trip_switch_on,
--			       params->trip_max->temperature);
-+	if (params->trip_max)
-+		estimate_pid_constants(tz, tz->tzp->sustainable_power,
-+				       params->trip_switch_on,
-+				       params->trip_max->temperature);
- 
- 	reset_pid_controller(params);
- 
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
 
--- 
-2.44.0
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
 
+If you want syzbot to run the reproducer, reply with:
+#syz test: git://repo/address.git branch-or-commit-hash
+If you attach or paste a git patch, syzbot will apply it before testing.
 
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
