@@ -1,133 +1,203 @@
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.153.233])
+Received: from mail.hugovil.com (mail.hugovil.com [162.243.120.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28892146D62;
-	Wed,  3 Apr 2024 18:42:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.153.233
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1166615380B;
+	Wed,  3 Apr 2024 18:44:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.243.120.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712169770; cv=none; b=aP2ryVp792LUYKtHvHncZJFqj5k0gjvLmZkkw6w95sDZxgrmVdAGe6Cy3wCYcwPtjeGIgMs6yG2/pcJ741oRxllOl30jgKkuMn7t7tDON6YNxLwsdBiB+jXt/DLxhKwVSYDXqsbxIBZ+rs+4eQ1idCkPhtk25tqCmk04lMAyI6Y=
+	t=1712169845; cv=none; b=q3ItjQjLQ+FVdAYJWfMzGvyWJS2UQNI3+DQ+BPyrYX7e1YvfcA78Fpx4BXCWuMbTog3azV8w7oIR02F7At4z/O/WH0+B2adO12yAf8NaDWBOhLrV88GRaHV6Qqp76HzCKbmU2+xjF/yRr2Fw1oBn7i9yPwR2RbNAYhnBwgWe0Yk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712169770; c=relaxed/simple;
-	bh=g9OGTjriFjC5okqqsdE43uxvtzt0NrohNgdOIFqLUPc=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
-	 In-Reply-To:To:CC; b=Pt8vfiu512NAdhFd59c2pMfnmIzxRwCNwwrDeB1KpvVHn1bY7XronKDK5TI6QdTGI0I4/1yfMQSPrc8Z5mcFfbWokfd4TvPCnfUIMry4RQrvZ67eaNjF0ukX4eDUOaFUeoHQnS+RXyBJCDPsmKZY+wDHKA2nV3AwPssSNoXbJIA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=pYr8Vq9v; arc=none smtp.client-ip=68.232.153.233
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
+	s=arc-20240116; t=1712169845; c=relaxed/simple;
+	bh=wQk1+TZdbZ9d27NNtYWpI7VAcGnhFyW3udF6s9YMzqE=;
+	h=Date:From:To:Cc:Message-Id:In-Reply-To:References:Mime-Version:
+	 Content-Type:Subject; b=kym3i6vnHgFsAZH1GUyW/D83Yi72vf1gTLmX/kUn6Ui3BkZBGjJPg6L4C30LHfc5rCe/5BXJ1euWanzhfE7c0u/kNLnH+elwrs2o5qxQhHADn2ZGi5i6WNBb2fiKSJkAvqCgzeB3KY8/oX0GqMUUkiy7CKSzVQ9rR9yM/6UsDl0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hugovil.com; spf=pass smtp.mailfrom=hugovil.com; dkim=pass (1024-bit key) header.d=hugovil.com header.i=@hugovil.com header.b=AbI0IcJG; arc=none smtp.client-ip=162.243.120.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hugovil.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hugovil.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="pYr8Vq9v"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1712169769; x=1743705769;
-  h=from:date:subject:mime-version:content-transfer-encoding:
-   message-id:references:in-reply-to:to:cc;
-  bh=g9OGTjriFjC5okqqsdE43uxvtzt0NrohNgdOIFqLUPc=;
-  b=pYr8Vq9ve23Kd4NzOdN3PxsKUWZ2eLfX70rdBTBYMuj5NBC26ZMSKHjQ
-   yuCW2NAeyO1uJV+YpSQVF2u2cwbyyf5Z3B8Pda5yeVbIYunxf0OWoRFAM
-   rCPqT5AZ4toxLoliGGygEdrSyc4IHKQEQD0wAe8EBY9k/7c0aa5LI3iJr
-   7z4sKO4GpWVlC9cim9z2PBPg9lfhvz4VD0bItM4QWrJBHG4eM5gM6YdKi
-   GAdqx7ViQnd27x8XgTDENoJG6ULf7Z2R0nWnIQ3lLwkckB7Qn6dGqkcVM
-   0UuHGqsyeVOqtPLPk8pbG7aUptWT2xayBuaSvThTtU9LFLBh88QQ8+xvd
-   g==;
-X-CSE-ConnectionGUID: By3oU9PeTtGY31IsBtby0Q==
-X-CSE-MsgGUID: roZiApLfSA2APbX12J9Lhw==
-X-IronPort-AV: E=Sophos;i="6.07,177,1708412400"; 
-   d="scan'208";a="21259638"
-X-Amp-Result: SKIPPED(no attachment in message)
-Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa1.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 03 Apr 2024 11:42:48 -0700
-Received: from chn-vm-ex02.mchp-main.com (10.10.85.144) by
- chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Wed, 3 Apr 2024 11:42:15 -0700
-Received: from DEN-DL-M70577.microchip.com (10.10.85.11) by
- chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server id
- 15.1.2507.35 via Frontend Transport; Wed, 3 Apr 2024 11:42:13 -0700
-From: Daniel Machon <daniel.machon@microchip.com>
-Date: Wed, 3 Apr 2024 20:41:44 +0200
-Subject: [PATCH net-next 3/3] net: sparx5: add support for tc flower
- redirect action
+	dkim=pass (1024-bit key) header.d=hugovil.com header.i=@hugovil.com header.b="AbI0IcJG"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hugovil.com
+	; s=x; h=Subject:Content-Transfer-Encoding:Mime-Version:Message-Id:Cc:To:From
+	:Date:subject:date:message-id:reply-to;
+	bh=UMzkfSMQqbRmqbP3R6toJqZVcXEAq1czX3NZPj6yIoY=; b=AbI0IcJGYSrv3qif0xxaUr8ug1
+	c+1B3q6Ac5cUHAakZIaIq9kvrVb7TeNHE8oJCqCi5F0QoSMU3qBGu+gNhLFhf7oOgCxSLA1bcWqPS
+	Mt7APWFcjuLBq72AhQA+zlVjL/I77BKY8O1l0ipn3l51SpPg4/SUQW5Mz8/Ok3mG/56s=;
+Received: from modemcable168.174-80-70.mc.videotron.ca ([70.80.174.168]:51750 helo=pettiford)
+	by mail.hugovil.com with esmtpa (Exim 4.92)
+	(envelope-from <hugo@hugovil.com>)
+	id 1rs5aZ-0008OG-Ui; Wed, 03 Apr 2024 14:44:00 -0400
+Date: Wed, 3 Apr 2024 14:43:59 -0400
+From: Hugo Villeneuve <hugo@hugovil.com>
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: gregkh@linuxfoundation.org, jirislaby@kernel.org,
+ linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org, Hugo Villeneuve
+ <hvilleneuve@dimonoff.com>
+Message-Id: <20240403144359.4ec6250720cb4a461e9fb8ec@hugovil.com>
+In-Reply-To: <CAHp75Vdm0RAX_xD41VvXuv3GG0SkHffqw7v=hs_6m4Ev1WZjMQ@mail.gmail.com>
+References: <20240402174353.256627-1-hugo@hugovil.com>
+	<20240402174353.256627-4-hugo@hugovil.com>
+	<CAHp75VdZ5yYVx7Df7G4X4Y7ZvJ3LAdq=A0fVNzNfMcdywJC-dQ@mail.gmail.com>
+	<20240403123501.8ef5c99f65a40ca2c10f635a@hugovil.com>
+	<CAHp75VcEj64aFb0nT8uQitkNSdWWqz7pmAqSGaGwy-tA=df0EA@mail.gmail.com>
+	<20240403135910.2ef852670c184927340d08d7@hugovil.com>
+	<CAHp75Vdm0RAX_xD41VvXuv3GG0SkHffqw7v=hs_6m4Ev1WZjMQ@mail.gmail.com>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-ID: <20240403-mirror-redirect-actions-v1-3-c8e7c8132c89@microchip.com>
-References: <20240403-mirror-redirect-actions-v1-0-c8e7c8132c89@microchip.com>
-In-Reply-To: <20240403-mirror-redirect-actions-v1-0-c8e7c8132c89@microchip.com>
-To: Lars Povlsen <lars.povlsen@microchip.com>, Steen Hegelund
-	<Steen.Hegelund@microchip.com>, <UNGLinuxDriver@microchip.com>, "David S.
- Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, "Jakub
- Kicinski" <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>
-CC: <linux-arm-kernel@lists.infradead.org>, <netdev@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, Daniel Machon <daniel.machon@microchip.com>
-X-Mailer: b4 0.14-dev
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 70.80.174.168
+X-SA-Exim-Mail-From: hugo@hugovil.com
+X-Spam-Level: 
+X-Spam-Report: 
+	* -1.0 ALL_TRUSTED Passed through trusted hosts only via SMTP
+	* -0.8 NICE_REPLY_A Looks like a legit reply (A)
+Subject: Re: [PATCH v3 3/5] serial: sc16is7xx: split into core and I2C/SPI
+ parts (core)
+X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
+X-SA-Exim-Scanned: Yes (on mail.hugovil.com)
 
-Add support for the flower redirect action. Two VCAP actions are encoded
-in the rule - one for the port mask, and one for the port mask mode.
-When the rule is hit, the port mask is used as the final destination
-set, replacing all other port masks.
+On Wed, 3 Apr 2024 21:04:29 +0300
+Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
 
-Signed-off-by: Daniel Machon <daniel.machon@microchip.com>
----
- .../ethernet/microchip/sparx5/sparx5_tc_flower.c   | 33 ++++++++++++++++++++++
- 1 file changed, 33 insertions(+)
+> On Wed, Apr 3, 2024 at 8:59 PM Hugo Villeneuve <hugo@hugovil.com> wrote:
+> > On Wed, 3 Apr 2024 20:44:05 +0300
+> > Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
+> > > On Wed, Apr 3, 2024 at 7:35 PM Hugo Villeneuve <hugo@hugovil.com> wrote:
+> > > > On Tue, 2 Apr 2024 22:40:07 +0300
+> > > > Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
+> > > > > On Tue, Apr 2, 2024 at 8:45 PM Hugo Villeneuve <hugo@hugovil.com> wrote:
+> 
+> ...
+> 
+> > > > > > -config SERIAL_SC16IS7XX_CORE
+> > > > > > -       tristate
+> > > > > > -
+> > > > > >  config SERIAL_SC16IS7XX
+> > > > > >         tristate "SC16IS7xx serial support"
+> > > > > >         select SERIAL_CORE
+> > > > > > -       depends on (SPI_MASTER && !I2C) || I2C
+> > > > > > +       depends on SPI_MASTER || I2C
+> > > > >
+> > > > > Is it?
+> > > >
+> > > > See discussion below, but I would remove the SPI/I2C depends. And I
+> > > > would rename SERIAL_SC16IS7XX to SERIAL_SC16IS7XX_CORE.
+> > > >
+> > > > >
+> > > > > >         help
+> > > > > >           Core driver for NXP SC16IS7xx serial ports.
+> > > > > >           Supported ICs are:
+> > > > > > @@ -1042,22 +1039,18 @@ config SERIAL_SC16IS7XX
+> > > > > >           drivers below.
+> > > > > >
+> > > > > >  config SERIAL_SC16IS7XX_I2C
+> > > > > > -       bool "SC16IS7xx for I2C interface"
+> > > > > > +       tristate "SC16IS7xx for I2C interface"
+> > > > > >         depends on SERIAL_SC16IS7XX
+> > > > > >         depends on I2C
+> > > > > > -       select SERIAL_SC16IS7XX_CORE if SERIAL_SC16IS7XX
+> > > > > > -       select REGMAP_I2C if I2C
+> > > > > > -       default y
+> > > > > > +       select REGMAP_I2C
+> > > > > >         help
+> > > > > > -         Enable SC16IS7xx driver on I2C bus,
+> > > > > > -         enabled by default to support oldconfig.
+> > > > > > +         Enable SC16IS7xx driver on I2C bus.
+> > > > > >
+> > > > > >  config SERIAL_SC16IS7XX_SPI
+> > > > > > -       bool "SC16IS7xx for spi interface"
+> > > > > > +       tristate "SC16IS7xx for SPI interface"
+> > > > > >         depends on SERIAL_SC16IS7XX
+> > > > > >         depends on SPI_MASTER
+> > > > > > -       select SERIAL_SC16IS7XX_CORE if SERIAL_SC16IS7XX
+> > > > > > -       select REGMAP_SPI if SPI_MASTER
+> > > > > > +       select REGMAP_SPI
+> > > > > >         help
+> > > > > >           Enable SC16IS7xx driver on SPI bus.
+> > > > >
+> > > > > Hmm... What I was thinking about is more like dropping
+> > > > >  the SERIAL_SC16IS7XX and having I2C/SPI to select the core.
+> > > > >
+> > > > > See many examples under drivers/iio on how it's done.
+> > > >
+> > > > Ok, I found this example:
+> > > > bf96f6e80cef ("iio: accel: kxsd9: Split out SPI transport")
+> > > >
+> > > > In it, the SPI part doesn't select the core, but depends on it, similar
+> > > > to what I have done. I find this approach more interesting for
+> > > > embedded systems as you can enable/disable I2C or SPI part if you
+> > > > need only one interface.
+> > >
+> > > Yes, but what I mean is to have i2c/spi symbols visible and if user
+> > > selects one of them or both the core is automatically being selected.
+> >
+> > Ok, I see. But a drawback of doing this is that for each interface
+> > (I2C/SPI), you would need to list (duplicate) all the devices
+> > supported. For now, that list is only in one place,
+> > for the generic SERIAL_SC16IS7XX_CORE section:
+> >
+> > ...
+> > config SERIAL_SC16IS7XX_CORE
+> >         tristate "SC16IS7xx serial support"
+> >         select SERIAL_CORE
+> >         help
+> >           Core driver for NXP SC16IS7xx serial ports.
+> >           Supported ICs are:
+> >
+> >             SC16IS740
+> >             SC16IS741
+> >             SC16IS750
+> 
+> Hmm... How do the other drivers have this separation? So, check
+> several examples (and check _the recently added_) in IIO and follow
+> that. If they have CORE visible, follow it.
 
-diff --git a/drivers/net/ethernet/microchip/sparx5/sparx5_tc_flower.c b/drivers/net/ethernet/microchip/sparx5/sparx5_tc_flower.c
-index a86ce1f8f3e5..0df8724251a0 100644
---- a/drivers/net/ethernet/microchip/sparx5/sparx5_tc_flower.c
-+++ b/drivers/net/ethernet/microchip/sparx5/sparx5_tc_flower.c
-@@ -1042,6 +1042,34 @@ static int sparx5_tc_action_mirred(struct vcap_admin *admin,
- 	return 0;
- }
- 
-+static int sparx5_tc_action_redirect(struct vcap_admin *admin,
-+				     struct vcap_rule *vrule,
-+				     struct flow_cls_offload *fco,
-+				     struct flow_action_entry *act)
-+{
-+	struct vcap_u72_action ports = {0};
-+	int err;
-+
-+	if (admin->vtype != VCAP_TYPE_IS0 && admin->vtype != VCAP_TYPE_IS2) {
-+		NL_SET_ERR_MSG_MOD(fco->common.extack,
-+				   "Redirect action not supported in this VCAP");
-+		return -EOPNOTSUPP;
-+	}
-+
-+	err = vcap_rule_add_action_u32(vrule, VCAP_AF_MASK_MODE,
-+				       SPX5_PMM_REPLACE_ALL);
-+	if (err)
-+		return err;
-+
-+	sparx5_tc_flower_set_port_mask(&ports, act->dev);
-+
-+	err = vcap_rule_add_action_u72(vrule, VCAP_AF_PORT_MASK, &ports);
-+	if (err)
-+		return err;
-+
-+	return 0;
-+}
-+
- /* Remove rule keys that may prevent templates from matching a keyset */
- static void sparx5_tc_flower_simplify_rule(struct vcap_admin *admin,
- 					   struct vcap_rule *vrule,
-@@ -1193,6 +1221,11 @@ static int sparx5_tc_flower_replace(struct net_device *ndev,
- 			if (err)
- 				goto out;
- 			break;
-+		case FLOW_ACTION_REDIRECT:
-+			err = sparx5_tc_action_redirect(admin, vrule, fco, act);
-+			if (err)
-+				goto out;
-+			break;
- 		case FLOW_ACTION_ACCEPT:
- 			err = sparx5_tc_set_actionset(admin, vrule);
- 			if (err)
+In iio/accel, there is a roughly equal mix of everything. But all
+examples that automatically select CORE do not list any specific
+variants, probably because of the maintenance burden that this would
+impose like I mentioned.
+
+The most recent one is bmi088, which has only one KConfig
+selection available, with I2C/SPI parts automatically selected, and
+with the benefit of only having to list all variants once. The only
+minor drawback of course is having to (almost always) compile an
+interface (I2C or SPI) which won't be used.
+
+I don't mind going this way for V4.
+
+
+> 
+> ...
+> 
+> > > > Isn't it provided by <linux/device.h> ?
+> > >
+> > > But why? Have you looked into device.h? It's a mess. You don't need it
+> > > in this header.
+> >
+> > Yes I have looked at it, and saw that the forward declaration of
+> > "struct device" opaque pointer is in it, and this is why I was
+> > including it. But I will remove it if you wish.
+> 
+> This file doesn't use the struct device, it uses an opaque pointer. In
+> C for this the forward declaration is enough, no need to include a
+> whole mess from device.h.
+
+Ok.
+
+Hugo.
+
+
+> 
+> -- 
+> With Best Regards,
+> Andy Shevchenko
+> 
+
 
 -- 
-2.34.1
-
+Hugo Villeneuve
