@@ -1,148 +1,121 @@
-Received: from frasgout11.his.huawei.com (frasgout11.his.huawei.com [14.137.139.23])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B35292AE7C;
-	Wed,  3 Apr 2024 09:10:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=14.137.139.23
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5F5E6EB5A
+	for <linux-kernel@vger.kernel.org>; Wed,  3 Apr 2024 09:11:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712135413; cv=none; b=JGPiB3c5ra597QZ/MufyY3uloKuipkaxpsI6wXY+qdSPPt2w4phocQLlcS5lseNJKXV8dpQjtdtJKkERotY7Ij6aveeqRA4vRap6utYtm/j4UgkyZvCrn1JuRQ0a4hfsOLPWZ3SRQBzIRqpIrDBNOUpWkveOQIeziCe/zCiKHls=
+	t=1712135472; cv=none; b=Ias5C5Og+B4eHwQOuZ8wDrXFJEY1ss1hqCpf9lqlbzFp8iuP/sGq8eIOf/UvOLrpiD853oGhVKtGFTqRPV/wn1qzPTbIwlmOHzyxp05tvOUYAX+/9cB7cakWSoRlQz7N7PjctzrTWd6SHWb/gxT4Re/0mkZk+67e4oiAxIUy3Oc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712135413; c=relaxed/simple;
-	bh=QgoE+OfmdPvK6VPzB9LV9LayCaBdrKNtJSdxQEmkaI4=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Lg6JPW+K4Cxiune1KOo1mvOsIpvKaoRg+CjtJ0EGNyMwcsYSxTefpTsamYzx4fvyv4op3lPRRTtdEGxSnFeRtbDWIZ2j4PWm14VawBRh3WzpzsHI/wOswdorUI1ZnJ55a7XeXB4Er5wZL3H6uXVJeGSSvdXxOAp89ALcBTXr/w8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=14.137.139.23
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.18.186.29])
-	by frasgout11.his.huawei.com (SkyGuard) with ESMTP id 4V8dp91MfZz9xHvZ;
-	Wed,  3 Apr 2024 16:53:53 +0800 (CST)
-Received: from mail02.huawei.com (unknown [7.182.16.47])
-	by mail.maildlp.com (Postfix) with ESMTP id 8C1FA140412;
-	Wed,  3 Apr 2024 17:09:58 +0800 (CST)
-Received: from huaweicloud.com (unknown [10.204.63.22])
-	by APP1 (Coremail) with SMTP id LxC2BwA3LBXYHA1mI_KDBQ--.29734S2;
-	Wed, 03 Apr 2024 10:09:57 +0100 (CET)
-From: Roberto Sassu <roberto.sassu@huaweicloud.com>
-To: viro@zeniv.linux.org.uk,
-	brauner@kernel.org,
-	jack@suse.cz,
-	paul@paul-moore.com,
-	jmorris@namei.org,
-	serge@hallyn.com,
-	zohar@linux.ibm.com
-Cc: linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-security-module@vger.kernel.org,
-	linux-cifs@vger.kernel.org,
-	linux-integrity@vger.kernel.org,
-	pc@manguebit.com,
-	torvalds@linux-foundation.org,
-	Roberto Sassu <roberto.sassu@huawei.com>,
-	Steve French <smfrench@gmail.com>
-Subject: [RESEND][PATCH v3] security: Place security_path_post_mknod() where the original IMA call was
-Date: Wed,  3 Apr 2024 11:07:49 +0200
-Message-Id: <20240403090749.2929667-1-roberto.sassu@huaweicloud.com>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1712135472; c=relaxed/simple;
+	bh=P541NbRWYuqXnx3+bGnLVMbeU44d3fPcyqmzLTRTyXg=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=PfoUk42pi+iQvrLPHqHBZ9CXpvc3XncyBEu9OoXRCQdIG3eYkfWDO3TdwKNaa2UExEeEMusCIQNDn0vfzCgu9Jmo2czsRhSYXLuLDfR/tj5bi5wPLbbd4c8OYPCnsX2IXIcMAjQtxLKfGGVlh4FzbU//phVFXCIkIpUfTtsiFmE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=YePQhhbJ; arc=none smtp.client-ip=209.85.214.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YePQhhbJ"
+Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-1e244c7cbf8so28984875ad.0
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Apr 2024 02:11:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1712135469; x=1712740269; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=7/O3Yye4pJUKSqqmi1ztO7+TuENg7PJXngjJtD8dhiA=;
+        b=YePQhhbJJgTfKf4awTWBBdsNXa18J+DO2yAvOcfga3kvVsstmG8w1J+rnz0Gneb5fc
+         lTcVEzxx8vKY/qlmcg5oIzxxMsHt0GVm8Kx4yluULd5pnyYwkPD+TZzq0mJGI/NEHYdE
+         oL4qyem9qOBUt8kaNklhowzGrPxoz5bpx+GQDYPCMtf5v2izkfln7/O9zgEvgIXEWljf
+         ljxSqe1o8pSpfgUkUypw1mnRuY+1sxZShNWqSA5UbQy+BjP8tHn2zJ+WfqJ5m7lbq059
+         qYxfNTKtT6QK5XGT0Ef7ROp/VwEveDP3b03+OWMlh2S+XG6qQz0GoyhmnCUVfCzmNUi+
+         VVvQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712135469; x=1712740269;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=7/O3Yye4pJUKSqqmi1ztO7+TuENg7PJXngjJtD8dhiA=;
+        b=BbHBTRqb42BOIqO4DLpVGWsoLUvzFf2yeo+ZnGnOR2V7NWQRycJAF/MfILTGUvVeU1
+         Gy1mjKJRLRifO0F4jWM5nbsK0hz9fDako/gkFpS8esPPGXEf/QmFvYHierF+4HoDmLNE
+         43wOTrZAJLV++4JlMR/7vAh2SB9J6OJfkwHt7pW54YAznkXnybGQDTq1Qg/ZKbl49Gs5
+         CWASRHJzcIFf6zqCA1WhKUbcWQxRQnYk8rk+n6GfSrl9EN29BHBeaDKnT65ptVtjIY0o
+         ZHUA6r7QAy6yIjc246mZOqoM16HUfN85s2EdLcGqm/Q8337JkCpWae/XzYfgZn6q3tC4
+         vcDA==
+X-Forwarded-Encrypted: i=1; AJvYcCWk/zK0RI/NCS2J/vShb6udu47pYOf31jcDIRr9lZfuvlaQQiuHAdTRI2orqGu9V+pyazj/0lYxbVMvPc/V/yBy3yHUmQYvtm3lwSeF
+X-Gm-Message-State: AOJu0YwvayiTSTn5tBSjnszSJs3DFk48/JRFXKPXh7U9T++jBiPuka4a
+	vHGs1/AtrGNwnldV2XccvLeP3/KpakpjC1wbbLmAhJqDq1u0lMB7YXcHjMtYG/35OqOyciWevPj
+	UHdBiSw==
+X-Google-Smtp-Source: AGHT+IF84q9hRu116oN3GLEOqf7CuYctkPWrAgQCygUpWta5lfkEIwl7OUv7gwt+uy43J5BmH7S/wA==
+X-Received: by 2002:a17:903:32ce:b0:1e0:b629:b009 with SMTP id i14-20020a17090332ce00b001e0b629b009mr2303646plr.20.1712135469129;
+        Wed, 03 Apr 2024 02:11:09 -0700 (PDT)
+Received: from [127.0.1.1] ([112.65.12.66])
+        by smtp.gmail.com with ESMTPSA id lo14-20020a170903434e00b001e0aded0ca7sm12688087plb.239.2024.04.03.02.11.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 03 Apr 2024 02:11:08 -0700 (PDT)
+From: Jun Nie <jun.nie@linaro.org>
+Subject: [PATCH v3 0/6] Add DSC support to DSI video panel
+Date: Wed, 03 Apr 2024 17:10:56 +0800
+Message-Id: <20240403-msm-drm-dsc-dsi-video-upstream-v1-0-db5036443545@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:LxC2BwA3LBXYHA1mI_KDBQ--.29734S2
-X-Coremail-Antispam: 1UD129KBjvJXoWxXrWrXFyUKr4rJFy3trWrKrg_yoW5AF4kpF
-	4rtF1DK34rJFy3WF1kAFy7CFyIvay5WFW5XFsYgr13AF9Igr1YgF1S9ryY9rZ8KrWUtry0
-	va17KrZxXw4UZrUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUkFb4IE77IF4wAFF20E14v26ryj6rWUM7CY07I20VC2zVCF04k2
-	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
-	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7Cj
-	xVAFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxV
-	AFwI0_Gr0_Gr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40E
-	x7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x
-	0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lFIxGxcIEc7CjxVA2Y2ka0xkIwI1l42xK82IY
-	c2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s
-	026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r4a6rW5MIIYrxkI7VAKI48JMIIF
-	0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0x
-	vE42xK8VAvwI8IcIk0rVWrZr1j6s0DMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2
-	jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07UZ18PUUUUU=
-X-CM-SenderInfo: purev21wro2thvvxqx5xdzvxpfor3voofrz/1tbiAgACBF1jj5gMswAAsS
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIACAdDWYC/x2NMQ6DMAwAv4I811JMoEO/UnWIsKEeAshuIyTE3
+ 2t1uOGWuxNcTMXh0Z1g0tR1W0Po1sH0LusiqBwOfeqHNKSM1SuyBT4Fik1ZNvzu/jEpFYnGOxO
+ lMmaGiOwmsx7/wRNahtd1/QAmFaGKdAAAAA==
+To: Rob Clark <robdclark@gmail.com>, 
+ Abhinav Kumar <quic_abhinavk@quicinc.com>, 
+ Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, Sean Paul <sean@poorly.run>, 
+ Marijn Suijten <marijn.suijten@somainline.org>, 
+ David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, 
+ Jessica Zhang <quic_jesszhan@quicinc.com>, Vinod Koul <vkoul@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org, 
+ freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
+ Jun Nie <jun.nie@linaro.org>, Jonathan Marek <jonathan@marek.ca>
+X-Mailer: b4 0.13.0
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1712135460; l=1325;
+ i=jun.nie@linaro.org; s=20240403; h=from:subject:message-id;
+ bh=P541NbRWYuqXnx3+bGnLVMbeU44d3fPcyqmzLTRTyXg=;
+ b=HkqQZDXjFiMWF6ZF+Cd0bcaoeJOmDhaXwhg2bFQTfchp7QA89xl1gKuBfqywkMi9u/CrU+Rqg
+ N1WZRF987sSDHY46unFNIz4C8AM5wiaqxvqBzLMDMKlkS8wAs1I5cIE
+X-Developer-Key: i=jun.nie@linaro.org; a=ed25519;
+ pk=MNiBt/faLPvo+iJoP1hodyY2x6ozVXL8QMptmsKg3cc=
 
-From: Roberto Sassu <roberto.sassu@huawei.com>
+This is follow up update to Jonathan's patch set.
 
-Commit 08abce60d63f ("security: Introduce path_post_mknod hook")
-introduced security_path_post_mknod(), to replace the IMA-specific call to
-ima_post_path_mknod().
+Changes vs V2:
+- Rebase to latest mainline.
+- Drop the INTF_CFG2_DATA_HCTL_EN change as it is handled in
+    latest mainline code.
+- Drop the bonded DSI patch as I do not have device to test it.
+- Address comments from version 2.
 
-For symmetry with security_path_mknod(), security_path_post_mknod() was
-called after a successful mknod operation, for any file type, rather than
-only for regular files at the time there was the IMA call.
-
-However, as reported by VFS maintainers, successful mknod operation does
-not mean that the dentry always has an inode attached to it (for example,
-not for FIFOs on a SAMBA mount).
-
-If that condition happens, the kernel crashes when
-security_path_post_mknod() attempts to verify if the inode associated to
-the dentry is private.
-
-Move security_path_post_mknod() where the ima_post_path_mknod() call was,
-which is obviously correct from IMA/EVM perspective. IMA/EVM are the only
-in-kernel users, and only need to inspect regular files.
-
-Reported-by: Steve French <smfrench@gmail.com>
-Closes: https://lore.kernel.org/linux-kernel/CAH2r5msAVzxCUHHG8VKrMPUKQHmBpE6K9_vjhgDa1uAvwx4ppw@mail.gmail.com/
-Suggested-by: Al Viro <viro@zeniv.linux.org.uk>
-Fixes: 08abce60d63f ("security: Introduce path_post_mknod hook")
-Signed-off-by: Roberto Sassu <roberto.sassu@huawei.com>
+Signed-off-by: Jun Nie <jun.nie@linaro.org>
 ---
- fs/namei.c          | 7 ++-----
- security/security.c | 4 ++--
- 2 files changed, 4 insertions(+), 7 deletions(-)
+Jonathan Marek (5):
+      drm/msm/dpu: fix video mode DSC for DSI
+      drm/msm/dsi: set video mode widebus enable bit when widebus is enabled
+      drm/msm/dsi: set VIDEO_COMPRESSION_MODE_CTRL_WC (fix video mode DSC)
+      drm/msm/dsi: add a comment to explain pkt_per_line encoding
+      drm/msm/dsi: support DSC configurations with slice_per_pkt > 1
 
-diff --git a/fs/namei.c b/fs/namei.c
-index ceb9ddf8dfdd..c5b2a25be7d0 100644
---- a/fs/namei.c
-+++ b/fs/namei.c
-@@ -4050,6 +4050,8 @@ static int do_mknodat(int dfd, struct filename *name, umode_t mode,
- 		case 0: case S_IFREG:
- 			error = vfs_create(idmap, path.dentry->d_inode,
- 					   dentry, mode, true);
-+			if (!error)
-+				security_path_post_mknod(idmap, dentry);
- 			break;
- 		case S_IFCHR: case S_IFBLK:
- 			error = vfs_mknod(idmap, path.dentry->d_inode,
-@@ -4060,11 +4062,6 @@ static int do_mknodat(int dfd, struct filename *name, umode_t mode,
- 					  dentry, mode, 0);
- 			break;
- 	}
--
--	if (error)
--		goto out2;
--
--	security_path_post_mknod(idmap, dentry);
- out2:
- 	done_path_create(&path, dentry);
- 	if (retry_estale(error, lookup_flags)) {
-diff --git a/security/security.c b/security/security.c
-index 7e118858b545..0a9a0ac3f266 100644
---- a/security/security.c
-+++ b/security/security.c
-@@ -1793,11 +1793,11 @@ int security_path_mknod(const struct path *dir, struct dentry *dentry,
- EXPORT_SYMBOL(security_path_mknod);
- 
- /**
-- * security_path_post_mknod() - Update inode security field after file creation
-+ * security_path_post_mknod() - Update inode security after reg file creation
-  * @idmap: idmap of the mount
-  * @dentry: new file
-  *
-- * Update inode security field after a file has been created.
-+ * Update inode security field after a regular file has been created.
-  */
- void security_path_post_mknod(struct mnt_idmap *idmap, struct dentry *dentry)
- {
+Jun Nie (1):
+      drm/display: Add slice_per_pkt for dsc
+
+ .../gpu/drm/msm/disp/dpu1/dpu_encoder_phys_vid.c   |  9 +++++
+ drivers/gpu/drm/msm/disp/dpu1/dpu_hw_intf.c        |  8 +++++
+ drivers/gpu/drm/msm/dsi/dsi.xml.h                  |  1 +
+ drivers/gpu/drm/msm/dsi/dsi_host.c                 | 42 +++++++++++-----------
+ include/drm/display/drm_dsc.h                      |  4 +++
+ 5 files changed, 44 insertions(+), 20 deletions(-)
+---
+base-commit: b1e6ec0a0fd0252af046e542f91234cd6c30b2cb
+change-id: 20240403-msm-drm-dsc-dsi-video-upstream-1156d110a53d
+
+Best regards,
 -- 
-2.34.1
+Jun Nie <jun.nie@linaro.org>
 
