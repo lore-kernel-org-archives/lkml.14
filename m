@@ -1,155 +1,118 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFDE71553BA;
-	Wed,  3 Apr 2024 19:58:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE1D3154BF0;
+	Wed,  3 Apr 2024 19:59:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712174306; cv=none; b=PEIIOJucOmmqrSo8QVjSsuxR6kc+kXOuFLRDW3T5txYPZ0csHmEjUCGSaflVRHRXyXoLOqAkIKovme5xmcDDX10Qx4oEqazClhhDz3p/SaOXle+YC883c8bJdS/njYjNBkPw9EbP0VEOhjY6umowpZl/xM5dj3WNf/MeH7UJSkE=
+	t=1712174353; cv=none; b=YJFXBqOn5vKIuLiYUcH1Yfcgy+d0cyGok3M+f6XYRztsLkMr2nLBVszPm40FYaNOPlrUOGePQgzOKFzc95zU0+Flfu0F2uFk8eEgOs4ucDbS8snivtHE1pUSaG/XoK+eMliJs/dqZVmjC6AteLLJmwAQhd4MGBBrqK3wTJQFXFs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712174306; c=relaxed/simple;
-	bh=ZolPI/SXOoFRlsyA2xZ/MLjL4K5rdMbF7iCV+sPToAk=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=KPmCcUCUc10kG4/JULHFtj+waa+vVgGzCwfzsuOj4Myan9qHasYqzmEfyciV0yPBUZI9T8Zqza36dfyv4VdxjljM2+50rAwHh+mf1q1fMXgD6fGCtzbwT1pD8jqDa0JczPHxlbjT/qkmg+NUg3RsV5pm4jYLVuU4GbEOTNmeIFI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DCxaN5Zv; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1712174353; c=relaxed/simple;
+	bh=RnV0b8ur5HtWa8bGgKkpFPMXquPIsmn9nG9BapgHhyw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=Fr8ILzEOd7GQnwQWQHa9Kl81pU+U6/GcoVstJzy6D6KwYsb00744uY3eMnTTKWvAi8xQYe3TAICLdSmKM+/KoxS1U/tJnAIKgI+/9Y1QRgnAU8KOPsu4P+L05YTF0IpQnzllh19cK9eMT/skPcVWrTpXGgMoF7GUorwi8WWY+t4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=Ira3qAVc; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DCxaN5Zv"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 61B79C433A6;
-	Wed,  3 Apr 2024 19:58:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712174306;
-	bh=ZolPI/SXOoFRlsyA2xZ/MLjL4K5rdMbF7iCV+sPToAk=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=DCxaN5ZvrL7/ojIbXsbJ8aeApY/jESwu3jMVvhco88jNo1zYd8RnULzubi7I45Iyr
-	 S98AmEEO3ie1jLlYw4mBm4VzSdNrHgLtcIEevu7Y3LJ+Z6A1m32EY/6h0KGggTU8me
-	 dHoNt6PiLhQavARzPr8K2X82IiGhu8GoRFUvl8k1mYGe4ibN+PxoTy2gy2sITlvesZ
-	 jt3KG3DQs2KkGfqG1sB5Tn+6Dfr1Bf/rTKhJsnLONBQqsneLB8iyEFP1d5MZIyuQKT
-	 Gu6uijcRoeC9A75//hhkkYyze48RRxgRgGMpbTja9wPiUxdmyhKVjg2SesmcvF5RwX
-	 MxDY2UO7vZ1bA==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57305CD129B;
-	Wed,  3 Apr 2024 19:58:26 +0000 (UTC)
-From: John Bauer via B4 Relay <devnull+johnebgood.securitylive.com@kernel.org>
-Date: Wed, 03 Apr 2024 14:58:09 -0500
-Subject: [PATCH 3/3] media: uvcvideo: Moved control checks to helper
- function
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="Ira3qAVc"
+Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 433Jful9017706;
+	Wed, 3 Apr 2024 19:58:53 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	message-id:date:mime-version:subject:to:cc:references:from
+	:in-reply-to:content-type:content-transfer-encoding; s=
+	qcppdkim1; bh=RAjJygrtnz3IafcFIvbNaEGp82M8DXE306CM7uWs/q4=; b=Ir
+	a3qAVcmK5WVcgb7TPsSQwFoYLuTbKmPZ1mugKalpGvJ5IGopV5gagHDPQKTPfC3N
+	gBkDJwhwYeFhKrB/5aGk23EHMms8wM9dAP/St61RwuF+In4RilJGGEtl5MhEMLSp
+	MJsVjCpXBsu97oj+5tr2Y1OLwZ3UHXqM7dGKBpLKVwi3neCym9XPW9OrIcaOY/Qd
+	OfyJxuSEFMRl1mpo68g4OFJtOIysGnSkAIUBc8US0mO1iEjsK8CpbtH0LBUAES+F
+	rsBBlUCQ5LwzH8xCjPlY7fSWY1O7tf4v4nGo40m3T+LbMmoCK4HeY910sAwNd5of
+	5r+BpMgGMlts1IkdMUqg==
+Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3x9077j41w-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 03 Apr 2024 19:58:53 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA03.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 433JwqkP016847
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 3 Apr 2024 19:58:52 GMT
+Received: from [10.110.9.99] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Wed, 3 Apr 2024
+ 12:58:50 -0700
+Message-ID: <2f509949-7e7e-cbf6-c1d0-f25971c2d890@quicinc.com>
+Date: Wed, 3 Apr 2024 12:58:50 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.11.0
+Subject: Re: [PATCH v3] phy/qcom-qmp-combo: propagate correct return value at
+ phy_power_on()
+Content-Language: en-US
+To: Stephen Boyd <swboyd@chromium.org>,
+        Kuogee Hsieh
+	<quic_khsieh@quicinc.com>, <abel.vesa@linaro.org>,
+        <agross@kernel.org>, <airlied@gmail.com>, <andersson@kernel.org>,
+        <daniel@ffwll.ch>, <dianders@chromium.org>,
+        <dmitry.baryshkov@linaro.org>, <dri-devel@lists.freedesktop.org>,
+        <robdclark@gmail.com>, <sean@poorly.run>, <vkoul@kernel.org>
+CC: <quic_jesszhan@quicinc.com>, <quic_sbillaka@quicinc.com>,
+        <marijn.suijten@somainline.org>, <freedreno@lists.freedesktop.org>,
+        <linux-arm-msm@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <1711741835-10044-1-git-send-email-quic_khsieh@quicinc.com>
+ <CAE-0n50Z2pDGH+ncjQq-huDsn9jdN=1SfaaU+qw229nZpUVCDw@mail.gmail.com>
+From: Abhinav Kumar <quic_abhinavk@quicinc.com>
+In-Reply-To: <CAE-0n50Z2pDGH+ncjQq-huDsn9jdN=1SfaaU+qw229nZpUVCDw@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240403-uvc-fix-relative-ptz-speed-v1-3-624c9267f745@securitylive.com>
-References: <20240403-uvc-fix-relative-ptz-speed-v1-0-624c9267f745@securitylive.com>
-In-Reply-To: <20240403-uvc-fix-relative-ptz-speed-v1-0-624c9267f745@securitylive.com>
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, 
- Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linh.tp.vu@gmail.com, ribalda@chromium.org, soyer@irl.hu, 
- John Bauer <johnebgood@securitylive.com>
-X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1712174305; l=2692;
- i=johnebgood@securitylive.com; s=20240325; h=from:subject:message-id;
- bh=2nl53Ftu6Hpf35R3FNa8JPbVSTHm2rJO1iLfSKB2ysg=;
- b=BhLEBiU0ZU86ee4ynGsqy1lFJdDPqxN8ydK1MeNxTyyuxPXHnWaLEAdFaP4ffI6z2Y/HjSzDy
- AyLB7FWoRxJDQTr3AuakRSnCoM6/nkz7NOiXW7IvPBYLDKLc86/p+QM
-X-Developer-Key: i=johnebgood@securitylive.com; a=ed25519;
- pk=RN31Fmrxbidp1TwtZGNmQwTDjUWMPnewQJfA/ug2P9E=
-X-Endpoint-Received: by B4 Relay for johnebgood@securitylive.com/20240325
- with auth_id=143
-X-Original-From: John Bauer <johnebgood@securitylive.com>
-Reply-To: johnebgood@securitylive.com
-
-From: John Bauer <johnebgood@securitylive.com>
-
-Made additional recommended changes from Ricardo. Relative
-controls are now checked with helper function is_relative_ptz_ctrl().
-
-Signed-off-by: John Bauer <johnebgood@securitylive.com>
----
- drivers/media/usb/uvc/uvc_ctrl.c | 40 +++++++++++++++++++---------------------
- 1 file changed, 19 insertions(+), 21 deletions(-)
-
-diff --git a/drivers/media/usb/uvc/uvc_ctrl.c b/drivers/media/usb/uvc/uvc_ctrl.c
-index 04300a782c81..34a9a29b0754 100644
---- a/drivers/media/usb/uvc/uvc_ctrl.c
-+++ b/drivers/media/usb/uvc/uvc_ctrl.c
-@@ -441,7 +441,6 @@ static s32 uvc_ctrl_get_rel_speed(struct uvc_control_mapping *mapping,
- 		return (rel == 0) ? 0 : (rel > 0 ? data[first+1]
- 						 : -data[first+1]);
- 	case UVC_GET_MIN:
--		return -data[first+1];
- 	case UVC_GET_MAX:
- 	case UVC_GET_RES:
- 	case UVC_GET_DEF:
-@@ -1233,6 +1232,17 @@ static u32 uvc_get_ctrl_bitmap(struct uvc_control *ctrl,
- 	return ~0;
- }
- 
-+static bool is_relative_ptz_ctrl(__u32 ctrl_id)
-+{
-+	switch (ctrl_id) {
-+	case V4L2_CID_ZOOM_CONTINUOUS:
-+	case V4L2_CID_PAN_SPEED:
-+	case V4L2_CID_TILT_SPEED:
-+		return true;
-+	}
-+	return false;
-+}
-+
- static int __uvc_query_v4l2_ctrl(struct uvc_video_chain *chain,
- 	struct uvc_control *ctrl,
- 	struct uvc_control_mapping *mapping,
-@@ -1327,22 +1337,16 @@ static int __uvc_query_v4l2_ctrl(struct uvc_video_chain *chain,
- 				     uvc_ctrl_data(ctrl, UVC_CTRL_DATA_MAX));
- 
- 	if (ctrl->info.flags & UVC_CTRL_FLAG_GET_MIN) {
--		switch (v4l2_ctrl->id) {
--		case V4L2_CID_ZOOM_CONTINUOUS:
--		case V4L2_CID_PAN_SPEED:
--		case V4L2_CID_TILT_SPEED:
--			/*
--			 * For the relative speed implementation the minimum
--			 * value cannot be probed so it becomes the additive
--			 * inverse of maximum.
--			 */
-+		/*
-+		 * For the relative speed implementation the minimum
-+		 * value cannot be probed so it becomes the additive
-+		 * inverse of maximum.
-+		 */
-+		if (is_relative_ptz_ctrl(v4l2_ctrl->id))
- 			v4l2_ctrl->minimum = -v4l2_ctrl->maximum;
--			break;
--		default:
-+		else
- 			v4l2_ctrl->minimum = mapping->get(mapping, UVC_GET_MIN,
- 						uvc_ctrl_data(ctrl, UVC_CTRL_DATA_MIN));
--			break;
--		}
- 	}
- 
- 	if (ctrl->info.flags & UVC_CTRL_FLAG_GET_RES)
-@@ -1935,14 +1939,8 @@ int uvc_ctrl_set(struct uvc_fh *handle,
- 		 * value cannot be probed so it becomes the additive
- 		 * inverse of maximum.
- 		 */
--		switch (xctrl->id) {
--		case V4L2_CID_ZOOM_CONTINUOUS:
--		case V4L2_CID_PAN_SPEED:
--		case V4L2_CID_TILT_SPEED:
-+		if (is_relative_ptz_ctrl(xctrl->id))
- 			min = -max;
--		default:
--			break;
--		}
- 
- 		step = mapping->get(mapping, UVC_GET_RES,
- 				    uvc_ctrl_data(ctrl, UVC_CTRL_DATA_RES));
-
--- 
-2.34.1
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: HzB9bFC3XVmDy2SfH_Qjw6dY9raEAm1I
+X-Proofpoint-ORIG-GUID: HzB9bFC3XVmDy2SfH_Qjw6dY9raEAm1I
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-04-03_20,2024-04-03_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999
+ malwarescore=0 adultscore=0 suspectscore=0 clxscore=1015
+ priorityscore=1501 lowpriorityscore=0 spamscore=0 phishscore=0 bulkscore=0
+ impostorscore=0 mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2403210001 definitions=main-2404030133
 
 
+
+On 4/3/2024 12:51 PM, Stephen Boyd wrote:
+> Quoting Kuogee Hsieh (2024-03-29 12:50:35)
+>> Currently qmp_combo_dp_power_on() always return 0 in regardless of
+>> return value of cfg->configure_dp_phy(). This patch propagate
+>> return value of cfg->configure_dp_phy() all the way back to caller.
+> 
+> Is this found via code inspection or because the phy is failing to power
+> on sometimes? I ask because I'm looking at a DP bug on Trogdor with
+> chromeos' v6.6 based kernel and wondering if this is related.
+> 
+
+No, we actually hit an issue. This issue was originally reported as a 
+link training issue while bringing up DP on x1e80100.
+
+While debugging that we noticed that we should not have even proceeded 
+to link training because the PLL was not getting locked and it was 
+failing silently since there are no other error prints (and hence the 
+second part of the patch to improve the error logs), and we do not 
+return any error code from this driver, we could not catch the PLL 
+unlocked issue.
+
+> Also, is the call to phy_power_on() going to be checked in
+> the DP driver?
+> 
+>   $ git grep -n phy_power_on -- drivers/gpu/drm/msm/dp/
+>   drivers/gpu/drm/msm/dp/dp_ctrl.c:1453:  phy_power_on(phy);
+
+Yes, this is a good point. We should also post the patch to add the 
+error checking in DP driver to fail if phy_power_on fails.
