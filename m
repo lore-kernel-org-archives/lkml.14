@@ -1,219 +1,164 @@
-Received: from relmlie5.idc.renesas.com (relmlor1.renesas.com [210.160.252.171])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A9BC16CDDB;
-	Wed,  3 Apr 2024 09:02:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.160.252.171
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712134935; cv=none; b=C58AIafQzsnYNd6MzNNQuJsvZmwKMANvu1fa+6b21CWFE8BIavCrp2mra/NA97ldjcrK3CdSn+2NPNedcGivol3cDPb30U9vm2vjO3wxnvO15oNktG7YRkoxCYA9A4qrUdS+zB/paODmr2TDqj0CVijGtJeghros2Rc27Du4j8c=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712134935; c=relaxed/simple;
-	bh=JbsvBMoyFD8gk8jPhVq+6vWawp6Bogda8tQ+hv6S9GM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=H+Dj8lp0HDtrFBEE+ky1a7bOlF2eXY7e6nvF+26nerh0O5BbhERCdgf5dKwO687OPGOkp0HP6NbjXm7QtnRPwvkbjGxqRjqr3wYgiA/AG6u0xXOEwJawG0DwHAFk27kjMSFSfGHCHUoqt/61ikr9N/hpRf64C2mUuCK/68RQQcc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com; spf=pass smtp.mailfrom=bp.renesas.com; arc=none smtp.client-ip=210.160.252.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bp.renesas.com
-X-IronPort-AV: E=Sophos;i="6.07,177,1708354800"; 
-   d="asc'?scan'208";a="200226792"
-Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
-  by relmlie5.idc.renesas.com with ESMTP; 03 Apr 2024 18:02:10 +0900
-Received: from [10.226.92.147] (unknown [10.226.92.147])
-	by relmlir6.idc.renesas.com (Postfix) with ESMTP id CC09541C1173;
-	Wed,  3 Apr 2024 18:02:06 +0900 (JST)
-Message-ID: <b683f659-23c6-42b2-b690-e3684f37cebf@bp.renesas.com>
-Date: Wed, 3 Apr 2024 10:02:04 +0100
+Received: from PAUP264CU001.outbound.protection.outlook.com (mail-francecentralazon11021010.outbound.protection.outlook.com [52.101.167.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAD2F56471
+	for <linux-kernel@vger.kernel.org>; Wed,  3 Apr 2024 09:03:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.167.10
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1712135038; cv=fail; b=P9ZWRvvsPknJaAVgQ1v3Z1ZBlWN2WDCKrVDxvV70kC5OnRktdlRzIf9KDyLiAFHcv5Ru/TcMnqZxwU2U5T5IyjU+0n43O4kZgCEk8N0pat7o47Agm+VcyLwHrj37/bW6cx1hvBjMvTNKY0kEgK5Y+ztJM/h6YeBSJm68C15oLbk=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1712135038; c=relaxed/simple;
+	bh=z97gaE+5M0SI9zFhPvSMJ6FJd5s3AQa2zaO4p5hmvFg=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=rbv6NJG/LsJPBmnBFRhIUblWA4sgUHffICdIudiH9pS6mNOQUFRe7LC4UQhBLiDZYDQbXydaeDid33Us2G/5wPJ64rtrERXkoc5rTg3t2eCoueU0P2tEhcUEkZuhxT2uP4pdopw4fvCd/8yY+f3GBjgzDFGTBub8gd4/IQQK5f0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu; spf=pass smtp.mailfrom=csgroup.eu; dkim=pass (2048-bit key) header.d=csgroup.eu header.i=@csgroup.eu header.b=QYzkP+9W; arc=fail smtp.client-ip=52.101.167.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=csgroup.eu
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=csgroup.eu header.i=@csgroup.eu header.b="QYzkP+9W"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=jEL0QWchXCSVqVTWPJIGd7/Hv8uXz58sR5JGYKC9fgJuMDSIUFWUwvLdg0fc61MP3tk1hYsMOKeHGgz/a4rubICOnGSEdfj4G7bNuAl5eoOpwFQPlagO/psW64Q/f2XHlHup3xdBkej+P5ImVGLbht6n/i6ra/W39Q17ymqn1dm77ImOtvynPfnzqeAchTmgV7fAa16xjpmUbQJfGaLyEOKUVkU3Mu6tTyn4FTpxVhJiM988gJ8W0Ma+We45eAlAisyX/hDn9WcmD5PPD9JjV9/Jueto2U1dv8qw7qFWqLaGhubmhvKMFkhf81Yg7aVoGcSUnbW+y5hsPyTP32DQfQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=z97gaE+5M0SI9zFhPvSMJ6FJd5s3AQa2zaO4p5hmvFg=;
+ b=Rnb/SEUDJKk9mETZ9rpHPS3uQlIXfdhZ5jkMN16xEnFvj/F2il8l0eAHOQGnN8fFR0VIyYy9Yq2zz5QbvURfA3DsciStjk+qNKbUeaPmC2ebH9xW/sGDduH+rCL+TGBYGStkYI2SGR/haj0bKEtO7yoFVVcIWk43YL/WMLAoMrpjUYUHo3MTUhs3fLrb11T9dNhWx8664UYo4wAbjLiE+HQoG46gU4QhIqtHe0cE5SIIZ2mZ5kGuIYm12ysEbkPcUkTKduPN2nv8cXCRzpbfpl/Qr++L8uUFWnNMRIFfso8SoXt0ZnwTa2H4AwVXrz8Br+bBt9DHT7r0BI4CU15j9A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=csgroup.eu; dmarc=pass action=none header.from=csgroup.eu;
+ dkim=pass header.d=csgroup.eu; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=csgroup.eu;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=z97gaE+5M0SI9zFhPvSMJ6FJd5s3AQa2zaO4p5hmvFg=;
+ b=QYzkP+9W06J8U/QiE4zc9xq6GZBuB/beIV5RO3Xyw4BS6LRvhgjZmxEat2sbxaaEgt5O8OPrNZyrhnMGAm4FVVyDYUvLFoIxnfJPJmtFBMIrLBANXNgsGeQUmW7Hfmx72srtWTxVzH1twO6EcRMDQLjy+TAS+6C6t9KZtBGgwfyMH+xPlJYineT/QjkaBF73FuJC1mBj84ZNWKZAI29K8ycAhXvmeVHFUIE9u8GUnhVGdQdocNo1r13kiK4eoiX5v7semDOK5aj9o58OJS2hkxrDtiMh6y2+ivY/knl2FFGvWmaxyezz8i04umohw5TuwG5uWlpfbH98a1g0O6O7GA==
+Received: from MRZP264MB2988.FRAP264.PROD.OUTLOOK.COM (2603:10a6:501:31::15)
+ by MR1P264MB1652.FRAP264.PROD.OUTLOOK.COM (2603:10a6:501:10::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.46; Wed, 3 Apr
+ 2024 09:03:54 +0000
+Received: from MRZP264MB2988.FRAP264.PROD.OUTLOOK.COM
+ ([fe80::c192:d40f:1c33:1f4e]) by MRZP264MB2988.FRAP264.PROD.OUTLOOK.COM
+ ([fe80::c192:d40f:1c33:1f4e%6]) with mapi id 15.20.7409.042; Wed, 3 Apr 2024
+ 09:03:54 +0000
+From: Christophe Leroy <christophe.leroy@csgroup.eu>
+To: Arnd Bergmann <arnd@arndb.de>, Arnd Bergmann <arnd@kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Andrew Morton
+	<akpm@linux-foundation.org>, Palmer Dabbelt <palmer@rivosinc.com>
+CC: Dave Hansen <dave.hansen@linux.intel.com>, Noah Goldstein
+	<goldstein.w.n@gmail.com>, Charlie Jenkins <charlie@rivosinc.com>
+Subject: Re: [PATCH 18/34] lib: checksum: hide unused
+ expected_csum_ipv6_magic[]
+Thread-Topic: [PATCH 18/34] lib: checksum: hide unused
+ expected_csum_ipv6_magic[]
+Thread-Index: AQHahZ5g28C+LJsTYku4NOBSr1WvGrFWOkqAgAAEhwCAAAGkAA==
+Date: Wed, 3 Apr 2024 09:03:54 +0000
+Message-ID: <2ffc8633-6ed8-4641-bd9f-313645dfff51@csgroup.eu>
+References: <20240403080702.3509288-1-arnd@kernel.org>
+ <20240403080702.3509288-19-arnd@kernel.org>
+ <66a1d5f1-d9b2-402c-826d-955370288037@csgroup.eu>
+ <bdcabb75-f9a5-4905-90b4-2c9c2cf0588a@app.fastmail.com>
+In-Reply-To: <bdcabb75-f9a5-4905-90b4-2c9c2cf0588a@app.fastmail.com>
+Accept-Language: fr-FR, en-US
+Content-Language: fr-FR
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+user-agent: Mozilla Thunderbird
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: MRZP264MB2988:EE_|MR1P264MB1652:EE_
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info:
+ khV7Ys30I+aOT9q82cRX/hfZaeSmo/cQVJxSCPZO3OQHc0Q54MZWtVJoHcQuyp4xMYVmmfl0nLXFvtQ0UtjE8XX5vd2EKkvmrf1CHt7n/EzqiwXHem47jwr/4n7y4rmxo5Fqwn+474I07PrVCEzdHMoykSA2V8wc555BkWgTEcs7/CkonMXarCP8d4LQJnwtJFMKSaToH3dl9K1o2otDpLz0uq1VSB6PJeFjM+IqXvwYOZIWGUl1FXjnLrfoSQHEoIItgAEVPoVGgtfTEFod4YfpqGAsftAhabZDHO51rXI2pbHJohoJ3gwajaLAGOh/9uwZ4kB+7Ntriieq0M6DKzzTnW6tr4NHz1o+V7Lm2CtPK8eI4NbB5fkz57EToMdxCfFUPFPgPWrq8sW0w8HFro99ExhjKlZirCcxK8s7R0MtKKiyxP8Vg5U9oeIA16JXO0O+XYCDA7DDui31FEkbLKdqHUIA7kzHZXrCPaGgLE9e5qIdvR9ZeT1togJ+g5QbVh6bmsvPw6Xk5trCcOwx/DKtvxWoDrTWUpJwR8bK/O96M0zMpAzn73pXjd0OwmXGwH/R4KzyCwQh2V94ICq540ZhjwguJpSDzBALZeEZqYo=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MRZP264MB2988.FRAP264.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230031)(1800799015)(366007)(376005);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?utf-8?B?S1pESldEWkQ0VUFoUTRqNE5ObmJzWDBQT1UvTzdLY0F3Wm5Na1RhMGpGWVJm?=
+ =?utf-8?B?S1NBOGpoa0dnaEN1Q3o5R0ZBRTJzL0ZNeExHVW43dmpONlN4N3FiK1Y3eldS?=
+ =?utf-8?B?dmlYaW5abEMxWUh0dzhBRk1zdnZNb1M3RnkzbGhxbWZ6WXNjUTAwU3Mrcjhx?=
+ =?utf-8?B?eHEvd3RzTTFybERZMzV5WTBjVlQ4UnNueXlqQllvRzV1SU42TkdlVHRYcjBH?=
+ =?utf-8?B?U1lMbzNkVERXMVBhelNSN09BL0xjYzFYSnJyMnAwM01nNVh2UHAvSU9CT05Q?=
+ =?utf-8?B?V1poU0pQcXp0YklkTTM5TExlMUFvNENra2pwUStkWlN2TnF4UlFpOXlCZ3B1?=
+ =?utf-8?B?RzcxandUd3ZGU2xnQ3lRL2tYQjNiU3NGQW82bHNoZzVVN05kMVdvUytBd0Er?=
+ =?utf-8?B?ZU16ZHVwdXppZVVTd2hva2lGWUFsNnA4NlpLbVh4OFNtbFREUWJvVVIyck5j?=
+ =?utf-8?B?SExlTERYTTNsVTY4ZHVnMC9LQnVZMTh5YnErYWFSK1NDTDQxS0M0bHFZSVRp?=
+ =?utf-8?B?ckpRcTlVL1d4QU44cTdBTkRuYzUyWkNuOFNjMGZDVG1oVjg2TmhvOUhrTmUw?=
+ =?utf-8?B?Qk5scEhkTHVrckZ3cjdaVkt1T0gzUUREakZHU1VBblVjNDVnR21jZGh4YUQ4?=
+ =?utf-8?B?M2tuMFFjYndEMjdsenlJZVBxQThCbU9YV3M5VmNRSU0vVWRyZHpVUUxTeGRV?=
+ =?utf-8?B?QytyRE95ZHZkSUVXT0poeExZcDNUa3Rkcmc4VzNOdS9vWWtaOWNTR3BzNy8v?=
+ =?utf-8?B?QWJ6RG9YNmVFWmRCTW13RGt4eXg5ZFp4cVRjNDI2d0JCSFV0NTBkRTlPNVdz?=
+ =?utf-8?B?clcxOWlaaTBkdDM4V1JyWEFHOGNFYUl5YjhMSGRTZzlCZFY2Myt5ME5hU01k?=
+ =?utf-8?B?czNVdnE0WWVCaktPSmdiWFVGUUNSK3c4aEpZYzR3bWFYZHV6aDkrVUtsREdn?=
+ =?utf-8?B?RVlXenErVjl5RC9GbVRBT09ZeERYWDU5NWswU2JHUnNKU3p4L0dDRmNQUXBK?=
+ =?utf-8?B?L1VBLy9pdkJxbktTL1psb0NQYm5qeUE5cWNac2VnbkRxWEcrYjcxZ1ZIVVN0?=
+ =?utf-8?B?cEFaTEoyZzc5OUJ3TWVjNGhBL3VYTGtvV284SzVhUFd6UjZwVzM1NFdxbDZz?=
+ =?utf-8?B?R3lJWEtLeG10U0dYUFdvZUNTV0I3cHFSa0pFV0NFN3JCTlpMMnBVN1pkNFEv?=
+ =?utf-8?B?UStFQjFsbHE5RGV6eTEweFZlT2hGN2lTREQzWjFhOEQ2QWxkUzd6UWVjTVZk?=
+ =?utf-8?B?ZGNkWmI0QnN6ZGxZUjM1OGVCc2Y0bDVLakFDTjB3Ri9uYk9wYkFIVVlvWVEy?=
+ =?utf-8?B?V1NtSmxRTjdjYzFNVlJjekxaekV2dG9kb3ZCMmY0ZjVKTG41QTMrNUp3Y0N3?=
+ =?utf-8?B?SUxYRC81cGpBemkxMXBlZjVFZnRFQ0ZpNHdWUnpYcWRBOWNRemRLeXlIeVNE?=
+ =?utf-8?B?c0gvdXplL0ZLV3VqSWdzNStPRjZJdkxWK3FKaHhKdStaS2tRWDN4bGZpNjV3?=
+ =?utf-8?B?ZU11bWNxUUdLaDg1ZGlxcXYwWGhsaEhlYS9MT2xtb0NtbS90SHYweURJM1dV?=
+ =?utf-8?B?YTRFTnVhVVcveEx4c05uaGtWUXBBVENEd1ZqOUthUHlrVkNkK0hIVXdVdW1n?=
+ =?utf-8?B?OGdZSHBzQ3JRcWtLUXdPZ3lPZFBtWGQxdkZsUWFjTjRhVGpMSzR6OEwxd2Er?=
+ =?utf-8?B?RS84QThPbHN3NWpTN0E5UC91K0pHMEFkclMzQjd3SG1LVDdzeU1haGJ3dEo3?=
+ =?utf-8?B?ZGlHcksxanI4N0d0cEJDT3U2VVBxOWpHK3FzZ3ptczFKRUpmTUJjOEp5Ympm?=
+ =?utf-8?B?ZXNXeG56M2RQalI4SEg0Zi9Ya3VXZFFzcHg1cUhFY2JOcFh5VjAzOHVLays3?=
+ =?utf-8?B?MEM5eit1aVFOSUhpQVBUdWxqb2NrenJlY0JldzdRSkdaRGlkb0VmVy9QVUlQ?=
+ =?utf-8?B?UGkrbFdXT3FIVDhJQVdESHVGQmxMeitxRWg1K1pwbHozMGNMME9NRXZlcUVv?=
+ =?utf-8?B?bm00UjRhdEJWRkVCTEdPQWl4SHlzaE5MdVJ5MTBGbDNPcmRha2tiQUdPb2tm?=
+ =?utf-8?B?Sm5pajhiMUJSTmMzalltdGxqVnhnT3hxVVhDdXJKZHFIRU5LaHc5RWJhZjR4?=
+ =?utf-8?Q?tNl8XlIxQavO4vmI0mQY0UKPv?=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <26F664066A817B4EA194BD71112C5A47@FRAP264.PROD.OUTLOOK.COM>
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/2] net: ravb: Always process TX descriptor ring
-Content-Language: en-GB
-To: Ratheesh Kannoth <rkannoth@marvell.com>
-Cc: Sergey Shtylyov <s.shtylyov@omp.ru>, "David S. Miller"
- <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- =?UTF-8?Q?Niklas_S=C3=B6derlund?= <niklas.soderlund+renesas@ragnatech.se>,
- netdev@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20240402145305.82148-1-paul.barker.ct@bp.renesas.com>
- <20240403033932.GA1652207@maili.marvell.com>
-From: Paul Barker <paul.barker.ct@bp.renesas.com>
-Organization: Renesas Electronics Corporation
-In-Reply-To: <20240403033932.GA1652207@maili.marvell.com>
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="------------bYB0gkSUt45Iix8pkQRussgN"
+X-OriginatorOrg: csgroup.eu
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: MRZP264MB2988.FRAP264.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-Network-Message-Id: b66a690c-df28-47ae-ed06-08dc53bcfce4
+X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Apr 2024 09:03:54.1445
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 9914def7-b676-4fda-8815-5d49fb3b45c8
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: Ip2m660plI+GfVkj40VJllBpG3t4zSHdGKzDnq6uj8pgXJiNijWEkK5QBgrAYf+acooqoFCZnmsxyQL4egH5EC1Yb/jWw2phtGzWbDF995U=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MR1P264MB1652
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---------------bYB0gkSUt45Iix8pkQRussgN
-Content-Type: multipart/mixed; boundary="------------mqf0Nm0K3JUoES7kBTlVMNP8";
- protected-headers="v1"
-From: Paul Barker <paul.barker.ct@bp.renesas.com>
-To: Ratheesh Kannoth <rkannoth@marvell.com>
-Cc: Sergey Shtylyov <s.shtylyov@omp.ru>, "David S. Miller"
- <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- =?UTF-8?Q?Niklas_S=C3=B6derlund?= <niklas.soderlund+renesas@ragnatech.se>,
- netdev@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Message-ID: <b683f659-23c6-42b2-b690-e3684f37cebf@bp.renesas.com>
-Subject: Re: [PATCH v2 1/2] net: ravb: Always process TX descriptor ring
-References: <20240402145305.82148-1-paul.barker.ct@bp.renesas.com>
- <20240403033932.GA1652207@maili.marvell.com>
-In-Reply-To: <20240403033932.GA1652207@maili.marvell.com>
-
---------------mqf0Nm0K3JUoES7kBTlVMNP8
-Content-Type: multipart/mixed; boundary="------------vL1X90uttMqWEOS0SbZkK6bc"
-
---------------vL1X90uttMqWEOS0SbZkK6bc
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-
-On 03/04/2024 04:39, Ratheesh Kannoth wrote:
-> On 2024-04-02 at 20:23:04, Paul Barker (paul.barker.ct@bp.renesas.com) =
-wrote:
->> The TX queue should be serviced each time the poll function is called,=
-
->> even if the full RX work budget has been consumed. This prevents
->> starvation of the TX queue when RX bandwidth usage is high.
->>
->> Fixes: c156633f1353 ("Renesas Ethernet AVB driver proper")
->> Signed-off-by: Paul Barker <paul.barker.ct@bp.renesas.com>
->> ---
->> Changes from v1:
->>   * Use the correct 'Fixes' tag.
->>   * Call the new variable 'unmask' and drop the unnecessary initialize=
-r,
->>     as requested by Sergey.
->>
->>  drivers/net/ethernet/renesas/ravb_main.c | 7 +++++--
->>  1 file changed, 5 insertions(+), 2 deletions(-)
->>
->> diff --git a/drivers/net/ethernet/renesas/ravb_main.c b/drivers/net/et=
-hernet/renesas/ravb_main.c
->> index d1be030c8848..48803050abdb 100644
->> --- a/drivers/net/ethernet/renesas/ravb_main.c
->> +++ b/drivers/net/ethernet/renesas/ravb_main.c
->> @@ -1324,12 +1324,12 @@ static int ravb_poll(struct napi_struct *napi,=
- int budget)
->>  	int q =3D napi - priv->napi;
->>  	int mask =3D BIT(q);
->>  	int quota =3D budget;
->> +	bool unmask;
->>
->>  	/* Processing RX Descriptor Ring */
->>  	/* Clear RX interrupt */
->>  	ravb_write(ndev, ~(mask | RIS0_RESERVED), RIS0);
->> -	if (ravb_rx(ndev, &quota, q))
->> -		goto out;
->> +	unmask =3D !ravb_rx(ndev, &quota, q);
->>
->>  	/* Processing TX Descriptor Ring */
-> AFAIU, TX is processed without any budget. This wont result in rx work =
-starvation if
-> TX traffic is more ?
-
-Quoting the docs in Documentation/networking/napi.rst:
-
-    The method takes a ``budget`` argument - drivers can process
-    completions for any number of Tx packets but should only process up
-    to ``budget`` number of Rx packets.
-
-    skb Tx processing should happen regardless of the ``budget``
-
-I take that to mean that the RX work budget running out should not stop
-processing of TX packets.
-
-Other drivers with a combined TX/RX poll function follow the same
-pattern of processing TX packets regardless of RX budget exhaustion, for
-example see ixgbe_poll() which processes TX packets first (in
-drivers/net/ethernet/intel/ixgbe/ixgbe_main.c).
-
-Thanks,
-
---=20
-Paul Barker
---------------vL1X90uttMqWEOS0SbZkK6bc
-Content-Type: application/pgp-keys; name="OpenPGP_0x27F4B3459F002257.asc"
-Content-Disposition: attachment; filename="OpenPGP_0x27F4B3459F002257.asc"
-Content-Description: OpenPGP public key
-Content-Transfer-Encoding: quoted-printable
-
------BEGIN PGP PUBLIC KEY BLOCK-----
-
-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3D
-=3DsIIN
------END PGP PUBLIC KEY BLOCK-----
-
---------------vL1X90uttMqWEOS0SbZkK6bc--
-
---------------mqf0Nm0K3JUoES7kBTlVMNP8--
-
---------------bYB0gkSUt45Iix8pkQRussgN
-Content-Type: application/pgp-signature; name="OpenPGP_signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="OpenPGP_signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-wnsEABYIACMWIQSiu8gv1Xr0fIw/aoLbaV4Vf/JGvQUCZg0bDQUDAAAAAAAKCRDbaV4Vf/JGvcgi
-AP4gcIFxx7+J1/ZrrkMZxv6WDjMqKN+ejHNPUQ+KvkTyoQEAvDN2aVFH+gwDgodXViUyjBtJRcKb
-z9LDJmjyLH4pRAQ=
-=obIs
------END PGP SIGNATURE-----
-
---------------bYB0gkSUt45Iix8pkQRussgN--
+DQoNCkxlIDAzLzA0LzIwMjQgw6AgMTA6NTgsIEFybmQgQmVyZ21hbm4gYSDDqWNyaXTCoDoNCj4g
+T24gV2VkLCBBcHIgMywgMjAyNCwgYXQgMTA6NDEsIENocmlzdG9waGUgTGVyb3kgd3JvdGU6DQo+
+PiBMZSAwMy8wNC8yMDI0IMOgIDEwOjA2LCBBcm5kIEJlcmdtYW5uIGEgw6ljcml0wqA6DQo+Pj4g
+RnJvbTogQXJuZCBCZXJnbWFubiA8YXJuZEBhcm5kYi5kZT4NCj4+Pg0KPj4+IFdoZW4gQ09ORklH
+X05FVCBpcyBkaXNhYmxlZCwgYW4gZXh0cmEgd2FybmluZyBzaG93cyB1cCBmb3IgdGhpcw0KPj4+
+IHVudXNlZCB2YXJpYWJsZToNCj4+Pg0KPj4+IGxpYi9jaGVja3N1bV9rdW5pdC5jOjIxODoxODog
+ZXJyb3I6ICdleHBlY3RlZF9jc3VtX2lwdjZfbWFnaWMnIGRlZmluZWQgYnV0IG5vdCB1c2VkIFst
+V2Vycm9yPXVudXNlZC1jb25zdC12YXJpYWJsZT1dDQo+Pj4NCj4+PiBIaWRlIGl0IHVuZGVyIHRo
+ZSBzYW1lICNpZmRlZiBhcyB0aGUgcmVmZXJlbmNlIHRvIGl0Lg0KPj4+DQo+Pj4gRml4ZXM6IGYy
+NGE3MDEwNmRjMSAoImxpYjogY2hlY2tzdW06IEZpeCBidWlsZCB3aXRoIENPTkZJR19ORVQ9biIp
+DQo+Pg0KPj4gSSB0aGluayB0aGF0IGNvbW1pdCBpbnRyb2R1Y2VkIHVuanVzdGlmaWVkICNpZmRl
+ZiBpbiBhIEMgZmlsZS4NCj4gDQo+PiBSZWZlcg0KPj4gaHR0cHM6Ly9kb2NzLmtlcm5lbC5vcmcv
+cHJvY2Vzcy9jb2Rpbmctc3R5bGUuaHRtbCNjb25kaXRpb25hbC1jb21waWxhdGlvbg0KPj4NCj4+
+IFRoZSBmaXggc2hvdWxkIGJlOg0KPj4NCj4+ICsJaWYgKCFJU19FTkFCTEVEKENPTkZJR19ORVQp
+KQ0KPj4gKwkJcmV0dXJuOw0KPj4gKw0KPj4gICAgCWZvciAoaW50IGkgPSAwOyBpIDwgTlVNX0lQ
+djZfVEVTVFM7IGkrKykgew0KPj4gICAgCQlzYWRkciA9IChjb25zdCBzdHJ1Y3QgaW42X2FkZHIg
+KikocmFuZG9tX2J1ZiArIGkpOw0KPj4gICAgCQlkYWRkciA9IChjb25zdCBzdHJ1Y3QgaW42X2Fk
+ZHIgKikocmFuZG9tX2J1ZiArIGkgKw0KPj4gQEAgLTYxOCw3ICs2MjAsNiBAQCBzdGF0aWMgdm9p
+ZCB0ZXN0X2NzdW1faXB2Nl9tYWdpYyhzdHJ1Y3Qga3VuaXQgKnRlc3QpDQo+PiAgICAJCUNIRUNL
+X0VRKHRvX3N1bTE2KGV4cGVjdGVkX2NzdW1faXB2Nl9tYWdpY1tpXSksDQo+PiAgICAJCQkgY3N1
+bV9pcHY2X21hZ2ljKHNhZGRyLCBkYWRkciwgbGVuLCBwcm90bywgY3N1bSkpOw0KPj4gICAgCX0N
+Cj4+IC0jZW5kaWYgLyogIUNPTkZJR19ORVQgKi8NCj4gDQo+IFllcywgSSB1c3VhbGx5IHByZWZl
+ciB0aGF0IGFwcHJvYWNoLCBhbmQgSSB0aGluayBJIHRyaWVkIGl0IGZpcnN0DQo+IGJ1dCByYW4g
+aW50byBjb21waWxlLXRpbWUgcHJvYmxlbXMgYmVjYXVzZSBjc3VtX2lwdjZfbWFnaWMoKQ0KPiBp
+cyBkZWNsYXJlZCBjb25kaXRpb25hbGx5LiBMZXQgbWUgdHJ5IGFnYWluLCBtYXliZSBJIG1pc3Jl
+bWVtYmVyDQo+IHdoYXQgSSBkaWQgb3IgSSBjYW4gcmVtb3ZlIHNvbWUgbW9yZSAjaWZkZWYgY2hl
+Y2tzIGZvciB0aGlzLg0KDQpGV0lXLCBiZWZvcmUgcmVwbHlpbmcgSSBkaWQgYSBidWlsZCBjaGVj
+ayB3aXRoIHBtYWMzMl9kZWZjb25maWcgDQoocG93ZXJwYykgd2l0aCBDT05GSUdfTkVUIHJlbW92
+ZWQuIEkgd2FzIGFibGUgdG8gYnVpbGQgDQpsaWIvY2hlY2tzdW1fa3VuaXQubyBhbmQgb2JqZHVt
+cCBzaG93biB0aGVyZSB3YXMgbm8gcmVmZXJlbmNlIHRvIA0KY3N1bV9pcHY2X21hZ2ljKCkgaW5z
+aWRlIGl0Lg0KDQpDaHJpc3RvcGhlDQo=
