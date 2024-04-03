@@ -1,114 +1,140 @@
-Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C21FD29CA;
-	Wed,  3 Apr 2024 22:49:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29649156253;
+	Wed,  3 Apr 2024 22:57:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712184544; cv=none; b=CKY8mzIbydJQyvX+sIEOSJYnuTqS3zpAFPcWT9vbFeN5C+NBze/60RCkfb0XQFjIWoLQ2gkQ4bi5lAUOBiuu71Ktk6IzngORKuAcuCcUNVwqiksn+JEX3eye1M5U76xEorPnWS0wnAcZQZhin1ozBCeRZPH9c/3QCCsGAIfiz2M=
+	t=1712185041; cv=none; b=Yx7XjCJZmC4VNrDMJdCpGErSan41x7ps0SMg7IdbxKMQ+D+J1yjww0cfeD85gV5BhxZoPf6eg7qIO67w+kFZ7N0FBE48AiQsA9kXnSwC2Fs63pPBurDigpCyeO9N8hoWfK/xOJII8ft7iRtpj95ZMBC7o4mtbCpMs2a38lkvJDw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712184544; c=relaxed/simple;
-	bh=aXWZraWkuHUebmsbdINo56HuhEXVRhqs1totcDah4dg=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=LT5SVw22aTrkAqx0/foErHi6DuOD2o4JyJK/e3jZ8L6LIu3SXBN1o7Z4hK1cQ5HInB+duIbEq1AlvW1E7+cQtviXJ3hcp7VF4zHr7WyyPy5TKyRUMzep+5CvTfteBJjdvOPcEJJMIuWtGy9nbSFTXabkcYWmqM0OiOO8kqLrs+A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; arc=none smtp.client-ip=185.11.138.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
-Received: from i53875aaf.versanet.de ([83.135.90.175] helo=diego.localnet)
-	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <heiko@sntech.de>)
-	id 1rs9PL-0003DP-QW; Thu, 04 Apr 2024 00:48:39 +0200
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-To: Shreeya Patel <shreeya.patel@collabora.com>,
- Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc: mchehab@kernel.org, hverkuil@xs4all.nl, hverkuil-cisco@xs4all.nl,
- robh@kernel.org, krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
- mturquette@baylibre.com, sboyd@kernel.org, p.zabel@pengutronix.de,
- shawn.wen@rock-chips.com, kernel@collabora.com, linux-kernel@vger.kernel.org,
- linux-media@vger.kernel.org, devicetree@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org,
- linux-clk@vger.kernel.org, linux-arm@lists.infradead.org
-Subject: Re: [PATCH v3 0/6] Add Synopsys DesignWare HDMI RX Controller
-Date: Thu, 04 Apr 2024 00:48:38 +0200
-Message-ID: <3049149.687JKscXgg@diego>
-In-Reply-To: <86150c89-11d5-4d52-987e-974b1a03018f@linaro.org>
-References:
- <20240327225057.672304-1-shreeya.patel@collabora.com>
- <35f774-660d3b80-3-513fcf80@97941910>
- <86150c89-11d5-4d52-987e-974b1a03018f@linaro.org>
+	s=arc-20240116; t=1712185041; c=relaxed/simple;
+	bh=O/P2O6YziHmPPFlfI6G/WG3f8fkCLygIYypjUyaWwPA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=h5xtp6vqn4cqi6EC5ArA55dulFai/InxFUBUKhZPMJvRQh/F/RCavbhEAnGyqwNJu6cciLqa4eASsRuHSpzEQUvgoBA/5ed+E53+8MIrHubZ9gGkxic2oVnPY/0JbLDtedCHDg40kwwx/AIrY3Cp6edzmZ82V5+C/m0Xki78sc8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NtClwrMG; arc=none smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NtClwrMG"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1712185040; x=1743721040;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=O/P2O6YziHmPPFlfI6G/WG3f8fkCLygIYypjUyaWwPA=;
+  b=NtClwrMGHwFaAD6YftAaXdxZ4vNZnvsjfpFJPkhU0cx+FGpu8pHjh5OE
+   BCfJiV0iKAGyvJEBg7fhHnCR9ULhZbejHjh6c4Rf/wrJMwHQ4HpE2TvR3
+   DbjZFi5LYZ+hUTvXS0vqYp3ZIGcEDNgqPSbSbAQ5/TCegogvUXFTCQhtf
+   gF7dv7SqKcivUFLVWbVUZXmEyTMEieTqp2DoKp1Dmpn71czx+wplmYTmB
+   pU+K1r+5E7JuMItDgyOtzN0i/9qHh045YF50MDrvlbelzHvYkqNmZd3Z0
+   SfOW/qszyu91LDgsI+87LXa8ES7W2vLvtaJuNVEKMhMifCkWaVr5UdLr9
+   Q==;
+X-CSE-ConnectionGUID: Q6R6LgkFReyZYGCVlvrXdQ==
+X-CSE-MsgGUID: YlgqDtgFT+2NIfKnTBjdSw==
+X-IronPort-AV: E=McAfee;i="6600,9927,11033"; a="24905434"
+X-IronPort-AV: E=Sophos;i="6.07,178,1708416000"; 
+   d="scan'208";a="24905434"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2024 15:57:20 -0700
+X-CSE-ConnectionGUID: HyCgqXkGQTGeoP+8seRqnA==
+X-CSE-MsgGUID: JYfbs+3jQ2iIWqB7Q2vKIA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,178,1708416000"; 
+   d="scan'208";a="49537008"
+Received: from lkp-server01.sh.intel.com (HELO e61807b1d151) ([10.239.97.150])
+  by orviesa002.jf.intel.com with ESMTP; 03 Apr 2024 15:57:16 -0700
+Received: from kbuild by e61807b1d151 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1rs9Xd-0000Kq-23;
+	Wed, 03 Apr 2024 22:57:13 +0000
+Date: Thu, 4 Apr 2024 06:57:12 +0800
+From: kernel test robot <lkp@intel.com>
+To: Chenghai Huang <huangchenghai2@huawei.com>, herbert@gondor.apana.org.au,
+	davem@davemloft.net
+Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
+	linux-crypto@vger.kernel.org, fanghao11@huawei.com,
+	liulongfang@huawei.com, shenyang39@huawei.com,
+	songzhiqi1@huawei.com, qianweili@huawei.com,
+	liushangbin@hisilicon.com, linwenkai6@hisilicon.com,
+	taoqi10@huawei.com, wangzhou1@hisilicon.com,
+	huangchenghai2@huawei.com
+Subject: Re: [PATCH 8/9] crypto: hisilicon/debugfs - Resolve the problem of
+ applying for redundant space in sq dump
+Message-ID: <202404040616.cF0Pvb9M-lkp@intel.com>
+References: <20240403100102.2735306-9-huangchenghai2@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240403100102.2735306-9-huangchenghai2@huawei.com>
 
-Am Mittwoch, 3. April 2024, 13:24:05 CEST schrieb Krzysztof Kozlowski:
-> On 03/04/2024 13:20, Shreeya Patel wrote:
-> > On Wednesday, April 03, 2024 15:51 IST, Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org> wrote:
-> > 
-> >> On 03/04/2024 11:24, Shreeya Patel wrote:
-> >>> On Thursday, March 28, 2024 04:20 IST, Shreeya Patel <shreeya.patel@collabora.com> wrote:
-> >>>
-> >>>> This series implements support for the Synopsys DesignWare
-> >>>> HDMI RX Controller, being compliant with standard HDMI 1.4b
-> >>>> and HDMI 2.0.
-> >>>>
-> >>>
-> >>> Hi Mauro and Hans,
-> >>>
-> >>> I haven't received any reviews so far. Hence, this is just a gentle reminder to review this patch series.
-> >>
-> >> Why did you put clk changes here? These go via different subsystem. That
-> >> might be one of obstacles for your patchset.
-> >>
-> > 
-> > I added clock changes in this patch series because HDMIRX driver depends on it.
-> > I thought it is wrong to send the driver patches which don't even compile?
-> 
-> Hm, why HDMIRX driver depends on clock? How? This sounds really wrong.
-> Please get it reviewed internally first.
+Hi Chenghai,
 
-For the change in question, the clock controller on the soc also handles
-the reset controls (hence its name CRU, clock-and-reset-unit) .
+kernel test robot noticed the following build warnings:
 
-There are at least 660 reset lines in the unit and it seems the hdmi-rx one
-was overlooked on the initial submission, hence patches 1+2 add the
-reset-line.
+[auto build test WARNING on herbert-cryptodev-2.6/master]
+[also build test WARNING on herbert-crypto-2.6/master linus/master v6.9-rc2 next-20240403]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-Of course, here only the "arm64: dts:" patch depends on the clock
-change, is it references the new reset-id.
+url:    https://github.com/intel-lab-lkp/linux/commits/Chenghai-Huang/crypto-hisilicon-sec-Add-the-condition-for-configuring-the-sriov-function/20240403-180924
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/herbert/cryptodev-2.6.git master
+patch link:    https://lore.kernel.org/r/20240403100102.2735306-9-huangchenghai2%40huawei.com
+patch subject: [PATCH 8/9] crypto: hisilicon/debugfs - Resolve the problem of applying for redundant space in sq dump
+config: arm64-defconfig (https://download.01.org/0day-ci/archive/20240404/202404040616.cF0Pvb9M-lkp@intel.com/config)
+compiler: aarch64-linux-gcc (GCC) 13.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240404/202404040616.cF0Pvb9M-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202404040616.cF0Pvb9M-lkp@intel.com/
+
+All warnings (new ones prefixed by >>):
+
+   drivers/crypto/hisilicon/debugfs.c: In function 'qm_sq_dump':
+>> drivers/crypto/hisilicon/debugfs.c:314:21: warning: unused variable 'sqe_curr' [-Wunused-variable]
+     314 |         void *sqe, *sqe_curr;
+         |                     ^~~~~~~~
 
 
-Am Mittwoch, 3. April 2024, 12:22:57 CEST schrieb Krzysztof Kozlowski:
-> Please do not engage multiple subsystems in one patchset, if not
-> necessary. Especially do not mix DTS into media or USB subsystems. And
-> do not put DTS in the middle!
+vim +/sqe_curr +314 drivers/crypto/hisilicon/debugfs.c
 
-picking up your reply from patch 4/6, there seem to be different "schools
-of thought" for this. Some maintainers might want to really only see
-patches that are explicitly for their subsystem - I guess networking
-might be a prime example for that, who will essentially apply whole series'
-if nobody protests in time (including dts patches)
+94476b2b6d60bc Kai Ye         2022-11-12  310  
+9c75609842f091 Kai Ye         2022-11-12  311  static int qm_sq_dump(struct hisi_qm *qm, char *s, char *name)
+94476b2b6d60bc Kai Ye         2022-11-12  312  {
+94476b2b6d60bc Kai Ye         2022-11-12  313  	u16 sq_depth = qm->qp_array->cq_depth;
+94476b2b6d60bc Kai Ye         2022-11-12 @314  	void *sqe, *sqe_curr;
+94476b2b6d60bc Kai Ye         2022-11-12  315  	struct hisi_qp *qp;
+94476b2b6d60bc Kai Ye         2022-11-12  316  	u32 qp_id, sqe_id;
+94476b2b6d60bc Kai Ye         2022-11-12  317  	int ret;
+94476b2b6d60bc Kai Ye         2022-11-12  318  
+94476b2b6d60bc Kai Ye         2022-11-12  319  	ret = q_dump_param_parse(qm, s, &sqe_id, &qp_id, sq_depth);
+94476b2b6d60bc Kai Ye         2022-11-12  320  	if (ret)
+94476b2b6d60bc Kai Ye         2022-11-12  321  		return ret;
+94476b2b6d60bc Kai Ye         2022-11-12  322  
+e0bbea3a20f7a0 Chenghai Huang 2024-04-03  323  	sqe = kzalloc(qm->sqe_size, GFP_KERNEL);
+94476b2b6d60bc Kai Ye         2022-11-12  324  	if (!sqe)
+94476b2b6d60bc Kai Ye         2022-11-12  325  		return -ENOMEM;
+94476b2b6d60bc Kai Ye         2022-11-12  326  
+94476b2b6d60bc Kai Ye         2022-11-12  327  	qp = &qm->qp_array[qp_id];
+e0bbea3a20f7a0 Chenghai Huang 2024-04-03  328  	memcpy(sqe, qp->sqe + sqe_id * qm->sqe_size, qm->sqe_size);
+e0bbea3a20f7a0 Chenghai Huang 2024-04-03  329  	memset(sqe + qm->debug.sqe_mask_offset, QM_SQE_ADDR_MASK,
+94476b2b6d60bc Kai Ye         2022-11-12  330  	       qm->debug.sqe_mask_len);
+94476b2b6d60bc Kai Ye         2022-11-12  331  
+e0bbea3a20f7a0 Chenghai Huang 2024-04-03  332  	dump_show(qm, sqe, qm->sqe_size, name);
+94476b2b6d60bc Kai Ye         2022-11-12  333  
+94476b2b6d60bc Kai Ye         2022-11-12  334  	kfree(sqe);
+94476b2b6d60bc Kai Ye         2022-11-12  335  
+94476b2b6d60bc Kai Ye         2022-11-12  336  	return 0;
+94476b2b6d60bc Kai Ye         2022-11-12  337  }
+94476b2b6d60bc Kai Ye         2022-11-12  338  
 
-On the other hand I also remember seeing requests for "the full picture"
-and individual maintainers then just picking and applying the patches
-meant for their subsystem.
-
-The series as it stands right now is nice in that it allows (random)
-developers to just pick it up, apply it to a tree and test the actual driver
-without needing to hunt for multiple dependant series.
-
-
-Of course you're right, the "arm64: dts:" patch should be the last in the
-series and not be in the middle of it.
-
-
-Regards
-Heiko
-
-
-
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
