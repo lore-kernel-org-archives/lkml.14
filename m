@@ -1,117 +1,247 @@
-Received: from mail-ua1-f52.google.com (mail-ua1-f52.google.com [209.85.222.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from esa16.fujitsucc.c3s2.iphmx.com (esa16.fujitsucc.c3s2.iphmx.com [216.71.158.33])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AA125D467
-	for <linux-kernel@vger.kernel.org>; Wed,  3 Apr 2024 07:53:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.52
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712130817; cv=none; b=oLZHsUG14yCDqqpq7ufHC1SrpGlheU5G3056LevOinj5lPev070LlUdA+OyR4hJcQllE9hR9w+yNldas7kYnyd4hpqwxCpPDY0yQg9QD5NKTQ0rIyzUIDnvgX+kS6sOruvGUN3kfzMimgIrRzUeMvZ2x6+ITZ3V48kMp8pemB4s=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712130817; c=relaxed/simple;
-	bh=lu4lr9wamx7dI/HCTq6kawIsHy+GqxMxRmNu/rjakdA=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=BoAQNbHb94wtF3VjW77vXc1sstNfOptU7g/LRSxhbvmF1NBKKNFj2MZa6bRppnw28hX6r7vJs1Rx+fi0sPEDH4AibDiM3K0BiTotB3rXkIMBJ4lCcu3vuKjVTl2suLksOvKuv3OizQf9cq6LXhEs73TPy4ETjsdEC9l9JOwJpqg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=MrtYJFNn; arc=none smtp.client-ip=209.85.222.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C29E5BAD7
+	for <linux-kernel@vger.kernel.org>; Wed,  3 Apr 2024 07:54:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=216.71.158.33
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1712130846; cv=fail; b=tTxnhxz+LLMd6c+3PkCp5h86eSwtMXZL53/wpQJaRnfOUJ1AAYKe2l0XhF8NzSEoUhcYMbLu8UvZ395E3hMTg4oHvmelP3yWttjyLqH7ytbwHtXQwPdR94m6V4v1Z90WdjzmbOmtxXyTOiQYR4wzyaDBZTk/bh/vm60jaXdt8V8=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1712130846; c=relaxed/simple;
+	bh=Gn1S5oahvyJ2QudPog+bQfNAFE2uaebZKi26kRxY7GY=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=GIO4CxWjOaH7k4SU4DkvVhU4Qao4NHJiqLsC8b2/HI0EqFCh0WPVMGMd9FEQoYmNMAySjJztZdL7AzMgApSbNj2jtnGylrNUyDkF8n50cPB4VM8jDbUPyXsLxS9dKTMZKOU9rIeZNieQu9beBQ2w0Fy3uzcHHWwlpEDbML1fkEI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fujitsu.com; spf=pass smtp.mailfrom=fujitsu.com; dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b=K+QhRAdO; arc=fail smtp.client-ip=216.71.158.33
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fujitsu.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fujitsu.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="MrtYJFNn"
-Received: by mail-ua1-f52.google.com with SMTP id a1e0cc1a2514c-7e328cd8e04so1670776241.0
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Apr 2024 00:53:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1712130814; x=1712735614; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=z7p53XmkkGTALNH4Ix0xvzQLOZKvgVhwnYYuHGcSQF4=;
-        b=MrtYJFNnPC9VhWUTMqaUxXOT+wiTRoVAdLq9f65kxYqzmMsr6NQGUYzD05TmJEnEcf
-         ar69I7VjL3kPopRwa/Y7IgDEzVYlqrxlX9S2dpsOHNC/e0atozXduTBZl6fZNHUAfsdi
-         2JVFtNvgnue09yJkbZI5RWzzJaem5TdDik5BhUbu8IxVAoxYr9f0sTi/uy+kulwBX2P+
-         750tu0rewg1l6uYRl1GX8HQuX1W/lkzmx9QCiE0pmKs9/BUePI79DvY0pk67Fp61bSUe
-         JnoD7Rp2k9iVeVjCihSXRAVrGCkzfdjjTOS5wasdJ44XBCojFqI/vWJfyRH0ZtkzboBd
-         704Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712130814; x=1712735614;
-        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=z7p53XmkkGTALNH4Ix0xvzQLOZKvgVhwnYYuHGcSQF4=;
-        b=impa+qG9zkZYNubsPI59bgM8dgfmOIvu+BvsUiZWm+r1MURNPO0R8pJP2UoBgKk7gA
-         dvr5d/QmrdzSEGQXe90eNOlSpPLH/LVYQR63XdKGHQ1my5RDjjfpfaxC4557r7L7cGdT
-         y69POw00gPbiAlgCioZkNLN4OlgvLWAqNaXjRdncNOd8gqeUyY+rWfOx4C5YAq8H4r+O
-         VLY3XccLzdtX1G2jKjV581MZHjWlEbDhZOJCOteWGpnlsR55pOhV6TtwfbyPYyDJAbxL
-         M7+mP6m7VoGXAnhK1BaV4sDmYEYZTARQwkcZhJSW8sxhXtVfeOcAaOdOc9aAnob6Tn5R
-         tCtg==
-X-Gm-Message-State: AOJu0YwYL71X1bRom0wA/AoychrMRYiWckHECAm/N1sWdk6Tu9FTtibx
-	Lx7c1p8npdY+u3KQAblL4VjqDGNkz9VaDT1mPrgb/kORcRosWSVlSjpcUPQh5jGky4b4+Ccdd+2
-	6P1UlURWQxBTSh6qtQSh1lDYNwXZcpYK0THLrwH+Dil/0T2kXCYA=
-X-Google-Smtp-Source: AGHT+IG60A9cZw5q2ghP0j48oSICnM4EvMleBb57CwMtDkNbKO547PHL78ohs2lagIPlHsnadarK5o/Vf4QbZb3wFa0=
-X-Received: by 2002:a05:6102:4bc6:b0:478:8714:e1e with SMTP id
- id6-20020a0561024bc600b0047887140e1emr8289869vsb.4.1712130814422; Wed, 03 Apr
- 2024 00:53:34 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b="K+QhRAdO"
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=fujitsu.com; i=@fujitsu.com; q=dns/txt; s=fj1;
+  t=1712130844; x=1743666844;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=Gn1S5oahvyJ2QudPog+bQfNAFE2uaebZKi26kRxY7GY=;
+  b=K+QhRAdOSFWlKebsHotzB/eCpq9vNr5dctXYvC21Yspcmnj/QtPeYGO5
+   F1ag2GAfh8fpAs9OftyRgsjuu6AvcD4Dzz8/XeDRrcz7i6BvZP2hzZl0D
+   4hFdJ/BdV/swmBDy7JFQE9Wfj5VNYtSkypzjxoOfA4tSvIB8eHbY914mZ
+   It4kjrOIN+ROh8z+HItWVw2eduNrk669TWc8ekRitkvPCtZYqxlQ8+bdz
+   JwHYsymx3v4FogP7FPdJoJboF1/hJFbmVsHoVFcA0yFF7KcghKkE/Cnmt
+   zVDJltmrvWFeky0uEOKmQco4CQ6LoEvdDBHHhksaJx9KNCzBJ9eSZRjro
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,11032"; a="115789280"
+X-IronPort-AV: E=Sophos;i="6.07,176,1708354800"; 
+   d="scan'208";a="115789280"
+Received: from mail-tycjpn01lp2169.outbound.protection.outlook.com (HELO JPN01-TYC-obe.outbound.protection.outlook.com) ([104.47.23.169])
+  by ob1.fujitsucc.c3s2.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2024 16:52:46 +0900
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=mKdCBArGP+gUXEkkqOmECg82Pg3NXKRnXYHVww/PtMeDCrcy3Htpfbl+A0KgQ4d4VcYJJmO1Rc1vY8TKNIeCwbWKDtJwOqSb4oQ/FgumjAzIV8q9VYBPHYXDcfvGrgonD3q7MHHBwjiK7QY9Gl3CP2SwWpsl9lVUQD5X62uaNtLxl3ap+IIiSX/uFXuE0UEn6tiiWiMo3YxTpM7k/jRdb6Mb+UULuHLJknqpdyg503v2yT5KpWrDCKPEXvVOC8U4+uFTZapdKLcaJYmyq7GBhiDLtScQ42ANWmmAc9TG3koqjhVcdkdhe4XIf3KaT7DK+qc3ybUw9BCt7SCotZ6unA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=3/KvAATbTh0NBh0R69dmo1iZG2IvAz8iwqmB3BsrjqY=;
+ b=gy954tAigTjLsCLNQ7x/71HZhk4MvQe+uHJmLxrbxEMhTwc9tYDfWxsonbUYQ1z++nc9I1cGMzqfoiPOYs14CbM/fs4djo/+1VOU+zBlVj5MPGS0JWS8WJoLO+UUjjGLvvXojmMGUm5oRahsqu1KzzvgaufPYiBfeeIfdATAzsXv96qylCG5wVMdfRP6W+2Ao8yoPbWefIhlKc9i6Px4OFk2xex48+1XWfHCi8rLJlp7Zfsrt/O0rP/Kwq3+58lD0iKf9kiovXdbqoFNeQWz1tSCND8mXn01cdVENfZqxB0xTABYS+BqPyDi8MTnXx61SKBRnJNXMOtPNIH/WCZ9uw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=fujitsu.com; dmarc=pass action=none header.from=fujitsu.com;
+ dkim=pass header.d=fujitsu.com; arc=none
+Received: from TYAPR01MB6330.jpnprd01.prod.outlook.com (2603:1096:402:3e::12)
+ by OS3PR01MB9563.jpnprd01.prod.outlook.com (2603:1096:604:1cc::6) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.46; Wed, 3 Apr
+ 2024 07:52:43 +0000
+Received: from TYAPR01MB6330.jpnprd01.prod.outlook.com
+ ([fe80::2f40:de1f:f497:a19]) by TYAPR01MB6330.jpnprd01.prod.outlook.com
+ ([fe80::2f40:de1f:f497:a19%7]) with mapi id 15.20.7409.042; Wed, 3 Apr 2024
+ 07:52:43 +0000
+From: "Shaopeng Tan (Fujitsu)" <tan.shaopeng@fujitsu.com>
+To: 'James Morse' <james.morse@arm.com>, "x86@kernel.org" <x86@kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+CC: Fenghua Yu <fenghua.yu@intel.com>, Reinette Chatre
+	<reinette.chatre@intel.com>, Thomas Gleixner <tglx@linutronix.de>, Ingo
+ Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, H Peter Anvin
+	<hpa@zytor.com>, Babu Moger <Babu.Moger@amd.com>,
+	"shameerali.kolothum.thodi@huawei.com"
+	<shameerali.kolothum.thodi@huawei.com>, D Scott Phillips OS
+	<scott@os.amperecomputing.com>, "carl@os.amperecomputing.com"
+	<carl@os.amperecomputing.com>, "lcherian@marvell.com" <lcherian@marvell.com>,
+	"bobo.shaobowang@huawei.com" <bobo.shaobowang@huawei.com>,
+	"baolin.wang@linux.alibaba.com" <baolin.wang@linux.alibaba.com>, Jamie Iles
+	<quic_jiles@quicinc.com>, Xin Hao <xhao@linux.alibaba.com>,
+	"peternewman@google.com" <peternewman@google.com>, "dfustini@baylibre.com"
+	<dfustini@baylibre.com>, "amitsinght@marvell.com" <amitsinght@marvell.com>,
+	David Hildenbrand <david@redhat.com>, Rex Nie <rex.nie@jaguarmicro.com>, Dave
+ Martin <dave.martin@arm.com>
+Subject: RE: [PATCH v1 09/31] x86/resctrl: Add a resctrl helper to reset all
+ the resources
+Thread-Topic: [PATCH v1 09/31] x86/resctrl: Add a resctrl helper to reset all
+ the resources
+Thread-Index: AQHae7AbTeTDWjxcfEOh+qFIltEZE7FWPYJw
+Date: Wed, 3 Apr 2024 07:52:42 +0000
+Message-ID:
+ <TYAPR01MB63303577D268E2175A61D0968B3D2@TYAPR01MB6330.jpnprd01.prod.outlook.com>
+References: <20240321165106.31602-1-james.morse@arm.com>
+ <20240321165106.31602-10-james.morse@arm.com>
+In-Reply-To: <20240321165106.31602-10-james.morse@arm.com>
+Accept-Language: ja-JP, en-US
+Content-Language: ja-JP
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+msip_labels:
+ MSIP_Label_1e92ef73-0ad1-40c5-ad55-46de3396802f_ActionId=e20eff45-3464-402a-b9e1-08eb0704b68e;MSIP_Label_1e92ef73-0ad1-40c5-ad55-46de3396802f_ContentBits=0;MSIP_Label_1e92ef73-0ad1-40c5-ad55-46de3396802f_Enabled=true;MSIP_Label_1e92ef73-0ad1-40c5-ad55-46de3396802f_Method=Privileged;MSIP_Label_1e92ef73-0ad1-40c5-ad55-46de3396802f_Name=FUJITSU-PUBLIC?;MSIP_Label_1e92ef73-0ad1-40c5-ad55-46de3396802f_SetDate=2024-04-03T07:52:03Z;MSIP_Label_1e92ef73-0ad1-40c5-ad55-46de3396802f_SiteId=a19f121d-81e1-4858-a9d8-736e267fd4c7;
+x-shieldmailcheckerpolicyversion: FJ-ISEC-20181130-VDI-enc
+x-shieldmailcheckermailid: 4652171694e546d5b894aa63a8119ba9
+x-securitypolicycheck: OK by SHieldMailChecker v2.6.2
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: TYAPR01MB6330:EE_|OS3PR01MB9563:EE_
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info:
+ 6cOs78wUvBWS2Rls2t3MYyM4eSNxhJqc44A4ELVQiB8azqxEq1Hrsl+4GskMdyU7gIzKiLnyHQZrrf9fUTyRWl8jk4s1zcnso1OLhXYQnPUfuHbHLFJIaYOts9V3/EtWGmPgITLLiPJLAMzL+0DkopAElRIfdr2pFC8XbMNWexi38KL0/ryzTiwpAYBNcyaxtusCT5L4VS54YytYjsBEW9+sZ5NtvwEUcJsuu9w28BQrD9DOQvp94IIr7vLZgABa5xur00lS2W2GEZH+UwIxwsKmTPjeQbbKfNO7T5bWu0A96bPGqMrhfTJozkIveOPTPuOfv5o5LPeWpKFyn/K34UN5YORUAWLG6y1Fw6oGS7x9ceksliXr2z85ChzZlFDMao0p+Pt0cv3h7enKI+Fqoq366O9++fCrd01lb739IA6sAv+ArjdxhaqugLxLsbIGb2q33vFkEZKXBx3dUInHw4wK4vF31k6wveek8e8lRW9OdvJ8eTNnnN+MR71eUN9yWrm70L4YgOAaj2zLEm7sc5dE4yLt8WzASHu5BMw37ev3gThrqcaG41pAonSyzGdB/2mJXNq5QECIjvCS8nsrAjBDWwmvPX7ZCap3+8mCP/74MiLWV//xYBP2xJAWIHv+lnDajGjTtCfqgpmNNjgx7Sy+OqPGWAURvQ7H7A/bQyQrbSi2hV/xLgHyxMC/S2wUT4ZYQPmafiaXgb0+Yw+32g==
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:ja;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TYAPR01MB6330.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(7416005)(376005)(366007)(1800799015)(1580799018);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?iso-2022-jp?B?M0x3eFBhWDhnbVhISi9VQ3JsUzBIcXNLWVY0L2s0Mkx6bE1tRkJYaGpY?=
+ =?iso-2022-jp?B?NWs1WVhBR3pOUEN6ak9WS1VNVFNVY1V6OVAwU1pZckZDQklTSitsT1hm?=
+ =?iso-2022-jp?B?Y1liSmN5aVRWS1cyT0JjNWVUWUtNRmRpb0cyd0VJUzdVWVBtVUllVlRZ?=
+ =?iso-2022-jp?B?LzNSc1NORk9HVlZuVGU1OGR5N2hkanlvdEs0ZWlJalNlejhJc3pYem15?=
+ =?iso-2022-jp?B?Vk1wT1BVWTErekVYbkdodm1XNm15RWp0NnJKd3B5b0lsT1Z5dFAwalY1?=
+ =?iso-2022-jp?B?SWhUTVhKRXRLU2xROURNQmFqUTkyS0lkYkEydWtldW9PN3kxYnVteXJh?=
+ =?iso-2022-jp?B?MHozZUliQUp1WWJUQmN5VTEwaVM3ZFNoWVRBem9pSC9IeVhHeEdGbFBu?=
+ =?iso-2022-jp?B?cFc0WEpVNlVhWkpNcHhnSmJiQ3gvTWh2SWFHUFkyVFpFQnpZMUpWWFBV?=
+ =?iso-2022-jp?B?TXBRUE9FT0hRUFZTdURJTlo3OXJlNTl0cUtpR0xITUxvYTl2eUIxcHlH?=
+ =?iso-2022-jp?B?MVBIeVRJZEhPUkVUUXc5WU5uUUhHcXBDZ0xKaDFYT3VCeWtSOEM0RU16?=
+ =?iso-2022-jp?B?K2wzaGlMajhON3paUTdvWk5WWGJiZjVRL1pMRndFN3lhTlQ5THVZUVlH?=
+ =?iso-2022-jp?B?RUdiU211UjQrS0NzaE5leWdEQUhzcS9mTlFQeWoyV2ErK2JhWWltOEdT?=
+ =?iso-2022-jp?B?WDV2ejVUZGpSUDhCbWEzYUxWNzF1ajdFSnBIL0RsVnJkdFJEWHcvZHJN?=
+ =?iso-2022-jp?B?Vk56dFQzZ2pmMUFSSkZ0d3oyVU9vSVhrZENKWFc2UTRLdXg5TjVqQXFV?=
+ =?iso-2022-jp?B?bEFmZWlmd2NMd0szV0pGL0tidmYvVkh3b2JJRklMUnVmTFQrSHB6TndE?=
+ =?iso-2022-jp?B?clp0QVJXR0lRNGNWeFltbDRTdXZESnNLelBsN1Vzc2t1SnpwVktNWmM0?=
+ =?iso-2022-jp?B?ZWVNdjN4ZTZGdER0N3hBTkt2alByaEVnWHh6ZDdmdkZRN1dyYzdhUHg1?=
+ =?iso-2022-jp?B?by9YR3Q5SDhoUmRTUThVVGVCNzIwUDFQVFUwVVpBYzVoQjVXS29rRjdU?=
+ =?iso-2022-jp?B?NHMwVXRFM3g1Q2pPT3ZwNXUybXBWVjEzMW1zSk5kUzlpQmJHaVBoZmF3?=
+ =?iso-2022-jp?B?elM2d3BRdGtoS3lvdUdwWlpaMHhQZWRVbW1QckFVTFB0THVPN1I2SUIy?=
+ =?iso-2022-jp?B?b3l3QjhRckpranNYUUJwUk9hY0M4dmZHR0RMVWVkVEZyWHlvaWFhemw4?=
+ =?iso-2022-jp?B?SE1DcmlDV2V5UEE3eWFJRkZra0d4NGhzblBpM2duMWN3SHZkcDdZaUJH?=
+ =?iso-2022-jp?B?YW5LRVp6SWxHeGlydjdkL2tPYjFJSittMDhTbDZZT0ZqakR6TlRnZ3hE?=
+ =?iso-2022-jp?B?ZHNhYnV6U1ZUZ0FSWVA5UndaU05wdFJxeUExS21RZ3ViSll4VUNPQlQ1?=
+ =?iso-2022-jp?B?T0EvQWJROFVBTEh1ckhzVHJkY2wrRDIzSzhCd0hKOThCdVRFc3J0MGZw?=
+ =?iso-2022-jp?B?QTlZTXd3aVgxWklIZmhDcUR3eEhLUXYyTTZYN0EvWS9veVErRXBwL1dl?=
+ =?iso-2022-jp?B?MHZ0azUxcHBqN0RGK3VMVXJJdkJlY1RITTN0YkVWRWNpM092ekR6QnNt?=
+ =?iso-2022-jp?B?ZVlOaEtISkxmb011L1JpQU5yRWp6dGpESmxieWdsK3JvdDhuMTVFSGx1?=
+ =?iso-2022-jp?B?SThpRnpicU9PQ0JXd05LYXdZU3lpRjgyc3hHcW9Ud3pmTWVudDhxSlNj?=
+ =?iso-2022-jp?B?cTNTRHBhbUVvdi8rbWRiNzBXUWJLdzkzS1pEcW1GazN0UnZmSUYrSXd3?=
+ =?iso-2022-jp?B?Q3ZrU3NodHRpY3F1eDlpVm5kOE02a1Z3TXJpUURpWjhaMThKMEFUWVpn?=
+ =?iso-2022-jp?B?OFpUT0dQTGVSK1UwelZnWXBKSnVtakkvcWhoSXNPUE9vRGM1M3pLZDAx?=
+ =?iso-2022-jp?B?cnhMTnZWZ1FvSDcxQ1FSOVFoNzBGLzZ6L0liVXhvTzJOeWsxWWM1SVRU?=
+ =?iso-2022-jp?B?bUJ1endKZmJUUzlSS3JNMG85M2duYkFOTGV6bi9wWW9XbkxWN29VSVV6?=
+ =?iso-2022-jp?B?dk1WR2RsaTZwL0RiR25NNm13ejdtU0Njd3p2eXpCUzZaWmtlYjBOOUxK?=
+ =?iso-2022-jp?B?d3IrS1pHV0JIRUJqNmwzUmx1VElyeitrQW1OK21SbEpxOGxtVzFYOVQx?=
+ =?iso-2022-jp?B?WWhqUVVKMzU5QVduc2J6dDZ2L3NkWmF6NkJrYXl2QzByMXlWMVRIQVhr?=
+ =?iso-2022-jp?B?OUw3bW5kYWpDZHJucVpOR1g4SGJLRmp2UTBKaTVvd0RFd2pGUFJzVlFT?=
+ =?iso-2022-jp?B?Q0FhR0g4b1F1eWtHbmtFZzFJcWwrVjNUa2c9PQ==?=
+Content-Type: text/plain; charset="iso-2022-jp"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: Naresh Kamboju <naresh.kamboju@linaro.org>
-Date: Wed, 3 Apr 2024 13:23:23 +0530
-Message-ID: <CA+G9fYvUwyf-5yB=xZVAPXrF3C9z==7bbhDYBnX9jdJ1PxzPnQ@mail.gmail.com>
-Subject: sh4: parisc: asm/cmpxchg.h:60:24: error: implicit declaration of
- function 'cmpxchg_emu_u8' [-Werror=implicit-function-declaration]
-To: open list <linux-kernel@vger.kernel.org>, 
-	Linux Regressions <regressions@lists.linux.dev>, lkft-triage@lists.linaro.org, 
-	linux-parisc <linux-parisc@vger.kernel.org>, Linux-sh list <linux-sh@vger.kernel.org>
-Cc: "Paul E. McKenney" <paulmck@kernel.org>, Mel Gorman <mgorman@techsingularity.net>, 
-	Andrew Morton <akpm@linux-foundation.org>, Rik van Riel <riel@surriel.com>, 
-	"Matthew Wilcox (Oracle)" <willy@infradead.org>, Arnd Bergmann <arnd@arndb.de>, 
-	Dan Carpenter <dan.carpenter@linaro.org>, Anders Roxell <anders.roxell@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
+	O81A8YV3dA7TmpTIZncnkd4gNeP1f/9sZ14dWHwfkAgw86XSX1a3QE8WvGauLqF/j1aHsAsYysYlCo9hjAHWlTj/5+OJYsXTP7Jxvv1++ScoF1ERlrhUFV9v4pPRjylLbTgeVrl9LViAPVtfp3SujHhrwqBEoZwhw7JYSV4Ni1DNBRVzFFuBr//R4wPscWE/SISIMTxnpR2JneCpT9PSoaTakHz89qnfygRX1dgd/nxMvjOtNjOGAtPOaW8+APmejkOuCLoOJADKFmmp8jQH+AqpAdiRp/EqkQzK9OZroC3MvpUzP6snPMMLtlAg1XbugxeXgQ6Co4a8EbEWJgRzqE2zpdsn/pWq4FOPo4XgfQXCSvzSX7asluFgx13imKm6uNnW7aly9ZRmVn1pdn7fJibeaJmI9vWtUa6PssNnuajH50UJcb4BfMg1Bwymu1BYvlquncQ/PXiTw/Vp899TOM9NBqQ0OBna9LWFJELFr88cFf8W4VEvVDQPn/zs+wqGLml+8lFTmOK6FtSYfnSFHAeP7IrIcczl8NZxZjBubTeTNCQn5NZl1oEC58tXFWI1bPC+XF16dqRdMnp0r2l3NETDXvEA3wzhrPugNmKHvMuS0rX/Q5GusOVeKTZpv7O0
+X-OriginatorOrg: fujitsu.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: TYAPR01MB6330.jpnprd01.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: c7f8d29a-dd5d-4b6e-ed22-08dc53b30b20
+X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Apr 2024 07:52:43.0662
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: a19f121d-81e1-4858-a9d8-736e267fd4c7
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: xGAcBHtuzdDwR7805+RDKVthzD/+yqN0Hh5YP17fwRWvKcMMmjCK7EJKsLVWnBD46mKfrW8P4KxvPyiEVjJ+nLEgA6e8qiyxZTgN4pFh8Yo=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: OS3PR01MB9563
 
-The parisc and sh defconfig builds failed due to following build warnings
-and errors on Linux next-20240402.
+Hello James,
 
-Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+> On umount(), resctrl resets each resource back to its default configurati=
+on. It
+> only ever does this for all resources in one go.
+>=20
+> reset_all_ctrls() is architecture specific as it works with struct
+> rdt_hw_resource.
+>=20
+> Add an architecture helper to reset all resources.
+>=20
+> Signed-off-by: James Morse <james.morse@arm.com>
+> ---
+>  arch/x86/include/asm/resctrl.h         |  2 ++
+>  arch/x86/kernel/cpu/resctrl/rdtgroup.c | 16 +++++++++++-----
+>  2 files changed, 13 insertions(+), 5 deletions(-)
+>=20
+> diff --git a/arch/x86/include/asm/resctrl.h b/arch/x86/include/asm/resctr=
+l.h
+> index f61382258743..5f6a5375bb4a 100644
+> --- a/arch/x86/include/asm/resctrl.h
+> +++ b/arch/x86/include/asm/resctrl.h
+> @@ -15,6 +15,8 @@
+>   */
+>  #define X86_RESCTRL_EMPTY_CLOSID         ((u32)~0)
+>=20
+> +void resctrl_arch_reset_resources(void);
+> +
+>  /**
+>   * struct resctrl_pqr_state - State cache for the PQR MSR
+>   * @cur_rmid:		The cached Resource Monitoring ID
+> diff --git a/arch/x86/kernel/cpu/resctrl/rdtgroup.c
+> b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
+> index 1a49c9918f8d..13c24cb18d76 100644
+> --- a/arch/x86/kernel/cpu/resctrl/rdtgroup.c
+> +++ b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
+> @@ -2859,6 +2859,14 @@ static int reset_all_ctrls(struct rdt_resource *r)
+>  	return 0;
+>  }
+>=20
+> +void resctrl_arch_reset_resources(void)
+> +{
+> +	struct rdt_resource *r;
+> +
+> +	for_each_capable_rdt_resource(r)
+Could you explain why not "for_each_alloc_capable_rdt_resource(r)"?
 
-parisc:
-  build:
-    * gcc-11-tinyconfig - Failed
-    * gcc-11-allnoconfig - Failed
-    * gcc-11-defconfig - Failed
+> +		reset_all_ctrls(r);
+> +}
+> +
+>  /*
+>   * Move tasks from one to the other group. If @from is NULL, then all ta=
+sks
+>   * in the systems are moved unconditionally (used for teardown).
+> @@ -2968,16 +2976,14 @@ static void rmdir_all_sub(void)
+>=20
+>  static void rdt_kill_sb(struct super_block *sb)  {
+> -	struct rdt_resource *r;
+> -
+>  	cpus_read_lock();
+>  	mutex_lock(&rdtgroup_mutex);
+>=20
+>  	rdt_disable_ctx();
+>=20
+> -	/*Put everything back to default values. */
+> -	for_each_alloc_capable_rdt_resource(r)
+This was "for_each_alloc_capable_rdt_resource(r)".
 
-sh:
-  build:
-    * gcc-11-defconfig - Failed
-    * gcc-11-dreamcast_defconfig - Failed
-    * gcc-11-tinyconfig - Failed
-    * gcc-11-shx3_defconfig - Failed
-    * gcc-11-allnoconfig - Failed
+Best regards,=20
+Shaopeng TAN
 
-In file included from arch/sh/include/asm/atomic.h:19,
-                 from include/linux/atomic.h:7,
-                 from include/asm-generic/bitops/lock.h:5,
-                 from arch/sh/include/asm/bitops.h:63,
-                 from include/linux/bitops.h:70,
-                 from include/linux/log2.h:12,
-                 from kernel/bounds.c:13:
-arch/sh/include/asm/cmpxchg.h: In function '__cmpxchg':
-arch/sh/include/asm/cmpxchg.h:60:24: error: implicit declaration of
-function 'cmpxchg_emu_u8' [-Werror=implicit-function-declaration]
-   60 |                 return cmpxchg_emu_u8((volatile u8 *)ptr, old, new);
-      |                        ^~~~~~~~~~~~~~
-arch/sh/include/asm/cmpxchg.h:62:24: error: implicit declaration of
-function 'cmpxchg_emu_u16' [-Werror=implicit-function-declaration]
-   62 |                 return cmpxchg_emu_u16((volatile u16 *)ptr, old, new);
-      |                        ^~~~~~~~~~~~~~~
-cc1: some warnings being treated as errors
+> -		reset_all_ctrls(r);
+> +	/* Put everything back to default values. */
+> +	resctrl_arch_reset_resources();
+> +
+>  	rmdir_all_sub();
+>  	rdt_pseudo_lock_release();
+>  	rdtgroup_default.mode =3D RDT_MODE_SHAREABLE;
+> --
+> 2.39.2
 
-Steps to reproduce:
-------
-# tuxmake --runtime podman --target-arch sh --toolchain gcc-11
---kconfig defconfig
-
-Links:
- - https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20240402/testrun/23264271/suite/build/test/gcc-11-defconfig/details/
- - https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20240402/testrun/23264273/suite/build/test/gcc-11-defconfig/details/
-
---
-Linaro LKFT
-https://lkft.linaro.org
