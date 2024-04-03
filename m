@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48CCB15491;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C8EF17BCE;
 	Wed,  3 Apr 2024 01:40:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712108435; cv=none; b=jNejiR4Nsl3HAIYuJes1DNFFmw4PrF+EEW1gfBl5ESeuC0NjGMAg0NQL7vG3Z0xEG05p+tcjbRjqkpiGQIMdesMu/bb0itW7ZC5/B+RgkRzgZUjHtbEqiMgCdGG7y4Ku2v2Pg6+61VQ6HqKvFWq8F9Pa0qip0YDWWfAO8Ix/uwY=
+	t=1712108435; cv=none; b=fCy3CPqLRFMhx/vhGsfTotWZJ3YKCHLU6CH1NuUjtQ50M6MGoa7Rwy8Qfc/RtQheJZG/QpOWO2kGvM3RL+WHya6L+uchRgEMRArVS8b3h3VOWoY+cuAF/lpFI6uwoiygC0tPpRrS9RgKxUJzT4SRiPmotph+MRS0RMcPcpyn7e0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1712108435; c=relaxed/simple;
-	bh=PnfFkAtq+kYoDUuoqH9ov0mIK+LroF3jkGYMhtBgEDk=;
+	bh=Z8qTCsLw7+oMuaV/qewhvl2ECFN/UQO0aDvA4mEBrSQ=;
 	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=Prq3Y1LM+SOJxezv4WHBBDrPhGj7YrAi0ZgNxRKJGI+fgPijkvrxJq+ZvRwc36SKsMiJmoEyFYPscVRXdDjIzmoIVrQU3M9Gk3AzIzUowXNeO9N1TysUbZmMQvF71vSoPBWQg2l8IXwJsTetRxTjX5nWBrUaT8/ptGdDF+4+MIA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nmQrQzJ1; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=Frtkf+MnTKi79ih2EyyPz9wGoXPyd+aE1pHQ7EGw3Ly9Ltr73Dl8BlsfTJg+ghW6zs4BwsypB6WS745H6Nzv/Is2Voi/2JEjZlvivDbfuUcYs/DGolkB1fHJfEXkSlE/gctqCGr0tEQa7ApJk4ciN9aohmxXaYIm/3se2x9g970=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OBDVtB/7; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nmQrQzJ1"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id D607AC433B2;
-	Wed,  3 Apr 2024 01:40:34 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OBDVtB/7"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 069C5C4166A;
+	Wed,  3 Apr 2024 01:40:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712108434;
-	bh=PnfFkAtq+kYoDUuoqH9ov0mIK+LroF3jkGYMhtBgEDk=;
+	s=k20201202; t=1712108435;
+	bh=Z8qTCsLw7+oMuaV/qewhvl2ECFN/UQO0aDvA4mEBrSQ=;
 	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=nmQrQzJ1ehcIQlPA3DCYl+kcxvnaFaGVdmbaIfzjKOsGU00usDRz7RNZBS6GzImd1
-	 Ghh3qz0miLZKo3OijTHdWKEQrDwDWxRiia5RMT0fmaQdB3vRZ6gfzW8Ss6kdyhMY0a
-	 2QkWdFi62sRg4E6cGJ5LT9YV4hh+CkXIDP1jyVOIwmbeYStkwammnGaDqZg1IbpWIk
-	 c+/0Mfu1ewaFnLCu6JM9iKTI0EWlj+SWSIBHOSqYFMMQD7OHJWUhG2B7PNgU0yhZnG
-	 xOXFDYLza5g/wxFOi8+7nZJpqvTfV9ZeuiW7WLVzJ8EkyjdzrIxsWQMp57wCnCGFw2
-	 tDUPywsGxtlqA==
+	b=OBDVtB/7tU5LTpyvHP8SPA/Ha9HPwqUXGlFhpB1HRWUaeEXxARiMik9R2Jc4iDk9i
+	 u7xmtdrl2pAEita/RFv957CjPMINipBrTHwR7/F76Ck6dnkFZQw+mXP6IbJ69dQpp6
+	 Y3imF0c4luCuvMvb7NGXAvRCDjOw3tOmmfAXnm+kdHwhQS5ZKOkstfzZlnlaFuVyEz
+	 j/9I16dar9AlJlYrNA2poqYZX1TKkUnWMwlRe873JejaERmvx022EWI/RZHQu8OSf7
+	 myLMGQKnSB+yR6zDnYKy506gc7JGCmq/GUcnu6cO2qgkJYOO5J3MgxQAhKt6iMOsCk
+	 aFLh+n27LQX4w==
 Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id CB05FD8BD1E;
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id EE3ECD8BD1B;
 	Wed,  3 Apr 2024 01:40:34 +0000 (UTC)
 Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
@@ -37,46 +37,42 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net-next 0/2] page_pool: allow direct bulk recycling
+Subject: Re: [PATCH net-next v2 0/2] Avoid explicit cpumask var allocation on
+ stack
 From: patchwork-bot+netdevbpf@kernel.org
 Message-Id: 
- <171210843482.14193.13072464299514068706.git-patchwork-notify@kernel.org>
+ <171210843497.14193.16578910884878610890.git-patchwork-notify@kernel.org>
 Date: Wed, 03 Apr 2024 01:40:34 +0000
-References: <20240329165507.3240110-1-aleksander.lobakin@intel.com>
-In-Reply-To: <20240329165507.3240110-1-aleksander.lobakin@intel.com>
-To: Alexander Lobakin <aleksander.lobakin@intel.com>
+References: <20240331053441.1276826-1-dawei.li@shingroup.cn>
+In-Reply-To: <20240331053441.1276826-1-dawei.li@shingroup.cn>
+To: Dawei Li <dawei.li@shingroup.cn>
 Cc: davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
- pabeni@redhat.com, lorenzo@kernel.org, toke@redhat.com,
- nex.sw.ncis.osdt.itp.upstreaming@intel.com, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org
+ pabeni@redhat.com, ioana.ciornei@nxp.com, wintera@linux.ibm.com,
+ twinkler@linux.ibm.com, netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-s390@vger.kernel.org
 
 Hello:
 
 This series was applied to netdev/net-next.git (main)
 by Jakub Kicinski <kuba@kernel.org>:
 
-On Fri, 29 Mar 2024 17:55:05 +0100 you wrote:
-> Previously, there was no reliable way to check whether it's safe to use
-> direct PP cache. The drivers were passing @allow_direct to the PP
-> recycling functions and that was it. Bulk recycling is used by
-> xdp_return_frame_bulk() on .ndo_xdp_xmit() frames completion where
-> the page origin is unknown, thus the direct recycling has never been
-> tried.
-> Now that we have at least 2 ways of checking if we're allowed to perform
-> direct recycling -- pool->p.napi (Jakub) and pool->cpuid (Lorenzo), we
-> can use them when doing bulk recycling as well. Just move that logic
-> from the skb core to the PP core and call it before
-> __page_pool_put_page() every time @allow_direct is false.
-> Under high .ndo_xdp_xmit() traffic load, the win is 2-3% Pps assuming
-> the sending driver uses xdp_return_frame_bulk() on Tx completion.
+On Sun, 31 Mar 2024 13:34:39 +0800 you wrote:
+> Hi,
+> 
+> This is v2 of previous series[1] about cpumask var on stack for net
+> subsystem.
+> 
+> Change since v1:
+> - For iucv_setmask_up() which returns void to caller, just make cpumask
+>   var static which is protected by global lock iucv_register_mutex. [Eric]
 > 
 > [...]
 
 Here is the summary with links:
-  - [net-next,1/2] page_pool: check for PP direct cache locality later
-    https://git.kernel.org/netdev/net-next/c/4a96a4e807c3
-  - [net-next,2/2] page_pool: try direct bulk recycling
-    https://git.kernel.org/netdev/net-next/c/39806b96c89a
+  - [net-next,v2,1/2] net/iucv: Avoid explicit cpumask var allocation on stack
+    https://git.kernel.org/netdev/net-next/c/be4e1304419c
+  - [net-next,v2,2/2] net/dpaa2: Avoid explicit cpumask var allocation on stack
+    https://git.kernel.org/netdev/net-next/c/d33fe1714a44
 
 You are awesome, thank you!
 -- 
