@@ -1,69 +1,38 @@
-Received: from mail-pg1-f172.google.com (mail-pg1-f172.google.com [209.85.215.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from verein.lst.de (verein.lst.de [213.95.11.211])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 841696EB73;
-	Wed,  3 Apr 2024 09:42:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68A2E1327F2
+	for <linux-kernel@vger.kernel.org>; Wed,  3 Apr 2024 09:42:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712137333; cv=none; b=DDLSJBviuJxlvRyOMF2H3EALepJKnigTFVZAjW5/lqbiMTw3+Tbjsnbeo/JbkABQO4ubfoU12FXcjSsNuDlfjFri5XxdfCzGOF9UVnGQAXLhLI3RJox83vTx4JseT+zcL3twGgNMrqiun3AEuz0zL3LuYTd09kWFj085Isteoz8=
+	t=1712137353; cv=none; b=j3SNAFXw0I2OA3bhI6fTbFZ9dAFibVVUFoqI8uo9pE6eMpNbOma2w3hxFfjidnF07H7QaeNGpZ7lDV3sSh0wQftvoCRer6bvBmk+vWoRh7pM2i6pfYGtJJf6GTmoyYagDzMLwCBbOLh4SEw0MBGOye5yLgh3LmWpiRaadjHtzAY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712137333; c=relaxed/simple;
-	bh=+ej/TWizrI+era82uq7nCvFBl8kRFoOo2CvsTpNzVDI=;
+	s=arc-20240116; t=1712137353; c=relaxed/simple;
+	bh=QRA1YwCiHBI26HpUVKJGnNMRhX+qFRxiIVI0/xjn2E0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VA4p8+lwHhBOSCLPDkCMUf8AFi0KQTYxBp5t9HGNKDiYSVWiraU6Cfli4NyLHH2iTGmj21zYW4p9kGI+JNfnQzdUD3hAFmPdeXdbJ0rgSpKWhMFiHb9HpOjWmafHSFSMs8v8kdEVnUm2obPi01+Blx+KZH2yJyB7gaE2j7+Xs+A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HnCkfYt/; arc=none smtp.client-ip=209.85.215.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HnCkfYt/"
-Received: by mail-pg1-f172.google.com with SMTP id 41be03b00d2f7-5d4d15ec7c5so4698703a12.1;
-        Wed, 03 Apr 2024 02:42:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1712137332; x=1712742132; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=7bU382ztyspHGb0aCvHLVuPZy5Tv25ydMKByJLrVwNE=;
-        b=HnCkfYt/yWdxFNjR31alY6fCzVMEjEyGcKqbUZ2a2GloxUtelcZ1HihxocK6M35hX+
-         p95yiFhkIwcloXbY78u9xqDoUWDKCnBqrbptUPKgR1mYKrdZjTa/t7IkvEjIMOZf+WjQ
-         g1a0i2hGiXrVNAbmITF/wtfVP9LlXFq72LKwcH9o9wAMSl9M/cgujxrZv7/qELiwtb7E
-         OBmDNcHuHnJ18kP1nzp9WUx4SZErdg9XmdW+cJKCBuuK5dkbG8rBEdXFLZP4aJxLs1hF
-         CJD0F+AxnXWBbxH7AQ2mBmeHgBtJ0eR4PgF5iWloCLi+VB/0/DuCQLkvI4Kkr1d9fM7O
-         Nt+g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712137332; x=1712742132;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=7bU382ztyspHGb0aCvHLVuPZy5Tv25ydMKByJLrVwNE=;
-        b=ZqeYrhNdHdPcOmxbt8tu/sdUIoeLxL7IG3aV2h+x/JoiQIaTQZk3Yp5jd3dhQPnKuP
-         MyoqXbiMsiS4lHsuX9N2XSW7ReXp1DsPhJpHGnIoqybhBjyYAazL1NcTZdCjXVnAdnjU
-         T5MGbfxxs5Ax05kJJJEY7u/zU+oV3znMA2UHKhXCr1fw/HhKMjsi/lMnj6kW71JnGIIf
-         oi0cz3BD8cFlBuPWequq8FMX6rg1ZWQAc6jaJ2yXzf3rBmSZhhFR3RG5qp4SWdQkSkC/
-         TLoMrV70w4pm2g5OH+DmeCfi3mqy0p/ZM5JID1GeZbQcn7PoSB8mtc7ydpRW+PzndMVJ
-         MSTw==
-X-Forwarded-Encrypted: i=1; AJvYcCUVvpxjEU4lobwDh4MG4wI+OQRrivRIvDaIe4qr8KYi6IimUHgIEg+SNA6rzxmuRv5SdghG78ZfNBDKOLYwHK5c6rCsg8V46Vs3jOoi97D/2sJYtwM8Ooi3sYP8yHXtrWPZn2AnfzcleN/W5/p54+/wLnX3CIeWPLSX/Pidxf99EQ==
-X-Gm-Message-State: AOJu0YyGMX4R1UpimGFm3IB8wjdO8vcjzV7cEipCKvzvZVabxvsCSvvH
-	iK27l0MyzbJQQZmAY7e1X+FGsZa8AtTNY366TWFSpiwet+LyHJJr
-X-Google-Smtp-Source: AGHT+IHpJ0K/xMKP4U0Tu9R6gv2om8QoE6M+2UXMzFJ1UrVKKlOnJnxE/pVxvp9DUAR/JwjArMHNTA==
-X-Received: by 2002:a05:6a20:d498:b0:1a7:1695:2c19 with SMTP id im24-20020a056a20d49800b001a716952c19mr8355503pzb.33.1712137331716;
-        Wed, 03 Apr 2024 02:42:11 -0700 (PDT)
-Received: from rigel (194-223-186-215.tpgi.com.au. [194.223.186.215])
-        by smtp.gmail.com with ESMTPSA id v65-20020a626144000000b006e6854d45afsm12072926pfb.97.2024.04.03.02.42.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 03 Apr 2024 02:42:11 -0700 (PDT)
-Date: Wed, 3 Apr 2024 17:42:05 +0800
-From: Kent Gibson <warthog618@gmail.com>
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Alexey Dobriyan <adobriyan@gmail.com>,
-	stable@vger.kernel.org, Stefan Wahren <wahrenst@gmx.net>,
-	Naresh Kamboju <naresh.kamboju@linaro.org>,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	Linux Kernel Functional Testing <lkft@linaro.org>
-Subject: Re: [PATCH] gpio: cdev: check for NULL labels when sanitizing them
- for irqs
-Message-ID: <20240403094205.GA158151@rigel>
-References: <20240402114159.32920-1-brgl@bgdev.pl>
+	 Content-Type:Content-Disposition:In-Reply-To; b=SuCBU2gNdezPNC5cRELdDLmz9LLDvImwXuPPh0GoGozwRBIVRWaVUQsaLJtE4q2bosMu06uXu2aTzoOu4nWd1xohfWgw9D4R0QV2JHo8h85hRm9Zjuvyb6WWu/FfhWknupaGosWLn1OyFg2+HvjqW+YeUxIB5lJ3xhi1lq8aOho=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
+Received: by verein.lst.de (Postfix, from userid 2407)
+	id 7B47A68BFE; Wed,  3 Apr 2024 11:42:25 +0200 (CEST)
+Date: Wed, 3 Apr 2024 11:42:25 +0200
+From: Christoph Hellwig <hch@lst.de>
+To: Arnd Bergmann <arnd@kernel.org>
+Cc: linux-kernel@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
+	Marek Szyprowski <m.szyprowski@samsung.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Kyungmin Park <kyungmin.park@samsung.com>,
+	Michal Nazarewicz <mina86@mina86.com>,
+	Robin Murphy <robin.murphy@arm.com>,
+	Yajun Deng <yajun.deng@linux.dev>, Binglei Wang <l3b2w1@gmail.com>,
+	Anshuman Khandual <anshuman.khandual@arm.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Zhenhua Huang <quic_zhenhuah@quicinc.com>, iommu@lists.linux.dev
+Subject: Re: [PATCH 14/34] dma/congiguous: avoid warning about unused
+ size_bytes
+Message-ID: <20240403094225.GA4828@lst.de>
+References: <20240403080702.3509288-1-arnd@kernel.org> <20240403080702.3509288-15-arnd@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -72,87 +41,10 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240402114159.32920-1-brgl@bgdev.pl>
+In-Reply-To: <20240403080702.3509288-15-arnd@kernel.org>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 
-On Tue, Apr 02, 2024 at 01:41:59PM +0200, Bartosz Golaszewski wrote:
-> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
->
-> We need to take into account that a line's consumer label may be NULL
-> and not try to kstrdup() it in that case but rather pass the NULL
-> pointer up the stack to the interrupt request function.
->
-> To that end: let make_irq_label() return NULL as a valid return value
-> and use ERR_PTR() instead to signal an allocation failure to callers.
->
-> Cc: stable@vger.kernel.org
-> Fixes: b34490879baa ("gpio: cdev: sanitize the label before requesting the interrupt")
-> Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
-> Closes: https://lore.kernel.org/lkml/20240402093534.212283-1-naresh.kamboju@linaro.org/
-> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> ---
->  drivers/gpio/gpiolib-cdev.c | 19 ++++++++++++++-----
->  1 file changed, 14 insertions(+), 5 deletions(-)
->
-> diff --git a/drivers/gpio/gpiolib-cdev.c b/drivers/gpio/gpiolib-cdev.c
-> index fa9635610251..1426cc1c4a28 100644
-> --- a/drivers/gpio/gpiolib-cdev.c
-> +++ b/drivers/gpio/gpiolib-cdev.c
-> @@ -1085,7 +1085,16 @@ static u32 gpio_v2_line_config_debounce_period(struct gpio_v2_line_config *lc,
->
->  static inline char *make_irq_label(const char *orig)
->  {
-> -	return kstrdup_and_replace(orig, '/', ':', GFP_KERNEL);
-> +	char *new;
-> +
-> +	if (!orig)
-> +		return NULL;
-> +
-> +	new = kstrdup_and_replace(orig, '/', ':', GFP_KERNEL);
-> +	if (!new)
-> +		return ERR_PTR(-ENOMEM);
-> +
-> +	return new;
->  }
->
->  static inline void free_irq_label(const char *label)
-> @@ -1158,8 +1167,8 @@ static int edge_detector_setup(struct line *line,
->  	irqflags |= IRQF_ONESHOT;
->
->  	label = make_irq_label(line->req->label);
-> -	if (!label)
-> -		return -ENOMEM;
-> +	if (IS_ERR(label))
-> +		return PTR_ERR(label);
->
->  	/* Request a thread to read the events */
->  	ret = request_threaded_irq(irq, edge_irq_handler, edge_irq_thread,
-> @@ -2217,8 +2226,8 @@ static int lineevent_create(struct gpio_device *gdev, void __user *ip)
->  		goto out_free_le;
->
->  	label = make_irq_label(le->label);
-> -	if (!label) {
-> -		ret = -ENOMEM;
-> +	if (IS_ERR(label)) {
-> +		ret = PTR_ERR(label);
->  		goto out_free_le;
->  	}
->
+contiguous is misspelled in the subject.
 
-It occurred to me that none of my tests cover this case, as they always
-request edges with the consumer set, so I added some and can confirm both
-the problem and the fix.
-
-In the process I found another bug - we overlooked setting up the irq
-label in debounce_setup() - the alternate path in edge_detector_setup()
-that performs sw debounce.  That results in a double free of the
-req->label and memory corruption hilarity follows.
-
-I've got a patch for that - the unfortunate part being that
-debounce_setup() is earlier in the file than make_irq_label() and
-free_irq_label().  Those will need to be pushed earlier, so it is
-sure to conflict with this patch.
-How would you prefer to proceed?
-
-Cheers,
-Kent.
-
+Instead of the __maybe_unused annotation I'd just conver it to a
+cpp #define.  I can take care of that if you want.
