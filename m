@@ -1,122 +1,104 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A73714B073
-	for <linux-kernel@vger.kernel.org>; Wed,  3 Apr 2024 16:11:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7583614B073
+	for <linux-kernel@vger.kernel.org>; Wed,  3 Apr 2024 16:12:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712160664; cv=none; b=PrDGrv5Spk8tEALL8q6A5LxLNegdsSnapjlDxSEOQZX55SYOibkK0q/H4mibOr23rToVYLWvqCktFY/y9WLkHjJGBeGY13//4jTVwwCZBZ2EwSfSO9bPVAMHme+vJZlgctxCovlrGZkNSyL8MXPutIjotkYb4nIoaQmBip6fkOs=
+	t=1712160739; cv=none; b=sKYvQwAJzJmBC3cTWFbdVo22APuF3Qaah5e6a8PJTyK9CwaDBMk/7TjIkBJyuRLew1A0X2ibOQQ0Ha6i8GvYWetG2apqtJblDVmg6nBjLxg+sFqI7jYOxrrkUhvd5NTCpxCRN1SrIdA51WZ53h0mkTN3CWVpqKc43DKDXYR0KZc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712160664; c=relaxed/simple;
-	bh=nyU0F3ej83LHBArYWvHTmUMX9HPrzUZJ7A/Qsu6qybw=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=sR3gUkVP1gE7vDeIl6Plv8BXlXHlJFYASBcHf1HAffhGVTjeOoHyggRA2dYQRjQXAKveAvhYyaqqSgzzUVbwKu8ZQdve3wHZBkESItpsjwBDOp9BhOtQXfkUw7lmN7Fjy2hj8vch/XQl19pgLXPan3JVLV66RYh4surQjQNlBmM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gjPhTdrk; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1712160739; c=relaxed/simple;
+	bh=qsyRmOlyTALS7ji80F2+z/3MPYXg6x1pvXiJIJElu34=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=FPMW5BqutHen9nvdNnX4rVCpxKQGC783kCcmpx1SRP85JpOwrSkWx0rTkVUk9nZ80KPlBVh62/NUtLhULQOF4u7SboJXMQgNz1O+2RPeu7af2OUB7JRV5jgI7fw/nV0KxiMFbkKqKlveRDsuLrKnJ4BFtBK57gfjdKe/v7+kKnw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=SkQ+dY5f; arc=none smtp.client-ip=78.32.30.218
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gjPhTdrk"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 167ACC433C7;
-	Wed,  3 Apr 2024 16:10:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712160664;
-	bh=nyU0F3ej83LHBArYWvHTmUMX9HPrzUZJ7A/Qsu6qybw=;
-	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
-	b=gjPhTdrkX6vjBSuS+zaKuaiyoGR/UHwImYh5jczdwkYJGVKzTI8yf2hpvYuYivheF
-	 9cAasLK2QGmMR19zPptwl9h0ZbUmVIMRICLp23Kjwu2VcYz0+/6ZeLdy4bzT59PDc2
-	 l63iyGVEr2qZXLKQT6+2lXJITHV3yENnPasAhVdiRKDDtUBVDx+h/fqVo0cbFGV7t1
-	 u7dlbbHFhMewEnqBVLHRm7gTFbvCN1GWPuV+Llr16q96XepFSjlvVBfIIp39cnhcMb
-	 LqkfZqDv4tft76m0tI2QRTWTUo2DDnMJBAR90COOO/G7XwDSHBgrqRskp2gieKHvJt
-	 RLvt1DTrQcT8g==
+	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="SkQ+dY5f"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=fc4gDAai9j+UWYc45hYpxViIgWITb5osBGXho7qrtHI=; b=SkQ+dY5ftzrf0uRCZdT/BokK+/
+	o36GyvaribvslS5SRmOBx7cKS7a1T5FIRzKY2QojVu/I82K7gFOIDEqhL0o2HKLn/ou2KdlqrlcTM
+	y82+JAb7I1T2IOjWQ8JYsW72aBIsyzEyQeHy2Z5MniFsGdd/cXLmzH83PlzxjJjUukBey/iXc6xEp
+	iaQhvXb/1uu6Ma5JrViy38atJ8lrOAjg3HAwc1AKieBhdwV5qh7w3OLKD+sM1Bek5mo+P7BmPnb0u
+	wpnpBKq1HTuVY3wPa600P7tP/zMBDtuJFQbwqkqpiA02suKByZsZzgH1kKqkJeqzHzjC8pTvgtlzR
+	V1o4pddg==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:56948)
+	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <linux@armlinux.org.uk>)
+	id 1rs3Dc-0000Gd-2Y;
+	Wed, 03 Apr 2024 17:12:08 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.94.2)
+	(envelope-from <linux@shell.armlinux.org.uk>)
+	id 1rs3Db-00084V-Hs; Wed, 03 Apr 2024 17:12:07 +0100
+Date: Wed, 3 Apr 2024 17:12:07 +0100
+From: "Russell King (Oracle)" <linux@armlinux.org.uk>
+To: Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
+Cc: Linux ARM <linux-arm-kernel@lists.infradead.org>,
+	syzbot <syzbot+cb76c2983557a07cdb14@syzkaller.appspotmail.com>,
+	linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Subject: Re: [syzbot] [hardening?] [mm?] BUG: bad usercopy in fpa_set
+Message-ID: <Zg1/1xbmrY4yDfhO@shell.armlinux.org.uk>
+References: <0000000000004cf5c205faf1c7f3@google.com>
+ <dcf54740-7cc3-4017-ad1b-8626a22fc15e@I-love.SAKURA.ne.jp>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Wed, 03 Apr 2024 19:10:58 +0300
-Message-Id: <D0AMARUFBCNN.21GJ0PXUDK0F6@kernel.org>
-Cc: <agordeev@linux.ibm.com>, <anil.s.keshavamurthy@intel.com>,
- <aou@eecs.berkeley.edu>, <bp@alien8.de>, <catalin.marinas@arm.com>,
- <dave.hansen@linux.intel.com>, <davem@davemloft.net>, <gor@linux.ibm.com>,
- <hca@linux.ibm.com>, <jcalvinowens@gmail.com>,
- <linux-arm-kernel@lists.infradead.org>, <mhiramat@kernel.org>,
- <mingo@redhat.com>, <mpe@ellerman.id.au>, <naveen.n.rao@linux.ibm.com>,
- <palmer@dabbelt.com>, <paul.walmsley@sifive.com>, <tglx@linutronix.de>,
- <will@kernel.org>
-Subject: Re: [PATCH 4/4] kprobes: Remove core dependency on modules
-From: "Jarkko Sakkinen" <jarkko@kernel.org>
-To: "Mark Rutland" <mark.rutland@arm.com>, <linux-kernel@vger.kernel.org>
-X-Mailer: aerc 0.17.0
-References: <20240326163624.3253157-1-mark.rutland@arm.com>
- <20240326163624.3253157-5-mark.rutland@arm.com>
- <Zg07hrb_RMUu2tq7@FVFF77S0Q05N>
-In-Reply-To: <Zg07hrb_RMUu2tq7@FVFF77S0Q05N>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <dcf54740-7cc3-4017-ad1b-8626a22fc15e@I-love.SAKURA.ne.jp>
+Sender: Russell King (Oracle) <linux@armlinux.org.uk>
 
-On Wed Apr 3, 2024 at 2:20 PM EEST, Mark Rutland wrote:
-> On Tue, Mar 26, 2024 at 04:36:24PM +0000, Mark Rutland wrote:
-> > From: Jarkko Sakkinen <jarkko@kernel.org>
-> >=20
-> > Tracing with kprobes while running a monolithic kernel is currently
-> > impossible because KPROBES depends on MODULES. While this dependency is
-> > necessary when KPROBES_USE_MODULE_ALLOC=3Dy, all the other module-speci=
-fic
-> > code only exist to handle the case when MODULES=3Dy, and can be hidden
-> > behind ifdeffery.
-> >=20
-> > Add the necessary ifdeffery, and remove the dependency on MODULES=3DN w=
-hen
-> > KPROBES_USE_MODULE_ALLOC=3Dn.
-> >=20
-> > Currently this allows kprobes to be used when CONFIG_MODULES=3Dn on arm=
-64
-> > and riscv, and other architectures can enable support by implementing
-> > their own kprobes_alloc_insn_page() and kprobes_free_insn_page() which
-> > do not depend on MODULES.
-> >=20
-> > Signed-off-by: Jarkko Sakkinen <jarkko@kernel.org>
-> > Link: https://lore.kernel.org/all/20240326012102.27438-1-jarkko@kernel.=
-org/
-> > [Mark: Remove execmem changes, depend on !KPROBES_USE_MODULE_ALLOC]
-> > Signed-off-by: Mark Rutland <mark.rutland@arm.com>
-> > Cc: Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>
-> > Cc: David S. Miller <davem@davemloft.net>
-> > Cc: Jarkko Sakkinen <jarkko@kernel.org>
-> > Cc: Masami Hiramatsu <mhiramat@kernel.org>
-> > Cc: Naveen N. Rao <naveen.n.rao@linux.ibm.com>
-> > ---
-> >  arch/Kconfig                |  2 +-
-> >  kernel/kprobes.c            | 12 +++++++++++-
-> >  kernel/trace/trace_kprobe.c | 15 +++++++++++++--
-> >  3 files changed, 25 insertions(+), 4 deletions(-)
-> >=20
-> > diff --git a/arch/Kconfig b/arch/Kconfig
-> > index 85bb59f7b8c07..cf43de9ffb5b9 100644
-> > --- a/arch/Kconfig
-> > +++ b/arch/Kconfig
-> > @@ -52,7 +52,7 @@ config GENERIC_ENTRY
-> > =20
-> >  config KPROBES
-> >  	bool "Kprobes"
-> > -	depends on MODULES
-> > +	depends on MODULES || !KPROBES_USE_MODULE_ALLOC
->
-> Whoops; that should be:
->
-> 	depends on MODULES || HAVE_KPROBES_ALLOC
->
-> ... with similar fixups in the commit message to describe HAVE_KPROBES_AL=
-LOC
-> rather than KPROBES_USE_MODULE_ALLOC (which does not exist in any version=
- of
-> the series that got sent to the list).
->
-> I'll send a v2 with that fixed (and the other changes from Jarkko's v7 ba=
-se
-> patch) once I've locally tested that for architectures with and without
-> HAVE_KPROBES_ALLOC.
+On Tue, Mar 05, 2024 at 08:27:07PM +0900, Tetsuo Handa wrote:
+> Hello.
+> 
+> syzbot is reporting kernel memory overwrite attempt at fpa_set().
+> I guessed that the amount to copy from/to should be sizeof(union fp_state)
+> than sizeof(struct user_fp), for arch_ptrace(PTRACE_[SG]ETFPREGS) for arm
+> is using offset == 0 and size == sizeof(union fp_state). But my guess did not
+> solve the issue ( https://syzkaller.appspot.com/x/patch.diff?x=11e46dbc180000 ).
 
-OK, please put to me to the CC list as I'm not ATM subscribed
-to the tracing list.
+This is silly.
 
-BR, Jarkko
+sizeof(struct user_fp) is:
+
+	8 * (
+		1 bit for sign1, 15 bits unused => 2 bytes
+		1 bit for sign2, 14 bits unused, 1 bit for j => 2 bytes
+		31 bits for mantissa1 => 4 bytes
+		32 bits for mantissa0 => 4 bytes
+	) +
+	4 bytes for fpsr
+	4 bytes for fpcr
+	8 bytes for ftype
+	4 bytes for init_flag
+
+This totals 8 * 12 + 4 + 4 + 8 + 4 = 116 bytes or 29 32-bit quantities,
+or 29 "unsigned int"s.
+
+This is copied into union fp_state. This union is made up of one of
+several different formats depending on the FP being used. user_fp
+doesn't reflect this. However, one of these, struct fp_soft_struct,
+is specifically sized to ensure that user_fp is _smaller_.
+
+struct fp_soft_struct is 35 unsigned int's. This is 140 bytes. This
+is larger than sizeof(user_fp).
+
+Therefore, there is _no way_ for fpa_set() to overwrite anything
+outside of thread_info->fpstate, because sizeof(struct user_fp)
+is smaller than sizeof(thread->fpstate).
+
+Syzbot appears to be wrong in this instance.
+
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
