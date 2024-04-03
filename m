@@ -1,216 +1,129 @@
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2100.outbound.protection.outlook.com [40.107.236.100])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD09314A0AF;
-	Wed,  3 Apr 2024 15:17:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.236.100
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712157478; cv=fail; b=dAD2BvdoNyyHrG6cJC5EL4zLNkpER6D3m/uyD6emRhaAZyGx6sq4lgQg0S+Qx7pFg3m0zwNN1E94jryILYcKSQObbFb65fcQUOKsvhmOn8cDc2S89UMQ5V2/3kk+Guq/ZZyFkV8I44KkV/bbTairR1ub2p8QCpsESYT+SElcU2I=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712157478; c=relaxed/simple;
-	bh=s11vAPXHSJppLpUI3MosfXlaBLzOYd5YmANCm+Azzo4=;
-	h=Message-ID:Date:To:Cc:References:From:Subject:In-Reply-To:
-	 Content-Type:MIME-Version; b=WQ1NGWIHErBjOTP2/3kzvt+ny9XFcFnGaeANnVSopm0+EC7BSGdjwrHaAB1Nl+uqtDLvUETW6RPeY1nutcxYQ8SHSp/4MAi8RolRJ5x4L/pF8+9P17TabmlocuyjmDijhb0ko82+DOkhT3iZDdJ7iuYalDyBbN8zaHnmbHUYQrg=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=0BbMIFco; arc=fail smtp.client-ip=40.107.236.100
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A38DA149C68;
+	Wed,  3 Apr 2024 15:22:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1712157741; cv=none; b=hNM2HRl8AcPQbFtO+8KI0pPeoXzDJFaAKxPvIcp7CeAHd/onaYA3BslnGwj6G9ZDYRg66VA/qWiAe2iZZWk4X19R6VkUhRxWxg9Sk/xn5fap4JI5ILRt7Y8UgGGaP8x5ICloweTKHQ7uQFYJF6v7RG68oVBFkqKXibEoX56J8Us=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1712157741; c=relaxed/simple;
+	bh=ibwa7qVlsz6WfcpJqPrroTnKs/SIZZIG690/0G7mCPE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=rSbS1DNZ+th1Bxk1eUSHK9+7Cavj2mu9cyH4XQo8yanFIUkXxkn3atR3XE9jA9+QyqdNhju3vvNp3BjjLmJ+6Hu8basf9vNDUShXnY+VB+4LnmgbjAT+f2phdeEyiq2fjnYrZgdeAfsrY6AapF102ewrmNb5mr1awDpY76QAK98=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FtcfiFAH; arc=none smtp.client-ip=209.85.214.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="0BbMIFco"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Y7c9Aila7YXe8pWIZu5It+NZ1OJ+opobbtsiSLulUtoEEwu3DKSmPGkjH6aCm1K8PU0hzJ3nf5NOEaLHJh9lr6U2KZoDPOM7QLZ/BKYCusN/fAoFKsaFGyZnXRP9DDhEAJfCe2ClesU/fUpRTwPnmlt0kwBY6kZSaDYCh60Gr24TbzU94+nYjEhcjQftOHQRWWGEkg2uymDkXU9XCCWCPIJ4J4UuXju/EQBWgFL9yCmGJx838XpjOZa3LXpm2cJ3VQTGs0saY5q1rLcpeiExqrU91lTXCE1bvkv7oo/ddmCukxiAjCntvt2VAes9r70oYxJ/UtJq1VHbU3aWRadi9Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=LkIJxO+k5NgAqNCe4hHiepJ8nTIlLHGfJEUZmxXky4Y=;
- b=Dc9dHT9FF6RkyXWjXNab/fsS6rIA8ZGhnX8VOnB5xJc0csMiB7/RiuwMLCcSIvp/Fhl2PXWI2K/zrDjbYemPed3FNTBC3soIrL1W7aP0nkgTVMOPWclieaRd73mt3lnNMAQpwx7NFKu6AGtFydAu4EyMXIAYd4q2Gh55Y2N3/DzmpgBuBXRmScF/bpHIEvnUbUJ9wRQrlm4WAMNp5iv+TFeZ5K9FW+22sPTLYNT2hgNI4hroMU+e7rFeYWVW+JUSKggnAhG+ukilTHuL1CzksCqNf3IbfokHlW/VCQKld44oqmorYL1cNIz0Z2PmX79QiMKXijNQDtziGjSdJTO3RQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=LkIJxO+k5NgAqNCe4hHiepJ8nTIlLHGfJEUZmxXky4Y=;
- b=0BbMIFco/9bJKxJfbUxhQQ0HBh7Eiff9g0XVXK7dCmo4yEcVX888ETMvCvN40Yin7ZY7lo8jF0YvI6Gya3GtrNm+CqkPsQ9JWyaAESDfzalik+C7UocdVSMaswuhADIJaieJGk48QClkxvVBsT78LNkIBvYL/oM4WMSjra2mGO4=
-Received: from BL1PR12MB5732.namprd12.prod.outlook.com (2603:10b6:208:387::17)
- by CH2PR12MB4247.namprd12.prod.outlook.com (2603:10b6:610:7c::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.46; Wed, 3 Apr
- 2024 15:17:53 +0000
-Received: from BL1PR12MB5732.namprd12.prod.outlook.com
- ([fe80::1032:4da5:7572:508]) by BL1PR12MB5732.namprd12.prod.outlook.com
- ([fe80::1032:4da5:7572:508%6]) with mapi id 15.20.7409.042; Wed, 3 Apr 2024
- 15:17:53 +0000
-Message-ID: <dd7977b9-bdd2-f36f-36bd-a383a2588f6e@amd.com>
-Date: Wed, 3 Apr 2024 10:17:51 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.15.1
-Content-Language: en-US
-To: Arnd Bergmann <arnd@kernel.org>, linux-kernel@vger.kernel.org,
- John Allen <john.allen@amd.com>, Herbert Xu <herbert@gondor.apana.org.au>,
- "David S. Miller" <davem@davemloft.net>
-Cc: Arnd Bergmann <arnd@arndb.de>,
- =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
- linux-crypto@vger.kernel.org
-References: <20240403080702.3509288-1-arnd@kernel.org>
- <20240403080702.3509288-25-arnd@kernel.org>
-From: Tom Lendacky <thomas.lendacky@amd.com>
-Subject: Re: [PATCH 24/34] crypto: ccp - drop platform ifdef checks
-In-Reply-To: <20240403080702.3509288-25-arnd@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SA0PR11CA0163.namprd11.prod.outlook.com
- (2603:10b6:806:1bb::18) To BL1PR12MB5732.namprd12.prod.outlook.com
- (2603:10b6:208:387::17)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FtcfiFAH"
+Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-1e28efd8335so7273165ad.0;
+        Wed, 03 Apr 2024 08:22:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1712157739; x=1712762539; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Fd7qpkMBxQ2+k8rxh1w6ZQnt5fuyzAt4KYqqtVYV1Mw=;
+        b=FtcfiFAHZmslRX389/ZzcFKiaE2fgsd0ET/1rDJWKGdy5tkn/W5fMJJQ4MWi0FlyKy
+         YIHvaLzwvXncu2V3BVzc1mgz+ABw/0s49wNXQkhFgRBigWvVjzniDyXfhm1m36gFL+HW
+         zVP0XrwWAlABPe5dBzVArOE+dFFjHsrAXMWEXlCOhv9sua8XyVdFhxOHCLTsLwQ03E2V
+         H5MF/2XEypmGSGdVcXTK/59UNddKxi5Nw6vBOrGbN3kG/cu3k6CkrCys78hCtT0WhXVq
+         hn4a7bAQQonrE8LuRRwEeTB5flDvFmq+uxLJWnpdDHOmDrAscfTfAG2NW7oBWRFiqhCF
+         ApFg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712157739; x=1712762539;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Fd7qpkMBxQ2+k8rxh1w6ZQnt5fuyzAt4KYqqtVYV1Mw=;
+        b=SjFNUaQeNzMpmuMMyNG2mmovo24UVM1UG5VvR6Pw20SJMLHaXOJJ8MeWDqPVzUO9VE
+         5RaI8e+rZ8rhjgPGZKD2eGrg27OFTxyNP8uqq8p2HlSmngCNmlZXrsuSPLxri9dD0N2c
+         dJ02zPqS4qk+x5r5/jGVDF2H//Ss5LUZVd8EXdkJldSnGYFtDcThRrNkR10YRcAaQZuR
+         LD3HfPdPUAXY2AgQXJ24anlAyHMdeEdaybPam/hpkxqc9rTYmvNF/yCf+hBY04D5bk9Z
+         82XISP5pTVI8yNW07ArD8W0OfgiERHkGryIyCGeVI6OezUCagDITmoi0AIghqadMx80g
+         UxWQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXRFHHQVwrQZ3K9KO2FXJloBr/QB2Ph4LsFqMFoCEveHFnlpXnwwUkvgBqyB5xLOUFPa+HHE2vf7J6muV/KRnJpa1choaSkyEnb1AGbbflrERCgmTUcYDmQMGVJLtQg/HsKbds6
+X-Gm-Message-State: AOJu0YwqY2l6lp1YiulTnqU7zk1QizB7/IUMCo1tJd8hxv8pkHqfw7tt
+	WJBKMQXtCSWsUWbC84A1TM6p9ET3Yv+S7docJ98YkTWIETU5WiVP
+X-Google-Smtp-Source: AGHT+IHjO4mpK4Tq4azhCzt5xkjqRK+0OXIWC7WSgQ51pHzDtg/QMk6JiACDB2L0msI6Q6if578FSw==
+X-Received: by 2002:a17:902:f612:b0:1e2:9ae0:2165 with SMTP id n18-20020a170902f61200b001e29ae02165mr1541870plg.0.1712157738889;
+        Wed, 03 Apr 2024 08:22:18 -0700 (PDT)
+Received: from localhost (dhcp-141-239-158-86.hawaiiantel.net. [141.239.158.86])
+        by smtp.gmail.com with ESMTPSA id b21-20020a170902d89500b001d91d515dffsm13428232plz.156.2024.04.03.08.22.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 03 Apr 2024 08:22:18 -0700 (PDT)
+Sender: Tejun Heo <htejun@gmail.com>
+Date: Wed, 3 Apr 2024 05:22:17 -1000
+From: Tejun Heo <tj@kernel.org>
+To: Greg KH <gregkh@linuxfoundation.org>
+Cc: Linux regressions mailing list <regressions@lists.linux.dev>,
+	Sasha Levin <sashal@kernel.org>,
+	"stable@vger.kernel.org" <stable@vger.kernel.org>,
+	LKML <linux-kernel@vger.kernel.org>
+Subject: Re: Hibernate stuck after recent kernel/workqueue.c changes in
+ Stable 6.6.23
+Message-ID: <Zg10Keik4KORjXMh@slm.duckdns.org>
+References: <ce4c2f67-c298-48a0-87a3-f933d646c73b@leemhuis.info>
+ <ZgylCe48FuOKNWtM@slm.duckdns.org>
+ <b6cdb17f-206c-4dff-bb45-a60317e0a55e@leemhuis.info>
+ <2024040328-surfacing-breezy-34c6@gregkh>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BL1PR12MB5732:EE_|CH2PR12MB4247:EE_
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	AYlLJ3T6sRa6hulBXQImAHoSRuUdGyByJDPivpK7H5qmaEVPLlkogy17ALsCB17yPW2FjRPltAzqSMJvVCJe3o4kT+jNB/Rw2yTjuY69U5gaMCrO26y2N5VZRVaQs4BgbZNDrLJTrmTYxlhC2NnO1qfHQfudtecItoVIrO10/txAa3Vm/6w7UKtmx2CLuyUinfTbCR7DWVtGeKlNsonb1B15Lg0nSfZ1eTl5+jY9BpGl6gXdq+DV0+k837vM75LYP2ckKPJr1y5wYmu5zXfgI/7KDV9F4KchEFlJVs+9mnL0m4H9p8IadOfGHFadkDvww6knVMfRXeEETJujT2IyffRN9/p5pTbn4Wx7pr3q3u6zb9fmXoK6KURCm3bYSZu5hDrzKHQSMONBKkXsVk7TdIK6tSj8T+tvo1iQREza82JHcLqXw9FOtcG9K8JjnCzLkcVN3J3g0YZbLF0Ft25wawf515dp2b0hNpOSvDVUEdXVBf15+vugKuPtvqoQ+YSHmh/7V2+2e+LIy9ijg8Pn9XvjJFoPEZ1WD8OH4CzzCkBrsw1zX5PI6sCCKOb10gEZXd2Y5xWsQ66H+Jvqd3gojPaEKKDdjGjlg2y4CN1W5vTW2qb1WnLUu0DSi2+BOm2dKYLOxWpRRMx9+gx4FlBj84zmcycVO+JikH0Hv9E3mos=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL1PR12MB5732.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366007)(376005)(1800799015);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?bk0zcjBNSnN5djh5Mkptb04ycGo0Z2RRcUhlL3haRVdxYTFrREdsMG4vNWlN?=
- =?utf-8?B?RFRKMmwxNXpZb0svSHZlYTY4QTI1NktSUnM5SHd6aFdzSE5hSDFOZXdGNzl0?=
- =?utf-8?B?V043cjRpZGV2emVGdElzTUtKUlE1OERqRXA0eFh1OVBHSVE0eElheTRaRnpr?=
- =?utf-8?B?Wk9iYXBsWFZQK3dzdmtReHNvbjFZZFYyOC9zOUVuL29oeGJSa3pxU0Ixck5Y?=
- =?utf-8?B?WE1EY2V1dFZhOFliNkU2SXV3elJOS2dWZWpIUVZQU3h0T2hsWDlPc1EwK3hs?=
- =?utf-8?B?OTRweUhDa2I0WTh6MEZSVTF6cUtTMXlNeXJZNGJZMnM5dzAxM2VJQXRER2RO?=
- =?utf-8?B?cUE5ZjZLRHZUano1NS8wRHNpVHhOL2tFbGJEc3VTMjF4a2hUMzlLM0UzMFpG?=
- =?utf-8?B?NjVqbUNKSCtUOGtSR2NYNnBqT3VxZi80YWt5d3hxKzMweDBwNW96N1FJWjJj?=
- =?utf-8?B?Y2EzOG5rZjU1QjZoZndnSVJyTjlOOHNTMGsrRmtmUExMY3ZpaU81elhyaWJR?=
- =?utf-8?B?M2x1TG9hcTNzM2tnTWJYcHRjeDQybmNScUszNnoveHZnK1RERGFqSEVjWHhF?=
- =?utf-8?B?NHZiV1lvVFFZNldmOENIaktMS291ZDh2WjFsUGZBZnZWZTBRWjFLN0xkOVk2?=
- =?utf-8?B?UEp1eGd4QUdlR2RjYytQN2JPYlJkYy82SmVUMzlwRUQ1Yis5clpEV1VHVHlO?=
- =?utf-8?B?cS9pTU9heDF3aHR2K0dJcUp6WlFsa0g2VW5ZVUNoOCtuSzREZytEU3ZXS0lk?=
- =?utf-8?B?NWpPci9PMFVEYjlva09uMWZmSGZ5SjFOM1BBbjcxcGZDeHc1b3BOZ1ZsOFlw?=
- =?utf-8?B?djJmOWxPTGhoWU4xMzBQaCtleFNwTlBYRy81NDJYdjBUZGJDZ3JSc1cyRGpz?=
- =?utf-8?B?ak5VMnFWYUpXWk5WRTdlY0luNEdPK0Q3NS9IKzA3VlBzcVU2NDdKcW1pYmph?=
- =?utf-8?B?K3hqMjVxVkowNFVZeUZJY2pKWURpcmYrOWFkZmczYVlpYXE2OWR0cW5YcGRr?=
- =?utf-8?B?djdRQlJqUHRNQjM5cHVGcjJueTlaQkdPWTdyeldHV3R4NTZzZS82TmZhZU8v?=
- =?utf-8?B?RGpvaWh4UEkrOFNMdXUxOEVrVjRIZ1pwQThJdkh1STdCUFRNU0piMWFPeTVt?=
- =?utf-8?B?M0F2UWN6UFZwVHE4Smlka1ltdkVLUjFVRjRIeU44bUNPT050bmp4anF2djVC?=
- =?utf-8?B?ZjAwUnJFWkw1MXN0NE1SNnBSM3VncGFWbEg2bkxaMVE1bFVIYi9rdUpheEtG?=
- =?utf-8?B?T1VxaFNHWUhPRHZOUlNJdUFDZnFjQmlhVU04c0UvcWwySXBERWQ3MzI5b0Y4?=
- =?utf-8?B?NjFTRFNKUzJOTXpCTlVPMlhWSXhXZHdYYUV0VlZTYVB5alcydVVMZVdOKzhP?=
- =?utf-8?B?WUNoc1hNZkhyR0ZXSmJEMDZTQ3VUY0xoVlJOSXhkTDlLTEY1dzNpMGhMWWY2?=
- =?utf-8?B?N3VjS3RtZGI3RE80SElYOEFsdDgrUktQdUxsK2VVMlRCcjQ5YkR1WWE5RjdD?=
- =?utf-8?B?OGsyZUdFWjdaMENOVkVUTkVnZ2p0UFEyN1dOdmZTak4xRXhTa2JzM0lZaXNi?=
- =?utf-8?B?cTA3eG92d0FoMnZqS1IxdGhYTkp2dldVdnRmcEtZN0JQeERybm9pZ1JSdkJ1?=
- =?utf-8?B?MGM5UHl6S1dRaHlxUzRVeVdmWlI2UnB2clJScFFzUGdrdG9jRGxDZ25hWDIx?=
- =?utf-8?B?eFBqUFRwU0pJV2YxQysyeXJ5ZERSWmNGMEdOd3h5RHdpeHhjZ0lyUG5Oa0c1?=
- =?utf-8?B?VklmeWhxQTdmZFliY2VKOUd6dzVST1NlaDBSbFJPdHQyVXBrb2FvdnU0VmRp?=
- =?utf-8?B?dEtGRWdXQzJWTUpEeU9senptQ3dkM2FOb1oxRXp6RGs3Y3FWMThOTWZtUlpT?=
- =?utf-8?B?K3FmbzRTWENhMkx2ekFJakNvdzUway9za01ENy9ub3lBaktRdEdsaWpZK21M?=
- =?utf-8?B?NCtEcEV2bmprQ2ZRQlZxMGVkc0F4Tkh4OG5TVkVGSTNjbUV2WnEwK2laOGc3?=
- =?utf-8?B?OHkzSUl5K0JpY1JOL1hrTXZNbm5hajV2blF2K1p4QzU3WWF3UzkrZFcrQnhM?=
- =?utf-8?B?WGd3SHBtdDczWHZrQWxRdWNsS2x3Wm1BTE4wRjJuRGNZbXhkZXR0RldBNVN4?=
- =?utf-8?Q?QiS+Uv2hrRAPLzh/9WQnYN4zz?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a7b9b96a-20b3-47ff-0263-08dc53f13bd3
-X-MS-Exchange-CrossTenant-AuthSource: BL1PR12MB5732.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Apr 2024 15:17:53.6913
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: kGlPtVhVtcu05/dXb/kuXtvwTsArEV4/ODqS+CXtvukNeWyrJ8ygqgjM/zlt0qkUL5fqk6y+IvhhguyllhS+SQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR12MB4247
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2024040328-surfacing-breezy-34c6@gregkh>
 
-On 4/3/24 03:06, Arnd Bergmann wrote:
-> From: Arnd Bergmann <arnd@arndb.de>
-> 
-> When both ACPI and OF are disabled, the dev_vdata variable is unused:
-> 
-> drivers/crypto/ccp/sp-platform.c:33:34: error: unused variable 'dev_vdata' [-Werror,-Wunused-const-variable]
-> 
-> This is not a useful configuration, and there is not much point in saving
-> a few bytes when only one of the two is enabled, so just remove all
-> these ifdef checks and rely on of_match_node() and acpi_match_device()
-> returning NULL when these subsystems are disabled.
-> 
-> Fixes: 6c5063434098 ("crypto: ccp - Add ACPI support")
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Hello,
 
-Would using __maybe_unused on dev_vdata be the safer, easier choice?
-
-Either way, I don't think removing the #ifdefs will pose a problem, so:
-
-Acked-by: Tom Lendacky <thomas.lendacky@amd.com>
-
-> ---
->   drivers/crypto/ccp/sp-platform.c | 14 ++------------
->   1 file changed, 2 insertions(+), 12 deletions(-)
+On Wed, Apr 03, 2024 at 07:11:04AM +0200, Greg KH wrote:
+> > Side note: I have no idea why the stable team backported those patches
+> > and no option on whether that was wise, just trying to help finding the best
+> > solution forward from the current state of things.
 > 
-> diff --git a/drivers/crypto/ccp/sp-platform.c b/drivers/crypto/ccp/sp-platform.c
-> index 473301237760..ff6ceb4feee0 100644
-> --- a/drivers/crypto/ccp/sp-platform.c
-> +++ b/drivers/crypto/ccp/sp-platform.c
-> @@ -39,44 +39,38 @@ static const struct sp_dev_vdata dev_vdata[] = {
->   	},
->   };
->   
-> -#ifdef CONFIG_ACPI
->   static const struct acpi_device_id sp_acpi_match[] = {
->   	{ "AMDI0C00", (kernel_ulong_t)&dev_vdata[0] },
->   	{ },
->   };
->   MODULE_DEVICE_TABLE(acpi, sp_acpi_match);
-> -#endif
->   
-> -#ifdef CONFIG_OF
->   static const struct of_device_id sp_of_match[] = {
->   	{ .compatible = "amd,ccp-seattle-v1a",
->   	  .data = (const void *)&dev_vdata[0] },
->   	{ },
->   };
->   MODULE_DEVICE_TABLE(of, sp_of_match);
-> -#endif
->   
->   static struct sp_dev_vdata *sp_get_of_version(struct platform_device *pdev)
->   {
-> -#ifdef CONFIG_OF
->   	const struct of_device_id *match;
->   
->   	match = of_match_node(sp_of_match, pdev->dev.of_node);
->   	if (match && match->data)
->   		return (struct sp_dev_vdata *)match->data;
-> -#endif
-> +
->   	return NULL;
->   }
->   
->   static struct sp_dev_vdata *sp_get_acpi_version(struct platform_device *pdev)
->   {
-> -#ifdef CONFIG_ACPI
->   	const struct acpi_device_id *match;
->   
->   	match = acpi_match_device(sp_acpi_match, &pdev->dev);
->   	if (match && match->driver_data)
->   		return (struct sp_dev_vdata *)match->driver_data;
-> -#endif
-> +
->   	return NULL;
->   }
->   
-> @@ -212,12 +206,8 @@ static int sp_platform_resume(struct platform_device *pdev)
->   static struct platform_driver sp_platform_driver = {
->   	.driver = {
->   		.name = "ccp",
-> -#ifdef CONFIG_ACPI
->   		.acpi_match_table = sp_acpi_match,
-> -#endif
-> -#ifdef CONFIG_OF
->   		.of_match_table = sp_of_match,
-> -#endif
->   	},
->   	.probe = sp_platform_probe,
->   	.remove_new = sp_platform_remove,
+> The Fixes: tag triggered it, that's why they were backported.
+> 
+> > > which would
+> > > be far too invasive for -stable, thus no Cc: stable.
+> > >
+> > > I didn't know a Fixes
+> > > tag automatically triggers backport to -stable. I will keep that in mind for
+> > > future.
+> > 
+> > /me fears that more and more developers due to situations like this will
+> > avoid Fixes: tags and wonders what consequences that might have for the
+> > kernel as a whole
+> 
+> The problem is that we have subsystems that only use Fixes: and not cc:
+> stable which is why we need to pick these up as well.  Fixes: is great,
+> but if everyone were to do this "properly" then we wouldn't need to pick
+> these other ones up, but instead, it's about 1/3 of our volume :(
+> 
+> I'll gladly revert the above series if they shouldn't have been
+> backported to stable, but from reading them, it seemed like they were
+> fixing an issue that was serious and should have been added to stable,
+> which is why they were.
+
+Oh, yeah, they're fixing an issue. It's just that the issue is relatively
+confined peformance degradation and the fix is really invasive, so not a
+great -stable candidate. At the very least, they'd need a log longer cooking
+time in mainline before being considered for -stable backport.
+
+My intention w/ Fixes: wasn't triggering -stable backport at all, so it's a
+miscommunication. From now on, I'll keep in mind that Fixes: does trigger
+backports. I'm not too worried about not using it as the fixee commit can be
+mentioned in the commit message.
+
+> This is also why we have review cycles, so maintainers can let us know
+> if they want us to drop them :)
+
+Heh, sorry about that. This never caused any issues, so I just glide over
+the stable mails without thinking.
+
+Thanks.
+
+-- 
+tejun
