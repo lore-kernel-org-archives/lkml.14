@@ -1,160 +1,160 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5516D153597
-	for <linux-kernel@vger.kernel.org>; Wed,  3 Apr 2024 18:25:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61ECD1534F2;
+	Wed,  3 Apr 2024 18:26:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712168728; cv=none; b=nVIm3+NxA0cicc9PuCmLnUctajVO6FY1F5Ssh8mnMoqdhMJ3d+Nz272g05fIsRlPyqXuqpEKrbiaT6kYoxIy15r/m+CFOD9SevgTnvFuDRB025yIig5GepyCDAmRsIFSOuuSKfkNFUoLaWZvrDNhUrALjOPV7bZE0F22/s8M9SQ=
+	t=1712168773; cv=none; b=DTApOn8Hb4rOy9Rgc53dZHhtBDSrg9JySX7DcgVCRJ+XAFPGO6dDEm/Cx1nWr+uFr/yv4n20fWD+z38Lu/VtCGaRv+UpuLQp5aoEia+yDKpm/cUwQYHA86F1Fb8pARjk+0U7kyAAS/N7wYkQn1dCOpTwVwYu5zMk/GjYYz5Hy9Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712168728; c=relaxed/simple;
-	bh=49xRMMJoQJIUdr7zdlVs8BfmW6KWUNR4b9vQnfKmZbA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=d1gqhOby4TxkPyyBlDrDr1ggJfAyb1gBMsi3Lj+sOBfaxrcaogxh7LGm7HLVCN/IiXFF+UNbJZsTJUnTHhYjuYZBu0BEjPiqKFPAzYXHmRdB6JZBhs4tBaVcezDG9IwwIAcN3PKVT//FD+fc/2C0/YXFLLFQ3UaVq2ygnTaGxfo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=P7wQeRaO; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1712168773; c=relaxed/simple;
+	bh=j+GDCCfyjwSvNi5L8u2NngjgwDzCFOTm7r8SKvYlO/M=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=KmDsCU1cXNsaD2L9OIVn4wGbwZgoM1VlgqNAgdXMhBkYYBbOvu4B5bvPzpeflwE9p//oHqiPSIgH7y7i4QxAxceptdBnZTTY8qt5MVTdQNHZtPdk9xD2jKOBIFqoQ4Wyz6bXj5lulD7OBkvxCDUC2f1hsJcmgUCk29CeEz9/3GA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ARUmcN4s; arc=none smtp.client-ip=209.85.210.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="P7wQeRaO"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1712168726;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=YXsmqoOHzY6mBushOHoxlZz3TK/EfZqT4lQukaq20AM=;
-	b=P7wQeRaO8pvv+bsOulr62tjYpf9C/Ld0fZFLGcYNPH5EYnIjilLCjxadWI9eW7sFMOz2Sl
-	YOtZmbPJrKk3igLm1q8w23oy+TciBsvtxjKiAoMtSgx1j9gd25lh9l5ZeYbV3Zmx4aZXY2
-	s47pBu5TUZPUCNmoQImKpUIaxAbU+eE=
-Received: from mail-qv1-f69.google.com (mail-qv1-f69.google.com
- [209.85.219.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-630-ktY1h6jYMaWS_RT1fk0KSA-1; Wed, 03 Apr 2024 14:25:25 -0400
-X-MC-Unique: ktY1h6jYMaWS_RT1fk0KSA-1
-Received: by mail-qv1-f69.google.com with SMTP id 6a1803df08f44-69120b349c9so127216d6.1
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Apr 2024 11:25:24 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ARUmcN4s"
+Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-6eaf7c97738so74615b3a.2;
+        Wed, 03 Apr 2024 11:26:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1712168772; x=1712773572; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=+KM0sALA3G00DhEkgIr0nJ9/xgi6K5DMXyrZsidqXcY=;
+        b=ARUmcN4sjSXBs/SDZpYv8dF7r7JIxIaKll1A1PbPkDxYbetiZHOav0oRD546xi5b1H
+         bMu8QRCYc+yXu1/mSRWJj+9h4IMs+Yce1BmMZlCU3BgA9/TV2FtQQHHqKBFLQZg8Rd+Z
+         r09t+ag9g/pFAQHI5vF4e+J3Zfz2wPwJ6Mj9+93JEB9nll1AiCeAByyp9roZmTB1CtS6
+         1OHPjYjLcZbo2wYzUXufaMSFZ8evZmwhf+aNRHGD+YP/tgdOQVFYQkK2maF2S8PcfV0k
+         kSo8uijvLn53gXOQPv9ARvfktKg91LLZHn4tb+2N5sUpUKfDW2l5lKEEYiDjoXyOrDWg
+         wkBA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712168724; x=1712773524;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=YXsmqoOHzY6mBushOHoxlZz3TK/EfZqT4lQukaq20AM=;
-        b=PTDmGtAPruISxDu+j1J8M4g/dRxASljJkdnisJIbIW/spZf3p3bu7N8qz1fGSI7Bf/
-         q9HAlNzV/4vgr9uCjJcIV5L/6aLtYrHYCqTJrfWr4v4k+qQiM1Fe4+Y3cngIJFL3Zw2J
-         aXhM1NRA319wuCU/xmVM7XY3hma6BUhauJKcZRTWnp8hzFSWb5r6kr0MRwgd3IGBuZpV
-         FnBGHHYsQF0VV1scL7V3vFTK/M9pvpQcVSSLmXaYPrfFBB1I1g/B1xp0LZgVL5RQgltd
-         bSzYhJMbWgc+2QMecV/aPaVNrzHOCWg5E7tsuLPfKJ5UlpdYaj1ZQKVvGiLm7IR8efta
-         m8Gg==
-X-Forwarded-Encrypted: i=1; AJvYcCWyIG6svPUlpsCZCJEBpPWVCiDaWpEaYN16RBSnrNBjgWYCMPwmrT2QaIpE5QkZpE+wIgYBsAgSqvhrLY+T9URqC+EVBO17fMSYto6Q
-X-Gm-Message-State: AOJu0YxnfqAHHYtDBrTcGKnC2XwEkcCd08iaosqewqIZ+M9lfE7hOmgH
-	m4+wBZi199zVqB7xatcoq6g+qxzx1JJxm8b+5nae5lLkUtQdorB2PliBwq1CltouCw2S9PnPfHS
-	EayiyMRCTzBbbPeK+hVMmzNoDLN+vMq5iia001HGIp9V+iOXKkgiETyO2LqDrgw==
-X-Received: by 2002:ad4:5cab:0:b0:699:2242:4ee8 with SMTP id q11-20020ad45cab000000b0069922424ee8mr129105qvh.3.1712168724106;
-        Wed, 03 Apr 2024 11:25:24 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHOuNMZozoa6aScFD4XBgyXphotERni3kWeSwgWQ4wF27W29jsLbCwW0feeq4rwhZfTMS4o4A==
-X-Received: by 2002:ad4:5cab:0:b0:699:2242:4ee8 with SMTP id q11-20020ad45cab000000b0069922424ee8mr129072qvh.3.1712168723495;
-        Wed, 03 Apr 2024 11:25:23 -0700 (PDT)
-Received: from x1n ([99.254.121.117])
-        by smtp.gmail.com with ESMTPSA id s15-20020a0562140caf00b00698fd63d167sm4435500qvs.123.2024.04.03.11.25.21
+        d=1e100.net; s=20230601; t=1712168772; x=1712773572;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=+KM0sALA3G00DhEkgIr0nJ9/xgi6K5DMXyrZsidqXcY=;
+        b=CAjorjgr+vpVHF+AeBRSIC5ybYwdLSitFqJV2AIHEWog20x5LgD+R6+8P2ZkGKFtGK
+         C0i/4yy/4a3Cm87c8YUzXnTUmEHKSaW7zirf2fuac/fthLstVLJF2TIOK6JkYp1Mqm+q
+         RM7ZNQIuBif8yTRaKuyfe+bO5U6l6KhaeJG1tKqZ8aTBQ9Ll4A1aR83cA2kwviu6n8mr
+         g0KuF1NHIl5RACpXikZI3McZTTKTDqD4bEP5qubl/uILYRl9P7b8JEaBDDv+EBL6iCgh
+         wAbmhz/2stsempb7gypnNKjk3WZlqbri7UfYo4tz6ERaksgR5uplVsZGY2QmgIyUUv0o
+         ZAVw==
+X-Forwarded-Encrypted: i=1; AJvYcCWF7oTSfI5tWr6lLclYdEJu5Sxr6koTAOseTnZQnzbo14p4vdOPZmwJH8II3LNEyKrVE19FyNSwB5/233Qseu2dXN3yMwkBMFifGkZW26RFhC5NmjrJOEA7E3F2K89DGdgE5zUcWL3eXmHKgVZ12j8urcR/5OgYPyb1kUvbIPpj6/aeUGAaH9Slog==
+X-Gm-Message-State: AOJu0YyRAeYlX7UpaBupwTB2EKzU95K8pMaOV/G4yHBl4xPyi+sbgytd
+	BHDL/jJyMcFVUHwsoKp9bwVBVlHGIBiSmZe9XwzQFvW14m5te9Zz
+X-Google-Smtp-Source: AGHT+IHyw8jSWtpDO8BrX3kYROr9rl6m4q+INmfSxI61JhQchpPQy8VC9DOn8KqfulZFH4T3VzoTnw==
+X-Received: by 2002:a05:6a20:a125:b0:1a7:2e6f:e5d3 with SMTP id q37-20020a056a20a12500b001a72e6fe5d3mr590280pzk.3.1712168771615;
+        Wed, 03 Apr 2024 11:26:11 -0700 (PDT)
+Received: from localhost.localdomain ([113.30.217.222])
+        by smtp.gmail.com with ESMTPSA id kq10-20020a056a004b0a00b006eae3aac040sm10609776pfb.31.2024.04.03.11.26.08
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 03 Apr 2024 11:25:23 -0700 (PDT)
-Date: Wed, 3 Apr 2024 14:25:20 -0400
-From: Peter Xu <peterx@redhat.com>
-To: Jason Gunthorpe <jgg@nvidia.com>
-Cc: Nathan Chancellor <nathan@kernel.org>, linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org, Yang Shi <shy828301@gmail.com>,
-	"Kirill A . Shutemov" <kirill@shutemov.name>,
-	Mike Kravetz <mike.kravetz@oracle.com>,
-	John Hubbard <jhubbard@nvidia.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Andrew Jones <andrew.jones@linux.dev>,
-	Muchun Song <muchun.song@linux.dev>,
-	linux-riscv@lists.infradead.org, linuxppc-dev@lists.ozlabs.org,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Christoph Hellwig <hch@infradead.org>,
-	Lorenzo Stoakes <lstoakes@gmail.com>,
-	Matthew Wilcox <willy@infradead.org>,
-	Rik van Riel <riel@surriel.com>,
+        Wed, 03 Apr 2024 11:26:11 -0700 (PDT)
+From: Anand Moon <linux.amoon@gmail.com>
+To: Chanwoo Choi <cw00.choi@samsung.com>,
+	MyungJoo Ham <myungjoo.ham@samsung.com>,
+	Kyungmin Park <kyungmin.park@samsung.com>,
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+	Alim Akhtar <alim.akhtar@samsung.com>
+Cc: Anand Moon <linux.amoon@gmail.com>,
+	linux-pm@vger.kernel.org,
+	linux-samsung-soc@vger.kernel.org,
 	linux-arm-kernel@lists.infradead.org,
-	Andrea Arcangeli <aarcange@redhat.com>,
-	David Hildenbrand <david@redhat.com>,
-	"Aneesh Kumar K . V" <aneesh.kumar@kernel.org>,
-	Vlastimil Babka <vbabka@suse.cz>,
-	James Houghton <jthoughton@google.com>,
-	Mike Rapoport <rppt@kernel.org>,
-	Axel Rasmussen <axelrasmussen@google.com>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>, loongarch@lists.linux.dev
-Subject: Re: [PATCH v4 05/13] mm/arch: Provide pud_pfn() fallback
-Message-ID: <Zg2fEP4eEeLhgDwE@x1n>
-References: <20240327152332.950956-1-peterx@redhat.com>
- <20240327152332.950956-6-peterx@redhat.com>
- <20240402190549.GA706730@dev-arch.thelio-3990X>
- <ZgyKLLVZ4vN56uZE@x1n>
- <20240402225320.GU946323@nvidia.com>
- <ZgyWUYVdUsAiXCC4@xz-m1.local>
- <20240403120841.GB1723999@nvidia.com>
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v2 1/2] PM / devfreq: exynos: Use Use devm_clk_get_enabled() helpers
+Date: Wed,  3 Apr 2024 23:45:04 +0530
+Message-ID: <20240403181517.5993-1-linux.amoon@gmail.com>
+X-Mailer: git-send-email 2.44.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20240403120841.GB1723999@nvidia.com>
+Content-Transfer-Encoding: 8bit
 
-On Wed, Apr 03, 2024 at 09:08:41AM -0300, Jason Gunthorpe wrote:
-> On Tue, Apr 02, 2024 at 07:35:45PM -0400, Peter Xu wrote:
-> > On Tue, Apr 02, 2024 at 07:53:20PM -0300, Jason Gunthorpe wrote:
-> > > On Tue, Apr 02, 2024 at 06:43:56PM -0400, Peter Xu wrote:
-> > > 
-> > > > I actually tested this without hitting the issue (even though I didn't
-> > > > mention it in the cover letter..).  I re-kicked the build test, it turns
-> > > > out my "make alldefconfig" on loongarch will generate a config with both
-> > > > HUGETLB=n && THP=n, while arch/loongarch/configs/loongson3_defconfig has
-> > > > THP=y (which I assume was the one above build used).  I didn't further
-> > > > check how "make alldefconfig" generated the config; a bit surprising that
-> > > > it didn't fetch from there.
-> > > 
-> > > I suspect it is weird compiler variations.. Maybe something is not
-> > > being inlined.
-> > > 
-> > > > (and it also surprises me that this BUILD_BUG can trigger.. I used to try
-> > > >  triggering it elsewhere but failed..)
-> > > 
-> > > As the pud_leaf() == FALSE should result in the BUILD_BUG never being
-> > > called and the optimizer removing it.
-> > 
-> > Good point, for some reason loongarch defined pud_leaf() without defining
-> > pud_pfn(), which does look strange.
-> > 
-> > #define pud_leaf(pud)		((pud_val(pud) & _PAGE_HUGE) != 0)
-> > 
-> > But I noticed at least MIPS also does it..  Logically I think one arch
-> > should define either none of both.
-> 
-> Wow, this is definately an arch issue. You can't define pud_leaf() and
-> not have a pud_pfn(). It makes no sense at all..
-> 
-> I'd say the BUILD_BUG has done it's job and found an issue, fix it by
-> not defining pud_leaf? I don't see any calls to pud_leaf in loongarch
-> at least
+The devm_clk_get_enabled() helpers:
+    - call devm_clk_get()
+    - call clk_prepare_enable() and register what is needed in order to
+     call clk_disable_unprepare() when needed, as a managed resource.
 
-Yes, that sounds better too to me, however it means we may also risk other
-archs that can fail another defconfig build.. and I worry I bring trouble
-to multiple such cases.  Fundamentally it's indeed my patch that broke
-those builds, so I still sent the change and leave that for arch developers
-to decide the best for the archs.
+This simplifies the code and avoids the calls to clk_disable_unprepare().
 
-I think if wanted, we can add that BUILD_BUG() back when we're sure no arch
-will break with it.  So such changes from arch can still be proposed
-alongside of removal of BUILD_BUG() (and I'd guess some other arch will
-start to notice such build issue soon if existed.. so it still more or less
-has similar effect of a reminder..).
+While at it, use dev_err_probe consistently, and use its return value
+to return the error code.
 
-Thanks,
+Signed-off-by: Anand Moon <linux.amoon@gmail.com>
+---
+v2: no changes
+---
+ drivers/devfreq/exynos-bus.c | 21 ++++-----------------
+ 1 file changed, 4 insertions(+), 17 deletions(-)
 
+diff --git a/drivers/devfreq/exynos-bus.c b/drivers/devfreq/exynos-bus.c
+index 245898f1a88e..153340b6685f 100644
+--- a/drivers/devfreq/exynos-bus.c
++++ b/drivers/devfreq/exynos-bus.c
+@@ -160,7 +160,6 @@ static void exynos_bus_exit(struct device *dev)
+ 	platform_device_unregister(bus->icc_pdev);
+ 
+ 	dev_pm_opp_of_remove_table(dev);
+-	clk_disable_unprepare(bus->clk);
+ 	dev_pm_opp_put_regulators(bus->opp_token);
+ }
+ 
+@@ -171,7 +170,6 @@ static void exynos_bus_passive_exit(struct device *dev)
+ 	platform_device_unregister(bus->icc_pdev);
+ 
+ 	dev_pm_opp_of_remove_table(dev);
+-	clk_disable_unprepare(bus->clk);
+ }
+ 
+ static int exynos_bus_parent_parse_of(struct device_node *np,
+@@ -247,23 +245,15 @@ static int exynos_bus_parse_of(struct device_node *np,
+ 	int ret;
+ 
+ 	/* Get the clock to provide each bus with source clock */
+-	bus->clk = devm_clk_get(dev, "bus");
+-	if (IS_ERR(bus->clk)) {
+-		dev_err(dev, "failed to get bus clock\n");
+-		return PTR_ERR(bus->clk);
+-	}
+-
+-	ret = clk_prepare_enable(bus->clk);
+-	if (ret < 0) {
+-		dev_err(dev, "failed to get enable clock\n");
+-		return ret;
+-	}
++	bus->clk = devm_clk_get_enabled(dev, "bus");
++	if (IS_ERR(bus->clk))
++		return dev_err_probe(dev, PTR_ERR(bus->clk), "failed to get bus clock\n");
+ 
+ 	/* Get the freq and voltage from OPP table to scale the bus freq */
+ 	ret = dev_pm_opp_of_add_table(dev);
+ 	if (ret < 0) {
+ 		dev_err(dev, "failed to get OPP table\n");
+-		goto err_clk;
++		return ret;
+ 	}
+ 
+ 	rate = clk_get_rate(bus->clk);
+@@ -281,8 +271,6 @@ static int exynos_bus_parse_of(struct device_node *np,
+ 
+ err_opp:
+ 	dev_pm_opp_of_remove_table(dev);
+-err_clk:
+-	clk_disable_unprepare(bus->clk);
+ 
+ 	return ret;
+ }
+@@ -453,7 +441,6 @@ static int exynos_bus_probe(struct platform_device *pdev)
+ 
+ err:
+ 	dev_pm_opp_of_remove_table(dev);
+-	clk_disable_unprepare(bus->clk);
+ err_reg:
+ 	dev_pm_opp_put_regulators(bus->opp_token);
+ 
 -- 
-Peter Xu
+2.44.0
 
