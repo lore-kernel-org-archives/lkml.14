@@ -1,159 +1,214 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53891146A92
-	for <linux-kernel@vger.kernel.org>; Wed,  3 Apr 2024 12:50:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 208371419BA;
+	Wed,  3 Apr 2024 12:51:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712148653; cv=none; b=X6zJW8sadPkoyCOU8YSWUKZgoCiXn3CEtbDayFqAyK1m9e1kPQAExnf2hpPNpyQHOjXkLGSRI6+Vwf/HRI9BholQ3tE/bBXGRPW0ncECGOfkUSeg496F0iF0w6AaNR5d/6APevzCeHhtaRzdifLOdWMm3IeVXRjyvn/doLWiHRQ=
+	t=1712148672; cv=none; b=VUGTJbZ6SLNi8h7Bz14sKR/EsDyysWItPx4ZtqSs2n28Ef07x7CJUY3iHy3/3gSpPdSxoqoyeg2+LNcUo/XCWeVW8taral8k34g/NRQKDy2aZ824F2RrDL9u8VtHOESxPn5Yq8+eFmQPZwcXmK0Gk+SwJ8r7AGQ4vSLMBvsIsBg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712148653; c=relaxed/simple;
-	bh=o5G4LuYk6sEvisbWMiODRuymYHEM3nRIHoBwcx+FraY=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=HpZCaUpesmPmmGpZhZdN0Zt1L/4nKJic+bYxkfXqFY1tHzAT4URGyQne8BIp/73SvWed7sQQezxAh5eywUBrgtb2h/1oZ7XG6KBnwawSEvaPVp62L23nPZ4rfSPSadEX0W0C4l0cXQNOi7vkLZUSQpb3fAm1ExjJqS85/LKcmQo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <ore@pengutronix.de>)
-	id 1rs04h-0005wj-0Z; Wed, 03 Apr 2024 14:50:43 +0200
-Received: from [2a0a:edc0:0:1101:1d::ac] (helo=dude04.red.stw.pengutronix.de)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <ore@pengutronix.de>)
-	id 1rs04f-00ABEa-3T; Wed, 03 Apr 2024 14:50:41 +0200
-Received: from ore by dude04.red.stw.pengutronix.de with local (Exim 4.96)
-	(envelope-from <ore@pengutronix.de>)
-	id 1rs04e-00EKY2-36;
-	Wed, 03 Apr 2024 14:50:40 +0200
-From: Oleksij Rempel <o.rempel@pengutronix.de>
-To: "David S. Miller" <davem@davemloft.net>,
-	Andrew Lunn <andrew@lunn.ch>,
-	Eric Dumazet <edumazet@google.com>,
-	Florian Fainelli <f.fainelli@gmail.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Vladimir Oltean <olteanv@gmail.com>,
-	Woojung Huh <woojung.huh@microchip.com>,
-	Arun Ramadoss <arun.ramadoss@microchip.com>
-Cc: Oleksij Rempel <o.rempel@pengutronix.de>,
-	kernel@pengutronix.de,
-	linux-kernel@vger.kernel.org,
-	netdev@vger.kernel.org,
-	UNGLinuxDriver@microchip.com,
-	=?UTF-8?q?S=C3=B8ren=20Andersen?= <san@skov.dk>
-Subject: [PATCH net-next v2 4/8] net: dsa: microchip: ksz8: Refactor ksz8_r_dyn_mac_table() for readability
-Date: Wed,  3 Apr 2024 14:50:35 +0200
-Message-Id: <20240403125039.3414824-5-o.rempel@pengutronix.de>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240403125039.3414824-1-o.rempel@pengutronix.de>
-References: <20240403125039.3414824-1-o.rempel@pengutronix.de>
+	s=arc-20240116; t=1712148672; c=relaxed/simple;
+	bh=zwy5/UeNKw0rdFTNUIENurIiqNiqQ2OzHWaKd+hx69E=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=nCiEOOoSVq06tOmvJQibRuYZv+0GOgQhX2d/F8ktP57j1LvOC2dudHA8xH4n8I2LPnQF1rJiTFFpCE5kQWLxyY6FOe1PDARjrLAP3f0VbNc8FBpELmLg+FwC4uUKATUWzmhw2WmKPeeMfatzTc6IKNlxr8YP4QoTTzH/EuQms1s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IKSsvjLp; arc=none smtp.client-ip=209.85.128.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IKSsvjLp"
+Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-416262d747dso717435e9.0;
+        Wed, 03 Apr 2024 05:51:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1712148669; x=1712753469; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=29BgQt41fxpDRMixAlECbaCmewv1mm5rdtRovSAulMA=;
+        b=IKSsvjLp0pJJD2zzd42kk8JKagUJBhyhBAbjFRxMcnVC69OY+OmP3vSc+uBBbzoKwo
+         qyjcDHAEPDimmutVqfD2UK8TPYcdUSLswOHb6t7OuvpMdTAEhSkvBtv+Vyc0VRzEXg77
+         xRyY63/Jaubow1Fko4loce8URvZgTriZHa3LILOSwAOUuZ22rH863YQcL1tgGlI0iLQE
+         8dcOwyalOwzZBS6P3DyPgamV/ouMX93NZfcoZBePxuVnmYBOn31xyfT1x9gxE2BHoGjY
+         gX/SVQ51YDIIgd3TGiFmKfo8Cf5I7fw1Bh8qbRH5EdkNcWH1cU+cTRr2A5wbFIfuzXeE
+         8LuQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712148669; x=1712753469;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=29BgQt41fxpDRMixAlECbaCmewv1mm5rdtRovSAulMA=;
+        b=ANO5y9mj4fTiF+3he8HNrJEYRh3AYs+oSBNQUrsd/pMFxU/rSrFGR1ZYoUW5kWEPOb
+         d42xhxAONMH3lioFvlQxcdiV8aieRUeFSqFqG0PRo1CGoqKQT6V6D2V6Ryw0SDnmy12L
+         jKS0Le/4z6lreRN1zYLiRdw6qNdgOMeIggo8ntTqIuqj6CkHTyGR8L387CnyUyAbtvP1
+         cYNsvAIgGUaEN85IyXr+3bd2dMQd/9JpE8ZuC7K20Vnoc+0FAPbj06HbpSVOS1pkKWGk
+         BKf17qz8p0f+zhg7i+6x7o0y1X+ffPwImN9rJHfVMViEsaENlwGL0W/IJG0ZKVESLivc
+         iJpA==
+X-Forwarded-Encrypted: i=1; AJvYcCVeBqG7IYbGwrNarsNgrJEs/lDNRU/C9LTqpwlVfuQyI1Emk9/+7f201Ke2jBa/Xs47Gr6pAl9e8tBM2u81hRxJ/KmFBflU3blif0a+SmmNIQCanbp3LFKUXTYj185lhXnSxI3JI9GSg2eLd8gvTgB2L91R2cwif/KZ7TP6YWWya3Shjg==
+X-Gm-Message-State: AOJu0YxI5yfO2XiPv3Mb5x7XPgYG7BGQr9rQP6vz5zZBgLax60jYYhXm
+	OpMMXCSd4s/DJkUXIhK510vEH1TEjpn/J+YXMSnF1MlV/Ukki9cr
+X-Google-Smtp-Source: AGHT+IGiMxFFkzEMKwErZDGMsEh8QQujgECEb7hAYrnmXSB8PanQ6hfDeg6f6lJ/1vv3KfoIi9fU0w==
+X-Received: by 2002:a05:600c:5710:b0:414:9103:e38c with SMTP id jv16-20020a05600c571000b004149103e38cmr10494666wmb.22.1712148669149;
+        Wed, 03 Apr 2024 05:51:09 -0700 (PDT)
+Received: from [10.254.108.81] (munvpn.amd.com. [165.204.72.6])
+        by smtp.gmail.com with ESMTPSA id dj11-20020a0560000b0b00b003437799a373sm3724238wrb.83.2024.04.03.05.51.07
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 03 Apr 2024 05:51:08 -0700 (PDT)
+Message-ID: <0c95aa84-63e6-41be-8c70-3a6dadefd682@gmail.com>
+Date: Wed, 3 Apr 2024 14:51:04 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 00/15] Unified cross-architecture kernel-mode FPU API
+To: Samuel Holland <samuel.holland@sifive.com>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ linux-arm-kernel@lists.infradead.org, x86@kernel.org
+Cc: linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
+ linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
+ Christoph Hellwig <hch@lst.de>, loongarch@lists.linux.dev,
+ amd-gfx@lists.freedesktop.org, Borislav Petkov <bp@alien8.de>,
+ Catalin Marinas <catalin.marinas@arm.com>,
+ Dave Hansen <dave.hansen@linux.intel.com>,
+ Huacai Chen <chenhuacai@kernel.org>, Ingo Molnar <mingo@redhat.com>,
+ Jonathan Corbet <corbet@lwn.net>, Masahiro Yamada <masahiroy@kernel.org>,
+ Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nicolas@fjasle.eu>,
+ Russell King <linux@armlinux.org.uk>, Thomas Gleixner <tglx@linutronix.de>,
+ Will Deacon <will@kernel.org>, linux-doc@vger.kernel.org,
+ linux-kbuild@vger.kernel.org, "Wentland, Harry" <Harry.Wentland@amd.com>,
+ Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>
+References: <20240329072441.591471-1-samuel.holland@sifive.com>
+Content-Language: en-US
+From: =?UTF-8?Q?Christian_K=C3=B6nig?= <ckoenig.leichtzumerken@gmail.com>
+In-Reply-To: <20240329072441.591471-1-samuel.holland@sifive.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ore@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-Move the code out of a long if statement scope in ksz8_r_dyn_mac_table()
-to improve code readability.
+I only skimmed over the platform patches and spend only a few minutes on 
+the amdgpu stuff.
 
-Reviewed-by: Vladimir Oltean <olteanv@gmail.com>
-Acked-by: Arun Ramadoss <arun.ramadoss@microchip.com>
-Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
----
- drivers/net/dsa/microchip/ksz8795.c | 60 +++++++++++++++--------------
- 1 file changed, 31 insertions(+), 29 deletions(-)
+ From what I've seen this series seems to make perfect sense to me, I 
+just can't fully judge everything.
 
-diff --git a/drivers/net/dsa/microchip/ksz8795.c b/drivers/net/dsa/microchip/ksz8795.c
-index c93eb351ab3d5..d258fb607b4af 100644
---- a/drivers/net/dsa/microchip/ksz8795.c
-+++ b/drivers/net/dsa/microchip/ksz8795.c
-@@ -416,7 +416,9 @@ static int ksz8_r_dyn_mac_table(struct ksz_device *dev, u16 addr, u8 *mac_addr,
- 	const u32 *masks;
- 	const u16 *regs;
- 	u16 ctrl_addr;
-+	u64 buf = 0;
- 	u8 data;
-+	int cnt;
- 	int rc;
- 
- 	shifts = dev->info->shifts;
-@@ -432,38 +434,38 @@ static int ksz8_r_dyn_mac_table(struct ksz_device *dev, u16 addr, u8 *mac_addr,
- 	if (rc == -EAGAIN) {
- 		if (addr == 0)
- 			*entries = 0;
-+		goto unlock_alu;
- 	} else if (rc == -ENXIO) {
- 		*entries = 0;
--	/* At least one valid entry in the table. */
--	} else {
--		u64 buf = 0;
--		int cnt;
--
--		ksz_read64(dev, regs[REG_IND_DATA_HI], &buf);
--		data_hi = (u32)(buf >> 32);
--		data_lo = (u32)buf;
--
--		/* Check out how many valid entry in the table. */
--		cnt = data & masks[DYNAMIC_MAC_TABLE_ENTRIES_H];
--		cnt <<= shifts[DYNAMIC_MAC_ENTRIES_H];
--		cnt |= (data_hi & masks[DYNAMIC_MAC_TABLE_ENTRIES]) >>
--			shifts[DYNAMIC_MAC_ENTRIES];
--		*entries = cnt + 1;
--
--		*fid = (data_hi & masks[DYNAMIC_MAC_TABLE_FID]) >>
--			shifts[DYNAMIC_MAC_FID];
--		*src_port = (data_hi & masks[DYNAMIC_MAC_TABLE_SRC_PORT]) >>
--			shifts[DYNAMIC_MAC_SRC_PORT];
--
--		mac_addr[5] = (u8)data_lo;
--		mac_addr[4] = (u8)(data_lo >> 8);
--		mac_addr[3] = (u8)(data_lo >> 16);
--		mac_addr[2] = (u8)(data_lo >> 24);
--
--		mac_addr[1] = (u8)data_hi;
--		mac_addr[0] = (u8)(data_hi >> 8);
--		rc = 0;
-+		goto unlock_alu;
- 	}
-+
-+	ksz_read64(dev, regs[REG_IND_DATA_HI], &buf);
-+	data_hi = (u32)(buf >> 32);
-+	data_lo = (u32)buf;
-+
-+	/* Check out how many valid entry in the table. */
-+	cnt = data & masks[DYNAMIC_MAC_TABLE_ENTRIES_H];
-+	cnt <<= shifts[DYNAMIC_MAC_ENTRIES_H];
-+	cnt |= (data_hi & masks[DYNAMIC_MAC_TABLE_ENTRIES]) >>
-+		shifts[DYNAMIC_MAC_ENTRIES];
-+	*entries = cnt + 1;
-+
-+	*fid = (data_hi & masks[DYNAMIC_MAC_TABLE_FID]) >>
-+		shifts[DYNAMIC_MAC_FID];
-+	*src_port = (data_hi & masks[DYNAMIC_MAC_TABLE_SRC_PORT]) >>
-+		shifts[DYNAMIC_MAC_SRC_PORT];
-+
-+	mac_addr[5] = (u8)data_lo;
-+	mac_addr[4] = (u8)(data_lo >> 8);
-+	mac_addr[3] = (u8)(data_lo >> 16);
-+	mac_addr[2] = (u8)(data_lo >> 24);
-+
-+	mac_addr[1] = (u8)data_hi;
-+	mac_addr[0] = (u8)(data_hi >> 8);
-+	rc = 0;
-+
-+unlock_alu:
- 	mutex_unlock(&dev->alu_mutex);
- 
- 	return rc;
--- 
-2.39.2
+So feel free to add Acked-by: Christian König <christian.koenig@amd.com> 
+but I strongly suggest that Harry and Rodrigo take a look as well.
+
+Regards,
+Christian.
+
+Am 29.03.24 um 08:18 schrieb Samuel Holland:
+> This series unifies the kernel-mode FPU API across several architectures
+> by wrapping the existing functions (where needed) in consistently-named
+> functions placed in a consistent header location, with mostly the same
+> semantics: they can be called from preemptible or non-preemptible task
+> context, and are not assumed to be reentrant. Architectures are also
+> expected to provide CFLAGS adjustments for compiling FPU-dependent code.
+> For the moment, SIMD/vector units are out of scope for this common API.
+>
+> This allows us to remove the ifdeffery and duplicated Makefile logic at
+> each FPU user. It then implements the common API on RISC-V, and converts
+> a couple of users to the new API: the AMDGPU DRM driver, and the FPU
+> self test.
+>
+> The underlying goal of this series is to allow using newer AMD GPUs
+> (e.g. Navi) on RISC-V boards such as SiFive's HiFive Unmatched. Those
+> GPUs need CONFIG_DRM_AMD_DC_FP to initialize, which requires kernel-mode
+> FPU support.
+>
+> Previous versions:
+> v3: https://lore.kernel.org/linux-kernel/20240327200157.1097089-1-samuel.holland@sifive.com/
+> v2: https://lore.kernel.org/linux-kernel/20231228014220.3562640-1-samuel.holland@sifive.com/
+> v1: https://lore.kernel.org/linux-kernel/20231208055501.2916202-1-samuel.holland@sifive.com/
+> v0: https://lore.kernel.org/linux-kernel/20231122030621.3759313-1-samuel.holland@sifive.com/
+>
+> Changes in v4:
+>   - Add missed CFLAGS changes for recov_neon_inner.c
+>     (fixes arm build failures)
+>   - Fix x86 include guard issue (fixes x86 build failures)
+>
+> Changes in v3:
+>   - Rebase on v6.9-rc1
+>   - Limit riscv ARCH_HAS_KERNEL_FPU_SUPPORT to 64BIT
+>
+> Changes in v2:
+>   - Add documentation explaining the built-time and runtime APIs
+>   - Add a linux/fpu.h header for generic isolation enforcement
+>   - Remove file name from header comment
+>   - Clean up arch/arm64/lib/Makefile, like for arch/arm
+>   - Remove RISC-V architecture-specific preprocessor check
+>   - Split altivec removal to a separate patch
+>   - Use linux/fpu.h instead of asm/fpu.h in consumers
+>   - Declare test_fpu() in a header
+>
+> Michael Ellerman (1):
+>    drm/amd/display: Only use hard-float, not altivec on powerpc
+>
+> Samuel Holland (14):
+>    arch: Add ARCH_HAS_KERNEL_FPU_SUPPORT
+>    ARM: Implement ARCH_HAS_KERNEL_FPU_SUPPORT
+>    ARM: crypto: Use CC_FLAGS_FPU for NEON CFLAGS
+>    arm64: Implement ARCH_HAS_KERNEL_FPU_SUPPORT
+>    arm64: crypto: Use CC_FLAGS_FPU for NEON CFLAGS
+>    lib/raid6: Use CC_FLAGS_FPU for NEON CFLAGS
+>    LoongArch: Implement ARCH_HAS_KERNEL_FPU_SUPPORT
+>    powerpc: Implement ARCH_HAS_KERNEL_FPU_SUPPORT
+>    x86/fpu: Fix asm/fpu/types.h include guard
+>    x86: Implement ARCH_HAS_KERNEL_FPU_SUPPORT
+>    riscv: Add support for kernel-mode FPU
+>    drm/amd/display: Use ARCH_HAS_KERNEL_FPU_SUPPORT
+>    selftests/fpu: Move FP code to a separate translation unit
+>    selftests/fpu: Allow building on other architectures
+>
+>   Documentation/core-api/floating-point.rst     | 78 +++++++++++++++++++
+>   Documentation/core-api/index.rst              |  1 +
+>   Makefile                                      |  5 ++
+>   arch/Kconfig                                  |  6 ++
+>   arch/arm/Kconfig                              |  1 +
+>   arch/arm/Makefile                             |  7 ++
+>   arch/arm/include/asm/fpu.h                    | 15 ++++
+>   arch/arm/lib/Makefile                         |  3 +-
+>   arch/arm64/Kconfig                            |  1 +
+>   arch/arm64/Makefile                           |  9 ++-
+>   arch/arm64/include/asm/fpu.h                  | 15 ++++
+>   arch/arm64/lib/Makefile                       |  6 +-
+>   arch/loongarch/Kconfig                        |  1 +
+>   arch/loongarch/Makefile                       |  5 +-
+>   arch/loongarch/include/asm/fpu.h              |  1 +
+>   arch/powerpc/Kconfig                          |  1 +
+>   arch/powerpc/Makefile                         |  5 +-
+>   arch/powerpc/include/asm/fpu.h                | 28 +++++++
+>   arch/riscv/Kconfig                            |  1 +
+>   arch/riscv/Makefile                           |  3 +
+>   arch/riscv/include/asm/fpu.h                  | 16 ++++
+>   arch/riscv/kernel/Makefile                    |  1 +
+>   arch/riscv/kernel/kernel_mode_fpu.c           | 28 +++++++
+>   arch/x86/Kconfig                              |  1 +
+>   arch/x86/Makefile                             | 20 +++++
+>   arch/x86/include/asm/fpu.h                    | 13 ++++
+>   arch/x86/include/asm/fpu/types.h              |  6 +-
+>   drivers/gpu/drm/amd/display/Kconfig           |  2 +-
+>   .../gpu/drm/amd/display/amdgpu_dm/dc_fpu.c    | 35 +--------
+>   drivers/gpu/drm/amd/display/dc/dml/Makefile   | 36 +--------
+>   drivers/gpu/drm/amd/display/dc/dml2/Makefile  | 36 +--------
+>   include/linux/fpu.h                           | 12 +++
+>   lib/Kconfig.debug                             |  2 +-
+>   lib/Makefile                                  | 26 +------
+>   lib/raid6/Makefile                            | 33 +++-----
+>   lib/test_fpu.h                                |  8 ++
+>   lib/{test_fpu.c => test_fpu_glue.c}           | 37 ++-------
+>   lib/test_fpu_impl.c                           | 37 +++++++++
+>   38 files changed, 348 insertions(+), 193 deletions(-)
+>   create mode 100644 Documentation/core-api/floating-point.rst
+>   create mode 100644 arch/arm/include/asm/fpu.h
+>   create mode 100644 arch/arm64/include/asm/fpu.h
+>   create mode 100644 arch/powerpc/include/asm/fpu.h
+>   create mode 100644 arch/riscv/include/asm/fpu.h
+>   create mode 100644 arch/riscv/kernel/kernel_mode_fpu.c
+>   create mode 100644 arch/x86/include/asm/fpu.h
+>   create mode 100644 include/linux/fpu.h
+>   create mode 100644 lib/test_fpu.h
+>   rename lib/{test_fpu.c => test_fpu_glue.c} (71%)
+>   create mode 100644 lib/test_fpu_impl.c
+>
 
