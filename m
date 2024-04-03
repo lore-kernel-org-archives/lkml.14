@@ -1,169 +1,145 @@
-Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com [209.85.208.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74123148FE4
-	for <linux-kernel@vger.kernel.org>; Wed,  3 Apr 2024 14:02:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47A84148305;
+	Wed,  3 Apr 2024 14:04:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712152960; cv=none; b=bJ+70ncuBytWqceNDL+ICnwQ8O1oyCQVsxGqXlBIA8pA4CQR+JtXhFph7TOLu5JATw3QdPrJMo9/2O4ffmg4J96GModKNOWdwQfatm/jSH9/uBQmvw8PeLyv9iG7Wd2F6IjELxOq3CQd8x8qSYL634pr4m4DEdIl3hmIEyVdaqM=
+	t=1712153046; cv=none; b=SU/mats1M0BJqS5OaXgGYtN1H8+5J+A6zXH+Q2PrJ9n53TqB5sZcmaWPwvCD1Snrc8+DqefDcvF4gtEiC+NuDyTfZisY+dDHIaxkC9FsUpA4lfxvjMcNAj/IbBsJ30fXq6flBvzHL6jvGUPHQd0y2I1Kl2MFLJEaG7krlr6xbdE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712152960; c=relaxed/simple;
-	bh=UXsMLWolQ65sgQY9ytl3MN9D3SzJEncq+W8keY+wzwk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=JZ1IL5EmNDN4EoM8vNBBdk23ncdJofl1VM6xicwZrDsQYXEn1yF7VCmjl0gF+MyLH43R8yRyDs2/7YfSG8GB8LUvlNe+GY4VoChvzUMDNTBQYRSHWULqEqx7UXGdzLM5an8WGZcAI4Pu9zoT6B/fFU+0dXfX6lJgjeBo0BLKibE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=yq2046sf; arc=none smtp.client-ip=209.85.208.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="yq2046sf"
-Received: by mail-lj1-f179.google.com with SMTP id 38308e7fff4ca-2d485886545so106097091fa.2
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Apr 2024 07:02:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1712152956; x=1712757756; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=Xffq3xDlhcth/zmXxLFozcKGPrlUpFFerV06UWS3/eA=;
-        b=yq2046sfhd0j1mkC1QM6GiS2anJPLRSS7PD2n8fg9RdHi+odltz9AZqUXjN6Q0Ntwz
-         s+3IegMvpK18U0IU5vHL5MywXr5bBz803LsNpsbCrzYhjBoYQL37uO1uP0CwIGOGhedQ
-         nUrPIcojdELYUiLxuSEOHmgCUj4PONGZij3hRwVPS8TFesH/6dVJ0f6oqgHyo2NzRjoY
-         /jny9N+oFKF2/f9PvFvgxuWFBgI70UosDgs3MGwx8/FcPgUEmdU+tB4k+hu0ELJD2+eF
-         hNM9Qu3aTR2deYqAaxINpaYcjsNVxR3mTh7vjFjsIf+48hJeePH4kFaUS/f9qAX/X3zo
-         DZvA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712152956; x=1712757756;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Xffq3xDlhcth/zmXxLFozcKGPrlUpFFerV06UWS3/eA=;
-        b=YCzEyOlof2U1fLPFYwxur4SRKaIqczEK2SgMSqyuTzB01ylwDm8JyD2k4cl4TdNhND
-         4Mx1pgmHX9ANnwksFhjv/LDZj+j4EQVOfHWezsORTMtpdJkVM53tt5KrQNMUBAXI+PxD
-         D+S3QXX/N74xmjE8yvusb2vxODa6rNGKfgm3i103H8p9Uw/fFp6pXJLb4dsI2WqSqMcx
-         wtyOC/TX/AA9bLO/W6tSuILXtAvW6C0NZCzpOHnIzT6mAgTdVnp2tD0aXFAQARa2CKm1
-         FmLY6XxW8xLp5Q+EkSM9TqPEAl7VuWxMe2Z6CgOd8Wi2tsGP3c0EVv6rJFSBT1nNkawc
-         hU+Q==
-X-Forwarded-Encrypted: i=1; AJvYcCV7/1AKQdkK9som5QVMidwyMWBCjbFggbsKbpaxlyA5ne9upgtRBbG+seizeNJtBKHsm1aKMM4aYNFA59vgMjV9GtZ0Lseajbf3LIKb
-X-Gm-Message-State: AOJu0YxAMts0sKO9YM92R1M345sZ//K/aSv9/2Mktfm53mYWf+r0mXfL
-	5b27xrED4x2z+vgT73lcBDsVrVnkNl98QzBAhaFA0Ssvu4O9U9UHpRIj49DOhd0=
-X-Google-Smtp-Source: AGHT+IETrJrTqm00Dp9BwZahe/RD7sPBnfDU3orBH0Q5JhIG1nu10mWk/AhrLzD3NxyRT2xEBRwUmQ==
-X-Received: by 2002:a2e:8550:0:b0:2d4:3e96:47ee with SMTP id u16-20020a2e8550000000b002d43e9647eemr3625858ljj.26.1712152956372;
-        Wed, 03 Apr 2024 07:02:36 -0700 (PDT)
-Received: from [192.168.1.20] ([178.197.223.16])
-        by smtp.gmail.com with ESMTPSA id o1-20020a1709064f8100b00a46baba1a0asm7788206eju.100.2024.04.03.07.02.31
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 03 Apr 2024 07:02:33 -0700 (PDT)
-Message-ID: <ec78df08-118b-4086-beec-9227b309595a@linaro.org>
-Date: Wed, 3 Apr 2024 16:02:30 +0200
+	s=arc-20240116; t=1712153046; c=relaxed/simple;
+	bh=anWldCiKGwnM3Qr2FBojle4TG/sM3U26csId4sUVpiA=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=qKRhDScXu5TFpUtVbdLrWQETdKentmLtqoMEMfF1UtcmVgq7EWmxhFFxeMC9PoCjC3jOyS1ILBCk7rFxb3EwRX87FGpxffawmUy488mi20sNcwhn6SdniNeOxKOxsjcMQdZayf3fclEV+cqkdxsXjuwrcMqFwp+mnxnizO7wbfM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.231])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4V8mfS0nqpz6D8W0;
+	Wed,  3 Apr 2024 22:02:40 +0800 (CST)
+Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
+	by mail.maildlp.com (Postfix) with ESMTPS id 95D1B140D30;
+	Wed,  3 Apr 2024 22:03:59 +0800 (CST)
+Received: from lhrpeml500006.china.huawei.com (7.191.161.198) by
+ lhrpeml500005.china.huawei.com (7.191.163.240) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Wed, 3 Apr 2024 15:03:59 +0100
+Received: from lhrpeml500006.china.huawei.com ([7.191.161.198]) by
+ lhrpeml500006.china.huawei.com ([7.191.161.198]) with mapi id 15.01.2507.035;
+ Wed, 3 Apr 2024 15:03:59 +0100
+From: Shiju Jose <shiju.jose@huawei.com>
+To: Daniel Ferguson <danielf@os.amperecomputing.com>,
+	"linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
+	"linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
+	"linux-mm@kvack.org" <linux-mm@kvack.org>, "dan.j.williams@intel.com"
+	<dan.j.williams@intel.com>, "dave@stgolabs.net" <dave@stgolabs.net>,
+	"Jonathan Cameron" <jonathan.cameron@huawei.com>, "dave.jiang@intel.com"
+	<dave.jiang@intel.com>, "alison.schofield@intel.com"
+	<alison.schofield@intel.com>, "vishal.l.verma@intel.com"
+	<vishal.l.verma@intel.com>, "ira.weiny@intel.com" <ira.weiny@intel.com>
+CC: "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"david@redhat.com" <david@redhat.com>, "Vilas.Sridharan@amd.com"
+	<Vilas.Sridharan@amd.com>, "leo.duran@amd.com" <leo.duran@amd.com>,
+	"Yazen.Ghannam@amd.com" <Yazen.Ghannam@amd.com>, "rientjes@google.com"
+	<rientjes@google.com>, "jiaqiyan@google.com" <jiaqiyan@google.com>,
+	"tony.luck@intel.com" <tony.luck@intel.com>, "Jon.Grimm@amd.com"
+	<Jon.Grimm@amd.com>, "dave.hansen@linux.intel.com"
+	<dave.hansen@linux.intel.com>, "rafael@kernel.org" <rafael@kernel.org>,
+	"lenb@kernel.org" <lenb@kernel.org>, "naoya.horiguchi@nec.com"
+	<naoya.horiguchi@nec.com>, "james.morse@arm.com" <james.morse@arm.com>,
+	"jthoughton@google.com" <jthoughton@google.com>, "somasundaram.a@hpe.com"
+	<somasundaram.a@hpe.com>, "erdemaktas@google.com" <erdemaktas@google.com>,
+	"pgonda@google.com" <pgonda@google.com>, "duenwen@google.com"
+	<duenwen@google.com>, "mike.malvestuto@intel.com"
+	<mike.malvestuto@intel.com>, "gthelen@google.com" <gthelen@google.com>,
+	"wschwartz@amperecomputing.com" <wschwartz@amperecomputing.com>,
+	"dferguson@amperecomputing.com" <dferguson@amperecomputing.com>, tanxiaofei
+	<tanxiaofei@huawei.com>, "Zengtao (B)" <prime.zeng@hisilicon.com>,
+	"kangkang.shen@futurewei.com" <kangkang.shen@futurewei.com>, wanghuiqiang
+	<wanghuiqiang@huawei.com>, Linuxarm <linuxarm@huawei.com>,
+	"wbs@os.amperecomputing.com" <wbs@os.amperecomputing.com>
+Subject: RE: [RFC PATCH v7 12/12] memory: RAS2: Add memory RAS2 driver
+Thread-Topic: [RFC PATCH v7 12/12] memory: RAS2: Add memory RAS2 driver
+Thread-Index: AQHaZmXf7yKhv06+EU6o6xtLiEJk9LFOBiUAgAjJRxA=
+Date: Wed, 3 Apr 2024 14:03:58 +0000
+Message-ID: <32c348a0a61d4c6585b1b58e923a7f79@huawei.com>
+References: <20240223143723.1574-1-shiju.jose@huawei.com>
+ <20240223143723.1574-13-shiju.jose@huawei.com>
+ <78d11760-bb43-42a1-a302-3e2d3bf40c48@os.amperecomputing.com>
+In-Reply-To: <78d11760-bb43-42a1-a302-3e2d3bf40c48@os.amperecomputing.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/6] wifi: ath10k: sdio: simplify module initialization
-To: Kalle Valo <kvalo@kernel.org>, Jeff Johnson <quic_jjohnson@quicinc.com>
-Cc: Jeff Johnson <jjohnson@kernel.org>,
- Brian Norris <briannorris@chromium.org>,
- Ajay Singh <ajay.kathat@microchip.com>,
- Claudiu Beznea <claudiu.beznea@tuxon.dev>, linux-wireless@vger.kernel.org,
- ath10k@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20240329171019.63836-1-krzysztof.kozlowski@linaro.org>
- <f78fa061-3b34-47d2-a40c-bbec744f0f97@quicinc.com>
- <87jzle5zda.fsf@kernel.org>
-Content-Language: en-US
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
- 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
- D2GYIS41Kv4Isx2dEFh+/Q==
-In-Reply-To: <87jzle5zda.fsf@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
 
-On 03/04/2024 15:50, Kalle Valo wrote:
-> Jeff Johnson <quic_jjohnson@quicinc.com> writes:
-> 
->> On 3/29/2024 10:10 AM, Krzysztof Kozlowski wrote:
->>> This driver's initialization functions do not perform any custom code,
->>> except printing messages.  Printing messages on modules
->>> loading/unloading is discouraged because it pollutes the dmesg
->>> regardless whether user actually has this device.  Core kernel code
->>> already gives tools to investigate whether module was loaded or not.
->>>
->>> Drop the printing messages which allows to replace open-coded
->>> module_sdio_driver().
->>>
->>> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
->>
->> Acked-by: Jeff Johnson <quic_jjohnson@quicinc.com>
->>
->>>
->>> ---
->>>
->>> FYI:
->>> I have ongoing patchset touching few lines above this patch chunk
->>> (sdio_driver) which might go via different tree. If that patchset is
->>> applied via different tree, it might result in a trivial conflict, but
->>> there is no dependency. They can go via separate trees (except that
->>> trivial conflict).
->>
->> I'll let Kalle respond if he'll take this through the ath tree vs letting you
->> take it through your tree
-> 
-> I prefer to avoid conflicts as much as possible. In this patchset I'm
-> not anticipating any conflicts with wireless trees, so if we can avoid
-> any conflicts, please take this patchset via the other tree:
-> 
-> Acked-by: Kalle Valo <kvalo@kernel.org>
-> 
-> I'll drop this patchset from my queue. But if I should take these to
-> wireless trees instead just let me know.
-
-Just to clarify - only the first patch has possible conflict. The rest
-should be fine. Can you pick up 2-6 patches from this set?
-
-Best regards,
-Krzysztof
-
+SGkgRGFuaWVsLA0KDQo+LS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj5Gcm9tOiBEYW5pZWwg
+RmVyZ3Vzb24gPGRhbmllbGZAb3MuYW1wZXJlY29tcHV0aW5nLmNvbT4NCj5TZW50OiAyOCBNYXJj
+aCAyMDI0IDIzOjQyDQo+VG86IFNoaWp1IEpvc2UgPHNoaWp1Lmpvc2VAaHVhd2VpLmNvbT47IGxp
+bnV4LWN4bEB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LQ0KPmFjcGlAdmdlci5rZXJuZWwub3JnOyBs
+aW51eC1tbUBrdmFjay5vcmc7IGRhbi5qLndpbGxpYW1zQGludGVsLmNvbTsNCj5kYXZlQHN0Z29s
+YWJzLm5ldDsgSm9uYXRoYW4gQ2FtZXJvbiA8am9uYXRoYW4uY2FtZXJvbkBodWF3ZWkuY29tPjsN
+Cj5kYXZlLmppYW5nQGludGVsLmNvbTsgYWxpc29uLnNjaG9maWVsZEBpbnRlbC5jb207IHZpc2hh
+bC5sLnZlcm1hQGludGVsLmNvbTsNCj5pcmEud2VpbnlAaW50ZWwuY29tDQo+Q2M6IGxpbnV4LWVk
+YWNAdmdlci5rZXJuZWwub3JnOyBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOw0KPmRhdmlk
+QHJlZGhhdC5jb207IFZpbGFzLlNyaWRoYXJhbkBhbWQuY29tOyBsZW8uZHVyYW5AYW1kLmNvbTsN
+Cj5ZYXplbi5HaGFubmFtQGFtZC5jb207IHJpZW50amVzQGdvb2dsZS5jb207IGppYXFpeWFuQGdv
+b2dsZS5jb207DQo+dG9ueS5sdWNrQGludGVsLmNvbTsgSm9uLkdyaW1tQGFtZC5jb207IGRhdmUu
+aGFuc2VuQGxpbnV4LmludGVsLmNvbTsNCj5yYWZhZWxAa2VybmVsLm9yZzsgbGVuYkBrZXJuZWwu
+b3JnOyBuYW95YS5ob3JpZ3VjaGlAbmVjLmNvbTsNCj5qYW1lcy5tb3JzZUBhcm0uY29tOyBqdGhv
+dWdodG9uQGdvb2dsZS5jb207IHNvbWFzdW5kYXJhbS5hQGhwZS5jb207DQo+ZXJkZW1ha3Rhc0Bn
+b29nbGUuY29tOyBwZ29uZGFAZ29vZ2xlLmNvbTsgZHVlbndlbkBnb29nbGUuY29tOw0KPm1pa2Uu
+bWFsdmVzdHV0b0BpbnRlbC5jb207IGd0aGVsZW5AZ29vZ2xlLmNvbTsNCj53c2Nod2FydHpAYW1w
+ZXJlY29tcHV0aW5nLmNvbTsgZGZlcmd1c29uQGFtcGVyZWNvbXB1dGluZy5jb207DQo+dGFueGlh
+b2ZlaSA8dGFueGlhb2ZlaUBodWF3ZWkuY29tPjsgWmVuZ3RhbyAoQikgPHByaW1lLnplbmdAaGlz
+aWxpY29uLmNvbT47DQo+a2FuZ2thbmcuc2hlbkBmdXR1cmV3ZWkuY29tOyB3YW5naHVpcWlhbmcg
+PHdhbmdodWlxaWFuZ0BodWF3ZWkuY29tPjsNCj5MaW51eGFybSA8bGludXhhcm1AaHVhd2VpLmNv
+bT47IHdic0Bvcy5hbXBlcmVjb21wdXRpbmcuY29tDQo+U3ViamVjdDogUmU6IFtSRkMgUEFUQ0gg
+djcgMTIvMTJdIG1lbW9yeTogUkFTMjogQWRkIG1lbW9yeSBSQVMyIGRyaXZlcg0KPg0KPj4gKy8q
+DQouLi4NCj4+ICsNCj4+ICtzdGF0aWMgaW50IHJhczJfcHJvYmUoc3RydWN0IHBsYXRmb3JtX2Rl
+dmljZSAqcGRldikgew0KPj4gKwlpbnQgcmV0LCBpZDsNCj4+ICsJc3RydWN0IG1ib3hfY2xpZW50
+ICpjbDsNCj4+ICsJc3RydWN0IGRldmljZSAqaHdfc2NydWJfZGV2Ow0KPj4gKwlzdHJ1Y3QgcmFz
+Ml9jb250ZXh0ICpyYXMyX2N0eDsNCj4+ICsJY2hhciBzY3J1Yl9uYW1lW1JBUzJfTUFYX05BTUVf
+TEVOR1RIXTsNCj4+ICsNCj4+ICsJcmFzMl9jdHggPSBkZXZtX2t6YWxsb2MoJnBkZXYtPmRldiwg
+c2l6ZW9mKCpyYXMyX2N0eCksIEdGUF9LRVJORUwpOw0KPj4gKwlpZiAoIXJhczJfY3R4KQ0KPj4g
+KwkJcmV0dXJuIC1FTk9NRU07DQo+PiArDQo+PiArCXJhczJfY3R4LT5kZXYgPSAmcGRldi0+ZGV2
+Ow0KPj4gKwlyYXMyX2N0eC0+b3BzID0gJnJhczJfaHdfb3BzOw0KPj4gKwlzcGluX2xvY2tfaW5p
+dCgmcmFzMl9jdHgtPnNwaW5sb2NrKTsNCj4+ICsJcGxhdGZvcm1fc2V0X2RydmRhdGEocGRldiwg
+cmFzMl9jdHgpOw0KPj4gKw0KPj4gKwljbCA9ICZyYXMyX2N0eC0+bWJveF9jbGllbnQ7DQo+PiAr
+CS8qIFJlcXVlc3QgbWFpbGJveCBjaGFubmVsICovDQo+PiArCWNsLT5kZXYgPSAmcGRldi0+ZGV2
+Ow0KPj4gKwljbC0+dHhfZG9uZSA9IHJhczJfdHhfZG9uZTsNCj4+ICsJY2wtPmtub3dzX3R4ZG9u
+ZSA9IHRydWU7DQo+PiArCXJhczJfY3R4LT5wY2Nfc3Vic3BhY2VfaWR4ID0gKigoaW50ICopcGRl
+di0+ZGV2LnBsYXRmb3JtX2RhdGEpOw0KPj4gKwlkZXZfZGJnKCZwZGV2LT5kZXYsICJwY2Mtc3Vi
+c3BhY2UtaWQ9JWRcbiIsIHJhczJfY3R4LQ0KPj5wY2Nfc3Vic3BhY2VfaWR4KTsNCj4+ICsJcmV0
+ID0gcmFzMl9yZWdpc3Rlcl9wY2NfY2hhbm5lbChyYXMyX2N0eCk7DQo+DQo+SW4gb3VyIGVuYWJs
+aW5nIGFjdGl2aXRpZXMsIHdlIGhhdmUgZm91bmQgYSBjaGFsbGVuZ2UgaGVyZS4NCj5PdXIgaGFy
+ZHdhcmUgaGFzIGEgc2luZ2xlIFBDQyBjaGFubmVsIGNvcnJlc3BvbmRpbmcgdG8gYSBzaW5nbGUg
+cGxhdGZvcm0td2lkZQ0KPnNjcnViIGludGVyZmFjZS4gVGhpcyBkcml2ZXIsIGZvbGxvd2luZyB0
+aGUgQUNQSSBzcGVjLCB3aWxsIGNyZWF0ZSBhIG5ldyBzY3J1Yg0KPm5vZGUgZm9yIGVhY2ggTlVN
+QSBub2RlLiBIb3dldmVyLCBmb3IgdXMsIHRoaXMgbWVhbnMgdGhhdCBlYWNoIHNjcnViIGRldmlj
+ZQ0KPndpbGwgdHJ5IHRvIG1hcCB0aGUgc2FtZSBQQ0MgY2hhbm5lbCwgYW5kIHRoaXMgY2F1c2Vz
+IGFuIGVycm9yLg0KDQpJcyBmYWlsaW5nIHRvIHByb2JlIGNsZWFubHkgaXMgZW5vdWdoIGZvciB5
+b3VyIHBsYXRmb3JtPyAgaS5lLiBwdXQgYW55IGVycm9yIG1lc3NhZ2VzIGFzIGRldl9kYmcoKQ0K
+b3Igd2hpY2hldmVyIG9uZSBjYXVzZXMgdGhpcyBwcm9ibGVtLg0KPj4gKwlpZiAocmV0IDwgMCkN
+Cj4+ICsJCXJldHVybiByZXQ7DQo+PiArDQo+PiArCXJldCA9IGRldm1fYWRkX2FjdGlvbl9vcl9y
+ZXNldCgmcGRldi0+ZGV2LCBkZXZtX3JhczJfcmVsZWFzZSwNCj5yYXMyX2N0eCk7DQo+PiArCWlm
+IChyZXQgPCAwKQ0KPj4gKwkJcmV0dXJuIHJldDsNCj4+ICsNCj4+ICsJaWYgKHJhczJfaXNfcGF0
+cm9sX3NjcnViX3N1cHBvcnQocmFzMl9jdHgpKSB7DQo+PiArCQlpZCA9IGlkYV9hbGxvYygmcmFz
+Ml9pZGEsIEdGUF9LRVJORUwpOw0KPj4gKwkJaWYgKGlkIDwgMCkNCj4+ICsJCQlyZXR1cm4gaWQ7
+DQo+PiArCQlyYXMyX2N0eC0+aWQgPSBpZDsNCj4+ICsJCXNucHJpbnRmKHNjcnViX25hbWUsIHNp
+emVvZihzY3J1Yl9uYW1lKSwgIiVzJWQiLA0KPlJBUzJfU0NSVUIsIGlkKTsNCj4+ICsJCWRldl9z
+ZXRfbmFtZSgmcGRldi0+ZGV2LCBSQVMyX0lEX0ZPUk1BVCwgaWQpOw0KPj4gKwkJaHdfc2NydWJf
+ZGV2ID0gZGV2bV9zY3J1Yl9kZXZpY2VfcmVnaXN0ZXIoJnBkZXYtPmRldiwNCj5zY3J1Yl9uYW1l
+LA0KPj4gKwkJCQkJCQkgIHJhczJfY3R4LA0KPiZyYXMyX3NjcnViX29wcywNCj4+ICsJCQkJCQkJ
+ICAwLCBOVUxMKTsNCj4+ICsJCWlmIChQVFJfRVJSX09SX1pFUk8oaHdfc2NydWJfZGV2KSkNCj4+
+ICsJCQlyZXR1cm4gUFRSX0VSUl9PUl9aRVJPKGh3X3NjcnViX2Rldik7DQo+PiArCX0NCj4+ICsJ
+cmFzMl9jdHgtPnNjcnViX2RldiA9IGh3X3NjcnViX2RldjsNCj4+ICsNCj4+ICsJcmV0dXJuIDA7
+DQo+PiArfQ0KPg0KVGhhbmtzLA0KU2hpanUNCg==
