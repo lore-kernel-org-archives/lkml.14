@@ -1,67 +1,65 @@
-Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com [209.85.208.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D7A8127B50;
-	Thu,  4 Apr 2024 12:14:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DEEB86244;
+	Thu,  4 Apr 2024 12:15:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712232890; cv=none; b=OXrfX9kgqKytUuyUPc0IRy108UipVCM//hu+tbskNfJoWc/w8+fdzDno+bnlkxJWTvzOOwrBkA0WZVTKzNYEhTSnT4b7qMa71v4y25+wM35irNDhJE+AiC6XTbhu1N4KXxdJTW9PGdshej3CF+guH3h+flTp/nOgKxY0fUGlYZk=
+	t=1712232946; cv=none; b=SaEuwH4LN5enqxdx1j9svExM3zUfkdKMHIWiky50WdHDxrIv6vozQx8EOjRUk9m+TlzlZQfsy4vsirq4mVYj9mt9iHFwGdqiGw9Jcx5qv8LrjUsB12KDEu64zAAOhPtLFC4GOiIW+xjNtSbXaDvvVr2cBY0YNDkY0g/X/9MtgWU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712232890; c=relaxed/simple;
-	bh=rOAdoL6tHaMG/zwN7wWRADpEydV7O+1IUICz69AHOf8=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Yz83CGo+JO20UzxOcHZkN+mnli3w7d0cJahlP3/5BPJBH+5hu55BJvCID1fXZsMM0wIBFex6CB+QGGucLX8JBeOvC0WyLxaIOCJtaNkyQ+sv/GNGGarHcT2/qYVCivcTOlPuuQevR4nutZjPnbMFVKNlkQ3vHdcxoYNYRRWjdDM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=R1P2aKLH; arc=none smtp.client-ip=209.85.208.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1712232946; c=relaxed/simple;
+	bh=ExeJC1M+3bZl05QwBaKfCI9mym+Fc6VBmZBjMFs3yM8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=RArrUv7xJIhFZeZ+UqLwD/R5sG+1ESJiJ/afJbNtUSacIIGLlE2QbELJ8Slx8W8COLm+OVaP0NTJAT/7F5T1cNuITyaaNouroEIp154pR2oSwjM+ngunprGO1vgWouE6eYZShjtmHrWBtZNeNnCdT7/u2lszGo7fR8xA5ehv/As=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=KKjKxSi6; arc=none smtp.client-ip=192.198.163.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="R1P2aKLH"
-Received: by mail-lj1-f174.google.com with SMTP id 38308e7fff4ca-2d85da5a7d1so2520071fa.0;
-        Thu, 04 Apr 2024 05:14:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1712232887; x=1712837687; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=0bUZo/pGzDNuYFiyOW47yNiCIYxU4kzybrhVLN1vRNs=;
-        b=R1P2aKLHuiyQDlVyrvuve7a+OjWxN6n1HwpPApPQ1tjKjzJHLlhlxKqilli4tY+PwI
-         H6LEzKShyGm6v437490SQnKprn26vkw9FJMSOnnJt+ja1utBbRJZsQQcLL1SShBmUE+K
-         wJWyz66wnj7UAHGnVcEY8QwdmloOK8claXpoMSMpgudEPCkASY4eiXWtXnp/8VuNEkiD
-         66Abyt9dlhzfSGQ3v5hDjFfy2kuKxrfV1aM9teBDto0c0WNIJqc1sGoeqe+2S0SfZZ1N
-         ISjrcsBHuJP32cg0beai7L0X4EyUfTk9jmIVvB+c0vKGuN60P0SbLFev7yEecpX+ajZo
-         Qpjg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712232887; x=1712837687;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=0bUZo/pGzDNuYFiyOW47yNiCIYxU4kzybrhVLN1vRNs=;
-        b=OVrf1sfovlASQmHZpllBnw1yih7uj8a4cmg0Hgq7konUiuN1J/ChsgsSieg9U5YlH8
-         809i2rnKYBv9JV8tPQIs9Aj5425Slx2wGIJ3tbQ+QyH/Q/JvQCtsiqX0EctVV0L/n9tX
-         CcPrO7mDz1b6C4uKpB83TjQJgCcTUPGxuCnGcbcqTGXx8feEq/skBuAase+sMg95ARCJ
-         kmZEK8z5X0CUsjP0Pk+u0G2DX8zxVyEx1+0E9rjv37jO96nOsk3vOcGTfbPn/ZZParU1
-         JdXRq9N2WrQpOsYoFq9eLY79W+rqlriaSUgVl8SihXY3a6a7GqCE/ok6zwhwbC0ZbMC+
-         njHw==
-X-Forwarded-Encrypted: i=1; AJvYcCVqkFCeRFmXORs/taE7UzmccEHMC2P1IRWYuXI05ouXiNCt8wBlsKEQV14Rplk2egwhmrexTkGAnWlXAZkCdBmVIcwyGwABGvOOPrXd4jNo3Bijxm3BEdiu4TIEo96fmzSPlJ3JBR826g==
-X-Gm-Message-State: AOJu0YzoY+cIGaXpE6M+NkDuhNDbBr28qPc74IIcN4EFkoblA5pu/xGA
-	9e+gFjz59JNxtXGg44ipWyNMRG4TEWQioXaLYKZXI6f3lcLsLPjNm8cRdFfF
-X-Google-Smtp-Source: AGHT+IFx9UQY4y+jjtNaDdJmgXCy8TISkHZLbhqawJtLmLtM00wjEtv0sQJ4gIIXFwtWO1M1e8b/CA==
-X-Received: by 2002:a2e:bb84:0:b0:2d6:d044:aab5 with SMTP id y4-20020a2ebb84000000b002d6d044aab5mr817311lje.11.1712232886526;
-        Thu, 04 Apr 2024 05:14:46 -0700 (PDT)
-Received: from pc636 (host-90-235-13-217.mobileonline.telia.com. [90.235.13.217])
-        by smtp.gmail.com with ESMTPSA id u22-20020a2e8556000000b002d834cb0400sm532238ljj.17.2024.04.04.05.14.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 04 Apr 2024 05:14:46 -0700 (PDT)
-From: Uladzislau Rezki <urezki@gmail.com>
-X-Google-Original-From: Uladzislau Rezki <urezki@pc636>
-Date: Thu, 4 Apr 2024 14:14:43 +0200
-To: Stephen Rothwell <sfr@canb.auug.org.au>
-Cc: "Paul E. McKenney" <paulmck@kernel.org>,
-	"Uladzislau Rezki (Sony)" <urezki@gmail.com>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	Linux Next Mailing List <linux-next@vger.kernel.org>
-Subject: Re: linux-next: Fixes tag needs some work in the rcu tree
-Message-ID: <Zg6Zs76UDYQsJTWM@pc636>
-References: <20240404083923.358c23da@canb.auug.org.au>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KKjKxSi6"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1712232943; x=1743768943;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=ExeJC1M+3bZl05QwBaKfCI9mym+Fc6VBmZBjMFs3yM8=;
+  b=KKjKxSi6qY+UA9lPHkkfz7bE+HAf8MJhK7dl0qc16nmxKocqHrlcJzVG
+   d55VAkTId2I53uKgT2STFD8PcUJUXMNJ12qmMFbqeWO0bwnCHfFc/R+FN
+   PCHrIzcNBqjDAfgZzrcKwo+4KJZcHvc0PY8xyTHIRRi1bq+DVwiry9glV
+   WFZdy8lxaelzehgvsZxP2nhJYn0W7yEYGraBs57kuBl2Qb2DZd0FxFsCn
+   XBtpb8yk5G6gFWVfJbht4RPHqg0yUvmNU7FNxQvLXDhQv2Y8JMO107fuw
+   yOOL568q5nnKL0O9Rd5+73sB6pgqqWIkwqhJKnqFk+fbjntuTeuu1pBKb
+   A==;
+X-CSE-ConnectionGUID: eGOvBaEkRhGGklZqBU/e8Q==
+X-CSE-MsgGUID: b0jMuyTPTs6ZkWU9QcJmAQ==
+X-IronPort-AV: E=McAfee;i="6600,9927,11033"; a="7352015"
+X-IronPort-AV: E=Sophos;i="6.07,179,1708416000"; 
+   d="scan'208";a="7352015"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Apr 2024 05:15:41 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,11033"; a="915216493"
+X-IronPort-AV: E=Sophos;i="6.07,179,1708416000"; 
+   d="scan'208";a="915216493"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.72.54])
+  by fmsmga002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Apr 2024 05:15:38 -0700
+Received: from andy by smile with local (Exim 4.97)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1rsM0F-00000001QEr-26v6;
+	Thu, 04 Apr 2024 15:15:35 +0300
+Date: Thu, 4 Apr 2024 15:15:35 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Nuno Sa <nuno.sa@analog.com>, Andi Shyti <andi.shyti@kernel.org>
+Cc: Petr Mladek <pmladek@suse.com>, Jonathan Cameron <jic23@kernel.org>,
+	Lars-Peter Clausen <lars@metafoo.de>,
+	Olivier Moysan <olivier.moysan@foss.st.com>,
+	Jyoti Bhayana <jbhayana@google.com>,
+	Chris Down <chris@chrisdown.name>,
+	John Ogness <john.ogness@linutronix.de>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org
+Subject: Re: [PATCH 0/4] dev_printk: add dev_errp_probe() helper
+Message-ID: <Zg6Z51uebr2dWLq2@smile.fi.intel.com>
+References: <20240404-dev-add_dev_errp_probe-v1-0-d18e3eb7ec3f@analog.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -70,32 +68,41 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240404083923.358c23da@canb.auug.org.au>
+In-Reply-To: <20240404-dev-add_dev_errp_probe-v1-0-d18e3eb7ec3f@analog.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-Hello!
++Cc: Andi
 
-> Hi all,
+On Thu, Apr 04, 2024 at 01:06:22PM +0200, Nuno Sa wrote:
+> This series adds a dev_errp_probe() helper. This is similar to
+> dev_err_probe() but for cases where an ERR_PTR() is to be returned
+> simplifying patterns like:
 > 
-> In commit
-> 
->   a55be9aacc45 ("rcu: Do not release a wait-head from a GP kthread")
-> 
-> Fixes tag
-> 
->   Fixes: 05a10b921000 ("rcu: Support direct wake-up of synchronize_rcu() users")
-> 
-> has these problem(s):
-> 
->   - Target SHA1 does not exist
-> 
-> Maybe you meant
-> 
-> Fixes: 654f59c6bc95 ("rcu: Support direct wake-up of synchronize_rcu() users")
-> 
-I have a question. Could you please clarify why those commits are in the linux-next?
-Those commits have to go over RCU tree. It looks like i am missing something but
-please elaborate.
+> 	dev_err_probe(dev, ret, ...);
+> 	return ERR_PTR(ret)
 
---
-Uladzislau Rezki
+What about ERR_CAST() cases?
+
+> The other three patches are adding users for it. The main motivator for
+> this were the changes in the commit ("iio: temperature: ltc2983: convert
+> to dev_err_probe()"). Initially I just had a local helper [1] but then
+> it was suggested to try a new, common helper. As a result, I looked for
+> a couple more users.
+> 
+> I then move into dev_errp_probe() [2] but it was then suggested to separare
+> the patch series so we have onde dedicated for the printk helper.
+> 
+> [1]: https://lore.kernel.org/all/20240301-ltc2983-misc-improv-v3-1-c09516ac0efc@analog.com/
+> [2]: https://lore.kernel.org/all/20240328-ltc2983-misc-improv-v4-0-0cc428c07cd5@analog.com/
+
+Have you seen mine?
+
+20220214143248.502-1-andriy.shevchenko@linux.intel.com
+
+(Note, I'm pretty much fine and thankful that you take care of this)
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
 
