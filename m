@@ -1,119 +1,94 @@
-Received: from wfout7-smtp.messagingengine.com (wfout7-smtp.messagingengine.com [64.147.123.150])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f181.google.com (mail-yw1-f181.google.com [209.85.128.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 392E383CA2
-	for <linux-kernel@vger.kernel.org>; Thu,  4 Apr 2024 11:43:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=64.147.123.150
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A929B7F7C8
+	for <linux-kernel@vger.kernel.org>; Thu,  4 Apr 2024 11:45:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712231035; cv=none; b=nZQt7Iel8GofToEs0quMhutOX98vUzMhzj6LOy/ya1h6y4fDQe/VvcrVIhWSf/xSfvJ8txIOw4DybLM3hVnzUmiRpAEuOHd+tTmfu5qd4Sd5RpD/HMmatwHJhqYjIV8BA0XkcekpXCgjOCNu5HXpZykv1Jgu1BIbQtPziHGsmzo=
+	t=1712231106; cv=none; b=NS/ztvrAIBeqxCzn+ZwpCO9dSz5oCkHUgGo8VpVzVXlQlQ0NLo3yaFZZn/VaPZ5ATxRj0VEpiedBQ/PJGpCcbRzl4pNfHA5r295vNbhB+/F5EEE5kKnNk85jfSSoc3L5cvY1zjaTJ9ofOcXz4hfzHO2r5vmp3RaMcaUKrrV/FrA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712231035; c=relaxed/simple;
-	bh=JS/gyrihL+kmuZx19if6yfZwNbw5WpGkmW5rUpwhV1c=;
-	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
-	 Subject:Content-Type; b=mwnWsXR4xep8WwqEgVEihW+QzVFuDFhjIqFux6v1ksTF5iLuxE+kPtWfmkLRHNzYI1zIrL3TFruRguW+iDhatYePoaVVNAejaDlCb6gnKTNSvyXM8w/RHX7Yh1f8ULpHEJEjxFbmUGwSlLeshycLpuIh4MSCxg1Ua9d7xMwBdsM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=CGoMWAsM; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=lFUVoPzS; arc=none smtp.client-ip=64.147.123.150
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+	s=arc-20240116; t=1712231106; c=relaxed/simple;
+	bh=/eLKtqRVMeBA+chi62xtVXaYNjNu3QL5M36nmn2NBgs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=mh+IErJDzIOzw/efxM5p164UUMQJWzSArl2vZtrNHlfCICJHqgO8PqZgl67kjC0HaEs8xQpTZZG0TK1U1pW+QwJhCouqZwzb3A/m58gz17cEWaAwct/FCT0vWU67TWN6Ee97ZcKXk7BMk2M8MblBnLHNB4SERpjWHpuVGl0B9uQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=DVkYGhWF; arc=none smtp.client-ip=209.85.128.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="CGoMWAsM";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="lFUVoPzS"
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-	by mailfout.west.internal (Postfix) with ESMTP id 87EDE1C00089;
-	Thu,  4 Apr 2024 07:43:51 -0400 (EDT)
-Received: from imap51 ([10.202.2.101])
-  by compute5.internal (MEProxy); Thu, 04 Apr 2024 07:43:52 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm1; t=1712231031;
-	 x=1712317431; bh=1CDCHaWEhOkiYy29sYtgzdL6T7tUW4lcGYamlcwuiRA=; b=
-	CGoMWAsMcxnS91IP2ezijTguxET+DbB/PlHjKKDN272tv37GjDpNXaOywim5Gsrk
-	aqx2Wt0nZorSAPAr1yQaGdruX5+7A+UkkwGNNA/KZwX471xoSuV5qNuK5RjVx9if
-	0Mn9lWFi2NgjfmobKQ56bGyOu3vaUhuXNDCRLza3BtXLE5XIVycUZ96LvI4f6daM
-	QGwB16ScbhKDW2J/veuk50i6C4HmckL6Wvoi+5JwmyjoZp7CxgTzU+Vd7XLLuz6F
-	2Bs7E6XFGMReQUFLAWoJ42B6uV3+UZSrASFlk/qJBxssqonexDaFNGAWLEhX88UK
-	RFixypeC9SgfjnuvHGb5Xg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1712231031; x=
-	1712317431; bh=1CDCHaWEhOkiYy29sYtgzdL6T7tUW4lcGYamlcwuiRA=; b=l
-	FUVoPzSYVN/yp8KUfA519NK13OXcwH7OOVsJuD1VxLqrM9Gty33ekJSFhWRMfK4Z
-	RWumwKWHpEKYNQJj2MLL9x51COonCbzikphr22HegyCOQoom7DGwlrzMtQQ67q7g
-	IK9edbvGig74BPRXMRoXp0ECZMmAjluSmH0G4zlZ5y9fI3XatkZZcHwkk3R19sxl
-	RUqN1F5loLbFfeCjDaiQhYtXwyiyYHghZpCak6cdanKjdjDTGfPoCK2FMnIbqfFf
-	B804BMqlVaC73DElyBQ9XjZA6bQHDKk/NoIOptn6YIIllNvLmJrxaP9UQbNJb86/
-	NbUZFPdE0T+RqTo6Xg4xw==
-X-ME-Sender: <xms:dpIOZsaun6lL6Z_HQrLFY8iRRUxKheisiZNKOEvsWZS9FbRN8DxwLw>
-    <xme:dpIOZnZqgcp9t3lfD3zA7NTrErVcbC_iC7zdn9Z3EBxYO4-K7sy5bdBHxadj5feME
-    uwp5nOTty0iVenB0rI>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrudefkedggeefucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepofgfggfkjghffffhvfevufgtgfesthhqredtreerjeenucfhrhhomhepfdet
-    rhhnugcuuegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusgdruggvqeenucggtffrrg
-    htthgvrhhnpeegfeejhedvledvffeijeeijeeivddvhfeliedvleevheejleetgedukedt
-    gfejveenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpe
-    grrhhnugesrghrnhgusgdruggv
-X-ME-Proxy: <xmx:dpIOZm-w6O5WJDGy6ekJBo97oK0jK393UnL7miSQNgbighTr0mphVA>
-    <xmx:dpIOZmpFzvTXNxVEEGHfw_1fiu0ZXEAKdPMXUmnYfhJRd3m4Zv7Ixg>
-    <xmx:dpIOZnqOLLQ-SekwYwmYhItplWqUr90MNfHorFFJKk6yXvoVXyiniw>
-    <xmx:dpIOZkTiWGR6LNeoeUa6gYlG4pelZbeskkjI7q9F14BmoSefCf86gg>
-    <xmx:d5IOZreScETdub_vsHYl7SRwbhsBu1vlv38LI8O-ULfptkFCl9LF-zxX>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-	id 57F08B6008D; Thu,  4 Apr 2024 07:43:50 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.11.0-alpha0-333-gbfea15422e-fm-20240327.001-gbfea1542
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DVkYGhWF"
+Received: by mail-yw1-f181.google.com with SMTP id 00721157ae682-616909c32cdso5061807b3.0
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Apr 2024 04:45:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1712231103; x=1712835903; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=rdNenNQMt+7XONzUW/9kB2yS6/Tol2kmLB8BmO6OGLU=;
+        b=DVkYGhWFfDN55ztook7u/m7XQt0/1DqgYEDQnuFZDO2f9sTQTLBrFr98sgJSAEPBTy
+         CYDUBrddaT3BTeeVQRTNHoomuhfbL0h3ksiBLbYWOwRkpk0Tk8UduqsZI0hnh9URk3Vg
+         XHCtdeiQw2W5IchOzIDCB6jlUZ/zutD7CWvoo+hqXzZS6AOTaSjDRhSRQwL2G+dVBalC
+         s6d3hKXJiDE7l3BHaoYQ6gKQMhHAHA2TUjRFQEU79gotNDh5VHhpOvhyC8A+VZm527jM
+         sFjPU+MfqQUo9YVqifBt9t30tT0EnkjMtQ1g4bHx2DXAQ+TsgVtqR6jiAdxPCgN5o7ln
+         BA/w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712231103; x=1712835903;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=rdNenNQMt+7XONzUW/9kB2yS6/Tol2kmLB8BmO6OGLU=;
+        b=rtkm2IoI5vdrSz1aNO4OkEcFgaKN/OXv2lmyf656u1mW3077dqKE/b8EAiRRiPMfiG
+         vAaE2gC8dmf7ohj07C1U+0eKFv9SiEvwEaUrFr8g1PMWZuDp5JXB/IWu12OFPmCUU7i9
+         Qz81Kemt8fVZLKSeHMYVxeOxiLDAjk1flcvMeF2Ho+UGKAROM5168RI9HH8UYJbtIh0w
+         upKTVVp70IauW9nuZNUvyxzE7Mzejm+j+Q+XGPqQBBqzJJIyXVQBLInkZ0NTjv5V0bGf
+         hpk6NomMgEv3PyKQ3RQFz5s+m5VBchP73DsIhcI4kEwMIB37JVJS73J4N1mNf8tGDbzr
+         iW3w==
+X-Forwarded-Encrypted: i=1; AJvYcCWIJ04uzwRdWka6dPgCJgWosXLvciJvpFzBXD0jzKlqDM8u2DI/Kay2uRTYWr78L6MBzJYGWRWjIHy4Rx3G35lL76y3vC84AKuSaYRr
+X-Gm-Message-State: AOJu0YwlB43WJ019DP4o1QlMeKogWsIpPej+WC40uHulEbt543KD3r54
+	b6barYQZUcBgQzOP88J5tR7HxjJymkZ/kC8BcuxWXFUprOHrkMCxlgXscntZUSaVCWauyYy/Kqp
+	av9EWaQ5I58xVkRgxNsqAxfPLZ6Fpic4WQBDNig==
+X-Google-Smtp-Source: AGHT+IHx0tbRHl168yEBc6/WvmuxrXGfc7u38wmDLosnPzuHcIEhg0s1LVsQ751gQ9iNeQVSKkhCvmykx56Fu3EOO5U=
+X-Received: by 2002:a0d:ca02:0:b0:615:8174:61a2 with SMTP id
+ m2-20020a0dca02000000b00615817461a2mr2142897ywd.8.1712231102703; Thu, 04 Apr
+ 2024 04:45:02 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-Id: <6f79f3bd-e60a-484a-92b7-f6a26f845809@app.fastmail.com>
-In-Reply-To: <2ffc8633-6ed8-4641-bd9f-313645dfff51@csgroup.eu>
-References: <20240403080702.3509288-1-arnd@kernel.org>
- <20240403080702.3509288-19-arnd@kernel.org>
- <66a1d5f1-d9b2-402c-826d-955370288037@csgroup.eu>
- <bdcabb75-f9a5-4905-90b4-2c9c2cf0588a@app.fastmail.com>
- <2ffc8633-6ed8-4641-bd9f-313645dfff51@csgroup.eu>
-Date: Thu, 04 Apr 2024 13:43:29 +0200
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Christophe Leroy" <christophe.leroy@csgroup.eu>,
- "Arnd Bergmann" <arnd@kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "Andrew Morton" <akpm@linux-foundation.org>,
- "Palmer Dabbelt" <palmer@rivosinc.com>
-Cc: "Dave Hansen" <dave.hansen@linux.intel.com>,
- "Noah Goldstein" <goldstein.w.n@gmail.com>,
- "Charlie Jenkins" <charlie@rivosinc.com>
-Subject: Re: [PATCH 18/34] lib: checksum: hide unused expected_csum_ipv6_magic[]
-Content-Type: text/plain;charset=utf-8
+References: <20240401141031.3106216-1-peng.fan@oss.nxp.com>
+In-Reply-To: <20240401141031.3106216-1-peng.fan@oss.nxp.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Thu, 4 Apr 2024 13:44:50 +0200
+Message-ID: <CACRpkdZAuNXGyg2wwYcQG4oO9w7jPS6vj4Vt0=kqX5fJ+QpNmw@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: pinconf-generic: check error value EOPNOTSUPP
+To: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>
+Cc: brgl@bgdev.pl, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	cristian.marussi@arm.com, sudeep.holla@arm.com, Peng Fan <peng.fan@nxp.com>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Apr 3, 2024, at 11:03, Christophe Leroy wrote:
-> Le 03/04/2024 =C3=A0 10:58, Arnd Bergmann a =C3=A9crit=C2=A0:
+On Mon, Apr 1, 2024 at 4:02=E2=80=AFPM Peng Fan (OSS) <peng.fan@oss.nxp.com=
+> wrote:
+
+> From: Peng Fan <peng.fan@nxp.com>
 >
->> On Wed, Apr 3, 2024, at 10:41, Christophe Leroy wrote:
->> Yes, I usually prefer that approach, and I think I tried it first
->> but ran into compile-time problems because csum_ipv6_magic()
->> is declared conditionally. Let me try again, maybe I misremember
->> what I did or I can remove some more #ifdef checks for this.
+> The SCMI error value SCMI_ERR_SUPPORT maps to linux error value
+> '-EOPNOTSUPP', so when dump configs, need check the error value
+> EOPNOTSUPP, otherwise there will be log "ERROR READING CONFIG SETTING".
 >
-> FWIW, before replying I did a build check with pmac32_defconfig=20
-> (powerpc) with CONFIG_NET removed. I was able to build=20
-> lib/checksum_kunit.o and objdump shown there was no reference to=20
-> csum_ipv6_magic() inside it.
+> Signed-off-by: Peng Fan <peng.fan@nxp.com>
+(...)
+>                         ret =3D pin_config_get_for_pin(pctldev, pin, &con=
+fig);
+>                 /* These are legal errors */
+> -               if (ret =3D=3D -EINVAL || ret =3D=3D -ENOTSUPP)
+> +               if (ret =3D=3D -EINVAL || ret =3D=3D -ENOTSUPP || ret =3D=
+=3D -EOPNOTSUPP)
 
-Right, got it now. I was confused a bit by CONFIG_NET vs CONFIG_IPV6
-given that the common definition for csum_ipv6_magic() is in
-net/ipv6 but unlike other files there still gets build when IPV6
-is disabled but NET remains turned on.
+TBH it's a bit odd to call an in-kernel API such as pin_config_get_for_pin(=
+)
+and get -EOPNOTSUPP back. But it's not like I care a lot, so patch applied.
 
-I've done a little more randconfig testing to verify it,
-sending v2 now.
-
-      Arnd
+Yours,
+Linus Walleij
