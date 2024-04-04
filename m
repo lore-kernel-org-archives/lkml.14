@@ -1,114 +1,143 @@
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F97B53E2E;
-	Thu,  4 Apr 2024 06:48:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.154.123
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0052756471;
+	Thu,  4 Apr 2024 06:48:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712213304; cv=none; b=l1q9L807n4xANy1uci0AC6Bdspho/LFY9jJ6A7jg+ez8nKD/V9IqKN76NE/v3n8gBCoGZaTqP46xIUkUiIw6Yg6sAGLi7GZmb1RR+yUhWIyBlFPqgvvX+tu5MFd+f4DokS52H5/H6YoUMf0sidLya8Ac8xA2iPaOOp1QK5Q10Ec=
+	t=1712213311; cv=none; b=c10CJH9JeuYN1llBuJIaTHf66GZaoCjMsFeMLtWuP+cX7Bt31UFiZ61m+brxk7IesrvnVDWiop5l1e/n15dnWhElslNEtogWvI0fYX2ofO2LtKGvqs9DkUqyxY8bj2peBMpV+sCff6i1kf2Qdl9bw0pXXkSwd78iByWmqrhj3n0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712213304; c=relaxed/simple;
-	bh=LGK2yHu2NA1tw1OVzxXDi8K+v7+Kt4wEU5L7h21w5BU=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PVP8SAkGT1j4KG9coHmOCUXU4RD55QoCuEk/sdqLbM7TpPGg4zEM8Kln/ljlS1y6kGEAhXKpafqeFeIpUSLmzg1Kixap2V/ouR5DqygFD3thRiy2dhF4xU7GTJFkBln60FMPp55jAMO25YdMDU2aAI0Vr3iSE4QbK18Pkj6d0vg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=d/5YONai; arc=none smtp.client-ip=68.232.154.123
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
+	s=arc-20240116; t=1712213311; c=relaxed/simple;
+	bh=0BHKcHIZtORzL2QSY9kHdJR44umnViVVEXDbS+LBEoc=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=ewK3yz2L8nY7rG370O/Gb0P0hxZE8Er2snGuRnCS9y4Txebu5LYfvHxdHA2GwSXZhCvTKs/UTwP8BCNSGeVf3Uf+Br4WJbMTrkAFq4smc+6ytzW3JgkxmCJDhOag69TN+vmHV8XfFnB54vZqV4z0mWSkKjXKBgccxbWXQCz15IY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=TEEMyRfM; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="d/5YONai"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1712213303; x=1743749303;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=LGK2yHu2NA1tw1OVzxXDi8K+v7+Kt4wEU5L7h21w5BU=;
-  b=d/5YONaiIEL4Wuw8gf5F7ALD8YC6Yis6Qkv2g9vy+mHgUsIstnPdOFrp
-   O2f5H/pngiLRm8YDRr+neIwSg05My3qEZu23IjGnpdbaDI/cTcVW4CjTe
-   gQjkQAk4epxc+xsBxdCAuJFz5GRo9hCSu4revDtOe8YxeoqWpym6hjrfe
-   S5ZyJ3CW+p3KeuFpP29XI4AM8fghJy9CTjD63fkPyE4CMFm7Xk8Bqe/WO
-   c/5/5CuheW7kW3Vs48BgcMuF3+xkV9VxCC9MrAgQeIC+qYB+3zoD3ZeZt
-   JSLlb7h/nvZxPCIJW+4CrukHalv/0U/w0iRmnOulYIXlqnhXSMB30Z9JC
-   w==;
-X-CSE-ConnectionGUID: GsiGwEYZQ9CUJDJZMZRgQg==
-X-CSE-MsgGUID: CFzFroZ/TOuqjz/ebU1XeA==
-X-IronPort-AV: E=Sophos;i="6.07,178,1708412400"; 
-   d="scan'208";a="19959521"
-X-Amp-Result: SKIPPED(no attachment in message)
-Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa2.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 03 Apr 2024 23:48:22 -0700
-Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
- chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Wed, 3 Apr 2024 23:47:51 -0700
-Received: from localhost (10.10.85.11) by chn-vm-ex04.mchp-main.com
- (10.10.85.152) with Microsoft SMTP Server id 15.1.2507.35 via Frontend
- Transport; Wed, 3 Apr 2024 23:47:51 -0700
-Date: Thu, 4 Apr 2024 08:47:50 +0200
-From: Horatiu Vultur <horatiu.vultur@microchip.com>
-To: Daniel Machon <daniel.machon@microchip.com>
-CC: Lars Povlsen <lars.povlsen@microchip.com>, Steen Hegelund
-	<Steen.Hegelund@microchip.com>, <UNGLinuxDriver@microchip.com>, "David S.
- Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, "Jakub
- Kicinski" <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	<linux-arm-kernel@lists.infradead.org>, <netdev@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH net-next 3/3] net: sparx5: add support for tc flower
- redirect action
-Message-ID: <20240404064750.psxhftdmvf5pannf@DEN-DL-M31836.microchip.com>
-References: <20240403-mirror-redirect-actions-v1-0-c8e7c8132c89@microchip.com>
- <20240403-mirror-redirect-actions-v1-3-c8e7c8132c89@microchip.com>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="TEEMyRfM"
+Received: from pps.filterd (m0353724.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 4346dS9n025311;
+	Thu, 4 Apr 2024 06:48:25 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-transfer-encoding; s=pp1;
+ bh=V7evhjpTFK9lm74+v57J7Xg0uT3wJ4ThHPEeFTWCAko=;
+ b=TEEMyRfMulrC+cP/oyQRzmKMny70gyFYWpPGaPhmAbMhNVb+orpUJogx1JsoFW0UjVxK
+ 6cMNbCg2kNcUvTC8GZunwJ0bS7lgS2M/IPlj3W5ZGasbAEeFJI5jd+E+rV2UOHO3aQMI
+ SZfL/44LRIFdurze/wAfJGtPIOTw8MkQb0ztEI1cE1mywj5jEP2wQJP7sK3RPnscCPQQ
+ JShcUSdsqzTItIx22DwyzA190o2K5kUSbHzAHV78bi27IMc3MHK9C1aRElR+qfmNoXsV
+ x4qVMmbJ8py4WakB3tY4oVIaJoDAbBbYckSvNr5jW9tzEfQCThrZUroNPKPtTHMCT4fs 1A== 
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3x9pj4r2wy-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 04 Apr 2024 06:48:24 +0000
+Received: from m0353724.ppops.net (m0353724.ppops.net [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 4346mO2S008206;
+	Thu, 4 Apr 2024 06:48:24 GMT
+Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3x9pj4r2wx-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 04 Apr 2024 06:48:24 +0000
+Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma13.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 43442PpJ031079;
+	Thu, 4 Apr 2024 06:48:23 GMT
+Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
+	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 3x9epxjj1v-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 04 Apr 2024 06:48:23 +0000
+Received: from smtpav01.fra02v.mail.ibm.com (smtpav01.fra02v.mail.ibm.com [10.20.54.100])
+	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 4346mHtq44368380
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 4 Apr 2024 06:48:19 GMT
+Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id B7BCB20043;
+	Thu,  4 Apr 2024 06:48:17 +0000 (GMT)
+Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 7EAFF20040;
+	Thu,  4 Apr 2024 06:48:17 +0000 (GMT)
+Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
+	by smtpav01.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Thu,  4 Apr 2024 06:48:17 +0000 (GMT)
+From: Thomas Richter <tmricht@linux.ibm.com>
+To: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        acme@kernel.org, namhyung@kernel.org
+Cc: svens@linux.ibm.com, gor@linux.ibm.com, sumanthk@linux.ibm.com,
+        hca@linux.ibm.com, Thomas Richter <tmricht@linux.ibm.com>,
+        Ian Rogers <irogers@google.com>
+Subject: [Ping PATCH 1/2 v2] perf report: Fix PAI counter names for s390 virtual machines
+Date: Thu,  4 Apr 2024 08:48:05 +0200
+Message-Id: <20240404064806.1362876-1-tmricht@linux.ibm.com>
+X-Mailer: git-send-email 2.40.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Disposition: inline
-In-Reply-To: <20240403-mirror-redirect-actions-v1-3-c8e7c8132c89@microchip.com>
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: wMPdyqtEhokfUQu_u3fm-w5kXlzap0wM
+X-Proofpoint-GUID: RaCYlNc5oY8ikhRFXIrfForHg67OUq82
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-04-04_02,2024-04-03_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 bulkscore=0
+ impostorscore=0 priorityscore=1501 malwarescore=0 phishscore=0
+ clxscore=1015 mlxscore=0 mlxlogscore=999 spamscore=0 adultscore=0
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2404010000 definitions=main-2404040042
 
-The 04/03/2024 20:41, Daniel Machon wrote:
+s390 introduced Processor Activity Instrumentation (PAI) counter
+facility on LPAR and virtual machines z/VM for models 3931 and 3932.
+These counters are stored as raw data in the perf.data file and are
+displayed with command
 
-Hi Daniel,
+ # ./perf report -i /tmp//perfout-635468 -D | grep Counter
+	Counter:007 <unknown> Value:0x00000000000186a0
+	Counter:032 <unknown> Value:0x0000000000000001
+	Counter:032 <unknown> Value:0x0000000000000001
+	Counter:032 <unknown> Value:0x0000000000000001
+ #
 
-  
-> +static int sparx5_tc_action_redirect(struct vcap_admin *admin,
-> +				     struct vcap_rule *vrule,
-> +				     struct flow_cls_offload *fco,
-> +				     struct flow_action_entry *act)
-> +{
-> +	struct vcap_u72_action ports = {0};
-> +	int err;
+However on z/VM virtual machines, the counter names are not retrieved
+from the PMU and are shown as '<unknown>'.
+This is caused by the CPU string saved in the mapfile.csv for this
+machine:
 
-The same comments from previous patch applies also here.
+   ^IBM.393[12].*3\.7.[[:xdigit:]]+$,3,cf_z16,core
 
-> +
-> +	if (admin->vtype != VCAP_TYPE_IS0 && admin->vtype != VCAP_TYPE_IS2) {
-> +		NL_SET_ERR_MSG_MOD(fco->common.extack,
-> +				   "Redirect action not supported in this VCAP");
-> +		return -EOPNOTSUPP;
-> +	}
-> +
-> +	err = vcap_rule_add_action_u32(vrule, VCAP_AF_MASK_MODE,
-> +				       SPX5_PMM_REPLACE_ALL);
-> +	if (err)
-> +		return err;
-> +
-> +	sparx5_tc_flower_set_port_mask(&ports, act->dev);
-> +
-> +	err = vcap_rule_add_action_u72(vrule, VCAP_AF_PORT_MASK, &ports);
-> +	if (err)
-> +		return err;
-> +
+This string contains the CPU Measurement facility first and second
+version number and authorization level (3\.7.[[:xdigit:]]+).
+These numbers do not apply to the PAI counter facility.
+In fact they can be omitted.
+Shorten the CPU identification string for this machine to manufacturer
+and model. This is sufficient for all PMU devices.
 
-And here.
+Output after:
+ # ./perf report -i /tmp//perfout-635468 -D | grep Counter
+	Counter:007 km_aes_128 Value:0x00000000000186a0
+	Counter:032 kma_gcm_aes_256 Value:0x0000000000000001
+	Counter:032 kma_gcm_aes_256 Value:0x0000000000000001
+	Counter:032 kma_gcm_aes_256 Value:0x0000000000000001
+ #
 
-> +	return 0;
-> +}
- 
-> -- 
-> 2.34.1
-> 
+Fixes: b539deafbadb ("perf report: Add s390 raw data interpretation for PAI counters")
+Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
+Acked-by: Sumanth Korikkar <sumanthk@linux.ibm.com>
+Reviewed-by: Ian Rogers <irogers@google.com>
+---
+ tools/perf/pmu-events/arch/s390/mapfile.csv | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
+diff --git a/tools/perf/pmu-events/arch/s390/mapfile.csv b/tools/perf/pmu-events/arch/s390/mapfile.csv
+index a918e1af77a5..b22648d12751 100644
+--- a/tools/perf/pmu-events/arch/s390/mapfile.csv
++++ b/tools/perf/pmu-events/arch/s390/mapfile.csv
+@@ -5,4 +5,4 @@ Family-model,Version,Filename,EventType
+ ^IBM.296[45].*[13]\.[1-5].[[:xdigit:]]+$,1,cf_z13,core
+ ^IBM.390[67].*[13]\.[1-5].[[:xdigit:]]+$,3,cf_z14,core
+ ^IBM.856[12].*3\.6.[[:xdigit:]]+$,3,cf_z15,core
+-^IBM.393[12].*3\.7.[[:xdigit:]]+$,3,cf_z16,core
++^IBM.393[12].*$,3,cf_z16,core
 -- 
-/Horatiu
+2.44.0
+
