@@ -1,20 +1,20 @@
 Received: from sakura.ysato.name (ik1-413-38519.vs.sakura.ne.jp [153.127.30.23])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A65E371B58;
-	Thu,  4 Apr 2024 05:15:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CE71C74410;
+	Thu,  4 Apr 2024 05:15:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=153.127.30.23
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712207710; cv=none; b=HmCRghtm7o9mdFQPN1cKm7VztkNLq6Kn7W/SQnKk5Gq1k31qy26OrIH1Ts3yvYkpFRud0LHWvAFS/ASg/FwO0osxkgdUNzmfZ2eu610JypIqbcE6CEtwSnFHBGviHSFzjv5wceC6Exib68NvSJuajhG5s5pgq0hb4DieYeE82K8=
+	t=1712207713; cv=none; b=tPp27I8fqn31QSm76G+h85UkrF+42Z2wOoyqSZTTxmznCqJSG5d5sCk81Jkmcu32PrXoVyMTqvZKuL/gxAf0MSKQ9DzgOSOELSdqACiR2zq8azcn2fU8QmbYwb1el04MgkFAQA8dcdVb/6FVz2QA//DzYK0dO7O6EUftv6uGrIY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712207710; c=relaxed/simple;
-	bh=HPmmSvMhl0GCAZDx4/OjF2pM4q8N+rvJP+xvKvCJtLQ=;
+	s=arc-20240116; t=1712207713; c=relaxed/simple;
+	bh=7kKBexl8c578dv6sgSv7f/xmW28ziZQmdbhonSn4XD0=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=HsSVhoXq63Uw0loRAGk987t/Ab22OgQ3+x6FfsYv4ouOdk8vqHeJw8JxiVlJ6LYDhtONj/TAAVe1YxGbvNqpZDjqdz94+gm0pxlrWVO4MLnJsOMDQlQRnniVMA4+ALQrL33kH0BjZWu5G6TLmwggL2RG0wIrcuiRJpqxqDrO21I=
+	 MIME-Version; b=O0Jsa03keKkRJZqKNLAffRUyku0GY1NZXJ5uu6GDrF7EE+SYZUkBwKfO4lMUFgXYQ8EJ7vtOZAD1aiYnB9TpNDN+TZFWdY19UT15FWSOwxnxR1CxmBc5li5Aq8V7HVE95BHX4mou4S1JueZWv7tuet/BP9Zy3WvVULgcmY9Qf9I=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=users.sourceforge.jp; spf=fail smtp.mailfrom=users.sourceforge.jp; arc=none smtp.client-ip=153.127.30.23
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=users.sourceforge.jp
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=users.sourceforge.jp
 Received: from SIOS1075.ysato.name (al128006.dynamic.ppp.asahi-net.or.jp [111.234.128.6])
-	by sakura.ysato.name (Postfix) with ESMTPSA id D0D0F1C0FA0;
-	Thu,  4 Apr 2024 14:15:05 +0900 (JST)
+	by sakura.ysato.name (Postfix) with ESMTPSA id B45D21C0FB3;
+	Thu,  4 Apr 2024 14:15:09 +0900 (JST)
 From: Yoshinori Sato <ysato@users.sourceforge.jp>
 To: linux-sh@vger.kernel.org
 Cc: Yoshinori Sato <ysato@users.sourceforge.jp>,
@@ -80,9 +80,9 @@ Cc: Yoshinori Sato <ysato@users.sourceforge.jp>,
 	linux-pci@vger.kernel.org,
 	linux-serial@vger.kernel.org,
 	linux-fbdev@vger.kernel.org
-Subject: [RESEND v7 07/37] sh: Fix COMMON_CLK support in CONFIG_OF=y.
-Date: Thu,  4 Apr 2024 14:14:18 +0900
-Message-Id: <429d40e16e70381d25d77c627ae490a2be28a0b7.1712207606.git.ysato@users.sourceforge.jp>
+Subject: [RESEND v7 09/37] dt-binding: Add compatible SH7750 SoC
+Date: Thu,  4 Apr 2024 14:14:20 +0900
+Message-Id: <4ac65d0f311e890c1ca92bf057c70954ec7ac351.1712207606.git.ysato@users.sourceforge.jp>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <cover.1712207606.git.ysato@users.sourceforge.jp>
 References: <cover.1712207606.git.ysato@users.sourceforge.jp>
@@ -94,103 +94,31 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Initialize the clock and timer using the COMMON_CLK procedure.
-sh's earlytimer mechanism doesn't work properly in OF,
-so timer initialization is delayed.
-If CONFIG_OF=y, perform the general timer initialization procedure.
-
 Signed-off-by: Yoshinori Sato <ysato@users.sourceforge.jp>
 ---
- arch/sh/boards/of-generic.c | 28 ++++------------------------
- arch/sh/kernel/time.c       | 12 ++++++++++++
- 2 files changed, 16 insertions(+), 24 deletions(-)
+ Documentation/devicetree/bindings/timer/renesas,tmu.yaml | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/arch/sh/boards/of-generic.c b/arch/sh/boards/of-generic.c
-index f7f3e618e85b..f1ca5a914c11 100644
---- a/arch/sh/boards/of-generic.c
-+++ b/arch/sh/boards/of-generic.c
-@@ -8,6 +8,7 @@
- #include <linux/of.h>
- #include <linux/of_clk.h>
- #include <linux/of_fdt.h>
-+#include <linux/of_platform.h>
- #include <linux/clocksource.h>
- #include <linux/irqchip.h>
- #include <asm/machvec.h>
-@@ -98,16 +99,7 @@ static void sh_of_smp_probe(void)
+diff --git a/Documentation/devicetree/bindings/timer/renesas,tmu.yaml b/Documentation/devicetree/bindings/timer/renesas,tmu.yaml
+index 84bbe15028a1..265d286ffb2f 100644
+--- a/Documentation/devicetree/bindings/timer/renesas,tmu.yaml
++++ b/Documentation/devicetree/bindings/timer/renesas,tmu.yaml
+@@ -39,6 +39,7 @@ properties:
+           - renesas,tmu-r8a779a0 # R-Car V3U
+           - renesas,tmu-r8a779f0 # R-Car S4-8
+           - renesas,tmu-r8a779g0 # R-Car V4H
++          - renesas,tmu-sh7750   # SH7750
+       - const: renesas,tmu
  
- #endif
- 
--static void noop(void)
--{
--}
--
--static int noopi(void)
--{
--	return 0;
--}
--
--static void __init sh_of_mem_reserve(void)
-+static void __init sh_of_mem_init(void)
- {
- 	early_init_fdt_reserve_self();
- 	early_init_fdt_scan_reserved_mem();
-@@ -140,25 +132,13 @@ static void __init sh_of_init_irq(void)
- 	irqchip_init();
- }
- 
--static int __init sh_of_clk_init(void)
--{
--#ifdef CONFIG_COMMON_CLK
--	/* Disabled pending move to COMMON_CLK framework. */
--	pr_info("SH generic board support: scanning for clk providers\n");
--	of_clk_init(NULL);
--#endif
--	return 0;
--}
--
- static struct sh_machine_vector __initmv sh_of_generic_mv = {
- 	.mv_setup	= sh_of_setup,
- 	.mv_name	= "devicetree", /* replaced by DT root's model */
- 	.mv_irq_demux	= sh_of_irq_demux,
- 	.mv_init_irq	= sh_of_init_irq,
--	.mv_clk_init	= sh_of_clk_init,
--	.mv_mode_pins	= noopi,
--	.mv_mem_init	= noop,
--	.mv_mem_reserve	= sh_of_mem_reserve,
-+	.mv_mode_pins	= generic_mode_pins,
-+	.mv_mem_init	= sh_of_mem_init,
- };
- 
- struct sh_clk_ops;
-diff --git a/arch/sh/kernel/time.c b/arch/sh/kernel/time.c
-index 821a09cbd605..ce5b7c2f8628 100644
---- a/arch/sh/kernel/time.c
-+++ b/arch/sh/kernel/time.c
-@@ -19,7 +19,9 @@
- #include <asm/clock.h>
- #include <asm/rtc.h>
- #include <asm/platform_early.h>
-+#include <linux/of_clk.h>
- 
-+#ifndef CONFIG_SH_DEVICE_TREE
- static void __init sh_late_time_init(void)
- {
- 	/*
-@@ -43,3 +45,13 @@ void __init time_init(void)
- 
- 	late_time_init = sh_late_time_init;
- }
-+#else
-+/* CONFIG_SH_DEVICE_TREE */
-+void __init time_init(void)
-+{
-+	pr_info("SH generic board support: scanning for clk providers\n");
-+
-+	of_clk_init(NULL);
-+	timer_probe();
-+}
-+#endif
+   reg:
+@@ -96,6 +97,7 @@ if:
+             - renesas,tmu-r8a7740
+             - renesas,tmu-r8a7778
+             - renesas,tmu-r8a7779
++            - renesas,tmu-sh7750
+ then:
+   required:
+     - resets
 -- 
 2.39.2
 
