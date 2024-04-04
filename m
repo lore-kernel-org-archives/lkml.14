@@ -1,144 +1,89 @@
-Received: from mail-pg1-f175.google.com (mail-pg1-f175.google.com [209.85.215.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail2.andi.de1.cc (vmd64148.contaboserver.net [161.97.139.27])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1E2B13C3EB;
-	Thu,  4 Apr 2024 22:19:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C391D13B2AD;
+	Thu,  4 Apr 2024 22:20:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=161.97.139.27
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712269151; cv=none; b=A7MiFRGpaljlR3/FlZHu78jsiui901bBnsuuBDhdhJmp+OhI2wWyT/9awaAUjWFY1TsgmYuI6mkOJdiprcljzrgNYrPCoVVrLULFt0i0jiNVfuxkNIuXRhBW+rx/W4QTgxj4FaPURnd6sSl5b3novSk2HMytxhLjD9IaAZdDNP4=
+	t=1712269224; cv=none; b=uihFrQkmYjPUWkrsiwjjo2uG7gvnicFIR1+mZE3uuHJgBxXUj87dWdvN6ZndUklJekFeXn2sXIzYaj40udecvPycjPmyqHWy8aUmNE8Wj347lDROLWahgno0Iffs9ac0vnEBtDyA9CC+O0xhMb0K8O89SIr0oV3foFQHJJMKPJ0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712269151; c=relaxed/simple;
-	bh=OBHcickDyG4iGacLH5Fn47xNvsmIx4Xp0B2DdAN7B1s=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Hx/wR5Li3sPm4hYJZAd3vhQ8KntYRuwk2j6lSyFB+Y9+yjWOCS+fbJ/UsrGKVU0i6/eYGa0VvsZ88FPv9+08jgk9Rt4Y8LIZbhSDzAvIKc/MK2iVpZ8D+aFM36WL/De7gJvYB8eivwFyCkl3/vBp6QColSyw2drCLxLfxb0vHtM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=I5XVqqrB; arc=none smtp.client-ip=209.85.215.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1712269224; c=relaxed/simple;
+	bh=k8qEGLL2If8scNURaxWNlbJuI1lpXFMLm5iEQoDWs4Y=;
+	h=From:To:Subject:Date:Message-Id:MIME-Version; b=DN97tiqOB8NjR3G4IeDpiyxp5jcOTj11+TwG8r4BqJpIlQcuMRohA4/VGtjpZ/Ac0IZKRNs8iIQPoNqlMs9+sfFsLZ9HT4li4VaXDtjuCKxYStbeVnYGEAc8rtbZ6ojiwoAyuML1i1ZU2I2LmKb9zXXRYQ0d6eMuX6UC9xSH19o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kemnade.info; spf=pass smtp.mailfrom=kemnade.info; dkim=pass (2048-bit key) header.d=kemnade.info header.i=@kemnade.info header.b=wOdiFMVM; arc=none smtp.client-ip=161.97.139.27
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kemnade.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kemnade.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="I5XVqqrB"
-Received: by mail-pg1-f175.google.com with SMTP id 41be03b00d2f7-5ce2aada130so1149872a12.1;
-        Thu, 04 Apr 2024 15:19:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1712269149; x=1712873949; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=WFi95zOVQYA4xEHKHqIiFXKZ5uGVSt/aCQ/r+P7rpsY=;
-        b=I5XVqqrBw/EcINfCazvCNosZZYgzyYBcfi3zJ1Z37Oy8gKO+SNpmS5Y7edzwnrrvZm
-         hbPs7cly5N+Ogfh/I3wwJS1qY0haDxLJKbzwFxHE0GQl9v71rVqO5XWg15lMWJFVEzzU
-         uWNFh3b2IHQqeQ/xkE35NZVgc9QucJ8Hk76tOcsXRd30WTirJ6JZqQVTajGLDmbKp9OB
-         W0c2z767pJN/0er0NGDDNF/R37We3jpYh5mAedeoiFehlzI/9/WQYOZE0/Xjwm80M4rs
-         l3iJNqc6kJoEZCbwn0kxogDc2A92gdIx1pIJW5Z2xJhNDVME3INrUQonFlilHkXMofZl
-         IoXw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712269149; x=1712873949;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=WFi95zOVQYA4xEHKHqIiFXKZ5uGVSt/aCQ/r+P7rpsY=;
-        b=M2kq+SUg/gpkRJiKnPHTasCQX2p7C4I6PKMFcdhpAJ7BqAB19OpjP4e/2MHowjIJwy
-         2gJ+npt2QeKUtkNO5Nalcl/zsdXA60MifIAnMxdRmNzxkBl3CgYzyjdn75uzOpIpEp5k
-         F5Ep0T27yejMZ2N/ZQGUdVdzm1wR8+hQQtPvYnjJX/f2G7MjewR3KZccqtv/TR4bbXfH
-         eSV9DQSGsn5b52q3Rqwfsh1sW1o0RKbuYD7jWMoUJwjY0HLz/V3vDA3HdsHtS5vRRS+l
-         VTw+bArC+EDiFKYZcExTINH/PRwjPJjGfYgsm769auZPX5GuG+bjvFRjxlXhQXJ4Qvsm
-         O1Zw==
-X-Forwarded-Encrypted: i=1; AJvYcCVCVPISI7b0u/vdf/HHWGNlk6mEVhbt/0i9tS3P3fWnXSg4MVa2r98VJHlYZLIOmguWG+tBYkC4m/9QpV6r5CLQH8Y/trhZNt92VqB3
-X-Gm-Message-State: AOJu0YwIHeHP0uWlNsfKWkGLA/6TuE1mQE3Co3WOg0Hlf3aOQq9UWEew
-	9mtET53AQ9vExpXP3612gwRMAkDo6yuflXkLcTcZ376VM5UEJjq+NlMN6d0Nk/1L59pmBGs11sr
-	Rwik9sT0FZdz9Gp0PWjaR0XQSMUg=
-X-Google-Smtp-Source: AGHT+IH6G5tOrI2ksQ9kGiIvzM22pWSwDHtXY27hq7L0Etr+ekfWcBU+YiIxZ61QO9rb8eSAR3mcKNUBvEuACLWnaRc=
-X-Received: by 2002:a05:6a20:d494:b0:1a7:3e78:cc7e with SMTP id
- im20-20020a056a20d49400b001a73e78cc7emr863190pzb.14.1712269149243; Thu, 04
- Apr 2024 15:19:09 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kemnade.info header.i=@kemnade.info header.b="wOdiFMVM"
+Received: from mail.andi.de1.cc ([2a02:c205:3004:2154::1])
+	by mail2.andi.de1.cc with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <andreas@kemnade.info>)
+	id 1rsVRR-003r6K-28;
+	Fri, 05 Apr 2024 00:20:17 +0200
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=kemnade.info; s=20220719; h=Content-Transfer-Encoding:MIME-Version:
+	Message-Id:Date:Subject:To:From:Sender:Reply-To:Cc:Content-Type:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
+	List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=cwXwAMn63d+EV4+GVNJ0peEQrITL1XlN2ioPF/8sSAg=; b=wOdiFMVMdydHN60sazRrfx+gyR
+	mD5LyUvzS20Ek2OgxRzBA+Ni6w6DmbNUZzwX1vEJ3gyETZp18YNSoUShrLKHGOtNMYNr9MxxyQz2h
+	FFD0dEWWDTdAV6ZFBR93+fDHDSgsImbdkCZfokIrAFtu72FmJf/eGIFYtANkS9/HtE8qtOTjQfi9s
+	IXP/YFUWAXtMWtIDA4e8pTj/xTcdromp1fLmHfcyv025KS71RM8r+FZERmhyu38J2IF0CscHI2emy
+	kltYQtkkOuDixW91k6t9m1DECaATesi9MvJ/w25drp2C/BzKpV+9N50joxk03O+Sfs+CLsrh225xY
+	3Zh6coHA==;
+Received: from p2003010777026a001a3da2fffebfd33a.dip0.t-ipconnect.de ([2003:107:7702:6a00:1a3d:a2ff:febf:d33a] helo=aktux)
+	by mail.andi.de1.cc with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <andreas@kemnade.info>)
+	id 1rsVRO-000Nwn-09;
+	Fri, 05 Apr 2024 00:20:14 +0200
+Received: from andi by aktux with local (Exim 4.96)
+	(envelope-from <andreas@kemnade.info>)
+	id 1rsVRN-002oTm-2G;
+	Fri, 05 Apr 2024 00:20:13 +0200
+From: Andreas Kemnade <andreas@kemnade.info>
+To: dmitry.torokhov@gmail.com,
+	robh+dt@kernel.org,
+	krzysztof.kozlowski+dt@linaro.org,
+	conor+dt@kernel.org,
+	andreas@kemnade.info,
+	o.rempel@pengutronix.de,
+	u.kleine-koenig@pengutronix.de,
+	hdegoede@redhat.com,
+	andy.shevchenko@gmail.com,
+	ye.xingchen@zte.com.cn,
+	p.puschmann@pironex.com,
+	linux-input@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	caleb.connolly@linaro.org
+Subject: [PATCH v2 0/2] Input: add ft5426
+Date: Fri,  5 Apr 2024 00:20:07 +0200
+Message-Id: <20240404222009.670685-1-andreas@kemnade.info>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240404010308.334604-1-void@manifault.com>
-In-Reply-To: <20240404010308.334604-1-void@manifault.com>
-From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date: Thu, 4 Apr 2024 15:18:57 -0700
-Message-ID: <CAEf4BzaXDQVCYD3YrzLJTKu7idHZ0KGzSedWPwEX3v44Fq1vQA@mail.gmail.com>
-Subject: Re: [PATCH bpf-next 1/2] bpf: Allow invoking kfuncs from
- BPF_PROG_TYPE_SYSCALL progs
-To: David Vernet <void@manifault.com>
-Cc: bpf@vger.kernel.org, ast@kernel.org, daniel@iogearbox.net, 
-	andrii@kernel.org, martin.lau@linux.dev, song@kernel.org, 
-	yonghong.song@linux.dev, john.fastabend@gmail.com, kpsingh@kernel.org, 
-	sdf@google.com, haoluo@google.com, jolsa@kernel.org, 
-	linux-kernel@vger.kernel.org, kernel-team@meta.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Wed, Apr 3, 2024 at 6:03=E2=80=AFPM David Vernet <void@manifault.com> wr=
-ote:
->
-> Currently, a set of core BPF kfuncs (e.g. bpf_task_*, bpf_cgroup_*,
-> bpf_cpumask_*, etc) cannot be invoked from BPF_PROG_TYPE_SYSCALL
-> programs. The whitelist approach taken for enabling kfuncs makes sense:
-> it not safe to call these kfuncs from every program type. For example,
-> it may not be safe to call bpf_task_acquire() in an fentry to
-> free_task().
->
-> BPF_PROG_TYPE_SYSCALL, on the other hand, is a perfectly safe program
-> type from which to invoke these kfuncs, as it's a very controlled
-> environment, and we should never be able to run into any of the typical
-> problems such as recursive invoations, acquiring references on freeing
-> kptrs, etc. Being able to invoke these kfuncs would be useful, as
-> BPF_PROG_TYPE_SYSCALL can be invoked with BPF_PROG_RUN, and would
-> therefore enable user space programs to synchronously call into BPF to
-> manipulate these kptrs.
->
-> This patch therefore enables invoking the aforementioned core kfuncs
-> from BPF_PROG_TYPE_SYSCALL progs.
->
-> Signed-off-by: David Vernet <void@manifault.com>
-> ---
->  kernel/bpf/cpumask.c | 1 +
->  kernel/bpf/helpers.c | 1 +
->  2 files changed, 2 insertions(+)
->
+Add ft5426 touchscreen controller and the corresponding compatible.
 
-Makes sense, but see my comments on patch #2.
+Changes in v2:
+- reorder compatible
 
-Acked-by: Andrii Nakryiko <andrii@kernel.org>
+Andreas Kemnade (2):
+  dt-bindings: input: touchscreen: edt-ft5x06: Add ft5426
+  Input: edt-ft5x06 - add ft5426
 
-> diff --git a/kernel/bpf/cpumask.c b/kernel/bpf/cpumask.c
-> index dad0fb1c8e87..33c473d676a5 100644
-> --- a/kernel/bpf/cpumask.c
-> +++ b/kernel/bpf/cpumask.c
-> @@ -474,6 +474,7 @@ static int __init cpumask_kfunc_init(void)
->         ret =3D bpf_mem_alloc_init(&bpf_cpumask_ma, sizeof(struct bpf_cpu=
-mask), false);
->         ret =3D ret ?: register_btf_kfunc_id_set(BPF_PROG_TYPE_TRACING, &=
-cpumask_kfunc_set);
->         ret =3D ret ?: register_btf_kfunc_id_set(BPF_PROG_TYPE_STRUCT_OPS=
-, &cpumask_kfunc_set);
-> +       ret =3D ret ?: register_btf_kfunc_id_set(BPF_PROG_TYPE_SYSCALL, &=
-cpumask_kfunc_set);
->         return  ret ?: register_btf_id_dtor_kfuncs(cpumask_dtors,
->                                                    ARRAY_SIZE(cpumask_dto=
-rs),
->                                                    THIS_MODULE);
-> diff --git a/kernel/bpf/helpers.c b/kernel/bpf/helpers.c
-> index d9e7aca8ae9e..8cde717137bd 100644
-> --- a/kernel/bpf/helpers.c
-> +++ b/kernel/bpf/helpers.c
-> @@ -2653,6 +2653,7 @@ static int __init kfunc_init(void)
->         ret =3D ret ?: register_btf_kfunc_id_set(BPF_PROG_TYPE_SCHED_CLS,=
- &generic_kfunc_set);
->         ret =3D ret ?: register_btf_kfunc_id_set(BPF_PROG_TYPE_XDP, &gene=
-ric_kfunc_set);
->         ret =3D ret ?: register_btf_kfunc_id_set(BPF_PROG_TYPE_STRUCT_OPS=
-, &generic_kfunc_set);
-> +       ret =3D ret ?: register_btf_kfunc_id_set(BPF_PROG_TYPE_SYSCALL, &=
-generic_kfunc_set);
->         ret =3D ret ?: register_btf_id_dtor_kfuncs(generic_dtors,
->                                                   ARRAY_SIZE(generic_dtor=
-s),
->                                                   THIS_MODULE);
-> --
-> 2.44.0
->
+ .../devicetree/bindings/input/touchscreen/edt-ft5x06.yaml        | 1 +
+ drivers/input/touchscreen/edt-ft5x06.c                           | 1 +
+ 2 files changed, 2 insertions(+)
+
+-- 
+2.39.2
+
