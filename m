@@ -1,342 +1,111 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BB2F84FDF
-	for <linux-kernel@vger.kernel.org>; Thu,  4 Apr 2024 15:32:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA93C1292EE;
+	Thu,  4 Apr 2024 15:33:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712244765; cv=none; b=nntYdTj3y95W8aH4dYw7Y6ba6S2PfvM8kc6u/oKIMEefpGIxCJjRNYYHanUonjXEwJ4vW7exA4tFXKUn3iInYPkCcXNfMU00zbqiURyNECyqu/klS7hS7I56/WPFZ0VlW7Ctk947pTCMdr0hJHBSSGJa4e2YPlokI1mssTl6Yy4=
+	t=1712244781; cv=none; b=Ap1X0x0yW7X8vUxpvUpPFI5SX/oFwheKh1BRjk/8SOrov4vcKsrfuLWmdN1LGsek8AVy7WybS8Zs+pQB7wQf8u0Uc0WeFGB+lAliMz4WBJ5se+pR6XWYz8LCbyUIVLPbwMzzghIRj1voJ6xFMXhCP/Zf2y7TXs2vOzwm6Mp+QMQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712244765; c=relaxed/simple;
-	bh=zsZ3ishnWX9uJ0W4Rc2EEdN3fsoDdgAdyOvP1ggjlak=;
+	s=arc-20240116; t=1712244781; c=relaxed/simple;
+	bh=+ihKIoYDSDX/L3rUTACaGuGGhf6TLUZ/+4aywDsnmIM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=n317qnPZYtqUiwi11sa8iBxF3Qu5QXydhpLFwqkHDJetRfXgldaH83IVvv7A7UqOOD1Ts2ZbY8n7ZonqNDqdKuWve8521SjjA97sKDopwn6WdnPbw45RaAhUJh/M5pyz6b0I2aXDNHsDX+PMl75xM2FOp85j6qk9N/9GyJJlCgQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=I/bAQlDg; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=UEt5xSpdYo0uctKDX1QyToz6xN01HMRwwuwzURpBDcd3VELKQzzpo7gRiAql9aFF8mFNv7JzBZkpms7RATLwSjS36yQ2dRDH8f+6QEi/kTOtAts+YpzNgv2wLYliqdBCuFvEHRJ2qJL0Dv0bR23r6L+ZP43rrDto7pXeJg5Qehw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PQLRQoQ8; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="I/bAQlDg"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1712244762;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=rAwr5RwMwHn0D/njvN++F10eAqx2FSSGd5SI+w45dIE=;
-	b=I/bAQlDgJvQbE/+zZpVKYGPROUKIRxjo7sG7GhG14SfG33raKFl5EDmQESfODhtJAk2LxM
-	6j0BSvpURSWzer/kWmdc/bmv307tjDSpoLAUqCj7Pop+D4jnawsLv+PT0VQxxeBZUkuUFx
-	xKEaD+NnI9RTvA5sE6Wpi1TexuTUVJQ=
-Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
- by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-435-VtgH5F9MM_mRjDojD5iFkg-1; Thu,
- 04 Apr 2024 11:32:39 -0400
-X-MC-Unique: VtgH5F9MM_mRjDojD5iFkg-1
-Received: from smtp.corp.redhat.com (int-mx09.intmail.prod.int.rdu2.redhat.com [10.11.54.9])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id E167F28AC1DD;
-	Thu,  4 Apr 2024 15:32:38 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.225.21])
-	by smtp.corp.redhat.com (Postfix) with SMTP id 79CAC492BCA;
-	Thu,  4 Apr 2024 15:32:37 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Thu,  4 Apr 2024 17:31:13 +0200 (CEST)
-Date: Thu, 4 Apr 2024 17:31:07 +0200
-From: Oleg Nesterov <oleg@redhat.com>
-To: Jiaxun Yang <jiaxun.yang@flygoat.com>
-Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	"linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
-	linux-kernel@vger.kernel.org, Xi Ruoyao <xry111@xry111.site>
-Subject: Re: [PATCH] MIPS: scall: Save thread_info.syscall unconditionally on
- entry
-Message-ID: <20240404153107.GF7153@redhat.com>
-References: <20240328-mips_save_syscall-v1-1-9e1d62d6999d@flygoat.com>
- <465b3f19-56dc-4953-a677-58fd853f2f88@app.fastmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PQLRQoQ8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 96471C433F1;
+	Thu,  4 Apr 2024 15:33:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1712244781;
+	bh=+ihKIoYDSDX/L3rUTACaGuGGhf6TLUZ/+4aywDsnmIM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=PQLRQoQ8m3JLC2Td7LqTr9Gyx8iw2LqCI4y/rdO3jtZZbS+Jx+i1K/p9KSnZBmeME
+	 +c29ns5saD6bgCr/l+2SX/f4nFyiiSIxm/5E9rcRe8PW0ZE7NZpGIwjxhx5E89VL15
+	 82t9Vd7JFQgbffAMgIwa0aZMPBP883Z6LDkVPEtCDYG8PJHV9dhQXrPGeZxtYv/B+S
+	 TdPsbPup6lVeq9b/AlKD3BSDhXEVHVqOEnkLN8LdjH60jD/0MagUPdIpfuABSjbPKn
+	 Ca++IKiyI5MdVDhXG+zD+xnTEBgDZk67+RLYMxMdw2G32RjOdiVttZUzTgVOGqjsQP
+	 tS4iFvBCBEjKg==
+Date: Thu, 4 Apr 2024 08:32:58 -0700
+From: Nathan Chancellor <nathan@kernel.org>
+To: Conor Dooley <conor@kernel.org>
+Cc: linux-riscv@lists.infradead.org,
+	Conor Dooley <conor.dooley@microchip.com>, stable@vger.kernel.org,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Wedson Almeida Filho <wedsonaf@gmail.com>,
+	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org,
+	Sami Tolvanen <samitolvanen@google.com>,
+	Kees Cook <keescook@chromium.org>, llvm@lists.linux.dev
+Subject: Re: [PATCH v3] rust: make mutually exclusive with CFI_CLANG
+Message-ID: <20240404153258.GA852748@dev-arch.thelio-3990X>
+References: <20240404-providing-emporium-e652e359c711@spud>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <465b3f19-56dc-4953-a677-58fd853f2f88@app.fastmail.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.9
+In-Reply-To: <20240404-providing-emporium-e652e359c711@spud>
 
-On 04/04, Jiaxun Yang wrote:
+On Thu, Apr 04, 2024 at 03:17:02PM +0100, Conor Dooley wrote:
+> From: Conor Dooley <conor.dooley@microchip.com>
 > 
+> On RISC-V and arm64, and presumably x86, if CFI_CLANG is enabled,
+> loading a rust module will trigger a kernel panic. Support for
+> sanitisers, including kcfi (CFI_CLANG), is in the works, but for now
+> they're nightly-only options in rustc. Make RUST depend on !CFI_CLANG
+> to prevent configuring a kernel without symmetrical support for kfi.
 > 
-> 在2024年3月28日三月 下午2:27，Jiaxun Yang写道：
-> > thread_info.syscall is used by syscall_get_nr to supply syscall nr
-> > over a thread stack frame.
-> >
-> > Previously, thread_info.syscall is only saved at syscall_trace_enter
-> > when syscall tracing is enabled. However rest of the kernel code do
-> > expect syscall_get_nr to be available without syscall tracing. The
-> > previous design breaks collect_syscall.
-> >
-> > Move saving process to syscall entry to fix it.
-> >
-> > Reported-by: Xi Ruoyao <xry111@xry111.site>
-> > Link: https://github.com/util-linux/util-linux/issues/2867
-> > Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
-> 
-> Ping, this needs to be in fixes tree.
+> Fixes: 2f7ab1267dc9 ("Kbuild: add Rust support")
+> cc: stable@vger.kernel.org
+> Signed-off-by: Conor Dooley <conor.dooley@microchip.com>
 
-Just in case... I see nothing wrong, but I can't review this patch.
-I know nothing about arch/mips/ so I can't really understand these
-low-level changes.
+Acked-by: Nathan Chancellor <nathan@kernel.org>
 
-Oleg.
+It seems like this won't be forgotten about but if there is not already
+an issue open for this somewhere, it would be good to have one, since we
+obviously want this for both C and Rust code.
 
+As a general meta comment not directed at anyone in particualr, I think
+these 'depends on !' should all have some sort of comment or description
+as to why they are disabled. I can infer from most of them but it would
+still be good to be explicit, especially since someone might want to
+work on fixing the ones that are due to missing support and such.
+
+> ---
+> Sending this one on its own, there's no explicit dep on this for the
+> riscv enabling patch, v3 to continue the numbering from there. Nothing
+> has changed since v2.
 > 
-> Thanks
+> CC: Miguel Ojeda <ojeda@kernel.org>
+> CC: Alex Gaynor <alex.gaynor@gmail.com>
+> CC: Wedson Almeida Filho <wedsonaf@gmail.com>
+> CC: linux-kernel@vger.kernel.org (open list)
+> CC: rust-for-linux@vger.kernel.org
+> CC: Sami Tolvanen <samitolvanen@google.com>
+> CC: Kees Cook <keescook@chromium.org>
+> CC: Nathan Chancellor <nathan@kernel.org>
+> CC: llvm@lists.linux.dev
+> ---
+>  init/Kconfig | 1 +
+>  1 file changed, 1 insertion(+)
 > 
-> > ---
-> >  arch/mips/include/asm/ptrace.h |  2 +-
-> >  arch/mips/kernel/asm-offsets.c |  1 +
-> >  arch/mips/kernel/ptrace.c      | 15 ++++++---------
-> >  arch/mips/kernel/scall32-o32.S | 23 +++++++++++++----------
-> >  arch/mips/kernel/scall64-n32.S |  3 ++-
-> >  arch/mips/kernel/scall64-n64.S |  3 ++-
-> >  arch/mips/kernel/scall64-o32.S | 33 +++++++++++++++++----------------
-> >  7 files changed, 42 insertions(+), 38 deletions(-)
-> >
-> > diff --git a/arch/mips/include/asm/ptrace.h b/arch/mips/include/asm/ptrace.h
-> > index d14d0e37ad02..4a2b40ce39e0 100644
-> > --- a/arch/mips/include/asm/ptrace.h
-> > +++ b/arch/mips/include/asm/ptrace.h
-> > @@ -159,7 +159,7 @@ extern unsigned long exception_ip(struct pt_regs *regs);
-> >  #define exception_ip(regs) exception_ip(regs)
-> >  #define profile_pc(regs) instruction_pointer(regs)
-> > 
-> > -extern asmlinkage long syscall_trace_enter(struct pt_regs *regs, long syscall);
-> > +extern asmlinkage long syscall_trace_enter(struct pt_regs *regs);
-> >  extern asmlinkage void syscall_trace_leave(struct pt_regs *regs);
-> > 
-> >  extern void die(const char *, struct pt_regs *) __noreturn;
-> > diff --git a/arch/mips/kernel/asm-offsets.c 
-> > b/arch/mips/kernel/asm-offsets.c
-> > index d1b11f66f748..cb1045ebab06 100644
-> > --- a/arch/mips/kernel/asm-offsets.c
-> > +++ b/arch/mips/kernel/asm-offsets.c
-> > @@ -101,6 +101,7 @@ void output_thread_info_defines(void)
-> >  	OFFSET(TI_CPU, thread_info, cpu);
-> >  	OFFSET(TI_PRE_COUNT, thread_info, preempt_count);
-> >  	OFFSET(TI_REGS, thread_info, regs);
-> > +	OFFSET(TI_SYSCALL, thread_info, syscall);
-> >  	DEFINE(_THREAD_SIZE, THREAD_SIZE);
-> >  	DEFINE(_THREAD_MASK, THREAD_MASK);
-> >  	DEFINE(_IRQ_STACK_SIZE, IRQ_STACK_SIZE);
-> > diff --git a/arch/mips/kernel/ptrace.c b/arch/mips/kernel/ptrace.c
-> > index 59288c13b581..61503a36067e 100644
-> > --- a/arch/mips/kernel/ptrace.c
-> > +++ b/arch/mips/kernel/ptrace.c
-> > @@ -1317,16 +1317,13 @@ long arch_ptrace(struct task_struct *child, 
-> > long request,
-> >   * Notification of system call entry/exit
-> >   * - triggered by current->work.syscall_trace
-> >   */
-> > -asmlinkage long syscall_trace_enter(struct pt_regs *regs, long syscall)
-> > +asmlinkage long syscall_trace_enter(struct pt_regs *regs)
-> >  {
-> >  	user_exit();
-> > 
-> > -	current_thread_info()->syscall = syscall;
-> > -
-> >  	if (test_thread_flag(TIF_SYSCALL_TRACE)) {
-> >  		if (ptrace_report_syscall_entry(regs))
-> >  			return -1;
-> > -		syscall = current_thread_info()->syscall;
-> >  	}
-> > 
-> >  #ifdef CONFIG_SECCOMP
-> > @@ -1335,7 +1332,7 @@ asmlinkage long syscall_trace_enter(struct 
-> > pt_regs *regs, long syscall)
-> >  		struct seccomp_data sd;
-> >  		unsigned long args[6];
-> > 
-> > -		sd.nr = syscall;
-> > +		sd.nr = current_thread_info()->syscall;
-> >  		sd.arch = syscall_get_arch(current);
-> >  		syscall_get_arguments(current, regs, args);
-> >  		for (i = 0; i < 6; i++)
-> > @@ -1345,23 +1342,23 @@ asmlinkage long syscall_trace_enter(struct 
-> > pt_regs *regs, long syscall)
-> >  		ret = __secure_computing(&sd);
-> >  		if (ret == -1)
-> >  			return ret;
-> > -		syscall = current_thread_info()->syscall;
-> >  	}
-> >  #endif
-> > 
-> >  	if (unlikely(test_thread_flag(TIF_SYSCALL_TRACEPOINT)))
-> >  		trace_sys_enter(regs, regs->regs[2]);
-> > 
-> > -	audit_syscall_entry(syscall, regs->regs[4], regs->regs[5],
-> > +	audit_syscall_entry(current_thread_info()->syscall,
-> > +			    regs->regs[4], regs->regs[5],
-> >  			    regs->regs[6], regs->regs[7]);
-> > 
-> >  	/*
-> >  	 * Negative syscall numbers are mistaken for rejected syscalls, but
-> >  	 * won't have had the return value set appropriately, so we do so now.
-> >  	 */
-> > -	if (syscall < 0)
-> > +	if (current_thread_info()->syscall < 0)
-> >  		syscall_set_return_value(current, regs, -ENOSYS, 0);
-> > -	return syscall;
-> > +	return current_thread_info()->syscall;
-> >  }
-> > 
-> >  /*
-> > diff --git a/arch/mips/kernel/scall32-o32.S b/arch/mips/kernel/scall32-o32.S
-> > index 18dc9b345056..2c604717e630 100644
-> > --- a/arch/mips/kernel/scall32-o32.S
-> > +++ b/arch/mips/kernel/scall32-o32.S
-> > @@ -77,6 +77,18 @@ loads_done:
-> >  	PTR_WD	load_a7, bad_stack_a7
-> >  	.previous
-> > 
-> > +	/*
-> > +	 * syscall number is in v0 unless we called syscall(__NR_###)
-> > +	 * where the real syscall number is in a0
-> > +	 */
-> > +	subu	t2, v0,  __NR_O32_Linux
-> > +	bnez	t2, 1f /* __NR_syscall at offset 0 */
-> > +	LONG_S	a0, TI_SYSCALL($28)	# Save a0 as syscall number
-> > +	b	2f
-> > +1:
-> > +	LONG_S	v0, TI_SYSCALL($28)	# Save v0 as syscall number
-> > +2:
-> > +
-> >  	lw	t0, TI_FLAGS($28)	# syscall tracing enabled?
-> >  	li	t1, _TIF_WORK_SYSCALL_ENTRY
-> >  	and	t0, t1
-> > @@ -114,16 +126,7 @@ syscall_trace_entry:
-> >  	SAVE_STATIC
-> >  	move	a0, sp
-> > 
-> > -	/*
-> > -	 * syscall number is in v0 unless we called syscall(__NR_###)
-> > -	 * where the real syscall number is in a0
-> > -	 */
-> > -	move	a1, v0
-> > -	subu	t2, v0,  __NR_O32_Linux
-> > -	bnez	t2, 1f /* __NR_syscall at offset 0 */
-> > -	lw	a1, PT_R4(sp)
-> > -
-> > -1:	jal	syscall_trace_enter
-> > +	jal	syscall_trace_enter
-> > 
-> >  	bltz	v0, 1f			# seccomp failed? Skip syscall
-> > 
-> > diff --git a/arch/mips/kernel/scall64-n32.S b/arch/mips/kernel/scall64-n32.S
-> > index 97456b2ca7dc..97788859238c 100644
-> > --- a/arch/mips/kernel/scall64-n32.S
-> > +++ b/arch/mips/kernel/scall64-n32.S
-> > @@ -44,6 +44,8 @@ NESTED(handle_sysn32, PT_SIZE, sp)
-> > 
-> >  	sd	a3, PT_R26(sp)		# save a3 for syscall restarting
-> > 
-> > +	LONG_S	v0, TI_SYSCALL($28)     # Store syscall number
-> > +
-> >  	li	t1, _TIF_WORK_SYSCALL_ENTRY
-> >  	LONG_L	t0, TI_FLAGS($28)	# syscall tracing enabled?
-> >  	and	t0, t1, t0
-> > @@ -72,7 +74,6 @@ syscall_common:
-> >  n32_syscall_trace_entry:
-> >  	SAVE_STATIC
-> >  	move	a0, sp
-> > -	move	a1, v0
-> >  	jal	syscall_trace_enter
-> > 
-> >  	bltz	v0, 1f			# seccomp failed? Skip syscall
-> > diff --git a/arch/mips/kernel/scall64-n64.S b/arch/mips/kernel/scall64-n64.S
-> > index e6264aa62e45..be11ea5cc67e 100644
-> > --- a/arch/mips/kernel/scall64-n64.S
-> > +++ b/arch/mips/kernel/scall64-n64.S
-> > @@ -46,6 +46,8 @@ NESTED(handle_sys64, PT_SIZE, sp)
-> > 
-> >  	sd	a3, PT_R26(sp)		# save a3 for syscall restarting
-> > 
-> > +	LONG_S	v0, TI_SYSCALL($28)     # Store syscall number
-> > +
-> >  	li	t1, _TIF_WORK_SYSCALL_ENTRY
-> >  	LONG_L	t0, TI_FLAGS($28)	# syscall tracing enabled?
-> >  	and	t0, t1, t0
-> > @@ -82,7 +84,6 @@ n64_syscall_exit:
-> >  syscall_trace_entry:
-> >  	SAVE_STATIC
-> >  	move	a0, sp
-> > -	move	a1, v0
-> >  	jal	syscall_trace_enter
-> > 
-> >  	bltz	v0, 1f			# seccomp failed? Skip syscall
-> > diff --git a/arch/mips/kernel/scall64-o32.S b/arch/mips/kernel/scall64-o32.S
-> > index d3c2616cba22..7a5abb73e531 100644
-> > --- a/arch/mips/kernel/scall64-o32.S
-> > +++ b/arch/mips/kernel/scall64-o32.S
-> > @@ -79,6 +79,22 @@ loads_done:
-> >  	PTR_WD	load_a7, bad_stack_a7
-> >  	.previous
-> > 
-> > +	/*
-> > +	 * absolute syscall number is in v0 unless we called syscall(__NR_###)
-> > +	 * where the real syscall number is in a0
-> > +	 * note: NR_syscall is the first O32 syscall but the macro is
-> > +	 * only defined when compiling with -mabi=32 (CONFIG_32BIT)
-> > +	 * therefore __NR_O32_Linux is used (4000)
-> > +	 */
-> > +
-> > +	subu	t2, v0,  __NR_O32_Linux
-> > +	bnez	t2, 1f /* __NR_syscall at offset 0 */
-> > +	LONG_S	a0, TI_SYSCALL($28)	# Save a0 as syscall number
-> > +	b	2f
-> > +1:
-> > +	LONG_S	v0, TI_SYSCALL($28)	# Save v0 as syscall number
-> > +2:
-> > +
-> >  	li	t1, _TIF_WORK_SYSCALL_ENTRY
-> >  	LONG_L	t0, TI_FLAGS($28)	# syscall tracing enabled?
-> >  	and	t0, t1, t0
-> > @@ -113,22 +129,7 @@ trace_a_syscall:
-> >  	sd	a7, PT_R11(sp)		# For indirect syscalls
-> > 
-> >  	move	a0, sp
-> > -	/*
-> > -	 * absolute syscall number is in v0 unless we called syscall(__NR_###)
-> > -	 * where the real syscall number is in a0
-> > -	 * note: NR_syscall is the first O32 syscall but the macro is
-> > -	 * only defined when compiling with -mabi=32 (CONFIG_32BIT)
-> > -	 * therefore __NR_O32_Linux is used (4000)
-> > -	 */
-> > -	.set	push
-> > -	.set	reorder
-> > -	subu	t1, v0,  __NR_O32_Linux
-> > -	move	a1, v0
-> > -	bnez	t1, 1f /* __NR_syscall at offset 0 */
-> > -	ld	a1, PT_R4(sp) /* Arg1 for __NR_syscall case */
-> > -	.set	pop
-> > -
-> > -1:	jal	syscall_trace_enter
-> > +	jal	syscall_trace_enter
-> > 
-> >  	bltz	v0, 1f			# seccomp failed? Skip syscall
-> > 
-> >
-> > ---
-> > base-commit: a6bd6c9333397f5a0e2667d4d82fef8c970108f2
-> > change-id: 20240328-mips_save_syscall-be471311cc9b
-> >
-> > Best regards,
-> > -- 
-> > Jiaxun Yang <jiaxun.yang@flygoat.com>
-> 
+> diff --git a/init/Kconfig b/init/Kconfig
+> index aa02aec6aa7d..ad9a2da27dc9 100644
+> --- a/init/Kconfig
+> +++ b/init/Kconfig
+> @@ -1899,6 +1899,7 @@ config RUST
+>  	bool "Rust support"
+>  	depends on HAVE_RUST
+>  	depends on RUST_IS_AVAILABLE
+> +	depends on !CFI_CLANG
+>  	depends on !MODVERSIONS
+>  	depends on !GCC_PLUGINS
+>  	depends on !RANDSTRUCT
 > -- 
-> - Jiaxun
+> 2.43.0
 > 
-
+> 
