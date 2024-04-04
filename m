@@ -1,28 +1,28 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA5C412D201;
-	Thu,  4 Apr 2024 18:42:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44571131BAB;
+	Thu,  4 Apr 2024 18:42:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712256134; cv=none; b=gQB3jHAEEchXh3zOwA1NDypEP2lOS6Se2h2CgZnxBfOomJJvCDTr9sZSqnqI9pDMe/7v1TVxRjpWHmJ3emWSiUpd/c0q5Yz4G2Ie7326GKrVnbjsHiDJWRrIfTLA+LCXzK0NYZlXLJ8349NWiZYBa94f9ZB2RypFt5lGN5QkJrk=
+	t=1712256142; cv=none; b=ff6WHyPl8lwGOL5e97coINYBOX9mPHmGUkQsJKu25s0cfDPBx1nO4PXxWLotFTRGFet/KTsVPbycE2rL1hZRyglE6zRXF7E/wLiuTj2gUNQskybqUwSDPx7oETfXWaRHVEr4GpfL1XZQhzacTgk4DRaYbpttnP34XfxykaD8xTU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712256134; c=relaxed/simple;
-	bh=Fe7X9yX/PlaFMGGoLhXDyJ13J431tCn9JR352f0UJ3U=;
+	s=arc-20240116; t=1712256142; c=relaxed/simple;
+	bh=a557CO2gWX7ligfM+IjtEikg9zWvzqnRuwp2rtlTa+s=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=hEA3ffGicTYt1NjRp/R8TZXTTq5nGw8PUR3LLarXFUy8gxicD+x5AHgcSs/ImDYLnDEXiBzbcdT14zUGkmT0Hph5l0bzChtluNoQkExu6607XIPkn0EXHYvoJer1Aj0IIZR/7bbvgH8tnzPuYEQjz5zHh/x9Hy8+x4PVWJG6XjY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=k3gjt2jz; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=Urw8fl5tSl8vp+DAWazJYNpmAWAFNYTF/dphibWWk7WCLEfCGXLbtdw7fT5hl9dJymeGcCaFow7Gt/9EcHBMddrtnTLzqkGgk6n0cfWawM+O13e7NxSJWH+oDh30gIP/1KSID1Gi57C7s6eaWj9LGJ6xKXevaxwOmo3FvpKbz5A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=Q1DLGkTp; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="k3gjt2jz"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AB871C43390;
-	Thu,  4 Apr 2024 18:42:12 +0000 (UTC)
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="Q1DLGkTp"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 309F3C433F1;
+	Thu,  4 Apr 2024 18:42:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1712256133;
-	bh=Fe7X9yX/PlaFMGGoLhXDyJ13J431tCn9JR352f0UJ3U=;
+	s=korg; t=1712256141;
+	bh=a557CO2gWX7ligfM+IjtEikg9zWvzqnRuwp2rtlTa+s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=k3gjt2jz8Jgn+kza8xCGV5t+1JkkaQHQatAdVfXc0s6NGH443FHFH898PVPR3QO8t
-	 uHSRHppxiyQAhjByaOwN5wHRbLh6b9M4TBDzgxQGK4XOhof3C7ZQrnQ3L+41SmG7nw
-	 dcU1qwUqkswle42DdnVwZdhpIxJtSP5E+vS6XweM=
+	b=Q1DLGkTpGXRRqhoBx47y7e2TB0NMzOpVW7SVAoglxjooD/J6k0o0/L8y3CraqZFSg
+	 1LFngq0fNChQ/tWHQROixVjiFNZeKyJY2T5pbU2zMdOFwZ5o8ktj4584J/Ox+lwtco
+	 PmIuxw25GX407lB1bW5b/wAiaI68hiYN5LC8MePE=
 From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To: linux-kernel@vger.kernel.org,
 	akpm@linux-foundation.org,
@@ -31,12 +31,12 @@ To: linux-kernel@vger.kernel.org,
 Cc: lwn@lwn.net,
 	jslaby@suse.cz,
 	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: Linux 6.6.25
-Date: Thu,  4 Apr 2024 20:42:03 +0200
-Message-ID: <2024040403-suds-bonanza-8dc9@gregkh>
+Subject: Re: Linux 6.8.4
+Date: Thu,  4 Apr 2024 20:42:09 +0200
+Message-ID: <2024040409-disliking-mammogram-096d@gregkh>
 X-Mailer: git-send-email 2.44.0
-In-Reply-To: <2024040403-dwelled-guacamole-b3f0@gregkh>
-References: <2024040403-dwelled-guacamole-b3f0@gregkh>
+In-Reply-To: <2024040409-attentive-raffle-d9bc@gregkh>
+References: <2024040409-attentive-raffle-d9bc@gregkh>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -46,23 +46,23 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
 diff --git a/Makefile b/Makefile
-index b053bae9296a..022af2a9a6d9 100644
+index a78379891d22..c436247d750c 100644
 --- a/Makefile
 +++ b/Makefile
 @@ -1,7 +1,7 @@
  # SPDX-License-Identifier: GPL-2.0
  VERSION = 6
- PATCHLEVEL = 6
--SUBLEVEL = 24
-+SUBLEVEL = 25
+ PATCHLEVEL = 8
+-SUBLEVEL = 3
++SUBLEVEL = 4
  EXTRAVERSION =
  NAME = Hurr durr I'ma ninja sloth
  
 diff --git a/include/linux/workqueue.h b/include/linux/workqueue.h
-index ad97453e7c3a..24b1e5070f4d 100644
+index 515e7958c6c1..2cc0a9606175 100644
 --- a/include/linux/workqueue.h
 +++ b/include/linux/workqueue.h
-@@ -405,13 +405,6 @@ enum {
+@@ -391,13 +391,6 @@ enum {
  	WQ_MAX_ACTIVE		= 512,	  /* I like 512, better ideas? */
  	WQ_UNBOUND_MAX_ACTIVE	= WQ_MAX_ACTIVE,
  	WQ_DFL_ACTIVE		= WQ_MAX_ACTIVE / 2,
@@ -76,7 +76,7 @@ index ad97453e7c3a..24b1e5070f4d 100644
  };
  
  /*
-@@ -454,33 +447,11 @@ extern struct workqueue_struct *system_freezable_power_efficient_wq;
+@@ -440,33 +433,11 @@ extern struct workqueue_struct *system_freezable_power_efficient_wq;
   * alloc_workqueue - allocate a workqueue
   * @fmt: printf format for the name of the workqueue
   * @flags: WQ_* flags
@@ -114,7 +114,7 @@ index ad97453e7c3a..24b1e5070f4d 100644
   *
   * RETURNS:
 diff --git a/kernel/workqueue.c b/kernel/workqueue.c
-index 66a270e235b4..fd7b84b06d92 100644
+index 781900b148b6..7b482a26d741 100644
 --- a/kernel/workqueue.c
 +++ b/kernel/workqueue.c
 @@ -108,7 +108,7 @@ enum {
@@ -227,7 +227,7 @@ index 66a270e235b4..fd7b84b06d92 100644
  };
  
  static struct kmem_cache *pwq_cache;
-@@ -658,36 +626,6 @@ static int worker_pool_assign_id(struct worker_pool *pool)
+@@ -664,36 +632,6 @@ static int worker_pool_assign_id(struct worker_pool *pool)
  	return ret;
  }
  
@@ -264,7 +264,7 @@ index 66a270e235b4..fd7b84b06d92 100644
  static unsigned int work_color_to_flags(int color)
  {
  	return color << WORK_STRUCT_COLOR_SHIFT;
-@@ -1457,71 +1395,6 @@ work_func_t wq_worker_last_func(struct task_struct *task)
+@@ -1463,71 +1401,6 @@ work_func_t wq_worker_last_func(struct task_struct *task)
  	return worker->last_func;
  }
  
@@ -336,7 +336,7 @@ index 66a270e235b4..fd7b84b06d92 100644
  /**
   * get_pwq - get an extra reference on the specified pool_workqueue
   * @pwq: pool_workqueue to get
-@@ -1574,293 +1447,24 @@ static void put_pwq_unlocked(struct pool_workqueue *pwq)
+@@ -1580,293 +1453,24 @@ static void put_pwq_unlocked(struct pool_workqueue *pwq)
  	}
  }
  
@@ -637,7 +637,7 @@ index 66a270e235b4..fd7b84b06d92 100644
  }
  
  /**
-@@ -1878,8 +1482,14 @@ static void pwq_dec_nr_in_flight(struct pool_workqueue *pwq, unsigned long work_
+@@ -1884,8 +1488,14 @@ static void pwq_dec_nr_in_flight(struct pool_workqueue *pwq, unsigned long work_
  {
  	int color = get_work_color(work_data);
  
@@ -654,7 +654,7 @@ index 66a270e235b4..fd7b84b06d92 100644
  
  	pwq->nr_in_flight[color]--;
  
-@@ -1992,7 +1602,8 @@ static int try_to_grab_pending(struct work_struct *work, bool is_dwork,
+@@ -1998,7 +1608,8 @@ static int try_to_grab_pending(struct work_struct *work, bool is_dwork,
  		 * management later on and cause stall.  Make sure the work
  		 * item is activated before grabbing.
  		 */
@@ -664,7 +664,7 @@ index 66a270e235b4..fd7b84b06d92 100644
  
  		list_del_init(&work->entry);
  		pwq_dec_nr_in_flight(pwq, *work_data_bits(work));
-@@ -2176,16 +1787,12 @@ static void __queue_work(int cpu, struct workqueue_struct *wq,
+@@ -2182,16 +1793,12 @@ static void __queue_work(int cpu, struct workqueue_struct *wq,
  	pwq->nr_in_flight[pwq->work_color]++;
  	work_flags = work_color_to_flags(pwq->work_color);
  
@@ -683,7 +683,7 @@ index 66a270e235b4..fd7b84b06d92 100644
  		insert_work(pwq, work, &pool->worklist, work_flags);
  		kick_pool(pool);
  	} else {
-@@ -3414,7 +3021,7 @@ static void insert_wq_barrier(struct pool_workqueue *pwq,
+@@ -3420,7 +3027,7 @@ static void insert_wq_barrier(struct pool_workqueue *pwq,
  
  	barr->task = current;
  
@@ -692,7 +692,7 @@ index 66a270e235b4..fd7b84b06d92 100644
  	work_flags |= WORK_STRUCT_INACTIVE;
  
  	/*
-@@ -3703,7 +3310,7 @@ void drain_workqueue(struct workqueue_struct *wq)
+@@ -3709,7 +3316,7 @@ void drain_workqueue(struct workqueue_struct *wq)
  		bool drained;
  
  		raw_spin_lock_irq(&pwq->pool->lock);
@@ -701,7 +701,7 @@ index 66a270e235b4..fd7b84b06d92 100644
  		raw_spin_unlock_irq(&pwq->pool->lock);
  
  		if (drained)
-@@ -4314,65 +3921,11 @@ static void wq_free_lockdep(struct workqueue_struct *wq)
+@@ -4320,65 +3927,11 @@ static void wq_free_lockdep(struct workqueue_struct *wq)
  }
  #endif
  
@@ -767,7 +767,7 @@ index 66a270e235b4..fd7b84b06d92 100644
  	wq_free_lockdep(wq);
  	free_percpu(wq->cpu_pwq);
  	free_workqueue_attrs(wq->unbound_attrs);
-@@ -4571,15 +4124,6 @@ static void pwq_release_workfn(struct kthread_work *work)
+@@ -4577,15 +4130,6 @@ static void pwq_release_workfn(struct kthread_work *work)
  		mutex_unlock(&wq_pool_mutex);
  	}
  
@@ -783,7 +783,7 @@ index 66a270e235b4..fd7b84b06d92 100644
  	call_rcu(&pwq->rcu, rcu_free_pwq);
  
  	/*
-@@ -4592,6 +4136,50 @@ static void pwq_release_workfn(struct kthread_work *work)
+@@ -4598,6 +4142,50 @@ static void pwq_release_workfn(struct kthread_work *work)
  	}
  }
  
@@ -834,7 +834,7 @@ index 66a270e235b4..fd7b84b06d92 100644
  /* initialize newly allocated @pwq which is associated with @wq and @pool */
  static void init_pwq(struct pool_workqueue *pwq, struct workqueue_struct *wq,
  		     struct worker_pool *pool)
-@@ -4605,7 +4193,6 @@ static void init_pwq(struct pool_workqueue *pwq, struct workqueue_struct *wq,
+@@ -4611,7 +4199,6 @@ static void init_pwq(struct pool_workqueue *pwq, struct workqueue_struct *wq,
  	pwq->flush_color = -1;
  	pwq->refcnt = 1;
  	INIT_LIST_HEAD(&pwq->inactive_works);
@@ -842,7 +842,7 @@ index 66a270e235b4..fd7b84b06d92 100644
  	INIT_LIST_HEAD(&pwq->pwqs_node);
  	INIT_LIST_HEAD(&pwq->mayday_node);
  	kthread_init_work(&pwq->release_work, pwq_release_workfn);
-@@ -4625,6 +4212,9 @@ static void link_pwq(struct pool_workqueue *pwq)
+@@ -4631,6 +4218,9 @@ static void link_pwq(struct pool_workqueue *pwq)
  	/* set the matching work_color */
  	pwq->work_color = wq->work_color;
  
@@ -852,7 +852,7 @@ index 66a270e235b4..fd7b84b06d92 100644
  	/* link in @pwq */
  	list_add_rcu(&pwq->pwqs_node, &wq->pwqs);
  }
-@@ -4693,11 +4283,10 @@ static void wq_calc_pod_cpumask(struct workqueue_attrs *attrs, int cpu,
+@@ -4699,11 +4289,10 @@ static void wq_calc_pod_cpumask(struct workqueue_attrs *attrs, int cpu,
  				"possible intersect\n");
  }
  
@@ -865,7 +865,7 @@ index 66a270e235b4..fd7b84b06d92 100644
  	struct pool_workqueue *old_pwq;
  
  	lockdep_assert_held(&wq_pool_mutex);
-@@ -4706,8 +4295,8 @@ static struct pool_workqueue *install_unbound_pwq(struct workqueue_struct *wq,
+@@ -4712,8 +4301,8 @@ static struct pool_workqueue *install_unbound_pwq(struct workqueue_struct *wq,
  	/* link_pwq() can handle duplicate calls */
  	link_pwq(pwq);
  
@@ -876,7 +876,7 @@ index 66a270e235b4..fd7b84b06d92 100644
  	return old_pwq;
  }
  
-@@ -4807,14 +4396,14 @@ static void apply_wqattrs_commit(struct apply_wqattrs_ctx *ctx)
+@@ -4813,14 +4402,14 @@ static void apply_wqattrs_commit(struct apply_wqattrs_ctx *ctx)
  
  	copy_workqueue_attrs(ctx->wq->unbound_attrs, ctx->attrs);
  
@@ -895,7 +895,7 @@ index 66a270e235b4..fd7b84b06d92 100644
  
  	mutex_unlock(&ctx->wq->mutex);
  }
-@@ -4937,7 +4526,9 @@ static void wq_update_pod(struct workqueue_struct *wq, int cpu,
+@@ -4930,7 +4519,9 @@ static void wq_update_pod(struct workqueue_struct *wq, int cpu,
  
  	/* nothing to do if the target cpumask matches the current pwq */
  	wq_calc_pod_cpumask(target_attrs, cpu, off_cpu);
@@ -906,7 +906,7 @@ index 66a270e235b4..fd7b84b06d92 100644
  		return;
  
  	/* create a new pwq */
-@@ -4955,11 +4546,10 @@ static void wq_update_pod(struct workqueue_struct *wq, int cpu,
+@@ -4948,11 +4539,10 @@ static void wq_update_pod(struct workqueue_struct *wq, int cpu,
  
  use_dfl_pwq:
  	mutex_lock(&wq->mutex);
@@ -922,7 +922,7 @@ index 66a270e235b4..fd7b84b06d92 100644
  out_unlock:
  	mutex_unlock(&wq->mutex);
  	put_pwq_unlocked(old_pwq);
-@@ -4997,13 +4587,10 @@ static int alloc_and_link_pwqs(struct workqueue_struct *wq)
+@@ -4990,13 +4580,10 @@ static int alloc_and_link_pwqs(struct workqueue_struct *wq)
  
  	cpus_read_lock();
  	if (wq->flags & __WQ_ORDERED) {
@@ -938,7 +938,7 @@ index 66a270e235b4..fd7b84b06d92 100644
  		     "ordering guarantee broken for workqueue %s\n", wq->name);
  	} else {
  		ret = apply_workqueue_attrs(wq, unbound_std_wq_attrs[highpri]);
-@@ -5078,69 +4665,6 @@ static int init_rescuer(struct workqueue_struct *wq)
+@@ -5071,69 +4658,6 @@ static int init_rescuer(struct workqueue_struct *wq)
  	return 0;
  }
  
@@ -1008,7 +1008,7 @@ index 66a270e235b4..fd7b84b06d92 100644
  __printf(1, 4)
  struct workqueue_struct *alloc_workqueue(const char *fmt,
  					 unsigned int flags,
-@@ -5148,8 +4672,7 @@ struct workqueue_struct *alloc_workqueue(const char *fmt,
+@@ -5141,8 +4665,7 @@ struct workqueue_struct *alloc_workqueue(const char *fmt,
  {
  	va_list args;
  	struct workqueue_struct *wq;
@@ -1018,7 +1018,7 @@ index 66a270e235b4..fd7b84b06d92 100644
  
  	/*
  	 * Unbound && max_active == 1 used to imply ordered, which is no longer
-@@ -5165,12 +4688,7 @@ struct workqueue_struct *alloc_workqueue(const char *fmt,
+@@ -5158,12 +4681,7 @@ struct workqueue_struct *alloc_workqueue(const char *fmt,
  		flags |= WQ_UNBOUND;
  
  	/* allocate wq and format name */
@@ -1032,7 +1032,7 @@ index 66a270e235b4..fd7b84b06d92 100644
  	if (!wq)
  		return NULL;
  
-@@ -5181,22 +4699,15 @@ struct workqueue_struct *alloc_workqueue(const char *fmt,
+@@ -5174,22 +4692,15 @@ struct workqueue_struct *alloc_workqueue(const char *fmt,
  	}
  
  	va_start(args, max_active);
@@ -1057,7 +1057,7 @@ index 66a270e235b4..fd7b84b06d92 100644
  	mutex_init(&wq->mutex);
  	atomic_set(&wq->nr_pwqs_to_flush, 0);
  	INIT_LIST_HEAD(&wq->pwqs);
-@@ -5207,13 +4718,8 @@ struct workqueue_struct *alloc_workqueue(const char *fmt,
+@@ -5200,13 +4711,8 @@ struct workqueue_struct *alloc_workqueue(const char *fmt,
  	wq_init_lockdep(wq);
  	INIT_LIST_HEAD(&wq->list);
  
@@ -1072,7 +1072,7 @@ index 66a270e235b4..fd7b84b06d92 100644
  
  	if (wq_online && init_rescuer(wq) < 0)
  		goto err_destroy;
-@@ -5229,7 +4735,8 @@ struct workqueue_struct *alloc_workqueue(const char *fmt,
+@@ -5222,7 +4728,8 @@ struct workqueue_struct *alloc_workqueue(const char *fmt,
  	mutex_lock(&wq_pool_mutex);
  
  	mutex_lock(&wq->mutex);
@@ -1082,7 +1082,7 @@ index 66a270e235b4..fd7b84b06d92 100644
  	mutex_unlock(&wq->mutex);
  
  	list_add_tail_rcu(&wq->list, &workqueues);
-@@ -5238,9 +4745,6 @@ struct workqueue_struct *alloc_workqueue(const char *fmt,
+@@ -5231,9 +4738,6 @@ struct workqueue_struct *alloc_workqueue(const char *fmt,
  
  	return wq;
  
@@ -1092,7 +1092,7 @@ index 66a270e235b4..fd7b84b06d92 100644
  err_unreg_lockdep:
  	wq_unregister_lockdep(wq);
  	wq_free_lockdep(wq);
-@@ -5262,9 +4766,9 @@ static bool pwq_busy(struct pool_workqueue *pwq)
+@@ -5255,9 +4759,9 @@ static bool pwq_busy(struct pool_workqueue *pwq)
  		if (pwq->nr_in_flight[i])
  			return true;
  
@@ -1104,7 +1104,7 @@ index 66a270e235b4..fd7b84b06d92 100644
  		return true;
  
  	return false;
-@@ -5346,12 +4850,13 @@ void destroy_workqueue(struct workqueue_struct *wq)
+@@ -5339,12 +4843,13 @@ void destroy_workqueue(struct workqueue_struct *wq)
  	rcu_read_lock();
  
  	for_each_possible_cpu(cpu) {
@@ -1122,7 +1122,7 @@ index 66a270e235b4..fd7b84b06d92 100644
  
  	rcu_read_unlock();
  }
-@@ -5362,14 +4867,15 @@ EXPORT_SYMBOL_GPL(destroy_workqueue);
+@@ -5355,14 +4860,15 @@ EXPORT_SYMBOL_GPL(destroy_workqueue);
   * @wq: target workqueue
   * @max_active: new max_active value.
   *
@@ -1140,7 +1140,7 @@ index 66a270e235b4..fd7b84b06d92 100644
  	/* disallow meddling with max_active for ordered workqueues */
  	if (WARN_ON(wq->flags & __WQ_ORDERED_EXPLICIT))
  		return;
-@@ -5380,10 +4886,9 @@ void workqueue_set_max_active(struct workqueue_struct *wq, int max_active)
+@@ -5373,10 +4879,9 @@ void workqueue_set_max_active(struct workqueue_struct *wq, int max_active)
  
  	wq->flags &= ~__WQ_ORDERED;
  	wq->saved_max_active = max_active;
@@ -1153,7 +1153,7 @@ index 66a270e235b4..fd7b84b06d92 100644
  
  	mutex_unlock(&wq->mutex);
  }
-@@ -5630,8 +5135,8 @@ static void show_pwq(struct pool_workqueue *pwq)
+@@ -5623,8 +5128,8 @@ static void show_pwq(struct pool_workqueue *pwq)
  	pr_info("  pwq %d:", pool->id);
  	pr_cont_pool_info(pool);
  
@@ -1164,7 +1164,7 @@ index 66a270e235b4..fd7b84b06d92 100644
  		!list_empty(&pwq->mayday_node) ? " MAYDAY" : "");
  
  	hash_for_each(pool->busy_hash, bkt, worker, hentry) {
-@@ -5705,7 +5210,7 @@ void show_one_workqueue(struct workqueue_struct *wq)
+@@ -5698,7 +5203,7 @@ void show_one_workqueue(struct workqueue_struct *wq)
  	unsigned long flags;
  
  	for_each_pwq(pwq, wq) {
@@ -1173,7 +1173,7 @@ index 66a270e235b4..fd7b84b06d92 100644
  			idle = false;
  			break;
  		}
-@@ -5717,7 +5222,7 @@ void show_one_workqueue(struct workqueue_struct *wq)
+@@ -5710,7 +5215,7 @@ void show_one_workqueue(struct workqueue_struct *wq)
  
  	for_each_pwq(pwq, wq) {
  		raw_spin_lock_irqsave(&pwq->pool->lock, flags);
@@ -1182,7 +1182,7 @@ index 66a270e235b4..fd7b84b06d92 100644
  			/*
  			 * Defer printing to avoid deadlocks in console
  			 * drivers that queue work while holding locks
-@@ -6064,10 +5569,6 @@ int workqueue_online_cpu(unsigned int cpu)
+@@ -6057,10 +5562,6 @@ int workqueue_online_cpu(unsigned int cpu)
  
  			for_each_cpu(tcpu, pt->pod_cpus[pt->cpu_pod[cpu]])
  				wq_update_pod(wq, tcpu, cpu, true);
@@ -1193,7 +1193,7 @@ index 66a270e235b4..fd7b84b06d92 100644
  		}
  	}
  
-@@ -6096,10 +5597,6 @@ int workqueue_offline_cpu(unsigned int cpu)
+@@ -6089,10 +5590,6 @@ int workqueue_offline_cpu(unsigned int cpu)
  
  			for_each_cpu(tcpu, pt->pod_cpus[pt->cpu_pod[cpu]])
  				wq_update_pod(wq, tcpu, cpu, false);
@@ -1204,7 +1204,7 @@ index 66a270e235b4..fd7b84b06d92 100644
  		}
  	}
  	mutex_unlock(&wq_pool_mutex);
-@@ -6187,6 +5684,7 @@ EXPORT_SYMBOL_GPL(work_on_cpu_safe_key);
+@@ -6180,6 +5677,7 @@ EXPORT_SYMBOL_GPL(work_on_cpu_safe_key);
  void freeze_workqueues_begin(void)
  {
  	struct workqueue_struct *wq;
@@ -1212,7 +1212,7 @@ index 66a270e235b4..fd7b84b06d92 100644
  
  	mutex_lock(&wq_pool_mutex);
  
-@@ -6195,7 +5693,8 @@ void freeze_workqueues_begin(void)
+@@ -6188,7 +5686,8 @@ void freeze_workqueues_begin(void)
  
  	list_for_each_entry(wq, &workqueues, list) {
  		mutex_lock(&wq->mutex);
@@ -1222,7 +1222,7 @@ index 66a270e235b4..fd7b84b06d92 100644
  		mutex_unlock(&wq->mutex);
  	}
  
-@@ -6260,6 +5759,7 @@ bool freeze_workqueues_busy(void)
+@@ -6253,6 +5752,7 @@ bool freeze_workqueues_busy(void)
  void thaw_workqueues(void)
  {
  	struct workqueue_struct *wq;
@@ -1230,7 +1230,7 @@ index 66a270e235b4..fd7b84b06d92 100644
  
  	mutex_lock(&wq_pool_mutex);
  
-@@ -6271,7 +5771,8 @@ void thaw_workqueues(void)
+@@ -6264,7 +5764,8 @@ void thaw_workqueues(void)
  	/* restore max_active and repopulate worklist */
  	list_for_each_entry(wq, &workqueues, list) {
  		mutex_lock(&wq->mutex);
@@ -1240,7 +1240,7 @@ index 66a270e235b4..fd7b84b06d92 100644
  		mutex_unlock(&wq->mutex);
  	}
  
-@@ -7109,7 +6610,7 @@ void __init workqueue_init_early(void)
+@@ -7186,7 +6687,7 @@ void __init workqueue_init_early(void)
  					      WQ_FREEZABLE, 0);
  	system_power_efficient_wq = alloc_workqueue("events_power_efficient",
  					      WQ_POWER_EFFICIENT, 0);
@@ -1249,7 +1249,7 @@ index 66a270e235b4..fd7b84b06d92 100644
  					      WQ_FREEZABLE | WQ_POWER_EFFICIENT,
  					      0);
  	BUG_ON(!system_wq || !system_highpri_wq || !system_long_wq ||
-@@ -7296,12 +6797,8 @@ void __init workqueue_init_topology(void)
+@@ -7373,12 +6874,8 @@ void __init workqueue_init_topology(void)
  	 * combinations to apply per-pod sharing.
  	 */
  	list_for_each_entry(wq, &workqueues, list) {
