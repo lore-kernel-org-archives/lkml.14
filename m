@@ -1,159 +1,219 @@
-Received: from wfout7-smtp.messagingengine.com (wfout7-smtp.messagingengine.com [64.147.123.150])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26DF184D35
-	for <linux-kernel@vger.kernel.org>; Thu,  4 Apr 2024 11:57:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=64.147.123.150
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5978883CDE;
+	Thu,  4 Apr 2024 11:58:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712231876; cv=none; b=YVUZH3nGxNrjc/aVfNoHyfWPpOBTOegCXaS82XSLO+KreRH3IUMtuXRJa8IRlt8pcyWphZ6rVzslq9W2HnPfbMfnBzbn/dqyeVJ6mbJPUCSerJ2fbI6OkZR+ZKxbPmxLo41eZsfYhUbMcBFCXiyc7rv7wBNJYPfHDxWtgRHYuwk=
+	t=1712231930; cv=none; b=pRDCPeCn4jxgjj3NunGHoNeL3Xmi3j2+yKSB5sy5/tO2EfCB20Y5LyS41rNTbZD1pObWRm/yLnw6OoRqGD4VV+2PRjdfwLcg9Rh2tbBUKgREZguS/ylHX7plsw88ZPVlKIi7/2KjxOqeOBOVoavt5Py9s0DZsfRUAfxl/XzvrtE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712231876; c=relaxed/simple;
-	bh=xpPSToXnScFnQLa4LDpK7c2Q/G7khDfZVgUOFA8eCzo=;
-	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
-	 Subject:Content-Type; b=ZYh2/sxbRD5TbQAKB0KXMaabwRRGV7pDTo9lYWGjtic7Got1W8tbo440SmwhPpbSNE0uAbaN14D4+6U433q6E5guMXSkL0qr945g7RjG4OxSAqGzZABXDqSsIOcAC8xnKulnVB3trTf/bVcW58G6fu0PVjpD2aden/LxE4Ypi+o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=S0ZH2vNC; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=SRiZMHrZ; arc=none smtp.client-ip=64.147.123.150
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+	s=arc-20240116; t=1712231930; c=relaxed/simple;
+	bh=I4S4xPsrmiZqgxMo8An3Q4s4/0gCW+VeyLvu4PCz+QM=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=HS0NVz8MpKeMPMVfh3+VPEgDtEFjD/PCCpK/lEzl3PG80f4Kr3IcYSjg8cyBMTxNWIWLf6nKCCEpFY7UK/y1tkEn4hSv3VPASEdm4XP6zQ4Pmg47hlFjEAhv/01WmF3OPZGPW3gfdgRoAguvL2+NtYFxex7ox3lio1VrN9BRNIo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=a7f8X9Eg; arc=none smtp.client-ip=209.85.218.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="S0ZH2vNC";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="SRiZMHrZ"
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-	by mailfout.west.internal (Postfix) with ESMTP id 9C0141C00119;
-	Thu,  4 Apr 2024 07:57:53 -0400 (EDT)
-Received: from imap51 ([10.202.2.101])
-  by compute5.internal (MEProxy); Thu, 04 Apr 2024 07:57:54 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-type:content-type:date:date:from:from:in-reply-to
-	:in-reply-to:message-id:mime-version:references:reply-to:subject
-	:subject:to:to; s=fm1; t=1712231873; x=1712318273; bh=D/MSOh/i9T
-	oqciNjLOcNeFhiNaDy1EPMCBIzveAwq2k=; b=S0ZH2vNCr1xg4e/Y/5OQHYNMFC
-	59Yt9ulNm6yPvo2q84EPK4o5+SrO9xCsFm4AuhGI7kWbpHGMSJqPRIzu0Y7FlSVe
-	L1BJJ7mKWSlS+jzwSFPJs4z4yJsvSFvBACnRj/SOfxbFJ9XbkWfgyxFyoGukMZ3w
-	7dpY+D8xndOa9MagHCYlPkesZz5muSijrLpYGp1/gVT1RYXhVkr22t1Hv9miL8i7
-	E7gP/gY7clC42ec+X+ibe9japFkaprhucMWm1BX7CeI0jG+/deVKlcFY7Pl9huLF
-	/lZ0xGvawcQYSB9ydwfh/qNb+5jO98oG5Smay0JBzEzsrJ7RhLPsQiMrxGsQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-	fm2; t=1712231873; x=1712318273; bh=D/MSOh/i9ToqciNjLOcNeFhiNaDy
-	1EPMCBIzveAwq2k=; b=SRiZMHrZbF0auOWjL6wYfR+Rp4XOArVoMkQEG3WYlP4i
-	YAXbOb+uVKoVXMyWEuH3erB0uQL1a229lXCRDb/wuBjIsxmUXNAt1wSA8N9bkutF
-	9wjZhah0U8B37qdUNyuL1QFnLGbn1UQKLQa5RF+wbyhJ/ghS5sPWJwiFmAQ9oJCh
-	/Y4zHzoJ1cHxXZSRMwh6GgW1JWjNDA5gdK78JeVmHLbCdEw+wHvlqCEToPeh6qT6
-	7Fzpm/3RanLyWx+q+NMw5+CbqCHDdLwBlSQNWRiNexeXNGWJku9WQ7ADBjl0MJGP
-	ZfKvUv5H+oh6pgxK+m5YjpGb6LXeu21ivT62U4oRzA==
-X-ME-Sender: <xms:wJUOZkIve_XcrIkLQtfTmHNxuv2FetMW4iOQ6W0MlJ91DvVFjHsKcw>
-    <xme:wJUOZkKHtkYgEyCEr859BMASYBMfmR357AOfQ1FDBIUPtZPX88740Z35MNqQvwNe-
-    hg2nWgXrpSD6p5iEhU>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrudefkedggeeiucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepofgfggfkjghffffhvfevufgtsehttdertderredtnecuhfhrohhmpedftehr
-    nhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrdguvgeqnecuggftrfgrth
-    htvghrnhepffehueegteeihfegtefhjefgtdeugfegjeelheejueethfefgeeghfektdek
-    teffnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprg
-    hrnhgusegrrhhnuggsrdguvg
-X-ME-Proxy: <xmx:wJUOZks7df2n0FH9tzQmCigrD5gxXJrMRSs426F_1G_V0Pgvkya7Xw>
-    <xmx:wJUOZhYNNzYZdoMXt4hm4bXdnLj6sMXrhz1-accxVc7SB2BnkFw8Rg>
-    <xmx:wJUOZrYavuuNJOBBPfiKdeLZAzf5076YKG9GWzJCEqY-c1JV8514KA>
-    <xmx:wJUOZtB_nyBXZw9GKzcc2yBswtCYCnkq5ZdCpZXhk5CbDLiB5XXzRw>
-    <xmx:wZUOZpOM5XqEO6YhYdQKrjt1BAkE-SvRmjp8UtzgjeFrjQGTWe4_0ea2>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-	id D7512B6008D; Thu,  4 Apr 2024 07:57:52 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.11.0-alpha0-333-gbfea15422e-fm-20240327.001-gbfea1542
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="a7f8X9Eg"
+Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-a47385a4379so380302866b.0;
+        Thu, 04 Apr 2024 04:58:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1712231926; x=1712836726; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=qsRNsoYGonWs9F3wm/xwAs0YUtd7nB9bkZE8SBzuHdw=;
+        b=a7f8X9Eg/qkjuS0RXdEw2FigBgyJc84tsrb4BcHrnNBugTq2DEQJ81pIwdGFYw1DQw
+         TngFSCvKshJHRxQRDGRKihDrQMJ3YmnyOkEaXREFufO6cjSUOyHxk5W2TX6nKYpuqbvS
+         E994cXVwnlFEb3mWN0nuKK3A1I/3e4xgVQmSjBdLqPYZs6OXRzaJDMCj0WIEucOOA/5N
+         7eNczt0qTrg+zh/P2jm6f9JeFuCgvOaxks0myzR+X/cYnbG0WlMoJcsvBiwQ4iRQeEVP
+         dQVa3GyIBKsVQ8zKoSsZXTd6yJPxMkpENkTf1jVQKxG7JtbyBzrcDLwFL3ejTDAcmQiL
+         ZFOQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712231926; x=1712836726;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=qsRNsoYGonWs9F3wm/xwAs0YUtd7nB9bkZE8SBzuHdw=;
+        b=vM7MMjwj62Z7nWhWoH8ttF2jMFLT7CWgip6hZLVOh8cHIkdKFXVUQL4VbQR9h+IC0+
+         TvWsWdmNdKrHZX/ee6wWe01b8dRZtppQeQMaOBPF3rras2CHrN1TiZPLNu+xQPBEZl+r
+         NZHV81LGLDJHu94zjtM3yk73ZerIhKGmJZhTZ8IvyNTQ7p8g9u44zLKaeDqxXYCuKaCr
+         tiEMjrfETM7abqyRFFzzWueCFsMbxa13UOhT3wM//cfHLqTACHzuiqQtd3d5hDWJdsM/
+         6iBVgPd5jfR1Qc6ypfnzv6q6u+E2XdptakZ3JwpnA0ppfkRguvZe+c4Wwk2favvu/J8y
+         zCGA==
+X-Forwarded-Encrypted: i=1; AJvYcCVrqQLfFyI0lCWEotjKSDzQViZSNNENuYtwjUSoTluNyniU28yNDWLbVi09MflnE1BzcRuj/CvBKZ+s5iWManRnoUSHt/H2M+qskxVZ56zqEvD/Ip3Dyw2A5BDvfj02ZVOB57YTAtW6qlrvkNEEbIMocgQ7SN3dS7wMhFVjFWQR5d/ug/kJ
+X-Gm-Message-State: AOJu0YwYYTzz1Tc7hXyjt6mD5sAM3ZtqmgWKwR5utJLjXVONACeQogtF
+	kUAbJ4S/K6HU5LhQCaW3qUBu7GYBX8aBpj9nNJS/WkEDtT/TfhgR
+X-Google-Smtp-Source: AGHT+IHd7nPhPfR8+dEIdU9lXVEWpv390SUK05ck+5jbxmVDFBpWRITJjq4jHfVI8EDOciClvgu7tg==
+X-Received: by 2002:a17:906:f912:b0:a4e:13ee:5dec with SMTP id lc18-20020a170906f91200b00a4e13ee5decmr4826565ejb.17.1712231926323;
+        Thu, 04 Apr 2024 04:58:46 -0700 (PDT)
+Received: from krava (2001-1ae9-1c2-4c00-726e-c10f-8833-ff22.ip6.tmcz.cz. [2001:1ae9:1c2:4c00:726e:c10f:8833:ff22])
+        by smtp.gmail.com with ESMTPSA id t5-20020a170906a10500b00a46af5f023bsm8913599ejy.202.2024.04.04.04.58.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 04 Apr 2024 04:58:45 -0700 (PDT)
+From: Jiri Olsa <olsajiri@gmail.com>
+X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
+Date: Thu, 4 Apr 2024 13:58:43 +0200
+To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Jiri Olsa <olsajiri@gmail.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Oleg Nesterov <oleg@redhat.com>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Andrii Nakryiko <andrii@kernel.org>, linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org,
+	Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+	John Fastabend <john.fastabend@gmail.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	"Borislav Petkov (AMD)" <bp@alien8.de>, x86@kernel.org
+Subject: Re: [PATCHv2 1/3] uprobe: Add uretprobe syscall to speed up return
+ probe
+Message-ID: <Zg6V8y2-OP_9at2l@krava>
+References: <20240402093302.2416467-1-jolsa@kernel.org>
+ <20240402093302.2416467-2-jolsa@kernel.org>
+ <20240403100708.233575a8ac2a5bac2192d180@kernel.org>
+ <Zg0lvUIB4WdRUGw_@krava>
+ <20240403230937.c3bd47ee47c102cd89713ee8@kernel.org>
+ <CAEf4BzZ2RFfz8PNgJ4ENZ0us4uX=DWhYFimXdtWms-VvGXOjgQ@mail.gmail.com>
+ <20240404095829.ec5db177f29cd29e849169fa@kernel.org>
+ <CAEf4BzYH60TwvBipHWB_kUqZZ6D-iUVnnFsBv06imRikK3o-bg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-Id: <f9b3c536-887a-4a33-bd03-70e60c5aa517@app.fastmail.com>
-In-Reply-To: <32936b57-f451-460b-a2df-e74293e44f5c@paulmck-laptop>
-References: <31c82dcc-e203-48a9-aadd-f2fcd57d94c1@paulmck-laptop>
- <20240401213950.3910531-3-paulmck@kernel.org>
- <836df0c7-51a7-4786-8a65-a70efe9b6eec@app.fastmail.com>
- <32936b57-f451-460b-a2df-e74293e44f5c@paulmck-laptop>
-Date: Thu, 04 Apr 2024 13:57:32 +0200
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Paul E. McKenney" <paulmck@kernel.org>
-Cc: linux-kernel@vger.kernel.org, kernel-team@meta.com,
- "Vineet Gupta" <vgupta@kernel.org>,
- "Andi Shyti" <andi.shyti@linux.intel.com>,
- "Andrzej Hajda" <andrzej.hajda@intel.com>,
- "Palmer Dabbelt" <palmer@rivosinc.com>, linux-snps-arc@lists.infradead.org
-Subject: Re: [PATCH RFC cmpxchg 3/8] ARC: Emulate one-byte and two-byte cmpxchg
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAEf4BzYH60TwvBipHWB_kUqZZ6D-iUVnnFsBv06imRikK3o-bg@mail.gmail.com>
 
-On Tue, Apr 2, 2024, at 19:06, Paul E. McKenney wrote:
-> On Tue, Apr 02, 2024 at 10:14:08AM +0200, Arnd Bergmann wrote:
->> On Mon, Apr 1, 2024, at 23:39, Paul E. McKenney wrote:
->> > Use the new cmpxchg_emu_u8() and cmpxchg_emu_u16() to emulate one-byte
->> > and two-byte cmpxchg() on arc.
->> >
->> > Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
->> 
->> I'm missing the context here, is it now mandatory to have 16-bit
->> cmpxchg() everywhere? I think we've historically tried hard to
->> keep this out of common code since it's expensive on architectures
->> that don't have native 16-bit load/store instructions (alpha, armv3)
->> and or sub-word atomics (armv5, riscv, mips).
->
-> I need 8-bit, and just added 16-bit because it was easy to do so.
-> I would be OK dropping the 16-bit portions of this series, assuming
-> that no-one needs it.  And assuming that it is easier to drop it than
-> to explain why it is not available.  ;-)
+On Wed, Apr 03, 2024 at 07:00:07PM -0700, Andrii Nakryiko wrote:
 
-It certainly makes sense to handle both the same, whichever
-way we do this.
+SNIP
 
->> Does the code that uses this rely on working concurrently with
->> non-atomic stores to part of the 32-bit word? If we want to
->> allow that, we need to merge my alpha ev4/45/5 removal series
->> first.
->
-> For 8-but cmpxchg(), yes.  There are potentially concurrent
-> smp_load_acquire() and smp_store_release() operations to this same byte.
->
-> Or is your question specific to the 16-bit primitives?  (Full disclosure:
-> I have no objection to removing Alpha ev4/45/5, having several times
-> suggested removing Alpha entirely.  And having the scars to prove it.)
+> Check rt_sigreturn syscall (manpage at [0], for example).
+> 
+>        sigreturn() exists only to allow the implementation of signal
+>        handlers.  It should never be called directly.  (Indeed, a simple
+>        sigreturn() wrapper in the GNU C library simply returns -1, with
+>        errno set to ENOSYS.)  Details of the arguments (if any) passed
+>        to sigreturn() vary depending on the architecture.  (On some
+>        architectures, such as x86-64, sigreturn() takes no arguments,
+>        since all of the information that it requires is available in the
+>        stack frame that was previously created by the kernel on the
+>        user-space stack.)
+> 
+> This is a very similar use case. Also, check its source code in
+> arch/x86/kernel/signal_64.c. It sends SIGSEGV to the calling process
+> on any sign of something not being right. It's exactly the same with
+> sys_uretprobe.
+> 
+>   [0] https://man7.org/linux/man-pages/man2/sigreturn.2.html
+> 
+> > And the number of syscalls are limited resource.
+> 
+> We have almost 500 of them, it didn't seems like adding 1-2 for good
+> reasons would be a problem. Can you please point to where the limits
+> on syscalls as a resource are described? I'm curious to learn.
+> 
+> >
+> > I'm actually not sure how much we need to care of it, but adding a new
+> > syscall is worth to be discussed carefully because all of them are
+> > user-space compatibility.
+> 
+> Absolutely, it's a good discussion to have.
+> 
+> >
+> > > > > > Also, we should run syzkaller on this syscall. And if uretprobe is
+> > > > >
+> > > > > right, I'll check on syzkaller
+> > > > >
+> > > > > > set in the user function, what happen if the user function directly
+> > > > > > calls this syscall? (maybe it consumes shadow stack?)
+> > > > >
+> > > > > the process should receive SIGILL if there's no pending uretprobe for
+> > > > > the current task, or it will trigger uretprobe if there's one pending
+> > > >
+> > > > No, that is too aggressive and not safe. Since the syscall is exposed to
+> > > > user program, it should return appropriate error code instead of SIGILL.
+> > > >
+> > >
+> > > This is the way it is today with uretprobes even through interrupt.
+> >
+> > I doubt that the interrupt (exception) and syscall should be handled
+> > differently. Especially, this exception is injected by uprobes but
+> > syscall will be caused by itself. But syscall can be called from user
+> > program (of couse this works as sys_kill(self, SIGILL)).
+> 
+> Yep, I'd keep the behavior the same between uretprobes implemented
+> through int3 and sys_uretprobe.
 
-For the native sub-word access, alpha ev5 cannot do either of
-them, while armv3 could do byte access but not 16-bit words.
++1 
 
-It sounds like the old alphas are already broken then, which
-is a good reason to finally drop support. It would appear that
-the arm riscpc is not affected by this though.
+> 
+> >
+> > > E.g., it could happen that user process is using fibers and is
+> > > replacing stack pointer without kernel realizing this, which will
+> > > trigger some defensive checks in uretprobe handling code and kernel
+> > > will send SIGILL because it can't support such cases. This is
+> > > happening today already, and it works fine in practice (except for
+> > > applications that manually change stack pointer, too bad, you can't
+> > > trace them with uretprobes, unfortunately).
+> >
+> > OK, we at least need to document it.
+> 
+> +1, yep
+> 
+> >
+> > >
+> > > So I think it's absolutely adequate to have this behavior if the user
+> > > process is *intentionally* abusing this API.
+> >
+> > Of course user expected that it is abusing. So at least we need to
+> > add a document that this syscall number is reserved to uprobes and
+> > user program must not use it.
+> >
+> 
+> Totally agree about documenting this.
 
->> For the cmpxchg() interface, I would prefer to handle the
->> 8-bit and 16-bit versions the same way as cmpxchg64() and
->> provide separate cmpxchg8()/cmpxchg16()/cmpxchg32() functions
->> by architectures that operate on fixed-size integer values
->> but not compounds or pointers, and a generic cmpxchg() wrapper
->> in common code that can handle the abtraction for pointers,
->> long and (if absolutely necessary) compounds by multiplexing
->> between cmpxchg32() and cmpxchg64() where needed.
->
-> So as to support _acquire(), _relaxed(), and _release()?
->
-> If so, I don't have any use cases for other than full ordering.
+ok there's map page on sigreturn.. do you think we should add man page
+for uretprobe or you can think of some other place to document it?
 
-My main goal here would be to simplify the definition of
-the very commonly used cmpxchg() macro so it doesn't have
-to deal with so many corner cases, and make it work the
-same way across all architectures. Without the type
-agnostic wrapper, there would also be the benefit of
-additional type checking that we get by replacing the
-macros with inline functions.
+> 
+> > >
+> > > > >
+> > > > > but we could limit the syscall to be executed just from the trampoline,
+> > > > > that should prevent all the user space use cases, I'll do that in next
+> > > > > version and add more tests for that
+> > > >
+> > > > Why not limit? :) The uprobe_handle_trampoline() expects it is called
+> > > > only from the trampoline, so it is natural to check the caller address.
+> > > > (and uprobe should know where is the trampoline)
+> > > >
+> > > > Since the syscall is always exposed to the user program, it should
+> > > > - Do nothing and return an error unless it is properly called.
+> > > > - check the prerequisites for operation strictly.
+> > > > I concern that new system calls introduce vulnerabilities.
+> > > >
+> > >
+> > > As Oleg and Jiri mentioned, this syscall can't harm kernel or other
+> > > processes, only the process that is abusing the API. So any extra
+> > > checks that would slow down this approach is an unnecessary overhead
+> > > and complication that will never be useful in practice.
+> >
+> > I think at least it should check the caller address to ensure the
+> > address is in the trampoline.
+> > But anyway, uprobes itself can break the target process, so no one
+> > might care if this system call breaks the process now.
+> 
+> If we already have an expected range of addresses, then I think it's
+> fine to do a quick unlikely() check. I'd be more concerned if we need
+> to do another lookup or search to just validate this. I'm sure Jiri
+> will figure it out.
 
-We'd still need all the combinations of cmpxchg() and xchg()
-with the four sizes and ordering variants, but at least the
-latter should easily collapse on most architectures. At the
-moment, most architectures only provide the full-ordering
-version.
+Oleg mentioned the trampoline address check could race with another
+thread's mremap call, however trap is using that check as well, it
+still seems like good idea to do it also in the uretprobe syscall
 
-      Arnd
+jirka
