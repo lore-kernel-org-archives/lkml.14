@@ -1,123 +1,83 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 133CF80C09;
-	Thu,  4 Apr 2024 11:15:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-yb1-f181.google.com (mail-yb1-f181.google.com [209.85.219.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEA826D1BA
+	for <linux-kernel@vger.kernel.org>; Thu,  4 Apr 2024 11:17:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712229324; cv=none; b=aMsG51pn8kyvhzLn5/hK8u5H5VIY1DOao8dXwvx2alNCDBs6TWprwjSwulc+F2Drg5iLfUJzyIS5YqWqJ7UExbFiYVWflyba1GNvabonnEGDlMcBf9eiwIaGLj4SOGq3x4HThD0AVAJrRAaf6QSPsnzh//7lyXXrBn2ajIjTw0s=
+	t=1712229468; cv=none; b=eqStPfaNNgkPn5cbjPfj/2Dgq9EnLSHxkr63g3EcW4ltIibY6voTfMI3urAKeU7yZt0+R8xi+ehbvRWREImYMJ5K/gCtIK8Yy+a+3JPeUlY5ISm6EDdALvVdXl4SoCutwPSdwgpnoV3InEiM25eJUkotwYcMM2haIa46YXE0080=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712229324; c=relaxed/simple;
-	bh=Gb6TQcZhy8zvbAqHNSQ5R13gtVldiV+tKWL8vvqYeV0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=TZPLdZKv8wgsrhfb7HpW9FEtYlnhS+RHn3qP7gn2p9B9Tg7L81RhQUfNyuUejGIC5hRK7K1jIEZj0r0sKs6Y8KXI6P0rsto1mf70Bn1+3btF9Rzk5ABULd9jYcg/Mzoznuj4upncMhgYwDslptSbrtYbefOMi4aSASYIWQTjlIA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2D4E9FEC;
-	Thu,  4 Apr 2024 04:15:52 -0700 (PDT)
-Received: from [10.57.73.43] (unknown [10.57.73.43])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A2B373F7B4;
-	Thu,  4 Apr 2024 04:15:20 -0700 (PDT)
-Message-ID: <7ebaa870-64d0-4944-bf62-d4ef1a97a1a9@arm.com>
-Date: Thu, 4 Apr 2024 12:15:22 +0100
+	s=arc-20240116; t=1712229468; c=relaxed/simple;
+	bh=o2/TKZRPzxKISKIjt6gJsBAoZL76Iizy3+HohxXMm1k=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ZbrjDTNdi77bdDxxhfrEPbdVbME4IM2T5zOr22mWQs3cUkJTXIdBSLTbmeQXYgilj7R87wjQCbPrWKZ6QgcHd5V3Fxwl+rdb48vukNUhJqn3ZvFJ9kmlDMADTy/+CG5w63Sb6A+FbJEtbZqwIRC/3CEKjzLwErnIgKAN7wOF6/Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=jckYf/K3; arc=none smtp.client-ip=209.85.219.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jckYf/K3"
+Received: by mail-yb1-f181.google.com with SMTP id 3f1490d57ef6-dcd7c526cc0so868997276.1
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Apr 2024 04:17:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1712229466; x=1712834266; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=o2/TKZRPzxKISKIjt6gJsBAoZL76Iizy3+HohxXMm1k=;
+        b=jckYf/K3quZSpAv3rg7b2GDVY73pXJwRviiJ0v7UrkY6+gERV+LwpNlsLIrDzLxrEi
+         2NFmeoH0wkFOFX1mRcwGIPJykOzDhdMmk4vq2MnlTcsGQKp9CH7HiJGzGYjholnSXBCE
+         FGvFktEedZ/x3fwSCio4ML6kMIz63nONDfvp6d0+tJ55EMDUc0n7oO74XjRmZFBk11rZ
+         zjgbYpu6v6edmelQhGQARw1UZaH90cCaEXH+VoDwpl0JnhAe9xRhSSocK4VRZNnB2vWB
+         9KCt5tTx7fFfdK3hokOao0e3GvKhE2dBDPQTYJYfXaQUPMnAkTXVFL3Y1he8bEHpGIP6
+         tY5Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712229466; x=1712834266;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=o2/TKZRPzxKISKIjt6gJsBAoZL76Iizy3+HohxXMm1k=;
+        b=W+fpjrDE0L3Q0h3sPIWe2qXuD+h2URpwonhcLNGf6ATvHdiIZpXLOzSVeTi1lpI0dS
+         wRFMT+FbmLTip/A8AXGqYMgCTdnjouBOzdlaFRQ2a7C6fFGIEBoIiIWIeZczezdiKP2n
+         /VsqRZ1mYoVVx6vtL8jcdNkTV/7JDQojtjwhdSgsgry9KXEKcUJRxT+BJi82Va0KQzVe
+         yR4Nxzc7vYm4YXaf//BURhVxeEYTBhjvzdw+eVyN8eAe5SyAPP9lpjYmzpsXDhmCL9Q4
+         m1RcW5h4A2TitMTFnUwU2aNHzjmGJilV2R9Eq5fNZG9dwfoanSx9N9XqvXahsg7eTjfv
+         mj+Q==
+X-Forwarded-Encrypted: i=1; AJvYcCWKU5p+X0wuXY5gDQhndhUAii0Cr98rIrtY9Giptkj+YXBCpVDNCGwl4E9wwaM2yhH1btTRUs5P6AOrdkYZNoKezdjU7YPXskngEdad
+X-Gm-Message-State: AOJu0YzDYL4Cy05kfa2vLtFvdLgBUobCiD9uF0saO7iw34pBixfNIkb3
+	ySp71qQoPtKFxR/vzUWtbpruRhdx3CMHhMaWd3LMRh1xc3Ph8p71RVTaYNm/hbLuezcKpsiK8kI
+	ZSAj1HdoSjNGMEEoB49izCMNhB1G4em+1yFrHCQqqRkyZHHg0
+X-Google-Smtp-Source: AGHT+IFbAfIVVH0ufOCH4t+iyy2AAsXNLXy/3qJv8Q6aR01Ii7ui3YwwGAvilR6gG4EdbWMZ6vEsWPHbdr9OH1g2yBI=
+X-Received: by 2002:a05:6902:4a:b0:dcf:3f11:633a with SMTP id
+ m10-20020a056902004a00b00dcf3f11633amr1992020ybh.35.1712229466011; Thu, 04
+ Apr 2024 04:17:46 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 1/2] thermal: gov_step_wise: Simplify
- get_target_state()
-Content-Language: en-US
-To: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc: LKML <linux-kernel@vger.kernel.org>,
- Daniel Lezcano <daniel.lezcano@linaro.org>,
- Linux PM <linux-pm@vger.kernel.org>
-References: <5766468.DvuYhMxLoT@kreacher> <4907519.31r3eYUQgx@kreacher>
-From: Lukasz Luba <lukasz.luba@arm.com>
-In-Reply-To: <4907519.31r3eYUQgx@kreacher>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20240329105634.712457-1-andy.shevchenko@gmail.com>
+In-Reply-To: <20240329105634.712457-1-andy.shevchenko@gmail.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Thu, 4 Apr 2024 13:17:34 +0200
+Message-ID: <CACRpkdaLh6wO2mGBWSeqHPMW-CXj09o5fParzmRAyFM52jnz_g@mail.gmail.com>
+Subject: Re: [PATCH v2 00/11] aw9523: number of cleanups
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: AngeloGioacchino Del Regno <angelogioacchino.delregno@somainline.org>, linux-gpio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Rafael,
+On Fri, Mar 29, 2024 at 11:56=E2=80=AFAM Andy Shevchenko
+<andy.shevchenko@gmail.com> wrote:
 
-On 4/3/24 19:11, Rafael J. Wysocki wrote:
-> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> 
-> The step-wise governor's get_target_state() function contains redundant
-> braces, redundant parens and a redundant next_target local variable, so
-> get rid of all that stuff.
-> 
-> No intentional functional impact.
-> 
-> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> ---
->   drivers/thermal/gov_step_wise.c |   27 ++++++++++-----------------
->   1 file changed, 10 insertions(+), 17 deletions(-)
-> 
-> Index: linux-pm/drivers/thermal/gov_step_wise.c
-> ===================================================================
-> --- linux-pm.orig/drivers/thermal/gov_step_wise.c
-> +++ linux-pm/drivers/thermal/gov_step_wise.c
-> @@ -32,7 +32,6 @@ static unsigned long get_target_state(st
->   {
->   	struct thermal_cooling_device *cdev = instance->cdev;
->   	unsigned long cur_state;
-> -	unsigned long next_target;
->   
->   	/*
->   	 * We keep this instance the way it is by default.
-> @@ -40,32 +39,26 @@ static unsigned long get_target_state(st
->   	 * cdev in use to determine the next_target.
->   	 */
->   	cdev->ops->get_cur_state(cdev, &cur_state);
-> -	next_target = instance->target;
->   	dev_dbg(&cdev->device, "cur_state=%ld\n", cur_state);
->   
->   	if (!instance->initialized) {
-> -		if (throttle) {
-> -			next_target = clamp((cur_state + 1), instance->lower, instance->upper);
-> -		} else {
-> -			next_target = THERMAL_NO_TARGET;
-> -		}
-> +		if (throttle)
-> +			return clamp(cur_state + 1, instance->lower, instance->upper);
->   
-> -		return next_target;
-> +		return THERMAL_NO_TARGET;
->   	}
->   
->   	if (throttle) {
->   		if (trend == THERMAL_TREND_RAISING)
-> -			next_target = clamp((cur_state + 1), instance->lower, instance->upper);
-> -	} else {
-> -		if (trend == THERMAL_TREND_DROPPING) {
-> -			if (cur_state <= instance->lower)
-> -				next_target = THERMAL_NO_TARGET;
-> -			else
-> -				next_target = clamp((cur_state - 1), instance->lower, instance->upper);
-> -		}
-> +			return clamp(cur_state + 1, instance->lower, instance->upper);
-> +	} else if (trend == THERMAL_TREND_DROPPING) {
-> +		if (cur_state <= instance->lower)
-> +			return THERMAL_NO_TARGET;
-> +
-> +		return clamp(cur_state - 1, instance->lower, instance->upper);
->   	}
->   
-> -	return next_target;
-> +	return instance->target;
->   }
->   
->   static void thermal_zone_trip_update(struct thermal_zone_device *tz,
-> 
-> 
-> 
+> Just noticed that the newly introduced driver has some leftovers or unnee=
+ded
+> customisation. Hence this series. It may (or may not :-) be sent as an up=
+date
+> for v6.9 cycle, but TBH there is nothing functional critical.
 
-LGTM,
+Patches applied as low urgency fixes, thanks Andy!
 
-Reviewed-by: Lukasz Luba <lukasz.luba@arm.com>
-
-Regards,
-Lukasz
+Yours,
+Linus Walleij
