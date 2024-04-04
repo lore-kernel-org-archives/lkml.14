@@ -1,80 +1,80 @@
-Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
+Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33B0F8662A
-	for <linux-kernel@vger.kernel.org>; Thu,  4 Apr 2024 12:32:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FCE9128832
+	for <linux-kernel@vger.kernel.org>; Thu,  4 Apr 2024 12:32:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712233924; cv=none; b=YckSPenjHgbP/mCkOEvx5JpN2lAR0/lxI5+IR06UNuzOipqUB7F0ujGH7NDrR0pLeRtwUf7YplLeBNaKkL54JeYvEKdbHF7YYBD+jwQmoUIQBv+iUNgI/i3QCZNuHmwI6pk0a68fcLN/y/D5sQJslv+l9YvHUqHvB9a9jwzt5hQ=
+	t=1712233930; cv=none; b=U6EEQeleFWsmSMQ2CcwMKaOchxQvZFBwcdxIag67dRdWBHyhdwbqci1FgyA3uHE9BAbWsg41rQyYcryG3iTJDAaPRn+0dupKMKHd6qh+x0PkAWCHAxFE1z8XSFJAJnP06Y+aH9F2uPydtSdcCiHpLIy25ESFoxl/k4WF6qobEgk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712233924; c=relaxed/simple;
-	bh=uGUdk3e/USR45wu9+IdS0MgK8dBh31QXCZ/leMk0cGw=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=hlC4dks63yYKSN3paoDC7joklwKX9+2kny/Hi/UTeFBhFyRTFL6N2t5a2JlRg4xotWDvHTwJep3o3a4PRk4xBMa2ed8RhZ7tscCzqHVnFlr/eVa4Gz/N0p3iTKWvgn/ww2Wnc8wEKnIkHk0vkJ9a0PTD3KV3XNQTkqUeLWpQpls=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=JPwtZY+d; arc=none smtp.client-ip=209.85.219.202
+	s=arc-20240116; t=1712233930; c=relaxed/simple;
+	bh=LCmFZdYF/+l0SVNHm/nDN6l6wTxTp1jhws0CkfXtePw=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=FfTlwvZCC+5S2izSjHZNyoU+c++KslnQYpbwAxOMskfS4Q1k1IF1KBI1OdNrGy378Cy9BvIaBiwVKndsZJjXIEpH4ckeQJDYG1n27hbBC4bsF8xvNHJWSD74yU5aJzwSRt9KhtuzlIYSlJKpwdLw7pQ5CvZlQpVjuQVZk3EWMoQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=qLRtS9i+; arc=none smtp.client-ip=209.85.128.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="JPwtZY+d"
-Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-dc647f65573so1764142276.2
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Apr 2024 05:32:02 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qLRtS9i+"
+Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-60cbba6f571so15540257b3.1
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Apr 2024 05:32:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1712233922; x=1712838722; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=BdH/gdE1nY5fzXt07x1io7y2LA29YSrbMxYZzDwB1DA=;
-        b=JPwtZY+dHV+cedyXfBXGDprX4/0KhbJctJNUTArt5cVCGgZjw0Weg2+jTngxsDYJ9w
-         9lpRhhYuuv0LrRqlowOHPW/6UtlfoNFk0yc6TTKdD2+TgqeRIiMcBU7CwSQO0+KhoL4z
-         206H6uO4Z2e6LgtVU/qPw+KrlF6WoiyBjA6BNfFYnPiT/6KQCzE2kL4otvtvKa087Bwc
-         w6wu3cO8TYVHdsMjWgZk9Rk9jBCkmIf0OpZbx0lNCsFKsLcfs3ejBodkDvIOqg/W0yOF
-         tQ8HuQQUuD629kmdOw/4sYnr1UgceWF9sL7iVhe6FBjW0zcb7zff/amVBf9IBu4bQMFI
-         rT7w==
+        d=google.com; s=20230601; t=1712233928; x=1712838728; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=XerkH2ynkf1vxp+fsqJ0qN8AZG46ak50/ECqEN32U0w=;
+        b=qLRtS9i+Hpp3AoAJ9P2S6a9WNwWXQK5PdQigQeMkN8KusBsDj7EcoA9T0YPt2lp8QU
+         jXUMmkHlLAIcYLgE7rEDbZh9unUgPCdg/G40G6rOIRVm9RlLbhri7HOgPuh0ByLmC1kX
+         75tSZjjLwVztrhqlm5U08SlCVJMPRR7ffS65xhGEWxxLHYzTjonFCsYEn9Hbmg3gvFPT
+         s8FAYEFgyw5kJkeK3MVDp/dhe9tJ0MOpaCUwliqVR2oWjo131F80d3b69XPYRkE4ISSd
+         uswnYKPaBpNdBxRk+clQUa7OdmtEvMOet8obX3s5SHB4Ak83PKmonXnw2md4+XFr1aDB
+         TwVw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712233922; x=1712838722;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=BdH/gdE1nY5fzXt07x1io7y2LA29YSrbMxYZzDwB1DA=;
-        b=s31tV7VgZ8XQ6UKD8jCN/eFJ5tj5c5ZuABO60T4PxEDuBJgbwe/3XfMgvRNtyGIr6w
-         +LXzwIYQmTnrsix/lpFLOIc40/ogueqqo2izEdAePcxbOSFYJnmHWB5uj4vnGhTUk/IP
-         RAeGtyEJxVWQXZ64sSHzSOjo25yftj2QFeyhW66HDm411IAf+i6+P3rOrpMudJBCz9EK
-         qpF+NHCELqPXNt//WXClLLxcLJ9BRxbhdDFLg8e0cpldu1Y+h2Vt4EOy4OPoqgRJco+y
-         6qurD9VHgcm0iICtsgWY05rye4F/Lrd4JUFvIg2IByOsWeqm8qqPGYQhoOhRkrLRme7+
-         OWhA==
-X-Forwarded-Encrypted: i=1; AJvYcCXDV3f/kcONPhKU9zgQoBEp2O6SOFDYg5bnHO23tQ9tyKPxlMcvnVrF/+8WScoLodUIEeRQKosQhqeXRfweEHCNppndHvA2HinU/h7D
-X-Gm-Message-State: AOJu0YwC0n1ykLdqwilqW/kgTcWTeY/kmWLPOQVGzXW3rVwOJz0KfmhC
-	k/TfoPkg5XMfPP2p/dtpboB3vaahzEuUOOKDLFoy65evq291OybcOulyrK/vw8imOg0z6GNh7Yv
-	uwZOZbDqZ8UxHoA==
-X-Google-Smtp-Source: AGHT+IEzh3qIzx1LAGE4XI7mt8DeGvKPiyuxF8I3px9EKzj/18nnGCvXVL454agqVBa79GQD+n0YaBC4Ds3u/dA=
+        d=1e100.net; s=20230601; t=1712233928; x=1712838728;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=XerkH2ynkf1vxp+fsqJ0qN8AZG46ak50/ECqEN32U0w=;
+        b=pY+VvhStpGxtTRjVTphL5lhFZun/AhqFCYXjSDBm6rd0/0wKchR6Nk0M8Zh0OhJXbA
+         9gmVqkxRWDQgqGzq4YxgAUFkeW2znENTo5c1riO7xhyxZy9Rt3xx3E0emN4WBQ+fSTV0
+         PH4/fa+c4U51F3FlukAnB4ZIF8C16/r2YpHqR3yjQtgmK/kh+HifwhDNen0xH/+9+67y
+         9m6EmEUT8FQF0TI9Zjnwff9YlXOGTX0/SUvaPEmMe+p4DW4u2580qL4JWx1j74RT4FmJ
+         jy0yAoon6PbJPXeq4NBlvw2pWRhAGbjozOSxYLP3WFjvuvV6b/9ab7wV/9R6/McHViO4
+         y3SQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWmRokNquwOZ+RsEYHapoGFCPlBOOup/tYDNn805ThwpTTCPp2hJ6LmvP0yBlV9Pi3vAnqQy1BuQZUFUzBGTL+321xZ/D2onRaRrWQ0
+X-Gm-Message-State: AOJu0YylARL9XdsPoFPUO7dpHBwjqRATKj/OLcg54Dkz017A/lASPPVu
+	Xx9Z4YABEXv8pLGL9lkTk7R6qC3KJ9JaDb1VmwFvGP892ZkaLbv8ey7hlb4opML2EIOHwZeSYQ7
+	WMJizIvWxT6PsXQ==
+X-Google-Smtp-Source: AGHT+IG0Bsq2KxhVPOQpSkN7RapTzL57jEs123Iy4spqtUcqzx174FkXstUUKG35PgzUW7U2kryjNQK8BX3zoew=
 X-Received: from aliceryhl2.c.googlers.com ([fda3:e722:ac3:cc00:68:949d:c0a8:572])
- (user=aliceryhl job=sendgmr) by 2002:a05:6902:124e:b0:dc6:e8a7:fdba with SMTP
- id t14-20020a056902124e00b00dc6e8a7fdbamr667777ybu.4.1712233922217; Thu, 04
- Apr 2024 05:32:02 -0700 (PDT)
-Date: Thu, 04 Apr 2024 12:31:38 +0000
+ (user=aliceryhl job=sendgmr) by 2002:a05:6902:124a:b0:dc2:1f34:fac4 with SMTP
+ id t10-20020a056902124a00b00dc21f34fac4mr708607ybu.2.1712233928129; Thu, 04
+ Apr 2024 05:32:08 -0700 (PDT)
+Date: Thu, 04 Apr 2024 12:31:40 +0000
+In-Reply-To: <20240404-alice-mm-v4-0-49a84242cf02@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-X-B4-Tracking: v=1; b=H4sIAKqdDmYC/2WOQQ6CMBBFr2K6tqadFkRX3sO4KMMATYCa1jQaw
- t1t2YBx+Wf+ezMzC+QtBXY9zMxTtMG6KQV9PDDszdQRt03KDAQoKaHiZrBIfBx5jYVSuiiRqGK
- p/vTU2vequj9S7m14Of9ZzVHmaZZoIUFvkii54I00NRJWCrW+dc51A53QjSxbImwkiN35CJmsQ EKRFtqUf6TayPT6jlSJxKY918ok8oI/5LIsX2UGH+EVAQAA
+References: <20240404-alice-mm-v4-0-49a84242cf02@google.com>
 X-Developer-Key: i=aliceryhl@google.com; a=openpgp; fpr=49F6C1FAA74960F43A5B86A1EE7A392FDE96209F
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3421; i=aliceryhl@google.com;
- h=from:subject:message-id; bh=uGUdk3e/USR45wu9+IdS0MgK8dBh31QXCZ/leMk0cGw=;
- b=owEBbQKS/ZANAwAKAQRYvu5YxjlGAcsmYgBmDp2toiRNy364oNYICcJk/sSU/qgF/S+vB+KAC
- UcWEIQPVMSJAjMEAAEKAB0WIQSDkqKUTWQHCvFIvbIEWL7uWMY5RgUCZg6drQAKCRAEWL7uWMY5
- RmGtD/9vmmD8rIAtTMInumhoyT6YIjXsYoBFdWkL/6yRQu4cwHvlSnwGi/7bAKtHK9ovPJuVjs+
- cFAsn7y2j9s/jvGA/97N7qdXTQNKoMd0ojcC6TA11XTbYV4uWTrQYfHbmi8wjKIZv6cgnL6kRo8
- 5tqHWOucZdduDrD/g8vWVxmrYB7m3iC0p0YOdLxHdft5TIyLQKm/wClid7hQApy72nDYBSui86w
- 5CkhiLUmjPDnYvAy2ITx6esrLBP5xBqMpUb6u2aDaR/i4JS9bor0V6PEDL83WhO78Qb+S+RKAtV
- q4W0dCNR7gBwPDJ2ATUHXLyInmbKotvd1eYGTf+gE/KOTVigNYMBPIQL4ooywsVxzu5DxVPou4T
- ONXWnG/keiMZDxuzZxLUGnU/0n8AFvxowwb7xsUoG2FH9d1yXI5f8L5yAW2Mamt/7lEyqjhLX/u
- eEJVe0PTVF+SBl+3eTvUMF2uAuNU4nm1456lbiD9nJDfsLOu1AWUtGsfYVNaiok3BsYKcqkRbu4
- u1eiy6ldcFaoXum6iHL0QvK9rX+MZPcjQNBQl1G4ALfrZTn32Jhk8q7G9Rd39g4shyHf9NRZJsd
- X1GsmLB2LJw7V9dwvNLv3DQa2hIMig3gIFyjq4lCwv+TR1yolDb0nvONC/B9UMwNLNjk9OuN+mW +l3Qxg8RtTX6c/Q==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=5074; i=aliceryhl@google.com;
+ h=from:subject:message-id; bh=fSgHfw/zkWrxiL7qQcuIRBGXo9AsMjuelkCO78cyAIg=;
+ b=owEBbQKS/ZANAwAKAQRYvu5YxjlGAcsmYgBmDp2+8k+koOL0GcIB850DW3ouuJxGlPR2MopoO
+ q15ulz7hZOJAjMEAAEKAB0WIQSDkqKUTWQHCvFIvbIEWL7uWMY5RgUCZg6dvgAKCRAEWL7uWMY5
+ RgjkEACUB3R7Sn1Mx7xhemoU2eWMaNTf+LDF5Kpe7cqJ9xnqMJgUM7WKETGwNBOqbI3f/iZTFjx
+ aiQywDbimWtwIc1Drme1GlbihXwW0ut7WIvv+XyiIlfzJ6zyEg43G6KnkHgFJrDQNJUJasQnF1U
+ rZ8fqDaarX/EyfixSMWxDOy5iBCJUUB9TejXbUP3TN8pM+eeWUcDj2Ri75ZLBBRyj0ZFHmNT+Rk
+ CsyqnI08i6aYsXalL/ZbGJcbr5ZzMh9FHkY7WbwlX9kViCto4ryG5uD/OT/XqJhjfDSeoroEtpF
+ 0Pow3pGanpm1TogMELV6Al/8AYQxB2Ohtkto9Sraez/KsIwnHLWZUn7wy/Fy1122vwqDEDshM+a
+ 9ZnHdbaYeepLUl07i5fbfQJF+vspuYl4Vlw0Vy6wKf92sanv7LX0Ea51dK3p9t5ISZSCj+fu2po
+ UKW8atf6Zd61GG+mkP56/s6RoAmb8FkFETpVa1TJr5E2AK08IaccRyTuge6riMTD3pco/tngGqK
+ gUbxYKsknZcq6egCRWt2fr/ghJggswWqRlYTMwQfkqZbRxngZACZ4spgLjMfBhj/czoN1673bJ4
+ GtDQCFA/FKvHXtKYpNaZPEbk0+O9ra4aNzGotNcsoVvFItYdR848PwQRYv2eh1kDTlnl46aFWAM NDdJ1cG5xmBxfGw==
 X-Mailer: b4 0.13-dev-26615
-Message-ID: <20240404-alice-mm-v4-0-49a84242cf02@google.com>
-Subject: [PATCH v4 0/4] Memory management patches needed by Rust Binder
+Message-ID: <20240404-alice-mm-v4-2-49a84242cf02@google.com>
+Subject: [PATCH v4 2/4] uaccess: always export _copy_[from|to]_user with CONFIG_RUST
 From: Alice Ryhl <aliceryhl@google.com>
 To: Miguel Ojeda <ojeda@kernel.org>, Matthew Wilcox <willy@infradead.org>, 
 	Al Viro <viro@zeniv.linux.org.uk>, Andrew Morton <akpm@linux-foundation.org>, 
@@ -90,92 +90,166 @@ Cc: Alex Gaynor <alex.gaynor@gmail.com>, Wedson Almeida Filho <wedsonaf@gmail.co
 	Alice Ryhl <aliceryhl@google.com>, Christian Brauner <brauner@kernel.org>
 Content-Type: text/plain; charset="utf-8"
 
-This patchset contains some abstractions needed by the Rust
-implementation of the Binder driver for passing data between userspace,
-kernelspace, and directly into other processes.
+From: Arnd Bergmann <arnd@arndb.de>
 
-These abstractions do not exactly match what was included in the Rust
-Binder RFC - I have made various improvements and simplifications since
-then. Nonetheless, please see the Rust Binder RFC [1] to get an
-understanding for how this will be used:
+Rust code needs to be able to access _copy_from_user and _copy_to_user
+so that it can skip the check_copy_size check in cases where the length
+is known at compile-time, mirroring the logic for when C code will skip
+check_copy_size. To do this, we ensure that exported versions of these
+methods are available when CONFIG_RUST is enabled.
 
-Users of "rust: add userspace pointers"
-     and "rust: add typed accessors for userspace pointers":
-	rust_binder: add binderfs support to Rust binder
-	rust_binder: add threading support
-	rust_binder: add nodes and context managers
-	rust_binder: add oneway transactions
-	rust_binder: add death notifications
-	rust_binder: send nodes in transactions
-	rust_binder: add BINDER_TYPE_PTR support
-	rust_binder: add BINDER_TYPE_FDA support
-	rust_binder: add process freezing
+Alice has verified that this patch passes the CONFIG_TEST_USER_COPY test
+on x86 using the Android cuttlefish emulator.
 
-Users of "rust: add abstraction for `struct page`":
-	rust_binder: add oneway transactions
-	rust_binder: add vma shrinker
-
-Links: https://lore.kernel.org/rust-for-linux/20231101-rust-binder-v1-0-08ba9197f637@google.com/ [1]
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Tested-by: Alice Ryhl <aliceryhl@google.com>
+Reviewed-by: Boqun Feng <boqun.feng@gmail.com>
 Signed-off-by: Alice Ryhl <aliceryhl@google.com>
 ---
-Changes in v4:
-- Rephrase when we fail with EFAULT.
-- Remove `pub` from examples.
-- Use slices for raw uaccess methods.
-- Fix PAGE_MASK constant.
-- Rephrase most safety comments in Page abstraction.
-- Make with_pointer_into_page and with_page_mapped private.
-- Explain how raw pointers into pages are used correctly.
-- Other minor doc improvements.
-- Link to v3: https://lore.kernel.org/rust-for-linux/20240311-alice-mm-v3-0-cdf7b3a2049c@google.com/
+ include/linux/uaccess.h | 38 ++++++++++++++++++++++++--------------
+ lib/usercopy.c          | 30 ++++--------------------------
+ 2 files changed, 28 insertions(+), 40 deletions(-)
 
-Changes in v3:
-- Fix bug in read_all.
-- Add missing `#include <linux/nospec.h>`.
-- Mention that the second patch passes CONFIG_TEST_USER_COPY.
-- Add gfp flags for Page.
-- Minor documentation adjustments.
-- Link to v2: https://lore.kernel.org/rust-for-linux/20240208-alice-mm-v2-0-d821250204a6@google.com/
+diff --git a/include/linux/uaccess.h b/include/linux/uaccess.h
+index 3064314f4832..2ebfce98b5cc 100644
+--- a/include/linux/uaccess.h
++++ b/include/linux/uaccess.h
+@@ -5,6 +5,7 @@
+ #include <linux/fault-inject-usercopy.h>
+ #include <linux/instrumented.h>
+ #include <linux/minmax.h>
++#include <linux/nospec.h>
+ #include <linux/sched.h>
+ #include <linux/thread_info.h>
+ 
+@@ -138,13 +139,18 @@ __copy_to_user(void __user *to, const void *from, unsigned long n)
+ 	return raw_copy_to_user(to, from, n);
+ }
+ 
+-#ifdef INLINE_COPY_FROM_USER
+ static inline __must_check unsigned long
+-_copy_from_user(void *to, const void __user *from, unsigned long n)
++_inline_copy_from_user(void *to, const void __user *from, unsigned long n)
+ {
+ 	unsigned long res = n;
+ 	might_fault();
+ 	if (!should_fail_usercopy() && likely(access_ok(from, n))) {
++		/*
++		 * Ensure that bad access_ok() speculation will not
++		 * lead to nasty side effects *after* the copy is
++		 * finished:
++		 */
++		barrier_nospec();
+ 		instrument_copy_from_user_before(to, from, n);
+ 		res = raw_copy_from_user(to, from, n);
+ 		instrument_copy_from_user_after(to, from, n, res);
+@@ -153,14 +159,11 @@ _copy_from_user(void *to, const void __user *from, unsigned long n)
+ 		memset(to + (n - res), 0, res);
+ 	return res;
+ }
+-#else
+ extern __must_check unsigned long
+ _copy_from_user(void *, const void __user *, unsigned long);
+-#endif
+ 
+-#ifdef INLINE_COPY_TO_USER
+ static inline __must_check unsigned long
+-_copy_to_user(void __user *to, const void *from, unsigned long n)
++_inline_copy_to_user(void __user *to, const void *from, unsigned long n)
+ {
+ 	might_fault();
+ 	if (should_fail_usercopy())
+@@ -171,25 +174,32 @@ _copy_to_user(void __user *to, const void *from, unsigned long n)
+ 	}
+ 	return n;
+ }
+-#else
+ extern __must_check unsigned long
+ _copy_to_user(void __user *, const void *, unsigned long);
+-#endif
+ 
+ static __always_inline unsigned long __must_check
+ copy_from_user(void *to, const void __user *from, unsigned long n)
+ {
+-	if (check_copy_size(to, n, false))
+-		n = _copy_from_user(to, from, n);
+-	return n;
++	if (!check_copy_size(to, n, false))
++		return n;
++#ifdef INLINE_COPY_FROM_USER
++	return _inline_copy_from_user(to, from, n);
++#else
++	return _copy_from_user(to, from, n);
++#endif
+ }
+ 
+ static __always_inline unsigned long __must_check
+ copy_to_user(void __user *to, const void *from, unsigned long n)
+ {
+-	if (check_copy_size(from, n, true))
+-		n = _copy_to_user(to, from, n);
+-	return n;
++	if (!check_copy_size(from, n, true))
++		return n;
++
++#ifdef INLINE_COPY_TO_USER
++	return _inline_copy_to_user(to, from, n);
++#else
++	return _copy_to_user(to, from, n);
++#endif
+ }
+ 
+ #ifndef copy_mc_to_kernel
+diff --git a/lib/usercopy.c b/lib/usercopy.c
+index d29fe29c6849..de7f30618293 100644
+--- a/lib/usercopy.c
++++ b/lib/usercopy.c
+@@ -7,40 +7,18 @@
+ 
+ /* out-of-line parts */
+ 
+-#ifndef INLINE_COPY_FROM_USER
++#if !defined(INLINE_COPY_FROM_USER) || defined(CONFIG_RUST)
+ unsigned long _copy_from_user(void *to, const void __user *from, unsigned long n)
+ {
+-	unsigned long res = n;
+-	might_fault();
+-	if (!should_fail_usercopy() && likely(access_ok(from, n))) {
+-		/*
+-		 * Ensure that bad access_ok() speculation will not
+-		 * lead to nasty side effects *after* the copy is
+-		 * finished:
+-		 */
+-		barrier_nospec();
+-		instrument_copy_from_user_before(to, from, n);
+-		res = raw_copy_from_user(to, from, n);
+-		instrument_copy_from_user_after(to, from, n, res);
+-	}
+-	if (unlikely(res))
+-		memset(to + (n - res), 0, res);
+-	return res;
++	return _inline_copy_from_user(to, from, n);
+ }
+ EXPORT_SYMBOL(_copy_from_user);
+ #endif
+ 
+-#ifndef INLINE_COPY_TO_USER
++#if !defined(INLINE_COPY_TO_USER) || defined(CONFIG_RUST)
+ unsigned long _copy_to_user(void __user *to, const void *from, unsigned long n)
+ {
+-	might_fault();
+-	if (should_fail_usercopy())
+-		return n;
+-	if (likely(access_ok(to, n))) {
+-		instrument_copy_to_user(to, from, n);
+-		n = raw_copy_to_user(to, from, n);
+-	}
+-	return n;
++	return _inline_copy_to_user(to, from, n);
+ }
+ EXPORT_SYMBOL(_copy_to_user);
+ #endif
 
-Changes in v2:
-- Rename user_ptr module to uaccess.
-- Use srctree-relative links.
-- Improve documentation.
-- Rename UserSlicePtr to UserSlice.
-- Make read_to_end append to the buffer.
-- Use named fields for uaccess types.
-- Add examples.
-- Use _copy_from/to_user to skip check_object_size.
-- Rename traits and move to kernel::types.
-- Remove PAGE_MASK constant.
-- Rename page methods to say _raw.
-- Link to v1: https://lore.kernel.org/rust-for-linux/20240124-alice-mm-v1-0-d1abcec83c44@google.com/
-
----
-Alice Ryhl (2):
-      rust: uaccess: add typed accessors for userspace pointers
-      rust: add abstraction for `struct page`
-
-Arnd Bergmann (1):
-      uaccess: always export _copy_[from|to]_user with CONFIG_RUST
-
-Wedson Almeida Filho (1):
-      rust: uaccess: add userspace pointers
-
- include/linux/uaccess.h         |  38 ++--
- lib/usercopy.c                  |  30 +---
- rust/bindings/bindings_helper.h |   2 +
- rust/helpers.c                  |  34 ++++
- rust/kernel/lib.rs              |   2 +
- rust/kernel/page.rs             | 259 +++++++++++++++++++++++++++
- rust/kernel/types.rs            |  67 +++++++
- rust/kernel/uaccess.rs          | 383 ++++++++++++++++++++++++++++++++++++++++
- 8 files changed, 775 insertions(+), 40 deletions(-)
----
-base-commit: 4cece764965020c22cff7665b18a012006359095
-change-id: 20231128-alice-mm-bc533456cee8
-
-Best regards,
 -- 
-Alice Ryhl <aliceryhl@google.com>
+2.44.0.478.gd926399ef9-goog
 
