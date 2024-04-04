@@ -1,43 +1,50 @@
-Received: from sender-of-o58.zoho.eu (sender-of-o58.zoho.eu [136.143.169.58])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBAA812AACA
-	for <linux-kernel@vger.kernel.org>; Thu,  4 Apr 2024 15:10:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.169.58
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712243453; cv=pass; b=gx36UxuPKPcUN0EiZkyC7Vf3knDACxcxQNDnED+kfGTb+QxkwZwgNDrf3coLDp2JFCOqaEtpOl6c5cCNmA3eOhblmiCt2k+Zw0ZaF3CB8RO7o/0UIJiteTm6pJguPjCLSinHK+hDoCVq6WbFIXwNJxKmiG6aDqxt7CcAvFkYwaM=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712243453; c=relaxed/simple;
-	bh=7WUNDIIdg+v8IieczXCbxBakhQiel4UAYpE/uW5hLg8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=Hvl2xpEEErZwEXEUf8Y/wFn5cTpUhKLqInDjNeM2nikbKYlEifvO9UvHOcCLGIody6qgaW0E0IDOxYTgu2QTRuxE8FpLO//oeKuBXiOd6ef6Xhd4BiKJGrpYQM13re5InZhGp8ekF9gs9S5wm77mh0DJ3jiFrpj0SWagN1B6udo=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bursov.com; spf=pass smtp.mailfrom=bursov.com; dkim=pass (1024-bit key) header.d=bursov.com header.i=vitaly@bursov.com header.b=aMmopZ3/; arc=pass smtp.client-ip=136.143.169.58
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bursov.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bursov.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D9491D551;
+	Thu,  4 Apr 2024 15:12:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1712243529; cv=none; b=oZAKbZyACid+P6UIEd1EIPVPDswjf1pZq1L8sc7S0nDi7ItVU5GhAquW9GO3W8vCoU8bL48l/zs3LZGAXJMdMF8L5NYbbYpgsLP7jrniSsju+zZF2FoAhB1IKRKCMMp+NOkeqE5DwpGlC3RitXdb2/aPAM55oQ6boATjiP+WkkY=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1712243529; c=relaxed/simple;
+	bh=J1aqCHl4RlvByCEFGZ60+2vPpqa4aKe6g5qYLLoW0CI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=WUW8zq2njdAi9h3H2wQ9MlTohOjKCCbCngfWjkg5XmuDIOSamhxFW86yUAO8PD7jlfkrMh2nuRyuhrRvLV+CVzQ9oX1IQYpW8gqbpQVAHW3o/o9zOs0UJBrDODZnGwHk6cm8thrWpU0YuSxFgGyn64dSJmT9ZSH6MN54BJJkRBo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Dc3+AVDp; arc=none smtp.client-ip=198.175.65.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=bursov.com header.i=vitaly@bursov.com header.b="aMmopZ3/"
-ARC-Seal: i=1; a=rsa-sha256; t=1712242509; cv=none; 
-	d=zohomail.eu; s=zohoarc; 
-	b=afiOIb1CLnH8VcB/ojHN6DY8UDaGox8SmkUw0tAuZY14onWaVXeGqIg2SAqNR3bi8+5V/zmMaSR8PT2C09cNKSquOotxDNb5z1FnXvcDhHAumjgnvbjOddoZDYn02AuSF1KhfnyxKWda+M1lMO/QGefCWwb8t7LDYjMkCO2DE1Q=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.eu; s=zohoarc; 
-	t=1712242509; h=Content-Type:Content-Transfer-Encoding:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To:Cc; 
-	bh=L0vD5NLd5FBlKTm0CUN0J8lJX+L9XvMOvLU1lQSrKhw=; 
-	b=IZZlDzPSmfdNWFfDvNfRYKLGVMfSeeSB2a/H2jgJiDdXnK7mkyW5YlCwxAkLzCDpU1p0I0A3K1pqvqzB5U5dm/v+VkYUSbgZQeCG+wGbmL+7KeoV0qVyupbIUNnC+loEZNK/hwmcgFDOJQ+Y0Z8AOnbRb7tXYY84Au/k50alcEw=
-ARC-Authentication-Results: i=1; mx.zohomail.eu;
-	dkim=pass  header.i=bursov.com;
-	spf=pass  smtp.mailfrom=vitaly@bursov.com;
-	dmarc=pass header.from=<vitaly@bursov.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1712242509;
-	s=zoho; d=bursov.com; i=vitaly@bursov.com;
-	h=Message-ID:Date:Date:MIME-Version:Subject:Subject:To:To:References:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To:Cc;
-	bh=L0vD5NLd5FBlKTm0CUN0J8lJX+L9XvMOvLU1lQSrKhw=;
-	b=aMmopZ3/CzKz+sqxRV6cFZPC5lj1cYBNJCqWkGyiVWvREeR4LGIL5RkKF/ewnoHE
-	VEHnBJsLOX1rH1Tme0TMOBL6o1rpRaUiRVUKC+12EkuDQ8YiLfzy/ljS4ZmSUzgtGEj
-	TelOpjRh/dBK1FwvDJNTbVtzNK12pbmOCkDDVt8o=
-Received: from [192.168.11.99] (92.60.179.150 [92.60.179.150]) by mx.zoho.eu
-	with SMTPS id 17122425082370.5114711016825595; Thu, 4 Apr 2024 16:55:08 +0200 (CEST)
-Message-ID: <9a27afea-046d-45f3-9ac4-98ccfd637068@bursov.com>
-Date: Thu, 4 Apr 2024 17:55:06 +0300
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Dc3+AVDp"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1712243528; x=1743779528;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=J1aqCHl4RlvByCEFGZ60+2vPpqa4aKe6g5qYLLoW0CI=;
+  b=Dc3+AVDpodc3alHA0dmsqxF6ClKugBDF7/XTS2MwaT/7Gq+npGwklAL3
+   zm+hsm1l3g2glFjQ1YcN6c4UPpK56V5N5Fbypxp0Zujkz/R7+dupuj3Vg
+   9VWDSYiqyFCPvLKgwhod0tWfUfzweMjyXATJ3/Tixs6raJNbFURHEOC9t
+   IGTPIz8crVFKwSx5uZsCkA7UjKdpUkoqDH856a4LfDzInz38TY2kWo7vy
+   i1IjzNAKSBsQRojYxm2f8oeInV9Fo9gx0N5fvHPJvxKh2C6KKRyG/CM1Y
+   ezzYs2aHpsp1Wq/t6/shaJAApJ560wQbm1ke0p7fcHKHKwiwznXlQXRXz
+   A==;
+X-CSE-ConnectionGUID: oHke3O1MQ+iUPrXb3nkyPw==
+X-CSE-MsgGUID: x7yeo/CiRUOF+77ysEWvnw==
+X-IronPort-AV: E=McAfee;i="6600,9927,11034"; a="11355536"
+X-IronPort-AV: E=Sophos;i="6.07,179,1708416000"; 
+   d="scan'208";a="11355536"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Apr 2024 08:12:07 -0700
+X-CSE-ConnectionGUID: JEZ3/RujSLiVwTylxe6LDw==
+X-CSE-MsgGUID: 7XRf0ZZKT4u4MRwLUuR2FQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,179,1708416000"; 
+   d="scan'208";a="23282962"
+Received: from aghiriba-mobl.ger.corp.intel.com (HELO [10.251.213.116]) ([10.251.213.116])
+  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Apr 2024 08:12:04 -0700
+Message-ID: <bab6cb4d-a460-45c9-a889-52a97eb6dd69@linux.intel.com>
+Date: Thu, 4 Apr 2024 18:12:35 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -45,82 +52,99 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 2/3] sched/debug: dump domains' level
-To: Valentin Schneider <vschneid@redhat.com>, Ingo Molnar <mingo@redhat.com>,
- Peter Zijlstra <peterz@infradead.org>, Juri Lelli <juri.lelli@redhat.com>,
- Vincent Guittot <vincent.guittot@linaro.org>,
- Dietmar Eggemann <dietmar.eggemann@arm.com>,
- Steven Rostedt <rostedt@goodmis.org>, Ben Segall <bsegall@google.com>,
- Mel Gorman <mgorman@suse.de>, Daniel Bristot de Oliveira
- <bristot@redhat.com>, linux-kernel@vger.kernel.org
-References: <cover.1712147341.git.vitaly@bursov.com>
- <d9af90271748e6035c5f8bfc03b7bacdde357766.1712147341.git.vitaly@bursov.com>
- <xhsmh34s1b43e.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
-Content-Language: en-US, ru-RU, uk-UA
-From: Vitalii Bursov <vitaly@bursov.com>
-In-Reply-To: <xhsmh34s1b43e.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
+Subject: Re: [PATCH] ASoC: SOF: Clean up sof_ipc_flood_dfs_write()
+To: Dan Carpenter <dan.carpenter@linaro.org>,
+ Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Cc: Liam Girdwood <lgirdwood@gmail.com>,
+ Bard Liao <yung-chuan.liao@linux.intel.com>,
+ Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
+ Daniel Baluta <daniel.baluta@nxp.com>,
+ Kai Vehmanen <kai.vehmanen@linux.intel.com>, Mark Brown
+ <broonie@kernel.org>, Jaroslav Kysela <perex@perex.cz>,
+ Takashi Iwai <tiwai@suse.com>, sound-open-firmware@alsa-project.org,
+ linux-sound@vger.kernel.org, linux-kernel@vger.kernel.org,
+ kernel-janitors@vger.kernel.org
+References: <a35dded2-392b-4ccb-9dbb-d782ac9b6547@moroto.mountain>
+From: =?UTF-8?Q?P=C3=A9ter_Ujfalusi?= <peter.ujfalusi@linux.intel.com>
+Content-Language: en-US
+In-Reply-To: <a35dded2-392b-4ccb-9dbb-d782ac9b6547@moroto.mountain>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ZohoMailClient: External
+Content-Transfer-Encoding: 8bit
 
 
 
-On 04.04.24 17:21, Valentin Schneider wrote:
-> On 03/04/24 16:28, Vitalii Bursov wrote:
->> Knowing domain's level exactly can be useful when setting
->> relax_domain_level or cpuset.sched_relax_domain_level
->>
->> Usage:
->> cat /debug/sched/domains/cpu0/domain1/level
->> to dump cpu0 domain1's level.
->>
->> Signed-off-by: Vitalii Bursov <vitaly@bursov.com>
->> ---
->>  kernel/sched/debug.c | 1 +
->>  1 file changed, 1 insertion(+)
->>
->> diff --git a/kernel/sched/debug.c b/kernel/sched/debug.c
->> index 8d5d98a5834d..c1eb9a1afd13 100644
->> --- a/kernel/sched/debug.c
->> +++ b/kernel/sched/debug.c
->> @@ -425,6 +425,7 @@ static void register_sd(struct sched_domain *sd, struct dentry *parent)
->>
->>       debugfs_create_file("flags", 0444, parent, &sd->flags, &sd_flags_fops);
->>       debugfs_create_file("groups_flags", 0444, parent, &sd->groups->flags, &sd_flags_fops);
->> +	debugfs_create_u32("level", 0444, parent, (u32 *)&sd->level);
+On 04/04/2024 10:34, Dan Carpenter wrote:
+> This function doesn't support partial writes so using
+> simple_write_to_buffer() doesn't really make sense.  It's better to
+> just use copy_from_user().
 > 
-> How about reusing the SDM macro? ->flags and ->groups_flags get special
-> treatment for pretty printing, but the others don't need that.
+> Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
+
+Thanks, it makes sense.
+
+Acked-by: Peter Ujfalusi <peter.ujfalusi@linux.intel.com>
+
 > ---
-> diff --git a/kernel/sched/debug.c b/kernel/sched/debug.c
-> index c1eb9a1afd13e..f97902208b34d 100644
-> --- a/kernel/sched/debug.c
-> +++ b/kernel/sched/debug.c
-> @@ -419,13 +419,13 @@ static void register_sd(struct sched_domain *sd, struct dentry *parent)
->  	SDM(u32,   0644, busy_factor);
->  	SDM(u32,   0644, imbalance_pct);
->  	SDM(u32,   0644, cache_nice_tries);
-> +	SDM(u32,   0444, level);
->  	SDM(str,   0444, name);
->  
->  #undef SDM
->  
->  	debugfs_create_file("flags", 0444, parent, &sd->flags, &sd_flags_fops);
->  	debugfs_create_file("groups_flags", 0444, parent, &sd->groups->flags, &sd_flags_fops);
-> -	debugfs_create_u32("level", 0444, parent, (u32 *)&sd->level);
->  }
->  
->  void update_sched_domain_debugfs(void)
+>  sound/soc/sof/sof-client-ipc-flood-test.c | 17 +++++++++++------
+>  1 file changed, 11 insertions(+), 6 deletions(-)
 > 
+> diff --git a/sound/soc/sof/sof-client-ipc-flood-test.c b/sound/soc/sof/sof-client-ipc-flood-test.c
+> index c0d6723aed59..1b2e9e25a836 100644
+> --- a/sound/soc/sof/sof-client-ipc-flood-test.c
+> +++ b/sound/soc/sof/sof-client-ipc-flood-test.c
+> @@ -160,15 +160,20 @@ static ssize_t sof_ipc_flood_dfs_write(struct file *file, const char __user *buf
+>  	unsigned long ipc_count = 0;
+>  	struct dentry *dentry;
+>  	int err;
+> -	size_t size;
+>  	char *string;
+>  	int ret;
+>  
+> +	if (*ppos != 0)
+> +		return -EINVAL;
+> +
+>  	string = kzalloc(count + 1, GFP_KERNEL);
+>  	if (!string)
+>  		return -ENOMEM;
+>  
+> -	size = simple_write_to_buffer(string, count, ppos, buffer, count);
+> +	if (copy_from_user(string, buffer, count)) {
+> +		ret = -EFAULT;
+> +		goto out;
+> +	}
+>  
+>  	/*
+>  	 * write op is only supported for ipc_flood_count or
+> @@ -198,7 +203,7 @@ static ssize_t sof_ipc_flood_dfs_write(struct file *file, const char __user *buf
+>  	/* limit max duration/ipc count for flood test */
+>  	if (flood_duration_test) {
+>  		if (!ipc_duration_ms) {
+> -			ret = size;
+> +			ret = count;
+>  			goto out;
+>  		}
+>  
+> @@ -207,7 +212,7 @@ static ssize_t sof_ipc_flood_dfs_write(struct file *file, const char __user *buf
+>  			ipc_duration_ms = MAX_IPC_FLOOD_DURATION_MS;
+>  	} else {
+>  		if (!ipc_count) {
+> -			ret = size;
+> +			ret = count;
+>  			goto out;
+>  		}
+>  
+> @@ -231,9 +236,9 @@ static ssize_t sof_ipc_flood_dfs_write(struct file *file, const char __user *buf
+>  	if (err < 0)
+>  		dev_err_ratelimited(dev, "debugfs write failed to idle %d\n", err);
+>  
+> -	/* return size if test is successful */
+> +	/* return count if test is successful */
+>  	if (ret >= 0)
+> -		ret = size;
+> +		ret = count;
+>  out:
+>  	kfree(string);
+>  	return ret;
 
-This worked when I tried it. The reason why I chose an explicit implementation
-with debugfs_create_u32() is because "level" is "int" and there's no
-debugfs_create_{s32,int}(). While casting is not the best option either, it
-hints that types mismatch.
-
-In a few other cases when types do not match, casting is usually used. e.g.
-mod_debug_add_ulong macro in kernel/module/stats.c:
-#define mod_debug_add_ulong(name) debugfs_create_ulong(#name, 0400, mod_debugfs_root, (unsigned long *) &name.counter)
-where "counter" can be s64 from the atomic64.
-
-Thanks
+-- 
+Péter
