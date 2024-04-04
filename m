@@ -1,173 +1,153 @@
-Received: from mx-out.tlen.pl (mx-out.tlen.pl [193.222.135.140])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f172.google.com (mail-pf1-f172.google.com [209.85.210.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BF0C21353
-	for <linux-kernel@vger.kernel.org>; Thu,  4 Apr 2024 21:12:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.222.135.140
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 605CA13BACF
+	for <linux-kernel@vger.kernel.org>; Thu,  4 Apr 2024 21:12:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712265135; cv=none; b=f2O4HeoVTqZq6Kbsuo3zTIGhpg8QZlRwQUmcFaBHJx/dT2EabEbS2+1y1jbc3W4ZGdxTPPsscL+8HkhQn4UidavH1tolxExECk/P70v7dpN5YPPmFkNlTs1113KEnwxmHoMFXWZYbg5q2FZ7cFyvds099ePEGrQiQpTEL/5aX5Y=
+	t=1712265140; cv=none; b=KpBrSc/BykuKQ1ZrUQ4YUufEl2YH1naE+WJy2JVMEI6f4C9WwgzmGz281nC8RvkLTjZ2RfeNf5jA2rzg6PM7mDXkRMnRWy+9iU5t14lKEbMZNmTRm+8c/XWx4W8jIaOjBWk5TCvxn8TfXV70o3YnXpbOMi0HPze9B5B0cloWrpE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712265135; c=relaxed/simple;
-	bh=qSHrbVUuH3RpnStcVOAX85alNRhQ+L7vmT9vMlOfAHU=;
-	h=Message-ID:Date:MIME-Version:To:Cc:From:Subject:Content-Type; b=IPje6v5S7AFW9cbKY2tthDDoPL4uAwWqroDDevhVjBpIkfZSB2zDHO1rbXitSI28yPIsnFYeuOghEnNufs0rgZabMmynnn3HPVFcRJpg8ciEZHrEoEs7b94zQpigMwwhTdAEvPNa3MuQI/nyeIiwEpnidaD1RJwtfSU4lviCY+Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=o2.pl; spf=pass smtp.mailfrom=o2.pl; dkim=pass (1024-bit key) header.d=o2.pl header.i=@o2.pl header.b=bL/Jy/KE; arc=none smtp.client-ip=193.222.135.140
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=o2.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=o2.pl
+	s=arc-20240116; t=1712265140; c=relaxed/simple;
+	bh=rmpxEp+C0OcbGEDkxWOAGQNTi1sVEOjwbv+sDWt+/Uc=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=DZcAAyLVqeLkuS/2sedRM/4GePj67YZ1WDJ9diszUKx4B8q8YDxjHOIpsgkhr7vPOHtjn8SAidpRydscgpyuGzN31yzxuKw/5d86Bo7Nq74RkyV8JJWdJvHSHaDZrADIrJzRyrjJHCLcogEagFpIpFEMPspK4gDK6UfoQLUj3Zg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=RbEA7fU5; arc=none smtp.client-ip=209.85.210.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=o2.pl header.i=@o2.pl header.b="bL/Jy/KE"
-Received: (wp-smtpd smtp.tlen.pl 33231 invoked from network); 4 Apr 2024 23:05:29 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=o2.pl; s=1024a;
-          t=1712264729; bh=qSHrbVUuH3RpnStcVOAX85alNRhQ+L7vmT9vMlOfAHU=;
-          h=To:Cc:From:Subject;
-          b=bL/Jy/KEcj9Zdg9691OjrK4INk0XhbwBO0nk/5ndwh2FGEk+uGFZyZyjKEzAlos8a
-           +TN1uQ1xvVplh3gAOCyjhuz+EXyhWNbnOjIAvIuj2LkS8GaV/9iXQKCTvUmYIMNHJU
-           e/Zp/rL0Zu8ahswz7R/e8D8ftjmn12ijHAw425ew=
-Received: from aaer216.neoplus.adsl.tpnet.pl (HELO [192.168.1.22]) (mat.jonczyk@o2.pl@[83.4.121.216])
-          (envelope-sender <mat.jonczyk@o2.pl>)
-          by smtp.tlen.pl (WP-SMTPD) with ECDHE-RSA-AES256-GCM-SHA384 encrypted SMTP
-          for <bp@alien8.de>; 4 Apr 2024 23:05:29 +0200
-Message-ID: <658b2641-1f06-4680-8bf9-87b64ad5241d@o2.pl>
-Date: Thu, 4 Apr 2024 23:05:28 +0200
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="RbEA7fU5"
+Received: by mail-pf1-f172.google.com with SMTP id d2e1a72fcca58-6ecc9f0bdaaso1120878b3a.1
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Apr 2024 14:12:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1712265138; x=1712869938; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=YhX44PZxMShjVYoGq3G73EA+Wi27qMQMkpuZjx12edY=;
+        b=RbEA7fU5v5Xf1qRz4w9YceUB3cvxwNfZlsnpdy25hOlE30bd1EW0RmlfRa5oWKjMdL
+         nMnY9Jp7JNOYwuOkRscbyz+l0NPIBpOwkPSItGnnLp/zh8lJH7T+0zJh1awVX52cybvI
+         I7agHFQI0pzQOlDb2zdfUFejERw5x/qAvVUe4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712265138; x=1712869938;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=YhX44PZxMShjVYoGq3G73EA+Wi27qMQMkpuZjx12edY=;
+        b=wqjoAtCtdYjViKuJ+8A+WIhx4gJXmIOVZ987EQM4L24MrBl6L4VR6jbMPGsdeJaoez
+         S0GwBXJfoJUr3F42wlBD19IbiZ21MfECyG/0jnNDGn26VAjt+anm2w2zdtr0qQyapc7V
+         egIaiujFx5JxuONifWEO9prJPswZk2EzSd3gx07N0GL3+l1UH62nCpdnaZMpmpueYl8t
+         WaDnZ4/lhg4pcB6+PPLsNokPLQtXr1neraVX9rfVSodep4q9Ojp05agDmoZzbiG3bllX
+         jgN7b3Lexe/VOojBvUh6UGtIeMfG4A4bM/DAWus1o1hUmXWP/bVBKVBGOd1+Oy3K2LBa
+         zAag==
+X-Forwarded-Encrypted: i=1; AJvYcCVRa/b/aBSn6voRvXt95cLvGXKGeB5fd6jK7/s9i2EFYT9M9UVEhInEXT+VEq6xRkPiP/U210z7Enyxi7WvsCUcznd2IexeK2okIAy3
+X-Gm-Message-State: AOJu0Yz68lUtpS4gU14Ep5dJMn4Ob2CTqqXTNBofqHIsqJh/MFom6Gz0
+	+iVdGnGw5gXAaFPoYZu7PwspOj8yCE3RNR9Q17bH3NwCcDdlkISaQpqCXWxgUg==
+X-Google-Smtp-Source: AGHT+IFqM8VySROclRyf1p9rfcfaz3HrAGbtUdSIx2Fha13TTWK8topWfvLSWg5anuCSRfn4+MFKew==
+X-Received: by 2002:a05:6a20:96d3:b0:1a3:ca1f:8baa with SMTP id hq19-20020a056a2096d300b001a3ca1f8baamr974551pzc.32.1712265138584;
+        Thu, 04 Apr 2024 14:12:18 -0700 (PDT)
+Received: from www.outflux.net ([198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id f16-20020a633810000000b005e43cce33f8sm98046pga.88.2024.04.04.14.12.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 04 Apr 2024 14:12:18 -0700 (PDT)
+From: Kees Cook <keescook@chromium.org>
+To: Jan Kara <jack@suse.cz>
+Cc: Kees Cook <keescook@chromium.org>,
+	Chuck Lever <chuck.lever@oracle.com>,
+	"Gustavo A . R . Silva" <gustavoars@kernel.org>,
+	Christian Brauner <brauner@kernel.org>,
+	Alexander Viro <viro@zeniv.linux.org.uk>,
+	Jeff Layton <jlayton@kernel.org>,
+	Amir Goldstein <amir73il@gmail.com>,
+	linux-fsdevel@vger.kernel.org,
+	linux-nfs@vger.kernel.org,
+	linux-hardening@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v2] fs: Set file_handle::handle_bytes before referencing file_handle::f_handle
+Date: Thu,  4 Apr 2024 14:12:15 -0700
+Message-Id: <20240404211212.it.297-kees@kernel.org>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Content-Language: en-GB
-To: "Borislav Petkov (AMD)" <bp@alien8.de>
-Cc: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
- Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-From: =?UTF-8?Q?Mateusz_Jo=C5=84czyk?= <mat.jonczyk@o2.pl>
-Subject: [REGRESSION] Build failure on 6.9-rc2 with "x86/bugs: Fix the SRSO
- mitigation on Zen3/4"
-Autocrypt: addr=mat.jonczyk@o2.pl; keydata=
- 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
- TANkZ3QqXNX2
-Content-Type: text/plain; charset=UTF-8
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2614; i=keescook@chromium.org;
+ h=from:subject:message-id; bh=rmpxEp+C0OcbGEDkxWOAGQNTi1sVEOjwbv+sDWt+/Uc=;
+ b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBmDxevvtFzbzRxm8cDZ8cTll2vfRi5DH5lS6YKy
+ 34KbZHhsfOJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZg8XrwAKCRCJcvTf3G3A
+ JtYEEACeo0yEzeZpPuvbwu/KgrcUSo8Rn+f6I2gueIa/keJEuxCDBp4sDQIy2MimWUHier93a41
+ mEtmjDA6wx8XGrn2UgP50X3KgM8X5CFScX49cahz4RTiZvDNg3Dy3I2MnUNup5iKPjE+B7ya1sv
+ oznhMgIx0toVd3tKo7w98bwpztzh20u5Iaw9Joy6wwdcgd4s8SibfWJGbMyr+fl2sdeCamwmXcK
+ PYwQFnomcswHly47ebMJIqK7amRQYyqYrh3qauFf4dZL0uIHvteVpMWuE4s/gOh1Ya5q2B2okEl
+ wRE5c4u8yH7npBZf7dDFpdf4w0VZYSID0Ela5rzU5nVrTdosygUe8fa15IiERmdBVKhuWPWjczg
+ 3Dq956Nec2I2cW1z1Wuhs+gU65JmTx0jmPhJlQodhW3Q7XwySIGRCuLceji6aE2pyFdJS3KXAee
+ VlQfa0qKqqFRWpGoy54tQWEAPIk4C6b/L8So00406EJ1ZEYlcRxWj/3zkDkpwR3072Ud1qk+pMJ
+ 4jWZm7FDKQSTpIWPv1nNz2ccHx4pWQfxE0Dzi7y40bhxxGBDkA17iY3PMjORmY5tKyHfI7skXCF
+ SWA0hzsdsyVPSIuwJhHE2bHLvzVHynfC9feCKnAhIG8KzmUwwHGDGBpf8ws/PRXRyXCjCj0JN+F
+ U4d+fLE gjH5uNFg==
+X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
-X-WP-MailID: 40027ac6927ec68a11edc0238d083472
-X-WP-AV: skaner antywirusowy Poczty o2
-X-WP-SPAM: NO 0000000 [8cOV]                               
 
-Hello,
+Since __counted_by(handle_bytes) was added to struct file_handle, we need
+to explicitly set it in the one place it wasn't yet happening prior to
+accessing the flex array "f_handle". For robustness also check for a
+negative value for handle_bytes, which is possible for an "int", but
+nothing appears to set.
 
-The v6.9-rc2 kernel fails to build without CONFIG_MITIGATION_SRSO but
-with most other mitigations in place (incl. CONFIG_MITIGATION_UNRET_ENTRY):
+Fixes: 1b43c4629756 ("fs: Annotate struct file_handle with __counted_by() and use struct_size()")
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+Cc: Jan Kara <jack@suse.cz>
+Cc: Chuck Lever <chuck.lever@oracle.com>
+Cc: Gustavo A. R. Silva <gustavoars@kernel.org>
+Cc: Christian Brauner <brauner@kernel.org>
+Cc: Alexander Viro <viro@zeniv.linux.org.uk>
+Cc: Jeff Layton <jlayton@kernel.org>
+Cc: Amir Goldstein <amir73il@gmail.com>
+Cc: linux-fsdevel@vger.kernel.org
+Cc: linux-nfs@vger.kernel.org
+Cc: linux-hardening@vger.kernel.org
+ v2: more bounds checking, add comments, dropped reviews since logic changed
+ v1: https://lore.kernel.org/all/20240403215358.work.365-kees@kernel.org/
+---
+ fs/fhandle.c | 11 +++++++++--
+ 1 file changed, 9 insertions(+), 2 deletions(-)
 
-[...]
-      LD      vmlinux.o
-      OBJCOPY modules.builtin.modinfo
-      GEN     modules.builtin
-      GEN     .vmlinux.objs
-      MODPOST Module.symvers
-    ERROR: modpost: "srso_alias_untrain_ret" [arch/x86/kvm/kvm-amd.ko] undefined!
-    make[2]: *** [scripts/Makefile.modpost:145: Module.symvers] Błąd 1
-    make[1]: *** [/media/1T-data/linux/linux-6.9-rc2/Makefile:1871: modpost] Błąd 2
-    make: *** [Makefile:240: __sub-make] Błąd 2
-    Command exited with non-zero status 2
-
-An investigation pointed to the following commit:
-
-commit 4535e1a4174c4111d92c5a9a21e542d232e0fcaa
-Author: Borislav Petkov (AMD) <bp@alien8.de>
-Date:   Thu Mar 28 13:59:05 2024 +0100
-
-    x86/bugs: Fix the SRSO mitigation on Zen3/4
-    
-    The original version of the mitigation would patch in the calls to the
-    untraining routines directly.  That is, the alternative() in UNTRAIN_RET
-    will patch in the CALL to srso_alias_untrain_ret() directly.
-    
-    However, even if commit e7c25c441e9e ("x86/cpu: Cleanup the untrain
-    mess") meant well in trying to clean up the situation, due to micro-
-    architectural reasons, the untraining routine srso_alias_untrain_ret()
-    must be the target of a CALL instruction and not of a JMP instruction as
-    it is done now.
-    
-    Reshuffle the alternative macros to accomplish that.
-    
-    Fixes: e7c25c441e9e ("x86/cpu: Cleanup the untrain mess")
-    Signed-off-by: Borislav Petkov (AMD) <bp@alien8.de>
-    Reviewed-by: Ingo Molnar <mingo@kernel.org>
-    Cc: stable@kernel.org
-    Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-
-After reverting it, the kernel builds successfully.
-
-Config extract:
-
-    CONFIG_CC_HAS_RETURN_THUNK=y
-    CONFIG_CC_HAS_ENTRY_PADDING=y
-    CONFIG_FUNCTION_PADDING_CFI=11
-    CONFIG_FUNCTION_PADDING_BYTES=16
-    CONFIG_CALL_PADDING=y
-    CONFIG_HAVE_CALL_THUNKS=y
-    CONFIG_CALL_THUNKS=y
-    CONFIG_PREFIX_SYMBOLS=y
-    CONFIG_SPECULATION_MITIGATIONS=y
-    CONFIG_MITIGATION_PAGE_TABLE_ISOLATION=y
-    CONFIG_MITIGATION_RETPOLINE=y
-    CONFIG_MITIGATION_RETHUNK=y
-    CONFIG_MITIGATION_UNRET_ENTRY=y
-    CONFIG_MITIGATION_CALL_DEPTH_TRACKING=y
-    # CONFIG_CALL_THUNKS_DEBUG is not set
-    CONFIG_MITIGATION_IBPB_ENTRY=y
-    CONFIG_MITIGATION_IBRS_ENTRY=y
-    # CONFIG_MITIGATION_SRSO is not set
-    # CONFIG_MITIGATION_GDS_FORCE is not set
-    # CONFIG_MITIGATION_RFDS is not set
-    CONFIG_ARCH_HAS_ADD_PAGES=y
-
-OS: Ubuntu 20.04, GCC 9.4.0
-
-To me, it looks that with the patch applied, arch/x86/include/asm/nospec-branch.h uses
-srso_alias_untrain_ret when CONFIG_MITIGATION_UNRET_ENTRY=y
-even though CONFIG_MITIGATION_SRSO=n.
-
-Greetings,
-
-Mateusz
+diff --git a/fs/fhandle.c b/fs/fhandle.c
+index 8a7f86c2139a..854f866eaad2 100644
+--- a/fs/fhandle.c
++++ b/fs/fhandle.c
+@@ -40,6 +40,11 @@ static long do_sys_name_to_handle(const struct path *path,
+ 			 GFP_KERNEL);
+ 	if (!handle)
+ 		return -ENOMEM;
++	/*
++	 * Since handle->f_handle is about to be written, make sure the
++	 * associated __counted_by(handle_bytes) variable is correct.
++	 */
++	handle->handle_bytes = f_handle.handle_bytes;
+ 
+ 	/* convert handle size to multiple of sizeof(u32) */
+ 	handle_dwords = f_handle.handle_bytes >> 2;
+@@ -51,8 +56,8 @@ static long do_sys_name_to_handle(const struct path *path,
+ 	handle->handle_type = retval;
+ 	/* convert handle size to bytes */
+ 	handle_bytes = handle_dwords * sizeof(u32);
+-	handle->handle_bytes = handle_bytes;
+-	if ((handle->handle_bytes > f_handle.handle_bytes) ||
++	/* check if handle_bytes would have exceeded the allocation */
++	if ((handle_bytes < 0) || (handle_bytes > f_handle.handle_bytes) ||
+ 	    (retval == FILEID_INVALID) || (retval < 0)) {
+ 		/* As per old exportfs_encode_fh documentation
+ 		 * we could return ENOSPC to indicate overflow
+@@ -68,6 +73,8 @@ static long do_sys_name_to_handle(const struct path *path,
+ 		handle_bytes = 0;
+ 	} else
+ 		retval = 0;
++	/* the "valid" number of bytes may fewer than originally allocated */
++	handle->handle_bytes = handle_bytes;
+ 	/* copy the mount id */
+ 	if (put_user(real_mount(path->mnt)->mnt_id, mnt_id) ||
+ 	    copy_to_user(ufh, handle,
+-- 
+2.34.1
 
