@@ -1,90 +1,126 @@
-Received: from mail-pf1-f169.google.com (mail-pf1-f169.google.com [209.85.210.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-00128a01.pphosted.com (mx0a-00128a01.pphosted.com [148.163.135.77])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D96983A07;
-	Thu,  4 Apr 2024 11:03:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3F7480C0B;
+	Thu,  4 Apr 2024 11:03:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.135.77
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712228606; cv=none; b=h1FnSvEk/oF/bPOXcruWJRl+9QHhUVwmicbmQE+mp3Jri+IpMpoooSskfMjwwCVExWDoTxTz+EOhGK9U4C9sIt2myt2toOla8RYPFfJ4wrXBZrStrFYzJEtdE21UZJ4hFU9k+wb4e7KKAXXFZ3R/hxESVUs+wLt9zJks/a6BtCU=
+	t=1712228637; cv=none; b=uXO8meo+PvmuyiojSEPLMGl9d78aPKF9TChXT3RFCZaFqGG/J39MnB3yjtE7NWaGXvkKlgPozYg3TtxD+g83K0Ijg2bqkoycXjszsjXyDHFFDDLFEJB5V6Dff8Am8nEWmcofyem9agDUQiyNeXFsAhvGrtVnZjKEchXwxGrDkXQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712228606; c=relaxed/simple;
-	bh=+hAeU74QQfbsZOvQyLbhO6tKobZra3FmBs+/7VBvJaE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=EncSGdVUnlGmIUEGbO2rHKdPiUbBle/CuMCpiQS+9bxRHz3m2d/xx+tf4RrBcV0RECtM8Ey8Zmm/zUry7qW3kEbrYeQw4dBw/Yc6Gy0SWqhMgE7zSIkxX7of5J7hCTbIM6Nj0mpMV9Y6ggw1qssp0O6lUvptFpH3ZLzrhktL5K8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ncZz3BWq; arc=none smtp.client-ip=209.85.210.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1712228637; c=relaxed/simple;
+	bh=UI9LYwYsbzsvYImq/LHr54gyhLBEwgpl2jvt1KqrE14=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
+	 In-Reply-To:To:CC; b=Uxs8n1km6Rk4EgsFzmKiikTpxfFKXjByD8+47xYi5PfGtDLcECfv82j7RDnpxr2h8KYDar1wfd8BJV0rK3KE+4MlNsaB0AFuLvmcWgRL9Tr3LCpKrn+BYEN1sTJVOwLjJyT/2Z70rVv5OpjHP4iPklPCSCNBEoKvjP4zgz8wrNk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com; spf=pass smtp.mailfrom=analog.com; dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b=nNcTYnhu; arc=none smtp.client-ip=148.163.135.77
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=analog.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ncZz3BWq"
-Received: by mail-pf1-f169.google.com with SMTP id d2e1a72fcca58-6ecf1d22d78so95213b3a.0;
-        Thu, 04 Apr 2024 04:03:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1712228605; x=1712833405; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=+hAeU74QQfbsZOvQyLbhO6tKobZra3FmBs+/7VBvJaE=;
-        b=ncZz3BWqXMnSTxYkZrAbQ457QC7NzCagsI4GgAs0jqX8sxDPA0eu8Hh4urLtGXTuT7
-         FvRdSt9Nb385aVFG4/WNdNkIIExPdvdrBHqN0y/UKmVy+jnggpmobIxft81kLjJOWZeY
-         8GRDDbo27bfBHLeB3X+5yQHUzVlhKmzfRoZYOW8O1RTPJ/GdK1L2i7DFs2uvdstnNGcV
-         nP4l43iGvNjOD5w3GRzdE2431aKERYQTzPBL3CHJrdP0VoTtWT34LR9y1pxNZhoGwDI9
-         7icm/aE4ypebqJz7yu1d1Ffhtw45LL4cNd8ToVVKeSsMohN+Bkj6OwIu/opNqchXFydz
-         5mkQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712228605; x=1712833405;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=+hAeU74QQfbsZOvQyLbhO6tKobZra3FmBs+/7VBvJaE=;
-        b=VtpQF3ourOsk8CbaVx4My3jesVGWNZZqPxm0BQxG9adPH05yAOSdi832YOaW2ZvWFC
-         LwFTk+y1yLflDzWcGwSgr1/uET4rV0jqIT/jcNIkdag8rvzo8UwMv1Tav4RGVPOPXao+
-         DooNr0RDdxWVpdy3SgzvNF8scj37m6E7Ja44OZEj5beO+uxUmMgaB9/sAYsdBxhiXHbb
-         bMTeqlIC7eYJ9X/VGap/nfQmPwWpIZOBqLKmuMQjFZN0ZVEqOLbS5Wz6IRwWvUz7DyLb
-         Qf69J0qb6wGrdeZF8JKMuoU0KKLebJqZcYu2pYX3Jy05izpcy6Tr53sSg6YtMXBu3XYI
-         4X8w==
-X-Forwarded-Encrypted: i=1; AJvYcCWfHD5gGrCSoSwsrRYYznVZZspVzGeO+bn+6h/7Kw3rNJUvIQxf+mtFpudua5F6tNHMhidG2Vgkp+7AQX2weAaEN2khFsOJMQ6qfeuBJ0CAxKHScc1YigfhAKNR2kaP/ODgr2fHNchMlfgAvc05roogwRB6gtvQpCbXVpokBrufrrlTsGqy
-X-Gm-Message-State: AOJu0Yxi2pOmMxALkWXQYsQ2cRvmK6DPwI/cBZbZCRJgwZhHA6WKIo8Z
-	+Up/t0Y/tZT/AroFH8Z60c9yKMehH5f5WXvXHipuYyNHMfNkcCBGvK54hBZNLFKANO5Lsv8iaD6
-	9nHpRUIXw0zHLeNObJaBgwHKtYkQ=
-X-Google-Smtp-Source: AGHT+IEiV3mYP5jcL1qYae16r/KN6hqKughbDlZ4LxlcHlZBBb1xETAo6BgRMuLOSJwR/Fy2iLftYZBAuG/Ww1JZaBM=
-X-Received: by 2002:a05:6a21:6d88:b0:1a7:199:8ac5 with SMTP id
- wl8-20020a056a216d8800b001a701998ac5mr2303003pzb.4.1712228604634; Thu, 04 Apr
- 2024 04:03:24 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b="nNcTYnhu"
+Received: from pps.filterd (m0375855.ppops.net [127.0.0.1])
+	by mx0b-00128a01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 434B0t7Q027727;
+	Thu, 4 Apr 2024 07:03:23 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=analog.com; h=
+	from:date:subject:mime-version:content-type
+	:content-transfer-encoding:message-id:references:in-reply-to:to
+	:cc; s=DKIM; bh=DVie1SwrMjiwlrzQLb/M1yZj1Vl6Rs0UnN786RZz6OU=; b=
+	nNcTYnhu1Ypp5Uua6EW3IgTZkQDFcAXkGU0fkBA2qcVm01e3JD88yj1oDivbJcub
+	mndqI1sopB4CKcRT1rCVYPuxlBODK3ZtVVQe+beo3UAASq+Zb41FBUuCsPwHZC6s
+	enwT1quXTCcJxTGben6/+GtptnFXQ5nge+il2868UFKKdXJ2tl5uIOdkbFvbRvlL
+	abKwH/i27KKEMSB1IoovhR/++Q8+0nAbfJIk3mqWBQe8Zr5ljb1ZYS/sbkHpzDhI
+	k0V3pDToNRK1asEt5qlfNQMXlpkej1QfAA+h/wJW4qI9uIjk+8cqaaJkkr+znrY8
+	LSPNKcj4A3bd+y0wuqNuhw==
+Received: from nwd2mta3.analog.com ([137.71.173.56])
+	by mx0b-00128a01.pphosted.com (PPS) with ESMTPS id 3x9ty900bp-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 04 Apr 2024 07:03:22 -0400 (EDT)
+Received: from ASHBMBX8.ad.analog.com (ASHBMBX8.ad.analog.com [10.64.17.5])
+	by nwd2mta3.analog.com (8.14.7/8.14.7) with ESMTP id 434B3L9f018926
+	(version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Thu, 4 Apr 2024 07:03:21 -0400
+Received: from ASHBMBX9.ad.analog.com (10.64.17.10) by ASHBMBX8.ad.analog.com
+ (10.64.17.5) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.14; Thu, 4 Apr 2024
+ 07:03:20 -0400
+Received: from zeus.spd.analog.com (10.66.68.11) by ashbmbx9.ad.analog.com
+ (10.64.17.10) with Microsoft SMTP Server id 15.2.986.14 via Frontend
+ Transport; Thu, 4 Apr 2024 07:03:20 -0400
+Received: from [127.0.0.1] ([10.44.3.56])
+	by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 434B2vcB008372;
+	Thu, 4 Apr 2024 07:03:17 -0400
+From: Nuno Sa <nuno.sa@analog.com>
+Date: Thu, 4 Apr 2024 13:06:25 +0200
+Subject: [PATCH 3/4] iio: backend: make use of dev_errp_probe()
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240404035205.59492-1-Frank.Li@nxp.com> <af602862-5120-4717-adb6-694ada09e8d8@linaro.org>
- <f5fa1872-0bae-4f04-aa94-27db937516e9@linaro.org>
-In-Reply-To: <f5fa1872-0bae-4f04-aa94-27db937516e9@linaro.org>
-From: Fabio Estevam <festevam@gmail.com>
-Date: Thu, 4 Apr 2024 08:03:12 -0300
-Message-ID: <CAOMZO5Dtd_p02YeX6tcWMGzujZ-GwLQMQBPBOx9xLmEgs6VVNg@mail.gmail.com>
-Subject: Re: [PATCH 1/1] dt-bindings: media: imx-jpeg: add clocks,clock-names,slot
- to fix warning
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc: Frank Li <Frank.Li@nxp.com>, Mirela Rabulea <mirela.rabulea@nxp.com>, 
-	Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, 
-	Pengutronix Kernel Team <kernel@pengutronix.de>, 
-	"open list:NXP i.MX 8QXP/8QM JPEG V4L2 DRIVER" <imx@lists.linux.dev>, 
-	"open list:NXP i.MX 8QXP/8QM JPEG V4L2 DRIVER" <linux-media@vger.kernel.org>, 
-	"open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, 
-	"moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, 
-	open list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-ID: <20240404-dev-add_dev_errp_probe-v1-3-d18e3eb7ec3f@analog.com>
+References: <20240404-dev-add_dev_errp_probe-v1-0-d18e3eb7ec3f@analog.com>
+In-Reply-To: <20240404-dev-add_dev_errp_probe-v1-0-d18e3eb7ec3f@analog.com>
+To: Petr Mladek <pmladek@suse.com>, Jonathan Cameron <jic23@kernel.org>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Olivier Moysan
+	<olivier.moysan@foss.st.com>,
+        Jyoti Bhayana <jbhayana@google.com>,
+        Andy
+ Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Chris Down
+	<chris@chrisdown.name>,
+        John Ogness <john.ogness@linutronix.de>,
+        Greg
+ Kroah-Hartman <gregkh@linuxfoundation.org>
+CC: <linux-kernel@vger.kernel.org>, <linux-iio@vger.kernel.org>
+X-Mailer: b4 0.13.0
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1712228790; l=964;
+ i=nuno.sa@analog.com; s=20231116; h=from:subject:message-id;
+ bh=UI9LYwYsbzsvYImq/LHr54gyhLBEwgpl2jvt1KqrE14=;
+ b=QpVM/CwFSB08m+dHiZ29iZzwzTePxpxfwoYGgEy0hgyimYu4ynHk3Ye0RAsdO1BJBhEMRYx1M
+ uPMEO9hw6K4DFL9AXLgnkn6Nvguu2I22cQ32KH0wgne9HEQX7MuA+AK
+X-Developer-Key: i=nuno.sa@analog.com; a=ed25519;
+ pk=3NQwYA013OUYZsmDFBf8rmyyr5iQlxV/9H4/Df83o1E=
+X-ADIRuleOP-NewSCL: Rule Triggered
+X-Proofpoint-GUID: ohDMsrMdtH-xBzVjz5Jt0KLbHxddhxou
+X-Proofpoint-ORIG-GUID: ohDMsrMdtH-xBzVjz5Jt0KLbHxddhxou
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-04-04_07,2024-04-04_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 spamscore=0
+ clxscore=1015 mlxlogscore=999 malwarescore=0 bulkscore=0 adultscore=0
+ priorityscore=1501 phishscore=0 mlxscore=0 impostorscore=0
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2404010003 definitions=main-2404040075
 
-On Thu, Apr 4, 2024 at 3:54=E2=80=AFAM Krzysztof Kozlowski
-<krzysztof.kozlowski@linaro.org> wrote:
+Using dev_errp_probe() to simplify the code.
 
-> And for the clocks, instead pick up this patch:
-> https://lore.kernel.org/all/20230721111020.1234278-3-alexander.stein@ew.t=
-q-group.com/
+Signed-off-by: Nuno Sa <nuno.sa@analog.com>
+---
+ drivers/iio/industrialio-backend.c | 8 +++-----
+ 1 file changed, 3 insertions(+), 5 deletions(-)
 
-Or maybe this one:
-https://lore.kernel.org/linux-devicetree/DB9PR04MB923493D0DA82C9EC4386BC2A8=
-FF1A@DB9PR04MB9234.eurprd04.prod.outlook.com/
+diff --git a/drivers/iio/industrialio-backend.c b/drivers/iio/industrialio-backend.c
+index 2fea2bbbe47f..e0b08283d667 100644
+--- a/drivers/iio/industrialio-backend.c
++++ b/drivers/iio/industrialio-backend.c
+@@ -296,11 +296,9 @@ struct iio_backend *devm_iio_backend_get(struct device *dev, const char *name)
+ 	}
+ 
+ 	fwnode = fwnode_find_reference(dev_fwnode(dev), "io-backends", index);
+-	if (IS_ERR(fwnode)) {
+-		dev_err_probe(dev, PTR_ERR(fwnode),
+-			      "Cannot get Firmware reference\n");
+-		return ERR_CAST(fwnode);
+-	}
++	if (IS_ERR(fwnode))
++		return dev_errp_probe(dev, PTR_ERR(fwnode),
++				      "Cannot get Firmware reference\n");
+ 
+ 	guard(mutex)(&iio_back_lock);
+ 	list_for_each_entry(back, &iio_back_list, entry) {
+
+-- 
+2.44.0
+
