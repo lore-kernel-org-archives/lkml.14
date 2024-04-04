@@ -1,404 +1,152 @@
-Received: from mail-yb1-f169.google.com (mail-yb1-f169.google.com [209.85.219.169])
+Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 777456AB6
-	for <linux-kernel@vger.kernel.org>; Thu,  4 Apr 2024 00:21:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95FF4ED9
+	for <linux-kernel@vger.kernel.org>; Thu,  4 Apr 2024 00:24:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712190096; cv=none; b=UiFFJve26TKDZOfu+mACot75uGV24zfR+1NqRQtbis1uIqqiIfbI4snkwWV76qGeFnn+wPBXwOwdkZZRKPL+DK6ywwzVp/mdBpAjaVJhJ9n05jOxH/6sTQn230Qp3YSfftmocu66eEa9Y4s2HJ+j4bDR33Gq0vxEBgCq9oDgEo0=
+	t=1712190282; cv=none; b=TZCgCKCMa0H7p0biX+pJvVZGQy2dlhMSVD4fTH1sTZ1UwtNI8azUcXzM5qiPDs8ITl3Pj1ujo+t8K4ruiQ6AK0loCizUfkPY8KXxMx/0HaQ02BH6xjBng8btOKqGKIT/bMxQ9zq+K+03F7BSrz+Q/vDYrUyJ/Cn9gR9SQbhD35o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712190096; c=relaxed/simple;
-	bh=dOPbi2CUnvmLWksVT5BRSkZCsZq4DeT3G+zormngmU0=;
+	s=arc-20240116; t=1712190282; c=relaxed/simple;
+	bh=3JPZfsSQGYLv4i4aZfgMUDZ5L89pgYI3CBEmLS7s63U=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=pJ3Un5u9KB87zBRFwtJxP7QGcLG8zcfKLDUh+GUgFt2CONuoMMxg6ONZ6g0gRIA5u7VStgWrPJ0DwKsy4fng/2+J9ZxKOyfYdYtb3dw7psY/l5ZJJa/kpGYCL2zKMeeo5uYX3Kw3gyI27jZ5Ge5uBTQdfOdMMtt7BsaxrwT6rL0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=NApmcLzD; arc=none smtp.client-ip=209.85.219.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
+	 To:Cc:Content-Type; b=rXenh5XBSqg2l2QsXBtnuNQhjBXYjcCHevxd1jXlS7bwP4pmiBLW/n7enagkOW/76g4jqwH5AVxpkhdyoscQFWALNcjaju74jYGkw5dawsZIsasNUjQAoQX2aeDZvqoD7QZ9Uf3lWCRJ7rKbMQB3bho/fml7nyS51abwuSnjsKY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=KMaPozWs; arc=none smtp.client-ip=209.85.218.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="NApmcLzD"
-Received: by mail-yb1-f169.google.com with SMTP id 3f1490d57ef6-dcc6fc978ddso373742276.0
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Apr 2024 17:21:33 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="KMaPozWs"
+Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-a465ddc2c09so26135466b.2
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Apr 2024 17:24:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1712190092; x=1712794892; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1712190279; x=1712795079; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=qO60jqsH0RDRW8MepZgYWUNAloZS/uU+ZxX94+OfopY=;
-        b=NApmcLzDOeR/M/hXmEUsnDvbkH/YNneRKPDzIgIZSBdOe7r4DfFbbkA/yvovm/gkTl
-         Fx3cg5hzpqDnAUhe8Zzmxhhhny/quI7JqEgkXHSMkElwr4Z/2bBnGTAbAR8aBE7dtB2Q
-         t+kuBDT4pR3RH8SmzRyAPihe+svVSC8brvCwfJlxJpbx5RjR4KCJvpuRzSkOtB3PENZZ
-         5I+zEQwj28y3jAPK+nnfblvxo3Or81xoVblnOddgB7MHzLIgZGaarV7lrczJsBgiemxN
-         fmL7RMtKazLlBa2ctmpfL991jpw00ZVLlZqJe16RDTimAyj1sIS3u4xvK1cX7WkFCtOu
-         iQ1g==
+        bh=vzWz7IdJMj61AY2xXdjLGAh4Sy+JwYaABh1sOf/dM44=;
+        b=KMaPozWsVN5P9vWH6ET4TjKwL50yqmPH+Ji9xlZHQm3+VEx/X/u3KY8Nf1ayZHvDb2
+         VKJ3fZy2jzBVvn0i3XB5YzXkDJeLwbH6EMzCYMkTaO7Xn1yany02QbwH9i9hYZtgr+gQ
+         Sg41kNyYisI1cNDwqrNpTpXE4ryRlFPA9lfkDKhZoEZL15UKq4Z97weJfl67Lqg+zID0
+         j231PvUszmcsJksZAyyuVjVNSnPVS56PXhh/KCfPaIYpI9KZAS5HWvmrYgqkRip4facw
+         LRcoVEJaxP4TPN7YTtUA59J+sm+K+HV0Ci3dWdh+3PCO/Rr9S9wQtaL2qvWEUrzmN7Ps
+         Jjmw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712190092; x=1712794892;
+        d=1e100.net; s=20230601; t=1712190279; x=1712795079;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=qO60jqsH0RDRW8MepZgYWUNAloZS/uU+ZxX94+OfopY=;
-        b=F8xjwWmjXr9N9EMfRyPPEzcniSgaFMemd6ascceMWTVI+ZfKPOp0nunwDXr9EaZ5Rz
-         zTyK+hHF9DNkhr5sy9m0eXRjMqWTbz8JvmiOp8o2+68oFTBvXxSqJL42XSZbogxovM/5
-         NEOzceLPtpEtKT3ZpuTTOJZ01sOu5a6+3cTYeoggz8Bwbe6lhLXiHOlMrTrR2ha8zgoy
-         TrNqAOx7BmpkT4SSOSES+gqMQcNIk3nmPWOhkod4aIKPUjUqcpqloEW1uwY1qsPSjttY
-         Mcv5jh6yBGIZ0jwJH1L+e8BIBafaq5aoA7kB/Xq2ara+inSrvaRa3cTNt47IVqUz8xAR
-         rt5g==
-X-Forwarded-Encrypted: i=1; AJvYcCWwn1mAfyYA24zdip0gqfEA28TPjppI7YlzWyMXaJwJz7Fb57RAe2I+DDf17jJs7SkSVSgmE+onNhNOr4Vgsa26qFD1Smk3JtG/zAjE
-X-Gm-Message-State: AOJu0Yyt2b4u+fHaqlJt/Ogb/FG6LAuMUCX3xPeLEK5/3CBKEKUptOa3
-	7Mi4VEhlD0uPGWkp/IteAvJ4+ugeToJyxZistyi3PnWd3onKpoTznoaDpryUPS2k5i2KxYqPGVP
-	1e8ZQ3GRJ+7dvm4R2Tg2UzPulr+lZ27bc8ZVCgg==
-X-Google-Smtp-Source: AGHT+IHSYTr5M+525vcAEY5Aj2ib0qO6jpryNktw+PRCGQjz5qKA3WKMPc+zBf2F+1T8pwG+v1Tqmm74FhKD/Wr0Snw=
-X-Received: by 2002:a05:6902:1029:b0:dc7:46fd:4998 with SMTP id
- x9-20020a056902102900b00dc746fd4998mr1050153ybt.13.1712190092377; Wed, 03 Apr
- 2024 17:21:32 -0700 (PDT)
+        bh=vzWz7IdJMj61AY2xXdjLGAh4Sy+JwYaABh1sOf/dM44=;
+        b=NBzo3setLu8iD7eXzlZvA6cBd/7N0AKFgPXvluJy5UzhQfbUfRL+yh4QLMY0KcK7F6
+         x13LbKRblEtFFwHe0eOJ4OuCSklHqbEtdUADXo2Iv4rmlHeha1M9GTw3C0ytJVFXSP73
+         QBSJdQM+hL6yYaqfu3IPa+Tg0UOBxDuTolOb35JWvuuGW/sBA1UiJ0YTmgURbkRwlEhK
+         8MgwfJ48wwpAf/98m4CVIApCtP0spVbczAVmEW+njuI9NvdPZJJPc4p545implWImjKn
+         CMYeHr2Q6bE+cftvLDQQryS58LEVZIoi6mNEZE6rkED12knUwMPe8zphH3aZ8fMalDpD
+         Tb0A==
+X-Forwarded-Encrypted: i=1; AJvYcCX2pQ9jYroJ+SpD+nqCaXj+xRlN/K+X7qtmVFRoaD/nw0fNbtrCvRLxDXf0kFGjbqqGTrmu3eJdxr9dyKuOmA0Nj00CtjDZ9HAckRPZ
+X-Gm-Message-State: AOJu0Yx92KZtUkqW6v2sh+5JFNf9oXOJ7zabyF8rLE+4hIqKquMZF6aL
+	cOUOMVn1agWynbl7z7neou71vyzRQj8p7fD8PjPdhYYpC84zOLUeonFOL9RWM+P5De4oL/pHcXj
+	05Cfo73m2l3g4OHOo6OYMmRL75lIAvjr1MCEWqSmgE6wmUuun0tx7
+X-Google-Smtp-Source: AGHT+IGkG1/yck/uSuam66eaa3CVQfyxf0M3DbmMTdOOe8Ii4uS2BxtQhgGXsXQVO5+1oO4H0dKDrcENMRpbVWqdT0o=
+X-Received: by 2002:a50:aa95:0:b0:565:f7c7:f23c with SMTP id
+ q21-20020a50aa95000000b00565f7c7f23cmr709860edc.3.1712190278846; Wed, 03 Apr
+ 2024 17:24:38 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240402001739.2521623-1-horenchuang@bytedance.com>
- <20240402001739.2521623-3-horenchuang@bytedance.com> <20240403180425.00003be0@Huawei.com>
-In-Reply-To: <20240403180425.00003be0@Huawei.com>
-From: "Ho-Ren (Jack) Chuang" <horenchuang@bytedance.com>
-Date: Wed, 3 Apr 2024 17:21:21 -0700
-Message-ID: <CAKPbEqoJZe+HWHhCvBTVSHXffGY2ign3Htp4pfbFb4YVJS_Q2A@mail.gmail.com>
-Subject: Re: [PATCH v10 2/2] memory tier: create CPUless memory tiers after
- obtaining HMAT info
-To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc: "Huang, Ying" <ying.huang@intel.com>, Gregory Price <gourry.memverge@gmail.com>, 
-	aneesh.kumar@linux.ibm.com, mhocko@suse.com, tj@kernel.org, 
-	john@jagalactic.com, Eishan Mirakhur <emirakhur@micron.com>, 
-	Vinicius Tavares Petrucci <vtavarespetr@micron.com>, Ravis OpenSrc <Ravis.OpenSrc@micron.com>, 
-	Alistair Popple <apopple@nvidia.com>, Srinivasulu Thanneeru <sthanneeru@micron.com>, 
-	SeongJae Park <sj@kernel.org>, Dan Williams <dan.j.williams@intel.com>, 
-	Vishal Verma <vishal.l.verma@intel.com>, Dave Jiang <dave.jiang@intel.com>, 
-	Andrew Morton <akpm@linux-foundation.org>, nvdimm@lists.linux.dev, 
-	linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Linux Memory Management List <linux-mm@kvack.org>, "Ho-Ren (Jack) Chuang" <horenc@vt.edu>, 
-	"Ho-Ren (Jack) Chuang" <horenchuang@gmail.com>, qemu-devel@nongnu.org, 
-	Hao Xiang <hao.xiang@bytedance.com>
+References: <20240403183352.391308-1-phillip@squashfs.org.uk>
+In-Reply-To: <20240403183352.391308-1-phillip@squashfs.org.uk>
+From: Justin Stitt <justinstitt@google.com>
+Date: Wed, 3 Apr 2024 17:24:25 -0700
+Message-ID: <CAFhGd8rMS2L7chM+h=UoDAfBMUdPsZxfrqfKWP-MWQfJO0h94g@mail.gmail.com>
+Subject: Re: [PATCH] Squashfs: remove deprecated strncpy by not copying the string
+To: Phillip Lougher <phillip@squashfs.org.uk>
+Cc: akpm@linux-foundation.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi Jonathan,
-
-Thank you for your feedback. I will fix them (inlined) in the next V11.
-
-On Wed, Apr 3, 2024 at 10:04=E2=80=AFAM Jonathan Cameron
-<Jonathan.Cameron@huawei.com> wrote:
+On Wed, Apr 3, 2024 at 11:34=E2=80=AFAM Phillip Lougher <phillip@squashfs.o=
+rg.uk> wrote:
 >
-> A few minor comments inline.
+> Squashfs copied the passed string (name) into a temporary buffer
+> to ensure it was NUL-terminated.  This however is completely
+> unnecessary as the string is already NUL-terminated.  So remove
+> the deprecated strncpy() by completely removing the string copy.
 >
-> > diff --git a/include/linux/memory-tiers.h b/include/linux/memory-tiers.=
-h
-> > index a44c03c2ba3a..16769552a338 100644
-> > --- a/include/linux/memory-tiers.h
-> > +++ b/include/linux/memory-tiers.h
-> > @@ -140,12 +140,13 @@ static inline int mt_perf_to_adistance(struct acc=
-ess_coordinate *perf, int *adis
-> >       return -EIO;
-> >  }
-> >
-> > -struct memory_dev_type *mt_find_alloc_memory_type(int adist, struct li=
-st_head *memory_types)
-> > +static inline struct memory_dev_type *mt_find_alloc_memory_type(int ad=
-ist,
-> > +                                     struct list_head *memory_types)
-> >  {
-> >       return NULL;
-> >  }
-> >
-> > -void mt_put_memory_types(struct list_head *memory_types)
-> > +static inline void mt_put_memory_types(struct list_head *memory_types)
-> >  {
-> Why in this patch and not previous one?
-
-I've also noticed this issue. I will fix it in the next V11.
-
-> >
-> >  }
-> > diff --git a/mm/memory-tiers.c b/mm/memory-tiers.c
-> > index 974af10cfdd8..44fa10980d37 100644
-> > --- a/mm/memory-tiers.c
-> > +++ b/mm/memory-tiers.c
-> > @@ -36,6 +36,11 @@ struct node_memory_type_map {
-> >
-> >  static DEFINE_MUTEX(memory_tier_lock);
-> >  static LIST_HEAD(memory_tiers);
-> > +/*
-> > + * The list is used to store all memory types that are not created
-> > + * by a device driver.
-> > + */
-> > +static LIST_HEAD(default_memory_types);
-> >  static struct node_memory_type_map node_memory_types[MAX_NUMNODES];
-> >  struct memory_dev_type *default_dram_type;
-> >
-> > @@ -108,6 +113,8 @@ static struct demotion_nodes *node_demotion __read_=
-mostly;
-> >
-> >  static BLOCKING_NOTIFIER_HEAD(mt_adistance_algorithms);
-> >
-> > +/* The lock is used to protect `default_dram_perf*` info and nid. */
-> > +static DEFINE_MUTEX(default_dram_perf_lock);
-> >  static bool default_dram_perf_error;
-> >  static struct access_coordinate default_dram_perf;
-> >  static int default_dram_perf_ref_nid =3D NUMA_NO_NODE;
-> > @@ -505,7 +512,8 @@ static inline void __init_node_memory_type(int node=
-, struct memory_dev_type *mem
-> >  static struct memory_tier *set_node_memory_tier(int node)
-> >  {
-> >       struct memory_tier *memtier;
-> > -     struct memory_dev_type *memtype;
-> > +     struct memory_dev_type *mtype =3D default_dram_type;
+> The background behind this unnecessary string copy is that it
+> dates back to the days when Squashfs was an out of kernel patch.
+> The code deliberately did not assume the string was NUL-terminated
+> in case in future this changed (due to kernel changes).  This
+> would mean the out of tree patches would be broken but still
+> compile OK.
 >
-> Does the rename add anything major to the patch?
-> If not I'd leave it alone to reduce the churn and give
-> a more readable patch.  If it is worth doing perhaps
-> a precursor patch?
->
+> Signed-off-by: Phillip Lougher <phillip@squashfs.org.uk>
 
-Either name works. Keeping it the same name will make the code
-easier to follow. I agree! Thanks.
+Reviewed-by: Justin Stitt <justinstitt@google.com>
 
-> > +     int adist =3D MEMTIER_ADISTANCE_DRAM;
-> >       pg_data_t *pgdat =3D NODE_DATA(node);
-> >
-> >
-> > @@ -514,11 +522,20 @@ static struct memory_tier *set_node_memory_tier(i=
-nt node)
-> >       if (!node_state(node, N_MEMORY))
-> >               return ERR_PTR(-EINVAL);
-> >
-> > -     __init_node_memory_type(node, default_dram_type);
-> > +     mt_calc_adistance(node, &adist);
-> > +     if (node_memory_types[node].memtype =3D=3D NULL) {
-> > +             mtype =3D mt_find_alloc_memory_type(adist, &default_memor=
-y_types);
-> > +             if (IS_ERR(mtype)) {
-> > +                     mtype =3D default_dram_type;
-> > +                     pr_info("Failed to allocate a memory type. Fall b=
-ack.\n");
-> > +             }
-> > +     }
-> > +
-> > +     __init_node_memory_type(node, mtype);
-> >
-> > -     memtype =3D node_memory_types[node].memtype;
-> > -     node_set(node, memtype->nodes);
-> > -     memtier =3D find_create_memory_tier(memtype);
-> > +     mtype =3D node_memory_types[node].memtype;
-> > +     node_set(node, mtype->nodes);
-> > +     memtier =3D find_create_memory_tier(mtype);
-> >       if (!IS_ERR(memtier))
-> >               rcu_assign_pointer(pgdat->memtier, memtier);
-> >       return memtier;
-> > @@ -655,6 +672,33 @@ void mt_put_memory_types(struct list_head *memory_=
-types)
-> >  }
-> >  EXPORT_SYMBOL_GPL(mt_put_memory_types);
-> >
-> > +/*
-> > + * This is invoked via `late_initcall()` to initialize memory tiers fo=
-r
-> > + * CPU-less memory nodes after driver initialization, which is
-> > + * expected to provide `adistance` algorithms.
-> > + */
-> > +static int __init memory_tier_late_init(void)
-> > +{
-> > +     int nid;
-> > +
-> > +     mutex_lock(&memory_tier_lock);
-> > +     for_each_node_state(nid, N_MEMORY)
-> > +             if (node_memory_types[nid].memtype =3D=3D NULL)
-> > +                     /*
-> > +                      * Some device drivers may have initialized memor=
-y tiers
-> > +                      * between `memory_tier_init()` and `memory_tier_=
-late_init()`,
-> > +                      * potentially bringing online memory nodes and
-> > +                      * configuring memory tiers. Exclude them here.
-> > +                      */
+> ---
+>  fs/squashfs/namei.c | 14 ++++----------
+>  1 file changed, 4 insertions(+), 10 deletions(-)
 >
-> Does the comment refer to this path, or to ones where memtype is set?
+> diff --git a/fs/squashfs/namei.c b/fs/squashfs/namei.c
+> index 11e4539b9eae..65aae7e2a859 100644
+> --- a/fs/squashfs/namei.c
+> +++ b/fs/squashfs/namei.c
+> @@ -62,27 +62,21 @@
+>   */
+>  static int get_dir_index_using_name(struct super_block *sb,
+>                         u64 *next_block, int *next_offset, u64 index_star=
+t,
+> -                       int index_offset, int i_count, const char *name,
+> -                       int len)
+> +                       int index_offset, int i_count, const char *name)
+>  {
+>         struct squashfs_sb_info *msblk =3D sb->s_fs_info;
+>         int i, length =3D 0, err;
+>         unsigned int size;
+>         struct squashfs_dir_index *index;
+> -       char *str;
 >
-
-Yes, the comment is for explaining why the if condition is used.
-
-> > +                     set_node_memory_tier(nid);
+>         TRACE("Entered get_dir_index_using_name, i_count %d\n", i_count);
 >
-> Given the large comment I would add {} to help with readability.
-> You could flip the logic to reduce indent
->         for_each_node_state(nid, N_MEMORY) {
->                 if (node_memory_types[nid].memtype)
->                         continue;
+> -       index =3D kmalloc(sizeof(*index) + SQUASHFS_NAME_LEN * 2 + 2, GFP=
+_KERNEL);
+> +       index =3D kmalloc(sizeof(*index) + SQUASHFS_NAME_LEN + 1, GFP_KER=
+NEL);
+>         if (index =3D=3D NULL) {
+>                 ERROR("Failed to allocate squashfs_dir_index\n");
+>                 goto out;
+>         }
+>
+> -       str =3D &index->name[SQUASHFS_NAME_LEN + 1];
+> -       strncpy(str, name, len);
+> -       str[len] =3D '\0';
+> -
+>         for (i =3D 0; i < i_count; i++) {
+>                 err =3D squashfs_read_metadata(sb, index, &index_start,
+>                                         &index_offset, sizeof(*index));
+> @@ -101,7 +95,7 @@ static int get_dir_index_using_name(struct super_block=
+ *sb,
+>
+>                 index->name[size] =3D '\0';
+>
+> -               if (strcmp(index->name, str) > 0)
+> +               if (strcmp(index->name, name) > 0)
+>                         break;
+>
+>                 length =3D le32_to_cpu(index->index);
+> @@ -153,7 +147,7 @@ static struct dentry *squashfs_lookup(struct inode *d=
+ir, struct dentry *dentry,
+>         length =3D get_dir_index_using_name(dir->i_sb, &block, &offset,
+>                                 squashfs_i(dir)->dir_idx_start,
+>                                 squashfs_i(dir)->dir_idx_offset,
+> -                               squashfs_i(dir)->dir_idx_cnt, name, len);
+> +                               squashfs_i(dir)->dir_idx_cnt, name);
+>
+>         while (length < i_size_read(dir)) {
 >                 /*
->                  * Some device drivers may have initialized memory tiers
->                  * between `memory_tier_init()` and `memory_tier_late_ini=
-t()`,
->                  * potentially bringing online memory nodes and
->                  * configuring memory tiers. Exclude them here.
->                  */
->                 set_node_memory_tier(nid);
+> --
+> 2.39.2
 >
->
-
-I will change it accordingly.
-
-> > +
-> > +     establish_demotion_targets();
-> > +     mutex_unlock(&memory_tier_lock);
-> > +
-> > +     return 0;
-> > +}
-> > +late_initcall(memory_tier_late_init);
-> > +
-> >  static void dump_hmem_attrs(struct access_coordinate *coord, const cha=
-r *prefix)
-> >  {
-> >       pr_info(
-> > @@ -668,7 +712,7 @@ int mt_set_default_dram_perf(int nid, struct access=
-_coordinate *perf,
-> >  {
-> >       int rc =3D 0;
-> >
-> > -     mutex_lock(&memory_tier_lock);
-> > +     mutex_lock(&default_dram_perf_lock);
->
-> As below, this is a classic case where guard() will help readability.
->
-
-I will change it accordingly.
-
-> >       if (default_dram_perf_error) {
-> >               rc =3D -EIO;
-> >               goto out;
-> > @@ -716,23 +760,30 @@ int mt_set_default_dram_perf(int nid, struct acce=
-ss_coordinate *perf,
-> >       }
-> >
-> >  out:
-> > -     mutex_unlock(&memory_tier_lock);
-> > +     mutex_unlock(&default_dram_perf_lock);
-> >       return rc;
-> >  }
-> >
-> >  int mt_perf_to_adistance(struct access_coordinate *perf, int *adist)
-> >  {
-> > -     if (default_dram_perf_error)
-> > -             return -EIO;
-> > +     int rc =3D 0;
->
-> Looks like rc is set in all paths that reach where it issued.
->
-
-Using guard(mutex), I will no longer need `int rc`.
-Replace `rc =3D` with `return XXX`.
-
-> >
-> > -     if (default_dram_perf_ref_nid =3D=3D NUMA_NO_NODE)
-> > -             return -ENOENT;
-> > +     mutex_lock(&default_dram_perf_lock);
->
-> This would benefit quite a lot from
-> guard(mutex)(&default_dram_perf_lock);
-> and direct returns throughout.
->
-
-Got it. I will change it accordingly.
-
->
-> > +     if (default_dram_perf_error) {
-> > +             rc =3D -EIO;
-> > +             goto out;
-> > +     }
-> >
-> >       if (perf->read_latency + perf->write_latency =3D=3D 0 ||
-> > -         perf->read_bandwidth + perf->write_bandwidth =3D=3D 0)
-> > -             return -EINVAL;
-> > +         perf->read_bandwidth + perf->write_bandwidth =3D=3D 0) {
-> > +             rc =3D -EINVAL;
-> > +             goto out;
-> > +     }
-> >
-> > -     mutex_lock(&memory_tier_lock);
-> > +     if (default_dram_perf_ref_nid =3D=3D NUMA_NO_NODE) {
-> > +             rc =3D -ENOENT;
-> > +             goto out;
-> > +     }
-> >       /*
-> >        * The abstract distance of a memory node is in direct proportion=
- to
-> >        * its memory latency (read + write) and inversely proportional t=
-o its
-> > @@ -745,9 +796,10 @@ int mt_perf_to_adistance(struct access_coordinate =
-*perf, int *adist)
-> >               (default_dram_perf.read_latency + default_dram_perf.write=
-_latency) *
-> >               (default_dram_perf.read_bandwidth + default_dram_perf.wri=
-te_bandwidth) /
-> >               (perf->read_bandwidth + perf->write_bandwidth);
-> > -     mutex_unlock(&memory_tier_lock);
-> >
-> > -     return 0;
-> > +out:
-> > +     mutex_unlock(&default_dram_perf_lock);
-> > +     return rc;
-> >  }
-> >  EXPORT_SYMBOL_GPL(mt_perf_to_adistance);
-> >
-> > @@ -858,7 +910,8 @@ static int __init memory_tier_init(void)
-> >        * For now we can have 4 faster memory tiers with smaller adistan=
-ce
-> >        * than default DRAM tier.
-> >        */
-> > -     default_dram_type =3D alloc_memory_type(MEMTIER_ADISTANCE_DRAM);
-> > +     default_dram_type =3D mt_find_alloc_memory_type(MEMTIER_ADISTANCE=
-_DRAM,
-> > +                                                                     &=
-default_memory_types);
->
-> Unusual indenting.  Align with just after (
->
-
-Aligning with "(" will exceed 100 columns. Would that be acceptable?
-
-> >       if (IS_ERR(default_dram_type))
-> >               panic("%s() failed to allocate default DRAM tier\n", __fu=
-nc__);
-> >
-> > @@ -868,6 +921,14 @@ static int __init memory_tier_init(void)
-> >        * types assigned.
-> >        */
-> >       for_each_node_state(node, N_MEMORY) {
-> > +             if (!node_state(node, N_CPU))
-> > +                     /*
-> > +                      * Defer memory tier initialization on CPUless nu=
-ma nodes.
-> > +                      * These will be initialized after firmware and d=
-evices are
->
-> I think this wraps at just over 80 chars.  Seems silly to wrap so tightly=
- and not
-> quite fit under 80. (this is about 83 chars.
->
-
-I can fix this.
-I have a question. From my patch, this is <80 chars. However,
-in an email, this is >80 chars. Does that mean we need to
-count the number of chars in an email, not in a patch? Or if I
-missed something? like vim configuration or?
-
-> > +                      * initialized.
-> > +                      */
-> > +                     continue;
-> > +
-> >               memtier =3D set_node_memory_tier(node);
-> >               if (IS_ERR(memtier))
-> >                       /*
->
-
-
---=20
-Best regards,
-Ho-Ren (Jack) Chuang
-=E8=8E=8A=E8=B3=80=E4=BB=BB
