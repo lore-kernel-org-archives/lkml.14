@@ -1,143 +1,250 @@
-Received: from mail-pf1-f169.google.com (mail-pf1-f169.google.com [209.85.210.169])
+Received: from phobos.denx.de (phobos.denx.de [85.214.62.61])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71DEC7FBD1;
-	Thu,  4 Apr 2024 10:59:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBBA57F7DD;
+	Thu,  4 Apr 2024 10:59:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=85.214.62.61
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712228359; cv=none; b=ieg6hkNxZWpe9cFe1Vod9W1pSupIcbNxORP/TPFpBSwsQxk1CiZdnMAYTX1NsO/EseQp1mFQ1dZ2rRaGTDnz6khfn9oRj4VwQqJS+w27o+xU2AT82/5Wu1XYudjSxUI5NaT49zRjLCXv+2Kuk9RToCSSDoFK95QHCuxIFhGIrxU=
+	t=1712228386; cv=none; b=nY3UvfBL5ve9QwKpvgj/Jnt2GcApnLRr+R9uVm7AtTL2PngjORVx7aZGKlTnLLXdWWXTLHcMHmVxmdbioVaJMPYYVLrmvzVhPYONRm8Ne9H1QDrM21PP7v8XTkH1G4nDmEaYMFcy7LtiNqkyAf4cNYh7yQXxix9QclijRHMIAZM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712228359; c=relaxed/simple;
-	bh=C/95RBc7hJ318ahH11gn81a5f+QxJ7u/QFH9rXe+Q5g=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pgYgzk9A7w6TfWX6epsl+mSxNaJZPlfGbGe1SEUBnYUek4WWCmFT/IZisvT0zXDbVSoTGa+MCJci+fzX+8G+t2kb3halEoloSlAkw612vl368OppgDgV/ijleUBMOfE2vg+2u38DeXkyvFDP+xPHqL5Vo2f92P4a+joJIMi2Cco=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=T8EU9aDi; arc=none smtp.client-ip=209.85.210.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1712228386; c=relaxed/simple;
+	bh=VvLUiOhFmvi3p+J8M6u3niysa4qSqIvhg7uW5L/YSU4=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Sp36eB/GrYrqSZSGO3LVGWh/o2+e80FiQ11DdZSvlfGyWu0drnxkJIEoBZs9iC9spvdZfnD3tLKsGVocSyXLWo5uUzxx6BCfMZtVJgvN9QdUcs2OApYZCMXHq6EocqAV0nRhMWixPotk9mHbLYut2azn3mfJqzPZc5nNgVTqIik=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de; spf=pass smtp.mailfrom=denx.de; dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b=SEMWZDLD; arc=none smtp.client-ip=85.214.62.61
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=denx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T8EU9aDi"
-Received: by mail-pf1-f169.google.com with SMTP id d2e1a72fcca58-6ea8a0d1a05so1328744b3a.1;
-        Thu, 04 Apr 2024 03:59:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1712228358; x=1712833158; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=1Ghu5jAvxJOZKEhQM6ZvukRe4OySknJN8UXfj0OErgk=;
-        b=T8EU9aDiON4jC/ip+dX+lE4bZek/LUn/8qu7UqjreZ8t7MM5ADietLqA5YERw4SXdT
-         0LozjKvvz9U5chY4LDs10IdTz20JO7BhdTeLknYb0W/6C62PZw6zlJGGSGWJZ6TnodYt
-         k86DpLBjglUkpl0JpLwsHgNca2Ml/gmq5PBlhyzrW9oa2TFh351SSu+UlJ2xESqKHTJ1
-         EB9uP/8bgZDGeu/yULQrJIKdGgVaf1atx2GL5Oj74MI5c+LZ70yvs6onFkKQOElViEgb
-         LFfZPdOH1lTzu3NG41Ig+Yme0MuGNd4K9P9Iam8u8FD+dYjnwHb09TQNVBZMqVKZWPOb
-         YARw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712228358; x=1712833158;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=1Ghu5jAvxJOZKEhQM6ZvukRe4OySknJN8UXfj0OErgk=;
-        b=ebvZ/DCllIX7+2NagED0C0FIbx/x5f9p15B/XTVirwPVAx4NeJOKHNtAzNxuOcYX4G
-         dXVa7+j/DO7BaapZ0/STe/PV3YBN0BbxIak4GtQulrx2lp+eL45gSodPOY3OTUhR2k5O
-         lORjEkqEYe03ulF3CQdRWm7zv0Q3dzRj+6Isoog2TxNQn8GN2ML7D0U3e+4jrUWFIki/
-         p051t/T80VLPkF2YPs9Z8wOIHscKbDiCElArm7T2U3iIjhFr7oktbNDFGUyUD+7goJls
-         e4FzTznvKEx3dDHfLFIo/y9v2iNqHq1jiWQvnjrP9/alx+U4rnMJJgrjrv5RyUhWI9lk
-         /kdw==
-X-Forwarded-Encrypted: i=1; AJvYcCWwb6N5reCjF60iQkLDVv/8AcVFv/MNLKQCTxMC0+jPtqbHhd0KqWQrVsJBL9LExKNQQoWSAZ2JhMzYnKSsFpSwEjLIXZaRTDNehYWbeVUtFMRrCzD4VphZK3vAzS3Jc0K0fA==
-X-Gm-Message-State: AOJu0YyaJd/1dn2Gp4e+xfiFnhSmybGpOMVEhlv4unU4woz5mxqkWwxq
-	927r2cmdxzx71ArACRDt2Ud+mD5J+o+yquTh3Lui7Pz/N8rXwaxs
-X-Google-Smtp-Source: AGHT+IHhPjZqxSM8T8GrwEDTzPV8yooF7Ihnxgc4OJrqo4y5CVKVUXIyq3C1ohgDCItd4N4zL57u5Q==
-X-Received: by 2002:a05:6a20:7f83:b0:1a3:ae53:fa6b with SMTP id d3-20020a056a207f8300b001a3ae53fa6bmr3288443pzj.6.1712228357504;
-        Thu, 04 Apr 2024 03:59:17 -0700 (PDT)
-Received: from rigel (194-223-186-215.tpgi.com.au. [194.223.186.215])
-        by smtp.gmail.com with ESMTPSA id r5-20020a056a00216500b006e4432027d1sm13767786pff.142.2024.04.04.03.59.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 04 Apr 2024 03:59:17 -0700 (PDT)
-Date: Thu, 4 Apr 2024 18:59:12 +0800
-From: Kent Gibson <warthog618@gmail.com>
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-	linus.walleij@linaro.org, stable@vger.kernel.org
-Subject: Re: [PATCH 1/2] gpio: cdev: fix missed label sanitizing in
- debounce_setup()
-Message-ID: <20240404105912.GA94230@rigel>
-References: <20240403131518.61392-1-warthog618@gmail.com>
- <20240403131518.61392-2-warthog618@gmail.com>
- <CAMRc=Mf0DPN1-npNPQA=3ivQd-PMhf_ZAa6eSFjmQ26Y8_Gv=g@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b="SEMWZDLD"
+Received: from wsk (85-222-111-42.dynamic.chello.pl [85.222.111.42])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+	(No client certificate requested)
+	(Authenticated sender: lukma@denx.de)
+	by phobos.denx.de (Postfix) with ESMTPSA id D2D1883339;
+	Thu,  4 Apr 2024 12:52:05 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=denx.de;
+	s=phobos-20191101; t=1712227927;
+	bh=H4P27d4njnyQUbPwQ1/Lu1Tg8ftGAXhaSall4PmQVJk=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=SEMWZDLDYX2HChHz3gPBOyguVnX6xgNXbKTCBm6MfVgBTvHpgYHsvMWE+gIN4iwoF
+	 glyE4lc4SHwC7KZ8GXHC2i7yywAYrAtWBw8MYRKk7ebuXbKEdU6W46kGD7v2FlmEY/
+	 bXjVHP29tAsZsYZiBQiGShtEZgZ+//xJ/uYHzgdb6dhK7aI//gwHnkrd+n7m+oTgMQ
+	 rqioDZ6n3/EW3k5bvLXmha80T+PFwx58ukZiUqvHGb0zGZLLlv5diqdrVWGSPLETmr
+	 GgaHelY1xbnWvMijJAVbfC/Nlf507oQ+oaZ+umXTLJuFhZoP6rtEHnz5rEDkb327r3
+	 83HLqAegrH1CA==
+Date: Thu, 4 Apr 2024 12:51:59 +0200
+From: Lukasz Majewski <lukma@denx.de>
+To: Paolo Abeni <pabeni@redhat.com>
+Cc: netdev@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>, Eric Dumazet
+ <edumazet@google.com>, Vladimir Oltean <olteanv@gmail.com>, "David S.
+ Miller" <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>, Oleksij
+ Rempel <o.rempel@pengutronix.de>, Tristram.Ha@microchip.com, Sebastian
+ Andrzej Siewior <bigeasy@linutronix.de>, Ravi Gunasekaran
+ <r-gunasekaran@ti.com>, Simon Horman <horms@kernel.org>, Nikita
+ Zhandarovich <n.zhandarovich@fintech.ru>, Murali Karicheri
+ <m-karicheri2@ti.com>, Jiri Pirko <jiri@resnulli.us>, Dan Carpenter
+ <dan.carpenter@linaro.org>, Ziyang Xuan <william.xuanziyang@huawei.com>,
+ Shigeru Yoshida <syoshida@redhat.com>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4] net: hsr: Provide RedBox support (HSR-SAN)
+Message-ID: <20240404125159.721fbc19@wsk>
+In-Reply-To: <168c9226d2cac6a5a53ce33ef1f76b99a02bedcb.camel@redhat.com>
+References: <20240402085850.229058-1-lukma@denx.de>
+	<168c9226d2cac6a5a53ce33ef1f76b99a02bedcb.camel@redhat.com>
+Organization: denx.de
+X-Mailer: Claws Mail 3.19.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMRc=Mf0DPN1-npNPQA=3ivQd-PMhf_ZAa6eSFjmQ26Y8_Gv=g@mail.gmail.com>
+Content-Type: multipart/signed; boundary="Sig_/2tuYs_oCKZ5lyc/yz2.Ps0l";
+ protocol="application/pgp-signature"; micalg=pgp-sha512
+X-Virus-Scanned: clamav-milter 0.103.8 at phobos.denx.de
+X-Virus-Status: Clean
 
-On Thu, Apr 04, 2024 at 10:20:29AM +0200, Bartosz Golaszewski wrote:
-> On Wed, Apr 3, 2024 at 3:15 PM Kent Gibson <warthog618@gmail.com> wrote:
-> >
-> > When adding sanitization of the label, the path through
-> > edge_detector_setup() that leads to debounce_setup() was overlooked.
-> > A request taking this path does not allocate a new label and the
-> > request label is freed twice when the request is released, resulting
-> > in memory corruption.
-> >
-> > Add label sanitization to debounce_setup().
-> >
-> > Cc: stable@vger.kernel.org
-> > Fixes: b34490879baa ("gpio: cdev: sanitize the label before requesting the interrupt")
-> > Signed-off-by: Kent Gibson <warthog618@gmail.com>
-> > ---
-> >  drivers/gpio/gpiolib-cdev.c | 31 +++++++++++++++++++------------
-> >  1 file changed, 19 insertions(+), 12 deletions(-)
-> >
-> > diff --git a/drivers/gpio/gpiolib-cdev.c b/drivers/gpio/gpiolib-cdev.c
-> > index fa9635610251..f4c2da2041e5 100644
-> > --- a/drivers/gpio/gpiolib-cdev.c
-> > +++ b/drivers/gpio/gpiolib-cdev.c
-> > @@ -728,6 +728,16 @@ static u32 line_event_id(int level)
-> >                        GPIO_V2_LINE_EVENT_FALLING_EDGE;
+--Sig_/2tuYs_oCKZ5lyc/yz2.Ps0l
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
+
+Hi Paolo,
+
+> On Tue, 2024-04-02 at 10:58 +0200, Lukasz Majewski wrote:
+> > Introduce RedBox support (HSR-SAN to be more precise) for HSR
+> > networks. Following traffic reduction optimizations have been
+> > implemented:
+> > - Do not send HSR supervisory frames to Port C (interlink)
+> > - Do not forward to HSR ring frames addressed to Port C
+> > - Do not forward to Port C frames from HSR ring
+> > - Do not send duplicate HSR frame to HSR ring when destination is
+> > Port C
+> >=20
+> > The corresponding patch to modify iptable2 sources has already been
+> > sent:
+> > https://lore.kernel.org/netdev/20240308145729.490863-1-lukma@denx.de/T/
+> >=20
+> > Testing procedure:
+> > ------------------
+> > The EVB-KSZ9477 has been used for testing on net-next branch
+> > (SHA1: 5fc68320c1fb3c7d456ddcae0b4757326a043e6f).
+> >=20
+> > Ports 4/5 were used for SW managed HSR (hsr1) as first hsr0 for
+> > ports 1/2 (with HW offloading for ksz9477) was created. Port 3 has
+> > been used as interlink port (single USB-ETH dongle).
+> >=20
+> > Configuration - RedBox (EVB-KSZ9477):
+> > if link set lan1 down;ip link set lan2 down
+> > ip link add name hsr0 type hsr slave1 lan1 slave2 lan2 supervision
+> > 45 version 1 ip link add name hsr1 type hsr slave1 lan4 slave2 lan5
+> > interlink lan3 supervision 45 version 1 ip link set lan4 up;ip link
+> > set lan5 up ip link set lan3 up
+> > ip addr add 192.168.0.11/24 dev hsr1
+> > ip link set hsr1 up
+> >=20
+> > Configuration - DAN-H (EVB-KSZ9477):
+> >=20
+> > ip link set lan1 down;ip link set lan2 down
+> > ip link add name hsr0 type hsr slave1 lan1 slave2 lan2 supervision
+> > 45 version 1 ip link add name hsr1 type hsr slave1 lan4 slave2 lan5
+> > supervision 45 version 1 ip link set lan4 up;ip link set lan5 up
+> > ip addr add 192.168.0.12/24 dev hsr1
+> > ip link set hsr1 up
+> >=20
+> > This approach uses only SW based HSR devices (hsr1).
+> >=20
+> > --------------          -----------------       ------------
+> > DAN-H  Port5 | <------> | Port5         |       |
+> >        Port4 | <------> | Port4   Port3 | <---> | PC
+> >              |          | (RedBox)      |       | (USB-ETH)
+> > EVB-KSZ9477  |          | EVB-KSZ9477   |       |
+> > --------------          -----------------       ------------
+> >=20
+> > Signed-off-by: Lukasz Majewski <lukma@denx.de> =20
+>=20
+> This is 'net-next' patch, you must insert the target tree in the subj
+> prefix.
+
+Ok. I will add it in v5.
+
+>=20
+> Does not apply cleanly to 'net-next', please rebase.
+>=20
+
+This patch depends on:
+https://git.kernel.org/pub/scm/linux/kernel/git/netdev/net.git/commit/?id=
+=3D10e52ad5ced2
+
+which already has been pulled to net-vanila/main
+(git://git.kernel.org/pub/scm/linux/kernel/git/netdev/net)
+
+Apparently, I need to wait until net-next would is rebased on top of the
+above tree.
+
+> Introducing a new functionality, this deserve some paired self-tests.=20
+
+I see. I can try to add something similar to
+./tools/testing/selftests/net/hsr/hsr_ping.sh
+
+to show the RedBox functionality.
+
+> Does this have specific H/W requirement or can it run e.g. on top of
+> veths?
+
+I'm testing this code on two EVB-KSZ9477 boards. It _shall_ work also on
+veths.
+
+> If the latter applies, please bundle some basic test with the
+> next revision (separate patch, same series).
+>=20
+
+Ok.
+
+> > @@ -561,6 +582,37 @@ void hsr_prune_nodes(struct timer_list *t)
+> >  		  jiffies + msecs_to_jiffies(PRUNE_PERIOD));
 > >  }
-> >
-> > +static inline char *make_irq_label(const char *orig)
+> > =20
+> > +void hsr_prune_proxy_nodes(struct timer_list *t)
 > > +{
-> > +       return kstrdup_and_replace(orig, '/', ':', GFP_KERNEL);
-> > +}
+> > +	struct hsr_priv *hsr =3D from_timer(hsr, t,
+> > prune_proxy_timer);
+> > +	unsigned long timestamp;
+> > +	struct hsr_node *node;
+> > +	struct hsr_node *tmp;
 > > +
-> > +static inline void free_irq_label(const char *label)
-> > +{
-> > +       kfree(label);
-> > +}
+> > +	spin_lock_bh(&hsr->list_lock);
+> > +	list_for_each_entry_safe(node, tmp, &hsr->proxy_node_db,
+> > mac_list) {
+> > +		timestamp =3D node->time_in[HSR_PT_INTERLINK];
 > > +
-> >  #ifdef CONFIG_HTE
-> >
-> >  static enum hte_return process_hw_ts_thread(void *p)
-> > @@ -1015,6 +1025,7 @@ static int debounce_setup(struct line *line, unsigned int debounce_period_us)
-> >  {
-> >         unsigned long irqflags;
-> >         int ret, level, irq;
-> > +       char *label;
-> >
-> >         /* try hardware */
-> >         ret = gpiod_set_debounce(line->desc, debounce_period_us);
-> > @@ -1037,11 +1048,17 @@ static int debounce_setup(struct line *line, unsigned int debounce_period_us)
-> >                         if (irq < 0)
-> >                                 return -ENXIO;
-> >
-> > +                       label = make_irq_label(line->req->label);
->
-> Now that I look at the actual patch, I don't really like it. We
-> introduce a bug just to fix it a commit later. Such things have been
-> frowned upon in the past.
->
-> Let me shuffle the code a bit, I'll try to make it a bit more correct.
->
+> > +		/* Prune old entries */
+> > +		if (time_is_before_jiffies(timestamp +
+> > +
+> > msecs_to_jiffies(HSR_PROXY_NODE_FORGET_TIME))) {
+> > +			hsr_nl_nodedown(hsr, node->macaddress_A);
+> > +			if (!node->removed) {
+> > +				list_del_rcu(&node->mac_list);
+> > +				node->removed =3D true;
+> > +				/* Note that we need to free this
+> > entry later: */
+> > +				kfree_rcu(node, rcu_head);
+> > +			}
+> > +		}
+> > +	}
+> > +
+> > +	spin_unlock_bh(&hsr->list_lock);
+> > +
+> > +	/* Restart timer */
+> > +	mod_timer(&hsr->prune_proxy_timer,
+> > +		  jiffies + msecs_to_jiffies(PRUNE_PROXY_PERIOD));
+> > =20
+>=20
+> AFAICS this timer not explicitly cancelled at hsr port tear-down time.
+>=20
+> What prevent it from expiring after a port has been deleted and
+> causing UaF?
+>=20
 
-The debounce_setup() oversight bug is the more severe, so it makes more
-sense to me to fix it first.  But then I my preferred solution would be
-to pull the original patch and submit a corrected patch that merges all
-three, so no bugs, but I assume that isn't an option.
+The purpose of this timer is to periodically call
+hsr_prune_proxy_node() function (presented above your reply), which
+internally uses list_for_each_entry_safe() to iterate over available
+RedBox nodes.
 
-Cheers,
-Kent.
+If there are none available, the function just re-sets the timer to
+the next PRUNE_PROXY_PERIOD.
+
+In the same way works the timer for hsr_prune_node() function, which
+removes stalled HSR nodes.
+
+> Cheers,
+>=20
+> Paolo
+>=20
+
+
+Best regards,
+
+Lukasz Majewski
+
+--
+
+DENX Software Engineering GmbH,      Managing Director: Erika Unter
+HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
+Phone: (+49)-8142-66989-59 Fax: (+49)-8142-66989-80 Email: lukma@denx.de
+
+--Sig_/2tuYs_oCKZ5lyc/yz2.Ps0l
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCgAdFiEEgAyFJ+N6uu6+XupJAR8vZIA0zr0FAmYOhk8ACgkQAR8vZIA0
+zr3xTAf/bb5rdgPpVrlVqowjRP6eM+4Haptg/NBK+ZLilY9NsJTsjNLMCorbZlKe
+3ICvyAa4SoQyA8DZ2Q1826BnytlAGr4UgplAMyTWRMJpoJpDgl0WniiSJFRvPUAK
+oAXVadGHx7JOcSooiiv5FQDFVwyxDkw6WNWK+AZnn+IpGym2O/eL5BnDMjQwJjjS
+YUsPxXi5tKXGXQUslHj0Sor9zfJXvL4/oXcFiiVXLINf9nZbuVZ6KoznCPUOKbNk
+4b+vwevnV/8UFqn+ztKVfVA+BhfsbyTfA1P8dUgnJ5cqECLIiCfpkr5fSz0L8voF
+asODAcmz3JuZgSJrtBKhkAIfDyWKuQ==
+=fm2p
+-----END PGP SIGNATURE-----
+
+--Sig_/2tuYs_oCKZ5lyc/yz2.Ps0l--
