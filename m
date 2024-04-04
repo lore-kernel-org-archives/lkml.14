@@ -1,98 +1,369 @@
-Received: from mx.manguebit.com (mx.manguebit.com [167.235.159.17])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A33F912E1E8;
-	Thu,  4 Apr 2024 16:07:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=167.235.159.17
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712246856; cv=pass; b=RpvX8g4Uy/jTAtyMf2DJjXpDgC/jj4uFEWDLnsJcD89FvAy965Pj+FEinjUQLcNrpoh31ghaZ94O2d/6OPFOHZGzMO9MjjntZ+IooPP1deG+bP6sHsUh/4D/HTFqIxF/EOkHYrk4u/Ib/5ro4L2N/TTt0zbJ/+MICtRKfTZmVVQ=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712246856; c=relaxed/simple;
-	bh=LUFWgRFtjQZ49bnS25rMZ1qtgXnfmx0q15Zi6FSjpy8=;
-	h=Message-ID:From:To:Cc:Subject:In-Reply-To:References:Date:
-	 MIME-Version:Content-Type; b=pnSCn6RM2DzaGK6Rqu/azCdHXHPOlXQgvuvjvLxfGG5CDnJE4WW1n748wyLlIxqn6fYJBBAzU/pndOLPB3xkqtV4e+Uc0Rx1Vp6dHuGlM89Stj7FAp/rGsRi5YIAZ0DfXqkrCbRsRrk0DYzH+KLrzwVuEvihvL4V5U2XCwXqPB8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=manguebit.com; spf=pass smtp.mailfrom=manguebit.com; dkim=pass (2048-bit key) header.d=manguebit.com header.i=@manguebit.com header.b=KlqV4cg0; arc=pass smtp.client-ip=167.235.159.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=manguebit.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=manguebit.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C56CC1BC46
+	for <linux-kernel@vger.kernel.org>; Thu,  4 Apr 2024 16:10:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1712247031; cv=none; b=MQ0kwYwr9odhXalLyo6BDLO8gbh3b7ZPgimE0GMv1Eb/fFDbfg/OFFjuOD5ljjVXqapZ4gsx1AwmbdvHnDSzZ/HhBIUr/M81CkLgof/IAH+Ynl0t6VMXeBeK/BGjqXndYF3DfiMF75rfcBaeiLIkh9cYlMCWa6TqJCbHfxmqzY8=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1712247031; c=relaxed/simple;
+	bh=jvZ+3f/HpHWZMwQrvAK/BeDpbuqUaxeHOpIoaUReKLc=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=oOZiCZUb4XEtW7Ou04BXWe9fOH3wh54EH9AgcklPJjEnyAxljO4jZKy2sRCLedcpzI3OEzADDzxE+FJFPhtpbR9Dd/jO2XJBM5VBZalVk+rgF+hYPgo77Z46ewiO6/7Uoc8ShFi4pjTHqEXEIVlTJcW98D1DRcOeBoYg4ufDi5g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=a1utw1WU; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=manguebit.com header.i=@manguebit.com header.b="KlqV4cg0"
-Message-ID: <14e66691a65e3d05d3d8d50e74dfb366@manguebit.com>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=manguebit.com;
-	s=dkim; t=1712246847;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=/VfdAcUgMKKdIImznXQCsjzxihOdEcjXVNKwK2JA30Q=;
-	b=KlqV4cg0zu0RMjPJ2+96XschbtCo+vwr0mHQpil0K68WGDUrHUMZ12SFTM9S1BaqjjBIx/
-	EDwshMfEnj5+HudcR88Pd+PoK/32C0K5LZYosj9cm9gcnrosLu0R9G/tfchMknldVhDt6C
-	wuzB1TfYgNcugCcGsMWhys6ABmzuh2SSMKXAP6/0v/ZjS9tcvwofC5gmlaHAYEl1pI46nf
-	oQt/iOC7WOWRjJUqZDhSXkpNQ5jxexKcvgpwPS0WVgUrWI/A0nSPpKEMOjq4YQELdGJSIS
-	yWikbG8PAoFVM7LNXaOMp23uO7cRJomjSxHn2R1dfCpOjwD7pJSkWZGaNWsFyA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=manguebit.com;
-	s=dkim; t=1712246847; h=from:from:sender:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=/VfdAcUgMKKdIImznXQCsjzxihOdEcjXVNKwK2JA30Q=;
-	b=qzPWneXaxl526HZlYSdO9k7llZr6l9jznC3EaHDXdORExty5mLPf16WNWkEbAU3d8oczwA
-	GFdn6D/faaCebfoZuASOIBhvfLwOcOfGFx2QoEanuQjqkwjoWPTUVXIw2MXi7ZiTsW8ER4
-	FrGQxnWyzA+GA1xPOe6PRGpbSJNshzYrrinxQnNEJJ9rzWRLcYAKJjyQb87nqZPDWDq+JW
-	lwlJh/PF6Nie3bu90aLsh+lmC90Jp9QU4Kome9fs+MW+TlrZr+92xseh9NpB0VcpkZAoHN
-	Y3VmyIzi6zdbAdPKIVbbuOI/O+z/dMpJmriIn9aTCIsvzL2otGjovY1SByWZZQ==
-ARC-Authentication-Results: i=1;
-	ORIGINATING;
-	auth=pass smtp.mailfrom=pc@manguebit.com
-ARC-Seal: i=1; s=dkim; d=manguebit.com; t=1712246847; a=rsa-sha256;
-	cv=none;
-	b=Mv6xhiXFLzmVYcG110KOH5zMR9BCpHlX2HcZQJrkSUrOb0RFTLgNEdwWkSM6GO9KyvSNN+
-	NXZRug3ua6MyoAAqSiG0+mO4sqqp29ZdTpqnLuqQNxktp/X5wRyUM+dgdxbF7KKebbmM02
-	o1Uor6zQz7E5UrLWo5n8QJmKdxrb2SsqoKkHiUj9COBabZc+f4s+j6XMoEJe3+jWBEv1fF
-	ElmeqtFCNr1tQfdxk1vrecvJbGL0cmI8wzZB2Lvjpb3NY/3tOcpAHPXMpErPSVzpllMgYb
-	bCOLcgs5tc0Iehr+Ppzngf3z1zCZ9hTDEtsn95S4BzSv7+iE9SA4zF2dYFq+Ag==
-From: Paulo Alcantara <pc@manguebit.com>
-To: David Howells <dhowells@redhat.com>, Steve French <sfrench@samba.org>
-Cc: dhowells@redhat.com, Shyam Prasad N <sprasad@microsoft.com>,
- linux-cifs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] cifs: Fix reacquisition of volume cookie on still-live
- connection
-In-Reply-To: <3756406.1712244064@warthog.procyon.org.uk>
-References: <3756406.1712244064@warthog.procyon.org.uk>
-Date: Thu, 04 Apr 2024 13:07:24 -0300
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="a1utw1WU"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1547CC433F1;
+	Thu,  4 Apr 2024 16:10:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1712247031;
+	bh=jvZ+3f/HpHWZMwQrvAK/BeDpbuqUaxeHOpIoaUReKLc=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=a1utw1WUHRcaJVsyPuCI73I/bTu3mxbHzwgaadExyiLsY1sY75Yu5aseMTlAU+pBp
+	 llU2jZtPNV0gOVSLgKpGnctK09vhuEvOzueuQxRnbXjVJi6GVD2vhUOxomrlYnEjm+
+	 hCu6j0yzxtHndeceQiJ367M23ayU2pNfg/d13rWDIHnKsTEU2eZjMvGN2zMT28iCUE
+	 daidhKt72/tUCjwVgsifrBT/81PqGbK2ojsZXtFFNJWyxC8WoTkcZbtTphUQV8a7Gb
+	 9bPd/SsUJn209saUNv0frdnDrVm7Y3lPTAFCHCUUDCE3DaVxp7vA3oOChrOn6ySMqv
+	 sABnXU6SeoK3Q==
+Date: Fri, 5 Apr 2024 01:10:26 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: "Jarkko Sakkinen" <jarkko@kernel.org>
+Cc: "Mark Rutland" <mark.rutland@arm.com>, <linux-kernel@vger.kernel.org>,
+ <anil.s.keshavamurthy@intel.com>, <aou@eecs.berkeley.edu>,
+ <catalin.marinas@arm.com>, <davem@davemloft.net>,
+ <linux-arm-kernel@lists.infradead.org>, <mhiramat@kernel.org>,
+ <naveen.n.rao@linux.ibm.com>, <palmer@dabbelt.com>,
+ <paul.walmsley@sifive.com>, <will@kernel.org>
+Subject: Re: [PATCH v2 4/4] kprobes: Remove core dependency on modules
+Message-Id: <20240405011026.8e96b1d129452f84210b6f66@kernel.org>
+In-Reply-To: <D0BFT1AHHVYR.2V75A0HT23T67@kernel.org>
+References: <20240403150154.667649-1-mark.rutland@arm.com>
+	<20240403150154.667649-5-mark.rutland@arm.com>
+	<D0B6SY8DJ5RC.KLZ08YRNLOH3@kernel.org>
+	<D0BFT1AHHVYR.2V75A0HT23T67@kernel.org>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Hi Dave,
+On Thu, 04 Apr 2024 18:18:21 +0300
+"Jarkko Sakkinen" <jarkko@kernel.org> wrote:
 
-David Howells <dhowells@redhat.com> writes:
+> On Thu Apr 4, 2024 at 11:15 AM EEST, Jarkko Sakkinen wrote:
+> > On Wed Apr 3, 2024 at 6:01 PM EEST, Mark Rutland wrote:
+> > > From: Jarkko Sakkinen <jarkko@kernel.org>
+> > >
+> > > Tracing with kprobes while running a monolithic kernel is currently
+> > > impossible because KPROBES depends on MODULES. While this dependency is
+> > > necessary when HAVE_KPROBES_ALLOC=n and the core kprobes code allocates
+> > > memory using module_alloc(), all the other module-specific code only
+> > > exist to handle the case when MODULES=y, and can be hidden behind
+> > > ifdeffery.
+> > >
+> > > Add the necessary ifdeffery, and remove the dependency on MODULES=y when
+> > > HAVE_KPROBES_ALLOC=y.
+> > >
+> > > As of this patch kprobes can be used when MODULES=n on arm64 and
+> > > riscv. All other architectures still depend on MODULES, either by virtue
+> > > of the core dependency on MODULES when HAVE_KPROBES_ALLOC=n, or by
+> > > virtue of an explciit dependency on MODULES in arch code.
+> > >
+> > > Other architectures can enable support by implementing their own
+> > > kprobes_alloc_insn_page() and kprobes_free_insn_page() which do not
+> > > depend on MODULES.
+> > >
+> > > Signed-off-by: Jarkko Sakkinen <jarkko@kernel.org>
+> > > Link: https://lore.kernel.org/lkml/20240326134616.7691-1-jarkko@kernel.org/
+> > > [Mark: Remove execmem changes, depend on HAVE_KPROBES_ALLOC]
+> > > Signed-off-by: Mark Rutland <mark.rutland@arm.com>
+> > > Cc: Albert Ou <aou@eecs.berkeley.edu>
+> > > Cc: Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>
+> > > Cc: Catalin Marinas <catalin.marinas@arm.com>
+> > > Cc: David S. Miller <davem@davemloft.net>
+> > > Cc: Jarkko Sakkinen <jarkko@kernel.org>
+> > > Cc: Masami Hiramatsu <mhiramat@kernel.org>
+> > > Cc: Naveen N. Rao <naveen.n.rao@linux.ibm.com>
+> > > Cc: Palmer Dabbelt <palmer@dabbelt.com>
+> > > Cc: Paul Walmsley <paul.walmsley@sifive.com>
+> > > Cc: Will Deacon <will@kernel.org>
+> > > ---
+> > >  arch/Kconfig                |  2 +-
+> > >  kernel/kprobes.c            | 46 ++++++++++++++++++++++---------------
+> > >  kernel/trace/trace_kprobe.c | 15 ++++++++++--
+> > >  3 files changed, 41 insertions(+), 22 deletions(-)
+> > >
+> > > diff --git a/arch/Kconfig b/arch/Kconfig
+> > > index 85bb59f7b8c07..0df2c88547b3c 100644
+> > > --- a/arch/Kconfig
+> > > +++ b/arch/Kconfig
+> > > @@ -52,7 +52,7 @@ config GENERIC_ENTRY
+> > >  
+> > >  config KPROBES
+> > >  	bool "Kprobes"
+> > > -	depends on MODULES
+> > > +	depends on MODULES || HAVE_KPROBES_ALLOC
+> > >  	depends on HAVE_KPROBES
+> > >  	select KALLSYMS
+> > >  	select TASKS_RCU if PREEMPTION
+> > > diff --git a/kernel/kprobes.c b/kernel/kprobes.c
+> > > index fa2ee4e59eca2..ec4493a41b505 100644
+> > > --- a/kernel/kprobes.c
+> > > +++ b/kernel/kprobes.c
+> > > @@ -1594,6 +1594,7 @@ static int check_kprobe_address_safe(struct kprobe *p,
+> > >  			goto out;
+> > >  		}
+> > >  
+> > > +#ifdef CONFIG_MODULES
+> > >  		/*
+> > >  		 * If the module freed '.init.text', we couldn't insert
+> > >  		 * kprobes in there.
+> > > @@ -1604,7 +1605,9 @@ static int check_kprobe_address_safe(struct kprobe *p,
+> > >  			*probed_mod = NULL;
+> > >  			ret = -ENOENT;
+> > >  		}
+> > > +#endif /* CONFIG_MODULES */
+> > >  	}
+> > > +
+> > >  out:
+> > >  	preempt_enable();
+> > >  	jump_label_unlock();
+> > > @@ -2484,24 +2487,6 @@ int kprobe_add_area_blacklist(unsigned long start, unsigned long end)
+> > >  	return 0;
+> > >  }
+> > >  
+> > > -/* Remove all symbols in given area from kprobe blacklist */
+> > > -static void kprobe_remove_area_blacklist(unsigned long start, unsigned long end)
+> > > -{
+> > > -	struct kprobe_blacklist_entry *ent, *n;
+> > > -
+> > > -	list_for_each_entry_safe(ent, n, &kprobe_blacklist, list) {
+> > > -		if (ent->start_addr < start || ent->start_addr >= end)
+> > > -			continue;
+> > > -		list_del(&ent->list);
+> > > -		kfree(ent);
+> > > -	}
+> > > -}
+> > > -
+> > > -static void kprobe_remove_ksym_blacklist(unsigned long entry)
+> > > -{
+> > > -	kprobe_remove_area_blacklist(entry, entry + 1);
+> > > -}
+> > > -
+> > >  int __weak arch_kprobe_get_kallsym(unsigned int *symnum, unsigned long *value,
+> > >  				   char *type, char *sym)
+> > >  {
+> > > @@ -2566,6 +2551,25 @@ static int __init populate_kprobe_blacklist(unsigned long *start,
+> > >  	return ret ? : arch_populate_kprobe_blacklist();
+> > >  }
+> > >  
+> > > +#ifdef CONFIG_MODULES
+> > > +/* Remove all symbols in given area from kprobe blacklist */
+> > > +static void kprobe_remove_area_blacklist(unsigned long start, unsigned long end)
+> > > +{
+> > > +	struct kprobe_blacklist_entry *ent, *n;
+> > > +
+> > > +	list_for_each_entry_safe(ent, n, &kprobe_blacklist, list) {
+> > > +		if (ent->start_addr < start || ent->start_addr >= end)
+> > > +			continue;
+> > > +		list_del(&ent->list);
+> > > +		kfree(ent);
+> > > +	}
+> > > +}
+> > > +
+> > > +static void kprobe_remove_ksym_blacklist(unsigned long entry)
+> > > +{
+> > > +	kprobe_remove_area_blacklist(entry, entry + 1);
+> > > +}
+> > > +
+> > >  static void add_module_kprobe_blacklist(struct module *mod)
+> > >  {
+> > >  	unsigned long start, end;
+> > > @@ -2662,6 +2666,9 @@ static int kprobes_module_callback(struct notifier_block *nb,
+> > >  	mutex_unlock(&kprobe_mutex);
+> > >  	return NOTIFY_DONE;
+> > >  }
+> > > +#else
+> > > +#define kprobes_module_callback	(NULL)
+> > > +#endif /* CONFIG_MODULES */
+> > >  
+> > >  static struct notifier_block kprobe_module_nb = {
+> > >  	.notifier_call = kprobes_module_callback,
+> > > @@ -2726,7 +2733,8 @@ static int __init init_kprobes(void)
+> > >  	err = arch_init_kprobes();
+> > >  	if (!err)
+> > >  		err = register_die_notifier(&kprobe_exceptions_nb);
+> > > -	if (!err)
+> > > +
+> > > +	if (!err && IS_ENABLED(CONFIG_MODULES))
+> > >  		err = register_module_notifier(&kprobe_module_nb);
+> > >  
+> > >  	kprobes_initialized = (err == 0);
+> > > diff --git a/kernel/trace/trace_kprobe.c b/kernel/trace/trace_kprobe.c
+> > > index 14099cc17fc9e..c509ba776e679 100644
+> > > --- a/kernel/trace/trace_kprobe.c
+> > > +++ b/kernel/trace/trace_kprobe.c
+> > > @@ -111,6 +111,7 @@ static nokprobe_inline bool trace_kprobe_within_module(struct trace_kprobe *tk,
+> > >  	return strncmp(module_name(mod), name, len) == 0 && name[len] == ':';
+> > >  }
+> > >  
+> > > +#ifdef CONFIG_MODULES
+> > >  static nokprobe_inline bool trace_kprobe_module_exist(struct trace_kprobe *tk)
+> > >  {
+> > >  	char *p;
+> > > @@ -129,6 +130,9 @@ static nokprobe_inline bool trace_kprobe_module_exist(struct trace_kprobe *tk)
+> > >  
+> > >  	return ret;
+> > >  }
+> > > +#else
+> > > +#define trace_kprobe_module_exist(tk) false /* aka a module never exists */
+> > > +#endif /* CONFIG_MODULES */
+> > >  
+> > >  static bool trace_kprobe_is_busy(struct dyn_event *ev)
+> > >  {
+> > > @@ -670,6 +674,7 @@ static int register_trace_kprobe(struct trace_kprobe *tk)
+> > >  	return ret;
+> > >  }
+> > >  
+> > > +#ifdef CONFIG_MODULES
+> > >  /* Module notifier call back, checking event on the module */
+> > >  static int trace_kprobe_module_callback(struct notifier_block *nb,
+> > >  				       unsigned long val, void *data)
+> > > @@ -699,6 +704,9 @@ static int trace_kprobe_module_callback(struct notifier_block *nb,
+> > >  
+> > >  	return NOTIFY_DONE;
+> > >  }
+> > > +#else
+> > > +#define trace_kprobe_module_callback (NULL)
+> > > +#endif /* CONFIG_MODULES */
+> > >  
+> > >  static struct notifier_block trace_kprobe_module_nb = {
+> > >  	.notifier_call = trace_kprobe_module_callback,
+> > > @@ -1933,8 +1941,11 @@ static __init int init_kprobe_trace_early(void)
+> > >  	if (ret)
+> > >  		return ret;
+> > >  
+> > > -	if (register_module_notifier(&trace_kprobe_module_nb))
+> > > -		return -EINVAL;
+> > > +	if (IS_ENABLED(CONFIG_MODULES)) {
+> > > +		ret = register_module_notifier(&trace_kprobe_module_nb);
+> > > +		if (ret)
+> > > +			return -EINVAL;
+> > > +	}
+> > >  
+> > >  	return 0;
+> > >  }
+> >
+> > 2/4, 3/4, 4/4:
+> >
+> > Tested-by: Jarkko Sakkinen <jarkko@kernel.org> # arch/riscv
+> 
+> Hey, I tried the pci_proc_init example:
+> 
+> [    3.060703] ------------[ ftrace bug ]------------
+> [    3.060944] ftrace faulted on writing
+> [    3.060987] [<ffffffff8102c0da>] pci_proc_init+0x0/0x80
+> [    3.061509] Updating ftrace call site to call a different ftrace function
+> [    3.061756] ftrace record flags: 80100001
+> [    3.061925]  (1)
+> [    3.061925]  expected tramp: ffffffff8000aa60
+> [    3.062527] ------------[ cut here ]------------
+> [    3.062652] WARNING: CPU: 0 PID: 18 at kernel/trace/ftrace.c:2180 ftrace_bug+0x282/0x2b8
+> [    3.062747] CPU: 0 PID: 18 Comm: migration/0 Not tainted 6.9.0-rc1 #2
+> [    3.062807] Hardware name: riscv-virtio,qemu (DT)
+> [    3.062868] Stopper: multi_cpu_stop+0x0/0x1a0 <- stop_machine_cpuslocked+0x140/0x18c
+> [    3.062925] epc : ftrace_bug+0x282/0x2b8
+> [    3.062957]  ra : ftrace_bug+0x282/0x2b8
+> [    3.062989] epc : ffffffff80fc31f4 ra : ffffffff80fc31f4 sp : ff20000000093c70
+> [    3.063014]  gp : ffffffff824b7780 tp : ff60000002a85940 t0 : ffffffff800923a6
+> [    3.063037]  t1 : 0000000000000020 t2 : 6465746365707865 s0 : ff20000000093cb0
+> [    3.063061]  s1 : ffffffff8102c0da a0 : 0000000000000022 a1 : ffffffff8229b7f0
+> [    3.063084]  a2 : 0000000000000010 a3 : fffffffffffffffe a4 : 0000000000000000
+> [    3.063108]  a5 : 0000000000000000 a6 : 0000000000000000 a7 : 0000000000000001
+> [    3.063131]  s2 : ff60000002850ab0 s3 : ffffffffffffffff s4 : 0000000000000002
+> [    3.063154]  s5 : 0000000002000000 s6 : 0000000082000000 s7 : 0000000000000000
+> [    3.063178]  s8 : 0000000000000001 s9 : ffffffff824bca18 s10: ff60000002845140
+> [    3.063202]  s11: 00000000000000ab t3 : ffffffff824ce9ef t4 : ffffffff824ce9ef
+> [    3.063225]  t5 : ffffffff824ce9f0 t6 : ff20000000093aa8
+> [    3.063248] status: 0000000200000100 badaddr: 0000000000000000 cause: 0000000000000003
+> [    3.063331] [<ffffffff80fc31f4>] ftrace_bug+0x282/0x2b8
+> [    3.063398] [<ffffffff80108b1a>] ftrace_replace_code+0xfe/0x168
+> [    3.063430] [<ffffffff80108c82>] ftrace_modify_all_code+0x5c/0x16a
+> [    3.063460] [<ffffffff80108da2>] __ftrace_modify_code+0x12/0x1c
+> [    3.063490] [<ffffffff800f299c>] multi_cpu_stop+0x118/0x1a0
+> [    3.063519] [<ffffffff800f242e>] cpu_stopper_thread+0xb2/0x12a
+> [    3.063548] [<ffffffff8005dece>] smpboot_thread_fn+0x1aa/0x1d2
+> [    3.063577] [<ffffffff80057fec>] kthread+0xfe/0x106
+> [    3.063606] [<ffffffff80fe3d76>] ret_from_fork+0xe/0x20
+> [    3.063676] ---[ end trace 0000000000000000 ]---
+> [    3.069730] ------------[ cut here ]------------
+> [    3.069861] Failed to disarm kprobe-ftrace at pci_proc_init+0x0/0x80 (error -19)
+> [    3.070078] WARNING: CPU: 0 PID: 1 at kernel/kprobes.c:1128 __disarm_kprobe_ftrace+0x9a/0xae
+> [    3.070124] CPU: 0 PID: 1 Comm: swapper/0 Tainted: G        W          6.9.0-rc1 #2
+> [    3.070133] Hardware name: riscv-virtio,qemu (DT)
+> [    3.070141] epc : __disarm_kprobe_ftrace+0x9a/0xae
+> [    3.070150]  ra : __disarm_kprobe_ftrace+0x9a/0xae
+> [    3.070157] epc : ffffffff800ffcda ra : ffffffff800ffcda sp : ff2000000000be30
+> [    3.070162]  gp : ffffffff824b7780 tp : ff60000002a70000 t0 : ffffffff800923a6
+> [    3.070167]  t1 : 0000000000000046 t2 : 6f742064656c6961 s0 : ff2000000000be60
+> [    3.070173]  s1 : ffffffffffffffed a0 : 0000000000000044 a1 : ffffffff8229b7f0
+> [    3.070178]  a2 : 0000000000000010 a3 : fffffffffffffffe a4 : 0000000000000000
+> [    3.070182]  a5 : 0000000000000000 a6 : 0000000000000000 a7 : 0000000000000001
+> [    3.070187]  s2 : ffffffff824bc940 s3 : ffffffff822ac158 s4 : ff60000002b53c80
+> [    3.070192]  s5 : ffffffff824bc940 s6 : ffffffff822ac158 s7 : ffffffff81000000
+> [    3.070197]  s8 : ffffffff814775f8 s9 : ffffffff824f23d8 s10: 0000000000000000
+> [    3.070202]  s11: 0000000000000000 t3 : ffffffff824ce9d7 t4 : ffffffff824ce9d7
+> [    3.070206]  t5 : ffffffff824ce9d8 t6 : ff2000000000bc48
+> [    3.070211] status: 0000000200000120 badaddr: 0000000000000000 cause: 0000000000000003
+> [    3.070218] [<ffffffff800ffcda>] __disarm_kprobe_ftrace+0x9a/0xae
+> [    3.070228] [<ffffffff80101b16>] kprobe_free_init_mem+0xc2/0x130
+> [    3.070236] [<ffffffff80fd9b38>] kernel_init+0x46/0x14e
+> [    3.070245] [<ffffffff80fe3d76>] ret_from_fork+0xe/0x20
+> [    3.070254] ---[ end trace 0000000000000000 ]---
+> [
+> 
+> This is with riscv64 defconfig, tracing shenanigans and the following
+> bootconfig and the bug was realized in QEMU:
 
-> During mount, cifs_mount_get_tcon() gets a tcon resource connection record
-> and then attaches an fscache volume cookie to it.  However, it does this
-> irrespective of whether or not the tcon returned from cifs_get_tcon() is a
-> new record or one that's already in use.  This leads to a warning about a
-> volume cookie collision and a leaked volume cookie because tcon->fscache
-> gets reset.
->
-> Fix this be adding a mutex and a "we've already tried this" flag and only
-> doing it once for the lifetime of the tcon.
+So this is with CONFIG_MODULES=y?
+This seems like an actual bug but not related to this series.
+Can you reproduce this without this patch series?
 
-Can't we just move the cookie acquisition to cifs_get_tcon() before it
-gets added to list @ses->tcon_list.  This way we'll guarantee that the
-cookie is set only once for the new tcon.
+Thank you,
 
-Besides, do we want to share a tcon with two different superblocks that
-have 'fsc' and 'nofsc', respectively?  If not, it would be better to fix
-match_tcon() as well to handle such case.
+> 
+> ftrace {
+> 	tracing_on = 0
+> 	tracer = "function_graph"
+> 	event {
+> 		kprobes.pci_proc_init_begin {
+> 			probes = "pci_proc_init"
+> 			actions = "traceon"
+> 		}
+> 		kprobes.pci_proc_init_end {
+> 			probes = "pci_proc_init%return"
+> 			actions = "traceoff"
+> 		}
+> 	}
+> }
+> 
+> kernel {
+> 	console = hvc0
+> 	dyndbg = "file arch/riscv/kernel/* +p"
+> 	earlycon = sbi
+> 	memblock = debug
+> 	memtest = 1
+> 	tp_printk
+> 	frace_dump_on_oops
+> }
+> 
+> BR, Jarkko
 
-> [!] Note: Looking at cifs_mount_get_tcon(), a more general solution may
-> actually be required.  Reacquiring the volume cookie isn't the only thing
-> that function does: it also partially reinitialises the tcon record without
-> any locking - which may cause live filesystem ops already using the tcon
-> through a previous mount to malfunction.
 
-Agreed.
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
