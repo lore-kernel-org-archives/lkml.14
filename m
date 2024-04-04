@@ -1,84 +1,92 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C6278527B;
-	Thu,  4 Apr 2024 12:09:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 233BA84D35;
+	Thu,  4 Apr 2024 12:09:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712232544; cv=none; b=lG2tKy0oZzqTsnQwAGh2usCL0hrqGsSPSNXVHgZyYCBdnxDCh3pMJsSe75beiwmVwfV1fT5AHiMRsIXiGY3X4bHpX8BJUDWybjW1nVN+VCA9ykPdU2KWBuoDYUL2a4KrVJjaA9brfqrLn42+HVhzw+TrHIKo3AancgoHReQghsI=
+	t=1712232582; cv=none; b=CHGFhWGA+eAUIi53+oKSgCs6yPVMrWKyENQvayQcrQtUIHkg2z71ihVJuk9pM2YUtw6YFUCOL3OdkVSP+2wRIbhgzm86jvAk1YiAkcTNpDjcngf26SsywoCx3Hdc2To2eySvtGZ0VAD1sBRis3VjqeiHLWfzHWlxwu21IxMLi3o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712232544; c=relaxed/simple;
-	bh=/D4uMFIkhTDyJK8HO5ZeD9TQWsYFezpRYZfKGXv8hRU=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=WUNUNqCsQtKR0RYb0oKOtsnZ/obBFWREqjeFG9x0nsxrtBzI7kHZI01Zs+kLNtqn0MQGopS/easeFOE+S4vnemCawiFA9P2Bfsg83v0/moc+2Me2BYbN9fD2EgTu1oB17MR2yMxXcd2cRUFcaaI9Bh9LHF2ihGqOHziTq+YkmzY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=N8gXI+P0; arc=none smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1712232582; c=relaxed/simple;
+	bh=iF+hZYmZWLuY/qpKYXvimUzQbVkITzEoCicAm2QU+ug=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=L7uPWS/NHtr4Nf++vpsE9CZdynR69ptwJ5Wspet22EG0Z+TSA/D/qMHxMeQZ5qDwhSF00RpVeWN1lz5/+nXNLr0g4/XsPQ4ZzNB81qkNvjif6SJBYlcM/7HSl3r4BFIMkGbFdWrH9akJ3qPrW7UlN0KZR9r0ChmlyatA3ZXoT4M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tO1YE7yI; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="N8gXI+P0"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1712232544; x=1743768544;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=/D4uMFIkhTDyJK8HO5ZeD9TQWsYFezpRYZfKGXv8hRU=;
-  b=N8gXI+P0WHFuW2WtiGvSHmHA6MqSML0DZ0UK8e8pJFYJj6+wwJwGh7kI
-   +d8D8owec4jvxlzWkMeXAGfCKPFKvbETjNZBY3iZM4g6RG38m73OEpQC9
-   LInZlFKNC6Bz9ftNvu54xHmIslWM8WcdIhKBGGeAeoTWNSpTBqBYa8vzx
-   /C9saOJdzM/ZLQtblWb0Uv34Nm5GS5W4NEnXNxdkrJEkbVN6HWsnPR/lx
-   DPNqIn9F/QvYI3lsdie/YR0n6fT2vw3AMpyP48o6tIGtMSVKQ2mAC8/c1
-   zs7qVnaIjPUq/alpReCZVpNOkcCdjwKq6AE+IEEVz2csRSXwUfpFeG6NJ
-   g==;
-X-CSE-ConnectionGUID: rZ8tOAxJTp64r8YCKI2WUQ==
-X-CSE-MsgGUID: atAaa0V4RQuhm/UM79zQJg==
-X-IronPort-AV: E=McAfee;i="6600,9927,11033"; a="18240562"
-X-IronPort-AV: E=Sophos;i="6.07,179,1708416000"; 
-   d="scan'208";a="18240562"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Apr 2024 05:09:00 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,11033"; a="937086417"
-X-IronPort-AV: E=Sophos;i="6.07,179,1708416000"; 
-   d="scan'208";a="937086417"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga001.fm.intel.com with ESMTP; 04 Apr 2024 05:08:58 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-	id 6BE5A193; Thu,  4 Apr 2024 15:08:57 +0300 (EEST)
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: linux-acpi@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>,
-	Len Brown <lenb@kernel.org>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH v2 0/2] ACPI: LPSS: Prepare for SPI code cleanup
-Date: Thu,  4 Apr 2024 15:06:57 +0300
-Message-ID: <20240404120856.4109303-1-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.43.0.rc1.1.gbec44491f096
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tO1YE7yI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 40BA0C433F1;
+	Thu,  4 Apr 2024 12:09:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1712232581;
+	bh=iF+hZYmZWLuY/qpKYXvimUzQbVkITzEoCicAm2QU+ug=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=tO1YE7yIHQ3qHA2nwtm0ZGmT8/uAMAQ4HLwBOrTlncFnT6lriWguTpZpABNNIHW5Y
+	 qW3rMAAWv4c0Ok75qIfpTLWIaIs3z0scaY8iS9B46CBHfZBgDB0Wjc4jdGd6jyr1LO
+	 gYQsN3RT7xMVJd95yiqSqpPArJGXx2gEUAO0DKw7qZugdu2OzMwnkDwOQ7hZ6F1qqZ
+	 RCIeBIyNT866v7M20DFMDH5TChLGS/VOTCCGTR/TLtY2pve92qhd9BEq59iq30dINh
+	 bj8OGhSALLZCuTkrSXp/Hz6Ebp4fnWqFD9WQ+i7JDmfJBmUFy45D5Wcd8g0DmpQ9Bg
+	 BSvBdwPyFGYqg==
+Date: Thu, 4 Apr 2024 13:09:36 +0100
+From: Mark Brown <broonie@kernel.org>
+To: Matti Vaittinen <mazziesaccount@gmail.com>
+Cc: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
+	Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Liam Girdwood <lgirdwood@gmail.com>,
+	Wim Van Sebroeck <wim@linux-watchdog.org>,
+	Guenter Roeck <linux@roeck-us.net>, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-watchdog@vger.kernel.org
+Subject: Re: [RFC PATCH 0/6] Support ROHM BD96801 scalable PMIC
+Message-ID: <eb03ec33-0627-4986-be04-8e35da390d6b@sirena.org.uk>
+References: <cover.1712058690.git.mazziesaccount@gmail.com>
+ <f7d454ac-6ecb-4431-a1de-c9b5d1240969@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="bLwWuxLdQRd8U3iv"
+Content-Disposition: inline
+In-Reply-To: <f7d454ac-6ecb-4431-a1de-c9b5d1240969@gmail.com>
+X-Cookie: Buckle up!
 
-An ad-hoc cleanup followed by preparation for SPI code cleaning.
-The latter will be done in the next kernel cycle to avoid conflicts.
 
-This patch series should go before
-https://lore.kernel.org/linux-acpi/20240403170302.1073841-1-andriy.shevchenko@linux.intel.com/
+--bLwWuxLdQRd8U3iv
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-In v2:
-- added Fixes tag to the first patch (Rafael)
-- reordered to get Fixes first in the series
-- v1: 20240402152952.3578659-1-andriy.shevchenko@linux.intel.com
+On Thu, Apr 04, 2024 at 10:26:34AM +0300, Matti Vaittinen wrote:
 
-Andy Shevchenko (2):
-  ACPI: LPSS: Advertise number of chip selects via property
-  ACPI: LPSS: Remove nested ifdeffery for CONFIG_PM
+> 1. Should we be able to have more than 1 IRQ domain / device?
+> 2. Should regmap_irq support having more than 1 HWIRQ
 
- drivers/acpi/acpi_lpss.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+I would expect each parent interrupt to show up as a separate remap_irq.
 
--- 
-2.43.0.rc1.1.gbec44491f096
+> then it seems that reading the IRQ information from the /proc/interrupts
+> works as expected. Here I am making a wild guess that the name of the domain
+> is used as a key for some data-lookups, and having two domains with a same
+> name will either overwrite something or cause wrong domain data to be
+> fetched. (This is just guessing for now).
 
+So if we arrange to supply a name when we register multiple domains
+things should work fine?
+
+--bLwWuxLdQRd8U3iv
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmYOmH8ACgkQJNaLcl1U
+h9CueAf/QxTLrSUED3FleSmC99lu2f6hCDoyehpmImkDa1WIGmVrBCv6Rr9IIogs
+u4+/eLtbZ/A8yxKJz7qEXBNwwS5LOpZpPPZvrTe9sZ6E5vbZq1EWP2M3OdnsB9XS
+64XavlWRYG6MgbYLx3G4E7xHzfAFmEBY3e9s2eaxYpH3iWiTruN8sSsS2Qx4ji8Z
+DDiD4SVtDHtHT/Njz2bR1iEw2Dq5yVRGRahTcmL7mGfcskcB/KB4x7dV4WfOJN27
+WZ5tTG2wDMRlan9AY9myMordW5FIPqzOhE4MdU3bmNNU/AcvrqRw0qrgvlKcik7r
+q0m/K5N4s/Bmnod2mW0p9r0Z7vHSig==
+=1Y5H
+-----END PGP SIGNATURE-----
+
+--bLwWuxLdQRd8U3iv--
