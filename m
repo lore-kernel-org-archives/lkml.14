@@ -1,111 +1,133 @@
-Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DF0F5DF23
-	for <linux-kernel@vger.kernel.org>; Thu,  4 Apr 2024 08:01:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FB8F45970
+	for <linux-kernel@vger.kernel.org>; Thu,  4 Apr 2024 08:01:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712217675; cv=none; b=RGGZNaqhX1G1kys7nsTIltlV02JLjgEoKuKGRhnGJT/CkA/rmSDrTb46h3dliedUrsckEZ3QYPtL0XodNCLmE67IdmgZExzdwUAt8JDqtFuy+PjTeHCVYtGHDCK4DI2W3UnDR0HFDQfbnS0523eiNeGve12ZrsP+cwk6O5FlrD8=
+	t=1712217720; cv=none; b=VyEw1hdONBihlKJCqHi2k2aCx65+UXykBVLpejb8eMUawQNBIWKo3d0Hnznc4eHO3uLh90qwhFNWHD1m0jC8tY4P7VQNVSy6bSOvQgsEZAsxtVFtze4AFuqKk4RjMiYsI1gjnVcIV4XEbE/8mDeAje7EJxCTJC+byYobz3LDvAs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712217675; c=relaxed/simple;
-	bh=QJ/GvWjb7OikBvvYJpHNtU5PYtM/0hhzpUz62Zhr5IU=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Yv/eWBOaofA9a/RQxHRXIBanSwKeeXeTeBIJhNpNeGr9XsG2avHXa9xU2EL0l0LMHbdi7+AYpjRnpuWLq4H+qQTPBvUpqYs8FLA6jgSYWD9dMLPoOg0lpLl73PMal+GVlNExNuyhTLufJS9q+2sgoS1YXkf2vA+F9YTwr5QaW9U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com; spf=none smtp.mailfrom=toblux.com; dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b=Dn3azvWb; arc=none smtp.client-ip=209.85.208.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=toblux.com
+	s=arc-20240116; t=1712217720; c=relaxed/simple;
+	bh=nn75BfzRjv6UXMTe1POmsOm6uuisJffR5hjMsK9B4pM=;
+	h=From:In-Reply-To:References:To:Cc:Subject:MIME-Version:
+	 Content-Type:Date:Message-ID; b=qevLWWGyCs3t1zxtFuZrupROFicH5+JX5To80HnVQAIcGaWminPh/TXkGDLy0vPMB0v6PdRPjRoHtLDxuRIL0nXRlcsvyRG6prmQKBc+JmE3/HsaloSCaQC+ALlzCPPOws9ivOQk+kR3okmTa+R+nGs0IArXjxjAf0rQSB0GAF4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=jLWZgRbe; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b="Dn3azvWb"
-Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-56bf6591865so939837a12.0
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Apr 2024 01:01:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=toblux-com.20230601.gappssmtp.com; s=20230601; t=1712217672; x=1712822472; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Xv8R3IrhUaaiihMPdgbzD/Fg2YiT2HLoLPB2jJluhQk=;
-        b=Dn3azvWbj0P8Ck27vJgjnmhTFSKldKYdM4gZEB4thWRHTHO6NeRZJ8QpjFiSwKN20P
-         Ek336C706THQwwpiJ6snnG36hcP1CRDS+QSX/ZRBYyAbYQHcON93ljL3cKO4Zu07O1jw
-         yExQaHADM/ZRniVZCg+g4qnIWeGSSeIXktF1mnYyM7HwsyhFBAok8CxkGdkibShxWzCa
-         KNiXs82OQillF6Vs8xtGxvyJvAj/KRdr3zaXoPWDiFkj1wVfqlbH+3DTDhNVNFJNtm1p
-         G/ykNLfkhBuQ5IQfTpuOLaCa0rLSVLQzPcoSF3mHtf8tfXMOxAFB8IMZnDb2riUBnmqS
-         fJjA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712217672; x=1712822472;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Xv8R3IrhUaaiihMPdgbzD/Fg2YiT2HLoLPB2jJluhQk=;
-        b=kAD91A03JYZ1uueW+K4ZhFRA+hLlLxTVS073T2Z0LkZCmFTE/ZI8PfWu6gz9UZCXf/
-         wT7ln5DQ0ID1rwJs2R3HEFokP7ziYVGGoV261DgJa+gQqyAlon+dlcuat8hrEOuoVGQt
-         GxcUcgxQuZJ2zuGKIlB/W1qunu5RTWuToqCbEnOQXb9gCjpctXguhY2yM2QXB/ILtme4
-         5vB/A4mFrR4dttD24aO0T22oU7KKVBPZATm7PujB7MyCkRe4IXU9kfM3q1blVwEwz1Oa
-         daxKLCvlToPW+wH1kOFrHw6L77XX7IunhwhVLiAW8RnXf/QomDkx7r8uSBRMSAyXrGST
-         pZKw==
-X-Forwarded-Encrypted: i=1; AJvYcCUFdfjP4Mea3jfVoX5H7Mv+5Iv3dpnaUbXe6J6iRZ9c2fuFHrYtoAdjbMZDuUSSWuEtO8Eyaa7guVePhF4Qk+N/BZYmxZRBT9oERBTS
-X-Gm-Message-State: AOJu0YxS4Zgld+J5QP9/FoIGxyx69JKZqg8+29OlDHENBeZyQ3zweI2/
-	vInWYZuv0ptX1M/zbyEaJbmnpFYt4pr6uobR3E46WwccUbn2LdYSAhA4dcgc6Ko=
-X-Google-Smtp-Source: AGHT+IEQQDX7G43C5KmJflK3VEIWNWAS7ktsRAeYWb2ozLpk/ugg7MgwS4QMOHuKzIeKgxoa7JkVIg==
-X-Received: by 2002:a50:c315:0:b0:56b:9ef8:f656 with SMTP id a21-20020a50c315000000b0056b9ef8f656mr1125320edb.7.1712217671985;
-        Thu, 04 Apr 2024 01:01:11 -0700 (PDT)
-Received: from fedora.fritz.box (aftr-82-135-80-212.dynamic.mnet-online.de. [82.135.80.212])
-        by smtp.gmail.com with ESMTPSA id k3-20020a056402340300b0056e06d5a301sm1681791edc.20.2024.04.04.01.01.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 04 Apr 2024 01:01:11 -0700 (PDT)
-From: Thorsten Blum <thorsten.blum@toblux.com>
-To: jirislaby@kernel.org
-Cc: chris@zankel.net,
-	gregkh@linuxfoundation.org,
-	jcmvbkbc@gmail.com,
-	linux-kernel@vger.kernel.org,
-	thorsten.blum@toblux.com
-Subject: [PATCH v3] tty: xtensa/iss: Use min() to fix Coccinelle warning
-Date: Thu,  4 Apr 2024 09:58:13 +0200
-Message-ID: <20240404075811.6936-3-thorsten.blum@toblux.com>
-X-Mailer: git-send-email 2.44.0
-In-Reply-To: <528c6824-287e-4be2-82f3-7fcdd254eb15@kernel.org>
-References: <528c6824-287e-4be2-82f3-7fcdd254eb15@kernel.org>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="jLWZgRbe"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1712217717;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=IE/xA/cazcP+HXhdhjRdwQDAS2gMvpTgfIxHPPrU41I=;
+	b=jLWZgRbe3Jrf4s1Xqc8AVGcHr1mAvgilCkf3XtnBhA94CrGf9ub+9LPunzUYMICm1FpgO4
+	H7FoYrTNhnq4nidWZN9jWcr+7mnS7OPmpi0tGV6SGhqiR9gq6GUz/V9lznwMIYG37V43sl
+	WZuGnX6ivwe+yvOtKULb5MUWAfy28vE=
+Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
+ by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-169-c0jY6rVYNYiCi_bmX-evYA-1; Thu,
+ 04 Apr 2024 04:01:52 -0400
+X-MC-Unique: c0jY6rVYNYiCi_bmX-evYA-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.rdu2.redhat.com [10.11.54.8])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 1BF723C02748;
+	Thu,  4 Apr 2024 08:01:51 +0000 (UTC)
+Received: from warthog.procyon.org.uk (unknown [10.42.28.146])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id DD1EAC1576F;
+	Thu,  4 Apr 2024 08:01:47 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+	Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+	Kingdom.
+	Registered in England and Wales under Company Registration No. 3798903
+From: David Howells <dhowells@redhat.com>
+In-Reply-To: <3655511.1712217111@warthog.procyon.org.uk>
+References: <3655511.1712217111@warthog.procyon.org.uk> <20240328163424.2781320-22-dhowells@redhat.com> <20240328163424.2781320-1-dhowells@redhat.com>
+To: Christian Brauner <christian@brauner.io>
+Cc: dhowells@redhat.com, Jeff Layton <jlayton@kernel.org>,
+    Gao Xiang <hsiangkao@linux.alibaba.com>,
+    Dominique Martinet <asmadeus@codewreck.org>,
+    Matthew Wilcox <willy@infradead.org>,
+    Steve French <smfrench@gmail.com>,
+    Marc Dionne <marc.dionne@auristor.com>,
+    Paulo Alcantara <pc@manguebit.com>,
+    Shyam Prasad N <sprasad@microsoft.com>, Tom Talpey <tom@talpey.com>,
+    Eric Van Hensbergen <ericvh@kernel.org>,
+    Ilya Dryomov <idryomov@gmail.com>, netfs@lists.linux.dev,
+    linux-cachefs@redhat.com, linux-afs@lists.infradead.org,
+    linux-cifs@vger.kernel.org, linux-nfs@vger.kernel.org,
+    ceph-devel@vger.kernel.org, v9fs@lists.linux.dev,
+    linux-erofs@lists.ozlabs.org, linux-fsdevel@vger.kernel.org,
+    linux-mm@kvack.org, netdev@vger.kernel.org,
+    linux-kernel@vger.kernel.org, Latchesar Ionkov <lucho@ionkov.net>,
+    Christian Schoenebeck <linux_oss@crudebyte.com>
+Subject: Re: [PATCH 21/26] netfs, 9p: Implement helpers for new write code
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <3666290.1712217703.1@warthog.procyon.org.uk>
+Content-Transfer-Encoding: quoted-printable
+Date: Thu, 04 Apr 2024 09:01:43 +0100
+Message-ID: <3666291.1712217703@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.8
 
-Inline strlen() and use min() to fix the following Coccinelle/coccicheck
-warning reported by minmax.cocci:
+David Howells <dhowells@redhat.com> wrote:
 
-	WARNING opportunity for min()
+> > +	size_t len =3D subreq->len - subreq->transferred;
+> =
 
-Signed-off-by: Thorsten Blum <thorsten.blum@toblux.com>
+> This actually needs to be 'int len' because of the varargs packet format=
+ter.
+
+I think the attached change is what's required.
+
+David
 ---
-Changes in v2:
-- Use min() instead of umin() as suggested by Jiri Slaby
+diff --git a/net/9p/client.c b/net/9p/client.c
+index 844aca4fe4d8..04af2a7bf54b 100644
+--- a/net/9p/client.c
++++ b/net/9p/client.c
+@@ -1670,10 +1670,10 @@ p9_client_write_subreq(struct netfs_io_subrequest =
+*subreq)
+ 	struct p9_client *clnt =3D fid->clnt;
+ 	struct p9_req_t *req;
+ 	unsigned long long start =3D subreq->start + subreq->transferred;
+-	size_t len =3D subreq->len - subreq->transferred;
+-	int written, err;
++	int written, len =3D subreq->len - subreq->transferred;
++	int err;
+ =
 
-Changes in v3:
-- Inline strlen() as suggested by Jiri Slaby
----
- arch/xtensa/platforms/iss/console.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+-	p9_debug(P9_DEBUG_9P, ">>> TWRITE fid %d offset %llu len %zd\n",
++	p9_debug(P9_DEBUG_9P, ">>> TWRITE fid %d offset %llu len %d\n",
+ 		 fid->fid, start, len);
+ =
 
-diff --git a/arch/xtensa/platforms/iss/console.c b/arch/xtensa/platforms/iss/console.c
-index 8896e691c051..abec44b687df 100644
---- a/arch/xtensa/platforms/iss/console.c
-+++ b/arch/xtensa/platforms/iss/console.c
-@@ -166,10 +166,8 @@ late_initcall(rs_init);
- 
- static void iss_console_write(struct console *co, const char *s, unsigned count)
- {
--	if (s && *s != 0) {
--		int len = strlen(s);
--		simc_write(1, s, count < len ? count : len);
--	}
-+	if (s && *s != 0)
-+		simc_write(1, s, min(count, strlen(s)));
- }
- 
- static struct tty_driver* iss_console_device(struct console *c, int *index)
--- 
-2.44.0
+ 	/* Don't bother zerocopy for small IO (< 1024) */
+@@ -1699,11 +1699,11 @@ p9_client_write_subreq(struct netfs_io_subrequest =
+*subreq)
+ 	}
+ =
+
+ 	if (written > len) {
+-		pr_err("bogus RWRITE count (%d > %lu)\n", written, len);
++		pr_err("bogus RWRITE count (%d > %u)\n", written, len);
+ 		written =3D len;
+ 	}
+ =
+
+-	p9_debug(P9_DEBUG_9P, "<<< RWRITE count %zd\n", len);
++	p9_debug(P9_DEBUG_9P, "<<< RWRITE count %d\n", len);
+ =
+
+ 	p9_req_put(clnt, req);
+ 	netfs_write_subrequest_terminated(subreq, written, false);
 
