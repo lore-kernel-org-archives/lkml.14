@@ -1,85 +1,94 @@
-Received: from mr85p00im-ztdg06021701.me.com (mr85p00im-ztdg06021701.me.com [17.58.23.196])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 440E412AAC5
-	for <linux-kernel@vger.kernel.org>; Thu,  4 Apr 2024 17:28:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=17.58.23.196
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07D1112D1ED
+	for <linux-kernel@vger.kernel.org>; Thu,  4 Apr 2024 17:31:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712251709; cv=none; b=TyYlTSjxHIZbpJ0RJOxrzuu2QKEjiYUvkSMxDFp5rqwo/LhdXo57p8xOyLvtxJnrOjxQNnwF6BQL48Q3jp/iXlCuQezexXzbeBMvv3qkNbQemAsraJ1ZcN/Q1M0LpdQeX1kBc6Kce6+VsO9p32S0QdiZ8vt8yfnUcXjFADXsPVc=
+	t=1712251868; cv=none; b=mbF+9r9sVMUh/rDE3wCBegHFoWSJKjeaDU0Q/YabElgZTp7KbhvqP4gyCG9vr9YUejkKAhdUvb4Obg3lyb8MttRlxb16i3Lo9o8znUMIkvnpqQGOt+lr5AnLsJPBoAmmfBgUGNX66jctgsPx6ntOZlIujL69q4166AuTsNjc3XY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712251709; c=relaxed/simple;
-	bh=Hgw8YDYeXIbAur1VdjrAw21TWVkSGL7n1rv1sgu7sus=;
-	h=Content-Type:From:Mime-Version:Subject:Date:Message-Id:References:
-	 Cc:In-Reply-To:To; b=MWbiEj7OWtUmYHCp0YutX/nbABp97MruIP8mqzSomfCn5kLNogdBXWbkPxdWfHdjA3HXBsh+QU65YiOCgpE3P4np336WvGB6QSm39xjOSQFeFDnIWzkkdk0ind9Td99WvPaijUYL3y735WN+Sx9yaroafB/qSAdaCz7pDDXuPH0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=me.com; spf=pass smtp.mailfrom=me.com; dkim=pass (2048-bit key) header.d=me.com header.i=@me.com header.b=K6Sf7z4N; arc=none smtp.client-ip=17.58.23.196
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=me.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=me.com
+	s=arc-20240116; t=1712251868; c=relaxed/simple;
+	bh=9+nALMnWqMtktQiKdj6h/JJPaQ9s+Le7L/1VmoPzmqY=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=pKR8tl2n4y0MpYJojh9vE9+FjT6rKa0rnwuquK950XcZxzLNWcVvmA43Dl7f5rvLnE8RMTF9Qx+kFkMCjCUSixDOVAHlR3TIgZoZLbDwa4fmCm32nIxI6chavdivYtx5f/+JqlaIhpxAlnGGJP8nD7lPewsz16DGRfdDM5cjK/Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=r7UDiK71; arc=none smtp.client-ip=209.85.128.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=me.com header.i=@me.com header.b="K6Sf7z4N"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=me.com; s=1a1hai;
-	t=1712251707; bh=nlxGTSwQ7v0Ep4e8zvJarUYi6YExHbW8T1sRZDS375Y=;
-	h=Content-Type:From:Mime-Version:Subject:Date:Message-Id:To;
-	b=K6Sf7z4Nr7QiFWmn+X1PDtxtBEWa0hwwkPt1fXSxwjleugocm4HwQj6J39jdtw4kt
-	 +6J82DQC0rKm3+0MWgjkrOPG/IGamEFWwmXg3rRkbd9J8ibjnsv7qjvJ4cppeCokl9
-	 VUUi+SVBPCxHKScwnJFkLrAOGD88tSUni5bcSFcYGsnJ1PH+nf7uuOJ8SEThYDvquV
-	 Tq4uy1NnwS/Kr6ByUZDso4z2UCwjvDzPLIquUSDH2Egnl6VvlLOxq0PVBHtfAqk6HF
-	 fI45hf1pbozauPBNJ4ZceFl24ng+QVxmxdfZmpWuh6138lEon0q19k45PhuWr+u7sx
-	 HQ3xZniwS7q4g==
-Received: from smtpclient.apple (mr38p00im-dlb-asmtp-mailmevip.me.com [17.57.152.18])
-	by mr85p00im-ztdg06021701.me.com (Postfix) with ESMTPSA id C1C892633A4B;
-	Thu,  4 Apr 2024 17:28:26 +0000 (UTC)
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-From: Laine Taffin Altman <alexanderaltman@me.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="r7UDiK71"
+Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-615073c8dfbso24259207b3.1
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Apr 2024 10:31:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1712251866; x=1712856666; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=Eo/SkK+TlNjp4T3bV1tp4QVg1mYvFjNY2jevZHmIKp0=;
+        b=r7UDiK71LM6DruG/FsIRIuqNzoW6t90LwF4qzeciOZZCTsSmReW6k1JHrPqJdQ9TDt
+         oVxF6pmJrh3E9bEo5cXjj1lJmw4wpqotgNwCzFE4g4ms9wwvCeB3UfF4woGfJriTSUI2
+         NNqSA9hvOLJBAjNe94PdfBnpOyk32fCRp+wK+40StG2SNVY9d8xhzfRvtZThS5UagBuX
+         YCrfxYKSuzzy7c8JUkd3t6cVsRz34mEyStgNKzSdCS22WC0wQv6N5RrYURAnpCjbGCoY
+         0dmD9+BojCjl/zTMutkoM1FZltaN21BlLPqpjw+z11oEOSZSAxnEjUwUdVsK8zUn6Y/i
+         Os8w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712251866; x=1712856666;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Eo/SkK+TlNjp4T3bV1tp4QVg1mYvFjNY2jevZHmIKp0=;
+        b=T7s0I6Rjrlb9zg4XGQY8/FhOWwBYLbsal5Y2PRmfZjQlb2UMc97bdkCiKZyIz+uadd
+         lw23fhgoSuQ7I+P/o6cIvY8jiQYHJCavoB4WJRT3nZcNKswZGp2YTbDxVdZxDKG0e5ym
+         VX982WHXU1rz7hjTfkBvMmpo+QSt6vq1HdSeVoQSr+jKwDKoB5DFaMwmFLkoTkhBkmMe
+         Ua/aEYTGCVXIZFu9ASqi/ou6C/pMEqo2Ki/0CgxatsBOGI0Gb/GiAXZme5q65wcKNzxM
+         AMvM8aimJusfcgzuo6e35y979pl/f+9vToMuLJI/xGXk7TBN1L+8TRjV5FcGe+RaByQK
+         WZiQ==
+X-Forwarded-Encrypted: i=1; AJvYcCW0FA2tFLcHfIjBR2vP+1hp5lBUex8EOqvPbFP/7fghNTIo5tvgc6QzDVpQoqTItuv84VAVyYI3oVZfx5vwZ1nTkw+YyHduryG3dvav
+X-Gm-Message-State: AOJu0YwNzHxXcYlljRJcLQQ5B5pCRmZ6Ac8zpFLMVoZvlMhTZjax3gIj
+	SxhKu/ozDnUI7K7u7HtvH/kOBxmX0P6k5eCpQukAulNs1KWEI/gCMmSclwbSAiQgFFz2i5cSP1A
+	A+g==
+X-Google-Smtp-Source: AGHT+IGxpleOXBSwibp1OJgiAWgTAeCKVGrLENZB5db4WF5+xM6eEryutq9uucKSEKwloLFURA8Eo/IRbrc=
+X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
+ (user=seanjc job=sendgmr) by 2002:a05:6902:2d05:b0:dc2:2ace:860 with SMTP id
+ fo5-20020a0569022d0500b00dc22ace0860mr20394ybb.2.1712251866075; Thu, 04 Apr
+ 2024 10:31:06 -0700 (PDT)
+Date: Thu, 4 Apr 2024 10:31:04 -0700
+In-Reply-To: <42dbf562-5eab-4f82-ad77-5ee5b8c79285@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (1.0)
-Subject: Re: [PATCH v4] rust: init: remove impl Zeroable for Infallible
-Date: Thu, 4 Apr 2024 10:28:13 -0700
-Message-Id: <A68286F0-AB83-4D64-99E3-EE47F03D1AAE@me.com>
-References: <CANiq72nyqxH2C1gr=UUCOftaKe0zSuuB++mMUD9zXo-pPBVMVg@mail.gmail.com>
-Cc: Alex Gaynor <alex.gaynor@gmail.com>, rust-for-linux@vger.kernel.org,
- Wedson Almeida Filho <wedsonaf@gmail.com>,
- Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
- =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,
- Andreas Hindborg <a.hindborg@samsung.com>,
- Alice Ryhl <aliceryhl@google.com>,
- Martin Rodriguez Reboredo <yakoyoku@gmail.com>,
- lkml <linux-kernel@vger.kernel.org>, stable@vger.kernel.org
-In-Reply-To: <CANiq72nyqxH2C1gr=UUCOftaKe0zSuuB++mMUD9zXo-pPBVMVg@mail.gmail.com>
-To: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
- Benno Lossin <benno.lossin@proton.me>
-X-Mailer: iPhone Mail (21F5048f)
-X-Proofpoint-GUID: xqsL6JBfzVb3C1dazRHJ2W53D_pWPobU
-X-Proofpoint-ORIG-GUID: xqsL6JBfzVb3C1dazRHJ2W53D_pWPobU
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-04-04_13,2024-04-04_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 phishscore=0
- mlxlogscore=980 clxscore=1011 adultscore=0 mlxscore=0 spamscore=0
- suspectscore=0 malwarescore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.19.0-2308100000 definitions=main-2404040123
+Mime-Version: 1.0
+References: <20240320005024.3216282-1-seanjc@google.com> <4d04b010-98f3-4eae-b320-a7dd6104b0bf@redhat.com>
+ <CALzav=eLH+V_5Y6ZWsRkmnbEb6fxPa55B7xyWxP3o6qsrs_nHA@mail.gmail.com>
+ <a2fff462-dfe6-4979-a7b2-131c6e0b5017@redhat.com> <ZgygGmaEuddZGKyX@google.com>
+ <ca1f320b-dc06-48e0-b4f5-ce860a72f0e2@redhat.com> <Zg3V-M3iospVUEDU@google.com>
+ <42dbf562-5eab-4f82-ad77-5ee5b8c79285@redhat.com>
+Message-ID: <Zg7j2D6WFqcPaXFB@google.com>
+Subject: Re: [RFC PATCH 0/4] KVM: x86/mmu: Rework marking folios dirty/accessed
+From: Sean Christopherson <seanjc@google.com>
+To: David Hildenbrand <david@redhat.com>
+Cc: David Matlack <dmatlack@google.com>, Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, David Stevens <stevensd@chromium.org>, 
+	Matthew Wilcox <willy@infradead.org>
+Content-Type: text/plain; charset="us-ascii"
 
-On Apr 4, 2024, at 4:03=E2=80=AFAM, Miguel Ojeda <miguel.ojeda.sandonis@gmai=
-l.com> wrote:
->=20
-> =EF=BB=BFOn Thu, Apr 4, 2024 at 11:01=E2=80=AFAM Benno Lossin <benno.lossi=
-n@proton.me> wrote:
->>=20
->> I don't see this commit in the kernel tree, what did you specify as
->> `--base` when running `git format`?
->=20
-> Yeah, I don't have it either, but it seems to apply cleanly.
->=20
-> Cheers,
-> Miguel
+On Thu, Apr 04, 2024, David Hildenbrand wrote:
+> On 04.04.24 00:19, Sean Christopherson wrote:
+> > Hmm, we essentially already have an mmu_notifier today, since secondary MMUs need
+> > to be invalidated before consuming dirty status.  Isn't the end result essentially
+> > a sane FOLL_TOUCH?
+> 
+> Likely. As stated in my first mail, FOLL_TOUCH is a bit of a mess right now.
+> 
+> Having something that makes sure the writable PTE/PMD is dirty (or
+> alternatively sets it dirty), paired with MMU notifiers notifying on any
+> mkclean would be one option that would leave handling how to handle dirtying
+> of folios completely to the core. It would behave just like a CPU writing to
+> the page table, which would set the pte dirty.
+> 
+> Of course, if frequent clearing of the dirty PTE/PMD bit would be a problem
+> (like we discussed for the accessed bit), that would not be an option. But
+> from what I recall, only clearing the PTE/PMD dirty bit is rather rare.
 
-I ran `git format-patch origin/master --base=3Dorigin/master`.  I
-can=E2=80=99t imagine how that could have resulted in a nonexistent commit
-hash?
-
-Thanks,
-Laine=
+And AFAICT, all cases already invalidate secondary MMUs anyways, so if anything
+it would probably be a net positive, e.g. the notification could more precisely
+say that SPTEs need to be read-only, not blasted away completely.
