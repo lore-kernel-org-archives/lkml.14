@@ -1,158 +1,178 @@
-Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40625134418;
-	Thu,  4 Apr 2024 23:23:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E9E4130A7F;
+	Thu,  4 Apr 2024 23:25:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712273039; cv=none; b=JlNQUWhgpv2Oxc89/3ZJqkahZdI7j/igBgJuFSyEWEVt3x7fXyr14FyDr5wZ/yoAeSLveq4T0ga25vLqobJcNqu2gZt9YytHCKOxNFPbeVA7bCoEjPrxOG0Vv4O7ATzqp7fchsbgPKeEXO912TeG5z4uF64sXDRmuyAyDsN04tE=
+	t=1712273141; cv=none; b=Y9hBcaZzvcXysBOz8cOOmIyqdtQDx3gXY8zTFBp+B9v9IormlvaKEWpRSHxbVaiHM1pYKd8LimuPJAq4DDEiJqQk51aRMcME0D1moumdm6As8Nxa4S7RqN3XfoSxemVY93l08oxVYO6UcaslQfotrhtyX46dQO12D0DudHqaCWo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712273039; c=relaxed/simple;
-	bh=Do963hSdPrLX5zfMcrNn6SbYrENL0NCjWtgD8cm98Nk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ow5zyCK1HIpaAL3AXasXvCcp4rc9v11YbGbdCTsdh15aSq6/hI5D33vdL5ZYeVjrYtOhkh7lgA1w1oujCxc3DLn586A9ZSTwMOuIlA/ipm9AEI9WFlw6Xsq9FwKLjWFYQyeC3uuvn4dd7D8kx3M38xeh8pveRrtpnfsOyvDCn/4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gmgz4EL6; arc=none smtp.client-ip=209.85.128.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1712273141; c=relaxed/simple;
+	bh=oqu+QXF9eyokJasNcXzyH/j0LzIhCwK4AHGP209pvQk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=mZ/m9G88OqzXCeWu5/3a+TVQt2/B0A1+0RZ9AREcQ9wx0wrySCNgY8JExvwb0lucyLQvtQiDZb5VEz86Xup/2JXck0ga47d7UNcVqqYXn/gbD90k2KILtKjbmm9/QsXpNJVLXvKAKqBCG+WEHaVkWCsk86S0cTmF9jVVQL1dSx4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Z888bGyG; arc=none smtp.client-ip=192.198.163.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gmgz4EL6"
-Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-4162aca8746so8000305e9.1;
-        Thu, 04 Apr 2024 16:23:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1712273035; x=1712877835; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=lXnwmQPrl07FZAiqD50mf42e3pDAJdibA7+5v+qAN78=;
-        b=gmgz4EL6/ZPvZ5Yhb+G4QxtHAhWjGLbn3SAmMLTUp1Kp8QDZuqhEv39zjg3ekORSGg
-         Q3tnizMdq7UIHHgthc5GH6ADzInaYj80fzspJlX21IQCGLQsOiOzhmkp5nFO+moygwYo
-         JuEt+3wT+JnF9zXHskwN+7/si/sW9/hNlR+rrFO1i2sXHdVZhgMVr9Zd0FSa6GppYrar
-         JQVN+Cl730iMFMY62Fq2IqWzFGXa5sadyfmr4I6LwNZ9W+dyQfP5yHD3mA1bBpjyuDzJ
-         JNW3faNP1gBmhBoKKxzUvJ+NYlZaZqlfeT6eg/d47a2xBA9yw++bhVwDvu7Cy30FQZjn
-         y3hw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712273035; x=1712877835;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=lXnwmQPrl07FZAiqD50mf42e3pDAJdibA7+5v+qAN78=;
-        b=wn3/YWpkU0FJMOTgbpF+4YqplvJveYzrLTRTLVJMSqDKhyfehGlX6s5A0QNt3GeEXu
-         +2IfMw5Jya2J2glpdlc+m4Q//nA4PceIm+lKxM/VfqarlHMQbJaEsuxYUIVQqKh7fwSr
-         dlJc7QR60KooWd5v9w0dQvZOqIjNv4NFyv77Kto9WvRKjG5hu7IDaJDhk9DHL7AfC+Cj
-         p9AM77WCCx33gZP56++fdc5RTCE9JsBtZJ28Y4AnIBw/Z55qs+b1U6UeIz0WGPNtaYQ8
-         AfetziDIH/P459J7KIEDQF/A/04tJVXIYHStc+PITeq5prHZeU3oqfcxaq62YfhATFnF
-         81Pw==
-X-Forwarded-Encrypted: i=1; AJvYcCXEuWOiNM92JyRmXkVqWYlxQahc1pYaopXnYhZc69ftUEhe8Bl7kUl2dtkuWqmxxTkswGrRtPLi2GzQ1uQtHEHbEjbf417b1Nb0oyMHxcqHjecb9M9qnTRGi5Yj7pdKaV19Xml+akl11Bd+rHbjlbwehtBzLoHJzprAh1wS/VPi602HSGv9P60bL6BmB0C4NtG0JSvir1T/ldm4TUqRtKVs
-X-Gm-Message-State: AOJu0YykxXiHNkkDM5sPalsEnbHGiC5j+fj8M5ci/XyQ+WE+//r9vZ8o
-	9iKbtq2cmM/aQA+U6VNkXh+zWSzShkEjCBzkRWnajNBnrFfsmPgz96MOTHcbLih722sxtRxoNCN
-	XwgGxLPV/ovKmEl1JxDd2EDz2tQc=
-X-Google-Smtp-Source: AGHT+IELDycs8Tmz4kVIWaOz90pVFimzN/8PHU3NEjxswWqigqc6Fh/8ut+n0sVFLjVwXD8RlCLctsIME6xMLay3jPc=
-X-Received: by 2002:a05:600c:3b08:b0:414:12f6:a105 with SMTP id
- m8-20020a05600c3b0800b0041412f6a105mr2948928wms.5.1712273035487; Thu, 04 Apr
- 2024 16:23:55 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Z888bGyG"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1712273139; x=1743809139;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=oqu+QXF9eyokJasNcXzyH/j0LzIhCwK4AHGP209pvQk=;
+  b=Z888bGyGjDHuILuha5CegLoMaMPYlEyC60/1NgjNqkhvxWC+jtv/uaOD
+   6pgNMmNgzy6X3B3WAh6GotEks14n/MhG8H32Y9UIqV1oDcskGeCb25cbV
+   O3c6nOofoVR0G6nr0HUDA7VVLpWZjksJE4o1LvrL9hPbDrkDahdwRVyir
+   785w8QMH9fL/v3z8+8gQCph6P71zyKCYXTSH9/+oU5yYKsswyQqN54FtQ
+   FBXp4Ra7O0D4j4oYiBN/PboOwsM+8wv9afbOwLsI8Wz5Mf+PirYFmcRpA
+   CCEYL1TBaYkShs6qb1KOf1EpFCAcUs6Pm00mNqXSRKDj6aulp4kCP0VCd
+   g==;
+X-CSE-ConnectionGUID: fJn2G0OTQuqdWgaSIZFtLA==
+X-CSE-MsgGUID: JFCJiFSKTzSN+NlsCIw+6Q==
+X-IronPort-AV: E=McAfee;i="6600,9927,11034"; a="7454409"
+X-IronPort-AV: E=Sophos;i="6.07,180,1708416000"; 
+   d="scan'208";a="7454409"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Apr 2024 16:25:38 -0700
+X-CSE-ConnectionGUID: hn8kO/wLQi+KqfsnEwSeWg==
+X-CSE-MsgGUID: UurbyzkfS92y0G733uwP4w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,180,1708416000"; 
+   d="scan'208";a="23435855"
+Received: from ls.sc.intel.com (HELO localhost) ([172.25.112.31])
+  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Apr 2024 16:25:38 -0700
+Date: Thu, 4 Apr 2024 16:25:37 -0700
+From: Isaku Yamahata <isaku.yamahata@intel.com>
+To: Sean Christopherson <seanjc@google.com>
+Cc: Chao Gao <chao.gao@intel.com>, isaku.yamahata@intel.com,
+	kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+	isaku.yamahata@gmail.com, Paolo Bonzini <pbonzini@redhat.com>,
+	erdemaktas@google.com, Sagi Shahar <sagis@google.com>,
+	Kai Huang <kai.huang@intel.com>, chen.bo@intel.com,
+	hang.yuan@intel.com, tina.zhang@intel.com,
+	isaku.yamahata@linux.intel.com
+Subject: Re: [PATCH v19 108/130] KVM: TDX: Handle TDX PV HLT hypercall
+Message-ID: <20240404232537.GV2444378@ls.amr.corp.intel.com>
+References: <cover.1708933498.git.isaku.yamahata@intel.com>
+ <c083430632ba9e80abd09bccd5609fb3cd9d9c63.1708933498.git.isaku.yamahata@intel.com>
+ <ZgzMH3944ZaBx8B3@chao-email>
+ <Zg1seIaTmM94IyR8@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240404190146.1898103-1-elver@google.com>
-In-Reply-To: <20240404190146.1898103-1-elver@google.com>
-From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Date: Thu, 4 Apr 2024 16:23:44 -0700
-Message-ID: <CAADnVQKc+Z39k9wbU2MHf-fPFma+9QsyOugmmmGq3ynQCTVfCw@mail.gmail.com>
-Subject: Re: [PATCH bpf-next 1/2] bpf: Introduce bpf_probe_write_user_registered()
-To: Marco Elver <elver@google.com>
-Cc: Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
-	Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, 
-	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
-	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
-	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>, 
-	Jiri Olsa <jolsa@kernel.org>, Dmitry Vyukov <dvyukov@google.com>, 
-	Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, bpf <bpf@vger.kernel.org>, 
-	"open list:DOCUMENTATION" <linux-doc@vger.kernel.org>, linux-trace-kernel@vger.kernel.org, 
-	LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <Zg1seIaTmM94IyR8@google.com>
 
-On Thu, Apr 4, 2024 at 12:02=E2=80=AFPM Marco Elver <elver@google.com> wrot=
-e:
->
-> With all the known caveats, tracing BPF programs may directly write to
-> user-space memory with the bpf_probe_write_user() helper. Memory safety
-> is an obvious problem when using this helper, since it is too easy to
-> overwrite memory across all running processes that user space did not
-> expect to be touched (neither the verifier nor the kernel knows what may
-> be touched). While it is possible to come up with mechanisms to safely
-> communicate to the BPF program which memory region may be written to,
-> there are no built-in guarantees of safety. For this reason, the helper
-> produces a warning in the kernel log, and in newer kernels it is
-> possible to disallow use of the helper since 51e1bb9eeaf7 ("bpf: Add
-> lockdown check for probe_write_user helper").
+On Wed, Apr 03, 2024 at 07:49:28AM -0700,
+Sean Christopherson <seanjc@google.com> wrote:
 
-So is it a fix or a feature?
+> On Wed, Apr 03, 2024, Chao Gao wrote:
+> > On Mon, Feb 26, 2024 at 12:26:50AM -0800, isaku.yamahata@intel.com wrote:
+> > >From: Isaku Yamahata <isaku.yamahata@intel.com>
+> > >
+> > >Wire up TDX PV HLT hypercall to the KVM backend function.
+> > >
+> > >Signed-off-by: Isaku Yamahata <isaku.yamahata@intel.com>
+> > >---
+> > >v19:
+> > >- move tdvps_state_non_arch_check() to this patch
+> > >
+> > >v18:
+> > >- drop buggy_hlt_workaround and use TDH.VP.RD(TD_VCPU_STATE_DETAILS)
+> > >
+> > >Signed-off-by: Isaku Yamahata <isaku.yamahata@intel.com>
+> > >---
+> > > arch/x86/kvm/vmx/tdx.c | 26 +++++++++++++++++++++++++-
+> > > arch/x86/kvm/vmx/tdx.h |  4 ++++
+> > > 2 files changed, 29 insertions(+), 1 deletion(-)
+> > >
+> > >diff --git a/arch/x86/kvm/vmx/tdx.c b/arch/x86/kvm/vmx/tdx.c
+> > >index eb68d6c148b6..a2caf2ae838c 100644
+> > >--- a/arch/x86/kvm/vmx/tdx.c
+> > >+++ b/arch/x86/kvm/vmx/tdx.c
+> > >@@ -688,7 +688,18 @@ void tdx_vcpu_load(struct kvm_vcpu *vcpu, int cpu)
+> > > 
+> > > bool tdx_protected_apic_has_interrupt(struct kvm_vcpu *vcpu)
+> > > {
+> > >-	return pi_has_pending_interrupt(vcpu);
+> > >+	bool ret = pi_has_pending_interrupt(vcpu);
+> > 
+> > Maybe
+> > 	bool has_pending_interrupt = pi_has_pending_interrupt(vcpu);
+> > 
+> > "ret" isn't a good name. or even call pi_has_pending_interrupt() directly in
+> > the if statement below.
+> 
+> Ya, or split the if-statement into multiple chucks, with comments explaining
+> what each non-intuitive chunk is doing.  The pi_has_pending_interrupt(vcpu) check
+> is self-explanatory, the halted thing, not so much.  They are terminal statements,
+> there's zero reason to pre-check the PID.
+> 
+> E.g.
+> 
+> 	/*
+> 	 * Comment explaining why KVM needs to assume a non-halted vCPU has a
+> 	 * pending interrupt (KVM can't see RFLAGS.IF).
+> 	 */
+> 	if (vcpu->arch.mp_state != KVM_MP_STATE_HALTED)
+> 		return true;
+> 
+> 	if (pi_has_pending_interrupt(vcpu))
+> 		return;
+> 
+> > >+	union tdx_vcpu_state_details details;
+> > >+	struct vcpu_tdx *tdx = to_tdx(vcpu);
+> > >+
+> > >+	if (ret || vcpu->arch.mp_state != KVM_MP_STATE_HALTED)
+> > >+		return true;
+> > 
+> > Question: why mp_state matters here?
+> > >+
+> > >+	if (tdx->interrupt_disabled_hlt)
+> > >+		return false;
+> > 
+> > Shouldn't we move this into vt_interrupt_allowed()? VMX calls the function to
+> > check if interrupt is disabled.
 
-> Nevertheless, direct user-space memory writes from BPF programs can be
-> useful to efficiently manipulate and communicate with cooperating user
-> space processes.
+Chao, are you suggesting to implement tdx_interrupt_allowed() as
+"EXIT_REASON_HLT && a0" instead of "return true"?
+I don't think it makes sense because it's rare case and we can't avoid spurious
+wakeup for TDX case.
 
-But there are many different ways for bpf to communicate with user space:
-perf ringbuf, bpf ringbug, various maps including mmap-ed array and arena.
-The commit log doesn't explain why we need another one.
 
-> For example, one of our use cases are for events that happen relatively
-> frequently in the kernel (e.g. specific scheduler events), but a set of
-> user space threads want to check for such events in very hot code paths
-> to make more optimal decisions (the cost of such a check can be no more
-> than a load and compare). The types of events and heuristics used may
-> change based on system environment and application, and a BPF program
-> provides the best trade-offs in terms of performance and deployment.
+> >KVM can clear tdx->interrupt_disabled_hlt on
+> > every TD-enter and set it only on TD-exit due to the guest making a
+> > TDVMCALL(hlt) w/ interrupt disabled.
+> 
+> I'm pretty sure interrupt_disabled_hlt shouldn't exist, should "a0", a.k.a. r12,
+> be preserved at this point?
+> 
+> 	/* Another comment explaning magic code. */
+> 	if (to_vmx(vcpu)->exit_reason.basic == EXIT_REASON_HLT &&
+> 	    tdvmcall_a0_read(vcpu))
+> 		return false;
+> 
+> 
+> Actually, can't this all be:
+> 
+> 	if (to_vmx(vcpu)->exit_reason.basic != EXIT_REASON_HLT)
+> 		return true;
+> 
+> 	if (!tdvmcall_a0_read(vcpu))
+> 		return false;
+> 
+> 	if (pi_has_pending_interrupt(vcpu))
+> 		return true;
+> 
+> 	return tdx_has_pending_virtual_interrupt(vcpu);
+> 
 
-and the tasks can use mmaped array shared across all or unique to each
-process.
-And both bpf and user space can read/write them with a single instruction.
-
->
-> To achieve better safety, introduce tagged user writable regions, that
-> must explicitly be registered before tracing BPF programs may use them:
->
->  1. The prctl() option PR_BPF_REGISTER_WRITABLE allows any user space
->     process (that is allowed to use prctl()) to register tagged writable
->     memory regions for the current thread.
->
->  2. Conversely, the prctl() option PR_BPF_UNREGISTER_WRITABLE allows a
->     user space process to unregister a writable memory region that was
->     previously registered from the current thread. This must be done
->     before freeing memory if the thread that registered a region is
->     still running.
->
->  3. Tracing BPF programs may write to any registered region in the
->     current thread with bpf_probe_write_user_registered(). If the memory
->     region has been tagged with a non-zero value, the BPF program must
->     provide a matching tag.
->
-> Admin capabilities are still required to attach BPF programs that use
-> the new bpf_probe_write_user_registered() helper.
-
-We stopped adding new helpers ~2 years ago.
-Only new kfuncs are allowed.
-
->
-> With this interface, user space threads are guaranteed that no writes
-> happen to regions that they did not explicitly register. Tagging can be
-> used to associate additional semantics with the memory region.
->
-> A note on tag allocation: Since such programs can only be installed by
-> the local system administrator, tag allocation may be done by the system
-> administrator. For example, by providing headers with tag definitions,
-> or a central service to distribute tags to the BPF program loader and to
-> user applications.
-
-Not clear how that's achieved in practice.
-To do prctl(REGSISTER, ... tag)
-the process will just pass this u32 tag.
-There is no way for the admin or other process to enforce certain
-tag usage.
-Since there is no way to enforce extra tag seems like a weak
-protection against something? What in particular?
+Thanks for the suggestion.  This is much cleaner.  Will update the function.
+-- 
+Isaku Yamahata <isaku.yamahata@intel.com>
