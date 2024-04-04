@@ -1,56 +1,61 @@
-Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56D0D1C698;
-	Thu,  4 Apr 2024 15:00:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D41E21C2A1;
+	Thu,  4 Apr 2024 15:00:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712242828; cv=none; b=QhnPNXCMOdcUAMyf3QWh+jqUGLgk3+Qalq6IfcMNf+OaVafKuCVMmBwKvzFOAYnOF6yVWGwZiXex8Yu15HiJk3VcW4kWm3B1pcL3NwDAbkEuhGDqsEFxVhx1PZM3SxJuoFQ3AF12/ewTL24VcqQx8GD5YGh70dlQizEeJTIjd58=
+	t=1712242843; cv=none; b=fV7gdlVtvkKOI31MSL7DM4m21aqMiL3ufXE0QO0Nd35wrEc3es3c3UXvLkWQEF6JRLrvv4RAhPFgDrlnDH6NFzabFv+1l2ONsN5MTZtLkfcUacl/wI96y2yX7e9HaLJwjTrD0xeuCq5LASWqoJ6euJA9naN4M+ZI5Jm8jeJWy7M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712242828; c=relaxed/simple;
-	bh=36sh5N/jvpjq6jwl9uDLoGCYQeODe9Y4/Xxq15VmGxU=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=dy59jXNMz9JhiuMWrE135PJSW/TU6xCIjHdyUEqLAauhTBNnagdRuEOSOfhExGonh/0RD3yK5FFCm14Uo2jv9FBhT8KPvi6sgcVISjA1QAUrOBQ/iwvPWXflkY07Ph5VSbvKtvL4tCTEtELZOPtqLmv4ZbPayXbI3eSxXMvxC0Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.208.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-56b0af675deso1246728a12.1;
-        Thu, 04 Apr 2024 08:00:26 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712242825; x=1712847625;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=xFdhNk5nsJDp0fP+o1jjxdXhOlujveYc4TGfWkAd6Tw=;
-        b=uEVuq165XJwzhECe733ybaBBv/yHZXeOxdezMghUt643+sfEjxa09Qv23obL4Sc5DV
-         PbmOVL4V/SgP/ddfASOrlYLgWe9zwAzaQ+0lztWgnIWFId/tylVIBimpN5hiIlZQPKvs
-         aHafTaAXBb3GjoKjy3HLfRubBsHbGASvlMQBFgrsTrNAYZrRcJ/Y7WaOFWKEaCSrAqIw
-         vykUypDxrw6T5LYNkZxr41L+sFuVHAC8caMBibKyBdKOmosisuxp5S+pAQJOd171wtGR
-         056iPoLRfh3BuerDRUbdjcqlxwP5dP5ksi8RfiWY/7A0hgXhBqJKOckcibAPgOZt8GXB
-         vqmA==
-X-Forwarded-Encrypted: i=1; AJvYcCVlFhQuz3nKjTjko/rYnm+kLcgQdmVd1ViIXB7gX+KTbZ4KFCApbtlpI6Vj7UWSTkC/GW9Vf5bdAll3q6B/PDtmfUupXy8p
-X-Gm-Message-State: AOJu0Yz02GGbupYWJdZKpgdvf/nIfoaEYl3+Tly+ztNUOsWfrLh43n93
-	R5xVxvq2O85C4ETkLCgxJIvBEoMSc/iJaDvm3XAoCBTsn9lwxKF64LuexYdk
-X-Google-Smtp-Source: AGHT+IEDoWBCdzLzbTOd4u5qjKtS5pCSs5obUD272vBgv9E+Eua7zaoJAOzGHG7jCtPFrcFlOwfRVw==
-X-Received: by 2002:a50:d7c2:0:b0:56b:cfef:b2de with SMTP id m2-20020a50d7c2000000b0056bcfefb2demr6344edj.26.1712242824689;
-        Thu, 04 Apr 2024 08:00:24 -0700 (PDT)
-Received: from localhost (fwdproxy-lla-120.fbsv.net. [2a03:2880:30ff:78::face:b00c])
-        by smtp.gmail.com with ESMTPSA id dh26-20020a0564021d3a00b0056e0b358e86sm1816264edb.97.2024.04.04.08.00.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 04 Apr 2024 08:00:24 -0700 (PDT)
-From: Breno Leitao <leitao@debian.org>
-To: kuba@kernel.org,
-	davem@davemloft.net,
-	pabeni@redhat.com,
-	edumazet@google.com
-Cc: linux-kernel@vger.kernel.org,
-	netdev@vger.kernel.org
-Subject: [PATCH net-next 3/3] net: dql: Optimize stall information population
-Date: Thu,  4 Apr 2024 07:59:32 -0700
-Message-ID: <20240404145939.3601097-4-leitao@debian.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240404145939.3601097-1-leitao@debian.org>
-References: <20240404145939.3601097-1-leitao@debian.org>
+	s=arc-20240116; t=1712242843; c=relaxed/simple;
+	bh=k0VeJYbpn/TShgzYqdD2a34SZlW9LgfGRcTUiFmDZpg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=cMQ9fP8BibXJM8BbKrKLXn4ZossHTYtyIxage2zWNovppJJpOptE2udlXFLmW0TipZb3uUNRxhbNY369njcOLCAjRISb+Ix7G3uIBp2w22bT5ExJoQwfquifMj8eTqAvOBmksgKTszyQc1QvjK58QNxTjzbhDxW8VrmHRTVRZIs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=O849EgRl; arc=none smtp.client-ip=192.198.163.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="O849EgRl"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1712242842; x=1743778842;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=k0VeJYbpn/TShgzYqdD2a34SZlW9LgfGRcTUiFmDZpg=;
+  b=O849EgRlT3B2Zfy6hyTh+yMgUlPyzGLPyEHFn8+ZEELo2+N7Axwp760U
+   DGdhKOvNf2EGCOzUuy6FsJHPHbzRLHCLHSGJYq+AeW0y5xDXda1Gu55z8
+   PXvdiF7+aVcUqREMdZ8vSCwoKowcTk2FNqKcc7ET06B2mBfgvxGjzM0t/
+   9p030X40HU/zsIge/z9BDk1IbooLO/HwOgSw8wkNpf30heMan2gxU0nIO
+   14/XFOUkKdTtqueVHR8uj6ihRyAD+ukpx0OFgoHQMgyUMMT+QrwPTGqZz
+   vHS1pWGCcLmW3F0DiSZY0/Lu6LLSVG2DFAHu7jimAga+TUnDaRtQPKL2D
+   A==;
+X-CSE-ConnectionGUID: Xw7L3KaYT6qE5fb+DpLugQ==
+X-CSE-MsgGUID: Ho72HPApTxm6FQ8oLsYZPQ==
+X-IronPort-AV: E=McAfee;i="6600,9927,11034"; a="7766868"
+X-IronPort-AV: E=Sophos;i="6.07,179,1708416000"; 
+   d="scan'208";a="7766868"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Apr 2024 08:00:40 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,11034"; a="937086705"
+X-IronPort-AV: E=Sophos;i="6.07,179,1708416000"; 
+   d="scan'208";a="937086705"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmsmga001.fm.intel.com with ESMTP; 04 Apr 2024 08:00:38 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+	id 28DED812; Thu,  4 Apr 2024 18:00:37 +0300 (EEST)
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	linux-kernel@vger.kernel.org,
+	linux-serial@vger.kernel.org
+Cc: Jiri Slaby <jirislaby@kernel.org>,
+	Yicong Yang <yangyicong@hisilicon.com>,
+	Tony Lindgren <tony@atomide.com>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	kernel test robot <oliver.sang@intel.com>
+Subject: [PATCH v1 1/1] serial: core: Clearing the circular buffer before NULLifying it
+Date: Thu,  4 Apr 2024 17:59:26 +0300
+Message-ID: <20240404150034.41648-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.43.0.rc1.1.gbec44491f096
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -59,37 +64,57 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-When Dynamic Queue Limit (DQL) is set, it always populate stall
-information through dql_queue_stall().  However, this information is
-only necessary if a stall threshold is set, stored in struct
-dql->stall_thrs.
+The circular buffer is NULLified in uart_tty_port_shutdown()
+under the spin lock. However, the PM or other timer based callbacks
+may still trigger after this event without knowning that buffer pointer
+is not valid. Since the serial code is a bit inconsistent in checking
+the buffer state (some rely on the head-tail positions, some on the
+buffer pointer), it's better to have both aligned, i.e. buffer pointer
+to be NULL and head-tail possitions to be the same, meaning it's empty.
+This will prevent asynchronous calls to dereference NULL pointer as
+reported recently in 8250 case:
 
-dql_queue_stall() is cheap, but not free, since it does have memory
-barriers and so forth.
+  BUG: kernel NULL pointer dereference, address: 00000cf5
+  Workqueue: pm pm_runtime_work
+  EIP: serial8250_tx_chars (drivers/tty/serial/8250/8250_port.c:1809)
+  ...
+  ? serial8250_tx_chars (drivers/tty/serial/8250/8250_port.c:1809)
+  __start_tx (drivers/tty/serial/8250/8250_port.c:1551)
+  serial8250_start_tx (drivers/tty/serial/8250/8250_port.c:1654)
+  serial_port_runtime_suspend (include/linux/serial_core.h:667 drivers/tty/serial/serial_port.c:63)
+  __rpm_callback (drivers/base/power/runtime.c:393)
+  ? serial_port_remove (drivers/tty/serial/serial_port.c:50)
+  rpm_suspend (drivers/base/power/runtime.c:447)
 
-Do not call dql_queue_stall() if there is no stall threshold set, and
-save some CPU cycles.
+The proposed change will prevent ->start_tx() to be called during
+suspend on shut down port.
 
-Signed-off-by: Breno Leitao <leitao@debian.org>
+Fixes: 43066e32227e ("serial: port: Don't suspend if the port is still busy")
+Reported-by: kernel test robot <oliver.sang@intel.com>
+Closes: https://lore.kernel.org/oe-lkp/202404031607.2e92eebe-lkp@intel.com
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
- include/linux/dynamic_queue_limits.h | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/include/linux/dynamic_queue_limits.h b/include/linux/dynamic_queue_limits.h
-index 9980df0b7247..869afb800ea1 100644
---- a/include/linux/dynamic_queue_limits.h
-+++ b/include/linux/dynamic_queue_limits.h
-@@ -137,7 +137,9 @@ static inline void dql_queued(struct dql *dql, unsigned int count)
- 
- 	dql->num_queued += count;
- 
--	dql_queue_stall(dql);
-+	/* Only populate stall information if the threshold is set */
-+	if (READ_ONCE(dql->stall_thrs))
-+		dql_queue_stall(dql);
- }
- 
- /* Returns how many objects can be queued, < 0 indicates over limit. */
+I have got into the very similar issue while working on max3100 driver.
+I haven't checked the 8250 case, but for mine the culprit is the same
+and this patch fixes it. Hence I assume it will fix the 8250 case as
+well.
+
+ drivers/tty/serial/serial_core.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/tty/serial/serial_core.c b/drivers/tty/serial/serial_core.c
+index a005fc06a077..ba3a674a8bbf 100644
+--- a/drivers/tty/serial/serial_core.c
++++ b/drivers/tty/serial/serial_core.c
+@@ -1788,6 +1788,7 @@ static void uart_tty_port_shutdown(struct tty_port *port)
+ 	 * Free the transmit buffer.
+ 	 */
+ 	uart_port_lock_irq(uport);
++	uart_circ_clear(&state->xmit);
+ 	buf = state->xmit.buf;
+ 	state->xmit.buf = NULL;
+ 	uart_port_unlock_irq(uport);
 -- 
-2.43.0
+2.43.0.rc1.1.gbec44491f096
 
