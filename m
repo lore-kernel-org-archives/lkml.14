@@ -1,101 +1,158 @@
-Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA7F813849C
-	for <linux-kernel@vger.kernel.org>; Thu,  4 Apr 2024 23:23:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40625134418;
+	Thu,  4 Apr 2024 23:23:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712272983; cv=none; b=fS+2EPULbt1ChYqZnjzbQkhUGt+8erxcF0Sf2gDZ7OjwNXJyhvtpc6sncYul/xQOoAwTzMmiNZ58Z+GXzb5zAQgt9JxQBsdDYXsf1XZiwEHD0Aiia5F1GJdwhlvW3tHM6tcSUqHsxRCM1x2RvcHaKzwm7jMDEeN6jSUAaQtpyf8=
+	t=1712273039; cv=none; b=JlNQUWhgpv2Oxc89/3ZJqkahZdI7j/igBgJuFSyEWEVt3x7fXyr14FyDr5wZ/yoAeSLveq4T0ga25vLqobJcNqu2gZt9YytHCKOxNFPbeVA7bCoEjPrxOG0Vv4O7ATzqp7fchsbgPKeEXO912TeG5z4uF64sXDRmuyAyDsN04tE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712272983; c=relaxed/simple;
-	bh=JDhLyOSQcTaSooSrCsfonCB5AjeLH72k876s7xQGT/E=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=XC3IL+ChmBsGx2qWi37+YyfXmuUcQA7BekmbLVzxz1Ti3A9VRNXyQbSuWfU1TeepYrQDJ2fPwsE83xnxvp4tVHtwJWyD5+VEaMjJhYwUXnr5DLjRUUkbDg6UjMt429PWYBz2cNy+meSjAeabpDLHKBIu0CsCN/9BV7IqOOY9GYk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com; spf=none smtp.mailfrom=toblux.com; dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b=Omb990ZD; arc=none smtp.client-ip=209.85.218.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=toblux.com
+	s=arc-20240116; t=1712273039; c=relaxed/simple;
+	bh=Do963hSdPrLX5zfMcrNn6SbYrENL0NCjWtgD8cm98Nk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ow5zyCK1HIpaAL3AXasXvCcp4rc9v11YbGbdCTsdh15aSq6/hI5D33vdL5ZYeVjrYtOhkh7lgA1w1oujCxc3DLn586A9ZSTwMOuIlA/ipm9AEI9WFlw6Xsq9FwKLjWFYQyeC3uuvn4dd7D8kx3M38xeh8pveRrtpnfsOyvDCn/4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gmgz4EL6; arc=none smtp.client-ip=209.85.128.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b="Omb990ZD"
-Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-a50f170b7e3so217539166b.2
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Apr 2024 16:23:01 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gmgz4EL6"
+Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-4162aca8746so8000305e9.1;
+        Thu, 04 Apr 2024 16:23:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=toblux-com.20230601.gappssmtp.com; s=20230601; t=1712272980; x=1712877780; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=KwA9Lj7DcFnIwvQ2Z0JNXU/969zMWpLh40LE9qlTFsg=;
-        b=Omb990ZDy3Ni8KlC44STRVuYWA08FoM6Roa3TdPJzgj11mYOVyDuZEAqgPc25R8lxE
-         lPpfVTUYaW4HRxIJWmSqw5+nRheQHacFfmKbeCxZViX0dIHTw3pyUYARbAX9x9J6IGBa
-         Cq7hVeuQxVjW4k/zN3PMPhSr6ELcPviHqIwM59knGNu9laYHn/0Msrpdn9rwYhSzvwvK
-         68vC4imC5869z3a0KEkIKVrJwSxQALXzk7yIUINcdC7M4GU6T1FTzH/BBpAb3ece6u7B
-         f4kCvKOi12H2/CbNVEVCoz/zxbG3VEwN9z5SPBOAK7Xfj2XFSKf6EFLxuifCBQZvHc6G
-         1mSQ==
+        d=gmail.com; s=20230601; t=1712273035; x=1712877835; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=lXnwmQPrl07FZAiqD50mf42e3pDAJdibA7+5v+qAN78=;
+        b=gmgz4EL6/ZPvZ5Yhb+G4QxtHAhWjGLbn3SAmMLTUp1Kp8QDZuqhEv39zjg3ekORSGg
+         Q3tnizMdq7UIHHgthc5GH6ADzInaYj80fzspJlX21IQCGLQsOiOzhmkp5nFO+moygwYo
+         JuEt+3wT+JnF9zXHskwN+7/si/sW9/hNlR+rrFO1i2sXHdVZhgMVr9Zd0FSa6GppYrar
+         JQVN+Cl730iMFMY62Fq2IqWzFGXa5sadyfmr4I6LwNZ9W+dyQfP5yHD3mA1bBpjyuDzJ
+         JNW3faNP1gBmhBoKKxzUvJ+NYlZaZqlfeT6eg/d47a2xBA9yw++bhVwDvu7Cy30FQZjn
+         y3hw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712272980; x=1712877780;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=KwA9Lj7DcFnIwvQ2Z0JNXU/969zMWpLh40LE9qlTFsg=;
-        b=t5QkukLltb77yDBnqW9SERu0PWAhnigXiQNlsDEq+XQAPQ1VC4tvs+As6sPKIwoVtL
-         p7n0cKAY5bAtYxbLw8rLqyqo7Yh+XBpmoCMAYPVoc5JKD50zlS8JIaL/oHUKHZtJzpSK
-         GaessYStjMRc+gfth0PZxxFaZ70W594We/ivS9xgjEywXdzQV1Y2Cc56odeTt404Yz8n
-         KWFuB0vCW4xgvy5lPEz0FJXZl7giZyyvaX7kCWtuqN3gbYMQ1qXKC0FN3AxG9VpMdMxl
-         6tLaEelxfoASvmne+EHINYB5ktpLKrXXAQnjyVaja4uRP4P9RCnXbJlOrLeIdsXP50kB
-         yz9w==
-X-Forwarded-Encrypted: i=1; AJvYcCW5oMGteFpVv9cUowb/dV7kxEkyTZmPG0mb+z3i91W2mLf0TGJgpoubkNvefwykSuISmMv1hjOJfbOZuIRwQyN/EdkAn6G6UKRrPnlY
-X-Gm-Message-State: AOJu0Yx1CpJhm8zsS/LKKbrp3v04VdtrSwnOyFK7veAGzVIahbSyD9QI
-	ULv3Tapf8YhiLsNewChdcy8tYyACJKCoGivKAFOj5cb2MAs20G9Zi1hYEEltE7A=
-X-Google-Smtp-Source: AGHT+IFuZOyI31RPfJNqk84k9YT+wF+zzwVQYgTjznj8dP/IUFod/milr4sZ93Uc0o0L77TMd3ntvQ==
-X-Received: by 2002:a17:906:5a98:b0:a51:8ce1:4eea with SMTP id l24-20020a1709065a9800b00a518ce14eeamr1773193ejq.55.1712272979914;
-        Thu, 04 Apr 2024 16:22:59 -0700 (PDT)
-Received: from fedora.fritz.box (aftr-82-135-80-212.dynamic.mnet-online.de. [82.135.80.212])
-        by smtp.gmail.com with ESMTPSA id gx5-20020a1709068a4500b00a4e579ce949sm126123ejc.51.2024.04.04.16.22.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 04 Apr 2024 16:22:59 -0700 (PDT)
-From: Thorsten Blum <thorsten.blum@toblux.com>
-To: Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	x86@kernel.org
-Cc: "H. Peter Anvin" <hpa@zytor.com>,
-	"Peter Zijlstra (Intel)" <peterz@infradead.org>,
-	Arnd Bergmann <arnd@arndb.de>,
-	linux-kernel@vger.kernel.org,
-	Thorsten Blum <thorsten.blum@toblux.com>
-Subject: [PATCH] x86/apic: Use max() to fix Coccinelle warning
-Date: Fri,  5 Apr 2024 01:21:47 +0200
-Message-ID: <20240404232146.47105-2-thorsten.blum@toblux.com>
-X-Mailer: git-send-email 2.44.0
+        d=1e100.net; s=20230601; t=1712273035; x=1712877835;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=lXnwmQPrl07FZAiqD50mf42e3pDAJdibA7+5v+qAN78=;
+        b=wn3/YWpkU0FJMOTgbpF+4YqplvJveYzrLTRTLVJMSqDKhyfehGlX6s5A0QNt3GeEXu
+         +2IfMw5Jya2J2glpdlc+m4Q//nA4PceIm+lKxM/VfqarlHMQbJaEsuxYUIVQqKh7fwSr
+         dlJc7QR60KooWd5v9w0dQvZOqIjNv4NFyv77Kto9WvRKjG5hu7IDaJDhk9DHL7AfC+Cj
+         p9AM77WCCx33gZP56++fdc5RTCE9JsBtZJ28Y4AnIBw/Z55qs+b1U6UeIz0WGPNtaYQ8
+         AfetziDIH/P459J7KIEDQF/A/04tJVXIYHStc+PITeq5prHZeU3oqfcxaq62YfhATFnF
+         81Pw==
+X-Forwarded-Encrypted: i=1; AJvYcCXEuWOiNM92JyRmXkVqWYlxQahc1pYaopXnYhZc69ftUEhe8Bl7kUl2dtkuWqmxxTkswGrRtPLi2GzQ1uQtHEHbEjbf417b1Nb0oyMHxcqHjecb9M9qnTRGi5Yj7pdKaV19Xml+akl11Bd+rHbjlbwehtBzLoHJzprAh1wS/VPi602HSGv9P60bL6BmB0C4NtG0JSvir1T/ldm4TUqRtKVs
+X-Gm-Message-State: AOJu0YykxXiHNkkDM5sPalsEnbHGiC5j+fj8M5ci/XyQ+WE+//r9vZ8o
+	9iKbtq2cmM/aQA+U6VNkXh+zWSzShkEjCBzkRWnajNBnrFfsmPgz96MOTHcbLih722sxtRxoNCN
+	XwgGxLPV/ovKmEl1JxDd2EDz2tQc=
+X-Google-Smtp-Source: AGHT+IELDycs8Tmz4kVIWaOz90pVFimzN/8PHU3NEjxswWqigqc6Fh/8ut+n0sVFLjVwXD8RlCLctsIME6xMLay3jPc=
+X-Received: by 2002:a05:600c:3b08:b0:414:12f6:a105 with SMTP id
+ m8-20020a05600c3b0800b0041412f6a105mr2948928wms.5.1712273035487; Thu, 04 Apr
+ 2024 16:23:55 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20240404190146.1898103-1-elver@google.com>
+In-Reply-To: <20240404190146.1898103-1-elver@google.com>
+From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Date: Thu, 4 Apr 2024 16:23:44 -0700
+Message-ID: <CAADnVQKc+Z39k9wbU2MHf-fPFma+9QsyOugmmmGq3ynQCTVfCw@mail.gmail.com>
+Subject: Re: [PATCH bpf-next 1/2] bpf: Introduce bpf_probe_write_user_registered()
+To: Marco Elver <elver@google.com>
+Cc: Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+	Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, 
+	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
+	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
+	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>, 
+	Jiri Olsa <jolsa@kernel.org>, Dmitry Vyukov <dvyukov@google.com>, 
+	Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, bpf <bpf@vger.kernel.org>, 
+	"open list:DOCUMENTATION" <linux-doc@vger.kernel.org>, linux-trace-kernel@vger.kernel.org, 
+	LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Fixes the following Coccinelle/coccicheck warning reported by
-minmax.cocci:
+On Thu, Apr 4, 2024 at 12:02=E2=80=AFPM Marco Elver <elver@google.com> wrot=
+e:
+>
+> With all the known caveats, tracing BPF programs may directly write to
+> user-space memory with the bpf_probe_write_user() helper. Memory safety
+> is an obvious problem when using this helper, since it is too easy to
+> overwrite memory across all running processes that user space did not
+> expect to be touched (neither the verifier nor the kernel knows what may
+> be touched). While it is possible to come up with mechanisms to safely
+> communicate to the BPF program which memory region may be written to,
+> there are no built-in guarantees of safety. For this reason, the helper
+> produces a warning in the kernel log, and in newer kernels it is
+> possible to disallow use of the helper since 51e1bb9eeaf7 ("bpf: Add
+> lockdown check for probe_write_user helper").
 
-	WARNING opportunity for max()
+So is it a fix or a feature?
 
-Signed-off-by: Thorsten Blum <thorsten.blum@toblux.com>
----
- arch/x86/kernel/apic/ipi.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> Nevertheless, direct user-space memory writes from BPF programs can be
+> useful to efficiently manipulate and communicate with cooperating user
+> space processes.
 
-diff --git a/arch/x86/kernel/apic/ipi.c b/arch/x86/kernel/apic/ipi.c
-index 5da693d633b7..7047948396c1 100644
---- a/arch/x86/kernel/apic/ipi.c
-+++ b/arch/x86/kernel/apic/ipi.c
-@@ -314,7 +314,7 @@ int safe_smp_processor_id(void)
- 
- 	cpuid = convert_apicid_to_cpu(apicid);
- 
--	return cpuid >= 0 ? cpuid : 0;
-+	return max(cpuid, 0);
- }
- #endif
- #endif
--- 
-2.44.0
+But there are many different ways for bpf to communicate with user space:
+perf ringbuf, bpf ringbug, various maps including mmap-ed array and arena.
+The commit log doesn't explain why we need another one.
 
+> For example, one of our use cases are for events that happen relatively
+> frequently in the kernel (e.g. specific scheduler events), but a set of
+> user space threads want to check for such events in very hot code paths
+> to make more optimal decisions (the cost of such a check can be no more
+> than a load and compare). The types of events and heuristics used may
+> change based on system environment and application, and a BPF program
+> provides the best trade-offs in terms of performance and deployment.
+
+and the tasks can use mmaped array shared across all or unique to each
+process.
+And both bpf and user space can read/write them with a single instruction.
+
+>
+> To achieve better safety, introduce tagged user writable regions, that
+> must explicitly be registered before tracing BPF programs may use them:
+>
+>  1. The prctl() option PR_BPF_REGISTER_WRITABLE allows any user space
+>     process (that is allowed to use prctl()) to register tagged writable
+>     memory regions for the current thread.
+>
+>  2. Conversely, the prctl() option PR_BPF_UNREGISTER_WRITABLE allows a
+>     user space process to unregister a writable memory region that was
+>     previously registered from the current thread. This must be done
+>     before freeing memory if the thread that registered a region is
+>     still running.
+>
+>  3. Tracing BPF programs may write to any registered region in the
+>     current thread with bpf_probe_write_user_registered(). If the memory
+>     region has been tagged with a non-zero value, the BPF program must
+>     provide a matching tag.
+>
+> Admin capabilities are still required to attach BPF programs that use
+> the new bpf_probe_write_user_registered() helper.
+
+We stopped adding new helpers ~2 years ago.
+Only new kfuncs are allowed.
+
+>
+> With this interface, user space threads are guaranteed that no writes
+> happen to regions that they did not explicitly register. Tagging can be
+> used to associate additional semantics with the memory region.
+>
+> A note on tag allocation: Since such programs can only be installed by
+> the local system administrator, tag allocation may be done by the system
+> administrator. For example, by providing headers with tag definitions,
+> or a central service to distribute tags to the BPF program loader and to
+> user applications.
+
+Not clear how that's achieved in practice.
+To do prctl(REGSISTER, ... tag)
+the process will just pass this u32 tag.
+There is no way for the admin or other process to enforce certain
+tag usage.
+Since there is no way to enforce extra tag seems like a weak
+protection against something? What in particular?
