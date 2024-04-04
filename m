@@ -1,117 +1,111 @@
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A95D1339AC;
-	Thu,  4 Apr 2024 06:47:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.154.123
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C3A12F32;
+	Thu,  4 Apr 2024 06:48:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712213227; cv=none; b=qjS2UAz/CRBF6FykuHgqcl7nY2pVPAPHBy9h3gHNsI57wLUYv7qOeI3MZSI+/S0MC97hwuP320rqrLch0vACzxfr+u3ypQukXgV9mzUb9TfIDFj+H5EsW9iMGStXWDJqoGmo2bHOGqRsQDqUFOOGzdHKW5F9P4ZpHAvGCuNfbVg=
+	t=1712213287; cv=none; b=vCFf8OjhwyiNe4LVJdn2BF0bGZiE091lKef4xPZOUdEGS4MBpFbqe/QkfHgEtlNouqxHon3vjd91M+K/D4Xn4BIe0mfCUxugj2Uz3/xFGY1kQY4mB0D1vulFi15+LNKgzsXJHO3pIFYc0d8SDC3e4ROfIlpDProsBU0f9r+ZSqY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712213227; c=relaxed/simple;
-	bh=BS/s55oBb1N9cMaDzp7eKHOCuDD7OcEW31rL76+i51g=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=An8/WuW5+rxVF5Q+o1fUvCyAwl78QPQ5KhTlHbPAd/626YSiAOFn1z6EGRiCOlUmUdaAOOjr7ZIgqMBSKLht7i6wg39KiPWUJPi2rQTeDibtxDDby38sqk4FO1NM8v5OXTG+DE2KLC5xNkQj4ikVAYkULaWWXwxqvQV+knh3xd4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=s3RmDrb1; arc=none smtp.client-ip=68.232.154.123
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
+	s=arc-20240116; t=1712213287; c=relaxed/simple;
+	bh=xOAqqA97rFiRnhyENeB1oh2EAjPFrezmlS/8ZhaH9qc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=l0XHBwq9y1OOYb6onhsSb/7UCNsXFFay6uFLgZuDVVagZCNcHMEgnqLJtX7c3Z5bPhRiEgMsvjnYJRMEAL+YRDl8EMFdwwoJG0T/PEevW/jUTswYeQLXD7ZAwMmagS+RjEop4TmQyEJydKcPd0yZH2G7YR+jagFdM6ruyWM8NKU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=eREUNBs9; arc=none smtp.client-ip=198.175.65.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="s3RmDrb1"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="eREUNBs9"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1712213225; x=1743749225;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1712213286; x=1743749286;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=BS/s55oBb1N9cMaDzp7eKHOCuDD7OcEW31rL76+i51g=;
-  b=s3RmDrb1PA8C4NlIDe6c6vkMzj9XfZLWAv8UR/uNP7m6vllYBQm5+oWZ
-   NVHZO7xgzdXr9JUrQWDngoJJ8z7UzLVwibiY2TBk9cHMIZyd9HIR69v0z
-   lA5kj75nWG9L00qNqBhZmGUk0cOf9luVCvIBuj8JWSKGnSHaa3j80f8cn
-   JLk2hijDth3oKezhuG/m4lXb6efZF0bYWn308n2R287T6gyiA5K+lYs1t
-   AqhxiH8VnJgaUuHASyopOb+wdwcaNGbX776U+5kzVmNEEOlMYmLj9ChQ2
-   f3vVXzqItSFRyFXjfZ/TrrFV3gs7YUvpNaTRrT8cb0YjlajhPuTjYxyfq
-   Q==;
-X-CSE-ConnectionGUID: axQ+w/uKQnKRlWfZ5SIJiw==
-X-CSE-MsgGUID: kNgSi04tRKyk6BXjxBVdHQ==
-X-IronPort-AV: E=Sophos;i="6.07,178,1708412400"; 
-   d="scan'208";a="186701098"
-X-Amp-Result: SKIPPED(no attachment in message)
-Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa6.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 03 Apr 2024 23:47:04 -0700
-Received: from chn-vm-ex02.mchp-main.com (10.10.85.144) by
- chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Wed, 3 Apr 2024 23:46:28 -0700
-Received: from localhost (10.10.85.11) by chn-vm-ex02.mchp-main.com
- (10.10.85.144) with Microsoft SMTP Server id 15.1.2507.35 via Frontend
- Transport; Wed, 3 Apr 2024 23:46:28 -0700
-Date: Thu, 4 Apr 2024 08:46:27 +0200
-From: Horatiu Vultur <horatiu.vultur@microchip.com>
-To: Daniel Machon <daniel.machon@microchip.com>
-CC: Lars Povlsen <lars.povlsen@microchip.com>, Steen Hegelund
-	<Steen.Hegelund@microchip.com>, <UNGLinuxDriver@microchip.com>, "David S.
- Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, "Jakub
- Kicinski" <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	<linux-arm-kernel@lists.infradead.org>, <netdev@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH net-next 2/3] net: sparx5: add support for tc flower
- mirred action.
-Message-ID: <20240404064627.6m25m2mi7zbpqbyo@DEN-DL-M31836.microchip.com>
-References: <20240403-mirror-redirect-actions-v1-0-c8e7c8132c89@microchip.com>
- <20240403-mirror-redirect-actions-v1-2-c8e7c8132c89@microchip.com>
+  bh=xOAqqA97rFiRnhyENeB1oh2EAjPFrezmlS/8ZhaH9qc=;
+  b=eREUNBs9zXos/lmStkTFhFEhR2gk6KubhEce+E20UQpjLBlzgMzdLfZ/
+   U9KMAlOk8DORDgZsH4IDDwV6T4bB0EQSvm0+7roN7hUC4z0N4yfJ0K77M
+   NW+ZO1MefzFRRStmk81peCGTlgG4mXcmhUYcU3S6XFotrRvSIlKzsGoiw
+   p04cPldg5jRycr3CwWk5Jz6QP2d4XFToUb0TJ7+jJ5dadV8Q72lxQ8Pi0
+   v7hL3RAcT7UJt47/BKrm+AntAxWRfAvyKl6PEiMYmzpCixUNsckbJ++1t
+   hpZiLRJXML9bVMr5qfJiAVeEnDalBrbUDfEXIImNtGfv1irGEGfLx9s6e
+   A==;
+X-CSE-ConnectionGUID: OH3nJK0HQr29KGB19cvAdA==
+X-CSE-MsgGUID: 1qnQN/6hQHWAVdzD6Lgx8g==
+X-IronPort-AV: E=McAfee;i="6600,9927,11033"; a="11309344"
+X-IronPort-AV: E=Sophos;i="6.07,178,1708416000"; 
+   d="scan'208";a="11309344"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2024 23:48:05 -0700
+X-CSE-ConnectionGUID: qEMawpElS4SNkIN6lS+AMg==
+X-CSE-MsgGUID: iuFyfbxPTwmWr+oLESktDA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,178,1708416000"; 
+   d="scan'208";a="18663740"
+Received: from turnipsi.fi.intel.com (HELO kekkonen.fi.intel.com) ([10.237.72.44])
+  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2024 23:48:01 -0700
+Received: from kekkonen.localdomain (localhost [127.0.0.1])
+	by kekkonen.fi.intel.com (Postfix) with SMTP id 17CB911F855;
+	Thu,  4 Apr 2024 09:47:58 +0300 (EEST)
+Date: Thu, 4 Apr 2024 06:47:58 +0000
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+To: git@luigi311.com
+Cc: linux-media@vger.kernel.org, dave.stevenson@raspberrypi.com,
+	jacopo.mondi@ideasonboard.com, mchehab@kernel.org, robh@kernel.org,
+	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
+	shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
+	festevam@gmail.com, devicetree@vger.kernel.org, imx@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	pavel@ucw.cz, phone-devel@vger.kernel.org,
+	Ondrej Jirman <megi@xff.cz>
+Subject: Re: [PATCH v3 22/25] dt-bindings: media: imx258: Add binding for
+ powerdown-gpio
+Message-ID: <Zg5NHqX2KmvOXf01@kekkonen.localdomain>
+References: <20240403150355.189229-1-git@luigi311.com>
+ <20240403150355.189229-23-git@luigi311.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240403-mirror-redirect-actions-v1-2-c8e7c8132c89@microchip.com>
+In-Reply-To: <20240403150355.189229-23-git@luigi311.com>
 
-The 04/03/2024 20:41, Daniel Machon wrote:
+Hi Luigi,
 
-Hi Daniel,
-
-...
-
-> +static int sparx5_tc_action_mirred(struct vcap_admin *admin,
-> +				   struct vcap_rule *vrule,
-> +				   struct flow_cls_offload *fco,
-> +				   struct flow_action_entry *act)
-> +{
-> +	struct vcap_u72_action ports = {0};
-
-Maybe this is just a preferences, but usually we use memset instead of {0};
-
-> +	int err;
-> +
-> +	if (admin->vtype != VCAP_TYPE_IS0 && admin->vtype != VCAP_TYPE_IS2) {
-> +		NL_SET_ERR_MSG_MOD(fco->common.extack,
-> +				   "Mirror action not supported in this VCAP");
-> +		return -EOPNOTSUPP;
-> +	}
-> +
-> +	err = vcap_rule_add_action_u32(vrule, VCAP_AF_MASK_MODE,
-> +				       SPX5_PMM_OR_DSTMASK);
-> +	if (err)
-> +		return err;
-> +
-> +	sparx5_tc_flower_set_port_mask(&ports, act->dev);
-> +
-> +	err = vcap_rule_add_action_u72(vrule, VCAP_AF_PORT_MASK, &ports);
-> +	if (err)
-> +		return err;
-
-You can just return directly the return value from vcap_rule_add_action_u72
-Something like:
-
-return vcap_rule_add_action_u72(...)
-
-> +
-> +	return 0;
-> +}
-> -- 
-> 2.34.1
+On Wed, Apr 03, 2024 at 09:03:51AM -0600, git@luigi311.com wrote:
+> From: Luis Garcia <git@luigi311.com>
 > 
+> Add powerdown-gpio binding as it is required for some boards
+> 
+> Signed-off-by: Ondrej Jirman <megi@xff.cz>
+> Signed-off-by: Luis Garcia <git@luigi311.com>
+> ---
+>  Documentation/devicetree/bindings/media/i2c/sony,imx258.yaml | 4 ++++
+>  1 file changed, 4 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/media/i2c/sony,imx258.yaml b/Documentation/devicetree/bindings/media/i2c/sony,imx258.yaml
+> index c978abc0cdb3..33338139e6e8 100644
+> --- a/Documentation/devicetree/bindings/media/i2c/sony,imx258.yaml
+> +++ b/Documentation/devicetree/bindings/media/i2c/sony,imx258.yaml
+> @@ -36,6 +36,10 @@ properties:
+>    reg:
+>      maxItems: 1
+>  
+> +  powerdown-gpios:
+> +    description:
+> +      Reference to the GPIO connected to the PWDN pin, if any.
+
+The sensor datasheet does not mention this one so I presume this is
+unrelated to the sensor. Could it be for GPIO regulator control instead?
+
+> +
+>    reset-gpios:
+>      description: |-
+>        Reference to the GPIO connected to the XCLR pin, if any.
 
 -- 
-/Horatiu
+Regards,
+
+Sakari Ailus
