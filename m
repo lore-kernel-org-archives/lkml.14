@@ -1,84 +1,152 @@
-Received: from mail-vk1-f182.google.com (mail-vk1-f182.google.com [209.85.221.182])
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56E9342072
-	for <linux-kernel@vger.kernel.org>; Thu,  4 Apr 2024 12:48:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29B486E613
+	for <linux-kernel@vger.kernel.org>; Thu,  4 Apr 2024 12:49:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712234939; cv=none; b=o0uwfrU8ptc5J4kzTUVcaWjossx0YNKbI6IsDvEVhRCJi3QYynYNWPLLYPLWAVcFiu8DIa6QiihmgCVxn5/Pbi7/G37c+CAIIsZsBOwr1EEHAsDnPJlCHPhJnXU7t4no1CXyxx4VS9CZX7jEEkJhebruI8hVY52JJG9DIuau+/8=
+	t=1712234950; cv=none; b=eW+M+eq9ws/k3L5nmNwdgv2kaTchhzBYsmefB0NMhOprr4TwfgifWLO2w9fUdGEZwsCjg1hh7/X9YRFU0u6KNmNnq6Cl1c+VS58fzfJ+NFfUwdLtpgYcqmAU/makTpzvFttXNQVxZjIbGRs8pVWrApKGe7GrvXbXikQUUhLSBxo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712234939; c=relaxed/simple;
-	bh=CDW+rWUwlBs2jr/h4xTTDqP5Pco98DLtx7p8J/ZzVus=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=rIgCcdvrDiC/6fDTE+ygxtsz3cTGk0dcCfzaB3ject720kYYQmQ2t/yTEbq7jzQ11mYfSJB/BdAfSAJFOxhKIeftq6PnAWcibz9Mslhd8eCtpFjvpCLiTdpQmMZSlWOOpGk3+ZU2Mwbxex9Ckal5GVwr/ucxegQQwocOq9FAD9U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=mnk1VaCs; arc=none smtp.client-ip=209.85.221.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1712234950; c=relaxed/simple;
+	bh=QyZhfVCs+m1G4gOeHX67Ge1/BAXef3MBHMSS+UUONXw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=iEzb90NvNepYJyahCZllD3pXXTau3ybbQgFbBShoMq5Z/KVldTMrS+UJ0CxGS+6IzQDTZTomeDpkULfrBFjmmryy0M9+XDfv32m50oyL2nl0CAeDQua6d3QDXbYabQE4aWxTOrfsf7NbWp2DDiU1n4PgtvEGsDMTO68RCSBUd2Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=ISdw1Kg1; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=IGW5qOax; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=ISdw1Kg1; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=IGW5qOax; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="mnk1VaCs"
-Received: by mail-vk1-f182.google.com with SMTP id 71dfb90a1353d-4daa69dfc27so155156e0c.3
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Apr 2024 05:48:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1712234935; x=1712839735; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=CDW+rWUwlBs2jr/h4xTTDqP5Pco98DLtx7p8J/ZzVus=;
-        b=mnk1VaCsT+DrkDCFAbjnInE8cA7VV/Vt4fcDnK3yTuQ4nPh3fSKkCVtzNnK3Cf3JjQ
-         2RnykLQu1BpiTn6Wv+aUmmLed9AWuXDWxdww5ZLD5yExMm415sPePkyrVEAgMzIfdbr/
-         Mk7K7huVgTdq7XZ2LoK0tO5y6L5MAqy9QApxsnCMg+FhSqeSfLe8C7Vs/qZXhUiOY83C
-         wXOUe+SM/zpAtgcBacRNL9TEWDOoyTBSWJ+srzQl/JchDJ3EGvpwiS1IljIzl4LkXyq/
-         A6uZJ0hSFmOrZgwHYBPY0VJC8BEYvrFIdcYNyuKRDGaaCLsa1x6qtlT0uLDsEqGrXhVR
-         KcEQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712234935; x=1712839735;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=CDW+rWUwlBs2jr/h4xTTDqP5Pco98DLtx7p8J/ZzVus=;
-        b=tQzOoIMS4d7PGkbMYVjLAaPoX0W5LqdRC6tpiqC2IV6hbZwiUjnFpreVBRAX+TdrhG
-         JvFu/Lz1LSmCXwnD7R5l25Yb5a4rF6dStwKCjs4cl17YFwGMTFyfbu0rG4K8L+oVZ/QL
-         47cZ8+/r0v0J5W7aDs6UEQyNo0IHB2IF4odpXbGEaxwYj9x1XCY+A8U/pFZ7S+18+kUY
-         7Zz1B38UwiJx2tueP9AniJ/mEY//FpMV8WDpF8vCfpR0Mf9XSy8RMZ9rO3BF2v9rg54r
-         Dyy09mv7+bggIniwwVMnzeaPh03UUF8Drz4KVOupIIAqG5rrdUdgu9XMR3vxSx+4mHZz
-         ukFQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXFXSQdArXxO4FftGA0H3tnAa2+7eHvj94Opk8vuvFa3TwTyUsmIm7UX75p3VBZR8nOJGiKiBRfWLHYD7t+39AgYVGcWW9DTxl4VUBg
-X-Gm-Message-State: AOJu0Yz1opzuuK3ig6qWauX/8+6uHmCixsg5tsSkaFsk+rINOVHAdKDf
-	5q5EiTZwAWXP906YL+sVBNvvN2kwMLnte9/Ljv/Ww4ZZ/dSGMvCvLHcJlX7n7Ozgcd/Jhrdwioo
-	WlsInlodA6okNAl7/VMMteVaqtiqBt/p2RVCq
-X-Google-Smtp-Source: AGHT+IHBt43zs+C9TqoUJqSvnZSsuN94K72cszgVwXZ/P+H9S6ThVSgqdaK2Haea8KCJbJ1OgGJTRLLQtqcb+3X0JuY=
-X-Received: by 2002:a05:6122:468c:b0:4da:9aa1:dd5e with SMTP id
- di12-20020a056122468c00b004da9aa1dd5emr2612931vkb.10.1712234935216; Thu, 04
- Apr 2024 05:48:55 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="ISdw1Kg1";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="IGW5qOax";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="ISdw1Kg1";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="IGW5qOax"
+Received: from imap2.dmz-prg2.suse.org (imap2.dmz-prg2.suse.org [10.150.64.98])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 6D14A5D96E;
+	Thu,  4 Apr 2024 12:49:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1712234947; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=8+/HnAezjLRt9n4+iHb7cFTsC2LplwLc1xaDDtuWmYQ=;
+	b=ISdw1Kg1i/QVu6zSkWOMz9Jh/1suGDLE1PYIDN9nIEk+7ZBzZvDTr0z0zCzuD2dt9/T395
+	0xE9NEJ9JYInCD6F4e8ZEa0P8tkZpcIMHEqgwkTkNU3Fut/+n29AeQLkOARGAsekwco5SW
+	txWqINeYZf7BLMfPSePGFMQ5SxT9p+o=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1712234947;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=8+/HnAezjLRt9n4+iHb7cFTsC2LplwLc1xaDDtuWmYQ=;
+	b=IGW5qOaxj28jRVQFpkY2likrWYQdrhvkzIEs8EBHjYEgt/b4Y6mf5Mvfht7Ro+yvLAXbld
+	xuXOuA6HBxBCglDQ==
+Authentication-Results: smtp-out2.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1712234947; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=8+/HnAezjLRt9n4+iHb7cFTsC2LplwLc1xaDDtuWmYQ=;
+	b=ISdw1Kg1i/QVu6zSkWOMz9Jh/1suGDLE1PYIDN9nIEk+7ZBzZvDTr0z0zCzuD2dt9/T395
+	0xE9NEJ9JYInCD6F4e8ZEa0P8tkZpcIMHEqgwkTkNU3Fut/+n29AeQLkOARGAsekwco5SW
+	txWqINeYZf7BLMfPSePGFMQ5SxT9p+o=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1712234947;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=8+/HnAezjLRt9n4+iHb7cFTsC2LplwLc1xaDDtuWmYQ=;
+	b=IGW5qOaxj28jRVQFpkY2likrWYQdrhvkzIEs8EBHjYEgt/b4Y6mf5Mvfht7Ro+yvLAXbld
+	xuXOuA6HBxBCglDQ==
+Received: from imap2.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap2.dmz-prg2.suse.org (Postfix) with ESMTPS id 0E996139E8;
+	Thu,  4 Apr 2024 12:49:07 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap2.dmz-prg2.suse.org with ESMTPSA
+	id mzMBAcOhDmYNZwAAn2gu4w
+	(envelope-from <osalvador@suse.de>); Thu, 04 Apr 2024 12:49:07 +0000
+Date: Thu, 4 Apr 2024 14:50:35 +0200
+From: Oscar Salvador <osalvador@suse.de>
+To: "Vishal Moola (Oracle)" <vishal.moola@gmail.com>
+Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+	akpm@linux-foundation.org, muchun.song@linux.dev,
+	willy@infradead.org
+Subject: Re: [PATCH v2 2/3] hugetlb: Convert hugetlb_no_page() to use struct
+ vm_fault
+Message-ID: <Zg6iG8cxpopXuFCo@localhost.localdomain>
+References: <20240401202651.31440-1-vishal.moola@gmail.com>
+ <20240401202651.31440-3-vishal.moola@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240328195457.225001-1-wedsonaf@gmail.com> <20240328195457.225001-6-wedsonaf@gmail.com>
-In-Reply-To: <20240328195457.225001-6-wedsonaf@gmail.com>
-From: Alice Ryhl <aliceryhl@google.com>
-Date: Thu, 4 Apr 2024 14:48:44 +0200
-Message-ID: <CAH5fLgjCQNxnZgSP_fx0NKq9TRi-byRTSb4qL3n45yMS1zrtHg@mail.gmail.com>
-Subject: Re: [PATCH v2 5/5] samples: rust: add in-place initialisation sample
-To: Wedson Almeida Filho <wedsonaf@gmail.com>
-Cc: rust-for-linux@vger.kernel.org, Miguel Ojeda <ojeda@kernel.org>, 
-	Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
-	Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@samsung.com>, 
-	linux-kernel@vger.kernel.org, Wedson Almeida Filho <walmeida@microsoft.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240401202651.31440-3-vishal.moola@gmail.com>
+X-Spam-Flag: NO
+X-Spam-Score: -0.06
+X-Spam-Level: 
+X-Spamd-Result: default: False [-0.06 / 50.00];
+	SUSPICIOUS_RECIPS(1.50)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	BAYES_HAM(-0.26)[73.53%];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	FREEMAIL_TO(0.00)[gmail.com];
+	TAGGED_RCPT(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	ARC_NA(0.00)[];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	RCPT_COUNT_FIVE(0.00)[6];
+	RCVD_TLS_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap2.dmz-prg2.suse.org:helo,imap2.dmz-prg2.suse.org:rdns]
 
-On Thu, Mar 28, 2024 at 8:55=E2=80=AFPM Wedson Almeida Filho <wedsonaf@gmai=
-l.com> wrote:
->
-> From: Wedson Almeida Filho <walmeida@microsoft.com>
->
-> This is a modified version of rust_minimal that is initialised in-place
-> and has a mutex.
->
-> Signed-off-by: Wedson Almeida Filho <walmeida@microsoft.com>
+On Mon, Apr 01, 2024 at 01:26:50PM -0700, Vishal Moola (Oracle) wrote:
+> hugetlb_no_page() can use the struct vm_fault passed in from
+> hugetlb_fault(). This alleviates the stack by consolidating 7
+> variables into a single struct.
+> 
+> Signed-off-by: Vishal Moola (Oracle) <vishal.moola@gmail.com>
+> ---
+>  mm/hugetlb.c | 59 ++++++++++++++++++++++++++--------------------------
+>  1 file changed, 29 insertions(+), 30 deletions(-)
+> 
+> diff --git a/mm/hugetlb.c b/mm/hugetlb.c
+> index 360b82374a89..aca2f11b4138 100644
+> --- a/mm/hugetlb.c
+> +++ b/mm/hugetlb.c
+> @@ -6189,9 +6189,7 @@ static bool hugetlb_pte_stable(struct hstate *h, struct mm_struct *mm,
+>  
+>  static vm_fault_t hugetlb_no_page(struct mm_struct *mm,
+>  			struct vm_area_struct *vma,
+> -			struct address_space *mapping, pgoff_t idx,
+> -			unsigned long address, pte_t *ptep,
+> -			pte_t old_pte, unsigned int flags,
+> +			struct address_space *mapping,
 
-Reviewed-by: Alice Ryhl <aliceryhl@google.com>
+AFAICS all this can be self-contained in vm_fault struct.
+vmf->vma->mm and vmf->vma.
+I mean, if we want to convert this interface, why not going all the way?
+
+Looks a bit odd some fields yes while some others remain.
+
+Or am I missing something?
+
+-- 
+Oscar Salvador
+SUSE Labs
