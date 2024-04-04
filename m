@@ -1,70 +1,71 @@
-Received: from mail-io1-f69.google.com (mail-io1-f69.google.com [209.85.166.69])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 486823FC2
-	for <linux-kernel@vger.kernel.org>; Thu,  4 Apr 2024 00:34:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.69
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 214334400;
+	Thu,  4 Apr 2024 00:42:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712190844; cv=none; b=epphVvoyFw38PnBEn57aLVFHdqN1vjClAwA0L3VUyke5kerX0DgbL859E0cRjaeCsc3X5de4t1ULvTZyuZGfv4iEct/7p65209StMRpPCiT+m31Su4FstEYFyAndVpApdTM/rymcCOs7qBgXw2A2pDpoWYAvV6DGpvQ3Q3kBKKc=
+	t=1712191329; cv=none; b=TtlvZwmMZKH4TAX++rDfwj78EWNRQjdItWSH7NHtSlA+g/+ulf1f81SCDrMMSckGVmKYqf/tOcGDmkTEYc2S+X1XwvTC7Sia84IgQ3mjrsAOW2Laf6D9p4PCoO5q2V62lCGmP+cCd0kmLqZCb6/42C8AVWSUSB/8G0vJ4D9Q00I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712190844; c=relaxed/simple;
-	bh=0UfpBIxWC9yUYf3SIOMzb9XBZY/TgJbRwSIHErPnzrM=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=TChCk6PhJ/SHg4AWkrkKaCichH5XJoiyefhSla5DTYoAy7T3ts8mVsH6rpCJHcDvphTsIeQNtAdo5/5GgxzZs7dzbuuocXcEDDQW+lNwJ8zunUJS97M8omcbjPie+deWL2ejzCcckGp8AGu4fGopALiVLf68jAIaO7FhAXTxNG8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.69
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f69.google.com with SMTP id ca18e2360f4ac-7cbf3ec6a96so136554839f.0
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Apr 2024 17:34:02 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712190842; x=1712795642;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=/oQDMAVsLvFPsJ5ZC8wEiAzk5lvfhtBZeNZiS4Knl8o=;
-        b=dOF06qCg5JGa9rS6WQT7xILZArcavnZFhXPwQ3y+cfi448h1EZVhxZ2WgUW0rg1sW1
-         V7esMNNUHL4ywUmbbjLZJJXxdY/6oqq4oglDpZn3ZlAo9WKY+xHiD8V6gl2JSoqo2R4a
-         UMu3axX2QOfeO3QzNCr6gbbE+3FP6EyVljycwMSa9b36ZPo1Ajt9c4hyELSLUVng1hm5
-         A60WqOW6w+xWBeMhKLdhaAhzZIdgB8Ym8txtgiucL/SnHALiDZJiiTdxVq/01Ylr19Hp
-         5jTjc0OUQ7GW4SYOqbvgWGZJRToQusydWHkqNVX0Iz9YbkgztIk9rQvTc04tmBoKm9dV
-         s4Bw==
-X-Gm-Message-State: AOJu0Yy8Q18uXbo8vzrsBV71KXkC+Lr3DNki/ssXue9UMJTTP/t6sTD/
-	OXCUnKVWZ4kEtNU7bGzr+MPLgosCeSXYtlKNrBU104o67LWbcR14w6tKT6xJUddbNV1MGEcevwr
-	z4g+F/wvFxyYeDRQpb1qvPisURanTVsHo/YB2YNO2LbzdhHYH0zMXV/7z6g==
-X-Google-Smtp-Source: AGHT+IGvT52j4/eiJKYb7yvGZx16MZl8BVmh2LNiEDsmww+rZi9UA5wGaulVgxnCx01hORRLDMTAbx0oIuWaHvrcCDfa563pgMO0
+	s=arc-20240116; t=1712191329; c=relaxed/simple;
+	bh=D3jepi0zJ72xuRUzY0zYzN1f9UFpgiWhtB98tF6EXB0=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=FR1e7p0nQoCNWP26ZVwlVkPA3lUDW+UB5P1GtUM67hEC7mcMUkipdNNSwj87iih6tQegNwfuho0Azsx6N8r0Tf4thERjarEu1LiYu7Sl5inRvqW1TXoHtkG6pyNJH+DmcbYq9M/wniLdG9xIU2uyOJP2p+Otr9P/S/+I3aqLHZw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ShYd/I9m; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ShYd/I9m"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 48FB6C433C7;
+	Thu,  4 Apr 2024 00:42:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1712191328;
+	bh=D3jepi0zJ72xuRUzY0zYzN1f9UFpgiWhtB98tF6EXB0=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=ShYd/I9m2URUu0tlaxxk4WyWjJKgKXJ/4m8hRncP4yC/s7wnUoILOAP2kTBi6lX2n
+	 5Qc5K4rpsr1BoFU4tsXpQ5NlpMTArIp96x3btM+/HkPEFqlsviC8em784f+IVwe1nM
+	 MWCGmieyLFP361y+YypfCUa9Tklp1iS0V+HSoQCw0JKvkUnQOt3Q16MXoyJnLXcKgR
+	 GexugvlF7GUD2gArHBV4d/gSwQy9VMK4kiYjQdfj7cFRne2l7BDgxBIKqOzNpMRGn+
+	 s1piLHXEK7Vdnp9xXavg5Twc7iXubNBn46Aj1Pig0hXdogegPXXhL8fLSwM2kUssHO
+	 x6+vIMKTlM8UQ==
+Date: Wed, 3 Apr 2024 17:42:07 -0700
+From: Jakub Kicinski <kuba@kernel.org>
+To: Oleksij Rempel <o.rempel@pengutronix.de>
+Cc: "David S. Miller" <davem@davemloft.net>, Andrew Lunn <andrew@lunn.ch>,
+ Eric Dumazet <edumazet@google.com>, Florian Fainelli
+ <f.fainelli@gmail.com>, Paolo Abeni <pabeni@redhat.com>, Vladimir Oltean
+ <olteanv@gmail.com>, Woojung Huh <woojung.huh@microchip.com>, Arun Ramadoss
+ <arun.ramadoss@microchip.com>, kernel@pengutronix.de,
+ linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+ UNGLinuxDriver@microchip.com, David Ahern <dsahern@kernel.org>, Simon
+ Horman <horms@kernel.org>, Willem de Bruijn <willemb@google.com>,
+ =?UTF-8?B?U8O4cmVu?= Andersen <san@skov.dk>
+Subject: Re: [PATCH net-next v2 5/9] net: dsa: microchip: add support for
+ different DCB app configurations
+Message-ID: <20240403174207.34205b6a@kernel.org>
+In-Reply-To: <20240403092905.2107522-6-o.rempel@pengutronix.de>
+References: <20240403092905.2107522-1-o.rempel@pengutronix.de>
+	<20240403092905.2107522-6-o.rempel@pengutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a92:d207:0:b0:368:8597:8292 with SMTP id
- y7-20020a92d207000000b0036885978292mr41796ily.1.1712190842436; Wed, 03 Apr
- 2024 17:34:02 -0700 (PDT)
-Date: Wed, 03 Apr 2024 17:34:02 -0700
-In-Reply-To: <20240403133301.14177-1-n.zhandarovich@fintech.ru>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000f3912806153a7e4d@google.com>
-Subject: Re: [syzbot] [v9fs?] KMSAN: uninit-value in p9_client_rpc (2)
-From: syzbot <syzbot+ff14db38f56329ef68df@syzkaller.appspotmail.com>
-To: linux-kernel@vger.kernel.org, n.zhandarovich@fintech.ru, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Hello,
+On Wed,  3 Apr 2024 11:29:01 +0200 Oleksij Rempel wrote:
+> Add DCB support to configure app trust sources and default port priority.
+> 
+> Following commands can be used for testing:
+> dcb apptrust set dev lan1 order pcp dscp
+> dcb app replace dev lan1 default-prio 3
+> 
+> Since it is not possible to configure DSCP-Prio mapping per port, this
+> patch provide only ability to read switch global dscp-prio mapping and
+> way to enable/disable app trust for DSCP.
 
-syzbot has tested the proposed patch and the reproducer did not trigger any issue:
+transient compiler nit:
 
-Reported-and-tested-by: syzbot+ff14db38f56329ef68df@syzkaller.appspotmail.com
-
-Tested on:
-
-commit:         c85af715 Merge tag 'vboxsf-v6.9-1' of git://git.kernel..
-git tree:       https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-console output: https://syzkaller.appspot.com/x/log.txt?x=1612eea1180000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=5112b3f484393436
-dashboard link: https://syzkaller.appspot.com/bug?extid=ff14db38f56329ef68df
-compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
-patch:          https://syzkaller.appspot.com/x/patch.diff?x=174fdc5e180000
-
-Note: testing is done by a robot and is best-effort only.
+drivers/net/dsa/microchip/ksz_dcb.c:86:17: warning: unused variable 'ksz8_port2_supported_apptrust' [-Wunused-const-variable]
+   86 | static const u8 ksz8_port2_supported_apptrust[] = {
+      |                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
