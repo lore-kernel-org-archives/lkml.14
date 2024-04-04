@@ -1,70 +1,73 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FFCA1BC46;
-	Thu,  4 Apr 2024 16:13:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8595224DE;
+	Thu,  4 Apr 2024 16:14:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712247235; cv=none; b=NnyU0qL2jeLw3c1NMiOdFiqq2H4+AOzcC3mjP6sc3FtgxggkEi3XdIG1Z91zdAsz7BA1yT39WdHp3ixxoneYZG84J+UTCxMdLSCMp8MCAXYvc1NhFDgpL6mqeLfkoPJGCubTtiM9GfgpfvPty4P4ZG95kBq5KBr85WV8hURc6Jw=
+	t=1712247252; cv=none; b=WhpO/L3eG8BmLKIf2/fkl2DG6Cg4fJPnRTu/1IVE+rjzW0qsU7GSyQ6YdFlObkMcicXjcFRh7yplGV9cW0i1LDeOAZLhySwkY+z3XVW/nMmS7FDDfmB93uH58FIx7FTkhGk8QdpJd13a8LQsbFezJbmAJzDXUyNizOvzpuc0QP0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712247235; c=relaxed/simple;
-	bh=smLC32iJuY0yye4WDyksXPgIINq4NnqEPI4ivboWM28=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=CzRHX+MjtEhfTvtLrsHb8qrpM28NZ3RDhq3C4iXaywAYj+h1xUHyerEz3CvYXKk8zwaHVecD9eeAvewlBFvptmNNpIr7GSK4scAckWR7N/7JKNRStl6xsu5XnboszZhi7GH2ACjahW8NmLqP1mwfVEj0+FeqH635Ss7IBtU4l1M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.231])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4V9RPy0hFNz67kr9;
-	Fri,  5 Apr 2024 00:09:10 +0800 (CST)
-Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
-	by mail.maildlp.com (Postfix) with ESMTPS id 74C58141546;
-	Fri,  5 Apr 2024 00:13:49 +0800 (CST)
-Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.35; Thu, 4 Apr
- 2024 17:13:48 +0100
-Date: Thu, 4 Apr 2024 17:13:48 +0100
-From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To: <ira.weiny@intel.com>
-CC: Dave Jiang <dave.jiang@intel.com>, Fan Ni <fan.ni@samsung.com>, "Navneet
- Singh" <navneet.singh@intel.com>, Dan Williams <dan.j.williams@intel.com>,
-	Davidlohr Bueso <dave@stgolabs.net>, Alison Schofield
-	<alison.schofield@intel.com>, Vishal Verma <vishal.l.verma@intel.com>,
-	<linux-btrfs@vger.kernel.org>, <linux-cxl@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 14/26] cxl/region: Read existing extents on region
- creation
-Message-ID: <20240404171348.00001cd6@Huawei.com>
-In-Reply-To: <20240324-dcd-type2-upstream-v1-14-b7b00d623625@intel.com>
-References: <20240324-dcd-type2-upstream-v1-0-b7b00d623625@intel.com>
-	<20240324-dcd-type2-upstream-v1-14-b7b00d623625@intel.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+	s=arc-20240116; t=1712247252; c=relaxed/simple;
+	bh=UUiZipEEAobiO7PS4UAv/nMDLlJTMGONEQDPS3ap/14=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=rbtQ0fdKH40vj/eF+PPuV9ZmnVVLyXvGjwUA7EYW6UZVgmpY6/lTLDdPShzT4KAh+KSAML+DoRUkgwqGnkHftZauviVRQ1c6nqksZRDV/CNH8/Y6icLhxw5eKYUpuwKZU0LsFl3/MxUojD1+Cvj1PKZa8CGczR94ontYO5fBhpY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=uoYLWTLs; arc=none smtp.client-ip=46.235.227.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="uoYLWTLs"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1712247248;
+	bh=UUiZipEEAobiO7PS4UAv/nMDLlJTMGONEQDPS3ap/14=;
+	h=From:To:Cc:Subject:Date:From;
+	b=uoYLWTLshZC5vsrh5QM1FNAKKvY2Oy4coxEmM3VUMh5wSaI3dAf4duzwnKfZvde3s
+	 QLxOkaplfRvUpS2q5WELklv+KOAY8P/hHosBP6auRavnnSQC+O6FsFtwqyi8FRfHE/
+	 v8EL+go/6vPo+A8tMrksy5iKRGWBdbyf+Dvdx9hXm766CfqCaX9J/qErdLu7dhvvAd
+	 2V8LX+i1WsvgYhXcLcqchQfLwRs8LFzNNUmhoskaIPWnCl+vFOxXbAZtt9jCml7oCq
+	 GiupKWuxr43RjQpok1ppX8/Oma0MWjDI7jwaBN4G8K8w+MVXVfC1kt+owi0u5nRREG
+	 13X6Qf8bGJAwQ==
+Received: from localhost.localdomain (broslavsky.collaboradmins.com [68.183.210.73])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: usama.anjum)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id C941337813A4;
+	Thu,  4 Apr 2024 16:14:04 +0000 (UTC)
+From: Muhammad Usama Anjum <usama.anjum@collabora.com>
+To: Eric Biederman <ebiederm@xmission.com>,
+	Kees Cook <keescook@chromium.org>,
+	Shuah Khan <shuah@kernel.org>,
+	Muhammad Usama Anjum <usama.anjum@collabora.com>,
+	linux-mm@kvack.org,
+	linux-kselftest@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: kernel@collabora.com
+Subject: [PATCH 0/2] selftests: add ksft_exit_fail_perror()
+Date: Thu,  4 Apr 2024 21:14:31 +0500
+Message-Id: <20240404161433.114497-1-usama.anjum@collabora.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml100004.china.huawei.com (7.191.162.219) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
+Content-Transfer-Encoding: 8bit
 
+In this series, ksft_exit_fail_perror() is being added which is helper
+function on top of ksft_exit_fail_msg(). It prints errno and its string
+form always. After writing and porting several kselftests, I've found
+out that most of times ksft_exit_fail_msg() isn't useful if errno value
+isn't printed. The ksft_exit_fail_perror() provides a convenient way to
+always print errno when its used.
 
-> +static bool cxl_dc_extent_in_ed(struct cxl_endpoint_decoder *cxled,
-> +				struct cxl_dc_extent *extent)
-> +{
-> +	uint64_t start = le64_to_cpu(extent->start_dpa);
-> +	uint64_t length = le64_to_cpu(extent->length);
-> +	struct range ext_range = (struct range){
-space ) {
+Muhammad Usama Anjum (2):
+  selftests: add ksft_exit_fail_perror()
+  selftests: exec: Use new ksft_exit_fail_perror() helper
 
-> +		.start = start,
-> +		.end = start + length - 1,
-> +	};
-> +	struct range ed_range = (struct range) {
-> +		.start = cxled->dpa_res->start,
-> +		.end = cxled->dpa_res->end,
-> +	};
+ tools/testing/selftests/exec/recursion-depth.c | 10 +++++-----
+ tools/testing/selftests/kselftest.h            | 14 ++++++++++++++
+ 2 files changed, 19 insertions(+), 5 deletions(-)
+
+-- 
+2.39.2
+
