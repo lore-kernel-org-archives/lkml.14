@@ -1,209 +1,494 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FBFF74407;
-	Thu,  4 Apr 2024 08:55:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D17571B5C;
+	Thu,  4 Apr 2024 08:56:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712220933; cv=none; b=UZ7GAn7/oRJvhdOMOrkcTMfgL5h2DLRLZdpOzMpqqECKGwopY0LUx+Vcm69LP+MDX7qh2lVDH11hxZNcBE9BtT+HeXDdFurmsOs4Duo4suPzOQLFwNARvjorUyCreTMib5T5dJ7SX/8ycqvO1/xVeB+XJqMQiZZHWLG1Pouw6vE=
+	t=1712220994; cv=none; b=OpGCpkfyEI+oCCuPE5kkZCr6sZ6hW7DqXShBY38XYV3Lqid9PVu8AYK92jDgVFHYDVPnWDfR+VmZfOeGqSlgjPFQpco3aftNEL1F3VxGzzYqk8Ces5oNA3dYaDH26HovsxsEi8ZY2d1snIGPjNH/NNdQ/EfaqQr8qOWz1c5jgrg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712220933; c=relaxed/simple;
-	bh=IbH0+gL58TpZYKymHhKNBBLCHtxp95ccm2jwAU9h+Nw=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=diyYHm4xqK1sQMY84RAlLPcpHdQNvTRwtmTsqa57uYyzYEhDUjo47No2Q2SyfrckKMODZ6ek/WpFHcjhBCljM3wxwp0F4f6ok0eqTDbVdgWD+ta5hlC7IQYx1q2NokV1alYgZAl+AdDi5HNblS/7eYR2qMDzFel9HGGroRRKOt4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=Xq8Lb2vA; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="Xq8Lb2vA"
-Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 4347dMGH021699;
-	Thu, 4 Apr 2024 08:55:16 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	date:from:to:cc:subject:message-id:references:mime-version
-	:content-type:in-reply-to; s=qcppdkim1; bh=dnjXlujvNAYcwAmqpkBNC
-	7FX12TCHJslntuFpg+/2z4=; b=Xq8Lb2vAkkdTATMftSF2W99tmPb8nGdVWh/Ya
-	D0N14IUBUpGwT0iBhWpRZc9XcK6iqJnHdMA47M+cB+LJEbIkjpPrcqjigpA0n3P1
-	2pxkCXhMxivzzdTah6PWnWsoY9+ntxiqiYKuqxD6TwfZ89EGD/gIgqqe9Yjpgnrn
-	YEher379Lr9LdMSYq1anUwK0LmNjNPRtcDEzGfUyg8C4p9HOUQYMXzmX4CT4vBXh
-	Ho17gP6UdovBpPpyoObxWAzrqgyq3rNrE9uevIxk8DXm5vTiSsrjRZ/eEMehrlVS
-	iJyDT91ucp5FnOVvIcxs21ql4hU0N8HMjvdwZ9P52xv0XQKLg==
-Received: from nasanppmta02.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3x9en7106x-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 04 Apr 2024 08:55:16 +0000 (GMT)
-Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
-	by NASANPPMTA02.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 4348tFAH013401
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 4 Apr 2024 08:55:15 GMT
-Received: from hu-varada-blr.qualcomm.com (10.80.80.8) by
- nasanex01b.na.qualcomm.com (10.46.141.250) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.4; Thu, 4 Apr 2024 01:55:10 -0700
-Date: Thu, 4 Apr 2024 14:25:06 +0530
-From: Varadarajan Narayanan <quic_varada@quicinc.com>
-To: Krzysztof Kozlowski <krzk@kernel.org>
-CC: <andersson@kernel.org>, <konrad.dybcio@linaro.org>,
-        <mturquette@baylibre.com>, <sboyd@kernel.org>, <robh@kernel.org>,
-        <krzk+dt@kernel.org>, <conor+dt@kernel.org>, <djakov@kernel.org>,
-        <dmitry.baryshkov@linaro.org>, <quic_anusha@quicinc.com>,
-        <linux-arm-msm@vger.kernel.org>, <linux-clk@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-pm@vger.kernel.org>
-Subject: Re: [PATCH v7 1/5] dt-bindings: interconnect: Add Qualcomm IPQ9574
- support
-Message-ID: <Zg5q6mnWtK6hmPBT@hu-varada-blr.qualcomm.com>
-References: <20240403104220.1092431-1-quic_varada@quicinc.com>
- <20240403104220.1092431-2-quic_varada@quicinc.com>
- <58c9b754-b9a7-444d-9545-9e6648010630@kernel.org>
+	s=arc-20240116; t=1712220994; c=relaxed/simple;
+	bh=s2Vzd4bI3iR1R7xzsFeWxElHHoRwdYdkcRTWXpx2in4=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=ajUnAscA4ppmby151honkteznZiFGRA1WJIlbV1mN9uKxCV8slP492amnGb73taisTtmWLT7TUMYcDcWV617ejTjkxqYrSZaruaDDIrgzDZqebkaC01hcOchy+/RgxEUn10wYz0dWv4CF96X1j0PqOEOrN1Lra68FA+6pkJXAlE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; arc=none smtp.client-ip=185.11.138.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
+Received: from i53875aaf.versanet.de ([83.135.90.175] helo=diego.localnet)
+	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <heiko@sntech.de>)
+	id 1rsItV-0008GZ-FH; Thu, 04 Apr 2024 10:56:25 +0200
+From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
+To: Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
+ David Jander <david@protonic.nl>, Sascha Hauer <s.hauer@pengutronix.de>
+Subject: Re: [PATCH 2/2] arm64: dts: rockchip: add Protonic MECSBC device-tree
+Date: Thu, 04 Apr 2024 10:56:24 +0200
+Message-ID: <11120876.BaYr0rKQ5T@diego>
+In-Reply-To: <20240404-protonic-mecsbc-v1-2-ad5b42ade6c6@pengutronix.de>
+References:
+ <20240404-protonic-mecsbc-v1-0-ad5b42ade6c6@pengutronix.de>
+ <20240404-protonic-mecsbc-v1-2-ad5b42ade6c6@pengutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 7Bit
 Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <58c9b754-b9a7-444d-9545-9e6648010630@kernel.org>
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01b.na.qualcomm.com (10.46.141.250)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: zYBKgQpaYWLdn4xJBS4DYfhhWlPuUjsJ
-X-Proofpoint-ORIG-GUID: zYBKgQpaYWLdn4xJBS4DYfhhWlPuUjsJ
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-04-04_05,2024-04-04_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
- lowpriorityscore=0 mlxlogscore=999 priorityscore=1501 adultscore=0
- malwarescore=0 mlxscore=0 bulkscore=0 phishscore=0 spamscore=0
- clxscore=1011 suspectscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.19.0-2404010003 definitions=main-2404040059
 
-On Wed, Apr 03, 2024 at 04:59:40PM +0200, Krzysztof Kozlowski wrote:
-> On 03/04/2024 12:42, Varadarajan Narayanan wrote:
-> > Add interconnect-cells to clock provider so that it can be
-> > used as icc provider.
-> >
-> > Add master/slave ids for Qualcomm IPQ9574 Network-On-Chip
-> > interfaces. This will be used by the gcc-ipq9574 driver
-> > that will for providing interconnect services using the
-> > icc-clk framework.
-> >
-> > Signed-off-by: Varadarajan Narayanan <quic_varada@quicinc.com>
-> > ---
-> > v7:
-> > Fix macro names to be consistent with other bindings
-> > v6:
-> > Removed Reviewed-by: Krzysztof Kozlowski
-> > Redefine the bindings such that driver and DT can share them
-> >
-> > v3:
-> > Squash Documentation/ and include/ changes into same patch
-> >
-> > qcom,ipq9574.h
-> > 	Move 'first id' to clock driver
-> >
-> > ---
-> >  .../bindings/clock/qcom,ipq9574-gcc.yaml      |  3 +
-> >  .../dt-bindings/interconnect/qcom,ipq9574.h   | 87 +++++++++++++++++++
-> >  2 files changed, 90 insertions(+)
-> >  create mode 100644 include/dt-bindings/interconnect/qcom,ipq9574.h
-> >
-> > diff --git a/Documentation/devicetree/bindings/clock/qcom,ipq9574-gcc.yaml b/Documentation/devicetree/bindings/clock/qcom,ipq9574-gcc.yaml
-> > index 944a0ea79cd6..824781cbdf34 100644
-> > --- a/Documentation/devicetree/bindings/clock/qcom,ipq9574-gcc.yaml
-> > +++ b/Documentation/devicetree/bindings/clock/qcom,ipq9574-gcc.yaml
-> > @@ -33,6 +33,9 @@ properties:
-> >        - description: PCIE30 PHY3 pipe clock source
-> >        - description: USB3 PHY pipe clock source
-> >
-> > +  '#interconnect-cells':
-> > +    const: 1
-> > +
-> >  required:
-> >    - compatible
-> >    - clocks
-> > diff --git a/include/dt-bindings/interconnect/qcom,ipq9574.h b/include/dt-bindings/interconnect/qcom,ipq9574.h
-> > new file mode 100644
-> > index 000000000000..0b076b0cf880
-> > --- /dev/null
-> > +++ b/include/dt-bindings/interconnect/qcom,ipq9574.h
-> > @@ -0,0 +1,87 @@
-> > +/* SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause) */
-> > +#ifndef INTERCONNECT_QCOM_IPQ9574_H
-> > +#define INTERCONNECT_QCOM_IPQ9574_H
-> > +
-> > +#define ICC_ANOC_PCIE0		0
-> > +#define ICC_SNOC_PCIE0		1
-> > +#define ICC_ANOC_PCIE1		2
-> > +#define ICC_SNOC_PCIE1		3
-> > +#define ICC_ANOC_PCIE2		4
-> > +#define ICC_SNOC_PCIE2		5
-> > +#define ICC_ANOC_PCIE3		6
-> > +#define ICC_SNOC_PCIE3		7
-> > +#define ICC_SNOC_USB		8
-> > +#define ICC_ANOC_USB_AXI	9
-> > +#define ICC_NSSNOC_NSSCC	10
-> > +#define ICC_NSSNOC_SNOC_0	11
-> > +#define ICC_NSSNOC_SNOC_1	12
-> > +#define ICC_NSSNOC_PCNOC_1	13
-> > +#define ICC_NSSNOC_QOSGEN_REF	14
-> > +#define ICC_NSSNOC_TIMEOUT_REF	15
-> > +#define ICC_NSSNOC_XO_DCD	16
-> > +#define ICC_NSSNOC_ATB		17
-> > +#define ICC_MEM_NOC_NSSNOC	18
-> > +#define ICC_NSSNOC_MEMNOC	19
-> > +#define ICC_NSSNOC_MEM_NOC_1	20
-> > +
-> > +#define ICC_NSSNOC_PPE		0
-> > +#define ICC_NSSNOC_PPE_CFG	1
-> > +#define ICC_NSSNOC_NSS_CSR	2
-> > +#define ICC_NSSNOC_IMEM_QSB	3
-> > +#define ICC_NSSNOC_IMEM_AHB	4
-> > +
-> > +#define MASTER_ANOC_PCIE0		(ICC_ANOC_PCIE0 * 2)
-> > +#define SLAVE_ANOC_PCIE0		((ICC_ANOC_PCIE0 * 2) + 1)
->
-> Which existing Qualcomm platform has such code?
+Hi Sascha,
 
-Existing Qualcomm platforms don't use icc-clk. They use icc-rpm
-or icc-rpmh. clk-cbf-msm8996.c is the only driver that uses icc-clk.
+Am Donnerstag, 4. April 2024, 10:34:40 CEST schrieb Sascha Hauer:
+> From: David Jander <david@protonic.nl>
+> 
+> MECSBC is a single board computer for blood analysis machines from
+> RR-Mechatronics, designed and manufactured by Protonic Holland, based on
+> the Rockchip RK3568 SoC.
+> 
+> Signed-off-by: David Jander <david@protonic.nl>
+> Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
+> ---
+>  arch/arm64/boot/dts/rockchip/Makefile          |   1 +
+>  arch/arm64/boot/dts/rockchip/rk3568-mecsbc.dts | 394 +++++++++++++++++++++++++
+>  2 files changed, 395 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/rockchip/Makefile b/arch/arm64/boot/dts/rockchip/Makefile
+> index f906a868b71ac..1152e0f6a25cb 100644
+> --- a/arch/arm64/boot/dts/rockchip/Makefile
+> +++ b/arch/arm64/boot/dts/rockchip/Makefile
+> @@ -104,6 +104,7 @@ dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3568-nanopi-r5c.dtb
+>  dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3568-nanopi-r5s.dtb
+>  dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3568-odroid-m1.dtb
+>  dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3568-qnap-ts433.dtb
+> +dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3568-mecsbc.dtb
+>  dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3568-radxa-e25.dtb
 
-The icc_clk_register automatically creates master & slave nodes
-for each clk entry provided as input with the node-ids 'n' and
-'n+1'. Since clk-cbf-msm8996.c has only one entry, it could just
-define MASTER_CBF_M4M and SLAVE_CBF_M4M with 0 and 1 and avoid these
-calculations.
+alphabetical sorting of entries please
 
-However, ipq9574 gives an array of clock entries as input to
-icc_clk_register. To tie the order/sequence of these clock
-entries correctly with the node-ids, this calculation is needed.
+>  dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3568-roc-pc.dtb
+>  dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3568-rock-3a.dtb
+> diff --git a/arch/arm64/boot/dts/rockchip/rk3568-mecsbc.dts b/arch/arm64/boot/dts/rockchip/rk3568-mecsbc.dts
+> new file mode 100644
+> index 0000000000000..e50d135042ec7
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/rockchip/rk3568-mecsbc.dts
+> @@ -0,0 +1,394 @@
+> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+> +
+> +/dts-v1/;
+> +#include <dt-bindings/gpio/gpio.h>
+> +#include <dt-bindings/leds/common.h>
+> +#include <dt-bindings/pinctrl/rockchip.h>
+> +#include <dt-bindings/pwm/pwm.h>
+> +#include "rk3568.dtsi"
+> +
+> +/ {
+> +	model = "Protonic MECSBC";
+> +	compatible = "prt,mecsbc", "rockchip,rk3568";
+> +
+> +	aliases {
+> +		mmc0 = &sdhci;
+> +		mmc1 = &sdmmc0;
+> +	};
+> +
+> +	chosen: chosen {
+> +		stdout-path = "serial2:1500000n8";
+> +	};
+> +
+> +	tas2562-sound {
+> +		compatible = "simple-audio-card";
+> +		simple-audio-card,format = "i2s";
+> +		simple-audio-card,name = "Speaker";
+> +		simple-audio-card,mclk-fs = <256>;
+> +
+> +		simple-audio-card,cpu {
+> +			sound-dai = <&i2s1_8ch>;
+> +		};
+> +
+> +		simple-audio-card,codec {
+> +			sound-dai = <&tas2562>;
+> +		};
+> +	};
+> +
+> +	vdd_gpu: regulator-vdd-gpu {
+> +		compatible = "pwm-regulator";
+> +		pwms = <&pwm1 0 5000 PWM_POLARITY_INVERTED>;
+> +		regulator-name = "vdd_gpu";
+> +		regulator-min-microvolt = <915000>;
+> +		regulator-max-microvolt = <1000000>;
+> +		regulator-always-on;
+> +		regulator-boot-on;
+> +		regulator-settling-time-up-us = <250>;
+> +		pwm-dutycycle-range = <0 100>; /* dutycycle inverted 0% => 0.915V */
+> +	};
+> +
+> +	vdd_npu: regulator-vdd-npu {
+> +		compatible = "pwm-regulator";
+> +		pwms = <&pwm2 0 5000 PWM_POLARITY_INVERTED>;
+> +		regulator-name = "vdd_npu";
+> +		regulator-min-microvolt = <915000>;
+> +		regulator-max-microvolt = <1000000>;
+> +		regulator-always-on;
+> +		regulator-boot-on;
+> +		regulator-settling-time-up-us = <250>;
+> +		pwm-dutycycle-range = <0 100>; /* dutycycle inverted 0% => 0.915V */
+> +	};
+> +
+> +	p3v3: p3v3-regulator {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "p3v3";
+> +		regulator-always-on;
+> +		regulator-boot-on;
+> +		regulator-min-microvolt = <3300000>;
+> +		regulator-max-microvolt = <3300000>;
+> +	};
+> +
+> +	p1v8: p1v8-regulator {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "p1v8";
+> +		regulator-always-on;
+> +		regulator-boot-on;
+> +		regulator-min-microvolt = <1800000>;
+> +		regulator-max-microvolt = <1800000>;
+> +	};
 
-> This is the third time I am asking for consistent headers. Open
-> existing, recently added headers and look how it is done there. Why?
-> Because I am against such calculations and see no reason for them.
+please sort alphabetical by node-name
 
-Apologies. Regret that I have to trouble you.
+> +};
+> +
+> +&combphy0 {
+> +	status = "okay";
+> +};
+> +
+> +&combphy1 {
+> +	status = "okay";
+> +};
+> +
+> +&combphy2 {
+> +	status = "okay";
+> +};
+> +
+> +&cpu0 {
+> +	cpu-supply = <&vdd_cpu>;
+> +};
+> +
+> +&cpu1 {
+> +	cpu-supply = <&vdd_cpu>;
+> +};
+> +
+> +&cpu2 {
+> +	cpu-supply = <&vdd_cpu>;
+> +};
+> +
+> +&cpu3 {
+> +	cpu-supply = <&vdd_cpu>;
+> +};
+> +
+> +&gmac1 {
+> +	assigned-clocks = <&cru SCLK_GMAC1_RX_TX>, <&cru SCLK_GMAC1>;
+> +	assigned-clock-parents = <&cru SCLK_GMAC1_RGMII_SPEED>, <&cru CLK_MAC1_2TOP>;
+> +	phy-handle = <&rgmii_phy1>;
+> +	phy-mode = "rgmii";
+> +	clock_in_out = "output";
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&gmac1m1_miim
+> +		     &gmac1m1_tx_bus2
+> +		     &gmac1m1_rx_bus2
+> +		     &gmac1m1_rgmii_clk
+> +		     &gmac1m1_clkinout
+> +		     &gmac1m1_rgmii_bus>;
+> +	status = "okay";
+> +	tx_delay = <0x30>;
+> +	rx_delay = <0x10>;
+> +};
+> +
+> +&gpu {
+> +	mali-supply = <&vdd_gpu>;
+> +	status = "okay";
+> +};
+> +
+> +&i2c0 {
+> +	status = "okay";
+> +
+> +	vdd_cpu: regulator@60 {
+> +		compatible = "fcs,fan53555";
+> +		reg = <0x60>;
+> +		fcs,suspend-voltage-selector = <1>;
+> +		regulator-name = "vdd_cpu";
+> +		regulator-always-on;
+> +		regulator-boot-on;
+> +		regulator-min-microvolt = <800000>;
+> +		regulator-max-microvolt = <1150000>;
+> +		regulator-ramp-delay = <2300>;
+> +
+> +		regulator-state-mem {
+> +			regulator-off-in-suspend;
+> +		};
+> +	};
+> +};
+> +
+> +&i2c2 {
+> +	status = "okay";
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&i2c2m0_xfer>;
+> +};
+> +
+> +&i2c3 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&i2c3m0_xfer>;
+> +	status = "okay";
+> +
+> +	tas2562: tas2562@4c {
+> +		compatible = "ti,tas2562";
+> +		reg = <0x4c>;
+> +		#sound-dai-cells = <0>;
+> +		shutdown-gpios = <&gpio1 RK_PD4 GPIO_ACTIVE_HIGH>;
+> +		interrupt-parent = <&gpio1>;
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&pinctrl_tas2562>;
+> +		interrupts = <RK_PD1 IRQ_TYPE_LEVEL_LOW>;
+> +		ti,imon-slot-no = <0>;
+> +	};
+> +};
+> +
+> +&i2c5 {
+> +	status = "okay";
+> +
+> +	tmp1075n@48 {
+> +		compatible = "ti,tmp1075";
+> +		reg = <0x48>;
+> +	};
+> +
+> +	pcf8563: rtc@51 {
+> +		compatible = "nxp,pcf85363";
+> +		reg = <0x51>;
+> +		#clock-cells = <0>;
+> +		clock-output-names = "rtcic_32kout";
+> +	};
+> +};
+> +
+> +&i2s1_8ch {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&i2s1m0_sclktx &i2s1m0_lrcktx &i2s1m0_sdi0 &i2s1m0_sdo0>;
+> +	rockchip,trcm-sync-tx-only;
+> +	status = "okay";
+> +};
+> +
+> +&mdio1 {
+> +	rgmii_phy1: ethernet-phy@2 {
+> +		compatible = "ethernet-phy-ieee802.3-c22";
+> +		reg = <0x2>;
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&eth_phy1_rst>;
+> +		reset-assert-us = <20000>;
+> +		reset-deassert-us = <100000>;
+> +		reset-gpios = <&gpio4 RK_PB3 GPIO_ACTIVE_LOW>;
+> +	};
+> +};
+> +
+> +&pcie2x1 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pcie20m1_pins>;
+> +	reset-gpios = <&gpio3 RK_PC1 GPIO_ACTIVE_HIGH>;
+> +	status = "okay";
+> +};
+> +
+> +&pcie30phy {
+> +	status = "okay";
+> +};
+> +
+> +&pcie3x2 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pcie30x2m1_pins>;
+> +	reset-gpios = <&gpio2 RK_PD6 GPIO_ACTIVE_HIGH>;
+> +	vpcie3v3-supply = <&p3v3>;
+> +	status = "okay";
+> +};
+> +
+> +&pinctrl {
+> +	ethernet {
+> +		eth_phy1_rst: eth_phy1_rst {
+> +			rockchip,pins = <4 RK_PB3 RK_FUNC_GPIO &pcfg_pull_none>;
+> +		};
+> +	};
+> +
+> +	tas2562 {
+> +		pinctrl_tas2562: tas2562 {
+> +			rockchip,pins = <1 RK_PD4 RK_FUNC_GPIO &pcfg_pull_up>;
+> +		};
+> +	};
+> +};
+> +
+> +&pmu_io_domains {
+> +	pmuio1-supply = <&p3v3>;
+> +	pmuio2-supply = <&p3v3>;
+> +	vccio1-supply = <&p1v8>;
+> +	vccio2-supply = <&p1v8>;
+> +	vccio3-supply = <&p3v3>;
+> +	vccio4-supply = <&p1v8>;
+> +	vccio5-supply = <&p3v3>;
+> +	vccio6-supply = <&p1v8>;
+> +	vccio7-supply = <&p3v3>;
+> +	status = "okay";
+> +};
+> +
+> +&saradc {
+> +	vref-supply = <&p1v8>;
+> +	status = "okay";
+> +};
+> +
+> +&sdhci {
+> +	bus-width = <8>;
+> +	max-frequency = <200000000>;
+> +	non-removable;
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&emmc_bus8 &emmc_clk &emmc_cmd &emmc_datastrobe>;
+> +	vmmc-supply = <&p3v3>;
+> +	vqmmc-supply = <&p1v8>;
+> +	mmc-hs200-1_8v;
+> +	non-removable;
+> +	no-sd;
+> +	no-sdio;
+> +	status = "okay";
+> +};
+> +
+> +&sdmmc0 {
+> +	bus-width = <4>;
+> +	cap-sd-highspeed;
+> +	cd-gpios = <&gpio0 RK_PA4 GPIO_ACTIVE_LOW>;
+> +	disable-wp;
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&sdmmc0_bus4 &sdmmc0_clk &sdmmc0_cmd &sdmmc0_det>;
+> +	sd-uhs-sdr50;
+> +	vmmc-supply = <&p3v3>;
+> +	vqmmc-supply = <&p3v3>;
+> +	status = "okay";
+> +};
+> +
+> +&tsadc {
+> +	rockchip,hw-tshut-mode = <1>;
+> +	rockchip,hw-tshut-polarity = <0>;
+> +	status = "okay";
+> +};
+> +
+> +&uart2 {
+> +	status = "okay";
+> +};
+> +
+> +&usb_host0_ehci {
+> +	status = "okay";
+> +};
+> +
+> +&usb_host0_ohci {
+> +	status = "okay";
+> +};
+> +
+> +&usb_host0_xhci {
+> +	extcon = <&usb2phy0>;
+> +	status = "okay";
+> +	dr_mode = "host";
 
-In this ipq9574 case, have to reconcile between the following
-feedbacks.
+please sort properties alphabetical, with
+compatible at the top and status last.
 
-1. https://lore.kernel.org/linux-arm-msm/fe40b307-26d0-4b2a-869b-5d093415b9d1@linaro.org/
-   We could probably use indexed identifiers here to avoid confusion:
-   [ICC_BINDING_NAME] = CLK_BINDING_NAME
 
-2. https://lore.kernel.org/linux-arm-msm/95f4e99a60cc97770fc3cee850b62faf.sboyd@kernel.org/
-   Are these supposed to be in a dt-binding header?
+> +};
+> +
+> +&usb_host1_ehci {
+> +	status = "okay";
+> +};
+> +
+> +&usb_host1_ohci {
+> +	status = "okay";
+> +};
+> +
+> +&usb_host1_xhci {
+> +	status = "okay";
+> +};
+> +
+> +&usb2phy0 {
+> +	status = "okay";
+> +};
+> +
+> +&usb2phy0_host {
+> +	status = "okay";
+> +};
+> +
+> +&usb2phy0_otg {
+> +	status = "okay";
+> +};
+> +
+> +&usb2phy1 {
+> +	status = "okay";
+> +};
+> +
+> +&usb2phy1_host {
+> +	status = "okay";
+> +};
+> +
+> +&usb2phy1_otg {
+> +	status = "okay";
+> +};
+> +
+> +&pwm1 {
+> +	status = "okay";
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pwm1m0_pins>;
+> +};
+> +
+> +&pwm2 {
+> +	status = "okay";
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pwm2m0_pins>;
+> +};
 
-3. https://lore.kernel.org/linux-arm-msm/031d0a35-b192-4161-beef-97b89d5d1da6@linaro.org/
-   Do you use them as well in the DTS?
+please sort phandles "&pwm2" alphabetical and status comes last
 
-Having the defines (with the calculations) seemed to to comply
-with the above three feedbacks.
 
-Please let me know if this can be handled in a different way that
-would be consistent with other Qualcomm platforms.
+> +
+> +&gpu_opp_table {
+> +	compatible = "operating-points-v2";
+> +
+> +	opp-200000000 {
+> +		opp-hz = /bits/ 64 <200000000>;
+> +		opp-microvolt = <915000>;
+> +	};
+> +
+> +	opp-300000000 {
+> +		opp-hz = /bits/ 64 <300000000>;
+> +		opp-microvolt = <915000>;
+> +	};
+> +
+> +	opp-400000000 {
+> +		opp-hz = /bits/ 64 <400000000>;
+> +		opp-microvolt = <915000>;
+> +	};
+> +
+> +	opp-600000000 {
+> +		opp-hz = /bits/ 64 <600000000>;
+> +		opp-microvolt = <920000>;
+> +	};
+> +
+> +	opp-700000000 {
+> +		opp-hz = /bits/ 64 <700000000>;
+> +		opp-microvolt = <950000>;
+> +	};
+> +
+> +	opp-800000000 {
+> +		opp-hz = /bits/ 64 <800000000>;
+> +		opp-microvolt = <1000000>;
+> +	};
+> +};
 
-Thanks
-Varada
+a comment would be nice, why the OPPs get changed
+
+
+Heiko
+
+
