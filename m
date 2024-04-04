@@ -1,123 +1,109 @@
-Received: from mail-ua1-f41.google.com (mail-ua1-f41.google.com [209.85.222.41])
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D1B92E401
-	for <linux-kernel@vger.kernel.org>; Thu,  4 Apr 2024 13:40:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B43E17722
+	for <linux-kernel@vger.kernel.org>; Thu,  4 Apr 2024 13:42:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712238051; cv=none; b=iCx0MmZg8wxq5UkkRHBFDm065EI67PpDu6DykQJUzebMO9N+mBtrBVy566Api+CjcMfN8c2XLgOnSDt+uIcQNpUSXl9CzBll2xja04Ij95/su0xSJZiTKpC3iO9AAE6lCR6vpvEaCXfkbGSql9BbyhqJVeUsRNsuPsxCLGD2Zrw=
+	t=1712238139; cv=none; b=jZGOANIaQphTCuhrmx+4VQzUvUnMl00RqgR2zgzfTfktkGv4aV9frngqBKyLsGa0+RDFA/rC+UISZwPRXUhde2tFsPenHmQfeh4D23UGHxMpQ25YRYIaoOfeO6pjVIweJOyaX4tTnOBAnyqaacjpLzOFNhbN9zfJXKgiGBa5Wy8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712238051; c=relaxed/simple;
-	bh=z89MX8HYRU8eftunJgLf/N/hvA+22G0MlIRdKBYcBOQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=jzSCXniAtQQTrW8GcvCMy3KVFCdzLgZKAsECOK+AR5tW6szhSyXf++BNEEhkNpn6xI3ylOyYpBf72y1H/bzKy7Si/v4Reuwq/VhkQT/fHEPzdJsmMFNWaQurAB/hs0yBkmMZBjzqxRMiEKQvKVjgCgXpBuO8mT+S7PaajtoIpyQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=PgH0YwT/; arc=none smtp.client-ip=209.85.222.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1712238139; c=relaxed/simple;
+	bh=qMD/lvlY3DoToWa/F0lmWjc16NjzdoQqwbmEIRR9314=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=YcFXwQneW+O7OIpnY5eF2f5soPbqlNIXBcOM+i2F4PzoigGYtYHSfBuz+R+AsfWonUuVDtv8/fhEblAHr8XuU2jGsCDkCICyMUYDXveOP415/GYkK9EeuJ6HY1BE02ojOflx1cm7fpQ72XpRDgXDFyVS2XXbJnZzXqlvgj5cZZ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=kqEylmTq; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=KkNAOZuR; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=kqEylmTq; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=KkNAOZuR; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="PgH0YwT/"
-Received: by mail-ua1-f41.google.com with SMTP id a1e0cc1a2514c-7e3d93697f7so332497241.1
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Apr 2024 06:40:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1712238049; x=1712842849; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=aOS6jB5q96k7GK5LtcB2yIdNav1TsSAYvbOvkVp9ZNE=;
-        b=PgH0YwT/maUKinOEMoJeJk4WnIxwiZTejcEeGmI/DPQLzkTNGgss4D9gmgLTe1l37p
-         6daai5ETDqoMwVDYmAyXjk8nLsPA12joiLU9WEvcYRA27ICOl4KipMdTFiS1IdRJb8LD
-         ZOwUy4nyc8vwwUIqeZ79nUayH7EduYwkxzGVA8YzUxrS38dQIIqLwNEBuBZXHexkrH/0
-         hLDKtDUDRp+ui+9lL0yLgCasVBSYz+e/swMLNP5RgFHTRPnPiNFpz0IuswuxfAnfYixy
-         Lf1z/9aGI6Uy64pPIfJyQFW6v4ErYNSLZmG9HqJ/F5fM0wJPuOy120CRPoM/LkCWVVzR
-         g0Sg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712238049; x=1712842849;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=aOS6jB5q96k7GK5LtcB2yIdNav1TsSAYvbOvkVp9ZNE=;
-        b=kjLq6LA3Dy+bl7KfUeK1b/kO6T/mtaB96j4vRObXRgE8AfUIEx527Z+cZjrmjq11r4
-         Ed0Xr9Nl88Wrka956N9R7WKP3p5p2sSukp4p26b5C6aBpsayLJQ9yTBjE8zXpSvQre+/
-         qUChn/A4KtLpfBBRdiB0atgwAWqrm6qRG2UN0UifDTvsSGcX8MNzyFhJ7rYHzMBAAFVW
-         WCrD5SqV6E0mdKz/7X9HKNQH01/Faa3iBIvwl6eEbrYrin1URQMqMmisardUfMPfApv4
-         o1gFroeWjeKBrcmPYGUL1u5kmZbGKJMXaZBK3JgBbjOqQmetnyGQ8KPFRJxfNbBfnMw5
-         54YA==
-X-Forwarded-Encrypted: i=1; AJvYcCXPrFeLcsE/t08BwNxf1vwqwtMARxhmg1Uc+E2xU6yZI7R3jeSUcmc4+5PjISJe5V2lywHIdMuNd0kN2WP24UyUEpUG9YICM0f+4aMF
-X-Gm-Message-State: AOJu0YxwgxaDr6DDMCYTYKW0IYXylfG7AjlXSBrBKURqgxKdnk5nE1KJ
-	gNXzQXhuBxjO4W3b68SriPFeKC8LxHeHJHPBp1Q8vAkGjRo8mblQ0paVyoq2R093ZrG4Xi5wlJR
-	xH+eL5sv5SDyrMC0lJufAo6gPJPCdhLJt+GwH
-X-Google-Smtp-Source: AGHT+IGpIspdlUNbRLtFDNytIXGtHZMaPzFQpb3jBaHTsPiM4ZMVlngt4/RaBpp9RWjLv+l1kAIe39yYGp5s9H9JN5c=
-X-Received: by 2002:a05:6102:f0a:b0:479:c181:a659 with SMTP id
- v10-20020a0561020f0a00b00479c181a659mr3220344vss.14.1712238048672; Thu, 04
- Apr 2024 06:40:48 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="kqEylmTq";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="KkNAOZuR";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="kqEylmTq";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="KkNAOZuR"
+Received: from hawking.nue2.suse.org (unknown [10.168.4.11])
+	by smtp-out2.suse.de (Postfix) with ESMTP id 40D985D9E9;
+	Thu,  4 Apr 2024 13:42:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1712238136; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=jKECyJGr5HtdnaY4tsEoyLq946ISDZRIngiGxLxPkeQ=;
+	b=kqEylmTqvUE77JwCy+hG582za952DmmVZ9IFzsBtxTCoEm89d89I3FuVs4D6GbqbUBw9Gx
+	/sHNBke+ZcojfIQfncITw5u+dt/ZUEX0rfMOGdOpm7aZTKXLtklfsv0DlCiVq7T2i7wINH
+	cT13HaHBGHKuIMVcOsd5+7Gz+jz5ouU=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1712238136;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=jKECyJGr5HtdnaY4tsEoyLq946ISDZRIngiGxLxPkeQ=;
+	b=KkNAOZuR118ii50urefvcvYFK1hYSXzWbOzMJWFmUQTK8w32+r9IzLsXZAAGMiBeDVx6D9
+	8bsnRCIPpN7aXdCQ==
+Authentication-Results: smtp-out2.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1712238136; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=jKECyJGr5HtdnaY4tsEoyLq946ISDZRIngiGxLxPkeQ=;
+	b=kqEylmTqvUE77JwCy+hG582za952DmmVZ9IFzsBtxTCoEm89d89I3FuVs4D6GbqbUBw9Gx
+	/sHNBke+ZcojfIQfncITw5u+dt/ZUEX0rfMOGdOpm7aZTKXLtklfsv0DlCiVq7T2i7wINH
+	cT13HaHBGHKuIMVcOsd5+7Gz+jz5ouU=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1712238136;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=jKECyJGr5HtdnaY4tsEoyLq946ISDZRIngiGxLxPkeQ=;
+	b=KkNAOZuR118ii50urefvcvYFK1hYSXzWbOzMJWFmUQTK8w32+r9IzLsXZAAGMiBeDVx6D9
+	8bsnRCIPpN7aXdCQ==
+Received: by hawking.nue2.suse.org (Postfix, from userid 17005)
+	id 228F54A0553; Thu,  4 Apr 2024 15:41:46 +0200 (CEST)
+From: Andreas Schwab <schwab@suse.de>
+To: linux-riscv@lists.infradead.org
+Cc: Conor Dooley <conor@kernel.org>,  Palmer Dabbelt <palmer@dabbelt.com>,
+  Yunhui Cui <cuiyunhui@bytedance.com>,  =?utf-8?B?QmrDtnJuIFTDtnBlbA==?=
+ <bjorn@rivosinc.com>,
+  linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] riscv: use KERN_INFO in do_trap
+In-Reply-To: <mvmy1aegrhm.fsf@suse.de> (Andreas Schwab's message of "Tue, 19
+	Mar 2024 16:40:05 +0100")
+References: <mvmy1aegrhm.fsf@suse.de>
+X-Yow: All I can think of is a platter of organic PRUNE CRISPS being trampled
+ by an army of swarthy, Italian LOUNGE SINGERS...
+Date: Thu, 04 Apr 2024 15:41:46 +0200
+Message-ID: <mvmcyr5ckit.fsf@suse.de>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240402-linked-list-v1-0-b1c59ba7ae3b@google.com>
- <20240402-linked-list-v1-7-b1c59ba7ae3b@google.com> <4aaf7fd7-49ed-4b3e-b691-0d8d7d426d3a@proton.me>
- <CAH5fLghEg37m_PhJxE8FVORHGROE9rd1CJttaWBGc7cXZCX+yQ@mail.gmail.com> <fe34947f-2daa-438a-b621-8557b78f1da6@proton.me>
-In-Reply-To: <fe34947f-2daa-438a-b621-8557b78f1da6@proton.me>
-From: Alice Ryhl <aliceryhl@google.com>
-Date: Thu, 4 Apr 2024 15:40:37 +0200
-Message-ID: <CAH5fLghDBzaDf38FQtt=DROmJ7qV+cXCxDn3nAmeaZibW20Trg@mail.gmail.com>
-Subject: Re: [PATCH 7/9] rust: list: add cursor
-To: Benno Lossin <benno.lossin@proton.me>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, 
-	Alex Gaynor <alex.gaynor@gmail.com>, Wedson Almeida Filho <wedsonaf@gmail.com>, 
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Andreas Hindborg <a.hindborg@samsung.com>, Marco Elver <elver@google.com>, 
-	Kees Cook <keescook@chromium.org>, Coly Li <colyli@suse.de>, Paolo Abeni <pabeni@redhat.com>, 
-	Pierre Gondois <pierre.gondois@arm.com>, Ingo Molnar <mingo@kernel.org>, 
-	Jakub Kicinski <kuba@kernel.org>, Wei Yang <richard.weiyang@gmail.com>, 
-	Matthew Wilcox <willy@infradead.org>, linux-kernel@vger.kernel.org, 
-	rust-for-linux@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
+X-Spam-Flag: NO
+X-Spam-Score: -4.14
+X-Spam-Level: 
+X-Spamd-Result: default: False [-4.14 / 50.00];
+	BAYES_HAM(-2.94)[99.75%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-0.999];
+	RCVD_NO_TLS_LAST(0.10)[];
+	MIME_GOOD(-0.10)[text/plain];
+	TO_DN_SOME(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	RCVD_COUNT_ONE(0.00)[1];
+	MID_RHS_MATCH_FROM(0.00)[];
+	RCPT_COUNT_FIVE(0.00)[6];
+	FROM_EQ_ENVFROM(0.00)[];
+	ARC_NA(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:email]
 
-On Thu, Apr 4, 2024 at 3:28=E2=80=AFPM Benno Lossin <benno.lossin@proton.me=
-> wrote:
->
-> On 03.04.24 14:49, Alice Ryhl wrote:
-> > On Wed, Apr 3, 2024 at 2:19=E2=80=AFPM Benno Lossin <benno.lossin@proto=
-n.me> wrote:
-> >> On 02.04.24 14:17, Alice Ryhl wrote:
-> >>> +impl<'a, T: ?Sized + ListItem<ID>, const ID: u64> Cursor<'a, T, ID> =
-{
-> >>> +    /// Access the current element of this cursor.
-> >>> +    pub fn current(&self) -> ArcBorrow<'_, T> {
-> >>> +        // SAFETY: The `current` pointer points a value in the list.
-> >>> +        let me =3D unsafe { T::view_value(ListLinks::from_fields(sel=
-f.current)) };
-> >>> +        // SAFETY:
-> >>> +        // * All values in a list are stored in an `Arc`.
-> >>> +        // * The value cannot be removed from the list for the durat=
-ion of the lifetime annotated
-> >>> +        //   on the returned `ArcBorrow`, because removing it from t=
-he list would require mutable
-> >>> +        //   access to the cursor or the list. However, the `ArcBorr=
-ow` holds an immutable borrow
-> >>> +        //   on the cursor, which in turn holds an immutable borrow =
-on the list, so any such
-> >>
-> >> The cursor has a mutable borrow on the list.
-> >>
-> >>
-> >>> +        //   mutable access requires first releasing the immutable b=
-orrow on the cursor.
-> >>> +        // * Values in a list never have a `UniqueArc` reference.
-> >>
-> >> Is there some type invariant guaranteeing this?
-> >
-> > The List owns a ListArc reference to the value. It would be unsound
-> > for there to also be a UniqueArc reference to it.
->
-> I think it would be good to add the existence of the `ListArc` as an
-> explanation.
+Ping!
 
-Will do. I'll do the other suggestions as well.
-
-Alice
+-- 
+Andreas Schwab, SUSE Labs, schwab@suse.de
+GPG Key fingerprint = 0196 BAD8 1CE9 1970 F4BE  1748 E4D4 88E3 0EEA B9D7
+"And now for something completely different."
