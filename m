@@ -1,90 +1,67 @@
-Received: from mailscanner05.zoner.fi (mailscanner05.zoner.fi [5.44.246.14])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4404312B14B
-	for <linux-kernel@vger.kernel.org>; Thu,  4 Apr 2024 14:08:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=5.44.246.14
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9D7D7129E6E
+	for <linux-kernel@vger.kernel.org>; Thu,  4 Apr 2024 14:10:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712239732; cv=none; b=UAnN91287xtJ4WM+SdonfBZSgxyFbNzdAkbqRZ95JhHxrepYShBymOFZg7WZA4wfruhex2P1lCuHBKtYVgUpDIvC92ETYCPPl54UNO3UMri/RzLxxYsYrSqPxAnnHLFZx+/8hDWpahCCU4zCPfXOwgKxvkPgk/h6KdVLvHZHQ/8=
+	t=1712239818; cv=none; b=jJajBwNX4Xy1PX19NErRSKjueIrwxXTJJqCXPc+xmUblcsmySYVno8d8IGBAa7pVxa10XV1s275P0G6WYV1ck6Pb3f6QJfvE91z4Tw4RtHp6Vp8ZIMfBlVmxlG/+C3556AtGasi9uJsFnCREa/oORj53T3FVAnVTPQ6hpcofDWU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712239732; c=relaxed/simple;
-	bh=M6DblwVE8DiuDynQ1JBmK+7fzA81IsqT2VdwDG2Puho=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=JlxbLZIlt+EpKCW2gokPF3KeWolz3GPN35UocuYZmiAWnjjx7/dWC2xJ5a15LkCyjawwbpIzXItjy+wx7do+1K7GudJZ119XDtfgSYylXVqp630Sfr96Uv+dxmLgIs8MaOBALYMliXStzzYcgdLVMvkPqNGYJ2hXKoh6ijKc+TM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tukaani.org; spf=pass smtp.mailfrom=tukaani.org; arc=none smtp.client-ip=5.44.246.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tukaani.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tukaani.org
-Received: from www25.zoner.fi (www25.zoner.fi [84.34.147.45])
-	by mailscanner05.zoner.fi (Postfix) with ESMTPS id CBA03212D6;
-	Thu,  4 Apr 2024 17:01:18 +0300 (EEST)
-Received: from mail.zoner.fi ([84.34.147.244])
-	by www25.zoner.fi with esmtp (Exim 4.96.1-7-g79877b70e)
-	(envelope-from <lasse.collin@tukaani.org>)
-	id 1rsNeY-00084X-2E;
-	Thu, 04 Apr 2024 17:01:18 +0300
-Date: Thu, 4 Apr 2024 17:01:03 +0300
-From: Lasse Collin <lasse.collin@tukaani.org>
-To: <angel.lkml@16bits.net>
-Cc: Andrew Morton <akpm@linux-foundation.org>, Jubin Zhong
- <zhongjubin@huawei.com>, linux-kernel@vger.kernel.org,
- vegard.nossum@oracle.com
-Subject: Re: [PATCH 11/11] xz: Adjust arch-specific options for better
- kernel compression
-Message-ID: <20240404170103.1bc382b3@kaneli>
-In-Reply-To: <20240403225903.0773746d@kaneli>
-References: <20240320183846.19475-1-lasse.collin@tukaani.org>
-	<20240320183846.19475-12-lasse.collin@tukaani.org>
-	<27db456edeb6f72e7e229c2333c5d8449718c26e.camel@16bits.net>
-	<20240403225903.0773746d@kaneli>
-X-Mailer: Claws Mail 4.2.0 (GTK 3.24.41; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1712239818; c=relaxed/simple;
+	bh=wVLB1krQLHRu+YiNi21HhMdn2rnox3JVbTq0Qx5Rp0Q=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=l2yeFQeUPFpchUmsE6vGB+vN3Cn5I4Kwa815oSt2mV/JrlMc9eDGORfaW6iZ2jcj3i3GdklXsuihw/x1ppCbl4A2soV/EAQkSlWJRIwjl27am4H0Pfnuva0dlk8FlSfn9Hmr3gECE4B1DMP1GfmajKuntZmxwVA9AFzcoych0Iw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B0126FEC;
+	Thu,  4 Apr 2024 07:10:46 -0700 (PDT)
+Received: from usa.arm.com (e103737-lin.cambridge.arm.com [10.1.197.49])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 331723F64C;
+	Thu,  4 Apr 2024 07:10:15 -0700 (PDT)
+From: Sudeep Holla <sudeep.holla@arm.com>
+To: linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	Cristian Marussi <cristian.marussi@arm.com>
+Cc: Sudeep Holla <sudeep.holla@arm.com>
+Subject: Re: [PATCH v2 0/5] SCMI misc small-updates
+Date: Thu,  4 Apr 2024 15:10:06 +0100
+Message-ID: <171223976883.451467.5338059341557064927.b4-ty@arm.com>
+X-Mailer: git-send-email 2.43.2
+In-Reply-To: <20240325204620.1437237-1-cristian.marussi@arm.com>
+References: <20240325204620.1437237-1-cristian.marussi@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-On 2024-04-03 Lasse Collin wrote:
-> On 2024-03-31 angel.lkml@16bits.net wrote:
-> > So, in the spirit of keeping a fair amount of paranoia, and since it
-> > doesn't do any harm, any such code should be failproofed to ensure
-> > it can only import the expected shell variables with the right
-> > format[3]:
-> >
-> >  eval "$($XZ --robot --version | grep
-> > '^\(XZ\|LIBLZMA\)_VERSION=[0-9]*$')" || exit  
-> 
-> I would rather get rid of eval. I committed the following to the
-> upstream repository:
-> 
-> XZ_VERSION=$($XZ --robot --version | sed -n 's/^XZ_VERSION=//p') ||
-> exit
+On Mon, 25 Mar 2024 20:46:15 +0000, Cristian Marussi wrote:
+> a bunch of small SCMI updates based on v6.9-rc1.
+> Mainly adding traces for weird SCMI messages like late timed-out replies,
+> out of order unexpected messages and malformed messages due to spurious
+> mbox IRQs.
+>
+> Thanks,
+> Cristian
+>
+> [...]
 
-Both my new version and the suggested eval+grep version have error
-detection issues:
+Applied to sudeep.holla/linux (for-next/scmi/updates), thanks!
 
-  - With the eval+grep version, if there are no matches, eval gets an
-    empty string as an argument in which case eval's exit status is
-    zero and "exit" won't be run. Exit status from $XZ is ignored.
-    XZ_VERSION won't be set or it might be inherited from the
-    environment.
+[1/5] include: trace: Widen the tag buffer in trace_scmi_dump_msg
+      https://git.kernel.org/sudeep.holla/c/da251ce21061
+[2/5] firmware: arm_scmi: Add helper to trace bad messages
+      https://git.kernel.org/sudeep.holla/c/5dc0e0b1f0ea
+[3/5] firmware: arm_scmi: Add message dump traces for bad and unexpected replies
+      https://git.kernel.org/sudeep.holla/c/5076ab66db16
+[4/5] firmware: arm_scmi: Simplify scmi_devm_notifier_unregister
+      https://git.kernel.org/sudeep.holla/c/264a2c520628
+[5/5] firmware: arm_scmi: Use dev_err_probe to bail out
+      https://git.kernel.org/sudeep.holla/c/3a7d93d1f71b
+--
+Regards,
+Sudeep
 
-  - With $XZ ... | sed ..., the exit status of $XZ is ignored. sed
-    will exit with 0 and thus "exit" won't be run even if $XZ fails.
-
-Upstream I changed to this:
-
-XZ_VERSION=$($XZ --robot --version) || exit
-XZ_VERSION=$(printf '%s\n' "$XZ_VERSION" | sed -n 's/^XZ_VERSION=//p')
-
-If output from $XZ is weird, XZ_VERSION might still become weird too.
-But the way the variable is used later should at worst result in
-"integer expression expected" error message.
-
-I think the above is a good enough balance for a shell script like
-this.
-
--- 
-Lasse Collin
