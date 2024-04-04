@@ -1,172 +1,107 @@
-Received: from wfhigh8-smtp.messagingengine.com (wfhigh8-smtp.messagingengine.com [64.147.123.159])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f48.google.com (mail-pj1-f48.google.com [209.85.216.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B02D31C6A4;
-	Thu,  4 Apr 2024 00:17:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=64.147.123.159
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 401151CAB5
+	for <linux-kernel@vger.kernel.org>; Thu,  4 Apr 2024 00:17:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712189865; cv=none; b=OkVbzq6Nd44v2IIUDgIEdwv50X+030lLzxgYbMXehcTwSwL0jTIR7OB9uJVsUXrBg0Ce4Bu9ki2gdnSybgwOJrZ27kz5mBQxXwwEWkCkAFjQSqCdtb3Db1zmIeFB2hNvHDpcNoMPsJmyrjHvJCDITHcjwv9WjFCamxCX4WVskgw=
+	t=1712189871; cv=none; b=tOZTeY17ZNZX5i95t8M0+BdNA8TAhGKp+IeYpFxcenEOmTVS4NXA8o0vfJoxuDW2p57xx71wkcKFXRU7yYCTRJs4TKQXhA3BuwQlqT9CvL8TGyxXgWMjJor9QjNE5qfMzVRwN7NUsfiou4DbEh98W39xPOkfTLTb+9NLTVxAPDY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712189865; c=relaxed/simple;
-	bh=VKZYrJDBI4Tg+jJYZ5tYzIFr1wEKASSqze+TdUIUhYw=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=rKoQtGIL8RE4zqrMGPfy8Qh1AJ4D2J7SFtJF2wFUhfyU/BqqWhmq0eU/Db7yQMxyRD38RGzCcww6vJGfQRYPTByey5MD3s0XfPIDM/iLCLpLzVVoe2dGMfPcI/3dakneFKwy2BgPimabrvg/YdDbP+kW2gVfZUo5Bm+qyRA8NLE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ljones.dev; spf=none smtp.mailfrom=ljones.dev; dkim=pass (2048-bit key) header.d=ljones.dev header.i=@ljones.dev header.b=vhfJmPvq; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=axl4b+IU; arc=none smtp.client-ip=64.147.123.159
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ljones.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ljones.dev
+	s=arc-20240116; t=1712189871; c=relaxed/simple;
+	bh=B7R3hnTJRgCRWl5nF3InAG07B70C9XWTY07YjD3CY9Q=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=s/0jqccmCOi447MA9XupYqeiymDERYA6TM98zQDI9jQo1CD6A2x6aMm2M++VI+AZpIkrLBBhS4vYJ19zPRKktK8OAQFeS3XwLF1MR+1NLIky+HDMcO6RUg/pI6TQuW5luEu0MaPwmZoiWtPeCZtwrqCJfSJj0fWpkt/+NS5xuqY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=moeryeMB; arc=none smtp.client-ip=209.85.216.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ljones.dev header.i=@ljones.dev header.b="vhfJmPvq";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="axl4b+IU"
-Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
-	by mailfhigh.west.internal (Postfix) with ESMTP id 9BD9E18000DD;
-	Wed,  3 Apr 2024 20:17:42 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute1.internal (MEProxy); Wed, 03 Apr 2024 20:17:43 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ljones.dev; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm3; t=1712189862;
-	 x=1712276262; bh=SWwR8iaMb1pyiVmb4GJOb8En73DRDg4SXGzGWsHKjIM=; b=
-	vhfJmPvqCkuxfiRTB7SAkmwQZsqAmMy+0MBdSWJIsi2PSAErVqv9QKaXHbGEmA2j
-	fAVAfGfehC1vZY2WBm99ll/l4b6ctE1BUHljSOdhxWM0bd3FOUCLfUOA8Jp3ev96
-	7C4oJMV3APOB5dE2gogV4/x0awN/7Azds3laYV95aTF5K/ULy4h4EjxuoypmD1E0
-	cndgtbzgnpvVe1jTcnBcJEXI3SEUqtFli1AVBl/gqyQHLWBz7uu0/62NX1tDanQu
-	7WM9IFqvlPqtEttmgZ9/BDveZuyWXxT/Zvyjdf7xmTbW4qKs82Qlji0u234i18Om
-	hommiemUKWmVp8aFpIzThA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1712189862; x=
-	1712276262; bh=SWwR8iaMb1pyiVmb4GJOb8En73DRDg4SXGzGWsHKjIM=; b=a
-	xl4b+IUtOsntKPlOEqzUBQZkulhzXdZrQTLU8RYX9Z1vIql/L4FWEC1nHBtmPfOD
-	OjGfwh9KMfM+j0tDfCAyI5iji0fO31BRQNHvZzA7r1kbCwLDW1dbcuFgrdxwsNNK
-	Zv2zS/+e+7GOjl51DvjVaDW+4U+jUWrsRuCRnOgki5jNPrl0VV/3MVt8nL6X7cLG
-	20cDbPIwv5JoPg5yG/egqknAKsnD4tGdmrT/DPynChp6se+KJU3OT3oe1BXMuqbJ
-	6kyrmMjOYKf5Q8qW0PTAypwnh28EspThfLOeoiWbyMBIv0TZLjFUXD5CfJJEjbPE
-	xrhIkzkFEvMmsHzqRkJzQ==
-X-ME-Sender: <xms:pfENZrVlpi05RBI-FklAIX4BysVUy8nJBTU6buFln1eJKoZFcyRfIQ>
-    <xme:pfENZjkIDPAQ3245KpzNdnePB26Hmiw6Ky7k4H3xS31HN1V8lNHueiyYWilQ3E51i
-    EFsci7MVSyO6xIJW40>
-X-ME-Received: <xmr:pfENZnYOb_74TOdBsClWZyMeAV5mDunffN4qNevY0VC1IY2prmUOMq9lMYCq>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrudefjedgfeefucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucenucfjughrpefhvfevufffkffojghfgggtgfesth
-    ekredtredtjeenucfhrhhomhepfdfnuhhkvgcuffdrucflohhnvghsfdcuoehluhhkvges
-    lhhjohhnvghsrdguvghvqeenucggtffrrghtthgvrhhnpeduudetudehiedvvdevveelhf
-    egkeefffdvfeetuefgveefgffgffeiffeitdelieenucevlhhushhtvghrufhiiigvpeeg
-    necurfgrrhgrmhepmhgrihhlfhhrohhmpehluhhkvgeslhhjohhnvghsrdguvghv
-X-ME-Proxy: <xmx:pfENZmWY8gnn5Iwd-pBo1kXAXZ0zAHoUpmKRlUy0otms8OkG1idSDQ>
-    <xmx:pfENZllllYAieemXmbiuLJ_sU7Yue7V809jyOk9Mj7IbDNfmUWEvAw>
-    <xmx:pfENZje5nBX_UEPt4C4R_7IFCh-bV8SSjgdXN4cqaq5OzA1rYa18NQ>
-    <xmx:pfENZvHXc-XaI49aPe70eBv8f-ZX_iCRbQpFzkDUVNWaFuYfK-PTQw>
-    <xmx:pvENZjaifIX-FT5p4rs368vYXXofWO4oft3WugS5r3NfqFl00D1qRBob>
-Feedback-ID: i5ec1447f:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
- 3 Apr 2024 20:17:39 -0400 (EDT)
-From: "Luke D. Jones" <luke@ljones.dev>
-To: hdegoede@redhat.com
-Cc: corentin.chary@gmail.com,
-	ilpo.jarvinen@linux.intel.com,
-	platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	"Luke D. Jones" <luke@ljones.dev>
-Subject: [PATCH v4 9/9] platform/x86: asus-wmi: cleanup main struct to avoid some holes
-Date: Thu,  4 Apr 2024 13:16:52 +1300
-Message-ID: <20240404001652.86207-10-luke@ljones.dev>
-X-Mailer: git-send-email 2.44.0
-In-Reply-To: <20240404001652.86207-1-luke@ljones.dev>
-References: <20240404001652.86207-1-luke@ljones.dev>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="moeryeMB"
+Received: by mail-pj1-f48.google.com with SMTP id 98e67ed59e1d1-2a226f8e44aso272060a91.0
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Apr 2024 17:17:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1712189869; x=1712794669; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=NEhL3R0CV+V3IuuciSTia1iTNDXKvNOyBjkJ1bb1xuA=;
+        b=moeryeMBg1rF1de14LZ/J6WEZLTGhm4Opitd/OsogBSskMhZ4ezInwXDi8cIdkQgwY
+         bjxh3Dq1gJtSM06a4Qiy5wuBq70tOTQzUSAfRISBICJ9ZYRExvFCqHcBD7HKsnKXnWqN
+         zP0i07ErOw+Mq4HK73p0lHDQh5IHz6q2eS/KPuuwLRHltZb3LpmTasf/vN5PvVFvBDdd
+         oK5uwnNU0aBDhW36BNulQc0wr05G+Jd8cooXpebonquvphyndPHtpkWjZjiLyGDGk8bo
+         1w5Tb6fpcM75svULCi4zxAJ74NZV4UwukrX4zeUY34wJBTtrDkbw52rRbivNb8Pv2jrX
+         Hn2A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712189869; x=1712794669;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=NEhL3R0CV+V3IuuciSTia1iTNDXKvNOyBjkJ1bb1xuA=;
+        b=CfW+zmzzOBBDh3P6gm7P8PLZBl+8cN7ipyLF4MITc/BmfpJJM2nG8szZ9soaySwOyV
+         eV41f3b12oVK6R2m0CSjCWFR/A8UqMM+naG+0KKhPSmMUZ+IEX/ZOkXrFJZVePpG2Vrb
+         IjJ8AiTlXNxKbn6dozNpn+blonEAWNPc3ppGflRxYntfS+jNXJVdbZCRE+2sRWshlwcp
+         +aNoT6/NMMRVMhfskR9x9kQZPGuMLThPme1vmN4W6lGpmhDqT2ReHRSNsnxkhtrF9H7/
+         VugmrnY+Td4vBY01kZ68StiBusN0tVMN4eZ9Zkv3Egu5EtsVFLdIUo9L0F8/+30nY02P
+         y9dA==
+X-Forwarded-Encrypted: i=1; AJvYcCWXe/r78lDh38y4OEJO5B52WGyx9V9bEUVWmVGnJfvZnj780LXACtajnYUyGRwCaE3/GTyYfWu5GNiuG7bDSeJ2O/8ovuWEW4fLQ1Jq
+X-Gm-Message-State: AOJu0Yy17BWJcuV09JPCsdUPylYFdbb+2Y8MTFJLHgGnezqp3yV3KIFG
+	popzhKAN/Tg9/vyWWB4mnRI97F+a6e4IXFhk60+mNzgO6gLROBu705226CwkYFjjvw==
+X-Google-Smtp-Source: AGHT+IFvRGBLmr18Nxk1BlgrtjmU4Hpm+bSbf901S7+dDxgwigEa/yJT6NNfNLt7go4I4DJzMOm6Rw==
+X-Received: by 2002:a17:90a:c587:b0:2a2:775:9830 with SMTP id l7-20020a17090ac58700b002a207759830mr1144439pjt.11.1712189869444;
+        Wed, 03 Apr 2024 17:17:49 -0700 (PDT)
+Received: from jc-ubuntu-dev-korn-1 (c-98-210-1-68.hsd1.ca.comcast.net. [98.210.1.68])
+        by smtp.gmail.com with ESMTPSA id q94-20020a17090a17e700b0029facfb3f25sm338726pja.45.2024.04.03.17.17.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 03 Apr 2024 17:17:49 -0700 (PDT)
+From: Jackson Chui <jacksonchui.qwerty@gmail.com>
+To: Johan Hovold <johan@kernel.org>,
+	Alex Elder <elder@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	greybus-dev@lists.linaro.org,
+	linux-staging@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Cc: Jackson Chui <jacksonchui.qwerty@gmail.com>
+Subject: [PATCH] staging: greybus: Clear up precedence for gcam logging macros
+Date: Wed,  3 Apr 2024 17:16:28 -0700
+Message-Id: <20240404001627.94858-1-jacksonchui.qwerty@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Reorganises some attr-available calls to remove a few unrequired
-booleans in the main driver struct which combined with some
-reorganisation prevents a series of large holes seen with pahole.
+Reported by checkpatch:
 
-Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
-Signed-off-by: Luke D. Jones <luke@ljones.dev>
+CHECK: Macro argument 'gcam' may be better as '(gcam)' to avoid
+precedence issues
+
+Disambiguates '&' (address-of) operator and '->' operator precedence,
+accounting for how '(gcam)->bundle->dev' is a 'struct device' and not a
+'struct device*', which is required by the dev_{dbg,info,err} driver
+model diagnostic macros. Issue found by checkpatch.
+
+Signed-off-by: Jackson Chui <jacksonchui.qwerty@gmail.com>
 ---
- drivers/platform/x86/asus-wmi.c | 17 ++++++-----------
- 1 file changed, 6 insertions(+), 11 deletions(-)
+ drivers/staging/greybus/camera.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
-index d06d9e0c498c..2d2b4eca7fd8 100644
---- a/drivers/platform/x86/asus-wmi.c
-+++ b/drivers/platform/x86/asus-wmi.c
-@@ -254,6 +254,9 @@ struct asus_wmi {
- 	u32 tablet_switch_dev_id;
- 	bool tablet_switch_inverted;
+diff --git a/drivers/staging/greybus/camera.c b/drivers/staging/greybus/camera.c
+index a8173aa3a995..d82a2d2abdca 100644
+--- a/drivers/staging/greybus/camera.c
++++ b/drivers/staging/greybus/camera.c
+@@ -180,9 +180,9 @@ static const struct gb_camera_fmt_info *gb_camera_get_format_info(u16 gb_fmt)
  
-+	/* The ROG Ally device requires the MCU USB device be disconnected before suspend */
-+	bool ally_mcu_usb_switch;
-+
- 	enum fan_type fan_type;
- 	enum fan_type gpu_fan_type;
- 	enum fan_type mid_fan_type;
-@@ -266,9 +269,7 @@ struct asus_wmi {
- 	u8 fan_boost_mode_mask;
- 	u8 fan_boost_mode;
+ #define GB_CAMERA_MAX_SETTINGS_SIZE	8192
  
--	bool charge_mode_available;
- 	bool egpu_enable_available;
--	bool egpu_connect_available;
- 	bool dgpu_disable_available;
- 	u32 gpu_mux_dev;
+-#define gcam_dbg(gcam, format...)	dev_dbg(&gcam->bundle->dev, format)
+-#define gcam_info(gcam, format...)	dev_info(&gcam->bundle->dev, format)
+-#define gcam_err(gcam, format...)	dev_err(&gcam->bundle->dev, format)
++#define gcam_dbg(gcam, format...)	dev_dbg(&((gcam)->bundle->dev), format)
++#define gcam_info(gcam, format...)	dev_info(&((gcam)->bundle->dev), format)
++#define gcam_err(gcam, format...)	dev_err(&((gcam)->bundle->dev), format)
  
-@@ -309,9 +310,6 @@ struct asus_wmi {
- 
- 	bool fnlock_locked;
- 
--	/* The ROG Ally device requires the MCU USB device be disconnected before suspend */
--	bool ally_mcu_usb_switch;
--
- 	struct asus_wmi_debug debug;
- 
- 	struct asus_wmi_driver *driver;
-@@ -4391,11 +4389,11 @@ static umode_t asus_sysfs_is_visible(struct kobject *kobj,
- 	else if (attr == &dev_attr_als_enable.attr)
- 		devid = ASUS_WMI_DEVID_ALS_ENABLE;
- 	else if (attr == &dev_attr_charge_mode.attr)
--		ok = asus->charge_mode_available;
-+		devid = ASUS_WMI_DEVID_CHARGE_MODE;
- 	else if (attr == &dev_attr_egpu_enable.attr)
- 		ok = asus->egpu_enable_available;
- 	else if (attr == &dev_attr_egpu_connected.attr)
--		ok = asus->egpu_connect_available;
-+		devid = ASUS_WMI_DEVID_EGPU_CONNECTED;
- 	else if (attr == &dev_attr_dgpu_disable.attr)
- 		ok = asus->dgpu_disable_available;
- 	else if (attr == &dev_attr_gpu_mux_mode.attr)
-@@ -4423,7 +4421,7 @@ static umode_t asus_sysfs_is_visible(struct kobject *kobj,
- 	else if (attr == &dev_attr_boot_sound.attr)
- 		devid = ASUS_WMI_DEVID_BOOT_SOUND;
- 	else if (attr == &dev_attr_panel_od.attr)
--		ok = asus->panel_overdrive_available;
-+		devid = ASUS_WMI_DEVID_PANEL_OD;
- 	else if (attr == &dev_attr_mini_led_mode.attr)
- 		ok = asus->mini_led_dev_id != 0;
- 	else if (attr == &dev_attr_available_mini_led_mode.attr)
-@@ -4674,12 +4672,9 @@ static int asus_wmi_add(struct platform_device *pdev)
- 	asus->nv_dynamic_boost = 5;
- 	asus->nv_temp_target = 75;
- 
--	asus->charge_mode_available = asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_CHARGE_MODE);
- 	asus->egpu_enable_available = asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_EGPU);
--	asus->egpu_connect_available = asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_EGPU_CONNECTED);
- 	asus->dgpu_disable_available = asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_DGPU);
- 	asus->kbd_rgb_state_available = asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_TUF_RGB_STATE);
--	asus->panel_overdrive_available = asus_wmi_dev_is_present(asus, ASUS_WMI_DEVID_PANEL_OD);
- 	asus->ally_mcu_usb_switch = acpi_has_method(NULL, ASUS_USB0_PWR_EC0_CSEE)
- 						&& dmi_match(DMI_BOARD_NAME, "RC71L");
- 
+ static int gb_camera_operation_sync_flags(struct gb_connection *connection,
+ 					  int type, unsigned int flags,
 -- 
-2.44.0
+2.34.1
 
