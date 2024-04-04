@@ -1,144 +1,92 @@
-Received: from EUR05-DB8-obe.outbound.protection.outlook.com (mail-db8eur05on2114.outbound.protection.outlook.com [40.107.20.114])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2570012E4D;
-	Thu,  4 Apr 2024 17:52:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.20.114
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712253173; cv=fail; b=o8YkXHhG3A6WQZiBMGxeIy7MUyCHnT/8BPQAwrLrLmcRSlXWUf1zxlTJT4+9vGjXsAg0OSSI18jj5wo3OHRZ71rjrPfjG/kpjsLkPJzQOSnrPkZUH+WnT3b9ZMBwBgiB4fNMBfVgsPx8//wHRxxsBTUq6IRmN1cuwPejDo/vKgo=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712253173; c=relaxed/simple;
-	bh=EZRytNjn7PfbCOUVKkks+WTif2utk3C6jyslB/FdvU8=;
-	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=lVGR2NF4mfi2hVY47NJi1p+cM5aH22+2fO/RG3MQAXlbAc4+s43oe82OLK+e4bnbD2XM8uI1J9+nQqvsLst6W/nwAT3na1PSpLrUsE2TRG4Gufyhp4hrINB+jyBmkJGNbaS2VrIz4ZWqIGH57R7DSlhLjBPYhT4dCdxWAlUf204=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mt.com; spf=pass smtp.mailfrom=mt.com; dkim=pass (2048-bit key) header.d=mt.com header.i=@mt.com header.b=fy0U7NXh; arc=fail smtp.client-ip=40.107.20.114
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mt.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mt.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1F5F127B7D;
+	Thu,  4 Apr 2024 17:56:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1712253365; cv=none; b=aG/rKaXl9sOUYizUcEQsRgeAQ+TP8bkP5LnELHMVt/enu4H6EoOpoUhOv7DOXlMnWH2AvPPabhq4xL1NWnxEiXwAMayJ8cgVRonlI5rqSB/WWTVBw1uFvzFFbs94js4KhQUqkY2ZJ3Z+UvQZA5W5/RHf0rHQq2C/vrdPSy+I+v0=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1712253365; c=relaxed/simple;
+	bh=jrrBn8WsgmiRVg7JSf1dTg4FPbZgIaRf3d5/pes6beA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=vDQ3zKP8Wsr3poImOoGXwZdWRzY5ySoBdOzbSsYn4xTPwVSub8a2w6E6H3n5eg4xuroWQ1NLnkcxAUr47n50Vh2/l5DN2TKcFiqE0NSUKgwzL6EHwaoVH+AdreWxSmwc+L+4LawHlF0PO4RYkCgT2siVEqOkXzUjPW1qQjY7H7I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mIV3m8++; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mt.com header.i=@mt.com header.b="fy0U7NXh"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=D2Dh/KaigmJI/Pa+o+N0M+rkPTgFqPIPT/wBAxo6kSXHDxuhxY1npTegeuhzDF/p3p1ULzKVz4ViTZCDph4UWHedumYh73EL+ASa44f/kzw/azQ3T4qjICy+J4DCU23TR/e3/+XxTyjYm4DoS4mFdmikxo2nJa7ik6c7HTqCcdPJbYr2KggzyO6+3L7jnlTFWiYsocNN4/rmeKJjQQp54ykFX0kDbxuYiPQ4qJXZmJ9MvLs2j53HVyurTnDW+zNckeT2NbkPzzLhz94I0KIiRESBwqj2MN5G0Aa9I5V4KNtm8ATmweAfuY4j/xJxQdzONfU6SorIJ98oXX0yWPPsZg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=sRVzY8EgHsg0XmmkJ+UKXyTJa3wD15teSMAC5TFmXy8=;
- b=PxwkQKunU9VhzUrYNUlzl+lX47xq85TuCEHjUNB9S97m2Ms2dEVWD6ptXxKeLV6akque+tKg5mq7K9ukDK6KCvIrrxEXGg3x//ewjY5QQXJ9klL2FFb2zYARQO620B9EW3Y0o+BbWJuyvCfItw7OVEcq/zkjfoOIlG9TYjT54Vd3D3azCBf5izd7oBjyVIdpKt3ZSZPwPmVtvSLuJHF0ENWrOlyR0AvI2yvFafdrn8aIKfUhOVM2UsoTE/CoYjBkbUyfL5IG3Ot1GuHg+Biir6CloJmV1t3m+YViV2FyJT22WQlWoy6flZ8+021fLpJZE4vHO2T3lKM0Ll1+1u2OOQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=mt.com; dmarc=pass action=none header.from=mt.com; dkim=pass
- header.d=mt.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mt.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=sRVzY8EgHsg0XmmkJ+UKXyTJa3wD15teSMAC5TFmXy8=;
- b=fy0U7NXhVbdrCqwPng3OGZn3Uk0b2XDXiZmsAlLev0c1+e44iDszszoDegj4PxdfFNHIIxPkjBsV86JTP8/AF+UcfQa2OyRBu7ulabpaANvTRx+JSHT/Avn5vPX9+hDuJIF7JlnoDtGeDjq7fgVzYg+3xsvSqTz3scrpewgT4bx/IUcLALSb62o2ie0nm1oIqcHR51BJgkem4dP/5N1V6HBhue/zuFpLCjsUCED+KmEDPgpc466hgix3K/SXu6XKVfd5kslzX+bR9yMU3iHnQjcrib4TalE9fXyC2HjcAIWSNjLm3jQCPlxe/7B+gRc/P5pOsCPcTVYXnARIn9hNdw==
-Received: from DB9PR03MB7513.eurprd03.prod.outlook.com (2603:10a6:10:224::17)
- by AS4PR03MB8339.eurprd03.prod.outlook.com (2603:10a6:20b:507::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7452.26; Thu, 4 Apr
- 2024 17:52:47 +0000
-Received: from DB9PR03MB7513.eurprd03.prod.outlook.com
- ([fe80::99b5:2449:1fc2:b78e]) by DB9PR03MB7513.eurprd03.prod.outlook.com
- ([fe80::99b5:2449:1fc2:b78e%6]) with mapi id 15.20.7409.042; Thu, 4 Apr 2024
- 17:52:47 +0000
-From: Markus Burri <markus.burri@mt.com>
-To: linux-kernel@vger.kernel.org
-Cc: Markus Burri <markus.burri@mt.com>,
-	Lars-Peter Clausen <lars@metafoo.de>,
-	Michael Hennerich <Michael.Hennerich@analog.com>,
-	Jonathan Cameron <jic23@kernel.org>,
-	linux-iio@vger.kernel.org
-Subject: [PATCH v1] iio: adc: ad_sigma_delta: Clear pending interrupts before enable
-Date: Thu,  4 Apr 2024 19:51:26 +0200
-Message-Id: <20240404175126.110208-1-markus.burri@mt.com>
-X-Mailer: git-send-email 2.39.2
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: MI2P293CA0008.ITAP293.PROD.OUTLOOK.COM
- (2603:10a6:290:45::19) To DB9PR03MB7513.eurprd03.prod.outlook.com
- (2603:10a6:10:224::17)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mIV3m8++"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1712253364; x=1743789364;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=jrrBn8WsgmiRVg7JSf1dTg4FPbZgIaRf3d5/pes6beA=;
+  b=mIV3m8++kspIwqLS4r2sviAru4/bMN2L+QRnQN31oOJSXSiqHaPVgUKX
+   JsSrV3QT+iyoyBnIOHScJoZhe+pGFb6abel0lWisCe0pm+L9B5wEyVkQD
+   eDKSggX0spksl5xP72wruxar0tGnKX66cR0t7ZwLTknti6Rj0y7XMyhCD
+   m2vLRetVkMj/PgWJ6GLOVIKMYVyIIx52Gw+zSqzPfOek6kSB3l1EDT2x5
+   b0A6AgfjKf3z4pTsN09OXtl2n4xjClBqdjzepjVyUNEcvuURfkjjuCXIo
+   J0nDtEI9TxD5BQNBiAyQmqhp/KuvndcxpAm8Ts5wZQnjz1xzUDpKqwBJP
+   A==;
+X-CSE-ConnectionGUID: BsLDQvQAQ6aqcwS+9GqBlQ==
+X-CSE-MsgGUID: wTI/hcFGTWex90dKNbv8ZQ==
+X-IronPort-AV: E=McAfee;i="6600,9927,11034"; a="30025601"
+X-IronPort-AV: E=Sophos;i="6.07,179,1708416000"; 
+   d="scan'208";a="30025601"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Apr 2024 10:56:03 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,11034"; a="937086937"
+X-IronPort-AV: E=Sophos;i="6.07,179,1708416000"; 
+   d="scan'208";a="937086937"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmsmga001.fm.intel.com with ESMTP; 04 Apr 2024 10:56:00 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+	id 4EB0B812; Thu,  4 Apr 2024 20:55:59 +0300 (EEST)
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Andrew Lunn <andrew@lunn.ch>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	Russell King <linux@armlinux.org.uk>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [PATCH net-next v1 1/1] net: mdio-gpio: Use device_is_compatible()
+Date: Thu,  4 Apr 2024 20:55:57 +0300
+Message-ID: <20240404175557.2470008-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.43.0.rc1.1.gbec44491f096
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DB9PR03MB7513:EE_|AS4PR03MB8339:EE_
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	ffJwxQGlgDMlEDJImeWnCBIxR42gf+Vrx1NDuKcNIn5VVz87YrluJU5643zaHxlJIH8bPo2xsDvRPfZcUaRWBzDdrh1vASGcZDM4ntKo6qtZaOHpsSkMBNF+994QwwfenBvhkSqbHKjOpe5b+nWjMFHwr0j/wwzlOwcLBErTa3+KmTLtBJNNpu4VUlIL3elS/bPUUskBLSKJtla2+0RMhjngTBj5alkIjIOatdYb7u3147XDy0v5fYd1yRdVdKzAcmXqxiN9dqrHWZKu4VHn3k2D4EPZ0NPqX56bsRX+tpz1ThfW/iEsDXl4KHOq/5PpakJZjBxBysuqgVv5SxhuZjpdhi9jlVFiH+a9U7nh78nRSm5geLpk6+YZ0pubmsC2Mx4J9uTkC30sAJ7ER89xPjE9KWEWx+2XRGDvHOuhFrlmBlvJNAq5U3R2mVfk53TbYwZ+aFvpAR4GwlZ9wrJuRvzIgM/ymqUTDVVo64hdb/rUa+McOLEBIRYUewegPI1XtfETX9OnPMpkNLhJvMoERTv/ugRJF8bvmyiHV1vIC3kUkqyBF1yzM9ZTXkmFsFOEru7Djguj6uJg/TlkQ/szEuskUWyVV4ubUTGZLDhipAE/ebMyw7jJibEzmYeUgdh5tGab6obltyEDxKUVzNDNaxwI4oMRNHeDKYc7L+vTXcfT6EfUdgcMX/3wTog+5yKQjoGhohzgBKkNHq0A+rzSG433Djeoma0h7FQSPbuodxI=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB9PR03MB7513.eurprd03.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(1800799015)(52116005)(366007)(376005)(38350700005);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?Ul2duN86phhMzdxoM63VRaFR+bEU2eYEEYy1fTYpynZa4VyTUAUXaUkKSgWS?=
- =?us-ascii?Q?84KKLTSApNofiN7COhx/A1cZ5UbcE/owSQXbJYJ7UWlfWyIe4FFKluhqsqx9?=
- =?us-ascii?Q?12TQ249A8DDtiRd6gG8vtmr0uiL/9qEj+SC6Wb5P2VAgADYdZ6XP6SfKUXpU?=
- =?us-ascii?Q?CrrmvMb6I9KPxnp2XTMIoYL29t3tCVC+BW8kPiFsyaUqYDJpmI2IRJMnSqD1?=
- =?us-ascii?Q?HesMr8q2wTdzK53sqCc/87BWD6guq9G6WNUnJBbd9g+fWmDgLUe+Pd4R6/CK?=
- =?us-ascii?Q?QA6dqYoV0lNORjlofwfTXzOs5pQgmXMw6WsYAMLt8wHIOR9hvkOWAvdVYxcd?=
- =?us-ascii?Q?EdqJpZPIis93838JjC54kS8E2ZBVnPXUXFWXuTdljya/1sZwaayMsW2htbuT?=
- =?us-ascii?Q?NjOhkAq38uWEdtV7eHutp8dh9jfIt5SxZjLPE7GipjXzzoqudAHXxZdOCiT/?=
- =?us-ascii?Q?eZ+/yAAeIOvUgAOcuScXWpXLf3zkucVm3Nduw6I4Ayp6DbkXItRv4gFxTV1e?=
- =?us-ascii?Q?VCRjjvJDyTxt7GTeLprWCKTDPKXa973yaCxRyU+QLWcQtGdbJqB0NA6hsE0a?=
- =?us-ascii?Q?Y+7yAYMi+6oxHhFdPx044qMUOt+YdmuUyxxrCeEqShp4UITi7/C4Rc8OJpIt?=
- =?us-ascii?Q?qHU6lqUyvKhSYMSraYPDu7AwXnb2cEE4PB4V0br+Csi+xGP9f+jegdfkuxQr?=
- =?us-ascii?Q?FUFJ9bKp4dbGU39sL4X4jiJnfUFIAD0QpRarbdSly6WHtTaY7eu8irLKuYTK?=
- =?us-ascii?Q?R+XPL5AJEOKo78Hlw4akT4zsAjVkmwNlvn5a8WW6SbKYUvSd2NliwqEEDsAG?=
- =?us-ascii?Q?ZLKu36xrS4IJXwJ30Nrt5+CT+VRf7mcha9VCmjEqiyaAC/XmjhzZGUdkKIVN?=
- =?us-ascii?Q?55RzqM+o2chQ5xRO0ceSZuGNmtUv4n12j+XeRLF7Z/nLJnSgU7W5xSL22MmG?=
- =?us-ascii?Q?AzYTw0m1oY86r3AdNnb5+cXnplA7sggc8hcur5T7OrbhmdCviQcnv+Kxl5AQ?=
- =?us-ascii?Q?811swNmgR5FCR6BDCMvwpx8fVgApZUyZLh17L9bGseuoMCxm5MvOm8ipYXBL?=
- =?us-ascii?Q?6qtGlTEPYVaubm29Ysp0MyZqIDymhHjtHRY6xL0UswqnEllYCpkYm4mU5cL+?=
- =?us-ascii?Q?v0aB1YYbq9g/UPmm2wVRl2+H0vCXzaacL0ouuMJE7HRzhpM5fiNOtYY7HhAk?=
- =?us-ascii?Q?caak2F1C7qgWHC1nPEuH8NIojRSEgsOIwhAIKd5BLWeTmxfXowHhiUZW+S6y?=
- =?us-ascii?Q?BsxRIyz6ZrupbVD0SkXFrjerbQXH2CDP9Sg19VWJwoiaQutKb3lhEess2SJ/?=
- =?us-ascii?Q?72bOaHWOPfGFKJcX0A4f3IwcUrGYAB/cFIdpG5DKFcDL13vxY8TzgKMuDnUw?=
- =?us-ascii?Q?6LKoXFbr4BAfxZ2oFz4+4BitQ1FwOMvf8EFF7kvzSH2pVTvlL5tlZXbviUF5?=
- =?us-ascii?Q?HfXLQm2T/Hr+8SUhQhLbl/Rui3qlooMFgCi9LBpAqdeY7JJNcP5cSigBurJv?=
- =?us-ascii?Q?Hr1MwrbYmMKAJExnYGGswugUaT+oWy044i7obqEIQ2LT+4AJ5V4Foc8I5k+y?=
- =?us-ascii?Q?y4KV9ibMCLPlssd4LSVKT9++9WRUHVDD3nuMp4hX?=
-X-OriginatorOrg: mt.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c161d3e0-b2ac-4554-2a14-08dc54d009f9
-X-MS-Exchange-CrossTenant-AuthSource: DB9PR03MB7513.eurprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Apr 2024 17:52:47.8090
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: fb4c0aee-6cd2-482f-a1a5-717e7c02496b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: unnyy/YZxH9fQlZnt3fLW5pkXYoZWH4BQFQfSz6R4ijM9/8RJt8SMIxA8JZnw/hS1FQoj3IQ4wemqYcLt97WUA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS4PR03MB8339
+Content-Transfer-Encoding: 8bit
 
-For device will enable and disable irq contiously like AD7195,
-it use DOUT/RDY pin for both SPI transfer and data ready.
-It will disable irq during SPI transfer, and re-eanble irq after SPI transfer.
-That may cause irq status bit set to 1 during spi transfer.
+Replace open coded variant of device_is_compatible().
 
-When the active condition has been detected, the corresponding bit
-remains set until cleared by software. Status flags are cleared
-by writing a 1 to the corresponding bit position.
-
-Signed-off-by: Markus Burri <markus.burri@mt.com>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
- drivers/iio/adc/ad_sigma_delta.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/net/mdio/mdio-gpio.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/drivers/iio/adc/ad_sigma_delta.c b/drivers/iio/adc/ad_sigma_delta.c
-index a602429cdde4..59544c39642a 100644
---- a/drivers/iio/adc/ad_sigma_delta.c
-+++ b/drivers/iio/adc/ad_sigma_delta.c
-@@ -515,6 +515,10 @@ static irqreturn_t ad_sd_trigger_handler(int irq, void *p)
+diff --git a/drivers/net/mdio/mdio-gpio.c b/drivers/net/mdio/mdio-gpio.c
+index 778db310a28d..82088741debd 100644
+--- a/drivers/net/mdio/mdio-gpio.c
++++ b/drivers/net/mdio/mdio-gpio.c
+@@ -132,8 +132,7 @@ static struct mii_bus *mdio_gpio_bus_init(struct device *dev,
+ 		new_bus->phy_ignore_ta_mask = pdata->phy_ignore_ta_mask;
+ 	}
  
- irq_handled:
- 	iio_trigger_notify_done(indio_dev->trig);
-+	/*
-+	 * ACK pending interrupts from spi transfer.
-+	 */
-+	irq_gc_ack_set_bit(irq_get_irq_data(sigma_delta->spi->irq));
- 	sigma_delta->irq_dis = false;
- 	enable_irq(sigma_delta->spi->irq);
- 
+-	if (dev->of_node &&
+-	    of_device_is_compatible(dev->of_node, "microchip,mdio-smi0")) {
++	if (device_is_compatible(dev, "microchip,mdio-smi0")) {
+ 		bitbang->ctrl.op_c22_read = 0;
+ 		bitbang->ctrl.op_c22_write = 0;
+ 		bitbang->ctrl.override_op_c22 = 1;
 -- 
-2.39.2
+2.43.0.rc1.1.gbec44491f096
 
