@@ -1,155 +1,71 @@
-Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
+Received: from mail-io1-f71.google.com (mail-io1-f71.google.com [209.85.166.71])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42AE813C3E3
-	for <linux-kernel@vger.kernel.org>; Thu,  4 Apr 2024 22:19:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCC8B13C3F7
+	for <linux-kernel@vger.kernel.org>; Thu,  4 Apr 2024 22:19:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.71
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712269143; cv=none; b=W6icAy+Jrv/v3sRT9PJxaASzf2Qgnj4BCIhd6UR9ejs89hFo3wO0QstVi+VvPTmvkFZS/sMgiY0dDzN4phbBt/pasN7E4CNteKsYL4BPkP23jVH86GNT6oTSlnIYUqMsQo6UFwBFoVO3bAysnwFMg0HxD/WvqO9b5qDalzQ5zNQ=
+	t=1712269146; cv=none; b=TwK2yzkeltPYH5z8DAnL64w0JTaxPLd8vamZruAgk6AETGu/GGF8uSYji7Al7SHrMxMhn6U/EprL0M7h5q1eAfN4SP+to9tQXAliQX4ZnfznK6gOJAuhsrW6PBw3HO/wHQ7MK3N3kTYLEW+kVyOgzYLdtpJ199eyzF1lMw0W0M4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712269143; c=relaxed/simple;
-	bh=+KWtArHYOV4/drlvpuKAYSMS04/EdwACCJckjwanf7U=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uJcDCu1ggic5fobxsGGtHvdTi2pZjGGGyb/HKtzEFRGE5hmfhpMBQupzGEWQAnYW9i2ypKtMqqTdVxpSGxbp2AK59ZEmB/QNtSyizLCdfOCyFo/qjVrMySpPBlOCx5anRnr+YtZoSz/NDyhrBVh41PJ5hieiyCdPQrHVT0ASVL4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=layalina.io; spf=pass smtp.mailfrom=layalina.io; dkim=pass (2048-bit key) header.d=layalina-io.20230601.gappssmtp.com header.i=@layalina-io.20230601.gappssmtp.com header.b=1UBDRMBR; arc=none smtp.client-ip=209.85.128.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=layalina.io
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=layalina.io
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=layalina-io.20230601.gappssmtp.com header.i=@layalina-io.20230601.gappssmtp.com header.b="1UBDRMBR"
-Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-4162a3e2d22so9482445e9.1
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Apr 2024 15:19:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=layalina-io.20230601.gappssmtp.com; s=20230601; t=1712269139; x=1712873939; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=wG/cxLIeAsMx6yckTC5J+rSQMKObkfyNIHYf4fi8mz4=;
-        b=1UBDRMBR6fqeaXcfc5hPVD3xKEfGPuM3RR1g1hXR4nSWUvMnh2JUQF5kPd3o1AC/wU
-         lBacytIHzU+AWsnzlYwmXkw5ABxwfWphIJvK30O7OwddMQ+WGg6i0UazwLM3MreJWQal
-         OGq1oWTA14fCpTXlF5G5KURqkARmdtCj49z578GUvLEf0+/morxOhae0TZw35yPpi4zd
-         7Dt3W480QAztw0nyPURWszNXXmocCPAydslrbnAN3xuKYwmmA8pNrSwYb37jD6AR0sAS
-         OZRJTAvNdcOpLpX4PR3mRPm2aIUG9nb7OpyHIaj4DlV3kBYF8s1QR4lfob1kgLeKCRlV
-         Uz4Q==
+	s=arc-20240116; t=1712269146; c=relaxed/simple;
+	bh=7NODJhpqCiBUARlC13M54J4ioWC06Fj/ZFd6ehYpxNM=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=Wt7A51zapx0UpQQsWgiGwoOga4Yo0CzaqKiUCxwgHEWknHuRREiVClqDpE3xkf1PeMMx7WShhuYfrxaxSggO7jjdFkudMn0iZKWzfFVRrTY2o3MEFPvOQjG6fYbw0p6TC7EhXYafou466J1lHqz84z/TWO6PTUYruZYadJifP2o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.71
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f71.google.com with SMTP id ca18e2360f4ac-7cf179c3da4so169852939f.2
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Apr 2024 15:19:04 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712269139; x=1712873939;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=wG/cxLIeAsMx6yckTC5J+rSQMKObkfyNIHYf4fi8mz4=;
-        b=KVKTe2bf/TkRRRw52BQVT543vdGUM2zoYCvqBkB5LnBP7lUs74ujIgF2g9D86oel9y
-         g+SCaEXzGQ2Lkgm64c3GzdktYCvU4aAMU7kg1tNIVqhCNdQrDl3VbA89NZ5b5hpodjbe
-         tuuIooSFm9edhN6X7fHfKnn6VMhhpsXNiTBLhCbDQtAQqULjwQIzXmFp9KCN2Q1L1/Vp
-         xt+evedAr2MHiNtUzwTzpaeqVVOi19FKURLriJM81lM3Uu9iQaLW2BKpI1bQ+VKfHshj
-         99SHwZJNpeJkaq3iEvm/PT6jpQyM11jKzBQJQUe2pJ5XGcyJYa1qabSsHf4Eo3dDvcwm
-         HEmg==
-X-Forwarded-Encrypted: i=1; AJvYcCXjdPcsO8LKJGq/n4br/g38OgK6/CMAkGC29EqP18jj4AJmZTGV/qjK7OTpPVOXFvKR8TvRbrd0NS/vRdw5e3yHSwagjPXXRHpOcnJo
-X-Gm-Message-State: AOJu0YwnVMt8OZr5wST/QTDwSedl4TYisBq7oizB8cAWFc2toccsRztM
-	b8olPQMFaTdE440c2BAV7+pLTQKO5dI48vGcPAXVnRxecReyZJJWACQ3POWjPr4=
-X-Google-Smtp-Source: AGHT+IFejTLcWMUMimwZqy8cXDemMXlzVW/rkc6Tpqa6pB0TSndvjL2ofWOJTqrQG4Tac8efgduTag==
-X-Received: by 2002:a05:600c:299:b0:414:726:87d9 with SMTP id 25-20020a05600c029900b00414072687d9mr773074wmk.12.1712269139604;
-        Thu, 04 Apr 2024 15:18:59 -0700 (PDT)
-Received: from airbuntu (host81-157-90-255.range81-157.btcentralplus.com. [81.157.90.255])
-        by smtp.gmail.com with ESMTPSA id c19-20020a05600c0a5300b004162673100fsm4120455wmq.13.2024.04.04.15.18.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 04 Apr 2024 15:18:59 -0700 (PDT)
-Date: Thu, 4 Apr 2024 23:18:57 +0100
-From: Qais Yousef <qyousef@layalina.io>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Vincent Guittot <vincent.guittot@linaro.org>,
-	Ingo Molnar <mingo@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Juri Lelli <juri.lelli@redhat.com>,
-	Daniel Bristot de Oliveira <bristot@redhat.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	"Paul E. McKenney" <paulmck@kernel.org>,
-	Joel Fernandes <joel@joelfernandes.org>,
-	John Stultz <jstultz@google.com>,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	linux-kernel@vger.kernel.org, Yabin Cui <yabinc@google.com>
-Subject: Re: [PATCH] sched/pi: Reweight fair_policy() tasks when inheriting
- prio
-Message-ID: <20240404221857.t2v3yteykleq2nol@airbuntu>
-References: <20240403005930.1587032-1-qyousef@layalina.io>
- <CAKfTPtDB8D6bouxJN9q8gXqG+BQYcsrJYEodDWtOB2kQwPH53A@mail.gmail.com>
- <20240403094224.105fdef0@gandalf.local.home>
+        d=1e100.net; s=20230601; t=1712269144; x=1712873944;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=eYo+XKJ2eT3bRygBT7/7KHEeMg1adnKVOy5tKf7Pnec=;
+        b=UtAI3Jbz0lVa2ZofLWO+sg2y+lHvutSsylqXCdcMTllQiwSyz68X+bqm6vTWltS//V
+         3v5k4M5UDqSdRizOnJzc7Qeh8xBhtUwcswC3LMvxDW/HdXZS3N0cMifkrEOJaq6FQd/7
+         lkbkYOhdAafVX58y9MzEf5eW9NgqQFVIT1ngCYPHz36C9QMUD8SYpYGF0UN7NDZoo523
+         PgIbNJ9v5ZG1ob6eM9p4O8Woh4gdBnHI+hZVDsL+xcBNvDwX4QDnUM2XV8ttTxwW/1q1
+         E5pbj9xmT14LBJjd2RnH/elK0GdgdFPj5X+ept/UMuKjyFMsKH8gmtiQ/85jfGIvgPeN
+         MIzA==
+X-Forwarded-Encrypted: i=1; AJvYcCWdMiJ1xVwSToi743EVu0dJTUsk5K0ZXO33BCB3QoRF3d2xQV8Lg7SbOcMsxAJZZtwVKtnGhqdCZTKSVGFRAAoN3VjgXfS7qGqFRDGD
+X-Gm-Message-State: AOJu0YxM5JTTeK+TSG7IOULhQAZJ28eCW+2m7zUmu4yUwptq2ACKfzng
+	RTqqW5l7Up4Mb2+wVmAo5ZrJ5vnZ1Nj7zcPVa1sTQSigjBklPrgbmyKBYvRf/rMJ5p1z6+x/CH1
+	yGwHVs8j+rx9ExlvSqDYnO8HpHhwN7BGTkTo2/X3DVIBuEoZ9Z4bXSdA=
+X-Google-Smtp-Source: AGHT+IGPHH8NJNv4WF/pRNJQT+K+9g7osvDp5eNffLwt8hxhiTLGjNVK34MAUhoVW6vkJpBz/aP6CUqkcY7+5SAUkhr076QfkQ0C
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20240403094224.105fdef0@gandalf.local.home>
+X-Received: by 2002:a05:6638:2102:b0:47f:1061:8851 with SMTP id
+ n2-20020a056638210200b0047f10618851mr56561jaj.2.1712269144032; Thu, 04 Apr
+ 2024 15:19:04 -0700 (PDT)
+Date: Thu, 04 Apr 2024 15:19:04 -0700
+In-Reply-To: <20240404114450.4136-1-hdanton@sina.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000171a3f06154cba0b@google.com>
+Subject: Re: [syzbot] [mm?] WARNING: bad unlock balance in madvise_cold_or_pageout_pte_range
+From: syzbot <syzbot+c641706ad4e9688cccdf@syzkaller.appspotmail.com>
+To: hdanton@sina.com, linux-kernel@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-On 04/03/24 09:42, Steven Rostedt wrote:
-> On Wed, 3 Apr 2024 15:11:06 +0200
-> Vincent Guittot <vincent.guittot@linaro.org> wrote:
-> 
-> > On Wed, 3 Apr 2024 at 02:59, Qais Yousef <qyousef@layalina.io> wrote:
-> > >
-> > > For fair tasks inheriting the priority (nice) without reweighting is
-> > > a NOP as the task's share won't change.  
-> > 
-> > AFAICT, there is no nice priority inheritance with rt_mutex; All nice
-> > tasks are sorted with the same "default prio" in the rb waiter tree.
-> > This means that the rt top waiter is not the cfs with highest prio but
-> > the 1st cfs waiting for the mutex.
-> 
-> I think the issue here is that the running process doesn't update its
-> weight and if there are other tasks that are not contending on this mutex,
-> they can still starve the lock owner.
-> 
-> IIUC (it's been ages since I looked at the code), high nice values (low
-> priority) turn to at lease nice 0 when they are "boosted". It doesn't
-> improve their chances of getting the lock though.
+Hello,
 
-The main issue is that if this low nice value is holding the lock and the cpus
-are busy, it can take a long time to release the lock.
+syzbot has tested the proposed patch and the reproducer did not trigger any issue:
 
-In today's systems the amount of waiting time that use cases 'permitted' (for
-lack of better word) keeps shrinking.
+Reported-and-tested-by: syzbot+c641706ad4e9688cccdf@syzkaller.appspotmail.com
 
-And the way userspace is coded these days with all these layers, app writers
-might not be aware there's this dependency where a low priority task might
-contend for a lock required by something important. Being able to rely on
-PTHREAD_PRIO_INHERIT to ensure they get boosted is useful to protect against
-a thread that has a low priority inadvertently holds this lock from causing
-massive delays to waiters as it might not get enough RUNNING time to release
-it.
+Tested on:
 
-To my knowledge windows has some sort of boost mechanism (that maybe Joel knows
-more about than me) for the lock holder to help release the lock faster that
-app developers rely on to fix similar issues.
+commit:         727900b6 Add linux-next specific files for 20240403
+git tree:       https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
+console output: https://syzkaller.appspot.com/x/log.txt?x=17446b3d180000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=afcaf46d374cec8c
+dashboard link: https://syzkaller.appspot.com/bug?extid=c641706ad4e9688cccdf
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+patch:          https://syzkaller.appspot.com/x/patch.diff?x=1268c903180000
 
-> 
-> > 
-> > >
-> > > This is visible when running with PTHREAD_PRIO_INHERIT where fair tasks
-> > > with low priority values are susceptible to starvation leading to PI
-> > > like impact on lock contention.
-> > >
-> > > The logic in rt_mutex will reset these low priority fair tasks into nice
-> > > 0, but without the additional reweight operation to actually update the
-> > > weights, it doesn't have the desired impact of boosting them to allow
-> > > them to run sooner/longer to release the lock.
-> > >
-> > > Apply the reweight for fair_policy() tasks to achieve the desired boost
-> > > for those low nice values tasks. Note that boost here means resetting
-> > > their nice to 0; as this is what the current logic does for fair tasks.  
-> > 
-> > But you can at the opposite decrease the cfs prio of a task
-> > and even worse with the comment :
-> > /* XXX used to be waiter->prio, not waiter->task->prio */
-> > 
-> > we use the prio of the top cfs waiter (ie the one waiting for the
-> > lock) not the default 0 so it can be anything in the range [-20:19]
-> > 
-> > Then, a task with low prio (i.e. nice > 0) can get a prio boost even
-> > if this task and the waiter are low priority tasks
-> 
-> 
-> Yeah, I'm all confused to exactly how the inheritance works with
-> SCHED_OTHER. I know John Stultz worked on this for a bit recently. He's
-> Cc'ed. But may not be paying attention ;-)
-> 
-> -- Steve
+Note: testing is done by a robot and is best-effort only.
