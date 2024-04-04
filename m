@@ -1,171 +1,127 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA037127B6A
-	for <linux-kernel@vger.kernel.org>; Thu,  4 Apr 2024 12:26:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCFFE129A99
+	for <linux-kernel@vger.kernel.org>; Thu,  4 Apr 2024 12:26:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712233581; cv=none; b=u+DMrmbK4ClRg4XCXTocaia0MsuJrFSmTF7ZsTmFSnmbfUJjUxDlDIRJShRvv37l9p9Gf/RDBPUdZdWkTlcjNDeziOgC0HupUcSrDbfqQhxU6TdBKyV1gb3y/wsheaAkSlZJ4CmLVma2ZhVBeLr7sPyMtKHWJCyp0F8JqW8gsgc=
+	t=1712233587; cv=none; b=KZBvtyw7fUuakuwWylLKiIGG7+/wsgtSMDTxslDk+7sTreerlwy/N0rVV9eCE4ey91prddBY9LBt1YiY3VSEWBwY9no/ZdAofAjcVjGciQ5XZr6El6SDcXtMJDGYMj9FAP7bsKgDpLkr952e2giOgdSRlG7wFfgAmIdgNXAutgs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712233581; c=relaxed/simple;
-	bh=YLTKhOijlN00zs6uhZzcSfA/PrpGaDrjnPnIf5l8Vd8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sbTfcrkOBmq8pt3Xkz8eLuCvNIRRhpUHHmmLRDH/SlKfYW0XaSbnHnKGANxp/3VOfdQBAeCgYoUVbVpyh5lsVBt2h3XVUbrqdsdE58skoQTTMIzQijvXR1hb8CAa+iO1gAKg3ZyUPV24BmfUHXotU7euR+4Ry5s9gt7vz9mllsY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=qofd5n/t; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=axmGiTcH; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=qofd5n/t; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=axmGiTcH; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1712233587; c=relaxed/simple;
+	bh=hmBS3wUHO0mONt4FlN4wFgGGwPzu6YR45Hg+n9iZFDA=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=FiDOrlYRDAd5a0QgwFFSPLXDm3HiAGe5rclHyFY0ByHVh3uBl2d3MFvsSockwD46K4zXilg4DGV0F1+U2ZWqK4lhBl2XrHACbq23STQxfhfrpZp8gIiqi9nWwepY/VdUNPVh7lsfUi1JvC6iKjTPloSql0oOh7+booF/5xrZobs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=gMVIZZWi; arc=none smtp.client-ip=209.85.221.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="qofd5n/t";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="axmGiTcH";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="qofd5n/t";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="axmGiTcH"
-Received: from imap2.dmz-prg2.suse.org (imap2.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:98])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id E40225D942;
-	Thu,  4 Apr 2024 12:26:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1712233577; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=kaNBuiDg+Yyb0ktBS/Z1u/Z6C+/cWf4P8ez4emkur5c=;
-	b=qofd5n/tkDGjc5eFhdijwPecpVxKwVFrwnJo0HHEfIYVm4D1KQeCM629Q5yYPYYxD1j1lY
-	g5eThqmJ3r9lW7YEz1zrQQKcO2c8jUHTYdaK4Zh33fSw3bq1068Fn+qHBKWeQaAb6353uO
-	V6wlUdL4fSyy0zkjLdxKtKj1G7qe1Nc=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1712233577;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=kaNBuiDg+Yyb0ktBS/Z1u/Z6C+/cWf4P8ez4emkur5c=;
-	b=axmGiTcH8F+XOxRTFHuKUxRS/ZYSLNUgepiydq7vuOUX86gOCJJCN9fh2biAwvkUcdCLqp
-	+gr/R2Avugsx4gAQ==
-Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b="qofd5n/t";
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=axmGiTcH
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1712233577; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=kaNBuiDg+Yyb0ktBS/Z1u/Z6C+/cWf4P8ez4emkur5c=;
-	b=qofd5n/tkDGjc5eFhdijwPecpVxKwVFrwnJo0HHEfIYVm4D1KQeCM629Q5yYPYYxD1j1lY
-	g5eThqmJ3r9lW7YEz1zrQQKcO2c8jUHTYdaK4Zh33fSw3bq1068Fn+qHBKWeQaAb6353uO
-	V6wlUdL4fSyy0zkjLdxKtKj1G7qe1Nc=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1712233577;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=kaNBuiDg+Yyb0ktBS/Z1u/Z6C+/cWf4P8ez4emkur5c=;
-	b=axmGiTcH8F+XOxRTFHuKUxRS/ZYSLNUgepiydq7vuOUX86gOCJJCN9fh2biAwvkUcdCLqp
-	+gr/R2Avugsx4gAQ==
-Received: from imap2.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap2.dmz-prg2.suse.org (Postfix) with ESMTPS id 82C1113AA3;
-	Thu,  4 Apr 2024 12:26:17 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap2.dmz-prg2.suse.org with ESMTPSA
-	id pYszHWmcDmaSXwAAn2gu4w
-	(envelope-from <osalvador@suse.de>); Thu, 04 Apr 2024 12:26:17 +0000
-Date: Thu, 4 Apr 2024 14:27:37 +0200
-From: Oscar Salvador <osalvador@suse.de>
-To: "Vishal Moola (Oracle)" <vishal.moola@gmail.com>
-Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-	akpm@linux-foundation.org, muchun.song@linux.dev,
-	willy@infradead.org
-Subject: Re: [PATCH v2 1/3] hugetlb: Convert hugetlb_fault() to use struct
- vm_fault
-Message-ID: <Zg6cualUqcsZYZxf@localhost.localdomain>
-References: <20240401202651.31440-1-vishal.moola@gmail.com>
- <20240401202651.31440-2-vishal.moola@gmail.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gMVIZZWi"
+Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-34388753650so409681f8f.3
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Apr 2024 05:26:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1712233584; x=1712838384; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=cXMXdhzuoLCLynIjoXzQvanMKsFRKu7E/3G3H+50quM=;
+        b=gMVIZZWi1z2FkhN00xQ+9vw0OIo8cysxMi1K7veW43FyRARjY0LAKrwqdvWOL0ACmQ
+         h87Vk9Z67FyZAJ7ooIL1l95eXG7TZxG29nqqc3NHBOte/N/rn2VKTT58WkEsLPq4UjoP
+         tbKqE2eNEF8UGuTfN+R7d80PcLP0d2tP8CTApvdkXUEbKGyLFuG8LyiMp7I7C6ZAfsOZ
+         fmZ+pwXoB/TW14/ree+87TxWxgAY4U6jCEOTYu7e7aqmE2nc92+brfKiEwCHbgyJLQhf
+         LdqplzbB2SiIi6COgJNg4zBIesqMqEV32VxyjW10sBS801e6atOE9FHCgcxmP7fxRUHP
+         purQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712233584; x=1712838384;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=cXMXdhzuoLCLynIjoXzQvanMKsFRKu7E/3G3H+50quM=;
+        b=C5yCv0+DMS5N0K+ornBN6tYlZgAlUk/qh9ViHuHmdFkNneBDaL0pSRuxRlCQwEewM8
+         FIFtGhIWkURc/g0OYKqRp7dQKgqMOpHENXCRVUHbDZZFdZPibQbYG2Na/h/376Mn2EPj
+         7plBOmudojONOtmVCWBYvCMouG9ok5554C+TPDFo9oQdOXSQH3L8c9BoQ4sp5EcYoc77
+         1WIVZSup4fyfrz+fM0G6ZxZfkB1uFk59MLpAEwkL/mWfLFtg+NpINVUJDMhrCXeDxSr/
+         3Gh98CFe5uxdbAhUhgmBaH2/zB7sg7o1ItWoiEpvUO9SyOsLXIDZGFXooYaucqyGIc8M
+         8amA==
+X-Forwarded-Encrypted: i=1; AJvYcCW2gF11OsWvDGvU7AgYdsOAKwd7C1IDjmpYu0kQxQc3uav9Oom5IYpX20bGnMBW2iHKBQbODVJS/0yn19uGix2EEUfH1cHWV0M/SbJ+
+X-Gm-Message-State: AOJu0YxdUl2xyN1zpQw0CLFQsheWQyP5nM/dFIbQ8T5aDsr+nX6CDm0t
+	J8/1aokcU2C3Cn+1FhBJwlMKmqwt1jTHbJWNKNb8wEb7CbQ4PTDMSSdiwxp14pg=
+X-Google-Smtp-Source: AGHT+IEApEjUKboR0OBWLDTAS6Jxlk1eQTEdQEi/Xza6SHa5181j+IZCoUEpXbG45sbONQ13Dr267A==
+X-Received: by 2002:a5d:60ce:0:b0:343:9189:e685 with SMTP id x14-20020a5d60ce000000b003439189e685mr1644596wrt.48.1712233584399;
+        Thu, 04 Apr 2024 05:26:24 -0700 (PDT)
+Received: from gpeter-l.roam.corp.google.com ([148.252.128.204])
+        by smtp.gmail.com with ESMTPSA id bu14-20020a056000078e00b003434b41c83fsm12106303wrb.81.2024.04.04.05.26.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 04 Apr 2024 05:26:23 -0700 (PDT)
+From: Peter Griffin <peter.griffin@linaro.org>
+To: mturquette@baylibre.com,
+	sboyd@kernel.org,
+	robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org,
+	vkoul@kernel.org,
+	kishon@kernel.org,
+	alim.akhtar@samsung.com,
+	avri.altman@wdc.com,
+	bvanassche@acm.org,
+	s.nawrocki@samsung.com,
+	cw00.choi@samsung.com,
+	jejb@linux.ibm.com,
+	martin.petersen@oracle.com,
+	chanho61.park@samsung.com,
+	ebiggers@kernel.org
+Cc: linux-scsi@vger.kernel.org,
+	linux-phy@lists.infradead.org,
+	devicetree@vger.kernel.org,
+	linux-clk@vger.kernel.org,
+	linux-samsung-soc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	tudor.ambarus@linaro.org,
+	andre.draszik@linaro.org,
+	saravanak@google.com,
+	willmcvicker@google.com,
+	Peter Griffin <peter.griffin@linaro.org>
+Subject: [PATCH 02/17] dt-bindings: soc: google: exynos-sysreg: add dedicated hsi2 sysreg compatible
+Date: Thu,  4 Apr 2024 13:25:44 +0100
+Message-ID: <20240404122559.898930-3-peter.griffin@linaro.org>
+X-Mailer: git-send-email 2.44.0.478.gd926399ef9-goog
+In-Reply-To: <20240404122559.898930-1-peter.griffin@linaro.org>
+References: <20240404122559.898930-1-peter.griffin@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240401202651.31440-2-vishal.moola@gmail.com>
-X-Spam-Level: 
-X-Spamd-Result: default: False [-2.96 / 50.00];
-	BAYES_HAM(-1.95)[94.77%];
-	SUSPICIOUS_RECIPS(1.50)[];
-	DWL_DNSWL_LOW(-1.00)[suse.de:dkim];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	URIBL_BLOCKED(0.00)[imap2.dmz-prg2.suse.org:helo,imap2.dmz-prg2.suse.org:rdns,suse.de:dkim,suse.de:email];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	TO_DN_SOME(0.00)[];
-	FREEMAIL_TO(0.00)[gmail.com];
-	MIME_TRACE(0.00)[0:+];
-	ARC_NA(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	DKIM_TRACE(0.00)[suse.de:+];
-	RCVD_COUNT_TWO(0.00)[2];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	RCPT_COUNT_FIVE(0.00)[6];
-	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TAGGED_RCPT(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap2.dmz-prg2.suse.org:helo,imap2.dmz-prg2.suse.org:rdns,suse.de:dkim,suse.de:email]
-X-Rspamd-Action: no action
-X-Rspamd-Queue-Id: E40225D942
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Spam-Flag: NO
-X-Spam-Score: -2.96
+Content-Transfer-Encoding: 8bit
 
-On Mon, Apr 01, 2024 at 01:26:49PM -0700, Vishal Moola (Oracle) wrote:
-> Now that hugetlb_fault() has a vm_fault available for fault tracking, use
-> it throughout. This cleans up the code by removing 2 variables, and
-> prepares hugetlb_fault() to take in a struct vm_fault argument.
-> 
-> Signed-off-by: Vishal Moola (Oracle) <vishal.moola@gmail.com>
+Update dt schema to include the gs101 hsi2 sysreg compatible.
 
-Reviewed-by: Oscar Salvador <osalvador@suse.de>
+Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
+---
+ .../devicetree/bindings/soc/samsung/samsung,exynos-sysreg.yaml  | 2 ++
+ 1 file changed, 2 insertions(+)
 
-A question below:
-
->  mm/hugetlb.c | 84 +++++++++++++++++++++++++---------------------------
->  1 file changed, 41 insertions(+), 43 deletions(-)
-> 
-> diff --git a/mm/hugetlb.c b/mm/hugetlb.c
-> index 8267e221ca5d..360b82374a89 100644
-> --- a/mm/hugetlb.c
-> +++ b/mm/hugetlb.c
-...  
->  	/*
-> -	 * entry could be a migration/hwpoison entry at this point, so this
-> -	 * check prevents the kernel from going below assuming that we have
-> -	 * an active hugepage in pagecache. This goto expects the 2nd page
-> -	 * fault, and is_hugetlb_entry_(migration|hwpoisoned) check will
-> -	 * properly handle it.
-> +	 * vmf.orig_pte could be a migration/hwpoison vmf.orig_pte at this
-
-"vmf.orig_pte could be a migration/hwpoison entry at ..."
-
-> -	entry = pte_mkyoung(entry);
-> -	if (huge_ptep_set_access_flags(vma, haddr, ptep, entry,
-> +	vmf.orig_pte = pte_mkyoung(vmf.orig_pte);
-> +	if (huge_ptep_set_access_flags(vma, vmf.address, vmf.pte, vmf.orig_pte,
->  						flags & FAULT_FLAG_WRITE))
-
-Would it make sense to teach huge_ptep_set_access_flags/set_huge_pte_at() to use
-vm_fault struct as well? All info we are passing is stored there.
-Maybe it is not worth the trouble though, just asking.
-
-
+diff --git a/Documentation/devicetree/bindings/soc/samsung/samsung,exynos-sysreg.yaml b/Documentation/devicetree/bindings/soc/samsung/samsung,exynos-sysreg.yaml
+index c0c6ce8fc786..3ca220582897 100644
+--- a/Documentation/devicetree/bindings/soc/samsung/samsung,exynos-sysreg.yaml
++++ b/Documentation/devicetree/bindings/soc/samsung/samsung,exynos-sysreg.yaml
+@@ -15,6 +15,7 @@ properties:
+       - items:
+           - enum:
+               - google,gs101-apm-sysreg
++              - google,gs101-hsi2-sysreg
+               - google,gs101-peric0-sysreg
+               - google,gs101-peric1-sysreg
+               - samsung,exynos3-sysreg
+@@ -72,6 +73,7 @@ allOf:
+         compatible:
+           contains:
+             enum:
++              - google,gs101-hsi2-sysreg
+               - google,gs101-peric0-sysreg
+               - google,gs101-peric1-sysreg
+               - samsung,exynos850-cmgp-sysreg
 -- 
-Oscar Salvador
-SUSE Labs
+2.44.0.478.gd926399ef9-goog
+
