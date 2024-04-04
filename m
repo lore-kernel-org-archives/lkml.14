@@ -1,98 +1,105 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBF1612A16E;
-	Thu,  4 Apr 2024 16:02:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F15461D531
+	for <linux-kernel@vger.kernel.org>; Thu,  4 Apr 2024 16:03:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712246563; cv=none; b=k5rmHsnVYXbyjg1WTudxWVucRfy22zxnmkFGXDVhy0R++QgQIWov7tQb9gacW70U/MFzFWr+2N79+reXcEPjPnOkv+5QHR+5i3/N2P3cwtsDlt0ITIIzVJE5jQPqcagyHNGguP+xI3gX/NA/9AEbP3kV7XMfz2SM4JpsC2NQpoA=
+	t=1712246583; cv=none; b=W//ONCRMRBxp2t8MllX+NCjrZMm7bJPu2TkF0/4MsFeVoCw8GsI8j+nIPKhiikQBOQiJ7ifnhAcdZhAe4IsYvqgJXYkI/NeaEloULbItn72xVJ6RT95QdoeyE+QYY+f5xXshSRfjJTWXTrGskloyptx4RxbClwc0X7pj+1tMdlQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712246563; c=relaxed/simple;
-	bh=S4vqLtLutHujkNQz1zATc4vO4U4vMe9CCrbAwlFtjfc=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=GBxocxOKiU1t9v5pnkCGs+vVYWpZn/7+2b+soF0L+jaw+GMDMFk9RTlxSFBn+pGWbMc0QmVCes62F1aNEoB+PcAMv520JPwJlNU5KPvi2/uRx++39MvqH2d3OBme9X37aElRYovBa0i4uWARP6pzrH66GHsJQc9jFx0igHu3kbs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NgFs24i1; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1712246583; c=relaxed/simple;
+	bh=oygxtAYgo7ybilPD4TDbXauKq+YBViBtgvaImPWLI7Q=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=HG2Czn1LNW+FDZrAqXCDGqFrByfkzkxKaUXMfZWfFnShqFDqivKo2aHHNqdZwLTFahcY1Gf7fxjvofXkdzKHbqN5RJ25yRWlLrI6TL6hVIyF4Lnm1DxbpQvuygfqXakQ3QxbNZk92S3NXz5LKpsZS/9gmDymlfDAbwSyqaeb0aU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Kf4ZmMZy; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NgFs24i1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 32065C433F1;
-	Thu,  4 Apr 2024 16:02:38 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Kf4ZmMZy"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 46023C433F1;
+	Thu,  4 Apr 2024 16:02:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712246561;
-	bh=S4vqLtLutHujkNQz1zATc4vO4U4vMe9CCrbAwlFtjfc=;
-	h=From:To:Cc:Subject:Date:From;
-	b=NgFs24i1FPcjYF68S5NJ9C21Ke4TUmFGvAX1/+vC0iO+QYM2cVVBwdW4/gC9ga5iz
-	 1EbkSBzsz4FJ4HIl4B8dFru62IQQ3rvRVS8aQo/SLwv6JVC7xaKo4JthyK1frNi5/r
-	 KoaUO2F9tnFat+D80UoCAg/6V3s246/rM2qv5igXMCHl+uY+/xmMGlzTNMkkhg/bxw
-	 doNgsU5apn6jndjpCWURmP0DkVT1Xhhej75+baqkyQIRZfybxkKzb4Vjl4NI16w3IY
-	 N7r/pyXWblz3wwCyx3PruJVus+rxyQTtD6aG8W5EPMSkANhaotH8R7HFaCL1v/IjjE
-	 eG7H1tVDs8z6g==
-From: Arnd Bergmann <arnd@kernel.org>
-To: Karol Herbst <kherbst@redhat.com>,
-	Lyude Paul <lyude@redhat.com>,
-	Danilo Krummrich <dakr@redhat.com>
-Cc: Arnd Bergmann <arnd@arndb.de>,
-	David Airlie <airlied@gmail.com>,
-	Daniel Vetter <daniel@ffwll.ch>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nick Desaulniers <ndesaulniers@google.com>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>,
-	Ben Skeggs <bskeggs@redhat.com>,
-	dri-devel@lists.freedesktop.org,
-	nouveau@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org,
-	llvm@lists.linux.dev
-Subject: [PATCH] [v2] nouveau: fix function cast warning
-Date: Thu,  4 Apr 2024 18:02:25 +0200
-Message-Id: <20240404160234.2923554-1-arnd@kernel.org>
-X-Mailer: git-send-email 2.39.2
+	s=k20201202; t=1712246582;
+	bh=oygxtAYgo7ybilPD4TDbXauKq+YBViBtgvaImPWLI7Q=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Kf4ZmMZyEcoI29vi+4BvRfIYFMyEkLSITJ6nuExiwuz9p9HLGL9wSTeuO9kqFQpcr
+	 onSSOu7kIaM8FQmm+0F9v2c8e1scpXxOK21tRZySKPrYLj488vJBEX6eYiO2kgviiW
+	 9zAIbOHctgAVYhN6E3prvcefWdcyqA+tmLow7aPUVD2ocaJotmPnmoMmDIuvhT/Svf
+	 +brI59zDzju6Sj6p/lkZiIwssGNY2rqoSbQcz/ZxZZYq4LX+4FPTXfYMThwAYZAunV
+	 syvtrFymcGWRUWQWrrLzEu3Gp1sYxBrtlhyQ0iFiXr/Ej/YBAiBCtiONzWuFjOxgGk
+	 BqFSPgaUfxN1A==
+Date: Thu, 4 Apr 2024 17:02:57 +0100
+From: Conor Dooley <conor@kernel.org>
+To: Christoph =?iso-8859-1?Q?M=FCllner?= <christoph.muellner@vrull.eu>
+Cc: linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Philipp Tomsich <philipp.tomsich@vrull.eu>,
+	=?iso-8859-1?Q?Bj=F6rn_T=F6pel?= <bjorn@kernel.org>,
+	Daniel Henrique Barboza <dbarboza@ventanamicro.com>,
+	Heiko Stuebner <heiko@sntech.de>,
+	Cooper Qu <cooper.qu@linux.alibaba.com>,
+	Zhiwei Liu <zhiwei_liu@linux.alibaba.com>,
+	Huang Tao <eric.huang@linux.alibaba.com>,
+	Alistair Francis <alistair.francis@wdc.com>,
+	Andrew Jones <ajones@ventanamicro.com>,
+	Qingfang Deng <dqfext@gmail.com>, Alexandre Ghiti <alex@ghiti.fr>
+Subject: Re: [PATCH v2 2/2] riscv: T-Head: Test availability bit before
+ enabling MAEE errata
+Message-ID: <20240404-drown-wronged-bfc421e412aa@spud>
+References: <20240329121414.688391-1-christoph.muellner@vrull.eu>
+ <20240329121414.688391-3-christoph.muellner@vrull.eu>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="wpMuYirtpZPsx9jO"
+Content-Disposition: inline
+In-Reply-To: <20240329121414.688391-3-christoph.muellner@vrull.eu>
 
-From: Arnd Bergmann <arnd@arndb.de>
 
-Calling a function through an incompatible pointer type causes breaks
-kcfi, so clang warns about the assignment:
+--wpMuYirtpZPsx9jO
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-drivers/gpu/drm/nouveau/nvkm/subdev/bios/shadowof.c:73:10: error: cast from 'void (*)(const void *)' to 'void (*)(void *)' converts to incompatible function type [-Werror,-Wcast-function-type-strict]
-   73 |         .fini = (void(*)(void *))kfree,
+On Fri, Mar 29, 2024 at 01:14:14PM +0100, Christoph M=FCllner wrote:
+> T-Head's MAEE mechanism (non-compatible equivalent of RVI's Svpbmt)
+> is currently assumed for all T-Head harts. However, QEMU recently
+> decided to drop acceptance of guests that write reserved bits in PTEs.
+> As MAEE uses reserved bits in PTEs and Linux applies the MAEE errata
+> for all T-Head harts, this broke the Linux startup on QEMU emulations
+> of the C906 emulation.
+>=20
+> This patch attempts to address this issue by testing the MAEE bit
+> in the th.sxstatus CSR. This CSR is available in HW and can be
+> emulated in QEMU.
+>=20
+> This patch also makes the MAEE probing mechanism reliable, because
+> a test for the right combination of mvendorid, marchid, and mimpid
+> is not sufficient to enable MAEE.
+>=20
+> Signed-off-by: Christoph M=FCllner <christoph.muellner@vrull.eu>
 
-Avoid this with a trivial wrapper.
+Seems ideal to me, I'm guessing the QEMU guys were okay with emulating
+the CSR. I don't see any screaming at the very least on the patch for
+it.
+Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
 
-Fixes: c39f472e9f14 ("drm/nouveau: remove symlinks, move core/ to nvkm/ (no code changes)")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
-v2: avoid 'return kfree()' expression returning a void
----
- drivers/gpu/drm/nouveau/nvkm/subdev/bios/shadowof.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+Thanks,
+Conor.
 
-diff --git a/drivers/gpu/drm/nouveau/nvkm/subdev/bios/shadowof.c b/drivers/gpu/drm/nouveau/nvkm/subdev/bios/shadowof.c
-index 4bf486b57101..cb05f7f48a98 100644
---- a/drivers/gpu/drm/nouveau/nvkm/subdev/bios/shadowof.c
-+++ b/drivers/gpu/drm/nouveau/nvkm/subdev/bios/shadowof.c
-@@ -66,11 +66,16 @@ of_init(struct nvkm_bios *bios, const char *name)
- 	return ERR_PTR(-EINVAL);
- }
- 
-+static void of_fini(void *p)
-+{
-+	kfree(p);
-+}
-+
- const struct nvbios_source
- nvbios_of = {
- 	.name = "OpenFirmware",
- 	.init = of_init,
--	.fini = (void(*)(void *))kfree,
-+	.fini = of_fini,
- 	.read = of_read,
- 	.size = of_size,
- 	.rw = false,
--- 
-2.39.2
+--wpMuYirtpZPsx9jO
+Content-Type: application/pgp-signature; name="signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZg7PMQAKCRB4tDGHoIJi
+0iaGAP9p8R6uT9Dq2VFAZHEcMfzw8GOIp1Ed5vkewkKknFDwcQD/dslVWUtYecpf
+gVVa5+8uAg5289fOiPhqPgRKomQtwwk=
+=NeFs
+-----END PGP SIGNATURE-----
+
+--wpMuYirtpZPsx9jO--
