@@ -1,105 +1,126 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0ECD21E86F;
-	Thu,  4 Apr 2024 09:26:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 994087442A
+	for <linux-kernel@vger.kernel.org>; Thu,  4 Apr 2024 09:26:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712222770; cv=none; b=nvrwElLh27Sz/aXhmpsOMjKb/rSPxDFirLDwOtpwqG84F0o/QEebxiITbBDVrWLLlQ/EdZw6nKitSZwmI4SJMVLyVbEylcMLODD+3nJeRNwR/jeFc9vy4UmrByrWAJgOYVpVqSf7NY2cH/BO8fcSxLIFU6OiB7a/ZtQax/HUaz8=
+	t=1712222796; cv=none; b=q8b+4NS82fXAj8+V5nnv13PV6BeycUzv0FwLe6Yh46tjjL6jYehV/jWJS8rmb/d3etSzNTF+YunWEdK1dmKSIBf/OmqG3/mfjg8GMHitq5nBUOb1MyDjjTFOF4qLoxpBGrzrmM6ERHXsWHM48m+uROv2orZWAZJE5Xw10UeJAW0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712222770; c=relaxed/simple;
-	bh=LQHPeCxsTClRiQFklZkM7OeAADhg7xB3paGeP09fuNI=;
-	h=Date:Content-Type:MIME-Version:From:To:Cc:In-Reply-To:References:
-	 Message-Id:Subject; b=ofwvREz9iNWlfQsNSe8mzdEOAsT46YTjJkT7fAY+EGGCVuKbXkte1RJZsEuvGZC1mG78hQDopr8YsXcqdkA6YX9dgzN2lugcfBhfDcxYOrKE03cB8umtYbIwmGcFe1iGFM0qZpkDPv9TbxRdxyb2ucykKPHYLSdRxQ15b2rGVik=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ccof+V0e; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1712222796; c=relaxed/simple;
+	bh=XAc3BIhJUg3umIIjqLa8/qsx1yVlz8S4sxmtR7CkB14=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=F2daPvUo0xBwvWgNBOGWvWJ16qBr5rtueuzf3pKJdemxPmJqTt9mOWo4wX7mKtFlgQe1pw7IlNjwFUYNZzdtEtpji0uQNFIpBHfangKS9iD4sSmOV3ZB1y0Tlq9Ahbwgb/E2HhinZvlFwRmyPH3MJaHUfX655NdK6TVq9+r6Pt4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=vv736jNp; arc=none smtp.client-ip=46.235.227.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ccof+V0e"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 799A2C433C7;
-	Thu,  4 Apr 2024 09:26:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712222768;
-	bh=LQHPeCxsTClRiQFklZkM7OeAADhg7xB3paGeP09fuNI=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-	b=ccof+V0eEDquGLB7ROWgkSuWRHrYjTBY/0h345S8VTXnPbHvM/M0douzbdfJSnRPk
-	 qHCwLS5haZtliW6qAVMI3aNB5nz/DPmhoOAvnd2wgmhUX2vkFo4JTuMg2URnq58CsC
-	 VA+RZyLMGk3NUeYB8b8wqjgEG28bi1INAaazGIZ6FvmFcjYpeENlOP+u+R6ikKMFY+
-	 aVwkX3SVcwmuE6JCd3dNSQDEV4tqjJQv/KZTxZBfLj/nzuqAcFNwLzxJjzPHOxlOMb
-	 JQfjiZMJTpp/tY/Q2GdV3HJQMg8Zyl3tKaWDk4uYaynFUXI43i33hzOsM60SdjKJhN
-	 i/uwGLI+moLyA==
-Date: Thu, 04 Apr 2024 04:26:07 -0500
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="vv736jNp"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1712222792;
+	bh=XAc3BIhJUg3umIIjqLa8/qsx1yVlz8S4sxmtR7CkB14=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=vv736jNpmicCIQP5dOfis7w7uG6VPaYsYmPMO5hX/jw3+pqZAd3SM5guyyeE1DsM4
+	 WVbgaRBAS5eGqZlbD4Raqgds6QwW9bG7SOqDrU769EEyZTrsGuI9GwLQOTfrcS4bAw
+	 5NcR6MgYFXogzK2Eiy9wL48rCZ3nZhnax+EhnHaNz+RrGfGE1kfD1mms1zhDSB6Ahm
+	 SNxvdd6Y7ndLA39+T/DknUeLRLmaXVyOThMvLaNsypHD/8UjnRUDsBHT/HEjStKJv3
+	 1qAsRatLsj9Bq4act0U0JmX8MGts5JXR335bY4T++FtR77Xdon9eHwtCydfR/+eZan
+	 P8j1qtVcwERkQ==
+Received: from localhost.localdomain (cola.collaboradmins.com [195.201.22.229])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: laura.nao)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 6A0483782117;
+	Thu,  4 Apr 2024 09:26:32 +0000 (UTC)
+From: Laura Nao <laura.nao@collabora.com>
+To: regressions@leemhuis.info
+Cc: kernel@collabora.com,
+	laura.nao@collabora.com,
+	linux-kernel@vger.kernel.org,
+	regressions@lists.linux.dev,
+	tglx@linutronix.de,
+	x86@kernel.org
+Subject: Re: [REGRESSION] mainline boot regression on AMD Stoney Ridge Chromebooks
+Date: Thu,  4 Apr 2024 11:26:59 +0200
+Message-Id: <20240404092659.176813-1-laura.nao@collabora.com>
+X-Mailer: git-send-email 2.30.2
+In-Reply-To: <09d67d1d-2c65-4872-b38e-665eda154339@leemhuis.info>
+References: <09d67d1d-2c65-4872-b38e-665eda154339@leemhuis.info>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: Rob Herring <robh@kernel.org>
-To: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Cc: shawn.sung@mediatek.com, ck.hu@mediatek.com, 
- linux-arm-kernel@lists.infradead.org, krzysztof.kozlowski+dt@linaro.org, 
- chunkuang.hu@kernel.org, daniel@ffwll.ch, p.zabel@pengutronix.de, 
- wenst@chromium.org, matthias.bgg@gmail.com, airlied@gmail.com, 
- tzimmermann@suse.de, kernel@collabora.com, 
- maarten.lankhorst@linux.intel.com, dri-devel@lists.freedesktop.org, 
- linux-kernel@vger.kernel.org, yu-chang.lee@mediatek.com, 
- jitao.shi@mediatek.com, conor+dt@kernel.org, 
- linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org, 
- mripard@kernel.org
-In-Reply-To: <20240404081635.91412-3-angelogioacchino.delregno@collabora.com>
-References: <20240404081635.91412-1-angelogioacchino.delregno@collabora.com>
- <20240404081635.91412-3-angelogioacchino.delregno@collabora.com>
-Message-Id: <171222276632.1805081.13595219837975408757.robh@kernel.org>
-Subject: Re: [PATCH v1 2/3] dt-bindings: arm: mediatek: mmsys: Add OF graph
- support for board path
+Content-Transfer-Encoding: 8bit
 
+Hi Thorsten,
 
-On Thu, 04 Apr 2024 10:16:34 +0200, AngeloGioacchino Del Regno wrote:
-> Document OF graph on MMSYS/VDOSYS: this supports up to three DDP paths
-> per HW instance (so potentially up to six displays for multi-vdo SoCs).
+On 4/4/24 10:24, Linux regression tracking (Thorsten Leemhuis) wrote:
+> [/me added x86 team]
 > 
-> The MMSYS or VDOSYS is always the first component in the DDP pipeline,
-> so it only supports an output port with multiple endpoints - where each
-> endpoint defines the starting point for one of the (currently three)
-> possible hardware paths.
+> On 28.03.24 12:50, Laura Nao wrote:
+>>>
+>>> I ran a manual bisection to track down the root cause for this
+>>> regression and landed on the c749ce
+>>> commit from this series:
+>>> https://lore.kernel.org/all/20240212153625.145745053@linutronix.de/
 > 
-> Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-> ---
->  .../bindings/arm/mediatek/mediatek,mmsys.yaml | 23 +++++++++++++++++++
->  1 file changed, 23 insertions(+)
+> FWIW, that commit is c749ce393b8fe9 ("x86/cpu: Use common topology code
+> for AMD") from tglx that was part of the "x86/cpu: Rework topology
+> evaluation" series.
 > 
+>>> Do you have any insight on this issue or any suggestion on how to
+>>> effectively debug this?
+>>>
+>>> Thank you!
+> 
+> Hmmm, it looks like this did not make any progress. Thomas, did this
+> fall through the cracks due to Easter, or is this this on your todo list?
+> 
+> Or was there some progress and I just missed it?
+> 
+> Laura Nao, I assume the problem is still happening?
 
-My bot found errors running 'make DT_CHECKER_FLAGS=-m dt_binding_check'
-on your patch (DT_CHECKER_FLAGS is new in v5.13):
+Yes, I confirm the issue is still happening.
 
-yamllint warnings/errors:
+See e.g. KernelCI report for next-20240403:
 
-dtschema/dtc warnings/errors:
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/arm/mediatek/mediatek,mmsys.yaml: properties:port:properties:required: ['endpoint@0'] is not of type 'object', 'boolean'
-	from schema $id: http://json-schema.org/draft-07/schema#
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/arm/mediatek/mediatek,mmsys.yaml: properties:port:properties: 'required' should not be valid under {'$ref': '#/definitions/json-schema-prop-names'}
-	hint: A json-schema keyword was found instead of a DT property name.
-	from schema $id: http://devicetree.org/meta-schemas/keywords.yaml#
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/arm/mediatek/mediatek,mmsys.yaml: properties:port:properties:required: ['endpoint@0'] is not of type 'object', 'boolean'
-	from schema $id: http://devicetree.org/meta-schemas/keywords.yaml#
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/arm/mediatek/mediatek,mmsys.yaml: ignoring, error in schema: properties: port: properties: required
-Documentation/devicetree/bindings/arm/mediatek/mediatek,mmsys.example.dtb: /example-0/syscon@14000000: failed to match any schema with compatible: ['mediatek,mt8173-mmsys', 'syscon']
+https://linux.kernelci.org/test/plan/id/660dbeed148e1a8a284c4372/
 
-doc reference errors (make refcheckdocs):
-
-See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20240404081635.91412-3-angelogioacchino.delregno@collabora.com
-
-The base for the series is generally the latest rc1. A different dependency
-should be noted in *this* patch.
-
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure 'yamllint' is installed and dt-schema is up to
-date:
-
-pip3 install dtschema --upgrade
-
-Please check and re-submit after running the above command yourself. Note
-that DT_SCHEMA_FILES can be set to your schema file to speed up checking
-your schema. However, it must be unset to test all examples with your schema.
+> 
+> FWIW, this was the initial problem description:
+> 
+>>>> KernelCI has identified a mainline boot regression [1] on the following
+>>>> AMD Stoney Ridge Chromebooks (grunt family), between v6.8 (e8f897) and
+>>>> v6.8-1185-g855684c7d938 (855684):
+>>>> - Acer Chromebook Spin 311 R721T (codename kasumi360)
+>>>> - HP Chromebook 14 (codename careena)
+>>>> - HP Chromebook 11A G6 EE (codename barla)
+>>>>
+>>>> The kernel doesn't boot at all and nothing is reported on the serial
+>>>> console after "Starting kernel ...". The issue is still present on the
+>>>> latest mainline revision.
+>>>> The defconfig used by KernelCI for the boot tests can be found in [2].
+>>>>
+>>>> Sending this report in order to track the regression while a fix is
+>>>> identified.
+>>>>
+>>>> Thanks,
+>>>>
+>>>> Laura
+>>>>
+>>>> [1] https://linux.kernelci.org/test/case/id/65fca98e3883a392524c4380/
+>>>> [2]
+>>>> https://storage.kernelci.org/mainline/master/v6.8-11837-g2ac2b1665d3fb/x86_64/x86_64_defconfig%2Bx86-board/gcc-10/config/kernel.config
+> 
+> 
+> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+> --
+> Everything you wanna know about Linux kernel regression tracking:
+> https://linux-regtracking.leemhuis.info/about/#tldr
+> If I did something stupid, please tell me, as explained on that page.
+> 
+> #regzbot poke
 
