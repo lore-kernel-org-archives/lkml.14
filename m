@@ -1,96 +1,226 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E19C1129E66
-	for <linux-kernel@vger.kernel.org>; Thu,  4 Apr 2024 14:18:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09559128812;
+	Thu,  4 Apr 2024 14:19:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712240293; cv=none; b=VwMmehCyKChOJMWxSw49fA3WDPkjeMxi70rXM2a6hGxGrFMUPT6KeFMSkc1R6aT7Tfzwmq3+qFb/4Jetn/1TBGlOqudX/zfv33nwEQmbrvQdVh4+6TR94Tfc59T/UgD5WB0Ecz47acdClxRTyyz8tAqTrvOasZeTYCIHDIFI0+Y=
+	t=1712240354; cv=none; b=iDFMAB4cSqyrr56K9L5r9w+rIkT0MFiEB+aPWzzheCojpPXrW8tLH4Y4B1U2y5oumegGsp2TcFtCJg+Kbnbt6NH+7XRBjJlzDAbEOBkMUh5JKfXfxMkilJlmGFe/LpDtneOYWvnMAazMqsEW99Ng/1hwQKVmiNzU/LNi41Qlp3I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712240293; c=relaxed/simple;
-	bh=UfiWHQntsDELmxpRPZhQhCJyp7xGl/T/JwBE4GvxKho=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Y43KV9XmWw0FdbfqJzmrCqxjWxtkgbo0AYi3oJgNg/hiGI4Q9hEs+aF88kw4LAMTlzzk/GHC+HDSBSwSr5N0/duqOeIZK0fTykIISxkfyzqS4imNJZoZBd5qNrCL9r3r4uHlRqLMiKH7JyI2GzGjZ/YQjVYEVMzglkFmo6Ha/Xw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=IHrV4L4j; arc=none smtp.client-ip=198.175.65.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1712240354; c=relaxed/simple;
+	bh=XJjDieTO1w0pl8GzPETpUUaCgNf0AYfLaFI+Dk9srHI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=sv7LYczBiTgLs4P1PTQjqfLd9NUmXwUhDYECyF2bIyveU0sN6b27gE4zi4OdkjIvdu9bhMk8IwuZmGN6ZRIjyg8hqXVL4EyKvODYxvPirYdTl/VPZidxRuiyHWNXXsmxthsn56Q/0vIGc7JmtfgNlIFX6S7tWUUG6kaSfPMtpvk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=jD3gmdwb; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=vEKXyExf; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=jD3gmdwb; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=vEKXyExf; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IHrV4L4j"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1712240292; x=1743776292;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=UfiWHQntsDELmxpRPZhQhCJyp7xGl/T/JwBE4GvxKho=;
-  b=IHrV4L4jv7GlcORx6SkSXo+UPtPuARLtk20nUsrXJM+EhpdXonwD7oyu
-   +ENM6iDDZXmMgHzhZHqeSmbH0eVhxCpxvdvNhQRlSS/b2OlfO5LrsY+p0
-   fcYUCNcBwgmAPfZphNGZ5u5pwb51VY+thTkZIOHkQkBO1m6H/mwSORR2I
-   chr4p2EXGP2frx5wJk+dYLGcb1wKi1Qk2MRxcmM3JSc6dlUoUXOPNC1ah
-   uvOQkW8F5fMIOJ3OX2nf1ceSUnhrF6g5WnhAJdFAmmB+Zn3LNqevXHsds
-   sLkURT4h1qDg0g8AoUgiNaqpVWY4X37Mbtg2FhaXwAhWkAdkPxn+dUhm4
-   w==;
-X-CSE-ConnectionGUID: WDJTDwP9TaCJaQQ/eS9cQQ==
-X-CSE-MsgGUID: tRaMkDiFRfC2c38vtLCGyQ==
-X-IronPort-AV: E=McAfee;i="6600,9927,11034"; a="7632431"
-X-IronPort-AV: E=Sophos;i="6.07,179,1708416000"; 
-   d="scan'208";a="7632431"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Apr 2024 07:18:09 -0700
-X-CSE-ConnectionGUID: PY3Ds2H5R7CHjzZfCzU4qg==
-X-CSE-MsgGUID: EuzSERffSGKMSmCLV2Rc4g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,179,1708416000"; 
-   d="scan'208";a="23448360"
-Received: from kanliang-dev.jf.intel.com ([10.165.154.102])
-  by fmviesa004.fm.intel.com with ESMTP; 04 Apr 2024 07:18:08 -0700
-From: kan.liang@linux.intel.com
-To: peterz@infradead.org,
-	mingo@redhat.com,
-	acme@kernel.org,
-	namhyung@kernel.org,
-	irogers@google.com,
-	adrian.hunter@intel.com,
-	alexander.shishkin@linux.intel.com,
-	linux-kernel@vger.kernel.org
-Cc: ak@linux.intel.com,
-	Zhenyu Wang <zhenyuw@linux.intel.com>,
-	Kan Liang <kan.liang@linux.intel.com>
-Subject: [PATCH 3/4] perf/x86/intel/uncore: Add LNL uncore iMC freerunning support
-Date: Thu,  4 Apr 2024 07:17:05 -0700
-Message-Id: <20240404141706.1235531-4-kan.liang@linux.intel.com>
-X-Mailer: git-send-email 2.35.1
-In-Reply-To: <20240404141706.1235531-1-kan.liang@linux.intel.com>
-References: <20240404141706.1235531-1-kan.liang@linux.intel.com>
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="jD3gmdwb";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="vEKXyExf";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="jD3gmdwb";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="vEKXyExf"
+Received: from imap2.dmz-prg2.suse.org (imap2.dmz-prg2.suse.org [10.150.64.98])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 3CE9D5F7B5;
+	Thu,  4 Apr 2024 14:19:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1712240351; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=/03H7hOh0GUJswqYaiMm+uzdwS+6pYD4p/9O8jdbNko=;
+	b=jD3gmdwbELggl6VJ3Z4wYnTUJ3G+Ff2eQhKteJoX23MDfui/8MotZAtZ1fDKkIL+Xc10tv
+	+T7Yv5/SglzV7hRUq3plTOdFIMecyHGcC3b1fprhch21IZbm/sb9D23anFKorPoEVAZbWy
+	SOZxxELUpPopWkQKzP/b+lM+XgHV6ds=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1712240351;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=/03H7hOh0GUJswqYaiMm+uzdwS+6pYD4p/9O8jdbNko=;
+	b=vEKXyExf1n7SDazEjF5HjLvFcu+7UMzf/LnCLO+pCnauN8mYuGRunTrS9t7w1SR0rFel2G
+	D100ouR1vjwjShAQ==
+Authentication-Results: smtp-out2.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1712240351; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=/03H7hOh0GUJswqYaiMm+uzdwS+6pYD4p/9O8jdbNko=;
+	b=jD3gmdwbELggl6VJ3Z4wYnTUJ3G+Ff2eQhKteJoX23MDfui/8MotZAtZ1fDKkIL+Xc10tv
+	+T7Yv5/SglzV7hRUq3plTOdFIMecyHGcC3b1fprhch21IZbm/sb9D23anFKorPoEVAZbWy
+	SOZxxELUpPopWkQKzP/b+lM+XgHV6ds=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1712240351;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=/03H7hOh0GUJswqYaiMm+uzdwS+6pYD4p/9O8jdbNko=;
+	b=vEKXyExf1n7SDazEjF5HjLvFcu+7UMzf/LnCLO+pCnauN8mYuGRunTrS9t7w1SR0rFel2G
+	D100ouR1vjwjShAQ==
+Received: from imap2.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap2.dmz-prg2.suse.org (Postfix) with ESMTPS id 336E513298;
+	Thu,  4 Apr 2024 14:19:11 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap2.dmz-prg2.suse.org with ESMTPSA
+	id k2CKDN+2DmYLBgAAn2gu4w
+	(envelope-from <jack@suse.cz>); Thu, 04 Apr 2024 14:19:11 +0000
+Received: by quack3.suse.cz (Postfix, from userid 1000)
+	id DC60EA0816; Thu,  4 Apr 2024 16:19:02 +0200 (CEST)
+Date: Thu, 4 Apr 2024 16:19:02 +0200
+From: Jan Kara <jack@suse.cz>
+To: Kemeng Shi <shikemeng@huaweicloud.com>
+Cc: tytso@mit.edu, adilger.kernel@dilger.ca, linux-ext4@vger.kernel.org,
+	linux-kernel@vger.kernel.org, jack@suse.cz, ojaswin@linux.ibm.com,
+	ritesh.list@gmail.com
+Subject: Re: [PATCH 4/5] ext4: use correct criteria name instead stale
+ integer number in comment
+Message-ID: <20240404141902.t5ut465q7vxusoa6@quack3>
+References: <20240326213823.528302-1-shikemeng@huaweicloud.com>
+ <20240326213823.528302-5-shikemeng@huaweicloud.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240326213823.528302-5-shikemeng@huaweicloud.com>
+X-Spam-Level: 
+X-Spamd-Result: default: False [-2.30 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	SUSPICIOUS_RECIPS(1.50)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	MID_RHS_NOT_FQDN(0.50)[];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	TAGGED_RCPT(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	ARC_NA(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[8];
+	MIME_TRACE(0.00)[0:+];
+	RCVD_COUNT_THREE(0.00)[3];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	FROM_HAS_DN(0.00)[];
+	FREEMAIL_CC(0.00)[mit.edu,dilger.ca,vger.kernel.org,suse.cz,linux.ibm.com,gmail.com];
+	TO_DN_SOME(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	RCVD_TLS_LAST(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap2.dmz-prg2.suse.org:helo,imap2.dmz-prg2.suse.org:rdns,suse.com:email]
+X-Spam-Score: -2.30
+X-Spam-Flag: NO
 
-From: Zhenyu Wang <zhenyuw@linux.intel.com>
+On Wed 27-03-24 05:38:22, Kemeng Shi wrote:
+> Use correct criteria name instead stale integer number in comment
+> 
+> Signed-off-by: Kemeng Shi <shikemeng@huaweicloud.com>
 
-LNL uncore imc freerunning counters keep same as previous HW.
+Looks good. But since the symbolic names already have CR prefix, we
+probably don't have to write e.g.:
 
-Signed-off-by: Zhenyu Wang <zhenyuw@linux.intel.com>
-Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
----
- arch/x86/events/intel/uncore_snb.c | 1 +
- 1 file changed, 1 insertion(+)
+/* Large fragment size list lookup succeeded at least once for cr =
+ * CR_POWER2_ALIGNED */
 
-diff --git a/arch/x86/events/intel/uncore_snb.c b/arch/x86/events/intel/uncore_snb.c
-index d1605163f11e..4cab1bf57602 100644
---- a/arch/x86/events/intel/uncore_snb.c
-+++ b/arch/x86/events/intel/uncore_snb.c
-@@ -1824,6 +1824,7 @@ static struct intel_uncore_type *lnl_mmio_uncores[] = {
- 	&adl_uncore_imc,
- 	&lnl_uncore_hbo,
- 	&lnl_uncore_sncu,
-+	&adl_uncore_imc_free_running,
- 	NULL
- };
- 
+But we can write directly:
+
+/* Large fragment size list lookup succeeded at least once for
+ * CR_POWER2_ALIGNED */
+
+								Honza
+
+> ---
+>  fs/ext4/ext4.h    | 15 ++++++++++++---
+>  fs/ext4/mballoc.c | 14 ++++++++------
+>  fs/ext4/mballoc.h |  4 ++--
+>  3 files changed, 22 insertions(+), 11 deletions(-)
+> 
+> diff --git a/fs/ext4/ext4.h b/fs/ext4/ext4.h
+> index 023571f8dd1b..9b90013c59a3 100644
+> --- a/fs/ext4/ext4.h
+> +++ b/fs/ext4/ext4.h
+> @@ -213,11 +213,20 @@ enum criteria {
+>  #define EXT4_MB_USE_RESERVED		0x2000
+>  /* Do strict check for free blocks while retrying block allocation */
+>  #define EXT4_MB_STRICT_CHECK		0x4000
+> -/* Large fragment size list lookup succeeded at least once for cr = 0 */
+> +/*
+> + * Large fragment size list lookup succeeded at least once for cr =
+> + * CR_POWER2_ALIGNED
+> + */
+>  #define EXT4_MB_CR_POWER2_ALIGNED_OPTIMIZED		0x8000
+> -/* Avg fragment size rb tree lookup succeeded at least once for cr = 1 */
+> +/*
+> + * Avg fragment size rb tree lookup succeeded at least once for cr =
+> + * CR_GOAL_LEN_FAST
+> + */
+>  #define EXT4_MB_CR_GOAL_LEN_FAST_OPTIMIZED		0x00010000
+> -/* Avg fragment size rb tree lookup succeeded at least once for cr = 1.5 */
+> +/*
+> + * Avg fragment size rb tree lookup succeeded at least once for cr =
+> + * CR_BEST_AVAIL_LEN
+> + */
+>  #define EXT4_MB_CR_BEST_AVAIL_LEN_OPTIMIZED		0x00020000
+>  
+>  struct ext4_allocation_request {
+> diff --git a/fs/ext4/mballoc.c b/fs/ext4/mballoc.c
+> index 62d468379722..0f8a34513bf6 100644
+> --- a/fs/ext4/mballoc.c
+> +++ b/fs/ext4/mballoc.c
+> @@ -1131,8 +1131,9 @@ static void ext4_mb_choose_next_group(struct ext4_allocation_context *ac,
+>  		ext4_mb_choose_next_group_best_avail(ac, new_cr, group);
+>  	} else {
+>  		/*
+> -		 * TODO: For CR=2, we can arrange groups in an rb tree sorted by
+> -		 * bb_free. But until that happens, we should never come here.
+> +		 * TODO: For CR=CR_GOAL_LEN_SLOW, we can arrange groups in an
+> +		 * rb tree sorted by bb_free. But until that happens, we should
+> +		 * never come here.
+>  		 */
+>  		WARN_ON(1);
+>  	}
+> @@ -3444,10 +3445,11 @@ static int ext4_mb_init_backend(struct super_block *sb)
+>  	}
+>  	if (sbi->s_mb_prefetch > ext4_get_groups_count(sb))
+>  		sbi->s_mb_prefetch = ext4_get_groups_count(sb);
+> -	/* now many real IOs to prefetch within a single allocation at cr=0
+> -	 * given cr=0 is an CPU-related optimization we shouldn't try to
+> -	 * load too many groups, at some point we should start to use what
+> -	 * we've got in memory.
+> +	/*
+> +	 * now many real IOs to prefetch within a single allocation at
+> +	 * cr=CR_POWER2_ALIGNED. Given cr=CR_POWER2_ALIGNED is an CPU-related
+> +	 * optimization we shouldn't try to load too many groups, at some point
+> +	 * we should start to use what we've got in memory.
+>  	 * with an average random access time 5ms, it'd take a second to get
+>  	 * 200 groups (* N with flex_bg), so let's make this limit 4
+>  	 */
+> diff --git a/fs/ext4/mballoc.h b/fs/ext4/mballoc.h
+> index 56938532b4ce..042437d8860f 100644
+> --- a/fs/ext4/mballoc.h
+> +++ b/fs/ext4/mballoc.h
+> @@ -187,8 +187,8 @@ struct ext4_allocation_context {
+>  	struct ext4_free_extent ac_f_ex;
+>  
+>  	/*
+> -	 * goal len can change in CR1.5, so save the original len. This is
+> -	 * used while adjusting the PA window and for accounting.
+> +	 * goal len can change in CR_BEST_AVAIL_LEN, so save the original len.
+> +	 * This is used while adjusting the PA window and for accounting.
+>  	 */
+>  	ext4_grpblk_t	ac_orig_goal_len;
+>  
+> -- 
+> 2.30.0
+> 
 -- 
-2.35.1
-
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
