@@ -1,138 +1,95 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B355B84FC8
-	for <linux-kernel@vger.kernel.org>; Thu,  4 Apr 2024 11:49:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7746886630;
+	Thu,  4 Apr 2024 11:49:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712231370; cv=none; b=BRWYdbetWGRp3iFh/o95CpqADz+RfnkNDmZIKEC6AtzKJMN5rAd0WSQu7E7965zZMyILRIkIDpCZOLh+OElcj0qjmBFtmBEkDVxHdYGMfJ0uL6RnTrUXD//b0MON/2DaEmbXZDrWZVbyV2fXDFst4cdIO6rCtuoVuIkp7Z/bFCw=
+	t=1712231376; cv=none; b=AwndxSXxvBtdnkErtJhsOf9rQXCxzbTEgDhPtaZ6c8tS574q9FoeK06jxSp1JNKOcBEouATHbD4KU3q0G1/+zdCOcCxswGRlQmTzDff+Jvdi4PAYZjlaDJmj6qzAEBSHQmSGyvEmDwANozyvYtS7qj1vLrQBrOWCBFMgm7Ivgyo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712231370; c=relaxed/simple;
-	bh=g4YqzOPIIY7GCoTlR7pyNYsta0tplaKPoxknIl7epoM=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=J1yxz6NMW5NXzwH1rlgYaWsF9RILFjgaH6JNGMaOIahrldgL8Na7qVz0KOcEZoFuChk9BrtX9oAfHXYZmtFt+T6DJbWUcEwnh07W0+BYNw/VDAfnxqnXJxxNXzq3DLUDngO3ds3yCdyg2znUmEvj4YJT8ZZuKzGwvnaoRiukvhM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=aEpghrOk; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1712231376; c=relaxed/simple;
+	bh=yVE6soaiuubo6FwqB1b2RlNAfh1E2hAC+6bdTlmFD4M=;
+	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=VQJIg14KU2FhiWSEB1f+KNUO1d+NGxSUoXOC7CUog1e+o+TLUTaOtan8PCLzunmxDsUy73H7U9t9eLaGtYYjHUb/9+xq96KmsOs35MZB6wl6ZBn8I/aUBJBIbHf59hRVpzNwylOXDVU9mcYJs4EC1cgo3QcAKvNs5LEpwFPGApY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=k5Cz74tf; arc=none smtp.client-ip=46.235.227.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="aEpghrOk"
-Received: from pps.filterd (m0353727.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 434BkTWI027412;
-	Thu, 4 Apr 2024 11:49:25 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding; s=pp1;
- bh=QwktDtoU33IoPMUJCZeU4oKjhACE8zM2zneIXMzb6mQ=;
- b=aEpghrOkhmpko1vDijvkpaO/j2mkaiDngvEWNdHFZCZ3w6kVkowh8Ytzzq32n5Cgv/mr
- N4fgXI33g6P/N2I0snCoXVXHAArxlOr8bPUK/plhH4NORAersRgpJIuGz6GgaEC3eZNz
- IxxSwsncRApFgR0IQwU8TTzzrxQaMp0GWnBmOdru7Qr6e87/lXfMjgjA5xIdcnWRUJ3p
- jXO9HJcEJBPXM4NYZvBBcFh7NyMLNy5ERSOd6pXg7bmHycIxsVsY0QClBNXoh3gqhP4/
- mditm/C7rtxJJDF+HUmzkXPK2pUkLnlpkFxs2yUt4h9DZZT/t50j99Hv5RLxsjsl7Xib 8w== 
-Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3x9ubf01bw-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 04 Apr 2024 11:49:24 +0000
-Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma12.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 434ADXAI007713;
-	Thu, 4 Apr 2024 11:49:23 GMT
-Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
-	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 3x9epwkvnu-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 04 Apr 2024 11:49:23 +0000
-Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
-	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 434BnIGX31654596
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 4 Apr 2024 11:49:20 GMT
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id EA91920040;
-	Thu,  4 Apr 2024 11:49:17 +0000 (GMT)
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id D10742004D;
-	Thu,  4 Apr 2024 11:49:17 +0000 (GMT)
-Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
-	by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Thu,  4 Apr 2024 11:49:17 +0000 (GMT)
-From: Niklas Schnelle <schnelle@linux.ibm.com>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Arnd Bergmann <arnd@kernel.org>
-Cc: Heiko Carstens <hca@linux.ibm.com>, linux-kernel@vger.kernel.org,
-        Niklas Schnelle <schnelle@linux.ibm.com>
-Subject: [PATCH 1/1] /dev/port: don't compile file operations without CONFIG_DEVPORT
-Date: Thu,  4 Apr 2024 13:49:17 +0200
-Message-Id: <20240404114917.3627747-2-schnelle@linux.ibm.com>
-X-Mailer: git-send-email 2.40.1
-In-Reply-To: <20240404114917.3627747-1-schnelle@linux.ibm.com>
-References: <20240404114917.3627747-1-schnelle@linux.ibm.com>
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="k5Cz74tf"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1712231372;
+	bh=yVE6soaiuubo6FwqB1b2RlNAfh1E2hAC+6bdTlmFD4M=;
+	h=Date:Cc:Subject:To:References:From:In-Reply-To:From;
+	b=k5Cz74tf/dgUW5zQbrAB9mloDLLTkX/YloFmSi3LzjRaGVDtLkU09bVD1zoiEe6S7
+	 iaYDqdtTdLz/8X/f6tzHGmoeAvS4StZKStAO4hUMmma3H9RtjLpF+478YGwrVRyWnz
+	 6vCNusGyDzyMFN4hd4Ri+S+++zKwfD/eELz6ufegR5lr7ggJVT4DAXNbBUcxrbXZ1a
+	 ybk+45n7nyg/siyvKSEworlOpRY2BPgTDHoNbnF0EX27MD6YdsguOYCViU5zFYlSdT
+	 mt0lUp+ZVy6TkBsDSD0pF2KGn16AHlpn2XbBs4MPehq/4seuowKHR3DilJ6rjGGb3s
+	 EQqY5UWoy6BVA==
+Received: from [10.193.1.1] (broslavsky.collaboradmins.com [68.183.210.73])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: usama.anjum)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 90AFE378200D;
+	Thu,  4 Apr 2024 11:49:27 +0000 (UTC)
+Message-ID: <1dd3cead-6251-425f-b050-582892da0800@collabora.com>
+Date: Thu, 4 Apr 2024 16:49:59 +0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: eUUhJCAK7QU925cUjgYqOKW6JlKuR98F
-X-Proofpoint-ORIG-GUID: eUUhJCAK7QU925cUjgYqOKW6JlKuR98F
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-04-04_08,2024-04-04_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 bulkscore=0
- adultscore=0 priorityscore=1501 mlxlogscore=999 spamscore=0
- lowpriorityscore=0 phishscore=0 suspectscore=0 clxscore=1015 mlxscore=0
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2404010000 definitions=main-2404040081
+User-Agent: Mozilla Thunderbird
+Cc: Muhammad Usama Anjum <usama.anjum@collabora.com>, kernel@collabora.com,
+ kernel-janitors@vger.kernel.org, linux-wireless@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-mediatek@lists.infradead.org
+Subject: Re: [PATCH] wifi: mt76: connac: check for null before dereferencing
+To: Felix Fietkau <nbd@nbd.name>, Lorenzo Bianconi <lorenzo@kernel.org>,
+ Ryder Lee <ryder.lee@mediatek.com>, Shayne Chen <shayne.chen@mediatek.com>,
+ Sean Wang <sean.wang@mediatek.com>, Kalle Valo <kvalo@kernel.org>,
+ Matthias Brugger <matthias.bgg@gmail.com>,
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+References: <20240301144406.2808307-1-usama.anjum@collabora.com>
+ <ab6b08c5-86a2-47e3-8683-28cdbe5be7cf@collabora.com>
+Content-Language: en-US
+From: Muhammad Usama Anjum <usama.anjum@collabora.com>
+In-Reply-To: <ab6b08c5-86a2-47e3-8683-28cdbe5be7cf@collabora.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-In the future inb() and friends will not be available when compiling
-with CONFIG_HAS_IOPORT=n so we must only try to access them here if
-CONFIG_DEVPORT is set which depends on HAS_IOPORT.
+Soft reminder
 
-Co-developed-by: Arnd Bergmann <arnd@kernel.org>
-Signed-off-by: Arnd Bergmann <arnd@kernel.org>
-Signed-off-by: Niklas Schnelle <schnelle@linux.ibm.com>
----
-Note: This patch does not depend any not-yet-mainline HAS_IOPORT changes
-and may be merged via subsystem specific trees at your earliest
-convenience.
+On 3/11/24 10:11 PM, Muhammad Usama Anjum wrote:
+> Soft reminder
+> 
+> On 3/1/24 7:44 PM, Muhammad Usama Anjum wrote:
+>> The wcid can be NULL. It should be checked for validity before
+>> dereferencing it to avoid crash.
+>>
+>> Fixes: 098428c400ff ("wifi: mt76: connac: set correct muar_idx for mt799x chipsets")
+>> Signed-off-by: Muhammad Usama Anjum <usama.anjum@collabora.com>
+>> ---
+>>  drivers/net/wireless/mediatek/mt76/mt76_connac_mcu.c | 2 +-
+>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/net/wireless/mediatek/mt76/mt76_connac_mcu.c b/drivers/net/wireless/mediatek/mt76/mt76_connac_mcu.c
+>> index af0c2b2aacb00..7af60eebe517a 100644
+>> --- a/drivers/net/wireless/mediatek/mt76/mt76_connac_mcu.c
+>> +++ b/drivers/net/wireless/mediatek/mt76/mt76_connac_mcu.c
+>> @@ -283,7 +283,7 @@ __mt76_connac_mcu_alloc_sta_req(struct mt76_dev *dev, struct mt76_vif *mvif,
+>>  	};
+>>  	struct sk_buff *skb;
+>>  
+>> -	if (is_mt799x(dev) && !wcid->sta)
+>> +	if (is_mt799x(dev) && wcid && !wcid->sta)
+>>  		hdr.muar_idx = 0xe;
+>>  
+>>  	mt76_connac_mcu_get_wlan_idx(dev, wcid, &hdr.wlan_idx_lo,
+> 
 
- drivers/char/mem.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/char/mem.c b/drivers/char/mem.c
-index 3c6670cf905f..7904e2bb6427 100644
---- a/drivers/char/mem.c
-+++ b/drivers/char/mem.c
-@@ -383,6 +383,7 @@ static int mmap_mem(struct file *file, struct vm_area_struct *vma)
- 	return 0;
- }
- 
-+#ifdef CONFIG_DEVPORT
- static ssize_t read_port(struct file *file, char __user *buf,
- 			 size_t count, loff_t *ppos)
- {
-@@ -424,6 +425,7 @@ static ssize_t write_port(struct file *file, const char __user *buf,
- 	*ppos = i;
- 	return tmp-buf;
- }
-+#endif
- 
- static ssize_t read_null(struct file *file, char __user *buf,
- 			 size_t count, loff_t *ppos)
-@@ -653,12 +655,14 @@ static const struct file_operations null_fops = {
- 	.uring_cmd	= uring_cmd_null,
- };
- 
--static const struct file_operations __maybe_unused port_fops = {
-+#ifdef CONFIG_DEVPORT
-+static const struct file_operations port_fops = {
- 	.llseek		= memory_lseek,
- 	.read		= read_port,
- 	.write		= write_port,
- 	.open		= open_port,
- };
-+#endif
- 
- static const struct file_operations zero_fops = {
- 	.llseek		= zero_lseek,
 -- 
-2.40.1
-
+BR,
+Muhammad Usama Anjum
