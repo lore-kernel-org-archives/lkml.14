@@ -1,271 +1,164 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f49.google.com (mail-io1-f49.google.com [209.85.166.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8869A18039;
-	Thu,  4 Apr 2024 16:32:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A554718039
+	for <linux-kernel@vger.kernel.org>; Thu,  4 Apr 2024 16:33:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712248368; cv=none; b=Yvd1HxkpSqAFPjl+9ys054ZSypuuEx9J3ZkyfGDUVC4EGW9ER4cxiDs7d2CO71l2bbmRgoyTplpYJEkvh4ABBPVl5YiWesa5EnuvVG/5Ih+MgvGx6sLzYuezwYxttW77mOj33+Z07YPr/RPrcCR3lxk0aiTiYoVObfrLz3Gujs8=
+	t=1712248402; cv=none; b=eL4vo84NenF+X1opTKETaQK1jBYld+bezlt8g+IjNt948tTdAQ6OQ/CB+4ifG2BNUdE+N1F+Gt0eoP9LNakI37Ss1vgHziFPyeHDmVJtVf//HnLaCBmOWA4KWQriRGNwa0MKHhzVJgvIMqDxPuEfusiHsOn9f3bMCx1HApfxYHg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712248368; c=relaxed/simple;
-	bh=MJ9NyxJXfgw/jY7GJL3DIjKd1e32tMBgLGQGYcUDkdY=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ia5obPmE2QuyR3ZonM9XX7ar7fQI6frzbNsQ1vnr6SKmQS6yf4wYWvZUS9l5JgRGu/uqHD1pafkNImX6tZ4KX3ldaGywTcgEAkcTaFeLhcMvfkqCjN6d8PxMWCuiTTGDS8jl+VWnexQUFvsRa9g7mbXSxHskfyc6IY5Ao1vosxk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.216])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4V9RvX0vCqz689lt;
-	Fri,  5 Apr 2024 00:31:20 +0800 (CST)
-Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
-	by mail.maildlp.com (Postfix) with ESMTPS id B69EF140A86;
-	Fri,  5 Apr 2024 00:32:42 +0800 (CST)
-Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.35; Thu, 4 Apr
- 2024 17:32:42 +0100
-Date: Thu, 4 Apr 2024 17:32:41 +0100
-From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To: <ira.weiny@intel.com>
-CC: Dave Jiang <dave.jiang@intel.com>, Fan Ni <fan.ni@samsung.com>, "Navneet
- Singh" <navneet.singh@intel.com>, Dan Williams <dan.j.williams@intel.com>,
-	Davidlohr Bueso <dave@stgolabs.net>, Alison Schofield
-	<alison.schofield@intel.com>, Vishal Verma <vishal.l.verma@intel.com>,
-	<linux-btrfs@vger.kernel.org>, <linux-cxl@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 16/26] cxl/extent: Realize extent devices
-Message-ID: <20240404173241.00003a6f@Huawei.com>
-In-Reply-To: <20240324-dcd-type2-upstream-v1-16-b7b00d623625@intel.com>
-References: <20240324-dcd-type2-upstream-v1-0-b7b00d623625@intel.com>
-	<20240324-dcd-type2-upstream-v1-16-b7b00d623625@intel.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+	s=arc-20240116; t=1712248402; c=relaxed/simple;
+	bh=vGeDMYxhIQMCz/6Ex+E0kSB/hxh7WfNOnL3GWD9KoLc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=u2ig0wpdSNXAHxPbU1Hb0uxGcQz2Od2+rf7GpPtIaU9MyP27DDSe6OAYet1QnHqJRGwiEZMm7IB1CO+11LMNl3JtuV692Bj9v/2VGd7oj+IzCG3p4ID8F64u0DMgGZFJGC0/JoC/iB5te07kozJAHSm2ccFbaZdESu4e8xl+nV8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=manifault.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.166.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=manifault.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-io1-f49.google.com with SMTP id ca18e2360f4ac-7c8b777ff8bso45612939f.0
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Apr 2024 09:33:20 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712248400; x=1712853200;
+        h=user-agent:in-reply-to:content-disposition:mime-version:references
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=/0q2ZaGBSP2grqbQnWREndiCOj94gUHk70M1Euz3N7I=;
+        b=B609UfcQMTW8CwVrokMKkt5qagGdBnfYneZjXRum2GnHpza6WnESsWaE1XwC/KRlW7
+         ljPwZEzunSt30qRjmr5JYyjvVFcz8n83gmrRANAVheJZXgrWafiIxul/C2vA2crd5g88
+         hqmtQofSxn55D8v2P8N/i706fiANR0TeTiwrKtDue4hY3FsfIGjpAUSiWeJ89SRA6xqa
+         2dyfMFLELGE4iwOgLZ3dhBWkelhSqkg3rJcYVefFtJ52U/rRBTrxHnQCF1mpqgxpsZgN
+         zm95iE4XeiJqKdnIZNayXhZVHePCGetRE4Ami5+4wk5zhQhZQuz59noAHJTFyOvRPQVD
+         2aqA==
+X-Forwarded-Encrypted: i=1; AJvYcCU+TPdDAShaSOxz6ZnKmUaJ3pQn6MoLIQc+h01L1ARx2xSc3LA11Gm4uX7Rr+CuUYUqN5rLmD264lkDL5fS5mtl6q+r0+gPTy5niRqk
+X-Gm-Message-State: AOJu0YwAzali8s2Yhn/Gh4CbISDUt3g80LCh3nlTq9PPry/REuOi7LK6
+	zTJ5hBFMG6OG8HzuSVDlc5i67BFCjJItr0SIhktAg2ibtFHjg05v
+X-Google-Smtp-Source: AGHT+IHnvc9JR4IOuY+kL+dDqEVHCvwNIsTvWTKOgm/ZvgUffUYXodMAbSL1DcVtPWkQO1Te4oj7dg==
+X-Received: by 2002:a05:6602:80f:b0:7d3:919b:691a with SMTP id z15-20020a056602080f00b007d3919b691amr340970iow.2.1712248399658;
+        Thu, 04 Apr 2024 09:33:19 -0700 (PDT)
+Received: from maniforge (c-76-136-75-40.hsd1.il.comcast.net. [76.136.75.40])
+        by smtp.gmail.com with ESMTPSA id q9-20020a6bf209000000b007d4b04c6d63sm29950ioh.12.2024.04.04.09.33.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 04 Apr 2024 09:33:19 -0700 (PDT)
+Date: Thu, 4 Apr 2024 11:33:16 -0500
+From: David Vernet <void@manifault.com>
+To: Yonghong Song <yonghong.song@linux.dev>
+Cc: ast@kernel.org, daniel@iogearbox.net, andrii@kernel.org,
+	martin.lau@linux.dev, song@kernel.org, yonghong.song@linux.dev,
+	john.fastabend@gmail.com, kpsingh@kernel.org, sdf@google.com,
+	haoluo@google.com, jolsa@kernel.org, linux-kernel@vger.kernel.org,
+	kernel-team@meta.com
+Subject: Re: [PATCH bpf-next 2/2] selftests/bpf: Verify calling core kfuncs
+ from BPF_PROG_TYPE_SYCALL
+Message-ID: <20240404163316.GA385240@maniforge>
+References: <20240404010308.334604-1-void@manifault.com>
+ <20240404010308.334604-2-void@manifault.com>
+ <36bb0747-bff4-4fad-93ca-dae406f14099@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml100004.china.huawei.com (7.191.162.219) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
-
-On Sun, 24 Mar 2024 16:18:19 -0700
-ira.weiny@intel.com wrote:
-
-> From: Navneet Singh <navneet.singh@intel.com>
-> 
-> Once all extents of an interleave set are present a region must
-> surface an extent to the region.
-> 
-> Without interleaving; endpoint decoder and region extents have a 1:1
-> relationship.  Future support for IW > 1 will maintain a N:1
-> relationship between the device extents and region extents.
-> 
-> Create a region extent device for every device extent found.  Release of
-> the extent device triggers a response to the underlying hardware extent.
-> 
-> There is no strong use case to support the addition of extents which
-> overlap previously accepted extent ranges.  Reject such new extents
-> until such time as a good use case emerges.
-> 
-> Expose the necessary details of region extents by creating the following
-> sysfs entries.
-> 
-> 	/sys/bus/cxl/devices/dax_regionX/extentY
-> 	/sys/bus/cxl/devices/dax_regionX/extentY/offset
-> 	/sys/bus/cxl/devices/dax_regionX/extentY/length
-> 	/sys/bus/cxl/devices/dax_regionX/extentY/label
-
-Docs?  The label in particular worries me a little as I'm not sure what
-is in it.  If it's the tag one possible format is a uuid (not a coincidence
-that it is the same length) and interpreting that as characters isn't
-going to get us far.  I wonder if we have to treat it as a binary attr
-given we have no idea what it is.
-
-Otherwise a query inline that may well be answered in later patches.
-
-> 
-> The use of the extent devices by the DAX layer is deferred to later
-> patches.
-> 
-> Signed-off-by: Navneet Singh <navneet.singh@intel.com>
-> Co-developed-by: Ira Weiny <ira.weiny@intel.com>
-> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
-> 
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="Tv6BS8qXzcVxLJbx"
+Content-Disposition: inline
+In-Reply-To: <36bb0747-bff4-4fad-93ca-dae406f14099@linux.dev>
+User-Agent: Mutt/2.2.13 (2024-03-09)
 
 
+--Tv6BS8qXzcVxLJbx
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-> +int dax_region_create_ext(struct cxl_dax_region *cxlr_dax,
-> +			  struct range *hpa_range,
-> +			  const char *label,
-> +			  struct range *dpa_range,
-> +			  struct cxl_endpoint_decoder *cxled)
-> +{
-> +	struct region_extent *reg_ext;
-> +	struct device *dev;
-> +	int rc, id;
-> +
-> +	id = ida_alloc(&cxl_extent_ida, GFP_KERNEL);
-> +	if (id < 0)
-> +		return -ENOMEM;
+On Thu, Apr 04, 2024 at 09:04:19AM -0700, Yonghong Song wrote:
+>
+> On 4/3/24 6:03 PM, David Vernet wrote:
+> > Now that we can call some kfuncs from BPF_PROG_TYPE_SYSCALL progs, let's
+> > add some selftests that verify as much. As a bonus, let's also verify
+> > that we can't call the progs from raw tracepoints.
+> >
+> > Signed-off-by: David Vernet <void@manifault.com>
+>
+> Ack with some comments below.
+>
+> Acked-by: Yonghong Song <yonghong.song@linux.dev>
 
-Whilst it doesn't matter hugely, it's nice if the release does things
-in opposite order of the creation. So perhaps move the ida_alloc
-after kzalloc or reg_ext?
+Thanks for the review. It looks like accidentally replied directly to
+me, so I'll re-add the missing cc's.
 
-> +
-> +	reg_ext = kzalloc(sizeof(*reg_ext), GFP_KERNEL);
-> +	if (!reg_ext)
-> +		return -ENOMEM;
-> +
-> +	reg_ext->hpa_range = *hpa_range;
-> +	reg_ext->ed_ext.dpa_range = *dpa_range;
-> +	reg_ext->ed_ext.cxled = cxled;
-> +	snprintf(reg_ext->label, DAX_EXTENT_LABEL_LEN, "%s", label);
-> +
-> +	dev = &reg_ext->dev;
-> +	device_initialize(dev);
-> +	dev->id = id;
-> +	device_set_pm_not_required(dev);
-> +	dev->parent = &cxlr_dax->dev;
-> +	dev->type = &region_extent_type;
-> +	rc = dev_set_name(dev, "extent%d", dev->id);
-> +	if (rc)
-> +		goto err;
-> +
-> +	rc = device_add(dev);
-> +	if (rc)
-> +		goto err;
-> +
-> +	dev_dbg(dev, "DAX region extent HPA %#llx - %#llx\n",
-> +		reg_ext->hpa_range.start, reg_ext->hpa_range.end);
-> +
-> +	return devm_add_action_or_reset(&cxlr_dax->dev, region_extent_unregister,
-> +	reg_ext);
+>
+> > ---
+> >   .../selftests/bpf/prog_tests/cgrp_kfunc.c     |  1 +
+> >   .../selftests/bpf/prog_tests/task_kfunc.c     |  1 +
+> >   .../selftests/bpf/progs/cgrp_kfunc_common.h   | 21 +++++++++++++++++++
+> >   .../selftests/bpf/progs/cgrp_kfunc_failure.c  |  4 ++++
+> >   .../selftests/bpf/progs/cgrp_kfunc_success.c  |  4 ++++
+> >   .../selftests/bpf/progs/cpumask_common.h      | 19 +++++++++++++++++
+> >   .../selftests/bpf/progs/cpumask_failure.c     |  4 ++++
+> >   .../selftests/bpf/progs/cpumask_success.c     |  3 +++
+> >   .../selftests/bpf/progs/task_kfunc_common.h   | 18 ++++++++++++++++
+> >   .../selftests/bpf/progs/task_kfunc_failure.c  |  4 ++++
+> >   .../selftests/bpf/progs/task_kfunc_success.c  |  4 ++++
+> >   11 files changed, 83 insertions(+)
+> >
+> > diff --git a/tools/testing/selftests/bpf/prog_tests/cgrp_kfunc.c b/tools/testing/selftests/bpf/prog_tests/cgrp_kfunc.c
+> > index adda85f97058..73f0ec4f4eb7 100644
+> > --- a/tools/testing/selftests/bpf/prog_tests/cgrp_kfunc.c
+> > +++ b/tools/testing/selftests/bpf/prog_tests/cgrp_kfunc.c
+> > @@ -102,6 +102,7 @@ void test_cgrp_kfunc(void)
+> >             run_success_test(success_tests[i]);
+> >     }
+> > +   RUN_TESTS(cgrp_kfunc_success);
+> >     RUN_TESTS(cgrp_kfunc_failure);
+> >   cleanup:
+> > diff --git a/tools/testing/selftests/bpf/prog_tests/task_kfunc.c b/tools/testing/selftests/bpf/prog_tests/task_kfunc.c
+> > index d4579f735398..3db4c8601b70 100644
+> > --- a/tools/testing/selftests/bpf/prog_tests/task_kfunc.c
+> > +++ b/tools/testing/selftests/bpf/prog_tests/task_kfunc.c
+> > @@ -94,5 +94,6 @@ void test_task_kfunc(void)
+> >             run_success_test(success_tests[i]);
+> >     }
+> > +   RUN_TESTS(task_kfunc_success);
+> >     RUN_TESTS(task_kfunc_failure);
+> >   }
+>
+> The above RUN_TESTS(cgrp_kfunc_success) and RUN_TESTS(task_kfunc_success)
+> will do duplicate work for *existing* bpf programs in their respective
+> files. I think we still prefer to have cgrp_kfunc_success tests
+> in cgrp_kfunc.c to make it easy to cross check. But in order to
+> remove duplicate work, one option is to make other non-RUN_TESTS
+> programs in those files not auto-loaded and their corresponding
+> prog_tests/*.c file need to explicitly enable loading the problem.
 
-Indent
+Good point, and yes I agree with that approach of not auto-loading
+non-RUN_TESTS programs. Considering that we have a  __success BTF tag to
+say, "this prog should successfully load", it seems odd that we'd also
+automatically load and validate progs that _didn't_ specify that tag as
+well. At that point, I'm not sure what value the tag is bringing. Also,
+that was the expected behavior before RUN_TESTS() was introduced, so it
+hopefully shouldn't cause much if any churn.
 
-> +
-> +err:
-> +	dev_err(&cxlr_dax->dev, "Failed to initialize DAX extent dev HPA %#llx - %#llx\n",
-> +		reg_ext->hpa_range.start, reg_ext->hpa_range.end);
-> +
-> +	put_device(dev);
-> +	return rc;
-> +}
-> diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
-> index 9e33a0976828..6b00e717e42b 100644
-> --- a/drivers/cxl/core/mbox.c
-> +++ b/drivers/cxl/core/mbox.c
-> @@ -1020,6 +1020,32 @@ static int cxl_clear_event_record(struct cxl_memdev_state *mds,
->  	return rc;
->  }
->  
-> +static int cxl_send_dc_cap_response(struct cxl_memdev_state *mds,
-> +				    struct range *extent, int opcode)
-> +{
-> +	struct cxl_mbox_cmd mbox_cmd;
-> +	size_t size;
-> +
-> +	struct cxl_mbox_dc_response *dc_res __free(kfree);
-> +	size = struct_size(dc_res, extent_list, 1);
-> +	dc_res = kzalloc(size, GFP_KERNEL);
-> +	if (!dc_res)
-> +		return -ENOMEM;
-> +
-> +	dc_res->extent_list[0].dpa_start = cpu_to_le64(extent->start);
-> +	memset(dc_res->extent_list[0].reserved, 0, 8);
-> +	dc_res->extent_list[0].length = cpu_to_le64(range_len(extent));
-> +	dc_res->extent_list_size = cpu_to_le32(1);
+> Maybe the current patch is okay even with duplicated work as it
+> should not take much time to verify those tiny problems.
 
-I guess this comes up later, but such a response means that if we are offered
-multiple extents in an add with the more flag set then we always reject all
-but the first one.
+IMO it should be fine for now as the overhead for validating and loading
+these progs is low, but it'd definitely be good to address this problem
+in a follow-up. I don't think it should take too much effort -- AFAICT
+we'd just have to mark a test spec as invalid if it didn't have any BTF
+test tags. Ideally I'd like to separate that from this patch set, but I
+can do it here if folks want.
 
-> +
-> +	mbox_cmd = (struct cxl_mbox_cmd) {
-> +		.opcode = opcode,
-> +		.size_in = size,
-> +		.payload_in = dc_res,
-> +	};
-> +
-> +	return cxl_internal_send_cmd(mds, &mbox_cmd);
-> +}
-> +
->  static struct cxl_memdev_state *
->  cxled_to_mds(struct cxl_endpoint_decoder *cxled)
->  {
-> @@ -1029,6 +1055,23 @@ cxled_to_mds(struct cxl_endpoint_decoder *cxled)
->  	return container_of(cxlds, struct cxl_memdev_state, cxlds);
->  }
->  
-> +void cxl_release_ed_extent(struct cxl_ed_extent *extent)
-> +{
-> +	struct cxl_endpoint_decoder *cxled = extent->cxled;
-> +	struct cxl_memdev_state *mds = cxled_to_mds(cxled);
-> +	struct device *dev = mds->cxlds.dev;
-> +	int rc;
-> +
-> +	dev_dbg(dev, "Releasing DC extent DPA %#llx - %#llx\n",
-> +		extent->dpa_range.start, extent->dpa_range.end);
-> +
-> +	rc = cxl_send_dc_cap_response(mds, &extent->dpa_range, CXL_MBOX_OP_RELEASE_DC);
+Thanks,
+David
 
-Long line that doesn't really need to be.
+--Tv6BS8qXzcVxLJbx
+Content-Type: application/pgp-signature; name="signature.asc"
 
-> +	if (rc)
-> +		dev_dbg(dev, "Failed to respond releasing extent DPA %#llx - %#llx; %d\n",
-> +			extent->dpa_range.start, extent->dpa_range.end, rc);
-> +}
-> +EXPORT_SYMBOL_NS_GPL(cxl_release_ed_extent, CXL);
-> +
->  static void cxl_mem_get_records_log(struct cxl_memdev_state *mds,
->  				    enum cxl_event_log_type type)
->  {
-> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-> index 3e563ab29afe..7635ff109578 100644
-> --- a/drivers/cxl/core/region.c
-> +++ b/drivers/cxl/core/region.c
-> @@ -1450,11 +1450,81 @@ static int cxl_region_validate_position(struct cxl_region *cxlr,
->  	return 0;
->  }
+-----BEGIN PGP SIGNATURE-----
 
->  static int cxl_region_attach_position(struct cxl_region *cxlr,
-> @@ -2684,6 +2754,7 @@ static struct cxl_dax_region *cxl_dax_region_alloc(struct cxl_region *cxlr)
->  
->  	dev = &cxlr_dax->dev;
->  	cxlr_dax->cxlr = cxlr;
-> +	cxlr->cxlr_dax = cxlr_dax;
->  	device_initialize(dev);
->  	lockdep_set_class(&dev->mutex, &cxl_dax_region_key);
->  	device_set_pm_not_required(dev);
-> @@ -2799,7 +2870,10 @@ static int cxl_region_read_extents(struct cxl_region *cxlr)
->  static void cxlr_dax_unregister(void *_cxlr_dax)
->  {
->  	struct cxl_dax_region *cxlr_dax = _cxlr_dax;
-> +	struct cxl_region *cxlr = cxlr_dax->cxlr;
->  
-> +	cxlr->cxlr_dax = NULL;
-> +	cxlr_dax->cxlr = NULL;
->  	device_unregister(&cxlr_dax->dev);
->  }
->  
-> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-> index d585f5fdd3ae..5379ad7f5852 100644
-> --- a/drivers/cxl/cxl.h
-> +++ b/drivers/cxl/cxl.h
+iHUEARYKAB0WIQRBxU1So5MTLwphjdFZ5LhpZcTzZAUCZg7WTAAKCRBZ5LhpZcTz
+ZN4gAP90V5S5vd7CuqZm6mofUeuq5mm/kMhfW9bBet5JoQBDugD/fsW+fYqnaO17
+5idK41x/IUMxA1OcM/UDvRH72sKRtwU=
+=iNe9
+-----END PGP SIGNATURE-----
 
-
-> +/**
-> + * struct region_extent - CXL DAX region extent
-> + * @dev: device representing this extent
-> + * @hpa_range: HPA range of this extent
-> + * @label: label of the extent
-> + * @ed_ext: Endpoint decoder extent which backs this extent
-> + */
-> +#define DAX_EXTENT_LABEL_LEN 64
-
-Something called DAX_* doesn't belong in this header...
-Either give a CXL_DAX_ prefix or move the definition if appropriate.
+--Tv6BS8qXzcVxLJbx--
