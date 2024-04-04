@@ -1,88 +1,59 @@
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EDBC1133413;
-	Thu,  4 Apr 2024 19:18:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from gentwo.org (gentwo.org [62.72.0.81])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93EB513119B
+	for <linux-kernel@vger.kernel.org>; Thu,  4 Apr 2024 19:18:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.72.0.81
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712258290; cv=none; b=PVcFauwgrDCQbleavT3X7D76QcALh/RCMYRPsql1+oFF2Ymbg/lHEIi0M78XwZpWOlFPVGHt2t+y3K9xc0fkqzvzywYKrOCDraE1O4YRXX6tcRabtotMMbqqpkclFZHnTX1xb4Q1Ei5zT2uHwjiMQyiqomQS7iTuI8PSIIR4udA=
+	t=1712258329; cv=none; b=U0NZEn6DC54ETWsLyTFRsbVn90+v5Gl0gjbPeMKuQ8GaHkoGlELfgjuOifISQaVEGWPEPTdHQOoxkBDE6oF0k83yAXIJZrKqlIaY1ujLX+yh3DqsnSvXcRHW/xwy37CJPv/WDd/Zcrrdc3PYVeVidzOUirYjLRqGO6PSVtkHycU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712258290; c=relaxed/simple;
-	bh=hQsnH1190673HPRgjVKyfoJUxLWZ/psXgZYe+KtS/p0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=praF+cH34qWqQQh1TXjL5H69FujFZKKWqfTrvD3GV0WrqN4thMzhk1H2pPEzfbTu33EGoDde/EyoFgFlcRTjXOAZt5sWg8F6clkTl+50JruvbqsgzR1QcB2RqLGVKJ3f8t+h4CEgYEWpjM9k55F5CiS66OY0Iass9CI4mi6JaNk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=RwqT6YsJ; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="RwqT6YsJ"
-Received: from [100.64.1.95] (unknown [20.29.225.195])
-	by linux.microsoft.com (Postfix) with ESMTPSA id C9C2320E94A7;
-	Thu,  4 Apr 2024 12:18:07 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com C9C2320E94A7
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1712258288;
-	bh=A7Q2axkjCx78vPEBshdngJM72aZQ9s5wZHp2jmg55+0=;
-	h=Date:Subject:To:References:From:In-Reply-To:From;
-	b=RwqT6YsJmdnnrXHHFSbq9RKV256RC5Z2Qt1RVhzqRL41d+g/++plFbI7OaU0y5lXa
-	 xK8Id/EOOOiRvURMOaHIKIxUsjRApKXm1zpvse7+6DRvz6Eo35XBhJyn02mxudZJMU
-	 R8AAFulwPcZAJ5CM+lurbHElalUA+2ztG0FICXFk=
-Message-ID: <0c6ff90d-0709-4fc5-951e-1b0f0b1273dc@linux.microsoft.com>
-Date: Thu, 4 Apr 2024 12:18:06 -0700
+	s=arc-20240116; t=1712258329; c=relaxed/simple;
+	bh=DRsq6B7gNf90bJWvlcjXsjCsytFzxuTCVa12StodvOA=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=EDt/iFOdYacOLAa4nmomZBQHyzj7/d+dQc38n8fUmfeDYL/21/F+RuoScNt7NI7FrzlWVygB2eVsGZRcQIf+Co0ZZW/tIW9/9ergxb43E52qXonKKZcO9RevX8nm08gwvQ+70Jp628sPBri0AX4fy6ZylBFb18+FWbUH18c78CM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com; spf=fail smtp.mailfrom=linux.com; arc=none smtp.client-ip=62.72.0.81
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=linux.com
+Received: by gentwo.org (Postfix, from userid 1003)
+	id 172CA40A89; Thu,  4 Apr 2024 12:12:11 -0700 (PDT)
+Received: from localhost (localhost [127.0.0.1])
+	by gentwo.org (Postfix) with ESMTP id 1506940A86;
+	Thu,  4 Apr 2024 12:12:11 -0700 (PDT)
+Date: Thu, 4 Apr 2024 12:12:11 -0700 (PDT)
+From: "Christoph Lameter (Ampere)" <cl@linux.com>
+To: Ming Yang <yangming73@huawei.com>
+cc: penberg@kernel.org, rientjes@google.com, iamjoonsoo.kim@lge.com, 
+    akpm@linux-foundation.org, vbabka@suse.cz, roman.gushchin@linux.dev, 
+    42.hyeyoo@gmail.com, linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
+    zhangliang5@huawei.com, wangzhigang17@huawei.com, liushixin2@huawei.com, 
+    alex.chen@huawei.com, pengyi.pengyi@huawei.com, xiqi2@huawei.com
+Subject: Re: [PATCH] slub: fix slub segmentation
+In-Reply-To: <20240402031025.1097-1-yangming73@huawei.com>
+Message-ID: <56193a2c-dadb-108d-4eaf-0a923fc4912b@linux.com>
+References: <20240402031025.1097-1-yangming73@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v0 10/14] sfc: falcon: Make I2C terminology more inclusive
-To: Edward Cree <ecree.xilinx@gmail.com>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- "open list:SFC NETWORK DRIVER" <netdev@vger.kernel.org>,
- "open list:SFC NETWORK DRIVER" <linux-net-drivers@amd.com>,
- open list <linux-kernel@vger.kernel.org>,
- Wolfram Sang <wsa+renesas@sang-engineering.com>,
- "open list:RADEON and AMDGPU DRM DRIVERS" <amd-gfx@lists.freedesktop.org>,
- "open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>,
- "open list:INTEL DRM DISPLAY FOR XE AND I915 DRIVERS"
- <intel-gfx@lists.freedesktop.org>,
- "open list:INTEL DRM DISPLAY FOR XE AND I915 DRIVERS"
- <intel-xe@lists.freedesktop.org>,
- "open list:DRM DRIVER FOR NVIDIA GEFORCE/QUADRO GPUS"
- <nouveau@lists.freedesktop.org>,
- "open list:I2C SUBSYSTEM HOST DRIVERS" <linux-i2c@vger.kernel.org>,
- "open list:BTTV VIDEO4LINUX DRIVER" <linux-media@vger.kernel.org>,
- "open list:FRAMEBUFFER LAYER" <linux-fbdev@vger.kernel.org>
-References: <20240329170038.3863998-1-eahariha@linux.microsoft.com>
- <20240329170038.3863998-11-eahariha@linux.microsoft.com>
- <20240402090028.GA1759653@gmail.com>
-Content-Language: en-CA
-From: Easwar Hariharan <eahariha@linux.microsoft.com>
-In-Reply-To: <20240402090028.GA1759653@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=US-ASCII; format=flowed
 
-On 4/2/2024 2:00 AM, Martin Habets wrote:
-> On Fri, Mar 29, 2024 at 05:00:34PM +0000, Easwar Hariharan wrote:
->> I2C v7, SMBus 3.2, and I3C specifications have replaced "master/slave"
->> with more appropriate terms. Inspired by and following on to Wolfram's
->> series to fix drivers/i2c/[1], fix the terminology for users of
->> I2C_ALGOBIT bitbanging interface, now that the approved verbiage exists
->> in the specification.
->>
->> Compile tested, no functionality changes intended
->>
->> [1]: https://lore.kernel.org/all/20240322132619.6389-1-wsa+renesas@sang-engineering.com/
->>
->> Signed-off-by: Easwar Hariharan <eahariha@linux.microsoft.com>
-> 
-> Reviewed-by: Martin Habets <habetsm.xilinx@gmail.com>
-> 
+On Tue, 2 Apr 2024, Ming Yang wrote:
 
-Thank you, Martin, for reviewing. I believe that we are settling on controller/target
-terminology from feedback on the other drivers in this series. Would you want to re-review
-v1 with that change, or should I add your R-B in v1 despite the change?
+> The key point of above allocation flow is: the slab should be alloced
+> from the partial of other node first, instead of the buddy system of
+> other node directly.
 
-Thanks,
-Easwar
+
+If you use GFP_THISNODE then you will trigger a reclaim pass on the remote 
+node. That could generate a performance regression.
+
+We already support this kind of behavior via the node_reclaim / 
+zone_reclaiom setting in procfs. Please use that.
+
+The remote buildup of the partial pages can be addressed by changing the 
+remote_node_defrag_ratio in the slabs. This will make slub scan remote 
+nodes for partial slabs before going into the page allocator.
+
 
