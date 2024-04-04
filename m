@@ -1,266 +1,197 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D18A1292F8;
-	Thu,  4 Apr 2024 12:23:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1CA08592E
+	for <linux-kernel@vger.kernel.org>; Thu,  4 Apr 2024 12:26:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712233440; cv=none; b=sfKgMxFsFb0ho99tQb3CFdxWUkyqn6unWXMK5y776C7+FPhoDeFq+R/bHc3NjntBpqTvRj4f4bI+DdmaH1Ys4I0v+R/mgtDvuuE0MoBFfkD80Vfr/N1awuFXFbkeLIbPAK58Vx9HybnRKu8K8sg2GK4V2rpEOoteIrY97o3o2Yg=
+	t=1712233573; cv=none; b=JEsbaWWP1Yd2KDuDYsPGQY0Wzb9z4C3uw0wHi2awEIEutVhItynrTJIBc3RI0hCk0UvEzxSeRmyUK6fa1RSItL7DmFYkHOBjnLQKGpkM/5DPxq9pmOvSHyfq7JeFCYuqGH+JZxooQncLiEA1fq2QZ6UZAH3DZuVzc6bMCz4Qe2s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712233440; c=relaxed/simple;
-	bh=KnqkCZZxEC8uS/Ao+n5Ee2O7zuea/twrqNzDm4+8APY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dFXcEETp0p6WJTqRxbByPIPtXgb+wOYXiszEF+18ytDfmaIm+fd6Kl8XuC1dKRxKV8vqnhzE+p+D3E2BmzQXhtCZezvclWHyX9n3drEMgHu3TIRQmPnUebsHIKHwjrrxtPyL0QeBIHXcOJaVxwdPNoflClrXXYtGGcK9SznjJC4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=VhWhRSF4; arc=none smtp.client-ip=198.175.65.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1712233573; c=relaxed/simple;
+	bh=bADRJFGOvu1b0zF/Q4lv3G9rwZq8EwwDyeDlWWXD6Co=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=dj3vWkZHZL9r68iMc82nZ8DqArykJzGR2SVxovL54PZ1KmdHWzBmmYzA1yyaVfXB8b4EzflAFGNUsz9/TFXLoMs30wCisnuJ9hblm/IHTYvTfUi8rN90q0cuamCYbeh4qfNHFFQPnAdsxOLeykMmPkq+CscA30UlybarZ04Il3A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=c7Dl8WGr; arc=none smtp.client-ip=209.85.128.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="VhWhRSF4"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1712233436; x=1743769436;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=KnqkCZZxEC8uS/Ao+n5Ee2O7zuea/twrqNzDm4+8APY=;
-  b=VhWhRSF46TcT4zDY1n1TzqjT/li+ztTozGid/FChOF8PyEUtBWa9bHg2
-   QeDbhpFkaOohcaI5Z3NNLeEhEzVkeT+cgrn9ah4u+OkXEjUXgJ7OO/pOU
-   bgPhA9qeK95bhWOLjcBZtg+1/MtlQ5kWi30HOB9+2XF/jXY+wCM4uS/sz
-   dC9uZCZD1WVt/et7tw+/CJA++eyBEco+ghROawJCSD7TGUK5S2d6djcHi
-   2Y4H/2Ct6s7fCehQbzEvj/if+UwiW/CKZlhLYxJpCbH3bd+yby9+BPumg
-   CqNgpMneCu8Tqxt+8ky+fxufOCf+KxVOwty1yKRO+xoxemfcUVpJpF26s
-   A==;
-X-CSE-ConnectionGUID: I7pJ65guTn2BsGF8mC4xlg==
-X-CSE-MsgGUID: 38zkMPpwQZi+kMm1/M0yXw==
-X-IronPort-AV: E=McAfee;i="6600,9927,11033"; a="7618767"
-X-IronPort-AV: E=Sophos;i="6.07,178,1708416000"; 
-   d="scan'208";a="7618767"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Apr 2024 05:18:43 -0700
-X-CSE-ConnectionGUID: YIABzNY1QySeA69ilqqoKg==
-X-CSE-MsgGUID: ZJ60WyGVQ3madHQa637Olg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,179,1708416000"; 
-   d="scan'208";a="23457504"
-Received: from turnipsi.fi.intel.com (HELO kekkonen.fi.intel.com) ([10.237.72.44])
-  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Apr 2024 05:18:40 -0700
-Received: from kekkonen.localdomain (localhost [127.0.0.1])
-	by kekkonen.fi.intel.com (Postfix) with SMTP id 33E2411F819;
-	Thu,  4 Apr 2024 15:18:37 +0300 (EEST)
-Date: Thu, 4 Apr 2024 12:18:37 +0000
-From: Sakari Ailus <sakari.ailus@linux.intel.com>
-To: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Hans Verkuil <hverkuil@xs4all.nl>,
-	Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-	Umang Jain <umang.jain@ideasonboard.com>,
-	linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 3/4] media: subdev: Improve
- v4l2_subdev_enable/disable_streams_fallback
-Message-ID: <Zg6anfpQt80gSKjN@kekkonen.localdomain>
-References: <20240404-enable-streams-impro-v1-0-1017a35bbe07@ideasonboard.com>
- <20240404-enable-streams-impro-v1-3-1017a35bbe07@ideasonboard.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="c7Dl8WGr"
+Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-415523d9824so8652615e9.3
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Apr 2024 05:26:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1712233570; x=1712838370; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=jJYM6tMjtFChrulSjg0o7kKxgUYy0TmdSYB4AKPdhEk=;
+        b=c7Dl8WGrjLWTItx3QpPn1tbGFQqqf+0BDlci95hQt4INKr4QDj2vAdy261gNi/3ZeC
+         MWTmLH1Ijym07RYr8fKnCgTryJRWtp4Fpz+vHv8xmuMldGQvVby8WysmChWitLVtPNiT
+         z6RPvcEmqtab9HTK0NnBg3GcQjCJ0CTiWaVevlsfyie2PqHBY/KgA8jDzmd8IN33zXsd
+         +kYLc3WeMwceyJRjnvW0euv985FH9G34i3Cyw7YgoebF3DJwkVvucFtBy4gWCZXHo/gl
+         b1m6d+TvR3DENTPLZ6J8PalFntIjOl4uQsOQgddPbORO/YHi7VbFDWdgtk81Hl203YoF
+         QUCA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712233570; x=1712838370;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=jJYM6tMjtFChrulSjg0o7kKxgUYy0TmdSYB4AKPdhEk=;
+        b=mQZR7faUlE0crVr7GSfs/qRKHivKUbsrTgdZCKpdYG79aLGLAAF0dsqQ14+ZmDAFs3
+         9ATtWnQhYDLr9Lw16Owo2WlpS5wQuh0xauLTqihOSCnx4qI5YjMrTFJ9npw56tvRCj2j
+         p8K2wHTQIjvysm07RLEMeZsZ/zG6N8sYjAIYQnIpNYRjOCwU85mEHifmo5KNmUw1j3qS
+         ce1mDHjU/GZQlk8eAHINoYW7h12E4dpbEqG22i2liEjQP21Wy8ffoch70Co+bWZeiw32
+         NonERCxfnJ6kgYzF4htTEFUbEBcui/9XqKZGZG9h4UR5t4xsSFDzYlmypqI1OOFON5+s
+         fdlA==
+X-Forwarded-Encrypted: i=1; AJvYcCXkKlnmWSiw681l5afCKtsPrXkpYr/7uFo+yTYr56EAAHFqB1PcmrKG/yEadUy2KWPHSrtCiH1b+oDlRIxDPzMn9064cyf7tgqfQ1q+
+X-Gm-Message-State: AOJu0YxRkd35iv8bAjKSTIq7ChJG/rYVsLGnwC/FfqnbafYCCmdp7rpg
+	yhnsAKv1pHyWjM6eMcCZx5QY8EccyPB6RGFbpCsn6Ux3uLqrdq4gLaTM+mBSbYs=
+X-Google-Smtp-Source: AGHT+IGhdc0j00kl/SimlNVvg9pgoaeQSTThX/VudHinZM2oZtNar8Jm+FLBUrq74KmHRHDDb/tr/A==
+X-Received: by 2002:a05:600c:54ef:b0:415:533b:1071 with SMTP id jb15-20020a05600c54ef00b00415533b1071mr2316215wmb.19.1712233569988;
+        Thu, 04 Apr 2024 05:26:09 -0700 (PDT)
+Received: from gpeter-l.roam.corp.google.com ([148.252.128.204])
+        by smtp.gmail.com with ESMTPSA id bu14-20020a056000078e00b003434b41c83fsm12106303wrb.81.2024.04.04.05.26.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 04 Apr 2024 05:26:08 -0700 (PDT)
+From: Peter Griffin <peter.griffin@linaro.org>
+To: mturquette@baylibre.com,
+	sboyd@kernel.org,
+	robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org,
+	vkoul@kernel.org,
+	kishon@kernel.org,
+	alim.akhtar@samsung.com,
+	avri.altman@wdc.com,
+	bvanassche@acm.org,
+	s.nawrocki@samsung.com,
+	cw00.choi@samsung.com,
+	jejb@linux.ibm.com,
+	martin.petersen@oracle.com,
+	chanho61.park@samsung.com,
+	ebiggers@kernel.org
+Cc: linux-scsi@vger.kernel.org,
+	linux-phy@lists.infradead.org,
+	devicetree@vger.kernel.org,
+	linux-clk@vger.kernel.org,
+	linux-samsung-soc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	tudor.ambarus@linaro.org,
+	andre.draszik@linaro.org,
+	saravanak@google.com,
+	willmcvicker@google.com,
+	Peter Griffin <peter.griffin@linaro.org>
+Subject: [PATCH 00/17] HSI2, UFS & UFS phy support for Tensor GS101
+Date: Thu,  4 Apr 2024 13:25:42 +0100
+Message-ID: <20240404122559.898930-1-peter.griffin@linaro.org>
+X-Mailer: git-send-email 2.44.0.478.gd926399ef9-goog
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240404-enable-streams-impro-v1-3-1017a35bbe07@ideasonboard.com>
+Content-Transfer-Encoding: 8bit
 
-Moi,
+Hi folks,
 
-Thanks for the patch.
+This series adds support for the High Speed Interface (HSI) 2 clock
+management unit, UFS controller and UFS phy calibration/tuning for GS101.
 
-On Thu, Apr 04, 2024 at 01:50:02PM +0300, Tomi Valkeinen wrote:
-> v4l2_subdev_enable/disable_streams_fallback() supports falling back to
-> .s_stream() for subdevs with a single source pad. It also tracks the
-> enabled streams for that one pad in the sd->enabled_streams field.
-> 
-> Tracking the enabled streams with sd->enabled_streams does not make
-> sense, as with .s_stream() there can only be a single stream per pad.
-> Thus, as the v4l2_subdev_enable/disable_streams_fallback() only supports
-> a single source pad, all we really need is a boolean which tells whether
-> streaming has been enabled on this pad or not.
-> 
-> However, as we only need a true/false state for a pad (instead of
-> tracking which streams have been enabled for a pad), we can easily
-> extend the fallback mechanism to support multiple source pads as we only
-> need to keep track of which pads have been enabled.
-> 
-> Change the sd->enabled_streams field to sd->enabled_pads, which is a
-> 64-bit bitmask tracking the enabled source pads. With this change we can
-> remove the restriction that
-> v4l2_subdev_enable/disable_streams_fallback() only supports a single
-> soruce pad.
-> 
-> Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
-> ---
->  drivers/media/v4l2-core/v4l2-subdev.c | 68 ++++++++++++++++++++---------------
->  include/media/v4l2-subdev.h           |  9 +++--
->  2 files changed, 44 insertions(+), 33 deletions(-)
-> 
-> diff --git a/drivers/media/v4l2-core/v4l2-subdev.c b/drivers/media/v4l2-core/v4l2-subdev.c
-> index 3b3310bce5d4..91298bb84e6b 100644
-> --- a/drivers/media/v4l2-core/v4l2-subdev.c
-> +++ b/drivers/media/v4l2-core/v4l2-subdev.c
-> @@ -2090,37 +2090,43 @@ static int v4l2_subdev_enable_streams_fallback(struct v4l2_subdev *sd, u32 pad,
->  					       u64 streams_mask)
->  {
->  	struct device *dev = sd->entity.graph_obj.mdev->dev;
-> -	unsigned int i;
->  	int ret;
->  
->  	/*
->  	 * The subdev doesn't implement pad-based stream enable, fall back
-> -	 * on the .s_stream() operation. This can only be done for subdevs that
-> -	 * have a single source pad, as sd->enabled_streams is global to the
-> -	 * subdev.
-> +	 * on the .s_stream() operation.
->  	 */
->  	if (!(sd->entity.pads[pad].flags & MEDIA_PAD_FL_SOURCE))
->  		return -EOPNOTSUPP;
->  
-> -	for (i = 0; i < sd->entity.num_pads; ++i) {
-> -		if (i != pad && sd->entity.pads[i].flags & MEDIA_PAD_FL_SOURCE)
-> -			return -EOPNOTSUPP;
-> -	}
-> +	/*
-> +	 * .s_stream() means there is no streams support, so only allowed stream
-> +	 * is the imlicit stream 0.
-> +	 */
-> +	if (streams_mask != BIT_ULL(0))
-> +		return -EOPNOTSUPP;
-> +
-> +	/*
-> +	 * We use a 64-bit bitmask for tracking enabled pads, so only subdevices
-> +	 * with 64 pads or less can be supported.
-> +	 */
-> +	if (pad >= sizeof(sd->enabled_pads) * 8)
+With this series applied, UFS is now functional! The SKhynix HN8T05BZGKX015
+can be enumerated, partitions mounted etc. This then allows us to move away
+from the initramfs rootfs we have been using for development so far.
 
-s/8/BITS_PER_BYTE/
+The intention is this series will be merged via Krzysztofs Samsung Exynos
+tree(s). This series is rebased on next-20240404.
 
-> +		return -EOPNOTSUPP;
->  
-> -	if (sd->enabled_streams & streams_mask) {
-> -		dev_dbg(dev, "set of streams %#llx already enabled on %s:%u\n",
-> -			streams_mask, sd->entity.name, pad);
-> +	if (sd->enabled_pads & BIT_ULL(pad)) {
-> +		dev_dbg(dev, "pad %u already enabled on %s\n",
-> +			pad, sd->entity.name);
->  		return -EALREADY;
->  	}
->  
-> -	/* Start streaming when the first streams are enabled. */
-> -	if (!sd->enabled_streams) {
-> +	/* Start streaming when the first pad is enabled. */
-> +	if (!sd->enabled_pads) {
->  		ret = v4l2_subdev_call(sd, video, s_stream, 1);
->  		if (ret)
->  			return ret;
->  	}
->  
-> -	sd->enabled_streams |= streams_mask;
-> +	sd->enabled_pads |= BIT_ULL(pad);
->  
->  	return 0;
->  }
-> @@ -2207,37 +2213,43 @@ static int v4l2_subdev_disable_streams_fallback(struct v4l2_subdev *sd, u32 pad,
->  						u64 streams_mask)
->  {
->  	struct device *dev = sd->entity.graph_obj.mdev->dev;
-> -	unsigned int i;
->  	int ret;
->  
->  	/*
-> -	 * If the subdev doesn't implement pad-based stream enable, fall  back
-> -	 * on the .s_stream() operation. This can only be done for subdevs that
-> -	 * have a single source pad, as sd->enabled_streams is global to the
-> -	 * subdev.
-> +	 * If the subdev doesn't implement pad-based stream enable, fall back
-> +	 * on the .s_stream() operation.
->  	 */
->  	if (!(sd->entity.pads[pad].flags & MEDIA_PAD_FL_SOURCE))
->  		return -EOPNOTSUPP;
->  
-> -	for (i = 0; i < sd->entity.num_pads; ++i) {
-> -		if (i != pad && sd->entity.pads[i].flags & MEDIA_PAD_FL_SOURCE)
-> -			return -EOPNOTSUPP;
-> -	}
-> +	/*
-> +	 * .s_stream() means there is no streams support, so only allowed stream
-> +	 * is the imlicit stream 0.
-> +	 */
-> +	if (streams_mask != BIT_ULL(0))
-> +		return -EOPNOTSUPP;
-> +
-> +	/*
-> +	 * We use a 64-bit bitmask for tracking enabled pads, so only subdevices
-> +	 * with 64 pads or less can be supported.
-> +	 */
-> +	if (pad >= sizeof(sd->enabled_pads) * 8)
+The series is broadly split into the following parts:
+1) dt-bindings documentation updates
+2) gs101 device tree updates
+3) Prepatory patches for samsung-ufs driver
+4) GS101 ufs-phy support
+5) Prepatory patches for ufs-exynos driver
+6) GS101 ufs-exynos support
 
-Ditto.
+Question
+========
 
-How much of the code of the two functions is the same? Could some of this
-be put to a common function both would call? They look (almost) exactly the
-same.
+Currently the link comes up in Gear 3 due to ufshcd_init_host_params()
+host_params initialisation. If I update that to use UFS_HS_G4 for
+negotiation then the link come up in Gear 4. I propose (in a future patch)
+to use VER register offset 0x8 to determine whether to set G4 capability
+or not (if major version is >= 3).
 
-> +		return -EOPNOTSUPP;
->  
-> -	if ((sd->enabled_streams & streams_mask) != streams_mask) {
-> -		dev_dbg(dev, "set of streams %#llx already disabled on %s:%u\n",
-> -			streams_mask, sd->entity.name, pad);
-> +	if ((sd->enabled_pads & BIT_ULL(pad)) != BIT_ULL(pad)) {
-> +		dev_dbg(dev, "pad %u already disabled on %s\n",
-> +			pad, sd->entity.name);
->  		return -EALREADY;
->  	}
->  
->  	/* Stop streaming when the last streams are disabled. */
-> -	if (!(sd->enabled_streams & ~streams_mask)) {
-> +	if (!(sd->enabled_pads & ~BIT_ULL(pad))) {
->  		ret = v4l2_subdev_call(sd, video, s_stream, 0);
->  		if (ret)
->  			return ret;
->  	}
->  
-> -	sd->enabled_streams &= ~streams_mask;
-> +	sd->enabled_pads &= ~BIT_ULL(pad);
->  
->  	return 0;
->  }
-> diff --git a/include/media/v4l2-subdev.h b/include/media/v4l2-subdev.h
-> index 8bd1e3c96d2b..7077aec3176c 100644
-> --- a/include/media/v4l2-subdev.h
-> +++ b/include/media/v4l2-subdev.h
-> @@ -1039,10 +1039,9 @@ struct v4l2_subdev_platform_data {
->   * @active_state: Active state for the subdev (NULL for subdevs tracking the
->   *		  state internally). Initialized by calling
->   *		  v4l2_subdev_init_finalize().
-> - * @enabled_streams: Bitmask of enabled streams used by
-> - *		     v4l2_subdev_enable_streams() and
-> - *		     v4l2_subdev_disable_streams() helper functions for fallback
-> - *		     cases.
-> + * @enabled_pads: Bitmask of enabled pads used by v4l2_subdev_enable_streams()
-> + *		  and v4l2_subdev_disable_streams() helper functions for
-> + *		  fallback cases.
->   * @streaming_enabled: Tracks whether streaming has been enabled with s_stream.
->   *
->   * Each instance of a subdev driver should create this struct, either
-> @@ -1091,7 +1090,7 @@ struct v4l2_subdev {
->  	 * doesn't support it.
->  	 */
->  	struct v4l2_subdev_state *active_state;
-> -	u64 enabled_streams;
-> +	u64 enabled_pads;
->  	bool streaming_enabled;
->  };
->  
-> 
+The bitfield of VER register in gs101 docs is
+
+RSVD [31:16] Reserved
+MJR [15:8] Major version number
+MNR [7:4] Minor version number
+VS [3:0] Version Suffix
+
+Can anyone confirm if other Exynos platforms supported by this driver have
+the same register, and if it conforms to the bitfield described above?
+
+I'm also open to suggestions on how else to detect and set G4 if others
+have a better idea. It looks like MTK and QCOM drivers both use a version
+field, hence the proposal above.
+
+fyi I'm out of office until Monday 12th April, so I will deal with any
+review feedback upon my return :-)
+
+For anyone wishing to try out the upstream kernel on their Pixel 6 device
+you can find the README on how to build / flash the kernel here
+https://git.codelinaro.org/linaro/googlelt/pixelscripts
+
+kind regards,
+
+Peter
+
+Peter Griffin (17):
+  dt-bindings: clock: google,gs101-clock:  add HSI2 clock management
+    unit
+  dt-bindings: soc: google: exynos-sysreg: add dedicated hsi2 sysreg
+    compatible
+  dt-bindings: ufs: exynos-ufs: Add gs101 compatible
+  dt-bindings: phy: samsung,ufs-phy: Add dedicated gs101-ufs-phy
+    compatible
+  arm64: dts: exynos: gs101: enable cmu-hsi2 clock controller
+  arm64: dts: exynos: gs101: Add the hsi2 sysreg node
+  arm64: dts: exynos: gs101: Add ufs, ufs-phy and ufs regulator dt nodes
+  clk: samsung: gs101: add support for cmu_hsi2
+  phy: samsung-ufs: use exynos_get_pmu_regmap_by_phandle() to obtain PMU
+    regmap
+  phy: samsung-ufs: ufs: Add SoC callbacks for calibration and clk data
+    recovery
+  phy: samsung-ufs: ufs: Add support for gs101 UFS phy tuning
+  scsi: ufs: host: ufs-exynos: Add EXYNOS_UFS_OPT_UFSPR_SECURE option
+  scsi: ufs: host: ufs-exynos: add EXYNOS_UFS_OPT_TIMER_TICK_SELECT
+    option
+  scsi: ufs: host: ufs-exynos: allow max frequencies up to 267Mhz
+  scsi: ufs: host: ufs-exynos: add some pa_dbg_ register offsets into
+    drvdata
+  scsi: ufs: host: ufs-exynos: Add support for Tensor gs101 SoC
+  MAINTAINERS: Add phy-gs101-ufs file to Tensor GS101.
+
+ .../bindings/clock/google,gs101-clock.yaml    |  30 +-
+ .../bindings/phy/samsung,ufs-phy.yaml         |   1 +
+ .../soc/samsung/samsung,exynos-sysreg.yaml    |   2 +
+ .../bindings/ufs/samsung,exynos-ufs.yaml      |  51 +-
+ MAINTAINERS                                   |   1 +
+ .../boot/dts/exynos/google/gs101-oriole.dts   |  17 +
+ arch/arm64/boot/dts/exynos/google/gs101.dtsi  |  53 ++
+ drivers/clk/samsung/clk-gs101.c               | 558 ++++++++++++++++++
+ drivers/phy/samsung/Makefile                  |   1 +
+ drivers/phy/samsung/phy-exynos7-ufs.c         |   1 +
+ drivers/phy/samsung/phy-exynosautov9-ufs.c    |   1 +
+ drivers/phy/samsung/phy-fsd-ufs.c             |   1 +
+ drivers/phy/samsung/phy-gs101-ufs.c           | 182 ++++++
+ drivers/phy/samsung/phy-samsung-ufs.c         |  21 +-
+ drivers/phy/samsung/phy-samsung-ufs.h         |   6 +
+ drivers/ufs/host/ufs-exynos.c                 | 197 ++++++-
+ drivers/ufs/host/ufs-exynos.h                 |  24 +-
+ include/dt-bindings/clock/google,gs101.h      |  63 ++
+ 18 files changed, 1179 insertions(+), 31 deletions(-)
+ create mode 100644 drivers/phy/samsung/phy-gs101-ufs.c
 
 -- 
-Kind regards,
+2.44.0.478.gd926399ef9-goog
 
-Sakari Ailus
