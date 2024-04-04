@@ -1,226 +1,146 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09559128812;
-	Thu,  4 Apr 2024 14:19:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 330CC823D0;
+	Thu,  4 Apr 2024 14:19:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712240354; cv=none; b=iDFMAB4cSqyrr56K9L5r9w+rIkT0MFiEB+aPWzzheCojpPXrW8tLH4Y4B1U2y5oumegGsp2TcFtCJg+Kbnbt6NH+7XRBjJlzDAbEOBkMUh5JKfXfxMkilJlmGFe/LpDtneOYWvnMAazMqsEW99Ng/1hwQKVmiNzU/LNi41Qlp3I=
+	t=1712240389; cv=none; b=IGA3QEFmA//ILjbktITyORDvCKayCZFYvVeiSFkUEoK2OkNZhIft2qgxRC1RIuuwzNL/59/kUDb8uiH1O3ZgbyviZigSCU5QabBNnEcsLjH3sixC+pScz3fJfAXA7OGYealvPuK5fNettBu+JMCJBCNmZhHOlioYVrITVUP/9jc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712240354; c=relaxed/simple;
-	bh=XJjDieTO1w0pl8GzPETpUUaCgNf0AYfLaFI+Dk9srHI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sv7LYczBiTgLs4P1PTQjqfLd9NUmXwUhDYECyF2bIyveU0sN6b27gE4zi4OdkjIvdu9bhMk8IwuZmGN6ZRIjyg8hqXVL4EyKvODYxvPirYdTl/VPZidxRuiyHWNXXsmxthsn56Q/0vIGc7JmtfgNlIFX6S7tWUUG6kaSfPMtpvk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=jD3gmdwb; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=vEKXyExf; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=jD3gmdwb; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=vEKXyExf; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	s=arc-20240116; t=1712240389; c=relaxed/simple;
+	bh=7n10ky3Ncdz6Lw03XqsMc0gUi5tPtH8zOClFhAgRNDA=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=SBMzwEg8DuKh7X6yXg6p8+HW0yNKJe+A/htkJOM5/R/XjJ2POdnvcjT9iZjojh1kf8D/DjhSM375dTaBIwOgLA8phK3IyNUmawjA1CjVgGkdf6DJR8DI7rMvSUowborOE5ckUS7AuJicTWDfe+TOjD0b1arm5cnRdSUIdQVxaxk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=Xk+S9dw+; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="jD3gmdwb";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="vEKXyExf";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="jD3gmdwb";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="vEKXyExf"
-Received: from imap2.dmz-prg2.suse.org (imap2.dmz-prg2.suse.org [10.150.64.98])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 3CE9D5F7B5;
-	Thu,  4 Apr 2024 14:19:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1712240351; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=/03H7hOh0GUJswqYaiMm+uzdwS+6pYD4p/9O8jdbNko=;
-	b=jD3gmdwbELggl6VJ3Z4wYnTUJ3G+Ff2eQhKteJoX23MDfui/8MotZAtZ1fDKkIL+Xc10tv
-	+T7Yv5/SglzV7hRUq3plTOdFIMecyHGcC3b1fprhch21IZbm/sb9D23anFKorPoEVAZbWy
-	SOZxxELUpPopWkQKzP/b+lM+XgHV6ds=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1712240351;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=/03H7hOh0GUJswqYaiMm+uzdwS+6pYD4p/9O8jdbNko=;
-	b=vEKXyExf1n7SDazEjF5HjLvFcu+7UMzf/LnCLO+pCnauN8mYuGRunTrS9t7w1SR0rFel2G
-	D100ouR1vjwjShAQ==
-Authentication-Results: smtp-out2.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1712240351; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=/03H7hOh0GUJswqYaiMm+uzdwS+6pYD4p/9O8jdbNko=;
-	b=jD3gmdwbELggl6VJ3Z4wYnTUJ3G+Ff2eQhKteJoX23MDfui/8MotZAtZ1fDKkIL+Xc10tv
-	+T7Yv5/SglzV7hRUq3plTOdFIMecyHGcC3b1fprhch21IZbm/sb9D23anFKorPoEVAZbWy
-	SOZxxELUpPopWkQKzP/b+lM+XgHV6ds=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1712240351;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=/03H7hOh0GUJswqYaiMm+uzdwS+6pYD4p/9O8jdbNko=;
-	b=vEKXyExf1n7SDazEjF5HjLvFcu+7UMzf/LnCLO+pCnauN8mYuGRunTrS9t7w1SR0rFel2G
-	D100ouR1vjwjShAQ==
-Received: from imap2.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap2.dmz-prg2.suse.org (Postfix) with ESMTPS id 336E513298;
-	Thu,  4 Apr 2024 14:19:11 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap2.dmz-prg2.suse.org with ESMTPSA
-	id k2CKDN+2DmYLBgAAn2gu4w
-	(envelope-from <jack@suse.cz>); Thu, 04 Apr 2024 14:19:11 +0000
-Received: by quack3.suse.cz (Postfix, from userid 1000)
-	id DC60EA0816; Thu,  4 Apr 2024 16:19:02 +0200 (CEST)
-Date: Thu, 4 Apr 2024 16:19:02 +0200
-From: Jan Kara <jack@suse.cz>
-To: Kemeng Shi <shikemeng@huaweicloud.com>
-Cc: tytso@mit.edu, adilger.kernel@dilger.ca, linux-ext4@vger.kernel.org,
-	linux-kernel@vger.kernel.org, jack@suse.cz, ojaswin@linux.ibm.com,
-	ritesh.list@gmail.com
-Subject: Re: [PATCH 4/5] ext4: use correct criteria name instead stale
- integer number in comment
-Message-ID: <20240404141902.t5ut465q7vxusoa6@quack3>
-References: <20240326213823.528302-1-shikemeng@huaweicloud.com>
- <20240326213823.528302-5-shikemeng@huaweicloud.com>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="Xk+S9dw+"
+Received: from pps.filterd (m0353728.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 434EHB1j015894;
+	Thu, 4 Apr 2024 14:19:36 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : in-reply-to : references : mime-version :
+ content-transfer-encoding; s=pp1;
+ bh=RaKwIs0VmiY7LXrvkCeRa3Sg2tsbMlNxX8BZdybEUJU=;
+ b=Xk+S9dw+etWO2vu9S/obXQIGRw+mhbYjEqwyormYkGH7kFMJw1bPmXI9S2eGNLlEfXEL
+ 0q7vot4fe8S/HjjO/fo5q5+SKsTuesN5xnH4ND3cC/uB0DUUxG6kEZc3BCBkR9X6IwbF
+ 315lN2PdlQyxv9WIHsIwHxuFU7ZAx/DZkzrybWp5pRlgD3DDALodUFJgz3gv0+XkuSbX
+ PBZUj4Og9ZV9+BuM5erd2J4ih4wEzpkN6RKIbD0n8jUfW/KtmWdAQE2xtCtgGugUbG8R
+ 0l2I1BIDQi8Q6ir4c0OWKc2TVC8sV+XLIgeKeCqths8NMbr9daP6/1Mcm4C1KuYfjEmQ fQ== 
+Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3x9wu1g04m-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 04 Apr 2024 14:19:35 +0000
+Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma12.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 434Dcuuo007713;
+	Thu, 4 Apr 2024 14:19:34 GMT
+Received: from smtprelay05.wdc07v.mail.ibm.com ([172.16.1.72])
+	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 3x9epwmjef-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 04 Apr 2024 14:19:34 +0000
+Received: from smtpav06.wdc07v.mail.ibm.com (smtpav06.wdc07v.mail.ibm.com [10.39.53.233])
+	by smtprelay05.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 434EJVRN28770824
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 4 Apr 2024 14:19:34 GMT
+Received: from smtpav06.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id E3DB858062;
+	Thu,  4 Apr 2024 14:19:31 +0000 (GMT)
+Received: from smtpav06.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 107CA58056;
+	Thu,  4 Apr 2024 14:19:31 +0000 (GMT)
+Received: from sbct-3.pok.ibm.com (unknown [9.47.158.153])
+	by smtpav06.wdc07v.mail.ibm.com (Postfix) with ESMTP;
+	Thu,  4 Apr 2024 14:19:30 +0000 (GMT)
+From: Stefan Berger <stefanb@linux.ibm.com>
+To: keyrings@vger.kernel.org, linux-crypto@vger.kernel.org,
+        herbert@gondor.apana.org.au, davem@davemloft.net
+Cc: linux-kernel@vger.kernel.org, saulo.alessandre@tse.jus.br, lukas@wunner.de,
+        bbhushan2@marvell.com, jarkko@kernel.org,
+        Stefan Berger <stefanb@linux.ibm.com>
+Subject: [PATCH v8 01/13] crypto: ecc - Use ECC_CURVE_NIST_P192/256/384_DIGITS where possible
+Date: Thu,  4 Apr 2024 10:18:44 -0400
+Message-ID: <20240404141856.2399142-2-stefanb@linux.ibm.com>
+X-Mailer: git-send-email 2.44.0
+In-Reply-To: <20240404141856.2399142-1-stefanb@linux.ibm.com>
+References: <20240404141856.2399142-1-stefanb@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240326213823.528302-5-shikemeng@huaweicloud.com>
-X-Spam-Level: 
-X-Spamd-Result: default: False [-2.30 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	SUSPICIOUS_RECIPS(1.50)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	MID_RHS_NOT_FQDN(0.50)[];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	TAGGED_RCPT(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ARC_NA(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[8];
-	MIME_TRACE(0.00)[0:+];
-	RCVD_COUNT_THREE(0.00)[3];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	FROM_HAS_DN(0.00)[];
-	FREEMAIL_CC(0.00)[mit.edu,dilger.ca,vger.kernel.org,suse.cz,linux.ibm.com,gmail.com];
-	TO_DN_SOME(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	RCVD_TLS_LAST(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap2.dmz-prg2.suse.org:helo,imap2.dmz-prg2.suse.org:rdns,suse.com:email]
-X-Spam-Score: -2.30
-X-Spam-Flag: NO
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: a8oYxE7yFiZSQH7FlexhcJqp5SRSRGYH
+X-Proofpoint-GUID: a8oYxE7yFiZSQH7FlexhcJqp5SRSRGYH
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-04-04_10,2024-04-04_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 mlxscore=0
+ clxscore=1015 mlxlogscore=999 adultscore=0 spamscore=0 suspectscore=0
+ impostorscore=0 bulkscore=0 priorityscore=1501 lowpriorityscore=0
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2404010000 definitions=main-2404040098
 
-On Wed 27-03-24 05:38:22, Kemeng Shi wrote:
-> Use correct criteria name instead stale integer number in comment
-> 
-> Signed-off-by: Kemeng Shi <shikemeng@huaweicloud.com>
+Replace hard-coded numbers with ECC_CURVE_NIST_P192/256/384_DIGITS where
+possible.
 
-Looks good. But since the symbolic names already have CR prefix, we
-probably don't have to write e.g.:
+Tested-by: Lukas Wunner <lukas@wunner.de>
+Reviewed-by: Jarkko Sakkinen <jarkko@kernel.org>
+Signed-off-by: Stefan Berger <stefanb@linux.ibm.com>
+---
+ crypto/ecc.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-/* Large fragment size list lookup succeeded at least once for cr =
- * CR_POWER2_ALIGNED */
-
-But we can write directly:
-
-/* Large fragment size list lookup succeeded at least once for
- * CR_POWER2_ALIGNED */
-
-								Honza
-
-> ---
->  fs/ext4/ext4.h    | 15 ++++++++++++---
->  fs/ext4/mballoc.c | 14 ++++++++------
->  fs/ext4/mballoc.h |  4 ++--
->  3 files changed, 22 insertions(+), 11 deletions(-)
-> 
-> diff --git a/fs/ext4/ext4.h b/fs/ext4/ext4.h
-> index 023571f8dd1b..9b90013c59a3 100644
-> --- a/fs/ext4/ext4.h
-> +++ b/fs/ext4/ext4.h
-> @@ -213,11 +213,20 @@ enum criteria {
->  #define EXT4_MB_USE_RESERVED		0x2000
->  /* Do strict check for free blocks while retrying block allocation */
->  #define EXT4_MB_STRICT_CHECK		0x4000
-> -/* Large fragment size list lookup succeeded at least once for cr = 0 */
-> +/*
-> + * Large fragment size list lookup succeeded at least once for cr =
-> + * CR_POWER2_ALIGNED
-> + */
->  #define EXT4_MB_CR_POWER2_ALIGNED_OPTIMIZED		0x8000
-> -/* Avg fragment size rb tree lookup succeeded at least once for cr = 1 */
-> +/*
-> + * Avg fragment size rb tree lookup succeeded at least once for cr =
-> + * CR_GOAL_LEN_FAST
-> + */
->  #define EXT4_MB_CR_GOAL_LEN_FAST_OPTIMIZED		0x00010000
-> -/* Avg fragment size rb tree lookup succeeded at least once for cr = 1.5 */
-> +/*
-> + * Avg fragment size rb tree lookup succeeded at least once for cr =
-> + * CR_BEST_AVAIL_LEN
-> + */
->  #define EXT4_MB_CR_BEST_AVAIL_LEN_OPTIMIZED		0x00020000
->  
->  struct ext4_allocation_request {
-> diff --git a/fs/ext4/mballoc.c b/fs/ext4/mballoc.c
-> index 62d468379722..0f8a34513bf6 100644
-> --- a/fs/ext4/mballoc.c
-> +++ b/fs/ext4/mballoc.c
-> @@ -1131,8 +1131,9 @@ static void ext4_mb_choose_next_group(struct ext4_allocation_context *ac,
->  		ext4_mb_choose_next_group_best_avail(ac, new_cr, group);
->  	} else {
->  		/*
-> -		 * TODO: For CR=2, we can arrange groups in an rb tree sorted by
-> -		 * bb_free. But until that happens, we should never come here.
-> +		 * TODO: For CR=CR_GOAL_LEN_SLOW, we can arrange groups in an
-> +		 * rb tree sorted by bb_free. But until that happens, we should
-> +		 * never come here.
->  		 */
->  		WARN_ON(1);
->  	}
-> @@ -3444,10 +3445,11 @@ static int ext4_mb_init_backend(struct super_block *sb)
->  	}
->  	if (sbi->s_mb_prefetch > ext4_get_groups_count(sb))
->  		sbi->s_mb_prefetch = ext4_get_groups_count(sb);
-> -	/* now many real IOs to prefetch within a single allocation at cr=0
-> -	 * given cr=0 is an CPU-related optimization we shouldn't try to
-> -	 * load too many groups, at some point we should start to use what
-> -	 * we've got in memory.
-> +	/*
-> +	 * now many real IOs to prefetch within a single allocation at
-> +	 * cr=CR_POWER2_ALIGNED. Given cr=CR_POWER2_ALIGNED is an CPU-related
-> +	 * optimization we shouldn't try to load too many groups, at some point
-> +	 * we should start to use what we've got in memory.
->  	 * with an average random access time 5ms, it'd take a second to get
->  	 * 200 groups (* N with flex_bg), so let's make this limit 4
->  	 */
-> diff --git a/fs/ext4/mballoc.h b/fs/ext4/mballoc.h
-> index 56938532b4ce..042437d8860f 100644
-> --- a/fs/ext4/mballoc.h
-> +++ b/fs/ext4/mballoc.h
-> @@ -187,8 +187,8 @@ struct ext4_allocation_context {
->  	struct ext4_free_extent ac_f_ex;
->  
->  	/*
-> -	 * goal len can change in CR1.5, so save the original len. This is
-> -	 * used while adjusting the PA window and for accounting.
-> +	 * goal len can change in CR_BEST_AVAIL_LEN, so save the original len.
-> +	 * This is used while adjusting the PA window and for accounting.
->  	 */
->  	ext4_grpblk_t	ac_orig_goal_len;
->  
-> -- 
-> 2.30.0
-> 
+diff --git a/crypto/ecc.c b/crypto/ecc.c
+index 3581027e9f92..01aa70e97e55 100644
+--- a/crypto/ecc.c
++++ b/crypto/ecc.c
+@@ -689,7 +689,7 @@ static void vli_mmod_barrett(u64 *result, u64 *product, const u64 *mod,
+ static void vli_mmod_fast_192(u64 *result, const u64 *product,
+ 			      const u64 *curve_prime, u64 *tmp)
+ {
+-	const unsigned int ndigits = 3;
++	const unsigned int ndigits = ECC_CURVE_NIST_P192_DIGITS;
+ 	int carry;
+ 
+ 	vli_set(result, product, ndigits);
+@@ -717,7 +717,7 @@ static void vli_mmod_fast_256(u64 *result, const u64 *product,
+ 			      const u64 *curve_prime, u64 *tmp)
+ {
+ 	int carry;
+-	const unsigned int ndigits = 4;
++	const unsigned int ndigits = ECC_CURVE_NIST_P256_DIGITS;
+ 
+ 	/* t */
+ 	vli_set(result, product, ndigits);
+@@ -800,7 +800,7 @@ static void vli_mmod_fast_384(u64 *result, const u64 *product,
+ 				const u64 *curve_prime, u64 *tmp)
+ {
+ 	int carry;
+-	const unsigned int ndigits = 6;
++	const unsigned int ndigits = ECC_CURVE_NIST_P384_DIGITS;
+ 
+ 	/* t */
+ 	vli_set(result, product, ndigits);
+@@ -932,13 +932,13 @@ static bool vli_mmod_fast(u64 *result, u64 *product,
+ 	}
+ 
+ 	switch (ndigits) {
+-	case 3:
++	case ECC_CURVE_NIST_P192_DIGITS:
+ 		vli_mmod_fast_192(result, product, curve_prime, tmp);
+ 		break;
+-	case 4:
++	case ECC_CURVE_NIST_P256_DIGITS:
+ 		vli_mmod_fast_256(result, product, curve_prime, tmp);
+ 		break;
+-	case 6:
++	case ECC_CURVE_NIST_P384_DIGITS:
+ 		vli_mmod_fast_384(result, product, curve_prime, tmp);
+ 		break;
+ 	default:
 -- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+2.43.0
+
