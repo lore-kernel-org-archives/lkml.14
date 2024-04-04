@@ -1,61 +1,89 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f69.google.com (mail-io1-f69.google.com [209.85.166.69])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AF9D1304A9;
-	Thu,  4 Apr 2024 18:25:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33AB9130485
+	for <linux-kernel@vger.kernel.org>; Thu,  4 Apr 2024 18:26:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.69
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712255119; cv=none; b=LMd+wq69nqIEsAYkIKtWNS9pE3FQBAHYbht2aj/IyxqqnW48fDLB7csR6oG3enUViutKN5pPNEYSoFgmEBwEc+tVJ8rNzgV0kj5GniGukrMgj3qdNdYERUibKJ1cA+Q3Ud0blOqhWjE6BrPIkqcGXpccgiJOP/7U5tpAeREHeMY=
+	t=1712255180; cv=none; b=dcI+6vWYXCoFHA7TG9xV58v02vHW1wfdAYvmzHAYHF6IxnlGKcabyz1gsdfDety6XuZn80MVLjk0tVQQexQ8l0qrOjQBEPXEi6yC8aBgcn9P7qqlx8sUjB78TNiKE2fdxV2PZ+ei/Am3rZke6vVlJGpB7IdI+/A22WVNfc5gPOs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712255119; c=relaxed/simple;
-	bh=e/bLGRSHGTFwElW+K1iLJxL/megYxkWcxCZjL1nF0Rc=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=LQYq+6HCSYkMSgBzn4OZ7kfCLvBu5ovsBiMArLl0Bb3LTN7LGgSelMDKiWA41M3inOYl6j1LJSQ5mi8XOp5D9oxe7+01H9PqKtCSp0/tzy5bs55bVtV7fJJrkNE38IUoRegJkBBgr256CxZQQMgBv0FeFfUNiC0EKRuHPakD+5I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=eu/GxhyK; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="eu/GxhyK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CDF83C433F1;
-	Thu,  4 Apr 2024 18:25:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
-	s=korg; t=1712255119;
-	bh=e/bLGRSHGTFwElW+K1iLJxL/megYxkWcxCZjL1nF0Rc=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=eu/GxhyK6rSliu26tWMN2lD7qjjN9caVpmyl8Rs2B07arfXPlSkDzMEfbPjLbBICF
-	 2rKA7vefw5tUUdiItpyyecMVzgEPJKSTKzh8axyExo6DWo4k0Z8SGsgjk28DJHjM5V
-	 IlJgQ1XSXx2LsOuZg7VP1nYVgKkc1uZ20xaLWWvw=
-Date: Thu, 4 Apr 2024 11:25:18 -0700
-From: Andrew Morton <akpm@linux-foundation.org>
-To: Huacai Chen <chenhuacai@loongson.cn>
-Cc: Huacai Chen <chenhuacai@kernel.org>, loongarch@lists.linux.dev,
- linux-mm@kvack.org, Xuefeng Li <lixuefeng@loongson.cn>, Guo Ren
- <guoren@kernel.org>, Xuerui Wang <kernel@xen0n.name>, Jiaxun Yang
- <jiaxun.yang@flygoat.com>, linux-kernel@vger.kernel.org,
- loongson-kernel@lists.loongnix.cn
-Subject: Re: [PATCH 1/3] mm: Move lowmem_page_address() a little later
-Message-Id: <20240404112518.51204544a4e73c2639ce53b1@linux-foundation.org>
-In-Reply-To: <20240404133642.971583-2-chenhuacai@loongson.cn>
-References: <20240404133642.971583-1-chenhuacai@loongson.cn>
-	<20240404133642.971583-2-chenhuacai@loongson.cn>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1712255180; c=relaxed/simple;
+	bh=UzKx2uEzqgslDAiwUDJyVu5c/uy6CYD26vc1Ic3/26A=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=kA9OKOf2WFpPIYokltksQChM6KfWs/WfEhBmN7eLAcv+wh/p3uXN0MUhJbFQLVWfP16qqbcGKU+UbRXWQCZLpUG0y70t34Md1g7g8tb8e3AkMOV9+OIiYvKd8O2teLyfN+azR9sA1vZltHJV7R23T4MnfKhZBvEVTLlsatJp4A4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.69
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f69.google.com with SMTP id ca18e2360f4ac-7d34f49058fso116419139f.0
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Apr 2024 11:26:18 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712255178; x=1712859978;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=UzKx2uEzqgslDAiwUDJyVu5c/uy6CYD26vc1Ic3/26A=;
+        b=rN3XxX0QvzXwkv3zc47wzdU6tn0bKj67Rc4Vb3Zr0yXe/5so/35GFLisyNpZFM56xx
+         FFtMMGQFu1sy6OztZGkx8fB9tc2wTIGeWzy6Ojf6yPzCSUfjO2993oYUeRTLS2Bwfhln
+         vRXEqFFuD/+VzfA/LGHfrWDjLqiC9vgwQuuD1Ue3ikhk7J0JF7NIvaZZDA8SUjvK5MxM
+         eBLqPmecsBUg4H9yyZ6PIMrlp1E6uJ6ebJfyjeoWtk8u6lqSttVrkhLCU28X4DcW/41H
+         qoqdDxh19IAFM3cFwkFpSRjyjJmheR4uSQN9nVWk+53vQPDZIjiVoBk1BJNC1LIW1wPa
+         N7Bg==
+X-Forwarded-Encrypted: i=1; AJvYcCVqPjkKudpfmF9uERHASTgpRzH+1yWvExITdz4LxgwUyRY1fgNcrHzr24puQQpZbKjsOLfZ6McUp803hTG0qdDos+OUYSjf+pc4NE1e
+X-Gm-Message-State: AOJu0YykrQhaijgRX68Wv09umhJeGt438MEGJpkH9ksDDk+2RGlN+ZDY
+	jzbdOTlVkDYVYXoJWaT6sJRBmDp5U3QCykjtQZWrzplSv4MGgCrkDOd/yIsubHNvXEE0hcB4ZnP
+	Z7yzj33HEfYUCQEK4H8BR6lnyxP+HXJ/JGDSS1dKlaXv1sqk22rc9rS0=
+X-Google-Smtp-Source: AGHT+IFpIWIHg6mhLlxKV0QUFxwSst0730/ptvTeVTNW/UryKELPdtjXE7jGOfXhNo5XLeYMDXSWFx9yJlRLe08U2sRzZ13cTnsP
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+X-Received: by 2002:a05:6602:2b0f:b0:7cc:805d:38b2 with SMTP id
+ p15-20020a0566022b0f00b007cc805d38b2mr22900iov.0.1712255178459; Thu, 04 Apr
+ 2024 11:26:18 -0700 (PDT)
+Date: Thu, 04 Apr 2024 11:26:18 -0700
+In-Reply-To: <000000000000a62351060e363bdc@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000ad5b3b06154979cd@google.com>
+Subject: Re: [syzbot] memory leak in ___neigh_create (2)
+From: syzbot <syzbot+42cfec52b6508887bbe8@syzkaller.appspotmail.com>
+To: alexander.mikhalitsyn@virtuozzo.com, davem@davemloft.net, den@openvz.org, 
+	dsahern@kernel.org, edumazet@google.com, f.fainelli@gmail.com, 
+	kuba@kernel.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org, 
+	nogikh@google.com, pabeni@redhat.com, razor@blackwall.org, 
+	syzkaller-bugs@googlegroups.com, thomas.zeitlhofer+lkml@ze-it.at, 
+	thomas.zeitlhofer@ze-it.at, wangyuweihx@gmail.com
+Content-Type: text/plain; charset="UTF-8"
 
-On Thu,  4 Apr 2024 21:36:34 +0800 Huacai Chen <chenhuacai@loongson.cn> wrote:
+This bug is marked as fixed by commit:
+net: stop syzbot
 
-> LoongArch will override page_to_virt() which use page_address() in the
-> KFENCE case (by defining WANT_PAGE_VIRTUAL/HASHED_PAGE_VIRTUAL). So move
-> lowmem_page_address() a little later to avoid such build errors:
-> 
-> error: implicit declaration of function 'page_address'.
-> 
+But I can't find it in the tested trees[1] for more than 90 days.
+Is it a correct commit? Please update it by replying:
 
-Acked-by: Andrew Morton <akpm@linux-foundation.org>
+#syz fix: exact-commit-title
 
-Please ensure that it spends adequate time in linux-next for the
-compilation testing.
+Until then the bug is still considered open and new crashes with
+the same signature are ignored.
+
+Kernel: Linux
+Dashboard link: https://syzkaller.appspot.com/bug?extid=42cfec52b6508887bbe8
+
+---
+[1] I expect the commit to be present in:
+
+1. for-kernelci branch of
+git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git
+
+2. master branch of
+git://git.kernel.org/pub/scm/linux/kernel/git/bpf/bpf-next.git
+
+3. master branch of
+git://git.kernel.org/pub/scm/linux/kernel/git/bpf/bpf.git
+
+4. main branch of
+git://git.kernel.org/pub/scm/linux/kernel/git/davem/net-next.git
+
+The full list of 9 trees can be found at
+https://syzkaller.appspot.com/upstream/repos
