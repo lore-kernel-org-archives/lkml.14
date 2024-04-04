@@ -1,115 +1,114 @@
-Received: from mail-yb1-f174.google.com (mail-yb1-f174.google.com [209.85.219.174])
+Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com [209.85.167.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B23DC71B45
-	for <linux-kernel@vger.kernel.org>; Thu,  4 Apr 2024 08:53:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F8B773530
+	for <linux-kernel@vger.kernel.org>; Thu,  4 Apr 2024 08:55:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712220841; cv=none; b=KwS1SYcBPeOyrOFoowHhn0DcQXMu+NWfXx+D5EhFYtZ7DJyIG3iwnXUGnkjFxZghBNX4koT9mCIsLRY3F6ekkiwn6d+J9qopSOF0BgkHsP4CmIMYs3m5AFyBpK318an3eYiWE32pqNUBLmapLxWfwskamThJ8pV5R9Km04Begjs=
+	t=1712220930; cv=none; b=OyeQyVdxpxpHs/GGkHkAyUKWYRwjXQ5amaxLruZIkQBjY9vmcDpjNEcVbDTsDa0yedtIax3JyFiwF02TtdF2PCz59+vYf24QzU9ku6gXl8laE0WPYBil0+3SQawNRDc58XFDBgo32vXEo30cbJT05NF+O3YW6Ym/7qiXKXcKMKQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712220841; c=relaxed/simple;
-	bh=oN6L5F4339c8x9zBSAaPAAYbUmNj5mF92X0nhCMXYT8=;
+	s=arc-20240116; t=1712220930; c=relaxed/simple;
+	bh=SjMW750EWieLC8GssjE4d0VybyGyABsFnQu1IQJUPVw=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=YFoIFqWNFSmxkHYlEOky3CDPmZ/fHK9hw0Xy6P5hI28kpYJW/bI40FmVQpdsZXlOf8Rrpndg4HDtfEg/IeaGCrT4Wqa/vhlFNZO3MxUjXJjiiSxZ+mtQEb778kqEo9JaOr4AXp20tkJX0iKL+OI49iDA1oirxLgY9EMRMYq/Yvk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=mv5oojXJ; arc=none smtp.client-ip=209.85.219.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	 To:Cc:Content-Type; b=pm/aooHf2rHAHqKX+po3DvqM5uhkptcQcxd9KxHhy8vPK2sPIFRE7KPj/z0uQpFrf3m8ywhZwogqWEi4yv/514qWfNbu6hB9rESnZh+nC02lcVI42psflLKR+8iqsnyK94YVm75DEGbonNe2i8k9OoitiDviQzmHrj3AA3giP9s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=WXjoiXjF; arc=none smtp.client-ip=209.85.167.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mv5oojXJ"
-Received: by mail-yb1-f174.google.com with SMTP id 3f1490d57ef6-ddda842c399so812093276.3
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Apr 2024 01:53:58 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="WXjoiXjF"
+Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-516b07b4c07so1357e87.1
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Apr 2024 01:55:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1712220838; x=1712825638; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1712220927; x=1712825727; darn=vger.kernel.org;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=b0saMo4QGYVfrGZY3BfXYJ+wYYPXK1vgxsVH3LduLhE=;
-        b=mv5oojXJQs/dZqQOhmlv9SMhqb2lHABRfOuVOazj+KbLtq6vLKnVn6KWdbZIHz9vqp
-         udi60YvI2iiiD/lI4W4tUhUD4NitfrqWYRPxlDPRCVJo0SHxpBLQ1Q2Of1WfrkEDz2Lr
-         dKH+ykmhgxoYfvS53r4hipq4zP7LxCgHkVCZlRg3R6aN+LeBCgrtn2+d/MaN2s/XU7od
-         9epamVS6V6fic0lsr+gpvKRxmCNHcx63REOVqjyXxknlcFGqP/orKTG7hb5u75aq7UTO
-         0ymfs5VFMt9nhk7zlwNKfweK2SXA5fHFZBg2jPaEtABerz5P+bWK7+hgSqw/nqRhI74x
-         2ClA==
+        bh=t3+/tCR4hiyQCc/kSu8Ua48ZwM/P/iLQrVfSfzYNWog=;
+        b=WXjoiXjF2YiauGR68sxn9HKCQXTVcDAafgWJUuCe44boHfEYw3YzUtTwCyZghzEfPQ
+         2t5FWQcnUOs8EWAFBKs5ST7YgY4dwrLnRRqPuIFwyVgdStXVNf1p905/+yHpKT+Vfu1I
+         bcZXA3xDi2ZiFURYzLX2Sgh/oh0i5QxASyzeVUVwfkrkd+vEI0stfppUMh5iJK1Ko26i
+         n2as/pYnv29bEmiaAyKGP4vT448kwLnql/uGhq0AyeYjn/Yzc2WfkHeXE4AMLoxGEdpV
+         H662na+m5IuzTxqvEAKWqZe4vtuZR1SudVMIwSoMIiV4Fw6mgQEA65wCm/CVozZGAvg5
+         M2hg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712220838; x=1712825638;
+        d=1e100.net; s=20230601; t=1712220927; x=1712825727;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=b0saMo4QGYVfrGZY3BfXYJ+wYYPXK1vgxsVH3LduLhE=;
-        b=rObt00769A9+opBMCfhfBP37w9Mn4t0mUfqOJWPgqC+azarAWZn9NQqbbKfWqD7yHv
-         m9M/US0YgAnUxFNsWQftd3mFuW9STHckPtuJMudzIbwxSeH4meEgd5BftMPiSkva5L+/
-         Nf8irvOf9RWAIzFdb7Y9+F8ocMPaDpi849ewPDKqsGTJKfKxkTkYnLlvUxom7gON+Ag6
-         1Xth2HPn2V0b5kzq1iayG4Ov0EnnBUlJ3J+Pl/72ofRR6Y7Iadto7+74X23A15zY8+pq
-         l2qcBXHcU0VH4VVdho5CZODalz6GfJG86oTq1cLCvQFfDi6Ze7iOfzbQFyEiGVp33RK9
-         XJkg==
-X-Forwarded-Encrypted: i=1; AJvYcCX5Dr8dpKvROqBc3vqK05D5dyThf/elvJ8/pQeatW754izKqex3NBgzBWIAiWax/FjjIXZ7XEnlQ1wwOXBQGoKbF4SLAabnHRjL0jz+
-X-Gm-Message-State: AOJu0Ywu73duiVP4wIjtStx4/Xn96NsBhfpsUQ9SpOCgQ10JvvR46XsP
-	tDhjHkE6nEYniMh35p4N/y3w9wiXkiYrl2rdb27GjGG/s8w2iHtshOnVB8a17DBHb4ansNOvKrP
-	J6pGnzgZBh1xJ5x3de9rAIbZ1G41KiDcLwfvx7w==
-X-Google-Smtp-Source: AGHT+IH7f3/xIqdGulCRGC9S2/T1fajzZP/pOTgqSEEM7kR4WSRQcksdbB122eHZa/2SpUYAsKQ5FgKEuYfHL4yMoGw=
-X-Received: by 2002:a25:5f51:0:b0:dc6:9d35:f9aa with SMTP id
- h17-20020a255f51000000b00dc69d35f9aamr2068959ybm.19.1712220837771; Thu, 04
- Apr 2024 01:53:57 -0700 (PDT)
+        bh=t3+/tCR4hiyQCc/kSu8Ua48ZwM/P/iLQrVfSfzYNWog=;
+        b=LnDcrprRbdngPU6kxH9rdri73vGZsE4xJrKzlA31sRPtI6wIQFY37EzG/gGQhbgQAT
+         FEqU4TkYW4T1fMQ0TYTLKdTgGVbyCBu/dwh4b2LKXaMKSSH/FuLL5+3oJGniv4A8qRUc
+         gjDzIoQA/jyouANNxG7v9XQGrOX8Znnu2dYCUG/PWFnk3wkvw5WCBQlJVQWSEZjsT4Bc
+         A3Or+6DR4Oui9h7S6rNYMrA1xfdnYDPCvDY1AuHxKl+N2ofkyocP+rV9kKe2WSC7o6T3
+         nrar0JixstcxT/kqu/05N8yziR4/054QH4wQgbamwCDW1MjNZwoZvxXDgVJC7tpZuYrv
+         94Tg==
+X-Forwarded-Encrypted: i=1; AJvYcCVzM4LESibhgC8we+8zZ2gmsjYJz+urboWUCf09YmT+sxq2Mjk9Nz63nVsBgRLz8x246octrSyJsc1v7UkZhMRGQnbHDXvHD6ASPUAN
+X-Gm-Message-State: AOJu0Yy26HnsaycndpY+99umxuv2TBKBs/+AV9F2CBVTn+ukpt5cuBu7
+	/+UGZHsmnk8BKJ2jg6Aug5i5nOqPsijpG5Ljk2w5UQ4JuNlcFobWCm7/3GzfWvZdsiElBdBTkFV
+	CxgXIw401v5dfRXI4XIsvHFZIwc9RLn5lhQHS
+X-Google-Smtp-Source: AGHT+IHJuCYcyRMZpQyAeKjDxXlQBfy8VLfzxYkxcBYpE2K0tzGDw3ORQEU59JjeJQMIq/kex/86/JdyqlrA8FkmdAE=
+X-Received: by 2002:a19:4342:0:b0:515:b9de:e444 with SMTP id
+ m2-20020a194342000000b00515b9dee444mr25478lfj.6.1712220927041; Thu, 04 Apr
+ 2024 01:55:27 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240404084631.417779-1-quic_mohs@quicinc.com> <20240404084631.417779-2-quic_mohs@quicinc.com>
-In-Reply-To: <20240404084631.417779-2-quic_mohs@quicinc.com>
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Date: Thu, 4 Apr 2024 11:53:46 +0300
-Message-ID: <CAA8EJpqWaYhzPKgTREtJnfdNZ4oSFZaRFM7Jhg+qd3AqadGOkA@mail.gmail.com>
-Subject: Re: [PATCH v2 1/2] ASoC: dt-bindings: qcom,sm8250: Add QCM6490 snd
- QCS6490 sound card
-To: Mohammad Rafi Shaik <quic_mohs@quicinc.com>
-Cc: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Banajit Goswami <bgoswami@quicinc.com>, 
-	Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, linux-arm-msm@vger.kernel.org, 
-	alsa-devel@alsa-project.org, linux-sound@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	quic_rohkumar@quicinc.com
+References: <20230316123028.2890338-1-elver@google.com> <CANDhNCqBGnAr_MSBhQxWo+-8YnPPggxoVL32zVrDB+NcoKXVPQ@mail.gmail.com>
+ <87frw3dd7d.ffs@tglx> <CANDhNCqbJHTNcnBj=twHQqtLjXiGNeGJ8tsbPrhGFq4Qz53c5w@mail.gmail.com>
+ <874jcid3f6.ffs@tglx> <20240403150343.GC31764@redhat.com> <87sf02bgez.ffs@tglx>
+In-Reply-To: <87sf02bgez.ffs@tglx>
+From: Dmitry Vyukov <dvyukov@google.com>
+Date: Thu, 4 Apr 2024 10:55:13 +0200
+Message-ID: <CACT4Y+a-kdkAjmACJuDzrhmUPmv9uMpYOg6LLVviMQn=+9JRgA@mail.gmail.com>
+Subject: Re: [PATCH v6 1/2] posix-timers: Prefer delivery of signals to the
+ current thread
+To: Thomas Gleixner <tglx@linutronix.de>
+Cc: Oleg Nesterov <oleg@redhat.com>, John Stultz <jstultz@google.com>, Marco Elver <elver@google.com>, 
+	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, 
+	"Eric W. Biederman" <ebiederm@xmission.com>, linux-kernel@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org, kasan-dev@googlegroups.com, 
+	Edward Liaw <edliaw@google.com>, Carlos Llamas <cmllamas@google.com>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Content-Type: text/plain; charset="UTF-8"
 
-On Thu, 4 Apr 2024 at 11:48, Mohammad Rafi Shaik <quic_mohs@quicinc.com> wrote:
+On Wed, 3 Apr 2024 at 17:43, Thomas Gleixner <tglx@linutronix.de> wrote:
 >
-> Document the bindings for the Qualcomm QCM6490 IDP and QCS6490 RB3Gen2
-> soc platforms sound card.
+> On Wed, Apr 03 2024 at 17:03, Oleg Nesterov wrote:
+> > On 04/03, Thomas Gleixner wrote:
+> >> The test if fragile as hell as there is absolutely no guarantee that the
+> >> signal target distribution is as expected. The expectation is based on a
+> >> statistical assumption which does not really hold.
+> >
+> > Agreed. I too never liked this test-case.
+> >
+> > I forgot everything about this patch and test-case, I can't really read
+> > your patch right now (sorry), so I am sure I missed something, but
+> >
+> >>  static void *distribution_thread(void *arg)
+> >>  {
+> >> -    while (__atomic_load_n(&remain, __ATOMIC_RELAXED));
+> >> -    return NULL;
+> >> +    while (__atomic_load_n(&remain, __ATOMIC_RELAXED) && !done) {
+> >> +            if (got_signal)
+> >> +                    usleep(10);
+> >> +    }
+> >> +
+> >> +    return (void *)got_signal;
+> >>  }
+> >
+> > Why distribution_thread() can't simply exit if got_signal != 0 ?
+> >
+> > See https://lore.kernel.org/all/20230128195641.GA14906@redhat.com/
 >
-> The bindings are the same as for other newer Qualcomm ADSP sound cards,
-> thus keep them in existing qcom,sm8250.yaml file, even though Linux driver
-> is separate.
->
-> Signed-off-by: Mohammad Rafi Shaik <quic_mohs@quicinc.com>
-> ---
->  Documentation/devicetree/bindings/sound/qcom,sm8250.yaml | 2 ++
->  1 file changed, 2 insertions(+)
->
-> diff --git a/Documentation/devicetree/bindings/sound/qcom,sm8250.yaml b/Documentation/devicetree/bindings/sound/qcom,sm8250.yaml
-> index 2ab6871e89e5..ff1a27f26bc2 100644
-> --- a/Documentation/devicetree/bindings/sound/qcom,sm8250.yaml
-> +++ b/Documentation/devicetree/bindings/sound/qcom,sm8250.yaml
-> @@ -29,6 +29,8 @@ properties:
->        - enum:
->            - qcom,apq8016-sbc-sndcard
->            - qcom,msm8916-qdsp6-sndcard
-> +          - qcom,qcm6490-sndcard
-> +          - qcom,qcs6490-rb3gen2-sndcard
+> Indeed. It's too obvious :)
 
-My 2c: you are adding one soundcard for the SoC family (qcm6490) and
-another one for the particular board kind (qcs6490-rb3gen2). That
-doesn't seem logical.
+This test models the intended use-case that was the motivation for the change:
+We want to sample execution of a running multi-threaded program, it
+has multiple active threads (that don't exit), since all threads are
+running and consuming CPU, they all should get a signal eventually.
 
->            - qcom,qrb5165-rb5-sndcard
->            - qcom,sc7180-qdsp6-sndcard
->            - qcom,sc8280xp-sndcard
-> --
-> 2.25.1
->
->
-
-
--- 
-With best wishes
-Dmitry
+If threads will exit once they get a signal, then the test will pass
+even if signal delivery is biased towards a single running thread all
+the time (the previous kernel impl).
