@@ -1,95 +1,129 @@
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7746886630;
-	Thu,  4 Apr 2024 11:49:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9843B8286B;
+	Thu,  4 Apr 2024 11:49:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712231376; cv=none; b=AwndxSXxvBtdnkErtJhsOf9rQXCxzbTEgDhPtaZ6c8tS574q9FoeK06jxSp1JNKOcBEouATHbD4KU3q0G1/+zdCOcCxswGRlQmTzDff+Jvdi4PAYZjlaDJmj6qzAEBSHQmSGyvEmDwANozyvYtS7qj1vLrQBrOWCBFMgm7Ivgyo=
+	t=1712231392; cv=none; b=gAP5/rvzDj5AA9srmplkrKpS2niN/TZLbmUzckufIYrA7w+NDo+zLQQiB2E8gVjNd0lY1h2F7nBx3F6pzu7RZ9ry/otLco6swSWX12MpE5nwltbYpQLbTgUeaqWk9b4C6aRSP8YA/42RiaXrvf6Lu/8yh9gm8CoMOKL9E1f/umk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712231376; c=relaxed/simple;
-	bh=yVE6soaiuubo6FwqB1b2RlNAfh1E2hAC+6bdTlmFD4M=;
-	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=VQJIg14KU2FhiWSEB1f+KNUO1d+NGxSUoXOC7CUog1e+o+TLUTaOtan8PCLzunmxDsUy73H7U9t9eLaGtYYjHUb/9+xq96KmsOs35MZB6wl6ZBn8I/aUBJBIbHf59hRVpzNwylOXDVU9mcYJs4EC1cgo3QcAKvNs5LEpwFPGApY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=k5Cz74tf; arc=none smtp.client-ip=46.235.227.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="k5Cz74tf"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1712231372;
-	bh=yVE6soaiuubo6FwqB1b2RlNAfh1E2hAC+6bdTlmFD4M=;
-	h=Date:Cc:Subject:To:References:From:In-Reply-To:From;
-	b=k5Cz74tf/dgUW5zQbrAB9mloDLLTkX/YloFmSi3LzjRaGVDtLkU09bVD1zoiEe6S7
-	 iaYDqdtTdLz/8X/f6tzHGmoeAvS4StZKStAO4hUMmma3H9RtjLpF+478YGwrVRyWnz
-	 6vCNusGyDzyMFN4hd4Ri+S+++zKwfD/eELz6ufegR5lr7ggJVT4DAXNbBUcxrbXZ1a
-	 ybk+45n7nyg/siyvKSEworlOpRY2BPgTDHoNbnF0EX27MD6YdsguOYCViU5zFYlSdT
-	 mt0lUp+ZVy6TkBsDSD0pF2KGn16AHlpn2XbBs4MPehq/4seuowKHR3DilJ6rjGGb3s
-	 EQqY5UWoy6BVA==
-Received: from [10.193.1.1] (broslavsky.collaboradmins.com [68.183.210.73])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: usama.anjum)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 90AFE378200D;
-	Thu,  4 Apr 2024 11:49:27 +0000 (UTC)
-Message-ID: <1dd3cead-6251-425f-b050-582892da0800@collabora.com>
-Date: Thu, 4 Apr 2024 16:49:59 +0500
+	s=arc-20240116; t=1712231392; c=relaxed/simple;
+	bh=rWbrqNP2jyNIuW4GC9x5L1VtJAk70ZYdmbHoBKNEOUo=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=qJjR1tn3kLTiCXpJ2lXmBhbszfDGvMGajE3Q47GrC+aaUMEWZvWer4UiBtXXiFrJlQwOLcVx8D5kpJ69D0Aqy7z/oycGZpJKQ54sueTmZmxS/aOw7pISBWm6h6jWKzyZNvtUgJap286yOTf4F5hK6rGpbh32bocxRckDWQ+47ls=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.218.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-a450bedffdfso119451166b.3;
+        Thu, 04 Apr 2024 04:49:50 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712231389; x=1712836189;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=mM0VRkY4R/s+2RZMIGBjXivRb+LhyFR0UNjBp7WG/2w=;
+        b=KOQTvE+ndRr4+2qUIpAQeB4QGHK5iS3nsuQQVnWQOnVLYgw+/1EottMxa/aAWv9lW9
+         Dwk91soPBJ/tBwN342jpxAoOWFPtXgzhTW5QaSTFbdlhC2/uE0dIQ7dgDjZ7LaJAPjih
+         NxjA7WYSNko6LjBuEm2TfJ8QgK7znhcps+2u6+ouDphH3GpWPS6504KJXDaNVYVB+BoS
+         vDW4p69EMY4+6q6a12JHNxK68wark7PM2WNbB6MBoJXZenIen/tjHSuVO3Fit3EMOPK/
+         fNIrBCkTvE9+n8n6pTrv7gb3ZfI+bb+pE+69YZfo4XX1US2vq3KPkM3BpSRvc5Y46jug
+         GOUg==
+X-Forwarded-Encrypted: i=1; AJvYcCXwaKVOJno07lPaA/VMC6e0VZ/0wejsPLGrp42R8Vk1niDCJjCkBBpzar3h5L1HdtBBjWRdwiijjrsDbHIc0MmB6zBXmODiskMzmi2h/5aXCvzGVguB6Z9Wm/GgvvurlsL/zP+XN2cg9EOkoFf2fUn9Mk+2+AvP+P9G
+X-Gm-Message-State: AOJu0YzWJ8v5lj8sXhM0aWbxyb2An/omlQjRp5VyzdAvrJxp240nE/M/
+	xPxS+R8SS08nA6AaH5BLczLY82j8LZ1/nhTANAuXJECDkhgG8B8j
+X-Google-Smtp-Source: AGHT+IFDNnBaWKjKBUScMyD1XxsRGzjVdkpYifMEFEBvLKEwHf4ElIsvpdnvFDl4eaA7HXmhAU+ciQ==
+X-Received: by 2002:a17:907:9807:b0:a4e:539d:2183 with SMTP id ji7-20020a170907980700b00a4e539d2183mr1768927ejc.73.1712231388672;
+        Thu, 04 Apr 2024 04:49:48 -0700 (PDT)
+Received: from localhost (fwdproxy-lla-118.fbsv.net. [2a03:2880:30ff:76::face:b00c])
+        by smtp.gmail.com with ESMTPSA id xj7-20020a170906db0700b00a4e379ac57fsm7640946ejb.30.2024.04.04.04.49.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 04 Apr 2024 04:49:48 -0700 (PDT)
+From: Breno Leitao <leitao@debian.org>
+To: aleksander.lobakin@intel.com,
+	kuba@kernel.org,
+	davem@davemloft.net,
+	pabeni@redhat.com,
+	edumazet@google.com,
+	elder@kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-mediatek@lists.infradead.org,
+	nbd@nbd.name,
+	sean.wang@mediatek.com,
+	Mark-MC.Lee@mediatek.com,
+	lorenzo@kernel.org,
+	taras.chornyi@plvision.eu,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Cc: quic_jjohnson@quicinc.com,
+	kvalo@kernel.org,
+	leon@kernel.org,
+	dennis.dalessandro@cornelisnetworks.com,
+	linux-kernel@vger.kernel.org,
+	netdev@vger.kernel.org,
+	bpf@vger.kernel.org
+Subject: [PATCH net-next v3 0/5] allocate dummy device dynamically
+Date: Thu,  4 Apr 2024 04:48:40 -0700
+Message-ID: <20240404114854.2498663-1-leitao@debian.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Cc: Muhammad Usama Anjum <usama.anjum@collabora.com>, kernel@collabora.com,
- kernel-janitors@vger.kernel.org, linux-wireless@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-mediatek@lists.infradead.org
-Subject: Re: [PATCH] wifi: mt76: connac: check for null before dereferencing
-To: Felix Fietkau <nbd@nbd.name>, Lorenzo Bianconi <lorenzo@kernel.org>,
- Ryder Lee <ryder.lee@mediatek.com>, Shayne Chen <shayne.chen@mediatek.com>,
- Sean Wang <sean.wang@mediatek.com>, Kalle Valo <kvalo@kernel.org>,
- Matthias Brugger <matthias.bgg@gmail.com>,
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-References: <20240301144406.2808307-1-usama.anjum@collabora.com>
- <ab6b08c5-86a2-47e3-8683-28cdbe5be7cf@collabora.com>
-Content-Language: en-US
-From: Muhammad Usama Anjum <usama.anjum@collabora.com>
-In-Reply-To: <ab6b08c5-86a2-47e3-8683-28cdbe5be7cf@collabora.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-Soft reminder
+struct net_device shouldn't be embedded into any structure, instead,
+the owner should use the private space to embed their state into
+net_device.
 
-On 3/11/24 10:11 PM, Muhammad Usama Anjum wrote:
-> Soft reminder
-> 
-> On 3/1/24 7:44 PM, Muhammad Usama Anjum wrote:
->> The wcid can be NULL. It should be checked for validity before
->> dereferencing it to avoid crash.
->>
->> Fixes: 098428c400ff ("wifi: mt76: connac: set correct muar_idx for mt799x chipsets")
->> Signed-off-by: Muhammad Usama Anjum <usama.anjum@collabora.com>
->> ---
->>  drivers/net/wireless/mediatek/mt76/mt76_connac_mcu.c | 2 +-
->>  1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/drivers/net/wireless/mediatek/mt76/mt76_connac_mcu.c b/drivers/net/wireless/mediatek/mt76/mt76_connac_mcu.c
->> index af0c2b2aacb00..7af60eebe517a 100644
->> --- a/drivers/net/wireless/mediatek/mt76/mt76_connac_mcu.c
->> +++ b/drivers/net/wireless/mediatek/mt76/mt76_connac_mcu.c
->> @@ -283,7 +283,7 @@ __mt76_connac_mcu_alloc_sta_req(struct mt76_dev *dev, struct mt76_vif *mvif,
->>  	};
->>  	struct sk_buff *skb;
->>  
->> -	if (is_mt799x(dev) && !wcid->sta)
->> +	if (is_mt799x(dev) && wcid && !wcid->sta)
->>  		hdr.muar_idx = 0xe;
->>  
->>  	mt76_connac_mcu_get_wlan_idx(dev, wcid, &hdr.wlan_idx_lo,
-> 
+But, in some cases the net_device is embedded inside the private
+structure, which blocks the usage of zero-length arrays inside
+net_device.
+
+Create a helper to allocate a dummy device at dynamically runtime, and
+move the Ethernet devices to use it, instead of embedding the dummy
+device inside the private structure.
+
+This fixes all the network cases except for wireless drivers.
+
+PS: Due to lack of hardware, unfortunately all these patches are
+compiled tested only.
+
+---
+Changelog:
+
+v1:
+	* https://lore.kernel.org/all/20240327200809.512867-1-leitao@debian.org/
+
+v2:
+	* Patch 1: Use a pre-defined name ("dummy#") for the dummy
+	  net_devices.
+	* Patch 2-5: Added users for the new helper.
+v3:
+	* Use free_netdev() instead of kfree() as suggested by Jakub.
+	* Change the free_netdev() place in ipa driver, as suggested by
+	  Alex Elder.
+	* Set err in the error path in the Marvell driver, as suggested
+	  by Simon Horman.
+
+Breno Leitao (5):
+  net: create a dummy net_device allocator
+  net: marvell: prestera: allocate dummy net_device dynamically
+  net: mediatek: mtk_eth_sock: allocate dummy net_device dynamically
+  net: ipa: allocate dummy net_device dynamically
+  net: ibm/emac: allocate dummy net_device dynamically
+
+ drivers/net/ethernet/ibm/emac/mal.c           | 13 +++--
+ drivers/net/ethernet/ibm/emac/mal.h           |  2 +-
+ .../ethernet/marvell/prestera/prestera_rxtx.c | 15 ++++--
+ drivers/net/ethernet/mediatek/mtk_eth_soc.c   | 17 ++++--
+ drivers/net/ethernet/mediatek/mtk_eth_soc.h   |  2 +-
+ drivers/net/ipa/gsi.c                         | 12 +++--
+ drivers/net/ipa/gsi.h                         |  2 +-
+ include/linux/netdevice.h                     |  3 ++
+ net/core/dev.c                                | 54 ++++++++++++-------
+ 9 files changed, 85 insertions(+), 35 deletions(-)
 
 -- 
-BR,
-Muhammad Usama Anjum
+2.43.0
+
