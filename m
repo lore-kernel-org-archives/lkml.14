@@ -1,124 +1,125 @@
-Received: from mail-4322.protonmail.ch (mail-4322.protonmail.ch [185.70.43.22])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E2281B7F4;
-	Thu,  4 Apr 2024 09:01:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.43.22
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D671B3399A;
+	Thu,  4 Apr 2024 09:03:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712221299; cv=none; b=kEyNyC1aTrHZnrjUt+j3gsqLEv4w59zv9uUFvA0LciTQg4/FDlh6HBr5MNgjeELDKeSfn5uPUETtDHKUb6jXYZ0B5uwhh4ebJ3PGV7OxmbBWhixp0fzZUcjJRkWPMAivVnoEk1txFFxJnembVc8L9CYF+vgjYxlJ/nmsI4Pg+vA=
+	t=1712221423; cv=none; b=ivBbXuXgV3bg6PwvNKusKA5a4DcdjCFR2wYJvldSt/x0BUYORU0pCoVHSL3l78/v6Ckt7BdXPHkiXVXXVfoI42WqT7UIFpqSeMaA0eOZh3Pjpz6w1hUGXqPMtFD/eUO3OYRgrSsDB93kGpRbIBJUptJ7YappNMEumWB+lBbQkLA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712221299; c=relaxed/simple;
-	bh=Z/+X+5Tr3shbeJv5Dt06oyq1ofubRAN9gc2I5U/VGZU=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=jxngPP2taxHYMKoJJSKKFVLMRzOtn5CK+/H2y6OasLNnzzcj53pUzR4gNIlv6/xvwajyOkynVwO7LlPzCJyfTF3M5wPB88on4rrgdFU0Ap4bIERBT/6SAXJ+THwZ6uI1anLc1bItIk/KKkPWur8KSZSbpKckMattc6O5K1EKEsQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me; spf=pass smtp.mailfrom=proton.me; dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b=n3IppDF2; arc=none smtp.client-ip=185.70.43.22
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
+	s=arc-20240116; t=1712221423; c=relaxed/simple;
+	bh=GPdoxmH0kXWK71xhmTauGg+kJZju/VsSstqqnKrPh3c=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=uCNYhpyG4RMZhiepX8LGHhVWFtqePbtvFnkP9jck5sqRwXxfnvZoHxWzpf7lLPPjpyQWkWbOtNcmqgSRB2Sd9SLog87r+ewP+yUOAcUz3Km2O36X64fbMaYCQrD0Qui2ND2MjPMTbxfMJhMBlw09hOWlW2MQMY8ge3j73Rxb+oA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SjAMY7vk; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b="n3IppDF2"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
-	s=protonmail; t=1712221296; x=1712480496;
-	bh=IsWHRkAXzz0UFSHl8jcWKwFQLylEunjH34ao/KOO2o4=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
-	 Message-ID:BIMI-Selector;
-	b=n3IppDF26eBYlHo3/SjMpauyZtRy38wc3c/ljWVqqL5zgkDHpFYElSp7LPeB3T0K7
-	 Awby4gLHSFodM8e3Z6XP7WHuMtVuW6XZNM1KLaVkfESbvu1JKK8YN4WPhcEaaJbv63
-	 Avf6LdO4GGGX/wZVBV+aKslc1YrRJkrOj/+ulqpYl8dAkMCqO2wbTUKx3xZqQzClFB
-	 49e0DuVVcrDmxVVLTwixKU9Ete9f9l68ooAvLD7G5yq7Ddx/e9ucpybIBG56qSkaUi
-	 vToTqyhD/N+CLkJJRsOGwkT9tTcpMRn4KdW9dZfqnUDj69favdBsn9bPITmcOOZ1eX
-	 BT7QflqDLPBhA==
-Date: Thu, 04 Apr 2024 09:01:26 +0000
-To: Laine Taffin Altman <alexanderaltman@me.com>, Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, rust-for-linux@vger.kernel.org, Wedson Almeida Filho <wedsonaf@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, Andreas Hindborg <a.hindborg@samsung.com>, Alice Ryhl <aliceryhl@google.com>, Martin Rodriguez Reboredo <yakoyoku@gmail.com>, lkml <linux-kernel@vger.kernel.org>
-From: Benno Lossin <benno.lossin@proton.me>
-Cc: stable@vger.kernel.org
-Subject: Re: [PATCH v4] rust: init: remove impl Zeroable for Infallible
-Message-ID: <d3423fb5-c117-4bd1-9f86-db35590a0562@proton.me>
-In-Reply-To: <CA160A4E-561E-4918-837E-3DCEBA74F808@me.com>
-References: <CA160A4E-561E-4918-837E-3DCEBA74F808@me.com>
-Feedback-ID: 71780778:user:proton
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SjAMY7vk"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5EECFC43399;
+	Thu,  4 Apr 2024 09:03:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1712221423;
+	bh=GPdoxmH0kXWK71xhmTauGg+kJZju/VsSstqqnKrPh3c=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=SjAMY7vkFSjcACcmRHPyeHG7m3JBPkKHMaJIxOCUziSR0/nlvbwaG1JPnsWozAQlk
+	 2KBUHqOOuMyyzX0hdCEGCQHx0ysztyCYFuxq0zo8jdTh5Fl3Ia0CEmO7nkLjLq/UQf
+	 hKjbrZJFMgV5w2E7ENhMNXj4KDdsCNn4mymGidmO7/R4cHxmYv338i/1VEgpb74zBz
+	 FuYzAns9OJzSXA9ndTdcBw85RJWzb5BAwRW27rS9m6/kuFstoUfMji0LpAjYmOdVPR
+	 g51m/eQHs/sA6viYQusj3NErS5fdPHnHoLC0JrqZOTxcC43ByPIMVH7ZELrwawKzkp
+	 YWiIuv2GUd/IQ==
+Received: by mail-oo1-f42.google.com with SMTP id 006d021491bc7-5a4930d9c48so128529eaf.1;
+        Thu, 04 Apr 2024 02:03:43 -0700 (PDT)
+X-Gm-Message-State: AOJu0Yxp1aLRQlQk8PFTqkdsvt25VhUCixXRjnGqIlFQNOpA6Z1ey1Mw
+	xrvOFhx2Usz5kP89EYdhPmdlf6JbgErCYd8k/Y/Dc+nLKoGzXgdzXCUFgvYrh3yk7DHxxzHnkxq
+	xHITbXy2KewKkjF9GEH9z6NbwQrU=
+X-Google-Smtp-Source: AGHT+IG1x7ghAraSqglLa67HISEtrAFoZm1A+mODWpVOFcuum6TmKbEi7oWlzKiPD7Vic27k+bqeVekjgsjaNf7c5DI=
+X-Received: by 2002:a4a:3511:0:b0:5a4:6ac7:de6d with SMTP id
+ l17-20020a4a3511000000b005a46ac7de6dmr1684332ooa.1.1712221422653; Thu, 04 Apr
+ 2024 02:03:42 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+References: <4558251.LvFx2qVVIh@kreacher> <3556878.iIbC2pHGDl@kreacher>
+In-Reply-To: <3556878.iIbC2pHGDl@kreacher>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Thu, 4 Apr 2024 11:03:30 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0j0jKi9=w_RiYqSZuQtveskcE8jKZHDwaP1EmNOxLk-RQ@mail.gmail.com>
+Message-ID: <CAJZ5v0j0jKi9=w_RiYqSZuQtveskcE8jKZHDwaP1EmNOxLk-RQ@mail.gmail.com>
+Subject: Re: [PATCH v3 6/6] thermal: core: Relocate critical and hot trip handling
+To: Linux PM <linux-pm@vger.kernel.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, 
+	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, 
+	Daniel Lezcano <daniel.lezcano@linaro.org>, Lukasz Luba <lukasz.luba@arm.com>, 
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
+	"Rafael J. Wysocki" <rjw@rjwysocki.net>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On 03.04.24 23:06, Laine Taffin Altman wrote:
-> In Rust, producing an invalid value of any type is immediate undefined
-> behavior (UB); this includes via zeroing memory.  Therefore, since an
-> uninhabited type has no valid values, producing any values at all for it =
-is
-> UB.
->=20
-> The Rust standard library type `core::convert::Infallible` is uninhabited=
-,
-> by virtue of having been declared as an enum with no cases, which always
-> produces uninhabited types in Rust.
->=20
-> The current kernel code allows this UB to be triggered, for example by co=
-de
-> like `Box::<core::convert::Infallible>::init(kernel::init::zeroed())`.
->=20
-> Thus, remove the implementation of `Zeroable` for `Infallible`, thereby
-> avoiding the unsoundness (potential for future UB).
->=20
-> Cc: stable@vger.kernel.org
-> Fixes: 38cde0bd7b67 ("rust: init: add `Zeroable` trait and `init::zeroed`=
- function")
-> Closes: https://github.com/Rust-for-Linux/pinned-init/pull/13
-> Signed-off-by: Laine Taffin Altman <alexanderaltman@me.com>
-> Reviewed-by: Alice Ryhl <aliceryhl@google.com>
-> Reviewed-by: Boqun Feng <boqun.feng@gmail.com>
+On Tue, Apr 2, 2024 at 9:04=E2=80=AFPM Rafael J. Wysocki <rjw@rjwysocki.net=
+> wrote:
+>
+> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+>
+> Modify handle_thermal_trip() to call handle_critical_trips() only after
+> finding that the trip temperature has been crossed on the way up and
+> remove the redundant temperature check from the latter.
+>
+> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-Reviewed-by: Benno Lossin <benno.lossin@proton.me>
+This change is premature, as it will cause handle_non_critical_trips()
+to be called for hot/critical trips which is questionable, so I'm
+withdrawing it for now.
+
+The rest of the series is still applicable, though.
+
 
 > ---
-> V3 -> V4: Address review nits; run checkpatch properly.
-> V2 -> V3: Email formatting correction.
-> V1 -> V2: Added more documentation to the comment, with links; also added=
- more details to the commit message.
->=20
->  rust/kernel/init.rs | 11 +++++++++--
->  1 file changed, 9 insertions(+), 2 deletions(-)
->=20
-> diff --git a/rust/kernel/init.rs b/rust/kernel/init.rs
-> index 424257284d16..3859c7ff81b7 100644
-> --- a/rust/kernel/init.rs
-> +++ b/rust/kernel/init.rs
-> @@ -1292,8 +1292,15 @@ macro_rules! impl_zeroable {
->      i8, i16, i32, i64, i128, isize,
->      f32, f64,
->=20
-> -    // SAFETY: These are ZSTs, there is nothing to zero.
-> -    {<T: ?Sized>} PhantomData<T>, core::marker::PhantomPinned, Infallibl=
-e, (),
-> +    // Note: do not add uninhabited types (such as `!` or `core::convert=
-::Infallible`) to this list;
-> +    // creating an instance of an uninhabited type is immediate undefine=
-d behavior.  For more on
-> +    // uninhabited/empty types, consult The Rustonomicon:
-> +    // https://doc.rust-lang.org/stable/nomicon/exotic-sizes.html#empty-=
-types The Rust Reference
-> +    // also has information on undefined behavior:
-> +    // https://doc.rust-lang.org/stable/reference/behavior-considered-un=
-defined.html
-> +    //
-> +    // SAFETY: These are inhabited ZSTs; there is nothing to zero and a =
-valid value exists.
-> +    {<T: ?Sized>} PhantomData<T>, core::marker::PhantomPinned, (),
->=20
->      // SAFETY: Type is allowed to take any value, including all zeros.
->      {<T>} MaybeUninit<T>,
->=20
-> base-commit: c85af715cac0a951eea97393378e84bb49384734
-
-I don't see this commit in the kernel tree, what did you specify as
-`--base` when running `git format`?
-
---=20
-Cheers,
-Benno
-
+>  drivers/thermal/thermal_core.c |   15 +++++++--------
+>  1 file changed, 7 insertions(+), 8 deletions(-)
+>
+> Index: linux-pm/drivers/thermal/thermal_core.c
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> --- linux-pm.orig/drivers/thermal/thermal_core.c
+> +++ linux-pm/drivers/thermal/thermal_core.c
+> @@ -349,10 +349,6 @@ void thermal_zone_device_critical_reboot
+>  static void handle_critical_trips(struct thermal_zone_device *tz,
+>                                   const struct thermal_trip *trip)
+>  {
+> -       /* If we have not crossed the trip_temp, we do not care. */
+> -       if (trip->temperature <=3D 0 || tz->temperature < trip->temperatu=
+re)
+> -               return;
+> -
+>         trace_thermal_zone_trip(tz, thermal_zone_trip_id(tz, trip), trip-=
+>type);
+>
+>         if (trip->type =3D=3D THERMAL_TRIP_CRITICAL)
+> @@ -404,12 +400,15 @@ static void handle_thermal_trip(struct t
+>                 list_add_tail(&td->notify_list_node, way_up_list);
+>                 td->notify_temp =3D trip->temperature;
+>                 td->threshold -=3D trip->hysteresis;
+> +
+> +               if (trip->type =3D=3D THERMAL_TRIP_CRITICAL ||
+> +                   trip->type =3D=3D THERMAL_TRIP_HOT) {
+> +                       handle_critical_trips(tz, trip);
+> +                       return;
+> +               }
+>         }
+>
+> -       if (trip->type =3D=3D THERMAL_TRIP_CRITICAL || trip->type =3D=3D =
+THERMAL_TRIP_HOT)
+> -               handle_critical_trips(tz, trip);
+> -       else
+> -               handle_non_critical_trips(tz, trip);
+> +       handle_non_critical_trips(tz, trip);
+>  }
+>
+>  static void update_temperature(struct thermal_zone_device *tz)
+>
+>
+>
+>
