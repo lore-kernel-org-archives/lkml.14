@@ -1,126 +1,106 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5E7884FAA;
-	Thu,  4 Apr 2024 11:57:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 302B284D05
+	for <linux-kernel@vger.kernel.org>; Thu,  4 Apr 2024 11:57:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712231840; cv=none; b=jWaN/gcrpVXtp7+WNl/+vtdLLzIucmRUciUUH1mb+SCyEDEFisutOSC8UYPilA/CaQJfHobgrH1h15PvFiu2NzjhLHLXuRRHKnsuj1uLSfANod+toArpzaUFT1MJlqvspuqV4bmpUtnjCrU6LqZJ6qxaoOC1PdbGYVvj5O+/sbo=
+	t=1712231861; cv=none; b=ZvWvERgi3mZWs0WvHs9Jf1pFkLWGjtq2P0JSxRO4aPARlulsAuhscdUaNSFfu9yW70fkgdN+0CGgPoD1P5QU0lkcMf7LdWzyFcAamPmXYcHSQl9Mod5Wl8Xu1tn5twr93ttbbYjX4au8awDLgKi7iLAZLFpanvhwvZPDs+Xp5e0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712231840; c=relaxed/simple;
-	bh=Dl0DCFFeaG32auCuag3L3uwTOmeWVL3ayWOMwWYAh8g=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=jBDrvIQe2A14wZTdtrzF+MpIk2MVnj5wBUpHsFAqMKPrv78xj0SzGI2zfz9JQ231y5PFiApVtl97OKOBJG9VxdqwvG2RzQNtI2hYpM1l12pZ+Av0J/hSBVE0uLFM7tSe7Nmyh5ZuFDZQpp2p6LKEDM0xto6zhP1LouQvX7vsWtw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DxFiXLzR; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1712231861; c=relaxed/simple;
+	bh=r2y5XgIeaVFD9YYVCCQXxvPJe8jenW3QZdB/CzLVRdQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GC7iBRGOk+eLRPPxVKx3fC0iorsNrjF8iifNXC1SMqJbfOpExO0geV2siP4xflsi7cPzCTAePNTm+eFVciiBxzUy6kncFx6A2tZ9CxoKV20hZntbQ/9QZfqFdekSGeISuhs6OAUp55eQe5Ndf1RbHBKSai36UScPQbjMz/5i0RM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=GHw7yOx5; arc=none smtp.client-ip=209.85.218.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DxFiXLzR"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EDC7EC43394;
-	Thu,  4 Apr 2024 11:57:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712231840;
-	bh=Dl0DCFFeaG32auCuag3L3uwTOmeWVL3ayWOMwWYAh8g=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=DxFiXLzRpeXrD5jM6XlZnyh/7G/4TMqh8nzd6j0aWfeiqUMSOVHDcGMjfZtzEY9H8
-	 gZmL+yfbuZAjZK/p4djk6G7SQdsogQjWVctEZxj0Ga3fP1avhxysVjYOMJ7O/w51TO
-	 duDMI0BuK0ObfXLRc1zwWEm2b+tigCRyrBiTCdWNo2l+RZr1OtlS54cwrmM4LpYoO4
-	 e8TUhzGCDn+4uEkHGDzOkA5oO2gsGu7BxUhBr5Y/TQcVN9lEN+ru4m7sKtSGOK5D9C
-	 ezPeMNLHCb0Y5cm219SgI0nlyo+DNaKHSJRMhjWf5fXiNIyfHjLhp3+zdEHZn6z/wm
-	 wu3tLft3tETKw==
-Received: by mail-oo1-f52.google.com with SMTP id 006d021491bc7-5a4e0859b65so268083eaf.0;
-        Thu, 04 Apr 2024 04:57:19 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCWWp1kRPb0kgvD84UIrkDcC0jpi+SG+RbWiQ3F3YPErpsj5aLHmOOqSJClMooX6nEeIEWI24GuHBK1Uy8dqdZ9SGcs7FrXikENfX0Ez98v52eQpyj6u0n1szU/rK9vCMPykzPUMUUU=
-X-Gm-Message-State: AOJu0Yz6kgoc5Cv2fXFyl4iB43QQdpEh8qbZhp+jzkFxXXAzVO/iPT9Z
-	MAqwMYOkibFAa73wkm6mz92kndk9/oDaDmPj4asvv+J3etZhJAdX1fVlbjmfbXkrp9ldyL7r3Bc
-	tYyw4vU4XzwA4mk1ps8sKzcoCyCY=
-X-Google-Smtp-Source: AGHT+IGmHNaoCJ05Wj/10dFYzW7o/nO7HyRVuPaGHmT3FbayK4Gc1hRS13Ap+tRnqEIM30ZGkBW+zHYw+HDPdi6e1TA=
-X-Received: by 2002:a4a:dbc7:0:b0:5a4:5630:93d6 with SMTP id
- t7-20020a4adbc7000000b005a4563093d6mr2273294oou.1.1712231839209; Thu, 04 Apr
- 2024 04:57:19 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="GHw7yOx5"
+Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-a5193f56986so33990166b.0
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Apr 2024 04:57:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ventanamicro.com; s=google; t=1712231857; x=1712836657; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=wWw71C7jU1cEwI+5ODGcknLMAR0yYHVr8hihh6Lqglg=;
+        b=GHw7yOx5X/R0s614/5Rftzsrr1O3kiprSpaywNMKFkoxb2PHZ5gMMWYTnBDonwIj5u
+         W90RiXYhSFTzTc438kzJKNdb/BvBFWI11G/3uXbuC5BoNNl6HieILMP8xPUeJsI8UlaK
+         +mbFivmR/knt0tOhbaYVybM8RaXMDjRzBnmOvY4NgbVr3duzsdmHGa044Qtcaly83HYO
+         t/4ADBu49c9g/JplcxZDIzQrAXw7dkytaQ3S/V9pvxJ5MCYOQ8waR21dA/74GK1EzAnU
+         wxNrZ3aIIwJ6LqfFgNl1LfylufRqSPE4hdF8DEqE5vnhA2t+bwtuRkAd37BKPkM9yNUD
+         E/vg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712231857; x=1712836657;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=wWw71C7jU1cEwI+5ODGcknLMAR0yYHVr8hihh6Lqglg=;
+        b=kBVOoIyuc8t1ZhE7X4mxOUXB35KfSsp7zjXgL6tyfC3wDj+jSJ5JSF4fAP3P1sNHs6
+         0Wh9lAw8AeLQ69RuoF4fHkER1lVcP28IqXfPhjbwgZn7DZS0vKbgSD/SRr/PJgor5IDy
+         GCO1MKeoaaCDg6ILyRd8ztftvWOkUZxpe8fSpBi/U2X7bBg53ORg1/RpLzq6LnLhWbt0
+         jhfIOuB4FtQhIeRhtgxpYPU3cqmgM4TEpklfH6QmI3nam9qp3XGBAQYak2JRBywMnzkT
+         d3ko1uF87wfa5aI7ec7b5SYIh0mFgBPnTJe4lSfQ79x3gQHFHBFd5fcJzU8tl03KaNpp
+         c8NA==
+X-Gm-Message-State: AOJu0YxidBDGY/y0Q1OLsKG8Qft2wkJJenOkuRY3V9FEoY7Cr1Y7RCE7
+	UOJ8oG1HOHKntlzYBE0vFwbDlHek2JN03zNAJYoVzuy8vAKkaod477F9jdmEx+4=
+X-Google-Smtp-Source: AGHT+IF8SdqZ3HyZZ91FGKimTKayOc7UTusAbOGT6GeUZ2TkAX0/2dzA77WUR8ICDxbEhjc/oE44yQ==
+X-Received: by 2002:a17:907:c0d:b0:a50:f172:6994 with SMTP id ga13-20020a1709070c0d00b00a50f1726994mr1816047ejc.73.1712231857594;
+        Thu, 04 Apr 2024 04:57:37 -0700 (PDT)
+Received: from localhost (cst2-173-16.cust.vodafone.cz. [31.30.173.16])
+        by smtp.gmail.com with ESMTPSA id g15-20020a170906538f00b00a4e98679e7dsm2355698ejo.87.2024.04.04.04.57.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 04 Apr 2024 04:57:37 -0700 (PDT)
+Date: Thu, 4 Apr 2024 13:57:36 +0200
+From: Andrew Jones <ajones@ventanamicro.com>
+To: Atish Patra <atishp@rivosinc.com>
+Cc: linux-kernel@vger.kernel.org, Ajay Kaher <akaher@vmware.com>, 
+	Alexandre Ghiti <alexghiti@rivosinc.com>, Alexey Makhalov <amakhalov@vmware.com>, 
+	Anup Patel <anup@brainfault.org>, Conor Dooley <conor.dooley@microchip.com>, 
+	Juergen Gross <jgross@suse.com>, kvm-riscv@lists.infradead.org, kvm@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org, linux-riscv@lists.infradead.org, 
+	Mark Rutland <mark.rutland@arm.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
+	Paolo Bonzini <pbonzini@redhat.com>, Paul Walmsley <paul.walmsley@sifive.com>, 
+	Shuah Khan <shuah@kernel.org>, virtualization@lists.linux.dev, 
+	VMware PV-Drivers Reviewers <pv-drivers@vmware.com>, Will Deacon <will@kernel.org>, x86@kernel.org
+Subject: Re: [PATCH v5 08/22] RISC-V: KVM: Fix the initial sample period value
+Message-ID: <20240404-1c3dc9b63f80fc451d3a732a@orel>
+References: <20240403080452.1007601-1-atishp@rivosinc.com>
+ <20240403080452.1007601-9-atishp@rivosinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <5766468.DvuYhMxLoT@kreacher> <2318465.ElGaqSPkdT@kreacher> <6f950b18-4ff7-4570-957d-49b46167c12e@arm.com>
-In-Reply-To: <6f950b18-4ff7-4570-957d-49b46167c12e@arm.com>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Thu, 4 Apr 2024 13:57:07 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0hD=Nfk3=5gQuEKu8oq9PV6C_+7N0ZJYKkQ9OH505RpZg@mail.gmail.com>
-Message-ID: <CAJZ5v0hD=Nfk3=5gQuEKu8oq9PV6C_+7N0ZJYKkQ9OH505RpZg@mail.gmail.com>
-Subject: Re: [PATCH v1 2/2] thermal: gov_step_wise: Simplify checks related to
- passive trips
-To: Lukasz Luba <lukasz.luba@arm.com>
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, LKML <linux-kernel@vger.kernel.org>, 
-	Daniel Lezcano <daniel.lezcano@linaro.org>, Linux PM <linux-pm@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240403080452.1007601-9-atishp@rivosinc.com>
 
-On Thu, Apr 4, 2024 at 1:26=E2=80=AFPM Lukasz Luba <lukasz.luba@arm.com> wr=
-ote:
+On Wed, Apr 03, 2024 at 01:04:37AM -0700, Atish Patra wrote:
+> The initial sample period value when counter value is not assigned
+> should be set to maximum value supported by the counter width.
+> Otherwise, it may result in spurious interrupts.
+> 
+> Signed-off-by: Atish Patra <atishp@rivosinc.com>
+> ---
+>  arch/riscv/kvm/vcpu_pmu.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/arch/riscv/kvm/vcpu_pmu.c b/arch/riscv/kvm/vcpu_pmu.c
+> index 86391a5061dd..cee1b9ca4ec4 100644
+> --- a/arch/riscv/kvm/vcpu_pmu.c
+> +++ b/arch/riscv/kvm/vcpu_pmu.c
+> @@ -39,7 +39,7 @@ static u64 kvm_pmu_get_sample_period(struct kvm_pmc *pmc)
+>  	u64 sample_period;
+>  
+>  	if (!pmc->counter_val)
+> -		sample_period = counter_val_mask + 1;
+> +		sample_period = counter_val_mask;
+>  	else
+>  		sample_period = (-pmc->counter_val) & counter_val_mask;
+>  
+> -- 
+> 2.34.1
 >
->
->
-> On 4/3/24 19:12, Rafael J. Wysocki wrote:
-> > From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> >
-> > Make it more clear from the code flow that the passive polling status
-> > updates only take place for passive trip points.
-> >
-> > No intentional functional impact.
-> >
-> > Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> > ---
-> >   drivers/thermal/gov_step_wise.c |   14 ++++++--------
-> >   1 file changed, 6 insertions(+), 8 deletions(-)
-> >
-> > Index: linux-pm/drivers/thermal/gov_step_wise.c
-> > =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> > --- linux-pm.orig/drivers/thermal/gov_step_wise.c
-> > +++ linux-pm/drivers/thermal/gov_step_wise.c
-> > @@ -92,15 +92,13 @@ static void thermal_zone_trip_update(str
-> >               if (instance->initialized && old_target =3D=3D instance->=
-target)
-> >                       continue;
-> >
-> > -             if (old_target =3D=3D THERMAL_NO_TARGET &&
-> > -                 instance->target !=3D THERMAL_NO_TARGET) {
-> > -                     /* Activate a passive thermal instance */
-> > -                     if (trip->type =3D=3D THERMAL_TRIP_PASSIVE)
-> > +             if (trip->type =3D=3D THERMAL_TRIP_PASSIVE) {
-> > +                     /* If needed, update the status of passive pollin=
-g. */
-> > +                     if (old_target =3D=3D THERMAL_NO_TARGET &&
-> > +                         instance->target !=3D THERMAL_NO_TARGET)
-> >                               tz->passive++;
-> > -             } else if (old_target !=3D THERMAL_NO_TARGET &&
-> > -                        instance->target =3D=3D THERMAL_NO_TARGET) {
-> > -                     /* Deactivate a passive thermal instance */
-> > -                     if (trip->type =3D=3D THERMAL_TRIP_PASSIVE)
-> > +                     else if (old_target !=3D THERMAL_NO_TARGET &&
-> > +                              instance->target =3D=3D THERMAL_NO_TARGE=
-T)
-> >                               tz->passive--;
-> >               }
-> >
-> >
-> >
-> >
->
-> The patch looks good, although I got some warning while applying with
-> my b4 tool:
-> BADSIG: DKIM/rjwysocki.net
 
-It's likely because it was sent from an address in the rjwysocki.net
-domain, but it is perfectly fine to send "somebody else's" patches if
-a replacement From: header is given.
-
-Looks like a b4 issue to me.
-
-> Anyway, it looks like false warning IMO.
->
-> Reviewed-by: Lukasz Luba <lukasz.luba@arm.com>
-
-Thank you!
+Reviewed-by: Andrew Jones <ajones@ventanamicro.com>
