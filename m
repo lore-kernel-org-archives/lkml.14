@@ -1,143 +1,87 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A4D812AAE8;
-	Thu,  4 Apr 2024 17:33:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E33A12AAE8
+	for <linux-kernel@vger.kernel.org>; Thu,  4 Apr 2024 17:33:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712251996; cv=none; b=phRHDMPYb5m0wWvH9H11/F/98+FvOHvSxgBK1HAZo8KFMhZEsOPenVcj4acPStpD0hFcfSeGpJocuiwtzz+lEutXknqGMHZ/o0VP+epZvNM0ZuZpoSkj0HKe+ipQcMhQToUNDALmWm+LAQ04+SKZmZzHgENSd+o8sOJvuj4HsVI=
+	t=1712252005; cv=none; b=lT6jWJAYjcDhiISoLeImqA2wp7dEXZfcyZh+WmKjKnHFMvmZFDSi65XPMdzZheoLPJnPdI7xtgIt/G6yh7Z7VD3VDVfi0IFeasiPJzDbQiuHmF65/Bai0f/q8OybWYv6eI6hEsQULiRREdJ0VNMYRJrUCVZS0QV0pUXgLNP9Ftk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712251996; c=relaxed/simple;
-	bh=WhycKvDs8Nm0e2yE6FewUWSMhX4pZiW2qepdqQnqjQU=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=sAZUh9SJZkEoFU+9+mN3oU3m8YC8wE2SrAmPC6Nk98lRs6aZ6vie7UkAuINZnzEleTU+KgMCcs9miagB4vnFq4AxwwhT9vPG47HDEWsUwdtLhpKn2XgHDwj9Qrba3QSE9IFB9ciOOiY0OfHKOXEPrlmEgj13g48DKUfZ7cYvBeU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gLSSquWR; arc=none smtp.client-ip=198.175.65.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1712252005; c=relaxed/simple;
+	bh=M7LFDxfI+pw4DBIRnlTAAJBqrunuk4w84JpUPz9y0gU=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=hKXMT5eQQAvo3tbV+jst30TtM0T97PprOuSx5Tq7AFaZ771fMssm8vmmQyeOpu0lqj6k33YwJiV4PFNeIwL673BlRAMItCTdgA/F/2CEHDRKDltPbw53afPIGigTdJo61b6O9j59zeB1Sm/N1Q3zQ1u/iAkx8uDA0qebtMCLYUA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BJke3yiy; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gLSSquWR"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1712251995; x=1743787995;
-  h=date:from:to:cc:subject:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=WhycKvDs8Nm0e2yE6FewUWSMhX4pZiW2qepdqQnqjQU=;
-  b=gLSSquWRbOk30KJOLa1Pxfr+fIXQGvKqAm1+bWUcE3J723rn7DVOLihZ
-   upoXGlliFQ1XKgOuuKNn1JMjaM52YLSwRkIKwJBIgA3uKFlg0J1O1DWaY
-   6JziuEH437sZ0afJ+qBr+VVBjoA3G851z3ARjIaYbj71EoU6OHXC+bh7+
-   StT7knzN8Lxeqz7b58c3o2ageC6dtfw/44AFr3p5Ny+K+lvTvky6c/4SX
-   bbuTPU4F16Vp99CNrk58ULrsmX1BCv0uzvjzoBs+KJcjM7d41uu2iwbtc
-   2bsp0Yjdpk8XrzNp/iUoqjgj9NOprBZlMBq5mcW2hxVAFnjHLaf2rQ3lE
-   Q==;
-X-CSE-ConnectionGUID: 15L8qycaRnSAtoLa8Dqq2g==
-X-CSE-MsgGUID: bsmX5D5xQduy/bQKQwNrWw==
-X-IronPort-AV: E=McAfee;i="6600,9927,11034"; a="7709650"
-X-IronPort-AV: E=Sophos;i="6.07,179,1708416000"; 
-   d="scan'208";a="7709650"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Apr 2024 10:33:09 -0700
-X-CSE-ConnectionGUID: TuJmPMI7T6u58LeAAqTTfg==
-X-CSE-MsgGUID: ximBQxIZSoGR85aXhPDCVQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,179,1708416000"; 
-   d="scan'208";a="23356605"
-Received: from jacob-builder.jf.intel.com (HELO jacob-builder) ([10.54.39.125])
-  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Apr 2024 10:33:08 -0700
-Date: Thu, 4 Apr 2024 10:37:35 -0700
-From: Jacob Pan <jacob.jun.pan@linux.intel.com>
-To: Robert Hoo <robert.hoo.linux@gmail.com>
-Cc: LKML <linux-kernel@vger.kernel.org>, X86 Kernel <x86@kernel.org>, Peter
- Zijlstra <peterz@infradead.org>, iommu@lists.linux.dev, Thomas Gleixner
- <tglx@linutronix.de>, Lu Baolu <baolu.lu@linux.intel.com>,
- kvm@vger.kernel.org, Dave Hansen <dave.hansen@intel.com>, Joerg Roedel
- <joro@8bytes.org>, "H. Peter Anvin" <hpa@zytor.com>, Borislav Petkov
- <bp@alien8.de>, Ingo Molnar <mingo@redhat.com>, Paul Luse
- <paul.e.luse@intel.com>, Dan Williams <dan.j.williams@intel.com>, Jens
- Axboe <axboe@kernel.dk>, Raj Ashok <ashok.raj@intel.com>, "Tian, Kevin"
- <kevin.tian@intel.com>, maz@kernel.org, seanjc@google.com, Robin Murphy
- <robin.murphy@arm.com>, jacob.jun.pan@linux.intel.com, Bjorn Helgaas
- <helgaas@kernel.org>
-Subject: Re: [PATCH 00/15] Coalesced Interrupt Delivery with posted MSI
-Message-ID: <20240404103735.003ed5a3@jacob-builder>
-In-Reply-To: <fe40498a-3bb2-43c6-b3e2-1e4e10205db1@gmail.com>
-References: <20240126234237.547278-1-jacob.jun.pan@linux.intel.com>
-	<fe40498a-3bb2-43c6-b3e2-1e4e10205db1@gmail.com>
-Organization: OTC
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BJke3yiy"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 44DA8C433F1;
+	Thu,  4 Apr 2024 17:33:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1712252005;
+	bh=M7LFDxfI+pw4DBIRnlTAAJBqrunuk4w84JpUPz9y0gU=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=BJke3yiy6Tqrtojinr6wwXkx5P0Y95W8EHm7B/G8BSKU0P0C5+C8Nh5+R3d/5sW4d
+	 S7G7g4WJwD0crZtFSkNF3BZMfS6d3eQ7MGe8e+kheWsVOER/VIfHBb2IJSTQAfkUxx
+	 IYLxPGy3Ol3j5TF2T9VG3ausArqHk7xz1s2G0qpL8ygd6GBZ9OTwZm3rFZqxMXNpzr
+	 IJUl1/X1poPjs3n1boRNSHPj7BCq+wdwHzZxeXqYhs6i5LSy+hHyCp+wGF/OS+qpKf
+	 S/oEtNUFM54cu56Hez85zena0Xi2slzkqD053xqXdHGUvX83IefXajmseA3n7jwzrj
+	 RUq0XF9T4YyTA==
+Received: from 82-132-213-213.dab.02.net ([82.132.213.213] helo=wait-a-minute.misterjones.org)
+	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.95)
+	(envelope-from <maz@kernel.org>)
+	id 1rsQxj-001Zu8-Ik;
+	Thu, 04 Apr 2024 18:33:22 +0100
+Date: Thu, 04 Apr 2024 18:33:16 +0100
+Message-ID: <87frw1rq1v.wl-maz@kernel.org>
+From: Marc Zyngier <maz@kernel.org>
+To: Gavin Shan <gshan@redhat.com>
+Cc: linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	catalin.marinas@arm.com,
+	will@kernel.org,
+	akpm@linux-foundation.org,
+	oliver.upton@linux.dev,
+	mark.rutland@arm.com,
+	ryan.roberts@arm.com,
+	apopple@nvidia.com,
+	rananta@google.com,
+	yangyicong@hisilicon.com,
+	v-songbaohua@oppo.com,
+	yezhenyu2@huawei.com,
+	yihyu@redhat.com,
+	shan.gavin@gmail.com
+Subject: Re: [PATCH v2] arm64: tlb: Fix TLBI RANGE operand
+In-Reply-To: <d0b2f9d0-228f-488d-94b8-79f01f17e4e8@redhat.com>
+References: <20240404053624.1485237-1-gshan@redhat.com>
+	<87il0xsdc0.wl-maz@kernel.org>
+	<d0b2f9d0-228f-488d-94b8-79f01f17e4e8@redhat.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/28.2
+ (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
 Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+X-SA-Exim-Connect-IP: 82.132.213.213
+X-SA-Exim-Rcpt-To: gshan@redhat.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, catalin.marinas@arm.com, will@kernel.org, akpm@linux-foundation.org, oliver.upton@linux.dev, mark.rutland@arm.com, ryan.roberts@arm.com, apopple@nvidia.com, rananta@google.com, yangyicong@hisilicon.com, v-songbaohua@oppo.com, yezhenyu2@huawei.com, yihyu@redhat.com, shan.gavin@gmail.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
-Hi Robert,
+On Thu, 04 Apr 2024 11:26:20 +0100,
+Gavin Shan <gshan@redhat.com> wrote:
+> 
+> In summary, we need 3 patches but the one fixing __TLBI_RANGE_NUM needs to be
+> PATCH[1/3] so that it can be easily picked by stable kernel. PATCH[2/3] would
+> be to improve __TLBI_VADDR_RANGE with masks. PATCH[3/3] will allow __flush_tlb_range_nosync()
+> to do range-based TLB flush for MAX_TLBI_RANGE_PAGES.
 
-On Thu, 4 Apr 2024 21:45:05 +0800, Robert Hoo <robert.hoo.linux@gmail.com>
-wrote:
+That's about it indeed.
 
-> On 1/27/2024 7:42 AM, Jacob Pan wrote:
-> > Hi Thomas and all,
-> >=20
-> > This patch set is aimed to improve IRQ throughput on Intel Xeon by
-> > making use of posted interrupts.
-> >=20
-> > There is a session at LPC2023 IOMMU/VFIO/PCI MC where I have presented
-> > this topic.
-> >=20
-> > https://lpc.events/event/17/sessions/172/#20231115
-> >=20
-> > Background
-> > =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> > On modern x86 server SoCs, interrupt remapping (IR) is required and
-> > turned on by default to support X2APIC. Two interrupt remapping modes
-> > can be supported by IOMMU/VT-d:
-> >=20
-> > - Remappable 	(host)
-> > - Posted	(guest only so far)
-> >=20
-> > With remappable mode, the device MSI to CPU process is a HW flow
-> > without system software touch points, it roughly goes as follows:
-> >=20
-> > 1.	Devices issue interrupt requests with writes to 0xFEEx_xxxx
-> > 2.	The system agent accepts and remaps/translates the IRQ
-> > 3.	Upon receiving the translation response, the system agent
-> > notifies the destination CPU with the translated MSI
-> > 4.	CPU's local APIC accepts interrupts into its IRR/ISR registers
-> > 5.	Interrupt delivered through IDT (MSI vector)
-> >=20
-> > The above process can be inefficient under high IRQ rates. The
-> > notifications in step #3 are often unnecessary when the destination CPU
-> > is already overwhelmed with handling bursts of IRQs. On some
-> > architectures, such as Intel Xeon, step #3 is also expensive and
-> > requires strong ordering w.r.t DMA.  =20
->=20
-> Can you tell more on this "step #3 requires strong ordering w.r.t. DMA"?
->=20
-I am not sure how much micro architecture details I can disclose but the
-point is that there are ordering rules related to DMA read/writes
-and posted MSI writes. I am not a hardware expert.
+	M.
 
-=46rom PCIe pov, my understanding is that the upstream writes tested here on
-NVMe drives as the result of 4K random reads are relaxed ordered. I can see
-lspci showing: RlxdOrd+ on my Samsung drives.
-
-DevCtl: CorrErr+ NonFatalErr+ FatalErr+ UnsupReq-
-                        RlxdOrd+ ExtTag+ PhantFunc- AuxPwr- NoSnoop+ FLRese=
-t-
-                        MaxPayload 512 bytes, MaxReadReq 4096 bytes
-
-But MSIs are strictly ordered afaik.
-
-> > As a result, slower
-> > IRQ rates can become a limiting factor for DMA I/O performance.
-> >  =20
->=20
->=20
-
-
-Thanks,
-
-Jacob
+-- 
+Without deviation from the norm, progress is not possible.
