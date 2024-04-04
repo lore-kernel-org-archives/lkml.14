@@ -1,106 +1,131 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f198.google.com (mail-il1-f198.google.com [209.85.166.198])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7769613A890
-	for <linux-kernel@vger.kernel.org>; Thu,  4 Apr 2024 20:36:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D208112837F
+	for <linux-kernel@vger.kernel.org>; Thu,  4 Apr 2024 20:37:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.198
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712263009; cv=none; b=HM0d3zgktG64ilCw3cpngZEOfVGxB7cXsuZSTmxix9N74o2tIaklBsIbV4js5bqGj6eeWMZZG0fgrxD8GehNofSo6pjSxxxoUBJLNyS0psFVr98J9s2baZs0iGO5yA62uW8WiXFXgW7Sm4/o6y4c0TuFtgQHgPnFpUV7FMDaLyA=
+	t=1712263051; cv=none; b=UqH0h2LGdjDE8J9GZogUP/pcBkcm4Bc0XEjFd2DOk5B8bs/xRQ/N5vkv+PsLCzXoZqsVK37KFTfkXUsd1mzDMW9uP3aaQxxLLQP2GRfqhqPaQg8yOLCdxIf109WhN58ZdWRSYe+4y+65bpSU4J9f66BrdH3QpeFljZj68Z+tWuw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712263009; c=relaxed/simple;
-	bh=y1Rsrld3EEbDp6rEcRf4DJgr5shNa6Z5QESiLrsf31A=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CUX+Z7XimExV9Bt8g/Y4k1/zflOuifhRTSqBjAKQYKTY2IgjyursGHF0brzhxJFmpPlP/UrtTN7Ki4tl+4G/gJWYQ1XU4aG8Fddn1AZcZIStH7Ia/5ZFYKZejf+HVlVsR/O6UBYPsWbNFsTkXVYfGzJElIYOJLkRJtYml2VYwBo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=JNi1crAz; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JNi1crAz"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1712263006;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=B/DObdPmk2vIFww25ZF0AN9UF35je65YLgjdkhWbsjU=;
-	b=JNi1crAzudHf4ufDPbjHnMj2+8kpDcyqYCJUbcjrVU9W9Fg2m10shNdU5t7EnNnx9iDLjp
-	oMrY58pYRkhG25+cq01qxkWiVBOBxM0zJsmzEzUmD0eVbNsqa3Y1LcZxk0n2K0V8UFbmPU
-	xZY0zjWXy/9TpTRV+b4f4DVnBcA7Gb8=
-Received: from mail-qv1-f69.google.com (mail-qv1-f69.google.com
- [209.85.219.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-556-7IcgZwXoNjSwOJKIxXfAUg-1; Thu, 04 Apr 2024 16:36:45 -0400
-X-MC-Unique: 7IcgZwXoNjSwOJKIxXfAUg-1
-Received: by mail-qv1-f69.google.com with SMTP id 6a1803df08f44-6993921ae18so1517366d6.0
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Apr 2024 13:36:44 -0700 (PDT)
+	s=arc-20240116; t=1712263051; c=relaxed/simple;
+	bh=A6HoS4GzLxsx7dqdRJSNn1EbWW7af9nHv+tk7XM/mQ8=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=Yya+JI4qJHGbCN6lAU50hp8Dn67afO+RNIbfp0BgBLBHuWoecWZ3h+8dmX1vYt/JkzJ8OZEyXDZTt6LeyodmISnvUasjcyHBrPquU4a2+bU+kjixvDBXPBH0Muw/jQlWf3Gt6XjpBEkhZnMzZkRVIlff0f9iRqYybPNU+iHPlt8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.198
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f198.google.com with SMTP id e9e14a558f8ab-368185c12d7so12560885ab.2
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Apr 2024 13:37:29 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712263004; x=1712867804;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=B/DObdPmk2vIFww25ZF0AN9UF35je65YLgjdkhWbsjU=;
-        b=Akf9mQUR98+3YCZ3Zu7B3gQeMDiALiMU2PrVPqolOShUJHtqxyCzbkVha20RlEKqNb
-         c6dBt7vlfC20Y4ddedCx7UY6dMIXdXIyWrmWMFNg1POj0IuLk6SEpjcOoyUbxKeQC04o
-         CSi0HrIy7M/dRpqM5UDEf5j5eG2hIjeTwuIqw4lwl+uzf4pQhqTQ+y5BYa8zFaI4Ulkm
-         CaiKYV/5tqtvBQjRHSbKKlQuKVuMMLE+Uh/PtttkkF3NAQ8E3QbjFxQydBaQm4kDGQwX
-         D2toZHH/WJSpfyJ3R0g5Q8gepf2MNpyZOOCZwcXUEVib8DKeK4Qf54mmILTpKcDid5Sn
-         tUWQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWheqR0Po8ToZ16TAMcCWmt4T6JIrYYW/b3oA6vvBbEfU0L6s4yKtwdlqmQP+AEHpgIqHK9ORa0NZxqYWMymqhoFYFTM6QvgZ5GA3vG
-X-Gm-Message-State: AOJu0YyurDNz/NhUfWpI8nmE7K2m/+cfMB/5X/IN72lOr+WYTn/0b4+Y
-	Y57+DYjIFCZWyihqTtWmRMqyvp0CAczA6gHn49dg7xeuMM0PpIBUeoKLJoCx8xw3gfqHukCrRRq
-	5+UMX/RLv0wRxzgk2Qro7hPeXxe9VRcR3eykvsMjsOaUQNl5391iF2brnHkaHLw==
-X-Received: by 2002:a05:6214:5084:b0:699:1b70:da97 with SMTP id kk4-20020a056214508400b006991b70da97mr3574428qvb.0.1712263004395;
-        Thu, 04 Apr 2024 13:36:44 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFIpQWyjNAjmxMD5sLmyARNNdxOYRp+t32fubrk31G8hnVLmzAp/R36F4eQIQpaEtl6eQpvYw==
-X-Received: by 2002:a05:6214:5084:b0:699:1b70:da97 with SMTP id kk4-20020a056214508400b006991b70da97mr3574392qvb.0.1712263003617;
-        Thu, 04 Apr 2024 13:36:43 -0700 (PDT)
-Received: from x1n ([99.254.121.117])
-        by smtp.gmail.com with ESMTPSA id b19-20020a0ccd13000000b00699103a1cf1sm44942qvm.119.2024.04.04.13.36.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 04 Apr 2024 13:36:43 -0700 (PDT)
-Date: Thu, 4 Apr 2024 16:36:41 -0400
-From: Peter Xu <peterx@redhat.com>
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: Matthew Wilcox <willy@infradead.org>, linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org, Huacai Chen <chenhuacai@kernel.org>,
-	David Hildenbrand <david@redhat.com>,
-	Jason Gunthorpe <jgg@nvidia.com>,
-	Nathan Chancellor <nathan@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>,
-	Ryan Roberts <ryan.roberts@arm.com>, loongarch@lists.linux.dev
-Subject: Re: [PATCH 1/3] mm: Allow anon exclusive check over hugetlb tail
- pages
-Message-ID: <Zg8PWdGYFEUbzbJH@x1n>
-References: <20240403013249.1418299-1-peterx@redhat.com>
- <20240403013249.1418299-2-peterx@redhat.com>
- <Zg3u5Sh9EbbYPhaI@casper.infradead.org>
- <Zg6vFtciZAl4SQHW@x1n>
- <Zg6z4ZEt7rbILgl8@casper.infradead.org>
- <Zg63YZaXqYdSLHG-@x1n>
- <20240404133137.560d15c1a3bc7176424901fb@linux-foundation.org>
+        d=1e100.net; s=20230601; t=1712263049; x=1712867849;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=hZzdwtDeS7G4wOc9so8v1UyHpIk8pMZqZRG7ETlZnlY=;
+        b=nqnT9bsgI91zhQQZ5juN7WBSfTthLdC3M+1kl2WE910DlhSs1UKk/2qWUiXUg/n4FJ
+         jVjtmU1C7C4D0sL8ppfY1xY6r24ESllHToPwKrQo8xg+BQoljI0Nv/8fODFmIz7TQ6N4
+         ukHlmucHBVh2V5TZjKJDttqauYCs0xyx2E7ZwxtSURT8nFp9NVhikWwC9I8Y29T1OuT8
+         8Xme98q9GOKeBkkUzr4GrcZH3bslQB8L1QAkhFn3TyNS8Lo5kliNJZ3K8CB5D0OoYLIJ
+         tjWE3CKNPlzVu0E1lNA6aBM9goRlpx5E1xjGVdY+/g7OUZ/KjcpI32GGkcZlgidyw8RC
+         IWZg==
+X-Forwarded-Encrypted: i=1; AJvYcCWFChXwYHiF0L+wO1odvhfTISOViYkCoVZGeRoopnw2HfyyYY0kmf/Rp0W2HNU2k21jWuwLtZee212nerp0WZe0pIAOiHHs12zzSj/S
+X-Gm-Message-State: AOJu0Yyy/eaiUCxFHe1k+ilwE8Eh4Anhxhk6xRyNtxqMAJ0rV08skA3w
+	PaI68RfP9jyNSxW7YF4TEDZ/mec7M0bNw9+I1qBa7rhdgRV9IfxCaQJNTDjWmfom8k1zJQXcJjq
+	HRQ6++g+LfshWPYIzGTJnkq3hOuPkc3xfK1AW1CrkoPturtEU5Du8958=
+X-Google-Smtp-Source: AGHT+IHH0wpbFePpiE6nTTuUuVkf34Ui7sRdZXJxbGX8wsukrvd1m3qn/Cs15Ur/7yo7smMr53WGlvlbRkjCZysIoBKE1MXFjoqv
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20240404133137.560d15c1a3bc7176424901fb@linux-foundation.org>
+X-Received: by 2002:a05:6e02:17cd:b0:368:9839:d21a with SMTP id
+ z13-20020a056e0217cd00b003689839d21amr24501ilu.5.1712263049093; Thu, 04 Apr
+ 2024 13:37:29 -0700 (PDT)
+Date: Thu, 04 Apr 2024 13:37:29 -0700
+In-Reply-To: <00000000000040a883061544c59f@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000cdb28b06154b4e94@google.com>
+Subject: Re: [syzbot] [netfilter?] KMSAN: uninit-value in nf_flow_offload_ip_hook
+From: syzbot <syzbot+b6f07e1c07ef40199081@syzkaller.appspotmail.com>
+To: coreteam@netfilter.org, davem@davemloft.net, edumazet@google.com, 
+	kadlec@netfilter.org, kuba@kernel.org, linux-kernel@vger.kernel.org, 
+	netdev@vger.kernel.org, netfilter-devel@vger.kernel.org, pabeni@redhat.com, 
+	pablo@netfilter.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-On Thu, Apr 04, 2024 at 01:31:37PM -0700, Andrew Morton wrote:
-> On Thu, 4 Apr 2024 10:21:21 -0400 Peter Xu <peterx@redhat.com> wrote:
-> 
-> > Andrew, could you help update with Matthew's fixup?  The comment is
-> > definitely better than what I wrote in all cases.
-> 
-> From: Andrew Morton <akpm@linux-foundation.org>
-> Subject: mm-allow-anon-exclusive-check-over-hugetlb-tail-pages-fix
-> Date: Thu Apr  4 01:27:47 PM PDT 2024
-> 
-> simplify PageAnonExclusive(), per Matthew
+syzbot has found a reproducer for the following issue on:
 
-Thank you!
+HEAD commit:    c85af715cac0 Merge tag 'vboxsf-v6.9-1' of git://git.kernel..
+git tree:       upstream
+console+strace: https://syzkaller.appspot.com/x/log.txt?x=1123c615180000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=5112b3f484393436
+dashboard link: https://syzkaller.appspot.com/bug?extid=b6f07e1c07ef40199081
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=16960955180000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=11cfc58d180000
 
--- 
-Peter Xu
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/6741d41720b3/disk-c85af715.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/1783406dda64/vmlinux-c85af715.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/53eeb4798ae1/bzImage-c85af715.xz
 
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+b6f07e1c07ef40199081@syzkaller.appspotmail.com
+
+=====================================================
+BUG: KMSAN: uninit-value in nf_flow_skb_encap_protocol net/netfilter/nf_flow_table_ip.c:290 [inline]
+BUG: KMSAN: uninit-value in nf_flow_offload_lookup net/netfilter/nf_flow_table_ip.c:352 [inline]
+BUG: KMSAN: uninit-value in nf_flow_offload_ip_hook+0x79a/0x3e40 net/netfilter/nf_flow_table_ip.c:424
+ nf_flow_skb_encap_protocol net/netfilter/nf_flow_table_ip.c:290 [inline]
+ nf_flow_offload_lookup net/netfilter/nf_flow_table_ip.c:352 [inline]
+ nf_flow_offload_ip_hook+0x79a/0x3e40 net/netfilter/nf_flow_table_ip.c:424
+ nf_hook_entry_hookfn include/linux/netfilter.h:154 [inline]
+ nf_hook_slow+0xf2/0x3f0 net/netfilter/core.c:626
+ nf_hook_ingress include/linux/netfilter_netdev.h:34 [inline]
+ nf_ingress net/core/dev.c:5318 [inline]
+ __netif_receive_skb_core+0x430b/0x6190 net/core/dev.c:5406
+ __netif_receive_skb_one_core net/core/dev.c:5536 [inline]
+ __netif_receive_skb+0xca/0xa00 net/core/dev.c:5652
+ netif_receive_skb_internal net/core/dev.c:5738 [inline]
+ netif_receive_skb+0x58/0x660 net/core/dev.c:5798
+ tun_rx_batched+0x3ee/0x980 drivers/net/tun.c:1549
+ tun_get_user+0x5566/0x69e0 drivers/net/tun.c:2002
+ tun_chr_write_iter+0x3af/0x5d0 drivers/net/tun.c:2048
+ call_write_iter include/linux/fs.h:2108 [inline]
+ new_sync_write fs/read_write.c:497 [inline]
+ vfs_write+0xb63/0x1520 fs/read_write.c:590
+ ksys_write+0x20f/0x4c0 fs/read_write.c:643
+ __do_sys_write fs/read_write.c:655 [inline]
+ __se_sys_write fs/read_write.c:652 [inline]
+ __x64_sys_write+0x93/0xe0 fs/read_write.c:652
+ do_syscall_64+0xd5/0x1f0
+ entry_SYSCALL_64_after_hwframe+0x72/0x7a
+
+Uninit was created at:
+ __alloc_pages+0x9d6/0xe70 mm/page_alloc.c:4598
+ alloc_pages_mpol+0x299/0x990 mm/mempolicy.c:2264
+ alloc_pages+0x1bf/0x1e0 mm/mempolicy.c:2335
+ skb_page_frag_refill+0x2bf/0x7c0 net/core/sock.c:2921
+ tun_build_skb drivers/net/tun.c:1679 [inline]
+ tun_get_user+0x1258/0x69e0 drivers/net/tun.c:1819
+ tun_chr_write_iter+0x3af/0x5d0 drivers/net/tun.c:2048
+ call_write_iter include/linux/fs.h:2108 [inline]
+ new_sync_write fs/read_write.c:497 [inline]
+ vfs_write+0xb63/0x1520 fs/read_write.c:590
+ ksys_write+0x20f/0x4c0 fs/read_write.c:643
+ __do_sys_write fs/read_write.c:655 [inline]
+ __se_sys_write fs/read_write.c:652 [inline]
+ __x64_sys_write+0x93/0xe0 fs/read_write.c:652
+ do_syscall_64+0xd5/0x1f0
+ entry_SYSCALL_64_after_hwframe+0x72/0x7a
+
+CPU: 0 PID: 5020 Comm: syz-executor108 Not tainted 6.9.0-rc2-syzkaller-00080-gc85af715cac0 #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 03/27/2024
+=====================================================
+
+
+---
+If you want syzbot to run the reproducer, reply with:
+#syz test: git://repo/address.git branch-or-commit-hash
+If you attach or paste a git patch, syzbot will apply it before testing.
