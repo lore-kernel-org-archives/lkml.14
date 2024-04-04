@@ -1,54 +1,59 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mx0a-0064b401.pphosted.com (mx0a-0064b401.pphosted.com [205.220.166.238])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDE951CFBD
-	for <linux-kernel@vger.kernel.org>; Thu,  4 Apr 2024 05:57:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 931F717991
+	for <linux-kernel@vger.kernel.org>; Thu,  4 Apr 2024 05:59:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.166.238
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712210228; cv=none; b=i50O4zbxKPf25zx8ujoSzy51E8nQxzOiHnlQUoC06f/EHGeXFPteUUc3M5goX59s8/kRBLgTMnnnwAiGlUbpBF1rBSrzzxfmqrURveT7yM0kBmjjAHE2tjEi/lQkUlO1aM+cJ0YCH8vAcLmqa/kvSWxzueaQKqJyTtwvpo61GC8=
+	t=1712210359; cv=none; b=BGvvxYT42nj+u8hCdi217weALNUFqEFvjX6DYOdkcVm33heNSkXSLMhCyeVC19NIqaBte4GmssFk5tLp71Kj0WrJyzw+LB5cRPGEADdcuV7Iui3N6IXB+FOP6bVRiucPbBGimjgDTQyj8xovkhEhi4o5drkNebdhR/u4Cu3zGUI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712210228; c=relaxed/simple;
-	bh=6bmbdoifZb2Jpy0PZiNXlrBy305qSk1zWYVTLBSmB0M=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version; b=YYNXxJEaCDN7ocF3cfgOCi70LxRHBL0Q3SxSbLumVrobtWt87ba+IqegXjACGFUX5xvtGpZOnolv7zY3Bu6A/bVVN3F0gfckJkp9IG0cYk5oMGFvsFshw6NqYkQxDUNEzDIOUU+B0KdZBkjK6vDnIv588i/gJLDggeSNdseGVLQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=b333WFN9; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1712210359; c=relaxed/simple;
+	bh=67kxMxBFVgKuDFsm3/aONhz4o7hUjpdqmsftgI1S7cg=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=deHDGSGyzeYRZc19DclWVzWwWzxzE/8y56nthJxsr4t4tWhevt2Nfn+NEVrpmCGhQv6rcq6nYA4kgpTFmjccUH303gaBNWSY5phH2YNNVK5mvBWH0NUkmTTxZg+Y35SS9dww4H6SVtsN3BLeC6B7sgc/P0TkQmio+i4BJhIWKlM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=windriver.com; spf=pass smtp.mailfrom=windriver.com; dkim=pass (2048-bit key) header.d=windriver.com header.i=@windriver.com header.b=MOLy/vTn; arc=none smtp.client-ip=205.220.166.238
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=windriver.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=windriver.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="b333WFN9"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1712210225;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=Vba8fCSuLQZTKX30MTVAeYL8D2lP6F44uKwflbfLdSs=;
-	b=b333WFN9geaSigKM6s/p14W9FfvtBAAggWoxlZLO4P5qeCOFiJnxY6GQxBHg9OZEedKieN
-	j0vK9i8T94/un1TtJecV70N1P1a6D2+2z5AVDXc/+XBj33GtZFRl5mBKwuDj3lY6j1MM2E
-	Gmi7kMoKYMNLPY61XnIhuWwT8O/moSU=
-Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
- by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-82-kWB3J8DCM-uAP7gznsnZFA-1; Thu,
- 04 Apr 2024 01:57:02 -0400
-X-MC-Unique: kWB3J8DCM-uAP7gznsnZFA-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.rdu2.redhat.com [10.11.54.2])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 1B8A03C02479;
-	Thu,  4 Apr 2024 05:57:02 +0000 (UTC)
-Received: from server.redhat.com (unknown [10.72.112.166])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 7530740C6CB5;
-	Thu,  4 Apr 2024 05:56:58 +0000 (UTC)
-From: Cindy Lu <lulu@redhat.com>
-To: lulu@redhat.com,
-	mst@redhat.com,
-	jasowang@redhat.com,
-	kvm@vger.kernel.org,
-	virtualization@lists.linux-foundation.org,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v3] Documentation: Add reconnect process for VDUSE
-Date: Thu,  4 Apr 2024 13:56:31 +0800
-Message-ID: <20240404055635.316259-1-lulu@redhat.com>
+	dkim=pass (2048-bit key) header.d=windriver.com header.i=@windriver.com header.b="MOLy/vTn"
+Received: from pps.filterd (m0250810.ppops.net [127.0.0.1])
+	by mx0a-0064b401.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4345pCBe000392;
+	Wed, 3 Apr 2024 22:58:40 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=windriver.com;
+	 h=from:to:cc:subject:date:message-id:in-reply-to:references
+	:mime-version:content-transfer-encoding:content-type; s=
+	PPS06212021; bh=yRxDl0C91mFi8jNJ4adnSczKE9V9/dpVGwj8Nv3DPtw=; b=
+	MOLy/vTnWdi4Ev0bU9R08m5bbCKnjCW/Rhh4hBW8IglLPXzQ8lyEvWq8S4xiGYTf
+	oIPAIlUJS3M+3WRa1LF/7E/8GV8X8TMUSuHDfQVqxjkGskWhMHjtxpaB/4ewgbhs
+	oSABaRZ550NPU1nwOladPWALO6WZOj4FocC9Gnubo5lVu9BTkWgKaVElFEvyQ5Hg
+	Y+PrHwxQ2UHeN1IVo3BteCLhEYRkQ2KB/QvdB0mq8szhlDRfg3E5vHwlq73v6e9j
+	CqAxOBsm+1NrS4D28j/UniuW8LEdWcoK1ivxROekhhiNFug3WJRMzYhMfSDKdWv4
+	Q9sSmdstNEeRiMTL7iE80Q==
+Received: from ala-exchng01.corp.ad.wrs.com (ala-exchng01.wrs.com [147.11.82.252])
+	by mx0a-0064b401.pphosted.com (PPS) with ESMTPS id 3x9eqeg9gs-2
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+	Wed, 03 Apr 2024 22:58:40 -0700 (PDT)
+Received: from ALA-EXCHNG02.corp.ad.wrs.com (147.11.82.254) by
+ ala-exchng01.corp.ad.wrs.com (147.11.82.252) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.37; Wed, 3 Apr 2024 22:58:39 -0700
+Received: from pek-lpd-ccm5.wrs.com (147.11.1.11) by
+ ALA-EXCHNG02.corp.ad.wrs.com (147.11.82.254) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.37 via Frontend Transport; Wed, 3 Apr 2024 22:58:36 -0700
+From: <xiongwei.song@windriver.com>
+To: <vbabka@suse.cz>, <rientjes@google.com>, <cl@linux.com>,
+        <penberg@kernel.org>, <iamjoonsoo.kim@lge.com>,
+        <akpm@linux-foundation.org>, <roman.gushchin@linux.dev>,
+        <42.hyeyoo@gmail.com>
+CC: <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>,
+        <chengming.zhou@linux.dev>
+Subject: [PATCH v2 1/3] mm/slub: remove the check of !kmem_cache_has_cpu_partial()
+Date: Thu, 4 Apr 2024 13:58:24 +0800
+Message-ID: <20240404055826.1469415-2-xiongwei.song@windriver.com>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20240404055826.1469415-1-xiongwei.song@windriver.com>
+References: <20240404055826.1469415-1-xiongwei.song@windriver.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -56,65 +61,47 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.2
+Content-Type: text/plain
+X-Proofpoint-ORIG-GUID: NjyypOTjHp702Ozz0uySYQA1ADPV3hsD
+X-Proofpoint-GUID: NjyypOTjHp702Ozz0uySYQA1ADPV3hsD
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-04-04_02,2024-04-03_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 phishscore=0
+ spamscore=0 mlxlogscore=999 clxscore=1015 suspectscore=0
+ lowpriorityscore=0 impostorscore=0 malwarescore=0 mlxscore=0 adultscore=0
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2404010003 definitions=main-2404040037
 
-Add a document explaining the reconnect process, including what the
-Userspace App needs to do and how it works with the kernel.
+From: Xiongwei Song <xiongwei.song@windriver.com>
 
-Signed-off-by: Cindy Lu <lulu@redhat.com>
+The check of !kmem_cache_has_cpu_partial(s) with
+CONFIG_SLUB_CPU_PARTIAL enabled here is always false.
+
+We have already checked kmem_cache_debug() earlier and if it was true,
+then we either continued or broke from the loop so we can't reach this
+code in that case and don't need to check kmem_cache_debug() as part of
+kmem_cache_has_cpu_partial() again. Here we can remove it.
+
+Signed-off-by: Xiongwei Song <xiongwei.song@windriver.com>
 ---
- Documentation/userspace-api/vduse.rst | 41 +++++++++++++++++++++++++++
- 1 file changed, 41 insertions(+)
+ mm/slub.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/Documentation/userspace-api/vduse.rst b/Documentation/userspace-api/vduse.rst
-index bdb880e01132..7faa83462e78 100644
---- a/Documentation/userspace-api/vduse.rst
-+++ b/Documentation/userspace-api/vduse.rst
-@@ -231,3 +231,44 @@ able to start the dataplane processing as follows:
-    after the used ring is filled.
- 
- For more details on the uAPI, please see include/uapi/linux/vduse.h.
-+
-+HOW VDUSE devices reconnection works
-+------------------------------------
-+1. What is reconnection?
-+
-+   When the userspace application loads, it should establish a connection
-+   to the vduse kernel device. Sometimes,the userspace application exists,
-+   and we want to support its restart and connect to the kernel device again
-+
-+2. How can I support reconnection in a userspace application?
-+
-+2.1 During initialization, the userspace application should first verify the
-+    existence of the device "/dev/vduse/vduse_name".
-+    If it doesn't exist, it means this is the first-time for connection. goto step 2.2
-+    If it exists, it means this is a reconnection, and we should goto step 2.3
-+
-+2.2 Create a new VDUSE instance with ioctl(VDUSE_CREATE_DEV) on
-+    /dev/vduse/control.
-+    When ioctl(VDUSE_CREATE_DEV) is called, kernel allocates memory for
-+    the reconnect information. The total memory size is PAGE_SIZE*vq_mumber.
-+
-+2.3 Check if the information is suitable for reconnect
-+    If this is reconnection :
-+    Before attempting to reconnect, The userspace application needs to use the
-+    ioctl(VDUSE_DEV_GET_CONFIG, VDUSE_DEV_GET_STATUS, VDUSE_DEV_GET_FEATURES...)
-+    to get the information from kernel.
-+    Please review the information and confirm if it is suitable to reconnect.
-+
-+2.4 Userspace application needs to mmap the memory to userspace
-+    The userspace application requires mapping one page for every vq. These pages
-+    should be used to save vq-related information during system running. Additionally,
-+    the application must define its own structure to store information for reconnection.
-+
-+2.5 Completed the initialization and running the application.
-+    While the application is running, it is important to store relevant information
-+    about reconnections in mapped pages. When calling the ioctl VDUSE_VQ_GET_INFO to
-+    get vq information, it's necessary to check whether it's a reconnection. If it is
-+    a reconnection, the vq-related information must be get from the mapped pages.
-+
-+2.6 When the Userspace application exits, it is necessary to unmap all the
-+    pages for reconnection
+diff --git a/mm/slub.c b/mm/slub.c
+index 1bb2a93cf7b6..059922044a4f 100644
+--- a/mm/slub.c
++++ b/mm/slub.c
+@@ -2610,8 +2610,7 @@ static struct slab *get_partial_node(struct kmem_cache *s,
+ 			partial_slabs++;
+ 		}
+ #ifdef CONFIG_SLUB_CPU_PARTIAL
+-		if (!kmem_cache_has_cpu_partial(s)
+-			|| partial_slabs > s->cpu_partial_slabs / 2)
++		if (partial_slabs > s->cpu_partial_slabs / 2)
+ 			break;
+ #else
+ 		break;
 -- 
-2.43.0
+2.34.1
 
