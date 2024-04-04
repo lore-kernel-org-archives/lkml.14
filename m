@@ -1,123 +1,130 @@
-Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF34713C3EB
-	for <linux-kernel@vger.kernel.org>; Thu,  4 Apr 2024 21:28:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8EC813BACF;
+	Thu,  4 Apr 2024 21:29:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712266095; cv=none; b=psCZkl/0RR8oiV+POx7CWktLEmCia66tUzqiLFYv0HLufpu74w6V5OoovvYAkCfRMpbxTKHrfaKzFQGQVl9CF74rtNWa67/V+7lAAPsHUsXiWzETJx7CBp+u1Llna52WcvFfASWP/8Db5rnRegA04sBikWaWtgEAGfskoIGhnP8=
+	t=1712266165; cv=none; b=B9uwEs7oU4nGLGx+6/JrdS/s+og0nPtC15ZFquFGz7/SIZiv3QB74TXFdguVsz67pCg36SKXzX21EKPHqEEmFJPigp/np0wqxO6om0D5+FfSkqF95w0CvVJkvsXvbPvhNyUB0UXqnWdiP1PmQtt9Ko9JU3Ox1WCqqG8uIt9dQK4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712266095; c=relaxed/simple;
-	bh=npMODBQKA2nj4U5DnfvWas5C+UgEISrVD0B3z/+vB1o=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=rWnFyWW+OUkuAu1V55SLC3GT4WZ5pH3ErNsacqvkJWSGJpyjIkMVnG4xRYgvl1b9RuD//7H0787vsnACDiJlLNFSI5ZIQLlYc4DxEdr2xBt4NWrCXu/eLgMjK71U2SbFdhhX5ReSDHXuG++bZ4VwTThHGUaN4cFJz/bs+eyGox8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ZWb4mMFB; arc=none smtp.client-ip=209.85.221.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1712266165; c=relaxed/simple;
+	bh=Utj8g5kSIY2oZzcEMi6QXW1D/5gc1CLBmlqTBBy6/AM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=lUlgkdjk/HlF00OSdbkpWs3XMJxNbiAFUWUv2D8E+Q6zKljZNBcRpaXfv9UXckj2USTSNtmNeA0BMnDivzGXhypZUXFhf2rcxJGcjozU8wv0kAJ6vkEIP5txtc1s2JT67+upBK/d4l2SHUJ45BVacJVuIlNxV/UE3C4PLxXKy6Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=d1g8oWeT; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ZWb4mMFB"
-Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-343cfa6faf0so586632f8f.0
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Apr 2024 14:28:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1712266092; x=1712870892; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=9OUdguqwR0wl7IoJc/6ZxoQ05I+NWMpwGK+WJht4B5k=;
-        b=ZWb4mMFB5iYnGiZRg9sNjT3Y8xx9ODzb44WD3HBzHx4ejat66hjJ3E0rPok3bTQ5gD
-         uB1rFBJS3yzbw9Y1D/o3ACbHOH2OTxtzvHjPUL6GLj68t67H5lHjrknbILcIyJ3316M6
-         k02J6k465qgy3qubGD/gM5atwobS2X8Kc7eCLNu9CPcWZTdhYWTaZIQdEUZTlphkzt5N
-         l3fOUlBf45gWI9gXpa/WNP/R+Rim7IiocbqCc0ab7N7+7PPx3jswQZG/f/sDSi8bjcD5
-         ge4rnq8Gvg/zTnZFnzF72KBxkJh7i7PKm0BFU4yzgBk2Ot1jwgyyXc2fW++JgbBIam4m
-         /NhA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712266092; x=1712870892;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=9OUdguqwR0wl7IoJc/6ZxoQ05I+NWMpwGK+WJht4B5k=;
-        b=mHYZn7eOL/kqWN7+Y3oMfqqLPcPoJHXj5DRCa5rbgEAIC4HbCifinO9neAxFu1FuVB
-         p7JhhGf7ChT2ginxEte+dTrVPXBRO3ETl1z3MzsJ0YMfdyVBjFIj+UkqXboKWzOZsF6S
-         7xlNsaM35NfDBzQ9LDLISyRH28m1x4ZN+P3AppFJoUG41N1tvA3LKspOAswffF7ekTYZ
-         zA4EJ54gNff5mcez2fOpMoJfJba63aw/d3zFoNZGQoEMd27mZNDNtG5lNLIF6kNPE13u
-         w5Nu739WaxUD1UuWLy2Iw217K1W/Q5WtYa5jcnOe/HdLZV8GcVEo6TaeFlP2j6QsDwqT
-         Hw8w==
-X-Forwarded-Encrypted: i=1; AJvYcCXhWfqTfHUrSlNhI34nh7mc3f2R2unYblYXWqS9yvvKHZI2A+74/xXRQ3mjkxca3jxABy8VVfUCwjmJXECr38VCZx9o1M6oXW/yaqA7
-X-Gm-Message-State: AOJu0Yz5RFx7YtuD06jahNUmRuWSDKGf9MofLA01icXqUFvALwrrDyui
-	CkQTjH3YoLpmduwRD3/1P6cRTScOtgu+kcgrRLEt9ER1JKFBhR4+2HCzWPJ1HU5eRfgmyEaIqkv
-	il4EZqib14p3/387OsU7UKtzdtyhNfEwnLQfe
-X-Google-Smtp-Source: AGHT+IGJXJt3z9AjFNT8jY0zgvGJQUXCyam/rKGlEORAE2+JiSEdT0O8DCZgFu4KuDOhR1WF8ozN+G8rXaz8Y8+rApU=
-X-Received: by 2002:adf:ce0c:0:b0:33f:84a1:7eb8 with SMTP id
- p12-20020adfce0c000000b0033f84a17eb8mr3002011wrn.1.1712266091794; Thu, 04 Apr
- 2024 14:28:11 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="d1g8oWeT"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=Zyi7AEcYnfqB6wuIN5C5labJ5TkiPsioxAOKz/6Fbqs=; b=d1g8oWeT9rYHBlZuF9xsTFDFHG
+	4lSJo/KGw64j3qekI4UzOPIXJ1k3xqp49kuQDsjI3KWu1PeNyrvAx32gduojBtJnubIYbpR8ATH9/
+	iHi0XgwD4MRWgBREvdk6kwWIJMIJufuG2rvsYSbhZahYCtFlqfUHZoB/9OG3i+HKLm5pf24AQ/JN2
+	9SFsSEsuALRsGWBL8WIAgLr6AWItvY3OcojGDkbhHZsDqZ1XuYyScYDs1+aUQs9aWl8qV9+jLJ+tV
+	tJCk+/43dla/bl5lv45MJp+W8A/geOJcFQ8gjN3XZ0JwVqHcOjoTgz3o0Y9HJuAjDwX2Jd5ldJTru
+	2h94r9pw==;
+Received: from willy by casper.infradead.org with local (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1rsUe5-00000008veN-2BP2;
+	Thu, 04 Apr 2024 21:29:17 +0000
+Date: Thu, 4 Apr 2024 22:29:17 +0100
+From: Matthew Wilcox <willy@infradead.org>
+To: Kees Cook <keescook@chromium.org>
+Cc: Jan Kara <jack@suse.cz>, Chuck Lever <chuck.lever@oracle.com>,
+	"Gustavo A . R . Silva" <gustavoars@kernel.org>,
+	Christian Brauner <brauner@kernel.org>,
+	Alexander Viro <viro@zeniv.linux.org.uk>,
+	Jeff Layton <jlayton@kernel.org>,
+	Amir Goldstein <amir73il@gmail.com>, linux-fsdevel@vger.kernel.org,
+	linux-nfs@vger.kernel.org, linux-hardening@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] fs: Set file_handle::handle_bytes before referencing
+ file_handle::f_handle
+Message-ID: <Zg8brYRFHlS1qaJC@casper.infradead.org>
+References: <20240404211212.it.297-kees@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240312155641.4003683-1-yosryahmed@google.com>
-In-Reply-To: <20240312155641.4003683-1-yosryahmed@google.com>
-From: Yosry Ahmed <yosryahmed@google.com>
-Date: Thu, 4 Apr 2024 14:27:33 -0700
-Message-ID: <CAJD7tkYg3KbmMHg0jt8x0Lp9zss6qr-9PnbwmYXGfa0uQ_Xyig@mail.gmail.com>
-Subject: Re: [PATCH v2 1/3] x86/mm: Use IPIs to synchronize LAM enablement
-To: x86@kernel.org
-Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>, 
-	Andy Lutomirski <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
-	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>, 
-	Rick Edgecombe <rick.p.edgecombe@intel.com>, Andrew Morton <akpm@linux-foundation.org>, 
-	linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240404211212.it.297-kees@kernel.org>
 
-On Tue, Mar 12, 2024 at 8:56=E2=80=AFAM Yosry Ahmed <yosryahmed@google.com>=
- wrote:
->
-> LAM can only be enabled when a process is single-threaded.  But _kernel_
-> threads can temporarily use a single-threaded process's mm.
->
-> If LAM is enabled by a userspace process while a kthread is using its
-> mm, the kthread will not observe LAM enablement (i.e.  LAM will be
-> disabled in CR3). This could be fine for the kthread itself, as LAM only
-> affects userspace addresses. However, if the kthread context switches to
-> a thread in the same userspace process, CR3 may or may not be updated
-> because the mm_struct doesn't change (based on pending TLB flushes). If
-> CR3 is not updated, the userspace thread will run incorrectly with LAM
-> disabled, which may cause page faults when using tagged addresses.
-> Example scenario:
->
-> CPU 1                                   CPU 2
-> /* kthread */
-> kthread_use_mm()
->                                         /* user thread */
->                                         prctl_enable_tagged_addr()
->                                         /* LAM enabled on CPU 2 */
-> /* LAM disabled on CPU 1 */
->                                         context_switch() /* to CPU 1 */
-> /* Switching to user thread */
-> switch_mm_irqs_off()
-> /* CR3 not updated */
-> /* LAM is still disabled on CPU 1 */
->
-> Synchronize LAM enablement by sending an IPI from
-> prctl_enable_tagged_addr() to all CPUs running with the mm_struct to
-> enable LAM. This makes sure LAM is enabled on CPU 1 in the above
-> scenario before prctl_enable_tagged_addr() returns and userspace starts
-> using tagged addresses, and before it's possible to run the userspace
-> process on CPU 1.
->
-> In switch_mm_irqs_off(), move reading the LAM mask until after
-> mm_cpumask() is updated. This ensures that if an outdated LAM mask is
-> written to CR3, an IPI is received to update it right after IRQs are
-> re-enabled.
->
-> Fixes: 82721d8b25d7 ("x86/mm: Handle LAM on context switch")
-> Suggested-by: Andy Lutomirski <luto@kernel.org>
-> Signed-off-by: Yosry Ahmed <yosryahmed@google.com>
-> Reviewed-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+On Thu, Apr 04, 2024 at 02:12:15PM -0700, Kees Cook wrote:
+> Since __counted_by(handle_bytes) was added to struct file_handle, we need
+> to explicitly set it in the one place it wasn't yet happening prior to
+> accessing the flex array "f_handle". For robustness also check for a
+> negative value for handle_bytes, which is possible for an "int", but
+> nothing appears to set.
 
-There hasn't been any further review comments on v2, and the merge
-window has been closed for a while now. Do I need  to take any further
-action or send a new version of this series?
+Why not change handle_bytes from an int to a u32?
+
+Also, what a grotty function.
+
+        handle_dwords = f_handle.handle_bytes >> 2;
+...
+        handle_bytes = handle_dwords * sizeof(u32);
+
+> Fixes: 1b43c4629756 ("fs: Annotate struct file_handle with __counted_by() and use struct_size()")
+> Signed-off-by: Kees Cook <keescook@chromium.org>
+> ---
+> Cc: Jan Kara <jack@suse.cz>
+> Cc: Chuck Lever <chuck.lever@oracle.com>
+> Cc: Gustavo A. R. Silva <gustavoars@kernel.org>
+> Cc: Christian Brauner <brauner@kernel.org>
+> Cc: Alexander Viro <viro@zeniv.linux.org.uk>
+> Cc: Jeff Layton <jlayton@kernel.org>
+> Cc: Amir Goldstein <amir73il@gmail.com>
+> Cc: linux-fsdevel@vger.kernel.org
+> Cc: linux-nfs@vger.kernel.org
+> Cc: linux-hardening@vger.kernel.org
+>  v2: more bounds checking, add comments, dropped reviews since logic changed
+>  v1: https://lore.kernel.org/all/20240403215358.work.365-kees@kernel.org/
+> ---
+>  fs/fhandle.c | 11 +++++++++--
+>  1 file changed, 9 insertions(+), 2 deletions(-)
+> 
+> diff --git a/fs/fhandle.c b/fs/fhandle.c
+> index 8a7f86c2139a..854f866eaad2 100644
+> --- a/fs/fhandle.c
+> +++ b/fs/fhandle.c
+> @@ -40,6 +40,11 @@ static long do_sys_name_to_handle(const struct path *path,
+>  			 GFP_KERNEL);
+>  	if (!handle)
+>  		return -ENOMEM;
+> +	/*
+> +	 * Since handle->f_handle is about to be written, make sure the
+> +	 * associated __counted_by(handle_bytes) variable is correct.
+> +	 */
+> +	handle->handle_bytes = f_handle.handle_bytes;
+>  
+>  	/* convert handle size to multiple of sizeof(u32) */
+>  	handle_dwords = f_handle.handle_bytes >> 2;
+> @@ -51,8 +56,8 @@ static long do_sys_name_to_handle(const struct path *path,
+>  	handle->handle_type = retval;
+>  	/* convert handle size to bytes */
+>  	handle_bytes = handle_dwords * sizeof(u32);
+> -	handle->handle_bytes = handle_bytes;
+> -	if ((handle->handle_bytes > f_handle.handle_bytes) ||
+> +	/* check if handle_bytes would have exceeded the allocation */
+> +	if ((handle_bytes < 0) || (handle_bytes > f_handle.handle_bytes) ||
+>  	    (retval == FILEID_INVALID) || (retval < 0)) {
+>  		/* As per old exportfs_encode_fh documentation
+>  		 * we could return ENOSPC to indicate overflow
+> @@ -68,6 +73,8 @@ static long do_sys_name_to_handle(const struct path *path,
+>  		handle_bytes = 0;
+>  	} else
+>  		retval = 0;
+> +	/* the "valid" number of bytes may fewer than originally allocated */
+> +	handle->handle_bytes = handle_bytes;
+>  	/* copy the mount id */
+>  	if (put_user(real_mount(path->mnt)->mnt_id, mnt_id) ||
+>  	    copy_to_user(ufh, handle,
+> -- 
+> 2.34.1
+> 
+> 
