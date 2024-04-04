@@ -1,107 +1,130 @@
-Received: from mail-pj1-f48.google.com (mail-pj1-f48.google.com [209.85.216.48])
+Received: from mail-pf1-f173.google.com (mail-pf1-f173.google.com [209.85.210.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 401151CAB5
-	for <linux-kernel@vger.kernel.org>; Thu,  4 Apr 2024 00:17:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B66BE1391
+	for <linux-kernel@vger.kernel.org>; Thu,  4 Apr 2024 00:19:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712189871; cv=none; b=tOZTeY17ZNZX5i95t8M0+BdNA8TAhGKp+IeYpFxcenEOmTVS4NXA8o0vfJoxuDW2p57xx71wkcKFXRU7yYCTRJs4TKQXhA3BuwQlqT9CvL8TGyxXgWMjJor9QjNE5qfMzVRwN7NUsfiou4DbEh98W39xPOkfTLTb+9NLTVxAPDY=
+	t=1712189945; cv=none; b=UX4nwKVdQT1DO1VxwjdRKko1qcXL2e+sMis8oHI70wTit7mUJC68Yeh2/xE6g/BovkJfrwCVb5YCPGUUVBeKZhgUfI8hfjHQ1EYX2xMs4W9OoqsLZIQQnk5HxVKnEsyX/Lknwnp3NmRh37ROAxvrWV3vAEF9p/6VCHRuK7JYPjc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712189871; c=relaxed/simple;
-	bh=B7R3hnTJRgCRWl5nF3InAG07B70C9XWTY07YjD3CY9Q=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=s/0jqccmCOi447MA9XupYqeiymDERYA6TM98zQDI9jQo1CD6A2x6aMm2M++VI+AZpIkrLBBhS4vYJ19zPRKktK8OAQFeS3XwLF1MR+1NLIky+HDMcO6RUg/pI6TQuW5luEu0MaPwmZoiWtPeCZtwrqCJfSJj0fWpkt/+NS5xuqY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=moeryeMB; arc=none smtp.client-ip=209.85.216.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1712189945; c=relaxed/simple;
+	bh=5LdGWGkBVQLDfDXo+88TMXwyj/Bf1G3/Mw8MFW3rdR8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=LLTLl9cCKC8A83fTNWMv7ADfkqxqK0ypFedfpdsSqrV2AHumKWFUGgkkxtSfAIeCWFboOa1A57ZPK21ir264/eHYSYDJTj+PMiwxQV55u4WK1UsuvqycfBoSDiFXU8mXrkRWxEY8GWtxB6h4J2/YtHb0ig2olWtGlkvjqmYyJlw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com; spf=pass smtp.mailfrom=fromorbit.com; dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b=QC8LjDVH; arc=none smtp.client-ip=209.85.210.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fromorbit.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="moeryeMB"
-Received: by mail-pj1-f48.google.com with SMTP id 98e67ed59e1d1-2a226f8e44aso272060a91.0
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Apr 2024 17:17:50 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b="QC8LjDVH"
+Received: by mail-pf1-f173.google.com with SMTP id d2e1a72fcca58-6ea9a60f7f5so343532b3a.3
+        for <linux-kernel@vger.kernel.org>; Wed, 03 Apr 2024 17:19:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1712189869; x=1712794669; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=NEhL3R0CV+V3IuuciSTia1iTNDXKvNOyBjkJ1bb1xuA=;
-        b=moeryeMBg1rF1de14LZ/J6WEZLTGhm4Opitd/OsogBSskMhZ4ezInwXDi8cIdkQgwY
-         bjxh3Dq1gJtSM06a4Qiy5wuBq70tOTQzUSAfRISBICJ9ZYRExvFCqHcBD7HKsnKXnWqN
-         zP0i07ErOw+Mq4HK73p0lHDQh5IHz6q2eS/KPuuwLRHltZb3LpmTasf/vN5PvVFvBDdd
-         oK5uwnNU0aBDhW36BNulQc0wr05G+Jd8cooXpebonquvphyndPHtpkWjZjiLyGDGk8bo
-         1w5Tb6fpcM75svULCi4zxAJ74NZV4UwukrX4zeUY34wJBTtrDkbw52rRbivNb8Pv2jrX
-         Hn2A==
+        d=fromorbit-com.20230601.gappssmtp.com; s=20230601; t=1712189942; x=1712794742; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=J/Ew6UmSHF3bhF5sgzlv0Nsw7b3+N8hTZIhaCBiHnNA=;
+        b=QC8LjDVHvjZl/8qIXe/DYQPHNI8d7bHKZXoN/L+4SqtlUiZw4x8MgWDMFw4FkOoJ30
+         Zy5mZYNo8txp40gHgfvpYBqXbnYhUHx7JdpZbRGoYF9yPqqd+T98/kYQHAZk+yMMV1Ox
+         DGPv72zfWo8CYZr1xM3LLdLTgbsA31ebRSTa2muzwzP4ewG2SL0Jdv6OxBFSAwYXV//q
+         GXu5HJ4VySZAd54UY7le6D3ZllDZPz7YSFsi2NsXsY2sh2ge12GcA+njNipLQEqgrpwr
+         jyexGLZ4hoGyodSSEkL4wbUVBT6XOOJOIiWWrIa/QIZysveM2p3cip4rxD+FAZHFZeZR
+         4/WA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712189869; x=1712794669;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=NEhL3R0CV+V3IuuciSTia1iTNDXKvNOyBjkJ1bb1xuA=;
-        b=CfW+zmzzOBBDh3P6gm7P8PLZBl+8cN7ipyLF4MITc/BmfpJJM2nG8szZ9soaySwOyV
-         eV41f3b12oVK6R2m0CSjCWFR/A8UqMM+naG+0KKhPSmMUZ+IEX/ZOkXrFJZVePpG2Vrb
-         IjJ8AiTlXNxKbn6dozNpn+blonEAWNPc3ppGflRxYntfS+jNXJVdbZCRE+2sRWshlwcp
-         +aNoT6/NMMRVMhfskR9x9kQZPGuMLThPme1vmN4W6lGpmhDqT2ReHRSNsnxkhtrF9H7/
-         VugmrnY+Td4vBY01kZ68StiBusN0tVMN4eZ9Zkv3Egu5EtsVFLdIUo9L0F8/+30nY02P
-         y9dA==
-X-Forwarded-Encrypted: i=1; AJvYcCWXe/r78lDh38y4OEJO5B52WGyx9V9bEUVWmVGnJfvZnj780LXACtajnYUyGRwCaE3/GTyYfWu5GNiuG7bDSeJ2O/8ovuWEW4fLQ1Jq
-X-Gm-Message-State: AOJu0Yy17BWJcuV09JPCsdUPylYFdbb+2Y8MTFJLHgGnezqp3yV3KIFG
-	popzhKAN/Tg9/vyWWB4mnRI97F+a6e4IXFhk60+mNzgO6gLROBu705226CwkYFjjvw==
-X-Google-Smtp-Source: AGHT+IFvRGBLmr18Nxk1BlgrtjmU4Hpm+bSbf901S7+dDxgwigEa/yJT6NNfNLt7go4I4DJzMOm6Rw==
-X-Received: by 2002:a17:90a:c587:b0:2a2:775:9830 with SMTP id l7-20020a17090ac58700b002a207759830mr1144439pjt.11.1712189869444;
-        Wed, 03 Apr 2024 17:17:49 -0700 (PDT)
-Received: from jc-ubuntu-dev-korn-1 (c-98-210-1-68.hsd1.ca.comcast.net. [98.210.1.68])
-        by smtp.gmail.com with ESMTPSA id q94-20020a17090a17e700b0029facfb3f25sm338726pja.45.2024.04.03.17.17.48
+        d=1e100.net; s=20230601; t=1712189942; x=1712794742;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=J/Ew6UmSHF3bhF5sgzlv0Nsw7b3+N8hTZIhaCBiHnNA=;
+        b=JerhNYNTvYsG3P0aGgyeZk/ha+LHhUiSDEUuFHQci51wsiHy6/x3O5xcecQ7fywVXC
+         HyFv38Ia6yL1n6vHyb93y/Shp8dwGR8FKSco7mi3jN9SW63T/xVajH2yFtmT5GuN9Lri
+         Ps+ONc/+HIJ+Vm0WhnoYMhfW6gWM7kO3c2ZdaBeyAu5UWTnEVEMPRP2MvBOTSvD48Dv9
+         k5I7onZgcKLXNsQOqd/i/X72pv+R63u7DsIS4T+mykt56OQaaiIrygSZuC6x9MncbRZr
+         wPDgrgjQiqjfoXD2uf5ZSWFFkMJAUoNKB/vOsrNnQmTq7WItY/IoKAPNcV3F0kGkfO5g
+         nERQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXdQudIPPNxSFHFsl1zbIlGYLAyOmT/gDdItKZsNNp/xyMyf81OIeqICcyqNkrGU+CTBZX0QspD1HF9nxPsAjV2/5wPQ9ry7d0VRIc7
+X-Gm-Message-State: AOJu0Yw4zKfBNtoG9XE0bmjUdxbxmnJlRsgYCFL9X+S0gQzfniExMFuK
+	T40dOOeZLPloDbjpDQ+eJdrKQ82demjfUP2mZwzYJB779G4f9ai/imi0adlWKO8=
+X-Google-Smtp-Source: AGHT+IFKT2w4O4ruHJDML5BtSRsEHhnp0R38EYWMUlfGE3tp+i8irA6jmLpi5aCVV37KdBohbDNcZQ==
+X-Received: by 2002:a05:6a20:158d:b0:1a3:c390:6a6b with SMTP id h13-20020a056a20158d00b001a3c3906a6bmr1418055pzj.6.1712189941674;
+        Wed, 03 Apr 2024 17:19:01 -0700 (PDT)
+Received: from dread.disaster.area (pa49-181-56-237.pa.nsw.optusnet.com.au. [49.181.56.237])
+        by smtp.gmail.com with ESMTPSA id gd22-20020a17090b0fd600b002a0187d84f0sm298668pjb.20.2024.04.03.17.19.01
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 03 Apr 2024 17:17:49 -0700 (PDT)
-From: Jackson Chui <jacksonchui.qwerty@gmail.com>
-To: Johan Hovold <johan@kernel.org>,
-	Alex Elder <elder@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	greybus-dev@lists.linaro.org,
-	linux-staging@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Cc: Jackson Chui <jacksonchui.qwerty@gmail.com>
-Subject: [PATCH] staging: greybus: Clear up precedence for gcam logging macros
-Date: Wed,  3 Apr 2024 17:16:28 -0700
-Message-Id: <20240404001627.94858-1-jacksonchui.qwerty@gmail.com>
-X-Mailer: git-send-email 2.34.1
+        Wed, 03 Apr 2024 17:19:01 -0700 (PDT)
+Received: from dave by dread.disaster.area with local (Exim 4.96)
+	(envelope-from <david@fromorbit.com>)
+	id 1rsAok-00369Z-39;
+	Thu, 04 Apr 2024 11:18:58 +1100
+Date: Thu, 4 Apr 2024 11:18:58 +1100
+From: Dave Chinner <david@fromorbit.com>
+To: Ye Bin <yebin10@huawei.com>
+Cc: tytso@mit.edu, adilger.kernel@dilger.ca, linux-ext4@vger.kernel.org,
+	linux-kernel@vger.kernel.org, jack@suse.cz
+Subject: Re: [PATCH] jbd2: use shrink_type type instead of bool type for
+ __jbd2_journal_clean_checkpoint_list()
+Message-ID: <Zg3x8qJXrseiiYgU@dread.disaster.area>
+References: <20240401011614.3650958-1-yebin10@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240401011614.3650958-1-yebin10@huawei.com>
 
-Reported by checkpatch:
+On Mon, Apr 01, 2024 at 09:16:14AM +0800, Ye Bin wrote:
+> "enum shrink_type" can clearly express the meaning of the parameter of
+> __jbd2_journal_clean_checkpoint_list(), and there is no need to use the
+> bool type.
+> 
+> Signed-off-by: Ye Bin <yebin10@huawei.com>
+> ---
+>  fs/jbd2/checkpoint.c | 9 +++------
+>  fs/jbd2/commit.c     | 2 +-
+>  include/linux/jbd2.h | 4 +++-
+>  3 files changed, 7 insertions(+), 8 deletions(-)
+> 
+> diff --git a/fs/jbd2/checkpoint.c b/fs/jbd2/checkpoint.c
+> index 1c97e64c4784..d6e8b80a4078 100644
+> --- a/fs/jbd2/checkpoint.c
+> +++ b/fs/jbd2/checkpoint.c
+> @@ -337,8 +337,6 @@ int jbd2_cleanup_journal_tail(journal_t *journal)
+>  
+>  /* Checkpoint list management */
+>  
+> -enum shrink_type {SHRINK_DESTROY, SHRINK_BUSY_STOP, SHRINK_BUSY_SKIP};
 
-CHECK: Macro argument 'gcam' may be better as '(gcam)' to avoid
-precedence issues
+So this is a local, internal definition, but ....
 
-Disambiguates '&' (address-of) operator and '->' operator precedence,
-accounting for how '(gcam)->bundle->dev' is a 'struct device' and not a
-'struct device*', which is required by the dev_{dbg,info,err} driver
-model diagnostic macros. Issue found by checkpatch.
+> diff --git a/include/linux/jbd2.h b/include/linux/jbd2.h
+> index 971f3e826e15..58a961999d70 100644
+> --- a/include/linux/jbd2.h
+> +++ b/include/linux/jbd2.h
+> @@ -1434,7 +1434,9 @@ void jbd2_update_log_tail(journal_t *journal, tid_t tid, unsigned long block);
+>  extern void jbd2_journal_commit_transaction(journal_t *);
+>  
+>  /* Checkpoint list management */
+> -void __jbd2_journal_clean_checkpoint_list(journal_t *journal, bool destroy);
+> +enum shrink_type {SHRINK_DESTROY, SHRINK_BUSY_STOP, SHRINK_BUSY_SKIP};
 
-Signed-off-by: Jackson Chui <jacksonchui.qwerty@gmail.com>
----
- drivers/staging/greybus/camera.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+... this exports it to the world. That's a problem, because the
+"SHRINK_*" namespace is owned by the memory management subsystem for
+controlling memory shrinkers. e.g. SHRINK_STOP and SHRINK_EMPTY are
+already defined and in wide use across the kernel in the cache
+shrinker infrastructure.
 
-diff --git a/drivers/staging/greybus/camera.c b/drivers/staging/greybus/camera.c
-index a8173aa3a995..d82a2d2abdca 100644
---- a/drivers/staging/greybus/camera.c
-+++ b/drivers/staging/greybus/camera.c
-@@ -180,9 +180,9 @@ static const struct gb_camera_fmt_info *gb_camera_get_format_info(u16 gb_fmt)
- 
- #define GB_CAMERA_MAX_SETTINGS_SIZE	8192
- 
--#define gcam_dbg(gcam, format...)	dev_dbg(&gcam->bundle->dev, format)
--#define gcam_info(gcam, format...)	dev_info(&gcam->bundle->dev, format)
--#define gcam_err(gcam, format...)	dev_err(&gcam->bundle->dev, format)
-+#define gcam_dbg(gcam, format...)	dev_dbg(&((gcam)->bundle->dev), format)
-+#define gcam_info(gcam, format...)	dev_info(&((gcam)->bundle->dev), format)
-+#define gcam_err(gcam, format...)	dev_err(&((gcam)->bundle->dev), format)
- 
- static int gb_camera_operation_sync_flags(struct gb_connection *connection,
- 					  int type, unsigned int flags,
+IOWS, these new types needs to be prefixed to indicate they are JBD2
+objects. i.e
+
+enum jbd2_shrink_type {JBD2_SHRINK_DESTROY, JBD2_.... };
+
+So that people who are looking at memory shrinker stuff don't get
+horribly confused by jbd2 using shrinker namespaces for things that
+are completely unrelated to memory reclaim...
+
+-Dave.
 -- 
-2.34.1
-
+Dave Chinner
+david@fromorbit.com
