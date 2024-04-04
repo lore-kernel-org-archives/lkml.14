@@ -1,146 +1,104 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 605021E4A2;
-	Thu,  4 Apr 2024 12:51:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40D7374C00
+	for <linux-kernel@vger.kernel.org>; Thu,  4 Apr 2024 12:52:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712235096; cv=none; b=bgqtMH5bDx971ij4UmuB98XDq6y5RfO7M7y6lmMoxbT92TtM3P4XKaBo6E3G31n1aY74iLf0yAyf2h0VWkXUoe4LFnygfP2ykJnLqSfZgocahCObkDvjzRbW+04RZbEFGWmCEJuAy/i8PfVGes/Gw7MTJXpesvGkzbnBcBtbuEw=
+	t=1712235121; cv=none; b=fxgoR8KllR8qSqHcBXBjBPOjkVdMZxmLFMNLF17llxTbpnv8QSkx/KEvz7itI1HubWwYssHUVR6MoFZI67AxCbNeT3SJ/dd8MVYnn1cRjJ88n+XyawAdiloOmXvfBhmK1AxI/qTw3uYz4BUoWGKr1VedF1ShFQ+eKW+niryRjbQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712235096; c=relaxed/simple;
-	bh=u4ww7v50CEjBfg1xgPiOEg+4022lXm9deC4xNxtry7M=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=k2sxapD3llKzxSdiNuRITK6E9R9TaO6n0FYk80HWmk41baTwlNr/nbsymdPk1Zdg3VJvNBSJCUIX0CdQrkn/QPYvWLjBKusulKkniz13cCGaZ26Py5SRsIBfX1hcLHCsmYkruBJ7LK6KNeOzunegITZ7C2qE3lo3BprQ1kIDcBc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=A1MtXQGT; arc=none smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1712235121; c=relaxed/simple;
+	bh=HAQPEmrsZnfhJBLM4La7QuPi+ei+wBR7Bf6pBFSm3J0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=nv1KhfY+ydZZp4vFCKkDhrCWR/SOFI7kglfgUw/8GmvVJsSL6/4z3ptqnriHdYDcW7Th0r+rJzSOcMhLTbsQllVlkx1z5aZDasxAZOqYyjCsk8v8/PO6k65gAAkYZ82TXTKWz0GmIEH/VqBHqJaaHzIHxxoiUOPNMVRSDI/Y158=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IjGHUybf; arc=none smtp.client-ip=209.85.218.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="A1MtXQGT"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1712235092; x=1743771092;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version:content-id;
-  bh=u4ww7v50CEjBfg1xgPiOEg+4022lXm9deC4xNxtry7M=;
-  b=A1MtXQGTwOGaU3UBCnDgMzVtftasxT6wYnEODkzvA0WU3slchrKR4CrG
-   er9KApRcjkOLNu2rHwBWdDr/NfIhDaVSL7Tt+PlLeM+S4j17+WMvwlO8n
-   NM27sp0x9uim0NxcuyAUWbAlexe/Y3H1QPucteJ5XKwmzV9jnVzuDrryF
-   ii2dI2zSCzKApgumvMQplVK3zSjGxzsRpY05Td2mpNm+2tT6CytVndCu4
-   AJyVChg8ywkAO6qjV+Q1O3p4F8TCfTHz952ABIZf3hke8KVtZ9072vCtb
-   4J1abyOM66+/A8jEa6HBPmFpbrE4cOHiEx9XpzApgdaK4wUURQWijE8t1
-   g==;
-X-CSE-ConnectionGUID: lKLZJo59TYe+8K+cUvPiyA==
-X-CSE-MsgGUID: chhJ+CFuQ8G84ZOQM/Ipdg==
-X-IronPort-AV: E=McAfee;i="6600,9927,11033"; a="18245247"
-X-IronPort-AV: E=Sophos;i="6.07,179,1708416000"; 
-   d="scan'208";a="18245247"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Apr 2024 05:51:27 -0700
-X-CSE-ConnectionGUID: dc4W9nU5Tpq3eyvtZLpAog==
-X-CSE-MsgGUID: YUucM6zASWCHFftmf3PyIA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,179,1708416000"; 
-   d="scan'208";a="18704359"
-Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.247.26])
-  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Apr 2024 05:51:25 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Thu, 4 Apr 2024 15:51:19 +0300 (EEST)
-To: Carlos Ferreira <carlosmiguelferreira.2003@gmail.com>
-cc: Hans de Goede <hdegoede@redhat.com>, platform-driver-x86@vger.kernel.org, 
-    LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] HP: wmi: added support for 4 zone keyboard rgb
-In-Reply-To: <5181e9fa-2acc-4bc3-9f22-77ec519941ac@gmail.com>
-Message-ID: <fde354a7-4947-e32f-4c35-8b5453257d8e@linux.intel.com>
-References: <20240324180549.148812-1-carlosmiguelferreira.2003@gmail.com> <980459bc-a781-1d2b-374c-da023d601c58@linux.intel.com> <998ee474-5e0c-4877-8a95-b22b0edd7837@gmail.com> <69e28674-58b8-4e77-b4b1-033ccb7e4dce@linux.intel.com>
- <5181e9fa-2acc-4bc3-9f22-77ec519941ac@gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IjGHUybf"
+Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-a5193f56986so42093566b.0
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Apr 2024 05:51:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1712235118; x=1712839918; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=KnnhlpaHNCUCIrrWDg/RL2L2v9aF/5YKbhFHqy0aII8=;
+        b=IjGHUybfaKqwFmzC73QI1T5boEvozQBst8Bl6PRhSmscGMYgt0A9gXdeG2HOwCi/6p
+         CHRkHLnv9W0apJuS9l2KJvwU4Bb6j37+aJ6hrod0nfZ0cqJYY/Q+95xIZX2aCskYAJFz
+         LkFbdyZcawF5taoA0q3gz7dUhtRkT3mabLMwBYkM/zO5g5p4MkVQhEOWPcP1E878HagC
+         Ex/5WClVSR60UFiJYNHExq4ZMvJNLA/Cbnr9BT9c7uNd92TQxcnvdTvcvFXicKLs+g/B
+         AVv1nKdcpI9v8ywGSnHrvgHSwssRZSg6QD9x3hmX/dXRifxXvPcODICRprLW2eqnFuTq
+         Q/xg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712235118; x=1712839918;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=KnnhlpaHNCUCIrrWDg/RL2L2v9aF/5YKbhFHqy0aII8=;
+        b=Tkb3fGWUm9wktcZX+lnop17dSchSQ6mIHJcxyoE3V072CYuJ1Q8iXktMoS85IWArj8
+         fdNLDjtnhR4JC2Q4826uQVucLjjUnjVQeJNgdmlPE0j4YOEydJlFOSv9yvKsIxCiLV/B
+         YVwyiF3faCTQOYz30vM39akZTupOSNIFypJfpjnieYQC99XO44zR4PRkOLJfm/t+Tzyl
+         8RfhJbiNwOoqlQGLTLTwNvoKYGYuuXVbZN4qGjg1xotOybKv6uUZfimmmmhM+h9zOBTk
+         +wMRi5UNfpJ1GFxvdnu4fzy/SIK3LIOxnIHOhFljU9QtZNAKgHA13PGhQDQlByCl/FBw
+         E1Ig==
+X-Forwarded-Encrypted: i=1; AJvYcCUZTmGDyxDicQSpQ4eZ70SfFWfTYoeOkte+MclGOCYwrTGefmuae8X79mq65ub31qgkiTj6KckEbclOv1Mny57BZBwmXPNHgAeTpZHo
+X-Gm-Message-State: AOJu0YytZ21MG8CejGqbwCRS0St1xiwOeoWVpOJ4lfMGsbcK9ZpMggjy
+	HbgA28HxT96LH7+uZib8VBjlxu3fhBwZIVYzUlmPHTmaYFehdaIWxk2gwGigfilPvmZEmxMwQBb
+	eln21nI8vvwKgt/luqcwkFouOK1U10ruxikk=
+X-Google-Smtp-Source: AGHT+IEAbu57T3CEw3mRcXuQKUKAbPMz0MmW5SuVqjvtMKR/CDDjvR12TFadTmieeFLw/af6A9WId94r6dBGaIvl5w8=
+X-Received: by 2002:a17:906:3a81:b0:a46:3ce4:5acb with SMTP id
+ y1-20020a1709063a8100b00a463ce45acbmr1583695ejd.75.1712235118422; Thu, 04 Apr
+ 2024 05:51:58 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; BOUNDARY="8323328-1823717409-1712234718=:2725"
-Content-ID: <bdb796b6-f4a8-7bf1-8bd0-98d4177b0363@linux.intel.com>
+References: <20240401224329.1228468-1-nunes.erico@gmail.com>
+In-Reply-To: <20240401224329.1228468-1-nunes.erico@gmail.com>
+From: Qiang Yu <yuq825@gmail.com>
+Date: Thu, 4 Apr 2024 20:51:46 +0800
+Message-ID: <CAKGbVbuvX3qN-0LU9Sj4dWxCY3CoLnj+wcSKx2=D1-K0Qn8WpA@mail.gmail.com>
+Subject: Re: [PATCH 0/2] drm/lima: two driver cleanups
+To: Erico Nunes <nunes.erico@gmail.com>
+Cc: anarsoul@gmail.com, dri-devel@lists.freedesktop.org, 
+	lima@lists.freedesktop.org, 
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+Serial is Reviewed-by: Qiang Yu <yuq825@gmail.com>
 
---8323328-1823717409-1712234718=:2725
-Content-Type: text/plain; CHARSET=ISO-8859-15
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Content-ID: <b08fb703-b434-9196-93b3-c9bebfa2f57d@linux.intel.com>
-
-On Wed, 27 Mar 2024, Carlos Ferreira wrote:
-
-> On 3/27/24 1:05 PM, Ilpo J=E4rvinen wrote:
->=20
-> > On Tue, 26 Mar 2024, Carlos Ferreira wrote:
-> >=20
-> >> Hi, i have changed some of the code. How does it look now?
-> >>
-> >> Signed-off-by: Carlos Ferreira <carlosmiguelferreira.2003@gmail.com>
-> >> ---
-> >=20
-> > First of all, you need to make a proper submission with versioning, tha=
-t=20
-> > is:
-> >=20
-> > - Put version into the subject: PATCH v2
-> > - Don't put extra stuff into changelog like the above question, if you=
-=20
-> > need to ask something, put your question underneath the first --- line.
-> > - List the changes you made underneath the first --- line (see ML=20
-> > archives for examples about formatting)
->=20
-> Should i submit the v2 patch with the current state or with the changes=
-=20
-> suggested such as the use of the leds API?=20
-
-Please send v3 once you've made the changes, there's no need to send=20
-patches which we know to become obsolete.
-
-> >>  drivers/platform/x86/hp/hp-wmi.c | 251 +++++++++++++++++++++++++++++-=
--
-> >>  1 file changed, 241 insertions(+), 10 deletions(-)
-> >>
-> >> diff --git a/drivers/platform/x86/hp/hp-wmi.c b/drivers/platform/x86/h=
-p/hp-wmi.c
-> >> index e53660422..8108ca7e9 100644
-> >> --- a/drivers/platform/x86/hp/hp-wmi.c
-> >> +++ b/drivers/platform/x86/hp/hp-wmi.c
-> >> @@ -27,6 +27,7 @@
-> >>  #include <linux/rfkill.h>
-> >>  #include <linux/string.h>
-> >>  #include <linux/dmi.h>
-> >> +#include <linux/bitfield.h>
-> >=20
-> > Try to put it earlier, these should eventually be in alphabetic order=
-=20
-> > (again, ordered by a separate patch, not this one).
->=20
-> You mean organizing all the imports like this?
-> #include <linux/acpi.h>
-> #include <linux/bitfield.h>
-> #include <linux/dmi.h>
-> #include <linux/hwmon.h>
-> #include <linux/init.h>
-> #include <linux/input.h>
-> #include <linux/input/sparse-keymap.h>
-> #include <linux/kernel.h>
-> #include <linux/module.h>
-> #include <linux/platform_device.h>
-> #include <linux/platform_profile.h>
-> #include <linux/rfkill.h>
-> #include <linux/slab.h>
-> #include <linux/string.h>
-> #include <linux/types.h>
-
-Yes.
-
-If adding to a non-sorted list, the include should be placed before any=20
-entries that are alphabetically after it but providing another patch=20
-to sort them is of course even better than that.
-
---=20
- i.
---8323328-1823717409-1712234718=:2725--
+On Tue, Apr 2, 2024 at 6:43=E2=80=AFAM Erico Nunes <nunes.erico@gmail.com> =
+wrote:
+>
+> Patch 1 is a fix for a crash which triggers on removing the module on
+> kernels with CONFIG_DEBUG_SHIRQ enabled, such as the Fedora kernel.
+>
+> Patch 2 is a fix to this warning:
+>   drivers/gpu/drm/lima/lima_drv.c:387:13: error: cast to smaller integer
+>   type 'enum lima_gpu_id' from 'const void *'
+>   [-Werror,-Wvoid-pointer-to-enum-cast]
+> which we have received as a repeated report from the kernel test bot to
+> the lima mailing list.
+> The warning only reproduces with recent clang on aarch64, but the patch
+> does get rid of it and there seem to be no more warnings for W=3D1.
+>
+> Erico Nunes (2):
+>   drm/lima: fix shared irq handling on driver remove
+>   drm/lima: fix void pointer to enum lima_gpu_id cast warning
+>
+>  drivers/gpu/drm/lima/lima_drv.c | 21 ++++++++++++++++++---
+>  drivers/gpu/drm/lima/lima_drv.h |  5 +++++
+>  drivers/gpu/drm/lima/lima_gp.c  |  2 ++
+>  drivers/gpu/drm/lima/lima_mmu.c |  5 +++++
+>  drivers/gpu/drm/lima/lima_pp.c  |  4 ++++
+>  5 files changed, 34 insertions(+), 3 deletions(-)
+>
+> --
+> 2.44.0
+>
