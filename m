@@ -1,115 +1,182 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78CE5139D;
-	Wed,  3 Apr 2024 23:55:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C211156890
+	for <linux-kernel@vger.kernel.org>; Wed,  3 Apr 2024 23:56:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712188527; cv=none; b=Pjep+Y285hmdQrpRGvzNbVIlX4UP7FyUuPNIL+tVpnNEux1rQ3p/9xDOIdFhQjouieI651+CDmackOAaIqEJ6KMvnw/+YLopiL0wc2tVAjWiFXHOnJrxsItC7fBHzwahqVE8eldmsFZ66dgeR06Eu9LxzwBOS/VA1DRK/v5EeX4=
+	t=1712188593; cv=none; b=J/z6l4DYwUlDwLz+gfj0tjtNAtjdvM7hN/kCiyPoTm31FlO+gUG7cDh08yimm4inc99A48EVHbNf0g5LBx4TpZASAm8vsq078R2Z5UZqfvBDKZHsOWkY12hOjIbPkCSURKWrlwhuE7DbbPk0xebGyJx+ggFdSCL6qwAnJTk78w0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712188527; c=relaxed/simple;
-	bh=HWHBdM5a47wfjfWmcaNM3oH6e3DQ6PEyk5hcv30TTn4=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=Z3yjUGBxLT+6xIM3Pad87pn8Gkkm3z13t+ogbdasqtHK3oxFvfcPObUQbmT+CtNidQfDRLOWXbfADgXG9Dg/uaOW/fGDT4DCU73eYKx+zKR4gZ1YsQxyONRe6D3pOyiv8OoS/SjhX2W7WQx6H0JqSXA1zmdc7ADMGZab3HJu/7Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CSX60lOJ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1712188593; c=relaxed/simple;
+	bh=UrXAQasvncSpBHkoTI6cFGko0JNvW/rvXuzK5szDdrs=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Mu/oQL+AYMre9PkzHBg9ZxBHSRbxyQ+43ibMuUO5JkN7bqcANOySopZCqvmoldlzkIiyf1Q+mXZyT2khsgzx5GpHo6Szc5b/usFedVDoeRgfttzFmIhyzcprtwLsvDUdRF4AcYIWKmvL2AEn+ZjnvyLLm/H6wrr0psW3MNsnt40=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YJzqfoyA; arc=none smtp.client-ip=192.198.163.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CSX60lOJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3AA36C433F1;
-	Wed,  3 Apr 2024 23:55:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712188527;
-	bh=HWHBdM5a47wfjfWmcaNM3oH6e3DQ6PEyk5hcv30TTn4=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=CSX60lOJpUVt/g+VfUjC5n6QM20vfeqZCF2mvJKXLloZhBG936KkYNAcXK+zfkdAv
-	 PaRjfysfe4887jJeoKZEMTi98/a4k+GGVYzo8mK9/HfgLq61PQAqL9ZAdjHAlE/y49
-	 yMlb4uhUFsgTjDtx4zVhaBmDLUYDBHAOnPp26e9zA4aNGBwUsp/sTV1I/3/UpKY1T7
-	 ep3zamJcF8CQb87lD/8pnVVBw3zQWM96tQpf5YV6uTbPSrzTvJcwM7sr9g13PJa4KH
-	 N2PPaaJy9liGDBBq2eB7ptHxYHi58CgxGo0m5r606yKUkq19M8P3LhmSqCvDaNU9K9
-	 8AT4CSreSSMGg==
-Date: Thu, 4 Apr 2024 08:55:22 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: paulmck@kernel.org
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- linux-fsdevel@vger.kernel.org, Zhenhua Huang <quic_zhenhuah@quicinc.com>,
- Masami Hiramatsu <mhiramat@kernel.org>
-Subject: Re: [PATCH fs/proc/bootconfig] remove redundant comments from
- /proc/bootconfig
-Message-Id: <20240404085522.63bf8cce6f961c07c8ce3f17@kernel.org>
-In-Reply-To: <f036c5b0-20cc-40c1-85f9-69fa9edd0c95@paulmck-laptop>
-References: <f036c5b0-20cc-40c1-85f9-69fa9edd0c95@paulmck-laptop>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YJzqfoyA"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1712188591; x=1743724591;
+  h=date:from:to:cc:subject:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=UrXAQasvncSpBHkoTI6cFGko0JNvW/rvXuzK5szDdrs=;
+  b=YJzqfoyACOnletvFawwnHBE9Zb7XZ0m/WaHFuUCGK/5dOj6GwDz+oj6c
+   u2ILrH56gcazxoD1gMbNKGVgYQt/2ap9xR3yDLpiKkxA66gDwQwTBgU/4
+   2Jsce8sEFxnitNgKmKvfmjTBiCnAq05Eu2B/uyedOKtyTa8IyvqNkwup+
+   WUEADakxbRa1pq4O7if444L8Ca+IEZr56phaqRHuRqdxYnlo3Ux22TXdH
+   XP5QbsNV0OkI2JEDuxIupmkCc2dsPpM35OocMa1UfUXisFN4RqdZl2B1U
+   2D0ZqAn0kPgfSzna7uEh4D3T7vRWHAOFaans3+wrBWcsaWDgnpKTKkEHh
+   Q==;
+X-CSE-ConnectionGUID: 6wm9BL79QI+hbDHHUB5cFQ==
+X-CSE-MsgGUID: /bcO6s9WQeami/HAhASAZQ==
+X-IronPort-AV: E=McAfee;i="6600,9927,11033"; a="18068634"
+X-IronPort-AV: E=Sophos;i="6.07,178,1708416000"; 
+   d="scan'208";a="18068634"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2024 16:56:30 -0700
+X-CSE-ConnectionGUID: +LUqcMe5Tg6zketEoCocVw==
+X-CSE-MsgGUID: x5Ktg1vVQmSszC3DmtCLnw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,178,1708416000"; 
+   d="scan'208";a="19057023"
+Received: from jacob-builder.jf.intel.com (HELO jacob-builder) ([10.54.39.125])
+  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2024 16:56:30 -0700
+Date: Wed, 3 Apr 2024 17:00:57 -0700
+From: Jacob Pan <jacob.jun.pan@linux.intel.com>
+To: Thomas Gleixner <tglx@linutronix.de>
+Cc: Dimitri Sivanich <sivanich@hpe.com>, David Woodhouse
+ <dwmw2@infradead.org>, Lu Baolu <baolu.lu@linux.intel.com>, Joerg Roedel
+ <joro@8bytes.org>, Will Deacon <will@kernel.org>, Robin Murphy
+ <robin.murphy@arm.com>, iommu@lists.linux.dev,
+ linux-kernel@vger.kernel.org, Steve Wahl <steve.wahl@hpe.com>, Russ
+ Anderson <russ.anderson@hpe.com>, jacob.jun.pan@linux.intel.com
+Subject: Re: [PATCH] Allocate DMAR fault interrupts locally
+Message-ID: <20240403170057.0294a17e@jacob-builder>
+In-Reply-To: <87msqnfihs.ffs@tglx>
+References: <ZeDj/LK56borSxO4@hpe.com>
+	<87plwe7w3m.ffs@tglx>
+	<Ze9r47riIq9ovBCY@hpe.com>
+	<20240321151357.1d18127f@jacob-builder>
+	<87msqnfihs.ffs@tglx>
+Organization: OTC
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
+MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Wed, 3 Apr 2024 12:16:28 -0700
-"Paul E. McKenney" <paulmck@kernel.org> wrote:
+Hi Thomas,
 
-> commit 717c7c894d4b ("fs/proc: Add boot loader arguments as comment to
-> /proc/bootconfig") adds bootloader argument comments into /proc/bootconfig.
-> 
-> /proc/bootconfig shows boot_command_line[] multiple times following
-> every xbc key value pair, that's duplicated and not necessary.
-> Remove redundant ones.
-> 
-> Output before and after the fix is like:
-> key1 = value1
-> *bootloader argument comments*
-> key2 = value2
-> *bootloader argument comments*
-> key3 = value3
-> *bootloader argument comments*
-> ...
-> 
-> key1 = value1
-> key2 = value2
-> key3 = value3
-> *bootloader argument comments*
-> ...
-> 
-> Fixes: 717c7c894d4b ("fs/proc: Add boot loader arguments as comment to /proc/bootconfig")
-> Signed-off-by: Zhenhua Huang <quic_zhenhuah@quicinc.com>
-> Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
-> Cc: Masami Hiramatsu <mhiramat@kernel.org>
-> Cc: <linux-trace-kernel@vger.kernel.org>
-> Cc: <linux-fsdevel@vger.kernel.org>
+On Sun, 24 Mar 2024 22:05:35 +0100, Thomas Gleixner <tglx@linutronix.de>
+wrote:
 
-OOps, good catch! Let me pick it.
+I sent out a tested patch based on your code, I made a few changes below.
 
-Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-
-Thank you!
-
-> 
-> diff --git a/fs/proc/bootconfig.c b/fs/proc/bootconfig.c
-> index 902b326e1e560..e5635a6b127b0 100644
-> --- a/fs/proc/bootconfig.c
-> +++ b/fs/proc/bootconfig.c
-> @@ -62,12 +62,12 @@ static int __init copy_xbc_key_value_list(char *dst, size_t size)
->  				break;
->  			dst += ret;
+> -- a/drivers/iommu/intel/dmar.c
+> +++ b/drivers/iommu/intel/dmar.c
+> @@ -1182,7 +1182,6 @@ static void free_iommu(struct intel_iomm
+>  			iommu->pr_irq = 0;
 >  		}
-> -		if (ret >= 0 && boot_command_line[0]) {
-> -			ret = snprintf(dst, rest(dst, end), "# Parameters from bootloader:\n# %s\n",
-> -				       boot_command_line);
-> -			if (ret > 0)
-> -				dst += ret;
-> -		}
-> +	}
-> +	if (ret >= 0 && boot_command_line[0]) {
-> +		ret = snprintf(dst, rest(dst, end), "# Parameters from bootloader:\n# %s\n",
-> +			       boot_command_line);
-> +		if (ret > 0)
-> +			dst += ret;
+>  		free_irq(iommu->irq, iommu);
+> -		dmar_free_hwirq(iommu->irq);
+>  		iommu->irq = 0;
 >  	}
->  out:
->  	kfree(key);
+>  
+> @@ -1956,17 +1955,21 @@ void dmar_msi_mask(struct irq_data *data
+>  	raw_spin_unlock_irqrestore(&iommu->register_lock, flag);
+>  }
+>  
+> -void dmar_msi_write(int irq, struct msi_msg *msg)
+> +static void dmar_iommu_msi_write(struct intel_iommu *iommu, struct
+> msi_msg *msg) {
+> -	struct intel_iommu *iommu = irq_get_handler_data(irq);
+>  	int reg = dmar_msi_reg(iommu, irq);
+> -	unsigned long flag;
+> +	unsigned long flags;
+>  
+> -	raw_spin_lock_irqsave(&iommu->register_lock, flag);
+> +	raw_spin_lock_irqsave(&iommu->register_lock, flags);
+>  	writel(msg->data, iommu->reg + reg + 4);
+>  	writel(msg->address_lo, iommu->reg + reg + 8);
+>  	writel(msg->address_hi, iommu->reg + reg + 12);
+> -	raw_spin_unlock_irqrestore(&iommu->register_lock, flag);
+> +	raw_spin_unlock_irqrestore(&iommu->register_lock, flags);
+> +}
+> +
+> +void dmar_msi_write(int irq, struct msi_msg *msg)
+> +{
+> +	dmar_iommu_msi_write(irq_get_handler_data(irq), msg);
+page request and perfmon irqs also use this function, where irq !=
+iommu->irq. In this case, fault irq got overwritten by other dmar irq
+sources. So we need to pass in irq as well.
+
+>  }
+>  
+>  void dmar_msi_read(int irq, struct msi_msg *msg)
+> @@ -2100,23 +2103,37 @@ irqreturn_t dmar_fault(int irq, void *de
+>  
+>  int dmar_set_interrupt(struct intel_iommu *iommu)
+>  {
+> -	int irq, ret;
+> +	static int dmar_irq;
+> +	int ret;
+>  
+> -	/*
+> -	 * Check if the fault interrupt is already initialized.
+> -	 */
+> +	/* Don't initialize it twice for a given iommu */
+>  	if (iommu->irq)
+>  		return 0;
+>  
+> -	irq = dmar_alloc_hwirq(iommu->seq_id, iommu->node, iommu);
+> -	if (irq > 0) {
+> -		iommu->irq = irq;
+> +	/*
+> +	 * There is one shared interrupt for all IOMMUs to prevent vector
+> +	 * exhaustion.
+> +	 */
+> +	if (!dmar_irq) {
+> +		int irq = dmar_alloc_hwirq(iommu->seq_id, iommu->node,
+> iommu); +
+> +		if (irq <= 0) {
+> +			pr_err("No free IRQ vectors\n");
+> +			return -EINVAL;
+> +		}
+> +		dmar_irq = irq;
+Need to store the fault irq.
+iommu->irq = irq
+
+>  	} else {
+> -		pr_err("No free IRQ vectors\n");
+> -		return -EINVAL;
+> +		struct msi_msg msg;
+> +
+> +		/*
+> +		 * Get the MSI message from the shared interrupt and
+> write
+> +		 * it to the iommu MSI registers.
+> +		 */
+> +		dmar_msi_read(dmar_irq, &msg);
+> +		dmar_iommu_msi_write(iommu, &msg);
+>  	}
+>  
+> -	ret = request_irq(irq, dmar_fault, IRQF_NO_THREAD, iommu->name,
+> iommu);
+> +	ret = request_irq(dmar_irq, dmar_fault, IRQF_NO_THREAD |
+> IRQF_SHARED, iommu->name, iommu); if (ret)
+I added IRQF_NOBALANCING, ok? it makes things simple by not reprogramming
+all the DMAR msi controls.
+
+>  		pr_err("Can't request irq\n");
+>  	return ret;
 
 
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Thanks,
+
+Jacob
