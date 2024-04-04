@@ -1,44 +1,40 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail78-59.sinamail.sina.com.cn (mail78-59.sinamail.sina.com.cn [219.142.78.59])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2113184D10
-	for <linux-kernel@vger.kernel.org>; Thu,  4 Apr 2024 11:45:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF9B885280
+	for <linux-kernel@vger.kernel.org>; Thu,  4 Apr 2024 11:45:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=219.142.78.59
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712231108; cv=none; b=h1/nD4gYpmwYa64tUOWwIV72NNpan/HZcnETE+PMSt2AqxR0F3AbER7w3aaAKQxtzVv1txu7RkkYM8ax/FuRF3Q8M/vWQrr+ojmDGvihb0mN/aPFRying62osINcmubknXPceNFWkKnUGYPkPNOL5/CQZ2VWnhQjZFB5wHwutSQ=
+	t=1712231118; cv=none; b=P4X2qWKU5RoRQZA4H13eyXWh/FKlGj2NzcxlTsvG8a+RWNmOY5k7oeN/UqvhI8ufxXroteIXG4USB1qPuLBtq5DX4ulDXYC+YdBMdKWDofmu2Nqkqkxp+1cXSV+toHEngqgvn1LPmtT8d0GeWCB3jpGN+qG2OfxUjtKiV54LbFA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712231108; c=relaxed/simple;
-	bh=gv1Ocmcd5hUfsp3yAkdFPtRtCSZP9+xU7yTapbaEZQs=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=ep0isesOP7EwXsBtYfSP5Q0FZ2s7gOXlbBJgoj+mO8gnH3gwW5tBobJyNG5zJVViEWwRjU3hJs5sIbc2rmJoPBiJ3hQJDHUmBlUwKR2LygNGUDp3tDIvzMVacelqMm88kz5oYj5QlnSi5yrlqcThslesSnc3YlHd79n1FKKmne4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ox5FpK1A; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ox5FpK1A"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A9F5EC433C7;
-	Thu,  4 Apr 2024 11:45:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712231107;
-	bh=gv1Ocmcd5hUfsp3yAkdFPtRtCSZP9+xU7yTapbaEZQs=;
-	h=From:To:Cc:Subject:Date:From;
-	b=Ox5FpK1A1fizasks/Iq6eFp655qD7PNJoT+wg1+aYw9yGUDpYJ200snt5IdeU1/8h
-	 Fnp1aj9cD/WRXU7wCIJRVccTBJLiEK8ilU198qQuzOZkKUIgrgUDD5001Ih5/aM4un
-	 UEly6LwRgSfOA3mrlAWC/y0PZBiUEHq9Z65PmWDf5rc0ksZQsJ6BZTtl4jQwE+MQUC
-	 VN3/7ApTYYBMc0lbfDadwzx5o0HjqSMAxU5FHg+4q5BeRfxLI7k//4CrYZekoPrKnI
-	 /Jw51s8Fc5oVIGGIYc3YEVZPxipvhWlGjkWbIoLX90VKci9cFvIDsHlg/0pzit/Woq
-	 x+OJBVNXe+oBg==
-From: Arnd Bergmann <arnd@kernel.org>
-To: Andrew Morton <akpm@linux-foundation.org>,
-	Palmer Dabbelt <palmer@rivosinc.com>
-Cc: Arnd Bergmann <arnd@arndb.de>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Charlie Jenkins <charlie@rivosinc.com>,
-	Noah Goldstein <goldstein.w.n@gmail.com>,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] [v2] lib: checksum: hide unused expected_csum_ipv6_magic[]
-Date: Thu,  4 Apr 2024 13:44:33 +0200
-Message-Id: <20240404114450.449683-1-arnd@kernel.org>
-X-Mailer: git-send-email 2.39.2
+	s=arc-20240116; t=1712231118; c=relaxed/simple;
+	bh=ylbl0xLM20RXeU86JQxIxQGnFc4IkTJwmxXrjH2ttMY=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=QL/L+kpaK6afUps2Y4eTAuOP3adhs+VHPfOTLIjfXlyqRp6ancyXGu0qgOJGmpmpcBXSr4tjpdfBKxgZ6mVtwZIlRCZ33EWKWN6zUB1AV2pnxDWtlNoi/MYCZwWC0uVvE7b654J5dJWxJrrXtKsDeCBkUxvUjxYJzVoY48BwRl4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sina.com; spf=pass smtp.mailfrom=sina.com; arc=none smtp.client-ip=219.142.78.59
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sina.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sina.com
+X-SMAIL-HELO: localhost.localdomain
+Received: from unknown (HELO localhost.localdomain)([113.88.48.253])
+	by sina.com (172.16.235.25) with ESMTP
+	id 660E92BB00003139; Thu, 4 Apr 2024 19:45:02 +0800 (CST)
+X-Sender: hdanton@sina.com
+X-Auth-ID: hdanton@sina.com
+Authentication-Results: sina.com;
+	 spf=none smtp.mailfrom=hdanton@sina.com;
+	 dkim=none header.i=none;
+	 dmarc=none action=none header.from=hdanton@sina.com
+X-SMAIL-MID: 70933534210418
+X-SMAIL-UIID: C5660C13CBE64EE8B9A9F29231FF9B65-20240404-194502-1
+From: Hillf Danton <hdanton@sina.com>
+To: syzbot <syzbot+c641706ad4e9688cccdf@syzkaller.appspotmail.com>
+Cc: linux-kernel@vger.kernel.org,
+	syzkaller-bugs@googlegroups.com
+Subject: Re: [syzbot] [mm?] WARNING: bad unlock balance in madvise_cold_or_pageout_pte_range
+Date: Thu,  4 Apr 2024 19:44:50 +0800
+Message-Id: <20240404114450.4136-1-hdanton@sina.com>
+In-Reply-To: <000000000000b92a9d0615433065@google.com>
+References: 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -47,52 +43,27 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Arnd Bergmann <arnd@arndb.de>
+On Thu, 04 Apr 2024 03:56:24 -0700
+> syzbot has found a reproducer for the following issue on:
+> 
+> HEAD commit:    727900b675b7 Add linux-next specific files for 20240403
+> git tree:       linux-next
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=13764a3d180000
 
-When CONFIG_NET is disabled, an extra warning shows up for this
-unused variable:
+#syz test https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git  727900b675b7
 
-lib/checksum_kunit.c:218:18: error: 'expected_csum_ipv6_magic' defined but not used [-Werror=unused-const-variable=]
-
-Replace the #ifdef with an IS_ENABLED() check that makes the compiler's
-dead-code-elimination take care of the link failure.
-
-Fixes: f24a70106dc1 ("lib: checksum: Fix build with CONFIG_NET=n")
-Suggested-by: Christophe Leroy <christophe.leroy@csgroup.eu>
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- lib/checksum_kunit.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
-
-diff --git a/lib/checksum_kunit.c b/lib/checksum_kunit.c
-index bf70850035c7..404dba36bae3 100644
---- a/lib/checksum_kunit.c
-+++ b/lib/checksum_kunit.c
-@@ -594,13 +594,15 @@ static void test_ip_fast_csum(struct kunit *test)
- 
- static void test_csum_ipv6_magic(struct kunit *test)
- {
--#if defined(CONFIG_NET)
- 	const struct in6_addr *saddr;
- 	const struct in6_addr *daddr;
- 	unsigned int len;
- 	unsigned char proto;
- 	__wsum csum;
- 
-+	if (!IS_ENABLED(CONFIG_NET))
-+		return;
-+
- 	const int daddr_offset = sizeof(struct in6_addr);
- 	const int len_offset = sizeof(struct in6_addr) + sizeof(struct in6_addr);
- 	const int proto_offset = sizeof(struct in6_addr) + sizeof(struct in6_addr) +
-@@ -618,7 +620,6 @@ static void test_csum_ipv6_magic(struct kunit *test)
- 		CHECK_EQ(to_sum16(expected_csum_ipv6_magic[i]),
- 			 csum_ipv6_magic(saddr, daddr, len, proto, csum));
- 	}
--#endif /* !CONFIG_NET */
- }
- 
- static struct kunit_case __refdata checksum_test_cases[] = {
--- 
-2.39.2
-
+--- x/mm/madvise.c
++++ y/mm/madvise.c
+@@ -482,10 +482,7 @@ restart:
+ 				err = split_folio(folio);
+ 				folio_unlock(folio);
+ 				folio_put(folio);
+-				if (err)
+-					continue;
+-				start_pte = pte =
+-					pte_offset_map_lock(mm, pmd, addr, &ptl);
++				start_pte = pte = pte_offset_map_lock(mm, pmd, addr, &ptl);
+ 				if (!start_pte)
+ 					break;
+ 				arch_enter_lazy_mmu_mode();
+--
