@@ -1,113 +1,107 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f176.google.com (mail-lj1-f176.google.com [209.85.208.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7032E74424;
-	Thu,  4 Apr 2024 08:47:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 540867175F
+	for <linux-kernel@vger.kernel.org>; Thu,  4 Apr 2024 08:48:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712220467; cv=none; b=hpjjIZVQLYYjIqg37QPEQpsmwbxxdM4GxzPRKfNWLPhOjQDCgmnW3kERpSRiSnuNQmbm/XEAX35MFNA9zL2J9zxy4s/S4ylzvc56CZ8ba6NDfw7j+GPHW4aSG6SE8IsMeUyOg9qvUOWBtTvFTSlDq3RRtG94fdYgrEzfSrnGBdg=
+	t=1712220509; cv=none; b=kqN2AIayhXTO53eBekZTzR1puZrAxkpmrPpaFRtHmfVxf7TL1fSFGNK06+WOhiDJ26o/lhSFPAE2ZxSpjg3sF+V/279cGkonANyzABQGbD+EFDgz0FwsuRf/r7uAHyHorkbcVPSF3YZz7DaMxBpULN05mHPMBexdT0bUmW3j8C0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712220467; c=relaxed/simple;
-	bh=ojwSW/sW2WoGGE7TZjI1eVy0HyWT9DzkCVi+qOzw8Uw=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=clVBqHcemMDXr0/7HxSvkMwB5iROBScxzr0nFpATpp8mzGEkxOaMJ7IDUZ8cibnkoy/O6XmZUUHutUm45R3ep9MeNqL/5hMqM3e4X6Mc2EQLKp25t3ZnEbzuS0vPzuZuWNsgVOpsFG9eNcHWmOdIo/XSpA5VGk+RsQZknefOR48=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=HP7T73ZH; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1712220509; c=relaxed/simple;
+	bh=VAWm0UzP0DuDy5F1x5kFPa1dBtbP9phKW4djgHUapw8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=CA2jZT1MBrQVDo0Kw/OynvqqLwpRa/auzvxDnvoP/GP/VnIjVY5et/YhOe47qgmD0wIemhJ+vVI5o/hPzDJCFT3hfdruKd0IBNJ6dI6yMoSDlPLjhFwVyKM560fqSwVrlTnEVGqijTVGVJZ91Uk8zZurFUBRoLGi0UgwleD5Fj4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FUqZnihh; arc=none smtp.client-ip=209.85.208.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="HP7T73ZH"
-Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 4346xIrn013688;
-	Thu, 4 Apr 2024 08:47:35 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	from:to:cc:subject:date:message-id:in-reply-to:references
-	:mime-version:content-transfer-encoding:content-type; s=
-	qcppdkim1; bh=45cdwSGTsaDqFfoJ7Wa+n9z+LEZVRnZrTzu4BzNzm08=; b=HP
-	7T73ZHowMa33YzXuIvk8ViNm8fiiJr1Eom74aZVEgKMGKK5pqLpAMszi55+14qY2
-	2DpDGlNYELvzyICvewIEJ0OKevIyYCqVjO/33awBfc8CpPmn2l088X0TgGpSInsF
-	W10shQs966JewPiYJCOv+q4bhgEPL8fkXaQnDUpUBhNqnqk3L/Hsgr4jb8mJc6tC
-	5seKeCJJKlijOInFv1HP/fN7TKVFA6xLLcXOuc4uSvnhTcIP/kbyo7Az1juTLEHC
-	99Zzxo6NdRV6+OTvGSKBSNTFLdi9u3GWMvSpZMz8u3gdmXy2wYr/jx5nIy7xS5ld
-	gwqsfWvYfYG+0XPdUn3Q==
-Received: from nasanppmta03.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3x9ep3rymr-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 04 Apr 2024 08:47:34 +0000 (GMT)
-Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
-	by NASANPPMTA03.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 4348lXff004683
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 4 Apr 2024 08:47:33 GMT
-Received: from hu-mohs-hyd.qualcomm.com (10.80.80.8) by
- nasanex01c.na.qualcomm.com (10.45.79.139) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.4; Thu, 4 Apr 2024 01:47:29 -0700
-From: Mohammad Rafi Shaik <quic_mohs@quicinc.com>
-To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Banajit Goswami
-	<bgoswami@quicinc.com>,
-        Liam Girdwood <lgirdwood@gmail.com>, Mark Brown
-	<broonie@kernel.org>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski
-	<krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>, Jaroslav Kysela
-	<perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>
-CC: <linux-arm-msm@vger.kernel.org>, <alsa-devel@alsa-project.org>,
-        <linux-sound@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <quic_rohkumar@quicinc.com>,
-        "Mohammad Rafi
- Shaik" <quic_mohs@quicinc.com>
-Subject: [PATCH v2 2/2] ASoC: qcom: sc8280xp: Add support for QCM6490 and QCS6490
-Date: Thu, 4 Apr 2024 14:16:31 +0530
-Message-ID: <20240404084631.417779-3-quic_mohs@quicinc.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240404084631.417779-1-quic_mohs@quicinc.com>
-References: <20240404084631.417779-1-quic_mohs@quicinc.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FUqZnihh"
+Received: by mail-lj1-f176.google.com with SMTP id 38308e7fff4ca-2d23114b19dso8147611fa.3
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Apr 2024 01:48:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1712220505; x=1712825305; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=201J+X1AYkvpNmreLpHZ+lzNZ8LWCQdS27PNve8BW0Y=;
+        b=FUqZnihheGopBLSod5/xdE32m/5mTjMhJONTXs8EBKRsH5w3bmR6ZaqOoboV1F3MXs
+         ZeDk8ud3562LIUYlNbDy0dQ6fvr7/VT8idRqN01n27WUaSYMnDgvZKELbGVk1I5kPJa1
+         S3xn3J6k1nv0AUXLqJneLEOVdHpUM0LltpVg9Fk5eIDGiZh2h+cL987Jm1RoWsO1aXV4
+         p0NQ2HhK6SHSfv90bbihSBjjYJfiBtN6arhqEgI1EgCZwPFjG7F+Y4RDye8FblUEPogX
+         w82yRTcfjpNk+TMWcJrRTS7FFo5WSBfLgWkfNKo7OpAQEo79ALSmb4TI7ui0YLAC4FPw
+         gKhw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712220505; x=1712825305;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=201J+X1AYkvpNmreLpHZ+lzNZ8LWCQdS27PNve8BW0Y=;
+        b=T1TtfHyFjdfHOIBoxGhcyi2OOxJ4V2oniUUwQX88pBAzgmjdvfMX0woDapDquSC/aI
+         SFiWXDjT1+kj5vw9SQ7Joy/RrcjbuQHloTzYrsZm1hIHpnPGP8SP3Zu+LPpJQ5ER/jp3
+         zkEhUsjXPzuCIgRnNOngzPiG6ZcUMTqKLKWyCHefhNXzwDUk3D2dA3Tm2w5rinK6GXwD
+         jdyZkyH5uLP8uWYN/RJFGyMZhC0bVBNxLK1QcnkP5zqhRLZiFEUbCiWuBL7EyTgy5I+E
+         up1Gvn+Z83Mj82Z4ZTW5npl93VhcbcTnfFy5KAjXLTdjHlSkSrLV88yxM/GHul13GsnN
+         53DQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVfSHfz36uWB3ak/95fIiaE2tfbO7S5Nbdm8w2Vwu+ATs5YF7ITltTeHbRgNL/pfJ6+87PpYAuFkGP5FHM3TL7WZ3sHOKJakh2I4LKf
+X-Gm-Message-State: AOJu0YwPxEADD082YL/Dqhyp7BG4T2QRjXLeXSVmCeUdGZ20aY0u3QwZ
+	4fVxsuufQsAglPZPew4CgcG/4NMITF8E/RCklXcIei4k8lwFIT/I
+X-Google-Smtp-Source: AGHT+IENcpHrKciQr+7TH3OwDtFXrbFu+dS6LsqRUYA4DxkMAa8/mCNNc6uK0Wbsf1J+3ZRJmoXiIg==
+X-Received: by 2002:a2e:9a9a:0:b0:2d4:3d86:54e2 with SMTP id p26-20020a2e9a9a000000b002d43d8654e2mr1465676lji.27.1712220505083;
+        Thu, 04 Apr 2024 01:48:25 -0700 (PDT)
+Received: from gmail.com (84-236-113-97.pool.digikabel.hu. [84.236.113.97])
+        by smtp.gmail.com with ESMTPSA id hi23-20020a05600c535700b004146a1bf590sm1850034wmb.32.2024.04.04.01.48.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 04 Apr 2024 01:48:24 -0700 (PDT)
+Sender: Ingo Molnar <mingo.kernel.org@gmail.com>
+Date: Thu, 4 Apr 2024 10:48:22 +0200
+From: Ingo Molnar <mingo@kernel.org>
+To: Uros Bizjak <ubizjak@gmail.com>
+Cc: x86@kernel.org, linux-kernel@vger.kernel.org,
+	Andy Lutomirski <luto@kernel.org>, Brian Gerst <brgerst@gmail.com>,
+	Denys Vlasenko <dvlasenk@redhat.com>,
+	"H . Peter Anvin" <hpa@zytor.com>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Josh Poimboeuf <jpoimboe@redhat.com>
+Subject: Re: [PATCH] x86/percpu: Fix and improve x86_this_cpu_test_bit() and
+ friends
+Message-ID: <Zg5pVphMVAJ6W9Cc@gmail.com>
+References: <20240403144648.3885-1-ubizjak@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01c.na.qualcomm.com (10.45.79.139)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: lzmaVPVA_Ah3Om7H91LxUDptQjDfJUOs
-X-Proofpoint-GUID: lzmaVPVA_Ah3Om7H91LxUDptQjDfJUOs
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-04-04_04,2024-04-04_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 bulkscore=0
- mlxlogscore=999 spamscore=0 suspectscore=0 priorityscore=1501
- lowpriorityscore=0 mlxscore=0 phishscore=0 impostorscore=0 adultscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2404010003 definitions=main-2404040058
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240403144648.3885-1-ubizjak@gmail.com>
 
-Add compatibles for sound card on Qualcomm QCM6490 IDP and
-QCS6490 RB3Gen2 boards.
 
-Signed-off-by: Mohammad Rafi Shaik <quic_mohs@quicinc.com>
----
- sound/soc/qcom/sc8280xp.c | 2 ++
- 1 file changed, 2 insertions(+)
+* Uros Bizjak <ubizjak@gmail.com> wrote:
 
-diff --git a/sound/soc/qcom/sc8280xp.c b/sound/soc/qcom/sc8280xp.c
-index b7fd503a1666..09c949e01479 100644
---- a/sound/soc/qcom/sc8280xp.c
-+++ b/sound/soc/qcom/sc8280xp.c
-@@ -169,6 +169,8 @@ static int sc8280xp_platform_probe(struct platform_device *pdev)
- }
- 
- static const struct of_device_id snd_sc8280xp_dt_match[] = {
-+	{.compatible = "qcom,qcm6490-sndcard", "qcm6490"},
-+	{.compatible = "qcom,qcs6490-rb3gen2-sndcard", "qcs6490"},
- 	{.compatible = "qcom,sc8280xp-sndcard", "sc8280xp"},
- 	{.compatible = "qcom,sm8450-sndcard", "sm8450"},
- 	{.compatible = "qcom,sm8550-sndcard", "sm8550"},
--- 
-2.25.1
+> Fix x86_this_cpu_variable_test_bit(), which is implemented with
+> wrong asm template, where argument 2 (count argument) is considered
+> as percpu variable. However, x86_this_cpu_test_bit() is currently
+> used exclusively with constant bit number argument, so the called
+> x86_this_cpu_variable_test_bit() function is never instantiated.
+> The fix introduces named assembler operands to prevent this kind
+> of errors.
+> 
+> Also rewrite the whole family of x86_this_cpu_test_bit() functions
+> as macros, so standard __my_cpu_var() and raw_cpu_read() macros
+> can be used on percpu variables. This approach considerably
+> simplifies implementation of functions and also introduces standard
+> checks on accessed percpu variables.
+> 
+> No functional changes intended.
 
+Could you please split this into at least two patches?
+
+Hint: 'also' in a changelog paragraph is an indicator of a new patch 
+being justified, in like 80% of the cases. :-)
+
+Thanks,
+
+	Ingo
