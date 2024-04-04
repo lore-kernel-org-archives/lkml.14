@@ -1,138 +1,140 @@
-Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CEDC5CDC0;
-	Thu,  4 Apr 2024 07:15:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6786C5CDE6
+	for <linux-kernel@vger.kernel.org>; Thu,  4 Apr 2024 07:15:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712214915; cv=none; b=KT2zFCwX+AB1PDh8KLnh44HGgmR9vyRIkPTFu5paKDfDCg/nadIFzECCFuPWMoP+a9ZyNk7Rq5sZywc8NRIxr0GlSDl3yZ3+DIBeYg5j88pSpWq6nmXQmc/rtGkBsPe5HtXeCQPoCe7ZvrhZhJvp82ehiSE/OVpc0/Ui2Y+2xP0=
+	t=1712214920; cv=none; b=ZIH3OsxUxwYwy/KIxIhT5HPrCoC3RrNDxcuaj1WGHkslRO0vqFnLnz6uUoWUecHzTAjQjydcZYs2bSaVZLtoQsmjv0GLjhYdWdmxRjthjlIlQxsyZ8VkfhREi9FqWsAXD2VreA5g5VQ2rOMMB+MFgBpCccCOriM2GMQG115VRG4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712214915; c=relaxed/simple;
-	bh=XQ53YgJ+KiTfINBFq/O6Z48P14zbeZM01KRRTndoD/U=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=sXljbkhr5cO77igl1wcVh/Mht8uS++eZF3BixBrQ8bhUSdIkuft+5Bo8or5fXLDUbastnab5NEjdNbX2z7ka67jcpPsSUAeBy9Y4+CrBH+GXGlXi6i1XC+9qiN2PuJxNqCm31yV5GN4gJghkTWni5KhyB/bdcwRfp6MKhavqpSY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CEtu3kxa; arc=none smtp.client-ip=209.85.214.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CEtu3kxa"
-Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-1def89f0cfdso13774335ad.0;
-        Thu, 04 Apr 2024 00:15:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1712214914; x=1712819714; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=qXppvwNAhzN97k5Naw+YEyw1OS4lAQ4l14Ygn5h0IzM=;
-        b=CEtu3kxaeUGSbXfcb+b/Z0z8AEGg2nbyhEZAv/s+Y0hEIhmAVJosmNFX0CHtVldU4J
-         +8UBbQBAjP+zxIz5DE9OlUMk+JwtiEIOSFDTiatUBF1MjtgoB9hHpBB0qot97YMl2OrZ
-         nMqCr/IwT6CoGnbLyJfMXpRhQodRH+ZRmL/h2m33MXH5BkJZ779fiEukUDUw6Wi8ikPs
-         8uSbrW5ouSh0aN8hRtqoxTeNED9U8dPBRZLGZYFIBdKM1WJnI5g9wKw6L67/3xzR8/Hv
-         as+PTNFPP2c4fe1qHNmhJ19onGG6hV457QpY1NvYtLYmkyUqQv1Vk+JqMdTU25mf+P1E
-         K7xg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712214914; x=1712819714;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=qXppvwNAhzN97k5Naw+YEyw1OS4lAQ4l14Ygn5h0IzM=;
-        b=E/mBYLFvDOEcKihi2BSJsVFDBi1vRJVdDYBdzDfPrh8qBD111rDqZrO9TU+DdRIof6
-         QkMu9vR6txPbSPHAKvbAcvxRqctv0MCFzQS3WP83HedX5BWF/9C2fDJO4RVPNkegrv6g
-         O3rlQ4NE2wJ35t7Doyt5BrjL6/ZC5ZmaXfYr/cVJj0U0VeOMAPMBHNonuTRpmMO7W4Lm
-         b1fbVVKL3DVX3FRL5BclsjCJ7/dsRjwWbnaw2FoR2jO8AUel5SPifyDqZZlewMUJLOFT
-         eokM5ZmZngDFV0dnq8BmT4g1NZRYZnsgkJLOQUEvYTXLhWTqF+2r+58Sq4Iy6s5vlmha
-         LDOQ==
-X-Forwarded-Encrypted: i=1; AJvYcCW1h/NVeG+5n8XqEij4/6MPw5+4pZx3VL8IwALrx+Qjq9nSwQbMLLXySLjlF4eShqMJ8MYZTno/FBP5WBsK1zrG9KahrO18fblEnp9lzgGOXv6kNHeyWT0D7MAOOYrtGcaJyL9WyNTufAWriXw1v861UiZFdvKGwSMQRdhdVB7ApQlGDujcL2sGgXA=
-X-Gm-Message-State: AOJu0YzN5qFTE3PIfEkxTx0sfIVyYhxdaGoEUWrTwAaWEs6RSxrtWnSH
-	6W7RDqUMFCWwqy0bb0ruSQsDcYOqswg9SCC1YAgGe1+LRF/dMJIs
-X-Google-Smtp-Source: AGHT+IG026jtHHMrN+DwLrmD2VL2UxEvIawtAyzH9cBcIzRtMNoZHVr0l8h2fdo3y1I/kj5sABCjBA==
-X-Received: by 2002:a17:903:2350:b0:1e2:908f:5d6c with SMTP id c16-20020a170903235000b001e2908f5d6cmr2692549plh.10.1712214913748;
-        Thu, 04 Apr 2024 00:15:13 -0700 (PDT)
-Received: from localhost.localdomain ([113.30.217.222])
-        by smtp.gmail.com with ESMTPSA id h20-20020a170902f2d400b001e26c4823d0sm5220873plc.52.2024.04.04.00.15.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 04 Apr 2024 00:15:13 -0700 (PDT)
-From: Anand Moon <linux.amoon@gmail.com>
-To: Alan Stern <stern@rowland.harvard.edu>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-	Alim Akhtar <alim.akhtar@samsung.com>
-Cc: Anand Moon <linux.amoon@gmail.com>,
-	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-	Johan Hovold <johan@kernel.org>,
-	linux-usb@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-samsung-soc@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 4/6] usb: ohci-exynos: Switch from CONFIG_PM guards to pm_ptr()
-Date: Thu,  4 Apr 2024 12:43:20 +0530
-Message-ID: <20240404071350.4242-5-linux.amoon@gmail.com>
-X-Mailer: git-send-email 2.44.0
-In-Reply-To: <20240404071350.4242-1-linux.amoon@gmail.com>
-References: <20240404071350.4242-1-linux.amoon@gmail.com>
+	s=arc-20240116; t=1712214920; c=relaxed/simple;
+	bh=6/4Cq2aA39sFtMVgi/VCqef4yRZF2TMXceBE6MEOND4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=meR8bWKIvepfk51faBh80B8rxrYJQhM4BzlDsDlt+dZUvBZ7eBDlsLwqMvlhjgYuPIDeXxZFk3n55ErIci3pimSQIozRTw6KCO5b+RGVCKluPFS5L05pOqgJZgbsQeShV1l09Kfbd86rUTW6MW/cdxe8b2s18/AMTqZjT4+tST4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+Received: from imap2.dmz-prg2.suse.org (imap2.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:98])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id ABFF25D686;
+	Thu,  4 Apr 2024 07:15:16 +0000 (UTC)
+Authentication-Results: smtp-out2.suse.de;
+	none
+Received: from imap2.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap2.dmz-prg2.suse.org (Postfix) with ESMTPS id 9282C139E8;
+	Thu,  4 Apr 2024 07:15:16 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap2.dmz-prg2.suse.org with ESMTPSA
+	id K68YI4RTDmZ8dQAAn2gu4w
+	(envelope-from <vbabka@suse.cz>); Thu, 04 Apr 2024 07:15:16 +0000
+Message-ID: <7c852583-3b87-4acb-ae1d-2065daf16984@suse.cz>
+Date: Thu, 4 Apr 2024 09:15:16 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 0/4] page_owner: Fix refcount imbalance and print fixup
+Content-Language: en-US
+To: Oscar Salvador <osalvador@suse.de>,
+ Andrew Morton <akpm@linux-foundation.org>
+Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+ Michal Hocko <mhocko@suse.com>, Marco Elver <elver@google.com>,
+ Andrey Konovalov <andreyknvl@gmail.com>,
+ Alexander Potapenko <glider@google.com>,
+ Alexandre Ghiti <alexghiti@rivosinc.com>
+References: <20240404070702.2744-1-osalvador@suse.de>
+From: Vlastimil Babka <vbabka@suse.cz>
+Autocrypt: addr=vbabka@suse.cz; keydata=
+ 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
+ EP+ylKVEKb0Q2A==
+In-Reply-To: <20240404070702.2744-1-osalvador@suse.de>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Rspamd-Pre-Result: action=no action;
+	module=replies;
+	Message is reply to one we originated
+X-Rspamd-Action: no action
+X-Spam-Flag: NO
+X-Spamd-Result: default: False [-4.00 / 50.00];
+	REPLY(-4.00)[]
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Spam-Score: -4.00
+X-Spam-Level: 
+X-Rspamd-Queue-Id: ABFF25D686
 
-Use the new PM macros for the suspend and resume functions to be
-automatically dropped by the compiler when CONFIG_PM are disabled,
-without having to use #ifdef guards. If CONFIG_PM unused,
-they will simply be discarded by the compiler.
+On 4/4/24 9:06 AM, Oscar Salvador wrote:
+> This series consists of a refactoring/correctness of updating the metadata
+> of tail pages, a couple of fixups for the refcounting part and a fixup for
+> the stack_start() function.
+> 
+> From this series on, instead of counting the stacks, we count the outstanding
+> nr_base_pages each stack has, which gives us a much better memory overview.
+> The other fixup is for the migration part.
+> 
+> A more detailed explanation can be found in the changelog of the respective
+> patches.
 
-Signed-off-by: Anand Moon <linux.amoon@gmail.com>
----
-v2: new changes in this series.
----
- drivers/usb/host/ohci-exynos.c | 11 +++--------
- 1 file changed, 3 insertions(+), 8 deletions(-)
+It's best to be explicit that this fixes issues in 6.9-rc1 and thus should
+be in mm-hotfixes(-unstable). Also you can use e.g. [PATCH mm-hotfixes]
+prefix to that effect next time.
 
-diff --git a/drivers/usb/host/ohci-exynos.c b/drivers/usb/host/ohci-exynos.c
-index 85d04ae0ae40..3e647e0b341d 100644
---- a/drivers/usb/host/ohci-exynos.c
-+++ b/drivers/usb/host/ohci-exynos.c
-@@ -212,8 +212,7 @@ static void exynos_ohci_shutdown(struct platform_device *pdev)
- 		hcd->driver->shutdown(hcd);
- }
- 
--#ifdef CONFIG_PM
--static int exynos_ohci_suspend(struct device *dev)
-+static int __maybe_unused exynos_ohci_suspend(struct device *dev)
- {
- 	struct usb_hcd *hcd = dev_get_drvdata(dev);
- 	struct exynos_ohci_hcd *exynos_ohci = to_exynos_ohci(hcd);
-@@ -230,7 +229,7 @@ static int exynos_ohci_suspend(struct device *dev)
- 	return 0;
- }
- 
--static int exynos_ohci_resume(struct device *dev)
-+static int __maybe_unused exynos_ohci_resume(struct device *dev)
- {
- 	struct usb_hcd *hcd			= dev_get_drvdata(dev);
- 	struct exynos_ohci_hcd *exynos_ohci	= to_exynos_ohci(hcd);
-@@ -249,10 +248,6 @@ static int exynos_ohci_resume(struct device *dev)
- 
- 	return 0;
- }
--#else
--#define exynos_ohci_suspend	NULL
--#define exynos_ohci_resume	NULL
--#endif
- 
- static const struct ohci_driver_overrides exynos_overrides __initconst = {
- 	.extra_priv_size =	sizeof(struct exynos_ohci_hcd),
-@@ -277,7 +272,7 @@ static struct platform_driver exynos_ohci_driver = {
- 	.shutdown	= exynos_ohci_shutdown,
- 	.driver = {
- 		.name	= "exynos-ohci",
--		.pm	= &exynos_ohci_pm_ops,
-+		.pm	= pm_ptr(&exynos_ohci_pm_ops),
- 		.of_match_table	= of_match_ptr(exynos_ohci_match),
- 	}
- };
--- 
-2.44.0
+> v3 -> v4:
+>  - Fix some typos remarked by Vlastimil
+>  - Add Reviewed-by tag from Vlastimil and Tested-by tag from Alexandre Ghiti
+>    (closed a syzbot report for RISC)
+> 
+> Oscar Salvador (4):
+>   mm,page_owner: Update metadata for tail pages
+>   mm,page_owner: Fix refcount imbalance
+>   mm,page_owner: Fix accounting of pages when migrating
+>   mm,page_owner: Fix printing of stack records
+> 
+>  Documentation/mm/page_owner.rst |  73 +++++++------
+>  mm/page_owner.c                 | 188 ++++++++++++++++++--------------
+>  2 files changed, 147 insertions(+), 114 deletions(-)
+> 
 
