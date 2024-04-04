@@ -1,133 +1,184 @@
-Received: from smtp-8fab.mail.infomaniak.ch (smtp-8fab.mail.infomaniak.ch [83.166.143.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com [209.85.208.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CBE6131BDB
-	for <linux-kernel@vger.kernel.org>; Thu,  4 Apr 2024 18:35:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.166.143.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9E8C1327FD;
+	Thu,  4 Apr 2024 18:36:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712255745; cv=none; b=fUWh71GSx54c/dUNgudWhEzYYYoA9ySf73v9ui/sYWHBkbJR463RT3SctomJz6EW9W0Kfr+aXjwTA7kSVyJ28Am6f3hydi0GjIbkjVKfl6ZMqZQoPzRPPqX++UYJrCtNLkq8bm1+eeji9m7QqvpNZRDLyk8efYRQJTmjvR+TyFM=
+	t=1712255769; cv=none; b=ZenDZ3iCOwRTI/9mDUEvVtkRfdzBadJLomw1ZgjcToda5eYfKqd0GCkH+1dA5aZf7eAV2IxPCpC7B3GGoMASETvUM9q+fL56KxLoevZWEug17AvBUJHd/pZEurRqjGC9bWs7HZVHw9z5ZthybQZ0PibN5K4hyDJR0x7qBq8pwoQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712255745; c=relaxed/simple;
-	bh=hS68QXp66ScUhpRGV4EtkMDc4jnXGdF9EVAx/s/x/dk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=V5A1ZvWXC3/U0Qc8ujobBf677wv2jGB6TaVb3da1Prnb+5yVYAwRGZBJSrRYs5UljFIxmTgWYr/CjhEWu6hLL9Wz6nuqynVRupx4cE/xqCnZtlfBDLlalR44PaaAYiz2gSF0eO3Rl6AUJCjlLKDxm25CR2Ok6CFl9RdFiFsDiLI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net; spf=pass smtp.mailfrom=digikod.net; dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b=iZc2nGn/; arc=none smtp.client-ip=83.166.143.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=digikod.net
+	s=arc-20240116; t=1712255769; c=relaxed/simple;
+	bh=Z/1fyCo41lS+AmGEgJmU2z5lD/1fcc9M1Qe0AELx5Gg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=bO5s79QjxK3rnkCDGvu1Oa6imfQiIQlOkzFoVlyvSM8gzPcmF5R+O0Utmkthd0TjRrWfJY42HEkmdnn1L+mv6egFKNK07WYM5RHczQDj9d4n2oUBivdLrXjigul+Wo3vDeeX8zKDktdL+fT8pUnJ/3L/sGmD0NHVxJSy0H7joVY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Q7L031P6; arc=none smtp.client-ip=209.85.208.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b="iZc2nGn/"
-Received: from smtp-3-0000.mail.infomaniak.ch (smtp-3-0000.mail.infomaniak.ch [10.4.36.107])
-	by smtp-4-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4V9VSG0trlz3PR;
-	Thu,  4 Apr 2024 20:26:22 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=digikod.net;
-	s=20191114; t=1712255181;
-	bh=hS68QXp66ScUhpRGV4EtkMDc4jnXGdF9EVAx/s/x/dk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=iZc2nGn/NHkQuuqgdrOe8ybA44XbAplsyVwtH72nDZBbD6YYFi5igOIIk3f+oXxTf
-	 re6Tz8+Jff2kgO94CSJgbu+kav6LO5w274kOHac1TSiWZf5lfW1IfrUCHXH9dM0wXb
-	 FisZqNefk21HRC0k97wQ2sGIPjl7wJjqQ3wlWEb0=
-Received: from unknown by smtp-3-0000.mail.infomaniak.ch (Postfix) with ESMTPA id 4V9VSB5NfFzlxv;
-	Thu,  4 Apr 2024 20:26:18 +0200 (CEST)
-Date: Thu, 4 Apr 2024 20:26:18 +0200
-From: =?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>
-To: Sean Christopherson <seanjc@google.com>
-Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	David Hildenbrand <david@redhat.com>, David Stevens <stevensd@chromium.org>, 
-	Paolo Bonzini <pbonzini@redhat.com>, Marc Zyngier <maz@kernel.org>, 
-	Oliver Upton <oliver.upton@linux.dev>, James Morse <james.morse@arm.com>, 
-	Suzuki K Poulose <suzuki.poulose@arm.com>, Zenghui Yu <yuzenghui@huawei.com>, 
-	Huacai Chen <chenhuacai@kernel.org>, Tianrui Zhao <zhaotianrui@loongson.cn>, 
-	Bibo Mao <maobibo@loongson.cn>, Michael Ellerman <mpe@ellerman.id.au>, 
-	Nicholas Piggin <npiggin@gmail.com>, Anup Patel <anup@brainfault.org>, 
-	Christian Borntraeger <borntraeger@linux.ibm.com>, Janosch Frank <frankja@linux.ibm.com>, 
-	Claudio Imbrenda <imbrenda@linux.ibm.com>, Xiaoyao Li <xiaoyao.li@intel.com>, Xu Yilun <yilun.xu@intel.com>, 
-	Chao Peng <chao.p.peng@linux.intel.com>, Fuad Tabba <tabba@google.com>, Jim Mattson <jmattson@google.com>, 
-	Jarkko Sakkinen <jarkko@kernel.org>, Maxim Levitsky <mlevitsk@redhat.com>, 
-	Anish Moorthy <amoorthy@google.com>, David Matlack <dmatlack@google.com>, 
-	Yu Zhang <yu.c.zhang@linux.intel.com>, Isaku Yamahata <isaku.yamahata@intel.com>, Edgecombe@google.com, 
-	Rick P <rick.p.edgecombe@intel.com>, Vlastimil Babka <vbabka@suse.cz>, 
-	Vishal Annapurve <vannapurve@google.com>, Ackerley Tng <ackerleytng@google.com>, 
-	Maciej Szmigiero <mail@maciej.szmigiero.name>, Quentin Perret <qperret@google.com>, 
-	Michael Roth <michael.roth@amd.com>, Wei Wang <wei.w.wang@intel.com>, 
-	Liam Merwick <liam.merwick@oracle.com>, Isaku Yamahata <isaku.yamahata@gmail.com>, 
-	Kirill Shutemov <kirill.shutemov@linux.intel.com>, Lai Jiangshan <jiangshan.ljs@antgroup.com>, 
-	Hou Wenlong <houwenlong.hwl@antgroup.com>, Xiong Zhang <xiong.y.zhang@linux.intel.com>, 
-	Jinrong Liang <ljr.kernel@gmail.com>, Like Xu <like.xu.linux@gmail.com>, 
-	Mingwei Zhang <mizhang@google.com>, Dapeng Mi <dapeng1.mi@intel.com>, 
-	James Morris <jamorris@linux.microsoft.com>, "Madhavan T. Venkataraman" <madvenka@linux.microsoft.com>, 
-	Thara Gopinath <tgopinath@microsoft.com>
-Subject: Re: [ANNOUNCE] KVM Microconference at LPC 2024
-Message-ID: <20240404.Chie9boy2eef@digikod.net>
-References: <20240402190652.310373-1-seanjc@google.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Q7L031P6"
+Received: by mail-lj1-f178.google.com with SMTP id 38308e7fff4ca-2d848973b57so16894491fa.3;
+        Thu, 04 Apr 2024 11:36:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1712255766; x=1712860566; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=TKZ76EB+xPDP2hiO+m9b6JZfXv6mCVaRqGHumTmPatc=;
+        b=Q7L031P63FNKJuYlQvrDosH2d2tin3HU3bykLuvrbAbaWyh7TzOX5s6hRWHRtHQ10o
+         /g1bxJ+vnoDOgG/gFsQf34960vCfQFH6hwnQP7oda2H8Dl7jh8B5+YeO//EyXNAvOd2O
+         4eIM32E+OHHlQDcw/GHUHck9rRMg0zCZcliQXs32zeamG75JlIC3wyYFxPhO3sjMLATU
+         xlkoueKIsiEjrrciX3Nmv7BOT6rnfhb1Svf/3dsElZwSEX2fHEg44d++4MvUDy72mTgB
+         ByGi/iFttwNXdLbJnn98/54adBmVVsebSkSbfEmilmOrByRUdY3EtdzOCupD/dkY6pJH
+         Jrag==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712255766; x=1712860566;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=TKZ76EB+xPDP2hiO+m9b6JZfXv6mCVaRqGHumTmPatc=;
+        b=GZFr8dJU+ploJvdP5JSVBkMVtioCajx1aluMwqQ+yIlCBxng9eYP9m3kQmcl4hzyHw
+         267m+nPG6jD0qPZm9Lbk9O4/VAFmjDwaTw3ialkKTVwopF8y2z0rVRqSy1gKNyMYX8Xm
+         311CBnVw39fTMyaCgsiOfMbXLFam/XsTiAeNiEAkqSg94cVWrzKJNC7hL0r0JoqkQqRK
+         yQuYxgnSeq8EwAlsg2B7uDlTOnLSeowuUNYm8ZYnDSECHuBHrwHizH450S1zA+5bp2F3
+         4SXXqX7zhcgjuuL1MSuEm4V4YpMh2JckCcShjZD+4MlEccuf4GwZzIG+ZocqcWrm2rT7
+         Wz+g==
+X-Forwarded-Encrypted: i=1; AJvYcCVtWeSvuwoOmGAl+BHSAn5Zhb6dK+5T4lky+S2rWEERYC1DIEZxqCPcy2myWy5/sg3jBIJXJ45ukVpa9Pa3xoDEGEW4Bzeg9WYaFz+qT0jOgMbkKyy9+T548gfkCwSghXD6Y3EOecmhjQYXZg==
+X-Gm-Message-State: AOJu0YyFHhl+DT3eYuZ44j33uGqGxOCnldXGNNiicJgyGDzoHdGTBvjc
+	qBAbYPY97jiUr8DOp9Ph58CoKZ4iqniGVT3QvydAlEHOzaK+3moN
+X-Google-Smtp-Source: AGHT+IE/Wl5iSbtcMQFWal73QrjHMBwx0DdZaNcB5xfFxkIGw/3mHZMxEE+pltw6x0M1If4KVg51tA==
+X-Received: by 2002:a2e:9141:0:b0:2d7:10a1:481e with SMTP id q1-20020a2e9141000000b002d710a1481emr2536459ljg.31.1712255765826;
+        Thu, 04 Apr 2024 11:36:05 -0700 (PDT)
+Received: from ?IPV6:2a02:8071:b783:140:927c:82ba:d32d:99c1? ([2a02:8071:b783:140:927c:82ba:d32d:99c1])
+        by smtp.gmail.com with ESMTPSA id hn3-20020a05600ca38300b004162b578d8bsm67368wmb.1.2024.04.04.11.36.04
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 04 Apr 2024 11:36:05 -0700 (PDT)
+Message-ID: <f90b41e8-577b-439a-ba50-6ca7ffb66f46@gmail.com>
+Date: Thu, 4 Apr 2024 20:36:03 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20240402190652.310373-1-seanjc@google.com>
-X-Infomaniak-Routing: alpha
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v9 00/13] firmware: qcom: qseecom: convert to using the TZ
+ allocator
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Andy Gross <agross@kernel.org>, Bjorn Andersson <andersson@kernel.org>,
+ Konrad Dybcio <konrad.dybcio@linaro.org>,
+ Elliot Berman <quic_eberman@quicinc.com>,
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+ Guru Das Srinagesh <quic_gurus@quicinc.com>,
+ Andrew Halaney <ahalaney@redhat.com>, Alex Elder <elder@linaro.org>,
+ Srini Kandagatla <srinivas.kandagatla@linaro.org>,
+ Arnd Bergmann <arnd@arndb.de>, linux-arm-msm@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ kernel@quicinc.com, Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+References: <20240325100359.17001-1-brgl@bgdev.pl>
+ <56e1c63a-4c09-4d92-9ef2-aad5390879cc@gmail.com>
+ <CAMRc=Mf_pvrh2VMfTVE-ZTypyO010p=to-cd8Q745DzSDXLGFw@mail.gmail.com>
+ <CAMRc=MfsVWcoMC-dB-fdxy332h-ucUPTfEUMAnCt5L-q3zJxWg@mail.gmail.com>
+ <82f94b54-82d1-49b9-badf-63d948b347fc@gmail.com>
+ <97e1f121-9e84-4e63-9c9c-57e2de0b29d7@gmail.com>
+ <CAMRc=McLJFGcy-A6PZNmjgDXnvx8z0J4k-Dbak-txvWnycHG2A@mail.gmail.com>
+ <2b1dc031-d645-494c-9103-a2bb422ea60b@gmail.com>
+ <CAMRc=MdoSPuedbGhy4toDEkw0vSzESDz2bXGpyt_=R4hqXW+Uw@mail.gmail.com>
+ <9b1e5ea0-bb32-4c42-b2e9-204bde31b905@gmail.com>
+ <CACMJSesvM6_PhhR_2sP4JX6bR4ytVVg=MwWBEVrCHf5FNp2JXw@mail.gmail.com>
+ <9db0fc7b-f24a-4d76-b8bd-ec577ecba0c6@gmail.com>
+ <CAMRc=Me9x1OXKXXxyhzZ6mxffmaoq=4QhMXCL6L71_xso2epWA@mail.gmail.com>
+ <CAMRc=Me0MamtJoPtQnucKyZx9pfkEPDAAZqWFWRU0CBcj+P50A@mail.gmail.com>
+Content-Language: en-US
+From: Maximilian Luz <luzmaximilian@gmail.com>
+In-Reply-To: <CAMRc=Me0MamtJoPtQnucKyZx9pfkEPDAAZqWFWRU0CBcj+P50A@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Tue, Apr 02, 2024 at 12:06:52PM -0700, Sean Christopherson wrote:
-> We are planning on submitting a CFP to host a second annual KVM Microconference
-> at Linux Plumbers Conference 2024 (https://lpc.events/event/18).  To help make
-> our submission as strong as possible, please respond if you will likely attend,
-> and/or have a potential topic that you would like to include in the proposal.
-> The tentative submission is below.
-> 
-> Note!  This is extremely time sensitive, as the deadline for submitting is
-> April 4th (yeah, we completely missed the initial announcement).
-> 
-> Sorry for the super short notice. :-(
-> 
-> P.S. The Cc list is very ad hoc, please forward at will.
-> 
-> ===================
-> KVM Microconference
-> ===================
-> 
-> KVM (Kernel-based Virtual Machine) enables the use of hardware features to
-> improve the efficiency, performance, and security of virtual machines (VMs)
-> created and managed by userspace.  KVM was originally developed to accelerate
-> VMs running a traditional kernel and operating system, in a world where the
-> host kernel and userspace are part of the VM's trusted computing base (TCB).
-> 
-> KVM has long since expanded to cover a wide (and growing) array of use cases,
-> e.g. sandboxing untrusted workloads, deprivileging third party code, reducing
-> the TCB of security sensitive workloads, etc.  The expectations placed on KVM
-> have also matured accordingly, e.g. functionality that once was "good enough"
-> no longer meets the needs and demands of KVM users.
-> 
-> The KVM Microconference will focus on how to evolve KVM and adjacent subsystems
-> in order to satisfy new and upcoming requirements.  Of particular interest is
-> extending and enhancing guest_memfd, a guest-first memory API that was heavily
-> discussed at the 2023 KVM Microconference, and merged in v6.8.
-> 
-> Potential Topics:
->    - Removing guest memory from the host kernel's direct map[1]
->    - Mapping guest_memfd into host userspace[2]
->    - Hugepage support for guest_memfd[3]
->    - Eliminating "struct page" for guest_memfd
->    - Passthrough/mediated PMU virtualization[4]
->    - Pagetable-based Virtual Machine (PVM)[5]
->    - Optimizing/hardening KVM usage of GUP[6][7]
->    - Defining KVM requirements for hardware vendors
->    - Utilizing "fault" injection to increase test coverage of edge cases
 
-We are still working on Heki to improve CR-pinning, memory protection,
-related interfaces and tests.  We'll send a new patch series shortly on
-CR-pinning (only), and follow-ups later.  By September, we'll like to
-share some updates and this microconference would be a good opportunity,
-with the right format this time. ;)
+On 4/2/24 10:44 AM, Bartosz Golaszewski wrote:
+> On Sat, Mar 30, 2024 at 8:16 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+>>
+>> On Fri, 29 Mar 2024 20:57:52 +0100, Maximilian Luz <luzmaximilian@gmail.com> said:
+>>> On 3/29/24 8:46 PM, Bartosz Golaszewski wrote:
+>>>> On Fri, 29 Mar 2024 at 20:39, Maximilian Luz <luzmaximilian@gmail.com> wrote:
+>>>>>
+>>>>> On 3/29/24 8:26 PM, Bartosz Golaszewski wrote:
+>>>>>> On Fri, 29 Mar 2024 at 20:22, Maximilian Luz <luzmaximilian@gmail.com> wrote:
+>>>>>>>
+>>>>>>> On 3/29/24 8:07 PM, Bartosz Golaszewski wrote:
+>>>>>>>>
+>>>>>>>> Both with and without SHM bridge?
+>>>>>>>
+>>>>>>> With CONFIG_QCOM_TZMEM_MODE_GENERIC=y (and the upcoming fix) everything
+>>>>>>> works. With CONFIG_QCOM_TZMEM_MODE_SHMBRIDGE=y things unfortunately
+>>>>>>> still get stuck at boot (regardless of the fix). I think that's
+>>>>>>> happening even before anything efivar related should come up.
+>>>>>>>
+>>>>>>
+>>>>>> This is on X13s? I will get one in 3 weeks. Can you get the bootlog
+>>>>>> somehow? Does the laptop have any serial console?
+>>>>>
+>>>>> Surface Pro X (sc8180x), but it should be similar enough to the X13s in
+>>>>> that regard. At least from what people with access to the X13s told me,
+>>>>> the qseecom stuff seems to behave the same.
+>>>>>
+>>>>> Unfortunately I don't have a direct serial console. Best I have is
+>>>>> USB-serial, but it's not even getting there. I'll have to try and see if
+>>>>> I can get some more info on the screen.
+>>>>>
+>>>>
+>>>> I have access to a sc8180x-primus board, does it make sense to test
+>>>> with this one? If so, could you give me instructions on how to do it?
+>>>
+>>> I guess it's worth a shot.
+>>>
+>>>   From what I can tell, there shouldn't be any patches in my tree that
+>>> would conflict with it. So I guess it should just be building it with
+>>> CONFIG_QCOM_TZMEM_MODE_SHMBRIDGE=y and booting.
+>>>
+>>> I am currently testing it on top of a patched v6.8 tree though (but that
+>>> should just contain patches to get the Pro X running). You can find the
+>>> full tree at
+>>>
+>>>       https://github.com/linux-surface/kernel/tree/spx/v6.8
+>>>
+>>> The last commit is the fix I mentioned, so you might want to revert
+>>> that, since the shmem issue triggers regardless of that and it prevents
+>>> your series from applying cleanly.
+>>>
+>>> Best regards,
+>>> Max
+>>>
+>>
+>> sc8180x-primus' support upstream is quite flaky. The board boots 50% of time.
+>> However it's true that with SHM bridge it gets to:
+>>
+>> mount: mounting efivarfs on /sys/firmware/efi/efivars failed: Operation not supported
+>>
+>> and stops 100% of the time. Without SHM bridge I cannot boot it either because
+>> I suppose I need the patch you sent yesterday. I haven't had the time to
+>> rebase it yet, it's quite intrusive to my series.
+>>
+>> I can confirm that with that patch the board still boots but still 50% of the
+>> time.
+>>
+>> Bart
+> 
+> Hi!
+> 
+> I was under the impression that until v8, the series worked on sc8180x
+> but I'm seeing that even v7 has the same issue with SHM Bridge on
+> sc8180x-primus. Could you confirm? Because I'm not sure if I should
+> track the differences or the whole thing was broken for this platform
+> from the beginning.
 
-> 
-> [1] https://lore.kernel.org/all/cc1bb8e9bc3e1ab637700a4d3defeec95b55060a.camel@amazon.com
-> [2] https://lore.kernel.org/all/20240222161047.402609-1-tabba@google.com
-> [3] https://lore.kernel.org/all/CABgObfa=DH7FySBviF63OS9sVog_wt-AqYgtUAGKqnY5Bizivw@mail.gmail.com
-> [4] https://lore.kernel.org/all/20240126085444.324918-1-xiong.y.zhang@linux.intel.com
-> [5] https://lore.kernel.org/all/20240226143630.33643-1-jiangshanlai@gmail.com
-> [6] https://lore.kernel.org/all/CABgObfZCay5-zaZd9mCYGMeS106L055CxsdOWWvRTUk2TPYycg@mail.gmail.com
-> [7] https://lore.kernel.org/all/20240320005024.3216282-1-seanjc@google.com
-> 
+Hi, sorry for the delay.
+
+Unfortunately I haven't had the time to test anything since v3. I don't
+remember all the details, but based on what I wrote back then, enabling
+the SHM bridge option did not lead to this result.
+
+I can try to test v7 (and others) on the weekend.
+
+Best regards,
+Max
