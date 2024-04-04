@@ -1,108 +1,114 @@
-Received: from mail-pg1-f169.google.com (mail-pg1-f169.google.com [209.85.215.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 692B415EA6;
-	Thu,  4 Apr 2024 14:33:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AC4010A2A;
+	Thu,  4 Apr 2024 14:34:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712241232; cv=none; b=QebNiiaeUVIigJxD0RHwmQwVS3CTrWB4x73Kiib3EDyyt2X6w2frHRUNk/6k0R9BfHk80rYrKtmGjq4sr+p3h6a/KdipPH5LCH2XV3AbAnGrmyf4ljiplkj9CrvYmCKSOyA0LOCi2VEjG/9nqxgI3H1zkDFIwumF5GxzbDobRaY=
+	t=1712241243; cv=none; b=KXqJJ+2hm0WYpcsuY8BVzxgBixUMY4QICxTdlTbkBVI3M2eOv+a6Z/P1w5gZR+X3YCx8ap6TbDCFdW8xBc68BtJOHAGuJFCNB73XrCc0HFRzcNVjxUDLvq7VeqiVu5m9iFc04jiiQgHRElp5lXU8TRC5QsuQ7g5AdXYYvtyhmGs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712241232; c=relaxed/simple;
-	bh=jpF7tTa5Sd3tDtJxZDaT9Swi8PyGNUK+y0VMQ7cXB4o=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=KWg3TIzPpjUdeAJAdLVMEi1KUX59IbEAW6qRC9FIhbJ3ck18WZlvX+mf+/1k855PpasDTc4bOdJrzp5wrvAU5MK4co82UdSQ/LhxYJHy9RNbLkrliKJgcGSKUnmLrpWI0wtmCx/TqyvSeWAHRMrsf1m1EPMpoY6bQq8zkmNR1Jg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=M3IDwNJd; arc=none smtp.client-ip=209.85.215.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1712241243; c=relaxed/simple;
+	bh=qeWH1j8MSxxeEmBA2X+MwI3VK5wur4A5XLpd2vAa/yU=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Tccbs9Vnhw1BQQ9lFZ1sdEe+eYqQRqq2smTu+Hm1sHGoxucrDG98DtNF2EayPzsG021mOZOowIS18o3j8wsnHj5POAZLDzRlDbGBVwP0kb1WhLunehFm/i0kM9hIBsELYNBLh2qL2N+j4C5fKQbOc+FWa4yXuN8zjBPPOWMwnAw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=tEDpVtAA; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="M3IDwNJd"
-Received: by mail-pg1-f169.google.com with SMTP id 41be03b00d2f7-53fa455cd94so905560a12.2;
-        Thu, 04 Apr 2024 07:33:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1712241230; x=1712846030; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=jpF7tTa5Sd3tDtJxZDaT9Swi8PyGNUK+y0VMQ7cXB4o=;
-        b=M3IDwNJdiyZ4qFR05T+FfB15+HQK9J3X4VLsA/UlyweDiZhCEZHVAQVcsKKrdVNegF
-         /369KiTIZirVN1gQ53sP/GsFkl3XqWIYtL9Fd8JfXlxNA+qlNSzgieaBEYbD4qYN+vpK
-         rQJGC09Q0hbiboWMzrxJRcVVchc4qn7E7YRJ7TdkWRKmQD8dz7s3Mxcm/VewvgyHH/mE
-         X6jq0OCnO5ex/DNI/KMIje5XrHJDCINYLxg8+tpt+j105WFE9YWmPsde4tOdSjuLA0yv
-         uy1mV7MB3/pPSBboyJAY8ysTgnnQsuTHX+yyGJzGmg1e1pTmcWII/hDZJuHU/srtxMqn
-         /nlQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712241230; x=1712846030;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=jpF7tTa5Sd3tDtJxZDaT9Swi8PyGNUK+y0VMQ7cXB4o=;
-        b=q7WjwBqhxq/Pvl3xYvC9oG0Co2l1D466u09n/Gj6IcUnKm9WP+CG+/g06H4Gf5sOzR
-         HSgoUvgMaFIo7oxhzvol6VaxBueY8XSCu1JG6eS156J8VvmYl4QIZKsTeWKkhxvF58Ot
-         bvl7bKsCIEOWRHONuecORGrwAllSYtCCkrlzrOhe0iUkdO4RQXcuKr6E0q5hs9NVkThs
-         B9UXU349JbDCvUtLz5qATq4TV+dEpSHxonUtMh/CkdzLnJhyPDpnODMeHMeY/MVg4s0W
-         wNJhn226PSaK7eZqmYy1CHJQaroSpHykDUjpwEzP9c2RdyRqjDvF0u6GUA3oJ+CYzQyt
-         OJoA==
-X-Forwarded-Encrypted: i=1; AJvYcCWD909KEA3nsUAiJwyjoW4vbGJz76USkfooaAWmi1IoxXfIEZoWGWvRhWqpT2EcaEM33JomFw8bV1xItoeuYV1gMw4PUdOuoINPlFnl48UxQovweHR9m7CAxM1jljSbOAlnle3Kf/1hiDc3VzIoEcQiBr3IR9FpfdMbtVjf7gecR43zdhk=
-X-Gm-Message-State: AOJu0YyF5q/hrJdvUMxRev7exbrX1Gi7Fwui/GhCM0CH16XEWWf+Iiv8
-	Wl8dxzWBnYudHin13C6DJNFzQA5+VztdkdbUJwvE2WgoqMU+qvsMEAd5HZcJH/qxF9FJwSTE+4n
-	C3CqOPuWL5KBWROrtYySbRI1BA/8=
-X-Google-Smtp-Source: AGHT+IG20eNpSzNkxnsgTkafpuA97Ew4OmO4JnqBaV5mNVNvOzgcdHEwHOPWG79O1UTpYlFkEm87j6CqNJkr6GVC/L4=
-X-Received: by 2002:a17:90b:f18:b0:29d:dd93:5865 with SMTP id
- br24-20020a17090b0f1800b0029ddd935865mr2399668pjb.46.1712241230437; Thu, 04
- Apr 2024 07:33:50 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="tEDpVtAA"
+Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 434EIWIP017874;
+	Thu, 4 Apr 2024 14:33:59 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : content-transfer-encoding : mime-version; s=pp1;
+ bh=ZMbVimfj/QT//YDCT37UTz3s+5iWkuUckagFXIsukKA=;
+ b=tEDpVtAAqGhyI3NNyeVil36RqkqJqcplMjYsTLhrqbX+vEF61Ktol40CL62wX8lY/DKC
+ CwwIK/gjt3L+Nlz7fxcd8R1mWO6V7H5A2IY7eRhD7+pyNdDaF6EteTHAXMgQVBu8ef2f
+ LS1IN0cxwfJVEtEZIk5vQdVoeh94AOEzclJCyBKcRnOivcwZmOMdcw7H+RxEa0oG3Gsi
+ dNk+ad8asxIWOtyAbqRbXe3WPlgCqYavPeNsmXuCjw4m+07uu0/Ax9BaeihpMbULy7pg
+ G42B6LvZt6Ig3sucQYJn7D3/ooIC3FkmXX2M3mbYK6vcNtlr6fyjyZpN8a4X3Pn8fsBj zQ== 
+Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3x9wuk81vu-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 04 Apr 2024 14:33:58 +0000
+Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma23.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 434DbEcB009115;
+	Thu, 4 Apr 2024 14:33:58 GMT
+Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
+	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3x9epxvn3s-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 04 Apr 2024 14:33:58 +0000
+Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
+	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 434EXqWB35455416
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 4 Apr 2024 14:33:54 GMT
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 6EBBF2004B;
+	Thu,  4 Apr 2024 14:33:52 +0000 (GMT)
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 4D92B20043;
+	Thu,  4 Apr 2024 14:33:52 +0000 (GMT)
+Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
+	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Thu,  4 Apr 2024 14:33:52 +0000 (GMT)
+From: Niklas Schnelle <schnelle@linux.ibm.com>
+To: Andi Shyti <andi.shyti@kernel.org>
+Cc: linux-i2c@vger.kernel.org, Arnd Bergmann <arnd@kernel.org>,
+        Heiko Carstens <hca@linux.ibm.com>, linux-kernel@vger.kernel.org,
+        Niklas Schnelle <schnelle@linux.ibm.com>
+Subject: [PATCH 0/1] i2c: Handle HAS_IOPORT dependencies
+Date: Thu,  4 Apr 2024 16:33:50 +0200
+Message-Id: <20240404143351.3950179-1-schnelle@linux.ibm.com>
+X-Mailer: git-send-email 2.40.1
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: oyeEmpd6kQTYaP5eM4pRCTfB4AJHKsc8
+X-Proofpoint-GUID: oyeEmpd6kQTYaP5eM4pRCTfB4AJHKsc8
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-UnRewURL: 0 URL was un-rewritten
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240404-providing-emporium-e652e359c711@spud>
-In-Reply-To: <20240404-providing-emporium-e652e359c711@spud>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Thu, 4 Apr 2024 16:33:08 +0200
-Message-ID: <CANiq72m9YAu=dr1=WMSHOqfpszj4S6OkMEQ05vqbv_zKO5pOsg@mail.gmail.com>
-Subject: Re: [PATCH v3] rust: make mutually exclusive with CFI_CLANG
-To: Conor Dooley <conor@kernel.org>
-Cc: linux-riscv@lists.infradead.org, Conor Dooley <conor.dooley@microchip.com>, 
-	stable@vger.kernel.org, Miguel Ojeda <ojeda@kernel.org>, 
-	Alex Gaynor <alex.gaynor@gmail.com>, Wedson Almeida Filho <wedsonaf@gmail.com>, linux-kernel@vger.kernel.org, 
-	rust-for-linux@vger.kernel.org, Sami Tolvanen <samitolvanen@google.com>, 
-	Kees Cook <keescook@chromium.org>, Nathan Chancellor <nathan@kernel.org>, llvm@lists.linux.dev, 
-	Matthew Maurer <mmaurer@google.com>, Ramon de C Valle <rcvalle@google.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-04-04_10,2024-04-04_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999
+ impostorscore=0 bulkscore=0 clxscore=1015 suspectscore=0
+ priorityscore=1501 phishscore=0 lowpriorityscore=0 adultscore=0 mlxscore=0
+ spamscore=0 malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2404010000 definitions=main-2404040100
 
-On Thu, Apr 4, 2024 at 4:17=E2=80=AFPM Conor Dooley <conor@kernel.org> wrot=
-e:
->
-> From: Conor Dooley <conor.dooley@microchip.com>
->
-> On RISC-V and arm64, and presumably x86, if CFI_CLANG is enabled,
-> loading a rust module will trigger a kernel panic. Support for
-> sanitisers, including kcfi (CFI_CLANG), is in the works, but for now
-> they're nightly-only options in rustc. Make RUST depend on !CFI_CLANG
-> to prevent configuring a kernel without symmetrical support for kfi.
->
-> Fixes: 2f7ab1267dc9 ("Kbuild: add Rust support")
-> cc: stable@vger.kernel.org
-> Signed-off-by: Conor Dooley <conor.dooley@microchip.com>
-> ---
-> Sending this one on its own, there's no explicit dep on this for the
-> riscv enabling patch, v3 to continue the numbering from there. Nothing
-> has changed since v2.
->
-> CC: Miguel Ojeda <ojeda@kernel.org>
-> CC: Alex Gaynor <alex.gaynor@gmail.com>
-> CC: Wedson Almeida Filho <wedsonaf@gmail.com>
-> CC: linux-kernel@vger.kernel.org (open list)
-> CC: rust-for-linux@vger.kernel.org
-> CC: Sami Tolvanen <samitolvanen@google.com>
-> CC: Kees Cook <keescook@chromium.org>
-> CC: Nathan Chancellor <nathan@kernel.org>
-> CC: llvm@lists.linux.dev
+Hi Andi,
 
-Cc'ing Matthew & Ramon as well so that they are aware and in case they
-want to comment.
+This is a follow up in my ongoing effort of making inb()/outb() and
+similar I/O port accessors compile-time optional. Previously I sent this
+as a treewide series titled "treewide: Remove I/O port accessors for
+HAS_IOPORT=n" with the latest being its 5th version[0]. With a significant
+subset of patches merged I've changed over to per-subsystem series. These
+series are stand alone and should be merged via the relevant tree such
+that with all subsystems complete we can follow this up with the final
+patch that will make the I/O port accessors compile-time optional.
 
-Cheers,
-Miguel
+The current state of the full series with changes to the remaining
+subsystems and the aforementioned final patch can be found for your
+convenience on my git.kernel.org tree in the has_ioport_v6 branch[1] with
+signed tags. As for compile-time vs runtime see Linus' reply to my first
+attempt[2].
+
+Thanks,
+Niklas
+
+[0] https://lore.kernel.org/all/20230522105049.1467313-1-schnelle@linux.ibm.com/
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/niks/linux.git/log/?h=has_ioport_v6
+[2] https://lore.kernel.org/lkml/CAHk-=wg80je=K7madF4e7WrRNp37e3qh6y10Svhdc7O8SZ_-8g@mail.gmail.com/
+
+Niklas Schnelle (1):
+  i2c: add HAS_IOPORT dependencies
+
+ drivers/i2c/busses/Kconfig | 31 +++++++++++++++++--------------
+ 1 file changed, 17 insertions(+), 14 deletions(-)
+
+-- 
+2.40.1
+
