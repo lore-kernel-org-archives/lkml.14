@@ -1,63 +1,63 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EA5E74405;
-	Thu,  4 Apr 2024 09:11:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 322727441C;
+	Thu,  4 Apr 2024 09:11:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712221880; cv=none; b=CoPCT5nJSAP5MvVIMn3Qqv2wWr+9mZRMzp63uApNtcDgLGOpd8Bsate1HPU5jAl211T5XJ9Whx/RgGnFKBE8716hfpIUJwgALkz7eCkBmwXYpLjr/mK0xmXCJ9Z3mW0XPKUZgQGxCaNF0VNflfq0yqutkzneQ7GrDypaF31JQb8=
+	t=1712221881; cv=none; b=oWIKT96NqNl3C1CIgCiIt8WR2E6OQQu2s4W9vvaDDQ1KE5ESOHWq28AGUHST+wToMXU8WiApVqS0kAZPQ6MPR6MB73bWWLxtDsEdpNNRxqPzbmAOX0gmQEwZ1tlkOBt2fA6Rn0T/nSCeYNJ9c6VDX0rqNTGvdPf5spVA4SRPys8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712221880; c=relaxed/simple;
-	bh=sSiAHnCYkMAb41uzqPX+bVFr0C/dLkqAWl3jCy0fZ9Q=;
+	s=arc-20240116; t=1712221881; c=relaxed/simple;
+	bh=1AVxcRcxQ+8gsWxFQV2c52Cxbze4tk12vFx+32U8s70=;
 	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=mkfdWzp+Ohku23/GTibG9Dh598U/Lc1cGO3jwfunhPfydKXiBzPGG1njk2vyI+GpByELJikpl6UuZtRmL7VIbpcdRfYXjStxWUV1U3QpbFBsCLvFpI9rvYmY4BD55TREGCovqJdYB3yzfZ+vY3Y2ht76fajeQ8+iAodXKe4M3D0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=lPhqarTD; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=TIDrA7tY; arc=none smtp.client-ip=193.142.43.55
+	 Message-ID:Content-Type; b=pAAI0SmMz2sjd5f65NhAWVKCjD++MGdi4WWC5BVoQRGDUKTcfGILIEx0/KGJ1FJjsgYLldMLwyZWbWpGyPcpMfOOzr9pyapoi2J5Ka60I8E6y/sWTRiSfiWJBshKeVRxw1e4u9frF2fmqX9Ici+DjtTopj1NC/QaB0XYzbnSaIc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=EOQbvgel; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Us1zLD3Q; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="lPhqarTD";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="TIDrA7tY"
-Date: Thu, 04 Apr 2024 09:11:15 -0000
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="EOQbvgel";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Us1zLD3Q"
+Date: Thu, 04 Apr 2024 09:11:17 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1712221876;
+	s=2020; t=1712221878;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=O+LRvHTpnOJnw49qH5A279TkC00i92hA34WqJSFN1GI=;
-	b=lPhqarTD0ara8iv/wt6nADF9NK1k0j7bmvEQn3Qruo3VLMRrkQR8nk9aew383NsJZRgM0e
-	7K5WqksXS+7g9f/KpVs2t9crI5q5/g6s77hMaK8Wpkbgrlt2UdZu8PuU8nFElamPwsMgZ0
-	enq8kLKjE1pPk77DvSp0cJwQ15rmeHLtBWU4H8touyK06zl5xXz+3QW44Y5NLfTFBVKnUG
-	QJwavA367GfwuxTtkXgVhAcpBeH9DCbfUS/I0iZpCXTsFlE24dgXO9Aq/nprjH5Exiic6x
-	cEw2YXbfKbaGalC622t4uxudhX5s/cma6JJy9vQMi82ilXJCnBnKAZQG1MJnTA==
+	bh=MsAoNUXTpwWBhnhoA004f/Vlu//19mS2FvY1h0r1Auw=;
+	b=EOQbvgelgbOsJJfS7iNFOuGzhmX6J7y4/vBO0LMHViJVsGuIHO58EdwMEZru3ZwEYXUZr5
+	No4WUAtp+28smEF3vLCp2JIST/gAjEE50iE7G6bJzl8gnnkoVX+4gDhubdj1pWxafOfHOO
+	DikFOz8FL3Bqd4RgHSWapIHr628rTA7O78Rh7FscCyzkal7iqFNw4m2o7tK2MVptfPImfe
+	uZnZo9a0oq+u9q5qhrm66fFkeIHSmmyXXk/I4UTLuVnuky2rvNkhJlVCK5lZkx8bdmexIC
+	j7uUtR+nkjSUGrQoGTqdf+M0XS5nR5Av2qwN1xgmDtGhqWCG1bWrA49Dehkuzw==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1712221876;
+	s=2020e; t=1712221878;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=O+LRvHTpnOJnw49qH5A279TkC00i92hA34WqJSFN1GI=;
-	b=TIDrA7tYCHfeSiemTWu3K0BVuz2g/hQNHPMCCur9/H97ylxfXlm5Af+2VON1PjTjXnV+tS
-	HnEvrc8kt55ofJDA==
+	bh=MsAoNUXTpwWBhnhoA004f/Vlu//19mS2FvY1h0r1Auw=;
+	b=Us1zLD3Qjp8WoIjIo9xEYfH8Pw/djHkk/9MXZZJCmEpqsp/t9pWrC1Pe4CixRVf1ddvvNk
+	26iSQ3C9w/4DpPBw==
 From: "tip-bot2 for Borislav Petkov (AMD)" <tip-bot2@linutronix.de>
 Sender: tip-bot2@linutronix.de
 Reply-to: linux-kernel@vger.kernel.org
 To: linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/urgent] x86/cc: Add cc_platform_set/_clear() helpers
-Cc: "Borislav Petkov (AMD)" <bp@alien8.de>,
- Tom Lendacky <thomas.lendacky@amd.com>, Srikanth Aithal <sraithal@amd.com>,
+Subject:
+ [tip: x86/alternatives] x86/alternatives: Catch late X86_FEATURE modifiers
+Cc: "Borislav Petkov (AMD)" <bp@alien8.de>, Srikanth Aithal <sraithal@amd.com>,
  x86@kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20240327154317.29909-5-bp@alien8.de>
-References: <20240327154317.29909-5-bp@alien8.de>
+In-Reply-To: <20240327154317.29909-3-bp@alien8.de>
+References: <20240327154317.29909-3-bp@alien8.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <171222187533.10875.12139303211259990842.tip-bot2@tip-bot2>
+Message-ID: <171222187750.10875.4089921606500177665.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2@linutronix.de>
 Robot-Unsubscribe:
  Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -65,139 +65,62 @@ Precedence: bulk
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 
-The following commit has been merged into the x86/urgent branch of tip:
+The following commit has been merged into the x86/alternatives branch of tip:
 
-Commit-ID:     bc6f707fc0feec72acc2f49c312eb31d257363a3
-Gitweb:        https://git.kernel.org/tip/bc6f707fc0feec72acc2f49c312eb31d257363a3
+Commit-ID:     97784e52f18fe6e0d6516ded8ecd3cec722ce9cc
+Gitweb:        https://git.kernel.org/tip/97784e52f18fe6e0d6516ded8ecd3cec722ce9cc
 Author:        Borislav Petkov (AMD) <bp@alien8.de>
-AuthorDate:    Wed, 27 Mar 2024 16:43:16 +01:00
+AuthorDate:    Wed, 27 Mar 2024 16:43:14 +01:00
 Committer:     Borislav Petkov (AMD) <bp@alien8.de>
-CommitterDate: Thu, 04 Apr 2024 10:40:27 +02:00
+CommitterDate: Wed, 03 Apr 2024 20:03:24 +02:00
 
-x86/cc: Add cc_platform_set/_clear() helpers
+x86/alternatives: Catch late X86_FEATURE modifiers
 
-Add functionality to set and/or clear different attributes of the
-machine as a confidential computing platform. Add the first one too:
-whether the machine is running as a host for SEV-SNP guests.
+After alternatives have been patched, changes to the X86_FEATURE flags
+won't take effect and could potentially even be wrong.
 
-Fixes: 216d106c7ff7 ("x86/sev: Add SEV-SNP host initialization support")
+Warn about it.
+
+This is something which has been long overdue.
+
 Signed-off-by: Borislav Petkov (AMD) <bp@alien8.de>
-Reviewed-by: Tom Lendacky <thomas.lendacky@amd.com>
 Tested-by: Srikanth Aithal <sraithal@amd.com>
-Link: https://lore.kernel.org/r/20240327154317.29909-5-bp@alien8.de
+Link: https://lore.kernel.org/r/20240327154317.29909-3-bp@alien8.de
 ---
- arch/x86/coco/core.c        | 52 ++++++++++++++++++++++++++++++++++++-
- include/linux/cc_platform.h | 12 ++++++++-
- 2 files changed, 64 insertions(+)
+ arch/x86/include/asm/cpufeature.h | 8 ++++++--
+ arch/x86/kernel/cpu/cpuid-deps.c  | 3 +++
+ 2 files changed, 9 insertions(+), 2 deletions(-)
 
-diff --git a/arch/x86/coco/core.c b/arch/x86/coco/core.c
-index ddd4efd..b31ef24 100644
---- a/arch/x86/coco/core.c
-+++ b/arch/x86/coco/core.c
-@@ -20,6 +20,11 @@
- enum cc_vendor cc_vendor __ro_after_init = CC_VENDOR_NONE;
- u64 cc_mask __ro_after_init;
+diff --git a/arch/x86/include/asm/cpufeature.h b/arch/x86/include/asm/cpufeature.h
+index 7103ba1..e5d8880 100644
+--- a/arch/x86/include/asm/cpufeature.h
++++ b/arch/x86/include/asm/cpufeature.h
+@@ -148,8 +148,12 @@ extern const char * const x86_bug_flags[NBUGINTS*32];
+ extern void setup_clear_cpu_cap(unsigned int bit);
+ extern void clear_cpu_cap(struct cpuinfo_x86 *c, unsigned int bit);
  
-+static struct cc_attr_flags {
-+	__u64 host_sev_snp	: 1,
-+	      __resv		: 63;
-+} cc_flags;
+-#define setup_force_cpu_cap(bit) do { \
+-	set_cpu_cap(&boot_cpu_data, bit);	\
++#define setup_force_cpu_cap(bit) do {			\
++							\
++	if (!boot_cpu_has(bit))				\
++		WARN_ON(alternatives_patched);		\
++							\
++	set_cpu_cap(&boot_cpu_data, bit);		\
+ 	set_bit(bit, (unsigned long *)cpu_caps_set);	\
+ } while (0)
+ 
+diff --git a/arch/x86/kernel/cpu/cpuid-deps.c b/arch/x86/kernel/cpu/cpuid-deps.c
+index b717420..5dd427c 100644
+--- a/arch/x86/kernel/cpu/cpuid-deps.c
++++ b/arch/x86/kernel/cpu/cpuid-deps.c
+@@ -114,6 +114,9 @@ static void do_clear_cpu_cap(struct cpuinfo_x86 *c, unsigned int feature)
+ 	if (WARN_ON(feature >= MAX_FEATURE_BITS))
+ 		return;
+ 
++	if (boot_cpu_has(feature))
++		WARN_ON(alternatives_patched);
 +
- static bool noinstr intel_cc_platform_has(enum cc_attr attr)
- {
- 	switch (attr) {
-@@ -93,6 +98,9 @@ static bool noinstr amd_cc_platform_has(enum cc_attr attr)
- 	case CC_ATTR_GUEST_SEV_SNP:
- 		return sev_status & MSR_AMD64_SEV_SNP_ENABLED;
+ 	clear_feature(c, feature);
  
-+	case CC_ATTR_HOST_SEV_SNP:
-+		return cc_flags.host_sev_snp;
-+
- 	default:
- 		return false;
- 	}
-@@ -153,6 +161,50 @@ u64 cc_mkdec(u64 val)
- }
- EXPORT_SYMBOL_GPL(cc_mkdec);
- 
-+static void amd_cc_platform_clear(enum cc_attr attr)
-+{
-+	switch (attr) {
-+	case CC_ATTR_HOST_SEV_SNP:
-+		cc_flags.host_sev_snp = 0;
-+		break;
-+	default:
-+		break;
-+	}
-+}
-+
-+void cc_platform_clear(enum cc_attr attr)
-+{
-+	switch (cc_vendor) {
-+	case CC_VENDOR_AMD:
-+		amd_cc_platform_clear(attr);
-+		break;
-+	default:
-+		break;
-+	}
-+}
-+
-+static void amd_cc_platform_set(enum cc_attr attr)
-+{
-+	switch (attr) {
-+	case CC_ATTR_HOST_SEV_SNP:
-+		cc_flags.host_sev_snp = 1;
-+		break;
-+	default:
-+		break;
-+	}
-+}
-+
-+void cc_platform_set(enum cc_attr attr)
-+{
-+	switch (cc_vendor) {
-+	case CC_VENDOR_AMD:
-+		amd_cc_platform_set(attr);
-+		break;
-+	default:
-+		break;
-+	}
-+}
-+
- __init void cc_random_init(void)
- {
- 	/*
-diff --git a/include/linux/cc_platform.h b/include/linux/cc_platform.h
-index cb0d6cd..60693a1 100644
---- a/include/linux/cc_platform.h
-+++ b/include/linux/cc_platform.h
-@@ -90,6 +90,14 @@ enum cc_attr {
- 	 * Examples include TDX Guest.
- 	 */
- 	CC_ATTR_HOTPLUG_DISABLED,
-+
-+	/**
-+	 * @CC_ATTR_HOST_SEV_SNP: AMD SNP enabled on the host.
-+	 *
-+	 * The host kernel is running with the necessary features
-+	 * enabled to run SEV-SNP guests.
-+	 */
-+	CC_ATTR_HOST_SEV_SNP,
- };
- 
- #ifdef CONFIG_ARCH_HAS_CC_PLATFORM
-@@ -107,10 +115,14 @@ enum cc_attr {
-  * * FALSE - Specified Confidential Computing attribute is not active
-  */
- bool cc_platform_has(enum cc_attr attr);
-+void cc_platform_set(enum cc_attr attr);
-+void cc_platform_clear(enum cc_attr attr);
- 
- #else	/* !CONFIG_ARCH_HAS_CC_PLATFORM */
- 
- static inline bool cc_platform_has(enum cc_attr attr) { return false; }
-+static inline void cc_platform_set(enum cc_attr attr) { }
-+static inline void cc_platform_clear(enum cc_attr attr) { }
- 
- #endif	/* CONFIG_ARCH_HAS_CC_PLATFORM */
- 
+ 	/* Collect all features to disable, handling dependencies */
