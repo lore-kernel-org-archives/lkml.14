@@ -1,103 +1,157 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 474475D734;
-	Thu,  4 Apr 2024 05:13:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D563C5F850;
+	Thu,  4 Apr 2024 05:13:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712207628; cv=none; b=SjByQ+Uo1aosMFTARrgFiGs0i05SZR8sQA3QUsTcp1PyGczl7zDRf2qrFH7EppjhcJsJ6AxGCPMfrLq0sTE1L2C6yllXnb6fC/UivIBwYQNqNiwDW4PK0cHFdeDGoblLDGjxqlbwGdPsZ4zA4nXzdAeieNsfHPmNcWxVZwtS4vk=
+	t=1712207631; cv=none; b=VLdWKn1gVC6j+o+yLbnxyTt5loUh3MFIk0fJGrZ4fRuqiEd9Jks0+CVSIf5LtSBDIjn7CJOjCyTWnxTL3CgdbljSHSB2coci6j+EA09olJkvInIdulSiYou01fMAoRDkqkK7I7/9odUz4p+QYui6KKfvdniB7IPVkzGOyJowSQo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712207628; c=relaxed/simple;
-	bh=igXeosfkBTaoM9X6CjC7IK5y1qjX9vxXcrQ9XZ1wa1g=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=e/97lX0ZgDS88yzPuCMgOR9ADPOOPQX3y+NAsumIwxhudma7jPu/JdCx+Nu7a/aZ/4vSrPwvDPCwXKeSCOkolH+vGRoA3F5iEbaXGaXUBuw0+Me4XMasP1+mF7qHA8mlIEOEEq8btqVKD9oYn31YDkiiMfnt6OVdcgq5InwJofc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=CHleygwg; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1712207631; c=relaxed/simple;
+	bh=NNdTGMeI3BKJSbRWKcY6O6EwK/hyTYU9C4WsrkgvkGY=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=JO2IsOnZ2g0OP5AwVZ5pugknuF/iFft5tUoAt1w36/JPtz1UgwHwasyY9pTDFeDBytAjAffXvGH91tK0Yoi3NbTM+H1hUGbMs4vej3NcuMfUh0cfp/+UyC1juGuHH6gJHycR2DwcOkWRYfyCWYXpkl3NWQls9Zosn8w4NnJ7S5I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=GJ/1OzUe; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="CHleygwg"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1C91DC43390;
-	Thu,  4 Apr 2024 05:13:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1712207627;
-	bh=igXeosfkBTaoM9X6CjC7IK5y1qjX9vxXcrQ9XZ1wa1g=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=CHleygwgLS/PSqH3c004VK3VF2KxonjO+QwA8pw2TeyQ7L6RJS7NQ3JvGKXlWQvBO
-	 ERNuetVU8xmDNfy4DTdBtc5cw4taftZsmHmvlJ4Dh81SFnWQFDbKDCMpy7dO0KyU9h
-	 k2poqIEJYH2xtVEjkhkS4KdEMfMglrtmtkumvqGg=
-Date: Thu, 4 Apr 2024 07:13:44 +0200
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Joseph Salisbury <joseph.salisbury@canonical.com>
-Cc: hch@lst.de, linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
-	axboe@kernel.dk, sashal@kernel.org, stable@vger.kernel.org,
-	Francis Ginther <francis.ginther@canonical.com>
-Subject: Re: [v5.15 Regression] block: rename GENHD_FL_NO_PART_SCAN to
- GENHD_FL_NO_PART
-Message-ID: <2024040407-bucket-sank-25a4@gregkh>
-References: <924449dc-9b1f-4943-afe3-a68c03aedbb5@canonical.com>
- <2024040329-unstopped-spelling-64c8@gregkh>
- <a0819f54-7469-4c94-b567-71f634c84ac1@canonical.com>
- <2024040306-putdown-grain-daf7@gregkh>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="GJ/1OzUe"
+Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 4343TYdm002201;
+	Thu, 4 Apr 2024 05:13:44 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	from:to:cc:subject:date:message-id:in-reply-to:references
+	:mime-version:content-transfer-encoding:content-type; s=
+	qcppdkim1; bh=PTV5+DQ7ryKEZGv3mJS+ywNkymvYkqTD/TtVct3tAaE=; b=GJ
+	/1OzUekMKEh/2Gu0+P87kTi0b9MnRKU8bfx3VZA04suul5eo+vlytD1V2pXqH2Dh
+	LUsYZ7asGFynkUkeTl4izshcr4QyxjIBnMo+4NCa34icvha/yVYgc6uNXONwMqP8
+	tl/wtQyT/iWsGbYgLOJcSiJEaVPIpnQ8/G2CUqV+n9OAsWL8fmshk+49NP8KkTU7
+	yBgNTrd+NiiSK31GuNIjCdxMZ2rIXpRgreEeagsjPpflfLu5oDu4aEJKK348AEq8
+	jJm5DB9FEGcPKmWR3oOdfeBqgY3lqDW6d75dGVxe5bwBqKYFURYRPs8PZhFyejed
+	MBuxFldUIdZw0rUvAm7w==
+Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3x9eph8m7d-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 04 Apr 2024 05:13:43 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 4345DgoJ029906
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 4 Apr 2024 05:13:42 GMT
+Received: from hu-kriskura-hyd.qualcomm.com (10.80.80.8) by
+ nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.4; Wed, 3 Apr 2024 22:13:37 -0700
+From: Krishna Kurapati <quic_kriskura@quicinc.com>
+To: Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Rob Herring
+	<robh@kernel.org>, Bjorn Andersson <andersson@kernel.org>,
+        Wesley Cheng
+	<quic_wcheng@quicinc.com>,
+        Konrad Dybcio <konrad.dybcio@linaro.org>,
+        "Greg
+ Kroah-Hartman" <gregkh@linuxfoundation.org>,
+        Conor Dooley
+	<conor+dt@kernel.org>,
+        Thinh Nguyen <Thinh.Nguyen@synopsys.com>,
+        Felipe Balbi
+	<balbi@kernel.org>, Johan Hovold <johan@kernel.org>
+CC: <devicetree@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
+        <linux-usb@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <quic_ppratap@quicinc.com>, <quic_jackp@quicinc.com>,
+        Krishna Kurapati
+	<quic_kriskura@quicinc.com>,
+        Johan Hovold <johan+linaro@kernel.org>
+Subject: [PATCH v19 9/9] usb: dwc3: qcom: Add multiport suspend/resume support for wrapper
+Date: Thu, 4 Apr 2024 10:42:29 +0530
+Message-ID: <20240404051229.3082902-10-quic_kriskura@quicinc.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240404051229.3082902-1-quic_kriskura@quicinc.com>
+References: <20240404051229.3082902-1-quic_kriskura@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <2024040306-putdown-grain-daf7@gregkh>
+Content-Type: text/plain
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: 1whCxnVWxOIMQxqRRqslASzewWp4a4LW
+X-Proofpoint-ORIG-GUID: 1whCxnVWxOIMQxqRRqslASzewWp4a4LW
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-04-04_01,2024-04-03_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 bulkscore=0
+ spamscore=0 priorityscore=1501 mlxlogscore=999 adultscore=0 clxscore=1015
+ lowpriorityscore=0 phishscore=0 malwarescore=0 mlxscore=0 suspectscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2404010003
+ definitions=main-2404040033
 
-On Wed, Apr 03, 2024 at 08:40:00PM +0200, Greg KH wrote:
-> On Wed, Apr 03, 2024 at 02:06:28PM -0400, Joseph Salisbury wrote:
-> > 
-> > 
-> > On 4/3/24 13:54, Greg KH wrote:
-> > > On Wed, Apr 03, 2024 at 01:50:09PM -0400, Joseph Salisbury wrote:
-> > > > Hi Christoph,
-> > > > 
-> > > > A kernel bug report was opened against Ubuntu [0].  This bug is a regression
-> > > > introduced in mainline version v5.17-rc1 and made it's way into v5.15 stable
-> > > > updates.
-> > > > 
-> > > > The following commit was identified as the cause of the regression in 5.15:
-> > > > 
-> > > > c6ce1c5dd327 ("block: rename GENHD_FL_NO_PART_SCAN to GENHD_FL_NO_PART")
-> > > How is renaming a define a "regression"?
-> > The "regression" is experienced after upgrading to the kernel to the version
-> > that introduced this commit.
-> > The v5.15.131 kernel works as expected, upgrading the kernel to v5.15.132
-> > breaks behavior that worked in a prior kernel version.
-> > Reverting commit c6ce1c5dd327 in v5.15.132 allows the experience to be as
-> > before in v5.15.131.
-> 
-> What "experience" are you talking about here?  Please be specific.  What
-> exactly "broke", what is the build error that happens?
-> 
-> > > > I was hoping to get your feedback, since you are the patch author. Is the
-> > > > best approach to revert this commit, since many third parties rely on the
-> > > > name being GENHD_FL_NO_PART_SCAN in kernel headers?
-> > > External kernel modules are never an issue.  Is this a userspace thing?
-> > > 
-> > > >   Is there a specific need that you know of that requires this commit
-> > > > in the 5.15 and earlier stable kernels?
-> > > Yes.  And Christoph did not do the backport, so I doubt he cares :)
-> > > 
-> > > Again, what in-kernel issue is caused by this?
-> > 
-> > Third party code that relies on the kernel-headers will no longer compile
-> > due to the name change.  Should we not care if we break things, even in
-> > userspace?
-> 
-> Is this userspace, or is it kernel drivers?
-> 
-> If kernel drivers, you know that there  s no stable kernel api, we
-> rename and change things all the time, even in stable kernel trees, for
-> good reasons (see the set of patches that were applied that contained
-> this change.)  Do you want to have unfixed security issues, or do you
-> want a secure kernel that happens to rename variables at times?
+Power event IRQ is used for wakeup in cases:
+a) where the controller is super speed capable and missing an
+ss_phy interrupt.
+b) where the GIC is not capable of detecting DP/DM hs phy irq's.
 
-Given the lack of response, I am going to assume that this means you are
-referring to out-of-tree kernel code and this is not a real "regression"
-at all.
+Power event IRQ stat register indicates whether high speed phy
+entered and exited L2 successfully during suspend and resume.
+Indicate the same for all ports of multiport.
 
-greg k-h
+Signed-off-by: Krishna Kurapati <quic_kriskura@quicinc.com>
+Reviewed-by: Johan Hovold <johan+linaro@kernel.org>
+---
+ drivers/usb/dwc3/dwc3-qcom.c | 22 +++++++++++++++++-----
+ 1 file changed, 17 insertions(+), 5 deletions(-)
+
+diff --git a/drivers/usb/dwc3/dwc3-qcom.c b/drivers/usb/dwc3/dwc3-qcom.c
+index 12182e0f8f45..d3e6d5d5e8bf 100644
+--- a/drivers/usb/dwc3/dwc3-qcom.c
++++ b/drivers/usb/dwc3/dwc3-qcom.c
+@@ -52,6 +52,13 @@
+ #define APPS_USB_AVG_BW 0
+ #define APPS_USB_PEAK_BW MBps_to_icc(40)
+ 
++static const u32 pwr_evnt_irq_stat_reg[DWC3_MAX_PORTS] = {
++	0x58,
++	0x1dc,
++	0x228,
++	0x238,
++};
++
+ struct dwc3_qcom_port {
+ 	int			qusb2_phy_irq;
+ 	int			dp_hs_phy_irq;
+@@ -421,9 +428,11 @@ static int dwc3_qcom_suspend(struct dwc3_qcom *qcom, bool wakeup)
+ 	if (qcom->is_suspended)
+ 		return 0;
+ 
+-	val = readl(qcom->qscratch_base + PWR_EVNT_IRQ_STAT_REG);
+-	if (!(val & PWR_EVNT_LPM_IN_L2_MASK))
+-		dev_err(qcom->dev, "HS-PHY not in L2\n");
++	for (i = 0; i < qcom->num_ports; i++) {
++		val = readl(qcom->qscratch_base + pwr_evnt_irq_stat_reg[i]);
++		if (!(val & PWR_EVNT_LPM_IN_L2_MASK))
++			dev_err(qcom->dev, "port-%d HS-PHY not in L2\n", i + 1);
++	}
+ 
+ 	for (i = qcom->num_clocks - 1; i >= 0; i--)
+ 		clk_disable_unprepare(qcom->clks[i]);
+@@ -472,8 +481,11 @@ static int dwc3_qcom_resume(struct dwc3_qcom *qcom, bool wakeup)
+ 		dev_warn(qcom->dev, "failed to enable interconnect: %d\n", ret);
+ 
+ 	/* Clear existing events from PHY related to L2 in/out */
+-	dwc3_qcom_setbits(qcom->qscratch_base, PWR_EVNT_IRQ_STAT_REG,
+-			  PWR_EVNT_LPM_IN_L2_MASK | PWR_EVNT_LPM_OUT_L2_MASK);
++	for (i = 0; i < qcom->num_ports; i++) {
++		dwc3_qcom_setbits(qcom->qscratch_base,
++				  pwr_evnt_irq_stat_reg[i],
++				  PWR_EVNT_LPM_IN_L2_MASK | PWR_EVNT_LPM_OUT_L2_MASK);
++	}
+ 
+ 	qcom->is_suspended = false;
+ 
+-- 
+2.34.1
+
