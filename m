@@ -1,55 +1,55 @@
-Received: from mail-lf1-f73.google.com (mail-lf1-f73.google.com [209.85.167.73])
+Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 144D01292D2
-	for <linux-kernel@vger.kernel.org>; Thu,  4 Apr 2024 12:32:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0460129A8E
+	for <linux-kernel@vger.kernel.org>; Thu,  4 Apr 2024 12:32:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712233929; cv=none; b=jiVDbIV72fi9WaS7uMO6eVQZR/u/jC2KxuFwaLeyfXwzN04PrcEiUnYSArDPRxpK9z9qD7Um/BvfBXy7IiUlUQlGlFnXJXHuT4b6nVU2CPsSTjidX4cjjmlvqGI/49ny5YhL5nW5XjeVSjiDBI43QjUH1OBzyjSxuGjuvAJPRpA=
+	t=1712233933; cv=none; b=agosMnVkcugZq6ON9kqjJfaaU5WwGUNk1PGzpkztaHxVD0mhyM8dfVN8AKNmRuocD5oha0HJJGhAMMw+h23Th5cGSRsSnWx4bIyJpHCnuhXrATyW7HYiPQKeERcdYgmX4I7HRg80TNp9TmcIHzTeHDIpJdDT80hET6/YPBPCtAc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712233929; c=relaxed/simple;
-	bh=ENZEMbGPREyoSg5+wBFZYD4lbX19qXHHsyAQOWu60DY=;
+	s=arc-20240116; t=1712233933; c=relaxed/simple;
+	bh=UiZpIf3BFNfRYXQgX1pbRbLKUYIHeSA1dkwNj3p46PY=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=XTlX0KucVnsOTKJDotgzs09/s0EvgQu8MwBLp6MGLcWctxouAOjnEwTdhI2edBF1yF3Miz+3YJucaOaTr/8FYm0pv5LJQNEFZ04swV3N+fL7sBr6ka0s2N/FGyf6Y1ZI3QgPTiRVVcETmW0eaa4wd8+j8beg5F43Ehy8jiTpz9M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=WysMrGuH; arc=none smtp.client-ip=209.85.167.73
+	 To:Cc:Content-Type; b=Kwh+MWhqhy1+Kw9U8nfSq0PZz/lZ/fema4Y7mJk3jhCnpGGr/rWTp2pv4Ksex/ojs1jXsQ/hWo8Pk+A8ks0Wy1Fvij4A3tQ6DwkdXceCHoo9/a86Zau1IAhaInv+bzfXrkzHnR3MO0sa+tdEOa1gdjqzs4cBjFChNXcPXvt5eeU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=VvGOj/23; arc=none smtp.client-ip=209.85.128.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="WysMrGuH"
-Received: by mail-lf1-f73.google.com with SMTP id 2adb3069b0e04-516d1d5eba4so32279e87.3
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Apr 2024 05:32:06 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="VvGOj/23"
+Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-6156b93c768so18007017b3.1
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Apr 2024 05:32:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1712233925; x=1712838725; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1712233931; x=1712838731; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=ysVmEE4mL4bMw4uot+7FLn+nKcsM+tEfIcHG5UH/UW0=;
-        b=WysMrGuHidg6eDNEwlU04V/Py7HeAtnG5JHpqI+Rq6uRv2dhZGBZajoMY0/HBXcefJ
-         DprGlXTZiuytwyaotrPUNnYw4LvKoKFA9S5sfXf3kxMyt4f13sg5nlpflh2Su09BYzA5
-         2ii2KWd8exCBisEI9+CLsrDneeGYF2dpZdajkXajpCAyQmpNtgiB7Z+Otdose9N0zoTk
-         mm4GK3RbZYadQMupQ8DsgCcwtdzFg3VbYppeiveJ2oqiHOT9LcKEpNexxhk7LZuhTgki
-         ad+qsjGWe8NxPBulbhS0lxjpcRv/ilrpmW2r/TbfhkJ3dMSPSBPgBqQsaHVHDpW7RKdH
-         zRyw==
+        bh=taakBWKWpiwoIIU3/+JYifQ+UJK0O86XOZIW+qgXD8k=;
+        b=VvGOj/23CXrIcXEmqyWqV0urEh6JCB/lsw5PACiGjJfXaEUOI+UMDorG4plSZqe+8W
+         XKSAiJNq2LTRKXAaTHaf2iC4Pd9ky2+0ROTfLAMGM115UKkZoyYtKFiB83dQwytlXW4M
+         sqakXFLPLTcGLcf3AsNSzwLdtq0RZzngLsC12YunqQrnMPXuQx6/KYBUqCK4yGWl6DMF
+         amHU8cFuz2iIHbDbkdkKHuvEeKYOxMFY1q8e4CnvczD9hO3lqOSfPBgrWyv/fjBjtlNn
+         43oTgeaaUcteJjR5nJ2k5ud0a8L2haOXnMuiKYbTXd+U9zMteW/s2Mqde3XCjsdfq8+T
+         9V9g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712233925; x=1712838725;
+        d=1e100.net; s=20230601; t=1712233931; x=1712838731;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ysVmEE4mL4bMw4uot+7FLn+nKcsM+tEfIcHG5UH/UW0=;
-        b=EINXPXTGKZMzhiky15u41CFuYCMnoFe4RSJhkOyJtLOCZUmNOMwWCXXBP1YQFBkrPz
-         7tjM+odNpJwiQfbpIumaS8GhfCqKq0UNovpAk3vdcFt5QdAX+LNXPAZOQ+8AGB8p1M9g
-         K9wzJX3AyWvK4t6aU4KiHpwhzhhdg1Z8wGu3ira4k+08cQVSqQq1CQxpA/6QFQXzr1mC
-         EYcLs1naYlbSwRR556Vyrd1oztXkdbTwTsJke3K24mPWJhWD/SjB/frxIIiXE8HF4cwv
-         yOhTO2yizjCiMtgCdq9jZiqaoqj4PLuqh5hrdQzHQVfjBAJC5CrK8O9eY+HG2jvk3CnV
-         z1Tw==
-X-Forwarded-Encrypted: i=1; AJvYcCUvgLmMhJ0fcaqB4hBJSHrPubZ6pdYmEopntkM/QysIRDCjHNytUEAZR020ohhwfTtWBINZ4S7hu7G5ZbT0Aw02GNbzddlyPfYrvM+W
-X-Gm-Message-State: AOJu0Yzep6Ph9YVy0Ah7Idxbp4+jbtOjwOfAFbqQyTQNKTReDp27DWpE
-	Wv6p0VMAHWbyuQYLNbwLnEwA+XEg9/PfT9YL23iwHEOT0KpM0+err9omz9NVXlir7zXYSytkPeL
-	Ic6Q4BcgfLfg5PQ==
-X-Google-Smtp-Source: AGHT+IFrwRynX5aWcZHx3g+jAqvB3lD7LQiPlI1bTzUb5n6NBE4kIOwE9BszfMGy9/GGL1AmsLhqzAfCwM6VGIM=
+        bh=taakBWKWpiwoIIU3/+JYifQ+UJK0O86XOZIW+qgXD8k=;
+        b=DDvuSDjFNtWVO21W3LbkuSWPDPhBbRayxk7ZJi2LAbw4Srmsq+3DGshewiKhKHtCTb
+         WYkLK85uk5PdwtaKOBpb3XNRXsucz0dHKtjbk3bf8OgNGF/YzN8HEE/aUPd8qwqEjRaY
+         Gyg7c7XrbxcVzy/C7ZugWpYZ0MmRXQKXnl9GUjrluDb0xPsI0AllFnDs7L26TC4vVXcZ
+         Mtt9kyXY7EuW4LjQY+meN6CQXe4zyCMttVA09jMtVHLwiBflj7zpTqVNjUej+9sRJYbn
+         eZvkjSIPtiGFTgWeMEiqXJD6ruPvvlA3jfRk4s/zR7aRxrORo9fCLXvOqQ5FlYU1vHzB
+         P73g==
+X-Forwarded-Encrypted: i=1; AJvYcCVeEc7ANo1ep1pGKi3iE9u4s62wFkjUVzrZzyYweG9G+OCiMyEJzi2p67JXu5f7amRpV9/c41xVpXUla4Z7T9kIV3xBuPG3x5bywFr8
+X-Gm-Message-State: AOJu0Yxh7904BONGZ/qcI9QcIYmMcvll9sxX6O7EKRPxFxKp9uSHnmBg
+	JamdnrvsTxKBUL5gOjpxBkpC9bnNNvgoqNpnUniiyM+2jvEPqd+CKBbUclcy1U5or2b+B4dD0u/
+	c3SEXM76L0TfmrQ==
+X-Google-Smtp-Source: AGHT+IFmI9GK0405EKKeFUihI1V2MMV978wCRRUD+IF2RG+iw2g50ENG8068UenBApb8aTochDt6fXyIgyqbaIU=
 X-Received: from aliceryhl2.c.googlers.com ([fda3:e722:ac3:cc00:68:949d:c0a8:572])
- (user=aliceryhl job=sendgmr) by 2002:ac2:46ec:0:b0:516:726f:112a with SMTP id
- q12-20020ac246ec000000b00516726f112amr2495lfo.11.1712233924900; Thu, 04 Apr
- 2024 05:32:04 -0700 (PDT)
-Date: Thu, 04 Apr 2024 12:31:39 +0000
+ (user=aliceryhl job=sendgmr) by 2002:a81:a0c6:0:b0:615:36af:1997 with SMTP id
+ x189-20020a81a0c6000000b0061536af1997mr657526ywg.1.1712233930863; Thu, 04 Apr
+ 2024 05:32:10 -0700 (PDT)
+Date: Thu, 04 Apr 2024 12:31:41 +0000
 In-Reply-To: <20240404-alice-mm-v4-0-49a84242cf02@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -59,22 +59,22 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20240404-alice-mm-v4-0-49a84242cf02@google.com>
 X-Developer-Key: i=aliceryhl@google.com; a=openpgp; fpr=49F6C1FAA74960F43A5B86A1EE7A392FDE96209F
-X-Developer-Signature: v=1; a=openpgp-sha256; l=14993; i=aliceryhl@google.com;
- h=from:subject:message-id; bh=U2svVG4smSrGB686kZq+YByj41C8BHYczzuL+Plq8Y0=;
- b=owEBbQKS/ZANAwAKAQRYvu5YxjlGAcsmYgBmDp297NpKkwdEgApdvuP1O7rHV/xrtpCd46bHP
- 6bmTytk0TqJAjMEAAEKAB0WIQSDkqKUTWQHCvFIvbIEWL7uWMY5RgUCZg6dvQAKCRAEWL7uWMY5
- Rs/KD/4n5BXQB8lYJ5u0mP3iZ51DHuumLkvA7xur/HtXbnHKrnQwhSMz2FxWuvA3/6bRxuhN4lQ
- OSCMRU7R3FcErMKpA4M5FT8DLOZWeSfCFaTCm2W2xMXcAaLZA5wOZnEJKiesuOUjrGRCjlEhQE4
- 3HTrVrmfzwzJ0Sq8SfCNc5De2f2GBpqRsMTzYXJFerZVueUdsmXEUA6VH+ZuTkwFZznBKx7qt3s
- 088veuPbyt8jx6lVZieMEiR0OtYzYGwwu8rzH7SDFjRpKpAYcULcdKPBNkKjnXztjeE6aW0z7Ck
- hESfmDxTOUtswgKOnRbELN9W8CQ5Ah/K3Pidi8IT0yiiu1/s8rzfhEWuS2CJ6yv+/uocTMOLpoP
- q4/kEbuq4IX3N0uLc7HwtzW1XoI8yWaLytgliRHmBwUuYUmEYG8fPJ2EjJDQP2jVbKGgu2g4RdS
- 3k26rW/vlVx43cdJjc+0ocGJnMQok6omKdxNHeviMKWswPFJV9RigRTm5q/YfJUWPMiXkgHmQVl
- aKOK/LebzW6mQFiJyZ1JADfJ282jFfhj9Hul/1GTu1JMy152nS3Tfh2DSqeEXFSGRcLfy8yrjY7
- ersWbqLCQu/EDahfc2TP5FaMraCyEBI45T+iLEeABV57jO8PLAg46vjLPJGeq1Fpmj/UzhsvDjF gVaZ6Px10t5Lrcw==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=8776; i=aliceryhl@google.com;
+ h=from:subject:message-id; bh=UiZpIf3BFNfRYXQgX1pbRbLKUYIHeSA1dkwNj3p46PY=;
+ b=owEBbQKS/ZANAwAKAQRYvu5YxjlGAcsmYgBmDp2+LY7YpSqabe2ORUZvWo4bVNMZVV5WG3R5Y
+ mu1KHdru/OJAjMEAAEKAB0WIQSDkqKUTWQHCvFIvbIEWL7uWMY5RgUCZg6dvgAKCRAEWL7uWMY5
+ Rg/hD/9idXpq7JAUwrsPqCMHE5ebfdee6X+qjWYNVVMCWAAHPuysFc6BuRDOAS3ksrtD6I64Hdx
+ 0SzqKoLWlb5G84cPRR3FsBvS9LZFniXIOnGP89k0MzHz4LCLcgAzuSZR+8nWh1P8kikjfhh9XDM
+ bIWO2k3E02cCC1VRTNmUWEv1dP7BrbQi6KTZWo9JrlqKuAaYH850u+ULTuThr4fL+Ht81FSKiw6
+ Z4pBcshiar3zqMhPz1UUyMk/oFXv0nGcmfkp+hRKzAgoWf6dEvxs+2IB/x1i7lm1DrhhIqb2U3F
+ kjheC6V5Y8QcshSdG7ezsMEsLByCbEgrq2jQ3Hk3Hd48w869oYE0COHGY6cMHt5S619qGi0TV3r
+ xnKuoInK826bagIN4wbiDkFKzfImcdzZ0+3AwdKjoUfrX8rQdwtBZ7N0N2/OQdNJnjJiGIUiJx/
+ q99e8A13V4pcSappEdzwx7wc6TzfPwDI95gpDV+6n4DF/I0WiPOVpdO8vYZhY3LQfoZqWopPS4N
+ ruTmP8hGyabWfrAD0Ja82KS+WKqXuHFPQuuOnpqUQiYX+f68M4WJ/oTzC+Cpy+61hKIpC8Y0RVB
+ ZCzUv+hAM1RIW280T6WS1qMu3Qj9oSrVLjpmlpGcavdbg3jbArrgOsMCpCFkVE3JRdu+mbqVW4S /wWNwuGpAnPGO1Q==
 X-Mailer: b4 0.13-dev-26615
-Message-ID: <20240404-alice-mm-v4-1-49a84242cf02@google.com>
-Subject: [PATCH v4 1/4] rust: uaccess: add userspace pointers
+Message-ID: <20240404-alice-mm-v4-3-49a84242cf02@google.com>
+Subject: [PATCH v4 3/4] rust: uaccess: add typed accessors for userspace pointers
 From: Alice Ryhl <aliceryhl@google.com>
 To: Miguel Ojeda <ojeda@kernel.org>, Matthew Wilcox <willy@infradead.org>, 
 	Al Viro <viro@zeniv.linux.org.uk>, Andrew Morton <akpm@linux-foundation.org>, 
@@ -90,407 +90,218 @@ Cc: Alex Gaynor <alex.gaynor@gmail.com>, Wedson Almeida Filho <wedsonaf@gmail.co
 	Alice Ryhl <aliceryhl@google.com>, Christian Brauner <brauner@kernel.org>
 Content-Type: text/plain; charset="utf-8"
 
-From: Wedson Almeida Filho <wedsonaf@gmail.com>
+Add safe methods for reading and writing Rust values to and from
+userspace pointers.
 
-A pointer to an area in userspace memory, which can be either read-only
-or read-write.
+The C methods for copying to/from userspace use a function called
+`check_object_size` to verify that the kernel pointer is not dangling.
+However, this check is skipped when the length is a compile-time
+constant, with the assumption that such cases trivially have a correct
+kernel pointer.
 
-All methods on this struct are safe: attempting to read or write on bad
-addresses (either out of the bound of the slice or unmapped addresses)
-will return `EFAULT`. Concurrent access, *including data races to/from
-userspace memory*, is permitted, because fundamentally another userspace
-thread/process could always be modifying memory at the same time (in the
-same way that userspace Rust's `std::io` permits data races with the
-contents of files on disk). In the presence of a race, the exact byte
-values read/written are unspecified but the operation is well-defined.
-Kernelspace code should validate its copy of data after completing a
-read, and not expect that multiple reads of the same address will return
-the same value.
+In this patch, we apply the same optimization to the typed accessors.
+For both methods, the size of the operation is known at compile time to
+be size_of of the type being read or written. Since the C side doesn't
+provide a variant that skips only this check, we create custom helpers
+for this purpose.
 
-These APIs are designed to make it difficult to accidentally write
-TOCTOU bugs. Every time you read from a memory location, the pointer is
-advanced by the length so that you cannot use that reader to read the
-same memory location twice. Preventing double-fetches avoids TOCTOU
-bugs. This is accomplished by taking `self` by value to prevent
-obtaining multiple readers on a given `UserSlicePtr`, and the readers
-only permitting forward reads. If double-fetching a memory location is
-necessary for some reason, then that is done by creating multiple
-readers to the same memory location.
-
-Constructing a `UserSlicePtr` performs no checks on the provided
-address and length, it can safely be constructed inside a kernel thread
-with no current userspace process. Reads and writes wrap the kernel APIs
-`copy_from_user` and `copy_to_user`, which check the memory map of the
-current process and enforce that the address range is within the user
-range (no additional calls to `access_ok` are needed).
+The majority of reads and writes to userspace pointers in the Rust
+Binder driver uses these accessor methods. Benchmarking has found that
+skipping the `check_object_size` check makes a big difference for the
+cases being skipped here. (And that the check doesn't make a difference
+for the cases that use the raw read/write methods.)
 
 This code is based on something that was originally written by Wedson on
-the old rust branch. It was modified by Alice by removing the
-`IoBufferReader` and `IoBufferWriter` traits, and various other changes.
+the old rust branch. It was modified by Alice to skip the
+`check_object_size` check, and to update various comments, including the
+notes about kernel pointers in `WritableToBytes`.
 
+Co-developed-by: Wedson Almeida Filho <wedsonaf@gmail.com>
 Signed-off-by: Wedson Almeida Filho <wedsonaf@gmail.com>
-Co-developed-by: Alice Ryhl <aliceryhl@google.com>
+Reviewed-by: Benno Lossin <benno.lossin@proton.me>
+Reviewed-by: Boqun Feng <boqun.feng@gmail.com>
 Signed-off-by: Alice Ryhl <aliceryhl@google.com>
 ---
- rust/helpers.c         |  14 +++
- rust/kernel/lib.rs     |   1 +
- rust/kernel/uaccess.rs | 311 +++++++++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 326 insertions(+)
+ rust/kernel/types.rs   | 67 ++++++++++++++++++++++++++++++++++++++++++++
+ rust/kernel/uaccess.rs | 76 ++++++++++++++++++++++++++++++++++++++++++++++++--
+ 2 files changed, 141 insertions(+), 2 deletions(-)
 
-diff --git a/rust/helpers.c b/rust/helpers.c
-index 70e59efd92bc..312b6fcb49d5 100644
---- a/rust/helpers.c
-+++ b/rust/helpers.c
-@@ -38,6 +38,20 @@ __noreturn void rust_helper_BUG(void)
+diff --git a/rust/kernel/types.rs b/rust/kernel/types.rs
+index aa77bad9bce4..f72b82efdbfa 100644
+--- a/rust/kernel/types.rs
++++ b/rust/kernel/types.rs
+@@ -409,3 +409,70 @@ pub enum Either<L, R> {
+     /// Constructs an instance of [`Either`] containing a value of type `R`.
+     Right(R),
  }
- EXPORT_SYMBOL_GPL(rust_helper_BUG);
- 
-+unsigned long rust_helper_copy_from_user(void *to, const void __user *from,
-+					 unsigned long n)
-+{
-+	return copy_from_user(to, from, n);
-+}
-+EXPORT_SYMBOL_GPL(rust_helper_copy_from_user);
 +
-+unsigned long rust_helper_copy_to_user(void __user *to, const void *from,
-+				       unsigned long n)
-+{
-+	return copy_to_user(to, from, n);
-+}
-+EXPORT_SYMBOL_GPL(rust_helper_copy_to_user);
++/// Types for which any bit pattern is valid.
++///
++/// Not all types are valid for all values. For example, a `bool` must be either
++/// zero or one, so reading arbitrary bytes into something that contains a
++/// `bool` is not okay.
++///
++/// It's okay for the type to have padding, as initializing those bytes has no
++/// effect.
++///
++/// # Safety
++///
++/// All bit-patterns must be valid for this type.
++pub unsafe trait FromBytes {}
 +
- void rust_helper_mutex_lock(struct mutex *lock)
- {
- 	mutex_lock(lock);
-diff --git a/rust/kernel/lib.rs b/rust/kernel/lib.rs
-index be68d5e567b1..37f84223b83f 100644
---- a/rust/kernel/lib.rs
-+++ b/rust/kernel/lib.rs
-@@ -49,6 +49,7 @@
- pub mod task;
- pub mod time;
- pub mod types;
-+pub mod uaccess;
- pub mod workqueue;
- 
- #[doc(hidden)]
++// SAFETY: All bit patterns are acceptable values of the types below.
++unsafe impl FromBytes for u8 {}
++unsafe impl FromBytes for u16 {}
++unsafe impl FromBytes for u32 {}
++unsafe impl FromBytes for u64 {}
++unsafe impl FromBytes for usize {}
++unsafe impl FromBytes for i8 {}
++unsafe impl FromBytes for i16 {}
++unsafe impl FromBytes for i32 {}
++unsafe impl FromBytes for i64 {}
++unsafe impl FromBytes for isize {}
++// SAFETY: If all bit patterns are acceptable for individual values in an array,
++// then all bit patterns are also acceptable for arrays of that type.
++unsafe impl<T: FromBytes> FromBytes for [T] {}
++unsafe impl<T: FromBytes, const N: usize> FromBytes for [T; N] {}
++
++/// Types that can be viewed as an immutable slice of initialized bytes.
++///
++/// If a struct implements this trait, then it is okay to copy it byte-for-byte
++/// to userspace. This means that it should not have any padding, as padding
++/// bytes are uninitialized. Reading uninitialized memory is not just undefined
++/// behavior, it may even lead to leaking sensitive information on the stack to
++/// userspace.
++///
++/// The struct should also not hold kernel pointers, as kernel pointer addresses
++/// are also considered sensitive. However, leaking kernel pointers is not
++/// considered undefined behavior by Rust, so this is a correctness requirement,
++/// but not a safety requirement.
++///
++/// # Safety
++///
++/// Values of this type may not contain any uninitialized bytes.
++pub unsafe trait AsBytes {}
++
++// SAFETY: Instances of the following types have no uninitialized portions.
++unsafe impl AsBytes for u8 {}
++unsafe impl AsBytes for u16 {}
++unsafe impl AsBytes for u32 {}
++unsafe impl AsBytes for u64 {}
++unsafe impl AsBytes for usize {}
++unsafe impl AsBytes for i8 {}
++unsafe impl AsBytes for i16 {}
++unsafe impl AsBytes for i32 {}
++unsafe impl AsBytes for i64 {}
++unsafe impl AsBytes for isize {}
++unsafe impl AsBytes for bool {}
++unsafe impl AsBytes for char {}
++unsafe impl AsBytes for str {}
++// SAFETY: If individual values in an array have no uninitialized portions, then
++// the array itself does not have any uninitialized portions either.
++unsafe impl<T: AsBytes> AsBytes for [T] {}
++unsafe impl<T: AsBytes, const N: usize> AsBytes for [T; N] {}
 diff --git a/rust/kernel/uaccess.rs b/rust/kernel/uaccess.rs
-new file mode 100644
-index 000000000000..3f8ad4dc13c4
---- /dev/null
+index 3f8ad4dc13c4..6566b8cc2541 100644
+--- a/rust/kernel/uaccess.rs
 +++ b/rust/kernel/uaccess.rs
-@@ -0,0 +1,311 @@
-+// SPDX-License-Identifier: GPL-2.0
-+
-+//! Slices to user space memory regions.
-+//!
-+//! C header: [`include/linux/uaccess.h`](srctree/include/linux/uaccess.h)
-+
-+use crate::{bindings, error::code::*, error::Result};
-+use alloc::vec::Vec;
-+use core::ffi::{c_ulong, c_void};
-+use core::mem::MaybeUninit;
-+
-+/// A pointer to an area in userspace memory, which can be either read-only or
-+/// read-write.
-+///
-+/// All methods on this struct are safe: attempting to read or write on bad
-+/// addresses (either out of the bound of the slice or unmapped addresses) will
-+/// return `EFAULT`. Concurrent access, *including data races to/from userspace
-+/// memory*, is permitted, because fundamentally another userspace
-+/// thread/process could always be modifying memory at the same time (in the
-+/// same way that userspace Rust's [`std::io`] permits data races with the
-+/// contents of files on disk). In the presence of a race, the exact byte values
-+/// read/written are unspecified but the operation is well-defined. Kernelspace
-+/// code should validate its copy of data after completing a read, and not
-+/// expect that multiple reads of the same address will return the same value.
-+///
-+/// These APIs are designed to make it difficult to accidentally write TOCTOU
-+/// (time-of-check to time-of-use) bugs. Every time a memory location is read,
-+/// the reader's position is advanced by the read length and the next read will
-+/// start from there. This helps prevent accidentally reading the same location
-+/// twice and causing a TOCTOU bug.
-+///
-+/// Creating a [`UserSliceReader`] and/or [`UserSliceWriter`] consumes the
-+/// `UserSlice`, helping ensure that there aren't multiple readers or writers to
-+/// the same location.
-+///
-+/// If double-fetching a memory location is necessary for some reason, then that
-+/// is done by creating multiple readers to the same memory location, e.g. using
-+/// [`clone_reader`].
-+///
-+/// # Examples
-+///
-+/// Takes a region of userspace memory from the current process, and modify it
-+/// by adding one to every byte in the region.
-+///
-+/// ```no_run
-+/// use alloc::vec::Vec;
-+/// use core::ffi::c_void;
-+/// use kernel::error::Result;
-+/// use kernel::uaccess::UserSlice;
-+///
-+/// fn bytes_add_one(uptr: *mut c_void, len: usize) -> Result<()> {
-+///     let (read, mut write) = UserSlice::new(uptr, len).reader_writer();
-+///
-+///     let mut buf = Vec::new();
-+///     read.read_all(&mut buf)?;
-+///
-+///     for b in &mut buf {
-+///         *b = b.wrapping_add(1);
-+///     }
-+///
-+///     write.write_slice(&buf)?;
-+///     Ok(())
-+/// }
-+/// ```
-+///
-+/// Example illustrating a TOCTOU (time-of-check to time-of-use) bug.
-+///
-+/// ```no_run
-+/// use alloc::vec::Vec;
-+/// use core::ffi::c_void;
-+/// use kernel::error::{code::EINVAL, Result};
-+/// use kernel::uaccess::UserSlice;
-+///
-+/// /// Returns whether the data in this region is valid.
-+/// fn is_valid(uptr: *mut c_void, len: usize) -> Result<bool> {
-+///     let read = UserSlice::new(uptr, len).reader();
-+///
-+///     let mut buf = Vec::new();
-+///     read.read_all(&mut buf)?;
-+///
-+///     todo!()
-+/// }
-+///
-+/// /// Returns the bytes behind this user pointer if they are valid.
-+/// fn get_bytes_if_valid(uptr: *mut c_void, len: usize) -> Result<Vec<u8>> {
-+///     if !is_valid(uptr, len)? {
-+///         return Err(EINVAL);
-+///     }
-+///
-+///     let read = UserSlice::new(uptr, len).reader();
-+///
-+///     let mut buf = Vec::new();
-+///     read.read_all(&mut buf)?;
-+///
-+///     // THIS IS A BUG! The bytes could have changed since we checked them.
-+///     //
-+///     // To avoid this kind of bug, don't call `UserSlice::new` multiple
-+///     // times with the same address.
-+///     Ok(buf)
-+/// }
-+/// ```
-+///
-+/// [`std::io`]: https://doc.rust-lang.org/std/io/index.html
-+/// [`clone_reader`]: UserSliceReader::clone_reader
-+pub struct UserSlice {
-+    ptr: *mut c_void,
-+    length: usize,
-+}
-+
-+impl UserSlice {
-+    /// Constructs a user slice from a raw pointer and a length in bytes.
+@@ -4,10 +4,15 @@
+ //!
+ //! C header: [`include/linux/uaccess.h`](srctree/include/linux/uaccess.h)
+ 
+-use crate::{bindings, error::code::*, error::Result};
++use crate::{
++    bindings,
++    error::code::*,
++    error::Result,
++    types::{AsBytes, FromBytes},
++};
+ use alloc::vec::Vec;
+ use core::ffi::{c_ulong, c_void};
+-use core::mem::MaybeUninit;
++use core::mem::{size_of, MaybeUninit};
+ 
+ /// A pointer to an area in userspace memory, which can be either read-only or
+ /// read-write.
+@@ -246,6 +251,41 @@ pub fn read_slice(&mut self, out: &mut [u8]) -> Result {
+         self.read_raw(out)
+     }
+ 
++    /// Reads a value of the specified type.
 +    ///
-+    /// Constructing a [`UserSlice`] performs no checks on the provided address
-+    /// and length, it can safely be constructed inside a kernel thread with no
-+    /// current userspace process. Reads and writes wrap the kernel APIs
-+    /// `copy_from_user` and `copy_to_user`, which check the memory map of the
-+    /// current process and enforce that the address range is within the user
-+    /// range (no additional calls to `access_ok` are needed).
-+    ///
-+    /// Callers must be careful to avoid time-of-check-time-of-use
-+    /// (TOCTOU) issues. The simplest way is to create a single instance of
-+    /// [`UserSlice`] per user memory block as it reads each byte at
-+    /// most once.
-+    pub fn new(ptr: *mut c_void, length: usize) -> Self {
-+        UserSlice { ptr, length }
-+    }
-+
-+    /// Reads the entirety of the user slice, appending it to the end of the
-+    /// provided buffer.
-+    ///
-+    /// Fails with `EFAULT` if the read happens on a bad address.
-+    pub fn read_all(self, buf: &mut Vec<u8>) -> Result {
-+        self.reader().read_all(buf)
-+    }
-+
-+    /// Constructs a [`UserSliceReader`].
-+    pub fn reader(self) -> UserSliceReader {
-+        UserSliceReader {
-+            ptr: self.ptr,
-+            length: self.length,
-+        }
-+    }
-+
-+    /// Constructs a [`UserSliceWriter`].
-+    pub fn writer(self) -> UserSliceWriter {
-+        UserSliceWriter {
-+            ptr: self.ptr,
-+            length: self.length,
-+        }
-+    }
-+
-+    /// Constructs both a [`UserSliceReader`] and a [`UserSliceWriter`].
-+    ///
-+    /// Usually when this is used, you will first read the data, and then
-+    /// overwrite it afterwards.
-+    pub fn reader_writer(self) -> (UserSliceReader, UserSliceWriter) {
-+        (
-+            UserSliceReader {
-+                ptr: self.ptr,
-+                length: self.length,
-+            },
-+            UserSliceWriter {
-+                ptr: self.ptr,
-+                length: self.length,
-+            },
-+        )
-+    }
-+}
-+
-+/// A reader for [`UserSlice`].
-+///
-+/// Used to incrementally read from the user slice.
-+pub struct UserSliceReader {
-+    ptr: *mut c_void,
-+    length: usize,
-+}
-+
-+impl UserSliceReader {
-+    /// Skip the provided number of bytes.
-+    ///
-+    /// Returns an error if skipping more than the length of the buffer.
-+    pub fn skip(&mut self, num_skip: usize) -> Result {
-+        // Update `self.length` first since that's the fallible part of this
-+        // operation.
-+        self.length = self.length.checked_sub(num_skip).ok_or(EFAULT)?;
-+        self.ptr = self.ptr.wrapping_byte_add(num_skip);
-+        Ok(())
-+    }
-+
-+    /// Create a reader that can access the same range of data.
-+    ///
-+    /// Reading from the clone does not advance the current reader.
-+    ///
-+    /// The caller should take care to not introduce TOCTOU issues, as described
-+    /// in the documentation for [`UserSlice`].
-+    pub fn clone_reader(&self) -> UserSliceReader {
-+        UserSliceReader {
-+            ptr: self.ptr,
-+            length: self.length,
-+        }
-+    }
-+
-+    /// Returns the number of bytes left to be read from this reader.
-+    ///
-+    /// Note that even reading less than this number of bytes may fail.
-+    pub fn len(&self) -> usize {
-+        self.length
-+    }
-+
-+    /// Returns `true` if no data is available in the io buffer.
-+    pub fn is_empty(&self) -> bool {
-+        self.length == 0
-+    }
-+
-+    /// Reads raw data from the user slice into a kernel buffer.
-+    ///
-+    /// Fails with `EFAULT` if the read happens on a bad address.
-+    pub fn read_raw(&mut self, out: &mut [MaybeUninit<u8>]) -> Result {
-+        let len = out.len();
-+        let out_ptr = out.as_mut_ptr().cast::<c_void>();
++    /// Fails with `EFAULT` if the read encounters a page fault.
++    pub fn read<T: FromBytes>(&mut self) -> Result<T> {
++        let len = size_of::<T>();
 +        if len > self.length {
 +            return Err(EFAULT);
 +        }
 +        let Ok(len_ulong) = c_ulong::try_from(len) else {
 +            return Err(EFAULT);
 +        };
-+        // SAFETY: The caller promises that `out` is valid for writing `len` bytes.
-+        let res = unsafe { bindings::copy_from_user(out_ptr, self.ptr, len_ulong) };
++        let mut out: MaybeUninit<T> = MaybeUninit::uninit();
++        // SAFETY: The local variable `out` is valid for writing `size_of::<T>()` bytes.
++        //
++        // By using the _copy_from_user variant, we skip the check_object_size
++        // check that verifies the kernel pointer. This mirrors the logic on the
++        // C side that skips the check when the length is a compile-time
++        // constant.
++        let res = unsafe {
++            bindings::_copy_from_user(out.as_mut_ptr().cast::<c_void>(), self.ptr, len_ulong)
++        };
 +        if res != 0 {
 +            return Err(EFAULT);
 +        }
-+        // Userspace pointers are not directly dereferencable by the kernel, so
-+        // we cannot use `add`, which has C-style rules for defined behavior.
++        // Since this is not a pointer to a valid object in our program,
++        // we cannot use `add`, which has C-style rules for defined
++        // behavior.
 +        self.ptr = self.ptr.wrapping_byte_add(len);
 +        self.length -= len;
-+        Ok(())
++        // SAFETY: The read above has initialized all bytes in `out`, and since
++        // `T` implements `FromBytes`, any bit-pattern is a valid value for this
++        // type.
++        Ok(unsafe { out.assume_init() })
 +    }
 +
-+    /// Reads raw data from the user slice into a kernel buffer.
+     /// Reads the entirety of the user slice, appending it to the end of the
+     /// provided buffer.
+     ///
+@@ -308,4 +348,36 @@ pub fn write_slice(&mut self, data: &[u8]) -> Result {
+         self.length -= len;
+         Ok(())
+     }
++
++    /// Writes the provided Rust value to this userspace pointer.
 +    ///
-+    /// Fails with `EFAULT` if the read happens on a bad address.
-+    pub fn read_slice(&mut self, out: &mut [u8]) -> Result {
-+        // SAFETY: The types are compatible and `read_raw` doesn't write
-+        // uninitialized bytes to `out`.
-+        let out = unsafe { &mut *(out as *mut [u8] as *mut [MaybeUninit<u8>]) };
-+        self.read_raw(out)
-+    }
-+
-+    /// Reads the entirety of the user slice, appending it to the end of the
-+    /// provided buffer.
-+    ///
-+    /// Fails with `EFAULT` if the read happens on a bad address.
-+    pub fn read_all(mut self, buf: &mut Vec<u8>) -> Result {
-+        let len = self.length;
-+        buf.try_reserve(len)?;
-+
-+        // The call to `try_reserve` was successful, so the spare capacity is at
-+        // least `len` bytes long.
-+        self.read_raw(&mut buf.spare_capacity_mut()[..len])?;
-+
-+        // SAFETY: Since the call to `read_raw` was successful, so the next
-+        // `len` bytes of the vector have been initialized.
-+        unsafe { buf.set_len(buf.len() + len) };
-+        Ok(())
-+    }
-+}
-+
-+/// A writer for [`UserSlice`].
-+///
-+/// Used to incrementally write into the user slice.
-+pub struct UserSliceWriter {
-+    ptr: *mut c_void,
-+    length: usize,
-+}
-+
-+impl UserSliceWriter {
-+    /// Returns the amount of space remaining in this buffer.
-+    ///
-+    /// Note that even writing less than this number of bytes may fail.
-+    pub fn len(&self) -> usize {
-+        self.length
-+    }
-+
-+    /// Returns `true` if no more data can be written to this buffer.
-+    pub fn is_empty(&self) -> bool {
-+        self.length == 0
-+    }
-+
-+    /// Writes raw data to this user pointer from a kernel buffer.
-+    ///
-+    /// Fails with `EFAULT` if the write happens on a bad address.
-+    pub fn write_slice(&mut self, data: &[u8]) -> Result {
-+        let len = data.len();
-+        let data_ptr = data.as_ptr().cast::<c_void>();
++    /// Fails with `EFAULT` if the write encounters a page fault.
++    pub fn write<T: AsBytes>(&mut self, value: &T) -> Result {
++        let len = size_of::<T>();
 +        if len > self.length {
 +            return Err(EFAULT);
 +        }
 +        let Ok(len_ulong) = c_ulong::try_from(len) else {
 +            return Err(EFAULT);
 +        };
-+        let res = unsafe { bindings::copy_to_user(self.ptr, data_ptr, len_ulong) };
++        // SAFETY: The reference points to a value of type `T`, so it is valid
++        // for reading `size_of::<T>()` bytes.
++        //
++        // By using the _copy_to_user variant, we skip the check_object_size
++        // check that verifies the kernel pointer. This mirrors the logic on the
++        // C side that skips the check when the length is a compile-time
++        // constant.
++        let res = unsafe {
++            bindings::_copy_to_user(self.ptr, (value as *const T).cast::<c_void>(), len_ulong)
++        };
 +        if res != 0 {
 +            return Err(EFAULT);
 +        }
-+        // Userspace pointers are not directly dereferencable by the kernel, so
-+        // we cannot use `add`, which has C-style rules for defined behavior.
++        // Since this is not a pointer to a valid object in our program,
++        // we cannot use `add`, which has C-style rules for defined
++        // behavior.
 +        self.ptr = self.ptr.wrapping_byte_add(len);
 +        self.length -= len;
 +        Ok(())
 +    }
-+}
+ }
 
 -- 
 2.44.0.478.gd926399ef9-goog
