@@ -1,37 +1,37 @@
 Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 584D871735
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 118D27174D
 	for <linux-kernel@vger.kernel.org>; Thu,  4 Apr 2024 08:35:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712219711; cv=none; b=fq5zmx5uhEthw3rBCJTc9uwKqbYs2bRiylY8SErb6Ucj5LXL19bTjjUbD+f73xGtMszLQV1u+UMCqprIUhkQbGudtZ6DECVWMRy5BMRFI36UtkEpaC7losY+nKCIzVGvzB3mdiaFF19XljMktZvYgP7/tmn0aptsJFeJwSpfwiU=
+	t=1712219711; cv=none; b=ZFQNSzpjBeG5jh70Gyz7QvSYc9WAD216K2JgR+4l2lB9cD8uBpdyBeNDQO117F4USU9/QsQET1cRX/L4j7lD56XAsBO6EekIUOdoaFYe0pKaE+3OhilTD1Ud6+mCr6T83C4+EOmo/Wqm1k4YQfNWlst3fEXxv6eKILEGoe62eGY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1712219711; c=relaxed/simple;
-	bh=R3WK7lsgcv6hzJeNFgwT/ZIP/4S5DB86hBp3h/+cNz0=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=Dup65vSlJIqz0IKSAyzJsXblTyH6BUYUBwDCp2NdT57WBOXlImI7JpiboMBAXUTgDu8oKbBVjM6epCaxS67nrp//r1e369rhAOByXMX166oQMJf+gVS+ZrgfHocagm0b+IgfgoaUslvwtsFUfnZ5CFlRLdUa+anwk/AHiMwJXZA=
+	bh=cbiTjEs8HQHw7Wd9eE35Sfk8KZVXcOQO3ROu/u+yhxQ=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=bmWd+T0DoLwEV2QGVCmFx/nk/esvd1HkZQkNL8hRtgcgkgE0W0QlEUf1sgGPCCU1GytuQPH7hmrMoyBKL3S4TBAFQJcgzdevmIZqRlTidMWskNuEWxEkJWWYxkdMqa54kcsJWuf6US6CvI9wEtZzDCv4t8jjSMKwLrH5njKHkfY=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
 Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
 	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
 	(Exim 4.92)
-	(envelope-from <m.grzeschik@pengutronix.de>)
-	id 1rsIYo-0004iC-23; Thu, 04 Apr 2024 10:35:02 +0200
-Received: from [2a0a:edc0:0:1101:1d::ac] (helo=dude04.red.stw.pengutronix.de)
+	(envelope-from <s.hauer@pengutronix.de>)
+	id 1rsIYZ-0004VJ-L9; Thu, 04 Apr 2024 10:34:47 +0200
+Received: from [2a0a:edc0:0:1101:1d::28] (helo=dude02.red.stw.pengutronix.de)
 	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
 	(Exim 4.94.2)
-	(envelope-from <m.grzeschik@pengutronix.de>)
-	id 1rsIYn-00AKmC-KV; Thu, 04 Apr 2024 10:35:01 +0200
-Received: from localhost ([::1] helo=dude04.red.stw.pengutronix.de)
-	by dude04.red.stw.pengutronix.de with esmtp (Exim 4.96)
-	(envelope-from <m.grzeschik@pengutronix.de>)
-	id 1rsIYn-00FhvA-1s;
-	Thu, 04 Apr 2024 10:35:01 +0200
-From: Michael Grzeschik <m.grzeschik@pengutronix.de>
-Date: Thu, 04 Apr 2024 10:35:01 +0200
-Subject: [PATCH] usb: gadget: function: uvc: set req_size once when the vb2
- queue is calculated
+	(envelope-from <s.hauer@pengutronix.de>)
+	id 1rsIYY-00AKm2-Qr; Thu, 04 Apr 2024 10:34:46 +0200
+Received: from localhost ([::1] helo=dude02.red.stw.pengutronix.de)
+	by dude02.red.stw.pengutronix.de with esmtp (Exim 4.96)
+	(envelope-from <s.hauer@pengutronix.de>)
+	id 1rsIYY-00Csm2-2B;
+	Thu, 04 Apr 2024 10:34:46 +0200
+From: Sascha Hauer <s.hauer@pengutronix.de>
+Date: Thu, 04 Apr 2024 10:34:40 +0200
+Subject: [PATCH 2/2] arm64: dts: rockchip: add Protonic MECSBC device-tree
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -40,132 +40,454 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240404-uvc_request_calc_once-v1-1-fea7fd8f0496@pengutronix.de>
-X-B4-Tracking: v=1; b=H4sIADRmDmYC/x2NUQrCQAwFr1Ly7UKtdUWvIrKkaWoDy1YTtwild
- zfI+5oHw2xgrMIGt2YD5VVMluJwPDRAM5YnBxmdoWu7vvWFulJSfle2TyLMlJZCHPByGqdrH+O
- ZI7g7oHEYFAvNbpeas58v5Um+/9j9se8/4OuZ43wAAAA=
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, 
- Daniel Scally <dan.scally@ideasonboard.com>, 
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Michael Grzeschik <m.grzeschik@pengutronix.de>
-X-Mailer: b4 0.12.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3280;
- i=m.grzeschik@pengutronix.de; h=from:subject:message-id;
- bh=R3WK7lsgcv6hzJeNFgwT/ZIP/4S5DB86hBp3h/+cNz0=;
- b=owEBbQKS/ZANAwAKAb9pWET5cfSrAcsmYgBmDmY1g1F2hyDuU1n1BbR67d4Va4pa9j3iM6z5H
- BJd/VAuV3OJAjMEAAEKAB0WIQQV2+2Fpbqd6fvv0Gi/aVhE+XH0qwUCZg5mNQAKCRC/aVhE+XH0
- q8gSD/99ZVnm/QDxrxfyZxr8Md0yVisuKOOH7aDnIZiLRuuWn1oQ9wHkx1UZeDXkoHgMW9tNfLH
- gTjI/E7aD7ejiUgrsfOyJ9Rf6xAoclXvnYUQm4uQbsSj/gHTPg2Pei/clbBvjhDu7MReU3sX6LO
- lzlS+YwEmjkzna0bkV1pFyrbmE0mA3+PGoJXNuVOg+n8X7fk+NpefJ4qw6gSrhWFNS8PECeiHVz
- APwZ0UHu0ZgsujpELAqg5SUDGM+i34jjoiWWCZVIvoFb0cpkYISauDJY9BAd3grQtL6yUxrXAWr
- xI1htGWQIPXmWumYpnsAC8goWEdZo38I4llYFu4BBwUL8yo0FyK7QnDgGDJfvy1IB6kKTeW7cs7
- wQnLTLUq4viQXQj2dxS7uLpljipXHR36c9Ehqu0vBdlcp8ZPiXMwbraO1FyR083nbDitGWchDsX
- A1TBzRQz8tQk+2ApVK1+gcvyzM7IxFUZPIPZNOEQ72ZSw1dXhoU7ZbluDLgUGu9mRMQDKerjllb
- q1YGt4OA2JN2pQDkqZOCgqySt6+2Pa0rtkVgtnxPqezFRtTaXjQe8mPSmba5frkmNSf62bDhKki
- Sjugang6fKGUZpAO47oPXa3YliQmAw2eORhSy4onVl1AGYd70wdI/huZPeeKFq93Vbyt9WUNxKk
- w2nJ8GmPAfc+O6w==
-X-Developer-Key: i=m.grzeschik@pengutronix.de; a=openpgp;
- fpr=957BC452CE953D7EA60CF4FC0BE9E3157A1E2C64
+Message-Id: <20240404-protonic-mecsbc-v1-2-ad5b42ade6c6@pengutronix.de>
+References: <20240404-protonic-mecsbc-v1-0-ad5b42ade6c6@pengutronix.de>
+In-Reply-To: <20240404-protonic-mecsbc-v1-0-ad5b42ade6c6@pengutronix.de>
+To: Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Heiko Stuebner <heiko@sntech.de>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+ linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, 
+ David Jander <david@protonic.nl>, Sascha Hauer <s.hauer@pengutronix.de>
+X-Mailer: b4 0.12.3
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1712219686; l=9252;
+ i=s.hauer@pengutronix.de; s=20230412; h=from:subject:message-id;
+ bh=elISZaQS41MeiHFrKquLffpmLJ15w6N3YRTfODXN8VM=;
+ b=Gd0Vne3tglSatEMlrr7gLNXGQqFPhK7oVKvC5VbzawFK44fUazQGvMDehgFjXo8fDZPjWcWRg
+ 34mXSzrXEspA21SnV9Fzc6/ZnOgUCFCwEBFaPDLrdwqxUQP64R5Tm+S
+X-Developer-Key: i=s.hauer@pengutronix.de; a=ed25519;
+ pk=4kuc9ocmECiBJKWxYgqyhtZOHj5AWi7+d0n/UjhkwTg=
 X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: m.grzeschik@pengutronix.de
+X-SA-Exim-Mail-From: s.hauer@pengutronix.de
 X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
 X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-The uvc gadget driver is calculating the req_size on every
-video_enable/alloc_request and is based on the fixed configfs parameters
-maxpacket, maxburst and mult.
+From: David Jander <david@protonic.nl>
 
-As those parameters can not be changed once the gadget is started and
-the same calculation is done already early on the
-vb2_streamon/queue_setup path its save to remove one extra calculation
-and reuse the calculation from uvc_queue_setup for the allocation step.
+MECSBC is a single board computer for blood analysis machines from
+RR-Mechatronics, designed and manufactured by Protonic Holland, based on
+the Rockchip RK3568 SoC.
 
-Signed-off-by: Michael Grzeschik <m.grzeschik@pengutronix.de>
+Signed-off-by: David Jander <david@protonic.nl>
+Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
 ---
- drivers/usb/gadget/function/uvc_queue.c |  2 ++
- drivers/usb/gadget/function/uvc_video.c | 15 ++-------------
- 2 files changed, 4 insertions(+), 13 deletions(-)
+ arch/arm64/boot/dts/rockchip/Makefile          |   1 +
+ arch/arm64/boot/dts/rockchip/rk3568-mecsbc.dts | 394 +++++++++++++++++++++++++
+ 2 files changed, 395 insertions(+)
 
-diff --git a/drivers/usb/gadget/function/uvc_queue.c b/drivers/usb/gadget/function/uvc_queue.c
-index 0aa3d7e1f3cc3..ce51643fc4639 100644
---- a/drivers/usb/gadget/function/uvc_queue.c
-+++ b/drivers/usb/gadget/function/uvc_queue.c
-@@ -63,6 +63,8 @@ static int uvc_queue_setup(struct vb2_queue *vq,
- 	 */
- 	nreq = DIV_ROUND_UP(DIV_ROUND_UP(sizes[0], 2), req_size);
- 	nreq = clamp(nreq, 4U, 64U);
+diff --git a/arch/arm64/boot/dts/rockchip/Makefile b/arch/arm64/boot/dts/rockchip/Makefile
+index f906a868b71ac..1152e0f6a25cb 100644
+--- a/arch/arm64/boot/dts/rockchip/Makefile
++++ b/arch/arm64/boot/dts/rockchip/Makefile
+@@ -104,6 +104,7 @@ dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3568-nanopi-r5c.dtb
+ dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3568-nanopi-r5s.dtb
+ dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3568-odroid-m1.dtb
+ dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3568-qnap-ts433.dtb
++dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3568-mecsbc.dtb
+ dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3568-radxa-e25.dtb
+ dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3568-roc-pc.dtb
+ dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3568-rock-3a.dtb
+diff --git a/arch/arm64/boot/dts/rockchip/rk3568-mecsbc.dts b/arch/arm64/boot/dts/rockchip/rk3568-mecsbc.dts
+new file mode 100644
+index 0000000000000..e50d135042ec7
+--- /dev/null
++++ b/arch/arm64/boot/dts/rockchip/rk3568-mecsbc.dts
+@@ -0,0 +1,394 @@
++// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
 +
-+	video->req_size = req_size;
- 	video->uvc_num_requests = nreq;
- 
- 	return 0;
-diff --git a/drivers/usb/gadget/function/uvc_video.c b/drivers/usb/gadget/function/uvc_video.c
-index d41f5f31dadd5..95bb64e16f3da 100644
---- a/drivers/usb/gadget/function/uvc_video.c
-+++ b/drivers/usb/gadget/function/uvc_video.c
-@@ -496,7 +496,6 @@ uvc_video_free_requests(struct uvc_video *video)
- 	INIT_LIST_HEAD(&video->ureqs);
- 	INIT_LIST_HEAD(&video->req_free);
- 	INIT_LIST_HEAD(&video->req_ready);
--	video->req_size = 0;
- 	return 0;
- }
- 
-@@ -504,16 +503,9 @@ static int
- uvc_video_alloc_requests(struct uvc_video *video)
- {
- 	struct uvc_request *ureq;
--	unsigned int req_size;
- 	unsigned int i;
- 	int ret = -ENOMEM;
- 
--	BUG_ON(video->req_size);
--
--	req_size = video->ep->maxpacket
--		 * max_t(unsigned int, video->ep->maxburst, 1)
--		 * (video->ep->mult);
--
- 	for (i = 0; i < video->uvc_num_requests; i++) {
- 		ureq = kzalloc(sizeof(struct uvc_request), GFP_KERNEL);
- 		if (ureq == NULL)
-@@ -523,7 +515,7 @@ uvc_video_alloc_requests(struct uvc_video *video)
- 
- 		list_add_tail(&ureq->list, &video->ureqs);
- 
--		ureq->req_buffer = kmalloc(req_size, GFP_KERNEL);
-+		ureq->req_buffer = kmalloc(video->req_size, GFP_KERNEL);
- 		if (ureq->req_buffer == NULL)
- 			goto error;
- 
-@@ -541,12 +533,10 @@ uvc_video_alloc_requests(struct uvc_video *video)
- 		list_add_tail(&ureq->req->list, &video->req_free);
- 		/* req_size/PAGE_SIZE + 1 for overruns and + 1 for header */
- 		sg_alloc_table(&ureq->sgt,
--			       DIV_ROUND_UP(req_size - UVCG_REQUEST_HEADER_LEN,
-+			       DIV_ROUND_UP(video->req_size - UVCG_REQUEST_HEADER_LEN,
- 					    PAGE_SIZE) + 2, GFP_KERNEL);
- 	}
- 
--	video->req_size = req_size;
--
- 	return 0;
- 
- error:
-@@ -699,7 +689,6 @@ uvcg_video_disable(struct uvc_video *video)
- 	INIT_LIST_HEAD(&video->ureqs);
- 	INIT_LIST_HEAD(&video->req_free);
- 	INIT_LIST_HEAD(&video->req_ready);
--	video->req_size = 0;
- 	spin_unlock_irqrestore(&video->req_lock, flags);
- 
- 	/*
++/dts-v1/;
++#include <dt-bindings/gpio/gpio.h>
++#include <dt-bindings/leds/common.h>
++#include <dt-bindings/pinctrl/rockchip.h>
++#include <dt-bindings/pwm/pwm.h>
++#include "rk3568.dtsi"
++
++/ {
++	model = "Protonic MECSBC";
++	compatible = "prt,mecsbc", "rockchip,rk3568";
++
++	aliases {
++		mmc0 = &sdhci;
++		mmc1 = &sdmmc0;
++	};
++
++	chosen: chosen {
++		stdout-path = "serial2:1500000n8";
++	};
++
++	tas2562-sound {
++		compatible = "simple-audio-card";
++		simple-audio-card,format = "i2s";
++		simple-audio-card,name = "Speaker";
++		simple-audio-card,mclk-fs = <256>;
++
++		simple-audio-card,cpu {
++			sound-dai = <&i2s1_8ch>;
++		};
++
++		simple-audio-card,codec {
++			sound-dai = <&tas2562>;
++		};
++	};
++
++	vdd_gpu: regulator-vdd-gpu {
++		compatible = "pwm-regulator";
++		pwms = <&pwm1 0 5000 PWM_POLARITY_INVERTED>;
++		regulator-name = "vdd_gpu";
++		regulator-min-microvolt = <915000>;
++		regulator-max-microvolt = <1000000>;
++		regulator-always-on;
++		regulator-boot-on;
++		regulator-settling-time-up-us = <250>;
++		pwm-dutycycle-range = <0 100>; /* dutycycle inverted 0% => 0.915V */
++	};
++
++	vdd_npu: regulator-vdd-npu {
++		compatible = "pwm-regulator";
++		pwms = <&pwm2 0 5000 PWM_POLARITY_INVERTED>;
++		regulator-name = "vdd_npu";
++		regulator-min-microvolt = <915000>;
++		regulator-max-microvolt = <1000000>;
++		regulator-always-on;
++		regulator-boot-on;
++		regulator-settling-time-up-us = <250>;
++		pwm-dutycycle-range = <0 100>; /* dutycycle inverted 0% => 0.915V */
++	};
++
++	p3v3: p3v3-regulator {
++		compatible = "regulator-fixed";
++		regulator-name = "p3v3";
++		regulator-always-on;
++		regulator-boot-on;
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++	};
++
++	p1v8: p1v8-regulator {
++		compatible = "regulator-fixed";
++		regulator-name = "p1v8";
++		regulator-always-on;
++		regulator-boot-on;
++		regulator-min-microvolt = <1800000>;
++		regulator-max-microvolt = <1800000>;
++	};
++};
++
++&combphy0 {
++	status = "okay";
++};
++
++&combphy1 {
++	status = "okay";
++};
++
++&combphy2 {
++	status = "okay";
++};
++
++&cpu0 {
++	cpu-supply = <&vdd_cpu>;
++};
++
++&cpu1 {
++	cpu-supply = <&vdd_cpu>;
++};
++
++&cpu2 {
++	cpu-supply = <&vdd_cpu>;
++};
++
++&cpu3 {
++	cpu-supply = <&vdd_cpu>;
++};
++
++&gmac1 {
++	assigned-clocks = <&cru SCLK_GMAC1_RX_TX>, <&cru SCLK_GMAC1>;
++	assigned-clock-parents = <&cru SCLK_GMAC1_RGMII_SPEED>, <&cru CLK_MAC1_2TOP>;
++	phy-handle = <&rgmii_phy1>;
++	phy-mode = "rgmii";
++	clock_in_out = "output";
++	pinctrl-names = "default";
++	pinctrl-0 = <&gmac1m1_miim
++		     &gmac1m1_tx_bus2
++		     &gmac1m1_rx_bus2
++		     &gmac1m1_rgmii_clk
++		     &gmac1m1_clkinout
++		     &gmac1m1_rgmii_bus>;
++	status = "okay";
++	tx_delay = <0x30>;
++	rx_delay = <0x10>;
++};
++
++&gpu {
++	mali-supply = <&vdd_gpu>;
++	status = "okay";
++};
++
++&i2c0 {
++	status = "okay";
++
++	vdd_cpu: regulator@60 {
++		compatible = "fcs,fan53555";
++		reg = <0x60>;
++		fcs,suspend-voltage-selector = <1>;
++		regulator-name = "vdd_cpu";
++		regulator-always-on;
++		regulator-boot-on;
++		regulator-min-microvolt = <800000>;
++		regulator-max-microvolt = <1150000>;
++		regulator-ramp-delay = <2300>;
++
++		regulator-state-mem {
++			regulator-off-in-suspend;
++		};
++	};
++};
++
++&i2c2 {
++	status = "okay";
++	pinctrl-names = "default";
++	pinctrl-0 = <&i2c2m0_xfer>;
++};
++
++&i2c3 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&i2c3m0_xfer>;
++	status = "okay";
++
++	tas2562: tas2562@4c {
++		compatible = "ti,tas2562";
++		reg = <0x4c>;
++		#sound-dai-cells = <0>;
++		shutdown-gpios = <&gpio1 RK_PD4 GPIO_ACTIVE_HIGH>;
++		interrupt-parent = <&gpio1>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&pinctrl_tas2562>;
++		interrupts = <RK_PD1 IRQ_TYPE_LEVEL_LOW>;
++		ti,imon-slot-no = <0>;
++	};
++};
++
++&i2c5 {
++	status = "okay";
++
++	tmp1075n@48 {
++		compatible = "ti,tmp1075";
++		reg = <0x48>;
++	};
++
++	pcf8563: rtc@51 {
++		compatible = "nxp,pcf85363";
++		reg = <0x51>;
++		#clock-cells = <0>;
++		clock-output-names = "rtcic_32kout";
++	};
++};
++
++&i2s1_8ch {
++	pinctrl-names = "default";
++	pinctrl-0 = <&i2s1m0_sclktx &i2s1m0_lrcktx &i2s1m0_sdi0 &i2s1m0_sdo0>;
++	rockchip,trcm-sync-tx-only;
++	status = "okay";
++};
++
++&mdio1 {
++	rgmii_phy1: ethernet-phy@2 {
++		compatible = "ethernet-phy-ieee802.3-c22";
++		reg = <0x2>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&eth_phy1_rst>;
++		reset-assert-us = <20000>;
++		reset-deassert-us = <100000>;
++		reset-gpios = <&gpio4 RK_PB3 GPIO_ACTIVE_LOW>;
++	};
++};
++
++&pcie2x1 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pcie20m1_pins>;
++	reset-gpios = <&gpio3 RK_PC1 GPIO_ACTIVE_HIGH>;
++	status = "okay";
++};
++
++&pcie30phy {
++	status = "okay";
++};
++
++&pcie3x2 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pcie30x2m1_pins>;
++	reset-gpios = <&gpio2 RK_PD6 GPIO_ACTIVE_HIGH>;
++	vpcie3v3-supply = <&p3v3>;
++	status = "okay";
++};
++
++&pinctrl {
++	ethernet {
++		eth_phy1_rst: eth_phy1_rst {
++			rockchip,pins = <4 RK_PB3 RK_FUNC_GPIO &pcfg_pull_none>;
++		};
++	};
++
++	tas2562 {
++		pinctrl_tas2562: tas2562 {
++			rockchip,pins = <1 RK_PD4 RK_FUNC_GPIO &pcfg_pull_up>;
++		};
++	};
++};
++
++&pmu_io_domains {
++	pmuio1-supply = <&p3v3>;
++	pmuio2-supply = <&p3v3>;
++	vccio1-supply = <&p1v8>;
++	vccio2-supply = <&p1v8>;
++	vccio3-supply = <&p3v3>;
++	vccio4-supply = <&p1v8>;
++	vccio5-supply = <&p3v3>;
++	vccio6-supply = <&p1v8>;
++	vccio7-supply = <&p3v3>;
++	status = "okay";
++};
++
++&saradc {
++	vref-supply = <&p1v8>;
++	status = "okay";
++};
++
++&sdhci {
++	bus-width = <8>;
++	max-frequency = <200000000>;
++	non-removable;
++	pinctrl-names = "default";
++	pinctrl-0 = <&emmc_bus8 &emmc_clk &emmc_cmd &emmc_datastrobe>;
++	vmmc-supply = <&p3v3>;
++	vqmmc-supply = <&p1v8>;
++	mmc-hs200-1_8v;
++	non-removable;
++	no-sd;
++	no-sdio;
++	status = "okay";
++};
++
++&sdmmc0 {
++	bus-width = <4>;
++	cap-sd-highspeed;
++	cd-gpios = <&gpio0 RK_PA4 GPIO_ACTIVE_LOW>;
++	disable-wp;
++	pinctrl-names = "default";
++	pinctrl-0 = <&sdmmc0_bus4 &sdmmc0_clk &sdmmc0_cmd &sdmmc0_det>;
++	sd-uhs-sdr50;
++	vmmc-supply = <&p3v3>;
++	vqmmc-supply = <&p3v3>;
++	status = "okay";
++};
++
++&tsadc {
++	rockchip,hw-tshut-mode = <1>;
++	rockchip,hw-tshut-polarity = <0>;
++	status = "okay";
++};
++
++&uart2 {
++	status = "okay";
++};
++
++&usb_host0_ehci {
++	status = "okay";
++};
++
++&usb_host0_ohci {
++	status = "okay";
++};
++
++&usb_host0_xhci {
++	extcon = <&usb2phy0>;
++	status = "okay";
++	dr_mode = "host";
++};
++
++&usb_host1_ehci {
++	status = "okay";
++};
++
++&usb_host1_ohci {
++	status = "okay";
++};
++
++&usb_host1_xhci {
++	status = "okay";
++};
++
++&usb2phy0 {
++	status = "okay";
++};
++
++&usb2phy0_host {
++	status = "okay";
++};
++
++&usb2phy0_otg {
++	status = "okay";
++};
++
++&usb2phy1 {
++	status = "okay";
++};
++
++&usb2phy1_host {
++	status = "okay";
++};
++
++&usb2phy1_otg {
++	status = "okay";
++};
++
++&pwm1 {
++	status = "okay";
++	pinctrl-names = "default";
++	pinctrl-0 = <&pwm1m0_pins>;
++};
++
++&pwm2 {
++	status = "okay";
++	pinctrl-names = "default";
++	pinctrl-0 = <&pwm2m0_pins>;
++};
++
++&gpu_opp_table {
++	compatible = "operating-points-v2";
++
++	opp-200000000 {
++		opp-hz = /bits/ 64 <200000000>;
++		opp-microvolt = <915000>;
++	};
++
++	opp-300000000 {
++		opp-hz = /bits/ 64 <300000000>;
++		opp-microvolt = <915000>;
++	};
++
++	opp-400000000 {
++		opp-hz = /bits/ 64 <400000000>;
++		opp-microvolt = <915000>;
++	};
++
++	opp-600000000 {
++		opp-hz = /bits/ 64 <600000000>;
++		opp-microvolt = <920000>;
++	};
++
++	opp-700000000 {
++		opp-hz = /bits/ 64 <700000000>;
++		opp-microvolt = <950000>;
++	};
++
++	opp-800000000 {
++		opp-hz = /bits/ 64 <800000000>;
++		opp-microvolt = <1000000>;
++	};
++};
 
----
-base-commit: 5bab5dc780c9ed0c69fc2f828015532acf4a7848
-change-id: 20240404-uvc_request_calc_once-a73df94665e6
-
-Best regards,
 -- 
-Michael Grzeschik <m.grzeschik@pengutronix.de>
+2.39.2
 
