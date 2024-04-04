@@ -1,131 +1,114 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72E07745C3;
-	Thu,  4 Apr 2024 11:49:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBBB3745C3
+	for <linux-kernel@vger.kernel.org>; Thu,  4 Apr 2024 11:49:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712231363; cv=none; b=kUOYTvzjSBftaQ6JAOlVfj7eW8B3strXSQwHf7rOCCBnLW6diSqi11YE82/1GuiwLKZRxJXE/gxiTZGIuJlic8xSNNB/PfMY6xnQK9b7qiPabrVXSGqxiJVgyaS6D4HO0ed382JRTs9fT99Jfx6PDmVv0t9taNl4BNFMBiY1tdg=
+	t=1712231369; cv=none; b=BaGFTgG1Kf2IsuQn+yiTGNOrwgkq7kagojSDmklPGCH61fUfju7AxvKxb4IMc2up/4aVukl1EkohAECUH5Ej6+o6BfXrhvLqd4xJUlT9q902wc59zqE3WjQawUnri+WIbsk3uI1wAVqnTpBF9Xj5kQk8iZw+it3+YB6PlqI2SpA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712231363; c=relaxed/simple;
-	bh=nsDNhESopgrlyLMUX6pXqRsQjNY64bQQgEYbtEgxgBE=;
-	h=From:To:Subject:Date:Message-Id:MIME-Version; b=geJC3byXHD/vXgJfbraktL1wpaa/e4dG4nMo7pwov0IyVssaLfJJemGMdQypoR4I4OUkSZxLRqoj6btegXHdbB0uxxQuXHxSavuvxqRGz+Yx0oGyr0PXxDUTNQN0DYFMdCKBn853hZ2kEClfRsYVU4T/oZJW/pu8G3G0Gle2Y4k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=gfTwZcZ0; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=GmZuFjP+; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1712231369; c=relaxed/simple;
+	bh=LCWAW+VOm6FrXEOYBB2mg7d0P/d+F63lRzQcYlEJDFg=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=TCpL+BBCKXnkylyNgc+Dw2jGeqddkob5WsYhvuZNtUipquh2AqSGrJcmkaHxStnZ8HDV8B3LHeQu5daS4zid1c5ITguXCo/waxxulfo+fdOjurjh6ESya2CRBl/r7O6Qf8W5zi0B67cUeTvPZZEzDFZTgyrLIWTtZx83j50PEWI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=lnvgy36I; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="gfTwZcZ0";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="GmZuFjP+"
-Received: from imap2.dmz-prg2.suse.org (imap2.dmz-prg2.suse.org [10.150.64.98])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id A32E65D8F8;
-	Thu,  4 Apr 2024 11:49:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1712231353; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:
-	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
-	bh=/x9kZleEmr9UJKwNDU1GNGFTF512qoraQs7ixZ7EWwk=;
-	b=gfTwZcZ0rHANC8/CboSHxZMhI7ZD42XjKhsHofmdSqY7PGURAD3NHOD4+gH01veMPoEqcL
-	gzX50WWvtMrq2wy7sOv4kbgsywX0tmCpkYHM154Hlfj3l/ewsiDIP7T8QpTwYZS6bYbLsI
-	qdMr11itivVub0nyd/qC+Km1o1p1roA=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1712231353;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:
-	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
-	bh=/x9kZleEmr9UJKwNDU1GNGFTF512qoraQs7ixZ7EWwk=;
-	b=GmZuFjP+6lm4IdGjqZGmtdEMX68Unvt5IgpnK4khuPUC9hHIfuM8gVH4L9Vm8wIkeHLEYK
-	v1wxGKIRB+XDueDw==
-Authentication-Results: smtp-out2.suse.de;
-	none
-Received: from imap2.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap2.dmz-prg2.suse.org (Postfix) with ESMTPS id 8E2DD13298;
-	Thu,  4 Apr 2024 11:49:13 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap2.dmz-prg2.suse.org with ESMTPSA
-	id Y5qKIrmTDmYZUwAAn2gu4w
-	(envelope-from <tbogendoerfer@suse.de>); Thu, 04 Apr 2024 11:49:13 +0000
-From: Thomas Bogendoerfer <tbogendoerfer@suse.de>
-To: Jay Vosburgh <j.vosburgh@gmail.com>,
-	Andy Gospodarek <andy@greyhouse.net>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH net] bonding: 802.3ad: Avoid packet loss when switching aggregator
-Date: Thu,  4 Apr 2024 13:49:08 +0200
-Message-Id: <20240404114908.134034-1-tbogendoerfer@suse.de>
-X-Mailer: git-send-email 2.35.3
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="lnvgy36I"
+Received: from pps.filterd (m0353726.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 434BRG5q020074;
+	Thu, 4 Apr 2024 11:49:24 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : content-transfer-encoding : mime-version; s=pp1;
+ bh=ZJhMoA4/8PPu9Nyl7nddIUmvaUIpt0j8YsJpTQeATsg=;
+ b=lnvgy36I3YYqHtfk9KO8u2+tIZxYDzkZvYwC0BrlIH8j3s+LrGIrrjgwCb7h4QDI13G5
+ Fyjth7NVmras+gFojA/7UlBmwmCin2FrfRoO8aQYRSUHN1K2c9KaU00FPaCVuuCWf88q
+ IQ4wPjvWf8URrfK5w417lTqjnCerYrsZ7GhpI52kgkg1uFwekhjEMmowPLMVostxMgap
+ dbYLxsr2u6/dA95Mn/U1huUeb1XTNOoy74KY1LID1cI+rLz9z43kmgj+TiEZNI+dGhnk
+ 1yiLSpyn5LZ7XRU55e+8MUb/pacVgYaGNp9f/MjOPdkdsMFLAu2rDOc28VR+zx9Xxpcc fw== 
+Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3x9ubc01qb-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 04 Apr 2024 11:49:24 +0000
+Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma12.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 434ANbZp007759;
+	Thu, 4 Apr 2024 11:49:23 GMT
+Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
+	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 3x9epwkvnv-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 04 Apr 2024 11:49:23 +0000
+Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
+	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 434BnHCQ45875496
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 4 Apr 2024 11:49:20 GMT
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id CCC7A2004B;
+	Thu,  4 Apr 2024 11:49:17 +0000 (GMT)
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id B2FAB20040;
+	Thu,  4 Apr 2024 11:49:17 +0000 (GMT)
+Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
+	by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Thu,  4 Apr 2024 11:49:17 +0000 (GMT)
+From: Niklas Schnelle <schnelle@linux.ibm.com>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Arnd Bergmann <arnd@kernel.org>
+Cc: Heiko Carstens <hca@linux.ibm.com>, linux-kernel@vger.kernel.org,
+        Niklas Schnelle <schnelle@linux.ibm.com>
+Subject: [PATCH 0/1] /dev/port: Handle HAS_IOPORT dependencies
+Date: Thu,  4 Apr 2024 13:49:16 +0200
+Message-Id: <20240404114917.3627747-1-schnelle@linux.ibm.com>
+X-Mailer: git-send-email 2.40.1
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: Lj2ScmAtP-imcuHAXZkXcG5WMtgurrRi
+X-Proofpoint-ORIG-GUID: Lj2ScmAtP-imcuHAXZkXcG5WMtgurrRi
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-UnRewURL: 0 URL was un-rewritten
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Score: 5.21
-X-Spamd-Result: default: False [5.21 / 50.00];
-	 ARC_NA(0.00)[];
-	 RCVD_VIA_SMTP_AUTH(0.00)[];
-	 FROM_HAS_DN(0.00)[];
-	 TO_DN_SOME(0.00)[];
-	 FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	 R_MISSING_CHARSET(2.50)[];
-	 TAGGED_RCPT(0.00)[];
-	 MIME_GOOD(-0.10)[text/plain];
-	 BROKEN_CONTENT_TYPE(1.50)[];
-	 TO_MATCH_ENVRCPT_ALL(0.00)[];
-	 NEURAL_HAM_LONG(-0.99)[-0.989];
-	 RCVD_COUNT_THREE(0.00)[3];
-	 DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	 NEURAL_HAM_SHORT(-0.20)[-0.999];
-	 RCPT_COUNT_SEVEN(0.00)[8];
-	 MID_CONTAINS_FROM(1.00)[];
-	 DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:email];
-	 FREEMAIL_TO(0.00)[gmail.com,greyhouse.net,davemloft.net,google.com,kernel.org,redhat.com,vger.kernel.org];
-	 FUZZY_BLOCKED(0.00)[rspamd.com];
-	 FROM_EQ_ENVFROM(0.00)[];
-	 MIME_TRACE(0.00)[0:+];
-	 RCVD_TLS_ALL(0.00)[];
-	 SUSPICIOUS_RECIPS(1.50)[]
-X-Spam-Level: *****
-X-Spam-Flag: NO
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-04-04_08,2024-04-04_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999 spamscore=0
+ priorityscore=1501 impostorscore=0 phishscore=0 clxscore=1011 mlxscore=0
+ suspectscore=0 adultscore=0 bulkscore=0 lowpriorityscore=0 malwarescore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2404010000
+ definitions=main-2404040081
 
-If selection logic decides to switch to a new aggregator it disables
-all ports of the old aggregator, but doesn't enable ports on
-the new aggregator. These ports will eventually be enabled when
-the next LACPDU is received, which might take some time and without an
-active port transmitted frames are dropped. Avoid this by enabling
-already collected ports of the new aggregator immediately.
+Hi Greg, Hi Arnd,
 
-Signed-off-by: Thomas Bogendoerfer <tbogendoerfer@suse.de>
----
- drivers/net/bonding/bond_3ad.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+This is a follow up in my ongoing effort of making inb()/outb() and
+similar I/O port accessors compile-time optional. Previously I sent this
+as a treewide series titled "treewide: Remove I/O port accessors for
+HAS_IOPORT=n" with the latest being its 5th version[0]. With a significant
+subset of patches merged I've changed over to per-subsystem series. These
+series are stand alone and should be merged via the relevant tree such
+that with all subsystems complete we can follow this up with the final
+patch that will make the I/O port accessors compile-time optional.
 
-diff --git a/drivers/net/bonding/bond_3ad.c b/drivers/net/bonding/bond_3ad.c
-index c6807e473ab7..529e2a7c51e2 100644
---- a/drivers/net/bonding/bond_3ad.c
-+++ b/drivers/net/bonding/bond_3ad.c
-@@ -1876,6 +1876,13 @@ static void ad_agg_selection_logic(struct aggregator *agg,
- 				__disable_port(port);
- 			}
- 		}
-+
-+		/* enable ports on new active aggregator */
-+		for (port = best->lag_ports; port;
-+			port = port->next_port_in_aggregator) {
-+			__enable_port(port);
-+		}
-+
- 		/* Slave array needs update. */
- 		*update_slave_arr = true;
- 	}
+The current state of the full series with changes to the remaining
+subsystems and the aforementioned final patch can be found for your
+convenience on my git.kernel.org tree in the has_ioport_v6 branch[1] with
+signed tags. As for compile-time vs runtime see Linus' reply to my first
+attempt[2].
+
+Thanks,
+Niklas
+
+[0] https://lore.kernel.org/all/20230522105049.1467313-1-schnelle@linux.ibm.com/
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/niks/linux.git/log/?h=has_ioport_v6
+[2] https://lore.kernel.org/lkml/CAHk-=wg80je=K7madF4e7WrRNp37e3qh6y10Svhdc7O8SZ_-8g@mail.gmail.com/
+
+Niklas Schnelle (1):
+  /dev/port: don't compile file operations without CONFIG_DEVPORT
+
+ drivers/char/mem.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
+
 -- 
-2.35.3
+2.40.1
 
