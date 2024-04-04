@@ -1,183 +1,186 @@
-Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
+Received: from mail-qv1-f43.google.com (mail-qv1-f43.google.com [209.85.219.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F9958287C
-	for <linux-kernel@vger.kernel.org>; Thu,  4 Apr 2024 09:33:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC7F073186;
+	Thu,  4 Apr 2024 09:33:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712223221; cv=none; b=Ol1kTktX7ifw2ebEywJNdT5FYv1xM3H1u+4yDFpPMekcp9puml4xSDvotpXYTorGpxHzFO6wE9t1w83xKamlFnj2ZXiCxsiiEjv5hfVOSJtSRG8DBFmjvtemIOahBMBQ8Eo47bcYVMiG0hnFCgJq8lNNO1Y5GIiMyNbH8uJ+rVY=
+	t=1712223234; cv=none; b=lg0rDaDXcPGhYjfMgOx4Oic/wEofldqPuNAM3QV45+9rky+Fn0gaEhDkM4X+4ZqL9+/8xsdb+9duHuclGhWdjUz/BfzpcvtKd6mK0sNu6hjRMLbQd9k7MkrWCLQkstz/3VyX7BCq/XXOq1OCAmh3ZYQ2QtJ9V+PEPd3ggMn5RbQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712223221; c=relaxed/simple;
-	bh=QikKFsZX5Z+SQME56UGEE4G7WVpkXWaJpct3ts0Ipc8=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=q88ByZMR+z/dT2GNUhOn3Gvw6ruGhoMnJbuVsrpLUy+mu95Qic2E4cv1CCc9/ztLL9YaVRcwlutr1TT5qffPvB+30Au/jiRRSN4RKioUI8nZIN4Tx/mB9KRH0ZE6km5aBQ8b4dHYIKjExSjPJW5/2vAtqlaIrkTSDtEFa6hXwxo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=gYZuhYkC; arc=none smtp.client-ip=209.85.221.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+	s=arc-20240116; t=1712223234; c=relaxed/simple;
+	bh=lJfZD0YPE4bSLnA47vSCMjB6M2AgR7foMEa5v1Pe2RU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=aWEkgSAHjPIWL3FvWBKtx9QBLFXOQi8U9DdCaavNodF+DinImFuS7B8LOxecOh8H0BmUYMQl5o1d/3hYrSdPsxmmtVDjWNJk18U1mVlH4MWhan2xAYypAJr9FqzE3qyJduY3kSg5sg+9qmETDXgpnXGQxrlZxcrQjpZJv8z0MPQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=m7VOYkxw; arc=none smtp.client-ip=209.85.219.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="gYZuhYkC"
-Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-343cfa6faf0so8391f8f.0
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Apr 2024 02:33:38 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="m7VOYkxw"
+Received: by mail-qv1-f43.google.com with SMTP id 6a1803df08f44-6992c0f6da3so3431646d6.1;
+        Thu, 04 Apr 2024 02:33:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1712223217; x=1712828017; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1712223232; x=1712828032; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=qbnVrvd22lq0FsuqRTbRtCkxT8J8OwHTwKvqCj8JxUU=;
-        b=gYZuhYkCmSQM23wfzmyDfHLLvPED4Wl4mOgWYUOe1wVSBG8B/BgZ+NmNjPplVkp28F
-         PP7oTAv+NWWzoAJeQt8/SmhqlvRgBB5MB25APnFqIRLpX3cL5jj+AbhEWIB3pK4ACXXu
-         NOWqg0SyEIBvy0j7uDNxmOCvbV46xBclFU2MxB9wKAcxKk8p2v7AJz0AJB6EYXjKl+11
-         P46WvFau/yoB/ht+tVsB5ELkS5Y32fK9ANb9afde22CT3qdmYTjduXsjudZAw/DSlAP2
-         R+OzRPorUxtLMYPgTZx1FHitg0vDQSnIGP1CglJPQiRwhuMNzukQvjjHJtGZWfqZUPz0
-         c65w==
+        bh=FWAqHn8+xECL5oeLDf6K7tfC2/a+9qCTtqqBfEwyf6o=;
+        b=m7VOYkxwwBxjUxxcQ6fLpU9GxHr40i6tQxNCNexBDO5At9vrQ5xrz1px/hQG+2GIm5
+         m75GBJiZtW4wL0+ZMeHN6+JHglfdezCats0tNfIbRjuWLyBdUS17UC0UJ6VcMeA9xL8j
+         bNeSusabLV6LoprsUP9mO9Q3Q6Btj2Hk11Kg7oAu7qcqL2JXy5fksI7LfDH37RRL1MqU
+         JQ7sIzoCglYNclPmG3roRYhFk8QdXRz0fi0GRZ7Gwlpd9Z3SOE9tVyeGh/g4C1bkLtib
+         YbIDvvlmnxPbLCYb0BWhtga868wWjjEWI+LnXfD+v+WaEorbx5D4fKuvgth2IlAEvMbj
+         Anyw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712223217; x=1712828017;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1712223232; x=1712828032;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=qbnVrvd22lq0FsuqRTbRtCkxT8J8OwHTwKvqCj8JxUU=;
-        b=M/8SQ+CsDkEa9G4k7nWwHAsrCSkwN3LzUhV7iVOf20/B4A6YvTfIJNiTgp/aD2S/aI
-         vuvP5NVIYlcvmMEFCe1BjVDvl5d5om6y9paz3iud7xpsXc44GFSUA7MG16o/DeAORncA
-         e3nxyzZu+z3byHu2YPQfyAggyNiwCfD8ea4yLYnQnVsGr/46+XrA5ZMf7cHt7PB5Sifu
-         DM+ibiHTkag9GXp/kP9wzEpIC0JeKPjPfpIOxJ1Z5IF4xamD14ydCC9+W3Q5ilYxd2hc
-         Jwc29fNyy4sOA4ti2MESBFDnZCpB3/7YUIiHf5Vlr6OmgC01skihEvUsEg745GS/064e
-         8BTw==
-X-Forwarded-Encrypted: i=1; AJvYcCXse4fskZNzZ5njc4HSOsFoFL5uTCxExZoHZPAjHOWGhwQ6IxN6l155x0LFhNYh7z+9duIzl0S3MERjCqBoltO5j9LYxbx4fMSA7EVj
-X-Gm-Message-State: AOJu0Yy81a3e5+LPyfOD19H8Z9NJqPevAJfhLZJ/cBtF0MgGEjSlK4BQ
-	rvJxteVfGYpikwHW/YPHUzAVNe+84sFoMTR77z8uYwgQrqY7nXcotruEDurXQt4=
-X-Google-Smtp-Source: AGHT+IH4Xuhodhs7j0LM3R9BjUEjQahSlYUFbtB6dhoYLc15+hktejYI24fxveoEX5zCL0O3Jf423g==
-X-Received: by 2002:a5d:568a:0:b0:33e:cf4d:c583 with SMTP id f10-20020a5d568a000000b0033ecf4dc583mr1724153wrv.16.1712223217370;
-        Thu, 04 Apr 2024 02:33:37 -0700 (PDT)
-Received: from brgl-uxlite.home ([2a01:cb1d:75a:e000:220a:565e:2927:8cf0])
-        by smtp.gmail.com with ESMTPSA id dj13-20020a0560000b0d00b0033e9fca1e49sm19436385wrb.60.2024.04.04.02.33.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 04 Apr 2024 02:33:36 -0700 (PDT)
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-To: Kent Gibson <warthog618@gmail.com>,
-	Linus Walleij <linus.walleij@linaro.org>
-Cc: linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Alexey Dobriyan <adobriyan@gmail.com>,
-	stable@vger.kernel.org,
-	Stefan Wahren <wahrenst@gmx.net>,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: [PATCH v2 2/2] gpio: cdev: fix missed label sanitizing in debounce_setup()
-Date: Thu,  4 Apr 2024 11:33:28 +0200
-Message-Id: <20240404093328.21604-3-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.40.1
-In-Reply-To: <20240404093328.21604-1-brgl@bgdev.pl>
-References: <20240404093328.21604-1-brgl@bgdev.pl>
+        bh=FWAqHn8+xECL5oeLDf6K7tfC2/a+9qCTtqqBfEwyf6o=;
+        b=cQ69E9H61ypDE72xDtSvXfQT7VbWEi4NGjmiKcOuv7X4TGWhYjTKva0m8+tZVd/y4U
+         Fa/W6lqcYIVAoNpQlMEoCxqw4htagXVTHI9Z2rc9G+lZhcNnpRKMFPB4FKDMa0MpH2Vm
+         /T4LFBt/o1BV8X2HR38Kf7poyFgA35ScNro3Je5vMY9t7edeuj+wbzcq7df/GGqztSIv
+         56nqcY8U3wr68RwqpHpNPp2QOb4wvWLC46rx3B6rlUfkB5wAunWk51lk115MJ+9UKIaV
+         RU5Te7FfyqFZ/QhSnCP8ym1eN/51yi8Ko8+v8RCjT6tP6u5i3/z5CMTXOuhPxK5Rtcgb
+         aUVw==
+X-Forwarded-Encrypted: i=1; AJvYcCW1PnVayE2YKfieIgQ4uZk1I3LQ1W7Ng9yfqv4Maoz4iJ1GHaEu4Y9Y8uuW8qUllrZWlTKMJSLs0mKw3vmLH9O1uVdfDDmawHrBzp/yUStXQMpWbkz+nnpXQwdbLQ9ndmA1vedDpNx5DfJFlQ==
+X-Gm-Message-State: AOJu0YwF94TmcN4YGjOyLoIukokVvrq/AJ5c9jJenv/aRi/kvRtHzak3
+	hMelFtZomxGYvM59FEk7yZiWpHqCCNebUoM87DU57rs1Oj8LzMBHlrybghTnWExPuJDYBziJ870
+	8BN312/mL6YkXnFOcEYfdhmseHeE=
+X-Google-Smtp-Source: AGHT+IGbbirhCWaHqNC+X46roF64fcTSKbRAVv7l0jg/9DDTm3zUzZN4eZR1RMq9j3HT3R///aBUWTiDFXkiTZfRLew=
+X-Received: by 2002:a05:6214:411c:b0:699:1f86:e968 with SMTP id
+ kc28-20020a056214411c00b006991f86e968mr1752988qvb.41.1712223231813; Thu, 04
+ Apr 2024 02:33:51 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <00000000000098f75506153551a1@google.com> <0000000000002f2066061539e54b@google.com>
+ <CAOQ4uxiS5X19OT2MTo_LnLAx2VL9oA1zBSpbuiWMNy_AyGLDrg@mail.gmail.com>
+ <20240404081122.GQ538574@ZenIV> <20240404082110.GR538574@ZenIV>
+In-Reply-To: <20240404082110.GR538574@ZenIV>
+From: Amir Goldstein <amir73il@gmail.com>
+Date: Thu, 4 Apr 2024 12:33:40 +0300
+Message-ID: <CAOQ4uximHfK78KFabJA3Hf4R0En6-GfJ3eF96Lzmc94PGuGayA@mail.gmail.com>
+Subject: Re: [syzbot] [kernfs?] possible deadlock in kernfs_fop_llseek
+To: Al Viro <viro@zeniv.linux.org.uk>
+Cc: syzbot <syzbot+9a5b0ced8b1bfb238b56@syzkaller.appspotmail.com>, 
+	gregkh@linuxfoundation.org, linux-fsdevel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com, tj@kernel.org, 
+	valesini@yandex-team.ru, Christoph Hellwig <hch@lst.de>, 
+	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, Miklos Szeredi <miklos@szeredi.hu>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Kent Gibson <warthog618@gmail.com>
+On Thu, Apr 4, 2024 at 11:21=E2=80=AFAM Al Viro <viro@zeniv.linux.org.uk> w=
+rote:
+>
+> On Thu, Apr 04, 2024 at 09:11:22AM +0100, Al Viro wrote:
+> > On Thu, Apr 04, 2024 at 09:54:35AM +0300, Amir Goldstein wrote:
+> > >
+> > > In the lockdep dependency chain, overlayfs inode lock is taken
+> > > before kernfs internal of->mutex, where kernfs (sysfs) is the lower
+> > > layer of overlayfs, which is sane.
+> > >
+> > > With /sys/power/resume (and probably other files), sysfs also
+> > > behaves as a stacking filesystem, calling vfs helpers, such as
+> > > lookup_bdev() -> kern_path(), which is a behavior of a stacked
+> > > filesystem, without all the precautions that comes with behaving
+> > > as a stacked filesystem.
+> >
+> > No.  This is far worse than anything stacked filesystems do - it's
+> > an arbitrary pathname resolution while holding a lock.
+> > It's not local.  Just about anything (including automounts, etc.)
+> > can be happening there and it pushes the lock in question outside
+> > of *ALL* pathwalk-related locks.  Pathname doesn't have to
+> > resolve to anything on overlayfs - it can just go through
+> > a symlink on it, or walk into it and traverse a bunch of ..
+> > afterwards, etc.
+> >
+> > Don't confuse that with stacking - it's not even close.
+> > You can't use that anywhere near overlayfs layers.
+> >
+> > Maybe isolate it into a separate filesystem, to be automounted
+> > on /sys/power.  And make anyone playing with overlayfs with
+> > sysfs as a layer mount the damn thing on top of power/ in your
+> > overlayfs.  But using that thing as a part of layer is
+> > a non-starter.
 
-When adding sanitization of the label, the path through
-edge_detector_setup() that leads to debounce_setup() was overlooked.
-A request taking this path does not allocate a new label and the
-request label is freed twice when the request is released, resulting
-in memory corruption.
+I don't follow what you are saying.
+Which code is in non-starter violation?
+kernfs for calling lookup_bdev() with internal of->mutex held?
+Overlayfs for allowing sysfs as a lower layer and calling
+vfs_llseek(lower_sysfs_file,...) during copy up while ovl inode is held
+for legit reasons (e.g. from ovl_rename())?
 
-Add label sanitization to debounce_setup().
+>
+> Incidentally, why do you need to lock overlayfs inode to call
+> vfs_llseek() on the underlying file?  It might (or might not)
+> need to lock the underlying file (for things like ->i_size,
+> etc.), but that will be done by ->llseek() instance and it
+> would deal with the inode in the layer, not overlayfs one.
 
-Cc: stable@vger.kernel.org
-Fixes: b34490879baa ("gpio: cdev: sanitize the label before requesting the interrupt")
-Signed-off-by: Kent Gibson <warthog618@gmail.com>
-[Bartosz: rebased on top of the fix for empty GPIO labels]
-Co-developed-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
----
- drivers/gpio/gpiolib-cdev.c | 47 +++++++++++++++++++++----------------
- 1 file changed, 27 insertions(+), 20 deletions(-)
+We do not (anymore) lock ovl inode in ovl_llseek(), see:
+b1f9d3858f72 ovl: use ovl_inode_lock in ovl_llseek()
+but ovl inode is held in operations (e.g. ovl_rename)
+which trigger copy up and call vfs_llseek() on the lower file.
 
-diff --git a/drivers/gpio/gpiolib-cdev.c b/drivers/gpio/gpiolib-cdev.c
-index 1426cc1c4a28..6fe978535047 100644
---- a/drivers/gpio/gpiolib-cdev.c
-+++ b/drivers/gpio/gpiolib-cdev.c
-@@ -728,6 +728,25 @@ static u32 line_event_id(int level)
- 		       GPIO_V2_LINE_EVENT_FALLING_EDGE;
- }
- 
-+static inline char *make_irq_label(const char *orig)
-+{
-+	char *new;
-+
-+	if (!orig)
-+		return NULL;
-+
-+	new = kstrdup_and_replace(orig, '/', ':', GFP_KERNEL);
-+	if (!new)
-+		return ERR_PTR(-ENOMEM);
-+
-+	return new;
-+}
-+
-+static inline void free_irq_label(const char *label)
-+{
-+	kfree(label);
-+}
-+
- #ifdef CONFIG_HTE
- 
- static enum hte_return process_hw_ts_thread(void *p)
-@@ -1015,6 +1034,7 @@ static int debounce_setup(struct line *line, unsigned int debounce_period_us)
- {
- 	unsigned long irqflags;
- 	int ret, level, irq;
-+	char *label;
- 
- 	/* try hardware */
- 	ret = gpiod_set_debounce(line->desc, debounce_period_us);
-@@ -1037,11 +1057,17 @@ static int debounce_setup(struct line *line, unsigned int debounce_period_us)
- 			if (irq < 0)
- 				return -ENXIO;
- 
-+			label = make_irq_label(line->req->label);
-+			if (IS_ERR(label))
-+				return -ENOMEM;
-+
- 			irqflags = IRQF_TRIGGER_FALLING | IRQF_TRIGGER_RISING;
- 			ret = request_irq(irq, debounce_irq_handler, irqflags,
- 					  line->req->label, line);
--			if (ret)
-+			if (ret) {
-+				free_irq_label(label);
- 				return ret;
-+			}
- 			line->irq = irq;
- 		} else {
- 			ret = hte_edge_setup(line, GPIO_V2_LINE_FLAG_EDGE_BOTH);
-@@ -1083,25 +1109,6 @@ static u32 gpio_v2_line_config_debounce_period(struct gpio_v2_line_config *lc,
- 	return 0;
- }
- 
--static inline char *make_irq_label(const char *orig)
--{
--	char *new;
--
--	if (!orig)
--		return NULL;
--
--	new = kstrdup_and_replace(orig, '/', ':', GFP_KERNEL);
--	if (!new)
--		return ERR_PTR(-ENOMEM);
--
--	return new;
--}
--
--static inline void free_irq_label(const char *label)
--{
--	kfree(label);
--}
--
- static void edge_detector_stop(struct line *line)
- {
- 	if (line->irq) {
--- 
-2.40.1
+>
+> Similar question applies to ovl_write_iter() - why do you
+> need to hold the overlayfs inode locked during the call of
+> backing_file_write_iter()?
+>
 
+Not sure. This question I need to defer to Miklos.
+I see in several places the pattern:
+        inode_lock(inode);
+        /* Update mode */
+        ovl_copyattr(inode);
+        ret =3D file_remove_privs(file);
+...
+        /* Update size */
+        ovl_file_modified(file);
+...
+        inode_unlock(inode);
+
+so it could be related to atomic remove privs and update mtime,
+but possibly we could convert all of those inode_lock() to
+ovl_inode_lock() (i.e. internal lock below vfs inode lock).
+
+[...]
+> Consider the scenario when unlink() is called on that sucker
+> during the write() that triggers that pathwalk.  We have
+>
+> unlink: blocked on overlayfs inode of file, while holding the parent dire=
+ctory.
+> write: holding the overlayfs inode of file and trying to resolve a pathna=
+me
+> that contains .../power/suspend_stats/../../...; blocked on attempt to lo=
+ck
+> parent so we could do a lookup in it.
+
+This specifically cannot happen because sysfs is not allowed as an
+upper layer only as a lower layer, so overlayfs itself will not be writing =
+to
+/sys/power/resume.
+
+>
+> No llseek involved anywhere, kernfs of->mutex held, but not contended,
+> deadlock purely on ->i_rwsem of overlayfs inodes.
+>
+> Holding overlayfs inode locked during the call of lookup_bdev() is really
+> no-go.
+
+Yes. I see that, but how can this be resolved?
+
+If the specific file /sys/power/resume will not have FMODE_LSEEK,
+then ovl_copy_up_file() will not try to skip_hole on it at all and the
+llseek lock dependency will be averted.
+
+The question is whether opt-out of FMODE_LSEEK for /sys/power/resume
+will break anything or if we should mark seq files in another way so that
+overlayfs would not try to seek_hole on any of them categorically.
+
+Thanks,
+Amir.
