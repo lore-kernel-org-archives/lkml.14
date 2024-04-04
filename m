@@ -1,183 +1,92 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E92CA74C14;
-	Thu,  4 Apr 2024 19:53:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63F3412EBD0;
+	Thu,  4 Apr 2024 19:53:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712260404; cv=none; b=aBHU6zlCNq2ehSLaZw5Yccuf0w9f1gBGOlrVnAs4qj3FWGA6v90ujSiWMCefzAeeZu90728huDo3oWB3mMpUZqP0UOj/NsNd4fcsgg84h8Q1Um87DVLSq+R0OQo1KHBmeriBT/hJaH3Ltcuoxm7+IIaptxvqClQX0g5O7XA+oXA=
+	t=1712260421; cv=none; b=fft4hJC/Y5YkBjjaS0EW5uXH0+77rPB8X5AJEJmgy1/h3n11LzBJDtWx3W48Wmv7zXI1TfvfLB1iSc9sz3NUKU01Z2sWT5yqzdRpIFaKBP1yDVDgyglkOw60X0VNeHNqudXa4B07pzzQWfDOEJCrZleU/yrxIkd6OzJvAlatL1A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712260404; c=relaxed/simple;
-	bh=WIaxxb/wJKgOnX2AIsmocmXM/m0z3iob9NXxQddI4Pg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CZoAVwnHGAJE41mhjTP+4ISLlCHMpOBjGznWfiM4yemOoVTWkcmrGcMiVukkaDsLhYGNp/KzS5zuF6eohMwHKokfqrmGfF3Xg2kTwKQAbJP5j4J0rG5JflByDwEhNYAb1w+nDNCFVXayiAQcyGsBCI5gU98JnfIBRKI/RywOIzA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=nj/C3MAl; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=PP4L2GS8; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=ji3QTxuq; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=Kwfam1vJ; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	s=arc-20240116; t=1712260421; c=relaxed/simple;
+	bh=0dykGMEIzzbTlo2r7m+D7cx0I5fgw0FXn+BBmF6bBqw=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=D5Q4O0QJzXz09noioYCw6Y2O6xt647rjydkI2jxKxpatHMat7z149NjSwBeuCxQz6eSptu2bktD3humaXZKv1aTxF2kh+ri1vsv5ENT6/zGOQbWzdv7fCg2vlsUp/jsp2xg5pWreF5nKPQ2xX9zMN7U6XHMsEtaG+61ozUsOtA8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eWYsq6cd; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="nj/C3MAl";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="PP4L2GS8";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="ji3QTxuq";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="Kwfam1vJ"
-Received: from imap2.dmz-prg2.suse.org (imap2.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:98])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id DFF871F441;
-	Thu,  4 Apr 2024 19:53:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1712260401;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=0kGyYdvz1lGwPR6FgbkygCOdLQOLaJs4yjJ3ECXl6LI=;
-	b=nj/C3MAlqmkQc/GHgjaqRmYlbJS+5xTV1FMACJvdtg8riSwbl++lq296aqqMGgyVrvVJC+
-	g70q7Vn4mDLP5A5HEt0Ei/di0p/ZpZI4M7Ph4s/OBODN9ToGvX17KRfxIaUd+FDzzG/Lec
-	vmNUvz2jeguhSMPPHk6DOKhGyrgtkg4=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1712260401;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=0kGyYdvz1lGwPR6FgbkygCOdLQOLaJs4yjJ3ECXl6LI=;
-	b=PP4L2GS8ki1HoCI3//JngIKC4kPQe4Y2WWYWVHX2hQ1snir6WrP+yDv2IDE0jK5yQT9oFr
-	AjKHp1X2QpNTkVDw==
-Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=ji3QTxuq;
-	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=Kwfam1vJ
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1712260400;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=0kGyYdvz1lGwPR6FgbkygCOdLQOLaJs4yjJ3ECXl6LI=;
-	b=ji3QTxuqAvPTAwRGLGMxv6NvIlKIvxIauFBNnrqBXlle6B5cnXc163/s7WIjZH/fdlG+uL
-	r/+6ACCwIy+WHlSgHvSJDQe23uCaCHtAitBgBANDtAn7deEPJ9h2jE87HqtwC3r+Fb2emb
-	5m4G4RYKxYU7dwIq5h5TSLGEzqwxjCo=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1712260400;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=0kGyYdvz1lGwPR6FgbkygCOdLQOLaJs4yjJ3ECXl6LI=;
-	b=Kwfam1vJR4+biIZroMqZaewwhFLWPbJLzQxsjs4IEXmgvyj6PnMIiIMfEOivT6zj8icM7p
-	xM7jzxhWCQ61E2Dg==
-Received: from imap2.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap2.dmz-prg2.suse.org (Postfix) with ESMTPS id C4F6613298;
-	Thu,  4 Apr 2024 19:53:20 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap2.dmz-prg2.suse.org with ESMTPSA
-	id wxDyLzAFD2ZSbAAAn2gu4w
-	(envelope-from <dsterba@suse.cz>); Thu, 04 Apr 2024 19:53:20 +0000
-Date: Thu, 4 Apr 2024 21:45:58 +0200
-From: David Sterba <dsterba@suse.cz>
-To: Johannes Thumshirn <jth@kernel.org>
-Cc: Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
-	David Sterba <dsterba@suse.com>, linux-btrfs@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Hans Holmberg <Hans.Holmberg@wdc.com>,
-	Naohiro Aota <Naohiro.Aota@wdc.com>, hch@lst.de,
-	Damien LeMoal <dlemoal@kernel.org>, Boris Burkov <boris@bur.io>,
-	Johannes Thumshirn <johannes.thumshirn@wdc.com>
-Subject: Re: [PATCH RFC PATCH 3/3] btrfs: zoned: kick cleaner kthread if low
- on space
-Message-ID: <20240404194558.GK14596@twin.jikos.cz>
-Reply-To: dsterba@suse.cz
-References: <20240328-hans-v1-0-4cd558959407@kernel.org>
- <20240328-hans-v1-3-4cd558959407@kernel.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eWYsq6cd"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4C218C433C7;
+	Thu,  4 Apr 2024 19:53:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1712260421;
+	bh=0dykGMEIzzbTlo2r7m+D7cx0I5fgw0FXn+BBmF6bBqw=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=eWYsq6cdE8XB4cOK3AWiv8n3QZ7i+7Ni1D2SBgpPsoYmtOFo/K4li1lmayQOYqU6q
+	 yjJTyvuJ5jQ+QyIfywyVFnIBRMS+2hpTwxhuyw2AAJ/3mpZNLqL2kUWAup5M/JCwmW
+	 GfkQukIkoYzg/l4zheIQqzIDwvb4q8PN7bQqJN88/bfgTmNecNNjN7SXZhCyMnFJ33
+	 yjOhjoRGqEACQJOfyDf19bxVqjG5HrBw/1ueT4Q3dgELG190YplzvA5VKJsQtEAcA4
+	 10wMY21RPYKmLtjkHEZFB0RYx8AS3+FbXAtKQ+bhfIt/25Rh6alrkzNUvICWuTt81A
+	 Yr2fUEFzJTWug==
+Date: Thu, 4 Apr 2024 12:53:39 -0700
+From: Jakub Kicinski <kuba@kernel.org>
+To: Jason Gunthorpe <jgg@nvidia.com>
+Cc: Edward Cree <ecree.xilinx@gmail.com>, David Ahern <dsahern@kernel.org>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Christoph Hellwig
+ <hch@infradead.org>, Saeed Mahameed <saeed@kernel.org>, Arnd Bergmann
+ <arnd@arndb.de>, Leon Romanovsky <leonro@nvidia.com>, Jiri Pirko
+ <jiri@nvidia.com>, Leonid Bloch <lbloch@nvidia.com>, Itay Avraham
+ <itayavr@nvidia.com>, Saeed Mahameed <saeedm@nvidia.com>, Aron Silverton
+ <aron.silverton@oracle.com>, linux-kernel@vger.kernel.org,
+ "netdev@vger.kernel.org" <netdev@vger.kernel.org>, Andy Gospodarek
+ <andrew.gospodarek@broadcom.com>
+Subject: Re: [PATCH V4 0/5] mlx5 ConnectX control misc driver
+Message-ID: <20240404125339.14695f27@kernel.org>
+In-Reply-To: <20240404183305.GM1723999@nvidia.com>
+References: <2024032248-ardently-ribcage-a495@gregkh>
+	<510c1b6b-1738-4baa-bdba-54d478633598@kernel.org>
+	<Zf2n02q0GevGdS-Z@C02YVCJELVCG>
+	<20240322135826.1c4655e2@kernel.org>
+	<e5c61607-4d66-4cd8-bf45-0aac2b3af126@kernel.org>
+	<20240322154027.5555780a@kernel.org>
+	<1cd2a70c-17b8-4421-b70b-3c0199a84a6a@kernel.org>
+	<0ea32dd4-f408-5870-77eb-f18899f1ad44@gmail.com>
+	<20240402184055.GP946323@nvidia.com>
+	<83025203-fefb-d828-724d-259e5df7c1b2@gmail.com>
+	<20240404183305.GM1723999@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240328-hans-v1-3-4cd558959407@kernel.org>
-User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
-X-Spam-Flag: NO
-X-Spam-Score: -1.38
-X-Rspamd-Action: no action
-X-Rspamd-Queue-Id: DFF871F441
-X-Spam-Level: 
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Spamd-Result: default: False [-1.38 / 50.00];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	HAS_REPLYTO(0.30)[dsterba@suse.cz];
-	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	BAYES_HAM(-0.17)[69.78%];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	ARC_NA(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[12];
-	TO_DN_SOME(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:98:from];
-	MIME_TRACE(0.00)[0:+];
-	RCVD_TLS_ALL(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:98:from];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	REPLYTO_ADDR_EQ_FROM(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap2.dmz-prg2.suse.org:helo,imap2.dmz-prg2.suse.org:rdns,suse.cz:dkim,suse.cz:replyto];
-	RCVD_COUNT_TWO(0.00)[2];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DKIM_TRACE(0.00)[suse.cz:+]
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Thu, Mar 28, 2024 at 02:56:33PM +0100, Johannes Thumshirn wrote:
-> From: Johannes Thumshirn <johannes.thumshirn@wdc.com>
+On Thu, 4 Apr 2024 15:33:05 -0300 Jason Gunthorpe wrote:
+> Uh no, mlx5 already has an excellent in-tree driver, thank you very
+> much. The configuration is not changing the driver, it is changing the
+> device.
 > 
-> Kick the cleaner kthread on chunk allocation if we're slowly running out
-> of usable space on a zoned filesystem.
-
-For zoned mode it makes more sense, as Boris noted it could be done for
-non-zoned too but maybe based on additional criteria as reusing the
-space is easier.
-
-Also cleaner does several things so it may start doing subvolume
-cleaning or defragmentation at the worst time.
-
-> Signed-off-by: Johannes Thumshirn <johannes.thumshirn@wdc.com>
-> ---
->  fs/btrfs/zoned.c | 6 ++++++
->  1 file changed, 6 insertions(+)
+> Consider, I can ship unique devices pre-configured for each site's
+> special needs. They still work with the same inbox driver.
 > 
-> diff --git a/fs/btrfs/zoned.c b/fs/btrfs/zoned.c
-> index fb8707f4cab5..25c1a17873db 100644
-> --- a/fs/btrfs/zoned.c
-> +++ b/fs/btrfs/zoned.c
-> @@ -1040,6 +1040,7 @@ int btrfs_reset_sb_log_zones(struct block_device *bdev, int mirror)
->  u64 btrfs_find_allocatable_zones(struct btrfs_device *device, u64 hole_start,
->  				 u64 hole_end, u64 num_bytes)
->  {
-> +	struct btrfs_fs_info *fs_info = device->fs_info;
->  	struct btrfs_zoned_device_info *zinfo = device->zone_info;
->  	const u8 shift = zinfo->zone_size_shift;
->  	u64 nzones = num_bytes >> shift;
-> @@ -1051,6 +1052,11 @@ u64 btrfs_find_allocatable_zones(struct btrfs_device *device, u64 hole_start,
->  	ASSERT(IS_ALIGNED(hole_start, zinfo->zone_size));
->  	ASSERT(IS_ALIGNED(num_bytes, zinfo->zone_size));
->  
-> +	if (!test_bit(BTRFS_FS_CLEANER_RUNNING, &fs_info->flags) &&
-> +	    btrfs_zoned_should_reclaim(fs_info)) {
-> +		wake_up_process(fs_info->cleaner_kthread);
+> In fact that happens already for certain large customers. It is why
+> Jakub recently pointed out that Meta doesn't need any
+> provisioning/mlx5ctl/misc driver. They just buy different devices than
+> everyone else.
 
-You can drop the BTRFS_FS_CLEANER_RUNNING condition, this is not a
-performance sensitive where the wake up of an already running process
-would hurt.
+> Further it is really rude and inappropriate to say that some customers
+> should not be able to enjoy intree drivers because of your aesthetic
+> opinion of hacks in a device's design.
 
-> +	}
-> +
->  	while (pos < hole_end) {
->  		begin = pos >> shift;
->  		end = begin + nzones;
-> 
-> -- 
-> 2.35.3
-> 
+To my knowledge the "customizations" are mostly around fitting into OCP
+servers. Those unfamiliar with how hyperscalers operate can mentally
+replace $hyperscaler with HP or Dell in your message. Minus all the
+proprietary OOB management stuff those guys also provide.
+
+> Overreach. The job of the kernel maintainer is to review the driver
+> software, not the device design.
+
+Agreed. I rarely if ever comment on what I think about device design.
+
+Discussion is about mlx5ctrl not "the device" as much as you'd like
+to equate the two.
