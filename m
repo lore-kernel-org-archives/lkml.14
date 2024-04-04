@@ -1,110 +1,268 @@
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
+Received: from mail-4316.protonmail.ch (mail-4316.protonmail.ch [185.70.43.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D10EE12A16B;
-	Thu,  4 Apr 2024 14:50:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FE7315EA6;
+	Thu,  4 Apr 2024 14:51:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.43.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712242234; cv=none; b=KSyItoCDDaCxkqAxS2z4XHdHVENq0PIpTBUkTKwZ4WNgFZS+QkmRNbkTtd1mmc9oIFXN3c1arYMd2vcsDKZlpUoqqNs45oZbuMS2oHStXQ1d4wxlFq2o6+ILE5WdtqWQmM+5VtXRbQ82OaFyLs9Sdftt/lCjw+zZKtW0nouxTto=
+	t=1712242284; cv=none; b=L/JVzS+0Nf4fvW6oq9OqAh6n0RhufX59Y9tRAYzhsVD21BY1U4mG8jKqOJRCZE9Za6xiUKT3fQedEirHDlctR6YMs7/h6qpfHgT86MPMe1X0Dj3NLgoEqjgih91Z8kCEd0uYwUQi0H/ArM0e0uKare8EGLLCRwH2+uwzJiYMDvA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712242234; c=relaxed/simple;
-	bh=p7JS/JW9XXD3bMddSLVFax+q5+sw7d8SB0tPzkZxUCE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=OHk4VbbHt2BSOC2w7G9WJcoo+2pfm9SIxe/ynzMjJBpJ8rT5KWjEg/wKtC8TBTDJlpnsr0mdMXPLOFGwYCwfzuEPnz03mOHctYpr0kwg6h62ZcKqQcy342cxGvTZngVkVIqRp7pX/vJSVhg7U8jMQs5UY59q40DhsBTwzgtG3Ck=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=4cb+Da5e; arc=none smtp.client-ip=46.235.227.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1712242284; c=relaxed/simple;
+	bh=9F4bE6RFEhkRy0ov/bMHMaKCv6iNYmCPVd5GJvpQkj0=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=YzMI+XpQriKwsPWiZp7EQu1D02WL1rsjozJVuLbPvNTIdgjkdbggN+liy/rFy5nuhYhCbqQP+v+zfP5J408X2tjeOCHoJr9wTmVCj7PAxKPF8RJrcaAqYsQ8sGCmCzuRvBleaErZriwg1XbaISzqFhSWys1u8rdVyazo+haPNkA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me; spf=pass smtp.mailfrom=proton.me; dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b=HiyOn/bU; arc=none smtp.client-ip=185.70.43.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="4cb+Da5e"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1712242231;
-	bh=p7JS/JW9XXD3bMddSLVFax+q5+sw7d8SB0tPzkZxUCE=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=4cb+Da5eqnTgzFsMbel5Czpg0yxMD9Cj6yJ2vpwTHOXdMEdIBz4CBhF+/ZsV+CU6i
-	 Dk2sHOTPShK29ZAITPiisvwR8WhbQ2JgohSYFVuE3atePxhCp7ww/igdnqJQkOW8Un
-	 7IvkkSaxe0q17rJYaLc01oPe0QTES7GWBRGv/MFT0oTMkzf5obDgSfbP1I2lukorpr
-	 gsSkEKfmZ97OxTIzC2WnAjno0669RcFpLpB2MjDH2iYFFV/6H6OwEWz/0yhmoCgjIT
-	 XVoSirLSNumhV/WWVNvJPdNEgUHdD3qmJ7qUsK82aCTGhw477PwEJFKWa4XEJwkNCc
-	 wYernkhbmyP0g==
-Received: from [100.90.194.27] (cola.collaboradmins.com [195.201.22.229])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: ehristev)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 29A043780029;
-	Thu,  4 Apr 2024 14:50:30 +0000 (UTC)
-Message-ID: <e6d1ad0b-719a-4693-bd34-bea3cf6e4fa2@collabora.com>
-Date: Thu, 4 Apr 2024 17:50:29 +0300
+	dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b="HiyOn/bU"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
+	s=46r6zabnkjcrdj3jci6p6oyzwa.protonmail; t=1712242280; x=1712501480;
+	bh=0Jzi1SJxdrZbAiksLrRC8eagzCOdwlYfNKWFhLLRZ30=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
+	 Message-ID:BIMI-Selector;
+	b=HiyOn/bUh/O0/cUk95114wulc/Dt1gYbWDYi+OG0mACzWIchMlHepzmIIHH/kFuWW
+	 cMz9PxPSkdOJv6xNO6KW2oSpJXUGUrPGAZMGfxihyjZherYPP+eF6xxPg1qTNb5Y6X
+	 6X7KZ2uklWfx/tkvBlLcHk/GMwQ4SRJpPE3rEIzbjtRPp6TWTX/dUQMKIsOU2Mcd3g
+	 7kpGojHWNE5mFVCeCO1mGEvfVbMx+vTpYSYjiMA+pqmIhrXMv2IFvwo0dc6u+forkG
+	 l6qaEFe2nfSL53SsxW8N4cjnRGv1HkveWidTMaZ+MzogxIkYLH3C7ZyWF7G2mnnq6n
+	 65nstalLpIEGA==
+Date: Thu, 04 Apr 2024 14:51:16 +0000
+To: Alice Ryhl <aliceryhl@google.com>
+From: Benno Lossin <benno.lossin@proton.me>
+Cc: Miguel Ojeda <ojeda@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, Alex Gaynor <alex.gaynor@gmail.com>, Wedson Almeida Filho <wedsonaf@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, Andreas Hindborg <a.hindborg@samsung.com>, Marco Elver <elver@google.com>, Kees Cook <keescook@chromium.org>, Coly Li <colyli@suse.de>, Paolo Abeni <pabeni@redhat.com>, Pierre Gondois <pierre.gondois@arm.com>, Ingo Molnar <mingo@kernel.org>, Jakub Kicinski <kuba@kernel.org>, Wei Yang <richard.weiyang@gmail.com>, Matthew Wilcox <willy@infradead.org>, linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org
+Subject: Re: [PATCH 5/9] rust: list: add List
+Message-ID: <3f3cf5ae-30df-4032-b752-77126035784c@proton.me>
+In-Reply-To: <CAH5fLgiN3jcd_HMgmP7H-026daMw0xkMk=CGaGc9AM7uHkFXFA@mail.gmail.com>
+References: <20240402-linked-list-v1-0-b1c59ba7ae3b@google.com> <20240402-linked-list-v1-5-b1c59ba7ae3b@google.com> <d896a813-3081-40b4-985b-ef257d55cec2@proton.me> <CAH5fLgiN3jcd_HMgmP7H-026daMw0xkMk=CGaGc9AM7uHkFXFA@mail.gmail.com>
+Feedback-ID: 71780778:user:proton
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [f2fs-dev] [PATCH v15 7/9] f2fs: Log error when lookup of encoded
- dentry fails
-To: krisman@suse.de, Eric Biggers <ebiggers@kernel.org>
-Cc: tytso@mit.edu, adilger.kernel@dilger.ca, linux-ext4@vger.kernel.org,
- jaegeuk@kernel.org, chao@kernel.org, linux-f2fs-devel@lists.sourceforge.net,
- linux-fsdevel@vger.kernel.org, brauner@kernel.org, jack@suse.cz,
- linux-kernel@vger.kernel.org, viro@zeniv.linux.org.uk, kernel@collabora.com
-References: <20240402154842.508032-1-eugen.hristev@collabora.com>
- <20240402154842.508032-8-eugen.hristev@collabora.com>
- <20240403042503.GI2576@sol.localdomain>
-Content-Language: en-US
-From: Eugen Hristev <eugen.hristev@collabora.com>
-In-Reply-To: <20240403042503.GI2576@sol.localdomain>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On 4/3/24 07:25, Eric Biggers wrote:
-> On Tue, Apr 02, 2024 at 06:48:40PM +0300, Eugen Hristev via Linux-f2fs-devel wrote:
->> If the volume is in strict mode, generi c_ci_compare can report a broken
->> encoding name.  This will not trigger on a bad lookup, which is caught
->> earlier, only if the actual disk name is bad.
+On 04.04.24 16:12, Alice Ryhl wrote:
+> On Thu, Apr 4, 2024 at 4:03=E2=80=AFPM Benno Lossin <benno.lossin@proton.=
+me> wrote:
+>> On 02.04.24 14:17, Alice Ryhl wrote:
+>>> +
+>>> +        if self.first.is_null() {
+>>> +            self.first =3D item;
+>>> +            // SAFETY: The caller just gave us ownership of these fiel=
+ds.
+>>> +            // INVARIANT: A linked list with one item should be cyclic=
+.
+>>> +            unsafe {
+>>> +                (*item).next =3D item;
+>>> +                (*item).prev =3D item;
+>>> +            }
+>>> +        } else {
+>>> +            let next =3D self.first;
+>>> +            // SAFETY: We just checked that `next` is non-null.
 >>
->> Suggested-by: Gabriel Krisman Bertazi <krisman@suse.de>
->> Signed-off-by: Eugen Hristev <eugen.hristev@collabora.com>
->> ---
->>  fs/f2fs/dir.c | 15 ++++++++++-----
->>  1 file changed, 10 insertions(+), 5 deletions(-)
+>> Missing mention of the type invariant.
+>=20
+> SAFETY: By the type invariant, this pointer is valid or null. We just
+> checked that it's not null, so it must be valid.
+
+Sounds good.
+
+[...]
+
+>>> +    /// Removes the first item from this list.
+>>> +    pub fn pop_front(&mut self) -> Option<ListArc<T, ID>> {
+>>> +        if self.first.is_null() {
+>>> +            return None;
+>>> +        }
+>>> +
+>>> +        // SAFETY: The first item of this list is in this list.
+>>> +        Some(unsafe { self.remove_internal(self.first) })
+>>> +    }
+>>> +
+>>> +    /// Removes the provided item from this list and returns it.
+>>> +    ///
+>>> +    /// This returns `None` if the item is not in the list.
 >>
->> diff --git a/fs/f2fs/dir.c b/fs/f2fs/dir.c
->> index 88b0045d0c4f..64286d80dd30 100644
->> --- a/fs/f2fs/dir.c
->> +++ b/fs/f2fs/dir.c
->> @@ -192,11 +192,16 @@ static inline int f2fs_match_name(const struct inode *dir,
->>  	struct fscrypt_name f;
->>  
->>  #if IS_ENABLED(CONFIG_UNICODE)
->> -	if (fname->cf_name.name)
->> -		return generic_ci_match(dir, fname->usr_fname,
->> -					&fname->cf_name,
->> -					de_name, de_name_len);
->> -
->> +	if (fname->cf_name.name) {
->> +		int ret = generic_ci_match(dir, fname->usr_fname,
->> +					   &fname->cf_name,
->> +					   de_name, de_name_len);
->> +		if (ret == -EINVAL)
->> +			f2fs_warn(F2FS_SB(dir->i_sb),
->> +				"Directory contains filename that is invalid UTF-8");
->> +
-> 
-> Shouldn't this use f2fs_warn_ratelimited?
+>> I think this should say "Returns `None` if the item is not in a list.".
+>> (Technically it should be "is not in a `List<T, ID>`", since it *can* be
+>> in another list with a different ID.)
+>=20
+> I'm not really convinced. The phrases "the list" and "a list" are
+> equivalent given the safety requirement for this method, but "the
+> list" seems more natural to me. The `remove` method of any other
+> collection would say "the list" too.
 
-f2fs_warn_ratelimited appears to be very new in the kernel,
+They are equivalent, but saying "the list" has the potential for this
+confusion: "If the function returns `None` if the item is not in the
+list, then why do I need to ensure that it is not in a different list?".
+>=20
+>>> +    ///
+>>> +    /// # Safety
+>>> +    ///
+>>> +    /// The provided item must not be in a different linked list.
+>>> +    pub unsafe fn remove(&mut self, item: &T) -> Option<ListArc<T, ID>=
+> {
+>>> +        let mut item =3D unsafe { ListLinks::fields(T::view_links(item=
+)) };
+>>> +        // SAFETY: The user provided a reference, and reference are ne=
+ver dangling.
+>>> +        //
+>>> +        // As for why this is not a data race, there are two cases:
+>>> +        //
+>>> +        //  * If `item` is not in any list, then these fields are read=
+-only and null.
+>>> +        //  * If `item` is in this list, then we have exclusive access=
+ to these fields since we
+>>> +        //    have a mutable reference to the list.
+>>> +        //
+>>> +        // In either case, there's no race.
+>>> +        let ListLinksFields { next, prev } =3D unsafe { *item };
+>>> +
+>>> +        debug_assert_eq!(next.is_null(), prev.is_null());
+>>> +        if !next.is_null() {
+>>> +            // This is really a no-op, but this ensures that `item` is=
+ a raw pointer that was
+>>> +            // obtained without going through a pointer->reference->po=
+inter conversion rountrip.
+>>> +            // This ensures that the list is valid under the more rest=
+rictive strict provenance
+>>> +            // ruleset.
+>>> +            //
+>>> +            // SAFETY: We just checked that `next` is not null, and it=
+'s not dangling by the
+>>> +            // list invariants.
+>>> +            unsafe {
+>>> +                debug_assert_eq!(item, (*next).prev);
+>>> +                item =3D (*next).prev;
+>>> +            }
+>>> +
+>>> +            // SAFETY: We just checked that `item` is in a list, so th=
+e caller guarantees that it
+>>> +            // is in this list. The pointers are in the right order.
+>>> +            Some(unsafe { self.remove_internal_inner(item, next, prev)=
+ })
+>>> +        } else {
+>>> +            None
+>>> +        }
+>>> +    }
+>>> +
+>>> +    /// Removes the provided item from the list.
+>>> +    ///
+>>> +    /// # Safety
+>>> +    ///
+>>> +    /// The pointer must point at an item in this list.
+>>> +    unsafe fn remove_internal(&mut self, item: *mut ListLinksFields) -=
+> ListArc<T, ID> {
+>>> +        // SAFETY: The caller promises that this pointer is not dangli=
+ng, and there's no data race
+>>> +        // since we have a mutable reference to the list containing `i=
+tem`.
+>>> +        let ListLinksFields { next, prev } =3D unsafe { *item };
+>>> +        // SAFETY: The pointers are ok and in the right order.
+>>> +        unsafe { self.remove_internal_inner(item, next, prev) }
+>>> +    }
+>>> +
+>>> +    /// Removes the provided item from the list.
+>>> +    ///
+>>> +    /// # Safety
+>>> +    ///
+>>> +    /// The `item` pointer must point at an item in this list, and we =
+must have `(*item).next =3D=3D
+>>> +    /// next` and `(*item).prev =3D=3D prev`.
+>>> +    unsafe fn remove_internal_inner(
+>>> +        &mut self,
+>>> +        item: *mut ListLinksFields,
+>>> +        next: *mut ListLinksFields,
+>>> +        prev: *mut ListLinksFields,
+>>> +    ) -> ListArc<T, ID> {
+>>> +        // SAFETY: We have exclusive access to items in the list, and =
+prev/next pointers are
+>>
+>> I think you mean that you have exclusive access to the prev/next fields
+>> of the `ListLinks` associated with `ID`... But that is rather long.
+>> Does anyone have any idea to shorten this?
+>=20
+> SAFETY: We have exclusive access to the pointers of items in the list,
+> and the prev/next pointers are never null for items in a list.
 
-Krisman do you think you can rebase your for-next on top of latest such that this
-function is available ? I am basing the series on your for-next branch.
+I would say that they are valid instead of never null, since you
+dereference them below. Otherwise sounds good.
 
-Thanks
+>=20
+>>> +        // never null for items in a list.
+>>> +        //
+>>> +        // INVARIANT: There are three cases:
+>>> +        //  * If the list has at least three items, then after removin=
+g the item, `prev` and `next`
+>>> +        //    will be next to each other.
+>>> +        //  * If the list has two items, then the remaining item will =
+point at itself.
+>>> +        //  * If the list has one item, then `next =3D=3D prev =3D=3D =
+item`, so these writes have no effect
+>>> +        //    due to the writes to `item` below.
+>>
+>> I think the writes do not have an effect. (no need to reference the
+>> writes to `item` below)
+>=20
+> ?
 
-> 
-> - Eric
-> _______________________________________________
-> Kernel mailing list -- kernel@mailman.collabora.com
-> To unsubscribe send an email to kernel-leave@mailman.collabora.com
-> This list is managed by https://mailman.collabora.com
+The first write is
+
+     (*next).prev =3D prev;
+
+Using the fact that `next =3D=3D prev =3D=3D item` we have
+
+     (*item).prev =3D prev;
+
+But that is already true, since the function requirement is that
+`(*item).prev =3D=3D prev`. So the write has no effect.
+The same should hold for `(*prev).next =3D next`.
+
+>=20
+>>> +        unsafe {
+>>> +            (*next).prev =3D prev;
+>>> +            (*prev).next =3D next;
+>>> +        }
+>>> +        // SAFETY: We have exclusive access to items in the list.
+>>> +        // INVARIANT: The item is no longer in a list, so the pointers=
+ should be null.
+>>> +        unsafe {
+>>> +            (*item).prev =3D ptr::null_mut();
+>>> +            (*item).next =3D ptr::null_mut();
+>>> +        }
+>>> +        // INVARIANT: There are three cases:
+>>> +        //  * If `item` was not the first item, then `self.first` shou=
+ld remain unchanged.
+>>> +        //  * If `item` was the first item and there is another item, =
+then we just updated
+>>> +        //    `prev->next` to `next`, which is the new first item, and=
+ setting `item->next` to null
+>>> +        //    did not modify `prev->next`.
+>>> +        //  * If `item` was the only item in the list, then `prev =3D=
+=3D item`, and we just set
+>>> +        //    `item->next` to null, so this correctly sets `first` to =
+null now that the list is
+>>> +        //    empty.
+>>> +        if self.first =3D=3D item {
+>>> +            // SAFETY: The `prev` field of an item in a list is never =
+dangling.
+>>
+>> I don't think this SAFETY comment makes sense.
+>>
+>>> +            self.first =3D unsafe { (*prev).next };
+>=20
+> SAFETY: `prev` is the `prev` pointer from a `ListLinks` in a `List`,
+> so the pointer is valid. There's no race, since we have exclusive
+> access to the list.
+
+Sounds good.
+
+--=20
+Cheers,
+Benno
 
