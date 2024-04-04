@@ -1,60 +1,48 @@
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
+Received: from bee.tesarici.cz (bee.tesarici.cz [37.205.15.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEDC95E07E
-	for <linux-kernel@vger.kernel.org>; Thu,  4 Apr 2024 07:58:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF37D5EE76;
+	Thu,  4 Apr 2024 07:58:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=37.205.15.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712217484; cv=none; b=Ycj2GryP5gRSo0XCGVKZU6BsyLwby9iRMgFW8Rp9iPEcVtG5bbPiZEyxsjApuBYtOOOSTLclxRJC4JqOEHRfTsN4ZnWJU170MY++FfEwdwGGSxjkBMaHD7r+roDoahP3Zk3bTX0cLCQf73at7hheOXQMaBRPBVbKpmUsAX2/Tzs=
+	t=1712217485; cv=none; b=EK/RNrizCWs41WI4wEMFo0J8g1dmeyV4V1mUJtHNNu/ta+W+1/TGLHPNBjWUYjR6Ngn3yN23WXIy0dEjzWWrbfgrdgq3bOs5MQ/P6KdzX7AHXYSf5Q7L+MSOf41UDaKCQMUuy6TiKewRTStM4dPbgP7OfFdIzYrvbYcuXFjw9a0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712217484; c=relaxed/simple;
-	bh=91LD58avnRzxuTR+zgR6nRtCYpKIsz1H4g5/SZOkKwg=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=EJIpqZEjxSTqPFhl5Z5+1Nea/QN5BNaW77UXNJNjgHnqtAMRie4cv7BP6a5xHPgqCqDUI5th75PN4JLJfn+UYy2V7FM6e83T3q7YP0nWgEDeTBU8IGwPkHBzWvouBWvSwsbPo9OTwMLJde4Z17Zr9Kk5j5u7Ur3mVzRDJCRGLxU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=0d8LCh7C; arc=none smtp.client-ip=46.235.227.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1712217485; c=relaxed/simple;
+	bh=jtzhrMLdZ8BM8eIGM+1HCvFVB4kJmRbapmmThq4pMyk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=eRoAsRyiv8Sv9c6uN/T/JWa8V8vDPecPICp4HZvCVWIrfKXwX2afX/uk51ASA3QNDNViSlWlwAfJcALQp30311o4ZwiPmVTYWPiMLKQcytgRIxogfdtYZMe++xCRS43zWLPnoXde8gjgRkAFQy66oKqoTrLx0ctOnuix9OHfPMQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tesarici.cz; spf=pass smtp.mailfrom=tesarici.cz; dkim=pass (2048-bit key) header.d=tesarici.cz header.i=@tesarici.cz header.b=BTPeoF04; arc=none smtp.client-ip=37.205.15.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tesarici.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tesarici.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="0d8LCh7C"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1712217481;
-	bh=91LD58avnRzxuTR+zgR6nRtCYpKIsz1H4g5/SZOkKwg=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=0d8LCh7CqmqBKxae4zvzP7kHfKBt66Je/wOdytq86ZfN/ZU+QYUjnG9uBCm9DaedO
-	 2/ryyht8UR5L779RenbBXb/U4nhu4mQ4gj2xaUcmBAhaccXIH1XnblbNc11z4cpA/E
-	 CH4G+CcCtI55wdVim+Ao9rLEzG+3AQxloITitp5437x1av6QPW+Yw/thp+7u0n4vyO
-	 QkFmOXCJy0k/DuxaLTsOHFpILB1Ei5bwxXFod40AcybdjGXbsU18iGnt9/trJjnaO3
-	 BX31mPHMjR6JIqwIDmWJ2eUrHGaBBvdslslPpdnEUpN8LfI1ajeJsOErsEW9Y1UtmV
-	 UvwNLgh9o2qGw==
-Received: from IcarusMOD.eternityproject.eu (cola.collaboradmins.com [195.201.22.229])
+	dkim=pass (2048-bit key) header.d=tesarici.cz header.i=@tesarici.cz header.b="BTPeoF04"
+Received: from meshulam.tesarici.cz (dynamic-2a00-1028-83b8-1e7a-4427-cc85-6706-c595.ipv6.o2.cz [IPv6:2a00:1028:83b8:1e7a:4427:cc85:6706:c595])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	(Authenticated sender: kholk11)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 2ACF3378212E;
-	Thu,  4 Apr 2024 07:58:00 +0000 (UTC)
-From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-To: chunkuang.hu@kernel.org
-Cc: p.zabel@pengutronix.de,
-	airlied@gmail.com,
-	daniel@ffwll.ch,
-	matthias.bgg@gmail.com,
-	angelogioacchino.delregno@collabora.com,
-	ck.hu@mediatek.com,
-	nancy.lin@mediatek.com,
-	nathan.lu@mediatek.com,
-	dri-devel@lists.freedesktop.org,
-	linux-mediatek@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	kernel@collabora.com,
-	wenst@chromium.org
-Subject: [PATCH v2 3/3] drm/mediatek: drm_ddp_comp: Add mtk_ddp_is_simple_comp() internal helper
-Date: Thu,  4 Apr 2024 09:57:54 +0200
-Message-ID: <20240404075754.83455-4-angelogioacchino.delregno@collabora.com>
+	by bee.tesarici.cz (Postfix) with ESMTPSA id 8F4C41BF132;
+	Thu,  4 Apr 2024 09:58:00 +0200 (CEST)
+Authentication-Results: mail.tesarici.cz; dmarc=fail (p=quarantine dis=none) header.from=tesarici.cz
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tesarici.cz; s=mail;
+	t=1712217480; bh=ZeTrjHj8R8/GGeNF/M+NaL7fhHhYqCIgj0CVkk8KzLg=;
+	h=From:To:Cc:Subject:Date:From;
+	b=BTPeoF04gCPLsFsx12CG+rAV9sdx737J25fCkK4oVXJMrnTAYLFOVoe9YGkgvUJ5a
+	 ZaecnVh3gxT7Jv+5bhR21nxMu9PW665iI1as0B7z7AdpzqIpn3BGIWCXT/WXYzn14m
+	 wk1rHGeajIUNtm4tSVYi6rkuskfibzSZ/uLWF9bxqkfYS/vAvpxwQ5Lvxxj/0K/IR0
+	 JHqfOlGD2ANKdmjHhku5afPml/bH3lFSXtr9rP9cMZMHtAsQwz3+3mEI0y8byw+aBK
+	 23epvw7DbQe6b/SvEei8yLjTFA+OmFQukCEfKwZxIJtxNSwYN6bgQ4ZnrLd2mFF+3F
+	 Yg5dhg7dHhJdw==
+From: Petr Tesarik <petr@tesarici.cz>
+To: "David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	netdev@vger.kernel.org (open list)
+Cc: Linux regressions mailing list <regressions@lists.linux.dev>,
+	linux-kernel@vger.kernel.org (open list),
+	"Linux regression tracking (Thorsten Leemhuis)" <regressions@leemhuis.info>,
+	Petr Tesarik <petr@tesarici.cz>
+Subject: [PATCH net] u64_stats: fix u64_stats_init() for lockdep when used repeatedly in one file
+Date: Thu,  4 Apr 2024 09:57:40 +0200
+Message-ID: <20240404075740.30682-1-petr@tesarici.cz>
 X-Mailer: git-send-email 2.44.0
-In-Reply-To: <20240404075754.83455-1-angelogioacchino.delregno@collabora.com>
-References: <20240404075754.83455-1-angelogioacchino.delregno@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -63,97 +51,44 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Move the simple component check to a new mtk_ddp_is_simple_comp()
-internal helper to reduce code duplication.
+Fix bogus lockdep warnings if multiple u64_stats_sync variables are
+initialized in the same file.
 
-Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Reviewed-by: CK Hu <ck.hu@mediatek.com>
+With CONFIG_LOCKDEP, seqcount_init() is a macro which declares:
+
+	static struct lock_class_key __key;
+
+Since u64_stats_init() is a function (albeit an inline one), all calls
+within the same file end up using the same instance, effectively treating
+them all as a single lock-class.
+
+Fixes: 9464ca650008 ("net: make u64_stats_init() a function")
+Closes: https://lore.kernel.org/netdev/ea1567d9-ce66-45e6-8168-ac40a47d1821@roeck-us.net/
+Signed-off-by: Petr Tesarik <petr@tesarici.cz>
 ---
- drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.c | 57 +++++++++++----------
- 1 file changed, 31 insertions(+), 26 deletions(-)
+ include/linux/u64_stats_sync.h | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.c b/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.c
-index 477fc1950a0e..d760285761b9 100644
---- a/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.c
-+++ b/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.c
-@@ -576,6 +576,29 @@ unsigned int mtk_drm_find_possible_crtc_by_comp(struct drm_device *drm,
- 	return ret;
+diff --git a/include/linux/u64_stats_sync.h b/include/linux/u64_stats_sync.h
+index ffe48e69b3f3..457879938fc1 100644
+--- a/include/linux/u64_stats_sync.h
++++ b/include/linux/u64_stats_sync.h
+@@ -135,10 +135,11 @@ static inline void u64_stats_inc(u64_stats_t *p)
+ 	p->v++;
  }
  
-+static bool mtk_ddp_is_simple_comp(enum mtk_ddp_comp_type type)
-+{
-+	switch (type) {
-+	case MTK_DISP_AAL:
-+	case MTK_DISP_BLS:
-+	case MTK_DISP_CCORR:
-+	case MTK_DISP_COLOR:
-+	case MTK_DISP_GAMMA:
-+	case MTK_DISP_MERGE:
-+	case MTK_DISP_OVL:
-+	case MTK_DISP_OVL_2L:
-+	case MTK_DISP_OVL_ADAPTOR:
-+	case MTK_DISP_PWM:
-+	case MTK_DISP_RDMA:
-+	case MTK_DP_INTF:
-+	case MTK_DPI:
-+	case MTK_DSI:
-+		return false;
-+	default:
-+		return true;
-+	}
-+}
-+
- int mtk_ddp_comp_init(struct device_node *node, struct mtk_ddp_comp *comp,
- 		      unsigned int comp_id)
+-static inline void u64_stats_init(struct u64_stats_sync *syncp)
+-{
+-	seqcount_init(&syncp->seq);
+-}
++#define u64_stats_init(syncp)				\
++	do {						\
++		struct u64_stats_sync *__s = (syncp);	\
++		seqcount_init(&__s->seq);		\
++	} while (0)
+ 
+ static inline void __u64_stats_update_begin(struct u64_stats_sync *syncp)
  {
-@@ -606,19 +629,13 @@ int mtk_ddp_comp_init(struct device_node *node, struct mtk_ddp_comp *comp,
- 	}
- 	comp->dev = &comp_pdev->dev;
- 
--	if (type == MTK_DISP_AAL ||
--	    type == MTK_DISP_BLS ||
--	    type == MTK_DISP_CCORR ||
--	    type == MTK_DISP_COLOR ||
--	    type == MTK_DISP_GAMMA ||
--	    type == MTK_DISP_MERGE ||
--	    type == MTK_DISP_OVL ||
--	    type == MTK_DISP_OVL_2L ||
--	    type == MTK_DISP_PWM ||
--	    type == MTK_DISP_RDMA ||
--	    type == MTK_DPI ||
--	    type == MTK_DP_INTF ||
--	    type == MTK_DSI)
-+	/*
-+	 * Resources for simple components are retrieved here as those are
-+	 * managed in here without the need of more complex drivers; for
-+	 * the latter, their respective probe function will do the job, so
-+	 * we must avoid getting their resources here.
-+	 */
-+	if (!mtk_ddp_is_simple_comp(type))
- 		return 0;
- 
- 	priv = devm_kzalloc(comp->dev, sizeof(*priv), GFP_KERNEL);
-@@ -652,19 +669,7 @@ void mtk_ddp_comp_destroy(struct mtk_ddp_comp *comp)
- 		return;
- 
- 	/* Complex components are destroyed with their own remove callback */
--	if (mtk_ddp_matches[comp->id].type == MTK_DISP_AAL ||
--	    mtk_ddp_matches[comp->id].type == MTK_DISP_BLS ||
--	    mtk_ddp_matches[comp->id].type == MTK_DISP_CCORR ||
--	    mtk_ddp_matches[comp->id].type == MTK_DISP_COLOR ||
--	    mtk_ddp_matches[comp->id].type == MTK_DISP_GAMMA ||
--	    mtk_ddp_matches[comp->id].type == MTK_DISP_MERGE ||
--	    mtk_ddp_matches[comp->id].type == MTK_DISP_OVL ||
--	    mtk_ddp_matches[comp->id].type == MTK_DISP_OVL_2L ||
--	    mtk_ddp_matches[comp->id].type == MTK_DISP_PWM ||
--	    mtk_ddp_matches[comp->id].type == MTK_DISP_RDMA ||
--	    mtk_ddp_matches[comp->id].type == MTK_DPI ||
--	    mtk_ddp_matches[comp->id].type == MTK_DP_INTF ||
--	    mtk_ddp_matches[comp->id].type == MTK_DSI)
-+	if (!mtk_ddp_is_simple_comp(mtk_ddp_matches[comp->id].type))
- 		return;
- 
- 	priv = dev_get_drvdata(comp->dev);
 -- 
 2.44.0
 
