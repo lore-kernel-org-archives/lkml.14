@@ -1,110 +1,146 @@
-Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F44212D76B;
-	Thu,  4 Apr 2024 19:43:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AA20134743;
+	Thu,  4 Apr 2024 19:43:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712259804; cv=none; b=g1ER/mNZniydwsUsNlos6zNNz1zaNApQGBCaRXDZAYkam2XrDkSBqFr5FzOSNRfO5I9ov+rHcNWHuejpG4uh15CEXj+Y4syVWxGhhgl9GhLczzI6Lz2kUxAOzeVFz6ezvqtK8hZfNKrKRpisFW0JfoM0xLVpwcgTD0Wo/5jZYGs=
+	t=1712259807; cv=none; b=PN0sg3Rs1QzyMaaO4e6ULmE3Dcwy5HTwpCoPZ+W2Vxn+TenC4nLvGmIJi2lYqRsZH22dox1KrCiAy5b+/kljVTg/qAEjVWxn/D+P1iMlpOYeL5Jh9R2cqerhjtIK4aNJ23mHi2Un5pPDHq6nZCpRZy5NNZ/use3DQwzkN/dHJ5E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712259804; c=relaxed/simple;
-	bh=zUDgi6iudoTJasQRtCJQcwLNiKQJmhurWg2xbJqb//k=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=PUs52ogJC4Ndgop8m0VZPMqjJaMhGBJ1WywD+FBqBG2NkANNCYl9JPt7JA9ea4+5ibuyIEbcbuN1v9+4EbZtNySvY3Vr+Ya2OYCZ+3gVKTqEKZzK7u91jGeQg5BzCkjcSGe0g5SW0HeNK4ehf/Du/UG9Ok9Qj0Ld7jHhOxsk+64=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; arc=none smtp.client-ip=185.11.138.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
-Received: from i53875aaf.versanet.de ([83.135.90.175] helo=phil.localnet)
-	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <heiko@sntech.de>)
-	id 1rsSzU-0005We-Pz; Thu, 04 Apr 2024 21:43:16 +0200
-From: Heiko Stuebner <heiko@sntech.de>
-To: Michael Turquette <mturquette@baylibre.com>,
- Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>
-Cc: linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
- devicetree@vger.kernel.org, David Jander <david@protonic.nl>,
- Sascha Hauer <s.hauer@pengutronix.de>
-Subject: Re: [PATCH] clk: rockchip: clk-rk3568.c: Add missing USB480M_PHY mux
-Date: Thu, 04 Apr 2024 21:43:15 +0200
-Message-ID: <3612648.44csPzL39Z@phil>
-In-Reply-To:
- <20240404-clk-rockchip-rk3568-add-usb480m-phy-mux-v1-1-e8542afd58b9@pengutronix.de>
-References:
- <20240404-clk-rockchip-rk3568-add-usb480m-phy-mux-v1-1-e8542afd58b9@pengutronix.de>
+	s=arc-20240116; t=1712259807; c=relaxed/simple;
+	bh=ssFyVGe6la71DQpqy8kwW+lUpLEMRvFgNVGNpKsWvPE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Z+8NmfdiXoutxKa3+rvpVZox+1VTsB3gl2izcYV1225AhMlhN4eRsHlrvP2cdrA3U2+QLegT+0dZQ/muy/jzY0uOuJAM0IjtHxBTTCFsAW8Qsq4XioWCmjBUjOiXYQUBV9x0K1JzSal98J4C2/V8RnWMNt7KoBT6ejT2Pi2X9GA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=QHYAQErq; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=Ampcvn6r; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=QHYAQErq; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=Ampcvn6r; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="QHYAQErq";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="Ampcvn6r";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="QHYAQErq";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="Ampcvn6r"
+Received: from imap2.dmz-prg2.suse.org (imap2.dmz-prg2.suse.org [10.150.64.98])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 8063B1F444;
+	Thu,  4 Apr 2024 19:43:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1712259802;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=gIJTzIQcbHebBkVn3DulvZH4vVRHwONfG5Hh7aP6lMU=;
+	b=QHYAQErqSuSs0NOzd6WUQt/L3K8BPbjXUwGrtgV5aj02jddC3+MdaAlllIodH4PR4MLlz2
+	6eEgQtqZofBccIawjK+EEtzdG1T/1ls+dglmaS1UJrS+qSQUOtneYzWRC4a0c7ABYGwzOO
+	4O1Tuf2todQyr02ZURef/6q9qWlCOQ4=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1712259802;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=gIJTzIQcbHebBkVn3DulvZH4vVRHwONfG5Hh7aP6lMU=;
+	b=Ampcvn6rx+dhtUCHrq7ys/KECzq8yl4np4RgM1DZD7CinKw1X24tJwUge7MUx+908BGYCy
+	CNoPd6VF3McUmhAg==
+Authentication-Results: smtp-out2.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1712259802;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=gIJTzIQcbHebBkVn3DulvZH4vVRHwONfG5Hh7aP6lMU=;
+	b=QHYAQErqSuSs0NOzd6WUQt/L3K8BPbjXUwGrtgV5aj02jddC3+MdaAlllIodH4PR4MLlz2
+	6eEgQtqZofBccIawjK+EEtzdG1T/1ls+dglmaS1UJrS+qSQUOtneYzWRC4a0c7ABYGwzOO
+	4O1Tuf2todQyr02ZURef/6q9qWlCOQ4=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1712259802;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=gIJTzIQcbHebBkVn3DulvZH4vVRHwONfG5Hh7aP6lMU=;
+	b=Ampcvn6rx+dhtUCHrq7ys/KECzq8yl4np4RgM1DZD7CinKw1X24tJwUge7MUx+908BGYCy
+	CNoPd6VF3McUmhAg==
+Received: from imap2.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap2.dmz-prg2.suse.org (Postfix) with ESMTPS id 6A8CE139E8;
+	Thu,  4 Apr 2024 19:43:22 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap2.dmz-prg2.suse.org with ESMTPSA
+	id I3TdGdoCD2ZtaQAAn2gu4w
+	(envelope-from <dsterba@suse.cz>); Thu, 04 Apr 2024 19:43:22 +0000
+Date: Thu, 4 Apr 2024 21:35:56 +0200
+From: David Sterba <dsterba@suse.cz>
+To: Johannes Thumshirn <jth@kernel.org>
+Cc: Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
+	David Sterba <dsterba@suse.com>, linux-btrfs@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Hans Holmberg <Hans.Holmberg@wdc.com>,
+	Naohiro Aota <Naohiro.Aota@wdc.com>, hch@lst.de,
+	Damien LeMoal <dlemoal@kernel.org>, Boris Burkov <boris@bur.io>,
+	Johannes Thumshirn <johannes.thumshirn@wdc.com>
+Subject: Re: [PATCH RFC PATCH 1/3] btrfs: zoned: traverse device list in
+ should reclaim under rcu_read_lock
+Message-ID: <20240404193556.GJ14596@twin.jikos.cz>
+Reply-To: dsterba@suse.cz
+References: <20240328-hans-v1-0-4cd558959407@kernel.org>
+ <20240328-hans-v1-1-4cd558959407@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240328-hans-v1-1-4cd558959407@kernel.org>
+User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
+X-Spam-Flag: NO
+X-Spam-Score: -1.02
+X-Spam-Level: 
+X-Spamd-Result: default: False [-1.02 / 50.00];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	HAS_REPLYTO(0.30)[dsterba@suse.cz];
+	NEURAL_HAM_SHORT(-0.20)[-0.997];
+	MIME_GOOD(-0.10)[text/plain];
+	BAYES_HAM(-0.02)[53.79%];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[12];
+	ARC_NA(0.00)[];
+	TO_DN_SOME(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	RCVD_TLS_ALL(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	REPLYTO_ADDR_EQ_FROM(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap2.dmz-prg2.suse.org:helo,imap2.dmz-prg2.suse.org:rdns]
 
-Hi Sascha,
+Subject: btrfs: zoned: traverse device list in should reclaim under rcu_read_lock
 
-Am Donnerstag, 4. April 2024, 09:27:01 CEST schrieb Sascha Hauer:
-> From: David Jander <david@protonic.nl>
+Please use the function name in the subject instead of the description,
+so like
+
+btrfs: zoned: traverse device list under RCU lock in btrfs_zoned_should_reclaim()
+
+On Thu, Mar 28, 2024 at 02:56:31PM +0100, Johannes Thumshirn wrote:
+> From: Johannes Thumshirn <johannes.thumshirn@wdc.com>
 > 
-> The USB480M clock can source from a MUX that selects the clock to come
-> from either of the USB-phy internal 480MHz PLLs. These clocks are
-> provided by the USB phy driver.
+> As btrfs_zoned_should_reclaim() traverses the device list with the
+> device_list_mutex held. But we're never changing the device list. All we
+> do is gathering the used and total bytes.
 > 
-> Signed-off-by: David Jander <david@protonic.nl>
-> Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
-> ---
->  drivers/clk/rockchip/clk-rk3568.c      | 4 ++++
->  include/dt-bindings/clock/rk3568-cru.h | 1 +
->  2 files changed, 5 insertions(+)
-> 
-> diff --git a/drivers/clk/rockchip/clk-rk3568.c b/drivers/clk/rockchip/clk-rk3568.c
-> index 8cb21d10beca2..2d44bcaef046b 100644
-> --- a/drivers/clk/rockchip/clk-rk3568.c
-> +++ b/drivers/clk/rockchip/clk-rk3568.c
-> @@ -215,6 +215,7 @@ static const struct rockchip_cpuclk_reg_data rk3568_cpuclk_data = {
->  
->  PNAME(mux_pll_p)			= { "xin24m" };
->  PNAME(mux_usb480m_p)			= { "xin24m", "usb480m_phy", "clk_rtc_32k" };
-> +PNAME(mux_usb480m_phy_p)		= { "clk_usbphy0_480m", "clk_usbphy1_480m"};
->  PNAME(mux_armclk_p)			= { "apll", "gpll" };
->  PNAME(clk_i2s0_8ch_tx_p)		= { "clk_i2s0_8ch_tx_src", "clk_i2s0_8ch_tx_frac", "i2s0_mclkin", "xin_osc0_half" };
->  PNAME(clk_i2s0_8ch_rx_p)		= { "clk_i2s0_8ch_rx_src", "clk_i2s0_8ch_rx_frac", "i2s0_mclkin", "xin_osc0_half" };
-> @@ -485,6 +486,9 @@ static struct rockchip_clk_branch rk3568_clk_branches[] __initdata = {
->  	MUX(USB480M, "usb480m", mux_usb480m_p, CLK_SET_RATE_PARENT,
->  			RK3568_MODE_CON0, 14, 2, MFLAGS),
->  
-> +	MUX(USB480M_PHY, "usb480m_phy", mux_usb480m_phy_p, CLK_SET_RATE_PARENT,
-> +			RK3568_MISC_CON2, 15, 1, MFLAGS),
-> +
->  	/* PD_CORE */
->  	COMPOSITE(0, "sclk_core_src", apll_gpll_npll_p, CLK_IGNORE_UNUSED,
->  			RK3568_CLKSEL_CON(2), 8, 2, MFLAGS, 0, 4, DFLAGS | CLK_DIVIDER_READ_ONLY,
-> diff --git a/include/dt-bindings/clock/rk3568-cru.h b/include/dt-bindings/clock/rk3568-cru.h
-> index d29890865150d..5263085c5b238 100644
-> --- a/include/dt-bindings/clock/rk3568-cru.h
-> +++ b/include/dt-bindings/clock/rk3568-cru.h
-> @@ -78,6 +78,7 @@
->  #define CPLL_333M		9
->  #define ARMCLK			10
->  #define USB480M			11
-> +#define USB480M_PHY		12
->  #define ACLK_CORE_NIU2BUS	18
->  #define CLK_CORE_PVTM		19
->  #define CLK_CORE_PVTM_CORE	20
-> 
+> So change the list traversal from the holding the device_list_mutex to
+> rcu_read_lock(). This also opens up the possibilities to call
+> btrfs_zoned_should_reclaim() with the chunk_mutex held.
 
-Please separate the code change and clock-id addition into separate
-patches. That way dt-maintainers will more easily see that there are
-changes to the dt-binding inside.
+You can add this patch independently, the device_list_mutex does not
+seem to be needed for strong consistency of the values you read.
 
-Other than that, the change looks fine :-)
-
-
-Thanks
-Heiko
-
-
-
+There are several other places where devices are under RCU only, like
+btrfs_commit_device_sizes (though this is also in the transaction
+context), various ioctls and btrfs_calc_avail_data_space().
