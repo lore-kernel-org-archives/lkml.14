@@ -1,102 +1,150 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
+Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EFF11311A3;
-	Thu,  4 Apr 2024 19:36:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C1F56D1AB
+	for <linux-kernel@vger.kernel.org>; Thu,  4 Apr 2024 19:38:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712259382; cv=none; b=gXKeYK/kf2e1gKB/dga+5uqw8xFMLjZBSgjCBIq0NqJFi7k3xVdVt4RJcwPwSMGncBSLowhCnpxtiHxHAhy62P/3i9a7NsNbeaNttNgIwC46PybCJ0bfoWxXszBZHD0DGarAZDNYMmpSeQtR9fdTa00JXhl8nJOhOuQNUsiXODY=
+	t=1712259531; cv=none; b=ICaKtUMVasW2c27YRjD2dsnez8NRv0C7ReOwo2VzimZ9nhEgmIdIVhK9da8Uct4bMCF1cGo/Mm7Bp4e/N+po7LKVTUcXBGSo/JHNFgko8mwh+BfmXwC24glllhvW+QX5MWoJbISe7TmBX9M3kaWkofqGO8Xetn6m2d9Bn65hKvY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712259382; c=relaxed/simple;
-	bh=MstYzcyGUXpMjvIesH3P0JOixnzqDZN4TkdenMuVwr8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=npfMc4yNcIEVHgGLBfErX7zFW/9F/mti0faT0uEMsXh67x6CNZWllfauM8QjTCTIbko5jfwqgrTxv1ECsU5nQenlvtBFav208ZmDePnZ2c3ADZvgEbe4xGog+SW5XQux2RtYYLHVrVSPs2BVHKeDfFnxLQHACxmx4mH9zSmHoPA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=O9jmwMG3; arc=none smtp.client-ip=198.175.65.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="O9jmwMG3"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1712259381; x=1743795381;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=MstYzcyGUXpMjvIesH3P0JOixnzqDZN4TkdenMuVwr8=;
-  b=O9jmwMG3x3wvR9/19nT7WDnCBNxsjDkl9B3/v7iMwuotxIR1JYHCjJF7
-   4Ra5L23/2BWGjysWr3oM26dxsLCJu34Jj7JifhK5sHUbX2sVvvQ+GLrwB
-   jxR4ERUl4059ukfBEzddifnbJCnyG6xTpxnEMNqFRpl/bTak0NqBZYj3I
-   SpNuwes42w03DxJV6mVdm7n7kh/LQrG32bg2dXfpBxZbsTgnsFlGNTzUh
-   WkXn7gCKhx+sp1NQdKdSu6xH+n5fCBczhZYgDZkn5wCdxIMCciZedgPnm
-   1I3WIkt+wzGpuRWdFCexwAcvYxIMqZAAEcdsIYYJoYOcvJlT9qrfddhBh
-   w==;
-X-CSE-ConnectionGUID: ZSZQZbwXT1qxi8d5I0z0vA==
-X-CSE-MsgGUID: SNUBVUB8R2quZIqFbeTZBw==
-X-IronPort-AV: E=McAfee;i="6600,9927,11034"; a="7698469"
-X-IronPort-AV: E=Sophos;i="6.07,180,1708416000"; 
-   d="scan'208";a="7698469"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Apr 2024 12:36:21 -0700
-X-CSE-ConnectionGUID: URAVo7AtRwKr1WSsfNnZ6w==
-X-CSE-MsgGUID: TaCQw88bQd+WcjBkxXteMg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,180,1708416000"; 
-   d="scan'208";a="18916555"
-Received: from ypottimu-mobl.amr.corp.intel.com (HELO [10.209.51.123]) ([10.209.51.123])
-  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Apr 2024 12:36:20 -0700
-Message-ID: <5f040ba2-627b-4b5d-959a-59f97b6ad0af@linux.intel.com>
-Date: Thu, 4 Apr 2024 12:36:19 -0700
+	s=arc-20240116; t=1712259531; c=relaxed/simple;
+	bh=OkgKMraGmojnn+a+fjRWstEELW1DW59wRiTp1ftO9RQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=tBF7QjBrUCcQ2v938f6cn0JpJX9XFSwT7bVj4b3VIL3U+uQuOq+hptPqT4DkJOlM5NaDs9QjRcdc8/hSvmKTpf7BElg5uvDuzkr6fQQtERjVj11dkxXQiFY9QVRJX5IYj5/hRNs0XIBnkWifj57UfmiMeYHv+0IaFgQFuqlm6Zw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; arc=none smtp.client-ip=185.11.138.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
+Received: from i53875aaf.versanet.de ([83.135.90.175] helo=phil.localnet)
+	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <heiko@sntech.de>)
+	id 1rsSv3-0005Tv-Jj; Thu, 04 Apr 2024 21:38:41 +0200
+From: Heiko Stuebner <heiko@sntech.de>
+To: Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>,
+ Sebastian Reichel <sre@kernel.org>
+Cc: Shawn Lin <shawn.lin@rock-chips.com>, Michal Tomek <mtdev79b@gmail.com>,
+ linux-phy@lists.infradead.org, linux-rockchip@lists.infradead.org,
+ linux-kernel@vger.kernel.org,
+ Sebastian Reichel <sebastian.reichel@collabora.com>
+Subject: Re: [PATCH 1/3] phy: rockchip-snps-pcie3: fix bifurcation on rk3588
+Date: Thu, 04 Apr 2024 21:38:40 +0200
+Message-ID: <2501840.irdbgypaU6@phil>
+In-Reply-To:
+ <20240404-rk3588-pcie-bifurcation-fixes-v1-1-9907136eeafd@kernel.org>
+References:
+ <20240404-rk3588-pcie-bifurcation-fixes-v1-0-9907136eeafd@kernel.org>
+ <20240404-rk3588-pcie-bifurcation-fixes-v1-1-9907136eeafd@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] platform/x86: lg-laptop: fix %s null argument warning
-To: Gergo Koteles <soyer@irl.hu>, Matan Ziv-Av <matan@svgalib.org>,
- Hans de Goede <hdegoede@redhat.com>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <33d40e976f08f82b9227d0ecae38c787fcc0c0b2.1712154684.git.soyer@irl.hu>
-Content-Language: en-US
-From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-In-Reply-To: <33d40e976f08f82b9227d0ecae38c787fcc0c0b2.1712154684.git.soyer@irl.hu>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 
-
-On 4/3/24 7:34 AM, Gergo Koteles wrote:
-> W=1 warns about null argument to kprintf:
-> warning: ‘%s’ directive argument is null [-Wformat-overflow=]
-> pr_info("product: %s  year: %d\n", product, year);
->
-> Use "unknown" instead of NULL.
->
-> Signed-off-by: Gergo Koteles <soyer@irl.hu>
+Am Donnerstag, 4. April 2024, 19:11:26 CEST schrieb Sebastian Reichel:
+> From: Michal Tomek <mtdev79b@gmail.com>
+> 
+> So far all RK3588 boards use fully aggregated PCIe. CM3588 is one
+> of the few boards using this feature and apparently it is broken.
+> 
+> The PHY offers the following mapping options:
+> 
+>   port 0 lane 0 - always mapped to controller 0 (4L)
+>   port 0 lane 1 - to controller 0 or 2 (1L0)
+>   port 1 lane 0 - to controller 0 or 1 (2L)
+>   port 1 lane 1 - to controller 0, 1 or 3 (1L1)
+> 
+> The data-lanes DT property maps these as follows:
+> 
+>   0 = no controller (unsupported by the HW)
+>   1 = 4L
+>   2 = 2L
+>   3 = 1L0
+>   4 = 1L1
+> 
+> That allows the following configurations with first column being the
+> mainline data-lane mapping, second column being the downstream name,
+> third column being PCIE3PHY_GRF_CMN_CON0 and PHP_GRF_PCIESEL register
+> values and final column being the user visible lane setup:
+> 
+>   <1 1 1 1> = AGGREG = [4 0] = x4 (aggregation)
+>   <1 1 2 2> = NANBNB = [0 0] = x2 x2 (no bif.)
+>   <1 3 2 2> = NANBBI = [1 1] = x2 x1x1 (bif. of port 0)
+>   <1 1 2 4> = NABINB = [2 2] = x1x1 x2 (bif. of port 1)
+>   <1 3 2 4> = NABIBI = [3 3] = x1x1 x1x1 (bif. of both ports)
+> 
+> The driver currently does not program PHP_GRF_PCIESEL correctly, which
+> is fixed by this patch. As a side-effect the new logic is much simpler
+> than the old logic.
+> 
+> Fixes: 2e9bffc4f713 ("phy: rockchip: Support PCIe v3")
+> Signed-off-by: Michal Tomek <mtdev79b@gmail.com>
+> Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
 > ---
-
-Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-
->  drivers/platform/x86/lg-laptop.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/platform/x86/lg-laptop.c b/drivers/platform/x86/lg-laptop.c
-> index ad3c39e9e9f5..e714ee6298dd 100644
-> --- a/drivers/platform/x86/lg-laptop.c
-> +++ b/drivers/platform/x86/lg-laptop.c
-> @@ -736,7 +736,7 @@ static int acpi_add(struct acpi_device *device)
->  		default:
->  			year = 2019;
->  		}
-> -	pr_info("product: %s  year: %d\n", product, year);
-> +	pr_info("product: %s  year: %d\n", product ?: "unknown", year);
+>  drivers/phy/rockchip/phy-rockchip-snps-pcie3.c | 24 ++++++++----------------
+>  1 file changed, 8 insertions(+), 16 deletions(-)
+> 
+> diff --git a/drivers/phy/rockchip/phy-rockchip-snps-pcie3.c b/drivers/phy/rockchip/phy-rockchip-snps-pcie3.c
+> index 121e5961ce11..d5bcc9c42b28 100644
+> --- a/drivers/phy/rockchip/phy-rockchip-snps-pcie3.c
+> +++ b/drivers/phy/rockchip/phy-rockchip-snps-pcie3.c
+> @@ -132,7 +132,7 @@ static const struct rockchip_p3phy_ops rk3568_ops = {
+>  static int rockchip_p3phy_rk3588_init(struct rockchip_p3phy_priv *priv)
+>  {
+>  	u32 reg = 0;
+> -	u8 mode = 0;
+> +	u8 mode = RK3588_LANE_AGGREGATION; /* default */
+>  	int ret;
 >  
->  	if (year >= 2019)
->  		battery_limit_use_wmbb = 1;
->
-> base-commit: 39cd87c4eb2b893354f3b850f916353f2658ae6f
+>  	/* Deassert PCIe PMA output clamp mode */
+> @@ -140,28 +140,20 @@ static int rockchip_p3phy_rk3588_init(struct rockchip_p3phy_priv *priv)
+>  
+>  	/* Set bifurcation if needed */
+>  	for (int i = 0; i < priv->num_lanes; i++) {
+> -		if (!priv->lanes[i])
+> -			mode |= (BIT(i) << 3);
+> -
+>  		if (priv->lanes[i] > 1)
+> -			mode |= (BIT(i) >> 1);
+> -	}
+> -
+> -	if (!mode)
+> -		reg = RK3588_LANE_AGGREGATION;
+> -	else {
+> -		if (mode & (BIT(0) | BIT(1)))
+> -			reg |= RK3588_BIFURCATION_LANE_0_1;
+> -
+> -		if (mode & (BIT(2) | BIT(3)))
+> -			reg |= RK3588_BIFURCATION_LANE_2_3;
+> +			mode &= ~RK3588_LANE_AGGREGATION;
+> +		if (priv->lanes[i] == 3)
+> +			mode |= RK3588_BIFURCATION_LANE_0_1;
+> +		if (priv->lanes[i] == 4)
+> +			mode |= RK3588_BIFURCATION_LANE_2_3;
+>  	}
+>  
+> +	reg = mode;
+>  	regmap_write(priv->phy_grf, RK3588_PCIE3PHY_GRF_CMN_CON0, (0x7<<16) | reg);
 
--- 
-Sathyanarayanan Kuppuswamy
-Linux Kernel Developer
+nit: instead of doing reg=mode, why not use mode directly?
+i.e. (0x7<<16) | mode in the regmap_write call
+
+other than that
+Acked-by: Heiko Stuebner <heiko@sntech.de>
+
+>  
+>  	/* Set pcie1ln_sel in PHP_GRF_PCIESEL_CON */
+>  	if (!IS_ERR(priv->pipe_grf)) {
+> -		reg = (mode & (BIT(6) | BIT(7))) >> 6;
+> +		reg = mode & 3;
+>  		if (reg)
+>  			regmap_write(priv->pipe_grf, PHP_GRF_PCIESEL_CON,
+>  				     (reg << 16) | reg);
+> 
+> 
+
+
+
 
