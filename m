@@ -1,160 +1,146 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E3F91BDE6;
-	Thu,  4 Apr 2024 14:55:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 431191C2AD
+	for <linux-kernel@vger.kernel.org>; Thu,  4 Apr 2024 14:56:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712242530; cv=none; b=lKIuEBVAU2gBGydAiySPoAhvnd7N3rVPO8j1w/LifFULJNFZuWxT31TfrbqeDywOjeDYTcfyVWv2h6fdo0UoIAsmbBkWjlh3cfvb3nHvJEkoFvtBmpxBdjVGXG9xs+6LQzW7qZnaxcdzY6i8np+CUb+9e0TIbApp2Vsve6O0OxY=
+	t=1712242564; cv=none; b=a3SKSYB4sKKmK5oNuq+9XaJwkXIrwpzaiyS3OA7aIhpW8Ai4OZAfRzGrsDKWxmUtha6KV6ctd3mxUMqDrpl1v9vtT3deL2eulYQIFvo2MdZNvufz53Jtu/GjSzFvSCY1xioyydZlWlJww3NRkwdzZUJFBz/4goH6Q7O9Z3Bojq0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712242530; c=relaxed/simple;
-	bh=G9lUvFywXgRdKLfamnkBnonk8oOiR9MI0r12zS6dtX0=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=M7QFfmio2YvYcrlL15LTlLDyF+1BrfFDLYZPNWnhUmZft8KcbUZViPyvPTISFgE1Qkg91KZjx7Mad69ZhXIL7ypl4CgNEzOCeF9TPch1D+7vY4mdn1bJsEkU2Grr7Pv4rrIebuXQSjkG45SI6ywagFxxIJyF/H7mRHdeOWd47Ok=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aen+RE8a; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1712242564; c=relaxed/simple;
+	bh=1CavvPgllyAa/15cVaRGGxEOJZQLKhATrB9uOUZKE7Y=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=SJZFskJNPZWC5Rkc/sYOGW8g/QzT8HGQ7KgM8PfnEIFfKfbx+R3rEPTMwVz5n6k6J+b06rfyBVmluWvq5m5QRbHVab5AIcCtMP8sYj5lJLywjsFVMFmfI2aAU+T/lNE5cnjn2QSUVLnOUfakw0ESovfzWE2LoiJq9owarKPwUHE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=i8agMKCi; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aen+RE8a"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 67D9FC433F1;
-	Thu,  4 Apr 2024 14:55:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712242529;
-	bh=G9lUvFywXgRdKLfamnkBnonk8oOiR9MI0r12zS6dtX0=;
-	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
-	b=aen+RE8ak25vlpX9Pe4w1s2I0IEuN0Xe8dsQ4xMCxRg401Ddm7Z4hTU7uhk3fCUgW
-	 GO+03+G0RSM+nLr2h8MsZmTZ+t+Y+YtN5Oi35yxECq2gH1KN+OeWgdWfs2BIGtmf07
-	 ozPdiS8nUL1wFS7zlORa+rjPcklbJXgUy6Y0Nvdq7gILpx6w1PCgVGDid/HHCyyQSZ
-	 egq4Ie94OJd3yeK5HZMzHWjCUNOtESyziFGcUDR12e/eav83l6kxPAo3YEAeC/nq/t
-	 2mXF9RP0DOWmABFVLYJWd7tjKUhoJwdz2l7KDmUWMIYSV8FBFzmoolBXAxqTe/LYpm
-	 Rk+PK0mphpHSg==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="i8agMKCi"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1712242562;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=NQJMd58pUdtgy9XOZ35rBzvDWBc5FSPJawvsuooB2RU=;
+	b=i8agMKCihr4fGxGvwqCrMjcZqPrxY6HUJYSiK8KHK/ucoXQOaqXUDwdzmVGWfrd4GCukt2
+	Gfw3YnHejZT3exTbNt51W4FWDAytKGm/wudtE9uNlGeonH7r/tcj+TvL+wT+ojvvS3byU4
+	akXdYsr0fAYNEdsy9vTxm7lveyHRNOo=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-246-N99Y3y5yNh-I55Dli-sewA-1; Thu, 04 Apr 2024 10:55:57 -0400
+X-MC-Unique: N99Y3y5yNh-I55Dli-sewA-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.rdu2.redhat.com [10.11.54.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 1BBF088FBAB;
+	Thu,  4 Apr 2024 14:55:57 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.225.21])
+	by smtp.corp.redhat.com (Postfix) with SMTP id 43CDC3C21;
+	Thu,  4 Apr 2024 14:55:54 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+	oleg@redhat.com; Thu,  4 Apr 2024 16:54:32 +0200 (CEST)
+Date: Thu, 4 Apr 2024 16:54:08 +0200
+From: Oleg Nesterov <oleg@redhat.com>
+To: Thomas Gleixner <tglx@linutronix.de>
+Cc: John Stultz <jstultz@google.com>, Marco Elver <elver@google.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>,
+	"Eric W. Biederman" <ebiederm@xmission.com>,
+	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+	Dmitry Vyukov <dvyukov@google.com>, kasan-dev@googlegroups.com,
+	Edward Liaw <edliaw@google.com>,
+	Carlos Llamas <cmllamas@google.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH v6 1/2] posix-timers: Prefer delivery of signals to the
+ current thread
+Message-ID: <20240404145408.GD7153@redhat.com>
+References: <87sf02bgez.ffs@tglx>
+ <87r0fmbe65.ffs@tglx>
+ <CANDhNCoGRnXLYRzQWpy2ZzsuAXeraqT4R13tHXmiUtGzZRD3gA@mail.gmail.com>
+ <87o7aqb6uw.ffs@tglx>
+ <CANDhNCreA6nJp4ZUhgcxNB5Zye1aySDoU99+_GDS57HAF4jZ_Q@mail.gmail.com>
+ <87frw2axv0.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Thu, 04 Apr 2024 17:55:22 +0300
-Message-Id: <D0BFBFRVGG47.FXCTWETKP7H4@kernel.org>
-Cc: "Andrew Cooper" <andrew.cooper3@citrix.com>, "Ard Biesheuvel"
- <ardb@kernel.org>, "Ross Philipson" <ross.philipson@oracle.com>, "Linux
- Kernel Mailing List" <linux-kernel@vger.kernel.org>, "the arch/x86
- maintainers" <x86@kernel.org>, <linux-integrity@vger.kernel.org>,
- <linux-doc@vger.kernel.org>, "Linux Crypto Mailing List"
- <linux-crypto@vger.kernel.org>, <kexec@lists.infradead.org>,
- <linux-efi@vger.kernel.org>, <dpsmith@apertussolutions.com>, "Thomas
- Gleixner" <tglx@linutronix.de>, "Ingo Molnar" <mingo@redhat.com>, "Borislav
- Petkov" <bp@alien8.de>, "H. Peter Anvin" <hpa@zytor.com>, "Dave Hansen"
- <dave.hansen@linux.intel.com>, "Matthew Garrett" <mjg59@srcf.ucam.org>,
- <James.Bottomley@hansenpartnership.com>, <peterhuewe@gmx.de>, "Jason
- Gunthorpe" <jgg@ziepe.ca>, "luto@amacapital.net" <luto@amacapital.net>,
- "Arvind Sankar" <nivedita@alum.mit.edu>, "Herbert Xu"
- <herbert@gondor.apana.org.au>, <davem@davemloft.net>,
- <kanth.ghatraju@oracle.com>, <trenchboot-devel@googlegroups.com>
-Subject: Re: [PATCH v8 06/15] x86: Add early SHA support for Secure Launch
- early measurements
-From: "Jarkko Sakkinen" <jarkko@kernel.org>
-To: "Eric Biggers" <ebiggers@kernel.org>, "Andy Lutomirski"
- <luto@kernel.org>
-X-Mailer: aerc 0.17.0
-References: <CAMj1kXEmMBY_jc0uM5UgZbuZ3-C7NPKzg5AScaunyu9XzLgzZA@mail.gmail.com> <98ad92bb-ef17-4c15-88ba-252db2a2e738@citrix.com> <CAMj1kXFTu+bV2kQhAyu15hrYai20NcBLb4Zu8XG2Y-XjL0f+rw@mail.gmail.com> <1a8e69a7-89eb-4d36-94d6-0da662d8b72f@citrix.com> <CAMj1kXEvmGy9RJo4s8tECsFj2dufZ8jBPoJOEtkcGUoj+x2qsw@mail.gmail.com> <431a0b3a-47e5-4e61-a7fc-31cdf56f4e4c@citrix.com> <20240223175449.GA1112@sol.localdomain> <e641e2f1-16cf-4717-8a1f-8afac2644efe@citrix.com> <20240223183004.GE1112@sol.localdomain> <10db421c-77da-4a1c-a25e-2374a7a2ef79@app.fastmail.com> <20240403235635.GA24248@quark.localdomain>
-In-Reply-To: <20240403235635.GA24248@quark.localdomain>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87frw2axv0.ffs@tglx>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.1
 
-On Thu Apr 4, 2024 at 2:56 AM EEST, Eric Biggers wrote:
-> On Wed, Apr 03, 2024 at 09:32:02AM -0700, Andy Lutomirski wrote:
-> > On Fri, Feb 23, 2024, at 10:30 AM, Eric Biggers wrote:
-> > > On Fri, Feb 23, 2024 at 06:20:27PM +0000, Andrew Cooper wrote:
-> > >> On 23/02/2024 5:54 pm, Eric Biggers wrote:
-> > >> > On Fri, Feb 23, 2024 at 04:42:11PM +0000, Andrew Cooper wrote:
-> > >> >> Yes, and I agree.=C2=A0 We're not looking to try and force this i=
-n with
-> > >> >> underhand tactics.
-> > >> >>
-> > >> >> But a blind "nack to any SHA-1" is similarly damaging in the oppo=
-site
-> > >> >> direction.
-> > >> >>
-> > >> > Well, reviewers have said they'd prefer that SHA-1 not be included=
- and given
-> > >> > some thoughtful reasons for that.  But also they've given suggesti=
-ons on how to
-> > >> > make the SHA-1 support more palatable, such as splitting it into a=
- separate
-> > >> > patch and giving it a proper justification.
-> > >> >
-> > >> > All suggestions have been ignored.
-> > >>=20
-> > >> The public record demonstrates otherwise.
-> > >>=20
-> > >> But are you saying that you'd be happy if the commit message read
-> > >> something more like:
-> > >>=20
-> > >> ---8<---
-> > >> For better or worse, Secure Launch needs SHA-1 and SHA-256.
-> > >>=20
-> > >> The choice of hashes used lie with the platform firmware, not with
-> > >> software, and is often outside of the users control.
-> > >>=20
-> > >> Even if we'd prefer to use SHA-256-only, if firmware elected to star=
-t us
-> > >> with the SHA-1 and SHA-256 backs active, we still need SHA-1 to pars=
-e
-> > >> the TPM event log thus far, and deliberately cap the SHA-1 PCRs in o=
-rder
-> > >> to safely use SHA-256 for everything else.
-> > >> ---
-> > >
-> > > Please take some time to read through the comments that reviewers hav=
-e left on
-> > > previous versions of the patchset.
-> >=20
-> > So I went and read through the old comments, and I'm lost.  In brief su=
-mmary:
-> >=20
-> > If the hardware+firmware only supports SHA-1, then some reviewers would=
- prefer
-> > Linux not to support DRTM.  I personally think this is a bit silly, but=
- it's
-> > not entirely unreasonable.  Maybe it should be a config option?
-> >=20
-> > If the hardware+firmware does support SHA-256, then it sounds (to me, r=
-eading
-> > this -- I haven't dug into the right spec pages) that, for optimal secu=
-rity,
-> > something still needs to effectively turn SHA-1 *off* at runtime by cap=
-ping
-> > the event log properly.  And that requires computing a SHA-1 hash.  And=
-, to be
-> > clear, (a) this is only on systems that already support SHA-256 and tha=
-t we
-> > should support and (b) *not* doing so leaves us potentially more vulner=
-able to
-> > SHA-1 attacks than doing so.  And no SHA-256-supporting tooling will ac=
-tually
-> > be compromised by a SHA-1 compromise if we cap the event log.
-> >=20
-> > So is there a way forward?  Just saying "read through the comments" see=
-ms like
-> > a dead end.
-> >=20
+On 04/04, Thomas Gleixner wrote:
 >
-> It seems there may be a justification for some form of SHA-1 support in t=
-his
-> feature.  As I've said, the problem is that it's not explained in the pat=
-chset
-> itself.  Rather, it just talks about "SHA" and pretends like SHA-1 and SH=
-A-2 are
-> basically the same.  In fact, SHA-1 differs drastically from SHA-2 in ter=
-ms of
-> security.  SHA-1 support should be added in a separate patch, with a clea=
-rly
-> explained rationale *in the patch itself* for the SHA-1 support *specific=
-ally*.
+> IOW, we cannot test this reliably at all with the current approach.
 
-Yeah, this is important so that we don't end up deleting that support
-by accident. Just adding to denote that this more than just a "process
-issue".
+Agreed!
 
-> - Eric
+So how about a REALLY SIMPLE test-case below?
 
-BR, Jarkko
+Lacks error checking, should be updated to match tools/testing/selftests.
+
+Without commit bcb7ee79029dca assert(sig_cnt > SIG_CNT) fails, the very
+1st tick wakes the leader up.
+
+With that commit it doesn't fail.
+
+Oleg.
+
+#include <stdio.h>
+#include <unistd.h>
+#include <signal.h>
+#include <pthread.h>
+#include <time.h>
+#include <assert.h>
+
+#define SIG_CNT	100
+static volatile int sig_cnt;
+
+static void alarm_func(int sig)
+{
+	++sig_cnt;
+}
+
+static void *thread_func(void *arg)
+{
+	// one second before the 1st tick to ensure the leader sleeps
+	struct itimerspec val = {
+		.it_value.tv_sec = 1,
+		.it_value.tv_nsec = 0,
+		.it_interval.tv_sec = 0,
+		.it_interval.tv_nsec = 1000 * 1000,
+	};
+	timer_t id;
+
+	timer_create(CLOCK_PROCESS_CPUTIME_ID, NULL, &id);
+	timer_settime(id, 0, &val, NULL);
+
+	while (sig_cnt < SIG_CNT)
+		;
+
+	// wake up the leader
+	kill(getpid(), SIGALRM);
+
+	return NULL;
+}
+
+int main(void)
+{
+	pthread_t thread;
+
+	signal(SIGALRM, alarm_func);
+
+	pthread_create(&thread, NULL, thread_func, NULL);
+
+	pause();
+
+	assert(sig_cnt > SIG_CNT); // likely SIG_CNT + 1
+
+	return 0;
+}
+
