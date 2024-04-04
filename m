@@ -1,173 +1,215 @@
-Received: from mail-qt1-f172.google.com (mail-qt1-f172.google.com [209.85.160.172])
+Received: from mail-io1-f52.google.com (mail-io1-f52.google.com [209.85.166.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 441D3125B9
-	for <linux-kernel@vger.kernel.org>; Thu,  4 Apr 2024 18:14:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FC44125B9
+	for <linux-kernel@vger.kernel.org>; Thu,  4 Apr 2024 18:15:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712254466; cv=none; b=tQ3X3qRvXew4f+j0WYG111UHwQ8JOoBaaV1zFt1AVhf+H0dB2WoIfhX89ZN/9ew/yD88xH0HQl/w8oX9IG2J6CA4HZk0MD3pihdcG+5gmcBoXmgwbJRycbgWPdluRsXXlwMUEP516qcw7r5CMDeauiapH9L4C1QFMseBOm32RzU=
+	t=1712254513; cv=none; b=dqtRd5DExA+4lUMbbzSFxzosq+4uNhTjCIt/ZsLHX92QCWxkAb6m89F/yNJkgm+fLnzhEmdW/IZWDrbihPpdQDZf86Qow9LbDOpi7WjrXKIlhBVUtBdjJhJP74CyP5oQnF1mcctOLhPzfFM7zIwNRxPsSHhJfgP3tlWoOFf4LGM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712254466; c=relaxed/simple;
-	bh=e5zxEreezdNSv6rdlcd86vOm3RZlnS4eg4FcrcnzZ2E=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=DQS3VTXQzSVfIpbaBSohJNNLd7rlBqVDX/LHdvFz7uP9HkPw6rl5nOca8OFRc1QrAb9fOwoff6wQnRmds5u0kL4TQ6T/130RvPbkF9r7Ch+VKo6XYNVmRk4UX5fvdpEgvhT2jdgKsyU7rvYMxhxlZWw57STYcd+UZCVT9lNt9uE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ndufresne.ca; spf=none smtp.mailfrom=ndufresne.ca; dkim=pass (2048-bit key) header.d=ndufresne-ca.20230601.gappssmtp.com header.i=@ndufresne-ca.20230601.gappssmtp.com header.b=1iBs6Jhp; arc=none smtp.client-ip=209.85.160.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ndufresne.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ndufresne.ca
+	s=arc-20240116; t=1712254513; c=relaxed/simple;
+	bh=yMTcvQjyx4yK2TgWYxBU/zVsUHL1XIcAf4s8MXZcTCw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:Cc:
+	 In-Reply-To:Content-Type; b=tm9phqMSSUoVwVVVfTfAVb4aPwRq6WqB0Kwmq7MP5uq1wg189tsvo2XSXPfgA3r6r6vh8MVv97oU84LhA7IYO4LjrYKOvxu0p7UAYHZNjWGfg4GcxV3j1F2tfFg3UROL23IqQnnBSkWzamoZsrXqWpRC2HM3OEDG7pz5PzIc2FY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com; spf=pass smtp.mailfrom=sifive.com; dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b=cXONBmin; arc=none smtp.client-ip=209.85.166.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sifive.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ndufresne-ca.20230601.gappssmtp.com header.i=@ndufresne-ca.20230601.gappssmtp.com header.b="1iBs6Jhp"
-Received: by mail-qt1-f172.google.com with SMTP id d75a77b69052e-432f421c56bso6768661cf.2
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Apr 2024 11:14:24 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="cXONBmin"
+Received: by mail-io1-f52.google.com with SMTP id ca18e2360f4ac-7d0486e3250so60101539f.1
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Apr 2024 11:15:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ndufresne-ca.20230601.gappssmtp.com; s=20230601; t=1712254463; x=1712859263; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:autocrypt
-         :references:in-reply-to:date:cc:to:from:subject:message-id:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=iLUkwMhnJgPR4LpTA3Lkdoto0zzMxhl5w3AfTc13Zqs=;
-        b=1iBs6Jhp7BHRPVqR+biztK7TmZcmBHOhbF6657Owh9xdyq+3wsi5m3i6fkH2tKRG5W
-         LKYDkr9rET+176q1tOQtqjgUEHUhotwOUm3+bsfp5lwxOXL9iPZygAyxXRCCqGKwXjlE
-         WHitmKCi0FqFzRyoiVGK85TCOCTRq8LR4fLNUsSl+9IM5uisnaQk4wU7og2Q0wlQSC8P
-         P4PI9FuQv2gZKL9v+K15Obs/FFdLvPbfOt9lM8n7bdKBcLXoyXxUMsyAvUPn/o8K1D9k
-         U9d743LoU3vg1zzMvgwSK9C7woRjJgCp5HpFnVTWSE6FvOXxLEVwOjV3rF7bMEroYAfA
-         TMzQ==
+        d=sifive.com; s=google; t=1712254510; x=1712859310; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:cc:content-language:from
+         :references:to:subject:user-agent:mime-version:date:message-id:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=7PI0LLP9w1WjXiWU7aCp0TwHBscK/fXXWNmgARMtLns=;
+        b=cXONBminWR2hS1KYDOsQm41lqwP5je3K7rCwiiI9YtpHpDR9rqN5QMX+cEctw8+igf
+         9+dHVjWQ/aQ9Gj03PspBFuMUUxa3LCWpTbyWoLQz2Eiu/7RgqqzhEOfiMRtB+UifDCsG
+         iCYdwplClB3o4mDWJvbPuYDqni2jeStaQ5Bv3LummGPRk5JqOXUtE9uyfsGX8imhGW9f
+         peJJGC1jQLDEBIERtKPRfKAiPdE0/pZgVdBXiJQKml2RdyQJLPTLeXnMBhcKRZYLVG8Q
+         sX6ZoNoAV8f6rzyt1E8NkbBJsf1KhdvW0btrqnFw/7xSLb3ZV34B8Yk5qqYHm6mWwsbt
+         s5Sw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712254463; x=1712859263;
-        h=mime-version:user-agent:content-transfer-encoding:autocrypt
-         :references:in-reply-to:date:cc:to:from:subject:message-id
+        d=1e100.net; s=20230601; t=1712254510; x=1712859310;
+        h=content-transfer-encoding:in-reply-to:cc:content-language:from
+         :references:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=iLUkwMhnJgPR4LpTA3Lkdoto0zzMxhl5w3AfTc13Zqs=;
-        b=SAXN+Nmhoa/8gSRSkUzZsBJsfjVX8jcNOVZbMGbCdlfuPm4l9MYLpPRE+bFOx+Jmlo
-         N6y1eQ0P9dLn0+Ku5g9QU5HnwctkP2X1tYPb9I1qoraHF5tiHkjOJdL0IazIqHEVblw8
-         5ZstLItEhh9HgxYEyqFdCVN0S+KuO5CHPRTKUlLLgdxqmvWjeYh3Oxm2Db6CeBW2rNpj
-         xYDaojJWbEakM2dIxBAk74TIUPRUC9K36jxVLDIGpFve4oZZLPEUDt/2810DNRRsTYrW
-         sf8ePIIEB3BhiwSpc+MvijJkP/Xg6OUCcgqAXTQVQV1SCso2SxJQYzA/xBbqsRn+nm4g
-         uQ2A==
-X-Forwarded-Encrypted: i=1; AJvYcCUnHpSPuwfK3lAEQcBHrbSn+BYdBVhWVTIifAE0W2ukNITqlWW0ZVaTsqdOK0uQoBuz2d3J6GS9BJ9EeDwGGN/MYGzjZeRoXrirkk7h
-X-Gm-Message-State: AOJu0YwiNEawNAFMMchs8pU9LoDwB9cjwkzzY7dYvwnaa6slgvW0lDfA
-	poHlV//0/E0qcukY4XfmckQu9K1FdMh39K49K2b5ByfdsyOcVtR3kPspDtf91kw=
-X-Google-Smtp-Source: AGHT+IEIVqq1yweJQ+9a/M7UnAUqllb9/xLGWZdymaOlvKqAMzFT/w2XDbtmeS8HrnqiNFVdpXYCvg==
-X-Received: by 2002:a05:622a:1895:b0:431:83bf:68ba with SMTP id v21-20020a05622a189500b0043183bf68bamr3381299qtc.10.1712254463234;
-        Thu, 04 Apr 2024 11:14:23 -0700 (PDT)
-Received: from nicolas-tpx395.localdomain ([2606:6d00:17:6448:fa75:a4ff:fe45:b56])
-        by smtp.gmail.com with ESMTPSA id ck7-20020a05622a230700b00430bddc75a5sm7780034qtb.23.2024.04.04.11.14.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 04 Apr 2024 11:14:23 -0700 (PDT)
-Message-ID: <5fc25468198cb3a228b91160dcc490600e1197d4.camel@ndufresne.ca>
-Subject: Re: [PATCH 1/2] media: v4l2-ctrls: Add average qp control
-From: Nicolas Dufresne <nicolas@ndufresne.ca>
-To: Ming Qian <ming.qian@nxp.com>, mchehab@kernel.org,
- hverkuil-cisco@xs4all.nl
-Cc: shawnguo@kernel.org, robh+dt@kernel.org, s.hauer@pengutronix.de, 
- kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com,
- xiahong.bao@nxp.com,  eagle.zhou@nxp.com, tao.jiang_2@nxp.com,
- ming.qian@oss.nxp.com,  imx@lists.linux.dev, linux-media@vger.kernel.org,
- linux-kernel@vger.kernel.org,  linux-arm-kernel@lists.infradead.org
-Date: Thu, 04 Apr 2024 14:14:22 -0400
-In-Reply-To: <20240329092352.2648837-1-ming.qian@nxp.com>
-References: <20240329092352.2648837-1-ming.qian@nxp.com>
-Autocrypt: addr=nicolas@ndufresne.ca; prefer-encrypt=mutual; keydata=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
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.50.4 (3.50.4-1.fc39) 
+        bh=7PI0LLP9w1WjXiWU7aCp0TwHBscK/fXXWNmgARMtLns=;
+        b=vTkxmoGCfgA5J892/ySjqIrjCHuIimpE3b2yyeNeTOnGufUeaFtST/zaMiTKZPKFfH
+         z2nuQT0U1ee8rNSI87RQv8oBYlK8oRLzgCbi6T3AZoRaNLy6UvrxE2yhogMWIFurXYpi
+         4F0TqKL777DdREe4q/GcU5GbF0FFBe8AY6NN06wRk+ot2aDer1Te3fg4BITmu6sOD+7N
+         61fL0q/H1Cy7IF9J2K4Qp3ve5++ZX/YqPoGGWyQ7y9OKjZ5GkQnq5y/4uUpt9aG5FefX
+         5NXQhJuLo4btAhbmrmtjuD0YUHN8s7dsEAWdkUvspOSJ4K7gUKivS37EuTTGmIAtoQ76
+         OGaA==
+X-Gm-Message-State: AOJu0YxC37if+vpedMP+C7G6R2JMykyKTWflRh/q5qgDeMfF+F5zTV9l
+	jBYXjnKZFPL22MYFpG8g/VVn/8D6hMfGQp+KOKlLJm6Yx7fz00xDL6W29W9PZZ8=
+X-Google-Smtp-Source: AGHT+IH+Rz2ETv/jL0+emg9tpkztNGdXiBnx5+2D20KLbKT62Y5e+cMqoaoMr9jzNV+C6TVJwJWQdA==
+X-Received: by 2002:a05:6602:4250:b0:7c8:55c2:63dc with SMTP id cc16-20020a056602425000b007c855c263dcmr616654iob.9.1712254510496;
+        Thu, 04 Apr 2024 11:15:10 -0700 (PDT)
+Received: from [100.64.0.1] ([170.85.6.190])
+        by smtp.gmail.com with ESMTPSA id c60-20020a029642000000b00478ac4d9882sm4847957jai.53.2024.04.04.11.15.08
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 04 Apr 2024 11:15:09 -0700 (PDT)
+Message-ID: <0b817fa8-2a1c-4da4-b5d4-f36ac93dbfd9@sifive.com>
+Date: Thu, 4 Apr 2024 13:15:06 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/2] riscv: thead: Rename T-Head PBMT to MAEE
+To: =?UTF-8?Q?Christoph_M=C3=BCllner?= <christoph.muellner@vrull.eu>,
+ linux-riscv@lists.infradead.org
+References: <20240329121414.688391-1-christoph.muellner@vrull.eu>
+ <20240329121414.688391-2-christoph.muellner@vrull.eu>
+From: Samuel Holland <samuel.holland@sifive.com>
+Content-Language: en-US
+Cc: linux-kernel@vger.kernel.org, Palmer Dabbelt <palmer@dabbelt.com>,
+ Paul Walmsley <paul.walmsley@sifive.com>, Albert Ou <aou@eecs.berkeley.edu>,
+ Philipp Tomsich <philipp.tomsich@vrull.eu>, =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?=
+ <bjorn@kernel.org>, Daniel Henrique Barboza <dbarboza@ventanamicro.com>,
+ Heiko Stuebner <heiko@sntech.de>, Cooper Qu <cooper.qu@linux.alibaba.com>,
+ Zhiwei Liu <zhiwei_liu@linux.alibaba.com>,
+ Huang Tao <eric.huang@linux.alibaba.com>,
+ Alistair Francis <alistair.francis@wdc.com>,
+ Andrew Jones <ajones@ventanamicro.com>, Conor Dooley <conor@kernel.org>,
+ Qingfang Deng <dqfext@gmail.com>, Alexandre Ghiti <alex@ghiti.fr>
+In-Reply-To: <20240329121414.688391-2-christoph.muellner@vrull.eu>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Hi,
+Hi Christoph,
 
-Le vendredi 29 mars 2024 =C3=A0 18:23 +0900, Ming Qian a =C3=A9crit=C2=A0:
-> Add a control V4L2_CID_MPEG_VIDEO_AVERAGE_QP to report the average qp
-> value of current encoded frame.
->=20
-> Signed-off-by: Ming Qian <ming.qian@nxp.com>
+On 2024-03-29 7:14 AM, Christoph Müllner wrote:
+> T-Head's vendor extension to set page attributes has the name
+> MAEE (MMU address attribute extension).
+> Let's rename it, so it is clear what this referes to.
+> 
+> See also:
+>   https://github.com/T-head-Semi/thead-extension-spec/blob/master/xtheadmaee.adoc
+
+My understanding is that MAEE is the name of the CSR bit and stands for "MMU (or
+Memory) Attribute Extension Enable", so the name for the extension itself would
+be "MAE" (just one E). This is similar to THEADISAEE => T-HEAD ISA Extension
+Enable. Does that sound right?
+
+Regards,
+Samuel
+
+> Signed-off-by: Christoph Müllner <christoph.muellner@vrull.eu>
 > ---
->  Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst | 4 ++++
->  drivers/media/v4l2-core/v4l2-ctrls-defs.c                 | 5 +++++
->  include/uapi/linux/v4l2-controls.h                        | 2 ++
->  3 files changed, 11 insertions(+)
->=20
-> diff --git a/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst b/=
-Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
-> index 2a165ae063fb..cef20b3f54ca 100644
-> --- a/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
-> +++ b/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
-> @@ -1653,6 +1653,10 @@ enum v4l2_mpeg_video_h264_hierarchical_coding_type=
- -
->      Quantization parameter for a P frame for FWHT. Valid range: from 1
->      to 31.
-> =20
-> +``V4L2_CID_MPEG_VIDEO_AVERAGE_QP (integer)``
-> +    This read-only control returns the average qp value of the currently
-> +    encoded frame. Applicable to the H264 and HEVC encoders.
-
-That seems ambiguous at best. What does it mean the "currently encoded fram=
-e" ?
-The OUTPUT and CAPTURE queue can be holding multiple frames. For "per frame=
-"
-accurate reporting, I feel like we'd need something like Hans' read-only
-requests proposal [0]. Its basically a mechanism that let you attach reques=
-t FD
-to capture buffer, so that supported controls can be saved per v4l2-buffer =
-and
-read later on.
-
-https://patches.linaro.org/project/linux-media/patch/20210610113615.785359-=
-12-hverkuil-cisco@xs4all.nl/
-
-If this isn't what you wanted, we'll need a better definition. It might be
-helpful to explain what this is used for.
-
-Nicolas
-
-> +
->  .. raw:: latex
-> =20
->      \normalsize
-> diff --git a/drivers/media/v4l2-core/v4l2-ctrls-defs.c b/drivers/media/v4=
-l2-core/v4l2-ctrls-defs.c
-> index 8696eb1cdd61..88e86e4e539d 100644
-> --- a/drivers/media/v4l2-core/v4l2-ctrls-defs.c
-> +++ b/drivers/media/v4l2-core/v4l2-ctrls-defs.c
-> @@ -972,6 +972,7 @@ const char *v4l2_ctrl_get_name(u32 id)
->  	case V4L2_CID_MPEG_VIDEO_USE_LTR_FRAMES:		return "Use LTR Frames";
->  	case V4L2_CID_FWHT_I_FRAME_QP:				return "FWHT I-Frame QP Value";
->  	case V4L2_CID_FWHT_P_FRAME_QP:				return "FWHT P-Frame QP Value";
-> +	case V4L2_CID_MPEG_VIDEO_AVERAGE_QP:			return "Average QP value";
-> =20
->  	/* VPX controls */
->  	case V4L2_CID_MPEG_VIDEO_VPX_NUM_PARTITIONS:		return "VPX Number of Par=
-titions";
-> @@ -1507,6 +1508,10 @@ void v4l2_ctrl_fill(u32 id, const char **name, enu=
-m v4l2_ctrl_type *type,
->  		*max =3D 0xffffffffffffLL;
->  		*step =3D 1;
->  		break;
-> +	case V4L2_CID_MPEG_VIDEO_AVERAGE_QP:
-> +		*type =3D V4L2_CTRL_TYPE_INTEGER;
-> +		*flags |=3D V4L2_CTRL_FLAG_VOLATILE | V4L2_CTRL_FLAG_READ_ONLY;
-> +		break;
->  	case V4L2_CID_PIXEL_RATE:
->  		*type =3D V4L2_CTRL_TYPE_INTEGER64;
->  		*flags |=3D V4L2_CTRL_FLAG_READ_ONLY;
-> diff --git a/include/uapi/linux/v4l2-controls.h b/include/uapi/linux/v4l2=
--controls.h
-> index 99c3f5e99da7..974fd254e573 100644
-> --- a/include/uapi/linux/v4l2-controls.h
-> +++ b/include/uapi/linux/v4l2-controls.h
-> @@ -898,6 +898,8 @@ enum v4l2_mpeg_video_av1_level {
->  	V4L2_MPEG_VIDEO_AV1_LEVEL_7_3 =3D 23
->  };
-> =20
-> +#define V4L2_CID_MPEG_VIDEO_AVERAGE_QP  (V4L2_CID_CODEC_BASE + 657)
-> +
->  /*  MPEG-class control IDs specific to the CX2341x driver as defined by =
-V4L2 */
->  #define V4L2_CID_CODEC_CX2341X_BASE				(V4L2_CTRL_CLASS_CODEC | 0x1000)
->  #define V4L2_CID_MPEG_CX2341X_VIDEO_SPATIAL_FILTER_MODE		(V4L2_CID_CODEC=
-_CX2341X_BASE+0)
+>  arch/riscv/Kconfig.errata            |  8 ++++----
+>  arch/riscv/errata/thead/errata.c     |  8 ++++----
+>  arch/riscv/include/asm/errata_list.h | 20 ++++++++++----------
+>  3 files changed, 18 insertions(+), 18 deletions(-)
+> 
+> diff --git a/arch/riscv/Kconfig.errata b/arch/riscv/Kconfig.errata
+> index 910ba8837add..2c24bef7e112 100644
+> --- a/arch/riscv/Kconfig.errata
+> +++ b/arch/riscv/Kconfig.errata
+> @@ -82,14 +82,14 @@ config ERRATA_THEAD
+>  
+>  	  Otherwise, please say "N" here to avoid unnecessary overhead.
+>  
+> -config ERRATA_THEAD_PBMT
+> -	bool "Apply T-Head memory type errata"
+> +config ERRATA_THEAD_MAEE
+> +	bool "Apply T-Head's MMU address attribute (MAEE)"
+>  	depends on ERRATA_THEAD && 64BIT && MMU
+>  	select RISCV_ALTERNATIVE_EARLY
+>  	default y
+>  	help
+> -	  This will apply the memory type errata to handle the non-standard
+> -	  memory type bits in page-table-entries on T-Head SoCs.
+> +	  This will apply the memory type errata to handle T-Head's MMU address
+> +	  attribute extension (MAEE).
+>  
+>  	  If you don't know what to do here, say "Y".
+>  
+> diff --git a/arch/riscv/errata/thead/errata.c b/arch/riscv/errata/thead/errata.c
+> index b1c410bbc1ae..8c8a8a4b0421 100644
+> --- a/arch/riscv/errata/thead/errata.c
+> +++ b/arch/riscv/errata/thead/errata.c
+> @@ -19,10 +19,10 @@
+>  #include <asm/patch.h>
+>  #include <asm/vendorid_list.h>
+>  
+> -static bool errata_probe_pbmt(unsigned int stage,
+> +static bool errata_probe_maee(unsigned int stage,
+>  			      unsigned long arch_id, unsigned long impid)
+>  {
+> -	if (!IS_ENABLED(CONFIG_ERRATA_THEAD_PBMT))
+> +	if (!IS_ENABLED(CONFIG_ERRATA_THEAD_MAEE))
+>  		return false;
+>  
+>  	if (arch_id != 0 || impid != 0)
+> @@ -140,8 +140,8 @@ static u32 thead_errata_probe(unsigned int stage,
+>  {
+>  	u32 cpu_req_errata = 0;
+>  
+> -	if (errata_probe_pbmt(stage, archid, impid))
+> -		cpu_req_errata |= BIT(ERRATA_THEAD_PBMT);
+> +	if (errata_probe_maee(stage, archid, impid))
+> +		cpu_req_errata |= BIT(ERRATA_THEAD_MAEE);
+>  
+>  	errata_probe_cmo(stage, archid, impid);
+>  
+> diff --git a/arch/riscv/include/asm/errata_list.h b/arch/riscv/include/asm/errata_list.h
+> index ea33288f8a25..7c377e137b41 100644
+> --- a/arch/riscv/include/asm/errata_list.h
+> +++ b/arch/riscv/include/asm/errata_list.h
+> @@ -23,7 +23,7 @@
+>  #endif
+>  
+>  #ifdef CONFIG_ERRATA_THEAD
+> -#define	ERRATA_THEAD_PBMT 0
+> +#define	ERRATA_THEAD_MAEE 0
+>  #define	ERRATA_THEAD_PMU 1
+>  #define	ERRATA_THEAD_NUMBER 2
+>  #endif
+> @@ -53,20 +53,20 @@ asm(ALTERNATIVE("sfence.vma %0", "sfence.vma", SIFIVE_VENDOR_ID,	\
+>   * in the default case.
+>   */
+>  #define ALT_SVPBMT_SHIFT 61
+> -#define ALT_THEAD_PBMT_SHIFT 59
+> +#define ALT_THEAD_MAEE_SHIFT 59
+>  #define ALT_SVPBMT(_val, prot)						\
+>  asm(ALTERNATIVE_2("li %0, 0\t\nnop",					\
+>  		  "li %0, %1\t\nslli %0,%0,%3", 0,			\
+>  			RISCV_ISA_EXT_SVPBMT, CONFIG_RISCV_ISA_SVPBMT,	\
+>  		  "li %0, %2\t\nslli %0,%0,%4", THEAD_VENDOR_ID,	\
+> -			ERRATA_THEAD_PBMT, CONFIG_ERRATA_THEAD_PBMT)	\
+> +			ERRATA_THEAD_MAEE, CONFIG_ERRATA_THEAD_MAEE)	\
+>  		: "=r"(_val)						\
+>  		: "I"(prot##_SVPBMT >> ALT_SVPBMT_SHIFT),		\
+> -		  "I"(prot##_THEAD >> ALT_THEAD_PBMT_SHIFT),		\
+> +		  "I"(prot##_THEAD >> ALT_THEAD_MAEE_SHIFT),		\
+>  		  "I"(ALT_SVPBMT_SHIFT),				\
+> -		  "I"(ALT_THEAD_PBMT_SHIFT))
+> +		  "I"(ALT_THEAD_MAEE_SHIFT))
+>  
+> -#ifdef CONFIG_ERRATA_THEAD_PBMT
+> +#ifdef CONFIG_ERRATA_THEAD_MAEE
+>  /*
+>   * IO/NOCACHE memory types are handled together with svpbmt,
+>   * so on T-Head chips, check if no other memory type is set,
+> @@ -83,11 +83,11 @@ asm volatile(ALTERNATIVE(						\
+>  	"slli    t3, t3, %3\n\t"					\
+>  	"or      %0, %0, t3\n\t"					\
+>  	"2:",  THEAD_VENDOR_ID,						\
+> -		ERRATA_THEAD_PBMT, CONFIG_ERRATA_THEAD_PBMT)		\
+> +		ERRATA_THEAD_MAEE, CONFIG_ERRATA_THEAD_MAEE)		\
+>  	: "+r"(_val)							\
+> -	: "I"(_PAGE_MTMASK_THEAD >> ALT_THEAD_PBMT_SHIFT),		\
+> -	  "I"(_PAGE_PMA_THEAD >> ALT_THEAD_PBMT_SHIFT),			\
+> -	  "I"(ALT_THEAD_PBMT_SHIFT)					\
+> +	: "I"(_PAGE_MTMASK_THEAD >> ALT_THEAD_MAEE_SHIFT),		\
+> +	  "I"(_PAGE_PMA_THEAD >> ALT_THEAD_MAEE_SHIFT),			\
+> +	  "I"(ALT_THEAD_MAEE_SHIFT)					\
+>  	: "t3")
+>  #else
+>  #define ALT_THEAD_PMA(_val)
 
