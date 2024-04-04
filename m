@@ -1,112 +1,160 @@
-Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D4AADDBC;
-	Thu,  4 Apr 2024 14:54:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E3F91BDE6;
+	Thu,  4 Apr 2024 14:55:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712242499; cv=none; b=YtKFz4bScNqTx/KmJeb4XDGo3miqx7ybVsYrqFDblDfjHd+ehT2gB1s82iNlGwpGXQ1MNhx3X75tJzeDPWTfp6CqOtDpggcRduzVtHgkQpEtTbY75AnwDqN0yL6rOGi5LZXKeRn+uBaiGRi3w9+Oqn9Fkg197RD/kQ955oPECnI=
+	t=1712242530; cv=none; b=lKIuEBVAU2gBGydAiySPoAhvnd7N3rVPO8j1w/LifFULJNFZuWxT31TfrbqeDywOjeDYTcfyVWv2h6fdo0UoIAsmbBkWjlh3cfvb3nHvJEkoFvtBmpxBdjVGXG9xs+6LQzW7qZnaxcdzY6i8np+CUb+9e0TIbApp2Vsve6O0OxY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712242499; c=relaxed/simple;
-	bh=x78rj90TFRZ7cOjs3pNg4nRwg+XPusDjo2DznyCzO2s=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=V+agLvvNyNjlnqGJr/+U81y+i4AUhS0GaWE+1TWT5uUDUo4YAC/M9vQcxeQYM1L/Hq1fvxWMbKavSThhoO1b0ChSjQJp239v7jlXLbPkO3Tinkk+MM2PRx9Mf/KJS/MGslcwgcTg6b8bjFEovVR5N9xXdHFFQipmhNXFBpYYNnk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ks+2N8TU; arc=none smtp.client-ip=209.85.128.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1712242530; c=relaxed/simple;
+	bh=G9lUvFywXgRdKLfamnkBnonk8oOiR9MI0r12zS6dtX0=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=M7QFfmio2YvYcrlL15LTlLDyF+1BrfFDLYZPNWnhUmZft8KcbUZViPyvPTISFgE1Qkg91KZjx7Mad69ZhXIL7ypl4CgNEzOCeF9TPch1D+7vY4mdn1bJsEkU2Grr7Pv4rrIebuXQSjkG45SI6ywagFxxIJyF/H7mRHdeOWd47Ok=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aen+RE8a; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ks+2N8TU"
-Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-4162bac959cso4018085e9.0;
-        Thu, 04 Apr 2024 07:54:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1712242496; x=1712847296; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=glulz4AZ62PEl1FtV867d3/xaAkvpKKca8G8SD97D8A=;
-        b=Ks+2N8TUYpRAhjzGJikLruvc75rlHWsOMiVPPg7isgygq7Slj+LaPdKmat+CiHPx1b
-         MYfpRY5mFn7jouCLcVQj7MF3m4V2ANPP6cTRXyulcu2GiZkVdKhVqOn74UD48dv5ZUcQ
-         a7zbJxmKdXmvQXk/nSTXgGuL5eUtTyYlkpjW/6WAbQ7ibJwgAfccRgl8HRPl+t0mvrM0
-         g/5H0KkZnjzQRIThgS1sGvsTrzlay4TMVYf0kDXNuFJjzgkGUceNtqBe+zl5AFwU3npm
-         gy3O2qaAHo6AhA7LTZE2SWUUuAnsrgl+m1EdizRk5k40v+i7Fa4ea6ZD5IKLoK+3yfyd
-         /NCQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712242496; x=1712847296;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=glulz4AZ62PEl1FtV867d3/xaAkvpKKca8G8SD97D8A=;
-        b=JVYPozf4UZriv4pMfl83z4/6Z14Qf8xlkMv+Ny4qggHqCJRtq5+oVqsuswP6yewKsz
-         PhhqA2lCVWWimYNCKSBdPvuSjwBpe96uxXCz2XfF03nPmu1gF8EAagHcDQrdc2f1ktz2
-         POFu6NgCryYLt3SHya82NAS72Rqpl5dDNN61dQOKhTpYAeB18fpSDEEMq3wMTNAro4OO
-         8pwHD20Cle2ZOA2gm63QrD7YxVJQRIkNn+aAZvV/byxeefBv6qUv9yFxZHuVL3jozBtp
-         tFfttm3y7xL+gMUILAGY27hhw2Mp3po14wzB3dS+Sbn/15DikmZFOXF1uBYHn80/HY1k
-         yFeA==
-X-Forwarded-Encrypted: i=1; AJvYcCUBSV0z9PjKOF6BYKRF46yuJXGtn/+CHq7MRAmvjkEJK35CKyyeV/U5G3oPZ2NyNN56tiKCkRg/Q7lFsUZBTn/x2XMOWQes7vSXZ4GUq4+YSrO/Eq3Ob2W8r4CMJD8My7IU28FQHoRB
-X-Gm-Message-State: AOJu0Yx39f7Xyoah5hz87qI0Fi5t5p+t2Pi9GjdQ1ZF5OKx3WI/Ga+xF
-	+2Ndj545hEgpO8MiJZuFmzyCOfVzqC4iXqxqxTsWOKoSDr5I+uKd
-X-Google-Smtp-Source: AGHT+IE/IrvuvbWC2KToqhYIKbLS8TuFoPDm6Z5Y0Js0av+z/qFyTnmMZGDwD+Ok2+gD0JTz8TdGlw==
-X-Received: by 2002:a7b:c450:0:b0:414:ff4:5957 with SMTP id l16-20020a7bc450000000b004140ff45957mr2153060wmi.5.1712242496120;
-        Thu, 04 Apr 2024 07:54:56 -0700 (PDT)
-Received: from ?IPv6:2003:f6:ef1b:2000:15d4:fc17:481e:8afe? (p200300f6ef1b200015d4fc17481e8afe.dip0.t-ipconnect.de. [2003:f6:ef1b:2000:15d4:fc17:481e:8afe])
-        by smtp.gmail.com with ESMTPSA id n10-20020a05600c4f8a00b0041493aae77esm2963505wmq.23.2024.04.04.07.54.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 04 Apr 2024 07:54:55 -0700 (PDT)
-Message-ID: <9f91388faee750e16021f2c0544e7a158a16202b.camel@gmail.com>
-Subject: Re: [PATCH 3/4] iio: backend: make use of dev_errp_probe()
-From: Nuno =?ISO-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Nuno Sa
-	 <nuno.sa@analog.com>
-Cc: Petr Mladek <pmladek@suse.com>, Jonathan Cameron <jic23@kernel.org>, 
- Lars-Peter Clausen <lars@metafoo.de>, Olivier Moysan
- <olivier.moysan@foss.st.com>, Jyoti Bhayana <jbhayana@google.com>, Chris
- Down <chris@chrisdown.name>, John Ogness <john.ogness@linutronix.de>, Greg
- Kroah-Hartman <gregkh@linuxfoundation.org>,  linux-kernel@vger.kernel.org,
- linux-iio@vger.kernel.org
-Date: Thu, 04 Apr 2024 16:58:27 +0200
-In-Reply-To: <Zg6bsS3WMvp-nY3S@smile.fi.intel.com>
-References: <20240404-dev-add_dev_errp_probe-v1-0-d18e3eb7ec3f@analog.com>
-	 <20240404-dev-add_dev_errp_probe-v1-3-d18e3eb7ec3f@analog.com>
-	 <Zg6bsS3WMvp-nY3S@smile.fi.intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.0 
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aen+RE8a"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 67D9FC433F1;
+	Thu,  4 Apr 2024 14:55:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1712242529;
+	bh=G9lUvFywXgRdKLfamnkBnonk8oOiR9MI0r12zS6dtX0=;
+	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
+	b=aen+RE8ak25vlpX9Pe4w1s2I0IEuN0Xe8dsQ4xMCxRg401Ddm7Z4hTU7uhk3fCUgW
+	 GO+03+G0RSM+nLr2h8MsZmTZ+t+Y+YtN5Oi35yxECq2gH1KN+OeWgdWfs2BIGtmf07
+	 ozPdiS8nUL1wFS7zlORa+rjPcklbJXgUy6Y0Nvdq7gILpx6w1PCgVGDid/HHCyyQSZ
+	 egq4Ie94OJd3yeK5HZMzHWjCUNOtESyziFGcUDR12e/eav83l6kxPAo3YEAeC/nq/t
+	 2mXF9RP0DOWmABFVLYJWd7tjKUhoJwdz2l7KDmUWMIYSV8FBFzmoolBXAxqTe/LYpm
+	 Rk+PK0mphpHSg==
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Thu, 04 Apr 2024 17:55:22 +0300
+Message-Id: <D0BFBFRVGG47.FXCTWETKP7H4@kernel.org>
+Cc: "Andrew Cooper" <andrew.cooper3@citrix.com>, "Ard Biesheuvel"
+ <ardb@kernel.org>, "Ross Philipson" <ross.philipson@oracle.com>, "Linux
+ Kernel Mailing List" <linux-kernel@vger.kernel.org>, "the arch/x86
+ maintainers" <x86@kernel.org>, <linux-integrity@vger.kernel.org>,
+ <linux-doc@vger.kernel.org>, "Linux Crypto Mailing List"
+ <linux-crypto@vger.kernel.org>, <kexec@lists.infradead.org>,
+ <linux-efi@vger.kernel.org>, <dpsmith@apertussolutions.com>, "Thomas
+ Gleixner" <tglx@linutronix.de>, "Ingo Molnar" <mingo@redhat.com>, "Borislav
+ Petkov" <bp@alien8.de>, "H. Peter Anvin" <hpa@zytor.com>, "Dave Hansen"
+ <dave.hansen@linux.intel.com>, "Matthew Garrett" <mjg59@srcf.ucam.org>,
+ <James.Bottomley@hansenpartnership.com>, <peterhuewe@gmx.de>, "Jason
+ Gunthorpe" <jgg@ziepe.ca>, "luto@amacapital.net" <luto@amacapital.net>,
+ "Arvind Sankar" <nivedita@alum.mit.edu>, "Herbert Xu"
+ <herbert@gondor.apana.org.au>, <davem@davemloft.net>,
+ <kanth.ghatraju@oracle.com>, <trenchboot-devel@googlegroups.com>
+Subject: Re: [PATCH v8 06/15] x86: Add early SHA support for Secure Launch
+ early measurements
+From: "Jarkko Sakkinen" <jarkko@kernel.org>
+To: "Eric Biggers" <ebiggers@kernel.org>, "Andy Lutomirski"
+ <luto@kernel.org>
+X-Mailer: aerc 0.17.0
+References: <CAMj1kXEmMBY_jc0uM5UgZbuZ3-C7NPKzg5AScaunyu9XzLgzZA@mail.gmail.com> <98ad92bb-ef17-4c15-88ba-252db2a2e738@citrix.com> <CAMj1kXFTu+bV2kQhAyu15hrYai20NcBLb4Zu8XG2Y-XjL0f+rw@mail.gmail.com> <1a8e69a7-89eb-4d36-94d6-0da662d8b72f@citrix.com> <CAMj1kXEvmGy9RJo4s8tECsFj2dufZ8jBPoJOEtkcGUoj+x2qsw@mail.gmail.com> <431a0b3a-47e5-4e61-a7fc-31cdf56f4e4c@citrix.com> <20240223175449.GA1112@sol.localdomain> <e641e2f1-16cf-4717-8a1f-8afac2644efe@citrix.com> <20240223183004.GE1112@sol.localdomain> <10db421c-77da-4a1c-a25e-2374a7a2ef79@app.fastmail.com> <20240403235635.GA24248@quark.localdomain>
+In-Reply-To: <20240403235635.GA24248@quark.localdomain>
 
-On Thu, 2024-04-04 at 15:23 +0300, Andy Shevchenko wrote:
-> On Thu, Apr 04, 2024 at 01:06:25PM +0200, Nuno Sa wrote:
-> > Using dev_errp_probe() to simplify the code.
->=20
-> ...
->=20
-> > +	if (IS_ERR(fwnode))
-> > +		return dev_errp_probe(dev, PTR_ERR(fwnode),
-> > +				=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 "Cannot get Firmware reference\n");
->=20
-> ERR_CAST() seems quite good candidate to have here.
->=20
-> 		return dev_errp_probe(dev, fwnode, "Cannot get Firmware
-> reference\n");
->=20
-> (Assuming dev_errp_probe() magically understands that, note you may have =
-it as
-> =C2=A0a macro and distinguish parameter type with _Generic() or so and be=
-have
-> =C2=A0differently: ERR_PTR() vs. ERR_CAST(), see acpi_dev_hid_uid_match()
-> =C2=A0implementation, but also keep in mind that it doesn't distinguish N=
-ULL/0,
-> there
-> =C2=A0is a patch available in the mailing list to fix that, though.)
->=20
+On Thu Apr 4, 2024 at 2:56 AM EEST, Eric Biggers wrote:
+> On Wed, Apr 03, 2024 at 09:32:02AM -0700, Andy Lutomirski wrote:
+> > On Fri, Feb 23, 2024, at 10:30 AM, Eric Biggers wrote:
+> > > On Fri, Feb 23, 2024 at 06:20:27PM +0000, Andrew Cooper wrote:
+> > >> On 23/02/2024 5:54 pm, Eric Biggers wrote:
+> > >> > On Fri, Feb 23, 2024 at 04:42:11PM +0000, Andrew Cooper wrote:
+> > >> >> Yes, and I agree.=C2=A0 We're not looking to try and force this i=
+n with
+> > >> >> underhand tactics.
+> > >> >>
+> > >> >> But a blind "nack to any SHA-1" is similarly damaging in the oppo=
+site
+> > >> >> direction.
+> > >> >>
+> > >> > Well, reviewers have said they'd prefer that SHA-1 not be included=
+ and given
+> > >> > some thoughtful reasons for that.  But also they've given suggesti=
+ons on how to
+> > >> > make the SHA-1 support more palatable, such as splitting it into a=
+ separate
+> > >> > patch and giving it a proper justification.
+> > >> >
+> > >> > All suggestions have been ignored.
+> > >>=20
+> > >> The public record demonstrates otherwise.
+> > >>=20
+> > >> But are you saying that you'd be happy if the commit message read
+> > >> something more like:
+> > >>=20
+> > >> ---8<---
+> > >> For better or worse, Secure Launch needs SHA-1 and SHA-256.
+> > >>=20
+> > >> The choice of hashes used lie with the platform firmware, not with
+> > >> software, and is often outside of the users control.
+> > >>=20
+> > >> Even if we'd prefer to use SHA-256-only, if firmware elected to star=
+t us
+> > >> with the SHA-1 and SHA-256 backs active, we still need SHA-1 to pars=
+e
+> > >> the TPM event log thus far, and deliberately cap the SHA-1 PCRs in o=
+rder
+> > >> to safely use SHA-256 for everything else.
+> > >> ---
+> > >
+> > > Please take some time to read through the comments that reviewers hav=
+e left on
+> > > previous versions of the patchset.
+> >=20
+> > So I went and read through the old comments, and I'm lost.  In brief su=
+mmary:
+> >=20
+> > If the hardware+firmware only supports SHA-1, then some reviewers would=
+ prefer
+> > Linux not to support DRTM.  I personally think this is a bit silly, but=
+ it's
+> > not entirely unreasonable.  Maybe it should be a config option?
+> >=20
+> > If the hardware+firmware does support SHA-256, then it sounds (to me, r=
+eading
+> > this -- I haven't dug into the right spec pages) that, for optimal secu=
+rity,
+> > something still needs to effectively turn SHA-1 *off* at runtime by cap=
+ping
+> > the event log properly.  And that requires computing a SHA-1 hash.  And=
+, to be
+> > clear, (a) this is only on systems that already support SHA-256 and tha=
+t we
+> > should support and (b) *not* doing so leaves us potentially more vulner=
+able to
+> > SHA-1 attacks than doing so.  And no SHA-256-supporting tooling will ac=
+tually
+> > be compromised by a SHA-1 compromise if we cap the event log.
+> >=20
+> > So is there a way forward?  Just saying "read through the comments" see=
+ms like
+> > a dead end.
+> >=20
+>
+> It seems there may be a justification for some form of SHA-1 support in t=
+his
+> feature.  As I've said, the problem is that it's not explained in the pat=
+chset
+> itself.  Rather, it just talks about "SHA" and pretends like SHA-1 and SH=
+A-2 are
+> basically the same.  In fact, SHA-1 differs drastically from SHA-2 in ter=
+ms of
+> security.  SHA-1 support should be added in a separate patch, with a clea=
+rly
+> explained rationale *in the patch itself* for the SHA-1 support *specific=
+ally*.
 
-Do we care that much for going with that trouble? I understand like this we=
- go
-PTR_ERR() to then comeback to ERR_PTR() but this for probe() which is not a
-fastpath. So perhaps we could just keep it simple?
+Yeah, this is important so that we don't end up deleting that support
+by accident. Just adding to denote that this more than just a "process
+issue".
 
-- Nuno S=C3=A1=20
+> - Eric
+
+BR, Jarkko
