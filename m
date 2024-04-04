@@ -1,120 +1,113 @@
-Received: from mail-pf1-f175.google.com (mail-pf1-f175.google.com [209.85.210.175])
+Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com [209.85.167.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6390112880A;
-	Thu,  4 Apr 2024 13:38:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F19086630
+	for <linux-kernel@vger.kernel.org>; Thu,  4 Apr 2024 13:39:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712237927; cv=none; b=dJVkwOD0WVgh2/bvoVy29mcWiDUS4zfhSOMo18wYG4Tdn5vLUYncftFtBbKf5lArRM7CKCbDR9EZyc1XCUhWemPOd2Njp6rvTU2Lpb92AkmOpYBD+BV0VDGyC5WFWYJxJnPl1wmZ5DQ3vf6z/8ymvk709Kl7mcXXyAjRAazXrNE=
+	t=1712237989; cv=none; b=JLQOxMvFPGRM5QlMJDv6Huuddzv06DKygt5gOmPAw6VNcycSHriXiXSHP1QuDvoRSS29u0c16/QptyQb8mqAMDYEN6SHASqyAHKUeXZUkqP2dDvrJIp9QQgH0l5j3SMLro+iIU0UDB328T+2hOVTBhO+HinDmhILPde+fcsRPwA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712237927; c=relaxed/simple;
-	bh=x8Lyghgp6/F9G9gkl5wcYiiVhCfyHgsqvEtMNlGYbZ8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=uBn6edHR25IaZBVgb3tG9a5oON8uNYnnujWaA68C9+LIlgT1p14tHwz7AOKBVpc8eDKMnsCQDJh7P1CEtACQUZb1PvxHG7mYCLqu/Hje0zE4gajjbsJMTVT7ybWZ1gMPBurshZc9r4LfsG9c/X7608lqvCXMcSldHQeNt+doLY8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iSEuKMMH; arc=none smtp.client-ip=209.85.210.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1712237989; c=relaxed/simple;
+	bh=iYftZ0+LaPHkXuNAZXjn3s5QsFloR9tJTymonE9sXXc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=hg4ZlJsme6XEnlIJJgtnOj8Fjnf/IwgWiDeqpUTGmH0oSKUEeuA8X0qKREjjxbIaKVhZ9Fw9E/FM/ffEwTpXZTselqDS+V2jG3Ei1FX5+eA895tdw7JZM9RgnJrxxHwUn/iCwsktu1aQlqUI9A511cjAfM8/PcSlyiNTbUKlyeU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=UhqP0hek; arc=none smtp.client-ip=209.85.167.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iSEuKMMH"
-Received: by mail-pf1-f175.google.com with SMTP id d2e1a72fcca58-6eaf7c97738so774139b3a.2;
-        Thu, 04 Apr 2024 06:38:46 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="UhqP0hek"
+Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-516c3e0e8d7so2655e87.0
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Apr 2024 06:39:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1712237926; x=1712842726; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Tft6OeeDgSbfAOUrN5Xx5Zopkyg1jcKnp2CiC8iZD30=;
-        b=iSEuKMMHN4Tn15z6X60Hk3AEesaN7Cc89/1IjnZopj0CS1xryd2BQtuQoISpMvkFNb
-         gvFigbbx15zRTTqhVO2KI++4ERKESvfm/cS6i+nfsJc5wzE2y6D033DQ2Regg1l/vD0v
-         H+OQ8rB+mHAtOFCU2d10kBwVK8AL6DkaB69tZdqr5T20HHxl7faDPQzSjQkTMgAzwK+K
-         NIFqEbhzGzsDT8C3MZhSGIGCuDIdiPF61G02EmVhCTZU5fm5Y5/M0zD8C7SQ92HbpO2L
-         ROWLYRoVGFk34esSUXUgaJj4SsU3B+extu76dK+G0AMJMrQHpEMeLy8KMVpa3Cyxp8as
-         ptWQ==
+        d=google.com; s=20230601; t=1712237986; x=1712842786; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Gxf/q8h91wmoUfIFbo/DD5ZINeNSkiIb7XwE7dW0D3U=;
+        b=UhqP0hek6RwkawX9aIu/e37M+UcewsMlPLaELM3CC2eHTKJ2VQ0V97L1KSO+LqBwTb
+         T9rhU6Jqch8/gcUMM1PNs/dJEYznvDMxAMH9V7KVWuE1EBY1qqTgLfV7iyy9puAOdr2o
+         l83DLuK+3WATOh7bxUVLnVW0cAyr0t6PFP5NOue6fiByp+HPLCAPdd+FJiyWnUiE5QZY
+         VvhyUWAwuLjuFgS3Zgef2UBECgJxVPfgfLivH4CXPbNqKloBFy34Zw23HN0KONtItnli
+         TiyEgJ7kMOv3KyGRC2xKSLKoZLm5sMjFtunpIiyDkdvfsJqt0hfzP14NRF2rRRD9mpMS
+         oKlw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712237926; x=1712842726;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Tft6OeeDgSbfAOUrN5Xx5Zopkyg1jcKnp2CiC8iZD30=;
-        b=nwdtfJMEvSSTWPjyHSax4evkZ3lMLrge4lTycG5PycrdFZdcOgsQARTNwjsVntJGgM
-         dwLXib7j8kffOmlL1rKNXwHUA5iBRFXpq/g8ab4F1Jzwg5THQz4nq+yY8VBjxsAPQcZC
-         XdHxMvKyv/nO3TTDm4VPwfovEqPx8DYlWnYMP6mlBCTdD2Sh5YGMIpzBTOfiqony2PIc
-         JC341wMUKcRw1MH2Cy53VBIQx/zW6HHt1AOYYRLSH8fJAabcZTpUmLSPJHUv2kwcLA8m
-         aR+iwNf8Ro3BHgWIB8q68nk0nep4zIPwKo6Q0Or1Ie32txRe0PuP+piMipw6SXEq6Dlj
-         U8yQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVslseMqt2Gz+NBvLFvVLIRr/w4+mkwY0MLwtmgusan5zLlPFpfiglTaaBfGudE+u1OM/nD0CT7CvaD9dDi0m5pZZlQ4jfvseCLfNU1GKAgXoPomIVnZ7PVXqOj6pjROhTa
-X-Gm-Message-State: AOJu0YxvrzUTrg7JSqC0n7COcHn9H1e4X1HT5s93K7wDFw4ciF0Mcdbx
-	o0X0ns7ym6p4yp8xzaaeK+zepf5jJdKuAGWO0v0nY1mnyRA6AWtY997mTZtl11PfNA==
-X-Google-Smtp-Source: AGHT+IGwYVCu7BN5Om9yXuxMS4L968QGnax7Rwa27cBqDVDI8qtrAZwX1+ZMyVsGVLwlnJVcobYbTw==
-X-Received: by 2002:a05:6a20:3254:b0:1a3:bd8a:141f with SMTP id hm20-20020a056a20325400b001a3bd8a141fmr2516552pzc.54.1712237925633;
-        Thu, 04 Apr 2024 06:38:45 -0700 (PDT)
-Received: from [172.27.237.1] (ec2-16-163-40-128.ap-east-1.compute.amazonaws.com. [16.163.40.128])
-        by smtp.gmail.com with ESMTPSA id g21-20020a631115000000b005df58c83e89sm13472352pgl.84.2024.04.04.06.38.38
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 04 Apr 2024 06:38:45 -0700 (PDT)
-Message-ID: <9734e080-96e4-4119-8ae6-28abb7877a3c@gmail.com>
-Date: Thu, 4 Apr 2024 21:38:34 +0800
+        d=1e100.net; s=20230601; t=1712237986; x=1712842786;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Gxf/q8h91wmoUfIFbo/DD5ZINeNSkiIb7XwE7dW0D3U=;
+        b=qoOsdnrB7UOTqHxYZyJTkcCB8fAjbYkz8EpT41Num5LS3QWAzpCQ8WGGgj5tpVfhjd
+         wFeUZ8t/HHNjSYXPGa7SSTMPObH9aWae2sbdHAVqUUGsQW6THBBTi3CwgcjctecUqrPV
+         SvRk8cfunr2Z6P7wc19HwF8/2UdGL7jOf8BHb0XrTQxkJfqwrwW23struriTGmZqVYuJ
+         WDoO2K+36b7toVEf0ZS/KnxuPV6qJiYPmlyvwuChsYFDlFtvlr9MgBEiobLzAhAyVqMC
+         S3wOxl1IAHNhoTBi/56z1huBFi47rFCrLt3KZg145P4k/DyiiCvh8iORb1PbKsfkcXjc
+         oCaQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUCHN7tFvEjCyWcbaxpjM3m+bpBxasxqGlJ3Et+eiNr5GH9+ou0kg5zkWfyhWSy6DNhRzM6W3+2dWLlQENH3KyG7lV+HYon7DAg84Mq
+X-Gm-Message-State: AOJu0Yxeu2u5X00U1/MW4dXtjE7gjzQrJqMOGf9voM1L5bwtdiHRFe9y
+	lCB3usD7d7MdQkun47Li2ywjrSXaNK48CA5u7hPOe/nrEz/DbdlwrihVE+b758vzWqJ0mzwpMi6
+	HTwoUD/2S0mgUBgxw0s9EhNUzDoFpiMBka3np
+X-Google-Smtp-Source: AGHT+IElGgGjrp6smPidvhQnabJPU523EKuFysRr6L+HxagQCbtXvtU6HkkMq6zk6+k9bk8gS2Z2FjLv1dPU/IQLrhQ=
+X-Received: by 2002:a19:9108:0:b0:515:c2ad:6cac with SMTP id
+ t8-20020a199108000000b00515c2ad6cacmr54444lfd.7.1712237985332; Thu, 04 Apr
+ 2024 06:39:45 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 05/15] x86/irq: Reserve a per CPU IDT vector for posted
- MSIs
-Content-Language: en-US
-To: Jacob Pan <jacob.jun.pan@linux.intel.com>,
- LKML <linux-kernel@vger.kernel.org>, X86 Kernel <x86@kernel.org>,
- Peter Zijlstra <peterz@infradead.org>, iommu@lists.linux.dev,
- Thomas Gleixner <tglx@linutronix.de>, Lu Baolu <baolu.lu@linux.intel.com>,
- kvm@vger.kernel.org, Dave Hansen <dave.hansen@intel.com>,
- Joerg Roedel <joro@8bytes.org>, "H. Peter Anvin" <hpa@zytor.com>,
- Borislav Petkov <bp@alien8.de>, Ingo Molnar <mingo@redhat.com>
-Cc: Paul Luse <paul.e.luse@intel.com>, Dan Williams
- <dan.j.williams@intel.com>, Jens Axboe <axboe@kernel.dk>,
- Raj Ashok <ashok.raj@intel.com>, "Tian, Kevin" <kevin.tian@intel.com>,
- maz@kernel.org, seanjc@google.com, Robin Murphy <robin.murphy@arm.com>
-References: <20240126234237.547278-1-jacob.jun.pan@linux.intel.com>
- <20240126234237.547278-6-jacob.jun.pan@linux.intel.com>
-From: Robert Hoo <robert.hoo.linux@gmail.com>
-In-Reply-To: <20240126234237.547278-6-jacob.jun.pan@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20240326151909.440275-1-kyletso@google.com> <2024040417-ice-decal-b37e@gregkh>
+In-Reply-To: <2024040417-ice-decal-b37e@gregkh>
+From: Kyle Tso <kyletso@google.com>
+Date: Thu, 4 Apr 2024 21:39:28 +0800
+Message-ID: <CAGZ6i=28pf2DARJ_23Bmtx4W8LEb2f_rW_Y9ziyi85txkajvGw@mail.gmail.com>
+Subject: Re: [PATCH v2] usb: typec: tcpm: Correct the PDO counting in pd_set
+To: Greg KH <gregkh@linuxfoundation.org>
+Cc: linux@roeck-us.net, heikki.krogerus@linux.intel.com, badhri@google.com, 
+	linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, 
+	stable@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 1/27/2024 7:42 AM, Jacob Pan wrote:
-> When posted MSI is enabled, all device MSIs are multiplexed into a single
-> notification vector. MSI handlers will be de-multiplexed at run-time by
-> system software without IDT delivery.
-> 
-> Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
-> ---
->   arch/x86/include/asm/irq_vectors.h | 9 ++++++++-
->   1 file changed, 8 insertions(+), 1 deletion(-)
-> 
-> diff --git a/arch/x86/include/asm/irq_vectors.h b/arch/x86/include/asm/irq_vectors.h
-> index 3a19904c2db6..08329bef5b1d 100644
-> --- a/arch/x86/include/asm/irq_vectors.h
-> +++ b/arch/x86/include/asm/irq_vectors.h
-> @@ -99,9 +99,16 @@
->   
->   #define LOCAL_TIMER_VECTOR		0xec
->   
-> +/*
-> + * Posted interrupt notification vector for all device MSIs delivered to
-> + * the host kernel.
-> + */
-> +#define POSTED_MSI_NOTIFICATION_VECTOR	0xeb
->   #define NR_VECTORS			 256
->   
-> -#ifdef CONFIG_X86_LOCAL_APIC
-> +#ifdef X86_POSTED_MSI
+On Thu, Apr 4, 2024 at 9:22=E2=80=AFPM Greg KH <gregkh@linuxfoundation.org>=
+ wrote:
+>
+> On Tue, Mar 26, 2024 at 11:19:09PM +0800, Kyle Tso wrote:
+> > Off-by-one errors happen because nr_snk_pdo and nr_src_pdo are
+> > incorrectly added one. The index of the loop is equal to the number of
+> > PDOs to be updated when leaving the loop and it doesn't need to be adde=
+d
+> > one.
+> >
+> > When doing the power negotiation, TCPM relies on the "nr_snk_pdo" as
+> > the size of the local sink PDO array to match the Source capabilities
+> > of the partner port. If the off-by-one overflow occurs, a wrong RDO
+> > might be sent and unexpected power transfer might happen such as over
+> > voltage or over current (than expected).
+> >
+> > "nr_src_pdo" is used to set the Rp level when the port is in Source
+> > role. It is also the array size of the local Source capabilities when
+> > filling up the buffer which will be sent as the Source PDOs (such as
+> > in Power Negotiation). If the off-by-one overflow occurs, a wrong Rp
+> > level might be set and wrong Source PDOs will be sent to the partner
+> > port. This could potentially cause over current or port resets.
+> >
+> > Fixes: cd099cde4ed2 ("usb: typec: tcpm: Support multiple capabilities")
+> > Cc: stable@vger.kernel.org
+> > Signed-off-by: Kyle Tso <kyletso@google.com>
+> > ---
+> > v1 -> v2:
+> > - update the commit message (adding the problems this patch solves)
+> >
+> >  drivers/usb/typec/tcpm/tcpm.c | 4 ++--
+> >  1 file changed, 2 insertions(+), 2 deletions(-)
+>
+> This fails to apply to my usb-linus branch :(
+>
+> Can you rebase and resend?
+>
+> thanks,
+>
+> greg k-h
 
-X86_POSTED_MSI --> CONFIG_X86_POSTED_MSI?
-
-> +#define FIRST_SYSTEM_VECTOR		POSTED_MSI_NOTIFICATION_VECTOR
-> +#elif defined(CONFIG_X86_LOCAL_APIC)
->   #define FIRST_SYSTEM_VECTOR		LOCAL_TIMER_VECTOR
->   #else
->   #define FIRST_SYSTEM_VECTOR		NR_VECTORS
-
+Just sent v3
