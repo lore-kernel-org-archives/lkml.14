@@ -1,139 +1,111 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 671D3130E25
-	for <linux-kernel@vger.kernel.org>; Thu,  4 Apr 2024 16:37:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABB351C6A1
+	for <linux-kernel@vger.kernel.org>; Thu,  4 Apr 2024 16:38:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712248656; cv=none; b=MxFbqfBnEkVsPzfCuFwkxauFYhqgGw4WJ5nXKS7d/lYFRlzHGMYIYcDxyVhqPVpDsjmgyPhVUyzBFXasddgnzf8DQtaI80mH7KLb2xdX5l4v3Q1z8qUS8x8HCcTzMwokPr9GHYpZmLmJZYYhp9cEVM7DmZpGwSovMyGNDoG+zsE=
+	t=1712248685; cv=none; b=naZbx0DvnIiS0S3kiUlWCjd3x0cs4I1wezArKWX3s7wHWo8aHL2y3cPoijgA9Rn38qJ6NffPJhuS3O9J2HeQ74KBSi17LSwtv2kBFEiEPRQVmf9l+qmLNAkUfdq/y+P9aDZwlXV1yxFZh7Ox5TZOrFueZVzUt/n/oi1Ggi9InZI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712248656; c=relaxed/simple;
-	bh=MRKvUOhgbx1JCPqRkZYfqZCtresFIov/9ISiCIQgDR4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=mrsPUev0b5vBHuscjtfy/RXMbS5VHO+IjWN0IfI04onTWiRK5wfAPdotUFjQL9jzL74qFj6rUr0uTRHwyvIplilQ89rAJbYSm+n5z3FRM4O3akdyqPHYbzmpmSHI2IWhFUWyXrJs1krlqXOfJC7lkdlHf2hPdIPa78IvZl1KVrg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=hOLd7dXM; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1712248685; c=relaxed/simple;
+	bh=ARHRqF2vMFHz0poKI5R/NwxZEEnfxngPCY70Gl8BRQM=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=uULUVhGOTzeBRxp9j0DJuIOun09VIz75AML3VXv+b65Vh8z5yH8hM7q6rZDCkPQe7Qm2YAlkUYnsrn9N3W03gpqvFtsce82t5E0UumjjCyfx2sqR9ufrnFcWQyLnUsRTMKM3aX22+N1pf29pvxbdjGmHMICX78yUXhe3TYP7IFY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=DYho//ae; arc=none smtp.client-ip=209.85.219.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hOLd7dXM"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1712248654;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Q3q+pZ5P34ghakudMZLyDnJaIa/cVUQD0kuqVhWGHj8=;
-	b=hOLd7dXMAJrsahgszPN4y+MZdG3OJiuTEYEfv0dy5vijSCZkTdkS2Ech7sTmuBp62tLOte
-	xwCUGKVbiXjEhlRDph9VDaEaH5Ic3BdPyknjQXUrVPbyqPdrrqa/u8wobC9BL2p0JuIdpU
-	GtJaT7Faly/Q1JY8n0FImaHndWkfJeM=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-383-iKIcEnTlP7OdF8dgEB13LQ-1; Thu, 04 Apr 2024 12:37:30 -0400
-X-MC-Unique: iKIcEnTlP7OdF8dgEB13LQ-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.rdu2.redhat.com [10.11.54.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 9AC5E88D016;
-	Thu,  4 Apr 2024 16:37:29 +0000 (UTC)
-Received: from t14s.fritz.box (unknown [10.39.192.101])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 0804E3C24;
-	Thu,  4 Apr 2024 16:37:25 +0000 (UTC)
-From: David Hildenbrand <david@redhat.com>
-To: linux-kernel@vger.kernel.org
-Cc: linux-mm@kvack.org,
-	linux-s390@vger.kernel.org,
-	kvm@vger.kernel.org,
-	David Hildenbrand <david@redhat.com>,
-	Matthew Wilcox <willy@infradead.org>,
-	Heiko Carstens <hca@linux.ibm.com>,
-	Vasily Gorbik <gor@linux.ibm.com>,
-	Alexander Gordeev <agordeev@linux.ibm.com>,
-	Christian Borntraeger <borntraeger@linux.ibm.com>,
-	Sven Schnelle <svens@linux.ibm.com>,
-	Janosch Frank <frankja@linux.ibm.com>,
-	Claudio Imbrenda <imbrenda@linux.ibm.com>,
-	Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
-	Thomas Huth <thuth@redhat.com>
-Subject: [PATCH v1 5/5] s390/hugetlb: convert PG_arch_1 code to work on folio->flags
-Date: Thu,  4 Apr 2024 18:36:42 +0200
-Message-ID: <20240404163642.1125529-6-david@redhat.com>
-In-Reply-To: <20240404163642.1125529-1-david@redhat.com>
-References: <20240404163642.1125529-1-david@redhat.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="DYho//ae"
+Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-dcbfe1a42a4so2122020276.2
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Apr 2024 09:38:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1712248682; x=1712853482; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=VWZS7flKLl0sICuGu0YXGwS4yht3MSv7qVnyogrx7+E=;
+        b=DYho//aeEs0NvsO0yasBDeGtjLoe2Nx5dA0Yis1T0Tl5FfGZib9dJTAfh4CEt8U5kq
+         +GkJmzGdQTSncbu62sZqtX+xeHfPfJNDS+rlh3ZrOJ/j3M33hPBp0Jyqy2dSfqeQ9trU
+         2X6cUyrBBjED+e0+Ed/z0yur2IjWRXZKK4eUXdDcIuilkMFgJKEv8hfCs+jaWMZTDmAq
+         qqbCgcmMpRUMzHwKRTtdTuwlJfG9+VrS31yhgt5izbkEzG7DqQkdSzhiv+khUo0TQQnK
+         3ev1cXBjd80p3PTxS2wd5kQ0G2HQNeDeFGlwdXwbSNamR2KG6sytmCpypSG6fd9Q1WC0
+         rg9A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712248682; x=1712853482;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=VWZS7flKLl0sICuGu0YXGwS4yht3MSv7qVnyogrx7+E=;
+        b=tWusQqpOv//ZSiFP5lOEyHg+OUFAGNlioW5OuXcVX5Nw8E7C+u1D2Fdro4e1wvWhyJ
+         AhFVGWuJY3Q7zfd3pkpJuNGEN/9fI3tOLlMO0OWEwfyJTdmQefGu3PINvuMgDyyOb1c3
+         WOVzwAv9eiP8f5/jIyk4elJnAFDGpFSTAsw/8trGq7XqxJfdIiTm9eCvutqfZmgNjyJe
+         8GxAWUHiPzyYZ7ymKc0w5YcDlgRLr1Kbcu3bXBplmkYVfqoBu1JaCyNIBSsZ/GwGboJh
+         yn6W2GtcEoVrFxIH6tDR5QgUbMPHdxKG7YQ0TcQsa+LJGglUhYOL1QU6JfNkxRmr7lq7
+         r+3Q==
+X-Forwarded-Encrypted: i=1; AJvYcCWHXUZV5gydbuLnvY+TMGFUCFUvzl23wHZ6TzvgtYROUeb8TIb1jEy3qbMXxUzDs1vwoniKl3ii4TE8PpbX9xMglwp3axXb1LbK5qpf
+X-Gm-Message-State: AOJu0Yz+TjW0yLyOFh7jf85soJFcQPaMp/emT8OwUMoTSTrg9mL7Kfbe
+	XMYEGtHMBC+XxgCp1pgMUInD8hvFaLAPBJICsiUneYcpwD8Cy75b/CnNNELn6GcvtJ6tCjJYP89
+	UCw==
+X-Google-Smtp-Source: AGHT+IG5CJi0WgWPz9hS4ye66MIeTg71IJ/rjxj7nrkFR7AsZK+ppsIjPTs4qWcpDFmnbajciozpjbHu8xA=
+X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
+ (user=seanjc job=sendgmr) by 2002:a25:2d22:0:b0:dcb:bc80:8333 with SMTP id
+ t34-20020a252d22000000b00dcbbc808333mr1870ybt.13.1712248682770; Thu, 04 Apr
+ 2024 09:38:02 -0700 (PDT)
+Date: Thu, 4 Apr 2024 09:38:01 -0700
+In-Reply-To: <6d24f7b1-a271-43de-ba94-847a3c9e0d8c@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.1
+Mime-Version: 1.0
+References: <20240228024147.41573-1-seanjc@google.com> <20240228024147.41573-2-seanjc@google.com>
+ <2441bd2a-a0b1-5184-bac8-28c94b151c93@amd.com> <6d24f7b1-a271-43de-ba94-847a3c9e0d8c@linux.intel.com>
+Message-ID: <Zg7XaYwmFbZUljfi@google.com>
+Subject: Re: [PATCH 01/16] KVM: x86/mmu: Exit to userspace with -EFAULT if
+ private fault hits emulation
+From: Sean Christopherson <seanjc@google.com>
+To: Binbin Wu <binbin.wu@linux.intel.com>
+Cc: Pankaj Gupta <pankaj.gupta@amd.com>, Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Yan Zhao <yan.y.zhao@intel.com>, 
+	Isaku Yamahata <isaku.yamahata@intel.com>, Michael Roth <michael.roth@amd.com>, 
+	Yu Zhang <yu.c.zhang@linux.intel.com>, Chao Peng <chao.p.peng@linux.intel.com>, 
+	Fuad Tabba <tabba@google.com>, David Matlack <dmatlack@google.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 
-Let's make it clearer that we are always working on folio flags and
-never page flags of tail pages.
+On Tue, Mar 12, 2024, Binbin Wu wrote:
+>=20
+> On 3/7/2024 8:52 PM, Gupta, Pankaj wrote:
+> > > Exit to userspace with -EFAULT / KVM_EXIT_MEMORY_FAULT if a private f=
+ault
+> > > triggers emulation of any kind, as KVM doesn't currently support
+> > > emulating access to guest private memory.=C2=A0 Practically speaking,=
+ private
+> > > faults and emulation are already mutually exclusive, but there are ed=
+ge
+> > > cases upon edge cases where KVM can return RET_PF_EMULATE, and adding=
+ one
+> > > last check
+> >=20
+> > edge cases upon edge cases?
+> >=20
+> > Just curious about the details of the edge cases scenarios?
+>=20
+> Same question out of curiosity.
 
-Signed-off-by: David Hildenbrand <david@redhat.com>
----
- arch/s390/mm/gmap.c        | 4 ++--
- arch/s390/mm/hugetlbpage.c | 8 ++++----
- 2 files changed, 6 insertions(+), 6 deletions(-)
+Accesses that hit the APIC-access page and gfns that are write-tracked, are=
+ the
+two most likely candidates.  Even plain old emulated MMIO falls into this b=
+ucket,
+e.g. if KVM botched things and generated a RSVD fault on a private mapping.=
+  I'll
+reword that line to
 
-diff --git a/arch/s390/mm/gmap.c b/arch/s390/mm/gmap.c
-index 9233b0acac89..ca31f2143bc0 100644
---- a/arch/s390/mm/gmap.c
-+++ b/arch/s390/mm/gmap.c
-@@ -2731,7 +2731,7 @@ static int __s390_enable_skey_hugetlb(pte_t *pte, unsigned long addr,
- {
- 	pmd_t *pmd = (pmd_t *)pte;
- 	unsigned long start, end;
--	struct page *page = pmd_page(*pmd);
-+	struct folio *folio = pmd_folio(*pmd);
- 
- 	/*
- 	 * The write check makes sure we do not set a key on shared
-@@ -2746,7 +2746,7 @@ static int __s390_enable_skey_hugetlb(pte_t *pte, unsigned long addr,
- 	start = pmd_val(*pmd) & HPAGE_MASK;
- 	end = start + HPAGE_SIZE - 1;
- 	__storage_key_init_range(start, end);
--	set_bit(PG_arch_1, &page->flags);
-+	set_bit(PG_arch_1, &folio->flags);
- 	cond_resched();
- 	return 0;
- }
-diff --git a/arch/s390/mm/hugetlbpage.c b/arch/s390/mm/hugetlbpage.c
-index e1e63dc1b23d..21ed6ac5f1c5 100644
---- a/arch/s390/mm/hugetlbpage.c
-+++ b/arch/s390/mm/hugetlbpage.c
-@@ -121,7 +121,7 @@ static inline pte_t __rste_to_pte(unsigned long rste)
- 
- static void clear_huge_pte_skeys(struct mm_struct *mm, unsigned long rste)
- {
--	struct page *page;
-+	struct folio *folio;
- 	unsigned long size, paddr;
- 
- 	if (!mm_uses_skeys(mm) ||
-@@ -129,16 +129,16 @@ static void clear_huge_pte_skeys(struct mm_struct *mm, unsigned long rste)
- 		return;
- 
- 	if ((rste & _REGION_ENTRY_TYPE_MASK) == _REGION_ENTRY_TYPE_R3) {
--		page = pud_page(__pud(rste));
-+		folio = page_folio(pud_page(__pud(rste)));
- 		size = PUD_SIZE;
- 		paddr = rste & PUD_MASK;
- 	} else {
--		page = pmd_page(__pmd(rste));
-+		folio = pmd_folio(__pmd(rste));
- 		size = PMD_SIZE;
- 		paddr = rste & PMD_MASK;
- 	}
- 
--	if (!test_and_set_bit(PG_arch_1, &page->flags))
-+	if (!test_and_set_bit(PG_arch_1, &folio->flags))
- 		__storage_key_init_range(paddr, paddr + size - 1);
- }
- 
--- 
-2.44.0
+  faults and emulation are already mutually exclusive, but there are many
+  flows that can result in KVM returning RET_PF_EMULATE, and adding one las=
+t
+  check to harden against weird, unexpected combinations and/or KVM bugs is
+  inexpensive.
 
+to make it sound less dramatic/hand-wavy.
