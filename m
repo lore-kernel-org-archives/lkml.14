@@ -1,176 +1,77 @@
-Received: from mail-yw1-f170.google.com (mail-yw1-f170.google.com [209.85.128.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 088211292FB
-	for <linux-kernel@vger.kernel.org>; Thu,  4 Apr 2024 14:14:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8617C1CD03;
+	Thu,  4 Apr 2024 14:15:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712240067; cv=none; b=V/BXQZ3kuczYrmJduQvQAN1GdqZcW+6XcOQCHnjDh667o9rASQoBk+VTgVO7Q8tevTcskDVg52UlsHgjwmCNa24ElUStD0U2A2L+HzhCvID+Rnros2nAL2gIWe5HVUJ37gyvPA3+dKx4RF4wtG+y/lDxOkyLu3Qh1eaQzSohSe0=
+	t=1712240133; cv=none; b=no/Oap6Qs5gf2GEQOnO7Yig9iruyls3jy/ZsczyQKPVy9lF/1WTm3gepPQrSRzupaOp74XvCZSb0m6rfuPPJPi2e8F8Y3982Ny2M4tDTHrx5emKSotPsAx8TMqGgvj/kVY34/x7OsqC00a930ZwXnR84FoxPcUtHD3G7bAKIiNw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712240067; c=relaxed/simple;
-	bh=wPNv0rAK4gkp3iAr/PUWZQQ3gdHika88yZSnlZ8mFvM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=dUxg2M8Sfllu1T1o5xum249ijTH0LEf2dswK+zZ21GFhpd9dxYZUdRurUKfB7SYAfGs8uaOZrXYPImcrjXHtS29g7nRBAo72pSyH2UK/4P+FxSSQ5bkyE3zeOUAJYvJUMhGSZ9AcYIIV1bt2do8d64c813ZQxgSoHUuaq/vRXj4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=okxy2CJ6; arc=none smtp.client-ip=209.85.128.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1712240133; c=relaxed/simple;
+	bh=5mRLZJpdw6WkB0SSyJ4/aJtAg0Lr9QOhnDLZhWIwlXw=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=UCC/dsVbfMuYNng94agqeLSu7eDHl39J3wwT6tjwcK9vXllmeL4VV5FpY1AY37Wbj7CYg8nMn5DW3d9aszs7m8axQ8fb+kerI0S74gZQwIfiqb88R3FL/C2f1wpI0kizUYpVc8dKwJsu+cZMLxHzGTqAUkzbSOucYcyDhNhJ1UA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=da6dwdfX; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="okxy2CJ6"
-Received: by mail-yw1-f170.google.com with SMTP id 00721157ae682-6157c30fbc9so10648087b3.0
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Apr 2024 07:14:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1712240065; x=1712844865; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ThTdXKBRbeKtfvxTpWolYFeuiHKpOFysUOKZwvjPsjg=;
-        b=okxy2CJ6E8ANDm6XcWeBcpjHXxBvRT+JcI391ITweCFOMARdfwi6DhCuJ7Lw1dtxou
-         IMZAoI0j+1fX/qBKrMBNDSH/Kc52iHTN0k+Dj2BWoSW3izh9AiOVyQHhowK1jABkg080
-         iYNZZ3PqSDtjnOhL3TWZIkOEv7vpaEw7OTSCBiHYsJDd/eeJ8h/+/EA2iTa0RXAKitLy
-         e1ddeovga09M+7bieiIAFMteTfNKgMpfkNoF1SjU+S6UTY0odYMN/4RoFSsI/4olRM+0
-         Hr+yQTjZOM8Zc78I/oMWm5FgFI8UrDmv9iPVl0jSarmbn+CQLlyizAdyegUy/370So+i
-         SuoA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712240065; x=1712844865;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ThTdXKBRbeKtfvxTpWolYFeuiHKpOFysUOKZwvjPsjg=;
-        b=ko1/BQW0o2zHr5ATtEWmtSMlVSYn2iLZJAyNWW+h7EYn8g3qKac0pbtiSZQOrspYIR
-         m7tLIraXuXqxDIPBPT902X10geKLfdu4Pv0ctJaojBr5w7VLCRpPuVJrv7xpO5DHkCE3
-         r0Y1mEDQoGmRgtXP6UXXHDysuA1tt8Y9f4+CciwnVj1h6MFzV6UcljPaHI1Hgqc+awzm
-         vPgMdqpzuLnCz6wkvCFGorr3vFrhvZaMJKmINHZNTsMTZIdT1621mkmGzFLRLUXZ5mSS
-         pIrbjf29hi/JX6zCOMM94SKookoHcNDrYkG22E9jcMOfCxUVCb78yw6kRfmksIoN2Csu
-         TRnA==
-X-Forwarded-Encrypted: i=1; AJvYcCWMVWuHfk/FJlQsUZ+zW5SItCD2ODk1nB4j6E46qGkbC8uaq3C0zxt5cB0+MN5LhmSwXncmyk44JyDTIEim3HOD2zX3rS62KSOkRFir
-X-Gm-Message-State: AOJu0YwmM2VF/MZviPrWIHyzFyFtxef6+n2UGTLPcPNNac93TzbEZP08
-	kbroUs+G2b6tFYFTBVIlhHZU563XuFBWtJyhRuuQVyPx/TjwGWHvPYbKqHmBhkovPVqubJP8cju
-	IhoQQS0U3Rj3XL5CoKK05lRs3AWYp6qYaI7e2
-X-Google-Smtp-Source: AGHT+IGDUpNqNE89JPxkJnDxFJf7/PVFTdmFLJF3gZOL+YcWNT1lfbQ0eNtc40hL79Zon1479pqusNFqd3fCHU1wudQ=
-X-Received: by 2002:a81:a0c9:0:b0:608:ecd0:f894 with SMTP id
- x192-20020a81a0c9000000b00608ecd0f894mr2430209ywg.1.1712240064820; Thu, 04
- Apr 2024 07:14:24 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="da6dwdfX"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DBC8FC433C7;
+	Thu,  4 Apr 2024 14:15:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1712240133;
+	bh=5mRLZJpdw6WkB0SSyJ4/aJtAg0Lr9QOhnDLZhWIwlXw=;
+	h=From:Subject:Date:To:Cc:From;
+	b=da6dwdfXp3t2QYrMLxkFcWIl33faaUCyNJbw3kCwhWnRoswr+xjeEMWJ+1SdBThLQ
+	 6yoD9iBh6AI6zMFk0ECjZwjIVB6XB2bUaDYr4jEHGwRfZA5nkVfwr/tVPqGPj32Nmp
+	 SE1WF9nRvd+Mk7BZ35WB7ufFakN+T1Fjt+wC9ke3PxebP5mMsPe8pKKebOuHKN7ajy
+	 raLjGlqsCweFmM5lHFeamClTwCmJHXq0I4XLHomObMbwsk2nzpHHLY/Ho59erKMSRs
+	 Oxv5fGAm4jYgvZ+b200OZFN/ylpqE3nCxX3vtU+9xvOnQCA+05GfZHxdNh17dii7Ym
+	 PA8LhGrLdYpjw==
+From: Rob Herring <robh@kernel.org>
+Subject: [PATCH 0/3] of: Use __free() based cleanups
+Date: Thu, 04 Apr 2024 09:15:09 -0500
+Message-Id: <20240404-dt-cleanup-free-v1-0-c60e6cba8da9@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240402-linked-list-v1-0-b1c59ba7ae3b@google.com>
- <20240402-linked-list-v1-2-b1c59ba7ae3b@google.com> <36306930-0390-4342-830d-03c11ec4a3a7@proton.me>
-In-Reply-To: <36306930-0390-4342-830d-03c11ec4a3a7@proton.me>
-From: Alice Ryhl <aliceryhl@google.com>
-Date: Thu, 4 Apr 2024 16:14:14 +0200
-Message-ID: <CAH5fLghHmuHxw1BL1F2-VF5KUXQLOwMqW6PfiAoLBXRE0Gyu=g@mail.gmail.com>
-Subject: Re: [PATCH 2/9] rust: list: add tracking for ListArc
-To: Benno Lossin <benno.lossin@proton.me>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, 
-	Alex Gaynor <alex.gaynor@gmail.com>, Wedson Almeida Filho <wedsonaf@gmail.com>, 
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Andreas Hindborg <a.hindborg@samsung.com>, Marco Elver <elver@google.com>, 
-	Kees Cook <keescook@chromium.org>, Coly Li <colyli@suse.de>, Paolo Abeni <pabeni@redhat.com>, 
-	Pierre Gondois <pierre.gondois@arm.com>, Ingo Molnar <mingo@kernel.org>, 
-	Jakub Kicinski <kuba@kernel.org>, Wei Yang <richard.weiyang@gmail.com>, 
-	Matthew Wilcox <willy@infradead.org>, linux-kernel@vger.kernel.org, 
-	rust-for-linux@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAO21DmYC/x2MQQqAIBAAvxJ7bsHSJPpKdLBcayEstCIQ/57En
+ OYwkyBSYIowVAkCPRz58EWauoJlM34lZFscWtEqUUB74bKT8feJLhChtp2Ualaz1D2U6gzk+P2
+ P45TzBx0o0jxhAAAA
+To: Saravana Kannan <saravanak@google.com>
+Cc: Jonathan Cameron <jic23@kernel.org>, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org
+X-Mailer: b4 0.13-dev
 
-On Wed, Apr 3, 2024 at 5:52=E2=80=AFPM Benno Lossin <benno.lossin@proton.me=
-> wrote:
->
-> I think the commit one-line description sounds a bit strange, how about
-> "rust: list: add ListArc tracking strategies"?
->
-> On 02.04.24 14:16, Alice Ryhl wrote:
-> > @@ -33,19 +34,64 @@ pub trait ListArcSafe<const ID: u64 =3D 0> {
-> >      unsafe fn on_drop_list_arc(&self);
-> >  }
-> >
-> > +/// Declares that this type is able to safely attempt to create `ListA=
-rc`s at any time.
-> > +///
-> > +/// # Safety
-> > +///
-> > +/// Implementers must ensure that `try_new_list_arc` does not return `=
-true` if a `ListArc` already
-> > +/// exists.
-> > +pub unsafe trait TryNewListArc<const ID: u64 =3D 0>: ListArcSafe<ID> {
-> > +    /// Attempts to convert an `Arc<Self>` into an `ListArc<Self>`. Re=
-turns `true` if the
-> > +    /// conversion was successful.
-> > +    fn try_new_list_arc(&self) -> bool;
-> > +}
-> > +
-> >  /// Declares that this type supports [`ListArc`].
-> >  ///
-> > -/// When using this macro, it will only be possible to create a [`List=
-Arc`] from a [`UniqueArc`].
-> > +/// When using this macro, you may choose between the `untracked` stra=
-tegy where it is not tracked
-> > +/// whether a [`ListArc`] exists, and the `tracked_by` strategy where =
-the tracking is deferred to a
-> > +/// field of the struct. The `tracked_by` strategy can be combined wit=
-h a field of type
-> > +/// [`AtomicListArcTracker`] to track whether a [`ListArc`] exists.
-> >  #[macro_export]
-> >  macro_rules! impl_list_arc_safe {
-> >      (impl$({$($generics:tt)*})? ListArcSafe<$num:tt> for $t:ty { untra=
-cked; } $($rest:tt)*) =3D> {
-> > -        impl$(<$($generics)*>)? $crate::list::ListArcSafe<$num> for $t=
- {
-> > +        impl$(<$($generics)*>)? ListArcSafe<$num> for $t {
->
-> This change seems unintentional.
+This small series converts the DT code to use __free() based cleanups 
+for kfree() and of_node_put(). Using __free() simplifies function exit 
+handling. Initial support for struct device_node was added in commit 
+9448e55d032d ("of: Add cleanup.h based auto release via 
+__free(device_node) markings").
 
-Will fix.
+Signed-off-by: Rob Herring <robh@kernel.org>
+---
+Rob Herring (3):
+      of: Add a helper to free property struct
+      of: Use scope based kfree() cleanups
+      of: Use scope based of_node_put() cleanups
 
-> >              unsafe fn on_create_list_arc_from_unique(&mut self) {}
-> >              unsafe fn on_drop_list_arc(&self) {}
-> >          }
-> >          $crate::list::impl_list_arc_safe! { $($rest)* }
-> >      };
-> >
-> > +    (impl$({$($generics:tt)*})? ListArcSafe<$num:tt> for $t:ty {
-> > +        tracked_by $field:ident : $fty:ty;
-> > +    } $($rest:tt)*) =3D> {
-> > +        impl$(<$($generics)*>)? ListArcSafe<$num> for $t {
->
-> Here you also want to access `ListArcSafe` via
-> `$crate::list::ListArcSafe`.
+ drivers/of/address.c    | 60 ++++++++++++++++---------------------------------
+ drivers/of/base.c       | 34 +++++++---------------------
+ drivers/of/dynamic.c    | 37 +++++++++++++-----------------
+ drivers/of/of_private.h |  1 +
+ drivers/of/overlay.c    | 11 +++------
+ drivers/of/property.c   | 22 ++++++------------
+ drivers/of/resolver.c   | 35 +++++++++++------------------
+ drivers/of/unittest.c   | 12 +++-------
+ 8 files changed, 70 insertions(+), 142 deletions(-)
+---
+base-commit: 4cece764965020c22cff7665b18a012006359095
+change-id: 20240404-dt-cleanup-free-6d5334b4b368
 
-Will fix.
+Best regards,
+-- 
+Rob Herring <robh@kernel.org>
 
-> > +            unsafe fn on_create_list_arc_from_unique(&mut self) {
-> > +                let me =3D self as *mut Self;
-> > +                let field: *mut $fty =3D unsafe { ::core::ptr::addr_of=
-_mut!((*me).$field) };
->
-> I think we should also have `SAFETY` comments in macros.
->
-> Also why can't this be done using safe code?:
->
->      let field: &mut $fty =3D &mut self.$field;
-
-Not sure why. Probably a historical accident. Will change it to be safe.
-
-> > +                unsafe { <$fty as $crate::list::ListArcSafe<$num>>::on=
-_create_list_arc_from_unique(
-> > +                        &mut *field
-> > +                ) };
->
-> Formatting? rustfmt gives me this:
->
->                  unsafe {
->                      <$fty as $crate::list::ListArcSafe<$num>>::on_create=
-_list_arc_from_unique(
->                          &mut *field
->                      )
->                  };
->
-> (maybe the `;` should be inside the `unsafe` block in this case?)
-
-I can make the change, but rustfmt does not affect macros.
-
-Alice
