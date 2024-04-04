@@ -1,98 +1,78 @@
-Received: from relay4-d.mail.gandi.net (relay4-d.mail.gandi.net [217.70.183.196])
+Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CA865D73A
-	for <linux-kernel@vger.kernel.org>; Thu,  4 Apr 2024 08:04:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.196
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F8745D73A;
+	Thu,  4 Apr 2024 08:04:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.154.123
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712217858; cv=none; b=p2BIBfryHfoOIr1mqAxRH66edi4wBUxPKI55n+ytpFRT0RT00ZOd165i5dgBnb/WW7MPvEE4ZTn9A4GTaW6sIRYQ2HFf5lvzBGPWux8ROnuyWwlVkrG+44z3hzF9R4+LF2TfgCBX+VL5xaX6M3xy8J7mnX8e4lPxt8Zc9pkZJ/E=
+	t=1712217885; cv=none; b=sf/yhuHd/OjyaZNuIJ3ot5j1AM/C6downp0xZpT5nFMHv+cSTFZeKQE7OSp00hHnGJS2+BxP67mBrLLhj+efOesARAqkXDmGGTrJppOvEmObROCox3yPZAjp6QAkO2qVkSt/89DgOqH0l99htHx9Ki14v24fVwQrPjlPBRNl4Ns=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712217858; c=relaxed/simple;
-	bh=Ek5fSmDXp78lw8Lyzp8NrGztbcnXisYx47LKbLmVKvI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=AIgqBCyo14PkS1eWG81GB8imvjkUV4Zt74YkjCXywaQteDfBgA4yt6eYi5zrQ6AeixkJF9+4B08VTg2IO5ixLbgNpme1Lswbhr7gAcZ8swD2oyeGBLGUuIGJ8ywMElXDEmkUFUlKNy0vJoQKORT3nST9npxICm8MKwuonun9qOI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr; spf=pass smtp.mailfrom=ghiti.fr; arc=none smtp.client-ip=217.70.183.196
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ghiti.fr
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 54BBAE0011;
-	Thu,  4 Apr 2024 08:04:06 +0000 (UTC)
-Message-ID: <ee75e516-87fd-462f-ba6a-8c33506057e1@ghiti.fr>
-Date: Thu, 4 Apr 2024 10:04:05 +0200
+	s=arc-20240116; t=1712217885; c=relaxed/simple;
+	bh=X1GctJvEBCORgKljirWAIXfLa3Hvgr0uFQWr0R44aHw=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=q8zp23o+SNzbl/vT1yRBZqSZUr8Rp86Lo4FNXrI2n3DzFHIAIUR6axP/QW2rXDsMJmA5GFILP0VhWhlI9T3zbRGUQ/MMzdfuq/wlW0nnYPp4NprGpu6sr+hEHZjBi39wjnaDg+tXvAqmXD10DqY6mABsoS86ECj6VtXa1gMNsfE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=xTAbamQK; arc=none smtp.client-ip=68.232.154.123
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="xTAbamQK"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1712217884; x=1743753884;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=X1GctJvEBCORgKljirWAIXfLa3Hvgr0uFQWr0R44aHw=;
+  b=xTAbamQKe3eXHpOsrSIQCJVGXA7WR7Cp9/yAIxFNOGaz81H3c8ntBtQp
+   DkTcr4eYZr4HVtyxlQk6y1TMnQ4UDvdJzXz7MnDv/WwPLfLFpnSlWNii5
+   gO+4lb9o3gZfuXCM4x1HGOf4pSFggoPge6Zxv4ge547aFBNMtoeUXbuMS
+   UwZyomnqM2+G3FIzZ3WbMdpvrzZhowhllngGGrg4rCVm/5g+G49IplUhW
+   KTSKd9gKuJTCYbMl2Y3hAgeBs7Xx1HpBAT7f4Kqq6qdTo/FrvSBX0w4Gx
+   niwm059+FazJx/gyghpmJn9q+mmKmEN1cs6ui30jucfGF2bUnG+XasaUk
+   Q==;
+X-CSE-ConnectionGUID: dlpw0rggR4WYgOJDui2PAg==
+X-CSE-MsgGUID: IqhGjgYfS7qAbPAyxk+qrA==
+X-IronPort-AV: E=Sophos;i="6.07,178,1708412400"; 
+   d="scan'208";a="186710219"
+X-Amp-Result: SKIPPED(no attachment in message)
+Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
+  by esa6.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 04 Apr 2024 01:04:43 -0700
+Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
+ chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Thu, 4 Apr 2024 01:04:32 -0700
+Received: from DEN-DL-M31836.microsemi.net (10.10.85.11) by
+ chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server id
+ 15.1.2507.35 via Frontend Transport; Thu, 4 Apr 2024 01:04:29 -0700
+From: Horatiu Vultur <horatiu.vultur@microchip.com>
+To: <andrew@lunn.ch>, <hkallweit1@gmail.com>, <linux@armlinux.org.uk>,
+	<davem@davemloft.net>, <edumazet@google.com>, <kuba@kernel.org>,
+	<pabeni@redhat.com>, <richardcochran@gmail.com>
+CC: <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<UNGLinuxDriver@microchip.com>, Horatiu Vultur <horatiu.vultur@microchip.com>
+Subject: [PATCH net-next 0/2] net: phy: micrel: lan8814: Enable PTP_PF_PEROUT
+Date: Thu, 4 Apr 2024 10:01:13 +0200
+Message-ID: <20240404080115.450929-1-horatiu.vultur@microchip.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 05/13] riscv: Only send remote fences when some other
- CPU is online
-Content-Language: en-US
-To: Samuel Holland <samuel.holland@sifive.com>,
- Palmer Dabbelt <palmer@dabbelt.com>, linux-riscv@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
- Alexandre Ghiti <alexghiti@rivosinc.com>, Jisheng Zhang
- <jszhang@kernel.org>, Yunhui Cui <cuiyunhui@bytedance.com>
-References: <20240327045035.368512-1-samuel.holland@sifive.com>
- <20240327045035.368512-6-samuel.holland@sifive.com>
-From: Alexandre Ghiti <alex@ghiti.fr>
-In-Reply-To: <20240327045035.368512-6-samuel.holland@sifive.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-GND-Sasl: alex@ghiti.fr
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 
+Add support for PTP_PF_PEROUT to lan8814. First patch just enables
+the LTC at probe time, such that it is not required to enable
+timestamping to have the LTC enabled. While the second patch actually
+adds support for PTP_PF_PEROUT.
 
-On 27/03/2024 05:49, Samuel Holland wrote:
-> If no other CPU is online, a local cache or TLB flush is sufficient.
-> These checks can be constant-folded when SMP is disabled.
->
-> Signed-off-by: Samuel Holland <samuel.holland@sifive.com>
-> ---
->
-> (no changes since v4)
->
-> Changes in v4:
->   - New patch for v4
->
->   arch/riscv/mm/cacheflush.c | 4 +++-
->   arch/riscv/mm/tlbflush.c   | 4 +++-
->   2 files changed, 6 insertions(+), 2 deletions(-)
->
-> diff --git a/arch/riscv/mm/cacheflush.c b/arch/riscv/mm/cacheflush.c
-> index d76fc73e594b..f5be1fec8191 100644
-> --- a/arch/riscv/mm/cacheflush.c
-> +++ b/arch/riscv/mm/cacheflush.c
-> @@ -21,7 +21,9 @@ void flush_icache_all(void)
->   {
->   	local_flush_icache_all();
->   
-> -	if (riscv_use_sbi_for_rfence())
-> +	if (num_online_cpus() < 2)
-> +		return;
-> +	else if (riscv_use_sbi_for_rfence())
->   		sbi_remote_fence_i(NULL);
->   	else
->   		on_each_cpu(ipi_remote_fence_i, NULL, 1);
-> diff --git a/arch/riscv/mm/tlbflush.c b/arch/riscv/mm/tlbflush.c
-> index da821315d43e..0901aa47b58f 100644
-> --- a/arch/riscv/mm/tlbflush.c
-> +++ b/arch/riscv/mm/tlbflush.c
-> @@ -79,7 +79,9 @@ static void __ipi_flush_tlb_all(void *info)
->   
->   void flush_tlb_all(void)
->   {
-> -	if (riscv_use_sbi_for_rfence())
-> +	if (num_online_cpus() < 2)
-> +		local_flush_tlb_all();
-> +	else if (riscv_use_sbi_for_rfence())
->   		sbi_remote_sfence_vma_asid(NULL, 0, FLUSH_TLB_MAX_SIZE, FLUSH_TLB_NO_ASID);
->   	else
->   		on_each_cpu(__ipi_flush_tlb_all, NULL, 1);
+Horatiu Vultur (2):
+  net: phy: micrel: lan8814: Enable LTC at probe time
+  net: phy: micrel: lan8814: Add support for PTP_PF_PEROUT
 
+ drivers/net/phy/micrel.c | 379 ++++++++++++++++++++++++++++++++++++---
+ 1 file changed, 355 insertions(+), 24 deletions(-)
 
-Could this be done directly in __sbi_rfence() instead?
-
-Otherwise:
-
-Reviewed-by: Alexandre Ghiti <alexghiti@rivosinc.com>
+-- 
+2.34.1
 
