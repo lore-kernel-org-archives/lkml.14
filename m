@@ -1,135 +1,90 @@
-Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com [209.85.167.52])
+Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com [209.85.167.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6167D839E0
-	for <linux-kernel@vger.kernel.org>; Thu,  4 Apr 2024 10:34:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5AE17F7E9;
+	Thu,  4 Apr 2024 10:40:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712226872; cv=none; b=cYYQawYQ6/DYVQfpRWPH4VnWg6sDbEEjQw5X/89ptTQ1xtcx7G6kckCHL/Lr0LcW6g8xW6V6nVCUWt8WyW2TLttFqTIOma+uAw6WpqQ2nPcBxh90tLnwlnVvOq8qNZhsxl5X6LP/LXtohRw5u65bsuoU7oAi/Ny43TPQhhdzEIM=
+	t=1712227247; cv=none; b=qEtXhp/Ci0OQZlsuSkGL3+HgQdq1oKCu1+kDnw3/4Ac514RX4Wk58QaMw6Sw+6r5Z2g/KKGYYe/s8xAMpEMMwhsigrC6PmLDa4xVtkSoRuuaHP0wRFkX1pph36pzOGV+gptnxZiT0BVs/wFwKcuAscE97DkECP4ma/TKYbcZn00=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712226872; c=relaxed/simple;
-	bh=3pUouzGKtTo71pYkdkJFB3gRP9khPlS9i6RZ43zvw+g=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=svKNrBZKSx85sVJQjv+BhQfTUs2EPXLI+hfcm76QF5HR9A+uwF0dxOgkjx+2QZNXO9j7j2JHrk3a1+qvOjG/lfPUP1mx54T1qSEOSP3BytOlt/OpsvkanLqoahjVvDP7tMXfTOMAwpHsjzBhOfyiqsd+AmtpOsE9ew/2+7p5yq0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=sOedv3if; arc=none smtp.client-ip=209.85.167.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
+	s=arc-20240116; t=1712227247; c=relaxed/simple;
+	bh=MNpe8NXr8iBQ9y95lzJMBHR0mcfS2MVo4cooShPcHIY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=VJJucXPs/w8Bl+yQ21aSCmNeGXLQ6p0U0ynxvG7wAZ5eaxK4J6HpVmk8hhEDNkZ9gEuaWd/qQvh1XpsFNqjq1RYtI+Lfd2Nlia3u6Z9I2rsTiNaETTZab14fejpmlBXk/sp8O9J4amwUGOnI8rAIO5itkceNnvHuc2w2lzGmYGA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HnL0e4Ke; arc=none smtp.client-ip=209.85.167.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="sOedv3if"
-Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-516cc5398c5so142767e87.0
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Apr 2024 03:34:30 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HnL0e4Ke"
+Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-51581c51ee6so206510e87.0;
+        Thu, 04 Apr 2024 03:40:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1712226868; x=1712831668; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=qrSVtGZRwZdqSUCPKBtbbPV0rvcWw4KEF79SGVRT1V0=;
-        b=sOedv3if+OSBwFJdc4sgFYFLK3L7Xk05DJirkiErKACVIxH4wHgftYXAioYktMVYaN
-         NdAHWZ5Wef3oyA9Jta3lHGTnNUo27gqf/Th19WkNLDuOE+7Dyo6PEFkzIWGua1MjRcig
-         +fQHV8OCXE60RzexFc/4ycpyMM3hMfu0I6KWZnmYxpLcy4VyL7/RMKVf+k7M4vWlFdHI
-         BDd4PwBM6Hh+z3r2C1wU3QylbgRE7ZLvuA15QPWHaQJEsSe3O7vKBwpqpT5usjhF9A4V
-         nYbNfTubxhNOXb7Yi1ZlsWulFau/Z13KajLoVmAz2tQjduJXpIVcQKZDOq1ZIvecOHHE
-         YR9g==
+        d=gmail.com; s=20230601; t=1712227243; x=1712832043; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=XHAApY73KEmZsLFXY/9Oln2REALZjiiaA9G+a918PPU=;
+        b=HnL0e4Ke4RzErDFTjrw1ZiydTqUU+gw6l3xKRK7Edf1OyW1dkkI5hqYYxmoU7a0rN9
+         qwXbcdT02bBDTdS92dxmW7JC8MSePk8o6Z0L2BdRlhOOJBGR6F4Q8/hlEmxLIN1u/+nt
+         8LKO3nKmmojOppG2Zc5GXaBmtQcSVnafDEoMqbYvIjm74qRk7ZjytWX9GaSs+O+g1CUK
+         vlVfVonr2LHfAw7qh3MyqGFmhIxwjFZi4dxJp7bSsfPsnAtuv1ID4yFUW4OSk6/l7l+N
+         4xXMJvH1xA67Owb6wACfvYE+Z6X4YAMTZzSVVxMUz01Xd83VAb7eVFkr9aATvB+nu4qe
+         CdfA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712226868; x=1712831668;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=qrSVtGZRwZdqSUCPKBtbbPV0rvcWw4KEF79SGVRT1V0=;
-        b=Xwgh7GMvGnsNl58RKI7BKkGU7GhrHUKi5IXlW8uZHYjbuVeX8zW9at1pWXMD4ZAQm7
-         k0ojvpFVDdjZ8fDHgA6IFq9VMf+PZrU+ptpy4vlyUykFKNjLouDSSNgZHRhu6U9Kl+NE
-         r+YCYUCp7zYGlGwjOFshIJv8lp6DUm6Lfa0W4bht/Bo56AAFwSgh5Y1EdUMUCB+fON9F
-         kUCm2prIKyOmGBD+wZz0bxPln/dCZ9R9RmFNEvmcXNyCgHZ3uI8BGXTCr0Y/Tl/IQume
-         ovyexptCMC2zjOZiqK1nw3JZfLoQUEOhEeqsS8p+dzZN6siEFlmVp5pOjey0yA67r3hN
-         qJbA==
-X-Forwarded-Encrypted: i=1; AJvYcCVrYj3qP/HJK4+GVad8onYlGYR9HhLRndXyDlOlUPBr+IYYn7u+g6fS5L49rgfSdvoeDohZ2HSQpBDvTydWjTcorAtyaU1T6htYQv+o
-X-Gm-Message-State: AOJu0Yy7fqS9b27d4xGVbo9nviZulC1EIxyGstnEVkiiQ0R6CpR9m+cM
-	ze8nJB3k/LrFPjdOgEUC9aEXy7jnU6SVOm1+5MS5tWQfp1Iglmg/oZLo2wM6hiM=
-X-Google-Smtp-Source: AGHT+IFMam9bMUHsyC4hhqDHYaIA0cA7zDlkrbsJGTyXcu6kj1HRLq2RIgLnRvRONkTw5gP+iloRaA==
-X-Received: by 2002:a19:8c0c:0:b0:513:d0dd:95ef with SMTP id o12-20020a198c0c000000b00513d0dd95efmr1384037lfd.5.1712226868674;
-        Thu, 04 Apr 2024 03:34:28 -0700 (PDT)
-Received: from carbon-x1.. ([2a01:e0a:999:a3a0:555b:1d2e:132d:dd32])
-        by smtp.gmail.com with ESMTPSA id ju8-20020a05600c56c800b00416253a0dbdsm2171340wmb.36.2024.04.04.03.34.27
+        d=1e100.net; s=20230601; t=1712227243; x=1712832043;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=XHAApY73KEmZsLFXY/9Oln2REALZjiiaA9G+a918PPU=;
+        b=mf6zULP6iE2tzd4tVyOCsjHH3fVA2Yl1EH2yNgrqW0Wj6BA5hISxspNdZeuqO4AcD/
+         fRYV5Xi0QQRfa7XTH7BQJSTyI2nXHPQ9hjK1CNNicCZMlyD+dBzpt3DTvgJFDsQ5WqOr
+         MXcAFlp19UT5MFYv9Iyd1zLXBwymUrcs3vcpfiB7W531hVgy7/rZPWbKQFQ9yuTr4AJ4
+         l0hrM0bZEyyvRuLYXH/oAEglMOjpGPuHC9t6gkNBX10jM2JgbbqFKnNrdCDg3iSZQtBL
+         1+aWEgnBa/UHDYYrbZiTw7BS5Ff/ksAPb+JvtsLEctl26Dy9eYaC79vX+uIVmcSFTXXf
+         TnGw==
+X-Forwarded-Encrypted: i=1; AJvYcCUZw5K3fPbDgZnihvtXOEVWgm2LtEwEzjWVUipm1DNiZdQRurVBGwzHj3GaZ0UkwNHTUKx8sRM3Z8+TgHQ9GRWhGkitBgHpl1cbQEU0CmeYQqhMPa0Ir/fB4MWU2GarZl1mCgDj
+X-Gm-Message-State: AOJu0YzsUtfwQ5h8UxP5AmHCnmbP/s3xYMp9lPYaZIpfQjsGLFq4Co44
+	JcL/puQ/4G+BPfja9TgdfFtkBRRjihJe7N5+xtFd19JK7Ev3ixtS
+X-Google-Smtp-Source: AGHT+IHR0p+3ho9pbfRNL01gwquYexqbUX64yQ5zJhZK+78xpZmjzybvdAxDqeblPu+VhwI9tuDGjQ==
+X-Received: by 2002:a05:6512:158d:b0:516:c241:a912 with SMTP id bp13-20020a056512158d00b00516c241a912mr1897481lfb.1.1712227242713;
+        Thu, 04 Apr 2024 03:40:42 -0700 (PDT)
+Received: from hoboy.vegasvil.org (195-70-108-137.stat.cablelink.at. [195.70.108.137])
+        by smtp.gmail.com with ESMTPSA id co20-20020a0560000a1400b0034334af2957sm18375303wrb.37.2024.04.04.03.40.41
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 04 Apr 2024 03:34:27 -0700 (PDT)
-From: =?UTF-8?q?Cl=C3=A9ment=20L=C3=A9ger?= <cleger@rivosinc.com>
-To: Jonathan Corbet <corbet@lwn.net>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Conor Dooley <conor@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Anup Patel <anup@brainfault.org>,
-	Shuah Khan <shuah@kernel.org>
-Cc: =?UTF-8?q?Cl=C3=A9ment=20L=C3=A9ger?= <cleger@rivosinc.com>,
-	Atish Patra <atishp@atishpatra.org>,
-	linux-doc@vger.kernel.org,
-	linux-riscv@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	kvm@vger.kernel.org,
-	kvm-riscv@lists.infradead.org,
-	linux-kselftest@vger.kernel.org
-Subject: [PATCH 5/5] KVM: riscv: selftests: Add Zimop extension to get-reg-list test
-Date: Thu,  4 Apr 2024 12:32:51 +0200
-Message-ID: <20240404103254.1752834-6-cleger@rivosinc.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240404103254.1752834-1-cleger@rivosinc.com>
-References: <20240404103254.1752834-1-cleger@rivosinc.com>
+        Thu, 04 Apr 2024 03:40:42 -0700 (PDT)
+Date: Thu, 4 Apr 2024 03:40:40 -0700
+From: Richard Cochran <richardcochran@gmail.com>
+To: Horatiu Vultur <horatiu.vultur@microchip.com>
+Cc: andrew@lunn.ch, hkallweit1@gmail.com, linux@armlinux.org.uk,
+	davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
+	pabeni@redhat.com, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, UNGLinuxDriver@microchip.com
+Subject: Re: [PATCH net-next 0/2] net: phy: micrel: lan8814: Enable
+ PTP_PF_PEROUT
+Message-ID: <Zg6DqAWbRH9lx7BM@hoboy.vegasvil.org>
+References: <20240404080115.450929-1-horatiu.vultur@microchip.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240404080115.450929-1-horatiu.vultur@microchip.com>
 
-The KVM RISC-V allows Zimop extension for Guest/VM so add this
-extension to get-reg-list test.
+On Thu, Apr 04, 2024 at 10:01:13AM +0200, Horatiu Vultur wrote:
+> Add support for PTP_PF_PEROUT to lan8814. First patch just enables
+> the LTC at probe time, such that it is not required to enable
+> timestamping to have the LTC enabled. While the second patch actually
+> adds support for PTP_PF_PEROUT.
+> 
+> Horatiu Vultur (2):
+>   net: phy: micrel: lan8814: Enable LTC at probe time
+>   net: phy: micrel: lan8814: Add support for PTP_PF_PEROUT
+> 
+>  drivers/net/phy/micrel.c | 379 ++++++++++++++++++++++++++++++++++++---
+>  1 file changed, 355 insertions(+), 24 deletions(-)
 
-Signed-off-by: Clément Léger <cleger@rivosinc.com>
----
- tools/testing/selftests/kvm/riscv/get-reg-list.c | 4 ++++
- 1 file changed, 4 insertions(+)
+For the series:
 
-diff --git a/tools/testing/selftests/kvm/riscv/get-reg-list.c b/tools/testing/selftests/kvm/riscv/get-reg-list.c
-index b882b7b9b785..40107bb61975 100644
---- a/tools/testing/selftests/kvm/riscv/get-reg-list.c
-+++ b/tools/testing/selftests/kvm/riscv/get-reg-list.c
-@@ -67,6 +67,7 @@ bool filter_reg(__u64 reg)
- 	case KVM_REG_RISCV_ISA_EXT | KVM_REG_RISCV_ISA_SINGLE | KVM_RISCV_ISA_EXT_ZIHINTNTL:
- 	case KVM_REG_RISCV_ISA_EXT | KVM_REG_RISCV_ISA_SINGLE | KVM_RISCV_ISA_EXT_ZIHINTPAUSE:
- 	case KVM_REG_RISCV_ISA_EXT | KVM_REG_RISCV_ISA_SINGLE | KVM_RISCV_ISA_EXT_ZIHPM:
-+	case KVM_REG_RISCV_ISA_EXT | KVM_REG_RISCV_ISA_SINGLE | KVM_RISCV_ISA_EXT_ZIMOP:
- 	case KVM_REG_RISCV_ISA_EXT | KVM_REG_RISCV_ISA_SINGLE | KVM_RISCV_ISA_EXT_ZKND:
- 	case KVM_REG_RISCV_ISA_EXT | KVM_REG_RISCV_ISA_SINGLE | KVM_RISCV_ISA_EXT_ZKNE:
- 	case KVM_REG_RISCV_ISA_EXT | KVM_REG_RISCV_ISA_SINGLE | KVM_RISCV_ISA_EXT_ZKNH:
-@@ -432,6 +433,7 @@ static const char *isa_ext_single_id_to_str(__u64 reg_off)
- 		KVM_ISA_EXT_ARR(ZIHINTNTL),
- 		KVM_ISA_EXT_ARR(ZIHINTPAUSE),
- 		KVM_ISA_EXT_ARR(ZIHPM),
-+		KVM_ISA_EXT_ARR(ZIMOP),
- 		KVM_ISA_EXT_ARR(ZKND),
- 		KVM_ISA_EXT_ARR(ZKNE),
- 		KVM_ISA_EXT_ARR(ZKNH),
-@@ -955,6 +957,7 @@ KVM_ISA_EXT_SIMPLE_CONFIG(zifencei, ZIFENCEI);
- KVM_ISA_EXT_SIMPLE_CONFIG(zihintntl, ZIHINTNTL);
- KVM_ISA_EXT_SIMPLE_CONFIG(zihintpause, ZIHINTPAUSE);
- KVM_ISA_EXT_SIMPLE_CONFIG(zihpm, ZIHPM);
-+KVM_ISA_EXT_SIMPLE_CONFIG(zimop, ZIMOP);
- KVM_ISA_EXT_SIMPLE_CONFIG(zknd, ZKND);
- KVM_ISA_EXT_SIMPLE_CONFIG(zkne, ZKNE);
- KVM_ISA_EXT_SIMPLE_CONFIG(zknh, ZKNH);
-@@ -1010,6 +1013,7 @@ struct vcpu_reg_list *vcpu_configs[] = {
- 	&config_zihintntl,
- 	&config_zihintpause,
- 	&config_zihpm,
-+	&config_zimop,
- 	&config_zknd,
- 	&config_zkne,
- 	&config_zknh,
--- 
-2.43.0
-
+Acked-by: Richard Cochran <richardcochran@gmail.com>
