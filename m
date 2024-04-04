@@ -1,76 +1,99 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f41.google.com (mail-io1-f41.google.com [209.85.166.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E98314285;
-	Thu,  4 Apr 2024 16:30:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1678718059
+	for <linux-kernel@vger.kernel.org>; Thu,  4 Apr 2024 16:32:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712248229; cv=none; b=IOvQMElZxZdKK4Ybz3u6TEEkhv3Hdz9MoF4Td0Zb6301klafTlx+gsM1ONbq8TjLcAJhfUffx0Px7aSfwT5kKkkwNE01cKWAIVFbA9aNhzHk7h3DP7oj+Rdb/vqJ1OZtSG/C5FFX9pEhGlgmZz32wfL9Zfo4flYjRlV+1/SV8H4=
+	t=1712248356; cv=none; b=phIuaq/m2urnpBushkpR2/LUKVWpHawydszkUsBYDhqJLSurBwas+xwnpBLaTNubOFQbxW81yjCVuPPPljtajOb5lDrr6hccQuiuFNYyCnRQbzy6AHLElQsSGiFz1y+r8RxCTb7CXbCZNWH5xk/Ia/roY/jfMEGoEibLniJIKso=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712248229; c=relaxed/simple;
-	bh=usR5faDmxVumxXCqbcLkB9ZucPwxHJeu1sjbARO4ux8=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=kPPFiJs/5fsf0ztWlW2Ah2Fk3B++l962apafQSKgclpjXxdmyBBB98i89eHJMe8TC1ZXSGOV2EttQ4J7rs5V4Ezi79Ekf7IV3cmrLzADrK/So4nLvNh8zvLAaQ+s85+rsYhRrrdB85cdfzYuy9cv0t+DlnFqW99p6WDf20qJw8s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TKdhiajN; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1712248356; c=relaxed/simple;
+	bh=FaRTigCLQPwODumK/uro6tAr7hVUCu4TTcem6firu4w=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=hNOZSS8GMOQQ/BCfDZxvjs7gKod4Kt1QaZfTFSX0cxnPuZnzMyc4dkw+OP8yq1+Ll9TJEHNW9chEzjNSnG8NCoRu08K0iktebZH5+NLWjG1xlPPdBLRuMnNwUd83p3TvpqoA0zM5fzc3+X208QZUmfQrpDczTz2zocvzo/hy3T8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=WfyvAADc; arc=none smtp.client-ip=209.85.166.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TKdhiajN"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 3FCA2C43390;
-	Thu,  4 Apr 2024 16:30:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712248229;
-	bh=usR5faDmxVumxXCqbcLkB9ZucPwxHJeu1sjbARO4ux8=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=TKdhiajNxpwLMI+G6/f12W3PXxzKv5r7Z+t6HFhtY3oyJXdRYUj0P0hViTJE4ka9o
-	 BIBrbpP4GFDpiqlausr9I4EUdDXtJr4j0Iatp0dIeFd9/8MVkUkF440XEDBraLmXxq
-	 HiWsAmrajtROsz5Uk7aEyXzkGOJTU1hKAh2t3I4QGGJR49sGVm2orvtp2yMU6C4hD1
-	 Exxv6WIKNv8us8vzF24oevqRRlesbCqN0hqdOnXVInlF1qTtvJv+2A9VzdDuissbMm
-	 fAQB9h1U2nKiI+yQl8x5/InFoZ4Ys9zXYc0/hbikN/V3kpfbTxLtjyajiAxJBUaMe5
-	 NSYfrDQ1+sKyg==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 2CED1D9A150;
-	Thu,  4 Apr 2024 16:30:29 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="WfyvAADc"
+Received: by mail-io1-f41.google.com with SMTP id ca18e2360f4ac-7d341f3dc33so17158639f.1
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Apr 2024 09:32:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linuxfoundation.org; s=google; t=1712248354; x=1712853154; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=rnzPx7jQfSANKpYvBZUrsn52XLSYl8iVTFuQscI6o9Q=;
+        b=WfyvAADcYPjL1OvggdQ94pH3tSeumrxgy0eC1ZC3MgP9VMoKIAz+kCjCDwtFa0gb7/
+         VixEh75GgiG0C2rgsc37nwjKXq9utXfCTysSh/uAnWckfVzlC8eqx+6GXe6YSE23ZX4s
+         GDmCzwS3+FU4AWA9Yx23yN3pZuEnWNFG8rxMU=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712248354; x=1712853154;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=rnzPx7jQfSANKpYvBZUrsn52XLSYl8iVTFuQscI6o9Q=;
+        b=ZTdRGkDM0VrZ2wHxI/OW+AThVGHRKAjbo4Xcp925HQSixY5GeLCuslCyMAovG7sKcX
+         UNIKg7POHhyBMExDAHZZotCyxYIYk8zzkcGuT98tmXzX/hAUIMiS2jj45C6cqN7TXKcX
+         Zz4WJo6cY8LOlzfJfhYG4enMgiA88eKTSsdmiwxUJQqCchtx/26sqwCzLW3JooZk7vph
+         K+UayubdyhTk6aHb3tNaEmYM7JVqIEhYtclp1gSgyJria6wKQdI274tRGU25rO9psOvZ
+         TrJpHiubjMLtWIhD4G1HyLM7y6ygVbbXze0+rg5ClMlefkjjskxsDV9ru4ggXJKbN3CQ
+         1fgw==
+X-Forwarded-Encrypted: i=1; AJvYcCU1iCb6RIOJEwwbqFgTV9Z99L0+AzuG3YZ7rSu5Czl2TvsZ+qyESc3lqm287jt4tlRuPsdJLMwtkfx3Y05ry2/Vr1obud6WuGnA9kYb
+X-Gm-Message-State: AOJu0YwGiEnJWL8Mlg+T9cuQLfMNRsR6mL/d7weKE8sBWcbsFpnWAarj
+	2+eRtspKXZ71hcVLG5ALQREi7HjlMmo3cDe9ZJFzh9QxRDHaWJ0hRJS5/CvLbIY=
+X-Google-Smtp-Source: AGHT+IG6x3n9pPVk7ZIl/6gWe0CvJfV0aQuqJSosY/xO54MV5MoKOSUCkywMrSzR9EIlLsZzzzQNug==
+X-Received: by 2002:a05:6602:21d6:b0:7d0:9f34:9d85 with SMTP id c22-20020a05660221d600b007d09f349d85mr3234193ioc.2.1712248354140;
+        Thu, 04 Apr 2024 09:32:34 -0700 (PDT)
+Received: from [192.168.1.128] ([38.175.170.29])
+        by smtp.gmail.com with ESMTPSA id o11-20020a02b80b000000b0047be410bcc5sm4826045jam.27.2024.04.04.09.32.33
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 04 Apr 2024 09:32:33 -0700 (PDT)
+Message-ID: <39f406e4-685e-4371-8726-c7df02299295@linuxfoundation.org>
+Date: Thu, 4 Apr 2024 10:32:33 -0600
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH v2] Bluetooth: hci_intel: Fix multiple issues reported by
- checkpatch.pl
-From: patchwork-bot+bluetooth@kernel.org
-Message-Id: 
- <171224822918.32019.784278169246902514.git-patchwork-notify@kernel.org>
-Date: Thu, 04 Apr 2024 16:30:29 +0000
-References: <20240402183751.107948-1-me@wantyapps.xyz>
-In-Reply-To: <20240402183751.107948-1-me@wantyapps.xyz>
-To: Uri Arev <me@wantyapps.xyz>
-Cc: luiz.dentz@gmail.com, marcel@holtmann.org,
- linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 0/2] tracing/selftests: Verbosity improvements to KTAP
+ output
+To: Steven Rostedt <rostedt@goodmis.org>, Mark Brown <broonie@kernel.org>,
+ Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Shuah Khan <shuah@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Aishwarya TCV <aishwarya.tcv@arm.com>, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+ Shuah Khan <skhan@linuxfoundation.org>
+References: <20240325-kselftest-ftrace-ktap-verbose-v1-0-3785199809da@kernel.org>
+ <20240326120809.09574951@gandalf.local.home>
+ <e2c68911-9b49-4080-b827-3b139b4f3257@linuxfoundation.org>
+Content-Language: en-US
+From: Shuah Khan <skhan@linuxfoundation.org>
+In-Reply-To: <e2c68911-9b49-4080-b827-3b139b4f3257@linuxfoundation.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hello:
-
-This patch was applied to bluetooth/bluetooth-next.git (master)
-by Luiz Augusto von Dentz <luiz.von.dentz@intel.com>:
-
-On Tue,  2 Apr 2024 21:37:45 +0300 you wrote:
-> From: Uri Arev <me@wantyapps.xyz>
+On 3/26/24 13:11, Shuah Khan wrote:
+> On 3/26/24 10:08, Steven Rostedt wrote:
+>>
+>> Shuah,
+>>
+>> If Masami is OK with this, can you take this through your tree?
+>>
+>> Acked-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+>>
+>> -- Steve
+>>
+>>
 > 
-> This fixes the following CHECKs, WARNINGs, and ERRORs reported in
-> hci_intel.c
-> 
-> Reported by checkpatch.pl:
-> 
-> [...]
+> Yes. Will do once Masami gives me the okay
+Hi Masami,
 
-Here is the summary with links:
-  - [v2] Bluetooth: hci_intel: Fix multiple issues reported by checkpatch.pl
-    https://git.kernel.org/bluetooth/bluetooth-next/c/54b53156ad36
+Are you okay with this patch?
 
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
+thanks,
+-- Shuah
 
