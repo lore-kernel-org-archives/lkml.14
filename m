@@ -1,107 +1,136 @@
-Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A428E17BA8;
-	Thu,  4 Apr 2024 16:03:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00F29839FC;
+	Thu,  4 Apr 2024 16:03:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712246608; cv=none; b=fYS1hA607QS6bTYSuZn1q+/pDd4MB/R0sgarKwWi1whz5Vf+/OOBpFxPIK9EMCWro+jU8+07OLWZwXZavfeh8RDZNCZSjhnoJTqMx+NvbTBKenkh4BK0q2wYnxe3S2t2NKmlzmNB8tYwu+IVZovzSfWaMXMeJIInLidaN4bpc1k=
+	t=1712246620; cv=none; b=N0XwL/kns7j7H2Ooka185B8zCJr3TlY5OHH8flnk+nbS1GcTRQUqCO77YStPGKTvLGJFlSEJ7pNLXkHU5LTurXSIJjI+R1wPI4XJvJCOrgHt2wGjuvLS5bqQpVAc+il7pdCpMFLr6nBVt3vS344P2BMEihdQIQYmPrt8wtskjzc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712246608; c=relaxed/simple;
-	bh=3laSCnY9+DHBNm5Yb0RHMgrrQMU1Q8kYq9NMeNSgcUY=;
-	h=Date:Message-Id:From:To:Cc:Subject:In-Reply-To; b=a2eR1njn4b2xQL5PvxNLGqfr4pgfCgGIQcRvq8XYEcCukZvgEKQHSNwtkXzT0HdGo1NyO+cere4e4/xtGSKHH0Idh4/hU7UFCbP/3s70+/v+nuvqjyjI5FSCBLGf5rwHiFbNpgiJgWmqk1K60uEL6GShthbXSr/VkXpZVYSnuzw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VZFddwlR; arc=none smtp.client-ip=209.85.214.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1712246620; c=relaxed/simple;
+	bh=eUp921iF2Ni3+2GuUlziJBbNXocWXTpROaZ4SOL9tPg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=IjFGal1jZBNOMmoJ+8cjMvuJAh316oLANHzGFyla6WGTJjrF9eokCwTrQ4Ol6w/6sON1ymL0ksLHbHDa8rdjDZvlrzQ1FtCT3P5bxZ9Ukvx/W6H3Dk3Jo8jxHYETW+iVzOfPisA6/+xxxIgxEF80LIBHeiSRqWXonVvFkkrMgD0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=SYBDOVFL; arc=none smtp.client-ip=46.235.227.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VZFddwlR"
-Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-1e2b137d666so6246915ad.2;
-        Thu, 04 Apr 2024 09:03:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1712246606; x=1712851406; darn=vger.kernel.org;
-        h=in-reply-to:subject:cc:to:from:message-id:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=cy0MHR54JGNOFy9o8DAySgEG/x1fzuUUOcz6G/+T/+s=;
-        b=VZFddwlRdAgzetcEnHreInivpE+VTNV068HzOcDUjm72PAAA2tgtjsTXLQH1QZkQj6
-         7HAps1aqM69WBn9fYNyyBQWE4z55750gMhI5/XoIv1KS0dYLF2L4kjElYV+0euejks4g
-         YOLeLVSOTzDAPk+FlE3etbV7A/3UAP23VcWoiXVyudS/2K8/E4fLWOS7LF5Vloy+ks1a
-         3GMVOklyivNp4nt9PymcZtsnfHcZGtViOx5zrQCzboW/MaIOWF7Zd6jvPu6Dj7MoFgzb
-         kUhDr+O2POSZOi8PIfMj1Cer8+l5my5NpVF1bzjQM9dNgVHLFMTzfJ9e2/1pH5PI+4tn
-         PDPw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712246606; x=1712851406;
-        h=in-reply-to:subject:cc:to:from:message-id:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=cy0MHR54JGNOFy9o8DAySgEG/x1fzuUUOcz6G/+T/+s=;
-        b=semuGKcjLj7FV2L6X8c6CJhPWWay2jOv+xD4KhrwmKO2+b4ZsevKuAtfDjKXXRhLJe
-         YqtzBDvQ0SVdB3ywXAP3abLBlAQ8GUdu2vPzZXPCBUGEejGx1q1Pu2l87qdrphy2Xl+D
-         TXyqNqfnSiU8x1jsewQdSxvJy2U+Pb3N8jLNiSKtyAA8Clhtbpj4MtDBdWa9XMduSy/p
-         jSDmQox320G3Yd6u5JnpferwFBesKKf0TK55b7olWpCvyb04lbZIxgj/IIU80q/Ie6VN
-         1zfigzSmAkL9/a3CZ9wOmHbaYs9xgZPRAH+GyHqdJ4xa2r8n36OLzbSL7ogyo3jfafkC
-         lRpQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVHokn3snaM2iqzLU4CoWp1+fbt9wXyvjE7kdi2opXBh3y6QM/sO9+mNreBXm2oHs6+KTxRFsEwMv7ftpB99AO0zGtkOskEM/r2N7slidUY4B58qR8UTCxaQvinGfBoQ7ZL//pYaGPDSg==
-X-Gm-Message-State: AOJu0YwiPSXe3mfxkmScp8WZWSDP0HxJhbYE6kA3gDWuoAtkrpqdpUfn
-	eCw4mkTBetU4a6nd82LqkiLEXmkntm5qlGfwmhNuKkgS32JJRPUK
-X-Google-Smtp-Source: AGHT+IGIZ1s4JW6qQAd8bIgbDQXjzd/SPVE488bXUbgRRSo7V604i20O0zxUSAUa2hDe9jiAtGUAsA==
-X-Received: by 2002:a17:902:c947:b0:1e0:a784:f965 with SMTP id i7-20020a170902c94700b001e0a784f965mr2658122pla.65.1712246605769;
-        Thu, 04 Apr 2024 09:03:25 -0700 (PDT)
-Received: from dw-tp ([49.205.218.89])
-        by smtp.gmail.com with ESMTPSA id a21-20020a170902ee9500b001dd95b5dd0fsm15614103pld.69.2024.04.04.09.03.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 04 Apr 2024 09:03:14 -0700 (PDT)
-Date: Thu, 04 Apr 2024 21:32:55 +0530
-Message-Id: <87frw1azf4.fsf@gmail.com>
-From: Ritesh Harjani (IBM) <ritesh.list@gmail.com>
-To: Mikhail Ukhin <mish.uxin2012@yandex.ru>, Theodore Ts'o <tytso@mit.edu>
-Cc: Mikhail Ukhin <mish.uxin2012@yandex.ru>, Andreas Dilger <adilger.kernel@dilger.ca>, linux-ext4@vger.kernel.org, linux-kernel@vger.kernel.org, Michail Ivanov <iwanov-23@bk.ru>, Pavel Koshutin <koshutin.pavel@yandex.ru>, Artem Sadovnikov <ancowi69@gmail.com>
-Subject: Re: [PATCH] ext4: fix semaphore unlocking order
-In-Reply-To: <87h6goqx9u.fsf@gmail.com>
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="SYBDOVFL"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1712246617;
+	bh=eUp921iF2Ni3+2GuUlziJBbNXocWXTpROaZ4SOL9tPg=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=SYBDOVFLk741a5OQ5y1Gg32de6U+d/kU0L4bZkUiliMMYWcLa4ngbnnyBBqx0rNKf
+	 4CQreXfppS223GWtwHvaAzBsS/oGTSf4+XKJ+2Wdwgrh70aoi3St2ylhFxoF4VjJx0
+	 7ClPLSm0WY4kxn3CxeslnioNDutGGIhkP19xVlLrpYhJAKv4DTLSGWvC0LH06aNPzv
+	 E4z0YWjpCzSkazlYVegkjGBBlwoY3Bk5/hBEuxW6/jckL7DcOrZYDRCDZhK4H3csLo
+	 0bFgvzW2roIP/xu+IjFP8zsEb8Qp690i8+koNDLHm7mneX+NhDp961K7wW4AHutRrr
+	 sJ19KTZyhxIeg==
+Received: from [100.109.49.129] (cola.collaboradmins.com [195.201.22.229])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: dmitry.osipenko)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 5C4A937813A4;
+	Thu,  4 Apr 2024 16:03:36 +0000 (UTC)
+Message-ID: <15865985-4688-4b7e-9f2d-89803adb8f5b@collabora.com>
+Date: Thu, 4 Apr 2024 19:03:33 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v11 8/8] KVM: x86/mmu: Handle non-refcounted pages
+To: David Stevens <stevensd@chromium.org>,
+ Sean Christopherson <seanjc@google.com>, Paolo Bonzini
+ <pbonzini@redhat.com>,
+ Pierre-Eric Pelloux-Prayer <pierre-eric.pelloux-prayer@amd.com>
+Cc: Yu Zhang <yu.c.zhang@linux.intel.com>,
+ Isaku Yamahata <isaku.yamahata@gmail.com>,
+ Zhi Wang <zhi.wang.linux@gmail.com>, Maxim Levitsky <mlevitsk@redhat.com>,
+ kvmarm@lists.linux.dev, linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+References: <20240229025759.1187910-1-stevensd@google.com>
+ <20240229025759.1187910-9-stevensd@google.com>
+Content-Language: en-US
+From: Dmitry Osipenko <dmitry.osipenko@collabora.com>
+In-Reply-To: <20240229025759.1187910-9-stevensd@google.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Ritesh Harjani (IBM) <ritesh.list@gmail.com> writes:
+Hi David,
 
-> Mikhail Ukhin <mish.uxin2012@yandex.ru> writes:
->
->> Fuzzing reports a possible deadlock in jbd2_log_wait_commit.
+On 2/29/24 05:57, David Stevens wrote:
+> From: David Stevens <stevensd@chromium.org>
+> 
+> Handle non-refcounted pages in __kvm_faultin_pfn. This allows the
+> host to map memory into the guest that is backed by non-refcounted
+> struct pages - for example, the tail pages of higher order non-compound
+> pages allocated by the amdgpu driver via ttm_pool_alloc_page.
+> 
+> Signed-off-by: David Stevens <stevensd@chromium.org>
 
-I think I agree with what Jan hinted to me in the call, that
-how can an unlock order mismatch be a deadlock.
+This patch has a problem on v6.8 kernel. Pierre-Eric of AMD found that
+Qemu crashes with "kvm bad address" error when booting Ubuntu 23.10 ISO
+with a disabled virtio-gpu and I was able to reproduce it. Pierre-Eric
+said this problem didn't exist with v6.7 kernel and using v10 kvm
+patches. Could you please take a look at this issue?
 
-But yes, a wrong unlock order can increase the locking times of
-thread-2 waiting on lock B; for e.g. if a premption happens between
-unlock of lock A & B by thread-1.
+To reproduce the bug, run Qemu like this and load the Ubuntu installer:
 
-So it is always good to fix the unlock order too.
+  qemu-system-x86_64 -boot d -cdrom ubuntu-23.10.1-desktop-amd64.iso -m
+4G --enable-kvm -display gtk -smp 1 -machine q35
 
->>
->> The problem occurs in ext4_ind_migrate due to an incorrect order of
->> unlocking of the journal and write semaphores - the order of unlocking
->> must be the reverse of the order of locking.
->>
->
-> Maybe we should update the subject msg to:
->       "ext4: "fix i_data_sem unlock order in ext4_ind_migrate()"
->
-> and also should add:
->     CC: stable@vger.kernel.org
+Qemu fails with "error: kvm run failed Bad address"
 
-In that case, I am not really sure, if this requires a cc'd stable.
-So, I will leave this upto Ted.
+On the host kernel there is this warning:
 
->
->
-> I think this should have been fixed in patch [1], but looks like it
-> forgot to fix the unlock order.
->
-> [1]: https://lore.kernel.org/all/1364801462-13120-1-git-send-email-dmonakhov@openvz.org/
->
->
->> Found by Linux Verification Center (linuxtesting.org) with syzkaller.
+ ------------[ cut here ]------------
+ WARNING: CPU: 19 PID: 11696 at mm/gup.c:229 try_grab_page+0x64/0x100
+ Call Trace:
+  <TASK>
+  ? try_grab_page+0x64/0x100
+  ? __warn+0x81/0x130
+  ? try_grab_page+0x64/0x100
+  ? report_bug+0x171/0x1a0
+  ? handle_bug+0x3c/0x80
+  ? exc_invalid_op+0x17/0x70
+  ? asm_exc_invalid_op+0x1a/0x20
+  ? try_grab_page+0x64/0x100
+  follow_page_pte+0xfa/0x4b0
+  __get_user_pages+0xe5/0x6e0
+  get_user_pages_unlocked+0xe7/0x370
+  hva_to_pfn+0xa2/0x760 [kvm]
+  ? free_unref_page+0xf9/0x180
+  kvm_faultin_pfn+0x112/0x610 [kvm]
+  kvm_tdp_page_fault+0x104/0x150 [kvm]
+  kvm_mmu_page_fault+0x298/0x860 [kvm]
+  kvm_arch_vcpu_ioctl_run+0xc7d/0x16b0 [kvm]
+  ? srso_alias_return_thunk+0x5/0xfbef5
+  ? kvm_arch_vcpu_put+0x128/0x190 [kvm]
+  ? srso_alias_return_thunk+0x5/0xfbef5
+  kvm_vcpu_ioctl+0x199/0x700 [kvm]
+  __x64_sys_ioctl+0x94/0xd0
+  do_syscall_64+0x86/0x170
+  ? kvm_on_user_return+0x64/0x90 [kvm]
+  ? srso_alias_return_thunk+0x5/0xfbef5
+  ? fire_user_return_notifiers+0x37/0x70
+  ? srso_alias_return_thunk+0x5/0xfbef5
+  ? syscall_exit_to_user_mode+0x80/0x230
+  ? srso_alias_return_thunk+0x5/0xfbef5
+  ? do_syscall_64+0x96/0x170
+  ? srso_alias_return_thunk+0x5/0xfbef5
+  ? do_syscall_64+0x96/0x170
+  ? do_syscall_64+0x96/0x170
+  ? do_syscall_64+0x96/0x170
+  ? srso_alias_return_thunk+0x5/0xfbef5
+  ? do_syscall_64+0x96/0x170
+  ? srso_alias_return_thunk+0x5/0xfbef5
+  entry_SYSCALL_64_after_hwframe+0x6e/0x76
+ ---[ end trace 0000000000000000 ]---
 
-It will be good to know what was the test which identified this though?
+-- 
+Best regards,
+Dmitry
 
--ritesh
