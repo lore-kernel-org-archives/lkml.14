@@ -1,90 +1,67 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 328AE200AE
-	for <linux-kernel@vger.kernel.org>; Thu,  4 Apr 2024 07:50:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2F5D63C7;
+	Thu,  4 Apr 2024 07:50:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712217017; cv=none; b=PIwhrMZpHB99HeosqxLiY8Ig4AC9vK4yPdeIflLvtgbYuf2u6Tt5k5ai7nYcvqVqUAkb1sIiW2XBvFDzSD+YVBHFJj3v0AYalRv97kijoL2PHNYtm+yW2P9ADgneHMtNq+ddViAAYeWYu3AIBGCfBn1FfzZZg4qqz3tJGwjrO+Q=
+	t=1712217017; cv=none; b=oPaE5QSXXD47QfOXYAP0ZS2EMNX7Tok3LPWilpBSVo1iIQLM+qV8yGYjZKv2f1GtENZXT6K675tpcGPvQpvaggC//qWoD5GzOIRCnjrdGqtM4e+tFy3ost2kFnkyih+pD1lIMrBeWLrm/tlaLSC0aNlJKocG7/h4/2axjHjARN0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1712217017; c=relaxed/simple;
-	bh=PDF8rAKtnoPQ5NeHKnC7IYfiaYEQ3BItds/rRYPd950=;
-	h=From:In-Reply-To:References:To:Cc:Subject:MIME-Version:
-	 Content-Type:Date:Message-ID; b=If23YoEh4iUGhkBW7S1cFiqJNevziaivziM22D8PQ0aKumfEeiXJFx7/IFf/wfGa/C3BaOqH9jc9QGCc0DwCMe014fNuRu5xjbK8Vd1bm3Lt+mtcrd7EwxDx5CSoSliF1XHhkHvgbkX39kPCsi0tQrTPWRZJQbPRi4aiEAN3etE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=chS54chS; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	bh=UQi/pLUsh2CNZLFSXNBZi74ZYYKx/Q531FOkLYDdepg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=iDGEUox5Hr06PkbdLO2U5W0zAzqNYbx0zu/XQRQF3DU5umrXAXj/eLa3JPVfwAWab9uB8ytMpQifFQwu2RU4AeDfJKAIfU2x/wEVGQxjvoz8JiRBiuksFjKeg+7zxnmDZ/Syc7wuVuC+jVfFCUfGusrecMDx4SM9LLHZzuUIDAE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=hKeuJszI; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="chS54chS"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1712217014;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=LvAHaZMN971uikkj/WIR5kxgCR1HxCvO96dpGZLwAzw=;
-	b=chS54chSHWiMhjEaDJNY7E7FvGDUiv0+OYmcWIgBSD2lc5sB4e2TWc3KuqUdLS4UG5NHSq
-	A3KNbIAiEFGVlWuiqbC2P2B0QN/qWCZuMTTQ/njZLzjcBiYKtY8yRJy7+efp20/adUj6RG
-	pveeM9hAYOL1Y1wVTPq2jK104j8cwjY=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-441-ko-0_dPIO36rm-uMOucm5A-1; Thu, 04 Apr 2024 03:50:11 -0400
-X-MC-Unique: ko-0_dPIO36rm-uMOucm5A-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.rdu2.redhat.com [10.11.54.4])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 5453A87984B;
-	Thu,  4 Apr 2024 07:50:11 +0000 (UTC)
-Received: from warthog.procyon.org.uk (unknown [10.42.28.146])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id A11C6200A386;
-	Thu,  4 Apr 2024 07:50:10 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-	Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-	Kingdom.
-	Registered in England and Wales under Company Registration No. 3798903
-From: David Howells <dhowells@redhat.com>
-In-Reply-To: <20240404132456.579b8ae9@canb.auug.org.au>
-References: <20240404132456.579b8ae9@canb.auug.org.au>
-To: Stephen Rothwell <sfr@canb.auug.org.au>
-Cc: dhowells@redhat.com, Christian Brauner <brauner@kernel.org>,
-    Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-    Linux Next Mailing List <linux-next@vger.kernel.org>
-Subject: Re: linux-next: build failure after merge of the vfs-brauner tree
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="hKeuJszI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8DE89C433C7;
+	Thu,  4 Apr 2024 07:50:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1712217017;
+	bh=UQi/pLUsh2CNZLFSXNBZi74ZYYKx/Q531FOkLYDdepg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=hKeuJszIqZPc0jGV4OqM6n6VTxHQs240dv/tevcdFCqOuq8e+s+vo0F/PdgCCtNf/
+	 8ocWcP0XYUkdhQfMsp/YGajJMfyC1OV2Vc/dlzL8nvEMfTzXoBVMNlELFyDXyuVJjt
+	 YhcMB1RmTCkrYev9rmOof+9TXedlcQ4Ea/IdoIUY=
+Date: Thu, 4 Apr 2024 09:50:12 +0200
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Bastien Curutchet <bastien.curutchet@bootlin.com>
+Cc: Jiri Slaby <jirislaby@kernel.org>, linux-kernel@vger.kernel.org,
+	linux-serial@vger.kernel.org,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+	herve.codina@bootlin.com, christophercordahi@nanometrics.ca
+Subject: Re: [PATCH 1/1] serial: 8250_of: Add clock_notifier
+Message-ID: <2024040455-bungee-subsidy-f5aa@gregkh>
+References: <20240404074450.42708-1-bastien.curutchet@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <3655431.1712217006.1@warthog.procyon.org.uk>
-Content-Transfer-Encoding: quoted-printable
-Date: Thu, 04 Apr 2024 08:50:06 +0100
-Message-ID: <3655432.1712217006@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.4
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240404074450.42708-1-bastien.curutchet@bootlin.com>
 
-Stephen Rothwell <sfr@canb.auug.org.au> wrote:
+On Thu, Apr 04, 2024 at 09:44:50AM +0200, Bastien Curutchet wrote:
+> The UART's input clock rate can change at runtime but this is not
+> handled by the driver.
+> 
+> Add a clock_notifier callback that updates the divisors when the input
+> clock is updated. The serial8250_update_uartclk() is used to do so.
+> PRE_RATE_CHANGE and ABORT_RATE_CHANGE notifications are ignored, only
+> the POST_RATE_CHANGE is used.
 
-> diff --git a/net/9p/client.c b/net/9p/client.c
-> index dada0033d71e..d4b88b7ff5ef 100644
-> --- a/net/9p/client.c
-> +++ b/net/9p/client.c
-> @@ -1699,7 +1699,7 @@ p9_client_write_subreq(struct netfs_io_subrequest =
-*subreq)
->  	}
->  =
+Why just this one notification?  You say they are ignored but do not say
+why.
 
->  	if (written > len) {
-> -		pr_err("bogus RWRITE count (%d > %lu)\n", written, len);
-> +		pr_err("bogus RWRITE count (%d > %zu)\n", written, len);
->  		written =3D len;
->  	}
+> 
+> Reorder the #include to match alphabetic order.
 
-Actually, that's the wrong fix.  'len' needs to be int not size_t because =
-of
-the varargs packet formatter.
+That is not needed here, why do that now?  And "alphabetic order" is not
+an issue for tty drivers, no need to do that, but if you really want to,
+a separate patch series is good for that.
 
-David
+thanks,
 
+greg k-h
