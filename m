@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C0B6135A55;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56699135A5C;
 	Thu,  4 Apr 2024 19:26:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712258812; cv=none; b=E49Xkp+tbPi0dcRz0loCVeDATPJ0nUgEKU3BkkwbvXx8HQVMn2Fs9wF446LYm0luFJ3S+aa2/vZNq91WSo/qDb6ITsUg3DhA0osjsXYR1dseN4heBPMKkX3pCP+32ImCKm+PQFaw9NHbpsKUBI+vfRB0Uw4cgaywZo1GqG5iU1s=
+	t=1712258812; cv=none; b=QHesjsBH7tzMOcype03eMzq9vckLVJVim2+aEXftRwfTmZvCJv1TnCF7f5pMate4F7PsFH7qh6uTeoOJjwzmkgJQta2mMnYc1kg7zFneEmvYlvQVO2pwvi5INojTmrbabGQwQBDc4nXHbK4yU9Y4Q9l6+ZqWOMJsimQcfwK0H7c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1712258812; c=relaxed/simple;
-	bh=0guQJ43kZOeFK9RaRxxK/HF/2Akt543i2YM1yup2VqY=;
+	bh=tN99QeAtJ9rSCHUuXKIZr5kPNcQaT1UKModjibckfc0=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=dI3gXCeXLT3u9Zop3jV4rmRxep6hDuI9dOdWWTzPyq8IqVsgBOOzM3ij09asChpTvK+5A+dlqA2/TUBJ46CZho9aYYRhCB0tgIKQwAwVv4Oxdb0nI8LdIYgFXVIV8aSCSnVXhMHFjryam5nqJIZu8Xcf5o7qGKSA7FOwP6tLLfk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iK0hUQTw; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=qRhHp33iyenvwrF8/glXtCDxK4ZEONkblJEmUWCSJflDZFvEJpLJu/nLj0Vk7RSbUTJCSAOv9OFMYbf9tkttgItZHCmsoE0XloflssQdmy6f2/QHxv9ZM/HLxYIGMrMOruQyP8YjJt35e6+NonTPR8eeIj3qQ8wLKALLWdSmEAE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qT22pEbP; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iK0hUQTw"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DB8C7C43399;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qT22pEbP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EDEC7C433A6;
 	Thu,  4 Apr 2024 19:26:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712258811;
-	bh=0guQJ43kZOeFK9RaRxxK/HF/2Akt543i2YM1yup2VqY=;
+	s=k20201202; t=1712258812;
+	bh=tN99QeAtJ9rSCHUuXKIZr5kPNcQaT1UKModjibckfc0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=iK0hUQTwRSYy33JiDwuEUeSQBqdgS5YZ1GNoaKUX2jKwdjibAtwKzF3/ScOLNEKsB
-	 waNLctbwNPfTnLkOS5FUPocf2RHHfPLzDmzzNAmCHqYyqvH8Ly1BQJhoV8xT8p2pFF
-	 cmMVgYIsfD6E9oacNfMRrnZO9kBb9d3VE8pHNLLUVz5zBkatO4s7sUhCG7NiVrM/iv
-	 o8SfU/eb5jl+bkR5F6d2KdssDw4GMyeXOcs+7IYBJpSayNfq1UjAG264wNoO9WFu3x
-	 +8gqb49hGbAmM2+bwxHSi2yVzi2mCQdIA+so3BH2mkMFue/fHDL/W++rhaa1/ADMhL
-	 pMMyMfalYxPuw==
+	b=qT22pEbP/E2OyGwVmTYn6ssiRlW0RAqkAHI9aW112G6dZKGZ9fd42U+fUw7SJrzsd
+	 tHHUXWOy8nzUcvRDlHdyVUxxUn0T0cEE0QIaC3lNqQoowL0b7cv6glRyXNqNoId9+l
+	 fwEUIGRluAnCAYwKPH9a5zln4a7yXL9tT0OzrL3ntFYUPNXv/AzhMQTsge16ohyyWH
+	 r420UN+KjmJY+ICpoCD95byx65G1HNVlKGDeueiKpxkQavXt8iojAdjhsBtNL4Jq8Z
+	 JBv5mFEaY14qc2B6OYijDeijlDeaQir9ID/mU8WoBJnDkiI0Q3OqEFwsPuSH2zoLka
+	 gPALKQ6pNIUqw==
 Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
-	id 90EDECE0D0C; Thu,  4 Apr 2024 12:26:51 -0700 (PDT)
+	id 98770CE13D0; Thu,  4 Apr 2024 12:26:51 -0700 (PDT)
 From: "Paul E. McKenney" <paulmck@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	linux-arch@vger.kernel.org,
@@ -44,14 +44,15 @@ Cc: stern@rowland.harvard.edu,
 	luc.maranget@inria.fr,
 	akiyks@gmail.com,
 	"Paul E. McKenney" <paulmck@kernel.org>,
+	Anna-Maria Behnsen <anna-maria@linutronix.de>,
 	Daniel Lustig <dlustig@nvidia.com>,
 	Joel Fernandes <joel@joelfernandes.org>,
 	Mark Rutland <mark.rutland@arm.com>,
 	Jonathan Corbet <corbet@lwn.net>,
 	linux-doc@vger.kernel.org
-Subject: [PATCH memory-model 1/3] Documentation/litmus-tests: Add locking tests to README
-Date: Thu,  4 Apr 2024 12:26:47 -0700
-Message-Id: <20240404192649.531112-1-paulmck@kernel.org>
+Subject: [PATCH memory-model 3/3] Documentation/atomic_t: Emphasize that failed atomic operations give no ordering
+Date: Thu,  4 Apr 2024 12:26:49 -0700
+Message-Id: <20240404192649.531112-3-paulmck@kernel.org>
 X-Mailer: git-send-email 2.40.1
 In-Reply-To: <8550daf1-4bfd-4607-8325-bfb7c1e2d8c7@paulmck-laptop>
 References: <8550daf1-4bfd-4607-8325-bfb7c1e2d8c7@paulmck-laptop>
@@ -63,8 +64,13 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-This commit documents the litmus tests in the "locking" directory.
+The ORDERING section of Documentation/atomic_t.txt can easily be read as
+saying that conditional atomic RMW operations that fail are ordered when
+those operations have the _acquire() or _release() suffixes.  This is
+not the case, therefore update this section to make it clear that failed
+conditional atomic RMW operations provide no ordering.
 
+Reported-by: Anna-Maria Behnsen <anna-maria@linutronix.de>
 Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
 Cc: Alan Stern <stern@rowland.harvard.edu>
 Cc: Will Deacon <will@kernel.org>
@@ -82,50 +88,33 @@ Cc: Mark Rutland <mark.rutland@arm.com>
 Cc: Jonathan Corbet <corbet@lwn.net>
 Cc: <linux-arch@vger.kernel.org>
 Cc: <linux-doc@vger.kernel.org>
+Acked-by: Andrea Parri <parri.andrea@gmail.com>
+Acked-by: Mark Rutland <mark.rutland@arm.com>
 ---
- Documentation/litmus-tests/README | 29 +++++++++++++++++++++++++++++
- 1 file changed, 29 insertions(+)
+ Documentation/atomic_t.txt | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/litmus-tests/README b/Documentation/litmus-tests/README
-index 658d37860d397..5c8915e6fb684 100644
---- a/Documentation/litmus-tests/README
-+++ b/Documentation/litmus-tests/README
-@@ -22,6 +22,35 @@ Atomic-RMW-ops-are-atomic-WRT-atomic_set.litmus
-     NOTE: Require herd7 7.56 or later which supports "(void)expr".
+diff --git a/Documentation/atomic_t.txt b/Documentation/atomic_t.txt
+index d7adc6d543db4..bee3b1bca9a7b 100644
+--- a/Documentation/atomic_t.txt
++++ b/Documentation/atomic_t.txt
+@@ -171,14 +171,14 @@ The rule of thumb:
+  - RMW operations that are conditional are unordered on FAILURE,
+    otherwise the above rules apply.
  
+-Except of course when an operation has an explicit ordering like:
++Except of course when a successful operation has an explicit ordering like:
  
-+locking (/locking directory)
-+----------------------------
-+
-+DCL-broken.litmus
-+	Demonstrates that double-checked locking needs more than just
-+	the obvious lock acquisitions and releases.
-+
-+DCL-fixed.litmus
-+	Demonstrates corrected double-checked locking that uses
-+	smp_store_release() and smp_load_acquire() in addition to the
-+	obvious lock acquisitions and releases.
-+
-+RM-broken.litmus
-+	Demonstrates problems with "roach motel" locking, where code is
-+	freely moved into lock-based critical sections.  This example also
-+	shows how to use the "filter" clause to discard executions that
-+	would be excluded by other code not modeled in the litmus test.
-+	Note also that this "roach motel" optimization is emulated by
-+	physically moving P1()'s two reads from x under the lock.
-+
-+	What is a roach motel?	This is from an old advertisement for
-+	a cockroach trap, much later featured in one of the "Men in
-+	Black" movies.	"The roaches check in.	They don't check out."
-+
-+RM-fixed.litmus
-+	The counterpart to RM-broken.litmus, showing P0()'s two loads from
-+	x safely outside of the critical section.
-+
-+
- RCU (/rcu directory)
- --------------------
+  {}_relaxed: unordered
+  {}_acquire: the R of the RMW (or atomic_read) is an ACQUIRE
+  {}_release: the W of the RMW (or atomic_set)  is a  RELEASE
  
+ Where 'unordered' is against other memory locations. Address dependencies are
+-not defeated.
++not defeated.  Conditional operations are still unordered on FAILURE.
+ 
+ Fully ordered primitives are ordered against everything prior and everything
+ subsequent. Therefore a fully ordered primitive is like having an smp_mb()
 -- 
 2.40.1
 
