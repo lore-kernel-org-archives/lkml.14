@@ -1,104 +1,234 @@
-Received: from mail-ua1-f49.google.com (mail-ua1-f49.google.com [209.85.222.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.wantyapps.xyz (mail.wantyapps.xyz [66.135.5.160])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 673881C6A0;
-	Thu,  4 Apr 2024 20:11:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CEC974BE5;
+	Thu,  4 Apr 2024 20:12:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=66.135.5.160
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712261480; cv=none; b=aZ2yoWLcwP4WpIlPBnEp3hCG8NAC1xoQuLvFwAEGB/ohSxIR4Ubawmu1tIpBZ6SyLOmukxJcuwGfb+c0QFg7qlWmvd9WNdq4midN3tDa/EQDsoDiKLQ6P73EQbqoktQ9mS6XvM2qReWWdHTRA3dUPRodm4NJxK9689teRM25DF0=
+	t=1712261535; cv=none; b=E4BwMLuQvSHJ/BnFhWQhcuHNvZDUAQ4g1ooreuNPsK/SajTf0YvZkUAMfK8soRCDJ3XG0Py9ae1zAyGcgdJyjotokeHqsrtLpmX974IA6FgpRv/3pr/MaYfIs43xFjK7ZEnpZcNGcr3HWuFEPh/5OupE9OI17nnm8tlyOU24W6U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712261480; c=relaxed/simple;
-	bh=M8iIHi2wG31CMAypyB9Hf3PCit7uyA2n3iFds5lnbAw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=fPkFV5BsxIhXRA4vBgCIj2kGKI3zKc2Qfk6YzeIWtm95YF/Z5kIrLY22SdGERmtSnzfweN+POecdN+zUaEYb0HjENd5HfYLfCsmllqDIE5rE+WPSE5ItEZLVsNMYc/V6K5QgGnHEW5LoJlvSPG8YNqWoEx2AEg9IUa2B0pEd1r8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UpPo/ywa; arc=none smtp.client-ip=209.85.222.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1712261535; c=relaxed/simple;
+	bh=Gl/SQCUDLwQcXJ1gYTjZ5RatYSPV/vzy1pGIL1cxGiI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=HkMSzwy1H929/La0Wu7q4pWEeiGATV5BfeKI3jPSU4TEvhYZ/p1BtGYR5ivgtwJVTs81bElxpvyAJcg5KsnmFAD2F510CfcTM+bQhme6dfEq6Vpefazd3VZcwi6BRN+6A5GLVceR83zvAicRoNSykcsKOJsZfS6N7RKbGqDASy0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=wantyapps.xyz; spf=pass smtp.mailfrom=wantyapps.xyz; dkim=pass (2048-bit key) header.d=wantyapps.xyz header.i=@wantyapps.xyz header.b=jtXiyr3H; arc=none smtp.client-ip=66.135.5.160
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=wantyapps.xyz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wantyapps.xyz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UpPo/ywa"
-Received: by mail-ua1-f49.google.com with SMTP id a1e0cc1a2514c-7e3a6fe180bso644454241.2;
-        Thu, 04 Apr 2024 13:11:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1712261478; x=1712866278; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=RjPJff2sg2YzMJe7DKQkjhJDQMLyOxul5rZyxHlPbrE=;
-        b=UpPo/ywa8RYUorUlEHsIzYg1c8YxxpKIk3BW4o9/QHhEWWVR/EX/OBiCIssT84rME4
-         Na1eLCWAR96o6hWcOY2dw4Lx3Bn0QrHJI/nK/yCXj8bCEM1BxBVkBZd3uCcUpHDBXSAa
-         MXyhggDZlgHyJCPGKpEtuROanTc5ku14ClZr3FmZFfR1Le5LF4Qa9oUo/APjpuGF61M8
-         j13oKHojUsWVLV++Pv2bbJM4zKV/mM15+dtby/KsOETIsKQcVAW6GPDaq1gV1wf4OPEf
-         z2lIbHhqA5Xc+w1EZegtNS+d8dG+9rABNUCuhWAbKcOz67VFf0CN3OLMyrZnTn2vEPEI
-         Pe0w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712261478; x=1712866278;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=RjPJff2sg2YzMJe7DKQkjhJDQMLyOxul5rZyxHlPbrE=;
-        b=UM/7rKdddnV8UFElpfApxAXcUwRAyRF2YJDZSeSGMYkUAvx4uKUSyXU6TFKSOmabPC
-         9XOHB3JY+UjiZMQ+zhfzFZzlzNcDj0E9Rx003Jg6bP2myVl17JYWDCZpxJRGM4dlP+Al
-         ZOWmXkoZFzOLqLyvu10gAVmLcIESyTO38rcmqEUXoUy5GMmZD+bSDvIqhP3nrb9skPJq
-         OGbLQ2n4RlpGSFoxLndH+6jSeXsY35Bn5KFLlo71OoFQ4fZAfRpPkmR2o55FYtwC08ks
-         sADegmlnZa9UWxRy7sYsQEcCkC2KgD7VJ1ddrxynWzBoA7LSqndnJEtxyyoegmK8jrhX
-         1ASA==
-X-Forwarded-Encrypted: i=1; AJvYcCVfS6edXRI5je0cN+S6rPLyVnxZS77PMAL9I2JlQlttaRxbJux4KHfEQMNeyl4TIELQ+EWkX23jbo0gkOXcYtBtRAH6xMfbZD95WGjbOotUEQ8Zt7UDiivbC1hy5uvzo7eDobra
-X-Gm-Message-State: AOJu0Yzm6yULJsr1dRjJhCqUl875YuAlCZrZUWnEPFywiV4gTsO7m/gU
-	7cH+c/b5FFkid1hzVMAxbRVaIycAMdshZ8LJ2IMRdH8DfsQjfTTH
-X-Google-Smtp-Source: AGHT+IERUiPcO7YKkrekeSdBQhRTR0raqdh0bkL/Rd5vl2K9OCFPKO5bBhKykLnsoGvvKIbbYvcNuw==
-X-Received: by 2002:a05:6122:4591:b0:4da:9d3e:a7df with SMTP id de17-20020a056122459100b004da9d3ea7dfmr928443vkb.5.1712261476812;
-        Thu, 04 Apr 2024 13:11:16 -0700 (PDT)
-Received: from [10.67.48.245] ([192.19.223.252])
-        by smtp.googlemail.com with ESMTPSA id fe4-20020a0562140b8400b00698facb19d5sm25978qvb.106.2024.04.04.13.11.10
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 04 Apr 2024 13:11:15 -0700 (PDT)
-Message-ID: <2e5e148b-1d5b-405f-bfdf-b55cf6ee5489@gmail.com>
-Date: Thu, 4 Apr 2024 13:11:08 -0700
+	dkim=pass (2048-bit key) header.d=wantyapps.xyz header.i=@wantyapps.xyz header.b="jtXiyr3H"
+Received: from multivac.localdomain (unknown [147.235.205.62])
+	by mail.wantyapps.xyz (Postfix) with ESMTPSA id F3E5694A89;
+	Thu,  4 Apr 2024 20:12:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=wantyapps.xyz;
+	s=mail; t=1712261532;
+	bh=Gl/SQCUDLwQcXJ1gYTjZ5RatYSPV/vzy1pGIL1cxGiI=;
+	h=From:To:Cc:Subject:Date:From;
+	b=jtXiyr3HKUraL+737UJt8myVamuLwELsvuRr40KtOqH3C5o5Vbz3c5UFRTYwp6lcX
+	 2VHQvuPwv7m5r/5IRNMQgaAsmbcLsMmZLXx3Maeo+jwsrNFOWYwWxhJQ1zSMU5ckO3
+	 ctxeuy2RiQLtX7XNJ8fwiFgClBCsSTL86MMR43f5/5ZrlOFrEEB1odt/HuZPNkWS0U
+	 r/eC1UZudwzjxzHTYnbSj5HusK7RhrflnrxK8XfzFZSyHZ/+8PHjfzBrBU4ILvbERO
+	 GlfoH/WngQ7kFE0uN7WhQcz3NgpnmJAbkNXTO6Alv80ShtCiZjDM37A/ux6pjM3lET
+	 DDs/IRC/WnSHQ==
+From: me@wantyapps.xyz
+To: 
+Cc: me@wantyapps.xyz,
+	Marcel Holtmann <marcel@holtmann.org>,
+	Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
+	linux-bluetooth@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v2] Bluetooth: ath3k: Fix multiple issues reported by checkpatch.pl
+Date: Thu,  4 Apr 2024 23:12:03 +0300
+Message-ID: <20240404201204.1574176-1-me@wantyapps.xyz>
+X-Mailer: git-send-email 2.44.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 6.6 00/11] 6.6.25-rc1 review
-Content-Language: en-US
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
-Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
- torvalds@linux-foundation.org, akpm@linux-foundation.org,
- linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
- lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
- sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de,
- conor@kernel.org, allen.lkml@gmail.com, broonie@kernel.org
-References: <20240403175126.839589571@linuxfoundation.org>
-From: Florian Fainelli <f.fainelli@gmail.com>
-In-Reply-To: <20240403175126.839589571@linuxfoundation.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 4/3/24 10:55, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 6.6.25 release.
-> There are 11 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Fri, 05 Apr 2024 17:51:13 +0000.
-> Anything received after that time might be too late.
-> 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.6.25-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.6.y
-> and the diffstat can be found below.
-> 
-> thanks,
-> 
-> greg k-h
+From: Uri Arev <me@wantyapps.xyz>
 
-On ARCH_BRCMSTB using 32-bit and 64-bit ARM kernels, build tested on 
-BMIPS_GENERIC:
+This fixes some CHECKs reported by the checkpatch script.
 
-Tested-by: Florian Fainelli <florian.fainelli@broadcom.com>
+Issues reported in ath3k.c:
+-------
+ath3k.c
+-------
+CHECK: Please don't use multiple blank lines
++
++
+
+CHECK: Blank lines aren't necessary after an open brace '{'
++static const struct usb_device_id ath3k_blist_tbl[] = {
++
+
+CHECK: Alignment should match open parenthesis
++static int ath3k_load_firmware(struct usb_device *udev,
++                               const struct firmware *firmware)
+
+CHECK: Alignment should match open parenthesis
++               err = usb_bulk_msg(udev, pipe, send_buf, size,
++                                       &len, 3000);
+
+CHECK: Unnecessary parentheses around 'len != size'
++               if (err || (len != size)) {
+
+CHECK: Alignment should match open parenthesis
++static int ath3k_get_version(struct usb_device *udev,
++                       struct ath3k_version *version)
+
+CHECK: Alignment should match open parenthesis
++static int ath3k_load_fwfile(struct usb_device *udev,
++               const struct firmware *firmware)
+
+CHECK: Alignment should match open parenthesis
++               err = usb_bulk_msg(udev, pipe, send_buf, size,
++                                       &len, 3000);
+
+CHECK: Unnecessary parentheses around 'len != size'
++               if (err || (len != size)) {
+
+CHECK: Blank lines aren't necessary after an open brace '{'
++       switch (fw_version.ref_clock) {
++
+
+CHECK: Alignment should match open parenthesis
++       snprintf(filename, ATH3K_NAME_LEN, "ar3k/ramps_0x%08x_%d%s",
++               le32_to_cpu(fw_version.rom_version), clk_value, ".dfu");
+
+CHECK: Alignment should match open parenthesis
++static int ath3k_probe(struct usb_interface *intf,
++                       const struct usb_device_id *id)
+
+CHECK: Alignment should match open parenthesis
++                       BT_ERR("Firmware file \"%s\" not found",
++                                                       ATH3K_FIRMWARE);
+
+CHECK: Alignment should match open parenthesis
++                       BT_ERR("Firmware file \"%s\" request failed (err=%d)",
++                                                       ATH3K_FIRMWARE, ret);
+
+total: 0 errors, 0 warnings, 14 checks, 540 lines checked
+
+Signed-off-by: Uri Arev <me@wantyapps.xyz>
+---
+Changes in v2:
+  - Fix spelling mistake
+  - Fix gitlint errors
+---
+ drivers/bluetooth/ath3k.c | 25 +++++++++++--------------
+ 1 file changed, 11 insertions(+), 14 deletions(-)
+
+diff --git a/drivers/bluetooth/ath3k.c b/drivers/bluetooth/ath3k.c
+index 88262d3a9392..ce97b336fbfb 100644
+--- a/drivers/bluetooth/ath3k.c
++++ b/drivers/bluetooth/ath3k.c
+@@ -3,7 +3,6 @@
+  * Copyright (c) 2008-2009 Atheros Communications Inc.
+  */
+ 
+-
+ #include <linux/module.h>
+ #include <linux/kernel.h>
+ #include <linux/init.h>
+@@ -128,7 +127,6 @@ MODULE_DEVICE_TABLE(usb, ath3k_table);
+  * for AR3012
+  */
+ static const struct usb_device_id ath3k_blist_tbl[] = {
+-
+ 	/* Atheros AR3012 with sflash firmware*/
+ 	{ USB_DEVICE(0x0489, 0xe04e), .driver_info = BTUSB_ATH3012 },
+ 	{ USB_DEVICE(0x0489, 0xe04d), .driver_info = BTUSB_ATH3012 },
+@@ -202,7 +200,7 @@ static inline void ath3k_log_failed_loading(int err, int len, int size,
+ #define TIMEGAP_USEC_MAX	100
+ 
+ static int ath3k_load_firmware(struct usb_device *udev,
+-				const struct firmware *firmware)
++			       const struct firmware *firmware)
+ {
+ 	u8 *send_buf;
+ 	int len = 0;
+@@ -237,9 +235,9 @@ static int ath3k_load_firmware(struct usb_device *udev,
+ 		memcpy(send_buf, firmware->data + sent, size);
+ 
+ 		err = usb_bulk_msg(udev, pipe, send_buf, size,
+-					&len, 3000);
++				   &len, 3000);
+ 
+-		if (err || (len != size)) {
++		if (err || len != size) {
+ 			ath3k_log_failed_loading(err, len, size, count);
+ 			goto error;
+ 		}
+@@ -262,7 +260,7 @@ static int ath3k_get_state(struct usb_device *udev, unsigned char *state)
+ }
+ 
+ static int ath3k_get_version(struct usb_device *udev,
+-			struct ath3k_version *version)
++			     struct ath3k_version *version)
+ {
+ 	return usb_control_msg_recv(udev, 0, ATH3K_GETVERSION,
+ 				    USB_TYPE_VENDOR | USB_DIR_IN, 0, 0,
+@@ -271,7 +269,7 @@ static int ath3k_get_version(struct usb_device *udev,
+ }
+ 
+ static int ath3k_load_fwfile(struct usb_device *udev,
+-		const struct firmware *firmware)
++			     const struct firmware *firmware)
+ {
+ 	u8 *send_buf;
+ 	int len = 0;
+@@ -310,8 +308,8 @@ static int ath3k_load_fwfile(struct usb_device *udev,
+ 		memcpy(send_buf, firmware->data + sent, size);
+ 
+ 		err = usb_bulk_msg(udev, pipe, send_buf, size,
+-					&len, 3000);
+-		if (err || (len != size)) {
++				   &len, 3000);
++		if (err || len != size) {
+ 			ath3k_log_failed_loading(err, len, size, count);
+ 			kfree(send_buf);
+ 			return err;
+@@ -425,7 +423,6 @@ static int ath3k_load_syscfg(struct usb_device *udev)
+ 	}
+ 
+ 	switch (fw_version.ref_clock) {
+-
+ 	case ATH3K_XTAL_FREQ_26M:
+ 		clk_value = 26;
+ 		break;
+@@ -441,7 +438,7 @@ static int ath3k_load_syscfg(struct usb_device *udev)
+ 	}
+ 
+ 	snprintf(filename, ATH3K_NAME_LEN, "ar3k/ramps_0x%08x_%d%s",
+-		le32_to_cpu(fw_version.rom_version), clk_value, ".dfu");
++		 le32_to_cpu(fw_version.rom_version), clk_value, ".dfu");
+ 
+ 	ret = request_firmware(&firmware, filename, &udev->dev);
+ 	if (ret < 0) {
+@@ -456,7 +453,7 @@ static int ath3k_load_syscfg(struct usb_device *udev)
+ }
+ 
+ static int ath3k_probe(struct usb_interface *intf,
+-			const struct usb_device_id *id)
++		       const struct usb_device_id *id)
+ {
+ 	const struct firmware *firmware;
+ 	struct usb_device *udev = interface_to_usbdev(intf);
+@@ -505,10 +502,10 @@ static int ath3k_probe(struct usb_interface *intf,
+ 	if (ret < 0) {
+ 		if (ret == -ENOENT)
+ 			BT_ERR("Firmware file \"%s\" not found",
+-							ATH3K_FIRMWARE);
++			       ATH3K_FIRMWARE);
+ 		else
+ 			BT_ERR("Firmware file \"%s\" request failed (err=%d)",
+-							ATH3K_FIRMWARE, ret);
++			       ATH3K_FIRMWARE, ret);
+ 		return ret;
+ 	}
+ 
 -- 
-Florian
+2.44.0
 
