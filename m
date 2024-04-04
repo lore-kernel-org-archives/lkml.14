@@ -1,102 +1,142 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 691721292CC;
-	Thu,  4 Apr 2024 13:45:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D8D3127B51
+	for <linux-kernel@vger.kernel.org>; Thu,  4 Apr 2024 13:45:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712238322; cv=none; b=Qt7UFPWJBSR4BNiPBi0t9de/bjXADKL2g69+c9uplOqWaVT12xoJ03qzQNh/XuE/R1Auh3QsVbirBQhsXnq4K2APiaw1dE1df6KhcafdkBPtTDPgLsJpYzp6lUTZyLtu2UabkFQ0Z5scKFsFB5vYdsk/yl8wAvLft7A1QKzqOIE=
+	t=1712238354; cv=none; b=gm9jSvgfCMvO9vvOGCdTbH+EYVKJwl7ct0JJvInAXC5f9RhNlbZgT7xUJEhPANP4JXjHpArkggIjAfdB9zG7Y3wLDtaWUIWowXC4KtnCZoiw2WVdhRi37Cyjp1r2GfDQEBc7slOlSh+KiaP6FL3yRKKOg9S42JSJfazz2ZS7uEY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712238322; c=relaxed/simple;
-	bh=lt7E2zXyUbMPBjxf4XmiRbNFbrymY6WXmeqg2i9JxxE=;
+	s=arc-20240116; t=1712238354; c=relaxed/simple;
+	bh=rIJ5gF+bcRTkcUlaZMOl88O4Cd9tIV5iHXQOl87YQrE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=q7y74ar2ATME45FCfqmsfAyKiyFCZwigkTauOgVMNMbzfcczc2Km0/R2RAZsA5yR63XIkR8cQKyq5++KuqG+Nfr6RwMLLeJREtW9LQkL0VNtCp3LJCuH9+KFOKA7uIoS99WJ0r3sUD86QLFwo2YKIC6qoEmNl3apZT68+ufqvk4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=VTBo4C/p; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	 Content-Type:Content-Disposition:In-Reply-To; b=lQ0k0CkkiEY6fKn9f0iQU3ypnoNqPKs1QNNryT1pmv1k2FNhsCE2eL7RXv6U2ctxEPUCtH8Y1DCoC36VwsPmZXuUIs26C+EPVyCCpGmKnX/wtn1l2qVM+JWzKWNavBlWdPEzXDa2tmH1J5WlvfRzb8MQ3D3vPQga2X3hCUpGYdo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=B/6yTEiq; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="VTBo4C/p"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 23A9F40E019C;
-	Thu,  4 Apr 2024 13:45:18 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id KFtpLrkW2Zbg; Thu,  4 Apr 2024 13:45:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1712238314; bh=KYePjgKyrxaOLQX3sTefJA/mryMqM96mkB5p7azkNE8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=VTBo4C/pxotQQ2bPyVDeqvaYiueLsOLbdQZDll5g3ZzIE7Kyup0p+vV96V6t70OpY
-	 COWgGMJG2WSKR0/kEV5/RVSjQXe+6Y6mqF3+vATFjpEUZyV2E00jx0aYQ32siV++BA
-	 XU2LEnoMqVGQZXD2BXxd+8AvfleG4o6as0eDMDOhoIEq7K/rGd7x//Ym0e5ezGqtv7
-	 g7EPORt+4YoazEyJkvcs/fVrOwwclj4/Y2hFFyTnPyC9iFMBJ5eZ45k954WzWgA6H/
-	 ZtxozH/dcXOIIxAJ1+Wz6Uxz5oJsSpQ2azqSyTEnKfMQxcrYadNInMAtG1cALG8YVH
-	 BWxIWgJzEMZFIIEtnx8gnzaZ0sQdsobihRWrMwtIBzbP7b95L67uoiEgOfJzw4csJR
-	 mXAF1ZGzZafZXhQskUx7Lw/yaXHgzTX5v9uhoSQyvHtRK6pNognGD22xVsfC6eM8LF
-	 0a/Au2ZGcHJDSVsfQ1X0jTIa239Yslny6HbYqqYW4io6xEo6B6ZmcqWLY2Bs2MMvBb
-	 rEnWrWJ5FcE/rZ8Tuizww6RiRapMDbyYn2m14uHo4ZDhXgy5Ue4RUS8ppJRefwum6Y
-	 4ICIFViVvRSpTXd0VDFkrlJCcZ/giC2/B7VTp7nmVkDscKlcieJzXtcAdSid41bSnV
-	 qbYTBG0nrhf9BzBPhOBS14hs=
-Received: from zn.tnic (p5de8ecf7.dip0.t-ipconnect.de [93.232.236.247])
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="B/6yTEiq"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1712238352;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=rIJ5gF+bcRTkcUlaZMOl88O4Cd9tIV5iHXQOl87YQrE=;
+	b=B/6yTEiqq0HnLD+kRMrGG0eH4mG9CZdN3UeR2CucS22b8Owf7g7ZUdqCw+/AKaqrOFX6Zn
+	q/epV/fWlgjdLiSj8rGfjY7IgDbmoQua42WHn2ODkSaq97cCjvXmPoQf0IIlIXyPRGmJwr
+	arxtwLU2yHaW+kaK1K1NxHqDpG4L9pM=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-256-xFKJxaPUPkGlWmgqta_Asw-1; Thu, 04 Apr 2024 09:45:47 -0400
+X-MC-Unique: xFKJxaPUPkGlWmgqta_Asw-1
+Received: from smtp.corp.redhat.com (int-mx10.intmail.prod.int.rdu2.redhat.com [10.11.54.10])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 467EA40E00F4;
-	Thu,  4 Apr 2024 13:44:53 +0000 (UTC)
-Date: Thu, 4 Apr 2024 15:44:52 +0200
-From: Borislav Petkov <bp@alien8.de>
-To: Sean Christopherson <seanjc@google.com>
-Cc: Michael Roth <michael.roth@amd.com>,
-	Josh Poimboeuf <jpoimboe@kernel.org>, bp@kernel.org,
-	bgardon@google.com, dave.hansen@linux.intel.com,
-	dmatlack@google.com, hpa@zytor.com, kvm@vger.kernel.org,
-	leitao@debian.org, linux-kernel@vger.kernel.org, maz@kernel.org,
-	mingo@redhat.com, mirsad.todorovac@alu.unizg.hr,
-	pawan.kumar.gupta@linux.intel.com, pbonzini@redhat.com,
-	peterz@infradead.org, shahuang@redhat.com, tabba@google.com,
-	tglx@linutronix.de, x86@kernel.org
-Subject: Re: [BUG net-next] arch/x86/kernel/cpu/bugs.c:2935: "Unpatched
- return thunk in use. This should not happen!" [STACKTRACE]
-Message-ID: <20240404134452.GDZg6u1A-mPTTRqs6d@fat_crate.local>
-References: <1d10cd73-2ae7-42d5-a318-2f9facc42bbe@alu.unizg.hr>
- <20240318202124.GCZfiiRGVV0angYI9j@fat_crate.local>
- <12619bd4-9e9e-4883-8706-55d050a4d11a@alu.unizg.hr>
- <20240326101642.GAZgKgisKXLvggu8Cz@fat_crate.local>
- <8fc784c2-2aad-4d1d-ba0f-e5ab69d28ec5@alu.unizg.hr>
- <20240328123830.dma3nnmmlb7r52ic@amd.com>
- <20240402101549.5166-1-bp@kernel.org>
- <20240402133856.dtzinbbudsu7rg7d@amd.com>
- <20240403121436.GDZg1ILCn0a4Ddif3g@fat_crate.local>
- <Zg1QFlDdRrLRZchi@google.com>
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 9E69F85A5B7;
+	Thu,  4 Apr 2024 13:45:30 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.225.21])
+	by smtp.corp.redhat.com (Postfix) with SMTP id 8942F492BD1;
+	Thu,  4 Apr 2024 13:45:27 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+	oleg@redhat.com; Thu,  4 Apr 2024 15:44:05 +0200 (CEST)
+Date: Thu, 4 Apr 2024 15:43:57 +0200
+From: Oleg Nesterov <oleg@redhat.com>
+To: Dmitry Vyukov <dvyukov@google.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>, John Stultz <jstultz@google.com>,
+	Marco Elver <elver@google.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>,
+	"Eric W. Biederman" <ebiederm@xmission.com>,
+	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+	kasan-dev@googlegroups.com, Edward Liaw <edliaw@google.com>,
+	Carlos Llamas <cmllamas@google.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH v6 1/2] posix-timers: Prefer delivery of signals to the
+ current thread
+Message-ID: <20240404134357.GA7153@redhat.com>
+References: <20230316123028.2890338-1-elver@google.com>
+ <CANDhNCqBGnAr_MSBhQxWo+-8YnPPggxoVL32zVrDB+NcoKXVPQ@mail.gmail.com>
+ <87frw3dd7d.ffs@tglx>
+ <CANDhNCqbJHTNcnBj=twHQqtLjXiGNeGJ8tsbPrhGFq4Qz53c5w@mail.gmail.com>
+ <874jcid3f6.ffs@tglx>
+ <20240403150343.GC31764@redhat.com>
+ <87sf02bgez.ffs@tglx>
+ <CACT4Y+a-kdkAjmACJuDzrhmUPmv9uMpYOg6LLVviMQn=+9JRgA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <Zg1QFlDdRrLRZchi@google.com>
+In-Reply-To: <CACT4Y+a-kdkAjmACJuDzrhmUPmv9uMpYOg6LLVviMQn=+9JRgA@mail.gmail.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.10
 
-On Wed, Apr 03, 2024 at 05:48:22AM -0700, Sean Christopherson wrote:
-> I'm guessing a general solution for OBJECT_FILES_NON_STANDARD is needed
+Perhaps I am totally confused, but.
 
-Yeah.
-
-> but I have a series to drop it for vmenter.S.
+On 04/04, Dmitry Vyukov wrote:
 >
-> https://lore.kernel.org/all/20240223204233.3337324-9-seanjc@google.com
+> On Wed, 3 Apr 2024 at 17:43, Thomas Gleixner <tglx@linutronix.de> wrote:
+> >
+> > > Why distribution_thread() can't simply exit if got_signal != 0 ?
+> > >
+> > > See https://lore.kernel.org/all/20230128195641.GA14906@redhat.com/
+> >
+> > Indeed. It's too obvious :)
+>
+> This test models the intended use-case that was the motivation for the change:
+> We want to sample execution of a running multi-threaded program, it
+> has multiple active threads (that don't exit), since all threads are
+> running and consuming CPU,
 
-Cool, ship it.
+Yes,
 
-Holler if I should test it a bit on my pile of hw.
+> they all should get a signal eventually.
 
-Thx.
+Well, yes and no.
 
--- 
-Regards/Gruss,
-    Boris.
+No, in a sense that the motivation was not to ensure that all threads
+get a signal, the motivation was to ensure that cpu_timer_fire() paths
+will use the current task as the default target for signal_wake_up/etc.
+This is just optimization.
 
-https://people.kernel.org/tglx/notes-about-netiquette
+But yes, all should get a signal eventually. And this will happen with
+or without the commit bcb7ee79029dca ("posix-timers: Prefer delivery of
+signals to the current thread"). Any thread can dequeue a shared signal,
+say, on return from interrupt.
+
+Just without that commit this "eventually" means A_LOT_OF_TIME statistically.
+
+> If threads will exit once they get a signal,
+
+just in case, the main thread should not exit ...
+
+> then the test will pass
+> even if signal delivery is biased towards a single running thread all
+> the time (the previous kernel impl).
+
+See above.
+
+But yes, I agree, if thread exits once it get a signal, then A_LOT_OF_TIME
+will be significantly decreased. But again, this is just statistical issue,
+I do not see how can we test the commit bcb7ee79029dca reliably.
+
+OTOH. If the threads do not exit after they get signal, then _in theory_
+nothing can guarantee that this test-case will ever complete even with
+that commit. It is possible that one of the threads will "never" have a
+chance to run cpu_timer_fire().
+
+In short, I leave this to you and Thomas. I have no idea how to write a
+"good" test for that commit.
+
+Well... perhaps the main thread should just sleep in pause(), and
+distribution_handler() should check that gettid() != getpid() ?
+Something like this maybe... We need to ensure that the main thread
+enters pause before timer_settime().
+
+Oleg.
+
