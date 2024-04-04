@@ -1,165 +1,204 @@
-Received: from out-189.mta0.migadu.com (out-189.mta0.migadu.com [91.218.175.189])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 462866A008
-	for <linux-kernel@vger.kernel.org>; Thu,  4 Apr 2024 20:07:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.189
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 593681BC46
+	for <linux-kernel@vger.kernel.org>; Thu,  4 Apr 2024 20:07:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712261222; cv=none; b=JnkG32W4S6gkRQPYrjo1NCDiTlNFRFZqb31tRw++BH/ZvCL/ZdjD64sdvzKRTYOefhyMfZgfk6xTV5T/mPqVawJ1l7xYbByggue3LitIwYMjikc9fVq7dnKJ+Vga3W32B8vs/HM2uYx0j3N85b6aDugZK41fqFSYCByjofdog6o=
+	t=1712261260; cv=none; b=Jlq5qV3yHRqKQLC5BV91rqC9gclPC6I9nug+rBfmf9Z0Sij8kJg0lZhjUhhasuPigED48Q6MzyQ9DbmvnynSElMfGwP0YCdaogH9awAJOs8bjfEAfsmwJSy8rLbM7TpSwvjmy7bRi93MOdhHKY9agTORZTSgRMSUscNJq4CNwpI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712261222; c=relaxed/simple;
-	bh=DuFa4hmd+yyQJc4kdYQczPH/6uJpnYrciswo6eFuxBs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=KJj6H+FFVHcK1+g92TwjAAhKSSCWOvpmp5VHzYFm0aOX3YjzP5tnt+v4bq/BomUjh0isrYKpXwZMbj+xD0t2MCjyloKo0tZsLYwr8BdY4f0UdVGyA8ItdS6X1tArU7jPH3oxWhgR2Bze4ZGzFNZKqaXzKxdhOtcQNeh7JbGMtCM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=OkBoT7cB; arc=none smtp.client-ip=91.218.175.189
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1712261260; c=relaxed/simple;
+	bh=H2PgplW4yHSIdo8CDgwMqqNoCYzCazA7fv20bb7mMQc=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=p2RnOv96MGNxj6IjY8rVPk7SY+Cfy9FxoFvARm7VFU1ZjXViIofvfjIXFXaRna916RO4hj9aGrz/JmvxoA39dYnxHwff7RWEDbNLoO9U2fF6++8XPnWuKv3xxaZgiluAtUBe7KDzvpnFTXdC/8NmhwFztwRLczHFym2K3NZ+R2c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=G/wn9siB; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="OkBoT7cB"
-Message-ID: <ff36e8fa-14f4-42a6-8210-cec24a7779a0@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1712261218;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="G/wn9siB"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1712261257;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=n1SLGajoYfkd/BVU/Z4IP2IUlKcHDqf4f4XKLUjAyXc=;
-	b=OkBoT7cBI9fR/9QKUis94AcIOB+rQcO8qjNPV0qOlGiPE5LTyG+5KtIv8xohW7d0i6xBKt
-	kwcOrQMKMzqDBJYkhbkF/4eud9cKIrLoQhoOeLGM+QwTREYPdvRzBYZ41PrIvo+FsdQJz0
-	7B3SnsMQ3UNpaUeJPZccXW1/xWvKcZQ=
-Date: Thu, 4 Apr 2024 13:06:50 -0700
+	bh=K7fjGhenDlbWaU5zor+1smq7yzHNYmLfEO1lExvtio8=;
+	b=G/wn9siBSFRlnJHL+IX+2O6Dik8YG0X5ENjojorrPq7c/5IkmPKknP3rGcLEGOtXl/hANi
+	FGqWURT3gSRNgmHdQSPiJXGV2oSMXUsuFhXTB5rhEzE6p+JBNoY0nPN11YCuWBVL5zT2gG
+	mXPef8esAP0BIH1x3B/Okl0cK029oYA=
+Received: from mail-io1-f70.google.com (mail-io1-f70.google.com
+ [209.85.166.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-640-RlLOEYDHMEK8DTB3AdQQWg-1; Thu, 04 Apr 2024 16:07:35 -0400
+X-MC-Unique: RlLOEYDHMEK8DTB3AdQQWg-1
+Received: by mail-io1-f70.google.com with SMTP id ca18e2360f4ac-7cc7a6a04d9so171445639f.3
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Apr 2024 13:07:35 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712261255; x=1712866055;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=K7fjGhenDlbWaU5zor+1smq7yzHNYmLfEO1lExvtio8=;
+        b=PV+1hD2eKcC31Nd6tHu8zcR/QzJhTTpdvPTEZrrpP1UA1eMdBKZJKXq6FVzpsMPsKC
+         8gfQn4J2DBLB/BA2N5bHADF9z6JeEBWB+3bBhaO1H0hqINXlf5Ir41fJuRlwH4mxeTan
+         AoYHvAwP+LxtPqQCUbSStY+LfwkXfb7ank6AHDI8GVwEKTFUVvY8VYj1UAQvDLT+IRHz
+         nxUU+IDc2yjzp0FYJAadjL1pR3o9p1tHf53pCx2QxIIhelrrQgIWuayQ5gIxM7e1SJCS
+         NEBIRWXEgZQ7IeBMLTeN2IrDXcV1qBwc7vCIHjNLPP0VkNzU5CfkKfChvsQBkldHbqOh
+         wY6w==
+X-Forwarded-Encrypted: i=1; AJvYcCWGiXU2Ijsk2aph9D5Gprnj9ocdbzEn1A0qTyED4WNvB41/XH7OthyGulHJZjy9TFpEIBt1YzC+dv0fFvLhi+2czLqJbIzuE54kU41E
+X-Gm-Message-State: AOJu0YzUvEVjKJ0iAH8I8Kll1aFxpvzZ7beLsQGtQ2G46T0nKRPCE4M2
+	kaASBsgoeOzGXUZ/GB3hn8xEnZyFDbrfvVmbqEvg8gCLV2N0nx9wmwoqreOqEG/USTMRNiJpyqR
+	GY9bQa5hdEALzDymZ+z5v2FnasiN8y9CFWi50U0Ymp8VdRvHLTbn7Y//1iVkjbA==
+X-Received: by 2002:a6b:6110:0:b0:7d5:7ea9:42d1 with SMTP id v16-20020a6b6110000000b007d57ea942d1mr472643iob.14.1712261254462;
+        Thu, 04 Apr 2024 13:07:34 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFZk+PQap7GRIEBSjt4tIDcZndUptl0BWU5rVStDj4SPN+Wy1PHBKbdkvA0+Pg0j37b6i6YQw==
+X-Received: by 2002:a6b:6110:0:b0:7d5:7ea9:42d1 with SMTP id v16-20020a6b6110000000b007d57ea942d1mr472571iob.14.1712261253357;
+        Thu, 04 Apr 2024 13:07:33 -0700 (PDT)
+Received: from redhat.com ([38.15.36.11])
+        by smtp.gmail.com with ESMTPSA id k15-20020a056638140f00b0047ec126cda5sm78846jad.74.2024.04.04.13.07.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 04 Apr 2024 13:07:32 -0700 (PDT)
+Date: Thu, 4 Apr 2024 14:07:31 -0600
+From: Alex Williamson <alex.williamson@redhat.com>
+To: Longfang Liu <liulongfang@huawei.com>
+Cc: <jgg@nvidia.com>, <shameerali.kolothum.thodi@huawei.com>,
+ <jonathan.cameron@huawei.com>, <kvm@vger.kernel.org>,
+ <linux-kernel@vger.kernel.org>, <linuxarm@openeuler.org>, =?UTF-8?B?Q8Op?=
+ =?UTF-8?B?ZHJpYw==?= Le Goater <clg@redhat.com>
+Subject: Re: [PATCH v4 2/4] hisi_acc_vfio_pci: Create subfunction for data
+ reading
+Message-ID: <20240404140731.2b75cb80.alex.williamson@redhat.com>
+In-Reply-To: <20240402032432.41004-3-liulongfang@huawei.com>
+References: <20240402032432.41004-1-liulongfang@huawei.com>
+	<20240402032432.41004-3-liulongfang@huawei.com>
+X-Mailer: Claws Mail 4.2.0 (GTK 3.24.41; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH bpf-next v3] selftests/bpf: Move test_dev_cgroup to
- prog_tests
-Content-Language: en-GB
-To: Muhammad Usama Anjum <usama.anjum@collabora.com>,
- Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>,
- Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau
- <martin.lau@linux.dev>, Eduard Zingerman <eddyz87@gmail.com>,
- Song Liu <song@kernel.org>, John Fastabend <john.fastabend@gmail.com>,
- KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@google.com>,
- Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
- Mykola Lysenko <mykolal@fb.com>, Shuah Khan <shuah@kernel.org>
-Cc: kernel@collabora.com, linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
- linux-kselftest@vger.kernel.org
-References: <20240401123455.1377896-1-usama.anjum@collabora.com>
- <92e1cce6-5f26-4a49-86b6-81e1e80d1aaa@linux.dev>
- <cfecd6ea-8fa3-477f-bd32-4087aefee2af@collabora.com>
- <0ff5c7d0-d5c5-4b61-ba89-8e7f9f775935@linux.dev>
- <0973bc93-7a8d-451c-9944-d91a77d68755@collabora.com>
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Yonghong Song <yonghong.song@linux.dev>
-In-Reply-To: <0973bc93-7a8d-451c-9944-d91a77d68755@collabora.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
+On Tue, 2 Apr 2024 11:24:30 +0800
+Longfang Liu <liulongfang@huawei.com> wrote:
 
-On 4/3/24 5:03 AM, Muhammad Usama Anjum wrote:
-> On 4/3/24 7:36 AM, Yonghong Song wrote:
->> On 4/2/24 8:16 AM, Muhammad Usama Anjum wrote:
->>> Yonghong Song,
->>>
->>> Thank you so much for replying. I was missing how to run pipeline manually.
->>> Thanks a ton.
->>>
->>> On 4/1/24 11:53 PM, Yonghong Song wrote:
->>>> On 4/1/24 5:34 AM, Muhammad Usama Anjum wrote:
->>>>> Move test_dev_cgroup.c to prog_tests/dev_cgroup.c to be able to run it
->>>>> with test_progs. Replace dev_cgroup.bpf.o with skel header file,
->>>>> dev_cgroup.skel.h and load program from it accourdingly.
->>>>>
->>>>>      ./test_progs -t dev_cgroup
->>>>>      mknod: /tmp/test_dev_cgroup_null: Operation not permitted
->>>>>      64+0 records in
->>>>>      64+0 records out
->>>>>      32768 bytes (33 kB, 32 KiB) copied, 0.000856684 s, 38.2 MB/s
->>>>>      dd: failed to open '/dev/full': Operation not permitted
->>>>>      dd: failed to open '/dev/random': Operation not permitted
->>>>>      #72     test_dev_cgroup:OK
->>>>>      Summary: 1/0 PASSED, 0 SKIPPED, 0 FAILED
->>>>> Signed-off-by: Muhammad Usama Anjum <usama.anjum@collabora.com>
->>>>> ---
->>>>> Changes since v2:
->>>>> - Replace test_dev_cgroup with serial_test_dev_cgroup as there is
->>>>>      probability that the test is racing against another cgroup test
->>>>> - Minor changes to the commit message above
->>>>>
->>>>> I've tested the patch with vmtest.sh on bpf-next/for-next and linux
->>>>> next. It is passing on both. Not sure why it was failed on BPFCI.
->>>>> Test run with vmtest.h:
->>>>> sudo LDLIBS=-static PKG_CONFIG='pkg-config --static' ./vmtest.sh
->>>>> ./test_progs -t dev_cgroup
->>>>> ./test_progs -t dev_cgroup
->>>>> mknod: /tmp/test_dev_cgroup_null: Operation not permitted
->>>>> 64+0 records in
->>>>> 64+0 records out
->>>>> 32768 bytes (33 kB, 32 KiB) copied, 0.000403432 s, 81.2 MB/s
->>>>> dd: failed to open '/dev/full': Operation not permitted
->>>>> dd: failed to open '/dev/random': Operation not permitted
->>>>>     #69      dev_cgroup:OK
->>>>> Summary: 1/0 PASSED, 0 SKIPPED, 0 FAILED
->>>> The CI failure:
->>>>
->>>>
->>>> Error: #72 dev_cgroup
->>>> serial_test_dev_cgroup:PASS:skel_open_and_load 0 nsec
->>>> serial_test_dev_cgroup:PASS:cgroup_setup_and_join 0 nsec
->>>> serial_test_dev_cgroup:PASS:bpf_attach 0 nsec
->>>> serial_test_dev_cgroup:PASS:bpf_query 0 nsec
->>>> serial_test_dev_cgroup:PASS:bpf_query 0 nsec
->>>> serial_test_dev_cgroup:PASS:rm 0 nsec
->>>> serial_test_dev_cgroup:PASS:mknod 0 nsec
->>>> serial_test_dev_cgroup:PASS:rm 0 nsec
->>>> serial_test_dev_cgroup:PASS:rm 0 nsec
->>>> serial_test_dev_cgroup:FAIL:mknod unexpected mknod: actual 256 !=
->>>> expected 0
->>>> serial_test_dev_cgroup:PASS:rm 0 nsec
->>>> serial_test_dev_cgroup:PASS:dd 0 nsec
->>>> serial_test_dev_cgroup:PASS:dd 0 nsec
->>>> serial_test_dev_cgroup:PASS:dd 0 nsec
->>>>
->>>> (cgroup_helpers.c:353: errno: Device or resource busy) umount cgroup2
->>>>
->>>> The error code 256 means mknod execution has some issues. Maybe you need to
->>>> find specific errno to find out what is going on. I think you can do ci
->>>> on-demanding test to debug.
->>> errno is 2 --> No such file or directory
->>>
->>> Locally I'm unable to reproduce it until I don't remove
->>> rm -f /tmp/test_dev_cgroup_zero such that the /tmp/test_dev_cgroup_zero
->>> node is present before test execution. The error code is 256 with errno 2.
->>> I'm debugging by placing system("ls /tmp 1>&2"); to find out which files
->>> are already present in /tmp. But ls's output doesn't appear on the CI logs.
->> errno 2 means ENOENT.
->>  From mknod man page (https://linux.die.net/man/2/mknod), it means
->>    A directory component in/pathname/  does not exist or is a dangling
->> symbolic link.
->>
->> It means /tmp does not exist or a dangling symbolic link.
->> It is indeed very strange. To make the test robust, maybe creating a temp
->> directory with mkdtemp and use it as the path? The temp directory
->> creation should be done before bpf prog attach.
-> I've tried following but still no luck:
-> * /tmp is already present. Then I thought maybe the desired file is already
-> present. I've verified that there isn't file of same name is present inside
-> /tmp.
-> * I thought maybe mknod isn't present in the system. But mknod --help succeeds.
-> * I switched from /tmp to current directory to create the mknod. But the
-> result is same error.
-> * I've tried to use the same kernel config as the BPF CI is using. I'm not
-> able to reproduce it.
->
-> Not sure which edge case or what's going on. The problem is appearing
-> because of some limitation in the rootfs.
+> During the live migration process. It needs to obtain various status
+> data of drivers and devices. In order to facilitate calling it in the
+> debugfs function. For all operations that read data from device registers,
+> the driver creates a subfunction.
+> Also fixed the location of address data.
 
-Maybe you could collect /tmp mount options to see whether anything is
-suspicious? In my vm, I have
-   tmpfs on /tmp type tmpfs (rw,nosuid,nodev,size=3501540k,nr_inodes=1048576)
-and the test works fine.
+C=C3=A9dric noted privately and I agree, 1) fixes should be provided in
+separate patches with a Fixes: tag rather than subtly included in a
+minor refactoring, and 2) what does this imply about the existing
+functionality of migration?  This would seem to suggest existing
+migration data is bogus if we're offset by a register reading the DMA
+address.  The commit log for the Fixes patch should describe this.
+
+>=20
+> Signed-off-by: Longfang Liu <liulongfang@huawei.com>
+> ---
+>  .../vfio/pci/hisilicon/hisi_acc_vfio_pci.c    | 56 +++++++++++--------
+>  .../vfio/pci/hisilicon/hisi_acc_vfio_pci.h    |  3 +
+>  2 files changed, 37 insertions(+), 22 deletions(-)
+>=20
+> diff --git a/drivers/vfio/pci/hisilicon/hisi_acc_vfio_pci.c b/drivers/vfi=
+o/pci/hisilicon/hisi_acc_vfio_pci.c
+> index 45351be8e270..bf358ba94b5d 100644
+> --- a/drivers/vfio/pci/hisilicon/hisi_acc_vfio_pci.c
+> +++ b/drivers/vfio/pci/hisilicon/hisi_acc_vfio_pci.c
+> @@ -486,6 +486,39 @@ static int vf_qm_load_data(struct hisi_acc_vf_core_d=
+evice *hisi_acc_vdev,
+>  	return 0;
+>  }
+> =20
+> +static int vf_qm_read_data(struct hisi_qm *vf_qm, struct acc_vf_data *vf=
+_data)
+> +{
+> +	struct device *dev =3D &vf_qm->pdev->dev;
+> +	int ret;
+> +
+> +	ret =3D qm_get_regs(vf_qm, vf_data);
+> +	if (ret)
+> +		return -EINVAL;
+> +
+> +	/* Every reg is 32 bit, the dma address is 64 bit. */
+> +	vf_data->eqe_dma =3D vf_data->qm_eqc_dw[QM_XQC_ADDR_HIGH];
+> +	vf_data->eqe_dma <<=3D QM_XQC_ADDR_OFFSET;
+> +	vf_data->eqe_dma |=3D vf_data->qm_eqc_dw[QM_XQC_ADDR_LOW];
+> +	vf_data->aeqe_dma =3D vf_data->qm_aeqc_dw[QM_XQC_ADDR_HIGH];
+> +	vf_data->aeqe_dma <<=3D QM_XQC_ADDR_OFFSET;
+> +	vf_data->aeqe_dma |=3D vf_data->qm_aeqc_dw[QM_XQC_ADDR_LOW];
+> +
+> +	/* Through SQC_BT/CQC_BT to get sqc and cqc address */
+> +	ret =3D qm_get_sqc(vf_qm, &vf_data->sqc_dma);
+> +	if (ret) {
+> +		dev_err(dev, "failed to read SQC addr!\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	ret =3D qm_get_cqc(vf_qm, &vf_data->cqc_dma);
+> +	if (ret) {
+> +		dev_err(dev, "failed to read CQC addr!\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+>  static int vf_qm_state_save(struct hisi_acc_vf_core_device *hisi_acc_vde=
+v,
+>  			    struct hisi_acc_vf_migration_file *migf)
+>  {
+> @@ -511,31 +544,10 @@ static int vf_qm_state_save(struct hisi_acc_vf_core=
+_device *hisi_acc_vdev,
+>  		return ret;
+>  	}
+> =20
+> -	ret =3D qm_get_regs(vf_qm, vf_data);
+> +	ret =3D vf_qm_read_data(vf_qm, vf_data);
+>  	if (ret)
+>  		return -EINVAL;
+> =20
+> -	/* Every reg is 32 bit, the dma address is 64 bit. */
+> -	vf_data->eqe_dma =3D vf_data->qm_eqc_dw[1];
+> -	vf_data->eqe_dma <<=3D QM_XQC_ADDR_OFFSET;
+> -	vf_data->eqe_dma |=3D vf_data->qm_eqc_dw[0];
+> -	vf_data->aeqe_dma =3D vf_data->qm_aeqc_dw[1];
+> -	vf_data->aeqe_dma <<=3D QM_XQC_ADDR_OFFSET;
+> -	vf_data->aeqe_dma |=3D vf_data->qm_aeqc_dw[0];
+> -
+> -	/* Through SQC_BT/CQC_BT to get sqc and cqc address */
+> -	ret =3D qm_get_sqc(vf_qm, &vf_data->sqc_dma);
+> -	if (ret) {
+> -		dev_err(dev, "failed to read SQC addr!\n");
+> -		return -EINVAL;
+> -	}
+> -
+> -	ret =3D qm_get_cqc(vf_qm, &vf_data->cqc_dma);
+> -	if (ret) {
+> -		dev_err(dev, "failed to read CQC addr!\n");
+> -		return -EINVAL;
+> -	}
+> -
+>  	migf->total_length =3D sizeof(struct acc_vf_data);
+>  	return 0;
+>  }
+> diff --git a/drivers/vfio/pci/hisilicon/hisi_acc_vfio_pci.h b/drivers/vfi=
+o/pci/hisilicon/hisi_acc_vfio_pci.h
+> index 5bab46602fad..7a9dc87627cd 100644
+> --- a/drivers/vfio/pci/hisilicon/hisi_acc_vfio_pci.h
+> +++ b/drivers/vfio/pci/hisilicon/hisi_acc_vfio_pci.h
+> @@ -38,6 +38,9 @@
+>  #define QM_REG_ADDR_OFFSET	0x0004
+> =20
+>  #define QM_XQC_ADDR_OFFSET	32U
+> +#define QM_XQC_ADDR_LOW		0x1
+> +#define QM_XQC_ADDR_HIGH	0x2
+> +
+>  #define QM_VF_AEQ_INT_MASK	0x0004
+>  #define QM_VF_EQ_INT_MASK	0x000c
+>  #define QM_IFC_INT_SOURCE_V	0x0020
 
