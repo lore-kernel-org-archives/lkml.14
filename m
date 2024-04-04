@@ -1,136 +1,91 @@
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D77A11D547
-	for <linux-kernel@vger.kernel.org>; Thu,  4 Apr 2024 15:23:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EAD02C189;
+	Thu,  4 Apr 2024 15:24:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712244236; cv=none; b=j8yzZge4WyCK2AjaWJ3QxvOnKNe5D7gugSbi+kF5Aj9HLbs24QOlLDSft/A40Qh+HgwP0ouT1IkO6BhyDTT15J37U+VBy2Q7ASdX0MTw17Nz3n/3l0MKsaOvH8ARZqyko6Bt/HpD2u2x52ERrmjfvLa3+avaG26s+tE5Y/S1MvY=
+	t=1712244257; cv=none; b=YXUemypNnwAaYZ7tgUZ5wP85J93NTzb7dZSzCzjIr1Nwjx5mM4OJ+R82F9hnqnDac3S7jV2hBOmTLPlyGpqaqErT5I7eGMzf699NUm5uq/pBtawf44J9wrf3miN7g79/E95itE2D+AHomoGpgr2IArNbbyCRZVhLAM8x48KBOls=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712244236; c=relaxed/simple;
-	bh=zfakYO7CS29y5adFO9lRm1TfVsKhvUUh8TJ3RmzDees=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=S7y9SPs/YWexamHRVczvKllfX6OYrdOZ3c6BOAxri02/2QfWLqRS6pcko0WnZ8K97GUXpyNtm/S44jRQH5eOLRj8Jr10FUbHaZaYFMRud329rGVXqbuzCQXzDqXGbBfaXABMSJn1AVt7iwMvvR8ZDNzSwlmPBvuLg2SfyrvpVlo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=bTFCO1zG; arc=none smtp.client-ip=46.235.227.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1712244257; c=relaxed/simple;
+	bh=x6ZnJOxjC4HEHWF02HQuM7ePfGFQL8u36kT/pJhsobo=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=U+O1Etcog3GnBItee+KSDtSsgH6kmLK8nB07ouGh3+GhFnUts0F8O+e9W6JsDsBUByXCNImMsJu4Oy46R12s8U/V1cz87NoptzXfh0h6/yH8NZDSCkGsGymmuSDWFndBW8levtLp9KHBKyfUxj+OqNRsW8SCHwjg/GxEotivcUc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ryY/kRh+; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="bTFCO1zG"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1712244233;
-	bh=zfakYO7CS29y5adFO9lRm1TfVsKhvUUh8TJ3RmzDees=;
-	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
-	b=bTFCO1zGGbjB8onR6iZ4lBCNh9FODnJT9hBCwn4S/byXbNgUKQM9toMO9XrndQ0sn
-	 qN1C3bs0FtXvkvghDMLs4VoksoBiBAdoEi8z8S/ZHKoP0zHcK01EtlLnzRB6B46GxZ
-	 y9YZW4dA7xN6p2plCxTlDcQiNDOwEA/g5h8QgxHimdtOHgbwwcOoH6XYmoHVp7VOiq
-	 zz+qjkcJTgYrcWfk1bUp05IVfCu+m0j3MQ/vFojMOFoDUFfVjDNuAKLDIcYaJOZni4
-	 H8YIyU88BGwX6iL83kGnIL6tcagzZMEJUuUcMppg8pxiGQIvXIK+ddTGr8/sJfarmJ
-	 ySE3ee9VaUySQ==
-Received: from [100.109.49.129] (cola.collaboradmins.com [195.201.22.229])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: dmitry.osipenko)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id B892D37813A4;
-	Thu,  4 Apr 2024 15:23:51 +0000 (UTC)
-Message-ID: <1f23ab7a-334c-4d7d-b917-8e8029e6c690@collabora.com>
-Date: Thu, 4 Apr 2024 18:23:49 +0300
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ryY/kRh+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C41E9C433C7;
+	Thu,  4 Apr 2024 15:24:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1712244256;
+	bh=x6ZnJOxjC4HEHWF02HQuM7ePfGFQL8u36kT/pJhsobo=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=ryY/kRh+/ufffsN8DaR0ct4bU3rygt8kfnJ3maY/xjWFSzGD6hsvN7MeK7gSgFdqY
+	 i54TJl4UgPs5YANHwB8p07inmx6cAY1Z7x55qy7wEt8rFKfJmhCBsoXq0a0Ge95Gai
+	 t/uatqc18KyefAndYvVgOQz30nj9uZWH6aMphs8CPDU7LphPqx8ivsxlHZpEjpPZu4
+	 3NU5PW/haV37AIE8RHK85KTws2tX0P05e80aEBcbwUwtg09T8uw2/B1c0SCQQvBzEP
+	 xMkk4M3akIQ556GGQY7geSJ3FZ3v2IknFL8SvUwb3nT0K74DU0eeyfHU44uoIzs/Wn
+	 cygkmP//SJr2g==
+From: Mark Brown <broonie@kernel.org>
+To: Laurentiu Mihalcea <laurentiumihalcea111@gmail.com>
+Cc: lgirdwood@gmail.com, peter.ujfalusi@linux.intel.com, 
+ pierre-louis.bossart@linux.intel.com, daniel.baluta@nxp.com, 
+ iuliana.prodan@nxp.com, linux-sound@vger.kernel.org, imx@lists.linux.dev, 
+ laurentiu.mihalcea@nxp.com, linux-kernel@vger.kernel.org
+In-Reply-To: <20240328221201.24722-1-laurentiumihalcea111@gmail.com>
+References: <20240328221201.24722-1-laurentiumihalcea111@gmail.com>
+Subject: Re: [PATCH 0/2] ASoC: SOF: imx: stop using the imx8_*_clocks API
+Message-Id: <171224425330.53181.2036893108505184171.b4-ty@kernel.org>
+Date: Thu, 04 Apr 2024 16:24:13 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v19 17/30] drm/panfrost: Fix the error path in
- panfrost_mmu_map_fault_addr()
-From: Dmitry Osipenko <dmitry.osipenko@collabora.com>
-To: Steven Price <steven.price@arm.com>,
- Boris Brezillon <boris.brezillon@collabora.com>
-Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
- kernel@collabora.com, virtualization@lists.linux-foundation.org,
- David Airlie <airlied@gmail.com>, Gerd Hoffmann <kraxel@redhat.com>,
- Gurchetan Singh <gurchetansingh@chromium.org>, Chia-I Wu
- <olvaffe@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
- Qiang Yu <yuq825@gmail.com>, Emma Anholt <emma@anholt.net>,
- Melissa Wen <mwen@igalia.com>
-References: <20240105184624.508603-1-dmitry.osipenko@collabora.com>
- <20240105184624.508603-18-dmitry.osipenko@collabora.com>
-Content-Language: en-US
-In-Reply-To: <20240105184624.508603-18-dmitry.osipenko@collabora.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.14-dev
 
-On 1/5/24 21:46, Dmitry Osipenko wrote:
-> From: Boris Brezillon <boris.brezillon@collabora.com>
+On Fri, 29 Mar 2024 00:11:59 +0200, Laurentiu Mihalcea wrote:
+> The imx8_*_clocks API requires keeping track of all of the clocks used
+> by the IMX SOF driver via an array. This is unnecessary and doesn't
+> scale well. As such, remove it altogether and replace it with
+> devm_clk_bulk_get_all() and friends.
 > 
-> If some the pages or sgt allocation failed, we shouldn't release the
-> pages ref we got earlier, otherwise we will end up with unbalanced
-> get/put_pages() calls. We should instead leave everything in place
-> and let the BO release function deal with extra cleanup when the object
-> is destroyed, or let the fault handler try again next time it's called.
+> Laurentiu Mihalcea (2):
+>   ASoC: SOF: imx: drop usage of the imx8_*_clocks API
+>   ASoC: SOF: imx: remove imx8_*_clocks API
 > 
-> Fixes: 187d2929206e ("drm/panfrost: Add support for GPU heap allocations")
-> Cc: <stable@vger.kernel.org>
-> Signed-off-by: Boris Brezillon <boris.brezillon@collabora.com>
-> Co-developed-by: Dmitry Osipenko <dmitry.osipenko@collabora.com>
-> Signed-off-by: Dmitry Osipenko <dmitry.osipenko@collabora.com>
-> ---
->  drivers/gpu/drm/panfrost/panfrost_mmu.c | 13 +++++++++----
->  1 file changed, 9 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/panfrost/panfrost_mmu.c b/drivers/gpu/drm/panfrost/panfrost_mmu.c
-> index bd5a0073009d..4a0b4bf03f1a 100644
-> --- a/drivers/gpu/drm/panfrost/panfrost_mmu.c
-> +++ b/drivers/gpu/drm/panfrost/panfrost_mmu.c
-> @@ -502,11 +502,18 @@ static int panfrost_mmu_map_fault_addr(struct panfrost_device *pfdev, int as,
->  	mapping_set_unevictable(mapping);
->  
->  	for (i = page_offset; i < page_offset + NUM_FAULT_PAGES; i++) {
-> +		/* Can happen if the last fault only partially filled this
-> +		 * section of the pages array before failing. In that case
-> +		 * we skip already filled pages.
-> +		 */
-> +		if (pages[i])
-> +			continue;
-> +
->  		pages[i] = shmem_read_mapping_page(mapping, i);
->  		if (IS_ERR(pages[i])) {
->  			ret = PTR_ERR(pages[i]);
->  			pages[i] = NULL;
-> -			goto err_pages;
-> +			goto err_unlock;
->  		}
->  	}
->  
-> @@ -514,7 +521,7 @@ static int panfrost_mmu_map_fault_addr(struct panfrost_device *pfdev, int as,
->  	ret = sg_alloc_table_from_pages(sgt, pages + page_offset,
->  					NUM_FAULT_PAGES, 0, SZ_2M, GFP_KERNEL);
->  	if (ret)
-> -		goto err_pages;
-> +		goto err_unlock;
->  
->  	ret = dma_map_sgtable(pfdev->dev, sgt, DMA_BIDIRECTIONAL, 0);
->  	if (ret)
-> @@ -537,8 +544,6 @@ static int panfrost_mmu_map_fault_addr(struct panfrost_device *pfdev, int as,
->  
->  err_map:
->  	sg_free_table(sgt);
-> -err_pages:
-> -	drm_gem_shmem_put_pages_locked(&bo->base);
->  err_unlock:
->  	dma_resv_unlock(obj->resv);
->  err_bo:
+> [...]
 
-Applied to misc-fixes
+Applied to
 
-Forgot that this patch doesn't depend on others in this series, sorry
-for not doing it earlier
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
 
--- 
-Best regards,
-Dmitry
+Thanks!
+
+[1/2] ASoC: SOF: imx: drop usage of the imx8_*_clocks API
+      commit: a358f67d16942f3bbc4d6b0e4b65efd5dda1c304
+[2/2] ASoC: SOF: imx: remove imx8_*_clocks API
+      commit: e618b8b37aa1dac42f50c87373d71ecc68ead97d
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
 
