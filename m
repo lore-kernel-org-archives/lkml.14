@@ -1,85 +1,148 @@
-Received: from mail-pg1-f177.google.com (mail-pg1-f177.google.com [209.85.215.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2DB259157;
-	Thu,  4 Apr 2024 11:03:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F87A59157;
+	Thu,  4 Apr 2024 11:03:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712228598; cv=none; b=WuuCBkZEak3O6G2V9Jt2sEb6qrC7c6bt85XSpipt+CDzhQht1/Pw9RXWx/kA58P7+YCDQJFCKvj4LVDXQGkbOxGZTYvvo2lxQ0MLAaAGqFP/HTwO+T50lr/Jwlmn8P5rfUwg41E0HtMFO3IeYoQEh7C1Ezcs81dDlnkBwY3jM2U=
+	t=1712228603; cv=none; b=ToI6yNP5lZpEIh5xL6BwrhOKoD+2MxV/AjM/nvJuWiNqqbG0Fut8r9M9ZeglaXZSz2llVRJrVWtcZ/rBtcNF+V8EpNB+t7p3Scu+m/No177aVdQaqkKfUEbrXHJOHjGl5YC40kN3pN/yOQSGELcsgkeIPDRiWLE0bb8YblhuDMg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712228598; c=relaxed/simple;
-	bh=fdu26r6ihIaZX1cgogSD3D0GMtEvmDKWge8KTEoRyp8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=MpQdnBiM40SGBXUuLFhXzgoKzf4VnaGit1dglTLBdZZVGgHXjtorjCxcX6mJeBlXNc8j3mZj5lv7oqxqMUkBRXSBqOa+tgQiFfG2vdseq2XHgUrkh2eAlFeZ94Vgtrlo1OGdZ3mMuA1O1YLK0agkhN1pAqcXkTt6A+PVcUSJ4XQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UamSE0Qg; arc=none smtp.client-ip=209.85.215.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1712228603; c=relaxed/simple;
+	bh=Q14ggXy+y0e4OfUSS6sgHf6RZqlI/EP8PYD1AXlxvVw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=qOuCjVJ2ZwihhIrWa7OHKccsNQeGGMaXO3XM1jYpaWN5bfE4GtEOlYayaQOq5SdXKtYMajN2BQVYwEqvra2PcD2c66ZXo09VhvteZiTQfyVsuQuy604wiUDozzrroHLhzUJQg8bHAfohRfMzDO4w4knG3bzzs+TZQt4vOIbv+Cg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mDTYor3G; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UamSE0Qg"
-Received: by mail-pg1-f177.google.com with SMTP id 41be03b00d2f7-5dbf7b74402so591275a12.0;
-        Thu, 04 Apr 2024 04:03:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1712228596; x=1712833396; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=fdu26r6ihIaZX1cgogSD3D0GMtEvmDKWge8KTEoRyp8=;
-        b=UamSE0QgDUXMQ3n7OR4g+C++oeQ7Yl0eQHXJD1unzuvoXxrF/zj/zgcHLyMN3wbDkG
-         P2Mk8yU+RgLQnclvzTxo57flirdr9w3uULurQmT7PgsHQlKbZLOtLbcawxJfdVvTJAIb
-         KIx9u2FCAVmHkFaQoli9kYNeZUa6KwkAC62FukJiA66vj30cJHDCZs1TzrNfkAYEhlvI
-         Ia+3SG94Vry9EpnZVt2x96R31XzuQlio377dMZI09Vcpfgwomnc7oi4qcZDRO1EowmdL
-         VjceIocXABSIvfco9StjkFlrO/RWBv3Q6ROxn4li6Ps+MFHBZXbikmGrInJOXV/7/XCL
-         t6lQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712228596; x=1712833396;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=fdu26r6ihIaZX1cgogSD3D0GMtEvmDKWge8KTEoRyp8=;
-        b=t+Hqr3EBz2Bou2xuBqgPUQYyNhScRYlLlKbLI23frsnB9cX1Ti9m9nM5f8rA/xsMHQ
-         biuwjq4BXalG3YDJZ9PXQgc3qlivv0hTSdE/ffTTj4vxhD8Vd6hQygv1s3haHVEgf5nU
-         LToogp4p1YaH9qLwKdXvvDNktXMFaJd6xV5CsiSLlvL0+HIu1Ko0tVU3vACuFWo8aWsb
-         ud9PLZafZEG3N2lKCOcXzxmyIHS+CQ9IklyfK8XJo7wy/fUtMhZkRGO305dj2JaA2msi
-         BQNQpUjkpbMRzm8HN7ehs9M6KEkY4iWwUv4XojkhQj4Ki9CXoxOSWWcQ7Liz2zlBgfSh
-         Qx0A==
-X-Forwarded-Encrypted: i=1; AJvYcCW9ly8icUZrpCXFiLADyJrjQ4dF29ZlI43xLwDXSfOShgcxPYT1FQVK7yeUzyDwNq+Cg23FlWeZWp2UWNEUAbH8BkIZIyJzd1A6xi9+I0gYQFpWiHKrs/LEpKJn8Jkzfbbd2R9RtpH1AxX4TS33/9QRxrBamfgalhX0AaoNogGR8xwJRVQ=
-X-Gm-Message-State: AOJu0YytjWCc6BBvmKZGBos6e42cWv1tTVlR7K7toL3EYB+IBlDxrjs4
-	l4J9LcUck/BL3YHzNy7EuexkPkdbAxRdUZ2+fivL8QwYv47hvP8170JUVTA1REL1VLlHgozDwG6
-	lIjFmu9Ah5+oFlLIQPFIAeJi+gp+Pg2nEZkw=
-X-Google-Smtp-Source: AGHT+IGa+EvFZksW3o4vdfyb9WBWkSxxOHrpZnu+E4Hbla3uW8VhIWpksDBi5VCY27MzkuQ5BUX+rCFVxMGUxP3J+wk=
-X-Received: by 2002:a05:6a20:4729:b0:1a3:6c63:8f9e with SMTP id
- ek41-20020a056a20472900b001a36c638f9emr1844042pzb.27.1712228596312; Thu, 04
- Apr 2024 04:03:16 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mDTYor3G"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 60563C43399;
+	Thu,  4 Apr 2024 11:03:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1712228603;
+	bh=Q14ggXy+y0e4OfUSS6sgHf6RZqlI/EP8PYD1AXlxvVw=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=mDTYor3GUqTiqx1mWDSXkEV1Vnm/cCTGnTl1eKZLn9l72ZgLAzRW16KGZ893QZmTJ
+	 HjHO8kjaJGFOGhC3oEJJq2/b0EkcS3b5UYeX0VJNn2GrLx8HfcnUhtMnNLkZJrpUd2
+	 AVuWLxDc80BMc4FEf6eSiWhhugSKsktgkAx7DZ8fgGXez1BC8W7gbDQIHk2qDLPNhi
+	 0HJ1LJCtDWGJJJ+0LQNfepO0MP4gXqM+5r44jJGWFea4furiWM8VIcH0RiSHZeoOXl
+	 Xj2RUHZGAmPFb2FxejqTvEJWWHaWHt5S5AVI3AUlYmyFtv8XC6UJ8tk+lFDUo556nH
+	 feq2HzpO7cx1g==
+Message-ID: <15064d90-e89d-4522-90a8-52aad643d7c8@kernel.org>
+Date: Thu, 4 Apr 2024 13:03:17 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CA160A4E-561E-4918-837E-3DCEBA74F808@me.com> <d3423fb5-c117-4bd1-9f86-db35590a0562@proton.me>
-In-Reply-To: <d3423fb5-c117-4bd1-9f86-db35590a0562@proton.me>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Thu, 4 Apr 2024 13:02:40 +0200
-Message-ID: <CANiq72nyqxH2C1gr=UUCOftaKe0zSuuB++mMUD9zXo-pPBVMVg@mail.gmail.com>
-Subject: Re: [PATCH v4] rust: init: remove impl Zeroable for Infallible
-To: Benno Lossin <benno.lossin@proton.me>
-Cc: Laine Taffin Altman <alexanderaltman@me.com>, Miguel Ojeda <ojeda@kernel.org>, 
-	Alex Gaynor <alex.gaynor@gmail.com>, rust-for-linux@vger.kernel.org, 
-	Wedson Almeida Filho <wedsonaf@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Andreas Hindborg <a.hindborg@samsung.com>, Alice Ryhl <aliceryhl@google.com>, 
-	Martin Rodriguez Reboredo <yakoyoku@gmail.com>, lkml <linux-kernel@vger.kernel.org>, 
-	stable@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] bpf: fix null ptr deref in dev_map_enqueue
+To: Edward Adam Davis <eadavis@qq.com>
+Cc: andrii@kernel.org, ast@kernel.org, bpf@vger.kernel.org,
+ daniel@iogearbox.net, davem@davemloft.net, eddyz87@gmail.com,
+ haoluo@google.com, john.fastabend@gmail.com, jolsa@kernel.org,
+ kpsingh@kernel.org, kuba@kernel.org, linux-kernel@vger.kernel.org,
+ martin.lau@linux.dev, netdev@vger.kernel.org, sdf@google.com,
+ song@kernel.org, syzbot+af9492708df9797198d6@syzkaller.appspotmail.com,
+ syzkaller-bugs@googlegroups.com, yonghong.song@linux.dev
+References: <f45ad3e1-4433-422e-be28-17deaba4ade1@kernel.org>
+ <tencent_A4FA0DA89270DDAC5D8519424F9B0DB42507@qq.com>
+Content-Language: en-US
+From: Jesper Dangaard Brouer <hawk@kernel.org>
+In-Reply-To: <tencent_A4FA0DA89270DDAC5D8519424F9B0DB42507@qq.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Thu, Apr 4, 2024 at 11:01=E2=80=AFAM Benno Lossin <benno.lossin@proton.m=
-e> wrote:
->
-> I don't see this commit in the kernel tree, what did you specify as
-> `--base` when running `git format`?
 
-Yeah, I don't have it either, but it seems to apply cleanly.
 
-Cheers,
-Miguel
+On 02/04/2024 05.03, Edward Adam Davis wrote:
+> On Mon, 1 Apr 2024 13:00:12 +0200, Jesper Dangaard Brouer wrote:
+>>> [Fix]
+>>> On the execution path of bpf_prog_test_run(), due to ri->map being NULL,
+>>> ri->tgtvalue was not set correctly.
+>>>
+>>> Reported-and-tested-by:syzbot+af9492708df9797198d6@syzkaller.appspotmail.com
+>>> Signed-off-by: Edward Adam Davis<eadavis@qq.com>
+>>> ---
+>>>    kernel/bpf/devmap.c | 6 +++++-
+>>>    1 file changed, 5 insertions(+), 1 deletion(-)
+>>>
+>>> diff --git a/kernel/bpf/devmap.c b/kernel/bpf/devmap.c
+>>> index 4e2cdbb5629f..ef20de14154a 100644
+>>> --- a/kernel/bpf/devmap.c
+>>> +++ b/kernel/bpf/devmap.c
+>>> @@ -86,6 +86,7 @@ struct bpf_dtab {
+>>>    static DEFINE_PER_CPU(struct list_head, dev_flush_list);
+>>>    static DEFINE_SPINLOCK(dev_map_lock);
+>>>    static LIST_HEAD(dev_map_list);
+>>> +static bool is_valid_dst(struct bpf_dtab_netdev *obj, struct xdp_frame *xdpf);
+>>>
+>>>    static struct hlist_head *dev_map_create_hash(unsigned int entries,
+>>>    					      int numa_node)
+>>> @@ -536,7 +537,10 @@ int dev_xdp_enqueue(struct net_device *dev, struct xdp_frame *xdpf,
+>>>    int dev_map_enqueue(struct bpf_dtab_netdev *dst, struct xdp_frame *xdpf,
+>>>    		    struct net_device *dev_rx)
+>>>    {
+>>> -	struct net_device *dev = dst->dev;
+>>> +	struct net_device *dev;
+>>> +	if (!is_valid_dst(dst, xdpf))
+>> This is overkill, because __xdp_enqueue() already contains most of the
+>> checks in is_valid_dst().
+>>
+>> Why not:
+>>
+>>    if (!dst)
+>> 	return -EINVAL;
+> This can work, but I think is_valid_dst() is better, as its internal inspection
+> of dst is more thorough.
+
+
+No, is_valid_dst() is not better, because it will repeat almost same
+checks (as I said) as __xdp_enqueue() already contains these checks.
+This is fast-path code, we don't want to repeat checks.
+
+--Jesper
+(copy-pasted function below to easier compare)
+
+static inline int __xdp_enqueue(struct net_device *dev, struct xdp_frame 
+*xdpf,
+				struct net_device *dev_rx,
+				struct bpf_prog *xdp_prog)
+{
+	int err;
+
+	if (!(dev->xdp_features & NETDEV_XDP_ACT_NDO_XMIT))
+		return -EOPNOTSUPP;
+
+	if (unlikely(!(dev->xdp_features & NETDEV_XDP_ACT_NDO_XMIT_SG) &&
+		     xdp_frame_has_frags(xdpf)))
+		return -EOPNOTSUPP;
+
+	err = xdp_ok_fwd_dev(dev, xdp_get_frame_len(xdpf));
+	if (unlikely(err))
+		return err;
+
+	bq_enqueue(dev, xdpf, dev_rx, xdp_prog);
+	return 0;
+}
+
+
+static bool is_valid_dst(struct bpf_dtab_netdev *obj, struct xdp_frame 
+*xdpf)
+{
+	if (!obj)
+		return false;
+
+	if (!(obj->dev->xdp_features & NETDEV_XDP_ACT_NDO_XMIT))
+		return false;
+
+	if (unlikely(!(obj->dev->xdp_features & NETDEV_XDP_ACT_NDO_XMIT_SG) &&
+		     xdp_frame_has_frags(xdpf)))
+		return false;
+
+	if (xdp_ok_fwd_dev(obj->dev, xdp_get_frame_len(xdpf)))
+		return false;
+
+	return true;
+}
+
+
