@@ -1,88 +1,142 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BF6311718;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBBF51BF37;
 	Thu,  4 Apr 2024 14:50:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712242228; cv=none; b=auFQDGeGSmGRZ+plQ2SHx0rdHo4M8j+VuzsMKD53tffTD8Mb5pfEr6LbqI8SZ6mR4kTcvzzrtMuS6mXbDEr9IVjieCe9KWy46iYq49XKEoT+w7wov81t8tQDtQ9ii2REPvZukDd06iyb8zPmMpGgbJQJ4yJmkGGeMimcwLTkcZU=
+	t=1712242230; cv=none; b=VcSWB9oZAMIFIplX1VZ4ERAhOwqgsRD4i/KFMFzw2BzIAPsBvzTOlBxKjW0qiBmQqA7XHXJFTUpeKTJQhgWTsSkxt3iXWY9NN/25xpzBxrxs8onJXului0+rRGZS0HEtJqEZY7oeuiX1dTpTFEcHh7d06mbGzaSuv9vYiOJOwGw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712242228; c=relaxed/simple;
-	bh=ku2YBuJik1s7SEiP8w3doooX/ZXddO29iUvYxp6Frm0=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=FowwbCL7I6ri7ff/whX/ojaXhjmCaZ/TNSKLsQJRsciafL5ULWjelmyBY8AeZAf7xanL5ZhmBDWy1Vbzcxoes8zGGL58RI/CuQa+qPhpiMoYcIYx1v36psHDgCD/IdqcoK+phEPbErToZ3ZMy7O4Of6AfUlBWU6a2NyEYnWIxPw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nPMJDeX9; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1712242230; c=relaxed/simple;
+	bh=SCMIZ1IGMHRrGNpDE/LUqaEShJmCNL+gjhIz3VUxPNw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=h9dIa+Ioy84v9uBY6vAjjuAYYqGwWgc26tELAfpULWkDkZYyAAYUjnnjhr4i/XWOFNHHpNRU1cyitR/DegunX+xaxCnmHNUQ0YguyKU4BAvlY9rO6FOskjDpwiKRVlSX7HQ0p9e35zObKCqX7Yn8uJ6QXMSxYilnSrpp05bQ5Z8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gyRaBgO6; arc=none smtp.client-ip=192.198.163.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nPMJDeX9"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 1C071C43390;
-	Thu,  4 Apr 2024 14:50:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712242228;
-	bh=ku2YBuJik1s7SEiP8w3doooX/ZXddO29iUvYxp6Frm0=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=nPMJDeX9sGvtjPadXq7idWRrp18Bxa/O9lJLCNfNttFl6kNJ/Rxel6WpRI+UUOLGR
-	 3BNc1+GEIhmovtwQXIP9jT+yuLPhBP2LDA5ZT6pq3z+cPxWiFqKYou01YVY9JrFkjK
-	 jv+NuohscEc4Y0rggb7V3rAZNW2pQyZJlxS/xQ6Z6qeRDV3xLfnVWxgXDoxUS3L0mG
-	 D5X33u0lPsTldX2FTmciZbxtRAf6dRs+pF0QhnizeY7gJ3Hoqvi7Ka74j0Lb5ib78D
-	 6kQyBH4pka0gDPdFBmN9/cPnEkSWbhpaWPr92+PhNULdHKFwps1Fp0yy2fJXk+L3Mr
-	 YO8a+BLw0bQ9g==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 0622AD9A150;
-	Thu,  4 Apr 2024 14:50:28 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gyRaBgO6"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1712242229; x=1743778229;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=SCMIZ1IGMHRrGNpDE/LUqaEShJmCNL+gjhIz3VUxPNw=;
+  b=gyRaBgO6iHU7G+M3z7CAuDPNh8s9ZqsGIL4Lco23SXCenJ4IaCHsOFj2
+   KzVU3PJMDVcZcbl9LWwoECo28JcItO+LbqV4vgr0vAVhyQBDX16gLsmsv
+   UvxVThRjAgJGvP15ucQW+1QFbEJXDqQgOZYcbkjIAJAXlJXTkxhGUOE5U
+   Jh/0V5yny640vDFGFyWrcNCwt7O313bEL8ly5RbdHFcE3WD/7lURsrhBH
+   RQTjosXEnENPvAeJ+9nZnlHbjGrLzwGMYRjKYVbNO7sxrIhYSauho+34u
+   MQsLAfkqdQD3tHP9pRp3oHAUnJmpIfLAre3CeciALo0xvvnAq7flgBJoT
+   Q==;
+X-CSE-ConnectionGUID: 6oSGR9rKSJmIImoaTSPmIA==
+X-CSE-MsgGUID: xnmJQGB0T4O2cKhBLBiowg==
+X-IronPort-AV: E=McAfee;i="6600,9927,11034"; a="18885071"
+X-IronPort-AV: E=Sophos;i="6.07,179,1708416000"; 
+   d="scan'208";a="18885071"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Apr 2024 07:50:28 -0700
+X-CSE-ConnectionGUID: GaTUqSPCScudo0L9LiAGBg==
+X-CSE-MsgGUID: G5bDDajiRvKG+tlUsjc4PA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,179,1708416000"; 
+   d="scan'208";a="19264395"
+Received: from aghiriba-mobl.ger.corp.intel.com (HELO [10.251.213.116]) ([10.251.213.116])
+  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Apr 2024 07:50:25 -0700
+Message-ID: <853f31f7-3616-4412-b153-ee24a7901757@linux.intel.com>
+Date: Thu, 4 Apr 2024 17:50:55 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] ASoC: SOF: Disable pointless writes to debugfs file
+To: Dan Carpenter <dan.carpenter@linaro.org>,
+ Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Cc: Liam Girdwood <lgirdwood@gmail.com>,
+ Bard Liao <yung-chuan.liao@linux.intel.com>,
+ Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
+ Daniel Baluta <daniel.baluta@nxp.com>,
+ Kai Vehmanen <kai.vehmanen@linux.intel.com>, Mark Brown
+ <broonie@kernel.org>, Jaroslav Kysela <perex@perex.cz>,
+ Takashi Iwai <tiwai@suse.com>, sound-open-firmware@alsa-project.org,
+ linux-sound@vger.kernel.org, linux-kernel@vger.kernel.org,
+ kernel-janitors@vger.kernel.org
+References: <9d2477cf-25aa-4d12-818f-fdafc9aaa28a@moroto.mountain>
+Content-Language: en-US
+From: =?UTF-8?Q?P=C3=A9ter_Ujfalusi?= <peter.ujfalusi@linux.intel.com>
+In-Reply-To: <9d2477cf-25aa-4d12-818f-fdafc9aaa28a@moroto.mountain>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH bpf-next v4 0/2] bpf,riscv: Add support for BPF Arena
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <171224222802.6630.17532386539061151793.git-patchwork-notify@kernel.org>
-Date: Thu, 04 Apr 2024 14:50:28 +0000
-References: <20240404114203.105970-1-puranjay12@gmail.com>
-In-Reply-To: <20240404114203.105970-1-puranjay12@gmail.com>
-To: Puranjay Mohan <puranjay12@gmail.com>
-Cc: ast@kernel.org, daniel@iogearbox.net, andrii@kernel.org,
- martin.lau@linux.dev, eddyz87@gmail.com, song@kernel.org,
- yonghong.song@linux.dev, john.fastabend@gmail.com, kpsingh@kernel.org,
- sdf@google.com, haoluo@google.com, jolsa@kernel.org, bjorn@kernel.org,
- luke.r.nels@gmail.com, xi.wang@gmail.com, paul.walmsley@sifive.com,
- palmer@dabbelt.com, aou@eecs.berkeley.edu, bpf@vger.kernel.org,
- linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
- pulehui@huaweicloud.com
 
-Hello:
 
-This series was applied to bpf/bpf-next.git (master)
-by Daniel Borkmann <daniel@iogearbox.net>:
 
-On Thu,  4 Apr 2024 11:42:01 +0000 you wrote:
-> Changes in V4:
-> V3: https://lore.kernel.org/all/20240326224943.86912-1-puranjay12@gmail.com/
-> - Fix some style issues.
-> - Add Tested-by: and Reviewed-by: tags by Pu Lehui and Björn
+On 04/04/2024 10:38, Dan Carpenter wrote:
+> The permissions on this debugfs file are 0444 so it can't be written to.
+> And writing to the file hasn't done anything since commit 6e9548cdb30e
+> ("ASoC: SOF: Convert the generic IPC flood test into SOF client").
+> Delete the write function.
+
+I agree, it is not used anymore and ...
+
 > 
-> Changes in V3
-> V2: https://lore.kernel.org/bpf/20240325155434.65589-1-puranjay12@gmail.com/
-> - Use REG_DONT_CLEAR_MARKER in place of DONT_CLEAR as the name.
-> - Use RV_REG_ZERO for the above as it is guaranteed to be never used in as
->   dst/src register in BPF LDX/STX/ST instructions.
-> - Use #define RV_REG_ARENA for RV_REG_S7
+> Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
+
+Acked-by: Peter Ujfalusi <peter.ujfalusi@linux.intel.com>
+
+> ---
+> I haven't tested this patch and there is a risk that it breaks some of
+> the test scripts.  Another option would be to just make it a dummy
+> function that does { return count; }.  But I thought I would try the
+> better option first.
 > 
-> [...]
+> Please review this extra carefully.
+> 
+>  sound/soc/sof/debug.c | 19 -------------------
+>  1 file changed, 19 deletions(-)
+> 
+> diff --git a/sound/soc/sof/debug.c b/sound/soc/sof/debug.c
+> index 7c8aafca8fde..937e51b02a24 100644
+> --- a/sound/soc/sof/debug.c
+> +++ b/sound/soc/sof/debug.c
+> @@ -19,24 +19,6 @@
+>  #include "sof-priv.h"
+>  #include "ops.h"
+>  
+> -static ssize_t sof_dfsentry_write(struct file *file, const char __user *buffer,
+> -				  size_t count, loff_t *ppos)
+> -{
+> -	size_t size;
+> -	char *string;
+> -	int ret;
+> -
+> -	string = kzalloc(count+1, GFP_KERNEL);
+> -	if (!string)
+> -		return -ENOMEM;
+> -
+> -	size = simple_write_to_buffer(string, count, ppos, buffer, count);
+> -	ret = size;
+> -
+> -	kfree(string);
 
-Here is the summary with links:
-  - [bpf-next,v4,1/2] bpf,riscv: Implement PROBE_MEM32 pseudo instructions
-    https://git.kernel.org/bpf/bpf-next/c/633a6e01d1a2
-  - [bpf-next,v4,2/2] bpf,riscv: Implement bpf_addr_space_cast instruction
-    https://git.kernel.org/bpf/bpf-next/c/21ab0b6d0cfc
+This was not too constructive ;)
 
-You are awesome, thank you!
+> -	return ret;
+> -}
+> -
+>  static ssize_t sof_dfsentry_read(struct file *file, char __user *buffer,
+>  				 size_t count, loff_t *ppos)
+>  {
+> @@ -126,7 +108,6 @@ static const struct file_operations sof_dfs_fops = {
+>  	.open = simple_open,
+>  	.read = sof_dfsentry_read,
+>  	.llseek = default_llseek,
+> -	.write = sof_dfsentry_write,
+>  };
+>  
+>  /* create FS entry for debug files that can expose DSP memories, registers */
+
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
-
+Péter
