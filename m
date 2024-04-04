@@ -1,75 +1,87 @@
-Received: from mail115-100.sinamail.sina.com.cn (mail115-100.sinamail.sina.com.cn [218.30.115.100])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7889101E6
-	for <linux-kernel@vger.kernel.org>; Thu,  4 Apr 2024 00:01:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=218.30.115.100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B24191C36;
+	Thu,  4 Apr 2024 00:01:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712188875; cv=none; b=CES5+ur9aA6wrYN8sdRcjEAjViCtPOYmw5ENoFwA93jlAS7CJYYpMcWo46egmffTtnpr906yEbRhgdSKRb7j9FZjUjG0GSQPYFmjgO9gbVkdgKxXU5ZMwKuCNmNe34PRSSALOXNN+G6pxgsdcbrZCyoKnY2uFiakY+mEpmZhGgE=
+	t=1712188911; cv=none; b=kPoUP19cgXOnmXNiMcnr3pSS2SIiZ8a7Ba5xPkDjlDyePOwAWIShHsH7gBzjqBc5/+nC8kSLqV8WhhOFPY+TkzPpc36tc6v5fjC+lynFGSxe1JsNQKuwYaFGvy07qv2IGv5g/lP+Ga1xvVjcmGFe7/xfTP5IVYiiUSrS9m8KD7w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712188875; c=relaxed/simple;
-	bh=eC1aYVYAAKRFGaFrPzu+pNFeosAE4bFpaTP1je5KirM=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=CDtrwbYdHhouKDmNpQ1kMe9o4xEHgZg9EGF3X0OzDBMK4yr2gRyj16EhZYg6qpuhZhjWv2LrrckqnnYpXDYmuzGaOEnoL6V9UsD99PCW2rRNuc78FJ/HWws+ApX8hgsfMM5qglgthhlJ6oB6/cTX78H22gDhusAjHxdIiooRxE4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sina.com; spf=pass smtp.mailfrom=sina.com; arc=none smtp.client-ip=218.30.115.100
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sina.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sina.com
-X-SMAIL-HELO: localhost.localdomain
-Received: from unknown (HELO localhost.localdomain)([113.88.48.253])
-	by sina.com (172.16.235.24) with ESMTP
-	id 660DEDBA00005DD1; Thu, 4 Apr 2024 08:01:01 +0800 (CST)
-X-Sender: hdanton@sina.com
-X-Auth-ID: hdanton@sina.com
-Authentication-Results: sina.com;
-	 spf=none smtp.mailfrom=hdanton@sina.com;
-	 dkim=none header.i=none;
-	 dmarc=none action=none header.from=hdanton@sina.com
-X-SMAIL-MID: 2157745089611
-X-SMAIL-UIID: 791D657EF29E45C090CE7142AF62D62F-20240404-080101-1
-From: Hillf Danton <hdanton@sina.com>
-To: syzbot <syzbot+e29c204bd2e3906fe69c@syzkaller.appspotmail.com>
-Cc: linux-kernel@vger.kernel.org,
-	syzkaller-bugs@googlegroups.com
-Subject: Re: [syzbot] [net?] [nfc?] WARNING: locking bug in nci_close_device (2)
-Date: Thu,  4 Apr 2024 08:00:49 +0800
-Message-Id: <20240404000049.3868-1-hdanton@sina.com>
-In-Reply-To: <000000000000195eea0615368539@google.com>
-References: 
+	s=arc-20240116; t=1712188911; c=relaxed/simple;
+	bh=z6RlBSR5aj4M2kYLHYH9aUI4l4AwRODvROqiMQqGqRM=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=tSq1Y8ZshOpXm2iQXp36g8bC2ScHlOXbQH9/Fsb8HV6IYpcVG7azi+ENR4VScP2U86GaOpkkJ79n8wqHzKiSIl8P4E1mqwi+gPzZ9Ub0onbg6yBPkrIBKqPSEhGhyvNttZGvMmPfC1SlqCnNj2rcVtpM6sVkywdOQwf6UcgdqSE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LpglnLPO; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LpglnLPO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B7DA3C433C7;
+	Thu,  4 Apr 2024 00:01:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1712188911;
+	bh=z6RlBSR5aj4M2kYLHYH9aUI4l4AwRODvROqiMQqGqRM=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=LpglnLPOmZodZPTZTjRY5E4ssCtYVloOxdPpXR2jLdwQtAR0wfeEutktistu+xoLK
+	 RjyTzEsmn+w/J2Ky3I+HoQvNDqohhExcGeLlhJRFCnRRVPX6AlrE6THYSs3XPzuwYg
+	 GUC1l2g+fqU7af205uyWZhe/tpWfZhYj1alkg27Uw3e26ogd6nXx7/BzQMHDFDaG8u
+	 qA5t8OyxR8Tr1Yjx3E5nMix3TqNuKSoGTo34yYZTklZjY8v+sabJrGwWE3beufbas/
+	 OAQ+HOkG8yUl4/1qySycvyvHEEiW2iMKnWKQawyy2MAxVMUaZuES+jZPqufbRA/LZg
+	 tHl32Nv6bK6ZA==
+Date: Wed, 3 Apr 2024 17:01:49 -0700
+From: Jakub Kicinski <kuba@kernel.org>
+To: David Ahern <dsahern@kernel.org>
+Cc: Leon Romanovsky <leon@kernel.org>, Edward Cree <ecree.xilinx@gmail.com>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jason Gunthorpe
+ <jgg@nvidia.com>, Christoph Hellwig <hch@infradead.org>, Saeed Mahameed
+ <saeed@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Jiri Pirko
+ <jiri@nvidia.com>, Leonid Bloch <lbloch@nvidia.com>, Itay Avraham
+ <itayavr@nvidia.com>, Saeed Mahameed <saeedm@nvidia.com>, Aron Silverton
+ <aron.silverton@oracle.com>, linux-kernel@vger.kernel.org,
+ "netdev@vger.kernel.org" <netdev@vger.kernel.org>, Andy Gospodarek
+ <andrew.gospodarek@broadcom.com>
+Subject: Re: [PATCH V4 0/5] mlx5 ConnectX control misc driver
+Message-ID: <20240403170149.7d2b8f2b@kernel.org>
+In-Reply-To: <d75ee9d5-36a9-4056-a0f3-0c05b2e744aa@kernel.org>
+References: <2024032248-ardently-ribcage-a495@gregkh>
+	<510c1b6b-1738-4baa-bdba-54d478633598@kernel.org>
+	<Zf2n02q0GevGdS-Z@C02YVCJELVCG>
+	<20240322135826.1c4655e2@kernel.org>
+	<e5c61607-4d66-4cd8-bf45-0aac2b3af126@kernel.org>
+	<20240322154027.5555780a@kernel.org>
+	<1cd2a70c-17b8-4421-b70b-3c0199a84a6a@kernel.org>
+	<0ea32dd4-f408-5870-77eb-f18899f1ad44@gmail.com>
+	<20240402184832.GO11187@unreal>
+	<cefa2b9a-4227-969e-d31e-c19a552b9c1c@gmail.com>
+	<20240403190012.GV11187@unreal>
+	<d75ee9d5-36a9-4056-a0f3-0c05b2e744aa@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Wed, 03 Apr 2024 12:49:25 -0700
-> syzbot has found a reproducer for the following issue on:
+On Wed, 3 Apr 2024 13:31:46 -0600 David Ahern wrote:
+> > ... Patches aren't languishing for want of reviewer resources; it's just that it
+> >  takes *submitter* time and effort to bring them up to the quality level
+> >  that's required, and occasionally the vendor has to (shock! horror!)
+> >  tell the world what one of their magic knobs actually *does*. ...
+> > 
+> > ^^^^ Content
+> > This paragraph alone shows that you completely didn't understand the
+> > discussion here.
 > 
-> HEAD commit:    fe46a7dd189e Merge tag 'sound-6.9-rc1' of git://git.kernel..
-> git tree:       upstream
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1201b6d3180000
+> +1
 
-#syz test https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git  fe46a7dd189e
+"didn't understand the discussion" is an ironic thing for you to +1,
+David. After all my emails about HNS3 RDMA you somehow concluded today
+that I want to make rules for the entire kernel:
+https://lore.kernel.org/all/6faa47b0-27c3-47f9-94be-1ec671d9543c@kernel.org/
 
---- x/net/nfc/nci/core.c
-+++ y/net/nfc/nci/core.c
-@@ -560,7 +560,8 @@ static int nci_close_device(struct nci_d
- 	 */
- 	mutex_lock(&ndev->req_lock);
- 
--	if (!test_and_clear_bit(NCI_UP, &ndev->flags)) {
-+	if (!test_and_clear_bit(NCI_UP, &ndev->flags) &&
-+	    !test_bit(NCI_UNREG +1, &ndev->flags)) {
- 		/* Need to flush the cmd wq in case
- 		 * there is a queued/running cmd_work
- 		 */
-@@ -601,6 +602,7 @@ static int nci_close_device(struct nci_d
- 
- 	/* Clear flags except NCI_UNREG */
- 	ndev->flags &= BIT(NCI_UNREG);
-+	set_bit(NCI_UNREG +1, &ndev->flags);
- 
- 	mutex_unlock(&ndev->req_lock);
- 
---
+And I second what Ed said. I have asked multiple vendors preaching
+impossibilism in this thread to start posting those knobs. I offered
+to do a quick off-list review of the list of knobs they have to give 
+a quick yay / nay, so they don't waste time implementing things that
+would get nacked. None of the vendors bothered taking me up on that
+offer.
