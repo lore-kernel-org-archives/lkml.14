@@ -1,46 +1,46 @@
-Received: from NAM04-DM6-obe.outbound.protection.outlook.com (mail-dm6nam04on2046.outbound.protection.outlook.com [40.107.102.46])
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2067.outbound.protection.outlook.com [40.107.92.67])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8BEA128362;
-	Thu,  4 Apr 2024 15:14:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.102.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 944D0823D0;
+	Thu,  4 Apr 2024 15:14:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.67
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712243668; cv=fail; b=aEUmQBVI8Hm3D1HwKF5fo62oyLqAgBpnpiltBeBE6qZyDCW3zQcmWCo3VYZ/zqS6wtfS9qxDEQjPbX6XcN1VpahgswLAmGz7wUznROxW8TkNjzqc3C8sZVsHPn+NjJJklB6F5Rcc126IlbWA5VJjXEDGf0GViPYfF6ugkludC4Y=
+	t=1712243669; cv=fail; b=V08kHq9dDxtGnaoPo6anqF/znYfBk6txArQ2ULYyBbUXi0qn9skFSgmf6gbHf42s97vg0/Yrppk7sO/zXo+nQ+1gG6g2G3vnlWlX4yiKXYlRF7fxFIn3T/cfsLzZjRME0VhGhY6tGtaKuVCtT1k3yACCa6c1et5diqtCnVSZ7VI=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712243668; c=relaxed/simple;
-	bh=vPFWkUy8IIHa/WUQHXkrjG1ox0a2n+Dx91X2EksZ93E=;
+	s=arc-20240116; t=1712243669; c=relaxed/simple;
+	bh=X/O/cVvQ0bk66pmGOrC4kUiJGBmZGD9SrKgoQG/VdOk=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=HNZqNBSi5ocZity0B1pquQAcbCj1viPAlcSrwrHTAp+xM5NXt3fk/bXCdVsZDh6jLp518wb666KJHYSWBasIYu4nKu77JKw7ua7Kw0QvYgOckEAC0S+UTpIGsI9X/SpA7pwWHMYm8nNKIuWYPLJUZtnz/MwprWkj3w7EUOfrLlo=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=Nao5wDHe; arc=fail smtp.client-ip=40.107.102.46
+	 MIME-Version:Content-Type; b=GnAdDdvZKFbvbdNycxgRW9ucnbLRRsZaHjj1yDhhOVKYUDXAt8X8fDXwpa4hVZ0lHR5vOGd1LXil/eHNRVYQDYss7kSR4pYTiXLtj4tRJDJRNTRhutLqVz0kOE5l9g23h0IHv5TrZkwyGeQztQ6ZwfoiH7sEZDBOFaJ4/aGNcTw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=5TwQ8IJp; arc=fail smtp.client-ip=40.107.92.67
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="Nao5wDHe"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="5TwQ8IJp"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Kp2UUCs7kujo2QeCYNEP1Fme/n+sJfyJi4xHJh2ntfOffZ/uucdf+nFaIxR+vRumoVvQY+YhvBjR3xBLIHLUpTq2+CDAm7NnpgL9OZOnr0FREFh++/RChPCCL6wjhXLdLiUxxzt+9Fn7yNAjJ3PkRsrW500mj05JpuKwswSN4+FZ8bNJIVh1zPzCcJAoOYDoUco/TRHPSJnLLIaKweghvLKzCHnU7S2ycplqcsSGbd/xc1bg1tHk/n0+mmkDvkm4T531otXsjNMcGVrBBpyK8unFiPcW3pPoE5EVf3yNFBx414L7rN5K1ouQm4ULNyukt584+PZwQDFglCP4FqfHAQ==
+ b=QeUQS1WGpcXBG2HlqmgIJgxqAJ3vyjCfRd0sPFW4s8OeAX8KIemeOHBcGqb2GIa3IWsAXwGjn/BxgOwURQJPK45C/A0cZSsEf2e9KJZxaQGFDkOYT+StO8PkMVqtHq1i6MvvqBWYtYmikXQVwzWxRH+yUbZ2CSSjB9RIf2meUMBCJRnbDkKUoCLo149tG+85bqdIop+p1y5Wi60e8ZHYy2jP7ja7JKGS/fwC67pJZrKSzuVNFsfJZ0Wbj4nJBjrGUEhG6lfQmABRfb4Nx/Dp/l9W93VBAWMIb2jDXqebMPQSS49qOQwn4vfyk4pbxiUZIRaghMVZsapX20gnZBKBCw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=ii7nrqaeeFK7Rd2T3wSvKEYfBVw/yhmnSw1wcsBU4Uk=;
- b=jSCYsjn5assO1QJPefInj12c99UXOVr/DmhkXyWVLsMzCZwrODVtKrUkv04bsMXzUcW3vesVBuk4JPe7pe0RcVbizxa82EAEedqtNIevH0v8rOqei5IB1Fv7q4xL0LIJ0r0zeqJyIUGCDTeSXf/Ybv81kpPJX8A/x5xSWt2sldsYQSFz74pg4lG8CPA2x0iBAC/r61VYLFyIW2OBQ2MmTpj2h3ehb1caK6EEaBbMuMcfnwEUuVrlfNwvQ0eb4QoBaU9QVEnE93oXFiOXMUjp/0Q01+mxybB/mcX6hvHOdLm2EXmz+jPkLRRrMgNvN873HrrhzPC1CUAS7sAAJX21XA==
+ bh=UKYsFKaHwAtFnsm54C34f0OvS6eu45Lr8/f0OlgxHIM=;
+ b=P52s4S3jdrTPglF27t3C+2s1R61/7ceOnOgX1/HLgq1hkQcUOQ3gE3JdnPXgruC9Gpb/ZT3XkIivmqw37r1r7RtYnsBbUNZNdEfEQiD9Cf0dLWKEiDsBAFHTYCYDe2rqd1h4KJwmWmNh4KCKhu9BLEGnvuNVGET+TWtyal0ccmVvWjboGP7LlqwNn9Wrhn7k3PTr2qb0cIrgpcH2m1nfMHcmQdwHwwB89IeW8szuhmCSFhcje4osuNa04FUAU4s1GbyRocs965Ckz64mH6YqeONaf2JaZNpP+I+iL5JbJ9hgwjNoLVz1BiIqVdAs1BKLBBRHvjybrjnH6LsZFpvEeA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
  dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
  header.from=amd.com; dkim=none (message not signed); arc=none (0)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ii7nrqaeeFK7Rd2T3wSvKEYfBVw/yhmnSw1wcsBU4Uk=;
- b=Nao5wDHeOUr/LdPHrwubD7tRIA75FhScfT8k/LfD3jNjpY1dq1thD/7tUtIXHZIEq7UigDioQ1Ryc6Cp1RmtMAvrBP0GpWvjL8tEjUzcWf4HEFK6gZXm13w9O3N+7dr9CcRooPBJOQndYThiONxHKoZQe07fQLTThcPHPhR4Ods=
-Received: from DM6PR05CA0043.namprd05.prod.outlook.com (2603:10b6:5:335::12)
- by MW5PR12MB5623.namprd12.prod.outlook.com (2603:10b6:303:199::9) with
+ bh=UKYsFKaHwAtFnsm54C34f0OvS6eu45Lr8/f0OlgxHIM=;
+ b=5TwQ8IJp7xeb+RuM10mV7wZSa7Bwf+S8vsXNNQhnvOjrbL5mo1npY/BDuyKl+pOx1uqzAhFwoVfhPtlelwfxidCiV/AnHRHzKKih3ESACO4xXOGGV6hLCj3g/xlVGa1bhtggZ3GYEbfcjWIPZ3OEShctrfs6UT5rEZiMWt500i0=
+Received: from DM6PR05CA0050.namprd05.prod.outlook.com (2603:10b6:5:335::19)
+ by MW4PR12MB6875.namprd12.prod.outlook.com (2603:10b6:303:209::5) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.46; Thu, 4 Apr
- 2024 15:14:24 +0000
+ 2024 15:14:21 +0000
 Received: from DS3PEPF000099DA.namprd04.prod.outlook.com
- (2603:10b6:5:335:cafe::37) by DM6PR05CA0043.outlook.office365.com
- (2603:10b6:5:335::12) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7452.26 via Frontend
- Transport; Thu, 4 Apr 2024 15:14:23 +0000
+ (2603:10b6:5:335:cafe::7) by DM6PR05CA0050.outlook.office365.com
+ (2603:10b6:5:335::19) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7472.10 via Frontend
+ Transport; Thu, 4 Apr 2024 15:14:20 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
  smtp.mailfrom=amd.com; dkim=none (message not signed)
  header.d=none;dmarc=pass action=none header.from=amd.com;
@@ -50,19 +50,19 @@ Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
 Received: from SATLEXMB04.amd.com (165.204.84.17) by
  DS3PEPF000099DA.mail.protection.outlook.com (10.167.17.11) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.7452.22 via Frontend Transport; Thu, 4 Apr 2024 15:14:23 +0000
+ 15.20.7452.22 via Frontend Transport; Thu, 4 Apr 2024 15:14:20 +0000
 Received: from quartz-7b1chost.amd.com (10.180.168.240) by SATLEXMB04.amd.com
  (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Thu, 4 Apr
- 2024 10:14:11 -0500
+ 2024 10:14:10 -0500
 From: Yazen Ghannam <yazen.ghannam@amd.com>
 To: <linux-edac@vger.kernel.org>
 CC: <linux-kernel@vger.kernel.org>, <tony.luck@intel.com>, <x86@kernel.org>,
 	<Avadhut.Naik@amd.com>, <John.Allen@amd.com>, Yazen Ghannam
 	<yazen.ghannam@amd.com>
-Subject: [PATCH v2 06/16] x86/mce/amd: Prep DFR handler before enabling banks
-Date: Thu, 4 Apr 2024 10:13:49 -0500
-Message-ID: <20240404151359.47970-7-yazen.ghannam@amd.com>
+Subject: [PATCH v2 02/16] x86/mce: Use mce_setup() helpers for apei_smca_report_x86_error()
+Date: Thu, 4 Apr 2024 10:13:45 -0500
+Message-ID: <20240404151359.47970-3-yazen.ghannam@amd.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20240404151359.47970-1-yazen.ghannam@amd.com>
 References: <20240404151359.47970-1-yazen.ghannam@amd.com>
@@ -78,82 +78,87 @@ X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
  (10.181.40.145)
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS3PEPF000099DA:EE_|MW5PR12MB5623:EE_
-X-MS-Office365-Filtering-Correlation-Id: 21cbd44e-b3bc-4a8a-741b-08dc54b9e936
+X-MS-TrafficTypeDiagnostic: DS3PEPF000099DA:EE_|MW4PR12MB6875:EE_
+X-MS-Office365-Filtering-Correlation-Id: 501fd181-48df-4fcf-3a00-08dc54b9e776
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
 X-Microsoft-Antispam-Message-Info:
-	BWNNZW9HZXoJ3yqi5lpGdM0bTcRvuxNrOI78p7ubIq5nwRcOsme+l314h/xGm7F+/FPP023NnSlwo/+sNTsM9tkW4QoKrJ5mn4lJG0TU2bYE8n8j+iNQyUQ/dWFob3oC6LIbNERarq0uEhpNMH5kEV552W8Jm8JR1aw47mHNDUWwfPoItLQrzEqvo3MblMTimqpIW1GYad9MUq7SNELKL+haBL1axaRLLrTCyrObhEHcUYgz/LLxTcb/wXEH+nmV+YgHN3NBun6sG7/jNulrjQwjpnexAcQNC1BFpOCYjI2Dj0f6y0+wHgxoVk4b5C8D7v73suycZlzY/ZOXGSqDnWlcNZazbvoaXRltqZ7cX1neWyB4+KGgstkB919+4IZOOiYh9CHR7jR02t/3D7BMzgPRs1zPI/Pi8mlBVoO2jj2n5IJONYJE/SXQkunKXp4GBpVZjaWrd0yklWLvlErWP3gZSMbXJ0w41cRDqbs3rgSjDjfjMlDLMIjOlqnMozT72cUdWjJ1fqf/xmM567G/o8P7L/5WstnLoPOSgUdOdfDGK8dtzUN5Afozkez8IGTbEI/7kkWaexhofqaNYR1oIza+wvMsGw62jaJEEcH9tvHvhsTsriQkLHwkOtxg92aFO0xIlNtI5CU5uO4JYTami5h7h1XKZEWyxkwNVCzbi1qhau+Oyjuz1zySVNGfsDuN
+	N1Y/k7yAFTYCf/d5oumfTlfOPpTnbd5VwYzlKoNkXCWEymEj3Xf4oatbgFGtghPR01e76yy0ILNAPJ+exiugw3xTOIYoQ15e+X3umEpEWbty3WxcR0P6DqOnPVHjjQfE/b4+jO0mPwoanIY26Bn7vj9L0KP+V4cE/TKXXRTdJVQ0QvFbOh0Ixq/WIuA63u+OAYYz+bNeiueRiWseVL4Cdq6nV87nPIg93J8/jMs5jIfsZsL44Q2ZJBj2gQuDr4Kx2OZVDKYOO4MfZQDxdhORHk2B9Soy8Ru3jgPpJDu5CjsIlWCSvoaHo/e+id4awURv5Jzkb9VzMqkFvlfY1MKcKMYz+9gO/YtNlaJYeKKM4G6vFGDrL8qAAHHzIbh86GVXNNcm1cb9zzY0R+iyNHKr6BplrtpJ1V2TLjB8uU9Im00b350UJDvb/E8wdFxAhQZTb9XUHzH+MYXHQwOJEipUMCHgxINREAV32rY0g/LPmSwixa5yjzKmAzeqT/uWT6736FAVGpvgfjb1fYNJ/kKeWFsuwgON0eUIPEqa2BtSsPcVzOBz8Dc2ejLUvT4LvBo78iakbD3ZNIlrKoXq8dkyjQZltjs72mMl/b8YtyvxvfZAhPj0SXVQlS32P6pPKdowInp/qvETI3/jmKGpU0TaBoWvVfRb7DgUwkFEgzXvkSpmPT3D1aKCjJMqPwLsDlXFQQPgWbSVtaQX5C/IZ9dR4Q==
 X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(82310400014)(376005)(36860700004)(1800799015);DIR:OUT;SFP:1101;
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(36860700004)(82310400014)(376005)(1800799015);DIR:OUT;SFP:1101;
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Apr 2024 15:14:23.5610
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Apr 2024 15:14:20.6391
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 21cbd44e-b3bc-4a8a-741b-08dc54b9e936
+X-MS-Exchange-CrossTenant-Network-Message-Id: 501fd181-48df-4fcf-3a00-08dc54b9e776
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
 X-MS-Exchange-CrossTenant-AuthSource:
 	DS3PEPF000099DA.namprd04.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW5PR12MB5623
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR12MB6875
 
-Scalable MCA systems use the per-bank MCA_CONFIG register to enable
-deferred error interrupts. This is done as part of SMCA configuration.
+Current AMD systems may report MCA errors using the ACPI Boot Error
+Record Table (BERT). The BERT entries for MCA errors will be an x86
+Common Platform Error Record (CPER) with an MSR register context that
+matches the MCAX/SMCA register space.
 
-Currently, the deferred error interrupt handler is set up after SMCA
-configuration.
+However, the BERT will not necessarily be processed on the CPU that
+reported the MCA errors. Therefore, the correct CPU number needs to be
+determined and the information saved in struct mce.
 
-Move the deferred error interrupt handler set up before SMCA
-configuration. This ensures the kernel is ready to receive the
-interrupts before the hardware is configured to send them.
+The CPU number is determined by searching all possible CPUs for a Local
+APIC ID matching the value in the x86 CPER.
+
+Use the newly defined mce_setup_*() helpers to get the correct data.
 
 Signed-off-by: Yazen Ghannam <yazen.ghannam@amd.com>
 ---
 
 Notes:
     Link:
-    https://lkml.kernel.org/r/20231118193248.1296798-11-yazen.ghannam@amd.com
+    https://lkml.kernel.org/r/20231118193248.1296798-4-yazen.ghannam@amd.com
     
     v1->v2:
-    * No change.
+    * Trim commit message (Boris)
+    * Rebase on earlier changes (Yazen)
 
- arch/x86/kernel/cpu/mce/amd.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ arch/x86/kernel/cpu/mce/apei.c | 17 +++++++----------
+ 1 file changed, 7 insertions(+), 10 deletions(-)
 
-diff --git a/arch/x86/kernel/cpu/mce/amd.c b/arch/x86/kernel/cpu/mce/amd.c
-index 3093fed06194..e8e78d91082b 100644
---- a/arch/x86/kernel/cpu/mce/amd.c
-+++ b/arch/x86/kernel/cpu/mce/amd.c
-@@ -589,6 +589,9 @@ static void deferred_error_interrupt_enable(struct cpuinfo_x86 *c)
- 	u32 low = 0, high = 0;
- 	int def_offset = -1, def_new;
+diff --git a/arch/x86/kernel/cpu/mce/apei.c b/arch/x86/kernel/cpu/mce/apei.c
+index 7f7309ff67d0..e4e32e337110 100644
+--- a/arch/x86/kernel/cpu/mce/apei.c
++++ b/arch/x86/kernel/cpu/mce/apei.c
+@@ -97,20 +97,17 @@ int apei_smca_report_x86_error(struct cper_ia_proc_ctx *ctx_info, u64 lapic_id)
+ 	if (ctx_info->reg_arr_size < 48)
+ 		return -EINVAL;
  
-+	if (!mce_flags.succor)
-+		return;
-+
- 	if (rdmsr_safe(MSR_CU_DEF_ERR, &low, &high))
- 		return;
- 
-@@ -768,6 +771,7 @@ void mce_amd_feature_init(struct cpuinfo_x86 *c)
- 	u32 low = 0, high = 0, address = 0;
- 	int offset = -1;
- 
-+	deferred_error_interrupt_enable(c);
- 
- 	for (bank = 0; bank < this_cpu_read(mce_num_banks); ++bank) {
- 		if (mce_flags.smca)
-@@ -794,9 +798,6 @@ void mce_amd_feature_init(struct cpuinfo_x86 *c)
- 			offset = prepare_threshold_block(bank, block, address, offset, high);
- 		}
- 	}
+-	mce_setup(&m);
 -
--	if (mce_flags.succor)
--		deferred_error_interrupt_enable(c);
- }
+-	m.extcpu = -1;
+-	m.socketid = -1;
+-
+ 	for_each_possible_cpu(cpu) {
+-		if (cpu_data(cpu).topo.initial_apicid == lapic_id) {
+-			m.extcpu = cpu;
+-			m.socketid = cpu_data(m.extcpu).topo.pkg_id;
++		if (cpu_data(cpu).topo.initial_apicid == lapic_id)
+ 			break;
+-		}
+ 	}
  
- /*
+-	m.apicid = lapic_id;
++	if (!cpu_possible(cpu))
++		return -EINVAL;
++
++	mce_setup_common(&m);
++	mce_setup_for_cpu(cpu, &m);
++
+ 	m.bank = (ctx_info->msr_addr >> 4) & 0xFF;
+ 	m.status = *i_mce;
+ 	m.addr = *(i_mce + 1);
 -- 
 2.34.1
 
