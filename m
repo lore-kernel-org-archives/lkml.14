@@ -1,181 +1,172 @@
-Received: from mail-oo1-f43.google.com (mail-oo1-f43.google.com [209.85.161.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA02612AAEA
-	for <linux-kernel@vger.kernel.org>; Thu,  4 Apr 2024 18:20:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 334B52D7A8
+	for <linux-kernel@vger.kernel.org>; Thu,  4 Apr 2024 18:23:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712254844; cv=none; b=fxp/qGjg2pAkS92C14t3oTm22KvG+1FaUUpwJig7iVHJtHLH97HTJu+piOCu6T3V0huXaQQaldWl5mMGDxn25Yx5t02xSTB/bBUHUy0swgKccwztt7Vv4EV3ZXmN0X6RdM4I+UD17rLKunj0IHPbc+3qhQE+5c3B/qSO13y4WW8=
+	t=1712255030; cv=none; b=Qg7RR/zB3gxLkBf3zlvvkc9W8u0rsTasb1wonoJliWjLCOvLZ2030W/HM5uKRFYxWluYBrOuibwJQTm8X/+NkJsBWqyi1Xhj2VVWjVkKYO69E4eFyZ6csQegADod6EEK084iqIfjHvaRWD1GpqGyvaR7rbpuALeDoJLP74rGRNY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712254844; c=relaxed/simple;
-	bh=e5g0fNwhaRE7FXVA54FziCjuxasfr6glNkCGFONMlxw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=lspluMELIg9XheucumcjGz720OCsBp70S0gBfMxpRWf+d8GC0FXgnYR93DmfsZvfguwJH75ifu5WxQ2bX5WacBC3Hdj+Pt1Ix88QPMy4e44dBDZZOR325pGZ7vR/Ydemwb/92gxF9cQTAGepWlKRfHZxsbUH557BQYQkNLFHnyo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cN2nUqmu; arc=none smtp.client-ip=209.85.161.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1712255030; c=relaxed/simple;
+	bh=FDRLSaZ4Bfk06GmAs1QpfTtlBBrx0Z0fIAFfyLXCR0s=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=We96yHd6aPNh0SRPzSo0KvYWy6IivVHo8wTppHdG8FRHCZWLYXr5ScKb8jszBpNH07XbTx0PcAQMApRG5s8TZiLE9edSPcG0tsdFJH/24rHdtoq3Aur5/szqMBD/NxXk/j07qJwzlAtRw93I4uvmdO5BXm4zn92B1em1l5OcdW0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=CaItbT5t; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cN2nUqmu"
-Received: by mail-oo1-f43.google.com with SMTP id 006d021491bc7-5a56710cdccso595632eaf.3
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Apr 2024 11:20:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1712254842; x=1712859642; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=hCTjSQ3G8vwzoqRaOEC3cHI2iX+8hi+olDPLQuDHRkA=;
-        b=cN2nUqmunaUBD+y/wEp8S+ReU5WbuebJ6+yOBjr/4QbIynscbw454dYXzOcz+86XRT
-         YQRdxePE/dl1O03nKoaQYv3p/h0Ukf375LaDWZ7jcmPo1WYu6p/h1qJ4mUJAHMRqCX67
-         OEwq4A7bC62kt0cC204m16RpFmcii9Xn4coz/R3ar9X1gt71H1nX9RbeofivM8Yga31r
-         VG630FejzEGXyYyBz0NH1ZfAdDBIbF56kY7fG07/cPWlJ7T+c0OgmuIDeSw5b0WEhnMk
-         jAYKUpaE1/x4SwJo+NQSkBkVV4CeBFZaAIit1RsnY4h6Hg65Pf6ALeu4GJO7N1sMePoT
-         iZdw==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CaItbT5t"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1712255028;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=osZUMx3CD6uxERiHrcdXifX+vl+p+oisHDar5m0G6LY=;
+	b=CaItbT5tIlhyGeCRfMkRRoimhWJor9QEIRXT4sB09ynyRSN6YknN7uDydry21OxK8fBLEc
+	4VUeo9aEjeXt+JEiafM8bPJt1L4TRLtDO6DNSJIzC4h0N91QV9sew0aoaWAPqOMc7/kH9o
+	nFde8EHu9NTlMCy+EPLdw8f191SOkqg=
+Received: from mail-lj1-f197.google.com (mail-lj1-f197.google.com
+ [209.85.208.197]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-55-vuGlLF-ENnKO2FVaHPNiiQ-1; Thu, 04 Apr 2024 14:23:46 -0400
+X-MC-Unique: vuGlLF-ENnKO2FVaHPNiiQ-1
+Received: by mail-lj1-f197.google.com with SMTP id 38308e7fff4ca-2d85b4ca694so7523611fa.1
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Apr 2024 11:23:46 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712254842; x=1712859642;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=hCTjSQ3G8vwzoqRaOEC3cHI2iX+8hi+olDPLQuDHRkA=;
-        b=aZ6OHrSPJi0QRl0kCUgEQz/JN8b3AI7bXmoieKvVDBkF4Vojbfy9ifLDUrU2Ei3fT+
-         Kj74Q292YOVDJng1+Kr079esEs5i6JYs/dvqONK2ADcJG1CkJJ/TYx75mxTvUqzi1Sep
-         jjIwtfQqNk0SdTqkO/aFsq4PiP9zbNIYLMAeJhEcwSwvIEMD0HaVDxS0V+BzsG2CCDzK
-         /MN7lbZq2s4NNWVK3ro1nyxZULTQZhH/Pjj9r/JOFGzJvdCam14sFs4P1JgJfmS4cZsa
-         ZdmsF9I8LUri24ZvwR4yYxCo7Sh9H53M2T8jh+13mlYvZTYcB9NISvKHh4amAhytdfSd
-         wF/w==
-X-Forwarded-Encrypted: i=1; AJvYcCWB0i872p1zxtRPGsMuhIhOjcc65TpRCCAh8nFlc2z75BsOJXwsVKpZpd2nqDxa2ZPkyFTFo6qm3wkL5TH0KKL9/2vfk1vhDAEJQkBM
-X-Gm-Message-State: AOJu0YwuYMmtryUe6FQgbMqY0eq9ANP7sdWe1UKM6XhNth56TklYLWCT
-	YGhyOeQoIyJ7oEaX6YePvZV4Ricl+xP2DY8HUX5MRn+H1X/Okf+jZSpDNv9bGs0ra/N4e7rVo0h
-	ePn7FA+7HT2iem4IyXslUDkEIMQklVFXHiiI=
-X-Google-Smtp-Source: AGHT+IHPGeiiu47FUDDpgQkoqFhZCWQZi6JtgKQDL5jzut6zhAA+ynl+4+e/MN9+fvRi/yVxkuseDfV7OtF4U6xIPZ4=
-X-Received: by 2002:a05:6359:45a9:b0:17f:56c9:95e4 with SMTP id
- no41-20020a05635945a900b0017f56c995e4mr3484609rwb.7.1712254841826; Thu, 04
- Apr 2024 11:20:41 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1712255025; x=1712859825;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=osZUMx3CD6uxERiHrcdXifX+vl+p+oisHDar5m0G6LY=;
+        b=HLfUAX9NINsCSgVHc7y2XqMS6v6zk4CYJEcQU0OYQYW1xWk6WI8kgRIZKI3Cne/RKf
+         H1F0eZJZF6ICDW6bNY8ELFhKeCphEnr4iUE1ok4P+DlwZQTwIlNOIz1z/vPUTiV7CtSJ
+         gC5zHmI0mrpPIEypyZIDcfEIx1i9+TjGIz44NNeEMup5UIBS6NMM+OKOa/5UYasxcqIs
+         Lk633ux1laSD0SFBORYG6Wo+Ztm417ilg301IjcmND9eXs4EjlXwaDC4c+IFxiF6nbi1
+         QbiWHL0GbTrH3ZIEZI8k7gzj17IoMVMFc6iPmmn084IXpKoFnqUrSG8IRWnjK7E5L7pc
+         fmbQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWcF6Z83rZD3dWXoleGegtpUY12n7QVdOoYXiHc//N/vAfpLxgEbo5+OQfNjYGyIvEbpzLAWxkGYNDwTT21O412d9Al6vSNJ//opsmZ
+X-Gm-Message-State: AOJu0Yw1AFhmCdcX2WJcHaT+OUXKBqEvlLjUbfmre0Ue4kE05zkAHfQj
+	t06KZahQf3vg9g1XyCNp/xxlN16mwqyTIzun47P3tAleKiSAdsnkh4xh6IIUxkCPZ2RXkELvzTP
+	LCgTSgRe10KG9VnwJVW3nuS306+qxVnWV7eWcftjviFxBPqaRq9ucElzGVG+avg==
+X-Received: by 2002:a2e:8804:0:b0:2d4:7532:92f2 with SMTP id x4-20020a2e8804000000b002d4753292f2mr2367394ljh.45.1712255025151;
+        Thu, 04 Apr 2024 11:23:45 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHwhIM94bRxD1bosPHrwuTlesX51tzJFoEVOBlhbyLHcRKjIAQIzW9090jx3OW83tRlaiNs5Q==
+X-Received: by 2002:a2e:8804:0:b0:2d4:7532:92f2 with SMTP id x4-20020a2e8804000000b002d4753292f2mr2367379ljh.45.1712255024690;
+        Thu, 04 Apr 2024 11:23:44 -0700 (PDT)
+Received: from ?IPV6:2003:cb:c743:de00:7030:120f:d1c9:4c3c? (p200300cbc743de007030120fd1c94c3c.dip0.t-ipconnect.de. [2003:cb:c743:de00:7030:120f:d1c9:4c3c])
+        by smtp.gmail.com with ESMTPSA id 5-20020a05600c024500b004161b59e230sm14271wmj.41.2024.04.04.11.23.43
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 04 Apr 2024 11:23:44 -0700 (PDT)
+Message-ID: <b3ea925f-bd47-4f54-bede-3f0d7471e3d7@redhat.com>
+Date: Thu, 4 Apr 2024 20:23:43 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240328072136.3023135-1-chao@kernel.org>
-In-Reply-To: <20240328072136.3023135-1-chao@kernel.org>
-From: Daeho Jeong <daeho43@gmail.com>
-Date: Thu, 4 Apr 2024 11:20:30 -0700
-Message-ID: <CACOAw_w0YgVtGGdb-2DQ6ROCc7YyXETWxWPiAB+D0qHt369fQQ@mail.gmail.com>
-Subject: Re: [f2fs-dev] [PATCH v6] f2fs: fix zoned block device information initialization
-To: Chao Yu <chao@kernel.org>
-Cc: jaegeuk@kernel.org, Wenjie Qi <qwjhust@gmail.com>, linux-kernel@vger.kernel.org, 
-	linux-f2fs-devel@lists.sourceforge.net
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH 0/4] KVM: x86/mmu: Rework marking folios
+ dirty/accessed
+To: Sean Christopherson <seanjc@google.com>
+Cc: David Matlack <dmatlack@google.com>, Paolo Bonzini <pbonzini@redhat.com>,
+ kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+ David Stevens <stevensd@chromium.org>, Matthew Wilcox <willy@infradead.org>
+References: <20240320005024.3216282-1-seanjc@google.com>
+ <4d04b010-98f3-4eae-b320-a7dd6104b0bf@redhat.com>
+ <CALzav=eLH+V_5Y6ZWsRkmnbEb6fxPa55B7xyWxP3o6qsrs_nHA@mail.gmail.com>
+ <a2fff462-dfe6-4979-a7b2-131c6e0b5017@redhat.com>
+ <ZgygGmaEuddZGKyX@google.com>
+ <ca1f320b-dc06-48e0-b4f5-ce860a72f0e2@redhat.com>
+ <Zg3V-M3iospVUEDU@google.com>
+ <42dbf562-5eab-4f82-ad77-5ee5b8c79285@redhat.com>
+ <Zg7j2D6WFqcPaXFB@google.com>
+Content-Language: en-US
+From: David Hildenbrand <david@redhat.com>
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <Zg7j2D6WFqcPaXFB@google.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Thu, Mar 28, 2024 at 12:23=E2=80=AFAM Chao Yu <chao@kernel.org> wrote:
->
-> From: Wenjie Qi <qwjhust@gmail.com>
->
-> If the max open zones of zoned devices are less than
-> the active logs of F2FS, the device may error due to
-> insufficient zone resources when multiple active logs
-> are being written at the same time.
->
-> Signed-off-by: Wenjie Qi <qwjhust@gmail.com>
-> Signed-off-by: Chao Yu <chao@kernel.org>
-> ---
-> v6:
-> - add check condition to avoid remount failure.
->  fs/f2fs/f2fs.h  |  1 +
->  fs/f2fs/super.c | 27 +++++++++++++++++++++++++++
->  2 files changed, 28 insertions(+)
->
-> diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
-> index 0550929dc6e5..694f8a52cb84 100644
-> --- a/fs/f2fs/f2fs.h
-> +++ b/fs/f2fs/f2fs.h
-> @@ -1559,6 +1559,7 @@ struct f2fs_sb_info {
->
->  #ifdef CONFIG_BLK_DEV_ZONED
->         unsigned int blocks_per_blkz;           /* F2FS blocks per zone *=
-/
-> +       unsigned int max_open_zones;            /* max open zone resource=
-s of the zoned device */
->  #endif
->
->         /* for node-related operations */
-> diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
-> index 7c45929671ad..642540782471 100644
-> --- a/fs/f2fs/super.c
-> +++ b/fs/f2fs/super.c
-> @@ -2326,6 +2326,17 @@ static int f2fs_remount(struct super_block *sb, in=
-t *flags, char *data)
->         if (err)
->                 goto restore_opts;
->
-> +#ifdef CONFIG_BLK_DEV_ZONED
-> +       if (f2fs_is_multi_device(sbi) &&
+On 04.04.24 19:31, Sean Christopherson wrote:
+> On Thu, Apr 04, 2024, David Hildenbrand wrote:
+>> On 04.04.24 00:19, Sean Christopherson wrote:
+>>> Hmm, we essentially already have an mmu_notifier today, since secondary MMUs need
+>>> to be invalidated before consuming dirty status.  Isn't the end result essentially
+>>> a sane FOLL_TOUCH?
+>>
+>> Likely. As stated in my first mail, FOLL_TOUCH is a bit of a mess right now.
+>>
+>> Having something that makes sure the writable PTE/PMD is dirty (or
+>> alternatively sets it dirty), paired with MMU notifiers notifying on any
+>> mkclean would be one option that would leave handling how to handle dirtying
+>> of folios completely to the core. It would behave just like a CPU writing to
+>> the page table, which would set the pte dirty.
+>>
+>> Of course, if frequent clearing of the dirty PTE/PMD bit would be a problem
+>> (like we discussed for the accessed bit), that would not be an option. But
+>> from what I recall, only clearing the PTE/PMD dirty bit is rather rare.
+> 
+> And AFAICT, all cases already invalidate secondary MMUs anyways, so if anything
+> it would probably be a net positive, e.g. the notification could more precisely
+> say that SPTEs need to be read-only, not blasted away completely.
+> 
 
-Why do we check multiple devices' condition here?
+As discussed, I think at least madvise_free_pte_range() wouldn't do 
+that. Notifiers would only get called later when actually zapping the 
+folio. So at least for some time, you would have the PTE not dirty, but 
+the SPTE writable or even dirty. So you'd have to set the page dirty 
+when zapping the SPTE ... and IMHO that is what we should maybe try to 
+avoid :)
 
-Thanks,
+-- 
+Cheers,
 
-> +               sbi->max_open_zones < F2FS_OPTION(sbi).active_logs) {
-> +               f2fs_err(sbi,
-> +                       "zoned: max open zones %u is too small, need at l=
-east %u open zones",
-> +                                sbi->max_open_zones, F2FS_OPTION(sbi).ac=
-tive_logs);
-> +               err =3D -EINVAL;
-> +               goto restore_opts;
-> +       }
-> +#endif
-> +
->         /* flush outstanding errors before changing fs state */
->         flush_work(&sbi->s_error_work);
->
-> @@ -3868,11 +3879,24 @@ static int init_blkz_info(struct f2fs_sb_info *sb=
-i, int devi)
->         sector_t nr_sectors =3D bdev_nr_sectors(bdev);
->         struct f2fs_report_zones_args rep_zone_arg;
->         u64 zone_sectors;
-> +       unsigned int max_open_zones;
->         int ret;
->
->         if (!f2fs_sb_has_blkzoned(sbi))
->                 return 0;
->
-> +       if (bdev_is_zoned(FDEV(devi).bdev)) {
-> +               max_open_zones =3D bdev_max_open_zones(bdev);
-> +               if (max_open_zones && (max_open_zones < sbi->max_open_zon=
-es))
-> +                       sbi->max_open_zones =3D max_open_zones;
-> +               if (sbi->max_open_zones < F2FS_OPTION(sbi).active_logs) {
-> +                       f2fs_err(sbi,
-> +                               "zoned: max open zones %u is too small, n=
-eed at least %u open zones",
-> +                               sbi->max_open_zones, F2FS_OPTION(sbi).act=
-ive_logs);
-> +                       return -EINVAL;
-> +               }
-> +       }
-> +
->         zone_sectors =3D bdev_zone_sectors(bdev);
->         if (sbi->blocks_per_blkz && sbi->blocks_per_blkz !=3D
->                                 SECTOR_TO_BLOCK(zone_sectors))
-> @@ -4186,6 +4210,9 @@ static int f2fs_scan_devices(struct f2fs_sb_info *s=
-bi)
->
->         logical_blksize =3D bdev_logical_block_size(sbi->sb->s_bdev);
->         sbi->aligned_blksize =3D true;
-> +#ifdef CONFIG_BLK_DEV_ZONED
-> +       sbi->max_open_zones =3D UINT_MAX;
-> +#endif
->
->         for (i =3D 0; i < max_devices; i++) {
->                 if (i =3D=3D 0)
-> --
-> 2.40.1
->
->
->
-> _______________________________________________
-> Linux-f2fs-devel mailing list
-> Linux-f2fs-devel@lists.sourceforge.net
-> https://lists.sourceforge.net/lists/listinfo/linux-f2fs-devel
+David / dhildenb
+
