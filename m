@@ -1,86 +1,71 @@
-Received: from smtp.smtpout.orange.fr (smtp-22.smtpout.orange.fr [80.12.242.22])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C615712EBD0;
-	Thu,  4 Apr 2024 20:00:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.22
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5705D134439
+	for <linux-kernel@vger.kernel.org>; Thu,  4 Apr 2024 20:01:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712260843; cv=none; b=RS8Xj6NPuDkuPUTaWkGsYUSVDqVF3ojbLxAiQtE4ygmvU39BMsNSUMwqchXR1Sjd0iztog9Tf1pMy23k6/vxG1k2M3KP+88epjXW0qm4qlbo/fDO025ANLUvWDoJxKnj8Lo0di8Ou7ulXkck2lscTG/JKV/0lPqa6Zc2ZAhyU/0=
+	t=1712260866; cv=none; b=ee07MmtxMnN8mpaF508yJKi2DbFnOwDaxbw4NJmjh9aJj0I+80oWGFuH0BNzC51Eage9S2/ZgSFgdTchhtJvC1xsdOuhLE9aFJPAUG85PDUlWVf7nAhtKLht6nsBGVrK8hbP7XTm+Q4lPQhHSMvnaLtIqPrz3sHRMHHGIjfXbfg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712260843; c=relaxed/simple;
-	bh=NnWpO5HSnw8uUargsGVv4mU1Z9TXWs7lg2IgQ98VYFI=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ABAXOmMmVGudV6xcOnFKCr0IQLvrmfZscgtvor5NWHunkr9hil5HLMvCdPq4KvJAZ2U0FjvgMmZel5GEhHpZKsTSW2lf7sUOc793uY+fLsxeUexVxkybbqsFEIu5Y5SjMFCWstmJ9iKrpIUBcTztpuymxENX6uawF7hsWZzhMpY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=eN17ffd8; arc=none smtp.client-ip=80.12.242.22
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
+	s=arc-20240116; t=1712260866; c=relaxed/simple;
+	bh=jDgRvDUXquf8+1TaLuMSDg9OKMhNKkoBxWlEmTKp85E=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=pQ3+up/+563YCIVNqIvbxvREZ8kjRBbdmlyCYWH0yHRS8PzukWJ72DeWnJCs7qXF+8P815jMG+8MhYJT5hSqbT/Myzo27OcFXKNP19khUMHusx41SksNnNTawOy3pQG4ufNPXWh07TmOW2jE+wNH519HH0qf55XnYwkWZeoXSFc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=v3ZDjcx2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="eN17ffd8"
-Received: from fedora.home ([86.243.17.157])
-	by smtp.orange.fr with ESMTPA
-	id sSi1r5Z4Z41mCsSi1r063b; Thu, 04 Apr 2024 21:25:14 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
-	s=t20230301; t=1712258714;
-	bh=7mPh8LUlfoCDmFbSl6D0jWurWX3Eg+JC2SqBtIhoOGc=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version;
-	b=eN17ffd8bTSnvh9tMtkbSJ3lfQle/tBrCTt37P67ieDX7vpHxeMzKFRFAzjtZwPvG
-	 ygdlvCBR6YX/y9FEF+mBsaVnqtwzNdIx1mQmlY2lpD/x2BZRsJSesa/niuwD3EI3iR
-	 EQl5zFf64ZRLLr76OWYlIEOK0kavjRjJi4iWJAreJm1TcmCeQNl638EY8gjjcOoDT/
-	 L3Y41daNle69s1Zgbubqms+Zw1i+6zfMyJ5IFzCeJUdUFoqU+kNUV0yZiK/uSX/B00
-	 t1k1sP0O9AY2RpEvNneM14sDxo7zJIxMSirrUgdQtJWQUtSjOq5lO12hm9WZHNIaGn
-	 kOB+uhcUOtBvQ==
-X-ME-Helo: fedora.home
-X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
-X-ME-Date: Thu, 04 Apr 2024 21:25:14 +0200
-X-ME-IP: 86.243.17.157
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-To: Colin Foster <colin.foster@in-advantage.com>,
-	Lee Jones <lee@kernel.org>
-Cc: linux-kernel@vger.kernel.org,
-	kernel-janitors@vger.kernel.org,
-	Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Subject: [PATCH] mfd: ocelot-spi: Use spi_sync_transfer()
-Date: Thu,  4 Apr 2024 21:25:09 +0200
-Message-ID: <7af920eb686b719cb7eb39c832e3ad414e0e1e1a.1712258667.git.christophe.jaillet@wanadoo.fr>
-X-Mailer: git-send-email 2.44.0
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="v3ZDjcx2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 37915C433F1;
+	Thu,  4 Apr 2024 20:01:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
+	s=korg; t=1712260865;
+	bh=jDgRvDUXquf8+1TaLuMSDg9OKMhNKkoBxWlEmTKp85E=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=v3ZDjcx2JDn180LtBtTUY0btLp75KXzlujdo9T4C8aNGCv0gHU1XYnl09OcNjXzsv
+	 MxprMsVHDbcCEy7oF5q3Tc/g3dZIs8phM8mN/U0d1LRHN2+YhVANRC5jroDLIwWA5/
+	 KlIjzseq8tJWn951wgdkSfWHObVQ00Hj0SNj83CI=
+Date: Thu, 4 Apr 2024 13:01:04 -0700
+From: Andrew Morton <akpm@linux-foundation.org>
+To: David Hildenbrand <david@redhat.com>
+Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org, x86@kernel.org, Peter
+ Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Thomas
+ Gleixner <tglx@linutronix.de>, Christoph Hellwig <hch@lst.de>, Borislav
+ Petkov <bp@alien8.de>, "H. Peter Anvin" <hpa@zytor.com>, Andy Lutomirski
+ <luto@kernel.org>, Dave Hansen <dave.hansen@linux.intel.com>, Fei Li
+ <fei1.li@intel.com>, Nathan Chancellor <nathan@kernel.org>, Wupeng Ma
+ <mawupeng1@huawei.com>, Ingo Molnar <mingo@kernel.org>
+Subject: Re: [PATCH v2 2/3] x86/mm/pat: fix VM_PAT handling in COW mappings
+Message-Id: <20240404130104.858c02d23216eb82438444d9@linux-foundation.org>
+In-Reply-To: <bced0912-4e30-4354-93f3-d6075952b5b5@redhat.com>
+References: <20240403212131.929421-1-david@redhat.com>
+	<20240403212131.929421-3-david@redhat.com>
+	<20240403151249.0f4fc5b4f8c07630fbbb6338@linux-foundation.org>
+	<bced0912-4e30-4354-93f3-d6075952b5b5@redhat.com>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Use spi_sync_transfer() instead of hand-writing it.
-It is less verbose.
+On Thu, 4 Apr 2024 21:20:06 +0200 David Hildenbrand <david@redhat.com> wrote:
 
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
----
- drivers/mfd/ocelot-spi.c | 5 +----
- 1 file changed, 1 insertion(+), 4 deletions(-)
+> >> Reported-by: Wupeng Ma <mawupeng1@huawei.com>
+> >> Closes: https://lkml.kernel.org/r/20240227122814.3781907-1-mawupeng1@huawei.com
+> >> Fixes: b1a86e15dc03 ("x86, pat: remove the dependency on 'vm_pgoff' in track/untrack pfn vma routines")
+> >> Fixes: 5899329b1910 ("x86: PAT: implement track/untrack of pfnmap regions for x86 - v3")
+> > 
+> > These are really old.  Should we backport this?
+> 
+> I was asking that question myself.
+> 
+> With the reproducer, the worst thing that happens on most systems is the 
+> warning. On !RAM and with PAT, there could be memory leaks and other 
+> surprises.
+> 
+> Likely, we should just backport it to stable. Should not be too hard to 
+> backport to stable kernels I guess/hope.
 
-diff --git a/drivers/mfd/ocelot-spi.c b/drivers/mfd/ocelot-spi.c
-index 94f82677675b..b015c8683f1b 100644
---- a/drivers/mfd/ocelot-spi.c
-+++ b/drivers/mfd/ocelot-spi.c
-@@ -145,7 +145,6 @@ static int ocelot_spi_regmap_bus_read(void *context, const void *reg, size_t reg
- 	struct device *dev = context;
- 	struct ocelot_ddata *ddata;
- 	struct spi_device *spi;
--	struct spi_message msg;
- 	unsigned int index = 0;
- 
- 	ddata = dev_get_drvdata(dev);
-@@ -166,9 +165,7 @@ static int ocelot_spi_regmap_bus_read(void *context, const void *reg, size_t reg
- 	xfers[index].len = val_size;
- 	index++;
- 
--	spi_message_init_with_transfers(&msg, xfers, index);
--
--	return spi_sync(spi, &msg);
-+	return spi_sync_transfer(spi, xfers, index);
- }
- 
- static int ocelot_spi_regmap_bus_write(void *context, const void *data, size_t count)
--- 
-2.44.0
-
+OK, thanks, I added the cc:stable tag.
