@@ -1,44 +1,44 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27635133416
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9B5912D201
 	for <linux-kernel@vger.kernel.org>; Thu,  4 Apr 2024 18:50:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712256645; cv=none; b=qKvWeHHrGOCmnqpHXrO+HwV2y4XIRY/FDMxezSw5RuJELY6S3N+a7E9qZZoZ9FvzNsVjXPYv+PsKvcIkJDLRC/Vt1+zukctWLuOFAHrPd19AYZ/7NOBRECxKkLi5mN4SrjDBJs7LmmxmYJQFoM5nLerd0U36qeSAlsJM/b6YJ+k=
+	t=1712256645; cv=none; b=VbIomPR1PSGrbQteO/TnAljdYwiyoyJzN4VvGs/LIxDNbF0bQM9OqmLOMbLAcL5ciR5ui/CrDAj1tT47cMG1VR6EJYvd6XtsvL1woM2j2OEsTNEdF8fVCYjaz5C+mJ/KIYlTFZ44CX5s2qK+SEMUmjwIzJBSFZUThj9x2qsooFg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1712256645; c=relaxed/simple;
-	bh=jdNIfZWZvPJII98ywtATikTD6VDJZQYwABwABAMUGS8=;
+	bh=JhCLT6R3dEV4Z8kPXKqhhzXcGFUKttw3pZHa+JT0OpU=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=nQ8rO6U4ThhWQrGeYWpynM6FzlJ6tjLNagYsVcT7es/r6bgTOhZt3r9I2N/bZZHKCERfhZfIR6jTLv5l3OBKDLbKpD/VQHZJqWa5dCCVaMLMx+XQXGwLHhTrkDJ4new800bZ4xVK7/47AjTjwu9Cwd6Z28WRJnWX77prjDBUVYQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=hvPvBNkc; arc=none smtp.client-ip=170.10.133.124
+	 MIME-Version:Content-Type; b=MUmaj49pPbHx5VoQvJKL+pQ58WQRXgZScx0Zin7aj0aMZ05HDA+2XmFDAu9MoK+bWwIwd+qTmts7qZACCb5ZBrWqjKsTmDyimc6Gi7BkW4nAu67x7qC3TtmUHdE2/vcShTlrfrvk7kXcQPdMbmzvFxcCh+SRhg+q/u0+iDHA5Ew=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=IRaR7EQv; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hvPvBNkc"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IRaR7EQv"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1712256642;
+	s=mimecast20190719; t=1712256641;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=JFajdk4fDiyh8VxZ37SkZXsZFlO1RmoQzZVvkfEWg0k=;
-	b=hvPvBNkc5oZFwi8mSdmNZJsdkqYq/IBy+w6KonJPl0CF2EaBdHVVEd8Z3Ly8+L7ZqwTHVw
-	z+OT76BoWJT6fs4aDR4Fjlr6g0X1ALnijbr3nkq/Rebqztga6PvgcRqOFJjo1pcdeFiP4O
-	PWjZ1OE/t6+czWbnRHDW6JcFJLrzRq4=
-Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
- by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-64-rFD63vFJMpWHpRDgCAYm6Q-1; Thu,
- 04 Apr 2024 14:50:36 -0400
-X-MC-Unique: rFD63vFJMpWHpRDgCAYm6Q-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.rdu2.redhat.com [10.11.54.7])
+	bh=Nc3SKOOYPHg3uIsI8oCYk9QWrQ5YHEK98RfXdPCT6Bs=;
+	b=IRaR7EQvNyoSCQhx4m7+QqrfNg9+p0xFlhIylouUEjbtPbyeKpEwKA3/Uuib29TPp107Jq
+	Hw4kUCKrpOSv0VuuntM02coESBssYfFxSIP4eDG4yi/DE0z7S1EAqxKZFgnF7QAcEEBPaj
+	UcN2iWZXgUccmzGLqCgUhNZqEcROBF8=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-58-9DwWGaL3OZ2V6bZuCBaOTQ-1; Thu, 04 Apr 2024 14:50:37 -0400
+X-MC-Unique: 9DwWGaL3OZ2V6bZuCBaOTQ-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.rdu2.redhat.com [10.11.54.4])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 6107728B7402;
-	Thu,  4 Apr 2024 18:50:36 +0000 (UTC)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 157CE85A5B7;
+	Thu,  4 Apr 2024 18:50:37 +0000 (UTC)
 Received: from virtlab701.virt.lab.eng.bos.redhat.com (virtlab701.virt.lab.eng.bos.redhat.com [10.19.152.228])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 3B46D1C060A4;
+	by smtp.corp.redhat.com (Postfix) with ESMTP id E2B8D2024517;
 	Thu,  4 Apr 2024 18:50:36 +0000 (UTC)
 From: Paolo Bonzini <pbonzini@redhat.com>
 To: linux-kernel@vger.kernel.org,
@@ -46,9 +46,9 @@ To: linux-kernel@vger.kernel.org,
 Cc: seanjc@google.com,
 	michael.roth@amd.com,
 	isaku.yamahata@intel.com
-Subject: [PATCH 08/11] KVM: guest_memfd: extract __kvm_gmem_punch_hole()
-Date: Thu,  4 Apr 2024 14:50:30 -0400
-Message-ID: <20240404185034.3184582-9-pbonzini@redhat.com>
+Subject: [PATCH 11/11] KVM: x86: Add gmem hook for determining max NPT mapping level
+Date: Thu,  4 Apr 2024 14:50:33 -0400
+Message-ID: <20240404185034.3184582-12-pbonzini@redhat.com>
 In-Reply-To: <20240404185034.3184582-1-pbonzini@redhat.com>
 References: <20240404185034.3184582-1-pbonzini@redhat.com>
 Precedence: bulk
@@ -59,68 +59,84 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.7
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.4
 
-Extract a version of kvm_gmem_punch_hole() that expects the
-caller to take the filemap invalidate_lock.
+From: Michael Roth <michael.roth@amd.com>
 
+In the case of SEV-SNP, whether or not a 2MB page can be mapped via a
+2MB mapping in the guest's nested page table depends on whether or not
+any subpages within the range have already been initialized as private
+in the RMP table. The existing mixed-attribute tracking in KVM is
+insufficient here, for instance:
+
+  - gmem allocates 2MB page
+  - guest issues PVALIDATE on 2MB page
+  - guest later converts a subpage to shared
+  - SNP host code issues PSMASH to split 2MB RMP mapping to 4K
+  - KVM MMU splits NPT mapping to 4K
+
+At this point there are no mixed attributes, and KVM would normally
+allow for 2MB NPT mappings again, but this is actually not allowed
+because the RMP table mappings are 4K and cannot be promoted on the
+hypervisor side, so the NPT mappings must still be limited to 4K to
+match this.
+
+Add a hook to determine the max NPT mapping size in situations like
+this.
+
+Signed-off-by: Michael Roth <michael.roth@amd.com>
+Message-Id: <20231230172351.574091-31-michael.roth@amd.com>
 Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 ---
- virt/kvm/guest_memfd.c | 25 +++++++++++++++----------
- 1 file changed, 15 insertions(+), 10 deletions(-)
+ arch/x86/include/asm/kvm-x86-ops.h | 1 +
+ arch/x86/include/asm/kvm_host.h    | 2 ++
+ arch/x86/kvm/mmu/mmu.c             | 8 ++++++++
+ 3 files changed, 11 insertions(+)
 
-diff --git a/virt/kvm/guest_memfd.c b/virt/kvm/guest_memfd.c
-index a537a7e63ab5..51c99667690a 100644
---- a/virt/kvm/guest_memfd.c
-+++ b/virt/kvm/guest_memfd.c
-@@ -152,19 +152,12 @@ static void kvm_gmem_invalidate_end(struct kvm_gmem *gmem, pgoff_t start,
- 	}
+diff --git a/arch/x86/include/asm/kvm-x86-ops.h b/arch/x86/include/asm/kvm-x86-ops.h
+index c81990937ab4..2db87a6fd52a 100644
+--- a/arch/x86/include/asm/kvm-x86-ops.h
++++ b/arch/x86/include/asm/kvm-x86-ops.h
+@@ -140,6 +140,7 @@ KVM_X86_OP_OPTIONAL_RET0(vcpu_get_apicv_inhibit_reasons);
+ KVM_X86_OP_OPTIONAL(get_untagged_addr)
+ KVM_X86_OP_OPTIONAL(alloc_apic_backing_page)
+ KVM_X86_OP_OPTIONAL_RET0(gmem_prepare)
++KVM_X86_OP_OPTIONAL_RET0(gmem_validate_fault)
+ KVM_X86_OP_OPTIONAL(gmem_invalidate)
+ 
+ #undef KVM_X86_OP
+diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
+index 59c7b95034fc..67dc108dd366 100644
+--- a/arch/x86/include/asm/kvm_host.h
++++ b/arch/x86/include/asm/kvm_host.h
+@@ -1811,6 +1811,8 @@ struct kvm_x86_ops {
+ 	void *(*alloc_apic_backing_page)(struct kvm_vcpu *vcpu);
+ 	int (*gmem_prepare)(struct kvm *kvm, kvm_pfn_t pfn, gfn_t gfn, int max_order);
+ 	void (*gmem_invalidate)(kvm_pfn_t start, kvm_pfn_t end);
++	int (*gmem_validate_fault)(struct kvm *kvm, kvm_pfn_t pfn, gfn_t gfn, bool is_private,
++				   u8 *max_level);
+ };
+ 
+ struct kvm_x86_nested_ops {
+diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
+index 992e651540e8..13dd367b8af1 100644
+--- a/arch/x86/kvm/mmu/mmu.c
++++ b/arch/x86/kvm/mmu/mmu.c
+@@ -4338,6 +4338,14 @@ static int kvm_faultin_pfn_private(struct kvm_vcpu *vcpu,
+ 			       fault->max_level);
+ 	fault->map_writable = !(fault->slot->flags & KVM_MEM_READONLY);
+ 
++	r = static_call(kvm_x86_gmem_validate_fault)(vcpu->kvm, fault->pfn,
++						     fault->gfn, fault->is_private,
++						     &fault->max_level);
++	if (r) {
++		kvm_release_pfn_clean(fault->pfn);
++		return r;
++	}
++
+ 	return RET_PF_CONTINUE;
  }
  
--static long kvm_gmem_punch_hole(struct inode *inode, loff_t offset, loff_t len)
-+static long __kvm_gmem_punch_hole(struct inode *inode, loff_t offset, loff_t len)
- {
- 	struct list_head *gmem_list = &inode->i_mapping->i_private_list;
- 	pgoff_t start = offset >> PAGE_SHIFT;
- 	pgoff_t end = (offset + len) >> PAGE_SHIFT;
- 	struct kvm_gmem *gmem;
--
--	/*
--	 * Bindings must be stable across invalidation to ensure the start+end
--	 * are balanced.
--	 */
--	filemap_invalidate_lock(inode->i_mapping);
--
- 	list_for_each_entry(gmem, gmem_list, entry)
- 		kvm_gmem_invalidate_begin(gmem, start, end);
- 
-@@ -173,11 +166,23 @@ static long kvm_gmem_punch_hole(struct inode *inode, loff_t offset, loff_t len)
- 	list_for_each_entry(gmem, gmem_list, entry)
- 		kvm_gmem_invalidate_end(gmem, start, end);
- 
--	filemap_invalidate_unlock(inode->i_mapping);
--
- 	return 0;
- }
- 
-+static long kvm_gmem_punch_hole(struct inode *inode, loff_t offset, loff_t len)
-+{
-+	int r;
-+
-+	/*
-+	 * Bindings must be stable across invalidation to ensure the start+end
-+	 * are balanced.
-+	 */
-+	filemap_invalidate_lock(inode->i_mapping);
-+	r = __kvm_gmem_punch_hole(inode, offset, len);
-+	filemap_invalidate_unlock(inode->i_mapping);
-+	return r;
-+}
-+
- static long kvm_gmem_allocate(struct inode *inode, loff_t offset, loff_t len)
- {
- 	struct address_space *mapping = inode->i_mapping;
 -- 
 2.43.0
-
 
