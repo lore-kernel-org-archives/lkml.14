@@ -1,66 +1,72 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com [209.85.167.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB71384FD8;
-	Thu,  4 Apr 2024 12:19:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 960D286277
+	for <linux-kernel@vger.kernel.org>; Thu,  4 Apr 2024 12:19:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712233147; cv=none; b=YAi5qjC3Ag+eclZm/PGxIXckA8wd52MOtWDW19jyyZLqxqHgNL8Yjt2yrOKTvq7+Ch+k9H8wJS2ttBbJR6YDFi45oQarELJPoRmEi/oJqFI58eEonYN9yc37esAu/nIru6dxEfQyVGRYx2hc5NJX2nGyEa+LMU1oQjwMlXWU0Xk=
+	t=1712233175; cv=none; b=HpNzT2g5HWYno0Etldu1Q5LFj9j0LDDGVsd/A32Tckm39AkDKaDT1KKVypr3LK1+bVuSr/kLRhEKm/J4wWp1k8u72CAHAthESuVIgL1aTza3IYcVo9EFq4Y1XqV1GB8TVby4Zaq7bA/p4avX0dK3s6Tc73GTMFPU4AMxMgQcCls=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712233147; c=relaxed/simple;
-	bh=mil+HQR04IvA/pn5IicgtVQd4s2jM36JG4PRtJicsTY=;
+	s=arc-20240116; t=1712233175; c=relaxed/simple;
+	bh=yFPwBTep8blPVjgy5nMdu/6Amok2vV20/Fu3FyIKsHI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pg4oQdzxS0yPVtmya5qzoqT/+duS5OtuSSk/b1hZvUEriWAz1j/iCMlPB/5ul7x3117Se5p496ZcuB3rPfNcaXrzJSd2/NSjnrr9rBGX3SZV0aJzOQKnomBukTXeH5pHoPE9VpTdJLaDoYD3J/UKn3GUjW7A5xmgNHAiRDSsl/w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=i6P2868z; arc=none smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=dDye36KvkCEkpFC0J7dLz0V87aiHWSwU5aPp7DxURZtidXZkhx0UoANxtr3KVkiGD6SeTfiH+AFIsxd0zhJ4E8saW70LSn1HCIlkoaXqoN9pO18To0YRNJgKQOiDXcUNzgnxmthQ94nQLQJ3MMSQhJlYlrofXFI9DxLubk9zkb8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=cDY2IIR0; arc=none smtp.client-ip=209.85.167.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="i6P2868z"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1712233146; x=1743769146;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=mil+HQR04IvA/pn5IicgtVQd4s2jM36JG4PRtJicsTY=;
-  b=i6P2868zuuT20xDdFlvrkrSaSePHagN9oVumbNhBdMgds5S0S0h/iXdK
-   RCyrC9MAB7Ludp6ivmc0gBzzFtimy+70wahNqCDsoqgNf+Og+xQ2Fv6yw
-   7cySGbvPQMYaNc5spJ4aKgkiTvzPaOhTqNfma6wcpMbJYuXajREbOgs3M
-   lRjVLXTD1uAIM51uPYzD3F0jjgwg3BkAareDdOJCQNZzBZpz6K78RYuLL
-   rylOeaith6Nt1lw0GEbT+8kDB8OsnICf1gg/pSnKdXpSv7JlF83B5E8+m
-   wXtg05pdL+GWXguw29i0+mv4z2P293kXuCP6SMwfGM9j94T8aYlAwg0/L
-   w==;
-X-CSE-ConnectionGUID: WXBqaGseRNqiYTp4+J8qqA==
-X-CSE-MsgGUID: 9G/BbE/JRYaCp1J2xROuqg==
-X-IronPort-AV: E=McAfee;i="6600,9927,11033"; a="18663390"
-X-IronPort-AV: E=Sophos;i="6.07,179,1708416000"; 
-   d="scan'208";a="18663390"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Apr 2024 05:19:05 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,11033"; a="915216555"
-X-IronPort-AV: E=Sophos;i="6.07,179,1708416000"; 
-   d="scan'208";a="915216555"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.72.54])
-  by fmsmga002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Apr 2024 05:19:02 -0700
-Received: from andy by smile with local (Exim 4.97)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1rsM3X-00000001QHL-2Qqa;
-	Thu, 04 Apr 2024 15:18:59 +0300
-Date: Thu, 4 Apr 2024 15:18:59 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Nuno Sa <nuno.sa@analog.com>, Andi Shyti <andi.shyti@kernel.org>
-Cc: Petr Mladek <pmladek@suse.com>, Jonathan Cameron <jic23@kernel.org>,
-	Lars-Peter Clausen <lars@metafoo.de>,
-	Olivier Moysan <olivier.moysan@foss.st.com>,
-	Jyoti Bhayana <jbhayana@google.com>,
-	Chris Down <chris@chrisdown.name>,
-	John Ogness <john.ogness@linutronix.de>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org
-Subject: Re: [PATCH 0/4] dev_printk: add dev_errp_probe() helper
-Message-ID: <Zg6as8asLMcLi6qM@smile.fi.intel.com>
-References: <20240404-dev-add_dev_errp_probe-v1-0-d18e3eb7ec3f@analog.com>
- <Zg6Z51uebr2dWLq2@smile.fi.intel.com>
+	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="cDY2IIR0"
+Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-516c11b6af9so1274548e87.2
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Apr 2024 05:19:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ventanamicro.com; s=google; t=1712233172; x=1712837972; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=lu9C520pl/QToPEuDedj4tCxIjbZApgXqw10FbpssTk=;
+        b=cDY2IIR0sXwPlKvhisoxoDA8cvnMXuhFha8dpOl4MOkFXDE6WRyyRRcoekb0v0ZVJa
+         g7eWIZhHLiJfTbqQ8fPCNWrQyR3dgctIcGURkfNMTlbhMm8GuOhTKaRSW857whd5487Y
+         tMANTtkLx73Tu5oLXl2t+Aa/rU0276xlLLnwVY/S+tQk0Zkgtk1ZOT4VeBjdurYi8wEo
+         DuuPSZtvkcVQn7KSZw+qDKHPMxBLpudmeouMkdkUPKEOTZe37iCtSNS0U7dF4+RVXWpT
+         E9+17LTL5q1YDJ9Svg5pnnsErm1pgTkJKOzueXhr5G5ITIgS1Ix/lVMsUgJ/aUD1MU3Q
+         A/ug==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712233172; x=1712837972;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=lu9C520pl/QToPEuDedj4tCxIjbZApgXqw10FbpssTk=;
+        b=U/x9rbg8iOqOGMc0MFxEwMifegb1XQUTomFczuXFzQ5c/S7rHA/rJs5ks85nYJINPR
+         WyatxMio55L1lNuHgiwFvGYYSSd6VbQAuL+TReryz2ULB8dSk0pbTCtGzgiTCSGjdtTZ
+         AkO2qWD8DjRhwi48Za/oBFWFvqZMYUBYuOxu2ENnozaUlnEtmHq1G7+mx61SNjxgyzgh
+         ZwrzUHlq2vE0tA1RWrFsCagCEhUpa0H+QvwPX7UWAjvwt84qz+ntgM0HaZ1P/Mmd+8Qs
+         SLiCvk/1Zbcea7CLrAJTFCWQjj3MP1MVMk6OClFNsZla9N7aNuzaKdl3FDmWJW80iIwk
+         zqLg==
+X-Gm-Message-State: AOJu0YzA2H43RUxLKXlkP4bD0yUge7qLbq6XF2SnXoKAH7Fa5yRLDvds
+	UUG/7+kCicNMmxYfZ33apYkV3o4bhQ/C6vYDa6KPOH7e+ma9+iK9mlpdLhnoDmQ=
+X-Google-Smtp-Source: AGHT+IGEr4LvYqRVP8TkgXhtJPu1ySWcSB/CsLOqLwHtKBXo1yVAMV8rZBtRTlCE8fvE3nx9A3syYg==
+X-Received: by 2002:ac2:555b:0:b0:515:d3dc:43e with SMTP id l27-20020ac2555b000000b00515d3dc043emr1852415lfk.51.1712233171751;
+        Thu, 04 Apr 2024 05:19:31 -0700 (PDT)
+Received: from localhost (cst2-173-16.cust.vodafone.cz. [31.30.173.16])
+        by smtp.gmail.com with ESMTPSA id a12-20020a170906670c00b00a46d6e51a6fsm9012975ejp.63.2024.04.04.05.19.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 04 Apr 2024 05:19:31 -0700 (PDT)
+Date: Thu, 4 Apr 2024 14:19:30 +0200
+From: Andrew Jones <ajones@ventanamicro.com>
+To: Atish Patra <atishp@rivosinc.com>
+Cc: linux-kernel@vger.kernel.org, Anup Patel <anup@brainfault.org>, 
+	Ajay Kaher <akaher@vmware.com>, Alexandre Ghiti <alexghiti@rivosinc.com>, 
+	Alexey Makhalov <amakhalov@vmware.com>, Conor Dooley <conor.dooley@microchip.com>, 
+	Juergen Gross <jgross@suse.com>, kvm-riscv@lists.infradead.org, kvm@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org, linux-riscv@lists.infradead.org, 
+	Mark Rutland <mark.rutland@arm.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
+	Paolo Bonzini <pbonzini@redhat.com>, Paul Walmsley <paul.walmsley@sifive.com>, 
+	Shuah Khan <shuah@kernel.org>, virtualization@lists.linux.dev, 
+	VMware PV-Drivers Reviewers <pv-drivers@vmware.com>, Will Deacon <will@kernel.org>, x86@kernel.org
+Subject: Re: [PATCH v5 11/22] RISC-V: KVM: No need to exit to the user space
+ if perf event failed
+Message-ID: <20240404-de7d09060b134d467e437fcf@orel>
+References: <20240403080452.1007601-1-atishp@rivosinc.com>
+ <20240403080452.1007601-12-atishp@rivosinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -69,45 +75,86 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <Zg6Z51uebr2dWLq2@smile.fi.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <20240403080452.1007601-12-atishp@rivosinc.com>
 
-On Thu, Apr 04, 2024 at 03:15:35PM +0300, Andy Shevchenko wrote:
-> +Cc: Andi
+On Wed, Apr 03, 2024 at 01:04:40AM -0700, Atish Patra wrote:
+> Currently, we return a linux error code if creating a perf event failed
+> in kvm. That shouldn't be necessary as guest can continue to operate
+> without perf profiling or profiling with firmware counters.
 > 
-> On Thu, Apr 04, 2024 at 01:06:22PM +0200, Nuno Sa wrote:
-> > This series adds a dev_errp_probe() helper. This is similar to
-> > dev_err_probe() but for cases where an ERR_PTR() is to be returned
-> > simplifying patterns like:
-> > 
-> > 	dev_err_probe(dev, ret, ...);
-> > 	return ERR_PTR(ret)
+> Return appropriate SBI error code to indicate that PMU configuration
+> failed. An error message in kvm already describes the reason for failure.
 > 
-> What about ERR_CAST() cases?
+> Fixes: 0cb74b65d2e5 ("RISC-V: KVM: Implement perf support without sampling")
+> Reviewed-by: Anup Patel <anup@brainfault.org>
+> Signed-off-by: Atish Patra <atishp@rivosinc.com>
+> ---
+>  arch/riscv/kvm/vcpu_pmu.c     | 14 +++++++++-----
+>  arch/riscv/kvm/vcpu_sbi_pmu.c |  6 +++---
+>  2 files changed, 12 insertions(+), 8 deletions(-)
 > 
-> > The other three patches are adding users for it. The main motivator for
-> > this were the changes in the commit ("iio: temperature: ltc2983: convert
-> > to dev_err_probe()"). Initially I just had a local helper [1] but then
-> > it was suggested to try a new, common helper. As a result, I looked for
-> > a couple more users.
-> > 
-> > I then move into dev_errp_probe() [2] but it was then suggested to separare
-> > the patch series so we have onde dedicated for the printk helper.
-> > 
-> > [1]: https://lore.kernel.org/all/20240301-ltc2983-misc-improv-v3-1-c09516ac0efc@analog.com/
-> > [2]: https://lore.kernel.org/all/20240328-ltc2983-misc-improv-v4-0-0cc428c07cd5@analog.com/
-> 
-> Have you seen mine?
-> 
-> 20220214143248.502-1-andriy.shevchenko@linux.intel.com
-> 
-> (Note, I'm pretty much fine and thankful that you take care of this)
+> diff --git a/arch/riscv/kvm/vcpu_pmu.c b/arch/riscv/kvm/vcpu_pmu.c
+> index b5159ce4592d..2d9929bbc2c8 100644
+> --- a/arch/riscv/kvm/vcpu_pmu.c
+> +++ b/arch/riscv/kvm/vcpu_pmu.c
+> @@ -229,8 +229,9 @@ static int kvm_pmu_validate_counter_mask(struct kvm_pmu *kvpmu, unsigned long ct
+>  	return 0;
+>  }
+>  
+> -static int kvm_pmu_create_perf_event(struct kvm_pmc *pmc, struct perf_event_attr *attr,
+> -				     unsigned long flags, unsigned long eidx, unsigned long evtdata)
+> +static long kvm_pmu_create_perf_event(struct kvm_pmc *pmc, struct perf_event_attr *attr,
+> +				      unsigned long flags, unsigned long eidx,
+> +				      unsigned long evtdata)
+>  {
+>  	struct perf_event *event;
+>  
+> @@ -454,7 +455,8 @@ int kvm_riscv_vcpu_pmu_ctr_cfg_match(struct kvm_vcpu *vcpu, unsigned long ctr_ba
+>  				     unsigned long eidx, u64 evtdata,
+>  				     struct kvm_vcpu_sbi_return *retdata)
+>  {
+> -	int ctr_idx, ret, sbiret = 0;
+> +	int ctr_idx, sbiret = 0;
+> +	long ret;
+>  	bool is_fevent;
+>  	unsigned long event_code;
+>  	u32 etype = kvm_pmu_get_perf_event_type(eidx);
+> @@ -513,8 +515,10 @@ int kvm_riscv_vcpu_pmu_ctr_cfg_match(struct kvm_vcpu *vcpu, unsigned long ctr_ba
+>  			kvpmu->fw_event[event_code].started = true;
+>  	} else {
+>  		ret = kvm_pmu_create_perf_event(pmc, &attr, flags, eidx, evtdata);
+> -		if (ret)
+> -			return ret;
+> +		if (ret) {
+> +			sbiret = SBI_ERR_NOT_SUPPORTED;
 
-Also you might be interested to have this
-20231201151446.1593472-1-andriy.shevchenko@linux.intel.com
+I'm still not sure about this. I replied in the v4 thread about it.
 
--- 
-With Best Regards,
-Andy Shevchenko
+Thanks,
+drew
 
-
+> +			goto out;
+> +		}
+>  	}
+>  
+>  	set_bit(ctr_idx, kvpmu->pmc_in_use);
+> diff --git a/arch/riscv/kvm/vcpu_sbi_pmu.c b/arch/riscv/kvm/vcpu_sbi_pmu.c
+> index 7eca72df2cbd..e1633606c98b 100644
+> --- a/arch/riscv/kvm/vcpu_sbi_pmu.c
+> +++ b/arch/riscv/kvm/vcpu_sbi_pmu.c
+> @@ -42,9 +42,9 @@ static int kvm_sbi_ext_pmu_handler(struct kvm_vcpu *vcpu, struct kvm_run *run,
+>  #endif
+>  		/*
+>  		 * This can fail if perf core framework fails to create an event.
+> -		 * Forward the error to userspace because it's an error which
+> -		 * happened within the host kernel. The other option would be
+> -		 * to convert to an SBI error and forward to the guest.
+> +		 * No need to forward the error to userspace and exit the guest.
+> +		 * The operation can continue without profiling. Forward the
+> +		 * appropriate SBI error to the guest.
+>  		 */
+>  		ret = kvm_riscv_vcpu_pmu_ctr_cfg_match(vcpu, cp->a0, cp->a1,
+>  						       cp->a2, cp->a3, temp, retdata);
+> -- 
+> 2.34.1
+> 
