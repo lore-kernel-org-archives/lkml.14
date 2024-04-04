@@ -1,156 +1,147 @@
-Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2096.outbound.protection.outlook.com [40.107.243.96])
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E91747350E
-	for <linux-kernel@vger.kernel.org>; Thu,  4 Apr 2024 11:46:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.243.96
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712231221; cv=fail; b=jz8wZ6jEUfbRptFG5HrLwj5Q735IHBPDowCHh7VT35xYy6E1kgJd5gKD/jHwrmgpyEL9vTokT+yJT2pyp7lPSTfR0LmlMrKbnxeaF4r1nDbvrGu0K4xR1R+2HDWP3Zr16h0hnUlPecAlVsMKGmQLBoFgVHz87VrbXix0u75tRnk=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712231221; c=relaxed/simple;
-	bh=XZ9h77NZBBeryhk3Wi2RsXl7df8cxABvkFWrJvGQILc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=nCu1NTPmaUQ/xFMnxjWLHr1I+cK1LchQxWlfG/FPtMeh4eoI6HjrkXJziFwqibMzm5rYTR04kTlHbp+8t7fSlP55nAY2ikruMpLi5jIxw7KFUVRAIWg/2JA+toFAoAFIC7I2cHnzcbk04qVEC62oeFL+nTOWGBLhjJtRpzLGcIo=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=Hbua/KuA; arc=fail smtp.client-ip=40.107.243.96
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89F0982876;
+	Thu,  4 Apr 2024 11:48:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1712231298; cv=none; b=u+wOFECmwBcpR468dEmMVoOhBPGDGZPLgSvU1nCCXO8280k78OhyDcibUY8n0e5b6YLbgGc6D19btO3mWkxnF/tCFhM3Kn5jphjzdDLSxDWx8fjY2iRUEOLq72CaeoJbRPnmnCrGjdrpcsqfqAxUvqmiomcSbiVQOViaRFo16is=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1712231298; c=relaxed/simple;
+	bh=X+2uugPuVrXC1l1UkYxfOwgJq2ar4xrcrs39UDAIhSQ=;
+	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=AtlOYboXCeT7c+fogq9RCA7SBYnMypDvZiLO+8Ro47oHikhEdTGNBcQitA+gQZIOnrCWwq3ftwwQ3wO2x7fqsaKvtQjlNHPmGPKlAYpVpfxJJyn9QDvQsNyqGEI3JLbdNTjmSE1IL38FQsvvThZ1rzFHOy2X0rEYNiV5rd6PVNQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=EMxuqA/C; arc=none smtp.client-ip=46.235.227.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="Hbua/KuA"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ODPKaqFV67ojdM6EHR2zBK6avAqhQmHp64G6dZcXRA7EmjhoUeLQRJ6k3PT0n3MeBbLcU7daYUyBGAQe9mhPg0LGgLsFC6fuFACEJJ4nx125qkEQu5KsB/Wy5/WHBH8UIfedcb0ci0IsxWJR7cIuGgYWEf3aDQwh+k11x2khIL2Oknih6AMQO3AtYn8hZ9lRocLuIgjt4cSF321n7gszRVCP/FsrcwwNukq0q9FsP/N1zyTzCgsUCfJM8EVuOoYVkannxXr9V8pjChaS/PAl4cTIvTWgOOYWbr4DvkLdVCiUplzajiioICG/DyZPo9lPrsjNLb58y0RxjyhSpHNXEw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=jDVLRVBwfIkXrIF5Slkpfvy2bGm9/+fZdo83oNPsJd8=;
- b=fkti/VWT4VARHkUlNMBk2Qtpk2m2v6MpaHuFFJ9ICogPBuSLLdT/EYgw/rTciAt46iOQPY0tV4Ge38hz+fD+uXUupseiHvNx5HbFqhfYat0aCyuaVZce3uF1KsX3BEPceT377//0Bq7WK7SgvOBv1qj9xLQ0ljIYIWgTXKAqbcYLyp9gc3aJ39bgWLXQ9vdaR5MhMlAAVaHBX3rJxSGAZ9IdfcOsLm6B3Mg0zcMkDthxKC+pVJQAS4DjFEmAdA8Lfzs+3us6Kda0kFLTise9sUL+AjeiSgjdsepEfHSI/CT4/Oisv+DOpheBCOA8Uzy+839WA8+G+xOH10Dj66NfiQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=jDVLRVBwfIkXrIF5Slkpfvy2bGm9/+fZdo83oNPsJd8=;
- b=Hbua/KuAviEZqzrX9Db3EqF0Y6XNI6Av50ruGBl1vTJjTcW/q4yEzYPvcLsNMaNWa/MsVghOcKZ1LK5NqiednmTqPlwPNZWhE83sAv6lBHXcUvciGTiFX/iViODzFI+ulhCWAMZ5qF6iku+zgVtoGpEwwDG8CNENjx87QlYZSEluIKJgcbUzz53upkvNkDX2mnCrTxxF7hxqmPUVo/bg/G/SwVePwuzqbH9/2zt9hJr6bhJ20OBmHi+JLe+Ut19WFd75cZ6+vwBNOICnEjJyp6+4UV5y1n5bmmdy4VzyW0LuU9vdk4udtn4p3SrxbusDa7NMr9oQA03TmdhJ1Spl6g==
-Received: from DM6PR12MB3849.namprd12.prod.outlook.com (2603:10b6:5:1c7::26)
- by SJ2PR12MB8181.namprd12.prod.outlook.com (2603:10b6:a03:4f6::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.46; Thu, 4 Apr
- 2024 11:46:54 +0000
-Received: from DM6PR12MB3849.namprd12.prod.outlook.com
- ([fe80::6aec:dbca:a593:a222]) by DM6PR12MB3849.namprd12.prod.outlook.com
- ([fe80::6aec:dbca:a593:a222%5]) with mapi id 15.20.7409.042; Thu, 4 Apr 2024
- 11:46:54 +0000
-Date: Thu, 4 Apr 2024 08:46:52 -0300
-From: Jason Gunthorpe <jgg@nvidia.com>
-To: Christophe Leroy <christophe.leroy@csgroup.eu>
-Cc: Andrew Morton <akpm@linux-foundation.org>, Peter Xu <peterx@redhat.com>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"linux-mm@kvack.org" <linux-mm@kvack.org>,
-	"linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>
-Subject: Re: [RFC PATCH 1/8] mm: Provide pagesize to pmd_populate()
-Message-ID: <20240404114652.GH1723999@nvidia.com>
-References: <cover.1711377230.git.christophe.leroy@csgroup.eu>
- <54d78f1b7e7f1c671e40b7c0c637380bcb834326.1711377230.git.christophe.leroy@csgroup.eu>
- <20240325161919.GD6245@nvidia.com>
- <6e16e042-0143-4a52-b4b7-09cf0022bc3e@csgroup.eu>
- <20240326150118.GI6245@nvidia.com>
- <9703878c-c0b0-48ff-a356-d43e8f7391f3@csgroup.eu>
- <20240327165754.GM946323@nvidia.com>
- <dee0b89b-8daf-4003-b26f-f612b14012e0@csgroup.eu>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <dee0b89b-8daf-4003-b26f-f612b14012e0@csgroup.eu>
-X-ClientProxiedBy: SN1PR12CA0111.namprd12.prod.outlook.com
- (2603:10b6:802:21::46) To DM6PR12MB3849.namprd12.prod.outlook.com
- (2603:10b6:5:1c7::26)
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="EMxuqA/C"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1712231293;
+	bh=X+2uugPuVrXC1l1UkYxfOwgJq2ar4xrcrs39UDAIhSQ=;
+	h=Date:Cc:Subject:To:References:From:In-Reply-To:From;
+	b=EMxuqA/CkRRKiGL1H3kwhSO7t636rfKNJSFagYNeGkQi30BSxSuudOK9sLwgDMZp0
+	 Fia08ny7dQml2JGL7l9z9aS/DIGbLZjzTEWFiv1phdhXd+AAx2TloQ+TuDEpGRbzvy
+	 mlxddAgHGqHi+Xy3YxPIYgPlE6Ujn25yvx9W5yzdYFRAaJ6f6frVKii5ugs+padpNk
+	 Jb2PKX1LccI2BIKtoOalTPb03IfZBJQVMXTbZ3XrgjDXv5STV72e7/0AvVZ3jlU7pK
+	 qhsbWWC3Ddy/368QXMnwwDOK634Le/UlmFEeOU2omFPnEWB8+6xteo81rmnmAkKq0P
+	 z6D62BJUak7RQ==
+Received: from [10.193.1.1] (broslavsky.collaboradmins.com [68.183.210.73])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: usama.anjum)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 82AAC378200D;
+	Thu,  4 Apr 2024 11:48:11 +0000 (UTC)
+Message-ID: <18b3976e-49a5-43d2-8d1b-bb87f2a312eb@collabora.com>
+Date: Thu, 4 Apr 2024 16:48:43 +0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM6PR12MB3849:EE_|SJ2PR12MB8181:EE_
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	yzrcdYRsrt+a6W34Ub9erLYosw44ewQGVz6o+anmHnLVLWpnd7OvyIGyhu+2PAzdm6E5ttVX8q2Y43lmy+q0pcqTdM7wXdQIN44AgkGhY+72hc+1jcklNlj0JAKoYTg6CJncHG6MngYFMj+xG9Ch1rRfB+RsskBdAdti+iEoyvUnYQEBCY9mNpRbp7zeUzZqoc/iX12gr8lN3meSVrcJ/kCFSz4YGzu/XVd+gt9Qb1fr/mHQ/PGe939v6uEacPO/4/7cBkZdzxMx2Fy5bJ50W3HdXg4hgmCqH1WUAnIdRcQ9wc5nIY0NeszmXz8SGgIxP9JVofhkvEEfqLEHYqrZedW49+24WobXXkH6EM7OqfcS/TPq9HlsunzIiLLMAGyMRDD/bh1Kw6+KvLfnnkekEhuX/LpCnGNkU531luWh47XRkeKcgICQoCLvgDsH/e5/2wC7JuGYUMW3+edblgWwODs1NCQ0yNCpjzCy0VpCJ2IUzapijioooH8Ny2yXVGVbNcHlnjyGoxG++cTPj5sOg5/IM8DI33HrrHSW9Ladc9IZRmPdbCiFF92x4X/stJF1GbmQQTFc9i/84uPGEtRXl40DdMISZQ03Yco1cbSafgqAJ49MJnFFgBulSWDzBYvaPxvpiAwzFW7frVyCzXbFFK7zZK+vk9+TbPDgLLHu/3E=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB3849.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376005)(1800799015)(366007);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?h8seUJdKwMtAS1IeSuM0VDx1Ky8IF28eKjAYNE0xQLuSCa6dI9HDKbuk0p7x?=
- =?us-ascii?Q?kacRGlUqz8G6B9IUy/AE1UYSPEAXm89UxCfyfI/E63ffGxOBFDUb5qVdoKVk?=
- =?us-ascii?Q?BqHYNrU3eEiOQ/YCv2E7UeBKGpWmlZbIZw9UqS2Aol65kA1FH/d0gQ7GRcoW?=
- =?us-ascii?Q?jq3L6LIClJnwr4+Jtxr7BkgB8xvBPj4ynpk9nXjStzaD1uRpvTRU3pJmYJDO?=
- =?us-ascii?Q?cqUCIAeNL20FEpDNr8K+nzvIE4ZO0D6WFnC51E5lX7ouNE9L+MUbQIdT11BK?=
- =?us-ascii?Q?RvXjxdtKF4s77rphsXoTcfXb43pHgD4PknlYVBMZ2zhWI6YIuIzVhTmkbH0f?=
- =?us-ascii?Q?PaklWN4r2m23eM06RypdI35Dc5VaXFoETJRmgKcfch4A0lGrYGJWaDPc2vxa?=
- =?us-ascii?Q?zEOxeHpLyGUkD+lSG8qFJjurOK1QHeQOJCOs3hP6I9fz0zsuH1QovEdkRKms?=
- =?us-ascii?Q?ZEPJyvBZcrovhmrWfK0u93unTOwuUMYQm2jLC6HFlMaD15ylYTb8/0Pgg9k+?=
- =?us-ascii?Q?vaA/ER/HfsdHk9n/cWjGHdQTQKXQS5vJt1ZUFk96ZfKyLjnv2Obd1uGS3upp?=
- =?us-ascii?Q?AbEcXTb9uC2aKMZAe0BaEiAq8kVEd3Fi4gM8iybtIThKhxkkgYf8iAbxzxLn?=
- =?us-ascii?Q?WiNBZ0Ji0bCBTSoQnZyoDkTnzxeS+lCzBPiUIFNRuaPxlhmszasWCTSOANhU?=
- =?us-ascii?Q?8As7Wmmq+VNwmcgyKJ5fMsmugJOFP+atZ6oWQ5BMnDXWPjJM/chcZj6k0fOG?=
- =?us-ascii?Q?DRJaQsGNoBBC1pzScgNXBNoJdS6xiPen3Fc+tU6Fdzs4nPOl6cqH17tsAGW4?=
- =?us-ascii?Q?a6BrjnJubV5sW2fCnEUYqUdQea89tQPG76/dsZ/I5q+GhRtvTTNS4YS7I9dz?=
- =?us-ascii?Q?dOfEl6vASA8VJ98nZL31QhnFv+RXWpDbIbdxsy2QzUalQORHKc7V/Jkn+RdH?=
- =?us-ascii?Q?mng7P98SWRgDtEEhH3TO7+qARJYAx06KEpS/XKIOy9N//zRySGWAinfwfyNf?=
- =?us-ascii?Q?4R5SD4ED16YaUWpUgeLawm6YWNUCjGTkrutR7izY/p+0GDipLLsHVqHevZSH?=
- =?us-ascii?Q?7LIOEa/VNKjq1kudLMSOI0WjHoJogjwQBWrCo3g2kX4AXsxn2m1bZ7qk50zm?=
- =?us-ascii?Q?2+hof2JJ2jNHFNc/y0qnGdwePX+Oc+t9R4SOmFG32JwwgoWi8UC/GsVdIS67?=
- =?us-ascii?Q?ZJwThMLiICJ03gQUIx5Sy//kknaxmQD7ujCXgRS14ifshTQwla0SCZkf0nfT?=
- =?us-ascii?Q?NuknwE9zR0FUXr3n4AOeqlh9bQzbSl8j+ffTJzMkbtf0bZRTXWcqvas4wJgY?=
- =?us-ascii?Q?ydT/m5DcJiNT5x3PMVAWY5EmKzCjfVagX3x60kipXSL25jdey8B+D60Dk66A?=
- =?us-ascii?Q?z78ONkAsDp1TomO2zXmC8CMD1LPKfPnxC4M5BwroirPBwativxRJVjoB30w0?=
- =?us-ascii?Q?Y7s3r/td+eqH7Py55TxbnTVfCagH1icBhVHd73JOz9VZKwftG7bX4xTSGfX7?=
- =?us-ascii?Q?GncfPOPScARf+vXgPVlhAKeT4YM7kEKI90ultnkxTT3noM8m4y3F1XTpK7NB?=
- =?us-ascii?Q?WQ5CuxXPsii9u6NbFaPAr2SmfjDecdSKaQId07Pw?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: b0d3243b-4ac3-4cce-bd86-08dc549cecc3
-X-MS-Exchange-CrossTenant-AuthSource: DM6PR12MB3849.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Apr 2024 11:46:54.5446
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: R6caJb69MrWzhHBQAny8WVnrggL9DzUPmCGUEFtgFEBrl/ds/OxNTD2n01/AkwQy
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ2PR12MB8181
+User-Agent: Mozilla Thunderbird
+Cc: Muhammad Usama Anjum <usama.anjum@collabora.com>,
+ Nicolin Chen <nicolinc@nvidia.com>, kernel@collabora.com,
+ iommu@lists.linux.dev, linux-kselftest@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Kevin Tian <kevin.tian@intel.com>,
+ Shuah Khan <shuah@kernel.org>
+Subject: Re: [PATCH] selftests: iommu: add config needed for iommufd_fail_nth
+To: Jason Gunthorpe <jgg@ziepe.ca>, Joao Martins <joao.m.martins@oracle.com>
+References: <20240325090048.1423908-1-usama.anjum@collabora.com>
+ <31fcc276-acd6-4277-bd6c-4a871c7fb28a@collabora.com>
+ <20240326150340.GE8419@ziepe.ca>
+ <56cc8b9e-c1cf-4520-ba45-b1237e8b7b64@collabora.com>
+ <20240327114958.GG8419@ziepe.ca>
+ <51f493a9-08e7-44d8-ae4a-58b2994ea276@oracle.com>
+ <f78b685d-a147-4b59-beb2-cde9d34ce22a@collabora.com>
+ <e9cb60bf-5035-4fed-9b36-ca2edf048fe8@oracle.com>
+ <20240327182050.GA1363414@ziepe.ca>
+ <ccab9229-c0de-4c38-bb5c-7f32cbd7fa2b@collabora.com>
+Content-Language: en-US
+From: Muhammad Usama Anjum <usama.anjum@collabora.com>
+In-Reply-To: <ccab9229-c0de-4c38-bb5c-7f32cbd7fa2b@collabora.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Wed, Apr 03, 2024 at 06:24:38PM +0000, Christophe Leroy wrote:
-> > If it is a software walker there might be value in just aligning to
-> > the contig pte scheme in all levels and forgetting about the variable
-> > size page table levels. That quarter page stuff is a PITA to manage
-> > the memory allocation for on PPC anyhow..
+On 3/28/24 1:13 AM, Muhammad Usama Anjum wrote:
+> On 3/27/24 11:20 PM, Jason Gunthorpe wrote:
+>> On Wed, Mar 27, 2024 at 06:09:37PM +0000, Joao Martins wrote:
+>>> On 27/03/2024 17:49, Muhammad Usama Anjum wrote:
+>>>> On 3/27/24 7:59 PM, Joao Martins wrote:
+>>>>> On 27/03/2024 11:49, Jason Gunthorpe wrote:
+>>>>>> On Wed, Mar 27, 2024 at 03:14:25PM +0500, Muhammad Usama Anjum wrote:
+>>>>>>> On 3/26/24 8:03 PM, Jason Gunthorpe wrote:
+>>>>>>>> On Tue, Mar 26, 2024 at 06:09:34PM +0500, Muhammad Usama Anjum wrote:
+>>>>>>>>> Even after applying this config patch and following snippet (which doesn't
+>>>>>>>>> terminate the program if mmap doesn't allocate exactly as the hint), I'm
+>>>>>>>>> finding failed tests.
+>>>>>>>>>
+>>>>>>>>> @@ -1746,7 +1748,7 @@ FIXTURE_SETUP(iommufd_dirty_tracking)
+>>>>>>>>>         assert((uintptr_t)self->buffer % HUGEPAGE_SIZE == 0);
+>>>>>>>>>         vrc = mmap(self->buffer, variant->buffer_size, PROT_READ | PROT_WRITE,
+>>>>>>>>>                    mmap_flags, -1, 0);
+>>>>>>>>> -       assert(vrc == self->buffer);
+>>>>>>>>> +       assert(vrc == self->buffer);// ???
+>>>>>>>>>
+>>>>>>>>> On x86:
+>>>>>>>>> # Totals: pass:176 fail:4 xfail:0 xpass:0 skip:0 error:0
+>>>>>>>>> On ARM64:
+>>>>>>>>> # Totals: pass:166 fail:14 xfail:0 xpass:0 skip:0 error:0
+>>>>>>>>>
+>>>>>>>>> The log files are attached.
+>>>>>>>>
+>>>>>>>> You probably don't have enough transparent huge pages available to the process
+>>>>>>>>
+>>>>>>>>       echo 1024 > /proc/sys/vm/nr_hugepages
+>>>>>>> After making huge pages available, the iommufd test always passed on x86.
+>>>>>>> But there are still failures on arm64. I'm looking into the failures.
+>>>>>>
+>>>>>> Oh that is really strange. Joao? Nicolin?
+>>>>>>
+>>>>> Definitely strange, I'll have a look.
+>>>>>
+>>>>> So it set the expected number of dirty bits as that assert doesn't fail, but it
+>>>>> is failing when we check that even bits are set but not odd ones. Like it's
+>>>>> hasn't set those bits.
+>>>>>
+>>>>> For mock tests there should be no difference between x86 and ARM assuming the
+>>>>> typical 4K page-size. Maybe this is 64k base pages in ARM? That's the only thing
+>>>>> that I can think of that affected mock domain.
+>>>> The config is attached. The defaults are being used i.e., 4k page.
+>>>
+>>> Looks like CONFIG_IOMMUFD_DRIVER is not defined :(
+>>>
+>>> Thus no bits are being set.
+>>
+>> Oh! 
+>>
+>> --- a/drivers/iommu/iommufd/Kconfig
+>> +++ b/drivers/iommu/iommufd/Kconfig
+>> @@ -37,6 +37,7 @@ config IOMMUFD_TEST
+>>         depends on DEBUG_KERNEL
+>>         depends on FAULT_INJECTION
+>>         depends on RUNTIME_TESTING_MENU
+>> +       select IOMMUFD_DRIVER
+>>         default n
+>>         help
+>>           This is dangerous, do not enable unless running
+>>
+> Tested this patch on my system and it fixes all issues for ARM64. Please
+> add tag for this Kconfig patch:
+> Tested by: Muhammad Usama Anjum <usama.anjum@collabora.com>
 > 
-> Looking one step further, into nohash/32, I see a challenge: on that 
-> platform, a PTE is 64 bits while a PGD/PMD entry is 32 bits. It is 
-> therefore not possible as such to do PMD leaf or cont-PMD leaf.
+> Also please accept the patch in this current series.
+Please let me know if you need me to send the config patch. Please accept
+the config patch as well.
 
-Hmm, maybe not, I have a feeling you can hide this detail in the
-pmd_offset routine if you pass in the PGD information too.
+>>
+>> ???
+>>
+>> Jason
+> 
 
-> - Double the size of PGD/PMD entries, but then we loose atomicity when 
-> reading or writing an entry, could this be a problem ?
-
-How does the 64 bit PTE work then? We have ignored this bug on x86 32
-bit, but there is a general difficult race with 64 bit atomicity on 32
-bit CPUs in the page tables.
-
-Ideally you'd have 64 bit entries at the PMD level that encode the
-page size the same as the PTE level. So you hit any level and you know
-your size. This is less memory efficient (though every other arch
-tolerates this) in general cases.
-
-Can you throw away some bits of PA in the 32 bit entries to signal a
-size?
-
-> - Do as for the 8xx, ie go down to PTEs even for pages greater than 4M.
-
-Aside from the memory waste, this is the most logical thing, go down
-far enough that you can encode the desired page size in the PTE and
-use the contig PTE scheme.
-
-Jason
+-- 
+BR,
+Muhammad Usama Anjum
