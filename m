@@ -1,117 +1,116 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 485F2131BDE;
-	Thu,  4 Apr 2024 19:22:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA8051339A5;
+	Thu,  4 Apr 2024 19:22:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712258534; cv=none; b=SxlkkFWfTOBhuCYrK5je1smlm/ScGxcS8hQCtpbO6MpWnbKGOfMYDRqBOFC233q3ZQ43pVRb3+NVxgZniTU1k10cx8XiMeG7eIxOqyLDUwqSwUYUF8Wfuukx8h0gfWxEGk8w86OQmT/uZ7TKf1QJQbTDS4kBPu2OrjZZWcA5owQ=
+	t=1712258561; cv=none; b=FpczNlN3nEOXdI8rlunEs8T8woUUytXDqlm9xDNsQRf4bZcYBXmGEZI2BzmpXHTUCXfr/XpoKVQvC2i9ShKBBsPaLEjmd2DnlUnAcGnjC5tXHVVh7CdL/R/zDJF3QxL4EzOaH6nYBKnbZ3FwsTUAdGE0/9P+tU0yH9zuWyWwUOY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712258534; c=relaxed/simple;
-	bh=Egp1NO+BBlQy6ZZGKntrh5fzBSDWHai2iUKm4Jo2cmg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WWKBq0GLmZqVHU3u5KnnXUdLsYqsSHtblpzFh9ZzAvV3bDICRBFaz/HeVaZB3YURRpOB0V5u2h5qzmDXdYFcRZLcBwacyhyQB+G279TKafQuaSCrVlcbQNakjnYoY+JpLtL0af7GcxO9Dipe7PrLZJvDNneJq5Ilb/f7xOvHJ3M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DiO4IAai; arc=none smtp.client-ip=198.175.65.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1712258561; c=relaxed/simple;
+	bh=8WNCQA2Qp3GjdSD3VAeio8P6hRuSDdefSKR77rNOC8k=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=APf9owpaQZSHK8wtg1QdyWSCN7DA6qFiBSkx8gD9ysUYGwTvZTTLJPthSSjxY//vwOnWjgqO2g5E8gJeQICDaQuxMGpMXn2fZcHiWTtFeykn4efK5lU265Pag+ynL4m6p0k55L3uEwQZovikMhOZRrvHHWEmJ/gx1rkK6a0xY2g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YWSU8WaK; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DiO4IAai"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1712258532; x=1743794532;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=Egp1NO+BBlQy6ZZGKntrh5fzBSDWHai2iUKm4Jo2cmg=;
-  b=DiO4IAaih9vj+aJns5ZcMwztJ1Tm5SOZQ4lnypenLOMzA/VbYU2Dn7VG
-   N42kcCWwtDknBtZLGd5imwd5Y5bZpznmiQw6ghCdQsjopN2wqR9AFJe3K
-   uMQ0osGK4zEXTCG544BPAMQTwQvh5iqp+R6601RqSEe7WjdD+fOTaXqHU
-   5rDooBr8oxohzqDEgEP3frxQ/HvG45+7xn9W23WfCwKa3JpztPI/pFdpm
-   KVAiuJWAWOMm2k7idSqZnNZ3RRmq775zyjoQinhsswoIL7WyjhhsVCIkA
-   bQRcKiUqjzXuvKT9euIX3pOPesKprGgwi9sx4JiLGt//22dG4QsJVKWR/
-   w==;
-X-CSE-ConnectionGUID: E/n14+tmT6yK0/6MFkVLxw==
-X-CSE-MsgGUID: uTQMLcOZQgOirF/mMzxKPA==
-X-IronPort-AV: E=McAfee;i="6600,9927,11034"; a="7413478"
-X-IronPort-AV: E=Sophos;i="6.07,179,1708416000"; 
-   d="scan'208";a="7413478"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Apr 2024 12:22:11 -0700
-X-CSE-ConnectionGUID: a/A4cP3QR6+wDOFXpyubLg==
-X-CSE-MsgGUID: wvMv0wbdQuWynV1lIHOBrg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,179,1708416000"; 
-   d="scan'208";a="18911324"
-Received: from lkp-server01.sh.intel.com (HELO e61807b1d151) ([10.239.97.150])
-  by fmviesa006.fm.intel.com with ESMTP; 04 Apr 2024 12:22:06 -0700
-Received: from kbuild by e61807b1d151 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1rsSex-0001PS-2d;
-	Thu, 04 Apr 2024 19:22:03 +0000
-Date: Fri, 5 Apr 2024 03:21:55 +0800
-From: kernel test robot <lkp@intel.com>
-To: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	chunkuang.hu@kernel.org
-Cc: oe-kbuild-all@lists.linux.dev, robh@kernel.org,
-	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
-	p.zabel@pengutronix.de, airlied@gmail.com, daniel@ffwll.ch,
-	maarten.lankhorst@linux.intel.com, mripard@kernel.org,
-	tzimmermann@suse.de, matthias.bgg@gmail.com,
-	angelogioacchino.delregno@collabora.com, shawn.sung@mediatek.com,
-	yu-chang.lee@mediatek.com, ck.hu@mediatek.com,
-	jitao.shi@mediatek.com, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-	linux-mediatek@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org, wenst@chromium.org,
-	kernel@collabora.com
-Subject: Re: [PATCH v1 2/3] dt-bindings: arm: mediatek: mmsys: Add OF graph
- support for board path
-Message-ID: <202404050315.7WBDW2E8-lkp@intel.com>
-References: <20240404081635.91412-3-angelogioacchino.delregno@collabora.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YWSU8WaK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5D0C0C433F1;
+	Thu,  4 Apr 2024 19:22:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1712258561;
+	bh=8WNCQA2Qp3GjdSD3VAeio8P6hRuSDdefSKR77rNOC8k=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=YWSU8WaKnRmHkmA2Fjd6sSysAxBu61BERgRSyepJ2uX9gM1FJnOc2ztLs8Jd9oehi
+	 51ZAdLoF3podq9eEO4PUthDZT0l3RKyIpDQPiTKmZ02sR1V/628i80rJklU1RhV3Lx
+	 21rWip2WpBgD+7O4wCU5TEL/ouRz3w+LSv8WGR0eHXCf9rHOtaQhfuRcbW9MqclSge
+	 mNeDaoN+5PV/MrzhOoN4beQ6AO1/4nODrSHmQjnUQ3EYONZEwlyfoj2MAzgSsLj1cI
+	 Mdua8xzVD6/bHvRuxEC0jypCFNNFignItzWnl9FSLxQ+qiWANeYibFkjWPt/cfEys7
+	 vpj1JzOtDnPBQ==
+Received: by mail-oo1-f49.google.com with SMTP id 006d021491bc7-5a46b30857bso253327eaf.1;
+        Thu, 04 Apr 2024 12:22:41 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCX2Esl+5uM5Jomqbcc3RuFjU2w75qLlmzA7T4Xv/9RlT0pJfdHlt1SufOGvJ6zR7SnaMlDuo5hza4yrPzINU2gUvdHZRZlPZBKKYT8Zke0k2tpzj1bP0dZWVb8BHEZGQb+g6TyRLQF8OQ==
+X-Gm-Message-State: AOJu0YxkCy3tx9sWgHEqCjBhppfaaAhcdVlwg8IJeYMu0Jg0be5ksdjO
+	VXyhbJN0en9NQ60fSkc83KdqJGFrUhnRG7eo62UL/boTK0pX/Fx80v06o1rQXGlIVgNqmtko49a
+	D+bn01XmllvSlopPld51i6XZDdZc=
+X-Google-Smtp-Source: AGHT+IE3plFIEkphAB8CO7rhbTEJi1S27LAagOoIbFfRCZLahWFxIuVODF8WMjZsqD45ENMVl1mkyHsol77H+i0uEE4=
+X-Received: by 2002:a05:6820:f45:b0:5a5:2d09:4fdc with SMTP id
+ ep5-20020a0568200f4500b005a52d094fdcmr3357764oob.1.1712258560736; Thu, 04 Apr
+ 2024 12:22:40 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240404081635.91412-3-angelogioacchino.delregno@collabora.com>
+References: <20240325123444.3031851-1-andriy.shevchenko@linux.intel.com> <20240325123444.3031851-4-andriy.shevchenko@linux.intel.com>
+In-Reply-To: <20240325123444.3031851-4-andriy.shevchenko@linux.intel.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Thu, 4 Apr 2024 21:22:29 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0g6bn4k2Sv+SRC1fiDoXU+hZ2iUR6GuL5O1Eny=Pxmh0w@mail.gmail.com>
+Message-ID: <CAJZ5v0g6bn4k2Sv+SRC1fiDoXU+hZ2iUR6GuL5O1Eny=Pxmh0w@mail.gmail.com>
+Subject: Re: [PATCH v1 3/7] ACPI: scan: Replace infinite for-loop with finite while-loop
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, linux-acpi@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, acpica-devel@lists.linux.dev, 
+	"Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>, 
+	Robert Moore <robert.moore@intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi AngeloGioacchino,
+On Mon, Mar 25, 2024 at 1:34=E2=80=AFPM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
+>
+> The infinite loops is harder to understand (as one has to go
+> over the body in order to find main exit conditional) and it's
+> more verbose than usual approach with a while-loop.
+>
+> Note, we may not use list_for_each_entry_safe() as there is locking
+> involved and the saved pointer may become invalid behind our back.
+>
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> ---
+>  drivers/acpi/scan.c | 14 ++++++--------
+>  1 file changed, 6 insertions(+), 8 deletions(-)
+>
+> diff --git a/drivers/acpi/scan.c b/drivers/acpi/scan.c
+> index 7c157bf92695..5e4118970285 100644
+> --- a/drivers/acpi/scan.c
+> +++ b/drivers/acpi/scan.c
+> @@ -530,15 +530,10 @@ static DEFINE_MUTEX(acpi_device_del_lock);
+>
+>  static void acpi_device_del_work_fn(struct work_struct *work_not_used)
+>  {
+> -       for (;;) {
+> -               struct acpi_device *adev;
+> +       struct acpi_device *adev;
+>
+> -               mutex_lock(&acpi_device_del_lock);
+> -
+> -               if (list_empty(&acpi_device_del_list)) {
+> -                       mutex_unlock(&acpi_device_del_lock);
+> -                       break;
+> -               }
+> +       mutex_lock(&acpi_device_del_lock);
+> +       while (!list_empty(&acpi_device_del_list)) {
+>                 adev =3D list_first_entry(&acpi_device_del_list,
+>                                         struct acpi_device, del_list);
+>                 list_del(&adev->del_list);
+> @@ -555,7 +550,10 @@ static void acpi_device_del_work_fn(struct work_stru=
+ct *work_not_used)
+>                  */
+>                 acpi_power_transition(adev, ACPI_STATE_D3_COLD);
+>                 acpi_dev_put(adev);
+> +
+> +               mutex_lock(&acpi_device_del_lock);
+>         }
+> +       mutex_unlock(&acpi_device_del_lock);
+>  }
+>
+>  /**
+> --
 
-kernel test robot noticed the following build warnings:
+I don't quite agree with this one, sorry.
 
-[auto build test WARNING on drm-misc/drm-misc-next]
-[also build test WARNING on robh/for-next pza/reset/next linus/master v6.9-rc2 next-20240404]
-[cannot apply to pza/imx-drm/next]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+The rest of the series has been applied as 6.10 material.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/AngeloGioacchino-Del-Regno/dt-bindings-display-mediatek-Add-OF-graph-support-for-board-path/20240404-161930
-base:   git://anongit.freedesktop.org/drm/drm-misc drm-misc-next
-patch link:    https://lore.kernel.org/r/20240404081635.91412-3-angelogioacchino.delregno%40collabora.com
-patch subject: [PATCH v1 2/3] dt-bindings: arm: mediatek: mmsys: Add OF graph support for board path
-compiler: loongarch64-linux-gcc (GCC) 13.2.0
-reproduce: (https://download.01.org/0day-ci/archive/20240405/202404050315.7WBDW2E8-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202404050315.7WBDW2E8-lkp@intel.com/
-
-dtcheck warnings: (new ones prefixed by >>)
->> Documentation/devicetree/bindings/arm/mediatek/mediatek,mmsys.yaml: properties:port:properties:required: ['endpoint@0'] is not of type 'object', 'boolean'
-   	from schema $id: http://json-schema.org/draft-07/schema#
->> Documentation/devicetree/bindings/arm/mediatek/mediatek,mmsys.yaml: properties:port:properties: 'required' should not be valid under {'$ref': '#/definitions/json-schema-prop-names'}
-   	hint: A json-schema keyword was found instead of a DT property name.
-   	from schema $id: http://devicetree.org/meta-schemas/keywords.yaml#
->> Documentation/devicetree/bindings/arm/mediatek/mediatek,mmsys.yaml: properties:port:properties:required: ['endpoint@0'] is not of type 'object', 'boolean'
-   	from schema $id: http://devicetree.org/meta-schemas/keywords.yaml#
---
->> Documentation/devicetree/bindings/arm/mediatek/mediatek,mmsys.yaml: ignoring, error in schema: properties: port: properties: required
-   Documentation/devicetree/bindings/net/snps,dwmac.yaml: mac-mode: missing type definition
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Thanks!
