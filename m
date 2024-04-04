@@ -1,233 +1,191 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+Received: from EUR05-DB8-obe.outbound.protection.outlook.com (mail-db8eur05on2108.outbound.protection.outlook.com [40.107.20.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CD9C84FDF
-	for <linux-kernel@vger.kernel.org>; Thu,  4 Apr 2024 15:33:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712244837; cv=none; b=pTJlGIcOX9k8o/nYX+qcQ7KyoocUtvqwRjSReIrk6r9c9JfhY+EW6CwhqdAjxoNHQZt5pMRwqsfJzhUnqufngEc7AaIaLHK5q0/GYdr0+DOlFCWWSbCsKYsG7mums90dKqyC4L8PoA3uHLW8a74vf7jcdrem3d8Lthj3y8ubv8E=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712244837; c=relaxed/simple;
-	bh=kC8z1LjQKKDzkZfrOH3QNMmDXYHkdOhUj44LuopUqMY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NLVPYJd6ALWbWg1oT1+fapFL2aLNgeU4bfKVkxzUpHbOP7VAOx45liiQf6i4gf5TtjdUx0TnaAhFuMyZGOUUnQmHH5SBHp0IojGULRAJrEn+d+cHljBTmmCR+9MLLxDrRXQfwpwIr73CpaWYq7M+pmZ68w6G/zpD1OWLp1w6CdQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1rsP64-0001tj-Ny; Thu, 04 Apr 2024 17:33:48 +0200
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1rsP61-00AP0e-EL; Thu, 04 Apr 2024 17:33:45 +0200
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.96)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1rsP61-00F9uU-18;
-	Thu, 04 Apr 2024 17:33:45 +0200
-Date: Thu, 4 Apr 2024 17:33:45 +0200
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To: Marek Szyprowski <m.szyprowski@samsung.com>
-Cc: linux-pwm@vger.kernel.org, linux-amlogic@lists.infradead.org, 
-	LKML <linux-kernel@vger.kernel.org>, kernel@pengutronix.de, linux-clk@vger.kernel.org, 
-	Alexander Stein <alexander.stein@ew.tq-group.com>, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 7/8] pwm: Add more locking
-Message-ID: <adqtn6iljcguv3m3ovhltusbbf4mljzlwg73yklaudvjjtazxv@vyf5fvuzic6x>
-References: <cover.1710670958.git.u.kleine-koenig@pengutronix.de>
- <e36c1a44096cbd7e9cb693f2300ac12ed1b2f79d.1710670958.git.u.kleine-koenig@pengutronix.de>
- <CGME20240404120932eucas1p1b3c1e07bf6f41f6330725148b0268b13@eucas1p1.samsung.com>
- <5a49cadd-21b7-4384-9e7d-9105ccc288b3@samsung.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45D9B6E615;
+	Thu,  4 Apr 2024 15:35:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.20.108
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1712244914; cv=fail; b=pBXlB2qhmrpUkyOJZ6VviQgI21dxIyhGqDUis+e0sFuth2xEWSPQynbpeMyXUy3xvxaHqOQAWQjP7NTPGzbe9Aa0yzZ+Wc3fffoSJAyBoSDdBCYHc3X7eqghJhHy3Lzw9AuqcMaeo55y7qNnjLZIsQwtI9uC3ypldLwb1rPUVU4=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1712244914; c=relaxed/simple;
+	bh=NEs3N1qMsT9syBsbLXC9DrxxuUEmeW79CJVhnL0mz+Y=;
+	h=From:Date:Subject:Content-Type:Message-Id:References:In-Reply-To:
+	 To:Cc:MIME-Version; b=PBMKbxLJOQun+QT3jATPqfMiYd8p/mja2r3/IvCMHtJW93f50/buQjQH6b0t1eZpNz42dKLDNN3jkN+HronAdQK3ptLkCYnlF2tL52osbfGqOhdCOze2QwLojH1RoH4XP6r97Xl9VtccUVhNzRDpCu4wZXb5YOyxGfy2BLH2lOI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=solid-run.com; spf=pass smtp.mailfrom=solid-run.com; dkim=pass (1024-bit key) header.d=solidrn.onmicrosoft.com header.i=@solidrn.onmicrosoft.com header.b=am9IRVyk; arc=fail smtp.client-ip=40.107.20.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=solid-run.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=solid-run.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=solidrn.onmicrosoft.com header.i=@solidrn.onmicrosoft.com header.b="am9IRVyk"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=BX4cz3zLGaZmFOL2wF/nFqQ6cNaLfwwdccmgDEiSgpdjBUVA2BIYutNm8eMysfAaw7WsCCCQkj6a/rV8VEIzpaEiXGZmkzI6WSdKyzrO0nN/9vYuVaoEz8Jy3XZY4LdfnO4y0jrWH9eXPZ9ZldBSXx+KQwFZ0Fuom1xZ60KdrXap33IhhN5F/2Rre2DHqK2NoL9uKytK4817ZFaYYoVDW6dOViFgpJmifIfeDY1uIFeg+MI/7nenI+6ryIejFPw+tyJfylL6f4oOsmc71ziT1hgxssinaByn+mUbxAS8DYl/hlRVi8mcm4F6epgOQi1K86dZlJfjr6VOZCcGLv6tIQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=6x6EOIUwDJ1P1ZCfZWg1ji8oxS9Yeec7E0tRwP/l7tU=;
+ b=A4rpRJ1sWZmQ7ibIkYefM1umzQcav6tZBiLKm84wyady3C8E6NFteY3Rgur2yQJj1k7yVSfk8JAWhcQOKqR7arurzg/ppadS2L7FvhP4JDiMI7fF6GT0wPONueVtJ0un4mIxsxs95DGByR2PfstikCMjTMJpjXdxUXefFB5MCik38BX5XkBqf+9TqGpjHVwkuQnwXqN9RCY+X8HsCfE8M9AOcA56GPRxestl/+YVxGnUCds/UJaH4oK0VwV6zsYC9jTgDwZJ03bJ9lJCAcvW6AEgfjLZulFbY7EUlmhfU9HW8NWV4ccOJhuRi1bEgeRWQm4ZGkapNnYlwfCxqvgYaA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=solid-run.com; dmarc=pass action=none
+ header.from=solid-run.com; dkim=pass header.d=solid-run.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=solidrn.onmicrosoft.com; s=selector1-solidrn-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=6x6EOIUwDJ1P1ZCfZWg1ji8oxS9Yeec7E0tRwP/l7tU=;
+ b=am9IRVykrVnSEXdVTLwDRProdxpfYjROXo8a2s0HzngYifGI5a8vRZ5Vj7OBrIsKy39r6EzMp23+0jEEYyqQKI4Apj9E8VPXOEey+5fYW2Ee7Fs61iNK+DUZ/VpM8rQnDpZWDCAeRAo6RiO/hxz3b98R/+uSUmh0W/s54uplXM0=
+Received: from AM9PR04MB7586.eurprd04.prod.outlook.com (2603:10a6:20b:2d5::17)
+ by PA4PR04MB7871.eurprd04.prod.outlook.com (2603:10a6:102:c2::8) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7452.27; Thu, 4 Apr
+ 2024 15:35:09 +0000
+Received: from AM9PR04MB7586.eurprd04.prod.outlook.com
+ ([fe80::57e1:e1cb:74e2:2e9d]) by AM9PR04MB7586.eurprd04.prod.outlook.com
+ ([fe80::57e1:e1cb:74e2:2e9d%5]) with mapi id 15.20.7409.042; Thu, 4 Apr 2024
+ 15:35:09 +0000
+From: Josua Mayer <josua@solid-run.com>
+Date: Thu, 04 Apr 2024 17:35:05 +0200
+Subject: [PATCH v2 1/3] dt-bindings: arm64: marvell: add solidrun cn9130
+ som based boards
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240404-cn9130-som-v2-1-3af2229c7d2d@solid-run.com>
+References: <20240404-cn9130-som-v2-0-3af2229c7d2d@solid-run.com>
+In-Reply-To: <20240404-cn9130-som-v2-0-3af2229c7d2d@solid-run.com>
+To: Andrew Lunn <andrew@lunn.ch>, 
+ Gregory Clement <gregory.clement@bootlin.com>, 
+ Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, 
+ Rob Herring <robh+dt@kernel.org>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Rob Herring <robh@kernel.org>
+Cc: Yazan Shhady <yazan.shhady@solid-run.com>, 
+ linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, Josua Mayer <josua@solid-run.com>
+X-Mailer: b4 0.12.4
+X-ClientProxiedBy: FR3P281CA0005.DEUP281.PROD.OUTLOOK.COM
+ (2603:10a6:d10:1d::19) To AM9PR04MB7586.eurprd04.prod.outlook.com
+ (2603:10a6:20b:2d5::17)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="q4ybeyaskyjbjlzd"
-Content-Disposition: inline
-In-Reply-To: <5a49cadd-21b7-4384-9e7d-9105ccc288b3@samsung.com>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: AM9PR04MB7586:EE_|PA4PR04MB7871:EE_
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	6PTbduBfrFV7EuHH7YjluPMJFSdEC8HvBDxXMXKtP0oFgP5vYnqgcGoQCMKfKRzQRFsSmg6PBk14+JS+aOj6/HOpuHftabCRgYUDNsF/bZdkGlq3DbQ1qE/q69663x90lUcJ/nexZURdLB9uZQVPCgPW+sGNLR0nR3z9UiQy+tnKoqSWLqLhup6UADIRfHfLe/9ZvADH3RnYl0PGx7dEZhKko8/LFsAAtMkp/KJEgWKoQTCku0Jhb/JZoxYTfYBdPd5V41KTG8+oypySVpallfgD39iKikvtaFE8g51pS8B/jZCOwSb30/LZGRPsl9AQAr3/jjnqhXD0ZhiE7XcpRl+JZiKx6uM5S9Qu2C8aHm0MsWm0vWLoYwtq8L4SjBOgRlOiqxFbD1VWQ80IhRCT9HN1UatXy/mNWLLOJK6q4qsQ/EEmfqL0L0K1QsyKxdP1SC8LcXvHPTWTyQXQgk6EziEmWorjKpjXVz+p9Ldp07CaWIFrPkt9Bty4wcv0hxorC0igU8CPUb0MQqE4EGDHD+fPN8ooMvfF9tIg5vDtP+Zk7HuTwUxCOaq9VfSt12Y+IXHi5f3+QK9ggJLlbt/OXQA4avbOzIkWlv4GiRTWsj9u3IWel441q0W8BCmG8Ou87lkCho+M+zYhb0UkGcNE27fFqnHAA7HqOEpgG7Il6Dl3qM2R68rfyeSeWqx6JIEynHa3ZB6DpygJVqDP+3YdAg==
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM9PR04MB7586.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(7416005)(366007)(376005)(52116005)(1800799015)(38350700005);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?RXFKMFZvN3V1TTFZS3BpYlQzdE5XSXZYd3FUaU4wM3JFUTY1WGlTUy90RUMz?=
+ =?utf-8?B?S1JMVGpFSllMYUJ1Vm9kbG1RSTRqaUhnQitHZklOb2tMSm0wN1FxVDhaUER0?=
+ =?utf-8?B?OHRlY01LcFdLWjVOQjQ2WGEvSm9MZWw0em14cGlJd3RDTnlqQ0tNeDVVMllw?=
+ =?utf-8?B?UjVWN1AwS3VydUdmRG9BVklGODhvRFdlUFo4U2RrM211MFNmWGxxWEtBcmZh?=
+ =?utf-8?B?aytQZDZtQW8xTUZpcCtHUXFNTjYza3NCbW5wT0RFbmFRVU91akxXeEIyRStG?=
+ =?utf-8?B?Nk5jOXY2bW9Dd1F0dEF2SFBXb0dsTWNUaW1jNVYxN05DK1k1TE4yMHJFazZp?=
+ =?utf-8?B?dDRRU3Zsb00wTmpsSll2YVViOE5pV0NqKzJ1NmpDN1BZZ1hvc28vY0hCVGJl?=
+ =?utf-8?B?Uk5jRzZ5cTVCZjd0REpadW5Pb2U5N1ZqNmtsV1llYVpjTGVoT29kc0RaTUZ0?=
+ =?utf-8?B?SXRwampGVnc4SytuaEZxOGpULzhwY1JHSzYraUtEelErTmF3RWJZMjNuZDJa?=
+ =?utf-8?B?eTdhU2o1bUxPeGJaTTNHdXV2K2pYUVpSRU1DUG9sVDhyQzlkd0YxU2w2WCs0?=
+ =?utf-8?B?ZHlXTXdyLzZVK29Oc0VCM2FNbVB3dHpNMVpGeGtkd1QvK25pK3pUYzRlMG1M?=
+ =?utf-8?B?bzFaWVhJMjk1WnEvZzE3RjBwbHFvNTNNaDhLVjA0OUQySFhKSlRiUzF5RHFs?=
+ =?utf-8?B?cW01ZldheUwzdGpVaXhzZG1PYjlQUkd1ZlpmRmtwMVFnK1krTnBsRytNM1Vl?=
+ =?utf-8?B?L0o4L2N1S3BXR1lKMkwxWmo2a1NoMTJtbHZWdERUQktoUWMvd050TUdMM3Zv?=
+ =?utf-8?B?STlkeE5obUdGUlkwU3kzTkJkZHFRcXQrYnZuZjZEQSttbFAvRjZpbS9lcGRw?=
+ =?utf-8?B?MUQ3bVRyNTdHUDY3Q3UwSk9hbkRrTkc4WXVvUVJ2UzFKQWhyVEVpZXJpd2NY?=
+ =?utf-8?B?eTJXUDB2NXJBNWZBNTBYbFJiOGpRaGxKcEU2a1poS3l3ZWNWUUxyVmpiZjdM?=
+ =?utf-8?B?dm5rQ2hobHVBU0JyVG5NWDd2Sm11UDlqTW1GcmJERytJRFAxTy9GaHFPRHJQ?=
+ =?utf-8?B?TWwzM0lZOW1BbldFdXVCL2VCZlpiOUwxRkViVTZCVGlmWW9Cb2gyYldaMnJL?=
+ =?utf-8?B?Nkp0dHpvNEFmWmRreXpxcUtaS2VuM09zRHdiUFdVd3hPY3EvWHdtOWR4ZG9x?=
+ =?utf-8?B?OU1mZk5BbzFmZWE3bzJIL0Vyc3ZCMUZ4amJIdzI2SkdUUHgzVGdhL3dWVm1k?=
+ =?utf-8?B?VlBrcHZoOGx1VDZiTnp4ZTVUQzJzdFc5T21VY1RPYjJJUUJQbFlVVWNTd21u?=
+ =?utf-8?B?VWsrdjdMSGFXNVFTeW5iQXc5UnBIekdXcWxZRVFnTUM3MzJUbXZpd3pwZUZt?=
+ =?utf-8?B?bmc0anVGQ1VzMGdGZmM2Y2FBVmRXamRzSitQa0ZZN2xUdCtmR3RCeG0vSlVN?=
+ =?utf-8?B?NEI1czJiVmQ3N1QvcnhZelM2RkNBbThyL2RYWXljM1JVL2Urbk9GNVA1VG9q?=
+ =?utf-8?B?c3A2cHgzM3VNRjg2TUZ5MURFQlg0QXdjcVpYU0Q1MzlCSE02ZkxEL3dKZDBq?=
+ =?utf-8?B?dm5RUFRLS0pHcVlNNWxJUitPM0pTWk9zLzBjM1dpMU93R2gzd2ovNUZrb2RZ?=
+ =?utf-8?B?RW1LODRFVWUxT204VmFWNXhJYnRUYm9NVlRrTEJsVGpYQVVuenYzRFlYblN2?=
+ =?utf-8?B?SDZuNDB5UWMxNnMrZGZyaTFTL2RSeS9wRXVKWExyTnVLc3ExZ3ppOGJoL3pp?=
+ =?utf-8?B?OFcwSkQydE5CQTlkaVdHSmdZUWpxSytBRDNYS2hnU01TTythT2VBeG9pc2hK?=
+ =?utf-8?B?YnpEc1NseWZGL01MQytqMWVCbG1YMTJEb2VaNnFhQW1sTllST0c4T0NLNWhJ?=
+ =?utf-8?B?dDV4ZXdaUG1IbzVhZkczRmhGUzBCdnBxQnk2enlONnk3R3BRWTNYeTlXRkw3?=
+ =?utf-8?B?U3hNei9uZ09rYTlyNTcxa29kWnRqNFRqeVZTcSt4MVRvWDRteEtqa1pua2Y4?=
+ =?utf-8?B?RnYwNHdWc21yNGZOamFGcFM4SFp6YjRGOFlwUjRRbHlCYU9rcUMyMiszM056?=
+ =?utf-8?B?NXE4MlZZaG9DcE8yYUhBa2xJMGtCTVhOcW9iNmUyVXZZQldWZTZPYXkwa1Za?=
+ =?utf-8?Q?66v/uyp1obpn9NPZDuemF7miS?=
+X-OriginatorOrg: solid-run.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5ee7af65-ab74-4f00-0ae1-08dc54bccfcc
+X-MS-Exchange-CrossTenant-AuthSource: AM9PR04MB7586.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Apr 2024 15:35:09.7706
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: a4a8aaf3-fd27-4e27-add2-604707ce5b82
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 5uAusMK346ujP6a2wns7LCL80GqbMaMrCbp0Ip3KTsYfaGqvw2QQjjbXDlqeRarz76eWeesjOYODzcDlFf3fQg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PA4PR04MB7871
 
+Add bindings for SolidRun boards based on CN9130 SoM.
 
---q4ybeyaskyjbjlzd
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Three boards are added in total:
+- Clearfog Base
+- Clearfog Pro
+- SolidWAN
+The Clearfog boards are identical to the older Armada 388 based boards,
+upgraded with a new SoM and SoC.
+However the feature set and performance characteristics are different,
+therefore compatible strings from armada 388 versions are not included.
 
-Hello Marek,
+SolidWAN uses the same SoM adding a southbridge on the carrier.
 
-[Cc +=3D linux-clk@vger.kernel.org, Alexander Stein, linux-arm-kernel@lists=
-=2Einfradead.org]
+Since 2019 there are bindings in-tree for two boards based on cn9130 and
+9131. These are extremely verbose by listing cn9132, cn9131, cn9130,
+ap807-quad, ap807 for the SoC alone.
+CN9130 SoC combines an application processor (ap807) and a
+communication processor (cp115) in a single package.
 
-On Thu, Apr 04, 2024 at 02:09:32PM +0200, Marek Szyprowski wrote:
-> On 17.03.2024 11:40, Uwe Kleine-K=F6nig wrote:
-> > This ensures that a pwm_chip that has no corresponding driver isn't used
-> > and that a driver doesn't go away while a callback is still running.
-> >
-> > In the presence of device links this isn't necessary yet (so this is no
-> > fix) but for pwm character device support this is needed.
-> >
-> > To not serialize all pwm_apply_state() calls, this introduces a per chip
-> > lock. An additional complication is that for atomic chips a mutex cannot
-> > be used (as pwm_apply_atomic() must not sleem) and a spinlock cannot be
-> > held while calling an operation for a sleeping chip. So depending on the
-> > chip being atomic or not a spinlock or a mutex is used.
-> >
-> > Signed-off-by: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
->=20
->=20
-> This patch landed some time ago in linux-next as commit a740f7879609=20
-> ("pwm: Add more locking"). Recently I've finally found that $subject=20
-> patch is responsible for the following lock dep splat observed for some=
-=20
-> time during day-to-day linux-next testing:
->=20
-> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D
-> WARNING: possible circular locking dependency detected
-> 6.9.0-rc1+ #14790 Tainted: G=A0=A0=A0=A0=A0=A0=A0=A0 C
-> ------------------------------------------------------
-> kworker/u24:4/59 is trying to acquire lock:
-> ffff00003c65b510 (&chip->nonatomic_lock){+.+.}-{3:3}, at:=20
-> pwm_apply_might_sleep+0x90/0xd8
->=20
-> but task is already holding lock:
-> ffff80008310fa40 (prepare_lock){+.+.}-{3:3}, at: clk_prepare_lock+0x4c/0x=
-a8
->=20
-> which lock already depends on the new lock.
->=20
->=20
-> the existing dependency chain (in reverse order) is:
->=20
-> -> #1 (prepare_lock){+.+.}-{3:3}:
->  =A0=A0=A0=A0=A0=A0 lock_acquire+0x68/0x84
->  =A0=A0=A0=A0=A0=A0 __mutex_lock+0xa0/0x840
->  =A0=A0=A0=A0=A0=A0 mutex_lock_nested+0x24/0x30
->  =A0=A0=A0=A0=A0=A0 clk_prepare_lock+0x4c/0xa8
->  =A0=A0=A0=A0=A0=A0 clk_round_rate+0x38/0xd0
->  =A0=A0=A0=A0=A0=A0 meson_pwm_apply+0x128/0x220 [pwm_meson]
->  =A0=A0=A0=A0=A0=A0 __pwm_apply+0x64/0x1f8
->  =A0=A0=A0=A0=A0=A0 pwm_apply_might_sleep+0x58/0xd8
->  =A0=A0=A0=A0=A0=A0 pwm_regulator_set_voltage+0xbc/0x12c
->  =A0=A0=A0=A0=A0=A0 _regulator_do_set_voltage+0x110/0x688
->  =A0=A0=A0=A0=A0=A0 regulator_set_voltage_rdev+0x64/0x25c
->  =A0=A0=A0=A0=A0=A0 regulator_do_balance_voltage+0x20c/0x47c
->  =A0=A0=A0=A0=A0=A0 regulator_balance_voltage+0x50/0x9c
->  =A0=A0=A0=A0=A0=A0 regulator_set_voltage_unlocked+0xa4/0x128
->  =A0=A0=A0=A0=A0=A0 regulator_set_voltage+0x50/0xec
->  =A0=A0=A0=A0=A0=A0 _opp_config_regulator_single+0x4c/0x130
->  =A0=A0=A0=A0=A0=A0 _set_opp+0xfc/0x544
->  =A0=A0=A0=A0=A0=A0 dev_pm_opp_set_rate+0x190/0x284
->  =A0=A0=A0=A0=A0=A0 set_target+0x34/0x40
->  =A0=A0=A0=A0=A0=A0 __cpufreq_driver_target+0x170/0x290
->  =A0=A0=A0=A0=A0=A0 cpufreq_online+0x814/0xa3c
->  =A0=A0=A0=A0=A0=A0 cpufreq_add_dev+0x80/0x98
->  =A0=A0=A0=A0=A0=A0 subsys_interface_register+0xfc/0x118
->  =A0=A0=A0=A0=A0=A0 cpufreq_register_driver+0x150/0x234
->  =A0=A0=A0=A0=A0=A0 dt_cpufreq_probe+0x150/0x480
->  =A0=A0=A0=A0=A0=A0 platform_probe+0x68/0xd8
->  =A0=A0=A0=A0=A0=A0 really_probe+0xbc/0x2a0
->  =A0=A0=A0=A0=A0=A0 __driver_probe_device+0x78/0x12c
->  =A0=A0=A0=A0=A0=A0 driver_probe_device+0xdc/0x164
->  =A0=A0=A0=A0=A0=A0 __device_attach_driver+0xb8/0x138
->  =A0=A0=A0=A0=A0=A0 bus_for_each_drv+0x84/0xe0
->  =A0=A0=A0=A0=A0=A0 __device_attach+0xa8/0x1b0
->  =A0=A0=A0=A0=A0=A0 device_initial_probe+0x14/0x20
->  =A0=A0=A0=A0=A0=A0 bus_probe_device+0xb0/0xb4
->  =A0=A0=A0=A0=A0=A0 deferred_probe_work_func+0x8c/0xc8
->  =A0=A0=A0=A0=A0=A0 process_one_work+0x220/0x634
->  =A0=A0=A0=A0=A0=A0 worker_thread+0x268/0x3a8
->  =A0=A0=A0=A0=A0=A0 kthread+0x124/0x128
->  =A0=A0=A0=A0=A0=A0 ret_from_fork+0x10/0x20
+The communication processor (short CP) is also available separately as a
+southbridge. It only functions in combination with the CN9130 SoC.
+Complete systems adding one or two southbridges are by convention called
+CN9131 and CN9132 respectively.
+Despite different naming all systems are built around the same SoC.
+Therefore marvell,cn9131 and marvell,cn9132 can be omitted. The number
+of CPs is part of a board's BoM and can be reflected in the board
+compatible string instead.
 
-This is the meson pwm driver calling clk_set_rate() in the .apply()
-callback.
+Existing bindings also describe cn9130 as a specialisation of
+ap807-quad. Usually board-level compatibles stop at the SoC without
+going into silicon versions or individual dies.
+There is no programming model at this layer, and in particular not for
+parts of an SoC. Therefore the ap compatibles can also be omitted.
 
-> -> #0 (&chip->nonatomic_lock){+.+.}-{3:3}:
->  =A0=A0=A0=A0=A0=A0 __lock_acquire+0x1318/0x20c4
->  =A0=A0=A0=A0=A0=A0 lock_acquire.part.0+0xc8/0x20c
->  =A0=A0=A0=A0=A0=A0 lock_acquire+0x68/0x84
->  =A0=A0=A0=A0=A0=A0 __mutex_lock+0xa0/0x840
->  =A0=A0=A0=A0=A0=A0 mutex_lock_nested+0x24/0x30
->  =A0=A0=A0=A0=A0=A0 pwm_apply_might_sleep+0x90/0xd8
->  =A0=A0=A0=A0=A0=A0 clk_pwm_prepare+0x54/0x84
->  =A0=A0=A0=A0=A0=A0 clk_core_prepare+0xc8/0x2f8
->  =A0=A0=A0=A0=A0=A0 clk_prepare+0x28/0x44
->  =A0=A0=A0=A0=A0=A0 mmc_pwrseq_simple_pre_power_on+0x4c/0x8c
->  =A0=A0=A0=A0=A0=A0 mmc_pwrseq_pre_power_on+0x24/0x34
->  =A0=A0=A0=A0=A0=A0 mmc_power_up.part.0+0x20/0x16c
->  =A0=A0=A0=A0=A0=A0 mmc_start_host+0xa0/0xac
->  =A0=A0=A0=A0=A0=A0 mmc_add_host+0x84/0xf0
->  =A0=A0=A0=A0=A0=A0 meson_mmc_probe+0x318/0x3e8
->  =A0=A0=A0=A0=A0=A0 platform_probe+0x68/0xd8
->  =A0=A0=A0=A0=A0=A0 really_probe+0xbc/0x2a0
->  =A0=A0=A0=A0=A0=A0 __driver_probe_device+0x78/0x12c
->  =A0=A0=A0=A0=A0=A0 driver_probe_device+0xdc/0x164
->  =A0=A0=A0=A0=A0=A0 __device_attach_driver+0xb8/0x138
->  =A0=A0=A0=A0=A0=A0 bus_for_each_drv+0x84/0xe0
->  =A0=A0=A0=A0=A0=A0 __device_attach_async_helper+0xb0/0xd4
->  =A0=A0=A0=A0=A0=A0 async_run_entry_fn+0x34/0xe0
->  =A0=A0=A0=A0=A0=A0 process_one_work+0x220/0x634
->  =A0=A0=A0=A0=A0=A0 worker_thread+0x268/0x3a8
->  =A0=A0=A0=A0=A0=A0 kthread+0x124/0x128
->  =A0=A0=A0=A0=A0=A0 ret_from_fork+0x10/0x20
+Signed-off-by: Josua Mayer <josua@solid-run.com>
+---
+ .../devicetree/bindings/arm/marvell/armada-7k-8k.yaml          | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-This is the clk_pwm driver that calls pwm_enable() in its .prepare()
-callback. Looking at
-arch/arm64/boot/dts/amlogic/meson-g12b-s922x-khadas-vim3.dts the
-pwm-clock uses &pwm_ef which is a meson pwm.
+diff --git a/Documentation/devicetree/bindings/arm/marvell/armada-7k-8k.yaml b/Documentation/devicetree/bindings/arm/marvell/armada-7k-8k.yaml
+index 16d2e132d3d1..74d935ea279c 100644
+--- a/Documentation/devicetree/bindings/arm/marvell/armada-7k-8k.yaml
++++ b/Documentation/devicetree/bindings/arm/marvell/armada-7k-8k.yaml
+@@ -82,4 +82,14 @@ properties:
+           - const: marvell,armada-ap807-quad
+           - const: marvell,armada-ap807
+ 
++      - description:
++          SolidRun CN9130 SoM based single-board computers
++        items:
++          - enum:
++              - solidrun,cn9130-clearfog-base
++              - solidrun,cn9130-clearfog-pro
++              - solidrun,cn9131-solidwan
++          - const: solidrun,cn9130-sr-som
++          - const: marvell,cn9130
++
+ additionalProperties: true
 
-This alone only works because clk_prepare_lock() is reentrant for a
-single thread (see commit 533ddeb1e86f ("clk: allow reentrant calls into
-the clk framework")). (Is this really safe? What does the prepare_lock
-actually protect?)
+-- 
+2.35.3
 
-And because of this the lockdep splat is a false positive (as is every
-ABBA splat involving the clk prepare_lock).
-
-I think to properly address this, the global prepare_lock should be
-replaced by a per-clk lock. This would at least make
-
-	https://lore.kernel.org/all/20231017135436.1241650-1-alexander.stein@ew.tq=
--group.com/
-
-(which I think is racy and needs a call to clk_rate_exclusive_get())
-unnecessary.
-
-Having said that, I don't know how to prevent that lockdep splat with
-neither dropping the blamed commit (which is needed for race free
-operation in the pwm framework) nor spending hours to rework the locking
-of the clk framework.
-
-Best regards
-Uwe
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---q4ybeyaskyjbjlzd
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmYOyFgACgkQj4D7WH0S
-/k4RYwgArVz3a8+C0BZ9M8Hrv++No3FtYEZYgX2Sc0PU4bjrgat48gn6bEaFoDWj
-zVXascQSvWsGhUsnfp41Pk8CtAUDuicbWnYlhyP2fJBRhOjus/XNUH/C9CklMkbD
-Dk797Phjk4Xr8/wkZf83UxyTcUYW1/WwAqDdPVaRZQAU1kp6pG4NFOQWkX7SJI75
-BEy6nUA7+kRuWc1nKNdPi0e4ME4xo3kfpocLohSIzOTqlOMt6lbpZ3i6K976RXs0
-o+gKLuS4q2buDoBo4jTDZhjIEUMcK0uxnk+DOzcyKfAZNROsV/rsmCiBSdMrbZiQ
-OJj/DcYqIVdoy3Z1l1FfjI4UonbimA==
-=aqSg
------END PGP SIGNATURE-----
-
---q4ybeyaskyjbjlzd--
