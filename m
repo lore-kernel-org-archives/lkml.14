@@ -1,45 +1,62 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7037C1862F;
-	Thu,  4 Apr 2024 16:37:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 715FE12BEBC
+	for <linux-kernel@vger.kernel.org>; Thu,  4 Apr 2024 16:37:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712248631; cv=none; b=t1RVzoG0KmYYWb2mJZD+GSIpf93Yi18eLwtYTSiBNBrIyg2NYd1XAqv1HvWyTmLuh6KlXtfJfPsCFtRUP0cYmxrHdomkr+KE0/DSfLGxn/o3nnYuePfNofWwoL8bSbP9poUQ3KLUkqWmb4uIcPO42gLeU9+1H4/4HfVJosBzANI=
+	t=1712248637; cv=none; b=bFUdipZss6Il+HFBbyDQ77C5Z9F1NW8496bwe1V+t/LEleYg5wSb4RjLmLzSDhk7teChUhmS23QN1T2kEK+2X9GXX6mspcIglSJM+45ennSAc3lKjfE6cBqFXrupSnDAkegJBwoW/t8tjoiy4XCVLwTBHcZMMWrwVKXcs2E68TQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712248631; c=relaxed/simple;
-	bh=S3DGuEYy5rg3RARDW98L/c2gSalXBmDUZgtrgI3deSo=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=iyzdYgGwEOpe5cvFW/HPYKMZ1d1AIZAEw+axIp9HoEEk1PjP2e5Wby980Ccc16cdgcoxTMSAah3LeozeKZdvzewYdelAmnl8OP4pZyxjVjiq5ew14aeObS6kOY7mAIcX97cx8+8nlmuJd/RxHYBUAuJDQPFzw2YZ5sy8VNazlkM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HBL6v53J; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1712248637; c=relaxed/simple;
+	bh=SXHj9/wEFGN76Sp3lJeZ2bNl1eT6+d7ErWDVUzf0EaY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=AlcZ4xQMgG6LA7zzXxTt7VyLM7PRaLV6vqH9zOjdvBjFb0QCtjN11T1CQtsRFTpFfJpHUvCC5T2+57ElIoNtHnTm/tCNHSrLFAHIhHR801Swq6eWepyvIYlIegl8O/1fs4Q25tflGystf2gPaSke/7EBcIUi4NXkpqO3btaQXRY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=IArdbN3s; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HBL6v53J"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B3502C433F1;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IArdbN3s"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1712248633;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=2i4EI1wSyDo81mrMl0H/7Wwslnn2XIreCf4ZZweSpD4=;
+	b=IArdbN3sIrWQTd1/4YYuXuZhv3AcmSOYtmJTb2p9OS3JfZe0E88V2vOi/yeQLEI28BCka/
+	jv6/iRaVMOSM7m1exv13FBRQjxGh3YXVGCc0zDZXUvos1cXuUJ7cxIeQ0BpDRLH93nPKpu
+	n2odXzl7SCHIRUOOOWZypAgJb2KFXqY=
+Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
+ by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-679-AtxE8RxIP922gaPsZUJwcA-1; Thu,
+ 04 Apr 2024 12:37:10 -0400
+X-MC-Unique: AtxE8RxIP922gaPsZUJwcA-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.rdu2.redhat.com [10.11.54.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 1FD7B1C0CCAD;
 	Thu,  4 Apr 2024 16:37:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712248630;
-	bh=S3DGuEYy5rg3RARDW98L/c2gSalXBmDUZgtrgI3deSo=;
-	h=From:To:Cc:Subject:Date:From;
-	b=HBL6v53J/YooQATusMc6w3NQV5riqeQkRaExLnqVTohg8ZW0Xfzf5YgruEA13tNrv
-	 wUO2iYUAjsfOdUVfwhT+8nLz7lY/3pYpmWO/cW1Bcnydfdo75seyOmDkeFp5ldpM9I
-	 OnKXYyrqoxjrZ92expqAHuLP5glkeLSA9zwVY9UoUggSOyuVHxEHcIj+MUxknBNpOi
-	 URxIAmCy9WrnUtlgsLCTc1gZMctLX8mOgmE49Z7j4q0eShWxCYJYMy2+Kp71/IpnJY
-	 FOK534QpFKMFTp4664E0xjlNPs5oNgYUwprwwosoQRMRDGxJkZXde5Q5iCWPSYK3ux
-	 LeCL077qNZG5g==
-From: Arnd Bergmann <arnd@kernel.org>
-To: netdev@vger.kernel.org
-Cc: Arnd Bergmann <arnd@arndb.de>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Palmer Dabbelt <palmer@rivosinc.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Charlie Jenkins <charlie@rivosinc.com>,
-	Noah Goldstein <goldstein.w.n@gmail.com>,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2] lib: checksum: hide unused expected_csum_ipv6_magic[]
-Date: Thu,  4 Apr 2024 18:36:45 +0200
-Message-Id: <20240404163702.241706-1-arnd@kernel.org>
-X-Mailer: git-send-email 2.39.2
+Received: from t14s.fritz.box (unknown [10.39.192.101])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 7B2343C21;
+	Thu,  4 Apr 2024 16:37:03 +0000 (UTC)
+From: David Hildenbrand <david@redhat.com>
+To: linux-kernel@vger.kernel.org
+Cc: linux-mm@kvack.org,
+	linux-s390@vger.kernel.org,
+	kvm@vger.kernel.org,
+	David Hildenbrand <david@redhat.com>,
+	Matthew Wilcox <willy@infradead.org>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Vasily Gorbik <gor@linux.ibm.com>,
+	Alexander Gordeev <agordeev@linux.ibm.com>,
+	Christian Borntraeger <borntraeger@linux.ibm.com>,
+	Sven Schnelle <svens@linux.ibm.com>,
+	Janosch Frank <frankja@linux.ibm.com>,
+	Claudio Imbrenda <imbrenda@linux.ibm.com>,
+	Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
+	Thomas Huth <thuth@redhat.com>
+Subject: [PATCH v1 0/5] s390: page_mapcount(), page_has_private() and PG_arch_1
+Date: Thu,  4 Apr 2024 18:36:37 +0200
+Message-ID: <20240404163642.1125529-1-david@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -47,57 +64,74 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.1
 
-From: Arnd Bergmann <arnd@arndb.de>
+On my journey to remove page_mapcount(), I got hooked up on other folio
+cleanups that Willy most certainly will enjoy.
 
-When CONFIG_NET is disabled, an extra warning shows up for this
-unused variable:
+This series removes the s390x usage of:
+* page_mapcount() [patches WIP]
+* page_has_private() [have patches to remove it]
 
-lib/checksum_kunit.c:218:18: error: 'expected_csum_ipv6_magic' defined but not used [-Werror=unused-const-variable=]
+... and makes PG_arch_1 only be set on folio->flags (i.e., never on tail
+pages of large folios).
 
-Replace the #ifdef with an IS_ENABLED() check that makes the compiler's
-dead-code-elimination take care of the link failure.
+Further, one "easy" fix upfront.
 
-Fixes: f24a70106dc1 ("lib: checksum: Fix build with CONFIG_NET=n")
-Suggested-by: Christophe Leroy <christophe.leroy@csgroup.eu>
-Acked-by: Palmer Dabbelt <palmer@rivosinc.com>
-Acked-by: Jakub Kicinski <kuba@kernel.org>
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
-resending v2 to netdev
+... unfortunately there is one other issue I spotted that I am not
+tackling in this series, because I am not 100% sure what we want to
+do: the usage of page_ref_freeze()/folio_ref_freeze() in
+make_folio_secure() is unsafe. :(
 
- lib/checksum_kunit.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+In make_folio_secure(), we're holding the folio lock, the mmap lock and
+the PT lock. So we are protected against concurrent fork(), zap, GUP,
+swapin, migration ... The page_ref_freeze()/ folio_ref_freeze() should
+also block concurrent GUP-fast very reliably.
 
-diff --git a/lib/checksum_kunit.c b/lib/checksum_kunit.c
-index bf70850035c7..404dba36bae3 100644
---- a/lib/checksum_kunit.c
-+++ b/lib/checksum_kunit.c
-@@ -594,13 +594,15 @@ static void test_ip_fast_csum(struct kunit *test)
- 
- static void test_csum_ipv6_magic(struct kunit *test)
- {
--#if defined(CONFIG_NET)
- 	const struct in6_addr *saddr;
- 	const struct in6_addr *daddr;
- 	unsigned int len;
- 	unsigned char proto;
- 	__wsum csum;
- 
-+	if (!IS_ENABLED(CONFIG_NET))
-+		return;
-+
- 	const int daddr_offset = sizeof(struct in6_addr);
- 	const int len_offset = sizeof(struct in6_addr) + sizeof(struct in6_addr);
- 	const int proto_offset = sizeof(struct in6_addr) + sizeof(struct in6_addr) +
-@@ -618,7 +620,6 @@ static void test_csum_ipv6_magic(struct kunit *test)
- 		CHECK_EQ(to_sum16(expected_csum_ipv6_magic[i]),
- 			 csum_ipv6_magic(saddr, daddr, len, proto, csum));
- 	}
--#endif /* !CONFIG_NET */
- }
- 
- static struct kunit_case __refdata checksum_test_cases[] = {
+But if the folio is mapped into multiple page tables, we could see
+concurrent zapping of the folio, a pagecache folios could get mapped/
+accessed concurrent, we could see fork() sharing the page in another
+process, GUP ... trying to adjust the folio refcount while we froze it.
+Very bad.
+
+For anonymous folios, it would likely be sufficient to check that
+folio_mapcount() == 1. For pagecache folios, that's insufficient, likely
+we would have to lock the pagecache. To handle folios mapped into
+multiple page tables, we would have to do what
+split_huge_page_to_list_to_order() does (temporary migration entries).
+
+So it's a bit more involved, and I'll have to leave that to s390x folks to
+figure out. There are othe reasonable cleanups I think, but I'll have to
+focus on other stuff.
+
+Compile tested, but not runtime tested, I'll appreiate some testing help
+from people with UV access and experience.
+
+Cc: Matthew Wilcox (Oracle) <willy@infradead.org>
+Cc: Heiko Carstens <hca@linux.ibm.com>
+Cc: Vasily Gorbik <gor@linux.ibm.com>
+Cc: Alexander Gordeev <agordeev@linux.ibm.com>
+Cc: Christian Borntraeger <borntraeger@linux.ibm.com>
+Cc: Sven Schnelle <svens@linux.ibm.com>
+Cc: Janosch Frank <frankja@linux.ibm.com>
+Cc: Claudio Imbrenda <imbrenda@linux.ibm.com>
+Cc: Gerald Schaefer <gerald.schaefer@linux.ibm.com>
+Cc: Matthew Wilcox (Oracle) <willy@infradead.org>
+Cc: Thomas Huth <thuth@redhat.com>
+
+David Hildenbrand (5):
+  s390/uv: don't call wait_on_page_writeback() without a reference
+  s390/uv: convert gmap_make_secure() to work on folios
+  s390/uv: convert PG_arch_1 users to only work on small folios
+  s390/uv: update PG_arch_1 comment
+  s390/hugetlb: convert PG_arch_1 code to work on folio->flags
+
+ arch/s390/include/asm/page.h |   2 +
+ arch/s390/kernel/uv.c        | 112 ++++++++++++++++++++++-------------
+ arch/s390/mm/gmap.c          |   4 +-
+ arch/s390/mm/hugetlbpage.c   |   8 +--
+ 4 files changed, 79 insertions(+), 47 deletions(-)
+
 -- 
-2.39.2
+2.44.0
 
