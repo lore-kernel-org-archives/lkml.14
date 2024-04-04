@@ -1,101 +1,69 @@
-Received: from gandalf.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5517912DD9B;
-	Thu,  4 Apr 2024 21:22:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F30612DD9B;
+	Thu,  4 Apr 2024 21:23:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712265777; cv=none; b=PazpdNd187PBBYNMsb+6L+UcoTS+n3nEHrzPntWMuZn3GeCDTCZE7JbclvVdqQRnXt/MQ+G9iQjTKn7GLuMMbVKjD63MhO6tnr5SakJC580Vvg+pvOl90t+hvM9SqgaquLlS6JX2XJcMjk13HVZSprlh9v4+XnxqeFI0yT5szuo=
+	t=1712265796; cv=none; b=ai37iDIgeydlWLKrDQ4Soup8sNPDKfN6kvBijfRHA4lIq/ikI1dYnwBDtB3I9UiB/D5GEPRObNY07jkV9Iumj65cYCHjm1qnAlph5brzHBkHFIWxOXmiw7FoG5T1HbaXnTtVYrcp8j5yBfKkN0pcFnnqGg9gDQSZ+GuM5yjPjVI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712265777; c=relaxed/simple;
-	bh=rIO7RiRPDq+k3n0/SLUar4PSqPI1e24ngMzDAoiYJpk=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=aYust3r8/VcTzygvBF6dfgUL9ak1YXpWq74gK8AHD3bBTD6eT9RTIv5DhnjDEmoyDjeznM2QMre0IpW47JJr6/vhb75uoy4edorjIbma2zSP3BGem5OLYqlc4ZRccfDn5O6nIkZmKTYwQvtfdNVKuLwydQM3BDwEfwMKosxMRwc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=C16XOPFc; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+	s=arc-20240116; t=1712265796; c=relaxed/simple;
+	bh=3TVcBr0w/hux0AWphLCDJyUovSkE9ClzpHoAsEMWFPk=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=JstqXy1JO5WibDG8FdKw/M93q4u/3oIseLKibXUdcbndtf+uNJ7QlTidHq/Z8f70vuFH+9rK9GtSTjGnE20727PiKFTYYj0HkPqPPb8bVnf/nJq13uE0Tr3AM6x+UjAl9BMjM/qGzj6KNl8oLuS6+7jio0NnUYG4iXpjbi99B4w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VP7wkD0C; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="C16XOPFc"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=201702; t=1712265772;
-	bh=38P+zYGFMcPTcXJryge5OAB4c4qWAdYh4T/ILFqnM0A=;
-	h=Date:From:To:Cc:Subject:From;
-	b=C16XOPFcQ61kGQeInt1DSpq76WsCl5gu112yo+Wkx1aMuZeh/VJOPU+lTLHs2Pu4S
-	 Vl73Aqf/pWot8sLwtUs8TfePMRqEDFXJVkQNvyIT5lM2MEUKwxadB/8BbWKE8md5oU
-	 spxKE1U7UUtb3T//h8i4SJ/nmvcwj4Epwc1sWIQeCurJshBAsiCvwbDVr1o31uAG92
-	 /n/xZIJqeS2jL3PbY94P0AZxf1Z7eIt5tHfUpiX//JDTn55Ra8StTXFWtL5Csev3VY
-	 aiIAssmLrPbX6Cban3044mJLzc9PIF1aC/FAvkvN7eHSSYrF0B84fT5KPUhzBgPPt1
-	 qATXUpgG73nTA==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4V9ZMv3Ycwz4wc5;
-	Fri,  5 Apr 2024 08:22:50 +1100 (AEDT)
-Date: Fri, 5 Apr 2024 08:22:47 +1100
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: David Miller <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>,
- Paolo Abeni <pabeni@redhat.com>, Andrew Morton <akpm@linux-foundation.org>
-Cc: Networking <netdev@vger.kernel.org>, Alexey Makhalov
- <alexey.makhalov@broadcom.com>, Krzysztof Kozlowski
- <krzysztof.kozlowski@linaro.org>, Linux Kernel Mailing List
- <linux-kernel@vger.kernel.org>, Linux Next Mailing List
- <linux-next@vger.kernel.org>
-Subject: linux-next: manual merge of the net tree with the mm-hotfixes tree
-Message-ID: <20240405082247.177638cf@canb.auug.org.au>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VP7wkD0C"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C45F1C433F1;
+	Thu,  4 Apr 2024 21:23:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1712265795;
+	bh=3TVcBr0w/hux0AWphLCDJyUovSkE9ClzpHoAsEMWFPk=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=VP7wkD0CIk1Xq+wJ9acs/zTbnufV6xQ/JUIRd4/GaQGZ/DRSMzg39LpHvTSX4lfKH
+	 iTHoGScXnOhQ388/uEgFOsDuNG6UL7lQaRZ2f7J/nkuGJX2RBT65mamPcy2WwQO53F
+	 Y5zNfnC/koZeMMfOSyVBtc+7MYH5jQslQCIZgRN+jiVr2p0gUoVLVmF4hfjDz2H455
+	 IiNe8FQ6Q8odocAeoFGKOc/32d9bvf3jdrDnhXgXZ1IL63rKG2mTsl+cLJsIhdGc/A
+	 b+jcGTOxDZPOa+wtiY/JbDsZDeLLx7LKkt7lFV6I8M93pGhGDu+EpiBb85j7iMLmHr
+	 1ofwUUfhVwkVg==
+From: Bjorn Andersson <andersson@kernel.org>
+To: Adam Skladowski <a39.skl@gmail.com>
+Cc: phone-devel@vger.kernel.org,
+	~postmarketos/upstreaming@lists.sr.ht,
+	Andy Gross <agross@kernel.org>,
+	Konrad Dybcio <konrad.dybcio@linaro.org>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>,
+	Georgi Djakov <djakov@kernel.org>,
+	linux-arm-msm@vger.kernel.org,
+	linux-clk@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: (subset) [PATCH 1/1] clk: qcom: smd-rpm: Restore msm8976 num_clk
+Date: Thu,  4 Apr 2024 16:22:46 -0500
+Message-ID: <171226578691.615813.15073915135961701115.b4-ty@kernel.org>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240401171641.8979-1-a39.skl@gmail.com>
+References: <20240401171641.8979-1-a39.skl@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/Wu_=e+S0FwX5G._gSarN6D=";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
---Sig_/Wu_=e+S0FwX5G._gSarN6D=
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
 
-Hi all,
+On Mon, 01 Apr 2024 19:16:39 +0200, Adam Skladowski wrote:
+> During rework somehow msm8976 num_clk got removed, restore it.
+> 
+> 
 
-Today's linux-next merge of the net tree got a conflict in:
+Applied, thanks!
 
-  MAINTAINERS
+[1/1] clk: qcom: smd-rpm: Restore msm8976 num_clk
+      commit: 0d4ce2458cd7d1d66a5ee2f3c036592fb663d5bc
 
-between commit:
-
-  ba74dd4f0460 ("MAINTAINERS: change vmware.com addresses to broadcom.com")
-
-from the mm-hotfixes tree and commit:
-
-  fa84513997e9 ("ptp: MAINTAINERS: drop Jeff Sipek")
-
-from the net tree.
-
-I fixed it up (I just used the former version) and can carry the fix as
-necessary. This is now fixed as far as linux-next is concerned, but any
-non trivial conflicts should be mentioned to your upstream maintainer
-when your tree is submitted for merging.  You may also want to consider
-cooperating with the maintainer of the conflicting tree to minimise any
-particularly complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/Wu_=e+S0FwX5G._gSarN6D=
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmYPGicACgkQAVBC80lX
-0GydGAf/dOx1xO2dm4EYRytGjFb52JemaTVgMeKqvTIoczDzUnbOgnph/KChF7jg
-ofXam6zRFb1CbtXfwkKWb+msnAbdVdjGLamf8Ikxo4HG9aLXdWcoxris1GfH+vja
-YlbpWvHNilmArzQ/Frs0D8tEinl/ohR4SUL7k2JnBgKSMErxlWF0zFQH496JYEvv
-3Ck+1hrHFi37YSb7DrEwaOAsqq0cGfoUpyHpo5zn6DxYm+Rhy46uHlJ1SBCaHUYg
-MujhxHFOPr+4DaPeyLVfqBXJYfEYqVPxjG4mFc51ghS68W8zeyeiB65uFBzDBuUQ
-EseShsUVldDGaKOXkiuYRA1DpRyMHA==
-=s6ZW
------END PGP SIGNATURE-----
-
---Sig_/Wu_=e+S0FwX5G._gSarN6D=--
+Best regards,
+-- 
+Bjorn Andersson <andersson@kernel.org>
