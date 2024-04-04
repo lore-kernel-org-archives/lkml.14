@@ -1,109 +1,88 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09CEE13C66F
-	for <linux-kernel@vger.kernel.org>; Thu,  4 Apr 2024 23:37:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16679130E57
+	for <linux-kernel@vger.kernel.org>; Thu,  4 Apr 2024 23:39:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712273870; cv=none; b=MVVts4Es4H/MdIYmgwq7A2yeIma5p5KaftQJhNkVl6AJ6CkQyRXZl4f0ZwPccjsJiF+8Ar8PbcJJQ+YmaXtW3BK57h6yTUXyUVkS2mIKSr+65piL29XVgAMWBoDbETjqkfFoRv4qxG0RQFbvNQl/PXYFoXhYOzqSIPqbg7XqhKE=
+	t=1712273997; cv=none; b=jqNOypWjQsErVWWiAV9ptnLEZi7rVSrVGNHS369Df88TIc0cxTGrHNdHAVPur9RRJVza/xZoLLg7Tq9EKODcpioXTBnkC+6WTsIdAUmzmbXwP+CJiHCxkXl3c/uRkhmgP3vy9v5kbgMi5Qb3cuhPFADji4oooZ70SLoz3I1oDK4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712273870; c=relaxed/simple;
-	bh=LpKJp577/TjDusKjKLzpsZI2h6/FFOW3ygGeMD9cx6E=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=h+YIrshggG0RfXvoWy6OjPHdH+jwuqakB7y3LiJiKxC7ZV6nKpm6xlDrFNh7+OHscw7kW7C9BfMBt0VKpBLDER97r1DtOxNVjaIyNubs4COgu30Pq2erGnp7N4lu2hkmZfxnYcSBz147nJQMtw46BQqjQKT/OsoCm5lnObl+bAI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=CAz4JB/2; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1712273997; c=relaxed/simple;
+	bh=6HKfD/8wmlZgXYXrjxJELPl80JlkIWJruUR23ZSPDdI=;
+	h=Date:From:To:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=WMy1k2BrNLqL3G1oG1MvZtmO01xP4n+8/N2HhrUhqh2bzt5Lsu08Wj49ngeWBZdEvxk7d0K7WfX3S3E2m6aG8iC8EogUpEVUCFa1yTJtWxzthL2AqSPcQu3BIzqYLWIKPAoM6hjtK1Uu9HWRuQeyqzEK4kbwsDA+bLURoc5Wf1Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=RgvtSSc4; arc=none smtp.client-ip=198.175.65.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CAz4JB/2"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1712273868;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=UH0SdUkY0Y7wcvIlBfPcVRXDNk9BBU7t+uEZjzSWyug=;
-	b=CAz4JB/2h9/OwDG3y4uqcvVsWHlgZuRkz7qlFCYqobchm4R65eANxbP/1vZA2K1436NB2V
-	//OVk421+ozTGUdW6ryn99YPCeNbUqPHD8IwFtRi/D3rB6I8rjnchXs7cs3bjBbwhgxPkm
-	B6X+8MHJ+IDd4sz4p9GOrPIM7Ix/RB0=
-Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
- by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-638-EqSQlcGjNlGdio4Ofq0TTQ-1; Thu,
- 04 Apr 2024 19:37:42 -0400
-X-MC-Unique: EqSQlcGjNlGdio4Ofq0TTQ-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.rdu2.redhat.com [10.11.54.5])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 610D33C0219B;
-	Thu,  4 Apr 2024 23:37:42 +0000 (UTC)
-Received: from chopper.lyude.net (unknown [10.22.8.53])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id BB34D10E4B;
-	Thu,  4 Apr 2024 23:37:41 +0000 (UTC)
-From: Lyude Paul <lyude@redhat.com>
-To: nouveau@lists.freedesktop.org,
-	dri-devel@lists.freedesktop.org
-Cc: Karol Herbst <kherbst@redhat.com>,
-	Danilo Krummrich <dakr@redhat.com>,
-	David Airlie <airlied@gmail.com>,
-	Daniel Vetter <daniel@ffwll.ch>,
-	linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH 2/2] drm/nouveau/dp: Don't probe eDP ports twice harder
-Date: Thu,  4 Apr 2024 19:35:54 -0400
-Message-ID: <20240404233736.7946-3-lyude@redhat.com>
-In-Reply-To: <20240404233736.7946-1-lyude@redhat.com>
-References: <20240404233736.7946-1-lyude@redhat.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="RgvtSSc4"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1712273996; x=1743809996;
+  h=date:from:to:subject:message-id:references:mime-version:
+   in-reply-to;
+  bh=6HKfD/8wmlZgXYXrjxJELPl80JlkIWJruUR23ZSPDdI=;
+  b=RgvtSSc4AH20TWads1rZRBBpiPjug+VDbCgVPyTPjmporsNKClg+QPVx
+   HkV/LHy7e/M9l+AJ5OP1i4oBD9hJPjxIZLMfRnO2yR9dB73DEoI46LhPE
+   41N5KOVcjtcvZdrg4mwavBlUdTCfg1CKmnSh772goKb6ntrgx398ewHGP
+   j60p3WRoHjLchcEYIX3kLIgVIjJHP+VLQ/22bZmTlXAnAzfGuokfYqfzD
+   STbvbYNmbHhwK7ph5WgAHdkiA3rBaKb0fzB5qraVyu1HQ7K5DQxE/xvJf
+   1FSk8jZPk6DhhoqNec2L5CGR8NeLEDRGMRw0A/2WernDXszViO/DxBpBd
+   g==;
+X-CSE-ConnectionGUID: YSwh2PTMQS6L/nL7I3ukeg==
+X-CSE-MsgGUID: 3jxbTN64R3+gp2y0nb81AA==
+X-IronPort-AV: E=McAfee;i="6600,9927,11034"; a="7695095"
+X-IronPort-AV: E=Sophos;i="6.07,180,1708416000"; 
+   d="scan'208";a="7695095"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Apr 2024 16:39:55 -0700
+X-CSE-ConnectionGUID: am/1XBW/SAuPaS37RMPlYg==
+X-CSE-MsgGUID: 0IaJQNE3SrSq6TfqMkDnkg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,180,1708416000"; 
+   d="scan'208";a="23616329"
+Received: from agluck-desk3.sc.intel.com (HELO agluck-desk3) ([172.25.222.105])
+  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Apr 2024 16:39:55 -0700
+Date: Thu, 4 Apr 2024 16:39:53 -0700
+From: Tony Luck <tony.luck@intel.com>
+To: Borislav Petkov <bp@alien8.de>, Yazen Ghannam <yazen.ghannam@amd.com>,
+	Miaohe Lin <linmiaohe@huawei.com>,
+	Naoya Horiguchi <naoya.horiguchi@nec.com>, linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: Machine check recovery broken in v6.9-rc1
+Message-ID: <Zg86SZYDppxffEvv@agluck-desk3>
+References: <Zg8kLSl2yAlA3o5D@agluck-desk3>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.5
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Zg8kLSl2yAlA3o5D@agluck-desk3>
 
-I didn't pay close enough attention the last time I tried to fix this
-problem - while we currently do correctly take care to make sure we don't
-probe a connected eDP port more then once, we don't do the same thing for
-eDP ports we found to be disconnected.
+On Thu, Apr 04, 2024 at 03:05:33PM -0700, Tony Luck wrote:
+> v6.8 works. v6.9-rc1 fails with:
+> 
+> kernel BUG at include/linux/swapops.h:119
+> 
+> 117 static inline unsigned long swp_offset_pfn(swp_entry_t entry)
+> 118 {
+> 119         VM_BUG_ON(!is_pfn_swap_entry(entry));
+> 120         return swp_offset(entry) & SWP_PFN_MASK;
+> 121 }
+> 
+> 
+> I've messed up the bisection three times now and ended up
+> pointing at some innocent looking commit. So I wonder if
+> anyone else has noticed and tried debugging.
 
-So, fix this and make sure we only ever probe eDP ports once and then leave
-them at that connector state forever (since without HPD, it's not going to
-change on its own anyway). This should get rid of the last few GSP errors
-getting spit out during runtime suspend and resume on some machines, as we
-tried to reprobe eDP ports in response to ACPI hotplug probe events.
+I think I know why I messed up the bisection. I thought
+the failure happens every time. But it seems that it only
+happens most of the time. I must have accidentally marked
+a build as "good" because I got "lucky" and my test passed.
 
-Signed-off-by: Lyude Paul <lyude@redhat.com>
----
- drivers/gpu/drm/nouveau/nouveau_dp.c | 14 +++++++++-----
- 1 file changed, 9 insertions(+), 5 deletions(-)
+Back to the bisect grindstone :-(
 
-diff --git a/drivers/gpu/drm/nouveau/nouveau_dp.c b/drivers/gpu/drm/nouveau/nouveau_dp.c
-index 8b1be7dd64ebe..8b27d372e86da 100644
---- a/drivers/gpu/drm/nouveau/nouveau_dp.c
-+++ b/drivers/gpu/drm/nouveau/nouveau_dp.c
-@@ -225,12 +225,16 @@ nouveau_dp_detect(struct nouveau_connector *nv_connector,
- 	u8 *dpcd = nv_encoder->dp.dpcd;
- 	int ret = NOUVEAU_DP_NONE, hpd;
- 
--	/* If we've already read the DPCD on an eDP device, we don't need to
--	 * reread it as it won't change
-+	/* eDP ports don't support hotplugging - so there's no point in probing eDP ports unless we
-+	 * haven't probed them once before.
- 	 */
--	if (connector->connector_type == DRM_MODE_CONNECTOR_eDP &&
--	    dpcd[DP_DPCD_REV] != 0)
--		return NOUVEAU_DP_SST;
-+	if (connector->connector_type == DRM_MODE_CONNECTOR_eDP) {
-+		if (connector->status == connector_status_connected) {
-+			return NOUVEAU_DP_SST;
-+		} else if (connector->status == connector_status_disconnected) {
-+			return NOUVEAU_DP_NONE;
-+		}
-+	}
- 
- 	// Ensure that the aux bus is enabled for probing
- 	drm_dp_dpcd_set_powered(&nv_connector->aux, true);
--- 
-2.44.0
-
+-Tony
