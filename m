@@ -1,104 +1,210 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ua1-f43.google.com (mail-ua1-f43.google.com [209.85.222.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B013F1BDC8;
-	Thu,  4 Apr 2024 16:36:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96E911C697
+	for <linux-kernel@vger.kernel.org>; Thu,  4 Apr 2024 16:36:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712248596; cv=none; b=IUbJXtBVHnjkA66uhZ9KXHZkhLujdD7QLHMI2L5KWwlBq3+3+NUl89mf6hZYQojcb1PHyO5PCmhYuWSMOgh3CwZ/Gd2SgKAZe/9aI7B+0DLuzouSDt+cAERzXHewD5NEjD8fVsD5jKbFWfAq264cgoV/ITlgZy8a/l40vAal3t8=
+	t=1712248620; cv=none; b=uN3IL6TAQ4Y8TzkRdv0SuDCKhW+c95IVRMioK/xyBOy/2b/hx3idJGiMHdDJ9WFMvwozrcGUhP5acKYplKrH943mu+InzhRRRBbZfvXaLBRkCHYOeDStOJyu04xniZcD5RIhYy1oXwfaAn7MSAob9bWc5bUlcHKqyrfKexegvh0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712248596; c=relaxed/simple;
-	bh=Dh3cRkMTiRudMMG7cHzZOisAQ/Yalp2K8TTsTMFLfvk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Eng5K+0Xug4xyjvbw7SU9vEa8k45Mfmt5jh7xkClYu2RZLJ4/nlQjn6vq90/GEwO/8EZoBgCyd8PJy41860hKGIhMwaAVHe05XAjV71j9yyrT1NnKLQxDeE5Lnc7RIT0ZMMMOthijEVXucGGGfPn0Alm6jtNeNtyCOb6AaX4uqM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=JrMIpjKD; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	s=arc-20240116; t=1712248620; c=relaxed/simple;
+	bh=RxA9yYFCilY5dxmQyD6NB24l+ixiHdRnI4CJyWiUqBo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=EmngztT9L7Ra1xUHWdaKNenRbc+/V59SJJxiPtbSezPjWxgQQwbC0uzbiOYdnCl6iJ+uE4AHNquz+t3e1WQ6RBtI3k0bv+tjT8i3bHfGa6O6MfN4LVk5eHsR5WVbwSKnqwTvGBZBDmGLkBrCLSu+A8AcEHlsX007D/8vNytFucI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=znyZghLJ; arc=none smtp.client-ip=209.85.222.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="JrMIpjKD"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 1AC7240E019C;
-	Thu,  4 Apr 2024 16:36:30 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id TfPF_F9SbhmA; Thu,  4 Apr 2024 16:36:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1712248584; bh=KueuMthQyFuh1EUtl71hsDsrfCIfV7rRzPJCe1tTIII=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=JrMIpjKDyHyQBdBzuGGFh3O5qgBWadAjSU3MwaI32SFrS6h38tCMESdnSTs4ITKNx
-	 G/gMkKvf8044Js6qF60TuL7Qih51pDlfaCmwEF6cB9xwbALE8YOf09chbEZKwm6wji
-	 b2jgMXmcgfyKdRdspRCgRvkULSXLAk22sbz/3oZqR5ssaARGTC1ijLuD05TW1cKXFo
-	 2GWp03UPSGgd1CUTK2rp3+0FOhjLRaJMr8/lKPCvJfmo3jqh59nGh36lGn1LG3SMtS
-	 uD2j5KMtVSxR/9NvUXr0mOZMz07Q+vejlm7ryyFWvFkmN7kWXdYU9z8wCLw0y8HhxO
-	 XfWBU4CHITg/5g6zUX3yPHNnJhJMVSiSgpeRUuZHxpakyfpU8Zk+jG3miLSSCTAW6h
-	 29IaelmZLag8Cwx7o9CJ+olPrM9sGTce8qjxOjtFyBICVskq0gB1piRjM43qy/1LNL
-	 vziI7vEHtQ6RZmkkH0/xJQGR7YKawSmo9umMRU4UUyLb+7pLlHEdk8H0Rx5oRUIVMl
-	 D7RSUfKnev0C7f66BACl/BmlEV/ntwWfQP62JzZRgT+LctNov/5VPdH8LRDn0iJZsi
-	 u9lvxC8r65cbLZibTU8ec9ClJkoUGYijIvw7uyoSgw46matbm5qwlRkGyDiaNwraPn
-	 EnS4mGep9DhzSRtkn4epliIQ=
-Received: from zn.tnic (p5de8ecf7.dip0.t-ipconnect.de [93.232.236.247])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id B281240E0192;
-	Thu,  4 Apr 2024 16:36:17 +0000 (UTC)
-Date: Thu, 4 Apr 2024 18:36:12 +0200
-From: Borislav Petkov <bp@alien8.de>
-To: Li Zhijian <lizhijian@fujitsu.com>
-Cc: linux-kernel@vger.kernel.org, Tony Luck <tony.luck@intel.com>,
-	James Morse <james.morse@arm.com>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Robert Richter <rric@kernel.org>, linux-edac@vger.kernel.org
-Subject: Re: [PATCH] EDAC/mc_sysfs: Convert sprintf/snprintf to sysfs_emit
-Message-ID: <20240404163612.GFZg7W_EN-JrPwnrSx@fat_crate.local>
-References: <20240314084628.1322006-1-lizhijian@fujitsu.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="znyZghLJ"
+Received: by mail-ua1-f43.google.com with SMTP id a1e0cc1a2514c-7e3e522d803so896010241.1
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Apr 2024 09:36:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1712248617; x=1712853417; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=UQYUGCMQImaV9Z+lvySiwhsUlOBH+IYL8YIHyQv3Kjo=;
+        b=znyZghLJUZ4ryPU/aGl5SrX20OWJLUExmdl36u9TmRv1U7S71E/VfHBiUd5A51T97K
+         Y3C/ueatWp+7SxOdT6JqWqEC00WEiBfiU4apHRUHdlSxF8kkkYQ373YZ08BVozDohHqi
+         q3fMoNV0WNltdWAKJteuipJWLLFmBLqaG4XwClifhUGyAaJQiF3ynOs6TZIMSCM7Da03
+         ZkBVmstE05HRCgXC2TOSG3/v7iXMsqx7OjOYKHlkp4mJOa6FbosNpjTM4N0RqPqCpt5b
+         DBK29ZvVY/GSl3UupOKpGVH9TlAYgJ9JCtdB0G6v2DJqpKdSd1hWeAUTdpxao/sU9Lfj
+         xWXw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712248617; x=1712853417;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=UQYUGCMQImaV9Z+lvySiwhsUlOBH+IYL8YIHyQv3Kjo=;
+        b=j3Rtr1ciFDnIkcngtZ2AxRMB7d0Nwf1e+1wi5kDALbceMENUVNrcCQpRXTj1E9/P2d
+         nzjoP3G0FpElve5icDuIhrdTAlQa3RiWJ/0Qm477t+jFP2zB9KXvdXPqxwNf+qHE5UTh
+         9TZfNFAnZ3qJCJUHxrsgJ2ktUBkgJ7LVPLj5AVta4zK64tl55SJnC8JbLgMNP8xvq+eA
+         Iz+2AvEj/9NHj/URgAIebuvuNcDEizQrq4bEsS8/27lZy0QHJlDLDSbERHi+lYWSGv/V
+         I0ufzddEhBfX+e/ESvmo8S9r3MLx9cWW4tdYUxl8z/hBDoV5iXQ7O96JSSOjeZkfeOaP
+         pgcA==
+X-Forwarded-Encrypted: i=1; AJvYcCXMCCf+kTxbzoK5aRdjZseYmQp+teO5hrqm2kAhYs8CfD+tZKAWHd3rWAIKqaDy3jnW+8/roEgZHTLe//T46+v5kCBzuAHCiCcqss8+
+X-Gm-Message-State: AOJu0YyCEYqtbfiBHpA+US58b3Q6nZsUjzfHaArW6ppYPiA9NXcJ1aKQ
+	AAvZR8GrJnkc6ObLxtUq6a9506YYOZdpwyoR/d8TTIEbJhq3rVfefuEe6Y+YsDNAMIdG4cBHN1g
+	YCWee9kqWbBo233I/70cl/Hs3W/HKjvJZCQ1Beg==
+X-Google-Smtp-Source: AGHT+IEB9OXnZlZWlV9PleCenI5Q0zAtZD2Kw/+SFx8BdfUpqKlCCn5Racdz3Kw/HfsDbCK6I8MQMETqmUG9rxjKzqM=
+X-Received: by 2002:a1f:f44c:0:b0:4c7:7760:8f14 with SMTP id
+ s73-20020a1ff44c000000b004c777608f14mr16412vkh.7.1712248617418; Thu, 04 Apr
+ 2024 09:36:57 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20240314084628.1322006-1-lizhijian@fujitsu.com>
+References: <20240403175126.839589571@linuxfoundation.org>
+In-Reply-To: <20240403175126.839589571@linuxfoundation.org>
+From: Naresh Kamboju <naresh.kamboju@linaro.org>
+Date: Thu, 4 Apr 2024 22:06:45 +0530
+Message-ID: <CA+G9fYs9XEgjM2M7G9kTGs34Khn=CWuBNhTZVMgnM1R9=Hc2Zg@mail.gmail.com>
+Subject: Re: [PATCH 6.6 00/11] 6.6.25-rc1 review
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: stable@vger.kernel.org, patches@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org, 
+	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org, 
+	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de, 
+	jonathanh@nvidia.com, f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, 
+	srw@sladewatkins.net, rwarsow@gmx.de, conor@kernel.org, allen.lkml@gmail.com, 
+	broonie@kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Mar 14, 2024 at 04:46:28PM +0800, Li Zhijian wrote:
-> Per filesystems/sysfs.rst, show() should only use sysfs_emit()
-> or sysfs_emit_at() when formatting the value to be returned to user space.
-> 
-> coccinelle complains that there are still a couple of functions that use
-> snprintf(). Convert them to sysfs_emit().
-> 
-> sprintf() will be converted as weel if they have.
-> 
-> Generally, this patch is generated by
-> make coccicheck M=<path/to/file> MODE=patch \
-> COCCI=scripts/coccinelle/api/device_attr_show.cocci
-> 
-> No functional change intended
-> 
-> CC: Borislav Petkov <bp@alien8.de>
-> CC: Tony Luck <tony.luck@intel.com>
-> CC: James Morse <james.morse@arm.com>
-> CC: Mauro Carvalho Chehab <mchehab@kernel.org>
-> CC: Robert Richter <rric@kernel.org>
-> CC: linux-edac@vger.kernel.org
-> Signed-off-by: Li Zhijian <lizhijian@fujitsu.com>
-> ---
-> This is a part of the work "Fix coccicheck device_attr_show warnings"[1]
-> Split them per subsystem so that the maintainer can review it easily
-> [1] https://lore.kernel.org/lkml/20240116041129.3937800-1-lizhijian@fujitsu.com/
-> ---
->  drivers/edac/edac_mc_sysfs.c | 48 ++++++++++++++++++------------------
->  1 file changed, 24 insertions(+), 24 deletions(-)
+On Wed, 3 Apr 2024 at 23:26, Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> This is the start of the stable review cycle for the 6.6.25 release.
+> There are 11 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+>
+> Responses should be made by Fri, 05 Apr 2024 17:51:13 +0000.
+> Anything received after that time might be too late.
+>
+> The whole patch series can be found in one patch at:
+>         https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-=
+6.6.25-rc1.gz
+> or in the git tree and branch at:
+>         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
+-rc.git linux-6.6.y
+> and the diffstat can be found below.
+>
+> thanks,
+>
+> greg k-h
 
-Applied, thanks.
 
--- 
-Regards/Gruss,
-    Boris.
+Results from Linaro=E2=80=99s test farm.
+No regressions on arm64, arm, x86_64, and i386.
 
-https://people.kernel.org/tglx/notes-about-netiquette
+Tested-by: Linux Kernel Functional Testing <lkft@linaro.org>
+
+## Build
+* kernel: 6.6.25-rc1
+* git: https://gitlab.com/Linaro/lkft/mirrors/stable/linux-stable-rc
+* git branch: linux-6.6.y
+* git commit: e253a5c1b7de55d37ff656141e7001bdfd035d8c
+* git describe: v6.6.24-12-ge253a5c1b7de
+* test details:
+https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-6.6.y/build/v6.6.2=
+4-12-ge253a5c1b7de
+
+## Test Regressions (compared to v6.6.21)
+
+## Metric Regressions (compared to v6.6.21)
+
+## Test Fixes (compared to v6.6.21)
+
+## Metric Fixes (compared to v6.6.21)
+
+## Test result summary
+total: 121780, pass: 106264, fail: 997, skip: 14420, xfail: 99
+
+## Build Summary
+* arc: 5 total, 5 passed, 0 failed
+* arm: 131 total, 131 passed, 0 failed
+* arm64: 40 total, 39 passed, 1 failed
+* i386: 31 total, 31 passed, 0 failed
+* mips: 24 total, 24 passed, 0 failed
+* parisc: 3 total, 3 passed, 0 failed
+* powerpc: 34 total, 34 passed, 0 failed
+* riscv: 16 total, 16 passed, 0 failed
+* s390: 12 total, 12 passed, 0 failed
+* sh: 10 total, 10 passed, 0 failed
+* sparc: 6 total, 6 passed, 0 failed
+* x86_64: 35 total, 35 passed, 0 failed
+
+## Test suites summary
+* boot
+* kselftest-arm64
+* kselftest-breakpoints
+* kselftest-capabilities
+* kselftest-clone3
+* kselftest-core
+* kselftest-cpu-hotplug
+* kselftest-exec
+* kselftest-fpu
+* kselftest-ftrace
+* kselftest-futex
+* kselftest-gpio
+* kselftest-intel_pstate
+* kselftest-ipc
+* kselftest-kcmp
+* kselftest-membarrier
+* kselftest-memfd
+* kselftest-mincore
+* kselftest-mqueue
+* kselftest-net
+* kselftest-net-mptcp
+* kselftest-openat2
+* kselftest-ptrace
+* kselftest-rseq
+* kselftest-rtc
+* kselftest-seccomp
+* kselftest-sigaltstack
+* kselftest-size
+* kselftest-tc-testing
+* kselftest-timers
+* kselftest-tmpfs
+* kselftest-tpm2
+* kselftest-user_events
+* kselftest-vDSO
+* kselftest-x86
+* kunit
+* libgpiod
+* libhugetlbfs
+* log-parser-boot
+* log-parser-test
+* ltp-cap_bounds
+* ltp-commands
+* ltp-containers
+* ltp-controllers
+* ltp-crypto
+* ltp-cve
+* ltp-fcntl-locktests
+* ltp-filecaps
+* ltp-fs
+* ltp-fs_bind
+* ltp-fs_perms_simple
+* ltp-hugetlb
+* ltp-io
+* ltp-ipc
+* ltp-math
+* ltp-mm
+* ltp-nptl
+* ltp-pty
+* ltp-sched
+* ltp-securebits
+* ltp-smoke
+* ltp-smoketest
+* ltp-syscalls
+* ltp-tracing
+* perf
+* rcutorture
+
+--
+Linaro LKFT
+https://lkft.linaro.org
