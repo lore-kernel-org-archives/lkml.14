@@ -1,67 +1,120 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2694513D882;
-	Thu,  4 Apr 2024 21:23:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37A4B13AD38
+	for <linux-kernel@vger.kernel.org>; Thu,  4 Apr 2024 21:25:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712265825; cv=none; b=c6we7RLY+R/fPzPrsIyNgLGEMZEqIvrQqB9bZHqhlbuEOXooCYvy1n4CMImC5ibClJjDP8mnIN5bID9uUXq9I6z8x9T4RJ9KSFbpw20fH+MswvzzKdmGBliLAi1o8SknAcpMalpKL8glBGaoWS8DzODV09vwlOwbFs2i9fPyXkM=
+	t=1712265928; cv=none; b=e80ZDvopkYaCboRx/KULOOQLyLkV9qlahev4T+kkU7f6LuGIk/vR4KOeXxuOpZUvBPNC4Cndb5JbK1Lq/vv4f21Bi+T2QNKGX/jp1wKzFLjmlTMuRrpptLyJoaSa9nBk0cNs8a5gYK6BFMBxdtZWWpR6w4+UtkBREok/VP1JlIU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712265825; c=relaxed/simple;
-	bh=8TXsyTFoPvfNdDHM7/oaby8QXltUmQb9FnsTZNZ5+R8=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=uc6Zv8YWPDBT/ZGP5BZFzSD0UJ81hsRYDYRCYmITr3Eml35IJ+pIypFOb10US7ADGHflRJSomYOMcBT5JnJL2P7zPNX67LFBKjiaiWZdKw8T8pF2egbyRpD2+IEWKYop9YTEKUuF1kATU6IvcS8f1em6kC8yRH0hjEv95tb1ITI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EP5KafwO; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1712265928; c=relaxed/simple;
+	bh=3NKUzTGkIDEpQ5wUoVyjTBqpGFGUoC7t9j9PGK1BOcQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=eC97/Vgm984weUmgdoNlUU+L1I81uAlXhWPE0BrnBEB4Vw0C0V1BgLT1hZoPCwuAZfYLnT2IgQO6Je7mF204hh5ldvJYI+bipwxq4Zr+kB/Tfq8Xx+s/j0hX0IIYpsK7JTnWeilIpknnIcIvZ1i8nogdKIw5gwHYZsT13/6etcY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=YVZ9jJv4; arc=none smtp.client-ip=209.85.214.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EP5KafwO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 77AB7C433F1;
-	Thu,  4 Apr 2024 21:23:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712265825;
-	bh=8TXsyTFoPvfNdDHM7/oaby8QXltUmQb9FnsTZNZ5+R8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=EP5KafwOU/N/A+rg1ngV1ckm+b2koqxh3D7KKUZy26npBgxFu/v3pjlyzBYksfoeH
-	 oY397pYdvPcxCsGlJpwxteL6yblb/+QjtvnvsNrEyv+OvJb6J+OvHLA9JsejCj6H+v
-	 uM+bAsl6/8SJAE7esCb/gLX3Pslmwh4L8owDsCgy3j3DfI8xQ2w6YhYLIIlz3+uQA8
-	 BIUXQLeJgoZgfH793HZVy3+baayXmf9XA3xL/Pc7oCVyoSB+JM8HafGQCunQbEYrf6
-	 9qo9gjHEDBjzkV5gi+8hcXKItiTSnYi3NjsuywYqE84agnBmXDiQlKDQVGvQKcz5H1
-	 fjXf4TBUxq/xg==
-From: Bjorn Andersson <andersson@kernel.org>
-To: Konrad Dybcio <konrad.dybcio@linaro.org>,
-	Stephen Boyd <swboyd@chromium.org>
-Cc: linux-kernel@vger.kernel.org,
-	patches@lists.linux.dev,
-	linux-arm-msm@vger.kernel.org,
-	cros-qcom-dts-watchers@chromium.org
-Subject: Re: [PATCH] arm64: dts: qcom: sc7180: Disable pmic pinctrl node on Trogdor
-Date: Thu,  4 Apr 2024 16:23:10 -0500
-Message-ID: <171226578671.615813.16450668357677583127.b4-ty@kernel.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240229012828.438020-1-swboyd@chromium.org>
-References: <20240229012828.438020-1-swboyd@chromium.org>
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="YVZ9jJv4"
+Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-1e0b889901bso13292385ad.1
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Apr 2024 14:25:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1712265926; x=1712870726; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=EpiEkHKVQpziLc/Q1KdhUKlYdlAbkM0446cfuS4Rfmw=;
+        b=YVZ9jJv493y9smv/0jF5HIShwzyvA4qSjrnq97hYJ3HAYCz9eWw+iJehW9rnNcNqo2
+         pfXJN8dbgnfQRVqee1wCqoIPuxN2XINa4wpzazZuVmgxyCUnd52m7oQCdwPrGwaJXncE
+         ALaMg6WJ5nv1dhrjenPwviG7GoqJwbjfIc30Q=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712265926; x=1712870726;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=EpiEkHKVQpziLc/Q1KdhUKlYdlAbkM0446cfuS4Rfmw=;
+        b=WL89F6gdgEeWgVzyLAZ06Dr9k3CrC6V5FtlqpxQUI+ydVzwZKHuFCEyt5AKO+QgxCb
+         2mgijFasUM47RxhyWiAy4gG4o3PVf9EQoeJyxKJriWPc1DWAkjU1WykNipRbZxFXK0yK
+         IE/7psH/6Ihlyvb2A5ywyCnBZJWEajYfZdRGfjLzcF6ShbMInNIT/9KrDTtfdIcwmmZc
+         rU2qCF7q6ujTmi/V1iIiX0zW7YxVkKfxt4XLO3xpGED7t85J1LxDCLYlEXTZzBSdXLNg
+         X/14hnrGS290XIO2fVYAyhKGUeQ0AQLfWWkI0vYBHkMmtMOy/kmSsGOyXlaE34HtlwtM
+         58zA==
+X-Forwarded-Encrypted: i=1; AJvYcCV9o+JCRMwR6kuOEVtd0qhIGtyBJlChMefmT9w+qrT5gpYOJ2BTfLf7RijMIkuuwpnc3IitW79vsu7V0pxThETpeg6mJnRA5ejmpfJz
+X-Gm-Message-State: AOJu0YwklcFbi2oQ4bv2hU9eEELdoWonR2FOaeIvX5hib/ZARHbIlho7
+	UNlK7BEBHaNSw/B9WAfgIUa8Jy8MnDFFIN2lAFvlHqloeIJO6x4WRLywrxr/QQ==
+X-Google-Smtp-Source: AGHT+IE94WGQc2eT/aw5lISX7Th0dXyOdwG6Wu0UODl3BM+QKoXt+9KC7Bf3vkB0vJ7kUinlMgttZA==
+X-Received: by 2002:a17:902:9698:b0:1e2:a2ca:6366 with SMTP id n24-20020a170902969800b001e2a2ca6366mr3033583plp.21.1712265926601;
+        Thu, 04 Apr 2024 14:25:26 -0700 (PDT)
+Received: from www.outflux.net ([198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id l15-20020a170902f68f00b001e20be11688sm73790plg.229.2024.04.04.14.25.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 04 Apr 2024 14:25:26 -0700 (PDT)
+Date: Thu, 4 Apr 2024 14:25:25 -0700
+From: Kees Cook <keescook@chromium.org>
+To: Justin Stitt <justinstitt@google.com>
+Cc: linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v2] hfsplus: refactor copy_name to not use strncpy
+Message-ID: <202404041425.53F8283@keescook>
+References: <20240401-strncpy-fs-hfsplus-xattr-c-v2-1-6e089999355e@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240401-strncpy-fs-hfsplus-xattr-c-v2-1-6e089999355e@google.com>
 
-
-On Wed, 28 Feb 2024 17:28:26 -0800, Stephen Boyd wrote:
-> We don't use this pmic pinctrl node on any Trogdor devices. The
-> AP_SUSPEND pin is here, but this pinctrl device isn't a supplier to
-> anything in the devicetrees that include this file. Disable this device
-> node in the DTS so that we don't waste time or memory on this device.
+On Mon, Apr 01, 2024 at 06:10:48PM +0000, Justin Stitt wrote:
+> strncpy() is deprecated with NUL-terminated destination strings [1].
 > 
+> The copy_name() method does a lot of manual buffer manipulation to
+> eventually arrive with its desired string. If we don't know the
+> namespace this attr has or belongs to we want to prepend "osx." to our
+> final string. Following this, we're copying xattr_name and doing a
+> bizarre manual NUL-byte assignment with a memset where n=1.
 > 
+> Really, we can use some more obvious string APIs to acomplish this,
+> improving readability and security. Following the same control flow as
+> before: if we don't know the namespace let's use scnprintf() to form our
+> prefix + xattr_name pairing (while NUL-terminating too!). Otherwise, use
+> strscpy() to return the number of bytes copied into our buffer.
+> Additionally, for non-empty strings, include the NUL-byte in the length
+> -- matching the behavior of the previous implementation.
+> 
+> Note that strscpy() _can_ return -E2BIG but this is already handled by
+> all callsites:
+> 
+> In both hfsplus_listxattr_finder_info() and hfsplus_listxattr(), ret is
+> already type ssize_t so we can change the return type of copy_name() to
+> match (understanding that scnprintf()'s return type is different yet
+> fully representable by ssize_t). Furthermore, listxattr() in fs/xattr.c
+> is well-equipped to handle a potential -E2BIG return result from
+> vfs_listxattr():
+> |	ssize_t error;
+> ...
+> |	error = vfs_listxattr(d, klist, size);
+> |	if (error > 0) {
+> |		if (size && copy_to_user(list, klist, error))
+> |			error = -EFAULT;
+> |	} else if (error == -ERANGE && size >= XATTR_LIST_MAX) {
+> |		/* The file system tried to returned a list bigger
+> |			than XATTR_LIST_MAX bytes. Not possible. */
+> |		error = -E2BIG;
+> |	}
+> ... the error can potentially already be -E2BIG, skipping this else-if
+> and ending up at the same state as other errors.
+> 
+> Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
+> Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html
+> Link: https://github.com/KSPP/linux/issues/90
+> Cc: linux-hardening@vger.kernel.org
+> Signed-off-by: Justin Stitt <justinstitt@google.com>
 
-Applied, thanks!
+Thanks, this looks right to me now!
 
-[1/1] arm64: dts: qcom: sc7180: Disable pmic pinctrl node on Trogdor
-      commit: cb69e758d5918cc03e449e159162e263e8bc7ec1
+Reviewed-by: Kees Cook <keescook@chromium.org>
 
-Best regards,
 -- 
-Bjorn Andersson <andersson@kernel.org>
+Kees Cook
