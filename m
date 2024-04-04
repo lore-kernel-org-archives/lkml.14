@@ -1,88 +1,68 @@
-Received: from sakura.ysato.name (ik1-413-38519.vs.sakura.ne.jp [153.127.30.23])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8F05E20B35;
-	Thu,  4 Apr 2024 05:10:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=153.127.30.23
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 551871BC3E;
+	Thu,  4 Apr 2024 05:12:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712207431; cv=none; b=oi8wZJJWCQuLJ1AjBjcBiWlBa0qt4XAhkLTTIHAfFanFxWque2/iXhSD3dKER7LAhiZMsMBd7ImfTZyhzNAZciHdRbFZGtuJwPkKO7XrH0hWESAPUqFMB2VEuujcA7N8DcQg1EcbXSpVXqIF1uyRLk0bOFMH8Yh+8tQrEp4SG9g=
+	t=1712207574; cv=none; b=aO5SPkRhQw4O/Zm6xrI7UcKBF+U88OXFEjmcL7prnr97JzLU53A1g4Lqz7cBEWxkbGVbI2Du1TmgDvIv0lcppCSn5mVRNKm+KfisHzubrCgPcfgNup706KRnz5PtV/dc6a6cClxBCacLBa2phWFQijFs0euCojRlH8ZMKOh/r7U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712207431; c=relaxed/simple;
-	bh=3DF/2Dz6pH2U0aQ7KjEm7anPXTkdGjTa5S1TzcVBgGw=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=lT8n9NJOWHffiqq6MwfrNozjsCA3OpdHsSkhEYxNAHm2vKAJw5CaNH5dPNEnBXXnSGA01KyY8WJ4nq1KTrCEnyf06wAHmWxwUGLJzKT5qluRqKlluUn1AmqRPNL1EvnnSl0dp1HjxiQD6RwZyjAs/aVmskIrkP7dPSGYrQaZqnI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=users.sourceforge.jp; spf=fail smtp.mailfrom=users.sourceforge.jp; arc=none smtp.client-ip=153.127.30.23
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=users.sourceforge.jp
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=users.sourceforge.jp
-Received: from SIOS1075.ysato.name (al128006.dynamic.ppp.asahi-net.or.jp [111.234.128.6])
-	by sakura.ysato.name (Postfix) with ESMTPSA id 0A0E91C0109;
-	Thu,  4 Apr 2024 14:00:35 +0900 (JST)
-From: Yoshinori Sato <ysato@users.sourceforge.jp>
-To: linux-sh@vger.kernel.org
-Cc: Yoshinori Sato <ysato@users.sourceforge.jp>,
-	Damien Le Moal <dlemoal@kernel.org>,
-	Niklas Cassel <cassel@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>,
-	David Airlie <airlied@gmail.com>,
-	Daniel Vetter <daniel@ffwll.ch>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Jiri Slaby <jirislaby@kernel.org>,
-	Magnus Damm <magnus.damm@gmail.com>,
-	Daniel Lezcano <daniel.lezcano@linaro.org>,
-	Rich Felker <dalias@libc.org>,
-	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
-	Lee Jones <lee@kernel.org>,
-	Helge Deller <deller@gmx.de>,
-	Heiko Stuebner <heiko.stuebner@cherry.de>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Sebastian Reichel <sre@kernel.org>,
-	Chris Morgan <macromorgan@hotmail.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Arnd Bergmann <arnd@arndb.de>,
-	David Rientjes <rientjes@google.com>,
-	Hyeonggon Yoo <42.hyeyoo@gmail.com>,
-	Vlastimil Babka <vbabka@suse.cz>,
-	Baoquan He <bhe@redhat.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Guenter Roeck <linux@roeck-us.net>,
-	Kefeng Wang <wangkefeng.wang@huawei.com>,
-	Stephen Rothwell <sfr@canb.auug.org.au>,
-	Javier Martinez Canillas <javierm@redhat.com>,
-	Guo Ren <guoren@kernel.org>,
-	Azeem Shaikh <azeemshaikh38@gmail.com>,
-	Max Filippov <jcmvbkbc@gmail.com>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Jacky Huang <ychuang3@nuvoton.com>,
-	Herve Codina <herve.codina@bootlin.com>,
-	Manikanta Guntupalli <manikanta.guntupalli@amd.com>,
-	Anup Patel <apatel@ventanamicro.com>,
-	Biju Das <biju.das.jz@bp.renesas.com>,
-	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
-	Sam Ravnborg <sam@ravnborg.org>,
-	Sergey Shtylyov <s.shtylyov@omp.ru>,
-	Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
-	linux-ide@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-renesas-soc@vger.kernel.org,
-	linux-clk@vger.kernel.org,
-	dri-devel@lists.freedesktop.org,
-	linux-pci@vger.kernel.org,
-	linux-serial@vger.kernel.org,
-	linux-fbdev@vger.kernel.org
-Subject: [PATCH v7 00/37] Device Tree support for SH7751 based board
-Date: Thu,  4 Apr 2024 13:59:25 +0900
-Message-Id: <cover.1712205900.git.ysato@users.sourceforge.jp>
-X-Mailer: git-send-email 2.39.2
+	s=arc-20240116; t=1712207574; c=relaxed/simple;
+	bh=62iw2197csIbHE0fzZqsZkT/FiLgE4tnEN9y9gg6QqM=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Pmzd5YLtVW2urqakGAUUp99HeW3FFXOaXWbYWxUM+nq3gvoCshvL7blD+Z0XlyiBe6FJp+WK5vCvOYmMVZLXHpMHU+9nS2sWbk4xD//wsaWeRN3Rob3ciWhM8+UYHI95Vo6QXqgwBKWBj/QdULX01XJrnr0KIhSVpMsIH4Dqz5c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=P0kM9eAy; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="P0kM9eAy"
+Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 4343kEIY009300;
+	Thu, 4 Apr 2024 05:12:45 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	from:to:cc:subject:date:message-id:mime-version
+	:content-transfer-encoding:content-type; s=qcppdkim1; bh=ImMkOu1
+	cd92c7aPDpR6hjaIqH7O7UIXEgipAc8YY7hQ=; b=P0kM9eAym9b9WXDKMpbuUK4
+	Ierupq4tgTr/0WBmEqMfbIOtBhGWi0Q+DdoyBeWJvWesmXRb9EFopXm58oDg7CG+
+	QDqA2yYHocSXnm4q2I5hekJUmI2SVQmb50UcanqMyk9LIwBO4UVklUHcky3Ifihq
+	HnOpVQtG9LEuu2U6Aq+W/XJRUKQPqS/V82xoSqICgVV2/X3gdGe7x62T22d5Y+M1
+	RO5w3PMV1b0ta7rP8mgf1PQdj2sOpOC9+xeM02s07NsnhvERLlmenBD7npHwKBPo
+	xTYTBY6/5pVQ9/AIZcvykIRTjLxIDkopFNCpPpPGT1h49oVa1ERyshWYgbGX7LQ=
+	=
+Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3x9ep3rkyg-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 04 Apr 2024 05:12:44 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA05.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 4345ChjK028121
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 4 Apr 2024 05:12:43 GMT
+Received: from hu-kriskura-hyd.qualcomm.com (10.80.80.8) by
+ nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.4; Wed, 3 Apr 2024 22:12:38 -0700
+From: Krishna Kurapati <quic_kriskura@quicinc.com>
+To: Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Rob Herring
+	<robh@kernel.org>, Bjorn Andersson <andersson@kernel.org>,
+        Wesley Cheng
+	<quic_wcheng@quicinc.com>,
+        Konrad Dybcio <konrad.dybcio@linaro.org>,
+        "Greg
+ Kroah-Hartman" <gregkh@linuxfoundation.org>,
+        Conor Dooley
+	<conor+dt@kernel.org>,
+        Thinh Nguyen <Thinh.Nguyen@synopsys.com>,
+        Felipe Balbi
+	<balbi@kernel.org>, Johan Hovold <johan@kernel.org>
+CC: <devicetree@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
+        <linux-usb@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <quic_ppratap@quicinc.com>, <quic_jackp@quicinc.com>,
+        Krishna Kurapati
+	<quic_kriskura@quicinc.com>
+Subject: [PATCH v19 0/9] Add multiport support for DWC3 controllers
+Date: Thu, 4 Apr 2024 10:42:20 +0530
+Message-ID: <20240404051229.3082902-1-quic_kriskura@quicinc.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -90,180 +70,223 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: NJHthWjJQqbBZXtrejwq9QahjYbRk53L
+X-Proofpoint-ORIG-GUID: NJHthWjJQqbBZXtrejwq9QahjYbRk53L
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-04-04_01,2024-04-03_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 phishscore=0
+ spamscore=0 bulkscore=0 priorityscore=1501 malwarescore=0 mlxlogscore=999
+ mlxscore=0 lowpriorityscore=0 adultscore=0 clxscore=1015 impostorscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2404010003
+ definitions=main-2404040033
 
-This is an updated version of something I wrote about 7 years ago.
-Minimum support for R2D-plus and LANDISK.
-I think R2D-1 will work if you add AX88796 to dts.
-And board-specific functions and SCI's SPI functions are not supported.
+Currently the DWC3 driver supports only single port controller which
+requires at most two PHYs ie HS and SS PHYs. There are SoCs that has
+DWC3 controller with multiple ports that can operate in host mode.
+Some of the port supports both SS+HS and other port supports only HS
+mode.
 
-You can get it working with qemu found here.
-https://gitlab.com/yoshinori.sato/qemu/-/tree/landisk
+This change primarily refactors the Phy logic in core driver to allow
+multiport support with Generic Phy's.
 
-v7 changes.
-- sh/kernel/setup.c: fix kernel parameter handling.
-- clk-sh7750.c: cleanup.
-- sh_tmu.c: cleanup.
-- irq-renesas-sh7751.c: IPR definition move to code.
-- irq-renesas-sh7751irl.c: update register definition.
-- pci-sh7751.c: Register initialization fix. 
-- sm501 and sm501fb: Re-design Device Tree properties.
+Changes have been tested on  QCOM SoC SA8295P which has 4 ports (2
+are HS+SS capable and 2 are HS only capable).
 
-v6 changes.
-- pci-sh7751: merge register define.
-- pci-sh7751: use 'dma-ranges' property.
-- pci-sh7751: rename general PCI properties.
-- sm501 and sm501fb: Re-design Device Tree properties.
-- sh/kernel/setup: cleanup command line setup.
-- irq-sh7751.c: some cleanup.
+Changes in v19:
+Replaced IS_ERR(ptr) with a NULL check.
+Modified name of function reading the port num in core file.
 
-v5 changes.
-- pci-sh7751: revert header changes. and some fix in previuous driver.
-- sh/kernel/iomap.c: Use SH io functions.
-- sm501 and sm501fb: re-write DT support.
+Changes in v18:
+Updated variable names in patch-7 for setup_port_irq and
+find_num_ports calls.
 
-v4 changes.
-- cpg-sh7750: use clk-divider and clk-gate.
-- pci-sh7751: unified header files to old PCI driver.
-- irq-renesas-sh7751: IPR registers direct mapping.
-- irq-renesas-sh7751irl: useful register bit mapping.
-- sm501 and sm501fb: re-write dt parser.
-- j2_minus: fix build error.
-- dt-binding schema: fix some errors.
-- *.dts: cleanup.
+Changes in v17:
+Modified DT handling patch by checking if dp_hs_phy_1 is present
+or not and then going for DT parsing.
 
-v3 changes.
-- Rewrite clk drivers.
-- Added sh_tmu to OF support.
-- Cleanup PCI stuff.
-- Update sm501 and sm501fb OF support.
-- Update devicetree and documents.
+Changes in v16:
+Removing ACPI has simplified the interrupt reading in wrapper. Also
+the logic to find number of ports is based on dp_hs_phy interrupt check
+in DT. Enabling and disabling interrupts is now done per port. Added
+info on power event irq in commit message.
 
-v2 changes.
-- Rebasing v6,6-rc1
-- re-write irqchip driver.
-- Add binding documents.
-- Cleanup review comment.
+Changes in v15:
+Added minItems property in qcom,dwc3 bindings as suggested by Rob.
+Retained all RB's/ACK's got in v14.
 
-Yoshinori Sato (37):
-  sh: passing FDT address to kernel startup.
-  sh: Kconfig unified OF supported targets.
-  sh: Enable OF support for build and configuration.
-  dt-bindings: interrupt-controller: Add header for Renesas SH3/4 INTC.
-  sh: GENERIC_IRQ_CHIP support for CONFIG_OF=y
-  sh: kernel/setup Update DT support.
-  sh: Fix COMMON_CLK support in CONFIG_OF=y.
-  clocksource: sh_tmu: CLOCKSOURCE support.
-  dt-binding: Add compatible SH7750 SoC
-  sh: Common PCI Framework driver support.
-  pci: pci-sh7751: Add SH7751 PCI driver
-  dt-bindings: pci: pci-sh7751: Add SH7751 PCI
-  dt-bindings: clock: sh7750-cpg: Add renesas,sh7750-cpg header.
-  clk: Compatible with narrow registers
-  clk: renesas: Add SH7750/7751 CPG Driver
-  irqchip: Add SH7751 INTC driver
-  dt-bindings: interrupt-controller: renesas,sh7751-intc: Add
-    json-schema
-  irqchip: SH7751 external interrupt encoder with enable gate.
-  dt-bindings: interrupt-controller: renesas,sh7751-irl-ext: Add
-    json-schema
-  serial: sh-sci: fix SH4 OF support.
-  dt-bindings: serial: renesas,scif: Add scif-sh7751.
-  dt-bindings: display: smi,sm501: SMI SM501 binding json-schema
-  dt-bindings: display: sm501 register definition helper
-  mfd: sm501: Convert platform_data to OF property
-  dt-binding: sh: cpus: Add SH CPUs json-schema
-  dt-bindings: vendor-prefixes: Add iodata
-  dt-bindings: ata: ata-generic: Add new targets
-  dt-bindings: soc: renesas: sh: Add SH7751 based target
-  sh: SH7751R SoC Internal peripheral definition dtsi.
-  sh: add RTS7751R2D Plus DTS
-  sh: Add IO DATA LANDISK dts
-  sh: Add IO DATA USL-5P dts
-  sh: j2_mimas_v2.dts update
-  sh: Add dtbs target support.
-  sh: RTS7751R2D Plus OF defconfig
-  sh: LANDISK OF defconfig
-  sh: j2_defconfig: update
+Changes in v14:
+Moved wrapper binding update to 5th patch in the series as it deals
+with only wakeup and not enumeration. The first part of the series
+deals with enumeration and the next part deals with wakeup.
+Updated commit text for wrapper driver patches.
+Added error checks in get_port_index and setup_irq call which were
+missing in v13.
+Added SOB and CDB tags appropriately for the patches.
+Rebased code on top of latest usb next.
+DT changes have been removed and will be sent as a separate series.
 
- .../devicetree/bindings/ata/ata-generic.yaml  |   2 +
- .../bindings/clock/renesas,sh7750-cpg.yaml    | 105 ++++
- .../bindings/display/smi,sm501.yaml           | 398 +++++++++++++++
- .../renesas,sh7751-intc.yaml                  |  53 ++
- .../renesas,sh7751-irl-ext.yaml               |  57 +++
- .../bindings/pci/renesas,sh7751-pci.yaml      |  89 ++++
- .../bindings/serial/renesas,scif.yaml         |   1 +
- .../devicetree/bindings/sh/cpus.yaml          |  63 +++
- .../devicetree/bindings/soc/renesas/sh.yaml   |  27 +
- .../bindings/timer/renesas,tmu.yaml           |   2 +
- .../devicetree/bindings/vendor-prefixes.yaml  |   2 +
- arch/sh/Kconfig                               |  33 +-
- arch/sh/boards/Kconfig                        |  23 +-
- arch/sh/boards/of-generic.c                   |  28 +-
- arch/sh/boot/compressed/head_32.S             |   5 +-
- arch/sh/boot/dts/Makefile                     |   5 +
- arch/sh/boot/dts/j2_mimas_v2.dts              |   2 +-
- arch/sh/boot/dts/landisk.dts                  |  77 +++
- arch/sh/boot/dts/rts7751r2dplus.dts           | 169 ++++++
- arch/sh/boot/dts/sh7751r.dtsi                 | 105 ++++
- arch/sh/boot/dts/usl-5p.dts                   |  85 ++++
- arch/sh/configs/j2_defconfig                  |  11 +-
- arch/sh/configs/landisk-of_defconfig          | 104 ++++
- arch/sh/configs/rts7751r2dplus-of_defconfig   |  75 +++
- arch/sh/drivers/Makefile                      |   2 +
- arch/sh/include/asm/io.h                      |   8 +
- arch/sh/include/asm/irq.h                     |  10 +-
- arch/sh/include/asm/pci.h                     |   4 +
- arch/sh/include/asm/setup.h                   |   1 +
- arch/sh/kernel/cpu/Makefile                   |   6 +-
- arch/sh/kernel/cpu/irq/imask.c                |  17 +
- arch/sh/kernel/cpu/sh4/Makefile               |   3 +
- arch/sh/kernel/iomap.c                        |  18 +
- arch/sh/kernel/setup.c                        |  36 +-
- arch/sh/kernel/time.c                         |  12 +
- drivers/clk/clk-divider.c                     |  56 +-
- drivers/clk/clk-gate.c                        |  62 ++-
- drivers/clk/renesas/Kconfig                   |  13 +-
- drivers/clk/renesas/Makefile                  |   1 +
- drivers/clk/renesas/clk-sh7750.c              | 480 ++++++++++++++++++
- drivers/clocksource/sh_tmu.c                  | 198 +++++---
- drivers/irqchip/Kconfig                       |  15 +
- drivers/irqchip/Makefile                      |   3 +
- drivers/irqchip/irq-renesas-sh7751.c          | 282 ++++++++++
- drivers/irqchip/irq-renesas-sh7751irl.c       | 221 ++++++++
- drivers/mfd/sm501.c                           | 315 ++++++++++++
- drivers/pci/controller/Kconfig                |   9 +
- drivers/pci/controller/Makefile               |   1 +
- drivers/pci/controller/pci-sh7751.c           | 342 +++++++++++++
- drivers/tty/serial/Kconfig                    |   2 +-
- drivers/tty/serial/sh-sci.c                   |   6 +-
- drivers/video/fbdev/sm501fb.c                 | 106 ++++
- include/dt-bindings/clock/sh7750-cpg.h        |  26 +
- include/dt-bindings/display/sm501.h           |  76 +++
- .../renesas,sh7751-intc.h                     |  19 +
- include/linux/clk-provider.h                  |  22 +-
- include/linux/sh_intc.h                       |   7 +-
- 57 files changed, 3713 insertions(+), 187 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/clock/renesas,sh7750-cpg.yaml
- create mode 100644 Documentation/devicetree/bindings/display/smi,sm501.yaml
- create mode 100644 Documentation/devicetree/bindings/interrupt-controller/renesas,sh7751-intc.yaml
- create mode 100644 Documentation/devicetree/bindings/interrupt-controller/renesas,sh7751-irl-ext.yaml
- create mode 100644 Documentation/devicetree/bindings/pci/renesas,sh7751-pci.yaml
- create mode 100644 Documentation/devicetree/bindings/sh/cpus.yaml
- create mode 100644 Documentation/devicetree/bindings/soc/renesas/sh.yaml
- create mode 100644 arch/sh/boot/dts/landisk.dts
- create mode 100644 arch/sh/boot/dts/rts7751r2dplus.dts
- create mode 100644 arch/sh/boot/dts/sh7751r.dtsi
- create mode 100644 arch/sh/boot/dts/usl-5p.dts
- create mode 100644 arch/sh/configs/landisk-of_defconfig
- create mode 100644 arch/sh/configs/rts7751r2dplus-of_defconfig
- create mode 100644 drivers/clk/renesas/clk-sh7750.c
- create mode 100644 drivers/irqchip/irq-renesas-sh7751.c
- create mode 100644 drivers/irqchip/irq-renesas-sh7751irl.c
- create mode 100644 drivers/pci/controller/pci-sh7751.c
- create mode 100644 include/dt-bindings/clock/sh7750-cpg.h
- create mode 100644 include/dt-bindings/display/sm501.h
- create mode 100644 include/dt-bindings/interrupt-controller/renesas,sh7751-intc.h
+Changes in v13:
+This series is a subset of patches in v11 as the first 3 patches in v11
+have been mereged into usb-next.
+Moved dr_mode property from platform specific files to common sc8280xp DT.
+Fixed function call wrapping, added comments and replaced #defines with
+enum in dwc3-qcom for identifying IRQ index appropriately.
+Fixed nitpicks pointed out in v11 for suspend-resume handling.
+Added reported-by tag for phy refactoring patch as a compile error was
+found by kernel test bot [1].
+Removed reviewed-by tag of maintainer for phy refactoring patch as a minor
+change of increasing phy-names array size by 2-bytes was done to fix
+compilation issue mentioned in [1].
+
+Changes in v12:
+Pushed as a subset of acked but no-yet-merged patches of v11 with intent
+of making rebase of other patches easy. Active reviewers from community
+suggested that it would be better to push the whole series in one go as it
+would give good clarity and context for all the patches in the series.
+So pushed v13 for the same addressing comments received in v11.
+
+Changes in v11:
+Implemented port_count calculation by reading interrupt-names from DT.
+Refactored IRQ handling in dwc3-qcom.
+Moving of macros to xhci-ext-caps.h made as a separate patch.
+Names of interrupts to be displayed on /proc/interrupts set to the ones
+present in DT.
+
+Changes in v10:
+Refactored phy init/exit/power-on/off functions in dwc3 core
+Refactored dwc3-qcom irq registration and handling
+Implemented wakeup for multiport irq's
+Moved few macros from xhci.h to xhci-ext-caps.h
+Fixed nits pointed out in v9
+Fixed Co-developed by and SOB tags in patches 5 and 11
+
+Changes in v9:
+Added IRQ support for DP/DM/SS MP Irq's of SC8280
+Refactored code to read port count by accessing xhci registers
+
+Changes in v8:
+Reorganised code in patch-5
+Fixed nitpicks in code according to comments received on v7
+Fixed indentation in DT patches
+Added drive strength for pinctrl nodes in SA8295 DT
+
+Changes in v7:
+Added power event irq's for Multiport controller.
+Udpated commit text for patch-9 (adding DT changes for enabling first
+port of multiport controller on sa8540-ride).
+Fixed check-patch warnings for driver code.
+Fixed DT binding errors for changes in snps,dwc3.yaml
+Reabsed code on top of usb-next
+
+Changes in v6:
+Updated comments in code after.
+Updated variables names appropriately as per review comments.
+Updated commit text in patch-2 and added additional info as per review
+comments.
+The patch header in v5 doesn't have "PATHCH v5" notation present. Corrected
+it in this version.
+
+Changes in v5:
+Added DT support for first port of Teritiary USB controller on SA8540-Ride
+Added support for reading port info from XHCI Extended Params registers.
+
+Changes in RFC v4:
+Added DT support for SA8295p.
+
+Changes in RFC v3:
+Incase any PHY init fails, then clear/exit the PHYs that
+are already initialized.
+
+Changes in RFC v2:
+Changed dwc3_count_phys to return the number of PHY Phandles in the node.
+This will be used now in dwc3_extract_num_phys to increment num_usb2_phy 
+and num_usb3_phy.
+Added new parameter "ss_idx" in dwc3_core_get_phy_ny_node and changed its
+structure such that the first half is for HS-PHY and second half is for
+SS-PHY.
+In dwc3_core_get_phy, for multiport controller, only if SS-PHY phandle is
+present, pass proper SS_IDX else pass -1.
+
+Tested enumeration interrupt registration on Tertiary controller of
+SA8295 ADP:
+
+/ # lsusb
+Bus 001 Device 001: ID 1d6b:0002
+Bus 002 Device 001: ID 1d6b:0003
+Bus 001 Device 002: ID 046d:c06a
+/ #
+/ # dmesg  | grep ports
+[    0.066250] Serial: 8250/16550 driver, 4 ports, IRQ sharing enabled
+[    0.154668] dwc3 a400000.usb: K: hs-ports: 4 ss-ports: 2
+[    0.223137] xhci-hcd xhci-hcd.0.auto: Host supports USB 3.1 Enhanced SuperSpeed
+[    0.227795] hub 1-0:1.0: 4 ports detected
+[    0.233724] hub 2-0:1.0: 2 ports detected
+
+Tested interrupt registration for all 4 ports of SA8295 ADP:
+
+/ # cat /proc/interrupts  |grep phy
+162: 0 0 0 0 0 0 0 0       PDC 127 Edge      dp_hs_phy_1
+163: 0 0 0 0 0 0 0 0       PDC 129 Edge      dp_hs_phy_2
+164: 0 0 0 0 0 0 0 0       PDC 131 Edge      dp_hs_phy_3
+165: 0 0 0 0 0 0 0 0       PDC 133 Edge      dp_hs_phy_4
+166: 0 0 0 0 0 0 0 0       PDC 126 Edge      dm_hs_phy_1
+167: 0 0 0 0 0 0 0 0       PDC  16 Level     ss_phy_1
+168: 0 0 0 0 0 0 0 0       PDC 128 Edge      dm_hs_phy_2
+169: 0 0 0 0 0 0 0 0       PDC  17 Level     ss_phy_2
+170: 0 0 0 0 0 0 0 0       PDC 130 Edge      dm_hs_phy_3
+171: 0 0 0 0 0 0 0 0       PDC 132 Edge      dm_hs_phy_4
+173: 0 0 0 0 0 0 0 0       PDC  14 Edge      dp_hs_phy_irq
+174: 0 0 0 0 0 0 0 0       PDC  15 Edge      dm_hs_phy_irq
+175: 0 0 0 0 0 0 0 0       PDC 138 Level     ss_phy_irq
+
+Tested working of ADB on SM8550 MTP.
+
+Links to previous versions:
+Link to v18: https://lore.kernel.org/all/20240326113253.3010447-1-quic_kriskura@quicinc.com/
+Link to v17: https://lore.kernel.org/all/20240326102809.2940123-1-quic_kriskura@quicinc.com/
+Link to v16: https://lore.kernel.org/all/20240307062052.2319851-1-quic_kriskura@quicinc.com/
+Link to v15: https://lore.kernel.org/all/20240216005756.762712-1-quic_kriskura@quicinc.com/
+Link to v14: https://lore.kernel.org/all/20240206051825.1038685-1-quic_kriskura@quicinc.com/
+Link to v13: https://lore.kernel.org/all/20231007154806.605-1-quic_kriskura@quicinc.com/
+Link to v12: https://lore.kernel.org/all/20231004165922.25642-1-quic_kriskura@quicinc.com/
+Link to v11: https://lore.kernel.org/all/20230828133033.11988-1-quic_kriskura@quicinc.com/
+Link to v10: https://lore.kernel.org/all/20230727223307.8096-1-quic_kriskura@quicinc.com/
+Link to v9: https://lore.kernel.org/all/20230621043628.21485-1-quic_kriskura@quicinc.com/
+Link to v8: https://lore.kernel.org/all/20230514054917.21318-1-quic_kriskura@quicinc.com/
+Link to v7: https://lore.kernel.org/all/20230501143445.3851-1-quic_kriskura@quicinc.com/
+Link to v6: https://lore.kernel.org/all/20230405125759.4201-1-quic_kriskura@quicinc.com/
+Link to v5: https://lore.kernel.org/all/20230310163420.7582-1-quic_kriskura@quicinc.com/
+Link to RFC v4: https://lore.kernel.org/all/20230115114146.12628-1-quic_kriskura@quicinc.com/
+Link to RFC v3: https://lore.kernel.org/all/1654709787-23686-1-git-send-email-quic_harshq@quicinc.com/#r
+Link to RFC v2: https://lore.kernel.org/all/1653560029-6937-1-git-send-email-quic_harshq@quicinc.com/#r
+
+Krishna Kurapati (9):
+  dt-bindings: usb: Add bindings for multiport properties on DWC3
+    controller
+  usb: dwc3: core: Access XHCI address space temporarily to read port
+    info
+  usb: dwc3: core: Skip setting event buffers for host only controllers
+  usb: dwc3: core: Refactor PHY logic to support Multiport Controller
+  dt-bindings: usb: qcom,dwc3: Add bindings for SC8280 Multiport
+  usb: dwc3: qcom: Add helper function to request wakeup interrupts
+  usb: dwc3: qcom: Refactor IRQ handling in glue driver
+  usb: dwc3: qcom: Enable wakeup for applicable ports of multiport
+  usb: dwc3: qcom: Add multiport suspend/resume support for wrapper
+
+ .../devicetree/bindings/usb/qcom,dwc3.yaml    |  34 ++
+ .../devicetree/bindings/usb/snps,dwc3.yaml    |  13 +-
+ drivers/usb/dwc3/core.c                       | 325 +++++++++++++-----
+ drivers/usb/dwc3/core.h                       |  19 +-
+ drivers/usb/dwc3/drd.c                        |  15 +-
+ drivers/usb/dwc3/dwc3-qcom.c                  | 251 +++++++++-----
+ 6 files changed, 482 insertions(+), 175 deletions(-)
 
 -- 
-2.39.2
+2.34.1
 
