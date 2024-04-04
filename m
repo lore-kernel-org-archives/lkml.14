@@ -1,169 +1,124 @@
-Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 229ED13B7A1
-	for <linux-kernel@vger.kernel.org>; Thu,  4 Apr 2024 23:36:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23F5A13C3CD
+	for <linux-kernel@vger.kernel.org>; Thu,  4 Apr 2024 23:37:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712273805; cv=none; b=PxvKLVsuV6W/oBe5ua4r2Dj6IW55RlnAk+D9eV2/lIj6ue6P8D7NVf4tAXflBwvwoquaAg7kp5NT3P8+cY0P95PH1A6/F6ox8yjWHESOBur/Wjn/uYbouW0iUBlw9JKG2ycemxNK5VMk3N38YYQuhOJoQcyC7csKicM7EXrMMWY=
+	t=1712273870; cv=none; b=J+//XzSw45NEbwlK0AdFyHfllVfmORpHCDERNrho2UXTbfbcLOUWl9Z66qljBwrNYukr97XcSxoIMvTrp9JPeHDSKA4lLmlrwMkvGJSLhPir7hNz9LzVrwCt86b1I37xTLzRx4B6EwxPGmI2vHz0WHPUVB0A1p5VMF+CkeRQSs4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712273805; c=relaxed/simple;
-	bh=KouUn0K398FqDmbn//sdAxYDPb3wIt3ud/qQYiZUIAM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=f89FmmWVXZ5OZ0Eswqw2t4xqyIL/QKMxgn1YWENNyqLR+isuYGFIw06sBr6w1mVs6S/oMgkgLzomlOOlSM6DG9t9h/qEB8Emt5/LhkZpmbz0JTh2gcLSlglZQESFjKB0hu+8zwgc4jFKdKnHvkkwyCPzfqgtNTh/+I9wTvKycgU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=sgyD3VhR; arc=none smtp.client-ip=209.85.218.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1712273870; c=relaxed/simple;
+	bh=WcJWrWJTEgUMIOPaDLKTAVkcya3IzINrlG4fX0PdNjk=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=cFdE7GbrGIXjPQNA/bC6yW1jlcbk+qjGdGfyDltoXT1aSGXWWACoDrT+cajtJLhXrZk9dxCKTDC4tYl/zKr2OdsvFgqrFxIH5+wMg37wF1LrwehcQf1Jkof3Ev6S1TRLAPPX83rt2dceKaz8Szy2OVe1Hhh5pJ4rsw3EwMJrFpo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=NXAZv0Y0; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="sgyD3VhR"
-Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-a4e40fad4fdso215242266b.2
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Apr 2024 16:36:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1712273801; x=1712878601; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=oPaPLo4tvZFunx9Zm5TfZKvrRMiMo0LvEV2TyEtrGw8=;
-        b=sgyD3VhR/MKZFIPwlen97fISoMB+qgplSJ2hj3Ao9vh4VRg2H9iJTWM04XOmgyMJyh
-         cpcL1c/aG6Ww4CBWD7uzIu8eiHFF1zzVbpLa+jELoOpn7AZn9gffREgcc/wwhYoOf939
-         RkfnAQ0Q+kfyUa3xM9lgf2/slksbjM0EVQny+ldH8YNuV3oUwiNMFubwCPXwq3c7YTH7
-         O9HTTxWpp8lLdLCnXbEtOqfaNenKTa7UD89kHj8hQaEzfuXsXCV5yWYJEXWGhd2OOpSO
-         Ml0gpaDaDPF1Z4M2ipKfs7Wh4/iZo8QVF+PvkkOBfsrdSeNTp4xOIIZUZfeIuwQnzAcF
-         CF6g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712273801; x=1712878601;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=oPaPLo4tvZFunx9Zm5TfZKvrRMiMo0LvEV2TyEtrGw8=;
-        b=p2+MdiM31d5KTSOwwnAtZflRmHKVcyu3Kx/TQmE0fmOb7czIKfzTpONTGGCfp3d8fs
-         7/+umTDRl+rC/v8wIkdDQ+3UJAl+73TxcWGSa5tnlKF6hs7qOHWJg+7u8hBnwU0kid9V
-         1BheZm8zsnbD7/ABhgQwlA91aCZf8KFgJ2CtM19yWoWurKsECOitBbARCHVskwDMlm3Y
-         FS82Mq1FhtQ3o4pn/mDGemRq0tkSiiB5zv3HfURaIcLYv1dFgv4TVUu6DLfdRKNidw/+
-         bUkYwiGRbZrg/gn+Z/2fuZ8O++9/yV4Ly9qgl+ceQJcN4gFnAuJkeroX2V6wSaFyFF2Q
-         UnDQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUNKSRVVfBWrPZHBWtFdbwUU4wItp8zbR/mJTeA++j5O74tqLyO0Hjt3ei5jMOAY4YzuxebBsOgGDjs+pfH9rvGRk/9rlM2RWXmyDXY
-X-Gm-Message-State: AOJu0YxNOVGbw+YiZ58N/DQUlvzIfNxLIyBorO8Cu5+Vwija/bw446Sj
-	hBvjhYd4IJRb0tRiydu0MUxsvLGVq8OQAYCGR5VjgMh8QEsXZCx+l+i6vW1VoefdWtXGbrdm01x
-	2hFTnodoT7T6NyqMozu+SqgFGy20AcFEY4m+YXnPgZ05awP+ETN5Ww/8=
-X-Google-Smtp-Source: AGHT+IHgW8H5JiF83eWk2CFNYwC1L+/Z6Sy81eE18wk8rH7kEwSDoBNRg3oIUIv1wE0Hit+Kk3O2AQVQPQrOwuBDwCA=
-X-Received: by 2002:a17:906:5290:b0:a45:ad29:725c with SMTP id
- c16-20020a170906529000b00a45ad29725cmr683187ejm.62.1712273801359; Thu, 04 Apr
- 2024 16:36:41 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NXAZv0Y0"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1712273867;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=8ypcfm8f/5CHd95kPjs/R9gdMDLtVxLsgq1JjJ/htFQ=;
+	b=NXAZv0Y04lqcVoSTxWBkv1RrpPXzgG7kr0EuYx8s6QuK6j0gxXRuuoAX29WaVqkAf7Qy/i
+	UbFZJ2/hsYz7n9bwTf7Y1NbJiShSi8sYZ+j7aKS1thP8hsideY19p7+E/54lfC9Bqljzxo
+	GCYJddzzGHzkwvYEvHp06XX1qMwWyCA=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-199-6pLPrQW0MIqKHr5AwYWBFw-1; Thu, 04 Apr 2024 19:37:41 -0400
+X-MC-Unique: 6pLPrQW0MIqKHr5AwYWBFw-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.rdu2.redhat.com [10.11.54.5])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 7E8858007A3;
+	Thu,  4 Apr 2024 23:37:41 +0000 (UTC)
+Received: from chopper.lyude.net (unknown [10.22.8.53])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 9873F8173;
+	Thu,  4 Apr 2024 23:37:40 +0000 (UTC)
+From: Lyude Paul <lyude@redhat.com>
+To: nouveau@lists.freedesktop.org,
+	dri-devel@lists.freedesktop.org
+Cc: Karol Herbst <kherbst@redhat.com>,
+	Danilo Krummrich <dakr@redhat.com>,
+	David Airlie <airlied@gmail.com>,
+	Daniel Vetter <daniel@ffwll.ch>,
+	linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH 1/2] drm/nouveau/kms/nv50-: Disable AUX bus for disconnected DP ports
+Date: Thu,  4 Apr 2024 19:35:53 -0400
+Message-ID: <20240404233736.7946-2-lyude@redhat.com>
+In-Reply-To: <20240404233736.7946-1-lyude@redhat.com>
+References: <20240404233736.7946-1-lyude@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <0000000000007545d00615188a03@google.com> <20240403180752.f95e1b77e033b5e03164c160@linux-foundation.org>
-In-Reply-To: <20240403180752.f95e1b77e033b5e03164c160@linux-foundation.org>
-From: Yosry Ahmed <yosryahmed@google.com>
-Date: Thu, 4 Apr 2024 16:36:03 -0700
-Message-ID: <CAJD7tkakCEg9zkwCrBr8GyObO7b9KOD6rUgyqniFN+YTCePd0A@mail.gmail.com>
-Subject: Re: [syzbot] [cgroups?] [mm?] WARNING in __mod_memcg_lruvec_state
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: syzbot <syzbot+9319a4268a640e26b72b@syzkaller.appspotmail.com>, 
-	cgroups@vger.kernel.org, hannes@cmpxchg.org, linux-kernel@vger.kernel.org, 
-	linux-mm@kvack.org, mhocko@kernel.org, muchun.song@linux.dev, 
-	roman.gushchin@linux.dev, shakeel.butt@linux.dev, 
-	syzkaller-bugs@googlegroups.com, Yu Zhao <yuzhao@google.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.5
 
-On Wed, Apr 3, 2024 at 6:08=E2=80=AFPM Andrew Morton <akpm@linux-foundation=
-.org> wrote:
->
-> On Tue, 02 Apr 2024 01:03:26 -0700 syzbot <syzbot+9319a4268a640e26b72b@sy=
-zkaller.appspotmail.com> wrote:
->
-> > Hello,
-> >
-> > syzbot found the following issue on:
-> >
-> > HEAD commit:    317c7bc0ef03 Merge tag 'mmc-v6.9-rc1' of git://git.kern=
-el...
-> > git tree:       upstream
-> > console output: https://syzkaller.appspot.com/x/log.txt?x=3D15fd40c5180=
-000
-> > kernel config:  https://syzkaller.appspot.com/x/.config?x=3Df64ec427e98=
-bccd7
-> > dashboard link: https://syzkaller.appspot.com/bug?extid=3D9319a4268a640=
-e26b72b
-> > compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for=
- Debian) 2.40
-> >
-> > Unfortunately, I don't have any reproducer for this issue yet.
-> >
-> > Downloadable assets:
-> > disk image (non-bootable): https://storage.googleapis.com/syzbot-assets=
-/7bc7510fe41f/non_bootable_disk-317c7bc0.raw.xz
-> > vmlinux: https://storage.googleapis.com/syzbot-assets/efab473d72c0/vmli=
-nux-317c7bc0.xz
-> > kernel image: https://storage.googleapis.com/syzbot-assets/5ba3f56d362d=
-/bzImage-317c7bc0.xz
-> >
-> > IMPORTANT: if you fix the issue, please add the following tag to the co=
-mmit:
-> > Reported-by: syzbot+9319a4268a640e26b72b@syzkaller.appspotmail.com
-> >
-> > ------------[ cut here ]------------
-> > WARNING: CPU: 0 PID: 30105 at mm/memcontrol.c:865 __mod_memcg_lruvec_st=
-ate+0x3fa/0x550 mm/memcontrol.c:865
-> > Modules linked in:
-> > CPU: 0 PID: 30105 Comm: syz-executor.2 Not tainted 6.9.0-rc1-syzkaller-=
-00178-g317c7bc0ef03 #0
-> > Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.2-debian-=
-1.16.2-1 04/01/2014
-> > RIP: 0010:__mod_memcg_lruvec_state+0x3fa/0x550 mm/memcontrol.c:865
-> > Code: 45 85 e4 75 1d 48 83 c4 18 5b 5d 41 5c 41 5d 41 5e 41 5f c3 cc cc=
- cc cc b8 00 04 00 00 e9 80 fd ff ff 89 c6 e9 a0 fd ff ff 90 <0f> 0b 90 e9 =
-a7 fc ff ff 48 c7 c7 18 43 e1 8f e8 32 51 f8 ff e9 5e
-> > RSP: 0018:ffffc900034beef8 EFLAGS: 00010202
-> > RAX: 0000000000000292 RBX: 0000000000000001 RCX: 1ffffffff1fc2863
-> > RDX: 0000000000000000 RSI: 0000000000000001 RDI: ffff888024b92bc8
-> > RBP: ffff888024b92000 R08: 0000000000000005 R09: 0000000000000000
-> > R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000001
-> > R13: ffff88801c326000 R14: 0000000000000001 R15: ffff888024b92000
-> > FS:  00007f0811bf96c0(0000) GS:ffff88806b000000(0000) knlGS:00000000000=
-00000
-> > CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> > CR2: 000000000cfff1dd CR3: 000000003e4e2000 CR4: 0000000000350ef0
-> > DR0: 0000000000000031 DR1: 0000000000000000 DR2: 0000000000000000
-> > DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-> > Call Trace:
-> >  <TASK>
-> >  __update_lru_size include/linux/mm_inline.h:47 [inline]
-> >  lru_gen_update_size include/linux/mm_inline.h:199 [inline]
-> >  lru_gen_add_folio+0x62d/0xe80 include/linux/mm_inline.h:262
-> >  lruvec_add_folio include/linux/mm_inline.h:323 [inline]
-> >  lru_add_fn+0x3fc/0xd80 mm/swap.c:215
-> >  folio_batch_move_lru+0x243/0x400 mm/swap.c:233
->
-> Well it beats me.  I assume we failed to update for a new case.  I'll
-> toss this into -next to perhaps shed a bit of light.
->
-> --- a/mm/memcontrol.c~__mod_memcg_lruvec_state-enhance-diagnostics
-> +++ a/mm/memcontrol.c
-> @@ -860,10 +860,12 @@ void __mod_memcg_lruvec_state(struct lru
->                 case NR_ANON_THPS:
->                 case NR_SHMEM_PMDMAPPED:
->                 case NR_FILE_PMDMAPPED:
-> -                       WARN_ON_ONCE(!in_task());
-> +                       if (WARN_ON_ONCE(!in_task()))
-> +                               pr_warn("stat item index: %d\n", idx);
->                         break;
->                 default:
-> -                       VM_WARN_ON_IRQS_ENABLED();
-> +                       if (VM_WARN_ON_IRQS_ENABLED())
-> +                               pr_warn("stat item index: %d\n", idx);
+GSP has its own state for keeping track of whether or not a given display
+connector is plugged in or not, and enforces this state on the driver. In
+particular, AUX transactions on a DisplayPort connector which GSP says is
+disconnected can never succeed - and can in some cases even cause
+unexpected timeouts, which can trickle up to cause other problems. A good
+example of this is runtime power management: where we can actually get
+stuck trying to resume the GPU if a userspace application like fwupd tries
+accessing a drm_aux_dev for a disconnected port. This was an issue I hit a
+few times with my Slimbook Executive 16 - where trying to offload something
+to the discrete GPU would wake it up, and then potentially cause it to
+timeout as fwupd tried to immediately access the dp_aux_dev nodes for
+nouveau.
 
-Line 865 from this commit should be this warning (i.e. warning because
-IRQs are enabled). This also makes sense because __update_lru_size()
-should not be updating any of the above stats.
+Likewise: we don't really have any cases I know of where we'd want to
+ignore this state and try an aux transaction anyway - and failing pointless
+aux transactions immediately can even speed things up. So - let's start
+enabling/disabling the aux bus in nouveau_dp_detect() to fix this. We
+enable the aux bus during connector probing, and leave it enabled if we
+discover something is actually on the connector. Otherwise, we just shut it
+off.
 
-folio_batch_move_lru() in the above call stack should be acquiring the
-lock with IRQs disabled though, so I am not sure what's going on from
-a quick look.
+This should fix some people's runtime PM issues (like myself), and also get
+rid of quite of a lot of GSP error spam in dmesg.
 
-Adding Yu Zhao here.
+Signed-off-by: Lyude Paul <lyude@redhat.com>
+---
+ drivers/gpu/drm/nouveau/nouveau_dp.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
+
+diff --git a/drivers/gpu/drm/nouveau/nouveau_dp.c b/drivers/gpu/drm/nouveau/nouveau_dp.c
+index fb06ee17d9e54..8b1be7dd64ebe 100644
+--- a/drivers/gpu/drm/nouveau/nouveau_dp.c
++++ b/drivers/gpu/drm/nouveau/nouveau_dp.c
+@@ -232,6 +232,9 @@ nouveau_dp_detect(struct nouveau_connector *nv_connector,
+ 	    dpcd[DP_DPCD_REV] != 0)
+ 		return NOUVEAU_DP_SST;
+ 
++	// Ensure that the aux bus is enabled for probing
++	drm_dp_dpcd_set_powered(&nv_connector->aux, true);
++
+ 	mutex_lock(&nv_encoder->dp.hpd_irq_lock);
+ 	if (mstm) {
+ 		/* If we're not ready to handle MST state changes yet, just
+@@ -293,6 +296,13 @@ nouveau_dp_detect(struct nouveau_connector *nv_connector,
+ 	if (mstm && !mstm->suspended && ret != NOUVEAU_DP_MST)
+ 		nv50_mstm_remove(mstm);
+ 
++	/* GSP doesn't like when we try to do aux transactions on a port it considers disconnected,
++	 * and since we don't really have a usecase for that anyway - just disable the aux bus here
++	 * if we've decided the connector is disconnected
++	 */
++	if (ret == NOUVEAU_DP_NONE)
++		drm_dp_dpcd_set_powered(&nv_connector->aux, false);
++
+ 	mutex_unlock(&nv_encoder->dp.hpd_irq_lock);
+ 	return ret;
+ }
+-- 
+2.44.0
+
