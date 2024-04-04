@@ -1,183 +1,252 @@
-Received: from mail-yw1-f174.google.com (mail-yw1-f174.google.com [209.85.128.174])
+Received: from mail-yw1-f172.google.com (mail-yw1-f172.google.com [209.85.128.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6529213AA56
-	for <linux-kernel@vger.kernel.org>; Thu,  4 Apr 2024 21:05:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89F8C12D1EF
+	for <linux-kernel@vger.kernel.org>; Thu,  4 Apr 2024 21:08:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712264705; cv=none; b=DzqhvHXEgoRQni0xmBhzQQ7Y9J8LMXu3PmhvYg+rD1YiDZYazHsw1DkPyxK5Eo5JsJBhXMvyqBiiHTrLPg6oXlo0C/eJufMvrawWUEzAS2k54Rk7S8RYIDdzq/ATnDoHYQgsU87GPngJzTeK24+ZqqSrT8B1QTMD4WNIgQy9MSs=
+	t=1712264882; cv=none; b=Px28wkvkjpet8pmmHBh1q+HJ3gIsvGOSJm2w94pEpilbEopfAzvgnAXBHp9wIvNltxhF4oIX+ql4i+6clCkKHh2QTC6hpO4JIwYB22SuqY7+P9xQE03f2kLeS+YOOfVpC7GhefPYa5bwkNSPAjV3LOh6BXb/ei4EQ8OzomZ9XO4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712264705; c=relaxed/simple;
-	bh=V1bvfCjUMNTcwsT2lBKJF4J897CJP70t3WLaAcvFFS8=;
+	s=arc-20240116; t=1712264882; c=relaxed/simple;
+	bh=jiPmv7P0Zt+7AyXesKeCak2Yp5DYXGginccDd9ut1dE=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=diUWVtLglRapBXXiy357upci1Q1F5mj4lUJwpTUSKSqYelAs2FimXqG2VTD2EVu/XN7jw3UY8/TxQX6F7L3sVa1Y4GQpnA/JM3wEdMJdlnOSBShrOi+pjIe46B+8mWw/J3apPnniY1mtA3tbtR6oFDAUnQoonVjFS8Asd6JYGIA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=AtatSxH2; arc=none smtp.client-ip=209.85.128.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
+	 To:Cc:Content-Type; b=f5H2mOYete+C1kVK8AotRfT4Yuq3lsLdwWgZj11Q9YlFQ2XNsxHFRekhonN112snBzcqW9EWtyGH+WGyv29VrMGc/gJC/U1FegCPszvaAli2KHXwS3eqTp/hAysswWUew70LweX5GXv233XYsKptLAsSTojwI8ltprgm2wu0DwE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=lbp2U1Zc; arc=none smtp.client-ip=209.85.128.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="AtatSxH2"
-Received: by mail-yw1-f174.google.com with SMTP id 00721157ae682-614b02f8ed6so22803737b3.0
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Apr 2024 14:05:03 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="lbp2U1Zc"
+Received: by mail-yw1-f172.google.com with SMTP id 00721157ae682-6151d2489b4so17028237b3.0
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Apr 2024 14:08:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1712264702; x=1712869502; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1712264879; x=1712869679; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=3BEwoI7vaLN7STH+6B1HZ1H40SSE9uFhmcRIVexkA4A=;
-        b=AtatSxH203Xl7YiKt6KexIweNl8GOt/BQpYTCl7iyhPDGvCTmPrpoRCl3yyV7Wycer
-         jctaGuvQ9qY5AlB0BvxhAaCXVdswkm1QiilvuDypgsOCf4Y3IybqSyoTpYf+fKtD3HhH
-         nqxVtk8R7xert+llPIj/KkS78YN4ZZxU6ttdLAnyaiAIe6VbXDRyM205xIWgTExM+mbG
-         XyTMofKGK/cEQQYCyDz3LnHBKbcWT5+tua+L49kfR3Zr04pPXNv5dsEL6Hspvxx8MHrm
-         Z3H8wL8uZoIXnVI/w+sdevS/WXvAIF/V3jPmjbuVgqXOBcpXOPMh8kc3xvNbvh1OMpL7
-         Yluw==
+        bh=GEPgxv5jO+a3XFdTbHPF5Q9T9DAeBlFJtTQ1Lr368bE=;
+        b=lbp2U1ZcPqsSPnTX9rIjuOSfO+NYSkJA1B4uPxFuFENz7Ir9o4W9/W4Z865Cj5Z/7J
+         2rGXpoBR0lXVSMbkX04RHhXVP+RajHrwtEm79Cojg9B5b2IazbdhkOlI2mSwZMrcH6YA
+         A9qogcgT/cRyRUVSiuLxB0vv9vR2is4+icrbzJOprJOrHj8M3/Vhv8CMAYBlRBl4J8y0
+         KTMfeIUUTCg4h1Ll9xxlz1lHMR0Q9E0ByfM4p+AdMZT5/6OSt4+69opzCQaUVsJ/qUBG
+         2mOBt6aSy9aSpWd1QvixhaH9nwWfwd2YlouyFe5FS+7fQ8YW5rqC6p09iMehDUuOatge
+         O9QA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712264702; x=1712869502;
+        d=1e100.net; s=20230601; t=1712264879; x=1712869679;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=3BEwoI7vaLN7STH+6B1HZ1H40SSE9uFhmcRIVexkA4A=;
-        b=kpOcspiPedLyBNV+obTe3F9rwx7QQlayJm1i54udnJPspG0kFpuc/26aWVYIya0ZNN
-         PVBUZrzi2PR+izOPFhD+/puBoVv71UbR0KSCaxEwutFjQzs5qUztV2QtcOlEJx+rix1w
-         c9Z2ZZgABZUyBzGyFcjERsylEGALFEgAG4ZLZBmKUdXNpStvAI2uWnkqc5UhzhvBjPTG
-         a6VvTTlBJGKTKpH4nJArl2oP15PC33jA5rSwnkz2ncBwHCBZ43X2ey4o0XIoKs5QLyxc
-         /dEDHUsXT+BtogQqu1CQ592tdbdbR5XPVkQaRHkx6WMMAtoUOsjarqV0B16ocs4AbUOa
-         NplQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWvxZvy9ESVg5ub3kDgBkQv6thy8iCUW/dExstHNOb+3ekjtNO8MEF6iYeymDXIzrQhPJ6Rb9WJmXjBWWIXDvtZ9bywL7SikJUZfmrd
-X-Gm-Message-State: AOJu0Ywdr/u6WiqZpkFa4tI+qH8m8usqi16lrG6AWh4ovbvmamKpsrPk
-	9hLokaosewWKmzHVpeu9uC7g4UCvFjlgb0rAlYgsMTXM6qyH5gBNAyWEGXb/M+2gYi7D+bEoHb8
-	vQut559n5gTrCYt3MHm84cG5F7lsM72YcGU1ZLA==
-X-Google-Smtp-Source: AGHT+IG6KpWakGj8bl6wl0XaCmeiykXs6HQkS3DMCudH9AT087DNiiXeU48IwUZnyWYEgunzOmtd5Z4JvSn2JDWo2cM=
-X-Received: by 2002:a25:bc50:0:b0:dcc:5b7e:ddfe with SMTP id
- d16-20020a25bc50000000b00dcc5b7eddfemr549930ybk.4.1712264702360; Thu, 04 Apr
- 2024 14:05:02 -0700 (PDT)
+        bh=GEPgxv5jO+a3XFdTbHPF5Q9T9DAeBlFJtTQ1Lr368bE=;
+        b=gpJ6GCRh+eQoTk9bP5vp243f8REu/ISkWcVKy1SpTwBa6mb7cPV24t8PFv8NcF/K26
+         7XQhSHsdm5t1wAPU2JiUbIauoyon+Ml5FiPyzrmYU5HU82oB/A/BMWWdekr3dMT8JmTj
+         yOPaFYAfvNScAc3InY6Cmkb8nUF0RcVI0/wq9p5kXPQgmwRt5hLcy2n+6eueDRL4VS5i
+         Prylv7Q3mXpyz+wJ8NfHvTJEb501K5J2Pk7yu392Qoi2pmVEJDosn9OTrnlu3MNQzZm4
+         +7sZdn1KJDmAzdWtggbhejlavO27ZG3DNxKnnmadjxwshn5EivEcKWCBMRmDJCAwHXNz
+         kfWQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXSg5zseTADkp+roEugKAWVQDNKoyFb9UNz5XjJHSz4cxFjC2wkfKWtqmnNw1t7gvtDw/QXQvRbemK7DauodowsB2lEDsZagYRJh/aC
+X-Gm-Message-State: AOJu0Yys2qlFGkhRizhLH+Qb2nXNrNv5e7oWxbiphYxBpkVqcgViMQGC
+	2jBYtIzJ44UmFzk5vpP2VgBJIdSloZCMsgMgz4uTfaFPhhYoDCcpY4tJ3neaQK8yEo20CqOgFI1
+	xwRwOyVJAkxxtUju2xal1dZsPtlRrBrcN/Zwp
+X-Google-Smtp-Source: AGHT+IGeSDcayNFImOyFgb30C9ktisTL2ID44stHNniOVpp+PNE1qvTfexNZELS3w9g9f5CAg8+S1Ah1YxYXd/48pl0=
+X-Received: by 2002:a25:ea53:0:b0:dca:e4fd:b6d6 with SMTP id
+ o19-20020a25ea53000000b00dcae4fdb6d6mr3005124ybe.61.1712264879294; Thu, 04
+ Apr 2024 14:07:59 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240402001739.2521623-1-horenchuang@bytedance.com>
- <20240402001739.2521623-3-horenchuang@bytedance.com> <20240403180425.00003be0@Huawei.com>
- <CAKPbEqoJZe+HWHhCvBTVSHXffGY2ign3Htp4pfbFb4YVJS_Q2A@mail.gmail.com> <20240404143733.00004594@Huawei.com>
-In-Reply-To: <20240404143733.00004594@Huawei.com>
-From: "Ho-Ren (Jack) Chuang" <horenchuang@bytedance.com>
-Date: Thu, 4 Apr 2024 14:04:51 -0700
-Message-ID: <CAKPbEqpp-mFv0bnOPtk0hFYVqA5y-e-T3QMWrS19g00Mob6D+g@mail.gmail.com>
-Subject: Re: [External] Re: [PATCH v10 2/2] memory tier: create CPUless memory
- tiers after obtaining HMAT info
-To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc: "Huang, Ying" <ying.huang@intel.com>, Gregory Price <gourry.memverge@gmail.com>, 
-	aneesh.kumar@linux.ibm.com, mhocko@suse.com, tj@kernel.org, 
-	john@jagalactic.com, Eishan Mirakhur <emirakhur@micron.com>, 
-	Vinicius Tavares Petrucci <vtavarespetr@micron.com>, Ravis OpenSrc <Ravis.OpenSrc@micron.com>, 
-	Alistair Popple <apopple@nvidia.com>, Srinivasulu Thanneeru <sthanneeru@micron.com>, 
-	SeongJae Park <sj@kernel.org>, Dan Williams <dan.j.williams@intel.com>, 
-	Vishal Verma <vishal.l.verma@intel.com>, Dave Jiang <dave.jiang@intel.com>, 
-	Andrew Morton <akpm@linux-foundation.org>, nvdimm@lists.linux.dev, 
-	linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Linux Memory Management List <linux-mm@kvack.org>, "Ho-Ren (Jack) Chuang" <horenc@vt.edu>, 
-	"Ho-Ren (Jack) Chuang" <horenchuang@gmail.com>, qemu-devel@nongnu.org, 
-	Hao Xiang <hao.xiang@bytedance.com>
+References: <20240404171726.2302435-1-lokeshgidra@google.com>
+ <Zg7hrt5HudXLBUn_@casper.infradead.org> <Zg8OYYV7DDo7S2Yf@x1n>
+ <CAJuCfpGHe2=noJomL0XonT4dVGvZmVujRMEbgpYgVg_d5wo-+g@mail.gmail.com> <Zg8V5OycPYYk7-Qp@x1n>
+In-Reply-To: <Zg8V5OycPYYk7-Qp@x1n>
+From: Suren Baghdasaryan <surenb@google.com>
+Date: Thu, 4 Apr 2024 14:07:45 -0700
+Message-ID: <CAJuCfpGj5xk-NxSwW6Mt8NGZcV9N__8zVPMGXDPAYKMcN9=Oig@mail.gmail.com>
+Subject: Re: [PATCH] userfaultfd: change src_folio after ensuring it's
+ unpinned in UFFDIO_MOVE
+To: Peter Xu <peterx@redhat.com>
+Cc: Matthew Wilcox <willy@infradead.org>, Lokesh Gidra <lokeshgidra@google.com>, 
+	akpm@linux-foundation.org, linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
+	kernel-team@android.com, aarcange@redhat.com, david@redhat.com, 
+	zhengqi.arch@bytedance.com, kaleshsingh@google.com, ngeoffray@google.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi Jonathan,
-
-Thank you! I will fix them and send a V11 soon.
-
-On Thu, Apr 4, 2024 at 6:37=E2=80=AFAM Jonathan Cameron
-<Jonathan.Cameron@huawei.com> wrote:
+On Thu, Apr 4, 2024 at 2:04=E2=80=AFPM Peter Xu <peterx@redhat.com> wrote:
 >
-> <snip>
->
-> > > > @@ -858,7 +910,8 @@ static int __init memory_tier_init(void)
-> > > >        * For now we can have 4 faster memory tiers with smaller adi=
-stance
-> > > >        * than default DRAM tier.
-> > > >        */
-> > > > -     default_dram_type =3D alloc_memory_type(MEMTIER_ADISTANCE_DRA=
-M);
-> > > > +     default_dram_type =3D mt_find_alloc_memory_type(MEMTIER_ADIST=
-ANCE_DRAM,
-> > > > +                                                                  =
-   &default_memory_types);
+> On Thu, Apr 04, 2024 at 01:55:07PM -0700, Suren Baghdasaryan wrote:
+> > On Thu, Apr 4, 2024 at 1:32=E2=80=AFPM Peter Xu <peterx@redhat.com> wro=
+te:
 > > >
-> > > Unusual indenting.  Align with just after (
-> > >
-> >
-> > Aligning with "(" will exceed 100 columns. Would that be acceptable?
-> I think we are talking cross purposes.
->
->         default_dram_type =3D mt_find_alloc_memory_type(MEMTIER_ADISTANCE=
-_DRAM,
->                                                       &default_memory_typ=
-es);
->
-> Is what I was suggesting.
->
-
-Oh, now I see. Thanks!
-
-> >
-> > > >       if (IS_ERR(default_dram_type))
-> > > >               panic("%s() failed to allocate default DRAM tier\n", =
-__func__);
+> > > On Thu, Apr 04, 2024 at 06:21:50PM +0100, Matthew Wilcox wrote:
+> > > > On Thu, Apr 04, 2024 at 10:17:26AM -0700, Lokesh Gidra wrote:
+> > > > > -           folio_move_anon_rmap(src_folio, dst_vma);
+> > > > > -           WRITE_ONCE(src_folio->index, linear_page_index(dst_vm=
+a, dst_addr));
+> > > > > -
+> > > > >             src_pmdval =3D pmdp_huge_clear_flush(src_vma, src_add=
+r, src_pmd);
+> > > > >             /* Folio got pinned from under us. Put it back and fa=
+il the move. */
+> > > > >             if (folio_maybe_dma_pinned(src_folio)) {
+> > > > > @@ -2270,6 +2267,9 @@ int move_pages_huge_pmd(struct mm_struct *m=
+m, pmd_t *dst_pmd, pmd_t *src_pmd, pm
+> > > > >                     goto unlock_ptls;
+> > > > >             }
+> > > > >
+> > > > > +           folio_move_anon_rmap(src_folio, dst_vma);
+> > > > > +           WRITE_ONCE(src_folio->index, linear_page_index(dst_vm=
+a, dst_addr));
+> > > > > +
 > > > >
-> > > > @@ -868,6 +921,14 @@ static int __init memory_tier_init(void)
-> > > >        * types assigned.
-> > > >        */
-> > > >       for_each_node_state(node, N_MEMORY) {
-> > > > +             if (!node_state(node, N_CPU))
-> > > > +                     /*
-> > > > +                      * Defer memory tier initialization on CPUles=
-s numa nodes.
-> > > > +                      * These will be initialized after firmware a=
-nd devices are
+> > > > This use of WRITE_ONCE scares me.  We hold the folio locked.  Why d=
+o
+> > > > we need to use WRITE_ONCE?  Who's looking at folio->index without
+> > > > holding the folio lock?
 > > >
-> > > I think this wraps at just over 80 chars.  Seems silly to wrap so tig=
-htly and not
-> > > quite fit under 80. (this is about 83 chars.
+> > > Seems true, but maybe suitable for a separate patch to clean it even =
+so?
+> > > We also have the other pte level which has the same WRITE_ONCE(), so =
+if we
+> > > want to drop we may want to drop both.
+> >
+> > Yes, I'll do that separately and will remove WRITE_ONCE() in both place=
+s.
+>
+> Thanks, Suren.  Besides, any comment on below?
+>
+> It's definely a generic per-vma question too (besides my willingness to
+> remove that userfault specific code..), so comments welcomed.
+
+Yes, I was typing my reply :)
+This might have happened simply because lock_vma_under_rcu() was
+originally developed to handle only anonymous page faults and then got
+expanded to cover file-backed cases as well. Your suggestion seems
+fine to me but I would feel much more comfortable after Matthew (who
+added file-backed support) reviewed it.
+
+>
+> >
+> > >
+> > > I just got to start reading some the new move codes (Lokesh, apologie=
+s on
+> > > not be able to provide feedbacks previously..), but then I found one =
+thing
+> > > unclear, on special handling of private file mappings only in userfau=
+lt
+> > > context, and I didn't know why:
+> > >
+> > > lock_vma():
+> > >         if (vma) {
+> > >                 /*
+> > >                  * lock_vma_under_rcu() only checks anon_vma for priv=
+ate
+> > >                  * anonymous mappings. But we need to ensure it is as=
+signed in
+> > >                  * private file-backed vmas as well.
+> > >                  */
+> > >                 if (!(vma->vm_flags & VM_SHARED) && unlikely(!vma->an=
+on_vma))
+> > >                         vma_end_read(vma);
+> > >                 else
+> > >                         return vma;
+> > >         }
+> > >
+> > > AFAIU even for generic users of lock_vma_under_rcu(), anon_vma must b=
+e
+> > > stable to be used.  Here it's weird to become an userfault specific
+> > > operation to me.
+> > >
+> > > I was surprised how it worked for private file maps on faults, then I=
+ had a
+> > > check and it seems we postponed such check until vmf_anon_prepare(), =
+which
+> > > is the CoW path already, so we do as I expected, but seems unnecessar=
+y to
+> > > that point?
+> > >
+> > > Would something like below make it much cleaner for us?  As I just do=
+n't
+> > > yet see why userfault is special here.
+> > >
+> > > Thanks,
+> > >
+> > > =3D=3D=3D8<=3D=3D=3D
+> > > diff --git a/mm/memory.c b/mm/memory.c
+> > > index 984b138f85b4..d5cf1d31c671 100644
+> > > --- a/mm/memory.c
+> > > +++ b/mm/memory.c
+> > > @@ -3213,10 +3213,8 @@ vm_fault_t vmf_anon_prepare(struct vm_fault *v=
+mf)
+> > >
+> > >         if (likely(vma->anon_vma))
+> > >                 return 0;
+> > > -       if (vmf->flags & FAULT_FLAG_VMA_LOCK) {
+> > > -               vma_end_read(vma);
+> > > -               return VM_FAULT_RETRY;
+> > > -       }
+> > > +       /* We shouldn't try a per-vma fault at all if anon_vma isn't =
+solid */
+> > > +       WARN_ON_ONCE(vmf->flags & FAULT_FLAG_VMA_LOCK);
+> > >         if (__anon_vma_prepare(vma))
+> > >                 return VM_FAULT_OOM;
+> > >         return 0;
+> > > @@ -5817,9 +5815,9 @@ struct vm_area_struct *lock_vma_under_rcu(struc=
+t mm_struct *mm,
+> > >          * find_mergeable_anon_vma uses adjacent vmas which are not l=
+ocked.
+> > >          * This check must happen after vma_start_read(); otherwise, =
+a
+> > >          * concurrent mremap() with MREMAP_DONTUNMAP could dissociate=
+ the VMA
+> > > -        * from its anon_vma.
+> > > +        * from its anon_vma.  This applies to both anon or private f=
+ile maps.
+> > >          */
+> > > -       if (unlikely(vma_is_anonymous(vma) && !vma->anon_vma))
+> > > +       if (unlikely(!(vma->vm_flags & VM_SHARED) && !vma->anon_vma))
+> > >                 goto inval_end_read;
+> > >
+> > >         /* Check since vm_start/vm_end might change before we lock th=
+e VMA */
+> > > diff --git a/mm/userfaultfd.c b/mm/userfaultfd.c
+> > > index f6267afe65d1..61f21da77dcd 100644
+> > > --- a/mm/userfaultfd.c
+> > > +++ b/mm/userfaultfd.c
+> > > @@ -72,17 +72,8 @@ static struct vm_area_struct *lock_vma(struct mm_s=
+truct *mm,
+> > >         struct vm_area_struct *vma;
+> > >
+> > >         vma =3D lock_vma_under_rcu(mm, address);
+> > > -       if (vma) {
+> > > -               /*
+> > > -                * lock_vma_under_rcu() only checks anon_vma for priv=
+ate
+> > > -                * anonymous mappings. But we need to ensure it is as=
+signed in
+> > > -                * private file-backed vmas as well.
+> > > -                */
+> > > -               if (!(vma->vm_flags & VM_SHARED) && unlikely(!vma->an=
+on_vma))
+> > > -                       vma_end_read(vma);
+> > > -               else
+> > > -                       return vma;
+> > > -       }
+> > > +       if (vma)
+> > > +               return vma;
+> > >
+> > >         mmap_read_lock(mm);
+> > >         vma =3D find_vma_and_prepare_anon(mm, address);
+> > > --
+> > > 2.44.0
+> > >
+> > >
+> > > --
+> > > Peter Xu
 > > >
 > >
-> > I can fix this.
-> > I have a question. From my patch, this is <80 chars. However,
-> > in an email, this is >80 chars. Does that mean we need to
-> > count the number of chars in an email, not in a patch? Or if I
-> > missed something? like vim configuration or?
 >
-> 3 tabs + 1 space + the text from * (58)
-> =3D 24 + 1 + 58 =3D 83
+> --
+> Peter Xu
 >
-> Advantage of using claws email for kernel stuff is it has a nice per char=
-acter
-> ruler at the top of the window.
->
-> I wonder if you have a different tab indent size?  The kernel uses 8
-> characters.  It might explain the few other odd indents if perhaps
-> you have it at 4 in your editor?
->
-> https://www.kernel.org/doc/html/v4.10/process/coding-style.html
->
-
-Got it. I was using tab=3D4. I will change to 8. Thanks!
-
-> Jonathan
->
-> >
-> > > > +                      * initialized.
-> > > > +                      */
-> > > > +                     continue;
-> > > > +
-> > > >               memtier =3D set_node_memory_tier(node);
-> > > >               if (IS_ERR(memtier))
-> > > >                       /*
-> > >
-> >
-> >
->
-
-
---=20
-Best regards,
-Ho-Ren (Jack) Chuang
-=E8=8E=8A=E8=B3=80=E4=BB=BB
