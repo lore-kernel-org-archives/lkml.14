@@ -1,23 +1,23 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 690AE1B964
-	for <linux-kernel@vger.kernel.org>; Thu,  4 Apr 2024 14:33:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F15751B964
+	for <linux-kernel@vger.kernel.org>; Thu,  4 Apr 2024 14:33:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712241204; cv=none; b=ccdPs2rHiGLQr24/jLmWR7TSC50KAaynoflYh0poPJpW0qLjj1Gm+YeHhQ2FTx3amhIHPnphZav2Z9oEWZln1o0ytC1XHwIU+q7GSJ+wtqNG1Q3AHKjY6/VIhlDlvKkCQnRm4jkRkfbRojG0t5zbq+eAmCyLYuIiwiI1pHtTUBU=
+	t=1712241207; cv=none; b=gTZ7g+0tzYqKI+lftC/iFrwAztsegjzW20PGXQS5jk0OAYPoxsHwzXM8+ojmIRs3zV3E4PCi8UttMZcwj8yc8T3HhU/NKKKoIRNyXB2Q7dTvJxiyev4Hgu+bsn1DKanyMxgtBBu10q77Ng8dOABiHM67Rw6OzjZ8xmPcJC7Orug=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712241204; c=relaxed/simple;
-	bh=SYO4oFNDFkL0s+N/cJYfdC8JBBGNx9XmnIIAMpjkrAQ=;
+	s=arc-20240116; t=1712241207; c=relaxed/simple;
+	bh=MBFCEoIMizXjea6QRBCNY0kwTxTJRZKU3qWYUNv/d+Y=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=lF4UFIHerTdbQfQaPGlx/WoOg3Rn7l/pZ7tv02GaF2oBQREvKifFcG1ZTaB7vUaY+DbdTsCvUCD2ZKky9lygbdDBsXOPGWdNL60fLUQu+gBXEm7ztkC7YT3UzalGL6nr5AwMyP86LpNj9TWueIwUNpm/z7hBjGRV/UE15vswonk=
+	 MIME-Version; b=Q68njDYitw8npjsX3ros0RBvQBQ8LtXGXysJ4bCrTj8wU4HTIX8P5yaRZifbrrqYVEeZQQxws2zj9v+6jAZ8D690kzmMT5z/xsB3ssDkr4iFnNnhd9PjX9Js2iGwAFko4lqPcDrsk+gAZk17fUjRar0zVJiKrbeEj8ypMia1mH8=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B87C1150C;
-	Thu,  4 Apr 2024 07:33:52 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2D4A11007;
+	Thu,  4 Apr 2024 07:33:56 -0700 (PDT)
 Received: from e125769.cambridge.arm.com (e125769.cambridge.arm.com [10.1.196.27])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 94D6A3F64C;
-	Thu,  4 Apr 2024 07:33:20 -0700 (PDT)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 086CD3F64C;
+	Thu,  4 Apr 2024 07:33:23 -0700 (PDT)
 From: Ryan Roberts <ryan.roberts@arm.com>
 To: Catalin Marinas <catalin.marinas@arm.com>,
 	Will Deacon <will@kernel.org>,
@@ -30,9 +30,9 @@ Cc: Ryan Roberts <ryan.roberts@arm.com>,
 	linux-arm-kernel@lists.infradead.org,
 	linux-kernel@vger.kernel.org,
 	Itaru Kitayama <itaru.kitayama@fujitsu.com>
-Subject: [PATCH v2 2/4] arm64: mm: Batch dsb and isb when populating pgtables
-Date: Thu,  4 Apr 2024 15:33:06 +0100
-Message-Id: <20240404143308.2224141-3-ryan.roberts@arm.com>
+Subject: [PATCH v2 4/4] arm64: mm: Lazily clear pte table mappings from fixmap
+Date: Thu,  4 Apr 2024 15:33:08 +0100
+Message-Id: <20240404143308.2224141-5-ryan.roberts@arm.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20240404143308.2224141-1-ryan.roberts@arm.com>
 References: <20240404143308.2224141-1-ryan.roberts@arm.com>
@@ -44,11 +44,20 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-After removing uneccessary TLBIs, the next bottleneck when creating the
-page tables for the linear map is DSB and ISB, which were previously
-issued per-pte in __set_pte(). Since we are writing multiple ptes in a
-given pte table, we can elide these barriers and insert them once we
-have finished writing to the table.
+With the pgtable operations abstracted into `struct pgtable_ops`, the
+early pgtable alloc, map and unmap operations are nicely centralized. So
+let's enhance the implementation to speed up the clearing of pte table
+mappings in the fixmap.
+
+Extend FIX_MAP so that we now have 16 slots in the fixmap dedicated for
+pte tables. At alloc/map time, we select the next slot in the series and
+map it. Or if we are at the end and no more slots are available, clear
+down all of the slots and start at the beginning again. Batching the
+clear like this means we can issue tlbis more efficiently.
+
+Due to the batching, there may still be some slots mapped at the end, so
+address this by adding an optional cleanup() function to `struct
+pgtable_ops` to handle this for us.
 
 Execution time of map_mem(), which creates the kernel linear map page
 tables, was measured on different machines with different RAM configs:
@@ -58,68 +67,192 @@ tables, was measured on different machines with different RAM configs:
 ---------------|-------------|-------------|-------------|-------------
                |   ms    (%) |   ms    (%) |   ms    (%) |    ms    (%)
 ---------------|-------------|-------------|-------------|-------------
-before         |   77   (0%) |  431   (0%) | 1727   (0%) |  3796   (0%)
-after          |   13 (-84%) |  162 (-62%) |  655 (-62%) |  1656 (-56%)
+before         |   11   (0%) |  109   (0%) |  449   (0%) |  1257   (0%)
+after          |    6 (-46%) |   61 (-44%) |  257 (-43%) |   838 (-33%)
 
 Signed-off-by: Ryan Roberts <ryan.roberts@arm.com>
 Tested-by: Itaru Kitayama <itaru.kitayama@fujitsu.com>
 Tested-by: Eric Chanudet <echanude@redhat.com>
 ---
- arch/arm64/include/asm/pgtable.h |  7 ++++++-
- arch/arm64/mm/mmu.c              | 13 ++++++++++++-
- 2 files changed, 18 insertions(+), 2 deletions(-)
+ arch/arm64/include/asm/fixmap.h  |  5 +++-
+ arch/arm64/include/asm/pgtable.h |  4 ---
+ arch/arm64/mm/fixmap.c           | 11 ++++++++
+ arch/arm64/mm/mmu.c              | 44 +++++++++++++++++++++++++++++---
+ 4 files changed, 56 insertions(+), 8 deletions(-)
 
+diff --git a/arch/arm64/include/asm/fixmap.h b/arch/arm64/include/asm/fixmap.h
+index 87e307804b99..91fcd7c5c513 100644
+--- a/arch/arm64/include/asm/fixmap.h
++++ b/arch/arm64/include/asm/fixmap.h
+@@ -84,7 +84,9 @@ enum fixed_addresses {
+ 	 * Used for kernel page table creation, so unmapped memory may be used
+ 	 * for tables.
+ 	 */
+-	FIX_PTE,
++#define NR_PTE_SLOTS		16
++	FIX_PTE_END,
++	FIX_PTE_BEGIN = FIX_PTE_END + NR_PTE_SLOTS - 1,
+ 	FIX_PMD,
+ 	FIX_PUD,
+ 	FIX_P4D,
+@@ -108,6 +110,7 @@ void __init early_fixmap_init(void);
+ #define __late_clear_fixmap(idx) __set_fixmap((idx), 0, FIXMAP_PAGE_CLEAR)
+ 
+ extern void __set_fixmap(enum fixed_addresses idx, phys_addr_t phys, pgprot_t prot);
++void __init clear_fixmap_nosync(enum fixed_addresses idx);
+ 
+ #include <asm-generic/fixmap.h>
+ 
 diff --git a/arch/arm64/include/asm/pgtable.h b/arch/arm64/include/asm/pgtable.h
-index afdd56d26ad7..105a95a8845c 100644
+index 92c9aed5e7af..4c7114d49697 100644
 --- a/arch/arm64/include/asm/pgtable.h
 +++ b/arch/arm64/include/asm/pgtable.h
-@@ -271,9 +271,14 @@ static inline pte_t pte_mkdevmap(pte_t pte)
- 	return set_pte_bit(pte, __pgprot(PTE_DEVMAP | PTE_SPECIAL));
+@@ -691,10 +691,6 @@ static inline unsigned long pmd_page_vaddr(pmd_t pmd)
+ /* Find an entry in the third-level page table. */
+ #define pte_offset_phys(dir,addr)	(pmd_page_paddr(READ_ONCE(*(dir))) + pte_index(addr) * sizeof(pte_t))
+ 
+-#define pte_set_fixmap(addr)		((pte_t *)set_fixmap_offset(FIX_PTE, addr))
+-#define pte_set_fixmap_offset(pmd, addr)	pte_set_fixmap(pte_offset_phys(pmd, addr))
+-#define pte_clear_fixmap()		clear_fixmap(FIX_PTE)
+-
+ #define pmd_page(pmd)			phys_to_page(__pmd_to_phys(pmd))
+ 
+ /* use ONLY for statically allocated translation tables */
+diff --git a/arch/arm64/mm/fixmap.c b/arch/arm64/mm/fixmap.c
+index de1e09d986ad..0cb09bedeeec 100644
+--- a/arch/arm64/mm/fixmap.c
++++ b/arch/arm64/mm/fixmap.c
+@@ -131,6 +131,17 @@ void __set_fixmap(enum fixed_addresses idx,
+ 	}
  }
  
--static inline void __set_pte(pte_t *ptep, pte_t pte)
-+static inline void __set_pte_nosync(pte_t *ptep, pte_t pte)
- {
- 	WRITE_ONCE(*ptep, pte);
++void __init clear_fixmap_nosync(enum fixed_addresses idx)
++{
++	unsigned long addr = __fix_to_virt(idx);
++	pte_t *ptep;
++
++	BUG_ON(idx <= FIX_HOLE || idx >= __end_of_fixed_addresses);
++
++	ptep = fixmap_pte(addr);
++	__pte_clear(&init_mm, addr, ptep);
 +}
 +
-+static inline void __set_pte(pte_t *ptep, pte_t pte)
-+{
-+	__set_pte_nosync(ptep, pte);
- 
- 	/*
- 	 * Only if the new pte is valid and kernel, otherwise TLB maintenance
+ void *__init fixmap_remap_fdt(phys_addr_t dt_phys, int *size, pgprot_t prot)
+ {
+ 	const u64 dt_virt_base = __fix_to_virt(FIX_FDT);
 diff --git a/arch/arm64/mm/mmu.c b/arch/arm64/mm/mmu.c
-index fd91b5bdb514..dc86dceb0efe 100644
+index 90bf822859b8..2e3b594aa23c 100644
 --- a/arch/arm64/mm/mmu.c
 +++ b/arch/arm64/mm/mmu.c
-@@ -178,7 +178,11 @@ static pte_t *init_pte(pte_t *ptep, unsigned long addr, unsigned long end,
- 	do {
- 		pte_t old_pte = __ptep_get(ptep);
+@@ -66,11 +66,14 @@ enum pgtable_type {
+  *              mapped either as a result of a previous call to alloc() or
+  *              map(). The page's virtual address must be considered invalid
+  *              after this call returns.
++ * @cleanup:    (Optional) Called at the end of a set of operations to cleanup
++ *              any lazy state.
+  */
+ struct pgtable_ops {
+ 	void *(*alloc)(int type, phys_addr_t *pa);
+ 	void *(*map)(int type, void *parent, unsigned long addr);
+ 	void (*unmap)(int type);
++	void (*cleanup)(void);
+ };
  
--		__set_pte(ptep, pfn_pte(__phys_to_pfn(phys), prot));
-+		/*
-+		 * Required barriers to make this visible to the table walker
-+		 * are deferred to the end of alloc_init_cont_pte().
-+		 */
-+		__set_pte_nosync(ptep, pfn_pte(__phys_to_pfn(phys), prot));
+ #define NO_BLOCK_MAPPINGS	BIT(0)
+@@ -139,9 +142,33 @@ pgprot_t phys_mem_access_prot(struct file *file, unsigned long pfn,
+ }
+ EXPORT_SYMBOL(phys_mem_access_prot);
  
- 		/*
- 		 * After the PTE entry has been populated once, we
-@@ -234,6 +238,13 @@ static void alloc_init_cont_pte(pmd_t *pmdp, unsigned long addr,
- 	} while (addr = next, addr != end);
- 
- 	pte_clear_fixmap();
++static int pte_slot_next __initdata = FIX_PTE_BEGIN;
 +
-+	/*
-+	 * Ensure all previous pgtable writes are visible to the table walker.
-+	 * See init_pte().
-+	 */
-+	dsb(ishst);
-+	isb();
++static void __init clear_pte_fixmap_slots(void)
++{
++	unsigned long start = __fix_to_virt(FIX_PTE_BEGIN);
++	unsigned long end = __fix_to_virt(pte_slot_next);
++	int i;
++
++	for (i = FIX_PTE_BEGIN; i > pte_slot_next; i--)
++		clear_fixmap_nosync(i);
++
++	flush_tlb_kernel_range(start, end);
++	pte_slot_next = FIX_PTE_BEGIN;
++}
++
++static int __init pte_fixmap_slot(void)
++{
++	if (pte_slot_next < FIX_PTE_END)
++		clear_pte_fixmap_slots();
++
++	return pte_slot_next--;
++}
++
+ static void *__init early_pgtable_alloc(int type, phys_addr_t *pa)
+ {
+ 	void *va;
++	int slot;
+ 
+ 	*pa = memblock_phys_alloc_range(PAGE_SIZE, PAGE_SIZE, 0,
+ 					MEMBLOCK_ALLOC_NOLEAKTRACE);
+@@ -159,7 +186,9 @@ static void *__init early_pgtable_alloc(int type, phys_addr_t *pa)
+ 		va = pmd_set_fixmap(*pa);
+ 		break;
+ 	case TYPE_PTE:
+-		va = pte_set_fixmap(*pa);
++		slot = pte_fixmap_slot();
++		set_fixmap(slot, *pa);
++		va = (pte_t *)__fix_to_virt(slot);
+ 		break;
+ 	default:
+ 		BUG();
+@@ -174,7 +203,9 @@ static void *__init early_pgtable_alloc(int type, phys_addr_t *pa)
+ 
+ static void *__init early_pgtable_map(int type, void *parent, unsigned long addr)
+ {
++	phys_addr_t pa;
+ 	void *entry;
++	int slot;
+ 
+ 	switch (type) {
+ 	case TYPE_P4D:
+@@ -187,7 +218,10 @@ static void *__init early_pgtable_map(int type, void *parent, unsigned long addr
+ 		entry = pmd_set_fixmap_offset((pud_t *)parent, addr);
+ 		break;
+ 	case TYPE_PTE:
+-		entry = pte_set_fixmap_offset((pmd_t *)parent, addr);
++		slot = pte_fixmap_slot();
++		pa = pte_offset_phys((pmd_t *)parent, addr);
++		set_fixmap(slot, pa);
++		entry = (pte_t *)(__fix_to_virt(slot) + (pa & (PAGE_SIZE - 1)));
+ 		break;
+ 	default:
+ 		BUG();
+@@ -209,7 +243,7 @@ static void __init early_pgtable_unmap(int type)
+ 		pmd_clear_fixmap();
+ 		break;
+ 	case TYPE_PTE:
+-		pte_clear_fixmap();
++		// Unmap lazily: see clear_pte_fixmap_slots().
+ 		break;
+ 	default:
+ 		BUG();
+@@ -220,6 +254,7 @@ static struct pgtable_ops early_pgtable_ops __initdata = {
+ 	.alloc = early_pgtable_alloc,
+ 	.map = early_pgtable_map,
+ 	.unmap = early_pgtable_unmap,
++	.cleanup = clear_pte_fixmap_slots,
+ };
+ 
+ bool pgattr_change_is_safe(u64 old, u64 new)
+@@ -538,6 +573,9 @@ static void __create_pgd_mapping_locked(pgd_t *pgdir, phys_addr_t phys,
+ 		alloc_init_p4d(pgdp, addr, next, phys, prot, ops, flags);
+ 		phys += next - addr;
+ 	} while (pgdp++, addr = next, addr != end);
++
++	if (ops->cleanup)
++		ops->cleanup();
  }
  
- static pmd_t *init_pmd(pmd_t *pmdp, unsigned long addr, unsigned long end,
+ static void __create_pgd_mapping(pgd_t *pgdir, phys_addr_t phys,
 -- 
 2.25.1
 
