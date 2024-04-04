@@ -1,32 +1,59 @@
-Received: from out30-99.freemail.mail.aliyun.com (out30-99.freemail.mail.aliyun.com [115.124.30.99])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f46.google.com (mail-pj1-f46.google.com [209.85.216.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40CF276023;
-	Thu,  4 Apr 2024 13:44:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.99
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38DCE85644;
+	Thu,  4 Apr 2024 13:45:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712238293; cv=none; b=k+zcoo2n/mfPb9uh8Sz5uERAwJqAKyhzbTct5EI9LwMtIiIgfSycE02F1eBaxW+t3vXKm5tWBSzJRNSgBNqT5TcdQ0e9bYcFDuK5NFKyGecZrZFw8nh/sMw33o8Oj2fJdETE8p7XuL5plfBCpkD6R00FCqySzU/L7c9a+CMnctM=
+	t=1712238317; cv=none; b=bYYq4XFKYSvBW9E1hKjyuHr9h4QTi8YrPpVS66RB/TAB4sSqv+8APyLTMyVdCLvAHYiwg3ymhPty4c9TnFb5BXI5066uBCnTcDbIrXSj0+89LeviHk2khMSys3slBREuEmafLPQOHuXxfM16i9TTcKoDcTVq0EJJ3T8goZ5IF3o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712238293; c=relaxed/simple;
-	bh=tAAtr7pnR4MH/4TMN77ugW13pgkeIiTR+g76NLCU3ds=;
+	s=arc-20240116; t=1712238317; c=relaxed/simple;
+	bh=eNFxWhJpWGn4MVKyzZRbjgkh8DaGFUxZWhNvYbMxGkI=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ayOWBDwlMlJCLtJzr47kkX41z9+LBT3lWXdzu/Pp1O1AKzCao+ZE750npVvjDFuGQnlSaqe2PZkEfgdpnajB6CX0f8SRIU3xa1ebnZLqe1RarD+uRd4X4t3mwC1nM96tUoTSvbmEaXEuZXOI5rrF9adJMP8u3MU3hGhlswhlF6U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=S5qcrfZm; arc=none smtp.client-ip=115.124.30.99
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	 In-Reply-To:Content-Type; b=dmBWMyIBqQkW6Ej3XHSuZAaKIrrBCAz9++Xktpk5syhfnUQoVerKPN1wPDr28ii7VeTeyP61DjO6H2n3tQFVxAOBueB1HX7TvcPF1TqgsonqxGamFNHCVYMgZomIoG+oOMkOBGxcbVWuWYlZodqri5VDPSd11c/yPlqXIsav8x4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AaOMsiCM; arc=none smtp.client-ip=209.85.216.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="S5qcrfZm"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1712238280; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=O+o5H6Rp/YKTpylXkB7+dR8XqLzGRaNwaFZPCluqRS8=;
-	b=S5qcrfZm1dko10hBCbO8YldAe+QslRnlpEVQBpZ76+NqGZUfVErND4p+JrABcyINl3+O3JmpGiQ2lC0P0YRDcgx3cqQ4V3A5Ypdo6CQE31FlAlb64oquLJPI0Jwu0v4Swah4Xq0HlN2JkGWFWLWsDauCmHa8h8nGs1c3ONIEhuU=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R431e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045192;MF=guwen@linux.alibaba.com;NM=1;PH=DS;RN=20;SR=0;TI=SMTPD_---0W3uXJtx_1712238278;
-Received: from 30.236.60.242(mailfrom:guwen@linux.alibaba.com fp:SMTPD_---0W3uXJtx_1712238278)
-          by smtp.aliyun-inc.com;
-          Thu, 04 Apr 2024 21:44:39 +0800
-Message-ID: <7c3733b7-a3f2-45ba-9b8d-880957ed5cdf@linux.alibaba.com>
-Date: Thu, 4 Apr 2024 21:44:37 +0800
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AaOMsiCM"
+Received: by mail-pj1-f46.google.com with SMTP id 98e67ed59e1d1-2a2da57ab3aso373962a91.3;
+        Thu, 04 Apr 2024 06:45:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1712238315; x=1712843115; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=WxzZmInBFuAtLU4NoG0liW28RCj7raug1tFQ+0Qn6gc=;
+        b=AaOMsiCMllr0ywB+3KRStqmw9umxWIGSm932/ZyMlENms6urkXC2Tsk4cIUdLlMY79
+         xRf5m1dumbNOrM+wUPv8ozHeg4+L5RZjNHbqojKeXwlGSzxjmUbjyBksrf0iV7s++do/
+         aXNWGFoPL7tv9+1dsbzHVfdodZH09nD68P7wU0maN/6vy7s/8VuGrf8EsCIR9u3630vR
+         4grNazG4lQln6LhovvJj1r/2lCw5xsMOlzGSmdqESaMjbGAt7PmfAux9aW7Y1JIInJdZ
+         4qRr/n03BtYjO1c9p/gQEH9RkQVxSUGb3VDKk07DF76eumd0dqWBy9rtfABQOFgAnT8X
+         gEHA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712238315; x=1712843115;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=WxzZmInBFuAtLU4NoG0liW28RCj7raug1tFQ+0Qn6gc=;
+        b=XV39LzC+W6ILO9Mi7DBIKk6UmeWrrmPdCE2p1xg/UnMCqFSxSZH1Knf3pwE7I+9V+O
+         SyYbADN+iL5Uwhyfdh+n0sgIjc37rRp5nd+tWihsYqBDVDH/Fgo7BLMZQcM99Gz8ZBTH
+         68vl8Ec1EUVj7/MT3cL13RoRGu5KSbIy25p7e2QA2XxTZ+RcMA6ClOIfbFNWlAN2io0o
+         6ld/vWeZSz7V9uFD+9aS18a2JaxNKTOTNsM/YPQHmCg4/Crdb1jYt1TUiF8hCqy0VACF
+         vaFWyER1Ml0TnIqQi0QzkoeackSsr10fJWJw7NSJdlyGEHREbeH74+saDMaTM6kfVyrf
+         gMhQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU8MUDCM3fUUt7EalKhPMPdfbctyisTySdRuUaF9INa5mag7yLOLYIdgkMQeG9n9jwmNk7t45m4aMjukXyM528aG7KNq2arccMEQRlIVZaGvvCvjTeqxrmS3UhdjUmGHDdR
+X-Gm-Message-State: AOJu0YxEGBx+8X0TGzh44gCye3TMAvkBQVV25XTA5aKkC2k9BIkP0ULn
+	D1Fv6yE+D12umR8C9pdGrJ1NhGHCbGYw48bukU4s7+6j0lJXarg8
+X-Google-Smtp-Source: AGHT+IGwHkPA46yLsNudscd7HWEyOutrM8mgbI2iygtOCqjw2DmR57hI0OfHbI9BXGLrzxboQP/BNg==
+X-Received: by 2002:a17:90a:17cb:b0:2a2:c430:fc30 with SMTP id q69-20020a17090a17cb00b002a2c430fc30mr2515476pja.21.1712238315089;
+        Thu, 04 Apr 2024 06:45:15 -0700 (PDT)
+Received: from [172.27.237.1] (ec2-16-163-40-128.ap-east-1.compute.amazonaws.com. [16.163.40.128])
+        by smtp.gmail.com with ESMTPSA id d4-20020a17090ac24400b002a2fe0998f0sm54885pjx.19.2024.04.04.06.45.08
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 04 Apr 2024 06:45:14 -0700 (PDT)
+Message-ID: <fe40498a-3bb2-43c6-b3e2-1e4e10205db1@gmail.com>
+Date: Thu, 4 Apr 2024 21:45:05 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -34,72 +61,64 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH net-next v5 05/11] net/smc: implement DMB-related
- operations of loopback-ism
-To: Niklas Schnelle <schnelle@linux.ibm.com>,
- Gerd Bayer <gbayer@linux.ibm.com>, wintera@linux.ibm.com,
- twinkler@linux.ibm.com, hca@linux.ibm.com, gor@linux.ibm.com,
- agordeev@linux.ibm.com, davem@davemloft.net, edumazet@google.com,
- kuba@kernel.org, pabeni@redhat.com, wenjia@linux.ibm.com, jaka@linux.ibm.com
-Cc: borntraeger@linux.ibm.com, svens@linux.ibm.com,
- alibuda@linux.alibaba.com, tonylu@linux.alibaba.com,
- linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
- netdev@vger.kernel.org
-References: <20240324135522.108564-1-guwen@linux.alibaba.com>
- <20240324135522.108564-6-guwen@linux.alibaba.com>
- <9a17268d4046f99b30f3620079b5749a9ddc5cd9.camel@linux.ibm.com>
- <92b0c4b1-4844-4adf-a15a-a9323fb859e1@linux.alibaba.com>
- <6d3cfa04c9826a24f0ad8d401940af3ad02a67bc.camel@linux.ibm.com>
-From: Wen Gu <guwen@linux.alibaba.com>
-In-Reply-To: <6d3cfa04c9826a24f0ad8d401940af3ad02a67bc.camel@linux.ibm.com>
+Subject: Re: [PATCH 00/15] Coalesced Interrupt Delivery with posted MSI
+Content-Language: en-US
+To: Jacob Pan <jacob.jun.pan@linux.intel.com>,
+ LKML <linux-kernel@vger.kernel.org>, X86 Kernel <x86@kernel.org>,
+ Peter Zijlstra <peterz@infradead.org>, iommu@lists.linux.dev,
+ Thomas Gleixner <tglx@linutronix.de>, Lu Baolu <baolu.lu@linux.intel.com>,
+ kvm@vger.kernel.org, Dave Hansen <dave.hansen@intel.com>,
+ Joerg Roedel <joro@8bytes.org>, "H. Peter Anvin" <hpa@zytor.com>,
+ Borislav Petkov <bp@alien8.de>, Ingo Molnar <mingo@redhat.com>
+Cc: Paul Luse <paul.e.luse@intel.com>, Dan Williams
+ <dan.j.williams@intel.com>, Jens Axboe <axboe@kernel.dk>,
+ Raj Ashok <ashok.raj@intel.com>, "Tian, Kevin" <kevin.tian@intel.com>,
+ maz@kernel.org, seanjc@google.com, Robin Murphy <robin.murphy@arm.com>
+References: <20240126234237.547278-1-jacob.jun.pan@linux.intel.com>
+From: Robert Hoo <robert.hoo.linux@gmail.com>
+In-Reply-To: <20240126234237.547278-1-jacob.jun.pan@linux.intel.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-
-
-On 2024/4/4 19:27, Niklas Schnelle wrote:
-> On Thu, 2024-04-04 at 18:20 +0800, Wen Gu wrote:
->>
->> On 2024/4/4 01:20, Gerd Bayer wrote:
->>> On Sun, 2024-03-24 at 21:55 +0800, Wen Gu wrote:
->>>
->>> When I instrumented this to see, why I still see tons of my other
->>> temporary instrumentation messages from the "ism" driver, I found that
->>> in my setup loopback-ism is used rather infrequently.
->>>
->>> I suspect this is due to how the SMC proposals are constructed in
->>> net/smc/af_smc.c and net/smc/smc_pnet.c - and later evaluated in
->>> smc_check_ism_v2_match() - where there is a first-come-first-serve
->>> selection.
->>>
->>> I wonder if one should change that to favour loopback-ism over "real"
->>> ISM devices - and how this could be achieved elegantly.
->>>
->>> Just some food for thought... Probably little you can do on x86.
->>>
->>
->> Yes, it is about the priority of available ISM devices, and now it
->> is decided by their order in the smcd_dev_list. The later registered
->> ISMv2 devices(without pnetid) will be added to the beginning of the
->> list (see smcd_register_dev()). So there is a probability that
->> loopback-ism will not be ranked first, since it is added into list
->> earlier during smc_init().
->>
->> If we have the runtime switch of loopback-ism, we can re-active the
->> loopback-ism, that make it be re-added into the beginning of the dev
->> list and be chosen first. Or a new netlink command to adjust the slot
->> order of available ISM devices in the list. As we discussed before,
->> that could be tasks in stage 1 or stage 2.
->>
->> Thanks!
+On 1/27/2024 7:42 AM, Jacob Pan wrote:
+> Hi Thomas and all,
 > 
-> Maybe when adding the ISM devices we could instead make sure that all
-> ISM devices are added after loopback and loopback is added in the
-> beginning. I think loopback should always be preferred and would
-> consider it a bug if it isn't faster too. Between virtio-ism and ISM it
-> may be less clear so maybe for stage 2 we would want a priority setting
-> and then insert ordered by priority. Thoughts?
-I have no objection. If we all agree, I will keep it at the beginning of the list.
+> This patch set is aimed to improve IRQ throughput on Intel Xeon by making use of
+> posted interrupts.
+> 
+> There is a session at LPC2023 IOMMU/VFIO/PCI MC where I have presented this
+> topic.
+> 
+> https://lpc.events/event/17/sessions/172/#20231115
+> 
+> Background
+> ==========
+> On modern x86 server SoCs, interrupt remapping (IR) is required and turned
+> on by default to support X2APIC. Two interrupt remapping modes can be supported
+> by IOMMU/VT-d:
+> 
+> - Remappable 	(host)
+> - Posted	(guest only so far)
+> 
+> With remappable mode, the device MSI to CPU process is a HW flow without system
+> software touch points, it roughly goes as follows:
+> 
+> 1.	Devices issue interrupt requests with writes to 0xFEEx_xxxx
+> 2.	The system agent accepts and remaps/translates the IRQ
+> 3.	Upon receiving the translation response, the system agent notifies the
+> 	destination CPU with the translated MSI
+> 4.	CPU's local APIC accepts interrupts into its IRR/ISR registers
+> 5.	Interrupt delivered through IDT (MSI vector)
+> 
+> The above process can be inefficient under high IRQ rates. The notifications in
+> step #3 are often unnecessary when the destination CPU is already overwhelmed
+> with handling bursts of IRQs. On some architectures, such as Intel Xeon, step #3
+> is also expensive and requires strong ordering w.r.t DMA. 
 
-Thanks!
+Can you tell more on this "step #3 requires strong ordering w.r.t. DMA"?
+
+> As a result, slower
+> IRQ rates can become a limiting factor for DMA I/O performance.
+> 
+
 
