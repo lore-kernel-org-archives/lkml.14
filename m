@@ -1,93 +1,123 @@
-Received: from smtp-fw-2101.amazon.com (smtp-fw-2101.amazon.com [72.21.196.25])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 990A113C68B
-	for <linux-kernel@vger.kernel.org>; Thu,  4 Apr 2024 21:27:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=72.21.196.25
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF34713C3EB
+	for <linux-kernel@vger.kernel.org>; Thu,  4 Apr 2024 21:28:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712266072; cv=none; b=ScXL6j/ZTKwGElFko4imERODyanrOZ4i7Hpg8Gmg+Ux0CEybD/7m45xDHv7ZDZbLkizJ0uqM0wzw6Q5zAypretf2TfVzWXUU+zDQNfLvsUqhpzp0+vt6/pp5pARcoHjmXt8sB8RM4mqhj8oVqfNiDpDd4LiEE3r8JMNDnPNL5H4=
+	t=1712266095; cv=none; b=psCZkl/0RR8oiV+POx7CWktLEmCia66tUzqiLFYv0HLufpu74w6V5OoovvYAkCfRMpbxTKHrfaKzFQGQVl9CF74rtNWa67/V+7lAAPsHUsXiWzETJx7CBp+u1Llna52WcvFfASWP/8Db5rnRegA04sBikWaWtgEAGfskoIGhnP8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712266072; c=relaxed/simple;
-	bh=i+qYSe82dk6E1DEDEYjK9f3oiyy6F6UrVwE4dTrUjFE=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=HHpTzQNgR4RJcyJEurv6YcVMYtLUvj1FGVNpTNnIpBrLVIGplNY7cc+34nE++jdbM9knT+Qmbs9hPPWsQ7iWnG3O4RKBToM6Ao00PnX6W6vLUq6Elz01gxEkvwcx6uuzzN/Qh4mBYipL/Gw0OncmFQjIQ4tWmWcY4GKp8KZ7TAo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.com; dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b=kKPC3kzL; arc=none smtp.client-ip=72.21.196.25
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.com
+	s=arc-20240116; t=1712266095; c=relaxed/simple;
+	bh=npMODBQKA2nj4U5DnfvWas5C+UgEISrVD0B3z/+vB1o=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=rWnFyWW+OUkuAu1V55SLC3GT4WZ5pH3ErNsacqvkJWSGJpyjIkMVnG4xRYgvl1b9RuD//7H0787vsnACDiJlLNFSI5ZIQLlYc4DxEdr2xBt4NWrCXu/eLgMjK71U2SbFdhhX5ReSDHXuG++bZ4VwTThHGUaN4cFJz/bs+eyGox8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ZWb4mMFB; arc=none smtp.client-ip=209.85.221.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="kKPC3kzL"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ZWb4mMFB"
+Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-343cfa6faf0so586632f8f.0
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Apr 2024 14:28:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1712266071; x=1743802071;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=vXMyRUMmIDSRpvnnN6Ds8+s/LCFeDKLvTc9elA3zE8M=;
-  b=kKPC3kzLgpxKq2pBE5X7cdrcBz+ZK1T4PB8DLn39PtP5fszzTns8um+C
-   IROnM6O/rNoM7XqdixIdfcrPZHkjD/vKLaUL71g0wh3ENWeuNHvi4Rl/t
-   yngVf789E9hBrTu9lm+zSysneWfqhj+3ny40AfGw21KR5Fbxgc7/AtJBe
-   g=;
-X-IronPort-AV: E=Sophos;i="6.07,180,1708387200"; 
-   d="scan'208";a="392718183"
-Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.43.8.6])
-  by smtp-border-fw-2101.iad2.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Apr 2024 21:27:49 +0000
-Received: from EX19MTAUWC002.ant.amazon.com [10.0.7.35:38359]
- by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.49.69:2525] with esmtp (Farcaster)
- id 9ce1e057-8baf-481b-b517-faf690d2bbe9; Thu, 4 Apr 2024 21:27:48 +0000 (UTC)
-X-Farcaster-Flow-ID: 9ce1e057-8baf-481b-b517-faf690d2bbe9
-Received: from EX19D002UWA003.ant.amazon.com (10.13.138.235) by
- EX19MTAUWC002.ant.amazon.com (10.250.64.143) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.28; Thu, 4 Apr 2024 21:27:48 +0000
-Received: from EX19MTAUEA001.ant.amazon.com (10.252.134.203) by
- EX19D002UWA003.ant.amazon.com (10.13.138.235) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.28; Thu, 4 Apr 2024 21:27:47 +0000
-Received: from dev-dsk-alisaidi-1d-b9a0e636.us-east-1.amazon.com
- (172.19.181.128) by mail-relay.amazon.com (10.252.134.102) with Microsoft
- SMTP Server id 15.2.1258.28 via Frontend Transport; Thu, 4 Apr 2024 21:27:47
- +0000
-Received: by dev-dsk-alisaidi-1d-b9a0e636.us-east-1.amazon.com (Postfix, from userid 5131138)
-	id 8F20F235D; Thu,  4 Apr 2024 21:27:47 +0000 (UTC)
-From: Ali Saidi <alisaidi@amazon.com>
-To: <kjlx@templeofstupid.com>
-CC: <alisaidi@amazon.com>, <catalin.marinas@arm.com>, <james.morse@arm.com>,
-	<kvmarm@lists.linux.dev>, <linux-arm-kernel@lists.infradead.org>,
-	<linux-kernel@vger.kernel.org>, <maz@kernel.org>, <me@davidreaver.com>,
-	<oliver.upton@linux.dev>, <suzuki.poulose@arm.com>, <will@kernel.org>,
-	<yuzenghui@huawei.com>
-Subject: Re: [PATCH] KVM: arm64: Limit stage2_apply_range() batch size to smallest block
-Date: Thu, 4 Apr 2024 21:27:42 +0000
-Message-ID: <20240404212742.11248-1-alisaidi@amazon.com>
-X-Mailer: git-send-email 2.40.1
-In-Reply-To: <20240404044028.GA1976@templeofstupid.com>
-References: <20240404044028.GA1976@templeofstupid.com>
+        d=google.com; s=20230601; t=1712266092; x=1712870892; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=9OUdguqwR0wl7IoJc/6ZxoQ05I+NWMpwGK+WJht4B5k=;
+        b=ZWb4mMFB5iYnGiZRg9sNjT3Y8xx9ODzb44WD3HBzHx4ejat66hjJ3E0rPok3bTQ5gD
+         uB1rFBJS3yzbw9Y1D/o3ACbHOH2OTxtzvHjPUL6GLj68t67H5lHjrknbILcIyJ3316M6
+         k02J6k465qgy3qubGD/gM5atwobS2X8Kc7eCLNu9CPcWZTdhYWTaZIQdEUZTlphkzt5N
+         l3fOUlBf45gWI9gXpa/WNP/R+Rim7IiocbqCc0ab7N7+7PPx3jswQZG/f/sDSi8bjcD5
+         ge4rnq8Gvg/zTnZFnzF72KBxkJh7i7PKm0BFU4yzgBk2Ot1jwgyyXc2fW++JgbBIam4m
+         /NhA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712266092; x=1712870892;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=9OUdguqwR0wl7IoJc/6ZxoQ05I+NWMpwGK+WJht4B5k=;
+        b=mHYZn7eOL/kqWN7+Y3oMfqqLPcPoJHXj5DRCa5rbgEAIC4HbCifinO9neAxFu1FuVB
+         p7JhhGf7ChT2ginxEte+dTrVPXBRO3ETl1z3MzsJ0YMfdyVBjFIj+UkqXboKWzOZsF6S
+         7xlNsaM35NfDBzQ9LDLISyRH28m1x4ZN+P3AppFJoUG41N1tvA3LKspOAswffF7ekTYZ
+         zA4EJ54gNff5mcez2fOpMoJfJba63aw/d3zFoNZGQoEMd27mZNDNtG5lNLIF6kNPE13u
+         w5Nu739WaxUD1UuWLy2Iw217K1W/Q5WtYa5jcnOe/HdLZV8GcVEo6TaeFlP2j6QsDwqT
+         Hw8w==
+X-Forwarded-Encrypted: i=1; AJvYcCXhWfqTfHUrSlNhI34nh7mc3f2R2unYblYXWqS9yvvKHZI2A+74/xXRQ3mjkxca3jxABy8VVfUCwjmJXECr38VCZx9o1M6oXW/yaqA7
+X-Gm-Message-State: AOJu0Yz5RFx7YtuD06jahNUmRuWSDKGf9MofLA01icXqUFvALwrrDyui
+	CkQTjH3YoLpmduwRD3/1P6cRTScOtgu+kcgrRLEt9ER1JKFBhR4+2HCzWPJ1HU5eRfgmyEaIqkv
+	il4EZqib14p3/387OsU7UKtzdtyhNfEwnLQfe
+X-Google-Smtp-Source: AGHT+IGJXJt3z9AjFNT8jY0zgvGJQUXCyam/rKGlEORAE2+JiSEdT0O8DCZgFu4KuDOhR1WF8ozN+G8rXaz8Y8+rApU=
+X-Received: by 2002:adf:ce0c:0:b0:33f:84a1:7eb8 with SMTP id
+ p12-20020adfce0c000000b0033f84a17eb8mr3002011wrn.1.1712266091794; Thu, 04 Apr
+ 2024 14:28:11 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
+References: <20240312155641.4003683-1-yosryahmed@google.com>
+In-Reply-To: <20240312155641.4003683-1-yosryahmed@google.com>
+From: Yosry Ahmed <yosryahmed@google.com>
+Date: Thu, 4 Apr 2024 14:27:33 -0700
+Message-ID: <CAJD7tkYg3KbmMHg0jt8x0Lp9zss6qr-9PnbwmYXGfa0uQ_Xyig@mail.gmail.com>
+Subject: Re: [PATCH v2 1/3] x86/mm: Use IPIs to synchronize LAM enablement
+To: x86@kernel.org
+Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>, 
+	Andy Lutomirski <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
+	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>, 
+	Rick Edgecombe <rick.p.edgecombe@intel.com>, Andrew Morton <akpm@linux-foundation.org>, 
+	linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-I measured the time it takes to unmap a VM by changing the kvm_page_table_test
-to report it. It's and on Graviton3 it's about 300ms per 1GB of flushing
-with 4KB pages. Unmapping 128GB takes around 39.5s and with a single call to
-__kvm_tlb_flush_vmid() instead of the 32M calls to __kvm_tlb_flush_vmid_ipa()
-reduces this to around 5.9s (~7x). This means each iteration of the
-stage2_apply_range() is reduced to 46ms. So we're certainly calling
-cond_resched() a whole lot more. 
+On Tue, Mar 12, 2024 at 8:56=E2=80=AFAM Yosry Ahmed <yosryahmed@google.com>=
+ wrote:
+>
+> LAM can only be enabled when a process is single-threaded.  But _kernel_
+> threads can temporarily use a single-threaded process's mm.
+>
+> If LAM is enabled by a userspace process while a kthread is using its
+> mm, the kthread will not observe LAM enablement (i.e.  LAM will be
+> disabled in CR3). This could be fine for the kthread itself, as LAM only
+> affects userspace addresses. However, if the kthread context switches to
+> a thread in the same userspace process, CR3 may or may not be updated
+> because the mm_struct doesn't change (based on pending TLB flushes). If
+> CR3 is not updated, the userspace thread will run incorrectly with LAM
+> disabled, which may cause page faults when using tagged addresses.
+> Example scenario:
+>
+> CPU 1                                   CPU 2
+> /* kthread */
+> kthread_use_mm()
+>                                         /* user thread */
+>                                         prctl_enable_tagged_addr()
+>                                         /* LAM enabled on CPU 2 */
+> /* LAM disabled on CPU 1 */
+>                                         context_switch() /* to CPU 1 */
+> /* Switching to user thread */
+> switch_mm_irqs_off()
+> /* CR3 not updated */
+> /* LAM is still disabled on CPU 1 */
+>
+> Synchronize LAM enablement by sending an IPI from
+> prctl_enable_tagged_addr() to all CPUs running with the mm_struct to
+> enable LAM. This makes sure LAM is enabled on CPU 1 in the above
+> scenario before prctl_enable_tagged_addr() returns and userspace starts
+> using tagged addresses, and before it's possible to run the userspace
+> process on CPU 1.
+>
+> In switch_mm_irqs_off(), move reading the LAM mask until after
+> mm_cpumask() is updated. This ensures that if an outdated LAM mask is
+> written to CR3, an IPI is received to update it right after IRQs are
+> re-enabled.
+>
+> Fixes: 82721d8b25d7 ("x86/mm: Handle LAM on context switch")
+> Suggested-by: Andy Lutomirski <luto@kernel.org>
+> Signed-off-by: Yosry Ahmed <yosryahmed@google.com>
+> Reviewed-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
 
-
-> Just a quick followup that I did test Will's patches and didn't find
-> that it changed the performance of the workload that I'd been testing.
-> IOW, I wasn't able to discern a network performance difference between
-> the baseline and those changes.
-
-That is a bit unexpected that the performance wasn't worse with the patch Will
-sent because it should have disabled the range invalidates since they these 
-invalidates will be getting rid of blocks?  Which Graviton were you testing
-this on? 
-
-Ali
-
+There hasn't been any further review comments on v2, and the merge
+window has been closed for a while now. Do I need  to take any further
+action or send a new version of this series?
