@@ -1,27 +1,27 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEF221DFCE;
-	Thu,  4 Apr 2024 18:42:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE6F313119B;
+	Thu,  4 Apr 2024 18:42:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712256129; cv=none; b=V3Cgmj/rbhZ/SWXARMWhSs+ULMwo7Q40QMvNAAeqFSP69RDpb42D6nu5qSo7/eknXXtZ414Bnqh1atz0eXyaTTUQprQPd4igdSCAJH/R4qWWXH5EB+cOcxqF7GXnVtFyILrQM67OKWjXt1f0WJEiZpiBqB72FWr9wCacOeYozKo=
+	t=1712256137; cv=none; b=AMGf/tSUPpAknOmoG7sMpRVBcaH/x0dhJwM99nUa6ZlcVKu7i609Wu/bN6e/HU9qyHR7PYDzxCCX6Cn5jAY3Fz76Rz5G2OANGHwfK9IM8sXjEtUrIi0jvaOkOWmMEhR/Kz4yw2LoA17yQ7AS2qXeZvRXE/GOCSfnpts4Q0OLUMA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712256129; c=relaxed/simple;
-	bh=cI6azxfny05M3Z//BIhPB50C5DqMX9ELlICE1cUWSHs=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Z0n6gMYZjfR306wQHC1YNM51wy1OtsyJ4mglgYpopTBFsn4vJ66wd1JAOokEs+Dvwh+caOL/XYT1UOYYRdBZm0pk1kWki18MmF4ID86XZSBcM5+I0ODjDyZ4/6qMcCZnqRujCKj2UW4cGJNFu/CmoENbkQNeWqLK16aDJ3RR+tQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=oRyHsPMy; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1712256137; c=relaxed/simple;
+	bh=RXwk3mvmfxTlAvcZkMCaK7Rhw/V8MZCUNA1Ak1sC34s=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=QL8LBOcCJXktvmAG4lUDhhAMxULmoqtEvFISYxgHHBn6/C+2QkBVUiaqAufbB/3aLAiLtKR0aK7EwIEieHQsMDYFePpEt+Cg25EdBBPk/3pW8at0Fvqn7hU/8KX5uYiDBT47VFfCrkD2qeuecHaT2Th6uxRpyRPgXskKhNob6P4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=OBVX85Lx; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="oRyHsPMy"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D8425C433C7;
-	Thu,  4 Apr 2024 18:42:07 +0000 (UTC)
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="OBVX85Lx"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 11817C43390;
+	Thu,  4 Apr 2024 18:42:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1712256128;
-	bh=cI6azxfny05M3Z//BIhPB50C5DqMX9ELlICE1cUWSHs=;
+	s=korg; t=1712256136;
+	bh=RXwk3mvmfxTlAvcZkMCaK7Rhw/V8MZCUNA1Ak1sC34s=;
 	h=From:To:Cc:Subject:Date:From;
-	b=oRyHsPMyfmi6kPbFZoTRaX0p6NK5TxA8H3j2eLw/yLIWQae+ZF/eTKV+dBKbeioPI
-	 j1ql7RwbK6JXG9ooQxZTpKVOM2w0nQtUjsq4bRdu2BLkTbfBfwuKDbPOpGqmcCMCRj
-	 /7cmzAGhnWQ1ASSzmPbzwS1SQ8b54/i0epAx9hZY=
+	b=OBVX85LxnF1fxGh5r+6IEgng9WsLSO78E67yd+ILTF4Ilmp5P/DbQXDCbAk46M14C
+	 zqHzHZirnmsFWiUAIDiQ5iXD5HtTa9Ps5PFxraCtaHDvRZIAFOeeuiMkRzPJ2e+aC5
+	 BZaCqKAIFW1uArTdD10c3vlEYAxvj61ReqbfFXUs=
 From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To: linux-kernel@vger.kernel.org,
 	akpm@linux-foundation.org,
@@ -30,9 +30,9 @@ To: linux-kernel@vger.kernel.org,
 Cc: lwn@lwn.net,
 	jslaby@suse.cz,
 	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Linux 6.6.25
-Date: Thu,  4 Apr 2024 20:42:02 +0200
-Message-ID: <2024040403-dwelled-guacamole-b3f0@gregkh>
+Subject: Linux 6.8.4
+Date: Thu,  4 Apr 2024 20:42:08 +0200
+Message-ID: <2024040409-attentive-raffle-d9bc@gregkh>
 X-Mailer: git-send-email 2.44.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -42,12 +42,12 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-I'm announcing the release of the 6.6.25 kernel.
+I'm announcing the release of the 6.8.4 kernel.
 
-All users of the 6.6 kernel series must upgrade.
+All users of the 6.8 kernel series must upgrade.
 
-The updated 6.6.y git tree can be found at:
-	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git linux-6.6.y
+The updated 6.8.y git tree can be found at:
+	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git linux-6.8.y
 and can be browsed at the normal kernel.org git web browser:
 	https://git.kernel.org/?p=linux/kernel/git/stable/linux-stable.git;a=summary
 
@@ -74,5 +74,5 @@ Greg Kroah-Hartman (12):
       Revert "workqueue: Factor out pwq_is_empty()"
       Revert "workqueue: Move pwq->max_active to wq->max_active"
       Revert "workqueue.c: Increase workqueue name length"
-      Linux 6.6.25
+      Linux 6.8.4
 
