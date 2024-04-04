@@ -1,104 +1,92 @@
-Received: from mail-yb1-f176.google.com (mail-yb1-f176.google.com [209.85.219.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31A0384D30
-	for <linux-kernel@vger.kernel.org>; Thu,  4 Apr 2024 11:58:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4293D84FC8;
+	Thu,  4 Apr 2024 11:59:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712231936; cv=none; b=YuoHB+lCekA+PKek/7vGw7G301Z/ohv5sJZGlM3s/7B0U8S+bvPyGzPRWoxHC4YwdyBYsBa4j0PDUsZloe+F+xOGNLNdFqWMZI/noqI/ekUmCMVzV+0rnTuKHAGAGs0HDaMgmaEKBX9hv/na/kp3UVqabieBfnk07PYUeiiLRec=
+	t=1712231967; cv=none; b=YBVV64nYySy0mxm8bpxBM3hvsbCJFMqj7M6Dq0XbSHz37g8K9QvvcL79AcPZxqAUAwyxkSK3HL6hd74UQOt4ABbmJtTwllRtO/xWwbPgEbCHL8dDouprpxs1lSmVG1Rw5TBD8HI+F+POJpg8GBRwdWY1ePII1Piw+eWjEFmyQRA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712231936; c=relaxed/simple;
-	bh=qH4XZ2IFxQPw0iadjvJVCpAIxzbzeVvAzyXBRoeAy9E=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=RqFQuU3YnkccNzOFS9TMCELL3PC9vRYQvxWozSrqbyafg44s0EfBzrvxP+OCR0Q8jrLjSTJx60zRoctQ9OrbqhXjOYAdGm/FW/hhY4K6fmzqtj0upGSiSy/IXMRLmeuSNUAA8jzA95W6PmBX4VsHEJU3FsZYHSsFOYVdtBw23dQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=xsw+jQrm; arc=none smtp.client-ip=209.85.219.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1712231967; c=relaxed/simple;
+	bh=swy1eZbFCxFKWtpDguCItdi4aLCPH0dNfeYL5h55mrw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GeFfQagof0ZuvyoO6S79iF6+qnhW5LAm9zzd44KuxHB0NJbUOdzAeUXAmG2MypiI76yxCarXEXzu1XKV24tGKJIqTBQ7yBcolc7D7d+S4fW5ZErwePBT5mIYxbNE0qB/bsGKxGYoxCTW7OV0WjBj0t/epb9DwmmnQrjtc4cu1qY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=izz5NNCL; arc=none smtp.client-ip=192.198.163.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xsw+jQrm"
-Received: by mail-yb1-f176.google.com with SMTP id 3f1490d57ef6-dcc6fc978ddso723884276.0
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Apr 2024 04:58:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1712231934; x=1712836734; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=qH4XZ2IFxQPw0iadjvJVCpAIxzbzeVvAzyXBRoeAy9E=;
-        b=xsw+jQrm1KpOqQxUmQbfq8duBd1OWU+07iJ2C+uyLW+C99sj5S5tU5N8GuKILcGlv1
-         4oG853kUn/EUEW7OEDtZHdYk6sePmOkBietyxKm3EdC6T3B1KPYkCbtRWMd+EkO/Rd/B
-         W8xsw+olI4/8Xp/DRznMC94Myb2MrSQDZuRL6+z/1yFYEVLigF43lzCOyz6L4H1Xzc2L
-         ZaU/MivG8o0Xa8GomBgFG1ms1IFS178SKOQv5X9L2TNNBesaAikvf/CdTAFh+s3j0lTF
-         VKg4QQMcI96gvNXVOSWqglWDWQK6jBTmuN89NyfzVh9sVZmKC+5/ADV2/b7IzkqQXd14
-         qKlQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712231934; x=1712836734;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=qH4XZ2IFxQPw0iadjvJVCpAIxzbzeVvAzyXBRoeAy9E=;
-        b=XIvD+BVU1Uq+h//Da86FJyeGCNZ6CZHKs4LacIvAJ6Bv+Q2PqqW5SzmCP8CNcbgs1U
-         HiTeQLPoGjvLflI9Sm6Vgj6A2hNndbQqWJGbXnNHwJFQRXOuJHGKJLHZFDJCqYka6+CD
-         gUEIxqZpk4FpML4wHxZLcIBChBmmnK/1N+ojh9A+cHLcKbKf00i9JbufqXDp1jm/vIpN
-         175+b7F+59H57S7ocZVeFx9R76OhOfXRe72EWuTE+hgXjSASxs9fKzNdiPsJwX0Yb3hj
-         QIAM4gIinn4iysbRu4BcO0OaDMqVtXquwzQmRwttMZn4kEkgBjkJN6/i4VFz5ME9O72o
-         bW9g==
-X-Forwarded-Encrypted: i=1; AJvYcCU0BGTQYIDicphYJR6qQQGL0h7qFlKNqCbpk4XnSVChZwfUeUQ1+SqCVH4mFOUd/WQG2fT/nBUcQsEXCzxkf3waJztLX4phH/c75jmB
-X-Gm-Message-State: AOJu0Yyr0eMz1R8/ZXrsCHlCBNh3xkVVgEyNPvkR5W/9BUPe7fYczvcA
-	KSHyGpyGTCxfFCM9DK6IOPdFg1my5OPpiSvhfOLkouXoaqktA7wAQSotou15sy3PgbYtBKMgIqA
-	JXlrCn0QYS/GHQLNIo/CIRlsGjijfAFZBeWZ3oA==
-X-Google-Smtp-Source: AGHT+IG8yq2enP3IQcY0tQ0zROWSYj21wUUMvwbt1fBAPBhrcUUxHgaEhfw3RVmcgwq6VENuY6ZjFW5jBZpK4n3+YRw=
-X-Received: by 2002:a05:6902:c0d:b0:dc7:4265:1e92 with SMTP id
- fs13-20020a0569020c0d00b00dc742651e92mr1948021ybb.23.1712231933979; Thu, 04
- Apr 2024 04:58:53 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="izz5NNCL"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1712231965; x=1743767965;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=swy1eZbFCxFKWtpDguCItdi4aLCPH0dNfeYL5h55mrw=;
+  b=izz5NNCLd/uRn4L24Vhvzrlx6wJBbAtTmZbGSn4u0SLkDqTFSjYkzfzD
+   cLXkN7AotY7SdsWnm8u7WimWLcgjS/nJHuVeUdXjcFtGy35mEocgMhpgR
+   zjLaTR4SK7LQlFJoobGwVWLLxlU4luUtgv68QEvqhhi1+cRFP4l7IDBhB
+   inyz4Mi4RRANn/9l0TtwTuNhP6ILLd8+V3ZAp33jAHKkF4JLx0HBon8YA
+   oPZBkCxAB5YBJRA7aJH9L/sX2nB0YZ2smIySIf//2LuiAIEna0/83MHFz
+   WtiWK/jXpmF6OB4EDTWubGNN4fr/A1YmEU2uPock/hxOBdxCAYzHUhW7o
+   A==;
+X-CSE-ConnectionGUID: 9P479gIdQL2pWziU7jm/PA==
+X-CSE-MsgGUID: 1xbOcBDUTOWjNZHrUX040Q==
+X-IronPort-AV: E=McAfee;i="6600,9927,11033"; a="7349858"
+X-IronPort-AV: E=Sophos;i="6.07,179,1708416000"; 
+   d="scan'208";a="7349858"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Apr 2024 04:59:25 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,11033"; a="915216202"
+X-IronPort-AV: E=Sophos;i="6.07,179,1708416000"; 
+   d="scan'208";a="915216202"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.72.54])
+  by fmsmga002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Apr 2024 04:59:20 -0700
+Received: from andy by smile with local (Exim 4.97)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1rsLkV-00000001Q1P-1Yv5;
+	Thu, 04 Apr 2024 14:59:19 +0300
+Date: Thu, 4 Apr 2024 14:59:19 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Tony Lindgren <tony@atomide.com>
+Cc: kernel test robot <oliver.sang@intel.com>,
+	Yicong Yang <yangyicong@hisilicon.com>, oe-lkp@lists.linux.dev,
+	lkp@intel.com, linux-kernel@vger.kernel.org,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	stable <stable@kernel.org>, linux-serial@vger.kernel.org
+Subject: Re: [linus:master] [serial]  43066e3222:
+ BUG:kernel_NULL_pointer_dereference,address
+Message-ID: <Zg6WF0DMePE-V1V0@smile.fi.intel.com>
+References: <202404031607.2e92eebe-lkp@intel.com>
+ <Zg1hBvRAxifo50sf@smile.fi.intel.com>
+ <20240404065415.GO5132@atomide.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <tencent_F76EB8D731C521C18D5D7C4F8229DAA58E08@qq.com>
- <tencent_6D10A9C63E3E0F412EED33477B5CDB98C207@qq.com> <CACRpkdY1wpGM7M5QV5rN0M6JMN_yugQJ7CEtnQjzsheD5AT23A@mail.gmail.com>
- <20240402-automatic-radial-7bc7dc342987@wendy>
-In-Reply-To: <20240402-automatic-radial-7bc7dc342987@wendy>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Thu, 4 Apr 2024 13:58:42 +0200
-Message-ID: <CACRpkdZbCJWWZkJZbmCnGqKq=ZxJB5gT5RHBLMz2cBoz-UDFUg@mail.gmail.com>
-Subject: Re: [PATCH v6 08/11] pinctrl: k210: Deprecate SOC_CANAAN and use SOC_CANAAN_K210
-To: Conor Dooley <conor.dooley@microchip.com>
-Cc: Yangyu Chen <cyy@cyyself.name>, linux-riscv@lists.infradead.org, 
-	Conor Dooley <conor@kernel.org>, Damien Le Moal <dlemoal@kernel.org>, Rob Herring <robh+dt@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
-	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
-	Albert Ou <aou@eecs.berkeley.edu>, Guo Ren <guoren@kernel.org>, 
-	Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
-	Philipp Zabel <p.zabel@pengutronix.de>, linux-gpio@vger.kernel.org, 
-	linux-clk@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240404065415.GO5132@atomide.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Tue, Apr 2, 2024 at 2:58=E2=80=AFPM Conor Dooley <conor.dooley@microchip=
-.com> wrote:
-> On Tue, Apr 02, 2024 at 02:31:36PM +0200, Linus Walleij wrote:
-> > On Sat, Mar 23, 2024 at 1:13=E2=80=AFPM Yangyu Chen <cyy@cyyself.name> =
-wrote:
+On Thu, Apr 04, 2024 at 09:54:15AM +0300, Tony Lindgren wrote:
+> * Andy Shevchenko <andriy.shevchenko@linux.intel.com> [240403 14:00]:
+> > Probably we need to check if the port is still open...
+> > 
+> > P.S. AFAIU the state / xmit is invalid pointer or so.
+> > 
+> > Culprit line:	serial_out(up, UART_TX, xmit->buf[xmit->tail]);
 
-> > Is this patch something I can just apply to the pinctrl tree?
->
-> The new symbol doesn't exist in the pinctrl tree, so the driver will
-> cease to be compilable. Yangyu sent a standalone version of these symbol
-> changes:
-> https://lore.kernel.org/all/tencent_DB11214C8D0D7C48829ADA128E7BB8F13108@=
-qq.com/
-> That whole series needs to go through one tree though, for the same reaso=
-n.
+xmit.buf seems to be NULL, that's why this fails.
 
-OK
+> Maybe we can set UPF_DEAD a bit earlier as below?
 
-> If your ack transfers to that (identical patch) I can take the whole lot
-> via the soc tree for v6.10.
+Lemme perform some tests later today.
 
-Yeah that's fine, go ahead.
+-- 
+With Best Regards,
+Andy Shevchenko
 
-Yours,
-Linus Walleij
+
