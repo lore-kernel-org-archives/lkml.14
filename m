@@ -1,223 +1,422 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A1AF12BEA7;
-	Thu,  4 Apr 2024 14:34:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A67FA11718;
+	Thu,  4 Apr 2024 14:34:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712241254; cv=none; b=s5JSknyzkM3VPzWlFXDfCWKYK8BvfHP03983FRBc0WR880zs7JGuk98Mo38bkpSpgRWKwFnEOarZXHpCx0t0CZqEECU4lskjOWud3lKV953m6anQ8GBJEIw3W+1goVA3GUip5j3HcRGyaGXnTLAfZnnx1qMeS2a2mNTPeNatp/s=
+	t=1712241281; cv=none; b=tP3LJivd+Ah91fZp1BlEXhLUr1GN/lXeiACGIjqTa3PovMlWTUzLTSTFBtRj2E63jck0mg3+lwIpqF5L+60yZieUGVPlV3HPozgrh81y+V6FUFoDuuOGJM5BtQkz4WreDUz+mvJhQo83dk/P9IUAB5Jv54D3udgwIBOh7o03si8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712241254; c=relaxed/simple;
-	bh=UweJMPWSHz002boLwW3AxxWDPZioxuRX7pcSYXIAcoE=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=luyZUigooyBNMiLE/2oRCoLfw6u8pF05YVuc+dJfQgTJZsc5hlyeNabnvCcQejA4DFeSKrGYAhK242XeTIpDQIQtnB0eXU78SkV8xtqq8pLaUMMlsv1YQ5Zuf51WyBQy9DLxy0AU4zNWfqmI/BdgUFkEGiRzdqw3Hjb62ZYmgIk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=casper.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=A8ccUrd2; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=casper.srs.infradead.org
+	s=arc-20240116; t=1712241281; c=relaxed/simple;
+	bh=DDF+XoErYnE2SQ7bm4cBMxwMCcMyp9S5zq1e/e1ba80=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=oexpiuuWFTBV832w+i0hIaKtCQD0ZhZ84DWUAlXUyEqeZs6ew/Z/mcw5OrDlfHNhHIJKpV1D1YiGOxsUVl3XEvjurOTrW+tT5azX5VeE4CYcphi20FEd0Jd/NdDBivkbFJMFA90GEqBxG+JXxpY4zmQUz7U8VcZHXTg1YI/sZ5U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rdT5/L2w; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="A8ccUrd2"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=MIME-Version:Content-Type:References:
-	In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=NuUKfzaeEJCMOWN1J3SrwQILxzqqiweT/7Ij/zZSuX8=; b=A8ccUrd2CBxQ9eI5j1KqDl9dzu
-	hOoPK/eKFx/0bqZDceyNlPtpvrhhBjPjs3y2s7o6s/wgbr7TKVq9ubXKGcZ7MwoFhyR7xkppVGFEN
-	LAfSyJb0oK26B/4ijreWIDf7RmrHJ+ZU2Ccz/YLQ3yBoK4y4FdkRcLj3Zfl7Noch35iz4ip2yfqqp
-	meAANY4er6I3WYGTUWt3zCsMZRqOy7TQhCA7YRx7dc4MZBpYZj27kxxoxN+cr6glzvZtc6VbKpuCe
-	1F85dq3kq9sNOEiGTs+1TlFK4upFhKdkGVf+dn30yKJtRy7pg8QbwXxh1zykm711USLk2VS0eQAQc
-	1VgmofoA==;
-Received: from [2001:8b0:10b:5:701b:6482:5251:39d9] (helo=u3832b3a9db3152.ant.amazon.com)
-	by casper.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1rsOAL-00000008EqO-0WhH;
-	Thu, 04 Apr 2024 14:34:09 +0000
-Message-ID: <d18bb252013df73abc0de662008f399cf77e78cf.camel@infradead.org>
-Subject: Re: [PATCH 1/1] KVM: selftests: add kvmclock drift test
-From: David Woodhouse <dwmw2@infradead.org>
-To: Dongli Zhang <dongli.zhang@oracle.com>, kvm@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org
-Cc: pbonzini@redhat.com, shuah@kernel.org, seanjc@google.com, 
-	linux-kernel@vger.kernel.org, joe.jin@oracle.com
-Date: Thu, 04 Apr 2024 15:34:08 +0100
-In-Reply-To: <20240106083346.29180-1-dongli.zhang@oracle.com>
-References: <20240106083346.29180-1-dongli.zhang@oracle.com>
-Content-Type: multipart/signed; micalg="sha-256"; protocol="application/pkcs7-signature";
-	boundary="=-Si+JKDVtpi7QO87q+IMn"
-User-Agent: Evolution 3.44.4-0ubuntu2 
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rdT5/L2w"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 943C5C433C7;
+	Thu,  4 Apr 2024 14:34:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1712241281;
+	bh=DDF+XoErYnE2SQ7bm4cBMxwMCcMyp9S5zq1e/e1ba80=;
+	h=From:To:Cc:Subject:Date:From;
+	b=rdT5/L2wdzNErSonxSKnmQa0CbrjCSi3vurljmcC8FjlTvmCHDNAhmv6qCMLjs7R8
+	 7xKirXzY+KfW9aJEwReRTUM8hhjZ3qsEpFg4Tm7QQiWo7tVbJFS75q4TAUkbnnd1z8
+	 bc10zHHXsS2HFNFlKr4nZzzxKYDw28hAlqdDYR37FBQ/tYlbWZ+FZyl0A+wyNPMyRz
+	 zMvYqqLkWHlByJdjCSKCz3aP6qwy2PBsTqJKvKseD+Av7RN6WPASAKnQyXmOb31mVD
+	 0yI1rbaCQObKNXgIjcdQCMVv0+1cJtoDplMuJUX2sTRAPqEjhTkXAZjtx9d+hW6fkN
+	 mti+xxkkT4K7g==
+From: Arnd Bergmann <arnd@kernel.org>
+To: Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Luis Chamberlain <mcgrof@kernel.org>
+Cc: Arnd Bergmann <arnd@arndb.de>,
+	Martin KaFai Lau <martin.lau@linux.dev>,
+	Eduard Zingerman <eddyz87@gmail.com>,
+	Song Liu <song@kernel.org>,
+	Yonghong Song <yonghong.song@linux.dev>,
+	John Fastabend <john.fastabend@gmail.com>,
+	KP Singh <kpsingh@kernel.org>,
+	Stanislav Fomichev <sdf@google.com>,
+	Hao Luo <haoluo@google.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Kumar Kartikeya Dwivedi <memxor@gmail.com>,
+	Puranjay Mohan <puranjay12@gmail.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Kees Cook <keescook@chromium.org>,
+	Zhen Lei <thunder.leizhen@huawei.com>,
+	"Paul E. McKenney" <paulmck@kernel.org>,
+	bpf@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	linux-modules@vger.kernel.org
+Subject: [PATCH] [v5] kallsyms: rework symbol lookup return codes
+Date: Thu,  4 Apr 2024 16:33:15 +0200
+Message-Id: <20240404143424.3279752-1-arnd@kernel.org>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-SRS-Rewrite: SMTP reverse-path rewritten from <dwmw2@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
+Content-Transfer-Encoding: 8bit
 
+From: Arnd Bergmann <arnd@arndb.de>
 
---=-Si+JKDVtpi7QO87q+IMn
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Building with W=1 in some configurations produces a false positive
+warning for kallsyms:
 
-On Sat, 2024-01-06 at 00:33 -0800, Dongli Zhang wrote:
-> There is kvmclock drift issue during the vCPU hotplug. It has been fixed =
-by
-> the commit c52ffadc65e2 ("KVM: x86: Don't unnecessarily force masterclock
-> update on vCPU hotplug").
->=20
-> This is to add the test to verify if the master clock is updated when we
-> write 0 to MSR_IA32_TSC from the host side.
->=20
-> Here is the usage example on the KVM with the bugfix reverted.
->=20
-> $ ./kvm_clock_drift -v -p 5
-> kvmclock based on old pvclock_vcpu_time_info: 5012221999
-> =C2=A0 version:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0 2
-> =C2=A0 tsc_timestamp:=C2=A0=C2=A0=C2=A0=C2=A0 3277968
-> =C2=A0 system_time:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 11849519
-> =C2=A0 tsc_to_system_mul: 2152530255
-> =C2=A0 tsc_shift:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 0
-> =C2=A0 flags:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0 1
->=20
-> kvmclock based on new pvclock_vcpu_time_info: 5012222411
-> =C2=A0 version:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0 4
-> =C2=A0 tsc_timestamp:=C2=A0=C2=A0=C2=A0=C2=A0 9980576184
-> =C2=A0 system_time:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 5012222411
-> =C2=A0 tsc_to_system_mul: 2152530255
-> =C2=A0 tsc_shift:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 0
-> =C2=A0 flags:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0 1
->=20
-> =3D=3D=3D=3D Test Assertion Failure =3D=3D=3D=3D
-> =C2=A0 x86_64/kvm_clock_drift.c:216: clock_old =3D=3D clock_new
-> =C2=A0 pid=3D14257 tid=3D14257 errno=3D4 -  Interrupted system call
-> =C2=A0=C2=A0=C2=A0=C2=A0 1=C2=A0=C2=A00x000000000040277b: main at kvm_clo=
-ck_drift.c:216
-> =C2=A0=C2=A0=C2=A0=C2=A0 2=C2=A0=C2=A00x00007f7766fa7e44: ?? ??:0
-> =C2=A0=C2=A0=C2=A0=C2=A0 3=C2=A0=C2=A00x000000000040286d: _start at ??:?
-> =C2=A0 kvmclock drift detected, old=3D5012221999, new=3D5012222411
->=20
-> Signed-off-by: Dongli Zhang <dongli.zhang@oracle.com>
+kernel/kallsyms.c: In function '__sprint_symbol.isra':
+kernel/kallsyms.c:503:17: error: 'strcpy' source argument is the same as destination [-Werror=restrict]
+  503 |                 strcpy(buffer, name);
+      |                 ^~~~~~~~~~~~~~~~~~~~
 
-We should extend this to cover live update =E2=80=94 it should create a
-*second* KVM, migrate the guest including its clock information to
-that, and validate that the kvmclock information still doesn't change.
+This originally showed up while building with -O3, but later started
+happening in other configurations as well, depending on inlining
+decisions. The underlying issue is that the local 'name' variable is
+always initialized to the be the same as 'buffer' in the called functions
+that fill the buffer, which gcc notices while inlining, though it could
+see that the address check always skips the copy.
 
-Ideally during a leap second.
+The calling conventions here are rather unusual, as all of the internal
+lookup functions (bpf_address_lookup, ftrace_mod_address_lookup,
+ftrace_func_address_lookup, module_address_lookup and
+kallsyms_lookup_buildid) already use the provided buffer and either return
+the address of that buffer to indicate success, or NULL for failure,
+but the callers are written to also expect an arbitrary other buffer
+to be returned.
 
+Rework the calling conventions to return the length of the filled buffer
+instead of its address, which is simpler and easier to follow as well
+as avoiding the warning. Leave only the kallsyms_lookup() calling conventions
+unchanged, since that is called from 16 different functions and
+adapting this would be a much bigger change.
 
+Link: https://lore.kernel.org/all/20200107214042.855757-1-arnd@arndb.de/
+Link: https://lore.kernel.org/lkml/20240326130647.7bfb1d92@gandalf.local.home/
+Reviewed-by: Luis Chamberlain <mcgrof@kernel.org>
+Acked-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+v5: fix ftrace_mod_address_lookup return value,
+    rebased on top of 2e114248e086 ("bpf: Replace deprecated strncpy with strscpy")
+v4: fix string length
+v3: use strscpy() instead of strlcpy()
+v2: complete rewrite after the first patch was rejected (in 2020). This
+    is now one of only two warnings that are in the way of enabling
+    -Wextra/-Wrestrict by default.
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+ include/linux/filter.h   | 14 +++++++-------
+ include/linux/ftrace.h   |  6 +++---
+ include/linux/module.h   | 14 +++++++-------
+ kernel/bpf/core.c        |  7 +++----
+ kernel/kallsyms.c        | 23 ++++++++++++-----------
+ kernel/module/kallsyms.c | 26 +++++++++++++-------------
+ kernel/trace/ftrace.c    | 13 +++++--------
+ 7 files changed, 50 insertions(+), 53 deletions(-)
 
+diff --git a/include/linux/filter.h b/include/linux/filter.h
+index 161d5f7b64ed..e3a8f51fdf84 100644
+--- a/include/linux/filter.h
++++ b/include/linux/filter.h
+@@ -1202,18 +1202,18 @@ static inline bool bpf_jit_kallsyms_enabled(void)
+ 	return false;
+ }
+ 
+-const char *__bpf_address_lookup(unsigned long addr, unsigned long *size,
++int __bpf_address_lookup(unsigned long addr, unsigned long *size,
+ 				 unsigned long *off, char *sym);
+ bool is_bpf_text_address(unsigned long addr);
+ int bpf_get_kallsym(unsigned int symnum, unsigned long *value, char *type,
+ 		    char *sym);
+ struct bpf_prog *bpf_prog_ksym_find(unsigned long addr);
+ 
+-static inline const char *
++static inline int
+ bpf_address_lookup(unsigned long addr, unsigned long *size,
+ 		   unsigned long *off, char **modname, char *sym)
+ {
+-	const char *ret = __bpf_address_lookup(addr, size, off, sym);
++	int ret = __bpf_address_lookup(addr, size, off, sym);
+ 
+ 	if (ret && modname)
+ 		*modname = NULL;
+@@ -1257,11 +1257,11 @@ static inline bool bpf_jit_kallsyms_enabled(void)
+ 	return false;
+ }
+ 
+-static inline const char *
++static inline int
+ __bpf_address_lookup(unsigned long addr, unsigned long *size,
+ 		     unsigned long *off, char *sym)
+ {
+-	return NULL;
++	return 0;
+ }
+ 
+ static inline bool is_bpf_text_address(unsigned long addr)
+@@ -1280,11 +1280,11 @@ static inline struct bpf_prog *bpf_prog_ksym_find(unsigned long addr)
+ 	return NULL;
+ }
+ 
+-static inline const char *
++static inline int
+ bpf_address_lookup(unsigned long addr, unsigned long *size,
+ 		   unsigned long *off, char **modname, char *sym)
+ {
+-	return NULL;
++	return 0;
+ }
+ 
+ static inline void bpf_prog_kallsyms_add(struct bpf_prog *fp)
+diff --git a/include/linux/ftrace.h b/include/linux/ftrace.h
+index 54d53f345d14..56834a3fa9be 100644
+--- a/include/linux/ftrace.h
++++ b/include/linux/ftrace.h
+@@ -87,15 +87,15 @@ struct ftrace_direct_func;
+ 
+ #if defined(CONFIG_FUNCTION_TRACER) && defined(CONFIG_MODULES) && \
+ 	defined(CONFIG_DYNAMIC_FTRACE)
+-const char *
++int
+ ftrace_mod_address_lookup(unsigned long addr, unsigned long *size,
+ 		   unsigned long *off, char **modname, char *sym);
+ #else
+-static inline const char *
++static inline int
+ ftrace_mod_address_lookup(unsigned long addr, unsigned long *size,
+ 		   unsigned long *off, char **modname, char *sym)
+ {
+-	return NULL;
++	return 0;
+ }
+ #endif
+ 
+diff --git a/include/linux/module.h b/include/linux/module.h
+index 1153b0d99a80..118c36366b35 100644
+--- a/include/linux/module.h
++++ b/include/linux/module.h
+@@ -922,11 +922,11 @@ int module_kallsyms_on_each_symbol(const char *modname,
+  * least KSYM_NAME_LEN long: a pointer to namebuf is returned if
+  * found, otherwise NULL.
+  */
+-const char *module_address_lookup(unsigned long addr,
+-				  unsigned long *symbolsize,
+-				  unsigned long *offset,
+-				  char **modname, const unsigned char **modbuildid,
+-				  char *namebuf);
++int module_address_lookup(unsigned long addr,
++			  unsigned long *symbolsize,
++			  unsigned long *offset,
++			  char **modname, const unsigned char **modbuildid,
++			  char *namebuf);
+ int lookup_module_symbol_name(unsigned long addr, char *symname);
+ int lookup_module_symbol_attrs(unsigned long addr,
+ 			       unsigned long *size,
+@@ -955,14 +955,14 @@ static inline int module_kallsyms_on_each_symbol(const char *modname,
+ }
+ 
+ /* For kallsyms to ask for address resolution.  NULL means not found. */
+-static inline const char *module_address_lookup(unsigned long addr,
++static inline int module_address_lookup(unsigned long addr,
+ 						unsigned long *symbolsize,
+ 						unsigned long *offset,
+ 						char **modname,
+ 						const unsigned char **modbuildid,
+ 						char *namebuf)
+ {
+-	return NULL;
++	return 0;
+ }
+ 
+ static inline int lookup_module_symbol_name(unsigned long addr, char *symname)
+diff --git a/kernel/bpf/core.c b/kernel/bpf/core.c
+index 7a33a3a7e63c..a1cfd2a34762 100644
+--- a/kernel/bpf/core.c
++++ b/kernel/bpf/core.c
+@@ -735,11 +735,11 @@ static struct bpf_ksym *bpf_ksym_find(unsigned long addr)
+ 	return n ? container_of(n, struct bpf_ksym, tnode) : NULL;
+ }
+ 
+-const char *__bpf_address_lookup(unsigned long addr, unsigned long *size,
++int __bpf_address_lookup(unsigned long addr, unsigned long *size,
+ 				 unsigned long *off, char *sym)
+ {
+ 	struct bpf_ksym *ksym;
+-	char *ret = NULL;
++	int ret = 0;
+ 
+ 	rcu_read_lock();
+ 	ksym = bpf_ksym_find(addr);
+@@ -747,9 +747,8 @@ const char *__bpf_address_lookup(unsigned long addr, unsigned long *size,
+ 		unsigned long symbol_start = ksym->start;
+ 		unsigned long symbol_end = ksym->end;
+ 
+-		strscpy(sym, ksym->name, KSYM_NAME_LEN);
++		ret = strscpy(sym, ksym->name, KSYM_NAME_LEN);
+ 
+-		ret = sym;
+ 		if (size)
+ 			*size = symbol_end - symbol_start;
+ 		if (off)
+diff --git a/kernel/kallsyms.c b/kernel/kallsyms.c
+index 18edd57b5fe8..eeb0e249e0e2 100644
+--- a/kernel/kallsyms.c
++++ b/kernel/kallsyms.c
+@@ -394,12 +394,12 @@ int kallsyms_lookup_size_offset(unsigned long addr, unsigned long *symbolsize,
+ 	       !!__bpf_address_lookup(addr, symbolsize, offset, namebuf);
+ }
+ 
+-static const char *kallsyms_lookup_buildid(unsigned long addr,
++static int kallsyms_lookup_buildid(unsigned long addr,
+ 			unsigned long *symbolsize,
+ 			unsigned long *offset, char **modname,
+ 			const unsigned char **modbuildid, char *namebuf)
+ {
+-	const char *ret;
++	int ret;
+ 
+ 	namebuf[KSYM_NAME_LEN - 1] = 0;
+ 	namebuf[0] = 0;
+@@ -416,7 +416,7 @@ static const char *kallsyms_lookup_buildid(unsigned long addr,
+ 		if (modbuildid)
+ 			*modbuildid = NULL;
+ 
+-		ret = namebuf;
++		ret = strlen(namebuf);
+ 		goto found;
+ 	}
+ 
+@@ -448,8 +448,13 @@ const char *kallsyms_lookup(unsigned long addr,
+ 			    unsigned long *offset,
+ 			    char **modname, char *namebuf)
+ {
+-	return kallsyms_lookup_buildid(addr, symbolsize, offset, modname,
+-				       NULL, namebuf);
++	int ret = kallsyms_lookup_buildid(addr, symbolsize, offset, modname,
++					  NULL, namebuf);
++
++	if (!ret)
++		return NULL;
++
++	return namebuf;
+ }
+ 
+ int lookup_symbol_name(unsigned long addr, char *symname)
+@@ -484,19 +489,15 @@ static int __sprint_symbol(char *buffer, unsigned long address,
+ {
+ 	char *modname;
+ 	const unsigned char *buildid;
+-	const char *name;
+ 	unsigned long offset, size;
+ 	int len;
+ 
+ 	address += symbol_offset;
+-	name = kallsyms_lookup_buildid(address, &size, &offset, &modname, &buildid,
++	len = kallsyms_lookup_buildid(address, &size, &offset, &modname, &buildid,
+ 				       buffer);
+-	if (!name)
++	if (!len)
+ 		return sprintf(buffer, "0x%lx", address - symbol_offset);
+ 
+-	if (name != buffer)
+-		strcpy(buffer, name);
+-	len = strlen(buffer);
+ 	offset -= symbol_offset;
+ 
+ 	if (add_offset)
+diff --git a/kernel/module/kallsyms.c b/kernel/module/kallsyms.c
+index ef73ae7c8909..6e6619a5b2f1 100644
+--- a/kernel/module/kallsyms.c
++++ b/kernel/module/kallsyms.c
+@@ -321,14 +321,15 @@ void * __weak dereference_module_function_descriptor(struct module *mod,
+  * For kallsyms to ask for address resolution.  NULL means not found.  Careful
+  * not to lock to avoid deadlock on oopses, simply disable preemption.
+  */
+-const char *module_address_lookup(unsigned long addr,
+-				  unsigned long *size,
+-			    unsigned long *offset,
+-			    char **modname,
+-			    const unsigned char **modbuildid,
+-			    char *namebuf)
++int module_address_lookup(unsigned long addr,
++			  unsigned long *size,
++			  unsigned long *offset,
++			  char **modname,
++			  const unsigned char **modbuildid,
++			  char *namebuf)
+ {
+-	const char *ret = NULL;
++	const char *sym;
++	int ret = 0;
+ 	struct module *mod;
+ 
+ 	preempt_disable();
+@@ -344,13 +345,12 @@ const char *module_address_lookup(unsigned long addr,
+ #endif
+ 		}
+ 
+-		ret = find_kallsyms_symbol(mod, addr, size, offset);
+-	}
+-	/* Make a copy in here where it's safe */
+-	if (ret) {
+-		strncpy(namebuf, ret, KSYM_NAME_LEN - 1);
+-		ret = namebuf;
++		sym = find_kallsyms_symbol(mod, addr, size, offset);
++
++		if (sym)
++			ret = strscpy(namebuf, sym, KSYM_NAME_LEN);
+ 	}
++
+ 	preempt_enable();
+ 
+ 	return ret;
+diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
+index 32ea92934268..03061c98a94c 100644
+--- a/kernel/trace/ftrace.c
++++ b/kernel/trace/ftrace.c
+@@ -6974,7 +6974,7 @@ allocate_ftrace_mod_map(struct module *mod,
+ 	return mod_map;
+ }
+ 
+-static const char *
++static int
+ ftrace_func_address_lookup(struct ftrace_mod_map *mod_map,
+ 			   unsigned long addr, unsigned long *size,
+ 			   unsigned long *off, char *sym)
+@@ -6995,21 +6995,18 @@ ftrace_func_address_lookup(struct ftrace_mod_map *mod_map,
+ 			*size = found_func->size;
+ 		if (off)
+ 			*off = addr - found_func->ip;
+-		if (sym)
+-			strscpy(sym, found_func->name, KSYM_NAME_LEN);
+-
+-		return found_func->name;
++		return strscpy(sym, found_func->name, KSYM_NAME_LEN);
+ 	}
+ 
+-	return NULL;
++	return 0;
+ }
+ 
+-const char *
++int
+ ftrace_mod_address_lookup(unsigned long addr, unsigned long *size,
+ 		   unsigned long *off, char **modname, char *sym)
+ {
+ 	struct ftrace_mod_map *mod_map;
+-	const char *ret = NULL;
++	int ret = 0;
+ 
+ 	/* mod_map is freed via call_rcu() */
+ 	preempt_disable();
+-- 
+2.39.2
 
---=-Si+JKDVtpi7QO87q+IMn
-Content-Type: application/pkcs7-signature; name="smime.p7s"
-Content-Disposition: attachment; filename="smime.p7s"
-Content-Transfer-Encoding: base64
-
-MIAGCSqGSIb3DQEHAqCAMIACAQExDzANBglghkgBZQMEAgEFADCABgkqhkiG9w0BBwEAAKCCEkQw
-ggYQMIID+KADAgECAhBNlCwQ1DvglAnFgS06KwZPMA0GCSqGSIb3DQEBDAUAMIGIMQswCQYDVQQG
-EwJVUzETMBEGA1UECBMKTmV3IEplcnNleTEUMBIGA1UEBxMLSmVyc2V5IENpdHkxHjAcBgNVBAoT
-FVRoZSBVU0VSVFJVU1QgTmV0d29yazEuMCwGA1UEAxMlVVNFUlRydXN0IFJTQSBDZXJ0aWZpY2F0
-aW9uIEF1dGhvcml0eTAeFw0xODExMDIwMDAwMDBaFw0zMDEyMzEyMzU5NTlaMIGWMQswCQYDVQQG
-EwJHQjEbMBkGA1UECBMSR3JlYXRlciBNYW5jaGVzdGVyMRAwDgYDVQQHEwdTYWxmb3JkMRgwFgYD
-VQQKEw9TZWN0aWdvIExpbWl0ZWQxPjA8BgNVBAMTNVNlY3RpZ28gUlNBIENsaWVudCBBdXRoZW50
-aWNhdGlvbiBhbmQgU2VjdXJlIEVtYWlsIENBMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKC
-AQEAyjztlApB/975Rrno1jvm2pK/KxBOqhq8gr2+JhwpKirSzZxQgT9tlC7zl6hn1fXjSo5MqXUf
-ItMltrMaXqcESJuK8dtK56NCSrq4iDKaKq9NxOXFmqXX2zN8HHGjQ2b2Xv0v1L5Nk1MQPKA19xeW
-QcpGEGFUUd0kN+oHox+L9aV1rjfNiCj3bJk6kJaOPabPi2503nn/ITX5e8WfPnGw4VuZ79Khj1YB
-rf24k5Ee1sLTHsLtpiK9OjG4iQRBdq6Z/TlVx/hGAez5h36bBJMxqdHLpdwIUkTqT8se3ed0PewD
-ch/8kHPo5fZl5u1B0ecpq/sDN/5sCG52Ds+QU5O5EwIDAQABo4IBZDCCAWAwHwYDVR0jBBgwFoAU
-U3m/WqorSs9UgOHYm8Cd8rIDZsswHQYDVR0OBBYEFAnA8vwL2pTbX/4r36iZQs/J4K0AMA4GA1Ud
-DwEB/wQEAwIBhjASBgNVHRMBAf8ECDAGAQH/AgEAMB0GA1UdJQQWMBQGCCsGAQUFBwMCBggrBgEF
-BQcDBDARBgNVHSAECjAIMAYGBFUdIAAwUAYDVR0fBEkwRzBFoEOgQYY/aHR0cDovL2NybC51c2Vy
-dHJ1c3QuY29tL1VTRVJUcnVzdFJTQUNlcnRpZmljYXRpb25BdXRob3JpdHkuY3JsMHYGCCsGAQUF
-BwEBBGowaDA/BggrBgEFBQcwAoYzaHR0cDovL2NydC51c2VydHJ1c3QuY29tL1VTRVJUcnVzdFJT
-QUFkZFRydXN0Q0EuY3J0MCUGCCsGAQUFBzABhhlodHRwOi8vb2NzcC51c2VydHJ1c3QuY29tMA0G
-CSqGSIb3DQEBDAUAA4ICAQBBRHUAqznCFfXejpVtMnFojADdF9d6HBA4kMjjsb0XMZHztuOCtKF+
-xswhh2GqkW5JQrM8zVlU+A2VP72Ky2nlRA1GwmIPgou74TZ/XTarHG8zdMSgaDrkVYzz1g3nIVO9
-IHk96VwsacIvBF8JfqIs+8aWH2PfSUrNxP6Ys7U0sZYx4rXD6+cqFq/ZW5BUfClN/rhk2ddQXyn7
-kkmka2RQb9d90nmNHdgKrwfQ49mQ2hWQNDkJJIXwKjYA6VUR/fZUFeCUisdDe/0ABLTI+jheXUV1
-eoYV7lNwNBKpeHdNuO6Aacb533JlfeUHxvBz9OfYWUiXu09sMAviM11Q0DuMZ5760CdO2VnpsXP4
-KxaYIhvqPqUMWqRdWyn7crItNkZeroXaecG03i3mM7dkiPaCkgocBg0EBYsbZDZ8bsG3a08LwEsL
-1Ygz3SBsyECa0waq4hOf/Z85F2w2ZpXfP+w8q4ifwO90SGZZV+HR/Jh6rEaVPDRF/CEGVqR1hiuQ
-OZ1YL5ezMTX0ZSLwrymUE0pwi/KDaiYB15uswgeIAcA6JzPFf9pLkAFFWs1QNyN++niFhsM47qod
-x/PL+5jR87myx5uYdBEQkkDc+lKB1Wct6ucXqm2EmsaQ0M95QjTmy+rDWjkDYdw3Ms6mSWE3Bn7i
-5ZgtwCLXgAIe5W8mybM2JzCCBhQwggT8oAMCAQICEQDGvhmWZ0DEAx0oURL6O6l+MA0GCSqGSIb3
-DQEBCwUAMIGWMQswCQYDVQQGEwJHQjEbMBkGA1UECBMSR3JlYXRlciBNYW5jaGVzdGVyMRAwDgYD
-VQQHEwdTYWxmb3JkMRgwFgYDVQQKEw9TZWN0aWdvIExpbWl0ZWQxPjA8BgNVBAMTNVNlY3RpZ28g
-UlNBIENsaWVudCBBdXRoZW50aWNhdGlvbiBhbmQgU2VjdXJlIEVtYWlsIENBMB4XDTIyMDEwNzAw
-MDAwMFoXDTI1MDEwNjIzNTk1OVowJDEiMCAGCSqGSIb3DQEJARYTZHdtdzJAaW5mcmFkZWFkLm9y
-ZzCCAiIwDQYJKoZIhvcNAQEBBQADggIPADCCAgoCggIBALQ3GpC2bomUqk+91wLYBzDMcCj5C9m6
-oZaHwvmIdXftOgTbCJXADo6G9T7BBAebw2JV38EINgKpy/ZHh7htyAkWYVoFsFPrwHounto8xTsy
-SSePMiPlmIdQ10BcVSXMUJ3Juu16GlWOnAMJY2oYfEzmE7uT9YgcBqKCo65pTFmOnR/VVbjJk4K2
-xE34GC2nAdUQkPFuyaFisicc6HRMOYXPuF0DuwITEKnjxgNjP+qDrh0db7PAjO1D4d5ftfrsf+kd
-RR4gKVGSk8Tz2WwvtLAroJM4nXjNPIBJNT4w/FWWc/5qPHJy2U+eITZ5LLE5s45mX2oPFknWqxBo
-bQZ8a9dsZ3dSPZBvE9ZrmtFLrVrN4eo1jsXgAp1+p7bkfqd3BgBEmfsYWlBXO8rVXfvPgLs32VdV
-NZxb/CDWPqBsiYv0Hv3HPsz07j5b+/cVoWqyHDKzkaVbxfq/7auNVRmPB3v5SWEsH8xi4Bez2V9U
-KxfYCnqsjp8RaC2/khxKt0A552Eaxnz/4ly/2C7wkwTQnBmdlFYhAflWKQ03Ufiu8t3iBE3VJbc2
-5oMrglj7TRZrmKq3CkbFnX0fyulB+kHimrt6PIWn7kgyl9aelIl6vtbhMA+l0nfrsORMa4kobqQ5
-C5rveVgmcIad67EDa+UqEKy/GltUwlSh6xy+TrK1tzDvAgMBAAGjggHMMIIByDAfBgNVHSMEGDAW
-gBQJwPL8C9qU21/+K9+omULPyeCtADAdBgNVHQ4EFgQUzMeDMcimo0oz8o1R1Nver3ZVpSkwDgYD
-VR0PAQH/BAQDAgWgMAwGA1UdEwEB/wQCMAAwHQYDVR0lBBYwFAYIKwYBBQUHAwQGCCsGAQUFBwMC
-MEAGA1UdIAQ5MDcwNQYMKwYBBAGyMQECAQEBMCUwIwYIKwYBBQUHAgEWF2h0dHBzOi8vc2VjdGln
-by5jb20vQ1BTMFoGA1UdHwRTMFEwT6BNoEuGSWh0dHA6Ly9jcmwuc2VjdGlnby5jb20vU2VjdGln
-b1JTQUNsaWVudEF1dGhlbnRpY2F0aW9uYW5kU2VjdXJlRW1haWxDQS5jcmwwgYoGCCsGAQUFBwEB
-BH4wfDBVBggrBgEFBQcwAoZJaHR0cDovL2NydC5zZWN0aWdvLmNvbS9TZWN0aWdvUlNBQ2xpZW50
-QXV0aGVudGljYXRpb25hbmRTZWN1cmVFbWFpbENBLmNydDAjBggrBgEFBQcwAYYXaHR0cDovL29j
-c3Auc2VjdGlnby5jb20wHgYDVR0RBBcwFYETZHdtdzJAaW5mcmFkZWFkLm9yZzANBgkqhkiG9w0B
-AQsFAAOCAQEAyW6MUir5dm495teKqAQjDJwuFCi35h4xgnQvQ/fzPXmtR9t54rpmI2TfyvcKgOXp
-qa7BGXNFfh1JsqexVkIqZP9uWB2J+uVMD+XZEs/KYNNX2PvIlSPrzIB4Z2wyIGQpaPLlYflrrVFK
-v9CjT2zdqvy2maK7HKOQRt3BiJbVG5lRiwbbygldcALEV9ChWFfgSXvrWDZspnU3Gjw/rMHrGnql
-Htlyebp3pf3fSS9kzQ1FVtVIDrL6eqhTwJxe+pXSMMqFiN0whpBtXdyDjzBtQTaZJ7zTT/vlehc/
-tDuqZwGHm/YJy883Ll+GP3NvOkgaRGWEuYWJJ6hFCkXYjyR9IzCCBhQwggT8oAMCAQICEQDGvhmW
-Z0DEAx0oURL6O6l+MA0GCSqGSIb3DQEBCwUAMIGWMQswCQYDVQQGEwJHQjEbMBkGA1UECBMSR3Jl
-YXRlciBNYW5jaGVzdGVyMRAwDgYDVQQHEwdTYWxmb3JkMRgwFgYDVQQKEw9TZWN0aWdvIExpbWl0
-ZWQxPjA8BgNVBAMTNVNlY3RpZ28gUlNBIENsaWVudCBBdXRoZW50aWNhdGlvbiBhbmQgU2VjdXJl
-IEVtYWlsIENBMB4XDTIyMDEwNzAwMDAwMFoXDTI1MDEwNjIzNTk1OVowJDEiMCAGCSqGSIb3DQEJ
-ARYTZHdtdzJAaW5mcmFkZWFkLm9yZzCCAiIwDQYJKoZIhvcNAQEBBQADggIPADCCAgoCggIBALQ3
-GpC2bomUqk+91wLYBzDMcCj5C9m6oZaHwvmIdXftOgTbCJXADo6G9T7BBAebw2JV38EINgKpy/ZH
-h7htyAkWYVoFsFPrwHounto8xTsySSePMiPlmIdQ10BcVSXMUJ3Juu16GlWOnAMJY2oYfEzmE7uT
-9YgcBqKCo65pTFmOnR/VVbjJk4K2xE34GC2nAdUQkPFuyaFisicc6HRMOYXPuF0DuwITEKnjxgNj
-P+qDrh0db7PAjO1D4d5ftfrsf+kdRR4gKVGSk8Tz2WwvtLAroJM4nXjNPIBJNT4w/FWWc/5qPHJy
-2U+eITZ5LLE5s45mX2oPFknWqxBobQZ8a9dsZ3dSPZBvE9ZrmtFLrVrN4eo1jsXgAp1+p7bkfqd3
-BgBEmfsYWlBXO8rVXfvPgLs32VdVNZxb/CDWPqBsiYv0Hv3HPsz07j5b+/cVoWqyHDKzkaVbxfq/
-7auNVRmPB3v5SWEsH8xi4Bez2V9UKxfYCnqsjp8RaC2/khxKt0A552Eaxnz/4ly/2C7wkwTQnBmd
-lFYhAflWKQ03Ufiu8t3iBE3VJbc25oMrglj7TRZrmKq3CkbFnX0fyulB+kHimrt6PIWn7kgyl9ae
-lIl6vtbhMA+l0nfrsORMa4kobqQ5C5rveVgmcIad67EDa+UqEKy/GltUwlSh6xy+TrK1tzDvAgMB
-AAGjggHMMIIByDAfBgNVHSMEGDAWgBQJwPL8C9qU21/+K9+omULPyeCtADAdBgNVHQ4EFgQUzMeD
-Mcimo0oz8o1R1Nver3ZVpSkwDgYDVR0PAQH/BAQDAgWgMAwGA1UdEwEB/wQCMAAwHQYDVR0lBBYw
-FAYIKwYBBQUHAwQGCCsGAQUFBwMCMEAGA1UdIAQ5MDcwNQYMKwYBBAGyMQECAQEBMCUwIwYIKwYB
-BQUHAgEWF2h0dHBzOi8vc2VjdGlnby5jb20vQ1BTMFoGA1UdHwRTMFEwT6BNoEuGSWh0dHA6Ly9j
-cmwuc2VjdGlnby5jb20vU2VjdGlnb1JTQUNsaWVudEF1dGhlbnRpY2F0aW9uYW5kU2VjdXJlRW1h
-aWxDQS5jcmwwgYoGCCsGAQUFBwEBBH4wfDBVBggrBgEFBQcwAoZJaHR0cDovL2NydC5zZWN0aWdv
-LmNvbS9TZWN0aWdvUlNBQ2xpZW50QXV0aGVudGljYXRpb25hbmRTZWN1cmVFbWFpbENBLmNydDAj
-BggrBgEFBQcwAYYXaHR0cDovL29jc3Auc2VjdGlnby5jb20wHgYDVR0RBBcwFYETZHdtdzJAaW5m
-cmFkZWFkLm9yZzANBgkqhkiG9w0BAQsFAAOCAQEAyW6MUir5dm495teKqAQjDJwuFCi35h4xgnQv
-Q/fzPXmtR9t54rpmI2TfyvcKgOXpqa7BGXNFfh1JsqexVkIqZP9uWB2J+uVMD+XZEs/KYNNX2PvI
-lSPrzIB4Z2wyIGQpaPLlYflrrVFKv9CjT2zdqvy2maK7HKOQRt3BiJbVG5lRiwbbygldcALEV9Ch
-WFfgSXvrWDZspnU3Gjw/rMHrGnqlHtlyebp3pf3fSS9kzQ1FVtVIDrL6eqhTwJxe+pXSMMqFiN0w
-hpBtXdyDjzBtQTaZJ7zTT/vlehc/tDuqZwGHm/YJy883Ll+GP3NvOkgaRGWEuYWJJ6hFCkXYjyR9
-IzGCBMcwggTDAgEBMIGsMIGWMQswCQYDVQQGEwJHQjEbMBkGA1UECBMSR3JlYXRlciBNYW5jaGVz
-dGVyMRAwDgYDVQQHEwdTYWxmb3JkMRgwFgYDVQQKEw9TZWN0aWdvIExpbWl0ZWQxPjA8BgNVBAMT
-NVNlY3RpZ28gUlNBIENsaWVudCBBdXRoZW50aWNhdGlvbiBhbmQgU2VjdXJlIEVtYWlsIENBAhEA
-xr4ZlmdAxAMdKFES+jupfjANBglghkgBZQMEAgEFAKCCAeswGAYJKoZIhvcNAQkDMQsGCSqGSIb3
-DQEHATAcBgkqhkiG9w0BCQUxDxcNMjQwNDA0MTQzNDA4WjAvBgkqhkiG9w0BCQQxIgQgTbm5/3Qm
-cGgUluSzo2R8+ZCa3TSOV170zNR34AKmKG4wgb0GCSsGAQQBgjcQBDGBrzCBrDCBljELMAkGA1UE
-BhMCR0IxGzAZBgNVBAgTEkdyZWF0ZXIgTWFuY2hlc3RlcjEQMA4GA1UEBxMHU2FsZm9yZDEYMBYG
-A1UEChMPU2VjdGlnbyBMaW1pdGVkMT4wPAYDVQQDEzVTZWN0aWdvIFJTQSBDbGllbnQgQXV0aGVu
-dGljYXRpb24gYW5kIFNlY3VyZSBFbWFpbCBDQQIRAMa+GZZnQMQDHShREvo7qX4wgb8GCyqGSIb3
-DQEJEAILMYGvoIGsMIGWMQswCQYDVQQGEwJHQjEbMBkGA1UECBMSR3JlYXRlciBNYW5jaGVzdGVy
-MRAwDgYDVQQHEwdTYWxmb3JkMRgwFgYDVQQKEw9TZWN0aWdvIExpbWl0ZWQxPjA8BgNVBAMTNVNl
-Y3RpZ28gUlNBIENsaWVudCBBdXRoZW50aWNhdGlvbiBhbmQgU2VjdXJlIEVtYWlsIENBAhEAxr4Z
-lmdAxAMdKFES+jupfjANBgkqhkiG9w0BAQEFAASCAgAZt9iErEU8Hq+BuFaIltBNfeeHB2eEFT5C
-fYD+r7CN3C6UnnDrkbOU9Dgz/H6+3m2XnTbZoOA1cnFQnvpKf0V5MMHIDfUUf4fLq0KHfkgcYQFo
-8nKW50V/e8umnFYlVGPGO4CjIMizracR1n6/KhmWdMPNVP1nZuJxiBL3pg3vAyJ63tMLEkrr0LOs
-0QDvWzFe7rkdpBJ+wjKzZJccRGc9KtgN9MXn/7qtRuvjJhseGoq4I7G2Suj5oIiB1wZl0EVIbGif
-K3uUZsHdhlnZbVNzVkZIifugpi68K/m6Fk9ZnjTBTXIdEK08Nl4NisTsofGKcDlPf7ZDvufPUWux
-S0qCeMF1OdCAu//b0eBjvYUBd4S7FSrmX3LFOigeDlbAq1dJbFkbs9w04xGNqb3WI/vH/7Fhyz9u
-V7I2WeZTfq/9A6lPc57qP/2NPCNk1K4A4+XOVeiiQ5xpmaWzr2Ex2YY+S9adsaKjUjWQWOP+LAgz
-73Keerct6OfOD5J9YhLx5vGnfLE4vzjn3tTk/FiY999HI+irAl7AnvjHiZV3KMYw7Kmhl64TDTkT
-vw/vGSnMnpMOHtILk5k4wNBU2O1YfbtaWLwc1ab3/MlvxJkT+EGp+1u+xLtarLhcfJ0PPu2fzdoj
-EpN3gaQCL6mxOl0shOnO4D6FNhJkL/nyIe0DzZdb2gAAAAAAAA==
-
-
---=-Si+JKDVtpi7QO87q+IMn--
