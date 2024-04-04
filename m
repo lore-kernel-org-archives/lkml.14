@@ -1,262 +1,106 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 914111E86F
-	for <linux-kernel@vger.kernel.org>; Thu,  4 Apr 2024 09:10:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EA2074400;
+	Thu,  4 Apr 2024 09:11:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712221830; cv=none; b=g8QF0kieRBq9zcTarJ+Ri7X0ufNzsTFdYU9NNmYyzl3towA+MPPgYPx7gK9pbpW9oEWfA66M2QGsGdxJ0RDqIyV6PuVAN9AsapMert+IoSTrjF/CNsHj9WEOTT5As4X+/GJh+d2SY8cpMl8D8OFI9zBpecHlpXTrPNGusLnih5w=
+	t=1712221879; cv=none; b=sNHnnm7ZuHXWdKtvWUjzWbEdyZ4DRzNob3SBel0BT6Mc3cQZb+lRK8CW1N6BPo9khl8nYNTwvpGFsauCHaKn4sTbAf/rh0aDuJE2d1oXjsG+jH8pcg2U3YEeHuEUhbe5pV3m2a6sD1JcaJHAHGIs8bBhLWG/5dogywf4fy4vtc8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712221830; c=relaxed/simple;
-	bh=f05m8PEbeJDSLndrUkpBjqyWXCZfLOBBZIVWIpskd2Q=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=lSF+cA1MBnyTfDPvRWO9t8aSR9nEmL9F+oEWTcM6/JVgkpAjtTIi5b6qMAURCspBBK1gX6pbKyUvNK028H2Bd+KFfdz9CsWy5SsmFfa79fYse5zvJkLX7Myl6ju1UOX/jmzEgB63THP3JgS9kFmBnhmcBsHXNd8iN0zv1X4uqp8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DFF8E+X+; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1712221879; c=relaxed/simple;
+	bh=n6p6k/lzQG02x5T4fSz4bMGLchasV8xiKuhC9VwpMhs=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=hCifBYqhzpVevPPzViYSy9GDKz6yk5P2rZKZ463XR8ANnG6XLnzuTW5dXcEaEyq+jpQUB9ToBbjECRcU6zaUYkA++qM7coA8mjiufuCbh0suSu5BoqtRf/OdXW9I7U3KMMtl04T3wdTYz9r22h6OaAbPOVD2sW4KOhH2YZhgGwc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=BqwJy8Lb; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=df9HqsCI; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DFF8E+X+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 04E99C433C7;
-	Thu,  4 Apr 2024 09:10:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712221830;
-	bh=f05m8PEbeJDSLndrUkpBjqyWXCZfLOBBZIVWIpskd2Q=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=DFF8E+X+fbEA0uawBttPRl9GZTK01Oz8ZRhr3iUd5qgtKeUCnbxs38JDNVuIqNHYU
-	 0fTbtsFU6zprjYXnmMHYk5ASapRy0EimI7HKqscw3PrPWhdm0NIwfdVHoB7XQ4E1Xu
-	 mXaDU8UCcy+GdK978XwsKlnJHsfb2rohfuOE5AkpRJKFwwZsR62K3g9JdNu2A81HSi
-	 TO0nDi6etmpf+lDtx4rWKumUp0nMkCIpIUAi1+M+p92yBNAujD8s7+vZHZTi5Q6Nzv
-	 aXbioWQCCOB/KJWeLONFd4GW9anc2oleGa+vgiNZNH17dWpsTl2Q0pqo3R/KoK1CkA
-	 NNFnAnx5SlA5w==
-Received: from [185.201.63.251] (helo=wait-a-minute.misterjones.org)
-	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.95)
-	(envelope-from <maz@kernel.org>)
-	id 1rsJ74-001Pk1-SZ;
-	Thu, 04 Apr 2024 10:10:27 +0100
-Date: Thu, 04 Apr 2024 10:10:23 +0100
-Message-ID: <87il0xsdc0.wl-maz@kernel.org>
-From: Marc Zyngier <maz@kernel.org>
-To: Gavin Shan <gshan@redhat.com>
-Cc: linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	catalin.marinas@arm.com,
-	will@kernel.org,
-	akpm@linux-foundation.org,
-	oliver.upton@linux.dev,
-	mark.rutland@arm.com,
-	ryan.roberts@arm.com,
-	apopple@nvidia.com,
-	rananta@google.com,
-	yangyicong@hisilicon.com,
-	v-songbaohua@oppo.com,
-	yezhenyu2@huawei.com,
-	yihyu@redhat.com,
-	shan.gavin@gmail.com
-Subject: Re: [PATCH v2] arm64: tlb: Fix TLBI RANGE operand
-In-Reply-To: <20240404053624.1485237-1-gshan@redhat.com>
-References: <20240404053624.1485237-1-gshan@redhat.com>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/28.2
- (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="BqwJy8Lb";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="df9HqsCI"
+Date: Thu, 04 Apr 2024 09:11:16 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1712221876;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=2hDGC9rmC3pGIV6LYm0wQNtQvLdvNnK47d0tnk8OlT0=;
+	b=BqwJy8Lb6OkvzA1FcsvlDg7D+DbXRbT4T1FEj7ue7HxFVAPxcpetro+8PrLdzeTpKl1N0E
+	ZL3n6McwsyGF+eF/5iOPutSsEliyLUNyTIo5aew0Ez06bEJ/GfntAV3mRoOKdOwlEi8sKV
+	07wIrDi40VulswsrA29EEbNBudGJnUCGRkMX8Lu2kYUVTRJXG71JY50EbcGH7OPUlcphXY
+	r8gqpGDiG/gzUiXz5OtwPxdyyEyW8tCB7qCLiuOTCVxCa1gpDUZwMiUAPzS6cnGGkUOSUN
+	tB8fC8gmDFjF4gqugu3xhoUPjohCgD4E+5BraBeDb9Eq1soFnnd5yMmx3WjoCg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1712221876;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=2hDGC9rmC3pGIV6LYm0wQNtQvLdvNnK47d0tnk8OlT0=;
+	b=df9HqsCIlejzfhym84YK3waW/9daiYZFUrUBfpWb3T1w6+8M3NcgNiwWGk3/709Z4r0G69
+	mUFteQ+sIgSmw5CQ==
+From: "tip-bot2 for Borislav Petkov (AMD)" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/urgent] x86/kvm/Kconfig: Have KVM_AMD_SEV select
+ ARCH_HAS_CC_PLATFORM
+Cc: "Borislav Petkov (AMD)" <bp@alien8.de>,
+ Tom Lendacky <thomas.lendacky@amd.com>, Srikanth Aithal <sraithal@amd.com>,
+ x86@kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20240327154317.29909-4-bp@alien8.de>
+References: <20240327154317.29909-4-bp@alien8.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-SA-Exim-Connect-IP: 185.201.63.251
-X-SA-Exim-Rcpt-To: gshan@redhat.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, catalin.marinas@arm.com, will@kernel.org, akpm@linux-foundation.org, oliver.upton@linux.dev, mark.rutland@arm.com, ryan.roberts@arm.com, apopple@nvidia.com, rananta@google.com, yangyicong@hisilicon.com, v-songbaohua@oppo.com, yezhenyu2@huawei.com, yihyu@redhat.com, shan.gavin@gmail.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+MIME-Version: 1.0
+Message-ID: <171222187604.10875.7369172404715557466.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
-On Thu, 04 Apr 2024 06:36:24 +0100,
-Gavin Shan <gshan@redhat.com> wrote:
-> 
-> KVM/arm64 relies on TLBI RANGE feature to flush TLBs when the dirty
-> bitmap is collected by VMM and the corresponding PTEs need to be
-> write-protected during live migration. Unfortunately, the operand
-> passed to the TLBI RANGE instruction isn't correctly sorted out by
-> commit d1d3aa98b1d4 ("arm64: tlb: Use the TLBI RANGE feature in arm64").
+The following commit has been merged into the x86/urgent branch of tip:
 
-This isn't the offending commit. See below.
+Commit-ID:     54f5f47b6055c6b57cbc41a440f8ca8b2ec4275a
+Gitweb:        https://git.kernel.org/tip/54f5f47b6055c6b57cbc41a440f8ca8b2ec4275a
+Author:        Borislav Petkov (AMD) <bp@alien8.de>
+AuthorDate:    Wed, 27 Mar 2024 16:43:15 +01:00
+Committer:     Borislav Petkov (AMD) <bp@alien8.de>
+CommitterDate: Thu, 04 Apr 2024 10:40:23 +02:00
 
-> It leads to crash on the destination VM after live migration because
-> TLBs aren't flushed completely and some of the dirty pages are missed.
-> 
-> For example, I have a VM where 8GB memory is assigned, starting from
-> 0x40000000 (1GB). Note that the host has 4KB as the base page size.
-> All TLBs for VM can be covered by one TLBI RANGE operation. However,
-> the operand 0xffff708000040000 is set for scale -9, and  -1 is returned
+x86/kvm/Kconfig: Have KVM_AMD_SEV select ARCH_HAS_CC_PLATFORM
 
-It's not scale, as it is limited to 2 bits. It's a random value that
-actively corrupts adjacent fields because it is wrongly sign-extended.
-ASID and TG are now utter bollocks, and the CPU is within its rights
-to totally ignore the TLBI (TG indicates 64kB translation granule...).
+The functionality to load SEV-SNP guests by the host will soon rely on
+cc_platform* helpers because the cpu_feature* API with the early
+patching is insufficient when SNP support needs to be disabled late.
 
-We really should fix __TLBI_VADDR_RANGE() to use proper bit fields
-instead of a bunch of shifts that lead to this mess.
+Therefore, pull that functionality in.
 
-> from __TLBI_RANGE_NUM() for scale 3/2/1/0 and rejected by the loop in
-> __flush_tlb_range_op(). __TLBI_RANGE_NUM() isn't expected to work
-> like this because all the pages should be covered by scale 3/2/1/0,
-> plus an additional page if needed.
-> 
-> Fix the macro __TLBI_RANGE_NUM() so that the correct NUM and TLBI RANGE
-> operand are provided for each scale level. With the changes, [-1 31]
-> instead of [-1 30] can be returned from the macro, meaning the TLBs for
-> 0x200000 pages (8GB memory) can be flushed in one shoot at scale 3. The
-> macro TLBI_RANGE_MASK is dropped since no one uses it any more.
-> 
-> Fixes: d1d3aa98b1d4 ("arm64: tlb: Use the TLBI RANGE feature in arm64")
-> Cc: stable@kernel.org # v5.10+
+Fixes: 216d106c7ff7 ("x86/sev: Add SEV-SNP host initialization support")
+Signed-off-by: Borislav Petkov (AMD) <bp@alien8.de>
+Reviewed-by: Tom Lendacky <thomas.lendacky@amd.com>
+Tested-by: Srikanth Aithal <sraithal@amd.com>
+Link: https://lore.kernel.org/r/20240327154317.29909-4-bp@alien8.de
+---
+ arch/x86/kvm/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-I don't think this is right. The problem only occurs since
-117940aa6e5f8 ("KVM: arm64: Define kvm_tlb_flush_vmid_range()"), which
-is the only case where we try to use NUM=31 (the rest of the kernel is
-using (MAX_TLBI_RANGE_PAGES - 1), which results in NUM=30 at most).
-
-Also, before e2768b798a19 ("arm64/mm: Modify range-based tlbi to
-decrement scale"), we used a different algorithm to perform the
-invalidation (increasing scale instead of decreasing), so this
-probably doesn't hit the same way.
-
-In any case, this is a KVM-only problem that will never show before
-v6.6. So 5.10 really isn't a place where we need to backport anything.
-
-> Reported-by: Yihuang Yu <yihyu@redhat.com>
-> Suggested-by: Marc Zyngier <maz@kernel.org>
-> Signed-off-by: Gavin Shan <gshan@redhat.com>
-> ---
-> v2: Improve __TLBI_RANGE_NUM() as Marc suggested
-> ---
->  arch/arm64/include/asm/tlbflush.h | 13 +++++++++----
->  1 file changed, 9 insertions(+), 4 deletions(-)
-> 
-> diff --git a/arch/arm64/include/asm/tlbflush.h b/arch/arm64/include/asm/tlbflush.h
-> index 3b0e8248e1a4..cd9b71c30366 100644
-> --- a/arch/arm64/include/asm/tlbflush.h
-> +++ b/arch/arm64/include/asm/tlbflush.h
-> @@ -161,12 +161,17 @@ static inline unsigned long get_trans_granule(void)
->  #define MAX_TLBI_RANGE_PAGES		__TLBI_RANGE_PAGES(31, 3)
->  
->  /*
-> - * Generate 'num' values from -1 to 30 with -1 rejected by the
-> + * Generate 'num' values from -1 to 31 with -1 rejected by the
->   * __flush_tlb_range() loop below.
->   */
-> -#define TLBI_RANGE_MASK			GENMASK_ULL(4, 0)
-> -#define __TLBI_RANGE_NUM(pages, scale)	\
-> -	((((pages) >> (5 * (scale) + 1)) & TLBI_RANGE_MASK) - 1)
-> +#define __TLBI_RANGE_NUM(pages, scale)					\
-> +	({								\
-> +		int __pages = min((pages),				\
-> +				  __TLBI_RANGE_PAGES(31, (scale)));	\
-> +		int __numplus1 = __pages >> (5 * (scale) + 1);		\
-> +									\
-> +		(__numplus1 - 1);					\
-> +	})
-
-This was only intended as a way to convey the general idea. __numplus1
-can obviously be removed and the right-shifting expression promoted as
-the return value.
-
-Next, the comments in this file need adjustments to reflect the
-supported invalidation range, as my original patch did (plus some
-more).
-
-Finally, and since we can now handle the full range of invalidation,
-it would make sense to fix __flush_tlb_range_nosync() to allow
-MAX_TLBI_RANGE_PAGES ranges (potentially in a separate patch).
-
-In the end, my sandbox contains the following, which should probably
-be split in 3 patches:
-
-diff --git a/arch/arm64/include/asm/tlbflush.h b/arch/arm64/include/asm/tlbflush.h
-index 3b0e8248e1a4..bcbe697ed191 100644
---- a/arch/arm64/include/asm/tlbflush.h
-+++ b/arch/arm64/include/asm/tlbflush.h
-@@ -142,16 +142,22 @@ static inline unsigned long get_trans_granule(void)
-  * EL1, Inner Shareable".
-  *
-  */
-+#define TLBIR_ASID_MASK		GENMASK_ULL(63, 48)
-+#define TLBIR_TG_MASK		GENMASK_ULL(47, 46)
-+#define TLBIR_SCALE_MASK	GENMASK_ULL(45, 44)
-+#define TLBIR_NUM_MASK		GENMASK_ULL(43, 39)
-+#define TLBIR_TTL_MASK		GENMASK_ULL(38, 37)
-+#define TLBIR_BADDR_MASK	GENMASK_ULL(36,  0)
-+
- #define __TLBI_VADDR_RANGE(baddr, asid, scale, num, ttl)			\
- 	({									\
--		unsigned long __ta = (baddr);					\
-+		unsigned long __ta = FIELD_PREP(TLBIR_BADDR_MASK, (baddr)); 	\
- 		unsigned long __ttl = (ttl >= 1 && ttl <= 3) ? ttl : 0;		\
--		__ta &= GENMASK_ULL(36, 0);					\
--		__ta |= __ttl << 37;						\
--		__ta |= (unsigned long)(num) << 39;				\
--		__ta |= (unsigned long)(scale) << 44;				\
--		__ta |= get_trans_granule() << 46;				\
--		__ta |= (unsigned long)(asid) << 48;				\
-+		__ta |= FIELD_PREP(TLBIR_TTL_MASK, __ttl);			\
-+		__ta |= FIELD_PREP(TLBIR_NUM_MASK, (unsigned long)(num));	\
-+		__ta |= FIELD_PREP(TLBIR_SCALE_MASK, (unsigned long)(scale));	\
-+		__ta |= FIELD_PREP(TLBIR_TG_MASK, get_trans_granule());		\
-+		__ta |= FIELD_PREP(TLBIR_ASID_MASK, (unsigned long)(asid));	\
- 		__ta;								\
- 	})
- 
-@@ -161,12 +167,17 @@ static inline unsigned long get_trans_granule(void)
- #define MAX_TLBI_RANGE_PAGES		__TLBI_RANGE_PAGES(31, 3)
- 
- /*
-- * Generate 'num' values from -1 to 30 with -1 rejected by the
-- * __flush_tlb_range() loop below.
-+ * Generate 'num' values from -1 to 31 with -1 rejected by the
-+ * __flush_tlb_range() loop below. Its return value is only
-+ * significant for a maximum of MAX_TLBI_RANGE_PAGES pages. If 'pages'
-+ * is more than that, you must iterate over the overall range.
-  */
--#define TLBI_RANGE_MASK			GENMASK_ULL(4, 0)
--#define __TLBI_RANGE_NUM(pages, scale)	\
--	((((pages) >> (5 * (scale) + 1)) & TLBI_RANGE_MASK) - 1)
-+#define __TLBI_RANGE_NUM(pages, scale)					\
-+	({								\
-+		int __pages = min((pages),				\
-+				  __TLBI_RANGE_PAGES(31, (scale)));	\
-+		(__pages >> (5 * (scale) + 1)) - 1;			\
-+	})
- 
- /*
-  *	TLB Invalidation
-@@ -379,10 +390,6 @@ static inline void arch_tlbbatch_flush(struct arch_tlbflush_unmap_batch *batch)
-  * 3. If there is 1 page remaining, flush it through non-range operations. Range
-  *    operations can only span an even number of pages. We save this for last to
-  *    ensure 64KB start alignment is maintained for the LPA2 case.
-- *
-- * Note that certain ranges can be represented by either num = 31 and
-- * scale or num = 0 and scale + 1. The loop below favours the latter
-- * since num is limited to 30 by the __TLBI_RANGE_NUM() macro.
-  */
- #define __flush_tlb_range_op(op, start, pages, stride,			\
- 				asid, tlb_level, tlbi_user, lpa2)	\
-@@ -437,11 +444,11 @@ static inline void __flush_tlb_range_nosync(struct vm_area_struct *vma,
- 	 * When not uses TLB range ops, we can handle up to
- 	 * (MAX_DVM_OPS - 1) pages;
- 	 * When uses TLB range ops, we can handle up to
--	 * (MAX_TLBI_RANGE_PAGES - 1) pages.
-+	 * MAX_TLBI_RANGE_PAGES pages.
- 	 */
- 	if ((!system_supports_tlb_range() &&
- 	     (end - start) >= (MAX_DVM_OPS * stride)) ||
--	    pages >= MAX_TLBI_RANGE_PAGES) {
-+	    pages > MAX_TLBI_RANGE_PAGES) {
- 		flush_tlb_mm(vma->vm_mm);
- 		return;
- 	}
-
-Thanks,
-
-	M.
-
--- 
-Without deviation from the norm, progress is not possible.
+diff --git a/arch/x86/kvm/Kconfig b/arch/x86/kvm/Kconfig
+index 3aaf7e8..0ebdd08 100644
+--- a/arch/x86/kvm/Kconfig
++++ b/arch/x86/kvm/Kconfig
+@@ -122,6 +122,7 @@ config KVM_AMD_SEV
+ 	default y
+ 	depends on KVM_AMD && X86_64
+ 	depends on CRYPTO_DEV_SP_PSP && !(KVM_AMD=y && CRYPTO_DEV_CCP_DD=m)
++	select ARCH_HAS_CC_PLATFORM
+ 	help
+ 	  Provides support for launching Encrypted VMs (SEV) and Encrypted VMs
+ 	  with Encrypted State (SEV-ES) on AMD processors.
