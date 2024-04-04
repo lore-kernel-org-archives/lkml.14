@@ -1,181 +1,126 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from buffalo.tulip.relay.mailchannels.net (buffalo.tulip.relay.mailchannels.net [23.83.218.24])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F25BC15EA6
-	for <linux-kernel@vger.kernel.org>; Thu,  4 Apr 2024 21:48:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712267291; cv=none; b=QBbjgnMLVqWGGPnW6gYgMMKP9EMW1OyHkswUmy0SY0xeCT2mskKUaWo9hP9mR/qdzv2UEgGzbuArvgEkM6gx5lrufK1Tw4kn1lB1GOqWRs2A6XDfEkuey/jimO3vZVY0ouvNOu80Q3LY9Hf5JVvpByoEnADlPQ4yeZ9hmuZjQso=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712267291; c=relaxed/simple;
-	bh=tyOJweThBBmRhkj3LkV8VI78GqXfmC8mx6HCWpOuukE=;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 931A813BAF5
+	for <linux-kernel@vger.kernel.org>; Thu,  4 Apr 2024 21:48:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=23.83.218.24
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1712267323; cv=pass; b=tzhPFnnR/hZUOIAptK1n7alerTqC3AdFQSNBIMwUjHRZr17hEZY7GjmcQb1R7ZjFGCNF5yc2YGwWCVY6QEOkFA+PX/txTMmC+N/Y3YW8vFvDIWLWDYDWqr/JeFWw99d8jh1R0QSY5guaG90jhPHiFXc89/Sz0ZRAl4/awRCsEOs=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1712267323; c=relaxed/simple;
+	bh=M6DIshYVJQR0DO4VUKuLo4E19fWk1vmFQ2Kk6iCE5tk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=EtRqSKAbybIS5Hza+totM3DcTV04KVIzTbL36/lLwJzIkYkD3IwK+BeiCQEZJlSMTRK7iS0gQizTOltQk/guO0ZjHUkKP0KXaZ9bJZYbSRXKIHUqTpiQbDTbQinSOfUPL2U/6U+52k7V/UADW9CSPQRIpalabWuSlCgjSmWGs+E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=U4cl7svS; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=ewBii+LCYmFuD5HjGA0nxwEDrwtCQWeJj6Wl2ov8nkxUveLSigAgabs8ZIaEj6+ZCL+Kud4lF7BEjtMSMgthmS1zAufkvGLUUqaZo9VNIdeGhAymkB2ZE8w3k9wBzeNTp0WXtNQJC7BkL8JfercEWTDEyfk0SOF1FRSF2QFPagk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=templeofstupid.com; spf=pass smtp.mailfrom=templeofstupid.com; dkim=pass (2048-bit key) header.d=templeofstupid.com header.i=@templeofstupid.com header.b=LMIK8Xyl; arc=pass smtp.client-ip=23.83.218.24
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=templeofstupid.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=templeofstupid.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="U4cl7svS"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1712267288;
+	dkim=pass (2048-bit key) header.d=templeofstupid.com header.i=@templeofstupid.com header.b="LMIK8Xyl"
+X-Sender-Id: dreamhost|x-authsender|kjlx@templeofstupid.com
+Received: from relay.mailchannels.net (localhost [127.0.0.1])
+	by relay.mailchannels.net (Postfix) with ESMTP id DD6808257B
+	for <linux-kernel@vger.kernel.org>; Thu,  4 Apr 2024 21:41:57 +0000 (UTC)
+Received: from pdx1-sub0-mail-a264.dreamhost.com (unknown [127.0.0.6])
+	(Authenticated sender: dreamhost)
+	by relay.mailchannels.net (Postfix) with ESMTPA id 84D8081F4E
+	for <linux-kernel@vger.kernel.org>; Thu,  4 Apr 2024 21:41:57 +0000 (UTC)
+ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1712266917; a=rsa-sha256;
+	cv=none;
+	b=0PXT1g2WDqexfisBw0CjqD6K5N+Ru+vs4In0SCl9VVkQ7LWYgNLInSI7v7JjD6IjG1DIEL
+	9g/fPuo3pn2Y53wYATk06VD8vW8YyKkKTc5qKWYBigPa7+GXr0MveNk50u2IwwfirtrH4i
+	48T1LVqIXpQHva7BGiH5mMo0lfDtMtyY4EosOJIZ1b4LhoNxGmiOMRwoUlOfJjfwWOHsfA
+	jW99WTMnXNUWS4j/8KyCBF6MzJwe0VPERcKaD20nhYU6UyVjh8BmFzs71ANz2XroeEz19Y
+	IyiUBAOqsODL6PpNucZ/ZlDdSAo8MEmpbU6++zjgfvDs6wKR0kMZYY8eed1BHA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=mailchannels.net;
+	s=arc-2022; t=1712266917;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=d56SKhTEmtwwDufddPphJGQfZPKBUJnUzF2wWqxF3/c=;
-	b=U4cl7svSlIK7RcjmgEdmdGc2rP4assD95p547ZSziMc3T4tfYTQxv+ScKab+haYTYNo7Vt
-	R3WE+vIFpTo8SiXx0n4YzkXksCrsj8wEI1cUhrD+sT4hJX+L3kQ1j/GOYC9lTN3DXa/s5M
-	UsYW5NdbrOllh8fYakYIWxjBpHttVNY=
-Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com
- [209.85.222.199]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-131-na6ULbXRMXeUYWZKf4WfnQ-1; Thu, 04 Apr 2024 17:48:07 -0400
-X-MC-Unique: na6ULbXRMXeUYWZKf4WfnQ-1
-Received: by mail-qk1-f199.google.com with SMTP id af79cd13be357-78d346eeb02so53116885a.1
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Apr 2024 14:48:07 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712267287; x=1712872087;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=d56SKhTEmtwwDufddPphJGQfZPKBUJnUzF2wWqxF3/c=;
-        b=jVMARoCTWgqVF7dqXa6vhSm2Wh84zyXFhQrH6ssBhbJ/wpVwCZ85wkFFwS4k6kFWtj
-         9eQYS5ZBkL4mVbMYbGGSQoHgbB7LKOTbqeWv+exMWWLx/+9N5Zr+EpK072bAD6vf9ikv
-         m9rt81zG9pteAPPaC72msNHd7LeGpZQEtY+Wcg47WgX81vMohYAa+qHMiav56u2TGB5Q
-         PtvxiTxkiA/0ac/btlYEw8MC70LbvVznmSQh30strmsRBL24ikKdKc9h8N1+YwGp+RG9
-         6gFkqQplqzjNd/rHO9qRICmVUzvJBZeut6w7ooJoHny9vEb5ht/xnopmxEdc1qNrnmnm
-         8v+w==
-X-Forwarded-Encrypted: i=1; AJvYcCXAg0W0UQUkcQnAU6FjF7bEWerZnsTaf1xxitzVvovnSsS/hLCVvP12Ma7rfBtZfq+W7sxg8TifmX5eoUesqKoYjuWOCDv1Ov0SO3tA
-X-Gm-Message-State: AOJu0Ywp4uJCv9W/qEHIQoK9SPQ6Ee+B2wCeui2P7zSVzfkOtsmw8Z6W
-	qk6/VqcJ38CAO2wXchT5LZUtlLi7C16znNuO2Zs1f4iSrX6yMHomEmkpf8eAKm+HvPBs+eo0rNr
-	ljn1REweHK60sCZcc1Jx/H7/C9+uQMZ4nBHSkLygl+t3h0U48qk9Bn71lbhiBYw==
-X-Received: by 2002:a05:620a:4710:b0:78d:3b13:f5ab with SMTP id bs16-20020a05620a471000b0078d3b13f5abmr4680975qkb.0.1712267286787;
-        Thu, 04 Apr 2024 14:48:06 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGchKyZTo6ytc9p0sjvCKGDIoG+ERHoc+VJC1tNlLSTRdcMUNyMf3HEESrAIicSQ8HrtIJ6pQ==
-X-Received: by 2002:a05:620a:4710:b0:78d:3b13:f5ab with SMTP id bs16-20020a05620a471000b0078d3b13f5abmr4680952qkb.0.1712267286207;
-        Thu, 04 Apr 2024 14:48:06 -0700 (PDT)
-Received: from x1n ([99.254.121.117])
-        by smtp.gmail.com with ESMTPSA id wg6-20020a05620a568600b00789e49808ffsm105555qkn.105.2024.04.04.14.48.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 04 Apr 2024 14:48:05 -0700 (PDT)
-Date: Thu, 4 Apr 2024 17:48:03 -0400
-From: Peter Xu <peterx@redhat.com>
-To: Jason Gunthorpe <jgg@nvidia.com>
-Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Matthew Wilcox <willy@infradead.org>,
-	Rik van Riel <riel@surriel.com>,
-	Lorenzo Stoakes <lstoakes@gmail.com>,
-	Axel Rasmussen <axelrasmussen@google.com>,
-	Yang Shi <shy828301@gmail.com>, John Hubbard <jhubbard@nvidia.com>,
-	linux-arm-kernel@lists.infradead.org,
-	"Kirill A . Shutemov" <kirill@shutemov.name>,
-	Andrew Jones <andrew.jones@linux.dev>,
-	Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Muchun Song <muchun.song@linux.dev>,
-	Christoph Hellwig <hch@infradead.org>,
-	linux-riscv@lists.infradead.org,
-	James Houghton <jthoughton@google.com>,
-	David Hildenbrand <david@redhat.com>,
-	Andrea Arcangeli <aarcange@redhat.com>,
-	"Aneesh Kumar K . V" <aneesh.kumar@kernel.org>,
-	Mike Kravetz <mike.kravetz@oracle.com>
-Subject: Re: [PATCH v3 00/12] mm/gup: Unify hugetlb, part 2
-Message-ID: <Zg8gEyE4o_VJsTmx@x1n>
-References: <20240321220802.679544-1-peterx@redhat.com>
- <20240322161000.GJ159172@nvidia.com>
- <ZgHJaJSpoeJVEccN@x1n>
- <20240326140252.GH6245@nvidia.com>
+	 in-reply-to:in-reply-to:references:references:dkim-signature;
+	bh=oiU215bQMRqMD25CrXr9YpvEHYCDhTpFJaAfQebstxE=;
+	b=97ilUBTD0D9600sfwr0sIY5oxBsLVvxZyvvEFnHyyv3AS+jSQgM3O+tx+j2DqohcFZNSnD
+	0D2e5XACe1zl1H+Ikx8pvlH8mlSdlx0Rv0LG2UiR+BiYJt5l8adgSUgSWoupIqXows4YQS
+	BvXO1EH/Aa0Yb7lWpL0wf60sHPgltXaEqltFT4tF4nbDND03yE5frN/tjaVgXgMoBSwUk0
+	Xn2eKF4pMpHOXvV5CiU5K8BkZ5GPp3RECnoC+cBQZBri5sZjFgtCzhwKBAQxNuDcjr0+QN
+	W8orRTMr8JrjKAHUTXKKlk4gZVONGJ1thjN/poMXEiEaVQoPLf4nd2zru76XYg==
+ARC-Authentication-Results: i=1;
+	rspamd-86f86f958-64ssq;
+	auth=pass smtp.auth=dreamhost smtp.mailfrom=kjlx@templeofstupid.com
+X-Sender-Id: dreamhost|x-authsender|kjlx@templeofstupid.com
+X-MC-Relay: Neutral
+X-MailChannels-SenderId: dreamhost|x-authsender|kjlx@templeofstupid.com
+X-MailChannels-Auth-Id: dreamhost
+X-Absorbed-Attack: 188f4a7f2a25fff5_1712266917779_651901442
+X-MC-Loop-Signature: 1712266917779:4165931739
+X-MC-Ingress-Time: 1712266917778
+Received: from pdx1-sub0-mail-a264.dreamhost.com (pop.dreamhost.com
+ [64.90.62.162])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
+	by 100.125.113.83 (trex/6.9.2);
+	Thu, 04 Apr 2024 21:41:57 +0000
+Received: from kmjvbox.templeofstupid.com (c-73-222-159-162.hsd1.ca.comcast.net [73.222.159.162])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: kjlx@templeofstupid.com)
+	by pdx1-sub0-mail-a264.dreamhost.com (Postfix) with ESMTPSA id 4V9Znx1TF9zVN
+	for <linux-kernel@vger.kernel.org>; Thu,  4 Apr 2024 14:41:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=templeofstupid.com;
+	s=dreamhost; t=1712266917;
+	bh=oiU215bQMRqMD25CrXr9YpvEHYCDhTpFJaAfQebstxE=;
+	h=Date:From:To:Cc:Subject:Content-Type;
+	b=LMIK8Xyl6bHblGCtjWTDQm/b66eFVU/mhAWcAHTczX+sQgZ1d/KhhBYxz6YF+Nkl4
+	 M1dGy/oyIWRXRI7sABKox7pd2poOj0ID/nTA94ZDsFKHdc1NMncUVSndihX3qhEnRz
+	 sBnj9sIc/4MY3YVzcKHf62ucff/Y9coWWktaClQ2viyYp+AkHBdZArpAkWE5enIHK1
+	 pOG4qmGndYS0AmrVyjSrQfqcSPJN0KJoQpKGBzS6m2rskWbGPFKH6EFkH9XKsFoSge
+	 2WfajbRLfnG+l4pvGsQQT84OSRQgExQoNe5DHzQ6qPeQUscrC9wGcpCYUHM+lsrFZ7
+	 X9KWR0A5TFUHQ==
+Received: from johansen (uid 1000)
+	(envelope-from kjlx@templeofstupid.com)
+	id e0103
+	by kmjvbox.templeofstupid.com (DragonFly Mail Agent v0.12);
+	Thu, 04 Apr 2024 14:41:56 -0700
+Date: Thu, 4 Apr 2024 14:41:56 -0700
+From: Krister Johansen <kjlx@templeofstupid.com>
+To: Ali Saidi <alisaidi@amazon.com>
+Cc: catalin.marinas@arm.com, james.morse@arm.com, kvmarm@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	maz@kernel.org, me@davidreaver.com, oliver.upton@linux.dev,
+	suzuki.poulose@arm.com, will@kernel.org, yuzenghui@huawei.com
+Subject: Re: [PATCH] KVM: arm64: Limit stage2_apply_range() batch size to
+ smallest block
+Message-ID: <20240404214156.GF2178@templeofstupid.com>
+References: <20240404044028.GA1976@templeofstupid.com>
+ <20240404212742.11248-1-alisaidi@amazon.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240326140252.GH6245@nvidia.com>
+In-Reply-To: <20240404212742.11248-1-alisaidi@amazon.com>
 
-On Tue, Mar 26, 2024 at 11:02:52AM -0300, Jason Gunthorpe wrote:
-> The more I look at this the more I think we need to get to Matthew's
-> idea of having some kind of generic page table API that is not tightly
-> tied to level. Replacing the hugetlb trick of 'everything is a PTE'
-> with 5 special cases in every place seems just horrible.
+On Thu, Apr 04, 2024 at 09:27:42PM +0000, Ali Saidi wrote:
+> > Just a quick followup that I did test Will's patches and didn't find
+> > that it changed the performance of the workload that I'd been testing.
+> > IOW, I wasn't able to discern a network performance difference between
+> > the baseline and those changes.
 > 
->    struct mm_walk_ops {
->        int (*leaf_entry)(struct mm_walk_state *state, struct mm_walk *walk);
->    }
-> 
-> And many cases really want something like:
->    struct mm_walk_state state;
-> 
->    if (!mm_walk_seek_leaf(state, mm, address))
->           goto no_present
->    if (mm_walk_is_write(state)) ..
-> 
-> And detailed walking:
->    for_each_pt_leaf(state, mm, address) {
->        if (mm_walk_is_write(state)) ..
->    }
-> 
-> Replacing it with a mm_walk_state that retains the level or otherwise
-> to allow decoding any entry composes a lot better. Forced Loop
-> unrolling can get back to the current code gen in alot of places.
-> 
-> It also makes the power stuff a bit nicer as the mm_walk_state could
-> automatically retain back pointers to the higher levels in the state
-> struct too...
-> 
-> The puzzle is how to do it and still get reasonable efficient codegen,
-> many operations are going to end up switching on some state->level to
-> know how to decode the entry.
+> That is a bit unexpected that the performance wasn't worse with the patch Will
+> sent because it should have disabled the range invalidates since they these 
+> invalidates will be getting rid of blocks?  Which Graviton were you testing
+> this on? 
 
-These discussions are definitely constructive, thanks Jason.  Very helpful.
+Sorry I didn't mention it earlier.  This was on a Graviton 4 with
+FEAT_TLBIRANGE.  Due to the placement of the test machine and the client
+the max single flow rate was 5Gbps, and with both the baseline and
+Will's patches I wasn't able to discern any slowdown there, at least in
+terms of impact to the adjacent networking traffic.  I saw an approx 1%
+slowdown with multiple flows at 10Gbps, but didn't have a baseline for
+that test case so was hesitant to offer it as conclusive.  I should be
+clear that I _wasn't_ measuring the the teardown times in this test
+-- just how the teardown itself impacted the networking performance.
 
-I thought about this last week but got interrupted.  It does make sense to
-me; it looks pretty generic and it is flexible enough as a top design.  At
-least that's what I thought.
-
-However now when I rethink about it, and look more into the code when I got
-the chance, it turns out this will be a major rewrite of mostly every
-walkers..  it doesn't mean that this is a bad idea, but then I'll need to
-compare the other approach, because there can be a huge difference on when
-we can get that code ready, I think. :)
-
-Consider that what we (or.. I) want to teach the pXd layers are two things
-right now: (1) hugetlb mappings (2) MMIO (PFN) mappings.  That mostly
-shares the generic concept when working on the mm walkers no matter which
-way to go, just different treatment on different type of mem.  (2) is on
-top of current code and new stuff, while (1) is a refactoring to drop
-hugetlb_entry() hook point as the goal.
-
-Taking a simplest mm walker (smaps) as example, I think most codes are
-ready thanks to THP's existance, and also like vm_normal_page[_pmd]() which
-should even already work for pfnmaps; pud layer is missing but that should
-be trivial.  It means we may have chance to drop hugetlb_entry() without an
-huge overhaul yet.
-
-Now the important question I'm asking myself is: do we really need huge p4d
-or even bigger?  It's 512GB on x86, and we said "No 512 GiB pages yet"
-(commit fe1e8c3e963) since 2017 - that is 7 years without chaning this
-fact.  While on non-x86 p4d_leaf() never defined.  Then it's also
-interesting to see how many codes are "ready" to handle p4d entries (by
-looking at p4d_leaf() calls; much easier to see with the removal of the
-rest huge apis..) even if none existed.
-
-So, can we over-engineer too much if we go the generic route now?
-Considering that we already have most of pmd/pud entries around in the mm
-walker ops.  So far it sounds better we leave it for later, until further
-justifed to be useful.  And that won't block it if it ever justified to be
-needed, I'd say it can also be seen as a step forward if I can make it to
-remove hugetlb_entry() first.
-
-Comments welcomed (before I start to work on anything..).
-
-Thanks,
-
--- 
-Peter Xu
-
+-K
