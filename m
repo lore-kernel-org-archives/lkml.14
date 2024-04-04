@@ -1,105 +1,77 @@
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C45612D758;
-	Thu,  4 Apr 2024 16:14:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 786AA1BC46
+	for <linux-kernel@vger.kernel.org>; Thu,  4 Apr 2024 16:14:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712247261; cv=none; b=kd/7xQdiGxwVQyenHlLgjFyeSym38yYJOUwKQ/6/Y3ZLHrmOiNksLejU3poDcrRnT172LXLm6d8BlAv2TXfY7AZnvdafM4unCf85sCa1T7BfRIbJMKg0SZaXikqNH/+i3URjCCfHwFQiu0mHHvO9QGGukGB88O09PjPduY/8ya0=
+	t=1712247274; cv=none; b=oYzTujkyNBlBcwQNEq2YlzInvOMMFDvinPfVW/DS01pyOI0jc0CjzudbVw3LdS/2n/OonPrIsYbb237AFm1n4ClX31jKiTc9/gfF9rlD/53Fq3MJ8DW8dHpegiDtGJzDnYeYFzxIXCswNHziS7NDER0CYwVWEqI09NZKFZOKiCE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712247261; c=relaxed/simple;
-	bh=ldtvjkAh4uiGxCheNFBwI4fa4kaJRENVGkoL+ZPIS0g=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=jFnh6xCQ/8HCz+Zn/wVwhpmLGvlWfwIUiq4nxUnBO1+KBDZftPJN+I9Q8l0xlE9PR4h13YNCwlTwekYzXOk3uT55MdHQhIt0RglseV2ISOBFd9O2/paHExTOpMIMz9lTOystlVdSF/gRTxmke9HeqJko/zYVm8l9Q9P+snnRneE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=fRx2C0Ai; arc=none smtp.client-ip=46.235.227.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1712247274; c=relaxed/simple;
+	bh=zQIu0W+9tdYoBo5T+slKZD8LMHqeZZgVgPHuv1ZgG/0=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=FA7Kbdd2yUOrN+3V+t5Y6erml5s+s1ggg1HDoyTHtwDc25B7AKS81lUdCc5SKW5OYdZV8knig3ll6plaTslDqtOejwarxxbsdyS1UdwviOma+cMd3EPeaCV++qM3CtMbrok1X8pRQj7DC6mAZ9KXxObFeJOeqL10TRerDTJzMJk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=X0iUeh8p; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=n9Ky/D2N; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="fRx2C0Ai"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1712247258;
-	bh=ldtvjkAh4uiGxCheNFBwI4fa4kaJRENVGkoL+ZPIS0g=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=fRx2C0AiLQ4G1u6VFtu1nRt8ktODQ2HPoOEC4eASfbnsv3kNtEnb3RqER3Y2wbRY9
-	 d/pJoQRl2pj7+q7DT0patY2f1zEPrCtrwOUGfyEg+1Y9GoFWQMUusXNax/Kl1k9DY1
-	 73JunOQKqEIxh0+00nwpZp9kupfykapjNm13AahJ2r9U2cuRX5xsRw9syYMPjG5lR1
-	 JnvrI/7rMjOBLXXhKhsNJ9b2Be3kKxApdA/+kWDhXAzANyGnmiGUzjGpQ0M/2GT64W
-	 SpEU9pSg90tT9ET8Bb0UgJvlZbj/k0v0OPetMnblBZWVFmWXQfOqKLD2YM0CZcB08/
-	 VqJE/TPfcDIEA==
-Received: from localhost.localdomain (broslavsky.collaboradmins.com [68.183.210.73])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: usama.anjum)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id B8A7B378212B;
-	Thu,  4 Apr 2024 16:14:14 +0000 (UTC)
-From: Muhammad Usama Anjum <usama.anjum@collabora.com>
-To: Eric Biederman <ebiederm@xmission.com>,
-	Kees Cook <keescook@chromium.org>,
-	Shuah Khan <shuah@kernel.org>,
-	Muhammad Usama Anjum <usama.anjum@collabora.com>,
-	linux-mm@kvack.org,
-	linux-kselftest@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: kernel@collabora.com
-Subject: [PATCH 2/2] selftests: exec: Use new ksft_exit_fail_perror() helper
-Date: Thu,  4 Apr 2024 21:14:33 +0500
-Message-Id: <20240404161433.114497-3-usama.anjum@collabora.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240404161433.114497-1-usama.anjum@collabora.com>
-References: <20240404161433.114497-1-usama.anjum@collabora.com>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="X0iUeh8p";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="n9Ky/D2N"
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1712247270;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=OGS/44FU5GIZLtaLg0w/7PHFNSThm+pNn7jES6aXJuY=;
+	b=X0iUeh8pWpCS8duV5Y428mGvbebbynLG7B3UpxtjFBZTSPubH13lV4alGWThaypltwE6FC
+	jujEHtP7JKFgnh7qL8xvm3oo0jhTD/1WbuHAR+fprlo/ShpHjWaKXIukXY+dS//bkq4ydK
+	62T7oY84f61D+KWyAdoWcR/gL2nbAWDXON5SEVID5TRwgYgEt2WHKABGrsrh1etaYDVCTR
+	eDoUOWp6vKdcn1N7WKPuY451UoUFVWD5S1Zlb8rM6pLodiLIOT3LkH1yvrxH7aIKS5eZqW
+	f1BYT8UA/UKlnnSdfCFNNeKN3vPfmTsp0KenXCXzWyZ170O+J/DyN0KIpeplyg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1712247270;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=OGS/44FU5GIZLtaLg0w/7PHFNSThm+pNn7jES6aXJuY=;
+	b=n9Ky/D2Ntwy8PG7Vns5taE92H5P268YAEDjBMMcaf9d+MuAbMwqmd3i7oJwXlyo34U9c3b
+	SI0NkQKVyJdXIYAQ==
+To: Laura Nao <laura.nao@collabora.com>
+Cc: kernel@collabora.com, laura.nao@collabora.com,
+ linux-kernel@vger.kernel.org, regressions@leemhuis.info,
+ regressions@lists.linux.dev, x86@kernel.org
+Subject: Re: [REGRESSION] mainline boot regression on AMD Stoney Ridge
+ Chromebooks
+In-Reply-To: <20240404152317.464796-1-laura.nao@collabora.com>
+References: <874jchb7na.ffs@tglx>
+ <20240404152317.464796-1-laura.nao@collabora.com>
+Date: Thu, 04 Apr 2024 18:14:30 +0200
+Message-ID: <87sf019kbd.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 
-Use ksft_exit_fail_perror() to print the value of errno and its string
-form. This is the first user of the ksft_exit_fail_perror() and proves
-the usefulness of this API.
+Laura!
 
-Signed-off-by: Muhammad Usama Anjum <usama.anjum@collabora.com>
----
- tools/testing/selftests/exec/recursion-depth.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+On Thu, Apr 04 2024 at 17:23, Laura Nao wrote:
+> On 4/4/24 15:05, Thomas Gleixner wrote:
+>> Can you please provide a boot dmesg from a 6.8 kernel and the output of
+>> 'cpuid' ?
+>
+> Sure, here's the output from an Acer Chromebook Spin 311 R721T device:
+> - kernel log: https://pastebin.com/raw/NNbeJupE
+> - cpuid output: https://pastebin.com/raw/ThmGqnqG
 
-diff --git a/tools/testing/selftests/exec/recursion-depth.c b/tools/testing/selftests/exec/recursion-depth.c
-index b2f37d86a5f62..438c8ff2fd260 100644
---- a/tools/testing/selftests/exec/recursion-depth.c
-+++ b/tools/testing/selftests/exec/recursion-depth.c
-@@ -37,25 +37,25 @@ int main(void)
- 			ksft_test_result_skip("error: unshare, errno %d\n", errno);
- 			ksft_finished();
- 		}
--		ksft_exit_fail_msg("error: unshare, errno %d\n", errno);
-+		ksft_exit_fail_perror("error: unshare");
- 	}
- 
- 	if (mount(NULL, "/", NULL, MS_PRIVATE | MS_REC, NULL) == -1)
--		ksft_exit_fail_msg("error: mount '/', errno %d\n", errno);
-+		ksft_exit_fail_perror("error: mount '/'");
- 
- 	/* Require "exec" filesystem. */
- 	if (mount(NULL, "/tmp", "ramfs", 0, NULL) == -1)
--		ksft_exit_fail_msg("error: mount ramfs, errno %d\n", errno);
-+		ksft_exit_fail_perror("error: mount ramfs");
- 
- #define FILENAME "/tmp/1"
- 
- 	fd = creat(FILENAME, 0700);
- 	if (fd == -1)
--		ksft_exit_fail_msg("error: creat, errno %d\n", errno);
-+		ksft_exit_fail_perror("error: creat");
- 
- #define S "#!" FILENAME "\n"
- 	if (write(fd, S, strlen(S)) != strlen(S))
--		ksft_exit_fail_msg("error: write, errno %d\n", errno);
-+		ksft_exit_fail_perror("error: write");
- 
- 	close(fd);
- 
--- 
-2.39.2
+Thanks for the quick response.
 
+Can you please provide 'cpuid -r' output too as 'cpuid' does a few
+tweaks to the raw data and it's hard to match it back to the code.
+
+Thanks,
+
+        tglx
