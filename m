@@ -1,146 +1,106 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com [209.85.167.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 431191C2AD
-	for <linux-kernel@vger.kernel.org>; Thu,  4 Apr 2024 14:56:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D02D1C290
+	for <linux-kernel@vger.kernel.org>; Thu,  4 Apr 2024 14:57:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712242564; cv=none; b=a3SKSYB4sKKmK5oNuq+9XaJwkXIrwpzaiyS3OA7aIhpW8Ai4OZAfRzGrsDKWxmUtha6KV6ctd3mxUMqDrpl1v9vtT3deL2eulYQIFvo2MdZNvufz53Jtu/GjSzFvSCY1xioyydZlWlJww3NRkwdzZUJFBz/4goH6Q7O9Z3Bojq0=
+	t=1712242623; cv=none; b=hcCy3ZnD61DDwLMU9L/iF8vzBDo1T7zXEbiJ+hhZgEUS9QA7TivhaaOzkmuGhE5zPMS6WPUz2odn7Sz4xqd9C2AFWlG8bE1XOMeq/Fj4AyWHVY3O5R5RboNKg1WwOOcqQfWLqjehtvmZfs//y/qBABtkX0nTxUDPB/Hd9K5rSJA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712242564; c=relaxed/simple;
-	bh=1CavvPgllyAa/15cVaRGGxEOJZQLKhATrB9uOUZKE7Y=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SJZFskJNPZWC5Rkc/sYOGW8g/QzT8HGQ7KgM8PfnEIFfKfbx+R3rEPTMwVz5n6k6J+b06rfyBVmluWvq5m5QRbHVab5AIcCtMP8sYj5lJLywjsFVMFmfI2aAU+T/lNE5cnjn2QSUVLnOUfakw0ESovfzWE2LoiJq9owarKPwUHE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=i8agMKCi; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1712242623; c=relaxed/simple;
+	bh=IaFoOl62tcCF59UV0efY1h+CjVTA1CJAzdIeBir6ok4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=sUuE0QE3cxPIGWWenm3BJggh7P8oGvA8Ro6WZd+sV2CYGwpQq1J005Ojqi91iSKPS0nCrTdVAZYtXSIvlndi/S3JtTXnIaU7NKnO+1KL9nvMnvwp/2nUXMV2dMXOIjpY3UCVc+scJEJLmgKSmy9l9A0Lp17Mx1uGK9KWFaFfFCA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=EZWFKZz9; arc=none smtp.client-ip=209.85.167.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="i8agMKCi"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1712242562;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=NQJMd58pUdtgy9XOZ35rBzvDWBc5FSPJawvsuooB2RU=;
-	b=i8agMKCihr4fGxGvwqCrMjcZqPrxY6HUJYSiK8KHK/ucoXQOaqXUDwdzmVGWfrd4GCukt2
-	Gfw3YnHejZT3exTbNt51W4FWDAytKGm/wudtE9uNlGeonH7r/tcj+TvL+wT+ojvvS3byU4
-	akXdYsr0fAYNEdsy9vTxm7lveyHRNOo=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-246-N99Y3y5yNh-I55Dli-sewA-1; Thu, 04 Apr 2024 10:55:57 -0400
-X-MC-Unique: N99Y3y5yNh-I55Dli-sewA-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.rdu2.redhat.com [10.11.54.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 1BBF088FBAB;
-	Thu,  4 Apr 2024 14:55:57 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.225.21])
-	by smtp.corp.redhat.com (Postfix) with SMTP id 43CDC3C21;
-	Thu,  4 Apr 2024 14:55:54 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Thu,  4 Apr 2024 16:54:32 +0200 (CEST)
-Date: Thu, 4 Apr 2024 16:54:08 +0200
-From: Oleg Nesterov <oleg@redhat.com>
-To: Thomas Gleixner <tglx@linutronix.de>
-Cc: John Stultz <jstultz@google.com>, Marco Elver <elver@google.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>,
-	"Eric W. Biederman" <ebiederm@xmission.com>,
-	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-	Dmitry Vyukov <dvyukov@google.com>, kasan-dev@googlegroups.com,
-	Edward Liaw <edliaw@google.com>,
-	Carlos Llamas <cmllamas@google.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH v6 1/2] posix-timers: Prefer delivery of signals to the
- current thread
-Message-ID: <20240404145408.GD7153@redhat.com>
-References: <87sf02bgez.ffs@tglx>
- <87r0fmbe65.ffs@tglx>
- <CANDhNCoGRnXLYRzQWpy2ZzsuAXeraqT4R13tHXmiUtGzZRD3gA@mail.gmail.com>
- <87o7aqb6uw.ffs@tglx>
- <CANDhNCreA6nJp4ZUhgcxNB5Zye1aySDoU99+_GDS57HAF4jZ_Q@mail.gmail.com>
- <87frw2axv0.ffs@tglx>
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="EZWFKZz9"
+Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-516d0c004b1so588701e87.2
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Apr 2024 07:57:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1712242619; x=1712847419; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=JubjZrC2lioP3RyL0Ciyw/lhrZMZfq1yICuaTDklK7g=;
+        b=EZWFKZz9RaX+148XZhWYsTgLQGwdwBNK2VrEsmAVYD0ariqC6TUDJt/5DVda2RuLQV
+         TTLscQ5C6nbhsjhYJNyyxYQg37yETs8EERx40byG+/y94TqxKEJfEKcjhMyMaT7hC1uU
+         vs+wO91bVAGGkf7PgCUrdsg8ShpLTY4ij/+pX2sKIi3KsJCbmS6rmMPOiS3s8rmWboRT
+         9mVrcvq8+O+k9nDWPgHOdDEHDvam9u8xxBTqtWirvSQMEnQ9rphkvggpG9alFDcjysy5
+         4f8OQY02+oCziX2X+NtJ4599YAlj2rzjSSOoZFI39Oh4um+rWwpHPMQ91H7c8z3pH/qF
+         tCqQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712242619; x=1712847419;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=JubjZrC2lioP3RyL0Ciyw/lhrZMZfq1yICuaTDklK7g=;
+        b=qOrXAg6/MJ0uiB5H4zwKks4kVgReb/D/v+82NbC0ltADnCx+nq7ovA94eTN0zgq5yz
+         J1q47kVaMC8Ja6oo3OGsd7lRaFYAttS0z/E72B17X7gKF12f7k7uW6v4zKbwQz5IpDdj
+         3RXL4Sp+mHvL/TrWX13opvWADL4NYOsphyl91PZtBQGfwTQ5FIg2ubYk0cMikNhs0I2D
+         TPkwcm/plb+tA0OrLD5ZT/YoBpecIY8u3z2hx+5ZOtJW3PtKQKZQ0mLf5k56fY1leYcL
+         9rfAyUYOgDUPNnRWCPC4A1qoDLLg5xYznhYwK7JXxcs6vEy4u1gj2BFXTM/hgEG4vyWb
+         HXMQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXLjwfpSL9hMa2nzGpJb3finBHwgeljoFyIhBCBbIPETGk3WpQ3G++AaW9oXa1ZQpTk20wdHsPfOnXYLHt0vIA2o/3F0JLKh+V/frCv
+X-Gm-Message-State: AOJu0YyLV705tOigNKr0KE1/qdEa1i78DGYzdkk9FBlcFsk5xvOiOFV3
+	aSUGv8d6A/24jhkpBeF6FGBcQxXr7XwgB0Wp52MkKBvesuEVSRLLtXN+yKN9J8PazNvDuTRZX1J
+	e2QhQtCm8oBH7MhoWblNjMJgq2qWM3eN4xJaauQ==
+X-Google-Smtp-Source: AGHT+IHH4OT8Ur7GKEjdrBzx/LNXQv1C7wzvGwVZ3h903XGh0LKvc2+hvzRaH2rKu19cXIt3tkuK71uJt+nF7XhwY1A=
+X-Received: by 2002:a05:6512:358a:b0:513:db34:7caf with SMTP id
+ m10-20020a056512358a00b00513db347cafmr2178763lfr.17.1712242619402; Thu, 04
+ Apr 2024 07:56:59 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87frw2axv0.ffs@tglx>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.1
+References: <20240404093328.21604-1-brgl@bgdev.pl>
+In-Reply-To: <20240404093328.21604-1-brgl@bgdev.pl>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Thu, 4 Apr 2024 16:56:48 +0200
+Message-ID: <CAMRc=MexL-XKiaCdPCs1uw5YoSMdwHSg6gV9fonsVCdb6R63UQ@mail.gmail.com>
+Subject: Re: [PATCH v2 0/2] gpio: cdev: label sanitization fixes
+To: Kent Gibson <warthog618@gmail.com>, Linus Walleij <linus.walleij@linaro.org>
+Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Alexey Dobriyan <adobriyan@gmail.com>, stable@vger.kernel.org, 
+	Stefan Wahren <wahrenst@gmx.net>, Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 04/04, Thomas Gleixner wrote:
+On Thu, Apr 4, 2024 at 11:33=E2=80=AFAM Bartosz Golaszewski <brgl@bgdev.pl>=
+ wrote:
 >
-> IOW, we cannot test this reliably at all with the current approach.
+> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+>
+> This series fixes a couple of bugs in the sanitization of labels
+> being passed to irq.
+>
+> Patch 1 fixes the case where userspace provides empty labels.
+>
+> Patch 2 fixes a missed path in the sanitization changes that can result
+> in memory corruption.
+>
+> v1 -> v2:
+> - switched the order of the patches in order to avoid introducing buggy
+>   code in one just to fix it in the second
+>
+> Bartosz Golaszewski (1):
+>   gpio: cdev: check for NULL labels when sanitizing them for irqs
+>
+> Kent Gibson (1):
+>   gpio: cdev: fix missed label sanitizing in debounce_setup()
+>
+>  drivers/gpio/gpiolib-cdev.c | 46 +++++++++++++++++++++++++------------
+>  1 file changed, 31 insertions(+), 15 deletions(-)
+>
+> --
+> 2.40.1
+>
 
-Agreed!
+I'll go ahead and apply it as the culprit already got upstream and
+into stable branches, so let's fix it ASAP. Tomorrow once autobuilders
+confirm it's fine, I'll send it to Linus.
 
-So how about a REALLY SIMPLE test-case below?
-
-Lacks error checking, should be updated to match tools/testing/selftests.
-
-Without commit bcb7ee79029dca assert(sig_cnt > SIG_CNT) fails, the very
-1st tick wakes the leader up.
-
-With that commit it doesn't fail.
-
-Oleg.
-
-#include <stdio.h>
-#include <unistd.h>
-#include <signal.h>
-#include <pthread.h>
-#include <time.h>
-#include <assert.h>
-
-#define SIG_CNT	100
-static volatile int sig_cnt;
-
-static void alarm_func(int sig)
-{
-	++sig_cnt;
-}
-
-static void *thread_func(void *arg)
-{
-	// one second before the 1st tick to ensure the leader sleeps
-	struct itimerspec val = {
-		.it_value.tv_sec = 1,
-		.it_value.tv_nsec = 0,
-		.it_interval.tv_sec = 0,
-		.it_interval.tv_nsec = 1000 * 1000,
-	};
-	timer_t id;
-
-	timer_create(CLOCK_PROCESS_CPUTIME_ID, NULL, &id);
-	timer_settime(id, 0, &val, NULL);
-
-	while (sig_cnt < SIG_CNT)
-		;
-
-	// wake up the leader
-	kill(getpid(), SIGALRM);
-
-	return NULL;
-}
-
-int main(void)
-{
-	pthread_t thread;
-
-	signal(SIGALRM, alarm_func);
-
-	pthread_create(&thread, NULL, thread_func, NULL);
-
-	pause();
-
-	assert(sig_cnt > SIG_CNT); // likely SIG_CNT + 1
-
-	return 0;
-}
-
+Bart
