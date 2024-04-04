@@ -1,48 +1,48 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2926B12AAF4
-	for <linux-kernel@vger.kernel.org>; Thu,  4 Apr 2024 14:07:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCED112CDB0
+	for <linux-kernel@vger.kernel.org>; Thu,  4 Apr 2024 14:07:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712239668; cv=none; b=Ly58CyskYxZftRv3qYEKPAS4PAgtjTM2cW0Ga+VDXH9TILyQKlXlj4aqiK8/P7hTOFGo1g4sqmP4MDmJau0FvmHLc4k9dW21Dfug9h6Fndn5rEkWaxCyeSUC1P/0HXCUWzDjePIUfoijGKt5AsSNTzgTBfYiv0fJtXj71xQbBCs=
+	t=1712239671; cv=none; b=b++EPxZeNDE1AEXtv7Y8idgkaGvO2nFXAsLbUWf0iWc/AEgXgAxMBLZPuqYEEae0iw+xjmAx4TX6xiuib1qLCL09+01YxePZuqnGVt+3ZY7SUHGWQRKP3Dr80y+h667Mm+G2GQHGrcQSgqsCny0F7zd8pBWPf27BbLr7k9/cQug=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712239668; c=relaxed/simple;
-	bh=jXuncPF6IxJBG5yok4GgyXtuuQVPH0GiJJRoX3VEiug=;
+	s=arc-20240116; t=1712239671; c=relaxed/simple;
+	bh=tykj5BdnbBhEDoTqqhcWUzRiGTAAmqbSFh3K0DqcGjc=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=fB3rOLDyFHtu1cjJ18bZK6bunxynjVvNa7s8xJQLLO7qq8A9teNZ8BkSJHLhtqW0dU6EaqJHzGElTR7bWGUMWRHnXggY2x/V5bvOjA3fR5Jz03dnWV8kCPAKGdSrmMe14NhXX91UwsMtEieZGLnKqNnIz3ggTktlxV5MXOqRZAw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=KhXMyulw; arc=none smtp.client-ip=198.175.65.14
+	 MIME-Version; b=RuUQb2epHXZGzQhkmZi2+f3KvsTpSrrmp7NIpZfkvkS3lDh9aEvz3h+QL7/UC47DqjXqkBo+VZAWTjYnscw3v9VpPeUwl9R4rBXA4R9HhTXQOJtFrpm+Ful+Sfmjg7Q7OYnwU9f+4K6b82gg0IaSD9g7/CzF2PE3x+CyRmupy8M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Ty8ehNe8; arc=none smtp.client-ip=198.175.65.14
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KhXMyulw"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Ty8ehNe8"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1712239667; x=1743775667;
+  t=1712239669; x=1743775669;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=jXuncPF6IxJBG5yok4GgyXtuuQVPH0GiJJRoX3VEiug=;
-  b=KhXMyulwePhCOArgLWR0Ox4DXrCWBk9+uFcv8RBgkdB3FefkaeVApZSW
-   LRLOrX4nK5oTSjE42vzDdZer/FNkGZO5TZxIzdN5p5HxwMzC7nz91YtD+
-   6rtXsAME9nBSjguMaauEDxYTzNV0DMoOmwVx6RywwTAfi02F9WccQN5+k
-   iIX/dtJNOBHFiz2JZGx9c0Idf8fr8NMKwh21fOZZw+YiY+0X3ioxkVY3W
-   1nU6ViADMsOZOCmCkwoVRXJcTISqNCzAuMDZw/6T8UEG2Va9B+AEFnfUA
-   9mVXL3F026kEmJOg9mq/nblq/uhD+0VPn7iOxTfXTrvnwZ/QFs3b+7oT/
-   g==;
-X-CSE-ConnectionGUID: 160SIER6Sue3ZvqOKn+p2A==
-X-CSE-MsgGUID: yB93LGlaR+e9dGeiptB3xQ==
-X-IronPort-AV: E=McAfee;i="6600,9927,11034"; a="11346540"
+  bh=tykj5BdnbBhEDoTqqhcWUzRiGTAAmqbSFh3K0DqcGjc=;
+  b=Ty8ehNe82cs3JdSh2GsM9kjirjLEj7NCVtGPiLKBF88jpu45CF7oI95h
+   txmrSFr9lIgkWe5+7xTJpW5gKR6S49zf35mWJkFPqN1rZtunJkXDjkZpV
+   nFTNsM0cKI2cXGz+8viJHmt4jeEFRNF/CdS1H4DIUY8/RPIzeSsvlFE9W
+   Bph6Jpa+3SKPG6CxUsCymqcBqJPJAPaJrkc9bJwAHwKql3waUUAMRV+Y1
+   AEtI4Fhc3xcBjawUpcygrdSbq/GVL3gowhGLshWe9HkYujVnoFcnlTzYu
+   OEbZFWDUzCjOFkVsaEp9JdaXBTogLSfOpJLeGZSdLoiU4C0xbC+25OkVY
+   Q==;
+X-CSE-ConnectionGUID: 8OehAmNZRVi7eqGjLdYaqQ==
+X-CSE-MsgGUID: Gv8iHljzTsar7nS9LjePAw==
+X-IronPort-AV: E=McAfee;i="6600,9927,11034"; a="11346554"
 X-IronPort-AV: E=Sophos;i="6.07,179,1708416000"; 
-   d="scan'208";a="11346540"
+   d="scan'208";a="11346554"
 Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Apr 2024 07:07:47 -0700
-X-CSE-ConnectionGUID: hLaScoNvR2G4JHYyIBJIpQ==
-X-CSE-MsgGUID: b65ottO/SxWmAq8WUqS1IQ==
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Apr 2024 07:07:49 -0700
+X-CSE-ConnectionGUID: OWEJN3quSOeTB1c0CqdwQQ==
+X-CSE-MsgGUID: akytula2TNy7hjbabeKDKQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.07,179,1708416000"; 
-   d="scan'208";a="23258896"
+   d="scan'208";a="23258909"
 Received: from kanliang-dev.jf.intel.com ([10.165.154.102])
-  by fmviesa005.fm.intel.com with ESMTP; 04 Apr 2024 07:07:46 -0700
+  by fmviesa005.fm.intel.com with ESMTP; 04 Apr 2024 07:07:49 -0700
 From: kan.liang@linux.intel.com
 To: peterz@infradead.org,
 	mingo@redhat.com,
@@ -54,9 +54,9 @@ To: peterz@infradead.org,
 	linux-kernel@vger.kernel.org
 Cc: ak@linux.intel.com,
 	Kan Liang <kan.liang@linux.intel.com>
-Subject: [PATCH 07/12] perf/x86/intel: Support Perfmon MSRs aliasing
-Date: Thu,  4 Apr 2024 07:06:32 -0700
-Message-Id: <20240404140637.1232635-8-kan.liang@linux.intel.com>
+Subject: [PATCH 09/12] perf: Extend perf_output_read
+Date: Thu,  4 Apr 2024 07:06:34 -0700
+Message-Id: <20240404140637.1232635-10-kan.liang@linux.intel.com>
 X-Mailer: git-send-email 2.35.1
 In-Reply-To: <20240404140637.1232635-1-kan.liang@linux.intel.com>
 References: <20240404140637.1232635-1-kan.liang@linux.intel.com>
@@ -70,157 +70,88 @@ Content-Transfer-Encoding: 8bit
 
 From: Kan Liang <kan.liang@linux.intel.com>
 
-The architectural performance monitoring V6 supports a new range of
-counters' MSRs in the 19xxH address range. They include all the GP
-counter MSRs, the GP control MSRs, and the fixed counter MSRs.
+The event may have been updated in the PMU-specific implementation,
+e.g., Intel PEBS counters snapshotting. The common code should not
+read and overwrite the value.
 
-The step between each sibling counter is 4. Add intel_pmu_addr_offset()
-to calculate the correct offset.
-
-Add fixedctr in struct x86_pmu to store the address of the fixed counter
-0. It can be used to calculate the rest of the fixed counters.
-
-The MSR address of the fixed counter control is not changed.
+The PERF_SAMPLE_READ in the data->sample_type can be used to detect
+whether the PMU-specific value is available. If yes, avoid the
+pmu->read() in the common code.
 
 Reviewed-by: Andi Kleen <ak@linux.intel.com>
 Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
 ---
- arch/x86/events/core.c           |  7 +++----
- arch/x86/events/intel/core.c     | 17 ++++++++++++++++-
- arch/x86/events/perf_event.h     |  7 +++++++
- arch/x86/include/asm/msr-index.h |  6 ++++++
- 4 files changed, 32 insertions(+), 5 deletions(-)
+ kernel/events/core.c | 15 ++++++++-------
+ 1 file changed, 8 insertions(+), 7 deletions(-)
 
-diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
-index f692e7fba740..5380f7a84840 100644
---- a/arch/x86/events/core.c
-+++ b/arch/x86/events/core.c
-@@ -1236,8 +1236,7 @@ static inline void x86_assign_hw_event(struct perf_event *event,
- 		fallthrough;
- 	case INTEL_PMC_IDX_FIXED ... INTEL_PMC_IDX_FIXED_BTS-1:
- 		hwc->config_base = MSR_ARCH_PERFMON_FIXED_CTR_CTRL;
--		hwc->event_base = MSR_ARCH_PERFMON_FIXED_CTR0 +
--				(idx - INTEL_PMC_IDX_FIXED);
-+		hwc->event_base = x86_pmu_fixed_ctr_addr(idx - INTEL_PMC_IDX_FIXED);
- 		hwc->event_base_rdpmc = (idx - INTEL_PMC_IDX_FIXED) |
- 					INTEL_PMC_FIXED_RDPMC_BASE;
- 		break;
-@@ -1573,7 +1572,7 @@ void perf_event_print_debug(void)
- 	for_each_set_bit(idx, fixed_cntr_mask, X86_PMC_IDX_MAX) {
- 		if (fixed_counter_disabled(idx, cpuc->pmu))
- 			continue;
--		rdmsrl(MSR_ARCH_PERFMON_FIXED_CTR0 + idx, pmc_count);
-+		rdmsrl(x86_pmu_fixed_ctr_addr(idx), pmc_count);
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index 724e6d7e128f..3bf305d866ab 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -7219,7 +7219,7 @@ static void perf_output_read_one(struct perf_output_handle *handle,
  
- 		pr_info("CPU#%d: fixed-PMC%d count: %016llx\n",
- 			cpu, idx, pmc_count);
-@@ -2482,7 +2481,7 @@ void perf_clear_dirty_counters(void)
- 			if (!test_bit(i - INTEL_PMC_IDX_FIXED, hybrid(cpuc->pmu, fixed_cntr_mask)))
- 				continue;
- 
--			wrmsrl(MSR_ARCH_PERFMON_FIXED_CTR0 + (i - INTEL_PMC_IDX_FIXED), 0);
-+			wrmsrl(x86_pmu_fixed_ctr_addr(i - INTEL_PMC_IDX_FIXED), 0);
- 		} else {
- 			wrmsrl(x86_pmu_event_addr(i), 0);
- 		}
-diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
-index f586af9bade1..f9eccdf6eea6 100644
---- a/arch/x86/events/intel/core.c
-+++ b/arch/x86/events/intel/core.c
-@@ -2953,7 +2953,7 @@ static void intel_pmu_reset(void)
- 	for_each_set_bit(idx, fixed_cntr_mask, INTEL_PMC_MAX_FIXED) {
- 		if (fixed_counter_disabled(idx, cpuc->pmu))
- 			continue;
--		wrmsrl_safe(MSR_ARCH_PERFMON_FIXED_CTR0 + idx, 0ull);
-+		wrmsrl_safe(x86_pmu_fixed_ctr_addr(idx), 0ull);
- 	}
- 
- 	if (ds)
-@@ -5191,6 +5191,7 @@ static __initconst const struct x86_pmu core_pmu = {
- 	.schedule_events	= x86_schedule_events,
- 	.eventsel		= MSR_ARCH_PERFMON_EVENTSEL0,
- 	.perfctr		= MSR_ARCH_PERFMON_PERFCTR0,
-+	.fixedctr		= MSR_ARCH_PERFMON_FIXED_CTR0,
- 	.event_map		= intel_pmu_event_map,
- 	.max_events		= ARRAY_SIZE(intel_perfmon_event_map),
- 	.apic			= 1,
-@@ -5244,6 +5245,7 @@ static __initconst const struct x86_pmu intel_pmu = {
- 	.schedule_events	= x86_schedule_events,
- 	.eventsel		= MSR_ARCH_PERFMON_EVENTSEL0,
- 	.perfctr		= MSR_ARCH_PERFMON_PERFCTR0,
-+	.fixedctr		= MSR_ARCH_PERFMON_FIXED_CTR0,
- 	.event_map		= intel_pmu_event_map,
- 	.max_events		= ARRAY_SIZE(intel_perfmon_event_map),
- 	.apic			= 1,
-@@ -6186,6 +6188,11 @@ static void intel_pmu_check_extra_regs(struct extra_reg *extra_regs)
- 	}
- }
- 
-+static inline int intel_pmu_addr_offset(int index, bool eventsel)
-+{
-+	return MSR_IA32_PMC_STEP * index;
-+}
-+
- static const struct { enum hybrid_pmu_type id; char *name; } intel_hybrid_pmu_type_map[] __initconst = {
- 	{ hybrid_small, "cpu_atom" },
- 	{ hybrid_big, "cpu_core" },
-@@ -7160,6 +7167,14 @@ __init int intel_pmu_init(void)
- 		pr_cont("full-width counters, ");
- 	}
- 
-+	/* Support V6+ MSR Aliasing */
-+	if (x86_pmu.version >= 6) {
-+		x86_pmu.perfctr = MSR_IA32_PMC_GP0_CTR;
-+		x86_pmu.eventsel = MSR_IA32_PMC_GP0_CFG_A;
-+		x86_pmu.fixedctr = MSR_IA32_PMC_FX0_CTR;
-+		x86_pmu.addr_offset = intel_pmu_addr_offset;
-+	}
-+
- 	if (!is_hybrid() && x86_pmu.intel_cap.perf_metrics)
- 		x86_pmu.intel_ctrl |= 1ULL << GLOBAL_CTRL_EN_PERF_METRICS;
- 
-diff --git a/arch/x86/events/perf_event.h b/arch/x86/events/perf_event.h
-index 4e448696bf96..ebfa5eb75cd2 100644
---- a/arch/x86/events/perf_event.h
-+++ b/arch/x86/events/perf_event.h
-@@ -787,6 +787,7 @@ struct x86_pmu {
- 	int		(*schedule_events)(struct cpu_hw_events *cpuc, int n, int *assign);
- 	unsigned	eventsel;
- 	unsigned	perfctr;
-+	unsigned	fixedctr;
- 	int		(*addr_offset)(int index, bool eventsel);
- 	int		(*rdpmc_index)(int index);
- 	u64		(*event_map)(int);
-@@ -1144,6 +1145,12 @@ static inline unsigned int x86_pmu_event_addr(int index)
- 				  x86_pmu.addr_offset(index, false) : index);
- }
- 
-+static inline unsigned int x86_pmu_fixed_ctr_addr(int index)
-+{
-+	return x86_pmu.fixedctr + (x86_pmu.addr_offset ?
-+				   x86_pmu.addr_offset(index, false) : index);
-+}
-+
- static inline int x86_pmu_rdpmc_index(int index)
+ static void perf_output_read_group(struct perf_output_handle *handle,
+ 			    struct perf_event *event,
+-			    u64 enabled, u64 running)
++			    u64 enabled, u64 running, bool read)
  {
- 	return x86_pmu.rdpmc_index ? x86_pmu.rdpmc_index(index) : index;
-diff --git a/arch/x86/include/asm/msr-index.h b/arch/x86/include/asm/msr-index.h
-index 05956bd8bacf..8d1f14f9a7c3 100644
---- a/arch/x86/include/asm/msr-index.h
-+++ b/arch/x86/include/asm/msr-index.h
-@@ -560,6 +560,12 @@
- #define MSR_RELOAD_PMC0			0x000014c1
- #define MSR_RELOAD_FIXED_CTR0		0x00001309
+ 	struct perf_event *leader = event->group_leader, *sub;
+ 	u64 read_format = event->attr.read_format;
+@@ -7241,7 +7241,7 @@ static void perf_output_read_group(struct perf_output_handle *handle,
+ 	if (read_format & PERF_FORMAT_TOTAL_TIME_RUNNING)
+ 		values[n++] = running;
  
-+/* V6 PMON MSR range */
-+#define MSR_IA32_PMC_GP0_CTR		0x1900
-+#define MSR_IA32_PMC_GP0_CFG_A		0x1901
-+#define MSR_IA32_PMC_FX0_CTR		0x1980
-+#define MSR_IA32_PMC_STEP		4
-+
- /* KeyID partitioning between MKTME and TDX */
- #define MSR_IA32_MKTME_KEYID_PARTITIONING	0x00000087
+-	if ((leader != event) &&
++	if ((leader != event) && read &&
+ 	    (leader->state == PERF_EVENT_STATE_ACTIVE))
+ 		leader->pmu->read(leader);
  
+@@ -7256,7 +7256,7 @@ static void perf_output_read_group(struct perf_output_handle *handle,
+ 	for_each_sibling_event(sub, leader) {
+ 		n = 0;
+ 
+-		if ((sub != event) &&
++		if ((sub != event) && read &&
+ 		    (sub->state == PERF_EVENT_STATE_ACTIVE))
+ 			sub->pmu->read(sub);
+ 
+@@ -7283,7 +7283,8 @@ static void perf_output_read_group(struct perf_output_handle *handle,
+  * on another CPU, from interrupt/NMI context.
+  */
+ static void perf_output_read(struct perf_output_handle *handle,
+-			     struct perf_event *event)
++			     struct perf_event *event,
++			     bool read)
+ {
+ 	u64 enabled = 0, running = 0, now;
+ 	u64 read_format = event->attr.read_format;
+@@ -7301,7 +7302,7 @@ static void perf_output_read(struct perf_output_handle *handle,
+ 		calc_timer_values(event, &now, &enabled, &running);
+ 
+ 	if (event->attr.read_format & PERF_FORMAT_GROUP)
+-		perf_output_read_group(handle, event, enabled, running);
++		perf_output_read_group(handle, event, enabled, running, read);
+ 	else
+ 		perf_output_read_one(handle, event, enabled, running);
+ }
+@@ -7343,7 +7344,7 @@ void perf_output_sample(struct perf_output_handle *handle,
+ 		perf_output_put(handle, data->period);
+ 
+ 	if (sample_type & PERF_SAMPLE_READ)
+-		perf_output_read(handle, event);
++		perf_output_read(handle, event, !(data->sample_flags & PERF_SAMPLE_READ));
+ 
+ 	if (sample_type & PERF_SAMPLE_CALLCHAIN) {
+ 		int size = 1;
+@@ -7944,7 +7945,7 @@ perf_event_read_event(struct perf_event *event,
+ 		return;
+ 
+ 	perf_output_put(&handle, read_event);
+-	perf_output_read(&handle, event);
++	perf_output_read(&handle, event, true);
+ 	perf_event__output_id_sample(event, &handle, &sample);
+ 
+ 	perf_output_end(&handle);
 -- 
 2.35.1
 
