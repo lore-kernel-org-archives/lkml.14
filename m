@@ -1,158 +1,90 @@
-Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from nbd.name (nbd.name [46.4.11.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA744129A7B;
-	Thu,  4 Apr 2024 11:50:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D4698286B;
+	Thu,  4 Apr 2024 11:51:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.4.11.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712231407; cv=none; b=s8c4EYx0x+KkjCk5McXUu/TMcTMukNeMZWvBQP4Hahx4b2d4qP4EQaDvwNbZtJSIPY9uIFTZH7YSdCaH2iTqoO6OAQv5doKPdO1DG6XGYGXtRrfNghXyw7Tqf2AJB0h8y39weBibVtmWJDF/UOBrmZRbsFXNOKGdSL9HBpwfH1I=
+	t=1712231495; cv=none; b=dvWDG119I91NxJ8Zm0whLTQuKr+rGCVfjQ6cZVg6Wd3T/J4mihvz03MskijbHLg4uLjoosjvAr0qZp2JdNxh/AH3ctxf8e+WklYIRU8zkF4kutOUokK+8fm2DcW38+xZIgRYUzmX81dSxInvArWm3RVVAwiopACB2BhmpqL3MQQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712231407; c=relaxed/simple;
-	bh=MB8+/MFHOEltGh7GM7e6UBLJe+yCPGpUyEgMI44tcDQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=UnNE6C5NViLpZfySoHBE3rEWMlP/CsObuJOaIcJqd9QOY7XPRi+eQH5zAV9F+ikdE/CVrYXKFyGiMmM4bl2q4uOQbUZvXoYZICcXATx6brPbDxojUesuR+WZXFpmz4FnZFCO+jAtp7Q+6/LEd4kqj8nyavP2zP9JpnMZGK7dfLI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.218.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-a51969e780eso12638866b.3;
-        Thu, 04 Apr 2024 04:50:05 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712231404; x=1712836204;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=CsBGQlMm+F00sLCL/qlkhF4TnT6nst/CdHn7pOQlov8=;
-        b=B+Ry2y2op9wHN00RRb98zMBE6n04YSGm8YHLlPZLyrLv03R+1UPyi6N9eYisbJJqD2
-         CmtKoFmS4cNJdLZvDDVTK1VRFjUeoTqZcufX48fQs0MkD420Sx/hCq/7qkvvI6ZT2i7B
-         +/kNdfGwITBKO/mvAQSicD2hMr7kElLt+OoIfg6pVqJyzWLNcnIqYtCL8RAHp87owyOi
-         Ogai7layC1a867SnlVOzVBNiAW1O8oMX2MvosACZhimAH1SXg8waJ+jKHe0rI9W8pklI
-         5EMAyUHjXcc4px46nVkZvxHtshd/C9hYC5/iJusSbqfD6OLJIYdlohZI5JDuFtITfUvB
-         4gsw==
-X-Forwarded-Encrypted: i=1; AJvYcCWnBHazubSU8uxPP6sf/C6cl+FNf6IcwukPGrsgusv5XFQfvkGWASN0S4A9XYbRMjUS9ed3plqpT/X/ThV4aCo5v7fafpVIz+X3CH4Qb+om/gus7Kz8sF0x2V9m6FiMXn8qnoVy+d9aAwnDebnk1aNa4It+GnF3WOUe
-X-Gm-Message-State: AOJu0Yx2r+FMGpScVACfPZeSHTdGL0U1MtpJvGt2y1zAkJcVnDFOsDNW
-	lXKhrdhziilROPRBsFuH0+uhxBY4bh35J16B88HT17N0LzMlyHQY
-X-Google-Smtp-Source: AGHT+IHFg0zyk2NS23/A1etHV8JcM7ibRi4errBqUEIZrG9N7OZjtPtXrBCEmEH5SFyOsilQGUWU4Q==
-X-Received: by 2002:a17:906:22d6:b0:a51:9449:6fa1 with SMTP id q22-20020a17090622d600b00a5194496fa1mr328854eja.15.1712231404025;
-        Thu, 04 Apr 2024 04:50:04 -0700 (PDT)
-Received: from localhost (fwdproxy-lla-119.fbsv.net. [2a03:2880:30ff:77::face:b00c])
-        by smtp.gmail.com with ESMTPSA id wz5-20020a170906fe4500b00a4e7a0a1c04sm4030319ejb.110.2024.04.04.04.50.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 04 Apr 2024 04:50:03 -0700 (PDT)
-From: Breno Leitao <leitao@debian.org>
-To: aleksander.lobakin@intel.com,
-	kuba@kernel.org,
-	davem@davemloft.net,
-	pabeni@redhat.com,
-	edumazet@google.com,
-	elder@kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org,
-	nbd@nbd.name,
-	sean.wang@mediatek.com,
-	Mark-MC.Lee@mediatek.com,
-	lorenzo@kernel.org,
-	taras.chornyi@plvision.eu
-Cc: quic_jjohnson@quicinc.com,
-	kvalo@kernel.org,
-	leon@kernel.org,
-	dennis.dalessandro@cornelisnetworks.com,
-	linux-kernel@vger.kernel.org,
-	netdev@vger.kernel.org,
-	bpf@vger.kernel.org,
-	Simon Horman <horms@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
-	Christian Marangi <ansuelsmth@gmail.com>
-Subject: [PATCH net-next v3 5/5] net: ibm/emac: allocate dummy net_device dynamically
-Date: Thu,  4 Apr 2024 04:48:45 -0700
-Message-ID: <20240404114854.2498663-6-leitao@debian.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240404114854.2498663-1-leitao@debian.org>
-References: <20240404114854.2498663-1-leitao@debian.org>
+	s=arc-20240116; t=1712231495; c=relaxed/simple;
+	bh=8O5ZvZ4fjwgxssxn/ENNSi7XeulcJkW5wfpRx1emVzY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=F3VmGSFZ8mFdresCuz538RhdO1vLGJZzEA4ubjQtAKSbFyUSB5IzgqzoVIQ0MP/D4KGPXu2+1McRq779D+VeWfpl0XNLDKgoTJgwyyxkRshJpzOFJ32wJ0mq5qJNrS6TpmgxHkR93K5gbTrDJuZedgeG1yF2BjP9VoSoceINkHc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nbd.name; spf=none smtp.mailfrom=nbd.name; dkim=pass (1024-bit key) header.d=nbd.name header.i=@nbd.name header.b=XhJgRF9F; arc=none smtp.client-ip=46.4.11.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nbd.name
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=nbd.name
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=nbd.name header.i=@nbd.name header.b="XhJgRF9F"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=nbd.name;
+	s=20160729; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
+	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+	List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=llRzHEkl3eDbrJM0DrmtkTmAdEXjMEgY6FEgWZBJato=; b=XhJgRF9FaehxNarnGDJUCdPpCr
+	TTjHcwyu3Uyb3N8+ZwDzoTEORab4vG/c+v4FhDD2CBIyJIeBVU1a5gnrR6bXdlB9deZP4cHZxtK6F
+	heDktcHoGqccxJRopAOgbRQQvFihBmspGYfUady+IRBkEKWXKdbnvE/IqAoN0EQ3kFUY=;
+Received: from p54ae9c93.dip0.t-ipconnect.de ([84.174.156.147] helo=nf.local)
+	by ds12 with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.94.2)
+	(envelope-from <nbd@nbd.name>)
+	id 1rsLcl-00CzBm-AT; Thu, 04 Apr 2024 13:51:19 +0200
+Message-ID: <6a18e0cc-a200-4db4-839f-f5ad213d44c4@nbd.name>
+Date: Thu, 4 Apr 2024 13:51:18 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] wifi: mt76: connac: check for null before dereferencing
+To: Muhammad Usama Anjum <usama.anjum@collabora.com>,
+ Lorenzo Bianconi <lorenzo@kernel.org>, Ryder Lee <ryder.lee@mediatek.com>,
+ Shayne Chen <shayne.chen@mediatek.com>, Sean Wang <sean.wang@mediatek.com>,
+ Kalle Valo <kvalo@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>,
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Cc: kernel@collabora.com, kernel-janitors@vger.kernel.org,
+ linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
+References: <20240301144406.2808307-1-usama.anjum@collabora.com>
+ <ab6b08c5-86a2-47e3-8683-28cdbe5be7cf@collabora.com>
+ <1dd3cead-6251-425f-b050-582892da0800@collabora.com>
+Content-Language: en-US
+From: Felix Fietkau <nbd@nbd.name>
+Autocrypt: addr=nbd@nbd.name; keydata=
+ xsDiBEah5CcRBADIY7pu4LIv3jBlyQ/2u87iIZGe6f0f8pyB4UjzfJNXhJb8JylYYRzIOSxh
+ ExKsdLCnJqsG1PY1mqTtoG8sONpwsHr2oJ4itjcGHfn5NJSUGTbtbbxLro13tHkGFCoCr4Z5
+ Pv+XRgiANSpYlIigiMbOkide6wbggQK32tC20QxUIwCg4k6dtV/4kwEeiOUfErq00TVqIiEE
+ AKcUi4taOuh/PQWx/Ujjl/P1LfJXqLKRPa8PwD4j2yjoc9l+7LptSxJThL9KSu6gtXQjcoR2
+ vCK0OeYJhgO4kYMI78h1TSaxmtImEAnjFPYJYVsxrhay92jisYc7z5R/76AaELfF6RCjjGeP
+ wdalulG+erWju710Bif7E1yjYVWeA/9Wd1lsOmx6uwwYgNqoFtcAunDaMKi9xVQW18FsUusM
+ TdRvTZLBpoUAy+MajAL+R73TwLq3LnKpIcCwftyQXK5pEDKq57OhxJVv1Q8XkA9Dn1SBOjNB
+ l25vJDFAT9ntp9THeDD2fv15yk4EKpWhu4H00/YX8KkhFsrtUs69+vZQwc0cRmVsaXggRmll
+ dGthdSA8bmJkQG5iZC5uYW1lPsJgBBMRAgAgBQJGoeQnAhsjBgsJCAcDAgQVAggDBBYCAwEC
+ HgECF4AACgkQ130UHQKnbvXsvgCgjsAIIOsY7xZ8VcSm7NABpi91yTMAniMMmH7FRenEAYMa
+ VrwYTIThkTlQzsFNBEah5FQQCACMIep/hTzgPZ9HbCTKm9xN4bZX0JjrqjFem1Nxf3MBM5vN
+ CYGBn8F4sGIzPmLhl4xFeq3k5irVg/YvxSDbQN6NJv8o+tP6zsMeWX2JjtV0P4aDIN1pK2/w
+ VxcicArw0VYdv2ZCarccFBgH2a6GjswqlCqVM3gNIMI8ikzenKcso8YErGGiKYeMEZLwHaxE
+ Y7mTPuOTrWL8uWWRL5mVjhZEVvDez6em/OYvzBwbkhImrryF29e3Po2cfY2n7EKjjr3/141K
+ DHBBdgXlPNfDwROnA5ugjjEBjwkwBQqPpDA7AYPvpHh5vLbZnVGu5CwG7NAsrb2isRmjYoqk
+ wu++3117AAMFB/9S0Sj7qFFQcD4laADVsabTpNNpaV4wAgVTRHKV/kC9luItzwDnUcsZUPdQ
+ f3MueRJ3jIHU0UmRBG3uQftqbZJj3ikhnfvyLmkCNe+/hXhPu9sGvXyi2D4vszICvc1KL4RD
+ aLSrOsROx22eZ26KqcW4ny7+va2FnvjsZgI8h4sDmaLzKczVRIiLITiMpLFEU/VoSv0m1F4B
+ FtRgoiyjFzigWG0MsTdAN6FJzGh4mWWGIlE7o5JraNhnTd+yTUIPtw3ym6l8P+gbvfoZida0
+ TspgwBWLnXQvP5EDvlZnNaKa/3oBes6z0QdaSOwZCRA3QSLHBwtgUsrT6RxRSweLrcabwkkE
+ GBECAAkFAkah5FQCGwwACgkQ130UHQKnbvW2GgCeMncXpbbWNT2AtoAYICrKyX5R3iMAoMhw
+ cL98efvrjdstUfTCP2pfetyN
+In-Reply-To: <1dd3cead-6251-425f-b050-582892da0800@collabora.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Embedding net_device into structures prohibits the usage of flexible
-arrays in the net_device structure. For more details, see the discussion
-at [1].
+On 04.04.24 13:49, Muhammad Usama Anjum wrote:
+> Soft reminder
 
-Un-embed the net_device from the private struct by converting it
-into a pointer. Then use the leverage the new alloc_netdev_dummy()
-helper to allocate and initialize dummy devices.
+I have this one in my mt76 tree already, and it will be included in my 
+next pull request to Kalle.
 
-[1] https://lore.kernel.org/all/20240229225910.79e224cf@kernel.org/
-
-Signed-off-by: Breno Leitao <leitao@debian.org>
----
- drivers/net/ethernet/ibm/emac/mal.c | 14 +++++++++++---
- drivers/net/ethernet/ibm/emac/mal.h |  2 +-
- 2 files changed, 12 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/net/ethernet/ibm/emac/mal.c b/drivers/net/ethernet/ibm/emac/mal.c
-index 2439f7e96e05..d92dd9c83031 100644
---- a/drivers/net/ethernet/ibm/emac/mal.c
-+++ b/drivers/net/ethernet/ibm/emac/mal.c
-@@ -605,9 +605,13 @@ static int mal_probe(struct platform_device *ofdev)
- 	INIT_LIST_HEAD(&mal->list);
- 	spin_lock_init(&mal->lock);
- 
--	init_dummy_netdev(&mal->dummy_dev);
-+	mal->dummy_dev = alloc_netdev_dummy(0);
-+	if (!mal->dummy_dev) {
-+		err = -ENOMEM;
-+		goto fail_unmap;
-+	}
- 
--	netif_napi_add_weight(&mal->dummy_dev, &mal->napi, mal_poll,
-+	netif_napi_add_weight(mal->dummy_dev, &mal->napi, mal_poll,
- 			      CONFIG_IBM_EMAC_POLL_WEIGHT);
- 
- 	/* Load power-on reset defaults */
-@@ -637,7 +641,7 @@ static int mal_probe(struct platform_device *ofdev)
- 					  GFP_KERNEL);
- 	if (mal->bd_virt == NULL) {
- 		err = -ENOMEM;
--		goto fail_unmap;
-+		goto fail_dummy;
- 	}
- 
- 	for (i = 0; i < mal->num_tx_chans; ++i)
-@@ -703,6 +707,8 @@ static int mal_probe(struct platform_device *ofdev)
- 	free_irq(mal->serr_irq, mal);
-  fail2:
- 	dma_free_coherent(&ofdev->dev, bd_size, mal->bd_virt, mal->bd_dma);
-+ fail_dummy:
-+	free_netdev(mal->dummy_dev);
-  fail_unmap:
- 	dcr_unmap(mal->dcr_host, 0x100);
-  fail:
-@@ -734,6 +740,8 @@ static void mal_remove(struct platform_device *ofdev)
- 
- 	mal_reset(mal);
- 
-+	free_netdev(mal->dummy_dev);
-+
- 	dma_free_coherent(&ofdev->dev,
- 			  sizeof(struct mal_descriptor) *
- 			  (NUM_TX_BUFF * mal->num_tx_chans +
-diff --git a/drivers/net/ethernet/ibm/emac/mal.h b/drivers/net/ethernet/ibm/emac/mal.h
-index d212373a72e7..e0ddc41186a2 100644
---- a/drivers/net/ethernet/ibm/emac/mal.h
-+++ b/drivers/net/ethernet/ibm/emac/mal.h
-@@ -205,7 +205,7 @@ struct mal_instance {
- 	int			index;
- 	spinlock_t		lock;
- 
--	struct net_device	dummy_dev;
-+	struct net_device	*dummy_dev;
- 
- 	unsigned int features;
- };
--- 
-2.43.0
+- Felix
 
