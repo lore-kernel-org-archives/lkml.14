@@ -1,139 +1,102 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04D011311A3;
-	Thu,  4 Apr 2024 19:35:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EFF11311A3;
+	Thu,  4 Apr 2024 19:36:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712259328; cv=none; b=SnTUNttBZnHiHIpYi451s4Jnm0qdTHAChrg7egKGTZ7cR6auG03phPcMfwHnGDZFzRPOZdGUAzedTuHbcvxBtI0hQQGYnkDO0ulwUiSYqhlW2QZmC+Lg9MG71/l4RbRKYbkTXZd0AMAkAdd0e9NgdA/U6cc6Ygn36pUntdTeIt0=
+	t=1712259382; cv=none; b=gXKeYK/kf2e1gKB/dga+5uqw8xFMLjZBSgjCBIq0NqJFi7k3xVdVt4RJcwPwSMGncBSLowhCnpxtiHxHAhy62P/3i9a7NsNbeaNttNgIwC46PybCJ0bfoWxXszBZHD0DGarAZDNYMmpSeQtR9fdTa00JXhl8nJOhOuQNUsiXODY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712259328; c=relaxed/simple;
-	bh=guTUrkGCJ4oBaMte9luwU3S1Hg/eVxHqcTnNcLV1rVw=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version; b=h0AsCqDsfln/flm9e5rxN3m8/YWyepCE3AFvmFIeJvppfT+g0AzshIo1I6EV3EZKg0pnX8ufUUOjvHuFCArMJ6Quwhbn+CKjSn0UkVclCaA//PBihzSJOMyBUIYIMlzNfgNkmSRDMQNnDRQzZwpCMBsU+DMA/yDWsBkMqD4o+b0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=IMENfMrr; arc=none smtp.client-ip=198.175.65.13
+	s=arc-20240116; t=1712259382; c=relaxed/simple;
+	bh=MstYzcyGUXpMjvIesH3P0JOixnzqDZN4TkdenMuVwr8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=npfMc4yNcIEVHgGLBfErX7zFW/9F/mti0faT0uEMsXh67x6CNZWllfauM8QjTCTIbko5jfwqgrTxv1ECsU5nQenlvtBFav208ZmDePnZ2c3ADZvgEbe4xGog+SW5XQux2RtYYLHVrVSPs2BVHKeDfFnxLQHACxmx4mH9zSmHoPA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=O9jmwMG3; arc=none smtp.client-ip=198.175.65.16
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IMENfMrr"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="O9jmwMG3"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1712259327; x=1743795327;
-  h=from:to:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=guTUrkGCJ4oBaMte9luwU3S1Hg/eVxHqcTnNcLV1rVw=;
-  b=IMENfMrrkHoTHemOntWUqAvGIjJ3Yw7Ff1W+3+FC0gwkEqvn2IKrMMrR
-   hhpVGnkEg+gc+4tuYlG61KtOrVB9Se1Vu36nOsp7VmjmjkROsr4Gu+ua7
-   2n3mYBYyIYUU1hErfZEkf37b8ybQDcD6Jzi1RQHjrmdTSK/iKdCtYDqk7
-   noRzfKl19vWfd0EtnEoirItp4RHgUQfaV8BZ9ByPZBXjAGaULcrKFNIiv
-   iuf2O9Xl6scrucAj18hIASXbf2IXatNUYsp2JWphywDZmgouc2u/bIcfE
-   BZiOqXTlCjvTHpxRJek6kcN3W5nm7weC0KoUUwIZZvT/sj1LajXkfPHPr
+  t=1712259381; x=1743795381;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=MstYzcyGUXpMjvIesH3P0JOixnzqDZN4TkdenMuVwr8=;
+  b=O9jmwMG3x3wvR9/19nT7WDnCBNxsjDkl9B3/v7iMwuotxIR1JYHCjJF7
+   4Ra5L23/2BWGjysWr3oM26dxsLCJu34Jj7JifhK5sHUbX2sVvvQ+GLrwB
+   jxR4ERUl4059ukfBEzddifnbJCnyG6xTpxnEMNqFRpl/bTak0NqBZYj3I
+   SpNuwes42w03DxJV6mVdm7n7kh/LQrG32bg2dXfpBxZbsTgnsFlGNTzUh
+   WkXn7gCKhx+sp1NQdKdSu6xH+n5fCBczhZYgDZkn5wCdxIMCciZedgPnm
+   1I3WIkt+wzGpuRWdFCexwAcvYxIMqZAAEcdsIYYJoYOcvJlT9qrfddhBh
    w==;
-X-CSE-ConnectionGUID: LLVtTc1IRQqMaNtQipqwqA==
-X-CSE-MsgGUID: 4S7fPRMYQs2fa89KAwJdJQ==
-X-IronPort-AV: E=McAfee;i="6600,9927,11034"; a="18711914"
+X-CSE-ConnectionGUID: ZSZQZbwXT1qxi8d5I0z0vA==
+X-CSE-MsgGUID: SNUBVUB8R2quZIqFbeTZBw==
+X-IronPort-AV: E=McAfee;i="6600,9927,11034"; a="7698469"
 X-IronPort-AV: E=Sophos;i="6.07,180,1708416000"; 
-   d="scan'208";a="18711914"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Apr 2024 12:35:26 -0700
+   d="scan'208";a="7698469"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Apr 2024 12:36:21 -0700
+X-CSE-ConnectionGUID: URAVo7AtRwKr1WSsfNnZ6w==
+X-CSE-MsgGUID: TaCQw88bQd+WcjBkxXteMg==
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,11034"; a="937087031"
 X-IronPort-AV: E=Sophos;i="6.07,180,1708416000"; 
-   d="scan'208";a="937087031"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga001.fm.intel.com with ESMTP; 04 Apr 2024 12:35:23 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-	id D9A9F3E5; Thu,  4 Apr 2024 22:35:22 +0300 (EEST)
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Linus Walleij <linus.walleij@linaro.org>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v1 1/1] pinctrl: Use DEFINE_SHOW_STORE_ATTRIBUTE() helper for debugfs
-Date: Thu,  4 Apr 2024 22:35:21 +0300
-Message-ID: <20240404193521.3581399-1-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.43.0.rc1.1.gbec44491f096
+   d="scan'208";a="18916555"
+Received: from ypottimu-mobl.amr.corp.intel.com (HELO [10.209.51.123]) ([10.209.51.123])
+  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Apr 2024 12:36:20 -0700
+Message-ID: <5f040ba2-627b-4b5d-959a-59f97b6ad0af@linux.intel.com>
+Date: Thu, 4 Apr 2024 12:36:19 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] platform/x86: lg-laptop: fix %s null argument warning
+To: Gergo Koteles <soyer@irl.hu>, Matan Ziv-Av <matan@svgalib.org>,
+ Hans de Goede <hdegoede@redhat.com>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <33d40e976f08f82b9227d0ecae38c787fcc0c0b2.1712154684.git.soyer@irl.hu>
+Content-Language: en-US
+From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+In-Reply-To: <33d40e976f08f82b9227d0ecae38c787fcc0c0b2.1712154684.git.soyer@irl.hu>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Use DEFINE_SHOW_STORE_ATTRIBUTE() helper for read-write file to reduce some
-duplicated code.
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- drivers/pinctrl/pinmux.c | 26 +++++++++-----------------
- 1 file changed, 9 insertions(+), 17 deletions(-)
+On 4/3/24 7:34 AM, Gergo Koteles wrote:
+> W=1 warns about null argument to kprintf:
+> warning: ‘%s’ directive argument is null [-Wformat-overflow=]
+> pr_info("product: %s  year: %d\n", product, year);
+>
+> Use "unknown" instead of NULL.
+>
+> Signed-off-by: Gergo Koteles <soyer@irl.hu>
+> ---
 
-diff --git a/drivers/pinctrl/pinmux.c b/drivers/pinctrl/pinmux.c
-index d924207d629b..addba55334d9 100644
---- a/drivers/pinctrl/pinmux.c
-+++ b/drivers/pinctrl/pinmux.c
-@@ -578,6 +578,7 @@ static int pinmux_functions_show(struct seq_file *s, void *what)
- 
- 	return 0;
- }
-+DEFINE_SHOW_ATTRIBUTE(pinmux_functions);
- 
- static int pinmux_pins_show(struct seq_file *s, void *what)
- {
-@@ -650,6 +651,7 @@ static int pinmux_pins_show(struct seq_file *s, void *what)
- 
- 	return 0;
- }
-+DEFINE_SHOW_ATTRIBUTE(pinmux_pins);
- 
- void pinmux_show_map(struct seq_file *s, const struct pinctrl_map *map)
- {
-@@ -672,10 +674,12 @@ void pinmux_show_setting(struct seq_file *s,
- 		   setting->data.mux.func);
- }
- 
--DEFINE_SHOW_ATTRIBUTE(pinmux_functions);
--DEFINE_SHOW_ATTRIBUTE(pinmux_pins);
-+static int pinmux_select_show(struct seq_file *s, void *unused)
-+{
-+	return -EPERM;
-+}
- 
--static ssize_t pinmux_select(struct file *file, const char __user *user_buf,
-+static ssize_t pinmux_select_write(struct file *file, const char __user *user_buf,
- 				   size_t len, loff_t *ppos)
- {
- 	struct seq_file *sfile = file->private_data;
-@@ -749,19 +753,7 @@ static ssize_t pinmux_select(struct file *file, const char __user *user_buf,
- 
- 	return ret;
- }
--
--static int pinmux_select_open(struct inode *inode, struct file *file)
--{
--	return single_open(file, NULL, inode->i_private);
--}
--
--static const struct file_operations pinmux_select_ops = {
--	.owner = THIS_MODULE,
--	.open = pinmux_select_open,
--	.write = pinmux_select,
--	.llseek = no_llseek,
--	.release = single_release,
--};
-+DEFINE_SHOW_STORE_ATTRIBUTE(pinmux_select);
- 
- void pinmux_init_device_debugfs(struct dentry *devroot,
- 			 struct pinctrl_dev *pctldev)
-@@ -771,7 +763,7 @@ void pinmux_init_device_debugfs(struct dentry *devroot,
- 	debugfs_create_file("pinmux-pins", 0444,
- 			    devroot, pctldev, &pinmux_pins_fops);
- 	debugfs_create_file("pinmux-select", 0200,
--			    devroot, pctldev, &pinmux_select_ops);
-+			    devroot, pctldev, &pinmux_select_fops);
- }
- 
- #endif /* CONFIG_DEBUG_FS */
+Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+
+>  drivers/platform/x86/lg-laptop.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/platform/x86/lg-laptop.c b/drivers/platform/x86/lg-laptop.c
+> index ad3c39e9e9f5..e714ee6298dd 100644
+> --- a/drivers/platform/x86/lg-laptop.c
+> +++ b/drivers/platform/x86/lg-laptop.c
+> @@ -736,7 +736,7 @@ static int acpi_add(struct acpi_device *device)
+>  		default:
+>  			year = 2019;
+>  		}
+> -	pr_info("product: %s  year: %d\n", product, year);
+> +	pr_info("product: %s  year: %d\n", product ?: "unknown", year);
+>  
+>  	if (year >= 2019)
+>  		battery_limit_use_wmbb = 1;
+>
+> base-commit: 39cd87c4eb2b893354f3b850f916353f2658ae6f
+
 -- 
-2.43.0.rc1.1.gbec44491f096
+Sathyanarayanan Kuppuswamy
+Linux Kernel Developer
 
