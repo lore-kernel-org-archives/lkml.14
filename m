@@ -1,247 +1,152 @@
-Received: from mx0b-0016f401.pphosted.com (mx0a-0016f401.pphosted.com [67.231.148.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B0495C99;
-	Thu,  4 Apr 2024 00:59:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.148.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E46D123CE;
+	Thu,  4 Apr 2024 01:01:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712192378; cv=none; b=A17lMm1L7KN1LIjiIqvlfk+L/3YHFHeM4DlPmRjZc8GJ/PaWuA/yoeiwKfvHM+oYGgxZ0PhSkOUzUPsgcVW1P2rRTJ76+TNSyK7CYhDUyeq161l5n0naTrGTnJKdJ1oAeXc4kE8S25NhfVKSeP1fCeamzQzbrAN2fpihGzVtzJc=
+	t=1712192482; cv=none; b=jDVuDnglQkvluN2ShVF/olh4YI5RVtuY1l46MYY63suJMzR8R4u9wOjro3cO5/bF+q7Vo4dNbrXxv+1S6xGpqZ53RhuAI0LPvrr4V7g+v881SER83i8g2e8Xfw/B99iJUFwMkNoIknm3/d4SIcYuJfT8WW5V5iWVXBtLUvA65jk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712192378; c=relaxed/simple;
-	bh=6QUBr595slcroOCfdcb8UZF1fOlVIaKWwWcSFJGekL0=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LPoCsjBfk8zcdXOIrHe1gJlna+T8e8fxZN4Tbbil5jUwCn7Hd5GjvZmVzalk7fSCUMxHbJ64nI/bbyUR02qVVKrYuzriU5LFfADJblil2eCc7urIPm0OUnWS+Qd20irQH9RfdGe8q/5Eo5ykkscV6uMtiDY3doyDG/CnfJjat6w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com; spf=pass smtp.mailfrom=marvell.com; dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b=F6fuBFB3; arc=none smtp.client-ip=67.231.148.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=marvell.com
+	s=arc-20240116; t=1712192482; c=relaxed/simple;
+	bh=VcITItGHjtKY9dfEMl4G05gYTHqgBMk3fUlh/7jjiJc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=lMJC7dYTlJX1NWVGmvVzpvPyVBb+0Mq+SUmpaT6L/h8gwR8Ac/hykqLDJ3Dse61PqKc4ktisdjksuTtli8kC6l7hRp9v6A2mYoMcKWI3Hfw1ImgTZQ9aOP+mgkbLwyEiUXcnNTbxODDYRFCFTyq6c9dEmBF9Tztzgt8KQAf2hHw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Xt5Dbdpn; arc=none smtp.client-ip=209.85.221.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="F6fuBFB3"
-Received: from pps.filterd (m0045849.ppops.net [127.0.0.1])
-	by mx0a-0016f401.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 433KwHmY025088;
-	Wed, 3 Apr 2024 17:58:19 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=
-	date:from:to:cc:subject:message-id:references:mime-version
-	:content-type:content-transfer-encoding:in-reply-to; s=pfpt0220;
-	 bh=mEz3A0cFZLO3onQWAKZpQFFgP9D767dhafoyZkTOCQ4=; b=F6fuBFB3hkdU
-	hSnUatMqU08RjlunuB1Kmkz7laPp8UHNL8cMK1rvQZzjFByFH/yxRwlI9VqKVAA+
-	as18etdXEOgRSaY2hWPuywuYrPhNItb1W5K4l8cXB08gUeyF1rrDkyl9/qmaYHCE
-	uJW1gQ/YbPkxVpA7iE1A5GWX3PgbOlrYjCBPTR5KwINBDECmFAcTzgkilXE0yBCd
-	iBvx8O/PqnHc7W0TsZm288RAc+XSp66lbZ6f1qQwLbeK+nNF6bJs7iYy9RsvuyWM
-	3YbFbFoSV4S+rHef2lnTdmLfwRTt6PC5A5M471i5yfhDoLGdga+g/JAQuK2yE86s
-	BZnYSW8Gqg==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-0016f401.pphosted.com (PPS) with ESMTPS id 3x9em4gk88-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 03 Apr 2024 17:58:19 -0700 (PDT)
-Received: from m0045849.ppops.net (m0045849.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.24/8.17.1.24) with ESMTP id 4340wINl007682;
-	Wed, 3 Apr 2024 17:58:18 -0700
-Received: from dc6wp-exch02.marvell.com ([4.21.29.225])
-	by mx0a-0016f401.pphosted.com (PPS) with ESMTPS id 3x9em4gk83-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 03 Apr 2024 17:58:18 -0700 (PDT)
-Received: from DC6WP-EXCH02.marvell.com (10.76.176.209) by
- DC6WP-EXCH02.marvell.com (10.76.176.209) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.4; Wed, 3 Apr 2024 17:58:17 -0700
-Received: from maili.marvell.com (10.69.176.80) by DC6WP-EXCH02.marvell.com
- (10.76.176.209) with Microsoft SMTP Server id 15.2.1544.4 via Frontend
- Transport; Wed, 3 Apr 2024 17:58:17 -0700
-Received: from hyd1403.caveonetworks.com (unknown [10.29.37.84])
-	by maili.marvell.com (Postfix) with ESMTP id DC6583F706F;
-	Wed,  3 Apr 2024 17:58:04 -0700 (PDT)
-Date: Thu, 4 Apr 2024 06:28:03 +0530
-From: Linu Cherian <lcherian@marvell.com>
-To: Pasha Tatashin <pasha.tatashin@soleen.com>
-CC: <akpm@linux-foundation.org>, <alim.akhtar@samsung.com>,
-        <alyssa@rosenzweig.io>, <asahi@lists.linux.dev>,
-        <baolu.lu@linux.intel.com>, <bhelgaas@google.com>,
-        <cgroups@vger.kernel.org>, <corbet@lwn.net>, <david@redhat.com>,
-        <dwmw2@infradead.org>, <hannes@cmpxchg.org>, <heiko@sntech.de>,
-        <iommu@lists.linux.dev>, <jernej.skrabec@gmail.com>,
-        <jonathanh@nvidia.com>, <joro@8bytes.org>,
-        <krzysztof.kozlowski@linaro.org>, <linux-doc@vger.kernel.org>,
-        <linux-fsdevel@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-mm@kvack.org>, <linux-rockchip@lists.infradead.org>,
-        <linux-samsung-soc@vger.kernel.org>, <linux-sunxi@lists.linux.dev>,
-        <linux-tegra@vger.kernel.org>, <lizefan.x@bytedance.com>,
-        <marcan@marcan.st>, <mhiramat@kernel.org>, <m.szyprowski@samsung.com>,
-        <paulmck@kernel.org>, <rdunlap@infradead.org>, <robin.murphy@arm.com>,
-        <samuel@sholland.org>, <suravee.suthikulpanit@amd.com>,
-        <sven@svenpeter.dev>, <thierry.reding@gmail.com>, <tj@kernel.org>,
-        <tomas.mudrunka@gmail.com>, <vdumpa@nvidia.com>, <wens@csie.org>,
-        <will@kernel.org>, <yu-cheng.yu@intel.com>, <rientjes@google.com>,
-        <bagasdotme@gmail.com>, <mkoutny@suse.com>
-Subject: Re: [PATCH v5 00/11] IOMMU memory observability
-Message-ID: <20240404005803.GA102637@hyd1403.caveonetworks.com>
-References: <20240222173942.1481394-1-pasha.tatashin@soleen.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Xt5Dbdpn"
+Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-33ddd1624beso207012f8f.1;
+        Wed, 03 Apr 2024 18:01:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1712192479; x=1712797279; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=HLU2APTaqoheKuuzuNc2tSXn6E7XDkIQ0oPwW38nA4I=;
+        b=Xt5DbdpnBGpOIWyRpSnbHEtDXN0wnQd1F7Qou3PIzQSoe/wf57mdql9R4FJxiiEG8V
+         ffsNkTEMPFwGCSxykrCWYEGIs6Wfe7a7zsY3RdSe0zSxjT6u8TdQIiSh/4oCPfCOhTDO
+         j0WwvGfhZ1EWzyzN1R9AoXt0sEFgSfJE83YffBaiIWuMPh5Y+B6Z11Bo9jsQ81av5LyF
+         QtLzYxRkuZJEG3qndqKCs/GqMLfpN0JKA0yG6T/AenSuPMGyfr8JO+3XZU04C4mK4U9Z
+         ObN5UKhUnGc0fe7Xay/5W1qRSr+wvhmXqtMQqej4Y485rY/kkB8cH6bYU++b+CQC3SWd
+         QX+w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712192479; x=1712797279;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=HLU2APTaqoheKuuzuNc2tSXn6E7XDkIQ0oPwW38nA4I=;
+        b=bzfBPktrhhOsbsS+4XdoHH2WMXxsxZcSSS2CucFW0NKFL4z5ciDQVUCnv4iIPr4Z4w
+         wbpjHip8I7GYxGfakJoVFBF2Tl4olddnDnrfatE/1zObmB/EPGVPmr5basbxFtqNt2kv
+         OJuZSJb1boqWJU2GX10sbAcMQnDA58dnK7y7G4CKVp5vRQGOyVRcxRt2ehXd/IwTW7VC
+         1Fy7LwsselMEiSyGRMQAwmMiEWKxIRZUJoft8BLpUqzEtxhFADfpHqMem8sbHVwxtWG2
+         g6UrbU2tW3JaNdsZ0rP7XJr89faXo3LAAsHXDD+DKVWzOoGZETkzcXN4M/GsdwwGIzNe
+         Q9CQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU3ovBuL1GzsPXy1KvQfVa2F2DnNXRdTyA1ELG2hSRDyB696Lkln7EICeEEZnfVT4bM/sawSnf8UdJefkKzsmsOmj/c1WRJzUBU1NOPCAx+nlx2Qk5/JwRijQVi5MK7jfIG6q4S32G415oHOSUsrjYLLLojLvAa187oi5J9alTmUGql
+X-Gm-Message-State: AOJu0YwpKjn+lYaIO+pa8wrRYQWwsjyXrCr5rWtbykkQnExEPA87Uqun
+	ukuWJPTt9S5gD1Txn4qWXXgPNIzAxXDUy/xIlXN72qIYASyXnALnvlzklyVbZzW+nNmCVKTCk3F
+	VLB8rJ89gbH5//dE6v29bLmAr3gQ=
+X-Google-Smtp-Source: AGHT+IGgve8RYBKKY6vg33L/syRyrb3Z5pP3xZmPioDKEq/WUwRK0ivhdEAPpSvjxORCV87KADxzfEeudnxPjlunbPA=
+X-Received: by 2002:a05:6000:4f1:b0:343:6c07:c816 with SMTP id
+ cr17-20020a05600004f100b003436c07c816mr1064770wrb.16.1712192478995; Wed, 03
+ Apr 2024 18:01:18 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240222173942.1481394-1-pasha.tatashin@soleen.com>
-X-Proofpoint-ORIG-GUID: kzH1frYTGGUfUioN4mjeRs5C7L-Xm_vN
-X-Proofpoint-GUID: s6kXEc2yc7_K9P5CbGLReHonYF_ihsoo
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-04-03_26,2024-04-03_01,2023-05-22_02
+References: <20240322-hid-bpf-sleepable-v5-0-179c7b59eaaa@kernel.org>
+ <20240322-hid-bpf-sleepable-v5-1-179c7b59eaaa@kernel.org> <CAADnVQJdm7+7tbJC8yhPqDUijE0DTD9UG4LOQmNRCWchQ3uGsg@mail.gmail.com>
+ <CAO-hwJKVVjhg6_0tAM75HGJL0WcERotyJc+7oBVvDiTGJAqTfw@mail.gmail.com> <CAADnVQ+5NqjqyeFS3XgDU0OCFgt1Y9bmTbHOPv6ekw1sJasyaA@mail.gmail.com>
+In-Reply-To: <CAADnVQ+5NqjqyeFS3XgDU0OCFgt1Y9bmTbHOPv6ekw1sJasyaA@mail.gmail.com>
+From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Date: Wed, 3 Apr 2024 18:01:07 -0700
+Message-ID: <CAADnVQJm7bi=iFtWj1XCmEdyDwb64KjxeP5RFo57paG3-zZo_g@mail.gmail.com>
+Subject: Re: [PATCH bpf-next v5 1/6] bpf/helpers: introduce sleepable bpf_timers
+To: Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Cc: Benjamin Tissoires <bentiss@kernel.org>, Alexei Starovoitov <ast@kernel.org>, 
+	Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>, 
+	Martin KaFai Lau <martin.lau@linux.dev>, Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
+	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
+	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>, 
+	Jiri Olsa <jolsa@kernel.org>, Mykola Lysenko <mykolal@fb.com>, Shuah Khan <shuah@kernel.org>, 
+	bpf <bpf@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
+	"open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 2024-02-22 at 23:09:26, Pasha Tatashin (pasha.tatashin@soleen.com) wrote:
-> ----------------------------------------------------------------------
-> Changelog
-> ----------------------------------------------------------------------
-> v5:
-> - Synced with v6.8-rc5
-> - Added: Acked-by: Marek Szyprowski <m.szyprowski@samsung.com>
-> - Added: Acked-by: Jernej Skrabec <jernej.skrabec@gmail.com>
-> - Addressed review comments from Robin Murphy:
->   Updated the header comment in iommu-pages.h
->   Removed __iommu_alloc_pages_node(), invoke
->   iommu_alloc_pages_node directly.
->   Removed unused: __iommu_alloc_page_node()
->   Removed __iommu_free_page()
->   Renamed: iommu_free_pages_list() -> iommu_put_pages_list()
->   Added missing iommu_put_pages_list() to dma-iommu.c in
->   iommu/dma: use iommu_put_pages_list() to releae freelist
-> 
-> v4:
-> - Synced with v6.8-rc3
-> - Updated commit log for "iommu: account IOMMU allocated memory" as
->   suggested by Michal Koutný
-> - Added more Acked-bys David Rientjes and Thierry Reding
-> - Added Tested-by Bagas Sanjaya.
-> 
-> v3:
-> - Sync with v6.7-rc7
-> - Addressed comments from David Rientjes: s/pages/page/, added
->   unlikely() into the branches, expanded comment for
->   iommu_free_pages_list().
-> - Added Acked-bys: David Rientjes
-> 
-> v2:
-> - Added Reviewed-by Janne Grunau
-> - Sync with 6.7.0-rc3
-> - Separated form the series patches:
-> vhost-vdpa: account iommu allocations
-> https://lore.kernel.org/all/20231130200447.2319543-1-pasha.tatashin@soleen.com
-> vfio: account iommu allocations
-> https://lore.kernel.org/all/20231130200900.2320829-1-pasha.tatashin@soleen.com
-> as suggested by Jason Gunthorpe
-> - Fixed SPARC build issue detected by kernel test robot
-> - Drop the following patches as they do account iommu page tables:
-> iommu/dma: use page allocation function provided by iommu-pages.h
-> iommu/fsl: use page allocation function provided by iommu-pages.h
-> iommu/iommufd: use page allocation function provided by iommu-pages.h
-> as suggested by Robin Murphy. These patches are not related to IOMMU
-> page tables. We might need to do a separate work to support DMA
-> observability.
-> - Remove support iommu/io-pgtable-arm-v7s as the 2nd level pages are
-> under a page size, thanks Robin Murphy for pointing this out.
-> 
-> ----------------------------------------------------------------------
-> Description
-> ----------------------------------------------------------------------
-> IOMMU subsystem may contain state that is in gigabytes. Majority of that
-> state is iommu page tables. Yet, there is currently, no way to observe
-> how much memory is actually used by the iommu subsystem.
-> 
-> This patch series solves this problem by adding both observability to
-> all pages that are allocated by IOMMU, and also accountability, so
-> admins can limit the amount if via cgroups.
-> 
-> The system-wide observability is using /proc/meminfo:
-> SecPageTables:    438176 kB
-> 
-> Contains IOMMU and KVM memory.
+On Wed, Apr 3, 2024 at 11:50=E2=80=AFAM Alexei Starovoitov
+<alexei.starovoitov@gmail.com> wrote:
+>
+> On Wed, Mar 27, 2024 at 10:02=E2=80=AFAM Benjamin Tissoires
+> <benjamin.tissoires@redhat.com> wrote:
+> > > >                 goto out;
+> > > >         }
+> > > > +       spin_lock(&t->sleepable_lock);
+> > > >         drop_prog_refcnt(t);
+> > > > +       spin_unlock(&t->sleepable_lock);
+> > >
+> > > this also looks odd.
+> >
+> > I basically need to protect "t->prog =3D NULL;" from happening while
+> > bpf_timer_work_cb is setting up the bpf program to be run.
+>
+> Ok. I think I understand the race you're trying to fix.
+> The bpf_timer_cancel_and_free() is doing
+> cancel_work()
+> and proceeds with
+> kfree_rcu(t, rcu);
+>
+> That's the only race and these extra locks don't help.
+>
+> The t->prog =3D NULL is nothing to worry about.
+> The bpf_timer_work_cb() might still see callback_fn =3D=3D NULL
+> "when it's being setup" and it's ok.
+> These locks don't help that.
+>
+> I suggest to drop sleepable_lock everywhere.
+> READ_ONCE of callback_fn in bpf_timer_work_cb() is enough.
+> Add rcu_read_lock_trace() before calling bpf prog.
+>
+> The race to fix is above 'cancel_work + kfree_rcu'
+> since kfree_rcu might free 'struct bpf_hrtimer *t'
+> while the work is pending and work_queue internal
+> logic might UAF struct work_struct work.
+> By the time it may luckily enter bpf_timer_work_cb() it's too late.
+> The argument 'struct work_struct *work' might already be freed.
+>
+> To fix this problem, how about the following:
+> don't call kfree_rcu and instead queue the work to free it.
+> After cancel_work(&t->work); the work_struct can be reused.
+> So set it up to call "freeing callback" and do
+> schedule_work(&t->work);
+>
+> There is a big assumption here that new work won't be
+> executed before cancelled work completes.
+> Need to check with wq experts.
+>
+> Another approach is to do something smart with
+> cancel_work() return code.
+> If it returns true set a flag inside bpf_hrtimer and
+> make bpf_timer_work_cb() free(t) after bpf prog finishes.
 
-Can you please clarify what does KVM memory refers to here ?
-Does it mean the VFIO map / virtio-iommu invoked ones for a guest VM?  
+Looking through wq code... I think I have to correct myself.
+cancel_work and immediate free is probably fine from wq pov.
+It has this comment:
+        worker->current_func(work);
+        /*
+         * While we must be careful to not use "work" after this, the trace
+         * point will only record its address.
+         */
+        trace_workqueue_execute_end(work, worker->current_func);
 
-> 
-> Per-node observability:
-> /sys/devices/system/node/nodeN/meminfo
-> Node N SecPageTables:    422204 kB
-> 
-> Contains IOMMU and KVM memory in the given NUMA node.
-> 
-> Per-node IOMMU only observability:
-> /sys/devices/system/node/nodeN/vmstat
-> nr_iommu_pages 105555
-> 
-> Contains number of pages IOMMU allocated in the given node.
-> 
-> Accountability: using sec_pagetables cgroup-v2 memory.stat entry.
-> 
-> With the change, iova_stress[1] stops as limit is reached:
-> 
-> $ ./iova_stress
-> iova space:     0T      free memory:   497G
-> iova space:     1T      free memory:   495G
-> iova space:     2T      free memory:   493G
-> iova space:     3T      free memory:   491G
-> 
-> stops as limit is reached.
-> 
-> This series encorporates suggestions that came from the discussion
-> at LPC [2].
-> ----------------------------------------------------------------------
-> [1] https://github.com/soleen/iova_stress
-> [2] https://lpc.events/event/17/contributions/1466
-> ----------------------------------------------------------------------
-> Previous versions
-> v1: https://lore.kernel.org/all/20231128204938.1453583-1-pasha.tatashin@soleen.com
-> v2: https://lore.kernel.org/linux-mm/20231130201504.2322355-1-pasha.tatashin@soleen.com
-> v3: https://lore.kernel.org/all/20231226200205.562565-1-pasha.tatashin@soleen.com
-> v4: https://lore.kernel.org/all/20240207174102.1486130-1-pasha.tatashin@soleen.com
-> ----------------------------------------------------------------------
-> 
-> Pasha Tatashin (11):
->   iommu/vt-d: add wrapper functions for page allocations
->   iommu/dma: use iommu_put_pages_list() to releae freelist
->   iommu/amd: use page allocation function provided by iommu-pages.h
->   iommu/io-pgtable-arm: use page allocation function provided by
->     iommu-pages.h
->   iommu/io-pgtable-dart: use page allocation function provided by
->     iommu-pages.h
->   iommu/exynos: use page allocation function provided by iommu-pages.h
->   iommu/rockchip: use page allocation function provided by iommu-pages.h
->   iommu/sun50i: use page allocation function provided by iommu-pages.h
->   iommu/tegra-smmu: use page allocation function provided by
->     iommu-pages.h
->   iommu: observability of the IOMMU allocations
->   iommu: account IOMMU allocated memory
-> 
->  Documentation/admin-guide/cgroup-v2.rst |   2 +-
->  Documentation/filesystems/proc.rst      |   4 +-
->  drivers/iommu/amd/amd_iommu.h           |   8 -
->  drivers/iommu/amd/init.c                |  91 ++++++------
->  drivers/iommu/amd/io_pgtable.c          |  13 +-
->  drivers/iommu/amd/io_pgtable_v2.c       |  20 +--
->  drivers/iommu/amd/iommu.c               |  13 +-
->  drivers/iommu/dma-iommu.c               |   7 +-
->  drivers/iommu/exynos-iommu.c            |  14 +-
->  drivers/iommu/intel/dmar.c              |  16 +-
->  drivers/iommu/intel/iommu.c             |  47 ++----
->  drivers/iommu/intel/iommu.h             |   2 -
->  drivers/iommu/intel/irq_remapping.c     |  16 +-
->  drivers/iommu/intel/pasid.c             |  18 +--
->  drivers/iommu/intel/svm.c               |  11 +-
->  drivers/iommu/io-pgtable-arm.c          |  15 +-
->  drivers/iommu/io-pgtable-dart.c         |  37 ++---
->  drivers/iommu/iommu-pages.h             | 186 ++++++++++++++++++++++++
->  drivers/iommu/rockchip-iommu.c          |  14 +-
->  drivers/iommu/sun50i-iommu.c            |   7 +-
->  drivers/iommu/tegra-smmu.c              |  18 ++-
->  include/linux/mmzone.h                  |   5 +-
->  mm/vmstat.c                             |   3 +
->  23 files changed, 361 insertions(+), 206 deletions(-)
->  create mode 100644 drivers/iommu/iommu-pages.h
-> 
-> -- 
-> 2.44.0.rc0.258.g7320e95886-goog
-> 
+the bpf_timer_work_cb() might still be running bpf prog.
+So it shouldn't touch 'struct bpf_hrtimer *t' after bpf prog returns,
+since kfree_rcu(t, rcu); could have freed it by then.
+There is also this code in net/rxrpc/rxperf.c
+        cancel_work(&call->work);
+        kfree(call);
+
+So it looks like it's fine to drop sleepable_lock,
+add rcu_read_lock_trace() and things should be ok.
