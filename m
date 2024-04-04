@@ -1,36 +1,36 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4AE512BF22
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4AAC12BEBC
 	for <linux-kernel@vger.kernel.org>; Thu,  4 Apr 2024 17:11:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712250708; cv=none; b=Rslg7eSRCvbUvJ0PfzEk9pIuUq+aRJ2EY7xiYBGWXHyDNTNGs0JL5vnAw5h0wbuLh/Gb2gv+vphZDx6QND+Cy+yMgzDei5VKC90HUOKvmPJSjQZs+OG0U81ixQdFHzDXoTMHJ7yHhDD7i4ii+5BJ/L2MJpRlPXx9o6LLsVermuY=
+	t=1712250708; cv=none; b=k6dscxzT7VuH3D/sBzEpsBqK57qDsUIZXDfbtV8HRg1hMIlzzq7kGabJ9R2CZgeqjlIJpzjjaye4IrOtXTC8o10MJKcAs7JnsB08USdiD6GZcXZzW3xv8eguNpuSa7xL3izOpYxO2y3BXciZIoYAUMIm3rx+VzBTNRhWTFT7V+g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1712250708; c=relaxed/simple;
-	bh=zpcDdIVvxk4yTaOZWfHubR8U8kouQobSWnPDR+JrX58=;
+	bh=seA14bpe1BODpthUIDxlQN39xfT0KeBxv5Uo0us43vQ=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=kqejjBft5L6wdbv/EcH0UhSyf7YCGVkJ6Y2iFqPBNsTs7BrybhIAqrn2sgp9ysS8Bcez8ovQYKYBHGbB+AfFSDFCR0nttT8U48w6iBI8yWbjI9qdArdNRYY5LV+e5PuWeMG20TPD+39P1Co0OY0BgBg/A96wnk19afgYHj1DUbc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Vpn91npP; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=JofKZwCGSV/VTZhlxLbQBnDQANYTC0jhzNbNt6t68JKbcgQHtMpoS2lLYMxaIf1hu753SpC5F7jq9a6E3irIE8HSIx8Y7D0S4ZKymY6j/LUdHm22XT3RHOcr8YZ0NeXfmvHXBScKIO4o39+cKJmQkSMspw/MdqAc4TyKgqpGZRQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=A69wDDpj; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Vpn91npP"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 34D32C433C7;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="A69wDDpj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2A95DC433F1;
 	Thu,  4 Apr 2024 17:11:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1712250708;
-	bh=zpcDdIVvxk4yTaOZWfHubR8U8kouQobSWnPDR+JrX58=;
+	bh=seA14bpe1BODpthUIDxlQN39xfT0KeBxv5Uo0us43vQ=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=Vpn91npP+4SFkyWtexpENgtpgeswQ9B0bIVQK6cvg993MJ7PSBRnBpzlVKt4Z1rw4
-	 umkOq8L1cEC6fwcY+1cXndxMJG41IYU0h4Gm/FC5hMNhA8ec+LfrRVLZq2KTd10D3+
-	 CnHvz58YYAeNpsBH4lrRqbcZ7t7PadXFgRoVO4rxGO5w90nXvojIzAjLmUESswNByf
-	 YlXUXtgXhrPmd+2PHhpsfYta90F1KRWi+7oCaUwFAkT3n7DzLtd5LaJ5Q/zqQmk0Yn
-	 sDZTN5DECxFBEq1oItcaI2ZOJX3PNGWYdmmT+IeicrOCUSc6Ku0lMxxlNLzI2KZuBk
-	 5x8oWwffhffLA==
+	b=A69wDDpjjxVjZ74EDGkr6RX7trWA3JxZAc+kKLOckuOVYxigq9tUchL8+iLGoTbma
+	 oj0bOVho23p4z/YSYLXFVvOXi00eUqc2GZJepwa/7jLbVB3xUaXanaQ/p5SshwoL+Q
+	 I2XjLmeVJ+JXWV7agV+Dp52SpI7ze8v+F0C+A1q1QMwEpM1Xs91OIZdaYy+o8ZmRHb
+	 W4MbNEdcwr+rXNlkXNyyzZ1FKwKjFNL7rxHLncJ2ssQtBNjX2KtutDq/BhNq34CarR
+	 Hmz8UtA9qRIA3ZqaJ7ZN6aeDb8QglOQ2sbxW/p38lGPiEQsiUaZtvbrbHxOESgAhzj
+	 cC3aSsSjVn62g==
 Received: by jupiter.universe (Postfix, from userid 1000)
-	id F2E3E4800CB; Thu,  4 Apr 2024 19:11:45 +0200 (CEST)
+	id 0093D4800D0; Thu,  4 Apr 2024 19:11:45 +0200 (CEST)
 From: Sebastian Reichel <sre@kernel.org>
-Date: Thu, 04 Apr 2024 19:11:26 +0200
-Subject: [PATCH 1/3] phy: rockchip-snps-pcie3: fix bifurcation on rk3588
+Date: Thu, 04 Apr 2024 19:11:28 +0200
+Subject: [PATCH 3/3] phy: rockchip: naneng-combphy: Fix mux on rk3588
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -39,7 +39,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240404-rk3588-pcie-bifurcation-fixes-v1-1-9907136eeafd@kernel.org>
+Message-Id: <20240404-rk3588-pcie-bifurcation-fixes-v1-3-9907136eeafd@kernel.org>
 References: <20240404-rk3588-pcie-bifurcation-fixes-v1-0-9907136eeafd@kernel.org>
 In-Reply-To: <20240404-rk3588-pcie-bifurcation-fixes-v1-0-9907136eeafd@kernel.org>
 To: Vinod Koul <vkoul@kernel.org>, 
@@ -50,114 +50,143 @@ Cc: Shawn Lin <shawn.lin@rock-chips.com>, Michal Tomek <mtdev79b@gmail.com>,
  linux-kernel@vger.kernel.org, 
  Sebastian Reichel <sebastian.reichel@collabora.com>
 X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3163; i=sre@kernel.org;
- h=from:subject:message-id; bh=QBfngFq0t7GnmHjYosXbtXgARP5FS0HHZVN+7PXAdds=;
- b=owJ4nAFtApL9kA0DAAoB2O7X88g7+poByyZiAGYO31EoJzzZciMxD/AnSu9WNJkPBP8UOvq8b
- 2QdhSn5KuPcMokCMwQAAQoAHRYhBO9mDQdGP4tyanlUE9ju1/PIO/qaBQJmDt9RAAoJENju1/PI
- O/qazSkP/Rpb4faAepRPTwOYYIWVDNQr9ZFkTsxGFAOa+QR5F2IvVOFh8jD2AI4FD9VnCbgE4IC
- efLWrIuR8gKuo2ykqtLEc5T+V0SvURfcD8QNDE9Twk/8zT+PZuROpDVfrBsWou00rgHAKrJah5+
- tMKGrq4q/OOsBQxfNZG1jABtIiFpWecrLd5zY4Kb8Rj+1lnFzKj3ivFCbMuMYCPPcCqJBdjycOf
- m7geZ0CNNLvIwOCTUXy6PWtbMiUwdCP40JRJxCIMtovKAnb4ARE19hMNUKhECuo6UWRQ5E/ALxe
- iuvTNBGCvevPryJ13RqqVE27ZnUzWa+zh0Y1FC1jOndKKGG7Zd90wNjJ5BqnMiXeOn+ME/1iIp4
- 3eE4wWO+vXcL6kIxz0UGZuW9QTFAlOTCAtqNpAmlPdtIJuFtj8+aub1cD/mxy5ezmwvPEmtmYrO
- AxmzGaI1Ajq7EJAWmKRdrmkbR84UmGDTbWEV+tSQHhB29KK7exNPIzjudBp7j/4HkdM9T9SjTxC
- ttuDp8waxJjXix7P6BaAPtt/jrQF7cO1vfEY/MfEJGlR7GAMEFfL4aPkpsp55gpoXI/+2QwFogB
- 2grBx4BAWdS9alx0KaaS0aiPxeSE5bqx6rNyshgyFY9Ak/fN0FiuA97BmSgTfolFQZaMzWM4shF
- qi8GOhaCg5tqCJUV66/knjA==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=4122; i=sre@kernel.org;
+ h=from:subject:message-id; bh=MUZluWX649SgZzXuKQn/BISKnYrBbHIpu81ShZbPzX8=;
+ b=owJ4nAFtApL9kA0DAAoB2O7X88g7+poByyZiAGYO31HdH9N8d1uLAozp3+LD80iwgDJVmCFYt
+ atmXGb1IwAWz4kCMwQAAQoAHRYhBO9mDQdGP4tyanlUE9ju1/PIO/qaBQJmDt9RAAoJENju1/PI
+ O/qazHQP/2ErjX9stm90A5BTm9bOsa1YuinkYvCFJrb8aum7Z+yzihekKxlTB5kxFTJntQiT85/
+ nNjXAZHKgKW99lPlNX+9qaDm78U8uTVy6q2ACfB+RU8gStmfuXUpwcuogoXIOBZ20LGRt69ZWmw
+ aufWqVnbsJ2zE+bU6alZGHf97NdHbZpLtKfW02Vkx6MlbevO0tuXjAf0F4I3QR2yAkeFPE0N8nx
+ KZ/WmREhZ7QTQGHB7dUWP2fU7hdJUHxto8XXxvv6KPA9PpvAvVjSRIrIQ65vVS5By4at1x3umjC
+ eLhuTiLT6F2Zidk6qmwB11DTOI1+T8NP32ajCsW/u7oiUuJjT9TY6qujT2w84uIY/Cu0xFzySQH
+ jsNgv3SIOxN2VgNEj6eyx5QvgpTkCaYr9AorVLWSUhlC5mIvOANHDiul3mfxxBL3NABNqEpXPkS
+ /S+u8QyRXM8ab2cncOl9VkAGEhJt8Ux3Km9PGcSAYLnXH4I4TDh1P1q+Jf9D9oMMOoLFDjrZ84T
+ Uzagx8r9GSu00X8IFrBr0X48gZNtcAnzoXPRNdRLcVDNobXKWyJ/KkWqxCIC+HZbKWExTrt0ZUq
+ fYywmP2Np67LX8B4HyVVFJeBVIAq8FqWcdsh5aNF2Lx4ZmQQgcxY3hWbOKZiF+CD13+Oso16OLC
+ 38ceCAaBbvl1GWjt481czYg==
 X-Developer-Key: i=sre@kernel.org; a=openpgp;
  fpr=EF660D07463F8B726A795413D8EED7F3C83BFA9A
 
-From: Michal Tomek <mtdev79b@gmail.com>
+From: Sebastian Reichel <sebastian.reichel@collabora.com>
 
-So far all RK3588 boards use fully aggregated PCIe. CM3588 is one
-of the few boards using this feature and apparently it is broken.
+The pcie1l0_sel and pcie1l1_sel bits in PCIESEL_CON configure the
+mux for PCIe1L0 and PCIe1L1 to either the PIPE Combo PHYs or the
+PCIe3 PHY. Thus this configuration interfers with the data-lanes
+configuration done by the PCIe3 PHY.
 
-The PHY offers the following mapping options:
+RK3588 has three Combo PHYs. The first one has a dedicated PCIe
+controller and is not affected by this. For the other two Combo
+PHYs, there is one mux for each of them.
 
-  port 0 lane 0 - always mapped to controller 0 (4L)
-  port 0 lane 1 - to controller 0 or 2 (1L0)
-  port 1 lane 0 - to controller 0 or 1 (2L)
-  port 1 lane 1 - to controller 0, 1 or 3 (1L1)
+pcie1l0_sel selects if PCIe 1L0 is muxed to Combo PHY 1 when
+bit is set to 0 or to the PCIe3 PHY when bit is set to 1.
 
-The data-lanes DT property maps these as follows:
+pcie1l1_sel selects if PCIe 1L1 is muxed to Combo PHY 2 when
+bit is set to 0 or to the PCIe3 PHY when bit is set to 1.
 
-  0 = no controller (unsupported by the HW)
-  1 = 4L
-  2 = 2L
-  3 = 1L0
-  4 = 1L1
+Currently the code always muxes 1L0 and 1L1 to the Combi PHYs
+once one of them is being used in PCIe mode. This is obviously
+wrong when at least one of the ports should be muxed to the
+PCIe3 PHY.
 
-That allows the following configurations with first column being the
-mainline data-lane mapping, second column being the downstream name,
-third column being PCIE3PHY_GRF_CMN_CON0 and PHP_GRF_PCIESEL register
-values and final column being the user visible lane setup:
+Fix this by introducing Combo PHY identification and then only
+setting up the required bit.
 
-  <1 1 1 1> = AGGREG = [4 0] = x4 (aggregation)
-  <1 1 2 2> = NANBNB = [0 0] = x2 x2 (no bif.)
-  <1 3 2 2> = NANBBI = [1 1] = x2 x1x1 (bif. of port 0)
-  <1 1 2 4> = NABINB = [2 2] = x1x1 x2 (bif. of port 1)
-  <1 3 2 4> = NABIBI = [3 3] = x1x1 x1x1 (bif. of both ports)
-
-The driver currently does not program PHP_GRF_PCIESEL correctly, which
-is fixed by this patch. As a side-effect the new logic is much simpler
-than the old logic.
-
-Fixes: 2e9bffc4f713 ("phy: rockchip: Support PCIe v3")
-Signed-off-by: Michal Tomek <mtdev79b@gmail.com>
+Fixes: a03c44277253 ("phy: rockchip: Add naneng combo phy support for RK3588")
+Reported-by: Michal Tomek <mtdev79b@gmail.com>
 Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
 ---
- drivers/phy/rockchip/phy-rockchip-snps-pcie3.c | 24 ++++++++----------------
- 1 file changed, 8 insertions(+), 16 deletions(-)
+ drivers/phy/rockchip/phy-rockchip-naneng-combphy.c | 36 ++++++++++++++++++++--
+ 1 file changed, 33 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/phy/rockchip/phy-rockchip-snps-pcie3.c b/drivers/phy/rockchip/phy-rockchip-snps-pcie3.c
-index 121e5961ce11..d5bcc9c42b28 100644
---- a/drivers/phy/rockchip/phy-rockchip-snps-pcie3.c
-+++ b/drivers/phy/rockchip/phy-rockchip-snps-pcie3.c
-@@ -132,7 +132,7 @@ static const struct rockchip_p3phy_ops rk3568_ops = {
- static int rockchip_p3phy_rk3588_init(struct rockchip_p3phy_priv *priv)
- {
- 	u32 reg = 0;
--	u8 mode = 0;
-+	u8 mode = RK3588_LANE_AGGREGATION; /* default */
- 	int ret;
+diff --git a/drivers/phy/rockchip/phy-rockchip-naneng-combphy.c b/drivers/phy/rockchip/phy-rockchip-naneng-combphy.c
+index 76b9cf417591..bf74e429ff46 100644
+--- a/drivers/phy/rockchip/phy-rockchip-naneng-combphy.c
++++ b/drivers/phy/rockchip/phy-rockchip-naneng-combphy.c
+@@ -125,12 +125,15 @@ struct rockchip_combphy_grfcfg {
+ };
  
- 	/* Deassert PCIe PMA output clamp mode */
-@@ -140,28 +140,20 @@ static int rockchip_p3phy_rk3588_init(struct rockchip_p3phy_priv *priv)
+ struct rockchip_combphy_cfg {
++	unsigned int num_phys;
++	unsigned int phy_ids[3];
+ 	const struct rockchip_combphy_grfcfg *grfcfg;
+ 	int (*combphy_cfg)(struct rockchip_combphy_priv *priv);
+ };
  
- 	/* Set bifurcation if needed */
- 	for (int i = 0; i < priv->num_lanes; i++) {
--		if (!priv->lanes[i])
--			mode |= (BIT(i) << 3);
--
- 		if (priv->lanes[i] > 1)
--			mode |= (BIT(i) >> 1);
--	}
--
--	if (!mode)
--		reg = RK3588_LANE_AGGREGATION;
--	else {
--		if (mode & (BIT(0) | BIT(1)))
--			reg |= RK3588_BIFURCATION_LANE_0_1;
--
--		if (mode & (BIT(2) | BIT(3)))
--			reg |= RK3588_BIFURCATION_LANE_2_3;
-+			mode &= ~RK3588_LANE_AGGREGATION;
-+		if (priv->lanes[i] == 3)
-+			mode |= RK3588_BIFURCATION_LANE_0_1;
-+		if (priv->lanes[i] == 4)
-+			mode |= RK3588_BIFURCATION_LANE_2_3;
+ struct rockchip_combphy_priv {
+ 	u8 type;
++	int id;
+ 	void __iomem *mmio;
+ 	int num_clks;
+ 	struct clk_bulk_data *clks;
+@@ -320,7 +323,7 @@ static int rockchip_combphy_probe(struct platform_device *pdev)
+ 	struct rockchip_combphy_priv *priv;
+ 	const struct rockchip_combphy_cfg *phy_cfg;
+ 	struct resource *res;
+-	int ret;
++	int ret, id;
+ 
+ 	phy_cfg = of_device_get_match_data(dev);
+ 	if (!phy_cfg) {
+@@ -338,6 +341,15 @@ static int rockchip_combphy_probe(struct platform_device *pdev)
+ 		return ret;
  	}
  
-+	reg = mode;
- 	regmap_write(priv->phy_grf, RK3588_PCIE3PHY_GRF_CMN_CON0, (0x7<<16) | reg);
++	/* find the phy-id from the io address */
++	priv->id = -ENODEV;
++	for (id = 0; id < phy_cfg->num_phys; id++) {
++		if (res->start == phy_cfg->phy_ids[id]) {
++			priv->id = id;
++			break;
++		}
++	}
++
+ 	priv->dev = dev;
+ 	priv->type = PHY_NONE;
+ 	priv->cfg = phy_cfg;
+@@ -562,6 +574,12 @@ static const struct rockchip_combphy_grfcfg rk3568_combphy_grfcfgs = {
+ };
  
- 	/* Set pcie1ln_sel in PHP_GRF_PCIESEL_CON */
- 	if (!IS_ERR(priv->pipe_grf)) {
--		reg = (mode & (BIT(6) | BIT(7))) >> 6;
-+		reg = mode & 3;
- 		if (reg)
- 			regmap_write(priv->pipe_grf, PHP_GRF_PCIESEL_CON,
- 				     (reg << 16) | reg);
+ static const struct rockchip_combphy_cfg rk3568_combphy_cfgs = {
++	.num_phys = 3,
++	.phy_ids = {
++		0xfe820000,
++		0xfe830000,
++		0xfe840000,
++	},
+ 	.grfcfg		= &rk3568_combphy_grfcfgs,
+ 	.combphy_cfg	= rk3568_combphy_cfg,
+ };
+@@ -578,8 +596,14 @@ static int rk3588_combphy_cfg(struct rockchip_combphy_priv *priv)
+ 		rockchip_combphy_param_write(priv->phy_grf, &cfg->con1_for_pcie, true);
+ 		rockchip_combphy_param_write(priv->phy_grf, &cfg->con2_for_pcie, true);
+ 		rockchip_combphy_param_write(priv->phy_grf, &cfg->con3_for_pcie, true);
+-		rockchip_combphy_param_write(priv->pipe_grf, &cfg->pipe_pcie1l0_sel, true);
+-		rockchip_combphy_param_write(priv->pipe_grf, &cfg->pipe_pcie1l1_sel, true);
++		switch (priv->id) {
++		case 1:
++			rockchip_combphy_param_write(priv->pipe_grf, &cfg->pipe_pcie1l0_sel, true);
++			break;
++		case 2:
++			rockchip_combphy_param_write(priv->pipe_grf, &cfg->pipe_pcie1l1_sel, true);
++			break;
++		}
+ 		break;
+ 	case PHY_TYPE_USB3:
+ 		/* Set SSC downward spread spectrum */
+@@ -736,6 +760,12 @@ static const struct rockchip_combphy_grfcfg rk3588_combphy_grfcfgs = {
+ };
+ 
+ static const struct rockchip_combphy_cfg rk3588_combphy_cfgs = {
++	.num_phys = 3,
++	.phy_ids = {
++		0xfee00000,
++		0xfee10000,
++		0xfee20000,
++	},
+ 	.grfcfg		= &rk3588_combphy_grfcfgs,
+ 	.combphy_cfg	= rk3588_combphy_cfg,
+ };
 
 -- 
 2.43.0
