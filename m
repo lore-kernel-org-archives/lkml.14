@@ -1,93 +1,234 @@
-Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 741E383A10
-	for <linux-kernel@vger.kernel.org>; Thu,  4 Apr 2024 12:02:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6920183A10
+	for <linux-kernel@vger.kernel.org>; Thu,  4 Apr 2024 12:03:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712232123; cv=none; b=nbVBgvVOdQ8UhJ2mFeYJUpvvd0vfaYXyW2Iq9X2qzEHwDXhfNBuK1RMBkjqzLnPSOSX9TJk/5c+bee2rLU9c+f7E/EB/lC/1JNknYtIUv7hQLGDxkijCgusf1KiSQyphanYtZhwAFrNgKsdqiO7XUJ2tcKbJYUW5OZI12hQo9UQ=
+	t=1712232184; cv=none; b=rG+QZQbzNDDOAf5aQ13ULyFvj5uohvzrtmhLGeCzOc5htiFknRN/t3yyEv/vGGuz5q6x0OfcGurR/VhZcbA+IhaOdhLIfMrKAMczOIVG2N0J7BZkq7DjvimBhwY7Yd5dxh82xafypTbL//1b4x/JMwmPx6kvLXCS6oixUlV40UU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712232123; c=relaxed/simple;
-	bh=W9ko0RfNE+S1DiS7+KgLkrYBPHmkmYztpcltRdxaN5o=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=R6BO4GC9trS/dTwxjPIs07DYf2PhnwC+nHsAHb5I0ElQP6AyVx3kUuEX8rL7sB6IdoAruBoGF9soSzU3BzxkNv0J8ars92s/+JfKDue6dF0FGPJv2hK8z8UiT4qYeaFv5WwDcBe9yKqnDNTmd6x2Vd4LF0GYQ+IoU59uk7ZdpvQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=H7hHb2Pq; arc=none smtp.client-ip=209.85.218.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
+	s=arc-20240116; t=1712232184; c=relaxed/simple;
+	bh=4+kvmAOt8o5Z0Sw88Ub69NokR1skVWGhRkZqzMc0zuo=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=UttIECigWZaoxyYnggG65vgZFBEh069t1CYRP1f4XFXDsjlObqYC08pHbmLFhXy3Kb5aONObkr/X0sRnnvGLsfb7eoNkhKCUEW8iXcikV+kcZXO4a6IkK+tj5ljbtJEA/rmO+8FRsVBH99SZF9vK0o0KJ5AWZD+rLpFuiIecrjs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=rmRMWmew; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="H7hHb2Pq"
-Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-a46ea03c2a5so153794566b.1
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Apr 2024 05:02:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ventanamicro.com; s=google; t=1712232120; x=1712836920; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=i6sgTwxk9jhbJgHBwC7uiEgEw3bNU/OxwYHoyLaglJk=;
-        b=H7hHb2PqfDTZ0NdF7Lkzz3dEXUQZSTEF2o/9++LqNBz1yUbtOkix5A4WdbHQYmp5JV
-         vIrUWS3gclXDWHvip4umv8wY6JnirVc8g7xVotMJ4oMA618NhFHw/resoT99254DmdoJ
-         otHIbUSq/r+LcS0B8WA6WrghL1gajvik9TiaSd/kJp+Be7+cVBxsW3hvAvKG/xi/C9bm
-         KXq09/+uUGhAabkvzmdepeoT3Rwz2p82HEoINFJ0wgqOSUyGzCQofFLPKj95+12+uC/c
-         SXCKnVRifUw1DXGxENAQThnkB5kOtp7IIRp+4MOj7OszVc8rXFac3UNRe1V0wGenhVMG
-         4ZXQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712232120; x=1712836920;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=i6sgTwxk9jhbJgHBwC7uiEgEw3bNU/OxwYHoyLaglJk=;
-        b=azeKdCugXRUWabCMNJQx4qO3FwjkiZuhtokoxOOvqiaerQ/Idahxqi2gzeBW5wMa/H
-         7z2NDswWFSKOR87VboWvdP22sBtve7Umy3qHZINfS1kHCGd59Tpv9WlMrnwsaVdR1ocn
-         RAKVZH43mKajyKmPtg6e8Jd+2VlwJweQ0p5Avx0QEgPvyVbAtkz0pRYotGqoMd8k+sZK
-         M3RxYTl3R6MCfY6YynA24uNHKmZLuh1wffbZ+Y8NsBf6dxoaXKJzi5Xzuzsp9Y+CrvX2
-         3FZw+kID/LsRnSFhuE6QaiX84/E8CGTFzxwfkXkrv0sG0Emb3mASxsV+NdB7AJ9pwl7s
-         SrsQ==
-X-Gm-Message-State: AOJu0YwVBtbWJb01ok12HgFfD0k1YmFPz1yYNLOFpYnfw8NBjCOGaeb3
-	qxou+C+vPF2gMz0D1Cal//35MAP32mFsxdH/RZaIxj6R7ySXbI9Xis9J3q+6zmw=
-X-Google-Smtp-Source: AGHT+IFp9TuLXZRqsWbkDSS4HE72CGMNStdZzxnFkRk5hlzliQxjfRqdZTW+nZQ93k29lkL/Bq+HhA==
-X-Received: by 2002:a17:906:f912:b0:a4e:13ee:5dec with SMTP id lc18-20020a170906f91200b00a4e13ee5decmr4834184ejb.17.1712232119747;
-        Thu, 04 Apr 2024 05:01:59 -0700 (PDT)
-Received: from localhost (cst2-173-16.cust.vodafone.cz. [31.30.173.16])
-        by smtp.gmail.com with ESMTPSA id la6-20020a170907780600b00a4e2db8ffdcsm8202481ejc.111.2024.04.04.05.01.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 04 Apr 2024 05:01:59 -0700 (PDT)
-Date: Thu, 4 Apr 2024 14:01:58 +0200
-From: Andrew Jones <ajones@ventanamicro.com>
-To: Atish Patra <atishp@rivosinc.com>
-Cc: linux-kernel@vger.kernel.org, Palmer Dabbelt <palmer@rivosinc.com>, 
-	Anup Patel <anup@brainfault.org>, Conor Dooley <conor.dooley@microchip.com>, 
-	Ajay Kaher <akaher@vmware.com>, Alexandre Ghiti <alexghiti@rivosinc.com>, 
-	Alexey Makhalov <amakhalov@vmware.com>, Juergen Gross <jgross@suse.com>, kvm-riscv@lists.infradead.org, 
-	kvm@vger.kernel.org, linux-kselftest@vger.kernel.org, linux-riscv@lists.infradead.org, 
-	Mark Rutland <mark.rutland@arm.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
-	Paolo Bonzini <pbonzini@redhat.com>, Paul Walmsley <paul.walmsley@sifive.com>, 
-	Shuah Khan <shuah@kernel.org>, virtualization@lists.linux.dev, 
-	VMware PV-Drivers Reviewers <pv-drivers@vmware.com>, Will Deacon <will@kernel.org>, x86@kernel.org
-Subject: Re: [PATCH v5 06/22] drivers/perf: riscv: Implement SBI PMU snapshot
- function
-Message-ID: <20240404-bbfb02e3aec944f9e11745ae@orel>
-References: <20240403080452.1007601-1-atishp@rivosinc.com>
- <20240403080452.1007601-7-atishp@rivosinc.com>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="rmRMWmew"
+Received: from pps.filterd (m0353726.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 434BRlSP020370;
+	Thu, 4 Apr 2024 12:02:53 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : in-reply-to : references : mime-version :
+ content-transfer-encoding; s=pp1;
+ bh=0BBQelJ9WYsqv+/ZavPKMbaS74/Kns8UbE3QsYDT2IQ=;
+ b=rmRMWmewEdQxZ2vvEKWUtRibDiq7wHpw9dRKh2zqJM/YQyGkBU2Ac2jNaQrYIWNyheNQ
+ rZdxmG9UnTbrtq5HfByJ6KebothSqsNw3owghiQ9x6sDQvCz8/6z2VcnPefXQ44LKLxw
+ AhFqmt369KIMETlFo1PvZQS8K/aNQOsFbtZ+simekCGTsnynSZzsj+e6xX7HG8jYHfkr
+ 8P6M00A1MezlGoW6mKSko7FQUZDJnDBYcGuumX7eCrmqiA14EoUAszEKt6g76OX5pnCM
+ h6JIYFfHJed6U7CQbq3J6vMmMvwF26VOZUX3YjyXOPjrkw83SusW2Psj/2zfL6b83e28 3g== 
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3x9ubc02gt-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 04 Apr 2024 12:02:52 +0000
+Received: from m0353726.ppops.net (m0353726.ppops.net [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 434C2qP4015765;
+	Thu, 4 Apr 2024 12:02:52 GMT
+Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3x9ubc02gp-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 04 Apr 2024 12:02:52 +0000
+Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma21.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 434A7nDU008686;
+	Thu, 4 Apr 2024 12:02:50 GMT
+Received: from smtprelay02.fra02v.mail.ibm.com ([9.218.2.226])
+	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3x9epw3y3a-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 04 Apr 2024 12:02:50 +0000
+Received: from smtpav01.fra02v.mail.ibm.com (smtpav01.fra02v.mail.ibm.com [10.20.54.100])
+	by smtprelay02.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 434C2jB746858618
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 4 Apr 2024 12:02:47 GMT
+Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 2B5D820043;
+	Thu,  4 Apr 2024 12:02:45 +0000 (GMT)
+Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id F38462004F;
+	Thu,  4 Apr 2024 12:02:44 +0000 (GMT)
+Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
+	by smtpav01.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Thu,  4 Apr 2024 12:02:44 +0000 (GMT)
+From: Niklas Schnelle <schnelle@linux.ibm.com>
+To: Dave Airlie <airlied@redhat.com>, Gerd Hoffmann <kraxel@redhat.com>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        Daniel Vetter <daniel@ffwll.ch>
+Cc: Arnd Bergmann <arnd@kernel.org>, Heiko Carstens <hca@linux.ibm.com>,
+        linux-kernel@vger.kernel.org, Niklas Schnelle <schnelle@linux.ibm.com>
+Subject: [PATCH 1/1] drm: handle HAS_IOPORT dependencies
+Date: Thu,  4 Apr 2024 14:02:44 +0200
+Message-Id: <20240404120244.3659560-2-schnelle@linux.ibm.com>
+X-Mailer: git-send-email 2.40.1
+In-Reply-To: <20240404120244.3659560-1-schnelle@linux.ibm.com>
+References: <20240404120244.3659560-1-schnelle@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240403080452.1007601-7-atishp@rivosinc.com>
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: 0fcoHLSwuDEvWhvGowlRN9l6diRjySDH
+X-Proofpoint-ORIG-GUID: LgiK4XXbiIyytbzo4hHJA1MK601KN7BV
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-04-04_08,2024-04-04_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999 spamscore=0
+ priorityscore=1501 impostorscore=0 phishscore=0 clxscore=1015 mlxscore=0
+ suspectscore=0 adultscore=0 bulkscore=0 lowpriorityscore=0 malwarescore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2404010000
+ definitions=main-2404040082
 
-On Wed, Apr 03, 2024 at 01:04:35AM -0700, Atish Patra wrote:
-...
-> +static int pmu_sbi_snapshot_disable(void)
-> +{
-> +	struct sbiret ret;
-> +
-> +	ret = sbi_ecall(SBI_EXT_PMU, SBI_EXT_PMU_SNAPSHOT_SET_SHMEM, -1,
-> +			-1, 0, 0, 0, 0);
+In a future patch HAS_IOPORT=n will disable inb()/outb() and friends at
+compile time. We thus need to add HAS_IOPORT as dependency for those
+drivers using them. In the bochs driver there is optional MMIO support
+detected at runtime, warn if this isn't taken when HAS_IOPORT is not
+defined.
 
-The "Rename the SBI_STA_SHMEM_DISABLE" patch should come before this
-patch so SBI_SHMEM_DISABLE can be used instead of the -1's here.
+There is also a direct and hard coded use in cirrus.c which according to
+the comment is only necessary during resume.  Let's just skip this as
+for example s390 which doesn't have I/O port support also doesen't
+support suspend/resume.
 
-Thanks,
-drew
+Co-developed-by: Arnd Bergmann <arnd@kernel.org>
+Signed-off-by: Arnd Bergmann <arnd@kernel.org>
+Signed-off-by: Niklas Schnelle <schnelle@linux.ibm.com>
+---
+Note: This patch does not depend any not-yet-mainline HAS_IOPORT changes
+and may be merged via subsystem specific trees at your earliest
+convenience.
+
+v5->v6: Added HAS_IOPORT for xe driver which copied some I/O port use from
+existing intel drivers.
+
+ drivers/gpu/drm/qxl/Kconfig   |  1 +
+ drivers/gpu/drm/tiny/bochs.c  | 17 +++++++++++++++++
+ drivers/gpu/drm/tiny/cirrus.c |  2 ++
+ drivers/gpu/drm/xe/Kconfig    |  2 +-
+ 4 files changed, 21 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/gpu/drm/qxl/Kconfig b/drivers/gpu/drm/qxl/Kconfig
+index ca3f51c2a8fe..d0e0d440c8d9 100644
+--- a/drivers/gpu/drm/qxl/Kconfig
++++ b/drivers/gpu/drm/qxl/Kconfig
+@@ -2,6 +2,7 @@
+ config DRM_QXL
+ 	tristate "QXL virtual GPU"
+ 	depends on DRM && PCI && MMU
++	depends on HAS_IOPORT
+ 	select DRM_KMS_HELPER
+ 	select DRM_TTM
+ 	select DRM_TTM_HELPER
+diff --git a/drivers/gpu/drm/tiny/bochs.c b/drivers/gpu/drm/tiny/bochs.c
+index c23c9f0cf49c..9ac3b455ddce 100644
+--- a/drivers/gpu/drm/tiny/bochs.c
++++ b/drivers/gpu/drm/tiny/bochs.c
+@@ -2,6 +2,7 @@
+ 
+ #include <linux/module.h>
+ #include <linux/pci.h>
++#include <asm/bug.h>
+ 
+ #include <drm/drm_aperture.h>
+ #include <drm/drm_atomic_helper.h>
+@@ -105,7 +106,9 @@ static void bochs_vga_writeb(struct bochs_device *bochs, u16 ioport, u8 val)
+ 
+ 		writeb(val, bochs->mmio + offset);
+ 	} else {
++#ifdef CONFIG_HAS_IOPORT
+ 		outb(val, ioport);
++#endif
+ 	}
+ }
+ 
+@@ -119,7 +122,11 @@ static u8 bochs_vga_readb(struct bochs_device *bochs, u16 ioport)
+ 
+ 		return readb(bochs->mmio + offset);
+ 	} else {
++#ifdef CONFIG_HAS_IOPORT
+ 		return inb(ioport);
++#else
++		return 0xff;
++#endif
+ 	}
+ }
+ 
+@@ -132,8 +139,12 @@ static u16 bochs_dispi_read(struct bochs_device *bochs, u16 reg)
+ 
+ 		ret = readw(bochs->mmio + offset);
+ 	} else {
++#ifdef CONFIG_HAS_IOPORT
+ 		outw(reg, VBE_DISPI_IOPORT_INDEX);
+ 		ret = inw(VBE_DISPI_IOPORT_DATA);
++#else
++		ret = 0xffff;
++#endif
+ 	}
+ 	return ret;
+ }
+@@ -145,8 +156,10 @@ static void bochs_dispi_write(struct bochs_device *bochs, u16 reg, u16 val)
+ 
+ 		writew(val, bochs->mmio + offset);
+ 	} else {
++#ifdef CONFIG_HAS_IOPORT
+ 		outw(reg, VBE_DISPI_IOPORT_INDEX);
+ 		outw(val, VBE_DISPI_IOPORT_DATA);
++#endif
+ 	}
+ }
+ 
+@@ -229,6 +242,10 @@ static int bochs_hw_init(struct drm_device *dev)
+ 			return -ENOMEM;
+ 		}
+ 	} else {
++		if (!IS_ENABLED(CONFIG_HAS_IOPORT)) {
++			DRM_ERROR("I/O ports are not supported\n");
++			return -EIO;
++		}
+ 		ioaddr = VBE_DISPI_IOPORT_INDEX;
+ 		iosize = 2;
+ 		if (!request_region(ioaddr, iosize, "bochs-drm")) {
+diff --git a/drivers/gpu/drm/tiny/cirrus.c b/drivers/gpu/drm/tiny/cirrus.c
+index 4e3a152f897a..716e1480c30f 100644
+--- a/drivers/gpu/drm/tiny/cirrus.c
++++ b/drivers/gpu/drm/tiny/cirrus.c
+@@ -509,8 +509,10 @@ static void cirrus_crtc_helper_atomic_enable(struct drm_crtc *crtc,
+ 
+ 	cirrus_mode_set(cirrus, &crtc_state->mode);
+ 
++#ifdef CONFIG_HAS_IOPORT
+ 	/* Unblank (needed on S3 resume, vgabios doesn't do it then) */
+ 	outb(VGA_AR_ENABLE_DISPLAY, VGA_ATT_W);
++#endif
+ 
+ 	drm_dev_exit(idx);
+ }
+diff --git a/drivers/gpu/drm/xe/Kconfig b/drivers/gpu/drm/xe/Kconfig
+index 1a556d087e63..519906b8e3de 100644
+--- a/drivers/gpu/drm/xe/Kconfig
++++ b/drivers/gpu/drm/xe/Kconfig
+@@ -48,7 +48,7 @@ config DRM_XE
+ 
+ config DRM_XE_DISPLAY
+ 	bool "Enable display support"
+-	depends on DRM_XE && DRM_XE=m
++	depends on DRM_XE && DRM_XE=m && HAS_IOPORT
+ 	select FB_IOMEM_HELPERS
+ 	select I2C
+ 	select I2C_ALGOBIT
+-- 
+2.40.1
+
