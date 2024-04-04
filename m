@@ -1,108 +1,319 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5378127B6A;
-	Thu,  4 Apr 2024 13:42:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F6B585644
+	for <linux-kernel@vger.kernel.org>; Thu,  4 Apr 2024 13:43:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712238141; cv=none; b=ZOgKsnyQYXX3SRpJ1PVgsaYl3g8bORE62fFJb6h08fqTrvc+B8Icd+51kQDwZzhKNIfFSn3Ym/xxmqVwx3/A3JuAwd2bxeKSgvpDAdUnSCuSsxL+M0H7lCA+mmOv9wQiwBBH+aIr7IzLqRFzkyJRakbsw6hIpXz+Pkw3jQ3o76E=
+	t=1712238225; cv=none; b=R30SVZ6UZUIJZ8YRh719kMWP/DvvNR7WNB5brVBg2O1XhXUItPvhM2kChIC6ZVjlK2gFuJJ/iFO2pC1vNSHU3dNn3OkAURxGuvjyop/HtIdGsYtYi47VzxNoBFabz7/E4ZS62DbrpDfbGyqWQ0nKLc71mH/ZWf19KSAuDi8fnuo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712238141; c=relaxed/simple;
-	bh=SiFNlvNoywBWrh9dJB2VKBaVx4+zJofi44aMlEqmAas=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QON9ORVgQjI4KIf/ncjRUSew+EwGutvrJ7Z3+LLNe4FduRHsuOW/bap2n+e886IV5Xr0g4VRJyWWUz2e7G2EGVhns1nlOgCi3ovBKdDeraUTmhnDGnaO9iRWpeeZetqMKKvRaPobV1d72Gi+dWwexynWhIfXKqNlF66ABKOc5zw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=YP8YeFFC; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	s=arc-20240116; t=1712238225; c=relaxed/simple;
+	bh=o9MhFdlGnw32ziXC3IWaYQCUzaU9mJTeg/Ipm0c064U=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Vu6E0BZEr3ZKjo36vJFwtG+hsO3MlXRPoFL/RK7p5GDmZWRN415b4nnZaKDRabI8PLTUFZQtrJm+Ha1Xl9t8cgHK7Lwu7drAmmvbOYT3e0OKEteA6oqHn/GxBy2oGdvJmOsNXtfVJ6SBmN6EETNBaCVKbcfE7ByDUBJMJLLBKd0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CtVYms7b; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="YP8YeFFC"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 4E3BD40E0177;
-	Thu,  4 Apr 2024 13:42:16 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id AG3-nPPPc-qB; Thu,  4 Apr 2024 13:42:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1712238132; bh=SnwD9Z8zRiZ36IaQVN6USZlKwVv26RZDYLKXu7FYw0o=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=YP8YeFFCnpEp8rna7b+P2a0QTsBwQx6jMX+N3KUJxALwLPHkfiaNO879S246LE+Qi
-	 lSN1Z/CPvCElarNeyzuv7kIOfgcYnDt0yHuTbIGM8kUH/aQDaEYbCVWRj0bQ1V83a3
-	 7Xoke6VfzlxS97dIZzsvv551Fh8zXMT4hh3q3MU5TsPkh5IZJlgZw0JKlIDJVRa5DP
-	 QUKLGKdEFHQI6tvIMgvUql135tHFjbPn9Bw7Ti5W2fG0BJ79/GdWan+YSKTAkVsaiS
-	 srT+AypeNQm4YPoQoXYbrKzJZXglxVtIoUUdWhNbqjmPobXR8znv6ZCQV+zy4xEOwF
-	 t34Mn8k+fc7kJeAmSo0/0PC+UvQ420a+4M+4LVki+m0QnTIqu0SObBj2sbPn1CjncO
-	 k/y2FKDUlW36ZfV2Uor/WT6GhCZrklebwwt12N4LW2d4ccd7p9zaDcjmT/dt5+7aUz
-	 qPlggv7g5VWLFnmg1M+1csCwWEqaZjhOIeeapI01UB3Em+swlCIsP5emHfHz/FFD2n
-	 mgVTsYNwb4cgEjiOU2Tuo0hIUYl7Z4mW1T1ZTgJN4lJ9B3sXP/pBgJW+LdnbEMpC3G
-	 TYmgsVBYdr9IBWDkaiQDbgNWGPdW3gto+R2HlJG9Y9n88xWy3sEyDG7clgEre1wErc
-	 /Kg4IE6VuUmwVVvIjkCkwpZ4=
-Received: from zn.tnic (p5de8ecf7.dip0.t-ipconnect.de [93.232.236.247])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 2FEC440E00F4;
-	Thu,  4 Apr 2024 13:41:51 +0000 (UTC)
-Date: Thu, 4 Apr 2024 15:41:42 +0200
-From: Borislav Petkov <bp@alien8.de>
-To: Mirsad Todorovac <mirsad.todorovac@alu.unizg.hr>
-Cc: Michael Roth <michael.roth@amd.com>, bp@kernel.org, bgardon@google.com,
-	dave.hansen@linux.intel.com, dmatlack@google.com, hpa@zytor.com,
-	jpoimboe@kernel.org, kvm@vger.kernel.org, leitao@debian.org,
-	linux-kernel@vger.kernel.org, maz@kernel.org, mingo@redhat.com,
-	pawan.kumar.gupta@linux.intel.com, pbonzini@redhat.com,
-	peterz@infradead.org, seanjc@google.com, shahuang@redhat.com,
-	tabba@google.com, tglx@linutronix.de, x86@kernel.org
-Subject: Re: [BUG net-next] arch/x86/kernel/cpu/bugs.c:2935: "Unpatched
- return thunk in use. This should not happen!" [STACKTRACE]
-Message-ID: <20240404134142.GCZg6uFh_ZSzUFLChd@fat_crate.local>
-References: <1d10cd73-2ae7-42d5-a318-2f9facc42bbe@alu.unizg.hr>
- <20240318202124.GCZfiiRGVV0angYI9j@fat_crate.local>
- <12619bd4-9e9e-4883-8706-55d050a4d11a@alu.unizg.hr>
- <20240326101642.GAZgKgisKXLvggu8Cz@fat_crate.local>
- <8fc784c2-2aad-4d1d-ba0f-e5ab69d28ec5@alu.unizg.hr>
- <20240328123830.dma3nnmmlb7r52ic@amd.com>
- <20240402101549.5166-1-bp@kernel.org>
- <20240402133856.dtzinbbudsu7rg7d@amd.com>
- <f497a833-f945-4907-b916-1739324de014@alu.unizg.hr>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CtVYms7b"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 29925C43394
+	for <linux-kernel@vger.kernel.org>; Thu,  4 Apr 2024 13:43:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1712238225;
+	bh=o9MhFdlGnw32ziXC3IWaYQCUzaU9mJTeg/Ipm0c064U=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=CtVYms7bi0GUMlzh7g8mj6AxPNKgrpVJAR/mdYntbvUHD1o9iscjF/KBUd8SkeCC/
+	 EaHxT4su0hC9xaaNUy2EzPbyfCTxjYLwU4K5oAuSOkcFC4iaBKN+vbHz/DUf9W93dz
+	 0ru/mTraP0VbRMYnQMNCKeHcAKXg8CiCcWbwkMkDH/fb3Oluq3T6ZDt529BSM/gWdy
+	 eRH+GggnHsZ4AioLJ/7k7MchPBVBBt/Kn9a1sWsUrXyg1xU490GsLgj03GSWYIRIMd
+	 /FrG5EET5LUiErRN9HXmHQRhp/D9OJ2PJFzUl9nCrePexKTOGIcLWCNwiaX+FmYPFX
+	 w+BwdMoI4w5mA==
+Received: by mail-lj1-f170.google.com with SMTP id 38308e7fff4ca-2d718efedb2so16693171fa.0
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Apr 2024 06:43:45 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUxvcLCpuouGTZtsYfwJ6QcX3J8FC1PrUXYRSh0CxPrfVPVODz9eyXl10gFpATc+l+r3pfYpIyycXcct14P5rQ/GLEz1cMhAfFTFMr2
+X-Gm-Message-State: AOJu0YxczmGUiB5xE7PBxTBw5AkxGP4dc0NulM+qJ0/9MdUPT+6ZLRj5
+	CTv4xa8gLwgjsYZNTX+HQ92SH6ltlkHg4/EWU4iZgsY60YVjSOqCPVAKKFrulqQetwVXHhja+6t
+	Jz4dOMjsWJ/tR7aHt0+/1nI2JLw==
+X-Google-Smtp-Source: AGHT+IECbm50o89l/5du0PboRTqVze4XM7Gg5DfNdiM8lsiR9jlOlNvwkQ6rhzvERNmqUAUF1jBJ11DEiIYDIxU9RrY=
+X-Received: by 2002:a05:651c:210e:b0:2d6:8868:f1a6 with SMTP id
+ a14-20020a05651c210e00b002d68868f1a6mr3184834ljq.43.1712238223818; Thu, 04
+ Apr 2024 06:43:43 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <f497a833-f945-4907-b916-1739324de014@alu.unizg.hr>
+References: <20240403114032.1162100-1-ryan.roberts@arm.com>
+ <20240403114032.1162100-2-ryan.roberts@arm.com> <CANeU7QnYOx-=xoeoLWotdQWOs2KMvw0E7LuRq27LO4RDA_ManQ@mail.gmail.com>
+ <2acd461f-1d75-434c-a2f2-a3a8e1daad8f@arm.com>
+In-Reply-To: <2acd461f-1d75-434c-a2f2-a3a8e1daad8f@arm.com>
+From: Chris Li <chrisl@kernel.org>
+Date: Thu, 4 Apr 2024 06:43:31 -0700
+X-Gmail-Original-Message-ID: <CANeU7QkZqJXCfj6oMZHM51nwqKYeJ+UG+rE8ZZ2HVUssM-RfhQ@mail.gmail.com>
+Message-ID: <CANeU7QkZqJXCfj6oMZHM51nwqKYeJ+UG+rE8ZZ2HVUssM-RfhQ@mail.gmail.com>
+Subject: Re: [PATCH v6 1/6] mm: swap: Remove CLUSTER_FLAG_HUGE from swap_cluster_info:flags
+To: Ryan Roberts <ryan.roberts@arm.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>, David Hildenbrand <david@redhat.com>, 
+	Matthew Wilcox <willy@infradead.org>, Huang Ying <ying.huang@intel.com>, Gao Xiang <xiang@kernel.org>, 
+	Yu Zhao <yuzhao@google.com>, Yang Shi <shy828301@gmail.com>, Michal Hocko <mhocko@suse.com>, 
+	Kefeng Wang <wangkefeng.wang@huawei.com>, Barry Song <21cnbao@gmail.com>, 
+	Lance Yang <ioworker0@gmail.com>, linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Apr 03, 2024 at 03:43:02PM +0200, Mirsad Todorovac wrote:
-> I wonder if I could make any additional contribution to the project.
+On Thu, Apr 4, 2024 at 12:06=E2=80=AFAM Ryan Roberts <ryan.roberts@arm.com>=
+ wrote:
+>
+> On 03/04/2024 23:12, Chris Li wrote:
+> > Hi Ryan,
+> >
+> > Sorry for the late reply. I want to review this series but don't have
+> > the chance to do it sooner.
+>
+> No problem. This series is now in mm-unstable, so if you want to request =
+any
+> changes in the other patches, I'd prefer it sooner rather than later, if =
+possible.
+>
+> >
+> > On Wed, Apr 3, 2024 at 4:40=E2=80=AFAM Ryan Roberts <ryan.roberts@arm.c=
+om> wrote:
+> >>
+> >> As preparation for supporting small-sized THP in the swap-out path,
+> >> without first needing to split to order-0, Remove the CLUSTER_FLAG_HUG=
+E,
+> >> which, when present, always implies PMD-sized THP, which is the same a=
+s
+> >> the cluster size.
+> >>
+> >> The only use of the flag was to determine whether a swap entry refers =
+to
+> >> a single page or a PMD-sized THP in swap_page_trans_huge_swapped().
+> >> Instead of relying on the flag, we now pass in nr_pages, which
+> >> originates from the folio's number of pages. This allows the logic to
+> >> work for folios of any order.
+> >>
+> >> The one snag is that one of the swap_page_trans_huge_swapped() call
+> >> sites does not have the folio. But it was only being called there to
+> >> shortcut a call __try_to_reclaim_swap() in some cases.
+> >> __try_to_reclaim_swap() gets the folio and (via some other functions)
+> >> calls swap_page_trans_huge_swapped(). So I've removed the problematic
+> >> call site and believe the new logic should be functionally equivalent.
+> >>
+> >> That said, removing the fast path means that we will take a reference
+> >> and trylock a large folio much more often, which we would like to avoi=
+d.
+> >> The next patch will solve this.
+> >>
+> >> Removing CLUSTER_FLAG_HUGE also means we can remove split_swap_cluster=
+()
+> >> which used to be called during folio splitting, since
+> >> split_swap_cluster()'s only job was to remove the flag.
+> >
+> > Seems necessary to remove the assumption of large folio be PMD size.
+> >
+> > Acked-by: Chris Li <chrisl@kernel.org>
+>
+> Thanks!
+>
+> >
+> >>
+> >> Reviewed-by: "Huang, Ying" <ying.huang@intel.com>
+> >> Signed-off-by: Ryan Roberts <ryan.roberts@arm.com>
+> >> ---
+> >>  include/linux/swap.h | 10 ----------
+> >>  mm/huge_memory.c     |  3 ---
+> >>  mm/swapfile.c        | 47 ++++++++-----------------------------------=
+-
+> >>  3 files changed, 8 insertions(+), 52 deletions(-)
+> >>
+> >> diff --git a/include/linux/swap.h b/include/linux/swap.h
+> >> index a211a0383425..f6f78198f000 100644
+> >> --- a/include/linux/swap.h
+> >> +++ b/include/linux/swap.h
+> >> @@ -259,7 +259,6 @@ struct swap_cluster_info {
+> >>  };
+> >>  #define CLUSTER_FLAG_FREE 1 /* This cluster is free */
+> >>  #define CLUSTER_FLAG_NEXT_NULL 2 /* This cluster has no next cluster =
+*/
+> >> -#define CLUSTER_FLAG_HUGE 4 /* This cluster is backing a transparent =
+huge page */
+> >>
+> >>  /*
+> >>   * We assign a cluster to each CPU, so each CPU can allocate swap ent=
+ry from
+> >> @@ -590,15 +589,6 @@ static inline int add_swap_extent(struct swap_inf=
+o_struct *sis,
+> >>  }
+> >>  #endif /* CONFIG_SWAP */
+> >>
+> >> -#ifdef CONFIG_THP_SWAP
+> >> -extern int split_swap_cluster(swp_entry_t entry);
+> >> -#else
+> >> -static inline int split_swap_cluster(swp_entry_t entry)
+> >> -{
+> >> -       return 0;
+> >> -}
+> >> -#endif
+> >> -
+> >>  #ifdef CONFIG_MEMCG
+> >>  static inline int mem_cgroup_swappiness(struct mem_cgroup *memcg)
+> >>  {
+> >> diff --git a/mm/huge_memory.c b/mm/huge_memory.c
+> >> index ea6d1f09a0b9..3ca9282a0dc9 100644
+> >> --- a/mm/huge_memory.c
+> >> +++ b/mm/huge_memory.c
+> >> @@ -2844,9 +2844,6 @@ static void __split_huge_page(struct page *page,=
+ struct list_head *list,
+> >>                 shmem_uncharge(folio->mapping->host, nr_dropped);
+> >>         remap_page(folio, nr);
+> >>
+> >> -       if (folio_test_swapcache(folio))
+> >> -               split_swap_cluster(folio->swap);
+> >> -
+> >>         /*
+> >>          * set page to its compound_head when split to non order-0 pag=
+es, so
+> >>          * we can skip unlocking it below, since PG_locked is transfer=
+red to
+> >> diff --git a/mm/swapfile.c b/mm/swapfile.c
+> >> index 5e6d2304a2a4..0d44ee2b4f9c 100644
+> >> --- a/mm/swapfile.c
+> >> +++ b/mm/swapfile.c
+> >> @@ -343,18 +343,6 @@ static inline void cluster_set_null(struct swap_c=
+luster_info *info)
+> >>         info->data =3D 0;
+> >>  }
+> >>
+> >> -static inline bool cluster_is_huge(struct swap_cluster_info *info)
+> >> -{
+> >> -       if (IS_ENABLED(CONFIG_THP_SWAP))
+> >> -               return info->flags & CLUSTER_FLAG_HUGE;
+> >> -       return false;
+> >> -}
+> >> -
+> >> -static inline void cluster_clear_huge(struct swap_cluster_info *info)
+> >> -{
+> >> -       info->flags &=3D ~CLUSTER_FLAG_HUGE;
+> >> -}
+> >> -
+> >>  static inline struct swap_cluster_info *lock_cluster(struct swap_info=
+_struct *si,
+> >>                                                      unsigned long off=
+set)
+> >>  {
+> >> @@ -1027,7 +1015,7 @@ static int swap_alloc_cluster(struct swap_info_s=
+truct *si, swp_entry_t *slot)
+> >>         offset =3D idx * SWAPFILE_CLUSTER;
+> >>         ci =3D lock_cluster(si, offset);
+> >>         alloc_cluster(si, idx);
+> >> -       cluster_set_count_flag(ci, SWAPFILE_CLUSTER, CLUSTER_FLAG_HUGE=
+);
+> >> +       cluster_set_count(ci, SWAPFILE_CLUSTER);
+> >>
+> >>         memset(si->swap_map + offset, SWAP_HAS_CACHE, SWAPFILE_CLUSTER=
+);
+> >>         unlock_cluster(ci);
+> >> @@ -1365,7 +1353,6 @@ void put_swap_folio(struct folio *folio, swp_ent=
+ry_t entry)
+> >>
+> >>         ci =3D lock_cluster_or_swap_info(si, offset);
+> >>         if (size =3D=3D SWAPFILE_CLUSTER) {
+> >> -               VM_BUG_ON(!cluster_is_huge(ci));
+> >>                 map =3D si->swap_map + offset;
+> >>                 for (i =3D 0; i < SWAPFILE_CLUSTER; i++) {
+> >>                         val =3D map[i];
+> >> @@ -1373,7 +1360,6 @@ void put_swap_folio(struct folio *folio, swp_ent=
+ry_t entry)
+> >>                         if (val =3D=3D SWAP_HAS_CACHE)
+> >>                                 free_entries++;
+> >>                 }
+> >> -               cluster_clear_huge(ci);
+> >>                 if (free_entries =3D=3D SWAPFILE_CLUSTER) {
+> >>                         unlock_cluster_or_swap_info(si, ci);
+> >>                         spin_lock(&si->lock);
+> >> @@ -1395,23 +1381,6 @@ void put_swap_folio(struct folio *folio, swp_en=
+try_t entry)
+> >>         unlock_cluster_or_swap_info(si, ci);
+> >>  }
+> >>
+> >> -#ifdef CONFIG_THP_SWAP
+> >> -int split_swap_cluster(swp_entry_t entry)
+> >> -{
+> >> -       struct swap_info_struct *si;
+> >> -       struct swap_cluster_info *ci;
+> >> -       unsigned long offset =3D swp_offset(entry);
+> >> -
+> >> -       si =3D _swap_info_get(entry);
+> >> -       if (!si)
+> >> -               return -EBUSY;
+> >> -       ci =3D lock_cluster(si, offset);
+> >> -       cluster_clear_huge(ci);
+> >> -       unlock_cluster(ci);
+> >> -       return 0;
+> >> -}
+> >> -#endif
+> >> -
+> >>  static int swp_entry_cmp(const void *ent1, const void *ent2)
+> >>  {
+> >>         const swp_entry_t *e1 =3D ent1, *e2 =3D ent2;
+> >> @@ -1519,22 +1488,23 @@ int swp_swapcount(swp_entry_t entry)
+> >>  }
+> >>
+> >>  static bool swap_page_trans_huge_swapped(struct swap_info_struct *si,
+> >> -                                        swp_entry_t entry)
+> >> +                                        swp_entry_t entry,
+> >> +                                        unsigned int nr_pages)
+> >>  {
+> >>         struct swap_cluster_info *ci;
+> >>         unsigned char *map =3D si->swap_map;
+> >>         unsigned long roffset =3D swp_offset(entry);
+> >> -       unsigned long offset =3D round_down(roffset, SWAPFILE_CLUSTER)=
+;
+> >> +       unsigned long offset =3D round_down(roffset, nr_pages);
+> >
+> > It is obvious this code only works for powers two nr_pages. The
+> > SWAPFILE_CLSTER is a power of two. If we switch to an API for
+> > nr_pages, we might want to warn/ban passing in the non-power of two
+> > nr_pages.
+>
+> Indeed. I could change the prototype to pass order instead of nr_pages, t=
+hen
+> generate nr_pages (=3D 1 << order) inside the function. But given the fun=
+ction is
+> static and only called from a single callsite, I don't see it as hugely
+> important. I'd prefer to leave as is at this stage, unless you have stron=
+g
+> objection.
 
-I'd suggest:
+That is fine with me.
 
-https://kernel.org/doc/html/latest/process/2.Process.html#getting-started-with-kernel-development
+>
+> >
+> >>         int i;
+> >>         bool ret =3D false;
+> >>
+> >>         ci =3D lock_cluster_or_swap_info(si, offset);
+> >> -       if (!ci || !cluster_is_huge(ci)) {
+> >> +       if (!ci || nr_pages =3D=3D 1) {
+> >>                 if (swap_count(map[roffset]))
+> >>                         ret =3D true;
+> >>                 goto unlock_out;
+> >>         }
+> >> -       for (i =3D 0; i < SWAPFILE_CLUSTER; i++) {
+> >> +       for (i =3D 0; i < nr_pages; i++) {
+> >
+> > Here we assume the swap entry offset is contiguous. That is beyond
+> > your patch's scope. If in the future we want to have non-contiguous
+> > swap entries to swap out large pages, we will need to find out and
+> > change all the places that have the assumption of contiguous swap
+> > entries.
+>
+> Yes there are tonnes of places that make this assumption :)
 
-and
+Yes, that is why I want to have some wrapper API to mark the existing
+place that makes the assumption. Hopefully we can just change those
+wrapper functions to implement the non-contiguous version of swap.
 
-https://kernel.org/doc/html/latest/process/development-process.html
+Thank you for the patch.
 
-which will give you a broader picture.
-
-You could test linux-next, build random configs:
-
-"make randconfig"
-
-and see if you trigger a compiler warning, try to analyze it, understand
-it and fix it.
-
-It is a steep climb but it is a lot of fun. :-)
-
-HTH.
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+Chris
