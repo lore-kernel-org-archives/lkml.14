@@ -1,158 +1,195 @@
-Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from wfhigh8-smtp.messagingengine.com (wfhigh8-smtp.messagingengine.com [64.147.123.159])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89BC918AED
-	for <linux-kernel@vger.kernel.org>; Thu,  4 Apr 2024 00:17:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 781BB1B800;
+	Thu,  4 Apr 2024 00:17:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=64.147.123.159
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712189859; cv=none; b=f8hV/TGEugpBZ2rXpgR5Wl2rHsH+HGQ84uPChGX/9Ox+EkWe9OnzGZMlWl1T/beWC/WIw+O6qWHTgST99RJExzAZLW9zCWfO99Y5cDztv6+ngQ7rboZqtMyhbd6tYaauVV6GE7DEH4YIAgkm+z0d2Bv2VME7vrU5G6R62is7Kws=
+	t=1712189860; cv=none; b=TlcD+OFmdwKRfGZaNu4zh/eNY8F5MS42pKVG+UU31EK7lC6Nf9yt/fA+3kW3QJfYH6aD5EBaUANrr81h6x4OV+4fiDtTB8RSgMRuHYdO5xgJoQLALLGcwQYOy4sGanNDqwknVuELwVI8eAKsk/FYe3kv3uWJry+OphgEutQ9Czg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712189859; c=relaxed/simple;
-	bh=jhNHOysICI779o73Egt7UZHvLrPML8bG71A3jGDYzbM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=nIqvH+vvhEGMn98CHwr2NMh2/i0CEFdZQDJzwKkh7EXy6WlDfVpjvs15YMuzv9JLBHGPGsr4UDJqO7cOTybquG27HiRcXYcNZ63Gkj6PxxRBzNWVZiln9pUuAeR5ZvJy/gVBXe68A7fqiVeu0NoTc+2wABeDQ2cvmi/zw+jniDQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Ptn02ojM; arc=none smtp.client-ip=209.85.218.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1712189860; c=relaxed/simple;
+	bh=RigxiSjgWoFftuq3+PU0L2MA0yigmESUDun1HkWLGKg=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=SorWKfrbqPu/2ZEFGSh5lmFVsZP8wIEuHi2MSFATHOVTAlBgCOiWpcRv2M7t35EIalvE3Z5yjVd0yti19rjsQMVDSbStMKQpCit3RNVZH9kyGDhlV+fAziD2KtdeHE9bP9oS1+PnsKcIXlKcaKRRJNNukp4gvgnWaKwzmHqxJsg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ljones.dev; spf=none smtp.mailfrom=ljones.dev; dkim=pass (2048-bit key) header.d=ljones.dev header.i=@ljones.dev header.b=Tq/5Wc95; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=SNWUhbXI; arc=none smtp.client-ip=64.147.123.159
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ljones.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ljones.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Ptn02ojM"
-Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-a466fc8fcccso52170666b.1
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Apr 2024 17:17:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1712189856; x=1712794656; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ssLe+xRcfYlMx9xR0eZTwk414Gz+dUio7AdeAbJ5si0=;
-        b=Ptn02ojMpXPgsSpuFeVFbpXW5GYFwMsv5Z2hW/e8oMbZGnnov/tXNMGYCN6aBO9ne1
-         0fBL+zr+wfdxd5jUKrTUVBJW9C5lmj+KVxhqyegHnUwwAj/bzqaF82bog7HPS9hugl/M
-         pM/dZ76CTXMI/S5TJk5Ysg2ab8u38bdbfKwZJ6MTHzDEXmpD3XR0pqCfgqsw0kTTntRX
-         jApgZgYnsOBVyYMhqikkeOSx3aYCRplb56RZ42ssrcNpS15+dQfnnUni78/+jKltnZSI
-         M0m/50K0S/E8kWMzPiPpHfqDS/NFo1z2Wb3jGuhjayADa8X34X0mkWI2ChEhaGNetGaG
-         9Nuw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712189856; x=1712794656;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ssLe+xRcfYlMx9xR0eZTwk414Gz+dUio7AdeAbJ5si0=;
-        b=bc7tgLEiH8hahpnDgTA0IAfVOoCTNEV7XHbK6si7WE80Sn5il9X3GV1NF70Bs2zLWI
-         GtWEuJc13FYpTkE0U4JURNvWoHdhdv7P0U9nbiAC1m6xzsf8DTpdZw2AoJekarNADPLU
-         IiZIA7tVzSupmSWDnak9LQkVlULQbZ4MHUGqCDlXoK580leOzqJcnv19+awxoSsy9es6
-         BGJiFjNJueECI4Z6tMQ18oUK1iu/t8naJ+FwAtRA37Wqi5ZTspNPs4HM3Pj9Ze6GWg7q
-         e1PmE4HD5icsF4OWvjoSV5b68bVo0zvoKnb4W9+wirdujJpnkUWaZLuJc5Wxt4ptzXeu
-         qquw==
-X-Forwarded-Encrypted: i=1; AJvYcCW8E7T0IuXLo0FBXUt6+vrEip8vEO4jA4GqcZUHfZiFz7CnanR510q7N/TOlbtwRxSXxRjp0WlfnhJjvJVsx1O6BRMhlssRix1fFZTl
-X-Gm-Message-State: AOJu0YzkCr8PvsKCvHuFtvqQqYxkG/U7Vn1rxmaEtX01yiFJdc/fJWPR
-	unecR3hfbnQOy0j/ia/Bbow3pyDST9a/j+lX4JXEnOBOQE9OUP+UyM64Q/4sR1xyi00GeBzuzSt
-	bEfPHUWsHdZdpATrKFzxZ51V88RCyy8g3Wrs4
-X-Google-Smtp-Source: AGHT+IHn3kmEEVtY/Z4M+IGnFBXQCBBGjilKeGG8Z9DojfTAjitMp5NLvPl7buki9auqxl4foHhN3uLjmOlKu2CDHyU=
-X-Received: by 2002:a17:906:1b02:b0:a4e:6957:de24 with SMTP id
- o2-20020a1709061b0200b00a4e6957de24mr447385ejg.37.1712189855541; Wed, 03 Apr
- 2024 17:17:35 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=ljones.dev header.i=@ljones.dev header.b="Tq/5Wc95";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="SNWUhbXI"
+Received: from compute2.internal (compute2.nyi.internal [10.202.2.46])
+	by mailfhigh.west.internal (Postfix) with ESMTP id 2E0BD18000FB;
+	Wed,  3 Apr 2024 20:17:38 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute2.internal (MEProxy); Wed, 03 Apr 2024 20:17:38 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ljones.dev; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm3; t=1712189857;
+	 x=1712276257; bh=7Az00aewtRWp5Y61/pH0rVHkKLXtEg51elHeqTyC75w=; b=
+	Tq/5Wc95MFpvgByIlowrxezmgZ8xzqgxUyvGzRfBDOn6PwhyLOsoTzfCTRR1Z537
+	xEU3Oij3S73L6a4R1h7GfElwNkfkY02tb6kE9NSs352IwCMPzXaS3MPg4mKJDbNR
+	bB6UrfOETP1A8k2sQf+IFJEL1x1nZspQsPTgd03Oa9J7OsV6Aniia+R8I529BpLC
+	O7+ebci/LfBMXx/TTfvFVmYv+R2hPlqNxuaSAAXsRVYYEpcUm/hMlVmR61IYY34P
+	eA3cBjOBlwit4SpAZUZjeSXITf2Pr4WKrzGAqWHwHNK0fQnI1t3bfzKO6wuuzHad
+	2lF7CUMAlXD0j8rrEQhLTQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1712189857; x=
+	1712276257; bh=7Az00aewtRWp5Y61/pH0rVHkKLXtEg51elHeqTyC75w=; b=S
+	NWUhbXIYF66PiJMfzUa6HbmSwjR9GFZRk74fL79TCxCGsYjNfe5bfL4/oihBf+ye
+	OaE4r8uQjzCREeXSagHGX/Y13rNhZMg9YG/1paD1jfbk3iaTNkRCXJvETKW7SBT3
+	ELtXceV9dEh9JG8gt1WrBgilGUe/g4KHNje7FMLGjnWcCyvC4vzMNmcfTN6UNc0X
+	won02uik0FORX+nrWPEJvaj7AaPlb5IULXDGyCND6C2fLoq43FCI2pNhaJPf3mYm
+	JRScBwm4txHmaO0T6nUAdXqX27zC2k2NYdyiWdDIgL9ufils94wh//SskAftgN9G
+	3RK1FJxi0c0ma60Udw1og==
+X-ME-Sender: <xms:ofENZtSgHgSnlg2Qyna6sCcFEXJgZvdksqW45goBVJ8RvlA1xjW7VQ>
+    <xme:ofENZmwO76jX6T0APyZ85bxlzbSaFaHarDCZQjRLME8pXfwy46J_MymILbh_fZFHH
+    hpA42zppa0x7yrmJtY>
+X-ME-Received: <xmr:ofENZi2Erp8j2joyigBByVcRPxqZK3J6HPvSj-r1jdJK_819-ueD1JjCtp5o>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrudefjedgfeefucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucenucfjughrpefhvfevufffkffojghfgggtgfesth
+    ekredtredtjeenucfhrhhomhepfdfnuhhkvgcuffdrucflohhnvghsfdcuoehluhhkvges
+    lhhjohhnvghsrdguvghvqeenucggtffrrghtthgvrhhnpeduudetudehiedvvdevveelhf
+    egkeefffdvfeetuefgveefgffgffeiffeitdelieenucevlhhushhtvghrufhiiigvpedt
+    necurfgrrhgrmhepmhgrihhlfhhrohhmpehluhhkvgeslhhjohhnvghsrdguvghv
+X-ME-Proxy: <xmx:ofENZlAhbuxW_7SEqCndKD7DTCKJcnyBES3p7aafpMOr7a35Yw4iyw>
+    <xmx:ofENZmjT1e79b1SwdXQLJdr4wZvPz9zWUZIjqn77tOBRs1uGj5aIKg>
+    <xmx:ofENZpoPwWE0u0FvoZyjApBvDX7IU9H-tSQmFrs6qvFRLNU6gk8OvQ>
+    <xmx:ofENZhiSzXO63eXRwEtZRxLpz86TMuAbWu8EAU8RFDJy3j3CypaCrw>
+    <xmx:ofENZhXjhVSdwvvMBpuICtDbF7W_xWpKjy0FkkRWxPMrZu8VmGgC17fo>
+Feedback-ID: i5ec1447f:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
+ 3 Apr 2024 20:17:34 -0400 (EDT)
+From: "Luke D. Jones" <luke@ljones.dev>
+To: hdegoede@redhat.com
+Cc: corentin.chary@gmail.com,
+	ilpo.jarvinen@linux.intel.com,
+	platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	"Luke D. Jones" <luke@ljones.dev>
+Subject: [PATCH v4 8/9] platform/x86: asus-wmi: Add support for MCU powersave
+Date: Thu,  4 Apr 2024 13:16:51 +1300
+Message-ID: <20240404001652.86207-9-luke@ljones.dev>
+X-Mailer: git-send-email 2.44.0
+In-Reply-To: <20240404001652.86207-1-luke@ljones.dev>
+References: <20240404001652.86207-1-luke@ljones.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240402190652.310373-1-seanjc@google.com>
-In-Reply-To: <20240402190652.310373-1-seanjc@google.com>
-From: Vishal Annapurve <vannapurve@google.com>
-Date: Wed, 3 Apr 2024 17:17:19 -0700
-Message-ID: <CAGtprH9WB7=B3NrL9xDHvcONPBkQG=S1uCMDi91=oZ=5uNkcTA@mail.gmail.com>
-Subject: Re: [ANNOUNCE] KVM Microconference at LPC 2024
-To: Sean Christopherson <seanjc@google.com>
-Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	David Hildenbrand <david@redhat.com>, David Stevens <stevensd@chromium.org>, 
-	Paolo Bonzini <pbonzini@redhat.com>, Marc Zyngier <maz@kernel.org>, 
-	Oliver Upton <oliver.upton@linux.dev>, James Morse <james.morse@arm.com>, 
-	Suzuki K Poulose <suzuki.poulose@arm.com>, Zenghui Yu <yuzenghui@huawei.com>, 
-	Huacai Chen <chenhuacai@kernel.org>, Tianrui Zhao <zhaotianrui@loongson.cn>, 
-	Bibo Mao <maobibo@loongson.cn>, Michael Ellerman <mpe@ellerman.id.au>, 
-	Nicholas Piggin <npiggin@gmail.com>, Anup Patel <anup@brainfault.org>, 
-	Christian Borntraeger <borntraeger@linux.ibm.com>, Janosch Frank <frankja@linux.ibm.com>, 
-	Claudio Imbrenda <imbrenda@linux.ibm.com>, Xiaoyao Li <xiaoyao.li@intel.com>, 
-	Xu Yilun <yilun.xu@intel.com>, Chao Peng <chao.p.peng@linux.intel.com>, 
-	Fuad Tabba <tabba@google.com>, Jim Mattson <jmattson@google.com>, 
-	Jarkko Sakkinen <jarkko@kernel.org>, Maxim Levitsky <mlevitsk@redhat.com>, 
-	Anish Moorthy <amoorthy@google.com>, David Matlack <dmatlack@google.com>, 
-	Yu Zhang <yu.c.zhang@linux.intel.com>, Isaku Yamahata <isaku.yamahata@intel.com>, 
-	Edgecombe@google.com, Rick P <rick.p.edgecombe@intel.com>, 
-	=?UTF-8?B?TWlja2HDq2wgU2FsYcO8bg==?= <mic@digikod.net>, 
-	Vlastimil Babka <vbabka@suse.cz>, Ackerley Tng <ackerleytng@google.com>, 
-	Maciej Szmigiero <mail@maciej.szmigiero.name>, Quentin Perret <qperret@google.com>, 
-	Michael Roth <michael.roth@amd.com>, Wei Wang <wei.w.wang@intel.com>, 
-	Liam Merwick <liam.merwick@oracle.com>, Isaku Yamahata <isaku.yamahata@gmail.com>, 
-	Kirill Shutemov <kirill.shutemov@linux.intel.com>, 
-	Lai Jiangshan <jiangshan.ljs@antgroup.com>, Hou Wenlong <houwenlong.hwl@antgroup.com>, 
-	Xiong Zhang <xiong.y.zhang@linux.intel.com>, Jinrong Liang <ljr.kernel@gmail.com>, 
-	Like Xu <like.xu.linux@gmail.com>, Mingwei Zhang <mizhang@google.com>, 
-	Dapeng Mi <dapeng1.mi@intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Tue, Apr 2, 2024 at 12:08=E2=80=AFPM Sean Christopherson <seanjc@google.=
-com> wrote:
->
-> We are planning on submitting a CFP to host a second annual KVM Microconf=
-erence
-> at Linux Plumbers Conference 2024 (https://lpc.events/event/18).  To help=
- make
-> our submission as strong as possible, please respond if you will likely a=
-ttend,
-> and/or have a potential topic that you would like to include in the propo=
-sal.
-> The tentative submission is below.
->
-> Note!  This is extremely time sensitive, as the deadline for submitting i=
-s
-> April 4th (yeah, we completely missed the initial announcement).
->
-> Sorry for the super short notice. :-(
->
-> P.S. The Cc list is very ad hoc, please forward at will.
->
-> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> KVM Microconference
-> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
->
-> KVM (Kernel-based Virtual Machine) enables the use of hardware features t=
-o
-> improve the efficiency, performance, and security of virtual machines (VM=
-s)
-> created and managed by userspace.  KVM was originally developed to accele=
-rate
-> VMs running a traditional kernel and operating system, in a world where t=
-he
-> host kernel and userspace are part of the VM's trusted computing base (TC=
-B).
->
-> KVM has long since expanded to cover a wide (and growing) array of use ca=
-ses,
-> e.g. sandboxing untrusted workloads, deprivileging third party code, redu=
-cing
-> the TCB of security sensitive workloads, etc.  The expectations placed on=
- KVM
-> have also matured accordingly, e.g. functionality that once was "good eno=
-ugh"
-> no longer meets the needs and demands of KVM users.
->
-> The KVM Microconference will focus on how to evolve KVM and adjacent subs=
-ystems
-> in order to satisfy new and upcoming requirements.  Of particular interes=
-t is
-> extending and enhancing guest_memfd, a guest-first memory API that was he=
-avily
-> discussed at the 2023 KVM Microconference, and merged in v6.8.
->
-> Potential Topics:
->    - Removing guest memory from the host kernel's direct map[1]
->    - Mapping guest_memfd into host userspace[2]
->    - Hugepage support for guest_memfd[3]
+Add support for an MCU powersave WMI call. This is intended to set the
+MCU in to a low-power mode when sleeping. This mode can cut sleep power
+use by around half.
 
-I and Ackerley would like to discuss 1G page support with guest_memfd
-and its implications on host MM and IOMMU implementation.
+Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+Signed-off-by: Luke D. Jones <luke@ljones.dev>
+---
+ .../ABI/testing/sysfs-platform-asus-wmi       |  9 ++++
+ drivers/platform/x86/asus-wmi.c               | 50 +++++++++++++++++++
+ 2 files changed, 59 insertions(+)
 
-Regards,
-Vishal
+diff --git a/Documentation/ABI/testing/sysfs-platform-asus-wmi b/Documentation/ABI/testing/sysfs-platform-asus-wmi
+index 72933527d2e4..28144371a0f1 100644
+--- a/Documentation/ABI/testing/sysfs-platform-asus-wmi
++++ b/Documentation/ABI/testing/sysfs-platform-asus-wmi
+@@ -203,3 +203,12 @@ Description:
+ 		Set if the BIOS POST sound is played on boot.
+ 			* 0 - False,
+ 			* 1 - True
++
++What:		/sys/devices/platform/<platform>/mcu_powersave
++Date:		Apr 2024
++KernelVersion:	6.10
++Contact:	"Luke Jones" <luke@ljones.dev>
++Description:
++		Set if the MCU can go in to low-power mode on system sleep
++			* 0 - False,
++			* 1 - True
+diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
+index ab98f91e573c..d06d9e0c498c 100644
+--- a/drivers/platform/x86/asus-wmi.c
++++ b/drivers/platform/x86/asus-wmi.c
+@@ -1303,6 +1303,53 @@ static ssize_t nv_temp_target_show(struct device *dev,
+ }
+ static DEVICE_ATTR_RW(nv_temp_target);
+ 
++/* Ally MCU Powersave ********************************************************/
++static ssize_t mcu_powersave_show(struct device *dev,
++				   struct device_attribute *attr, char *buf)
++{
++	struct asus_wmi *asus = dev_get_drvdata(dev);
++	int result;
++
++	result = asus_wmi_get_devstate_simple(asus, ASUS_WMI_DEVID_MCU_POWERSAVE);
++	if (result < 0)
++		return result;
++
++	return sysfs_emit(buf, "%d\n", result);
++}
++
++static ssize_t mcu_powersave_store(struct device *dev,
++				    struct device_attribute *attr,
++				    const char *buf, size_t count)
++{
++	int result, err;
++	u32 enable;
++
++	struct asus_wmi *asus = dev_get_drvdata(dev);
++
++	result = kstrtou32(buf, 10, &enable);
++	if (result)
++		return result;
++
++	if (enable > 1)
++		return -EINVAL;
++
++	err = asus_wmi_set_devstate(ASUS_WMI_DEVID_MCU_POWERSAVE, enable, &result);
++	if (err) {
++		pr_warn("Failed to set MCU powersave: %d\n", err);
++		return err;
++	}
++
++	if (result > 1) {
++		pr_warn("Failed to set MCU powersave (result): 0x%x\n", result);
++		return -EIO;
++	}
++
++	sysfs_notify(&asus->platform_device->dev.kobj, NULL, "mcu_powersave");
++
++	return count;
++}
++static DEVICE_ATTR_RW(mcu_powersave);
++
+ /* Battery ********************************************************************/
+ 
+ /* The battery maximum charging percentage */
+@@ -4317,6 +4364,7 @@ static struct attribute *platform_attributes[] = {
+ 	&dev_attr_ppt_platform_sppt.attr,
+ 	&dev_attr_nv_dynamic_boost.attr,
+ 	&dev_attr_nv_temp_target.attr,
++	&dev_attr_mcu_powersave.attr,
+ 	&dev_attr_boot_sound.attr,
+ 	&dev_attr_panel_od.attr,
+ 	&dev_attr_mini_led_mode.attr,
+@@ -4370,6 +4418,8 @@ static umode_t asus_sysfs_is_visible(struct kobject *kobj,
+ 		devid = ASUS_WMI_DEVID_NV_DYN_BOOST;
+ 	else if (attr == &dev_attr_nv_temp_target.attr)
+ 		devid = ASUS_WMI_DEVID_NV_THERM_TARGET;
++	else if (attr == &dev_attr_mcu_powersave.attr)
++		devid = ASUS_WMI_DEVID_MCU_POWERSAVE;
+ 	else if (attr == &dev_attr_boot_sound.attr)
+ 		devid = ASUS_WMI_DEVID_BOOT_SOUND;
+ 	else if (attr == &dev_attr_panel_od.attr)
+-- 
+2.44.0
+
