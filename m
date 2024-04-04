@@ -1,104 +1,109 @@
-Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
+Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com [209.85.208.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AFEC26AC2
-	for <linux-kernel@vger.kernel.org>; Thu,  4 Apr 2024 10:33:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C631A74E10
+	for <linux-kernel@vger.kernel.org>; Thu,  4 Apr 2024 10:34:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712226815; cv=none; b=EZIkEtVvMMD9QCXbKMwhGjwMRdT5rJjSDOnOs8YUrJPg3+7JeCyvz9JTyx4aR6cISC6FktlVQMxc7uyHN1uYaGDA/PYNaAWg0jFR7fONjf6bhLaFUqPBacJos9hSXRBnIbGWuG9X6+tydSEw8ZrzXo4sR0IxWtk0EbQEznxNm1Y=
+	t=1712226867; cv=none; b=jx/2LB0C7++NQ+BHQ380DBWrnDbLSq7/+LScIE618EBjDFHI8zIVi8KlpHXU+7Yn3m7ZMFsSGjhQF9VoAdZ/Oa435vg7DTf7k3E2px8ad77Zmf8UTuoXLYVXDfCyIXN37hxV5rbb0YeP1lGvNnzk7dwfJuAvz6Eq/fL7RqJedAk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712226815; c=relaxed/simple;
-	bh=taANS0pFnx0FrvL+3Vfun+Vs2ztHPpMenCXXjBFTVnM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=eQSgWU7+8qg5alqXiKI/C3XGO2MabJm71aeu59BqwrJ1qTEbkAspCLl87ucP+sxm0g1Ts/v/clHruEbFvTneQmJpk/Sbxp/W/CJuShgKqRUId5xpHj5fXwMD4B3l5jLPdkqSfsUj/zsZpCsqiTYBMYK61DNdETf8ve7MY7irBZA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=S8MX3Jb8; arc=none smtp.client-ip=209.85.208.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1712226867; c=relaxed/simple;
+	bh=2/q4jfOj6U1einCYXJdHvK78eAQ3vHaYbSRzBTdpsBA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=OWS5a7Fk2WrZ2QsP2D6g5EAmoOugBkUNqOD+D87hz7pwSce76rMqc5ZWsUSVQuw8zgRqfkhWmUgyLbnoRmKWYsgGw7ta9OPvV7SXKROBxKbjAz12+qIXVE32oiQmE9afgDb6XLcQ1NFvsI6YIHz3JpvJeXkkJg1QYRdfR3ukZOA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=m9/oW3Kj; arc=none smtp.client-ip=209.85.208.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="S8MX3Jb8"
-Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-56e1e6e1d01so605438a12.1
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Apr 2024 03:33:33 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="m9/oW3Kj"
+Received: by mail-lj1-f171.google.com with SMTP id 38308e7fff4ca-2d82422d202so1477261fa.0
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Apr 2024 03:34:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1712226812; x=1712831612; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=4nprhaK+Y4soPnmXX5Z5/fOdcoBVk/SC/U1liNLz3dk=;
-        b=S8MX3Jb8Ef/6c4PfI0RjP7xeLIvwQ+/h/dmAgL5VKCml9iFXOTf+VAHSPylBj+6fuX
-         yB7eHTbhU0sIeUwjputKQhPs7+Dlo1vCIAl5v53arTbpyx2QrpmfDg6G60arlSFjZ4xl
-         MmRHHIxTuqRO9yT8EB65VCdOr9zBy53H8Zx2hhAy0P+bVkB3FpktW8Gm4QB6bLe1lDeq
-         eYDY40pJdDPV4ASYMg2d1pWzClb1mMqbe9LPkPRoxKufaZun7UicsT2/26b1vyDQeQHy
-         bkda6qXyaETqz/0dPATsaOPWkxm473twCZ0/sgmTu5N+FSjG7HF0mN02D4/8uCmR5t0A
-         g2Kw==
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1712226863; x=1712831663; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=h0yWpEBMuRREaN4Rfpr4/p3Cbe2kX6z7SdkYvYffV00=;
+        b=m9/oW3KjpOr27N9nfPPmNzaCEB8cK9KH3zQA+Xy7uidbef5hRIvmfyD1u9Y06YStT+
+         BzPXWgetDznouQS8INkOz2wS91EWVtiApc5C1/l5PhRXvJhKI4+/+kX2gqDhpRIJrIi5
+         HUeipZ+CFkuPtDzHlw5I4YWsYBMydVUwnJ7UKmE4RH4HjmQIw3TDdx0uXM5vnB8NA+fv
+         nT1CCzOP+mdWKaAxpx6Wo5GWFhLq/TeKDcxbUXNkhuR/f5k8Iwa/RQKndW1+aKlQ6Uum
+         DkdXKyrZ14urAGlK7qL+nAvTTf8kZEwT+BF5nAlk8WypzhpmTcwnHa4bBu477jftqZfc
+         ZArA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712226812; x=1712831612;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=4nprhaK+Y4soPnmXX5Z5/fOdcoBVk/SC/U1liNLz3dk=;
-        b=I3T9nwKMwZG7AqOr6iLwy6MVylhR+3XJkhfxZRYLTDaFgPcJEHfeyI9qr2r/rp0VGX
-         BXPFw0WgZEHsIzmcKlFNyzGO6JA6PqXINvDlO1JPDNFzgjKa6y2fmjOh4flY/0UOWELn
-         YFYJqC5PIflDPPOzjOTi+D78cfUcsw+aBS33jGDqWHgPPZb4VHJL0eWVsRWJUpdI1JEv
-         YDeCRxCHDBo/nzvJufvl1dg8mAHXg2gx3RCX+CQzvTEz2w2JfIefgtfZwPcjQ6u7PDJG
-         fJ98GPGMdhiMbouxR+LqxOWQ9JQuNP9LqJAGBlp35x8ga66bCOI4FbBj9x5oZ2dtTGUm
-         fRGw==
-X-Forwarded-Encrypted: i=1; AJvYcCWHx0akTx4AFJ+mD/CyW8ana9v1SxkOOaz04n8kNdgfOiK9SVB35o55pyHk5Bk9ueBppZuqI0luTAsHObhONX03B2R0Aq55FlkAgSOi
-X-Gm-Message-State: AOJu0YyYHvBNPWyXb4SgKTde/+aKGhFk/a3vCYHKfAZkK0voJrPdO5B0
-	G6B519RFjOJvYwEyYiJ4CYKJCF4n2RCvkz7M2BRXMa0dv2zVpypjYFhK+cieXTI=
-X-Google-Smtp-Source: AGHT+IFtAS+XwA0BTekopAetIioLl7wHkCMuYQDhbu67X4/QjYP1QMC8tb5ZGpmUksyPG3vKmrJkZw==
-X-Received: by 2002:a50:9ec1:0:b0:56e:3c6:802 with SMTP id a59-20020a509ec1000000b0056e03c60802mr1277757edf.2.1712226811764;
-        Thu, 04 Apr 2024 03:33:31 -0700 (PDT)
-Received: from ?IPV6:2003:e5:873a:400:704b:6dbb:e7c0:786e? (p200300e5873a0400704b6dbbe7c0786e.dip0.t-ipconnect.de. [2003:e5:873a:400:704b:6dbb:e7c0:786e])
-        by smtp.gmail.com with ESMTPSA id fd6-20020a056402388600b0056c53ea5affsm8842085edb.77.2024.04.04.03.33.31
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 04 Apr 2024 03:33:31 -0700 (PDT)
-Message-ID: <b248ff79-18c6-4a0f-bfd5-02772f181d33@suse.com>
-Date: Thu, 4 Apr 2024 12:33:31 +0200
+        d=1e100.net; s=20230601; t=1712226863; x=1712831663;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=h0yWpEBMuRREaN4Rfpr4/p3Cbe2kX6z7SdkYvYffV00=;
+        b=eus3i/pNxdAl7T4HspoBsrsIqyO88P2q980PncmbmDBE6JkVrBlhEyW4MAB0IUWmmi
+         ygNBEvLVFd9XLurpcEgFObsTJkoncymyDN+mQ0MYqdfqo2hVygsH3PW9XanfxA7HH2Y9
+         U01WhZpBYWhRwKwo13F3spalXyjSugQeubAyILGcTgbvfnmUyXMs80JTbZqz0DrgyB1x
+         DtP3+Xq4XiGj43VCVDojgqV4mi0W2oJ4GIPM74dg51SVf2UhKtS0zk/Ign+seZBXpTpR
+         K/hqjnhWDXq51e+XlSfZcvfHUP6QUspi5GwqsGtj60YnK7kXdrmap4/IuKheihQGa+bX
+         L6Cw==
+X-Forwarded-Encrypted: i=1; AJvYcCXFFi7V03HshoY/prEttlrR0kuGyBoFMnSl8SiGQcGWaJmeI2hCCQOKfPsd/wDp90+hbcEe3DceCt7uTXi+grN4AJQm66A5Jd/aYPlF
+X-Gm-Message-State: AOJu0YzCZ0JlN+KQzF8BZklwe8llygvfaL+vHRQ/CP9nWrmioqDSaxZT
+	xOaPU0paRepdeVJwz/sT1XSQ/kpKxHf4lB8s9QMHf/S1HMkRQDwkVecM7uLs7/U=
+X-Google-Smtp-Source: AGHT+IGgwXcPXNss81WaNWWIVnkPiMwtrKqgSEy7SDtHw2OIS4sQFnmrJ6LWngbeMCuWYCY0SDTSXA==
+X-Received: by 2002:a2e:99cf:0:b0:2d6:c59e:37bd with SMTP id l15-20020a2e99cf000000b002d6c59e37bdmr1469136ljj.3.1712226862690;
+        Thu, 04 Apr 2024 03:34:22 -0700 (PDT)
+Received: from carbon-x1.. ([2a01:e0a:999:a3a0:555b:1d2e:132d:dd32])
+        by smtp.gmail.com with ESMTPSA id ju8-20020a05600c56c800b00416253a0dbdsm2171340wmb.36.2024.04.04.03.34.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 04 Apr 2024 03:34:22 -0700 (PDT)
+From: =?UTF-8?q?Cl=C3=A9ment=20L=C3=A9ger?= <cleger@rivosinc.com>
+To: Jonathan Corbet <corbet@lwn.net>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Conor Dooley <conor@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Anup Patel <anup@brainfault.org>,
+	Shuah Khan <shuah@kernel.org>
+Cc: =?UTF-8?q?Cl=C3=A9ment=20L=C3=A9ger?= <cleger@rivosinc.com>,
+	Atish Patra <atishp@atishpatra.org>,
+	linux-doc@vger.kernel.org,
+	linux-riscv@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	kvm@vger.kernel.org,
+	kvm-riscv@lists.infradead.org,
+	linux-kselftest@vger.kernel.org
+Subject: [PATCH 0/5] Add parsing for Zimop ISA extension
+Date: Thu,  4 Apr 2024 12:32:46 +0200
+Message-ID: <20240404103254.1752834-1-cleger@rivosinc.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 3/4] x86/boot: Explicitly pass NX enabling status
-Content-Language: en-US
-To: Dave Hansen <dave.hansen@linux.intel.com>, linux-kernel@vger.kernel.org
-Cc: tglx@linutronix.de, x86@kernel.org, bp@alien8.de, kai.huang@intel.com
-References: <20240403153508.7328E749@davehans-spike.ostc.intel.com>
- <20240403153513.76C52354@davehans-spike.ostc.intel.com>
-From: =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
-In-Reply-To: <20240403153513.76C52354@davehans-spike.ostc.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On 03.04.24 17:35, Dave Hansen wrote:
-> From: Dave Hansen <dave.hansen@linux.intel.com>
-> 
-> The kernel sometimes needs to mask unsupported bits out of page
-> table entries.  It does that with a mask: '__supported_pte_mask'.
-> 
-> That mask can obviously only contain the No-eXecute bit (_PAGE_NX)
-> on hardware where NX is supported.  x86_configure_nx() checks the
-> boot CPU's NX support and adjusts the mask appropriately.
-> 
-> But it doesn't check support directly.  It uses the venerable
-> 'boot_cpu_data' which is a software approximation of the actual CPU
-> support.  Unfortunately, Xen wants to set up '__supported_pte_mask'
-> before 'boot_cpu_data' has been initialized.  It hacks around this
-> problem by repeating some of the 'boot_cpu_data' setup *just* for
-> NX.
-> 
-> Have x86_configure_nx() stop consulting 'boot_cpu_data' and move
-> the NX detection to the caller.
-> 
-> No functional change.  That will come later.
-> 
-> Signed-off-by: Dave Hansen <dave.hansen@linux.intel.com>
-> Reviewed-by: Kai Huang <kai.huang@intel.com>
+The Zimop ISA extension was ratified recently. This series adds support
+for parsing it from riscv,isa, hwprobe export and kvm support for
+Guest/VM.
 
-Reviewed-by: Juergen Gross <jgross@suse.com>
+Clément Léger (5):
+  dt-bindings: riscv: add Zimop ISA extension description
+  riscv: add ISA extension parsing for Zimop
+  riscv: hwprobe: export Zimop ISA extension
+  RISC-V: KVM: Allow Zimop extension for Guest/VM
+  KVM: riscv: selftests: Add Zimop extension to get-reg-list test
 
+ Documentation/arch/riscv/hwprobe.rst                    | 4 ++++
+ Documentation/devicetree/bindings/riscv/extensions.yaml | 5 +++++
+ arch/riscv/include/asm/hwcap.h                          | 1 +
+ arch/riscv/include/uapi/asm/hwprobe.h                   | 1 +
+ arch/riscv/include/uapi/asm/kvm.h                       | 1 +
+ arch/riscv/kernel/cpufeature.c                          | 1 +
+ arch/riscv/kernel/sys_hwprobe.c                         | 1 +
+ arch/riscv/kvm/vcpu_onereg.c                            | 2 ++
+ tools/testing/selftests/kvm/riscv/get-reg-list.c        | 4 ++++
+ 9 files changed, 20 insertions(+)
 
-Juergen
+-- 
+2.43.0
 
