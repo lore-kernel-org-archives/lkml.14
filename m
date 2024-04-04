@@ -1,149 +1,131 @@
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F160745C3;
-	Thu,  4 Apr 2024 11:49:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72E07745C3;
+	Thu,  4 Apr 2024 11:49:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712231351; cv=none; b=Jeg/o7vGtFJL8/1sghmDi6LLW85evpnGqvTevvXBIeDTLGSwVvSF4aqi8crunxduP9sLyWC8rXBkj+Y09BHIr3gCCKJZAVkZuwIU6NFUnarEv+klroOikDlg50WBeSPlvlb42DgbLs/6oNU4q1da0gqJcr0+bxP1dWjn2+cL3Wg=
+	t=1712231363; cv=none; b=kUOYTvzjSBftaQ6JAOlVfj7eW8B3strXSQwHf7rOCCBnLW6diSqi11YE82/1GuiwLKZRxJXE/gxiTZGIuJlic8xSNNB/PfMY6xnQK9b7qiPabrVXSGqxiJVgyaS6D4HO0ed382JRTs9fT99Jfx6PDmVv0t9taNl4BNFMBiY1tdg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712231351; c=relaxed/simple;
-	bh=BWoUsoa5YB4lhI10K0YeWtvCr1zRzQPNRlj6UNtfjfo=;
-	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=mmYeXSOqG53+nQFFMV7VNSIn2Bw1bmyBTg4MPk1B+oHmNVsa9WrloAT1KL8DrPiqkYuwmwwVDsXEY/2TT8JHeN+JXu2xi4ZDsfYHAHBWS2vX0iz20o+rxuZvurytTUMRwFvSKh9DJ7gTcWolb7rIn/Ij+ckpt0bvnogBe0QyXVE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=w4lYWrL7; arc=none smtp.client-ip=46.235.227.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1712231363; c=relaxed/simple;
+	bh=nsDNhESopgrlyLMUX6pXqRsQjNY64bQQgEYbtEgxgBE=;
+	h=From:To:Subject:Date:Message-Id:MIME-Version; b=geJC3byXHD/vXgJfbraktL1wpaa/e4dG4nMo7pwov0IyVssaLfJJemGMdQypoR4I4OUkSZxLRqoj6btegXHdbB0uxxQuXHxSavuvxqRGz+Yx0oGyr0PXxDUTNQN0DYFMdCKBn853hZ2kEClfRsYVU4T/oZJW/pu8G3G0Gle2Y4k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=gfTwZcZ0; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=GmZuFjP+; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="w4lYWrL7"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1712231348;
-	bh=BWoUsoa5YB4lhI10K0YeWtvCr1zRzQPNRlj6UNtfjfo=;
-	h=Date:Cc:Subject:To:References:From:In-Reply-To:From;
-	b=w4lYWrL79dG6OT+yr360jTrTlooYPA9oOV0lcECKbTzYDAVM+u5a0HQrWoOLK2HsJ
-	 fzzzaSOcSvvoDCPuDpY1ADsCeyzTo782fbYliQoEpXqqxPI4J7PBzSBlwvTDWbQ3/t
-	 FgHLGVifUo/umZKeb79LHvaTN6j38cEMx1zAP/ZWMGUZU2VCtezsJiAH2t0JNRL9aE
-	 +WOtaRU043PRLXGF+o4bw/UNWZ7oJP2Z+oEYgkpmoYE6fgyFZdC6Za6+MebykW9KSf
-	 Ro89hmvOcVMNAKGquCziwN/KtX57SMBPVIUi3+oWgVrXmdyvDaWnmQwR2XVQ4xNZmG
-	 CP/vgvBOfiAzQ==
-Received: from [10.193.1.1] (broslavsky.collaboradmins.com [68.183.210.73])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="gfTwZcZ0";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="GmZuFjP+"
+Received: from imap2.dmz-prg2.suse.org (imap2.dmz-prg2.suse.org [10.150.64.98])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	(Authenticated sender: usama.anjum)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 6FFC5378200D;
-	Thu,  4 Apr 2024 11:49:07 +0000 (UTC)
-Message-ID: <7942f5b1-4712-4350-8d3f-d06f7be65fde@collabora.com>
-Date: Thu, 4 Apr 2024 16:49:39 +0500
+	by smtp-out2.suse.de (Postfix) with ESMTPS id A32E65D8F8;
+	Thu,  4 Apr 2024 11:49:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1712231353; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=/x9kZleEmr9UJKwNDU1GNGFTF512qoraQs7ixZ7EWwk=;
+	b=gfTwZcZ0rHANC8/CboSHxZMhI7ZD42XjKhsHofmdSqY7PGURAD3NHOD4+gH01veMPoEqcL
+	gzX50WWvtMrq2wy7sOv4kbgsywX0tmCpkYHM154Hlfj3l/ewsiDIP7T8QpTwYZS6bYbLsI
+	qdMr11itivVub0nyd/qC+Km1o1p1roA=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1712231353;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=/x9kZleEmr9UJKwNDU1GNGFTF512qoraQs7ixZ7EWwk=;
+	b=GmZuFjP+6lm4IdGjqZGmtdEMX68Unvt5IgpnK4khuPUC9hHIfuM8gVH4L9Vm8wIkeHLEYK
+	v1wxGKIRB+XDueDw==
+Authentication-Results: smtp-out2.suse.de;
+	none
+Received: from imap2.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap2.dmz-prg2.suse.org (Postfix) with ESMTPS id 8E2DD13298;
+	Thu,  4 Apr 2024 11:49:13 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap2.dmz-prg2.suse.org with ESMTPSA
+	id Y5qKIrmTDmYZUwAAn2gu4w
+	(envelope-from <tbogendoerfer@suse.de>); Thu, 04 Apr 2024 11:49:13 +0000
+From: Thomas Bogendoerfer <tbogendoerfer@suse.de>
+To: Jay Vosburgh <j.vosburgh@gmail.com>,
+	Andy Gospodarek <andy@greyhouse.net>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH net] bonding: 802.3ad: Avoid packet loss when switching aggregator
+Date: Thu,  4 Apr 2024 13:49:08 +0200
+Message-Id: <20240404114908.134034-1-tbogendoerfer@suse.de>
+X-Mailer: git-send-email 2.35.3
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Cc: Muhammad Usama Anjum <usama.anjum@collabora.com>, kernel@collabora.com,
- linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] selftests: x86: conform test to TAP format output
-To: Shuah Khan <shuah@kernel.org>
-References: <20240307183708.2857513-1-usama.anjum@collabora.com>
- <3c3b8d18-7f52-4914-8a1e-8e32b4dd8b20@collabora.com>
-Content-Language: en-US
-From: Muhammad Usama Anjum <usama.anjum@collabora.com>
-In-Reply-To: <3c3b8d18-7f52-4914-8a1e-8e32b4dd8b20@collabora.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Spam-Score: 5.21
+X-Spamd-Result: default: False [5.21 / 50.00];
+	 ARC_NA(0.00)[];
+	 RCVD_VIA_SMTP_AUTH(0.00)[];
+	 FROM_HAS_DN(0.00)[];
+	 TO_DN_SOME(0.00)[];
+	 FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	 R_MISSING_CHARSET(2.50)[];
+	 TAGGED_RCPT(0.00)[];
+	 MIME_GOOD(-0.10)[text/plain];
+	 BROKEN_CONTENT_TYPE(1.50)[];
+	 TO_MATCH_ENVRCPT_ALL(0.00)[];
+	 NEURAL_HAM_LONG(-0.99)[-0.989];
+	 RCVD_COUNT_THREE(0.00)[3];
+	 DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	 NEURAL_HAM_SHORT(-0.20)[-0.999];
+	 RCPT_COUNT_SEVEN(0.00)[8];
+	 MID_CONTAINS_FROM(1.00)[];
+	 DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:email];
+	 FREEMAIL_TO(0.00)[gmail.com,greyhouse.net,davemloft.net,google.com,kernel.org,redhat.com,vger.kernel.org];
+	 FUZZY_BLOCKED(0.00)[rspamd.com];
+	 FROM_EQ_ENVFROM(0.00)[];
+	 MIME_TRACE(0.00)[0:+];
+	 RCVD_TLS_ALL(0.00)[];
+	 SUSPICIOUS_RECIPS(1.50)[]
+X-Spam-Level: *****
+X-Spam-Flag: NO
 
-Soft reminder
+If selection logic decides to switch to a new aggregator it disables
+all ports of the old aggregator, but doesn't enable ports on
+the new aggregator. These ports will eventually be enabled when
+the next LACPDU is received, which might take some time and without an
+active port transmitted frames are dropped. Avoid this by enabling
+already collected ports of the new aggregator immediately.
 
-On 3/25/24 12:07 PM, Muhammad Usama Anjum wrote:
-> Soft reminder
-> 
-> On 3/7/24 11:37 PM, Muhammad Usama Anjum wrote:
->> Conform the layout, informational and status messages to TAP. No
->> functional change is intended other than the layout of output messages.
->>
->> Signed-off-by: Muhammad Usama Anjum <usama.anjum@collabora.com>
->> ---
->>  tools/testing/selftests/x86/vdso_restorer.c | 29 +++++++++------------
->>  1 file changed, 12 insertions(+), 17 deletions(-)
->>
->> diff --git a/tools/testing/selftests/x86/vdso_restorer.c b/tools/testing/selftests/x86/vdso_restorer.c
->> index fe99f24341554..f621167424a9c 100644
->> --- a/tools/testing/selftests/x86/vdso_restorer.c
->> +++ b/tools/testing/selftests/x86/vdso_restorer.c
->> @@ -21,6 +21,7 @@
->>  #include <unistd.h>
->>  #include <syscall.h>
->>  #include <sys/syscall.h>
->> +#include "../kselftest.h"
->>  
->>  /* Open-code this -- the headers are too messy to easily use them. */
->>  struct real_sigaction {
->> @@ -44,17 +45,19 @@ static void handler_without_siginfo(int sig)
->>  
->>  int main()
->>  {
->> -	int nerrs = 0;
->>  	struct real_sigaction sa;
->>  
->> +	ksft_print_header();
->> +	ksft_set_plan(2);
->> +
->>  	void *vdso = dlopen("linux-vdso.so.1",
->>  			    RTLD_LAZY | RTLD_LOCAL | RTLD_NOLOAD);
->>  	if (!vdso)
->>  		vdso = dlopen("linux-gate.so.1",
->>  			      RTLD_LAZY | RTLD_LOCAL | RTLD_NOLOAD);
->>  	if (!vdso) {
->> -		printf("[SKIP]\tFailed to find vDSO.  Tests are not expected to work.\n");
->> -		return 0;
->> +		ksft_print_msg("[SKIP]\tFailed to find vDSO. Tests are not expected to work.\n");
->> +		return KSFT_SKIP;
->>  	}
->>  
->>  	memset(&sa, 0, sizeof(sa));
->> @@ -62,21 +65,16 @@ int main()
->>  	sa.flags = SA_SIGINFO;
->>  	sa.restorer = NULL;	/* request kernel-provided restorer */
->>  
->> -	printf("[RUN]\tRaise a signal, SA_SIGINFO, sa.restorer == NULL\n");
->> +	ksft_print_msg("Raise a signal, SA_SIGINFO, sa.restorer == NULL\n");
->>  
->>  	if (syscall(SYS_rt_sigaction, SIGUSR1, &sa, NULL, 8) != 0)
->>  		err(1, "raw rt_sigaction syscall");
->>  
->>  	raise(SIGUSR1);
->>  
->> -	if (handler_called) {
->> -		printf("[OK]\tSA_SIGINFO handler returned successfully\n");
->> -	} else {
->> -		printf("[FAIL]\tSA_SIGINFO handler was not called\n");
->> -		nerrs++;
->> -	}
->> +	ksft_test_result(handler_called, "SA_SIGINFO handler returned\n");
->>  
->> -	printf("[RUN]\tRaise a signal, !SA_SIGINFO, sa.restorer == NULL\n");
->> +	ksft_print_msg("Raise a signal, !SA_SIGINFO, sa.restorer == NULL\n");
->>  
->>  	sa.flags = 0;
->>  	sa.handler = handler_without_siginfo;
->> @@ -86,10 +84,7 @@ int main()
->>  
->>  	raise(SIGUSR1);
->>  
->> -	if (handler_called) {
->> -		printf("[OK]\t!SA_SIGINFO handler returned successfully\n");
->> -	} else {
->> -		printf("[FAIL]\t!SA_SIGINFO handler was not called\n");
->> -		nerrs++;
->> -	}
->> +	ksft_test_result(handler_called, "SA_SIGINFO handler returned\n");
->> +
->> +	ksft_finished();
->>  }
-> 
+Signed-off-by: Thomas Bogendoerfer <tbogendoerfer@suse.de>
+---
+ drivers/net/bonding/bond_3ad.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
+diff --git a/drivers/net/bonding/bond_3ad.c b/drivers/net/bonding/bond_3ad.c
+index c6807e473ab7..529e2a7c51e2 100644
+--- a/drivers/net/bonding/bond_3ad.c
++++ b/drivers/net/bonding/bond_3ad.c
+@@ -1876,6 +1876,13 @@ static void ad_agg_selection_logic(struct aggregator *agg,
+ 				__disable_port(port);
+ 			}
+ 		}
++
++		/* enable ports on new active aggregator */
++		for (port = best->lag_ports; port;
++			port = port->next_port_in_aggregator) {
++			__enable_port(port);
++		}
++
+ 		/* Slave array needs update. */
+ 		*update_slave_arr = true;
+ 	}
 -- 
-BR,
-Muhammad Usama Anjum
+2.35.3
+
