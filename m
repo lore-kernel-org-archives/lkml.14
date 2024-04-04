@@ -1,220 +1,119 @@
-Received: from mail-pg1-f178.google.com (mail-pg1-f178.google.com [209.85.215.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2399E12B163
-	for <linux-kernel@vger.kernel.org>; Thu,  4 Apr 2024 17:37:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B47BE848A
+	for <linux-kernel@vger.kernel.org>; Thu,  4 Apr 2024 17:39:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712252239; cv=none; b=rpBGIiny855SRlTbVbqmlfkVY6tUmluH6wNpuilr81TH1Qq2nK2LclP2uWd2bb1TkIv7JzwDRfGjuC2DOdxdEF+nUWRengbhBZBYh1V1YhCi88wsN8yox5HH321ZN4OuDjpwE/PxoOEhWB05A5wti5Y3wdGKZHP37taNU34nHEc=
+	t=1712252341; cv=none; b=lZUmSFYoY2KzrYGIYiYX5uFt3nTSput7eVzYuF48FM8NR7bZvRZjTY9iE37oDDXLyxLc+RE4Fz/74M6rURRSqwg7Y6Jc0DbGxjs0Y84u50miu30R4EfpB5tk6qOBP+AOWLdx3apTHTI8qZNzlw1woB63p4V3A/0juRXmAKbO7pc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712252239; c=relaxed/simple;
-	bh=qNxmB9dvz4cGF0PgT9uMqcRVLK8IoGpeK+milK+2GFg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Z8L6G0129Q2eOESzpZMEHq0SPk6a/PbNWXawlxqGuh2AZ4zhf7XAm7O+UVpknnqJsr8iFYx5KcmIdeWggRpRD8zHrxx5lfTCaQVYs4O0Yb90R3U/2g3KqNlmAuE1GciQLsT7h9M5AaOJFKDBaJXdFsm5LtnskSSQd8M10CUYoF8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=ld+nTY7U; arc=none smtp.client-ip=209.85.215.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
+	s=arc-20240116; t=1712252341; c=relaxed/simple;
+	bh=Gwc7Mbp5isXbI0Uoz22ItrePrRCxrLBZd8oPSQyBVUs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=bd7jYpxqPnVNdLYeN4Ov7ASnHbLCL+3xerEOzohgnkkhqhkKFqIFslwU1vhcU7owzrqXIVKWZY7goaulM6LTSaXWntb1ak3kZSPuQONQTkThGTvnnDjxs4HCQlCvxGEhs7WAVJjz1A6UEO3ONJQrrxhXDcd/8kdi7Ih694nt2jk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=i2YHbv1R; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="ld+nTY7U"
-Received: by mail-pg1-f178.google.com with SMTP id 41be03b00d2f7-5ce6b5e3c4eso853138a12.2
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Apr 2024 10:37:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1712252236; x=1712857036; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Q0YGAbo5VsMRKNvr6HUFHGXg4ydusoh6NcFGvWhqL/0=;
-        b=ld+nTY7Uy8WOxSKWEYxjEzYATU5hGhfsFkHQTf5zrsljodbqECYA17vqJ5UUloCRFV
-         tNi4meOHym16khgdCWPwK1antXXzJ6xnOjxWY6amDjTYXPrn712IMI53PS5PtFoS+muZ
-         f2HugKYV+JDLC86vjS5teCs34mayoiLiVsNs3Xi17OsPhPBbmDsNRcydr786SULzlvo0
-         8ffwkHYTTeY0GG2LU5M8aoXr3ymxtc0EswgYNM+EA1mFj8VYUno1vuQQigwHdr7xnUI9
-         qfz+IPSv1AVlJsyREeYMzlW/wmu4ceKQ4s4Xj1LHnHrlBrEoB0bI6rpY/v/mEboPXEmf
-         1GVg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712252236; x=1712857036;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Q0YGAbo5VsMRKNvr6HUFHGXg4ydusoh6NcFGvWhqL/0=;
-        b=UYe5OyttTaOTtgLMLKkID8goxP8XHjtU6/Th8/W+pwr/KEHMUZFGi4MTZTf6VLiCqU
-         FkIT1niUikPYM2LnelMj2Ik98vQBaYpzCUlUm/Y6sg0BBXZoISI5sQ2mT8T8ihYN6+/e
-         8GtYDR14RU/DK4LqwfpbRCQ+SK2/43VrqX7H3yl/V8qrK46SPOrlL+q/vOlGcb4BrT6z
-         Yxqdd74BqaNssjcsraHesRiXoj7vmf6YDEHMXxh6t1mKu0IPcZDHpkrrZfkSIZAh4e10
-         h0KN9oRFqAn6Xh5TXf+IcqU3FLG/vXhNjMB/+NilzaUG6dypNjp5FINXtr/ANZ8dRoMq
-         4Rnw==
-X-Forwarded-Encrypted: i=1; AJvYcCWASMx/iCcCVWSD3jvtxQPX9GQBkvtlkUUAxcpzkzh++cV0C0aj8ozi3wGsrGZlWdvicSI6dU1tX1gEoQMqS9fDu3f1mok3ZblhmJ2W
-X-Gm-Message-State: AOJu0Yxc2rtZt0v2FDKMSrER/yW6kdqglWaVBlx6L71+0J31Q5Hea9+X
-	5TkmWG4+23DnfsWOVtmL7WsmKtC6VRZe/8cjMgWBboiAm/HZ65I77fq32gA4C2TLgreNPBgEY16
-	rZjNT56nHs3vcbx+CcEs612vmKHv05htHMgt7DA==
-X-Google-Smtp-Source: AGHT+IE0DwpVP9FvdgUiEaX9DyIxnkxvkjXoN3ggf7SGLxyoGEAQiYNn0vs3zY4qK/tte6bUofAXx0ODGxiK9gbQHcs=
-X-Received: by 2002:a17:90a:34c9:b0:2a2:bc66:1ead with SMTP id
- m9-20020a17090a34c900b002a2bc661eadmr3184921pjf.38.1712252236354; Thu, 04 Apr
- 2024 10:37:16 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="i2YHbv1R"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4AA41C433C7;
+	Thu,  4 Apr 2024 17:39:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1712252341;
+	bh=Gwc7Mbp5isXbI0Uoz22ItrePrRCxrLBZd8oPSQyBVUs=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+	b=i2YHbv1RudOFgqsTfPM2H/xiYgpmhLNKeOCiYaHUVbS8Thh+oPjPFRclhGhP9dFYR
+	 CaKv3+/UhGRnH0EtkJRr1jfEAbyS+L5eCMwzV66O8lKcJUOS2uccQUKmmx0BZ+CaCu
+	 v/xhGvT/HVnH11lcEm6nzY37205VS5vuiQ8LzT8Syro3jyZ1CmDtuZrxv0Hf3g5+/z
+	 VzO6HZLo+P31NH6PZyAU5Qa3DDR78rOVQlhECw1pvmk1KppseAbGxakOXjX/0ejZ/k
+	 xki8JF+RRslLEp7MrgWuxBUjNZvcVcuqteXbchRzurFaVwDtjWTcJFMChmafAYXC+k
+	 fLiw1HHye88CA==
+Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
+	id D6F42CE0D0C; Thu,  4 Apr 2024 10:39:00 -0700 (PDT)
+Date: Thu, 4 Apr 2024 10:39:00 -0700
+From: "Paul E. McKenney" <paulmck@kernel.org>
+To: Feng Tang <feng.tang@intel.com>
+Cc: linux-kernel@vger.kernel.org, x86@kernel.org,
+	Zhengxu Chen <zhxchen17@meta.com>,
+	Danielle Costantino <dcostantino@meta.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Waiman Long <longman@redhat.com>, John Stultz <jstultz@google.com>,
+	Boqun Feng <boqun.feng@gmail.com>,
+	Neeraj Upadhyay <Neeraj.Upadhyay@amd.com>
+Subject: Re: [PATCH RFC v2 tsc] Check for sockets instead of CPUs to make
+ code match comment
+Message-ID: <4b6724fb-2fb7-4081-ba1d-0797d746d9b8@paulmck-laptop>
+Reply-To: paulmck@kernel.org
+References: <62a0a0cd-3103-4e8f-b4c8-a91f12121e92@paulmck-laptop>
+ <Zg416EXHJa9CdI9L@feng-clx.sh.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cover.1689792825.git.tjeznach@rivosinc.com> <CAHCEehJKYu3-GSX2L6L4_VVvYt1MagRgPJvYTbqekrjPw3ZSkA@mail.gmail.com>
- <CANXhq0qsZS7sB-npPKdnFaWi2+yUc_dROCsVXZDHo07-a34wcw@mail.gmail.com>
-In-Reply-To: <CANXhq0qsZS7sB-npPKdnFaWi2+yUc_dROCsVXZDHo07-a34wcw@mail.gmail.com>
-From: Tomasz Jeznach <tjeznach@rivosinc.com>
-Date: Thu, 4 Apr 2024 10:37:05 -0700
-Message-ID: <CAH2o1u6seMkt5stxkpr4JCdmU3ZXDid5gDL7+9abNg=zPqdFdQ@mail.gmail.com>
-Subject: Re: [PATCH 00/13] Linux RISC-V IOMMU Support
-To: Zong Li <zong.li@sifive.com>
-Cc: Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
-	Robin Murphy <robin.murphy@arm.com>, Will Deacon <will@kernel.org>, Joerg Roedel <joro@8bytes.org>, 
-	Anup Patel <apatel@ventanamicro.com>, Albert Ou <aou@eecs.berkeley.edu>, 
-	Greentime Hu <greentime.hu@sifive.com>, linux@rivosinc.com, 
-	"linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>, Sebastien Boeuf <seb@rivosinc.com>, iommu@lists.linux.dev, 
-	Nick Kossifidis <mick@ics.forth.gr>, linux-riscv <linux-riscv@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Zg416EXHJa9CdI9L@feng-clx.sh.intel.com>
 
-On Fri, Feb 23, 2024 at 6:04=E2=80=AFAM Zong Li <zong.li@sifive.com> wrote:
->
-> >
-> > The RISC-V IOMMU specification is now ratified as-per the RISC-V intern=
-ational
-> > process [1]. The latest frozen specifcation can be found at:
-> > https://github.com/riscv-non-isa/riscv-iommu/releases/download/v1.0/ris=
-cv-iommu.pdf
-> >
-> > At a high-level, the RISC-V IOMMU specification defines:
-> > 1) Memory-mapped programming interface
-> >    - Mandatory and optional registers layout and description.
-> >    - Software guidelines for device initialization and capabilities dis=
-covery.
-> > 2) In-memory queue interface
-> >    - A command-queue used by software to queue commands to the IOMMU.
-> >    - A fault/event queue used to bring faults and events to software=E2=
-=80=99s attention.
-> >    - A page-request queue used to report =E2=80=9CPage Request=E2=80=9D=
- messages received from
-> >      PCIe devices.
-> >    - Message-signalled and wire-signaled interrupt mechanism.
-> > 3) In-memory data structures
-> >    - Device-context: used to associate a device with an address space a=
-nd to hold
-> >      other per-device parameters used by the IOMMU to perform address t=
-ranslations.
-> >    - Process-contexts: used to associate a different virtual address sp=
-ace based on
-> >      device provided process identification number.
-> >    - MSI page table configuration used to direct an MSI to a guest inte=
-rrupt file
-> >      in an IMSIC. The MSI page table formats are defined by the Advance=
-d Interrupt
-> >      Architecture specification [2].
-> >
-> > This series introduces complete single-level translation support, inclu=
-ding shared
-> > virtual address (SVA), ATS/PRI interfaces in the kernel driver. Patches=
- adding MSI
-> > identity remapping and G-Stage translation (GPA to SPA) are added only =
-to excercise
-> > hardware interfaces, to be complemented with AIA/KVM bindings in follow=
--up series.
-> >
-> > This series is a logical regrouping of series of incremental patches ba=
-sed on
-> > RISC-V International IOMMU Task Group discussions and specification dev=
-elopment
-> > process. Original series can be found at the maintainer's repository br=
-anch [3].
-> >
-> > These patches can also be found in the riscv_iommu_v1 branch at:
-> > https://github.com/tjeznach/linux/tree/riscv_iommu_v1
-> >
-> > To test this series, use QEMU/OpenSBI with RISC-V IOMMU implementation =
-available in
-> > the riscv_iommu_v1 branch at:
-> > https://github.com/tjeznach/qemu/tree/riscv_iommu_v1
-> >
-> > References:
-> > [1] - https://wiki.riscv.org/display/HOME/Specification+Status
-> > [2] - https://github.com/riscv/riscv-aia/releases/download/1.0/riscv-in=
-terrupts-1.0.pdf
-> > [3] - https://github.com/tjeznach/qemu/tree/tjeznach/riscv-iommu-202307=
-19
-> >
-> >
-> > Anup Patel (1):
-> >   dt-bindings: Add RISC-V IOMMU bindings
-> >
-> > Tomasz Jeznach (10):
-> >   RISC-V: drivers/iommu: Add RISC-V IOMMU - Ziommu support.
-> >   RISC-V: arch/riscv/config: enable RISC-V IOMMU support
-> >   MAINTAINERS: Add myself for RISC-V IOMMU driver
-> >   RISC-V: drivers/iommu/riscv: Add sysfs interface
-> >   RISC-V: drivers/iommu/riscv: Add command, fault, page-req queues
-> >   RISC-V: drivers/iommu/riscv: Add device context support
-> >   RISC-V: drivers/iommu/riscv: Add page table support
-> >   RISC-V: drivers/iommu/riscv: Add SVA with PASID/ATS/PRI support.
-> >   RISC-V: drivers/iommu/riscv: Add MSI identity remapping
-> >   RISC-V: drivers/iommu/riscv: Add G-Stage translation support
-> >
-> >  .../bindings/iommu/riscv,iommu.yaml           |  146 ++
-> >  MAINTAINERS                                   |    7 +
-> >  arch/riscv/configs/defconfig                  |    1 +
-> >  drivers/iommu/Kconfig                         |    1 +
-> >  drivers/iommu/Makefile                        |    2 +-
-> >  drivers/iommu/io-pgtable.c                    |    3 +
-> >  drivers/iommu/riscv/Kconfig                   |   22 +
-> >  drivers/iommu/riscv/Makefile                  |    1 +
-> >  drivers/iommu/riscv/io_pgtable.c              |  266 ++
-> >  drivers/iommu/riscv/iommu-bits.h              |  704 ++++++
-> >  drivers/iommu/riscv/iommu-pci.c               |  206 ++
-> >  drivers/iommu/riscv/iommu-platform.c          |  160 ++
-> >  drivers/iommu/riscv/iommu-sysfs.c             |  183 ++
-> >  drivers/iommu/riscv/iommu.c                   | 2130 +++++++++++++++++
-> >  drivers/iommu/riscv/iommu.h                   |  165 ++
-> >  include/linux/io-pgtable.h                    |    2 +
-> >  16 files changed, 3998 insertions(+), 1 deletion(-)
-> >  create mode 100644 Documentation/devicetree/bindings/iommu/riscv,iommu=
-.yaml
-> >  create mode 100644 drivers/iommu/riscv/Kconfig
-> >  create mode 100644 drivers/iommu/riscv/Makefile
-> >  create mode 100644 drivers/iommu/riscv/io_pgtable.c
-> >  create mode 100644 drivers/iommu/riscv/iommu-bits.h
-> >  create mode 100644 drivers/iommu/riscv/iommu-pci.c
-> >  create mode 100644 drivers/iommu/riscv/iommu-platform.c
-> >  create mode 100644 drivers/iommu/riscv/iommu-sysfs.c
-> >  create mode 100644 drivers/iommu/riscv/iommu.c
-> >  create mode 100644 drivers/iommu/riscv/iommu.h
-> >
-> > --
-> > 2.34.1
-> >
-> >
-> > _______________________________________________
-> > linux-riscv mailing list
-> > linux-riscv@lists.infradead.org
-> > http://lists.infradead.org/mailman/listinfo/linux-riscv
->
-> Hi Tomasz,
-> Could I know if you have a plan for the next version and if you have
-> any estimates for when the v2 patch will be ready? We have some
-> patches based on top of your old implementation, and it would be great
-> if we can rebase them onto your next version. Thanks.
+On Thu, Apr 04, 2024 at 01:08:56PM +0800, Feng Tang wrote:
+> On Wed, Apr 03, 2024 at 12:10:41PM -0700, Paul E. McKenney wrote:
+> > The unsynchronized_tsc() eventually checks num_possible_cpus(), and
+> > if the system is non-Intel and the number of possible CPUs is greater
+> > than one, assumes that TSCs are unsynchronized.  This despite the
+> > comment saying "assume multi socket systems are not synchronized",
+> > that is, socket rather than CPU.  This behavior was preserved by
+> > commit 8fbbc4b45ce3 ("x86: merge tsc_init and clocksource code") and
+> > by the previous relevant commit 7e69f2b1ead2 ("clocksource: Remove the
+> > update callback").
+> > 
+> > The clocksource drivers were added by commit 5d0cf410e94b ("Time: i386
+> > Clocksource Drivers") back in 2006, and the comment still said "socket"
+> > rather than "CPU".
+> > 
+> > Therefore, bravely (and perhaps foolishly) make the code match the
+> > comment.
+> > 
+> > Note that it is possible to bypass both code and comment by booting
+> > with tsc=reliable, but this also disables the clocksource watchdog,
+> > which is undesirable when trust in the TSC is strictly limited.
+> > 
+> > Changes since v1:
+> > 
+> > o	Forward-port to v6.9-rc1.
+> > 
+> > Reported-by: Zhengxu Chen <zhxchen17@meta.com>
+> > Reported-by: Danielle Costantino <dcostantino@meta.com>
+> > Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
+> > Cc: Thomas Gleixner <tglx@linutronix.de>
+> > Cc: Ingo Molnar <mingo@redhat.com>
+> > Cc: Borislav Petkov <bp@alien8.de>
+> > Cc: Dave Hansen <dave.hansen@linux.intel.com>
+> > Cc: "H. Peter Anvin" <hpa@zytor.com>
+> > Cc: Peter Zijlstra <peterz@infradead.org>
+> > Cc: Feng Tang <feng.tang@intel.com>
+> > Cc: Waiman Long <longman@redhat.com>
+> > Cc: John Stultz <jstultz@google.com>
+> > Cc: Neeraj Upadhyay <Neeraj.Upadhyay@amd.com>
+> > Cc: <x86@kernel.org>
+> > 
+> > diff --git a/arch/x86/kernel/tsc.c b/arch/x86/kernel/tsc.c
+> > index 5a69a49acc963..e938b990bea19 100644
+> > --- a/arch/x86/kernel/tsc.c
+> > +++ b/arch/x86/kernel/tsc.c
+> > @@ -1289,7 +1289,7 @@ int unsynchronized_tsc(void)
+> >  	 */
+> >  	if (boot_cpu_data.x86_vendor != X86_VENDOR_INTEL) {
+> >  		/* assume multi socket systems are not synchronized: */
+> > -		if (num_possible_cpus() > 1)
+> > +		if (nr_online_nodes > 1)
+> 
+> Regarding package/socket number, Thomas' topology refactoring patchset
+> (merged in 6.9-rc1) makes topology_max_packages() more accurate than
+> nr_online_nodes(), more details in https://lore.kernel.org/lkml/20240327025105.2861341-1-feng.tang@intel.com/
 
-Hi Zong,
+Thank you, and updated with attribution.
 
-Thank you for your interest. Next version of the iommu/riscv is almost read=
-y to
-be sent in next few days.
-There is a number of bug fixes and design changes based on the testing and
-great feedback after v1 was published.
-Upcoming patch set will be smaller, with core functionality only, hopefully=
- to
-make the review easier. Functionality related to the MSI remapping, shared
-virtual addressing, nested translations will be moved to separate patch set=
-s.
-
-Complete, up to date revision is always available at
-https://github.com/tjeznach/linux/
-
-regards,
-- Tomasz
+							Thanx, Paul
