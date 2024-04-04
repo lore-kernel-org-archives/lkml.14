@@ -1,71 +1,58 @@
-Received: from mail-io1-f72.google.com (mail-io1-f72.google.com [209.85.166.72])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from sxb1plsmtpa01-11.prod.sxb1.secureserver.net (sxb1plsmtpa01-11.prod.sxb1.secureserver.net [188.121.53.121])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E3D3746E
-	for <linux-kernel@vger.kernel.org>; Thu,  4 Apr 2024 00:48:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.72
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B834C4C65
+	for <linux-kernel@vger.kernel.org>; Thu,  4 Apr 2024 00:57:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.121.53.121
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712191685; cv=none; b=Bmv/dtRuE4an1euL068j3ApHuWXnnBZDi2au0IyS/E8B8SJL8etKikT65frl8BKZJTJusfwSMhCAgXpgkMj7D+b6Vi05G20zh875R5Bc3BOjX/KH5jMYi7NYlnvlXN7F236e9nIoBr2sYNDq/u298N3xMLACCZS7qwY9QWdkR4Y=
+	t=1712192256; cv=none; b=nUOT5Ke//T3o0uWlZwkySmSCvro/uzSQm7dqupukjVBOQvAqshIwTKC9XndRv8xcEYw+o3SAFkMsTx6iH2d6ZP4do7RrVBSD3Umu9EDUY7HH63wqh7cgh6pH3i1CV0onEBZhmcO12IOs9fVM0OsBKHGaA2DYOnWEhHGfGDFHuKY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712191685; c=relaxed/simple;
-	bh=V/IkkmlSgnCdY2OQuempFA/lObSzj4HvFjiswkAAexM=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=CkoB25MNAkmecCo39I4OJuactKI4GL7C7Zk5BX6QSsZP9hZOrlXjfq8UqYKro8Sli7SyZhGlWpGLNL+jm+muUFuhOzMyRwmtO/QO22VyQaj0gDYvfkQR1HnyX5tCFffD0gWebTKiO3pQgeH8SBOfgZhRYH5AXoQrohbASrA3xjU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.72
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f72.google.com with SMTP id ca18e2360f4ac-7cc764c885bso51457839f.3
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Apr 2024 17:48:03 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712191683; x=1712796483;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=yqEt58zeisua8ol27uiaSQz7crIi9GUPLBM9sTseYKg=;
-        b=uGLekeUVSMepoiX3xwqjrEbLRWmrtSRHphK3q09nzIgTWgrWoU00I8A8AFOv5mUWiw
-         feDqpVKQ13CXWcToB+3HSjAOvXQsHRuyHisxCdRaNvcNoaCh9yxK7bPHP0CSubs6XBI7
-         fC/3e+Y4tLxaczyxFPX6cctPTpm48Z7eQPQ5jkQiFYTGMhtY7iV6oricTnSvcQ3GUKgr
-         xd+rIju5wZC4qLMcJOc4QoZE4744hIXbuPd7GDL9JLrsySdUWKHSidZEx+SkVgaCMWMF
-         t/szEubDy35Q5hHsRRh6Dhm8Y6R2R4G/3WGhziKnxYgYjAxAGnSNj3XvC3FaqRMFwX05
-         qpeQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXzPwmiSn7oiT/W6Dd3rUq4KRHmA1KoJKrdo81SqHobhxOB4yXMuPoAugnjq3Hz+VRUEWlHoDwSHya39fpDgkFcveY77YxSK5x5ppdU
-X-Gm-Message-State: AOJu0Yzu3imgYeKOgYIfCJm9vsvD+lIjzEgDodBGZfTSEVVLMLOTGprn
-	Y/E9syubImszo8sMmXccVgDDtKwT2eUrp6jukNujW3nW4+OuOuOSsIDE7G3UgJJN7UIAQGlAj/x
-	mIhAspWdK70Ek67P/DUzu2eAAA6OCM5nizmVuK6Tk7w8a+y1CKPOdOsM=
-X-Google-Smtp-Source: AGHT+IH6IzauDBgm0B81tKQ4/kOnmRZNRB4pQUa/3tFWdP1LA2h1OrGBBXk9h4k5n4enW0neiFuNHTSdMfW3MJDmY8ByNLVX9f+B
+	s=arc-20240116; t=1712192256; c=relaxed/simple;
+	bh=wkVVPzfd0UQTkvZ8xc/BmRhj+WUj2Lu/IgPhkOElz1o=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=QByoSWB58ogMhZJMDCckYbutdpl7+4ezOYjrk/MvzLz6DTLwhh+eYdSdYzkMDdcNuNmuXfzwnIl6iOh5eRncGGAeFrzKqG6SlPqLft+IzEyUHAwes87K/SjI8jGMWohPFgRBvcZcz6fEG+9KyBOTTEg0PTYunDqgSTUvCB3EmOs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squashfs.org.uk; spf=pass smtp.mailfrom=squashfs.org.uk; arc=none smtp.client-ip=188.121.53.121
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squashfs.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=squashfs.org.uk
+Received: from [192.168.178.90] ([82.69.79.175])
+	by :SMTPAUTH: with ESMTPA
+	id sB7er3FFsvAPUsB7frsYBM; Wed, 03 Apr 2024 17:38:32 -0700
+X-CMAE-Analysis: v=2.4 cv=R+XIGsRX c=1 sm=1 tr=0 ts=660df688
+ a=84ok6UeoqCVsigPHarzEiQ==:117 a=84ok6UeoqCVsigPHarzEiQ==:17
+ a=IkcTkHD0fZMA:10 a=FXvPX3liAAAA:8 a=W08pmZW3enM1sLpWauQA:9 a=3ZKOabzyN94A:10
+ a=QEXdDO2ut3YA:10 a=UObqyxdv-6Yh2QiB9mM_:22
+X-SECURESERVER-ACCT: phillip@squashfs.org.uk
+Message-ID: <356bd1ed-9877-461d-9593-bbf1b23b3d8c@squashfs.org.uk>
+Date: Thu, 4 Apr 2024 01:38:30 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6638:2182:b0:47f:2226:38bd with SMTP id
- s2-20020a056638218200b0047f222638bdmr41221jaj.6.1712191683337; Wed, 03 Apr
- 2024 17:48:03 -0700 (PDT)
-Date: Wed, 03 Apr 2024 17:48:03 -0700
-In-Reply-To: <20240403134454.3792-1-hdanton@sina.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000012b1e306153ab1e5@google.com>
-Subject: Re: [syzbot] [ext4?] possible deadlock in ext4_xattr_inode_iget (3)
-From: syzbot <syzbot+ee72b9a7aad1e5a77c5c@syzkaller.appspotmail.com>
-To: hdanton@sina.com, linux-kernel@vger.kernel.org, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] Squashfs: replace deprecated strncpy with strscpy
+To: Justin Stitt <justinstitt@google.com>
+Cc: linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+References: <20240328-strncpy-fs-squashfs-namei-c-v1-1-5c7bcbbeb675@google.com>
+ <594a6365-5cc6-4778-aec5-c5ad2a4b2930@squashfs.org.uk>
+ <CAFhGd8pCE11Xm219Pc8uyJnsDkSqaTM6gpY8Tpa2fWmHg4OnCA@mail.gmail.com>
+Content-Language: en-GB
+From: Phillip Lougher <phillip@squashfs.org.uk>
+In-Reply-To: <CAFhGd8pCE11Xm219Pc8uyJnsDkSqaTM6gpY8Tpa2fWmHg4OnCA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-CMAE-Envelope: MS4xfBq20SukAjsHUGUSD81ZufCFLj2kOVSbjtsHJxDyR/RYet6SRJVmHlsADOcDUkZyYBBOFeMIBvOVZLXPTw3bitAkOGgGp0utu0wfwHWSvsgYAQt41tz9
+ /gBKeMmU2ckl8QthIAXK4vuu+psXeUDL+R2kANNGLtgpszVHStA8bIKFxZcjOlgv7peYlopIw2CUMrOCHOZ5t8fkGohWUhYUIef3W6G5kgEJBaCvrehEtVzl
+ Rpv0g2bmmvbqrpH8cnYkHl2y3QXBw/i4t0ANDDMvMAXWsw0UtE7tAxoo5kS0YO88
 
-Hello,
+On 04/04/2024 01:30, Justin Stitt wrote:
+> On Wed, Apr 3, 2024 at 12:32 PM Phillip Lougher <phillip@squashfs.org.uk> wrote:
+>> A better way to remove the strncpy() is to remove the unnecessary string
+>> copy, which I have done in this patch here:
+> 
+> Great! Cleaning up this code while removing strncpy() is a two for one.
 
-syzbot has tested the proposed patch and the reproducer did not trigger any issue:
+Yes - thanks for your reply.
 
-Reported-and-tested-by: syzbot+ee72b9a7aad1e5a77c5c@syzkaller.appspotmail.com
-
-Tested on:
-
-commit:         fe46a7dd Merge tag 'sound-6.9-rc1' of git://git.kernel..
-git tree:       https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
-console output: https://syzkaller.appspot.com/x/log.txt?x=10fceed3180000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=1a07d5da4eb21586
-dashboard link: https://syzkaller.appspot.com/bug?extid=ee72b9a7aad1e5a77c5c
-compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
-patch:          https://syzkaller.appspot.com/x/patch.diff?x=132ad4f6180000
-
-Note: testing is done by a robot and is best-effort only.
+Phillip
