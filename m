@@ -1,262 +1,136 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f54.google.com (mail-io1-f54.google.com [209.85.166.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE8D51CA84
-	for <linux-kernel@vger.kernel.org>; Thu,  4 Apr 2024 16:52:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E9C912D1FA
+	for <linux-kernel@vger.kernel.org>; Thu,  4 Apr 2024 16:54:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712249576; cv=none; b=BXT/WxpKyX0j0xABkCN4dG+uvOPhaRV7J0oisG5QS3vpbgI3OQSEwIfdyQr6IUb18kb8VyfYIVPidjTN4ym7Z8BhLqdG9qRvutCVrs53DOQ4qLutyOPyZvqbOZSU8jrQ1PWZ4RgryyL8pgUQfVq27EFNU1cjdPs7JPhArVjiIbo=
+	t=1712249655; cv=none; b=YqRbrMvk4yXuk5xrVrptgiHAoIm1lHlB+hhc791OWzt3AI7EpjI9S8cBuUnFVPacT+3hjgFv1b8cCOJERkwK93MIYmGQL7Ykaww0zWTquCJGjVCLAZhPkGl+oQ7yTN31JQeHsGv8wedPNSVlT05SSozT2SlvF5YVUC+dVBRYvzQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712249576; c=relaxed/simple;
-	bh=Xov/W0E31ifQozW0fhKUs9bbDNuFa7IX5G3pMtVN7bM=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=sJ83UHVX5mnqyh3FwjcplS0s0JO0sgtx6A7Y1bm4qLmUJJstH4kal0S7nH+F9n40n8bKH36dnvj2RiycJHqkSO45VlWjacfIY0OEPpgCvReGDUAQTPvpnyehmp4VpAxBXopwqmXb0PUHSm5FKAGHtnrbQYfHilWIwjVk7A9KM/E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=qhxBAQRp; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=1M6ZOl46; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1712249655; c=relaxed/simple;
+	bh=lQXxyaAh1yfepGvWX1Dxa3BYz89/8nOI90HRYgFhJjQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=OzAhbQoTR6UcngJ6Om6dxDfU4wlgCHAPoKSapEbUzqUVzNVBHn9xsdzpPByxmG+JY8wluWXuPdi+pKIkFviUwTi5P9GUHq9GPUBTDhrVfe6KIUbjZ6Sbr0nbUmV1KlrejNf8m3J8glAwLBmZPEHz4Z9fZn8XGVGETMbBQHRMcUc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=F0X3Aebe; arc=none smtp.client-ip=209.85.166.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="qhxBAQRp";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="1M6ZOl46"
-From: Anna-Maria Behnsen <anna-maria@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1712249573;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=JX/6LEuH1nrDXzYEDxupwbV5UlrvBalnE8NfAturiSk=;
-	b=qhxBAQRpHKmiMvrVOFGqZKz54FkZmCUXdqr1cMynvv4SG46P1gi81C0o1hsOcPabBy8QdB
-	2UfVthJGIIhKCm74rY/N+Pyk1jIrQrTX2+iNKdvSdvxMQAgy10UmkGRQxa2Gi1TXebMnZw
-	zKZIotrX1ZYS7ov1ovkz8gWg3JbeihTjOr/hisQ5sU5GGOxPOhcUcCPlVOvoN0uyHvSDbR
-	H7zT4nWMICgDgrS5OaWwNC8C+mYYNKyk2KDgF8iYl+saUBChHFy0CfZLcP9yfSF5s1DzEZ
-	IuebJm5B3Pw4acQvlHYFaIP4jAQ4/nbTjHu/H5i6fSrpRaeXuV6B1b2foXQeSA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1712249573;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=JX/6LEuH1nrDXzYEDxupwbV5UlrvBalnE8NfAturiSk=;
-	b=1M6ZOl46rqxRuPz51XrVMTNKwDYb0Nm1loy0mYnoCjHmx8fgGy3rhR3z81lFsFsdG6ZQBl
-	R7fL7LCMHChcX6CA==
-To: Frederic Weisbecker <frederic@kernel.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@kernel.org>,
- LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2] timers/migration: Fix ignored event due to missing
- CPU update
-In-Reply-To: <Zg2Ct6M2RJAYHgCB@localhost.localdomain>
-References: <20240401214859.11533-1-frederic@kernel.org>
- <87r0fo9jmw.fsf@somnus> <Zg2Ct6M2RJAYHgCB@localhost.localdomain>
-Date: Thu, 04 Apr 2024 18:52:52 +0200
-Message-ID: <878r1tvzmj.fsf@somnus>
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="F0X3Aebe"
+Received: by mail-io1-f54.google.com with SMTP id ca18e2360f4ac-7d341f3dc33so17452739f.1
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Apr 2024 09:54:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linuxfoundation.org; s=google; t=1712249653; x=1712854453; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=mbKbff6IZcMe7tMchG80ujSCo/40juHuTAkwW5EuY0s=;
+        b=F0X3Aebe9NyQCOC/I4YAA4IVCOMFwL+tyiSU4HIy03qTwfxTQlc65pKNF7IBbQJ5JF
+         +XpYJ5XHseqtB7RUvsTfeFQTeUeZkcJwmN9uv3XlBN4nfOsSbhPdrsu/uKfemAIz6EBq
+         UKhUSzotn5VVmSiGxqSLD5Ck9tWE+1WEzQfyQ=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712249653; x=1712854453;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=mbKbff6IZcMe7tMchG80ujSCo/40juHuTAkwW5EuY0s=;
+        b=KOJ6MX2OxDrG4bpn1idkqh7UFWTV9hopIQphCHbfz9ybqJeKeHFKgQf8Sr3/JkMGt2
+         qUh9WeTzbpLoEzvpmBv3obz0NpdBGx3CY+VSvyFEmYOSzVZKGOUugTuO6KsPzGtkrV+u
+         rO49XfI/M5DS9BkQlDD6NBjDGAx3u7Qz8fVr35GeoMxCbOEBMg6jv1u14m1/HKaP05X8
+         Hjm0QJBjslSkv0TAw4KvdVIEBSILTNKx4OTfS32I8xFJqEXS1ZtrbICyv0d8W29OOSJz
+         s4bxxEIlpNJIiaSSp60wBp2qIgbV09Mq+DrUUK4kAMKs7QtOsDGUwZGF0UZDrWf6hBaa
+         eZiA==
+X-Forwarded-Encrypted: i=1; AJvYcCWRRok2O18ZAFf6y9B8Znh5Ul74g0odlYv/hZsCQmSiCYMU8YLUxwR0eAsrYPGx3aS+IPRqVzmtBbz0YSUY5mbBeTyd68zQQ3oyr78+
+X-Gm-Message-State: AOJu0YwRGom9y82qYMFBu4ROcrzqY2bb1sD0wxsoMkYwOvcF7C+nXZNv
+	4XlPCleN+ssXkBJYJ97aWQgUftECLgYgcFwOK4l/Lyi7ZgeCpGqDeYDvykehwluU/avtKeDj+Ig
+	O
+X-Google-Smtp-Source: AGHT+IFIoeSIptPcK/ZIht/gxDhBth3YhYHyf8Hmsc8CO9peKgWubokh48VKo1WOettsk1NRD6I0ng==
+X-Received: by 2002:a05:6e02:541:b0:368:efa4:be12 with SMTP id i1-20020a056e02054100b00368efa4be12mr3434944ils.3.1712249653087;
+        Thu, 04 Apr 2024 09:54:13 -0700 (PDT)
+Received: from [192.168.1.128] ([38.175.170.29])
+        by smtp.gmail.com with ESMTPSA id j3-20020a92c203000000b00369bb06ae5dsm1081324ilo.25.2024.04.04.09.54.12
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 04 Apr 2024 09:54:12 -0700 (PDT)
+Message-ID: <e565670b-d31e-48fa-a873-6c68dba5b04b@linuxfoundation.org>
+Date: Thu, 4 Apr 2024 10:54:12 -0600
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [BUG] seltests/iommu: runaway ./iommufd consuming 99% CPU after a
+ failed assert()
+To: Mirsad Todorovac <mirsad.todorovac@alu.unizg.hr>,
+ Joao Martins <joao.m.martins@oracle.com>, Jason Gunthorpe <jgg@nvidia.com>
+Cc: iommu@lists.linux.dev, Kevin Tian <kevin.tian@intel.com>,
+ Shuah Khan <shuah@kernel.org>, linux-kselftest@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Shuah Khan <skhan@linuxfoundation.org>
+References: <0d5c3b29-fc5b-41d9-9556-5ce94262dac8@alu.unizg.hr>
+ <20240319135852.GA393211@nvidia.com>
+ <a692d5d7-11d5-4c1b-9abc-208d2194ccde@alu.unizg.hr>
+ <cdc9c46b-1bad-41cd-8f98-38cc2171186a@oracle.com>
+ <20240325135207.GC6245@nvidia.com>
+ <f8e03425-98cf-4076-8959-d85eda846bab@oracle.com>
+ <08a13b79-e94a-4f80-96e9-ce223d928b3e@alu.unizg.hr>
+Content-Language: en-US
+From: Shuah Khan <skhan@linuxfoundation.org>
+In-Reply-To: <08a13b79-e94a-4f80-96e9-ce223d928b3e@alu.unizg.hr>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-Frederic Weisbecker <frederic@kernel.org> writes:
+On 3/27/24 14:04, Mirsad Todorovac wrote:
+> 
+> 
+> On 3/27/24 11:41, Joao Martins wrote:
+>> On 25/03/2024 13:52, Jason Gunthorpe wrote:
+>>> On Mon, Mar 25, 2024 at 12:17:28PM +0000, Joao Martins wrote:
+>>>>> However, I am not smart enough to figure out why ...
+>>>>>
+>>>>> Apparently, from the source, mmap() fails to allocate pages on the desired address:
+>>>>>
+>>>>>    1746         assert((uintptr_t)self->buffer % HUGEPAGE_SIZE == 0);
+>>>>>    1747         vrc = mmap(self->buffer, variant->buffer_size, PROT_READ |
+>>>>> PROT_WRITE,
+>>>>>    1748                    mmap_flags, -1, 0);
+>>>>> → 1749         assert(vrc == self->buffer);
+>>>>>    1750
+>>>>>
+>>>>> But I am not that deep into the source to figure our what was intended and what
+>>>>> went
+>>>>> wrong :-/
+>>>>
+>>>> I can SKIP() the test rather assert() in here if it helps. Though there are
+>>>> other tests that fail if no hugetlb pages are reserved.
+>>>>
+>>>> But I am not sure if this is problem here as the initial bug email had an
+>>>> enterily different set of failures? Maybe all you need is an assert() and it
+>>>> gets into this state?
+>>>
+>>> I feel like there is something wrong with the kselftest framework,
+>>> there should be some way to fail the setup/teardown operations without
+>>> triggering an infinite loop :(
+>>
+>> I am now wondering if the problem is the fact that we have an assert() in the
+>> middle of FIXTURE_{TEST,SETUP} whereby we should be having ASSERT_TRUE() (or any
+>> other kselftest macro that). The expect/assert macros from kselftest() don't do
+>> asserts and it looks like we are failing mid tests in the assert().
+>>
+>> Maybe it is OK for setup_sizes(), but maybe not OK for the rest (i.e. during the
+>> actual setup / tests). I can throw a patch there to see if this helps Mirsad.
+> 
+> Well, we are in the job of making the kernel better and as bug free as we can.
+> 
+> Maybe we should not delve too much into detail: is this a kernel bug, or the kselftest
+> program bug?
+> 
+> Some people already mentioned that I might have sysctl variable problems. I don't see
+> what the mmap() HUGEPAGE allocation at fixed address was meant to prove?
+> 
 
-> Le Tue, Apr 02, 2024 at 11:52:23AM +0200, Anna-Maria Behnsen a =C3=A9crit=
- :
->> Frederic Weisbecker <frederic@kernel.org> writes:
->>=20
->> > When a group event is updated with its expiry unchanged but a different
->> > CPU, that target change may go unnoticed and the event may be propagat=
-ed
->> > up with a stale CPU value. The following depicts a scenario that has
->> > been actually observed:
->>=20
->> urgh...
->>=20
->> >
->> > Signed-off-by: Frederic Weisbecker <frederic@kernel.org>
->> > ---
->> >  kernel/time/timer_migration.c | 5 ++++-
->> >  1 file changed, 4 insertions(+), 1 deletion(-)
->> >
->> > diff --git a/kernel/time/timer_migration.c b/kernel/time/timer_migrati=
-on.c
->> > index c63a0afdcebe..90786bb9a607 100644
->> > --- a/kernel/time/timer_migration.c
->> > +++ b/kernel/time/timer_migration.c
->> > @@ -762,8 +762,11 @@ bool tmigr_update_events(struct tmigr_group *grou=
-p, struct tmigr_group *child,
->> >  	 * queue when the expiry time changed only or when it could be ignor=
-ed.
->> >  	 */
->> >  	if (timerqueue_node_queued(&evt->nextevt)) {
->> > -		if ((evt->nextevt.expires =3D=3D nextexp) && !evt->ignore)
->> > +		if ((evt->nextevt.expires =3D=3D nextexp) && !evt->ignore) {
->> > +			if (evt->cpu !=3D first_childevt->cpu)
->> > +				evt->cpu =3D first_childevt->cpu;
->>=20
->> Why not just unconditionally overwriting the evt->cpu value here?
->
-> Right! See below:
->
-> ---
-> From d038dad7345398a2f6671a3cda98a48805f9eba3 Mon Sep 17 00:00:00 2001
-> From: Frederic Weisbecker <frederic@kernel.org>
-> Date: Mon, 1 Apr 2024 23:48:59 +0200
-> Subject: [PATCH v2] timers/migration: Fix ignored event due to missing CP=
-U update
->
-> When a group event is updated with its expiry unchanged but a different
-> CPU, that target change may go unnoticed and the event may be propagated
-> up with a stale CPU value. The following depicts a scenario that has
-> been actually observed:
->
->                        [GRP2:0]
->                    migrator =3D GRP1:1
->                    active   =3D GRP1:1
->                    nextevt  =3D TGRP1:0 (T0)
->                     /              \
->                [GRP1:0]           [GRP1:1]
->             migrator =3D NONE       [...]
->             active   =3D NONE
->             nextevt  =3D TGRP0:0 (T0)
->             /           \
->         [GRP0:0]       [...]
->       migrator =3D NONE
->       active   =3D NONE
->       nextevt  =3D T0
->       /         \
->     0 (T0)       1 (T1)
->     idle         idle
->
-> 0) The hierarchy has 3 levels. The left part (GRP1:0) is all idle,
-> including CPU 0 and CPU 1 which have a timer each: T0 and T1. They have
-> the same expiry value.
->
->                        [GRP2:0]
->                    migrator =3D GRP1:1
->                    active   =3D GRP1:1
->                    nextevt  =3D KTIME_MAX
->                     /              \
->                [GRP1:0]           [GRP1:1]
->             migrator =3D NONE       [...]
->             active   =3D NONE
->             nextevt  =3D TGRP0:0 (T0)
->             /           \
->         [GRP0:0]       [...]
->       migrator =3D NONE
->       active   =3D NONE
->       nextevt  =3D T0
->       /         \
->     0 (T0)       1 (T1)
->     idle         idle
->
-> 1) The migrator in GRP1:1 handles remotely T0. The event is dequeued
-> from the top and T0 executed.
->
->                        [GRP2:0]
->                    migrator =3D GRP1:1
->                    active   =3D GRP1:1
->                    nextevt  =3D KTIME_MAX
->                     /              \
->                [GRP1:0]           [GRP1:1]
->             migrator =3D NONE       [...]
->             active   =3D NONE
->             nextevt  =3D TGRP0:0 (T0)
->             /           \
->         [GRP0:0]       [...]
->       migrator =3D NONE
->       active   =3D NONE
->       nextevt  =3D T1
->       /         \
->     0            1 (T1)
->     idle         idle
->
-> 2) The migrator in GRP1:1 fetches the next timer for CPU 0 and finds
-> none. But it updates the events from its groups, starting with GRP0:0
-> which now has T1 as its next event. So far so good.
->
->                        [GRP2:0]
->                    migrator =3D GRP1:1
->                    active   =3D GRP1:1
->                    nextevt  =3D KTIME_MAX
->                     /              \
->                [GRP1:0]           [GRP1:1]
->             migrator =3D NONE       [...]
->             active   =3D NONE
->             nextevt  =3D TGRP0:0 (T0)
->             /           \
->         [GRP0:0]       [...]
->       migrator =3D NONE
->       active   =3D NONE
->       nextevt  =3D T1
->       /         \
->     0            1 (T1)
->     idle         idle
->
-> 3) The migrator in GRP1:1 proceeds upward and updates the events in
-> GRP1:0. The child event TGRP0:0 is found queued with the same expiry
-> as before. And therefore it is left unchanged. However the target CPU
-> is not the same but that fact is ignored so TGRP0:0 still points to
-> CPU 0 when it should point to CPU 1.
->
->                        [GRP2:0]
->                    migrator =3D GRP1:1
->                    active   =3D GRP1:1
->                    nextevt  =3D TGRP1:0 (T0)
->                     /              \
->                [GRP1:0]           [GRP1:1]
->             migrator =3D NONE       [...]
->             active   =3D NONE
->             nextevt  =3D TGRP0:0 (T0)
->             /           \
->         [GRP0:0]       [...]
->       migrator =3D NONE
->       active   =3D NONE
->       nextevt  =3D T1
->       /         \
->     0            1 (T1)
->     idle         idle
->
-> 4) The propagation has reached the top level and TGRP1:0, having TGRP0:0
-> as its first event, also wrongly points to CPU 0. TGRP1:0 is added to
-> the top level group.
->
->                        [GRP2:0]
->                    migrator =3D GRP1:1
->                    active   =3D GRP1:1
->                    nextevt  =3D KTIME_MAX
->                     /              \
->                [GRP1:0]           [GRP1:1]
->             migrator =3D NONE       [...]
->             active   =3D NONE
->             nextevt  =3D TGRP0:0 (T0)
->             /           \
->         [GRP0:0]       [...]
->       migrator =3D NONE
->       active   =3D NONE
->       nextevt  =3D T1
->       /         \
->     0            1 (T1)
->     idle         idle
->
-> 5) The migrator in GRP1:1 dequeues the next event in top level pointing
-> to CPU 0. But since it actually doesn't see any real event in CPU 0, it
-> early returns.
->
-> 6) T1 is left unhandled until either CPU 0 or CPU 1 wake up.
->
-> Some other bad scenario may involve trees with just two levels.
->
-> Fix this with unconditionally updating the CPU of the child event before
-> considering to early return while updating a queued event with an
-> unchanged expiry value.
->
-> Fixes: 7ee988770326 ("timers: Implement the hierarchical pull model")
-> Signed-off-by: Frederic Weisbecker <frederic@kernel.org>
+I applied fix to this problem to linux-kselftest fixes branch for next rc.
+Please give it a try.
 
-Reviewed-by: Anna-Maria Behnsen <anna-maria@linutronix.de>
-
-Thanks,
-
-	Anna-Maria
+thanks,
+-- Shuah
 
