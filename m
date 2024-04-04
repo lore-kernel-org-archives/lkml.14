@@ -1,115 +1,171 @@
-Received: from lelv0142.ext.ti.com (lelv0142.ext.ti.com [198.47.23.249])
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC9665D73B;
-	Thu,  4 Apr 2024 08:35:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.249
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 584D871735
+	for <linux-kernel@vger.kernel.org>; Thu,  4 Apr 2024 08:35:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712219703; cv=none; b=syVA9JVssUyOu7XtxsNG7d1rW1mpdPeXAj28lB9ZKMBofBvD3ZW+oFev47D/le6eUnJ1S65GTHDJaMC8zg05kWcaRcAIvQZwXMi4TbSJw3OYAx99gDfxLqmHwvci6ZBo4iCr4982wI4QB/XoqdM1c/DqWW0LbNg2dNyKi/sArJQ=
+	t=1712219711; cv=none; b=fq5zmx5uhEthw3rBCJTc9uwKqbYs2bRiylY8SErb6Ucj5LXL19bTjjUbD+f73xGtMszLQV1u+UMCqprIUhkQbGudtZ6DECVWMRy5BMRFI36UtkEpaC7losY+nKCIzVGvzB3mdiaFF19XljMktZvYgP7/tmn0aptsJFeJwSpfwiU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712219703; c=relaxed/simple;
-	bh=DQTSSWiiWCkefrYnZPQVvZGHFdYfwKXX7rU+vuILK3c=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CuN0aSgtzx9KdQyiPbbl1gCogvN86YqHNuawKbMpr1//l9oWg3kMUpNX9GLOfv7qCInDGX2nLVYWLUZwrG+XM92rGOtNlMirSNa6Pm1bNA03eO5NoGxbB1HIifZ3QzrpeojYTO4OrluhF4vPgp0qCc4VGuG9IhS6hlvp20+6XYQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=tZzNUlr7; arc=none smtp.client-ip=198.47.23.249
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="tZzNUlr7"
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-	by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 4348YhOQ103551;
-	Thu, 4 Apr 2024 03:34:43 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1712219683;
-	bh=zKEXPE9es174/NXvmXcWvCz01yqeUuHdClVxb0krZBo=;
-	h=Date:From:To:CC:Subject:References:In-Reply-To;
-	b=tZzNUlr7qNGsNyN7127Sjasos5RTHym4CSOzBPRJrUoJfif13JP1pFbZhDyP0CGad
-	 3eQR+GaxYysbaW4r+Q0VECs6szrbHLo+Pel2HdPJaKImcAYcjGS6MX5bd7gXX2z4KY
-	 cF+5DA7YSE/08NSvQBPmioAqBjdokvJ/xQ1HPc4Q=
-Received: from DFLE107.ent.ti.com (dfle107.ent.ti.com [10.64.6.28])
-	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 4348YhOv039372
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Thu, 4 Apr 2024 03:34:43 -0500
-Received: from DFLE102.ent.ti.com (10.64.6.23) by DFLE107.ent.ti.com
- (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Thu, 4
- Apr 2024 03:34:43 -0500
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE102.ent.ti.com
- (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Thu, 4 Apr 2024 03:34:43 -0500
-Received: from localhost (uda0492258.dhcp.ti.com [172.24.227.9])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 4348Yg4W089889;
-	Thu, 4 Apr 2024 03:34:42 -0500
-Date: Thu, 4 Apr 2024 14:04:42 +0530
-From: Siddharth Vadapalli <s-vadapalli@ti.com>
-To: Vignesh Raghavendra <vigneshr@ti.com>
-CC: Siddharth Vadapalli <s-vadapalli@ti.com>, <nm@ti.com>, <kristo@kernel.org>,
-        <robh@kernel.org>, <krzysztof.kozlowski+dt@linaro.org>,
-        <conor+dt@kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-        <srk@ti.com>
-Subject: Re: [PATCH] arm64: dts: ti: k3-am62p-main: use eFuse MAC Address for
- CPSW3G Port 1
-Message-ID: <77abfbd6-ee24-4a25-a05b-51bd7716a26f@ti.com>
-References: <20240402094200.4036076-1-s-vadapalli@ti.com>
- <ae04c041-688c-4413-8f15-b37b4ea44aac@ti.com>
- <f7cadda8-c3cf-48a0-846a-1ff317a28292@ti.com>
+	s=arc-20240116; t=1712219711; c=relaxed/simple;
+	bh=R3WK7lsgcv6hzJeNFgwT/ZIP/4S5DB86hBp3h/+cNz0=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=Dup65vSlJIqz0IKSAyzJsXblTyH6BUYUBwDCp2NdT57WBOXlImI7JpiboMBAXUTgDu8oKbBVjM6epCaxS67nrp//r1e369rhAOByXMX166oQMJf+gVS+ZrgfHocagm0b+IgfgoaUslvwtsFUfnZ5CFlRLdUa+anwk/AHiMwJXZA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <m.grzeschik@pengutronix.de>)
+	id 1rsIYo-0004iC-23; Thu, 04 Apr 2024 10:35:02 +0200
+Received: from [2a0a:edc0:0:1101:1d::ac] (helo=dude04.red.stw.pengutronix.de)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <m.grzeschik@pengutronix.de>)
+	id 1rsIYn-00AKmC-KV; Thu, 04 Apr 2024 10:35:01 +0200
+Received: from localhost ([::1] helo=dude04.red.stw.pengutronix.de)
+	by dude04.red.stw.pengutronix.de with esmtp (Exim 4.96)
+	(envelope-from <m.grzeschik@pengutronix.de>)
+	id 1rsIYn-00FhvA-1s;
+	Thu, 04 Apr 2024 10:35:01 +0200
+From: Michael Grzeschik <m.grzeschik@pengutronix.de>
+Date: Thu, 04 Apr 2024 10:35:01 +0200
+Subject: [PATCH] usb: gadget: function: uvc: set req_size once when the vb2
+ queue is calculated
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <f7cadda8-c3cf-48a0-846a-1ff317a28292@ti.com>
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240404-uvc_request_calc_once-v1-1-fea7fd8f0496@pengutronix.de>
+X-B4-Tracking: v=1; b=H4sIADRmDmYC/x2NUQrCQAwFr1Ly7UKtdUWvIrKkaWoDy1YTtwild
+ zfI+5oHw2xgrMIGt2YD5VVMluJwPDRAM5YnBxmdoWu7vvWFulJSfle2TyLMlJZCHPByGqdrH+O
+ ZI7g7oHEYFAvNbpeas58v5Um+/9j9se8/4OuZ43wAAAA=
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, 
+ Daniel Scally <dan.scally@ideasonboard.com>, 
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Michael Grzeschik <m.grzeschik@pengutronix.de>
+X-Mailer: b4 0.12.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3280;
+ i=m.grzeschik@pengutronix.de; h=from:subject:message-id;
+ bh=R3WK7lsgcv6hzJeNFgwT/ZIP/4S5DB86hBp3h/+cNz0=;
+ b=owEBbQKS/ZANAwAKAb9pWET5cfSrAcsmYgBmDmY1g1F2hyDuU1n1BbR67d4Va4pa9j3iM6z5H
+ BJd/VAuV3OJAjMEAAEKAB0WIQQV2+2Fpbqd6fvv0Gi/aVhE+XH0qwUCZg5mNQAKCRC/aVhE+XH0
+ q8gSD/99ZVnm/QDxrxfyZxr8Md0yVisuKOOH7aDnIZiLRuuWn1oQ9wHkx1UZeDXkoHgMW9tNfLH
+ gTjI/E7aD7ejiUgrsfOyJ9Rf6xAoclXvnYUQm4uQbsSj/gHTPg2Pei/clbBvjhDu7MReU3sX6LO
+ lzlS+YwEmjkzna0bkV1pFyrbmE0mA3+PGoJXNuVOg+n8X7fk+NpefJ4qw6gSrhWFNS8PECeiHVz
+ APwZ0UHu0ZgsujpELAqg5SUDGM+i34jjoiWWCZVIvoFb0cpkYISauDJY9BAd3grQtL6yUxrXAWr
+ xI1htGWQIPXmWumYpnsAC8goWEdZo38I4llYFu4BBwUL8yo0FyK7QnDgGDJfvy1IB6kKTeW7cs7
+ wQnLTLUq4viQXQj2dxS7uLpljipXHR36c9Ehqu0vBdlcp8ZPiXMwbraO1FyR083nbDitGWchDsX
+ A1TBzRQz8tQk+2ApVK1+gcvyzM7IxFUZPIPZNOEQ72ZSw1dXhoU7ZbluDLgUGu9mRMQDKerjllb
+ q1YGt4OA2JN2pQDkqZOCgqySt6+2Pa0rtkVgtnxPqezFRtTaXjQe8mPSmba5frkmNSf62bDhKki
+ Sjugang6fKGUZpAO47oPXa3YliQmAw2eORhSy4onVl1AGYd70wdI/huZPeeKFq93Vbyt9WUNxKk
+ w2nJ8GmPAfc+O6w==
+X-Developer-Key: i=m.grzeschik@pengutronix.de; a=openpgp;
+ fpr=957BC452CE953D7EA60CF4FC0BE9E3157A1E2C64
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: m.grzeschik@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-On Tue, Apr 02, 2024 at 04:02:07PM +0530, Siddharth Vadapalli wrote:
-> On Tue, Apr 02, 2024 at 03:25:41PM +0530, Vignesh Raghavendra wrote:
-> > 
-> > 
-> > On 02/04/24 15:12, Siddharth Vadapalli wrote:
-> > > Assign the MAC Address programmed in the eFuse registers as the default
-> > > MAC Address for CPSW3G MAC Port 1. Utilize the "ti,syscon-efuse"
-> > > device-tree property to do so.
-> > > 
-> > > Signed-off-by: Siddharth Vadapalli <s-vadapalli@ti.com>
-> > > ---
-> > > 
-> > > This patch is based on linux-next tagged next-20240402.
-> > > 
-> > > Regards,
-> > > Siddharth.
-> > > 
-> > >  arch/arm64/boot/dts/ti/k3-am62p-main.dtsi | 1 +
-> > >  1 file changed, 1 insertion(+)
-> > > 
-> > > diff --git a/arch/arm64/boot/dts/ti/k3-am62p-main.dtsi b/arch/arm64/boot/dts/ti/k3-am62p-main.dtsi
-> > > index 7337a9e13535..eb126f4a04dd 100644
-> > > --- a/arch/arm64/boot/dts/ti/k3-am62p-main.dtsi
-> > > +++ b/arch/arm64/boot/dts/ti/k3-am62p-main.dtsi
-> > > @@ -696,6 +696,7 @@ cpsw_port1: port@1 {
-> > >  				label = "port1";
-> > >  				phys = <&phy_gmii_sel 1>;
-> > >  				mac-address = [00 00 00 00 00 00];
-> > > +				ti,syscon-efuse = <&wkup_conf 0x200>;
-> > 
-> > Sorry, how does this work? wkup_conf is not marked as "syscon" compatible?
-> 
-> Sorry I failed to realize that. So this will also require adding a
-> custom property similar to:
-> https://github.com/torvalds/linux/commit/cc1965b02d6cb18d9220dae06f7e2e0b0ebbea48
-> followed by adding a new sub-node within wkup_conf corresponding to the
-> MAC Address CTRL_MMR registers.
-> 
-> Thank you for reviewing the patch and pointing this out.
+The uvc gadget driver is calculating the req_size on every
+video_enable/alloc_request and is based on the fixed configfs parameters
+maxpacket, maxburst and mult.
 
-I have posted the v2 patch at:
-https://patchwork.kernel.org/project/linux-arm-kernel/patch/20240404081845.622707-1-s-vadapalli@ti.com/
-verifying that the MAC Address present in the CTRLMMR_MAC_IDx registers
-is assigned to the network interface corresponding to CPSW3G MAC Port 1.
+As those parameters can not be changed once the gadget is started and
+the same calculation is done already early on the
+vb2_streamon/queue_setup path its save to remove one extra calculation
+and reuse the calculation from uvc_queue_setup for the allocation step.
 
-Regards,
-Siddharth.
+Signed-off-by: Michael Grzeschik <m.grzeschik@pengutronix.de>
+---
+ drivers/usb/gadget/function/uvc_queue.c |  2 ++
+ drivers/usb/gadget/function/uvc_video.c | 15 ++-------------
+ 2 files changed, 4 insertions(+), 13 deletions(-)
+
+diff --git a/drivers/usb/gadget/function/uvc_queue.c b/drivers/usb/gadget/function/uvc_queue.c
+index 0aa3d7e1f3cc3..ce51643fc4639 100644
+--- a/drivers/usb/gadget/function/uvc_queue.c
++++ b/drivers/usb/gadget/function/uvc_queue.c
+@@ -63,6 +63,8 @@ static int uvc_queue_setup(struct vb2_queue *vq,
+ 	 */
+ 	nreq = DIV_ROUND_UP(DIV_ROUND_UP(sizes[0], 2), req_size);
+ 	nreq = clamp(nreq, 4U, 64U);
++
++	video->req_size = req_size;
+ 	video->uvc_num_requests = nreq;
+ 
+ 	return 0;
+diff --git a/drivers/usb/gadget/function/uvc_video.c b/drivers/usb/gadget/function/uvc_video.c
+index d41f5f31dadd5..95bb64e16f3da 100644
+--- a/drivers/usb/gadget/function/uvc_video.c
++++ b/drivers/usb/gadget/function/uvc_video.c
+@@ -496,7 +496,6 @@ uvc_video_free_requests(struct uvc_video *video)
+ 	INIT_LIST_HEAD(&video->ureqs);
+ 	INIT_LIST_HEAD(&video->req_free);
+ 	INIT_LIST_HEAD(&video->req_ready);
+-	video->req_size = 0;
+ 	return 0;
+ }
+ 
+@@ -504,16 +503,9 @@ static int
+ uvc_video_alloc_requests(struct uvc_video *video)
+ {
+ 	struct uvc_request *ureq;
+-	unsigned int req_size;
+ 	unsigned int i;
+ 	int ret = -ENOMEM;
+ 
+-	BUG_ON(video->req_size);
+-
+-	req_size = video->ep->maxpacket
+-		 * max_t(unsigned int, video->ep->maxburst, 1)
+-		 * (video->ep->mult);
+-
+ 	for (i = 0; i < video->uvc_num_requests; i++) {
+ 		ureq = kzalloc(sizeof(struct uvc_request), GFP_KERNEL);
+ 		if (ureq == NULL)
+@@ -523,7 +515,7 @@ uvc_video_alloc_requests(struct uvc_video *video)
+ 
+ 		list_add_tail(&ureq->list, &video->ureqs);
+ 
+-		ureq->req_buffer = kmalloc(req_size, GFP_KERNEL);
++		ureq->req_buffer = kmalloc(video->req_size, GFP_KERNEL);
+ 		if (ureq->req_buffer == NULL)
+ 			goto error;
+ 
+@@ -541,12 +533,10 @@ uvc_video_alloc_requests(struct uvc_video *video)
+ 		list_add_tail(&ureq->req->list, &video->req_free);
+ 		/* req_size/PAGE_SIZE + 1 for overruns and + 1 for header */
+ 		sg_alloc_table(&ureq->sgt,
+-			       DIV_ROUND_UP(req_size - UVCG_REQUEST_HEADER_LEN,
++			       DIV_ROUND_UP(video->req_size - UVCG_REQUEST_HEADER_LEN,
+ 					    PAGE_SIZE) + 2, GFP_KERNEL);
+ 	}
+ 
+-	video->req_size = req_size;
+-
+ 	return 0;
+ 
+ error:
+@@ -699,7 +689,6 @@ uvcg_video_disable(struct uvc_video *video)
+ 	INIT_LIST_HEAD(&video->ureqs);
+ 	INIT_LIST_HEAD(&video->req_free);
+ 	INIT_LIST_HEAD(&video->req_ready);
+-	video->req_size = 0;
+ 	spin_unlock_irqrestore(&video->req_lock, flags);
+ 
+ 	/*
+
+---
+base-commit: 5bab5dc780c9ed0c69fc2f828015532acf4a7848
+change-id: 20240404-uvc_request_calc_once-a73df94665e6
+
+Best regards,
+-- 
+Michael Grzeschik <m.grzeschik@pengutronix.de>
+
