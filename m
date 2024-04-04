@@ -1,512 +1,109 @@
-Received: from mail-4322.protonmail.ch (mail-4322.protonmail.ch [185.70.43.22])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D23EE1292D7
-	for <linux-kernel@vger.kernel.org>; Thu,  4 Apr 2024 14:03:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.43.22
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A12B12880A;
+	Thu,  4 Apr 2024 14:05:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712239435; cv=none; b=KQCD4s8ff9XBMzaWzmo06APNrcZ99aMOCiagCqZCQpdkGIHcw7v0T3dbzXj96Kmw1JIAwB6PcqixW/iGtnqjSd4WkjH3SptWoXr809uuLNXnyQTxSMBK9AXl1FKYwuWtMQqkunw0NViF7iV9unKiiJtBmTGyTBhd7P2Cjop73dA=
+	t=1712239540; cv=none; b=ObpFi7EaolaJ+4qK/gwBceZj5Oi2030hUtL4eEpY/DaA8TpKfO7/ymrP1KZ0l0cUMbHIdFeHwrGzKcGg85lXQLcdCJgbdpt9nTbBy8zkoFGASqDaQedLSnrUar3swk+eAhGNNRFPmh3r89mSWRL0MXKYZdANDgF9yUL/mzBIKdU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712239435; c=relaxed/simple;
-	bh=gPbMYYFcNAjcrF4xRBroOPbJ01haxu2ZG/L8Pe3skq8=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ge/LOE8FycpN2vIsvXGAMw8RcoA5H/yb3i4932PQAFwsEZWsAmK4XOVtAxwUwUH1sh0QX4AYNsO7UoF3veVa+FD/j5mepiv5mmkVRYzQOCV9DSve7g6ZtFWpJg4CBsj5IFAH27jUk02XBxsxVdjpWlnvfMnSYzIrtTq7gJTtZkE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me; spf=pass smtp.mailfrom=proton.me; dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b=GYOhMcRB; arc=none smtp.client-ip=185.70.43.22
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
+	s=arc-20240116; t=1712239540; c=relaxed/simple;
+	bh=U/MPpQggBCzuKAhHoUOfvrR+Z2ao2griNbbZUp9Y+FY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=J+X3DcFztgc2oAyGKt3BqDCxFmZTf2Yk+ayvPhbfDzvnMBmJE76T5j1EIoGZJfrbTio6WXrhVlk2uEbUFWG931hSGNdaCRp8J9CcoyM/GbF60dATVqaBkE4vb7Xedv/XNIl33PXEQM209JwHy3W0PuJZN7Hf1lfVrJGZlup13kA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qqz23xxk; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b="GYOhMcRB"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
-	s=protonmail; t=1712239430; x=1712498630;
-	bh=mxRt1JFDvTbBuOkFZH1WEcA2xwbKGdW+b1os3pnPbR4=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
-	 Message-ID:BIMI-Selector;
-	b=GYOhMcRB959RJhvXCSEh0sn/wXP5FCXKe3pdhhnCCxT/Co9qcbS4EDglfs9DhOo+Y
-	 QNFT6Vhs3c/OoWu41xolRn/XM4bqibpwidIvnwM4RGKyxMWwBWtm4KMCIN7rN4VkB5
-	 Tek+r211m9st10KyBmkvN0K7To4ifBGvOg7Ry7PKNv5ekDr+FrCi8ncZ1PRd24e7x7
-	 XKzfmV0ytDcpR9ZD7GxG9eTbONBdLrNQgunFWJ4dlAg0fweaQRI59e94XbMaut7+Ry
-	 MBIIlHMH1+QF0GJmC0GyWsn1At6EWBVr20LZ0sIZ2qHUHWuySVKMqwv22WYKbTDl9d
-	 74yJD+bPFqB+w==
-Date: Thu, 04 Apr 2024 14:03:43 +0000
-To: Alice Ryhl <aliceryhl@google.com>, Miguel Ojeda <ojeda@kernel.org>, Andrew Morton <akpm@linux-foundation.org>
-From: Benno Lossin <benno.lossin@proton.me>
-Cc: Alex Gaynor <alex.gaynor@gmail.com>, Wedson Almeida Filho <wedsonaf@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, Andreas Hindborg <a.hindborg@samsung.com>, Marco Elver <elver@google.com>, Kees Cook <keescook@chromium.org>, Coly Li <colyli@suse.de>, Paolo Abeni <pabeni@redhat.com>, Pierre Gondois <pierre.gondois@arm.com>, Ingo Molnar <mingo@kernel.org>, Jakub Kicinski <kuba@kernel.org>, Wei Yang <richard.weiyang@gmail.com>, Matthew Wilcox <willy@infradead.org>, linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org
-Subject: Re: [PATCH 5/9] rust: list: add List
-Message-ID: <d896a813-3081-40b4-985b-ef257d55cec2@proton.me>
-In-Reply-To: <20240402-linked-list-v1-5-b1c59ba7ae3b@google.com>
-References: <20240402-linked-list-v1-0-b1c59ba7ae3b@google.com> <20240402-linked-list-v1-5-b1c59ba7ae3b@google.com>
-Feedback-ID: 71780778:user:proton
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qqz23xxk"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B1F06C433F1;
+	Thu,  4 Apr 2024 14:05:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1712239540;
+	bh=U/MPpQggBCzuKAhHoUOfvrR+Z2ao2griNbbZUp9Y+FY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=qqz23xxki1mIXnAn+WLvnaKU8EC8fa6V5d6k5Usmy77PxW7O+g/Val5wg3CcRaipW
+	 YKnVAkSAt+QkgRFy7T6+wLHcfe4VRNl0giMnZVtWuLT0+9vgk3x3IuFo0uSLILr2hF
+	 38oCiSGmm9D9TiUbfdAiYMMze3u6lqZvXK+Mue1IKwOqdQkFRedSI0nnU1oifJA2QB
+	 iZGyfT6ZgaetNmvNRoUi/q9h/GVHhLkUoyRguasgV/EGkIx+OAH5A6obocOLzCsIBk
+	 QP0TJfX532W1p7z0iTei/pgnZdunysyNUKsQy6RnsEmkOnTbev8yM6/4+fAolbICX6
+	 +HzJf7Dw7Gh3A==
+Date: Thu, 4 Apr 2024 16:05:37 +0200
+From: Frederic Weisbecker <frederic@kernel.org>
+To: Oliver Sang <oliver.sang@intel.com>
+Cc: Anna-Maria Behnsen <anna-maria@linutronix.de>, oe-lkp@lists.linux.dev,
+	lkp@intel.com, linux-kernel@vger.kernel.org,
+	Thomas Gleixner <tglx@linutronix.de>, ying.huang@intel.com,
+	feng.tang@intel.com, fengwei.yin@intel.com
+Subject: Re: [linus:master] [timers]  7ee9887703:
+ stress-ng.uprobe.ops_per_sec -17.1% regression
+Message-ID: <Zg6zscsaZ0OA14yn@localhost.localdomain>
+References: <202403271623.f0b40181-oliver.sang@intel.com>
+ <Zgs5NxoUUoGIkuQO@pavilion.home>
+ <Zgtjdd0C2FzYVBto@xsang-OptiPlex-9020>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <Zgtjdd0C2FzYVBto@xsang-OptiPlex-9020>
 
-On 02.04.24 14:17, Alice Ryhl wrote:
-> Add the actual linked list itself.
->=20
-> The linked list uses the following design: The List type itself just has
-> a single pointer to the first element of the list. And the actual list
-> items then form a cycle. So the last item is `first->prev`.
->=20
-> This is slightly different from the usual kernel linked list. Matching
-> that exactly would amount to giving List two pointers, and having it be
-> part of the cycle of items. This alternate design has the advantage that
-> the cycle is never completely empty, which can reduce the number of
-> branches in some cases. However, it also has the disadvantage that List
-> must be pinned, which this design is trying to avoid.
->=20
-> Having the list items form a cycle rather than having null pointers at
-> the beginning/end is convenient for several reasons. For one, it lets us
-> store only one pointer in List, and it simplifies the implementation of
-> several functions.
->=20
-> Unfortunately, the `remove` function that removes an arbitrary element
-> from the list has to be unsafe. This is needed because there is no way
-> to handle the case where you pass an element from the wrong list. For
-> example, if it is the first element of some other list, then that other
-> list's `first` pointer would not be updated. Similarly, it could be a
-> data race if you try to remove it from two different lists in parallel.
-> (There's no problem with passing `remove` an item that's not in any
-> list. Additionally, other removal methods such as `pop_front` need not
-> be unsafe, as they can't be used to remove items from another list.)
->=20
-> Signed-off-by: Alice Ryhl <aliceryhl@google.com>
-> ---
->   rust/kernel/list.rs     | 294 +++++++++++++++++++++++++++++++++++++++++=
-++++++-
->   rust/kernel/list/arc.rs |   6 +-
->   2 files changed, 295 insertions(+), 5 deletions(-)
->=20
-> diff --git a/rust/kernel/list.rs b/rust/kernel/list.rs
-> index 7af5109500f2..7e9ed802b26b 100644
-> --- a/rust/kernel/list.rs
-> +++ b/rust/kernel/list.rs
-> @@ -6,6 +6,7 @@
->=20
->   use crate::init::PinInit;
->   use crate::types::Opaque;
-> +use core::marker::PhantomData;
->   use core::ptr;
->=20
->   mod impl_list_item_mod;
-> @@ -16,7 +17,41 @@
->       impl_list_arc_safe, AtomicListArcTracker, ListArc, ListArcSafe, Try=
-NewListArc,
->   };
->=20
-> -/// Implemented by types where a [`ListArc<Self>`] can be inserted into =
-a `List`.
-> +/// A linked list.
-> +///
-> +/// All elements in this linked list will be [`ListArc`] references to t=
-he value. Since a value can
-> +/// only have one `ListArc` (for each pair of prev/next pointers), this =
-ensures that the same
-> +/// prev/next pointers are not used for several linked lists.
-> +///
-> +/// # Invariants
-> +///
-> +/// If the list is empty, then `first` is null. Otherwise, it points at =
-the links field of the
-> +/// first element of this list. The prev/next pointers of items in the l=
-ist will always form a
-> +/// cycle. This means that prev/next pointers for an item in a list are =
-never null and never
-> +/// dangling.
+Le Tue, Apr 02, 2024 at 09:46:29AM +0800, Oliver Sang a écrit :
+> hi, Frederic Weisbecker,
+> 
+> On Tue, Apr 02, 2024 at 12:46:15AM +0200, Frederic Weisbecker wrote:
+> > Le Wed, Mar 27, 2024 at 04:39:17PM +0800, kernel test robot a écrit :
+> > > 
+> > > 
+> > > Hello,
+> > > 
+> > > 
+> > > we reported
+> > > "[tip:timers/core] [timers]  7ee9887703:  netperf.Throughput_Mbps -1.2% regression"
+> > > in
+> > > https://lore.kernel.org/all/202403011511.24defbbd-oliver.sang@intel.com/
+> > > 
+> > > now we noticed this commit is in mainline and we captured further results.
+> > > 
+> > > still include netperf results for complete. below details FYI.
+> > > 
+> > > 
+> > > kernel test robot noticed a -17.1% regression of stress-ng.uprobe.ops_per_sec
+> > > on:
+> > 
+> > The good news is that I can reproduce.
+> > It has made me spot something already:
+> > 
+> >    https://lore.kernel.org/lkml/ZgsynV536q1L17IS@pavilion.home/T/#m28c37a943fdbcbadf0332cf9c32c350c74c403b0
+> > 
+> > But that's not enough to fix the regression. Investigation continues...
+> 
+> Thanks a lot for information! if you want us test any patch, please let us know.
 
-I think this is missing that all elements of the list are in `ListArc`s.
+The good news is that I can reproduce on two CPUs with just this:
 
-About "This means that prev/next pointers for an item in a list are
-never null and never dangling.", I think it would be simpler to say that
-"All prev/next pointers of items in the list are valid and form a cycle."
+    ./tmp-pkg/stress-ng/src/stress-ng/stress-ng --uprobe-ops 1 --uprobe 2 --timeout 5 --metrics-brief
 
-> +pub struct List<T: ?Sized + ListItem<ID>, const ID: u64 =3D 0> {
-> +    first: *mut ListLinksFields,
-> +    _ty: PhantomData<ListArc<T, ID>>,
-> +}
-> +
-> +// SAFETY: This is a container of `ListArc<T, ID>`, and access to the co=
-ntainer allows the same
-> +// type of access to the `ListArc<T, ID>` elements.
-> +unsafe impl<T, const ID: u64> Send for List<T, ID>
-> +where
-> +    ListArc<T, ID>: Send,
-> +    T: ?Sized + ListItem<ID>,
-> +{
-> +}
-> +// SAFETY: This is a container of `ListArc<T, ID>`, and access to the co=
-ntainer allows the same
-> +// type of access to the `ListArc<T, ID>` elements.
-> +unsafe impl<T, const ID: u64> Sync for List<T, ID>
-> +where
-> +    ListArc<T, ID>: Sync,
-> +    T: ?Sized + ListItem<ID>,
-> +{
-> +}
-> +
-> +/// Implemented by types where a [`ListArc<Self>`] can be inserted into =
-a [`List`].
->   ///
->   /// # Safety
->   ///
-> @@ -56,7 +91,7 @@ pub unsafe trait ListItem<const ID: u64 =3D 0>: ListArc=
-Safe<ID> {
->       ///   been called.
->       unsafe fn view_value(me: *mut ListLinks<ID>) -> *const Self;
->=20
-> -    /// This is called when an item is inserted into a `List`.
-> +    /// This is called when an item is inserted into a [`List`].
->       ///
->       /// # Guarantees
->       ///
-> @@ -103,7 +138,6 @@ struct ListLinksFields {
->   /// The fields are null if and only if this item is not in a list.
->   #[repr(transparent)]
->   pub struct ListLinks<const ID: u64 =3D 0> {
-> -    #[allow(dead_code)]
->       inner: Opaque<ListLinksFields>,
->   }
->=20
-> @@ -125,4 +159,258 @@ pub fn new() -> impl PinInit<Self> {
->               }),
->           }
->       }
-> +
-> +    /// # Safety
-> +    ///
-> +    /// The pointer must be dereferencable.
+This reminds me I should try on a single CPU. 
 
-I would use "`me` is valid.".
+Anyway but the big problem with stress-ng.uprobe is that it consists in
+triggering uprobes events and consuming /sys/kernel/tracing/trace_pipe
 
-> +    #[inline]
-> +    unsafe fn fields(me: *mut Self) -> *mut ListLinksFields {
-> +        // SAFETY: The caller promises that the pointer is valid.
-> +        unsafe { Opaque::raw_get(ptr::addr_of!((*me).inner)) }
-> +    }
-> +
-> +    /// # Safety
-> +    ///
-> +    /// The pointer must be dereferencable.
+This makes this testcase nearly impossible to analyse because I can't use any
+tracing: the traces are consumed by the testcase. That alone took me quite
+some time to figure out.
 
-Ditto.
+Then I tried using perf event to do the tracing, as it relies on a different
+ring buffer. It works but traces generate ring buffer consumer wake up, which
+doesn't work as we are analysing code that depends on idle behaviour.
 
-> +    #[inline]
-> +    unsafe fn from_fields(me: *mut ListLinksFields) -> *mut Self {
-> +        me.cast()
-> +    }
-> +}
-> +
-> +impl<T: ?Sized + ListItem<ID>, const ID: u64> List<T, ID> {
-> +    /// Creates a new empty list.
-> +    pub const fn new() -> Self {
-> +        Self {
-> +            first: ptr::null_mut(),
-> +            _ty: PhantomData,
-> +        }
-> +    }
-> +
-> +    /// Returns whether this list is empty.
-> +    pub fn is_empty(&self) -> bool {
-> +        self.first.is_null()
-> +    }
-> +
-> +    /// Add the provided item to the back of the list.
-> +    pub fn push_back(&mut self, item: ListArc<T, ID>) {
-> +        let item =3D unsafe { ListLinks::fields(T::prepare_to_insert(Lis=
-tArc::into_raw(item))) };
+Then I tried hacking stress-uprobe.c so that the consumed traces are recorded
+in a buffer that I writeback in the end. So I can add my own tracepoints in
+the flow. And it works but that again doesn't mix up well with tracing idle
+behaviour, similar to perf event: the fact that the testcase waits on
+/sys/kernel/tracing/trace_pipe produce wake ups from idle while a trace happen
+on idle. And that noise ruins the tracing.
 
-Missing SAFETY comment.
-
-> +
-> +        if self.first.is_null() {
-> +            self.first =3D item;
-> +            // SAFETY: The caller just gave us ownership of these fields=
-.
-> +            // INVARIANT: A linked list with one item should be cyclic.
-> +            unsafe {
-> +                (*item).next =3D item;
-> +                (*item).prev =3D item;
-> +            }
-> +        } else {
-> +            let next =3D self.first;
-> +            // SAFETY: We just checked that `next` is non-null.
-
-Missing mention of the type invariant.
-
-> +            let prev =3D unsafe { (*next).prev };
-> +            // SAFETY: Pointers in a linked list are never dangling, and=
- the caller just gave us
-> +            // ownership of the fields on `item`.
-> +            // INVARIANT: This correctly inserts `item` between `prev` a=
-nd `next`.
-> +            unsafe {
-> +                (*item).next =3D next;
-> +                (*item).prev =3D prev;
-> +                (*prev).next =3D item;
-> +                (*next).prev =3D item;
-> +            }
-> +        }
-> +    }
-> +
-> +    /// Add the provided item to the front of the list.
-> +    pub fn push_front(&mut self, item: ListArc<T, ID>) {
-> +        let item =3D unsafe { ListLinks::fields(T::prepare_to_insert(Lis=
-tArc::into_raw(item))) };
-> +
-> +        if self.first.is_null() {
-> +            // SAFETY: The caller just gave us ownership of these fields=
-.
-> +            // INVARIANT: A linked list with one item should be cyclic.
-> +            unsafe {
-> +                (*item).next =3D item;
-> +                (*item).prev =3D item;
-> +            }
-> +        } else {
-> +            let next =3D self.first;
-> +            // SAFETY: We just checked that `next` is non-null.
-> +            let prev =3D unsafe { (*next).prev };
-> +            // SAFETY: Pointers in a linked list are never dangling, and=
- the caller just gave us
-> +            // ownership of the fields on `item`.
-> +            // INVARIANT: This correctly inserts `item` between `prev` a=
-nd `next`.
-> +            unsafe {
-> +                (*item).next =3D next;
-> +                (*item).prev =3D prev;
-> +                (*prev).next =3D item;
-> +                (*next).prev =3D item;
-> +            }
-> +        }
-> +        self.first =3D item;
-> +    }
-> +
-> +    /// Removes the last item from this list.
-> +    pub fn pop_back(&mut self) -> Option<ListArc<T, ID>> {
-> +        if self.first.is_null() {
-> +            return None;
-> +        }
-> +
-> +        // SAFETY: We just checked that the list is not empty.
-> +        let last =3D unsafe { (*self.first).prev };
-> +        // SAFETY: The last item of this list is in this list.
-> +        Some(unsafe { self.remove_internal(last) })
-> +    }
-> +
-> +    /// Removes the first item from this list.
-> +    pub fn pop_front(&mut self) -> Option<ListArc<T, ID>> {
-> +        if self.first.is_null() {
-> +            return None;
-> +        }
-> +
-> +        // SAFETY: The first item of this list is in this list.
-> +        Some(unsafe { self.remove_internal(self.first) })
-> +    }
-> +
-> +    /// Removes the provided item from this list and returns it.
-> +    ///
-> +    /// This returns `None` if the item is not in the list.
-
-I think this should say "Returns `None` if the item is not in a list.".
-(Technically it should be "is not in a `List<T, ID>`", since it *can* be
-in another list with a different ID.)
-
-> +    ///
-> +    /// # Safety
-> +    ///
-> +    /// The provided item must not be in a different linked list.
-> +    pub unsafe fn remove(&mut self, item: &T) -> Option<ListArc<T, ID>> =
-{
-> +        let mut item =3D unsafe { ListLinks::fields(T::view_links(item))=
- };
-> +        // SAFETY: The user provided a reference, and reference are neve=
-r dangling.
-> +        //
-> +        // As for why this is not a data race, there are two cases:
-> +        //
-> +        //  * If `item` is not in any list, then these fields are read-o=
-nly and null.
-> +        //  * If `item` is in this list, then we have exclusive access t=
-o these fields since we
-> +        //    have a mutable reference to the list.
-> +        //
-> +        // In either case, there's no race.
-> +        let ListLinksFields { next, prev } =3D unsafe { *item };
-> +
-> +        debug_assert_eq!(next.is_null(), prev.is_null());
-> +        if !next.is_null() {
-> +            // This is really a no-op, but this ensures that `item` is a=
- raw pointer that was
-> +            // obtained without going through a pointer->reference->poin=
-ter conversion rountrip.
-> +            // This ensures that the list is valid under the more restri=
-ctive strict provenance
-> +            // ruleset.
-> +            //
-> +            // SAFETY: We just checked that `next` is not null, and it's=
- not dangling by the
-> +            // list invariants.
-> +            unsafe {
-> +                debug_assert_eq!(item, (*next).prev);
-> +                item =3D (*next).prev;
-> +            }
-> +
-> +            // SAFETY: We just checked that `item` is in a list, so the =
-caller guarantees that it
-> +            // is in this list. The pointers are in the right order.
-> +            Some(unsafe { self.remove_internal_inner(item, next, prev) }=
-)
-> +        } else {
-> +            None
-> +        }
-> +    }
-> +
-> +    /// Removes the provided item from the list.
-> +    ///
-> +    /// # Safety
-> +    ///
-> +    /// The pointer must point at an item in this list.
-> +    unsafe fn remove_internal(&mut self, item: *mut ListLinksFields) -> =
-ListArc<T, ID> {
-> +        // SAFETY: The caller promises that this pointer is not dangling=
-, and there's no data race
-> +        // since we have a mutable reference to the list containing `ite=
-m`.
-> +        let ListLinksFields { next, prev } =3D unsafe { *item };
-> +        // SAFETY: The pointers are ok and in the right order.
-> +        unsafe { self.remove_internal_inner(item, next, prev) }
-> +    }
-> +
-> +    /// Removes the provided item from the list.
-> +    ///
-> +    /// # Safety
-> +    ///
-> +    /// The `item` pointer must point at an item in this list, and we mu=
-st have `(*item).next =3D=3D
-> +    /// next` and `(*item).prev =3D=3D prev`.
-> +    unsafe fn remove_internal_inner(
-> +        &mut self,
-> +        item: *mut ListLinksFields,
-> +        next: *mut ListLinksFields,
-> +        prev: *mut ListLinksFields,
-> +    ) -> ListArc<T, ID> {
-> +        // SAFETY: We have exclusive access to items in the list, and pr=
-ev/next pointers are
-
-I think you mean that you have exclusive access to the prev/next fields
-of the `ListLinks` associated with `ID`... But that is rather long.
-Does anyone have any idea to shorten this?
-
-> +        // never null for items in a list.
-> +        //
-> +        // INVARIANT: There are three cases:
-> +        //  * If the list has at least three items, then after removing =
-the item, `prev` and `next`
-> +        //    will be next to each other.
-> +        //  * If the list has two items, then the remaining item will po=
-int at itself.
-> +        //  * If the list has one item, then `next =3D=3D prev =3D=3D it=
-em`, so these writes have no effect
-> +        //    due to the writes to `item` below.
-
-I think the writes do not have an effect. (no need to reference the
-writes to `item` below)
-
-> +        unsafe {
-> +            (*next).prev =3D prev;
-> +            (*prev).next =3D next;
-> +        }
-> +        // SAFETY: We have exclusive access to items in the list.
-> +        // INVARIANT: The item is no longer in a list, so the pointers s=
-hould be null.
-> +        unsafe {
-> +            (*item).prev =3D ptr::null_mut();
-> +            (*item).next =3D ptr::null_mut();
-> +        }
-> +        // INVARIANT: There are three cases:
-> +        //  * If `item` was not the first item, then `self.first` should=
- remain unchanged.
-> +        //  * If `item` was the first item and there is another item, th=
-en we just updated
-> +        //    `prev->next` to `next`, which is the new first item, and s=
-etting `item->next` to null
-> +        //    did not modify `prev->next`.
-> +        //  * If `item` was the only item in the list, then `prev =3D=3D=
- item`, and we just set
-> +        //    `item->next` to null, so this correctly sets `first` to nu=
-ll now that the list is
-> +        //    empty.
-> +        if self.first =3D=3D item {
-> +            // SAFETY: The `prev` field of an item in a list is never da=
-ngling.
-
-I don't think this SAFETY comment makes sense.
-
---=20
-Cheers,
-Benno
-
-> +            self.first =3D unsafe { (*prev).next };
-> +        }
-> +
-> +        // SAFETY: We just removed a `ListArc` from the list, so we can =
-turn it back into a
-> +        // `ListArc`.
-> +        unsafe { ListArc::from_raw(T::post_remove(ListLinks::from_fields=
-(item))) }
-> +    }
-> +
-> +    /// Moves all items from `other` into `self`.
-> +    ///
-> +    /// The items of `other` are added to the back of `self`, so the las=
-t item of `other` becomes
-> +    /// the last item of `self`.
-> +    pub fn push_all_back(&mut self, other: &mut List<T, ID>) {
-> +        // First, we insert the elements into `self`. At the end, we mak=
-e `other` empty.
-> +        if self.is_empty() {
-> +            // INVARIANT: All of the elements in `other` become elements=
- of `self`.
-> +            self.first =3D other.first;
-> +        } else if !other.is_empty() {
-> +            let other_first =3D other.first;
-> +            // SAFETY: The other list is not empty, so this pointer is v=
-alid.
-> +            let other_last =3D unsafe { (*other_first).prev };
-> +            let self_first =3D self.first;
-> +            // SAFETY: The self list is not empty, so this pointer is va=
-lid.
-> +            let self_last =3D unsafe { (*self_first).prev };
-> +
-> +            // SAFETY: We have exclusive access to both lists, so we can=
- update the pointers.
-> +            // INVARIANT: This correctly sets the pointers to merge both=
- lists. We do not need to
-> +            // update `self.first` because the first element of `self` d=
-oes not change.
-> +            unsafe {
-> +                (*self_first).prev =3D other_last;
-> +                (*other_last).next =3D self_first;
-> +                (*self_last).next =3D other_first;
-> +                (*other_first).prev =3D self_last;
-> +            }
-> +        }
-> +
-> +        // INVARIANT: The other list is now empty, so update its pointer=
-.
-> +        other.first =3D ptr::null_mut();
-> +    }
-> +}
-> +
-> +impl<T: ?Sized + ListItem<ID>, const ID: u64> Drop for List<T, ID> {
-> +    fn drop(&mut self) {
-> +        while let Some(item) =3D self.pop_front() {
-> +            drop(item);
-> +        }
-> +    }
->   }
-
+So I'm kind of running out of options for now :-/
