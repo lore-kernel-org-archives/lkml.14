@@ -1,71 +1,95 @@
-Received: from mail-io1-f71.google.com (mail-io1-f71.google.com [209.85.166.71])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F49B3FC2
-	for <linux-kernel@vger.kernel.org>; Thu,  4 Apr 2024 02:39:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.71
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A82E8EEB2;
+	Thu,  4 Apr 2024 02:40:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712198346; cv=none; b=hg1AUp2eNcbwXiHsGoCfVd5OPdN2Vb6b9JR1Vi2mtyuyrndMJ31rCFyEsZsZSaKUiNBG5jtk+H5KFx8K+Rg9X2zYOF0BAZ6WmtgIkfpfCv6thMjPmyT6AHoy9QUH9GtYhdji+5R6YuXwedsb4KdnyUlh98DOzYg8mmVkiAMePxg=
+	t=1712198427; cv=none; b=CSDRzRPRKgOQTS7eLJw+0snzj+ytt6IQhDKX0jWCFbSqvKSlSKQQPTgp4r0p+Nasc4dIYBlXW8uGz/XQDr4g0ZqevzljSXqhb2erA4m0+0uBFJnDNX0KtsAP9R9HibaGJf9aWa0yKf8omr/0R6tr3ACQvMdop37OS4zIVVtEVgA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712198346; c=relaxed/simple;
-	bh=MEe0MzLGdJql/DnSM4nY1OscnovHyp03ahMc85LihZA=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=l6/NY9oXA1/+82zuo/L6n6U56IAkUX3V6qmxh/ek3S+5HdlPOrMW0/0/JFGrcC43TEe8I5h4/7ovlPUbdpFkSGKnBaTm9d6U7C53NnejkD9i68LbweG524h4TvP7f3bL4ydws+NWmtcDYmHN3WlGPEQUV1MzDNjOrjshQVEdJEI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.71
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f71.google.com with SMTP id ca18e2360f4ac-7cbf092a502so59246639f.0
-        for <linux-kernel@vger.kernel.org>; Wed, 03 Apr 2024 19:39:04 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712198344; x=1712803144;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=nlKfiMMTgxpZSq4XnNY3uaq1k86EbBK7PbjDB3tI9r8=;
-        b=QzH00z/aO2SHiMqwjTj+5ai8Bawq033haZ/Dos3HVYYwkS4QaZDML/5Ro3Fv91vtfl
-         a2WHoICs8TxTakHJ5ynbfDfopJOL0BY+/rknQkzVA/RVCiOQ4POA+7h07yKXENXfINPl
-         WdJKBCw49B7l8CBRANPv4ybQ7n+fB3Ir7LDkgFLlGJcZdTb/O7xEqaXOSwsQ0ti4MmpZ
-         QXanC0ak7z21NgoSlWuGQDUX3E/bqctPuiqnt1Dx/0UsfK2EyCmBjsj9uhLo/Sp1OQBv
-         ab2Vz/LbzNJC9VP4W4i8KtN3eU/HIUYMRZdnlYPIR4nn111gcilMSHsu1IlZ5T+8aWJy
-         qIgA==
-X-Forwarded-Encrypted: i=1; AJvYcCUUJyD+MK2RRnB8xsswN/spb5C+QFvyBlga8xnhdVQhahl8SX9iVOnwV6uXNjIhoXpmdFQ2tvcDeFG/sFla2Ls4WTxIWvdKx6P4G2Ht
-X-Gm-Message-State: AOJu0Yzb/1BbecnyNUvwo00bzASVFIqe7VQCgaRdQGq1GleOjeb9nAMx
-	O6YnuEQoA545XaQ+y9KjZSHVUhTFCbHjAZ8ugDk79byI/KtCfd2weoHsnwSjsW5wJu2Nk300V6h
-	um/d3zceBhqF+BPfBVuhjAWnsjkc5KsWcFUfkcdJB7ui+7QGzQXCAnsI=
-X-Google-Smtp-Source: AGHT+IHuTan0Xxo2bC5qZvf0CFkhuAachumAjCI2fZZZJk83+PP2hEcAPk3bTxFWpBEIk6HbbFpi72VKWPEkthNwCUf5zupPn/Su
+	s=arc-20240116; t=1712198427; c=relaxed/simple;
+	bh=z1iXLvkFfv7cvcYmpQ/4o3DzldKRSGogDcrjWfkz/no=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=hAgq1+PHMe/XQmz54vkJM+94bagcQMIic9rdEqKL2pJVUOFuUOhvdgSekXYIpu4x+u9OphCvrBqHWTsU4NdiP95NYKt/otBZhA/Ev1kzefzCMTJ2vGSR3UeXQhLa0Aap6JJ/eZMIjh7p9ZOtL0+dtLNI6e7zojOWLDrBjqmSADE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pXVwxse+; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pXVwxse+"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 41F9DC433F1;
+	Thu,  4 Apr 2024 02:40:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1712198427;
+	bh=z1iXLvkFfv7cvcYmpQ/4o3DzldKRSGogDcrjWfkz/no=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=pXVwxse+4leHQBCAqngVCssZ1Db/s7EX/otUfWPT8kcdnZlyzTP7XAki1eODxVXlv
+	 sRUnbNgRIKG+k4AI1koZH1px3gFXjfiMditk/+ecmOikQq68Z77/yf6EKmdnoZe08u
+	 fafw/k4+9FxQwdM1Vzu/TyMtWC1VS9Bxy1V0qyzx+9MbYr5T6Ui5fjy6CUkTqggFCV
+	 qRLXXKYmVd7xrvpw+ZcIRBdlawvjotu7VcwLsV5zRfE5Z0cwqD6aUp31mDic+QpHKz
+	 BlCO4q0ESelNHxfmzCRtp+zgs1i+0HlAGdAZ000PPj1OxmF0OK7v1CEoRCH3gnwFhV
+	 Eltyt/Bk0Jfmg==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 31064C43168;
+	Thu,  4 Apr 2024 02:40:27 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6638:6284:b0:47e:db25:8eb7 with SMTP id
- fh4-20020a056638628400b0047edb258eb7mr48890jab.2.1712198344346; Wed, 03 Apr
- 2024 19:39:04 -0700 (PDT)
-Date: Wed, 03 Apr 2024 19:39:04 -0700
-In-Reply-To: <20240404021257.4018-1-hdanton@sina.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000019a4fe06153c3e35@google.com>
-Subject: Re: [syzbot] [kernfs?] possible deadlock in kernfs_fop_llseek
-From: syzbot <syzbot+9a5b0ced8b1bfb238b56@syzkaller.appspotmail.com>
-To: hdanton@sina.com, linux-kernel@vger.kernel.org, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH net,v2] net: mana: Fix Rx DMA datasize and skb_over_panic
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <171219842719.31127.17495935498454370650.git-patchwork-notify@kernel.org>
+Date: Thu, 04 Apr 2024 02:40:27 +0000
+References: <1712087316-20886-1-git-send-email-haiyangz@microsoft.com>
+In-Reply-To: <1712087316-20886-1-git-send-email-haiyangz@microsoft.com>
+To: Haiyang Zhang <haiyangz@microsoft.com>
+Cc: linux-hyperv@vger.kernel.org, netdev@vger.kernel.org, decui@microsoft.com,
+ stephen@networkplumber.org, kys@microsoft.com, paulros@microsoft.com,
+ olaf@aepfle.de, vkuznets@redhat.com, davem@davemloft.net, wei.liu@kernel.org,
+ edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, leon@kernel.org,
+ longli@microsoft.com, ssengar@linux.microsoft.com,
+ linux-rdma@vger.kernel.org, daniel@iogearbox.net, john.fastabend@gmail.com,
+ bpf@vger.kernel.org, ast@kernel.org, sharmaajay@microsoft.com,
+ hawk@kernel.org, tglx@linutronix.de, shradhagupta@linux.microsoft.com,
+ linux-kernel@vger.kernel.org, stable@vger.kernel.org
 
-Hello,
+Hello:
 
-syzbot has tested the proposed patch and the reproducer did not trigger any issue:
+This patch was applied to netdev/net.git (main)
+by Jakub Kicinski <kuba@kernel.org>:
 
-Reported-and-tested-by: syzbot+9a5b0ced8b1bfb238b56@syzkaller.appspotmail.com
+On Tue,  2 Apr 2024 12:48:36 -0700 you wrote:
+> mana_get_rxbuf_cfg() aligns the RX buffer's DMA datasize to be
+> multiple of 64. So a packet slightly bigger than mtu+14, say 1536,
+> can be received and cause skb_over_panic.
+> 
+> Sample dmesg:
+> [ 5325.237162] skbuff: skb_over_panic: text:ffffffffc043277a len:1536 put:1536 head:ff1100018b517000 data:ff1100018b517100 tail:0x700 end:0x6ea dev:<NULL>
+> [ 5325.243689] ------------[ cut here ]------------
+> [ 5325.245748] kernel BUG at net/core/skbuff.c:192!
+> [ 5325.247838] invalid opcode: 0000 [#1] PREEMPT SMP NOPTI
+> [ 5325.258374] RIP: 0010:skb_panic+0x4f/0x60
+> [ 5325.302941] Call Trace:
+> [ 5325.304389]  <IRQ>
+> [ 5325.315794]  ? skb_panic+0x4f/0x60
+> [ 5325.317457]  ? asm_exc_invalid_op+0x1f/0x30
+> [ 5325.319490]  ? skb_panic+0x4f/0x60
+> [ 5325.321161]  skb_put+0x4e/0x50
+> [ 5325.322670]  mana_poll+0x6fa/0xb50 [mana]
+> [ 5325.324578]  __napi_poll+0x33/0x1e0
+> [ 5325.326328]  net_rx_action+0x12e/0x280
+> 
+> [...]
 
-Tested on:
+Here is the summary with links:
+  - [net,v2] net: mana: Fix Rx DMA datasize and skb_over_panic
+    https://git.kernel.org/netdev/net/c/c0de6ab920aa
 
-commit:         fe46a7dd Merge tag 'sound-6.9-rc1' of git://git.kernel..
-git tree:       https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
-console output: https://syzkaller.appspot.com/x/log.txt?x=15410de3180000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=4d90a36f0cab495a
-dashboard link: https://syzkaller.appspot.com/bug?extid=9a5b0ced8b1bfb238b56
-compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
-patch:          https://syzkaller.appspot.com/x/patch.diff?x=153a4a3d180000
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
 
-Note: testing is done by a robot and is best-effort only.
+
