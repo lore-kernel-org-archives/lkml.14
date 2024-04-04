@@ -1,83 +1,79 @@
-Received: from irl.hu (irl.hu [95.85.9.111])
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C12681D551;
-	Thu,  4 Apr 2024 15:10:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.85.9.111
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 577191D543;
+	Thu,  4 Apr 2024 15:10:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712243443; cv=none; b=nIH9l7cCWoxcdA9rOGC7KCq3aY3dS1bxHJNJYi3MYV6Yrc5/frQRUCdXx4TgNDZaMwasSgoQHJAZgNT+Y1sPk/PKIOgpdgUaib4dhnBXF/E8+rLrCGEUvKk1CYnQoNKsX8vF4QWN35sllUjY9mQRQ8y4JRzOQdn6nha99+kfd8I=
+	t=1712243453; cv=none; b=sVcDNNO72+ILzMtuVDhkORiA82V7izjvmNPBvs5RAaVuRSQmAztmmXniR/FEoA4xdRh+XnJxscW10+6oFvqQ/pP8jLPHIlOWjGSsPaOceQxMZhmsOWFm1DIRwsRyf/jevpDC+UVkoJujzm0WVDMU7CTFdI51BnVATRpzo5YyCo0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712243443; c=relaxed/simple;
-	bh=vaEH/7UI3i+pPAefwLuVf+TqLBvLn9fh0xIiqmLVADw=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=fFgx0Z8MKofK+08151HGzoRZKJS38IPCqNx5/X2ihq9Tz6KW/sb3ACj6tOW4HxXKrm1l9e1MRUZ8cGVrvQUpCct1eEPyBfSGm9WCj1eHojvKqfSeqr8i5PIUaObSq9CBslXTGqCzfduF/yrugfrrf97mXYkHNMR/10B/oXoMrwQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=irl.hu; spf=pass smtp.mailfrom=irl.hu; arc=none smtp.client-ip=95.85.9.111
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=irl.hu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=irl.hu
-Received: from [192.168.2.4] (51b69867.dsl.pool.telekom.hu [::ffff:81.182.152.103])
-  (AUTH: CRAM-MD5 soyer@irl.hu, )
-  by irl.hu with ESMTPSA
-  id 000000000006EF1D.00000000660EC1BA.002595F8; Thu, 04 Apr 2024 17:05:30 +0200
-Message-ID: <b5ad9ab4e1785266fbf9f9b9e68b41bec95e5820.camel@irl.hu>
-Subject: Re: [PATCH v3] platform/x86: ideapad-laptop: switch platform
- profiles using thermal management key
-From: Gergo Koteles <soyer@irl.hu>
-To: Daniel Lezcano <daniel.lezcano@linaro.org>,
-  Ike Panhc <ike.pan@canonical.com>,
-  Hans de Goede <hdegoede@redhat.com>,
-  Ilpo =?ISO-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Date: Thu, 04 Apr 2024 17:05:29 +0200
-In-Reply-To: <45f12590-4f79-4875-a497-cbb1ac3deb38@linaro.org>
-References:
-	  <7c358ad8dd6de7889fa887954145a181501ac362.1712236099.git.soyer@irl.hu>
-	 <45f12590-4f79-4875-a497-cbb1ac3deb38@linaro.org>
-Autocrypt: addr=soyer@irl.hu; prefer-encrypt=mutual;
- keydata=mDMEZgeDQBYJKwYBBAHaRw8BAQdAD5oxV6MHkjzSfQL2O8VsPW3rSUeCHfbx/a6Yfj3NUnS0HEdlcmdvIEtvdGVsZXMgPHNveWVyQGlybC5odT6ImQQTFgoAQRYhBLSYvEYEgjzzEMQCqgtEJzXf/1IRBQJmB4NAAhsDBQkFo5qABQsJCAcCAiICBhUKCQgLAgQWAgMBAh4HAheAAAoJEAtEJzXf/1IRmdYA/0bE1BX7zOGKBgCa1DwzH2UHXawSKLpptADvI/ao6OOtAP4+wYgpR0kWR28lhmkRTpzG/+8GiMWsT60SV2bz9B7sCbg4BGYHg0ASCisGAQQBl1UBBQEBB0CPo8ow/E97WYtaek9EsLXvsvwpBsjWLq5mMOgJL/ukCwMBCAeIfgQYFgoAJhYhBLSYvEYEgjzzEMQCqgtEJzXf/1IRBQJmB4NAAhsMBQkFo5qAAAoJEAtEJzXf/1IRklEA/ipTfAI/onzNwZIp9sCdnt0bLhR5Oz8RD/FpbrJV1v7eAP0c/C6NQPDPWbQpobBR0pf1eTjWXjjr1fj2jxSvWbMRCw==
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.50.4 (3.50.4-1.fc39) 
+	s=arc-20240116; t=1712243453; c=relaxed/simple;
+	bh=DUPMyZ/xTsclqJcgpP/qVJGgpzSu7G7XOnc2Q+6j4DM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=rbHa6k+Z8frATv8qRx7I0lHPM20m/EBvh6K4rQzTTaMtN/6UVMG8V11OSJmXLlQgadi58c5lcCAb071hHCeUhCUlCDGcu9ZSaHCchc1ieHp7YJIlE4vQFXaZInub2jf1sf7OL2pLZNq0/yItNB6j5XVxZOy5EagEGq7JTn5ZqiU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=ILKd5cbz; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="ILKd5cbz"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=s98YOMLip/viIAxMH0MZuJz4Cxd3gdWcic10eltssBY=; b=ILKd5cbzcuFB5csUzEM688wtcZ
+	gM85mlwHCTKiS1EtgUIeftyAozV/j2FYv6T0fDkWvjjMNrtiGCg6Yy0YEPZw9LnCX/LRaLAynjzDU
+	ogZEG/XF4yVRPzx9pTZ0o5AhfYNSpNTAofzdWEyopqvGCOKD1cpfm2eDcYK6fwwBv2F8=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1rsOjh-00CC5o-Ue; Thu, 04 Apr 2024 17:10:41 +0200
+Date: Thu, 4 Apr 2024 17:10:41 +0200
+From: Andrew Lunn <andrew@lunn.ch>
+To: Sascha Hauer <s.hauer@pengutronix.de>
+Cc: Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Heiko Stuebner <heiko@sntech.de>, devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
+	David Jander <david@protonic.nl>
+Subject: Re: [PATCH 2/2] arm64: dts: rockchip: add Protonic MECSBC device-tree
+Message-ID: <9d325b4e-031c-4f6c-9788-fa5a68470efa@lunn.ch>
+References: <20240404-protonic-mecsbc-v1-0-ad5b42ade6c6@pengutronix.de>
+ <20240404-protonic-mecsbc-v1-2-ad5b42ade6c6@pengutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240404-protonic-mecsbc-v1-2-ad5b42ade6c6@pengutronix.de>
 
-Hi Daniel,
+> +&gmac1 {
+> +	assigned-clocks = <&cru SCLK_GMAC1_RX_TX>, <&cru SCLK_GMAC1>;
+> +	assigned-clock-parents = <&cru SCLK_GMAC1_RGMII_SPEED>, <&cru CLK_MAC1_2TOP>;
+> +	phy-handle = <&rgmii_phy1>;
+> +	phy-mode = "rgmii";
+> +	clock_in_out = "output";
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&gmac1m1_miim
+> +		     &gmac1m1_tx_bus2
+> +		     &gmac1m1_rx_bus2
+> +		     &gmac1m1_rgmii_clk
+> +		     &gmac1m1_clkinout
+> +		     &gmac1m1_rgmii_bus>;
+> +	status = "okay";
+> +	tx_delay = <0x30>;
+> +	rx_delay = <0x10>;
+> +};
 
-On Thu, 2024-04-04 at 15:27 +0200, Daniel Lezcano wrote:
-> > Cycling is done through modulo.
-> >=20
-> > Quick and dirty example:
-> >=20
-> > static int profiles[] =3D {
-> > 	PLATFORM_PROFILE_LOW_POWER,
-> > 	PLATFORM_PROFILE_BALANCED,
-> > 	PLATFORM_PROFILE_PERFORMANCE
-> > };
-> >=20
-> > static int current_profile_index =3D 0;
-> >=20
-> > static void dytc_profile_cycle(struct ideapad_private *priv)
-> > {
-> > 	current_profile_index++
-> >=20
-> > 	current_profile_index =3D
-> > 		current_profile_index % ARRAY_SIZE(profiles);
-> >=20
-> > 	dytc_profile_set(&priv->dytc->pprof,
-> > 			profiles[current_profile_index]);
-> >=20
-> > 	platform_profile_notify();
-> > }
-> >=20
+There was a discussion about phy-mode = "rgmii"; and these
+tx/rx_delays last month. Please could you go read that discussion and
+them make use of rgmii-id, and change the delays.
 
-Thanks for your suggestions. I thought about it.
-It would make this module complicated, but something like this fits
-well in the platform_profile module.
-I will implement the cycle there in v4.
+Also, where did you copy this from? If possible, it would be good to
+fix the example everybody copies into new DT blobs.
 
-Best regards,
-Gergo
-
+	Andrew
