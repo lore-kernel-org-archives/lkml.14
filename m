@@ -1,148 +1,92 @@
-Received: from fhigh2-smtp.messagingengine.com (fhigh2-smtp.messagingengine.com [103.168.172.153])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A16C13C66C;
-	Thu,  4 Apr 2024 23:31:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.153
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D83ED13C3CD
+	for <linux-kernel@vger.kernel.org>; Thu,  4 Apr 2024 23:32:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712273473; cv=none; b=osKD9zxPCrOB2GTic23lu0ANqiY2DnQSoyFWQvjf9i7DmVS4jvg4E7UVxV5AwspM95+A4aSp8Xp3UMigTVSZlVfkpE6/rfmTLREICK3Lk2+7RdU7xdafRaQHebZhF5OLqlmZFLUA92AHTMjkOO8NVaVBhHJ/Ydh2pSohpuTr8gQ=
+	t=1712273561; cv=none; b=u/BitD9pxjV4XnBkntu3pw2LXw2VX/CXvofSojjA68ZY2LEwjfcMAzx8MuX07gHAACUnJp4swm50OI1Wo/3Sr0GhItLX467+b5qOapnyTdgazrg1JMOZXDr1OfKk9BPB/FAwxt2GUDCjtGWzuwnuYM/n2t3GTAiNKFYqh5lHJSI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712273473; c=relaxed/simple;
-	bh=gT3ISPrTb39TkoYxCl+zUy++inSKyXfqXfH+8D34BXY=;
-	h=To:Cc:Message-Id:From:Subject:Date; b=cWAwo77prkjpdxL2/E02JC+ZOBvRwbqrrIBTsb/45Pl81XZx1v6THGLocX3Wo2MBQdEBq2XU+j7YaWn4a6mdninXvn4bJiwjDGpIQ1743LOvxIOYw5uH1DWnUxYB9AcT3yhfKbosnCO/DuW6YA+vWBivyQZfeNMY5v/YftNwb3g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=none smtp.mailfrom=linux-m68k.org; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=bVtCQEka; arc=none smtp.client-ip=103.168.172.153
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux-m68k.org
+	s=arc-20240116; t=1712273561; c=relaxed/simple;
+	bh=R+JcGZWerA4/j0GP5BcYvILM9CMcZQ3Ab1BvbCrrzCs=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=C66dA4PRX6WjGfI/ljnQm6PZldoiwXrJP6dxWWfJv8e6Xneig432h8US61n/tah9gwPR0c0XqMv6CD1TVhvnxWOmneIzejbVbpOQc5la28ILqo0deqJ/CSm+RaIvO6qeqnHni3QrmwlT+dpElw3DNg69erkblWWQdSTdVwo9KqY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=bGmB8WLM; arc=none smtp.client-ip=209.85.214.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="bVtCQEka"
-Received: from compute2.internal (compute2.nyi.internal [10.202.2.46])
-	by mailfhigh.nyi.internal (Postfix) with ESMTP id 7F3841140105;
-	Thu,  4 Apr 2024 19:31:10 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute2.internal (MEProxy); Thu, 04 Apr 2024 19:31:10 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:date:date:feedback-id
-	:feedback-id:from:from:in-reply-to:message-id:reply-to:subject
-	:subject:to:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-	:x-sasl-enc; s=fm2; t=1712273470; x=1712359870; bh=pK0jqIblLjOpZ
-	HzUGqOIz32gEstS475diijrXkvB3eA=; b=bVtCQEkankDw3t6RGYiDd8/EY4b+5
-	OzQ9bQO+z+fvSgLNl4Hihj/3+1Iyt/j/7mRvoNEdx9nq0mzoPY82XWtyZ6CSelPJ
-	hTMmdx59Zi1PlM439ffPVs8D6dHkR2+WxZxgJlt/NR3Ad1oBZUAh9wSbEnd6Abiw
-	eZiiU7nZQmEespjylXWF4NzO3fpesz6tvLToDVZwG0/Kjyudz/odn0nT26lnK+m+
-	EzMUyA2YkcTH03g6pmPgKPNIwAh14/8ZpFNQvnv7YvVLYtcqXpGRYXUQsicsQQLL
-	60/U1Av/QVDDm7Xuzzq2wfz2uYrvA/Dsa++yY9htMb+aLQzBwGBfaUGlQ==
-X-ME-Sender: <xms:PTgPZiIYUQgfXdEe2xMm6RNyfQ9Ax0Tys96XO8zAiceVf7ZEVrmsdw>
-    <xme:PTgPZqLug2l4k5bBmMT7AD0W_AlvjhEHFlW3copE2AghsDdWIV4ay6MPjgLElFJ2g
-    JaX5IP8W_fOczojAag>
-X-ME-Received: <xmr:PTgPZit_SuYal7Dwk2kbRLRnYZP7JMuu0UwIps91x6C4ER09IjsEvH6sygZj46dOB8DrcWkWPzAW3iRUKjVVz_Q8wQnX50hILEs>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrudefledgvdegucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepvfevkffhufffsedttdertddttddtnecuhfhrohhmpefhihhnnhcuvfhhrghi
-    nhcuoehfthhhrghinheslhhinhhugidqmheikehkrdhorhhgqeenucggtffrrghtthgvrh
-    hnpefftdekheelvddvtdetudelhfehhfejjeeuudeileettdeuleeigeefkeehvdevffen
-    ucffohhmrghinhepghhithhhuhgsrdgtohhmpdhkvghrnhgvlhdrohhrghenucevlhhush
-    htvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehfthhhrghinheslhhi
-    nhhugidqmheikehkrdhorhhg
-X-ME-Proxy: <xmx:PTgPZnYzgMZqTR9eF0t2MW4RQMMnH5xqPRNnqU0AnmpCIYqoUvnT_A>
-    <xmx:PTgPZpax3bPUEitnmylwi9RrEP0uTOGwHsuDo3ZplnQqvvPXd0f_QQ>
-    <xmx:PTgPZjD9Hw4wmx-HpbYzcz-5yMeY0kIz_0QGqEcP2rsyMf3ndWf0Tw>
-    <xmx:PTgPZvZ-9TuHrTyx0lF6wnPMq_srWjKCDVH-0PJoQ9ruq4NwESpiTw>
-    <xmx:PjgPZtpVPFHDMi94NCjMIl9Z1y5zCPxerLPUSPRZGYZ9sMIgh69zrJHO>
-Feedback-ID: i58a146ae:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
- 4 Apr 2024 19:31:07 -0400 (EDT)
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-    Jiri Slaby <jirislaby@kernel.org>
-Cc: Michael Ellerman <mpe@ellerman.id.au>,
-    Nicholas Piggin <npiggin@gmail.com>,
-    Christophe Leroy <christophe.leroy@csgroup.eu>,
-    "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>,
-    "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
-    linux-kernel@vger.kernel.org,
-    linux-serial@vger.kernel.org,
-    linuxppc-dev@lists.ozlabs.org,
-    linux-m68k@lists.linux-m68k.org,
-    Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-    Andy Shevchenko <andy.shevchenko@gmail.com>
-Message-Id: <0df45bedded1249f6c6ec2c2fb0d9879da1841b7.1712273040.git.fthain@linux-m68k.org>
-From: Finn Thain <fthain@linux-m68k.org>
-Subject: [PATCH v2] serial/pmac_zilog: Remove flawed mitigation for rx irq flood
-Date: Fri, 05 Apr 2024 10:24:00 +1100
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="bGmB8WLM"
+Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-1e0f2798cd8so14513985ad.3
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Apr 2024 16:32:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google; t=1712273559; x=1712878359; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=R+JcGZWerA4/j0GP5BcYvILM9CMcZQ3Ab1BvbCrrzCs=;
+        b=bGmB8WLMFMwpMjjvJzDIeeDDlejXxOtkjvpAhmt3k5cboS576t5rzSkQhcTDcfowSe
+         gKymjunI/WKxZrVxk1qFg5J8RRC6fL+0gMa1anAy2C/LRM81kpB0MwoDIiOngb+mikN6
+         qXO1fS1lymojlSHxowZYu6rjJdZbgOTlj3hAQ=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712273559; x=1712878359;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=R+JcGZWerA4/j0GP5BcYvILM9CMcZQ3Ab1BvbCrrzCs=;
+        b=v2c2GyhMo73eMk0hgBmsngpJuQk8D8KbCWRkgU9+BpngeVqXEA+pSekLrfpdk9kxqg
+         tem8mrLExs4/v8jIBX/a1Cnlqk64in89AdllfKMLDY5JXnheVNA5tVhRFiPoPwEnEBuk
+         Ns7bAf9+XXR81UhpjUe60LAgB7HbJXUPwWE1gaqPN7Eo/kHFxJd6LKQyqcrjRZ6uKJG6
+         k1TEHCa9+ZHFKpQpY5ux3pxYMMShyv2H7vlnDHSTMBdcNbuabRcCKQdpZbbqbB9KvVLu
+         n8KDIWliHkyOzhLoJJP/KvzuCF2CvJPXOa7CQJRU+XliuMenrLCQjuJB/9uT9f7S0Wno
+         7uTQ==
+X-Gm-Message-State: AOJu0Yy5oydYj6iVt62RHvNBOU0oLY3VtIa4SAX6Cx53Rmk9slAGTxHV
+	nlMWqDrXriW5fPPca0cuy7jWwfonYFJVWASn+KmfMKy8/na7AAOy66okR/kkmw==
+X-Google-Smtp-Source: AGHT+IGG4uDv5A1Im5aEtkPraZjP1jqit8IkG6mPT5w+o0kvHdp78WkPTKabNTc/bYh7JTK+vQvnlQ==
+X-Received: by 2002:a17:902:f7cb:b0:1e0:157a:846c with SMTP id h11-20020a170902f7cb00b001e0157a846cmr3031022plw.55.1712273559198;
+        Thu, 04 Apr 2024 16:32:39 -0700 (PDT)
+Received: from amakhalov-build-vm.eng.vmware.com ([128.177.82.146])
+        by smtp.gmail.com with ESMTPSA id c5-20020a170902c1c500b001e2a4663179sm188177plc.258.2024.04.04.16.32.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 04 Apr 2024 16:32:38 -0700 (PDT)
+From: Alexey Makhalov <alexey.makhalov@broadcom.com>
+To: hpa@zytor.com
+Cc: linux-kernel@vger.kernel.org,
+	virtualization@lists.linux.dev,
+	bp@alien8.de,
+	x86@kernel.org,
+	dave.hansen@linux.intel.com,
+	mingo@redhat.com,
+	tglx@linutronix.de,
+	netdev@vger.kernel.org,
+	richardcochran@gmail.com,
+	linux-input@vger.kernel.org,
+	dmitry.torokhov@gmail.com,
+	zackr@vmware.com,
+	linux-graphics-maintainer@vmware.com,
+	pv-drivers@vmware.com,
+	timothym@vmware.com,
+	akaher@vmware.com,
+	dri-devel@lists.freedesktop.org,
+	daniel@ffwll.ch,
+	airlied@gmail.com,
+	tzimmermann@suse.de,
+	mripard@kernel.org,
+	maarten.lankhorst@linux.intel.com,
+	horms@kernel.org,
+	kirill.shutemov@linux.intel.com
+Subject: Re: [PATCH v7 0/7] VMware hypercalls enhancements
+Date: Thu,  4 Apr 2024 16:32:31 -0700
+Message-Id: <20240404233231.36294-1-alexey.makhalov@broadcom.com>
+X-Mailer: git-send-email 2.39.0
+In-Reply-To: <20240307212949.4166120-1-alexey.makhalov@broadcom.com>
+References: <20240307212949.4166120-1-alexey.makhalov@broadcom.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-The mitigation was intended to stop the irq completely. That may be
-better than a hard lock-up but it turns out that you get a crash anyway
-if you're using pmac_zilog as a serial console:
-
-ttyPZ0: pmz: rx irq flood !
-BUG: spinlock recursion on CPU#0, swapper/0
-
-That's because the pr_err() call in pmz_receive_chars() results in
-pmz_console_write() attempting to lock a spinlock already locked in
-pmz_interrupt(). With CONFIG_DEBUG_SPINLOCK=y, this produces a fatal
-BUG splat. The spinlock in question is the one in struct uart_port.
-
-Even when it's not fatal, the serial port rx function ceases to work.
-Also, the iteration limit doesn't play nicely with QEMU, as can be
-seen in the bug report linked below.
-
-A web search for other reports of the error message "pmz: rx irq flood"
-didn't produce anything. So I don't think this code is needed any more.
-Remove it.
-
-Link: https://github.com/vivier/qemu-m68k/issues/44
-Link: https://lore.kernel.org/all/1078874617.9746.36.camel@gaston/
-Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-Signed-off-by: Finn Thain <fthain@linux-m68k.org>
----
-Changed since v1:
- - Reworked commit log according to comments from Andy Shevchenko.
----
- drivers/tty/serial/pmac_zilog.c | 14 --------------
- 1 file changed, 14 deletions(-)
-
-diff --git a/drivers/tty/serial/pmac_zilog.c b/drivers/tty/serial/pmac_zilog.c
-index c8bf08c19c64..77691fbbf779 100644
---- a/drivers/tty/serial/pmac_zilog.c
-+++ b/drivers/tty/serial/pmac_zilog.c
-@@ -210,7 +210,6 @@ static bool pmz_receive_chars(struct uart_pmac_port *uap)
- {
- 	struct tty_port *port;
- 	unsigned char ch, r1, drop, flag;
--	int loops = 0;
- 
- 	/* Sanity check, make sure the old bug is no longer happening */
- 	if (uap->port.state == NULL) {
-@@ -291,24 +290,11 @@ static bool pmz_receive_chars(struct uart_pmac_port *uap)
- 		if (r1 & Rx_OVR)
- 			tty_insert_flip_char(port, 0, TTY_OVERRUN);
- 	next_char:
--		/* We can get stuck in an infinite loop getting char 0 when the
--		 * line is in a wrong HW state, we break that here.
--		 * When that happens, I disable the receive side of the driver.
--		 * Note that what I've been experiencing is a real irq loop where
--		 * I'm getting flooded regardless of the actual port speed.
--		 * Something strange is going on with the HW
--		 */
--		if ((++loops) > 1000)
--			goto flood;
- 		ch = read_zsreg(uap, R0);
- 		if (!(ch & Rx_CH_AV))
- 			break;
- 	}
- 
--	return true;
-- flood:
--	pmz_interrupt_control(uap, 0);
--	pmz_error("pmz: rx irq flood !\n");
- 	return true;
- }
- 
--- 
-2.39.3
-
+Peter, can you please review version 7 of "x86/vmware: Add TDX hypercall support" patch.
+It addresses the concern you had in previous version. Thanks.
