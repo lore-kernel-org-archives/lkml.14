@@ -1,200 +1,203 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 540FA1339BA;
-	Thu,  4 Apr 2024 20:12:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81A11134733
+	for <linux-kernel@vger.kernel.org>; Thu,  4 Apr 2024 20:13:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712261548; cv=none; b=ttC0l64VBer80WWnltrHHnrom7P+KH6PN90XTcXoGfgYqIA8QHDmC3HuOsSFooQraLEwCvUUeI0Ur1b9dOifZiG9tMWvHY/7cdCW/3iYHyHoHPb+811HVgzhvovLKuJScEaqm73kdIfe0HO7fVidtB0mJ2DMwGkh2xicIN/VkCI=
+	t=1712261598; cv=none; b=OX6Hz1EL2SCsO3bzcH/xOWSphHTaiUfArBHH5sKGvjAVGe7EXoC16cZfk9QTc7xYCAdOHOh6yWMsLmwua0Bx0w7UDQUEav1OZEJJXr3v7eMMwGO93yiBHhscyrzonaFgnY197ZaO2JJtWhPdO55+U0dUzW3FcevnXnlXA/2lHyE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712261548; c=relaxed/simple;
-	bh=EVMGvafgBfGII3RlR8B+OnNiFJ1HBdwxUaoCS0beDwY=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=jANx073DIKO08NdBjpp3qSAH3AVqO/tO6RmIoDX08tpzyf2B9iyuMZDxBQQSHv4+Wc86gaKO16guD2Q4/dtb6BeoDEIgEZdSsHhQq+NyAIR+hgg2AOCD9dZSS+habhNOKQgcKqjCHaZPBAwG+ncoB4WXECXuQpP7Mep7Sbs1zsI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=q/N0Qg7e; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1712261598; c=relaxed/simple;
+	bh=MtMfGB7FH6RoXXq2+aUs70YoAHP7p/Zh23dvXEoiUio=;
+	h=Date:Subject:In-Reply-To:CC:From:To:Message-ID:Mime-Version:
+	 Content-Type; b=GVIJDr18cl9gZES9Hdhi9AtE96gVCI8vcklsXW2C8Gx1MgfS5JirYMaf8BxJCyPU5/dbUv6hkBjguwZ8wULFICDcT0lREJH4WeE5ZzOMyhNxMqhY/fcshheRPawdbrwiwVkHx/wKz/+z2JozpDP/p9iE/jnBw/zoTU30bkbBRtc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dabbelt.com; spf=pass smtp.mailfrom=dabbelt.com; dkim=pass (2048-bit key) header.d=dabbelt-com.20230601.gappssmtp.com header.i=@dabbelt-com.20230601.gappssmtp.com header.b=Yc61DdAw; arc=none smtp.client-ip=209.85.214.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dabbelt.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dabbelt.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="q/N0Qg7e"
-Received: from pps.filterd (m0353722.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 434K4Lif024701;
-	Thu, 4 Apr 2024 20:12:00 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : subject :
- from : to : cc : date : in-reply-to : references : content-type :
- content-transfer-encoding : mime-version; s=pp1;
- bh=Vq+lptyiRA9JJ5e/aNhf5SqSn6V7P4PE1G4+0cOGBO8=;
- b=q/N0Qg7eXYklXJJKy7OU7HMJI+I5t5nGr+wqlqvFENVTwHk6aLuKF/p02dFOCb1R2m5z
- v6CgCDNdVMraTxA3E2tViCfDi9EsvUqEUfKqdHjy35dgykdZJK+VIOoIgW1ocMRdrIST
- T4AufXqc+yx6SQT3R6eo2TvvYD656ngycn2PTmYpZ763Ph0JhRG8aKJgcLv5ZhOUots7
- +g5DGSvIMMuo6fLdgSOylNbU+qAXkRLtIe2s3tFAb76j/9Ci6pl4CW63hT+cF4Ddlejm
- flFQqvbfZd9GVz1Y1KkH5rMWrmZHq45z92A+fDnholzzgwBEeV8MiBAJ7OtZqaE87czX kg== 
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3xa2w900kb-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 04 Apr 2024 20:12:00 +0000
-Received: from m0353722.ppops.net (m0353722.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 434KBxQS003418;
-	Thu, 4 Apr 2024 20:11:59 GMT
-Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3xa2w900k6-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 04 Apr 2024 20:11:59 +0000
-Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma12.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 434JLP0d007723;
-	Thu, 4 Apr 2024 20:11:59 GMT
-Received: from smtprelay02.wdc07v.mail.ibm.com ([172.16.1.69])
-	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 3x9epwpcx0-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 04 Apr 2024 20:11:59 +0000
-Received: from smtpav01.wdc07v.mail.ibm.com (smtpav01.wdc07v.mail.ibm.com [10.39.53.228])
-	by smtprelay02.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 434KBu806750888
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 4 Apr 2024 20:11:58 GMT
-Received: from smtpav01.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 43B6358055;
-	Thu,  4 Apr 2024 20:11:56 +0000 (GMT)
-Received: from smtpav01.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 334045804B;
-	Thu,  4 Apr 2024 20:11:55 +0000 (GMT)
-Received: from li-5cd3c5cc-21f9-11b2-a85c-a4381f30c2f3.ibm.com (unknown [9.61.110.28])
-	by smtpav01.wdc07v.mail.ibm.com (Postfix) with ESMTP;
-	Thu,  4 Apr 2024 20:11:55 +0000 (GMT)
-Message-ID: <b3956fd36307d33ebbf0e4633e0d2389860cf720.camel@linux.ibm.com>
-Subject: Re: [PATCH v5][next] integrity: Avoid
- -Wflex-array-member-not-at-end warnings
-From: Mimi Zohar <zohar@linux.ibm.com>
-To: "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Roberto Sassu
- <roberto.sassu@huawei.com>,
-        Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
-        Eric Snowberg <eric.snowberg@oracle.com>,
-        Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>
-Cc: linux-integrity@vger.kernel.org, linux-security-module@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Date: Thu, 04 Apr 2024 16:11:54 -0400
-In-Reply-To: <27d36ec8e0539c5d6bc760de7305299a2142f9f1.camel@linux.ibm.com>
-References: <Zg7AoOh7CL5ZD/fe@neat>
-	 <27d36ec8e0539c5d6bc760de7305299a2142f9f1.camel@linux.ibm.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5 (3.28.5-23.el8_9) 
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: cKQ50c5FNWZMYVHwbzG33Sdc9xNugIbj
-X-Proofpoint-GUID: 6QGzaMYvKNPwzhV7Q8RfDJC5OcsCCgGz
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-UnRewURL: 0 URL was un-rewritten
+	dkim=pass (2048-bit key) header.d=dabbelt-com.20230601.gappssmtp.com header.i=@dabbelt-com.20230601.gappssmtp.com header.b="Yc61DdAw"
+Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-1e2b1cd446fso7869895ad.3
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Apr 2024 13:13:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=dabbelt-com.20230601.gappssmtp.com; s=20230601; t=1712261596; x=1712866396; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:to:from:cc
+         :in-reply-to:subject:date:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=mUAL9RLsULnbJgPVDzb+qmxwNae1uJap47Wq1rbrKPw=;
+        b=Yc61DdAw6xND5P9a11CKzXapa6q5hL3Kht7Db1Zbisl1/YKtg8rBBXEEH5oEyeVdwt
+         XnN7z9VamyCExsiJULLlMo/MPU95QFAcc0vBP9oMSkQz9lm1WpvP2zbA6RacOk8ehcA+
+         6gtXFFmHprojy5p3lPUkt7ku2qIaHGIwLjhrHOHqsRQmB8vsNPp3/QQTUmwafyO6wRgo
+         CoMTZXUjCQVlHjCEMj8fPtguRRPUGqv0+tJS3+yIVIPHMeb5b2QoLAavEaymVvkSeTaY
+         uQ7yPCOEKXMerglAzds8AqQQ0/otG3kkZMENMvHygieKN0Xlkh0+GRfWhGxbmMdkM124
+         M79w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712261596; x=1712866396;
+        h=content-transfer-encoding:mime-version:message-id:to:from:cc
+         :in-reply-to:subject:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=mUAL9RLsULnbJgPVDzb+qmxwNae1uJap47Wq1rbrKPw=;
+        b=Ow9v4Jh1mHOYbqtf6t994XHuYqwxvwaXLDMEoBQLpQTpGAgD0kC/di2180Nj8CaChj
+         pRM/bspIwwjqgFGWnSHOcsy62xEH4t0VrxqUoCPlXSdflBJKjnmjGqw0LPMfsPUN+oek
+         XPBzwvF4waDlTeiUw5VVtKxc8CKckpO77hzO3UozotvxlTcjPmM+aMOOgPOu38owVgSP
+         QUy5tJS/4JlFkxceaF9JHOdbAZ9eihP4PlIw4VGJN6D7PMH6zJEJyk9KKLiHWsRwHqsO
+         jb4xAhGk97QgK2aeiXEHQjzy+w+S/6t/7arsnC6lwcVipmJ+DXyRBGUBbvFGjyubpDz0
+         NskA==
+X-Forwarded-Encrypted: i=1; AJvYcCXfvS9KP5poscUjo/c8/8ZPBWHCvXj4Qu27Gf7jvHWyaiBjVcbAMzHpn7tO9nZlFu2spy5IYligNhpXeAco+KTC02ka/Nlpv4l5MVyE
+X-Gm-Message-State: AOJu0Yz8y0QlhwG8J8XrZVjjksI7/jOFUTRjau2YbsbXPWiDPcXMJLlz
+	cE2AjUbjHMtXWq2waJzQoutxFNL+0e4s6o+qqUxNFP1gQzdJWwgKavMQPTguD4E=
+X-Google-Smtp-Source: AGHT+IGgwVSfPRNKtx9Jf4OL/W8qOt/gsfmr5K1tuYOatYpNyhpDKyZ2oO0seu2QZI/uO8RorGBWHQ==
+X-Received: by 2002:a17:902:c155:b0:1e2:5e77:4cd with SMTP id 21-20020a170902c15500b001e25e7704cdmr3199719plj.7.1712261595505;
+        Thu, 04 Apr 2024 13:13:15 -0700 (PDT)
+Received: from localhost ([50.145.13.30])
+        by smtp.gmail.com with ESMTPSA id b3-20020a170903228300b001e2c2d694cdsm20633plh.31.2024.04.04.13.13.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 04 Apr 2024 13:13:15 -0700 (PDT)
+Date: Thu, 04 Apr 2024 13:13:15 -0700 (PDT)
+X-Google-Original-Date: Thu, 04 Apr 2024 13:13:13 PDT (-0700)
+Subject:     Re: [External] [PATCH] riscv: process: Fix kernel gp leakage
+In-Reply-To: <7312eb06-c9dd-4a0e-98bc-ea4e8ace7b10@ghiti.fr>
+CC: sorear@fastmail.com, cuiyunhui@bytedance.com, linux-riscv@lists.infradead.org,
+  Paul Walmsley <paul.walmsley@sifive.com>, aou@eecs.berkeley.edu, linux-kernel@vger.kernel.org
+From: Palmer Dabbelt <palmer@dabbelt.com>
+To: alex@ghiti.fr
+Message-ID: <mhng-c2329625-3c61-4c53-86c6-5989b03505f5@palmer-ri-x1c9a>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-04-04_16,2024-04-04_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 clxscore=1015
- priorityscore=1501 malwarescore=0 bulkscore=0 mlxlogscore=999 adultscore=0
- mlxscore=0 phishscore=0 lowpriorityscore=0 impostorscore=0 spamscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2404010000
- definitions=main-2404040144
+Mime-Version: 1.0 (MHng)
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Thu, 2024-04-04 at 12:49 -0400, Mimi Zohar wrote:
-> Hi Gustavo,
-> 
-> On Thu, 2024-04-04 at 09:00 -0600, Gustavo A. R. Silva wrote:
-> > -Wflex-array-member-not-at-end is coming in GCC-14, and we are getting
-> > ready to enable it globally.
-> > 
-> > There is currently an object (`hdr)` in `struct ima_max_digest_data`
-> > that contains a flexible structure (`struct ima_digest_data`):
-> > 
-> >  struct ima_max_digest_data {
-> >         struct ima_digest_data hdr;
-> >         u8 digest[HASH_MAX_DIGESTSIZE];
-> >  } __packed;
-> > 
-> > So, in order to avoid ending up with a flexible-array member in the
-> > middle of a struct, we use the `__struct_group()` helper to separate
-> > the flexible array from the rest of the members in the flexible
-> > structure:
-> > 
-> > struct ima_digest_data {
-> >         __struct_group(ima_digest_data_hdr, hdr, __packed,
-> > 
-> >         ... the rest of the members
-> > 
-> >         );
-> >         u8 digest[];
-> > } __packed;
-> > 
-> > And similarly for `struct evm_ima_xattr_data`.
-> > 
-> > With the change described above, we can now declare an object of the
-> > type of the tagged `struct ima_digest_data_hdr`, without embedding the
-> > flexible array in the middle of another struct:
-> > 
-> >  struct ima_max_digest_data {
-> >         struct ima_digest_data_hdr hdr;
-> >         u8 digest[HASH_MAX_DIGESTSIZE];
-> >  } __packed;
-> > 
-> > And similarly for `struct evm_digest` and `struct evm_xattr`.
-> > 
-> > We also use `container_of()` whenever we need to retrieve a pointer to
-> > the flexible structure.
-> > 
-> > So, with these changes, fix the following warnings:
-> > 
-> > security/integrity/evm/evm.h:64:32: warning: structure containing a flexible
-> > array member is not at the end of another structure [-Wflex-array-member-
-> > not-
-> > at-end]
-> > security/integrity/evm/../integrity.h:40:35: warning: structure containing a
-> > flexible array member is not at the end of another structure [-Wflex-array-
-> > member-not-at-end]
-> > security/integrity/evm/../integrity.h:68:32: warning: structure containing a
-> > flexible array member is not at the end of another structure [-Wflex-array-
-> > member-not-at-end]
-> > security/integrity/ima/../integrity.h:40:35: warning: structure containing a
-> > flexible array member is not at the end of another structure [-Wflex-array-
-> > member-not-at-end]
-> > security/integrity/ima/../integrity.h:68:32: warning: structure containing a
-> > flexible array member is not at the end of another structure [-Wflex-array-
-> > member-not-at-end]
-> > security/integrity/integrity.h:40:35: warning: structure containing a
-> > flexible
-> > array member is not at the end of another structure [-Wflex-array-member-
-> > not-
-> > at-end]
-> > security/integrity/integrity.h:68:32: warning: structure containing a
-> > flexible
-> > array member is not at the end of another structure [-Wflex-array-member-
-> > not-
-> > at-end]
-> > security/integrity/platform_certs/../integrity.h:40:35: warning: structure
-> > containing a flexible array member is not at the end of another structure [-
-> > Wflex-array-member-not-at-end]
-> > security/integrity/platform_certs/../integrity.h:68:32: warning: structure
-> > containing a flexible array member is not at the end of another structure [-
-> > Wflex-array-member-not-at-end]
-> > 
-> > Link: https://github.com/KSPP/linux/issues/202
-> > Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-> 
-> Reviewed-by: Mimi Zohar <zohar@linux.ibm.com>
-> 
-> Thanks, Gustavo.  I already applied and tested v4, but was trying to actually
-> see the errors with before pushing it out.
+On Tue, 02 Apr 2024 02:21:15 PDT (-0700), alex@ghiti.fr wrote:
+> Hi Stefan,
+>
+> On 27/03/2024 17:53, Stefan O'Rear wrote:
+>> On Wed, Mar 27, 2024, at 4:43 AM, yunhui cui wrote:
+>>> Hi Stefan,
+>>>
+>>> On Wed, Mar 27, 2024 at 2:14 PM Stefan O'Rear <sorear@fastmail.com> wrote:
+>>>> childregs represents the registers which are active for the new thread
+>>>> in user context. For a kernel thread, childregs->gp is never used since
+>>>> the kernel gp is not touched by switch_to. For a user mode helper, the
+>>>> gp value can be observed in user space after execve or possibly by other
+>>>> means.
+>>>>
+>>>> Fixes: 7db91e57a0ac ("RISC-V: Task implementation")
+>>>> Signed-off-by: Stefan O'Rear <sorear@fastmail.com>
+>>>> ---
+>>>>   arch/riscv/kernel/process.c | 3 ---
+>>>>   1 file changed, 3 deletions(-)
+>>>>
+>>>> diff --git a/arch/riscv/kernel/process.c b/arch/riscv/kernel/process.c
+>>>> index 92922dbd5b5c..51042f48da17 100644
+>>>> --- a/arch/riscv/kernel/process.c
+>>>> +++ b/arch/riscv/kernel/process.c
+>>>> @@ -27,8 +27,6 @@
+>>>>   #include <asm/vector.h>
+>>>>   #include <asm/cpufeature.h>
+>>>>
+>>>> -register unsigned long gp_in_global __asm__("gp");
+>>>> -
+>>>>   #if defined(CONFIG_STACKPROTECTOR) && !defined(CONFIG_STACKPROTECTOR_PER_TASK)
+>>>>   #include <linux/stackprotector.h>
+>>>>   unsigned long __stack_chk_guard __read_mostly;
+>>>> @@ -207,7 +205,6 @@ int copy_thread(struct task_struct *p, const struct kernel_clone_args *args)
+>>>>          if (unlikely(args->fn)) {
+>>>>                  /* Kernel thread */
+>>>>                  memset(childregs, 0, sizeof(struct pt_regs));
+>>>> -               childregs->gp = gp_in_global;
+>>>>                  /* Supervisor/Machine, irqs on: */
+>>>>                  childregs->status = SR_PP | SR_PIE;
+>>>>
+>>>> --
+>>>> 2.40.1
+>>>>
+>>>>
+>>> Can you help express in more detail what the problem was before fixing it?
+>> It's a KASLR bypass, since gp_in_global is the address of the kernel symbol
+>> __global_pointer$.
+>>
+>> The /* Kernel thread */ comment is somewhat inaccurate in that it is also used
+>> for user_mode_helper threads, which exec a user process, e.g. /sbin/init or
+>> when /proc/sys/kernel/core_pattern is a pipe. Such threads do not have
+>> PF_KTHREAD set and are valid targets for ptrace etc. even before they exec.
+>>
+>> childregs is the *user* context during syscall execution and it is observable
+>> from userspace in at least five ways:
+>>
+>> 1. kernel_execve does not currently clear integer registers, so the starting
+>>     register state for PID 1 and other user processes started by the kernel has
+>>     sp = user stack, gp = kernel __global_pointer$, all other integer registers
+>>     zeroed by the memset in the patch comment.
+>
+>
+> So as I  did not this know this path really well, I played a bit and I
+> can confirm that usermode processes reach userspace with the gp = kernel:
+>
+> Thread 1 hit Breakpoint 12, 0x00007fff82487fc4 in ?? ()
+> 1: x/i $pc
+> => 0x7fff82487fc4:    mv    a0,sp
+> 3: /x $gp = 0xffffffff817fee50
+>
+>
+>>
+>>     This is a bug in its own right, but I'm unwilling to bet that it is the only
+>>     way to exploit the issue addressed by this patch.
+>>
+>> 2. ptrace(PTRACE_GETREGSET): you can PTRACE_ATTACH to a user_mode_helper thread
+>>     before it execs, but ptrace requires SIGSTOP to be delivered which can only
+>>     happen at user/kernel boundaries.
+>>
+>> 3. /proc/*/task/*/syscall: this is perfectly happy to read pt_regs for
+>>     user_mode_helpers before the exec completes, but gp is not one of the
+>>     registers it returns.
+>>
+>> 4. PERF_SAMPLE_REGS_USER: LOCKDOWN_PERF normally prevents access to kernel
+>>     addresses via PERF_SAMPLE_REGS_INTR, but due to this bug kernel addresses
+>>     are also exposed via PERF_SAMPLE_REGS_USER which is permitted under
+>>     LOCKDOWN_PERF. I have not attempted to write exploit code.
+>>
+>> 5. Much of the tracing infrastructure allows access to user registers. I have
+>>     not attempted to determine which forms of tracing allow access to user
+>>     registers without already allowing access to kernel registers.
+>>
+>> Does this help? How much of this should be in the commit message?
+>
+>
+> I'd put them all, but up to you, at least the first usecase that I was
+> able to reproduce should be added to the commit log.
 
-With GCC-14, I'm seeing the "warning: structure containing a flexible array
-member is not at the end of another structure [-Wflex-array-member-not-at-end]"
-messages.  As expected, with the patch no warnings.
+I just pasted it all in the commit, it seems generally useful for people 
+running into the commit.  With the Link tags maybe it's less important 
+these days, but I always just err on the side of putting more stuff in 
+the commit messages.
 
-"checkpatch.pl --strict" complains "CHECK: Alignment should match open
-parenthesis".  I'll queue the patch, but how about teaching checkpatch.pl to
-ignore __struct_group()?
+> You can add:
+>
+> Reviewed-by: Alexandre Ghiti <alexghiti@rivosinc.com>
+>
+> And this should go to -fixes.
 
-thanks,
+It's queued up for the tester.
 
-Mimi
-
+> Thanks,
+>
+> Alex
+>
+>
+>>
+>> -s
+>>
+>>> Thanks,
+>>> Yunhui
+>>>
+>>> _______________________________________________
+>>> linux-riscv mailing list
+>>> linux-riscv@lists.infradead.org
+>>> http://lists.infradead.org/mailman/listinfo/linux-riscv
+>> _______________________________________________
+>> linux-riscv mailing list
+>> linux-riscv@lists.infradead.org
+>> http://lists.infradead.org/mailman/listinfo/linux-riscv
