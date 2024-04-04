@@ -1,258 +1,112 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A6D4DDBC
-	for <linux-kernel@vger.kernel.org>; Thu,  4 Apr 2024 14:52:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D4AADDBC;
+	Thu,  4 Apr 2024 14:54:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712242379; cv=none; b=uLOrdU0fFZBbAbCudbAfbaCfOn+XvzNSDaGab7/IP+EBkXdQR567BhZ5jpljY9PqH8YLPaAoKQwss5oIvh9SFtoC6VF6+gBX7G/G0G4koaTUBZABatMw6l3X1sZAqGA4RdNExBl/FHGgTJNY2pesnkWDpi4l5o7b/zfLMOlKkqc=
+	t=1712242499; cv=none; b=YtKFz4bScNqTx/KmJeb4XDGo3miqx7ybVsYrqFDblDfjHd+ehT2gB1s82iNlGwpGXQ1MNhx3X75tJzeDPWTfp6CqOtDpggcRduzVtHgkQpEtTbY75AnwDqN0yL6rOGi5LZXKeRn+uBaiGRi3w9+Oqn9Fkg197RD/kQ955oPECnI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712242379; c=relaxed/simple;
-	bh=yDEfkYUDh+W1R7iXjoblfriyBkGy8yjK6VJorXuSzzw=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=JsvpG5Zma32SkfMoBs8jcr8k5+63tGBksDPzYYLntP+XhWS6AleJzmGKB7TSQYsA4cGFGhRxLgVH4BfFwYqpLDtxTXzSHZ5tmkT8YT3hX7khHL/kJZPgEuAnkhSiOnj7SWyLbGEbSsbxPT3L7ZDDv4t3nvjiXshOiSlP6oxgedI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Krt+ml8I; arc=none smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1712242499; c=relaxed/simple;
+	bh=x78rj90TFRZ7cOjs3pNg4nRwg+XPusDjo2DznyCzO2s=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=V+agLvvNyNjlnqGJr/+U81y+i4AUhS0GaWE+1TWT5uUDUo4YAC/M9vQcxeQYM1L/Hq1fvxWMbKavSThhoO1b0ChSjQJp239v7jlXLbPkO3Tinkk+MM2PRx9Mf/KJS/MGslcwgcTg6b8bjFEovVR5N9xXdHFFQipmhNXFBpYYNnk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ks+2N8TU; arc=none smtp.client-ip=209.85.128.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Krt+ml8I"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1712242378; x=1743778378;
-  h=date:from:to:cc:subject:message-id;
-  bh=yDEfkYUDh+W1R7iXjoblfriyBkGy8yjK6VJorXuSzzw=;
-  b=Krt+ml8IgDf4qN2NbFtmSOEBtZ27n9hjtfiWvZDsoPHS4gzxYWxa/uVx
-   O8Ou5HVQwZt2HY0Q3QE6GDppwCgMPdVCUdmwpBeVMUKV6mJWiei/cp0kR
-   QMiTBBGL+YaK63O1CIlcOVmtmIFVLXwfZv3fuh9yZjZEFcmvTMaomSCrg
-   g+LV0mQZhtCAbECXPIUrQ1oNuedd+U/PSDNTOeXxmOFwhYD50XSmC0/9n
-   A2Gnv/kk3zEvxR7FvNRVlPVDVH81MNvpDan8m+pVD/4PqF8By8n84xmxr
-   TP/zOHE3FZSXHZdKyG5s+nrADQg+N2bE+02N6xHDt8frq0ITGdWL0BdJe
-   g==;
-X-CSE-ConnectionGUID: xDVWZTWsQvOah/j/G+Bk7g==
-X-CSE-MsgGUID: KD1iMdL+R2CNLK1qDKXrRA==
-X-IronPort-AV: E=McAfee;i="6600,9927,11034"; a="18260331"
-X-IronPort-AV: E=Sophos;i="6.07,179,1708416000"; 
-   d="scan'208";a="18260331"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Apr 2024 07:52:57 -0700
-X-CSE-ConnectionGUID: KgGtEx27RUm9Fh70uSP/1w==
-X-CSE-MsgGUID: e5/c4LRjRMeg+pPljNQMpA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,179,1708416000"; 
-   d="scan'208";a="19249924"
-Received: from lkp-server01.sh.intel.com (HELO e61807b1d151) ([10.239.97.150])
-  by orviesa007.jf.intel.com with ESMTP; 04 Apr 2024 07:52:56 -0700
-Received: from kbuild by e61807b1d151 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1rsOST-0001CE-1s;
-	Thu, 04 Apr 2024 14:52:53 +0000
-Date: Thu, 04 Apr 2024 22:52:46 +0800
-From: kernel test robot <lkp@intel.com>
-To: "x86-ml" <x86@kernel.org>
-Cc: linux-kernel@vger.kernel.org
-Subject: [tip:timers/urgent] BUILD SUCCESS
- cffaefd15a8f423cdee5d8eac15d267bc92de314
-Message-ID: <202404042244.o9Tqr3Tg-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ks+2N8TU"
+Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-4162bac959cso4018085e9.0;
+        Thu, 04 Apr 2024 07:54:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1712242496; x=1712847296; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=glulz4AZ62PEl1FtV867d3/xaAkvpKKca8G8SD97D8A=;
+        b=Ks+2N8TUYpRAhjzGJikLruvc75rlHWsOMiVPPg7isgygq7Slj+LaPdKmat+CiHPx1b
+         MYfpRY5mFn7jouCLcVQj7MF3m4V2ANPP6cTRXyulcu2GiZkVdKhVqOn74UD48dv5ZUcQ
+         a7zbJxmKdXmvQXk/nSTXgGuL5eUtTyYlkpjW/6WAbQ7ibJwgAfccRgl8HRPl+t0mvrM0
+         g/5H0KkZnjzQRIThgS1sGvsTrzlay4TMVYf0kDXNuFJjzgkGUceNtqBe+zl5AFwU3npm
+         gy3O2qaAHo6AhA7LTZE2SWUUuAnsrgl+m1EdizRk5k40v+i7Fa4ea6ZD5IKLoK+3yfyd
+         /NCQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712242496; x=1712847296;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=glulz4AZ62PEl1FtV867d3/xaAkvpKKca8G8SD97D8A=;
+        b=JVYPozf4UZriv4pMfl83z4/6Z14Qf8xlkMv+Ny4qggHqCJRtq5+oVqsuswP6yewKsz
+         PhhqA2lCVWWimYNCKSBdPvuSjwBpe96uxXCz2XfF03nPmu1gF8EAagHcDQrdc2f1ktz2
+         POFu6NgCryYLt3SHya82NAS72Rqpl5dDNN61dQOKhTpYAeB18fpSDEEMq3wMTNAro4OO
+         8pwHD20Cle2ZOA2gm63QrD7YxVJQRIkNn+aAZvV/byxeefBv6qUv9yFxZHuVL3jozBtp
+         tFfttm3y7xL+gMUILAGY27hhw2Mp3po14wzB3dS+Sbn/15DikmZFOXF1uBYHn80/HY1k
+         yFeA==
+X-Forwarded-Encrypted: i=1; AJvYcCUBSV0z9PjKOF6BYKRF46yuJXGtn/+CHq7MRAmvjkEJK35CKyyeV/U5G3oPZ2NyNN56tiKCkRg/Q7lFsUZBTn/x2XMOWQes7vSXZ4GUq4+YSrO/Eq3Ob2W8r4CMJD8My7IU28FQHoRB
+X-Gm-Message-State: AOJu0Yx39f7Xyoah5hz87qI0Fi5t5p+t2Pi9GjdQ1ZF5OKx3WI/Ga+xF
+	+2Ndj545hEgpO8MiJZuFmzyCOfVzqC4iXqxqxTsWOKoSDr5I+uKd
+X-Google-Smtp-Source: AGHT+IE/IrvuvbWC2KToqhYIKbLS8TuFoPDm6Z5Y0Js0av+z/qFyTnmMZGDwD+Ok2+gD0JTz8TdGlw==
+X-Received: by 2002:a7b:c450:0:b0:414:ff4:5957 with SMTP id l16-20020a7bc450000000b004140ff45957mr2153060wmi.5.1712242496120;
+        Thu, 04 Apr 2024 07:54:56 -0700 (PDT)
+Received: from ?IPv6:2003:f6:ef1b:2000:15d4:fc17:481e:8afe? (p200300f6ef1b200015d4fc17481e8afe.dip0.t-ipconnect.de. [2003:f6:ef1b:2000:15d4:fc17:481e:8afe])
+        by smtp.gmail.com with ESMTPSA id n10-20020a05600c4f8a00b0041493aae77esm2963505wmq.23.2024.04.04.07.54.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 04 Apr 2024 07:54:55 -0700 (PDT)
+Message-ID: <9f91388faee750e16021f2c0544e7a158a16202b.camel@gmail.com>
+Subject: Re: [PATCH 3/4] iio: backend: make use of dev_errp_probe()
+From: Nuno =?ISO-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Nuno Sa
+	 <nuno.sa@analog.com>
+Cc: Petr Mladek <pmladek@suse.com>, Jonathan Cameron <jic23@kernel.org>, 
+ Lars-Peter Clausen <lars@metafoo.de>, Olivier Moysan
+ <olivier.moysan@foss.st.com>, Jyoti Bhayana <jbhayana@google.com>, Chris
+ Down <chris@chrisdown.name>, John Ogness <john.ogness@linutronix.de>, Greg
+ Kroah-Hartman <gregkh@linuxfoundation.org>,  linux-kernel@vger.kernel.org,
+ linux-iio@vger.kernel.org
+Date: Thu, 04 Apr 2024 16:58:27 +0200
+In-Reply-To: <Zg6bsS3WMvp-nY3S@smile.fi.intel.com>
+References: <20240404-dev-add_dev_errp_probe-v1-0-d18e3eb7ec3f@analog.com>
+	 <20240404-dev-add_dev_errp_probe-v1-3-d18e3eb7ec3f@analog.com>
+	 <Zg6bsS3WMvp-nY3S@smile.fi.intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.0 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git timers/urgent
-branch HEAD: cffaefd15a8f423cdee5d8eac15d267bc92de314  vdso: Use CONFIG_PAGE_SHIFT in vdso/datapage.h
+On Thu, 2024-04-04 at 15:23 +0300, Andy Shevchenko wrote:
+> On Thu, Apr 04, 2024 at 01:06:25PM +0200, Nuno Sa wrote:
+> > Using dev_errp_probe() to simplify the code.
+>=20
+> ...
+>=20
+> > +	if (IS_ERR(fwnode))
+> > +		return dev_errp_probe(dev, PTR_ERR(fwnode),
+> > +				=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 "Cannot get Firmware reference\n");
+>=20
+> ERR_CAST() seems quite good candidate to have here.
+>=20
+> 		return dev_errp_probe(dev, fwnode, "Cannot get Firmware
+> reference\n");
+>=20
+> (Assuming dev_errp_probe() magically understands that, note you may have =
+it as
+> =C2=A0a macro and distinguish parameter type with _Generic() or so and be=
+have
+> =C2=A0differently: ERR_PTR() vs. ERR_CAST(), see acpi_dev_hid_uid_match()
+> =C2=A0implementation, but also keep in mind that it doesn't distinguish N=
+ULL/0,
+> there
+> =C2=A0is a patch available in the mailing list to fix that, though.)
+>=20
 
-elapsed time: 1138m
+Do we care that much for going with that trouble? I understand like this we=
+ go
+PTR_ERR() to then comeback to ERR_PTR() but this for probe() which is not a
+fastpath. So perhaps we could just keep it simple?
 
-configs tested: 181
-configs skipped: 3
-
-The following configs have been built successfully.
-More configs may be tested in the coming days.
-
-tested configs:
-alpha                             allnoconfig   gcc  
-alpha                            allyesconfig   gcc  
-alpha                               defconfig   gcc  
-arc                              allmodconfig   gcc  
-arc                               allnoconfig   gcc  
-arc                              allyesconfig   gcc  
-arc                                 defconfig   gcc  
-arc                   randconfig-001-20240404   gcc  
-arc                   randconfig-002-20240404   gcc  
-arm                              alldefconfig   gcc  
-arm                              allmodconfig   gcc  
-arm                               allnoconfig   clang
-arm                              allyesconfig   gcc  
-arm                                 defconfig   clang
-arm                        mvebu_v5_defconfig   gcc  
-arm                   randconfig-001-20240404   gcc  
-arm                   randconfig-002-20240404   gcc  
-arm                   randconfig-003-20240404   clang
-arm                   randconfig-004-20240404   clang
-arm                         s3c6400_defconfig   gcc  
-arm                         wpcm450_defconfig   gcc  
-arm64                            allmodconfig   clang
-arm64                             allnoconfig   gcc  
-arm64                               defconfig   gcc  
-arm64                 randconfig-001-20240404   gcc  
-arm64                 randconfig-002-20240404   gcc  
-arm64                 randconfig-003-20240404   clang
-arm64                 randconfig-004-20240404   gcc  
-csky                             allmodconfig   gcc  
-csky                              allnoconfig   gcc  
-csky                             allyesconfig   gcc  
-csky                                defconfig   gcc  
-csky                  randconfig-001-20240404   gcc  
-csky                  randconfig-002-20240404   gcc  
-hexagon                          allmodconfig   clang
-hexagon                           allnoconfig   clang
-hexagon                          allyesconfig   clang
-hexagon                             defconfig   clang
-hexagon               randconfig-001-20240404   clang
-hexagon               randconfig-002-20240404   clang
-i386                             allmodconfig   gcc  
-i386                              allnoconfig   gcc  
-i386                             allyesconfig   gcc  
-i386         buildonly-randconfig-001-20240404   gcc  
-i386         buildonly-randconfig-002-20240404   clang
-i386         buildonly-randconfig-003-20240404   clang
-i386         buildonly-randconfig-004-20240404   gcc  
-i386         buildonly-randconfig-005-20240404   clang
-i386         buildonly-randconfig-006-20240404   gcc  
-i386                                defconfig   clang
-i386                  randconfig-001-20240404   gcc  
-i386                  randconfig-002-20240404   clang
-i386                  randconfig-003-20240404   clang
-i386                  randconfig-004-20240404   gcc  
-i386                  randconfig-005-20240404   clang
-i386                  randconfig-006-20240404   clang
-i386                  randconfig-011-20240404   gcc  
-i386                  randconfig-012-20240404   clang
-i386                  randconfig-013-20240404   gcc  
-i386                  randconfig-014-20240404   clang
-i386                  randconfig-015-20240404   gcc  
-i386                  randconfig-016-20240404   gcc  
-loongarch                        allmodconfig   gcc  
-loongarch                         allnoconfig   gcc  
-loongarch                        allyesconfig   gcc  
-loongarch                           defconfig   gcc  
-loongarch             randconfig-001-20240404   gcc  
-loongarch             randconfig-002-20240404   gcc  
-m68k                             allmodconfig   gcc  
-m68k                              allnoconfig   gcc  
-m68k                             allyesconfig   gcc  
-m68k                                defconfig   gcc  
-m68k                        m5407c3_defconfig   gcc  
-microblaze                       allmodconfig   gcc  
-microblaze                        allnoconfig   gcc  
-microblaze                       allyesconfig   gcc  
-microblaze                          defconfig   gcc  
-mips                             allmodconfig   gcc  
-mips                              allnoconfig   gcc  
-mips                             allyesconfig   gcc  
-mips                     cu1000-neo_defconfig   gcc  
-nios2                            allmodconfig   gcc  
-nios2                             allnoconfig   gcc  
-nios2                            allyesconfig   gcc  
-nios2                               defconfig   gcc  
-nios2                 randconfig-001-20240404   gcc  
-nios2                 randconfig-002-20240404   gcc  
-openrisc                         allmodconfig   gcc  
-openrisc                          allnoconfig   gcc  
-openrisc                         allyesconfig   gcc  
-openrisc                            defconfig   gcc  
-parisc                           allmodconfig   gcc  
-parisc                            allnoconfig   gcc  
-parisc                           allyesconfig   gcc  
-parisc                              defconfig   gcc  
-parisc                randconfig-001-20240404   gcc  
-parisc                randconfig-002-20240404   gcc  
-parisc64                            defconfig   gcc  
-powerpc                          allmodconfig   gcc  
-powerpc                           allnoconfig   gcc  
-powerpc                          allyesconfig   clang
-powerpc                        cell_defconfig   gcc  
-powerpc                     powernv_defconfig   gcc  
-powerpc               randconfig-001-20240404   gcc  
-powerpc               randconfig-002-20240404   gcc  
-powerpc               randconfig-003-20240404   clang
-powerpc64             randconfig-001-20240404   gcc  
-powerpc64             randconfig-002-20240404   clang
-powerpc64             randconfig-003-20240404   clang
-riscv                            allmodconfig   clang
-riscv                             allnoconfig   gcc  
-riscv                            allyesconfig   clang
-riscv                               defconfig   clang
-riscv                 randconfig-001-20240404   clang
-riscv                 randconfig-002-20240404   clang
-s390                             allmodconfig   clang
-s390                              allnoconfig   clang
-s390                             allyesconfig   gcc  
-s390                                defconfig   clang
-s390                  randconfig-001-20240404   gcc  
-s390                  randconfig-002-20240404   gcc  
-sh                               allmodconfig   gcc  
-sh                                allnoconfig   gcc  
-sh                               allyesconfig   gcc  
-sh                                  defconfig   gcc  
-sh                    randconfig-001-20240404   gcc  
-sh                    randconfig-002-20240404   gcc  
-sh                          sdk7786_defconfig   gcc  
-sh                           se7619_defconfig   gcc  
-sh                           sh2007_defconfig   gcc  
-sparc                            allmodconfig   gcc  
-sparc                             allnoconfig   gcc  
-sparc                            allyesconfig   gcc  
-sparc                               defconfig   gcc  
-sparc64                          allmodconfig   gcc  
-sparc64                          allyesconfig   gcc  
-sparc64                             defconfig   gcc  
-sparc64               randconfig-001-20240404   gcc  
-sparc64               randconfig-002-20240404   gcc  
-um                               allmodconfig   clang
-um                                allnoconfig   clang
-um                               allyesconfig   gcc  
-um                                  defconfig   clang
-um                             i386_defconfig   gcc  
-um                    randconfig-001-20240404   clang
-um                    randconfig-002-20240404   clang
-um                           x86_64_defconfig   clang
-x86_64                            allnoconfig   clang
-x86_64                           allyesconfig   clang
-x86_64       buildonly-randconfig-001-20240404   gcc  
-x86_64       buildonly-randconfig-002-20240404   gcc  
-x86_64       buildonly-randconfig-003-20240404   gcc  
-x86_64       buildonly-randconfig-004-20240404   clang
-x86_64       buildonly-randconfig-005-20240404   clang
-x86_64       buildonly-randconfig-006-20240404   clang
-x86_64                              defconfig   gcc  
-x86_64                randconfig-001-20240404   clang
-x86_64                randconfig-002-20240404   gcc  
-x86_64                randconfig-003-20240404   clang
-x86_64                randconfig-004-20240404   gcc  
-x86_64                randconfig-005-20240404   gcc  
-x86_64                randconfig-006-20240404   gcc  
-x86_64                randconfig-011-20240404   clang
-x86_64                randconfig-012-20240404   clang
-x86_64                randconfig-013-20240404   clang
-x86_64                randconfig-014-20240404   clang
-x86_64                randconfig-015-20240404   gcc  
-x86_64                randconfig-016-20240404   gcc  
-x86_64                randconfig-071-20240404   gcc  
-x86_64                randconfig-072-20240404   clang
-x86_64                randconfig-073-20240404   clang
-x86_64                randconfig-074-20240404   gcc  
-x86_64                randconfig-075-20240404   clang
-x86_64                randconfig-076-20240404   gcc  
-x86_64                          rhel-8.3-rust   clang
-x86_64                               rhel-8.3   gcc  
-xtensa                            allnoconfig   gcc  
-xtensa                           allyesconfig   gcc  
-xtensa                       common_defconfig   gcc  
-xtensa                randconfig-001-20240404   gcc  
-xtensa                randconfig-002-20240404   gcc  
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+- Nuno S=C3=A1=20
