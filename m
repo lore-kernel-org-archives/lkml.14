@@ -1,76 +1,111 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47A6F86ADB;
-	Thu,  4 Apr 2024 15:43:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D26A763F4;
+	Thu,  4 Apr 2024 15:44:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712245436; cv=none; b=V0A0uENWL/L31yLhaJN7JqeJdBCZN2sXGQR/9VJc5LH0ctrA9ANxFgjPwfsAB4JS96Sg4xr3f7nLmG3vhWiCXxbFNxp+jlaSL6C8TdVaDmGBcI4Vh/sClmVtQhukzWeKg7MzE60J0dzh5UmuCcicFqtVL1H5D3sNqU3UjSeJS+g=
+	t=1712245462; cv=none; b=Tfkw7vUaq67+Ub0ZNrefeuCol9ycHfYsW6A2TGu6eJrVACJFz0V1u6Ly5Q3V8It/4PQUJ6dkiLgMRKZX8B9cxaXMn6KBWxWR3UGfYBvEveg6r3HPqMLu0JhiO9rB4Chu5/3uD8PvdZs+RqBSOXofx0Muihv0WnxPb+3VBRAYO1I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712245436; c=relaxed/simple;
-	bh=Ts3qGSlroqc0rCsJJ0xFCnRTgL2rVaTIMzZY2xTp8kI=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=KImuyEL77iiUP/O1w6akN005OknxmCcMvoMSHtCxj+CUVeMl+kq8yhVACPI2GLdjMgaY28bmbdPaMqyd7efepwBsxR6RQSOfg3Xu1NX+ICT2sMTUGpLhoXS8Volwrv2WT3zKkS5bV+97IEmH32zImQ70rnMoLjwSZ/cdCpuU5Ro=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=OSyq/Srk; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=5lA2dLfP; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1712245462; c=relaxed/simple;
+	bh=XyF/KPOxCX9FXqX/BdsHnu7IbjmJCKAUNKTfXOqk1v8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=CHGxIwLlnbN3BVYFQX76QTY9aCc2YGI7Mf0/myi/9GI81yLt2MGvrL1p9K4TgRJkFhiOE6j8FcLfuY/CRAaluDtB5yndCOSWi26Kf+mPUjisQaT8Offe8XS4gPVF5gOuPiEClpmXX4UAX1Pyx0L4oK5EfLZC/bgaeykSPicJQ0M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=Clz870Dj; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="OSyq/Srk";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="5lA2dLfP"
-Date: Thu, 4 Apr 2024 17:43:51 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1712245433;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type;
-	bh=foU1M3It3GalBGF0iZ+MjM8nUxBRueNGz8SQVeFfg4w=;
-	b=OSyq/Srka1J+2O+DtvaOBM9byofUx29yY13ZssobA4RTB59AoEKjHJ2HX6dmmA1hOwJG/u
-	j/Xgc47UWBmvZvAyND7pA+3ZEm0/T+Xomv5j7jg/qXHjymcGDPaOXduDoWHXEBjfpSsSxY
-	pY4LD2m/a/fs1Y1ng+ERwc2LaLmVzHw0yvmKMBw9t9t5KdKmdvP6wrZ3LAVLgw/NZeFeeL
-	jd9AFCGt9GQOiO7kV/bsmyGQ/xRE7c4o/MAFt0YWoAjLnj/0+tawOzy0WfMaeCtFeEwHUc
-	70URlFSlvhwE53yHaMRLn2RDVpOXRKvkEihGHstcD+NfZQ6lR9Hz+qv2jhrDKg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1712245433;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type;
-	bh=foU1M3It3GalBGF0iZ+MjM8nUxBRueNGz8SQVeFfg4w=;
-	b=5lA2dLfPQJoD7e9mCAgbFPdwfQJDdyHoefPZy9xlvqVqawv75CGjf3Aa8MiU24LEXi8T9v
-	GFZzrVD5MAZsQ2Dg==
-From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To: Thomas Gleixner <tglx@linutronix.de>
-Cc: LKML <linux-kernel@vger.kernel.org>, linux-rt-users@vger.kernel.org,
-	Steven Rostedt <rostedt@goodmis.org>
-Subject: [ANNOUNCE] v6.9-rc2-rt1
-Message-ID: <20240404154351.0uUUy1fB@linutronix.de>
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="Clz870Dj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7445AC433F1;
+	Thu,  4 Apr 2024 15:44:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1712245461;
+	bh=XyF/KPOxCX9FXqX/BdsHnu7IbjmJCKAUNKTfXOqk1v8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Clz870DjZTRnsAcEdvUqazZ8PFZrZ10E8IYBcCgZCKJCV3VZb138qfAS8JSNf9Pem
+	 FfjAlLdQYoAdf5/pRDobmSfUka9nqNV5MA+d77H77bNqPy+4tEWWmc0iuLjqeikBpU
+	 t/YEpw05pNUPEj2VBBmMS2rCVbo4d0FOEW3e8y+Y=
+Date: Thu, 4 Apr 2024 17:44:18 +0200
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Linux regressions mailing list <regressions@lists.linux.dev>
+Cc: Tejun Heo <tj@kernel.org>, Sasha Levin <sashal@kernel.org>,
+	"stable@vger.kernel.org" <stable@vger.kernel.org>,
+	LKML <linux-kernel@vger.kernel.org>
+Subject: Re: Do we need a "DoNotBackPort" tag? (was: Re: Hibernate stuck
+ after recent kernel/workqueue.c changes in Stable 6.6.23)
+Message-ID: <2024040454-playful-tainted-7446@gregkh>
+References: <ce4c2f67-c298-48a0-87a3-f933d646c73b@leemhuis.info>
+ <ZgylCe48FuOKNWtM@slm.duckdns.org>
+ <b6cdb17f-206c-4dff-bb45-a60317e0a55e@leemhuis.info>
+ <2024040328-surfacing-breezy-34c6@gregkh>
+ <Zg10Keik4KORjXMh@slm.duckdns.org>
+ <2024040319-doorbell-ecosystem-7d31@gregkh>
+ <dfd87673-c581-4b4b-b37a-1cf5c817240d@leemhuis.info>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <dfd87673-c581-4b4b-b37a-1cf5c817240d@leemhuis.info>
 
-Dear RT folks!
+On Thu, Apr 04, 2024 at 05:36:42PM +0200, Linux regression tracking (Thorsten Leemhuis) wrote:
+> On 03.04.24 18:10, Greg KH wrote:
+> > On Wed, Apr 03, 2024 at 05:22:17AM -1000, Tejun Heo wrote:
+> >> On Wed, Apr 03, 2024 at 07:11:04AM +0200, Greg KH wrote:
+> >>>> Side note: I have no idea why the stable team backported those patches
+> >>>> and no option on whether that was wise, just trying to help finding the best
+> >>>> solution forward from the current state of things.
+> >>>
+> >>> The Fixes: tag triggered it, that's why they were backported.
+> 
+> Yeah, this is what I assumed.
+> 
+> >>>>> which would
+> >>>>> be far too invasive for -stable, thus no Cc: stable.
+> >>>>>
+> >>>>> I didn't know a Fixes
+> >>>>> tag automatically triggers backport to -stable. I will keep that in mind for
+> >>>>> future.
+> >>>>
+> >>>> /me fears that more and more developers due to situations like this will
+> >>>> avoid Fixes: tags and wonders what consequences that might have for the
+> >>>> kernel as a whole
+> >>>
+> >>> The problem is that we have subsystems that only use Fixes: and not cc:
+> >>> stable which is why we need to pick these up as well.  Fixes: is great,
+> >>> but if everyone were to do this "properly" then we wouldn't need to pick
+> >>> these other ones up, but instead, it's about 1/3 of our volume :(
+> 
+> I'm also well aware of that and do not want to complain about it, as I
+> think I grasped why the stable team works like that -- and even think
+> given the circumstances it is round about the right approach. I also
+> understand that mistakes will always happen.
+> 
+> Nevertheless this thread and the Bluetooth thing we had earlier this
+> week[1] makes me fear that this approach could lead to developer
+> avoiding Fixes: tags. And funny thing, that's something that is already
+> happening, as I noticed by chance today: "'"A "Fixes" tag has been
+> deliberately omitted to avoid potential test failures and subsequent
+> regression issues that could arise from backporting."'"[2].
+> 
+> I wonder if that in the long term might be bad. But well, maybe it won't
+> matter much. Still made me wonder if we should have a different solution
+> for this kind of problem. Something like this?
+> 
+>   Cc: <stable@vger.kernel.org> # DoNotBackport
+> 
+> Or something like this?
+> 
+>   Cc: <stable@vger.kernel.org> # DoNotBackport - or only after 16 weeks
+> in mainline [but I don't care]
 
-I'm pleased to announce the v6.9-rc2-rt1 patch set. 
+We do this today, with stuff like:
+	Cc: stable <stable@kernel.org>	# wait for -rc3 to be out
 
-Changes since v6.8.2-rt11:
+So if people want to do that, they can, the documentation says that you
+can give us hints and the like in the # area, and usually we notice them :)
 
-  - Update to v6.9-rc2.
+thanks,
 
-Known issues
-    None.
-
-You can get this release via the git tree at:
-
-    https://git.kernel.org/pub/scm/linux/kernel/git/rt/linux-rt-devel.git v6.9-rc2-rt1
-
-The RT patch against v6.9-rc2 can be found here:
-
-    https://cdn.kernel.org/pub/linux/kernel/projects/rt/6.9/older/patch-6.9-rc2-rt1.patch.xz
-
-The split quilt queue is available at:
-
-    https://cdn.kernel.org/pub/linux/kernel/projects/rt/6.9/older/patches-6.9-rc2-rt1.tar.xz
-
-Sebastian
+greg k-h
