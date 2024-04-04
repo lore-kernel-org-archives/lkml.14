@@ -1,127 +1,103 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F224125B9;
-	Thu,  4 Apr 2024 17:04:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 538251C6BC;
+	Thu,  4 Apr 2024 17:05:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712250288; cv=none; b=KJ9ngcfMs6fP6JTJj2q0mei+aSZUs61g8aFyP9A7Lxe+yf0Itpqk5IenM0sXg4xurU/DzokxLVIjzSSqsip4M0rqIO3Np4EYnsXxcqMA8KiInOwdzVZPRRQjLCEqwbHL0/7Tgh0KOL5j9s/fKX+5T2Jhv6/e7dJJwmt2E4PqgL0=
+	t=1712250314; cv=none; b=GrBSE3sxk8GguurQMl/Bwnf64uL9v9w5fMurR84zTB04AxApaXqRa0Ew3GN7kWrtzZ5TrRCDw49SenDASpqmzHAzhJ2DqkafdULMMqaZ8yEkUyqQFFbxtsFQk2KcaMj0etrJda/bsqFtoeOp+6QQYUrHYfq1+ruACzuY+ucVHe8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712250288; c=relaxed/simple;
-	bh=x/9ry9wlBV0rCnnySuGdNSMlfXrPzK2YD/HWEbR4zhQ=;
+	s=arc-20240116; t=1712250314; c=relaxed/simple;
+	bh=ciuhxV+lxpulzdqgBI0ASX/tPUFRGPCHizIhzVA75GQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TThYY0bX5PI71WWdBAqvAdrwwuX370DNNUoSr6ZpLnAkszBribZ1RQSNfj3uG7PUK2YMxdpb+pXSHGru8DMWU+6JEOogHLDDDYpkWHVPfbDcOKgS9DPiYYoaObd033FIAy7u+kI2uYtMIWfthmtBGRkbI6qu7MTVkNrkUgjsCwk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=SjUt7RDL; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=FyMzruATG6zB/uS+DMZxziQQhuOR+2ya7E4m9CxFbORgPhnLlR0wXhBZdW4vqmqTYpR5vebw6MOnHc7t/2/Go5flZs+89CMjRvctmj9zm/1KEjxKTna/t31ot4jekI/SAqQiwQMfYs77RirgpGffrzxc9oV7Hf36wddsatxiEr0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ERmAQndG; arc=none smtp.client-ip=192.198.163.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="SjUt7RDL"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=4CFp86wmxp1/JViVh6kBybDsWXnT4XZ0nWmOLk8Oyj0=; b=SjUt7RDLy8Dplm6P/4WcYLCDto
-	JdMhwnM8Tzfwk5oJXKCWGBJAd6uhu57bpnCvXTmEXcMrnoqK4t0aD5o1x6FcPoeHZcEwrqQ3FPctY
-	0c+WEzZJ5fshBqiGEcv3yjtTXOEw5ewWZlAsh9VVpawJuENkQYvgtFXn9rIqLzHRUEv/B4yd9T+NI
-	CKTrHVJsbB0s1mNNR0fevMlZMbCoTmBq3NE6HUw+kdV3qVOaJBosFJH6nZle7fAO04gBwW0zz6Xhl
-	SrnK0b5GjDAXJGIixt3dWRZpcvikm3SkrvW/C/zeVmzHQuuyBVXoYOVj/ba/GG0FEGfYCQOUfddO7
-	XGjtmthg==;
-Received: from willy by casper.infradead.org with local (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1rsQVm-00000008UpK-45BQ;
-	Thu, 04 Apr 2024 17:04:27 +0000
-Date: Thu, 4 Apr 2024 18:04:26 +0100
-From: Matthew Wilcox <willy@infradead.org>
-To: Suren Baghdasaryan <surenb@google.com>
-Cc: akpm@linux-foundation.org, joro@8bytes.org, will@kernel.org,
-	trond.myklebust@hammerspace.com, anna@kernel.org, arnd@arndb.de,
-	herbert@gondor.apana.org.au, davem@davemloft.net, jikos@kernel.org,
-	benjamin.tissoires@redhat.com, tytso@mit.edu, jack@suse.com,
-	dennis@kernel.org, tj@kernel.org, cl@linux.com,
-	jakub@cloudflare.com, penberg@kernel.org, rientjes@google.com,
-	iamjoonsoo.kim@lge.com, vbabka@suse.cz, edumazet@google.com,
-	kuba@kernel.org, pabeni@redhat.com, iommu@lists.linux.dev,
-	linux-kernel@vger.kernel.org, linux-nfs@vger.kernel.org,
-	linux-acpi@vger.kernel.org, acpica-devel@lists.linux.dev,
-	linux-arch@vger.kernel.org, linux-crypto@vger.kernel.org,
-	bpf@vger.kernel.org, linux-input@vger.kernel.org,
-	linux-ext4@vger.kernel.org, linux-mm@kvack.org,
-	netdev@vger.kernel.org, linux-security-module@vger.kernel.org,
-	kent.overstreet@linux.dev
-Subject: Re: [PATCH 1/1] mm: change inlined allocation helpers to account at
- the call site
-Message-ID: <Zg7dmp5VJkm1nLRM@casper.infradead.org>
-References: <20240404165404.3805498-1-surenb@google.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ERmAQndG"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1712250312; x=1743786312;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=ciuhxV+lxpulzdqgBI0ASX/tPUFRGPCHizIhzVA75GQ=;
+  b=ERmAQndGdDzEZ37USJLxIjNOOJidrSz6xozPYe+HJeV4a54cqtXGts0f
+   PGXGlVIncBJQPcs1hBsZqLa0ZXhs8QyRKNlEivDCd8YBgfaaGcQ7C2vWr
+   Dd4pH8v5FsezWA/5mjIDU5LdHX/TMnxq+xnzZuzCvR7VbRWWIeJEFRC60
+   5N2daMzVX7FFUCof8EeXuQkQNEkKm04pWM4RogTwdckZdT7u/1R8HBjm6
+   PV5vYipZHnp2RYBj/Y5bQK4hU0ggZHHHwb+92Kb3iEHlhAZJrJAzG4Uam
+   4ZYZ+rhtQgosIAR/La+WNOWkAanklD/jl07jdNk7CMQaeEyyCi/p24MBw
+   w==;
+X-CSE-ConnectionGUID: p3iTTt48TzKiYiVCax8MDQ==
+X-CSE-MsgGUID: eXPQlIF5TLuEhKpVDDOfrg==
+X-IronPort-AV: E=McAfee;i="6600,9927,11034"; a="32949982"
+X-IronPort-AV: E=Sophos;i="6.07,179,1708416000"; 
+   d="scan'208";a="32949982"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Apr 2024 10:05:10 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,11034"; a="915223889"
+X-IronPort-AV: E=Sophos;i="6.07,179,1708416000"; 
+   d="scan'208";a="915223889"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.72.54])
+  by fmsmga002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Apr 2024 10:05:08 -0700
+Received: from andy by smile with local (Exim 4.97)
+	(envelope-from <andriy.shevchenko@intel.com>)
+	id 1rsQWP-00000001WTh-3noL;
+	Thu, 04 Apr 2024 20:05:05 +0300
+Date: Thu, 4 Apr 2024 20:05:05 +0300
+From: Andy Shevchenko <andriy.shevchenko@intel.com>
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>, brgl@bgdev.pl,
+	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+	cristian.marussi@arm.com, sudeep.holla@arm.com,
+	Peng Fan <peng.fan@nxp.com>
+Subject: Re: [PATCH] pinctrl: pinconf-generic: check error value EOPNOTSUPP
+Message-ID: <Zg7dwcFz5eD7Am2u@smile.fi.intel.com>
+References: <20240401141031.3106216-1-peng.fan@oss.nxp.com>
+ <CACRpkdZAuNXGyg2wwYcQG4oO9w7jPS6vj4Vt0=kqX5fJ+QpNmw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20240404165404.3805498-1-surenb@google.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CACRpkdZAuNXGyg2wwYcQG4oO9w7jPS6vj4Vt0=kqX5fJ+QpNmw@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Thu, Apr 04, 2024 at 09:54:04AM -0700, Suren Baghdasaryan wrote:
-> +++ b/include/linux/dma-fence-chain.h
-> @@ -86,10 +86,7 @@ dma_fence_chain_contained(struct dma_fence *fence)
->   *
->   * Returns a new struct dma_fence_chain object or NULL on failure.
->   */
-> -static inline struct dma_fence_chain *dma_fence_chain_alloc(void)
-> -{
-> -	return kmalloc(sizeof(struct dma_fence_chain), GFP_KERNEL);
-> -};
-> +#define dma_fence_chain_alloc()	kmalloc(sizeof(struct dma_fence_chain), GFP_KERNEL)
+On Thu, Apr 04, 2024 at 01:44:50PM +0200, Linus Walleij wrote:
+> On Mon, Apr 1, 2024 at 4:02 PM Peng Fan (OSS) <peng.fan@oss.nxp.com> wrote:
+> 
+> > From: Peng Fan <peng.fan@nxp.com>
+> >
+> > The SCMI error value SCMI_ERR_SUPPORT maps to linux error value
+> > '-EOPNOTSUPP', so when dump configs, need check the error value
+> > EOPNOTSUPP, otherwise there will be log "ERROR READING CONFIG SETTING".
+> >
+> > Signed-off-by: Peng Fan <peng.fan@nxp.com>
+> (...)
+> >                         ret = pin_config_get_for_pin(pctldev, pin, &config);
+> >                 /* These are legal errors */
+> > -               if (ret == -EINVAL || ret == -ENOTSUPP)
+> > +               if (ret == -EINVAL || ret == -ENOTSUPP || ret == -EOPNOTSUPP)
+> 
+> TBH it's a bit odd to call an in-kernel API such as pin_config_get_for_pin()
+> and get -EOPNOTSUPP back. But it's not like I care a lot, so patch applied.
 
-You've removed some typesafety here.  Before, if I wrote:
+Hmm... I would like actually to get this being consistent. The documentation
+explicitly says that in-kernel APIs uses Linux error code and not POSIX one.
 
-	struct page *page = dma_fence_chain_alloc();
+This check opens a Pandora box.
 
-the compiler would warn me that I've done something stupid.  Now it
-can't tell.  Suggest perhaps:
+FWIW, it just like dozen or so drivers that needs to be fixed, I prefer to
+have them being moved to ENOTSUPP, rather this patch.
 
-#define dma_fence_chain_alloc()						  \
-	(struct dma_fence_chain *)kmalloc(sizeof(struct dma_fence_chain), \
-						GFP_KERNEL)
+-- 
+With Best Regards,
+Andy Shevchenko
 
-but maybe there's a better way of doing that.  There are a few other
-occurrences of the same problem in this monster patch.
 
-> +++ b/include/linux/hid_bpf.h
-> @@ -149,10 +149,7 @@ static inline int hid_bpf_connect_device(struct hid_device *hdev) { return 0; }
->  static inline void hid_bpf_disconnect_device(struct hid_device *hdev) {}
->  static inline void hid_bpf_destroy_device(struct hid_device *hid) {}
->  static inline void hid_bpf_device_init(struct hid_device *hid) {}
-> -static inline u8 *call_hid_bpf_rdesc_fixup(struct hid_device *hdev, u8 *rdesc, unsigned int *size)
-> -{
-> -	return kmemdup(rdesc, *size, GFP_KERNEL);
-> -}
-> +#define call_hid_bpf_rdesc_fixup(_hdev, _rdesc, _size) kmemdup(_rdesc, *(_size), GFP_KERNEL)
-
-here
-
-> -static inline handle_t *jbd2_alloc_handle(gfp_t gfp_flags)
-> -{
-> -	return kmem_cache_zalloc(jbd2_handle_cache, gfp_flags);
-> -}
-> +#define jbd2_alloc_handle(_gfp_flags)	kmem_cache_zalloc(jbd2_handle_cache, _gfp_flags)
-
-here
-
-> +++ b/include/linux/skmsg.h
-> @@ -410,11 +410,8 @@ void sk_psock_stop_verdict(struct sock *sk, struct sk_psock *psock);
->  int sk_psock_msg_verdict(struct sock *sk, struct sk_psock *psock,
->  			 struct sk_msg *msg);
->  
-> -static inline struct sk_psock_link *sk_psock_init_link(void)
-> -{
-> -	return kzalloc(sizeof(struct sk_psock_link),
-> -		       GFP_ATOMIC | __GFP_NOWARN);
-> -}
-> +#define sk_psock_init_link()	\
-> +		kzalloc(sizeof(struct sk_psock_link), GFP_ATOMIC | __GFP_NOWARN)
-
-here
-
-... I kind of gave up at this point.  You'll want to audit for yourself
-anyway ;-)
