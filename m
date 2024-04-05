@@ -1,182 +1,160 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail2-relais-roc.national.inria.fr (mail2-relais-roc.national.inria.fr [192.134.164.83])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33F223F8D4;
-	Fri,  5 Apr 2024 22:56:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EA9E2E84E
+	for <linux-kernel@vger.kernel.org>; Fri,  5 Apr 2024 23:00:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.134.164.83
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712357780; cv=none; b=VyqyKiovrvTvfBUattYCDa74p0nFempIfp8LXG4bEMXjGfa44vr6BVq11udy7C34yrqqafC+Z4kQH6Mzexn19Lv5a3oCYqbH6NgD6yggIJF2rfDI96VC4BPEFAF2kG/sxUl+ob8XZxrpWWIWvYtKrvNQ4dwrGWERXcT8THg3Hck=
+	t=1712358047; cv=none; b=GssNeV/atoeTvgq3i9VNpO5ixgXrJvrA1JCr4J/vt2JNKOAep/Ou8vAn8TuX6U48GiL978JCh1iA3qhNkQJAr6r3uqVw3UtfuzYJBoXddzZ2d2076hXUkQCSL9Ws27+mnl8ubvfy/GilV3z9/qOklmFiqOz4/x8uHBRZauavwHc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712357780; c=relaxed/simple;
-	bh=AO5Kpd/Nydfgj35Of2FHSq+t2Vc9UkcYjNb1Rv1uAJU=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=iMcthdO6zKhwdXOc/QafmQju7EV0Vrnq4FL3kcExcV3GUInry3FigQ2rRFtZnCccI6DVvrQOzBOXd3cVkhjYuMsfYi7nTby4eMGY2hLB8c3FatY/tMzWtVaBP3WMHFEsKTxuJP+T3/iZiujPdgCiFMtmJK5ywuYRgYw8Laylg20=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jhCesNHg; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1712358047; c=relaxed/simple;
+	bh=CiSiD5qhIQWwosDNaLJfp1lrKTM/qSUDfU9Mwb1M0GM=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=dJzKht/3WHnadQnB8qAMhLNz4kc8H6oAt3Gwe93E8aUxYp69sPf2XBL4qk4wAE3JMqWKVpn1CNn8A7iWpe9201x7xTaXn6KA/Jjzwx12iY0ireit/VIGz4tvUMAzTYmDmyl3xnmAg5l7ARYru91thqtpwfC9t/qz3xuBIp9HZKA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=inria.fr; spf=pass smtp.mailfrom=inria.fr; dkim=pass (1024-bit key) header.d=inria.fr header.i=@inria.fr header.b=EC4J5vK/; arc=none smtp.client-ip=192.134.164.83
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=inria.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=inria.fr
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jhCesNHg"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8FC6CC43394;
-	Fri,  5 Apr 2024 22:56:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712357779;
-	bh=AO5Kpd/Nydfgj35Of2FHSq+t2Vc9UkcYjNb1Rv1uAJU=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=jhCesNHgJsGQy/dJ+jMTvQxpMAlN7OgTaHzunQ8wqR+ZK1K0QOohd2H+VYYa2GJXJ
-	 VoO8mEj6/LAQxky2LY39loFOlGyqMgUgjy0ku0Ra3JqIbLqsdzuchkfDK1vm3nfJt+
-	 gF+ncWODUv/WmY7G63bW0WhCs7seeraBk51OcDoNZiXuflI/Kr01Kz7iGlvJisijxU
-	 ZTIjRN6PfQBKU4mkVqU1BJnOciHkf372J0/YxkjTG58vMrbdF5M3eomG9/0oxjg3MV
-	 vpPLotdW3RgC4/nKE0t9UA9P0oGMwG9v8KqKLSul6cYDfI8wtH5vbbj0eGmpigoqEz
-	 cbR2Q3O98NeFw==
-From: Rob Herring <robh@kernel.org>
-Date: Fri, 05 Apr 2024 17:56:03 -0500
-Subject: [PATCH v2 3/3] dt-bindings: kbuild: Add separate target/dependency
- for processed-schema.json
+	dkim=pass (1024-bit key) header.d=inria.fr header.i=@inria.fr header.b="EC4J5vK/"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=inria.fr; s=dc;
+  h=date:from:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=I2GgNCfpdaZ52tLl2SvBDH3lJIvmmyVEPO4phk6KvCU=;
+  b=EC4J5vK/wJCQJTSpd36WFRhmiDLunMCZuZ1TwDGy5iGJBB87qqqKvj30
+   LxzJhcMoaj8fOEVx620QnT/9k5eT6saNijm0SkmPDnU8D8i4+pDSOSgjc
+   6cqktXSO+gR+sztYAR7m5/pwv4TK53Qe04ExyWsFDkOuVO+TZEVhPfqA3
+   k=;
+Authentication-Results: mail2-relais-roc.national.inria.fr; dkim=none (message not signed) header.i=none; spf=SoftFail smtp.mailfrom=julia.lawall@inria.fr; dmarc=fail (p=none dis=none) d=inria.fr
+X-IronPort-AV: E=Sophos;i="6.07,182,1708383600"; 
+   d="scan'208";a="160229611"
+Received: from 231.85.89.92.rev.sfr.net (HELO hadrien) ([92.89.85.231])
+  by mail2-relais-roc.national.inria.fr with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Apr 2024 01:00:36 +0200
+Date: Sat, 6 Apr 2024 01:00:35 +0200 (CEST)
+From: Julia Lawall <julia.lawall@inria.fr>
+X-X-Sender: jll@hadrien
+To: "Paul E. McKenney" <paulmck@kernel.org>
+cc: Julia Lawall <julia.lawall@inria.fr>, Arnd Bergmann <arnd@arndb.de>, 
+    linux-kernel@vger.kernel.org
+Subject: Re: Finding open-coded workarounds for 1/2-byte cmpxchg()?
+In-Reply-To: <f57bcb57-45a4-4dfb-8758-8f7302223ea9@paulmck-laptop>
+Message-ID: <alpine.DEB.2.22.394.2404060057110.3446@hadrien>
+References: <f57bcb57-45a4-4dfb-8758-8f7302223ea9@paulmck-laptop>
+User-Agent: Alpine 2.22 (DEB 394 2020-01-19)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240405-dt-kbuild-rework-v2-3-3a035caee357@kernel.org>
-References: <20240405-dt-kbuild-rework-v2-0-3a035caee357@kernel.org>
-In-Reply-To: <20240405-dt-kbuild-rework-v2-0-3a035caee357@kernel.org>
-To: Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
- Conor Dooley <conor+dt@kernel.org>, Masahiro Yamada <masahiroy@kernel.org>, 
- Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nicolas@fjasle.eu>
-Cc: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, 
- Marijn Suijten <marijn.suijten@somainline.org>, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org
-X-Mailer: b4 0.13-dev
+Content-Type: text/plain; charset=US-ASCII
 
-Running dtbs_check and dt_compatible_check targets really only depend
-on processed-schema.json, but the dependency is 'dt_binding_check'. That
-was sort worked around with the CHECK_DT_BINDING variable in order to
-skip some of the work that 'dt_binding_check' does. It still runs the
-full checks of the schemas which is not necessary and adds 10s of
-seconds to the build time. That's significant when checking only a few
-DTBs and with recent changes that have improved the validation time by
-6-7x.
 
-Add a new target, dt_binding_schema, which just builds
-processed-schema.json and can be used as the dependency for other
-targets. The scripts_dtc dependency isn't needed either as the examples
-aren't built for it.
 
-Signed-off-by: Rob Herring <robh@kernel.org>
----
-v2:
- - Just split out building processed-schema.json and drop running
-yamllint, schema validation, or checking examples separately.
- - Fix multiple targets in parallel build. (Thanks Masahiro!)
----
- Documentation/devicetree/bindings/Makefile |  9 ++++++---
- Makefile                                   | 24 ++++++++++++------------
- scripts/Makefile.lib                       |  2 +-
- 3 files changed, 19 insertions(+), 16 deletions(-)
+On Thu, 4 Apr 2024, Paul E. McKenney wrote:
 
-diff --git a/Documentation/devicetree/bindings/Makefile b/Documentation/devicetree/bindings/Makefile
-index 3779405269ab..8cdda477987f 100644
---- a/Documentation/devicetree/bindings/Makefile
-+++ b/Documentation/devicetree/bindings/Makefile
-@@ -63,7 +63,7 @@ override DTC_FLAGS := \
- $(obj)/processed-schema.json: $(DT_DOCS) check_dtschema_version FORCE
- 	$(call if_changed,mk_schema)
- 
--always-$(CHECK_DT_BINDING) += .dt-binding.checked .yamllint.checked
-+targets += .dt-binding.checked .yamllint.checked
- $(obj)/.yamllint.checked: $(DT_DOCS) $(src)/.yamllint FORCE
- 	$(if $(DT_SCHEMA_LINT),$(call if_changed,yamllint),)
- 
-@@ -71,8 +71,8 @@ $(obj)/.dt-binding.checked: $(DT_DOCS) FORCE
- 	$(call if_changed,chk_bindings)
- 
- always-y += processed-schema.json
--always-$(CHECK_DT_BINDING) += $(patsubst $(obj)/%,%, $(CHK_DT_EXAMPLES))
--always-$(CHECK_DT_BINDING) += $(patsubst $(obj)/%.dtb,%.dts, $(CHK_DT_EXAMPLES))
-+targets += $(patsubst $(obj)/%,%, $(CHK_DT_EXAMPLES))
-+targets += $(patsubst $(obj)/%.dtb,%.dts, $(CHK_DT_EXAMPLES))
- 
- # Hack: avoid 'Argument list too long' error for 'make clean'. Remove most of
- # build artifacts here before they are processed by scripts/Makefile.clean
-@@ -81,3 +81,6 @@ clean-files = $(shell find $(obj) \( -name '*.example.dts' -o \
- 
- dt_compatible_check: $(obj)/processed-schema.json
- 	$(Q)$(srctree)/scripts/dtc/dt-extract-compatibles $(srctree) | xargs dt-check-compatible -v -s $<
-+
-+PHONY += dt_binding_check
-+dt_binding_check: $(obj)/.dt-binding.checked $(obj)/.yamllint.checked $(CHK_DT_EXAMPLES)
-diff --git a/Makefile b/Makefile
-index 763b6792d3d5..1356e48caa2b 100644
---- a/Makefile
-+++ b/Makefile
-@@ -1398,12 +1398,12 @@ dtbs: dtbs_prepare
- # dtbs_install depend on it as dtbs_install may run as root.
- dtbs_prepare: include/config/kernel.release scripts_dtc
- 
--ifneq ($(filter dtbs_check, $(MAKECMDGOALS)),)
-+ifneq ($(filter dt_binding_check dtbs_check, $(MAKECMDGOALS)),)
- export CHECK_DTBS=y
- endif
- 
- ifneq ($(CHECK_DTBS),)
--dtbs_prepare: dt_binding_check
-+dtbs_prepare: dt_binding_schemas
- endif
- 
- dtbs_check: dtbs
-@@ -1421,16 +1421,15 @@ PHONY += scripts_dtc
- scripts_dtc: scripts_basic
- 	$(Q)$(MAKE) $(build)=scripts/dtc
- 
--ifneq ($(filter dt_binding_check, $(MAKECMDGOALS)),)
--export CHECK_DT_BINDING=y
--endif
-+PHONY += dt_binding_check dt_binding_schemas
-+dt_binding_check: dt_binding_schemas scripts_dtc
-+	$(Q)$(MAKE) $(build)=Documentation/devicetree/bindings $@
- 
--PHONY += dt_binding_check
--dt_binding_check: scripts_dtc
-+dt_binding_schemas:
- 	$(Q)$(MAKE) $(build)=Documentation/devicetree/bindings
- 
- PHONY += dt_compatible_check
--dt_compatible_check: dt_binding_check
-+dt_compatible_check: dt_binding_schemas
- 	$(Q)$(MAKE) $(build)=Documentation/devicetree/bindings $@
- 
- # ---------------------------------------------------------------------------
-@@ -1626,10 +1625,11 @@ help:
- 	@echo  ''
- 	@$(if $(dtstree), \
- 		echo 'Devicetree:'; \
--		echo '* dtbs             - Build device tree blobs for enabled boards'; \
--		echo '  dtbs_install     - Install dtbs to $(INSTALL_DTBS_PATH)'; \
--		echo '  dt_binding_check - Validate device tree binding documents'; \
--		echo '  dtbs_check       - Validate device tree source files';\
-+		echo '* dtbs               - Build device tree blobs for enabled boards'; \
-+		echo '  dtbs_install       - Install dtbs to $(INSTALL_DTBS_PATH)'; \
-+		echo '  dt_binding_check   - Validate device tree binding documents and examples'; \
-+		echo '  dt_binding_schema  - Build processed device tree binding schemas'; \
-+		echo '  dtbs_check         - Validate device tree source files';\
- 		echo '')
- 
- 	@echo 'Userspace tools targets:'
-diff --git a/scripts/Makefile.lib b/scripts/Makefile.lib
-index 3179747cbd2c..d1d51e38b55d 100644
---- a/scripts/Makefile.lib
-+++ b/scripts/Makefile.lib
-@@ -410,7 +410,7 @@ $(multi-dtb-y): FORCE
- 	$(call if_changed,fdtoverlay)
- $(call multi_depend, $(multi-dtb-y), .dtb, -dtbs)
- 
--ifneq ($(CHECK_DTBS)$(CHECK_DT_BINDING),)
-+ifneq ($(CHECK_DTBS),)
- DT_CHECKER ?= dt-validate
- DT_CHECKER_FLAGS ?= $(if $(DT_SCHEMA_FILES),-l $(DT_SCHEMA_FILES),-m)
- DT_BINDING_DIR := Documentation/devicetree/bindings
+> Hello, Julia!
+>
+> I hope that things are going well for you and yours.
+>
+> TL;DR: Would you or one of your students be interested in looking for
+> some interesting code patterns involving cmpxchg?  If such patterns exist,
+> we would either need to provide fixes or to drop support for old systems.
+>
+> If this would be of interest, please read on!
+>
+> Arnd (CCed) and I are looking for open-coded emulations for one-byte
+> and two-byte cmpxchg().  Such emulations might be attempting to work
+> around the fact that not all architectures support those sizes, being
+> as they are only required to support four-byte cmpxchg() and, if they
+> are 64-bit architectures, eight-byte cmpxchg().
+>
+> There is a one-byte emulation in RCU (kernel/rcu/tasks.h), which looks
+> like this:
+>
+> ------------------------------------------------------------------------
+>
+> u8 rcu_trc_cmpxchg_need_qs(struct task_struct *t, u8 old, u8 new)
+> {
+> 	union rcu_special ret;
+> 	union rcu_special trs_old = READ_ONCE(t->trc_reader_special);
+> 	union rcu_special trs_new = trs_old;
+>
+> 	if (trs_old.b.need_qs != old)
+> 		return trs_old.b.need_qs;
+> 	trs_new.b.need_qs = new;
+> 	ret.s = cmpxchg(&t->trc_reader_special.s, trs_old.s, trs_new.s);
+> 	return ret.b.need_qs;
+> }
+>
+> ------------------------------------------------------------------------
+>
+> An additional issue is posed by these, also in kernel/rcu/tasks.h:
+>
+> ------------------------------------------------------------------------
+>
+> 	if (trs.b.need_qs == (TRC_NEED_QS_CHECKED | TRC_NEED_QS)) {
+>
+> 	return smp_load_acquire(&t->trc_reader_special.b.need_qs);
+>
+> 	smp_store_release(&t->trc_reader_special.b.need_qs, v);
+>
+> ------------------------------------------------------------------------
+>
+> The additional issue is that these statements assume that each CPU
+> architecture has single-byte load and store instructions, which some of
+> the older Alpha systems do not.  Fortunately for me, Arnd was already
+> thinking in terms of removing support for these systems.
+>
+> But there are additional systems that do not support 16-bit loads and
+> stores.  So if there is a 16-bit counterpart to rcu_trc_cmpxchg_need_qs()
+> on a quantity that is also subject to 16-bit loads or stores, either
+> that function needs adjustment or a few more ancient systems need to
+> lose their Linux-kernel support.
+>
+> Again, is looking for this sort of thing something that you or one of
+> your students would be interested in?
 
--- 
-2.43.0
+Hello,
 
+I tried, but without much success.  The following looks a little bit
+promising, eg the use of the variable name "want", but it's not clear that
+the rest of the context fits the pattern.
+
+diff -u -p /home/julia/linux/net/sunrpc/xprtsock.c
+/tmp/nothing/net/sunrpc/xprtsock.c
+--- /home/julia/linux/net/sunrpc/xprtsock.c
++++ /tmp/nothing/net/sunrpc/xprtsock.c
+@@ -690,12 +690,9 @@ xs_read_stream(struct sock_xprt *transpo
+ 		if (ret <= 0)
+ 			goto out_err;
+ 		transport->recv.offset = ret;
+-		if (transport->recv.offset != want)
+-			return transport->recv.offset;
+
+The semantic patch in question was:
+
+@r@
+expression olde;
+idexpression old;
+@@
+
+if (olde != old) { ... return olde; }
+
+@@
+expression newe != r.olde;
+idexpression nw;
+expression r.olde;
+idexpression r.old;
+@@
+
+*if (olde != old) { ... return olde; }
+...
+*newe = nw;
+...
+*return newe;
+
+The semantic patch doesn't include the cmpxchg.  I wasn't sure if that
+would always be present, or in what form.
+
+julia
