@@ -1,100 +1,135 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2122E17106D;
-	Fri,  5 Apr 2024 15:48:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D26916FF41;
+	Fri,  5 Apr 2024 15:50:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712332137; cv=none; b=Mb5torBwP8WpqbXyQ7fyQ63akeUp8+3d1G6Pv0vcSA+A52ygBr79f2F85y/4P0nc3H0+M1012ZMmXFH4FRuTe0cGcUmDr3M3XQhajc/kFhH1cCrKFJA/vR9TNSqu2mY0HBJL8vDC1lzoeoc8TBzovU4vsRpus6iKgOt4qNPzfc0=
+	t=1712332208; cv=none; b=ba3efn/4gACebkKY4RKUulXNQvBNjSVzHFdUkwQtxGMPqLTAbH5zuLQg4uQvJkmP3rgH2cTswfPnVRD+cbrh8o3mC6fNnOjKcB5CvE+mUpjIPqUjNWToB+6jmQnSOEJ91jRc8NG2hOd6+V850rWaZqYB9+/SEVGxbvQyzPWAPCY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712332137; c=relaxed/simple;
-	bh=IgoFna4ozbyY4uim9EA58wTZVLELUeO04TswSLteP6s=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=DzWxP4GQd9O4OIpgLNN3ZAaDloMrUh/XW3kdsdTL9zW+/gJKiFLqFxqTBD1zEZOJPkmE+9lTRVvVCOT3AVaLnQQyDNCoB1oOwAhKnLrgeK+91ZKMSYRI49UcdZeLHj5cdI2bE4XoH5PV01AcNFmrBDqzsAyqWKpBxQXFxIy+ZHE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZNCLxQV/; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1712332208; c=relaxed/simple;
+	bh=gLrhTgtMj9INqFnBVX/qAmHy7PjKq5tZfRw+4IEfGnQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=AY2wgBl8XsF8HBUo55FQQd5E4xkFJOaTDIRzLJNGorW6KVTUNmQX4iyW9bZVN6yetLza4nxU0zqd+wlKGAhcN3ny8lQQSuwmFhzKVedLVemTC/Q0uc4CNWYCzFsD1q5V+9d96s5J98vefVIb3/VpvPHWLL8Gp4+sQxF1tQRbdcw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZZZT7v7+; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZNCLxQV/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9CBC0C433B1;
-	Fri,  5 Apr 2024 15:48:53 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZZZT7v7+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AF668C433C7;
+	Fri,  5 Apr 2024 15:49:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712332137;
-	bh=IgoFna4ozbyY4uim9EA58wTZVLELUeO04TswSLteP6s=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=ZNCLxQV/d9Gm8N9ut19bdF6HDO8Xy+cMGp/jd3klpEHI9GaRqDgTpd+BEyR/Ne7+m
-	 jmzc7s4ds+hI4pRDmzI0bnHMXtYvqA1G171h8rzfmeT0U4Taorij1FLbUgitNeitcj
-	 HvOLoIXoz+qZzCjTnM6FpZeRSfnt/+czJccKjMFVFU/OsSGZ8tP4qz3ATyVApCe6em
-	 sRKC0PXoChZKTfUOybhKGkukVeUuMeOUSif3EmyuqCNJBGtMi3xYqV+GO4gNjnmR/z
-	 ua5epYOwdOisi0YLgiqbbvyai5CxnwUubZrMrUinYnVOwmr730HIb6U1tW4zMnSV8G
-	 pgE01LuYwi7DA==
-From: Conor Dooley <conor@kernel.org>
-To: linux-riscv@lists.infradead.org,
-	Yangyu Chen <cyy@cyyself.name>
-Cc: Conor Dooley <conor.dooley@microchip.com>,
-	Conor Dooley <conor@kernel.org>,
-	Damien Le Moal <dlemoal@kernel.org>,
-	Dan Carpenter <dan.carpenter@linaro.org>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Guo Ren <guoren@kernel.org>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	linux-gpio@vger.kernel.org,
-	linux-clk@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 0/5] riscv: Kconfig.socs: Deprecate SOC_CANAAN and use SOC_CANAAN_K210 for K210
-Date: Fri,  5 Apr 2024 16:47:36 +0100
-Message-ID: <20240405-revolt-food-4654ca0ac5b4@spud>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <tencent_2E60E33C1F88A090B6B3A332AE528C6B8806@qq.com>
-References: <tencent_2E60E33C1F88A090B6B3A332AE528C6B8806@qq.com>
+	s=k20201202; t=1712332208;
+	bh=gLrhTgtMj9INqFnBVX/qAmHy7PjKq5tZfRw+4IEfGnQ=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=ZZZT7v7+p8D4N9WPiOJQnq3XRDdGXEzy4mgghSHheQ9UU299F/WFfh5PkX0cb/b9b
+	 +8J+aC7VUO1DHQ+BTXmbSgtRq3qYk6W1cMhCGV6vQ9/9UoXzHd8KMk0Ud7j22xFx4J
+	 4+sIO7kcrDSigxgqhQINbd4EhzBtAKr4gL2TYU8eakhbLppu9okbaztV0iN+TlWizY
+	 G1qDcH553j6R3EuGett/LscIurjDIokE/rM8Wp37Ktxckcpx1r/hnc/Ha/opJfcVYb
+	 1NXez5J93aKPT1v9WGo580LcDaCO8QqOEtJIUPM5kMdI4n5b1S5v1UAcNlJhipGLMC
+	 gZatkbLMPZEZQ==
+Message-ID: <b66d23fa-ac69-4e93-bc1d-93d8dd90bc6b@kernel.org>
+Date: Fri, 5 Apr 2024 17:49:57 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1455; i=conor.dooley@microchip.com; h=from:subject:message-id; bh=MZ6COhcm44GicWVOSRcaxUS9DaBxroGchNqsbFCZFmg=; b=owGbwMvMwCFWscWwfUFT0iXG02pJDGkCsuIr+IwaOV9x8rQLzjqXWXXzZomHRVWxd3DoOmmNX rPIwJKOUhYGMQ4GWTFFlsTbfS1S6/+47HDueQszh5UJZAgDF6cATGTrbEaGB2F7Vix9F969e0Fx VOaE7aXFhWHTlr8TvT2zZZrlUX6LIEaGlkl2b/7KfJCc8Fm175dm+YW5rlzyWkxLQ7ZzTFKa1fu eEwA=
-X-Developer-Key: i=conor.dooley@microchip.com; a=openpgp; fpr=F9ECA03CF54F12CD01F1655722E2C55B37CF380C
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/6] dt-bindings: net: snps,dwmac: remove tx-sched-sp
+ property
+To: Flavio Suligoi <f.suligoi@asem.it>,
+ Alexandre Torgue <alexandre.torgue@foss.st.com>,
+ Jose Abreu <joabreu@synopsys.com>, "David S . Miller" <davem@davemloft.net>,
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+ Paolo Abeni <pabeni@redhat.com>, Maxime Coquelin
+ <mcoquelin.stm32@gmail.com>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+ Sascha Hauer <s.hauer@pengutronix.de>,
+ Pengutronix Kernel Team <kernel@pengutronix.de>,
+ Fabio Estevam <festevam@gmail.com>, Bjorn Andersson <andersson@kernel.org>,
+ Konrad Dybcio <konrad.dybcio@linaro.org>,
+ Giuseppe Cavallaro <peppe.cavallaro@st.com>
+Cc: netdev@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
+ linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+ imx@lists.linux.dev, linux-arm-msm@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20240405152800.638461-1-f.suligoi@asem.it>
+ <20240405152800.638461-2-f.suligoi@asem.it>
+Content-Language: en-US
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <20240405152800.638461-2-f.suligoi@asem.it>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-From: Conor Dooley <conor.dooley@microchip.com>
-
-On Fri, 29 Mar 2024 01:03:22 +0800, Yangyu Chen wrote:
-> Since SOC_FOO should be deprecated from patch [1], and cleanup for other
-> SoCs is already in the mailing list [2,3,4], so we deprecate the use of
-> SOC_CANAAN and use ARCH_CANAAN for SoCs vendored by Canaan instead from now
-> on.
+On 05/04/2024 17:27, Flavio Suligoi wrote:
+> The property "tx-sched-sp" no longer exists, as it was removed from the
+> file:
 > 
-> However, the K210 SoC is so special for NoMMU and built for loader.bin, if
-> we share the ARCH_CANAAN symbol directly for K210 and other new SoCs which
-> has MMU and no need for loader, it will confuse some users who may try to
-> boot MMU Kernel on K210, but it will fail. Thus, this patch set renamed the
-> original use of SOC_CANAAN to SOC_CANAAN_K210 for K210 SoC, as Damien
-> suggested from the list [5]. Then, it made some adaptations for soc, clk,
-> pinctrl, and reset drivers.
+> drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c
 > 
-> [...]
+> by the commit:
 
-Applied to riscv-dt-for-next, thanks!
+Keep syntax as asked by submitting patches, so "by the commit sha ("foo
+bar").
 
-[1/5] riscv: Kconfig.socs: Split ARCH_CANAAN and SOC_CANAAN_K210
-      https://git.kernel.org/conor/c/ef10bdf9c3e6
-[2/5] soc: canaan: Deprecate SOC_CANAAN and use SOC_CANAAN_K210 for K210
-      https://git.kernel.org/conor/c/915fb0e31c5b
-[3/5] clk: k210: Deprecate SOC_CANAAN and use SOC_CANAAN_K210
-      https://git.kernel.org/conor/c/8e5b7234ded5
-[4/5] pinctrl: k210: Deprecate SOC_CANAAN and use SOC_CANAAN_K210
-      https://git.kernel.org/conor/c/c1556a9b426e
-[5/5] reset: k210: Deprecate SOC_CANAAN and use SOC_CANAAN_K210
-      https://git.kernel.org/conor/c/68f41105ea07
+> 
+> commit aed6864035b1 ("net: stmmac: platform: Delete a redundant condition
+> branch")
+> 
+> Signed-off-by: Flavio Suligoi <f.suligoi@asem.it>
+> ---
+>  .../devicetree/bindings/net/snps,dwmac.yaml        | 14 --------------
+>  1 file changed, 14 deletions(-)
 
-I added another commit at the end, deleting SOC_CANAAN given all the users
-are gone and it is not user-visible:
-	https://git.kernel.org/conor/c/0eea987088a22d73d81e968de7347cdc7e594f72
+This means by default we have tx-sched-sp... I guess it is fine,
+assuming there are no other users (projects) of this binding property.
 
-Thanks,
-Conor.
+Acked-by: Krzysztof Kozlowski <krzk@kernel.org>
+
+Best regards,
+Krzysztof
+
