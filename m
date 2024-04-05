@@ -1,112 +1,101 @@
-Received: from mx1.t-argos.ru (mx1.t-argos.ru [109.73.34.58])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38B1D15F300;
-	Fri,  5 Apr 2024 09:41:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=109.73.34.58
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3DBA51474DC;
+	Fri,  5 Apr 2024 09:46:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712310121; cv=none; b=kkkAl7YqyyYyZPyD05uYEjgkKRtjcc3ZuCPrqo45cztPEdF0rO7c8CXLvdUlV7xH0EhjqhVSoXaLDGfIWgL8IJK9N6dkNdVjXYV3jjqilSPxjP75A8WE8QQmTtbuyNY8EdbYOeNQx88E0rlVmITUGr2XEK4ZiwZFJaEHGzlglBk=
+	t=1712310371; cv=none; b=PTMa3XlPPk+ouVtRRqUSqjd9NWYC3iNNQsj4/KEzhOWoKYBlQgdE27HDEB8GgfhocyJFPWpDWt2Y1L2doHy2BvAcirkLjlGwXDjPN59nfsltWr9mRX1UPiNIBQ7MRVxH7rNicX0wJSsELE2tdyGnLFkImTv+WuGsdJ/TTo7wi9E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712310121; c=relaxed/simple;
-	bh=ZcOerhmDTyl3W/0mikjVoprKLaRbhLbMr5B5dPhdLbQ=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=E5tcuHwiqu/IxIU0zyVfSrhFZnl63L7ZQHKLnF7zkvQ3L6b26tjd4ge0uqSb3MoxAoCPKMP2VN7n51JRnJS3ijyQCQafnG5NfhSOZPycWbTECnvxGVmvRKhZaqJ2p1d/XCGnKI3C4eR7wSrz76IHeyVdvZUUNEgbuB4lsO3Lz5I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=t-argos.ru; spf=pass smtp.mailfrom=t-argos.ru; dkim=pass (2048-bit key) header.d=t-argos.ru header.i=@t-argos.ru header.b=rVEFTvJV; arc=none smtp.client-ip=109.73.34.58
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=t-argos.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=t-argos.ru
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=t-argos.ru header.i=@t-argos.ru header.b="rVEFTvJV"
-Received: from mx1.t-argos.ru (localhost [127.0.0.1])
-	by mx1.t-argos.ru (Postfix) with ESMTP id EBDBE100002;
-	Fri,  5 Apr 2024 12:41:37 +0300 (MSK)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=t-argos.ru; s=mail;
-	t=1712310098; bh=exxj3SM6SDla62q2JnE6KpTdEW+tLbPYFoaJcDDjiCk=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type;
-	b=rVEFTvJVYuBk8YQaTZ+E40GhNjXrfT8k6cuAWc0TqZ1FXgkxUIJD44+EjJYoOm4TJ
-	 raiil9rNugUF5L9NAehigNcJ55coI413o7d9Ml2Nhuwtg8FIvB8LANWbQ3kmYuAqPz
-	 wBdlCSjkp6GP38gN+Hz7B6vgCYVZzrhMccZrVo9/OVRFFJ8FIXE8krzV4OwWZGvfjd
-	 VUmj2IkfHLNoY8iH0dnQuiJ19YYtGiB+z62dAGgPFGk4zfxNMflCYaAPZbzUh1AJbB
-	 Cw4VkYi7EARXvsWigIv0R0OICSsGv/9HsK1dpI8r8KmtUjXVigl0whxxPu5aYcyPeW
-	 fqZDy1GLijIsg==
-Received: from mx1.t-argos.ru.ru (ta-mail-02.ta.t-argos.ru [172.17.13.212])
-	by mx1.t-argos.ru (Postfix) with ESMTP;
-	Fri,  5 Apr 2024 12:40:19 +0300 (MSK)
-Received: from localhost.localdomain (172.17.215.6) by ta-mail-02
- (172.17.13.212) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Fri, 5 Apr 2024
- 12:40:13 +0300
-From: Aleksandr Mishin <amishin@t-argos.ru>
-To: Ionela Voinescu <ionela.voinescu@arm.com>
-CC: Aleksandr Mishin <amishin@t-argos.ru>, "Rafael J. Wysocki"
-	<rafael@kernel.org>, Viresh Kumar <viresh.kumar@linaro.org>,
-	<linux-pm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<lvc-project@linuxtesting.org>
-Subject: [PATCH] cppc_cpufreq: Fix possible null pointer dereference
-Date: Fri, 5 Apr 2024 12:40:05 +0300
-Message-ID: <20240405094005.18545-1-amishin@t-argos.ru>
-X-Mailer: git-send-email 2.30.2
+	s=arc-20240116; t=1712310371; c=relaxed/simple;
+	bh=N/ilJYPULnziC1IDqUT0V88hxfBEu9DOsd7q2tbFgn8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=LVq7xQ6Dca7GdhI+pMqKBZr1mjbnpqdoOBc4oqINPijzhZQYyI98JNPmVuJYXrrg7JCoaWpPWUG2yAK7aPfststfjLU2Jf3rmQIhsVuRPjLSfBLVyKP2NWwG7NSwLk3Ep3s5DSPwEx/Auw7s2PubEfQZuMoaU3fC7KKzJqts808=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1D534FEC;
+	Fri,  5 Apr 2024 02:46:39 -0700 (PDT)
+Received: from bogus (e103737-lin.cambridge.arm.com [10.1.197.49])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4AF6A3F64C;
+	Fri,  5 Apr 2024 02:46:07 -0700 (PDT)
+Date: Fri, 5 Apr 2024 10:46:04 +0100
+From: Sudeep Holla <sudeep.holla@arm.com>
+To: Andy Shevchenko <andriy.shevchenko@intel.com>,
+	Linus Walleij <linus.walleij@linaro.org>
+Cc: Peng Fan <peng.fan@nxp.com>, Sudeep Holla <sudeep.holla@arm.com>,
+	"Peng Fan (OSS)" <peng.fan@oss.nxp.com>,
+	"brgl@bgdev.pl" <brgl@bgdev.pl>,
+	"linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"cristian.marussi@arm.com" <cristian.marussi@arm.com>
+Subject: Re: [PATCH] pinctrl: pinconf-generic: check error value EOPNOTSUPP
+Message-ID: <Zg_IXLNPakLmbbc7@bogus>
+References: <20240401141031.3106216-1-peng.fan@oss.nxp.com>
+ <CACRpkdZAuNXGyg2wwYcQG4oO9w7jPS6vj4Vt0=kqX5fJ+QpNmw@mail.gmail.com>
+ <Zg7dwcFz5eD7Am2u@smile.fi.intel.com>
+ <DU0PR04MB941777DA29D70013342721A788032@DU0PR04MB9417.eurprd04.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: ta-mail-02.ta.t-argos.ru (172.17.13.212) To ta-mail-02
- (172.17.13.212)
-X-KSMG-Rule-ID: 1
-X-KSMG-Message-Action: clean
-X-KSMG-AntiSpam-Lua-Profiles: 184599 [Apr 05 2024]
-X-KSMG-AntiSpam-Version: 6.1.0.4
-X-KSMG-AntiSpam-Envelope-From: amishin@t-argos.ru
-X-KSMG-AntiSpam-Rate: 0
-X-KSMG-AntiSpam-Status: not_detected
-X-KSMG-AntiSpam-Method: none
-X-KSMG-AntiSpam-Auth: dkim=none
-X-KSMG-AntiSpam-Info: LuaCore: 15 0.3.15 adb41f89e2951eb37b279104a7abb8e79494a5e7, {Tracking_from_domain_doesnt_match_to}, mx1.t-argos.ru.ru:7.1.1;t-argos.ru:7.1.1;127.0.0.199:7.1.2;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1, FromAlignment: s
-X-MS-Exchange-Organization-SCL: -1
-X-KSMG-AntiSpam-Interceptor-Info: scan successful
-X-KSMG-AntiPhishing: Clean, bases: 2024/04/05 09:29:00
-X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 1.1.2.30, bases: 2024/04/05 07:02:00 #24662400
-X-KSMG-AntiVirus-Status: Clean, skipped
+In-Reply-To: <DU0PR04MB941777DA29D70013342721A788032@DU0PR04MB9417.eurprd04.prod.outlook.com>
 
-cppc_cpufreq_get_rate() and hisi_cppc_cpufreq_get_rate() can be called from
-different places with various parameters. So cpufreq_cpu_get() can return
-null as 'policy' in some circumstances.
-Fix this bug by adding null return check.
+On Fri, Apr 05, 2024 at 02:13:28AM +0000, Peng Fan wrote:
+> Hi Andy,
+>
+> > Subject: Re: [PATCH] pinctrl: pinconf-generic: check error value EOPNOTSUPP
+> >
+> > On Thu, Apr 04, 2024 at 01:44:50PM +0200, Linus Walleij wrote:
+> > > On Mon, Apr 1, 2024 at 4:02 PM Peng Fan (OSS) <peng.fan@oss.nxp.com>
+> > wrote:
+> > >
+> > > > From: Peng Fan <peng.fan@nxp.com>
+> > > >
+> > > > The SCMI error value SCMI_ERR_SUPPORT maps to linux error value
+> > > > '-EOPNOTSUPP', so when dump configs, need check the error value
+> > > > EOPNOTSUPP, otherwise there will be log "ERROR READING CONFIG
+> > SETTING".
+> > > >
+> > > > Signed-off-by: Peng Fan <peng.fan@nxp.com>
+> > > (...)
+> > > >                         ret = pin_config_get_for_pin(pctldev, pin, &config);
+> > > >                 /* These are legal errors */
+> > > > -               if (ret == -EINVAL || ret == -ENOTSUPP)
+> > > > +               if (ret == -EINVAL || ret == -ENOTSUPP || ret ==
+> > > > + -EOPNOTSUPP)
+> > >
+> > > TBH it's a bit odd to call an in-kernel API such as
+> > > pin_config_get_for_pin() and get -EOPNOTSUPP back. But it's not like I care
+> > a lot, so patch applied.
+> >
+> > Hmm... I would like actually to get this being consistent. The documentation
+> > explicitly says that in-kernel APIs uses Linux error code and not POSIX one.
+>
+> Would you please share me the documentation?
+>
 
-Found by Linux Verification Center (linuxtesting.org) with SVACE.
++1, I am interested in knowing more about this as I wasn't aware of this.
 
-Fixes: a28b2bfc099c ("cppc_cpufreq: replace per-cpu data array with a list")
-Signed-off-by: Aleksandr Mishin <amishin@t-argos.ru>
----
- drivers/cpufreq/cppc_cpufreq.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+> >
+> > This check opens a Pandora box.
+> >
+> > FWIW, it just like dozen or so drivers that needs to be fixed, I prefer to have
+> > them being moved to ENOTSUPP, rather this patch.
+>
+> I see many patches convert to use EOPNOTSUPP by checking git log.
+>
+> And checkpatch.pl reports warning for using ENOTSUPP.
+>
 
-diff --git a/drivers/cpufreq/cppc_cpufreq.c b/drivers/cpufreq/cppc_cpufreq.c
-index 64420d9cfd1e..5f7e04e8497b 100644
---- a/drivers/cpufreq/cppc_cpufreq.c
-+++ b/drivers/cpufreq/cppc_cpufreq.c
-@@ -741,6 +741,9 @@ static unsigned int cppc_cpufreq_get_rate(unsigned int cpu)
- {
- 	struct cppc_perf_fb_ctrs fb_ctrs_t0 = {0}, fb_ctrs_t1 = {0};
- 	struct cpufreq_policy *policy = cpufreq_cpu_get(cpu);
-+	if (!policy)
-+		return -ENODEV;
-+
- 	struct cppc_cpudata *cpu_data = policy->driver_data;
- 	u64 delivered_perf;
- 	int ret;
-@@ -822,6 +825,9 @@ static struct cpufreq_driver cppc_cpufreq_driver = {
- static unsigned int hisi_cppc_cpufreq_get_rate(unsigned int cpu)
- {
- 	struct cpufreq_policy *policy = cpufreq_cpu_get(cpu);
-+	if (!policy)
-+		return -ENODEV;
-+
- 	struct cppc_cpudata *cpu_data = policy->driver_data;
- 	u64 desired_perf;
- 	int ret;
--- 
-2.30.2
+Exactly, I do remember changing ENOTSUPP to EOPNOTSUPP based on checkpatch
+suggestion. So either the checkpatch.pl or the document you are referring
+is inconsistent and needs fixing either way.
 
+--
+Regards,
+Sudeep
