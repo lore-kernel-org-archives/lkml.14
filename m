@@ -1,69 +1,343 @@
-Received: from verein.lst.de (verein.lst.de [213.95.11.211])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3744716DEAB;
-	Fri,  5 Apr 2024 14:52:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4945716DEAB
+	for <linux-kernel@vger.kernel.org>; Fri,  5 Apr 2024 14:52:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712328767; cv=none; b=QulPvWPx2+GlWsptP0WorpQQmZxR0fbi9rWbl3AQPhtcLik97wQGVUxekxpFQ9JCYIrmc086FB1PurYoCzcJJM1gW2M6h+pfk/GUzcPx++m4N+N2UVrbtbLxMyyc5AhC94kIxU0NnXIcV3AbunvhheCKwEYqlw2WJZ58829LtDc=
+	t=1712328773; cv=none; b=GiVKzE025Z9C45guYJ3J97IuLIO/pIbiH9OQHKg5b0joRtPLeISB0n8+zfzUJlg2IOzh+MW8Z4Hdywvbs/27HqCSwSDKtMlBHdCQplNPMui/Pp4Y8GasGMimR4e6OCa6/eCB6gHRlL3GeCDrt8HbOq0ejFMgwNH0jAv5Qn+R1XQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712328767; c=relaxed/simple;
-	bh=bL2giRgf/f1M6TVUVmUCOeofYNHANZ5VQjcrrlLM6V0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GBNxoIoekZUBuOOKU3r8uYqcIuh8Z79bpLjBhp5Id0aaqP1rflW3Z/2yQpV06noLPSW3ImXz4uEbV3B9PssQArnLYYre7bDjeYsLlcTsq1ilRNsI0j5UdSNFRN/QRV18aNYG0a25vuh3o+gOSwtlU/tjkhhVEQM5q7h93+e64NQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
-Received: by verein.lst.de (Postfix, from userid 2407)
-	id 354FD68D08; Fri,  5 Apr 2024 16:52:41 +0200 (CEST)
-Date: Fri, 5 Apr 2024 16:52:40 +0200
-From: Christoph Hellwig <hch@lst.de>
-To: Christian Brauner <brauner@kernel.org>
-Cc: Christoph Hellwig <hch@lst.de>, Amir Goldstein <amir73il@gmail.com>,
-	Al Viro <viro@zeniv.linux.org.uk>,
-	syzbot <syzbot+9a5b0ced8b1bfb238b56@syzkaller.appspotmail.com>,
-	gregkh@linuxfoundation.org, linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com,
-	tj@kernel.org, valesini@yandex-team.ru, Jan Kara <jack@suse.cz>,
-	Miklos Szeredi <miklos@szeredi.hu>
-Subject: Re: [syzbot] [kernfs?] possible deadlock in kernfs_fop_llseek
-Message-ID: <20240405145240.GA6931@lst.de>
-References: <00000000000098f75506153551a1@google.com> <0000000000002f2066061539e54b@google.com> <CAOQ4uxiS5X19OT2MTo_LnLAx2VL9oA1zBSpbuiWMNy_AyGLDrg@mail.gmail.com> <20240404081122.GQ538574@ZenIV> <20240404082110.GR538574@ZenIV> <CAOQ4uximHfK78KFabJA3Hf4R0En6-GfJ3eF96Lzmc94PGuGayA@mail.gmail.com> <20240405065135.GA3959@lst.de> <20240405-ozonwerte-hungrig-326d97c62e65@brauner> <20240405-liebschaft-effekt-ca71fb6e7699@brauner>
+	s=arc-20240116; t=1712328773; c=relaxed/simple;
+	bh=9fXD74EoOk0Qq6pCxBrdU2yUnMV1sDo8MVE0kEQOWN0=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=LIaWQC0TESV/dksrmy4vI7TP3iv5VBlVbtkig25+PVoOkhN87QXUTSneBPfTVkKi1m29xzNeubVaYeH5//honVbjnQYNpM0tm+aI1l/RZj0pwaYYcEBG9zcjrnYomtdvGobV3yf2HXi8hqkF3+rTWvGydMJb1K1B3qKnNIEr+jg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Xv+3p/wv; arc=none smtp.client-ip=192.198.163.8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Xv+3p/wv"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1712328771; x=1743864771;
+  h=date:from:to:cc:subject:message-id;
+  bh=9fXD74EoOk0Qq6pCxBrdU2yUnMV1sDo8MVE0kEQOWN0=;
+  b=Xv+3p/wveENcVopMbOj4NOtPFz4bKbqRMo6m+OGQzRJ0KcTsi0GOxIWP
+   lYEQz0usbAyOZB3kDYv+kJCownKUPHCWlhTss55L3gTjZjtvOiz7E3V+H
+   NBlSSpS6E69qOLNKf9fnT3lFQTZnoqbxpJ/grw58F5wkjCqEAoZp10sr0
+   edGh31QPNqJ1ltA4+B882oTo5nr1vxY2+Gk9ASHuUv4SbENhXJ1ocdW/y
+   k8S53AvBILkruKgKOjzVb7uNvjiLpnLTCT2U2cgQi2bqCtZ0+xpSxoQie
+   DOhmk2+FwkQQkSEHNs2UaZ/uQa3BTW8xkjBRShW14Jz26yEbcOheZvuHa
+   g==;
+X-CSE-ConnectionGUID: uvFM6kJvSq2WUtdw3tn1mg==
+X-CSE-MsgGUID: N8qnQZ0jQFyHMDJVJXLsWA==
+X-IronPort-AV: E=McAfee;i="6600,9927,11035"; a="25168595"
+X-IronPort-AV: E=Sophos;i="6.07,181,1708416000"; 
+   d="scan'208";a="25168595"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Apr 2024 07:52:51 -0700
+X-CSE-ConnectionGUID: eXWGiqEWTuC2BKdv3Rukrw==
+X-CSE-MsgGUID: RqAwg883Qh6WItxeo/jpKQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,181,1708416000"; 
+   d="scan'208";a="19103787"
+Received: from lkp-server01.sh.intel.com (HELO e61807b1d151) ([10.239.97.150])
+  by fmviesa010.fm.intel.com with ESMTP; 05 Apr 2024 07:52:49 -0700
+Received: from kbuild by e61807b1d151 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1rskvv-0002Nl-1Z;
+	Fri, 05 Apr 2024 14:52:47 +0000
+Date: Fri, 05 Apr 2024 22:52:04 +0800
+From: kernel test robot <lkp@intel.com>
+To: "Paul E. McKenney" <paulmck@kernel.org>
+Cc: linux-kernel@vger.kernel.org
+Subject: [paulmck-rcu:dev.2024.04.03b] BUILD REGRESSION
+ f6416a4a0ebe5a37b471f04b20992be201563e81
+Message-ID: <202404052259.aGa1vezk-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240405-liebschaft-effekt-ca71fb6e7699@brauner>
-User-Agent: Mutt/1.5.17 (2007-11-01)
 
-On Fri, Apr 05, 2024 at 03:48:20PM +0200, Christian Brauner wrote:
-> * There's early_lookup_bdev() which deals with PARTUUID,
->   PARTLABEL, raw device number, and lookup based on /dev. No actual path
->   lookup involved in that.
-> 
-> * So the only interesting case is lookup_bdev() for /sys/power/suspend.
->   That one takes arbitrary paths. But being realistic for a moment...
->   How many people will specify a device path that's _not_ some variant
->   of /dev/...? IOW, how many people will specify a device path that's
->   not on devtmpfs or a symlink on devtmpfs? Probably almost no one.
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/paulmck/linux-rcu.git dev.2024.04.03b
+branch HEAD: f6416a4a0ebe5a37b471f04b20992be201563e81  rcu: Reduce synchronize_rcu() delays when all wait heads are in use
 
-That's not the point.  The poins is that trying to do the dumb name
-to bdev translation in early_lookup_bdev is wrong.  Distro had and have
-their own numbering schemes, and not using them bypasses access
-control.  We should never use that at runtime.
+Error/Warning: (recently discovered and may have been fixed)
 
-> <brauner> So /sys/power/resume does systemd ever write anything other than a /dev/* path in to there?
-> <maintainer> Hmm? You never do that? It only accepts devno.
-> 
-> So that takes away one of the main users of this api. So I really
-> suspect that arbitrary device path is unused in practice. Maybe I'm all
-> wrong though.
+kernel/locking/qspinlock_paravirt.h:333:(.text+0x3afeb9): undefined reference to `cmpxchg_emu_u8'
+kernel/locking/qspinlock_paravirt.h:91:(.spinlock.text+0xcc1): undefined reference to `cmpxchg_emu_u8'
+kernel/rcu/tasks.h:1482:(.text+0x3f6f): undefined reference to `cmpxchg_emu_u8'
+ld.lld: error: undefined symbol: cmpxchg_emu_u8
+ld: kernel/rcu/tasks.h:1482:(.text+0x3fa1): undefined reference to `cmpxchg_emu_u8'
+ld: update.c:(.text+0x578): undefined reference to `cmpxchg_emu_u8'
 
-I'm all fine with just accepting a devno and no name.  But I fear it
-will break something as someone added it for whatever use case they had
-(and we should not have allowed that back then, but that ship has sailed
-unfortunately)
+Unverified Error/Warning (likely false positive, please contact us if interested):
+
+ERROR: modpost: "cmpxchg_emu_u16" [drivers/platform/surface/aggregator/surface_aggregator.ko] undefined!
+ERROR: modpost: "cmpxchg_emu_u8" [drivers/platform/surface/aggregator/surface_aggregator.ko] undefined!
+controller.c:(.text+0xae5): undefined reference to `cmpxchg_emu_u16'
+ld: qspinlock.c:(.spinlock.text+0x41f): undefined reference to `cmpxchg_emu_u16'
+ld: qspinlock.c:(.spinlock.text+0x45a): undefined reference to `cmpxchg_emu_u8'
+qspinlock.c:(.spinlock.text+0x393): undefined reference to `cmpxchg_emu_u8'
+
+Error/Warning ids grouped by kconfigs:
+
+gcc_recent_errors
+|-- i386-allmodconfig
+|   |-- ERROR:cmpxchg_emu_u16-drivers-platform-surface-aggregator-surface_aggregator.ko-undefined
+|   `-- ERROR:cmpxchg_emu_u8-drivers-platform-surface-aggregator-surface_aggregator.ko-undefined
+|-- i386-allyesconfig
+|   |-- controller.c:(.text):undefined-reference-to-cmpxchg_emu_u16
+|   |-- ld:qspinlock.c:(.spinlock.text):undefined-reference-to-cmpxchg_emu_u16
+|   |-- ld:qspinlock.c:(.spinlock.text):undefined-reference-to-cmpxchg_emu_u8
+|   `-- qspinlock.c:(.spinlock.text):undefined-reference-to-cmpxchg_emu_u8
+|-- i386-buildonly-randconfig-004-20240405
+|   `-- ld:update.c:(.text):undefined-reference-to-cmpxchg_emu_u8
+|-- i386-randconfig-002-20240405
+|   |-- kernel-rcu-tasks.h:(.text):undefined-reference-to-cmpxchg_emu_u8
+|   `-- ld:kernel-rcu-tasks.h:(.text):undefined-reference-to-cmpxchg_emu_u8
+|-- i386-randconfig-061-20240405
+|   |-- kernel-rcu-tasks.h:(.text):undefined-reference-to-cmpxchg_emu_u8
+|   `-- ld:kernel-rcu-tasks.h:(.text):undefined-reference-to-cmpxchg_emu_u8
+|-- x86_64-buildonly-randconfig-004-20240405
+|   `-- ld:update.c:(.text):undefined-reference-to-cmpxchg_emu_u8
+|-- x86_64-randconfig-012-20240405
+|   `-- kernel-rcu-tasks.h:(.text):undefined-reference-to-cmpxchg_emu_u8
+|-- x86_64-randconfig-013-20240405
+|   |-- kernel-rcu-tasks.h:(.text):undefined-reference-to-cmpxchg_emu_u8
+|   `-- ld:kernel-rcu-tasks.h:(.text):undefined-reference-to-cmpxchg_emu_u8
+|-- x86_64-randconfig-015-20240405
+|   |-- kernel-rcu-tasks.h:(.text):undefined-reference-to-cmpxchg_emu_u8
+|   `-- ld:kernel-rcu-tasks.h:(.text):undefined-reference-to-cmpxchg_emu_u8
+|-- x86_64-randconfig-071-20240405
+|   |-- kernel-rcu-tasks.h:(.text):undefined-reference-to-cmpxchg_emu_u8
+|   `-- ld:kernel-rcu-tasks.h:(.text):undefined-reference-to-cmpxchg_emu_u8
+|-- x86_64-randconfig-072-20240405
+|   |-- kernel-rcu-tasks.h:(.text):undefined-reference-to-cmpxchg_emu_u8
+|   `-- ld:kernel-rcu-tasks.h:(.text):undefined-reference-to-cmpxchg_emu_u8
+|-- x86_64-randconfig-074-20240405
+|   |-- kernel-rcu-tasks.h:(.text):undefined-reference-to-cmpxchg_emu_u8
+|   `-- ld:kernel-rcu-tasks.h:(.text):undefined-reference-to-cmpxchg_emu_u8
+|-- x86_64-randconfig-075-20240405
+|   |-- kernel-rcu-tasks.h:(.text):undefined-reference-to-cmpxchg_emu_u8
+|   `-- ld:kernel-rcu-tasks.h:(.text):undefined-reference-to-cmpxchg_emu_u8
+|-- x86_64-randconfig-076-20240405
+|   |-- kernel-rcu-tasks.h:(.text):undefined-reference-to-cmpxchg_emu_u8
+|   `-- ld:kernel-rcu-tasks.h:(.text):undefined-reference-to-cmpxchg_emu_u8
+`-- x86_64-randconfig-161-20240405
+    |-- kernel-locking-qspinlock_paravirt.h:(.spinlock.text):undefined-reference-to-cmpxchg_emu_u8
+    `-- kernel-locking-qspinlock_paravirt.h:(.text):undefined-reference-to-cmpxchg_emu_u8
+clang_recent_errors
+|-- i386-buildonly-randconfig-003-20240405
+|   `-- ld.lld:error:undefined-symbol:cmpxchg_emu_u8
+|-- i386-randconfig-062-20240405
+|   `-- ld.lld:error:undefined-symbol:cmpxchg_emu_u8
+|-- i386-randconfig-063-20240405
+|   `-- ld.lld:error:undefined-symbol:cmpxchg_emu_u8
+|-- x86_64-buildonly-randconfig-005-20240405
+|   `-- ld.lld:error:undefined-symbol:cmpxchg_emu_u8
+|-- x86_64-buildonly-randconfig-006-20240405
+|   `-- ld.lld:error:undefined-symbol:cmpxchg_emu_u8
+|-- x86_64-randconfig-001-20240405
+|   `-- ld.lld:error:undefined-symbol:cmpxchg_emu_u8
+|-- x86_64-randconfig-002-20240405
+|   `-- ld.lld:error:undefined-symbol:cmpxchg_emu_u8
+|-- x86_64-randconfig-003-20240405
+|   `-- ld.lld:error:undefined-symbol:cmpxchg_emu_u8
+|-- x86_64-randconfig-005-20240405
+|   `-- ld.lld:error:undefined-symbol:cmpxchg_emu_u8
+|-- x86_64-randconfig-011-20240405
+|   `-- ld.lld:error:undefined-symbol:cmpxchg_emu_u8
+`-- x86_64-randconfig-014-20240405
+    `-- ld.lld:error:undefined-symbol:cmpxchg_emu_u8
+
+elapsed time: 1124m
+
+configs tested: 180
+configs skipped: 3
+
+tested configs:
+alpha                             allnoconfig   gcc  
+alpha                            allyesconfig   gcc  
+alpha                               defconfig   gcc  
+arc                              allmodconfig   gcc  
+arc                               allnoconfig   gcc  
+arc                              allyesconfig   gcc  
+arc                                 defconfig   gcc  
+arc                     haps_hs_smp_defconfig   gcc  
+arc                   randconfig-001-20240405   gcc  
+arc                   randconfig-002-20240405   gcc  
+arm                              allmodconfig   gcc  
+arm                               allnoconfig   clang
+arm                              allyesconfig   gcc  
+arm                                 defconfig   clang
+arm                         lpc32xx_defconfig   clang
+arm                   randconfig-001-20240405   gcc  
+arm                   randconfig-002-20240405   clang
+arm                   randconfig-003-20240405   gcc  
+arm                   randconfig-004-20240405   clang
+arm                           tegra_defconfig   gcc  
+arm                           u8500_defconfig   gcc  
+arm                        vexpress_defconfig   gcc  
+arm                         vf610m4_defconfig   gcc  
+arm64                            allmodconfig   clang
+arm64                             allnoconfig   gcc  
+arm64                               defconfig   gcc  
+arm64                 randconfig-001-20240405   gcc  
+arm64                 randconfig-002-20240405   gcc  
+arm64                 randconfig-003-20240405   gcc  
+arm64                 randconfig-004-20240405   gcc  
+csky                             allmodconfig   gcc  
+csky                              allnoconfig   gcc  
+csky                             allyesconfig   gcc  
+csky                                defconfig   gcc  
+csky                  randconfig-001-20240405   gcc  
+csky                  randconfig-002-20240405   gcc  
+hexagon                          allmodconfig   clang
+hexagon                           allnoconfig   clang
+hexagon                          allyesconfig   clang
+hexagon                             defconfig   clang
+hexagon               randconfig-001-20240405   clang
+hexagon               randconfig-002-20240405   clang
+i386                             allmodconfig   gcc  
+i386                              allnoconfig   gcc  
+i386                             allyesconfig   gcc  
+i386         buildonly-randconfig-001-20240405   gcc  
+i386         buildonly-randconfig-002-20240405   gcc  
+i386         buildonly-randconfig-003-20240405   clang
+i386         buildonly-randconfig-004-20240405   gcc  
+i386         buildonly-randconfig-005-20240405   clang
+i386         buildonly-randconfig-006-20240405   clang
+i386                                defconfig   clang
+i386                  randconfig-001-20240405   clang
+i386                  randconfig-002-20240405   gcc  
+i386                  randconfig-003-20240405   clang
+i386                  randconfig-004-20240405   clang
+i386                  randconfig-005-20240405   clang
+i386                  randconfig-006-20240405   gcc  
+i386                  randconfig-011-20240405   clang
+i386                  randconfig-012-20240405   gcc  
+i386                  randconfig-013-20240405   gcc  
+i386                  randconfig-014-20240405   gcc  
+i386                  randconfig-015-20240405   gcc  
+i386                  randconfig-016-20240405   clang
+loongarch                        allmodconfig   gcc  
+loongarch                         allnoconfig   gcc  
+loongarch                           defconfig   gcc  
+loongarch             randconfig-001-20240405   gcc  
+loongarch             randconfig-002-20240405   gcc  
+m68k                             allmodconfig   gcc  
+m68k                              allnoconfig   gcc  
+m68k                             allyesconfig   gcc  
+m68k                                defconfig   gcc  
+microblaze                       allmodconfig   gcc  
+microblaze                        allnoconfig   gcc  
+microblaze                       allyesconfig   gcc  
+microblaze                          defconfig   gcc  
+mips                              allnoconfig   gcc  
+mips                             allyesconfig   gcc  
+mips                      bmips_stb_defconfig   clang
+mips                        omega2p_defconfig   clang
+nios2                            allmodconfig   gcc  
+nios2                             allnoconfig   gcc  
+nios2                            allyesconfig   gcc  
+nios2                               defconfig   gcc  
+nios2                 randconfig-001-20240405   gcc  
+nios2                 randconfig-002-20240405   gcc  
+openrisc                          allnoconfig   gcc  
+openrisc                         allyesconfig   gcc  
+openrisc                            defconfig   gcc  
+parisc                           allmodconfig   gcc  
+parisc                            allnoconfig   gcc  
+parisc                           allyesconfig   gcc  
+parisc                              defconfig   gcc  
+parisc                randconfig-001-20240405   gcc  
+parisc                randconfig-002-20240405   gcc  
+parisc64                            defconfig   gcc  
+powerpc                          allmodconfig   gcc  
+powerpc                           allnoconfig   gcc  
+powerpc                          allyesconfig   clang
+powerpc                   currituck_defconfig   clang
+powerpc                     mpc5200_defconfig   clang
+powerpc                 mpc834x_itx_defconfig   clang
+powerpc                      pmac32_defconfig   clang
+powerpc               randconfig-001-20240405   clang
+powerpc               randconfig-002-20240405   clang
+powerpc               randconfig-003-20240405   clang
+powerpc                         wii_defconfig   gcc  
+powerpc64             randconfig-001-20240405   gcc  
+powerpc64             randconfig-002-20240405   gcc  
+powerpc64             randconfig-003-20240405   clang
+riscv                            allmodconfig   clang
+riscv                             allnoconfig   gcc  
+riscv                            allyesconfig   clang
+riscv                               defconfig   clang
+riscv                 randconfig-001-20240405   clang
+riscv                 randconfig-002-20240405   gcc  
+s390                             allmodconfig   clang
+s390                              allnoconfig   clang
+s390                             allyesconfig   gcc  
+s390                          debug_defconfig   gcc  
+s390                                defconfig   clang
+s390                  randconfig-001-20240405   clang
+s390                  randconfig-002-20240405   gcc  
+s390                       zfcpdump_defconfig   clang
+sh                               allmodconfig   gcc  
+sh                                allnoconfig   gcc  
+sh                               allyesconfig   gcc  
+sh                                  defconfig   gcc  
+sh                    randconfig-001-20240405   gcc  
+sh                    randconfig-002-20240405   gcc  
+sh                        sh7757lcr_defconfig   gcc  
+sparc                            allmodconfig   gcc  
+sparc                             allnoconfig   gcc  
+sparc                               defconfig   gcc  
+sparc64                          allmodconfig   gcc  
+sparc64                          allyesconfig   gcc  
+sparc64                             defconfig   gcc  
+sparc64               randconfig-001-20240405   gcc  
+sparc64               randconfig-002-20240405   gcc  
+um                               allmodconfig   clang
+um                                allnoconfig   clang
+um                               allyesconfig   gcc  
+um                                  defconfig   clang
+um                             i386_defconfig   gcc  
+um                    randconfig-001-20240405   gcc  
+um                    randconfig-002-20240405   clang
+um                           x86_64_defconfig   clang
+x86_64                            allnoconfig   clang
+x86_64                           allyesconfig   clang
+x86_64       buildonly-randconfig-001-20240405   clang
+x86_64       buildonly-randconfig-002-20240405   clang
+x86_64       buildonly-randconfig-003-20240405   gcc  
+x86_64       buildonly-randconfig-004-20240405   gcc  
+x86_64       buildonly-randconfig-005-20240405   clang
+x86_64       buildonly-randconfig-006-20240405   clang
+x86_64                              defconfig   gcc  
+x86_64                randconfig-001-20240405   clang
+x86_64                randconfig-002-20240405   clang
+x86_64                randconfig-003-20240405   clang
+x86_64                randconfig-004-20240405   gcc  
+x86_64                randconfig-005-20240405   clang
+x86_64                randconfig-006-20240405   gcc  
+x86_64                randconfig-011-20240405   clang
+x86_64                randconfig-012-20240405   gcc  
+x86_64                randconfig-013-20240405   gcc  
+x86_64                randconfig-014-20240405   clang
+x86_64                randconfig-015-20240405   gcc  
+x86_64                randconfig-016-20240405   gcc  
+x86_64                randconfig-071-20240405   gcc  
+x86_64                randconfig-072-20240405   gcc  
+x86_64                randconfig-073-20240405   gcc  
+x86_64                randconfig-074-20240405   gcc  
+x86_64                randconfig-075-20240405   gcc  
+x86_64                randconfig-076-20240405   gcc  
+x86_64                          rhel-8.3-rust   clang
+xtensa                            allnoconfig   gcc  
+xtensa                  audio_kc705_defconfig   gcc  
+xtensa                randconfig-001-20240405   gcc  
+xtensa                randconfig-002-20240405   gcc  
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
