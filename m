@@ -1,217 +1,123 @@
-Received: from smtp-relay-internal-1.canonical.com (smtp-relay-internal-1.canonical.com [185.125.188.123])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96C9B2D61A
-	for <linux-kernel@vger.kernel.org>; Fri,  5 Apr 2024 22:36:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.188.123
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C10EC1426F;
+	Fri,  5 Apr 2024 22:37:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712356579; cv=none; b=PJ3ZFVOgMsSVSbcIcfNvloKdEmDA9hN9EHxbRQx/MTVqdap07NEFCA1rPljO+UeXE/woIQ/KdjSutayms1pQpfSjpmTd3tv8bR0jDGtUZmei8EajT76cLxzkjYMQeWXLpdzaAmKsFeSQGJIIM9Ue3af6OVZDIrW57X/qydyLHvs=
+	t=1712356666; cv=none; b=T5Rbsuqn+34S2wHnKLNokPRqJOuD2ScC6TlgDLm8MiFf/5WC8cxRf8mZDb7LoDEGK1X3YCQug+yOdZ28D/F5omQfX6EJ9D+c1EUhB9VNy1iDINgHnwVX7EQaWiJiDvWVkOTYpAGgdbXvJvKxg+pvs0ck2hL48rWzbwCOqT02c3Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712356579; c=relaxed/simple;
-	bh=QMvCqoIxUJk4A3mQL/m6zq/lJ4o+BiC3MUzbNU4scZQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=UE7Hc07KAN9g3LBmOqrWjTuEY6cD91Cx3jofxjh1aTNnPfNGUfFBIHvbeBlXN81K1UF5nyLM1MMLhglyNNWrCbvIM7rsl9afwROUMg964BOQL9FBz9Wji2M14USxkVkIJpLp4cT5gAY5bllmHYD31r8+qoCIjVAEMn3VR5q6oo4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b=RMB+3U21; arc=none smtp.client-ip=185.125.188.123
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
+	s=arc-20240116; t=1712356666; c=relaxed/simple;
+	bh=pcosRLT+plCTRdcbPNPsDmzaWjgYtYbKdOn2t8ObmoQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=embxmvH5lemReY14D9UMw8/K7h4ZgFR6e3QxelarrqzhkCU2LPwaeS4h3Mo5b+d/Fv3fzjU8h0LDrJfM+jb1prOmkKE/4dW85Nd1zwa4vFKO/rTnrmb9KzfWsYMZ5HILmX5843t/enBZPOWORxsFPKWRQ3ukpllLcELp/tPVl0Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=WNWyVRQR; arc=none smtp.client-ip=192.198.163.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="RMB+3U21"
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com [209.85.128.70])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-relay-internal-1.canonical.com (Postfix) with ESMTPS id C87F73FE5A
-	for <linux-kernel@vger.kernel.org>; Fri,  5 Apr 2024 22:36:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-	s=20210705; t=1712356573;
-	bh=3VLnZHG6NMsFZ484LFX99y48PIsMB85l7TlShPfpb8M=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version;
-	b=RMB+3U21AiqEFB1hoLH7ZqM94SEut0BUv8OgHnCDw+g5No5+U5gMeDe98100Qkzoe
-	 pVJ+0xs2Bx8zRucRW+P4t+eS8FX0vBHIUdf/bT6c18WI/KPubLAthJgg1W2vwx5592
-	 ZiIu5N88Ywi0l4gnuOuQiMWFUvEJ677Ic+FHELjb4zw2J1GGIo1wqb+2Jz/a93fF4z
-	 +D1FUbhPJRVgjX3LCsaXt8EYImBpKOFoirTCAQKo6DGyzc0CoEs8IDN4MV9VZpwlBV
-	 5yoDdTVMEnefrZtV1dDFMtxB6wi5btXOGb4EIXYcAXjJXXeqgPAy3YgKMWtOlpIZ0W
-	 4C3lDamKlLQuQ==
-Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-416331732aaso2646825e9.0
-        for <linux-kernel@vger.kernel.org>; Fri, 05 Apr 2024 15:36:13 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712356565; x=1712961365;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=3VLnZHG6NMsFZ484LFX99y48PIsMB85l7TlShPfpb8M=;
-        b=gimBWmcBZSZUGvRwK3rCZAc0njnF2VS1PHmy0onYue6bOyDBQ65VJwlOjzzxiqbNC6
-         abUTnAripaNFWHGxNlOLzAAgxVY4kV61/nbG/z9veuJReeARIFrIzQNoXZyV0A2GkxP6
-         gOfOPSZFqMTialiacPML3SGXFLQj+z/jDor2m9N4nNxe/9bEBHZ9Iez4d1ZdQ+lmyuwJ
-         nxP+Tsqclf9Z0TQINYzFhOesccJTrVjCBtNmKcTWavX1oOf6FXNy/nbzxSmhvGBiQ48G
-         7/eXuHGPTWkba6DuqlirngcN2+MrUInj/X/rkAtDxr10anRMAQJHX+cho2EAJCaOPX5/
-         rGPQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVGn99kCzP28qWZQxSunuwLZUsrPU0jV8LZhbBOv79cvONb7nnfcU1Em4zOoV3igcUP/M9us7SGE1yYbm2/cGEHThpMLpm13KGKhRbI
-X-Gm-Message-State: AOJu0YzIn4kG0htm2/o2Ajiok98VXMi7yibXC73AM0YwMvhz8rMyhPfo
-	VxRCIqYbOHRyVxA14xrG/PpVMBf9vZ5Ok7QG4HAcchAWOnPdvwT+4McF03j6BKuoN3QW3okWpZg
-	ahng4VlJdhj2ec1YZhUpbzk0/xM+aTJ2r9UlW+/7PHdNEGgn55i4M3KHmS2TiXMO2axEWZjSeWo
-	xJmA==
-X-Received: by 2002:a05:600c:1e24:b0:412:efc8:299b with SMTP id ay36-20020a05600c1e2400b00412efc8299bmr1976468wmb.39.1712356564661;
-        Fri, 05 Apr 2024 15:36:04 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFy6QBCKBbZSuFIsTW1GksJvbLyNHWJv1lSbckpk7UcILNYkV43dYJd1R4rSx10ciYc2EMozQ==
-X-Received: by 2002:a05:600c:1e24:b0:412:efc8:299b with SMTP id ay36-20020a05600c1e2400b00412efc8299bmr1976459wmb.39.1712356564143;
-        Fri, 05 Apr 2024 15:36:04 -0700 (PDT)
-Received: from gpd.station (net-2-39-142-110.cust.vodafonedsl.it. [2.39.142.110])
-        by smtp.gmail.com with ESMTPSA id bi21-20020a05600c3d9500b004163334df40sm1475698wmb.19.2024.04.05.15.36.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 05 Apr 2024 15:36:03 -0700 (PDT)
-From: Andrea Righi <andrea.righi@canonical.com>
-To: Andrii Nakryiko <andrii@kernel.org>,
-	Eduard Zingerman <eddyz87@gmail.com>
-Cc: Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Martin KaFai Lau <martin.lau@linux.dev>,
-	Song Liu <song@kernel.org>,
-	Yonghong Song <yonghong.song@linux.dev>,
-	John Fastabend <john.fastabend@gmail.com>,
-	KP Singh <kpsingh@kernel.org>,
-	Stanislav Fomichev <sdf@google.com>,
-	Hao Luo <haoluo@google.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	David Vernet <void@manifault.com>,
-	Tejun Heo <tj@kernel.org>,
-	bpf@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v3 2/2] libbpf: Add ring__consume_n / ring_buffer__consume_n
-Date: Sat,  6 Apr 2024 00:16:05 +0200
-Message-ID: <20240405223556.11142-3-andrea.righi@canonical.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240405223556.11142-1-andrea.righi@canonical.com>
-References: <20240405223556.11142-1-andrea.righi@canonical.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WNWyVRQR"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1712356665; x=1743892665;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=pcosRLT+plCTRdcbPNPsDmzaWjgYtYbKdOn2t8ObmoQ=;
+  b=WNWyVRQRgOUxjG5OT6mkkWS9dejbbCGRPhKJnARgOdy696qf58jKxu0y
+   K14HxmzoXUQyoNwPh/O2BKpDO7YeGZPfHzdSA6uo9GnkDxR6DTuRN3EM7
+   +Vfgm6MTBJ7Quh1qT6DMggLS4T140O8LpiJdlI1031g8ZYTVeqUY/Rs2K
+   sR1NPkkzYn/dJJzTdDdcyBtiaYh+JXnFtQjhferbha3dyOWe6pSj0ixks
+   rC+JqUNEd6JaiQCMd8R9Nf+4ax8k/DnaRS/nweLUKxeOT4KS8N2lcf1Mi
+   XENtfJ8eDXOXe6yke1a2BbdVlSpZWfvLUM0JXQZ2Qjxi0CzIqA/0OoKAl
+   g==;
+X-CSE-ConnectionGUID: 2qlAAbQJTe+0OKE9gDt8Jg==
+X-CSE-MsgGUID: ZSqxPTT8QLKtUIouRzYhxw==
+X-IronPort-AV: E=McAfee;i="6600,9927,11035"; a="19063730"
+X-IronPort-AV: E=Sophos;i="6.07,182,1708416000"; 
+   d="scan'208";a="19063730"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Apr 2024 15:37:44 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,11035"; a="915268493"
+X-IronPort-AV: E=Sophos;i="6.07,182,1708416000"; 
+   d="scan'208";a="915268493"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.72.54])
+  by fmsmga002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Apr 2024 15:37:42 -0700
+Received: from andy by smile with local (Exim 4.97)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1rssBn-00000001sGz-2k5y;
+	Sat, 06 Apr 2024 01:37:39 +0300
+Date: Sat, 6 Apr 2024 01:37:39 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Jiri Slaby <jirislaby@kernel.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org,
+	Yicong Yang <yangyicong@hisilicon.com>,
+	Tony Lindgren <tony@atomide.com>,
+	kernel test robot <oliver.sang@intel.com>
+Subject: Re: [PATCH v1 1/1] serial: core: Clearing the circular buffer before
+ NULLifying it
+Message-ID: <ZhB9M8C9IhXtJIXR@smile.fi.intel.com>
+References: <20240404150034.41648-1-andriy.shevchenko@linux.intel.com>
+ <f0f200b0-34dc-430b-b55e-b133faf4db44@kernel.org>
+ <ZhAWIThfejjbmj8u@smile.fi.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZhAWIThfejjbmj8u@smile.fi.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-Introduce a new API to consume items from a ring buffer, limited to a
-specified amount, and return to the caller the actual number of items
-consumed.
+On Fri, Apr 05, 2024 at 06:17:54PM +0300, Andy Shevchenko wrote:
+> On Fri, Apr 05, 2024 at 07:25:03AM +0200, Jiri Slaby wrote:
+> > On 04. 04. 24, 16:59, Andy Shevchenko wrote:
+> > > The circular buffer is NULLified in uart_tty_port_shutdown()
+> > > under the spin lock. However, the PM or other timer based callbacks
+> > > may still trigger after this event without knowning that buffer pointer
+> > > is not valid. Since the serial code is a bit inconsistent in checking
+> > > the buffer state (some rely on the head-tail positions, some on the
+> > > buffer pointer), it's better to have both aligned, i.e. buffer pointer
+> > > to be NULL and head-tail possitions to be the same, meaning it's empty.
+> > > This will prevent asynchronous calls to dereference NULL pointer as
+> > > reported recently in 8250 case:
+> > > 
+> > >    BUG: kernel NULL pointer dereference, address: 00000cf5
+> > >    Workqueue: pm pm_runtime_work
+> > >    EIP: serial8250_tx_chars (drivers/tty/serial/8250/8250_port.c:1809)
+> > >    ...
+> > >    ? serial8250_tx_chars (drivers/tty/serial/8250/8250_port.c:1809)
+> > >    __start_tx (drivers/tty/serial/8250/8250_port.c:1551)
+> > >    serial8250_start_tx (drivers/tty/serial/8250/8250_port.c:1654)
+> > >    serial_port_runtime_suspend (include/linux/serial_core.h:667 drivers/tty/serial/serial_port.c:63)
+> > >    __rpm_callback (drivers/base/power/runtime.c:393)
+> > >    ? serial_port_remove (drivers/tty/serial/serial_port.c:50)
+> > >    rpm_suspend (drivers/base/power/runtime.c:447)
+> > 
+> > Yeah, I noticed start_tx() is called repeatedly after shutdown() yesterday
+> > too. So thanks for looking into this.
+> 
+> > And it's pretty weird. I think it's new with the runtime PM (sure, /me reads
+> > Fixes: now). I am not sure if it is documented, but most of the code in tty/
+> > assumes NO ordinary ->ops (like start_tx()) are called after shutdown().
+> > Actually, to me it occurs like serial8250_start_tx() should not be called in
+> > the first place. It makes no sense after all.
+> > 
+> > BTW cannot be x_char en/queued at that time too (the other check in the if)?
+> > But again, serial8250_start_tx() should not be called after shutdown().
+> 
+> Yes, and I have no clue how we can check this as startup can be called again
+> and so on. The PM callback is timer based AFAIU, meaning it may happen at any
+> time.
+> 
+> But do you agree that this patch has value on its own?
 
-Link: https://lore.kernel.org/lkml/20240310154726.734289-1-andrea.righi@canonical.com/T
-Signed-off-by: Andrea Righi <andrea.righi@canonical.com>
----
- tools/lib/bpf/libbpf.h   | 12 ++++++++++++
- tools/lib/bpf/libbpf.map |  6 ++++++
- tools/lib/bpf/ringbuf.c  | 38 +++++++++++++++++++++++++++++++++++---
- 3 files changed, 53 insertions(+), 3 deletions(-)
+FWIW, https://lore.kernel.org/all/0000000000009e2dd805ffc595a3@google.com/T/
 
-diff --git a/tools/lib/bpf/libbpf.h b/tools/lib/bpf/libbpf.h
-index f88ab50c0229..4f775a6dcaa0 100644
---- a/tools/lib/bpf/libbpf.h
-+++ b/tools/lib/bpf/libbpf.h
-@@ -1293,6 +1293,7 @@ LIBBPF_API int ring_buffer__add(struct ring_buffer *rb, int map_fd,
- 				ring_buffer_sample_fn sample_cb, void *ctx);
- LIBBPF_API int ring_buffer__poll(struct ring_buffer *rb, int timeout_ms);
- LIBBPF_API int ring_buffer__consume(struct ring_buffer *rb);
-+LIBBPF_API int ring_buffer__consume_n(struct ring_buffer *rb, size_t n);
- LIBBPF_API int ring_buffer__epoll_fd(const struct ring_buffer *rb);
- 
- /**
-@@ -1367,6 +1368,17 @@ LIBBPF_API int ring__map_fd(const struct ring *r);
-  */
- LIBBPF_API int ring__consume(struct ring *r);
- 
-+/**
-+ * @brief **ring__consume_n()** consumes up to a requested amount of items from
-+ * a ringbuffer without event polling.
-+ *
-+ * @param r A ringbuffer object.
-+ * @param n Maximum amount of items to consume.
-+ * @return The number of items consumed, or a negative number if any of the
-+ * callbacks return an error.
-+ */
-+LIBBPF_API int ring__consume_n(struct ring *r, size_t n);
-+
- struct user_ring_buffer_opts {
- 	size_t sz; /* size of this struct, for forward/backward compatibility */
- };
-diff --git a/tools/lib/bpf/libbpf.map b/tools/lib/bpf/libbpf.map
-index 51732ecb1385..23d82bba021a 100644
---- a/tools/lib/bpf/libbpf.map
-+++ b/tools/lib/bpf/libbpf.map
-@@ -416,3 +416,9 @@ LIBBPF_1.4.0 {
- 		btf__new_split;
- 		btf_ext__raw_data;
- } LIBBPF_1.3.0;
-+
-+LIBBPF_1.5.0 {
-+	global:
-+		ring__consume_n;
-+		ring_buffer__consume_n;
-+} LIBBPF_1.4.0;
-diff --git a/tools/lib/bpf/ringbuf.c b/tools/lib/bpf/ringbuf.c
-index 2c4031168413..19cd34883011 100644
---- a/tools/lib/bpf/ringbuf.c
-+++ b/tools/lib/bpf/ringbuf.c
-@@ -277,6 +277,33 @@ static int64_t ringbuf_process_ring(struct ring *r, size_t n)
- 	return cnt;
- }
- 
-+/* Consume available ring buffer(s) data without event polling, up to n
-+ * records.
-+ *
-+ * Returns number of records consumed across all registered ring buffers (or
-+ * n, whichever is less), or negative number if any of the callbacks return
-+ * error.
-+ */
-+int ring_buffer__consume_n(struct ring_buffer *rb, size_t n)
-+{
-+	int64_t err, res = 0;
-+	int i;
-+
-+	for (i = 0; i < rb->ring_cnt; i++) {
-+		struct ring *ring = rb->rings[i];
-+
-+		err = ringbuf_process_ring(ring, n);
-+		if (err < 0)
-+			return libbpf_err(err);
-+		res += err;
-+		n -= err;
-+
-+		if (n == 0)
-+			break;
-+	}
-+	return res;
-+}
-+
- /* Consume available ring buffer(s) data without event polling.
-  * Returns number of records consumed across all registered ring buffers (or
-  * INT_MAX, whichever is less), or negative number if any of the callbacks
-@@ -378,17 +405,22 @@ int ring__map_fd(const struct ring *r)
- 	return r->map_fd;
- }
- 
--int ring__consume(struct ring *r)
-+int ring__consume_n(struct ring *r, size_t n)
- {
--	int64_t res;
-+	int res;
- 
--	res = ringbuf_process_ring(r, INT_MAX);
-+	res = ringbuf_process_ring(r, n);
- 	if (res < 0)
- 		return libbpf_err(res);
- 
- 	return res > INT_MAX ? INT_MAX : res;
- }
- 
-+int ring__consume(struct ring *r)
-+{
-+	return ring__consume_n(r, INT_MAX);
-+}
-+
- static void user_ringbuf_unmap_ring(struct user_ring_buffer *rb)
- {
- 	if (rb->consumer_pos) {
 -- 
-2.43.0
+With Best Regards,
+Andy Shevchenko
+
 
