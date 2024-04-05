@@ -1,100 +1,105 @@
-Received: from mail-io1-f41.google.com (mail-io1-f41.google.com [209.85.166.41])
+Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD555171073
-	for <linux-kernel@vger.kernel.org>; Fri,  5 Apr 2024 16:08:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AC1F16ABC3;
+	Fri,  5 Apr 2024 16:10:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712333285; cv=none; b=QNdsZ6sQKyf71TJDYJLA4wcTehXLyP+ue07Ksy3zrHCgE2sIRLU8XgkWMTrrNGuUyEVin2cQ/WPkQafN3Q0aZlFa9xrfXHuF0ZM8jglDobnL4HCjwXMb53qT4yJ415s8fk8C2zOhvBs5VTomHwnRXqwYdMJv6MDNfjZXWJpFcrM=
+	t=1712333429; cv=none; b=sm230r/fDp1FOiPGkKSmR4LTrtOzWPmF+q94qIvADGQItJcVG/jxAQmy3cT04ZV22ctAds+WmfGOUk8dHgDAEKWoIR6Y1IDpZQ0GF+ZnVzcTG9hneAYoOLGItOX6mlSNKvStrhgDUYGMsL6TYhkDpSoTMZUiNLcCiOfN18MJ+QU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712333285; c=relaxed/simple;
-	bh=WQf37KnE8UstSt4WJHEZVKafftMROgs9kzOlz+UeEzM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=iU9xSc2Ph05tCbrbBrj3eagAsCqlnmxlqWYp3UFa9kOzRQ1fEB0Ijr9XXxb9kRgzWiJJ5Ec/uW00B84CXyV8HgEKgTDybzvJicMj1TY3sMINFUWFNi5tWEefOfttLl4KRPXxegOim5zZ+sqkdUxzfeKcVwJL610sViAGn8Ay7/4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=RF1P1tAq; arc=none smtp.client-ip=209.85.166.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1712333429; c=relaxed/simple;
+	bh=XoXoslvHGhFAGNnZ/jtkQPOaFZnm6QeH3/hk2RonHU8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=EWsLNrsw7SM1kp61YNrN5OL86aSX4TqmVMLI3dZwjS9QNSc7e81SX3lUE6Yn6oHR/9NtIjg0HZaQNXHHIEaf28hEfg0PFLbbI6y88bBR3shNWxyVt4XvlqYYAPHj4K0hNVZ4gROeczUrQOqT7AJuEwaUGqA0mebxbNDH55UdTWI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Sg//saIJ; arc=none smtp.client-ip=209.85.218.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="RF1P1tAq"
-Received: by mail-io1-f41.google.com with SMTP id ca18e2360f4ac-7c86e6f649aso23014839f.0
-        for <linux-kernel@vger.kernel.org>; Fri, 05 Apr 2024 09:08:03 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Sg//saIJ"
+Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-a4715991c32so350484566b.1;
+        Fri, 05 Apr 2024 09:10:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1712333283; x=1712938083; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=oAuKDU6QiZ6ML3XGubjP2fNWyg1GAOwTBQh+lV89r38=;
-        b=RF1P1tAqP3quLAouu2FwQVEKMZfuTL/RhbhOTdyP7oTf3gFptlw/NVwiayTL9e2JgE
-         Uk5xCIZssSK6EvgKVWsChs3tfpMRfspjYJqtKqKl4iHHLDiY5viu6FVIaiMcr4D9wkuF
-         ON7QY9G+UxHZZWqbwZbrWIXqrpsywHPYczIOA=
+        d=gmail.com; s=20230601; t=1712333427; x=1712938227; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=QRnuU2T0zeBP54NjTK724wHa45BiVHY1dZbI/4zG+So=;
+        b=Sg//saIJpNTqinmB2+tRADa5wtqoQWxwHXuOdbWL3EWDePEIJ7ZFvGR6vsGgZaClur
+         fKyD7NDPBMBtOTzrYeuF5NFBqqQBPAgZn4bP2vbrTOCFQqE3W+kDpeJ/ozakujp+tUMY
+         /QiOBTP8jwnl0IXFBu+S7MCw5s5jrhaTSFF1TYd/8UGGG0buZLO9wFMGe1if7wWrBZZF
+         RSPf3L8dJKbwbB95JQs4yhCORhbc02ZufaxRRLnchOq5YToG0ljoIa9aSW4JaooG/g1j
+         2U5C/h/9WTpy0j1GTtM3fKiWG/4Hqg56P0xbXAl7M1VrKS9QB8EgT1Ud+45xYYPOsd/E
+         BMkQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712333283; x=1712938083;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=oAuKDU6QiZ6ML3XGubjP2fNWyg1GAOwTBQh+lV89r38=;
-        b=AQ+feqGXgTOsxCCJpvn8fnm3RYwDwnYcmqpTRXYS9A0il0DXj+Rbre+zzI4Ui20hiN
-         QiZQa4Mop9dUTTNfrhpzEbxl+fLKEu+RUBEkBAAf4JmEwk0zN7yzuM7lzl+Fm9QliUiJ
-         YJgg0KNaV50vXCzXWCX1p/YJAQkI4m1HhlL3pFrVQIxg1PfPGFJecIk2aSfFZEkou7KD
-         VCGUdWDDXCrS7OjIYJl/uj+3zgo99/gjJr0OYENJY1j9BAbZAEp2707pZYZSeWLeTktd
-         tO7j+hJc3ryELFTtmQkXwdjLkFg3bnxR6FzjambH00Sres2FRRF4DFoHSMBLB55lZg3S
-         3Ybw==
-X-Forwarded-Encrypted: i=1; AJvYcCUWtl/9rTDWbBRyzg0yfUIti6B7CKoq8MPPBIa0VB1q0O8Q0mmZWHsfjSyzHCGncxesySsdsRo3I5sRrcZ6iDqnZqPhXOjF9o75i2rt
-X-Gm-Message-State: AOJu0YwXxhSo7KQx4PyB9gCRJMt8/7qpzppHErMRijKqO1xUPGz2yYJ4
-	/QLOA8avdj/zL5O5LyyUtQwFpHFAWO8wlXgzcopxkj3z+HxgRo6Vz8nCV87I2Y8=
-X-Google-Smtp-Source: AGHT+IEFSBlsclA6e2FP+b8IjmZLWOus+sNYfoqoIt8htlDfnprRT5+aCUKOtOxFEmmqkr93Xto/Bw==
-X-Received: by 2002:a05:6602:148:b0:7d0:bd2b:43ba with SMTP id v8-20020a056602014800b007d0bd2b43bamr1795873iot.0.1712333282821;
-        Fri, 05 Apr 2024 09:08:02 -0700 (PDT)
-Received: from [192.168.1.128] ([38.175.170.29])
-        by smtp.gmail.com with ESMTPSA id f4-20020a5edf04000000b007cc78dafb96sm578949ioq.7.2024.04.05.09.08.01
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 05 Apr 2024 09:08:02 -0700 (PDT)
-Message-ID: <60d96894-a146-4ebb-b6d0-e1988a048c64@linuxfoundation.org>
-Date: Fri, 5 Apr 2024 10:08:00 -0600
+        d=1e100.net; s=20230601; t=1712333427; x=1712938227;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=QRnuU2T0zeBP54NjTK724wHa45BiVHY1dZbI/4zG+So=;
+        b=JCxtT4sHBAEEjJOdX3BZXdsenIA55CadPBCI6nqNBzCGctTlfjweCkasjptQjiXtGb
+         P9csVQ1afQFuD5EuVyTr4kB1XY7RVXbryURU7/BIkhU60/4qx7pU2gGVO6bmH9qmnnzJ
+         /Tj36A78ir43ngsEBTCFQvtDqjGI7JB3alJSXghkxi83yECCrwCWDpe8nWfe7AYXMV/w
+         PeWlwPaYAF1xEofwKeMfTfzPhUxPTXLdrBLXZdli29LqjY7rekDnqTL+/4GSrCENPhxB
+         qV5FgcvbsqPbwe40tnaIQivLd6j1xV1IWXvKbZW7bsmM2RDF3NpN7A/6YnMDh6rl+WOD
+         YUIw==
+X-Forwarded-Encrypted: i=1; AJvYcCUCx7ZYlvT9+52kuHO45e53ROHVS7mO3GhH6fstSDJOr291ihd/Dg10zhxcTswhjh5wCh+3bGTtBAGDkL6A4h39zfKvb00k/b6G+sK4
+X-Gm-Message-State: AOJu0YzBSjSz5y7O26HskrbKl30xuxiAyzxj950LQtDv2tRC+BCGULPy
+	z4YajXg/cVqM8yy28fuqgiNLzi076Yfm8tzpZDnWSt2vp2K6KleE
+X-Google-Smtp-Source: AGHT+IH7Qbt1NBMrdEBXQHquNIASOfmjNvLH5V9PKL2THeFZ+c+Z2bsaJEPTx1jQZbu29vT3ktgvlA==
+X-Received: by 2002:a17:907:ea8:b0:a4e:d43:dc4b with SMTP id ho40-20020a1709070ea800b00a4e0d43dc4bmr1835447ejc.58.1712333426307;
+        Fri, 05 Apr 2024 09:10:26 -0700 (PDT)
+Received: from skbuf ([2a02:2f04:d700:2000::b2c])
+        by smtp.gmail.com with ESMTPSA id n2-20020a1709062bc200b00a517e505e3bsm979891ejg.204.2024.04.05.09.10.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 05 Apr 2024 09:10:25 -0700 (PDT)
+Date: Fri, 5 Apr 2024 19:10:23 +0300
+From: Vladimir Oltean <olteanv@gmail.com>
+To: Pawel Dembicki <paweldembicki@gmail.com>
+Cc: netdev@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>,
+	Simon Horman <horms@kernel.org>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Russell King <rmk+kernel@armlinux.org.uk>,
+	Andrew Lunn <andrew@lunn.ch>,
+	Florian Fainelli <f.fainelli@gmail.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Claudiu Manoil <claudiu.manoil@nxp.com>,
+	Alexandre Belloni <alexandre.belloni@bootlin.com>,
+	UNGLinuxDriver@microchip.com, Russell King <linux@armlinux.org.uk>,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next v8 02/16] net: dsa: vsc73xx: convert to PHYLINK
+Message-ID: <20240405161023.qp2jl2a63z4vg3a2@skbuf>
+References: <20240403103734.3033398-1-paweldembicki@gmail.com>
+ <20240403103734.3033398-3-paweldembicki@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 0/7] Handle faults in KUnit tests
-To: =?UTF-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>,
- Brendan Higgins <brendanhiggins@google.com>, David Gow
- <davidgow@google.com>, Rae Moar <rmoar@google.com>
-Cc: Alan Maguire <alan.maguire@oracle.com>, Borislav Petkov <bp@alien8.de>,
- Dave Hansen <dave.hansen@linux.intel.com>,
- "Eric W . Biederman" <ebiederm@xmission.com>, "H . Peter Anvin"
- <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
- James Morris <jamorris@linux.microsoft.com>,
- Kees Cook <keescook@chromium.org>, Luis Chamberlain <mcgrof@kernel.org>,
- "Madhavan T . Venkataraman" <madvenka@linux.microsoft.com>,
- Marco Pagani <marpagan@redhat.com>, Paolo Bonzini <pbonzini@redhat.com>,
- Sean Christopherson <seanjc@google.com>, Stephen Boyd <sboyd@kernel.org>,
- Thara Gopinath <tgopinath@microsoft.com>,
- Thomas Gleixner <tglx@linutronix.de>, Vitaly Kuznetsov
- <vkuznets@redhat.com>, Zahra Tarkhani <ztarkhani@microsoft.com>,
- kvm@vger.kernel.org, linux-hardening@vger.kernel.org,
- linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-security-module@vger.kernel.org, linux-um@lists.infradead.org,
- x86@kernel.org, Shuah Khan <skhan@linuxfoundation.org>
-References: <20240326095118.126696-1-mic@digikod.net>
-Content-Language: en-US
-From: Shuah Khan <skhan@linuxfoundation.org>
-In-Reply-To: <20240326095118.126696-1-mic@digikod.net>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240403103734.3033398-3-paweldembicki@gmail.com>
 
-On 3/26/24 03:51, Mickaël Salaün wrote:
-> Hi,
+On Wed, Apr 03, 2024 at 12:37:18PM +0200, Pawel Dembicki wrote:
+> This patch replaces the adjust_link api with the phylink apis that provide
+> equivalent functionality.
 > 
-> This patch series teaches KUnit to handle kthread faults as errors, and
-> it brings a few related fixes and improvements.
+> The remaining functionality from the adjust_link is now covered in the
+> phylink_mac_link_* and phylink_mac_config.
 > 
-> Shuah, everything should be OK now, could you please merge this series?
+> Removes:
+> .adjust_link
+> Adds:
+> .phylink_mac_config
+> .phylink_mac_link_up
+> .phylink_mac_link_down
+> 
+> Signed-off-by: Pawel Dembicki <paweldembicki@gmail.com>
+> Reviewed-by: Florian Fainelli <florian.fainelli@broadcom.com>
+> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+> Reviewed-by: Russell King (Oracle) <rmk+kernel@armlinux.org.uk>
+> ---
 
-Please cc linux-kselftest and kunit mailing lists. You got the world cc'ed
-except for the important ones. :)
-
-thanks,
--- Shuah
+I think you should split out the phylink patches from VLAN work, since
+these seem good to go.
