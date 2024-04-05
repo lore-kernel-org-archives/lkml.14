@@ -1,262 +1,101 @@
-Received: from mailout2.w1.samsung.com (mailout2.w1.samsung.com [210.118.77.12])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 467602C1AE;
-	Fri,  5 Apr 2024 06:35:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.118.77.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C8DD1BF27;
+	Fri,  5 Apr 2024 06:36:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712298953; cv=none; b=haVN7symei8zouhJC+IfhylEnL3BJCgHCxCW9g2Jb/vY4C/XpXRIu+rjN0J/orq3RGosKQhZCcjKne6VprOomymU/blx/GKuHIwSePLjQn6NleQSAqbBSlerbmbJHyU+ENZ1pkRRzEuodZbG+yHXaMSKSPFlQVr9KWIgDS8kdDA=
+	t=1712298967; cv=none; b=uVpdI5G2UhRD1lDqr+O3SPY/sF6UthhPk8Whmk5fs0PY0SIwDFRkk3cwH0ojYsMqlNz1JQL8an3sLvwVRyC8IYKHpy58LFrII5ACZ7vC7wDkprOSf6nF+srtcyR3AEaC5MvX1QCCvtPPdwlZvxCWFg7u1HuV3172iBf9q6GhBDU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712298953; c=relaxed/simple;
-	bh=cO1PzXnsl05Oi3CJR79NBSXRD97u81UbzHGkGAWcnc4=;
-	h=Date:From:To:CC:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To:References; b=b/hDR6ld7SJYZVbEXhJNLyx6ntFFG2XJ9vpNjNA9AamBG7VcuAJwpYHAWPeeO1Hka9DofODSiOe4y4zTUWRoFMc68RsnxyRtwqQ4bgzXo3rPX35Co1v5gS8MxfiqldaN1yzb7Qi1faFyMB1qYT8QUbNwfaPWeBo6z6sy8e9xZ44=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=vLL9rtI/; arc=none smtp.client-ip=210.118.77.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+	s=arc-20240116; t=1712298967; c=relaxed/simple;
+	bh=rCXu4epE+VTWM+HBe7qOASe0JtrD/GpcjyADbon9iVs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=o0VW+TLvSl3K2aWKUk3yQG+y5Ms9r7MXGwOtkCQnXwiefKfvUGiWgXV3Tz5klq38YOSPSBVYbkMGdg7ZNcXJ1ON/E+qGGOAusupjvROoCnogGweGtM9zK+qQe8r8QKHO/Wd3rMzXMJ3utpkXlfOYkh3sOIvLIjBgFyGGqlfmoq8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=DGZ39aBW; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="vLL9rtI/"
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-	by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20240405063549euoutp024dc9ce480a65aa6b4cf156e048429c46~DTtKHMJ1a2835028350euoutp02_;
-	Fri,  5 Apr 2024 06:35:49 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20240405063549euoutp024dc9ce480a65aa6b4cf156e048429c46~DTtKHMJ1a2835028350euoutp02_
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1712298949;
-	bh=hG667JlBEGcijqfQ0bCFe89iWwdz0RQupU+vCJJh7gI=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
-	b=vLL9rtI/oHdfrQxFN0DLwcMDnqDors74/koymRS2310QBWeyv31yIBpwkwkoUeTSo
-	 lltrcZvZd/Ns7rpxicR/PWoV+HTsmfTk3gKUVuElEScvN+2fE0ruZYylFndr2yGBkj
-	 TKK9WQk2MZCNyikCJPXKZA6A0NNdI2Tce2aB5uAE=
-Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
-	eucas1p1.samsung.com (KnoxPortal) with ESMTP id
-	20240405063549eucas1p125a1262ad66664a4616735348ea5a6aa~DTtJ6z7b90623506235eucas1p1C;
-	Fri,  5 Apr 2024 06:35:49 +0000 (GMT)
-Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
-	eusmges3new.samsung.com (EUCPMTA) with SMTP id 8D.85.09552.4CB9F066; Fri,  5
-	Apr 2024 07:35:49 +0100 (BST)
-Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
-	eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-	20240405063548eucas1p1500de4f04b0d27fca8f29a1f02ce90b8~DTtJTtNbV3228332283eucas1p1h;
-	Fri,  5 Apr 2024 06:35:48 +0000 (GMT)
-Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
-	eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
-	20240405063548eusmtrp15c48b857f1e330de8c899a3144758be0~DTtJSCSo-2498024980eusmtrp1I;
-	Fri,  5 Apr 2024 06:35:48 +0000 (GMT)
-X-AuditID: cbfec7f5-83dff70000002550-38-660f9bc43f5c
-Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
-	eusmgms1.samsung.com (EUCPMTA) with SMTP id 28.88.09146.4CB9F066; Fri,  5
-	Apr 2024 07:35:48 +0100 (BST)
-Received: from CAMSVWEXC02.scsc.local (unknown [106.1.227.72]) by
-	eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
-	20240405063548eusmtip14193961009864e00ad20f3c07538b0c9~DTtI_kPvT1565515655eusmtip1k;
-	Fri,  5 Apr 2024 06:35:48 +0000 (GMT)
-Received: from localhost (106.210.248.50) by CAMSVWEXC02.scsc.local
-	(2002:6a01:e348::6a01:e348) with Microsoft SMTP Server (TLS) id 15.0.1497.2;
-	Fri, 5 Apr 2024 07:35:47 +0100
-Date: Wed, 3 Apr 2024 12:59:13 +0200
-From: Joel Granados <j.granados@samsung.com>
-To: Kuniyuki Iwashima <kuniyu@amazon.com>
-CC: <devnull+j.granados.samsung.com@kernel.org>, <Dai.Ngo@oracle.com>,
-	<alex.aring@gmail.com>, <alibuda@linux.alibaba.com>,
-	<allison.henderson@oracle.com>, <anna@kernel.org>, <bridge@lists.linux.dev>,
-	<chuck.lever@oracle.com>, <coreteam@netfilter.org>, <courmisch@gmail.com>,
-	<davem@davemloft.net>, <dccp@vger.kernel.org>, <dhowells@redhat.com>,
-	<dsahern@kernel.org>, <edumazet@google.com>, <fw@strlen.de>,
-	<geliang@kernel.org>, <guwen@linux.alibaba.com>,
-	<herbert@gondor.apana.org.au>, <horms@verge.net.au>, <ja@ssi.bg>,
-	<jaka@linux.ibm.com>, <jlayton@kernel.org>, <jmaloy@redhat.com>,
-	<jreuter@yaina.de>, <kadlec@netfilter.org>, <keescook@chromium.org>,
-	<kolga@netapp.com>, <kuba@kernel.org>, <linux-afs@lists.infradead.org>,
-	<linux-hams@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-nfs@vger.kernel.org>, <linux-rdma@vger.kernel.org>,
-	<linux-s390@vger.kernel.org>, <linux-sctp@vger.kernel.org>,
-	<linux-wpan@vger.kernel.org>, <linux-x25@vger.kernel.org>,
-	<lucien.xin@gmail.com>, <lvs-devel@vger.kernel.org>,
-	<marc.dionne@auristor.com>, <marcelo.leitner@gmail.com>,
-	<martineau@kernel.org>, <matttbe@kernel.org>, <mcgrof@kernel.org>,
-	<miquel.raynal@bootlin.com>, <mptcp@lists.linux.dev>, <ms@dev.tdt.de>,
-	<neilb@suse.de>, <netdev@vger.kernel.org>,
-	<netfilter-devel@vger.kernel.org>, <pabeni@redhat.com>,
-	<pablo@netfilter.org>, <ralf@linux-mips.org>, <razor@blackwall.org>,
-	<rds-devel@oss.oracle.com>, <roopa@nvidia.com>, <stefan@datenfreihafen.org>,
-	<steffen.klassert@secunet.com>, <tipc-discussion@lists.sourceforge.net>,
-	<tom@talpey.com>, <tonylu@linux.alibaba.com>,
-	<trond.myklebust@hammerspace.com>, <wenjia@linux.ibm.com>,
-	<ying.xue@windriver.com>
-Subject: Re: [PATCH v2 4/4] ax.25: Remove the now superfluous sentinel
- elements from ctl_table array
-Message-ID: <20240403105913.o5jc45ijxjixbapw@joelS2.panther.com>
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="DGZ39aBW"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 26CC8C433F1;
+	Fri,  5 Apr 2024 06:36:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1712298966;
+	bh=rCXu4epE+VTWM+HBe7qOASe0JtrD/GpcjyADbon9iVs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=DGZ39aBWy9/eqltVfphM20ylODyQHL41s0ElfcCxmn4adpCjvZ8Ao3elLDEF1XZ33
+	 knS88Iz28eXrQVzqaBl2Y7wZ9ONDhQQu94OtFzIz+57OEfLAVrXTMBQWe7agDYzwRy
+	 Niw4LIgk39SLdroDUEAdr3Ctyif8EynxXv3DimyU=
+Date: Fri, 5 Apr 2024 08:36:03 +0200
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Matthew Wilcox <willy@infradead.org>
+Cc: Sasha Levin <sashal@kernel.org>, stable@vger.kernel.org,
+	Rik van Riel <riel@surriel.com>,
+	Mel Gorman <mgorman@techsingularity.net>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	linux-kernel@vger.kernel.org
+Subject: Re: FAILED: Patch "bounds: support non-power-of-two CONFIG_NR_CPUS"
+ failed to apply to 5.4-stable tree
+Message-ID: <2024040545-diligence-suffrage-d430@gregkh>
+References: <20240327122125.2836828-1-sashal@kernel.org>
+ <ZgQowqqGf-E7Cpcz@casper.infradead.org>
+ <2024032935-antsy-imitation-1453@gregkh>
+ <2024032959-ladies-circling-3a5e@gregkh>
+ <ZguYw9Dke_uq5UZU@casper.infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg="pgp-sha512";
-	protocol="application/pgp-signature"; boundary="w6pan44lwventsuw"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240403091625.lk35wt2iqkvabrmr@joelS2.panther.com>
-X-ClientProxiedBy: CAMSVWEXC01.scsc.local (2002:6a01:e347::6a01:e347) To
-	CAMSVWEXC02.scsc.local (2002:6a01:e348::6a01:e348)
-X-Brightmail-Tracker: H4sIAAAAAAAAA2VTa1BUZRj2O7ddNteOiPElODorIBpBVOarlooZc6ofyeBMZk3KyAFJWHBX
-	wss4rYAscrFNmhjxAkisy21RWFeWixIqCDhchAKNy3BXWBRcQEFlE46WM/173ucy3/P8+MSk
-	bZJ4kThIvo9XyP2CZYyEMlZO1r9749SbAe9pJkioUK2GrtI4GlTRMQQcNVkpMGbEE2BtHyDg
-	uUlNgqVrgIbUc4UMnK6PpuB5SzwDTWd6CXgQ+ZQCffFRAvoqu0VgTMxBkBPZRsHlgccMxA86
-	QtSlcQS9P3fT0KwdYWBSmy2CzvFuCiaPvwEn46IIuBUfAkXtvRQ0GI/ToE3IY0BT4wl/XW4n
-	oKn4NAMN5bU09FckUqBJjyKhL22IhrYkLQXlZakIuvMfEhCV+oiEKEsPCVO6KhrqEq0kpOiz
-	SWjV9CG4pr5Cw638SBFMnL1JQlmqioLKtLdAo6+hYKLWjCDZ/CcJt0udoGbMSkBdoYUGy2lX
-	SNIZCCg59kQEhvofoGaqhoCexwMMWFs3bNzE6RriaO5u9zjJPairRtzZ3EPcKVUjxU1NruQM
-	WXcILv76IMmZUtpFnLHcmUsrCOeeVVwUcQXZxxjuRlYewZm61nCac+Voi2y75GN/PjjoR17h
-	sX6nZPfz0n5R2L3F+289/JtQoSoch2zEmP0QD8SoqTgkEduyOoTHGy2McIwhXNxseKlYEG69
-	eR+9iiQVDBOCcB7hP34ZIv91XVA9pYWjEGGNqepFRCymWCc8OiSZSTOsG643t5Ez2I5dgWP1
-	CbN+ki2U4upjLfSMsIANwE86+mazUnYjvjNpN0NL2fm4+mQvNYNJdj8e6bw5ayFZB3x+WjxD
-	27Be+FFZ7iyNWRl+nPOF0PkwrjHcne2M2ca5+F5mBiMIm/FvsYkvhy3Ag1UGkYAdcW1SAiUE
-	khC+Oj0iEo4chLVHxgnBtQ5HN/e+THjhYcsRRnh5Hm4dni/0nIdPGJNJgZbi2Bhbwe2CczrM
-	lAYtS3ltWcpry1L+WybQbjit5BHzP/odrE0fIgX8CdbrH1JpSJSN7PlwZUggr/xAzke4K/1C
-	lOHyQPddoSEF6MVfrZ2uGi9CusFR9wpEiFEFcnoR7r6Q04AWUfJQOS+zk8ZvlAbYSv39Dhzk
-	FaE7FOHBvLICOYgpmb3U2X8Jb8sG+u3j9/B8GK94pRJim0UqQr1kbvDowYgdYRJHz7oyx/eX
-	R/20YCl9NKGkLtt0QM6nZT3ri81fHOG2+sqmL22UrrX2zVt+Z24nF3dcdzkhu+ZPbt57uFTh
-	7usTWuSgECV+HVAtXtvyedGRFdOuprUj285kX+7o1JoHFm7fMzGV71O5bPQbXUTYymjfjwa3
-	9Y2OLamXW8vcntgmj9nfX7EmMnPOBovXLpnoO5/+zp0lnnYxid96SrSpuou+q6gpffPC9Qcj
-	jDZBLt7LzeYgc5xzaL/xs+8N1/O7vCzenfWuVFOTNc/De+/VS7mf/up976tDW5caHDJGG99O
-	d1H7zFnX7LW1J1S9yiOzyZWbM5wud1+r3t1zpV1GKXf7ea4kFUq/fwBFmmt5JgUAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA2WTe0yTZxTGeb9bC67zGxT3Dl3UBjZls1IEPThRZJB924zTmP3DsmnBjzst
-	tgU3xa2hitoKsrCMiIyLbChFy7jIbbJ0TGCCAcSJwkCkcgkXZVJvVIRRm2Um++/J7zzPk5OT
-	HCHpel7gIYxRaHiVQh4vYVyotrmW/jWXTy+O9GmpxdCo3QCDl/Q0aA+nEXCkbp6C6iIDAfP9
-	owQ8rztKgnVwlIb8M5UM5HYcpuD5TQMD138YIuB+6jMKTPVHCBhutgigOr0UQWlqHwU1o08Y
-	MIwvA93FRwiGTlpo+LP4bwZmio0CGHhkoWAmYxGc0usIuGpIgNr+IQo6qzNoKD5xgYHMVhl0
-	1/QTcL0+l4FOcxsNI43pFGQW6kgYLpigoS+rmAJzQz4CS9kUAbr8aRJ01rsk2M610NCePk9C
-	jslIwq3MYQS/H/2VhqtlqQJ4nPcHCQ35WgqaC5ZApqmVgsdtkwiyJ2+Q0HXJE1ofzhPQXmml
-	wZq7CrLOVRHwy/GnAqjqiIVWWysBd5+MMjB/a0tQMHeuU09zvZZHJHe//Qri8s4f5E5rr1Gc
-	bcabqyrpITjD5XGSq8vpF3DVZi+uoCKJm20sF3AVxuMM11RygeDqBgO4zDNmtEMSJt2kUiZp
-	+BXRSrUmUPKZDHylsgCQ+voFSGXrNny+0ddfsnbzpr18fEwyr1q7eY80+my9jU4cefNLY4+7
-	FjVhPXIWYtYPZ1XcI+zalf0J4dG6IAdfhssf3qAd2g3PdusZPXJZ8DxAuKt3kHQEKhEeu7dG
-	j4RCivXEDyZc7Jhh38Udk30vLGJ2NT5mOkHbsyRbLsKTpR0vBm5sJH56exjZsyI2CPfMiB39
-	qQS2mCYYu0fEvoavnBqi7Jpkk3HXaBVj95PsUnx2TmjHzuxWPN1w/kUNZiX4SelHjpUPYevz
-	EZSJ3HJeKsp5qSjnvyIH9sa35saI/+F3cHHhBOnQgdhkmqIKkMCIxHySOiEqQS2TquUJ6iRF
-	lDRCmVCBFl6lunmmshbljT+QNiJCiBqR50LS8nNpJ/KgFEoFLxGLDEGiSFfRXvlXB3iVcrcq
-	KZ5XNyL/hRt+S3q4RygX/k6h2S1b7+Mv81sf4OMfsH6d5HXRh4nH5K5slFzDx/F8Iq/6N0cI
-	nT20hDnycGyJV1FwZ3jvJ92hPmNFtQerhftJ9++Wh8wu3pVxsm25Uwp6IyhoTfTN/V88e7/s
-	1dAPprZ8I2SvJYeL0UCY153YouTmwriQK9v2zWxJ+RgFGyt2BLZE6H5rWRU/5vv1vrGUKlXb
-	XJNm/MbAaienyqVnm840l2ybm56+/dcSMfcjfVQiUU0f8ah/ZpvYmnsgZaWS3VDh7hIbb3p4
-	aWMXH1a2fXuG/1vm6OzxwE3BF2MGQhMfo4aaOM+k/sqEzojsjZqVO3fHpb2X/L3x+p6BkGXh
-	l9OjonfODilS7rSko1emumTz4c4XdG+njZvF8qV1VdqaNgyLNtu8Pt11aMgz0jo7IKHU0XKZ
-	N6lSy/8BW/wH478EAAA=
-X-CMS-MailID: 20240405063548eucas1p1500de4f04b0d27fca8f29a1f02ce90b8
-X-Msg-Generator: CA
-X-RootMTR: 20240328195008eucas1p2fc32577c64a80424c10f30e4f69fc11a
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20240328195008eucas1p2fc32577c64a80424c10f30e4f69fc11a
-References: <20240328-jag-sysctl_remset_net-v2-4-52c9fad9a1af@samsung.com>
-	<CGME20240328195008eucas1p2fc32577c64a80424c10f30e4f69fc11a@eucas1p2.samsung.com>
-	<20240328194934.42278-1-kuniyu@amazon.com>
-	<20240403091625.lk35wt2iqkvabrmr@joelS2.panther.com>
+In-Reply-To: <ZguYw9Dke_uq5UZU@casper.infradead.org>
 
---w6pan44lwventsuw
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Tue, Apr 02, 2024 at 06:33:55AM +0100, Matthew Wilcox wrote:
+> On Fri, Mar 29, 2024 at 06:05:20PM +0100, Greg KH wrote:
+> > On Fri, Mar 29, 2024 at 02:34:43PM +0100, Greg KH wrote:
+> > > On Wed, Mar 27, 2024 at 02:10:10PM +0000, Matthew Wilcox wrote:
+> > > > On Wed, Mar 27, 2024 at 08:21:25AM -0400, Sasha Levin wrote:
+> > > > > The patch below does not apply to the 5.4-stable tree.
+> > > > > If someone wants it applied there, or to any other stable or longterm
+> > > > > tree, then please email the backport, including the original git commit
+> > > > > id to <stable@vger.kernel.org>.
+> > > > 
+> > > > Looks like you just need a little more fuzz on the patch.
+> > > > 
+> > > > diff --git a/kernel/bounds.c b/kernel/bounds.c
+> > > > index 9795d75b09b2..a94e3769347e 100644
+> > > > --- a/kernel/bounds.c
+> > > > +++ b/kernel/bounds.c
+> > > > @@ -19,7 +19,7 @@ int main(void)
+> > > >  	DEFINE(NR_PAGEFLAGS, __NR_PAGEFLAGS);
+> > > >  	DEFINE(MAX_NR_ZONES, __MAX_NR_ZONES);
+> > > >  #ifdef CONFIG_SMP
+> > > > -	DEFINE(NR_CPUS_BITS, ilog2(CONFIG_NR_CPUS));
+> > > > +	DEFINE(NR_CPUS_BITS, bits_per(CONFIG_NR_CPUS));
+> > > >  #endif
+> > > >  	DEFINE(SPINLOCK_SIZE, sizeof(spinlock_t));
+> > > >  	/* End of constants */
+> > > 
+> > > Now fuzzed, thanks.
+> > 
+> > But it breaks the build on 4.19.y, so I'll go drop it from there.  If
+> > you want it added there, please provide a working fix.
+> 
+> Looks like bits_per() didn't exist in 4.19.  It was added as part of commit 69842cba9ace84849bb9b8edcdf2cefccd97901c
+> Author: Patrick Bellasi <patrick.bellasi@arm.com>
+> Date:   Fri Jun 21 09:42:02 2019 +0100
+> 
+>     sched/uclamp: Add CPU's clamp buckets refcounting
+> 
+> Up to you; I can provide bits_per() to 4.19 which will aid backporting
+> other fixes (we currently have 17 uses of bits_per() in 6.9), or we can
+> just drop this whole thing for 4.19.
+> 
 
-On Wed, Apr 03, 2024 at 11:16:25AM +0200, Joel Granados wrote:
-> On Thu, Mar 28, 2024 at 12:49:34PM -0700, Kuniyuki Iwashima wrote:
-> > From: Joel Granados via B4 Relay <devnull+j.granados.samsung.com@kernel=
-=2Eorg>
-> > Date: Thu, 28 Mar 2024 16:40:05 +0100
-> > > This commit comes at the tail end of a greater effort to remove the
-> > > empty elements at the end of the ctl_table arrays (sentinels) which w=
-ill
-> > > reduce the overall build time size of the kernel and run time memory
-> > > bloat by ~64 bytes per sentinel (further information Link :
-> > > https://lore.kernel.org/all/ZO5Yx5JFogGi%2FcBo@bombadil.infradead.org=
-/)
-> > >=20
-> > > When we remove the sentinel from ax25_param_table a buffer overflow
-> > > shows its ugly head. The sentinel's data element used to be changed w=
-hen
-> > > CONFIG_AX25_DAMA_SLAVE was not defined.
-> >=20
-> > I think it's better to define the relation explicitly between the
-> > enum and sysctl table by BUILD_BUG_ON() in ax25_register_dev_sysctl()
-> >=20
-> >   BUILD_BUG_ON(AX25_MAX_VALUES !=3D ARRAY_SIZE(ax25_param_table));
-> >=20
-> > and guard AX25_VALUES_DS_TIMEOUT with #ifdef CONFIG_AX25_DAMA_SLAVE
-> > as done for other enum.
-> This is a great idea. I'll also try to look and see where else I can add
-> the explicit relation check.
->=20
-> Thx for the review
->=20
-> >=20
-> >=20
-> > > This did not have any adverse
-> > > effects as we still stopped on the sentinel because of its null
-> > > procname. But now that we do not have the sentinel element, we are
-> > > careful to check ax25_param_table's size.
-> > >=20
-> > > Signed-off-by: Joel Granados <j.granados@samsung.com>
-> > > ---
-> > >  net/ax25/sysctl_net_ax25.c | 4 +---
-> > >  1 file changed, 1 insertion(+), 3 deletions(-)
-> > >=20
-> > > diff --git a/net/ax25/sysctl_net_ax25.c b/net/ax25/sysctl_net_ax25.c
-> > > index db66e11e7fe8..e55be8817a1e 100644
-> > > --- a/net/ax25/sysctl_net_ax25.c
-> > > +++ b/net/ax25/sysctl_net_ax25.c
-> > > @@ -141,8 +141,6 @@ static const struct ctl_table ax25_param_table[] =
-=3D {
-> > >  		.extra2		=3D &max_ds_timeout
-> > >  	},
-> > >  #endif
-> > > -
-> > > -	{ }	/* that's all, folks! */
-> > >  };
-> > > =20
-> > >  int ax25_register_dev_sysctl(ax25_dev *ax25_dev)
-> > > @@ -155,7 +153,7 @@ int ax25_register_dev_sysctl(ax25_dev *ax25_dev)
-> > >  	if (!table)
-> > >  		return -ENOMEM;
-> > > =20
-> > > -	for (k =3D 0; k < AX25_MAX_VALUES; k++)
-> > > +	for (k =3D 0; k < AX25_MAX_VALUES && k < ARRAY_SIZE(ax25_param_tabl=
-e); k++)
-And with the BUILD_BUG_ON we don't need to do the `k <
-ARRAY_SIZE(ax25_param_table)` any longer. Win/win :)
+At this point in time for 4.19, unless it's really criticial, I would
+just say drop it.
 
-> > >  		table[k].data =3D &ax25_dev->values[k];
-> > > =20
-> > >  	snprintf(path, sizeof(path), "net/ax25/%s", ax25_dev->dev->name);
-> > >=20
-> > > --=20
-> > > 2.43.0
->=20
-> --=20
->=20
-> Joel Granados
+thanks,
 
-
-
---=20
-
-Joel Granados
-
---w6pan44lwventsuw
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQGzBAABCgAdFiEErkcJVyXmMSXOyyeQupfNUreWQU8FAmYNNoEACgkQupfNUreW
-QU/2xwv+MItPQYrz+S6dRg4Ai/4AcELCorzBdY4bODL7PVt21oRNRzkdPrq6w6ju
-ZFVkQH/WIICFHeGJ9RJGwF/e3xOzwTpg3GK0xE0s3YT4eO2R/dzV7LyIGklp7WT2
-bsnrm2zhkiKp7OZHIhHUze9HniHLvoBiJPVAMMe3YXMkEtrjxfqLOVNnyKxuHjdD
-1QuYwZvFvCXZt/1y0B/vvCeaq+hlNidK29TRRU0Bmqb4jE9WYTYtBkwxLDPw9mNo
-kZ3nbaxct86hWGyWHXS9mYjySkRbS2JqHXYoDV+u0S51ufVgo7crYSL9E93t0hu2
-O6wCfXcUw2vcypp/jivDaSw5x9ULQWg4ITiWl3wxxsaRjoUwVl7IfOk1nQYwOsCE
-K138v1DytuqhzXRyLYYf6yEfug89HG762oB0V3UAxqx6uYQlpc99DhP2ejynYco2
-Ae8GVoKvakSl5NpefEu2btStO3NdM9rueEYF77z5oIYhbkC0YnkyJZz6zDtMQY/M
-7yoIH3I9
-=Ju+L
------END PGP SIGNATURE-----
-
---w6pan44lwventsuw--
+greg k-h
