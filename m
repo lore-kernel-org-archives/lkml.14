@@ -1,57 +1,57 @@
-Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
+Received: from mail-lj1-f181.google.com (mail-lj1-f181.google.com [209.85.208.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20A40171090
-	for <linux-kernel@vger.kernel.org>; Fri,  5 Apr 2024 15:31:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C7A416FF30
+	for <linux-kernel@vger.kernel.org>; Fri,  5 Apr 2024 15:31:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712331069; cv=none; b=REwbkfG/SCoqjn59Akl2Igjywsk1W3h1JfTSjEJHe8OGjNNZen6x7pX00T6mTKwYoWzsmkYFbEYKDaVH+pzvDL0LwvgnXT/qmyD0zrTwchQuH31WeDSLPCAfZ9pQcnXYGRGXJaRO7pm/yZ5uhoyqammjBkXwdNXDXnMwN5YSRoI=
+	t=1712331088; cv=none; b=A50tWBLTBLu538Bn+Xw/4c0jsSvRyCwEiclVc/YxpFwiYhLDym+3VPI+CQ40/gSy4IalKb3InVF8tYELfMAqts5wAvmMbyX/UMLdASmfuW2hcMAl+wsTG849jNRJ4SwgpjQSiGYzFMZmO/4bVdxo2Hx/BzB2DTn9i98vnDezNWg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712331069; c=relaxed/simple;
-	bh=2Kt4SH2gGiz91yQulAqzYzGqZughTmXtdSCmlRBjfH4=;
+	s=arc-20240116; t=1712331088; c=relaxed/simple;
+	bh=cXC6o2KXoVoS1fxorVEDM5VMh0EzbI3z75qBmbAsSQ8=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Zx/x0ZtfE56EMbP1kDhUhtxhRShm6Y0ie409835RubknYXwrIv7EQF0aYn67J7vz6/r4DugD9t+Gyv/s0krLgPBLxJVYstVFqMnSir93qU1dooGeopdCPmreSj+2jMZqsamc1URFOHTki41Wx9Q92tfhLEXJlkqkDxQGK+Y6KkA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Y3RtmLph; arc=none smtp.client-ip=209.85.208.50
+	 MIME-Version; b=RN9bg7V8PYI0wTZGoQTsb5foRsW04QaMPjGE1UVEDOk2yxAVeYTJce3uwPnusbUh6ToNVPenqVYSvnZhh6G9HKcwnpw75HtGFLGv0XZ1bcG+y1KcAhAdi/nVi9SEzCPldZialWcGm5PXe75ielc7D2Dkvq6gU53o2mLk9Le5Zmg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=U2wu2uFK; arc=none smtp.client-ip=209.85.208.181
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Y3RtmLph"
-Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-56e37503115so345742a12.1
-        for <linux-kernel@vger.kernel.org>; Fri, 05 Apr 2024 08:31:07 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="U2wu2uFK"
+Received: by mail-lj1-f181.google.com with SMTP id 38308e7fff4ca-2d6eedf3e99so32931601fa.1
+        for <linux-kernel@vger.kernel.org>; Fri, 05 Apr 2024 08:31:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1712331066; x=1712935866; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1712331084; x=1712935884; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=f26+JW8g/Mxdh9BcUQdPk6EFgK15mePlKBpnnLhSmdE=;
-        b=Y3RtmLphm9Nnng82H+9/94NnAoLvx3YkqvkXZ7DWJqZAHH4G+ga8KQwHhu6KW1m/u7
-         hfVNRV4P6segm1+D9U5jN6NxZCCG+OQN9uEpyTIbxOE2HwGsD5Nf5DwjnK/cfq0yXDa/
-         F1nLVciiaevlmxNs3zTPL0Ye+qOknWtEeUTbxmfrGhuWPQwQcfeadbZY3YiyaqfSxl/s
-         dAf23sdlmgWaYtTK35X3bW5O/DIKQgPJr6kZhFzWgCKro0h6qbwufr455vG1FcC8GMRi
-         Fr1b7musirkOvZmrGn8AVd0jpExaPGUUCIN9P5MG+E62anKKTrdXb16qdYp4wa7bfwEN
-         WBEA==
+        bh=GLmSQbomn7jjoFYvGpaYKKjdNIRUVaXuPm21MTZkhWI=;
+        b=U2wu2uFK+r9nak6VfOD2tQ45SFekynxIZffe6Gh49zdOSPAXxeA09xwEFLFVi4YQT/
+         TX60cyd+qLr96QZXS/1wkSf/Jc55DHq6W/6ZZ4Ez6TaqVfpeyUGTr3zPneD4Gw9GHFMA
+         bk7aJXjkti2ami41yYCfcZ1j/5NpB1nfK1c8FHJYiuFDDrDH+0xY690aDFxgpnxszwVc
+         ITyXkeSaUkYakc8jo2O1g/m4kBhrIVP8PNDzSrtjORQX8sbygo6xr69P0oYzO8bCdjCq
+         M0LbTUjadcejn0yY/j94AByRPcTVVeEsskVMjaHhVPErFe1vn7lpVLvKji53c4cZ5G5Q
+         cFrg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712331066; x=1712935866;
+        d=1e100.net; s=20230601; t=1712331084; x=1712935884;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=f26+JW8g/Mxdh9BcUQdPk6EFgK15mePlKBpnnLhSmdE=;
-        b=TNPI7sMM9eRdty38K5XBWfqTGUyd9vFiOojC4kiJCu2IXLjCWC00DipH8LEZw7ERIj
-         09XhCtTtl3Y7943C0yIeVUrqtxLRBeGWFTnDV5R2OxiRiW8tqEPaFByarEOmLhhGxdMo
-         ijsrojolVN+znOW3V+/QCukbljoOeD5aQl+3+DYzwEM8k/ku/ZaKTI7IynOL1NjEPc5b
-         z7K6psfsqz8cmmdfP9/1FT2tFg6s1m9LYAPw/rsnbpcZEPiRyrkUWEC4l2lyjVFBqLJm
-         D2Azv3F9VqZGUpxAEOLcPQYxaVl2PhLI6odKptR/DjElVGoX8AB1PrMUH25Ww9JdETm1
-         BSyQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWJFqhjngk4lVxRxmOUWNDu20mAi8CiCtPrbcM7H3g5yEM2hc3q2phnUEKnZcfzKr8yC3J9NA3nj23LIDBbBZ8qZLZdOE3kmfiDfBmt
-X-Gm-Message-State: AOJu0Yy4raN5zhz/bmYxrtyqZhuqh3sOY+EFFwaNh4KATBnp1jMZq1a9
-	K0EnHm9wyz+5OVIhDIx6tAOOVN/RuBHOAoVPoMd/szIvL40DFDmn
-X-Google-Smtp-Source: AGHT+IEOoVbeSJ/OSUmQPcHN5mMxTwHjjaoROo5lfs6LhyW4u0ipSb8oGcAGiW5kwuMmalkC8ave+w==
-X-Received: by 2002:a50:f60b:0:b0:56c:3feb:8898 with SMTP id c11-20020a50f60b000000b0056c3feb8898mr1359874edn.3.1712331066460;
-        Fri, 05 Apr 2024 08:31:06 -0700 (PDT)
+        bh=GLmSQbomn7jjoFYvGpaYKKjdNIRUVaXuPm21MTZkhWI=;
+        b=c5WpP0IRzTvBCG/3Wo+95T135htblp6eIn2p53TZBi1c/jTK/lvLRHThEpqycsouq9
+         aE39wFVld9XtG27EQb0nndUtLOlMn39avpQZZG8tZGJg02gNVXxFNUySSGOvWNHnub3/
+         tWS52R6MldZ+Icc7w7upkya3AS0SQ/wEQUGElID9ywA6Fy59MEHwTnCZG30N0f7eo9hz
+         gwdRp8NgstGAsmuwlntrlGcitVI+7E1ijCR75wk1+B9pfOOravmY76mpikM5Vt4EZArL
+         WJTRlsX/MaxVCRqjPMTveRFjICwIKao2Rp76OUvr0k19Hw2GrX1jGfuKcfdDfbtszVPB
+         lhng==
+X-Forwarded-Encrypted: i=1; AJvYcCXY0UtnAi7Se7yGORNWdlUzKPyr2bAqbUyhMdr6g3a+5BSPKcT4OPTy/GTi0W0xSZMZPz3y4zsilNp1gf3KMqFy7LFyrhivOGWyym1d
+X-Gm-Message-State: AOJu0Yx5Qix5Y0OPkVSWPsS+j2R39aFVzcRm+nzDOdXy4n5y61isc1qz
+	EjZ7Q/J3ohQx2WPeMbrrc42HHifMbYd991D0HON1hDax2pmfOiahCmK6j1dWnPk=
+X-Google-Smtp-Source: AGHT+IE7RgZin2OZ+qw13032XMFBtJshqJC/13QOVSjiQyPWaNMLxo/xWtEHTWGKxvCq6iMC0ubYRQ==
+X-Received: by 2002:a05:6402:3716:b0:56d:c757:9379 with SMTP id ek22-20020a056402371600b0056dc7579379mr3103612edb.15.1712331064035;
+        Fri, 05 Apr 2024 08:31:04 -0700 (PDT)
 Received: from mosaic.enunes.eu (ip-78-45-66-209.bb.vodafone.cz. [78.45.66.209])
-        by smtp.gmail.com with ESMTPSA id ca19-20020aa7cd73000000b0056dfda8eef3sm906752edb.54.2024.04.05.08.31.05
+        by smtp.gmail.com with ESMTPSA id ca19-20020aa7cd73000000b0056dfda8eef3sm906752edb.54.2024.04.05.08.31.03
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 05 Apr 2024 08:31:05 -0700 (PDT)
+        Fri, 05 Apr 2024 08:31:03 -0700 (PDT)
 From: Erico Nunes <nunes.erico@gmail.com>
 To: Qiang Yu <yuq825@gmail.com>,
 	anarsoul@gmail.com,
@@ -66,9 +66,9 @@ Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
 	megi@xff.cz,
 	linux-kernel@vger.kernel.org,
 	Erico Nunes <nunes.erico@gmail.com>
-Subject: [PATCH v2 3/3] drm/lima: mask irqs in timeout path before hard reset
-Date: Fri,  5 Apr 2024 17:29:51 +0200
-Message-ID: <20240405152951.1531555-4-nunes.erico@gmail.com>
+Subject: [PATCH v2 1/3] drm/lima: add mask irq callback to gp and pp
+Date: Fri,  5 Apr 2024 17:29:49 +0200
+Message-ID: <20240405152951.1531555-2-nunes.erico@gmail.com>
 X-Mailer: git-send-email 2.44.0
 In-Reply-To: <20240405152951.1531555-1-nunes.erico@gmail.com>
 References: <20240405152951.1531555-1-nunes.erico@gmail.com>
@@ -80,54 +80,136 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-There is a race condition in which a rendering job might take just long
-enough to trigger the drm sched job timeout handler but also still
-complete before the hard reset is done by the timeout handler.
-This runs into race conditions not expected by the timeout handler.
-In some very specific cases it currently may result in a refcount
-imbalance on lima_pm_idle, with a stack dump such as:
-
-[10136.669170] WARNING: CPU: 0 PID: 0 at drivers/gpu/drm/lima/lima_devfreq.c:205 lima_devfreq_record_idle+0xa0/0xb0
-...
-[10136.669459] pc : lima_devfreq_record_idle+0xa0/0xb0
-...
-[10136.669628] Call trace:
-[10136.669634]  lima_devfreq_record_idle+0xa0/0xb0
-[10136.669646]  lima_sched_pipe_task_done+0x5c/0xb0
-[10136.669656]  lima_gp_irq_handler+0xa8/0x120
-[10136.669666]  __handle_irq_event_percpu+0x48/0x160
-[10136.669679]  handle_irq_event+0x4c/0xc0
-
-We can prevent that race condition entirely by masking the irqs at the
-beginning of the timeout handler, at which point we give up on waiting
-for that job entirely.
-The irqs will be enabled again at the next hard reset which is already
-done as a recovery by the timeout handler.
+This is needed because we want to reset those devices in device-agnostic
+code such as lima_sched.
+In particular, masking irqs will be useful before a hard reset to
+prevent race conditions.
 
 Signed-off-by: Erico Nunes <nunes.erico@gmail.com>
-Reviewed-by: Qiang Yu <yuq825@gmail.com>
 ---
- drivers/gpu/drm/lima/lima_sched.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+ drivers/gpu/drm/lima/lima_bcast.c | 12 ++++++++++++
+ drivers/gpu/drm/lima/lima_bcast.h |  3 +++
+ drivers/gpu/drm/lima/lima_gp.c    |  8 ++++++++
+ drivers/gpu/drm/lima/lima_pp.c    | 18 ++++++++++++++++++
+ drivers/gpu/drm/lima/lima_sched.h |  1 +
+ 5 files changed, 42 insertions(+)
 
-diff --git a/drivers/gpu/drm/lima/lima_sched.c b/drivers/gpu/drm/lima/lima_sched.c
-index 66841503a618..bbf3f8feab94 100644
---- a/drivers/gpu/drm/lima/lima_sched.c
-+++ b/drivers/gpu/drm/lima/lima_sched.c
-@@ -430,6 +430,13 @@ static enum drm_gpu_sched_stat lima_sched_timedout_job(struct drm_sched_job *job
- 		return DRM_GPU_SCHED_STAT_NOMINAL;
- 	}
+diff --git a/drivers/gpu/drm/lima/lima_bcast.c b/drivers/gpu/drm/lima/lima_bcast.c
+index fbc43f243c54..6d000504e1a4 100644
+--- a/drivers/gpu/drm/lima/lima_bcast.c
++++ b/drivers/gpu/drm/lima/lima_bcast.c
+@@ -43,6 +43,18 @@ void lima_bcast_suspend(struct lima_ip *ip)
  
-+	/*
-+	 * The task might still finish while this timeout handler runs.
-+	 * To prevent a race condition on its completion, mask all irqs
-+	 * on the running core until the next hard reset completes.
-+	 */
-+	pipe->task_mask_irq(pipe);
+ }
+ 
++int lima_bcast_mask_irq(struct lima_ip *ip)
++{
++	bcast_write(LIMA_BCAST_BROADCAST_MASK, 0);
++	bcast_write(LIMA_BCAST_INTERRUPT_MASK, 0);
++	return 0;
++}
 +
- 	if (!pipe->error)
- 		DRM_ERROR("%s job timeout\n", lima_ip_name(ip));
++int lima_bcast_reset(struct lima_ip *ip)
++{
++	return lima_bcast_hw_init(ip);
++}
++
+ int lima_bcast_init(struct lima_ip *ip)
+ {
+ 	int i;
+diff --git a/drivers/gpu/drm/lima/lima_bcast.h b/drivers/gpu/drm/lima/lima_bcast.h
+index 465ee587bceb..cd08841e4787 100644
+--- a/drivers/gpu/drm/lima/lima_bcast.h
++++ b/drivers/gpu/drm/lima/lima_bcast.h
+@@ -13,4 +13,7 @@ void lima_bcast_fini(struct lima_ip *ip);
  
+ void lima_bcast_enable(struct lima_device *dev, int num_pp);
+ 
++int lima_bcast_mask_irq(struct lima_ip *ip);
++int lima_bcast_reset(struct lima_ip *ip);
++
+ #endif
+diff --git a/drivers/gpu/drm/lima/lima_gp.c b/drivers/gpu/drm/lima/lima_gp.c
+index 6b354e2fb61d..e15295071533 100644
+--- a/drivers/gpu/drm/lima/lima_gp.c
++++ b/drivers/gpu/drm/lima/lima_gp.c
+@@ -233,6 +233,13 @@ static void lima_gp_task_mmu_error(struct lima_sched_pipe *pipe)
+ 	lima_sched_pipe_task_done(pipe);
+ }
+ 
++static void lima_gp_task_mask_irq(struct lima_sched_pipe *pipe)
++{
++	struct lima_ip *ip = pipe->processor[0];
++
++	gp_write(LIMA_GP_INT_MASK, 0);
++}
++
+ static int lima_gp_task_recover(struct lima_sched_pipe *pipe)
+ {
+ 	struct lima_ip *ip = pipe->processor[0];
+@@ -365,6 +372,7 @@ int lima_gp_pipe_init(struct lima_device *dev)
+ 	pipe->task_error = lima_gp_task_error;
+ 	pipe->task_mmu_error = lima_gp_task_mmu_error;
+ 	pipe->task_recover = lima_gp_task_recover;
++	pipe->task_mask_irq = lima_gp_task_mask_irq;
+ 
+ 	return 0;
+ }
+diff --git a/drivers/gpu/drm/lima/lima_pp.c b/drivers/gpu/drm/lima/lima_pp.c
+index d0d2db0ef1ce..a4a2ffe6527c 100644
+--- a/drivers/gpu/drm/lima/lima_pp.c
++++ b/drivers/gpu/drm/lima/lima_pp.c
+@@ -429,6 +429,9 @@ static void lima_pp_task_error(struct lima_sched_pipe *pipe)
+ 
+ 		lima_pp_hard_reset(ip);
+ 	}
++
++	if (pipe->bcast_processor)
++		lima_bcast_reset(pipe->bcast_processor);
+ }
+ 
+ static void lima_pp_task_mmu_error(struct lima_sched_pipe *pipe)
+@@ -437,6 +440,20 @@ static void lima_pp_task_mmu_error(struct lima_sched_pipe *pipe)
+ 		lima_sched_pipe_task_done(pipe);
+ }
+ 
++static void lima_pp_task_mask_irq(struct lima_sched_pipe *pipe)
++{
++	int i;
++
++	for (i = 0; i < pipe->num_processor; i++) {
++		struct lima_ip *ip = pipe->processor[i];
++
++		pp_write(LIMA_PP_INT_MASK, 0);
++	}
++
++	if (pipe->bcast_processor)
++		lima_bcast_mask_irq(pipe->bcast_processor);
++}
++
+ static struct kmem_cache *lima_pp_task_slab;
+ static int lima_pp_task_slab_refcnt;
+ 
+@@ -468,6 +485,7 @@ int lima_pp_pipe_init(struct lima_device *dev)
+ 	pipe->task_fini = lima_pp_task_fini;
+ 	pipe->task_error = lima_pp_task_error;
+ 	pipe->task_mmu_error = lima_pp_task_mmu_error;
++	pipe->task_mask_irq = lima_pp_task_mask_irq;
+ 
+ 	return 0;
+ }
+diff --git a/drivers/gpu/drm/lima/lima_sched.h b/drivers/gpu/drm/lima/lima_sched.h
+index 6bd4f3b70109..85b23ba901d5 100644
+--- a/drivers/gpu/drm/lima/lima_sched.h
++++ b/drivers/gpu/drm/lima/lima_sched.h
+@@ -80,6 +80,7 @@ struct lima_sched_pipe {
+ 	void (*task_error)(struct lima_sched_pipe *pipe);
+ 	void (*task_mmu_error)(struct lima_sched_pipe *pipe);
+ 	int (*task_recover)(struct lima_sched_pipe *pipe);
++	void (*task_mask_irq)(struct lima_sched_pipe *pipe);
+ 
+ 	struct work_struct recover_work;
+ };
 -- 
 2.44.0
 
