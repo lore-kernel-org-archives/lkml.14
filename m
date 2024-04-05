@@ -1,135 +1,261 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE83D1799D;
-	Fri,  5 Apr 2024 02:47:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 94B4422616;
+	Fri,  5 Apr 2024 02:47:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712285236; cv=none; b=RNVfV7oWeDijXIycDOMv7+pZrZVE6HAwH3WxgOJMaRPAPlYs+HkXYRXbdbNFzYnSXoNPxTrI4FX98O2T4ddWWiTXOgaEo1woC5upHstLnmW1vqRBZ1ok/krJ4QgGdkCcyKNC2+Bi3iIsqFFQ8yiV8e5qb6OnPw5klhqb1/R1mjM=
+	t=1712285242; cv=none; b=RAEz5NlyGXYNBbAipkwc23JHNgfbR93S7J+OxS/8gkBNhurFpzGjg0WQQ/OtBCgVIIZ02bXT1U5pNHu4CX+ykYThafF9+q4imOoWQUeWVTkYXI68W5rux/X0Z4v+CMSoo0pSZ1cIj9KNmJGqHBsiz9fRQet8LQRZbgMtMJaUZF4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712285236; c=relaxed/simple;
-	bh=wBv65L9hzKyYfs1C1huLb7fG9q+nSSzcBwhEwfzOwG8=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=iDVKE/C73p4GlEdxq8spaLYPRw+Ym8GbmgQ+/l3Ur8sjKXR41PvPZEPJN/Giq8PaOvyCJPdFkpo/OgGDhKL4NDBwroDsrTT6rsNAhpHv+bqZv9vtot7Y7Af9SVvF6m8clGeeG/E36ZMdJWpgp4claBv6YKpGzhP0hzqMhOt52PA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=dbBRh/0z; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="dbBRh/0z"
-Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 4351rhNg002845;
-	Fri, 5 Apr 2024 02:47:09 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	date:from:to:cc:subject:message-id:references:mime-version
-	:content-type:in-reply-to; s=qcppdkim1; bh=uZmR3IxZAMghnqIZ+nWXT
-	+Q4Kb5D1wfuQ7GlN09EhNU=; b=dbBRh/0zZxfNQSXst9iYqGxEBuCRISQhOyALi
-	XrxBkIZOAh2KwBzEgJEa8WIujoqfe2NdMXMOJY1G8ig2ePnWmmHkIRUB73ag6JiM
-	OiFL7BwOZMlrYSF9F5SVW3NNe/JCenoEnZNub0wya+enHtKAXNksznbdSFL07ev9
-	zCP40tHWepTIy9m4Fma9+NoarBA0ro68zXJ1sn2NtArZMbdAXPbgWqk6VO8UUopj
-	J9nC7lLHmnKnxFdHk6j9pwN5f/37ZUHZ80iXiZLYneLeuueXrCXwcn+ULen0O2yN
-	g6Wdd69UyFuCiRfFdDkI4zwvQbw3/rwsPgmSF8xl6yj+BuU5Q==
-Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3xa4ej8cjf-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 05 Apr 2024 02:47:09 +0000 (GMT)
-Received: from nalasex01c.na.qualcomm.com (nalasex01c.na.qualcomm.com [10.47.97.35])
-	by NALASPPMTA05.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 4352l8ON027698
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 5 Apr 2024 02:47:08 GMT
-Received: from hu-bjorande-lv.qualcomm.com (10.49.16.6) by
- nalasex01c.na.qualcomm.com (10.47.97.35) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.4; Thu, 4 Apr 2024 19:47:08 -0700
-Date: Thu, 4 Apr 2024 19:47:06 -0700
-From: Bjorn Andersson <quic_bjorande@quicinc.com>
-To: jianbin zhang <quic_jianbinz@quicinc.com>
-CC: Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio
-	<konrad.dybcio@linaro.org>,
-        Alexandre Belloni
-	<alexandre.belloni@bootlin.com>,
-        <linux-arm-msm@vger.kernel.org>, <linux-rtc@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH V4 2/2] rtc-pm8xxx: Correct the value written into the
- PM8xxx_RTC_ALARM_CLEAR
-Message-ID: <Zg9mKnPrhTTNafdb@hu-bjorande-lv.qualcomm.com>
-References: <20240401-fix-rtc-alarm-which-fired-before-driver-probe-not-be-cleard-v1-0-aab2cd6ddab8@quicinc.com>
- <20240401-fix-rtc-alarm-which-fired-before-driver-probe-not-be-cleard-v1-2-aab2cd6ddab8@quicinc.com>
+	s=arc-20240116; t=1712285242; c=relaxed/simple;
+	bh=JwC7YAnWyfiHK6XtAKEvLgWXV6GQ33AAA/cq7RvWPC8=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=GQW0K2Y5hOazEEx9Y11/HEuT6RQsqMl9r41hhTid5dwbzsY3aF3Rwp97yRo8ZZrf/c0BXG9LXx6GacvsVnxRTY+ABTA1P1NupTCusBFnKDCe79l6QZJzDoZshknm/YsERi1w3TDIGxrtwW5qr2FH0UaDpL0vIi4VBLkKeLqgxV8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 64B6BFEC;
+	Thu,  4 Apr 2024 19:47:50 -0700 (PDT)
+Received: from a077893.blr.arm.com (a077893.blr.arm.com [10.162.41.6])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 28F0E3F766;
+	Thu,  4 Apr 2024 19:47:13 -0700 (PDT)
+From: Anshuman Khandual <anshuman.khandual@arm.com>
+To: linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	will@kernel.org,
+	catalin.marinas@arm.com,
+	mark.rutland@arm.com
+Cc: Anshuman Khandual <anshuman.khandual@arm.com>,
+	Mark Brown <broonie@kernel.org>,
+	James Clark <james.clark@arm.com>,
+	Rob Herring <robh@kernel.org>,
+	Marc Zyngier <maz@kernel.org>,
+	Suzuki Poulose <suzuki.poulose@arm.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	linux-perf-users@vger.kernel.org,
+	Jonathan Corbet <corbet@lwn.net>,
+	Oliver Upton <oliver.upton@linux.dev>,
+	linux-doc@vger.kernel.org
+Subject: [PATCH V17 4/9] arm64/boot: Enable EL2 requirements for BRBE
+Date: Fri,  5 Apr 2024 08:16:34 +0530
+Message-Id: <20240405024639.1179064-5-anshuman.khandual@arm.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20240405024639.1179064-1-anshuman.khandual@arm.com>
+References: <20240405024639.1179064-1-anshuman.khandual@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20240401-fix-rtc-alarm-which-fired-before-driver-probe-not-be-cleard-v1-2-aab2cd6ddab8@quicinc.com>
-X-ClientProxiedBy: nalasex01c.na.qualcomm.com (10.47.97.35) To
- nalasex01c.na.qualcomm.com (10.47.97.35)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: vOj5pO2_65fYxxyJEZhV-k4xuJhsRmMy
-X-Proofpoint-GUID: vOj5pO2_65fYxxyJEZhV-k4xuJhsRmMy
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-04-05_01,2024-04-04_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- phishscore=0 clxscore=1015 adultscore=0 mlxlogscore=999 malwarescore=0
- impostorscore=0 spamscore=0 mlxscore=0 lowpriorityscore=0 bulkscore=0
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2404010003 definitions=main-2404050019
+Content-Transfer-Encoding: 8bit
 
-On Mon, Apr 01, 2024 at 09:56:30AM +0800, jianbin zhang wrote:
-> Writing 1 to the PM8xxx_RTC_ALARM_CLEAR register is expected to clear
-> the triggered alarm status. In patch v2, the value written to the
+Fine grained trap control for BRBE registers, and instructions access need
+to be configured in HDFGRTR_EL2, HDFGWTR_EL2 and HFGITR_EL2 registers when
+kernel enters at EL1 but EL2 is present. This changes __init_el2_fgt() as
+required.
 
-I'm not sure what "in patch v2" refers to here.
+Similarly cycle and mis-prediction capture need to be enabled in BRBCR_EL1
+and BRBCR_EL2 when the kernel enters either into EL1 or EL2. This adds new
+__init_el2_brbe() to achieve this objective.
 
-Also, as with patch 1, please fix your subject line and use internal
-review list.
+This also updates Documentation/arch/arm64/booting.rst with all the above
+EL2 along with MDRC_EL3.SBRBE requirements.
 
-Regards,
-Bjorn
+First this replaces an existing hard encoding (1 << 62) with corresponding
+applicable macro HDFGRTR_EL2_nPMSNEVFR_EL1_MASK.
 
-> PM8xxx_RTC_ALARM_CLEAR register in the trigger function is incorrectly
-> written as 0. So correct the value written to PM8xxx_RTC_ALARM_CLEAR
-> register into 1.
-> 
-> Signed-off-by: jianbin zhang <quic_jianbinz@quicinc.com>
-> ---
-> Changess in v4:
-> - add the cover letter
-> - modify the patch to conform to the specification
-> 
-> Changes in v3:
-> - Correct the value written into the PM8xxx_RTC_ALARM_CLEAR to 1.
-> - link: https://lore.kernel.org/linux-rtc/20240319191216.GB3796206@hu-bjorande-lv.qualcomm.com/T/#t
-> 
-> Changes in v2:
-> - Switch to using regmap_update_bits() instead of open coding
->   read-modify-write accesses.
-> - link: https://lore.kernel.org/lkml/20230202155448.6715-4-johan+linaro@kernel.org/
-> 
-> Changes in v1:
-> -link: https://lore.kernel.org/linux-rtc/20230126142057.25715-4-johan+linaro@kernel.org/
-> ---
->  drivers/rtc/rtc-pm8xxx.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/rtc/rtc-pm8xxx.c b/drivers/rtc/rtc-pm8xxx.c
-> index e4e2307445cf..806c99cdac9a 100644
-> --- a/drivers/rtc/rtc-pm8xxx.c
-> +++ b/drivers/rtc/rtc-pm8xxx.c
-> @@ -391,7 +391,7 @@ static irqreturn_t pm8xxx_alarm_trigger(int irq, void *dev_id)
->  
->  	/* Clear alarm status */
->  	rc = regmap_update_bits(rtc_dd->regmap, regs->alarm_ctrl2,
-> -				PM8xxx_RTC_ALARM_CLEAR, 0);
-> +				PM8xxx_RTC_ALARM_CLEAR, 1);
->  	if (rc)
->  		return IRQ_NONE;
->  
-> 
-> -- 
-> 2.43.2
-> 
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Will Deacon <will@kernel.org>
+Cc: Jonathan Corbet <corbet@lwn.net>
+Cc: Marc Zyngier <maz@kernel.org>
+Cc: Oliver Upton <oliver.upton@linux.dev>
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-doc@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+----
+Changes in V17:
+
+- New patch added in the series
+- Separated out from the BRBE driver implementation patch
+- Dropped the comment in __init_el2_brbe()
+- Updated __init_el2_brbe() with BRBCR_EL2.MPRED requirements
+- Updated __init_el2_brbe() with __check_hvhe() constructs
+- Updated booting.rst regarding MPRED, MDCR_EL3 and fine grained control
+
+ Documentation/arch/arm64/booting.rst | 26 ++++++++
+ arch/arm64/include/asm/el2_setup.h   | 90 +++++++++++++++++++++++++++-
+ 2 files changed, 113 insertions(+), 3 deletions(-)
+
+diff --git a/Documentation/arch/arm64/booting.rst b/Documentation/arch/arm64/booting.rst
+index b57776a68f15..512210da7dd2 100644
+--- a/Documentation/arch/arm64/booting.rst
++++ b/Documentation/arch/arm64/booting.rst
+@@ -349,6 +349,32 @@ Before jumping into the kernel, the following conditions must be met:
+ 
+     - HWFGWTR_EL2.nSMPRI_EL1 (bit 54) must be initialised to 0b01.
+ 
++  For CPUs with feature Branch Record Buffer Extension (FEAT_BRBE):
++
++  - If the kernel is entered at EL2 and EL1 is present:
++
++    - BRBCR_EL1.CC (bit 3) must be initialised to 0b1.
++    - BRBCR_EL1.MPRED (bit 4) must be initialised to 0b1.
++
++  - If the kernel is entered at EL1 and EL2 is present:
++
++    - BRBCR_EL2.CC (bit 3) must be initialised to 0b1.
++    - BRBCR_EL2.MPRED (bit 4) must be initialised to 0b1.
++
++    - HDFGRTR_EL2.nBRBDATA (bit 61) must be initialised to 0b1.
++    - HDFGRTR_EL2.nBRBCTL  (bit 60) must be initialised to 0b1.
++    - HDFGRTR_EL2.nBRBIDR  (bit 59) must be initialised to 0b1.
++
++    - HDFGWTR_EL2.nBRBDATA (bit 61) must be initialised to 0b1.
++    - HDFGWTR_EL2.nBRBCTL  (bit 60) must be initialised to 0b1.
++
++    - HFGITR_EL2.nBRBIALL (bit 56) must be initialised to 0b1.
++    - HFGITR_EL2.nBRBINJ  (bit 55) must be initialised to 0b1.
++
++  - If EL3 is present:
++
++    - MDCR_EL3.SBRBE (bits 33:32) must be initialised to 0b11.
++
+   For CPUs with the Scalable Matrix Extension FA64 feature (FEAT_SME_FA64):
+ 
+   - If EL3 is present:
+diff --git a/arch/arm64/include/asm/el2_setup.h b/arch/arm64/include/asm/el2_setup.h
+index b7afaa026842..7c12a8e658d4 100644
+--- a/arch/arm64/include/asm/el2_setup.h
++++ b/arch/arm64/include/asm/el2_setup.h
+@@ -154,6 +154,41 @@
+ .Lskip_set_cptr_\@:
+ .endm
+ 
++#ifdef CONFIG_ARM64_BRBE
++/*
++ * Enable BRBE cycle count and miss-prediction
++ *
++ * BRBE requires both BRBCR_EL1.CC and BRBCR_EL2.CC fields, be set
++ * for the cycle counts to be available in BRBINF<N>_EL1.CC during
++ * branch record processing after a PMU interrupt. This enables CC
++ * field on both these registers while still executing inside EL2.
++ *
++ * BRBE driver would still be able to toggle branch records cycle
++ * count support via BRBCR_EL1.CC field regardless of whether the
++ * kernel ends up executing in EL1 or EL2.
++ *
++ * The same principle applies for branch record mis-prediction info
++ * as well, thus requiring MPRED field to be set on both BRBCR_EL1
++ * and BRBCR_EL2 while still executing inside EL2.
++ */
++.macro __init_el2_brbe
++	mrs	x1, id_aa64dfr0_el1
++	ubfx	x1, x1, #ID_AA64DFR0_EL1_BRBE_SHIFT, #4
++	cbz	x1, .Lskip_brbe_\@
++
++	mov_q	x0, BRBCR_ELx_CC | BRBCR_ELx_MPRED
++	msr_s	SYS_BRBCR_EL2, x0
++
++	__check_hvhe .Lset_brbe_nvhe_\@, x1
++	msr_s	SYS_BRBCR_EL12, x0	// VHE
++	b	.Lskip_brbe_\@
++
++.Lset_brbe_nvhe_\@:
++	msr_s	SYS_BRBCR_EL1, x0	// NVHE
++.Lskip_brbe_\@:
++.endm
++#endif /* CONFIG_ARM64_BRBE */
++
+ /* Disable any fine grained traps */
+ .macro __init_el2_fgt
+ 	mrs	x1, id_aa64mmfr0_el1
+@@ -161,16 +196,48 @@
+ 	cbz	x1, .Lskip_fgt_\@
+ 
+ 	mov	x0, xzr
++	mov	x2, xzr
+ 	mrs	x1, id_aa64dfr0_el1
+ 	ubfx	x1, x1, #ID_AA64DFR0_EL1_PMSVer_SHIFT, #4
+ 	cmp	x1, #3
+ 	b.lt	.Lset_debug_fgt_\@
++
+ 	/* Disable PMSNEVFR_EL1 read and write traps */
+-	orr	x0, x0, #(1 << 62)
++	orr	x0, x0, #HDFGRTR_EL2_nPMSNEVFR_EL1_MASK
++	orr	x2, x2, #HDFGWTR_EL2_nPMSNEVFR_EL1_MASK
+ 
+ .Lset_debug_fgt_\@:
++#ifdef CONFIG_ARM64_BRBE
++	mrs	x1, id_aa64dfr0_el1
++	ubfx	x1, x1, #ID_AA64DFR0_EL1_BRBE_SHIFT, #4
++	cbz	x1, .Lskip_brbe_reg_fgt_\@
++
++	/*
++	 * Disable read traps for the following registers
++	 *
++	 * [BRBSRC|BRBTGT|RBINF]_EL1
++	 * [BRBSRCINJ|BRBTGTINJ|BRBINFINJ|BRBTS]_EL1
++	 */
++	orr	x0, x0, #HDFGRTR_EL2_nBRBDATA_MASK
++
++	/*
++	 * Disable write traps for the following registers
++	 *
++	 * [BRBSRCINJ|BRBTGTINJ|BRBINFINJ|BRBTS]_EL1
++	 */
++	orr	x2, x2, #HDFGWTR_EL2_nBRBDATA_MASK
++
++	/* Disable read and write traps for [BRBCR|BRBFCR]_EL1 */
++	orr	x0, x0, #HDFGRTR_EL2_nBRBCTL_MASK
++	orr	x2, x2, #HDFGWTR_EL2_nBRBCTL_MASK
++
++	/* Disable read traps for BRBIDR_EL1 */
++	orr	x0, x0, #HDFGRTR_EL2_nBRBIDR_MASK
++
++.Lskip_brbe_reg_fgt_\@:
++#endif /* CONFIG_ARM64_BRBE */
+ 	msr_s	SYS_HDFGRTR_EL2, x0
+-	msr_s	SYS_HDFGWTR_EL2, x0
++	msr_s	SYS_HDFGWTR_EL2, x2
+ 
+ 	mov	x0, xzr
+ 	mrs	x1, id_aa64pfr1_el1
+@@ -193,7 +260,21 @@
+ .Lset_fgt_\@:
+ 	msr_s	SYS_HFGRTR_EL2, x0
+ 	msr_s	SYS_HFGWTR_EL2, x0
+-	msr_s	SYS_HFGITR_EL2, xzr
++	mov	x0, xzr
++#ifdef CONFIG_ARM64_BRBE
++	mrs	x1, id_aa64dfr0_el1
++	ubfx	x1, x1, #ID_AA64DFR0_EL1_BRBE_SHIFT, #4
++	cbz	x1, .Lskip_brbe_insn_fgt_\@
++
++	/* Disable traps for BRBIALL instruction */
++	orr	x0, x0, #HFGITR_EL2_nBRBIALL_MASK
++
++	/* Disable traps for BRBINJ instruction */
++	orr	x0, x0, #HFGITR_EL2_nBRBINJ_MASK
++
++.Lskip_brbe_insn_fgt_\@:
++#endif /* CONFIG_ARM64_BRBE */
++	msr_s	SYS_HFGITR_EL2, x0
+ 
+ 	mrs	x1, id_aa64pfr0_el1		// AMU traps UNDEF without AMU
+ 	ubfx	x1, x1, #ID_AA64PFR0_EL1_AMU_SHIFT, #4
+@@ -228,6 +309,9 @@
+ 	__init_el2_nvhe_idregs
+ 	__init_el2_cptr
+ 	__init_el2_fgt
++#ifdef CONFIG_ARM64_BRBE
++	__init_el2_brbe
++#endif
+ .endm
+ 
+ #ifndef __KVM_NVHE_HYPERVISOR__
+-- 
+2.25.1
+
