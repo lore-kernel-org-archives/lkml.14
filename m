@@ -1,109 +1,70 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from www262.sakura.ne.jp (www262.sakura.ne.jp [202.181.97.72])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60D1116EBEB;
-	Fri,  5 Apr 2024 14:28:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DA6716EC02
+	for <linux-kernel@vger.kernel.org>; Fri,  5 Apr 2024 14:28:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.181.97.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712327309; cv=none; b=XaVcdKOhCzVjDwmXeGdDv2RGWzk8hlfOieXsFp9+x7GrwYoW3RMxfYL0DrdwO5+RRwokk4ewgR7izDBCzmwIBq/bliHD/LfYKWl8z/GeboCMW5lxJ1hdTzCX2Jd0TRLM9abvF3cPU0fl2BSfDfr2xoUCMK59lxsJcebMvgvIKZM=
+	t=1712327336; cv=none; b=CMkJepTU64kUi5MI5fp+WgMCucEuSOhwoclqEqbfPd9miRHPSIduFYpWqeGSoSH7ugwJ3SpDsWrvCx4VRnLAYCHltpvyMgmTCkSsjVSxLeLi+9cvvCR64hvpz3WKFbqzmiMXVFLsQqhyWKAApn09vVj/8TKNJ/ow6AOnEODKvfk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712327309; c=relaxed/simple;
-	bh=F4cLYa35bs+vGQ3otj+tZ+gR8cVZxKEOwbRS5rXqeIs=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=cce405HXDMmHtqzY8Zk+bcMCdT7wBMCrQ0St7Rvf6te5RfVNrQiTMrkXBo439aInO3Q+jL1PoDXp2Mmei5UmLIgTfVRb5x7g1TCvd5dT35HXPScP01o7i9HiyGKnsyHRDBw02KLqMWpY4lSqcEkggMBPnC0xMUyuwNVKP/Hi7QY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UTWuCqC+; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UTWuCqC+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 59386C433C7;
-	Fri,  5 Apr 2024 14:28:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712327308;
-	bh=F4cLYa35bs+vGQ3otj+tZ+gR8cVZxKEOwbRS5rXqeIs=;
-	h=From:To:Cc:Subject:Date:From;
-	b=UTWuCqC+8b5MhYjP6DSeqxRKQ8lNjzTxo8BjDSmC4rmygV3ZmHxeuDm6taFnHcTLi
-	 I3dGLOh5C6e97Zb6AG0LIKKU5OrERSHoIrSBNkCmvXd1VzouW2o34NswRB0KaKQfch
-	 dfnUFI8zg5l3QUUFil45D2OE/oZpiqQTl199EicMVz0YDf8RjEPDnTRCYJGgjRVrUH
-	 tEiDM1SSouzBnlpDBgNaBxG6Nw2xaXul6MyNyqeeeoCpVh1uytcuZft19Nk6RmHCUl
-	 EUeFw/49COhyba0lkwpOcAS9CKMVoHLsrcBDNK5UNwUNeAVj4SblpxmNujB+5qd7z0
-	 /ieUcQTLuWqtg==
-From: Arnd Bergmann <arnd@kernel.org>
-To: Andi Shyti <andi.shyti@kernel.org>,
-	Wim Van Sebroeck <wim@linux-watchdog.org>,
-	Guenter Roeck <linux@roeck-us.net>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	Wolfram Sang <wsa+renesas@sang-engineering.com>
-Cc: Arnd Bergmann <arnd@arndb.de>,
-	Jarkko Nikula <jarkko.nikula@linux.intel.com>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Jean Delvare <jdelvare@suse.de>,
-	linux-i2c@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-watchdog@vger.kernel.org
-Subject: [PATCH] i2c: i801: add I2C_MUX dependency
-Date: Fri,  5 Apr 2024 16:27:43 +0200
-Message-Id: <20240405142823.615609-1-arnd@kernel.org>
-X-Mailer: git-send-email 2.39.2
+	s=arc-20240116; t=1712327336; c=relaxed/simple;
+	bh=ZKPxNyJ/POC7lEeU2rV6nn5Qm8glSbPgLQjlLHnJ+L8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=AqhZhKf3QJu4MJ4EYZCMJVtp0iKtpiZ6ceUonvR+t3HZieMWFLBisH16WNMoqVWet9JUoiu4h7rhxTx8rWUh02eSRF33771anhwqsQcJyDYoxtJbxqtYFbdboj6/RPwjuVXwyRHJQgaoXNI3OSoIi8i4Vj+mXUn323QQvRrIng4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=I-love.SAKURA.ne.jp; spf=pass smtp.mailfrom=I-love.SAKURA.ne.jp; arc=none smtp.client-ip=202.181.97.72
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=I-love.SAKURA.ne.jp
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=I-love.SAKURA.ne.jp
+Received: from fsav411.sakura.ne.jp (fsav411.sakura.ne.jp [133.242.250.110])
+	by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id 435ESKvB018214;
+	Fri, 5 Apr 2024 23:28:21 +0900 (JST)
+	(envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
+Received: from www262.sakura.ne.jp (202.181.97.72)
+ by fsav411.sakura.ne.jp (F-Secure/fsigk_smtp/550/fsav411.sakura.ne.jp);
+ Fri, 05 Apr 2024 23:28:20 +0900 (JST)
+X-Virus-Status: clean(F-Secure/fsigk_smtp/550/fsav411.sakura.ne.jp)
+Received: from [192.168.1.6] (M106072142033.v4.enabler.ne.jp [106.72.142.33])
+	(authenticated bits=0)
+	by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id 435ESKSm018210
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NO);
+	Fri, 5 Apr 2024 23:28:20 +0900 (JST)
+	(envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
+Message-ID: <0b49d91b-511f-449e-b7c3-93b2ccce6c49@I-love.SAKURA.ne.jp>
+Date: Fri, 5 Apr 2024 23:28:20 +0900
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [syzbot] [hardening?] [mm?] BUG: bad usercopy in fpa_set
+Content-Language: en-US
+To: "Russell King (Oracle)" <linux@armlinux.org.uk>,
+        Kees Cook <keescook@chromium.org>
+Cc: Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        syzbot <syzbot+cb76c2983557a07cdb14@syzkaller.appspotmail.com>,
+        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
+References: <0000000000004cf5c205faf1c7f3@google.com>
+ <dcf54740-7cc3-4017-ad1b-8626a22fc15e@I-love.SAKURA.ne.jp>
+ <Zg1/1xbmrY4yDfhO@shell.armlinux.org.uk>
+From: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+In-Reply-To: <Zg1/1xbmrY4yDfhO@shell.armlinux.org.uk>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-From: Arnd Bergmann <arnd@arndb.de>
+On 2024/04/04 1:12, Russell King (Oracle) wrote:
+> Therefore, there is _no way_ for fpa_set() to overwrite anything
+> outside of thread_info->fpstate, because sizeof(struct user_fp)
+> is smaller than sizeof(thread->fpstate).
+> 
+> Syzbot appears to be wrong in this instance.
+> 
 
-When I2C_MUX is a loadable module but I2C_I801 is built-in, the newly
-added notifier function causes a link error:
+Thanks for clarification.
 
-x86_64-linux-ld: drivers/i2c/busses/i2c-i801.o: in function `i801_notifier_call':
-i2c-i801.c:(.text+0x1f5): undefined reference to `i2c_root_adapter'
-
-This code is only built if I2C_MUX_GPIO is also enabled, so add a
-conditional dependency that allows building the driver as before if the
-GPIO part is disabled, but otherwise require the linker dependency at
-Kconfig level.
-
-With the added dependency, the driver cannot be selected by a builtin
-ITCO_WDT driver when I2C_MUX_GPIO is a loadable module, so remove
-the 'select' statement in that driver as well. This was apparently
-never needed at compile-time, and the watchdog driver just needs either
-the LPC or the I2C drivers, but never both.
-
-Configurations that rely on the implied 'select' from the watchdog
-driver now need to enable all three.
-
-Fixes: 71b494e043d2 ("i2c: i801: Call i2c_register_spd for muxed child segments")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- drivers/i2c/busses/Kconfig | 1 +
- drivers/watchdog/Kconfig   | 2 --
- 2 files changed, 1 insertion(+), 2 deletions(-)
-
-diff --git a/drivers/i2c/busses/Kconfig b/drivers/i2c/busses/Kconfig
-index 1872f1995c77..2619018dd756 100644
---- a/drivers/i2c/busses/Kconfig
-+++ b/drivers/i2c/busses/Kconfig
-@@ -108,6 +108,7 @@ config I2C_HIX5HD2
- config I2C_I801
- 	tristate "Intel 82801 (ICH/PCH)"
- 	depends on PCI
-+	depends on I2C_MUX || I2C_MUX_GPIO=n
- 	select P2SB if X86
- 	select CHECK_SIGNATURE if X86 && DMI
- 	select I2C_SMBUS
-diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
-index 0b0df3fe1efd..4dfb3773e6e2 100644
---- a/drivers/watchdog/Kconfig
-+++ b/drivers/watchdog/Kconfig
-@@ -1301,8 +1301,6 @@ config ITCO_WDT
- 	select WATCHDOG_CORE
- 	depends on I2C || I2C=n
- 	depends on MFD_INTEL_PMC_BXT || !MFD_INTEL_PMC_BXT
--	select LPC_ICH if !EXPERT
--	select I2C_I801 if !EXPERT && I2C
- 	help
- 	  Hardware driver for the intel TCO timer based watchdog devices.
- 	  These drivers are included in the Intel 82801 I/O Controller
--- 
-2.39.2
+I came to suspect that commit 08626a6056aa ("arm: Implement thread_struct
+whitelist for hardened usercopy") missed that ptrace(PTRACE_SETFPREGS)
+needs to declare a usercopy whitelist. It seems to me that
+https://syzkaller.appspot.com/text?tag=Patch&x=14c42099180000 can fix
+this problem, but I'm not sure whether this is safe/correct. Can you check?
 
