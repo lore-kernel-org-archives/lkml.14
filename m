@@ -1,107 +1,83 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84F014C627;
-	Fri,  5 Apr 2024 06:09:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47978288D7;
+	Fri,  5 Apr 2024 06:09:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712297355; cv=none; b=Xn7ZqqMU3+QykJzzrkA1ihusIofkQhI3GpwH6rwDcE7IpPDWkIKEtCgkhMtGw//c+JW4lQMcX1AgbKgpV68IlfLRX2kIYPumy4E/AemKLuz/CK+Fz8Sopp8I5FpyD1F4acl1kcnujYfcgaF1WxmjbgLlhePsaa1lVddKENBUBr0=
+	t=1712297356; cv=none; b=V/BQXtHjfOgUvhKgDM+ZpZBYndkpCL0jNKB5OkeW4yA19eyXm/QLHYqZOfsSZUpnCpfm4iIezMefkn7BdybdmTbAMJmGZWr1XK8RlDqqvAHkmNJFZmjgLUnssfQ/jLL6na0x+T1qAmRd8BicGKnOccvasATqardg4C3YI4qRVCY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712297355; c=relaxed/simple;
-	bh=5+bhGaEEsgnXQkvvlI11yrFLziNuirM9WUE4o2kU49s=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=PKI4O354IR1vnReQe9YR+GgQsqnZ2qTWjuofFHH4ps6z+t9eEoZ2giNyH2EvInEP5YfzkCkp80NUOko0wSXf4IwBhZOJlP6C/PkBVXiHqb58EVlibZ5exzPnenwTTXWBRvoxde7T3gH9tep9gKNce3U1qOOPugCBFYpkEaXkbb0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SR5IkoVW; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1712297356; c=relaxed/simple;
+	bh=Ax4sJ6lM/7okBNB/kwtUl/CrqrB9SAf0EvUEBFTadgA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Bc9RgnpYlJ1XnfPmK5osm2ysBKujQBcEwqTq4sdfQn860v20gBT+xcuNxtIFynvEgP3wYfuUTVtqlv3TkDN+7c+iTAs5uAHHsrn8lLFtuX1rWw/Wrkzf89rd9UCs5xvhxdIbYmGQj4QGsJbB4NIcrA2HiVEzWxAgO5Ui26+2jMc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=2DxURgT2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SR5IkoVW"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 202EDC433F1;
-	Fri,  5 Apr 2024 06:09:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712297355;
-	bh=5+bhGaEEsgnXQkvvlI11yrFLziNuirM9WUE4o2kU49s=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=SR5IkoVWCThIz/IBG4dzQ2NMBOZgCa6oO3mHsRDzKtpnJI73i/leg0yhmXB/ELmoo
-	 k4tJVUb5AYY5fzBvjdbtoGwC7z571VIunje+PC3+0xHmQUzw1S6C2e1HyoVJpEGRR/
-	 GNdgND2effh9za7S8E1C7Ho5IKLUTJyHiRL8kaa9hlKzm05fpge3Gyi4OWord4zqVo
-	 hF7fwsJ+JIfygO36D2ObOsvpI8Nb8t5wTYEyhZIsd+9e++sd170qbM9glC/WnukVk6
-	 NvpxDyXWqS5ONegWMu11GvD322p2uJ6xULNYpFWk9xYyaDnPE17xrmxCMyAdOrAPeC
-	 9+F2fxqtatrpg==
-From: "Jiri Slaby (SUSE)" <jirislaby@kernel.org>
-To: gregkh@linuxfoundation.org
-Cc: linux-serial@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	"Jiri Slaby (SUSE)" <jirislaby@kernel.org>,
-	Richard Genoud <richard.genoud@gmail.com>,
-	Nicolas Ferre <nicolas.ferre@microchip.com>,
-	Alexandre Belloni <alexandre.belloni@bootlin.com>,
-	Claudiu Beznea <claudiu.beznea@tuxon.dev>,
-	linux-arm-kernel@lists.infradead.org
-Subject: [PATCH 14/15] tty: atmel_serial: define macro for RX size
-Date: Fri,  5 Apr 2024 08:08:25 +0200
-Message-ID: <20240405060826.2521-15-jirislaby@kernel.org>
-X-Mailer: git-send-email 2.44.0
-In-Reply-To: <20240405060826.2521-1-jirislaby@kernel.org>
-References: <20240405060826.2521-1-jirislaby@kernel.org>
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="2DxURgT2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6FED3C43394;
+	Fri,  5 Apr 2024 06:09:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1712297356;
+	bh=Ax4sJ6lM/7okBNB/kwtUl/CrqrB9SAf0EvUEBFTadgA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=2DxURgT2rBCom3wbTDMzwKzGgTgPDVe5D2b7G7NxfCNQQ3fCaK6mmf/X+xy9oAt6Q
+	 zk+Y0PoCPYdVT8g2/0OfOHrQE8nseBbcmIF8jZrLDcRI/hnOkO6zd+HHMZ74fx9xe+
+	 SrkaI5YuK6qAH1itk0CtCTT4h9U9RcxVzLw73V/4=
+Date: Fri, 5 Apr 2024 08:09:12 +0200
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Arnd Bergmann <arnd@kernel.org>
+Cc: Arnd Bergmann <arnd@arndb.de>, Luis Chamberlain <mcgrof@kernel.org>,
+	linux-modules@vger.kernel.org,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Jens Axboe <axboe@kernel.dk>,
+	"Ricardo B. Marliere" <ricardo@marliere.net>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] [v3] module: don't ignore sysfs_create_link() failures
+Message-ID: <2024040558-animation-express-1ae1@gregkh>
+References: <20240326145733.3413024-1-arnd@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240326145733.3413024-1-arnd@kernel.org>
 
-It is repeated in the code and there is also a big warning by
-ATMEL_SERIAL_RINGSIZE. So define ATMEL_SERIAL_RX_SIZE and use it
-appropriatelly.
+On Tue, Mar 26, 2024 at 03:57:18PM +0100, Arnd Bergmann wrote:
+> From: Arnd Bergmann <arnd@arndb.de>
+> 
+> The sysfs_create_link() return code is marked as __must_check, but the
+> module_add_driver() function tries hard to not care, by assigning the
+> return code to a variable. When building with 'make W=1', gcc still
+> warns because this variable is only assigned but not used:
+> 
+> drivers/base/module.c: In function 'module_add_driver':
+> drivers/base/module.c:36:6: warning: variable 'no_warn' set but not used [-Wunused-but-set-variable]
+> 
+> Rework the code to properly unwind and return the error code to the
+> caller. My reading of the original code was that it tries to
+> not fail when the links already exist, so keep ignoring -EEXIST
+> errors.
+> 
+> Cc: Luis Chamberlain <mcgrof@kernel.org>
+> Cc: linux-modules@vger.kernel.org
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: "Rafael J. Wysocki" <rafael@kernel.org>
+> Fixes: e17e0f51aeea ("Driver core: show drivers in /sys/module/")
+> See-also: 4a7fb6363f2d ("add __must_check to device management code")
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> ---
+> v3: make error handling stricter, add unwinding,
+>      fix build fail with CONFIG_MODULES=n
+> v2: rework to actually handle the error. I have not tested the
+>     error handling beyond build testing, so please review carefully.
+> ---
+>  drivers/base/base.h   |  9 ++++++---
+>  drivers/base/bus.c    |  9 ++++++++-
+>  drivers/base/module.c | 42 +++++++++++++++++++++++++++++++-----------
+>  3 files changed, 45 insertions(+), 15 deletions(-)
 
-The macro uses array_size() and kmalloc_array() is switched to
-kmalloc().
-
-Signed-off-by: Jiri Slaby (SUSE) <jirislaby@kernel.org>
-Cc: Richard Genoud <richard.genoud@gmail.com>
-Cc: Nicolas Ferre <nicolas.ferre@microchip.com>
-Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc: Claudiu Beznea <claudiu.beznea@tuxon.dev>
-Cc: linux-arm-kernel@lists.infradead.org
----
- drivers/tty/serial/atmel_serial.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
-
-diff --git a/drivers/tty/serial/atmel_serial.c b/drivers/tty/serial/atmel_serial.c
-index 69ec80ffc97b..5cde5077c429 100644
---- a/drivers/tty/serial/atmel_serial.c
-+++ b/drivers/tty/serial/atmel_serial.c
-@@ -96,7 +96,9 @@ struct atmel_uart_char {
-  * can contain up to 1024 characters in PIO mode and up to 4096 characters in
-  * DMA mode.
-  */
--#define ATMEL_SERIAL_RINGSIZE 1024
-+#define ATMEL_SERIAL_RINGSIZE	1024
-+#define ATMEL_SERIAL_RX_SIZE	array_size(sizeof(struct atmel_uart_char), \
-+					   ATMEL_SERIAL_RINGSIZE)
- 
- /*
-  * at91: 6 USARTs and one DBGU port (SAM9260)
-@@ -1208,7 +1210,7 @@ static int atmel_prepare_rx_dma(struct uart_port *port)
- 	BUG_ON(!PAGE_ALIGNED(ring->buf));
- 	sg_set_page(&atmel_port->sg_rx,
- 		    virt_to_page(ring->buf),
--		    sizeof(struct atmel_uart_char) * ATMEL_SERIAL_RINGSIZE,
-+		    ATMEL_SERIAL_RX_SIZE,
- 		    offset_in_page(ring->buf));
- 	nent = dma_map_sg(port->dev,
- 			  &atmel_port->sg_rx,
-@@ -2947,9 +2949,7 @@ static int atmel_serial_probe(struct platform_device *pdev)
- 
- 	if (!atmel_use_pdc_rx(&atmel_port->uart)) {
- 		ret = -ENOMEM;
--		data = kmalloc_array(ATMEL_SERIAL_RINGSIZE,
--				     sizeof(struct atmel_uart_char),
--				     GFP_KERNEL);
-+		data = kmalloc(ATMEL_SERIAL_RX_SIZE, GFP_KERNEL);
- 		if (!data)
- 			goto err_clk_disable_unprepare;
- 		atmel_port->rx_ring.buf = data;
--- 
-2.44.0
-
+Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
