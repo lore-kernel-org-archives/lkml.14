@@ -1,124 +1,125 @@
-Received: from e3i57.smtp2go.com (e3i57.smtp2go.com [158.120.84.57])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1C4116FF39
-	for <linux-kernel@vger.kernel.org>; Fri,  5 Apr 2024 15:29:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=158.120.84.57
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59E4516FF47;
+	Fri,  5 Apr 2024 15:29:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712330971; cv=none; b=WQ9NbAalmj2GDb4F7H65IyYEH/EEo6JHYJHxU9j4PxCgBdtwtGzLSOyRybOx1Av1PNF7MnUaQLduDphrD8tIvL1ofuh1VcO590e5J4nPt8YLBPJkZS5D8nmGqu+V/FG6dBrfR70IIpwXSGrGR23KOaNxJpeUxtaP8+yrTtxj1Mg=
+	t=1712330979; cv=none; b=OpwaL2hCfJOc/aqNneKbN7YGr0TQYTSAsRJNellJd7puep7kJHLzMpMUKZFBjKOOayc5mWYqKuWrDMbaKUBHBv29zn6KN6s9JuoVGuVwUlcfTdwlMyCUSOWbbo3d4UWfnEHl/yQLTHr2sTCOMCbMws0ltaRKP/MByYmBdObLOyI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712330971; c=relaxed/simple;
-	bh=B/Y9KFHnGrgSCyRy0/AylRmUryM/Ly5WlXGcNe5R6y8=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=UjImXB5O6VVQNeBWwCfzkix+dYTHh8CbJFrfYXycYxZfXmkq0Mt8/FUH5eMBByTOflnTlLkrGrmfjThGLuOciEocPTIF6DiVfp6+Sy+4m9wZ5NWuRv8hoFDXuiHb98bpzLr1wNEuLYyrLoZsfu9E3M+c2dHxx1pxAnBnsWWbxR8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=asem.it; spf=pass smtp.mailfrom=em1174574.asem.it; dkim=pass (2048-bit key) header.d=smtpcorp.com header.i=@smtpcorp.com header.b=reXmQLxG; dkim=pass (2048-bit key) header.d=asem.it header.i=@asem.it header.b=ltGt4Jk3; arc=none smtp.client-ip=158.120.84.57
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=asem.it
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=em1174574.asem.it
+	s=arc-20240116; t=1712330979; c=relaxed/simple;
+	bh=5VRbHJIvszzptc9rXnIqoakhk4Y/8V4MlYQ1nZayw50=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=SZhoW69VXmuTs5kkfqDWBm9GxLJ49bUhf1HAn75nWaKmonVfNxSFldJbY1Lptkg2MwBsPk0qKFH/krOlVtCgHy0SH9emlLGP8128OP4eJuseqY37IFp+ZZlRTMmhO5ZHKjB6O3lqZU7a4AeV7fNyBTSu8zQuDmszksSuGTL+E2Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=trnWmx4l; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=smtpcorp.com header.i=@smtpcorp.com header.b="reXmQLxG";
-	dkim=pass (2048-bit key) header.d=asem.it header.i=@asem.it header.b="ltGt4Jk3"
-Received: from [10.86.249.198] (helo=asas054.asem.intra)
-	by smtpcorp.com with esmtpa (Exim 4.96.1-S2G)
-	(envelope-from <f.suligoi@asem.it>)
-	id 1rslV3-04gIYl-1T;
-	Fri, 05 Apr 2024 15:29:05 +0000
-Received: from flavio-x.asem.intra ([172.16.18.47]) by asas054.asem.intra with Microsoft SMTPSVC(10.0.14393.4169);
-	 Fri, 5 Apr 2024 17:29:01 +0200
-From: Flavio Suligoi <f.suligoi@asem.it>
-To: Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	Jose Abreu <joabreu@synopsys.com>,
-	"David S . Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konrad.dybcio@linaro.org>,
-	Giuseppe Cavallaro <peppe.cavallaro@st.com>
-Cc: netdev@vger.kernel.org,
-	linux-stm32@st-md-mailman.stormreply.com,
-	linux-arm-kernel@lists.infradead.org,
-	devicetree@vger.kernel.org,
-	imx@lists.linux.dev,
-	linux-arm-msm@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Flavio Suligoi <f.suligoi@asem.it>
-Subject: [PATCH 5/6] arm64: dts: qcom: sa8540p-ride: remove tx-sched-sp property
-Date: Fri,  5 Apr 2024 17:27:59 +0200
-Message-Id: <20240405152800.638461-6-f.suligoi@asem.it>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240405152800.638461-1-f.suligoi@asem.it>
-References: <20240405152800.638461-1-f.suligoi@asem.it>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="trnWmx4l"
+Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 435EvwLl009043;
+	Fri, 5 Apr 2024 15:29:31 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : content-transfer-encoding : mime-version; s=pp1;
+ bh=oFe/WebQcvfKeDqTd4X6IDbnNxnThHpUT2URrKMxakI=;
+ b=trnWmx4lNVm+sHVEP43gMwrbWVqntQ+B7ygvG42mU4Z9hQWv/R0rLa58hvSIiP3JEiAs
+ JaBmwpgU/C3RaZ3NKq4YSui5y5DbuoPBR84MmhJFXMMkN4ieCdnJAg1ovUGaeHdVUzyo
+ L0ES/Xcu5VfxjjynFnpLqSwIWXQz8XPjS75clLdBkCGeSfUg9Yr2LhcHt/LswnZZSUpj
+ 2OyaQSXkCK1PoO3rrmg6S1MJZM1O8Qp0V5qixcSWAnnexe70U08YTeldypuQjtJ53Dqj
+ kD4LAsSorctRM6tHJVgkJYSv+vSAF5WRfUG5RH/xirkCuugwouvm1YJoCcgx52coUyWa yA== 
+Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3xakgu83py-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 05 Apr 2024 15:29:30 +0000
+Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma12.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 435D7GTE007708;
+	Fri, 5 Apr 2024 15:29:30 GMT
+Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
+	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 3x9epwu90g-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 05 Apr 2024 15:29:29 +0000
+Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
+	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 435FTOos14745964
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 5 Apr 2024 15:29:26 GMT
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 936B12006C;
+	Fri,  5 Apr 2024 15:29:24 +0000 (GMT)
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 72C6B20040;
+	Fri,  5 Apr 2024 15:29:24 +0000 (GMT)
+Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
+	by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Fri,  5 Apr 2024 15:29:24 +0000 (GMT)
+From: Niklas Schnelle <schnelle@linux.ibm.com>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jirislaby@kernel.org>,
+        =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: linux-serial@vger.kernel.org, Arnd Bergmann <arnd@kernel.org>,
+        Heiko Carstens <hca@linux.ibm.com>, linux-kernel@vger.kernel.org,
+        Niklas Schnelle <schnelle@linux.ibm.com>
+Subject: [PATCH 0/1] tty: Handle HAS_IOPORT dependencies
+Date: Fri,  5 Apr 2024 17:29:23 +0200
+Message-Id: <20240405152924.252598-1-schnelle@linux.ibm.com>
+X-Mailer: git-send-email 2.40.1
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: PmB-YRW4Zn-ztXJCbnXD0pRA-O1SuGOs
+X-Proofpoint-ORIG-GUID: PmB-YRW4Zn-ztXJCbnXD0pRA-O1SuGOs
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-UnRewURL: 0 URL was un-rewritten
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-OriginalArrivalTime: 05 Apr 2024 15:29:01.0719 (UTC) FILETIME=[FC6F5270:01DA876D]
-X-smtpcorp-track: 1rs_V304gmY_1T.EuMFjfTvPRcpq
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=smtpcorp.com;
- i=@smtpcorp.com; q=dns/txt; s=a1-4; t=1712330947; h=feedback-id :
- x-smtpcorp-track : date : message-id : to : subject : from : reply-to
- : sender : list-unsubscribe;
- bh=6HGwCVZ1ZliNjksUiz6WB6FukgOBYyF3KdLTYEIBNkQ=;
- b=reXmQLxGBgxroutnpgzOHJS2YB4puln2N/DVwvpWafCpVbpTqR4fbcPZuldCnzJ/UED+0
- 6pf3QZBgP/Dje21U+6+RF9ZrJnd3gTe4ChoEdXvzvIARUFKA6/X8jfxQ74/+Lo+gZrX/eUd
- WL7+ABvhtfjegGSR/vSRRJ31i7mg+RfHdpPvtoiFORmDf1B1ZkfQ+yBll176MCxKc+21OoW
- pDXND7VJqqGUh23sQgkl1aBfqBzyPD9o3GLJXlVUgvSorTfVX8pZ8ZToxlaKBahA44XLY6G
- KBFlBdN5CkxOTyTa07y6r5OsqIMBM90wNA/kvDAfJBfi5DMJGk7nRIbirzjA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=asem.it;
- i=@asem.it; q=dns/txt; s=s1174574; t=1712330947; h=from : subject : to
- : message-id : date; bh=6HGwCVZ1ZliNjksUiz6WB6FukgOBYyF3KdLTYEIBNkQ=;
- b=ltGt4Jk3FUdS/luWLMsWvoNhsCBkH+B0RIh51ZArshaizhETiAMiGWpvER0pViVXaM9Yn
- ai5At9O+uKPbDomdEDvm6yMT6v6DAP0PvNPxxE5oIERqSeLJVWy1si/vdPyUV3xbZ8ZjMgK
- CzfuLmT1Mfv4SiXj8UFGtIVpMmmwAbRcABY6c1c20gQF79P2nUc4F9Rh1RxXU7jaWxp10Ph
- UWv8jCGwsdjmuvYGxW4KcaGmZhejPA32zW8r62Voq/b8+/7MSqp0r6x2NiUia2CC2UsNmTo
- i7U2fycfQf2E6qjfUajSanQmWPssW1Kx52sFPLBpdZnQ/f62pJ8wAnxkxdFg==
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-04-05_16,2024-04-05_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ adultscore=0 mlxlogscore=999 mlxscore=0 lowpriorityscore=0 suspectscore=0
+ malwarescore=0 impostorscore=0 spamscore=0 clxscore=1011 bulkscore=0
+ phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2404010000 definitions=main-2404050111
 
-The property "tx-sched-sp" no longer exists, as it was removed from the
-file:
+Hi Greg, Jiri, Ilpo,
 
-drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c
+This is a follow up in my ongoing effort of making inb()/outb() and
+similar I/O port accessors compile-time optional. Previously I sent this
+as a treewide series titled "treewide: Remove I/O port accessors for
+HAS_IOPORT=n" with the latest being its 5th version[0]. With a significant
+subset of patches merged I've changed over to per-subsystem series. These
+series are stand alone and should be merged via the relevant tree such
+that with all subsystems complete we can follow this up with the final
+patch that will make the I/O port accessors compile-time optional.
 
-by the commit:
+The current state of the full series with changes to the remaining subsystems
+and the aforementioned final patch can be found for your convenience on my
+git.kernel.org tree in the has_ioport branch[1]. As for compile-time vs runtime
+see Linus' reply to my first attempt[2].
 
-commit aed6864035b1 ("net: stmmac: platform: Delete a redundant condition
-branch")
+The patch was previously acked[3] by Greg but given this was almost
+a year ago and didn't apply then I didn't carry the Ack over. That said
+I don't think there were non trivial changes.
 
-Signed-off-by: Flavio Suligoi <f.suligoi@asem.it>
----
- arch/arm64/boot/dts/qcom/sa8540p-ride.dts | 2 --
- 1 file changed, 2 deletions(-)
+Thanks,
+Niklas
 
-diff --git a/arch/arm64/boot/dts/qcom/sa8540p-ride.dts b/arch/arm64/boot/dts/qcom/sa8540p-ride.dts
-index 177b9dad6ff7..11663cf81e45 100644
---- a/arch/arm64/boot/dts/qcom/sa8540p-ride.dts
-+++ b/arch/arm64/boot/dts/qcom/sa8540p-ride.dts
-@@ -225,7 +225,6 @@ queue3 {
- 
- 	ethernet0_mtl_tx_setup: tx-queues-config {
- 		snps,tx-queues-to-use = <1>;
--		snps,tx-sched-sp;
- 
- 		queue0 {
- 			snps,dcb-algorithm;
-@@ -302,7 +301,6 @@ queue3 {
- 
- 	ethernet1_mtl_tx_setup: tx-queues-config {
- 		snps,tx-queues-to-use = <1>;
--		snps,tx-sched-sp;
- 
- 		queue0 {
- 			snps,dcb-algorithm;
+[0] https://lore.kernel.org/all/20230522105049.1467313-1-schnelle@linux.ibm.com/
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/niks/linux.git/log/?h=has_ioport
+[2] https://lore.kernel.org/lkml/CAHk-=wg80je=K7madF4e7WrRNp37e3qh6y10Svhdc7O8SZ_-8g@mail.gmail.com/
+[3] https://lore.kernel.org/all/2023053050-prodigal-shine-4d1c@gregkh/
+
+Niklas Schnelle (1):
+  tty: serial: handle HAS_IOPORT dependencies
+
+ drivers/tty/Kconfig                  |  4 +--
+ drivers/tty/serial/8250/8250_early.c |  4 +++
+ drivers/tty/serial/8250/8250_pci.c   | 14 ++++++++++
+ drivers/tty/serial/8250/8250_port.c  | 42 +++++++++++++++++++++++-----
+ drivers/tty/serial/8250/Kconfig      |  7 ++---
+ drivers/tty/serial/Kconfig           |  2 +-
+ 6 files changed, 59 insertions(+), 14 deletions(-)
+
 -- 
-2.34.1
+2.40.1
 
