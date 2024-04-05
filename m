@@ -1,150 +1,140 @@
-Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BC8416F0D3
-	for <linux-kernel@vger.kernel.org>; Fri,  5 Apr 2024 14:15:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA7B116EBE7;
+	Fri,  5 Apr 2024 14:16:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712326536; cv=none; b=Wk66UdIAhbSvGF27wLpXC4vmbI4CrHmpwRhdknh5aua/zT1iT709bpgawSkvDmutQkXwnR6RREzvFys7Huf1Jz6XIoaaWU6Dd+EP50Kk7kGU2pUhasYT4Onq6RFchr9sq3VeGLfIVdMkr53eowI+NFHmLPh3AEEjpImf8t/UIEU=
+	t=1712326614; cv=none; b=dRSh12XzcWHE05/19wA4h8QYCPFxqS5ED7x0w9ZzEkx12VAA3NkixJZggucSA10/GxpXCr1ARjlDRrao7bHFC8Q0suNn5oaEpTT1Xo2gPxtJ05ZbK0A1yy8RaFgontFegBERcqw2wG965PVcfZThIld2pj2WCnJFcRu2V74aIm0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712326536; c=relaxed/simple;
-	bh=i4Tr+nVq+Xi4RO9+q//9cew+LkXLU25d9j5EEYLNZ0w=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=XmoTCjvLThMe/PtUpUgOgw9PnlzDXwWNZQ8cp9/Q20SyleQRFZRr/EDxSenNT+cUfPQMaeZ+P32MaDBsTEZ2UcOrpg0eIQyVSfK+LhLuN++G0qwpnuhWyxT3i1FFXGF0awaRNs5Y+mJq20eH/CTmJfv0CeVwnXLLjmvkT2AwjB4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--panikiel.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=yCIY2Y5r; arc=none smtp.client-ip=209.85.128.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--panikiel.bounces.google.com
+	s=arc-20240116; t=1712326614; c=relaxed/simple;
+	bh=Hw+KO3P+18sZHmzC74dpfmnZvcgIJNwH7PxzRg8kCyw=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=ZP1gtl251Y5fagcCCYW1zga/0jfcDuwW1cgvYYgFvOqsHU6cQ29zQiF1LWsJF2WVkYbw3Fegi1t0U4Pz88Wu52EO0NqpU2irwVNU5XqFy5XFQCVzE/Mclkp56yld33lm3+Nvgvi6WxWj/hh7DOFnBFkfIKzGcGa4nPJw6k0GigU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NLcxvN8D; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="yCIY2Y5r"
-Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-60a61b31993so36780037b3.1
-        for <linux-kernel@vger.kernel.org>; Fri, 05 Apr 2024 07:15:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1712326534; x=1712931334; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=zsDOfX+3b1RUaLhcJa3oIsCx6Cf2GznngtDV1SnNmvI=;
-        b=yCIY2Y5r52Kg6SeycmYxCmlYo5begxTNog5Kx0TJ9ixkHE7TKjqSHA6Ykf72dzaucG
-         fYUsOsB7xI2/Lp8dPDQxyitXD+hKdadvHKdreDk03wTWvegycvnnQjysvhOYd+GmNsJM
-         V9INDvqTjD6zRrL1UW3oVrRwAyVStaq89EU2rLASAn4InIOBcK9XUKm64D7zObIAPVT7
-         +KDf2U0j1fJXvQZ9EI4wj4PkXVmfYySLWw921dCyKovkc0JlgyxyAMVugJreVfC8K6+J
-         41LVyunD7aJBqE0+iKbMHbJOz3IsO3XgHc8nHPNZUCuxYx74dTJV0yRqaiYug50wnzoc
-         13Eg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712326534; x=1712931334;
-        h=content-transfer-encoding:cc:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=zsDOfX+3b1RUaLhcJa3oIsCx6Cf2GznngtDV1SnNmvI=;
-        b=dZxE7JgrwutEmjkX0ffme9uj+EH4icf8+tHf9e78K+59FJT6MPhKkyEdwJA29IGBv8
-         JMQ4aZT7Nnj3FPJ/cyjRRclTFG7gaCP43EOB04eFLpqaB24q3OTiBZeXFG0//cdN5SOO
-         vke9NIJ8uc3WlztbaRchzUW6GlywVycbzsKdtJhcZfjfeE87I4sINPbGoAOrUDcaQJPw
-         QAlG3thNARnR/Lg3ubHYQ10CjLC7TU66xxH3Gn2VaYkupwk3ZB5AOGdZSytTigvO2rbe
-         2la1EzZg76e6ahpf6KFUFA8PW2Uu1jdQqsBMiTrIwV9gT0CqUJIb9HdJYFoLIKSntz3n
-         o8Iw==
-X-Forwarded-Encrypted: i=1; AJvYcCXIIJCTnQtvH8AecAKR9A+ynbthBjSTx8WjF9tRSGsZBl3wL4lWZaEK+21OlziAObXgWY/QJXw6mwrnTzwT4Y5wwzbbXCV/rxcmNIJe
-X-Gm-Message-State: AOJu0YzrImmr0kxumqx4yoLiP+jsARWHaLBJVmz8Bav8dXYZHptENgC9
-	JwA6c0zdKuWUkRZNHSbsBiJnMHmIPMeYtgCjwEyELc/SlfamFDWSnL9W1qeenHuNldoc+jGsWax
-	oX68Cbi/uoA==
-X-Google-Smtp-Source: AGHT+IEazU1D3+af0NVMWywuHy/ujQAr1fDtXw2VNn2XTE2hgtIiqfvfx0Pk6JxWWw8zhjW8vAbmO2PrbYxeKw==
-X-Received: from szatan.c.googlers.com ([fda3:e722:ac3:cc00:28:9cb1:c0a8:2d83])
- (user=panikiel job=sendgmr) by 2002:a81:6c92:0:b0:617:cb4f:a5df with SMTP id
- h140-20020a816c92000000b00617cb4fa5dfmr370403ywc.3.1712326534377; Fri, 05 Apr
- 2024 07:15:34 -0700 (PDT)
-Date: Fri,  5 Apr 2024 14:14:11 +0000
-In-Reply-To: <20240405141411.1807189-1-panikiel@google.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NLcxvN8D"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C5D8CC433F1;
+	Fri,  5 Apr 2024 14:16:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1712326613;
+	bh=Hw+KO3P+18sZHmzC74dpfmnZvcgIJNwH7PxzRg8kCyw=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=NLcxvN8DTCyS38Wo2c8q90q/2MoZExiascd6YXu8KFmC45GJekv4kw9UWrhP5O+n0
+	 T4xoLBCSAvDVEYvlrPQBTILTQwRgV33CHfTCNI7qRQM7BYrkuE03OQOLgno/wn77Hr
+	 PESugZv29avchfZsAMS7s+RgIUgsP4Oo55AJ5wVwthZ7azQ+bkK9VOK4bnmL9SeDKc
+	 1DW+tMTj256yPD6wXa43Wc+15PNllkAGj03SBSKmJkJyZ4+hPiynM7vGxR5en1wli/
+	 jky8B6fJI7vZ5nZqRQjLt+hBOkkkZ2VwAF70r1CsG/RVx+y3YKum8iJy4svQONVsyM
+	 VcZaxRzX6q6pg==
+From: =?utf-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn@kernel.org>
+To: Puranjay Mohan <puranjay12@gmail.com>, Alexei Starovoitov
+ <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko
+ <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, Eduard
+ Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, Yonghong Song
+ <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, KP
+ Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@google.com>, Hao Luo
+ <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>, Paul Walmsley
+ <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou
+ <aou@eecs.berkeley.edu>, bpf@vger.kernel.org,
+ linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, Pu Lehui
+ <pulehui@huawei.com>
+Cc: puranjay12@gmail.com
+Subject: Re: [PATCH bpf-next] riscv, bpf: add internal-only MOV instruction
+ to resolve per-CPU addrs
+In-Reply-To: <20240405124348.27644-1-puranjay12@gmail.com>
+References: <20240405124348.27644-1-puranjay12@gmail.com>
+Date: Fri, 05 Apr 2024 16:16:49 +0200
+Message-ID: <87wmpbnbce.fsf@all.your.base.are.belong.to.us>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20240405141411.1807189-1-panikiel@google.com>
-X-Mailer: git-send-email 2.44.0.478.gd926399ef9-goog
-Message-ID: <20240405141411.1807189-17-panikiel@google.com>
-Subject: [PATCH 16/16] media: v4l2-subdev: Remove non-pad dv timing callbacks
-From: "=?UTF-8?q?Pawe=C5=82=20Anikiel?=" <panikiel@google.com>
-To: kieran.bingham@ideasonboard.com, mchehab@kernel.org, 
-	hverkuil-cisco@xs4all.nl, tharvey@gateworks.com, 
-	niklas.soderlund@ragnatech.se, prabhakar.csengg@gmail.com, 
-	charles-antoine.couret@nexvision.fr, thierry.reding@gmail.com, 
-	jonathanh@nvidia.com, skomatineni@nvidia.com, luca.ceresoli@bootlin.com
-Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	chromeos-krk-upstreaming@google.com, 
-	"=?UTF-8?q?Pawe=C5=82=20Anikiel?=" <panikiel@google.com>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
 
-After the conversion of dv timing calls to use a pad argument is done,
-remove the old callbacks. Update the subdev ioctl handlers to use the
-new callbacks.
+Puranjay Mohan <puranjay12@gmail.com> writes:
 
-Signed-off-by: Pawe=C5=82 Anikiel <panikiel@google.com>
----
- drivers/media/v4l2-core/v4l2-subdev.c |  6 +++---
- include/media/v4l2-subdev.h           | 14 --------------
- 2 files changed, 3 insertions(+), 17 deletions(-)
+> Support an instruction for resolving absolute addresses of per-CPU
+> data from their per-CPU offsets. This instruction is internal-only and
+> users are not allowed to use them directly. They will only be used for
+> internal inlining optimizations for now between BPF verifier and BPF
+> JITs.
+>
+> RISC-V uses generic per-cpu implementation where the offsets for CPUs
+> are kept in an array called __per_cpu_offset[cpu_number]. RISCV stores
+> the address of the task_struct in TP register. The first element in
+> tast_struct is struct thread_info, and we can get the cpu number by
+     ^
+     k ;-)
+> reading from the TP register + offsetof(struct thread_info, cpu).
+>
+> Once we have the cpu number in a register we read the offset for that
+> cpu from address: &__per_cpu_offset + cpu_number << 3. Then we add this
+> offset to the destination register.
 
-diff --git a/drivers/media/v4l2-core/v4l2-subdev.c b/drivers/media/v4l2-cor=
-e/v4l2-subdev.c
-index 07759cdd0844..6572667fd5c4 100644
---- a/drivers/media/v4l2-core/v4l2-subdev.c
-+++ b/drivers/media/v4l2-core/v4l2-subdev.c
-@@ -906,16 +906,16 @@ static long subdev_do_ioctl(struct file *file, unsign=
-ed int cmd, void *arg,
- 	}
-=20
- 	case VIDIOC_SUBDEV_QUERY_DV_TIMINGS:
--		return v4l2_subdev_call(sd, video, query_dv_timings, arg);
-+		return v4l2_subdev_call(sd, pad, query_dv_timings, 0, arg);
-=20
- 	case VIDIOC_SUBDEV_G_DV_TIMINGS:
--		return v4l2_subdev_call(sd, video, g_dv_timings, arg);
-+		return v4l2_subdev_call(sd, pad, g_dv_timings, 0, arg);
-=20
- 	case VIDIOC_SUBDEV_S_DV_TIMINGS:
- 		if (ro_subdev)
- 			return -EPERM;
-=20
--		return v4l2_subdev_call(sd, video, s_dv_timings, arg);
-+		return v4l2_subdev_call(sd, pad, s_dv_timings, 0, arg);
-=20
- 	case VIDIOC_SUBDEV_G_STD:
- 		return v4l2_subdev_call(sd, video, g_std, arg);
-diff --git a/include/media/v4l2-subdev.h b/include/media/v4l2-subdev.h
-index a5213411ef2b..1af16b16f0bf 100644
---- a/include/media/v4l2-subdev.h
-+++ b/include/media/v4l2-subdev.h
-@@ -452,14 +452,6 @@ enum v4l2_subdev_pre_streamon_flags {
-  *
-  * @g_pixelaspect: callback to return the pixelaspect ratio.
-  *
-- * @s_dv_timings: Set custom dv timings in the sub device. This is used
-- *	when sub device is capable of setting detailed timing information
-- *	in the hardware to generate/detect the video signal.
-- *
-- * @g_dv_timings: Get custom dv timings in the sub device.
-- *
-- * @query_dv_timings: callback for VIDIOC_QUERY_DV_TIMINGS() ioctl handler=
- code.
-- *
-  * @s_rx_buffer: set a host allocated memory buffer for the subdev. The su=
-bdev
-  *	can adjust @size to a lower value and must not write more data to the
-  *	buffer starting at @data than the original value of @size.
-@@ -490,12 +482,6 @@ struct v4l2_subdev_video_ops {
- 	int (*g_input_status)(struct v4l2_subdev *sd, u32 *status);
- 	int (*s_stream)(struct v4l2_subdev *sd, int enable);
- 	int (*g_pixelaspect)(struct v4l2_subdev *sd, struct v4l2_fract *aspect);
--	int (*s_dv_timings)(struct v4l2_subdev *sd,
--			struct v4l2_dv_timings *timings);
--	int (*g_dv_timings)(struct v4l2_subdev *sd,
--			struct v4l2_dv_timings *timings);
--	int (*query_dv_timings)(struct v4l2_subdev *sd,
--			struct v4l2_dv_timings *timings);
- 	int (*s_rx_buffer)(struct v4l2_subdev *sd, void *buf,
- 			   unsigned int *size);
- 	int (*pre_streamon)(struct v4l2_subdev *sd, u32 flags);
---=20
-2.44.0.478.gd926399ef9-goog
+Just to clarify for readers; BPF programs are run with migrate disable,
+which means that on RT we can be preempted, which means that per-cpu
+operations are trickier (disabling interrupts/preemption).
 
+However, this BPF instruction is about calculating the per-cpu address,
+so the look up can be inlined.
+
+It's not a per-cpu *operation*.
+
+> To measure the improvement from this change, the benchmark in [1] was
+> used on Qemu:
+>
+> Before:
+> glob-arr-inc   :    1.127 =C2=B1 0.013M/s
+> arr-inc        :    1.121 =C2=B1 0.004M/s
+> hash-inc       :    0.681 =C2=B1 0.052M/s
+>
+> After:
+> glob-arr-inc   :    1.138 =C2=B1 0.011M/s
+> arr-inc        :    1.366 =C2=B1 0.006M/s
+> hash-inc       :    0.676 =C2=B1 0.001M/s
+>
+> [1] https://github.com/anakryiko/linux/commit/8dec900975ef
+>
+> Signed-off-by: Puranjay Mohan <puranjay12@gmail.com>
+> ---
+>  arch/riscv/net/bpf_jit_comp64.c | 24 ++++++++++++++++++++++++
+>  1 file changed, 24 insertions(+)
+>
+> diff --git a/arch/riscv/net/bpf_jit_comp64.c b/arch/riscv/net/bpf_jit_com=
+p64.c
+> index 15e482f2c657..e95bd1d459a4 100644
+> --- a/arch/riscv/net/bpf_jit_comp64.c
+> +++ b/arch/riscv/net/bpf_jit_comp64.c
+> @@ -12,6 +12,7 @@
+>  #include <linux/stop_machine.h>
+>  #include <asm/patch.h>
+>  #include <asm/cfi.h>
+> +#include <asm/percpu.h>
+>  #include "bpf_jit.h"
+>=20=20
+>  #define RV_FENTRY_NINSNS 2
+> @@ -1089,6 +1090,24 @@ int bpf_jit_emit_insn(const struct bpf_insn *insn,=
+ struct rv_jit_context *ctx,
+>  			emit_or(RV_REG_T1, rd, RV_REG_T1, ctx);
+>  			emit_mv(rd, RV_REG_T1, ctx);
+>  			break;
+> +		} else if (insn_is_mov_percpu_addr(insn)) {
+> +			if (rd !=3D rs)
+> +				emit_mv(rd, rs, ctx);
+> +#ifdef CONFIG_SMP
+> +				/* Load current CPU number in T1 */
+> +				emit_ld(RV_REG_T1, offsetof(struct thread_info, cpu), RV_REG_TP,
+> +					ctx);
+> +				/* << 3 because offsets are 8 bytes */
+> +				emit_slli(RV_REG_T1, RV_REG_T1, 3, ctx);
+> +				/* Load address of __per_cpu_offset array in T2 */
+> +				emit_imm(RV_REG_T2, (u64)&__per_cpu_offset, ctx);
+
+Did you try using emit_addr() here? I'd guess that'll be fewer
+instructions, no?
+
+
+Bj=C3=B6rn
