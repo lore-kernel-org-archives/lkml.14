@@ -1,187 +1,86 @@
-Received: from mail-pg1-f173.google.com (mail-pg1-f173.google.com [209.85.215.173])
+Received: from msa.smtpout.orange.fr (msa-213.smtpout.orange.fr [193.252.23.213])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 188E2171E64
-	for <linux-kernel@vger.kernel.org>; Fri,  5 Apr 2024 18:18:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B0BC17277E;
+	Fri,  5 Apr 2024 18:18:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.252.23.213
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712341097; cv=none; b=dOIsXdcmxYaz86B0uKVEhzOP5DEw+ZLbS0xMFynqyYvCUnCizYgpIqS5HTgfVNyONz1gms0SfwM0gyXDVzpRm434CFe1o4f3bKxTlIbEf44rP6hlB6Wwnvvz5qOJo6plMe6n/wuKOz00/DRqHG8tdfgo6AtIHprDMK8GwB+7qKk=
+	t=1712341103; cv=none; b=N4mYQfwxE4ql/UFPnBUMx/l1iPM0nzTwvAJconZ2LkHIJ1c0Hou8grae224g9ya2NW4aXJWAC0Cn3pmXQB6eRyzeEgQYtxJTzdS8ouAOGIJYxYaSeoNtmRHkkt4fTE42RW4b9phuqpJNyxWCT572Q0/KoTilOlEhFUlDutINc0Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712341097; c=relaxed/simple;
-	bh=wdMJhgg03J9ToLHXaFixR/36utzApFawE0KvfzXoqHs=;
-	h=From:Message-Id:Content-Type:Mime-Version:Subject:Date:
-	 In-Reply-To:Cc:To:References; b=kC/GhFghSl3UXJj9jyCC6OVQ4zkzwO4x5iVMiGi+vsq3zb4dc0P0dZLnm0K3IECJzxhzlWcZDBNalbD8ECXHW7lji9AhOiQFAphdtAH0wG12o6foR83wgAqdsfdlaLEEZyLz3plVa3ZLcqkSjSjjjbuPNZgRRiOZJoPZqtF8XWw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dilger.ca; spf=pass smtp.mailfrom=dilger.ca; dkim=pass (2048-bit key) header.d=dilger-ca.20230601.gappssmtp.com header.i=@dilger-ca.20230601.gappssmtp.com header.b=pDfz/pHp; arc=none smtp.client-ip=209.85.215.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dilger.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dilger.ca
+	s=arc-20240116; t=1712341103; c=relaxed/simple;
+	bh=cvs/43SwtLRtedcsO543rgUvMrFflja1dGXNQx9R344=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=CJPgNLkb2Dn1CV4p1WCwHCbGSc6TCY++D2ffXiOEl//avpCIWR9DmE3HHQOK89jH98qdWR6g1gMv1GlCR/7a3LrIM2BOAiBl68csoO/dk78FTJgZgsRzkZhSF+RU1PLVe4RMaaitte1HP9xcN6aWpH8HmGLw0wj75Pd5DMecwd8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=lkTgAZOC; arc=none smtp.client-ip=193.252.23.213
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=dilger-ca.20230601.gappssmtp.com header.i=@dilger-ca.20230601.gappssmtp.com header.b="pDfz/pHp"
-Received: by mail-pg1-f173.google.com with SMTP id 41be03b00d2f7-5cddfe0cb64so1652073a12.0
-        for <linux-kernel@vger.kernel.org>; Fri, 05 Apr 2024 11:18:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=dilger-ca.20230601.gappssmtp.com; s=20230601; t=1712341094; x=1712945894; darn=vger.kernel.org;
-        h=references:to:cc:in-reply-to:date:subject:mime-version:message-id
-         :from:from:to:cc:subject:date:message-id:reply-to;
-        bh=9Yt5fFOUcQfwmred9ry2pM1oK9JKeRbA+BTjVzFtQRM=;
-        b=pDfz/pHpB9sII143/jXXuhAPupP2d7QqElx2yN6GP5mJZLDzlEq2j3+FkgpvDG8R70
-         bByMj5Xf7C/7OBEFOHZJHxMZaAaeKda+7qN4Wqz17N0FoTKvF7NR+2bZhPvLtMV/EOhy
-         sGkxkLM1kj/Dnl5jKKvuGakKCPr3uUo4pKbYZMoRn9IpjWhB1qqqSSRqoOx07X/YaMjY
-         c3AixXB7DPaoEBUwJUZGapwQnmdKMrBJqoTGe6YglQ6eNqP3C6Cp+2GOJU1Vaq3wOAFN
-         ted3ttFSX/T1A1av5p3hdiK9+mzxI4Qd54n3bf7Ybmz3cmSvBuArKYuLL7sZuYgsBIHi
-         HNJA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712341094; x=1712945894;
-        h=references:to:cc:in-reply-to:date:subject:mime-version:message-id
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=9Yt5fFOUcQfwmred9ry2pM1oK9JKeRbA+BTjVzFtQRM=;
-        b=fT+cN7/BXmbMzwt9J9d0mhZufiF8EYudF2rnTdbpUhigrTyaEgeopa1Vct+8BvZSQ9
-         KzAKpBXlORLkSY3gAUjYXHE6ZHw/+kkBdCuCdf2I9LyMoKWCV2JdrJkoGGf2fA8c0ooc
-         9wF2Cc4kLyuSc3nA26rJnPf9a3VbMSY4ho40zzNXelVRXHRVZkifLxBkckOrbdP/1HhG
-         7lQdqbsuSUbqiLsZaJlMn5QjoIw3S9f/3K+ko5U0756BCXVB7i+FFdKdjtYpHmUV5PR/
-         GmyK2aAOi30ym3lkdqj2DIs5ARY7C+5Kff3zIHyj60C1+uCS/XioFCuUuO9B92CsONCG
-         wCBQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVIGHrbDqHIetsgILcWZ/J3TqaGNNcsAJgcBQHEa9Rno4Uk+cg7JacKdGD0li8UXfc118ba9QtVzjjs8X4aQNyrKHzgeIfhqXjjWmZ1
-X-Gm-Message-State: AOJu0YxU7G8+wtlGzV4K6hQFWREq91wIUi63o0rEPJYeqCF06kPY1AA6
-	pGZA6UwZM3UzPWW4hDQzU8IwXiJhMCFVdlWyF20vtp+QeX8ioPbow5GRikwvc6M=
-X-Google-Smtp-Source: AGHT+IEDn0os+fUgFYATLn+Iq6FZjbfsk3zOmEGVgE/EWJZEoD0wnOYoH0jftB7HpCio2JhiLuD6iA==
-X-Received: by 2002:a17:90a:1648:b0:2a1:f455:c3d7 with SMTP id x8-20020a17090a164800b002a1f455c3d7mr2069740pje.16.1712341094316;
-        Fri, 05 Apr 2024 11:18:14 -0700 (PDT)
-Received: from cabot.adilger.int (S01068c763f81ca4b.cg.shawcable.net. [70.77.200.158])
-        by smtp.gmail.com with ESMTPSA id bb20-20020a17090b009400b002a46d73ebdcsm1525837pjb.46.2024.04.05.11.18.12
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 05 Apr 2024 11:18:13 -0700 (PDT)
-From: Andreas Dilger <adilger@dilger.ca>
-Message-Id: <BF24ACE8-3644-4378-8E7A-AFAF82C0CDD3@dilger.ca>
-Content-Type: multipart/signed;
- boundary="Apple-Mail=_700566DC-00D7-4239-B730-9CEAF4C860C8";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="lkTgAZOC"
+Received: from fedora.home ([86.243.17.157])
+	by smtp.orange.fr with ESMTPA
+	id so7frCyNy41mCso7gr3bZJ; Fri, 05 Apr 2024 20:17:08 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
+	s=t20230301; t=1712341028;
+	bh=CBOkN9rmFPDZtUIpA+M9rXhLCZmZnPuzbOdFADzAiHU=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version;
+	b=lkTgAZOCcEfDQ6oFnLdPtpbDX3pQNJE5xRzadS8UtdiIVUW+JpWKdYOywrEp0LFns
+	 1M8+YXAffelLS48FIErg2gSVHJS+vxT6xtJfEF1OEIOQ3gPk4IYsAZEYkTo0HTr7cE
+	 7LT1vBFXD97HtS5IVWNigCSzRk9OBpRSmOPvsTfs9ok8+JQQSCt6togt8evYjq0LsT
+	 jkdxr5HXJH2VQKEXwbuHRyMXWKL4VVlJ9TWkpytUrdSiVMJBTWxVgjxve2TsA5QRsK
+	 cCqp7kPNj4FYzNODtt8cF9vi/SnH9G8nvFEYlBSC9v+8x+ZHHhkWAoRatIb3jlwR2V
+	 Rk0Vvb+rxDpQA==
+X-ME-Helo: fedora.home
+X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
+X-ME-Date: Fri, 05 Apr 2024 20:17:08 +0200
+X-ME-IP: 86.243.17.157
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>
+Cc: linux-kernel@vger.kernel.org,
+	kernel-janitors@vger.kernel.org,
+	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+	linux-pci@vger.kernel.org
+Subject: [PATCH] PCI: endpoint: Remove some unused fields in struct pci_epf_group
+Date: Fri,  5 Apr 2024 20:16:59 +0200
+Message-ID: <6507d44b6c60a19af35a605e2d58050be8872ab6.1712341008.git.christophe.jaillet@wanadoo.fr>
+X-Mailer: git-send-email 2.44.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 10.3 \(3273\))
-Subject: Re: [PATCH v3 00/13] fiemap extension for more physical information
-Date: Fri, 5 Apr 2024 12:20:21 -0600
-In-Reply-To: <vf4k3yagvb6vf3vfu7st7uj7asv4zbf5c3b2tef2g2xic5fkvj@olqxfakmkoew>
-Cc: Sweet Tea Dorminy <sweettea-kernel@dorminy.me>,
- Jonathan Corbet <corbet@lwn.net>,
- Brian Foster <bfoster@redhat.com>,
- Chris Mason <clm@fb.com>,
- Josef Bacik <josef@toxicpanda.com>,
- David Sterba <dsterba@suse.com>,
- Jaegeuk Kim <jaegeuk@kernel.org>,
- Chao Yu <chao@kernel.org>,
- Alexander Viro <viro@zeniv.linux.org.uk>,
- Christian Brauner <brauner@kernel.org>,
- Jan Kara <jack@suse.cz>,
- =?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>,
- linux-doc@vger.kernel.org,
- Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- linux-bcachefs@vger.kernel.org,
- linux-btrfs <linux-btrfs@vger.kernel.org>,
- linux-f2fs-devel@lists.sourceforge.net,
- linux-fsdevel <linux-fsdevel@vger.kernel.org>,
- kernel-team@meta.com,
- djwong@kernel.org
-To: Kent Overstreet <kent.overstreet@linux.dev>
-References: <cover.1712126039.git.sweettea-kernel@dorminy.me>
- <vf4k3yagvb6vf3vfu7st7uj7asv4zbf5c3b2tef2g2xic5fkvj@olqxfakmkoew>
-X-Mailer: Apple Mail (2.3273)
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
+In "struct pci_epf_group", the 'type_group' field is unused.
 
---Apple-Mail=_700566DC-00D7-4239-B730-9CEAF4C860C8
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain;
-	charset=us-ascii
+This was added, but already unused, by commit 70b3740f2c19 ("PCI: endpoint:
+Automatically create a function specific attributes group")
 
-On Apr 3, 2024, at 12:17 PM, Kent Overstreet <kent.overstreet@linux.dev> =
-wrote:
->=20
-> On Wed, Apr 03, 2024 at 03:22:41AM -0400, Sweet Tea Dorminy wrote:
->> For many years, various btrfs users have written programs to discover
->> the actual disk space used by files, using root-only interfaces.
->> However, this information is a great fit for fiemap: it is inherently
->> tied to extent information, all filesystems can use it, and the
->> capabilities required for FIEMAP make sense for this additional
->> information also.
->>=20
->> Hence, this patchset adds various additional information to fiemap,
->> and extends filesystems (but not iomap) to return it.  This uses some =
-of
->> the reserved padding in the fiemap extent structure, so programs =
-unaware
->> of the changes will be unaffected.
->>=20
->> This is based on next-20240403. I've tested the btrfs part of this =
-with
->> the standard btrfs testing matrix locally and manually, and done =
-minimal
->> testing of the non-btrfs parts.
->>=20
->> I'm unsure whether btrfs should be returning the entire physical =
-extent
->> referenced by a particular logical range, or just the part of the
->> physical extent referenced by that range. The v2 thread has a =
-discussion
->> of this.
->=20
-> I believe there was some talk of using the padding for a device ID, so
-> that fiemap could properly support multi device filesystems. Are we =
-sure
-> this is the best use of those bytes?
+Remove it.
 
-The current (pre-patch) fiemap_extent struct is:
+Found with cppcheck, unusedStructMember.
 
-struct fiemap_extent {
-        __u64 fe_logical;  /* logical offset in bytes for the start of
-                            * the extent from the beginning of the file =
-*/
-        __u64 fe_physical; /* physical offset in bytes for the start
-                            * of the extent from the beginning of the =
-disk */
-        __u64 fe_length;   /* length in bytes for this extent */
-        __u64 fe_reserved64[2];
-        __u32 fe_flags;    /* FIEMAP_EXTENT_* flags for this extent */
-        __u32 fe_reserved[3];
-};
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+---
+Compile tested only.
+---
+ drivers/pci/endpoint/pci-ep-cfs.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-and this series is only changing fe_reserved64[0] to fe_phys_length.
-There was discussion in the past of using "fe_reserved[0]" for the =
-device
-ID, which is still OK.
+diff --git a/drivers/pci/endpoint/pci-ep-cfs.c b/drivers/pci/endpoint/pci-ep-cfs.c
+index 0ea64e24ed61..ad4e2e329ae9 100644
+--- a/drivers/pci/endpoint/pci-ep-cfs.c
++++ b/drivers/pci/endpoint/pci-ep-cfs.c
+@@ -23,7 +23,6 @@ struct pci_epf_group {
+ 	struct config_group group;
+ 	struct config_group primary_epc_group;
+ 	struct config_group secondary_epc_group;
+-	struct config_group *type_group;
+ 	struct delayed_work cfs_work;
+ 	struct pci_epf *epf;
+ 	int index;
+-- 
+2.44.0
 
-Cheers, Andreas
-
-
-
-
-
-
---Apple-Mail=_700566DC-00D7-4239-B730-9CEAF4C860C8
-Content-Transfer-Encoding: 7bit
-Content-Disposition: attachment;
-	filename=signature.asc
-Content-Type: application/pgp-signature;
-	name=signature.asc
-Content-Description: Message signed with OpenPGP
-
------BEGIN PGP SIGNATURE-----
-Comment: GPGTools - http://gpgtools.org
-
-iQIzBAEBCAAdFiEEDb73u6ZejP5ZMprvcqXauRfMH+AFAmYQQOUACgkQcqXauRfM
-H+CHWg/+ImmZQ6Nzwva0Efg63ioqP0pS3airRAPWj+bfSnsIXaituGulL3hG2Lt5
-IORycBQ5w1uifrkGHdmcpOjoIsPuaQrjAdC700vt5TRhqLojhU6ZnLz/eZMFUSIe
-oS0f9OPJPx3vDKBfMBeVTZbrzka94z5Wl0pUohNFSshNfYOrAKyGiBc0KLzpslFo
-eQODjM5SpgwhN7Te0Wcpklr8JMQXI5e+QXkAnor25ImqCHB7PPL4BEt40/HS6hH/
-MfDLh7WHcatQFHB4prRJrULNDnOSJz+LD2UAu602/s03c2lIEHiVkTb8AATrFE8O
-FZvfEdge3gjEXaK1zO1/eNScUgHH8eESBDbWk2ACkU/p7Ip9MS5FgcWXVBxEUoDl
-46VkGOuqWFwGgY020Q+Tvo7I6r1+MahDttyCKe34bzu0WB/t19del0moZyHhicgS
-oNyZN8rIM5QPmuwi1glNkPi8uL23QLb3frSVmrTflx1GxKBhB+fyN/TQP+42Y1zJ
-eBbSWPgWoWHC7u3ULQYA1Mjbi5DUh8dAjwWIJXsFIJwL4oGb54mX/vE2ef9YAHpI
-x1p+7ds2vdDYqG2o5UXaI9YPg45kDNVm+/Io5+DXNMKGVH6XIyhr/Uy5dzx6tVHK
-CdPBC3K4hWSLU6rlwFhwXJ0d5kc2AuRrcmDi8Q+FzSOHlLyt9zM=
-=UxlY
------END PGP SIGNATURE-----
-
---Apple-Mail=_700566DC-00D7-4239-B730-9CEAF4C860C8--
