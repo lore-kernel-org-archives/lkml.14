@@ -1,189 +1,200 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2101171E5B;
-	Fri,  5 Apr 2024 18:19:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.10
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712341172; cv=fail; b=L7Oay6rrbKP7z2cMqlHBacM8vQjxYu5hadJv6ARoLwEsf4AvW4K1iZ3Y8v0C3t+4STfukDDnOg00tvNoxyd4KONLnbDYaeDdi6RhsenBiYu4m/4jNC0bc6mEpNmC1PGD43hNXmuM2VAjm4YqgW3qJxmZ5c06Rdi71dzFI3l8P9Y=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712341172; c=relaxed/simple;
-	bh=lc1SYyTik6aUAm22/N8o7HbxBW7EkmW9oKPY7xupobE=;
-	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=iO2u9jZpAMQSdhxP9IN9mgHVvzAe6mGme616eKndgjtXbMuVU29gMCXwCuUigfvQzgqJMDBVrzI8pQtC4WeVxReJBKZyYrZiZmAyhIMGF8rHluSFeMt6Aln8tGZhy4CJ5Hrfc/urmddEorsBjKjXZr08cQe1ew5oYn+F4/1VJT0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=EWWRQnqU; arc=fail smtp.client-ip=192.198.163.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DC2C172777
+	for <linux-kernel@vger.kernel.org>; Fri,  5 Apr 2024 18:19:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.43
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1712341181; cv=none; b=a8GzVpAClvn6T1cSm0FT/+TMcrC0Xeu70paGFDW03Xo3CZ/P/jyqHgegNmhVKk+4lJ19SAuNG7VjR5YXCnX6tInrY/001LnlUXFaOs3naRjg5GXpOgsElYteuQfQin1eRT6YTv9dZx6xkeQYFMUfk7QxGH2qjPfoLp4/JSIZ6lk=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1712341181; c=relaxed/simple;
+	bh=cCLDIsYFejxah3kcUtD/78RZA+bRyvoysZUBeT3z5Mg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=fmaLZmtdUDSRBtDBIJzS1hGV77USL+yJM3Wa7gV53b60NfwRk1yUHDIVxQbIEMb7X8uhfIQaauaSeqUmNcnwdKYfmvx2F9jYbmg3qwwTgeooxFs7mFzAa+vDpPiX4ZVNCjSU2U6ULbEbUW5up1CWIp485pqM9KQkf5J6T5mM1g8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=gkdKURFo; arc=none smtp.client-ip=209.85.208.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="EWWRQnqU"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1712341171; x=1743877171;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=lc1SYyTik6aUAm22/N8o7HbxBW7EkmW9oKPY7xupobE=;
-  b=EWWRQnqUx78GUYO4Y9PyWtEu6r7mO5V1f5sME2TmJqTGTF9AUlQZDjYG
-   KdZWXljRTiw8Tqf1tvJIw8GE4EEmISRTF4lhkzV5Om+odXSmk1GUC+c8O
-   w/CZTvmkNlYzpsDMBj1YAvl4qcEEg7L4h2Mc+t9+aFYlbHLv2HBLO0Yhi
-   g/yxrSQkIZxTHULEwOR8o45qM+dJN8RSSGL6QZMAVnEz6sp61UHQAZHDn
-   V6z5lZOTLoVBfuIqr5Bj8Kfe+TRvStyMYjhNX58MXvJ1i0OQ8ifveNl+8
-   Klqam3sRCFpn5+XvtdfgCoK2YFUFEZpjh9c2O2td83Lzj9Q3MjkopgmJZ
-   A==;
-X-CSE-ConnectionGUID: wsD2YhBeQ2a28SA1RZp1GA==
-X-CSE-MsgGUID: /pDudTtFSqm/5hHXs0UnGw==
-X-IronPort-AV: E=McAfee;i="6600,9927,11035"; a="19038241"
-X-IronPort-AV: E=Sophos;i="6.07,181,1708416000"; 
-   d="scan'208";a="19038241"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Apr 2024 11:19:30 -0700
-X-CSE-ConnectionGUID: 56LUwg6JSuWjyXR5dU237g==
-X-CSE-MsgGUID: dkZQjLFWS6a+Lex6btmsnA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,181,1708416000"; 
-   d="scan'208";a="19685446"
-Received: from orsmsx603.amr.corp.intel.com ([10.22.229.16])
-  by orviesa006.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 05 Apr 2024 11:19:30 -0700
-Received: from orsmsx610.amr.corp.intel.com (10.22.229.23) by
- ORSMSX603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Fri, 5 Apr 2024 11:19:29 -0700
-Received: from ORSEDG602.ED.cps.intel.com (10.7.248.7) by
- orsmsx610.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35 via Frontend Transport; Fri, 5 Apr 2024 11:19:29 -0700
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (104.47.55.169)
- by edgegateway.intel.com (134.134.137.103) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Fri, 5 Apr 2024 11:19:29 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=UKAh4QzEAz7VG91ML7Z2w18Q74b3HelwGdIg9+qZIFi1ktPhlkhukG6B4e2DBF/W2qXPIrUVezFtv6Jon2h7IA7bkiUvn5FYVTsZGIqb+V9TuMwtJB2FzeL99UZFyUBfB2i6jG4NTzJ6TLY/5GNpn+zukPpvlNsXhOX7//q2rtns0c4hdzBInfsqArTaKV2ZZcS3Vamin67JBGrxPjm0dYF4F1hkSPg9d9496TsUAfOhaRTkWqTWEs4+u9VUKpbZX9K4SYcZz/IWkeN/f9oPi69Edm4+X+jCrKkLalBJNofgPpYvpwWpkTtpHo+lf0A4EKlEox17TMR68pHuRRwZXw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=J/8KuFyicCLb3DUz1SUxzQcIhnjxsw76UEd4dXD61A0=;
- b=AcML0r2ZQ5nVb+ZRN3R2DGiWtP8QhBxAd5AA69BohE1BWXAj7WjpgS9RTafENkwZGpryYnjMvEos+JzlGvb06/X2FZuHPm1TouO+EwwU1jjgLDZQTLi0grd8Ds62D4R3I8WBoqS6e2pBZwdAOdTB4CmISFAfzDFFSqZslqcPU8VtP7UV9n3UIixn6nAg8xrQfD/jKqA8bO7L9rWpu7x1tqmOKO0sEISfyOHyuHuWmxRZza7NsS8J/QU/JQl8pqTKEhtg9JiTjZDHzBM62LUYBm7nJg2v8/RqfAmkh9lJFtzHxdyKQoKrnRyqY6rWl9eCAGfhBJjk1QKvP06cPBjutw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Received: from SA1PR11MB6733.namprd11.prod.outlook.com (2603:10b6:806:25c::17)
- by MW6PR11MB8440.namprd11.prod.outlook.com (2603:10b6:303:242::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7452.26; Fri, 5 Apr
- 2024 18:19:26 +0000
-Received: from SA1PR11MB6733.namprd11.prod.outlook.com
- ([fe80::5c74:8206:b635:e10e]) by SA1PR11MB6733.namprd11.prod.outlook.com
- ([fe80::5c74:8206:b635:e10e%7]) with mapi id 15.20.7452.019; Fri, 5 Apr 2024
- 18:19:26 +0000
-Date: Fri, 5 Apr 2024 11:19:23 -0700
-From: Ira Weiny <ira.weiny@intel.com>
-To: Dave Jiang <dave.jiang@intel.com>, <ira.weiny@intel.com>, Fan Ni
-	<fan.ni@samsung.com>, Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	"Navneet Singh" <navneet.singh@intel.com>
-CC: Dan Williams <dan.j.williams@intel.com>, Davidlohr Bueso
-	<dave@stgolabs.net>, Alison Schofield <alison.schofield@intel.com>, "Vishal
- Verma" <vishal.l.verma@intel.com>, <linux-btrfs@vger.kernel.org>,
-	<linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 04/26] cxl/region: Add dynamic capacity decoder and
- region modes
-Message-ID: <661040ab52a14_e9f9f2943c@iweiny-mobl.notmuch>
-References: <20240324-dcd-type2-upstream-v1-0-b7b00d623625@intel.com>
- <20240324-dcd-type2-upstream-v1-4-b7b00d623625@intel.com>
- <1c7f63c5-1b7a-4f7b-9d48-4dd8b017d7de@intel.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <1c7f63c5-1b7a-4f7b-9d48-4dd8b017d7de@intel.com>
-X-ClientProxiedBy: SJ0PR13CA0114.namprd13.prod.outlook.com
- (2603:10b6:a03:2c5::29) To SA1PR11MB6733.namprd11.prod.outlook.com
- (2603:10b6:806:25c::17)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gkdKURFo"
+Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-56e1fe3f105so1181303a12.2
+        for <linux-kernel@vger.kernel.org>; Fri, 05 Apr 2024 11:19:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1712341178; x=1712945978; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=+1RwFx5Y5CQOS1dH67ttsjIpb2yYeYbzx39qz2nB/54=;
+        b=gkdKURFo1z2kORHxqHXUDzQQQLbTZ0Pxbe/W+0q/11lRtKT0v5BD8QQIzFM+8KIO8P
+         RnBUYLWnzqCshsh8rY51QbHVfVJWgp8FXYhLtru6JbkTDO3iyVtseybmVlU+ynkBrjhn
+         huME40eQv9OvJXN9vetOTh3PtgJvlDrRKrlxgL8KrXvkiDPZ5pHNjCuNNqUnmJsQIpFd
+         jRfffDLbwLuOHaanapLsKLR+21IM+m6wWToWc/TxRdqDyDL0k44O0ddD0dXFihlYK7lG
+         Hda47jpdIUnDpANGKja3SBaJbwY2Q7m7eNi/T+F1em0bApANVXQ0eMaO4q9iV36IdqmO
+         RKSw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712341178; x=1712945978;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=+1RwFx5Y5CQOS1dH67ttsjIpb2yYeYbzx39qz2nB/54=;
+        b=Z6x5FRYMj9Q0n7JM+y89/zCYBaAMUrr5wO/6bzzlKjUV6PSLaLCfn219JVKdh+SbRu
+         TqsrSX79/aWaAU0PtBhoYC5SSUlbTns+2OKdxJPrYecuZ688r744rVWcBs26Qz7OscXH
+         K/2O3BNj/NZtSrgJbRP6VORmmvNmVn5/BRv8osf3ds0rB1274fNWFjRA3B2ZdPNsWC3f
+         N7h+6Im8UKwZTK2r8AiXsvKEjUUnFWqVwQbcfBMYlb6xHQ6ts7j03KswsGN5L2/k8FrT
+         RYQhi5e7IimnDqdSORaDyOy5qYQFhLKdAOAOOMLKQMKL3akMiB1ZlQpMu0LD3m4g+1iz
+         3Frw==
+X-Forwarded-Encrypted: i=1; AJvYcCXb4qCgPE8v6C/gUbQ2m1gRNk2q3keDCFCE/63Sbt3+uRiq8oCPqG5W761aaRVcTkqjuDVx+bjwoCdTO+PRHLpbMTTQYq9Hy7dkrFPA
+X-Gm-Message-State: AOJu0YwfswtafBTUbAEH/+w53o5GEv6XKYO/EcB2jqT3oOoyZ6BnXaKt
+	x7Z/rh0Ndm4mCMPPSVatfunzg2ZbY1iXWUhf0/2xgL3F//Ax4NHQO+OVSdLnmyk=
+X-Google-Smtp-Source: AGHT+IFJE27+I1fV34zf0q3INt5gP7v3XA/hxhqaP7lbIgf2utXVlcEuEzbd1685nzCblz2Pxk/4lA==
+X-Received: by 2002:a50:a40f:0:b0:56e:3571:189c with SMTP id u15-20020a50a40f000000b0056e3571189cmr1469625edb.18.1712341177745;
+        Fri, 05 Apr 2024 11:19:37 -0700 (PDT)
+Received: from [192.168.1.20] ([178.197.223.16])
+        by smtp.gmail.com with ESMTPSA id ij6-20020a056402158600b0056ddd9427d2sm1038022edb.58.2024.04.05.11.19.36
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 05 Apr 2024 11:19:37 -0700 (PDT)
+Message-ID: <352672fc-b6e1-458e-b4f9-840a8ba07c7e@linaro.org>
+Date: Fri, 5 Apr 2024 20:19:35 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SA1PR11MB6733:EE_|MW6PR11MB8440:EE_
-X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: rOZoAgftldyIPEueSkys492H+IZQLON5Mi3jNl67TmRjAf/+tMFFDQebJ6D6v4hHyArHqYC3p6QawZwx+1rE9s/HrCsMQlExTKBNDtGQkQVlR7sgLoWUaDDo8C14zAAcU40r4psBp/yZfilDxvM7p0CBIjn8xDcCfxsuMaLucVwS5B3WA9QchsYsXMZTbMgEHg2leiAvXiyvfl9OuaTVcRH26zCTbDjvN7fHnS750wvHPnb9eooeeO9TWU0uCsWOZEKTyfS/XesOujz7raa9hwo1l94UveaF2GakzK8a7bdVw9BWh9O26Hw/lYy12EaeedqdE1+mMT0iQmNQkYN4m/Gyw80Fu1s2iwN8THJnhPgtAgyJ8TXMTlZREvVGWBiKYBrFL2I0RpUTT2BNu0JTA9IsouCZcxKSmDI5P5x7Uxeb9lSJPVys6sZedjONov7ABtabHxcTi4/3V/GUYBzUULjrjnuWfl4kn2Mm8GWSnpKQiISEaED9Mc7Q2/FnDmvwyMciIVUB9wCTNphWs9XgsI7SYa+tq10CMLLLUSqq9B6G92zIlch82DLQnDSMSQ7DBkgU+1fP9Y4+dbi63ztxvA022LxuHX715PhB6O23FzJCT6qhn6MB+lj2oppf+L9TLjJ+TnjW0F9R5mX52czv1g==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR11MB6733.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366007)(376005)(1800799015);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?bGHeAvT3y4qjprQAFzsj14BKPWba+AJyhZK2GqBGjRBZXhDAC4dTiVlc6YYt?=
- =?us-ascii?Q?m62ofL9yGkj5B6c8tWXJc88+h8iyAb1qs3sXSpz8Z47YQqGxDvo0J9wG39yu?=
- =?us-ascii?Q?CA0xwttu9dTDjjn6WV89ypwVzTaT4bmOFcOAAjZ9ycHfRRiLujUqJE8cclwA?=
- =?us-ascii?Q?k97Xv+YcJAGxyhszF417adTZu5d5F+KZYkWNyd9cVpFzNw5/KTPUsVY03tDx?=
- =?us-ascii?Q?zrfPRXlHLzPqoHR5lM8HrXmLWAiyHhsXOYjJrstQ0UwEvXvgzBTBo/0x3JG+?=
- =?us-ascii?Q?M0V0YGHh/sMn27lmNeBUAAMVoqllX9+cryPEWvM5wz6K/uUW2JTF5qUTwGCg?=
- =?us-ascii?Q?D3yz4GxEfikLo8ZDD1s/a52J9cxJR2yYUoQFMWgpTRSRntyEmG1njIu43eoH?=
- =?us-ascii?Q?VFhUzRB8yI4Ok6w3ZbWzDPYBvWssQ/8fVALpN4sQbJKPDSJPLIbXdKpFh/D+?=
- =?us-ascii?Q?GWSS/Y4wcRdkULzIRe4Gz66pVSPVR1QTEqWwjFEpuHfx7YSpZYvk6AGUT4mw?=
- =?us-ascii?Q?VwviAfaeGL1voKkxvU/uNwdeGnRNfhDJk6e8lP256JbIMpMVPdz2Mt+/SSzK?=
- =?us-ascii?Q?DiQgjnyhLn6L7qSgFKIWpSpzDEahiAbsvIJ6NF6RMq3JdCfnR6G3+OLshkwF?=
- =?us-ascii?Q?+JWsRZWdTyBFvSIpFc5m5m/1W3dqc81Bf3Ypi4YJU3Gxc/5ZsexPeNzduDSG?=
- =?us-ascii?Q?v9X5HsryzPwydQz1pL/beohT0Rvwn6CUgWIOfRUam4zsaNdknYBqvB2UEonb?=
- =?us-ascii?Q?1X6uo4n1Xj4xiOQNAPgfi49eks4LEBXMWS2KYANkXxnOp4iGF3cXDqh7mn8B?=
- =?us-ascii?Q?EDclHgy8Y/v39IDdzaR1Vva8X490ksg6qtTn+NHo1UzUnlZ+soKuR8qdGfPh?=
- =?us-ascii?Q?zWy2eyRG2f0e4enn/1LkCGeLObFVB4N6T+q7QhTWOcv/kGnPRVqI4M+1Prq2?=
- =?us-ascii?Q?tiWanOLo4NVXlb58jA0MFMajtvGloWpwmtTCMeM4KNFot4c3ofOWmi5sQZF3?=
- =?us-ascii?Q?5DflXdHS7V/42WqAKyS9MsKW/WojD/5o/Vw88PYmzAvfYvifQLhe8zTkl8No?=
- =?us-ascii?Q?fnSAS9/Tkp15SwgZpwsQf8n73rK6ipu7u2jakw9H79PJbW8SRvIB9u0t0klS?=
- =?us-ascii?Q?SCtYgJ6vpoqnKBkHI6D36OYX+i1nO8Rg3hBzGn/sAyp7m2OvT49Cp00/hV/Z?=
- =?us-ascii?Q?K6P/V/j//HWnNXA1kc6/Vm06rHZLsuh/LlKSfUl/cgZA8Y44c0RQq/rHPmx0?=
- =?us-ascii?Q?r08+bytZBJ77am/P9KZVaUxUQS0bUcL38jOnmT+/yqAy3bEAWttabUUYCyYP?=
- =?us-ascii?Q?67ihgmq+WW1w17szheqXuS8+5Rlb1RQ70Y0S1YyaDZKTB29xeSXDByegzf8+?=
- =?us-ascii?Q?Vz42licssiqR2s70kB2s/iO9gDhOKCySC7szgvAmLz5ZAJcjIXiOrDI8LY6N?=
- =?us-ascii?Q?mfBXvqh+BcXVQTx/UlWfDx1eyMfi+J0lipSp2UV1ZF31d+Gn9e4VUGE67K0c?=
- =?us-ascii?Q?heb2eO63N1chgMMGs6rxZjxTrPl7RfR8Q+3r8t3xr03HokS+mSBpK67YGcUW?=
- =?us-ascii?Q?V76osaoXqiqN2N2qE4a8hSBYSx6fdbqiNWUpFX22?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: e51b4dff-1901-471b-9702-08dc559ced59
-X-MS-Exchange-CrossTenant-AuthSource: SA1PR11MB6733.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Apr 2024 18:19:26.6294
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: Fi2+hedl5S8JYR0M4sCGXGNOOjmlGueEsh5enRTiQAYSlivDfZmigLCIwcA23SiW6rFD/YQSBby6poVoFhZDDA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW6PR11MB8440
-X-OriginatorOrg: intel.com
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] dt-bindings: omap-mcpdm: Convert to DT schema
+To: Mithil <bavishimithil@gmail.com>
+Cc: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
+ Rob Herring <robh+dt@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>, alsa-devel@alsa-project.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20240404160649.967-1-bavishimithil@gmail.com>
+ <78091796-fd0a-42dd-a4da-f7bed3025bf9@linaro.org>
+ <CAGzNGRnuG_gLUrH1N57WvpKbpiNtFrcsG6nJcacQNJB_yMYNrA@mail.gmail.com>
+ <ec7f77a7-2cf1-4ea6-b9c4-d4fe8a1673ab@linaro.org>
+ <CAGzNGRktm5gMj=bhtX2RAzcn1v5ref+nV-HV3Fct56FzAzxjWA@mail.gmail.com>
+ <c9084453-65f1-43b0-88df-5b73052ccb72@linaro.org>
+ <CAGzNGR=2-us8GRB3RNi4_24QZ9rNBC7Lx0PFsWwbvxuRKk5ngw@mail.gmail.com>
+Content-Language: en-US
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
+ 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
+ D2GYIS41Kv4Isx2dEFh+/Q==
+In-Reply-To: <CAGzNGR=2-us8GRB3RNi4_24QZ9rNBC7Lx0PFsWwbvxuRKk5ngw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Dave Jiang wrote:
+On 05/04/2024 19:21, Mithil wrote:
+> On Fri, Apr 5, 2024 at 10:38 PM Krzysztof Kozlowski
+> <krzysztof.kozlowski@linaro.org> wrote:
+>>
+>> On 05/04/2024 18:29, Mithil wrote:
+>>> On Fri, Apr 5, 2024 at 9:27 PM Krzysztof Kozlowski
+>>> <krzysztof.kozlowski@linaro.org> wrote:
+>>>>
+>>>> On 05/04/2024 16:48, Mithil wrote:
+>>>>> So sorry about the 2nd patch being sent as a new mail, here is a new
+>>>>> patch with the changes as suggested
+>>>>>
+>>>>>> Please use subject prefixes matching the subsystem
+>>>>> Changed the patch name to match the folder history.
+>>>>
+>>>> Nothing improved. What the history tells you?
+>>>>
+>>>
+>>> Referred to "ASoC: dt-bindings: rt1015: Convert to dtschema"
+>>> Not really sure what else I should change.
+>>
+>> But the subject you wrote here is "dt-bindings: omap-mcpdm: Convert to
+>> DT schema"?
+>>
+>> Where is the ASoC?
+>>
+> I did change it, will send the patch again.
 > 
+>>
+>> reg is not correct. Please point me to files doing that way, so I can
+>> fix them.
+>>
+>> You need items with description.
+>>
+> Documentation/devicetree/bindings/sound/fsl,imx-asrc.yaml
+> I referred here for the description, but will add items for the 2 regs
+
+I don't see at all the code you are using. It's entirely different!
+Where in this file is that type of "reg" property?
+
 > 
-> On 3/24/24 4:18 PM, ira.weiny@intel.com wrote:
-> > From: Navneet Singh <navneet.singh@intel.com>
-> > 
-> > Region mode must reflect a general dynamic capacity type which is
-> > associated with a specific Dynamic Capacity (DC) partitions in each
-> > device decoder within the region.  DC partitions are also know as DC
-> > regions per CXL 3.1.
+>>> Interrupts and hwmods use maxItems now.
+>>
+>> hwmods lost description, why?
+> Seems self explanatory.
+
+Really? Not to me. I have no clue what this is. Also, you need
+description for (almost) every non-standard, vendor property.
+
 > 
-> This section reads somewhat awkward to me. Does this read any better?
-> 
-> One or more Dynamic Capacity (DC) partitions (and decoders) form a CXL
-> software region. The region mode reflects composition of that entire software
-> region. Decoder mode reflects a specific DC partition. DC partitions are also
-> known as DC regions per CXL specification r3.1 but is not the same entity as
-> CXL software regions.
+>>> Changed nodename to be generic in example as well.
+>>
+>> "mcpdm" does not feel generic. What is mcpdm? Google finds nothing.
+>> Maybe just "pdm"?
+>>
+> Multichannel PDM Controller. Kept it like that since the node is also
 
-Yea that does sound better but I think this builds on your text and is even
-more clear.
+You said you "changed nodename". So from what did you change to what?
 
-<commit>
-cxl/region: Add dynamic capacity decoder and region modes
+> called as mcpdm in the devicetree. Calling it pdm might cause
 
-One or more decoders each pointing to a Dynamic Capacity (DC) partition form a
-CXL software region.  The region mode reflects composition of that entire
-software region.  Decoder mode reflects a specific DC partition.  DC partitions
-are also known as DC regions per CXL specification r3.1 but they are not the
-same entity as CXL software regions.
+Poor DTS is not the example...
 
-Define the new modes and helper functions required to make the association
-between these new modes.
+> confusion.
 
-</commit>
+So far I am confused. Often name of SoC block is specific, not generic.
+Anyway, that's not important part, so if you claim mcpdm is generic name
+of a class of devices, I am fine.
 
+Best regards,
+Krzysztof
 
-Ira
