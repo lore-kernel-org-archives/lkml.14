@@ -1,128 +1,94 @@
-Received: from mail-pf1-f179.google.com (mail-pf1-f179.google.com [209.85.210.179])
+Received: from mail-ua1-f47.google.com (mail-ua1-f47.google.com [209.85.222.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C51D512CD98
-	for <linux-kernel@vger.kernel.org>; Fri,  5 Apr 2024 07:40:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A47E613CFBF
+	for <linux-kernel@vger.kernel.org>; Fri,  5 Apr 2024 07:44:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712302859; cv=none; b=OlCvYL8+uXh1bKfPWctRzsGeANt4U9OOb3ITkN5bIx+P/0rD+YnJfdB7hBlALXxWXWwhuGdLKAxiFJ2buodJahc6FcK+k7NWo1Ha3+09RmvWLqjKXle67SIJf/mMmItT9iWfAPU4A0fbg14qBXmmwHTCUoeaYBQoOKKQGMQceD0=
+	t=1712303062; cv=none; b=IqFwF7ZUwqjquVstBP54wtN8xeUlsBB57E/0prlJHrCHgjg20nGu8OeVVMGAY/sFqpPeS6+kOLomb1CFlyob4tQE/N0CGG4oyNb6O8y3PPwNev4wyEy/LTeOcq+9rrM07XUphm15Oi+esvEP3P7ujtMvu6IlES2F12XQniy8QeM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712302859; c=relaxed/simple;
-	bh=TlV2tfNsy0zEXW78TY+Y9hKkNagEtGiiitnOqeo8Nr0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GDH+VZWe+bXGKGeWXpWhEWY3RJJZsAOQqCB2YdcqCAfwtw1DyVf98J2mbToDZyjLNxCnPbUpYyyObVq7cymZlavyCs43L/mt7grxzpMcHp3rtTbJeNHV7nW/FSIxtf1LCZH13Z2gVFHMkwApNx4FzAvLGy8blc2gb6c/7ckOnig=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=RHrlE0Ny; arc=none smtp.client-ip=209.85.210.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1712303062; c=relaxed/simple;
+	bh=SHGbtYE78WACdauHUN0T3sz6l7y4v0ZFIs1aCPJUAfs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=DcmJJvvufslToR1XXF+7Hy6pTCsva8FCDICyEAq50+bhfeNcJS73Du3PrPZvVOJm3YW4Qhiha7jvz8wWg8uvTafSyfINUY0k7NAAlnI4Zaw9AhWwveXw3K6YIqrO7UNptZ1l3ad6TWE24IVSbgA/Eg1Rn9V7DLz/jqJO8/FwXWk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=okUN6yzJ; arc=none smtp.client-ip=209.85.222.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="RHrlE0Ny"
-Received: by mail-pf1-f179.google.com with SMTP id d2e1a72fcca58-6e74aa08d15so1459683b3a.1
-        for <linux-kernel@vger.kernel.org>; Fri, 05 Apr 2024 00:40:55 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="okUN6yzJ"
+Received: by mail-ua1-f47.google.com with SMTP id a1e0cc1a2514c-7e3e522d803so1235523241.1
+        for <linux-kernel@vger.kernel.org>; Fri, 05 Apr 2024 00:44:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1712302855; x=1712907655; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=i1a6gAQh2PhrhPbXculVO9O3NtZn8zLGPDuyjie7Sr0=;
-        b=RHrlE0NyBj9DZq6tajOxAjVnUDk3t2Kjq/T3h7fg6hknd8mVeNu//PpgZrEdiGR7LW
-         /1NdqJmH1sZtfqKdOVSPtDSDsc1nHYnS04SXAFpKW50x3G4npFMfSYxary7bRX6aWROP
-         RIEy93zhapai3yWdwkfIWFc4ur/qUQp2VxhIcw9EonqjosCu0a7cPG/pAqc/FkaEOINF
-         TlrILtZEGaGvoAUPIfze3BtRapD6GX27RE0SGe63KEZrg3u78GyNSZlrPe7NRQIIEDxu
-         IBAQ7hlv+R6hpYqvG/4EqucG/KctvaMZIz9VwKNCsj9piInQcExEFjH+4g1bY0qZSBEn
-         /8ww==
+        d=google.com; s=20230601; t=1712303059; x=1712907859; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=SHGbtYE78WACdauHUN0T3sz6l7y4v0ZFIs1aCPJUAfs=;
+        b=okUN6yzJEqwBDFZGJZL0LcADDUilMBNKJN8H7jWZR05NbtB4cpOanmzpMjHANSONZV
+         99U6ofHCD42rVReWS4zc6lFac32qpV0ihfRwWZSZQLTKqiSDg9DEL10UKYMMrWzPGeK3
+         EeauzsP/2fK3E7GeMPc1E+qRrnLULQ4XRqUPaPTvrKlw48pac09Mn9K75w7k4z61uKoV
+         TsOWZo2DND3gVyfh50eMzslQXDWlLaXrEAhA12adDuRbzCiU5aaQ9jFE9RkX8Q8dt7CV
+         eY4Iy7ZAm/LpmJz4w2mZuePUZbVwFSgmhyeMGh2RixH5ki2R7qlfUBhkuHHVTJws9j+N
+         B+bg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712302855; x=1712907655;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=i1a6gAQh2PhrhPbXculVO9O3NtZn8zLGPDuyjie7Sr0=;
-        b=cz+vHs2aQCt843gbUg8sabMMbKXYqip+iuaRPNg3L22ep72VkKacQCMgD9ApY00ayR
-         bXEBQc3XqGO1z0kVOz5zlPuzzo4mihJk3BV3ESxauh9ct1fhG4bZxW3IeLeShdBu0VrH
-         AL/wnjaR6VVI5ob3rl1yTLcrolwZo/U7FTdSdVDgkI0e6dGGdnVBRKc59dLWGYkwQzvK
-         xM9M7AUx/m6rqZQFlpFH57rEslqNszPl0w1Exgh0TGEVo3OWHQroAY/t/tPCG2BjpHrp
-         aX3+bVtOopDNsOn1u6EuUqCWx5YRqdi/0A/0KCzWQ2FAUmLPq4YrxXqcRDbtRPkSXJoC
-         AHGg==
-X-Forwarded-Encrypted: i=1; AJvYcCWg7jq5swPRoDMW0/0GSS2PUge6sS3dlbQCFwAQneHeXZiJ0mBuy2NybgwF1x2Eh4+xKqdlNsmweowVStn7lW5scocQepLJV/rPwkXv
-X-Gm-Message-State: AOJu0YwZGFDsnOpsfyg/gakZ7txF8e3nWr/xoMwcF4Jbk8rzv+XPnKeZ
-	BoCdiRlW31+z0TsNkX1JwcuypTm2v6DmPvFeNOpKt+Dyp7RpQMYw9gO2AJWtZQ==
-X-Google-Smtp-Source: AGHT+IGQzPSdv4xCm9KGESdaqlLSMA46b1EcN3+jKD7raTmoSF2Zx46In/rvazfGN0hikiiMIMSQ5g==
-X-Received: by 2002:a05:6a00:3c8c:b0:6ea:b48a:f971 with SMTP id lm12-20020a056a003c8c00b006eab48af971mr941273pfb.2.1712302854931;
-        Fri, 05 Apr 2024 00:40:54 -0700 (PDT)
-Received: from thinkpad ([120.60.67.119])
-        by smtp.gmail.com with ESMTPSA id q26-20020a63505a000000b005df41b00ee9sm820523pgl.68.2024.04.05.00.40.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 05 Apr 2024 00:40:54 -0700 (PDT)
-Date: Fri, 5 Apr 2024 13:10:44 +0530
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Konrad Dybcio <konrad.dybcio@linaro.org>
-Cc: Krishna chaitanya chundru <quic_krichai@quicinc.com>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Rob Herring <robh+dt@kernel.org>,
-	Johan Hovold <johan+linaro@kernel.org>,
-	Brian Masney <bmasney@redhat.com>,
-	Georgi Djakov <djakov@kernel.org>, linux-arm-msm@vger.kernel.org,
-	linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, vireshk@kernel.org,
-	quic_vbadigan@quicinc.com, quic_skananth@quicinc.com,
-	quic_nitegupt@quicinc.com, quic_parass@quicinc.com
-Subject: Re: [PATCH v8 2/7] arm64: dts: qcom: sm8450: Add interconnect path
- to PCIe node
-Message-ID: <20240405074044.GC2953@thinkpad>
-References: <20240302-opp_support-v8-0-158285b86b10@quicinc.com>
- <20240302-opp_support-v8-2-158285b86b10@quicinc.com>
- <4bd2e661-8e1e-41ff-9b7f-917bb92a196d@linaro.org>
+        d=1e100.net; s=20230601; t=1712303059; x=1712907859;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=SHGbtYE78WACdauHUN0T3sz6l7y4v0ZFIs1aCPJUAfs=;
+        b=h3xtLYNrqGVioKrgAlnYXoOiF/hN/J+xjtiIrwE2V2aDAZ9WB6y/GrB5yI7wD2LcA/
+         2sujNKFQ7kXFeH6wEHrg685iWwBPpygp6aAV6SR39CTa0vADbF3gOfaXYB9hLshTjuQn
+         Tbrou5CMWJezxpzUu2F6ox428TZ9DdJcxdleVluyzu+a+wp+tcotKljBKgojK/nhpLoD
+         0PEOs2myI6Jj7TsJEqgQITFnn/GqYd1Alt+et7rgvq9daBFctJ0CSjozV6Mj4+Lo3GVO
+         D2FBPXg6akf4MaqItQ7/9wxXEmfTsUivdisqanfnoxuFABxSnl8G6IJYUvK64Je4EZun
+         ujow==
+X-Forwarded-Encrypted: i=1; AJvYcCXTLLBfx+eXgb/hjFSl41i4xEPS0O1G/VxBMoNt4Kvttx4OzUFJ297xyciWDts6tvd4POw52KO9/LiU8fhClxxhQadiACgQ+xWEJwxV
+X-Gm-Message-State: AOJu0YyT3pxjz5pZp6uen14drKZfPNZTbqi+oHlv2AqlNau9AT9xUBY8
+	UpQPzD/Ire113GMcBMfiDF0jfojt/a0pHTfBIGl4W8ly1MqrhD7/0PWQuQhjrJLPIQXYXINYL89
+	gA51GMp7HsQkIFEI5JzFUab2H6xASZVMDJ5bC
+X-Google-Smtp-Source: AGHT+IGMeMqrXZ0hb7q26iSJbPXd6dY3rpQtcLC3/bDQAURqKv3BShFGpUtYoVqS9r2ldERtJ0iVFeg0BVc9I60Wl/c=
+X-Received: by 2002:a05:6102:512c:b0:479:c401:824 with SMTP id
+ bm44-20020a056102512c00b00479c4010824mr1516533vsb.6.1712303059454; Fri, 05
+ Apr 2024 00:44:19 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <4bd2e661-8e1e-41ff-9b7f-917bb92a196d@linaro.org>
+References: <20240404-alice-mm-v4-0-49a84242cf02@google.com>
+ <20240404-alice-mm-v4-4-49a84242cf02@google.com> <a48b2347-b58b-432e-bdb8-d5449016ab57@proton.me>
+In-Reply-To: <a48b2347-b58b-432e-bdb8-d5449016ab57@proton.me>
+From: Alice Ryhl <aliceryhl@google.com>
+Date: Fri, 5 Apr 2024 09:44:06 +0200
+Message-ID: <CAH5fLgg3wpcDE+n6nd0CGtDzyXSrD2nLhY8RxdTHjAD8hQ9VDQ@mail.gmail.com>
+Subject: Re: [PATCH v4 4/4] rust: add abstraction for `struct page`
+To: Benno Lossin <benno.lossin@proton.me>
+Cc: Miguel Ojeda <ojeda@kernel.org>, Matthew Wilcox <willy@infradead.org>, 
+	Al Viro <viro@zeniv.linux.org.uk>, Andrew Morton <akpm@linux-foundation.org>, 
+	Kees Cook <keescook@chromium.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+	Wedson Almeida Filho <wedsonaf@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Andreas Hindborg <a.hindborg@samsung.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	=?UTF-8?B?QXJ2ZSBIasO4bm5ldsOlZw==?= <arve@android.com>, 
+	Todd Kjos <tkjos@android.com>, Martijn Coenen <maco@android.com>, 
+	Joel Fernandes <joel@joelfernandes.org>, Carlos Llamas <cmllamas@google.com>, 
+	Suren Baghdasaryan <surenb@google.com>, Arnd Bergmann <arnd@arndb.de>, linux-mm@kvack.org, 
+	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org, 
+	Christian Brauner <brauner@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Mar 06, 2024 at 05:04:54PM +0100, Konrad Dybcio wrote:
-> 
-> 
-> On 3/2/24 04:59, Krishna chaitanya chundru wrote:
-> > Add pcie-mem & cpu-pcie interconnect path to the PCIe nodes.
-> > 
-> > Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> > Signed-off-by: Krishna chaitanya chundru <quic_krichai@quicinc.com>
-> > ---
-> >   arch/arm64/boot/dts/qcom/sm8450.dtsi | 8 ++++++++
-> >   1 file changed, 8 insertions(+)
-> > 
-> > diff --git a/arch/arm64/boot/dts/qcom/sm8450.dtsi b/arch/arm64/boot/dts/qcom/sm8450.dtsi
-> > index 01e4dfc4babd..6b1d2e0d9d14 100644
-> > --- a/arch/arm64/boot/dts/qcom/sm8450.dtsi
-> > +++ b/arch/arm64/boot/dts/qcom/sm8450.dtsi
-> > @@ -1781,6 +1781,10 @@ pcie0: pcie@1c00000 {
-> >   					<0 0 0 3 &intc 0 0 0 151 IRQ_TYPE_LEVEL_HIGH>, /* int_c */
-> >   					<0 0 0 4 &intc 0 0 0 152 IRQ_TYPE_LEVEL_HIGH>; /* int_d */
-> > +			interconnects = <&pcie_noc MASTER_PCIE_0 0 &mc_virt SLAVE_EBI1 0>,
-> 
-> Please use QCOM_ICC_TAG_ALWAYS.
-> 
-> > +					<&gem_noc MASTER_APPSS_PROC 0 &config_noc SLAVE_PCIE_0 0>;
-> 
-> And this path could presumably be demoted to QCOM_ICC_TAG_ACTIVE_ONLY?
-> 
+On Fri, Apr 5, 2024 at 12:33=E2=80=AFAM Benno Lossin <benno.lossin@proton.m=
+e> wrote:
+>
+> On 04.04.24 14:31, Alice Ryhl wrote:
+> > +/// A bitwise shift for the page size.
+> > +#[allow(clippy::unnecessary_cast)]
+>
+> Why can't you remove the cast?
 
-I think it should be fine since there would be no register access done while the
-RPMh is put into sleep state. Krishna, can you confirm that by executing the CX
-shutdown with QCOM_ICC_TAG_ACTIVE_ONLY vote for cpu-pcie path on any supported
-platform?
+Bindgen could decide to use a different type in the future or on
+different platforms.
 
-But if we do such change, then it should also be applied to other SoCs.
-
-- Mani
-
--- 
-மணிவண்ணன் சதாசிவம்
+Alice
