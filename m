@@ -1,76 +1,64 @@
-Received: from mail.lichtvoll.de (lichtvoll.de [89.58.27.11])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B304916D304;
-	Fri,  5 Apr 2024 12:18:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.58.27.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CA5C16D30E;
+	Fri,  5 Apr 2024 12:18:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712319512; cv=none; b=j+fie7lfl2h7rLf1dRd+nhtXZJFlzC3IogcLvGjY43mvppzr4iTBo2BltXJtEKo5dAJ48bnDGtXgq9wWxt0BOnDOENW18J4sWywb1YlvuTdO/zkgDkeSS3A34tDaVk4D9NTiQ4wy9BgL6NgEIxWqSa1oinIRYEHt2zIahLyoYWU=
+	t=1712319521; cv=none; b=IDkXXGH/EtSel37Dauufz5x8Kh6Zgi0SbaGaN/JUi+t6vdT/F6/mrhomlq5zFp/5kw2uWo0RsREJ4UiqUgKpuThZfnhIx5lOFaLR28+CudfQz47qpM7bg7lU/F54uxmfEF4jOaj5kpPN1LhdIHswKkgGY+pUub8Fk/mZXcfsD2g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712319512; c=relaxed/simple;
-	bh=/7/EHAFiwXfZnMJN7n05obC7Qsl6vUhibypEKOHsxEM=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=tPXmWTNff8GMzTDM/mnAZkXMTOZsVK+5hg/JbACLNQ8f2Wj6WNrCGU6hZO1NAyghz4VDxvjCuvMEpgE5XqyndKYR5QoJPSh/1xcGfWpVyKJQNWuap9Rqli5TDLFPJaEBq356kPzar9n5qs9pxFFhG6B1jRIX11XjBNTaDGN4pZM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lichtvoll.de; spf=pass smtp.mailfrom=lichtvoll.de; arc=none smtp.client-ip=89.58.27.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lichtvoll.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lichtvoll.de
-Received: from 127.0.0.1 (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (secp384r1) server-digest SHA384)
-	(No client certificate requested)
-	by mail.lichtvoll.de (Postfix) with ESMTPSA id A95E5A199;
-	Fri,  5 Apr 2024 12:18:18 +0000 (UTC)
-Authentication-Results: mail.lichtvoll.de;
-	auth=pass smtp.auth=martin@lichtvoll.de smtp.mailfrom=martin@lichtvoll.de
-From: Martin Steigerwald <martin@lichtvoll.de>
-To: linux-pm@vger.kernel.org, regressions@lists.linux.dev,
- linux-kernel@vger.kernel.org,
- Linux regressions mailing list <regressions@lists.linux.dev>
-Subject:
- Re: [regression] 6.8.1: fails to hibernate with
- pm_runtime_force_suspend+0x0/0x120 returns -16
-Date: Fri, 05 Apr 2024 14:18:18 +0200
-Message-ID: <6035338.lOV4Wx5bFT@lichtvoll.de>
-In-Reply-To: <12413606.O9o76ZdvQC@lichtvoll.de>
-References:
- <2325246.ElGaqSPkdT@lichtvoll.de> <6034738.lOV4Wx5bFT@lichtvoll.de>
- <12413606.O9o76ZdvQC@lichtvoll.de>
+	s=arc-20240116; t=1712319521; c=relaxed/simple;
+	bh=SwuG1AXYxkpbVOpYKxFxoD/c/IxVIKvdXOwhcOLwQe4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=e9v7RyWVC5JifdwQNYk9PVMLicGMGNA766Uc60h9i99MGPoABG4wJ9UHxaIVgy3H/eNh7qtBtW0lJwa5F3BQN71aZRMQudziwunPFc377II5Pf3rYapHeogcs+ljHJVL6CRO6dCrxyXZM2SifFVxusaatHOjoZV5zghWEXZUlO8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=ruJA5GKT; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ruJA5GKT"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=pM8ku/k+HG+DRvbgpdHgmsq0Y2sQAqCM3oLo4AlR/Jo=; b=ruJA5GKT8MQAZXQt4R8YzVLx3q
+	BponjEjS37cz7oDZzozhnIrP+VyqxjOnY6s6TgcBd23ZzhO+rfoaoarVGyNi99n1r/jgFCNausf3U
+	ClItxZiQk1Aw+8AhE4DrCHliNC6oK3PSaCrXVXK1/C0Ps8STreiUWiRLjfEqG3J09/p569I/Sn0p4
+	N5VEswxDPIi6MPPQUZelxVFM/iDjUbwQaz0uswbahPJ0aJW6LKgYtvjwWfCZtRbgNXYBDuam2ZWhV
+	tsRDnu1PTH6l77o0/U1m10ld/koAobb/u5T6EH0DP93CJiskgX95YEjcUP2W3cv7j/42GzjyNk1Wj
+	OMNzZFTQ==;
+Received: from willy by casper.infradead.org with local (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1rsiWd-0000000ARWt-0dWU;
+	Fri, 05 Apr 2024 12:18:31 +0000
+Date: Fri, 5 Apr 2024 13:18:31 +0100
+From: Matthew Wilcox <willy@infradead.org>
+To: Eugen Hristev <eugen.hristev@collabora.com>
+Cc: tytso@mit.edu, adilger.kernel@dilger.ca, linux-ext4@vger.kernel.org,
+	jaegeuk@kernel.org, chao@kernel.org,
+	linux-f2fs-devel@lists.sourceforge.net,
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+	kernel@collabora.com, viro@zeniv.linux.org.uk, brauner@kernel.org,
+	jack@suse.cz, krisman@suse.de, ebiggers@kernel.org
+Subject: Re: [PATCH v16 0/9] Cache insensitive cleanup for ext4/f2fs
+Message-ID: <Zg_sF1uPG4gdnJxI@casper.infradead.org>
+References: <20240405121332.689228-1-eugen.hristev@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240405121332.689228-1-eugen.hristev@collabora.com>
 
-Martin Steigerwald - 05.04.24, 13:54:34 CEST:
-> > The plot thickens, now 6.7.12 as compared to 6.7.11 which failed
-> > hibernation with busy work queues=C2=B9 and 6.7.9 + bcachefs downgrade
-> > fixes
->=20
-> > fails hibernation with the same error message than 6.8.1:
-> [=E2=80=A6]
->=20
-> > Not doing it today or probably the weekend, but now I have some
-> > actionable git bisect plan without bisecting between major kernel
-> > releases which as I have been told between 6.7 an 6.8-rc1 can lead to
-> > non working modeset graphics on AMD Ryzen in between.
-> >=20
-> > It seems now I only need to git bisect between 6.7.11 and 6.7.12 to
-> > find the patch that breaks hibernation on 6.8.1 as well. However
-> > first I will briefly check whether 6.8.4 hibernates okay.
->=20
-> 6.8.4 is still affected and fails hibernation with the same error
-> message.
+On Fri, Apr 05, 2024 at 03:13:23PM +0300, Eugen Hristev wrote:
+> Hello,
+> 
+> I am trying to respin the series here :
+> https://www.spinics.net/lists/linux-ext4/msg85081.html
 
-Also this time it is just the ThinkPad T14 AMD Gen 1 with a Lenovo USB
-mouse. No second monitor, no USB hub, no nothing else attached.
+The subject here is "Cache insensitive cleanup for ext4/f2fs".
+Cache insensitive means something entirely different
+https://en.wikipedia.org/wiki/Cache-oblivious_algorithm
 
-Should have tested with such a minimal setup to begin with to limit the
-test case to a minimum.
-
-=2D-=20
-Martin
-
-
+I suspect you mean "Case insensitive".
