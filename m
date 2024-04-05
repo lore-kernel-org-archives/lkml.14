@@ -1,102 +1,66 @@
-Received: from mout.web.de (mout.web.de [212.227.15.4])
+Received: from mail115-171.sinamail.sina.com.cn (mail115-171.sinamail.sina.com.cn [218.30.115.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9CA327447;
-	Fri,  5 Apr 2024 10:06:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.4
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECFAB27447
+	for <linux-kernel@vger.kernel.org>; Fri,  5 Apr 2024 10:06:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=218.30.115.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712311591; cv=none; b=VrOV1DfPDUWCa7OJsj3xaoDLgxlpRioErPlpbbB2LipqExT1P0PXnCGbQaakXShkNR/sxKmXq+WF591O9V0UjljSggNXzeZhx+nYRhQpPKJ0wh8IHXgJHqOWao4/ed1Z0xVJDkQ5qoTWE/TAxR8VViNCxoWKK5YVDtRaC3vq9wQ=
+	t=1712311608; cv=none; b=fvuSqJzyggUdO+ooZ2ClLJ8TosvNk27ey3UYa7ITVfE/aztwa9YsqOvcymOdwixwVQJAjnWVE2A6UbvxfQLGY18zOgApP69L7G3HIxLzI+KHjMLz1kiN6lwZJlhqz9KncCavHWnyisXKC/z1JFHkNta1oUt4z84AKAv+I+Jz0Bk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712311591; c=relaxed/simple;
-	bh=46/M8frtVI1xwHwJDfzOWBILidy1qF/nbknjFjniG0Y=;
-	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
-	 In-Reply-To:Content-Type; b=I65StV5mdgcdNDrhriClKl9q4OrC2wlJNDsTnwiqTed+GXtEC+5YNHXCeTSYm3rt9yj375ai/0dYwy9zEwOIPqQdTOFBn+fgeIuenQb04lYAQiBFWOs3YucYd1vQLoC8yGifj7Cyp2z2FJJrzBhBkrYY0W+GvV5TIR7R5ZZvl3M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=IxP8PvBs; arc=none smtp.client-ip=212.227.15.4
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="IxP8PvBs"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1712311570; x=1712916370; i=markus.elfring@web.de;
-	bh=h1rD7cl36D2n8I8nOEC0tJ1ZmmxTzOTFUREe8MP1MAI=;
-	h=X-UI-Sender-Class:Date:To:Cc:References:Subject:From:
-	 In-Reply-To;
-	b=IxP8PvBsbBgI06W49RzUSQBvZz6BCq3PFnpRVr/ZpiFKbUMPG2UB3AtDHpkN84U+
-	 lT2K2HCZIswoF7yj0G0WE/4+yM03xYmvhfvywElv5UJEsgo2Ma08KexaUyPV5Vopq
-	 596Br/ZBhBLA8drDiizBzHtnFT6JxVd3NzW1Igh8OwUFw5TGkG6+ZN28EdXTLFilk
-	 rpuGxpOjfkT+IpMbnLy3Pkk5OuuLB9eBZdgfeEJ5RB+ZC/D11D/Ou9A5BUnTLgtH0
-	 s8ssHbY3ADf6l6wcr6Ad5Jc80L8ue+aqO4pJ4TAekuXq1JPhFbWAJBikPEvE1nZG9
-	 3CcfR/cYv4/prJWrhQ==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.21] ([94.31.90.95]) by smtp.web.de (mrweb005
- [213.165.67.108]) with ESMTPSA (Nemesis) id 1MKdHE-1s6txd3UOS-00Ubi9; Fri, 05
- Apr 2024 12:06:09 +0200
-Message-ID: <12a5180c-fbac-41dc-b1bf-9eded9d8c5ed@web.de>
-Date: Fri, 5 Apr 2024 12:05:56 +0200
+	s=arc-20240116; t=1712311608; c=relaxed/simple;
+	bh=uhE3Dtr5vLTtIukfMKSwe22iwlUD3pTNUmH5IJLzTzM=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=WRLNqlxHSGLMlUjxqX0bGHzIalcIWFoZ2fDsX6b7F6pQYg3TM3OMJyxDhgx57+32aalwYsxOF73t2aX60qW1ONzGLO0fIXrvyqSo9VhkcNPtBTRzdMeYhuP15UE8PTYwDVlQ7TiwPxWjErI/vRsa6lKy0lmjc/w/c9xaLLbus1w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sina.com; spf=pass smtp.mailfrom=sina.com; arc=none smtp.client-ip=218.30.115.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sina.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sina.com
+X-SMAIL-HELO: localhost.localdomain
+Received: from unknown (HELO localhost.localdomain)([116.24.9.172])
+	by sina.com (172.16.235.25) with ESMTP
+	id 660FCD2600007381; Fri, 5 Apr 2024 18:06:33 +0800 (CST)
+X-Sender: hdanton@sina.com
+X-Auth-ID: hdanton@sina.com
+Authentication-Results: sina.com;
+	 spf=none smtp.mailfrom=hdanton@sina.com;
+	 dkim=none header.i=none;
+	 dmarc=none action=none header.from=hdanton@sina.com
+X-SMAIL-MID: 0451634210153
+X-SMAIL-UIID: 6827D1A4AD6C4FD4BFA4499AE196B6B2-20240405-180634-1
+From: Hillf Danton <hdanton@sina.com>
+To: syzbot <syzbot+8a1d152fba6b41f760ae@syzkaller.appspotmail.com>
+Cc: linux-kernel@vger.kernel.org,
+	syzkaller-bugs@googlegroups.com
+Subject: Re: [syzbot] [bluetooth?] KASAN: slab-out-of-bounds Read in l2cap_sock_setsockopt
+Date: Fri,  5 Apr 2024 18:06:20 +0800
+Message-Id: <20240405100620.953-1-hdanton@sina.com>
+In-Reply-To: <000000000000b48cb0061553f087@google.com>
+References: 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-To: Shahar Avidar <ikobh7@gmail.com>, linux-staging@lists.linux.dev,
- kernel-janitors@vger.kernel.org,
- Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
- "Felix N. Kimbu" <felixkimbu1@gmail.com>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Hans Verkuil <hverkuil-cisco@xs4all.nl>, Rob Herring <robh@kernel.org>
-Cc: LKML <linux-kernel@vger.kernel.org>,
- Dan Carpenter <dan.carpenter@linaro.org>
-References: <20240405074000.3481217-6-ikobh7@gmail.com>
-Subject: Re: [PATCH v3 5/7] staging: pi433: Remove duplicated code using the
- "goto" error recovery scheme.
-Content-Language: en-GB
-From: Markus Elfring <Markus.Elfring@web.de>
-In-Reply-To: <20240405074000.3481217-6-ikobh7@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:mhQpAhLFo7ec/e+NSRI//PqcCKVx4mChnrxS6HgTJKN0F9eJODN
- G18UTr3jFVbFS535x0kRrC5Awju3Fb7FQ92s/mBaG0mf5PQqG4RqxsUiadSxY9v/37CJQlW
- X/hJhWIZc44ruv9F+DgP29MYONiq7YK11IdqjEn2PMe5nqZ1gE2QtkCdgAIwPrT9mZ7PkYG
- usLzoDhNnMUOr835xL+bA==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:4QjQawHPQ3k=;1+SIoM3nxoQyGRfDtsKMlr3BPbY
- sdbnZGu6YO8wbYi7c8JOY+023ecEHxj6USL226LwddImTF4Y3ZRIDL21VzzUNJzTkXoj9Jola
- KJuvXL9NU3RAt9khWJBLEz4zbFlBZRFEctFR48ihhFvb1A/SeHNJDXMHqTZZ0zOla2AB58IeF
- cnNoUkmRk/tuRv+r9u89DNXhL/wX8HSmLvj3x8IFDlT2aZOUWJn51FnK3tja/Lb9KId0QIU4U
- ug13HJdwEMqv3IfHLf/QNFjdsTDxti0foXDAwFdOO3PYKMyuO52Vbc2ded8ZKGXRs6fyVAUud
- Dk6c+eFzTX0wYE28V+spJDjy+XPWnsCuROE1NZj5oxvQ6OG25zxDDXL+VuHxdRaGRMnX4G+VI
- RmFasWpvZ1zISIdmbmwTsNCILH4fVPvJf7a9ysDk2PljsWPMVdh1r82QsIz7GAoBRQM6ksoFm
- BR3cd+CkDUnXN5pslGn9BXiWQkIt8mwHU2vKtgshzIjJVkhsEsGSGb83e6tbPuRTfAjW+gxdk
- 6DLA8D6SFvnTIa/UpaWRMalvbvvPoo0iXqScdvHx+9tVZXMK6B6CeLx0CkYs8/mxT/tL6s3B3
- e03KDak7pRwe1BsOmh0RnewcUWdfiVwcqmK3bSdJkAzBJoPyL5tMauBMezomezVIbnr/66oJe
- tk/E12ppxp94FdEBLmvGeBUyhDq+x98VD+jWjgwW+FniFMuu1sIIPBVaf0ptavuFMafGTDe1q
- OROECt+eoy3ivkVtxind6TOYLH3yx+kf8dlzo50XkTOAXkeZByOei8Y9N+W6qSDrOVwjSzA1q
- xs8WAb+Axc/tetLGUkn7TqGY4wJpKFf3Js0F1JxBsaZvs=
+Content-Transfer-Encoding: 8bit
 
-I suggest to use the summary phrase =E2=80=9CUse common error handling cod=
-e
-in pi433_init()=E2=80=9D instead.
+On Thu, 04 Apr 2024 23:55:25 -0700
+> syzbot found the following issue on:
+> 
+> HEAD commit:    707081b61156 Merge branch 'for-next/core', remote-tracking..
+> git tree:       git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git for-kernelci
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=15c6098d180000
 
+#syz test https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git  fe46a7dd189e
 
-> pi433_init had "unregister_chrdev" called twice.
-> Remove it using goto statements.
-
-How do you think about to use the following change description?
-
-   unregister_chrdev() was called in two if branches.
-   Thus add jump targets so that a bit of exception handling can be better
-   reused at the end of this function implementation.
-
-
-=E2=80=A6
-v2->v3:
-=E2=80=A6
-          a seperate patch.
-=E2=80=A6
-
-Would you like to avoid a typo here?
-
-Regards,
-Markus
+--- x/net/bluetooth/l2cap_sock.c
++++ y/net/bluetooth/l2cap_sock.c
+@@ -960,7 +960,7 @@ static int l2cap_sock_setsockopt(struct
+ 			break;
+ 		}
+ 
+-		if (copy_from_sockptr(&opt, optval, sizeof(u32))) {
++		if (optlen < sizeof(u32) || copy_from_sockptr(&opt, optval, sizeof(u32))) {
+ 			err = -EFAULT;
+ 			break;
+ 		}
+--
