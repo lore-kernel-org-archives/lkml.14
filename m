@@ -1,79 +1,118 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF45616FF5C;
-	Fri,  5 Apr 2024 15:50:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1A5F16F28B;
+	Fri,  5 Apr 2024 15:50:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712332230; cv=none; b=mgmTYrGIuI2OetkxekR7aerltCjUcK3ut1BsjU0RZ9GV2ayLSVeHwtkd2aGBeSD7mydaH6g4xgBU4CAXP4MxAj8WYtLWVj2jsYUdoxjnm+FFvnRK3XYRMKkJnji3TZ7cX6VdnFffrA1SAcx95pISORegH4u8Yi/RAwcJg0+kBiE=
+	t=1712332231; cv=none; b=Ma+zSv8DXX2U0UQiqfXsJ8cds57f5OSUhOlg+uzWlv9hWuFI/7AF3DSOSpwxLO7SgtzvjyN039vwajIy0OglrU76Ohb/X6phXrQ26d304vgLPME4zca6FypY4TZlDVKB5UMiO+5DGnQO+NU8qAJ1Qhedu0eUbQw7s310Bng9Exo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712332230; c=relaxed/simple;
-	bh=dYWFC4dTPThsm4mKcrWmIM9MEbrMaA57mtINggeOeiQ=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=SB8okl4rYNA6k0H7gnAL9fGoXELVdYGGEUw+1Cvcycc+Ytfe54e/QJ0Hr6qjapZT4uuHaChuA2PINZ0o68Dt+r8WhyhxZj9xbwWyKTBKKtw4AAFXOmmXDGTBoR1aMRuG4CtFcSosZ1UHIhvsTcOUjWQEGKl054DTVK+Fmm4YTpw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QVBeBj8u; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1712332231; c=relaxed/simple;
+	bh=JuwIBPyywPFitWU0GAYwZuSb8x811YnAxbc/FR7Z6kg=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=jBU5MY1W6QRh0+Mx+W/ACK6CMe5kHj6J+IatiYganWDrI5TlDM+zFsOSK4JCSUnBhAt8EVm0ANxwnu/kHMPzM5U8WiwJL2+B3wrl4Iuvu87Ft4bYS9pXqJogKrEAG98O+rEnFJ5HkRyQrFUcPgp6gGDxSYE8eJU15voiYKZYavY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mDejj3ET; arc=none smtp.client-ip=198.175.65.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QVBeBj8u"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 68EE2C43399;
-	Fri,  5 Apr 2024 15:50:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712332229;
-	bh=dYWFC4dTPThsm4mKcrWmIM9MEbrMaA57mtINggeOeiQ=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=QVBeBj8ublFEaE3qaj8F6ucZRkTiQp0RBlw07zx0XTUFAPJ7R8PfM64Rq3OnUb7s0
-	 MjR6eykjh2cyBd6zK6pEjYjEAErAsjhO72oUi6YPpUD7K2Jhvzp/Kb37pNEnLhgOAp
-	 90SeP2Joiyz9Sy99O/5Q/NycqMSD2XgmRsl+4AQv6XEgZ30D7tI7GOsV8h992fhyRk
-	 G5dYzB5nrmKUMsT81l+2I6ZtQa1Yitrmd3JRip3HEcNZyaEC3vHt+inFD9yie2BZe4
-	 th+JVYVBK1ED0/Wfx4rYBT12c/7y5OVhIOElzJN2TVV6YqlyWfpiPB162i8q6lRQdG
-	 eBMIco4aTwnIg==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 54C3CD2D0F1;
-	Fri,  5 Apr 2024 15:50:29 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mDejj3ET"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1712332229; x=1743868229;
+  h=date:from:to:cc:subject:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=JuwIBPyywPFitWU0GAYwZuSb8x811YnAxbc/FR7Z6kg=;
+  b=mDejj3ETBMQC3/UBpoaBLyPhW94V8rkm/P03UDmXMLfTpQPQp+is3t2s
+   VIjeBble3YCNSruCKVEp+1PrkGqMS9U1Mx1UpDwonWsEPNHTigC7XIupg
+   EEas9o2WnYkZT9r+Lx7rZiCsfkLsKxz14dvneTgcH1++SsTrDZ/rISp7o
+   EJWdQCBncoiEoqdKTFAoMSY42drhBKfDUWaLbJFVmClcmTaclZTRF+cHM
+   3asCrbsPy0m39UxlaDIRqAFrU2rB1It1mvri/xOkpfkhF1ZaCrgzY+suT
+   e0tc1pYTf0IjvbSjtlw1XULiu3wGfplKm3mjxVozb6G4i9ri7/5Pp4v3l
+   g==;
+X-CSE-ConnectionGUID: xaUgz2DZTJOPoNF5yyEW9Q==
+X-CSE-MsgGUID: n9S30rN/TRqFM6u0dFIVzA==
+X-IronPort-AV: E=McAfee;i="6600,9927,11035"; a="7830974"
+X-IronPort-AV: E=Sophos;i="6.07,181,1708416000"; 
+   d="scan'208";a="7830974"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Apr 2024 08:50:19 -0700
+X-CSE-ConnectionGUID: b+flWz2dSiyMWDRXybRuQw==
+X-CSE-MsgGUID: xBkY6l/yQaKUhOjf4ieNSA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,181,1708416000"; 
+   d="scan'208";a="23905135"
+Received: from jacob-builder.jf.intel.com (HELO jacob-builder) ([10.54.39.125])
+  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Apr 2024 08:50:19 -0700
+Date: Fri, 5 Apr 2024 08:54:46 -0700
+From: Jacob Pan <jacob.jun.pan@linux.intel.com>
+To: Robert Hoo <robert.hoo.linux@gmail.com>
+Cc: LKML <linux-kernel@vger.kernel.org>, X86 Kernel <x86@kernel.org>, Peter
+ Zijlstra <peterz@infradead.org>, iommu@lists.linux.dev, Thomas Gleixner
+ <tglx@linutronix.de>, Lu Baolu <baolu.lu@linux.intel.com>,
+ kvm@vger.kernel.org, Dave Hansen <dave.hansen@intel.com>, Joerg Roedel
+ <joro@8bytes.org>, "H. Peter Anvin" <hpa@zytor.com>, Borislav Petkov
+ <bp@alien8.de>, Ingo Molnar <mingo@redhat.com>, Paul Luse
+ <paul.e.luse@intel.com>, Dan Williams <dan.j.williams@intel.com>, Jens
+ Axboe <axboe@kernel.dk>, Raj Ashok <ashok.raj@intel.com>, "Tian, Kevin"
+ <kevin.tian@intel.com>, maz@kernel.org, seanjc@google.com, Robin Murphy
+ <robin.murphy@arm.com>, jacob.jun.pan@linux.intel.com
+Subject: Re: [PATCH 04/15] x86/irq: Add a Kconfig option for posted MSI
+Message-ID: <20240405085001.2bb3e8ad@jacob-builder>
+In-Reply-To: <89927174-6ca9-4299-8157-a0404b30b156@gmail.com>
+References: <20240126234237.547278-1-jacob.jun.pan@linux.intel.com>
+ <20240126234237.547278-5-jacob.jun.pan@linux.intel.com>
+ <89927174-6ca9-4299-8157-a0404b30b156@gmail.com>
+Organization: OTC
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH] bpf: fix perf_snapshot_branch_stack link failure
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <171233222934.27726.10866961945362995147.git-patchwork-notify@kernel.org>
-Date: Fri, 05 Apr 2024 15:50:29 +0000
-References: <20240405142637.577046-1-arnd@kernel.org>
-In-Reply-To: <20240405142637.577046-1-arnd@kernel.org>
-To: Arnd Bergmann <arnd@kernel.org>
-Cc: ast@kernel.org, daniel@iogearbox.net, andrii@kernel.org,
- yonghong.song@linux.dev, john.fastabend@gmail.com, arnd@arndb.de,
- martin.lau@linux.dev, eddyz87@gmail.com, song@kernel.org, kpsingh@kernel.org,
- shung-hsi.yu@suse.com, memxor@gmail.com, davemarchevsky@fb.com,
- bpf@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Hello:
+Hi Robert,
 
-This patch was applied to bpf/bpf-next.git (master)
-by Alexei Starovoitov <ast@kernel.org>:
+On Fri, 5 Apr 2024 10:28:59 +0800, Robert Hoo <robert.hoo.linux@gmail.com>
+wrote:
 
-On Fri,  5 Apr 2024 16:26:25 +0200 you wrote:
-> From: Arnd Bergmann <arnd@arndb.de>
+> On 1/27/2024 7:42 AM, Jacob Pan wrote:
+> > This option will be used to support delivering MSIs as posted
+> > interrupts. Interrupt remapping is required.
+> > 
+> > Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
+> > ---
+> >   arch/x86/Kconfig | 11 +++++++++++
+> >   1 file changed, 11 insertions(+)
+> > 
+> > diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+> > index 5edec175b9bf..79f04ee2b91c 100644
+> > --- a/arch/x86/Kconfig
+> > +++ b/arch/x86/Kconfig
+> > @@ -463,6 +463,17 @@ config X86_X2APIC
+> >   
+> >   	  If you don't know what to do here, say N.
+> >   
+> > +config X86_POSTED_MSI
+> > +	bool "Enable MSI and MSI-x delivery by posted interrupts"
+> > +	depends on X86_X2APIC && X86_64 && IRQ_REMAP  
 > 
-> The newly added code to handle bpf_get_branch_snapshot fails to link when
-> CONFIG_PERF_EVENTS is disabled:
-> 
-> aarch64-linux-ld: kernel/bpf/verifier.o: in function `do_misc_fixups':
-> verifier.c:(.text+0x1090c): undefined reference to `__SCK__perf_snapshot_branch_stack'
-> 
-> [...]
+> Does posted_msi really depend on x2APIC? PID.NDST encoding supports both
+> xAPIC and x2APIC.
+No, posted_msi works with xAPIC as well. I just fixed a bug in NDST xAPIC
+encoding, will be in v2.
 
-Here is the summary with links:
-  - bpf: fix perf_snapshot_branch_stack link failure
-    https://git.kernel.org/bpf/bpf-next/c/58babe27180c
+I was thinking from the performance advantage of x2APIC. But you are right
+they are orthogonal.
 
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
+> If posted_msi posts more stringent requirement, I think it deserves an 
+> explanation in this patch's description.
+> And, X86_X2APIC already depends on IRQ_REMAP, can we just list one of
+> them here?
+Will drop X2APIC dependency.
 
+Thanks,
 
+Jacob
