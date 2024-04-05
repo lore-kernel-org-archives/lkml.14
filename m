@@ -1,117 +1,185 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD646140370;
-	Fri,  5 Apr 2024 07:51:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FBB61773D;
+	Fri,  5 Apr 2024 07:52:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712303486; cv=none; b=FKnMV8yV3848OsBIplCiJkMDSBSM7jG4i6MSj9LhTtEBBZQ1e7KxzBh26Vprzi72lzo7nEb7uWFqI9W8CxivoRvWnB759cnjFe7MtfYkglLwqyihRpPeIegmovrSMmqRpH+Y20NJrfMCflL8tq9jHLS2GslbG11gLRhaB2PS+sA=
+	t=1712303523; cv=none; b=JFfAidz9k+ccvV/bnF9+dRebquTIrFHUBayWz9tAZoHebM+Jak7eIa2QNwBdrIIE/AMZQpE1v/1i2MZlvPD79UkukP8FmgnQlSWAo1BW0669SueDcGwPjaRxlXTkKCzoE0kVWt1NG14/QLepcG+YIFVQrpf8b7R+DPg4gLSjP9U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712303486; c=relaxed/simple;
-	bh=hy+66NGPDCuyO88jk9doLTSP/pAvwzzvwk2CzBCUp+c=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=lOSe/TtyFMpoGYL+pVym3qmioPjcej1Is+1RvGm/Is/eauY8lXNadaDCHvja5wghGUxwPSuMt8ewD+nC5rvXSNEtSd8stKBK/gA0vhZ7htCrRwPDGOh3nZoUOhgcqzsgv1AfYadE/WOHrLk2mRh2IHLcZqZmJ2AWnlNoYtdYX9Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UvNAG0sf; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1712303523; c=relaxed/simple;
+	bh=eSBeUtaPTiuGE/L3fK3RJK0pdyzBXQxqV3SP+jh2Mso=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=l+Pcm46EEDaAMCONFQMS9F8Ik0mZpl+JPHfHytGvgAfpouXI8zQ8dQ2Ud+IGqRWia22KSzA7n41iof306fSlbS2CcacrEYR9mtE5p4eBaRiq6UMRWoLr9jhs8yeSG1vpPGVApAgfLAKPkF4ZdJpbnXYgoPUCzVM5tlSyw2n7c9k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=FspPzd09; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UvNAG0sf"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5D3C1C43390;
-	Fri,  5 Apr 2024 07:51:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712303486;
-	bh=hy+66NGPDCuyO88jk9doLTSP/pAvwzzvwk2CzBCUp+c=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=UvNAG0sfPsbWqLkWaw8zngmWW2byGpvEER8XgGJwJjBYjfjX/hwM1egjarlBeIn8X
-	 hTjYeAgArTAqFRg0K36QeR2HpP0MDv8PNNyxnXQCvaEif+SS1AahPTXhOSLyHefXju
-	 iGAhnK5qFxtphr+GlO6+7bjQcGnJ5i4Rzaw3p5n/fvr1etwLHASLb5s81LByHvIt1V
-	 YP/nn2QEfhheC+f8XfxcIOSrtxVAVDZ8zuimAl5D7eHIXBuFNRvH77zY8QBQCyUHhJ
-	 rgrdLfxsvyNsMYqmL3ov4cT7pXKKE1xtxgg9h3LKEbTTNj6TWnzHKV7CuhWjSP5Q8A
-	 kmfGm6fCb//tw==
-Message-ID: <5fec5719-9714-49d6-ac1e-9cd75557daf3@kernel.org>
-Date: Fri, 5 Apr 2024 09:51:15 +0200
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="FspPzd09"
+Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 43568b4s006643;
+	Fri, 5 Apr 2024 07:51:52 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	message-id:date:mime-version:subject:to:cc:references:from
+	:in-reply-to:content-type:content-transfer-encoding; s=
+	qcppdkim1; bh=Stdkm1d8pOmNC1KqFybyHbTnupWW/gHp/Ow0ym25MJw=; b=Fs
+	pPzd09WMf8QCmHyhrkU1QszoEZbo5XnaV/dpVe0Je+dPLTl/rmcnxYkaNwT3jpAW
+	0pegwnLWRZXFGhGa97VcsHOzHapwrVM4L3vq5zAgrmS+WIbRmN1rlcDf4UFOYHEo
+	SAegobhJz89QhbFAE05KL6fQjafp8gmVNR7fnS2SuNv12HRd3hsf2rDz/Jovxqjs
+	hAINkoHhf9XpN7uRw5WaPf0kC3IA82+5QFR5c3hbcjyvBgUK4FmQmHOyi/UGDA6o
+	jXh+f2qityG8qThMWpZ0MHM6vW+4oJkBIroXe27ZTuKD6x8o5L2uYxt0pc4oEnj0
+	MBqKSoKyQFhIjTgc213A==
+Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3x9v8jj5ew-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 05 Apr 2024 07:51:51 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA03.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 4357ppeh013290
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 5 Apr 2024 07:51:51 GMT
+Received: from [10.216.11.24] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Fri, 5 Apr 2024
+ 00:51:46 -0700
+Message-ID: <09ad75db-2b13-68ff-a5cf-12a7cd0d46c7@quicinc.com>
+Date: Fri, 5 Apr 2024 13:21:42 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 05/17] arm64: dts: exynos: gs101: enable cmu-hsi2 clock
- controller
-To: Peter Griffin <peter.griffin@linaro.org>, mturquette@baylibre.com,
- sboyd@kernel.org, robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
- vkoul@kernel.org, kishon@kernel.org, alim.akhtar@samsung.com,
- avri.altman@wdc.com, bvanassche@acm.org, s.nawrocki@samsung.com,
- cw00.choi@samsung.com, jejb@linux.ibm.com, martin.petersen@oracle.com,
- chanho61.park@samsung.com, ebiggers@kernel.org
-Cc: linux-scsi@vger.kernel.org, linux-phy@lists.infradead.org,
- devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
- linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, tudor.ambarus@linaro.org,
- andre.draszik@linaro.org, saravanak@google.com, willmcvicker@google.com
-References: <20240404122559.898930-1-peter.griffin@linaro.org>
- <20240404122559.898930-6-peter.griffin@linaro.org>
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.13.0
+Subject: Re: [PATCH v3 06/19] media: venus: pm_helpers: Move reset acquisition
+ to common code
 Content-Language: en-US
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <20240404122559.898930-6-peter.griffin@linaro.org>
-Content-Type: text/plain; charset=UTF-8
+To: Konrad Dybcio <konrad.dybcio@linaro.org>,
+        Stanimir Varbanov
+	<stanimir.k.varbanov@gmail.com>,
+        Vikash Garodia <quic_vgarodia@quicinc.com>,
+        Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
+        Andy Gross
+	<agross@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        "Mauro Carvalho
+ Chehab" <mchehab@kernel.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>
+CC: Marijn Suijten <marijn.suijten@somainline.org>,
+        Stanimir Varbanov
+	<stanimir.varbanov@linaro.org>,
+        Mauro Carvalho Chehab
+	<mchehab+huawei@kernel.org>,
+        <linux-media@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20230911-topic-mars-v3-0-79f23b81c261@linaro.org>
+ <20230911-topic-mars-v3-6-79f23b81c261@linaro.org>
+From: Dikshita Agarwal <quic_dikshita@quicinc.com>
+In-Reply-To: <20230911-topic-mars-v3-6-79f23b81c261@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: aKdtCQJZ7dRmeFSYjsFbIQZeoXM3xJYD
+X-Proofpoint-ORIG-GUID: aKdtCQJZ7dRmeFSYjsFbIQZeoXM3xJYD
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-04-05_06,2024-04-04_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ spamscore=0 malwarescore=0 phishscore=0 priorityscore=1501 adultscore=0
+ mlxscore=0 clxscore=1015 mlxlogscore=999 impostorscore=0 bulkscore=0
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2404010003 definitions=main-2404050056
 
-On 04/04/2024 14:25, Peter Griffin wrote:
-> Enable the cmu_hsi2 clock management unit. It feeds some of
-> the high speed interfaces such as PCIe and UFS.
+
+
+On 3/27/2024 11:38 PM, Konrad Dybcio wrote:
+> There is no reason to keep reset_get code local to HFIv4/v6.
 > 
-> Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
+> Move it to the common part.
+> 
+> Signed-off-by: Konrad Dybcio <konrad.dybcio@linaro.org>
 > ---
->  arch/arm64/boot/dts/exynos/google/gs101.dtsi | 12 ++++++++++++
->  1 file changed, 12 insertions(+)
+>  drivers/media/platform/qcom/venus/core.c       |  9 ++++++++-
+>  drivers/media/platform/qcom/venus/pm_helpers.c | 23 -----------------------
+>  2 files changed, 8 insertions(+), 24 deletions(-)
 > 
-
-
-Was it really compiled?
-
-Best regards,
-Krzysztof
-
+> diff --git a/drivers/media/platform/qcom/venus/core.c b/drivers/media/platform/qcom/venus/core.c
+> index 5ab3c414ec0f..0652065cb113 100644
+> --- a/drivers/media/platform/qcom/venus/core.c
+> +++ b/drivers/media/platform/qcom/venus/core.c
+> @@ -15,6 +15,7 @@
+>  #include <linux/of_platform.h>
+>  #include <linux/platform_device.h>
+>  #include <linux/pm_opp.h>
+> +#include <linux/reset.h>
+>  #include <linux/slab.h>
+>  #include <linux/types.h>
+>  #include <linux/pm_domain.h>
+> @@ -286,7 +287,7 @@ static int venus_probe(struct platform_device *pdev)
+>  {
+>  	struct device *dev = &pdev->dev;
+>  	struct venus_core *core;
+> -	int ret;
+> +	int i, ret;
+>  
+>  	core = devm_kzalloc(dev, sizeof(*core), GFP_KERNEL);
+>  	if (!core)
+> @@ -324,6 +325,12 @@ static int venus_probe(struct platform_device *pdev)
+>  	if (ret)
+>  		return ret;
+>  
+> +	for (i = 0; i < core->res->resets_num; i++) {
+> +		core->resets[i] = devm_reset_control_get_exclusive(dev, core->res->resets[i]);
+> +		if (IS_ERR(core->resets[i]))
+> +			return PTR_ERR(core->resets[i]);
+> +	}
+> +
+>  	if (core->pm_ops->core_get) {
+>  		ret = core->pm_ops->core_get(core);
+>  		if (ret)
+> diff --git a/drivers/media/platform/qcom/venus/pm_helpers.c b/drivers/media/platform/qcom/venus/pm_helpers.c
+> index 730c4b593cec..5b2a40a2f524 100644
+> --- a/drivers/media/platform/qcom/venus/pm_helpers.c
+> +++ b/drivers/media/platform/qcom/venus/pm_helpers.c
+> @@ -939,25 +939,6 @@ static int core_resets_reset(struct venus_core *core)
+>  	return ret;
+>  }
+>  
+> -static int core_resets_get(struct venus_core *core)
+> -{
+> -	struct device *dev = core->dev;
+> -	const struct venus_resources *res = core->res;
+> -	unsigned int i;
+> -	int ret;
+> -
+> -	for (i = 0; i < res->resets_num; i++) {
+> -		core->resets[i] =
+> -			devm_reset_control_get_exclusive(dev, res->resets[i]);
+> -		if (IS_ERR(core->resets[i])) {
+> -			ret = PTR_ERR(core->resets[i]);
+> -			return ret;
+> -		}
+> -	}
+> -
+> -	return 0;
+> -}
+> -
+>  static int core_get_v4(struct venus_core *core)
+>  {
+>  	struct device *dev = core->dev;
+> @@ -981,10 +962,6 @@ static int core_get_v4(struct venus_core *core)
+>  	if (ret)
+>  		return ret;
+>  
+> -	ret = core_resets_get(core);
+> -	if (ret)
+> -		return ret;
+> -
+>  	if (legacy_binding)
+>  		return 0;
+>  
+> 
+Reviewed-by: Dikshita Agarwal <quic_dikshita@quicinc.com>
