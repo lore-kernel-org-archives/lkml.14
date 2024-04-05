@@ -1,63 +1,127 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f178.google.com (mail-il1-f178.google.com [209.85.166.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25445175564
-	for <linux-kernel@vger.kernel.org>; Fri,  5 Apr 2024 21:06:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C31C174ECB
+	for <linux-kernel@vger.kernel.org>; Fri,  5 Apr 2024 21:07:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712351170; cv=none; b=aqgAqW/xdEDCLk9i2fsGZ59/45eVfj7aRYT8RuTo14H4jybIkoNbi4Oo1sFbJEAlIi6k9gRhIzYKOGMDnGFwpi5pi3zJGCAWAW6gUI9rsSL/tjlguqZdlpyxsPuCNSqfWUU6D/W6xwg9hOycRkA4rw7WNnh4snypyfXxusNUiD8=
+	t=1712351277; cv=none; b=E1WRpDflBvYlyFCfbkYBL+nybHoYHVB9rMm/ZDKJiI6nP0ktIWI4BNmk1nfPMNZxSC5mfWxYixQM1Gh43n/A1R1tjzZrdUiJ1YZbygIz1go8hpT/62Axb9BauJqYk3NTOzQl+Tm6x99gB80rMF/+EdkBqJ0SPyWF8TSCt485Jtw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712351170; c=relaxed/simple;
-	bh=B4Sgbntbvj+AgCtEMDhyAntY5n2I43aIiKKUajYQXQU=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=fJ1NHdTW5eXtXRysYa3f0Ur/zxipbh05FampUnaJvYi/eDPbD5mAlisM7+8i4j6pXqW0SRzVU5b/NYi9Ur60XRrIkf+rTjmPHMyMF5sGmpQHvEO7eZq33GWp71UDRjocY4ZDjaNwYp7xaOPuvUgP6kGtrmyBB3fnP67Cc84CwM8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=S/9U4EyC; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1712351277; c=relaxed/simple;
+	bh=7qfhjtYFkM6G6ZDJn3ZynqgAg7omtB8AHzvP+GXhTgs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=IsXhf9x2XilNyk+BOPMDjIXK/t58nX6T3I6e9zzg+Vj+nSy1g35hxvXPS5eHRU6CesUYo6xZpKwnyLTEOp3pFS2AdIJ9kQZLBAmbcbcbt+oU1b8MFO5FzucVieltj7JrTjWrB28zcah4uylcFSxlRt2fZuzxdmK9IVVch4L5Mfg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=XPRVBOZo; arc=none smtp.client-ip=209.85.166.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S/9U4EyC"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 0284EC43390;
-	Fri,  5 Apr 2024 21:06:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712351170;
-	bh=B4Sgbntbvj+AgCtEMDhyAntY5n2I43aIiKKUajYQXQU=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=S/9U4EyCVHhbABqdO9RfMuPqzFd9XcePxdpuF2xTL7NRm/s8by7mcRgOTF3OlYpCB
-	 7O3AS8LnR+aZwQlTouP/JkE2ubTM3eY9/J8u6Cpn5rXYfyEpZNjr+H7fC4E7BIv2W4
-	 TELu7a1+v0THJwkZR7XbYLbVlOz1/CYLOgDHedbLQZ3xLnCgdpn1kfaWY54p3/faCi
-	 ye9L65Uld/2/6YW+P2HBOt6iK44yax5P3mDJ1ZD8RLRRAbW8XP69FxJS0I9WhTb0HQ
-	 RhjdZ2NSw4TpewGY0pG4hmxt7p7q2MF+wyea3vS9yuF6ARm7FrYWZQoj5qQM6lR4pv
-	 5c7gde3iuKXyg==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id EDFE0D8A100;
-	Fri,  5 Apr 2024 21:06:09 +0000 (UTC)
-Subject: Re: [GIT PULL] RISC-V Fixes for 6.9-rc3
-From: pr-tracker-bot@kernel.org
-In-Reply-To: <mhng-28e73e09-0100-4e0e-8c4a-490552b42c6f@palmer-ri-x1c9a>
-References: <mhng-28e73e09-0100-4e0e-8c4a-490552b42c6f@palmer-ri-x1c9a>
-X-PR-Tracked-List-Id: <linux-riscv.lists.infradead.org>
-X-PR-Tracked-Message-Id: <mhng-28e73e09-0100-4e0e-8c4a-490552b42c6f@palmer-ri-x1c9a>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/riscv/linux.git tags/riscv-for-linus-6.9-rc3
-X-PR-Tracked-Commit-Id: d14fa1fcf69db9d070e75f1c4425211fa619dfc8
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 261b8e89b6274f7f9c2fee5ff494dfb384d3e2c7
-Message-Id: <171235116997.3156.1887417054016273983.pr-tracker-bot@kernel.org>
-Date: Fri, 05 Apr 2024 21:06:09 +0000
-To: Palmer Dabbelt <palmer@rivosinc.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="XPRVBOZo"
+Received: by mail-il1-f178.google.com with SMTP id e9e14a558f8ab-36a125869ddso1101035ab.0
+        for <linux-kernel@vger.kernel.org>; Fri, 05 Apr 2024 14:07:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linuxfoundation.org; s=google; t=1712351274; x=1712956074; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=8tFcMER8j7g+Kousn29UjGQVOvnMnxSE38Y7ZswRMOA=;
+        b=XPRVBOZo9/KZqJNuT+uMaXeWmQcjeLORQJjde4wakAiBQUb43i+3t5eKkk0Lx75eP1
+         UVS3p8oFawC9YFMbUuu/T8kjrbzVoZIPMutyRkIQiN3LAvd9XjTgPj0oDhZuyQT9T6Cn
+         DknbnaZHIHjVAE1HTyYZAZOfC9FFXACEWDbXM=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712351274; x=1712956074;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=8tFcMER8j7g+Kousn29UjGQVOvnMnxSE38Y7ZswRMOA=;
+        b=AwA/d5n+2q6PugEqBw5QTaOeY+Rn5K2mGVZ2/e26oASWBlcvpH6FK3o5zP2faXMTw9
+         /WGXE05fYOaE4BCigGmwsiBjC8/yaMpQyvIpfpocRZc2iQd0hZtdmuuQ1yOD1ELbkqw/
+         9jL4J6E8VdSTIf9VEjw6hRw9I36MDfCtjaQkB01jx/wTGS/in3FSPYo3AfW5jeQmKDsW
+         i9/EONoeZoOc3u3vPa+u3etZZcPgBRV7nNJla4P2Ai5cKXtGO4HHbPvB1nO0GmJr6JkA
+         ICBJns5/f93sZADshtuwCrmtjqfAdM5R/1lrbp3k1MWlWNCRlZzaaG3K3aYqtO9wdakl
+         Tuyw==
+X-Forwarded-Encrypted: i=1; AJvYcCUUGhpYYjTOHVh+TphPP8GYKrj83ZOf+j12mBVDLo80b5PKP1RFr39yKtThbgV/4/rgIdnoXTIuasdcEK/MNaDrPyMMo1Zh5qFE3B2L
+X-Gm-Message-State: AOJu0Yzn6jIc6t6Dl3tAGj3DSeaGUnefcqSKE/YDqjeZ0cDzV9iWfLY5
+	wEZkw3v3VWwZ0gRp7Ymyy8hI0bGuO/3FrwyR24ljyMsQw/lEUL1BssgJCyLNK08=
+X-Google-Smtp-Source: AGHT+IFpUdTjNiUrmIGtr3vJSUg8kWEja0OcCt+9TF/CDdmE4VJ6Ro4tdKiAzi9GtH7u4JkONeQpNQ==
+X-Received: by 2002:a6b:ec05:0:b0:7d5:bfd3:7237 with SMTP id c5-20020a6bec05000000b007d5bfd37237mr2616439ioh.0.1712351274500;
+        Fri, 05 Apr 2024 14:07:54 -0700 (PDT)
+Received: from [192.168.1.128] ([38.175.170.29])
+        by smtp.gmail.com with ESMTPSA id l2-20020a056638144200b0047efdf3a882sm784394jad.177.2024.04.05.14.07.53
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 05 Apr 2024 14:07:53 -0700 (PDT)
+Message-ID: <244a65f0-4f9c-444c-b150-ef3b18cfbaa7@linuxfoundation.org>
+Date: Fri, 5 Apr 2024 15:07:53 -0600
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 0/2] selftests: Replace "Bail out" with "Error" in
+ ksft_exit_fail_msg()
+To: Muhammad Usama Anjum <usama.anjum@collabora.com>,
+ "Bird, Tim" <Tim.Bird@sony.com>, Kees Cook <keescook@chromium.org>
+Cc: "kernel@collabora.com" <kernel@collabora.com>,
+ Shuah Khan <shuah@kernel.org>,
+ "linux-kselftest@vger.kernel.org" <linux-kselftest@vger.kernel.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "linux-mm@kvack.org" <linux-mm@kvack.org>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Eric Biederman <ebiederm@xmission.com>,
+ Shuah Khan <skhan@linuxfoundation.org>
+References: <20240405131748.1582646-1-usama.anjum@collabora.com>
+ <2a77adeb-ed22-4a9b-a1d9-ac5d29ae696d@linuxfoundation.org>
+ <SA3PR13MB6372E672EA40B403EBE588EDFD032@SA3PR13MB6372.namprd13.prod.outlook.com>
+ <d103fdc2-e7a1-4658-88ab-22929ae48a06@collabora.com>
+Content-Language: en-US
+From: Shuah Khan <skhan@linuxfoundation.org>
+In-Reply-To: <d103fdc2-e7a1-4658-88ab-22929ae48a06@collabora.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-The pull request you sent on Fri, 05 Apr 2024 10:29:24 -0700 (PDT):
+On 4/5/24 14:38, Muhammad Usama Anjum wrote:
+> Hi Tim,
+> 
+> On 4/6/24 12:36 AM, Bird, Tim wrote:
+>> Sorry I didn't catch this on the original submission.
+>>
+>>> -----Original Message-----
+>>> From: Shuah Khan <skhan@linuxfoundation.org>
+>>>
+>>> On 4/5/24 07: 17, Muhammad Usama Anjum wrote: > "Bail out! " is not descriptive. It rather should be: "Failed: " and > then this added prefix
+>>> doesn't need to be added everywhere. Usually in > the logs, we are searching for "Failed"
+>>> ZjQcmQRYFpfptBannerStart
+>>> Caution : This email originated from outside of Sony.
+>>> Do not click links or open any attachments unless you recognize the sender and know the content is safe. Please report phishing if unsure.
+>>>
+>>> ZjQcmQRYFpfptBannerEnd
+>>> On 4/5/24 07:17, Muhammad Usama Anjum wrote:
+>>>> "Bail out! " is not descriptive. It rather should be: "Failed: " and
+>>>> then this added prefix doesn't need to be added everywhere. Usually in
+>>>> the logs, we are searching for "Failed" or "Error" instead of "Bail
+>>>> out" so it must be replace.
+>>
+>> Bail out! is the wording in the original TAP spec.  We should not change
+>> it unless we plan to abandon compatibility with that spec. (which I
+>> would advise against).
+>>
+>> See https://testanything.org/tap-specification.html
+> I didn't know that exact words are coming from TAP. Thank you for catching
+> it. We don't intend to move away from the spec.
+> 
+>>
+>> The reason "Bail out!" is preferred (IMO) is that it is less likely to be emitted
+>> in other test output, and is more 'grepable'.
+> Makes sense.
+> 
+>>
+>> This would get a NAK from me.
+> Let's drop this series.
+> 
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/riscv/linux.git tags/riscv-for-linus-6.9-rc3
+Thank you. Dropped now.
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/261b8e89b6274f7f9c2fee5ff494dfb384d3e2c7
+thanks,
+-- Shuah
 
-Thank you!
-
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
