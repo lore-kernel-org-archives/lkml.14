@@ -1,207 +1,311 @@
-Received: from hi1smtp01.de.adit-jv.com (smtp1.de.adit-jv.com [93.241.18.167])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5668116C692;
-	Fri,  5 Apr 2024 11:44:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.241.18.167
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D0C32032D;
+	Fri,  5 Apr 2024 11:45:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712317477; cv=none; b=gSQC/LhVpgSoADxTqevoP43TdZM4pr7VPItc7f4lHIQFlR6oVMqb52ywoJ1S/6hcB20zyqDVPmF/3ZXXqV8RobRvdRCU1onczlGD4y1SctaTlcZx69taNzpDdEDeb7YF32hInQb/a1efpzV52gLAwPgkuezCfHY1yUU2k7u/39c=
+	t=1712317552; cv=none; b=Z9PS786hwb1oYA0fcgX5C0vE62p4w6uidrLUkCPIad6dScr1rT4M1XrZHimde2cqp6YmByuIdRVt72vxB6R0TcvovEgh5oLbvnfyiLTb5/kPq7RSCW7OZHy2l995I5e4m0RWQM6aSGiIsP5puYfapgrHvdIqERWWRZb2Gye3Pmo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712317477; c=relaxed/simple;
-	bh=2JBzSHDGY98Yx0uLAifekWBTCBn0Y25oNrSFPLoeaVk=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=u4wwKgdQdqa1bE+/I1uZLsex1zmZnMgxkOAgRPBVUwMUmUnd+7Z/2zjC/VSMh7Khothob2WI+CEZAMCsUsKogku+gl5TUkYYjjCOKsn3LxxQmSCmR609pxIgWp5K122s530r4DSD3PInXyW4NNBvuTElJU1Rl9lw1d15Ff6NUyA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=de.adit-jv.com; spf=pass smtp.mailfrom=de.adit-jv.com; arc=none smtp.client-ip=93.241.18.167
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=de.adit-jv.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=de.adit-jv.com
-Received: from hi2exch02.adit-jv.com (hi2exch02.adit-jv.com [10.72.92.28])
-	by hi1smtp01.de.adit-jv.com (Postfix) with ESMTP id 61DF3520100;
-	Fri,  5 Apr 2024 13:39:03 +0200 (CEST)
-Received: from vmlxhi-118.adit-jv.com (10.72.93.77) by hi2exch02.adit-jv.com
- (10.72.92.28) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.37; Fri, 5 Apr
- 2024 13:39:03 +0200
-Date: Fri, 5 Apr 2024 13:38:55 +0200
-From: Hardik Gajjar <hgajjar@de.adit-jv.com>
-To: Ferry Toth <fntoth@gmail.com>
-CC: Hardik Gajjar <hgajjar@de.adit-jv.com>, Andy Shevchenko
-	<andriy.shevchenko@intel.com>, <gregkh@linuxfoundation.org>,
-	<s.hauer@pengutronix.de>, <jonathanh@nvidia.com>,
-	<linux-usb@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<quic_linyyuan@quicinc.com>, <paul@crapouillou.net>,
-	<quic_eserrao@quicinc.com>, <erosca@de.adit-jv.com>
-Subject: Re: [PATCH v4] usb: gadget: u_ether: Replace netif_stop_queue with
- netif_device_detach
-Message-ID: <20240405113855.GA121923@vmlxhi-118.adit-jv.com>
-References: <20231006153808.9758-1-hgajjar@de.adit-jv.com>
- <20231006155646.12938-1-hgajjar@de.adit-jv.com>
- <ZaQS5x-XK08Jre6I@smile.fi.intel.com>
- <20240115132720.GA98840@vmlxhi-118.adit-jv.com>
- <f25283fc-4550-4725-960b-2ea783fd62e1@gmail.com>
- <aeee83d8-dee3-42ed-b705-988b17800721@gmail.com>
+	s=arc-20240116; t=1712317552; c=relaxed/simple;
+	bh=yFjpIS3whW+ZjA1+hS3kVGbmKjV/ELzS5HrcQgHGDig=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=TL0KXKARa9btYgDYPRDxGq78BDgcnt/H0tP1BV57ePj7xtKJUGysSfNFy4z2rQOCj7YtrACzdTNO3JnQck+xGz1XbmMIPqxDHlbmF08XAlF8/LTko3VpdtjA9oUUZMI5yAYwG3Z3+bHflkMLBYTyG6RUevZmwmaVRjTmXAr86L8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jfK+6cAY; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jfK+6cAY"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 46693C433C7;
+	Fri,  5 Apr 2024 11:45:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1712317551;
+	bh=yFjpIS3whW+ZjA1+hS3kVGbmKjV/ELzS5HrcQgHGDig=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=jfK+6cAYZuyNsnDLvCmN0zbLbKymTXGfe+Gt5BQlEzUvR3XEwSrBdkxF1i0Umwt58
+	 kWL0OLykxNOuGuYI3Lh+o1WYxOWeVh7QktuxMQQQfCpu1DNvVqtZurJp++jwHTNPcP
+	 32Tg9QZATdVxK88acUSs11SNkFXq+5l/NDas+128/ON1HPJLCk6HR+GU7vNJhfqEXP
+	 2tBFrSXJyes11GjmcxeYK7P3qvwRc5MJMi1A3JAgZ5+IkaChJyFrdBd2B3WFUoM+za
+	 BKC0AhftvobGWtooSKSV24UvzwRpsjRIuLZXJtjoWPQR/UJFXn+a5Zv1bJuNRwA8VT
+	 djqG3bpkqUHdw==
+Date: Fri, 5 Apr 2024 17:15:47 +0530
+From: Vinod Koul <vkoul@kernel.org>
+To: Bard Liao <yung-chuan.liao@linux.intel.com>
+Cc: linux-sound@vger.kernel.org, linux-kernel@vger.kernel.org,
+	pierre-louis.bossart@linux.intel.com, bard.liao@intel.com
+Subject: Re: [PATCH 6/7] soundwire: debugfs: add interface to read/write
+ commands
+Message-ID: <Zg_ka02zLnXrADGj@matsya>
+References: <20240326090122.1051806-1-yung-chuan.liao@linux.intel.com>
+ <20240326090122.1051806-7-yung-chuan.liao@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <aeee83d8-dee3-42ed-b705-988b17800721@gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-ClientProxiedBy: hi2exch02.adit-jv.com (10.72.92.28) To
- hi2exch02.adit-jv.com (10.72.92.28)
+In-Reply-To: <20240326090122.1051806-7-yung-chuan.liao@linux.intel.com>
 
-On Wed, Apr 03, 2024 at 11:01:58PM +0200, Ferry Toth wrote:
-> Hi,
+On 26-03-24, 09:01, Bard Liao wrote:
+> From: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
 > 
-> Op 15-01-2024 om 21:10 schreef Ferry Toth:
-> > Hi,
-> > 
-> > Op 15-01-2024 om 14:27 schreef Hardik Gajjar:
-> > > On Sun, Jan 14, 2024 at 06:59:19PM +0200, Andy Shevchenko wrote:
-> > > > +Cc: Ferry.
-> > > > 
-> > > > On Fri, Oct 06, 2023 at 05:56:46PM +0200, Hardik Gajjar wrote:
-> > > > > This patch replaces the usage of netif_stop_queue with
-> > > > > netif_device_detach
-> > > > > in the u_ether driver. The netif_device_detach function not
-> > > > > only stops all
-> > > > > tx queues by calling netif_tx_stop_all_queues but also marks
-> > > > > the device as
-> > > > > removed by clearing the __LINK_STATE_PRESENT bit.
-> > > > > 
-> > > > > This change helps notify user space about the disconnection
-> > > > > of the device
-> > > > > more effectively, compared to netif_stop_queue, which only
-> > > > > stops a single
-> > > > > transmit queue.
-> > > > 
-> > > > This change effectively broke my USB ether setup.
-> > > > 
-> > > > git bisect start
-> > > > # status: waiting for both good and bad commits
-> > > > # good: [1f24458a1071f006e3f7449c08ae0f12af493923] Merge tag
-> > > > 'tty-6.7-rc1' of
-> > > > git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/tty
-> > > > git bisect good 1f24458a1071f006e3f7449c08ae0f12af493923
-> > > > # status: waiting for bad commit, 1 good commit known
-> > > > # bad: [2c40c1c6adab90ee4660caf03722b3a3ec67767b] Merge tag
-> > > > 'usb-6.7-rc1' of
-> > > > git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/usb
-> > > > git bisect bad 2c40c1c6adab90ee4660caf03722b3a3ec67767b
-> > > > # bad: [17d6b82d2d6d467149874b883cdba844844b996d] usb/usbip: fix
-> > > > wrong data added to platform device
-> > > > git bisect bad 17d6b82d2d6d467149874b883cdba844844b996d
-> > > > # good: [ba6b83a910b6d8a9379bda55cbf06cb945473a96] usb:
-> > > > xhci-mtk: add a bandwidth budget table
-> > > > git bisect good ba6b83a910b6d8a9379bda55cbf06cb945473a96
-> > > > # good: [dddc00f255415b826190cfbaa5d6dbc87cd9ded1] Revert "usb:
-> > > > gadget: uvc: cleanup request when not in correct state"
-> > > > git bisect good dddc00f255415b826190cfbaa5d6dbc87cd9ded1
-> > > > # bad: [8f999ce60ea3d47886b042ef1f22bb184b6e9c59] USB: typec:
-> > > > tps6598x: Refactor tps6598x port registration
-> > > > git bisect bad 8f999ce60ea3d47886b042ef1f22bb184b6e9c59
-> > > > # bad: [f49449fbc21e7e9550a5203902d69c8ae7dfd918] usb: gadget:
-> > > > u_ether: Replace netif_stop_queue with netif_device_detach
-> > > > git bisect bad f49449fbc21e7e9550a5203902d69c8ae7dfd918
-> > > > # good: [97475763484245916735a1aa9a3310a01d46b008] USB: usbip:
-> > > > fix stub_dev hub disconnect
-> > > > git bisect good 97475763484245916735a1aa9a3310a01d46b008
-> > > > # good: [0f5aa1b01263b8b621bc4f031a1f2983ef8517b7] usb: usbtest:
-> > > > fix a type promotion bug
-> > > > git bisect good 0f5aa1b01263b8b621bc4f031a1f2983ef8517b7
-> > > > # first bad commit: [f49449fbc21e7e9550a5203902d69c8ae7dfd918]
-> > > > usb: gadget: u_ether: Replace netif_stop_queue with
-> > > > netif_device_detach
-> > > > 
-> > > > Note, revert indeed helps. Should I send a revert?
-> > > > 
-> > > > I use configfs to setup USB EEM function and it worked till this
-> > > > commit.
-> > > > If needed, I can share my scripts, but I believe it's not needed
-> > > > as here
-> > > > we see a clear regression.
-> > > > 
-> > > > -- 
-> > > > With Best Regards,
-> > > > Andy Shevchenko
-> > > > 
-> > > > 
-> > > 
-> > > Without this patch, there may be a potential crash in a race
-> > > condition, as __LINK_STATE_PRESENT is monitored at many places in
-> > > the Network stack to determine the status of the link.
-> > > 
-> > > Could you please provide details on how this patch affects your
-> > > functionality? Are you experiencing connection problems or data
-> > > transfer interruptions?
-> > 
-> > In my case on mrfld (Intel Edison Arduino) using configfs with this
-> > patch no config from host through dhcp is received. Manual setting
-> > correct ipv4 addr / mask / gw still no connection.
-> > 
-> > > Instead of reverting this patch, consider trying the upcoming patch
-> > > (soon to be available in the mainline) to see if it resolves your
-> > > issue.
-> > > 
-> > > https://urldefense.proofpoint.com/v2/url?u=https-3A__lore.kernel.org_lkml_2023122900-2Dcommence-2Dagenda-2Ddb2c-40gregkh_T_-23m36a812d3f1e5d744ee32381f6ae4185940b376de&d=DwICaQ&c=euGZstcaTDllvimEN8b7jXrwqOf-v5A_CdpgnVfiiMM&r=SAhjP5GOmrADp1v_EE5jWoSuMlYCIt9gKduw-DCBPLs&m=4g6EtvkKKfp8YYHpU196b2HzQxCMgsAhuo8pFng3X4TCWdcOVEUCug2-l2hRfLyV&s=t82wZAFwm2FTSaacgsmSpZWvWEa89jN8GX-okIJrwFw&e=
-> > > 
-> > 
-> > This patch works for me with v6.7.0.
+> We have an existing debugfs files to read standard registers
+> (DP0/SCP/DPn).
 > 
-> I need to revisit this. The patch in this topic landed in v6.7.0-rc1
-> (f49449fbc21e) and breaks the gadget mrfld (Intel Edison Arduino) and other
-> platforms as well.
+> This patch provides a more generic interface to ANY set of read/write
+> contiguous registers in a peripheral device. In follow-up patches,
+> this interface will be extended to use BRA transfers.
 > 
-> The mentioned fix "usb: gadget: u_ether: Re-attach netif device to mirror
-> detachment*" * has landed in v6.8.0-rc1 (76c945730). What it does fix: I am
-> able to make a USB EEM function again.
+> The sequence is to use the following files added under the existing
+> debugsfs directory for each peripheral device:
 > 
-> However, now a hidden issue appears. With mrfld there is an external switch
-> to easily switch between host and device mode.
+> command (write 0, read 1)
+> num_bytes
+> start_address
+> firmware_file (only for writes)
+> read_buffer (only for reads)
 > 
-> What is not fixed:
+> Example for a read command - this checks the 6 bytes used for
+> enumeration.
 > 
-> - when in device mode and unplugging/plugging the cable when using `ifconfig
-> usb0` the line "usb0: flags=4163<UP,BROADCAST,RUNNING,MULTICAST>" changes to
-> "usb0: flags=4099<UP,BROADCAST,MULTICAST>" as is supposed to, the route
-> table is updated and the dir `/sys/class/net/usb0` exists and in the dir
-> `cat carrier*` shows the carrier up and down counts. This is the expected
-> behavior.
-> 
-> - when in device mode and switching to host mode `ifconfig usb0` continues
-> to show "RUNNING", the route table is not modified and the dir
-> `/sys/class/net/usb0` no longer exists.
-> 
-> - switching to device mode again, USB EEM works fine, no changes to RUNNING
-> or the route table happen and the dir `/sys/class/net/usb0` still is non-
-> existing.
-> 
-> - unplugging/plugging the cable in device mode after this does not restore
-> the original situation.
-> 
-> This behavior I tested on v6.9.0-rc2 (with a few unrelated but essential
-> patches on top) and bisected back to this patch in v6.70-rc1.
-> 
-> It seems `netif_device_detach` does not completely clean up as expected and
-> `netif_device_attach` does not completely rebuild.
-> 
-> I am wondering if on other platforms this can be reproduced? If so, inho it
-> would be best to revert the both patches until the issue is resolved.
-> 
-> Thanks,
-> 
-> Ferry
+> cd /sys/kernel/debug/soundwire/master-0-0/sdw\:0\:025d\:0711\:01/
+> echo 1 > command
+> echo 6 > num_bytes
+> echo 0x50 > start_address
+> echo 1 > go
 
-I'm wondering why the /sys/class/net/usb0 directory is being removed when the network interface is still available.
-This behavior seems not correct.
+can we have a simpler interface? i am not a big fan of this kind of
+structure for debugging.
 
-The gether_cleanup function should remove the interface along with the associated kobject,
-and this function should only be called during the unloading of the driver or deleting the gadget.
-Could you please confirm whether any of your custom modifications are removing the net interface kobject?
+How about two files read_bytes and write_bytes where you read/write
+bytes.
 
+echo 0x50 6 > read_bytes
+cat read_bytes
+
+in this format I would like to see addr and values (not need to print
+address /value words (regmap does that too)
+
+For write
+
+echo start_addr N byte0 byte 1 ... byte N > write_bytes
+
+ 
+> cat read_buffer
+> address 0x50 val 0x30
+> address 0x51 val 0x02
+> address 0x52 val 0x5d
+> address 0x53 val 0x07
+> address 0x54 val 0x11
+> address 0x55 val 0x01
 > 
-> > > Thanks,
-> > > Hardik
-> > 
+> Example with a 2-byte firmware file written in DP0 address 0x22
+> 
+> od -x /lib/firmware/test_firmware
+> 0000000 0a37
+> 0000002
+> 
+> cd /sys/kernel/debug/soundwire/master-0-0/sdw\:0\:025d\:0711\:01/
+> echo 0 > command
+> echo 2 > num_bytes
+> echo 0x22 > start_address
+> echo "test_firmware" > firmware_file
+> echo 1 > go
+> 
+> cd /sys/kernel/debug/soundwire/master-0-0/sdw\:0\:025d\:0711\:01/
+> echo 1 > command
+> echo 2 > num_bytes
+> echo 0x22 > start_address
+> echo 1 > go
+> cat read_buffer
+> 
+> address 0x22 val 0x37
+> address 0x23 val 0x0a
+> 
+> Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+> Reviewed-by: Rander Wang <rander.wang@intel.com>
+> Signed-off-by: Bard Liao <yung-chuan.liao@linux.intel.com>
+> ---
+>  drivers/soundwire/debugfs.c | 150 ++++++++++++++++++++++++++++++++++++
+>  1 file changed, 150 insertions(+)
+> 
+> diff --git a/drivers/soundwire/debugfs.c b/drivers/soundwire/debugfs.c
+> index 67abd7e52f09..6d253d69871d 100644
+> --- a/drivers/soundwire/debugfs.c
+> +++ b/drivers/soundwire/debugfs.c
+> @@ -3,6 +3,7 @@
+>  
+>  #include <linux/device.h>
+>  #include <linux/debugfs.h>
+> +#include <linux/firmware.h>
+>  #include <linux/mod_devicetable.h>
+>  #include <linux/pm_runtime.h>
+>  #include <linux/slab.h>
+> @@ -137,6 +138,145 @@ static int sdw_slave_reg_show(struct seq_file *s_file, void *data)
+>  }
+>  DEFINE_SHOW_ATTRIBUTE(sdw_slave_reg);
+>  
+> +#define MAX_CMD_BYTES 256
+> +
+> +static int cmd;
+> +static u32 start_addr;
+> +static size_t num_bytes;
+> +static u8 read_buffer[MAX_CMD_BYTES];
+> +static char *firmware_file;
+> +
+> +static int set_command(void *data, u64 value)
+> +{
+> +	struct sdw_slave *slave = data;
+> +
+> +	if (value > 1)
+> +		return -EINVAL;
+> +
+> +	/* Userspace changed the hardware state behind the kernel's back */
+> +	add_taint(TAINT_USER, LOCKDEP_STILL_OK);
+> +
+> +	dev_dbg(&slave->dev, "command: %s\n", value ? "read" : "write");
+> +	cmd = value;
+> +
+> +	return 0;
+> +}
+> +DEFINE_DEBUGFS_ATTRIBUTE(set_command_fops, NULL,
+> +			 set_command, "%llu\n");
+> +
+> +static int set_start_address(void *data, u64 value)
+> +{
+> +	struct sdw_slave *slave = data;
+> +
+> +	/* Userspace changed the hardware state behind the kernel's back */
+> +	add_taint(TAINT_USER, LOCKDEP_STILL_OK);
+> +
+> +	dev_dbg(&slave->dev, "start address %#llx\n", value);
+> +
+> +	start_addr = value;
+> +
+> +	return 0;
+> +}
+> +DEFINE_DEBUGFS_ATTRIBUTE(set_start_address_fops, NULL,
+> +			 set_start_address, "%llu\n");
+> +
+> +static int set_num_bytes(void *data, u64 value)
+> +{
+> +	struct sdw_slave *slave = data;
+> +
+> +	if (value == 0 || value > MAX_CMD_BYTES)
+> +		return -EINVAL;
+> +
+> +	/* Userspace changed the hardware state behind the kernel's back */
+> +	add_taint(TAINT_USER, LOCKDEP_STILL_OK);
+> +
+> +	dev_dbg(&slave->dev, "number of bytes %lld\n", value);
+> +
+> +	num_bytes = value;
+> +
+> +	return 0;
+> +}
+> +DEFINE_DEBUGFS_ATTRIBUTE(set_num_bytes_fops, NULL,
+> +			 set_num_bytes, "%llu\n");
+> +
+> +static int cmd_go(void *data, u64 value)
+> +{
+> +	struct sdw_slave *slave = data;
+> +	int ret;
+> +
+> +	if (value != 1)
+> +		return -EINVAL;
+> +
+> +	/* one last check */
+> +	if (start_addr > SDW_REG_MAX ||
+> +	    num_bytes == 0 || num_bytes > MAX_CMD_BYTES)
+> +		return -EINVAL;
+> +
+> +	ret = pm_runtime_get_sync(&slave->dev);
+> +	if (ret < 0 && ret != -EACCES) {
+> +		pm_runtime_put_noidle(&slave->dev);
+> +		return ret;
+> +	}
+> +
+> +	/* Userspace changed the hardware state behind the kernel's back */
+> +	add_taint(TAINT_USER, LOCKDEP_STILL_OK);
+> +
+> +	dev_dbg(&slave->dev, "starting command\n");
+> +
+> +	if (cmd == 0) {
+> +		const struct firmware *fw;
+> +
+> +		ret = request_firmware(&fw, firmware_file, &slave->dev);
+> +		if (ret < 0) {
+> +			dev_err(&slave->dev, "firmware %s not found\n", firmware_file);
+> +			goto out;
+> +		}
+> +
+> +		if (fw->size != num_bytes) {
+> +			dev_err(&slave->dev,
+> +				"firmware %s: unexpected size %zd, desired %zd\n",
+> +				firmware_file, fw->size, num_bytes);
+> +			release_firmware(fw);
+> +			goto out;
+> +		}
+> +
+> +		ret = sdw_nwrite_no_pm(slave, start_addr, num_bytes, fw->data);
+> +		release_firmware(fw);
+> +	} else {
+> +		ret = sdw_nread_no_pm(slave, start_addr, num_bytes, read_buffer);
+> +	}
+> +
+> +	dev_dbg(&slave->dev, "command completed %d\n", ret);
+> +
+> +out:
+> +	pm_runtime_mark_last_busy(&slave->dev);
+> +	pm_runtime_put(&slave->dev);
+> +
+> +	return ret;
+> +}
+> +DEFINE_DEBUGFS_ATTRIBUTE(cmd_go_fops, NULL,
+> +			 cmd_go, "%llu\n");
+> +
+> +#define MAX_LINE_LEN 128
+> +
+> +static int read_buffer_show(struct seq_file *s_file, void *data)
+> +{
+> +	char buf[MAX_LINE_LEN];
+> +	int i;
+> +
+> +	if (num_bytes == 0 || num_bytes > MAX_CMD_BYTES)
+> +		return -EINVAL;
+> +
+> +	for (i = 0; i < num_bytes; i++) {
+> +		scnprintf(buf, MAX_LINE_LEN, "address %#x val 0x%02x\n",
+> +			  start_addr + i, read_buffer[i]);
+> +		seq_printf(s_file, "%s", buf);
+> +	}
+> +
+> +	return 0;
+> +}
+> +DEFINE_SHOW_ATTRIBUTE(read_buffer);
+> +
+>  void sdw_slave_debugfs_init(struct sdw_slave *slave)
+>  {
+>  	struct dentry *master;
+> @@ -151,6 +291,16 @@ void sdw_slave_debugfs_init(struct sdw_slave *slave)
+>  
+>  	debugfs_create_file("registers", 0400, d, slave, &sdw_slave_reg_fops);
+>  
+> +	/* interface to send arbitrary commands */
+> +	debugfs_create_file("command", 0200, d, slave, &set_command_fops);
+> +	debugfs_create_file("start_address", 0200, d, slave, &set_start_address_fops);
+> +	debugfs_create_file("num_bytes", 0200, d, slave, &set_num_bytes_fops);
+> +	debugfs_create_file("go", 0200, d, slave, &cmd_go_fops);
+> +
+> +	debugfs_create_file("read_buffer", 0400, d, slave, &read_buffer_fops);
+> +	firmware_file = NULL;
+> +	debugfs_create_str("firmware_file", 0200, d, &firmware_file);
+> +
+>  	slave->debugfs = d;
+>  }
+>  
+> -- 
+> 2.34.1
+
+-- 
+~Vinod
