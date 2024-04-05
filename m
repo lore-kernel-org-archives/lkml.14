@@ -1,104 +1,105 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 628641A26E
-	for <linux-kernel@vger.kernel.org>; Fri,  5 Apr 2024 09:48:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB5F51A26E
+	for <linux-kernel@vger.kernel.org>; Fri,  5 Apr 2024 09:50:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712310497; cv=none; b=QD9heXD5Nmh5EvAI4hcbF+pRG1gXNktzBXPvJ5EYmrUdpHmZ6HNzZEPc/osQ3MspzuRc/W0ebxq+/bH4uBFLkJqyzXNFb6yMEhV1Nta1+H/jwKM5/TXX+JRVC2sOHxElGUsWuV/yGinKjw7zrPuXUhLzEKw188FT7v4MWudsgCg=
+	t=1712310614; cv=none; b=q0txXKBMoCWkIxfarV42ygFN6FLV8zoH1NG8Y0RfGp6GT+BJSCpQ6240mm87qgonVLweIT80rxEqLSEzwaEscohoAuGuPQs4/fgYU3e1axMHsHw2Y3b2uHqtghcsu8Ux5qdnG08sKOkUxybq34X5vpEGWz0ggbdJxTwOEsFP/KM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712310497; c=relaxed/simple;
-	bh=cJbnnlU2IrQbKX6MyuGanbX91V+FSwBB56HgQEm7moE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=f9HiIA1N4hhvdFYVSzqtSf298utKEQT6rGedo3MjCM2z4ycFCorKnzTSqxEf/Z6KC2KFBQ/KDdIDjXnCSwd0PbjH2JuInhQedFGjFxxTAUxR0cmh/6dApMeioac5PVmHNbeJSJO+tVx0u5v7UUTJTvaJQWw5gR4TK1mbA0WrbfE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 422C1FEC;
-	Fri,  5 Apr 2024 02:48:45 -0700 (PDT)
-Received: from [10.57.72.221] (unknown [10.57.72.221])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7C9753F64C;
-	Fri,  5 Apr 2024 02:48:10 -0700 (PDT)
-Message-ID: <a73e4a31-cd32-4e75-ad79-10492b2cd0e4@arm.com>
-Date: Fri, 5 Apr 2024 11:48:07 +0200
+	s=arc-20240116; t=1712310614; c=relaxed/simple;
+	bh=hSWXhZbD6PA6W0zh+ZqK9opYJ0KSx0CuUh2LDJVqsug=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=mxBMhGaoJ3EfyGhPAFvwJyduJhCvgATX+1CDu9J1D63NQxtb/rgevQeEz8vY6Lc6czsjem3OOMDlCiaTEXdtnvD0BghWHMLpsp78LYEpGNCnSxDrEOegbwSXwHKg9ANFK4epkVkgwFvYyGV+j/H4CDpfbKs+bR+nxaW+F7I8v6A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <mkl@pengutronix.de>)
+	id 1rsgCl-0003Gt-Rv; Fri, 05 Apr 2024 11:49:51 +0200
+Received: from [2a0a:edc0:0:b01:1d::7b] (helo=bjornoya.blackshift.org)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <mkl@pengutronix.de>)
+	id 1rsgCl-00AXqP-3W; Fri, 05 Apr 2024 11:49:51 +0200
+Received: from pengutronix.de (unknown [172.20.34.65])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	(Authenticated sender: mkl-all@blackshift.org)
+	by smtp.blackshift.org (Postfix) with ESMTPSA id AE6A52B282F;
+	Fri,  5 Apr 2024 09:49:50 +0000 (UTC)
+Date: Fri, 5 Apr 2024 11:49:50 +0200
+From: Marc Kleine-Budde <mkl@pengutronix.de>
+To: Esben Haabendal <esben@geanix.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	Jiri Slaby <jirislaby@kernel.org>, Shawn Guo <shawnguo@kernel.org>, 
+	Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, 
+	Fabio Estevam <festevam@gmail.com>, linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org, 
+	imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 1/2] serial: imx: Introduce timeout when waiting on
+ transmitter empty
+Message-ID: <20240405-impurity-emerald-f67dc37adf9b-mkl@pengutronix.de>
+References: <76cf9ce9cbf9dcdf78bc00ce7a919db1776ebce1.1712309058.git.esben@geanix.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 6/7] sched/fair: Remove on_null_domain() and redundant
- checks
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: linux-kernel@vger.kernel.org, Aaron Lu <aaron.lu@intel.com>,
- Rui Zhang <rui.zhang@intel.com>,
- Anna-Maria Behnsen <anna-maria@linutronix.de>,
- Frederic Weisbecker <frederic@kernel.org>, Ingo Molnar <mingo@kernel.org>,
- Thomas Gleixner <tglx@linutronix.de>, Juri Lelli <juri.lelli@redhat.com>,
- Vincent Guittot <vincent.guittot@linaro.org>,
- Dietmar Eggemann <dietmar.eggemann@arm.com>,
- Steven Rostedt <rostedt@goodmis.org>, Ben Segall <bsegall@google.com>,
- Mel Gorman <mgorman@suse.de>, Daniel Bristot de Oliveira
- <bristot@redhat.com>, Valentin Schneider <vschneid@redhat.com>,
- Waiman Long <longman@redhat.com>, Andrew Morton <akpm@linux-foundation.org>,
- Michal Hocko <mhocko@suse.com>
-References: <20240403150543.2793354-1-pierre.gondois@arm.com>
- <20240403150543.2793354-7-pierre.gondois@arm.com>
- <20240404072745.GA35684@noisy.programming.kicks-ass.net>
-Content-Language: en-US
-From: Pierre Gondois <pierre.gondois@arm.com>
-In-Reply-To: <20240404072745.GA35684@noisy.programming.kicks-ass.net>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="6rhh7y57qqxw7exf"
+Content-Disposition: inline
+In-Reply-To: <76cf9ce9cbf9dcdf78bc00ce7a919db1776ebce1.1712309058.git.esben@geanix.com>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: mkl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-Hello Peter,
 
-On 4/4/24 09:27, Peter Zijlstra wrote:
-> On Wed, Apr 03, 2024 at 05:05:38PM +0200, Pierre Gondois wrote:
->> CPUs with a NULL sched domain are removed from the HKR_TYPE_SCHED
->> isolation mask. The two following checks are equialent:
->> - !housekeeping_runtime_test_cpu(cpu, HKR_TYPE_SCHED)
->> - on_null_domain(rq)
->>
->> Remove on_null_domain() and the redundant checks.
->>
->> Signed-off-by: Pierre Gondois <pierre.gondois@arm.com>
->> ---
->>   kernel/sched/fair.c | 18 ++++++------------
->>   1 file changed, 6 insertions(+), 12 deletions(-)
->>
->> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
->> index 3e0f2a0f153f..9657c8f2176b 100644
->> --- a/kernel/sched/fair.c
->> +++ b/kernel/sched/fair.c
->> @@ -11830,11 +11830,6 @@ static void sched_balance_domains(struct rq *rq, enum cpu_idle_type idle)
->>   
->>   }
->>   
->> -static inline int on_null_domain(struct rq *rq)
->> -{
->> -	return unlikely(!rcu_dereference_sched(rq->sd));
->> -}
->> -
->>   #ifdef CONFIG_NO_HZ_COMMON
->>   /*
->>    * NOHZ idle load balancing (ILB) details:
->> @@ -12040,7 +12035,7 @@ void nohz_balance_exit_idle(struct rq *rq)
->>   	SCHED_WARN_ON(rq != this_rq());
->>   
->>   	/* If we're a completely isolated CPU, we don't play: */
->> -	if (on_null_domain(rq))
->> +	if (!housekeeping_runtime_test_cpu(cpu_of(rq), HKR_TYPE_SCHED))
->>   		return;
->>   
->>   	if (likely(!rq->nohz_tick_stopped))
-> 
-> This seems broken, the whole null domain can happen with cpusets, but
-> this housekeeping nonsense is predicated on CPU_ISOLATION and none of
-> that is mandatory for CPUSETS.
+--6rhh7y57qqxw7exf
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-ok right,
-I will try to remove this implicit dependency,
+On 05.04.2024 11:25:13, Esben Haabendal wrote:
+> By waiting at most 1 second for USR2_TXDC to be set, we avoid a potentital
+> deadlock.
+>=20
+> In case of the timeout, there is not much we can do, so we simply ignore
+> the transmitter state and optimistically try to continue.
+>=20
+> Signed-off-by: Esben Haabendal <esben@geanix.com>
+> Acked-by: Marc Kleine-Budde <mkl@pengutronix.de>
 
-Regards,
-Pierre
+Where's the cover letter and patch 2/2? Have a look at b4 [1], it's a
+great tool to help you with sending git patch series.
+
+[1] https://b4.docs.kernel.org/en/latest/
+
+Marc
+
+--=20
+Pengutronix e.K.                 | Marc Kleine-Budde          |
+Embedded Linux                   | https://www.pengutronix.de |
+Vertretung N=C3=BCrnberg              | Phone: +49-5121-206917-129 |
+Amtsgericht Hildesheim, HRA 2686 | Fax:   +49-5121-206917-9   |
+
+--6rhh7y57qqxw7exf
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEUEC6huC2BN0pvD5fKDiiPnotvG8FAmYPyTsACgkQKDiiPnot
+vG8gsAf/fEGSFLsAsbgzZopYqja0FtibvbPZ1dlovaaUkpMAPJxw50RrvIK4/Nor
+CQYR8XnT9GiH77IUOjNphjpvJJYNXWxkvsj1U9vAYziAV+fDRCzXxYWVmJf/7MNC
+gJ2EOm2FCAmlOkiRcvzeoaIIodo2465NLn9WQaWj9qbrGslgQ996WZ6bl1wu6aZG
+LS4/7FK9dbdAu8w6poagajePRAYZ9U5faIiBA5ZMSegB0dHHXgUbQAzRqvCZmWVY
+3qbzsy+0uvN0lz4Z7jP6tQ/8YcKl5vz/HOdYAyN2qI3yJnB+ChB71ON3RwYSSHTO
+pVA/zhZztk307ZmaTA7eeWnLFBAyFw==
+=BAfU
+-----END PGP SIGNATURE-----
+
+--6rhh7y57qqxw7exf--
