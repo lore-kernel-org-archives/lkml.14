@@ -1,237 +1,187 @@
-Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2103.outbound.protection.outlook.com [40.107.243.103])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f173.google.com (mail-pg1-f173.google.com [209.85.215.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1783171E73
-	for <linux-kernel@vger.kernel.org>; Fri,  5 Apr 2024 18:16:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.243.103
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712341000; cv=fail; b=nr8R70lx9ijOF/ku779IrHmoxaFDUkurDD4ECTLBtK4QXjSuM1tl81CrdW7r5YhkL3fF4HeIC5IDHNmEH/HEh5LU01emFAWd3yWHWk75d676iZ00V93yN8TKqXPrGoKSTztQ0mE410N8wusFrdG6BR3ZFUuVCQ34qeq5RcHIyNY=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712341000; c=relaxed/simple;
-	bh=b+VOh4nd7oGjj+46zRtjT+gXfViWPw4o8+/5APRAqGk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=F4SUZ8vXOpOrIit1VR858D0L5dPsQ46dzB2ldTcaWO/GDWvfOU1kQxJ5YU4qdN73qYBc+3itYrL1QFl3H51BEOzEUxFc+Nu/NEQMBEhx0UmAtTWhMGgmsZD347ehgqPFzH+O4l/mv+J+NbePB9N7kDgpmUSJuPdh+zheGoYxxK8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=VHzvvWsn; arc=fail smtp.client-ip=40.107.243.103
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 188E2171E64
+	for <linux-kernel@vger.kernel.org>; Fri,  5 Apr 2024 18:18:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.173
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1712341097; cv=none; b=dOIsXdcmxYaz86B0uKVEhzOP5DEw+ZLbS0xMFynqyYvCUnCizYgpIqS5HTgfVNyONz1gms0SfwM0gyXDVzpRm434CFe1o4f3bKxTlIbEf44rP6hlB6Wwnvvz5qOJo6plMe6n/wuKOz00/DRqHG8tdfgo6AtIHprDMK8GwB+7qKk=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1712341097; c=relaxed/simple;
+	bh=wdMJhgg03J9ToLHXaFixR/36utzApFawE0KvfzXoqHs=;
+	h=From:Message-Id:Content-Type:Mime-Version:Subject:Date:
+	 In-Reply-To:Cc:To:References; b=kC/GhFghSl3UXJj9jyCC6OVQ4zkzwO4x5iVMiGi+vsq3zb4dc0P0dZLnm0K3IECJzxhzlWcZDBNalbD8ECXHW7lji9AhOiQFAphdtAH0wG12o6foR83wgAqdsfdlaLEEZyLz3plVa3ZLcqkSjSjjjbuPNZgRRiOZJoPZqtF8XWw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dilger.ca; spf=pass smtp.mailfrom=dilger.ca; dkim=pass (2048-bit key) header.d=dilger-ca.20230601.gappssmtp.com header.i=@dilger-ca.20230601.gappssmtp.com header.b=pDfz/pHp; arc=none smtp.client-ip=209.85.215.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dilger.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dilger.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="VHzvvWsn"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=mdt9B1785xflqM8UneTmI37q0sahMuEQdiWB5m/81s/Rm+3MGhfKMGhyEdFhhuzQkmJDZ7CxVXv3g23YWxxoujwNJAWs9wPd7ltzPW5anP1s1/Mkjvk0xAJ8AG4rSdKXL2iDTo3UsA8FVkS2v9Y8wlqhXqHrOuB2lT1dqOO9KCO1E2UZGwW1ivUEdiJBDZCKJ83HHZrYyciwnKxbr0W97tPmJwNSvjLYGDa1nFgbprF427k53/ya0FGBnnoRuyfLbRYmDIKYYS7XJgVf/wmb7UwbMiKOluddungNswkZoKkPg3Id91dzgEmZAYJ2RHpoUbrlupKh00d0XpS8IkFXVg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=+NL/KIvxvAV++WeDu1cV5CmNrcO0AJ7LxX7Dumkmbg4=;
- b=f3z/osyfoSFWhFX+xNqJEFoq7eZVex92rf8pDdY/rXJ4nOJFvCcJv1aNpR2VF7tWZIhu8VzDZQAHQcVFjFofykdKDSAPTfNeXU6Rd94Z7JnuiAsOx1UArfOFwMxjV+BJ/HYetwc3PZDzlOkDGsEe2Th3aWWRdRf91XZG4IiaMhsJ+I30YpVW3Meyc6gstJnAmbSAxG/ZJmqQ+F14hsLJ1vWLvU228U4txgi9coonRm4RZYmJGTrcT0VCQ0SUfefXrj0LQ7/EjWVNM/7kWXRffi5UY/Rp2buwz//ojxAe5/KTrFsudeC/gmnp1Ht9a/jIDKYrS10uushloGH7FcUK9Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=+NL/KIvxvAV++WeDu1cV5CmNrcO0AJ7LxX7Dumkmbg4=;
- b=VHzvvWsnAWum7AL2cx/98WHqjEtZCgf0av4TUO05PHkfnTUe2Ska/W8umFjZARYbYWKCdEMi7kDbtUuBBY/oQI8SqWMVCQX+1HS7MHvqfdEqNLdWTG05OEhaqwRKU0oUsyDFbnd04oP+LvCciPRovC/Wp0wZy6lQEvnfJR/hg+HL4LETcHcs0bPbgLvbFvNP+32uLW3tvVwqYOTElyo1HtfQ+ITfw+o1OH+zgy6s9MtE3d9iT+1s+Fs2Au9eFdxOx51xTQwsAltWYKXqSgwdG+oF0lmmrVR0Ib10DUqTLAjbKALtYjlOuZlfO+Q7ko2S33QWOyryIP0aDn9Doqd6Zw==
-Received: from DM6PR12MB3849.namprd12.prod.outlook.com (2603:10b6:5:1c7::26)
- by SA3PR12MB7831.namprd12.prod.outlook.com (2603:10b6:806:311::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.46; Fri, 5 Apr
- 2024 18:16:34 +0000
-Received: from DM6PR12MB3849.namprd12.prod.outlook.com
- ([fe80::6aec:dbca:a593:a222]) by DM6PR12MB3849.namprd12.prod.outlook.com
- ([fe80::6aec:dbca:a593:a222%5]) with mapi id 15.20.7409.042; Fri, 5 Apr 2024
- 18:16:34 +0000
-Date: Fri, 5 Apr 2024 15:16:33 -0300
-From: Jason Gunthorpe <jgg@nvidia.com>
-To: Peter Xu <peterx@redhat.com>
-Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Matthew Wilcox <willy@infradead.org>,
-	Rik van Riel <riel@surriel.com>,
-	Lorenzo Stoakes <lstoakes@gmail.com>,
-	Axel Rasmussen <axelrasmussen@google.com>,
-	Yang Shi <shy828301@gmail.com>, John Hubbard <jhubbard@nvidia.com>,
-	linux-arm-kernel@lists.infradead.org,
-	"Kirill A . Shutemov" <kirill@shutemov.name>,
-	Andrew Jones <andrew.jones@linux.dev>,
-	Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Muchun Song <muchun.song@linux.dev>,
-	Christoph Hellwig <hch@infradead.org>,
-	linux-riscv@lists.infradead.org,
-	James Houghton <jthoughton@google.com>,
-	David Hildenbrand <david@redhat.com>,
-	Andrea Arcangeli <aarcange@redhat.com>,
-	"Aneesh Kumar K . V" <aneesh.kumar@kernel.org>,
-	Mike Kravetz <mike.kravetz@oracle.com>
-Subject: Re: [PATCH v3 00/12] mm/gup: Unify hugetlb, part 2
-Message-ID: <20240405181633.GH5383@nvidia.com>
-References: <20240321220802.679544-1-peterx@redhat.com>
- <20240322161000.GJ159172@nvidia.com>
- <ZgHJaJSpoeJVEccN@x1n>
- <20240326140252.GH6245@nvidia.com>
- <Zg8gEyE4o_VJsTmx@x1n>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Zg8gEyE4o_VJsTmx@x1n>
-X-ClientProxiedBy: BL1PR13CA0358.namprd13.prod.outlook.com
- (2603:10b6:208:2c6::33) To DM6PR12MB3849.namprd12.prod.outlook.com
- (2603:10b6:5:1c7::26)
+	dkim=pass (2048-bit key) header.d=dilger-ca.20230601.gappssmtp.com header.i=@dilger-ca.20230601.gappssmtp.com header.b="pDfz/pHp"
+Received: by mail-pg1-f173.google.com with SMTP id 41be03b00d2f7-5cddfe0cb64so1652073a12.0
+        for <linux-kernel@vger.kernel.org>; Fri, 05 Apr 2024 11:18:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=dilger-ca.20230601.gappssmtp.com; s=20230601; t=1712341094; x=1712945894; darn=vger.kernel.org;
+        h=references:to:cc:in-reply-to:date:subject:mime-version:message-id
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=9Yt5fFOUcQfwmred9ry2pM1oK9JKeRbA+BTjVzFtQRM=;
+        b=pDfz/pHpB9sII143/jXXuhAPupP2d7QqElx2yN6GP5mJZLDzlEq2j3+FkgpvDG8R70
+         bByMj5Xf7C/7OBEFOHZJHxMZaAaeKda+7qN4Wqz17N0FoTKvF7NR+2bZhPvLtMV/EOhy
+         sGkxkLM1kj/Dnl5jKKvuGakKCPr3uUo4pKbYZMoRn9IpjWhB1qqqSSRqoOx07X/YaMjY
+         c3AixXB7DPaoEBUwJUZGapwQnmdKMrBJqoTGe6YglQ6eNqP3C6Cp+2GOJU1Vaq3wOAFN
+         ted3ttFSX/T1A1av5p3hdiK9+mzxI4Qd54n3bf7Ybmz3cmSvBuArKYuLL7sZuYgsBIHi
+         HNJA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712341094; x=1712945894;
+        h=references:to:cc:in-reply-to:date:subject:mime-version:message-id
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=9Yt5fFOUcQfwmred9ry2pM1oK9JKeRbA+BTjVzFtQRM=;
+        b=fT+cN7/BXmbMzwt9J9d0mhZufiF8EYudF2rnTdbpUhigrTyaEgeopa1Vct+8BvZSQ9
+         KzAKpBXlORLkSY3gAUjYXHE6ZHw/+kkBdCuCdf2I9LyMoKWCV2JdrJkoGGf2fA8c0ooc
+         9wF2Cc4kLyuSc3nA26rJnPf9a3VbMSY4ho40zzNXelVRXHRVZkifLxBkckOrbdP/1HhG
+         7lQdqbsuSUbqiLsZaJlMn5QjoIw3S9f/3K+ko5U0756BCXVB7i+FFdKdjtYpHmUV5PR/
+         GmyK2aAOi30ym3lkdqj2DIs5ARY7C+5Kff3zIHyj60C1+uCS/XioFCuUuO9B92CsONCG
+         wCBQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVIGHrbDqHIetsgILcWZ/J3TqaGNNcsAJgcBQHEa9Rno4Uk+cg7JacKdGD0li8UXfc118ba9QtVzjjs8X4aQNyrKHzgeIfhqXjjWmZ1
+X-Gm-Message-State: AOJu0YxU7G8+wtlGzV4K6hQFWREq91wIUi63o0rEPJYeqCF06kPY1AA6
+	pGZA6UwZM3UzPWW4hDQzU8IwXiJhMCFVdlWyF20vtp+QeX8ioPbow5GRikwvc6M=
+X-Google-Smtp-Source: AGHT+IEDn0os+fUgFYATLn+Iq6FZjbfsk3zOmEGVgE/EWJZEoD0wnOYoH0jftB7HpCio2JhiLuD6iA==
+X-Received: by 2002:a17:90a:1648:b0:2a1:f455:c3d7 with SMTP id x8-20020a17090a164800b002a1f455c3d7mr2069740pje.16.1712341094316;
+        Fri, 05 Apr 2024 11:18:14 -0700 (PDT)
+Received: from cabot.adilger.int (S01068c763f81ca4b.cg.shawcable.net. [70.77.200.158])
+        by smtp.gmail.com with ESMTPSA id bb20-20020a17090b009400b002a46d73ebdcsm1525837pjb.46.2024.04.05.11.18.12
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 05 Apr 2024 11:18:13 -0700 (PDT)
+From: Andreas Dilger <adilger@dilger.ca>
+Message-Id: <BF24ACE8-3644-4378-8E7A-AFAF82C0CDD3@dilger.ca>
+Content-Type: multipart/signed;
+ boundary="Apple-Mail=_700566DC-00D7-4239-B730-9CEAF4C860C8";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM6PR12MB3849:EE_|SA3PR12MB7831:EE_
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	yljun5jxC6+bMauIhUrHuM3mpOo3fH2aaqlY+KB+Un20/tVjDiX0P5MAWqdnK1wqRgBDtgP/UfNEeU+3/cheVL/DRY18NENb3YWDRQOpj6lMpxLxRsZx0sZlxNMTNm5bgk3mq5vbFoU0jTqUE/+IB9APhCS+4WlqbPqynQUC2jtl77629Q2jGmkVZ0a2CFWE+DMkii/EAoyJUGGZqAyaA2U0oxNMJsmkLm6xZ+OAAPjQ7SRFLpdZY1Zb8E/FBp/HbpZaGfOHYp42/M68LCJv05yW1bkVGsmiCjPe4Yc1DPpcwLqtQUXQSCN0fiNT6io8ljFpgaYtRSEzlq8/GWD+eYNBqLFMV8M2hB4GacDgjwSN3udV6iXjC7X95/8pyVCWHDuXB0rUcnptM18O419hoNrhmromrTL8WXLVFISjqGy+JeZCzBALnQJUyHEViAjKgXNqYZixFhQVLz78t+TwEWbJQFH5EzPLxg8GJwdqABpsT6RaRJ9GjMAbsaahYxFbaUeWaTeikR5EKEtwJv4sMN+OAeacZavNup0VWXPBjqmsUgiAczuXwsa2icNfF0OhVUUi6zP9cIcNMkQqgKLRKHzm21SuHJTdBj6E2NTu31WT3h5eTCZxAxJH8LI49e9ViOYH3ca2nw65WVKD16vtWnaiU411olpl7I0P3i7vFeU=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB3849.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376005)(1800799015)(366007)(7416005);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?Dprj84UPiOHIf0k82+m2bA+qbgU1qsrRoZEpdjDdzIfYTRv+pW7LoXaF/N7c?=
- =?us-ascii?Q?GAJiWpyqwNE+Pf1KwlNWeU+60JtY7mLj+vCRuUsCl6ZtK/Dqjp1hHU1ePsN4?=
- =?us-ascii?Q?l5JSCWbRRzlXipY3AaKT/1Zl9jPMWs6N3gmms0lLWpLGnMBT6qtZERRU0mZw?=
- =?us-ascii?Q?96K5M42ty1axc4nE+wrIUp615mcV1WTZCZSPpZf2/foa+yTRh7dkNxB0SQr6?=
- =?us-ascii?Q?KVoyOyEufNNU2IWuEKJpQk3+/msFSv4hq5T4fbhBk9/5tu/FGF1uW3Si7Yez?=
- =?us-ascii?Q?nu6BAzmqyGu/X5PsnzFpDiRs+Zi/FSSKrxYcQSe5gCop+BMTQjX814Pk9C4j?=
- =?us-ascii?Q?+gq8FZ3AwZucl9yhZxd4qw6LUy/LuZIlHXOBLJGihO93ZA3ohcBaLywq20uW?=
- =?us-ascii?Q?vmzgmsN4siZw9f1JGtRJ/BWYg2LaB/HRkAlOtZXpB797T9dfelHEdzcd9csG?=
- =?us-ascii?Q?kvC4Dtb+mE2MyfHB+ZXayFXT2Mrs2qjlMCkmVQap3gcSQosOTwIThjFuIYxq?=
- =?us-ascii?Q?oGbQvc2oek6ZCgHx+mvIwjPDOG1GTQ91dci5J9SlRPX6WaY7hu6X6R8B5QAJ?=
- =?us-ascii?Q?ZuFScyBLtR9JqDAYTidYpVBlm2rubBeNxcdP4qsC8wsuI+NNUA5O4reO5CdD?=
- =?us-ascii?Q?ixikDVlurZSDkp9ZJ3KZakDtroy/NY5vtBMDGK/bdbfY6n9j0e5GUH6Mv9Uo?=
- =?us-ascii?Q?mc7DpIFKbFhYE5oShqxI2lRkezcJmQ6JZfrAMN1DsszHKUEh8skKfdG0Be3l?=
- =?us-ascii?Q?x4li06zEubxY6CSnUKnIuac/QIKXX/0SQyTIbkciFonb9cl31DUMf+RQABOq?=
- =?us-ascii?Q?TXAzJ8l4tHjVKWpa5aKFq7sStyF5UOwTO4fHOwI4d6tCcjkn/Ki8zAcmxMWs?=
- =?us-ascii?Q?kuGlGH9DfMbpVW6KHt5bzEieGPffZy6BRVGqIOt7pmYjwwF3V0hohR+WnqCU?=
- =?us-ascii?Q?E7zSy+z1mThrbmP2abBvfEd5F2S3okuYNk6qottAN65bgQr66eVti6/mA6Zn?=
- =?us-ascii?Q?Exlm038siVBSRCrfBRa0BALgJ5/5ruV/1qXWooe6vBr8dmpSox939cFkXVVF?=
- =?us-ascii?Q?+WoTwPqGC2kD6aPcywVLZhDBuUFrzQAfwp03mKnDDqJznl/n/fJ3JputTr2K?=
- =?us-ascii?Q?PWhF7x5lKAVtesZXUdqQy2kp/izhrwsrkyuYNBSXb4IDfb1A7k+Vmiwix+t1?=
- =?us-ascii?Q?3DQ86id61o7uGrmgwnSpnHh+L2K+fb/mm5LJQcmjrHIlul/b9N6yyOFj+jqw?=
- =?us-ascii?Q?0o7Qeey+KzVG2UsakWevu7BJeLLRmmTnJSfTm8AD11zMOAWE8WELDljNUH1P?=
- =?us-ascii?Q?S2H/vEfXv+YZnKF43HSsqGuEMWfXucUYOzzd8TPrMMnRbBVmOJgApPfS1Ev6?=
- =?us-ascii?Q?S4oFSiP+lELPp9s2ZOO3Iv+rKIoMD/S0XQFlU0FDwCJxfDd6Ab6766d3JTlA?=
- =?us-ascii?Q?tmcQqj9/upc/JQ9hi7tbsVW6y2isckMqdUGrCPJ90UqbeudD1iMGwmSiYovW?=
- =?us-ascii?Q?cGqnz86x/7c4cs40SGM1CSfIPSBI4s6ff4KxUSPaMUvZ3xgz0sgkmXGfNt/m?=
- =?us-ascii?Q?6iEjQSEgE78mRyj9KN3Go7x1UvIvBdIkLOXfiFK7?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 07cbcf67-69a9-4c94-f0a2-08dc559c86b1
-X-MS-Exchange-CrossTenant-AuthSource: DM6PR12MB3849.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Apr 2024 18:16:34.4601
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: AgYvKRlYuSGWNegSxgNgI+MfCtxmNafRohpyYhPJoWvsVF5U0AE6UyRNZyZ6O7BN
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA3PR12MB7831
+Mime-Version: 1.0 (Mac OS X Mail 10.3 \(3273\))
+Subject: Re: [PATCH v3 00/13] fiemap extension for more physical information
+Date: Fri, 5 Apr 2024 12:20:21 -0600
+In-Reply-To: <vf4k3yagvb6vf3vfu7st7uj7asv4zbf5c3b2tef2g2xic5fkvj@olqxfakmkoew>
+Cc: Sweet Tea Dorminy <sweettea-kernel@dorminy.me>,
+ Jonathan Corbet <corbet@lwn.net>,
+ Brian Foster <bfoster@redhat.com>,
+ Chris Mason <clm@fb.com>,
+ Josef Bacik <josef@toxicpanda.com>,
+ David Sterba <dsterba@suse.com>,
+ Jaegeuk Kim <jaegeuk@kernel.org>,
+ Chao Yu <chao@kernel.org>,
+ Alexander Viro <viro@zeniv.linux.org.uk>,
+ Christian Brauner <brauner@kernel.org>,
+ Jan Kara <jack@suse.cz>,
+ =?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>,
+ linux-doc@vger.kernel.org,
+ Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ linux-bcachefs@vger.kernel.org,
+ linux-btrfs <linux-btrfs@vger.kernel.org>,
+ linux-f2fs-devel@lists.sourceforge.net,
+ linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+ kernel-team@meta.com,
+ djwong@kernel.org
+To: Kent Overstreet <kent.overstreet@linux.dev>
+References: <cover.1712126039.git.sweettea-kernel@dorminy.me>
+ <vf4k3yagvb6vf3vfu7st7uj7asv4zbf5c3b2tef2g2xic5fkvj@olqxfakmkoew>
+X-Mailer: Apple Mail (2.3273)
 
-On Thu, Apr 04, 2024 at 05:48:03PM -0400, Peter Xu wrote:
-> On Tue, Mar 26, 2024 at 11:02:52AM -0300, Jason Gunthorpe wrote:
-> > The more I look at this the more I think we need to get to Matthew's
-> > idea of having some kind of generic page table API that is not tightly
-> > tied to level. Replacing the hugetlb trick of 'everything is a PTE'
-> > with 5 special cases in every place seems just horrible.
-> > 
-> >    struct mm_walk_ops {
-> >        int (*leaf_entry)(struct mm_walk_state *state, struct mm_walk *walk);
-> >    }
-> > 
-> > And many cases really want something like:
-> >    struct mm_walk_state state;
-> > 
-> >    if (!mm_walk_seek_leaf(state, mm, address))
-> >           goto no_present
-> >    if (mm_walk_is_write(state)) ..
-> > 
-> > And detailed walking:
-> >    for_each_pt_leaf(state, mm, address) {
-> >        if (mm_walk_is_write(state)) ..
-> >    }
-> > 
-> > Replacing it with a mm_walk_state that retains the level or otherwise
-> > to allow decoding any entry composes a lot better. Forced Loop
-> > unrolling can get back to the current code gen in alot of places.
-> > 
-> > It also makes the power stuff a bit nicer as the mm_walk_state could
-> > automatically retain back pointers to the higher levels in the state
-> > struct too...
-> > 
-> > The puzzle is how to do it and still get reasonable efficient codegen,
-> > many operations are going to end up switching on some state->level to
-> > know how to decode the entry.
-> 
-> These discussions are definitely constructive, thanks Jason.  Very helpful.
-> 
-> I thought about this last week but got interrupted.  It does make sense to
-> me; it looks pretty generic and it is flexible enough as a top design.  At
-> least that's what I thought.
 
-Yeah, exactly..
+--Apple-Mail=_700566DC-00D7-4239-B730-9CEAF4C860C8
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain;
+	charset=us-ascii
 
-> However now when I rethink about it, and look more into the code when I got
-> the chance, it turns out this will be a major rewrite of mostly every
-> walkers..  
+On Apr 3, 2024, at 12:17 PM, Kent Overstreet <kent.overstreet@linux.dev> =
+wrote:
+>=20
+> On Wed, Apr 03, 2024 at 03:22:41AM -0400, Sweet Tea Dorminy wrote:
+>> For many years, various btrfs users have written programs to discover
+>> the actual disk space used by files, using root-only interfaces.
+>> However, this information is a great fit for fiemap: it is inherently
+>> tied to extent information, all filesystems can use it, and the
+>> capabilities required for FIEMAP make sense for this additional
+>> information also.
+>>=20
+>> Hence, this patchset adds various additional information to fiemap,
+>> and extends filesystems (but not iomap) to return it.  This uses some =
+of
+>> the reserved padding in the fiemap extent structure, so programs =
+unaware
+>> of the changes will be unaffected.
+>>=20
+>> This is based on next-20240403. I've tested the btrfs part of this =
+with
+>> the standard btrfs testing matrix locally and manually, and done =
+minimal
+>> testing of the non-btrfs parts.
+>>=20
+>> I'm unsure whether btrfs should be returning the entire physical =
+extent
+>> referenced by a particular logical range, or just the part of the
+>> physical extent referenced by that range. The v2 thread has a =
+discussion
+>> of this.
+>=20
+> I believe there was some talk of using the padding for a device ID, so
+> that fiemap could properly support multi device filesystems. Are we =
+sure
+> this is the best use of those bytes?
 
-Indeed, it is why it may not be reasonable.
+The current (pre-patch) fiemap_extent struct is:
 
-> Consider that what we (or.. I) want to teach the pXd layers are two things
-> right now: (1) hugetlb mappings (2) MMIO (PFN) mappings.  That mostly
-> shares the generic concept when working on the mm walkers no matter which
-> way to go, just different treatment on different type of mem.  (2) is on
-> top of current code and new stuff, while (1) is a refactoring to drop
-> hugetlb_entry() hook point as the goal.
+struct fiemap_extent {
+        __u64 fe_logical;  /* logical offset in bytes for the start of
+                            * the extent from the beginning of the file =
+*/
+        __u64 fe_physical; /* physical offset in bytes for the start
+                            * of the extent from the beginning of the =
+disk */
+        __u64 fe_length;   /* length in bytes for this extent */
+        __u64 fe_reserved64[2];
+        __u32 fe_flags;    /* FIEMAP_EXTENT_* flags for this extent */
+        __u32 fe_reserved[3];
+};
 
-Right, I view this as a two pronged attack
+and this series is only changing fe_reserved64[0] to fe_phys_length.
+There was discussion in the past of using "fe_reserved[0]" for the =
+device
+ID, which is still OK.
 
-One one front you teach the generic pXX_* macros to process huge pages
-and push that around to the performance walkers like GUP
+Cheers, Andreas
 
-On another front you want to replace use of the hugepte with the new
-walkers.
 
-The challenge with the hugepte code is that it is all structured to
-assume one API that works at all levels and that may be a hard fit to
-replace with pXX_* functions.
 
-The places that are easy to switch from hugetlb to pXX_* may as well
-do so.
 
-Other places maybe need a hugetlb replacement that has a similar
-abstraction level of pointing to any page table level.
 
-I think if you do the easy places for pXX conversion you will have a
-good idea about what is needed for the hard places.
 
-> Now the important question I'm asking myself is: do we really need huge p4d
-> or even bigger?
+--Apple-Mail=_700566DC-00D7-4239-B730-9CEAF4C860C8
+Content-Transfer-Encoding: 7bit
+Content-Disposition: attachment;
+	filename=signature.asc
+Content-Type: application/pgp-signature;
+	name=signature.asc
+Content-Description: Message signed with OpenPGP
 
-Do we need huge p4d support with folios? Probably not..
+-----BEGIN PGP SIGNATURE-----
+Comment: GPGTools - http://gpgtools.org
 
-huge p4d support for pfnmap, eg in VFIO. Yes I think that is possibly
-interesting - but I wouldn't ask anyone to do the work :)
+iQIzBAEBCAAdFiEEDb73u6ZejP5ZMprvcqXauRfMH+AFAmYQQOUACgkQcqXauRfM
+H+CHWg/+ImmZQ6Nzwva0Efg63ioqP0pS3airRAPWj+bfSnsIXaituGulL3hG2Lt5
+IORycBQ5w1uifrkGHdmcpOjoIsPuaQrjAdC700vt5TRhqLojhU6ZnLz/eZMFUSIe
+oS0f9OPJPx3vDKBfMBeVTZbrzka94z5Wl0pUohNFSshNfYOrAKyGiBc0KLzpslFo
+eQODjM5SpgwhN7Te0Wcpklr8JMQXI5e+QXkAnor25ImqCHB7PPL4BEt40/HS6hH/
+MfDLh7WHcatQFHB4prRJrULNDnOSJz+LD2UAu602/s03c2lIEHiVkTb8AATrFE8O
+FZvfEdge3gjEXaK1zO1/eNScUgHH8eESBDbWk2ACkU/p7Ip9MS5FgcWXVBxEUoDl
+46VkGOuqWFwGgY020Q+Tvo7I6r1+MahDttyCKe34bzu0WB/t19del0moZyHhicgS
+oNyZN8rIM5QPmuwi1glNkPi8uL23QLb3frSVmrTflx1GxKBhB+fyN/TQP+42Y1zJ
+eBbSWPgWoWHC7u3ULQYA1Mjbi5DUh8dAjwWIJXsFIJwL4oGb54mX/vE2ef9YAHpI
+x1p+7ds2vdDYqG2o5UXaI9YPg45kDNVm+/Io5+DXNMKGVH6XIyhr/Uy5dzx6tVHK
+CdPBC3K4hWSLU6rlwFhwXJ0d5kc2AuRrcmDi8Q+FzSOHlLyt9zM=
+=UxlY
+-----END PGP SIGNATURE-----
 
-But then again we come back to power and its big list of page sizes
-and variety :( Looks like some there have huge sizes at the pgd level
-at least.
-
-> So, can we over-engineer too much if we go the generic route now?
-
-Yes we can, and it will probably be slow as well. The pXX macros are
-the most efficient if code can be adapted to use them.
-
-> Considering that we already have most of pmd/pud entries around in the mm
-> walker ops.
-
-Yeah, so you add pgd and maybe p4d and then we can don't need any
-generic thing. If it is easy it would be nice.
-
-Jason
+--Apple-Mail=_700566DC-00D7-4239-B730-9CEAF4C860C8--
