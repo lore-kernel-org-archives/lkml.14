@@ -1,174 +1,51 @@
-Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from verein.lst.de (verein.lst.de [213.95.11.211])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3DD21CA9E
-	for <linux-kernel@vger.kernel.org>; Fri,  5 Apr 2024 06:51:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC40623774;
+	Fri,  5 Apr 2024 06:51:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712299882; cv=none; b=BTfCIudh4pwIHPPbAezGyprRd9Mfwm/2I8M+wAJEqsBxtiecubNd+MxyxZ+xtNRqOCbH2kcld76pvPNf2sB638wL/jzC546nVPrpV3GG+dF9KS4FTQ7P340fBUdqy6cCbmMT1l849sihwM4H8BIJN+IQPQv+SAb2+TK8yR6/SFo=
+	t=1712299902; cv=none; b=Rzqe/y5m2Jy8M+epucAu6BmE9wfACUIgyAJgz/Wi0hrq1xGGABRppTa9XwpEVOWHt6FWJS8l5JqBJxijrrqceN35mZZlCWynS1J/B+VPm9oQOdoVmjNYQDbcO7Z2xGVRib5SRllqVkZKIUspYA+DPracfeqjhdShN2r/vRO7BIc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712299882; c=relaxed/simple;
-	bh=4oDVAHGYYcR/2l5FlZ2TZi7td9mGan3FkIWef+vpdkY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=sm6uHK8HTEYKg2JEnoYNK8yMqK7OpH5szYM8JrPwLWnMLWvzl/d6oxb2wI1JuqGuMvTjTbOddPTEBJJk0KfN9nq9MJLh3GjMk/lt/QmksUR1+xD/Ng0F4qqb0TuerTFPEtNW1axznaEvV7WWbHRKd2STIukhPfcRtX4XZc+b5Hs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=nvinfKEZ; arc=none smtp.client-ip=209.85.221.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="nvinfKEZ"
-Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-343e986aa6cso41445f8f.1
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Apr 2024 23:51:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1712299879; x=1712904679; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=5/LaVfwoI2Gev4h8pd9kUELtSUqC9s7I3hRen4i8R0o=;
-        b=nvinfKEZSzD5YmtTGtIpvZKKTHgnGpX0XmdiKh5nFqaZaDMLbChosTffNZoxAHYnrX
-         ubanMps9gVtuK39aUh/RrF+quA+PVDIZwVn953gO1A5IOzFXATyIqTlf8Y6mfJdLU+6p
-         6VI3XZPV0yx1sfhraWlEQQSx+KaIO5kHDBUdqN2ZjFTlTTBhSNshFfc8RD5eLWWJQMNb
-         kK1yq1bqKScNJ8+G2b4u9HB9vcRR53alY1zs4bTwsZZC1IeROLbf7l0LIWI94SyYjN08
-         KPIHPz45W7SIIP87kuybRkIKceALOThTsrBld1tAWqLtxill14E62qvwUhfJJbFY0H7A
-         8cCg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712299879; x=1712904679;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=5/LaVfwoI2Gev4h8pd9kUELtSUqC9s7I3hRen4i8R0o=;
-        b=Acp3aZUVlZVfT37nWDT6DVPdFeb2iRYdr6a74nUWHtAimAEzzWjo/AjJaD4/eTPcC5
-         OeBwLI1YUHYU3hhkV2uwo2VJ52GwFjRLJDnnaUf2P6opH1/0mLWepOLQaMHmZmOebhb+
-         9oU1vzNlefmRJtwHAUVsjuYG32TJINAlNBwrUFDgfxgBdspmTcN2pvXFu8s4IkKXdmja
-         9+yKIDLvf2o1JGiEUAXKMiLtBfNrP7gXPiVol+QY0PehEQEhPbLamtsVXwDjDigCA8X6
-         5u4VY/ubO9iBYL45rK0I6jR5frCHIK2Gd0AXcE9l5l21B8PjDumiBvNgxhzwJQgNR3Wj
-         nCPQ==
-X-Gm-Message-State: AOJu0YwpOrP5rNMOrOsqNp1I4J2Ev5ReJ57TvhTytLA0Dw+W4vzvADsj
-	aCamBDpyk41Z3ebtBd6dPx5ZgaPzkNLtDFqoq/2Yi7GArMUd+yGShmv8dXiw6n8=
-X-Google-Smtp-Source: AGHT+IEyhPrmjE/oN6EOHsuw0ki2NGJjyj01bnaXLlQUKnVG5zEK9TNydD+65vOAyHQ2YpRh30qzqg==
-X-Received: by 2002:adf:f251:0:b0:343:77f4:e663 with SMTP id b17-20020adff251000000b0034377f4e663mr308655wrp.18.1712299879068;
-        Thu, 04 Apr 2024 23:51:19 -0700 (PDT)
-Received: from [192.168.10.46] (146725694.box.freepro.com. [130.180.211.218])
-        by smtp.googlemail.com with ESMTPSA id y16-20020adff6d0000000b0034335f13570sm1211624wrp.116.2024.04.04.23.51.18
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 04 Apr 2024 23:51:18 -0700 (PDT)
-Message-ID: <e3005e1d-02b8-4e2a-8f83-d6b67de9d4a9@linaro.org>
-Date: Fri, 5 Apr 2024 08:51:18 +0200
+	s=arc-20240116; t=1712299902; c=relaxed/simple;
+	bh=u0DVGxQ/Nm0tNWYQG+wNZ6KotMW7/NQoiImt8Bh6Iu0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=rUXlUJfxsFHvaqO00xwhC2Q6OhwGpZMaCdTOSoTZ5MHr9lnDgqHyfgrdgg+3AIuQVbOzBzPh+Ud2oSvmuKK4DHZ9SrMbhO1PhH7m9obKwwPs+srIe0eIyT+1ramDPry/kI0z2bfuZR2enhbyC2tshgrR4LBr2+dYgLGR+iQirR4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
+Received: by verein.lst.de (Postfix, from userid 2407)
+	id 2C4B768D07; Fri,  5 Apr 2024 08:51:36 +0200 (CEST)
+Date: Fri, 5 Apr 2024 08:51:35 +0200
+From: Christoph Hellwig <hch@lst.de>
+To: Amir Goldstein <amir73il@gmail.com>
+Cc: Al Viro <viro@zeniv.linux.org.uk>,
+	syzbot <syzbot+9a5b0ced8b1bfb238b56@syzkaller.appspotmail.com>,
+	gregkh@linuxfoundation.org, linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com,
+	tj@kernel.org, valesini@yandex-team.ru,
+	Christoph Hellwig <hch@lst.de>,
+	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
+	Miklos Szeredi <miklos@szeredi.hu>
+Subject: Re: [syzbot] [kernfs?] possible deadlock in kernfs_fop_llseek
+Message-ID: <20240405065135.GA3959@lst.de>
+References: <00000000000098f75506153551a1@google.com> <0000000000002f2066061539e54b@google.com> <CAOQ4uxiS5X19OT2MTo_LnLAx2VL9oA1zBSpbuiWMNy_AyGLDrg@mail.gmail.com> <20240404081122.GQ538574@ZenIV> <20240404082110.GR538574@ZenIV> <CAOQ4uximHfK78KFabJA3Hf4R0En6-GfJ3eF96Lzmc94PGuGayA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1] thermal: core: Relocate the struct thermal_governor
- definition
-Content-Language: en-US
-To: "Rafael J. Wysocki" <rjw@rjwysocki.net>,
- Linux PM <linux-pm@vger.kernel.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, Lukasz Luba <lukasz.luba@arm.com>
-References: <2725268.mvXUDI8C0e@kreacher>
-From: Daniel Lezcano <daniel.lezcano@linaro.org>
-In-Reply-To: <2725268.mvXUDI8C0e@kreacher>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAOQ4uximHfK78KFabJA3Hf4R0En6-GfJ3eF96Lzmc94PGuGayA@mail.gmail.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 
-On 04/04/2024 21:27, Rafael J. Wysocki wrote:
-> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> 
-> Notice that struct thermal_governor is only used by the thermal core
-> and so move its definition to thermal_core.h.
-> 
-> No functional impact.
-> 
-> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+On Thu, Apr 04, 2024 at 12:33:40PM +0300, Amir Goldstein wrote:
+> I don't follow what you are saying.
+> Which code is in non-starter violation?
+> kernfs for calling lookup_bdev() with internal of->mutex held?
 
-Acked-by: Daniel Lezcano <daniel.lezcano@linaro.org>
-
-> ---
->   drivers/thermal/thermal_core.h |   25 +++++++++++++++++++++++++
->   include/linux/thermal.h        |   25 -------------------------
->   2 files changed, 25 insertions(+), 25 deletions(-)
-> 
-> Index: linux-pm/drivers/thermal/thermal_core.h
-> ===================================================================
-> --- linux-pm.orig/drivers/thermal/thermal_core.h
-> +++ linux-pm/drivers/thermal/thermal_core.h
-> @@ -23,6 +23,31 @@ struct thermal_trip_desc {
->   };
->   
->   /**
-> + * struct thermal_governor - structure that holds thermal governor information
-> + * @name:	name of the governor
-> + * @bind_to_tz: callback called when binding to a thermal zone.  If it
-> + *		returns 0, the governor is bound to the thermal zone,
-> + *		otherwise it fails.
-> + * @unbind_from_tz:	callback called when a governor is unbound from a
-> + *			thermal zone.
-> + * @throttle:	callback called for every trip point even if temperature is
-> + *		below the trip point temperature
-> + * @update_tz:	callback called when thermal zone internals have changed, e.g.
-> + *		thermal cooling instance was added/removed
-> + * @governor_list:	node in thermal_governor_list (in thermal_core.c)
-> + */
-> +struct thermal_governor {
-> +	const char *name;
-> +	int (*bind_to_tz)(struct thermal_zone_device *tz);
-> +	void (*unbind_from_tz)(struct thermal_zone_device *tz);
-> +	int (*throttle)(struct thermal_zone_device *tz,
-> +			const struct thermal_trip *trip);
-> +	void (*update_tz)(struct thermal_zone_device *tz,
-> +			  enum thermal_notify_event reason);
-> +	struct list_head	governor_list;
-> +};
-> +
-> +/**
->    * struct thermal_zone_device - structure for a thermal zone
->    * @id:		unique id number for each thermal zone
->    * @type:	the thermal zone device type
-> Index: linux-pm/include/linux/thermal.h
-> ===================================================================
-> --- linux-pm.orig/include/linux/thermal.h
-> +++ linux-pm/include/linux/thermal.h
-> @@ -126,31 +126,6 @@ struct thermal_cooling_device {
->   #endif
->   };
->   
-> -/**
-> - * struct thermal_governor - structure that holds thermal governor information
-> - * @name:	name of the governor
-> - * @bind_to_tz: callback called when binding to a thermal zone.  If it
-> - *		returns 0, the governor is bound to the thermal zone,
-> - *		otherwise it fails.
-> - * @unbind_from_tz:	callback called when a governor is unbound from a
-> - *			thermal zone.
-> - * @throttle:	callback called for every trip point even if temperature is
-> - *		below the trip point temperature
-> - * @update_tz:	callback called when thermal zone internals have changed, e.g.
-> - *		thermal cooling instance was added/removed
-> - * @governor_list:	node in thermal_governor_list (in thermal_core.c)
-> - */
-> -struct thermal_governor {
-> -	const char *name;
-> -	int (*bind_to_tz)(struct thermal_zone_device *tz);
-> -	void (*unbind_from_tz)(struct thermal_zone_device *tz);
-> -	int (*throttle)(struct thermal_zone_device *tz,
-> -			const struct thermal_trip *trip);
-> -	void (*update_tz)(struct thermal_zone_device *tz,
-> -			  enum thermal_notify_event reason);
-> -	struct list_head	governor_list;
-> -};
-> -
->   /* Structure to define Thermal Zone parameters */
->   struct thermal_zone_params {
->   	const char *governor_name;
-> 
-> 
-> 
-
--- 
-<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
-
+That is a huge problem, and has been causing endless annoying lockdep
+chains in the block layer for us.  If we have some way to kill this
+the whole block layer would benefit.
