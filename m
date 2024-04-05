@@ -1,130 +1,127 @@
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82E1913D53E;
-	Fri,  5 Apr 2024 07:45:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.154.123
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85DA3225D6;
+	Fri,  5 Apr 2024 07:45:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712303129; cv=none; b=bdzO4ioqH+kZG3SHkjqIAUnpvjJzsZw8qTIY5+4BWZnzy3ldGNO1LRA+aHAfJxJbW0rDl/BXC4YAI20Tgdxot8avCcrzpoGEKnVC8WOmdj2rs3zzCmkWZkVEth9n791MxpKRfbeFt7uJje9yQKXy6ZLmvKfVvQFX2nEcV/PMngI=
+	t=1712303156; cv=none; b=ewS+Sypg7gBdLG4AuAPu63nTSvps3qhf+Uyvv+oIuuEb7j+H9UhCXkxzscDmYl0ph6HeNAwTdtYvkqsvXi05PwxLxn8RUrlUoGbFqFVgxln80eaQnA1t1HgNeAOs/OJTopWwkUN+UMytHGH+HSv/KLTEn53wTvyaWXtBIyfA9EY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712303129; c=relaxed/simple;
-	bh=hG/7WXbVHwPtjqKBcDc2XwtEgfdfo2i1v9NTvMXhAsY=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
-	 In-Reply-To:To:CC; b=fRj0KIyz4EsEQIsusuZSWzTZ0xDNvHSUM8Msv5rCBn8aQ1X0/JR5rFC9sJjTwLGNfaawYrYQ69WhbnFGpqSTuDlULJP38U43Yb16TcLdIT21YrPNWwwC/Fo1TNZt9ZSF79uSQiozeNYY5d83t+wanGKtFsrvfTNMTGY8thSCU+U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=CfAs1bOw; arc=none smtp.client-ip=68.232.154.123
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
+	s=arc-20240116; t=1712303156; c=relaxed/simple;
+	bh=AQ5k1Ebe5Fm4EtDbJnnbbMyqhwHlWArxIYkQrss7lyM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=XjiJm0mdcQ8cBP7jUUUJlrEDwAgBDypF+dl3+Z1S1NdPSlJpaFDSj1nFqmfSWeAPVArikpP6014H7jIb7ewM71nUcgKKnGbyCUHgqoERovH3An76XTnZRuyKE5hYVCgeCgqK0HmyDtip/RoC5j9d0ed05BqsZlre4dQAIZhG+DY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=H6YfLLej; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="CfAs1bOw"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1712303127; x=1743839127;
-  h=from:date:subject:mime-version:content-transfer-encoding:
-   message-id:references:in-reply-to:to:cc;
-  bh=hG/7WXbVHwPtjqKBcDc2XwtEgfdfo2i1v9NTvMXhAsY=;
-  b=CfAs1bOwTvtWL6AhDM1wS947iswdOUYniVJ6Gap59lTvdAkP+ALKJaaJ
-   wD/RsfKB30Jvmglr+3VCBzZqzERKlfSXaDbLGMSYaKvHZSUpDgCjL6LFT
-   cc/gSbaaN/CNHrMBIK1LY4aWBbTDBs91Wd3sEW9cvA7JxS4TsVN05+N4O
-   Bksk147FakfRU5zXLZkVlSujgIiw0r8jT7xavelgm5XLLs/4FB2lf/VR+
-   D+YtGOABkD3VF2YYAmKh9uw/fRSknzZdYM8CZRAxq/X25B+pnv7nx1rq3
-   3VHYh7xz7xC/m/WKVJmMmKF4S3gt3Xq9UMEH4loH5J8PZWxMIzedfGC6F
-   A==;
-X-CSE-ConnectionGUID: LnJ8QAI7QrCTf6/TR/LIZQ==
-X-CSE-MsgGUID: zx1E/0f7Tt+Tn7q5T9/slQ==
-X-IronPort-AV: E=Sophos;i="6.07,180,1708412400"; 
-   d="scan'208";a="19563251"
-X-Amp-Result: SKIPPED(no attachment in message)
-Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa4.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 05 Apr 2024 00:45:23 -0700
-Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
- chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Fri, 5 Apr 2024 00:45:08 -0700
-Received: from DEN-DL-M70577.microchip.com (10.10.85.11) by
- chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server id
- 15.1.2507.35 via Frontend Transport; Fri, 5 Apr 2024 00:45:06 -0700
-From: Daniel Machon <daniel.machon@microchip.com>
-Date: Fri, 5 Apr 2024 09:44:50 +0200
-Subject: [PATCH net-next v2 2/2] net: sparx5: add support for tc flower
- redirect action
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="H6YfLLej"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 919F4C433C7;
+	Fri,  5 Apr 2024 07:45:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1712303156;
+	bh=AQ5k1Ebe5Fm4EtDbJnnbbMyqhwHlWArxIYkQrss7lyM=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=H6YfLLejAxrZxxFNmjJgj/DW4+tTj3G9EynkBu6+EjBdNBFsqwTa27hG1DyS9p/jW
+	 iUSEtKfvPy0ojzIrAdob/11+KUIZqo5biJn2I8RaDbPurUTY/TkmCs574+a/7fys66
+	 OOgdvcA3vefeoQ/EPg+cd+wVk55vxMSDoloZ3/mqQrGo5RNKKWPv0ctWGKLo+bb/X6
+	 5oHtkt5orCMp1He1kCoYbvuuljT17NKw8/Vwj04fTqA/quhN6i3HmRs/fi665HppaP
+	 fbwXfBrNmq9Uv9lBEpsW1IeLH0NepdDptBixolDwDP696lxgpRZPlKBV1pRo3kZX2B
+	 vKGsQ01pK3BKw==
+Message-ID: <948a70ed-e3de-41d6-ada8-b547aa004ef0@kernel.org>
+Date: Fri, 5 Apr 2024 09:45:46 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 00/17] HSI2, UFS & UFS phy support for Tensor GS101
+To: Peter Griffin <peter.griffin@linaro.org>, mturquette@baylibre.com,
+ sboyd@kernel.org, robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
+ vkoul@kernel.org, kishon@kernel.org, alim.akhtar@samsung.com,
+ avri.altman@wdc.com, bvanassche@acm.org, s.nawrocki@samsung.com,
+ cw00.choi@samsung.com, jejb@linux.ibm.com, martin.petersen@oracle.com,
+ chanho61.park@samsung.com, ebiggers@kernel.org
+Cc: linux-scsi@vger.kernel.org, linux-phy@lists.infradead.org,
+ devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
+ linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, tudor.ambarus@linaro.org,
+ andre.draszik@linaro.org, saravanak@google.com, willmcvicker@google.com
+References: <20240404122559.898930-1-peter.griffin@linaro.org>
+Content-Language: en-US
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <20240404122559.898930-1-peter.griffin@linaro.org>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-Message-ID: <20240405-mirror-redirect-actions-v2-2-875d4c1927c8@microchip.com>
-References: <20240405-mirror-redirect-actions-v2-0-875d4c1927c8@microchip.com>
-In-Reply-To: <20240405-mirror-redirect-actions-v2-0-875d4c1927c8@microchip.com>
-To: Lars Povlsen <lars.povlsen@microchip.com>, Steen Hegelund
-	<Steen.Hegelund@microchip.com>, <UNGLinuxDriver@microchip.com>, "David S.
- Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, "Jakub
- Kicinski" <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>
-CC: Ratheesh Kannoth <rkannoth@marvell.com>,
-	<linux-arm-kernel@lists.infradead.org>, <netdev@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, Daniel Machon <daniel.machon@microchip.com>
-X-Mailer: b4 0.14-dev
 
-Add support for the flower redirect action. Two VCAP actions are encoded
-in the rule - one for the port mask, and one for the port mask mode.
-When the rule is hit, the port mask is used as the final destination
-set, replacing all other port masks.
+On 04/04/2024 14:25, Peter Griffin wrote:
+> Hi folks,
+> 
+> This series adds support for the High Speed Interface (HSI) 2 clock
+> management unit, UFS controller and UFS phy calibration/tuning for GS101.
+> 
+> With this series applied, UFS is now functional! The SKhynix HN8T05BZGKX015
+> can be enumerated, partitions mounted etc. This then allows us to move away
+> from the initramfs rootfs we have been using for development so far.
+> 
+> The intention is this series will be merged via Krzysztofs Samsung Exynos
+> tree(s). This series is rebased on next-20240404.
+> 
+> The series is broadly split into the following parts:
+> 1) dt-bindings documentation updates
+> 2) gs101 device tree updates
+> 3) Prepatory patches for samsung-ufs driver
+> 4) GS101 ufs-phy support
+> 5) Prepatory patches for ufs-exynos driver
+> 6) GS101 ufs-exynos support
 
-Signed-off-by: Daniel Machon <daniel.machon@microchip.com>
----
- .../ethernet/microchip/sparx5/sparx5_tc_flower.c   | 29 ++++++++++++++++++++++
- 1 file changed, 29 insertions(+)
+UFS phy and host should go through their trees. What is the
+reason/need/requirement to put it into this patchset and merge via
+Samsung SoC tree?
 
-diff --git a/drivers/net/ethernet/microchip/sparx5/sparx5_tc_flower.c b/drivers/net/ethernet/microchip/sparx5/sparx5_tc_flower.c
-index fb2e3004183a..82dd270adae6 100644
---- a/drivers/net/ethernet/microchip/sparx5/sparx5_tc_flower.c
-+++ b/drivers/net/ethernet/microchip/sparx5/sparx5_tc_flower.c
-@@ -1038,6 +1038,30 @@ static int sparx5_tc_action_mirred(struct vcap_admin *admin,
- 	return vcap_rule_add_action_u72(vrule, VCAP_AF_PORT_MASK, &ports);
- }
- 
-+static int sparx5_tc_action_redirect(struct vcap_admin *admin,
-+				     struct vcap_rule *vrule,
-+				     struct flow_cls_offload *fco,
-+				     struct flow_action_entry *act)
-+{
-+	struct vcap_u72_action ports = {0};
-+	int err;
-+
-+	if (admin->vtype != VCAP_TYPE_IS0 && admin->vtype != VCAP_TYPE_IS2) {
-+		NL_SET_ERR_MSG_MOD(fco->common.extack,
-+				   "Redirect action not supported in this VCAP");
-+		return -EOPNOTSUPP;
-+	}
-+
-+	err = vcap_rule_add_action_u32(vrule, VCAP_AF_MASK_MODE,
-+				       SPX5_PMM_REPLACE_ALL);
-+	if (err)
-+		return err;
-+
-+	sparx5_tc_flower_set_port_mask(&ports, act->dev);
-+
-+	return vcap_rule_add_action_u72(vrule, VCAP_AF_PORT_MASK, &ports);
-+}
-+
- /* Remove rule keys that may prevent templates from matching a keyset */
- static void sparx5_tc_flower_simplify_rule(struct vcap_admin *admin,
- 					   struct vcap_rule *vrule,
-@@ -1189,6 +1213,11 @@ static int sparx5_tc_flower_replace(struct net_device *ndev,
- 			if (err)
- 				goto out;
- 			break;
-+		case FLOW_ACTION_REDIRECT:
-+			err = sparx5_tc_action_redirect(admin, vrule, fco, act);
-+			if (err)
-+				goto out;
-+			break;
- 		case FLOW_ACTION_ACCEPT:
- 			err = sparx5_tc_set_actionset(admin, vrule);
- 			if (err)
-
--- 
-2.34.1
+Best regards,
+Krzysztof
 
