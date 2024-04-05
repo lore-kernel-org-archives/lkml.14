@@ -1,102 +1,106 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6F1B172BBC;
-	Fri,  5 Apr 2024 19:27:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DF15172BBC;
+	Fri,  5 Apr 2024 19:28:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712345260; cv=none; b=MQJNCwIbRJwu878ysFQDBksYgUEFxhoeNHgFjUcIfyL9n4gqNCL4mDeSeV8lLyzgAooORB8tln5KOIAFWXz+yiQakJ7BAR8ipTz5QupCBROKA9nG0iWQEuhhu+5I7wTHcVo5iZWmHCybKSTG1logx2nXakI7RfJBwQ08fQR4VSQ=
+	t=1712345284; cv=none; b=REi9pmasdMOHdvYLG0ahHtqEaUnkKMzkVO+ScZpxmIyHH4XmGawV32EHc8HOllqfcK0ex4mLHkUto6qRkw8vXruuiCL5yqTlio5EVLNG93bVcIpGYGuQU7+b5tRhLKps0yEocwOGMhb5lV4eVo4gYN0xEgPdsFWJurHA7wThA2k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712345260; c=relaxed/simple;
-	bh=crcjOhzy+doTw2TnjKtSbbAjJz/A0YxidcR+fdaZLXc=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=TuZ1FICY5AChdu3tssEGtfJnrDACAWexakLaK+Yb1YdL9EeFIOD2ldYlAhFY1N+2yCeulbJg1E+7WWU8Zsp6KB0pDxxR5YRU4s/gHAHoEtJnbvnJbim7vPt5hMFV65hTkwxL2QOR94Qyk91egtfG5HDYxBC/MtqemkwNx2/2exQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=Ukh08ayD; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1712345284; c=relaxed/simple;
+	bh=s4X5xF38G0xdBCRwrgje/a8N9SSzOSAJM1btVV1Oid0=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=MBKD2RMrqk/x0wL54mL8t71MHdzo8ypraL0dDODX9Sg0Pres1pfZj3Q5pMePbCN73awHpqLonvnqmLzAz81wySYdd0by4Ty2+nr6GAgEIm5AhAqPQ1Yf4Rxk0w+I62A1NycdJiyAVs9ALLwcPUFbjKt1r1OLWdTPVGGDYtXtSnY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tCDnoxOU; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="Ukh08ayD"
-Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 435JMNZV032522;
-	Fri, 5 Apr 2024 19:27:29 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	from:to:cc:subject:date:message-id:in-reply-to:references
-	:mime-version:content-type:content-transfer-encoding; s=
-	qcppdkim1; bh=gpVa01wMnCOH+oPLt4SrcSclKrEaxSbwjAyukD7OqYU=; b=Uk
-	h08ayDyXG/SbtsVrp3dGCfjFL5PH9IPhMERENRzqrHqeiJ6PieLtQLqxW5QXR/Qe
-	7qI9CtzoQHgO71D1FRdGAbYapiTjNzV8TorBl0ANcl6UYKg3KFnuxNKVJ2lZiCqA
-	12aFroKLMTqbTXbIqY3Hp1U7uqV+ieXjJ1Y+CJ/BXxFoj/4sqvG6RZiJQXWiO3vX
-	Dfd07ERo6vR8L8/VhHBBISMVjYz9KE8ZuWTLgC30aY1AvMAorTY1HZjEOWvLzgp5
-	LrEwYXVas9cgt1IM4TK+3x83KPUUSqeiAPgcmiiJTUEmQWZGzCwx+Vck6AOdmWjl
-	aNJ/RSdM92AuUI38ytmQ==
-Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3xa1xaaqyc-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 05 Apr 2024 19:27:28 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA03.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 435JRSNo028890
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 5 Apr 2024 19:27:28 GMT
-Received: from jesszhan-linux.qualcomm.com (10.80.80.8) by
- nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.4; Fri, 5 Apr 2024 12:27:27 -0700
-From: Abhinav Kumar <quic_abhinavk@quicinc.com>
-To: <dri-devel@lists.freedesktop.org>, <robdclark@gmail.com>,
-        <sean@poorly.run>, <swboyd@chromium.org>, <dianders@chromium.org>,
-        <vkoul@kernel.org>, <daniel@ffwll.ch>, <airlied@gmail.com>,
-        <agross@kernel.org>, <dmitry.baryshkov@linaro.org>,
-        <abel.vesa@linaro.org>, <andersson@kernel.org>,
-        Kuogee Hsieh <quic_khsieh@quicinc.com>
-CC: Abhinav Kumar <quic_abhinavk@quicinc.com>, <quic_jesszhan@quicinc.com>,
-        <quic_sbillaka@quicinc.com>, <marijn.suijten@somainline.org>,
-        <freedreno@lists.freedesktop.org>, <linux-arm-msm@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3] drm/msm/dp: assign correct DP controller ID to x1e80100 interface table
-Date: Fri, 5 Apr 2024 12:27:11 -0700
-Message-ID: <171234515616.24464.8575480727140216508.b4-ty@quicinc.com>
-X-Mailer: git-send-email 2.43.2
-In-Reply-To: <1711741586-9037-1-git-send-email-quic_khsieh@quicinc.com>
-References: <1711741586-9037-1-git-send-email-quic_khsieh@quicinc.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tCDnoxOU"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 825B1C433F1;
+	Fri,  5 Apr 2024 19:28:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1712345284;
+	bh=s4X5xF38G0xdBCRwrgje/a8N9SSzOSAJM1btVV1Oid0=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=tCDnoxOUCYeV7Pblmh2okpq4jgNajyC9ezTEfuysj8xIgQKvwqhTYee3ZS3FxYtGk
+	 DBOFJx2XagEzwPdeTYjk6C+UP8e6UrD7gyf/wU/1yucN4R9ldy2eot1NzCotWPvacE
+	 V6lYbcEcSYhEfUfSfzDcT28OfD/yEHL4Qj0GfsXuwOEex5sy1QxFCijWCMNYrX1MPH
+	 0ctHqJrxJBtK1OjhAdshieBRj4Lc0632VWS5fzLo/FlklR2lnGZITVAA0IfDmdhnvs
+	 U6+woybOxPLwlLrGCqCgeDVTbN/mL2EVGoqUxyZfKWfFMz41nCtxnFzCmqn7wiPanQ
+	 tZaTkhPL2Uz8g==
+From: SeongJae Park <sj@kernel.org>
+To: Honggyu Kim <honggyu.kim@sk.com>
+Cc: SeongJae Park <sj@kernel.org>,
+	damon@lists.linux.dev,
+	linux-mm@kvack.org,
+	akpm@linux-foundation.org,
+	apopple@nvidia.com,
+	baolin.wang@linux.alibaba.com,
+	dave.jiang@intel.com,
+	hyeongtak.ji@sk.com,
+	kernel_team@skhynix.com,
+	linmiaohe@huawei.com,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	mathieu.desnoyers@efficios.com,
+	mhiramat@kernel.org,
+	rakie.kim@sk.com,
+	rostedt@goodmis.org,
+	surenb@google.com,
+	yangx.jy@fujitsu.com,
+	ying.huang@intel.com,
+	ziy@nvidia.com,
+	42.hyeyoo@gmail.com,
+	art.jeongseob@gmail.com
+Subject: Re: [RFC PATCH v3 0/7] DAMON based tiered memory management for CXL memory
+Date: Fri,  5 Apr 2024 12:28:00 -0700
+Message-Id: <20240405192800.67163-1-sj@kernel.org>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20240405060858.2818-1-honggyu.kim@sk.com>
+References: 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: _ltcihew4web1Ih4sfy0Y3rUER1l7AXr
-X-Proofpoint-ORIG-GUID: _ltcihew4web1Ih4sfy0Y3rUER1l7AXr
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-04-05_21,2024-04-05_02,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 malwarescore=0
- spamscore=0 lowpriorityscore=0 adultscore=0 bulkscore=0 mlxlogscore=955
- mlxscore=0 suspectscore=0 priorityscore=1501 phishscore=0 impostorscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2404010003
- definitions=main-2404050137
 
+Hello Honggyu,
 
-On Fri, 29 Mar 2024 12:46:26 -0700, Kuogee Hsieh wrote:
-> At current x1e80100 interface table, interface #3 is wrongly
-> connected to DP controller #0 and interface #4 wrongly connected
-> to DP controller #2. Fix this problem by connect Interface #3 to
-> DP controller #0 and interface #4 connect to DP controller #1.
-> Also add interface #6, #7 and #8 connections to DP controller to
-> complete x1e80100 interface table.
+On Fri,  5 Apr 2024 15:08:49 +0900 Honggyu Kim <honggyu.kim@sk.com> wrote:
+
+> There was an RFC IDEA "DAMOS-based Tiered-Memory Management" previously
+> posted at [1].
 > 
-> [...]
+> It says there is no implementation of the demote/promote DAMOS action
+> are made.  This RFC is about its implementation for physical address
+> space.
+> 
+> 
+> Changes from RFC v2:
+>   1. Rename DAMOS_{PROMOTE,DEMOTE} actions to DAMOS_MIGRATE_{HOT,COLD}.
+>   2. Create 'target_nid' to set the migration target node instead of
+>      depending on node distance based information.
+>   3. Instead of having page level access check in this patch series,
+>      delegate the job to a new DAMOS filter type YOUNG[2].
+>   4. Introduce vmstat counters "damon_migrate_{hot,cold}".
+>   5. Rebase from v6.7 to v6.8.
 
-Applied, thanks!
+Thank you for patiently keeping discussion and making this great version!  I
+left comments on each patch, but found no special concerns.  Per-page access
+recheck for MIGRATE_HOT and vmstat change are taking my eyes, though.  I doubt
+if those really needed.  It would be nice if you could answer to the comments.
 
-[1/1] drm/msm/dp: assign correct DP controller ID to x1e80100 interface table
-      https://gitlab.freedesktop.org/drm/msm/-/commit/ee15c8bf5d77
+Once my comments on this version are addressed, I would have no reason to
+object at dropping the RFC tag from this patchset.
 
-Best regards,
--- 
-Abhinav Kumar <quic_abhinavk@quicinc.com>
+Nonetheless, I show some warnings and errors from checkpatch.pl.  I don't
+really care about those for RFC patches, so no problem at all.  But if you
+agree to my opinion about RFC tag dropping, and therefore if you will send next
+version without RFC tag, please make sure you also run checkpatch.pl before
+posting.
+
+
+Thanks,
+SJ
+
+[...]
