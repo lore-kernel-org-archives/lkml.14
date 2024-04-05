@@ -1,105 +1,233 @@
-Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from server02.seltendoof.de (server02.seltendoof.de [168.119.48.163])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AC1F16ABC3;
-	Fri,  5 Apr 2024 16:10:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19EA416ABC3;
+	Fri,  5 Apr 2024 16:10:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=168.119.48.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712333429; cv=none; b=sm230r/fDp1FOiPGkKSmR4LTrtOzWPmF+q94qIvADGQItJcVG/jxAQmy3cT04ZV22ctAds+WmfGOUk8dHgDAEKWoIR6Y1IDpZQ0GF+ZnVzcTG9hneAYoOLGItOX6mlSNKvStrhgDUYGMsL6TYhkDpSoTMZUiNLcCiOfN18MJ+QU=
+	t=1712333453; cv=none; b=YwiaEmGuvCPKVsocdJZZCALC9yXjfZ4GLhX30SvqZjgovbeRyXCN+hspwB6OJtNz9d0KYLg75mmV+autOB2MMpZJOGa7Bdcw2e9KFIyC5iYrUjlNC7eU7dJW7s7ZHLz6SZP6dyVzf1GCABkywAoFOOV65IAEX2e0rmiBNRkRXX4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712333429; c=relaxed/simple;
-	bh=XoXoslvHGhFAGNnZ/jtkQPOaFZnm6QeH3/hk2RonHU8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=EWsLNrsw7SM1kp61YNrN5OL86aSX4TqmVMLI3dZwjS9QNSc7e81SX3lUE6Yn6oHR/9NtIjg0HZaQNXHHIEaf28hEfg0PFLbbI6y88bBR3shNWxyVt4XvlqYYAPHj4K0hNVZ4gROeczUrQOqT7AJuEwaUGqA0mebxbNDH55UdTWI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Sg//saIJ; arc=none smtp.client-ip=209.85.218.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1712333453; c=relaxed/simple;
+	bh=IuaNYNENXvNmIch8NqAwnftW39eKkt4bYfMCRUrRUqc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=WTLSNg1jSyise6IBLBVJf7nPZ3lJ7G7Eb3KlmLLvdoV8hrlMR/dO7jXjeJYK+7+s7g3vwP7dNsq3rv2Fi0tALTmKI6Z2ZMJEGYctZ+hRgkvr/2mh86gQhq3bi+kOQWDku33zmWnoImFVYtQqzxuSCTXmqDwbFMd+ajQ9NKwyzQI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=seltendoof.de; spf=pass smtp.mailfrom=seltendoof.de; dkim=pass (2048-bit key) header.d=seltendoof.de header.i=@seltendoof.de header.b=dXxl0WN7; arc=none smtp.client-ip=168.119.48.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=seltendoof.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=seltendoof.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Sg//saIJ"
-Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-a4715991c32so350484566b.1;
-        Fri, 05 Apr 2024 09:10:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1712333427; x=1712938227; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=QRnuU2T0zeBP54NjTK724wHa45BiVHY1dZbI/4zG+So=;
-        b=Sg//saIJpNTqinmB2+tRADa5wtqoQWxwHXuOdbWL3EWDePEIJ7ZFvGR6vsGgZaClur
-         fKyD7NDPBMBtOTzrYeuF5NFBqqQBPAgZn4bP2vbrTOCFQqE3W+kDpeJ/ozakujp+tUMY
-         /QiOBTP8jwnl0IXFBu+S7MCw5s5jrhaTSFF1TYd/8UGGG0buZLO9wFMGe1if7wWrBZZF
-         RSPf3L8dJKbwbB95JQs4yhCORhbc02ZufaxRRLnchOq5YToG0ljoIa9aSW4JaooG/g1j
-         2U5C/h/9WTpy0j1GTtM3fKiWG/4Hqg56P0xbXAl7M1VrKS9QB8EgT1Ud+45xYYPOsd/E
-         BMkQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712333427; x=1712938227;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=QRnuU2T0zeBP54NjTK724wHa45BiVHY1dZbI/4zG+So=;
-        b=JCxtT4sHBAEEjJOdX3BZXdsenIA55CadPBCI6nqNBzCGctTlfjweCkasjptQjiXtGb
-         P9csVQ1afQFuD5EuVyTr4kB1XY7RVXbryURU7/BIkhU60/4qx7pU2gGVO6bmH9qmnnzJ
-         /Tj36A78ir43ngsEBTCFQvtDqjGI7JB3alJSXghkxi83yECCrwCWDpe8nWfe7AYXMV/w
-         PeWlwPaYAF1xEofwKeMfTfzPhUxPTXLdrBLXZdli29LqjY7rekDnqTL+/4GSrCENPhxB
-         qV5FgcvbsqPbwe40tnaIQivLd6j1xV1IWXvKbZW7bsmM2RDF3NpN7A/6YnMDh6rl+WOD
-         YUIw==
-X-Forwarded-Encrypted: i=1; AJvYcCUCx7ZYlvT9+52kuHO45e53ROHVS7mO3GhH6fstSDJOr291ihd/Dg10zhxcTswhjh5wCh+3bGTtBAGDkL6A4h39zfKvb00k/b6G+sK4
-X-Gm-Message-State: AOJu0YzBSjSz5y7O26HskrbKl30xuxiAyzxj950LQtDv2tRC+BCGULPy
-	z4YajXg/cVqM8yy28fuqgiNLzi076Yfm8tzpZDnWSt2vp2K6KleE
-X-Google-Smtp-Source: AGHT+IH7Qbt1NBMrdEBXQHquNIASOfmjNvLH5V9PKL2THeFZ+c+Z2bsaJEPTx1jQZbu29vT3ktgvlA==
-X-Received: by 2002:a17:907:ea8:b0:a4e:d43:dc4b with SMTP id ho40-20020a1709070ea800b00a4e0d43dc4bmr1835447ejc.58.1712333426307;
-        Fri, 05 Apr 2024 09:10:26 -0700 (PDT)
-Received: from skbuf ([2a02:2f04:d700:2000::b2c])
-        by smtp.gmail.com with ESMTPSA id n2-20020a1709062bc200b00a517e505e3bsm979891ejg.204.2024.04.05.09.10.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 05 Apr 2024 09:10:25 -0700 (PDT)
-Date: Fri, 5 Apr 2024 19:10:23 +0300
-From: Vladimir Oltean <olteanv@gmail.com>
-To: Pawel Dembicki <paweldembicki@gmail.com>
-Cc: netdev@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>,
-	Simon Horman <horms@kernel.org>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Russell King <rmk+kernel@armlinux.org.uk>,
-	Andrew Lunn <andrew@lunn.ch>,
-	Florian Fainelli <f.fainelli@gmail.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Claudiu Manoil <claudiu.manoil@nxp.com>,
-	Alexandre Belloni <alexandre.belloni@bootlin.com>,
-	UNGLinuxDriver@microchip.com, Russell King <linux@armlinux.org.uk>,
+	dkim=pass (2048-bit key) header.d=seltendoof.de header.i=@seltendoof.de header.b="dXxl0WN7"
+From: =?UTF-8?q?Christian=20G=C3=B6ttsche?= <cgoettsche@seltendoof.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=seltendoof.de;
+	s=2023072701; t=1712333448;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=65/EuaYqUYMyrh0I6zU6AC/esz68cGi8d98R5zgiH2U=;
+	b=dXxl0WN7HfFkwnkTuaaMbMt9OtWmDDftoOB1zI9kzet2lDnxDjsLqbvA9XTkgxC5Pgpyrz
+	AeKhoNlRjr5+EHytPPCtBGq+w2WIsy0lt4UKKFzM5yQaARypzW9ymSDUjQulwCUf2v1uQ7
+	FUDL+EKSt54g62TZhir/w99l9tbC+obg2w3NlPeOUjk22zLIV7OYRONu8ItD1De2D1eql0
+	DWHznnCm2XKXyWyBELoPA56HPWenVTSo2LbhdjQXfLfAqejFW+rTSVszRJ0rE3mrccDhwA
+	g5EqHz4X+C3dw1DE6j7MONCFLLQnAmo1gdxWMM28EfeVIhMiVM2DcCFeDFh4AQ==
+To: selinux@vger.kernel.org
+Cc: =?UTF-8?q?Christian=20G=C3=B6ttsche?= <cgzones@googlemail.com>,
+	Paul Moore <paul@paul-moore.com>,
+	Stephen Smalley <stephen.smalley.work@gmail.com>,
+	Ondrej Mosnacek <omosnace@redhat.com>,
+	Xiu Jianfeng <xiujianfeng@huaweicloud.com>,
+	Jacob Satterfield <jsatterfield.linux@gmail.com>,
 	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next v8 02/16] net: dsa: vsc73xx: convert to PHYLINK
-Message-ID: <20240405161023.qp2jl2a63z4vg3a2@skbuf>
-References: <20240403103734.3033398-1-paweldembicki@gmail.com>
- <20240403103734.3033398-3-paweldembicki@gmail.com>
+Subject: [PATCH 2/2] selinux: add support for xperms in conditional policies
+Date: Fri,  5 Apr 2024 18:10:11 +0200
+Message-ID: <20240405161042.260113-1-cgoettsche@seltendoof.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240403103734.3033398-3-paweldembicki@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Wed, Apr 03, 2024 at 12:37:18PM +0200, Pawel Dembicki wrote:
-> This patch replaces the adjust_link api with the phylink apis that provide
-> equivalent functionality.
-> 
-> The remaining functionality from the adjust_link is now covered in the
-> phylink_mac_link_* and phylink_mac_config.
-> 
-> Removes:
-> .adjust_link
-> Adds:
-> .phylink_mac_config
-> .phylink_mac_link_up
-> .phylink_mac_link_down
-> 
-> Signed-off-by: Pawel Dembicki <paweldembicki@gmail.com>
-> Reviewed-by: Florian Fainelli <florian.fainelli@broadcom.com>
-> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-> Reviewed-by: Russell King (Oracle) <rmk+kernel@armlinux.org.uk>
-> ---
+From: Christian Göttsche <cgzones@googlemail.com>
 
-I think you should split out the phylink patches from VLAN work, since
-these seem good to go.
+Add support for extended permission rules in conditional policies.
+Currently the kernel accepts such rules already, but evaluating a
+security decision will hit a BUG() in
+services_compute_xperms_decision().  Thus reject extended permission
+rules in conditional policies for current policy versions.
+
+Add a new policy version for this feature.
+
+Signed-off-by: Christian Göttsche <cgzones@googlemail.com>
+---
+Userspace patches are available at:
+https://github.com/SELinuxProject/selinux/pull/432
+
+Maybe the policy version 34 can be reused for the prefix/suffix filetrans
+feature to avoid two new versions?
+---
+ security/selinux/include/security.h |  3 ++-
+ security/selinux/ss/avtab.c         | 12 ++++++++++--
+ security/selinux/ss/avtab.h         |  2 +-
+ security/selinux/ss/conditional.c   |  2 +-
+ security/selinux/ss/policydb.c      |  5 +++++
+ security/selinux/ss/services.c      | 11 +++++++----
+ security/selinux/ss/services.h      |  2 +-
+ 7 files changed, 27 insertions(+), 10 deletions(-)
+
+diff --git a/security/selinux/include/security.h b/security/selinux/include/security.h
+index 289bf9233f71..3a385821c574 100644
+--- a/security/selinux/include/security.h
++++ b/security/selinux/include/security.h
+@@ -46,10 +46,11 @@
+ #define POLICYDB_VERSION_INFINIBAND	     31
+ #define POLICYDB_VERSION_GLBLUB		     32
+ #define POLICYDB_VERSION_COMP_FTRANS	     33 /* compressed filename transitions */
++#define POLICYDB_VERSION_COND_XPERMS	     34 /* extended permissions in conditional policies */
+ 
+ /* Range of policy versions we understand*/
+ #define POLICYDB_VERSION_MIN POLICYDB_VERSION_BASE
+-#define POLICYDB_VERSION_MAX POLICYDB_VERSION_COMP_FTRANS
++#define POLICYDB_VERSION_MAX POLICYDB_VERSION_COND_XPERMS
+ 
+ /* Mask for just the mount related flags */
+ #define SE_MNTMASK 0x0f
+diff --git a/security/selinux/ss/avtab.c b/security/selinux/ss/avtab.c
+index 2ad98732d052..bc7f1aa3ebfb 100644
+--- a/security/selinux/ss/avtab.c
++++ b/security/selinux/ss/avtab.c
+@@ -339,7 +339,7 @@ static const uint16_t spec_order[] = {
+ int avtab_read_item(struct avtab *a, void *fp, struct policydb *pol,
+ 		    int (*insertf)(struct avtab *a, const struct avtab_key *k,
+ 				   const struct avtab_datum *d, void *p),
+-		    void *p)
++		    void *p, bool conditional)
+ {
+ 	__le16 buf16[4];
+ 	u16 enabled;
+@@ -457,6 +457,14 @@ int avtab_read_item(struct avtab *a, void *fp, struct policydb *pol,
+ 		       "was specified\n",
+ 		       vers);
+ 		return -EINVAL;
++	} else if ((vers < POLICYDB_VERSION_COND_XPERMS) &&
++	       (key.specified & AVTAB_XPERMS) &&
++	       conditional) {
++		pr_err("SELinux:  avtab:  policy version %u does not "
++		       "support extended permissions rules in conditional "
++		       "policies and one was specified\n",
++		       vers);
++		return -EINVAL;
+ 	} else if (key.specified & AVTAB_XPERMS) {
+ 		memset(&xperms, 0, sizeof(struct avtab_extended_perms));
+ 		rc = next_entry(&xperms.specified, fp, sizeof(u8));
+@@ -523,7 +531,7 @@ int avtab_read(struct avtab *a, void *fp, struct policydb *pol)
+ 		goto bad;
+ 
+ 	for (i = 0; i < nel; i++) {
+-		rc = avtab_read_item(a, fp, pol, avtab_insertf, NULL);
++		rc = avtab_read_item(a, fp, pol, avtab_insertf, NULL, false);
+ 		if (rc) {
+ 			if (rc == -ENOMEM)
+ 				pr_err("SELinux: avtab: out of memory\n");
+diff --git a/security/selinux/ss/avtab.h b/security/selinux/ss/avtab.h
+index 8e8820484c55..b48c15b3698c 100644
+--- a/security/selinux/ss/avtab.h
++++ b/security/selinux/ss/avtab.h
+@@ -107,7 +107,7 @@ struct policydb;
+ int avtab_read_item(struct avtab *a, void *fp, struct policydb *pol,
+ 		    int (*insert)(struct avtab *a, const struct avtab_key *k,
+ 				  const struct avtab_datum *d, void *p),
+-		    void *p);
++		    void *p, bool conditional);
+ 
+ int avtab_read(struct avtab *a, void *fp, struct policydb *pol);
+ int avtab_write_item(struct policydb *p, const struct avtab_node *cur,
+diff --git a/security/selinux/ss/conditional.c b/security/selinux/ss/conditional.c
+index d53c34021dbe..ed4606e3af5d 100644
+--- a/security/selinux/ss/conditional.c
++++ b/security/selinux/ss/conditional.c
+@@ -349,7 +349,7 @@ static int cond_read_av_list(struct policydb *p, void *fp,
+ 	for (i = 0; i < len; i++) {
+ 		data.dst = &list->nodes[i];
+ 		rc = avtab_read_item(&p->te_cond_avtab, fp, p, cond_insertf,
+-				     &data);
++				     &data, true);
+ 		if (rc) {
+ 			kfree(list->nodes);
+ 			list->nodes = NULL;
+diff --git a/security/selinux/ss/policydb.c b/security/selinux/ss/policydb.c
+index 383f3ae82a73..3ba5506a3fff 100644
+--- a/security/selinux/ss/policydb.c
++++ b/security/selinux/ss/policydb.c
+@@ -155,6 +155,11 @@ static const struct policydb_compat_info policydb_compat[] = {
+ 		.sym_num = SYM_NUM,
+ 		.ocon_num = OCON_NUM,
+ 	},
++	{
++		.version = POLICYDB_VERSION_COND_XPERMS,
++		.sym_num = SYM_NUM,
++		.ocon_num = OCON_NUM,
++	},
+ };
+ 
+ static const struct policydb_compat_info *
+diff --git a/security/selinux/ss/services.c b/security/selinux/ss/services.c
+index e88b1b6c4adb..57f09f830a06 100644
+--- a/security/selinux/ss/services.c
++++ b/security/selinux/ss/services.c
+@@ -944,9 +944,10 @@ static void avd_init(struct selinux_policy *policy, struct av_decision *avd)
+ }
+ 
+ void services_compute_xperms_decision(struct extended_perms_decision *xpermd,
+-					struct avtab_node *node)
++					const struct avtab_node *node)
+ {
+ 	unsigned int i;
++	u16 specified;
+ 
+ 	if (node->datum.u.xperms->specified == AVTAB_XPERMS_IOCTLFUNCTION) {
+ 		if (xpermd->driver != node->datum.u.xperms->driver)
+@@ -959,7 +960,9 @@ void services_compute_xperms_decision(struct extended_perms_decision *xpermd,
+ 		BUG();
+ 	}
+ 
+-	if (node->key.specified == AVTAB_XPERMS_ALLOWED) {
++	specified = node->key.specified & ~(AVTAB_ENABLED | AVTAB_ENABLED_OLD);
++
++	if (specified == AVTAB_XPERMS_ALLOWED) {
+ 		xpermd->used |= XPERMS_ALLOWED;
+ 		if (node->datum.u.xperms->specified == AVTAB_XPERMS_IOCTLDRIVER) {
+ 			memset(xpermd->allowed->p, 0xff,
+@@ -970,7 +973,7 @@ void services_compute_xperms_decision(struct extended_perms_decision *xpermd,
+ 				xpermd->allowed->p[i] |=
+ 					node->datum.u.xperms->perms.p[i];
+ 		}
+-	} else if (node->key.specified == AVTAB_XPERMS_AUDITALLOW) {
++	} else if (specified == AVTAB_XPERMS_AUDITALLOW) {
+ 		xpermd->used |= XPERMS_AUDITALLOW;
+ 		if (node->datum.u.xperms->specified == AVTAB_XPERMS_IOCTLDRIVER) {
+ 			memset(xpermd->auditallow->p, 0xff,
+@@ -981,7 +984,7 @@ void services_compute_xperms_decision(struct extended_perms_decision *xpermd,
+ 				xpermd->auditallow->p[i] |=
+ 					node->datum.u.xperms->perms.p[i];
+ 		}
+-	} else if (node->key.specified == AVTAB_XPERMS_DONTAUDIT) {
++	} else if (specified == AVTAB_XPERMS_DONTAUDIT) {
+ 		xpermd->used |= XPERMS_DONTAUDIT;
+ 		if (node->datum.u.xperms->specified == AVTAB_XPERMS_IOCTLDRIVER) {
+ 			memset(xpermd->dontaudit->p, 0xff,
+diff --git a/security/selinux/ss/services.h b/security/selinux/ss/services.h
+index 93358e7a649c..a6d8a06fd13c 100644
+--- a/security/selinux/ss/services.h
++++ b/security/selinux/ss/services.h
+@@ -38,7 +38,7 @@ struct convert_context_args {
+ void services_compute_xperms_drivers(struct extended_perms *xperms,
+ 				     struct avtab_node *node);
+ void services_compute_xperms_decision(struct extended_perms_decision *xpermd,
+-				      struct avtab_node *node);
++				      const struct avtab_node *node);
+ 
+ int services_convert_context(struct convert_context_args *args,
+ 			     struct context *oldc, struct context *newc,
+-- 
+2.43.0
+
