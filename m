@@ -1,170 +1,143 @@
-Received: from mail-108-mta111.mxroute.com (mail-108-mta111.mxroute.com [136.175.108.111])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDEA71CD03
-	for <linux-kernel@vger.kernel.org>; Fri,  5 Apr 2024 10:38:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=136.175.108.111
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD0C11CD03;
+	Fri,  5 Apr 2024 10:39:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712313538; cv=none; b=HdkOyePxQ93WMh0pyCqqKIZ03hRh2u67JEpSL5TVcvY5ZR9eT19RtmMSTp7dwB3s8UJeb8WRhtWelh/N3c10HtEjVuPPytyn5nIJLkZA48nC+jBt26zh5vi2lV8ETBUwZ/jvdnmfQR2ITlrwhufSHZs2TsLBOkGPhbdd+GNW8dc=
+	t=1712313583; cv=none; b=kvkN7b7tf2dOZUBN77q86dEbE+TrtToR6N9I5Ij4tDMLASwlMXV5vSgepJ9j5HAkV/aDMJ4J63cDK7rhaWukvD75vM8+mCyiEc5ozU38eKAPL7O+3KHyj/FGdIG6SxAn9Z/LkPXhksFogknJ4sMX+VBSbQHDcTIr0uzJddDvCnw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712313538; c=relaxed/simple;
-	bh=xLI22zriJDENRfnsRmIjvn6POO6xOPVHd6HwhyKlUrk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Jn/Ob/kYsAwTX3VIVWNS/DA5J9Jss19s2btYsT/KZfU0FuXXz9u0yMeGXURpKdQ1hxBJJXFz7m1a97I0lxVrAng0hTWUziFxbf2jw1N0kpx+x4is9Co8HQzlZ4C25PMEvRM919aqhXjGCpc1L2JBrYkP7q8kE0W5DoPUnp/fWZE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=luigi311.com; spf=pass smtp.mailfrom=luigi311.com; dkim=pass (2048-bit key) header.d=luigi311.com header.i=@luigi311.com header.b=pATTLDVL; arc=none smtp.client-ip=136.175.108.111
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=luigi311.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=luigi311.com
+	s=arc-20240116; t=1712313583; c=relaxed/simple;
+	bh=2E17j7Ve7FOfk4tx0gvsLANCrYkPs6Skdo6dyBA9/zw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=DbXr6Ln4yZdHYFpv1VufVb7bOxODnQ480A49WqDK9G6ihn5H3MCSaGdbxGRyGj2ljVomeD1b54BSo5PxXSsw6BcI6iHOL9a2lIufCIy7WBRGgs1/WaPVxmlb1beJlpUoZ8qsNb8ZIjMxgK58lHRzCzayF0DTVuWDgyijLNNtO98=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=iOA/EM9F; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=luigi311.com header.i=@luigi311.com header.b="pATTLDVL"
-Received: from filter006.mxroute.com ([136.175.111.2] filter006.mxroute.com)
- (Authenticated sender: mN4UYu2MZsgR)
- by mail-108-mta111.mxroute.com (ZoneMTA) with ESMTPSA id 18eadd248db0003bea.010
- for <linux-kernel@vger.kernel.org>
- (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384);
- Fri, 05 Apr 2024 10:33:43 +0000
-X-Zone-Loop: 0b5db6c4603024265795f5a8aa1c9d4fd257db595b0c
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=luigi311.com; s=x; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:
-	From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=vfGoyAWCyKZOHSAUcGDkEoz4paY7t5qH+0okM64n3Do=; b=pATTLDVLYKydxuA4/oMU+IXM8X
-	evupdRWiPyqRs4QJYB3u83H2KriInjeFUXtv7UFyjn6jkcDdJywE8kQQFpc+NqypqFdtPp/GqgeSd
-	/JArjSTKWOw4SHSRhZtEcsmwMEB27salHAMo/GhT7wMAzmOnETj//CUNv+jnhskVyBq40F4+UH5UH
-	7OJ7pX+RVUagog04vV55RXxUCrj1Yzra14eOEvWyRmA7JrKFBfxmFmQE8Ra7esLdGtQ/ZyM94ymdX
-	Ztl/Ad9Q6l8RKhYyN45hZ/K36FNA5jhYIhMrhkxuoUbDzmOduRhdl/cAIENpmkLIPPR9hNlD+gaZK
-	UpvwQaAw==;
-Message-ID: <082190a8-7ac5-4240-9a16-6b9168c67d57@luigi311.com>
-Date: Fri, 5 Apr 2024 04:33:38 -0600
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="iOA/EM9F"
+Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 4359ptLe003900;
+	Fri, 5 Apr 2024 10:39:02 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	message-id:date:mime-version:subject:to:cc:references:from
+	:in-reply-to:content-type:content-transfer-encoding; s=
+	qcppdkim1; bh=vMAf/nBH0Lm+9CPcj0kvlu1Nzkm+iBU7ikLptAux34M=; b=iO
+	A/EM9F31Bwst/NWC1EU3qsryTgFMIpsxJVIFknTAFgkI85aVQhfvTBf6U1XGXfuL
+	+PfhWRbPAhQuC28HA6egyf/FB2J6KrgxdqnTp+lUkUnPMBFgqMXEd2sHWtdpWEq+
+	dNvHmIhQrTjcFE1u82Mto1QPJFjBKJylDh0zH5ZarjhEOcDAO9jYQYn9V9tqAxiY
+	GxLo6EQiLWQaH2xLawvl0hLrWvZRlOAerPXwbM1GwxM5EJ6YcSTSSiOTN7hnvE+K
+	DQWWaYyCsOfZ4cDElIfMCdhlCA8dxraLsb/Z/iJr/rUXb3U/H7UhfMDHZGBvqI2C
+	o0J+zEdB0UuT8BtaW/Jg==
+Received: from nasanppmta02.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3xa7m5gy5v-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 05 Apr 2024 10:39:02 +0000 (GMT)
+Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
+	by NASANPPMTA02.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 435Ad1hg012862
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 5 Apr 2024 10:39:01 GMT
+Received: from [10.214.66.81] (10.80.80.8) by nasanex01c.na.qualcomm.com
+ (10.45.79.139) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Fri, 5 Apr 2024
+ 03:38:58 -0700
+Message-ID: <95bc8e95-3e52-9e50-9fe6-7ba1d4e07ca4@quicinc.com>
+Date: Fri, 5 Apr 2024 16:08:55 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 21/25] drivers: media: i2c: imx258: Use macros
-To: Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc: linux-media@vger.kernel.org, dave.stevenson@raspberrypi.com,
- jacopo.mondi@ideasonboard.com, mchehab@kernel.org, robh@kernel.org,
- krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org, shawnguo@kernel.org,
- s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
- devicetree@vger.kernel.org, imx@lists.linux.dev,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- pavel@ucw.cz, phone-devel@vger.kernel.org, Ondrej Jirman <megi@xff.cz>
-References: <20240403150355.189229-1-git@luigi311.com>
- <20240403150355.189229-22-git@luigi311.com>
- <Zg2CirmwL3JfjA8s@kekkonen.localdomain>
- <df8c245a-40e9-4bf5-b870-7efe321d820a@luigi311.com>
- <Zg5Mz0QSqNDXzY4o@kekkonen.localdomain>
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.13.0
+Subject: Re: [PATCH] cppc_cpufreq: Fix possible null pointer dereference
+To: Aleksandr Mishin <amishin@t-argos.ru>,
+        Ionela Voinescu
+	<ionela.voinescu@arm.com>
+CC: "Rafael J. Wysocki" <rafael@kernel.org>,
+        Viresh Kumar
+	<viresh.kumar@linaro.org>, <linux-pm@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <lvc-project@linuxtesting.org>
+References: <20240405094005.18545-1-amishin@t-argos.ru>
 Content-Language: en-US
-From: Luis Garcia <git@luigi311.com>
-In-Reply-To: <Zg5Mz0QSqNDXzY4o@kekkonen.localdomain>
-Content-Type: text/plain; charset=UTF-8
+From: Mukesh Ojha <quic_mojha@quicinc.com>
+In-Reply-To: <20240405094005.18545-1-amishin@t-argos.ru>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 7bit
-X-Authenticated-Id: git@luigi311.com
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nasanex01c.na.qualcomm.com (10.45.79.139)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: 4kWrjpNpQ5uudnOwQwrAhMPfSnV1neMA
+X-Proofpoint-GUID: 4kWrjpNpQ5uudnOwQwrAhMPfSnV1neMA
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-04-05_09,2024-04-04_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ spamscore=0 mlxscore=0 bulkscore=0 phishscore=0 adultscore=0
+ suspectscore=0 malwarescore=0 impostorscore=0 clxscore=1011
+ mlxlogscore=999 priorityscore=1501 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.19.0-2404010003 definitions=main-2404050078
 
-On 4/4/24 00:46, Sakari Ailus wrote:
-> On Wed, Apr 03, 2024 at 01:17:26PM -0600, Luigi311 wrote:
->> On 4/3/24 10:23, Sakari Ailus wrote:
->>> Hi Luis,
->>>
->>> On Wed, Apr 03, 2024 at 09:03:50AM -0600, git@luigi311.com wrote:
->>>> From: Luis Garcia <git@luigi311.com>
->>>>
->>>> Use understandable macros instead of raw values.
->>>>
->>>> Signed-off-by: Ondrej Jirman <megi@xff.cz>
->>>> Signed-off-by: Luis Garcia <git@luigi311.com>
->>>> ---
->>>>  drivers/media/i2c/imx258.c | 434 ++++++++++++++++++-------------------
->>>>  1 file changed, 207 insertions(+), 227 deletions(-)
->>>>
->>>> diff --git a/drivers/media/i2c/imx258.c b/drivers/media/i2c/imx258.c
->>>> index e2ecf6109516..30352c33f63c 100644
->>>> --- a/drivers/media/i2c/imx258.c
->>>> +++ b/drivers/media/i2c/imx258.c
->>>> @@ -33,8 +33,6 @@
->>>>  #define IMX258_VTS_30FPS_VGA		0x034c
->>>>  #define IMX258_VTS_MAX			65525
->>>>  
->>>> -#define IMX258_REG_VTS			0x0340
->>>> -
->>>>  /* HBLANK control - read only */
->>>>  #define IMX258_PPL_DEFAULT		5352
->>>>  
->>>> @@ -90,6 +88,53 @@
->>>>  #define IMX258_PIXEL_ARRAY_WIDTH	4208U
->>>>  #define IMX258_PIXEL_ARRAY_HEIGHT	3120U
->>>>  
->>>> +/* regs */
->>>> +#define IMX258_REG_PLL_MULT_DRIV                  0x0310
->>>> +#define IMX258_REG_IVTPXCK_DIV                    0x0301
->>>> +#define IMX258_REG_IVTSYCK_DIV                    0x0303
->>>> +#define IMX258_REG_PREPLLCK_VT_DIV                0x0305
->>>> +#define IMX258_REG_IOPPXCK_DIV                    0x0309
->>>> +#define IMX258_REG_IOPSYCK_DIV                    0x030b
->>>> +#define IMX258_REG_PREPLLCK_OP_DIV                0x030d
->>>> +#define IMX258_REG_PHASE_PIX_OUTEN                0x3030
->>>> +#define IMX258_REG_PDPIX_DATA_RATE                0x3032
->>>> +#define IMX258_REG_SCALE_MODE                     0x0401
->>>> +#define IMX258_REG_SCALE_MODE_EXT                 0x3038
->>>> +#define IMX258_REG_AF_WINDOW_MODE                 0x7bcd
->>>> +#define IMX258_REG_FRM_LENGTH_CTL                 0x0350
->>>> +#define IMX258_REG_CSI_LANE_MODE                  0x0114
->>>> +#define IMX258_REG_X_EVN_INC                      0x0381
->>>> +#define IMX258_REG_X_ODD_INC                      0x0383
->>>> +#define IMX258_REG_Y_EVN_INC                      0x0385
->>>> +#define IMX258_REG_Y_ODD_INC                      0x0387
->>>> +#define IMX258_REG_BINNING_MODE                   0x0900
->>>> +#define IMX258_REG_BINNING_TYPE_V                 0x0901
->>>> +#define IMX258_REG_FORCE_FD_SUM                   0x300d
->>>> +#define IMX258_REG_DIG_CROP_X_OFFSET              0x0408
->>>> +#define IMX258_REG_DIG_CROP_Y_OFFSET              0x040a
->>>> +#define IMX258_REG_DIG_CROP_IMAGE_WIDTH           0x040c
->>>> +#define IMX258_REG_DIG_CROP_IMAGE_HEIGHT          0x040e
->>>> +#define IMX258_REG_SCALE_M                        0x0404
->>>> +#define IMX258_REG_X_OUT_SIZE                     0x034c
->>>> +#define IMX258_REG_Y_OUT_SIZE                     0x034e
->>>> +#define IMX258_REG_X_ADD_STA                      0x0344
->>>> +#define IMX258_REG_Y_ADD_STA                      0x0346
->>>> +#define IMX258_REG_X_ADD_END                      0x0348
->>>> +#define IMX258_REG_Y_ADD_END                      0x034a
->>>> +#define IMX258_REG_EXCK_FREQ                      0x0136
->>>> +#define IMX258_REG_CSI_DT_FMT                     0x0112
->>>> +#define IMX258_REG_LINE_LENGTH_PCK                0x0342
->>>> +#define IMX258_REG_SCALE_M_EXT                    0x303a
->>>> +#define IMX258_REG_FRM_LENGTH_LINES               0x0340
->>>> +#define IMX258_REG_FINE_INTEG_TIME                0x0200
->>>> +#define IMX258_REG_PLL_IVT_MPY                    0x0306
->>>> +#define IMX258_REG_PLL_IOP_MPY                    0x030e
->>>> +#define IMX258_REG_REQ_LINK_BIT_RATE_MBPS_H       0x0820
->>>> +#define IMX258_REG_REQ_LINK_BIT_RATE_MBPS_L       0x0822
->>>> +
->>>> +#define REG8(a, v) { a, v }
->>>> +#define REG16(a, v) { a, ((v) >> 8) & 0xff }, { (a) + 1, (v) & 0xff }
->>>
->>> The patch is nice but these macros are better replaced by the V4L2 CCI
->>> helper that also offers register access functions. Could you add a patch to
->>> convert the driver to use it (maybe after this one)?
->>>
->>
->> Ohh perfect, using something else would be great. Ill go ahead and see
->> if I can get that working.
-> 
-> Thanks. It may be easier to just do it in this one actually. Up to you.
-> 
 
-I've made the swap but looks like its not playing nice with my ppp,
-its causing a crash and showing a call trace as soon as it does its
-first read to check the identity. I went in and dropped the cci_read
-and left it with the original implementation and I'm getting a very
-similar crash with cci_write too so it looks like its not liking
-how I'm implementing it. Looking at the few other drivers that were
-swapped over to use that, I don't seem to be missing anything. It's
-a big change so its not really something I can describe what I've
-changed but I do have the change on my github here
-https://github.com/luigi311/linux/commit/840593acb20eee87ce361e6929edf51eefbbe737
-if you can provide some guidance, if not I can skip this change
-all together and we can do a separate attempt at swapping over to it.
+
+On 4/5/2024 3:10 PM, Aleksandr Mishin wrote:
+> cppc_cpufreq_get_rate() and hisi_cppc_cpufreq_get_rate() can be called from
+> different places with various parameters. So cpufreq_cpu_get() can return
+> null as 'policy' in some circumstances.
+> Fix this bug by adding null return check.
+> 
+> Found by Linux Verification Center (linuxtesting.org) with SVACE.
+> 
+> Fixes: a28b2bfc099c ("cppc_cpufreq: replace per-cpu data array with a list")
+> Signed-off-by: Aleksandr Mishin <amishin@t-argos.ru>
+> ---
+>   drivers/cpufreq/cppc_cpufreq.c | 6 ++++++
+>   1 file changed, 6 insertions(+)
+> 
+> diff --git a/drivers/cpufreq/cppc_cpufreq.c b/drivers/cpufreq/cppc_cpufreq.c
+> index 64420d9cfd1e..5f7e04e8497b 100644
+> --- a/drivers/cpufreq/cppc_cpufreq.c
+> +++ b/drivers/cpufreq/cppc_cpufreq.c
+> @@ -741,6 +741,9 @@ static unsigned int cppc_cpufreq_get_rate(unsigned int cpu)
+>   {
+>   	struct cppc_perf_fb_ctrs fb_ctrs_t0 = {0}, fb_ctrs_t1 = {0};
+>   	struct cpufreq_policy *policy = cpufreq_cpu_get(cpu);
+> +	if (!policy)
+> +		return -ENODEV;
+> +
+
+You should be doing this after all variable declaration, somewhere
+
+...
+...
+struct cppc_cpudata *cpu_data;
+u64 delivered_perf;
+int ret;
+
+if (!policy)
+	return -ENODEV;
+
+cpu_data = policy->driver_data;
+..
+..
+
+>   	struct cppc_cpudata *cpu_data = policy->driver_data;
+>   	u64 delivered_perf;
+>   	int ret;
+> @@ -822,6 +825,9 @@ static struct cpufreq_driver cppc_cpufreq_driver = {
+>   static unsigned int hisi_cppc_cpufreq_get_rate(unsigned int cpu)
+>   {
+>   	struct cpufreq_policy *policy = cpufreq_cpu_get(cpu);
+
+same here.
+
+> +	if (!policy)
+> +		return -ENODEV;
+> +
+>   	struct cppc_cpudata *cpu_data = policy->driver_data;
+>   	u64 desired_perf;
+>   	int ret;
+
+-Mukesh
