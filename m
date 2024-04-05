@@ -1,242 +1,151 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+Received: from smtp-fw-9106.amazon.com (smtp-fw-9106.amazon.com [207.171.188.206])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2694179961;
-	Fri,  5 Apr 2024 22:26:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82DCE175557;
+	Fri,  5 Apr 2024 22:27:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=207.171.188.206
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712356017; cv=none; b=QOETdDAbPKkz2KDw9OAQGOxPCNxMrqd7YU4VA32G0F6+3V2x7R2LwZfigt7VIqwiU7ChF4qaeGAlg9Q65+r+UaIjGQz1bzs3V/b/q51PM/jCy3xMtWc+524ktG0Cmn51ESHcBGKIzZL/dgmDEC4jwDcs0mPgSu1QaFm5x+mx4Wk=
+	t=1712356047; cv=none; b=u+xTbhwsmRezwWfNUAyD1JnRzYl/RJ/gI33aR37BWnetkFsDlfuOE49y0jw4NlmNvPl+IRzp3v9tKVfEynZUheaDyRaLRI7r5G6eGY6/33jNYzyHjj++ENwlF76h46xJp4yZrTbnCZTWPFcbF4NglQgipCGifrHbHr8YbrgMt50=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712356017; c=relaxed/simple;
-	bh=ZGWBCczfujdRtFbtPKsDRo5XDo8fcTnRO3bkTJQexVw=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Q1AnuOLSod+XXPNUNAldrVt4aUJrAUHXF7Odi9as2yCq9ffJv3vEUiydUdcLK9fiki9EQxMaICsv6TgVTFSZHI45iWxA6pGvd1IKX4GdHIY4OvInhUjDWv9e/Z+/XD7gcrXAPEJEQ4Lplvns8AoLAd6s9/PgjksZnwJ9I/ClAjY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TnJGte1Y; arc=none smtp.client-ip=192.198.163.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1712356047; c=relaxed/simple;
+	bh=qrrZBeX1vtGWgwK5O99qDlCfzTKu2CnGs6Zioe/+/30=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Z0aoUwsMtCAaySyGhoMv85FBhIAl7qXo9RqNcGHUA6nx0srvUfdJ0sUczzXtFonspXftrqI+tIQu3FI9Q5mPxzBi7tsHpXZLaZeA7USE3YTTRH9sj5p2/pxHsoCBKQygnR/hJPHMos+OzJ6ckIQP/hqFBl3Qp1ulx67fVGhsHKk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.co.jp; dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b=LMoCvuAv; arc=none smtp.client-ip=207.171.188.206
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.co.jp
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TnJGte1Y"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1712356016; x=1743892016;
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="LMoCvuAv"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1712356045; x=1743892045;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=ZGWBCczfujdRtFbtPKsDRo5XDo8fcTnRO3bkTJQexVw=;
-  b=TnJGte1YL+nyCRoQLZcXNkdQ2AfgvE3IQg/foLXtWevw6xCX22aY/XQE
-   xlMuHjz/Zqp04UmVke+k7W2p4p1g3ElEgC+15CqJIWoQRr9OsnzA6kFwB
-   5ZZCFh5+qQEWuZYwnuyShe/P48uVl29tQraCJXq6MIdXoRAWKia4bt73K
-   qVz4W5BN8j1wh+h9pSgT5cYt9guxxTWOqcB4mtpa7962ag6zpS4hm2qAf
-   mbAQlit4JQF6dKkZNYdCD3tTq4sZmTKUGURrfx8OtkcfhSiTTGrSVhyiS
-   CS0yTqwUBIkW+WjES0489u0HYSGYHwGw0RMq218IceN24+BMZ0cdAMs1/
-   w==;
-X-CSE-ConnectionGUID: Run8SIX+SWiU9HpnW8Geyw==
-X-CSE-MsgGUID: NC5Ia1NgTe6WY+u2eFMCrA==
-X-IronPort-AV: E=McAfee;i="6600,9927,11035"; a="19062853"
-X-IronPort-AV: E=Sophos;i="6.07,182,1708416000"; 
-   d="scan'208";a="19062853"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Apr 2024 15:26:54 -0700
-X-CSE-ConnectionGUID: dqE0TdDNQ62K5gm9q66mFQ==
-X-CSE-MsgGUID: icfEMMlNRoyitei5C2xCcw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,182,1708416000"; 
-   d="scan'208";a="23928356"
-Received: from jacob-builder.jf.intel.com ([10.54.39.125])
-  by fmviesa004.fm.intel.com with ESMTP; 05 Apr 2024 15:26:52 -0700
-From: Jacob Pan <jacob.jun.pan@linux.intel.com>
-To: LKML <linux-kernel@vger.kernel.org>,
-	X86 Kernel <x86@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	iommu@lists.linux.dev,
-	Thomas Gleixner <tglx@linutronix.de>,
-	"Lu Baolu" <baolu.lu@linux.intel.com>,
-	kvm@vger.kernel.org,
-	Dave Hansen <dave.hansen@intel.com>,
-	Joerg Roedel <joro@8bytes.org>,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	"Borislav Petkov" <bp@alien8.de>,
-	"Ingo Molnar" <mingo@redhat.com>
-Cc: Paul Luse <paul.e.luse@intel.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Jens Axboe <axboe@kernel.dk>,
-	Raj Ashok <ashok.raj@intel.com>,
-	"Tian, Kevin" <kevin.tian@intel.com>,
-	maz@kernel.org,
-	seanjc@google.com,
-	"Robin Murphy" <robin.murphy@arm.com>,
-	jim.harris@samsung.com,
-	a.manzanares@samsung.com,
-	"Bjorn Helgaas" <helgaas@kernel.org>,
-	guang.zeng@intel.com,
-	robert.hoo.linux@gmail.com,
-	Jacob Pan <jacob.jun.pan@linux.intel.com>
-Subject: [PATCH v2 13/13] iommu/vt-d: Enable posted mode for device MSIs
-Date: Fri,  5 Apr 2024 15:31:10 -0700
-Message-Id: <20240405223110.1609888-14-jacob.jun.pan@linux.intel.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240405223110.1609888-1-jacob.jun.pan@linux.intel.com>
-References: <20240405223110.1609888-1-jacob.jun.pan@linux.intel.com>
+  bh=MZmfmRuTm98xxNT3u4GoRIvJJsGslBrgcovMMdqPwTw=;
+  b=LMoCvuAvAiKpauBjBvG9rZqvq6Adv0g22tVGZIEI0d5TB8C2HlDl1LHj
+   ASgigsE0s2Il2hca+iDoCM6AQH10YBXw8e5uCk/kWQjy44Sa3yPPKf9V2
+   ge0Y/ag/602Bo2vu9PmOTCQz5V4tyWdDcU0BFbPvDDGjaYJf/FMeOaHPI
+   Q=;
+X-IronPort-AV: E=Sophos;i="6.07,182,1708387200"; 
+   d="scan'208";a="716520780"
+Received: from pdx4-co-svc-p1-lb2-vlan2.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.25.36.210])
+  by smtp-border-fw-9106.sea19.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Apr 2024 22:27:19 +0000
+Received: from EX19MTAUWB002.ant.amazon.com [10.0.7.35:33431]
+ by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.50.222:2525] with esmtp (Farcaster)
+ id d323b31d-9f42-407f-b466-8125712ac6f4; Fri, 5 Apr 2024 22:27:18 +0000 (UTC)
+X-Farcaster-Flow-ID: d323b31d-9f42-407f-b466-8125712ac6f4
+Received: from EX19D004ANA001.ant.amazon.com (10.37.240.138) by
+ EX19MTAUWB002.ant.amazon.com (10.250.64.231) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1258.28; Fri, 5 Apr 2024 22:27:17 +0000
+Received: from 88665a182662.ant.amazon.com (10.106.101.45) by
+ EX19D004ANA001.ant.amazon.com (10.37.240.138) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1258.28;
+ Fri, 5 Apr 2024 22:27:06 +0000
+From: Kuniyuki Iwashima <kuniyu@amazon.com>
+To: <j.granados@samsung.com>
+CC: <Dai.Ngo@oracle.com>, <alex.aring@gmail.com>, <alibuda@linux.alibaba.com>,
+	<allison.henderson@oracle.com>, <anna@kernel.org>, <bridge@lists.linux.dev>,
+	<chuck.lever@oracle.com>, <coreteam@netfilter.org>, <courmisch@gmail.com>,
+	<davem@davemloft.net>, <dccp@vger.kernel.org>,
+	<devnull+j.granados.samsung.com@kernel.org>, <dhowells@redhat.com>,
+	<dsahern@kernel.org>, <edumazet@google.com>, <fw@strlen.de>,
+	<geliang@kernel.org>, <guwen@linux.alibaba.com>,
+	<herbert@gondor.apana.org.au>, <horms@verge.net.au>, <ja@ssi.bg>,
+	<jaka@linux.ibm.com>, <jlayton@kernel.org>, <jmaloy@redhat.com>,
+	<jreuter@yaina.de>, <kadlec@netfilter.org>, <keescook@chromium.org>,
+	<kolga@netapp.com>, <kuba@kernel.org>, <kuniyu@amazon.com>,
+	<linux-afs@lists.infradead.org>, <linux-hams@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <linux-nfs@vger.kernel.org>,
+	<linux-rdma@vger.kernel.org>, <linux-s390@vger.kernel.org>,
+	<linux-sctp@vger.kernel.org>, <linux-wpan@vger.kernel.org>,
+	<linux-x25@vger.kernel.org>, <lucien.xin@gmail.com>,
+	<lvs-devel@vger.kernel.org>, <marc.dionne@auristor.com>,
+	<marcelo.leitner@gmail.com>, <martineau@kernel.org>, <matttbe@kernel.org>,
+	<mcgrof@kernel.org>, <miquel.raynal@bootlin.com>, <mptcp@lists.linux.dev>,
+	<ms@dev.tdt.de>, <neilb@suse.de>, <netdev@vger.kernel.org>,
+	<netfilter-devel@vger.kernel.org>, <pabeni@redhat.com>,
+	<pablo@netfilter.org>, <ralf@linux-mips.org>, <razor@blackwall.org>,
+	<rds-devel@oss.oracle.com>, <roopa@nvidia.com>, <stefan@datenfreihafen.org>,
+	<steffen.klassert@secunet.com>, <tipc-discussion@lists.sourceforge.net>,
+	<tom@talpey.com>, <tonylu@linux.alibaba.com>,
+	<trond.myklebust@hammerspace.com>, <wenjia@linux.ibm.com>,
+	<ying.xue@windriver.com>
+Subject: Re: [PATCH v2 4/4] ax.25: Remove the now superfluous sentinel elements from ctl_table array
+Date: Fri, 5 Apr 2024 15:26:58 -0700
+Message-ID: <20240405222658.3615-1-kuniyu@amazon.com>
+X-Mailer: git-send-email 2.30.2
+In-Reply-To: <20240405071531.fv6smp55znlfnul2@joelS2.panther.com>
+References: <20240405071531.fv6smp55znlfnul2@joelS2.panther.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: EX19D035UWB001.ant.amazon.com (10.13.138.33) To
+ EX19D004ANA001.ant.amazon.com (10.37.240.138)
 
-With posted MSI feature enabled on the CPU side, iommu interrupt
-remapping table entries (IRTEs) for device MSI/x can be allocated,
-activated, and programed in posted mode. This means that IRTEs are
-linked with their respective PIDs of the target CPU.
+From: Joel Granados <j.granados@samsung.com>
+Date: Fri, 5 Apr 2024 09:15:31 +0200
+> On Thu, Mar 28, 2024 at 12:49:34PM -0700, Kuniyuki Iwashima wrote:
+> > From: Joel Granados via B4 Relay <devnull+j.granados.samsung.com@kernel.org>
+> > Date: Thu, 28 Mar 2024 16:40:05 +0100
+> > > This commit comes at the tail end of a greater effort to remove the
+> > > empty elements at the end of the ctl_table arrays (sentinels) which will
+> > > reduce the overall build time size of the kernel and run time memory
+> > > bloat by ~64 bytes per sentinel (further information Link :
+> > > https://lore.kernel.org/all/ZO5Yx5JFogGi%2FcBo@bombadil.infradead.org/)
+> > > 
+> > > When we remove the sentinel from ax25_param_table a buffer overflow
+> > > shows its ugly head. The sentinel's data element used to be changed when
+> > > CONFIG_AX25_DAMA_SLAVE was not defined.
+> > 
+> > I think it's better to define the relation explicitly between the
+> > enum and sysctl table by BUILD_BUG_ON() in ax25_register_dev_sysctl()
+> > 
+> >   BUILD_BUG_ON(AX25_MAX_VALUES != ARRAY_SIZE(ax25_param_table));
+> > 
+> > and guard AX25_VALUES_DS_TIMEOUT with #ifdef CONFIG_AX25_DAMA_SLAVE
+> > as done for other enum.
+> 
+> When I remove AX25_VALUES_DS_TIMEOUT from the un-guarded build it
+> complains in net/ax25/ax25_ds_timer.c (ax25_ds_set_timer). Here is the
+> report https://lore.kernel.org/oe-kbuild-all/202404040301.qzKmVQGB-lkp@intel.com/.
+> 
+> How best to address this? Should we just guard the whole function and do
+> nothing when not set? like this:
 
-Handlers for the posted MSI notification vector will de-multiplex
-device MSI handlers. CPU notifications are coalesced if interrupts
-arrive at a high frequency.
+It seems fine to me.
 
-Excluding the following:
-- legacy devices IOAPIC, HPET (may be needed for booting, not a source
-of high MSIs)
-- VT-d's own IRQs (not remappable).
+ax25_ds_timeout() checks !ax25_dev->dama.slave_timeout, but it's
+initialised by kzalloc() during dev setup, so it will be a noop.
 
-Suggested-by: Thomas Gleixner <tglx@linutronix.de>
-Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
 
----
-v2: Fold in helper function for retrieving PID address
-v1: Added a warning if the effective affinity mask is not set up
----
- drivers/iommu/intel/irq_remapping.c | 69 +++++++++++++++++++++++++++--
- 1 file changed, 65 insertions(+), 4 deletions(-)
+> 
+> ```
+> void ax25_ds_set_timer(ax25_dev *ax25_dev)
+> {
+> #ifdef COFNIG_AX25_DAMA_SLAVE
+>         if (ax25_dev == NULL)        ···/* paranoia */
+>                 return;
+> 
+>         ax25_dev->dama.slave_timeout =
+>                 msecs_to_jiffies(ax25_dev->values[AX25_VALUES_DS_TIMEOUT]) / 10;
+>         mod_timer(&ax25_dev->dama.slave_timer, jiffies + HZ);
+> #else
+>         return;
+> #endif
+> }
+> 
+> ```
+> 
+> I'm not too familiar with this, so pointing me to the "correct" way to
+> handle this would be helpfull.
 
-diff --git a/drivers/iommu/intel/irq_remapping.c b/drivers/iommu/intel/irq_remapping.c
-index fa719936b44e..ac5f9e83943b 100644
---- a/drivers/iommu/intel/irq_remapping.c
-+++ b/drivers/iommu/intel/irq_remapping.c
-@@ -19,6 +19,7 @@
- #include <asm/cpu.h>
- #include <asm/irq_remapping.h>
- #include <asm/pci-direct.h>
-+#include <asm/posted_intr.h>
- 
- #include "iommu.h"
- #include "../irq_remapping.h"
-@@ -49,6 +50,7 @@ struct irq_2_iommu {
- 	u16 sub_handle;
- 	u8  irte_mask;
- 	enum irq_mode mode;
-+	bool posted_msi;
- };
- 
- struct intel_ir_data {
-@@ -1118,6 +1120,14 @@ static void prepare_irte(struct irte *irte, int vector, unsigned int dest)
- 	irte->redir_hint = 1;
- }
- 
-+static void prepare_irte_posted(struct irte *irte)
-+{
-+	memset(irte, 0, sizeof(*irte));
-+
-+	irte->present = 1;
-+	irte->p_pst = 1;
-+}
-+
- struct irq_remap_ops intel_irq_remap_ops = {
- 	.prepare		= intel_prepare_irq_remapping,
- 	.enable			= intel_enable_irq_remapping,
-@@ -1126,6 +1136,47 @@ struct irq_remap_ops intel_irq_remap_ops = {
- 	.enable_faulting	= enable_drhd_fault_handling,
- };
- 
-+#ifdef CONFIG_X86_POSTED_MSI
-+
-+static phys_addr_t get_pi_desc_addr(struct irq_data *irqd)
-+{
-+	int cpu = cpumask_first(irq_data_get_effective_affinity_mask(irqd));
-+
-+	if (WARN_ON(cpu >= nr_cpu_ids))
-+		return 0;
-+
-+	return __pa(per_cpu_ptr(&posted_interrupt_desc, cpu));
-+}
-+
-+static void intel_ir_reconfigure_irte_posted(struct irq_data *irqd)
-+{
-+	struct intel_ir_data *ir_data = irqd->chip_data;
-+	struct irte *irte = &ir_data->irte_entry;
-+	struct irte irte_pi;
-+	u64 pid_addr;
-+
-+	pid_addr = get_pi_desc_addr(irqd);
-+
-+	if (!pid_addr) {
-+		pr_warn("Failed to setup IRQ %d for posted mode", irqd->irq);
-+		return;
-+	}
-+
-+	memset(&irte_pi, 0, sizeof(irte_pi));
-+
-+	/* The shared IRTE already be set up as posted during alloc_irte */
-+	dmar_copy_shared_irte(&irte_pi, irte);
-+
-+	irte_pi.pda_l = (pid_addr >> (32 - PDA_LOW_BIT)) & ~(-1UL << PDA_LOW_BIT);
-+	irte_pi.pda_h = (pid_addr >> 32) & ~(-1UL << PDA_HIGH_BIT);
-+
-+	modify_irte(&ir_data->irq_2_iommu, &irte_pi);
-+}
-+
-+#else
-+static inline void intel_ir_reconfigure_irte_posted(struct irq_data *irqd) {}
-+#endif
-+
- static void intel_ir_reconfigure_irte(struct irq_data *irqd, bool force)
- {
- 	struct intel_ir_data *ir_data = irqd->chip_data;
-@@ -1139,8 +1190,9 @@ static void intel_ir_reconfigure_irte(struct irq_data *irqd, bool force)
- 	irte->vector = cfg->vector;
- 	irte->dest_id = IRTE_DEST(cfg->dest_apicid);
- 
--	/* Update the hardware only if the interrupt is in remapped mode. */
--	if (force || ir_data->irq_2_iommu.mode == IRQ_REMAPPING)
-+	if (ir_data->irq_2_iommu.posted_msi)
-+		intel_ir_reconfigure_irte_posted(irqd);
-+	else if (force || ir_data->irq_2_iommu.mode == IRQ_REMAPPING)
- 		modify_irte(&ir_data->irq_2_iommu, irte);
- }
- 
-@@ -1194,7 +1246,7 @@ static int intel_ir_set_vcpu_affinity(struct irq_data *data, void *info)
- 	struct intel_ir_data *ir_data = data->chip_data;
- 	struct vcpu_data *vcpu_pi_info = info;
- 
--	/* stop posting interrupts, back to remapping mode */
-+	/* stop posting interrupts, back to the default mode */
- 	if (!vcpu_pi_info) {
- 		modify_irte(&ir_data->irq_2_iommu, &ir_data->irte_entry);
- 	} else {
-@@ -1320,6 +1372,11 @@ static void intel_irq_remapping_prepare_irte(struct intel_ir_data *data,
- 		break;
- 	case X86_IRQ_ALLOC_TYPE_PCI_MSI:
- 	case X86_IRQ_ALLOC_TYPE_PCI_MSIX:
-+		if (posted_msi_supported()) {
-+			prepare_irte_posted(irte);
-+			data->irq_2_iommu.posted_msi = 1;
-+		}
-+
- 		set_msi_sid(irte,
- 			    pci_real_dma_dev(msi_desc_to_pci_dev(info->desc)));
- 		break;
-@@ -1407,7 +1464,11 @@ static int intel_irq_remapping_alloc(struct irq_domain *domain,
- 
- 		irq_data->hwirq = (index << 16) + i;
- 		irq_data->chip_data = ird;
--		irq_data->chip = &intel_ir_chip;
-+		if (posted_msi_supported() &&
-+			((info->type == X86_IRQ_ALLOC_TYPE_PCI_MSI) || (info->type == X86_IRQ_ALLOC_TYPE_PCI_MSIX)))
-+			irq_data->chip = &intel_ir_chip_post_msi;
-+		else
-+			irq_data->chip = &intel_ir_chip;
- 		intel_irq_remapping_prepare_irte(ird, irq_cfg, info, index, i);
- 		irq_set_status_flags(virq + i, IRQ_MOVE_PCNTXT);
- 	}
--- 
-2.25.1
+Also, you will need to guard another use of AX25_VALUES_DS_TIMEOUT in
+ax25_dev_device_up().
 
+Thanks!
