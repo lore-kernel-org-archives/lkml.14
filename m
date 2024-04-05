@@ -1,127 +1,72 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f70.google.com (mail-io1-f70.google.com [209.85.166.70])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15CB816EBE4;
-	Fri,  5 Apr 2024 14:24:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9DF916EBEB
+	for <linux-kernel@vger.kernel.org>; Fri,  5 Apr 2024 14:25:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.70
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712327091; cv=none; b=B+epClVHGtr6/YZmeDjbkKpbpJU878mw9gg+t3J5KBG2XMVCIOqo/WeKHTnpGFIjHZ71baWrJ9qZD0GZZ9cHeQ4GTfCjLEf8fpUvQg10fITelUzt9Y0XVRWZTi3ffdA2mJuPUonczVVji3jfdx3q3/DUBWAiGMi6mwFC6iIdfG8=
+	t=1712327106; cv=none; b=KMKcMs0qqbZLG5W0nKnNd8kvBZaAcqXeTf+8qse6TsPyLMl57gQYoedfEz+SuVTi7KMtpWztVdhuLlQNr3t8ZjEzWpuzH6AjSwGgDhbi4fzwlcUcXGVoca/8o4O9K6VXHPjLUHuUyX6kNY6erU3k2J/T3xL7JpBKGg1eBn1EbhY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712327091; c=relaxed/simple;
-	bh=9u276kZaHIRoTA4fadL2lfzY0PJaTWAhflWuDXQc7KI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mUJxMN+3j3/BbAWaUfeCMTpD/3/nc1qOvz4JrvkYYKiYQU4Bs5Wo2pgh1JBJrWsXo2vzWmQ7zg2uXCrltxOJzgXEtvlB/BsKTjqJA1d3GdNXY2Vdmgr/yCI13BsfV18rmnKMHoYd4rKnZ6JjhBGmzcLSYhtfTxcythVsgxp9eOA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eltXqxIs; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eltXqxIs"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A85AAC433C7;
-	Fri,  5 Apr 2024 14:24:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712327090;
-	bh=9u276kZaHIRoTA4fadL2lfzY0PJaTWAhflWuDXQc7KI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=eltXqxIseJTpiuRAJ13spAdHEBB1EkmRpmBqdjP6Uehu/d9KdmHKmpaLerp6rcb1b
-	 ytDBJQ9mj8iYPDlAFMU+rbHbI7B2A8Dr21YQV5p+SLT9bq/BLo1HPCnJfXavCO/sUD
-	 6OTWC0kWWTQefiM8pVw61K31PavRnvXPa4a70nAJN7WnIQKT+hl3ylfcO4+L5O9/FT
-	 01vmrmu0p3OPsUPjB0zEVjw7EglL8QZBLzv97TXIquUwe29e9IJw8PdTBlDh7jqG0B
-	 YEj5U8jtyTF0LwOlnHvMtkjYZnV0BpVaMaTgGCz7MrGdazCCg4SuYfSnMLyrUHnzed
-	 boUmhxbFl0yxg==
-Date: Fri, 5 Apr 2024 19:54:46 +0530
-From: Vinod Koul <vkoul@kernel.org>
-To: Maxime Ripard <mripard@kernel.org>
-Cc: Alexander Stein <alexander.stein@ew.tq-group.com>,
-	Andrzej Hajda <andrzej.hajda@intel.com>,
-	Neil Armstrong <neil.armstrong@linaro.org>,
-	Robert Foss <rfoss@kernel.org>,
-	Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-	Jonas Karlman <jonas@kwiboo.se>,
-	Jernej Skrabec <jernej.skrabec@gmail.com>,
-	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>, Sandor Yu <Sandor.yu@nxp.com>,
-	dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-phy@lists.infradead.org,
-	imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
-	linux@ew.tq-group.com,
-	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Subject: Re: [PATCH v15 2/8] phy: Add HDMI configuration options
-Message-ID: <ZhAJridEyhUeFVr0@matsya>
-References: <20240306101625.795732-1-alexander.stein@ew.tq-group.com>
- <20240306101625.795732-3-alexander.stein@ew.tq-group.com>
- <20240306-inquisitive-funny-bull-017550@houat>
+	s=arc-20240116; t=1712327106; c=relaxed/simple;
+	bh=cuEO7vqKjzgwUrWsarUircwTjd771GhXXOLQG5x5mPM=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=FKNhlugi/52IQbOri513GINw7CpGrwFxdpGemsM2cW+2GflXsdKKX7NFRUd52uz+Lvq5lxx+ckzDIbVSMbiLy3Rr0Ng0nHyaABftCI9rH8mqSPGQMg7NbYOqXXFc3CXHQGUAQq3mQ/G/KAell+VYy/Io/OhScYHT503CdrTm20o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.70
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f70.google.com with SMTP id ca18e2360f4ac-7cc78077032so216946639f.0
+        for <linux-kernel@vger.kernel.org>; Fri, 05 Apr 2024 07:25:04 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712327104; x=1712931904;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=laQPa37WZVRnQ0n/tGH7oSPgcFcCrPtU6u7CAqIV8mA=;
+        b=R556ujsRSgn1N68MR/ajdYd5Nffk0AnOQ2e2FSYXSWkfCNnmqOWCyMV3ZROy4XqALL
+         3W0TOJwmAG+381WNmmGjesJ1+FPnFbvwxe6drg0FXeInFp73PS/0tGWVuNurUS0wVN/Y
+         5HXQtethqu3SypYNmQYIP7jqH3U8xZAe5G6VNbR5yrNCURneF6TTMLgPbChBoSUMKEuG
+         Z1l35PLCw/Fj+3OgqDu0lmSpUFaymrfsjz50gQiy0SGYr34KPtA7lH5jlnsFDiYqMw2W
+         RIKn9nCmtIn/ezN56xg+IeGbXf7BWD0Ry+Wf9R4emQbOXdPe7XMb2Heb1++iQ+nrhFK+
+         rFsA==
+X-Forwarded-Encrypted: i=1; AJvYcCXv7w1SSIX6rYUtraLAj5SsqUvT0gScVJo2vpiWH2di8L/bq8cgOGx/b51fHameI1oV6QykvoNsW6EJI5z0L4z9EjKGU8afsUOQF17I
+X-Gm-Message-State: AOJu0YxmrYdQUKzhZU5AQVXsJS9H9/bAVRL3D/T55cDFO6LE96u2lRnc
+	hsp7x8i9lCI9+iX8OnZgLiTjwVpywttaxauYI2gj/6/VlUowV1Dw7GJWSOoXl4mxcRi0p7rGmea
+	JnuaaxZTboMZh3l//mqJziyVPvm+2Ex1ZirbGZg/8t+NDTba0GH8AIlg=
+X-Google-Smtp-Source: AGHT+IEDA/lUAfIO2TSFdjwJB94S9+jQ2873WHGNSKcC0Ig9wjgHPpBBegvmnzqPEP36QS8uJQ+irazk+l2jQZNi5gs9czIX9I2T
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240306-inquisitive-funny-bull-017550@houat>
+X-Received: by 2002:a05:6e02:12e3:b0:368:727e:ec80 with SMTP id
+ l3-20020a056e0212e300b00368727eec80mr89661iln.5.1712327103934; Fri, 05 Apr
+ 2024 07:25:03 -0700 (PDT)
+Date: Fri, 05 Apr 2024 07:25:03 -0700
+In-Reply-To: <cb6d724f-7afb-44c6-835c-6c8c229b70a0@I-love.SAKURA.ne.jp>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000c5572506155a38b8@google.com>
+Subject: Re: [syzbot] [arm] BUG: bad usercopy in fpa_set
+From: syzbot <syzbot+cb76c2983557a07cdb14@syzkaller.appspotmail.com>
+To: keescook@chromium.org, linux-kernel@vger.kernel.org, 
+	penguin-kernel@i-love.sakura.ne.jp, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-On 06-03-24, 15:48, Maxime Ripard wrote:
-> Hi Alexander,
-> 
-> On Wed, Mar 06, 2024 at 11:16:19AM +0100, Alexander Stein wrote:
-> > From: Sandor Yu <Sandor.yu@nxp.com>
-> > 
-> > Allow HDMI PHYs to be configured through the generic
-> > functions through a custom structure added to the generic union.
-> > 
-> > The parameters added here are based on HDMI PHY
-> > implementation practices.  The current set of parameters
-> > should cover the potential users.
-> > 
-> > Signed-off-by: Sandor Yu <Sandor.yu@nxp.com>
-> > Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-> > Acked-by: Vinod Koul <vkoul@kernel.org>
-> > ---
-> >  include/linux/phy/phy-hdmi.h | 24 ++++++++++++++++++++++++
-> >  include/linux/phy/phy.h      |  7 ++++++-
-> >  2 files changed, 30 insertions(+), 1 deletion(-)
-> >  create mode 100644 include/linux/phy/phy-hdmi.h
-> > 
-> > diff --git a/include/linux/phy/phy-hdmi.h b/include/linux/phy/phy-hdmi.h
-> > new file mode 100644
-> > index 0000000000000..b7de88e9090f0
-> > --- /dev/null
-> > +++ b/include/linux/phy/phy-hdmi.h
-> > @@ -0,0 +1,24 @@
-> > +/* SPDX-License-Identifier: GPL-2.0 */
-> > +/*
-> > + * Copyright 2022 NXP
-> > + */
-> > +
-> > +#ifndef __PHY_HDMI_H_
-> > +#define __PHY_HDMI_H_
-> > +
-> > +#include <linux/hdmi.h>
-> > +/**
-> > + * struct phy_configure_opts_hdmi - HDMI configuration set
-> > + * @pixel_clk_rate: Pixel clock of video modes in KHz.
-> > + * @bpc: Maximum bits per color channel.
-> > + * @color_space: Colorspace in enum hdmi_colorspace.
-> > + *
-> > + * This structure is used to represent the configuration state of a HDMI phy.
-> > + */
-> > +struct phy_configure_opts_hdmi {
-> > +	unsigned int pixel_clk_rate;
-> > +	unsigned int bpc;
-> > +	enum hdmi_colorspace color_space;
-> > +};
-> 
-> Does the PHY actually care about the pixel clock rate, color space and
-> formats, or does it only care about the character rate?
+Hello,
 
-Nope it should not
+syzbot has tested the proposed patch and the reproducer did not trigger any issue:
 
--- 
-~Vinod
+Reported-and-tested-by: syzbot+cb76c2983557a07cdb14@syzkaller.appspotmail.com
+
+Tested on:
+
+commit:         8cb4a9a8 x86/cpufeatures: Add CPUID_LNX_5 to track rec..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=14d6c52d180000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=39e01873cab062c1
+dashboard link: https://syzkaller.appspot.com/bug?extid=cb76c2983557a07cdb14
+compiler:       arm-linux-gnueabi-gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
+userspace arch: arm
+patch:          https://syzkaller.appspot.com/x/patch.diff?x=14c42099180000
+
+Note: testing is done by a robot and is best-effort only.
