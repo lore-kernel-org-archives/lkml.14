@@ -1,189 +1,335 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp.smtpout.orange.fr (smtp-26.smtpout.orange.fr [80.12.242.26])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 224CF16FF58;
-	Fri,  5 Apr 2024 16:13:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1E5117106F;
+	Fri,  5 Apr 2024 16:13:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.26
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712333623; cv=none; b=qjt6b/mQ//b6qx/XjDrPhhzLQzoCv+zKqajzGRcG9is7ZI/lSCz0vNjzHf80lDKvm546ncRlQ1SCaTr35moogsNJ5b12ZbyBz9Xgl0ySdPN0L9S3OXEA6DsDH9RjZ0oaJchSP8yb3t2RU6ypkGtq9IkfZvg/ZKkgEX2jrFFlLXg=
+	t=1712333637; cv=none; b=eYrR2/AAmKNv6f6yu5US+heIwiWbn6fdqtZ9tQYhHS84g2GreQq4j0ZvFrlUxY0bmq1RUWjBVx28vLnOwpk+IarwAGefZkKQeuk/0y6W0VFZ/1BTnz6mfTeeNGFMD6RvrTPEMXaAif9iaclTuRYSiLf0tzzB57eN5VUK9D5OUWY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712333623; c=relaxed/simple;
-	bh=Q8DxPoGFwNt1vwUx+kL+4TrG1ntiPpirQuVvn+D6NKU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mGK9MBj9ADxY6ZN9IfsjTzaQZHpFq+Wc0lbghaQ6Z1fS4wP6/ZpGh4ec0HDifAAhaq6oK50hC+Xv1Rc8UIsHB5jsQay9UlLUWZKF1V1bi9dDQpqpHGfqhoQJBMmIfTlLNMN/VxN6sGlytwFyp0352bjRae8o9Am6QAiMHGyjwAw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SrsDaaZJ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1712333637; c=relaxed/simple;
+	bh=446fASRPfRilsIGps55d8+e8J1yR6wjH51douWekheQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=MKoHUCRseNWuPYH8r4lsgv2FZledEy76lYy7WcfgzCFTWFCN4GKgka2t8NV3hEaFRQxQIJaK8n9VfCqeRTPZg5hpoLx3Yd47Wk3P01PIKn3UTXvgzLC64k3nDUMewbhgw9KxCwhGV6Cypg0LcP960CQFyfp4QcOxqjKBHstxpNk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=ZYgnhfdF; arc=none smtp.client-ip=80.12.242.26
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SrsDaaZJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CDCE2C433F1;
-	Fri,  5 Apr 2024 16:13:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712333622;
-	bh=Q8DxPoGFwNt1vwUx+kL+4TrG1ntiPpirQuVvn+D6NKU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=SrsDaaZJEZNam0u270Lqu6ITF3tmsHbfl5xJzBiMP+xzKqRg3dW9jJzcFcKtlTeuf
-	 /gwDGmvJJfEDAvIO0XBmb0KytS7+b/X3C9wPmxFqGEC3ddumLytl9WB1gewdhH+O1C
-	 X11MjfDn9ssOtSnJXJF4G3ysSkWpqBEIHH6VCRWXr/qVbQmYFTqbYYp1iYGAW4EEml
-	 ffaZdaGxwhRAZ7i3eiY1ArIdlfsmCZOES1t8uQifZbRKvsRClf4qLKK3ivwhFYQn/Q
-	 t/ZsB8JXwcSbDWZuUB1Wua9pSKwuayucxVll6yPrdUTZGdVQdzWuR3qfdLtWOJtCR3
-	 PgS/O2g3G1BtA==
-Date: Fri, 5 Apr 2024 17:13:37 +0100
-From: Conor Dooley <conor@kernel.org>
-To: Jason-JH Lin =?utf-8?B?KOael+edv+elpSk=?= <Jason-JH.Lin@mediatek.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>,
-	Houlong Wei =?utf-8?B?KOmtj+WOmum+mSk=?= <houlong.wei@mediatek.com>,
-	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-	Shawn Sung =?utf-8?B?KOWui+WtneismSk=?= <Shawn.Sung@mediatek.com>,
-	CK Hu =?utf-8?B?KOiDoeS/iuWFiSk=?= <ck.hu@mediatek.com>,
-	"conor+dt@kernel.org" <conor+dt@kernel.org>,
-	"robh@kernel.org" <robh@kernel.org>,
-	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
-	"krzysztof.kozlowski+dt@linaro.org" <krzysztof.kozlowski+dt@linaro.org>,
-	"matthias.bgg@gmail.com" <matthias.bgg@gmail.com>,
-	"jassisinghbrar@gmail.com" <jassisinghbrar@gmail.com>,
-	"angelogioacchino.delregno@collabora.com" <angelogioacchino.delregno@collabora.com>
-Subject: Re: [PATCH v5 02/10] dt-bindings: mailbox: Add mboxes property for
- CMDQ secure driver
-Message-ID: <20240405-remindful-galley-2dee9eec4f34@spud>
-References: <20240403102602.32155-1-shawn.sung@mediatek.com>
- <20240403102602.32155-3-shawn.sung@mediatek.com>
- <20240403-conflict-detest-717b4175a00c@spud>
- <9b9707a4a0e285a12741fe4140680ad2578d8d2b.camel@mediatek.com>
- <20240404-lankiness-devouring-d4d012b22cb9@spud>
- <e6a30feb1e4bb41c90df5e0272385d0f47a7dcab.camel@mediatek.com>
+	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="ZYgnhfdF"
+Received: from [192.168.1.18] ([86.243.17.157])
+	by smtp.orange.fr with ESMTPA
+	id smBFrrKFnOOBFsmBFrIsHA; Fri, 05 Apr 2024 18:12:43 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
+	s=t20230301; t=1712333563;
+	bh=+pRBTJW1OUjq+2ZwP12ZfPfemwchotgOt0zCg7URj1Q=;
+	h=Message-ID:Date:MIME-Version:Subject:To:From;
+	b=ZYgnhfdFYv+mDKfMzNZkz/qslvBPz900MkpdvyJtqDOTA225CsdZIExPUfZoKLX4f
+	 zN7lOiIxrRVPTfLXEREQpIvw99Lv7BK0SFkd5ytl92qBJvbyZ+xOgexhxClWSEB/mg
+	 AGBeSvyEppu0FA0/SpxxG2BuKihQ3Up0H/nsx3xCnoQzYOxOtnAZ2lQTrb4Mmv3p7/
+	 SygZM83/mbjkh29Y2rCekJwGCCo49NUdnwoXnLf3Ei+FsDrzIOYaMLLncER6mngWO7
+	 BFteKWE8SlSrE5hMCO74rr8AizuKrMy9toXp3dcGJxP796SfhBRRa168K4IRkzoXtH
+	 EmDHi6oHTMzXg==
+X-ME-Helo: [192.168.1.18]
+X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
+X-ME-Date: Fri, 05 Apr 2024 18:12:43 +0200
+X-ME-IP: 86.243.17.157
+Message-ID: <ed5153e1-f4de-4268-a9d0-e74b779d2587@wanadoo.fr>
+Date: Fri, 5 Apr 2024 18:12:40 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="Q/1d7/5euK6JVvYU"
-Content-Disposition: inline
-In-Reply-To: <e6a30feb1e4bb41c90df5e0272385d0f47a7dcab.camel@mediatek.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 3/4] usb: dwc3: exynos: Use
+ devm_regulator_bulk_get_enable() helper function
+To: Anand Moon <linux.amoon@gmail.com>
+Cc: Thinh Nguyen <Thinh.Nguyen@synopsys.com>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+ Alim Akhtar <alim.akhtar@samsung.com>, linux-usb@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20240301193831.3346-1-linux.amoon@gmail.com>
+ <20240301193831.3346-4-linux.amoon@gmail.com>
+ <52158bf6-16fe-4ce2-b9b6-bbc6550a6e14@wanadoo.fr>
+ <CANAwSgTCaSSMN2QCw5fr=RBp0WwWaLuebzQDO=scnABNFNctJQ@mail.gmail.com>
+ <e85ad80f-af7d-4eaf-9d14-dff13451f7e5@wanadoo.fr>
+ <CANAwSgRrOw+6MHLPDP8RwLwzwB1EVGBTovtR2ChhqR3b5uWowA@mail.gmail.com>
+ <CANAwSgQk10=K6Z5OzvT3OUncfr6BWyx7oH2JKN5CJAnS+uO7QQ@mail.gmail.com>
+Content-Language: en-MW, en-US
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+In-Reply-To: <CANAwSgQk10=K6Z5OzvT3OUncfr6BWyx7oH2JKN5CJAnS+uO7QQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+
+Le 05/04/2024 à 08:10, Anand Moon a écrit :
+>   Hi Christophe, Krzysztof,
+> 
+> On Mon, 4 Mar 2024 at 17:16, Anand Moon <linux.amoon@gmail.com> wrote:
+>>
+>> Hi Christophe,
+>>
+>> On Sun, 3 Mar 2024 at 00:07, Christophe JAILLET
+>> <christophe.jaillet@wanadoo.fr> wrote:
+>>>
+>>> Le 02/03/2024 à 17:48, Anand Moon a écrit :
+>>>> Hi Christophe,
+>>>>
+>>>> On Sat, 2 Mar 2024 at 21:20, Christophe JAILLET
+>>>> <christophe.jaillet@wanadoo.fr> wrote:
+>>>>>
+>>>>> Le 01/03/2024 à 20:38, Anand Moon a écrit :
+>>>>>> Use devm_regulator_bulk_get_enable() instead of open coded
+>>>>>> 'devm_regulator_get(), regulator_enable(), regulator_disable().
+>>>>>>
+>>>>>> Signed-off-by: Anand Moon <linux.amoon@gmail.com>
+>>>>>> ---
+>>>>>>     drivers/usb/dwc3/dwc3-exynos.c | 49 +++-------------------------------
+>>>>>>     1 file changed, 4 insertions(+), 45 deletions(-)
+>>>>>>
+>>>>>> diff --git a/drivers/usb/dwc3/dwc3-exynos.c b/drivers/usb/dwc3/dwc3-exynos.c
+>>>>>> index 5d365ca51771..7c77f3c69825 100644
+>>>>>> --- a/drivers/usb/dwc3/dwc3-exynos.c
+>>>>>> +++ b/drivers/usb/dwc3/dwc3-exynos.c
+>>>>>> @@ -32,9 +32,6 @@ struct dwc3_exynos {
+>>>>>>         struct clk              *clks[DWC3_EXYNOS_MAX_CLOCKS];
+>>>>>>         int                     num_clks;
+>>>>>>         int                     suspend_clk_idx;
+>>>>>> -
+>>>>>> -     struct regulator        *vdd33;
+>>>>>> -     struct regulator        *vdd10;
+>>>>>>     };
+>>>>>>
+>>>>>>     static int dwc3_exynos_probe(struct platform_device *pdev)
+>>>>>> @@ -44,6 +41,7 @@ static int dwc3_exynos_probe(struct platform_device *pdev)
+>>>>>>         struct device_node      *node = dev->of_node;
+>>>>>>         const struct dwc3_exynos_driverdata *driver_data;
+>>>>>>         int                     i, ret;
+>>>>>> +     static const char * const regulators[] = { "vdd33", "vdd10" };
+>>>>>>
+>>>>>>         exynos = devm_kzalloc(dev, sizeof(*exynos), GFP_KERNEL);
+>>>>>>         if (!exynos)
+>>>>>> @@ -78,27 +76,9 @@ static int dwc3_exynos_probe(struct platform_device *pdev)
+>>>>>>         if (exynos->suspend_clk_idx >= 0)
+>>>>>>                 clk_prepare_enable(exynos->clks[exynos->suspend_clk_idx]);
+>>>>>>
+>>>>>> -     exynos->vdd33 = devm_regulator_get(dev, "vdd33");
+>>>>>> -     if (IS_ERR(exynos->vdd33)) {
+>>>>>> -             ret = PTR_ERR(exynos->vdd33);
+>>>>>> -             goto vdd33_err;
+>>>>>> -     }
+>>>>>> -     ret = regulator_enable(exynos->vdd33);
+>>>>>> -     if (ret) {
+>>>>>> -             dev_err(dev, "Failed to enable VDD33 supply\n");
+>>>>>> -             goto vdd33_err;
+>>>>>> -     }
+>>>>>> -
+>>>>>> -     exynos->vdd10 = devm_regulator_get(dev, "vdd10");
+>>>>>> -     if (IS_ERR(exynos->vdd10)) {
+>>>>>> -             ret = PTR_ERR(exynos->vdd10);
+>>>>>> -             goto vdd10_err;
+>>>>>> -     }
+>>>>>> -     ret = regulator_enable(exynos->vdd10);
+>>>>>> -     if (ret) {
+>>>>>> -             dev_err(dev, "Failed to enable VDD10 supply\n");
+>>>>>> -             goto vdd10_err;
+>>>>>> -     }
+>>>>>> +     ret = devm_regulator_bulk_get_enable(dev, ARRAY_SIZE(regulators), regulators);
+>>>>>> +     if (ret)
+>>>>>> +             return dev_err_probe(dev, ret, "Failed to enable regulators\n");
+>>>>>>
+>>>>>>         if (node) {
+>>>>>>                 ret = of_platform_populate(node, NULL, NULL, dev);
+>>>>>> @@ -115,10 +95,6 @@ static int dwc3_exynos_probe(struct platform_device *pdev)
+>>>>>>         return 0;
+>>>>>>
+>>>>>>     populate_err:
+>>>>>> -     regulator_disable(exynos->vdd10);
+>>>>>> -vdd10_err:
+>>>>>> -     regulator_disable(exynos->vdd33);
+>>>>>> -vdd33_err:
+>>>>>>         for (i = exynos->num_clks - 1; i >= 0; i--)
+>>>>>>                 clk_disable_unprepare(exynos->clks[i]);
+>>>>>>
+>>>>>> @@ -140,9 +116,6 @@ static void dwc3_exynos_remove(struct platform_device *pdev)
+>>>>>>
+>>>>>>         if (exynos->suspend_clk_idx >= 0)
+>>>>>>                 clk_disable_unprepare(exynos->clks[exynos->suspend_clk_idx]);
+>>>>>> -
+>>>>>> -     regulator_disable(exynos->vdd33);
+>>>>>> -     regulator_disable(exynos->vdd10);
+>>>>>>     }
+>>>>>>
+>>>>>>     static const struct dwc3_exynos_driverdata exynos5250_drvdata = {
+>>>>>> @@ -196,9 +169,6 @@ static int dwc3_exynos_suspend(struct device *dev)
+>>>>>>         for (i = exynos->num_clks - 1; i >= 0; i--)
+>>>>>>                 clk_disable_unprepare(exynos->clks[i]);
+>>>>>>
+>>>>>> -     regulator_disable(exynos->vdd33);
+>>>>>> -     regulator_disable(exynos->vdd10);
+>>>>>
+>>>>> Hi,
+>>>>>
+>>>>> Same here, I don't think that removing regulator_[en|dis]able from the
+>>>>> suspend and resume function is correct.
+>>>>>
+>>>>> The goal is to stop some hardware when the system is suspended, in order
+>>>>> to save some power.
+>>>> Ok,
+>>>>>
+>>>>> Why did you removed it?
+>>>>
+>>>> As per the description of the function  devm_regulator_bulk_get_enable
+>>>>
+>>>> * This helper function allows drivers to get several regulator
+>>>>    * consumers in one operation with management, the regulators will
+>>>>    * automatically be freed when the device is unbound.  If any of the
+>>>>    * regulators cannot be acquired then any regulators that were
+>>>>    * allocated will be freed before returning to the caller.
+>>>
+>>> The code in suspend/resume is not about freeing some resources. It is
+>>> about enabling/disabling some hardware to save some power.
+>>>
+>>> Think to the probe/remove functions as the software in the kernel that
+>>> knows how to handle some hardawre, and the suspend/resume as the on/off
+>>> button to power-on and off the electrical chips.
+>>>
+>>> When the system is suspended, the software is still around. But some
+>>> hardware can be set in a low consumption mode to save some power.
+>>>
+>>> IMHO, part of the code you removed changed this behaviour and increase
+>>> the power consumption when the system is suspended.
+>>>
+>>
+>> You are correct, I have changed the regulator API from
+>> devm_regulator_get_enable to devm_regulator_bulk_get_enable
+>> which changes this behavior.
+>> I will fix it in the next version.
+>>
+>>> CJ
+> 
+> I could not find any example in the kernel to support
+> devm_regulator_bulk_disable
+> but here is my modified file.
+> 
+> If you have any suggestions for this plz let me know.
+
+I don't think that your approach is correct, and I don't think that the 
+proposed patch does what you expect it to do.
+
+Calling a devm_ function in suspend/resume functions looks really 
+strange to me and is likely broken.
+
+Especially here, devm_regulator_bulk_get_enable() in the resume function 
+allocates some memory that is not freed in 
+devm_regulator_bulk_disable(), because the API is not designed to work 
+like that. So this could generate a kind of memory leak.
 
 
---Q/1d7/5euK6JVvYU
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+*I think that the code is good enough as-is*, but if you really want to 
+change something, maybe:
+    - devm_regulator_get()+regulator_enable() in the probe could be 
+changed to devm_regulator_get_enable()
+    - the resume/suspend function should be left as-is with 
+regulator_disable()/regulator_ensable()
+    - remove regulator_disable() from the error handling path of the 
+probe and from the remove function.
 
-On Fri, Apr 05, 2024 at 02:33:14PM +0000, Jason-JH Lin (=E6=9E=97=E7=9D=BF=
-=E7=A5=A5) wrote:
-> On Thu, 2024-04-04 at 15:52 +0100, Conor Dooley wrote:
-> > On Thu, Apr 04, 2024 at 04:31:06AM +0000, Jason-JH Lin (=E6=9E=97=E7=9D=
-=BF=E7=A5=A5) wrote:
-> > > Hi Conor,
-> > >=20
-> > > Thanks for the reviews.
-> > >=20
-> > > On Wed, 2024-04-03 at 16:46 +0100, Conor Dooley wrote:
-> > > > On Wed, Apr 03, 2024 at 06:25:54PM +0800, Shawn Sung wrote:
-> > > > > From: "Jason-JH.Lin" <jason-jh.lin@mediatek.com>
-> > > > >=20
-> > > > > Add mboxes to define a GCE loopping thread as a secure irq
-> > > > > handler.
-> > > > > This property is only required if CMDQ secure driver is
-> > > > > supported.
-> > > > >=20
-> > > > > Signed-off-by: Jason-JH.Lin <jason-jh.lin@mediatek.com>
-> > > > > Signed-off-by: Hsiao Chien Sung <shawn.sung@mediatek.com>
-> > > > > ---
-> > > > >  .../bindings/mailbox/mediatek,gce-mailbox.yaml         | 10
-> > > > > ++++++++++
-> > > > >  1 file changed, 10 insertions(+)
-> > > > >=20
-> > > > > diff --git
-> > > > > a/Documentation/devicetree/bindings/mailbox/mediatek,gce-
-> > > > > mailbox.yaml
-> > > > > b/Documentation/devicetree/bindings/mailbox/mediatek,gce-
-> > > > > mailbox.yaml
-> > > > > index cef9d76013985..c0d80cc770899 100644
-> > > > > --- a/Documentation/devicetree/bindings/mailbox/mediatek,gce-
-> > > > > mailbox.yaml
-> > > > > +++ b/Documentation/devicetree/bindings/mailbox/mediatek,gce-
-> > > > > mailbox.yaml
-> > > > > @@ -49,6 +49,16 @@ properties:
-> > > > >      items:
-> > > > >        - const: gce
-> > > > > =20
-> > > > > +  mediatek,gce-events:
-> > > > > +    description:
-> > > > > +      The event id which is mapping to the specific hardware
-> > > > > event
-> > > > > signal
-> > > > > +      to gce. The event id is defined in the gce header
-> > > > > +      include/dt-bindings/gce/<chip>-gce.h of each chips.
-> > > >=20
-> > > > Missing any info here about when this should be used, hint - you
-> > > > have
-> > > > it
-> > > > in the commit message.
-> > > >=20
-> > > > > +    $ref: /schemas/types.yaml#/definitions/uint32-arrayi
-> > > >=20
-> > > > Why is the ID used by the CMDQ service not fixed for each SoC?
-> > > >=20
-> > >=20
-> > > I forgot to sync with Shawn about this:
-> > > https://lore.kernel.org/all/20240124011459.12204-1-jason-
-> > > jh.lin@mediatek.com
-> > >=20
-> > > I'll fix it at the next version.
-> >=20
-> > When I say "fixed" I don't mean "this is wrong, please fix it", I
-> > mean
-> > "why is the value not static for a particular SoC". This needs to be
-> > explained in the patch (and the description for the event here needs
-> > to
-> > explain what the gce-mailbox is reserving an event for).
-> >=20
-> Oh, I see. Thanks for noticing me.
->=20
-> We do want to reserve a static event ID for gce-mailbox to different
-> SoCs. There are 2 mainly reasons to why we set it in DTS:
-> 1. There are 1024 events IDs for GCE to use to execute instructions in
-> the specific event happened. These events could be signaled by HW or SW
-> and their value would be different in different SoC because of HW event
-> IDs distribution range from 0 to 1023.
-> If we set a static event ID: 855 for mt8188, it might be conflict the
-> event ID original set in mt8195.
+I *think* it would work.
 
-That's not a problem, we have compatibles for this purpose.
+CJ
 
-> 2. If we defined the event ID in DTS, we might know how many SW or HW
-> event IDs are used.
-> If someone wants to use a new event ID for a new feature, they could
-> find out the used event IDs in DTS easily and avoid the event ID
-> conflicting.
 
-Are the event IDs not documented in the reference manual for the SoC in
-question? Or in documentation for the secure world for these devices? A
-DTS should not be the authoritive source for this information for
-developers.
+> -----8<----------8<----------
+> diff --git a/drivers/usb/dwc3/dwc3-exynos.c b/drivers/usb/dwc3/dwc3-exynos.c
+> index 6d07592ad022..2f808cb9a006 100644
+> --- a/drivers/usb/dwc3/dwc3-exynos.c
+> +++ b/drivers/usb/dwc3/dwc3-exynos.c
+> @@ -34,6 +34,8 @@ struct dwc3_exynos {
+>          int                     suspend_clk_idx;
+>   };
+> 
+> +static const char * const regulators[] = { "vdd33", "vdd10" };
+> +
+>   static int dwc3_exynos_probe(struct platform_device *pdev)
+>   {
+>          struct dwc3_exynos      *exynos;
+> @@ -41,7 +43,6 @@ static int dwc3_exynos_probe(struct platform_device *pdev)
+>          struct device_node      *node = dev->of_node;
+>          const struct dwc3_exynos_driverdata *driver_data;
+>          int                     i, ret;
+> -       static const char * const regulators[] = { "vdd33", "vdd10" };
+> 
+>          exynos = devm_kzalloc(dev, sizeof(*exynos), GFP_KERNEL);
+>          if (!exynos)
+> @@ -166,6 +167,8 @@ static int __maybe_unused
+> dwc3_exynos_suspend(struct device *dev)
+>          struct dwc3_exynos *exynos = dev_get_drvdata(dev);
+>          int i;
+> 
+> +       devm_regulator_bulk_disable(dev);
+> +
+>          for (i = exynos->num_clks - 1; i >= 0; i--)
+>                  clk_disable_unprepare(exynos->clks[i]);
+> 
+> @@ -177,6 +180,11 @@ static int __maybe_unused
+> dwc3_exynos_resume(struct device *dev)
+>          struct dwc3_exynos *exynos = dev_get_drvdata(dev);
+>          int i, ret;
+> 
+> +       ret = devm_regulator_bulk_get_enable(dev, ARRAY_SIZE(regulators),
+> +                                               regulators);
+> +       if (ret)
+> +               dev_err(dev, "Failed to enable regulators\n");
+> +
+>          for (i = 0; i < exynos->num_clks; i++) {
+>                  ret = clk_prepare_enable(exynos->clks[i]);
+>                  if (ret) {
+> 
+> To support these changes we need to export the
+> devm_regulator_bulk_disable function.
+> -----8<----------8<----------
+> diff --git a/drivers/regulator/devres.c b/drivers/regulator/devres.c
+> index 90bb0d178885..97eed739f929 100644
+> --- a/drivers/regulator/devres.c
+> +++ b/drivers/regulator/devres.c
+> @@ -318,7 +318,7 @@ void devm_regulator_bulk_put(struct
+> regulator_bulk_data *consumers)
+>   }
+>   EXPORT_SYMBOL_GPL(devm_regulator_bulk_put);
+> 
+> -static void devm_regulator_bulk_disable(void *res)
+> +void devm_regulator_bulk_disable(void *res)
+>   {
+>          struct regulator_bulk_devres *devres = res;
+>          int i;
+> @@ -326,6 +326,7 @@ static void devm_regulator_bulk_disable(void *res)
+>          for (i = 0; i < devres->num_consumers; i++)
+>                  regulator_disable(devres->consumers[i].consumer);
+>   }
+> +EXPORT_SYMBOL_GPL(devm_regulator_bulk_disable);
+> 
+>   /**
+>    * devm_regulator_bulk_get_enable - managed get'n enable multiple regulators
+> diff --git a/include/linux/regulator/consumer.h
+> b/include/linux/regulator/consumer.h
+> index 4660582a3302..ce7d28306b17 100644
+> --- a/include/linux/regulator/consumer.h
+> +++ b/include/linux/regulator/consumer.h
+> @@ -214,6 +214,7 @@ int __must_check regulator_bulk_enable(int num_consumers,
+>                                         struct regulator_bulk_data *consumers);
+>   int devm_regulator_bulk_get_enable(struct device *dev, int num_consumers,
+>                                     const char * const *id);
+> +void devm_regulator_bulk_disable(void *res);
+>   int regulator_bulk_disable(int num_consumers,
+>                             struct regulator_bulk_data *consumers);
+>   int regulator_bulk_force_disable(int num_consumers,
+> --------------------------------------------------------------------------
+> 
+> Thanks
+> -Anand
+> 
+> 
 
-Additionally, the driver could very easily detect if someone does happen
-to put in the reserved ID. That could be generically useful (IOW, check
-all of them for re-use) if the ID are to not allowed to be shared.
-
-> The reason why we define a event ID is we want to get a SW signal from
-> secure world. We design a GCE looping thread in gce-mailbox driver to
-> wait for the GCE execute done event for each cmdq secure packets from
-> secure world.
-
-This sort of information needs to be in the commit message, but I don't
-think this property is needed at all since it seems to be something
-detectable from the compatible.
-
---Q/1d7/5euK6JVvYU
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZhAjMQAKCRB4tDGHoIJi
-0g9NAPsHTqr3FpCqnixCtTXtxW69Xrc2gEnNIQPw1BJYSwFYigD/dCkJ0WhN+ox9
-Bo19dT70y5DIOhKbgSd1tK3mieXUxgo=
-=/DXl
------END PGP SIGNATURE-----
-
---Q/1d7/5euK6JVvYU--
