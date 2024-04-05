@@ -1,180 +1,397 @@
-Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
+Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EAB3611E;
-	Fri,  5 Apr 2024 08:56:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7808F15F31D
+	for <linux-kernel@vger.kernel.org>; Fri,  5 Apr 2024 08:58:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712307382; cv=none; b=Ve8bWcb+cy26rOm6mdmEVTY+WDtA1Ge2ul3veXoAFsTIvQOYbGX/HaU2xwb+Jl1kPN6uA3cej/2XWqZYkNRhyTAwp0hbjJ3Jz44OW9b/jmCWX5mJJgbON2ZvPp7ZyWNolmz+V6P0eq6JtNxPPSuKXW6xuVpNTca+DUNoRldPDPM=
+	t=1712307525; cv=none; b=G5VXroN29rK4wumzaeODz/79w0Hdye6ZT/hUu8fCOO8PX/iHKRJXzqoNaqvQq6ottel92lhGT+b1pkKcEaB09GXCjfTeYt29AX112qQtV154CpRQsq8jsG40c2BgGMiCZWO8jlcGQIBiQOndVMbxg2HkZ14ilWgFQdKHr06PMpo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712307382; c=relaxed/simple;
-	bh=9mH29mPxAOKPezMYs3FWiNFuq+e72vmkdp75jHJFhvk=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=q+CM7z9koMmlY85cOEM0h3ZZgYsB50qx8yjFnJ4iyio/DjAvWiCXWJWL5qBCJhEAN4a47EzlQuHHrvAFSLDdqLmCTlh9MkEWe+2MJ8ft4PWW7wSEDlzeopQ6cs1eDIYsTnb089BsOVV+UzUEJI81K9UcNQ53XuLg7Az9L19gBOM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WIrPQ3fO; arc=none smtp.client-ip=209.85.208.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1712307525; c=relaxed/simple;
+	bh=UfgJIGbrSqwgwmcf29SClvJEf6OHWtdMTMMDqZN0JYM=;
+	h=References:From:To:Cc:Subject:Date:In-reply-to:Message-ID:
+	 MIME-Version:Content-Type; b=gvOaOZ+/jAhZoCOUJYJM76CGuRC3t0kPAftSjBTFwyd3IMCf/M7ipdeXQv0YaeHyKA+/gGoAwadb81o8huW87FubavGqdtARwKPSM6yeb4cpIdLV+iiT5cEoW6C19hPayvwCL/Eq7Riv93t5CZLbBVtiZg+IivPOp6eUM1qKL50=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=Iy9MNx1w; arc=none smtp.client-ip=209.85.221.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WIrPQ3fO"
-Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-56df87057bbso2004020a12.3;
-        Fri, 05 Apr 2024 01:56:20 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="Iy9MNx1w"
+Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-343d88460cdso628332f8f.2
+        for <linux-kernel@vger.kernel.org>; Fri, 05 Apr 2024 01:58:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1712307379; x=1712912179; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=mTuc9EJwZIHipEqAi292Whn+sPWqCiAHFZmxuUeoSkY=;
-        b=WIrPQ3fOTArPaZaCtyXuurtNGgyR7P+rsSjgTTd6rDq21UKa+C6T4mHvHo9Tq04ARW
-         TUjS42aUZR0fG0TdcR5xU7MPMmpBRV1W6ZOsAVaYAZZ8XAYrWf6eniVnMg/S1SnJXEUR
-         USsMGuvH6A+OBYVuBGehwP/l0Zjs1OO3KF2V9Wd0PnU6eVyYUSTKBy+isOsN9yJoua7s
-         uoDlMlP2mwebeU+oBTYzEH2omp1LhbMaWdCgSD7ACWVB4KT2Z7stOCwHZqgK0Y/0hUfL
-         1a/QDoC6GJlY0jFUQ68b1rIbYj4bnUJk3Zdw4nM0kNeAD0LiGTIamNbOUGH9dPVMDF+O
-         BzDA==
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1712307521; x=1712912321; darn=vger.kernel.org;
+        h=mime-version:message-id:in-reply-to:date:subject:cc:to:from
+         :user-agent:references:from:to:cc:subject:date:message-id:reply-to;
+        bh=tvTd0Fm8ZquDDVIbm2YOHB7MsYv/hDWQ2T1VR/OyIKU=;
+        b=Iy9MNx1w1186vSoThc9VzOTg/R5G/DUZiWGpDUD4H8KMmWWutPJidpjRZ7UTzWldWf
+         8zre+MDVp4dhG2CjEg8zpPGaC8a9Ba4hKqmwwmuy3m6Xl21VGuQy84QfTThR6EaPbiG5
+         s/o+Gn7KR4ZJOrEttogcYRILZhrNJZFt0mnGXJwRodtDch3FlYQ7c2WlWrkDQc/3e+Sj
+         KB48JVwyBcrjBErrxASY99Tf/qhrTF/HTmr/1aMF9lcqlOQFJ1P+fskXw+Q+XZEzjPuO
+         bIYEPEHlGG5rR+Ky9/36pcuGw7LaiMGOb5JTjK+am1OmNS6y+POPWLb2gCOPm233xd+G
+         z8Bw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712307379; x=1712912179;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+        d=1e100.net; s=20230601; t=1712307521; x=1712912321;
+        h=mime-version:message-id:in-reply-to:date:subject:cc:to:from
+         :user-agent:references:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=mTuc9EJwZIHipEqAi292Whn+sPWqCiAHFZmxuUeoSkY=;
-        b=Dhk2751snr76CzKjBoDHORmIG663/DG4212oDjQgqyGXo0fX+0PW/wA9WADNbbTw7X
-         AUseiXMGapdrGrnDnbA7zYr13YS2kNikc6CQlo+7JLKAu7pIK0kbeHzEynIw/awOwryJ
-         BCW0zYbPuQzjxnaJuJY8hnJMLq9pUajO7hgk86DUlyhdq5XE6A4KNnHN56Iuz17OtsfI
-         zoRyQRwQWZTspCxAPfpmRJC+qgcuRgSYNZU2p72q5FwGh+iVbculPF5oEKwFz4I7BVMQ
-         R9FxlAsdjWmDV9LsXaA0MR+KO3Sb4NCnGsUvKTecbkpjb5h0CC1Lnx65UL1tQavn1N7A
-         Prng==
-X-Forwarded-Encrypted: i=1; AJvYcCXOxNOMxYhyVRxThEaT3GXNYKh6EpPlZykkkpQlbuh191XencLGF3cVEVSgcGWnu1gujre2uIRCBC23gTXqTWmgbqQrA1kYvjPU1V8rfydw64EJDda26aKRltOHWcfESTJS3IWFIMaegJJAP0MhwtlDOparfxqL3aS+VbmbivQvjbs5bMhntAUR3KXsu+huc8fIQKexqPMi2XRyaavEkV9Y
-X-Gm-Message-State: AOJu0YwDBaMQs8WloiSqGx4UWDosur0W4zO/YsTu2l2CPU/rXLExNzYE
-	krjWfbhnhYK9eCUZ5imCKlOYJlcQKNCoDQZJEtmN3hP9drE1M1px
-X-Google-Smtp-Source: AGHT+IH8u6z6LZMoimxuXhlPOWiRu65ig2OfNbn7jhKaH1xlHNq6MOqkQjgf4Zy/I+i4HPS8WNS20Q==
-X-Received: by 2002:a50:8d11:0:b0:56e:cde:8983 with SMTP id s17-20020a508d11000000b0056e0cde8983mr667980eds.7.1712307378387;
-        Fri, 05 Apr 2024 01:56:18 -0700 (PDT)
-Received: from krava ([83.240.63.239])
-        by smtp.gmail.com with ESMTPSA id a1-20020a508581000000b0056e2432d10bsm562570edh.70.2024.04.05.01.56.16
+        bh=tvTd0Fm8ZquDDVIbm2YOHB7MsYv/hDWQ2T1VR/OyIKU=;
+        b=u25Da8sbZ2jpRAQN/5YmC74HvVCjHrp2HKU+fhwkspzpFh/8A3Li2MaiyKkaZQDxx0
+         uoUL3S54NFZWdTqJ3bKbvnNwOeiVrxSHEWwyEGSDntzHR5tjjnYPv2nUCYPjsaofDFmM
+         KoJAWk3w+GETp6P9q+QLlSya31se3mfKEQKSMM37XFB3d6+BIGpzVkbZkZApLIsIofjY
+         ESLjhFoepzYTw7RIJpx+/ElTlS8WI5PbzUwhmcgpsTT3AHxnLHpN2F6eOflPGlkwb4vK
+         Gx6BFMr+PsVpqluxCYgknzTB2xic4IzPWx91yX43VR4wOh4cea1eNvqL/8lnd6sZOy3b
+         JGhg==
+X-Forwarded-Encrypted: i=1; AJvYcCV8ogkQXuqZyDmXsT65Q1KUt2qDyjJw571Q9Bm1cV6pVbpYn6IB43JsSRdJyhA+BUwRUagXDnkuludB94EyTbBruBDSrOs/axgEmmPf
+X-Gm-Message-State: AOJu0YwaCtGyiAqIXHgAFGpdq1gxG/m7BfrBeyzu0OGoyQbNzMItq9eI
+	Hca3+skby/M3AalKcLRiwkqfCJWYen5FKaYz1WWQhzRwPfgRZp8Pef0djjBCEcU=
+X-Google-Smtp-Source: AGHT+IFkeZDLwHmb5ksDQvkIX1BxNeAKFtQ2xaawsaOuYE3qt3kcvau+dHTVrKGw3Ss9d7qEh2aORA==
+X-Received: by 2002:adf:a486:0:b0:33e:bfd0:41f9 with SMTP id g6-20020adfa486000000b0033ebfd041f9mr633683wrb.31.1712307520708;
+        Fri, 05 Apr 2024 01:58:40 -0700 (PDT)
+Received: from localhost ([2a01:e0a:3c5:5fb1:dd7a:d766:e9e8:454c])
+        by smtp.gmail.com with ESMTPSA id g11-20020adfe40b000000b00341cb22a8d4sm1494134wrm.108.2024.04.05.01.58.40
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 05 Apr 2024 01:56:17 -0700 (PDT)
-From: Jiri Olsa <olsajiri@gmail.com>
-X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
-Date: Fri, 5 Apr 2024 10:56:15 +0200
-To: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Oleg Nesterov <oleg@redhat.com>,
-	Andrii Nakryiko <andrii.nakryiko@gmail.com>,
-	Jiri Olsa <olsajiri@gmail.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Andrii Nakryiko <andrii@kernel.org>, linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org,
-	Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-	John Fastabend <john.fastabend@gmail.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	"Borislav Petkov (AMD)" <bp@alien8.de>, x86@kernel.org,
-	linux-api@vger.kernel.org
-Subject: Re: [PATCHv2 1/3] uprobe: Add uretprobe syscall to speed up return
- probe
-Message-ID: <Zg-8r63tPSkuhN7p@krava>
-References: <20240402093302.2416467-2-jolsa@kernel.org>
- <20240403100708.233575a8ac2a5bac2192d180@kernel.org>
- <Zg0lvUIB4WdRUGw_@krava>
- <20240403230937.c3bd47ee47c102cd89713ee8@kernel.org>
- <CAEf4BzZ2RFfz8PNgJ4ENZ0us4uX=DWhYFimXdtWms-VvGXOjgQ@mail.gmail.com>
- <20240404095829.ec5db177f29cd29e849169fa@kernel.org>
- <CAEf4BzYH60TwvBipHWB_kUqZZ6D-iUVnnFsBv06imRikK3o-bg@mail.gmail.com>
- <20240405005405.9bcbe5072d2f32967501edb3@kernel.org>
- <20240404161108.GG7153@redhat.com>
- <20240405102203.825c4a2e9d1c2be5b2bffe96@kernel.org>
+        Fri, 05 Apr 2024 01:58:40 -0700 (PDT)
+References: <20240403-amlogic-v6-4-upstream-dsi-ccf-vim3-v12-0-99ecdfdc87fc@linaro.org>
+ <20240403-amlogic-v6-4-upstream-dsi-ccf-vim3-v12-2-99ecdfdc87fc@linaro.org>
+ <1jmsq9pmgd.fsf@starbuckisacylon.baylibre.com>
+ <2cf79f07-0ae1-4267-ac08-fe40366d87d4@linaro.org>
+User-agent: mu4e 1.10.8; emacs 29.2
+From: Jerome Brunet <jbrunet@baylibre.com>
+To: neil.armstrong@linaro.org
+Cc: Jerome Brunet <jbrunet@baylibre.com>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley
+ <conor+dt@kernel.org>, Martin Blumenstingl
+ <martin.blumenstingl@googlemail.com>, Kevin Hilman <khilman@baylibre.com>,
+ Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
+ <sboyd@kernel.org>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann
+ <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Daniel Vetter
+ <daniel@ffwll.ch>, Jagan Teki <jagan@amarulasolutions.com>, Nicolas Belin
+ <nbelin@baylibre.com>, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-amlogic@lists.infradead.org,
+ linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ dri-devel@lists.freedesktop.org
+Subject: Re: [PATCH v12 2/7] clk: meson: add vclk driver
+Date: Fri, 05 Apr 2024 09:00:43 +0200
+In-reply-to: <2cf79f07-0ae1-4267-ac08-fe40366d87d4@linaro.org>
+Message-ID: <1ja5m8p4n4.fsf@starbuckisacylon.baylibre.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240405102203.825c4a2e9d1c2be5b2bffe96@kernel.org>
+Content-Type: text/plain
 
-On Fri, Apr 05, 2024 at 10:22:03AM +0900, Masami Hiramatsu wrote:
-> On Thu, 4 Apr 2024 18:11:09 +0200
-> Oleg Nesterov <oleg@redhat.com> wrote:
-> 
-> > On 04/05, Masami Hiramatsu wrote:
-> > >
-> > > Can we make this syscall and uprobe behavior clearer? As you said, if
-> > > the application use sigreturn or longjump, it may skip returns and
-> > > shadow stack entries are left in the kernel. In such cases, can uretprobe
-> > > detect it properly, or just crash the process (or process runs wrongly)?
-> > 
-> > Please see the comment in handle_trampoline(), it tries to detect this case.
-> > This patch should not make any difference.
-> 
-> I think you mean this loop will skip and discard the stacked return_instance
-> to find the valid one.
-> 
-> ----
->         do {
->                 /*
->                  * We should throw out the frames invalidated by longjmp().
->                  * If this chain is valid, then the next one should be alive
->                  * or NULL; the latter case means that nobody but ri->func
->                  * could hit this trampoline on return. TODO: sigaltstack().
->                  */
->                 next = find_next_ret_chain(ri);
->                 valid = !next || arch_uretprobe_is_alive(next, RP_CHECK_RET, regs);
-> 
->                 instruction_pointer_set(regs, ri->orig_ret_vaddr);
->                 do {
->                         if (valid)
->                                 handle_uretprobe_chain(ri, regs);
->                         ri = free_ret_instance(ri);
->                         utask->depth--;
->                 } while (ri != next);
->         } while (!valid);
-> ----
-> 
-> I think this expects setjmp/longjmp as below
-> 
-> foo() { <- retprobe1
-> 	setjmp()
-> 	bar() { <- retprobe2
-> 		longjmp()
-> 	}
-> } <- return to trampoline
-> 
-> In this case, we need to skip retprobe2's instance.
-> My concern is, if we can not find appropriate return instance, what happen?
-> e.g.
-> 
-> foo() { <-- retprobe1
->    bar() { # sp is decremented
->        sys_uretprobe() <-- ??
->     }
-> }
-> 
-> It seems sys_uretprobe() will handle retprobe1 at that point instead of
-> SIGILL.
 
-yes, and I think it's fine, you get the consumer called in wrong place,
-but it's your fault and kernel won't crash
+On Thu 04 Apr 2024 at 18:59, Neil Armstrong <neil.armstrong@linaro.org> wrote:
 
-this can be fixed by checking the syscall is called from the trampoline
-and prevent handle_trampoline call if it's not
+> On 04/04/2024 10:13, Jerome Brunet wrote:
+>> On Wed 03 Apr 2024 at 09:46, Neil Armstrong <neil.armstrong@linaro.org>
+>> wrote:
+>> 
+>>> The VCLK and VCLK_DIV clocks have supplementary bits.
+>>>
+>>> The VCLK gate has a "SOFT RESET" bit to toggle after the whole
+>>> VCLK sub-tree rate has been set, this is implemented in
+>>> the gate enable callback.
+>>>
+>>> The VCLK_DIV clocks as enable and reset bits used to disable
+>>> and reset the divider, associated with CLK_SET_RATE_GATE it ensures
+>>> the rate is set while the divider is disabled and in reset mode.
+>>>
+>>> The VCLK_DIV enable bit isn't implemented as a gate since it's part
+>>> of the divider logic and vendor does this exact sequence to ensure
+>>> the divider is correctly set.
+>> The checkpatch warning is still there. Is it a choice or a mistake ?
+>> Documentation says "GPL v2" exists for historic reason which seems to
+>> hint "GPL" is preferred, and I suppose this is why checkpatch warns for
+>> it.
+>
+> Well I didn't see this warning, this is what I fixed:
+>
+> $ scripts/checkpatch.pl --strict drivers/clk/meson/vclk.c
+> CHECK: Alignment should match open parenthesis
+> #63: FILE: drivers/clk/meson/vclk.c:63:
+> +static unsigned long meson_vclk_div_recalc_rate(struct clk_hw *hw,
+> +                                                    unsigned long prate)
+>
+> CHECK: Alignment should match open parenthesis
+> #73: FILE: drivers/clk/meson/vclk.c:73:
+> +static int meson_vclk_div_determine_rate(struct clk_hw *hw,
+> +                                             struct clk_rate_request *req)
+>
+> CHECK: Alignment should match open parenthesis
+> #83: FILE: drivers/clk/meson/vclk.c:83:
+> +static int meson_vclk_div_set_rate(struct clk_hw *hw, unsigned long rate,
+> +                                       unsigned long parent_rate)
+>
 
-> 
-> Can we avoid this with below strict check?
-> 
-> if (ri->stack != regs->sp + expected_offset)
-> 	goto sigill;
+I would not ask a respin solely for this. It's nice to fix it but I was
+mostly after the warning TBH.
 
-hm the current uprobe 'alive' check makes sure the return_instance is above
-or at the same stack address, not sure we can match it exactly, need to think
-about that more
+> <snip>
+>
+> It seems that checking a commit triggers an extra check....
+>
+> $ scripts/checkpatch.pl --strict -G 1bac9f6aa3c3
+> WARNING: added, moved or deleted file(s), does MAINTAINERS need updating?
+> #58:
+> new file mode 100644
+>
+> <snip>
+>
+> WARNING: Prefer "GPL" over "GPL v2" - see commit bf7fbeeae6db ("module: Cure the MODULE_LICENSE "GPL" vs. "GPL v2" bogosity")
+> #203: FILE: drivers/clk/meson/vclk.c:141:
+> +MODULE_LICENSE("GPL v2");
 
-> 
-> expected_offset should be 16 (push * 3 - ret) on x64 if we ri->stack is the
-> regs->sp right after call.
+Hum, I'm running checkpatch against the mail itself, not the commit. I
+still get the warning
 
-the syscall trampoline already updates the regs->sp before calling
-handle_trampoline
+>
+> <snip>
+>
+> Neil
+>
+>> 
+>>>
+>>> Signed-off-by: Neil Armstrong <neil.armstrong@linaro.org>
+>>> ---
+>>>   drivers/clk/meson/Kconfig  |   4 ++
+>>>   drivers/clk/meson/Makefile |   1 +
+>>>   drivers/clk/meson/vclk.c   | 141 +++++++++++++++++++++++++++++++++++++++++++++
+>>>   drivers/clk/meson/vclk.h   |  51 ++++++++++++++++
+>>>   4 files changed, 197 insertions(+)
+>>>
+>>> diff --git a/drivers/clk/meson/Kconfig b/drivers/clk/meson/Kconfig
+>>> index 29ffd14d267b..8a9823789fa3 100644
+>>> --- a/drivers/clk/meson/Kconfig
+>>> +++ b/drivers/clk/meson/Kconfig
+>>> @@ -30,6 +30,10 @@ config COMMON_CLK_MESON_VID_PLL_DIV
+>>>   	tristate
+>>>   	select COMMON_CLK_MESON_REGMAP
+>>>   +config COMMON_CLK_MESON_VCLK
+>>> +	tristate
+>>> +	select COMMON_CLK_MESON_REGMAP
+>>> +
+>>>   config COMMON_CLK_MESON_CLKC_UTILS
+>>>   	tristate
+>>>   diff --git a/drivers/clk/meson/Makefile b/drivers/clk/meson/Makefile
+>>> index 9ee4b954c896..9ba43fe7a07a 100644
+>>> --- a/drivers/clk/meson/Makefile
+>>> +++ b/drivers/clk/meson/Makefile
+>>> @@ -12,6 +12,7 @@ obj-$(CONFIG_COMMON_CLK_MESON_PLL) += clk-pll.o
+>>>   obj-$(CONFIG_COMMON_CLK_MESON_REGMAP) += clk-regmap.o
+>>>   obj-$(CONFIG_COMMON_CLK_MESON_SCLK_DIV) += sclk-div.o
+>>>   obj-$(CONFIG_COMMON_CLK_MESON_VID_PLL_DIV) += vid-pll-div.o
+>>> +obj-$(CONFIG_COMMON_CLK_MESON_VCLK) += vclk.o
+>>>     # Amlogic Clock controllers
+>>>   diff --git a/drivers/clk/meson/vclk.c b/drivers/clk/meson/vclk.c
+>>> new file mode 100644
+>>> index 000000000000..45dc216941ea
+>>> --- /dev/null
+>>> +++ b/drivers/clk/meson/vclk.c
+>>> @@ -0,0 +1,141 @@
+>>> +// SPDX-License-Identifier: GPL-2.0
+>>> +/*
+>>> + * Copyright (c) 2024 Neil Armstrong <neil.armstrong@linaro.org>
+>>> + */
+>>> +
+>>> +#include <linux/module.h>
+>>> +#include "vclk.h"
+>>> +
+>>> +/* The VCLK gate has a supplementary reset bit to pulse after ungating */
+>>> +
+>>> +static inline struct meson_vclk_gate_data *
+>>> +clk_get_meson_vclk_gate_data(struct clk_regmap *clk)
+>>> +{
+>>> +	return (struct meson_vclk_gate_data *)clk->data;
+>>> +}
+>>> +
+>>> +static int meson_vclk_gate_enable(struct clk_hw *hw)
+>>> +{
+>>> +	struct clk_regmap *clk = to_clk_regmap(hw);
+>>> +	struct meson_vclk_gate_data *vclk = clk_get_meson_vclk_gate_data(clk);
+>>> +
+>>> +	meson_parm_write(clk->map, &vclk->enable, 1);
+>>> +
+>>> +	/* Do a reset pulse */
+>>> +	meson_parm_write(clk->map, &vclk->reset, 1);
+>>> +	meson_parm_write(clk->map, &vclk->reset, 0);
+>>> +
+>>> +	return 0;
+>>> +}
+>>> +
+>>> +static void meson_vclk_gate_disable(struct clk_hw *hw)
+>>> +{
+>>> +	struct clk_regmap *clk = to_clk_regmap(hw);
+>>> +	struct meson_vclk_gate_data *vclk = clk_get_meson_vclk_gate_data(clk);
+>>> +
+>>> +	meson_parm_write(clk->map, &vclk->enable, 0);
+>>> +}
+>>> +
+>>> +static int meson_vclk_gate_is_enabled(struct clk_hw *hw)
+>>> +{
+>>> +	struct clk_regmap *clk = to_clk_regmap(hw);
+>>> +	struct meson_vclk_gate_data *vclk = clk_get_meson_vclk_gate_data(clk);
+>>> +
+>>> +	return meson_parm_read(clk->map, &vclk->enable);
+>>> +}
+>>> +
+>>> +const struct clk_ops meson_vclk_gate_ops = {
+>>> +	.enable = meson_vclk_gate_enable,
+>>> +	.disable = meson_vclk_gate_disable,
+>>> +	.is_enabled = meson_vclk_gate_is_enabled,
+>>> +};
+>>> +EXPORT_SYMBOL_GPL(meson_vclk_gate_ops);
+>>> +
+>>> +/* The VCLK Divider has supplementary reset & enable bits */
+>>> +
+>>> +static inline struct meson_vclk_div_data *
+>>> +clk_get_meson_vclk_div_data(struct clk_regmap *clk)
+>>> +{
+>>> +	return (struct meson_vclk_div_data *)clk->data;
+>>> +}
+>>> +
+>>> +static unsigned long meson_vclk_div_recalc_rate(struct clk_hw *hw,
+>>> +						unsigned long prate)
+>>> +{
+>>> +	struct clk_regmap *clk = to_clk_regmap(hw);
+>>> +	struct meson_vclk_div_data *vclk = clk_get_meson_vclk_div_data(clk);
+>>> +
+>>> +	return divider_recalc_rate(hw, prate, meson_parm_read(clk->map, &vclk->div),
+>>> +				   vclk->table, vclk->flags, vclk->div.width);
+>>> +}
+>>> +
+>>> +static int meson_vclk_div_determine_rate(struct clk_hw *hw,
+>>> +					 struct clk_rate_request *req)
+>>> +{
+>>> +	struct clk_regmap *clk = to_clk_regmap(hw);
+>>> +	struct meson_vclk_div_data *vclk = clk_get_meson_vclk_div_data(clk);
+>>> +
+>>> +	return divider_determine_rate(hw, req, vclk->table, vclk->div.width,
+>>> +				      vclk->flags);
+>>> +}
+>>> +
+>>> +static int meson_vclk_div_set_rate(struct clk_hw *hw, unsigned long rate,
+>>> +				   unsigned long parent_rate)
+>>> +{
+>>> +	struct clk_regmap *clk = to_clk_regmap(hw);
+>>> +	struct meson_vclk_div_data *vclk = clk_get_meson_vclk_div_data(clk);
+>>> +	int ret;
+>>> +
+>>> +	ret = divider_get_val(rate, parent_rate, vclk->table, vclk->div.width,
+>>> +			      vclk->flags);
+>>> +	if (ret < 0)
+>>> +		return ret;
+>>> +
+>>> +	meson_parm_write(clk->map, &vclk->div, ret);
+>>> +
+>>> +	return 0;
+>>> +};
+>>> +
+>>> +static int meson_vclk_div_enable(struct clk_hw *hw)
+>>> +{
+>>> +	struct clk_regmap *clk = to_clk_regmap(hw);
+>>> +	struct meson_vclk_div_data *vclk = clk_get_meson_vclk_div_data(clk);
+>>> +
+>>> +	/* Unreset the divider when ungating */
+>>> +	meson_parm_write(clk->map, &vclk->reset, 0);
+>>> +	meson_parm_write(clk->map, &vclk->enable, 1);
+>>> +
+>>> +	return 0;
+>>> +}
+>>> +
+>>> +static void meson_vclk_div_disable(struct clk_hw *hw)
+>>> +{
+>>> +	struct clk_regmap *clk = to_clk_regmap(hw);
+>>> +	struct meson_vclk_div_data *vclk = clk_get_meson_vclk_div_data(clk);
+>>> +
+>>> +	/* Reset the divider when gating */
+>>> +	meson_parm_write(clk->map, &vclk->enable, 0);
+>>> +	meson_parm_write(clk->map, &vclk->reset, 1);
+>>> +}
+>>> +
+>>> +static int meson_vclk_div_is_enabled(struct clk_hw *hw)
+>>> +{
+>>> +	struct clk_regmap *clk = to_clk_regmap(hw);
+>>> +	struct meson_vclk_div_data *vclk = clk_get_meson_vclk_div_data(clk);
+>>> +
+>>> +	return meson_parm_read(clk->map, &vclk->enable);
+>>> +}
+>>> +
+>>> +const struct clk_ops meson_vclk_div_ops = {
+>>> +	.recalc_rate = meson_vclk_div_recalc_rate,
+>>> +	.determine_rate = meson_vclk_div_determine_rate,
+>>> +	.set_rate = meson_vclk_div_set_rate,
+>>> +	.enable = meson_vclk_div_enable,
+>>> +	.disable = meson_vclk_div_disable,
+>>> +	.is_enabled = meson_vclk_div_is_enabled,
+>>> +};
+>>> +EXPORT_SYMBOL_GPL(meson_vclk_div_ops);
+>>> +
+>>> +MODULE_DESCRIPTION("Amlogic vclk clock driver");
+>>> +MODULE_AUTHOR("Neil Armstrong <neil.armstrong@linaro.org>");
+>>> +MODULE_LICENSE("GPL v2");
+>>> diff --git a/drivers/clk/meson/vclk.h b/drivers/clk/meson/vclk.h
+>>> new file mode 100644
+>>> index 000000000000..20b0b181db09
+>>> --- /dev/null
+>>> +++ b/drivers/clk/meson/vclk.h
+>>> @@ -0,0 +1,51 @@
+>>> +/* SPDX-License-Identifier: GPL-2.0 */
+>>> +/*
+>>> + * Copyright (c) 2024 Neil Armstrong <neil.armstrong@linaro.org>
+>>> + */
+>>> +
+>>> +#ifndef __VCLK_H
+>>> +#define __VCLK_H
+>>> +
+>>> +#include "clk-regmap.h"
+>>> +#include "parm.h"
+>>> +
+>>> +/**
+>>> + * struct meson_vclk_gate_data - vclk_gate regmap backed specific data
+>>> + *
+>>> + * @enable:	vclk enable field
+>>> + * @reset:	vclk reset field
+>>> + * @flags:	hardware-specific flags
+>>> + *
+>>> + * Flags:
+>>> + * Same as clk_gate except CLK_GATE_HIWORD_MASK which is ignored
+>>> + */
+>>> +struct meson_vclk_gate_data {
+>>> +	struct parm enable;
+>>> +	struct parm reset;
+>>> +	u8 flags;
+>>> +};
+>>> +
+>>> +extern const struct clk_ops meson_vclk_gate_ops;
+>>> +
+>>> +/**
+>>> + * struct meson_vclk_div_data - vclk_div regmap back specific data
+>>> + *
+>>> + * @div:	divider field
+>>> + * @enable:	vclk divider enable field
+>>> + * @reset:	vclk divider reset field
+>>> + * @table:	array of value/divider pairs, last entry should have div = 0
+>>> + *
+>>> + * Flags:
+>>> + * Same as clk_divider except CLK_DIVIDER_HIWORD_MASK which is ignored
+>>> + */
+>>> +struct meson_vclk_div_data {
+>>> +	struct parm div;
+>>> +	struct parm enable;
+>>> +	struct parm reset;
+>>> +	const struct clk_div_table *table;
+>>> +	u8 flags;
+>>> +};
+>>> +
+>>> +extern const struct clk_ops meson_vclk_div_ops;
+>>> +
+>>> +#endif /* __VCLK_H */
+>> 
 
-        regs->sp += sizeof(r11_cx_ax);
 
-jirka
+-- 
+Jerome
