@@ -1,215 +1,110 @@
-Received: from mail-lj1-f181.google.com (mail-lj1-f181.google.com [209.85.208.181])
+Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C7A416FF30
-	for <linux-kernel@vger.kernel.org>; Fri,  5 Apr 2024 15:31:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 668EC16F901
+	for <linux-kernel@vger.kernel.org>; Fri,  5 Apr 2024 15:32:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712331088; cv=none; b=A50tWBLTBLu538Bn+Xw/4c0jsSvRyCwEiclVc/YxpFwiYhLDym+3VPI+CQ40/gSy4IalKb3InVF8tYELfMAqts5wAvmMbyX/UMLdASmfuW2hcMAl+wsTG849jNRJ4SwgpjQSiGYzFMZmO/4bVdxo2Hx/BzB2DTn9i98vnDezNWg=
+	t=1712331145; cv=none; b=K+Y8ncAtahYuUnJDu+8ECLh97e0iWcQE6A5viaitQ0nSDuLOvZ3bXM9a9SBkE4KkLPkHHDbVqK7HSpiXJ2uuECOqz7LPkKbMdQpU/QXjzATuWr2QR461MtfOsypT4mI98EEStsqsBe2193PTF2JNs8g643bp4wuIsh1OBY+tcVU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712331088; c=relaxed/simple;
-	bh=cXC6o2KXoVoS1fxorVEDM5VMh0EzbI3z75qBmbAsSQ8=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=RN9bg7V8PYI0wTZGoQTsb5foRsW04QaMPjGE1UVEDOk2yxAVeYTJce3uwPnusbUh6ToNVPenqVYSvnZhh6G9HKcwnpw75HtGFLGv0XZ1bcG+y1KcAhAdi/nVi9SEzCPldZialWcGm5PXe75ielc7D2Dkvq6gU53o2mLk9Le5Zmg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=U2wu2uFK; arc=none smtp.client-ip=209.85.208.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1712331145; c=relaxed/simple;
+	bh=7EromWr0XaULO1KfVY9RUjIf9QiuQBRV6BTlvsJvh6c=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=shd2iNQ3/3AUt8Gg45OJ0E/wbRaUn5FxDuXKlGuo1lWgxotl7of/8xqr+PQQpIQHMd7j5OKy261hVhJg1hnI+QYy3Of5NH8NnmXhpGtSn+6Kr19sFh2/FZcN2gD4NTCOvbWskucTXXmLI5c13NPDnhYHGe8+HffQjVQwqR+btdU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=IozsLkcW; arc=none smtp.client-ip=209.85.214.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="U2wu2uFK"
-Received: by mail-lj1-f181.google.com with SMTP id 38308e7fff4ca-2d6eedf3e99so32931601fa.1
-        for <linux-kernel@vger.kernel.org>; Fri, 05 Apr 2024 08:31:25 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="IozsLkcW"
+Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-1e244c7cbf8so20585985ad.0
+        for <linux-kernel@vger.kernel.org>; Fri, 05 Apr 2024 08:32:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1712331084; x=1712935884; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=GLmSQbomn7jjoFYvGpaYKKjdNIRUVaXuPm21MTZkhWI=;
-        b=U2wu2uFK+r9nak6VfOD2tQ45SFekynxIZffe6Gh49zdOSPAXxeA09xwEFLFVi4YQT/
-         TX60cyd+qLr96QZXS/1wkSf/Jc55DHq6W/6ZZ4Ez6TaqVfpeyUGTr3zPneD4Gw9GHFMA
-         bk7aJXjkti2ami41yYCfcZ1j/5NpB1nfK1c8FHJYiuFDDrDH+0xY690aDFxgpnxszwVc
-         ITyXkeSaUkYakc8jo2O1g/m4kBhrIVP8PNDzSrtjORQX8sbygo6xr69P0oYzO8bCdjCq
-         M0LbTUjadcejn0yY/j94AByRPcTVVeEsskVMjaHhVPErFe1vn7lpVLvKji53c4cZ5G5Q
-         cFrg==
+        d=chromium.org; s=google; t=1712331143; x=1712935943; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=3zCHuG1riB67zTF6cGFfKkOo6cTBnZXN81xTdOBpCWY=;
+        b=IozsLkcWRI5168jxUKU/GQcSs9LOPpGniS3WckvW/fu2aEpu5cSajns+SXuG17A2vI
+         LiziQjjmbUruurUN1jmO+0qRgxqnVmRjDrshsDhvAgxTU00y2SvSKMCjXVbhhsFsvR41
+         a4kUdgEFDe5ovegHuA1MxMD4CO4dRkjxnSuvI=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712331084; x=1712935884;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=GLmSQbomn7jjoFYvGpaYKKjdNIRUVaXuPm21MTZkhWI=;
-        b=c5WpP0IRzTvBCG/3Wo+95T135htblp6eIn2p53TZBi1c/jTK/lvLRHThEpqycsouq9
-         aE39wFVld9XtG27EQb0nndUtLOlMn39avpQZZG8tZGJg02gNVXxFNUySSGOvWNHnub3/
-         tWS52R6MldZ+Icc7w7upkya3AS0SQ/wEQUGElID9ywA6Fy59MEHwTnCZG30N0f7eo9hz
-         gwdRp8NgstGAsmuwlntrlGcitVI+7E1ijCR75wk1+B9pfOOravmY76mpikM5Vt4EZArL
-         WJTRlsX/MaxVCRqjPMTveRFjICwIKao2Rp76OUvr0k19Hw2GrX1jGfuKcfdDfbtszVPB
-         lhng==
-X-Forwarded-Encrypted: i=1; AJvYcCXY0UtnAi7Se7yGORNWdlUzKPyr2bAqbUyhMdr6g3a+5BSPKcT4OPTy/GTi0W0xSZMZPz3y4zsilNp1gf3KMqFy7LFyrhivOGWyym1d
-X-Gm-Message-State: AOJu0Yx5Qix5Y0OPkVSWPsS+j2R39aFVzcRm+nzDOdXy4n5y61isc1qz
-	EjZ7Q/J3ohQx2WPeMbrrc42HHifMbYd991D0HON1hDax2pmfOiahCmK6j1dWnPk=
-X-Google-Smtp-Source: AGHT+IE7RgZin2OZ+qw13032XMFBtJshqJC/13QOVSjiQyPWaNMLxo/xWtEHTWGKxvCq6iMC0ubYRQ==
-X-Received: by 2002:a05:6402:3716:b0:56d:c757:9379 with SMTP id ek22-20020a056402371600b0056dc7579379mr3103612edb.15.1712331064035;
-        Fri, 05 Apr 2024 08:31:04 -0700 (PDT)
-Received: from mosaic.enunes.eu (ip-78-45-66-209.bb.vodafone.cz. [78.45.66.209])
-        by smtp.gmail.com with ESMTPSA id ca19-20020aa7cd73000000b0056dfda8eef3sm906752edb.54.2024.04.05.08.31.03
+        d=1e100.net; s=20230601; t=1712331143; x=1712935943;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=3zCHuG1riB67zTF6cGFfKkOo6cTBnZXN81xTdOBpCWY=;
+        b=DpjwjjWXuJT4Gc8F5NRwQrFDEZOPZrtZZhPQBeOTwQLIjrazbX1w64NI/TEMhjv8lk
+         7wWxGrHgZLaH4l+xtAPLlUKEL/J6TV4zI9zi7GNjRQMEIS0yFl56i2ijjYtNHJlOplhF
+         1Gw9sjjPqa8KUc3x8xmKkBXvXeeM13+oAhyVZyjblwTT2Eb9C90PRhwDndgFxgzR5Mz/
+         NvGNvUu22cjoUJJ3PR69uqO7Js3cJN0RYUqQRdKukECqFufSySKA8txEwdlYRAij/aQC
+         tSQkk8Khbu4FoFDcsAw8PyEr33R8IucHpGvuINbaEY2WUEV5X3rogh8HXfDZNdgzybvK
+         xbrw==
+X-Forwarded-Encrypted: i=1; AJvYcCWiu6NuLbLhjvwA5Ty/lZOoSKv1xI5HyjVNlmgAf4FYwEC8jYfCb7zxGY3yCY0w3ozQ01/GOcFerS6t0JrshcljqN1tcRt+SuP1j+OC
+X-Gm-Message-State: AOJu0Yzlaa1PdMDQNDJ1gjp0cgy3PpgtLaQWGgDyETSE7j8LGVDCNPar
+	o54x8ePDTFtHvGJjj8USDFKdjw2VWX0TFV6WOLl7jyQ5re3lzO94nhkJASHodg==
+X-Google-Smtp-Source: AGHT+IEcd30JQvThROXLk6blXSCc/d9PBNI1VHjF0rNb0/xAuRQY0RK64NghWzC/QEFJnHzUbp+dIw==
+X-Received: by 2002:a17:902:ed8f:b0:1e2:577:f694 with SMTP id e15-20020a170902ed8f00b001e20577f694mr1785714plj.61.1712331143586;
+        Fri, 05 Apr 2024 08:32:23 -0700 (PDT)
+Received: from www.outflux.net ([198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id j5-20020a170903024500b001e29c6d5084sm1698784plh.227.2024.04.05.08.32.22
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 05 Apr 2024 08:31:03 -0700 (PDT)
-From: Erico Nunes <nunes.erico@gmail.com>
-To: Qiang Yu <yuq825@gmail.com>,
-	anarsoul@gmail.com,
-	dri-devel@lists.freedesktop.org,
-	lima@lists.freedesktop.org
-Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>,
-	Daniel Vetter <daniel@ffwll.ch>,
-	christian.koenig@amd.com,
-	megi@xff.cz,
-	linux-kernel@vger.kernel.org,
-	Erico Nunes <nunes.erico@gmail.com>
-Subject: [PATCH v2 1/3] drm/lima: add mask irq callback to gp and pp
-Date: Fri,  5 Apr 2024 17:29:49 +0200
-Message-ID: <20240405152951.1531555-2-nunes.erico@gmail.com>
-X-Mailer: git-send-email 2.44.0
-In-Reply-To: <20240405152951.1531555-1-nunes.erico@gmail.com>
-References: <20240405152951.1531555-1-nunes.erico@gmail.com>
+        Fri, 05 Apr 2024 08:32:23 -0700 (PDT)
+Date: Fri, 5 Apr 2024 08:32:22 -0700
+From: Kees Cook <keescook@chromium.org>
+To: Shuah Khan <skhan@linuxfoundation.org>
+Cc: Muhammad Usama Anjum <usama.anjum@collabora.com>,
+	Eric Biederman <ebiederm@xmission.com>,
+	Shuah Khan <shuah@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+	linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
+	kernel@collabora.com
+Subject: Re: [PATCH 0/2] selftests: Replace "Bail out" with "Error" in
+ ksft_exit_fail_msg()
+Message-ID: <202404050832.187F972C@keescook>
+References: <20240405131748.1582646-1-usama.anjum@collabora.com>
+ <2a77adeb-ed22-4a9b-a1d9-ac5d29ae696d@linuxfoundation.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2a77adeb-ed22-4a9b-a1d9-ac5d29ae696d@linuxfoundation.org>
 
-This is needed because we want to reset those devices in device-agnostic
-code such as lima_sched.
-In particular, masking irqs will be useful before a hard reset to
-prevent race conditions.
+On Fri, Apr 05, 2024 at 08:56:31AM -0600, Shuah Khan wrote:
+> On 4/5/24 07:17, Muhammad Usama Anjum wrote:
+> > "Bail out! " is not descriptive. It rather should be: "Failed: " and
+> > then this added prefix doesn't need to be added everywhere. Usually in
+> > the logs, we are searching for "Failed" or "Error" instead of "Bail
+> > out" so it must be replace.
+> > 
+> > Remove Error/Failed prefixes from all usages as well.
+> > 
+> > Muhammad Usama Anjum (2):
+> >    selftests: Replace "Bail out" with "Error"
+> >    selftests: Remove Error/Failed prefix from ksft_exit_fail*() usages
+> > 
+> >   tools/testing/selftests/exec/load_address.c   |   8 +-
+> >   .../testing/selftests/exec/recursion-depth.c  |  10 +-
+> >   tools/testing/selftests/kselftest.h           |   2 +-
+> >   .../selftests/mm/map_fixed_noreplace.c        |  24 +--
+> >   tools/testing/selftests/mm/map_populate.c     |   2 +-
+> >   tools/testing/selftests/mm/mremap_dontunmap.c |   2 +-
+> >   tools/testing/selftests/mm/pagemap_ioctl.c    | 166 +++++++++---------
+> >   .../selftests/mm/split_huge_page_test.c       |   2 +-
+> >   8 files changed, 108 insertions(+), 108 deletions(-)
+> > 
+> 
+> Andrew, Kees,
+> 
+> I will apply these to linux-kselftest next as a series since these
+> changes depend on change to tools/testing/selftests/kselftest.h
+> and need to go together.
+> 
+> Are you okay with that?
 
-Signed-off-by: Erico Nunes <nunes.erico@gmail.com>
----
- drivers/gpu/drm/lima/lima_bcast.c | 12 ++++++++++++
- drivers/gpu/drm/lima/lima_bcast.h |  3 +++
- drivers/gpu/drm/lima/lima_gp.c    |  8 ++++++++
- drivers/gpu/drm/lima/lima_pp.c    | 18 ++++++++++++++++++
- drivers/gpu/drm/lima/lima_sched.h |  1 +
- 5 files changed, 42 insertions(+)
+Sounds good!
 
-diff --git a/drivers/gpu/drm/lima/lima_bcast.c b/drivers/gpu/drm/lima/lima_bcast.c
-index fbc43f243c54..6d000504e1a4 100644
---- a/drivers/gpu/drm/lima/lima_bcast.c
-+++ b/drivers/gpu/drm/lima/lima_bcast.c
-@@ -43,6 +43,18 @@ void lima_bcast_suspend(struct lima_ip *ip)
- 
- }
- 
-+int lima_bcast_mask_irq(struct lima_ip *ip)
-+{
-+	bcast_write(LIMA_BCAST_BROADCAST_MASK, 0);
-+	bcast_write(LIMA_BCAST_INTERRUPT_MASK, 0);
-+	return 0;
-+}
-+
-+int lima_bcast_reset(struct lima_ip *ip)
-+{
-+	return lima_bcast_hw_init(ip);
-+}
-+
- int lima_bcast_init(struct lima_ip *ip)
- {
- 	int i;
-diff --git a/drivers/gpu/drm/lima/lima_bcast.h b/drivers/gpu/drm/lima/lima_bcast.h
-index 465ee587bceb..cd08841e4787 100644
---- a/drivers/gpu/drm/lima/lima_bcast.h
-+++ b/drivers/gpu/drm/lima/lima_bcast.h
-@@ -13,4 +13,7 @@ void lima_bcast_fini(struct lima_ip *ip);
- 
- void lima_bcast_enable(struct lima_device *dev, int num_pp);
- 
-+int lima_bcast_mask_irq(struct lima_ip *ip);
-+int lima_bcast_reset(struct lima_ip *ip);
-+
- #endif
-diff --git a/drivers/gpu/drm/lima/lima_gp.c b/drivers/gpu/drm/lima/lima_gp.c
-index 6b354e2fb61d..e15295071533 100644
---- a/drivers/gpu/drm/lima/lima_gp.c
-+++ b/drivers/gpu/drm/lima/lima_gp.c
-@@ -233,6 +233,13 @@ static void lima_gp_task_mmu_error(struct lima_sched_pipe *pipe)
- 	lima_sched_pipe_task_done(pipe);
- }
- 
-+static void lima_gp_task_mask_irq(struct lima_sched_pipe *pipe)
-+{
-+	struct lima_ip *ip = pipe->processor[0];
-+
-+	gp_write(LIMA_GP_INT_MASK, 0);
-+}
-+
- static int lima_gp_task_recover(struct lima_sched_pipe *pipe)
- {
- 	struct lima_ip *ip = pipe->processor[0];
-@@ -365,6 +372,7 @@ int lima_gp_pipe_init(struct lima_device *dev)
- 	pipe->task_error = lima_gp_task_error;
- 	pipe->task_mmu_error = lima_gp_task_mmu_error;
- 	pipe->task_recover = lima_gp_task_recover;
-+	pipe->task_mask_irq = lima_gp_task_mask_irq;
- 
- 	return 0;
- }
-diff --git a/drivers/gpu/drm/lima/lima_pp.c b/drivers/gpu/drm/lima/lima_pp.c
-index d0d2db0ef1ce..a4a2ffe6527c 100644
---- a/drivers/gpu/drm/lima/lima_pp.c
-+++ b/drivers/gpu/drm/lima/lima_pp.c
-@@ -429,6 +429,9 @@ static void lima_pp_task_error(struct lima_sched_pipe *pipe)
- 
- 		lima_pp_hard_reset(ip);
- 	}
-+
-+	if (pipe->bcast_processor)
-+		lima_bcast_reset(pipe->bcast_processor);
- }
- 
- static void lima_pp_task_mmu_error(struct lima_sched_pipe *pipe)
-@@ -437,6 +440,20 @@ static void lima_pp_task_mmu_error(struct lima_sched_pipe *pipe)
- 		lima_sched_pipe_task_done(pipe);
- }
- 
-+static void lima_pp_task_mask_irq(struct lima_sched_pipe *pipe)
-+{
-+	int i;
-+
-+	for (i = 0; i < pipe->num_processor; i++) {
-+		struct lima_ip *ip = pipe->processor[i];
-+
-+		pp_write(LIMA_PP_INT_MASK, 0);
-+	}
-+
-+	if (pipe->bcast_processor)
-+		lima_bcast_mask_irq(pipe->bcast_processor);
-+}
-+
- static struct kmem_cache *lima_pp_task_slab;
- static int lima_pp_task_slab_refcnt;
- 
-@@ -468,6 +485,7 @@ int lima_pp_pipe_init(struct lima_device *dev)
- 	pipe->task_fini = lima_pp_task_fini;
- 	pipe->task_error = lima_pp_task_error;
- 	pipe->task_mmu_error = lima_pp_task_mmu_error;
-+	pipe->task_mask_irq = lima_pp_task_mask_irq;
- 
- 	return 0;
- }
-diff --git a/drivers/gpu/drm/lima/lima_sched.h b/drivers/gpu/drm/lima/lima_sched.h
-index 6bd4f3b70109..85b23ba901d5 100644
---- a/drivers/gpu/drm/lima/lima_sched.h
-+++ b/drivers/gpu/drm/lima/lima_sched.h
-@@ -80,6 +80,7 @@ struct lima_sched_pipe {
- 	void (*task_error)(struct lima_sched_pipe *pipe);
- 	void (*task_mmu_error)(struct lima_sched_pipe *pipe);
- 	int (*task_recover)(struct lima_sched_pipe *pipe);
-+	void (*task_mask_irq)(struct lima_sched_pipe *pipe);
- 
- 	struct work_struct recover_work;
- };
 -- 
-2.44.0
-
+Kees Cook
