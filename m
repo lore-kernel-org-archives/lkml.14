@@ -1,141 +1,136 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62DD0171645
-	for <linux-kernel@vger.kernel.org>; Fri,  5 Apr 2024 17:05:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B188417164E;
+	Fri,  5 Apr 2024 17:05:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712336728; cv=none; b=ZkRPRRCQr8PeDMtgzD+25Sk3qZUcfYvvNCpoztgiz7AnrEtPGu0/BHNYByDu7H5CkJJlHZFj7X/WPYcNlxy9P+O+z4J2GaqeQ353na+8U/vQviX9DZMvG17utNH1cone6+DoFkfGBHa+X/Sn+NuBaM4KRJuu3L3GfhG6rHSlc40=
+	t=1712336755; cv=none; b=e7mmHLUqHOuwyl8lIqDohAndKGGlNQM9kPVZMWisxcG5W2/dZAuFOQDZtmMozu1GeJweWnxBrHAgXfJVr3lObOa9lzRagRwV/cQKz5u5Oov2MxX8EjRVymr4j34w/6PHGa8+56hI+5cVFjJhJCiDEjA1p4+s4ugsOyA6CezHJ5g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712336728; c=relaxed/simple;
-	bh=/AEsABMgIL9oKeChIdc/eQy55s/yNzx6q1zHRQyyKiI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=BfC6S01JSbisraJOQwqNVPNf1jJw+cU7QNSHRSQ+HWWaaqA4373QhEKGpm6/x7GkRpIre7bmuMDQspbJPHhWSz/Pt0OgNGXCCiIHNrk4OlKIJdCVD1QiV0RmkkuQeujgmEm2aBdM3yLuNKK4Q2gDoLxI43pMyeqoxXZKsGXhztw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Yu2jtznq; arc=none smtp.client-ip=192.198.163.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1712336755; c=relaxed/simple;
+	bh=292FtAHAQkVnLeVN989TV5AQEa/YkR9Vv3e9Rljpa14=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=g9ZgvNxXPXBD9BAVk6iEAKinGJHSFJcFPloKd4FGFl7Q1BLeF98hDheU1LTcv4CHaMSxYCWeyBdavX8Cmx6NpoBI6/sqnzI2qhO0wqijTYsf7EcOkfeZqcpX1f0d4YrKGrWR/QkHSEttgO1lHgF1S03cbEg4rPxO8Q2+V64wyno=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=C0JGWdqn; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=afuAoHsU; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Yu2jtznq"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1712336726; x=1743872726;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=/AEsABMgIL9oKeChIdc/eQy55s/yNzx6q1zHRQyyKiI=;
-  b=Yu2jtznqHUwMkZG96jcpuNusGlgFDV1Hi9US78/DmaegWr/6F6GROIHK
-   OrVpmCNdFHsGEfWQ3w8CxmG2omIHFJVdz/D34pPHcfJwBa4K/1w1iIM8h
-   frS2utrEvBdVICAcsqstEo0NXJJBmhtb4/ynQTJHs4N4HMGPOJcImyxYr
-   QTIKH7KCGdXSxni7E4VImsiLblFf9PoHTu2hyoWK1wh1H9bN6Arf2Q02R
-   wweR921hE+9dlKztT6bfJNC4aEebaauji5DzY7vzJkH/iXkVFMBE311Dj
-   Xhca6njpSFIFIX8PhN8qvlWMxaCfEBU1mQTvSczH3up4JJLvo/4+6zBPG
-   A==;
-X-CSE-ConnectionGUID: G1BlriSRSf+UWGE9W7LNMw==
-X-CSE-MsgGUID: 1SSUMdA+Rp+ar1yvta5dQw==
-X-IronPort-AV: E=McAfee;i="6600,9927,11035"; a="18284819"
-X-IronPort-AV: E=Sophos;i="6.07,181,1708416000"; 
-   d="scan'208";a="18284819"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Apr 2024 10:05:26 -0700
-X-CSE-ConnectionGUID: +MFNCUHzRv2kuSn9OWymFg==
-X-CSE-MsgGUID: prsXshp8Tu6fZbMcXuf3OQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,181,1708416000"; 
-   d="scan'208";a="19659692"
-Received: from twwright-mobl1.amr.corp.intel.com (HELO [10.209.65.212]) ([10.209.65.212])
-  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Apr 2024 10:05:25 -0700
-Message-ID: <7cd4b4d5-a7b4-41d9-8bd3-ad41401fec61@linux.intel.com>
-Date: Fri, 5 Apr 2024 10:05:24 -0700
+	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="C0JGWdqn";
+	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="afuAoHsU"
+Received: from imap2.dmz-prg2.suse.org (imap2.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:98])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 0D78021ABE;
+	Fri,  5 Apr 2024 17:05:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+	t=1712336752; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=vT8XBjOmiOF2DZOaI8CF1LOaUqXXvEhx/xriwZY31Nc=;
+	b=C0JGWdqn0yuOJeZdigrbYy9nkvUEiDe8JxxzqOL2EJ87oIECnDUXhxlt56Raw64ImP/hrL
+	8y+jI+/SK5758gU+BEsDOBisv7hWDx8f0BVlypYkMgPdPZauB5xFl5BLdU+4qR6RL5X56s
+	AKtAopOR2L37mXgsDUnMNUielg9mGr8=
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.com header.s=susede1 header.b=afuAoHsU
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+	t=1712336751; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=vT8XBjOmiOF2DZOaI8CF1LOaUqXXvEhx/xriwZY31Nc=;
+	b=afuAoHsUSSaWfJ0EVXtxzDQO6En30JUuysIxxye+1XlE7NzesjZW3wnqpEN2FrDtARb9lI
+	4S7yvOd/HQFJBl1UxmTMW5kIpZadEtwjFy0A+I9tYfBE/JNAML1+1Lf59G6qpcjrFcOUOO
+	Su8w6yWg3z3u/eVP4Rk3OE6UQpU8ACc=
+Received: from imap2.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap2.dmz-prg2.suse.org (Postfix) with ESMTPS id BCB7013A92;
+	Fri,  5 Apr 2024 17:05:50 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap2.dmz-prg2.suse.org with ESMTPSA
+	id WMJiLW4vEGYteAAAn2gu4w
+	(envelope-from <mkoutny@suse.com>); Fri, 05 Apr 2024 17:05:50 +0000
+From: =?UTF-8?q?Michal=20Koutn=C3=BD?= <mkoutny@suse.com>
+To: cgroups@vger.kernel.org,
+	linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-kselftest@vger.kernel.org
+Cc: Tejun Heo <tj@kernel.org>,
+	Zefan Li <lizefan.x@bytedance.com>,
+	Johannes Weiner <hannes@cmpxchg.org>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Shuah Khan <shuah@kernel.org>
+Subject: [RFC PATCH v3 1/9] cgroup/pids: Remove superfluous zeroing
+Date: Fri,  5 Apr 2024 19:05:40 +0200
+Message-ID: <20240405170548.15234-2-mkoutny@suse.com>
+X-Mailer: git-send-email 2.44.0
+In-Reply-To: <20240405170548.15234-1-mkoutny@suse.com>
+References: <20240405170548.15234-1-mkoutny@suse.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 3/4] x86/boot/compressed: Skip Video Memory access in
- Decompressor for SEV-ES/SNP.
-To: Ashish Kalra <Ashish.Kalra@amd.com>, tglx@linutronix.de,
- mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org
-Cc: rafael@kernel.org, peterz@infradead.org, adrian.hunter@intel.com,
- jun.nakajima@intel.com, rick.p.edgecombe@intel.com, thomas.lendacky@amd.com,
- michael.roth@amd.com, seanjc@google.com, kai.huang@intel.com,
- bhe@redhat.com, kirill.shutemov@linux.intel.com, bdas@redhat.com,
- vkuznets@redhat.com, dionnaglaze@google.com, anisinha@redhat.com,
- jroedel@suse.de, ardb@kernel.org, kexec@lists.infradead.org,
- linux-coco@lists.linux.dev, linux-kernel@vger.kernel.org
-References: <20240325103911.2651793-1-kirill.shutemov@linux.intel.com>
- <cover.1712270975.git.ashish.kalra@amd.com>
- <1027427fafa350a41234f5061c8c48fc77c58326.1712270976.git.ashish.kalra@amd.com>
-Content-Language: en-US
-From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-In-Reply-To: <1027427fafa350a41234f5061c8c48fc77c58326.1712270976.git.ashish.kalra@amd.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Rspamd-Action: no action
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Spam-Level: 
+X-Spamd-Result: default: False [-0.51 / 50.00];
+	MID_CONTAINS_FROM(1.00)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.com:s=susede1];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	BAYES_HAM(-0.00)[33.76%];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	ARC_NA(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[9];
+	RCVD_TLS_ALL(0.00)[];
+	DKIM_SIGNED(0.00)[suse.com:s=susede1];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:98:from];
+	RCVD_COUNT_TWO(0.00)[2];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap2.dmz-prg2.suse.org:helo,imap2.dmz-prg2.suse.org:rdns,suse.com:dkim,suse.com:email];
+	DKIM_TRACE(0.00)[suse.com:+]
+X-Rspamd-Queue-Id: 0D78021ABE
+X-Spam-Flag: NO
+X-Spam-Score: -0.51
+X-Spamd-Bar: /
 
+Atomic counters are in kzalloc'd struct. They are zeroed already and
+atomic64_t does not need special initialization
+(cf kernel/trace/trace_clock.c:trace_counter).
 
-On 4/4/24 4:11 PM, Ashish Kalra wrote:
-> From: Ashish Kalra <ashish.kalra@amd.com>
->
-> Accessing guest video memory/RAM during kernel decompressor
-> causes guest termination as boot stage2 #VC handler for
-> SEV-ES/SNP systems does not support MMIO handling.
->
-> This issue is observed with SEV-ES/SNP guest kexec as
-> kexec -c adds screen_info to the boot parameters
-> passed to the kexec kernel, which causes console output to
-> be dumped to both video and serial.
->
-> As the decompressor output gets cleared really fast, it is
-> preferable to get the console output only on serial, hence,
-> skip accessing video RAM during decompressor stage to
-> prevent guest termination.
->
-> Serial console output during decompressor stage works as
-> boot stage2 #VC handler already supports handling port I/O.
->
-> Suggested-by: Thomas Lendacy <thomas.lendacky@amd.com>
-> Signed-off-by: Ashish Kalra <ashish.kalra@amd.com>
-> ---
+Signed-off-by: Michal Koutný <mkoutny@suse.com>
+---
+ kernel/cgroup/pids.c | 2 --
+ 1 file changed, 2 deletions(-)
 
-Looks good to me.
-
-Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-
->  arch/x86/boot/compressed/misc.c | 6 ++++--
->  arch/x86/boot/compressed/misc.h | 1 +
->  2 files changed, 5 insertions(+), 2 deletions(-)
->
-> diff --git a/arch/x86/boot/compressed/misc.c b/arch/x86/boot/compressed/misc.c
-> index b70e4a21c15f..47b4db200e1f 100644
-> --- a/arch/x86/boot/compressed/misc.c
-> +++ b/arch/x86/boot/compressed/misc.c
-> @@ -427,8 +427,10 @@ asmlinkage __visible void *extract_kernel(void *rmode, unsigned char *output)
->  		vidport = 0x3d4;
->  	}
->  
-> -	lines = boot_params_ptr->screen_info.orig_video_lines;
-> -	cols = boot_params_ptr->screen_info.orig_video_cols;
-> +	if (!sev_es_enabled()) {
-> +		lines = boot_params_ptr->screen_info.orig_video_lines;
-> +		cols = boot_params_ptr->screen_info.orig_video_cols;
-> +	}
->  
->  	init_default_io_ops();
->  
-> diff --git a/arch/x86/boot/compressed/misc.h b/arch/x86/boot/compressed/misc.h
-> index b353a7be380c..3c12ca987554 100644
-> --- a/arch/x86/boot/compressed/misc.h
-> +++ b/arch/x86/boot/compressed/misc.h
-> @@ -37,6 +37,7 @@
->  #include <asm/desc_defs.h>
->  
->  #include "tdx.h"
-> +#include "sev.h"
->  
->  #define BOOT_CTYPE_H
->  #include <linux/acpi.h>
-
+diff --git a/kernel/cgroup/pids.c b/kernel/cgroup/pids.c
+index 7695e60bcb40..0e5ec7d59b4d 100644
+--- a/kernel/cgroup/pids.c
++++ b/kernel/cgroup/pids.c
+@@ -75,9 +75,7 @@ pids_css_alloc(struct cgroup_subsys_state *parent)
+ 	if (!pids)
+ 		return ERR_PTR(-ENOMEM);
+ 
+-	atomic64_set(&pids->counter, 0);
+ 	atomic64_set(&pids->limit, PIDS_MAX);
+-	atomic64_set(&pids->events_limit, 0);
+ 	return &pids->css;
+ }
+ 
 -- 
-Sathyanarayanan Kuppuswamy
-Linux Kernel Developer
+2.44.0
 
