@@ -1,47 +1,58 @@
-Received: from out-173.mta0.migadu.com (out-173.mta0.migadu.com [91.218.175.173])
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DCD9161902
-	for <linux-kernel@vger.kernel.org>; Fri,  5 Apr 2024 10:20:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C18F0160798;
+	Fri,  5 Apr 2024 10:21:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712312442; cv=none; b=suiFQqu+rMPJQoUiimjpxoPZMGH0ffgycbQH6FqfbGJpUg0qswjGVYk4yI0oPNNZu+IAb6NWcRFMO1JN4fMD7wOaGpC+QlKLW9zJPFZ1zNrHlD+PwwjuaHt0vtbDWoVr94pr8MTDkXECn7AuRND7kh7lZ8VYkwmwfO3PgyupahY=
+	t=1712312473; cv=none; b=Yv3hYd9Expuo95jSPfV5yGpg+5ffTzUfNBPdKojHpiBSNuQ4o6eLeuyD61IcpdE7u1lCYC/ouVbWSdXSaVaXef5PMnGxMlvKVPx5f5/sM7e0VCC7ojcDjEaSq7dkORC2RRRukhVAVPBiMq1W3uGvMJKigtI/yaQhkl3wtTSyNuo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712312442; c=relaxed/simple;
-	bh=x9FEW35UHYYiTgw3MPS855vU699G37yrjB8/DVBrIOE=;
+	s=arc-20240116; t=1712312473; c=relaxed/simple;
+	bh=8OTcYbM5BXtHpjptecVPfKlc9zekT5TkSATwQT2nhFg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PK2z2f2NEU1m8R13s6n8j1tMDfxlQ/S9LaTUPFcdGcynN8tzdqYtgQ+UtRK9RPskEu7c6OXu0fpgaalCSaUBP52BQXTi9Zf8263LmMPr98rOU7sjndftPOvXZ4SwurvM+WQXvqbXcUSMgH++rZIP/jGVJnZL+f4DNAfiZ+Mnzb8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=t3AqxFMd; arc=none smtp.client-ip=91.218.175.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	 Content-Type:Content-Disposition:In-Reply-To; b=foCApdi0hU3JecENYDeQ4+vC0RIeK0KLhPyhqzQ35SxLBRykJXQ2xIhlBtH2O3sHG85aN6MP3kJmZ2NcW7c1bk2GbiwVQyrfaB37tj6W1ANxDjS8II9T4WaHsD5ta5RFX17ixbY4C3QI+h9639MRQJizv0KkGOAVcTI+iq+0vcw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=XxhDIG9x; arc=none smtp.client-ip=78.32.30.218
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="t3AqxFMd"
-Date: Fri, 5 Apr 2024 06:20:32 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1712312437;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=JKB/XK2+ZspoYCWJ5e9uu85ZD/ohSEghijO4GmecwRI=;
-	b=t3AqxFMdmrGtYQ9G8J216FgOVp7DHoc0Xl3/V6haSjRofA+J7YhhVeOOItBQf08WAumVMo
-	nQF8ZnKnTLhSXGMG2LvUUMcNlI5s/Bj6jZIzc20XpDdSIHP81L8M5hslsOIXVeIolsY/ev
-	xjIhfxlnC1KvRHF0mVQhDM3doE0Si7o=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Kent Overstreet <kent.overstreet@linux.dev>
-To: Dave Chinner <david@fromorbit.com>
-Cc: Matthew Wilcox <willy@infradead.org>, 
-	John Garry <john.g.garry@oracle.com>, axboe@kernel.dk, kbusch@kernel.org, hch@lst.de, sagi@grimberg.me, 
-	jejb@linux.ibm.com, martin.petersen@oracle.com, djwong@kernel.org, 
-	viro@zeniv.linux.org.uk, brauner@kernel.org, dchinner@redhat.com, jack@suse.cz, 
-	linux-block@vger.kernel.org, linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org, 
-	linux-fsdevel@vger.kernel.org, tytso@mit.edu, jbongio@google.com, linux-scsi@vger.kernel.org, 
-	ojaswin@linux.ibm.com, linux-aio@kvack.org, linux-btrfs@vger.kernel.org, 
-	io-uring@vger.kernel.org, nilay@linux.ibm.com, ritesh.list@gmail.com
-Subject: Re: [PATCH v6 00/10] block atomic writes
-Message-ID: <62uvkga54im76lnz47nc2znoeayidp2tcwpffseqtl42xdwxlc@hep6ckbgpwqz>
-References: <20240326133813.3224593-1-john.g.garry@oracle.com>
- <ZgOXb_oZjsUU12YL@casper.infradead.org>
- <ZgSCMXKtcYWhxR7e@dread.disaster.area>
+	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="XxhDIG9x"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=h6ooeeo3yUb6+TuxcE/grwqLZtdIxPaR752SVlSVmKQ=; b=XxhDIG9xuOitAMHCbDFb0BlB6B
+	DiryAlmDMJmtwZ815XVyY3qDkdkswFq9dqYmkmXWhgDCmegsEGEdYMyBVsHM7khh2WLVp9LoJ8jjP
+	NE9D52HkUhK2rYVojzqgnHMNzNg0Gj/hegRy7OrJ2+04Tg0M6eah+L9bZBNXqjNTKYlh+XUxTC5tl
+	nGyxozXpq0JW9Y7Un7dWNZy/1jryTfstjW4/EJAW9T6k5HHWt4IJIfsAmWmDDcfdF/Pz52Zldcryh
+	kcaOb7C+cjctXDi4/isMSf+shwF5twQzHYBItIZcIOh7bFSfxIc5pgsi0TLwgNQLlw5EyUPDaFjJR
+	fjLiabFw==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:47700)
+	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <linux@armlinux.org.uk>)
+	id 1rsggk-0002HW-22;
+	Fri, 05 Apr 2024 11:20:50 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.94.2)
+	(envelope-from <linux@shell.armlinux.org.uk>)
+	id 1rsggh-0001Jq-Nk; Fri, 05 Apr 2024 11:20:47 +0100
+Date: Fri, 5 Apr 2024 11:20:47 +0100
+From: "Russell King (Oracle)" <linux@armlinux.org.uk>
+To: Daniel Machon <daniel.machon@microchip.com>
+Cc: "David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Lars Povlsen <lars.povlsen@microchip.com>,
+	Steen Hegelund <Steen.Hegelund@microchip.com>,
+	UNGLinuxDriver@microchip.com,
+	Bjarni Jonasson <bjarni.jonasson@microchip.com>,
+	netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net] net: sparx5: fix reconfiguration of PCS on link mode
+ change
+Message-ID: <Zg/Qf4P5gAzRUYuK@shell.armlinux.org.uk>
+References: <20240405-link-mode-reconfiguration-fix-v1-1-c1480bc2346a@microchip.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -50,68 +61,50 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ZgSCMXKtcYWhxR7e@dread.disaster.area>
-X-Migadu-Flow: FLOW_OUT
+In-Reply-To: <20240405-link-mode-reconfiguration-fix-v1-1-c1480bc2346a@microchip.com>
+Sender: Russell King (Oracle) <linux@armlinux.org.uk>
 
-On Thu, Mar 28, 2024 at 07:31:45AM +1100, Dave Chinner wrote:
-> On Wed, Mar 27, 2024 at 03:50:07AM +0000, Matthew Wilcox wrote:
-> > On Tue, Mar 26, 2024 at 01:38:03PM +0000, John Garry wrote:
-> > > The goal here is to provide an interface that allows applications use
-> > > application-specific block sizes larger than logical block size
-> > > reported by the storage device or larger than filesystem block size as
-> > > reported by stat().
-> > > 
-> > > With this new interface, application blocks will never be torn or
-> > > fractured when written. For a power fail, for each individual application
-> > > block, all or none of the data to be written. A racing atomic write and
-> > > read will mean that the read sees all the old data or all the new data,
-> > > but never a mix of old and new.
-> > > 
-> > > Three new fields are added to struct statx - atomic_write_unit_min,
-> > > atomic_write_unit_max, and atomic_write_segments_max. For each atomic
-> > > individual write, the total length of a write must be a between
-> > > atomic_write_unit_min and atomic_write_unit_max, inclusive, and a
-> > > power-of-2. The write must also be at a natural offset in the file
-> > > wrt the write length. For pwritev2, iovcnt is limited by
-> > > atomic_write_segments_max.
-> > > 
-> > > There has been some discussion on supporting buffered IO and whether the
-> > > API is suitable, like:
-> > > https://lore.kernel.org/linux-nvme/ZeembVG-ygFal6Eb@casper.infradead.org/
-> > > 
-> > > Specifically the concern is that supporting a range of sizes of atomic IO
-> > > in the pagecache is complex to support. For this, my idea is that FSes can
-> > > fix atomic_write_unit_min and atomic_write_unit_max at the same size, the
-> > > extent alignment size, which should be easier to support. We may need to
-> > > implement O_ATOMIC to avoid mixing atomic and non-atomic IOs for this. I
-> > > have no proposed solution for atomic write buffered IO for bdev file
-> > > operations, but I know of no requirement for this.
-> > 
-> > The thing is that there's no requirement for an interface as complex as
-> > the one you're proposing here.  I've talked to a few database people
-> > and all they want is to increase the untorn write boundary from "one
-> > disc block" to one database block, typically 8kB or 16kB.
-> > 
-> > So they would be quite happy with a much simpler interface where they
-> > set the inode block size at inode creation time, and then all writes to
-> > that inode were guaranteed to be untorn.  This would also be simpler to
-> > implement for buffered writes.
-> 
-> You're conflating filesystem functionality that applications will use
-> with hardware and block-layer enablement that filesystems and
-> filesystem utilities need to configure the filesystem in ways that
-> allow users to make use of atomic write capability of the hardware.
-> 
-> The block layer functionality needs to export everything that the
-> hardware can do and filesystems will make use of. The actual
-> application usage and setup of atomic writes at the filesystem/page
-> cache layer is a separate problem.  i.e. The block layer interfaces
-> need only support direct IO and expose limits for issuing atomic
-> direct IO, and nothing more. All the more complex stuff to make it
-> "easy to use" is filesystem level functionality and completely
-> outside the scope of this patchset....
+On Fri, Apr 05, 2024 at 11:53:15AM +0200, Daniel Machon wrote:
+> It was observed that the PCS would be misconfigured on link mode change,
+> if the negotiated link mode went from no-inband capabilities to in-band
+> capabilities. This bug appeared after the neg_mode change of phylink [1],
+> but is really due to the wrong config being used when reconfiguring the PCS.
 
-A CoW filesystem can implement atomic writes without any block device
-support. It seems to me that might have been the easier place to start -
-start by getting the APIs right, then do all the plumbing for efficient
-untorn writes on non CoW filesystems...
+I don't see how the change you point to could have changed the
+behaviour. Old code:
+
+	conf.inband = phylink_autoneg_inband(mode);
+	conf.autoneg = phylink_test(advertising, Autoneg);
+
+New code:
+
+	conf.inband = neg_mode == PHYLINK_PCS_NEG_INBAND_DISABLED ||
+		      neg_mode == PHYLINK_PCS_NEG_INBAND_ENABLED;
+	conf.autoneg = neg_mode == PHYLINK_PCS_NEG_INBAND_ENABLED;
+
+where, for SGMII or 802.3z modes, neg_mode will be one of
+PHYLINK_PCS_NEG_INBAND_DISABLED or PHYLINK_PCS_NEG_INBAND_ENABLED if
+phylink_autoneg_inband(mode) is true, or PHYLINK_PCS_NEG_OUTBAND if
+not.
+
+It does change conf.autoneg slightly in that this will always be true
+for SGMII, but will only be true for Autoneg + 802.3z modes.
+
+As far as your code change goes, it looks correct to me, but I think
+it's fixing a bug that goes back long before the commit you have
+identified.
+
+However, I think there's another issue here which is more relevant to
+the problem you describe in your commit message. If you look at
+port_conf_has_changed(), you will notice that it fails to compare
+conf.inband, and thus fails to notice any change in the setting of
+that configuration item. This will result in sparx5_port_pcs_set()
+not even being called if only conf.inband changes state.
+
+Thus, changing from in-band to out-of-band or vice versa won't have
+any effect if this is the only change that occurs, and this also
+exists prior to my change.
+
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
