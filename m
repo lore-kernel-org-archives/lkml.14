@@ -1,127 +1,318 @@
-Received: from mail-yb1-f179.google.com (mail-yb1-f179.google.com [209.85.219.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8ADFA163A9B
-	for <linux-kernel@vger.kernel.org>; Fri,  5 Apr 2024 10:26:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48F9316ABD7;
+	Fri,  5 Apr 2024 10:26:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712312769; cv=none; b=azFp9A45MtHWTMtiGNvk/w68OhfMssgTF9yOLS+fh4hf7i6fwBaQyLRcfbMkVMax0PeEXbDEzhmGIOZsJT/cMry0P9jxsHL4C9eLjo7PR5yGqkZRXs05EiUpEYelvtilt6VMh5HCUIvB72bwU2k58fJzwUcSqKTWRUwSMXcDdCo=
+	t=1712312772; cv=none; b=ZFEw88wX2Hp5xxHLAyxE3UwN3jfiVvEUAYJTq4N0K0bOXqHCCRiFGrA0/oTKPyfukhLvNOoT5gpkqOTZfG3mYJsP2m4lu5xMdJS1WIpUmAXUhjTGVcXIjbIWm61R2dFzNLftCuJTvU9GN3Clah1I5KdUXhYL6SpJZHkkcrTt8ZE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712312769; c=relaxed/simple;
-	bh=BmBFgykMPvqdnMoOyGWVJk45cd5kDC9vL/wpVpRu1Xs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Kle4pCPxLdE7DfO8V4w2DFx14FgcwWKC02ZU5W7CoxOWV1QGjugAqoAeN9mSU2CEvH5uTNEL7Besosgkwp56ZcL3F0RiBlYOUJn4Qr3uECWztEdcYROkipcef73Pcn/MVF3QBfCd8vNotPuIsV8sLVvBoepTLHseu/Fh43eS5a4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=raspberrypi.com; spf=pass smtp.mailfrom=raspberrypi.com; dkim=pass (2048-bit key) header.d=raspberrypi.com header.i=@raspberrypi.com header.b=p9BH6h0S; arc=none smtp.client-ip=209.85.219.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=raspberrypi.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=raspberrypi.com
+	s=arc-20240116; t=1712312772; c=relaxed/simple;
+	bh=HtLpKedjx0y5wps8iP5hKkJRmK1rcWNkMEh1B6of13Q=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=LtYL4Kqg7+AAcqDNW8xILVdSjrM8SjtNmzJebyU3XcXdfoHw0cjwGbAj8wpdR+a0JtfHWuP1kWB4B0QqzhCZcvslcubH7+VI/ikBsmpWN+FsPXxf36tJFwuZVdgCEaVV4mL0Trqy0l5Ir0FmWmSYqqpt0iGphbJaETxZ+j2Smg4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CRX7H4UB; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=raspberrypi.com header.i=@raspberrypi.com header.b="p9BH6h0S"
-Received: by mail-yb1-f179.google.com with SMTP id 3f1490d57ef6-dbed0710c74so1863081276.1
-        for <linux-kernel@vger.kernel.org>; Fri, 05 Apr 2024 03:26:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=raspberrypi.com; s=google; t=1712312766; x=1712917566; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=iARPaYJhsEjl43QzURc5h56Y/6xNJ33w7/reZZghG84=;
-        b=p9BH6h0S5gK+WTCDV66QyrPRpG2IELHqzgoT2ckfqC/SmyxB9mCQAvRgO7mhWuz2NT
-         ojbvmKt9Y3swtLE50ZnkTHJUeFolks7+bZFbY3nfcFiA0dde6npQGzebgjiklP+4um8M
-         TQNN8MlDFAv8WRSV5ncwy2h5gqjiB4t9NFesBOIVTkd0BJIBIkiPQDsGQMWdyPLZ4PrR
-         QhUdRQ1njlk/d1KALeSEHnWmJ2lVvbLPbZo0KXkwGSR9tRF9HRYyXUnKLOhdA0QS2EaV
-         FD3BuTtyERfjzadLeYOfFxYHdPAD/c8K5x+1ox2dDwjzFctROywebUMgZcVH4hsADJOq
-         MwEQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712312766; x=1712917566;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=iARPaYJhsEjl43QzURc5h56Y/6xNJ33w7/reZZghG84=;
-        b=u10RjaGk3w9peocWIOSlI/vqzix53R9HM3xwbp/CMaMoR6kPhQcy8MM+BypPj2hLvb
-         7dapNjd9yfKwlr0KHapH6fmRDxHdt0nqJRfCy/4V7dcAJryPMbTGci3A0mc5fimGkEKw
-         OfbfAq0kxPWln8fgQL4hezSEwnSjOlRB/7vjy23BHDqxEggC6mJQfCaZX+yUEXgtmCEJ
-         w11hDcV30H54i3IHJmMTtsCsqTw19tXWpNLOej4VqB3cK0437Eb1jZ5OBVDPw1kYFP3Y
-         eqIt0VxwQz+QhUU05Mg0GphdfOuTeShO5MKMDBWC1uYf4CrThRbpAAnmeqHslcxtmas8
-         55yQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVY1znNap3ANJ9TOHRtjipOX5InY6WVZyyak/BzChC986cWCdd4wwsySoYc35rr5rBW9n3Qf42nAyoYbCsrk9wkf99F561RUk/PVnAh
-X-Gm-Message-State: AOJu0YxP9zM+pj0A/d837RKW3wTEmfkYGugMTCB3uIeJ9ncH5o16AkfE
-	1XlYG8TN34jwUMXPFskLXttzNBcYPheU5bwVnXG+ipgNE7xLprrSTl/DySp/EO47ayLRA6ZeOJA
-	qyHHQMjfXX9RCpG7Pm/scH/RjrmLS0wYOO1En/Q==
-X-Google-Smtp-Source: AGHT+IGiNf41UOijFcS+nvm5XPR4W+ctyL+gK32z/KhUeqbVvoF5ElMWQNkmalXvInXcffwLsTBQ8Hmu10M3phXGLpo=
-X-Received: by 2002:a5b:f04:0:b0:dc6:d22e:ef4c with SMTP id
- x4-20020a5b0f04000000b00dc6d22eef4cmr765600ybr.17.1712312766450; Fri, 05 Apr
- 2024 03:26:06 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CRX7H4UB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 856A4C433F1;
+	Fri,  5 Apr 2024 10:26:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1712312771;
+	bh=HtLpKedjx0y5wps8iP5hKkJRmK1rcWNkMEh1B6of13Q=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=CRX7H4UBB7kPSUzXnxDKmSNo532TD3YO4D+qrDYw2dW6eOBQYREN4zbANv47di5wi
+	 EDPQM3+HT5pSSvPIh+/KPGDacf5922NfQwxGqvZDFzwnvIzJwna1folgAYE3H+xJuv
+	 /AvFKW1QTLTyU01rXyClNL2GN6CvCQK1HMnIXcweLI5WI75lrxY4oq19XeJ/q6LuUl
+	 ZWnNBp+ailhaRMRsmupdhJN9ID2KpIkT5vmdWeV8qBTPrvQZpFJ5H0cxHbohYLVniO
+	 9YZsqDHaHjO7n8U75wZI+k+GLAQkzSjC11rW0MN7KgGAE5D3166HBBT86txAItg8ql
+	 kRouyou8kMxZA==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
+	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.95)
+	(envelope-from <maz@kernel.org>)
+	id 1rsglt-001mIH-64;
+	Fri, 05 Apr 2024 11:26:09 +0100
+Date: Fri, 05 Apr 2024 11:26:08 +0100
+Message-ID: <868r1st8an.wl-maz@kernel.org>
+From: Marc Zyngier <maz@kernel.org>
+To: Anshuman Khandual <anshuman.khandual@arm.com>
+Cc: linux-arm-kernel@lists.infradead.org,
+	Jonathan Corbet <corbet@lwn.net>,
+	Oliver Upton <oliver.upton@linux.dev>,
+	James Morse <james.morse@arm.com>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Mark Brown <broonie@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	kvmarm@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: Re: [RFC 8/8] arm64/hw_breakpoint: Enable FEAT_Debugv8p9
+In-Reply-To: <20240405080008.1225223-9-anshuman.khandual@arm.com>
+References: <20240405080008.1225223-1-anshuman.khandual@arm.com>
+	<20240405080008.1225223-9-anshuman.khandual@arm.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/29.2
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20240403150355.189229-1-git@luigi311.com> <20240403150355.189229-19-git@luigi311.com>
- <20240403-vista-defendant-ebadbaa52059@spud>
-In-Reply-To: <20240403-vista-defendant-ebadbaa52059@spud>
-From: Dave Stevenson <dave.stevenson@raspberrypi.com>
-Date: Fri, 5 Apr 2024 11:25:50 +0100
-Message-ID: <CAPY8ntC9SHJ6Ma17s0Vf2coB-0NUk-xgCLK9KCkxFMuXKHXNwg@mail.gmail.com>
-Subject: Re: [PATCH v3 18/25] dt-bindings: media: imx258: Add alternate
- compatible strings
-To: Conor Dooley <conor@kernel.org>
-Cc: git@luigi311.com, linux-media@vger.kernel.org, 
-	jacopo.mondi@ideasonboard.com, mchehab@kernel.org, robh@kernel.org, 
-	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org, shawnguo@kernel.org, 
-	s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com, 
-	sakari.ailus@linux.intel.com, devicetree@vger.kernel.org, imx@lists.linux.dev, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	pavel@ucw.cz, phone-devel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: anshuman.khandual@arm.com, linux-arm-kernel@lists.infradead.org, corbet@lwn.net, oliver.upton@linux.dev, james.morse@arm.com, suzuki.poulose@arm.com, catalin.marinas@arm.com, will@kernel.org, broonie@kernel.org, mark.rutland@arm.com, kvmarm@lists.linux.dev, linux-kernel@vger.kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
-Hi Conor
+On Fri, 05 Apr 2024 09:00:08 +0100,
+Anshuman Khandual <anshuman.khandual@arm.com> wrote:
+> 
+> Currently there can be maximum 16 breakpoints, and 16 watchpoints available
+> on a given platform - as detected from ID_AA64DFR0_EL1.[BRPs|WRPs] register
+> fields. But these breakpoint, and watchpoints can be extended further up to
+> 64 via a new arch feature FEAT_Debugv8p9.
+> 
+> This first enables banked access for the breakpoint and watchpoint register
+> set via MDSELR_EL1, extended exceptions via MDSCR_EL1.EMBWE and determining
+> available breakpoints and watchpoints in the platform from ID_AA64DFR1_EL1,
+> when FEAT_Debugv8p9 is enabled.
+> 
+> Cc: Catalin Marinas <catalin.marinas@arm.com>
+> Cc: Will Deacon <will@kernel.org>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: linux-arm-kernel@lists.infradead.org
+> Cc: linux-kernel@vger.kernel.org
+> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+> ---
+>  arch/arm64/include/asm/debug-monitors.h |  2 +-
+>  arch/arm64/include/asm/hw_breakpoint.h  | 46 +++++++++++++++++++------
+>  arch/arm64/kernel/debug-monitors.c      | 16 ++++++---
+>  arch/arm64/kernel/hw_breakpoint.c       | 33 ++++++++++++++++++
+>  4 files changed, 82 insertions(+), 15 deletions(-)
+> 
+> diff --git a/arch/arm64/include/asm/debug-monitors.h b/arch/arm64/include/asm/debug-monitors.h
+> index 13d437bcbf58..75eedba2abbe 100644
+> --- a/arch/arm64/include/asm/debug-monitors.h
+> +++ b/arch/arm64/include/asm/debug-monitors.h
+> @@ -19,7 +19,7 @@
+>  /* MDSCR_EL1 enabling bits */
+>  #define DBG_MDSCR_KDE		(1 << 13)
+>  #define DBG_MDSCR_MDE		(1 << 15)
+> -#define DBG_MDSCR_MASK		~(DBG_MDSCR_KDE | DBG_MDSCR_MDE)
+> +#define DBG_MDSCR_EMBWE		(1UL << 32)
+>  
+>  #define	DBG_ESR_EVT(x)		(((x) >> 27) & 0x7)
+>  
+> diff --git a/arch/arm64/include/asm/hw_breakpoint.h b/arch/arm64/include/asm/hw_breakpoint.h
+> index bd81cf17744a..6b9822140f71 100644
+> --- a/arch/arm64/include/asm/hw_breakpoint.h
+> +++ b/arch/arm64/include/asm/hw_breakpoint.h
+> @@ -79,8 +79,8 @@ static inline void decode_ctrl_reg(u32 reg,
+>   * Limits.
+>   * Changing these will require modifications to the register accessors.
+>   */
+> -#define ARM_MAX_BRP		16
+> -#define ARM_MAX_WRP		16
+> +#define ARM_MAX_BRP		64
+> +#define ARM_MAX_WRP		64
+>  
+>  /* Virtual debug register bases. */
+>  #define AARCH64_DBG_REG_BVR	0
+> @@ -135,22 +135,48 @@ static inline void ptrace_hw_copy_thread(struct task_struct *task)
+>  }
+>  #endif
+>  
+> +static inline bool is_debug_v8p9_enabled(void)
+> +{
+> +	u64 dfr0 = read_sanitised_ftr_reg(SYS_ID_AA64DFR0_EL1);
+> +	int dver = cpuid_feature_extract_unsigned_field(dfr0, ID_AA64DFR0_EL1_DebugVer_SHIFT);
+> +
+> +	return dver == ID_AA64DFR0_EL1_DebugVer_V8P9;
+> +}
+> +
+>  /* Determine number of BRP registers available. */
+>  static inline int get_num_brps(void)
+>  {
+> -	u64 dfr0 = read_sanitised_ftr_reg(SYS_ID_AA64DFR0_EL1);
+> -	return 1 +
+> -		cpuid_feature_extract_unsigned_field(dfr0,
+> -						ID_AA64DFR0_EL1_BRPs_SHIFT);
+> +	u64 dfr0, dfr1;
+> +	int dver, brps;
+> +
+> +	dfr0 = read_sanitised_ftr_reg(SYS_ID_AA64DFR0_EL1);
+> +	dver = cpuid_feature_extract_unsigned_field(dfr0, ID_AA64DFR0_EL1_DebugVer_SHIFT);
+> +	if (dver == ID_AA64DFR0_EL1_DebugVer_V8P9) {
+> +		dfr1 = read_sanitised_ftr_reg(SYS_ID_AA64DFR1_EL1);
+> +		brps = cpuid_feature_extract_unsigned_field_width(dfr1,
+> +								  ID_AA64DFR1_EL1_BRPs_SHIFT, 8);
+> +	} else {
+> +		brps = cpuid_feature_extract_unsigned_field(dfr0, ID_AA64DFR0_EL1_BRPs_SHIFT);
+> +	}
+> +	return 1 + brps;
+>  }
+>  
+>  /* Determine number of WRP registers available. */
+>  static inline int get_num_wrps(void)
+>  {
+> -	u64 dfr0 = read_sanitised_ftr_reg(SYS_ID_AA64DFR0_EL1);
+> -	return 1 +
+> -		cpuid_feature_extract_unsigned_field(dfr0,
+> -						ID_AA64DFR0_EL1_WRPs_SHIFT);
+> +	u64 dfr0, dfr1;
+> +	int dver, wrps;
+> +
+> +	dfr0 = read_sanitised_ftr_reg(SYS_ID_AA64DFR0_EL1);
+> +	dver = cpuid_feature_extract_unsigned_field(dfr0, ID_AA64DFR0_EL1_DebugVer_SHIFT);
+> +	if (dver == ID_AA64DFR0_EL1_DebugVer_V8P9) {
+> +		dfr1 = read_sanitised_ftr_reg(SYS_ID_AA64DFR1_EL1);
+> +		wrps = cpuid_feature_extract_unsigned_field_width(dfr1,
+> +								  ID_AA64DFR1_EL1_WRPs_SHIFT, 8);
+> +	} else {
+> +		wrps = cpuid_feature_extract_unsigned_field(dfr0, ID_AA64DFR0_EL1_WRPs_SHIFT);
+> +	}
+> +	return 1 + wrps;
+>  }
+>  
+>  #ifdef CONFIG_CPU_PM
+> diff --git a/arch/arm64/kernel/debug-monitors.c b/arch/arm64/kernel/debug-monitors.c
+> index 64f2ecbdfe5c..3299d1e8dc61 100644
+> --- a/arch/arm64/kernel/debug-monitors.c
+> +++ b/arch/arm64/kernel/debug-monitors.c
+> @@ -23,6 +23,7 @@
+>  #include <asm/debug-monitors.h>
+>  #include <asm/system_misc.h>
+>  #include <asm/traps.h>
+> +#include <asm/hw_breakpoint.h>
 
-On Wed, 3 Apr 2024 at 17:14, Conor Dooley <conor@kernel.org> wrote:
->
-> On Wed, Apr 03, 2024 at 09:03:47AM -0600, git@luigi311.com wrote:
-> > From: Dave Stevenson <dave.stevenson@raspberrypi.com>
-> >
-> > There are a number of variants of the imx258 modules that can not
-> > be differentiated at runtime, so add compatible strings for the
-> > PDAF variant.
-> >
-> > Signed-off-by: Dave Stevenson <dave.stevenson@raspberrypi.com>
-> > Signed-off-by: Luis Garcia <git@luigi311.com>
-> > ---
-> >  .../devicetree/bindings/media/i2c/sony,imx258.yaml       | 9 +++++++--
-> >  1 file changed, 7 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/Documentation/devicetree/bindings/media/i2c/sony,imx258.yaml b/Documentation/devicetree/bindings/media/i2c/sony,imx258.yaml
-> > index bee61a443b23..c978abc0cdb3 100644
-> > --- a/Documentation/devicetree/bindings/media/i2c/sony,imx258.yaml
-> > +++ b/Documentation/devicetree/bindings/media/i2c/sony,imx258.yaml
-> > @@ -13,11 +13,16 @@ description: |-
-> >    IMX258 is a diagonal 5.867mm (Type 1/3.06) 13 Mega-pixel CMOS active pixel
-> >    type stacked image sensor with a square pixel array of size 4208 x 3120. It
-> >    is programmable through I2C interface.  Image data is sent through MIPI
-> > -  CSI-2.
-> > +  CSI-2. The sensor exists in two different models, a standard variant
-> > +  (IMX258) and a variant with phase detection autofocus (IMX258-PDAF).
-> > +  The camera module does not expose the model through registers, so the
-> > +  exact model needs to be specified.
-> >
-> >  properties:
-> >    compatible:
-> > -    const: sony,imx258
-> > +    enum:
-> > +      - sony,imx258
-> > +      - sony,imx258-pdaf
->
-> Does the pdaf variant support all of the features/is it register
-> compatible with the regular variant? If it is, the regular variant
-> should be a fallback compatible.
+include order.
 
-It has the same register set, but certain registers have to be
-programmed differently so that the image is corrected for the
-partially shielded pixels used for phase detect auto focus (PDAF).
-Either compatible will "work" on either variant of the module, but
-you'll get weird image artifacts when using the wrong one.
+>  
+>  /* Determine debug architecture. */
+>  u8 debug_monitors_arch(void)
+> @@ -34,7 +35,7 @@ u8 debug_monitors_arch(void)
+>  /*
+>   * MDSCR access routines.
+>   */
+> -static void mdscr_write(u32 mdscr)
+> +static void mdscr_write(u64 mdscr)
+>  {
+>  	unsigned long flags;
+>  	flags = local_daif_save();
+> @@ -43,7 +44,7 @@ static void mdscr_write(u32 mdscr)
+>  }
+>  NOKPROBE_SYMBOL(mdscr_write);
+>  
+> -static u32 mdscr_read(void)
+> +static u64 mdscr_read(void)
+>  {
+>  	return read_sysreg(mdscr_el1);
+>  }
+> @@ -76,10 +77,11 @@ early_param("nodebugmon", early_debug_disable);
+>   */
+>  static DEFINE_PER_CPU(int, mde_ref_count);
+>  static DEFINE_PER_CPU(int, kde_ref_count);
+> +static DEFINE_PER_CPU(int, embwe_ref_count);
+>  
+>  void enable_debug_monitors(enum dbg_active_el el)
+>  {
+> -	u32 mdscr, enable = 0;
+> +	u64 mdscr, enable = 0;
+>  
+>  	WARN_ON(preemptible());
+>  
+> @@ -90,6 +92,9 @@ void enable_debug_monitors(enum dbg_active_el el)
+>  	    this_cpu_inc_return(kde_ref_count) == 1)
+>  		enable |= DBG_MDSCR_KDE;
+>  
+> +	if (is_debug_v8p9_enabled() && this_cpu_inc_return(embwe_ref_count) == 1)
+> +		enable |= DBG_MDSCR_EMBWE;
+> +
+>  	if (enable && debug_enabled) {
+>  		mdscr = mdscr_read();
+>  		mdscr |= enable;
+> @@ -100,7 +105,7 @@ NOKPROBE_SYMBOL(enable_debug_monitors);
+>  
+>  void disable_debug_monitors(enum dbg_active_el el)
+>  {
+> -	u32 mdscr, disable = 0;
+> +	u64 mdscr, disable = 0;
+>  
+>  	WARN_ON(preemptible());
+>  
+> @@ -111,6 +116,9 @@ void disable_debug_monitors(enum dbg_active_el el)
+>  	    this_cpu_dec_return(kde_ref_count) == 0)
+>  		disable &= ~DBG_MDSCR_KDE;
+>  
+> +	if (is_debug_v8p9_enabled() && this_cpu_dec_return(embwe_ref_count) == 0)
+> +		disable &= ~DBG_MDSCR_EMBWE;
+> +
+>  	if (disable) {
+>  		mdscr = mdscr_read();
+>  		mdscr &= disable;
+> diff --git a/arch/arm64/kernel/hw_breakpoint.c b/arch/arm64/kernel/hw_breakpoint.c
+> index 2f5755192c2b..7b9169535b76 100644
+> --- a/arch/arm64/kernel/hw_breakpoint.c
+> +++ b/arch/arm64/kernel/hw_breakpoint.c
+> @@ -103,10 +103,40 @@ int hw_breakpoint_slots(int type)
+>  	WRITE_WB_REG_CASE(OFF, 14, REG, VAL);	\
+>  	WRITE_WB_REG_CASE(OFF, 15, REG, VAL)
+>  
+> +static int set_bank_index(int n)
+> +{
+> +	int mdsel_bank;
+> +	int bank = n / 16, index = n % 16;
+> +
+> +	switch (bank) {
+> +	case 0:
+> +		mdsel_bank = MDSELR_EL1_BANK_BANK_0;
+> +		break;
+> +	case 1:
+> +		mdsel_bank = MDSELR_EL1_BANK_BANK_1;
+> +		break;
+> +	case 2:
+> +		mdsel_bank = MDSELR_EL1_BANK_BANK_2;
+> +		break;
+> +	case 3:
+> +		mdsel_bank = MDSELR_EL1_BANK_BANK_3;
+> +		break;
+> +	default:
+> +		pr_warn("Unknown register bank %d\n", bank);
+> +		return -EINVAL;
+> +	}
+> +	write_sysreg_s(mdsel_bank << MDSELR_EL1_BANK_SHIFT, SYS_MDSELR_EL1);
+> +	isb();
+> +	return index;
+> +}
+> +
+>  static u64 read_wb_reg(int reg, int n)
+>  {
+>  	u64 val = 0;
+>  
+> +	if (is_debug_v8p9_enabled())
+> +		n = set_bank_index(n);
+> +
+>  	switch (reg + n) {
+>  	GEN_READ_WB_REG_CASES(AARCH64_DBG_REG_BVR, AARCH64_DBG_REG_NAME_BVR, val);
+>  	GEN_READ_WB_REG_CASES(AARCH64_DBG_REG_BCR, AARCH64_DBG_REG_NAME_BCR, val);
+> @@ -122,6 +152,9 @@ NOKPROBE_SYMBOL(read_wb_reg);
+>  
+>  static void write_wb_reg(int reg, int n, u64 val)
+>  {
+> +	if (is_debug_v8p9_enabled())
+> +		n = set_bank_index(n);
+> +
+>  	switch (reg + n) {
+>  	GEN_WRITE_WB_REG_CASES(AARCH64_DBG_REG_BVR, AARCH64_DBG_REG_NAME_BVR, val);
+>  	GEN_WRITE_WB_REG_CASES(AARCH64_DBG_REG_BCR, AARCH64_DBG_REG_NAME_BCR, val);
 
-  Dave
+Are these things guaranteed to be only used in contexts where there
+can be no interleaving of such operations? If any interleaving can
+occur, this is broken.
 
-> Cheers,
-> Conor.
+	M.
+
+-- 
+Without deviation from the norm, progress is not possible.
