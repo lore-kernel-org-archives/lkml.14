@@ -1,16 +1,16 @@
 Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 072FB179655
-	for <linux-kernel@vger.kernel.org>; Fri,  5 Apr 2024 21:47:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1902B178CC2
+	for <linux-kernel@vger.kernel.org>; Fri,  5 Apr 2024 21:47:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712353636; cv=none; b=GkYqBJANi5KJ0EYNk8fE87CIBwhSDXm9c6MYOIDUfA3jzzXzO/ca83j5eOVCRUYuo4uRB3+szfROAAYoY61wAMdv6pxzNufscSsyeD8/RnmArc0igRBDj1l5kZO+edGjSBB1jgxwV+uQ3B6g59IlEIseg8JoYn1m95MvLucckFw=
+	t=1712353637; cv=none; b=WzGbOIHb7MZ9L159jzQLCtX4rgEhM0dllzkzHdr7ah1ZYKo0iLK7NlB48Bhll8443ndepWbY8KLIjZbElIMeVwXf6mxeB0LBE2h7N6PIKv8aUsSyAYSISaQ8aC5GRlWaQxmfpnvKTl7L3Abt2DngJqtW33+OcHcVpH/3LvNY9h8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712353636; c=relaxed/simple;
-	bh=sML4yTkaHvLtKgoITIAUmIwRs5N5w/UFVDgdAATlPnQ=;
+	s=arc-20240116; t=1712353637; c=relaxed/simple;
+	bh=0dYl1SyOidFE2v7fVyYEZ+EClZfh/dUkxtDv1eKQvQo=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=hFwv98h7b89EX2mTcCS5nB1SR5OoVR66i8oyZEthln1DBbIIEYxMT5ja15OeYnNlUtUsXHY+g/SImHzoWLYgx+wlrQ5g0lET9ne//dIUXVkvKWDVE7US1du7JoebtGHWcQI6FeY7+KZIEJS3hLNVuqUi+HyK6NKnJghWAuD5ZeU=
+	 MIME-Version:Content-Type; b=kv4450Sh3Rczf92K7zirs5rwlWSn1FJnsBCkVrBd0Kn6Ly1O9GYG62JJbuKk/FRVOWpTN6cAzUqBTlZDml38GPktfNpo3fZxM54j0+v0rJCV28BHo9Y8T0uMhBLN1rpkfTbwB2d77QeJ2gh0SCJ9K7X7PcY+jctt9JT6U/zBR7Q=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
@@ -18,16 +18,16 @@ Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
 	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
 	(Exim 4.92)
 	(envelope-from <ukl@pengutronix.de>)
-	id 1rsrOY-00035H-BO; Fri, 05 Apr 2024 23:46:46 +0200
+	id 1rsrOe-0003hO-Jl; Fri, 05 Apr 2024 23:46:52 +0200
 Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
 	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
 	(Exim 4.94.2)
 	(envelope-from <ukl@pengutronix.de>)
-	id 1rsrOX-00Ad40-Tp; Fri, 05 Apr 2024 23:46:45 +0200
+	id 1rsrOd-00Ad5j-Lu; Fri, 05 Apr 2024 23:46:51 +0200
 Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.96)
 	(envelope-from <ukl@pengutronix.de>)
-	id 1rsrOX-00FZp8-2i;
-	Fri, 05 Apr 2024 23:46:45 +0200
+	id 1rsrOd-00FZqs-1u;
+	Fri, 05 Apr 2024 23:46:51 +0200
 From: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
 To: Rob Herring <robh@kernel.org>,
 	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
@@ -41,9 +41,9 @@ Cc: Pengutronix Kernel Team <kernel@pengutronix.de>,
 	linux-arm-kernel@lists.infradead.org,
 	linux-kernel@vger.kernel.org,
 	Alexander Stein <alexander.stein@ew.tq-group.com>
-Subject: [PATCH v1 11/49] ARM: dts: imx6qdl-apf6dev: Use #pwm-cells = <3> for imx27-pwm devices
-Date: Fri,  5 Apr 2024 23:41:58 +0200
-Message-ID:  <dba52fb96d46b38a4b17d7096275a1ae6f2a3706.1712352665.git.u.kleine-koenig@pengutronix.de>
+Subject: [PATCH v1 38/49] ARM: dts: imx6sll-evk: Use #pwm-cells = <3> for imx27-pwm device
+Date: Fri,  5 Apr 2024 23:42:25 +0200
+Message-ID:  <fc97afe9931150a5adabe383c6b7beedb4445675.1712352665.git.u.kleine-koenig@pengutronix.de>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <cover.1712352665.git.u.kleine-koenig@pengutronix.de>
 References: <cover.1712352665.git.u.kleine-koenig@pengutronix.de>
@@ -54,7 +54,7 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1292; i=u.kleine-koenig@pengutronix.de; h=from:subject:message-id; bh=sML4yTkaHvLtKgoITIAUmIwRs5N5w/UFVDgdAATlPnQ=; b=owEBbQGS/pANAwAKAY+A+1h9Ev5OAcsmYgBmEHA4MFvgDjOzeByaZUbQ4OfSClS6FWkvup0ms tdqViPtd5eJATMEAAEKAB0WIQQ/gaxpOnoeWYmt/tOPgPtYfRL+TgUCZhBwOAAKCRCPgPtYfRL+ Tm5eB/9V4g4Z1XPufI1V4xPBL0wDLOgq6+8dIQWHRq+jJWqgyPMq7Y2z1LzwDntTGcZREoOHXlS AR16L6f0qH3tLni86zGrhABxkJuHIt7Kb3yhgFFvxIafTGlGFtOa5hG02HE9gi4c2iID0WpqPk/ KWSQLK5hf/fWtWTxXA3KVhMBYWakmUJQ5BIKGF9kwmVFq3QNXQBKKS4b479WThwsKg67FNY/y37 FOrg8RH6x3Ns+vDf3WTGSuYb1YsJ6mB1Mo30RI1N9PSE+in3uxEnVi2uUO97dirLvKLBZBCbFPz uouwTj+1WfAETpVHrJ1QZohnbzP1chkoGEy5pJDweLzHggt4
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1309; i=u.kleine-koenig@pengutronix.de; h=from:subject:message-id; bh=0dYl1SyOidFE2v7fVyYEZ+EClZfh/dUkxtDv1eKQvQo=; b=owEBbQGS/pANAwAKAY+A+1h9Ev5OAcsmYgBmEHCsMqZnBgKoCLHGXu+yPPXh7yVtYkJ8JSMoe SYXvaXyo0CJATMEAAEKAB0WIQQ/gaxpOnoeWYmt/tOPgPtYfRL+TgUCZhBwrAAKCRCPgPtYfRL+ Tq6SB/wLgWKq0+7sflyws74XETZIvf1enpRx4hzC5MHWdPiqlxQhzVhjsOcOxjwulq91EbObC+O phCLAzNvaTAbD8BPjDKyHhCdcR2lnVmdBlgpT1X4sZYN3iXxQDjmk8f+9+bm8d82pq96L+c9sUw svio6j8voHLFAggyumpW9WBDrEkqd6rO+pzaDufzQd2j0vb+mMBZ/8wYqbl32WVnio8Nqxo2MBt HaqWL8tJ9phw1agvUYzjuvvgKarEBy6UARe96vK9loo55m5VsLtmBVe5TI6T22HFQPnwKD4GqXO ywRLFjqRzf3XDEvrDUaBFnptbXNDFWUPxibSvD29yMlqz+xj
 X-Developer-Key: i=u.kleine-koenig@pengutronix.de; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
 Content-Transfer-Encoding: 8bit
 X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
@@ -64,39 +64,43 @@ X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
 The binding dictates using 3 pwm-cells. Adhere to that.
 
-This fixes the following dtbs_check warnings:
+This fixes the following dtbs_check warning:
 
-	arch/arm/boot/dts/nxp/imx/imx6dl-apf6dev.dtb: pwm@2088000: #pwm-cells:0:0: 3 was expected
+	arch/arm/boot/dts/nxp/imx/imx6sll-evk.dtb: pwm@2080000: #pwm-cells:0:0: 3 was expected
 		from schema : http://devicetree.org/schemas/pwm/imx-pwm.yaml#
-	arch/arm/boot/dts/nxp/imx/imx6q-apf6dev.dtb: pwm@2088000: #pwm-cells:0:0: 3 was expected
-		from schema : http://devicetree.org/schemas/pwm/imx-pwm.yaml#
+
+There is no need for an explicit status = "okay" in the pwm node as
+the soc dtsi doesn't disable this device. Drop this property, too.
 
 Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
 ---
- arch/arm/boot/dts/nxp/imx/imx6qdl-apf6dev.dtsi | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ arch/arm/boot/dts/nxp/imx/imx6sll-evk.dts | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/arch/arm/boot/dts/nxp/imx/imx6qdl-apf6dev.dtsi b/arch/arm/boot/dts/nxp/imx/imx6qdl-apf6dev.dtsi
-index 338d292553ad..3a46ade3b6bd 100644
---- a/arch/arm/boot/dts/nxp/imx/imx6qdl-apf6dev.dtsi
-+++ b/arch/arm/boot/dts/nxp/imx/imx6qdl-apf6dev.dtsi
-@@ -13,7 +13,7 @@ chosen {
+diff --git a/arch/arm/boot/dts/nxp/imx/imx6sll-evk.dts b/arch/arm/boot/dts/nxp/imx/imx6sll-evk.dts
+index e3e9b0ec4f73..febc2dd9967d 100644
+--- a/arch/arm/boot/dts/nxp/imx/imx6sll-evk.dts
++++ b/arch/arm/boot/dts/nxp/imx/imx6sll-evk.dts
+@@ -26,7 +26,7 @@ memory@80000000 {
  
- 	backlight: backlight {
+ 	backlight_display: backlight-display {
  		compatible = "pwm-backlight";
--		pwms = <&pwm3 0 191000>;
-+		pwms = <&pwm3 0 191000 0>;
+-		pwms = <&pwm1 0 5000000>;
++		pwms = <&pwm1 0 5000000 0>;
  		brightness-levels = <0 4 8 16 32 64 128 255>;
- 		default-brightness-level = <0>;
- 		power-supply = <&reg_5v>;
-@@ -212,7 +212,6 @@ &pcie {
+ 		default-brightness-level = <6>;
+ 		status = "okay";
+@@ -314,10 +314,8 @@ display_out: endpoint {
  };
  
- &pwm3 {
+ &pwm1 {
 -	#pwm-cells = <2>;
  	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_pwm3>;
- 	status = "okay";
+ 	pinctrl-0 = <&pinctrl_pwm1>;
+-	status = "okay";
+ };
+ 
+ &snvs_poweroff {
 -- 
 2.43.0
 
