@@ -1,123 +1,149 @@
-Received: from mail-il1-f178.google.com (mail-il1-f178.google.com [209.85.166.178])
+Received: from luna.linkmauve.fr (luna.linkmauve.fr [82.65.109.163])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D417B16F856;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BFB016F859;
 	Fri,  5 Apr 2024 14:30:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.178
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=82.65.109.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712327452; cv=none; b=iBE2s96AVWRGKem1bP7Nxvqv4NRXerIRw3xDWlVl4QIRXhdoPNl+sXulBGHeboXi6/ZMMg5eo6puw8risuzNYis/60eVHdFVCsG4N9qLwtK9eyuy9FwZDUSXa6ood3fNeXRRkg3+lEMrn3G6S+7HfKRLWL/vg3YcrlNe7GzVX9w=
+	t=1712327453; cv=none; b=S+F/FzL3xoEeErcZzhvkKPPuBUKvj6SkrtY4w2S4pmflLvq2vllVj5gw0IfWPlNuBk/L2IRqJjjT9DrkwtuaZEyAJzKLKz+/QqDXRCBHNYbNIrZ30qvCoh7RfQlOWKeToC4Ti/aGHwXx+dnq0VsTDbzx6hzMwDkMglUJpxljyDs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712327452; c=relaxed/simple;
-	bh=LFtBoVTcSa0WoZ4hT+3gROUd9+4JFFOPzrtM0DkuNNI=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=UEHuyNSML4YODl/JXJMMHa3+vBbpa64BQ1IEXOTH06FBnJYmtUlLgd8XhvyOTKZN2JpHrNK60ly3DUh9L91yy2Lnp4gDK+PnuEynlbYldSBa6aB2FY0oVzpUYo5bGAxOiDZioifgEXUkEFh4hiQGtk9vZi9z99OOjKZaJvqSiak=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=manifault.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.166.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=manifault.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-il1-f178.google.com with SMTP id e9e14a558f8ab-36a0d09e6ffso3945665ab.0;
-        Fri, 05 Apr 2024 07:30:50 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712327450; x=1712932250;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=gfXRwZpB8GnNWQ39P82k01Aag/6u7hx54JnENyAlqhI=;
-        b=tw/vgfu778Q5TiSnD2FxOi7fxj8n2JoOeLn1QEjUkRHC/F6Uq8LHwbMI8sW1e8DWDK
-         V+jM9vglg699o3qTopkdneGQJ8Pc3E7UCDsJnzh3YCD2G8CKiTbNNCazLgfWL9XbmCep
-         iEYpJ6P23TvKHM9XfGA7FJ4h+ZxUhUIEXEniTDH6IzV4Yj1mSujxI2yROeKKv0hSl66O
-         VN/rN0nXdgL18Zwyg2tuYEi7FlfWohNollqDjjtWYgCSVXHJwfMxQQVDR7SZoHk+uMRY
-         Y9yg+Qbq9tGll7KeKry5Lo1FZxnxEop740dSVXPVGxbjqW7Yt4b8zZurIIlG5s63eMWe
-         t07Q==
-X-Forwarded-Encrypted: i=1; AJvYcCXKxAT4oroxKQt0DXdPnJcP5ISarYCLWu6+yWRkO/LQkqPgaBfUSWMY9KvbhYQwzW7N1z4jK+rIkm/vMcpLyivjyOnRuPQvN9+9UKSX
-X-Gm-Message-State: AOJu0Yz6GXAWJrMGwqYg1EEw0usTVyQe2cvn/y675nd+pXT1Jec9+3Zz
-	lV9AX3EqolNGpfg4/Ei6MK77UTnb7+lorB+9juo7MyXikKS0AK+t9uQuHL5AfIM=
-X-Google-Smtp-Source: AGHT+IEz5IjsSZ0rwrqyeaT3VLrS3vSgQpobPv7oPx/vy/q5pxyJq5zwjafs/cRXnl7Zn6ITFBKQYA==
-X-Received: by 2002:a05:6e02:1ca6:b0:368:99a9:3f1c with SMTP id x6-20020a056e021ca600b0036899a93f1cmr1562352ill.9.1712327444873;
-        Fri, 05 Apr 2024 07:30:44 -0700 (PDT)
-Received: from localhost (c-76-136-75-40.hsd1.il.comcast.net. [76.136.75.40])
-        by smtp.gmail.com with ESMTPSA id r11-20020a056638300b00b0047bed8cd9cesm584114jak.81.2024.04.05.07.30.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 05 Apr 2024 07:30:44 -0700 (PDT)
-From: David Vernet <void@manifault.com>
-To: bpf@vger.kernel.org
-Cc: ast@kernel.org,
-	daniel@iogearbox.net,
-	andrii@kernel.org,
-	martin.lau@linux.dev,
-	song@kernel.org,
-	yonghong.song@linux.dev,
-	john.fastabend@gmail.com,
-	kpsingh@kernel.org,
-	sdf@google.com,
-	haoluo@google.com,
-	jolsa@kernel.org,
+	s=arc-20240116; t=1712327453; c=relaxed/simple;
+	bh=OAIDc5kctipri1hRyW8oc3G7ind5HlKJOPmKLgo/ZtE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=L7YDRKzmZn0eaGWoqRomB68i8KwWjYUQ1g54whtA3rs1FVsNkmbeRf03SCEgG56gdzKPSbKt7LBiplDv0b/Hw2gR9Y9ys1pMRHo3NP7gTKNOsi8yXKlK7C32OinRKaShC8W9kYM7A17j7oq/H0U0jiuCmvRjmsH0s3tQSshwjjE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linkmauve.fr; spf=pass smtp.mailfrom=linkmauve.fr; arc=none smtp.client-ip=82.65.109.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linkmauve.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linkmauve.fr
+Received: by luna.linkmauve.fr (Postfix, from userid 1000)
+	id BA81A106966F; Fri,  5 Apr 2024 16:21:30 +0200 (CEST)
+Date: Fri, 5 Apr 2024 16:21:30 +0200
+From: Link Mauve <linkmauve@linkmauve.fr>
+To: Nicolas Dufresne <nicolas@ndufresne.ca>
+Cc: Emmanuel Gil Peyrot <linkmauve@linkmauve.fr>,
 	linux-kernel@vger.kernel.org,
-	kernel-team@meta.com
-Subject: [PATCH bpf-next v2 1/2] bpf: Allow invoking kfuncs from BPF_PROG_TYPE_SYSCALL progs
-Date: Fri,  5 Apr 2024 09:30:40 -0500
-Message-ID: <20240405143041.632519-2-void@manifault.com>
-X-Mailer: git-send-email 2.44.0
-In-Reply-To: <20240405143041.632519-1-void@manifault.com>
-References: <20240405143041.632519-1-void@manifault.com>
+	Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Heiko Stuebner <heiko@sntech.de>, Joerg Roedel <joro@8bytes.org>,
+	Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
+	Sebastian Reichel <sebastian.reichel@collabora.com>,
+	Cristian Ciocaltea <cristian.ciocaltea@collabora.com>,
+	Dragan Simic <dsimic@manjaro.org>,
+	Shreeya Patel <shreeya.patel@collabora.com>,
+	Chris Morgan <macromorgan@hotmail.com>,
+	Andy Yan <andy.yan@rock-chips.com>,
+	Nicolas Frattaroli <frattaroli.nicolas@gmail.com>,
+	linux-media@vger.kernel.org, linux-rockchip@lists.infradead.org,
+	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	iommu@lists.linux.dev
+Subject: Re: [PATCH v2 0/2] Enable JPEG encoding on rk3588
+Message-ID: <ZhAI6tQZTD7BTosI@desktop>
+References: <20240327134115.424846-1-linkmauve@linkmauve.fr>
+ <bbcb66e9499120a86b367e7abdac2d8e2e704bfb.camel@ndufresne.ca>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <bbcb66e9499120a86b367e7abdac2d8e2e704bfb.camel@ndufresne.ca>
+Jabber-ID: linkmauve@linkmauve.fr
 
-Currently, a set of core BPF kfuncs (e.g. bpf_task_*, bpf_cgroup_*,
-bpf_cpumask_*, etc) cannot be invoked from BPF_PROG_TYPE_SYSCALL
-programs. The whitelist approach taken for enabling kfuncs makes sense:
-it not safe to call these kfuncs from every program type. For example,
-it may not be safe to call bpf_task_acquire() in an fentry to
-free_task().
+On Thu, Apr 04, 2024 at 01:41:15PM -0400, Nicolas Dufresne wrote:
+> Hi,
 
-BPF_PROG_TYPE_SYSCALL, on the other hand, is a perfectly safe program
-type from which to invoke these kfuncs, as it's a very controlled
-environment, and we should never be able to run into any of the typical
-problems such as recursive invoations, acquiring references on freeing
-kptrs, etc. Being able to invoke these kfuncs would be useful, as
-BPF_PROG_TYPE_SYSCALL can be invoked with BPF_PROG_RUN, and would
-therefore enable user space programs to synchronously call into BPF to
-manipulate these kptrs.
+Hi,
 
-This patch therefore enables invoking the aforementioned core kfuncs
-from BPF_PROG_TYPE_SYSCALL progs.
+> 
+> Le mercredi 27 mars 2024 à 14:41 +0100, Emmanuel Gil Peyrot a écrit :
+> > Only the JPEG encoder is available for now, although there are patches
+> > for the undocumented VP8 encoder floating around[0].
+> 
+> [0] seems like a broken link. The VP8 encoder RFC is for RK3399 (and Hantro H1
+> posted by ST more recently). The TRM says "VEPU121(JPEG encoder only)", which
+> suggest that the H.264 and VP8 encoders usually found on the VEPU121 are
+> removed. As Rockchip have remove the synthesize register while modifying the H1
+> IP, it is difficult to verify. Confusingly the H.264 specific registers are
+> documented in the TRM around VEPU121.
 
-Acked-by: Andrii Nakryiko <andrii@kernel.org>
-Acked-by: Yonghong Song <yonghong.song@linux.dev>
-Signed-off-by: David Vernet <void@manifault.com>
----
- kernel/bpf/cpumask.c | 1 +
- kernel/bpf/helpers.c | 1 +
- 2 files changed, 2 insertions(+)
+Ah, the link became, and was indeed ST’s series:
+https://patchwork.kernel.org/project/linux-rockchip/list/?series=789885&archive=both
 
-diff --git a/kernel/bpf/cpumask.c b/kernel/bpf/cpumask.c
-index dad0fb1c8e87..33c473d676a5 100644
---- a/kernel/bpf/cpumask.c
-+++ b/kernel/bpf/cpumask.c
-@@ -474,6 +474,7 @@ static int __init cpumask_kfunc_init(void)
- 	ret = bpf_mem_alloc_init(&bpf_cpumask_ma, sizeof(struct bpf_cpumask), false);
- 	ret = ret ?: register_btf_kfunc_id_set(BPF_PROG_TYPE_TRACING, &cpumask_kfunc_set);
- 	ret = ret ?: register_btf_kfunc_id_set(BPF_PROG_TYPE_STRUCT_OPS, &cpumask_kfunc_set);
-+	ret = ret ?: register_btf_kfunc_id_set(BPF_PROG_TYPE_SYSCALL, &cpumask_kfunc_set);
- 	return  ret ?: register_btf_id_dtor_kfuncs(cpumask_dtors,
- 						   ARRAY_SIZE(cpumask_dtors),
- 						   THIS_MODULE);
-diff --git a/kernel/bpf/helpers.c b/kernel/bpf/helpers.c
-index d9e7aca8ae9e..8cde717137bd 100644
---- a/kernel/bpf/helpers.c
-+++ b/kernel/bpf/helpers.c
-@@ -2653,6 +2653,7 @@ static int __init kfunc_init(void)
- 	ret = ret ?: register_btf_kfunc_id_set(BPF_PROG_TYPE_SCHED_CLS, &generic_kfunc_set);
- 	ret = ret ?: register_btf_kfunc_id_set(BPF_PROG_TYPE_XDP, &generic_kfunc_set);
- 	ret = ret ?: register_btf_kfunc_id_set(BPF_PROG_TYPE_STRUCT_OPS, &generic_kfunc_set);
-+	ret = ret ?: register_btf_kfunc_id_set(BPF_PROG_TYPE_SYSCALL, &generic_kfunc_set);
- 	ret = ret ?: register_btf_id_dtor_kfuncs(generic_dtors,
- 						  ARRAY_SIZE(generic_dtors),
- 						  THIS_MODULE);
+But the TRM part 1 says the VEPU121 supports H.264 encoding (page 367),
+and it’s likely they didn’t remove just VP8 support since the codec
+features are pretty close to H.264’s.
+
+> 
+> > 
+> > This has been tested on a rock-5b, resulting in four /dev/video*
+> > encoders.  The userspace program I’ve been using to test them is
+> > Onix[1], using the jpeg-encoder example, it will pick one of these four
+> > at random (but displays the one it picked):
+> > % ffmpeg -i <input image> -pix_fmt yuvj420p temp.yuv
+> > % jpeg-encoder temp.yuv <width> <height> NV12 <quality> output.jpeg
+> 
+> I don't like that we exposing each identical cores a separate video nodes. I
+> think we should aim for 1 device, and then multi-plex and schedule de cores from
+> inside the Linux kernel.
+
+I agree, but this should be handled in the driver not in the device
+tree, and it can be done later.
+
+> 
+> Not doing this now means we'll never have an optimal hardware usage
+> distribution. Just consider two userspace software wanting to do jpeg encoding.
+> If they both take a guess, they may endup using a single core. Where with proper
+> scheduling in V4L2, the kernel will be able to properly distribute the load. I
+> insist on this, since if we merge you changes it becomes an ABI and we can't
+> change it anymore.
+
+Will it really become ABI just like that?  Userspace should always
+discover the video nodes and their capabilities and not hardcode e.g. a
+specific /dev/videoN file for a specific codec.  I would argue that this
+series would let userspace do JPEG encoding right away, even if in a
+less optimal way than if the driver would round-robin them through a
+single video node, but that can always be added in a future version.
+
+> 
+> I understand that this impose a rework of the mem2mem framework so that we can
+> run multiple jobs, but this will be needed anyway on RK3588, since the rkvdec2,
+> which we don't have a driver yet is also multi-core, but you need to use 2 cores
+> when the resolution is close to 8K.
+
+I think the mediatek JPEG driver already supports that, would it be ok
+to do it the same way?
+
+> 
+> Nicolas
+> 
+> > 
+> > [0] https://patchwork.kernel.org/project/linux-rockchip/list/?series=789885
+> > [1] https://crates.io/crates/onix
+> > 
+> > Changes since v1:
+> > - Dropped patches 1 and 4.
+> > - Use the proper compatible form, since this device should be fully
+> >   compatible with the VEPU of rk356x.
+> > - Describe where the VEPU121 name comes from, and list other encoders
+> >   and decoders present in this SoC.
+> > - Properly test the device tree changes, I previously couldn’t since I
+> >   was using a too recent version of python-jsonschema…
+> > 
+> > Emmanuel Gil Peyrot (2):
+> >   media: dt-binding: media: Document rk3588’s VEPU121
+> >   arm64: dts: rockchip: Add VEPU121 to rk3588
+> > 
+> >  .../bindings/media/rockchip,rk3568-vepu.yaml  |  8 +-
+> >  arch/arm64/boot/dts/rockchip/rk3588s.dtsi     | 80 +++++++++++++++++++
+> >  2 files changed, 86 insertions(+), 2 deletions(-)
+> > 
+> 
+
 -- 
-2.44.0
-
+Link Mauve
