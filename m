@@ -1,90 +1,79 @@
-Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com [209.85.167.50])
+Received: from mail-ot1-f53.google.com (mail-ot1-f53.google.com [209.85.210.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30151143860;
-	Fri,  5 Apr 2024 08:11:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DFFA14D299;
+	Fri,  5 Apr 2024 08:12:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712304706; cv=none; b=OP6bVTFypUgcR/OO3mlXx2WFBjkpmapbsFAGYtHLXgCoj5Q6Fw3lMyvqBMvbnTp6zq6xJaJHbZ0GaJqeWBGmAxewbQ/q4J38yQ9umLEZaCLHI5wiuKxfHzm96+ylefV1fuF7lQ6ORF7YynHg+7kofAdagO9P/U8f1+WAK7EdQso=
+	t=1712304764; cv=none; b=BjgecALpQHm58C5bfAbPkth50E8MpzLgZ4HfS+JxSqv6ztLz7UUMshnIq6jngG25n/ZKUzMP2VlzrxjKjcd+2Tth5AgazitlnD05SJ18lClDV0VXXrAldW6AUCU+tfjeo3hzzNzJ8rc0eruGVY42H09IzIFpavwC2gKXrjcs8iQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712304706; c=relaxed/simple;
-	bh=yi8PAHg0FKEHeQospJGwgER/voQz1Dbxm5AeM7nY/n0=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=bat/kDzIyqfX4vUPvz0KDh35VEPotdFgOw05o5a8RGLL8qsoxc4TXbAvO1cTZ3j2Cw/EFanIiPTXCuWcFx2B7t+eUHlHnbKXO8bckuqrvFwk909Mt2trtiuhRS3CZLfwQsKSAST+ScQamYEWIxh5fzPPkZRW8i5MBSlNPM0NRWs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=V5W2zGwy; arc=none smtp.client-ip=209.85.167.50
+	s=arc-20240116; t=1712304764; c=relaxed/simple;
+	bh=GXiP+uDMkTskhfWyyo+BigOGT7Sp0II1yXElavMKWW0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=TXtAGKOOnewC6QLZRLGg72yie+GxtzapDkZPAES6WZUOBFod773Gl7bpQMtslIyOz1MeOUXzACw/ymtKoAeNb0XjxM6kVt6Pdo2/ni6l8dHo4DQ1qBsMOeYTKUC436ZpcR8SBK9DPS3dmLiBYp93eABSOsIZ4hceK76AjOojJLk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lkjzBlKG; arc=none smtp.client-ip=209.85.210.53
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="V5W2zGwy"
-Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-516c97ddcd1so2184833e87.2;
-        Fri, 05 Apr 2024 01:11:44 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lkjzBlKG"
+Received: by mail-ot1-f53.google.com with SMTP id 46e09a7af769-6e6d063e88bso1190636a34.3;
+        Fri, 05 Apr 2024 01:12:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1712304703; x=1712909503; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=yi8PAHg0FKEHeQospJGwgER/voQz1Dbxm5AeM7nY/n0=;
-        b=V5W2zGwyXnQa4KavoDhSQ92NT8zHe3kSzPX2ps2p0FQ+P4nGnKUON4TRBxsirNBSmH
-         7AwAEz6bew+a/ivEZtGjyyDkpBovER1jXeobCRckxZAtO9CuCzvEfxusK1nI2hMctdqL
-         ZKFefLEVXSA3med/MVGgScXAIzZwnfYBnRiREiqLe/Mm+NdOnf5NnhqQeupaX5WbQVeV
-         1jKo7hC4R9Zs/C0uT6olYcGtmH6PJlWJeXq4uL2It3pEez0+YO1/zmWlbHv1x6VQKyFU
-         jexI9BVXPmPZ4DXPW1UhB35RpF3kLdWQeZpTXdEs73PqLO2vtZPPO6yOCSfAsOTw9aFd
-         meeA==
+        d=gmail.com; s=20230601; t=1712304761; x=1712909561; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=z9c3bDJ3ex6PwLSEvWrW5Tb1qMTVJqP9dhel5KI3lZ8=;
+        b=lkjzBlKGmf6+x9zY737A9aeQbYxU8A+inm6CfAJ/0LX/dG4vm38coPWyANJYlWbjZp
+         6bxMdcPTZLfMYZh61umDZ38lXyop9JP+yTXYg4Ph+1Hh8TVO7Sd3odhfw0lchnqrRGaA
+         m4Wa7PVlSjLexTJpvYrZ10Dewu9WjQ5/rBnk/2SIcn6Ljk42F14p68QQhBev/yy6odTD
+         uPNlqjDgttZUNNNyqZeYn5muLz9/o+W/OOurOg8V5inteGNKzkgxcSqW5grdtl6Bbv5s
+         l68B+2plcvnyqpiqOPdzso5s4O4FzgwtPHWJRn1caAGfUTaAbd+DztHw0+v5T5iN3ho7
+         VInw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712304703; x=1712909503;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=yi8PAHg0FKEHeQospJGwgER/voQz1Dbxm5AeM7nY/n0=;
-        b=P8a5vCpe8S4N1eQ/bRJIMIrVkv26ScCBbdC0vf8r4lZPetq/pesfT/wzlRnQZwwNVF
-         omk+1e1kGz/PeTbb36JGoLvWMqXejROEs1JItbygWt5jRdgiX8FMDk1O6TyO7emc/R+j
-         n4nEbb6i6F7/7LcJppBi3lBmiUSbl6d+lp2NIdgOBLUjQAHha7cuRtqfDOsPPWMCj3Gb
-         sUIC+LdmUmzCDWn+ZQcQwijvnaAlGTBUIihcd5Zpqg2TrWCVwo7V8HOD4iHiiuF+sqbc
-         /HvdQmPcs60xQIga3OQoRMfSaQDv8TpkJx1oG8VEaYEzxfZW67DuTE5teFaoQBO6Vard
-         3JEg==
-X-Forwarded-Encrypted: i=1; AJvYcCUxIZeivwVJ/InZ9wg6p4EpU4fq5APm8WKagHPcCZ9BdKflwAAwqD1TMSIMB58Ct2wzdOwVJn8U/6pndWnLQ3ctVKFXUYHv8Fueci4TeUaIAYhtBGx0tczSqpASbDUEsWDH8yp9eQfnGg==
-X-Gm-Message-State: AOJu0YzCqvzYb8JsOpQ72yaUr5SaJT+qBPbHEgt+FZr4qnnHSS75jv9B
-	g78732G6ksVYnRREHyLDClj2+MvpB357BTO0S7jIixlYvT9jP+2K
-X-Google-Smtp-Source: AGHT+IEBl+NGUmAKsMMIjq3va74DO9HZXUY2YYjJkt/EkqMvCQ8eSxSObJ3o1yUFzc3pe8iGvN6xdQ==
-X-Received: by 2002:a05:6512:459:b0:513:c60a:5fc0 with SMTP id y25-20020a056512045900b00513c60a5fc0mr474146lfk.0.1712304703038;
-        Fri, 05 Apr 2024 01:11:43 -0700 (PDT)
-Received: from [10.176.235.56] ([137.201.254.41])
-        by smtp.gmail.com with ESMTPSA id e10-20020adffc4a000000b00343a66f6be4sm1394300wrs.24.2024.04.05.01.11.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 05 Apr 2024 01:11:42 -0700 (PDT)
-Message-ID: <0d8ff9ae438537272d40c801f5f5e1b6fb213363.camel@gmail.com>
-Subject: Re: [PATCH v2 1/1] scsi: ufs: Remove support for old UFSHCI versions
-From: Bean Huo <huobean@gmail.com>
-To: Avri Altman <avri.altman@wdc.com>, "James E . J . Bottomley"
-	 <jejb@linux.ibm.com>, "Martin K . Petersen" <martin.petersen@oracle.com>
-Cc: Christoph Hellwig <hch@infradead.org>, Bart Van Assche
- <bvanassche@acm.org>,  Bean Huo <beanhuo@micron.com>,
- linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
-Date: Fri, 05 Apr 2024 10:11:41 +0200
-In-Reply-To: <20240327071714.757-2-avri.altman@wdc.com>
-References: <20240327071714.757-1-avri.altman@wdc.com>
-	 <20240327071714.757-2-avri.altman@wdc.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.44.4-0ubuntu2 
+        d=1e100.net; s=20230601; t=1712304761; x=1712909561;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=z9c3bDJ3ex6PwLSEvWrW5Tb1qMTVJqP9dhel5KI3lZ8=;
+        b=QPE0RVHeDy4HkLwzol2W/fJlYcOoHN4Qpv6OC5q+tpaCt88D2Hlu3QP8jypGowXY47
+         EySyMFBRDzcc3Gd7A44TNOKAzyUDHU1StbOipCXIHFL/GQqZzh458g/OoUL4r3KEVsXl
+         LnRkkTerjMlhQq+y69Er0ZhM3/xzvEc8aosqoqw6/HMldwZU9D73VxJTGVHvBdCfLtXy
+         760hbeRjhAOCd1jx6Ept6IrShvQZrqZF6l63iSOC51r0lGXmgaCbRWw0MC6HLIE2NmFp
+         xH6Ijwj9RXEXFyFUzG9lHswPVD19MkGw56pqzrwfHRIQa5rX+KXtnehvEsrFgbFzwbsZ
+         ysiw==
+X-Forwarded-Encrypted: i=1; AJvYcCW0E1KRHhSRIr5baPWhcUfZP3IPbtcWftCApyEMbO+QxbJFR1m3b8z9gPjuUF1obAP+sFRx6t2OtCOLt1VrHg/7d8xOJVojKRNCcfpOaggRZVrzc09Na1L3oEJlxU30PiIzAxJF4PaxDii0+yxlSZg8PgVVSXl1lCA4f0z+HfJXq9XnpbJolg==
+X-Gm-Message-State: AOJu0YyW0l7KBGrzgNTCJjIh4Yq+Rxz8lfOuApq/uGWv4upQCEDt6wpV
+	HKj+JFNy/dubfPhHdHwAinLsmh5cg+uj8Xq8VThK2EndYPUlRTRVY7FbvRPB6o1WUJ4v2U7C1O8
+	MalYaMGaXpGZ+aW+g68pQUbRjCow=
+X-Google-Smtp-Source: AGHT+IGJA4qSu/BgqwLCfgWb2f5ZtBV+ihPgrrMO/9aw/0G4Sp4ahheWhLM/jo2bbCVdOazrR+RuAXv6TsavrH9MEDs=
+X-Received: by 2002:a05:6870:7683:b0:22e:9504:9600 with SMTP id
+ dx3-20020a056870768300b0022e95049600mr539457oab.55.1712304761495; Fri, 05 Apr
+ 2024 01:12:41 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+References: <20240327054911.43093-1-animeshagarwal28@gmail.com> <Zg+tgFFDkwLvWgLv@gondor.apana.org.au>
+In-Reply-To: <Zg+tgFFDkwLvWgLv@gondor.apana.org.au>
+From: Animesh Agarwal <animeshagarwal28@gmail.com>
+Date: Fri, 5 Apr 2024 13:42:29 +0530
+Message-ID: <CAE3Oz803YoKiWqf1zu_3E1Md4pADjR00aSr=twzdKtD_-a_O4Q@mail.gmail.com>
+Subject: Re: [PATCH v2] dt-bindings: crypto: ti,omap-sham: Convert to dtschema
+To: Herbert Xu <herbert@gondor.apana.org.au>
+Cc: "David S. Miller" <davem@davemloft.net>, Rob Herring <robh+dt@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
+	linux-crypto@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, 2024-03-27 at 09:17 +0200, Avri Altman wrote:
-> UFS spec version 2.1 was published more than 10 years ago. It is
-> vanishingly unlikely that even there are out there platforms that
-> uses
-> earlier host controllers, let alone that those ancient platforms will
-> ever run a V6.10 kernel.=C2=A0 Thus, remove support of host controllers
-> prior
-> to UFS2.1.
->=20
-> This patch removes some legacy tuning calls that no longer apply.
->=20
-> Signed-off-by: Avri Altman <avri.altman@wdc.com>
+On Fri, Apr 5, 2024 at 1:21=E2=80=AFPM Herbert Xu <herbert@gondor.apana.org=
+.au> wrote:
+> Patch applied.  Thanks.
 
-Acked-by: Bean Huo <beanhuo@micron.com>
+Glad to hear. Thanks!
+---
+Animesh Agarwal
