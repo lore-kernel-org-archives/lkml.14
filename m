@@ -1,153 +1,283 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBFF9200C7;
-	Fri,  5 Apr 2024 02:45:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C6BB2171AD;
+	Fri,  5 Apr 2024 02:47:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712285147; cv=none; b=B0NhvgbJI/RF4Y0zrHwGa+/zcqXcqfLFBJUv+KmMdJAoecOeZ5aOLXeKREzfElngzOPgkGUgxPfdyGJE3BbhNOLR5wazPG7bf5DowH9Tkmw+yUNaM4/3kfnGkjy1A+xcGoy5vcvxx8FXLqEX0ZJOiwIqi15MjRoRjF704TDoRlA=
+	t=1712285223; cv=none; b=FOgDVH15P90SvZC5QBKW0SGtTC7nCAt8dbckZxH9vu8hNtQ69k1mMoBctEsIFCPoTxSwo5z0QV3jFXGdtypTTQRW8EzxOaZLlYD8MCdvxdk2WFs3B+VLWuL4Gn2IiIsDZB4jT+JEDanbpbz52ySKdF1HIpWPYP3/THx3/JAzdkg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712285147; c=relaxed/simple;
-	bh=qqV0FguGCTgmP3Zlqv/SIQDUZMAcngfLSumSuiNyRAw=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oLYW60sQrNpk0fnWYmrZ7RwtzH/m9kvshCjKFMK4pqEjwVlMsNu63PHIGBWNyjXDjy1ZvA4TRqrQWmdxbUc83Pj1q6A9kiJWvCux1CKZiI9oUO+tRU8+c1Wf38eQTj8D5kcGCDlLClVKkY/OSu9+kpDqxSi851rgZu1FcvHaRZo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=NyNLyw/v; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="NyNLyw/v"
-Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 4352f5Qh019527;
-	Fri, 5 Apr 2024 02:45:40 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	date:from:to:cc:subject:message-id:references:mime-version
-	:content-type:in-reply-to; s=qcppdkim1; bh=bKdudp4O3Z4sw6Qonpwqy
-	Pii2xiamxAolShtYA4Nnmo=; b=NyNLyw/v2Wg8hb/VrTOgpBobmInm/dJyptHzX
-	c1jYEEbMl1V2pDBClQZic+ZyhqX8Ylwh7QR6CqycSAN1Dz00Jti/bxOehwXg4d7j
-	ka7pSSxpkc4LbvNwBDJfjzPnzb1MdsGG17sXaUVjnz8cKHBpNh5zYa6uPvIgIqsV
-	Jl9C5w8DfSq9L9WQC6ad492s0V8f/ZUU/izx6BaZzv0hg5hpSnZ6Prfw6GV0u2fm
-	/J79gI3sAdGaGzRrzJba8kjRP4ZndyGuikRLoHBnP1XJECOfnh7GZSu4DUvGsu6O
-	rJw6zvxpxFbpuxFVStNoOBE1NPA0h14UeAGBovo1IFFJcZblA==
-Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3xa8fc00vt-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 05 Apr 2024 02:45:39 +0000 (GMT)
-Received: from nalasex01c.na.qualcomm.com (nalasex01c.na.qualcomm.com [10.47.97.35])
-	by NALASPPMTA05.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 4352jcJG025484
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 5 Apr 2024 02:45:38 GMT
-Received: from hu-bjorande-lv.qualcomm.com (10.49.16.6) by
- nalasex01c.na.qualcomm.com (10.47.97.35) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.4; Thu, 4 Apr 2024 19:45:38 -0700
-Date: Thu, 4 Apr 2024 19:45:37 -0700
-From: Bjorn Andersson <quic_bjorande@quicinc.com>
-To: jianbin zhang <quic_jianbinz@quicinc.com>
-CC: Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio
-	<konrad.dybcio@linaro.org>,
-        Alexandre Belloni
-	<alexandre.belloni@bootlin.com>,
-        <linux-arm-msm@vger.kernel.org>, <linux-rtc@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH V4 1/2] rtc-pm8xxx: clear the triggered alarm interrupt
- during driver probe
-Message-ID: <Zg9l0cTBgoibIaDQ@hu-bjorande-lv.qualcomm.com>
-References: <20240401-fix-rtc-alarm-which-fired-before-driver-probe-not-be-cleard-v1-0-aab2cd6ddab8@quicinc.com>
- <20240401-fix-rtc-alarm-which-fired-before-driver-probe-not-be-cleard-v1-1-aab2cd6ddab8@quicinc.com>
+	s=arc-20240116; t=1712285223; c=relaxed/simple;
+	bh=ZLOd6rm+Rs3qRSm1ggZsV6KLD4ZnR9wJaJ4/G9lK1IE=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=aSQqW9E3lPap5cAAgWnGtRp0cfxfUfMYqG3kyeVDMMdNv89kXNbvqZ2E/HdkaNK5UdTpLi4am1K+dZxu9GM+JJG8XBT/kX2ppuDgmvQSgQIrePc93nBRAr6P32OX5Z7diVS2a10/gLM+Rn9I/mP4UGx7+5lLGQklL4UhonAKRZo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 905381007;
+	Thu,  4 Apr 2024 19:47:31 -0700 (PDT)
+Received: from a077893.blr.arm.com (a077893.blr.arm.com [10.162.41.6])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id E55213F766;
+	Thu,  4 Apr 2024 19:46:55 -0700 (PDT)
+From: Anshuman Khandual <anshuman.khandual@arm.com>
+To: linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	will@kernel.org,
+	catalin.marinas@arm.com,
+	mark.rutland@arm.com
+Cc: Anshuman Khandual <anshuman.khandual@arm.com>,
+	Mark Brown <broonie@kernel.org>,
+	James Clark <james.clark@arm.com>,
+	Rob Herring <robh@kernel.org>,
+	Marc Zyngier <maz@kernel.org>,
+	Suzuki Poulose <suzuki.poulose@arm.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	linux-perf-users@vger.kernel.org
+Subject: [PATCH V17 1/9] arm64/sysreg: Add BRBE registers and fields
+Date: Fri,  5 Apr 2024 08:16:31 +0530
+Message-Id: <20240405024639.1179064-2-anshuman.khandual@arm.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20240405024639.1179064-1-anshuman.khandual@arm.com>
+References: <20240405024639.1179064-1-anshuman.khandual@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20240401-fix-rtc-alarm-which-fired-before-driver-probe-not-be-cleard-v1-1-aab2cd6ddab8@quicinc.com>
-X-ClientProxiedBy: nalasex01c.na.qualcomm.com (10.47.97.35) To
- nalasex01c.na.qualcomm.com (10.47.97.35)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: Zr8u3Q0b5AUQp6yt-TjDjfG8Py73mOpe
-X-Proofpoint-ORIG-GUID: Zr8u3Q0b5AUQp6yt-TjDjfG8Py73mOpe
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-04-05_01,2024-04-04_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0 mlxscore=0
- malwarescore=0 mlxlogscore=999 bulkscore=0 suspectscore=0 clxscore=1015
- priorityscore=1501 adultscore=0 phishscore=0 impostorscore=0 spamscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2404010003
- definitions=main-2404050019
+Content-Transfer-Encoding: 8bit
 
-On Mon, Apr 01, 2024 at 09:56:29AM +0800, jianbin zhang wrote:
+This adds BRBE related register definitions and various other related field
+macros there in. These will be used subsequently in a BRBE driver, which is
+being added later on. While here, this drops redundant register definitions
+from the header i.e (arch/arm64/include/asm/sysreg.h).
 
-Sorry, I think the patch looks good now, but the subject prefix
-(rtc-pm8xxx) does not match other changes to this file.
+BRBINFx_EL1_TYPE_IMPDEF_TRAP_EL3 register field value has been derived from
+latest ARM DDI 0601 ID121123, AKA 2023-12 instead of latest ARM ARM i.e ARM
+DDI 0487J.a. Please find the definition here.
 
-> If the alarm is triggered before the driver gets probed, the alarm interrupt
-> will be missed and it won't be detected, and the stale alarm settings will
-> be still retained because of not being cleared.
-> 
-> Issue reproduce step:
-> (1) set the alarm and poweroff the device
-> (2) alarm happens and the device boots
-> (3) poweroff the device again
-> (4) alarm irq not be cleard, device boots again
-> 
-> the fixing here is clear the interrupt during the step(3) unconditionally.
-> 
-> Signed-off-by: jianbin zhang <quic_jianbinz@quicinc.com>
-> ---
-> Changes in v4:
-> - add the cover letter
-> - modify the patch to conform to the specification
-> 
-> Changes in v3:
-> - clear the interrupt in driver probe unconditionally
-> - link: https://lore.kernel.org/linux-rtc/20240319191037.GA3796206@hu-bjorande-lv.qualcomm.com/T/#t
+https://developer.arm.com/documentation/ddi0601/2023-12/
 
-These are expected to be links to the previous revisions of your patch,
-not people's answers.
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Will Deacon <will@kernel.org>
+Cc: Marc Zyngier <maz@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org
+Reviewed-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+----
+Changes in V17:
 
-Please consult go/upstream and switch to b4 for the future, which does
-this automatically for you. Please also use the internal review list!
+- Added back Reviewed-by tags from Mark Brown
+- Updated the commit message regarding the field BRBINFx_EL1_TYPE_IMPDEF_TRAP_EL3
+- Added leading 0s for all values as BRBIDR0_EL1.NUMREC is a 8 bit field
+- Added leading 0s for all values as BRBFCR_EL1.BANK is a 2 bit field
+- Reordered BRBCR_EL1/BRBCR_EL12/BRBCR_EL2 registers as per sysreg encodings
+- Renamed s/FIRST/BANK_0 and s/SECOND/BANK_1 in BRBFCR_EL1.BANK
+- Renamed s/UNCOND_DIRECT/DIRECT_UNCOND in BRBINFx_EL1.TYPE
+- Renamed s/COND_DIRECT/DIRECT_COND in BRBINFx_EL1.TYPE
+- Dropped __SYS_BRBINF/__SYS_BRBSRC/__SYS_BRBTGT and their expansions
+- Moved all existing BRBE registers from sysreg.h header to tools/sysreg format
 
-Regards,
-Bjorn
+ arch/arm64/include/asm/sysreg.h |  17 ++---
+ arch/arm64/tools/sysreg         | 131 ++++++++++++++++++++++++++++++++
+ 2 files changed, 137 insertions(+), 11 deletions(-)
 
-> 
-> Changes in v2:
-> - Adapt the V1 patch according to the newest rtc-pm8xxx
-> - link: https://lore.kernel.org/linux-rtc/20240124024023df15ef6e@mail.local/
-> 
-> Changes in v1:
-> - fixing is as below logic, During driver probe: read ALARM_EN, read ALARM_DATA, read RTC_RDATA,
->   if (ALARM_DATA < RTC_DATA), Trigger the alarm event and clear the alarm settins
-> - link: https://lore.kernel.org/linux-rtc/20220321090514.4523-1-quic_jianbinz@quicinc.com/
-> 
-> Changes in original:
-> - link to original: https://lore.kernel.org/linux-rtc/YTusgJlMUdXOKQaL@piout.net/
-> ---
->  drivers/rtc/rtc-pm8xxx.c | 5 +++++
->  1 file changed, 5 insertions(+)
-> 
-> diff --git a/drivers/rtc/rtc-pm8xxx.c b/drivers/rtc/rtc-pm8xxx.c
-> index f6b779c12ca7..e4e2307445cf 100644
-> --- a/drivers/rtc/rtc-pm8xxx.c
-> +++ b/drivers/rtc/rtc-pm8xxx.c
-> @@ -527,6 +527,11 @@ static int pm8xxx_rtc_probe(struct platform_device *pdev)
->  	if (rc)
->  		return rc;
->  
-> +	rc = regmap_update_bits(rtc_dd->regmap, rtc_dd->regs->alarm_ctrl2,
-> +					  PM8xxx_RTC_ALARM_CLEAR, 1);
-> +	if (rc)
-> +		return rc;
-> +
->  	return 0;
->  }
->  
-> 
-> -- 
-> 2.43.2
-> 
+diff --git a/arch/arm64/include/asm/sysreg.h b/arch/arm64/include/asm/sysreg.h
+index 9e8999592f3a..6db64ce5b12b 100644
+--- a/arch/arm64/include/asm/sysreg.h
++++ b/arch/arm64/include/asm/sysreg.h
+@@ -195,16 +195,8 @@
+ #define SYS_DBGVCR32_EL2		sys_reg(2, 4, 0, 7, 0)
+ 
+ #define SYS_BRBINF_EL1(n)		sys_reg(2, 1, 8, (n & 15), (((n & 16) >> 2) | 0))
+-#define SYS_BRBINFINJ_EL1		sys_reg(2, 1, 9, 1, 0)
+ #define SYS_BRBSRC_EL1(n)		sys_reg(2, 1, 8, (n & 15), (((n & 16) >> 2) | 1))
+-#define SYS_BRBSRCINJ_EL1		sys_reg(2, 1, 9, 1, 1)
+ #define SYS_BRBTGT_EL1(n)		sys_reg(2, 1, 8, (n & 15), (((n & 16) >> 2) | 2))
+-#define SYS_BRBTGTINJ_EL1		sys_reg(2, 1, 9, 1, 2)
+-#define SYS_BRBTS_EL1			sys_reg(2, 1, 9, 0, 2)
+-
+-#define SYS_BRBCR_EL1			sys_reg(2, 1, 9, 0, 0)
+-#define SYS_BRBFCR_EL1			sys_reg(2, 1, 9, 0, 1)
+-#define SYS_BRBIDR0_EL1			sys_reg(2, 1, 9, 2, 0)
+ 
+ #define SYS_TRCITECR_EL1		sys_reg(3, 0, 1, 2, 3)
+ #define SYS_TRCACATR(m)			sys_reg(2, 1, 2, ((m & 7) << 1), (2 | (m >> 3)))
+@@ -270,8 +262,6 @@
+ /* ETM */
+ #define SYS_TRCOSLAR			sys_reg(2, 1, 1, 0, 4)
+ 
+-#define SYS_BRBCR_EL2			sys_reg(2, 4, 9, 0, 0)
+-
+ #define SYS_MIDR_EL1			sys_reg(3, 0, 0, 0, 0)
+ #define SYS_MPIDR_EL1			sys_reg(3, 0, 0, 0, 5)
+ #define SYS_REVIDR_EL1			sys_reg(3, 0, 0, 0, 6)
+@@ -601,7 +591,6 @@
+ #define SYS_CNTHV_CVAL_EL2		sys_reg(3, 4, 14, 3, 2)
+ 
+ /* VHE encodings for architectural EL0/1 system registers */
+-#define SYS_BRBCR_EL12			sys_reg(2, 5, 9, 0, 0)
+ #define SYS_SCTLR_EL12			sys_reg(3, 5, 1, 0, 0)
+ #define SYS_CPACR_EL12			sys_reg(3, 5, 1, 0, 2)
+ #define SYS_SCTLR2_EL12			sys_reg(3, 5, 1, 0, 3)
+@@ -794,6 +783,12 @@
+ #define OP_COSP_RCTX			sys_insn(1, 3, 7, 3, 6)
+ #define OP_CPP_RCTX			sys_insn(1, 3, 7, 3, 7)
+ 
++/*
++ * BRBE Instructions
++ */
++#define BRB_IALL_INSN	__emit_inst(0xd5000000 | OP_BRB_IALL | (0x1f))
++#define BRB_INJ_INSN	__emit_inst(0xd5000000 | OP_BRB_INJ  | (0x1f))
++
+ /* Common SCTLR_ELx flags. */
+ #define SCTLR_ELx_ENTP2	(BIT(60))
+ #define SCTLR_ELx_DSSBS	(BIT(44))
+diff --git a/arch/arm64/tools/sysreg b/arch/arm64/tools/sysreg
+index a4c1dd4741a4..e5bf99234c74 100644
+--- a/arch/arm64/tools/sysreg
++++ b/arch/arm64/tools/sysreg
+@@ -1025,6 +1025,137 @@ UnsignedEnum	3:0	MTEPERM
+ EndEnum
+ EndSysreg
+ 
++
++SysregFields BRBINFx_EL1
++Res0	63:47
++Field	46	CCU
++Field	45:32	CC
++Res0	31:18
++Field	17	LASTFAILED
++Field	16	T
++Res0	15:14
++Enum	13:8		TYPE
++	0b000000	DIRECT_UNCOND
++	0b000001	INDIRECT
++	0b000010	DIRECT_LINK
++	0b000011	INDIRECT_LINK
++	0b000101	RET
++	0b000111	ERET
++	0b001000	DIRECT_COND
++	0b100001	DEBUG_HALT
++	0b100010	CALL
++	0b100011	TRAP
++	0b100100	SERROR
++	0b100110	INSN_DEBUG
++	0b100111	DATA_DEBUG
++	0b101010	ALIGN_FAULT
++	0b101011	INSN_FAULT
++	0b101100	DATA_FAULT
++	0b101110	IRQ
++	0b101111	FIQ
++	0b110000	IMPDEF_TRAP_EL3
++	0b111001	DEBUG_EXIT
++EndEnum
++Enum	7:6	EL
++	0b00	EL0
++	0b01	EL1
++	0b10	EL2
++	0b11	EL3
++EndEnum
++Field	5	MPRED
++Res0	4:2
++Enum	1:0	VALID
++	0b00	NONE
++	0b01	TARGET
++	0b10	SOURCE
++	0b11	FULL
++EndEnum
++EndSysregFields
++
++SysregFields	BRBCR_ELx
++Res0	63:24
++Field	23 	EXCEPTION
++Field	22 	ERTN
++Res0	21:10
++Field	9	FZPSS
++Field	8 	FZP
++Res0	7
++Enum	6:5	TS
++	0b01	VIRTUAL
++	0b10	GUEST_PHYSICAL
++	0b11	PHYSICAL
++EndEnum
++Field	4	MPRED
++Field	3	CC
++Res0	2
++Field	1	ExBRE
++Field	0	E0BRE
++EndSysregFields
++
++Sysreg	BRBCR_EL1	2	1	9	0	0
++Fields	BRBCR_ELx
++EndSysreg
++
++Sysreg	BRBFCR_EL1	2	1	9	0	1
++Res0	63:30
++Enum	29:28	BANK
++	0b00	BANK_0
++	0b01	BANK_1
++EndEnum
++Res0	27:23
++Field	22	CONDDIR
++Field	21	DIRCALL
++Field	20	INDCALL
++Field	19	RTN
++Field	18	INDIRECT
++Field	17	DIRECT
++Field	16	EnI
++Res0	15:8
++Field	7	PAUSED
++Field	6	LASTFAILED
++Res0	5:0
++EndSysreg
++
++Sysreg	BRBTS_EL1	2	1	9	0	2
++Field	63:0	TS
++EndSysreg
++
++Sysreg	BRBINFINJ_EL1	2	1	9	1	0
++Fields BRBINFx_EL1
++EndSysreg
++
++Sysreg	BRBSRCINJ_EL1	2	1	9	1	1
++Field	63:0 ADDRESS
++EndSysreg
++
++Sysreg	BRBTGTINJ_EL1	2	1	9	1	2
++Field	63:0 ADDRESS
++EndSysreg
++
++Sysreg	BRBIDR0_EL1	2	1	9	2	0
++Res0	63:16
++Enum	15:12	CC
++	0b101	20_BIT
++EndEnum
++Enum	11:8	FORMAT
++	0b0	0
++EndEnum
++Enum	7:0		NUMREC
++	0b00001000	8
++	0b00010000	16
++	0b00100000	32
++	0b01000000	64
++EndEnum
++EndSysreg
++
++Sysreg	BRBCR_EL2	2	4	9	0	0
++Fields	BRBCR_ELx
++EndSysreg
++
++Sysreg	BRBCR_EL12	2	5	9	0	0
++Fields	BRBCR_ELx
++EndSysreg
++
+ Sysreg	ID_AA64ZFR0_EL1	3	0	0	4	4
+ Res0	63:60
+ UnsignedEnum	59:56	F64MM
+-- 
+2.25.1
+
