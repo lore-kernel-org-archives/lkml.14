@@ -1,230 +1,94 @@
-Received: from mailout3.samsung.com (mailout3.samsung.com [203.254.224.33])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B76D417BB7
-	for <linux-kernel@vger.kernel.org>; Fri,  5 Apr 2024 06:37:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.33
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39C1714288;
+	Fri,  5 Apr 2024 06:37:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712299062; cv=none; b=RFgqiCdE/PfigH7J4h+kd6Ll18r0FDckQO6yHNI3/sET8zrZBJFRwsxWpCDS9pagn97Rh5e/wGHdIj52qJRu3+au9ujnsBESbBFtsl6BYAqwkPjH6sW6HIRwr7wvOHr0PB7MB/Y8Z921XmmhNFP3opD4ew+TXszZqTSLnO/EUs0=
+	t=1712299072; cv=none; b=WuT87U2IKCo++f/P2f5PCvtIT11EY25iOqcnyHbpqfWhQAe/Yor4Juj4xwshJ7XCvEWLPCxdyKt3knsEM6tbNdR+edQ7p78k0Ae3UP63Ly87eZtR/9A3+1BqAPXxrMAi2U3cOclUufQ0p/Ol+xBhJQqDtKsE8spTL/BDAF2IIOs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712299062; c=relaxed/simple;
-	bh=4KKrOAUgtvFzWwEeFckdFEnHHxIs4bk8RNDTh0Z+ew8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:From:In-Reply-To:
-	 Content-Type:References; b=m8bzGT/0quXdjnkU2QgAQtXCT9/GtS/J838uzoXbUGpIFXhZiySguAd6cK4/sQl0GXRkP3WYwbbsV12XFVbd5Mqoaks6ED7J+8ojTtcKsCqQ3hEh+SzSKmRhdMuQx5GFqEAOtgYIOFqSP9a7iHhVVklznCh35ly1DYC5kCaX7zo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=a79eE/aF; arc=none smtp.client-ip=203.254.224.33
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+	s=arc-20240116; t=1712299072; c=relaxed/simple;
+	bh=x+/Mq/rmeQx2+kJB0UUehFljzLSHxpKorqQ3wE9zZvQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qrVK/acO0kCrqYifc10rDg/w9lowxO7Vzho0kpZlPLJQEhgsUzh7mX9vggkuCkaC34vqPv/BNplnwA9RYUrAxeYC6wHt0KviRtJV0g+YgkO6uybuV+mZCBJ3LOhIpQjdHY5UXBq2tJrX+12r6kle4+1qjsM1BYcoeZmiXS140eE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=noxxfr5O; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="a79eE/aF"
-Received: from epcas2p4.samsung.com (unknown [182.195.41.56])
-	by mailout3.samsung.com (KnoxPortal) with ESMTP id 20240405063732epoutp0321d9df36220d312826952825d12eab82~DTuqMSsDC0974709747epoutp03S
-	for <linux-kernel@vger.kernel.org>; Fri,  5 Apr 2024 06:37:32 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20240405063732epoutp0321d9df36220d312826952825d12eab82~DTuqMSsDC0974709747epoutp03S
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1712299052;
-	bh=7gP/5naD++bxmajPl7elEI7F1kgdeQwpQ3HndpQNEEc=;
-	h=Date:Subject:To:Cc:From:In-Reply-To:References:From;
-	b=a79eE/aF3ByXlvQ2cFtQkL1inLTqornHGRBwhJX2e+ex3FeWCK5yurvRqqTyLK9JM
-	 7tOZplEkpNgmS2UOOs5mIHtZA9FlpKGJRF6U8CCU8r+gB+D+7Vzus1Lh/45dBdDGst
-	 FgVxocH5s30uvy3d49nFsvlB85XG/wn7PYsMSM3w=
-Received: from epsnrtp3.localdomain (unknown [182.195.42.164]) by
-	epcas2p2.samsung.com (KnoxPortal) with ESMTP id
-	20240405063732epcas2p2e44664f7aae5fc96fc25ec909c1f51ee~DTupr-nkE0911409114epcas2p2f;
-	Fri,  5 Apr 2024 06:37:32 +0000 (GMT)
-Received: from epsmges2p1.samsung.com (unknown [182.195.36.70]) by
-	epsnrtp3.localdomain (Postfix) with ESMTP id 4V9pgv3Kbzz4x9Pt; Fri,  5 Apr
-	2024 06:37:31 +0000 (GMT)
-Received: from epcas2p3.samsung.com ( [182.195.41.55]) by
-	epsmges2p1.samsung.com (Symantec Messaging Gateway) with SMTP id
-	34.63.09673.B2C9F066; Fri,  5 Apr 2024 15:37:31 +0900 (KST)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-	epcas2p1.samsung.com (KnoxPortal) with ESMTPA id
-	20240405063731epcas2p160d72b7fd452359a821d6a03de0d53fe~DTuowijPm0900509005epcas2p1w;
-	Fri,  5 Apr 2024 06:37:31 +0000 (GMT)
-Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
-	epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-	20240405063731epsmtrp25cbc5ce1d3f2da6b34bcf0144fe4c7f8~DTuovpz8n2705427054epsmtrp2v;
-	Fri,  5 Apr 2024 06:37:31 +0000 (GMT)
-X-AuditID: b6c32a45-82dff700000025c9-ad-660f9c2b3758
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-	epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-	BD.3C.08924.A2C9F066; Fri,  5 Apr 2024 15:37:30 +0900 (KST)
-Received: from [172.27.222.155] (unknown [10.229.38.76]) by
-	epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-	20240405063730epsmtip2464ab5d19c0333d2d1604326a3bc8cd0~DTuojR0pD1227812278epsmtip2G;
-	Fri,  5 Apr 2024 06:37:30 +0000 (GMT)
-Message-ID: <76954c9b-e87a-c530-edb7-a8be4e3327ab@samsung.com>
-Date: Fri, 5 Apr 2024 15:37:30 +0900
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="noxxfr5O"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 26A48C433F1;
+	Fri,  5 Apr 2024 06:37:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1712299071;
+	bh=x+/Mq/rmeQx2+kJB0UUehFljzLSHxpKorqQ3wE9zZvQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=noxxfr5Od8JqZzA0S0c0eMEryFu92K1ivZ/Xu6hDxj5sgEOn55Ibt2/H9bEWMSsNl
+	 0v3w7GVCpas6gpDmPjN2LTMa2G/NtwdXIB7mHbuhRSyZoPxXQarH6f3s6c8RbLtHyR
+	 ZlQRSF+nth98pN3+OGq3rrmFlKlWmVQIgC67MuuA=
+Date: Fri, 5 Apr 2024 08:37:48 +0200
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Dmitry Rokosov <ddrokosov@salutedevices.com>
+Cc: quic_sridsn@quicinc.com, quic_mdalam@quicinc.com, ezra@easyb.ch,
+	gch981213@gmail.com, miquel.raynal@bootlin.com, richard@nod.at,
+	sashal@kernel.org, vigneshr@ti.com, kernel@salutedevices.com,
+	rockosov@gmail.com, linux-kernel@vger.kernel.org,
+	linux-mtd@lists.infradead.org,
+	Ezra Buehler <ezra.buehler@husqvarnagroup.com>,
+	stable@vger.kernel.org,
+	Martin Kurbanov <mmkurbanov@salutedevices.com>
+Subject: Re: [PATCH v1] mtd: spinand: Add support for 5-byte IDs
+Message-ID: <2024040509-faceless-passerby-10ad@gregkh>
+References: <20240404121532.14755-1-ddrokosov@salutedevices.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
-	Thunderbird/102.15.1
-Subject: Re: [PATCH v2 0/2] Make reader optimistic spinning optional
-Content-Language: en-US
-To: Waiman Long <longman@redhat.com>, John Stultz <jstultz@google.com>
-Cc: peterz@infradead.org, mingo@redhat.com, will@kernel.org,
-	boqun.feng@gmail.com, linux-kernel@vger.kernel.org,
-	gregkh@linuxfoundation.org, bongkyu7.kim@samsung.com
-From: Bongkyu Kim <bongkyu7.kim@samsung.com>
-In-Reply-To: <45ddde77-a5dd-41e8-933f-36ed0f8cf178@redhat.com>
-Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrLJsWRmVeSWpSXmKPExsWy7bCmua72HP40g2U3JCxeN75kslizpZHJ
-	onnxejaLPyc2sllc3jWHzeL0sRMsFpcOLGCyON57gMmi5Y6pA6fHzll32T0WbCr12LxCy2PT
-	qk42j/1z17B7vN93lc2jb8sqRo/Pm+QCOKKybTJSE1NSixRS85LzUzLz0m2VvIPjneNNzQwM
-	dQ0tLcyVFPISc1NtlVx8AnTdMnOAjlNSKEvMKQUKBSQWFyvp29kU5ZeWpCpk5BeX2CqlFqTk
-	FJgX6BUn5haX5qXr5aWWWBkaGBiZAhUmZGccnzibqWCeZkXr+nvsDYzPlLoYOTkkBEwkPq79
-	x9LFyMUhJLCDUWLfi0lMEM4nRonXc66yQjjfGCW2v/0JlOEAa5k2QQAivpdRYtWdvWwQzltG
-	ibNfFrKCzOUVsJN41PqBDcRmEVCR2Lj0HFRcUOLkzCcsILaoQLTEzGkLGUFsYQEXibbv68Fs
-	ZgFxiVtP5jOB2CICbhLLvvSwQsRXMko8mZIEYrMJ6Ej8Xz0DrIYTaNf9w7ehauQlmrfOZgY5
-	SEJgLYdE45dDzBCPukgcmHifDcIWlnh1fAs7hC0l8fndXqh4scTEl1OhmhsYJZpeb2eBSBhL
-	zHrWzgjyPrOApsT6XfqQkFCWOHKLBWIvn0TH4b/sEGFeiY42IYhGNYndz1tZIWwZiYNn1zJB
-	2B4S1w5OZprAqDgLKVRmIfl+FpJvZiHsXcDIsopRLLWgODc9tdiowBAe2cn5uZsYwelWy3UH
-	4+S3H/QOMTJxMB5ilOBgVhLh7XbgTRPiTUmsrEotyo8vKs1JLT7EaAqMm4nMUqLJ+cCEn1cS
-	b2hiaWBiZmZobmRqYK4kznuvdW6KkEB6YklqdmpqQWoRTB8TB6dUA5OU5Ouk+YnMjbfe7uFe
-	LPpKaPrjwraET92qps/XKjg56D2d6bnNzPm3+Lf2ZyvO/t60StuO84bjFqs4jnm3zOr4J+cV
-	qcay8tjFflDVY3g/593LnYVtEbek3+7/eNL0TXNyStbFzPBlEcxalanWby/cXLuM6Q1v8DzR
-	l71Wn6+ZKGvL+84yTtDUe8p4eTLv8ZuSD26//hKau4ApfkWB0CfVe6tiFIuE339aJzlBJSQi
-	7oxTYNxti0VX030m2obffMiZaGA7M1uwlOdIuopbJ5v3Z+eXX5IDdIySDtoevJm8I0ZEpTRj
-	wmMOCctIpZhN/mvynTxs8nmTn/sFXvnCv2f9egHFUMv6tBP/JJ2XKbEUZyQaajEXFScCAEs1
-	B7dABAAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFupmkeLIzCtJLcpLzFFi42LZdlhJXldrDn+awfQJNhavG18yWazZ0shk
-	0bx4PZvFnxMb2Swu75rDZnH62AkWi0sHFjBZHO89wGTRcsfUgdNj56y77B4LNpV6bF6h5bFp
-	VSebx/65a9g93u+7yubRt2UVo8fnTXIBHFFcNimpOZllqUX6dglcGccnzmYqmKdZ0br+HnsD
-	4zOlLkYODgkBE4lpEwS6GLk4hAR2M0p0zfnE2sXICRSXkTj0by0ThC0scb/lCCtE0WtGie57
-	t1hAErwCdhKPWj+wgdgsAioSG5eeY4WIC0qcnPmEBWSBqEC0RNdLY5CwsICLRNv39YwgNrOA
-	uMStJ/PB5osIuEks+9IDNp9ZYCWjxKYnj5ghlr1llujo/gnWwSagI/F/9QywDk6gxfcP32YF
-	WcAsoC6xfp4QxFB5ieats5knMArNQnLGLCT7ZiF0zELSsYCRZRWjZGpBcW56brFhgWFearle
-	cWJucWleul5yfu4mRnB8aWnuYNy+6oPeIUYmDsZDjBIczEoivN0OvGlCvCmJlVWpRfnxRaU5
-	qcWHGKU5WJTEecVf9KYICaQnlqRmp6YWpBbBZJk4OKUamLKbynpOaTZ0be4/YHvzjE4SW0ah
-	0M7dq0Vmhb9o9+Ixn/lj75tt1VGrdqw53/RcVvjlZoU49Rzzecfv1K7VufRJ5kHSxnz5trOV
-	KckSM0WOcMjWTzvza8bdwK1vhXN2Bdg6ZAaGK7Od/Pz1vsi8xMMvqxh7izvDX/CwV2a16i69
-	e6fM7oOTrKxgzM43gmyXWrRUPPNl1l1/fm1P64xz+/y9QnMmir9q/rzr+/Yu2SlhihwHz4Qe
-	2SnQ6DtT7Z/FyoNrLrul1rIX/gnJqG8+VMt2m+nt94tNa1ufrGfY8qNsnUWJ/uyv9mK52gun
-	TFRL1Or+nrhc/Kbz7xnT07mEN6r3bG1d6LKOI7jYzFRdWYmlOCPRUIu5qDgRAJY7KXweAwAA
-X-CMS-MailID: 20240405063731epcas2p160d72b7fd452359a821d6a03de0d53fe
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: AUTO_CONFIDENTIAL
-CMS-TYPE: 102P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20230901010734epcas2p4aadced02d68d3db407fda23de34601d2
-References: <CGME20230901010734epcas2p4aadced02d68d3db407fda23de34601d2@epcas2p4.samsung.com>
-	<20230901010704.18493-1-bongkyu7.kim@samsung.com>
-	<CANDhNCoFRr=qizswLm-dzxJK0fHuCx98Z2B1pUspdwGqBEejYg@mail.gmail.com>
-	<20240403012132.GA460@KORCO045595.samsungds.net>
-	<CANDhNCpvKj6Swer-8DtQEotdnOiqfAg43oZLw_HZs6ogwqPwzg@mail.gmail.com>
-	<20240403014207.GA499@KORCO045595.samsungds.net>
-	<23fd78bb-76a7-46e8-9523-5d2cab4186f5@redhat.com>
-	<45ddde77-a5dd-41e8-933f-36ed0f8cf178@redhat.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240404121532.14755-1-ddrokosov@salutedevices.com>
 
-On 4/5/24 12:06, Waiman Long wrote:
-> On 4/4/24 13:44, Waiman Long wrote:
->>
->> On 4/2/24 21:42, Bongkyu Kim wrote:
->>> On Tue, Apr 02, 2024 at 06:27:40PM -0700, John Stultz wrote:
->>>> On Tue, Apr 2, 2024 at 6:21 PM Bongkyu Kim
->>>> <bongkyu7.kim@samsung.com> wrote:
->>>>> On Tue, Apr 02, 2024 at 04:46:06PM -0700, John Stultz wrote:
->>>>>> On Thu, Aug 31, 2023 at 6:07 PM Bongkyu Kim
->>>>>> <bongkyu7.kim@samsung.com> wrote:
->>>>>>> This is rework of the following discussed patch.
->>>>>>> https://lore.kernel.org/all/20230613043308.GA1027@KORCO045595.samsungds.net/
->>>>>>>
->>>>>>> Changes from the previous patch
->>>>>>> - Split to revert and modify patches
->>>>>>> - Change according to Waiman Long's review
->>>>>>>      More wording to documentation part
->>>>>>>      Change module_param to early_param
->>>>>>>      Code change by Waiman Long's suggestion
->>>>>>>
->>>>>>> In mobile environment, reader optimistic spinning is still useful
->>>>>>> because there're not many readers. In my test result at android
->>>>>>> device,
->>>>>>> it improves application startup time about 3.8%
->>>>>>> App startup time is most important factor for android user
->>>>>>> expriences.
->>>>>>> So, re-enable reader optimistic spinning by this commit. And,
->>>>>>> make it optional feature by cmdline.
->>>>>>>
->>>>>>> Test result:
->>>>>>> This is 15 application startup performance in our exynos soc.
->>>>>>> - Cortex A78*2 + Cortex A55*6
->>>>>>> - unit: ms (lower is better)
->>>>>>>
->>>>>>> Application             base  opt_rspin  Diff  Diff(%)
->>>>>>> --------------------  ------  ---------  ----  -------
->>>>>>> * Total(geomean)         343        330   -13    +3.8%
->>>>>>> --------------------  ------  ---------  ----  -------
->>>>>>> helloworld               110        108    -2    +1.8%
->>>>>>> Amazon_Seller            397        388    -9    +2.3%
->>>>>>> Whatsapp                 311        304    -7    +2.3%
->>>>>>> Simple_PDF_Reader        500        463   -37    +7.4%
->>>>>>> FaceApp                  330        317   -13    +3.9%
->>>>>>> Timestamp_Camera_Free    451        443    -8    +1.8%
->>>>>>> Kindle                   629        597   -32    +5.1%
->>>>>>> Coinbase                 243        233   -10    +4.1%
->>>>>>> Firefox                  425        399   -26    +6.1%
->>>>>>> Candy_Crush_Soda         552        538   -14    +2.5%
->>>>>>> Hill_Climb_Racing        245        230   -15    +6.1%
->>>>>>> Call_Recorder            437        426   -11    +2.5%
->>>>>>> Color_Fill_3D            190        180   -10    +5.3%
->>>>>>> eToro                    512        505    -7    +1.4%
->>>>>>> GroupMe                  281        266   -15    +5.3%
->>>>>>>
->>>>>> Hey Bongkyu,
->>>>>>    I wanted to reach out to see what the current status of this patch
->>>>>> set? I'm seeing other parties trying to work around the loss of the
->>>>>> optimistic spinning functionality since commit 617f3ef95177
->>>>>> ("locking/rwsem: Remove reader optimistic spinning") as well, with
->>>>>> their own custom variants (providing some substantial gains), and
->>>>>> would really like to have a common solution.
->>>>>>
->>>>> I didn't get an reply, so I've been waiting.
->>>>> Could you let me know about their patch?
->>>> I don't have insight/access to any other implementations, but I have
->>>> nudged folks to test your patch and chime in here.
->>>>
->>>> Mostly I just wanted to share that others are also seeing performance
->>>> trouble from the loss of optimistic spinning, so it would be good to
->>>> get some sort of shared solution upstream.
->>>>
->>>> thanks
->>>> -john
->>>>
->> When this patch series was originally posted last year, we gave some
->> comments and suggestion on how to improve it as well as request for
->> more information on certain area. We were expecting a v2 with the
->> suggested changes, but we never got one and so it just fell off the
->> cliff.
->>
->> Please send a v2 with the requested change and we can continue our
->> discussion.
+On Thu, Apr 04, 2024 at 03:15:21PM +0300, Dmitry Rokosov wrote:
+> From: Ezra Buehler <ezra.buehler@husqvarnagroup.com>
 > 
-> The major reason that reader optimistic spinning was taken out is
-> because of reader fragmentation especially now that we essentially wake
-> up all the readers all at once when it is reader's turn to take the read
-> lock. I do admit I am a bit biased toward systems with large number of
-> CPU cores. On smaller systems with just a few CPU cores, reader
-> optimistic spinning may help performance. So one idea that I have is
-> that one of the command line option values is an auto mode (beside on
-> and off) that reader optimistic spinning is enabled for, say, <= 8 CPUs,
-> but disabled with more CPUs.
-> 
-> Anyway, this is just one of my ideas.
-> 
-> Cheers,
-> Longman
-> 
-> 
+> [ Upstream commit 34a956739d295de6010cdaafeed698ccbba87ea4 ]
 
-Hi Longman,
+This commit is already in the following releases:
+	6.6.24 6.7.12 6.8.3 6.9-rc1
 
-Including your idea, I will reconsider and resend patch.
+> E.g. ESMT chips will return an identification code with a length of 5
+> bytes. In order to prevent ambiguity, flash chips would actually need to
+> return IDs that are up to 17 or more bytes long due to JEDEC's
+> continuation scheme. I understand that if a manufacturer ID is located
+> in bank N of JEDEC's database (there are currently 16 banks), N - 1
+> continuation codes (7Fh) need to be added to the identification code
+> (comprising of manufacturer ID and device ID). However, most flash chip
+> manufacturers don't seem to implement this (correctly).
+> 
+> Cc: <stable@vger.kernel.org> # 6.6.23
+> Cc: <stable@vger.kernel.org> # 6.7.11
+> Cc: <stable@vger.kernel.org> # 6.8.2
+> Signed-off-by: Ezra Buehler <ezra.buehler@husqvarnagroup.com>
+> Reviewed-by: Martin Kurbanov <mmkurbanov@salutedevices.com>
+> Tested-by: Martin Kurbanov <mmkurbanov@salutedevices.com>
+> Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+> Link: https://lore.kernel.org/linux-mtd/20240125200108.24374-2-ezra@easyb.ch
+> Signed-off-by: Dmitry Rokosov <ddrokosov@salutedevices.com>
+> ---
+> 
+> In the patch series [1] only one patch was marked with Fixes tag, that's
+> why the secon patch was not applied to 6.6.y, 6.7.y and 6.8y. It breaks
+> ESMT detection flow with logs:
+> 
+> [    0.770730] spi-nand spi0.0: unknown raw ID c8017f7f
+> [    0.772688] spi-nand: probe of spi0.0 failed with error -524
+> 
+> Please cherry-pick the second patch from the series to 6.6.y, 6.7.y and
+> 6.8.y.
 
-Thanks,
-Bongkyu
+What commit id is "the second patch" here?  The one referenced above?
+If so, again, this is already in a released kernel, so I'm confused as
+to what to do here.
+
+thanks,
+
+greg k-h
