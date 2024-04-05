@@ -1,343 +1,262 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4945716DEAB
-	for <linux-kernel@vger.kernel.org>; Fri,  5 Apr 2024 14:52:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E99EB16DEAB;
+	Fri,  5 Apr 2024 14:53:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712328773; cv=none; b=GiVKzE025Z9C45guYJ3J97IuLIO/pIbiH9OQHKg5b0joRtPLeISB0n8+zfzUJlg2IOzh+MW8Z4Hdywvbs/27HqCSwSDKtMlBHdCQplNPMui/Pp4Y8GasGMimR4e6OCa6/eCB6gHRlL3GeCDrt8HbOq0ejFMgwNH0jAv5Qn+R1XQ=
+	t=1712328821; cv=none; b=luRPzonNxbIRVChv8LD43DIU/bIPAEdBZTZX0La09LEz6iIqRfNQsysDNKr2laFAlKFlsydmXWwNUMAaEZoxt9zL4R2sm27wQvHP9kBFWWecyj3MZRiMi4MVVf7LrDqclSFTWXcYSsiWrX1wH7ptsf2R+PvjFyIZB8VYWPlD+R0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712328773; c=relaxed/simple;
-	bh=9fXD74EoOk0Qq6pCxBrdU2yUnMV1sDo8MVE0kEQOWN0=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=LIaWQC0TESV/dksrmy4vI7TP3iv5VBlVbtkig25+PVoOkhN87QXUTSneBPfTVkKi1m29xzNeubVaYeH5//honVbjnQYNpM0tm+aI1l/RZj0pwaYYcEBG9zcjrnYomtdvGobV3yf2HXi8hqkF3+rTWvGydMJb1K1B3qKnNIEr+jg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Xv+3p/wv; arc=none smtp.client-ip=192.198.163.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1712328821; c=relaxed/simple;
+	bh=H+V6Pev4js4HSCeSItpTFruA1Ni2g1JyzcjIpJViqrg=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=XW1jhxClq44OY9A6IaerGZIjdoJXTeuLYXjJ9WY5l2QyMwQHGlHI73kYiAGa60t5tLiS2VoVqHD0gGmt1zlqxL/rF7uP/qhxSgfEokmtEx6G7VJE73tmb4tptHtzadRul1M0IBx3PNjBWIOnGJ4BPUSWk2Xd4j1FItLcPS4gdMk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Zy4/hhk/; arc=none smtp.client-ip=192.198.163.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Xv+3p/wv"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Zy4/hhk/"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1712328771; x=1743864771;
-  h=date:from:to:cc:subject:message-id;
-  bh=9fXD74EoOk0Qq6pCxBrdU2yUnMV1sDo8MVE0kEQOWN0=;
-  b=Xv+3p/wveENcVopMbOj4NOtPFz4bKbqRMo6m+OGQzRJ0KcTsi0GOxIWP
-   lYEQz0usbAyOZB3kDYv+kJCownKUPHCWlhTss55L3gTjZjtvOiz7E3V+H
-   NBlSSpS6E69qOLNKf9fnT3lFQTZnoqbxpJ/grw58F5wkjCqEAoZp10sr0
-   edGh31QPNqJ1ltA4+B882oTo5nr1vxY2+Gk9ASHuUv4SbENhXJ1ocdW/y
-   k8S53AvBILkruKgKOjzVb7uNvjiLpnLTCT2U2cgQi2bqCtZ0+xpSxoQie
-   DOhmk2+FwkQQkSEHNs2UaZ/uQa3BTW8xkjBRShW14Jz26yEbcOheZvuHa
-   g==;
-X-CSE-ConnectionGUID: uvFM6kJvSq2WUtdw3tn1mg==
-X-CSE-MsgGUID: N8qnQZ0jQFyHMDJVJXLsWA==
-X-IronPort-AV: E=McAfee;i="6600,9927,11035"; a="25168595"
+  t=1712328820; x=1743864820;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=H+V6Pev4js4HSCeSItpTFruA1Ni2g1JyzcjIpJViqrg=;
+  b=Zy4/hhk/UkETyPFIg9WTVzFsaq1XvNQRWXWe3hEs8NbMAuFE2OxP4Bxg
+   +IxkpxVYqaZE/oZ5P7XhQ/5KwZYw6B/bgGkiJD/OB0KXBJHt6BHcX7xoj
+   WJoTh22aMaMFs64DwGCVXE0+7D4Bri3Wcy3D5stMN2gdmqyjrVRckCzWT
+   w2LlagWVBm0EZbCaO9N6VPfUJppM5FQ9GVN7u+cvKTiTydrIsMEJChX3H
+   c4ygZwJvKgnajWNrNoxTlaaelr+1M9DolILMZ5Q0tF87HacsUE+1x2lfl
+   Fki8/kPcRVR4YIuAJU0dmT0IXgPnf8465JCQIhxQ6E/4Ls2GycBqd1Rpu
+   A==;
+X-CSE-ConnectionGUID: LoDM7ZXJQ9auBlcwBCk/kg==
+X-CSE-MsgGUID: IG8oY8E7QgmPMxjOlaxL8A==
+X-IronPort-AV: E=McAfee;i="6600,9927,11035"; a="18269813"
 X-IronPort-AV: E=Sophos;i="6.07,181,1708416000"; 
-   d="scan'208";a="25168595"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Apr 2024 07:52:51 -0700
-X-CSE-ConnectionGUID: eXWGiqEWTuC2BKdv3Rukrw==
-X-CSE-MsgGUID: RqAwg883Qh6WItxeo/jpKQ==
+   d="scan'208";a="18269813"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Apr 2024 07:53:39 -0700
+X-CSE-ConnectionGUID: V2Gk/VcsQvSMQOvH8IT/sw==
+X-CSE-MsgGUID: tehVrCpHRwW7hVxSyp12bw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.07,181,1708416000"; 
-   d="scan'208";a="19103787"
-Received: from lkp-server01.sh.intel.com (HELO e61807b1d151) ([10.239.97.150])
-  by fmviesa010.fm.intel.com with ESMTP; 05 Apr 2024 07:52:49 -0700
-Received: from kbuild by e61807b1d151 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1rskvv-0002Nl-1Z;
-	Fri, 05 Apr 2024 14:52:47 +0000
-Date: Fri, 05 Apr 2024 22:52:04 +0800
-From: kernel test robot <lkp@intel.com>
-To: "Paul E. McKenney" <paulmck@kernel.org>
-Cc: linux-kernel@vger.kernel.org
-Subject: [paulmck-rcu:dev.2024.04.03b] BUILD REGRESSION
- f6416a4a0ebe5a37b471f04b20992be201563e81
-Message-ID: <202404052259.aGa1vezk-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+   d="scan'208";a="19285495"
+Received: from test2-linux-lab.an.intel.com ([10.122.105.166])
+  by fmviesa008.fm.intel.com with ESMTP; 05 Apr 2024 07:53:38 -0700
+From: matthew.gerlach@linux.intel.com
+To: bhelgaas@google.com,
+	lpieralisi@kernel.org,
+	kw@linux.com,
+	robh@kernel.org,
+	krzysztof.kozlowski+dt@linaro.org,
+	conor+dt@kernel.org,
+	linux-pci@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Matthew Gerlach <matthew.gerlach@linux.intel.com>
+Subject: [PATCH v2] dt-bindings: PCI: altera: Convert to YAML
+Date: Fri,  5 Apr 2024 09:53:22 -0500
+Message-Id: <20240405145322.3805828-1-matthew.gerlach@linux.intel.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/paulmck/linux-rcu.git dev.2024.04.03b
-branch HEAD: f6416a4a0ebe5a37b471f04b20992be201563e81  rcu: Reduce synchronize_rcu() delays when all wait heads are in use
+From: Matthew Gerlach <matthew.gerlach@linux.intel.com>
 
-Error/Warning: (recently discovered and may have been fixed)
+Convert the device tree bindings for the Altera Root Port PCIe controller
+from text to YAML.
 
-kernel/locking/qspinlock_paravirt.h:333:(.text+0x3afeb9): undefined reference to `cmpxchg_emu_u8'
-kernel/locking/qspinlock_paravirt.h:91:(.spinlock.text+0xcc1): undefined reference to `cmpxchg_emu_u8'
-kernel/rcu/tasks.h:1482:(.text+0x3f6f): undefined reference to `cmpxchg_emu_u8'
-ld.lld: error: undefined symbol: cmpxchg_emu_u8
-ld: kernel/rcu/tasks.h:1482:(.text+0x3fa1): undefined reference to `cmpxchg_emu_u8'
-ld: update.c:(.text+0x578): undefined reference to `cmpxchg_emu_u8'
+Signed-off-by: Matthew Gerlach <matthew.gerlach@linux.intel.com>
+---
+v2:
+ - Move allOf: to bottom of file, just like example-schema is showing
+ - add constraint for reg and reg-names
+ - remove unneeded device_type
+ - drop #address-cells and #size-cells
+ - change minItems to maxItems for interrupts:
+ - change msi-parent to just "msi-parent: true"
+ - cleaned up required:
+ - make subject consistent with other commits coverting to YAML
+ - s/overt/onvert/g
+---
+ .../devicetree/bindings/pci/altera-pcie.txt   |  50 ---------
+ .../bindings/pci/altr,pcie-root-port.yaml     | 106 ++++++++++++++++++
+ 2 files changed, 106 insertions(+), 50 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/pci/altera-pcie.txt
+ create mode 100644 Documentation/devicetree/bindings/pci/altr,pcie-root-port.yaml
 
-Unverified Error/Warning (likely false positive, please contact us if interested):
-
-ERROR: modpost: "cmpxchg_emu_u16" [drivers/platform/surface/aggregator/surface_aggregator.ko] undefined!
-ERROR: modpost: "cmpxchg_emu_u8" [drivers/platform/surface/aggregator/surface_aggregator.ko] undefined!
-controller.c:(.text+0xae5): undefined reference to `cmpxchg_emu_u16'
-ld: qspinlock.c:(.spinlock.text+0x41f): undefined reference to `cmpxchg_emu_u16'
-ld: qspinlock.c:(.spinlock.text+0x45a): undefined reference to `cmpxchg_emu_u8'
-qspinlock.c:(.spinlock.text+0x393): undefined reference to `cmpxchg_emu_u8'
-
-Error/Warning ids grouped by kconfigs:
-
-gcc_recent_errors
-|-- i386-allmodconfig
-|   |-- ERROR:cmpxchg_emu_u16-drivers-platform-surface-aggregator-surface_aggregator.ko-undefined
-|   `-- ERROR:cmpxchg_emu_u8-drivers-platform-surface-aggregator-surface_aggregator.ko-undefined
-|-- i386-allyesconfig
-|   |-- controller.c:(.text):undefined-reference-to-cmpxchg_emu_u16
-|   |-- ld:qspinlock.c:(.spinlock.text):undefined-reference-to-cmpxchg_emu_u16
-|   |-- ld:qspinlock.c:(.spinlock.text):undefined-reference-to-cmpxchg_emu_u8
-|   `-- qspinlock.c:(.spinlock.text):undefined-reference-to-cmpxchg_emu_u8
-|-- i386-buildonly-randconfig-004-20240405
-|   `-- ld:update.c:(.text):undefined-reference-to-cmpxchg_emu_u8
-|-- i386-randconfig-002-20240405
-|   |-- kernel-rcu-tasks.h:(.text):undefined-reference-to-cmpxchg_emu_u8
-|   `-- ld:kernel-rcu-tasks.h:(.text):undefined-reference-to-cmpxchg_emu_u8
-|-- i386-randconfig-061-20240405
-|   |-- kernel-rcu-tasks.h:(.text):undefined-reference-to-cmpxchg_emu_u8
-|   `-- ld:kernel-rcu-tasks.h:(.text):undefined-reference-to-cmpxchg_emu_u8
-|-- x86_64-buildonly-randconfig-004-20240405
-|   `-- ld:update.c:(.text):undefined-reference-to-cmpxchg_emu_u8
-|-- x86_64-randconfig-012-20240405
-|   `-- kernel-rcu-tasks.h:(.text):undefined-reference-to-cmpxchg_emu_u8
-|-- x86_64-randconfig-013-20240405
-|   |-- kernel-rcu-tasks.h:(.text):undefined-reference-to-cmpxchg_emu_u8
-|   `-- ld:kernel-rcu-tasks.h:(.text):undefined-reference-to-cmpxchg_emu_u8
-|-- x86_64-randconfig-015-20240405
-|   |-- kernel-rcu-tasks.h:(.text):undefined-reference-to-cmpxchg_emu_u8
-|   `-- ld:kernel-rcu-tasks.h:(.text):undefined-reference-to-cmpxchg_emu_u8
-|-- x86_64-randconfig-071-20240405
-|   |-- kernel-rcu-tasks.h:(.text):undefined-reference-to-cmpxchg_emu_u8
-|   `-- ld:kernel-rcu-tasks.h:(.text):undefined-reference-to-cmpxchg_emu_u8
-|-- x86_64-randconfig-072-20240405
-|   |-- kernel-rcu-tasks.h:(.text):undefined-reference-to-cmpxchg_emu_u8
-|   `-- ld:kernel-rcu-tasks.h:(.text):undefined-reference-to-cmpxchg_emu_u8
-|-- x86_64-randconfig-074-20240405
-|   |-- kernel-rcu-tasks.h:(.text):undefined-reference-to-cmpxchg_emu_u8
-|   `-- ld:kernel-rcu-tasks.h:(.text):undefined-reference-to-cmpxchg_emu_u8
-|-- x86_64-randconfig-075-20240405
-|   |-- kernel-rcu-tasks.h:(.text):undefined-reference-to-cmpxchg_emu_u8
-|   `-- ld:kernel-rcu-tasks.h:(.text):undefined-reference-to-cmpxchg_emu_u8
-|-- x86_64-randconfig-076-20240405
-|   |-- kernel-rcu-tasks.h:(.text):undefined-reference-to-cmpxchg_emu_u8
-|   `-- ld:kernel-rcu-tasks.h:(.text):undefined-reference-to-cmpxchg_emu_u8
-`-- x86_64-randconfig-161-20240405
-    |-- kernel-locking-qspinlock_paravirt.h:(.spinlock.text):undefined-reference-to-cmpxchg_emu_u8
-    `-- kernel-locking-qspinlock_paravirt.h:(.text):undefined-reference-to-cmpxchg_emu_u8
-clang_recent_errors
-|-- i386-buildonly-randconfig-003-20240405
-|   `-- ld.lld:error:undefined-symbol:cmpxchg_emu_u8
-|-- i386-randconfig-062-20240405
-|   `-- ld.lld:error:undefined-symbol:cmpxchg_emu_u8
-|-- i386-randconfig-063-20240405
-|   `-- ld.lld:error:undefined-symbol:cmpxchg_emu_u8
-|-- x86_64-buildonly-randconfig-005-20240405
-|   `-- ld.lld:error:undefined-symbol:cmpxchg_emu_u8
-|-- x86_64-buildonly-randconfig-006-20240405
-|   `-- ld.lld:error:undefined-symbol:cmpxchg_emu_u8
-|-- x86_64-randconfig-001-20240405
-|   `-- ld.lld:error:undefined-symbol:cmpxchg_emu_u8
-|-- x86_64-randconfig-002-20240405
-|   `-- ld.lld:error:undefined-symbol:cmpxchg_emu_u8
-|-- x86_64-randconfig-003-20240405
-|   `-- ld.lld:error:undefined-symbol:cmpxchg_emu_u8
-|-- x86_64-randconfig-005-20240405
-|   `-- ld.lld:error:undefined-symbol:cmpxchg_emu_u8
-|-- x86_64-randconfig-011-20240405
-|   `-- ld.lld:error:undefined-symbol:cmpxchg_emu_u8
-`-- x86_64-randconfig-014-20240405
-    `-- ld.lld:error:undefined-symbol:cmpxchg_emu_u8
-
-elapsed time: 1124m
-
-configs tested: 180
-configs skipped: 3
-
-tested configs:
-alpha                             allnoconfig   gcc  
-alpha                            allyesconfig   gcc  
-alpha                               defconfig   gcc  
-arc                              allmodconfig   gcc  
-arc                               allnoconfig   gcc  
-arc                              allyesconfig   gcc  
-arc                                 defconfig   gcc  
-arc                     haps_hs_smp_defconfig   gcc  
-arc                   randconfig-001-20240405   gcc  
-arc                   randconfig-002-20240405   gcc  
-arm                              allmodconfig   gcc  
-arm                               allnoconfig   clang
-arm                              allyesconfig   gcc  
-arm                                 defconfig   clang
-arm                         lpc32xx_defconfig   clang
-arm                   randconfig-001-20240405   gcc  
-arm                   randconfig-002-20240405   clang
-arm                   randconfig-003-20240405   gcc  
-arm                   randconfig-004-20240405   clang
-arm                           tegra_defconfig   gcc  
-arm                           u8500_defconfig   gcc  
-arm                        vexpress_defconfig   gcc  
-arm                         vf610m4_defconfig   gcc  
-arm64                            allmodconfig   clang
-arm64                             allnoconfig   gcc  
-arm64                               defconfig   gcc  
-arm64                 randconfig-001-20240405   gcc  
-arm64                 randconfig-002-20240405   gcc  
-arm64                 randconfig-003-20240405   gcc  
-arm64                 randconfig-004-20240405   gcc  
-csky                             allmodconfig   gcc  
-csky                              allnoconfig   gcc  
-csky                             allyesconfig   gcc  
-csky                                defconfig   gcc  
-csky                  randconfig-001-20240405   gcc  
-csky                  randconfig-002-20240405   gcc  
-hexagon                          allmodconfig   clang
-hexagon                           allnoconfig   clang
-hexagon                          allyesconfig   clang
-hexagon                             defconfig   clang
-hexagon               randconfig-001-20240405   clang
-hexagon               randconfig-002-20240405   clang
-i386                             allmodconfig   gcc  
-i386                              allnoconfig   gcc  
-i386                             allyesconfig   gcc  
-i386         buildonly-randconfig-001-20240405   gcc  
-i386         buildonly-randconfig-002-20240405   gcc  
-i386         buildonly-randconfig-003-20240405   clang
-i386         buildonly-randconfig-004-20240405   gcc  
-i386         buildonly-randconfig-005-20240405   clang
-i386         buildonly-randconfig-006-20240405   clang
-i386                                defconfig   clang
-i386                  randconfig-001-20240405   clang
-i386                  randconfig-002-20240405   gcc  
-i386                  randconfig-003-20240405   clang
-i386                  randconfig-004-20240405   clang
-i386                  randconfig-005-20240405   clang
-i386                  randconfig-006-20240405   gcc  
-i386                  randconfig-011-20240405   clang
-i386                  randconfig-012-20240405   gcc  
-i386                  randconfig-013-20240405   gcc  
-i386                  randconfig-014-20240405   gcc  
-i386                  randconfig-015-20240405   gcc  
-i386                  randconfig-016-20240405   clang
-loongarch                        allmodconfig   gcc  
-loongarch                         allnoconfig   gcc  
-loongarch                           defconfig   gcc  
-loongarch             randconfig-001-20240405   gcc  
-loongarch             randconfig-002-20240405   gcc  
-m68k                             allmodconfig   gcc  
-m68k                              allnoconfig   gcc  
-m68k                             allyesconfig   gcc  
-m68k                                defconfig   gcc  
-microblaze                       allmodconfig   gcc  
-microblaze                        allnoconfig   gcc  
-microblaze                       allyesconfig   gcc  
-microblaze                          defconfig   gcc  
-mips                              allnoconfig   gcc  
-mips                             allyesconfig   gcc  
-mips                      bmips_stb_defconfig   clang
-mips                        omega2p_defconfig   clang
-nios2                            allmodconfig   gcc  
-nios2                             allnoconfig   gcc  
-nios2                            allyesconfig   gcc  
-nios2                               defconfig   gcc  
-nios2                 randconfig-001-20240405   gcc  
-nios2                 randconfig-002-20240405   gcc  
-openrisc                          allnoconfig   gcc  
-openrisc                         allyesconfig   gcc  
-openrisc                            defconfig   gcc  
-parisc                           allmodconfig   gcc  
-parisc                            allnoconfig   gcc  
-parisc                           allyesconfig   gcc  
-parisc                              defconfig   gcc  
-parisc                randconfig-001-20240405   gcc  
-parisc                randconfig-002-20240405   gcc  
-parisc64                            defconfig   gcc  
-powerpc                          allmodconfig   gcc  
-powerpc                           allnoconfig   gcc  
-powerpc                          allyesconfig   clang
-powerpc                   currituck_defconfig   clang
-powerpc                     mpc5200_defconfig   clang
-powerpc                 mpc834x_itx_defconfig   clang
-powerpc                      pmac32_defconfig   clang
-powerpc               randconfig-001-20240405   clang
-powerpc               randconfig-002-20240405   clang
-powerpc               randconfig-003-20240405   clang
-powerpc                         wii_defconfig   gcc  
-powerpc64             randconfig-001-20240405   gcc  
-powerpc64             randconfig-002-20240405   gcc  
-powerpc64             randconfig-003-20240405   clang
-riscv                            allmodconfig   clang
-riscv                             allnoconfig   gcc  
-riscv                            allyesconfig   clang
-riscv                               defconfig   clang
-riscv                 randconfig-001-20240405   clang
-riscv                 randconfig-002-20240405   gcc  
-s390                             allmodconfig   clang
-s390                              allnoconfig   clang
-s390                             allyesconfig   gcc  
-s390                          debug_defconfig   gcc  
-s390                                defconfig   clang
-s390                  randconfig-001-20240405   clang
-s390                  randconfig-002-20240405   gcc  
-s390                       zfcpdump_defconfig   clang
-sh                               allmodconfig   gcc  
-sh                                allnoconfig   gcc  
-sh                               allyesconfig   gcc  
-sh                                  defconfig   gcc  
-sh                    randconfig-001-20240405   gcc  
-sh                    randconfig-002-20240405   gcc  
-sh                        sh7757lcr_defconfig   gcc  
-sparc                            allmodconfig   gcc  
-sparc                             allnoconfig   gcc  
-sparc                               defconfig   gcc  
-sparc64                          allmodconfig   gcc  
-sparc64                          allyesconfig   gcc  
-sparc64                             defconfig   gcc  
-sparc64               randconfig-001-20240405   gcc  
-sparc64               randconfig-002-20240405   gcc  
-um                               allmodconfig   clang
-um                                allnoconfig   clang
-um                               allyesconfig   gcc  
-um                                  defconfig   clang
-um                             i386_defconfig   gcc  
-um                    randconfig-001-20240405   gcc  
-um                    randconfig-002-20240405   clang
-um                           x86_64_defconfig   clang
-x86_64                            allnoconfig   clang
-x86_64                           allyesconfig   clang
-x86_64       buildonly-randconfig-001-20240405   clang
-x86_64       buildonly-randconfig-002-20240405   clang
-x86_64       buildonly-randconfig-003-20240405   gcc  
-x86_64       buildonly-randconfig-004-20240405   gcc  
-x86_64       buildonly-randconfig-005-20240405   clang
-x86_64       buildonly-randconfig-006-20240405   clang
-x86_64                              defconfig   gcc  
-x86_64                randconfig-001-20240405   clang
-x86_64                randconfig-002-20240405   clang
-x86_64                randconfig-003-20240405   clang
-x86_64                randconfig-004-20240405   gcc  
-x86_64                randconfig-005-20240405   clang
-x86_64                randconfig-006-20240405   gcc  
-x86_64                randconfig-011-20240405   clang
-x86_64                randconfig-012-20240405   gcc  
-x86_64                randconfig-013-20240405   gcc  
-x86_64                randconfig-014-20240405   clang
-x86_64                randconfig-015-20240405   gcc  
-x86_64                randconfig-016-20240405   gcc  
-x86_64                randconfig-071-20240405   gcc  
-x86_64                randconfig-072-20240405   gcc  
-x86_64                randconfig-073-20240405   gcc  
-x86_64                randconfig-074-20240405   gcc  
-x86_64                randconfig-075-20240405   gcc  
-x86_64                randconfig-076-20240405   gcc  
-x86_64                          rhel-8.3-rust   clang
-xtensa                            allnoconfig   gcc  
-xtensa                  audio_kc705_defconfig   gcc  
-xtensa                randconfig-001-20240405   gcc  
-xtensa                randconfig-002-20240405   gcc  
-
+diff --git a/Documentation/devicetree/bindings/pci/altera-pcie.txt b/Documentation/devicetree/bindings/pci/altera-pcie.txt
+deleted file mode 100644
+index 816b244a221e..000000000000
+--- a/Documentation/devicetree/bindings/pci/altera-pcie.txt
++++ /dev/null
+@@ -1,50 +0,0 @@
+-* Altera PCIe controller
+-
+-Required properties:
+-- compatible :	should contain "altr,pcie-root-port-1.0" or "altr,pcie-root-port-2.0"
+-- reg:		a list of physical base address and length for TXS and CRA.
+-		For "altr,pcie-root-port-2.0", additional HIP base address and length.
+-- reg-names:	must include the following entries:
+-		"Txs": TX slave port region
+-		"Cra": Control register access region
+-		"Hip": Hard IP region (if "altr,pcie-root-port-2.0")
+-- interrupts:	specifies the interrupt source of the parent interrupt
+-		controller.  The format of the interrupt specifier depends
+-		on the parent interrupt controller.
+-- device_type:	must be "pci"
+-- #address-cells:	set to <3>
+-- #size-cells:		set to <2>
+-- #interrupt-cells:	set to <1>
+-- ranges:	describes the translation of addresses for root ports and
+-		standard PCI regions.
+-- interrupt-map-mask and interrupt-map: standard PCI properties to define the
+-		mapping of the PCIe interface to interrupt numbers.
+-
+-Optional properties:
+-- msi-parent:	Link to the hardware entity that serves as the MSI controller
+-		for this PCIe controller.
+-- bus-range:	PCI bus numbers covered
+-
+-Example
+-	pcie_0: pcie@c00000000 {
+-		compatible = "altr,pcie-root-port-1.0";
+-		reg = <0xc0000000 0x20000000>,
+-			<0xff220000 0x00004000>;
+-		reg-names = "Txs", "Cra";
+-		interrupt-parent = <&hps_0_arm_gic_0>;
+-		interrupts = <0 40 4>;
+-		interrupt-controller;
+-		#interrupt-cells = <1>;
+-		bus-range = <0x0 0xFF>;
+-		device_type = "pci";
+-		msi-parent = <&msi_to_gic_gen_0>;
+-		#address-cells = <3>;
+-		#size-cells = <2>;
+-		interrupt-map-mask = <0 0 0 7>;
+-		interrupt-map = <0 0 0 1 &pcie_0 1>,
+-			            <0 0 0 2 &pcie_0 2>,
+-			            <0 0 0 3 &pcie_0 3>,
+-			            <0 0 0 4 &pcie_0 4>;
+-		ranges = <0x82000000 0x00000000 0x00000000 0xc0000000 0x00000000 0x10000000
+-			  0x82000000 0x00000000 0x10000000 0xd0000000 0x00000000 0x10000000>;
+-	};
+diff --git a/Documentation/devicetree/bindings/pci/altr,pcie-root-port.yaml b/Documentation/devicetree/bindings/pci/altr,pcie-root-port.yaml
+new file mode 100644
+index 000000000000..999dcda05f55
+--- /dev/null
++++ b/Documentation/devicetree/bindings/pci/altr,pcie-root-port.yaml
+@@ -0,0 +1,106 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
++# Copyright (C) 2024, Intel Corporation
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/altr,pcie-root-port.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Altera PCIe Root Port
++
++maintainers:
++  - Matthew Gerlach <matthew.gerlach@linux.intel.com>
++
++properties:
++  compatible:
++    items:
++      - enum:
++          - altr,pcie-root-port-1.0
++          - altr,pcie-root-port-2.0
++
++  interrupts:
++    maxItems: 1
++
++  interrupt-map-mask:
++    items:
++      - const: 0
++      - const: 0
++      - const: 0
++      - const: 7
++
++  interrupt-map:
++    maxItems: 4
++
++  "#interrupt-cells":
++    const: 1
++
++  msi-parent: true
++
++required:
++  - compatible
++  - reg
++  - reg-names
++  - device_type
++  - interrupts
++  - interrupt-map
++  - interrupt-map-mask
++
++unevaluatedProperties: false
++
++allOf:
++  - $ref: /schemas/pci/pci-bus.yaml#
++  - if:
++      properties:
++        compatible:
++          enum:
++            - altr,pcie-root-port-1.0
++    then:
++      properties:
++        reg:
++          items:
++            - description: TX slave port region
++            - description: Control register access region
++
++        reg-names:
++          items:
++            - const: Txs
++            - const: Cra
++
++    else:
++      properties:
++        reg:
++          items:
++            - description: Hard IP region
++            - description: TX slave port region
++            - description: Control register access region
++
++        reg-names:
++          items:
++            - const: Hip
++            - const: Txs
++            - const: Cra
++
++examples:
++  - |
++    #include <dt-bindings/interrupt-controller/arm-gic.h>
++    #include <dt-bindings/interrupt-controller/irq.h>
++    pcie_0: pcie@c00000000 {
++        compatible = "altr,pcie-root-port-1.0";
++        reg = <0xc0000000 0x20000000>,
++              <0xff220000 0x00004000>;
++        reg-names = "Txs", "Cra";
++        interrupt-parent = <&hps_0_arm_gic_0>;
++        interrupts = <GIC_SPI 40 IRQ_TYPE_LEVEL_HIGH>;
++        #interrupt-cells = <1>;
++        bus-range = <0x0 0xff>;
++        device_type = "pci";
++        msi-parent = <&msi_to_gic_gen_0>;
++        #address-cells = <3>;
++        #size-cells = <2>;
++        interrupt-map-mask = <0 0 0 7>;
++        interrupt-map = <0 0 0 1 &pcie_intc 1>,
++                        <0 0 0 2 &pcie_intc 2>,
++                        <0 0 0 3 &pcie_intc 3>,
++                        <0 0 0 4 &pcie_intc 4>;
++        ranges = <0x82000000 0x00000000 0x00000000 0xc0000000 0x00000000 0x10000000
++                  0x82000000 0x00000000 0x10000000 0xd0000000 0x00000000 0x10000000>;
++    };
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.34.1
+
