@@ -1,50 +1,65 @@
-Received: from mail11.truemail.it (mail11.truemail.it [217.194.8.81])
+Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61204219FC;
-	Fri,  5 Apr 2024 06:36:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.194.8.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4BCC1CFB5
+	for <linux-kernel@vger.kernel.org>; Fri,  5 Apr 2024 06:37:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712299018; cv=none; b=l7Uv6qbWpN5R7zfxMDtpyfidao6DGNHp0wZM8BqeL+4VfwRydbD/CSz6eZm9a3u0pknr04yPHnXjr1NsbanRPvzYkui4zPDtXmHRJhDdgo61j0Ict0IbL14cHSealWiYhLbtl++pLCXT9/9AkFLVq0tEtnnvTbJ9oDM1mQFy4So=
+	t=1712299061; cv=none; b=IGQHjanFKYnY/T9AQpcIstDSMWNj8LPG7RMnti/svPs/zzSe7iO1WTV5yyYlVuuo0YEXnccY911b4y93EIudGqP+VV0vPxooRJkHeP0XhdYhZvAue3VNu0PsqnmOvXLnNt4hvRX+KTxwvqt1XMW3YE8snxDtARbhC4IuYhjIMJM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712299018; c=relaxed/simple;
-	bh=MF9x0u+ja/f5NG5xBWtjLFDFjBEi4bSDETo9bvduU0o=;
+	s=arc-20240116; t=1712299061; c=relaxed/simple;
+	bh=bgDz6g1gPJNOWXZ0pJtwEJayVj0AbYJFB6CCr4Jz4Io=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JzWTrPzxyOFreOj31gP9rxGeyqUQzAcbthNwsgNtTjhNiQbTv1s9lXrJKqf3+c8Lrzi/F0xGR2Z74hsgUQh2rdZThh5kc4cHQV7T/ZEzL8QKE1GArht0cUrcZmFHU/z8fQk5k2WqyB4oc6J3RrutLLYdvFd01HzFtSPGm0+pWSU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it; spf=pass smtp.mailfrom=dolcini.it; dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b=BlHXSaqW; arc=none smtp.client-ip=217.194.8.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dolcini.it
+	 Content-Type:Content-Disposition:In-Reply-To; b=lJ5YNAZsQr4c0YkX95IRl2lbNNLuWUkgAIETcrk9qqtQv+20vGIJjrhFnQ5p7d0bGA1XANzmLoOmUeS6eugqvA+Y+DOX1xK8skbJ6T3cJDS7CbX+tJNLNJYHpPSW+VTdn+96AZIMuYNGN0I3ystCpGjlpjhbqOMiVJF9qrHH/+0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=h5Qgp4RM; arc=none smtp.client-ip=209.85.208.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b="BlHXSaqW"
-Received: from francesco-nb (93-49-2-63.ip317.fastwebnet.it [93.49.2.63])
-	by mail11.truemail.it (Postfix) with ESMTPA id 941101F930;
-	Fri,  5 Apr 2024 08:36:52 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dolcini.it;
-	s=default; t=1712299013;
-	bh=UC3T4Qz0UwYKpOOwA7clFwRt2M9KxDI2AekTfv3g9ns=; h=From:To:Subject;
-	b=BlHXSaqWBfs60fQTTc+F47Eq2cXsItS6heieelM4AyiV1KlXwpzlS83Sk5Snl/rDZ
-	 8QC2D93r4m01aixdZKcjUoR3mDHhMJtuBdwvt9mhkk2D0UCUZzAlVkkZkrqWGxQhOq
-	 uRhupWPIOjE5SUoDFPK+hg3MZaWPfYV709gjmGojrfjPrkDZRj4AvXofOHQ6/HgMjd
-	 f1v/2RiUHzoBQB24KudG4hmUNOM3+HS9AxaGwQKOYP7IGESXzuVK3+GwRh7klpnvmL
-	 DYmhv00V17Atlh2LNAjgvEuU68j8RMOHfNhYcFCuodm7DpVk8lKjiKtzWF4dmC1uK1
-	 G6M47heIyNU4Q==
-Date: Fri, 5 Apr 2024 08:36:48 +0200
-From: Francesco Dolcini <francesco@dolcini.it>
-To: Frank Li <Frank.Li@nxp.com>
-Cc: Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	"open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>,
-	"open list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <imx@lists.linux.dev>,
-	"moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>,
-	open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/1] arm64: dts: imx8qxp-mek: add cm40_i2c, wm8960/wm8962
- and sai[0,1,4,5]
-Message-ID: <20240405063648.GA4562@francesco-nb>
-References: <20240404161914.1655305-1-Frank.Li@nxp.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="h5Qgp4RM"
+Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-56bdf81706aso2424743a12.2
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Apr 2024 23:37:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1712299058; x=1712903858; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=XqDAdsVeoyL+xrVeF88k7hXSD8XUa1tRXZUSMSa9TIs=;
+        b=h5Qgp4RMFmnEwFIu1c2PT5qattyjWk3WWcsUw4vN/nd+rYC+VuQ+f9BY2h6XR+zFpJ
+         F6zkW4N4i7XARwih+9AuUfMwnr9QA1v927uPzKjteuffr9soLcDRsXtiNnbOiWf+22uB
+         za7FH1I0AUoQmDWjRKKe2j4S47jzdD3yihbOstyJqW4I9p04nneUaAyV9mJ8Np7gVgCQ
+         S4hZYbDuaneJYVvHq2DGb6lCp4FSEal0nzsU6kkNTErTeGjVmkYO+50JPe9nn+0oFhkl
+         4KzbkU3YtKnkUK6bW2K4VfV/sPNldphA0wbVHcj1Mf40MWXNsB4LuYzusUREIfxHsl/Y
+         Cojw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712299058; x=1712903858;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=XqDAdsVeoyL+xrVeF88k7hXSD8XUa1tRXZUSMSa9TIs=;
+        b=SqeloDvRF4QJB/6mxzCgnxhC93ZQXvuF9/MfjdUTtplA6bjPRGCmgS9zMBHzZETBIa
+         z9ZS7SaMBFQnYQ+JFaT5asy9gLeDoDHQS0PjeqyNV0+MB7KajemCg2D+q3C9zJPMevbM
+         2ZRr6kMWZHZytzBYcJz4opI32qMVUdCPnl9g98omZkXoUMPBeXAzEB/yvd8wqtNYG93G
+         v3OmAgPFacryiZSLGInV/Qe/G362oAx2lEhDoyM6CIGL0eeV8X3th47HZJ/DS/JYfGvQ
+         4Ulebb/UC0MFGzNtxzmVk0M29BLt5as/Nm8MrwJ5LYpsmtepfhukmsTxW0CBFX27pR8D
+         FLvw==
+X-Gm-Message-State: AOJu0YyxTsRr8J1tFSYd6Ihs2DB00GQd/ZVDViki91cxAGN099agme18
+	AueCXspjnNjKdpVNvMBxGO5ZMYgirEhuBiIxwjhW3XnZ8Yk+K9iyeeWxTxH/KzO/S7MSwSQgemb
+	d
+X-Google-Smtp-Source: AGHT+IGRBLADwlM/3DSugja9cczPOJ/v278LOwFQQ9RMre415HD7loRF8XDyKXmJQQvheswnKKB18w==
+X-Received: by 2002:a50:d599:0:b0:56c:5990:813e with SMTP id v25-20020a50d599000000b0056c5990813emr364888edi.13.1712299058070;
+        Thu, 04 Apr 2024 23:37:38 -0700 (PDT)
+Received: from localhost ([102.222.70.76])
+        by smtp.gmail.com with ESMTPSA id h13-20020a0564020e0d00b0056e34297cbasm72015edh.80.2024.04.04.23.37.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 04 Apr 2024 23:37:37 -0700 (PDT)
+Date: Fri, 5 Apr 2024 09:37:33 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: Philipp Hortmann <philipp.g.hortmann@gmail.com>
+Cc: linux-kernel@vger.kernel.org, linux-staging@lists.linux.dev,
+	forest@forestbond.com, gregkh@linuxfoundation.org
+Subject: Re: [PATCH] MAINTAINERS: vt665?: Replace Forest with Philipp as
+ maintainer
+Message-ID: <cc0b2d25-e9d3-47f0-b22c-24f748ad8ceb@moroto.mountain>
+References: <20240404202450.GA23408@matrix-ESPRIMO-P710>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -53,45 +68,20 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240404161914.1655305-1-Frank.Li@nxp.com>
+In-Reply-To: <20240404202450.GA23408@matrix-ESPRIMO-P710>
 
-Hello Frank,
-
-On Thu, Apr 04, 2024 at 12:19:13PM -0400, Frank Li wrote:
-> imx8qxp-mek use two kind audio codec, wm8960 and wm8962. Using dummy gpio
-> i2c bus mux to connect both i2c devices. One will probe failure and other
-> will probe success when devices driver check whoami. So one dtb can cover
-> both board configuration.
+On Thu, Apr 04, 2024 at 10:24:50PM +0200, Philipp Hortmann wrote:
+> Remove Forest Bond <forest@alittletooquiet.net> as maintainer as this
+> email address is not reachable anymore. Add me as I want to take care
+> of the driver and I do have vt6655 and vt6656 hardware to test.
 > 
-> Signed-off-by: Frank Li <Frank.Li@nxp.com>
-> ---
->  arch/arm64/boot/dts/freescale/imx8qxp-mek.dts | 210 ++++++++++++++++++
->  1 file changed, 210 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/freescale/imx8qxp-mek.dts b/arch/arm64/boot/dts/freescale/imx8qxp-mek.dts
-> index 8360bb851ac03..adff87c7cf305 100644
-> --- a/arch/arm64/boot/dts/freescale/imx8qxp-mek.dts
-> +++ b/arch/arm64/boot/dts/freescale/imx8qxp-mek.dts
-> @@ -44,6 +51,105 @@ usb3_data_ss: endpoint {
+> Link: https://lore.kernel.org/linux-staging/d599cd7b-a5d6-4f2d-8744-10254b75f7e5@moroto.mountain/
+> Signed-off-by: Philipp Hortmann <philipp.g.hortmann@gmail.com>
 
-[...]
+Thanks, Philipp!
 
-> +	/*
-> +	 * This dummy i2c mux. GPIO actually will not impact selection. At actual boards, only 1
-> +	 * device connectted. I2C client driver will check ID when probe. Only matched ID's driver
-> +	 * probe successfully.
-> +	 */
-> +	i2cvmux: i2cmux {
-> +		compatible = "i2c-mux-gpio";
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +		mux-gpios = <&lsio_gpio5 0 GPIO_ACTIVE_HIGH>; /* use an unused gpio */
+Acked-by: Dan Carpenter <dan.carpenter@linaro.org>
 
-There is for sure people that have more experience and competency that
-me and it would be interesting to hear their feedback, but this
-looks like a bad hack, and you are just playing with the driver
-behavior to ensure that you get what you need.
-
-Francesco
-
+regards,
+dan carpenter
 
