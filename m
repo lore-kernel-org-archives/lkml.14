@@ -1,84 +1,264 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f174.google.com (mail-yb1-f174.google.com [209.85.219.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B70C16D4FD;
-	Fri,  5 Apr 2024 14:13:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAEC716EBE4
+	for <linux-kernel@vger.kernel.org>; Fri,  5 Apr 2024 14:14:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712326384; cv=none; b=sZhKFdyt+m6wZN65FqF6iGFU/0vNMHIxS1XmuYjXYMnUL0QdCm4lypAYRYbQiI+n2ibRci8gcskcr/1ZuujJEDCnCrP0kCbn+QvPukgh4YLwsZElczqCo445SCWp4Dpf+fhTV6cCxi+kMw/bC78GoXeOLuvCxBpCBHvxb2/IJgs=
+	t=1712326467; cv=none; b=ZySOce6WXOPwINhdiSz7ZBYpjg7B2UVJOzEKeAfrdE41Lu7RrJ12N2ohQg7heZvkbMpjcKDcGmT206yhRmM99ri81WUvBlSH2PD90ITYNYpG7Tp8MECGMMZa4XgMy7Oiq54CTt4oRnNQbavuxR8mWMCAxAIdzTV7ahiy8OgMfXw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712326384; c=relaxed/simple;
-	bh=HPIt9psmFPVnp7r7+Zh3KzoyVHWbAy48PqCYi0Pu4IM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Od8TLpxEa/dbdD7uqSJTVlfwOCjwkiv4Fje+HpFTXXKvVZsAH9+gjIKWghlPfmkGjpgqzrX92Z7+j2vgCG2XRw978MRfJpQjl8eBlq0jzkhNwEdxcg1VL2n4o8bJtcBOkMVYXmV9QwDdyir9wKd8rwAubAtKDRGazNjQdBNUze0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=qmTEIYh+; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+	s=arc-20240116; t=1712326467; c=relaxed/simple;
+	bh=/3Ff0ruSdSe2swlOVf02/BjidRrZyf0D/8DkjYb/ays=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=jQlh3reEGZJt9UYmRfsRprO3HaZ9aS2bkaAU4AWNQ+v4s+dngT/A5M1xFLS0bWpfeIxoR+D+isugS1WM7YQLPl2iuIpAbWW7PP/5X4TYKQt70fsO+903eCe/zeQNmi5z577RfdywhyJJpiwNhtjLoUbJZqdF/SrUCXbGVwRo5jM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=m9cIbNdh; arc=none smtp.client-ip=209.85.219.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="qmTEIYh+"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=9qdf+0eilDJvsPS3nOJaMxfRkKXZWsVah0onHb0dxbo=; b=qmTEIYh+8dnT3oGS9xU3I5O5Je
-	M/1zRWZkNUIc0RE8GUgi4kaoY0yQcdvSyRBavgk1+7QJqTeKWj6INlAc7vgcG72DqRoLthwt/m4iJ
-	qQfTTy45ANvYBxa8LrVD4VRqsMTY7/PNyBEOCfeiODYjhmgNoyhosuwe7gONuIvN0cy4=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1rskJG-00CJEz-FA; Fri, 05 Apr 2024 16:12:50 +0200
-Date: Fri, 5 Apr 2024 16:12:50 +0200
-From: Andrew Lunn <andrew@lunn.ch>
-To: Alexander Lobakin <aleksander.lobakin@intel.com>
-Cc: "David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	David Ahern <dsahern@kernel.org>,
-	Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
-	nex.sw.ncis.osdt.itp.upstreaming@intel.com, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH RFC net-next 1/7] netdev_features: remove unused
- __UNUSED_NETIF_F_1
-Message-ID: <f6d9db1c-bde2-4704-a3cf-69e84a5a6fd3@lunn.ch>
-References: <20240405133731.1010128-1-aleksander.lobakin@intel.com>
- <20240405133731.1010128-2-aleksander.lobakin@intel.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="m9cIbNdh"
+Received: by mail-yb1-f174.google.com with SMTP id 3f1490d57ef6-dd045349d42so2184787276.2
+        for <linux-kernel@vger.kernel.org>; Fri, 05 Apr 2024 07:14:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1712326465; x=1712931265; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=hpu1q6SRpmnX63rYNMcOKU3gYj7mEiDBoir+Gp671n0=;
+        b=m9cIbNdhfbiUpGNUSPqcDbHILtBQP+M5o/MovmM8BAVPq9GI/VOtL/o3RGDDPc8dtv
+         Lj81qvHQsKZqY2+lN7WkFGWkSyV1KHRIYN0Af6zlIZJl5XRpqkbryrDRsBOET3UMX6az
+         go+D87uWk04bZWqJzuyHK5zINSei7kY+4REtcOi/q/YzPP/V+a1r9VaeKF5EAXWfS+L2
+         MOLSgmbAWbB5C7VTz4yQ6KTmTl0ljAAzc7QK0Q7eZSo0LJ6fiaKQoXiaxrCi24I6oFUg
+         y1CHV5cBBnsEDB0fgKjyS7P8HWj5ZzqOia5QJzgQ6v64sFz82e44gtzY3AUCHJuTwmzF
+         v5VA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712326465; x=1712931265;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=hpu1q6SRpmnX63rYNMcOKU3gYj7mEiDBoir+Gp671n0=;
+        b=lXVBjGd27PMey9+Q7/UOKQsrjPtW9wTyI9Ppno+XaJBcI2bjDtteWdQ07jJnNBsl8b
+         7gJ/pTvK1yP4WY312y2GwcI63sAsNaHenbkRC0dPgfQvJdvXigPvu7ZFAkQ4hG5q0zjV
+         okambuiEQ5ZrF61pBEQTUTzwDAnDda2br70zIbCKKFddQZ80ItS3y7jwzKRqmKFgsrgZ
+         bjesjaPHgnZJB++8Q379pcTZbHUv47jltJAsf3GUlm/PX5qqR5M/eIRhQCvoToonAyUj
+         JBtRynwjshCpDHeQYeHoBtpQPNeFffeBQNQw7BNM948DX1wvPRp8l4Jf9POKbfiWW9Af
+         9b8w==
+X-Forwarded-Encrypted: i=1; AJvYcCX4/2RJTcq00jpZOK9i1u5xFfV5A5A4/yway7zmcYMognjye+b0MAZcFBc0VEa7R2GQOubFvrCQBKebtocglN6jajuwt8a3A+PUtsd2
+X-Gm-Message-State: AOJu0YwGeCwlk89XqJRon/YvExuMYA3Qe+evRmi4yNSqVzMnWbfUiVDd
+	0hxsEXeFmiDlSvqlOLN4nWpCYm0eIp+S3FzBT2ylcOplhOHGC5/LSHKiZQ8NP+6dxFnFUQPRqWU
+	STDzA0QolDWhrUX8JqXn5TrGKpPKGjHtEK+Xq
+X-Google-Smtp-Source: AGHT+IHDoL8CyE4JI6s6nrfOOaPQHBhIqvTMcGBGoOIQ6VIDYTEmV/Kyll+3WtknG2SvBV6fBNw77eOzOIYfr57jOZQ=
+X-Received: by 2002:a05:6902:4a:b0:dc7:32ea:c89f with SMTP id
+ m10-20020a056902004a00b00dc732eac89fmr1241871ybh.15.1712326464281; Fri, 05
+ Apr 2024 07:14:24 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240405133731.1010128-2-aleksander.lobakin@intel.com>
+References: <20240321163705.3067592-1-surenb@google.com> <c14cd89b-c879-4474-a800-d60fc29c1820@gmail.com>
+In-Reply-To: <c14cd89b-c879-4474-a800-d60fc29c1820@gmail.com>
+From: Suren Baghdasaryan <surenb@google.com>
+Date: Fri, 5 Apr 2024 07:14:13 -0700
+Message-ID: <CAJuCfpHEt2n6sA7m5zvc-F+z=3-twVEKfVGCa0+y62bT10b0Bw@mail.gmail.com>
+Subject: Re: [PATCH v6 00/37] Memory allocation profiling
+To: Klara Modin <klarasmodin@gmail.com>
+Cc: akpm@linux-foundation.org, kent.overstreet@linux.dev, mhocko@suse.com, 
+	vbabka@suse.cz, hannes@cmpxchg.org, roman.gushchin@linux.dev, mgorman@suse.de, 
+	dave@stgolabs.net, willy@infradead.org, liam.howlett@oracle.com, 
+	penguin-kernel@i-love.sakura.ne.jp, corbet@lwn.net, void@manifault.com, 
+	peterz@infradead.org, juri.lelli@redhat.com, catalin.marinas@arm.com, 
+	will@kernel.org, arnd@arndb.de, tglx@linutronix.de, mingo@redhat.com, 
+	dave.hansen@linux.intel.com, x86@kernel.org, peterx@redhat.com, 
+	david@redhat.com, axboe@kernel.dk, mcgrof@kernel.org, masahiroy@kernel.org, 
+	nathan@kernel.org, dennis@kernel.org, jhubbard@nvidia.com, tj@kernel.org, 
+	muchun.song@linux.dev, rppt@kernel.org, paulmck@kernel.org, 
+	pasha.tatashin@soleen.com, yosryahmed@google.com, yuzhao@google.com, 
+	dhowells@redhat.com, hughd@google.com, andreyknvl@gmail.com, 
+	keescook@chromium.org, ndesaulniers@google.com, vvvvvv@google.com, 
+	gregkh@linuxfoundation.org, ebiggers@google.com, ytcoode@gmail.com, 
+	vincent.guittot@linaro.org, dietmar.eggemann@arm.com, rostedt@goodmis.org, 
+	bsegall@google.com, bristot@redhat.com, vschneid@redhat.com, cl@linux.com, 
+	penberg@kernel.org, iamjoonsoo.kim@lge.com, 42.hyeyoo@gmail.com, 
+	glider@google.com, elver@google.com, dvyukov@google.com, 
+	songmuchun@bytedance.com, jbaron@akamai.com, aliceryhl@google.com, 
+	rientjes@google.com, minchan@google.com, kaleshsingh@google.com, 
+	kernel-team@android.com, linux-doc@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, iommu@lists.linux.dev, 
+	linux-arch@vger.kernel.org, linux-fsdevel@vger.kernel.org, linux-mm@kvack.org, 
+	linux-modules@vger.kernel.org, kasan-dev@googlegroups.com, 
+	cgroups@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Apr 05, 2024 at 03:37:25PM +0200, Alexander Lobakin wrote:
-> NETIF_F_NO_CSUM was removed in 3.2-rc2 by commit 34324dc2bf27
-> ("net: remove NETIF_F_NO_CSUM feature bit") and became
-> __UNUSED_NETIF_F_1. It's not used anywhere in the code.
-> Remove this bit waste.
-> 
-> Signed-off-by: Alexander Lobakin <aleksander.lobakin@intel.com>
-> ---
->  include/linux/netdev_features.h | 1 -
->  1 file changed, 1 deletion(-)
-> 
-> diff --git a/include/linux/netdev_features.h b/include/linux/netdev_features.h
-> index 7c2d77d75a88..44c428d62db4 100644
-> --- a/include/linux/netdev_features.h
-> +++ b/include/linux/netdev_features.h
-> @@ -14,7 +14,6 @@ typedef u64 netdev_features_t;
->  enum {
->  	NETIF_F_SG_BIT,			/* Scatter/gather IO. */
->  	NETIF_F_IP_CSUM_BIT,		/* Can checksum TCP/UDP over IPv4. */
-> -	__UNUSED_NETIF_F_1,
->  	NETIF_F_HW_CSUM_BIT,		/* Can checksum all the packets. */
->  	NETIF_F_IPV6_CSUM_BIT,		/* Can checksum TCP/UDP over IPV6 */
->  	NETIF_F_HIGHDMA_BIT,		/* Can DMA to high memory. */
+On Fri, Apr 5, 2024 at 6:37=E2=80=AFAM Klara Modin <klarasmodin@gmail.com> =
+wrote:
+>
+> Hi,
+>
+> On 2024-03-21 17:36, Suren Baghdasaryan wrote:
+> > Overview:
+> > Low overhead [1] per-callsite memory allocation profiling. Not just for
+> > debug kernels, overhead low enough to be deployed in production.
+> >
+> > Example output:
+> >    root@moria-kvm:~# sort -rn /proc/allocinfo
+> >     127664128    31168 mm/page_ext.c:270 func:alloc_page_ext
+> >      56373248     4737 mm/slub.c:2259 func:alloc_slab_page
+> >      14880768     3633 mm/readahead.c:247 func:page_cache_ra_unbounded
+> >      14417920     3520 mm/mm_init.c:2530 func:alloc_large_system_hash
+> >      13377536      234 block/blk-mq.c:3421 func:blk_mq_alloc_rqs
+> >      11718656     2861 mm/filemap.c:1919 func:__filemap_get_folio
+> >       9192960     2800 kernel/fork.c:307 func:alloc_thread_stack_node
+> >       4206592        4 net/netfilter/nf_conntrack_core.c:2567 func:nf_c=
+t_alloc_hashtable
+> >       4136960     1010 drivers/staging/ctagmod/ctagmod.c:20 [ctagmod] f=
+unc:ctagmod_start
+> >       3940352      962 mm/memory.c:4214 func:alloc_anon_folio
+> >       2894464    22613 fs/kernfs/dir.c:615 func:__kernfs_new_node
+> >       ...
+> >
+> > Since v5 [2]:
+> > - Added Reviewed-by and Acked-by, per Vlastimil Babka and Miguel Ojeda
+> > - Changed pgalloc_tag_{add|sub} to use number of pages instead of order=
+, per Matthew Wilcox
+> > - Changed pgalloc_tag_sub_bytes to pgalloc_tag_sub_pages and adjusted t=
+he usage, per Matthew Wilcox
+> > - Moved static key check before prepare_slab_obj_exts_hook(), per Vlast=
+imil Babka
+> > - Fixed RUST helper, per Miguel Ojeda
+> > - Fixed documentation, per Randy Dunlap
+> > - Rebased over mm-unstable
+> >
+> > Usage:
+> > kconfig options:
+> >   - CONFIG_MEM_ALLOC_PROFILING
+> >   - CONFIG_MEM_ALLOC_PROFILING_ENABLED_BY_DEFAULT
+> >   - CONFIG_MEM_ALLOC_PROFILING_DEBUG
+> >     adds warnings for allocations that weren't accounted because of a
+> >     missing annotation
+> >
+> > sysctl:
+> >    /proc/sys/vm/mem_profiling
+> >
+> > Runtime info:
+> >    /proc/allocinfo
+> >
+> > Notes:
+> >
+> > [1]: Overhead
+> > To measure the overhead we are comparing the following configurations:
+> > (1) Baseline with CONFIG_MEMCG_KMEM=3Dn
+> > (2) Disabled by default (CONFIG_MEM_ALLOC_PROFILING=3Dy &&
+> >      CONFIG_MEM_ALLOC_PROFILING_BY_DEFAULT=3Dn)
+> > (3) Enabled by default (CONFIG_MEM_ALLOC_PROFILING=3Dy &&
+> >      CONFIG_MEM_ALLOC_PROFILING_BY_DEFAULT=3Dy)
+> > (4) Enabled at runtime (CONFIG_MEM_ALLOC_PROFILING=3Dy &&
+> >      CONFIG_MEM_ALLOC_PROFILING_BY_DEFAULT=3Dn && /proc/sys/vm/mem_prof=
+iling=3D1)
+> > (5) Baseline with CONFIG_MEMCG_KMEM=3Dy && allocating with __GFP_ACCOUN=
+T
+> > (6) Disabled by default (CONFIG_MEM_ALLOC_PROFILING=3Dy &&
+> >      CONFIG_MEM_ALLOC_PROFILING_BY_DEFAULT=3Dn)  && CONFIG_MEMCG_KMEM=
+=3Dy
+> > (7) Enabled by default (CONFIG_MEM_ALLOC_PROFILING=3Dy &&
+> >      CONFIG_MEM_ALLOC_PROFILING_BY_DEFAULT=3Dy) && CONFIG_MEMCG_KMEM=3D=
+y
+> >
+> > Performance overhead:
+> > To evaluate performance we implemented an in-kernel test executing
+> > multiple get_free_page/free_page and kmalloc/kfree calls with allocatio=
+n
+> > sizes growing from 8 to 240 bytes with CPU frequency set to max and CPU
+> > affinity set to a specific CPU to minimize the noise. Below are results
+> > from running the test on Ubuntu 22.04.2 LTS with 6.8.0-rc1 kernel on
+> > 56 core Intel Xeon:
+> >
+> >                          kmalloc                 pgalloc
+> > (1 baseline)            6.764s                  16.902s
+> > (2 default disabled)    6.793s  (+0.43%)        17.007s (+0.62%)
+> > (3 default enabled)     7.197s  (+6.40%)        23.666s (+40.02%)
+> > (4 runtime enabled)     7.405s  (+9.48%)        23.901s (+41.41%)
+> > (5 memcg)               13.388s (+97.94%)       48.460s (+186.71%)
+> > (6 def disabled+memcg)  13.332s (+97.10%)       48.105s (+184.61%)
+> > (7 def enabled+memcg)   13.446s (+98.78%)       54.963s (+225.18%)
+> >
+> > Memory overhead:
+> > Kernel size:
+> >
+> >     text           data        bss         dec         diff
+> > (1) 26515311        18890222    17018880    62424413
+> > (2) 26524728        19423818    16740352    62688898    264485
+> > (3) 26524724        19423818    16740352    62688894    264481
+> > (4) 26524728        19423818    16740352    62688898    264485
+> > (5) 26541782        18964374    16957440    62463596    39183
+> >
+> > Memory consumption on a 56 core Intel CPU with 125GB of memory:
+> > Code tags:           192 kB
+> > PageExts:         262144 kB (256MB)
+> > SlabExts:           9876 kB (9.6MB)
+> > PcpuExts:            512 kB (0.5MB)
+> >
+> > Total overhead is 0.2% of total memory.
+> >
+> > Benchmarks:
+> >
+> > Hackbench tests run 100 times:
+> > hackbench -s 512 -l 200 -g 15 -f 25 -P
+> >        baseline       disabled profiling           enabled profiling
+> > avg   0.3543         0.3559 (+0.0016)             0.3566 (+0.0023)
+> > stdev 0.0137         0.0188                       0.0077
+> >
+> >
+> > hackbench -l 10000
+> >        baseline       disabled profiling           enabled profiling
+> > avg   6.4218         6.4306 (+0.0088)             6.5077 (+0.0859)
+> > stdev 0.0933         0.0286                       0.0489
+> >
+> > stress-ng tests:
+> > stress-ng --class memory --seq 4 -t 60
+> > stress-ng --class cpu --seq 4 -t 60
+> > Results posted at: https://evilpiepirate.org/~kent/memalloc_prof_v4_str=
+ess-ng/
+> >
+> > [2] https://lore.kernel.org/all/20240306182440.2003814-1-surenb@google.=
+com/
+>
+> If I enable this, I consistently get percpu allocation failures. I can
+> occasionally reproduce it in qemu. I've attached the logs and my config,
+> please let me know if there's anything else that could be relevant.
 
-Are you sure this enum is not ABI?
+Thanks for the report!
+In debug_alloc_profiling.log I see:
 
-It would be good to add an explanation why it is not ABI to the cover
-letter.
+[    7.445127] percpu: limit reached, disable warning
 
-	Andrew
+That's probably the reason. I'll take a closer look at the cause of
+that and how we can fix it.
+
+ In qemu-alloc3.log I see couple of warnings:
+
+[    1.111620] alloc_tag was not set
+[    1.111880] WARNING: CPU: 0 PID: 164 at
+include/linux/alloc_tag.h:118 kfree (./include/linux/alloc_tag.h:118
+(discriminator 1) ./include/linux/alloc_tag.h:161 (discriminator 1)
+mm/slub.c:2043 ...
+
+[    1.161710] alloc_tag was not cleared (got tag for fs/squashfs/cache.c:4=
+13)
+[    1.162289] WARNING: CPU: 0 PID: 195 at
+include/linux/alloc_tag.h:109 kmalloc_trace_noprof
+(./include/linux/alloc_tag.h:109 (discriminator 1)
+./include/linux/alloc_tag.h:149 (discriminator 1) ...
+
+Which means we missed to instrument some allocation. Can you please
+check if disabling CONFIG_MEM_ALLOC_PROFILING_DEBUG fixes QEMU case?
+In the meantime I'll try to reproduce and fix this.
+Thanks,
+Suren.
+
+
+
+>
+> Kind regards,
+> Klara Modin
