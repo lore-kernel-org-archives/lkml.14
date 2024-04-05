@@ -1,115 +1,66 @@
-Received: from mail-qt1-f169.google.com (mail-qt1-f169.google.com [209.85.160.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3732B1E87C
-	for <linux-kernel@vger.kernel.org>; Fri,  5 Apr 2024 22:10:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08DB2171072
+	for <linux-kernel@vger.kernel.org>; Fri,  5 Apr 2024 22:20:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712355021; cv=none; b=GzHQWq1mC0xZGlFtQRdI6uI+PMWU8HIH87Pv62V5LWwlbtIWyx1WLPvThqKl0Nd5qwJztluu58/A7U+3opcC/aZ8UXfB0gIvWwc4DQViLFaYoCAd0bZuql3fCS0+XkH1lq++Y/FAYyn7SCfiptmWyjp3ttaMMdtKbCuC8DPwR+I=
+	t=1712355637; cv=none; b=swTFs2mT1d63B0AfLQUJCeFtioVCuZtXALoLnKGUS3i+USKhK6HuqEu7oILysgMAeyC7faZi6BrILgV9EGEOcVfTJBrZTWS31GMSEC2NOb+wZigJ124SDRUHBeorkVmjqmpi39C70ysdM2BhH1H3+E32FZcUz6WN6FNw5IX3zlE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712355021; c=relaxed/simple;
-	bh=vuTLdDyuJIsA0mUvXwtAZorouX5Y3SqaNdRMyruQWPQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=oQPxpYKGHioLnQ/FvISm9JAK7gLE7ltkvQxM8iV5wkjMzpkfdANtC4lZmrBcjWY7agQJiJNrlo4w+zP1/7LqJB/kaJmOAjMRBe53ZiUK9PnaVAKPuj1xUA7y+sdoN8AqhQ4uaio4xqDG9lxxYlTI4G6Aat7sPh82pbGC89BUtQo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=R4wCSADs; arc=none smtp.client-ip=209.85.160.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1712355637; c=relaxed/simple;
+	bh=uTY5jVjpH0FTqCBHDUNVadQhyUCYEKH4MhY3pgtsHE4=;
+	h=From:To:Cc:Subject:Date:Message-Id; b=amGJa4L9aftlOdxrpMRY7PnzKVl1Yn49ENIiScfTO+XRHL+hYljNsaAAD3hlRZVM+xKPSx9SQ1eHWTM3pBjjvtCY6IRRjZKoScsZRunryikQyX77R3eQl6//QTpvxZ+JmylQmZ8b3ze1mtV/Ccf/f3bnYiesVJyYydVvSdMIoiQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EuLf/LZC; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="R4wCSADs"
-Received: by mail-qt1-f169.google.com with SMTP id d75a77b69052e-432d55b0fa9so53841cf.1
-        for <linux-kernel@vger.kernel.org>; Fri, 05 Apr 2024 15:10:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1712355019; x=1712959819; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=vuTLdDyuJIsA0mUvXwtAZorouX5Y3SqaNdRMyruQWPQ=;
-        b=R4wCSADsTUH/75F3rR+yuv3vIWHR4K276BKUfawkWXOHqIwQshSGwinrBSYoqjbFyL
-         0sC/rQ6LRLlil6aD9VsquExp2uQ3I/q2znKHFnEzDXgqT492z8/lqR/+krd2y2wTaTVs
-         nyMsrAxwZK6M7WswlB8u/80VWeTtVLs/ZJVa+MaR5IdmXAoaHWN5ZobLSDzr/hRdSCRa
-         hVK80k6N/m7Jc+dut3NNdE2mZglpERy5BZzhCEP6IFJ8OHrTfQboANkDuyFxA0M/UugP
-         l3MEm8CNK7XRYKJzsvHvM7mGI3Cy3QY1c7uNNT98Jpakje42UIorhjUIUJkNXuT5w4cT
-         jXdw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712355019; x=1712959819;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=vuTLdDyuJIsA0mUvXwtAZorouX5Y3SqaNdRMyruQWPQ=;
-        b=ODCR/Gk/CL7tC7LFNF7RuFT8FE2+pkbDLG/Vvw0+wVF4TH93X//sulUU6SxgWYJVG3
-         h1vo6zOjU2T1pSsmZbSUHqB9QMhCgOO24dZ38pwXfEBe9SMvqZ5znPazGelBgK/RQX0f
-         HYXBmZvuJbKkfVWeN3Sv+vOp7W3rIcev6PMsau8isVvTJD1etS6nCF4DE1vnTkBZmtQS
-         +zeemLREk8zOyamebdUBn1CyjG8HyZzNuGMhDkjhQab5tvX35gv72Bpj8qg8GHiLIyfa
-         F6oOuvtjm4wjW0kC6SrueUx8LQzszEai3sggkA6erOB3kRuIRxJWrPy2Qu6ALTQdhy/Q
-         xV4g==
-X-Forwarded-Encrypted: i=1; AJvYcCVmQm7Is3ByNO+SanT7cBNCrcgH8iZFWopzk1qGvWDeWKYuBuCPkGnJf1/TtubykDLHhDApf+32dhAVGH3M2xH4aO0TyIaiUg6t77N6
-X-Gm-Message-State: AOJu0YxXZ8+xrFwVIzYpri5+N5mtoTDPqFg0QzfxC6ib9VTRP0ownAt3
-	dCLEbJ/cmdepuAUVJO2TvCPnVCv5WyuHJwvz2x5vhW73bitWitN1aFoD9WobpmXScj8tco8BB+T
-	6pY4Z8EEk7pEs+quHeYAqwG9CvKz2ljraeefk
-X-Google-Smtp-Source: AGHT+IHrI0hnnlCotusGdYlD9m/OSL+LlZsYDysYD26ZYUGUpFJllz9nT4pbGMp0W92aAEELhj5fi2ttx67qMchAWA0=
-X-Received: by 2002:a05:622a:1dcc:b0:432:fea5:e3b4 with SMTP id
- bn12-20020a05622a1dcc00b00432fea5e3b4mr29765qtb.3.1712355019018; Fri, 05 Apr
- 2024 15:10:19 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EuLf/LZC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 306A2C433C7;
+	Fri,  5 Apr 2024 22:20:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1712355635;
+	bh=uTY5jVjpH0FTqCBHDUNVadQhyUCYEKH4MhY3pgtsHE4=;
+	h=From:To:Cc:Subject:Date:From;
+	b=EuLf/LZCNa6DplLX2Ma3a/UWKJxHs7SZD6lsF1wcFalsEZ3w/v63HkQAhRu5tB2ju
+	 1h7Kbz+8ZhhXskqcHtYjIEOoMJA3IQrhvjO2mkxNnrijdRgrgifbLNBuF8+WqFIf3i
+	 e+4oxokFpFFkpzFELmaNaP4Y3ZC71IRCKccsLGiHOCa387XfCnolX4H9SWCILPEUlV
+	 ekGmlOPAz4uq2/DsTzO+0lYCat66QJ+1jSbxV5MeX7lzf0QdjLmozpulf/YryRJBNX
+	 bTsW2+fVbH3ejAzXPxWhpvH6gASFgEgm2IJAq0a6RlwctKPMjm/hb/wgU99zlnNm5P
+	 Mq2jC0GaXkdXw==
+From: Mark Brown <broonie@kernel.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>
+Subject: [GIT PULL] regmap fixes for v6.9-rc2
+Date: Fri, 05 Apr 2024 23:20:26 +0100
+Message-Id: <20240405222035.306A2C433C7@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20240325172707.73966-1-peternewman@google.com>
- <20240325172707.73966-4-peternewman@google.com> <4a6b1645-c72c-41dd-a455-bdf0ec57d4c5@intel.com>
-In-Reply-To: <4a6b1645-c72c-41dd-a455-bdf0ec57d4c5@intel.com>
-From: Peter Newman <peternewman@google.com>
-Date: Fri, 5 Apr 2024 15:10:07 -0700
-Message-ID: <CALPaoCiH0CZgEL8UQZeTrRtV_b-Oc6JyvaG4+txuZzsHCv976Q@mail.gmail.com>
-Subject: Re: [PATCH v1 3/6] x86/resctrl: Disallow mongroup rename on MPAM
-To: Reinette Chatre <reinette.chatre@intel.com>
-Cc: Fenghua Yu <fenghua.yu@intel.com>, James Morse <james.morse@arm.com>, 
-	Stephane Eranian <eranian@google.com>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, 
-	Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
-	"H. Peter Anvin" <hpa@zytor.com>, Peter Zijlstra <peterz@infradead.org>, Juri Lelli <juri.lelli@redhat.com>, 
-	Vincent Guittot <vincent.guittot@linaro.org>, Dietmar Eggemann <dietmar.eggemann@arm.com>, 
-	Steven Rostedt <rostedt@goodmis.org>, Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>, 
-	Daniel Bristot de Oliveira <bristot@redhat.com>, Valentin Schneider <vschneid@redhat.com>, 
-	Uros Bizjak <ubizjak@gmail.com>, Mike Rapoport <rppt@kernel.org>, 
-	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>, 
-	Rick Edgecombe <rick.p.edgecombe@intel.com>, Xin Li <xin3.li@intel.com>, 
-	Babu Moger <babu.moger@amd.com>, Shaopeng Tan <tan.shaopeng@fujitsu.com>, 
-	Maciej Wieczor-Retman <maciej.wieczor-retman@intel.com>, Jens Axboe <axboe@kernel.dk>, 
-	Christian Brauner <brauner@kernel.org>, Oleg Nesterov <oleg@redhat.com>, 
-	Andrew Morton <akpm@linux-foundation.org>, Tycho Andersen <tandersen@netflix.com>, 
-	Nicholas Piggin <npiggin@gmail.com>, Beau Belgrave <beaub@linux.microsoft.com>, 
-	"Matthew Wilcox (Oracle)" <willy@infradead.org>, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-Hi Reinette,
+The following changes since commit 4cece764965020c22cff7665b18a012006359095:
 
-On Thu, Apr 4, 2024 at 4:11=E2=80=AFPM Reinette Chatre
-<reinette.chatre@intel.com> wrote:
->
-> Hi Peter,
->
-> On 3/25/2024 10:27 AM, Peter Newman wrote:
-> > Moving a monitoring group to a different parent control assumes that th=
-e
-> > monitors will not be impacted. This is not the case on MPAM where the
-> > PMG is an extension of the PARTID.
-> >
-> > Detect this situation by requiring the change in CLOSID not to affect
-> > the result of resctrl_arch_rmid_idx_encode(), otherwise return
-> > -EOPNOTSUPP.
-> >
->
-> Thanks for catching this. This seems out of place in this series. It soun=
-ds
-> more like an independent fix that should go in separately.
+  Linux 6.9-rc1 (2024-03-24 14:10:05 -0700)
 
-I asserted in a comment in a patch later in the series that the
-mongroup parent pointer never changes on MPAM, then decided to follow
-up on whether it was actually true, so it's only here because this
-series depends on it. I'll post it again separately with the fix you
-requested below.
+are available in the Git repository at:
 
-Thanks!
--Peter
+  https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regmap.git tags/regmap-fix-v6.9-rc2
+
+for you to fetch changes up to eaa03486d932572dfd1c5f64f9dfebe572ad88c0:
+
+  regmap: maple: Fix uninitialized symbol 'ret' warnings (2024-03-29 16:32:26 +0000)
+
+----------------------------------------------------------------
+regmap: Fixes for v6.9
+
+Richard found a nasty corner case in the maple tree code which he fixed,
+and also fixed a compiler warning which was showing up with the
+toolchain he uses and helpfully identified a possible incorrect error
+code which could have runtime impacts.
+
+----------------------------------------------------------------
+Richard Fitzgerald (2):
+      regmap: maple: Fix cache corruption in regcache_maple_drop()
+      regmap: maple: Fix uninitialized symbol 'ret' warnings
+
+ drivers/base/regmap/regcache-maple.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
