@@ -1,101 +1,87 @@
-Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com [209.85.167.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-177.mta0.migadu.com (out-177.mta0.migadu.com [91.218.175.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE11F172796;
-	Fri,  5 Apr 2024 19:06:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14F97172BB0
+	for <linux-kernel@vger.kernel.org>; Fri,  5 Apr 2024 19:06:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712343964; cv=none; b=LqW8l36g2kFcC3T20g9GGKG6ytPjdVp0nqnK5RV6i53s4Box6cFF9Hnm7FxVHKXWf4mKfk5dVZ+p3fR2BDU1c46XZVNdfcHgbC22OqkPmOCBXv6OwVeFMNTojTpTJcQp9f23wgA5IOgf6zLAAQNlFu8Am4CeNfnyOfLwiGLEhBs=
+	t=1712344013; cv=none; b=e8EMQjEI5FRojvp1q20Ud4qfZR9HGt69cfM5gLAuxAPSlQjb4hLcppFGM5JGM53nnWYrKMclIk0wCdc0y4gzcd9Hmhmd8gOz0k6Y5y+kyGs2+iBCjFAooFAGUxj+dKoDKSVxZs43gcoA3WO8a2H3qfSn94x9XNNlC/EQVdQlam8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712343964; c=relaxed/simple;
-	bh=zFci7/zQH9wpVuV3O3qwf1utK2Fw0+XCVQcYfefS1Ss=;
-	h=From:To:Cc:Subject:References:Date:In-Reply-To:Message-ID:
-	 MIME-Version:Content-Type; b=l5sp1XD+ELoKQlwxm72pLFRubjAoYhOlo7V5TAGjNSRaIBn4QYj02Yrm5UPuOZltU9ED4t5cGqAGS/mbQCziEH9OAOcGHDKS/BAVg6yn7Vx4xOwNIHfbFImGZiRswsY2ghZD5AqMI0BvrTHrqomD//5IW8h1GuXgQcGLxY56DNo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=V6f1lJI4; arc=none smtp.client-ip=209.85.167.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1712344013; c=relaxed/simple;
+	bh=cFa86Z8RRLF4vPDeov8Dfg04JBAwVybrO/2egSFq9GU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=LRpRqymJj2et6kTz+YDJvCOwtdGlwVdovwLgOfmrawJ/2T4iWqZp3KXgHUHplMV71PMiza8XggQvOm61FpOnJ54bpDLNeaNzjBo0E4SBwFucoTp5v4yejU1/9ldcRZ1+BibGteHi7UdlPuidE3kk5JlJxh86vp3ziKA1HzHZpVQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=HZ97vexP; arc=none smtp.client-ip=91.218.175.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="V6f1lJI4"
-Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-516d536f6f2so1118186e87.2;
-        Fri, 05 Apr 2024 12:06:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1712343961; x=1712948761; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:user-agent:message-id
-         :in-reply-to:date:references:subject:cc:to:from:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=zFci7/zQH9wpVuV3O3qwf1utK2Fw0+XCVQcYfefS1Ss=;
-        b=V6f1lJI4hAWT2U23HDsn7arNZC+g2ZOUXE8+fTs/Ag7RU4KNCWRZgP/ZPklSgx+U5M
-         8nV32R8D2xJrxdC6VW4iruWDKm8lRogAbNfp2s0ziEcoPqc3o6cIKiEoMHCFkQbowkU1
-         truQJcyn0Da4En0NqSbQjFyvQYoyQqhNRC/meSB5tWDrLp8Bloe7ncwp07u6mQ38Mx8D
-         P7WvDzdKRUGn1aaU4LBsef3Ddp16fXSZfm6l22+dxjwpIHMPMQXDwqd0ezJPgWpfKfP/
-         wL5A35Qx4zceQKs3/L2v8aZaAxhNBRXOHFQPa9VT3jABuMxR7tB6QWpDsQuIKD2ETw47
-         I2qQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712343961; x=1712948761;
-        h=content-transfer-encoding:mime-version:user-agent:message-id
-         :in-reply-to:date:references:subject:cc:to:from:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=zFci7/zQH9wpVuV3O3qwf1utK2Fw0+XCVQcYfefS1Ss=;
-        b=T12aQn8SjiCaMX9DFGCFA3H4xGVS3Ky8N5amQ/ehdQ0Y4pGyNwzaxXVko38qUu2A7F
-         8hRw5gXf4y+tgjwL7uvh78jBgYWEwSbObibYw2WK42g4PrKQxr8YBc7ojwkd5O+KAeXb
-         2XHwvgvFm8qXnj5Vnik3E1dd6IMmvT/em/An1YAkXV9Fao1gQ+jV8yKICJ5FJlBbDgjI
-         zaCm5gjEVJ3arNz7SiCxzg5NoM8hrnwwCJF8KWoJEnIhipcQpriKcvWgLS+QApAfqn7d
-         6FNwnaw4l3tszh3aLs5icnAUHz4Ht/CE6xexAAT+TRwyLrLMCHtkYZSUzeKPeurQxOF+
-         qIdw==
-X-Forwarded-Encrypted: i=1; AJvYcCVe2YMXX6Fs8VsX+99dX9kfjYN1V5es9uWrSjWqEAkGZ18wshvq738jpzsHvax+QcIswmGV55TgU24LNe4071GDH/6Q4zp3gNUBg3HFh3PBxurlLQOgwtqAFb9JWTy+Pw4rATUvuIwMxQCL
-X-Gm-Message-State: AOJu0Yxe7EqC9qEW8dJdg3NY2GtUgUt9YhRxJ/EhCHqpjNYIaRcY5a3o
-	NMWczRMWtjzsL+eg6fkSOXJF2W6NDRtkESCh7DWhGZRgRvwyx1f6
-X-Google-Smtp-Source: AGHT+IF8d6Tm00RPEfua/VpB/UdPM5cBubuR1FNzA5BoxG+5BDk3l4sBzRGKEiGeYtOcwDOUKS8BQQ==
-X-Received: by 2002:a05:6512:ac5:b0:515:d3dc:43e with SMTP id n5-20020a0565120ac500b00515d3dc043emr2267678lfu.51.1712343960384;
-        Fri, 05 Apr 2024 12:06:00 -0700 (PDT)
-Received: from osv.localdomain ([89.175.180.246])
-        by smtp.gmail.com with ESMTPSA id d24-20020a193858000000b00513e466cb0asm268120lfj.5.2024.04.05.12.05.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 05 Apr 2024 12:06:00 -0700 (PDT)
-From: Sergey Organov <sorganov@gmail.com>
-To: Fabio Estevam <festevam@gmail.com>
-Cc: Esben Haabendal <esben@geanix.com>,  Greg Kroah-Hartman
- <gregkh@linuxfoundation.org>,  Jiri Slaby <jirislaby@kernel.org>,  Shawn
- Guo <shawnguo@kernel.org>,  Sascha Hauer <s.hauer@pengutronix.de>,
-  Pengutronix Kernel Team <kernel@pengutronix.de>,  Marc Kleine-Budde
- <mkl@pengutronix.de>,  linux-kernel@vger.kernel.org,
-  linux-serial@vger.kernel.org,  imx@lists.linux.dev,
-  linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 1/2] serial: imx: Introduce timeout when waiting on
- transmitter empty
-References: <76cf9ce9cbf9dcdf78bc00ce7a919db1776ebce1.1712309058.git.esben@geanix.com>
-	<CAOMZO5Axz7un+9H2uEoQtE0=pYNC0hEyZiNobrSi2m0ajj8N+g@mail.gmail.com>
-Date: Fri, 05 Apr 2024 22:05:59 +0300
-In-Reply-To: <CAOMZO5Axz7un+9H2uEoQtE0=pYNC0hEyZiNobrSi2m0ajj8N+g@mail.gmail.com>
-	(Fabio Estevam's message of "Fri, 5 Apr 2024 14:38:48 -0300")
-Message-ID: <87r0fj1vfs.fsf@osv.gnss.ru>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/27.1 (gnu/linux)
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="HZ97vexP"
+Date: Fri, 5 Apr 2024 15:06:43 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1712344009;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=xy7rrQFx/ai4jiHF7erHWLhfU4NiOdULn/JTP2Sih9s=;
+	b=HZ97vexPrKySNDCOlz9qANDAP2JyhZBo/XKrmr+lyOE6CHkjHxJYL3ItLuk9OGrZpDRot0
+	Q2UlJMp5dDfEit2UE6bzXAAdCDy+AAHKq7O1YfadBIDO1LT0kCLSqROgs2CrC0IoQX2GA0
+	sxKvTykI3035G7lRq82NPDS2a99O47w=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Kent Overstreet <kent.overstreet@linux.dev>
+To: Andreas Dilger <adilger@dilger.ca>
+Cc: Sweet Tea Dorminy <sweettea-kernel@dorminy.me>, 
+	Jonathan Corbet <corbet@lwn.net>, Brian Foster <bfoster@redhat.com>, Chris Mason <clm@fb.com>, 
+	Josef Bacik <josef@toxicpanda.com>, David Sterba <dsterba@suse.com>, 
+	Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <chao@kernel.org>, 
+	Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, 
+	=?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>, linux-doc@vger.kernel.org, 
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-bcachefs@vger.kernel.org, 
+	linux-btrfs <linux-btrfs@vger.kernel.org>, linux-f2fs-devel@lists.sourceforge.net, 
+	linux-fsdevel <linux-fsdevel@vger.kernel.org>, kernel-team@meta.com
+Subject: Re: [PATCH v3 02/13] fiemap: update fiemap_fill_next_extent()
+ signature
+Message-ID: <3bvnvw5lvlraveup3du7esp3v54wissngudpov3xzneajo2fji@hbqk52z2xp2z>
+References: <cover.1712126039.git.sweettea-kernel@dorminy.me>
+ <58f9c9eef8b0e33a8d46a3ad8a8db46890e1fbe8.1712126039.git.sweettea-kernel@dorminy.me>
+ <BDD29EBF-3A5F-4241-B9F2-789605D99817@dilger.ca>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <BDD29EBF-3A5F-4241-B9F2-789605D99817@dilger.ca>
+X-Migadu-Flow: FLOW_OUT
 
-Fabio Estevam <festevam@gmail.com> writes:
+On Fri, Apr 05, 2024 at 01:05:01PM -0600, Andreas Dilger wrote:
+> On Apr 3, 2024, at 1:22 AM, Sweet Tea Dorminy <sweettea-kernel@dorminy.me> wrote:
+> > 
+> > Update the signature of fiemap_fill_next_extent() to allow passing a
+> > physical length. Update all callers to pass a 0 physical length -- since
+> > none set the EXTENT_HAS_PHYS_LEN flag, this value doesn't matter.
+> 
+> Patch-structure-wise, it doesn't make sense to me to change all of the callers
+> to pass "0" as the argument to this function, and then submit a whole series
+> of per-filesystem patches that sets only FIEMAP_EXTENT_HAS_PHYS_LEN (but also
+> passes phys_len = 0, which is wrong AFAICS).
+> 
+> A cleaner approach would be to rename the existing fiemap_fill_next_extent()
+> to fiemap_fill_next_extent_phys() that takes phys_len as an argument, and then
+> add a simple wrapper until all of the filesystems are updated:
+> 
+> #define fiemap_fill_next_extent(info, logical, phys, log_len, flags, dev) \
+>    fiemap_fill_next_extent_phys(info, logical, phys, log_len, 0, flags, dev)
+> 
+> Then the per-filesystem patches would involve changing over the callers to
+> use fiemap_fill_next_extent_phys() and setting FIEMAP_EXTENT_HAS_PHYS_LEN.
 
-> On Fri, Apr 5, 2024 at 6:25 AM Esben Haabendal <esben@geanix.com> wrote:
->>
->> By waiting at most 1 second for USR2_TXDC to be set, we avoid a potentital
->
-> s/potentital/potential
->
-> Could you elaborate on this deadlock? Have you seen it in practice?
+Cleaner still would be to just have the callers initiaize and pass a
+struct fiemap_extent instead of passing around a whole bunch of integer
+parameters.
 
-I've stumped upon this piece of code a long time ago, and it's indeed
-broken. However, to actually see a "deadlock", I believe one needs to
-enable hardware RTS/CTS handshake on the port, then, say, not connect
-RS232 cable, and then printk(), if enabled to this port, will soon
-result in the loop to be executed forever, that in turn will hang
-single-CPU machine entirely (provided this code is still executed with
-interrupts disabled, as it was at the time I investigated severe
-printk()-induced ISR delays).
-
--- Sergey Organov
+You get more explicit naming, better typesafety - functions with a bunch
+of integer parametrs are not great from a type safety POV - and you can
+add and pass fields to fiemap_extent without having to update callers
+that aren't using it.
