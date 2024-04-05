@@ -1,112 +1,169 @@
-Received: from 008.lax.mailroute.net (008.lax.mailroute.net [199.89.1.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1491A1EB36;
-	Fri,  5 Apr 2024 18:43:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=199.89.1.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBA73172BAC
+	for <linux-kernel@vger.kernel.org>; Fri,  5 Apr 2024 18:43:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712342635; cv=none; b=FiR6yHUT3ucg0h5/XSFVQdZkt7oHkPUqQKW2AxN1hCiVaqo2xzIG8Bo4qi4Rpvu+YMuahQWSiKtLqSOjynWdcmrgxFptSfTmwwaGWlGVpnoKu99njbHKlnELVl8KICeYlw8sFRwqMuSAi3ARiiRFlhhBEevqqY8BDZZ7sJt+xw4=
+	t=1712342639; cv=none; b=BdBKv0EayfhjQwItp4lGZ+ixJxopCupdhvcRJcMtjyqOeRPKKXZ4FJ9U6JQMW4iGJnfy5Ix9+J5PiJZEbMIs2XT/jAx/S8l/FJYGjhpID8D3P/jsAsdqTpFpoySNZqvg/k0J6h9+4gXUS8YyPiJ+969/3tPro+adiKBn5W1o9Ko=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712342635; c=relaxed/simple;
-	bh=ZEC1qMsL2GXr2LN1cOLgyDd0sOBWxyJv/iuho8smCfY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=KfRsmM+3D2i6CuUO6PeYZ3HM8/OzqE4Z/zDN533Jo798vmBCctZaisfYNHwwcEsxT92INRLfhozfp39WD1dBHbkpXiL1XdChGj75LAXgA5TUme+OmJ1Hb7dMb0HBHh1pTAH+BWnyne1TweQjKdXfAqe//2p+Rl+J4LIk+HbMj7g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=acm.org; spf=pass smtp.mailfrom=acm.org; dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b=hGoBIkun; arc=none smtp.client-ip=199.89.1.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=acm.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=acm.org
+	s=arc-20240116; t=1712342639; c=relaxed/simple;
+	bh=Fce75o2l5YUPt0p0cIxGUqN80w6+7bIFBDLkdPYFUPM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=UZzcS04RpomLpnmgXvxHKI7WKpAXcYbWSVoXevCqPOsxwhtK5FNyqo+tFXpUS8CEosB20RCxKrMT2hWZtjBLUfmhdVQBnLqQdujBLe/h7r4z8lj3dT5d2V5SfO1HmLDhkwMg99IotfcSmhpsDIWKgBvBsk3lgEcOnoxPCFBqpaQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=yvJ53+0N; arc=none smtp.client-ip=209.85.218.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b="hGoBIkun"
-Received: from localhost (localhost [127.0.0.1])
-	by 008.lax.mailroute.net (Postfix) with ESMTP id 4VB6lX1bTlz6ChQsS;
-	Fri,  5 Apr 2024 18:41:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=acm.org; h=
-	content-transfer-encoding:content-type:content-type:in-reply-to
-	:from:from:references:content-language:subject:subject
-	:user-agent:mime-version:date:date:message-id:received:received;
-	 s=mr01; t=1712342497; x=1714934498; bh=VNC7WePIHudWvJ0AAT9LZu0v
-	6qRSozA1WrVYvu0F6II=; b=hGoBIkunSTVoGIkPld3Aw27ohCl1CyzhZ/kiGQH4
-	NBK/EOhy7WJgdJRDY37TbiJWLu4ordrIJrk0KgoozgD+oyo9/OE0F0K2xTDGt6IK
-	WxeUC2qVXW18x0+J21Dkn9hbXrMDjElDiyRaCunipep5sFaJBGk1g+yfJevNq/Wm
-	LEBwmMyP3TK/eSRGzXQtAdqzD5PKcdMJF8z+CH8MwIigJ+KP8RSYfGqRRj2gWJy/
-	5zecRrtx0YxQaOgFWGROMwC4oasM5eGyLO9xgPCv7KRfGVWpIDC5jEdweZnKfiqp
-	MWgyuqRneOsuatsnJqkjozSjZXuOSStLlhwvT4JcI+c5vA==
-X-Virus-Scanned: by MailRoute
-Received: from 008.lax.mailroute.net ([127.0.0.1])
- by localhost (008.lax [127.0.0.1]) (mroute_mailscanner, port 10029) with LMTP
- id frwn6AeDHquf; Fri,  5 Apr 2024 18:41:37 +0000 (UTC)
-Received: from [100.96.154.173] (unknown [104.132.1.77])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: bvanassche@acm.org)
-	by 008.lax.mailroute.net (Postfix) with ESMTPSA id 4VB6lM6wGRz6ChQs1;
-	Fri,  5 Apr 2024 18:41:35 +0000 (UTC)
-Message-ID: <a70f1a3d-1ec9-496b-9b93-5d4b06b4f967@acm.org>
-Date: Fri, 5 Apr 2024 11:41:35 -0700
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="yvJ53+0N"
+Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-a51a7d4466bso107881466b.2
+        for <linux-kernel@vger.kernel.org>; Fri, 05 Apr 2024 11:43:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1712342636; x=1712947436; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=XnMV8AN6DREIABPi1BxfkQZ01lAd8EKxgi6dsBuz1eI=;
+        b=yvJ53+0NovIi+woe6xXyJTHSURUKNuSFuhP3xidHkmNAjxg7X/c7SvxcrMgDcyL4DB
+         V7gkEFsU5q2wll7f/nZfqc/tj9ocO4P/jJbqfEZL+t4JMtUP9hkhcUGt3nO4eHQijYS2
+         +LULySrWy+wsELmG7osQnnyKoBKGgYcr6blekrs3O+IkDmlCK/qbv/bgsJbIDhXiXRuv
+         ihwZc7xfs1ALoTJHmDRNHiyH7/fK0qlitj1ZJfnSQtPs2CC061jCOeMC0YOQvYHB+c+g
+         p0UCaKpRP7zgxdrB1yyow3z/UxM/tOAa6YeNSB2fU4xR1rdkH4w5Qj4y/terD4yWQe4q
+         fSiQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712342636; x=1712947436;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=XnMV8AN6DREIABPi1BxfkQZ01lAd8EKxgi6dsBuz1eI=;
+        b=xMKMO1+imZ4gU1G0+QvWPCuk8kDdBhzG41yV1YMJXim+ExMD7t3HRKdgnmhW/GSXJZ
+         IvSB855ZecdKXdrACTjc2crMdfIkHC6SmzyBOtJa5PQ9+L+PievhBYkla61LaokaaipY
+         9ykCee2GuZlTBYiBRQdNaEOCzwNmUuChm6M/Y23bwy8HTxg5Dg6ys3RGMwhC/SnAA8+e
+         uaNY90m3K+ohescyopocPQBOq5HYoxVz0Iglp+uX2JIz7LYqiBJA00Q2Czd9u7+OyTFQ
+         xr8jcmA5Kir/CKLlIKaJQTRDG/7FyMz9hFw+3os/inLj5efJDduQSFplaLShHiY4s623
+         xMjg==
+X-Forwarded-Encrypted: i=1; AJvYcCWVMER426we4qSqKBWgrD8uV3G21JQ8HE/iMQeBBJVqXtzIrPoC3ELOUex6kmNqtRVghyk93lGuN96RvX20f0L7YwbUsz0rv2fN+G9E
+X-Gm-Message-State: AOJu0YzI/kNxheKsvMUH4Z8rZp5vniSyllCKNHFozkFfVehdHfmuOm03
+	iqdn1/9Ek0rSBMg8+Jq2SqWEULp0DjL25ic9bvzd7v8yamW50kzzCraljMlJfkUBLKBh7fVZTyQ
+	ULBAMpQRWQaFjERssWK8p1zDTMKpwzRkmj0Ir
+X-Google-Smtp-Source: AGHT+IGbP37cCkoF7uwvIhjztIqOWb1qd4D53h5AorS37SmONsYnMkD6uHssi4l96XHUZw+tQA80X/rlVn4ygLCgIJg=
+X-Received: by 2002:a17:906:717:b0:a51:a488:9213 with SMTP id
+ y23-20020a170906071700b00a51a4889213mr1575930ejb.17.1712342635786; Fri, 05
+ Apr 2024 11:43:55 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1] scsi: ufs: core: changing the status to check inflight
-Content-Language: en-US
-To: SEO HOYOUNG <hy50.seo@samsung.com>, linux-scsi@vger.kernel.org,
- linux-kernel@vger.kernel.org, alim.akhtar@samsung.com, avri.altman@wdc.com,
- jejb@linux.ibm.com, martin.petersen@oracle.com, beanhuo@micron.com,
- kwangwon.min@samsung.com, kwmad.kim@samsung.com, sh425.lee@samsung.com,
- quic_nguyenb@quicinc.com, cpgs@samsung.com, h10.kim@samsung.com
-References: <CGME20240405071217epcas2p470124e9f6e9066cb5cdc7f78557042e3@epcas2p4.samsung.com>
- <20240405071601.84337-1-hy50.seo@samsung.com>
-From: Bart Van Assche <bvanassche@acm.org>
-In-Reply-To: <20240405071601.84337-1-hy50.seo@samsung.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20240405053510.1948982-1-yosryahmed@google.com>
+ <20240405053510.1948982-3-yosryahmed@google.com> <20240405152619.GA866431@cmpxchg.org>
+In-Reply-To: <20240405152619.GA866431@cmpxchg.org>
+From: Yosry Ahmed <yosryahmed@google.com>
+Date: Fri, 5 Apr 2024 11:43:17 -0700
+Message-ID: <CAJD7tkaSCvgs-yKXeAVoW14_LhtCrL3N9hu9xA41GCvz+RvWBw@mail.gmail.com>
+Subject: Re: [PATCH v2 2/5] mm: zswap: calculate limits only when updated
+To: Johannes Weiner <hannes@cmpxchg.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>, Nhat Pham <nphamcs@gmail.com>, 
+	Chengming Zhou <chengming.zhou@linux.dev>, linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
+	David Hildenbrand <david@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 4/5/24 00:16, SEO HOYOUNG wrote:
-> According to below the patch applied, lrbp->cmd do not will NULL
-> after call release_scsi_cmd()
-> So check the rq->state unconditionally even if it is completed normally
-> in ufshcd_cmd_inflight()
-> 
-> If occurred abort status and tm_cmd timeout, will run err_handler
-> for re-init UFS.
-> Then err_handler will check pending request for clearing cmd.
-> At that time, check if the state of rq is not MQ_RQ_IDLE.
-> In other words, check if it is MQ_RQ_COMPLETE or MQ_RQ_IN_FLIGHT.
-> If rq->state is MQ_RQ_COMPLETE, it is already completed in the block,
-> so there is no need to process the queue.
+On Fri, Apr 5, 2024 at 8:26=E2=80=AFAM Johannes Weiner <hannes@cmpxchg.org>=
+ wrote:
+>
+> On Fri, Apr 05, 2024 at 05:35:07AM +0000, Yosry Ahmed wrote:
+> > Currently, we calculate the zswap global limit, and potentially the
+> > acceptance threshold in the zswap, in pages in the zswap store path.
+> > This is unnecessary because the values rarely change.
+> >
+> > Instead, precalculate the them when the module parameters are updated,
+> > which should be rare. Since we are adding custom handlers for setting
+> > the percentages now, add proper validation that they are <=3D 100.
+> >
+> > Suggested-by: Johannes Weiner <hannes@cmpxchg.org>
+> > Signed-off-by: Yosry Ahmed <yosryahmed@google.com>
+>
+> Nice! Getting that stuff out of the hotpath!
+>
+> Two comments below:
+>
+> > @@ -684,6 +703,43 @@ static int zswap_enabled_param_set(const char *val=
+,
+> >       return ret;
+> >  }
+> >
+> > +static int __zswap_percent_param_set(const char *val,
+> > +                                  const struct kernel_param *kp)
+> > +{
+> > +     unsigned int n;
+> > +     int ret;
+> > +
+> > +     ret =3D kstrtouint(val, 10, &n);
+> > +     if (ret || n > 100)
+> > +             return -EINVAL;
+> > +
+> > +     return param_set_uint(val, kp);
+> > +}
+> > +
+> > +static int zswap_max_pool_param_set(const char *val,
+> > +                                 const struct kernel_param *kp)
+> > +{
+> > +     int err =3D __zswap_percent_param_set(val, kp);
+> > +
+> > +     if (!err) {
+> > +             zswap_update_max_pages();
+> > +             zswap_update_accept_thr_pages();
+> > +     }
+> > +
+> > +     return err;
+> > +}
+> > +
+> > +static int zswap_accept_thr_param_set(const char *val,
+> > +                                   const struct kernel_param *kp)
+> > +{
+> > +     int err =3D __zswap_percent_param_set(val, kp);
+> > +
+> > +     if (!err)
+> > +             zswap_update_accept_thr_pages();
+> > +
+> > +     return err;
+> > +}
+>
+> I think you can keep this simple and just always update both if
+> anything changes for whatever reason. It's an extremely rare event
+> after all. That should cut it from 3 functions to 1.
 
-The above description does not explain the motivation for this patch
-very well. How about the following description?
+Yeah we can also combine both update functions in this case.
 
-"ufshcd_cmd_inflight() is used to check whether or not a command is
-in progress. Make it skip commands that have already completed by
-changing the !blk_mq_request_started(rq) check into blk_mq_rq_state(rq) 
-!= MQ_RQ_IN_FLIGHT. We cannot rely on lrbp->cmd since lrbp->cmd is not
-cleared when a command completes."
+>
+> Note that totalram_pages can also change during memory onlining and
+> offlining. For that you need a memory notifier that also calls that
+> refresh function. It's simple enough, though, check out the code
+> around register_memory_notifier() in drivers/xen/balloon.c.
 
-> diff --git a/drivers/ufs/core/ufshcd.c b/drivers/ufs/core/ufshcd.c
-> index 21429eec1b82..3f47ea584cb1 100644
-> --- a/drivers/ufs/core/ufshcd.c
-> +++ b/drivers/ufs/core/ufshcd.c
-> @@ -3088,7 +3088,7 @@ bool ufshcd_cmd_inflight(struct scsi_cmnd *cmd)
->   		return false;
->   
->   	rq = scsi_cmd_to_rq(cmd);
-> -	if (!blk_mq_request_started(rq))
-> +	if (blk_mq_rq_state(rq) != MQ_RQ_IN_FLIGHT)
->   		return false;
->   
->   	return true;
+Good point, I completely missed this. It seems like totalram_pages can
+actually change from contexts other than memory hotplug as well,
+specifically through adjust_managed_page_count(), and mostly through
+ballooning drivers. Do we trigger the notifiers in this case? I can't
+find such logic.
 
-Please convert the two return statements into a single return statement,
-e.g. as follows:
+It seems like in this case the actual amount of memory does not
+change, but the drivers take it away from the system. It makes some
+sense to me that the zswap limits do not change in this case,
+especially that userspace just sets those limits as a percentage of
+total memory. I wouldn't expect userspace to take ballooning into
+account here.
 
-	return cmd &&
-	    blk_mq_rq_state(scsi_cmd_to_rq(cmd)) == MQ_RQ_IN_FLIGHT;
+However, it would be a behavioral change from today where we always
+rely on totalram_pages(). Also, if userspace happens to change the
+limit when a driver is holding a big chunk of memory away from
+totalram_pages, then the limit would be constantly underestimated.
 
-Thanks,
+I do not have enough familiarity with memory ballooning to know for
+sure if this is okay. How much memory can memory ballooning add/remove
+from totalram_pages(), and is it usually transient or does it stick
+around for a while?
 
-Bart.
+Also CCing David here.
