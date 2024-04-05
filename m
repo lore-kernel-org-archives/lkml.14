@@ -1,109 +1,111 @@
-Received: from mx1.t-argos.ru (mx1.t-argos.ru [109.73.34.58])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7958C15FA95;
-	Fri,  5 Apr 2024 09:10:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=109.73.34.58
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA74715FCE3
+	for <linux-kernel@vger.kernel.org>; Fri,  5 Apr 2024 09:10:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712308218; cv=none; b=cqJweNwxCH5IXQuJwVVOQTy4dAjcg0SZhuShK1KOuja8lePKv3liCsJhO5sdMRUjQo0LGmdGHA3EYl/VlMBOQrWmCn9YKq4tUSPyapJmDe1qnu35/1uTlZV3J6s0dJDgm+3iDFeOnXn7HFsbJBuXWroRRS/7Bjk++0yW7pS3bk0=
+	t=1712308236; cv=none; b=aWnTvC00vSiyLQppvsmI6PVaaeERjpBP47yRGUqlGCKZXevbAm2U23yLcjRX8rl+K5TFYPaVzR7hh/kTnUNq3hktDQwq0+WqDm8q1TDAagSlI2qeZxajyEMLK1dYm2b31nbeSWmkJlB0V4yHANweUvwrQwH7MpAz3ckPZBc822Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712308218; c=relaxed/simple;
-	bh=6zgWN/Gm2MnsvJelWP4xZxfUiEvn8aa8s91l1UYyo+k=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=OKHNgdR68pQMoBMRud1k7RoGuYUQ4QXlqfdMb0iWkdL7Wd9Lbns4Q/W472tWd1+CAFk2X0piECLfWUJ4ILnlmEONvCIaTPwzWrf9N+hEseteLvWrXQqI8xW7kdf/shf82ETRXAkN9Wqo98Beg6grRkpx0gz9GsYTqC9kxDp0NOM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=t-argos.ru; spf=pass smtp.mailfrom=t-argos.ru; dkim=pass (2048-bit key) header.d=t-argos.ru header.i=@t-argos.ru header.b=UZOrdnA+; arc=none smtp.client-ip=109.73.34.58
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=t-argos.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=t-argos.ru
+	s=arc-20240116; t=1712308236; c=relaxed/simple;
+	bh=81eM6jiXwtalbaZcX5u6YOuEklPGUYeCbo3s4KCd5z0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=lnfcsQk15lSh1F4h0NaPUdUV64O0N2qy1ew+tl2aVkPHbscypJB+kVBz5shjAr/2cV10gKZc+FrHCj7rwjn9snJcfVdSRap5DW2lzgEioBSWuXqVlXxOeotVZMlBACYNzRu77smz8ZjaTL5UNuK4d6FfQz/Gf6JMh6yumQgjdRQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=IepPMTgV; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=t-argos.ru header.i=@t-argos.ru header.b="UZOrdnA+"
-Received: from mx1.t-argos.ru (localhost [127.0.0.1])
-	by mx1.t-argos.ru (Postfix) with ESMTP id 19A01100002;
-	Fri,  5 Apr 2024 12:09:48 +0300 (MSK)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=t-argos.ru; s=mail;
-	t=1712308188; bh=VeRoNF/EWKHuynHlmfs5d4fsjEQAUTE/mmqlapIGuaQ=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type;
-	b=UZOrdnA+lc/svGM+U6EefY3kFyXEWa31+mAu3vpxm3h+mpw3sutFU9OF3ifrKCIlB
-	 bxNNKunHV71q45tKYaL329KXMXwpLmyEGfENz5y34Gvi7KMklaDq9TX7rL8SDgpm1O
-	 lF/YvNb6kQGWIMZbXyia2rEWUn6SiNhP/gQLna+gcaHsyv5ZQovIFszGRM2xbr3PnH
-	 G/4H1zDv98/Hal3tgsqIrVUBoPKDGpDeGPJjAt8HMzllILIGoc8SgZfdEavqUV96FT
-	 1shD1wxrc1mJ0h1o5Cv4cl2Bdm9XnHOYPP9/w8VjNZmepPCZuf9n+y4ms4N/j3iGF3
-	 Qsqzq+ZrDv39A==
-Received: from mx1.t-argos.ru.ru (ta-mail-02.ta.t-argos.ru [172.17.13.212])
-	by mx1.t-argos.ru (Postfix) with ESMTP;
-	Fri,  5 Apr 2024 12:07:47 +0300 (MSK)
-Received: from localhost.localdomain (172.17.215.6) by ta-mail-02
- (172.17.13.212) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Fri, 5 Apr 2024
- 12:07:27 +0300
-From: Aleksandr Mishin <amishin@t-argos.ru>
-To: Christian Marangi <ansuelsmth@gmail.com>
-CC: Aleksandr Mishin <amishin@t-argos.ru>, Amit Kucheria <amitk@kernel.org>,
-	Thara Gopinath <thara.gopinath@gmail.com>, Bjorn Andersson
-	<andersson@kernel.org>, Konrad Dybcio <konrad.dybcio@linaro.org>, "Rafael J.
- Wysocki" <rafael@kernel.org>, Daniel Lezcano <daniel.lezcano@linaro.org>,
-	Zhang Rui <rui.zhang@intel.com>, Lukasz Luba <lukasz.luba@arm.com>,
-	<linux-pm@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <lvc-project@linuxtesting.org>
-Subject: [PATCH] drivers: thermal: tsens: Fix null pointer dereference
-Date: Fri, 5 Apr 2024 12:07:20 +0300
-Message-ID: <20240405090720.16419-1-amishin@t-argos.ru>
-X-Mailer: git-send-email 2.30.2
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IepPMTgV"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1712308233;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=E+32tc+g6bFUi7eOalPmpwKSPNS4pCbzAaqy2IDSlhk=;
+	b=IepPMTgV0r+/r6V2tMB/znrmABGss4dQAC/PrjayrNThgasv6ELwAp4uqCQGaiyYzxM8GE
+	a2yTsggviijYz0dWB+I0wRg78D8PX2T/g7aIHB73mtKTTIc6vSbtRthjVu6vj4plL64lh8
+	15V+J6rtNOJHQstcHborSfjNA6aIG7k=
+Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
+ [209.85.218.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-482-ta9lZDMeNLKgdaWG8kQb9A-1; Fri, 05 Apr 2024 05:10:32 -0400
+X-MC-Unique: ta9lZDMeNLKgdaWG8kQb9A-1
+Received: by mail-ej1-f72.google.com with SMTP id a640c23a62f3a-a5198c1a6f4so56034766b.3
+        for <linux-kernel@vger.kernel.org>; Fri, 05 Apr 2024 02:10:32 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712308231; x=1712913031;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=E+32tc+g6bFUi7eOalPmpwKSPNS4pCbzAaqy2IDSlhk=;
+        b=iztpoXOqujBVUdhV/fVMUUUcDLgJMxxQ+l1rnLjQgg3gc9+oCHm2LfZCjbkgRS3fx2
+         VkVkITHwlyqvG9RButjivxy7B3e1cPbxfUwNVGQ64bDtRCZgMuWFArZsDwY2cONVCEln
+         GnY2K94ne1c29DXRSkYcydfUoESGMvjlvLnCPFbibot+ROZ8InoZ/Sdvl1o8vF2voWuP
+         Qwm4bPTqh0jHvB8c5Z2/kIFKSVKySXq9oCejk17fwuUpcSsPnpj9TC9W0QEkL95HwfNH
+         2FbykdqxK3Wp4VV+7LPozpUoPBiN3oi3X90tS4DjjYIY6dd3o112UEdjhMjJ5jH+TYq3
+         G6ng==
+X-Forwarded-Encrypted: i=1; AJvYcCUwQT0Gu4CkhaRxq3GS969fJkGs2YU281ppOijNXUIlIDXeRZf2EOUL1GZ2nYcel9k2dPeZl078V3qaVn8YYLSPOsAbMipueIzMguxm
+X-Gm-Message-State: AOJu0Yzx9hvn7FXXJqLEpQnfotvRBgsgieTWcehkE++rFobkRs3dv1We
+	l8UYGvregxhrPVqyUvH3JKpIDr84LNRNTXb3vOdIa71rn7zkxHlFeutnVN13o/eC0H7pZl7enm6
+	hDCv7psK3eCDwtNTdZ5kW65AfgskWahfOXdIrQQbyIobDlK5vpOZxLHrv4nMEew==
+X-Received: by 2002:a17:907:7ea2:b0:a47:16d1:113f with SMTP id qb34-20020a1709077ea200b00a4716d1113fmr908612ejc.47.1712308231281;
+        Fri, 05 Apr 2024 02:10:31 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFuVZr8zHBruV3lHP+YdrL6HnH+f7vAApqXuUuk45CM5IDB1fylmdA8Q2RPCqFaOslqpFidew==
+X-Received: by 2002:a17:907:7ea2:b0:a47:16d1:113f with SMTP id qb34-20020a1709077ea200b00a4716d1113fmr908582ejc.47.1712308230994;
+        Fri, 05 Apr 2024 02:10:30 -0700 (PDT)
+Received: from [192.168.0.182] (host-87-2-128-150.retail.telecomitalia.it. [87.2.128.150])
+        by smtp.gmail.com with ESMTPSA id v17-20020a170906b01100b00a46aba003eesm607927ejy.215.2024.04.05.02.10.29
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 05 Apr 2024 02:10:30 -0700 (PDT)
+Message-ID: <c959833a-9074-47ed-b9dd-e7e276cee0f9@redhat.com>
+Date: Fri, 5 Apr 2024 11:10:28 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: ta-mail-02.ta.t-argos.ru (172.17.13.212) To ta-mail-02
- (172.17.13.212)
-X-KSMG-Rule-ID: 1
-X-KSMG-Message-Action: clean
-X-KSMG-AntiSpam-Lua-Profiles: 184598 [Apr 05 2024]
-X-KSMG-AntiSpam-Version: 6.1.0.4
-X-KSMG-AntiSpam-Envelope-From: amishin@t-argos.ru
-X-KSMG-AntiSpam-Rate: 0
-X-KSMG-AntiSpam-Status: not_detected
-X-KSMG-AntiSpam-Method: none
-X-KSMG-AntiSpam-Auth: dkim=none
-X-KSMG-AntiSpam-Info: LuaCore: 15 0.3.15 adb41f89e2951eb37b279104a7abb8e79494a5e7, {Tracking_from_domain_doesnt_match_to}, mx1.t-argos.ru.ru:7.1.1;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;t-argos.ru:7.1.1;127.0.0.199:7.1.2, FromAlignment: s
-X-MS-Exchange-Organization-SCL: -1
-X-KSMG-AntiSpam-Interceptor-Info: scan successful
-X-KSMG-AntiPhishing: Clean, bases: 2024/04/05 06:54:00
-X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 1.1.2.30, bases: 2024/04/05 07:02:00 #24662400
-X-KSMG-AntiVirus-Status: Clean, skipped
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 13/15] sched/deadline: Make start_dl_timer callers more
+ robust
+To: "Joel Fernandes (Google)" <joel@joelfernandes.org>,
+ linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
+ Peter Zijlstra <peterz@infradead.org>, Juri Lelli <juri.lelli@redhat.com>,
+ Vincent Guittot <vincent.guittot@linaro.org>,
+ Dietmar Eggemann <dietmar.eggemann@arm.com>,
+ Steven Rostedt <rostedt@goodmis.org>, Ben Segall <bsegall@google.com>,
+ Mel Gorman <mgorman@suse.de>, Valentin Schneider <vschneid@redhat.com>
+Cc: Suleiman Souhlal <suleiman@google.com>,
+ Youssef Esmat <youssefesmat@google.com>, David Vernet <void@manifault.com>,
+ Thomas Gleixner <tglx@linutronix.de>, "Paul E . McKenney"
+ <paulmck@kernel.org>, joseph.salisbury@canonical.com,
+ Luca Abeni <luca.abeni@santannapisa.it>,
+ Tommaso Cucinotta <tommaso.cucinotta@santannapisa.it>,
+ Vineeth Pillai <vineeth@bitbyteword.org>,
+ Shuah Khan <skhan@linuxfoundation.org>, Phil Auld <pauld@redhat.com>
+References: <20240313012451.1693807-1-joel@joelfernandes.org>
+ <20240313012451.1693807-14-joel@joelfernandes.org>
+Content-Language: en-US, pt-BR, it-IT
+From: Daniel Bristot de Oliveira <bristot@redhat.com>
+In-Reply-To: <20240313012451.1693807-14-joel@joelfernandes.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-compute_intercept_slope() is called from calibrate_8960() (in tsens-8960.c)
-as compute_intercept_slope(priv, p1, NULL, ONE_PT_CALIB) which lead to null
-pointer dereference (if DEBUG or DYNAMIC_DEBUG set).
-Fix this bug by adding null pointer check.
+On 3/13/24 02:24, Joel Fernandes (Google) wrote:
+> For whatever reason, if start_dl_timer() returned 0 during replenish (it
+> did not start a new timer), then do not marked dl_defer_armed, because
+> we never really armed.
+> 
+> Further, we need to cancel any old timers,
+> 
+> This is similar to what dl_check_constrained_dl() does.
+> 
+> Add some guardrails for such situations.
+> 
+> Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
 
-Found by Linux Verification Center (linuxtesting.org) with SVACE.
+Makes sense, added as part of the defer patch.
 
-Fixes: dfc1193d4dbd ("thermal/drivers/tsens: Replace custom 8960 apis with generic apis")
-Signed-off-by: Aleksandr Mishin <amishin@t-argos.ru>
----
- drivers/thermal/qcom/tsens.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/thermal/qcom/tsens.c b/drivers/thermal/qcom/tsens.c
-index 6d7c16ccb44d..f7dd70e8d158 100644
---- a/drivers/thermal/qcom/tsens.c
-+++ b/drivers/thermal/qcom/tsens.c
-@@ -262,9 +262,10 @@ void compute_intercept_slope(struct tsens_priv *priv, u32 *p1,
- 	int num, den;
- 
- 	for (i = 0; i < priv->num_sensors; i++) {
--		dev_dbg(priv->dev,
--			"%s: sensor%d - data_point1:%#x data_point2:%#x\n",
--			__func__, i, p1[i], p2[i]);
-+		if (p1 && p2)
-+			dev_dbg(priv->dev,
-+				"%s: sensor%d - data_point1:%#x data_point2:%#x\n",
-+				__func__, i, p1[i], p2[i]);
- 
- 		if (!priv->sensor[i].slope)
- 			priv->sensor[i].slope = SLOPE_DEFAULT;
--- 
-2.30.2
+-- Daniel
 
