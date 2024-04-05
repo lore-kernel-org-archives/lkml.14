@@ -1,33 +1,37 @@
-Received: from exchange.fintech.ru (exchange.fintech.ru [195.54.195.159])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 960C616D4CE
-	for <linux-kernel@vger.kernel.org>; Fri,  5 Apr 2024 13:30:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.54.195.159
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 929C916D338
+	for <linux-kernel@vger.kernel.org>; Fri,  5 Apr 2024 13:33:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712323841; cv=none; b=EPUI7AMHPfZ6nNvreKNQJlmGOGB1UhfcNSVmscoLgdKy7IjjKKg57LZkAEpVcaTWdglDOZbudS4FXrjLQQERxdR8+VF2dBkwBeUM7vgDtJaqIpaE7DIe3JymShwJA09yHSYfvNViwKmVOR0iLVcQPpKbs0rtEZOMyHxuZjvH4uw=
+	t=1712324023; cv=none; b=mSDLufUOcgTTrNrBG+Ln40v8SY+OwMRuWLcJpXmAKjIgb6HO9b+UIquSHrb2ia/8Aet3ntqbLbMBLFUd67O82WlRZl1V9j964hfIgS0eX+PEpkhIykVrSjvF6Jn2Doc0R+katckXr8QeLg7VE+Canh3oUofS7vfFt5/MqU89SLs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712323841; c=relaxed/simple;
-	bh=nXWtpG7RHfWilP1gK4LzxWvB5kFemA4zGZoWKUag2tk=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=iylteYxD74V7h+OlT3C9VGt/dZ3zSFVSddrvobMeHY9rL5kLWCLTNHI/3tPNRedBWnQDk0LzXo2CpVaPgiQlTOyj6Z0EB5/pZPC9ogF2L5H75R+QjtOqSX+QsYJriW/7gIqDw9fwJXl27cLxNQc6hLEcQJTGQBJGDBHvq/ZDIrM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fintech.ru; spf=pass smtp.mailfrom=fintech.ru; arc=none smtp.client-ip=195.54.195.159
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fintech.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fintech.ru
-Received: from Ex16-01.fintech.ru (10.0.10.18) by exchange.fintech.ru
- (195.54.195.159) with Microsoft SMTP Server (TLS) id 14.3.498.0; Fri, 5 Apr
- 2024 16:30:34 +0300
-Received: from localhost (10.0.253.138) by Ex16-01.fintech.ru (10.0.10.18)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2242.4; Fri, 5 Apr 2024
- 16:30:33 +0300
-From: Nikita Zhandarovich <n.zhandarovich@fintech.ru>
-To: <syzbot+5f29dc6a889fc42bd896@syzkaller.appspotmail.com>
-CC: Nikita Zhandarovich <n.zhandarovich@fintech.ru>,
-	<syzkaller-bugs@googlegroups.com>, <linux-kernel@vger.kernel.org>
-Subject: Re: [syzbot] WARNING in vmk80xx_auto_attach/usb_submit_urb
-Date: Fri, 5 Apr 2024 06:30:30 -0700
-Message-ID: <20240405133030.21567-1-n.zhandarovich@fintech.ru>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1712324023; c=relaxed/simple;
+	bh=LXjGpHiVHp7hjPWruy4/t8/vqKCfVZqBmrey23+vPl8=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=m41NlILj3mvGws2qvV3MKqwmU9XyivyBwGAx36zhp/ANmHp21K44Y0WGIflwS9VmKaadKKZb80rJqSmWTUOty82TBT+WJxBpSFfoWcOUIXvbqMkJ77bJXPSWR+qVaWug4KEH7Mun6si3wuN/VSbzTRgDfl9vlVhTXRooXanndio=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 312F0DA7;
+	Fri,  5 Apr 2024 06:34:10 -0700 (PDT)
+Received: from e125905.cambridge.arm.com (e125905.cambridge.arm.com [10.1.194.73])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 20A2A3F7B4;
+	Fri,  5 Apr 2024 06:33:38 -0700 (PDT)
+From: Beata Michalska <beata.michalska@arm.com>
+To: linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	ionela.voinescu@arm.com,
+	vanshikonda@os.amperecomputing.com
+Cc: sudeep.holla@arm.com,
+	will@kernel.org,
+	catalin.marinas@arm.com,
+	vincent.guittot@linaro.org,
+	sumitg@nvidia.com,
+	yang@os.amperecomputing.com,
+	lihuisong@huawei.com
+Subject: [PATCH v4 0/4] Add support for AArch64 AMUv1-based arch_freq_get_on_cpu
+Date: Fri,  5 Apr 2024 14:33:15 +0100
+Message-Id: <20240405133319.859813-1-beata.michalska@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,67 +39,61 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: Ex16-02.fintech.ru (10.0.10.19) To Ex16-01.fintech.ru
- (10.0.10.18)
 
-Refactor endpoint checks to ensure there is no ambivalence
-about endpoint types.
+Introducing arm64 specific version of arch_freq_get_on_cpu, cashing on
+existing implementation for FIE and AMUv1 support: the frequency scale
+factor, updated on each sched tick, serves as a base for retrieving
+the frequency for a given CPU, representing an average frequency
+reported between the ticks - thus its accuracy is limited.
 
-Try a specific branch to mitigate unrelated issues with boot/build.
+The changes have been rather lightly (due to some limitations) tested on
+an FVP model. Note that some small discrepancies have been observed while
+testing (on the model) and this is currently being investigated, though it
+should not have any significant impact on the overall results.
 
-#syz test git://git.kernel.org/pub/scm/linux/kernel/git/netdev/net-next.git 4090fa373f0e763c43610853>
----
- drivers/comedi/drivers/vmk80xx.c | 35 ++++++++++++-----------------------
- 1 file changed, 12 insertions(+), 23 deletions(-)
+Relevant discussions:
+[1] https://lore.kernel.org/all/20240229162520.970986-1-vanshikonda@os.amperecomputing.com/
+[2] https://lore.kernel.org/all/7eozim2xnepacnnkzxlbx34hib4otycnbn4dqymfziqou5lw5u@5xzpv3t7sxo3/
+[3] https://lore.kernel.org/all/20231212072617.14756-1-lihuisong@huawei.com/
+[4] https://lore.kernel.org/lkml/ZIHpd6unkOtYVEqP@e120325.cambridge.arm.com/T/#m4e74cb5a0aaa353c60fedc6cfb95ab7a6e381e3c
 
-diff --git a/drivers/comedi/drivers/vmk80xx.c b/drivers/comedi/drivers/vmk80xx.c
-index 4536ed43f65b..476885403c61 100644
---- a/drivers/comedi/drivers/vmk80xx.c
-+++ b/drivers/comedi/drivers/vmk80xx.c
-@@ -641,33 +641,22 @@ static int vmk80xx_find_usb_endpoints(struct comedi_device *dev)
- 	struct vmk80xx_private *devpriv = dev->private;
- 	struct usb_interface *intf = comedi_to_usb_interface(dev);
- 	struct usb_host_interface *iface_desc = intf->cur_altsetting;
--	struct usb_endpoint_descriptor *ep_desc;
--	int i;
-+	struct usb_endpoint_descriptor *ep_rx_desc, *ep_tx_desc;
-+	int i, ret;
- 
--	if (iface_desc->desc.bNumEndpoints != 2)
--		return -ENODEV;
--
--	for (i = 0; i < iface_desc->desc.bNumEndpoints; i++) {
--		ep_desc = &iface_desc->endpoint[i].desc;
--
--		if (usb_endpoint_is_int_in(ep_desc) ||
--		    usb_endpoint_is_bulk_in(ep_desc)) {
--			if (!devpriv->ep_rx)
--				devpriv->ep_rx = ep_desc;
--			continue;
--		}
--
--		if (usb_endpoint_is_int_out(ep_desc) ||
--		    usb_endpoint_is_bulk_out(ep_desc)) {
--			if (!devpriv->ep_tx)
--				devpriv->ep_tx = ep_desc;
--			continue;
--		}
--	}
-+	if (devpriv->model == VMK8061_MODEL)
-+		ret = usb_find_common_endpoints(iface_desc, &ep_rx_desc,
-+						&ep_tx_desc, NULL, NULL);
-+	else
-+		ret = usb_find_common_endpoints(iface_desc, NULL, NULL,
-+						&ep_rx_desc, &ep_tx_desc);
- 
--	if (!devpriv->ep_rx || !devpriv->ep_tx)
-+	if (ret)
- 		return -ENODEV;
- 
-+	devpriv->ep_rx = ep_rx_desc;
-+	devpriv->ep_tx = ep_tx_desc;
-+
- 	if (!usb_endpoint_maxp(devpriv->ep_rx) || !usb_endpoint_maxp(devpriv->ep_tx))
- 		return -EINVAL;
- 
+v4:
+- dropping seqcount
+- fixing identifying active cpu within given policy
+- skipping full dynticks cpus when retrieving the freq
+- bringing back plugging in arch_freq_get_on_cpu into cpuinfo_cur_freq
+
+v3:
+- dropping changes to cpufreq_verify_current_freq
+- pulling in changes from Ionela initializing capacity_freq_ref to 0
+  (thanks for that!)  and applying suggestions made by her during last review:
+	- switching to arch_scale_freq_capacity and arch_scale_freq_ref when
+	  reversing freq scale factor computation
+	- swapping shift with multiplication
+- adding time limit for considering last scale update as valid
+- updating frequency scale factor upon entering idle
+
+v2:
+- Splitting the patches
+- Adding comment for full dyntick mode
+- Plugging arch_freq_get_on_cpu into cpufreq_verify_current_freq instead
+  of in show_cpuinfo_cur_freq to allow the framework to stay more in sync
+  with potential freq changes
+
+
+Beata Michalska (3):
+  arm64: Provide an AMU-based version of arch_freq_get_on_cpu
+  arm64: Update AMU-based frequency scale factor on entering idle
+  cpufreq: Use arch specific feedback for cpuinfo_cur_freq
+
+Ionela Voinescu (1):
+  arch_topology: init capacity_freq_ref to 0
+
+ arch/arm64/kernel/topology.c | 125 ++++++++++++++++++++++++++++++++---
+ drivers/base/arch_topology.c |   8 ++-
+ drivers/cpufreq/cpufreq.c    |   4 +-
+ 3 files changed, 123 insertions(+), 14 deletions(-)
+
+-- 
+2.25.1
+
