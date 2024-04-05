@@ -1,216 +1,140 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C11A16C6B5
-	for <linux-kernel@vger.kernel.org>; Fri,  5 Apr 2024 12:01:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF98416C6AE
+	for <linux-kernel@vger.kernel.org>; Fri,  5 Apr 2024 12:05:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712318494; cv=none; b=DHCDsGxl5hu33QV/L3/ZkzbQwZd1Wa2w+pQYdhms5dZKy9ZYY8DjVXynwbzdf1QM3XnnNTSrSSjR5m+gvCDn22cRLYbu8a78CeaxAC+SyYl72t/IjnIOqGSvjIlIw3C7e4808+0d8aHxPNl+0KByfnfHfFRVkwEDrhuTBX5Jpi4=
+	t=1712318709; cv=none; b=eytYxAh7v1eN9+f6qFoBz+gDP8nUAtTYABU+QMAJWAb/QnxH5y2O8fJqr0nNVmalUWKpxbxemQelFoGKzKKJiEbXN+ttmQ7U0zkhGUXREwR5cbdqG+QzfuKg3DUX6UQLxhwCkzaSUmf/JhlKqK9eWgRg40C+llYUpj24g7CTAJU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712318494; c=relaxed/simple;
-	bh=jqn2XCZxEDbBltMtM+7J9+MGFZAyGlmvapHglxRoTiA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=F7xLPRVpS+cAMHb1Bh3LFrGUIfDpfii1hVsvFgGxh5r+1/Nlc7yk8h35SL9TC+BJjST+cGQdcTuSJOHvXEgE8tdUxLquHZ+XzV0yNx3BDPoJHaT9W7GRncaaFNViXf/sTQPMkshk4ADLyJnmgkKxz/utDfUVbelNY40xCEXLHvQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=jWsMO/YQ; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1712318709; c=relaxed/simple;
+	bh=80HGX1rBfdkCbl1leKPRwW3VkQK8pthaXxSNoatku0E=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=nHrg3n2y37vzwp1WCNPlRO8jNbUDMjB1ur4CDqzqFhyyhLjSTcLVFu6RJ6+a3LLkUhFZRqXgD4hwA9xOz3VVYW+alKCUHJWfDZsLgw/9hF7OOAzPnExnorSc9TyCrRZI4MuuwnCyaHAb344MVksHlQ+V2VjLiMiFjT59bnVoNwE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=L8E6eR8K; arc=none smtp.client-ip=209.85.218.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="jWsMO/YQ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1712318491;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Er4m6dF4CTJ/JTa0OQR3uPXdnB5OQd8nc24oiwvaXBk=;
-	b=jWsMO/YQ08g0xQwIzLliRaVqqvcONohz4ip6nfLuZ9aa09Vo+HxaNNpiJuO+mR0KX3i9Au
-	reFarCA/DhbYUuVdVYjpwD5f0Ee7XqZq+G3OZ/KSFrE5lsLJccGrKo+/vfwtRKkBM4R5g+
-	IbjuVk4Ae3Iw1MDLbaSha5DoDvJMfUE=
-Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com
- [209.85.160.198]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-677-6s_a9PAjNtqQQbZk-DyMsg-1; Fri, 05 Apr 2024 08:01:30 -0400
-X-MC-Unique: 6s_a9PAjNtqQQbZk-DyMsg-1
-Received: by mail-qt1-f198.google.com with SMTP id d75a77b69052e-4311b01a1ecso21592101cf.2
-        for <linux-kernel@vger.kernel.org>; Fri, 05 Apr 2024 05:01:30 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="L8E6eR8K"
+Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-a519e04b142so118829766b.3
+        for <linux-kernel@vger.kernel.org>; Fri, 05 Apr 2024 05:05:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ventanamicro.com; s=google; t=1712318706; x=1712923506; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=ANigKjFKB20C56QgtDtNKw9YzFML+UBbBswsTMHl8ws=;
+        b=L8E6eR8KrGH/smO9HW2Ibf3e2We+nq/F+KKakxicXZAaxFlph//AGSueTke3lZ3KZS
+         NvUD6O3gvrKAjI9WI0qWdb93QhyWYS0KtVRG2okPK41VdiH6kqflu27e7zbIGCZsUJjh
+         sZbO0m9eRrF2fXxAq4jXrwQXNrALN+8urj9T+rLYChb57eNkhOuE1fybIBn31XXocCRt
+         7mAizkIUROzrZQAOsHdtkW1pIxkO8IYamMz63u6Ug8lmsL9qo2vXVkCfGekpuu9L7ua3
+         O0bZjqGFo3sSLxZi+y62f5F8UfMVKz68E0lGWt40oFuqK1PDj7dY5zHptfcnI71lYU2U
+         iAAA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712318490; x=1712923290;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Er4m6dF4CTJ/JTa0OQR3uPXdnB5OQd8nc24oiwvaXBk=;
-        b=hz96x3j/5IpK11Ez6CnSCxYbDkoP5uCK2Q/BM4ItpIKgr9SXI5cFGMyZi0wVKlXDYD
-         GD2QyOwMUlU2t7XDUvU37pb9Ry/ZVeBiv0KjYxvuixxfmTmh9lFEE8ZsHO/X4FikpyPj
-         X7M+OqyCMhTK6Kr/ZS+JVABZ7YoUlHFMbVD8U7XuxHxe3nGCHr7ShaNCZnDxKtcgOZJS
-         T5rSb1OQ0yQxFZtS9NMlE4+2K5eIIq8nXXS1ZMLU8qupOHnglaCfuBj0n/66SqIoIY62
-         j821Cf35pGgdDZiQiOx3o2lH5oCnfHnRgAK02Owrm1cegV0LzH6CSXtPE4I12PnlpICK
-         pyTg==
-X-Forwarded-Encrypted: i=1; AJvYcCVCQHJPxacGcvgALgqvb3sya+QvCeTgVF0Sfx7OeFlJeeKyeaN/Wsz+cIGW9XiQ4Uw8Yw4CLCj2ItJq6wzfeQgel3C1KDMtBHVgLhDe
-X-Gm-Message-State: AOJu0YwB+jllmo13yWtAID3eR6lrbBsm9P1v4PlwNOHCP/Je81839hXc
-	5Kry6Lg8L+ygaA7LGvV9ZZ1yc9Fkvpi3ohrYcnGedMFfZfriiRjuNPjEs4mlK3L3NV392QCd80q
-	MXktMrd32MphbXGz1Yy4DB/VR+yOvosdQabisDEv+W7xqZuyAlRUfAvHTuDavZQ==
-X-Received: by 2002:a05:622a:40b:b0:434:3e7c:ff29 with SMTP id n11-20020a05622a040b00b004343e7cff29mr1054725qtx.8.1712318485071;
-        Fri, 05 Apr 2024 05:01:25 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFiyCyRJp19IZ/hMqBIxQeEde5V/OMaJJ5oWTE9Op1Wu8z9M5yrM5kFTCU5Bk+wY8/8Aog8fg==
-X-Received: by 2002:a05:622a:40b:b0:434:3e7c:ff29 with SMTP id n11-20020a05622a040b00b004343e7cff29mr1054631qtx.8.1712318483158;
-        Fri, 05 Apr 2024 05:01:23 -0700 (PDT)
-Received: from rh.redhat.com (p200300c93f4c24001316a1e598258370.dip0.t-ipconnect.de. [2003:c9:3f4c:2400:1316:a1e5:9825:8370])
-        by smtp.gmail.com with ESMTPSA id fb17-20020a05622a481100b00434383f2518sm679808qtb.87.2024.04.05.05.01.20
+        d=1e100.net; s=20230601; t=1712318706; x=1712923506;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ANigKjFKB20C56QgtDtNKw9YzFML+UBbBswsTMHl8ws=;
+        b=EPn9DH65QSoMJJde6s3OI1SyIB3F5ZNWqDhZX9k8Wvu4mdZBOiL6RP74eqMEVu0zRK
+         VbPkbJA3dkBGMX2F4DD8CXvMSRZSLSp6GSiDvAOcToC5oMyhI1eHRPZBHp7nDaDcpN70
+         aB8YGwgMHKoZ1vaJ9So9S+7EGfD6wn0UAjSnAU1D+ipWqDT2CiL9JFPS3iqcnvX6jcNb
+         un0Y72liDf4uGkoVYDbNK33sjPF5PULClp7+9nQHMALY9J336+x0Htpdh8eiyPEIYvH5
+         dpT4ci4A5F/lMUXCzVPrPSFEX76VnPL7eJuSofKiKEpWHD+v9jbbpzKh7dq8AL6bpBka
+         l7GQ==
+X-Gm-Message-State: AOJu0YyO50ie8x9ckXwDQdpinkkyv5KII4CAt79dFqbjEInfToiRvjIs
+	PR/3QK7jGA8isGVCdaWE5nv8oVjI+w8hI0kmIOpDy//cFCbF+qERXK4G0+lr6fc=
+X-Google-Smtp-Source: AGHT+IESMNgkqXbtafANGbo2BARFo6uXoCxR7/FEaBsi9GwxuDZftgiVL+fjv6uvWjEhvAUc6QG2Uw==
+X-Received: by 2002:a17:907:6d20:b0:a4e:48d6:b9d7 with SMTP id sa32-20020a1709076d2000b00a4e48d6b9d7mr1342167ejc.56.1712318706052;
+        Fri, 05 Apr 2024 05:05:06 -0700 (PDT)
+Received: from localhost (2001-1ae9-1c2-4c00-20f-c6b4-1e57-7965.ip6.tmcz.cz. [2001:1ae9:1c2:4c00:20f:c6b4:1e57:7965])
+        by smtp.gmail.com with ESMTPSA id hd6-20020a170907968600b00a46da83f7fdsm763981ejc.145.2024.04.05.05.05.04
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 05 Apr 2024 05:01:22 -0700 (PDT)
-From: Sebastian Ott <sebott@redhat.com>
-To: linux-arm-kernel@lists.infradead.org,
-	kvmarm@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Cc: Marc Zyngier <maz@kernel.org>,
-	Oliver Upton <oliver.upton@linux.dev>,
-	James Morse <james.morse@arm.com>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>
-Subject: [PATCH 3/4] KVM: arm64: add emulation for CTR_EL0 register
-Date: Fri,  5 Apr 2024 14:01:07 +0200
-Message-ID: <20240405120108.11844-4-sebott@redhat.com>
-X-Mailer: git-send-email 2.44.0
-In-Reply-To: <20240405120108.11844-1-sebott@redhat.com>
-References: <20240405120108.11844-1-sebott@redhat.com>
+        Fri, 05 Apr 2024 05:05:05 -0700 (PDT)
+Date: Fri, 5 Apr 2024 14:05:04 +0200
+From: Andrew Jones <ajones@ventanamicro.com>
+To: Atish Patra <atishp@rivosinc.com>
+Cc: linux-kernel@vger.kernel.org, Anup Patel <anup@brainfault.org>, 
+	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alexghiti@rivosinc.com>, 
+	Atish Patra <atishp@atishpatra.org>, Conor Dooley <conor.dooley@microchip.com>, 
+	Guo Ren <guoren@kernel.org>, Icenowy Zheng <uwu@icenowy.me>, kvm-riscv@lists.infradead.org, 
+	kvm@vger.kernel.org, linux-kselftest@vger.kernel.org, linux-riscv@lists.infradead.org, 
+	Mark Rutland <mark.rutland@arm.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
+	Paolo Bonzini <pbonzini@redhat.com>, Paul Walmsley <paul.walmsley@sifive.com>, 
+	Shuah Khan <shuah@kernel.org>, Will Deacon <will@kernel.org>
+Subject: Re: [PATCH v4 09/15] RISC-V: KVM: Add perf sampling support for
+ guests
+Message-ID: <20240405-de92b25fdc1ecf53770c49d9@orel>
+References: <20240229010130.1380926-1-atishp@rivosinc.com>
+ <20240229010130.1380926-10-atishp@rivosinc.com>
+ <20240302-f9732d962e5f7c7760059f2e@orel>
+ <c46c57c2-95bc-4289-ac99-efd5bad093b5@rivosinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <c46c57c2-95bc-4289-ac99-efd5bad093b5@rivosinc.com>
 
-CTR_EL0 is currently handled as an invariant register, thus
-guests will be presented with the host value of that register.
-Add emulation for CTR_EL0 based on a per VM value.
+On Tue, Apr 02, 2024 at 01:33:10AM -0700, Atish Patra wrote:
+...
+> > but it should be possible for the VMM to disable this extension in the
+> > guest. We just need to change all the checks in KVM of the host's ISA
+> > for RISCV_ISA_EXT_SSCOFPMF to checking the guest's ISA instead. Maybe
+> > it's not worth it, though, if the guest PMU isn't useful without overflow.
+> > But, sometimes it's nice to be able to disable stuff for debug and
+> > workarounds.
+> > 
+> 
+> As per my understanding, kvm_riscv_vcpu_isa_disable_allowed only returns
+> true for those extensions which can be disabled architecturally.
 
-When CTR_EL0 is changed the reset function for CLIDR_EL1 is
-called to make sure we present the guest with consistent
-register values.
+I think kvm_riscv_vcpu_isa_disable_allowed can return true for any
+extensions that KVM can guarantee won't be exposed in any way to the
+guest. Extensions that cannot be disabled architecturally must return
+false, since their instructions will still be present in the guest, even
+if KVM doesn't want to expose them, but extensions which KVM emulates
+can return true because KVM can choose not to emulate them. IIUC, sscofpmf
+falls in this latter category.
 
-Signed-off-by: Sebastian Ott <sebott@redhat.com>
----
- arch/arm64/kvm/sys_regs.c | 72 ++++++++++++++++++++++++++++++++++-----
- 1 file changed, 64 insertions(+), 8 deletions(-)
+> 
+> VMM can still disable any extension by not adding to the device tree.
+> In fact, that's how kvmtool can disable sstc or sscofpmf with
+> --disable-<isa-ext command>.
+> 
+> The warning is bit confused though.
+> 
+> For example: if you run kvmtool with --disable-sstc
+> 
+> "Warning: Failed to disable sstc ISA exension"
 
-diff --git a/arch/arm64/kvm/sys_regs.c b/arch/arm64/kvm/sys_regs.c
-index 4d29b1a0842d..b0ba292259f9 100644
---- a/arch/arm64/kvm/sys_regs.c
-+++ b/arch/arm64/kvm/sys_regs.c
-@@ -1874,6 +1874,55 @@ static bool access_ctr(struct kvm_vcpu *vcpu, struct sys_reg_params *p,
- 	return true;
- }
- 
-+static u64 reset_ctr(struct kvm_vcpu *vcpu, const struct sys_reg_desc *rd)
-+{
-+	vcpu->kvm->arch.ctr_el0 = 0;
-+	return kvm_get_ctr_el0(vcpu->kvm);
-+}
-+
-+static int get_ctr(struct kvm_vcpu *vcpu, const struct sys_reg_desc *rd,
-+		   u64 *val)
-+{
-+	*val = kvm_get_ctr_el0(vcpu->kvm);
-+	return 0;
-+}
-+
-+static const struct sys_reg_desc *get_sys_reg_desc(u32 encoding);
-+
-+static int set_ctr(struct kvm_vcpu *vcpu, const struct sys_reg_desc *rd,
-+		   u64 val)
-+{
-+	u64 host_val = read_sanitised_ftr_reg(SYS_CTR_EL0);
-+	u64 old_val = kvm_get_ctr_el0(vcpu->kvm);
-+	const struct sys_reg_desc *clidr_el1;
-+	int ret;
-+
-+	if (val == old_val)
-+		return 0;
-+
-+	if (kvm_vm_has_ran_once(vcpu->kvm))
-+		return -EBUSY;
-+
-+	mutex_lock(&vcpu->kvm->arch.config_lock);
-+	ret = arm64_check_features(vcpu, rd, val);
-+	if (ret) {
-+		mutex_unlock(&vcpu->kvm->arch.config_lock);
-+		return ret;
-+	}
-+	if (val != host_val)
-+		vcpu->kvm->arch.ctr_el0 = val;
-+	else
-+		vcpu->kvm->arch.ctr_el0 = 0;
-+
-+	mutex_unlock(&vcpu->kvm->arch.config_lock);
-+
-+	clidr_el1 = get_sys_reg_desc(SYS_CLIDR_EL1);
-+	if (clidr_el1)
-+		clidr_el1->reset(vcpu, clidr_el1);
-+
-+	return 0;
-+}
-+
- static bool access_clidr(struct kvm_vcpu *vcpu, struct sys_reg_params *p,
- 			 const struct sys_reg_desc *r)
- {
-@@ -2460,7 +2509,11 @@ static const struct sys_reg_desc sys_reg_descs[] = {
- 	{ SYS_DESC(SYS_CCSIDR2_EL1), undef_access },
- 	{ SYS_DESC(SYS_SMIDR_EL1), undef_access },
- 	{ SYS_DESC(SYS_CSSELR_EL1), access_csselr, reset_unknown, CSSELR_EL1 },
--	{ SYS_DESC(SYS_CTR_EL0), access_ctr },
-+	{ SYS_DESC(SYS_CTR_EL0), access_ctr, .reset = reset_ctr,
-+	  .get_user = get_ctr, .set_user = set_ctr, .val = (CTR_EL0_DIC_MASK |
-+							    CTR_EL0_IDC_MASK |
-+							    CTR_EL0_DminLine_MASK |
-+							    CTR_EL0_IminLine_MASK)},
- 	{ SYS_DESC(SYS_SVCR), undef_access },
- 
- 	{ PMU_SYS_REG(PMCR_EL0), .access = access_pmcr, .reset = reset_pmcr,
-@@ -3623,6 +3676,13 @@ static bool index_to_params(u64 id, struct sys_reg_params *params)
- 	}
- }
- 
-+static const struct sys_reg_desc *get_sys_reg_desc(u32 encoding)
-+{
-+	struct sys_reg_params params = encoding_to_params(encoding);
-+
-+	return find_reg(&params, sys_reg_descs, ARRAY_SIZE(sys_reg_descs));
-+}
-+
- const struct sys_reg_desc *get_reg_by_id(u64 id,
- 					 const struct sys_reg_desc table[],
- 					 unsigned int num)
-@@ -3676,18 +3736,11 @@ FUNCTION_INVARIANT(midr_el1)
- FUNCTION_INVARIANT(revidr_el1)
- FUNCTION_INVARIANT(aidr_el1)
- 
--static u64 get_ctr_el0(struct kvm_vcpu *v, const struct sys_reg_desc *r)
--{
--	((struct sys_reg_desc *)r)->val = read_sanitised_ftr_reg(SYS_CTR_EL0);
--	return ((struct sys_reg_desc *)r)->val;
--}
--
- /* ->val is filled in by kvm_sys_reg_table_init() */
- static struct sys_reg_desc invariant_sys_regs[] __ro_after_init = {
- 	{ SYS_DESC(SYS_MIDR_EL1), NULL, get_midr_el1 },
- 	{ SYS_DESC(SYS_REVIDR_EL1), NULL, get_revidr_el1 },
- 	{ SYS_DESC(SYS_AIDR_EL1), NULL, get_aidr_el1 },
--	{ SYS_DESC(SYS_CTR_EL0), NULL, get_ctr_el0 },
- };
- 
- static int get_invariant_sys_reg(u64 id, u64 __user *uaddr)
-@@ -4049,6 +4102,9 @@ void kvm_init_sysreg(struct kvm_vcpu *vcpu)
- 			vcpu->arch.hcrx_el2 |= (HCRX_EL2_MSCEn | HCRX_EL2_MCE2);
- 	}
- 
-+	if (vcpu->kvm->arch.ctr_el0)
-+		vcpu->arch.hcr_el2 |= HCR_TID2;
-+
- 	if (test_bit(KVM_ARCH_FLAG_FGU_INITIALIZED, &kvm->arch.flags))
- 		goto out;
- 
--- 
-2.42.0
+I think Sstc should allow disabling since it has a corresponding henvcfg
+bit which KVM could not set in order to force accesses to the Sstc CSRs
+to raise ILL exceptions. So, let's put Sstc aside, since it's not a good
+example. An extension like Zihintpause, OTOH, cannot be disabled since
+the 'pause' instruction will be present even if KVM does not put
+Zihintpause in the guest's ISA string. If a kvmtool user uses
+--disable-zihintpause, then I think this warning about failing to disable
+the extension is appropriate.
 
+> 
+> But sstc is disabled: Here is the cpuinfo output.
+> # cat /proc/cpuinfo
+> processor       : 0
+> hart            : 0
+> isa             : rv64imafdc_zicbom_zicboz_zicntr_zicsr_zifencei_zihintntl_zihintpause_zihpm_zfa_zba_zbb_zbc_zbs_smstateen_sscofpmf
+> mmu             : sv57
+> mvendorid       : 0x0
+> marchid         : 0x0
+> mimpid          : 0x0
+> hart isa        : rv64imafdc_zicbom_zicboz_zicntr_zicsr_zifencei_zihintntl_zihintpause_zihpm_zfa_zba_zbb_zbc_zbs_smstateen_sscofpmf
+
+Removing from the ISA string is the best we can do in cases like
+Zihintpause, and is likely good enough for well-behaved guests, but the
+VMM's warning to the user is good for these cases too, since not all
+guests are well-behaved.
+
+Thanks,
+drew
