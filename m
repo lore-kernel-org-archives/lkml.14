@@ -1,118 +1,130 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1A5F16F28B;
-	Fri,  5 Apr 2024 15:50:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54A3116F28B;
+	Fri,  5 Apr 2024 15:50:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712332231; cv=none; b=Ma+zSv8DXX2U0UQiqfXsJ8cds57f5OSUhOlg+uzWlv9hWuFI/7AF3DSOSpwxLO7SgtzvjyN039vwajIy0OglrU76Ohb/X6phXrQ26d304vgLPME4zca6FypY4TZlDVKB5UMiO+5DGnQO+NU8qAJ1Qhedu0eUbQw7s310Bng9Exo=
+	t=1712332252; cv=none; b=at2T4tZqQkh1oHXmnNr7N5sFKv4gskIaY0gO0onhz0bjB4U2loMN3ZtGMSUO4zVW6bBywfM2cybTSntpQV3JLoGNA5Y/sZPl3WLG1BKmEsxH1rSDrQiPQPXQ73eWuRjzyBz6lqLzQpf8MksY0k+25fwhI/TLvXtiL7cqA9eovwk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712332231; c=relaxed/simple;
-	bh=JuwIBPyywPFitWU0GAYwZuSb8x811YnAxbc/FR7Z6kg=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=jBU5MY1W6QRh0+Mx+W/ACK6CMe5kHj6J+IatiYganWDrI5TlDM+zFsOSK4JCSUnBhAt8EVm0ANxwnu/kHMPzM5U8WiwJL2+B3wrl4Iuvu87Ft4bYS9pXqJogKrEAG98O+rEnFJ5HkRyQrFUcPgp6gGDxSYE8eJU15voiYKZYavY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mDejj3ET; arc=none smtp.client-ip=198.175.65.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1712332252; c=relaxed/simple;
+	bh=QV5OlGrTEtG4KKZLN6xXEFl9Ht0QMzJyxZGOnp5ktK8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=JKFqRhHJYaylTrQiS+0dJ42cX0XHFA+HHu5HmtBUCnX3vAkI7ARmBQd+3EyqaArobBLB23j6TZiJM7ZP9O08V/1B/NLlKOxz9FBwiNh9usFmCING9nxDb8F1JJ7brXQkAnOHhV6hKctQvxide/Gzx920KuPOAEQep6ULDRrT3tw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TcbCvz8C; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mDejj3ET"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1712332229; x=1743868229;
-  h=date:from:to:cc:subject:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=JuwIBPyywPFitWU0GAYwZuSb8x811YnAxbc/FR7Z6kg=;
-  b=mDejj3ETBMQC3/UBpoaBLyPhW94V8rkm/P03UDmXMLfTpQPQp+is3t2s
-   VIjeBble3YCNSruCKVEp+1PrkGqMS9U1Mx1UpDwonWsEPNHTigC7XIupg
-   EEas9o2WnYkZT9r+Lx7rZiCsfkLsKxz14dvneTgcH1++SsTrDZ/rISp7o
-   EJWdQCBncoiEoqdKTFAoMSY42drhBKfDUWaLbJFVmClcmTaclZTRF+cHM
-   3asCrbsPy0m39UxlaDIRqAFrU2rB1It1mvri/xOkpfkhF1ZaCrgzY+suT
-   e0tc1pYTf0IjvbSjtlw1XULiu3wGfplKm3mjxVozb6G4i9ri7/5Pp4v3l
-   g==;
-X-CSE-ConnectionGUID: xaUgz2DZTJOPoNF5yyEW9Q==
-X-CSE-MsgGUID: n9S30rN/TRqFM6u0dFIVzA==
-X-IronPort-AV: E=McAfee;i="6600,9927,11035"; a="7830974"
-X-IronPort-AV: E=Sophos;i="6.07,181,1708416000"; 
-   d="scan'208";a="7830974"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Apr 2024 08:50:19 -0700
-X-CSE-ConnectionGUID: b+flWz2dSiyMWDRXybRuQw==
-X-CSE-MsgGUID: xBkY6l/yQaKUhOjf4ieNSA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,181,1708416000"; 
-   d="scan'208";a="23905135"
-Received: from jacob-builder.jf.intel.com (HELO jacob-builder) ([10.54.39.125])
-  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Apr 2024 08:50:19 -0700
-Date: Fri, 5 Apr 2024 08:54:46 -0700
-From: Jacob Pan <jacob.jun.pan@linux.intel.com>
-To: Robert Hoo <robert.hoo.linux@gmail.com>
-Cc: LKML <linux-kernel@vger.kernel.org>, X86 Kernel <x86@kernel.org>, Peter
- Zijlstra <peterz@infradead.org>, iommu@lists.linux.dev, Thomas Gleixner
- <tglx@linutronix.de>, Lu Baolu <baolu.lu@linux.intel.com>,
- kvm@vger.kernel.org, Dave Hansen <dave.hansen@intel.com>, Joerg Roedel
- <joro@8bytes.org>, "H. Peter Anvin" <hpa@zytor.com>, Borislav Petkov
- <bp@alien8.de>, Ingo Molnar <mingo@redhat.com>, Paul Luse
- <paul.e.luse@intel.com>, Dan Williams <dan.j.williams@intel.com>, Jens
- Axboe <axboe@kernel.dk>, Raj Ashok <ashok.raj@intel.com>, "Tian, Kevin"
- <kevin.tian@intel.com>, maz@kernel.org, seanjc@google.com, Robin Murphy
- <robin.murphy@arm.com>, jacob.jun.pan@linux.intel.com
-Subject: Re: [PATCH 04/15] x86/irq: Add a Kconfig option for posted MSI
-Message-ID: <20240405085001.2bb3e8ad@jacob-builder>
-In-Reply-To: <89927174-6ca9-4299-8157-a0404b30b156@gmail.com>
-References: <20240126234237.547278-1-jacob.jun.pan@linux.intel.com>
- <20240126234237.547278-5-jacob.jun.pan@linux.intel.com>
- <89927174-6ca9-4299-8157-a0404b30b156@gmail.com>
-Organization: OTC
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TcbCvz8C"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 21392C433C7;
+	Fri,  5 Apr 2024 15:50:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1712332251;
+	bh=QV5OlGrTEtG4KKZLN6xXEFl9Ht0QMzJyxZGOnp5ktK8=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=TcbCvz8CxFiSEYnJ+kZEdd8WeqBOQ7s5Bm4Skndh9eD8p8TmUEhthv0CvPHDkvsOQ
+	 yCvmr7XF/+8Fg8b9xx5NlasJ9uZS8YiwGqdo04JnJ0YMa+azf2vPT+24LUYtGZII+K
+	 WVB1UhLNB6ExBsgD7JbM9h0pPm6kYT4p/NDX3+9nCVkk6TCZPcFYIhrhM6tUDVzde4
+	 KvcYIcPtgIdWZQLCBaj+r7dt5Nk6NOBEh52XXPZthV2PwOOdcbNV3yYRtrxIydUchd
+	 A0knV8IEhUiHb9qUxO8Ys1hAszwxjq1Qya2CoybitsN1u61WoovsA0rQgdFOPGwZWY
+	 2DnScAq4ryBrA==
+Message-ID: <c599d2cd-2871-4f84-94bb-00656c1a9395@kernel.org>
+Date: Fri, 5 Apr 2024 17:50:41 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/6] dt-bindings: net: snps,dwmac: remove tx-sched-sp
+ property
+To: Flavio Suligoi <f.suligoi@asem.it>,
+ Alexandre Torgue <alexandre.torgue@foss.st.com>,
+ Jose Abreu <joabreu@synopsys.com>, "David S . Miller" <davem@davemloft.net>,
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+ Paolo Abeni <pabeni@redhat.com>, Maxime Coquelin
+ <mcoquelin.stm32@gmail.com>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+ Sascha Hauer <s.hauer@pengutronix.de>,
+ Pengutronix Kernel Team <kernel@pengutronix.de>,
+ Fabio Estevam <festevam@gmail.com>, Bjorn Andersson <andersson@kernel.org>,
+ Konrad Dybcio <konrad.dybcio@linaro.org>,
+ Giuseppe Cavallaro <peppe.cavallaro@st.com>
+Cc: netdev@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
+ linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+ imx@lists.linux.dev, linux-arm-msm@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20240405152800.638461-1-f.suligoi@asem.it>
+ <20240405152800.638461-2-f.suligoi@asem.it>
+Content-Language: en-US
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <20240405152800.638461-2-f.suligoi@asem.it>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Robert,
-
-On Fri, 5 Apr 2024 10:28:59 +0800, Robert Hoo <robert.hoo.linux@gmail.com>
-wrote:
-
-> On 1/27/2024 7:42 AM, Jacob Pan wrote:
-> > This option will be used to support delivering MSIs as posted
-> > interrupts. Interrupt remapping is required.
-> > 
-> > Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
-> > ---
-> >   arch/x86/Kconfig | 11 +++++++++++
-> >   1 file changed, 11 insertions(+)
-> > 
-> > diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-> > index 5edec175b9bf..79f04ee2b91c 100644
-> > --- a/arch/x86/Kconfig
-> > +++ b/arch/x86/Kconfig
-> > @@ -463,6 +463,17 @@ config X86_X2APIC
-> >   
-> >   	  If you don't know what to do here, say N.
-> >   
-> > +config X86_POSTED_MSI
-> > +	bool "Enable MSI and MSI-x delivery by posted interrupts"
-> > +	depends on X86_X2APIC && X86_64 && IRQ_REMAP  
+On 05/04/2024 17:27, Flavio Suligoi wrote:
+> The property "tx-sched-sp" no longer exists, as it was removed from the
+> file:
 > 
-> Does posted_msi really depend on x2APIC? PID.NDST encoding supports both
-> xAPIC and x2APIC.
-No, posted_msi works with xAPIC as well. I just fixed a bug in NDST xAPIC
-encoding, will be in v2.
+> drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c
+> 
+> by the commit:
+> 
+> commit aed6864035b1 ("net: stmmac: platform: Delete a redundant condition
+> branch")
+> 
+> Signed-off-by: Flavio Suligoi <f.suligoi@asem.it>
+> ---
+>  .../devicetree/bindings/net/snps,dwmac.yaml        | 14 --------------
+>  1 file changed, 14 deletions(-)
 
-I was thinking from the performance advantage of x2APIC. But you are right
-they are orthogonal.
+One more thought though:
+1. Missing net-next patch annotation,
+2. Please split DTS from net. DTS goes via separate trees.
 
-> If posted_msi posts more stringent requirement, I think it deserves an 
-> explanation in this patch's description.
-> And, X86_X2APIC already depends on IRQ_REMAP, can we just list one of
-> them here?
-Will drop X2APIC dependency.
+Best regards,
+Krzysztof
 
-Thanks,
-
-Jacob
