@@ -1,147 +1,121 @@
-Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
+Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C98472C1AD
-	for <linux-kernel@vger.kernel.org>; Fri,  5 Apr 2024 06:58:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 138FD24B5B;
+	Fri,  5 Apr 2024 06:59:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712300324; cv=none; b=GOIE2jDQl82eql+1+ZL4MoAJZ4DkxpHjAzlakR40Y3q9Xq7npDYAm0wuFgM9LR23WGWMTk5Iwpu73BCs6R7dm5ugb3HNq1IloTfiyTwPeKV0A0MkYUN7Q5Fc8TgowjMb14amIN/M9vxjGnJ8LaeqU3uY56P+pvj6a+Q6ubhMct8=
+	t=1712300344; cv=none; b=Ow+yarwnmShzODYd76djfSzYFYsGPFZ9d/aLVR3/O56H9GMNEerPx+HPALg98WwpviH1hJZKG+W8m44ipjSgqu2SpUf2xCl9SXpkvreWtXBJ+BWxZJ/c6H3y8C+I5c7q1H8o8IP03H8Hvhrb3hDR3h7H5dDGd3PTAGG141gNECI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712300324; c=relaxed/simple;
-	bh=w4YfYFCnNRhq+hmoWgDVGwZG4mzlMaN1EEu4Nss4Z98=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=B9r024yhA4222J/gBvzd3/Lx69CMC1dmMCN2PqS01J5ziRsOKU0iv4Se1mcVXNwD92FfEkRi9uQlyjTXfsy/ZvY61U3P4lBPruPTIwU4DaNVr8uMfjrqgHmU+ABZcPo8JuaUYdaaUOdixSt0KHfqqUlaItyM7ydhYWQkzo9DKYI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=SfdpkCwP; arc=none smtp.client-ip=209.85.208.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1712300344; c=relaxed/simple;
+	bh=pUg3n1Irw/j3lwjLbn/K2qRZnbg0yPoUrDBFEOcFtzw=;
+	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=jIY/6pXzjmfFYOj+7aMCbpaipT4Ab7J6bRuRTvFs9aV+5rID7wX5KA4wH654e0y+ZLwbwq2m+3eRcd+ROh2H4aJExyH7g2gy4IxmnHM3drTmgnYRwBRWZePiFi055J8AfepI1s4eV6WoUxDB2tTgXayOWX3mZ2qTucYk02WKmnc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NHF5Aqee; arc=none smtp.client-ip=209.85.221.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SfdpkCwP"
-Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-56e136cbcecso2353692a12.3
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Apr 2024 23:58:42 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NHF5Aqee"
+Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-3434c6e1941so856538f8f.0;
+        Thu, 04 Apr 2024 23:59:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1712300321; x=1712905121; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=GIT5lIcHDKsZacvmPnTb4XsF32g7HylvN7JGq3xEO60=;
-        b=SfdpkCwPYEM6mZDA4IimfQqO2354BDEHMm3AI6dNiHJ5Uma0HiuNEMu808mD6IkTIy
-         qY0ZtYhZA/C9d1uu20yNfRj/GpOuM11gTYGAeDQmKSF3M1gnfcCTSXqIu4d/NjzlbLmk
-         jqGBCitZVZoZEWDav6CGf1EVB6AnsB1i9BKR9nkxMqJTmj/xtk4NFt4Ap2SL/yZiAx97
-         4q5kxtf8s2QbkRiAtC4z42f0PziZ2xU2RbmxhXUld12A8USz3ddGMgep400BCZkqkp2R
-         NbD/mgxQyEpXMUmD9kV2ciu9uc5DF5nsd5aUurJWYH2qBZOHyy83yk3L4Xi2gwHrAwPu
-         QETw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712300321; x=1712905121;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1712300341; x=1712905141; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:to:from:subject:message-id:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=GIT5lIcHDKsZacvmPnTb4XsF32g7HylvN7JGq3xEO60=;
-        b=cH3bBzOU1JS6TFqVmYuwnJAo9lLyqBy8vQoeRwOpkMX1cmXGPcKdA0kiAGC8O7suH0
-         g0ieXhFMAKBWDSuLamojwvQCFBjZrcedXbW5+YxC+bkjYvEPq3y5ZkV09q53rrdEw3dw
-         tWJqbnHszA/yue0Q1uKxu37Qt4eNko8yDv4q5ZojwL8zgf4o9/Jt3yKRrK9vEB1XngHo
-         1/SbZVl5eARaoQ3yzqdzoTfDsNxYQ3blt25u/iUYBp4Ww3szjB7UGX1WC8hIhzpsrkrL
-         3qhQFtHerxD75/sKZSnibigdba+0wmrwCb4C32Yrzw40nmxOLT5PN4NpBRxbDEcPB6JR
-         Mh2Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVjBOns5874BTrNCr6KeqAbylolutMhIOHEXIkXBmhKPHzViBCseg9TqKly02Zmf4dZlkIbvQZns7eh5bwNcYRUKxG5LjGlfXUYJx4n
-X-Gm-Message-State: AOJu0Yw8v0LqX6wbYrwjtvzNBAvGif1oqsm9ObhTgQkCoGF/pp+KareA
-	CdFfMXV/V7sl7cQF+2Eoalhs8gJTbi6wcTm15hIzToEcHoTJGO+dcfeRD8m2QzE=
-X-Google-Smtp-Source: AGHT+IHY3P/qLBaJr8r1CwhWXGeCk1viksJC9puBYbXfQJF7ZOm4pvbdI+S+Wypq6/LanWrSZE42RQ==
-X-Received: by 2002:a50:d714:0:b0:56e:2e0:79d1 with SMTP id t20-20020a50d714000000b0056e02e079d1mr378356edi.4.1712300321141;
-        Thu, 04 Apr 2024 23:58:41 -0700 (PDT)
-Received: from [192.168.1.20] ([178.197.223.16])
-        by smtp.gmail.com with ESMTPSA id u4-20020aa7d884000000b0056e1be375f2sm481502edq.32.2024.04.04.23.58.40
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 04 Apr 2024 23:58:40 -0700 (PDT)
-Message-ID: <78091796-fd0a-42dd-a4da-f7bed3025bf9@linaro.org>
-Date: Fri, 5 Apr 2024 08:58:39 +0200
+        bh=NtsP9N3Y/UsOibduuzAW0/izjs/GyV9mM2aDGvk1f1Y=;
+        b=NHF5AqeeS/aNR3eL2DNwlBeIgJ2zZPtX1bUe8qFwjtGo52YhB0H0Y0cMmwZqvhqoxI
+         Hdl7ki6huYdCFTCfTTpPfmfCrZaZNRkJ+jhBUiUzqMc/oHQGidb4p6HSl3t3cD5nlcbE
+         diDtHOfOMp8niA8cv0vihgR6Fpey/+FH4RS1kbkFT/tUVoXkFQRt8g4iFSsa/7x1/M/p
+         vAL9vJAlAXtI7VRp3e1L8SB+ZVC+Jfce81RTMLi+eB/1IN45JE+0XdoAAudNrJjxK/in
+         Yqc5gaPPuIwymvMR8DxebRWiB7UnapbNOxD9ZsxMufiqkpq2/YThDpDej9bU0GuxTIh5
+         cjbg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712300341; x=1712905141;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:to:from:subject:message-id:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=NtsP9N3Y/UsOibduuzAW0/izjs/GyV9mM2aDGvk1f1Y=;
+        b=mRZPWyuvhI9yjxWB49SQD8LWV2QEpqEwU+M18OIouKNevwP7NT6WJUVM5UDZNQrGXa
+         UoODUesPDoeYjaN/IeG/X0tifxRVTBUy8RXic3MQjRmIQcBUVaXTZPHjrV7VnbakVxie
+         W3JYJNmKf1R5/K8vlFEfJsnoIn0xQoLKo7N6L9vWTqxG7/bQqSOqWQQuB0sZW0Xu+cEJ
+         dcTC39DplzkuW1SBw1dUsh+UgZhe2wxQBV6qZQR4fh2lFDc4UFayBw4nZXokkTUxBuzl
+         m2v8EOE0LUTw9SeFAKGF9MV/4x5WxzEC4EcVXF4vn/dWV9dWKwLLmgWPBqlQvcKqZqZN
+         Ko/A==
+X-Forwarded-Encrypted: i=1; AJvYcCURqg0BjnqnV4D4dItj2OgeHFHQpuPbtYmPUJ39KvvufZ91LEKlCTIf1Ag8sCkxNuwsELuaHbnl7AtnFZJdVkO3qThAjIgOIfs/zWGKYUo8QQURjjdHvj8gm2RQrsZQ7fKWs3upiMGC
+X-Gm-Message-State: AOJu0Yw4Z/k+jkGKwYGtCUJU8Hf7xCQG3WP0oKfNNKdx+vQ3srlI6bTI
+	7JDfbvjcCBBkeyhW8MHdeHSYbyEIgkivyOymTzukFt3Og2nD7vgx
+X-Google-Smtp-Source: AGHT+IFOV0vx06Mwcrc3cTYRhkWOotSTL3QGIXw6WKI1DyRFX6MrrCFP6WKAxdAeHCfli1UKqOf7iQ==
+X-Received: by 2002:a5d:6705:0:b0:343:6f87:fe33 with SMTP id o5-20020a5d6705000000b003436f87fe33mr461580wru.7.1712300341138;
+        Thu, 04 Apr 2024 23:59:01 -0700 (PDT)
+Received: from ?IPv6:2003:f6:ef16:e300:6c47:9f78:b083:629a? (p200300f6ef16e3006c479f78b083629a.dip0.t-ipconnect.de. [2003:f6:ef16:e300:6c47:9f78:b083:629a])
+        by smtp.gmail.com with ESMTPSA id dr20-20020a5d5f94000000b0033ea499c645sm1265764wrb.4.2024.04.04.23.59.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 04 Apr 2024 23:59:00 -0700 (PDT)
+Message-ID: <00ed6785db2b43ec3727f42c71dc2c8dd1b627f1.camel@gmail.com>
+Subject: Re: [PATCH v2 1/1] iio:imu: adis16475: Fix sync mode setting
+From: Nuno =?ISO-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
+To: Ramona Gradinariu <ramona.bolboaca13@gmail.com>, 
+	linux-kernel@vger.kernel.org, jic23@kernel.org, nuno.sa@analog.com, 
+	linux-iio@vger.kernel.org
+Date: Fri, 05 Apr 2024 09:02:33 +0200
+In-Reply-To: <20240405045309.816328-2-ramona.bolboaca13@gmail.com>
+References: <20240405045309.816328-1-ramona.bolboaca13@gmail.com>
+	 <20240405045309.816328-2-ramona.bolboaca13@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.0 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] dt-bindings: omap-mcpdm: Convert to DT schema
-To: Mighty <bavishimithil@gmail.com>
-Cc: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
- Rob Herring <robh+dt@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>, alsa-devel@alsa-project.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20240404160649.967-1-bavishimithil@gmail.com>
-Content-Language: en-US
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
- 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
- D2GYIS41Kv4Isx2dEFh+/Q==
-In-Reply-To: <20240404160649.967-1-bavishimithil@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
 
-On 04/04/2024 18:06, Mighty wrote:
-> From: Mithil Bavishi <bavishimithil@gmail.com>
-> 
-> Convert the OMAP4+ McPDM bindings to DT schema.
-> 
-> Signed-off-by: Mighty <bavishimithil@gmail.com>
+On Fri, 2024-04-05 at 07:53 +0300, Ramona Gradinariu wrote:
+> Fix sync mode setting by applying the necessary shift bits.
+>=20
+> Fixes: fff7352bf7a3 ("iio: imu: Add support for adis16475")
+> Signed-off-by: Ramona Gradinariu <ramona.bolboaca13@gmail.com>
+> ---
 
-This does not match SoB. Can you respond to comments you receive?
+Not sure there was a reason to drop my tag... Anyways:
 
-Subject: nothing improved.
+Reviewed-by: Nuno Sa <nuno.sa@analog.com>
 
-Rest... also did not improve. so you ignored entire feedback?
-
-This is a friendly reminder during the review process.
-
-It seems my or other reviewer's previous comments were not fully
-addressed. Maybe the feedback got lost between the quotes, maybe you
-just forgot to apply it. Please go back to the previous discussion and
-either implement all requested changes or keep discussing them.
-
-Thank you.
-
-Best regards,
-Krzysztof
+> changes in v2:
+> =C2=A0- added u16 value to call __adis_update_bits to fix build error
+> =C2=A0drivers/iio/imu/adis16475.c | 4 +++-
+> =C2=A01 file changed, 3 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/drivers/iio/imu/adis16475.c b/drivers/iio/imu/adis16475.c
+> index 01f55cc902fa..060a21c70460 100644
+> --- a/drivers/iio/imu/adis16475.c
+> +++ b/drivers/iio/imu/adis16475.c
+> @@ -1289,6 +1289,7 @@ static int adis16475_config_sync_mode(struct adis16=
+475
+> *st)
+> =C2=A0	struct device *dev =3D &st->adis.spi->dev;
+> =C2=A0	const struct adis16475_sync *sync;
+> =C2=A0	u32 sync_mode;
+> +	u16 val;
+>=20
+> =C2=A0	/* default to internal clk */
+> =C2=A0	st->clk_freq =3D st->info->int_clk * 1000;
+> @@ -1350,8 +1351,9 @@ static int adis16475_config_sync_mode(struct adis16=
+475
+> *st)
+> =C2=A0	 * I'm keeping this for simplicity and avoiding extra variables
+> =C2=A0	 * in chip_info.
+> =C2=A0	 */
+> +	val =3D ADIS16475_SYNC_MODE(sync->sync_mode);
+> =C2=A0	ret =3D __adis_update_bits(&st->adis, ADIS16475_REG_MSG_CTRL,
+> -				 ADIS16475_SYNC_MODE_MASK, sync->sync_mode);
+> +				 ADIS16475_SYNC_MODE_MASK, val);
+> =C2=A0	if (ret)
+> =C2=A0		return ret;
+>=20
+> --
+> 2.34.1
+>=20
 
