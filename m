@@ -1,102 +1,122 @@
-Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
+Received: from mail-qk1-f196.google.com (mail-qk1-f196.google.com [209.85.222.196])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B961374CB
-	for <linux-kernel@vger.kernel.org>; Fri,  5 Apr 2024 07:23:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC22D36134
+	for <linux-kernel@vger.kernel.org>; Fri,  5 Apr 2024 07:23:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.196
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712301800; cv=none; b=t9RtjWt8aXj6fvUq/A7oeH/V2u3HLqbTYum370fdGyqXvaOT7LwAxmvkqmkaY/WSyb7I+MzAWiLya6Qm5eaI0BJ2hOmfajMW3QZ7HqOuzj+TUHfgH0CIuXqEGMQv5KV4gRcwdqrvs4/yRJgji1fdfM8yVGKupEwx4ulqKgutOPQ=
+	t=1712301806; cv=none; b=ZRTFz9wuVDM5sRt5CnTbJN8UP9xY4yFBdujXr0jJ1aQKYQM+isDy1KnsCvYyS6CWCsqQUaRGJf2rSgZgKqstSBdKq2nYq1p9XY6VJLLNXrpexvfAFjO5Fo+wdqprqShLDS0sfUXR6oSTKfRjqnInNOfgHhgtcxLwUZzZtJmSDcE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712301800; c=relaxed/simple;
-	bh=8xdKzFa1VnOYKWHALQhOMQPnqmr+rwGwQXGIzJueTMY=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=ex9mlpAGXuwMgLK2CCQJQ3nZKE4SmFGyKFAMk0rSqEDfxrSkzVyKLTiGzUu7GaiLpBLVB83O2OQ8eFXGRNYoP7be8n/zj58dW/w0TtutEgoh5UGJTvOfUvLHRVucWAEWXwT/vjPt+MPF2xWGubtdOVdkAaVAz1Ik/7Af1XMuaG8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=iYsuHMH2; arc=none smtp.client-ip=209.85.221.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1712301806; c=relaxed/simple;
+	bh=nWhmRghyNt6Jg/NyCAzSPWxsJwzKVk2yWrFadbiL3wo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=uMZLRQzOnbrCOMINfRFVZxlBlcQpHDuuMHgXPqLZUiNOvtZmToAaMVnFh/zukWwcmzbzikQ7H7GRw0MwGW95WX0P1GdfwqX0xK0T9MLqhAIdbupt9BXzSYvyu/lhlUw7Fls++hu5FdA/OJvsNyBsLLXZDOgpzAPFZgkZ9Ub9jyM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=VTtLasdR; arc=none smtp.client-ip=209.85.222.196
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="iYsuHMH2"
-Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-34175878e3cso1241677f8f.0
-        for <linux-kernel@vger.kernel.org>; Fri, 05 Apr 2024 00:23:19 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="VTtLasdR"
+Received: by mail-qk1-f196.google.com with SMTP id af79cd13be357-78a26803f1aso108740985a.3
+        for <linux-kernel@vger.kernel.org>; Fri, 05 Apr 2024 00:23:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1712301798; x=1712906598; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=Swy2Ymmin5bn1S0K0/BIJr14PVb2mCYW4gABHjS10eE=;
-        b=iYsuHMH2wacPBIrhP7vpfKm3ie5aWDC8vy581v44MsGa0iejOZgTjgB8zsV50f928z
-         MDsDT3KZ4vhT6uiYVfUJRvccFJqX85GZB03Dyd8GixTk4c/i4j2Oq/5dXgYFwLTIhofA
-         uzIUTzKmolcS8KukNH1Lpyv8LNLyCJLxMfbEygujQLaXedhZEnkWEaO8AfAlDmCK9sgp
-         2uxq6jjgaraDqg72slWfsVZlTOmMzDuKUgnl/uPLwvajgtwNRFCnWdrVLNOHlcfgwS+y
-         8nzr0TRTw1Li9UO7GnDN/T6hwEFO1DZcKfovNgXM529cnMx1rHrej6E9rSK/qX2ewf5w
-         rF3A==
+        d=chromium.org; s=google; t=1712301803; x=1712906603; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=JUMwQHIkq2s6PP2HhBebNLyPm3hSUj+L7rns3+rNZm8=;
+        b=VTtLasdR0Oc7wFnBWA1/rxtlI/YO71OnvucNT2Zvbb60eaum2WalbK0eToXQCVIl1/
+         fTwlUggpOqqfIIFN7P+MH2NON0LaXEROkUfVdZdmITcrNv0R7pcIEl01CErsFG0HO30G
+         WLdOQLJb9gPNbw0C8SBqQeWj/g4iQaMHzMWFM=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712301798; x=1712906598;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Swy2Ymmin5bn1S0K0/BIJr14PVb2mCYW4gABHjS10eE=;
-        b=dCUjWDsge9NM6RKbSEME554sfCpceziwUz/b915jtTCFKVwk1Z/4r/9YluFtPMKTwl
-         QyW86mHrt0CVCORFHWpDWFw+R/yHAF1QgubV1OA46u+zqw4kETpEmR9GDpoeLIhLY9mT
-         b/l/+4RhJ6IiLG6TUh9kTJxUJdIQhqPAAlQvSHeLdCDdNwbdQuoM9BSGNZrTNwSOLWr8
-         8O01ALu+1NNPUVCr9c/jM12OwyRmlV/2sMUgYVLOjYZf/Ds9pN7LIkaLB2bRMNAGxDBX
-         +FRpaCAJRE4jnssIdlIx1dZqFaQU6glrF1SEBM5SowhP9x7kxQ/JDuJntrbH3C5qonD0
-         TfNA==
-X-Forwarded-Encrypted: i=1; AJvYcCX0JDJYFkjcY26vKBeLAkKGrLr3YS4tc1+8MeIDR+p6tVfs7ift6h+AhNLITS9lcGJ43L4E+UkTdFA+hGKrAYmlU9jkRcE6pVM1p5cu
-X-Gm-Message-State: AOJu0Yyv//jP12e4/3V4svFCIVMtyQpRHccy6pdbprMWvUh2jI3mRg+6
-	Okn3AC3pfnwUF/sbElRzGgJq5KQdquuTLbOSD5hzE3sxBXHRaTPkP2iabpoc5Zg=
-X-Google-Smtp-Source: AGHT+IGFYhmbZFEXBcvSW4oTAKx1TZq9kP46lHeI8Ljnkc838zmC3DM9SJlHsNvNEbhOX4B03Xxclg==
-X-Received: by 2002:a5d:5918:0:b0:343:6f88:5de with SMTP id v24-20020a5d5918000000b003436f8805demr424276wrd.44.1712301797816;
-        Fri, 05 Apr 2024 00:23:17 -0700 (PDT)
-Received: from draszik.lan ([80.111.64.44])
-        by smtp.gmail.com with ESMTPSA id r24-20020adfb1d8000000b00341b451a31asm1312626wra.36.2024.04.05.00.23.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 05 Apr 2024 00:23:17 -0700 (PDT)
-Message-ID: <132435ffc0eebed9317b346e880c4a69f09d6839.camel@linaro.org>
-Subject: Re: [PATCH 08/17] clk: samsung: gs101: add support for cmu_hsi2
-From: =?ISO-8859-1?Q?Andr=E9?= Draszik <andre.draszik@linaro.org>
-To: Peter Griffin <peter.griffin@linaro.org>, mturquette@baylibre.com, 
- sboyd@kernel.org, robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
-  vkoul@kernel.org, kishon@kernel.org, alim.akhtar@samsung.com,
- avri.altman@wdc.com,  bvanassche@acm.org, s.nawrocki@samsung.com,
- cw00.choi@samsung.com,  jejb@linux.ibm.com, martin.petersen@oracle.com,
- chanho61.park@samsung.com,  ebiggers@kernel.org
-Cc: linux-scsi@vger.kernel.org, linux-phy@lists.infradead.org, 
-	devicetree@vger.kernel.org, linux-clk@vger.kernel.org, 
-	linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, tudor.ambarus@linaro.org, 
-	saravanak@google.com, willmcvicker@google.com
-Date: Fri, 05 Apr 2024 08:23:16 +0100
-In-Reply-To: <20240404122559.898930-9-peter.griffin@linaro.org>
-References: <20240404122559.898930-1-peter.griffin@linaro.org>
-	 <20240404122559.898930-9-peter.griffin@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.50.3-1 
+        d=1e100.net; s=20230601; t=1712301803; x=1712906603;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=JUMwQHIkq2s6PP2HhBebNLyPm3hSUj+L7rns3+rNZm8=;
+        b=dq7xkkFuuk0xpLR5IeBeDYY+sJ9Z8/AhS7HLzBJIvmEZiirbsm8Pzrmtf/BRJBDYBR
+         DdYfqhcbNovcb59uWOEvziyG7NXrBjWguN1h7pQ7tRnET8F+vC+hyiFWSb71b5fUwzu9
+         H7rbSAVQ9plfNEBWbkswP0g1kxq2CCLZ/SK5/qmGH0RGkWPKRsCY8EHPNB+tvZDQFzot
+         014jWhPRlMcz3YXFEcE6yBtQXXaIPoWVcOsLYokTHO9RtAIDAqbbOE60Yur7HT2Cd2cW
+         ivf9ixdIJse4roEAv43lmjp+EL76NnKLi0uW455zjgu6bNTPxNp+EzOky+dJz5POgoRj
+         /r+Q==
+X-Forwarded-Encrypted: i=1; AJvYcCWd/3KzmQxc3A407lymlsFxXE8BtggHkhcNvfPF+tc8Jrm66DWKnsfbg+VbPBoumnDWjY0HQXO6PO/eqSgCGTKm0tqBV3mirxiVOXSq
+X-Gm-Message-State: AOJu0YxbACWJsWBP1BqtZsnRZ2HXAC6FDhARv32PNtQvV7vYtC0snUxS
+	TVzY0Sm/ko88aSDJ3DzSleTBxZwZei7QOxwb2xxcibjwmMOtZSj27t4VoP86adSaluVotQcp7TE
+	XEw0W
+X-Google-Smtp-Source: AGHT+IGs/OGBw0DYTQJyqvlmwtSbBBLK4vgqop9A89AavVOMniCh5l7cJaRGn2Xt0ehnGvfwBEjF+g==
+X-Received: by 2002:a05:620a:5a4c:b0:78c:2f17:8b0b with SMTP id wx12-20020a05620a5a4c00b0078c2f178b0bmr619204qkn.6.1712301802794;
+        Fri, 05 Apr 2024 00:23:22 -0700 (PDT)
+Received: from mail-qv1-f41.google.com (mail-qv1-f41.google.com. [209.85.219.41])
+        by smtp.gmail.com with ESMTPSA id po26-20020a05620a385a00b0078d4aab609bsm264361qkn.23.2024.04.05.00.23.22
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 05 Apr 2024 00:23:22 -0700 (PDT)
+Received: by mail-qv1-f41.google.com with SMTP id 6a1803df08f44-69938e2b71dso5702196d6.0
+        for <linux-kernel@vger.kernel.org>; Fri, 05 Apr 2024 00:23:22 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVP99aEx1Y3m/a8IS3FEAOeuz7fCmtrBLG1pvxzM10y97coMsVhEEaM55Scs+QiO4flNYKySPs40Qsjh4ngY88/jLeJKyhji7YjNhS+
+X-Received: by 2002:ad4:5fcf:0:b0:699:225b:bb7d with SMTP id
+ jq15-20020ad45fcf000000b00699225bbb7dmr526982qvb.36.1712301801562; Fri, 05
+ Apr 2024 00:23:21 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+References: <20240405-uvc-fix-relative-ptz-speed-v1-0-c32cdb2a899d@securitylive.com>
+In-Reply-To: <20240405-uvc-fix-relative-ptz-speed-v1-0-c32cdb2a899d@securitylive.com>
+From: Ricardo Ribalda <ribalda@chromium.org>
+Date: Fri, 5 Apr 2024 09:23:04 +0200
+X-Gmail-Original-Message-ID: <CANiDSCv50XHMA5-DQco2r8EbqvB3X9CyaKzyig4JyfiR=3AnfQ@mail.gmail.com>
+Message-ID: <CANiDSCv50XHMA5-DQco2r8EbqvB3X9CyaKzyig4JyfiR=3AnfQ@mail.gmail.com>
+Subject: Re: [PATCH 0/2] media: uvcvideo: UVC minimum relative pan/tilt/zoom
+ speed fix
+To: johnebgood@securitylive.com
+Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, 
+	Mauro Carvalho Chehab <mchehab@kernel.org>, linux-media@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linh.tp.vu@gmail.com, soyer@irl.hu
+Content-Type: text/plain; charset="UTF-8"
 
-Hi Pete,
+Hi John
 
-On Thu, 2024-04-04 at 13:25 +0100, Peter Griffin wrote:
-> diff --git a/include/dt-bindings/clock/google,gs101.h b/include/dt-bindin=
-gs/clock/google,gs101.h
-> index 3dac3577788a..ac239ce6821b 100644
-> --- a/include/dt-bindings/clock/google,gs101.h
-> +++ b/include/dt-bindings/clock/google,gs101.h
-> @@ -518,4 +518,67 @@
-> =C2=A0#define CLK_GOUT_PERIC1_CLK_PERIC1_USI9_USI_CLK		45
-> =C2=A0#define CLK_GOUT_PERIC1_SYSREG_PERIC1_PCLK		46
-> =C2=A0
-> +/* CMU_HSI2 */
+On Fri, 5 Apr 2024 at 09:07, John Bauer via B4 Relay
+<devnull+johnebgood.securitylive.com@kernel.org> wrote:
+>
+> Thanks for the help Ricardo, still figuring out this whole workflow.
 
-You need to add these defines as part of the patch that is updating the
-binding (patch 1 this series).
+Thanks for the changes. Can you squash 2/2 on 1/2 ?
 
-Cheers,
-Andre'
+I wonder why the patches are sent as PATCH instead of PATCHv2 ... :?
+Are you using the last version of b4?
 
+btw, if you want to avoid sending the patches to the list for testing you can do
+b4 send --dry-run
+and that will print the email instead of sending it.
+
+
+>
+> Signed-off-by: John Bauer <johnebgood@securitylive.com>
+> ---
+> Changes in v2:
+> - Made recommended changes, moved control check to helper function and removed dead code.
+> - Link to v1: https://lore.kernel.org/all/20240326-uvc-relative-ptz-speed-fix-v1-1-453fd5ccfd37@securitylive.com/
+>
+> ---
+> John Bauer (2):
+>       media: uvcvideo: UVC minimum relative pan/tilt/zoom speed fix.
+>       Made recommended changes
+>
+>  drivers/media/usb/uvc/uvc_ctrl.c | 38 +++++++++++++++++++++++++++++++++-----
+>  1 file changed, 33 insertions(+), 5 deletions(-)
+> ---
+> base-commit: e8f897f4afef0031fe618a8e94127a0934896aba
+> change-id: 20240405-uvc-fix-relative-ptz-speed-e671f9a34449
+>
+> Best regards,
+> --
+> John Bauer <johnebgood@securitylive.com>
+>
+>
+
+
+-- 
+Ricardo Ribalda
