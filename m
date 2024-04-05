@@ -1,150 +1,150 @@
-Received: from mail-oa1-f41.google.com (mail-oa1-f41.google.com [209.85.160.41])
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A56316F288
-	for <linux-kernel@vger.kernel.org>; Fri,  5 Apr 2024 14:19:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AFA216D4F9
+	for <linux-kernel@vger.kernel.org>; Fri,  5 Apr 2024 14:22:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712326767; cv=none; b=tge1wLK2KHgVH1LgyXZfsaOmfnpmQ7msBxLEZvwVC/4W+o0uQoqWkZZPzbJiZEuiycVXHnpb33VrVYyQSte0eHZ+uIAab1PGqiGfHDrJSRBe8ZUJGIiNZG2si3ArO0NosCxxKcXlBALNSgaxzNkRQW7fnLa2r69macgJZqarx/I=
+	t=1712326951; cv=none; b=aHL/+qs+jtdrNQ7x33JHtN1QFZanBD9JsSL9iMU/DdWnXQ6MfwKRlLXejWEIhyXOCRi9tqtZ0DZlE8k54aczIPm4lKZhrGNPo8U59zyxHOVNNFiH1/xk8v5tqEyT1LsMVt35AmI4k90tEMpaKu2VptAIO0vKxG+87hA9vRBMASg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712326767; c=relaxed/simple;
-	bh=GtC0XbiBrZa/B4r/7Htvb9UrPAe6iDI2Za/Fy3NSIfs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=gNUhxnJRtVc/QlhHt7iOh/4qmbVbmBV7mSZpVuNUdRZ28NX9pwsff8kZ5TICsXM5dHS1eGOS2GA8POHAmAnOlBanv5MpraKv2dfXTVhl0i7ALmycV2ADMednUa9kmCnJOYfe79CrjgggyXDLIwBiMa4ivRJqgjq+ZFzp6MXnloI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=snkmYQmH; arc=none smtp.client-ip=209.85.160.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1712326951; c=relaxed/simple;
+	bh=wjOjBr+FtGDvW0yLcrvx74vXWXG3wBlNMlVobfWFVtc=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=D0q54xo5CaG+GQl1pI6hhu6BElKC/+CsqUzgnjlgP3iHQd1Y9AiNMzeyzXT2bbAEZdZB4FdxtY61kkeK7Rf0/s6TRsOpgX1zsmoO5vLmk8s6LNAISDwoudH1J4SpK+kp02tdN0Xt5SAXv8Uik5n95uM7Vt9cjFGbTByGqBwb+OU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=hAxELR+V; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=O3En1L+G; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=hAxELR+V; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=O3En1L+G; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="snkmYQmH"
-Received: by mail-oa1-f41.google.com with SMTP id 586e51a60fabf-22a5df0f789so925720fac.3
-        for <linux-kernel@vger.kernel.org>; Fri, 05 Apr 2024 07:19:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1712326762; x=1712931562; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=wrV/f7nikTYr7uJsU2LLbggB6FZ9wB2rmWaAwVpSG+w=;
-        b=snkmYQmHlP9LKSI3UKIBUxkP1ctk6icZsRLL1yXCm9vtOxyimv2XKnp7U5Aq1JZU2f
-         vTdPrfstVnTsWU/iRpV07svAq8XI9wUjpxJUbM5BaxwJaZeObM3UCzCOew7NPfjboMra
-         Uy20WA1ERpKvY3RozbHLm0sLu/sES2PIdBK1RKNwkThcuCLP+aFdF+ZLIyIfN+YM7+le
-         goGNfOQI4Dhkw0B4hArPgrxnKUHo/3rmxZ33P5V1qJEHMOYRBa7UHgXcw1WMPYUUdojo
-         TbBMXiwwW1P0jopampKsky8anNGSvFagmRBC7wWdp4t67H8EEQBu7/GN4ZuF3SqSN+Ws
-         pm9A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712326762; x=1712931562;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=wrV/f7nikTYr7uJsU2LLbggB6FZ9wB2rmWaAwVpSG+w=;
-        b=outPBYKwMbr7bvNBNPCniaTzvuUoNCsTaea/kuQe8kzqaNbpWUVtcXfiPZOjdW+ERP
-         BjLfEG1P2I87XsrtYM0rlgF36H8zKvUlcye9xn032svTn3TYwCBo+SPVmgs4b6XYFXNq
-         47/EIBzNv8hgSPaOjoYWHQ1ev6vz0LukdzYbzHQ5nfQ5C93h1D+Lp98G9tQoqugbB/9Z
-         ROpzcRi1nUmDe6T1FIAEle5OubVPwUGGAfDB/C3aYbOtuLLMIXEaiEndqi1YBI5YlMYo
-         TwghiQhkadK+hQKO3ra33HbPyIncn9RsC5emSAKgEB5CIqVOz7PeZuFuiz4L8U/FpVvn
-         AALA==
-X-Forwarded-Encrypted: i=1; AJvYcCUwLoy8YvkaD9/KGYxQUk91Bwfp/9GqRFMpwHxTM+LA+t4f3Ne/2x0wE/T5Wv9KuObQaJZaP88x6My2Wool+DS02zmnkHU2lxvPmbL9
-X-Gm-Message-State: AOJu0YwmVKJFi8aHv3KFqkMoBOfz6jQSaJyLJybip+bR94pkxhPG0IRr
-	QDxXoyy88H3udFaHmIIGg+pL93Of9cicZvBCrTfxT0kbnQ2MTDTD7GFpBynRbQY=
-X-Google-Smtp-Source: AGHT+IEfOsARdaOTsm95hHsI4nHAz7smazObv2UyX6oVfv9HmVQkQR/tziju0Iumk/YkSUZaQZNhqw==
-X-Received: by 2002:a05:6870:558f:b0:229:e689:7c1b with SMTP id qj15-20020a056870558f00b00229e6897c1bmr1920573oac.7.1712326762528;
-        Fri, 05 Apr 2024 07:19:22 -0700 (PDT)
-Received: from [192.168.40.12] (d24-150-219-207.home.cgocable.net. [24.150.219.207])
-        by smtp.gmail.com with ESMTPSA id dy6-20020a05620a60c600b0078d43da0be3sm666257qkb.5.2024.04.05.07.19.21
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 05 Apr 2024 07:19:22 -0700 (PDT)
-Message-ID: <9b2bab7a-24a7-49da-8cb8-f58e28baf065@baylibre.com>
-Date: Fri, 5 Apr 2024 10:19:20 -0400
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="hAxELR+V";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="O3En1L+G";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="hAxELR+V";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="O3En1L+G"
+Received: from imap2.dmz-prg2.suse.org (imap2.dmz-prg2.suse.org [10.150.64.98])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 809821F7D7;
+	Fri,  5 Apr 2024 14:22:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1712326941;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type;
+	bh=wjOjBr+FtGDvW0yLcrvx74vXWXG3wBlNMlVobfWFVtc=;
+	b=hAxELR+V1MR1BqqUWh9h5h42MGiIOtreuNal/pzzp/yFnVZ7f6wYKnplPZVVs0lbxhm5NL
+	YpevQglqd94K+kDfiFs9WkuqiWuUgLVWT4fq6E14+SPgu/wNeMGsrgtZf3yoS0zGyxnrte
+	pAC6TJeQFdLABhECDhSfWIthrryERKA=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1712326941;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type;
+	bh=wjOjBr+FtGDvW0yLcrvx74vXWXG3wBlNMlVobfWFVtc=;
+	b=O3En1L+GbVrR/e3Yg6AsqHgr0moOcekfcQiJ8HB2n2xkgk7jorNh2Ym/iijDIlmy4qTEj8
+	MhH3UrM1Fx+PXFAQ==
+Authentication-Results: smtp-out2.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1712326941;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type;
+	bh=wjOjBr+FtGDvW0yLcrvx74vXWXG3wBlNMlVobfWFVtc=;
+	b=hAxELR+V1MR1BqqUWh9h5h42MGiIOtreuNal/pzzp/yFnVZ7f6wYKnplPZVVs0lbxhm5NL
+	YpevQglqd94K+kDfiFs9WkuqiWuUgLVWT4fq6E14+SPgu/wNeMGsrgtZf3yoS0zGyxnrte
+	pAC6TJeQFdLABhECDhSfWIthrryERKA=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1712326941;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type;
+	bh=wjOjBr+FtGDvW0yLcrvx74vXWXG3wBlNMlVobfWFVtc=;
+	b=O3En1L+GbVrR/e3Yg6AsqHgr0moOcekfcQiJ8HB2n2xkgk7jorNh2Ym/iijDIlmy4qTEj8
+	MhH3UrM1Fx+PXFAQ==
+Received: from imap2.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap2.dmz-prg2.suse.org (Postfix) with ESMTPS id 3277C139E8;
+	Fri,  5 Apr 2024 14:22:21 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap2.dmz-prg2.suse.org with ESMTPSA
+	id /pJSCx0JEGanQgAAn2gu4w
+	(envelope-from <pvorel@suse.cz>); Fri, 05 Apr 2024 14:22:21 +0000
+Date: Fri, 5 Apr 2024 16:22:19 +0200
+From: Petr Vorel <pvorel@suse.cz>
+To: Cyril Hrubis <chrubis@suse.cz>, Jan Stancek <jstancek@redhat.com>,
+	Li Wang <liwang@redhat.com>, Xiao Yang <yangx.jy@fujitsu.com>,
+	Yang Xu <xuyang2018.jy@fujitsu.com>,
+	Mike Frysinger <vapier@gentoo.org>,
+	Alexey Kodanev <aleksei.kodanev@bell-sw.com>,
+	Enji Cooper <yaneurabeya@gmail.com>,
+	Andrea Cervesato <andrea.cervesato@suse.de>,
+	Wei Gao <wegao@suse.com>, Avinesh Kumar <akumar@suse.de>
+Cc: ltp@lists.linux.it, automated-testing@lists.yoctoproject.org,
+	linux-kernel@vger.kernel.org, Tim Bird <tim.bird@sony.com>
+Subject: New LTP documentation
+Message-ID: <20240405142219.GA637941@pevik>
+Reply-To: Petr Vorel <pvorel@suse.cz>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH 0/3] pwm: add support for duty_offset
-To: =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-Cc: linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org,
- michael.hennerich@analog.com, nuno.sa@analog.com, dlechner@baylibre.com
-References: <20240405003025.739603-1-tgamblin@baylibre.com>
- <fhrderkiwqzc7fw2hptz2la3aco72wlossqbrr4m42qllcpcpw@vhxflah2ex2a>
-Content-Language: en-US
-From: Trevor Gamblin <tgamblin@baylibre.com>
-In-Reply-To: <fhrderkiwqzc7fw2hptz2la3aco72wlossqbrr4m42qllcpcpw@vhxflah2ex2a>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+X-Spam-Flag: NO
+X-Spam-Score: -2.71
+X-Spam-Level: 
+X-Spamd-Result: default: False [-2.71 / 50.00];
+	BAYES_HAM(-2.21)[96.25%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	MID_RHS_NOT_FQDN(0.50)[];
+	HAS_REPLYTO(0.30)[pvorel@suse.cz];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	FREEMAIL_TO(0.00)[suse.cz,redhat.com,fujitsu.com,gentoo.org,bell-sw.com,gmail.com,suse.de,suse.com];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[15];
+	MISSING_XM_UA(0.00)[];
+	TO_DN_SOME(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	ARC_NA(0.00)[];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	RCVD_TLS_ALL(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap2.dmz-prg2.suse.org:helo,imap2.dmz-prg2.suse.org:rdns];
+	RCVD_COUNT_TWO(0.00)[2];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	REPLYTO_EQ_FROM(0.00)[]
 
+Hi all,
 
-On 2024-04-05 08:23, Uwe Kleine-König wrote:
-> Hello Trevor,
->
-> In general I really like your effort to generalize the pwm framework.
-> Thanks a lot!
-Thanks! I'm glad that it (mostly) fits.
->
-> On Thu, Apr 04, 2024 at 08:30:22PM -0400, Trevor Gamblin wrote:
->> This series extends the PWM subsystem to support the duty_offset feature
->> found on some PWM devices. It includes a patch to enable this feature
->> for the axi-pwmgen driver, which can also serve as an example of how to
->> implement it for other devices. It also contains a patch adding a new
->> pwm_config_full() function mirroring the behavior of pwm_config() but
-> Please don't. pwm_config() is a function I want to get rid of in the
-> long term. Consumers that want to make use of it should use
-> pwm_apply_*().
-Okay, I'll drop this patch.
->
->> with duty_offset included, to help maintain compatibility for drivers
->> that don't support the feature.
->>
->> The series was tested on actual hardware using a Zedboard. An
->> oscilloscope was used to validate that the generated PWM signals matched
->> the requested ones. The libpwm [1] tool was also used for testing the
->> char device functionality.
->>
->> The series is marked RFC as there are some outstanding questions about
->> implementation:
->>
->> 1. In drivers/pwm/core.c, __pwm_apply() was modified to check that the
->> sum of state->duty_offset + state->duty_cycle does not exceed
->> state->period, but in the character device section these values are
->> being checked separately. Is this intentional? What is the intended
->> behavior?
-> state->duty_offset + state->duty_cycle doesn't necessarily need to be
-> less or equal to state->period. Consider this waveform, where ^ marks
-> the start of a period.
->
->
->          ___       _________       __...
->             \_____/         \_____/
->          ^               ^
->
-> This one has duty_offset = 9 and duty_cycle = 10 while
-> period = 16 < 10 + 9.
-Alright, I'll make a change here.
->
->> 2. Should __pwm_apply() explicitly disallow PWM_POLARITY_INVERSED and
->> duty_offset together?
-> While there is no technical need for that, a configuration with both
-> PWM_POLARITY_INVERSED and duty_offset > 0 is irritating. So I'd say yes,
-> it should be disallowed. When I created the cdev API I even considered
-> dropping .polarity for lowlevel drivers and convert them all to
-> .duty_offset.
-Will do.
->
-> Having said that I don't like the addition of .supports_offset to
-> struct pwm_chip, which only signals a new incomplete evolution of the
-> pwm framework. Better adapt all drivers and then assume all of them
-> support it.
-Can you clarify what you mean here - is the intent to put basic handling 
-of duty_offset (even if that means simply setting it to 0) in each driver?
->
->> 3. Are there other places that would need duty_offset handling which
->> have been missed?
-> I'm happy you adapted the tracing stuff. I didn't look closely, but I
-> don't think something important was missed.
->
->> Note that in addition to the other patches in this series, the changes
->> to the axi-pwmgen driver rely on [2] and [3], which haven't been picked
->> up yet.
-> Best regards
-> Uwe
->
+today I merged Andrea's and Cyril's work migrating our GitHub based docs to
+readthedocs.org. Andrea, Cyril, thank you for this work, we're now using for
+docs the same approach as the Linux kernel.
+
+Our new documentation is now on https://linux-test-project.readthedocs.io/en/latest/.
+
+I configured the hook on readthedocs.org, thus any docs update should trigger
+readthedocs.org rebuild.
+
+I also disabled our wiki on GitHub [2], it redirects to our homepage. It would
+be good to be able to redirect it to our new readthedocs.org docs [1].
+
+I also remove (with Cyril's ack) the content of our github.io page [3] to our
+new readthedocs.org docs [1].
+
+The docs is mostly done, but some bits are missing (e.g. C Test Network API [4],
+KVM Test API [5], shell API [6]), thus we kept them in doc/old folder. This
+folder will be removed once we finish the migration.
+
+Kind regards,
+Petr
+
+[1] https://linux-test-project.readthedocs.io/en/latest/
+[2] https://github.com/linux-test-project/ltp/wiki/
+[3] https://linux-test-project.github.io/
+[4] https://github.com/linux-test-project/ltp/blob/master/doc/old/C-Test-Network-API.asciidoc
+[5] https://github.com/linux-test-project/ltp/blob/master/doc/old/KVM-Test-API.asciidoc
+[6] https://github.com/linux-test-project/ltp/blob/master/doc/old/Shell-Test-API.asciidoc
