@@ -1,85 +1,80 @@
-Received: from out30-132.freemail.mail.aliyun.com (out30-132.freemail.mail.aliyun.com [115.124.30.132])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1171C161B43
-	for <linux-kernel@vger.kernel.org>; Fri,  5 Apr 2024 12:24:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.132
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2349816C68C;
+	Fri,  5 Apr 2024 12:30:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712319874; cv=none; b=AS3wCGOU6QfsI72DUJWR+R6o2ZpzdsluEPNQ2/7UO19HFwElt1HBCnpHuwUkzjexR/rBgcCvnuFx0yAzwjp2nhSlA1/qdP1q7Qmburd8inu/sMru1lVvcTA0oaPc7WJPRXRUQIQh25YOYTDztYVYFncKRDV6vmCbgzDLqDrKhx0=
+	t=1712320211; cv=none; b=h+soNJ0NX0CYk8Y4OJbetJpZRVGV6DP3myggj0w4bBlmFRegeLLExXRqWwKspdWRxsSkgbIYzASuyIDHp5Toa8O64R8TKn0Q1DQRWnkwGBBLkiXTZp9GTlbv991P7WCTPAcyFIySveJQ7Qsq/bnWEJ8dPAl+KxBXbwg4Cn1vhX4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712319874; c=relaxed/simple;
-	bh=TMV6W+86/NP9K6bri+78PHBBLg88f2DQxrOZVXBrspA=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=UHfyyfn8TIlEHu+P/fe6CokPBRZ/CwO8zFd2sEOKVFAvN2DqfeL8RD3ZPGAd0zD0Aj7YSmlUAXREYFwiNJvtsYhrUWuAPhQ4rLB8J5phPutwyaqG/E3ZDmUt5qRGkTlw4QoXuVFGdudstT0anvDqeCitVOFy6DNdj19/MGgvrHc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=Wgxkv1rQ; arc=none smtp.client-ip=115.124.30.132
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	s=arc-20240116; t=1712320211; c=relaxed/simple;
+	bh=8lQhM8JxUd/FKcBbaU5GpGkfXWulPr2jKxFBOayt09U=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=END5o1MW3QqTsiTnfZ8xRofRcj4d/WZzuiSAkxKo1p9Kq17KKGCDPf0zdEZU6syKUQQtDsAVAFpd3uZMvDQwd2KxQhPA2v6pkoCyiEcKJccX4Q5NSaTzjqqrVkrOL2GP/s19SfpSlq3EpKsIDGOU1wXEso04wE5+oxvMYjq42hI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cI1UkXGw; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="Wgxkv1rQ"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1712319864; h=From:To:Subject:Date:Message-Id:MIME-Version;
-	bh=Xgh9CRUBvGZe+XyUWVoXRS+621S2VeB7U0nxfDSeTKc=;
-	b=Wgxkv1rQ78vkZqULUWLyf1lFuFyHrgHZwiATuW110pEgWvUgt0XGUt1k+glpHM0ldw2+LekL0w/tCbWfuIISTgLR8dBwPB60fk1iFJMmZDqzDD6sjUId5MFaLmB6c2djLud02ON9PbR1YzRQhePgkSjnr69A70uVd8fhemEDGts=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R201e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045170;MF=baolin.wang@linux.alibaba.com;NM=1;PH=DS;RN=6;SR=0;TI=SMTPD_---0W3wypEZ_1712319863;
-Received: from localhost(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0W3wypEZ_1712319863)
-          by smtp.aliyun-inc.com;
-          Fri, 05 Apr 2024 20:24:24 +0800
-From: Baolin Wang <baolin.wang@linux.alibaba.com>
-To: akpm@linux-foundation.org
-Cc: mgorman@techsingularity.net,
-	vbabka@suse.cz,
-	baolin.wang@linux.alibaba.com,
-	linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] mm: set pageblock_order to HPAGE_PMD_ORDER in case with !CONFIG_HUGETLB_PAGE but THP enabled
-Date: Fri,  5 Apr 2024 20:24:16 +0800
-Message-Id: <3d57d253070035bdc0f6d6e5681ce1ed0e1934f7.1712286863.git.baolin.wang@linux.alibaba.com>
-X-Mailer: git-send-email 2.39.3
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cI1UkXGw"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0B8ADC433F1;
+	Fri,  5 Apr 2024 12:30:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1712320209;
+	bh=8lQhM8JxUd/FKcBbaU5GpGkfXWulPr2jKxFBOayt09U=;
+	h=Date:Subject:To:References:From:In-Reply-To:From;
+	b=cI1UkXGwKUFRepIYAsCkN9V3fri3x/30GDAeNheZRIYwH5PUtoN7fMFOa7Pe8FoAH
+	 6yFlhKIYmHXiDh6UfMY1JkkuH95uCFoPPiYlO4DQwGvEDlIv1qc5LWx2kzGZlnIONa
+	 XfLRUqNFqI9tYqRkhvDdq+AGJmNlRNpL0cPxt+IApOof20+6sJvQkw3EQPwNGSjRb1
+	 8csCsxIeF7PIpgozJUSIVeSXpDvlz/HyBEtxTjEh7RSioqC0kTGK2nZGGI/8WONRT8
+	 dKzgoWlDg4m+5ryJSBBn1XUgv6CtG90hrVNTX/WQDrWzy+gyC7MKRAHseljc9sGa3f
+	 7Z5jStf7zlpwg==
+Message-ID: <6d2cf4d9-0b6d-4fb2-a130-7695baa118c3@kernel.org>
+Date: Fri, 5 Apr 2024 07:30:07 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/4] arm64: dts: stratix10: socdk: drop unneeded flash
+ address/size-cells
+To: Krzysztof Kozlowski <krzk@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20240401141025.98125-1-krzk@kernel.org>
+Content-Language: en-US
+From: Dinh Nguyen <dinguyen@kernel.org>
+In-Reply-To: <20240401141025.98125-1-krzk@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-As Vlastimil suggested in previous discussion[1], it doesn't make sense to set
-pageblock_order as MAX_PAGE_ORDER when hugetlbfs is not enabled and THP is enabled.
-Instead, it should be set to HPAGE_PMD_ORDER.
+On 4/1/24 09:10, Krzysztof Kozlowski wrote:
+> Flash node uses single "partition" node to describe partitions, so
+> remove deprecated address/size-cells properties to also fix dtc W=1
+> warnings:
+> 
+>    socfpga_stratix10_socdk.dts:182.10-211.4: Warning (avoid_unnecessary_addr_size): /soc@0/spi@ff8d2000/flash@0: unnecessary #address-cells/#size-cells without "ranges" or child "reg" property
+> 
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> ---
+>   arch/arm64/boot/dts/altera/socfpga_stratix10_socdk.dts | 2 --
+>   1 file changed, 2 deletions(-)
+> 
+> diff --git a/arch/arm64/boot/dts/altera/socfpga_stratix10_socdk.dts b/arch/arm64/boot/dts/altera/socfpga_stratix10_socdk.dts
+> index 26173f0b0051..4eee777ef1a1 100644
+> --- a/arch/arm64/boot/dts/altera/socfpga_stratix10_socdk.dts
+> +++ b/arch/arm64/boot/dts/altera/socfpga_stratix10_socdk.dts
+> @@ -180,8 +180,6 @@ rtc@68 {
+>   &qspi {
+>   	status = "okay";
+>   	flash@0 {
+> -		#address-cells = <1>;
+> -		#size-cells = <1>;
+>   		compatible = "micron,mt25qu02g", "jedec,spi-nor";
+>   		reg = <0>;
+>   		spi-max-frequency = <100000000>;
 
-[1] https://lore.kernel.org/all/76457ec5-d789-449b-b8ca-dcb6ceb12445@suse.cz/
-Suggested-by: Vlastimil Babka <vbabka@suse.cz>
-Signed-off-by: Baolin Wang <baolin.wang@linux.alibaba.com>
----
- include/linux/pageblock-flags.h | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+All patches applied!
 
-diff --git a/include/linux/pageblock-flags.h b/include/linux/pageblock-flags.h
-index 3f2409b968ec..547e82cdc89a 100644
---- a/include/linux/pageblock-flags.h
-+++ b/include/linux/pageblock-flags.h
-@@ -28,7 +28,7 @@ enum pageblock_bits {
- 	NR_PAGEBLOCK_BITS
- };
- 
--#ifdef CONFIG_HUGETLB_PAGE
-+#if defined(CONFIG_HUGETLB_PAGE)
- 
- #ifdef CONFIG_HUGETLB_PAGE_SIZE_VARIABLE
- 
-@@ -45,7 +45,11 @@ extern unsigned int pageblock_order;
- 
- #endif /* CONFIG_HUGETLB_PAGE_SIZE_VARIABLE */
- 
--#else /* CONFIG_HUGETLB_PAGE */
-+#elif defined(CONFIG_TRANSPARENT_HUGEPAGE)
-+
-+#define pageblock_order		min_t(unsigned int, HPAGE_PMD_ORDER, MAX_PAGE_ORDER)
-+
-+#else /* CONFIG_TRANSPARENT_HUGEPAGE */
- 
- /* If huge pages are not used, group by MAX_ORDER_NR_PAGES */
- #define pageblock_order		MAX_PAGE_ORDER
--- 
-2.39.3
-
+Thanks,
+Dinh
