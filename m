@@ -1,60 +1,69 @@
-Received: from out203-205-251-72.mail.qq.com (out203-205-251-72.mail.qq.com [203.205.251.72])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A081C15FA95
-	for <linux-kernel@vger.kernel.org>; Fri,  5 Apr 2024 14:41:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.251.72
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 080A016F820
+	for <linux-kernel@vger.kernel.org>; Fri,  5 Apr 2024 14:41:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712328106; cv=none; b=PXAtaTDmZnP1a012lB9rr3jMyCpYdrxo/KI7+IYy97JBASzPHBUJNs/SYHlH+HWrpiEa23N9C8UVvws48odU0HEeaU04bapGw/EWc/0InmBXFaIJf/4CnFFUNV6MFrRN7sv2uTXGO33Z5A8ymZ2U9J5n6qerlNCdDfuHkMIrols=
+	t=1712328110; cv=none; b=ejDN/FDPa0vw4OcrQkJXOSiVSiQvxmNrLBxa2Dv4O5fbmwMQ5qZDVgDq4AnrefaEPEEhwYPMH9BiD3Mog4jwzDP+9DNnY0gXemyAE4V8j2Kjuh4AqtDVAnLwQE0/MZ68xjckgL81osx+p/V9SpHvw9aRGLnBBHPmLJU82Oj8LPI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712328106; c=relaxed/simple;
-	bh=5NpUT3miNBD5LFLqv76YWlD13uZF47++BIZwJIrolzs=;
-	h=Message-ID:From:To:Cc:Subject:Date:MIME-Version; b=g9D7FXuvh9vke71ZXng2sFcq2IGC5ciJtJaINGWpC8pYVkPN/UDfr6ZiB/jO0KoP9z1IPPmAhnDQYq7i356tmdBQoJw4AxfiaDDUXF1HqsC8sFKc8G0eAxqB6gpVV94SwLd3ytPtmOSadt/GoHRaNgTt4XqudP+1CXSk56zoB4o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foxmail.com; spf=pass smtp.mailfrom=foxmail.com; dkim=pass (1024-bit key) header.d=foxmail.com header.i=@foxmail.com header.b=Ev+RxpEA; arc=none smtp.client-ip=203.205.251.72
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foxmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foxmail.com
+	s=arc-20240116; t=1712328110; c=relaxed/simple;
+	bh=sxY2AEeSba+Q/Kxf5OSL1C7dhwkaGiayEInG3JEg4Go=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=rQaB1fZw4GPsoRFsO32U1J6UPN9g50peHCNSE8bPxhxfphmil5U2z7XqaLQofKvVUZoepQ/mBA+Xc3ZGzpF4EgQEWzitc2g+1naO6DA+Tv5ApVzgax53rkXrPG4jyV3bRz3fk1p17nmuVH7w57dBLA+gBIuJnCVTqkTmmMNmA/s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=H7brh+Ym; arc=none smtp.client-ip=209.85.208.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=foxmail.com header.i=@foxmail.com header.b="Ev+RxpEA"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foxmail.com;
-	s=s201512; t=1712328095;
-	bh=h1szTFKuBBT4B0FZ8+/wAdJnH1vl0StVKZ/7ccts1xY=;
-	h=From:To:Cc:Subject:Date;
-	b=Ev+RxpEAYMA/GEH//o8AG6Flti1KIAefp3fh5W2YotrYAYqWPHE6nUJHtfvkpxk5a
-	 xL3yngAK2zxgJmBKApSvVtjtnkm0ykrN73FXVx6OZuQwxEf1eBSXl83naCn/R0/4+T
-	 oMKcd9hxE9bqNEt/BC0g2poSqHvbkw3kYbz78skM=
-Received: from localhost.localdomain ([2409:8a60:2a60:b160:dc34:caba:9ec4:65ef])
-	by newxmesmtplogicsvrszb9-1.qq.com (NewEsmtp) with SMTP
-	id A4A1A43D; Fri, 05 Apr 2024 22:41:10 +0800
-X-QQ-mid: xmsmtpt1712328070towhp7ula
-Message-ID: <tencent_70C2A71330E3F84D3D1F55F9521B04BD4C0A@qq.com>
-X-QQ-XMAILINFO: N/WmRbclY25Gbp5H5tlpB41qttfa717xaaHZ5yVNQnf2eLmcW3VXfJh6LSKxS2
-	 xuPbZl6YI8yqvyhXxb1kfHSdRRgKB981Q+B6yphCujW141/wlwS6fXsWJ6Xuxrl4xC0EpiozlkxE
-	 uuBFV/7JOIUzzf7+NmIV77QLDpXjYLMxVPGpSiqghzwPw1a/siBSyWFepsPgKDTdgqFK8pZRNUMz
-	 hW/XefP7uT4AgsG0qI/hokbk6WdGr8zm79xgyn7jQtqTnMb5hBadEl382rXxBWzS8FovGGtG59Wv
-	 IOfIblTlt7shydIekdqShzbt/L2YD3QgkO5XfrAHfg5kzTmHQMkhniaai/ryqbap7bwkwID6WOJP
-	 2mE5mvttygZ23nwOQhyebzm43ICWRCfkQeK/F27PJGWAo5VEfTQB0z/NnJ7o6QOkRTWvAOBrDEeY
-	 xTA8kXe6sgQgRlDCv2SZJJb1UkCCUmL5A1q6hXQiVOQmVJ8pN8/A/cIHnOrlD10uvMzAP99r2aIT
-	 jaWK/dYCW/WovCCfRQj37/eex9rl1YihbCoLIFZpurPXhiBRQ6zXn2OJccB3RpC4Ocxxfbp6nBdD
-	 DvwormNku63rTaEbVsI9sPAaK5IcEDxwMAujHCIN18OwGCNIMKJbHzvbEG4lxhLk9rKfFT+IWIzk
-	 76qVgvW2XVJvpklPdvwmUZw6Phjy88Ffrox97bHi3/+w9j79QOlC2ybQuN8U4d/9gtYEgpmh/mSO
-	 4szk1jgT/UJmFUcSlXjXWd3jEJ/fmWQs8I/KImRzkr1a4hGRlhLuwFIzI06mi+HlS00GHp3PyKj2
-	 zOzj2mfyDvxZVz1v3cXLkhx+0PIj84H1Dw35e1BSmkHHxz5PbJH1yz6NT0BgrG/r0gaeuyiun1Ir
-	 GTXFA4RIsZsSUiTkdG4h7x8a9RWtWvuB9NVkrQWmGXKxdvtW+HtA4CgHomhX7HGkSS38tyl50Nbg
-	 orl0QhF/9WxDDRgT4PalxZWF8vIi7n5VbG3/V7MszZzCFCBch9JHCS/ynOA4LHtJLm88mTh84oML
-	 u2w7zR3jgZ4yMzNUrfnUf6xscmzUbF9EA3N5KZRQ==
-X-QQ-XMRINFO: M/715EihBoGSf6IYSX1iLFg=
-From: wenyang.linux@foxmail.com
-To: "Eric W . Biederman" <ebiederm@xmission.com>,
-	Luis Chamberlain <mcgrof@kernel.org>,
-	Kees Cook <keescook@chromium.org>,
-	Joel Granados <j.granados@samsung.com>,
-	Christian Brauner <brauner@kernel.org>
-Cc: Wen Yang <wenyang.linux@foxmail.com>,
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="H7brh+Ym"
+Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-563cb3ba9daso2402737a12.3
+        for <linux-kernel@vger.kernel.org>; Fri, 05 Apr 2024 07:41:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1712328107; x=1712932907; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=JTqiLc0V7BtkLzywEdmRvMeMh3GhRnDflsLTNgiO3NQ=;
+        b=H7brh+YmdpS8KDDdr3d9x/yRYHOcUO9ohLylaqjYwaI5e1R4SXXPqq4G5dF1zjkpUc
+         h2RAPpfx8PJqhNPRLt8zLWB09Y/cSU8/MZma8xMXaMgsmejmt47FDkH0VJ8feHJ2qRTI
+         emtQKIOYVpqJ8k0ACtZN74YqZglFN2MnvxTsiWr48bmX7kH14zT4W3atquMWHP/P6Kns
+         PhhKTPaLsqRI0e82Ogp4HoOrC1/BB0xFalEp7IpTECU6yspdJKYhU0RIse943kYoOM14
+         zpr/GoABjK5TqCZ7qmybH/4xmeQo8F3bQiz+I/4u/Yla3E9+TXKs7wRmai/v/KHDq9qS
+         jCNw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712328107; x=1712932907;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=JTqiLc0V7BtkLzywEdmRvMeMh3GhRnDflsLTNgiO3NQ=;
+        b=FGcWybs9Mam8OEfZg9t8zR2Ja+Llxi0oB0PINB33xfLOHOybq3wP6yL2kG5QV8VFwS
+         Hc7VYoOmKvUUAJbfZ3S9VX4jV9YHujiXdwdUCKkAlQIz0loQzRFBf2fVa3WQ+KG33u34
+         nyTFEtAqTrwCNajRnwp9BWZynVjCHu36lvH0fVSKxHGGwfRlUDYo0c9ZV7YJA0c9OUwD
+         HgrwF/JCYerbADfC8W0KqNyMkDr4dJOy/OgXcou+vb/NjGca9lXnjS7ArznFtZGLcLyh
+         Od1YkK4prF+owKEF+UTbPjL/XzqjmPa1BFWuAfRoDipmVCrZzH/j13acRag8w7EEQb+M
+         3EUQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXLqgCT18k1F6ZO818J/7bBjSHSraHgF5EPCFK0NiegsR8vvsQiSDgfY1mj1lUr3U8Liz8xjwsDvgm9RImqpdt0SenIXQYldK/0YBZU
+X-Gm-Message-State: AOJu0Ywvqa1GhVyuoXoBp1W/zXrJFtYBEumrgRjRAUzDJ9ZsQ3kME31S
+	YU0Bl0v3juBNdt8vi6bHIyeF8OgyJT7DYWIBR9eDkwgQ1iQ0ybnqGJMesy9qTtE=
+X-Google-Smtp-Source: AGHT+IHh+ZxoCzU1FGg+Ay1sdVh8yffh8/bUZTifdB3YwV0ck6OUItK6hnnakWAv1mKM1jDatQrBDA==
+X-Received: by 2002:a17:906:5ad8:b0:a4e:a204:e699 with SMTP id x24-20020a1709065ad800b00a4ea204e699mr1326916ejs.17.1712328107384;
+        Fri, 05 Apr 2024 07:41:47 -0700 (PDT)
+Received: from krzk-bin.. ([178.197.223.16])
+        by smtp.gmail.com with ESMTPSA id g15-20020a170906198f00b00a4e2bf2f743sm899183ejd.184.2024.04.05.07.41.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 05 Apr 2024 07:41:46 -0700 (PDT)
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+To: Vinod Koul <vkoul@kernel.org>,
+	Bard Liao <yung-chuan.liao@linux.intel.com>,
+	Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+	Sanyog Kale <sanyog.r.kale@intel.com>,
+	linux-arm-msm@vger.kernel.org,
+	alsa-devel@alsa-project.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v3] sysctl: move the extra1/2 boundary check of u8 to sysctl_check_table_array
-Date: Fri,  5 Apr 2024 22:40:59 +0800
-X-OQ-MSGID: <20240405144059.93871-1-wenyang.linux@foxmail.com>
-X-Mailer: git-send-email 2.25.1
+Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+	Mark Brown <broonie@kernel.org>
+Subject: [PATCH v2] soundwire: qcom: allow multi-link on newer devices
+Date: Fri,  5 Apr 2024 16:41:41 +0200
+Message-Id: <20240405144141.47217-1-krzysztof.kozlowski@linaro.org>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -63,203 +72,70 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Wen Yang <wenyang.linux@foxmail.com>
+Newer Qualcomm SoCs like X1E80100 might come with four speakers spread
+over two Soundwire controllers, thus they need a multi-link Soundwire
+stream runtime.
 
-The boundary check of u8's extra is currently performed at runtime.
-This may result in some kernel modules that can be loaded normally without
-any errors, but not works, as follows:
+Cc: Mark Brown <broonie@kernel.org>
+Cc: alsa-devel@alsa-project.org
+Reviewed-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
- #include <linux/kernel.h>
- #include <linux/module.h>
- #include <linux/sysctl.h>
-
-static struct ctl_table_header *_table_header;
-unsigned char _data = 0;
-struct ctl_table table[] = {
-	{
-		.procname       = "foo",
-		.data           = &_data,
-		.maxlen         = sizeof(u8),
-		.mode           = 0644,
-		.proc_handler   = proc_dou8vec_minmax,
-		.extra1         = SYSCTL_ZERO,
-		.extra2         = SYSCTL_ONE_THOUSAND,
-	},
-	{}
-};
-
-static int init_demo(void) {
-	if (!_table_header)
-		_table_header = register_sysctl("kernel", table);
-
-	pr_info("test: init module.\n");
-	return 0;
-}
-
-static void cleanup_demo(void) {
-	if (_table_header) {
-		unregister_sysctl_table(_table_header);
-	}
-
-	pr_info("test: cleanup module.\n");
-}
-
-module_init(init_demo);
-module_exit(cleanup_demo);
-MODULE_LICENSE("GPL");
-
- # insmod test.ko
-
- # cat /proc/sys/kernel/foo
- cat: /proc/sys/kernel/foo: Invalid argument
-
- # echo 1 >  /proc/sys/kernel/foo
- -bash: echo: write error: Invalid argument
-
-This patch moves boundary checking forward to module loading,
-thereby reporting errors in advance, and also adds a kunit test case.
-
-Signed-off-by: Wen Yang <wenyang.linux@foxmail.com>
-Cc: Luis Chamberlain <mcgrof@kernel.org>
-Cc: Kees Cook <keescook@chromium.org>
-Cc: Joel Granados <j.granados@samsung.com>
-Cc: Eric W. Biederman <ebiederm@xmission.com>
-Cc: Christian Brauner <brauner@kernel.org>
-Cc: linux-kernel@vger.kernel.org
 ---
-v3: 
-- kunit: using register_sysctl, and thus unnecessary sentries were removed
-- kunit: using constant ctl_tables
-v2:
-- kunit: detect registration failure with KUNIT_EXPECT_NULL
 
- fs/proc/proc_sysctl.c | 12 +++++++++++
- kernel/sysctl-test.c  | 49 +++++++++++++++++++++++++++++++++++++++++++
- kernel/sysctl.c       | 14 ++++---------
- 3 files changed, 65 insertions(+), 10 deletions(-)
+Changes in v2:
+1. Only rebase (slightly different context)
+---
+ drivers/soundwire/qcom.c | 22 ++++++++++++++++++++++
+ 1 file changed, 22 insertions(+)
 
-diff --git a/fs/proc/proc_sysctl.c b/fs/proc/proc_sysctl.c
-index 37cde0efee57..136e3f8966c3 100644
---- a/fs/proc/proc_sysctl.c
-+++ b/fs/proc/proc_sysctl.c
-@@ -1096,6 +1096,7 @@ static int sysctl_err(const char *path, struct ctl_table *table, char *fmt, ...)
- 
- static int sysctl_check_table_array(const char *path, struct ctl_table *table)
- {
-+	unsigned int extra;
- 	int err = 0;
- 
- 	if ((table->proc_handler == proc_douintvec) ||
-@@ -1107,6 +1108,17 @@ static int sysctl_check_table_array(const char *path, struct ctl_table *table)
- 	if (table->proc_handler == proc_dou8vec_minmax) {
- 		if (table->maxlen != sizeof(u8))
- 			err |= sysctl_err(path, table, "array not allowed");
-+
-+		if (table->extra1) {
-+			extra = *(unsigned int *) table->extra1;
-+			if (extra > 255U)
-+				err |= sysctl_err(path, table, "array not allowed");
-+		}
-+		if (table->extra2) {
-+			extra = *(unsigned int *) table->extra2;
-+			if (extra > 255U)
-+				err |= sysctl_err(path, table, "array not allowed");
-+		}
- 	}
- 
- 	if (table->proc_handler == proc_dobool) {
-diff --git a/kernel/sysctl-test.c b/kernel/sysctl-test.c
-index 6ef887c19c48..4e7dcc9187e2 100644
---- a/kernel/sysctl-test.c
-+++ b/kernel/sysctl-test.c
-@@ -367,6 +367,54 @@ static void sysctl_test_api_dointvec_write_single_greater_int_max(
- 	KUNIT_EXPECT_EQ(test, 0, *((int *)table.data));
+diff --git a/drivers/soundwire/qcom.c b/drivers/soundwire/qcom.c
+index fb70afe64fcc..ce5cf3ecceb5 100644
+--- a/drivers/soundwire/qcom.c
++++ b/drivers/soundwire/qcom.c
+@@ -905,6 +905,18 @@ static int qcom_swrm_init(struct qcom_swrm_ctrl *ctrl)
+ 	return 0;
  }
  
-+/*
-+ * Test that registering an invalid extra value is not allowed.
-+ */
-+static void sysctl_test_register_sysctl_sz_invalid_extra_value(
-+		struct kunit *test)
++static int qcom_swrm_read_prop(struct sdw_bus *bus)
 +{
-+	unsigned char data = 0;
-+	struct ctl_table table_foo[] = {
-+		{
-+			.procname	= "foo",
-+			.data		= &data,
-+			.maxlen		= sizeof(u8),
-+			.mode		= 0644,
-+			.proc_handler	= proc_dou8vec_minmax,
-+			.extra1		= SYSCTL_FOUR,
-+			.extra2		= SYSCTL_ONE_THOUSAND,
-+		},
-+	};
++	struct qcom_swrm_ctrl *ctrl = to_qcom_sdw(bus);
 +
-+	struct ctl_table table_bar[] = {
-+		{
-+			.procname	= "bar",
-+			.data		= &data,
-+			.maxlen		= sizeof(u8),
-+			.mode		= 0644,
-+			.proc_handler	= proc_dou8vec_minmax,
-+			.extra1		= SYSCTL_NEG_ONE,
-+			.extra2		= SYSCTL_ONE_HUNDRED,
-+		},
-+	};
++	if (ctrl->version >= SWRM_VERSION_2_0_0) {
++		bus->multi_link = true;
++		bus->hw_sync_min_links = 3;
++	}
 +
-+	struct ctl_table table_qux[] = {
-+		{
-+			.procname	= "qux",
-+			.data		= &data,
-+			.maxlen		= sizeof(u8),
-+			.mode		= 0644,
-+			.proc_handler	= proc_dou8vec_minmax,
-+			.extra1		= SYSCTL_ZERO,
-+			.extra2		= SYSCTL_TWO_HUNDRED,
-+		},
-+	};
-+
-+	KUNIT_EXPECT_NULL(test, register_sysctl("foo", table_foo));
-+	KUNIT_EXPECT_NULL(test, register_sysctl("foo", table_bar));
-+	KUNIT_EXPECT_NOT_NULL(test, register_sysctl("foo", table_qux));
++	return 0;
 +}
 +
- static struct kunit_case sysctl_test_cases[] = {
- 	KUNIT_CASE(sysctl_test_api_dointvec_null_tbl_data),
- 	KUNIT_CASE(sysctl_test_api_dointvec_table_maxlen_unset),
-@@ -378,6 +426,7 @@ static struct kunit_case sysctl_test_cases[] = {
- 	KUNIT_CASE(sysctl_test_dointvec_write_happy_single_negative),
- 	KUNIT_CASE(sysctl_test_api_dointvec_write_single_less_int_min),
- 	KUNIT_CASE(sysctl_test_api_dointvec_write_single_greater_int_max),
-+	KUNIT_CASE(sysctl_test_register_sysctl_sz_invalid_extra_value),
- 	{}
+ static enum sdw_command_response qcom_swrm_xfer_msg(struct sdw_bus *bus,
+ 						    struct sdw_msg *msg)
+ {
+@@ -1056,6 +1068,7 @@ static const struct sdw_master_port_ops qcom_swrm_port_ops = {
  };
  
-diff --git a/kernel/sysctl.c b/kernel/sysctl.c
-index 81cc974913bb..3efe3a991743 100644
---- a/kernel/sysctl.c
-+++ b/kernel/sysctl.c
-@@ -977,16 +977,10 @@ int proc_dou8vec_minmax(struct ctl_table *table, int write,
- 	if (table->maxlen != sizeof(u8))
- 		return -EINVAL;
+ static const struct sdw_master_ops qcom_swrm_ops = {
++	.read_prop = qcom_swrm_read_prop,
+ 	.xfer_msg = qcom_swrm_xfer_msg,
+ 	.pre_bank_switch = qcom_swrm_pre_bank_switch,
+ };
+@@ -1173,6 +1186,15 @@ static int qcom_swrm_stream_alloc_ports(struct qcom_swrm_ctrl *ctrl,
  
--	if (table->extra1) {
--		min = *(unsigned int *) table->extra1;
--		if (min > 255U)
--			return -EINVAL;
--	}
--	if (table->extra2) {
--		max = *(unsigned int *) table->extra2;
--		if (max > 255U)
--			return -EINVAL;
--	}
-+	if (table->extra1)
-+		min = *(unsigned char *) table->extra1;
-+	if (table->extra2)
-+		max = *(unsigned char *) table->extra2;
- 
- 	tmp = *table;
- 
+ 	mutex_lock(&ctrl->port_lock);
+ 	list_for_each_entry(m_rt, &stream->master_list, stream_node) {
++		/*
++		 * For streams with multiple masters:
++		 * Allocate ports only for devices connected to this master.
++		 * Such devices will have ports allocated by their own master
++		 * and its qcom_swrm_stream_alloc_ports() call.
++		 */
++		if (ctrl->bus.id != m_rt->bus->id)
++			continue;
++
+ 		if (m_rt->direction == SDW_DATA_DIR_RX) {
+ 			maxport = ctrl->num_dout_ports;
+ 			port_mask = &ctrl->dout_port_mask;
 -- 
-2.25.1
+2.34.1
 
