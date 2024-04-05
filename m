@@ -1,197 +1,504 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAF93161339
-	for <linux-kernel@vger.kernel.org>; Fri,  5 Apr 2024 10:14:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 388AC161339
+	for <linux-kernel@vger.kernel.org>; Fri,  5 Apr 2024 10:14:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712312048; cv=none; b=Ih4V/fyHrHLhM2M81C9stmNw/2GdZ54PG4Y/1qGYdPjFGZ8mZgoMZsYosqIjoeYZFg3lVVKdnbhueKoXfarJRGZprD/50k+DSH1Sfrv7HBoRkus3JSEqKlAElQutqWWxPEmu+T0FAvzzHSqgwx0uTtOc1wuS7P7Kt6Kdv9YI6DI=
+	t=1712312071; cv=none; b=C4bTR9AxyRevsu7ZDz1CUci0giZ3CNpto3AveesRKjfd26+aU0G/BVYrYbdeySxuDpQpJE3xnBeOXdoQS6hivZqO4EKt0ptTJsp/dmYrJc5C3qrrRraHmt9FU4fPaNNCFAOSpRE7I/UnMivq93nkg6nlzjFDO6lDZhU6/rGECc0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712312048; c=relaxed/simple;
-	bh=9SBJNoNO1FLBc/aU9xElMoCvlBmk+cSrNhdbzpGmaX8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=dUZjROwhIJKGGXp6U/dGgoa2uoOmq6zBrkffoNjMEy6MK9/+GM90OVhvkmyGVdMAuB/FUs7vkT+Is041D+wpNosQNpmLHxivpIiPl35Lixr1gag5P0RyM8iszEb9SGUSsrrPuQfmKI8nJkLoNIID+e7HgqCzsPF6CUzNJGNAO3Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=KrYVkjJR; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KrYVkjJR"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1712312045;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=Q2LsbCNDZ9kZ8fz4UXiWjfH8HnRNSDuHZENAwBXreIo=;
-	b=KrYVkjJRVi6Cjook1USToiHES6mgIMWtJD1nUyfDYSr8/FwwTBGhGMtb3lhbRDrECDMqVH
-	DEC0UXLs7dRpEou6tVWV2vyITXGxnUXsyeqTV5L/ezfXxlU/fJM7FZgH+IzuWvLZe4bROa
-	txbic6X3MxhqAeU8tOXMV4Mg+/hdPuw=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-538-EIYoPZBaNyiSo4aT40XExA-1; Fri, 05 Apr 2024 06:14:03 -0400
-X-MC-Unique: EIYoPZBaNyiSo4aT40XExA-1
-Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-416259a5fe5so10022115e9.0
-        for <linux-kernel@vger.kernel.org>; Fri, 05 Apr 2024 03:14:03 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712312042; x=1712916842;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:from:references:cc:to:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=Q2LsbCNDZ9kZ8fz4UXiWjfH8HnRNSDuHZENAwBXreIo=;
-        b=gyWQrzyYAQjl/ytZ61T7OIOvVn1+BMpC/CFAZkNfbYYRXHtv8bTgHk/GUu0h2gkbSg
-         KUR8FIHNTqVxMXJNlh05gZoeq7/yIyFZekZKwICSXudRLPKD7/jiA1totQ+nQmU9KUAF
-         P5mVQUw42I1METNV744L/voxHxub0fOS+rsovI41ecGBOnY0+poTXncM7tfjB6iSTqlv
-         NeeiiSzjNgMw8nG2e/quRG1e1vHu2WAQkaPTZ+bGjN2gRgRSE8N807RU7qQ3BgZcCeFI
-         4jAtqVb5r5o7rqkleWTbGsc3R0RhENpRRio0ZpWZgD9BxhUQf2pz1UvwqGFrZuT0C+nM
-         ooYw==
-X-Forwarded-Encrypted: i=1; AJvYcCW9Dsw1wqBFGB2jdCxwVKZ3lgVkM/waF69lyfD7trSt1AJqOTqDUsm0nuNnSO+X7aWfzyFxKlpMVk5mNFOqk46vwpBg/l9fMdCrQWvM
-X-Gm-Message-State: AOJu0YzEcdE2pXV8xkAQLHzk1zE9UuH3jsqXYCM5FEjdfBcJURZI9x38
-	rhkMuQr8v1pt4edCzRENjJM3iqLSk/BoloVv7douaVRue7i8loWDDXympa2icMWn7zMUplvyg5o
-	AisKOjRQbJubg+Ln6ZLKgsZ15tTT4iI8sl3hrg9ewaJTi/KIy9uTGUuj6HWS0Pg==
-X-Received: by 2002:a05:600c:3594:b0:413:f3f0:c591 with SMTP id p20-20020a05600c359400b00413f3f0c591mr785381wmq.41.1712312042124;
-        Fri, 05 Apr 2024 03:14:02 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEMzMYKxfyvSr6YxQeBStz2WDjrVzPSM6kxu1H/M1eplI/e8pfwS/xR0E2e7lDCYHcQh3E1gw==
-X-Received: by 2002:a05:600c:3594:b0:413:f3f0:c591 with SMTP id p20-20020a05600c359400b00413f3f0c591mr785367wmq.41.1712312041714;
-        Fri, 05 Apr 2024 03:14:01 -0700 (PDT)
-Received: from ?IPV6:2003:cb:c74b:5500:e1f8:a310:8fa3:4ec1? (p200300cbc74b5500e1f8a3108fa34ec1.dip0.t-ipconnect.de. [2003:cb:c74b:5500:e1f8:a310:8fa3:4ec1])
-        by smtp.gmail.com with ESMTPSA id o34-20020a05600c512200b0041627ab1554sm5847474wms.22.2024.04.05.03.14.00
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 05 Apr 2024 03:14:01 -0700 (PDT)
-Message-ID: <7a1c58d7-ddd9-40fc-a4ef-81c548de2b07@redhat.com>
-Date: Fri, 5 Apr 2024 12:14:00 +0200
+	s=arc-20240116; t=1712312071; c=relaxed/simple;
+	bh=+xKOajsc2Izq55sVeKrU1ybNlqYAvE/aWZh9mmJq/uY=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=n/TEY4kpKyYPW4XA8ieGRLClApq351v8KChUWUzQgQq8G0mcMd8J7tpcUM+83wXkpO/LMGr0sp7OLBEaSl5BUF23+UsbiVnzu0KkDu929n2g6R2936VVrqcYxXr4sS6bCHbyItu4Dzj/ur/2Z9+4tPOMgUFxxQ3InwYcA1TCd80=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <s.hauer@pengutronix.de>)
+	id 1rsgaY-0008Kv-R3; Fri, 05 Apr 2024 12:14:26 +0200
+Received: from [2a0a:edc0:0:1101:1d::28] (helo=dude02.red.stw.pengutronix.de)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <s.hauer@pengutronix.de>)
+	id 1rsgaY-00AY5F-3L; Fri, 05 Apr 2024 12:14:26 +0200
+Received: from localhost ([::1] helo=dude02.red.stw.pengutronix.de)
+	by dude02.red.stw.pengutronix.de with esmtp (Exim 4.96)
+	(envelope-from <s.hauer@pengutronix.de>)
+	id 1rsgaY-00AhER-05;
+	Fri, 05 Apr 2024 12:14:26 +0200
+From: Sascha Hauer <s.hauer@pengutronix.de>
+Date: Fri, 05 Apr 2024 12:14:26 +0200
+Subject: [PATCH v2 2/2] arm64: dts: rockchip: add Protonic MECSBC
+ device-tree
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH 0/4] KVM: x86/mmu: Rework marking folios
- dirty/accessed
-To: Paolo Bonzini <pbonzini@redhat.com>
-Cc: Sean Christopherson <seanjc@google.com>,
- David Matlack <dmatlack@google.com>, kvm@vger.kernel.org,
- linux-kernel@vger.kernel.org, David Stevens <stevensd@chromium.org>,
- Matthew Wilcox <willy@infradead.org>
-References: <20240320005024.3216282-1-seanjc@google.com>
- <4d04b010-98f3-4eae-b320-a7dd6104b0bf@redhat.com>
- <CALzav=eLH+V_5Y6ZWsRkmnbEb6fxPa55B7xyWxP3o6qsrs_nHA@mail.gmail.com>
- <a2fff462-dfe6-4979-a7b2-131c6e0b5017@redhat.com>
- <ZgygGmaEuddZGKyX@google.com>
- <ca1f320b-dc06-48e0-b4f5-ce860a72f0e2@redhat.com>
- <Zg3V-M3iospVUEDU@google.com>
- <42dbf562-5eab-4f82-ad77-5ee5b8c79285@redhat.com>
- <Zg7j2D6WFqcPaXFB@google.com>
- <b3ea925f-bd47-4f54-bede-3f0d7471e3d7@redhat.com>
- <Zg8jip0QIBbOCgpz@google.com>
- <36e1592a-e590-48a0-9a79-eeac6b41314b@redhat.com>
- <CABgObfbykeRXv2r2tULe6_SwD7DkWPaMTdc6PkAUb3JmTodf4w@mail.gmail.com>
-From: David Hildenbrand <david@redhat.com>
-Content-Language: en-US
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <CABgObfbykeRXv2r2tULe6_SwD7DkWPaMTdc6PkAUb3JmTodf4w@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240405-protonic-mecsbc-v2-2-0a6fedc78b9f@pengutronix.de>
+References: <20240405-protonic-mecsbc-v2-0-0a6fedc78b9f@pengutronix.de>
+In-Reply-To: <20240405-protonic-mecsbc-v2-0-0a6fedc78b9f@pengutronix.de>
+To: Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Heiko Stuebner <heiko@sntech.de>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+ linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, 
+ David Jander <david@protonic.nl>, Sascha Hauer <s.hauer@pengutronix.de>
+X-Mailer: b4 0.12.3
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1712312066; l=9611;
+ i=s.hauer@pengutronix.de; s=20230412; h=from:subject:message-id;
+ bh=AmaeLU460BkqowyJgoyxOdzI89kg/HGa+2cLnp5Pl6E=;
+ b=bRaZVrWcdPo/Rz4TGl2WFBEDp0SAnVr2Exp4PkkbFfC6MNpM5/F63L6SxEQzi1xi7vAtN1td/
+ FtOra7YusyqDjMA4i6tH0YFqWrDIQFfg5CkfLgsRdTRcD3aqcgeJNvk
+X-Developer-Key: i=s.hauer@pengutronix.de; a=ed25519;
+ pk=4kuc9ocmECiBJKWxYgqyhtZOHj5AWi7+d0n/UjhkwTg=
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: s.hauer@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-On 05.04.24 11:37, Paolo Bonzini wrote:
-> On Fri, Apr 5, 2024 at 8:53 AM David Hildenbrand <david@redhat.com> wrote:
->>>        mmu_notifier_invalidate_range_start(&range);
->>>        tlb_start_vma(&tlb, vma);
->>>        walk_page_range(vma->vm_mm, range.start, range.end,
->>>                        &madvise_free_walk_ops, &tlb);
->>>        tlb_end_vma(&tlb, vma);
->>>        mmu_notifier_invalidate_range_end(&range);
->>>
->>
->> Indeed, we do setup the MMU notifier invalidation. We do the start/end
->> ... I was looking for PTE notifications.
->>
->> I spotted the set_pte_at(), not a set_pte_at_notify() like we do in
->> other code. Maybe that's not required here (digging through
->> documentation I'm still left clueless). [...]
->> Absolutely unclear to me when we *must* to use it, or if it is. Likely
->> its a pure optimization when we're *changing* a PTE.
-> 
-> Yes, .change_pte() is just an optimization. The original point of it
-> was for KSM, so that KVM could flip the sPTE to a new location without
-> first zapping it. At the time there was also an .invalidate_page()
-> callback, and both of them were *not* bracketed by calls to
-> mmu_notifier_invalidate_range_{start,end}()
-> 
-> Later on, both callbacks were changed to occur within an
-> invalidate_range_start/end() block.
-> 
-> Commit 6bdb913f0a70 ("mm: wrap calls to set_pte_at_notify with
-> invalidate_range_start and invalidate_range_end", 2012-10-09) did so
-> for .change_pte(). The reason to do so was a bit roundabout, namely to
-> allow sleepable .invalidate_page() hooks (because .change_pte() is not
-> sleepable and at the time .invalidate_page() was used as a fallback
-> for .change_pte()).
-> 
-> This however made KVM's usage of the .change_pte() callback completely
-> moot, because KVM unmaps the sPTEs during .invalidate_range_start()
-> and therefore .change_pte() has no hope of succeeding.
-> 
-> (Commit 369ea8242c0f ("mm/rmap: update to new mmu_notifier semantic
-> v2", 2017-08-31) is where the other set of non-bracketed calls to MMU
-> notifier callbacks was changed; calls to
-> mmu_notifier_invalidate_page() were replaced by calls to
-> mmu_notifier_invalidate_range(), bracketed by calls to
-> mmu_notifier_invalidate_range_{start,end}()).
-> 
-> Since KVM is the only user of .change_pte(), we can remove
-> .change_pte() and set_pte_at_notify() completely.
+From: David Jander <david@protonic.nl>
 
-Nice, thanks for all that information!
+MECSBC is a single board computer for blood analysis machines from
+RR-Mechatronics, designed and manufactured by Protonic Holland, based on
+the Rockchip RK3568 SoC.
+
+Signed-off-by: David Jander <david@protonic.nl>
+Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
+---
+ arch/arm64/boot/dts/rockchip/Makefile          |   1 +
+ arch/arm64/boot/dts/rockchip/rk3568-mecsbc.dts | 404 +++++++++++++++++++++++++
+ 2 files changed, 405 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/rockchip/Makefile b/arch/arm64/boot/dts/rockchip/Makefile
+index f906a868b71ac..51c242c462b04 100644
+--- a/arch/arm64/boot/dts/rockchip/Makefile
++++ b/arch/arm64/boot/dts/rockchip/Makefile
+@@ -100,6 +100,7 @@ dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3568-evb1-v10.dtb
+ dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3568-fastrhino-r66s.dtb
+ dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3568-fastrhino-r68s.dtb
+ dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3568-lubancat-2.dtb
++dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3568-mecsbc.dtb
+ dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3568-nanopi-r5c.dtb
+ dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3568-nanopi-r5s.dtb
+ dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3568-odroid-m1.dtb
+diff --git a/arch/arm64/boot/dts/rockchip/rk3568-mecsbc.dts b/arch/arm64/boot/dts/rockchip/rk3568-mecsbc.dts
+new file mode 100644
+index 0000000000000..edd54c5932337
+--- /dev/null
++++ b/arch/arm64/boot/dts/rockchip/rk3568-mecsbc.dts
+@@ -0,0 +1,404 @@
++// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
++
++/dts-v1/;
++#include <dt-bindings/gpio/gpio.h>
++#include <dt-bindings/leds/common.h>
++#include <dt-bindings/pinctrl/rockchip.h>
++#include <dt-bindings/pwm/pwm.h>
++#include "rk3568.dtsi"
++
++/ {
++	model = "Protonic MECSBC";
++	compatible = "prt,mecsbc", "rockchip,rk3568";
++
++	aliases {
++		mmc0 = &sdhci;
++		mmc1 = &sdmmc0;
++	};
++
++	chosen: chosen {
++		stdout-path = "serial2:1500000n8";
++	};
++
++	tas2562-sound {
++		compatible = "simple-audio-card";
++		simple-audio-card,format = "i2s";
++		simple-audio-card,name = "Speaker";
++		simple-audio-card,mclk-fs = <256>;
++
++		simple-audio-card,cpu {
++			sound-dai = <&i2s1_8ch>;
++		};
++
++		simple-audio-card,codec {
++			sound-dai = <&tas2562>;
++		};
++	};
++
++	vdd_gpu: regulator-vdd-gpu {
++		compatible = "pwm-regulator";
++		pwms = <&pwm1 0 5000 PWM_POLARITY_INVERTED>;
++		regulator-name = "vdd_gpu";
++		regulator-min-microvolt = <915000>;
++		regulator-max-microvolt = <1000000>;
++		regulator-always-on;
++		regulator-boot-on;
++		regulator-settling-time-up-us = <250>;
++		pwm-dutycycle-range = <0 100>; /* dutycycle inverted 0% => 0.915V */
++	};
++
++	vcc_sd: regulator-sd {
++		compatible = "regulator-gpio";
++		enable-gpios = <&gpio0 RK_PA5 GPIO_ACTIVE_HIGH>;
++		enable-active-high;
++		gpios = <&gpio0 RK_PA6 GPIO_ACTIVE_HIGH>;
++		regulator-name = "sdcard-gpio-supply";
++		regulator-min-microvolt = <1800000>;
++		regulator-max-microvolt = <3300000>;
++		states = <1800000 0x1>, <3300000 0x0>;
++	};
++
++	vdd_npu: regulator-vdd-npu {
++		compatible = "pwm-regulator";
++		pwms = <&pwm2 0 5000 PWM_POLARITY_INVERTED>;
++		regulator-name = "vdd_npu";
++		regulator-min-microvolt = <915000>;
++		regulator-max-microvolt = <1000000>;
++		regulator-always-on;
++		regulator-boot-on;
++		regulator-settling-time-up-us = <250>;
++		pwm-dutycycle-range = <0 100>; /* dutycycle inverted 0% => 0.915V */
++	};
++
++	p3v3: regulator-p3v3 {
++		compatible = "regulator-fixed";
++		regulator-name = "p3v3";
++		regulator-always-on;
++		regulator-boot-on;
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++	};
++
++	p1v8: regulator-p1v8 {
++		compatible = "regulator-fixed";
++		regulator-name = "p1v8";
++		regulator-always-on;
++		regulator-boot-on;
++		regulator-min-microvolt = <1800000>;
++		regulator-max-microvolt = <1800000>;
++	};
++};
++
++&combphy0 {
++	status = "okay";
++};
++
++&combphy1 {
++	status = "okay";
++};
++
++&combphy2 {
++	status = "okay";
++};
++
++&cpu0 {
++	cpu-supply = <&vdd_cpu>;
++};
++
++&cpu1 {
++	cpu-supply = <&vdd_cpu>;
++};
++
++&cpu2 {
++	cpu-supply = <&vdd_cpu>;
++};
++
++&cpu3 {
++	cpu-supply = <&vdd_cpu>;
++};
++
++&gmac1 {
++	assigned-clocks = <&cru SCLK_GMAC1_RX_TX>, <&cru SCLK_GMAC1>;
++	assigned-clock-parents = <&cru SCLK_GMAC1_RGMII_SPEED>, <&cru CLK_MAC1_2TOP>;
++	phy-handle = <&rgmii_phy1>;
++	phy-mode = "rgmii-id";
++	clock_in_out = "output";
++	pinctrl-names = "default";
++	pinctrl-0 = <&gmac1m1_miim
++		     &gmac1m1_tx_bus2
++		     &gmac1m1_rx_bus2
++		     &gmac1m1_rgmii_clk
++		     &gmac1m1_clkinout
++		     &gmac1m1_rgmii_bus>;
++	status = "okay";
++};
++
++&gpu {
++	mali-supply = <&vdd_gpu>;
++	status = "okay";
++};
++
++&i2c0 {
++	status = "okay";
++
++	vdd_cpu: regulator@60 {
++		compatible = "fcs,fan53555";
++		reg = <0x60>;
++		fcs,suspend-voltage-selector = <1>;
++		regulator-name = "vdd_cpu";
++		regulator-always-on;
++		regulator-boot-on;
++		regulator-min-microvolt = <800000>;
++		regulator-max-microvolt = <1150000>;
++		regulator-ramp-delay = <2300>;
++
++		regulator-state-mem {
++			regulator-off-in-suspend;
++		};
++	};
++};
++
++&i2c2 {
++	status = "okay";
++	pinctrl-names = "default";
++	pinctrl-0 = <&i2c2m0_xfer>;
++};
++
++&i2c3 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&i2c3m0_xfer>;
++	status = "okay";
++
++	tas2562: amplifier@4c {
++		compatible = "ti,tas2562";
++		reg = <0x4c>;
++		#sound-dai-cells = <0>;
++		shutdown-gpios = <&gpio1 RK_PD4 GPIO_ACTIVE_HIGH>;
++		interrupt-parent = <&gpio1>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&pinctrl_tas2562>;
++		interrupts = <RK_PD1 IRQ_TYPE_LEVEL_LOW>;
++		ti,imon-slot-no = <0>;
++	};
++};
++
++&i2c5 {
++	status = "okay";
++
++	temperature-sensor@48 {
++		compatible = "ti,tmp1075";
++		reg = <0x48>;
++	};
++
++	rtc@51 {
++		compatible = "nxp,pcf85363";
++		reg = <0x51>;
++		#clock-cells = <0>;
++		clock-output-names = "rtcic_32kout";
++	};
++};
++
++&i2s1_8ch {
++	pinctrl-names = "default";
++	pinctrl-0 = <&i2s1m0_sclktx &i2s1m0_lrcktx &i2s1m0_sdi0 &i2s1m0_sdo0>;
++	rockchip,trcm-sync-tx-only;
++	status = "okay";
++};
++
++&mdio1 {
++	rgmii_phy1: ethernet-phy@2 {
++		compatible = "ethernet-phy-ieee802.3-c22";
++		reg = <0x2>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&eth_phy1_rst>;
++		reset-assert-us = <20000>;
++		reset-deassert-us = <100000>;
++		reset-gpios = <&gpio4 RK_PB3 GPIO_ACTIVE_LOW>;
++	};
++};
++
++&pcie2x1 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pcie20m1_pins>;
++	reset-gpios = <&gpio3 RK_PC1 GPIO_ACTIVE_HIGH>;
++	status = "okay";
++};
++
++&pcie30phy {
++	status = "okay";
++};
++
++&pcie3x2 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pcie30x2m1_pins>;
++	reset-gpios = <&gpio2 RK_PD6 GPIO_ACTIVE_HIGH>;
++	vpcie3v3-supply = <&p3v3>;
++	status = "okay";
++};
++
++&pinctrl {
++	ethernet {
++		eth_phy1_rst: eth-phy1-rst {
++			rockchip,pins = <4 RK_PB3 RK_FUNC_GPIO &pcfg_pull_none>;
++		};
++	};
++
++	tas2562 {
++		pinctrl_tas2562: tas2562 {
++			rockchip,pins = <1 RK_PD4 RK_FUNC_GPIO &pcfg_pull_up>;
++		};
++	};
++};
++
++&pmu_io_domains {
++	pmuio1-supply = <&p3v3>;
++	pmuio2-supply = <&p3v3>;
++	vccio1-supply = <&p1v8>;
++	vccio2-supply = <&p1v8>;
++	vccio3-supply = <&vcc_sd>;
++	vccio4-supply = <&p1v8>;
++	vccio5-supply = <&p3v3>;
++	vccio6-supply = <&p1v8>;
++	vccio7-supply = <&p3v3>;
++	status = "okay";
++};
++
++&saradc {
++	vref-supply = <&p1v8>;
++	status = "okay";
++};
++
++&sdhci {
++	bus-width = <8>;
++	max-frequency = <200000000>;
++	non-removable;
++	pinctrl-names = "default";
++	pinctrl-0 = <&emmc_bus8 &emmc_clk &emmc_cmd &emmc_datastrobe>;
++	vmmc-supply = <&p3v3>;
++	vqmmc-supply = <&p1v8>;
++	mmc-hs200-1_8v;
++	non-removable;
++	no-sd;
++	no-sdio;
++	status = "okay";
++};
++
++&sdmmc0 {
++	bus-width = <4>;
++	cap-sd-highspeed;
++	cd-gpios = <&gpio0 RK_PA4 GPIO_ACTIVE_LOW>;
++	disable-wp;
++	pinctrl-names = "default";
++	pinctrl-0 = <&sdmmc0_bus4 &sdmmc0_clk &sdmmc0_cmd &sdmmc0_det>;
++	sd-uhs-sdr50;
++	sd-uhs-sdr104;
++	vmmc-supply = <&p3v3>;
++	vqmmc-supply = <&vcc_sd>;
++	status = "okay";
++};
++
++&tsadc {
++	rockchip,hw-tshut-mode = <1>;
++	rockchip,hw-tshut-polarity = <0>;
++	status = "okay";
++};
++
++&uart2 {
++	status = "okay";
++};
++
++&usb_host0_ehci {
++	status = "okay";
++};
++
++&usb_host0_ohci {
++	status = "okay";
++};
++
++&usb_host0_xhci {
++	extcon = <&usb2phy0>;
++	status = "okay";
++	dr_mode = "host";
++};
++
++&usb_host1_ehci {
++	status = "okay";
++};
++
++&usb_host1_ohci {
++	status = "okay";
++};
++
++&usb_host1_xhci {
++	status = "okay";
++};
++
++&usb2phy0 {
++	status = "okay";
++};
++
++&usb2phy0_host {
++	status = "okay";
++};
++
++&usb2phy0_otg {
++	status = "okay";
++};
++
++&usb2phy1 {
++	status = "okay";
++};
++
++&usb2phy1_host {
++	status = "okay";
++};
++
++&usb2phy1_otg {
++	status = "okay";
++};
++
++&pwm1 {
++	status = "okay";
++	pinctrl-names = "default";
++	pinctrl-0 = <&pwm1m0_pins>;
++};
++
++&pwm2 {
++	status = "okay";
++	pinctrl-names = "default";
++	pinctrl-0 = <&pwm2m0_pins>;
++};
++
++&gpu_opp_table {
++	compatible = "operating-points-v2";
++
++	opp-200000000 {
++		opp-hz = /bits/ 64 <200000000>;
++		opp-microvolt = <915000>;
++	};
++
++	opp-300000000 {
++		opp-hz = /bits/ 64 <300000000>;
++		opp-microvolt = <915000>;
++	};
++
++	opp-400000000 {
++		opp-hz = /bits/ 64 <400000000>;
++		opp-microvolt = <915000>;
++	};
++
++	opp-600000000 {
++		opp-hz = /bits/ 64 <600000000>;
++		opp-microvolt = <920000>;
++	};
++
++	opp-700000000 {
++		opp-hz = /bits/ 64 <700000000>;
++		opp-microvolt = <950000>;
++	};
++
++	opp-800000000 {
++		opp-hz = /bits/ 64 <800000000>;
++		opp-microvolt = <1000000>;
++	};
++};
 
 -- 
-Cheers,
-
-David / dhildenb
+2.39.2
 
