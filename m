@@ -1,52 +1,44 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mail.wantyapps.xyz (mail.wantyapps.xyz [66.135.5.160])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04150174EEA
-	for <linux-kernel@vger.kernel.org>; Fri,  5 Apr 2024 21:40:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE8F74C74;
+	Fri,  5 Apr 2024 21:42:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=66.135.5.160
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712353208; cv=none; b=O80eDc1HWnVnB1QVUnj5PSopV6rB6uiJ6W3l27IVrXpXM0wtyjux0enHoy6NPHtmFJ93HZtv91Q8AzLelfsBZsDs2AYW6blXSzQakA7CK/fl9VrqvTsPXV19dkuwcqp8Dq7F6eKwK760Bh7s/7zb/gkJKc19e1jcjypAxYCLOKY=
+	t=1712353363; cv=none; b=p5Ph1CuHD2w2bacrK8jv4BQJuXWAXAPEKGCDa1tyWeiPBYbFVd6GVNZLbcg/i7WtVwh9tJ/4/SPKKK3zkTR9K9iQdS+Jvy5bR6XmjYf5BZyk/3ren774oQ9j8gc+tNMPgO1cNmkZnUyDsy+OxPlYvfLFBXs1gHUo6jKVnxxZhAE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712353208; c=relaxed/simple;
-	bh=MWViFiV2oxg4tnMs/wG+1axaltDwW1RpJ9QKG08kA9o=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=B8INxJsQn+yXNGOsVLT1icNmMUNIYTJuKO8siSYJLiNj/pTpqKwM7XbNEPeS8wbf9NQXcco03vComOcpvmdST3m6XwyjD0LKgJdJjpyR1opFbYpIE6Ks5Ljyuq7KYsGZiMm2mOBBMShN4KsBnVVRgT8Slkasxylz2VrNG1wXXE8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=V9se4gYT; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1712353363; c=relaxed/simple;
+	bh=HZG6dXrNkcoRgeV+k8hA9G3top5k7OmbWR2k4HUy6gs=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=MbhIJKTbRykFcmQSOFeAt9P74MwczewI7z5tnJqg56OtHNLN57GCFM/GMbLBFp0IEfBnkaf8AgesZCO/jHRFN2PVNp7ZO2te6b8TbLp0BcL5z4aT42eu5lcM1X4xOWizpIq5EsnXsnBJKgRpGMS7LdQ7jFVqRbZDeAUmA2zK2+8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=wantyapps.xyz; spf=pass smtp.mailfrom=wantyapps.xyz; dkim=pass (2048-bit key) header.d=wantyapps.xyz header.i=@wantyapps.xyz header.b=Obsb3XeI; arc=none smtp.client-ip=66.135.5.160
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=wantyapps.xyz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wantyapps.xyz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="V9se4gYT"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1712353205;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=8yBgVsN5LppqIbArLWzBgh9/VT+hGJdZqFj/5b4sX08=;
-	b=V9se4gYTShwRE9s24TD6tSg8LG07h2Xi7M6LqHwd405fZzy2UUb3J30kkf5EpdBmwTR94O
-	XR/TR//IB8VB+qscSxi1510PVna+2Wk+zLlH1CQ1HOobJpwWzL2N3WF4wiUXaTYgpl+DDy
-	9HVC/UTL2DuelWm1/ltMzSRZCM/bsGk=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-586-WZJh4Fj-Owy4mxAPrd_JZg-1; Fri, 05 Apr 2024 17:40:04 -0400
-X-MC-Unique: WZJh4Fj-Owy4mxAPrd_JZg-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.rdu2.redhat.com [10.11.54.2])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 976C0811E81;
-	Fri,  5 Apr 2024 21:40:03 +0000 (UTC)
-Received: from cantor.redhat.com (unknown [10.2.16.198])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id DCDAF400D69A;
-	Fri,  5 Apr 2024 21:40:02 +0000 (UTC)
-From: Jerry Snitselaar <jsnitsel@redhat.com>
-To: Fenghua Yu <fenghua.yu@intel.com>,
-	Dave Jiang <dave.jiang@intel.com>
-Cc: Vinod Koul <vkoul@kernel.org>,
-	dmaengine@vger.kernel.org,
+	dkim=pass (2048-bit key) header.d=wantyapps.xyz header.i=@wantyapps.xyz header.b="Obsb3XeI"
+Received: from multivac.localdomain (unknown [147.235.205.62])
+	by mail.wantyapps.xyz (Postfix) with ESMTPSA id 0D4CF9508D;
+	Fri,  5 Apr 2024 21:42:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=wantyapps.xyz;
+	s=mail; t=1712353355;
+	bh=HZG6dXrNkcoRgeV+k8hA9G3top5k7OmbWR2k4HUy6gs=;
+	h=From:To:Cc:Subject:Date:From;
+	b=Obsb3XeItVVX+5LjAkHQIJesAl6Xqge9esmh/hUuHLmmmAUhCyizpxFNFoxXY7J2M
+	 sjr58e2sanShV8RRmiqA2iq4pXYsTzD6/gLh+g5xnNtY9jKkGeehh4M60QcaNd4HO9
+	 UOfwZZBRLCAdjcM0B3tQb2yp68l4UF/JRbdUd1CbEBM4+NFKJaeofF5DWBAD9yPSdh
+	 uN9IWb2OF0C/xjeQ97e5QIrxi68O25qMehfwxKsuKWEGIFyMHjTokT8x0Czi5xrBDT
+	 os/MeAZpHYqfqSrZBcqhMHlM/1/hzg/ZSrNJITgXEOue2E44lJB6i3CPowqh6bfEW3
+	 cL7g6zokgbL4g==
+From: me@wantyapps.xyz
+To: 
+Cc: me@wantyapps.xyz,
+	Marcel Holtmann <marcel@holtmann.org>,
+	Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
+	linux-bluetooth@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v2] dmaengine: idxd: Check for driver name match before sva user feature
-Date: Fri,  5 Apr 2024 14:39:41 -0700
-Message-ID: <20240405213941.3629709-1-jsnitsel@redhat.com>
+Subject: [PATCH v3] Bluetooth: ath3k: Fix multiple issues reported by checkpatch.pl
+Date: Sat,  6 Apr 2024 00:42:24 +0300
+Message-ID: <20240405214225.2170476-1-me@wantyapps.xyz>
+X-Mailer: git-send-email 2.44.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -54,67 +46,190 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.2
 
-Currently if the user driver is probed on a workqueue configured for
-another driver with SVA not enabled on the system, it will print
-out a number of probe failing messages like the following:
+From: Uri Arev <me@wantyapps.xyz>
 
-    [   264.831140] user: probe of wq13.0 failed with error -95
+This fixes some CHECKs reported by the checkpatch script.
 
-On some systems, such as GNR, the number of messages can
-reach over 100.
+Issues reported in ath3k.c:
+-------
+ath3k.c
+-------
+CHECK: Please don't use multiple blank lines
++
++
 
-Move the SVA feature check to be after the driver name match
-check.
+CHECK: Blank lines aren't necessary after an open brace '{'
++static const struct usb_device_id ath3k_blist_tbl[] = {
++
 
-Cc: Vinod Koul <vkoul@kernel.org>
-Cc: dmaengine@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Reviewed-by: Fenghua Yu <fenghua.yu@intel.com>
-Reviewed-by: Dave Jiang <dave.jiang@intel.com>
-Signed-off-by: Jerry Snitselaar <jsnitsel@redhat.com>
+CHECK: Alignment should match open parenthesis
++static int ath3k_load_firmware(struct usb_device *udev,
++                               const struct firmware *firmware)
+
+CHECK: Alignment should match open parenthesis
++               err = usb_bulk_msg(udev, pipe, send_buf, size,
++                                       &len, 3000);
+
+CHECK: Unnecessary parentheses around 'len != size'
++               if (err || (len != size)) {
+
+CHECK: Alignment should match open parenthesis
++static int ath3k_get_version(struct usb_device *udev,
++                       struct ath3k_version *version)
+
+CHECK: Alignment should match open parenthesis
++static int ath3k_load_fwfile(struct usb_device *udev,
++               const struct firmware *firmware)
+
+CHECK: Alignment should match open parenthesis
++               err = usb_bulk_msg(udev, pipe, send_buf, size,
++                                       &len, 3000);
+
+CHECK: Unnecessary parentheses around 'len != size'
++               if (err || (len != size)) {
+
+CHECK: Blank lines aren't necessary after an open brace '{'
++       switch (fw_version.ref_clock) {
++
+
+CHECK: Alignment should match open parenthesis
++       snprintf(filename, ATH3K_NAME_LEN, "ar3k/ramps_0x%08x_%d%s",
++               le32_to_cpu(fw_version.rom_version), clk_value, ".dfu");
+
+CHECK: Alignment should match open parenthesis
++static int ath3k_probe(struct usb_interface *intf,
++                       const struct usb_device_id *id)
+
+CHECK: Alignment should match open parenthesis
++                       BT_ERR("Firmware file \"%s\" not found",
++                                                       ATH3K_FIRMWARE);
+
+CHECK: Alignment should match open parenthesis
++               BT_ERR("Firmware file \"%s\" request failed (err=%d)",
++                                               ATH3K_FIRMWARE, ret);
+
+total: 0 errors, 0 warnings, 14 checks, 540 lines checked
+
+Signed-off-by: Uri Arev <me@wantyapps.xyz>
 ---
-v2:
- - Fix typo.
- - Add Reviewed-by tags for Dave and Fenghua
+Changes in v2:
+  - Fix spelling mistake
+  - Fix gitlint errors
 
- drivers/dma/idxd/cdev.c | 17 +++++++++--------
- 1 file changed, 9 insertions(+), 8 deletions(-)
+Changes in v3:
+  - Fix line length error in error section of commit
+---
+ drivers/bluetooth/ath3k.c | 25 +++++++++++--------------
+ 1 file changed, 11 insertions(+), 14 deletions(-)
 
-diff --git a/drivers/dma/idxd/cdev.c b/drivers/dma/idxd/cdev.c
-index 8078ab9acfbc..a4b771781afc 100644
---- a/drivers/dma/idxd/cdev.c
-+++ b/drivers/dma/idxd/cdev.c
-@@ -517,6 +517,14 @@ static int idxd_user_drv_probe(struct idxd_dev *idxd_dev)
- 	if (idxd->state != IDXD_DEV_ENABLED)
- 		return -ENXIO;
+diff --git a/drivers/bluetooth/ath3k.c b/drivers/bluetooth/ath3k.c
+index 88262d3a9392..ce97b336fbfb 100644
+--- a/drivers/bluetooth/ath3k.c
++++ b/drivers/bluetooth/ath3k.c
+@@ -3,7 +3,6 @@
+  * Copyright (c) 2008-2009 Atheros Communications Inc.
+  */
  
-+	mutex_lock(&wq->wq_lock);
-+
-+	if (!idxd_wq_driver_name_match(wq, dev)) {
-+		idxd->cmd_status = IDXD_SCMD_WQ_NO_DRV_NAME;
-+		rc = -ENODEV;
-+		goto wq_err;
-+	}
-+
- 	/*
- 	 * User type WQ is enabled only when SVA is enabled for two reasons:
- 	 *   - If no IOMMU or IOMMU Passthrough without SVA, userspace
-@@ -532,14 +540,7 @@ static int idxd_user_drv_probe(struct idxd_dev *idxd_dev)
- 		dev_dbg(&idxd->pdev->dev,
- 			"User type WQ cannot be enabled without SVA.\n");
+-
+ #include <linux/module.h>
+ #include <linux/kernel.h>
+ #include <linux/init.h>
+@@ -128,7 +127,6 @@ MODULE_DEVICE_TABLE(usb, ath3k_table);
+  * for AR3012
+  */
+ static const struct usb_device_id ath3k_blist_tbl[] = {
+-
+ 	/* Atheros AR3012 with sflash firmware*/
+ 	{ USB_DEVICE(0x0489, 0xe04e), .driver_info = BTUSB_ATH3012 },
+ 	{ USB_DEVICE(0x0489, 0xe04d), .driver_info = BTUSB_ATH3012 },
+@@ -202,7 +200,7 @@ static inline void ath3k_log_failed_loading(int err, int len, int size,
+ #define TIMEGAP_USEC_MAX	100
  
--		return -EOPNOTSUPP;
--	}
+ static int ath3k_load_firmware(struct usb_device *udev,
+-				const struct firmware *firmware)
++			       const struct firmware *firmware)
+ {
+ 	u8 *send_buf;
+ 	int len = 0;
+@@ -237,9 +235,9 @@ static int ath3k_load_firmware(struct usb_device *udev,
+ 		memcpy(send_buf, firmware->data + sent, size);
+ 
+ 		err = usb_bulk_msg(udev, pipe, send_buf, size,
+-					&len, 3000);
++				   &len, 3000);
+ 
+-		if (err || (len != size)) {
++		if (err || len != size) {
+ 			ath3k_log_failed_loading(err, len, size, count);
+ 			goto error;
+ 		}
+@@ -262,7 +260,7 @@ static int ath3k_get_state(struct usb_device *udev, unsigned char *state)
+ }
+ 
+ static int ath3k_get_version(struct usb_device *udev,
+-			struct ath3k_version *version)
++			     struct ath3k_version *version)
+ {
+ 	return usb_control_msg_recv(udev, 0, ATH3K_GETVERSION,
+ 				    USB_TYPE_VENDOR | USB_DIR_IN, 0, 0,
+@@ -271,7 +269,7 @@ static int ath3k_get_version(struct usb_device *udev,
+ }
+ 
+ static int ath3k_load_fwfile(struct usb_device *udev,
+-		const struct firmware *firmware)
++			     const struct firmware *firmware)
+ {
+ 	u8 *send_buf;
+ 	int len = 0;
+@@ -310,8 +308,8 @@ static int ath3k_load_fwfile(struct usb_device *udev,
+ 		memcpy(send_buf, firmware->data + sent, size);
+ 
+ 		err = usb_bulk_msg(udev, pipe, send_buf, size,
+-					&len, 3000);
+-		if (err || (len != size)) {
++				   &len, 3000);
++		if (err || len != size) {
+ 			ath3k_log_failed_loading(err, len, size, count);
+ 			kfree(send_buf);
+ 			return err;
+@@ -425,7 +423,6 @@ static int ath3k_load_syscfg(struct usb_device *udev)
+ 	}
+ 
+ 	switch (fw_version.ref_clock) {
 -
--	mutex_lock(&wq->wq_lock);
--
--	if (!idxd_wq_driver_name_match(wq, dev)) {
--		idxd->cmd_status = IDXD_SCMD_WQ_NO_DRV_NAME;
--		rc = -ENODEV;
-+		rc = -EOPNOTSUPP;
- 		goto wq_err;
+ 	case ATH3K_XTAL_FREQ_26M:
+ 		clk_value = 26;
+ 		break;
+@@ -441,7 +438,7 @@ static int ath3k_load_syscfg(struct usb_device *udev)
+ 	}
+ 
+ 	snprintf(filename, ATH3K_NAME_LEN, "ar3k/ramps_0x%08x_%d%s",
+-		le32_to_cpu(fw_version.rom_version), clk_value, ".dfu");
++		 le32_to_cpu(fw_version.rom_version), clk_value, ".dfu");
+ 
+ 	ret = request_firmware(&firmware, filename, &udev->dev);
+ 	if (ret < 0) {
+@@ -456,7 +453,7 @@ static int ath3k_load_syscfg(struct usb_device *udev)
+ }
+ 
+ static int ath3k_probe(struct usb_interface *intf,
+-			const struct usb_device_id *id)
++		       const struct usb_device_id *id)
+ {
+ 	const struct firmware *firmware;
+ 	struct usb_device *udev = interface_to_usbdev(intf);
+@@ -505,10 +502,10 @@ static int ath3k_probe(struct usb_interface *intf,
+ 	if (ret < 0) {
+ 		if (ret == -ENOENT)
+ 			BT_ERR("Firmware file \"%s\" not found",
+-							ATH3K_FIRMWARE);
++			       ATH3K_FIRMWARE);
+ 		else
+ 			BT_ERR("Firmware file \"%s\" request failed (err=%d)",
+-							ATH3K_FIRMWARE, ret);
++			       ATH3K_FIRMWARE, ret);
+ 		return ret;
  	}
  
 -- 
