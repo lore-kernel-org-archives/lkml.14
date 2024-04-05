@@ -1,153 +1,117 @@
-Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
+Received: from mail-io1-f70.google.com (mail-io1-f70.google.com [209.85.166.70])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B27E816D4E1
-	for <linux-kernel@vger.kernel.org>; Fri,  5 Apr 2024 13:30:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4454916D32D
+	for <linux-kernel@vger.kernel.org>; Fri,  5 Apr 2024 13:30:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.70
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712323808; cv=none; b=sNwnOS3iiAG+ORekoz9WW9tmQ6M0/isgrWaAbgeui3cxVCDB7Pf92MSvfYrMZHtIjEqhkzFp+DjtCQmAA57LYYOAw7gtItVV0Sr43utmqisfSmHdkYUGnG9n/izjhJxdYrALKRlhLadOURZAMowX3WQudNprqOHIIvNTWxG87UA=
+	t=1712323837; cv=none; b=j45zvY1VP0p7D/K5O4aWgv5E8LiuGKrVQmgFqbmAD+E6PGlUTCumvYOAkDcPU2CLFYzbSC3Szk3fkfEbq+pEK11dgiiYPBqqeUVaKnnxZwkaVWjwNqA/F+RTCdKfCm49OjZ9a3JwJ/BlST4FA/XM2uBysnycVnVFcJqNFS1i4/A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712323808; c=relaxed/simple;
-	bh=wSswXutQJ+wCZIDOdh13zZfPNpNOZaTJPxJxnSQYIrs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ntnYOs50vyB6uQ6VsRDocC9dcD20tzRCubiBYakuV0JwGcmuVbbmevpRiZPUvrkhKJxxZBmpt5EhgDkMc6GCd80+UKJC0dNPrwsIAxbYyW/foRx/VILCGUpu/g57VHr0oSKoUVB1sgU1+s5/Y0h8I8M53tBAve4PtBIWgQEDz74=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=h0dpdXlM; arc=none smtp.client-ip=209.85.208.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="h0dpdXlM"
-Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-56e0430f714so10435a12.1
-        for <linux-kernel@vger.kernel.org>; Fri, 05 Apr 2024 06:30:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1712323805; x=1712928605; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=udhYzo9d/0PPqGVdd4D3LGjxi+bDzO7RIJlIIFERmQE=;
-        b=h0dpdXlMP0f9BdNCgI3z2niKFXY9IYX0Nco1p7nyhoLd2RFtzrVsqFiIjztlGdKcx7
-         wcyCekVug7fXUGKUXGx5ORzxP1flB2jj7auYgifZZ5v5fInbkVYHYRKdln0OP6jYD3pi
-         Xrv6ggpi8FVSsputPRghJWQWJ4s4eEaDTdjH+Rlq4RVRJIs/Rx5AlZgSVKEi3h9MbmGa
-         gQtPAikTtw1tQDjJxSxH/JL0aOakrB+KFbmYjCdKmLPE1EyobbmSLJnyMPbrkoTqX5k1
-         CUjKDAqTaF/mn3kknxmnVsUo4HaIa30jD9yu2vX5fUmOMLvVRCtdIOHp7FG2/lBbYGJN
-         ORxg==
+	s=arc-20240116; t=1712323837; c=relaxed/simple;
+	bh=EJcW0sZ77+XrV5zGyzG0ZY2MZYMLOhwYkIOwA+cbql8=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:Cc:
+	 Content-Type; b=PGtgYsE74qCG2Dq2Sdwwie+bGVMMmoZeYINwAMYK7nYwwuxMqTjGKd0lsKRMnZo9qaMn7R7Pp+7XL6xGnbsk2BD48BGjpjA6MEs4N70J0/WhUXPOIZdrNDlyG0GykHEHE6wA4e1j+6haoeO5Jnd5bd/+5WemclJw1bRtWUC/VZI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.70
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f70.google.com with SMTP id ca18e2360f4ac-7cc0370e9b0so239552839f.0
+        for <linux-kernel@vger.kernel.org>; Fri, 05 Apr 2024 06:30:35 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712323805; x=1712928605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=udhYzo9d/0PPqGVdd4D3LGjxi+bDzO7RIJlIIFERmQE=;
-        b=r7nFC/3jwrA9yK67mSOeguqla57x3oxlppigQJEoRbjl97sJqefl/jkI0wsvvyiDDX
-         7kP7RMDMHbtSEKHSh5HS2wqNqS2dXy/JsYMnLYAwUkaQRxbrnfH+6VDZHsOmGh1XiBZq
-         140qNyip1UAdn7c+4sakATy8G1c0NIPA/j0TBGoCgorkvUjxS7lWqcVKAyjkaHBfSpLo
-         AlHEg0xFzQ/pna6wmgQRg9XrBCxk8li0hJVttzwNvaSOs95XKS+BP4276nAGlBiUfRVy
-         8EZfoEXsPPOVE2pgoFPprH75cMzLbuaHdrP43lM85BDAPf8YrXS3GjhZ+HepfZmqBD4d
-         Vl4w==
-X-Forwarded-Encrypted: i=1; AJvYcCW2OBjxSagFIJta1Hrx1EA5ivBZAWbUgmrEzHVXV9KKIaNU2FicZHQIWxuFR4hd/U8BHg5IA+zfvghbV6KuAkxoYCX31jhJd9KUfjLW
-X-Gm-Message-State: AOJu0Ywoi8v9VxusSRfgyyhwAkcYdttPU+un0N4qAhHGPP+IB103Px0F
-	xNi9HL4G1S9qGxQI38eLxOVYgymIMFiBfqfXyZMy+7if1Wxyv81pwwpItaxsUqil580C4kwitx6
-	zg1mwyXyGbKIoIA+I0ADvKyCHJULjTTn7CBX4
-X-Google-Smtp-Source: AGHT+IHKnNwfoWVM8o54afDpZXoYzLLS0/kJjLYpGez23Xun7fuG7ohs51CmC+MLEwtVWDcCBP1C25v11O1H+kvmdgE=
-X-Received: by 2002:a05:6402:26c4:b0:56e:22b4:fa72 with SMTP id
- x4-20020a05640226c400b0056e22b4fa72mr347542edd.3.1712323804808; Fri, 05 Apr
- 2024 06:30:04 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1712323835; x=1712928635;
+        h=cc:to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=iSSqrMatCEUW1BHeL7+LvxirvHxOF6dEe7+WLCWA82s=;
+        b=CKph0x31naT0Kab9Rr4EqAqnvk+XOyQFYKW7Nvx+SgoOOyzif3ua+OObi8zHgYU1hS
+         7Bd0CQwWrOLkiDvBbMwWkuHwZqsfQa6e2m8bmd5R/D+ucTg6SoGpOVZ6YeE1abDnAL9N
+         zZEkWmiYlBtcWw863VMoht7Yv6ckLkiTVRnZWKMMeVFIXwbg1QDZhobZ27kIxfy14Upw
+         xPFBH+f/1MexJK5y0wNKgkeSjliHIne0KCBLH6SXWQWY0ngjHO4kEo76sre0yBCIHUcb
+         /9N/fER701gsxJPlMCKDwHKGbq9Qt/46D6vhEFvDyPi79aXi3NeRbHIdk8TyTIEY1sL4
+         lIfA==
+X-Gm-Message-State: AOJu0Yz1+yBZd2RMTgOD3+IaCiH1+oo1k2lX2v5vR1kogXz41wLVmK0y
+	W7sTVWEpKvySErXPh8M/03OKD9IYVD5xQbOTV38jV6A7RPhFEWWx3vHYFQX6mmhNMVZSLIsVD0Z
+	fjPIhlMpAs6y4HhZV27g4Z/i8iaq50oyKJF0I+WaATf9aMlfn2s6z65Q=
+X-Google-Smtp-Source: AGHT+IFsEQRfeqa2H7O2024jQT7tS4Gj8WduUTwKRu7NEF08O8r/ZG7bylKfMhWCQHGKuP87hGLXnrFRDKZ4vCGJAnT01fr6oAvO
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240405-upstream-net-next-20240405-mptcp-last-time-info-v1-0-52dc49453649@kernel.org>
- <20240405-upstream-net-next-20240405-mptcp-last-time-info-v1-1-52dc49453649@kernel.org>
-In-Reply-To: <20240405-upstream-net-next-20240405-mptcp-last-time-info-v1-1-52dc49453649@kernel.org>
-From: Eric Dumazet <edumazet@google.com>
-Date: Fri, 5 Apr 2024 15:29:53 +0200
-Message-ID: <CANn89i+2TMNF7chYaDFEBNRng3iLPaXBqXKNtZYevDd95-PqmQ@mail.gmail.com>
-Subject: Re: [PATCH net-next 1/2] mptcp: add last time fields in mptcp_info
-To: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Cc: mptcp@lists.linux.dev, Mat Martineau <martineau@kernel.org>, 
-	Geliang Tang <geliang@kernel.org>, "David S. Miller" <davem@davemloft.net>, 
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Shuah Khan <shuah@kernel.org>, 
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org, Geliang Tang <tanggeliang@kylinos.cn>
+X-Received: by 2002:a05:6602:13c3:b0:7cc:7112:ea9c with SMTP id
+ o3-20020a05660213c300b007cc7112ea9cmr53057iov.2.1712323835436; Fri, 05 Apr
+ 2024 06:30:35 -0700 (PDT)
+Date: Fri, 05 Apr 2024 06:30:35 -0700
+In-Reply-To: <20240405133030.21567-1-n.zhandarovich@fintech.ru>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000f3b0e906155975f2@google.com>
+Subject: Re: [syzbot] WARNING in vmk80xx_auto_attach/usb_submit_urb
+From: syzbot <syzbot+5f29dc6a889fc42bd896@syzkaller.appspotmail.com>
+To: n.zhandarovich@fintech.ru
+Cc: linux-kernel@vger.kernel.org, n.zhandarovich@fintech.ru, 
+	syzkaller-bugs@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Fri, Apr 5, 2024 at 3:06=E2=80=AFPM Matthieu Baerts (NGI0)
-<matttbe@kernel.org> wrote:
+> Refactor endpoint checks to ensure there is no ambivalence
+> about endpoint types.
 >
-> From: Geliang Tang <tanggeliang@kylinos.cn>
+> Try a specific branch to mitigate unrelated issues with boot/build.
 >
-> This patch adds "last time" fields last_data_sent, last_data_recv and
-> last_ack_recv in struct mptcp_sock to record the last time data_sent,
-> data_recv and ack_recv happened. They all are initialized as
-> tcp_jiffies32 in __mptcp_init_sock(), and updated as tcp_jiffies32 too
-> when data is sent in __subflow_push_pending(), data is received in
-> __mptcp_move_skbs_from_subflow(), and ack is received in ack_update_msk()=
-.
->
-> Similar to tcpi_last_data_sent, tcpi_last_data_recv and tcpi_last_ack_rec=
-v
-> exposed with TCP, this patch exposes the last time "an action happened" f=
-or
-> MPTCP in mptcp_info, named mptcpi_last_data_sent, mptcpi_last_data_recv a=
-nd
-> mptcpi_last_ack_recv, calculated in mptcp_diag_fill_info() as the time
-> deltas between now and the newly added last time fields in mptcp_sock.
->
-> Also add three reserved bytes in struct mptcp_info not to have holes in
-> this structure exposed to userspace.
->
-> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/446
-> Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
-> Reviewed-by: Mat Martineau <martineau@kernel.org>
-> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+> #syz test git://git.kernel.org/pub/scm/linux/kernel/git/netdev/net-next.git 4090fa373f0e763c43610853>
+
+"4090fa373f0e763c43610853>" does not look like a valid git branch or commit.
+
 > ---
->  include/uapi/linux/mptcp.h | 4 ++++
-
-
-> diff --git a/net/mptcp/sockopt.c b/net/mptcp/sockopt.c
-> index 73fdf423de44..2ec2fdf9f4af 100644
-> --- a/net/mptcp/sockopt.c
-> +++ b/net/mptcp/sockopt.c
-> @@ -896,6 +896,7 @@ static int mptcp_getsockopt_first_sf_only(struct mptc=
-p_sock *msk, int level, int
->  void mptcp_diag_fill_info(struct mptcp_sock *msk, struct mptcp_info *inf=
-o)
->  {
->         struct sock *sk =3D (struct sock *)msk;
-> +       u32 now =3D tcp_jiffies32;
->         u32 flags =3D 0;
->         bool slow;
+>  drivers/comedi/drivers/vmk80xx.c | 35 ++++++++++++-----------------------
+>  1 file changed, 12 insertions(+), 23 deletions(-)
 >
-> @@ -930,6 +931,7 @@ void mptcp_diag_fill_info(struct mptcp_sock *msk, str=
-uct mptcp_info *info)
->         info->mptcpi_snd_una =3D msk->snd_una;
->         info->mptcpi_rcv_nxt =3D msk->ack_seq;
->         info->mptcpi_bytes_acked =3D msk->bytes_acked;
-> +       info->mptcpi_last_ack_recv =3D jiffies_to_msecs(now - msk->last_a=
-ck_recv);
->         mptcp_data_unlock(sk);
->
->         slow =3D lock_sock_fast(sk);
-
- lock_sock_fast(sk) can sleep and be quite slow...
-
-I suggest you reload now =3D jiffies32;
-
-
-> @@ -942,6 +944,8 @@ void mptcp_diag_fill_info(struct mptcp_sock *msk, str=
-uct mptcp_info *info)
->         info->mptcpi_bytes_retrans =3D msk->bytes_retrans;
->         info->mptcpi_subflows_total =3D info->mptcpi_subflows +
->                 __mptcp_has_initial_subflow(msk);
-> +       info->mptcpi_last_data_sent =3D jiffies_to_msecs(now - msk->last_=
-data_sent);
-> +       info->mptcpi_last_data_recv =3D jiffies_to_msecs(now - msk->last_=
-data_recv);
->         unlock_sock_fast(sk, slow);
->  }
->  EXPORT_SYMBOL_GPL(mptcp_diag_fill_info);
->
-> --
-> 2.43.0
->
+> diff --git a/drivers/comedi/drivers/vmk80xx.c b/drivers/comedi/drivers/vmk80xx.c
+> index 4536ed43f65b..476885403c61 100644
+> --- a/drivers/comedi/drivers/vmk80xx.c
+> +++ b/drivers/comedi/drivers/vmk80xx.c
+> @@ -641,33 +641,22 @@ static int vmk80xx_find_usb_endpoints(struct comedi_device *dev)
+>  	struct vmk80xx_private *devpriv = dev->private;
+>  	struct usb_interface *intf = comedi_to_usb_interface(dev);
+>  	struct usb_host_interface *iface_desc = intf->cur_altsetting;
+> -	struct usb_endpoint_descriptor *ep_desc;
+> -	int i;
+> +	struct usb_endpoint_descriptor *ep_rx_desc, *ep_tx_desc;
+> +	int i, ret;
+>  
+> -	if (iface_desc->desc.bNumEndpoints != 2)
+> -		return -ENODEV;
+> -
+> -	for (i = 0; i < iface_desc->desc.bNumEndpoints; i++) {
+> -		ep_desc = &iface_desc->endpoint[i].desc;
+> -
+> -		if (usb_endpoint_is_int_in(ep_desc) ||
+> -		    usb_endpoint_is_bulk_in(ep_desc)) {
+> -			if (!devpriv->ep_rx)
+> -				devpriv->ep_rx = ep_desc;
+> -			continue;
+> -		}
+> -
+> -		if (usb_endpoint_is_int_out(ep_desc) ||
+> -		    usb_endpoint_is_bulk_out(ep_desc)) {
+> -			if (!devpriv->ep_tx)
+> -				devpriv->ep_tx = ep_desc;
+> -			continue;
+> -		}
+> -	}
+> +	if (devpriv->model == VMK8061_MODEL)
+> +		ret = usb_find_common_endpoints(iface_desc, &ep_rx_desc,
+> +						&ep_tx_desc, NULL, NULL);
+> +	else
+> +		ret = usb_find_common_endpoints(iface_desc, NULL, NULL,
+> +						&ep_rx_desc, &ep_tx_desc);
+>  
+> -	if (!devpriv->ep_rx || !devpriv->ep_tx)
+> +	if (ret)
+>  		return -ENODEV;
+>  
+> +	devpriv->ep_rx = ep_rx_desc;
+> +	devpriv->ep_tx = ep_tx_desc;
+> +
+>  	if (!usb_endpoint_maxp(devpriv->ep_rx) || !usb_endpoint_maxp(devpriv->ep_tx))
+>  		return -EINVAL;
+>  
