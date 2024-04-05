@@ -1,238 +1,198 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+Received: from EUR01-VE1-obe.outbound.protection.outlook.com (mail-ve1eur01on2098.outbound.protection.outlook.com [40.107.14.98])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 910661E52C;
-	Fri,  5 Apr 2024 12:31:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712320290; cv=none; b=MPn8rH29gIpDPSdSfqFjx0Maqm7Cp7pAFWqFuhX0EeoyW80Nt/FhZ9tFnPGpxrlPCPiWtcZAttlm9dhAaJewiu62bCcz/T0sVET/YkZH5vhCj6wWwaxym1XHXcg9IiWbVxkiZ4LU6lyrLlYoPZio7ZKjHemQVSXgrJBXgQBOSsI=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712320290; c=relaxed/simple;
-	bh=KRPKqvNbg4Tz2Kh9PFfjApEuX40woj7+wPYcZIqO5+g=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=hceASqJIc03rbNgi3xznfW4zebDw+T65uKdzFqfS2Jr+hfkghR7q71VMZikeuKwCI0+kmsSKacMSLNcPFSBcvfeIWcdZj09LnOU59RECXjTOAyOfmbBWb7/1gVqnvKu9IbQYcyQaWsCOphQEXhDa7RLxov8DF7iIHqAq1aGV6lY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=JLGdZ/e9; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD68F16C879;
+	Fri,  5 Apr 2024 12:31:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.14.98
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1712320303; cv=fail; b=ABwn599san+K2DZps4Ss8fwpJyGgl5FBhFFFPNGGo1hWcAqNZ0rqi/vq3kTnVPR0s5ER6fh8+vURZke8/9GAMDFE5DP75xaAPevGTZY5neom2ryWktAa5/Bo29U/7I8KeXVvigdi3cN+ksd50Tx+x4sbit1WGmIVpewtPHQBmGQ=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1712320303; c=relaxed/simple;
+	bh=dOBkgjs/jb/HONnQGf/3KjMH4BWduYVwov2hTsuR/Og=;
+	h=From:Subject:Date:Message-Id:Content-Type:To:Cc:MIME-Version; b=e4pRvTz/caCRB8Eoa1rgldKpN3WLMnV6ixMRWVgL0QPPnQLskNgZUlBS+6phJo7R92NP7sLM6qGQmkDzyEkbeYuuhHkl7OJ3Iiwpk6NDroUw3Yn/zxAVGfTVSNUT6CEALDepoFchZYcQ2gOI1BNN0hn6/18MJob/3vmpyLUYMzQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com; spf=pass smtp.mailfrom=oss.nxp.com; dkim=pass (1024-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b=L8K6jwbQ; arc=fail smtp.client-ip=40.107.14.98
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="JLGdZ/e9"
-Received: from [192.168.88.20] (91-154-34-181.elisa-laajakaista.fi [91.154.34.181])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 8611D8E1;
-	Fri,  5 Apr 2024 14:30:46 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1712320247;
-	bh=KRPKqvNbg4Tz2Kh9PFfjApEuX40woj7+wPYcZIqO5+g=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=JLGdZ/e9eGPub9wKHNbL+g9vQNiHehS66wjodPeuVn6vzykNEyfswMicafLU0y4MZ
-	 6LjHxt9QJf2xj6n+IXyHELl8GMceIY3HtjMmkpZ32hnmZIYJXKDtM2RIfhQ1z2FZiD
-	 W3r/JYLKuEqwTV4LgNXuDKQKZT9YDWDtuula2S90=
-Message-ID: <0dc8d701-3bc7-4f50-8852-5cce2b405c2e@ideasonboard.com>
-Date: Fri, 5 Apr 2024 15:31:22 +0300
+	dkim=pass (1024-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="L8K6jwbQ"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=M0lrr1pSjw/mx2qSRX0dqvgJSxtacwifQgnLjkDAalYZJu5BW1FchtvMLg7LGrB17bwGKBxbFJsv1L7qrShNjGnz2Lediqv1wbCx3Vj7cjNvpOHoP4sXGVQzk640tOtu8HcEe9YXpr/Acf0Fhr2p7Lqhnp34KmSmnLPjlTVqRnImWS0MAPNnq6BK/6jMkgtq131oMsx0pdH3pckDKMiZk9r1gqmX1U3/kcnfoXaiAlAIDlxgOcVApT/4b+8BjUwFPl00Q2rEeMgjhkNuHgZkrLRGgCCPaRepz6WzMIE6O3/omkralD336VU22rM00TXf6BBLSVWdHcPbUMnK7qAXog==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=f7r/QbCh6yxfaNa2Ama41YWrsrix2m0n5/CpYxO2YqQ=;
+ b=HuJ0iB+LVRlE+MD8YaFJRIDvzZCpb+mUJ2lMaI9kG5VVB/JExe2LmC90xA28Px4VSr5DT9AsGcLblFfcOHaYw42dSVqQ/B6K/CU+VF1ZxCUxTpVCg/NNkd9gvGmL6h7hgQ/fHJtdabpXQwQNvSymoEHTFPxUVU6S7AI3YCgsGltSz/Y5pvQu9MVLLL/rHewNZGWs0FydxbT7SpjbtnFIdF4v1S3CjaVHjAOhgdeYvihjFJ6MkKCgp6Xgs8KQZzRh7hBYSSpNkv7m0M0ysL8+XthwuRyAeh+AqbUy/wotZN2NBCa1RwRes00VIMQUj+1Yel1Dl2b5H//sJk5JhMQf4Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
+ dkim=pass header.d=oss.nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
+ s=selector2-NXP1-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=f7r/QbCh6yxfaNa2Ama41YWrsrix2m0n5/CpYxO2YqQ=;
+ b=L8K6jwbQa1KuR3d2P8fTnLo8UFHonHf3/0eHLB7lRcEqcETbCCSSCPqa0Vbg2CLieb4KVVqq+tRH3Wmq3fEmCyQRfyUk01coWTZ3NZlj5mtDncBnGcsaZfNPqTAjjJxpvEboHLLw7R7zWH7Ridh+WvJCyynmjnr/iC96q3Gy1i0=
+Received: from DU0PR04MB9417.eurprd04.prod.outlook.com (2603:10a6:10:358::11)
+ by PA4PR04MB7744.eurprd04.prod.outlook.com (2603:10a6:102:c9::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.46; Fri, 5 Apr
+ 2024 12:31:37 +0000
+Received: from DU0PR04MB9417.eurprd04.prod.outlook.com
+ ([fe80::d30b:44e7:e78e:662d]) by DU0PR04MB9417.eurprd04.prod.outlook.com
+ ([fe80::d30b:44e7:e78e:662d%4]) with mapi id 15.20.7386.037; Fri, 5 Apr 2024
+ 12:31:37 +0000
+From: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>
+Subject: [PATCH v2 0/6] firmware: support i.MX95 SCMI BBM/MISC Extenstion
+Date: Fri, 05 Apr 2024 20:39:22 +0800
+Message-Id: <20240405-imx95-bbm-misc-v2-v2-0-9fc9186856c2@nxp.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAPrwD2YC/x3MTQqAIBBA4avIrBuQQRd2lWjhz1Sz0EJBgujuS
+ ctv8d4Djatwg1k9ULlLk7MM0KQgHr7sjJKGgTQZbbRFybezGELGLC1iJwyWXSLjUzQEo7sqb3L
+ /z2V93w8VX8hQYwAAAA==
+To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>, 
+ Sascha Hauer <s.hauer@pengutronix.de>, 
+ Pengutronix Kernel Team <kernel@pengutronix.de>, 
+ Fabio Estevam <festevam@gmail.com>, Sudeep Holla <sudeep.holla@arm.com>, 
+ Cristian Marussi <cristian.marussi@arm.com>
+Cc: Peng Fan <peng.fan@nxp.com>, devicetree@vger.kernel.org, 
+ imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
+ linux-kernel@vger.kernel.org
+X-Mailer: b4 0.12.3
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1712320792; l=2568;
+ i=peng.fan@nxp.com; s=20230812; h=from:subject:message-id;
+ bh=dOBkgjs/jb/HONnQGf/3KjMH4BWduYVwov2hTsuR/Og=;
+ b=TK8qY4ZqbMBehn5Ahf1xeSB9pvdYdp1Gbudq3FAA1jfADeGIzYrFTCr9xomhCaxg7YxvlWo2Z
+ FVkfnEATm/aD/v8rZJpjsp/pwap3G8WV/tiFhQRWF7f3jp/1DGdU9//
+X-Developer-Key: i=peng.fan@nxp.com; a=ed25519;
+ pk=I4sJg7atIT1g63H7bb5lDRGR2gJW14RKDD0wFL8TT1g=
+X-ClientProxiedBy: SI1PR02CA0024.apcprd02.prod.outlook.com
+ (2603:1096:4:1f4::12) To DU0PR04MB9417.eurprd04.prod.outlook.com
+ (2603:10a6:10:358::11)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 1/9] drm: xlnx: zynqmp_dpsub: Set layer mode during
- creation
-To: Anatoliy Klymenko <anatoliy.klymenko@amd.com>
-Cc: dri-devel@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
- linux-media@vger.kernel.org,
- Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
- Michal Simek <michal.simek@amd.com>, Andrzej Hajda
- <andrzej.hajda@intel.com>, Neil Armstrong <neil.armstrong@linaro.org>,
- Robert Foss <rfoss@kernel.org>, Jonas Karlman <jonas@kwiboo.se>,
- Jernej Skrabec <jernej.skrabec@gmail.com>, Rob Herring <robh+dt@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>,
- Mauro Carvalho Chehab <mchehab@kernel.org>
-References: <20240321-dp-live-fmt-v3-0-d5090d796b7e@amd.com>
- <20240321-dp-live-fmt-v3-1-d5090d796b7e@amd.com>
-From: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
-Content-Language: en-US
-Autocrypt: addr=tomi.valkeinen@ideasonboard.com; keydata=
- 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
-In-Reply-To: <20240321-dp-live-fmt-v3-1-d5090d796b7e@amd.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+X-MS-Exchange-MessageSentRepresentingType: 1
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DU0PR04MB9417:EE_|PA4PR04MB7744:EE_
+X-MS-Exchange-SharedMailbox-RoutingAgent-Processed: True
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	pdif9JdbFNt70bh7vLKKQMBVjM3GJ9503/0mc+FBl3/6lhOt8wGcY2kkML07GrJyk17OQ6k8VT77LIbWMc7sneYHcaacLCMcAvrMFodUDn+q6p0fTpM81ouLy9JmZ35FLwtqJfTnhC01my2NqrKJjBbCbGPA6r/dUR0DfTnyxAr/is+i+n0p8HB4qlNcUHFWOuKEkELFjFHE1aYd9Xu6MkdnLFMUck8BQCxbfaHn3mdTbb2cXIzQqgYyGjq8o7dP0ituP0ajGT9x4mZfDq+eUzESWFt8z3C284Kt4JBETMioqXK7sbTuv3OxG6XkMwTK1zWebWxpDpRvJuQ/qYgB9+NZ7EE4NC7jlpaMjxWb/X2g2IRYfHgREqAMOVe2TC4SJn19+5jDK9N/lVhlUdKjawXXgij+oySkF0DoltyXfX7qm7vJ5aAwyS/0EUR5Qc/xaDaNSV3Zel/X8tu7PCXB6/m5q9TE42oNqmsXTLRv3xeK4AU/UapYEWGIaGjI5grXm2HjH2EuMBMacX8831xJkNHA4jrVVtlI4rkHoKjevtHB8/zFq87yO2Q2+4nwhEBUI9sh2AYnRuWKUeFPS/OWRVQnJ6EA7UWPHycGbmfrGTtAR5ZFF2nm0iBfhVCKemT6Dv7V0gilg//6QmgsdUGe9aRIC2heJ6pHYinkGYXO7t0=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DU0PR04MB9417.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376005)(7416005)(1800799015)(52116005)(366007)(38350700005);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?SUlIMUQwMTlNQWEwaEw4SXhkcG9Bb3F4VHZESk9GM0hTdnVDRnFOS1hzVFF5?=
+ =?utf-8?B?RnJTTDVrRXNzRFBRYTZoRzdENDJLNlh2MzVyeThaMVZ1QlFta3JFUFh1OXV2?=
+ =?utf-8?B?YnJxekpvb05obVhLd2tHTUhmOUZGSXVML0t0b0g1T1V4KzA1dlpkMHo4UTdP?=
+ =?utf-8?B?ZWJNQW1OcllaYndkajA2WDRiRit1TWJXTE1hSGlqOW5wb2l3czJMQmhrQ1pi?=
+ =?utf-8?B?WUdYNmFFVlcwSWc3cU5LNjVVaEhUbndrQ1Q4TXQ2STBoS1RiVTFqN3lzY1Fx?=
+ =?utf-8?B?WFgwREpQY0JTVmRycGIwTFBUTHNCUERyaDJsMWJFcjNnNnkrZ2VSckVDZWlV?=
+ =?utf-8?B?cG9vWEJwd0V6SHJoSjRBRUJLMHZ0NVFoaDduaEV3SGMwdm15ZEdtNDJEeDRi?=
+ =?utf-8?B?TTBFaUwySXYrYWE3UnJXL2VXYU5WSDI2QzZsWnpkZmhuajBZaWpPcmpwR3c4?=
+ =?utf-8?B?ZG01ZkQ1UEJONzFsaDd4MFcrWG9SczFUZDVIbEMxU25yOElYdlgzRkIyZ3d3?=
+ =?utf-8?B?cEVyMktJVlFVNXpZSWpoZHJIVnJYbWY4M2tmOGJESjdWU3ZRMUx2aWNsZER4?=
+ =?utf-8?B?UXovNEg1RU0rWVMwa3UxbkplMzdzTENoMXB1M1cwclpUc3lJRW41eXNNQXNI?=
+ =?utf-8?B?cmdPNHdpTGNiQUVMdndkUGJoRk5RNUVOWFJuR3V1MmZFanJMaDU3enJibmlR?=
+ =?utf-8?B?aVVMYXZiY092b0lwUFBsSjg1WUh0Z1IzU3lJNWVld2QwSmlwRWxtdVdrcDkx?=
+ =?utf-8?B?ZW1aUkh0T09udUJJekIyMno1cVNOMWMvK2JUK29zVHR5dG9ZNVg4NDFBWUhW?=
+ =?utf-8?B?c29obHlkWnJ3Zk96amljbDVIZVdTZFBYWmhqeS9mbm5MZzhYWWRXZlBFbStP?=
+ =?utf-8?B?TEx5ZkJ3ZTVPcnl1aHEzZTc4ci9OdkRKcDdoT1hlNmF0WXZISTEzcnpNOUU0?=
+ =?utf-8?B?NWtxTWl0Y2xybTEzWG0xT1dYdUpsakJUc1dqbjJIcUpJYTVpU0N3NkgvM2VL?=
+ =?utf-8?B?LytFejhnUVVHdHdqU2syM2FZNjduaE91cmxzb2UwenVVTGFlK1FJalIvVGVZ?=
+ =?utf-8?B?ZjhHcUhicWJ1QUI3YkNLbG1wTHFpZ1BRRS9ERDFiVXBYSnlnRTZHUTEvZ3Vu?=
+ =?utf-8?B?OXErOHhZQzhEVnFVTjEvclBlOVpSdVF1ZU1hRGlpNjJuc3hENjI3aVVLSDA2?=
+ =?utf-8?B?U1BWcEhjeXdlRmJyRUNVYzlaMmVyQWlVd0Rkd2lnVXY3NzFSN0E5RUxkcGJt?=
+ =?utf-8?B?eHBlMWlCUURSdEtXNDkwd1A1WElOZVpudloxRFlkK2hJNENLKy9Wa2FKUnM3?=
+ =?utf-8?B?cVR0M3B3TnBKRy85bHo0NkV4MnljbjRId3ZreFhZNlgwS3dxekQ2cHpybmpO?=
+ =?utf-8?B?U3ZLU1l1U2paUVNiY3RoQXp1cmFTaGpGNGpLRzZPZlBHTTdOK0cxZDVwcnFy?=
+ =?utf-8?B?dGVRYXdqVmhhSFZra3YvMWM2MFpqTzJEQ1RSMUhGc2JJWm1DeDY1ekJnRUFP?=
+ =?utf-8?B?ZGFpSlNQaEhEaml0VWRkbzVkOEV1S3l4czhmR2V1OTdRaUNhKy9NWE5aM25C?=
+ =?utf-8?B?eG9DWkQzK2VkOUg0eWR4Ync3d3pMMGFhU3VSRDFGWGQ1ZVp2RHRHRnFlNW1F?=
+ =?utf-8?B?ZUJGZGNUcUpsellicTNCMmE1NG9EbHpXbG9SNGZGMGluaytvb2taVWZETkR4?=
+ =?utf-8?B?clZNRjQ2bmZqNmNYQmgvWmsybFVXNzNVWXZER0xYOStnMFRhZ3JoSUwreGtj?=
+ =?utf-8?B?cStVNWFJV2FEcE5pTnZlV3BsQ2t1dTN0YjJockgvSmtrWkQrclJlL1hIaFE4?=
+ =?utf-8?B?NUo1RWt5a01jZmRFWWRkRHF2M0VwbmFZZUFjbEhXazdRMnpJZ2prNXd0YURx?=
+ =?utf-8?B?bGZTWkN6ZFRIUUQvUWJGckh1SzFiYVpRWlpzQnA2RkVWcVVGaXhPOUk5Q21F?=
+ =?utf-8?B?QmIweFFrSGJPYlA5YTdwaTFXSHkyRkhUVGJtL2hyci9rQVE3RGpqQXNZSXB2?=
+ =?utf-8?B?VWcyU3lMSGJBY0R5U3RMOS9GR3FMYUt0RTcrUXBtYStHaTYyMDNoNml3dkVl?=
+ =?utf-8?B?bUV4VkxaY2p4WEFCT05GVnRWRUFLa1c1RDRSV0NuNVFNM0FMc3JJUTlzWmtl?=
+ =?utf-8?Q?1NRMCvFXJo4M/5xeLmE/8vIT3?=
+X-OriginatorOrg: oss.nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8c838cc8-4ddc-41c0-cbc7-08dc556c560e
+X-MS-Exchange-CrossTenant-AuthSource: DU0PR04MB9417.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Apr 2024 12:31:37.2489
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: U8RSrtnnEazJlZ5dgBgh3dODl+JY+jJmmYNnCdgi1ZLEClBNVVzAmxt5Q1a0ISIgRORxPQOg59NYfrRlkzCRkg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PA4PR04MB7744
 
-On 21/03/2024 22:43, Anatoliy Klymenko wrote:
-> Set layer mode of operation (live or dma-based) during layer creation.
-> 
-> Each DPSUB layer mode of operation is defined by corresponding DT node port
-> connection, so it is possible to assign it during layer object creation.
-> Previously it was set in layer enable functions, although it is too late
-> as setting layer format depends on layer mode, and should be done before
-> given layer enabled.
-> 
-> Signed-off-by: Anatoliy Klymenko <anatoliy.klymenko@amd.com>
-> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> ---
->   drivers/gpu/drm/xlnx/zynqmp_disp.c | 20 ++++++++++++++++----
->   drivers/gpu/drm/xlnx/zynqmp_disp.h | 13 +------------
->   drivers/gpu/drm/xlnx/zynqmp_dp.c   |  2 +-
->   drivers/gpu/drm/xlnx/zynqmp_kms.c  |  2 +-
->   4 files changed, 19 insertions(+), 18 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/xlnx/zynqmp_disp.c b/drivers/gpu/drm/xlnx/zynqmp_disp.c
-> index 8a39b3accce5..e6d26ef60e89 100644
-> --- a/drivers/gpu/drm/xlnx/zynqmp_disp.c
-> +++ b/drivers/gpu/drm/xlnx/zynqmp_disp.c
-> @@ -64,6 +64,16 @@
->   
->   #define ZYNQMP_DISP_MAX_NUM_SUB_PLANES			3
->   
-> +/**
-> + * enum zynqmp_dpsub_layer_mode - Layer mode
-> + * @ZYNQMP_DPSUB_LAYER_NONLIVE: non-live (memory) mode
-> + * @ZYNQMP_DPSUB_LAYER_LIVE: live (stream) mode
-> + */
-> +enum zynqmp_dpsub_layer_mode {
-> +	ZYNQMP_DPSUB_LAYER_NONLIVE,
-> +	ZYNQMP_DPSUB_LAYER_LIVE,
-> +};
-> +
->   /**
->    * struct zynqmp_disp_format - Display subsystem format information
->    * @drm_fmt: DRM format (4CC)
-> @@ -902,15 +912,12 @@ u32 *zynqmp_disp_layer_drm_formats(struct zynqmp_disp_layer *layer,
->   /**
->    * zynqmp_disp_layer_enable - Enable a layer
->    * @layer: The layer
-> - * @mode: Operating mode of layer
->    *
->    * Enable the @layer in the audio/video buffer manager and the blender. DMA
->    * channels are started separately by zynqmp_disp_layer_update().
->    */
-> -void zynqmp_disp_layer_enable(struct zynqmp_disp_layer *layer,
-> -			      enum zynqmp_dpsub_layer_mode mode)
-> +void zynqmp_disp_layer_enable(struct zynqmp_disp_layer *layer)
->   {
-> -	layer->mode = mode;
->   	zynqmp_disp_avbuf_enable_video(layer->disp, layer);
->   	zynqmp_disp_blend_layer_enable(layer->disp, layer);
->   }
-> @@ -1134,6 +1141,11 @@ static int zynqmp_disp_create_layers(struct zynqmp_disp *disp)
->   		layer->id = i;
->   		layer->disp = disp;
->   		layer->info = &layer_info[i];
-> +		/* For now assume dpsub works in either live or non-live mode for both layers.
-> +		 * Hybrid mode is not supported yet.
-> +		 */
+i.MX95 System Manager Firmware support vendor extension protocol:
+- Battery Backed Module(BBM) Protocol for RTC and BUTTON feature.
+- MISC Protocol for misc settings, such as BLK CTRL GPR settings, GPIO
+expander settings.
 
-This comment style is not according to the style guide, and in fact you 
-fix it in the patch 4. So please fix it here instead.
+This patchset is to support the two protocols and users that use the
+protocols.
 
-  Tomi
+Signed-off-by: Peng Fan <peng.fan@nxp.com>
+To: Rob Herring <robh@kernel.org>
+To: Krzysztof Kozlowski <krzk+dt@kernel.org>
+To: Conor Dooley <conor+dt@kernel.org>
+To: Shawn Guo <shawnguo@kernel.org>
+To: Sascha Hauer <s.hauer@pengutronix.de>
+To: Pengutronix Kernel Team <kernel@pengutronix.de>
+To: Fabio Estevam <festevam@gmail.com>
+To: Peng Fan <peng.fan@nxp.com>
+To: Sudeep Holla <sudeep.holla@arm.com>
+To: Cristian Marussi <cristian.marussi@arm.com>
+Cc: devicetree@vger.kernel.org
+Cc: imx@lists.linux.dev
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org
 
-> +		layer->mode = disp->dpsub->dma_enabled ? ZYNQMP_DPSUB_LAYER_NONLIVE
-> +						       : ZYNQMP_DPSUB_LAYER_LIVE;
->   
->   		ret = zynqmp_disp_layer_request_dma(disp, layer);
->   		if (ret)
-> diff --git a/drivers/gpu/drm/xlnx/zynqmp_disp.h b/drivers/gpu/drm/xlnx/zynqmp_disp.h
-> index 123cffac08be..9b8b202224d9 100644
-> --- a/drivers/gpu/drm/xlnx/zynqmp_disp.h
-> +++ b/drivers/gpu/drm/xlnx/zynqmp_disp.h
-> @@ -42,16 +42,6 @@ enum zynqmp_dpsub_layer_id {
->   	ZYNQMP_DPSUB_LAYER_GFX,
->   };
->   
-> -/**
-> - * enum zynqmp_dpsub_layer_mode - Layer mode
-> - * @ZYNQMP_DPSUB_LAYER_NONLIVE: non-live (memory) mode
-> - * @ZYNQMP_DPSUB_LAYER_LIVE: live (stream) mode
-> - */
-> -enum zynqmp_dpsub_layer_mode {
-> -	ZYNQMP_DPSUB_LAYER_NONLIVE,
-> -	ZYNQMP_DPSUB_LAYER_LIVE,
-> -};
-> -
->   void zynqmp_disp_enable(struct zynqmp_disp *disp);
->   void zynqmp_disp_disable(struct zynqmp_disp *disp);
->   int zynqmp_disp_setup_clock(struct zynqmp_disp *disp,
-> @@ -62,8 +52,7 @@ void zynqmp_disp_blend_set_global_alpha(struct zynqmp_disp *disp,
->   
->   u32 *zynqmp_disp_layer_drm_formats(struct zynqmp_disp_layer *layer,
->   				   unsigned int *num_formats);
-> -void zynqmp_disp_layer_enable(struct zynqmp_disp_layer *layer,
-> -			      enum zynqmp_dpsub_layer_mode mode);
-> +void zynqmp_disp_layer_enable(struct zynqmp_disp_layer *layer);
->   void zynqmp_disp_layer_disable(struct zynqmp_disp_layer *layer);
->   void zynqmp_disp_layer_set_format(struct zynqmp_disp_layer *layer,
->   				  const struct drm_format_info *info);
-> diff --git a/drivers/gpu/drm/xlnx/zynqmp_dp.c b/drivers/gpu/drm/xlnx/zynqmp_dp.c
-> index 1846c4971fd8..04b6bcac3b07 100644
-> --- a/drivers/gpu/drm/xlnx/zynqmp_dp.c
-> +++ b/drivers/gpu/drm/xlnx/zynqmp_dp.c
-> @@ -1295,7 +1295,7 @@ static void zynqmp_dp_disp_enable(struct zynqmp_dp *dp,
->   	/* TODO: Make the format configurable. */
->   	info = drm_format_info(DRM_FORMAT_YUV422);
->   	zynqmp_disp_layer_set_format(layer, info);
-> -	zynqmp_disp_layer_enable(layer, ZYNQMP_DPSUB_LAYER_LIVE);
-> +	zynqmp_disp_layer_enable(layer);
->   
->   	if (layer_id == ZYNQMP_DPSUB_LAYER_GFX)
->   		zynqmp_disp_blend_set_global_alpha(dp->dpsub->disp, true, 255);
-> diff --git a/drivers/gpu/drm/xlnx/zynqmp_kms.c b/drivers/gpu/drm/xlnx/zynqmp_kms.c
-> index db3bb4afbfc4..43bf416b33d5 100644
-> --- a/drivers/gpu/drm/xlnx/zynqmp_kms.c
-> +++ b/drivers/gpu/drm/xlnx/zynqmp_kms.c
-> @@ -122,7 +122,7 @@ static void zynqmp_dpsub_plane_atomic_update(struct drm_plane *plane,
->   
->   	/* Enable or re-enable the plane if the format has changed. */
->   	if (format_changed)
-> -		zynqmp_disp_layer_enable(layer, ZYNQMP_DPSUB_LAYER_NONLIVE);
-> +		zynqmp_disp_layer_enable(layer);
->   }
->   
->   static const struct drm_plane_helper_funcs zynqmp_dpsub_plane_helper_funcs = {
-> 
+Changes in v2:
+- Sorry for late update since v1.
+- Add a new patch 1
+- Address imx,scmi.yaml issues
+- Address comments for imx-sm-bbm.c and imx-sm-misc.c
+- I not add vendor id since related patches not landed in linux-next.
+- Link to v1: https://lore.kernel.org/r/20240202-imx95-bbm-misc-v1-0-3cb743020933@nxp.com
+
+---
+Peng Fan (6):
+      dt-bindings: firmware: arm,scmi: set additionalProperties to true
+      dt-bindings: firmware: add i.MX SCMI Extension protocol
+      firmware: arm_scmi: add initial support for i.MX BBM protocol
+      firmware: arm_scmi: add initial support for i.MX MISC protocol
+      firmware: imx: support BBM module
+      firmware: imx: add i.MX95 MISC driver
+
+ .../devicetree/bindings/firmware/arm,scmi.yaml     |   2 +-
+ .../devicetree/bindings/firmware/imx,scmi.yaml     |  80 +++++
+ drivers/firmware/arm_scmi/Kconfig                  |  20 ++
+ drivers/firmware/arm_scmi/Makefile                 |   2 +
+ drivers/firmware/arm_scmi/imx-sm-bbm.c             | 378 +++++++++++++++++++++
+ drivers/firmware/arm_scmi/imx-sm-misc.c            | 305 +++++++++++++++++
+ drivers/firmware/imx/Makefile                      |   2 +
+ drivers/firmware/imx/sm-bbm.c                      | 317 +++++++++++++++++
+ drivers/firmware/imx/sm-misc.c                     |  92 +++++
+ include/linux/firmware/imx/sm.h                    |  33 ++
+ include/linux/scmi_imx_protocol.h                  |  62 ++++
+ 11 files changed, 1292 insertions(+), 1 deletion(-)
+---
+base-commit: 2b3d5988ae2cb5cd945ddbc653f0a71706231fdd
+change-id: 20240405-imx95-bbm-misc-v2-b5e9d24adc42
+
+Best regards,
+-- 
+Peng Fan <peng.fan@nxp.com>
 
