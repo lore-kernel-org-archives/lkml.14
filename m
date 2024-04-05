@@ -1,82 +1,126 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75F6116C85B
-	for <linux-kernel@vger.kernel.org>; Fri,  5 Apr 2024 14:43:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B9A41CD2B;
+	Fri,  5 Apr 2024 14:44:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712328190; cv=none; b=qpdBH76CD8notEDpU3ttVyoyLmz7pQ2AxxN7uOrR2LSO9mufpruJSNOzV9bE9jAII6ubrRlSSJO2v32RROFVQrFr/s5iO32FgPVhp3KONiaZ5oaOj5c66jUT7aXQ5gtHUSRa8fsPWJW/nxXmGMUAKcvcH+xOWTOg1QW723ZEzFs=
+	t=1712328258; cv=none; b=kpIJFhU8XHsR3WXEtEDEUeJ2J4e1fEkP58H8V21KWfcAE6kWI2MYTWs4b0aSQGj8gw8iID3CAX065WRMWP6cnvEY2zUPwRVobeEtbv9uoQ+5gHbLBmc04Zf70vP+B9tns1NbQiU+CJHqogQR/7zmWlgmWQ4+yeqY36uAXGAtiRQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712328190; c=relaxed/simple;
-	bh=dtABkso0LSZG2RGcX8jHgM1Ekot+NTaq1ZsNzn+1SL4=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=lzrozM0yQU+Ip/fMCPp1WO+ktYakF3xUiQj/dDH9VsQRIM3NfrW0fvLrUxx8tYCYupFDLQgI1v8x3tP3mPUpFowzaThsPpjjANFCdYalXoLRylQ1C5/Bn8SEAfsVvkh2Akzi+duvPQiJ+L/+M1e2AabweBGZX/4tdqHQTsKUDyE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Lcr5P9Z+; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1712328258; c=relaxed/simple;
+	bh=9dpbmAJPM0JfLCrP3RmJsaVOlpVPAps6eS3B5ySdjTc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=o2AmlTZ5tqDCft0tywr5yZUATxkpJBVxSZP9BqVY9xeQsSUhW5RHn/Dw4sLvsMXsBk7k970geYqhlj3W8mA99eiQyPFdse3+LV8ppTa1O6hdVHBFukjo0rlMylGma4h2Tf998Ig3w7GthIgdeLeZT3CdG34DVNivyLVowFtO0vI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Lew1hGE3; arc=none smtp.client-ip=192.198.163.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Lcr5P9Z+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C5B1EC433C7;
-	Fri,  5 Apr 2024 14:43:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712328189;
-	bh=dtABkso0LSZG2RGcX8jHgM1Ekot+NTaq1ZsNzn+1SL4=;
-	h=From:To:Cc:Subject:Date:From;
-	b=Lcr5P9Z+BP47g3ZrRyRJuqQxNdyFrQB6OkNYSyeYxsLXikRS6nG7Jp9pg9ZxD77c1
-	 aEo+Yw2M9jyvix1ZB67Foi51FOPT3cPwp4drXJbvWucrQjyNBZ4FI+tSD2V3UcOYim
-	 rZBF959m/b5PDnQaLQAjXAPeYQz5z6q2857Uvg8SvfETw10ABBwsbYF3qd55t826nI
-	 6NWOx2///6T3hQPgYpcfPWH0ds+9QdiX6jh5Ttc0dGdxL08JUVb2ZOjxAlT4Bdf5vI
-	 1corVP5yvBSA271ppQU0N3SBjxcRRspcwEZPaBwgHQ2+JKjAN/xVsGzVmx4TBTO/+j
-	 b0StK6PIW9vwA==
-From: Arnd Bergmann <arnd@kernel.org>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Arnd Bergmann <arnd@arndb.de>,
-	Sudip Mukherjee <sudipm.mukherjee@gmail.com>,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] [v3] parport: mfc3: avoid empty-body warning
-Date: Fri,  5 Apr 2024 16:42:57 +0200
-Message-Id: <20240405144304.1223160-1-arnd@kernel.org>
-X-Mailer: git-send-email 2.39.2
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Lew1hGE3"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1712328257; x=1743864257;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=9dpbmAJPM0JfLCrP3RmJsaVOlpVPAps6eS3B5ySdjTc=;
+  b=Lew1hGE3FSZiccajWNoBfKOL4GYvTZpq0ZXxeDzKkIiesinQEXU5ohcf
+   dZHfTuroXI3NATqy3H7lf0vh31K06yMpp7E3IK6iei6SNqngTjWgP0zaq
+   aRpv4jc7T2AxsbF5MQ0kU1sFUu6axGFHVXBQGXjlw2YLOrAMibI1o1tVT
+   skXwYm3dTAS7zTgBATOQwn+IHg34ZBIOwEdxpOVN/ejtfRS5zNmZ5kCbZ
+   XE3fKt7+prIqDHqSPprb8wRoHw3yXA47SxJbsoFiiYXCohY2TEkblaKhy
+   HbbvsG1X4XUGFSX05FsktMaHfER8GI08hA8LrsViKRI8rsBpk3hX98YJ2
+   w==;
+X-CSE-ConnectionGUID: i33PHZTWRY2yCWP4QrP8Aw==
+X-CSE-MsgGUID: WDc7KlI/QuW6mgMyde/ivg==
+X-IronPort-AV: E=McAfee;i="6600,9927,11035"; a="10629400"
+X-IronPort-AV: E=Sophos;i="6.07,181,1708416000"; 
+   d="scan'208";a="10629400"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Apr 2024 07:44:16 -0700
+X-CSE-ConnectionGUID: F1r6EvQCTdO8Pmwg7qg/6g==
+X-CSE-MsgGUID: 0gjku4KHQB6Chw+uu1oUGg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,181,1708416000"; 
+   d="scan'208";a="19750711"
+Received: from mdawoo-mobl.amr.corp.intel.com (HELO [10.212.152.63]) ([10.212.152.63])
+  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Apr 2024 07:44:16 -0700
+Message-ID: <311c6f62-4232-417a-beb8-df9ca8a732ec@linux.intel.com>
+Date: Fri, 5 Apr 2024 07:44:15 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 3/4] ACPI: x86: Move blacklist to x86 folder
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+ Zhang Rui <rui.zhang@intel.com>,
+ "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+ linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>
+References: <20240404183448.3310449-1-andriy.shevchenko@linux.intel.com>
+ <20240404183448.3310449-4-andriy.shevchenko@linux.intel.com>
+Content-Language: en-US
+From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+In-Reply-To: <20240404183448.3310449-4-andriy.shevchenko@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-From: Arnd Bergmann <arnd@arndb.de>
 
-on m68k builds, the mfc3 driver causes a warning about an empty if() block:
+On 4/4/24 11:23 AM, Andy Shevchenko wrote:
+> blacklist is built solely for x86, move it to the respective folder.
 
-drivers/parport/parport_mfc3.c: In function 'control_pc_to_mfc3':
-drivers/parport/parport_mfc3.c:106:37: warning: suggest braces around empty body in an 'if' statement [-Wempty-body]
+Don't you need #ifdef CONFIG_X86 for acpi_blacklisted() in
+include/linux/acpi.h
 
-Remove it in favor of a simpler comment.
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> ---
+>  drivers/acpi/Makefile              | 1 -
+>  drivers/acpi/x86/Makefile          | 2 ++
+>  drivers/acpi/{ => x86}/blacklist.c | 2 +-
+>  3 files changed, 3 insertions(+), 2 deletions(-)
+>  rename drivers/acpi/{ => x86}/blacklist.c (99%)
+>
+> diff --git a/drivers/acpi/Makefile b/drivers/acpi/Makefile
+> index 413c18e2bf61..6f4187a34f41 100644
+> --- a/drivers/acpi/Makefile
+> +++ b/drivers/acpi/Makefile
+> @@ -14,7 +14,6 @@ tables.o: $(src)/../../include/$(CONFIG_ACPI_CUSTOM_DSDT_FILE) ;
+>  endif
+>  
+>  obj-$(CONFIG_ACPI)		+= tables.o
+> -obj-$(CONFIG_X86)		+= blacklist.o
+>  
+>  #
+>  # ACPI Core Subsystem (Interpreter)
+> diff --git a/drivers/acpi/x86/Makefile b/drivers/acpi/x86/Makefile
+> index b97b1bcf8404..1f3c5fa84f9e 100644
+> --- a/drivers/acpi/x86/Makefile
+> +++ b/drivers/acpi/x86/Makefile
+> @@ -3,3 +3,5 @@ acpi-x86-y		+= apple.o
+>  acpi-x86-y		+= cmos_rtc.o
+>  acpi-x86-y		+= s2idle.o
+>  acpi-x86-y		+= utils.o
+> +
+> +obj-$(CONFIG_X86)	+= blacklist.o
+> diff --git a/drivers/acpi/blacklist.c b/drivers/acpi/x86/blacklist.c
+> similarity index 99%
+> rename from drivers/acpi/blacklist.c
+> rename to drivers/acpi/x86/blacklist.c
+> index a558d24fb788..55214d0a12b1 100644
+> --- a/drivers/acpi/blacklist.c
+> +++ b/drivers/acpi/x86/blacklist.c
+> @@ -17,7 +17,7 @@
+>  #include <linux/acpi.h>
+>  #include <linux/dmi.h>
+>  
+> -#include "internal.h"
+> +#include "../internal.h"
+>  
+>  #ifdef CONFIG_DMI
+>  static const struct dmi_system_id acpi_rev_dmi_table[] __initconst;
 
-Acked-by: Sudip Mukherjee <sudipm.mukherjee@gmail.com>
-Link: https://lore.kernel.org/lkml/20230727122448.2479942-1-arnd@kernel.org/
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
-This one was still missing from my series to enable more warnings by default
-in Makefile.extrawarn.
-
-Greg, can you take this through the char-misc tree for 6.10?
----
- drivers/parport/parport_mfc3.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
-
-diff --git a/drivers/parport/parport_mfc3.c b/drivers/parport/parport_mfc3.c
-index f4d0da741e85..bb1817218d7b 100644
---- a/drivers/parport/parport_mfc3.c
-+++ b/drivers/parport/parport_mfc3.c
-@@ -102,8 +102,7 @@ static unsigned char control_pc_to_mfc3(unsigned char control)
- 		ret |= 128;
- 	if (control & PARPORT_CONTROL_AUTOFD) /* AUTOLF */
- 		ret &= ~64;
--	if (control & PARPORT_CONTROL_STROBE) /* Strobe */
--		/* Handled directly by hardware */;
-+	/* PARPORT_CONTROL_STROBE handled directly by hardware */
- 	return ret;
- }
- 
 -- 
-2.39.2
+Sathyanarayanan Kuppuswamy
+Linux Kernel Developer
 
