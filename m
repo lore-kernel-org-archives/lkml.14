@@ -1,155 +1,172 @@
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.153.233])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62A031DDD1;
-	Fri,  5 Apr 2024 12:43:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.153.233
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BECAF1DDD1;
+	Fri,  5 Apr 2024 12:43:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712321025; cv=none; b=u6uPNW6Rgs1/ktUlYW+1bKjH8Z9wDe9rblRbMeEbs9+3e2GnP/eTPxCFR3OL2UMaZRxAzNP0w7s7DBWrmeADTyTEn1nZS+IlYPfbGIahjgQpE15fmfvMm+9OhvoD6XFFGq0c8/340XfWF3Z70EGRl4DRoXD1n1Xc4rGoUguwGvA=
+	t=1712321041; cv=none; b=Lasd7qenMqEBs6hMmxN6CzNjs6ckWrkGlkHkeyCPOm9fPxZhXMVAO8MGxJpqmg37Ehr0EZ0Bcy3U4xwsfsmBrwBfNWg/VL6NYnzCqTzlUve0SYGdevY+f7SQxvJHlzZ9W+Nd/YNCKsZVBi2ViowpgnpeoLH+lZ21Wlwyxj1p38s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712321025; c=relaxed/simple;
-	bh=uKpkhmhxikuILquZfgGaVnyy2MUxIAtbODz/S12cy40=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ghgDYWwJOYEyhT54LRk6wKsvEbZVIQvpDz/TDZ1r45rnWwdLtKnvFGuJ2KVCcIROv2LLG7m7XdM/NUMCyFch/FF6mDKeQmnVLxmm8O/v6Opy7HFEey/6ADi+dx6KwD2xQgwSQ3ftOP1Qc7QMjTwTj5KSaEaBDkOvM11oF7EgMYA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=VCOLuLku; arc=none smtp.client-ip=68.232.153.233
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
+	s=arc-20240116; t=1712321041; c=relaxed/simple;
+	bh=5GYBpqDHl1ruxELv5Dvt6rvSuLuznw5wiX1smMGHpyw=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=eE4jmYjljYk6ZrzXFDJ6ejfoQQF0xeIoVuGiEothsPL1uOz02U44Fh10m+5Ene2HJmETpV2Ny+3B+xOPnjh4Vxk5PygZpCYVYWZ1+Ph5F7K3gIRiMgYVAn4R/QYHNbIxRXfn+TrxFfidFR5kveFhjOyK6JwxA/AqIqSYT/ATphA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ct5AtXc5; arc=none smtp.client-ip=209.85.128.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="VCOLuLku"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1712321023; x=1743857023;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=uKpkhmhxikuILquZfgGaVnyy2MUxIAtbODz/S12cy40=;
-  b=VCOLuLkuP18WH1dKH9rVXMXMgM5d7tlMbgPkSlExMkkw2uGde2PjNsGs
-   F05Ev0Ihhq620z3v7CN9i8TmQ14FZpvLEEvfGPFeUk2AMtpYzFGH3jhCz
-   UrLLtMGXLTuGHNhHquBUN/7o4uPmVA9UxFVu2DHYhp7yYURGTGZmCaIMj
-   tMWZ3s2MqUuik1mNryPpchyL3531Plm0eGOdSO41z9Md/L163989Z/f7x
-   otbDi4qdoh+g9X/wjNKPXXTUVNROHrYkDVLCTFkzHGxF2d3/IXFOhcgPA
-   EP9vCSJPRrO1zCXiPz+MwfHW6dDGJ99yJtLoVotxFQdsckMKx8usEOJ0h
-   A==;
-X-CSE-ConnectionGUID: yN0usXTgTm6z0XmMc2aABQ==
-X-CSE-MsgGUID: Db6lycEUTUmxkwlCZaQJzw==
-X-IronPort-AV: E=Sophos;i="6.07,181,1708412400"; 
-   d="asc'?scan'208";a="250449363"
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa5.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 05 Apr 2024 05:42:39 -0700
-Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
- chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Fri, 5 Apr 2024 05:42:36 -0700
-Received: from wendy (10.10.85.11) by chn-vm-ex04.mchp-main.com (10.10.85.152)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35 via Frontend
- Transport; Fri, 5 Apr 2024 05:42:34 -0700
-Date: Fri, 5 Apr 2024 13:41:44 +0100
-From: Conor Dooley <conor.dooley@microchip.com>
-To: Jonathan Cameron <jic23@kernel.org>
-CC: <marius.cristea@microchip.com>, <lars@metafoo.de>, <robh+dt@kernel.org>,
-	<jdelvare@suse.com>, <linux@roeck-us.net>, <linux-hwmon@vger.kernel.org>,
-	<krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>,
-	<linux-iio@vger.kernel.org>, <devicetree@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v5 2/2] iio: adc: adding support for PAC193x
-Message-ID: <20240405-embellish-bonnet-ab5f10560d93@wendy>
-References: <20240222164206.65700-1-marius.cristea@microchip.com>
- <20240222164206.65700-3-marius.cristea@microchip.com>
- <20240224191559.40d233db@jic23-huawei>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ct5AtXc5"
+Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-4162b74f2a1so11329295e9.3;
+        Fri, 05 Apr 2024 05:43:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1712321038; x=1712925838; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=pULb2/SEKmMEonTMi0DJm45CRye8jTdoFzr8IafrgxM=;
+        b=ct5AtXc5XiXqbIdF1L2Jx3gVb82WqV0qovX5HCvTQd5VM3PYY00TGX1beSXFeoHTkd
+         QAqAMLKQlI9DinK7LfFkgyPqH3NK/Dh/zOhGLUPHVnm1bwXGTvPT1yux0c/BWvenOobs
+         9UQJUi9162l3VVkWRxYUA/ajBIlov0zK2aT1fX7bptmC/xBwBiaOIwA6I/kNKjwAaglD
+         /KAIhbOHByWJ2IT1BJa187J0LMRi7wLPnJVs9ZJGZGbKwT75T+wA5mf++imkMHv0f6sJ
+         VdJmYAQkMza15MfZQWRU3pfJK7m4uWqNsj7K+EnUUBWVtqS+zumEKzdnaSLuvCeDhHJT
+         HBSA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712321038; x=1712925838;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=pULb2/SEKmMEonTMi0DJm45CRye8jTdoFzr8IafrgxM=;
+        b=p37zgOPmebPOofkeQitJUKnQiT6DLTtBzh5gXg8SzDqfyfhF+YNPgyxcn1HzHTPZ6v
+         cTeOF/5w8vNFmUkdOmUpbOdYduKTRYLEJBSfeoUWMC6gjEam68dR5M39EwZVLnmjG6EZ
+         oFHO/aWOh2fyeNuWKclu9C9msUaYF5r9MUKZr9pJETb88Er45ZmwXZ9PiLH373ADnSZg
+         9GVdOHWrykMABeK+ZYqzyWQAfRgfZxTO8n9uO0q5G6ktNW+7p3BJjbkM+XQ23dEdPcno
+         G0Y8irXkzf6iyDS0B/+sVgl/Dn5pA3+nPLFE6J0+m7Qfh8LtVG+4601AfQeY8UjJM0Zz
+         j53A==
+X-Forwarded-Encrypted: i=1; AJvYcCVGcI7wQ9CR9kOWhw0AMyJKTsE8Quyo1EJFM6m2oT6w/egFW96M0Hx6slhHBr9QHigkE5f6fN7GIdxfUGGCyGKtGdlC9chc5GkMOWXO04bFnOnXinL6qFb2v79NfDnkQopx
+X-Gm-Message-State: AOJu0Yyo1O5m0CoBtoYo89tmBZm5Dvn2MNnitGHA1VSYgv6k+6KdyHwN
+	tkhBtaJTosrsZwAt5FJO6SkYuP8yPL2AEu3HBFTw3yI4sWDXWff9
+X-Google-Smtp-Source: AGHT+IHUW+bDfIBmn2iekT8yv3sAv6IIGKq2Tu5MgysTRgeCJ5Z1WV+/TuTm7uyrmNDypSyF3mGedA==
+X-Received: by 2002:a05:600c:a0d:b0:416:331f:d3b3 with SMTP id z13-20020a05600c0a0d00b00416331fd3b3mr53944wmp.38.1712321037814;
+        Fri, 05 Apr 2024 05:43:57 -0700 (PDT)
+Received: from localhost (54-240-197-231.amazon.com. [54.240.197.231])
+        by smtp.gmail.com with ESMTPSA id n32-20020a05600c3ba000b00415612e29a1sm2887862wms.30.2024.04.05.05.43.57
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 05 Apr 2024 05:43:57 -0700 (PDT)
+From: Puranjay Mohan <puranjay12@gmail.com>
+To: Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Martin KaFai Lau <martin.lau@linux.dev>,
+	Eduard Zingerman <eddyz87@gmail.com>,
+	Song Liu <song@kernel.org>,
+	Yonghong Song <yonghong.song@linux.dev>,
+	John Fastabend <john.fastabend@gmail.com>,
+	KP Singh <kpsingh@kernel.org>,
+	Stanislav Fomichev <sdf@google.com>,
+	Hao Luo <haoluo@google.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	=?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn@kernel.org>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	bpf@vger.kernel.org,
+	linux-riscv@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	Pu Lehui <pulehui@huawei.com>
+Cc: puranjay12@gmail.com
+Subject: [PATCH bpf-next] riscv, bpf: add internal-only MOV instruction to resolve per-CPU addrs
+Date: Fri,  5 Apr 2024 12:43:48 +0000
+Message-Id: <20240405124348.27644-1-puranjay12@gmail.com>
+X-Mailer: git-send-email 2.40.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="rftDiodiuYntSj0z"
-Content-Disposition: inline
-In-Reply-To: <20240224191559.40d233db@jic23-huawei>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
---rftDiodiuYntSj0z
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Support an instruction for resolving absolute addresses of per-CPU
+data from their per-CPU offsets. This instruction is internal-only and
+users are not allowed to use them directly. They will only be used for
+internal inlining optimizations for now between BPF verifier and BPF
+JITs.
 
-On Sat, Feb 24, 2024 at 07:15:59PM +0000, Jonathan Cameron wrote:
-> On Thu, 22 Feb 2024 18:42:06 +0200
-> <marius.cristea@microchip.com> wrote:
->=20
-> > From: Marius Cristea <marius.cristea@microchip.com>
-> >=20
-> > This is the iio driver for Microchip
-> > PAC193X series of Power Monitor with Accumulator chip family.
-> >=20
-> > Signed-off-by: Marius Cristea <marius.cristea@microchip.com>
-> So I had a few comments on this, but nothing that can't be cleaned up lat=
-er.
-> + I'll fix the thing the bots didn't like on the bindings.
->=20
-> Series applied to the togreg branch of iio.git and pushed out
-> as testing for 0-day to take a look at it.
+RISC-V uses generic per-cpu implementation where the offsets for CPUs
+are kept in an array called __per_cpu_offset[cpu_number]. RISCV stores
+the address of the task_struct in TP register. The first element in
+tast_struct is struct thread_info, and we can get the cpu number by
+reading from the TP register + offsetof(struct thread_info, cpu).
 
-I tested this out on v6.9-rc2 and prompted a backtrace when collectd
-started running:
-	------------[ cut here ]------------
-	UBSAN: array-index-out-of-bounds in /home/conor/stuff/linux/drivers/iio/ad=
-c/pac1934.c:857:25
-	index 7 is out of range for type 'u32 [4]'
-	CPU: 1 PID: 179 Comm: iiod Not tainted 6.9.0-rc2-dirty #1
-	Hardware name: Microchip PolarFire-SoC Icicle Kit (DT)
-	Call Trace:
-	[<ffffffff80006bba>] dump_backtrace+0x28/0x30
-	[<ffffffff80bd67d8>] show_stack+0x38/0x44
-	[<ffffffff80be7820>] dump_stack_lvl+0x6e/0x9a
-	[<ffffffff80be7864>] dump_stack+0x18/0x20
-	[<ffffffff80be1452>] ubsan_epilogue+0x10/0x46
-	[<ffffffff80615358>] __ubsan_handle_out_of_bounds+0x6a/0x78
-	[<ffffffff80981f3a>] pac1934_read_raw+0x20c/0x34c
-	[<ffffffff80977c4c>] iio_read_channel_info+0x5c/0xbe
-	[<ffffffff8073516e>] dev_attr_show+0x1c/0x4a
-	[<ffffffff80387292>] sysfs_kf_seq_show+0x80/0xcc
-	[<ffffffff80385b12>] kernfs_seq_show+0x3c/0x4a
-	[<ffffffff8031e3d8>] seq_read_iter+0x136/0x2e4
-	[<ffffffff80385cde>] kernfs_fop_read_iter+0x38/0x16a
-	[<ffffffff802e904a>] vfs_read+0x1be/0x2ba
-	[<ffffffff802e9c48>] ksys_read+0x64/0xd2
-	[<ffffffff802e9cd6>] __riscv_sys_read+0x20/0x28
-	[<ffffffff80be838a>] do_trap_ecall_u+0xee/0x204
-	[<ffffffff80bf57d0>] ret_from_exception+0x0/0x64
-	---[ end trace ]---
+Once we have the cpu number in a register we read the offset for that
+cpu from address: &__per_cpu_offset + cpu_number << 3. Then we add this
+offset to the destination register.
 
-The device itself only has 4 channels, but in sysfs there are "fake"
-channels for the average voltages and currents too. UBSAN points at:
-	case PAC1934_VSENSE_AVG_4_ADDR:
-		*val =3D PAC1934_MAX_VSENSE_RSHIFTED_BY_16B;
-		if (chan->scan_type.sign =3D=3D 'u')
-			*val2 =3D info->shunts[channel];
-		else
-			*val2 =3D info->shunts[channel] >> 1;
-		return IIO_VAL_FRACTIONAL;
+To measure the improvement from this change, the benchmark in [1] was
+used on Qemu:
 
-And info->shunts is only valid for the 4 real channels, so I guess the
-averaged channels probably need to do a [channel - 4] or similar. I
-dunno if that relation between averaged channels and their "real"
-counterparts is fixed or if different pac devices need different values,
-but on my system here that would work.
+Before:
+glob-arr-inc   :    1.127 ± 0.013M/s
+arr-inc        :    1.121 ± 0.004M/s
+hash-inc       :    0.681 ± 0.052M/s
 
-I do quite like that UBSAN points out the line in question :)
+After:
+glob-arr-inc   :    1.138 ± 0.011M/s
+arr-inc        :    1.366 ± 0.006M/s
+hash-inc       :    0.676 ± 0.001M/s
 
-Cheers,
-Conor.
+[1] https://github.com/anakryiko/linux/commit/8dec900975ef
 
---rftDiodiuYntSj0z
-Content-Type: application/pgp-signature; name="signature.asc"
+Signed-off-by: Puranjay Mohan <puranjay12@gmail.com>
+---
+ arch/riscv/net/bpf_jit_comp64.c | 24 ++++++++++++++++++++++++
+ 1 file changed, 24 insertions(+)
 
------BEGIN PGP SIGNATURE-----
+diff --git a/arch/riscv/net/bpf_jit_comp64.c b/arch/riscv/net/bpf_jit_comp64.c
+index 15e482f2c657..e95bd1d459a4 100644
+--- a/arch/riscv/net/bpf_jit_comp64.c
++++ b/arch/riscv/net/bpf_jit_comp64.c
+@@ -12,6 +12,7 @@
+ #include <linux/stop_machine.h>
+ #include <asm/patch.h>
+ #include <asm/cfi.h>
++#include <asm/percpu.h>
+ #include "bpf_jit.h"
+ 
+ #define RV_FENTRY_NINSNS 2
+@@ -1089,6 +1090,24 @@ int bpf_jit_emit_insn(const struct bpf_insn *insn, struct rv_jit_context *ctx,
+ 			emit_or(RV_REG_T1, rd, RV_REG_T1, ctx);
+ 			emit_mv(rd, RV_REG_T1, ctx);
+ 			break;
++		} else if (insn_is_mov_percpu_addr(insn)) {
++			if (rd != rs)
++				emit_mv(rd, rs, ctx);
++#ifdef CONFIG_SMP
++				/* Load current CPU number in T1 */
++				emit_ld(RV_REG_T1, offsetof(struct thread_info, cpu), RV_REG_TP,
++					ctx);
++				/* << 3 because offsets are 8 bytes */
++				emit_slli(RV_REG_T1, RV_REG_T1, 3, ctx);
++				/* Load address of __per_cpu_offset array in T2 */
++				emit_imm(RV_REG_T2, (u64)&__per_cpu_offset, ctx);
++				/* Add offset of current CPU to  __per_cpu_offset */
++				emit_add(RV_REG_T1, RV_REG_T2, RV_REG_T1, ctx);
++				/* Load __per_cpu_offset[cpu] in T1 */
++				emit_ld(RV_REG_T1, 0, RV_REG_T1, ctx);
++				/* Add the offset to Rd */
++				emit_add(rd, rd, RV_REG_T1, ctx);
++#endif
+ 		}
+ 		if (imm == 1) {
+ 			/* Special mov32 for zext */
+@@ -2038,3 +2057,8 @@ bool bpf_jit_supports_arena(void)
+ {
+ 	return true;
+ }
++
++bool bpf_jit_supports_percpu_insn(void)
++{
++	return true;
++}
+-- 
+2.40.1
 
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZg/xiAAKCRB4tDGHoIJi
-0txtAP9vdnuMITiNcZxaL8SMlaKjSPQD1+HFCcXJLC7ZFeBlYwD9GJvPd7VFEWXq
-582boF44JXcw1Oov6i1opoQf1CMElwY=
-=Eo5n
------END PGP SIGNATURE-----
-
---rftDiodiuYntSj0z--
