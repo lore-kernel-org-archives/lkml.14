@@ -1,99 +1,95 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F07DE1D530;
-	Fri,  5 Apr 2024 16:58:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB0C1171651
+	for <linux-kernel@vger.kernel.org>; Fri,  5 Apr 2024 16:58:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712336303; cv=none; b=KRiKczmGUkuN2EQ5V0jxnK1XXuLT7gwtGWRGUkRV/goE5Lb/+M320Avrnma/cXLWNCVUKXSGMh2tq6pzwQbGyK407ZAdwK17hfxwoE15l62SWUj/lWyIWQnbNd5RMR2x2BKUfS5rxSm/WE8Jatloux/lt3SJN12oAcbcqS8EhHA=
+	t=1712336329; cv=none; b=SC62xty2qXbHLssNiGFZA7miVI35UMrarkxhfqsrFyiwmLwL2/Ps+k1nDApkTLdqBK4spCAraEmfn+W5c+dUKdRMHN8ZmGVO5lseEkLW3Yw9Zi1nyr2dI7DLy8d6KI2XJhbQeMiHpklv8AVKF3BOXgRZ+X3QgL4gv4a/lnHTP9Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712336303; c=relaxed/simple;
-	bh=9FApvoxcrmF0KAwjGuStONiAqHxiDKFUt4yrEwT5Ht8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=TxRO6M26Be3NSK9HOHq+lrY0XVcqVBucmy5QcjAihl5HK1qEkjY1ZYtPZ7qdMU7p3JYK0QMtX0zGfFeaRSqF58YFfIGHleVgbfZJK7+44cB7NOP2N5VQZ2KhVvZkYsC8zecwHh+CytkISBjG0+cIPLfyb31Jrn7jO+YRa6UPZNg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=fLn0QGhZ; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1712336329; c=relaxed/simple;
+	bh=kYxNSdByNJ1m5udrkC+/cqq0sc3hRu5OPcBDsIZ3Gf4=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=Hg5Q4AkNH8+sm0Wlro14baRFBawx7NEQ9EXhZ1S8ejVfGXSrU6uUWokwJb6Zo2tbsO1bLLSeqMmHZDr3GmxMZaAUoyVtCR9Ax7Xg77QXviTuhArxhh11APYPtE9GayXtN4PCCFwI4NdjCXI/cFusianREZY4VCSFVK3nZmPsYEQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ee3cuSZ/; arc=none smtp.client-ip=209.85.216.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="fLn0QGhZ"
-Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 435BQeFP011666;
-	Fri, 5 Apr 2024 16:58:17 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	message-id:date:mime-version:subject:to:cc:references:from
-	:in-reply-to:content-type:content-transfer-encoding; s=
-	qcppdkim1; bh=jlSvlwx1DIYu2a8LtFCH2ITQ5R5r9ksV7tC/6/xSt4A=; b=fL
-	n0QGhZ9FIYitlhxcECLJXl8w0CzvuSmRuaRoPVf+yvbnyOuJNGuim+Zr9LekPsvd
-	UrKOOJUOrFp8/P4mNFW85HKTM7LZjwYmH/wQ6UVtmo9b4f3LDxKluIlX1MJ4ouw5
-	31vgFT4Y/AHHs91EKIgP00aisQ/qFMsYeQ0HSEmaOzRIpwtD/+le34AQnT7s9IKp
-	RUFPSpCy9IwX1M6bUq5dUPJuaWKkqtKYjJ8uBqLJ7jTw9K4WIIMmDBZY8bE0IEAQ
-	aV8tw8GJ079ygVInxxb6Nw+ifEOEYT4qNttNf3bXJZ3gIJcc7wljDX1mFj4YdbC8
-	r2Q4oMVN+1etLgqGS77g==
-Received: from nasanppmta05.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3xafe3rx6y-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 05 Apr 2024 16:58:17 +0000 (GMT)
-Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
-	by NASANPPMTA05.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 435GwGOm005043
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 5 Apr 2024 16:58:16 GMT
-Received: from [10.216.23.38] (10.80.80.8) by nasanex01c.na.qualcomm.com
- (10.45.79.139) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Fri, 5 Apr 2024
- 09:57:34 -0700
-Message-ID: <6277fb20-d579-1171-3e34-432e37727ac1@quicinc.com>
-Date: Fri, 5 Apr 2024 22:26:53 +0530
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ee3cuSZ/"
+Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-2a2fdf6eb3bso1332456a91.1
+        for <linux-kernel@vger.kernel.org>; Fri, 05 Apr 2024 09:58:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1712336327; x=1712941127; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:reply-to:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=oIaKqbHItjZpkeLlKYbk7Duobe/+p8JYcpNo0hsVcB4=;
+        b=ee3cuSZ/PmCUOwcIJB2qvnULBvdJaPiOG+DLN7uGg9FlUZxfVpTFsTLbyh1vds0wd3
+         K/yS2ySVGapxfJwvbgoJb0VsIPUUbPHoDqHgMaAqmUeysAsNBOObAcN3XWpfxcrU7JuT
+         wrLexnldFYDw3uWwlEzQFUbcyfrc+eGzyICS1XmX6UY3fnwrB55yQopf5Q4T4wibpfPo
+         m5ROP0ynkxcrMFiKnu7DAUNIazVMmb2O2xgS9rwwBWwPHs/c5qGWVz+epJZ3IwqZYQgk
+         rwBKSM1pznyk3lQMO/ubBpmMNtRauGUwh2znJlkL37xqZ3eEO9onwao0zLd3lLluJWls
+         jbLQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712336327; x=1712941127;
+        h=cc:to:from:subject:message-id:mime-version:date:reply-to
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=oIaKqbHItjZpkeLlKYbk7Duobe/+p8JYcpNo0hsVcB4=;
+        b=NElfoIYGZ2OTbvRX9LpTl9KIwNeXKpnDSqnzbf8yejh2+KwZOyhby8cM3SKpIVCedE
+         RcvD1lhIy3JcOU0Vcgw7AMnV7pxWKrlP2955qMXMFzYT4AATXKtkSM3TttYg12lb+HYV
+         8AbR9YQ5iP7PbMlMsXjwY/V1/xAfZEJ25WG47+RvW+y7/m5LWfDZNI2t6Lgc8/IpZmLI
+         DrEVv8R49HM7Sd5mwwiL5eefNVSIyYbqAOIpzHdm1HROYZ3qWJaoxYe8eSR0kmYA1pMU
+         6jLduhjI9QhFGNjkuYhjyUzwiXqqNX+wb+W8WnCFfQW4Uzu0NArs0CNR3mjZKOGMPd2B
+         Vy/g==
+X-Forwarded-Encrypted: i=1; AJvYcCX0va6ydGybcnL0YZNUThj91Z+v6MqZxscxvCo26We9588QN3iF8KMJLhbVMNDLXGOGejQ+Y+E2otB/sBkCD2FOP9XhnOUzYJUiMrbq
+X-Gm-Message-State: AOJu0Ywx9io5elUSD8QPIlkUODviBif2nyFqI0fYuLVOtXDspLpL5eXq
+	KHoWjK6yFe74ueqXqQgpKrD4x13RXcHJhUhzHfR7SmVayYDGtYqR+8inBS4UEYcM2dJk1I96wh/
+	LXw==
+X-Google-Smtp-Source: AGHT+IGoqd3TklGeYcqwAk8h7GLRYYheErNCawJpvvIGGiJhhWOdi5tZcUmwXbQAsDVZm3CxPiydDP/0hIs=
+X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
+ (user=seanjc job=sendgmr) by 2002:a17:90a:cc0a:b0:29b:efaf:2bd7 with SMTP id
+ b10-20020a17090acc0a00b0029befaf2bd7mr6740pju.2.1712336327275; Fri, 05 Apr
+ 2024 09:58:47 -0700 (PDT)
+Reply-To: Sean Christopherson <seanjc@google.com>
+Date: Fri,  5 Apr 2024 09:58:44 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
-Subject: Re: [PATCH v2 1/2] soc: qcom: pmic_glink: don't traverse clients list
- without a lock
-Content-Language: en-US
-To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-        Bjorn Andersson
-	<andersson@kernel.org>,
-        Konrad Dybcio <konrad.dybcio@linaro.org>,
-        Neil
- Armstrong <neil.armstrong@linaro.org>
-CC: <linux-arm-msm@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20240403-pmic-glink-fix-clients-v2-0-aed4e02baacc@linaro.org>
- <20240403-pmic-glink-fix-clients-v2-1-aed4e02baacc@linaro.org>
-From: Mukesh Ojha <quic_mojha@quicinc.com>
-In-Reply-To: <20240403-pmic-glink-fix-clients-v2-1-aed4e02baacc@linaro.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01c.na.qualcomm.com (10.45.79.139)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: -QkxH5zR_S5qHJZlOIKJVFqb2MXQGHhi
-X-Proofpoint-ORIG-GUID: -QkxH5zR_S5qHJZlOIKJVFqb2MXQGHhi
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-04-05_19,2024-04-05_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- spamscore=0 clxscore=1015 suspectscore=0 phishscore=0 adultscore=0
- mlxscore=0 lowpriorityscore=0 impostorscore=0 bulkscore=0 malwarescore=0
- mlxlogscore=713 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2404010003 definitions=main-2404050118
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.44.0.478.gd926399ef9-goog
+Message-ID: <20240405165844.1018872-1-seanjc@google.com>
+Subject: [ANNOUNCE] PUCK Notes - 2024.04.03 - TDX Upstreaming Strategy
+From: Sean Christopherson <seanjc@google.com>
+To: Sean Christopherson <seanjc@google.com>
+Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Rick P Edgecombe <rick.p.edgecombe@intel.com>, Isaku Yamahata <isaku.yamahata@intel.com>, 
+	Wei W Wang <wei.w.wang@intel.com>, David Skidmore <davidskidmore@google.com>, 
+	Steve Rutherford <srutherford@google.com>, Pankaj Gupta <pankaj.gupta@amd.com>
+Content-Type: text/plain; charset="UTF-8"
 
+ - Recording and slides uploaded[1].
 
+ - Hold off on v20 for a few weeks, to try and land as much prep work as
+   possible before v20.
 
-On 4/3/2024 8:40 AM, Dmitry Baryshkov wrote:
-> Take the client_lock before traversing the clients list at the
-> pmic_glink_state_notify_clients() function. This is required to keep the
-> list traversal safe from concurrent modification.
-> 
-> Fixes: 58ef4ece1e41 ("soc: qcom: pmic_glink: Introduce base PMIC GLINK driver")
-> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+ - Exactly how to slice n' dice the series to make it easier to review is TBD,
+   but generally speaking the plan is to queue patches into a "dead" branch,
+   e.g. kvm/kvm-coco-queue, when they are ready, to reduce the sheer volume of
+   the series and thus help alleviate reviewer fatigue.
 
-Nice catch.
+ - Don't hardcode fixed/required CPUID values in KVM, use available metadata
+   from TDX Module to reject "bad" guest CPUID (or let the TDX module reject?).
+   I.e. don't let a guest silently run with a CPUID that diverges from what
+   userspace provided.
 
-Reviewed-by: Mukesh Ojha <quic_mojha@quicinc.com>
+ - Ideally, the TDX Module would come with full metadata (not in JSON format)
+   that KVM can (a) use to reject a "bad" CPUID configuration (from userspace),
+   and (b) that KVM can provide to userspace to make debugging issues suck less.
 
--Mukesh
+ - For guest MAXPHYADDR vs. GPAW, rely on KVM_GET_SUPPORTED_CPUID to enumerate
+   the usable MAXPHYADDR[2], and simply refuse to enable TDX if the TDX Module
+   isn't compatible.  Specifically, if MAXPHYADDR=52, 5-level paging is enabled,
+   but the TDX-Module only allows GPAW=0, i.e. only supports 4-level paging.
+
+[1] https://drive.google.com/corp/drive/folders/1hm_ITeuB6DjT7dNd-6Ezybio4tRRQOlC
+[2] https://lore.kernel.org/all/20240313125844.912415-1-kraxel@redhat.com
