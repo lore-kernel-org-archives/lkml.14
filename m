@@ -1,375 +1,149 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E060116D4D4
-	for <linux-kernel@vger.kernel.org>; Fri,  5 Apr 2024 11:04:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCD1916C428
+	for <linux-kernel@vger.kernel.org>; Fri,  5 Apr 2024 11:04:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712315052; cv=none; b=SRlv1PS+Fmwc5wZ2tMVAWx94m4B5RrmfwZF19KylUlE50kW/OQA/+zKfvULdE4UcwmLd50TQPE0xifVjoE3CHfuOzE1r6e7lZ7AkpcK/ddUNbrzCJFFTxn2AX3Lis/3LmnVzJxHIvWwWvOanbviQpaDh/fsh/e99+k/ZBB3DjEc=
+	t=1712315054; cv=none; b=h3IMfxZFtY9P5tfLBH8mD0KA9nlFPl8WV1bWuobRJBdaQ2KJy8fFeA1J3s67yF5qjssqhZfAwrKKIRuYYeh6gFWf1jArpBazYpC3TAN3/khSWJ0uaBHNEpMGVV7qpFZC4SufDedqOOhlXb6WYMrz8BMT7hHuV3ElJ/73fJnv9GU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712315052; c=relaxed/simple;
-	bh=5Y2fyNUHD/NYL9OTkH1o2QuB1uTrify2VwkvSF8Fd+8=;
-	h=Message-Id:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=I0ybOIERuDdIQN+YBoeE1IWyjjmf8ZNpVgYPVm0yh3Kbr9IOmXiLyuC616M3gaCA432CgdEKd/5o/dmEL4BY8eTdkEbo1Nlwuv0+v7uFVGnGE6KIleI5iavxaU5Y8k0VkTlp1Kz+W7ZLpUDAYCmWgmzU9wEvNrotkZU3vnNbhnY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=ISYk+F8U; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1712315054; c=relaxed/simple;
+	bh=wBMV5p3J2JTZi1smUXpNuqqWSBvAhb9I78iswaEzVSQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=FNukQ0PqNx3L3LJE/OJzC7qqD9SY+3bsfCdfAQvugbSvpi2NlrBOmCI7/W8HnW3rjf4sJ5OJKOve6IAtcsX9pyflUDpTfJ7U3BhfOpTI+HhvIfDHPq9fIzHWGDAvoGPONaVbUqNB+lGeSTWhkDj1NWoaW8kPMBBqdpfJvsGriUM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=HznEYMMg; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ISYk+F8U"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=Content-Type:MIME-Version:References:
-	Subject:Cc:To:From:Date:Message-Id:Sender:Reply-To:Content-Transfer-Encoding:
-	Content-ID:Content-Description:In-Reply-To;
-	bh=grzrP4wXEBMeBZEyaJ+pITjDHDMxy2pyhIBAHe0RxZc=; b=ISYk+F8UgOTBeA9cgGR62fREyK
-	exLG0xM1sEM+BpXyrNR3ZhzZB2NkG14elrR6CrarQqe7wK8FnjdzgzQYSqqXSmkFqHGN/jkZeD+h2
-	PrVRC9XdkqQFWNFcWQnrfG3zFodgb0EU+6QMdOHH10Xti2VYXveIOibmJzWGU82X8xsMleCvUpXx4
-	zbzRzPwU/8Wc100yjSe9Y68e97NWO93xyDMLYfEfUveXId6znmiP99rle/5jDVQxyo/FOzNxH7y6O
-	OXzOEQkrrMG4+5HziisJGFKYn9Md/hCyK3+O/Uhzso0urX29Hn78DpK2xVwHcKz7EBVQSvXrZApRl
-	Q2n0StYw==;
-Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1rshMH-00000005Z8l-4A7Z;
-	Fri, 05 Apr 2024 11:03:48 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 0)
-	id A75A1302DD3; Fri,  5 Apr 2024 13:03:44 +0200 (CEST)
-Message-Id: <20240405110010.934104715@infradead.org>
-User-Agent: quilt/0.65
-Date: Fri, 05 Apr 2024 12:28:04 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: mingo@redhat.com,
- peterz@infradead.org,
- juri.lelli@redhat.com,
- vincent.guittot@linaro.org,
- dietmar.eggemann@arm.com,
- rostedt@goodmis.org,
- bsegall@google.com,
- mgorman@suse.de,
- bristot@redhat.com,
- vschneid@redhat.com,
- linux-kernel@vger.kernel.org
-Cc: kprateek.nayak@amd.com,
- wuyun.abel@bytedance.com,
- tglx@linutronix.de,
- efault@gmx.de
-Subject: [RFC][PATCH 10/10] sched/eevdf: Use sched_attr::sched_runtime to set request/slice suggestion
-References: <20240405102754.435410987@infradead.org>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HznEYMMg"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1712315051;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=SEi1RTqH8QtMZRPSPitoNGJj8IFtnVKgY7uUM21+oVQ=;
+	b=HznEYMMgbkHldGkF0W1+VQeFhW7+eAtDKWvxbb6Mo2AUHa2M8dxGnCNRJMreRcmQMXzT0R
+	FPVyeI3Zn02rmQuKD4sqi3/zJJCGe5sSgnpuJ05G5Dm/4Jgjbbl58R8Nx13hEfedqQWNi4
+	tiDg0SZxNgOR4XTS1I0Aj6ayRB9y9V8=
+Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
+ by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-434-rAG5sZ48NdmSfgSkG70qyQ-1; Fri,
+ 05 Apr 2024 07:04:07 -0400
+X-MC-Unique: rAG5sZ48NdmSfgSkG70qyQ-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.rdu2.redhat.com [10.11.54.4])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 103431C06509;
+	Fri,  5 Apr 2024 11:04:07 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.226.136])
+	by smtp.corp.redhat.com (Postfix) with SMTP id 3459F202451F;
+	Fri,  5 Apr 2024 11:04:00 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+	oleg@redhat.com; Fri,  5 Apr 2024 13:02:42 +0200 (CEST)
+Date: Fri, 5 Apr 2024 13:02:30 +0200
+From: Oleg Nesterov <oleg@redhat.com>
+To: Jiri Olsa <olsajiri@gmail.com>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>,
+	Andrii Nakryiko <andrii.nakryiko@gmail.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Andrii Nakryiko <andrii@kernel.org>, linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org,
+	Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+	John Fastabend <john.fastabend@gmail.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	"Borislav Petkov (AMD)" <bp@alien8.de>, x86@kernel.org,
+	linux-api@vger.kernel.org
+Subject: Re: [PATCHv2 1/3] uprobe: Add uretprobe syscall to speed up return
+ probe
+Message-ID: <20240405110230.GA22839@redhat.com>
+References: <20240403100708.233575a8ac2a5bac2192d180@kernel.org>
+ <Zg0lvUIB4WdRUGw_@krava>
+ <20240403230937.c3bd47ee47c102cd89713ee8@kernel.org>
+ <CAEf4BzZ2RFfz8PNgJ4ENZ0us4uX=DWhYFimXdtWms-VvGXOjgQ@mail.gmail.com>
+ <20240404095829.ec5db177f29cd29e849169fa@kernel.org>
+ <CAEf4BzYH60TwvBipHWB_kUqZZ6D-iUVnnFsBv06imRikK3o-bg@mail.gmail.com>
+ <20240405005405.9bcbe5072d2f32967501edb3@kernel.org>
+ <20240404161108.GG7153@redhat.com>
+ <20240405102203.825c4a2e9d1c2be5b2bffe96@kernel.org>
+ <Zg-8r63tPSkuhN7p@krava>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Zg-8r63tPSkuhN7p@krava>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.4
 
-Allow applications to directly set a suggested request/slice length using
-sched_attr::sched_runtime.
+On 04/05, Jiri Olsa wrote:
+>
+> On Fri, Apr 05, 2024 at 10:22:03AM +0900, Masami Hiramatsu wrote:
+> >
+> > I think this expects setjmp/longjmp as below
+> >
+> > foo() { <- retprobe1
+> > 	setjmp()
+> > 	bar() { <- retprobe2
+> > 		longjmp()
+> > 	}
+> > } <- return to trampoline
+> >
+> > In this case, we need to skip retprobe2's instance.
 
-The implementation clamps the value to: 0.1[ms] <= slice <= 100[ms]
-which is 1/10 the size of HZ=1000 and 10 times the size of HZ=100.
+Yes,
 
-Applications should strive to use their periodic runtime at a high
-confidence interval (95%+) as the target slice. Using a smaller slice
-will introduce undue preemptions, while using a larger value will
-increase latency.
+> > My concern is, if we can not find appropriate return instance, what happen?
+> > e.g.
+> >
+> > foo() { <-- retprobe1
+> >    bar() { # sp is decremented
+> >        sys_uretprobe() <-- ??
+> >     }
+> > }
+> >
+> > It seems sys_uretprobe() will handle retprobe1 at that point instead of
+> > SIGILL.
+>
+> yes, and I think it's fine, you get the consumer called in wrong place,
+> but it's your fault and kernel won't crash
 
-For all the following examples assume a scheduling quantum of 8, and for
-consistency all examples have W=4:
+Agreed.
 
-  {A,B,C,D}(w=1,r=8):
+With or without this patch userpace can also do
 
-  ABCD...
-  +---+---+---+---
+	foo() { <-- retprobe1
+		bar() {
+			jump to xol_area
+		}
+	}
 
-  t=0, V=1.5				t=1, V=3.5
-  A  |------<				A          |------<
-  B   |------<				B   |------<
-  C    |------<				C    |------<
-  D     |------<			D     |------<
-  ---+*------+-------+---		---+--*----+-------+---
+handle_trampoline() will handle retprobe1.
 
-  t=2, V=5.5				t=3, V=7.5
-  A          |------<			A          |------<
-  B           |------<			B           |------<
-  C    |------<				C            |------<
-  D     |------<			D     |------<
-  ---+----*--+-------+---		---+------*+-------+---
+> this can be fixed by checking the syscall is called from the trampoline
+> and prevent handle_trampoline call if it's not
 
-Note: 4 identical tasks in FIFO order
+Yes, but I still do not think this makes a lot of sense. But I won't argue.
 
-~~~
+And what should sys_uretprobe() do if it is not called from the trampoline?
+I'd prefer force_sig(SIGILL) to punish the abuser ;) OK, OK, EINVAL.
 
-  {A,B}(w=1,r=16) C(w=2,r=16)
+I agree very much with Andrii,
 
-  AACCBBCC...
-  +---+---+---+---
+       sigreturn()  exists only to allow the implementation of signal handlers.  It should never be
+       called directly.  Details of the arguments (if any) passed to sigreturn() vary depending  on
+       the architecture.
 
-  t=0, V=1.25				t=2, V=5.25
-  A  |--------------<                   A                  |--------------<
-  B   |--------------<                  B   |--------------<
-  C    |------<                         C    |------<
-  ---+*------+-------+---               ---+----*--+-------+---
+this is how sys_uretprobe() should be treated/documented.
 
-  t=4, V=8.25				t=6, V=12.25
-  A                  |--------------<   A                  |--------------<
-  B   |--------------<                  B                   |--------------<
-  C            |------<                 C            |------<
-  ---+-------*-------+---               ---+-------+---*---+---
+sigreturn() can be "improved" too. Say, it could validate sigcontext->ip
+and return -EINVAL if this addr is not valid. But why?
 
-Note: 1 heavy task -- because q=8, double r such that the deadline of the w=2
-      task doesn't go below q.
-
-Note: observe the full schedule becomes: W*max(r_i/w_i) = 4*2q = 8q in length.
-
-Note: the period of the heavy task is half the full period at:
-      W*(r_i/w_i) = 4*(2q/2) = 4q
-
-~~~
-
-  {A,C,D}(w=1,r=16) B(w=1,r=8):
-
-  BAACCBDD...
-  +---+---+---+---
-
-  t=0, V=1.5				t=1, V=3.5
-  A  |--------------<			A  |---------------<
-  B   |------<				B           |------<
-  C    |--------------<			C    |--------------<
-  D     |--------------<		D     |--------------<
-  ---+*------+-------+---		---+--*----+-------+---
-
-  t=3, V=7.5				t=5, V=11.5
-  A                  |---------------<  A                  |---------------<
-  B           |------<                  B           |------<
-  C    |--------------<                 C                    |--------------<
-  D     |--------------<                D     |--------------<
-  ---+------*+-------+---               ---+-------+--*----+---
-
-  t=6, V=13.5
-  A                  |---------------<
-  B                   |------<
-  C                    |--------------<
-  D     |--------------<
-  ---+-------+----*--+---
-
-Note: 1 short task -- again double r so that the deadline of the short task
-      won't be below q. Made B short because its not the leftmost task, but is
-      eligible with the 0,1,2,3 spread.
-
-Note: like with the heavy task, the period of the short task observes:
-      W*(r_i/w_i) = 4*(1q/1) = 4q
-
-~~~
-
-  A(w=1,r=16) B(w=1,r=8) C(w=2,r=16)
-
-  BCCAABCC...
-  +---+---+---+---
-
-  t=0, V=1.25				t=1, V=3.25
-  A  |--------------<                   A  |--------------<
-  B   |------<                          B           |------<
-  C    |------<                         C    |------<
-  ---+*------+-------+---               ---+--*----+-------+---
-
-  t=3, V=7.25				t=5, V=11.25
-  A  |--------------<                   A                  |--------------<
-  B           |------<                  B           |------<
-  C            |------<                 C            |------<
-  ---+------*+-------+---               ---+-------+--*----+---
-
-  t=6, V=13.25
-  A                  |--------------<
-  B                   |------<
-  C            |------<
-  ---+-------+----*--+---
-
-Note: 1 heavy and 1 short task -- combine them all.
-
-Note: both the short and heavy task end up with a period of 4q
-
-~~~
-
-  A(w=1,r=16) B(w=2,r=16) C(w=1,r=8)
-
-  BBCAABBC...
-  +---+---+---+---
-
-  t=0, V=1				t=2, V=5
-  A  |--------------<                   A  |--------------<
-  B   |------<                          B           |------<
-  C    |------<                         C    |------<
-  ---+*------+-------+---               ---+----*--+-------+---
-
-  t=3, V=7				t=5, V=11
-  A  |--------------<                   A                  |--------------<
-  B           |------<                  B           |------<
-  C            |------<                 C            |------<
-  ---+------*+-------+---               ---+-------+--*----+---
-
-  t=7, V=15
-  A                  |--------------<
-  B                   |------<
-  C            |------<
-  ---+-------+------*+---
-
-Note: as before but permuted
-
-~~~
-
->From all this it can be deduced that, for the steady state:
-
- - the total period (P) of a schedule is:	W*max(r_i/w_i)
- - the average period of a task is:		W*(r_i/w_i)
- - each task obtains the fair share:		w_i/W of each full period P
-
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
----
- include/linux/sched.h |    5 ++++-
- kernel/sched/core.c   |   33 ++++++++++++++++++++++++++-------
- kernel/sched/debug.c  |    3 ++-
- kernel/sched/fair.c   |    6 ++++--
- 4 files changed, 36 insertions(+), 11 deletions(-)
-
---- a/include/linux/sched.h
-+++ b/include/linux/sched.h
-@@ -542,7 +542,10 @@ struct sched_entity {
- 
- 	struct list_head		group_node;
- 	unsigned int			on_rq;
--	unsigned int			sched_delayed;
-+
-+	unsigned char			sched_delayed;
-+	unsigned char			custom_slice;
-+					/* 2 byte hole */
- 
- 	u64				exec_start;
- 	u64				sum_exec_runtime;
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -4550,7 +4550,6 @@ static void __sched_fork(unsigned long c
- 	p->se.nr_migrations		= 0;
- 	p->se.vruntime			= 0;
- 	p->se.vlag			= 0;
--	p->se.slice			= sysctl_sched_base_slice;
- 	INIT_LIST_HEAD(&p->se.group_node);
- 
- #ifdef CONFIG_FAIR_GROUP_SCHED
-@@ -4801,6 +4800,8 @@ int sched_fork(unsigned long clone_flags
- 
- 		p->prio = p->normal_prio = p->static_prio;
- 		set_load_weight(p, false);
-+		p->se.custom_slice = 0;
-+		p->se.slice = sysctl_sched_base_slice;
- 
- 		/*
- 		 * We don't need the reset flag anymore after the fork. It has
-@@ -7627,10 +7628,20 @@ static void __setscheduler_params(struct
- 
- 	p->policy = policy;
- 
--	if (dl_policy(policy))
-+	if (dl_policy(policy)) {
- 		__setparam_dl(p, attr);
--	else if (fair_policy(policy))
-+	} else if (fair_policy(policy)) {
- 		p->static_prio = NICE_TO_PRIO(attr->sched_nice);
-+		if (attr->sched_runtime) {
-+			p->se.custom_slice = 1;
-+			p->se.slice = clamp_t(u64, attr->sched_runtime,
-+					      NSEC_PER_MSEC/10,   /* HZ=1000 * 10 */
-+					      NSEC_PER_MSEC*100); /* HZ=100  / 10 */
-+		} else {
-+			p->se.custom_slice = 0;
-+			p->se.slice = sysctl_sched_base_slice;
-+		}
-+	}
- 
- 	/*
- 	 * __sched_setscheduler() ensures attr->sched_priority == 0 when
-@@ -7812,7 +7823,9 @@ static int __sched_setscheduler(struct t
- 	 * but store a possible modification of reset_on_fork.
- 	 */
- 	if (unlikely(policy == p->policy)) {
--		if (fair_policy(policy) && attr->sched_nice != task_nice(p))
-+		if (fair_policy(policy) &&
-+		    (attr->sched_nice != task_nice(p) ||
-+		     (attr->sched_runtime && attr->sched_runtime != p->se.slice)))
- 			goto change;
- 		if (rt_policy(policy) && attr->sched_priority != p->rt_priority)
- 			goto change;
-@@ -7958,6 +7971,9 @@ static int _sched_setscheduler(struct ta
- 		.sched_nice	= PRIO_TO_NICE(p->static_prio),
- 	};
- 
-+	if (p->se.custom_slice)
-+		attr.sched_runtime = p->se.slice;
-+
- 	/* Fixup the legacy SCHED_RESET_ON_FORK hack. */
- 	if ((policy != SETPARAM_POLICY) && (policy & SCHED_RESET_ON_FORK)) {
- 		attr.sched_flags |= SCHED_FLAG_RESET_ON_FORK;
-@@ -8124,12 +8140,14 @@ static int sched_copy_attr(struct sched_
- 
- static void get_params(struct task_struct *p, struct sched_attr *attr)
- {
--	if (task_has_dl_policy(p))
-+	if (task_has_dl_policy(p)) {
- 		__getparam_dl(p, attr);
--	else if (task_has_rt_policy(p))
-+	} else if (task_has_rt_policy(p)) {
- 		attr->sched_priority = p->rt_priority;
--	else
-+	} else {
- 		attr->sched_nice = task_nice(p);
-+		attr->sched_runtime = p->se.slice;
-+	}
- }
- 
- /**
-@@ -10084,6 +10102,7 @@ void __init sched_init(void)
- 	}
- 
- 	set_load_weight(&init_task, false);
-+	init_task.se.slice = sysctl_sched_base_slice,
- 
- 	/*
- 	 * The boot idle thread does lazy MMU switching as well:
---- a/kernel/sched/debug.c
-+++ b/kernel/sched/debug.c
-@@ -579,11 +579,12 @@ print_task(struct seq_file *m, struct rq
- 	else
- 		SEQ_printf(m, " %c", task_state_to_char(p));
- 
--	SEQ_printf(m, "%15s %5d %9Ld.%06ld %c %9Ld.%06ld %9Ld.%06ld %9Ld.%06ld %9Ld %5d ",
-+	SEQ_printf(m, "%15s %5d %9Ld.%06ld %c %9Ld.%06ld %c %9Ld.%06ld %9Ld.%06ld %9Ld %5d ",
- 		p->comm, task_pid_nr(p),
- 		SPLIT_NS(p->se.vruntime),
- 		entity_eligible(cfs_rq_of(&p->se), &p->se) ? 'E' : 'N',
- 		SPLIT_NS(p->se.deadline),
-+		p->se.custom_slice ? 'S' : ' ',
- 		SPLIT_NS(p->se.slice),
- 		SPLIT_NS(p->se.sum_exec_runtime),
- 		(long long)(p->nvcsw + p->nivcsw),
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -984,7 +984,8 @@ static void update_deadline(struct cfs_r
- 	 * nice) while the request time r_i is determined by
- 	 * sysctl_sched_base_slice.
- 	 */
--	se->slice = sysctl_sched_base_slice;
-+	if (!se->custom_slice)
-+		se->slice = sysctl_sched_base_slice;
- 
- 	/*
- 	 * EEVDF: vd_i = ve_i + r_i / w_i
-@@ -5169,7 +5170,8 @@ place_entity(struct cfs_rq *cfs_rq, stru
- 	u64 vslice, vruntime = avg_vruntime(cfs_rq);
- 	s64 lag = 0;
- 
--	se->slice = sysctl_sched_base_slice;
-+	if (!se->custom_slice)
-+		se->slice = sysctl_sched_base_slice;
- 	vslice = calc_delta_fair(se->slice, se);
- 
- 	/*
-
+Oleg.
 
