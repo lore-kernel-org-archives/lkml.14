@@ -1,51 +1,51 @@
-Received: from mail-il1-f200.google.com (mail-il1-f200.google.com [209.85.166.200])
+Received: from mail-io1-f69.google.com (mail-io1-f69.google.com [209.85.166.69])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A692026ACA
-	for <linux-kernel@vger.kernel.org>; Fri,  5 Apr 2024 06:55:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D3C028DAB
+	for <linux-kernel@vger.kernel.org>; Fri,  5 Apr 2024 06:55:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.69
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712300127; cv=none; b=LrfPEspDVl6FelzSFoBSP90bek4qCkcKCTlUVutmbl8QDwzt/NqWc/8cmNuWX0Keiwy1UeJoXzrTnEmtzes888LY8oB4VkSR/bHJFnSRgQ88jVi7pPWhO6XmFshNnNb+dm1QZqDVa0OfD6Hdl0pCCmTGVS2P8Rzu5BdY6PJXJEk=
+	t=1712300128; cv=none; b=TIgT0SiY8hrWATQnjix/3I78lFQ7ben2bkaes4d6RmlTE/vppmxzEigD4I655Mt4FXRxshslh0/mJ/cZXtgpX+XuwY4ymxRzJ9pEwoW2CIXw2GYbhwoDws+T50fYduKS6l951ZDxVplOJCY5TqQdtvQ4lahnG7iWIE4lmaGlw5o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712300127; c=relaxed/simple;
-	bh=dL5L+n5ag8PJQ9Jv/y2xtaF3xC2tMdoKXIR4//yJItI=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=n0npsY7aSFMSUYq0aqX7hvno/QD2Vfc9U6poY4Tt7xouXl+5c6m/mQb0bPnAsQOzZLXQuZmaUebmslvRFcKzQ5MxOYxbnQ2CK7TrP3CU3pCNEj35TXEazH22RewISl4koxLmV5dyjZUqL1zZ2lcNm1yFqRGNiBStC20gXa1gLsQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.200
+	s=arc-20240116; t=1712300128; c=relaxed/simple;
+	bh=e78tKgv3BstXDrMcwvGnF8ZdaCgneNK+UMS5ucdmOYQ=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=t0FVhLWMon4bUbmqosV2ShzGw7kN3LgvSAyGerecIroQwXbLXo3n79ZJvPixPxKXDBYB80MzUn31EtATYZd789wQopQls3OYG1m37w1t77ow7507olh25h0o4Un+NvFapoYxL+02NZkaAUGv22Ab9YfEeMnCQmdsbW6mrzDyPo0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.69
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f200.google.com with SMTP id e9e14a558f8ab-36a0a33c1bbso7547775ab.2
-        for <linux-kernel@vger.kernel.org>; Thu, 04 Apr 2024 23:55:25 -0700 (PDT)
+Received: by mail-io1-f69.google.com with SMTP id ca18e2360f4ac-7cf265b30e2so193828239f.1
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Apr 2024 23:55:26 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20230601; t=1712300125; x=1712904925;
         h=to:from:subject:message-id:date:mime-version:x-gm-message-state
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=RDnh/D5T7n7ZqWztdoHzvl2vnLvDv2JXdXIOKNWNq5c=;
-        b=FndHPJIfQ/hjHYddE8/XhZSce1MiJvsgPn3kI7tFXyFwocDnxysHN3YNWlb3+lYn7s
-         ZqWs0hjEbBGhxHoH/yQ0MmyZgIfXuXicmJ/x3dfJJMxePnNtt9ALNX+KgbJoxn9gM/Gs
-         q0zBv4nciYhwfHFVrllDRmhtgqwUBlcPKg1ftNYs0R9iAyCkcBq1+GZLTdo2LXTXzeKD
-         j9+tJz4o+AJbkRIYHHG+vmS5L6PrccF1oLByz+Sy+ERXrG2MfjFpA0QE4oRsn1MKeTjF
-         9eanoG4hsE4zZH4qAgXAWyjoDJSLdlmFctcJ+L3yYRrGplvyTHfY9Z3RcxQ1ROQdU2ad
-         6oUg==
-X-Forwarded-Encrypted: i=1; AJvYcCW3dwD3y901uqU+b6IhJXSkJdZ+7y/nch32Sf1ROCtHvu0uZpI6CSQ37+LJiVGsBzC+n5gynCzkp0Y8lMaB14phFJOrJFxMEnRcLH5X
-X-Gm-Message-State: AOJu0Yyos/sc8V2HA4AAiDUbPq10ORZVgnLgzpAEgx5TLQS0jq1zCf1Q
-	FY43AZURMRULsA/SjxJKIvcJut6BOXK3Afr/G6FhKcAmEAAWIZqweDoTO1AMoMIWjcXD5RDu/Bc
-	kW22jXZNRnk2UYUcOlwskZ+UzhhqVJmdPr7ycuEBOrp5LoaDZOdIGmWs=
-X-Google-Smtp-Source: AGHT+IFRKl+ETsdKgVqObuOeGAoO3IavnzO6NzjZNPOGie/sp1RFqtJRr4wgRgYC2/X8gTRL7NE5llHAFqia8StUWmajei09+Z2e
+        bh=jZuoOMkIddIxcCuLMNOg09YDXxxR2pBIVhNHkuy40PU=;
+        b=O8Mn+dy8Yi+4SsxRPfmjgNT4JjcqyEgVA4c999pOa4DRct77CERIeSG7GpXEbjHw1D
+         VoQMZsiltCnN/LQ6aEuDDgJHtRPFoLcLbZ7cNbaNGiz3dfqR8k2htsOJgzVpPb2gcqtV
+         wJwQpoGZweSZDyI9Xn0jdfmWPb/qpvOUz2mkrk6VnQNbxf7vAT1ZMnRWbdswtxrHrG2K
+         iDR4pwdHdGWs6Flx1fL5mkAfpDo7gvc7uhJsD/BdqFhNOu6Ko2xQTlhKnudrC9bu8j0u
+         bedM9yNYMFVCVJQwv+MxP0KGxCCArRYIy8BivKw3eNzGaocQQ6Elo4T0r4RE20KdQpmh
+         mViA==
+X-Forwarded-Encrypted: i=1; AJvYcCWExmzCDIxbGYRRTmpxApVntiqIKA7SL0i2iWIMnB77CLjTBLGqhhi5d73aYUlCGxFqb2CT3C1Bjp10XKZ12g+Qz+5HdEYwLTs0AiWF
+X-Gm-Message-State: AOJu0Yy1KLH1Ejt+pKF2F4eVt+XKaXYfrV14awh4aL6Qgs0bfcNbVwoJ
+	ex2xzS+j0Mx4u6NozKw/VLAcDZfx0SN3MzaI0deSkcwUgRPvP/VgD5k5S7ammZtqe1WUwzMA7/r
+	GE8z7oS4m/4bka0YCjAMnp/z3DPTHnFfxCQ7zy7MfsB8AcJan9p9nxP8=
+X-Google-Smtp-Source: AGHT+IF1UaxHswGz64oCwaDVvqzmgMbNKh+bTLIgS6cZJp6+a1VrLr9Yf2rbhhobSfwsq3kR1A+hmbkRdiMAe7EN9LHiRqpTYWes
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:13ab:b0:368:7775:2df2 with SMTP id
- h11-20020a056e0213ab00b0036877752df2mr41808ilo.5.1712300124820; Thu, 04 Apr
- 2024 23:55:24 -0700 (PDT)
-Date: Thu, 04 Apr 2024 23:55:24 -0700
+X-Received: by 2002:a05:6e02:b24:b0:36a:1132:8bc5 with SMTP id
+ e4-20020a056e020b2400b0036a11328bc5mr8130ilu.3.1712300125429; Thu, 04 Apr
+ 2024 23:55:25 -0700 (PDT)
+Date: Thu, 04 Apr 2024 23:55:25 -0700
 X-Google-Appengine-App-Id: s~syzkaller
 X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000b0848f061553f0d5@google.com>
-Subject: [syzbot] [bluetooth?] KASAN: slab-out-of-bounds Read in sco_sock_setsockopt
-From: syzbot <syzbot+b71011ec0a23f4d15625@syzkaller.appspotmail.com>
+Message-ID: <000000000000b9b20e061553f06e@google.com>
+Subject: [syzbot] [bluetooth?] KASAN: slab-out-of-bounds Read in rfcomm_sock_setsockopt
+From: syzbot <syzbot+d4ecae01a53fd9b42e7d@syzkaller.appspotmail.com>
 To: johan.hedberg@gmail.com, linux-bluetooth@vger.kernel.org, 
 	linux-kernel@vger.kernel.org, luiz.dentz@gmail.com, marcel@holtmann.org, 
 	syzkaller-bugs@googlegroups.com
@@ -57,12 +57,12 @@ syzbot found the following issue on:
 
 HEAD commit:    fe46a7dd189e Merge tag 'sound-6.9-rc1' of git://git.kernel..
 git tree:       upstream
-console+strace: https://syzkaller.appspot.com/x/log.txt?x=17e823e3180000
+console+strace: https://syzkaller.appspot.com/x/log.txt?x=176e2415180000
 kernel config:  https://syzkaller.appspot.com/x/.config?x=4d90a36f0cab495a
-dashboard link: https://syzkaller.appspot.com/bug?extid=b71011ec0a23f4d15625
+dashboard link: https://syzkaller.appspot.com/bug?extid=d4ecae01a53fd9b42e7d
 compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=12155aa9180000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=16ace2a9180000
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=118f9af9180000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=12a0ad29180000
 
 Downloadable assets:
 disk image: https://storage.googleapis.com/syzbot-assets/f6c04726a2ae/disk-fe46a7dd.raw.xz
@@ -70,15 +70,16 @@ vmlinux: https://storage.googleapis.com/syzbot-assets/09c26ce901ea/vmlinux-fe46a
 kernel image: https://storage.googleapis.com/syzbot-assets/134acf7f5322/bzImage-fe46a7dd.xz
 
 IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+b71011ec0a23f4d15625@syzkaller.appspotmail.com
+Reported-by: syzbot+d4ecae01a53fd9b42e7d@syzkaller.appspotmail.com
 
 ==================================================================
 BUG: KASAN: slab-out-of-bounds in copy_from_sockptr_offset include/linux/sockptr.h:49 [inline]
 BUG: KASAN: slab-out-of-bounds in copy_from_sockptr include/linux/sockptr.h:55 [inline]
-BUG: KASAN: slab-out-of-bounds in sco_sock_setsockopt+0xc0b/0xf90 net/bluetooth/sco.c:893
-Read of size 4 at addr ffff8880296aeb83 by task syz-executor142/5061
+BUG: KASAN: slab-out-of-bounds in rfcomm_sock_setsockopt_old net/bluetooth/rfcomm/sock.c:632 [inline]
+BUG: KASAN: slab-out-of-bounds in rfcomm_sock_setsockopt+0x893/0xa70 net/bluetooth/rfcomm/sock.c:673
+Read of size 4 at addr ffff8880209a8bc3 by task syz-executor632/5064
 
-CPU: 0 PID: 5061 Comm: syz-executor142 Not tainted 6.8.0-syzkaller-08951-gfe46a7dd189e #0
+CPU: 0 PID: 5064 Comm: syz-executor632 Not tainted 6.8.0-syzkaller-08951-gfe46a7dd189e #0
 Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 03/27/2024
 Call Trace:
  <TASK>
@@ -89,7 +90,8 @@ Call Trace:
  kasan_report+0x143/0x180 mm/kasan/report.c:601
  copy_from_sockptr_offset include/linux/sockptr.h:49 [inline]
  copy_from_sockptr include/linux/sockptr.h:55 [inline]
- sco_sock_setsockopt+0xc0b/0xf90 net/bluetooth/sco.c:893
+ rfcomm_sock_setsockopt_old net/bluetooth/rfcomm/sock.c:632 [inline]
+ rfcomm_sock_setsockopt+0x893/0xa70 net/bluetooth/rfcomm/sock.c:673
  do_sock_setsockopt+0x3af/0x720 net/socket.c:2311
  __sys_setsockopt+0x1ae/0x250 net/socket.c:2334
  __do_sys_setsockopt net/socket.c:2343 [inline]
@@ -97,17 +99,17 @@ Call Trace:
  __x64_sys_setsockopt+0xb5/0xd0 net/socket.c:2340
  do_syscall_64+0xfb/0x240
  entry_SYSCALL_64_after_hwframe+0x6d/0x75
-RIP: 0033:0x7fe1069a9d89
+RIP: 0033:0x7f36ff898dc9
 Code: 28 00 00 00 75 05 48 83 c4 28 c3 e8 91 18 00 00 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b8 ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007ffdb5d99c28 EFLAGS: 00000246 ORIG_RAX: 0000000000000036
-RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 00007fe1069a9d89
-RDX: 0000000000000010 RSI: 0000000000000112 RDI: 0000000000000007
+RSP: 002b:00007ffe010c2208 EFLAGS: 00000246 ORIG_RAX: 0000000000000036
+RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 00007f36ff898dc9
+RDX: 0000000000000003 RSI: 0000000000000012 RDI: 0000000000000006
 RBP: 0000000000000006 R08: 0000000000000002 R09: 0000000000000000
-R10: 0000000020000000 R11: 0000000000000246 R12: 0000555584ea7338
+R10: 00000000200000c0 R11: 0000000000000246 R12: 0000555567399338
 R13: 000000000000000e R14: 0000000000000000 R15: 0000000000000000
  </TASK>
 
-Allocated by task 5061:
+Allocated by task 5064:
  kasan_save_stack mm/kasan/common.c:47 [inline]
  kasan_save_track+0x3f/0x80 mm/kasan/common.c:68
  poison_kmalloc_redzone mm/kasan/common.c:370 [inline]
@@ -125,20 +127,20 @@ Allocated by task 5061:
  do_syscall_64+0xfb/0x240
  entry_SYSCALL_64_after_hwframe+0x6d/0x75
 
-The buggy address belongs to the object at ffff8880296aeb80
+The buggy address belongs to the object at ffff8880209a8bc0
  which belongs to the cache kmalloc-8 of size 8
 The buggy address is located 1 bytes to the right of
- allocated 2-byte region [ffff8880296aeb80, ffff8880296aeb82)
+ allocated 2-byte region [ffff8880209a8bc0, ffff8880209a8bc2)
 
 The buggy address belongs to the physical page:
-page:ffffea0000a5ab80 refcount:1 mapcount:0 mapping:0000000000000000 index:0x0 pfn:0x296ae
+page:ffffea0000826a00 refcount:1 mapcount:0 mapping:0000000000000000 index:0x0 pfn:0x209a8
 flags: 0xfff00000000800(slab|node=0|zone=1|lastcpupid=0x7ff)
 page_type: 0xffffffff()
-raw: 00fff00000000800 ffff888014c41280 dead000000000100 dead000000000122
+raw: 00fff00000000800 ffff888014c41280 ffffea000081fb80 dead000000000002
 raw: 0000000000000000 0000000080800080 00000001ffffffff 0000000000000000
 page dumped because: kasan: bad access detected
 page_owner tracks the page as allocated
-page last allocated via order 0, migratetype Unmovable, gfp_mask 0x12cc0(GFP_KERNEL|__GFP_NOWARN|__GFP_NORETRY), pid 1, tgid 1 (swapper/0), ts 18614896584, free_ts 17708736389
+page last allocated via order 0, migratetype Unmovable, gfp_mask 0x12cc0(GFP_KERNEL|__GFP_NOWARN|__GFP_NORETRY), pid 1, tgid 1 (swapper/0), ts 9917548498, free_ts 0
  set_page_owner include/linux/page_owner.h:31 [inline]
  post_alloc_hook+0x1ea/0x210 mm/page_alloc.c:1533
  prep_new_page mm/page_alloc.c:1540 [inline]
@@ -153,39 +155,28 @@ page last allocated via order 0, migratetype Unmovable, gfp_mask 0x12cc0(GFP_KER
  __slab_alloc mm/slub.c:3610 [inline]
  __slab_alloc_node mm/slub.c:3663 [inline]
  slab_alloc_node mm/slub.c:3835 [inline]
- kmalloc_trace+0x269/0x360 mm/slub.c:3992
- kmalloc include/linux/slab.h:628 [inline]
- kzalloc include/linux/slab.h:749 [inline]
- add_sysfs_param+0x541/0x7f0 kernel/params.c:646
- kernel_add_sysfs_param+0xb4/0x130 kernel/params.c:817
- param_sysfs_builtin+0x16e/0x1f0 kernel/params.c:856
- param_sysfs_builtin_init+0x31/0x40 kernel/params.c:990
+ __do_kmalloc_node mm/slub.c:3965 [inline]
+ __kmalloc+0x2e5/0x4a0 mm/slub.c:3979
+ kmalloc_array include/linux/slab.h:665 [inline]
+ kcalloc include/linux/slab.h:696 [inline]
+ group_cpus_evenly+0x294/0x5f0 lib/group_cpus.c:365
+ blk_mq_map_queues+0x4c/0x3e0 block/blk-mq-cpumap.c:23
+ blk_mq_alloc_tag_set+0x7ac/0xf40 block/blk-mq.c:4521
+ nbd_dev_add+0x367/0xc80 drivers/block/nbd.c:1831
+ nbd_init+0x224/0x2e0 drivers/block/nbd.c:2593
  do_one_initcall+0x238/0x830 init/main.c:1241
  do_initcall_level+0x157/0x210 init/main.c:1303
  do_initcalls+0x3f/0x80 init/main.c:1319
  kernel_init_freeable+0x435/0x5d0 init/main.c:1550
- kernel_init+0x1d/0x2a0 init/main.c:1439
-page last free pid 57 tgid 57 stack trace:
- reset_page_owner include/linux/page_owner.h:24 [inline]
- free_pages_prepare mm/page_alloc.c:1140 [inline]
- free_unref_page_prepare+0x95d/0xa80 mm/page_alloc.c:2346
- free_unref_page+0x37/0x3f0 mm/page_alloc.c:2486
- vfree+0x186/0x2e0 mm/vmalloc.c:2914
- delayed_vfree_work+0x56/0x80 mm/vmalloc.c:2835
- process_one_work kernel/workqueue.c:3254 [inline]
- process_scheduled_works+0xa00/0x1770 kernel/workqueue.c:3335
- worker_thread+0x86d/0xd70 kernel/workqueue.c:3416
- kthread+0x2f0/0x390 kernel/kthread.c:388
- ret_from_fork+0x4b/0x80 arch/x86/kernel/process.c:147
- ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:243
+page_owner free stack trace missing
 
 Memory state around the buggy address:
- ffff8880296aea80: 00 fc fc fc 00 fc fc fc fa fc fc fc 07 fc fc fc
- ffff8880296aeb00: 07 fc fc fc fa fc fc fc 00 fc fc fc 00 fc fc fc
->ffff8880296aeb80: 02 fc fc fc 04 fc fc fc 04 fc fc fc fa fc fc fc
-                   ^
- ffff8880296aec00: fa fc fc fc fa fc fc fc fa fc fc fc 00 fc fc fc
- ffff8880296aec80: 00 fc fc fc fa fc fc fc fa fc fc fc fa fc fc fc
+ ffff8880209a8a80: 06 fc fc fc 06 fc fc fc 06 fc fc fc 07 fc fc fc
+ ffff8880209a8b00: fa fc fc fc 05 fc fc fc 05 fc fc fc 05 fc fc fc
+>ffff8880209a8b80: fa fc fc fc fa fc fc fc 02 fc fc fc fa fc fc fc
+                                           ^
+ ffff8880209a8c00: 00 fc fc fc 00 fc fc fc 00 fc fc fc 05 fc fc fc
+ ffff8880209a8c80: 05 fc fc fc 05 fc fc fc fa fc fc fc 00 fc fc fc
 ==================================================================
 
 
