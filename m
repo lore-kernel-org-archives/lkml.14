@@ -1,48 +1,48 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 768F819BA3;
-	Fri,  5 Apr 2024 03:25:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9B641C69E;
+	Fri,  5 Apr 2024 03:25:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712287516; cv=none; b=URuoBEKIwjk/onW34dfdnIYMjeCzX7aWZgbAkD8Mi8R4QB8MsHqJt28kRUXfcqpVbMDt1jKFw7xXun+Cx8EbGQybVUN8PjKeFHJ7Rjgk/VA3bXWugSkIRqHqAu0HNYc+6MyPRdmaE6m6d26ZLntNyRO5ZTXSD9bs30Hj+jLg0xM=
+	t=1712287517; cv=none; b=VwOE+JPP+6mqmKE8/MtSS53zEubQ+L3Gc6s4b9raWvUxaL9oDvxY7dDIIpVsGlX9q1VZskmGZFmcilsNjSn+iZpu9stU7mOqOJN9EW5cgcpm+DLA0eYGVpPZ7T+kLzxegCvHCXMmr0oJD9reTMNf7wvD6MHiROhRehVyLW6Ak1A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712287516; c=relaxed/simple;
-	bh=+iKqhyKGkVXoEkYfsk73JGBa7Q1p8wyiM3+c4v3R6fM=;
+	s=arc-20240116; t=1712287517; c=relaxed/simple;
+	bh=bHHdCOZqXbgYmG6B4RYvVRb/VX16Z/JRQ3gWhdccBsc=;
 	h=From:To:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=FPCISybpHfZZDZp2yw+FkTAMiYQvE+pu3GPetWqE7NeDOghiUJ8r7OBUaL4VeKAiLLwq4h2RogQIt/7nxr1OQsWG8U+Iohv1YiKxarscsHhQj1oqx7kEUNW8kqkqLnxsE/D1tZg664JyqDCQwo/v86O5V42ZBSnayBRYeDgDIeg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Sqrh8oeb; arc=none smtp.client-ip=192.198.163.8
+	 MIME-Version:Content-Type; b=OHHWDxPQfINOVRmwa/tb/JeXH1qGqB7vD937FdEWkvf7lA3UciH9GG6X+xHblrtJaYjAmwqHVI9XmCCzOCvf5sD8dZ1B28FFh1Xdwkxq0S3z/NZ6cAzOKZp02NUXPxiI7T42KTTQa378DJJZCwiLDaBYgnc3nZWy3uzArHe70IE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=JM7dRz8s; arc=none smtp.client-ip=192.198.163.8
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Sqrh8oeb"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JM7dRz8s"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1712287515; x=1743823515;
+  t=1712287516; x=1743823516;
   h=from:to:subject:date:message-id:in-reply-to:references:
    mime-version:content-transfer-encoding;
-  bh=+iKqhyKGkVXoEkYfsk73JGBa7Q1p8wyiM3+c4v3R6fM=;
-  b=Sqrh8oebtLFv9W9Y4XsGJdK81yX2Ts97dZ6VgdiXom1J93CGNprWlvOi
-   YoQRst0VPzIewbaQN9hDOcdOnu2eJ6mLEnA5zEVPR53KgZqdkPNlDR38k
-   malIfAcpPsnUHWSs4wGv7fnS6iY4ya3zJymZS2lY8Kf9XKXoEwdktZv5g
-   O8eCmJFURT2V/Z4Sv72rDmzgliy/qnNJXcw9EN7SmSzUGiXNnQgjV9RfS
-   GQ07C4ylnK5aISCpAxMU1xzij8up4E5YnkGN5eD2tto7VJh1Kf3lfQJdo
-   feQvsM6TJkp0QPCPflUkyBukQ2Hc78RoGAYCyn3NK3g21AB6RKGort1gV
-   A==;
-X-CSE-ConnectionGUID: p5ryTvHFTAK0T/qcu51pcg==
-X-CSE-MsgGUID: 67E9NHJ9TAGOCl1uCl0pwA==
-X-IronPort-AV: E=McAfee;i="6600,9927,11034"; a="25112460"
+  bh=bHHdCOZqXbgYmG6B4RYvVRb/VX16Z/JRQ3gWhdccBsc=;
+  b=JM7dRz8sWvDm3pPqALeCS7WkNmyIrcW3Rmdlw7Wh0Ju5xLCy8xkzcqZ9
+   UWRwiLGx9+6EROdMw98Z+gKh8/rgnvdGe8ZKq1Pa/f8pLukpJVz5KtcCr
+   ypNSiXhGmM8y6e2DwfDg87AeCk3AbcFQsbQY+RtH/nTeUnwUSEEuv4QXU
+   6Vt/8ocsVypiJ+q6ZoZYUwlUi5se0Ao9GENZ5U4CEguItuVqg4d0a9IQ4
+   xbF4xKHmoIJB9/OFobZVErAdHN5LJPVnljEpwZR5pXUs4cLsCS3bsjb44
+   9jLtxPQQoBp2zYI+HJQf7CA3YgG3PHTqb1UWpIzrHaqftQcvq0X9HxZdC
+   w==;
+X-CSE-ConnectionGUID: iIZtYh4oQl6eX+/cQdIz9g==
+X-CSE-MsgGUID: HYRL9XX1QiqtvuzgGs+G5w==
+X-IronPort-AV: E=McAfee;i="6600,9927,11034"; a="25112464"
 X-IronPort-AV: E=Sophos;i="6.07,180,1708416000"; 
-   d="scan'208";a="25112460"
+   d="scan'208";a="25112464"
 Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Apr 2024 20:25:13 -0700
-X-CSE-ConnectionGUID: 73q662uYQsKStkzF0PtXlg==
-X-CSE-MsgGUID: algKtaajQR2V/A8Dn1EtMw==
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Apr 2024 20:25:14 -0700
+X-CSE-ConnectionGUID: edggZg0PRXujahysEDSQBA==
+X-CSE-MsgGUID: 6/mDPYQqTcqeXTFXbzs79A==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.07,180,1708416000"; 
-   d="scan'208";a="18955981"
+   d="scan'208";a="18955983"
 Received: from alexpabo-mobl.amr.corp.intel.com (HELO debox1-desk4.lan) ([10.209.49.45])
-  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Apr 2024 20:25:12 -0700
+  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Apr 2024 20:25:13 -0700
 From: "David E. Box" <david.e.box@linux.intel.com>
 To: david.e.box@linux.intel.com,
 	hdegoede@redhat.com,
@@ -50,9 +50,9 @@ To: david.e.box@linux.intel.com,
 	platform-driver-x86@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	sathyanarayanan.kuppuswamy@linux.intel.com
-Subject: [PATCH V3 2/9] platform/x86/intel/sdsi: Combine read and write mailbox flows
-Date: Thu,  4 Apr 2024 20:25:00 -0700
-Message-Id: <20240405032507.2637311-3-david.e.box@linux.intel.com>
+Subject: [PATCH V3 4/9] platform/x86/intel/sdsi: Add attribute to read the current meter state
+Date: Thu,  4 Apr 2024 20:25:02 -0700
+Message-Id: <20240405032507.2637311-5-david.e.box@linux.intel.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20240405032507.2637311-1-david.e.box@linux.intel.com>
 References: <20240405032507.2637311-1-david.e.box@linux.intel.com>
@@ -65,10 +65,9 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-The current mailbox commands are either read-only or write-only and the
-flow is different for each. New commands will need to send and receive
-data. In preparation for these commands, create a common polling function
-to handle sending data and receiving in the same transaction.
+The meter_certificate file provides access to metering information that may
+be attested but is only updated every 8 hours. Add new attribute,
+meter_current, to allow reading an untested snapshot of the current values.
 
 Signed-off-by: David E. Box <david.e.box@linux.intel.com>
 Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
@@ -77,190 +76,113 @@ Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
 
 V3 - no changes
 
-V2 - In sdsi_cmd_read() remove unnecessary check for non-zero packet_size
-     in do loop since the loop is exited earlier when packet_size is
-     zero.
+V2 - make control_flags a parameter to be eventually passed to
+     sdsi_mbox_cmd_read(). This removes the need for a lock which had been
+     added to protect control_flags when it was a member of the private
+     struct.
 
- drivers/platform/x86/intel/sdsi.c | 79 +++++++++++++++++--------------
- 1 file changed, 44 insertions(+), 35 deletions(-)
+ drivers/platform/x86/intel/sdsi.c | 30 ++++++++++++++++++++++++------
+ 1 file changed, 24 insertions(+), 6 deletions(-)
 
 diff --git a/drivers/platform/x86/intel/sdsi.c b/drivers/platform/x86/intel/sdsi.c
-index a70c071de6e2..d80c2dc0ce71 100644
+index bb3eaf5eb382..277e4f4b20ac 100644
 --- a/drivers/platform/x86/intel/sdsi.c
 +++ b/drivers/platform/x86/intel/sdsi.c
-@@ -15,6 +15,7 @@
- #include <linux/iopoll.h>
- #include <linux/kernel.h>
- #include <linux/module.h>
-+#include <linux/overflow.h>
- #include <linux/pci.h>
- #include <linux/slab.h>
- #include <linux/sysfs.h>
-@@ -156,8 +157,8 @@ static int sdsi_status_to_errno(u32 status)
- 	}
- }
+@@ -68,6 +68,7 @@
+ #define CTRL_COMPLETE			BIT(6)
+ #define CTRL_READY			BIT(7)
+ #define CTRL_INBAND_LOCK		BIT(32)
++#define CTRL_METER_ENABLE_DRAM		BIT(33)
+ #define CTRL_STATUS			GENMASK(15, 8)
+ #define CTRL_PACKET_SIZE		GENMASK(31, 16)
+ #define CTRL_MSG_SIZE			GENMASK(63, 48)
+@@ -95,6 +96,7 @@ enum sdsi_command {
+ struct sdsi_mbox_info {
+ 	u64	*payload;
+ 	void	*buffer;
++	u64	control_flags;
+ 	int	size;
+ };
  
--static int sdsi_mbox_cmd_read(struct sdsi_priv *priv, struct sdsi_mbox_info *info,
--			      size_t *data_size)
-+static int sdsi_mbox_poll(struct sdsi_priv *priv, struct sdsi_mbox_info *info,
-+			  size_t *data_size)
- {
- 	struct device *dev = priv->dev;
- 	u32 total, loop, eom, status, message_size;
-@@ -166,18 +167,10 @@ static int sdsi_mbox_cmd_read(struct sdsi_priv *priv, struct sdsi_mbox_info *inf
- 
- 	lockdep_assert_held(&priv->mb_lock);
- 
--	/* Format and send the read command */
--	control = FIELD_PREP(CTRL_EOM, 1) |
--		  FIELD_PREP(CTRL_SOM, 1) |
--		  FIELD_PREP(CTRL_RUN_BUSY, 1) |
+@@ -250,7 +252,8 @@ static int sdsi_mbox_cmd_read(struct sdsi_priv *priv, struct sdsi_mbox_info *inf
+ 	control = FIELD_PREP(CTRL_EOM, 1) |
+ 		  FIELD_PREP(CTRL_SOM, 1) |
+ 		  FIELD_PREP(CTRL_RUN_BUSY, 1) |
 -		  FIELD_PREP(CTRL_PACKET_SIZE, info->size);
--	writeq(control, priv->control_addr);
--
- 	/* For reads, data sizes that are larger than the mailbox size are read in packets. */
- 	total = 0;
- 	loop = 0;
- 	do {
--		void *buf = info->buffer + (SDSI_SIZE_MAILBOX * loop);
- 		u32 packet_size;
- 
- 		/* Poll on ready bit */
-@@ -195,6 +188,11 @@ static int sdsi_mbox_cmd_read(struct sdsi_priv *priv, struct sdsi_mbox_info *inf
- 		if (ret)
- 			break;
- 
-+		if (!packet_size) {
-+			sdsi_complete_transaction(priv);
-+			break;
-+		}
-+
- 		/* Only the last packet can be less than the mailbox size. */
- 		if (!eom && packet_size != SDSI_SIZE_MAILBOX) {
- 			dev_err(dev, "Invalid packet size\n");
-@@ -208,9 +206,13 @@ static int sdsi_mbox_cmd_read(struct sdsi_priv *priv, struct sdsi_mbox_info *inf
- 			break;
- 		}
- 
--		sdsi_memcpy64_fromio(buf, priv->mbox_addr, round_up(packet_size, SDSI_SIZE_CMD));
-+		if (info->buffer) {
-+			void *buf = info->buffer + array_size(SDSI_SIZE_MAILBOX, loop);
- 
--		total += packet_size;
-+			sdsi_memcpy64_fromio(buf, priv->mbox_addr,
-+					     round_up(packet_size, SDSI_SIZE_CMD));
-+			total += packet_size;
-+		}
- 
- 		sdsi_complete_transaction(priv);
- 	} while (!eom && ++loop < MBOX_MAX_PACKETS);
-@@ -230,16 +232,33 @@ static int sdsi_mbox_cmd_read(struct sdsi_priv *priv, struct sdsi_mbox_info *inf
- 		dev_warn(dev, "Read count %u differs from expected count %u\n",
- 			 total, message_size);
- 
--	*data_size = total;
-+	if (data_size)
-+		*data_size = total;
- 
- 	return 0;
- }
- 
--static int sdsi_mbox_cmd_write(struct sdsi_priv *priv, struct sdsi_mbox_info *info)
-+static int sdsi_mbox_cmd_read(struct sdsi_priv *priv, struct sdsi_mbox_info *info,
-+			      size_t *data_size)
-+{
-+	u64 control;
-+
-+	lockdep_assert_held(&priv->mb_lock);
-+
-+	/* Format and send the read command */
-+	control = FIELD_PREP(CTRL_EOM, 1) |
-+		  FIELD_PREP(CTRL_SOM, 1) |
-+		  FIELD_PREP(CTRL_RUN_BUSY, 1) |
-+		  FIELD_PREP(CTRL_PACKET_SIZE, info->size);
-+	writeq(control, priv->control_addr);
-+
-+	return sdsi_mbox_poll(priv, info, data_size);
-+}
-+
-+static int sdsi_mbox_cmd_write(struct sdsi_priv *priv, struct sdsi_mbox_info *info,
-+			       size_t *data_size)
- {
- 	u64 control;
--	u32 status;
--	int ret;
- 
- 	lockdep_assert_held(&priv->mb_lock);
- 
-@@ -256,20 +275,7 @@ static int sdsi_mbox_cmd_write(struct sdsi_priv *priv, struct sdsi_mbox_info *in
- 		  FIELD_PREP(CTRL_PACKET_SIZE, info->size);
++		  FIELD_PREP(CTRL_PACKET_SIZE, info->size) |
++		  info->control_flags;
  	writeq(control, priv->control_addr);
  
--	/* Poll on ready bit */
--	ret = readq_poll_timeout(priv->control_addr, control, control & CTRL_READY,
--				 MBOX_POLLING_PERIOD_US, MBOX_TIMEOUT_US);
--
--	if (ret)
--		goto release_mbox;
--
--	status = FIELD_GET(CTRL_STATUS, control);
--	ret = sdsi_status_to_errno(status);
--
--release_mbox:
--	sdsi_complete_transaction(priv);
--
--	return ret;
-+	return sdsi_mbox_poll(priv, info, data_size);
- }
+ 	return sdsi_mbox_poll(priv, info, data_size);
+@@ -424,8 +427,8 @@ static ssize_t provision_cap_write(struct file *filp, struct kobject *kobj,
+ static BIN_ATTR_WO(provision_cap, SDSI_SIZE_WRITE_MSG);
  
- static int sdsi_mbox_acquire(struct sdsi_priv *priv, struct sdsi_mbox_info *info)
-@@ -313,7 +319,8 @@ static int sdsi_mbox_acquire(struct sdsi_priv *priv, struct sdsi_mbox_info *info
- 	return ret;
- }
- 
--static int sdsi_mbox_write(struct sdsi_priv *priv, struct sdsi_mbox_info *info)
-+static int sdsi_mbox_write(struct sdsi_priv *priv, struct sdsi_mbox_info *info,
-+			   size_t *data_size)
+ static ssize_t
+-certificate_read(u64 command, struct sdsi_priv *priv, char *buf, loff_t off,
+-		 size_t count)
++certificate_read(u64 command, u64 control_flags, struct sdsi_priv *priv,
++		 char *buf, loff_t off, size_t count)
  {
- 	int ret;
+ 	struct sdsi_mbox_info info = {};
+ 	size_t size;
+@@ -441,6 +444,7 @@ certificate_read(u64 command, struct sdsi_priv *priv, char *buf, loff_t off,
  
-@@ -323,7 +330,7 @@ static int sdsi_mbox_write(struct sdsi_priv *priv, struct sdsi_mbox_info *info)
- 	if (ret)
- 		return ret;
+ 	info.payload = &command;
+ 	info.size = sizeof(command);
++	info.control_flags = control_flags;
  
--	return sdsi_mbox_cmd_write(priv, info);
-+	return sdsi_mbox_cmd_write(priv, info, data_size);
- }
- 
- static int sdsi_mbox_read(struct sdsi_priv *priv, struct sdsi_mbox_info *info, size_t *data_size)
-@@ -342,7 +349,7 @@ static int sdsi_mbox_read(struct sdsi_priv *priv, struct sdsi_mbox_info *info, s
- static ssize_t sdsi_provision(struct sdsi_priv *priv, char *buf, size_t count,
- 			      enum sdsi_command command)
- {
--	struct sdsi_mbox_info info;
-+	struct sdsi_mbox_info info = {};
- 	int ret;
- 
- 	if (count > (SDSI_SIZE_WRITE_MSG - SDSI_SIZE_CMD))
-@@ -364,7 +371,9 @@ static ssize_t sdsi_provision(struct sdsi_priv *priv, char *buf, size_t count,
  	ret = mutex_lock_interruptible(&priv->mb_lock);
  	if (ret)
- 		goto free_payload;
--	ret = sdsi_mbox_write(priv, &info);
-+
-+	ret = sdsi_mbox_write(priv, &info, NULL);
-+
- 	mutex_unlock(&priv->mb_lock);
+@@ -472,7 +476,7 @@ state_certificate_read(struct file *filp, struct kobject *kobj,
+ 	struct device *dev = kobj_to_dev(kobj);
+ 	struct sdsi_priv *priv = dev_get_drvdata(dev);
  
- free_payload:
-@@ -408,7 +417,7 @@ static ssize_t
- certificate_read(u64 command, struct sdsi_priv *priv, char *buf, loff_t off,
- 		 size_t count)
- {
--	struct sdsi_mbox_info info;
-+	struct sdsi_mbox_info info = {};
- 	size_t size;
- 	int ret;
+-	return certificate_read(SDSI_CMD_READ_STATE, priv, buf, off, count);
++	return certificate_read(SDSI_CMD_READ_STATE, 0, priv, buf, off, count);
+ }
+ static BIN_ATTR_ADMIN_RO(state_certificate, SDSI_SIZE_READ_MSG);
+ 
+@@ -484,10 +488,23 @@ meter_certificate_read(struct file *filp, struct kobject *kobj,
+ 	struct device *dev = kobj_to_dev(kobj);
+ 	struct sdsi_priv *priv = dev_get_drvdata(dev);
+ 
+-	return certificate_read(SDSI_CMD_READ_METER, priv, buf, off, count);
++	return certificate_read(SDSI_CMD_READ_METER, 0, priv, buf, off, count);
+ }
+ static BIN_ATTR_ADMIN_RO(meter_certificate, SDSI_SIZE_READ_MSG);
+ 
++static ssize_t
++meter_current_read(struct file *filp, struct kobject *kobj,
++		   struct bin_attribute *attr, char *buf, loff_t off,
++		   size_t count)
++{
++	struct device *dev = kobj_to_dev(kobj);
++	struct sdsi_priv *priv = dev_get_drvdata(dev);
++
++	return certificate_read(SDSI_CMD_READ_METER, CTRL_METER_ENABLE_DRAM,
++				priv, buf, off, count);
++}
++static BIN_ATTR_ADMIN_RO(meter_current, SDSI_SIZE_READ_MSG);
++
+ static ssize_t registers_read(struct file *filp, struct kobject *kobj,
+ 			      struct bin_attribute *attr, char *buf, loff_t off,
+ 			      size_t count)
+@@ -518,6 +535,7 @@ static struct bin_attribute *sdsi_bin_attrs[] = {
+ 	&bin_attr_registers,
+ 	&bin_attr_state_certificate,
+ 	&bin_attr_meter_certificate,
++	&bin_attr_meter_current,
+ 	&bin_attr_provision_akc,
+ 	&bin_attr_provision_cap,
+ 	NULL
+@@ -537,7 +555,7 @@ sdsi_battr_is_visible(struct kobject *kobj, struct bin_attribute *attr, int n)
+ 	if (!(priv->features & SDSI_FEATURE_SDSI))
+ 		return 0;
+ 
+-	if (attr == &bin_attr_meter_certificate)
++	if (attr == &bin_attr_meter_certificate || attr == &bin_attr_meter_current)
+ 		return (priv->features & SDSI_FEATURE_METERING) ?
+ 				attr->attr.mode : 0;
  
 -- 
 2.34.1
