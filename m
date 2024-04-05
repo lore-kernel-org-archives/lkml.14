@@ -1,25 +1,40 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CA5D9146002;
-	Fri,  5 Apr 2024 08:16:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 491C648CF2;
+	Fri,  5 Apr 2024 08:17:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712304988; cv=none; b=CblBZ7SQd/bfkQCTLnRP5D7CRgaRqjaWoTljk2QcjbukmZdImBwXntbyTf11F2VOm4LaratGeV37+sqEVfbQ7Hnv50rlAFDuI0zMLdHoUJVQbpwdV4KGm0XcXhFVqkMbKAvYBu1y1NTnftJGHll39XeCANUfDX4pcCTAqnHdrqg=
+	t=1712305073; cv=none; b=M4Irst499W+Y/DW/Mspb5TgbQHqH79vHkNWaMDVa9Zu8gE9TKLQSHnWN+a6APxoMNsZKXULAcXwk/44ezoveVy3RgxBb4yQO40pTupgoanR1zUas1lFFo6wI0IvwrIbtPawSNb1NzjxdAW2rP7YwV5QzMCzQ8s8gyCt8BJr0hDw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712304988; c=relaxed/simple;
-	bh=hMqL39LdAj1j1exJ+uwIa+In8yLPgOVIeLpi4Dxs8F8=;
+	s=arc-20240116; t=1712305073; c=relaxed/simple;
+	bh=2ttnx/syndg1SQwF3EPAEoa5ox2rpecAHGxXciYNAHA=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Dm6N40fuCv8FbPel3oNDeqr2A9uPDNuKr4NidTpGXq83HKRaQfr4na+SQi3LzCd9Cdoetg9PNSU5izq/JfeL6fvdwJehSkL/80WIKxHmYlJkgmLEDRXmPU67ukFChgxmarqxjS6nwz8DrSM+it/HgiYUhdpbTKw0WZgAQx/0E7o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AA54FFEC;
-	Fri,  5 Apr 2024 01:16:56 -0700 (PDT)
-Received: from [10.57.74.176] (unknown [10.57.74.176])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 67AA73F64C;
-	Fri,  5 Apr 2024 01:16:25 -0700 (PDT)
-Message-ID: <adf6a0b3-0d4a-45ab-a69a-28b7c84f7a40@arm.com>
-Date: Fri, 5 Apr 2024 09:16:26 +0100
+	 In-Reply-To:Content-Type; b=QrKMQJcm2uQ3/oV62lMQciFrnOh1dYysj9uhPY2Why6sug3O0mVWS68Rr8vVhmMky7IX3V/UinpQwcYhv/TUhWUHr8avj0Lg7azD8RmcIjAHztaSyqfc5QZGo2T9Pe72XHTUpaImbgu4P3w1myfdwb/h79SlidA7mBc2cjhrPpM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=lNDi1GUq; arc=none smtp.client-ip=46.235.227.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="lNDi1GUq"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1712305070;
+	bh=2ttnx/syndg1SQwF3EPAEoa5ox2rpecAHGxXciYNAHA=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=lNDi1GUq481w8n4ZvQHskVubVZVHye+7Mk7oZ4ndKU3aKRXi0wnBIRrRrUsZSr8sM
+	 xPvcR7vsjVNzh0nC7bQ2uMvNmkhNxPw6bgv8JCcVBG+2Mr4Ey+jY2uKPCuKiX0DhNI
+	 EhE1L49+O+6Dtd5BxYrqV+/SJtktnSQNw+81/jKBivKNqKDMnIlgFXI1d3zO+tarKl
+	 9nYSww5mpaH/LOqFLpqxbxCbYjvbLXzJT+dg9k8+2OwybGNheaTQd097QbeUco3gq2
+	 1thO+Wi05vVqT8HPEhvlGJ7yA5amGyeBDlm6Tz6mfbRnvmgfLPp3AHAoTqU7n6cDx1
+	 EV+OPSJKAk+3w==
+Received: from [100.93.89.217] (cola.collaboradmins.com [195.201.22.229])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: benjamin.gaignard)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id F0E073780EC6;
+	Fri,  5 Apr 2024 08:17:49 +0000 (UTC)
+Message-ID: <ebbe249f-bce6-4e81-969f-c63ab4b063f3@collabora.com>
+Date: Fri, 5 Apr 2024 10:17:49 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -27,116 +42,60 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1] thermal: core: Relocate the struct thermal_governor
- definition
+Subject: Re: [PATCH] media: verisilicon: AV1: Be more fexible on postproc
+ capabilities
+To: Nicolas Dufresne <nicolas@ndufresne.ca>, ezequiel@vanguardiasur.com.ar,
+ p.zabel@pengutronix.de, mchehab@kernel.org, heiko@sntech.de
+Cc: linux-media@vger.kernel.org, linux-rockchip@lists.infradead.org,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ kernel@collabora.com
+References: <20240328093439.18712-1-benjamin.gaignard@collabora.com>
+ <e4d01c27aa976c44e0b7122e39111be062a4deb4.camel@ndufresne.ca>
 Content-Language: en-US
-To: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc: LKML <linux-kernel@vger.kernel.org>,
- Daniel Lezcano <daniel.lezcano@linaro.org>,
- Linux PM <linux-pm@vger.kernel.org>
-References: <2725268.mvXUDI8C0e@kreacher>
-From: Lukasz Luba <lukasz.luba@arm.com>
-In-Reply-To: <2725268.mvXUDI8C0e@kreacher>
+From: Benjamin Gaignard <benjamin.gaignard@collabora.com>
+In-Reply-To: <e4d01c27aa976c44e0b7122e39111be062a4deb4.camel@ndufresne.ca>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
 
+Le 04/04/2024 à 19:59, Nicolas Dufresne a écrit :
+> Hi,
+>
+> Le jeudi 28 mars 2024 à 10:34 +0100, Benjamin Gaignard a écrit :
+>> RK3588 post-processor block is able to convert 10 bits streams
+>> into 8 bits pixels format.
+> Does it come with any HDR to SDR capabilities ? cause stripping off 2 bits means
+> that tone mapping will cause a lot of banding as it won't have the expected
+> precision. I'm simply trying to make up the big portrait so we don't just offer
+> yet another foot gun. But perhaps its fine to offer this, its just that we don't
+> have a mechanism to report which pixel format in the selection will cause data
+> lost.
 
-On 4/4/24 20:27, Rafael J. Wysocki wrote:
-> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> 
-> Notice that struct thermal_governor is only used by the thermal core
-> and so move its definition to thermal_core.h.
-> 
-> No functional impact.
-> 
-> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> ---
->   drivers/thermal/thermal_core.h |   25 +++++++++++++++++++++++++
->   include/linux/thermal.h        |   25 -------------------------
->   2 files changed, 25 insertions(+), 25 deletions(-)
-> 
-> Index: linux-pm/drivers/thermal/thermal_core.h
-> ===================================================================
-> --- linux-pm.orig/drivers/thermal/thermal_core.h
-> +++ linux-pm/drivers/thermal/thermal_core.h
-> @@ -23,6 +23,31 @@ struct thermal_trip_desc {
->   };
->   
->   /**
-> + * struct thermal_governor - structure that holds thermal governor information
-> + * @name:	name of the governor
-> + * @bind_to_tz: callback called when binding to a thermal zone.  If it
-> + *		returns 0, the governor is bound to the thermal zone,
-> + *		otherwise it fails.
-> + * @unbind_from_tz:	callback called when a governor is unbound from a
-> + *			thermal zone.
-> + * @throttle:	callback called for every trip point even if temperature is
-> + *		below the trip point temperature
-> + * @update_tz:	callback called when thermal zone internals have changed, e.g.
-> + *		thermal cooling instance was added/removed
-> + * @governor_list:	node in thermal_governor_list (in thermal_core.c)
-> + */
-> +struct thermal_governor {
-> +	const char *name;
-> +	int (*bind_to_tz)(struct thermal_zone_device *tz);
-> +	void (*unbind_from_tz)(struct thermal_zone_device *tz);
-> +	int (*throttle)(struct thermal_zone_device *tz,
-> +			const struct thermal_trip *trip);
-> +	void (*update_tz)(struct thermal_zone_device *tz,
-> +			  enum thermal_notify_event reason);
-> +	struct list_head	governor_list;
-> +};
-> +
-> +/**
->    * struct thermal_zone_device - structure for a thermal zone
->    * @id:		unique id number for each thermal zone
->    * @type:	the thermal zone device type
-> Index: linux-pm/include/linux/thermal.h
-> ===================================================================
-> --- linux-pm.orig/include/linux/thermal.h
-> +++ linux-pm/include/linux/thermal.h
-> @@ -126,31 +126,6 @@ struct thermal_cooling_device {
->   #endif
->   };
->   
-> -/**
-> - * struct thermal_governor - structure that holds thermal governor information
-> - * @name:	name of the governor
-> - * @bind_to_tz: callback called when binding to a thermal zone.  If it
-> - *		returns 0, the governor is bound to the thermal zone,
-> - *		otherwise it fails.
-> - * @unbind_from_tz:	callback called when a governor is unbound from a
-> - *			thermal zone.
-> - * @throttle:	callback called for every trip point even if temperature is
-> - *		below the trip point temperature
-> - * @update_tz:	callback called when thermal zone internals have changed, e.g.
-> - *		thermal cooling instance was added/removed
-> - * @governor_list:	node in thermal_governor_list (in thermal_core.c)
-> - */
-> -struct thermal_governor {
-> -	const char *name;
-> -	int (*bind_to_tz)(struct thermal_zone_device *tz);
-> -	void (*unbind_from_tz)(struct thermal_zone_device *tz);
-> -	int (*throttle)(struct thermal_zone_device *tz,
-> -			const struct thermal_trip *trip);
-> -	void (*update_tz)(struct thermal_zone_device *tz,
-> -			  enum thermal_notify_event reason);
-> -	struct list_head	governor_list;
-> -};
-> -
->   /* Structure to define Thermal Zone parameters */
->   struct thermal_zone_params {
->   	const char *governor_name;
-> 
-> 
-> 
+No it just to enable post-processor capabilities like we have already for G2/HEVC.
+Since it is a post-processor pixel format it will be enumerated after V4L2_PIX_FMT_NV15_4L4
+so it will update to userland to decide to use it or not.
 
-That makes perfectly sense IMO. We don't have drivers which come
-together with some custom governor just for them (like IIRC some
-devfreq more complex devices do/did).
+Benjamin
 
-Lets close that open dimension.
-
-Reviewed-by: Lukasz Luba <lukasz.luba@arm.com>
-
+>
+> Nicolas
+>
+>> Signed-off-by: Benjamin Gaignard <benjamin.gaignard@collabora.com>
+>> Fixes: 003afda97c65 ("media: verisilicon: Enable AV1 decoder on rk3588")
+>> ---
+>>   drivers/media/platform/verisilicon/rockchip_vpu_hw.c | 1 -
+>>   1 file changed, 1 deletion(-)
+>>
+>> diff --git a/drivers/media/platform/verisilicon/rockchip_vpu_hw.c b/drivers/media/platform/verisilicon/rockchip_vpu_hw.c
+>> index f97527670783..964122e7c355 100644
+>> --- a/drivers/media/platform/verisilicon/rockchip_vpu_hw.c
+>> +++ b/drivers/media/platform/verisilicon/rockchip_vpu_hw.c
+>> @@ -82,7 +82,6 @@ static const struct hantro_fmt rockchip_vpu981_postproc_fmts[] = {
+>>   	{
+>>   		.fourcc = V4L2_PIX_FMT_NV12,
+>>   		.codec_mode = HANTRO_MODE_NONE,
+>> -		.match_depth = true,
+>>   		.postprocessed = true,
+>>   		.frmsize = {
+>>   			.min_width = ROCKCHIP_VPU981_MIN_SIZE,
+>
