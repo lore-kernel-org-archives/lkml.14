@@ -1,48 +1,48 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0301176FB5;
-	Fri,  5 Apr 2024 22:26:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21D3717799D;
+	Fri,  5 Apr 2024 22:26:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712356011; cv=none; b=lnnuGC1UpMwD7cq1yI5/6I9Td1MspHrXc2jD27oL4hKX8NRYlxZC9X5zSKmuCcxJxpjVlHqP3q9DwdaWa49/O99e3EdlXLxab50jMfpMJv0Asj4uQqR5m7wOWxrHLtxh3L2i/eXX+BJBTo6PbJbxkW2UbmUrwXBvJaAA8WP6IPo=
+	t=1712356012; cv=none; b=HWTRAL80cUmV2gpAHybi5sWu/cAuyXDYsTXAT9mX35H1xDu/MJioSJqfegcHU7YQKqJbzO2W1Mjepgtmh6a2ZcPpnWUb340Q/hPuHq6BBEZxUr1lE7GpnQZJthfEIxjBXi24nqBYfoQZZ1yraEs9kX2yyO4jopM3BQQRVcUdoVQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712356011; c=relaxed/simple;
-	bh=0w0uJEzA4z9kskjV3ew8MBQxd2yM5o3G1Z9OFkj0BDg=;
+	s=arc-20240116; t=1712356012; c=relaxed/simple;
+	bh=aMX9sw5AlWfnuSsCSRnkGkG0cgUx+sH4S0oPTBTmTuo=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=ZMLuTeSDHxG2qw85hYgZDPsVII1xZaOjaDWElyuH+h8BAurh75Er3dcSsYguIDg8ARnn190DXVt09WoEj8nkKScP+gXnwxdcp8tdtQV9Hv3hEDECjiJyLNUmfpyeUMvbpTfT3d5mlaWSQDWyuAqmDnO65ZYAwP0jK6Ql1DMfURw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PVixcInh; arc=none smtp.client-ip=192.198.163.10
+	 MIME-Version; b=hgT7YrcoypaPQGq9aIqoGTXq9gLx0XiflV+VAsLpH8Wll+42W5fansXaxyQfyPse/7HQuMFiZ7EE3sWBQVXvAtrtoUdJOfaykZSVMpZVAiR2PMXTsJYcOvaPzlhXy/+KbxGvcxoNrGhMIoF5XK7EhzJyHzizX4zPskqMsQ+HTwQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YiO91EgE; arc=none smtp.client-ip=192.198.163.10
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PVixcInh"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YiO91EgE"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1712356010; x=1743892010;
+  t=1712356011; x=1743892011;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=0w0uJEzA4z9kskjV3ew8MBQxd2yM5o3G1Z9OFkj0BDg=;
-  b=PVixcInhTvo7UD1kYgCSxxz3PMCX389W6QOtoepLADiuhMSrPPvJoosX
-   y0zfH60FAJykVgdvSAQzY54t32oM/rGTaudZ/h7DgA5YYwkAASfpr3SUj
-   Mz0boQrM4lMrj34gbxBG1qy+SKirDHttOzNH1rfxU/zN3CnGTK7wC6f/s
-   FVDEUBOLFDYTa+gkO93BAJNAsWGy301iiT9uNYtxD8QNqBGxpV40Lf+Ty
-   lSTTl7OqQHXxcvsEkbp4PXpwKF/Q+UaB5r1whBKZC+Y6QLwYEciDecnsv
-   IysCD+Mv+7Xjtc9X29TLWLCQHAB2zih5+gUx0tbHP3bHsKqeNUepunc/A
-   Q==;
-X-CSE-ConnectionGUID: a0RflBLhSiuG/eUi+5Nm9w==
-X-CSE-MsgGUID: oQW3hgfwR067H4faxH9cHw==
-X-IronPort-AV: E=McAfee;i="6600,9927,11035"; a="19062734"
+  bh=aMX9sw5AlWfnuSsCSRnkGkG0cgUx+sH4S0oPTBTmTuo=;
+  b=YiO91EgENp/mq0TUFgdy5gCVa2pDXiz9IZe5WZMrS2au+UAWT1eB6H+K
+   AtY4aJmkZcA+LkQeSvEPx6svC+99l+ayVmFwztNLgdKOpGPfMe9U2SCrC
+   JoysUApXB2MxdyouFGpP87xucQ+XlH0zZ/QlSLOQgiEFyeBmoCsTP4SY3
+   8vkZSdMcAiREgIkDglRDz4MATWFxz60N/3ii3xsDOz3z1P4PYZn0mtch1
+   yK8sQCCKAnmM7AzCw0D0aKw27GuVDGgi6H2M196im9P92Y9eIaUkPjHW2
+   mn858elRPPLtVlyOAS/NTXVFulYBnjeyuQTJURFg6QGVqJnC0ix8qqeEu
+   A==;
+X-CSE-ConnectionGUID: mUtZWD4JQ5uqx6vWDcfugA==
+X-CSE-MsgGUID: TBEFnWwkRsGP1Wr+EqKOwg==
+X-IronPort-AV: E=McAfee;i="6600,9927,11035"; a="19062762"
 X-IronPort-AV: E=Sophos;i="6.07,182,1708416000"; 
-   d="scan'208";a="19062734"
+   d="scan'208";a="19062762"
 Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Apr 2024 15:26:48 -0700
-X-CSE-ConnectionGUID: YpW3/WDlS+mgWCYtHA3Bjw==
-X-CSE-MsgGUID: WoQPFCO3SEuXJvtd4IBqrg==
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Apr 2024 15:26:50 -0700
+X-CSE-ConnectionGUID: un+Vo/c2SMSc7Y7UhwtFGg==
+X-CSE-MsgGUID: uqcZv7bYQ1qshj4GMGZmpQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.07,182,1708416000"; 
-   d="scan'208";a="23928320"
+   d="scan'208";a="23928326"
 Received: from jacob-builder.jf.intel.com ([10.54.39.125])
-  by fmviesa004.fm.intel.com with ESMTP; 05 Apr 2024 15:26:47 -0700
+  by fmviesa004.fm.intel.com with ESMTP; 05 Apr 2024 15:26:48 -0700
 From: Jacob Pan <jacob.jun.pan@linux.intel.com>
 To: LKML <linux-kernel@vger.kernel.org>,
 	X86 Kernel <x86@kernel.org>,
@@ -70,9 +70,9 @@ Cc: Paul Luse <paul.e.luse@intel.com>,
 	guang.zeng@intel.com,
 	robert.hoo.linux@gmail.com,
 	Jacob Pan <jacob.jun.pan@linux.intel.com>
-Subject: [PATCH v2 05/13] x86/irq: Reserve a per CPU IDT vector for posted MSIs
-Date: Fri,  5 Apr 2024 15:31:02 -0700
-Message-Id: <20240405223110.1609888-6-jacob.jun.pan@linux.intel.com>
+Subject: [PATCH v2 07/13] x86/irq: Factor out calling ISR from common_interrupt
+Date: Fri,  5 Apr 2024 15:31:04 -0700
+Message-Id: <20240405223110.1609888-8-jacob.jun.pan@linux.intel.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20240405223110.1609888-1-jacob.jun.pan@linux.intel.com>
 References: <20240405223110.1609888-1-jacob.jun.pan@linux.intel.com>
@@ -84,65 +84,60 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-When posted MSI is enabled, all device MSIs are multiplexed into a single
-notification vector. MSI handlers will be de-multiplexed at run-time by
-system software without IDT delivery.
+Prepare for calling external IRQ handlers directly from the posted MSI
+demultiplexing loop. Extract the common code with common interrupt to
+avoid code duplication.
 
 Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
-
 ---
-v2:
- - Add missing CONFIG_ in #ifdef
- - Extend changes to x86 tools
----
- arch/x86/include/asm/irq_vectors.h       | 9 ++++++++-
- tools/arch/x86/include/asm/irq_vectors.h | 9 ++++++++-
- 2 files changed, 16 insertions(+), 2 deletions(-)
+ arch/x86/kernel/irq.c | 23 ++++++++++++++---------
+ 1 file changed, 14 insertions(+), 9 deletions(-)
 
-diff --git a/arch/x86/include/asm/irq_vectors.h b/arch/x86/include/asm/irq_vectors.h
-index d18bfb238f66..1ee00be8218d 100644
---- a/arch/x86/include/asm/irq_vectors.h
-+++ b/arch/x86/include/asm/irq_vectors.h
-@@ -97,9 +97,16 @@
+diff --git a/arch/x86/kernel/irq.c b/arch/x86/kernel/irq.c
+index f39f6147104c..c54de9378943 100644
+--- a/arch/x86/kernel/irq.c
++++ b/arch/x86/kernel/irq.c
+@@ -242,18 +242,10 @@ static __always_inline void handle_irq(struct irq_desc *desc,
+ 		__handle_irq(desc, regs);
+ }
  
- #define LOCAL_TIMER_VECTOR		0xec
+-/*
+- * common_interrupt() handles all normal device IRQ's (the special SMP
+- * cross-CPU interrupts have their own entry points).
+- */
+-DEFINE_IDTENTRY_IRQ(common_interrupt)
++static __always_inline void call_irq_handler(int vector, struct pt_regs *regs)
+ {
+-	struct pt_regs *old_regs = set_irq_regs(regs);
+ 	struct irq_desc *desc;
  
+-	/* entry code tells RCU that we're not quiescent.  Check it. */
+-	RCU_LOCKDEP_WARN(!rcu_is_watching(), "IRQ failed to wake up RCU");
+-
+ 	desc = __this_cpu_read(vector_irq[vector]);
+ 	if (likely(!IS_ERR_OR_NULL(desc))) {
+ 		handle_irq(desc, regs);
+@@ -268,7 +260,20 @@ DEFINE_IDTENTRY_IRQ(common_interrupt)
+ 			__this_cpu_write(vector_irq[vector], VECTOR_UNUSED);
+ 		}
+ 	}
++}
++
 +/*
-+ * Posted interrupt notification vector for all device MSIs delivered to
-+ * the host kernel.
++ * common_interrupt() handles all normal device IRQ's (the special SMP
++ * cross-CPU interrupts have their own entry points).
 + */
-+#define POSTED_MSI_NOTIFICATION_VECTOR	0xeb
- #define NR_VECTORS			 256
++DEFINE_IDTENTRY_IRQ(common_interrupt)
++{
++	struct pt_regs *old_regs = set_irq_regs(regs);
++
++	/* entry code tells RCU that we're not quiescent.  Check it. */
++	RCU_LOCKDEP_WARN(!rcu_is_watching(), "IRQ failed to wake up RCU");
  
--#ifdef CONFIG_X86_LOCAL_APIC
-+#ifdef CONFIG_X86_POSTED_MSI
-+#define FIRST_SYSTEM_VECTOR		POSTED_MSI_NOTIFICATION_VECTOR
-+#elif defined(CONFIG_X86_LOCAL_APIC)
- #define FIRST_SYSTEM_VECTOR		LOCAL_TIMER_VECTOR
- #else
- #define FIRST_SYSTEM_VECTOR		NR_VECTORS
-diff --git a/tools/arch/x86/include/asm/irq_vectors.h b/tools/arch/x86/include/asm/irq_vectors.h
-index 3f73ac3ed3a0..989816ca7c9e 100644
---- a/tools/arch/x86/include/asm/irq_vectors.h
-+++ b/tools/arch/x86/include/asm/irq_vectors.h
-@@ -99,9 +99,16 @@
++	call_irq_handler(vector, regs);
+ 	set_irq_regs(old_regs);
+ }
  
- #define LOCAL_TIMER_VECTOR		0xec
- 
-+/*
-+ * Posted interrupt notification vector for all device MSIs delivered to
-+ * the host kernel.
-+ */
-+#define POSTED_MSI_NOTIFICATION_VECTOR	0xeb
- #define NR_VECTORS			 256
- 
--#ifdef CONFIG_X86_LOCAL_APIC
-+#ifdef CONFIG_X86_POSTED_MSI
-+#define FIRST_SYSTEM_VECTOR		POSTED_MSI_NOTIFICATION_VECTOR
-+#elif defined(CONFIG_X86_LOCAL_APIC)
- #define FIRST_SYSTEM_VECTOR		LOCAL_TIMER_VECTOR
- #else
- #define FIRST_SYSTEM_VECTOR		NR_VECTORS
 -- 
 2.25.1
 
