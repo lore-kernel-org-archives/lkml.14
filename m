@@ -1,125 +1,118 @@
-Received: from mail-il1-f173.google.com (mail-il1-f173.google.com [209.85.166.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail2.andi.de1.cc (vmd64148.contaboserver.net [161.97.139.27])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57AAD172776
-	for <linux-kernel@vger.kernel.org>; Fri,  5 Apr 2024 18:50:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7B98172797;
+	Fri,  5 Apr 2024 18:57:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=161.97.139.27
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712343042; cv=none; b=UQjrgTllharaDCjegYjDyLIn0AKfZD5PEBoiKVNS2gWQAnYPrJDJn6cnUiWIBjf9473J4JfGyU1WXDRsE5k+CAyvX95jJ+mgdHH+NRL/3jwEzvcEUsfpCJ3OEsktT0rNrro4TxBm5VZSVyo6vypM5sdy3MLZcXF33ngGYX9zU20=
+	t=1712343428; cv=none; b=gzErBedUxiLO8avz5QgiZslNvqTUIFAQb0HbwJfrTuCmgRcMa0qA09/ObAI0Hpc1BbXYVJdDRN6jg85Uhl0Diu15VZUHWEwsHD31CleeZQTrWIc9s5XYeO4BiktnREjk9lYrwiNYz7ofYzbHQnCdnWaZY3Iz2FBuQTAZCC3gboE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712343042; c=relaxed/simple;
-	bh=m7oG2Qmos7+pA78FFQa0mcED9SbBpSit9bDHeJjmzQw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=aaB64m/zxTPM6F/fHu5Qa/VOAofoIhDboTE75zu+BzfxDhhi3Iaw0+9XkdHkTM0EXyf2AZsk/xKpOYqd/zYLaID+V5VTZJB/NokGq+Bo72Co6QD+H2lpC5biqVPb72M9lXF4X4Uck/wNVQD3B3h4tJ5ST8jw59p8tQyXqWxHktc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=bgof5Yl/; arc=none smtp.client-ip=209.85.166.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1712343428; c=relaxed/simple;
+	bh=vnYEQ17KysvX7LO1gsXCZ7bQP+q4ViwuQl1/8sCVlOk=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=RaEVbS1dAGy0qGY2EDIT4rnFOWLUpyAOvSvQZ2IV/2UxtYLlykC7WpzzoZofKOJRzxdm0ANu51Zk6+hR7mir81pc0fjm2zBwSugn9KNssiR6aaLWMlDTU0PPpOt2NGT+1CF0T3ON8RuDDztuGLyltcRGgqeR481B2LPvCxrNpdk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kemnade.info; spf=pass smtp.mailfrom=kemnade.info; dkim=pass (2048-bit key) header.d=kemnade.info header.i=@kemnade.info header.b=AVyLVVCb; arc=none smtp.client-ip=161.97.139.27
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kemnade.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kemnade.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="bgof5Yl/"
-Received: by mail-il1-f173.google.com with SMTP id e9e14a558f8ab-36a125869ddso891545ab.0
-        for <linux-kernel@vger.kernel.org>; Fri, 05 Apr 2024 11:50:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1712343038; x=1712947838; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Vp44i9Xlfeu0O10COsw98V/v7e0jo8kvUbsVGI+1kuo=;
-        b=bgof5Yl/PgEbGbIwPck+Do3VgBLbEy9ZQK+apV9dCcrJbJ7p9PgazTqrOZxooPIKgh
-         8EqAtlBS4St3/mGXMYyXNpzAHsUBx5mn3qubOdCirKuA1le+BRhjuDixJBPI8Bakitz1
-         +g+J1OTUVE+T17HMXMDxo/xkNInNH9ArdJop4=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712343038; x=1712947838;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Vp44i9Xlfeu0O10COsw98V/v7e0jo8kvUbsVGI+1kuo=;
-        b=MV6NJv4JN4+MVAdD1BvNUsFPlzAPp7/VnieUdpwIb7mnUvNwYwcr0B8Sa7rFXjYddS
-         7B/eD7w8g8xlTbSxisl/NIG96iBosLeIXOLRaPfPWIC5HxfQOcdron/mQoPK61m5cEN4
-         nlwEH/9y9ndM+S35bZfBjRobvtsc+XCeGHOTBywnXQ1jRGxXZl6TInDt41MSe1TSg5s3
-         eoSnXCBgN/Fq1DhOaN1uxKn2KVPoqXP0zHauVimydGpP5UDr2NI9rKfySGEZNlVBQiFt
-         POVKzWVBn205z+N9e+6XMkIrmKjnp/jyrStBqfPsI7pGebAnME8AgpA7ej3YQvTN52kq
-         sNvg==
-X-Forwarded-Encrypted: i=1; AJvYcCWiGrEYcQCVoBdbUO9hrunfNBQQDlsHrKIL2l+x5veZiihcz6gxUeUwIUboGwX3h0fMWz+svLcxx7xDYNEnAMzXxOkbSqkMWxNKVWVV
-X-Gm-Message-State: AOJu0YwtH1q6JLgPC7Sy5FsH8SDEchqBPHpTeKNIPXJVzAnARCDWqWVM
-	PUZQRq2p9abQ95OqKYIUYzx6Civi8CZ0CHZAIhKP0wBPhwT8HVEfVBRgDIVQDpQ=
-X-Google-Smtp-Source: AGHT+IGnMS2NKy+1HVwAPdxdmucJAIWJJEZlmMEtziDgLQxVglpyFfMG5GBRQy0N2McwE23OjduKXA==
-X-Received: by 2002:a6b:ec05:0:b0:7d5:bfd3:7237 with SMTP id c5-20020a6bec05000000b007d5bfd37237mr2288245ioh.0.1712343038341;
-        Fri, 05 Apr 2024 11:50:38 -0700 (PDT)
-Received: from [192.168.1.128] ([38.175.170.29])
-        by smtp.gmail.com with ESMTPSA id x26-20020a02971a000000b0047ec2b62deasm724949jai.91.2024.04.05.11.50.37
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 05 Apr 2024 11:50:37 -0700 (PDT)
-Message-ID: <84acaa6b-44b6-495a-939f-4a6e49e162c9@linuxfoundation.org>
-Date: Fri, 5 Apr 2024 12:50:37 -0600
+	dkim=pass (2048-bit key) header.d=kemnade.info header.i=@kemnade.info header.b="AVyLVVCb"
+Received: from mail.andi.de1.cc ([2a02:c205:3004:2154::1])
+	by mail2.andi.de1.cc with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <andreas@kemnade.info>)
+	id 1rsokE-003tJv-0p;
+	Fri, 05 Apr 2024 20:56:58 +0200
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=kemnade.info; s=20220719; h=Content-Transfer-Encoding:Content-Type:
+	MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=ogE4OYrDq5iNX0qpphDnVQy5Okj2XC66c4JZZyH1L24=; b=AVyLVVCbDK7rv9n92vw1sNlfhL
+	HP85XOMdLA6kVEjQKAz4eq66qdjYEJRVaexEHVTjt9k/JSzRmwxLa2vK1tvYdXiGSfeyNCMlfJBmn
+	DzOIyIkJ8Q0RhBdujYKspXHhznntU3crbTg84qfAYw2kMRgPWBppeOgJkXkO4GgYcM+y65fxYgMsa
+	UUEzR3U1IAcf3ca8DG/Vr01tkvz5c2NJvJoMm1SANA6jaIDcl4CdoupHje36LBYSBbzzneTl0osCi
+	x5H2WN3OVt0a4mhqzvlulKQcYd+Tft8AFOwTjwtvjk3SfKpHx7NSLhQbgQr/3HYCqTp2zrJJFnf00
+	OOKU3vAg==;
+Received: from p2003010777026a001a3da2fffebfd33a.dip0.t-ipconnect.de ([2003:107:7702:6a00:1a3d:a2ff:febf:d33a] helo=aktux)
+	by mail.andi.de1.cc with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <andreas@kemnade.info>)
+	id 1rsokB-000Pe2-1H;
+	Fri, 05 Apr 2024 20:56:55 +0200
+Date: Fri, 5 Apr 2024 20:56:53 +0200
+From: Andreas Kemnade <andreas@kemnade.info>
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: dmitry.torokhov@gmail.com, robh+dt@kernel.org,
+ krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
+ o.rempel@pengutronix.de, u.kleine-koenig@pengutronix.de,
+ hdegoede@redhat.com, ye.xingchen@zte.com.cn, p.puschmann@pironex.com,
+ linux-input@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, caleb.connolly@linaro.org
+Subject: Re: [PATCH v2 2/2] Input: edt-ft5x06 - add ft5426
+Message-ID: <20240405205653.32bdcb75@aktux>
+In-Reply-To: <CAHp75VckoDheCN-KQ0KcSk9rE_-cXFUujurtA4sK6KAixDttQQ@mail.gmail.com>
+References: <20240404222009.670685-1-andreas@kemnade.info>
+	<20240404222009.670685-3-andreas@kemnade.info>
+	<CAHp75VeZ9U_+1rJQjr4KvvzjYQGzfKtk+BK00vqvKcVn2-yP3g@mail.gmail.com>
+	<20240405182832.4e457695@aktux>
+	<CAHp75VckoDheCN-KQ0KcSk9rE_-cXFUujurtA4sK6KAixDttQQ@mail.gmail.com>
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/2] selftests: Replace "Bail out" with "Error" in
- ksft_exit_fail_msg()
-To: Kees Cook <keescook@chromium.org>,
- Muhammad Usama Anjum <usama.anjum@collabora.com>
-Cc: Eric Biederman <ebiederm@xmission.com>, Shuah Khan <shuah@kernel.org>,
- Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
- linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
- kernel@collabora.com, Shuah Khan <skhan@linuxfoundation.org>
-References: <20240405131748.1582646-1-usama.anjum@collabora.com>
- <2a77adeb-ed22-4a9b-a1d9-ac5d29ae696d@linuxfoundation.org>
- <202404050832.187F972C@keescook>
-Content-Language: en-US
-From: Shuah Khan <skhan@linuxfoundation.org>
-In-Reply-To: <202404050832.187F972C@keescook>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-On 4/5/24 09:32, Kees Cook wrote:
-> On Fri, Apr 05, 2024 at 08:56:31AM -0600, Shuah Khan wrote:
->> On 4/5/24 07:17, Muhammad Usama Anjum wrote:
->>> "Bail out! " is not descriptive. It rather should be: "Failed: " and
->>> then this added prefix doesn't need to be added everywhere. Usually in
->>> the logs, we are searching for "Failed" or "Error" instead of "Bail
->>> out" so it must be replace.
->>>
->>> Remove Error/Failed prefixes from all usages as well.
->>>
->>> Muhammad Usama Anjum (2):
->>>     selftests: Replace "Bail out" with "Error"
->>>     selftests: Remove Error/Failed prefix from ksft_exit_fail*() usages
->>>
->>>    tools/testing/selftests/exec/load_address.c   |   8 +-
->>>    .../testing/selftests/exec/recursion-depth.c  |  10 +-
->>>    tools/testing/selftests/kselftest.h           |   2 +-
->>>    .../selftests/mm/map_fixed_noreplace.c        |  24 +--
->>>    tools/testing/selftests/mm/map_populate.c     |   2 +-
->>>    tools/testing/selftests/mm/mremap_dontunmap.c |   2 +-
->>>    tools/testing/selftests/mm/pagemap_ioctl.c    | 166 +++++++++---------
->>>    .../selftests/mm/split_huge_page_test.c       |   2 +-
->>>    8 files changed, 108 insertions(+), 108 deletions(-)
->>>
->>
+On Fri, 5 Apr 2024 20:21:19 +0300
+Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
 
-Usama,
+> On Fri, Apr 5, 2024 at 7:28=E2=80=AFPM Andreas Kemnade <andreas@kemnade.i=
+nfo> wrote:
+> > On Fri, 5 Apr 2024 18:13:45 +0300
+> > Andy Shevchenko <andy.shevchenko@gmail.com> wrote: =20
+> > > On Fri, Apr 5, 2024 at 1:20=E2=80=AFAM Andreas Kemnade <andreas@kemna=
+de.info> wrote: =20
+>=20
+> ...
+>=20
+> > > > @@ -1484,6 +1484,7 @@ static const struct of_device_id edt_ft5x06_o=
+f_match[] =3D {
+> > > >         { .compatible =3D "edt,edt-ft5206", .data =3D &edt_ft5x06_d=
+ata },
+> > > >         { .compatible =3D "edt,edt-ft5306", .data =3D &edt_ft5x06_d=
+ata },
+> > > >         { .compatible =3D "edt,edt-ft5406", .data =3D &edt_ft5x06_d=
+ata },
+> > > > +       { .compatible =3D "focaltech,ft5426", .data =3D &edt_ft5506=
+_data }, =20
+> > >
+> > > Why a different vendor prefix?
+> > > In case you need to use this one, keep the list sorted, currently this
+> > > splits the edt,* ones.
+> > > =20
+> > How do I know whether to use evervision or edt instead? =20
+>=20
+> Ask DT people, the vendor-prefixes lists both...
+>=20
+> > I sorted by the numbers. Looking at datasheets for other controllers I =
+see
+> > https://www.displayfuture.com/Display/datasheet/controller/FT5x06.pdf
+> > it only mentions FocalTech Systems Co., Ltd. =20
+>=20
+> But does the driver use that? AFAICS it uses edt. Perhaps it's due to
+> a business split, not to my knowledge anyway.
+>=20
+well, the fact is that there were several tried to add duplicates to this
+driver to the kernel using focaltech prefixes e.g.
+https://lore.kernel.org/linux-input/47209259-9e57-f263-bf48-10f233c63b69@re=
+dhat.com/
 
-Please generate separate patches for each test (one for exec and
-one for mm) when you do this kind of work across tests in the
-future. I applied them this time.
+My guess it is somehow about owner of the firmware in the chip vs the chip =
+itself.
 
->> Andrew, Kees,
->>
->> I will apply these to linux-kselftest next as a series since these
->> changes depend on change to tools/testing/selftests/kselftest.h
->> and need to go together.
->>
->> Are you okay with that?
-> 
-> Sounds good!
-> 
-
-Thank you. Applied to linux-kselftest next for Linux 6.10-rc1.
-
-thanks,
--- Shuah
-
+Regards,
+Andreas
