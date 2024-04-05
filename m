@@ -1,147 +1,105 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from rere.qmqm.pl (rere.qmqm.pl [91.227.64.183])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CC6615FA9C
-	for <linux-kernel@vger.kernel.org>; Fri,  5 Apr 2024 09:38:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4CAC15FA9C;
+	Fri,  5 Apr 2024 09:38:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.227.64.183
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712309885; cv=none; b=K5rI8A+okPxLaf9pUFvYLzaMExmcrhchw1CvFTyV+51peuOoww4xGIGcmt8whnkapan8NOMO5FjZNwiullMN/1NbtNaOFIj/NEzKGkhLBycy+BtmCS+GEzARbRJf+h7/ZZ7H4r1on0mz3AQWxnA0h/I8n03QrAzkuzNJB08ZDQs=
+	t=1712309901; cv=none; b=AkwXRnRMetJ0L9IbHlnUlbm/I0PKkqbVheFMD6/h7gGzzCCEy3N0M6MCj5zef/kgVgDLuYdVbDKvVZa2ntxLYmVOH9+UNCMoJUCM5lDHULesMw/QG1A4N4mKQkWQ1JBmToVuVKemW8967bjjTRSDQiUl8coDx2ZJP5dEQov/leg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712309885; c=relaxed/simple;
-	bh=GkRFkjj3yHtzdRR99kfcHdzefMolzFxP8TwNQvvTfbw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=jZxo26z99OuQ2RU5RWOmvNZ0WZ+QkihJiJyU/yO7GJkLSq8z8RYCS/RoHNqMFakP0mCIPivytJPMMi2XcoFT+hwoJFmXq5GBLyMEAMc1qg27KSnUn7V+4RMOBffgsFCSXHGVzfVHzU6rnLIg5BdIuQeLsH/3RLFeohuksd6xRW4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=GdQbSXJE; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1712309901; c=relaxed/simple;
+	bh=gui0f6MViE5zSAEEOcDKHdPoDszSctiaYWprNP7GSNc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=TYx9XDMOKHsxsxgpErRPS/ygvPDzCeAlZTHPD8jU6Un/vl7oitKkIppyqtOYrexLuq9vY46aMb/YVGm7xn8ldd+hst08TGbqT5Eu4ZsNBxcPdZveBtSAApHlqy+wE0mswPrfmKn1k9Vlu1n6YEW+MMhGa8Dopk6yoUAbjF5ae08=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=rere.qmqm.pl; spf=pass smtp.mailfrom=rere.qmqm.pl; dkim=pass (2048-bit key) header.d=rere.qmqm.pl header.i=@rere.qmqm.pl header.b=ZcrcoLqs; arc=none smtp.client-ip=91.227.64.183
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=rere.qmqm.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rere.qmqm.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GdQbSXJE"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1712309882;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=V3uuBiJkAylOmO9OjZj3QvZBOcaQFjZAsmRqZXYAPrA=;
-	b=GdQbSXJEUkFe/RN2LZSLBi5Xl5jojThuJonrK8CbKlTOqOiJE6lknDrtISntebLXigO1JF
-	G+HsJ1sTPXbWP881OmWiPZv6drNQgL15/qCdgm5yrIwkRXIKnRedfK205jntbcTyhYlfw1
-	iDoMd5vz2jFVoCEWZ8Wn+4XOe9Kb0RI=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-290-zF76GJ42Nd-RUOLKNimjgw-1; Fri, 05 Apr 2024 05:38:01 -0400
-X-MC-Unique: zF76GJ42Nd-RUOLKNimjgw-1
-Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-4156e6f39c6so9294455e9.0
-        for <linux-kernel@vger.kernel.org>; Fri, 05 Apr 2024 02:38:01 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712309880; x=1712914680;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=V3uuBiJkAylOmO9OjZj3QvZBOcaQFjZAsmRqZXYAPrA=;
-        b=ewZ0T5nijjg0m+iZVp+p+vIZpKXjit5taqKEqSLlwF2neStcNCLGGYvs6C11jf99C2
-         RfkdEyqEZljUlRISmzazYdXU2pwxaik/0ffyQdZ5dX4klUgU3eith2edEQuHww83Taiy
-         80AASQTi22FDJyny/lXwuNs7XryTCbadiFfMXJ3piEjFJCukH8j7WyPJeZhTP2scn6zv
-         l87FTJILRp6MpPa+Md5vWQsImTBuChb+3t/B/PB7xv9wHuZfaysPgTMuWIId7K1du24C
-         Agxl+tqI8xvXL26Q5nsTMHoVdwWONhWTjHkXis3/ML386mx2ckKWmefmvGqWBaPOMkFr
-         awQQ==
-X-Forwarded-Encrypted: i=1; AJvYcCV3mkGzMPz/ACQAzCdHLXcwKvevbp6h1YA30or/79Z6NXla2J30yjwfNa/BZL6FyabeuZcPD5gm1s0Ai+rMGUGFYXWoqWrktQbqHRkC
-X-Gm-Message-State: AOJu0YzWdl94GEMI6guF5DerByuZlIZheULft08Lhrq6FEvMZFaqhpcb
-	OSCZ0MJBa9yUkdYumRNNMdeffDSXPYgtZibjM+TUq5TpB99v0lZw4l3xPfzCeIurX7O4oDdXtXB
-	VX1WqjwXq0zZMTrbP1hSOiawkYFKJlm863qSuZem8jjR+doBXqh/+XsOp/wNpE0esd0hc+4YUvo
-	krjh6TLBtSyqjBjcgVb7AOLEbIxsEd8eUEaIH/
-X-Received: by 2002:a5d:474c:0:b0:33e:6d6c:8503 with SMTP id o12-20020a5d474c000000b0033e6d6c8503mr739458wrs.16.1712309880131;
-        Fri, 05 Apr 2024 02:38:00 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHrW2E4L8dtYMZfT2FVzU8jH+3wWVUZgUPVuxswxS6TVAJ98ONwuEP32ytUfAH2YUgdwoJe+pjiuXTobnp23Ys=
-X-Received: by 2002:a5d:474c:0:b0:33e:6d6c:8503 with SMTP id
- o12-20020a5d474c000000b0033e6d6c8503mr739443wrs.16.1712309879759; Fri, 05 Apr
- 2024 02:37:59 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=rere.qmqm.pl header.i=@rere.qmqm.pl header.b="ZcrcoLqs"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rere.qmqm.pl; s=1;
+	t=1712309337; bh=gui0f6MViE5zSAEEOcDKHdPoDszSctiaYWprNP7GSNc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ZcrcoLqsz/zzlMruWf44PYk75DueBejOUyr1Eh31EyaZcoY7ODel3t0vFK51sQutC
+	 YY7dBqw6x5FiEghmAZFtz/zTJMGq5GtkEocuVfbQcN9BDPuRIei5HZ4DdjLpHxZ7+6
+	 E7lgHaOaQ5/+P2XOh5i4UPTyYivuDu5pF+wIovDfOhmC0jyS7Po0jdQpgN6Tw+kWcU
+	 BR21bYeWeQT2EX7dHW/mtmIf4RbdkqX5exTxh2367mA4o2zBmZSc7BFV4XrNkiEptZ
+	 Q5SBD2Ru9xBFkYUfXpcQGRwkKRKwaEBGta6Gar0WuqKpV+3lBKaNoDOSXQIouXFRPP
+	 Bq/roRR1X1cQQ==
+Received: from remote.user (localhost [127.0.0.1])
+	by rere.qmqm.pl (Postfix) with ESMTPSA id 4V9tTX48kvz8B;
+	Fri,  5 Apr 2024 11:28:48 +0200 (CEST)
+X-Virus-Status: Clean
+X-Virus-Scanned: clamav-milter 1.0.3 at mail
+Date: Fri, 5 Apr 2024 11:28:47 +0200
+From: =?iso-8859-2?Q?Micha=B3_Miros=B3aw?= <mirq-linux@rere.qmqm.pl>
+To: Allen Pais <apais@linux.microsoft.com>
+Cc: linux-kernel@vger.kernel.org, tj@kernel.org, keescook@chromium.org,
+	vkoul@kernel.org, marcan@marcan.st, sven@svenpeter.dev,
+	florian.fainelli@broadcom.com, rjui@broadcom.com,
+	sbranden@broadcom.com, paul@crapouillou.net,
+	Eugeniy.Paltsev@synopsys.com, manivannan.sadhasivam@linaro.org,
+	vireshk@kernel.org, Frank.Li@nxp.com, leoyang.li@nxp.com,
+	zw@zh-kernel.org, wangzhou1@hisilicon.com, haijie1@huawei.com,
+	shawnguo@kernel.org, s.hauer@pengutronix.de, sean.wang@mediatek.com,
+	matthias.bgg@gmail.com, angelogioacchino.delregno@collabora.com,
+	afaerber@suse.de, logang@deltatee.com, daniel@zonque.org,
+	haojian.zhuang@gmail.com, robert.jarzmik@free.fr,
+	andersson@kernel.org, konrad.dybcio@linaro.org, orsonzhai@gmail.com,
+	baolin.wang@linux.alibaba.com, zhang.lyra@gmail.com,
+	patrice.chotard@foss.st.com, linus.walleij@linaro.org,
+	wens@csie.org, jernej.skrabec@gmail.com, peter.ujfalusi@gmail.com,
+	kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
+	decui@microsoft.com, jassisinghbrar@gmail.com, mchehab@kernel.org,
+	maintainers@bluecherrydvr.com, aubin.constans@microchip.com,
+	ulf.hansson@linaro.org, manuel.lauss@gmail.com,
+	jh80.chung@samsung.com, oakad@yahoo.com,
+	hayashi.kunihiko@socionext.com, mhiramat@kernel.org,
+	brucechang@via.com.tw, HaraldWelte@viatech.com, pierre@ossman.eu,
+	duncan.sands@free.fr, stern@rowland.harvard.edu, oneukum@suse.com,
+	openipmi-developer@lists.sourceforge.net, dmaengine@vger.kernel.org,
+	asahi@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+	linux-rpi-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
+	imx@lists.linux.dev, linuxppc-dev@lists.ozlabs.org,
+	linux-mediatek@lists.infradead.org,
+	linux-actions@lists.infradead.org, linux-arm-msm@vger.kernel.org,
+	linux-riscv@lists.infradead.org, linux-sunxi@lists.linux.dev,
+	linux-tegra@vger.kernel.org, linux-hyperv@vger.kernel.org,
+	linux-rdma@vger.kernel.org, linux-media@vger.kernel.org,
+	linux-mmc@vger.kernel.org, linux-omap@vger.kernel.org,
+	linux-renesas-soc@vger.kernel.org, linux-s390@vger.kernel.org,
+	netdev@vger.kernel.org, linux-usb@vger.kernel.org
+Subject: Re: [PATCH 9/9] mmc: Convert from tasklet to BH workqueue
+Message-ID: <Zg_ET2XmZM_Id_Ad@qmqm.qmqm.pl>
+References: <20240327160314.9982-1-apais@linux.microsoft.com>
+ <20240327160314.9982-10-apais@linux.microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240320005024.3216282-1-seanjc@google.com> <4d04b010-98f3-4eae-b320-a7dd6104b0bf@redhat.com>
- <CALzav=eLH+V_5Y6ZWsRkmnbEb6fxPa55B7xyWxP3o6qsrs_nHA@mail.gmail.com>
- <a2fff462-dfe6-4979-a7b2-131c6e0b5017@redhat.com> <ZgygGmaEuddZGKyX@google.com>
- <ca1f320b-dc06-48e0-b4f5-ce860a72f0e2@redhat.com> <Zg3V-M3iospVUEDU@google.com>
- <42dbf562-5eab-4f82-ad77-5ee5b8c79285@redhat.com> <Zg7j2D6WFqcPaXFB@google.com>
- <b3ea925f-bd47-4f54-bede-3f0d7471e3d7@redhat.com> <Zg8jip0QIBbOCgpz@google.com>
- <36e1592a-e590-48a0-9a79-eeac6b41314b@redhat.com>
-In-Reply-To: <36e1592a-e590-48a0-9a79-eeac6b41314b@redhat.com>
-From: Paolo Bonzini <pbonzini@redhat.com>
-Date: Fri, 5 Apr 2024 11:37:47 +0200
-Message-ID: <CABgObfbykeRXv2r2tULe6_SwD7DkWPaMTdc6PkAUb3JmTodf4w@mail.gmail.com>
-Subject: Re: [RFC PATCH 0/4] KVM: x86/mmu: Rework marking folios dirty/accessed
-To: David Hildenbrand <david@redhat.com>
-Cc: Sean Christopherson <seanjc@google.com>, David Matlack <dmatlack@google.com>, kvm@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, David Stevens <stevensd@chromium.org>, 
-	Matthew Wilcox <willy@infradead.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=iso-8859-2
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240327160314.9982-10-apais@linux.microsoft.com>
 
-On Fri, Apr 5, 2024 at 8:53=E2=80=AFAM David Hildenbrand <david@redhat.com>=
- wrote:
-> >       mmu_notifier_invalidate_range_start(&range);
-> >       tlb_start_vma(&tlb, vma);
-> >       walk_page_range(vma->vm_mm, range.start, range.end,
-> >                       &madvise_free_walk_ops, &tlb);
-> >       tlb_end_vma(&tlb, vma);
-> >       mmu_notifier_invalidate_range_end(&range);
-> >
->
-> Indeed, we do setup the MMU notifier invalidation. We do the start/end
-> ... I was looking for PTE notifications.
->
-> I spotted the set_pte_at(), not a set_pte_at_notify() like we do in
-> other code. Maybe that's not required here (digging through
-> documentation I'm still left clueless). [...]
-> Absolutely unclear to me when we *must* to use it, or if it is. Likely
-> its a pure optimization when we're *changing* a PTE.
+On Wed, Mar 27, 2024 at 04:03:14PM +0000, Allen Pais wrote:
+> The only generic interface to execute asynchronously in the BH context is
+> tasklet; however, it's marked deprecated and has some design flaws. To
+> replace tasklets, BH workqueue support was recently added. A BH workqueue
+> behaves similarly to regular workqueues except that the queued work items
+> are executed in the BH context.
+> 
+> This patch converts drivers/infiniband/* from tasklet to BH workqueue.
+> 
+> Based on the work done by Tejun Heo <tj@kernel.org>
+> Branch: https://git.kernel.org/pub/scm/linux/kernel/git/tj/wq.git for-6.10
+> 
+> Signed-off-by: Allen Pais <allen.lkml@gmail.com>
+> ---
+[...]
+>  drivers/mmc/host/cb710-mmc.c                  | 15 ++--
+>  drivers/mmc/host/cb710-mmc.h                  |  3 +-
+[...]
 
-Yes, .change_pte() is just an optimization. The original point of it
-was for KSM, so that KVM could flip the sPTE to a new location without
-first zapping it. At the time there was also an .invalidate_page()
-callback, and both of them were *not* bracketed by calls to
-mmu_notifier_invalidate_range_{start,end}()
-
-Later on, both callbacks were changed to occur within an
-invalidate_range_start/end() block.
-
-Commit 6bdb913f0a70 ("mm: wrap calls to set_pte_at_notify with
-invalidate_range_start and invalidate_range_end", 2012-10-09) did so
-for .change_pte(). The reason to do so was a bit roundabout, namely to
-allow sleepable .invalidate_page() hooks (because .change_pte() is not
-sleepable and at the time .invalidate_page() was used as a fallback
-for .change_pte()).
-
-This however made KVM's usage of the .change_pte() callback completely
-moot, because KVM unmaps the sPTEs during .invalidate_range_start()
-and therefore .change_pte() has no hope of succeeding.
-
-(Commit 369ea8242c0f ("mm/rmap: update to new mmu_notifier semantic
-v2", 2017-08-31) is where the other set of non-bracketed calls to MMU
-notifier callbacks was changed; calls to
-mmu_notifier_invalidate_page() were replaced by calls to
-mmu_notifier_invalidate_range(), bracketed by calls to
-mmu_notifier_invalidate_range_{start,end}()).
-
-Since KVM is the only user of .change_pte(), we can remove
-.change_pte() and set_pte_at_notify() completely.
-
-Paolo
-
-> __replace_page() uses it with __replace_page() when replacing the mapped
-> page. And migrate_vma_insert_page() uses it with MMU_NOTIFY_MIGRATE.
->
-> Other code (e.g., khugepaged) doesn't seem to use it as well.
->
-> ... so I guess it's fine? Confusing.
->
-> --
-> Cheers,
->
-> David / dhildenb
->
-
+Acked-by: Micha³ Miros³aw <mirq-linux@rere.qmqm.pl>
