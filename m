@@ -1,119 +1,265 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out203-205-251-72.mail.qq.com (out203-205-251-72.mail.qq.com [203.205.251.72])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B93E516EBEF
-	for <linux-kernel@vger.kernel.org>; Fri,  5 Apr 2024 14:41:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A081C15FA95
+	for <linux-kernel@vger.kernel.org>; Fri,  5 Apr 2024 14:41:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.251.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712328093; cv=none; b=Nx++qFaPdp6GCvbsWs2lC2/L5VoMnusELQ6XTW+DMcKX7rv38LxaQSavT3RXMpujOfYQr0UaobTK1LHrZk3jnefaF2E42MBqKQWWFRUBfpya9fWvem96ZwiSIPCoL3PUtFCdHVeWjb7498hLd8KEl7j9LfMMlSMOEeSKDoo24Dg=
+	t=1712328106; cv=none; b=PXAtaTDmZnP1a012lB9rr3jMyCpYdrxo/KI7+IYy97JBASzPHBUJNs/SYHlH+HWrpiEa23N9C8UVvws48odU0HEeaU04bapGw/EWc/0InmBXFaIJf/4CnFFUNV6MFrRN7sv2uTXGO33Z5A8ymZ2U9J5n6qerlNCdDfuHkMIrols=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712328093; c=relaxed/simple;
-	bh=Btz/Hmez86EgZIrlgPrZQhuTuSmdGF/ahACcmo7T4Mg=;
-	h=Content-Type:Date:Message-Id:Cc:From:To:Subject:References:
-	 In-Reply-To; b=HDzqi1bYyTI60m2MK3IVT/LIhEy0G6K7eFQn6ckxmuQszaG2E4bic/d7gVgkNgzWMbsj5QlkL3N5n+bnVNcOVbc9Gw6NlXf1kKR7M4YZhtaVd7Gw6oHdVXqqSuiK+RxH/XlRN2zQr5TfWHhQq0w63F/8L9ozOKUvD/yduWHWvMY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ceKEAO9U; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1712328106; c=relaxed/simple;
+	bh=5NpUT3miNBD5LFLqv76YWlD13uZF47++BIZwJIrolzs=;
+	h=Message-ID:From:To:Cc:Subject:Date:MIME-Version; b=g9D7FXuvh9vke71ZXng2sFcq2IGC5ciJtJaINGWpC8pYVkPN/UDfr6ZiB/jO0KoP9z1IPPmAhnDQYq7i356tmdBQoJw4AxfiaDDUXF1HqsC8sFKc8G0eAxqB6gpVV94SwLd3ytPtmOSadt/GoHRaNgTt4XqudP+1CXSk56zoB4o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foxmail.com; spf=pass smtp.mailfrom=foxmail.com; dkim=pass (1024-bit key) header.d=foxmail.com header.i=@foxmail.com header.b=Ev+RxpEA; arc=none smtp.client-ip=203.205.251.72
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foxmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foxmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ceKEAO9U"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0203CC433F1;
-	Fri,  5 Apr 2024 14:41:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712328093;
-	bh=Btz/Hmez86EgZIrlgPrZQhuTuSmdGF/ahACcmo7T4Mg=;
-	h=Date:Cc:From:To:Subject:References:In-Reply-To:From;
-	b=ceKEAO9UgifeYaKFh885NRTA4DS7/FeFKKR9QT7dkK3CHRKwAa217pcHGGBK1wM5B
-	 PWe4e1byFUEtobZUDsRGGIZ7eyXWhFGJuvEh3aFxafYxb/A8JrKqq5vWt49qQ1plw7
-	 l6SNs8m/5FcsN4oVBqULt8Z1F2+/v4gDk83WsOFH4Q27thtKChR5qSiCMdZvorsy4x
-	 AND6dENTJMwSssXppAlY1MIp6VKYAwYz6fX0Nbgrk2soTM9T2hDW+EzZpvZZvomjh4
-	 6EShp2Nk6PmavmEDN0f7ey5HV9Zankjufonefl/0S7JnmInABpjRIVKuwKblw97YZK
-	 7rbEPHrqJhpZQ==
-Content-Type: multipart/signed;
- boundary=acb6ba1a78e0ad4c2fe8ee2d551c5ffa69006074ac6e66ab85279d8ddadb;
- micalg=pgp-sha384; protocol="application/pgp-signature"
-Date: Fri, 05 Apr 2024 16:41:29 +0200
-Message-Id: <D0C9NCOMI27O.2VW2U3FNFTSPK@kernel.org>
-Cc: <linux-mtd@lists.infradead.org>, <linux-kernel@vger.kernel.org>
-From: "Michael Walle" <mwalle@kernel.org>
-To: "Flavio Suligoi" <f.suligoi@asem.it>, "Tudor Ambarus"
- <tudor.ambarus@linaro.org>, "Pratyush Yadav" <pratyush@kernel.org>, "Miquel
- Raynal" <miquel.raynal@bootlin.com>, "Richard Weinberger" <richard@nod.at>,
- "Vignesh Raghavendra" <vigneshr@ti.com>
-Subject: Re: [PATCH 1/1] mtd: spi-nor: everspin: add em004lxb entry
-X-Mailer: aerc 0.16.0
-References: <20240405100104.480779-1-f.suligoi@asem.it>
- <20240405100104.480779-2-f.suligoi@asem.it>
-In-Reply-To: <20240405100104.480779-2-f.suligoi@asem.it>
+	dkim=pass (1024-bit key) header.d=foxmail.com header.i=@foxmail.com header.b="Ev+RxpEA"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foxmail.com;
+	s=s201512; t=1712328095;
+	bh=h1szTFKuBBT4B0FZ8+/wAdJnH1vl0StVKZ/7ccts1xY=;
+	h=From:To:Cc:Subject:Date;
+	b=Ev+RxpEAYMA/GEH//o8AG6Flti1KIAefp3fh5W2YotrYAYqWPHE6nUJHtfvkpxk5a
+	 xL3yngAK2zxgJmBKApSvVtjtnkm0ykrN73FXVx6OZuQwxEf1eBSXl83naCn/R0/4+T
+	 oMKcd9hxE9bqNEt/BC0g2poSqHvbkw3kYbz78skM=
+Received: from localhost.localdomain ([2409:8a60:2a60:b160:dc34:caba:9ec4:65ef])
+	by newxmesmtplogicsvrszb9-1.qq.com (NewEsmtp) with SMTP
+	id A4A1A43D; Fri, 05 Apr 2024 22:41:10 +0800
+X-QQ-mid: xmsmtpt1712328070towhp7ula
+Message-ID: <tencent_70C2A71330E3F84D3D1F55F9521B04BD4C0A@qq.com>
+X-QQ-XMAILINFO: N/WmRbclY25Gbp5H5tlpB41qttfa717xaaHZ5yVNQnf2eLmcW3VXfJh6LSKxS2
+	 xuPbZl6YI8yqvyhXxb1kfHSdRRgKB981Q+B6yphCujW141/wlwS6fXsWJ6Xuxrl4xC0EpiozlkxE
+	 uuBFV/7JOIUzzf7+NmIV77QLDpXjYLMxVPGpSiqghzwPw1a/siBSyWFepsPgKDTdgqFK8pZRNUMz
+	 hW/XefP7uT4AgsG0qI/hokbk6WdGr8zm79xgyn7jQtqTnMb5hBadEl382rXxBWzS8FovGGtG59Wv
+	 IOfIblTlt7shydIekdqShzbt/L2YD3QgkO5XfrAHfg5kzTmHQMkhniaai/ryqbap7bwkwID6WOJP
+	 2mE5mvttygZ23nwOQhyebzm43ICWRCfkQeK/F27PJGWAo5VEfTQB0z/NnJ7o6QOkRTWvAOBrDEeY
+	 xTA8kXe6sgQgRlDCv2SZJJb1UkCCUmL5A1q6hXQiVOQmVJ8pN8/A/cIHnOrlD10uvMzAP99r2aIT
+	 jaWK/dYCW/WovCCfRQj37/eex9rl1YihbCoLIFZpurPXhiBRQ6zXn2OJccB3RpC4Ocxxfbp6nBdD
+	 DvwormNku63rTaEbVsI9sPAaK5IcEDxwMAujHCIN18OwGCNIMKJbHzvbEG4lxhLk9rKfFT+IWIzk
+	 76qVgvW2XVJvpklPdvwmUZw6Phjy88Ffrox97bHi3/+w9j79QOlC2ybQuN8U4d/9gtYEgpmh/mSO
+	 4szk1jgT/UJmFUcSlXjXWd3jEJ/fmWQs8I/KImRzkr1a4hGRlhLuwFIzI06mi+HlS00GHp3PyKj2
+	 zOzj2mfyDvxZVz1v3cXLkhx+0PIj84H1Dw35e1BSmkHHxz5PbJH1yz6NT0BgrG/r0gaeuyiun1Ir
+	 GTXFA4RIsZsSUiTkdG4h7x8a9RWtWvuB9NVkrQWmGXKxdvtW+HtA4CgHomhX7HGkSS38tyl50Nbg
+	 orl0QhF/9WxDDRgT4PalxZWF8vIi7n5VbG3/V7MszZzCFCBch9JHCS/ynOA4LHtJLm88mTh84oML
+	 u2w7zR3jgZ4yMzNUrfnUf6xscmzUbF9EA3N5KZRQ==
+X-QQ-XMRINFO: M/715EihBoGSf6IYSX1iLFg=
+From: wenyang.linux@foxmail.com
+To: "Eric W . Biederman" <ebiederm@xmission.com>,
+	Luis Chamberlain <mcgrof@kernel.org>,
+	Kees Cook <keescook@chromium.org>,
+	Joel Granados <j.granados@samsung.com>,
+	Christian Brauner <brauner@kernel.org>
+Cc: Wen Yang <wenyang.linux@foxmail.com>,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v3] sysctl: move the extra1/2 boundary check of u8 to sysctl_check_table_array
+Date: Fri,  5 Apr 2024 22:40:59 +0800
+X-OQ-MSGID: <20240405144059.93871-1-wenyang.linux@foxmail.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
---acb6ba1a78e0ad4c2fe8ee2d551c5ffa69006074ac6e66ab85279d8ddadb
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
+From: Wen Yang <wenyang.linux@foxmail.com>
 
-Hi Flavio,
+The boundary check of u8's extra is currently performed at runtime.
+This may result in some kernel modules that can be loaded normally without
+any errors, but not works, as follows:
 
-On Fri Apr 5, 2024 at 12:01 PM CEST, Flavio Suligoi wrote:
-> Add the Everspin EM0004LXB 4Mb (512KB) Industrial STT-MRAM Persistent
-> Memory.
-> This device is JEDEC compatible (JESD251 and JESD251-1), but it is not
-> able to provide SFDP information.
+ #include <linux/kernel.h>
+ #include <linux/module.h>
+ #include <linux/sysctl.h>
 
-Did you try the at25 driver if it will fit your usecase? Judging
-from your last response, it sounds like it will do.
+static struct ctl_table_header *_table_header;
+unsigned char _data = 0;
+struct ctl_table table[] = {
+	{
+		.procname       = "foo",
+		.data           = &_data,
+		.maxlen         = sizeof(u8),
+		.mode           = 0644,
+		.proc_handler   = proc_dou8vec_minmax,
+		.extra1         = SYSCTL_ZERO,
+		.extra2         = SYSCTL_ONE_THOUSAND,
+	},
+	{}
+};
 
->
-> Link: https://www.everspin.com/file/158244/download
->
-> Signed-off-by: Flavio Suligoi <f.suligoi@asem.it>
-> ---
->  drivers/mtd/spi-nor/everspin.c | 8 ++++++++
->  1 file changed, 8 insertions(+)
->
-> diff --git a/drivers/mtd/spi-nor/everspin.c b/drivers/mtd/spi-nor/everspi=
-n.c
-> index 5f321e24ae7d..4741930ce9a8 100644
-> --- a/drivers/mtd/spi-nor/everspin.c
-> +++ b/drivers/mtd/spi-nor/everspin.c
-> @@ -31,6 +31,14 @@ static const struct flash_info everspin_nor_parts[] =
-=3D {
->  		.size =3D SZ_512K,
->  		.sector_size =3D SZ_512K,
->  		.flags =3D SPI_NOR_NO_ERASE | SPI_NOR_NO_FR,
-> +	}, {
-> +		.id =3D SNOR_ID(0x6b, 0xbb, 0x13),
-> +		.name =3D "em004lxb",
-> +		.size =3D SZ_512K,
-> +		.sector_size =3D SZ_512K,
-> +		.flags =3D SPI_NOR_NO_ERASE | SPI_NOR_NO_FR | SPI_NOR_HAS_LOCK |
+static int init_demo(void) {
+	if (!_table_header)
+		_table_header = register_sysctl("kernel", table);
 
-Will it also work without SPI_NOR_NO_ERASE? Also, the flash supports
-fast read, so drop NO_FR. Also, please have a look at [1] for the
-testing requirements.
+	pr_info("test: init module.\n");
+	return 0;
+}
 
-Thanks.
--michael
+static void cleanup_demo(void) {
+	if (_table_header) {
+		unregister_sysctl_table(_table_header);
+	}
 
-> +			 SPI_NOR_HAS_TB | SPI_NOR_4BIT_BP | SPI_NOR_BP3_SR_BIT6,
-> +		.no_sfdp_flags =3D SPI_NOR_SKIP_SFDP,
->  	}
->  };
-> =20
+	pr_info("test: cleanup module.\n");
+}
 
-[1] https://docs.kernel.org/driver-api/mtd/spi-nor.html
+module_init(init_demo);
+module_exit(cleanup_demo);
+MODULE_LICENSE("GPL");
 
---acb6ba1a78e0ad4c2fe8ee2d551c5ffa69006074ac6e66ab85279d8ddadb
-Content-Type: application/pgp-signature; name="signature.asc"
+ # insmod test.ko
 
------BEGIN PGP SIGNATURE-----
+ # cat /proc/sys/kernel/foo
+ cat: /proc/sys/kernel/foo: Invalid argument
 
-iKgEABMJADAWIQTIVZIcOo5wfU/AngkSJzzuPgIf+AUCZhANmRIcbXdhbGxlQGtl
-cm5lbC5vcmcACgkQEic87j4CH/hh6wF/W6ehEKW1KipXS15k6n/JOHz5SNhKHN3B
-vpilSYvkfW+/ZLMZBgGjNTKnOFlePmnOAYCVhLAxPiDYQ1p8FHwGOLNFEjYLw/Lu
-GRDEhq8JnOuyKnFJMv9UO0OaGygMib3W9Xg=
-=bbaR
------END PGP SIGNATURE-----
+ # echo 1 >  /proc/sys/kernel/foo
+ -bash: echo: write error: Invalid argument
 
---acb6ba1a78e0ad4c2fe8ee2d551c5ffa69006074ac6e66ab85279d8ddadb--
+This patch moves boundary checking forward to module loading,
+thereby reporting errors in advance, and also adds a kunit test case.
+
+Signed-off-by: Wen Yang <wenyang.linux@foxmail.com>
+Cc: Luis Chamberlain <mcgrof@kernel.org>
+Cc: Kees Cook <keescook@chromium.org>
+Cc: Joel Granados <j.granados@samsung.com>
+Cc: Eric W. Biederman <ebiederm@xmission.com>
+Cc: Christian Brauner <brauner@kernel.org>
+Cc: linux-kernel@vger.kernel.org
+---
+v3: 
+- kunit: using register_sysctl, and thus unnecessary sentries were removed
+- kunit: using constant ctl_tables
+v2:
+- kunit: detect registration failure with KUNIT_EXPECT_NULL
+
+ fs/proc/proc_sysctl.c | 12 +++++++++++
+ kernel/sysctl-test.c  | 49 +++++++++++++++++++++++++++++++++++++++++++
+ kernel/sysctl.c       | 14 ++++---------
+ 3 files changed, 65 insertions(+), 10 deletions(-)
+
+diff --git a/fs/proc/proc_sysctl.c b/fs/proc/proc_sysctl.c
+index 37cde0efee57..136e3f8966c3 100644
+--- a/fs/proc/proc_sysctl.c
++++ b/fs/proc/proc_sysctl.c
+@@ -1096,6 +1096,7 @@ static int sysctl_err(const char *path, struct ctl_table *table, char *fmt, ...)
+ 
+ static int sysctl_check_table_array(const char *path, struct ctl_table *table)
+ {
++	unsigned int extra;
+ 	int err = 0;
+ 
+ 	if ((table->proc_handler == proc_douintvec) ||
+@@ -1107,6 +1108,17 @@ static int sysctl_check_table_array(const char *path, struct ctl_table *table)
+ 	if (table->proc_handler == proc_dou8vec_minmax) {
+ 		if (table->maxlen != sizeof(u8))
+ 			err |= sysctl_err(path, table, "array not allowed");
++
++		if (table->extra1) {
++			extra = *(unsigned int *) table->extra1;
++			if (extra > 255U)
++				err |= sysctl_err(path, table, "array not allowed");
++		}
++		if (table->extra2) {
++			extra = *(unsigned int *) table->extra2;
++			if (extra > 255U)
++				err |= sysctl_err(path, table, "array not allowed");
++		}
+ 	}
+ 
+ 	if (table->proc_handler == proc_dobool) {
+diff --git a/kernel/sysctl-test.c b/kernel/sysctl-test.c
+index 6ef887c19c48..4e7dcc9187e2 100644
+--- a/kernel/sysctl-test.c
++++ b/kernel/sysctl-test.c
+@@ -367,6 +367,54 @@ static void sysctl_test_api_dointvec_write_single_greater_int_max(
+ 	KUNIT_EXPECT_EQ(test, 0, *((int *)table.data));
+ }
+ 
++/*
++ * Test that registering an invalid extra value is not allowed.
++ */
++static void sysctl_test_register_sysctl_sz_invalid_extra_value(
++		struct kunit *test)
++{
++	unsigned char data = 0;
++	struct ctl_table table_foo[] = {
++		{
++			.procname	= "foo",
++			.data		= &data,
++			.maxlen		= sizeof(u8),
++			.mode		= 0644,
++			.proc_handler	= proc_dou8vec_minmax,
++			.extra1		= SYSCTL_FOUR,
++			.extra2		= SYSCTL_ONE_THOUSAND,
++		},
++	};
++
++	struct ctl_table table_bar[] = {
++		{
++			.procname	= "bar",
++			.data		= &data,
++			.maxlen		= sizeof(u8),
++			.mode		= 0644,
++			.proc_handler	= proc_dou8vec_minmax,
++			.extra1		= SYSCTL_NEG_ONE,
++			.extra2		= SYSCTL_ONE_HUNDRED,
++		},
++	};
++
++	struct ctl_table table_qux[] = {
++		{
++			.procname	= "qux",
++			.data		= &data,
++			.maxlen		= sizeof(u8),
++			.mode		= 0644,
++			.proc_handler	= proc_dou8vec_minmax,
++			.extra1		= SYSCTL_ZERO,
++			.extra2		= SYSCTL_TWO_HUNDRED,
++		},
++	};
++
++	KUNIT_EXPECT_NULL(test, register_sysctl("foo", table_foo));
++	KUNIT_EXPECT_NULL(test, register_sysctl("foo", table_bar));
++	KUNIT_EXPECT_NOT_NULL(test, register_sysctl("foo", table_qux));
++}
++
+ static struct kunit_case sysctl_test_cases[] = {
+ 	KUNIT_CASE(sysctl_test_api_dointvec_null_tbl_data),
+ 	KUNIT_CASE(sysctl_test_api_dointvec_table_maxlen_unset),
+@@ -378,6 +426,7 @@ static struct kunit_case sysctl_test_cases[] = {
+ 	KUNIT_CASE(sysctl_test_dointvec_write_happy_single_negative),
+ 	KUNIT_CASE(sysctl_test_api_dointvec_write_single_less_int_min),
+ 	KUNIT_CASE(sysctl_test_api_dointvec_write_single_greater_int_max),
++	KUNIT_CASE(sysctl_test_register_sysctl_sz_invalid_extra_value),
+ 	{}
+ };
+ 
+diff --git a/kernel/sysctl.c b/kernel/sysctl.c
+index 81cc974913bb..3efe3a991743 100644
+--- a/kernel/sysctl.c
++++ b/kernel/sysctl.c
+@@ -977,16 +977,10 @@ int proc_dou8vec_minmax(struct ctl_table *table, int write,
+ 	if (table->maxlen != sizeof(u8))
+ 		return -EINVAL;
+ 
+-	if (table->extra1) {
+-		min = *(unsigned int *) table->extra1;
+-		if (min > 255U)
+-			return -EINVAL;
+-	}
+-	if (table->extra2) {
+-		max = *(unsigned int *) table->extra2;
+-		if (max > 255U)
+-			return -EINVAL;
+-	}
++	if (table->extra1)
++		min = *(unsigned char *) table->extra1;
++	if (table->extra2)
++		max = *(unsigned char *) table->extra2;
+ 
+ 	tmp = *table;
+ 
+-- 
+2.25.1
+
