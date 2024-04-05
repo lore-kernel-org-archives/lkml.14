@@ -1,109 +1,117 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0654416C45E;
-	Fri,  5 Apr 2024 15:52:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE248171084;
+	Fri,  5 Apr 2024 15:52:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712332350; cv=none; b=bIk3vO2N3Fu8YTX6v9/Sk+XdF94m1TDAj+eO+4qxQd3bq7DaL3bp66CxSzMiwKJHo7YRA8k4Pypbgisd/WLXDy3xsVS+TcNSNGsKQvcs8iYMH70lSJJxaKQSBEXcAaAuZvZtFtD52u02gDpk/wGkuOogfTrOzddOGN3dqXgGX1k=
+	t=1712332353; cv=none; b=tJILLuSavG02VEZ58XPTSus+Qg1QM7bsrpCiyHdkGS9Cucj8OC8sn6i4RnOIgTPqvY0REZuRHhRl62xUKfiVHsg0y2CulpNTnFRUEnRBUp4TQWgRk7t6Szz85pmYAdy/IMJ0wDNTeabSNXrQRr9b3idW2vGdO8MWZE4MMPOKeBA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712332350; c=relaxed/simple;
-	bh=0DLwPXtz3s/pnpDyHKeyGJUx5h2MKJ57J8vOGPMiy/c=;
-	h=From:To:Cc:Subject:Date:Message-Id; b=BESQYpEplEZtaQgMljUlYXB0Mvoyjc2AuyQpNzWwsR2wapg2pm98W+Uppzppb5Qw1Cq1Z/OGq/vuuYwk//jwMbs+VOaqc0p8Vpkuk0p2epfRxHeSM3hRs6fIrDatEY77ZjOptfGYtGp7jf0fED/F8Ga7br+m7GB1n6NsuudzTjY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=qualcomm.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=FDOCrt2C; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qualcomm.com
+	s=arc-20240116; t=1712332353; c=relaxed/simple;
+	bh=1TYQ2nOf7m5eWfWsRNd18xHaQuIeo9EkWggomHT0qUI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=lVNJHrwVF3whS360w/NyQETjavxYRVT2DYBNoY8uWMtltLrzRtp68/XpkBZYve9gZAKAnd0grt+dP2OS62CaMSiEovjfISjmSEpu+OwDPudWgYBmgrTbzRsuee9mwjvqmgM9u0KI86AU73JsPdaZZeBMJ380D1zqGdIh1WE92cQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Om3T7B+X; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="FDOCrt2C"
-Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 435CUeX8010410;
-	Fri, 5 Apr 2024 15:52:24 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	from:to:cc:subject:date:message-id; s=qcppdkim1; bh=sG1XfZTCDkK5
-	lGZiblJPHTJdQCUMcIt2vLP9MBa3y/g=; b=FDOCrt2CyWpUzvcOXWQuIEh/Y945
-	r3i+y8KDvr4qLAJhiaDr2i2jrR/v6pAxOpkvwLlmQo+V3HwwMlA5eJ7xZtthlfep
-	+lhiurRhzpOLhLUSK+M5jZwYk86cx7vadtjKyQU+5Ys+8ws+91Zc9NKBbVNUIrBH
-	awqWyCNlouQmIhB3JoXHKr28oNt7fdTBGbP8hH0xhLQZ2llH/IkxBlpwCXAr01Rn
-	UCJJRt55330h2yAUP0mTvwyu2112A/HffggRShhzSjgF6Nb4ZA2euvgmCrygzbp4
-	t9JGFQWeaLxhN9vvvP2/jj6Nol514+al+oaplY1hx3uxG8W0ZwqDqFA6Tg==
-Received: from apblrppmta01.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3xahb10fyn-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 05 Apr 2024 15:52:24 +0000 (GMT)
-Received: from pps.filterd (APBLRPPMTA01.qualcomm.com [127.0.0.1])
-	by APBLRPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTP id 435FqLQP014489;
-	Fri, 5 Apr 2024 15:52:21 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-	by APBLRPPMTA01.qualcomm.com (PPS) with ESMTPS id 3x6btmhjcb-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
-	Fri, 05 Apr 2024 15:52:21 +0000
-Received: from APBLRPPMTA01.qualcomm.com (APBLRPPMTA01.qualcomm.com [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 435FqLno014468;
-	Fri, 5 Apr 2024 15:52:21 GMT
-Received: from hu-sgudaval-hyd.qualcomm.com (hu-dikshita-hyd.qualcomm.com [10.213.110.13])
-	by APBLRPPMTA01.qualcomm.com (PPS) with ESMTP id 435FqKlb014465;
-	Fri, 05 Apr 2024 15:52:21 +0000
-Received: by hu-sgudaval-hyd.qualcomm.com (Postfix, from userid 347544)
-	id 85BA42F4D; Fri,  5 Apr 2024 21:22:19 +0530 (+0530)
-From: Dikshita Agarwal <quic_dikshita@quicinc.com>
-To: Stanimir Varbanov <stanimir.k.varbanov@gmail.com>,
-        Vikash Garodia <quic_vgarodia@quicinc.com>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konrad.dybcio@linaro.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc: "Bryan O'Donoghue" <bryan.odonoghue@linaro.org>,
-        linux-media@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Dikshita Agarwal <quic_dikshita@quicinc.com>
-Subject: [PATCH] media: venus: fix use after free in vdec_close
-Date: Fri,  5 Apr 2024 21:21:59 +0530
-Message-Id: <1712332319-11767-1-git-send-email-quic_dikshita@quicinc.com>
-X-Mailer: git-send-email 2.7.4
-X-QCInternal: smtphost
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: r8h5ePs04KIbg_F1SCrB67TU-uymLv6c
-X-Proofpoint-GUID: r8h5ePs04KIbg_F1SCrB67TU-uymLv6c
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-04-05_17,2024-04-05_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- phishscore=0 spamscore=0 malwarescore=0 impostorscore=0 mlxlogscore=999
- mlxscore=0 suspectscore=0 priorityscore=1501 clxscore=1015 adultscore=0
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2404010003 definitions=main-2404050112
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Om3T7B+X"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1C456C433F1;
+	Fri,  5 Apr 2024 15:52:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1712332352;
+	bh=1TYQ2nOf7m5eWfWsRNd18xHaQuIeo9EkWggomHT0qUI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Om3T7B+XSv2dLDaDtUMT1+Bj89NktWuLG9ZRiHO6pDXJCKOFbWt3CuoJPum7E3X2j
+	 TWI7MtUFfRcF7Mdq4DvRdXsYGbaMY2y8A53XSgX6Wr06fq4MvfRcCohMT/67DUID7J
+	 jn9BmSmUHZ5xj+761vczmdGa3K6e386tRbc4MsOnT11ooeZlA5p18lWpvUUq4Ljj6T
+	 Y5/S5MbstQZLh48LDyA8yYRFhk+Y3YmpoD9RevHhIJuUa7C1CecIPzSAkWhza6DnPK
+	 RlmUbsLkYrUKL8Nxk0yFvPuDgLFb64V2/yFNrQ/Zyj7TvtVGTJYWQJ3iNjxsB06OXr
+	 IxlcVyAXZ0RvQ==
+Date: Fri, 5 Apr 2024 16:52:27 +0100
+From: Conor Dooley <conor@kernel.org>
+To: Yangyu Chen <cyy@cyyself.name>
+Cc: Icenowy Zheng <uwu@icenowy.me>, linux-riscv@lists.infradead.org,
+	Damien Le Moal <dlemoal@kernel.org>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>, Guo Ren <guoren@kernel.org>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Philipp Zabel <p.zabel@pengutronix.de>, linux-gpio@vger.kernel.org,
+	linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v6 10/11] riscv: dts: add initial canmv-k230 and k230-evb
+ dts
+Message-ID: <20240405-election-stubble-6b7e3d530d3c@spud>
+References: <tencent_F76EB8D731C521C18D5D7C4F8229DAA58E08@qq.com>
+ <tencent_DF5D7CD182AFDA188E0FB80E314A21038D08@qq.com>
+ <c052918c13069cfcf768d03518560c65c990b220.camel@icenowy.me>
+ <tencent_1C21558D2A7C7B8251DA4E8E08B82E313C08@qq.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="zGrM3zVsiNMs8DNg"
+Content-Disposition: inline
+In-Reply-To: <tencent_1C21558D2A7C7B8251DA4E8E08B82E313C08@qq.com>
 
-There appears to be a possible use after free with vdec_close().
-The firmware will add buffer release work to the work queue through
-HFI callbacks as a normal part of decoding. Randomly closing the
-decoder device from userspace during normal decoding can incur
-a read after free for inst.
 
-Fix it by cancelling the delayed work in vdec_close.
+--zGrM3zVsiNMs8DNg
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Dikshita Agarwal <quic_dikshita@quicinc.com>
----
- drivers/media/platform/qcom/venus/vdec.c | 1 +
- 1 file changed, 1 insertion(+)
+On Mon, Mar 25, 2024 at 11:10:49AM +0800, Yangyu Chen wrote:
+> > On Mar 25, 2024, at 00:23, Icenowy Zheng <uwu@icenowy.me> wrote:
+> > =E5=9C=A8 2024-03-23=E6=98=9F=E6=9C=9F=E5=85=AD=E7=9A=84 20:12 +0800=EF=
+=BC=8CYangyu Chen=E5=86=99=E9=81=93=EF=BC=9A
+> >> - Svpbmt and T-Head MAEE both supported
+> >>=20
+> >> T-Head C908 does support both Svpbmt and T-Head MAEE for page-based
+> >> memory
+> >> attributes and is controlled by BIT(21) on CSR.MXSTATUS. The Svpbmt
+> >> is used
+> >> here for mainline kernel support for K230. If the kernel wants to use
+> >> Svpbmt, the M-Mode software should unset BIT(21) of CSR.MXSTATUS
+> >> before
+> >> entering the S-Mode kernel. Otherwise, the kernel will not boot, as 0
+> >> on
+> >> T-Head MAEE is NonCachable Memory. Once the kernel switches from bare
+> >> metal
+> >> to Sv39, It will lose dirty cache line modifications that haven't
+> >> been
+> >> written back to the memory.
+> >=20
+> > As MXSTATUS has a S-mode read-only mirror known as SXSTATUS, maybe the
+> > kernel should detect SXSTATUS to decide whether to use Svpbmt or
+> > Xtheadpbmt (BTW Svnapot conflicts with Xtheadpbmt too).
+> >=20
+>=20
+> Thanks for this hint. I may need to change some code in the T-Head PBMT p=
+robe.
 
-diff --git a/drivers/media/platform/qcom/venus/vdec.c b/drivers/media/platform/qcom/venus/vdec.c
-index 29130a9..8dda46a 100644
---- a/drivers/media/platform/qcom/venus/vdec.c
-+++ b/drivers/media/platform/qcom/venus/vdec.c
-@@ -1747,6 +1747,7 @@ static int vdec_close(struct file *file)
- 
- 	vdec_pm_get(inst);
- 
-+	cancel_delayed_work_sync(&inst->delayed_process_work);
- 	v4l2_m2m_ctx_release(inst->m2m_ctx);
- 	v4l2_m2m_release(inst->m2m_dev);
- 	vdec_ctrl_deinit(inst);
--- 
-2.7.4
+For now, I'd rather we just focused on supporting the standard
+extensions on this SoC in mainline. I've applied the patches re-doing
+the Kconfig options just now, feel free to resend these patches
+whenever.
 
+Thanks,
+Conor.
+
+--zGrM3zVsiNMs8DNg
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZhAeOgAKCRB4tDGHoIJi
+0s3NAP9jV2FX5X2ERdKTaT8zG4y7prr8i8ld575p2m0u1mmbNQD/SIHdnbGSOOp0
+XurrRRps4Y469JrQ/R9fmQG+RFel5AY=
+=Xusz
+-----END PGP SIGNATURE-----
+
+--zGrM3zVsiNMs8DNg--
