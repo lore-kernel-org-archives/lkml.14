@@ -1,16 +1,16 @@
 Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9933161303
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86AED16087B
 	for <linux-kernel@vger.kernel.org>; Fri,  5 Apr 2024 09:52:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712310750; cv=none; b=dJryeR37TLU9SzoNTt3KQMMcDEXYPyYxNibdG/SRL0UYPX1y5v+zhmKeZ8k8DPlz+dBya4H/HFRFUhoO/LV42eocCrjaRQ5KF+pPwxQaOusRsDib+CDLzPKjRfsOi5sUfxdslYdO4Ak997SdahDvn1Xo04lfv4nDUcjjdmLPA40=
+	t=1712310750; cv=none; b=ueCxu+C4hO4VbkXQSo0X3YIg07GxOgyyFnEOI3w6c72JUqZFQsMJWOsjg4Sjrq3j/fo396vPn+34m2tv3KkTTs+DSjMEutQxfy11NEB2yw3ybgayy5NS8lyiz1leYZgfMONbgq8vQqLRjeccCIWVnw1C6m6i47GU6srQaPX91Z4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1712310750; c=relaxed/simple;
-	bh=N1vfQtVqdEZLvE8Bx0YbG7jmexrDntzSCnSI0MJdxLw=;
+	bh=deD3JQLISBcou22spzckWxYwmAH0N6cZe4YvG+FKgpQ=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=gciiImITuJAaUpeptJKIO7yEbcSDK8OcCuY9aR+xRWtXR5rdLGpTqnXvpn4/X9NT4KyszHjcm2EGyQTDtU3ZD4ttenmMGKb4ZJsMAD8vIzqtf4uIWZGB4mcOie5+gwTboyd5kQH8ECHGcauG2SR/WwnzPQaPz4LDh+w/Kna7gY4=
+	 MIME-Version; b=q3MQ9SzHev0vAHJf9uOSkT2zxQ+GkT5H4p9PGMX56MZmR2xMBCf7vLi+rkTcmNOjITfDXO/9TV+4kFUk1l6roSi7qYxMdkLRd0oVgJASDYK7Un0N09eN2kE4hw/WjarAsAODi7gE0uMvqFRxH144JXEWR33eTYnB25us5ZNebMo=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
@@ -18,15 +18,15 @@ Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
 	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
 	(Exim 4.92)
 	(envelope-from <ore@pengutronix.de>)
-	id 1rsgFA-0005EA-SA; Fri, 05 Apr 2024 11:52:20 +0200
+	id 1rsgFA-0005EC-S9; Fri, 05 Apr 2024 11:52:20 +0200
 Received: from [2a0a:edc0:0:1101:1d::ac] (helo=dude04.red.stw.pengutronix.de)
 	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
 	(Exim 4.94.2)
 	(envelope-from <ore@pengutronix.de>)
-	id 1rsgF8-00AXqc-B2; Fri, 05 Apr 2024 11:52:18 +0200
+	id 1rsgF8-00AXqf-E6; Fri, 05 Apr 2024 11:52:18 +0200
 Received: from ore by dude04.red.stw.pengutronix.de with local (Exim 4.96)
 	(envelope-from <ore@pengutronix.de>)
-	id 1rsgF8-001U4s-0p;
+	id 1rsgF8-001U5C-0w;
 	Fri, 05 Apr 2024 11:52:18 +0200
 From: Oleksij Rempel <o.rempel@pengutronix.de>
 To: "David S. Miller" <davem@davemloft.net>,
@@ -47,9 +47,9 @@ Cc: Oleksij Rempel <o.rempel@pengutronix.de>,
 	Simon Horman <horms@kernel.org>,
 	Willem de Bruijn <willemb@google.com>,
 	=?UTF-8?q?S=C3=B8ren=20Andersen?= <san@skov.dk>
-Subject: [PATCH net-next v3 3/9] net: add IEEE 802.1q specific helpers
-Date: Fri,  5 Apr 2024 11:52:10 +0200
-Message-Id: <20240405095216.353829-4-o.rempel@pengutronix.de>
+Subject: [PATCH net-next v3 5/9] net: dsa: microchip: add support for different DCB app configurations
+Date: Fri,  5 Apr 2024 11:52:12 +0200
+Message-Id: <20240405095216.353829-6-o.rempel@pengutronix.de>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20240405095216.353829-1-o.rempel@pengutronix.de>
 References: <20240405095216.353829-1-o.rempel@pengutronix.de>
@@ -65,369 +65,693 @@ X-SA-Exim-Mail-From: ore@pengutronix.de
 X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
 X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-IEEE 802.1q specification provides recommendation and examples which can
-be used as good default values for different drivers.
+Add DCB support to configure app trust sources and default port priority.
 
-This patch implements mapping examples documented in IEEE 802.1Q-2022 in
-Annex I "I.3 Traffic type to traffic class mapping" and IETF DSCP naming
-and mapping DSCP to Traffic Type inspired by RFC8325.
+Following commands can be used for testing:
+dcb apptrust set dev lan1 order pcp dscp
+dcb app replace dev lan1 default-prio 3
 
-This helpers will be used in followup patches for dsa/microchip DCB
-implementation.
+Since it is not possible to configure DSCP-Prio mapping per port, this
+patch provide only ability to read switch global dscp-prio mapping and
+way to enable/disable app trust for DSCP.
 
 Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
 ---
-changes v2:
-- properly export symbols with EXPORT_SYMBOL_GPL()
-- return error if NET_IEEE8021Q_HELPERS is not enabled
+changes v3:
+- move ksz8_port2_supported_apptrust[] to a followup patch
 ---
- include/net/dscp.h           |  76 ++++++++++++++++
- include/net/ieee8021q.h      |  49 ++++++++++
- net/Kconfig                  |   4 +
- net/core/Makefile            |   1 +
- net/core/ieee8021q_helpers.c | 167 +++++++++++++++++++++++++++++++++++
- 5 files changed, 297 insertions(+)
- create mode 100644 include/net/dscp.h
- create mode 100644 include/net/ieee8021q.h
- create mode 100644 net/core/ieee8021q_helpers.c
+ drivers/net/dsa/microchip/Kconfig      |   2 +
+ drivers/net/dsa/microchip/Makefile     |   2 +-
+ drivers/net/dsa/microchip/ksz_common.c |  12 +-
+ drivers/net/dsa/microchip/ksz_common.h |   5 +
+ drivers/net/dsa/microchip/ksz_dcb.c    | 544 +++++++++++++++++++++++++
+ drivers/net/dsa/microchip/ksz_dcb.h    |  21 +
+ 6 files changed, 584 insertions(+), 2 deletions(-)
+ create mode 100644 drivers/net/dsa/microchip/ksz_dcb.c
+ create mode 100644 drivers/net/dsa/microchip/ksz_dcb.h
 
-diff --git a/include/net/dscp.h b/include/net/dscp.h
-new file mode 100644
-index 0000000000000..ba40540868c9c
---- /dev/null
-+++ b/include/net/dscp.h
-@@ -0,0 +1,76 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/* Copyright (c) 2024 Pengutronix, Oleksij Rempel <kernel@pengutronix.de> */
-+
-+#ifndef __DSCP_H__
-+#define __DSCP_H__
-+
-+/*
-+ * DSCP Pools and Codepoint Space Division:
-+ *
-+ * The Differentiated Services (Diffserv) architecture defines a method for
-+ * classifying and managing network traffic using the DS field in IPv4 and IPv6
-+ * packet headers. This field can carry one of 64 distinct DSCP (Differentiated
-+ * Services Code Point) values, which are divided into three pools based on
-+ * their Least Significant Bits (LSB) patterns and intended usage. Each pool has
-+ * a specific registration procedure for assigning DSCP values:
-+ *
-+ * Pool 1 (Standards Action Pool):
-+ * - Codepoint Space: xxxxx0
-+ *   This pool includes DSCP values ending in '0' (binary), allocated via
-+ *   Standards Action. It is intended for globally recognized traffic classes,
-+ *   ensuring interoperability across the internet. This pool encompasses
-+ *   well-known DSCP values such as CS0-CS7, AFxx, EF, and VOICE-ADMIT.
-+ *
-+ * Pool 2 (Experimental/Local Use Pool):
-+ * - Codepoint Space: xxxx11
-+ *   Reserved for DSCP values ending in '11' (binary), this pool is designated
-+ *   for Experimental or Local Use. It allows for private or temporary traffic
-+ *   marking schemes not intended for standardized global use, facilitating
-+ *   testing and network-specific configurations without impacting
-+ *   interoperability.
-+ *
-+ * Pool 3 (Preferential Standardization Pool):
-+ * - Codepoint Space: xxxx01
-+ *   Initially reserved for experimental or local use, this pool now serves as
-+ *   a secondary standardization resource should Pool 1 become exhausted. DSCP
-+ *   values ending in '01' (binary) are assigned via Standards Action, with a
-+ *   focus on adopting new, standardized traffic classes as the need arises.
-+ *
-+ * For pool updates see:
-+ * https://www.iana.org/assignments/dscp-registry/dscp-registry.xhtml
-+ */
-+
-+/* Pool 1: Standardized DSCP values as per [RFC8126] */
-+#define DSCP_CS0 0		/* 000000, [RFC2474] */
-+/* CS0 is some times called default (DF) */
-+#define DSCP_DF 0		/* 000000, [RFC2474] */
-+#define DSCP_CS1 8		/* 001000, [RFC2474] */
-+#define DSCP_CS2 16		/* 010000, [RFC2474] */
-+#define DSCP_CS3 24		/* 011000, [RFC2474] */
-+#define DSCP_CS4 32		/* 100000, [RFC2474] */
-+#define DSCP_CS5 40		/* 101000, [RFC2474] */
-+#define DSCP_CS6 48		/* 110000, [RFC2474] */
-+#define DSCP_CS7 56		/* 111000, [RFC2474] */
-+#define DSCP_AF11 10		/* 001010, [RFC2597] */
-+#define DSCP_AF12 12		/* 001100, [RFC2597] */
-+#define DSCP_AF13 14		/* 001110, [RFC2597] */
-+#define DSCP_AF21 18		/* 010010, [RFC2597] */
-+#define DSCP_AF22 20		/* 010100, [RFC2597] */
-+#define DSCP_AF23 22		/* 010110, [RFC2597] */
-+#define DSCP_AF31 26		/* 011010, [RFC2597] */
-+#define DSCP_AF32 28		/* 011100, [RFC2597] */
-+#define DSCP_AF33 30		/* 011110, [RFC2597] */
-+#define DSCP_AF41 34		/* 100010, [RFC2597] */
-+#define DSCP_AF42 36		/* 100100, [RFC2597] */
-+#define DSCP_AF43 38		/* 100110, [RFC2597] */
-+#define DSCP_EF 46		/* 101110, [RFC3246] */
-+#define DSCP_VOICE_ADMIT 44	/* 101100, [RFC5865] */
-+
-+/* Pool 3: Standardized assignments, previously available for experimental/local
-+ * use
-+ */
-+#define DSCP_LE 1		/* 000001, [RFC8622] */
-+
-+#define DSCP_MAX 64
-+
-+#endif /* __DSCP_H__ */
-diff --git a/include/net/ieee8021q.h b/include/net/ieee8021q.h
-new file mode 100644
-index 0000000000000..da1e4db7e3db6
---- /dev/null
-+++ b/include/net/ieee8021q.h
-@@ -0,0 +1,49 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/* Copyright (c) 2024 Pengutronix, Oleksij Rempel <kernel@pengutronix.de> */
-+
-+#ifndef _NET_IEEE8021Q_H
-+#define _NET_IEEE8021Q_H
-+
-+/**
-+ * enum ieee8021q_traffic_type - 802.1Q traffic type priority values (802.1Q-2022)
-+ *
-+ * @IEEE8021Q_TT_BK: Background
-+ * @IEEE8021Q_TT_BE: Best Effort (default). According to 802.1Q-2022, BE is 0
-+ * but has higher priority than BK which is 1.
-+ * @IEEE8021Q_TT_EE: Excellent Effort
-+ * @IEEE8021Q_TT_CA: Critical Applications
-+ * @IEEE8021Q_TT_VI: Video, < 100 ms latency and jitter
-+ * @IEEE8021Q_TT_VO: Voice, < 10 ms latency and jitter
-+ * @IEEE8021Q_TT_IC: Internetwork Control
-+ * @IEEE8021Q_TT_NC: Network Control
-+ */
-+enum ieee8021q_traffic_type {
-+	IEEE8021Q_TT_BK = 0,
-+	IEEE8021Q_TT_BE = 1,
-+	IEEE8021Q_TT_EE = 2,
-+	IEEE8021Q_TT_CA = 3,
-+	IEEE8021Q_TT_VI = 4,
-+	IEEE8021Q_TT_VO = 5,
-+	IEEE8021Q_TT_IC = 6,
-+	IEEE8021Q_TT_NC = 7,
-+};
-+
-+#if IS_ENABLED(CONFIG_NET_IEEE8021Q_HELPERS)
-+
-+int ietf_dscp_to_ieee8021q_tt(int dscp);
-+int ieee8021q_tt_to_tc(int tt, int num_queues);
-+
-+#else
-+
-+static inline int ietf_dscp_to_ieee8021q_tt(int dscp)
-+{
-+	return -ENOTSUPP;
-+}
-+
-+static inline int ieee8021q_tt_to_tc(int tt, int num_queues)
-+{
-+	return -ENOTSUPP;
-+}
-+
-+#endif
-+#endif /* _NET_IEEE8021Q_H */
-diff --git a/net/Kconfig b/net/Kconfig
-index 3e57ccf0da279..2da4e6639527a 100644
---- a/net/Kconfig
-+++ b/net/Kconfig
-@@ -449,6 +449,10 @@ config GRO_CELLS
- config SOCK_VALIDATE_XMIT
- 	bool
+diff --git a/drivers/net/dsa/microchip/Kconfig b/drivers/net/dsa/microchip/Kconfig
+index 394ca8678d2ba..c1b906c05a025 100644
+--- a/drivers/net/dsa/microchip/Kconfig
++++ b/drivers/net/dsa/microchip/Kconfig
+@@ -4,6 +4,8 @@ menuconfig NET_DSA_MICROCHIP_KSZ_COMMON
+ 	depends on NET_DSA
+ 	select NET_DSA_TAG_KSZ
+ 	select NET_DSA_TAG_NONE
++	select NET_IEEE8021Q_HELPERS
++	select DCB
+ 	help
+ 	  This driver adds support for Microchip KSZ9477 series switch and
+ 	  KSZ8795/KSZ88x3 switch chips.
+diff --git a/drivers/net/dsa/microchip/Makefile b/drivers/net/dsa/microchip/Makefile
+index 49459a50dbc81..1cfba1ec9355a 100644
+--- a/drivers/net/dsa/microchip/Makefile
++++ b/drivers/net/dsa/microchip/Makefile
+@@ -1,6 +1,6 @@
+ # SPDX-License-Identifier: GPL-2.0-only
+ obj-$(CONFIG_NET_DSA_MICROCHIP_KSZ_COMMON)	+= ksz_switch.o
+-ksz_switch-objs := ksz_common.o
++ksz_switch-objs := ksz_common.o ksz_dcb.o
+ ksz_switch-objs += ksz9477.o ksz9477_acl.o ksz9477_tc_flower.o
+ ksz_switch-objs += ksz8795.o
+ ksz_switch-objs += lan937x_main.o
+diff --git a/drivers/net/dsa/microchip/ksz_common.c b/drivers/net/dsa/microchip/ksz_common.c
+index b2d1c61400c51..840b17b8507e1 100644
+--- a/drivers/net/dsa/microchip/ksz_common.c
++++ b/drivers/net/dsa/microchip/ksz_common.c
+@@ -28,6 +28,7 @@
+ #include <net/switchdev.h>
  
-+config NET_IEEE8021Q_HELPERS
-+	bool
-+	default n
+ #include "ksz_common.h"
++#include "ksz_dcb.h"
+ #include "ksz_ptp.h"
+ #include "ksz8.h"
+ #include "ksz9477.h"
+@@ -2364,6 +2365,10 @@ static int ksz_setup(struct dsa_switch *ds)
+ 		goto out_ptp_clock_unregister;
+ 	}
+ 
++	ret = ksz_dcb_init(dev);
++	if (ret)
++		goto out_ptp_clock_unregister;
 +
- config NET_SELFTESTS
- 	def_tristate PHYLIB
- 	depends on PHYLIB && INET
-diff --git a/net/core/Makefile b/net/core/Makefile
-index 21d6fbc7e884c..62be9aef25285 100644
---- a/net/core/Makefile
-+++ b/net/core/Makefile
-@@ -26,6 +26,7 @@ obj-$(CONFIG_NETPOLL) += netpoll.o
- obj-$(CONFIG_FIB_RULES) += fib_rules.o
- obj-$(CONFIG_TRACEPOINTS) += net-traces.o
- obj-$(CONFIG_NET_DROP_MONITOR) += drop_monitor.o
-+obj-$(CONFIG_NET_IEEE8021Q_HELPERS) += ieee8021q_helpers.o
- obj-$(CONFIG_NET_SELFTESTS) += selftests.o
- obj-$(CONFIG_NETWORK_PHY_TIMESTAMPING) += timestamping.o
- obj-$(CONFIG_NET_PTP_CLASSIFY) += ptp_classifier.o
-diff --git a/net/core/ieee8021q_helpers.c b/net/core/ieee8021q_helpers.c
+ 	/* start switch */
+ 	regmap_update_bits(ksz_regmap_8(dev), regs[S_START_CTRL],
+ 			   SW_START, SW_START);
+@@ -2691,7 +2696,7 @@ static int ksz_port_setup(struct dsa_switch *ds, int port)
+ 	 * there is no need to do anything.
+ 	 */
+ 
+-	return 0;
++	return ksz_dcb_init_port(dev, port);
+ }
+ 
+ void ksz_port_stp_state_set(struct dsa_switch *ds, int port, u8 state)
+@@ -3943,6 +3948,11 @@ static const struct dsa_switch_ops ksz_switch_ops = {
+ 	.port_setup_tc		= ksz_setup_tc,
+ 	.get_mac_eee		= ksz_get_mac_eee,
+ 	.set_mac_eee		= ksz_set_mac_eee,
++	.port_get_default_prio	= ksz_port_get_default_prio,
++	.port_set_default_prio	= ksz_port_set_default_prio,
++	.port_get_dscp_prio	= ksz_port_get_dscp_prio,
++	.port_set_apptrust	= ksz_port_set_apptrust,
++	.port_get_apptrust	= ksz_port_get_apptrust,
+ };
+ 
+ struct ksz_device *ksz_switch_alloc(struct device *base, void *priv)
+diff --git a/drivers/net/dsa/microchip/ksz_common.h b/drivers/net/dsa/microchip/ksz_common.h
+index 900e9ac06d013..cbbaafca79379 100644
+--- a/drivers/net/dsa/microchip/ksz_common.h
++++ b/drivers/net/dsa/microchip/ksz_common.h
+@@ -621,6 +621,11 @@ static inline bool ksz_is_ksz88x3(struct ksz_device *dev)
+ 	return dev->chip_id == KSZ8830_CHIP_ID;
+ }
+ 
++static inline bool is_ksz8(struct ksz_device *dev)
++{
++	return ksz_is_ksz87xx(dev) || ksz_is_ksz88x3(dev);
++}
++
+ static inline int is_lan937x(struct ksz_device *dev)
+ {
+ 	return dev->chip_id == LAN9370_CHIP_ID ||
+diff --git a/drivers/net/dsa/microchip/ksz_dcb.c b/drivers/net/dsa/microchip/ksz_dcb.c
 new file mode 100644
-index 0000000000000..61db84419f7a8
+index 0000000000000..46491c6dd6f60
 --- /dev/null
-+++ b/net/core/ieee8021q_helpers.c
-@@ -0,0 +1,167 @@
++++ b/drivers/net/dsa/microchip/ksz_dcb.c
+@@ -0,0 +1,544 @@
 +// SPDX-License-Identifier: GPL-2.0
 +// Copyright (c) 2024 Pengutronix, Oleksij Rempel <kernel@pengutronix.de>
 +
-+#include <linux/printk.h>
-+#include <linux/types.h>
++#include <linux/dsa/ksz_common.h>
++#include <net/dsa.h>
 +#include <net/dscp.h>
 +#include <net/ieee8021q.h>
 +
-+/* Following arrays map Traffic Types (TT) to traffic classes (TC) for different
-+ * number of queues as shown in the example provided by  IEEE 802.1Q-2022 in
-+ * Annex I "I.3 Traffic type to traffic class mapping" and Table I-1 "Traffic
-+ * type to traffic class mapping".
++#include "ksz_common.h"
++#include "ksz_dcb.h"
++#include "ksz8.h"
++
++#define KSZ8_REG_PORT_1_CTRL_0			0x10
++#define KSZ8_PORT_DIFFSERV_ENABLE		BIT(6)
++#define KSZ8_PORT_802_1P_ENABLE			BIT(5)
++#define KSZ8_PORT_BASED_PRIO_M			GENMASK(4, 3)
++
++#define KSZ88X3_REG_TOS_DSCP_CTRL		0x60
++#define KSZ8765_REG_TOS_DSCP_CTRL		0x90
++
++#define KSZ9477_REG_SW_MAC_TOS_CTRL		0x033e
++#define KSZ9477_SW_TOS_DSCP_REMAP		BIT(0)
++#define KSZ9477_SW_TOS_DSCP_DEFAULT_PRIO_M	GENMASK(5, 3)
++
++#define KSZ9477_REG_DIFFSERV_PRIO_MAP		0x0340
++
++#define KSZ9477_REG_PORT_MRI_PRIO_CTRL		0x0801
++#define KSZ9477_PORT_HIGHEST_PRIO		BIT(7)
++#define KSZ9477_PORT_OR_PRIO			BIT(6)
++#define KSZ9477_PORT_MAC_PRIO_ENABLE		BIT(4)
++#define KSZ9477_PORT_VLAN_PRIO_ENABLE		BIT(3)
++#define KSZ9477_PORT_802_1P_PRIO_ENABLE		BIT(2)
++#define KSZ9477_PORT_DIFFSERV_PRIO_ENABLE	BIT(1)
++#define KSZ9477_PORT_ACL_PRIO_ENABLE		BIT(0)
++
++#define KSZ9477_REG_PORT_MRI_MAC_CTRL		0x0802
++#define KSZ9477_PORT_BASED_PRIO_M		GENMASK(2, 0)
++
++struct ksz_apptrust_map {
++	u8 apptrust;
++	u8 bit;
++};
++
++static const struct ksz_apptrust_map ksz8_apptrust_map_to_bit[] = {
++	{ DCB_APP_SEL_PCP, KSZ8_PORT_802_1P_ENABLE },
++	{ IEEE_8021QAZ_APP_SEL_DSCP, KSZ8_PORT_DIFFSERV_ENABLE },
++};
++
++static const struct ksz_apptrust_map ksz9477_apptrust_map_to_bit[] = {
++	{ DCB_APP_SEL_PCP, KSZ9477_PORT_802_1P_PRIO_ENABLE },
++	{ IEEE_8021QAZ_APP_SEL_DSCP, KSZ9477_PORT_DIFFSERV_PRIO_ENABLE },
++};
++
++/*
++ * ksz_supported_apptrust[] - Supported apptrust selectors and Priority Order
++ *			      of Internal Priority Value (IPV) sources.
++ *
++ * This array defines the apptrust selectors supported by the hardware, where
++ * the index within the array indicates the priority of the selector - lower
++ * indices correspond to higher priority. This fixed priority scheme is due to
++ * the hardware's design, which does not support configurable priority among
++ * different priority sources.
++ *
++ * The priority sources, including Tail Tag, ACL, VLAN PCP and DSCP are ordered
++ * by the hardware's fixed logic, as detailed below. The order reflects a
++ * non-configurable precedence where certain types of priority information
++ * override others:
++ *
++ * 1. Tail Tag - Highest priority, overrides ACL, VLAN PCP, and DSCP priorities.
++ * 2. ACL - Overrides VLAN PCP and DSCP priorities.
++ * 3. VLAN PCP - Overrides DSCP priority.
++ * 4. DSCP - Lowest priority, does not override any other priority source.
++ *
++ * In this context, the array's lower index (higher priority) for
++ * 'DCB_APP_SEL_PCP' suggests its relative priority over
++ * 'IEEE_8021QAZ_APP_SEL_DSCP' within the system's fixed priority scheme.
++ *
++ * DCB_APP_SEL_PCP - Priority Code Point selector
++ * IEEE_8021QAZ_APP_SEL_DSCP - Differentiated Services Code Point selector
 + */
-+static const u8 ieee8021q_8queue_tt_tc_map[] = {
-+	[IEEE8021Q_TT_BK] = 0,
-+	[IEEE8021Q_TT_BE] = 1,
-+	[IEEE8021Q_TT_EE] = 2,
-+	[IEEE8021Q_TT_CA] = 3,
-+	[IEEE8021Q_TT_VI] = 4,
-+	[IEEE8021Q_TT_VO] = 5,
-+	[IEEE8021Q_TT_IC] = 6,
-+	[IEEE8021Q_TT_NC] = 7,
++static const u8 ksz_supported_apptrust[] = {
++	DCB_APP_SEL_PCP,
++	IEEE_8021QAZ_APP_SEL_DSCP,
 +};
 +
-+static const u8 ieee8021q_7queue_tt_tc_map[] = {
-+	[IEEE8021Q_TT_BK] = 0,
-+	[IEEE8021Q_TT_BE] = 1,
-+	[IEEE8021Q_TT_EE] = 2,
-+	[IEEE8021Q_TT_CA] = 3,
-+	[IEEE8021Q_TT_VI] = 4,	[IEEE8021Q_TT_VO] = 4,
-+	[IEEE8021Q_TT_IC] = 5,
-+	[IEEE8021Q_TT_NC] = 6,
++static const char * const ksz_supported_apptrust_variants[] = {
++	"empty", "dscp", "pcp", "dscp pcp"
 +};
 +
-+static const u8 ieee8021q_6queue_tt_tc_map[] = {
-+	[IEEE8021Q_TT_BK] = 0,
-+	[IEEE8021Q_TT_BE] = 1,
-+	[IEEE8021Q_TT_EE] = 2,	[IEEE8021Q_TT_CA] = 2,
-+	[IEEE8021Q_TT_VI] = 3,	[IEEE8021Q_TT_VO] = 3,
-+	[IEEE8021Q_TT_IC] = 4,
-+	[IEEE8021Q_TT_NC] = 5,
-+};
-+
-+static const u8 ieee8021q_5queue_tt_tc_map[] = {
-+	[IEEE8021Q_TT_BK] = 0, [IEEE8021Q_TT_BE] = 0,
-+	[IEEE8021Q_TT_EE] = 1, [IEEE8021Q_TT_CA] = 1,
-+	[IEEE8021Q_TT_VI] = 2, [IEEE8021Q_TT_VO] = 2,
-+	[IEEE8021Q_TT_IC] = 3,
-+	[IEEE8021Q_TT_NC] = 4,
-+};
-+
-+static const u8 ieee8021q_4queue_tt_tc_map[] = {
-+	[IEEE8021Q_TT_BK] = 0, [IEEE8021Q_TT_BE] = 0,
-+	[IEEE8021Q_TT_EE] = 1, [IEEE8021Q_TT_CA] = 1,
-+	[IEEE8021Q_TT_VI] = 2, [IEEE8021Q_TT_VO] = 2,
-+	[IEEE8021Q_TT_IC] = 3, [IEEE8021Q_TT_NC] = 3,
-+};
-+
-+static const u8 ieee8021q_3queue_tt_tc_map[] = {
-+	[IEEE8021Q_TT_BK] = 0, [IEEE8021Q_TT_BE] = 0,
-+	[IEEE8021Q_TT_EE] = 0, [IEEE8021Q_TT_CA] = 0,
-+	[IEEE8021Q_TT_VI] = 1, [IEEE8021Q_TT_VO] = 1,
-+	[IEEE8021Q_TT_IC] = 2, [IEEE8021Q_TT_NC] = 2,
-+};
-+
-+static const u8 ieee8021q_2queue_tt_tc_map[] = {
-+	[IEEE8021Q_TT_BK] = 0, [IEEE8021Q_TT_BE] = 0,
-+	[IEEE8021Q_TT_EE] = 0, [IEEE8021Q_TT_CA] = 0,
-+	[IEEE8021Q_TT_VI] = 1, [IEEE8021Q_TT_VO] = 1,
-+	[IEEE8021Q_TT_IC] = 1, [IEEE8021Q_TT_NC] = 1,
-+};
-+
-+static const u8 ieee8021q_1queue_tt_tc_map[] = {
-+	[IEEE8021Q_TT_BK] = 0, [IEEE8021Q_TT_BE] = 0,
-+	[IEEE8021Q_TT_EE] = 0, [IEEE8021Q_TT_CA] = 0,
-+	[IEEE8021Q_TT_VI] = 0, [IEEE8021Q_TT_VO] = 0,
-+	[IEEE8021Q_TT_IC] = 0, [IEEE8021Q_TT_NC] = 0,
-+};
++static void ksz_get_defult_port_prio_reg(struct ksz_device *dev, int *reg,
++					 u8 *mask, int *shift)
++{
++	if (is_ksz8(dev)) {
++		*reg = KSZ8_REG_PORT_1_CTRL_0;
++		*mask = KSZ8_PORT_BASED_PRIO_M;
++		*shift = __bf_shf(KSZ8_PORT_BASED_PRIO_M);
++	} else {
++		*reg = KSZ9477_REG_PORT_MRI_MAC_CTRL;
++		*mask = KSZ9477_PORT_BASED_PRIO_M;
++		*shift = __bf_shf(KSZ9477_PORT_BASED_PRIO_M);
++	}
++}
 +
 +/**
-+ * ieee8021q_tt_to_tc - Map IEEE 802.1Q Traffic Type to Traffic Class
-+ * @tt: IEEE 802.1Q Traffic Type
-+ * @num_queues: Number of queues
++ * ksz_port_get_default_prio - Retrieves the default priority for a port on a
++ *			       KSZ switch
++ * @ds: Pointer to the DSA switch structure
++ * @port: Port number from which to get the default priority
 + *
-+ * This function maps an IEEE 802.1Q Traffic Type to a Traffic Class (TC) based
-+ * on the number of queues configured on the switch. The mapping is based on the
-+ * example provided by IEEE 802.1Q-2022 in Annex I "I.3 Traffic type to traffic
-+ * class mapping" and Table I-1 "Traffic type to traffic class mapping".
++ * This function fetches the default priority for the specified port on a KSZ
++ * switch.
 + *
-+ * Return: Traffic Class corresponding to the given Traffic Type.
++ * Return: The default priority of the port on success, or a negative error
++ * code on failure.
 + */
-+int ieee8021q_tt_to_tc(int tt, int num_queues)
++int ksz_port_get_default_prio(struct dsa_switch *ds, int port)
 +{
-+	switch (num_queues) {
-+	case 8:
-+		return ieee8021q_8queue_tt_tc_map[tt];
-+	case 7:
-+		return ieee8021q_7queue_tt_tc_map[tt];
-+	case 6:
-+		return ieee8021q_6queue_tt_tc_map[tt];
-+	case 5:
-+		return ieee8021q_5queue_tt_tc_map[tt];
-+	case 4:
-+		return ieee8021q_4queue_tt_tc_map[tt];
-+	case 3:
-+		return ieee8021q_3queue_tt_tc_map[tt];
-+	case 2:
-+		return ieee8021q_2queue_tt_tc_map[tt];
-+	case 1:
-+		return ieee8021q_1queue_tt_tc_map[tt];
++	struct ksz_device *dev = ds->priv;
++	int ret, reg, shift;
++	u8 data, mask;
++
++	ksz_get_defult_port_prio_reg(dev, &reg, &mask, &shift);
++
++	ret = ksz_pread8(dev, port, reg, &data);
++	if (ret)
++		return ret;
++
++	return (data & mask) >> shift;
++}
++
++/**
++ * ksz_port_set_default_prio - Sets the default priority for a port on a KSZ
++ *			       switch
++ * @ds: Pointer to the DSA switch structure
++ * @port: Port number for which to set the default priority
++ * @prio: Priority value to set
++ *
++ * This function sets the default priority for the specified port on a KSZ
++ * switch.
++ *
++ * Return: 0 on success, or a negative error code on failure.
++ */
++int ksz_port_set_default_prio(struct dsa_switch *ds, int port, u8 prio)
++{
++	struct ksz_device *dev = ds->priv;
++	int reg, shift;
++	u8 mask;
++
++	if (prio >= dev->info->num_tx_queues)
++		return -EINVAL;
++
++	ksz_get_defult_port_prio_reg(dev, &reg, &mask, &shift);
++
++	return ksz_prmw8(dev, port, reg, mask, (prio << shift) & mask);
++}
++
++/**
++ * ksz_get_dscp_prio_reg - Retrieves the DSCP-to-priority-mapping register
++ * @dev: Pointer to the KSZ switch device structure
++ * @reg: Pointer to the register address to be set
++ * @per_reg: Pointer to the number of DSCP values per register
++ * @mask: Pointer to the mask to be set
++ *
++ * This function retrieves the DSCP to priority mapping register, the number of
++ * DSCP values per register, and the mask to be set.
++ */
++static void ksz_get_dscp_prio_reg(struct ksz_device *dev, int *reg,
++				  int *per_reg, u8 *mask)
++{
++	if (ksz_is_ksz87xx(dev)) {
++		*reg = KSZ8765_REG_TOS_DSCP_CTRL;
++		*per_reg = 4;
++		*mask = GENMASK(1, 0);
++	} else if (ksz_is_ksz88x3(dev)) {
++		*reg = KSZ88X3_REG_TOS_DSCP_CTRL;
++		*per_reg = 4;
++		*mask = GENMASK(1, 0);
++	} else {
++		*reg = KSZ9477_REG_DIFFSERV_PRIO_MAP;
++		*per_reg = 2;
++		*mask = GENMASK(2, 0);
++	}
++}
++
++/**
++ * ksz_port_get_dscp_prio - Retrieves the priority for a DSCP value on a KSZ
++ *			    switch
++ * @ds: Pointer to the DSA switch structure
++ * @port: Port number for which to get the priority
++ * @dscp: DSCP value for which to get the priority
++ *
++ * This function fetches the priority value from switch global DSCP-to-priorty
++ * mapping table for the specified DSCP value.
++ *
++ * Return: The priority value for the DSCP on success, or a negative error
++ * code on failure.
++ */
++int ksz_port_get_dscp_prio(struct dsa_switch *ds, int port, u8 dscp)
++{
++	struct ksz_device *dev = ds->priv;
++	int reg, per_reg, ret, shift;
++	u8 data, mask;
++
++	ksz_get_dscp_prio_reg(dev, &reg, &per_reg, &mask);
++
++	/* If DSCP remapping is disabled, DSCP bits 3-5 are used as Internal
++	 * Priority Value (IPV)
++	 */
++	if (!is_ksz8(dev)) {
++		ret = ksz_read8(dev, KSZ9477_REG_SW_MAC_TOS_CTRL, &data);
++		if (ret)
++			return ret;
++
++		/* If DSCP remapping is disabled, DSCP bits 3-5 are used as
++		 * Internal Priority Value (IPV)
++		 */
++		if (!(data & KSZ9477_SW_TOS_DSCP_REMAP))
++			return FIELD_GET(KSZ9477_SW_TOS_DSCP_DEFAULT_PRIO_M,
++					 dscp);
 +	}
 +
-+	pr_warn("Invalid number of queues %d\n", num_queues);
++	/* In case DSCP remapping is enabled, we need to write the DSCP to
++	 * priority mapping table.
++	 */
++	reg += dscp / per_reg;
++	ret = ksz_read8(dev, reg, &data);
++	if (ret)
++		return ret;
++
++	shift = (dscp % per_reg) * (8 / per_reg);
++
++	return (data >> shift) & mask;
++}
++
++/**
++ * ksz_init_global_dscp_map - Initializes the global DSCP-to-priority mapping
++ * @dev: Pointer to the KSZ switch device structure
++ *
++ * This function initializes the global DSCP-to-priority mapping table for the
++ * switch.
++ *
++ * Return: 0 on success, or a negative error code on failure
++ */
++static int ksz_init_global_dscp_map(struct ksz_device *dev)
++{
++	int reg, per_reg, ret, dscp;
++	u8 data = 0;
++	u8 mask;
++
++	/* On KSZ9xxx variants, DSCP remapping is disabled by default.
++	 * Enable to have, predictable and reproducible behavior across
++	 * different devices.
++	 */
++	if (!is_ksz8(dev)) {
++		ret = ksz_rmw8(dev, KSZ9477_REG_SW_MAC_TOS_CTRL,
++			       KSZ9477_SW_TOS_DSCP_REMAP,
++			       KSZ9477_SW_TOS_DSCP_REMAP);
++		if (ret)
++			return ret;
++	}
++
++	ksz_get_dscp_prio_reg(dev, &reg, &per_reg, &mask);
++
++	for (dscp = 0; dscp < DSCP_MAX; dscp++) {
++		int ipv, shift, tt;
++
++		/* Map DSCP to Traffic Type, which is corresponding to the
++		 * Internal Priority Value (IPV) in the switch.
++		 */
++		if (!is_ksz8(dev)) {
++			ipv = ietf_dscp_to_ieee8021q_tt(dscp);
++		} else {
++			/* On KSZ8xxx variants we do not have IPV to queue
++			 * remapping table. We need to convert DSCP to Traffic
++			 * Type and then to queue.
++			 */
++			tt = ietf_dscp_to_ieee8021q_tt(dscp);
++			if (tt < 0)
++				return tt;
++
++			ipv = ieee8021q_tt_to_tc(tt, dev->info->num_tx_queues);
++		}
++
++		if (ipv < 0)
++			return ipv;
++
++		shift = (dscp % per_reg) * (8 / per_reg);
++		data |= (ipv & mask) << shift;
++
++		if (dscp % per_reg == per_reg - 1) {
++			ret = ksz_write8(dev, reg + (dscp / per_reg), data);
++			if (ret)
++				return ret;
++
++			data = 0;
++		}
++	}
++
 +	return 0;
 +}
-+EXPORT_SYMBOL_GPL(ieee8021q_tt_to_tc);
 +
 +/**
-+ * ietf_dscp_to_ieee8021q_tt - Map IETF DSCP to IEEE 802.1Q Traffic Type
-+ * @dscp: IETF DSCP value
++ * ksz_apptrust_error - Prints an error message for an invalid apptrust selector
++ * @dev: Pointer to the KSZ switch device structure
 + *
-+ * This function maps an IETF DSCP value to an IEEE 802.1Q Traffic Type (TT).
-+ * Since there is no corresponding mapping between DSCP and IEEE 802.1Q Traffic
-+ * Type, this function is inspired by the RFC8325 documentation which describe
-+ * the mapping between DSCP and 802.11 User Priority (UP) values.
-+ *
-+ * Return: IEEE 802.1Q Traffic Type corresponding to the given DSCP value
++ * This function prints an error message when an invalid apptrust selector is
++ * provided.
 + */
-+
-+int ietf_dscp_to_ieee8021q_tt(int dscp)
++static void ksz_apptrust_error(struct ksz_device *dev)
 +{
-+	switch (dscp) {
-+	case DSCP_CS0:
-+	case DSCP_AF11:
-+	case DSCP_AF12:
-+	case DSCP_AF13:
-+		return IEEE8021Q_TT_BE;
-+	case DSCP_CS1:
-+		return IEEE8021Q_TT_BK;
-+	case DSCP_CS2:
-+	case DSCP_AF21:
-+	case DSCP_AF22:
-+	case DSCP_AF23:
-+		return IEEE8021Q_TT_EE;
-+	case DSCP_CS3:
-+	case DSCP_AF31:
-+	case DSCP_AF32:
-+	case DSCP_AF33:
-+		return IEEE8021Q_TT_CA;
-+	case DSCP_CS4:
-+	case DSCP_AF41:
-+	case DSCP_AF42:
-+	case DSCP_AF43:
-+		return IEEE8021Q_TT_VI;
-+	case DSCP_CS5:
-+	case DSCP_EF:
-+	case DSCP_VOICE_ADMIT:
-+		return IEEE8021Q_TT_VO;
-+	case DSCP_CS6:
-+		return IEEE8021Q_TT_IC;
-+	case DSCP_CS7:
-+		return IEEE8021Q_TT_NC;
++	char supported_apptrust_variants[64];
++	int i;
++
++	supported_apptrust_variants[0] = '\0';
++	for (i = 0; i < ARRAY_SIZE(ksz_supported_apptrust_variants); i++) {
++		if (i > 0)
++			strlcat(supported_apptrust_variants, ", ",
++				sizeof(supported_apptrust_variants));
++		strlcat(supported_apptrust_variants,
++			ksz_supported_apptrust_variants[i],
++			sizeof(supported_apptrust_variants));
 +	}
 +
-+	return (dscp >> 3) & 0x7;
++	dev_err(dev->dev, "Invalid apptrust selector or priority order. Supported: %s\n",
++		supported_apptrust_variants);
 +}
-+EXPORT_SYMBOL_GPL(ietf_dscp_to_ieee8021q_tt);
++
++/**
++ * ksz_port_set_apptrust_validate - Validates the apptrust selectors
++ * @dev: Pointer to the KSZ switch device structure
++ * @port: Port number for which to set the apptrust selectors
++ * @sel: Array of apptrust selectors to validate
++ * @nsel: Number of apptrust selectors in the array
++ *
++ * This function validates the apptrust selectors provided and ensures that
++ * they are in the correct order.
++ *
++ * This family of switches supports two apptrust selectors: DCB_APP_SEL_PCP and
++ * IEEE_8021QAZ_APP_SEL_DSCP. The priority order of the selectors is fixed and
++ * cannot be changed. The order is as follows:
++ * 1. DCB_APP_SEL_PCP - Priority Code Point selector (highest priority)
++ * 2. IEEE_8021QAZ_APP_SEL_DSCP - Differentiated Services Code Point selector
++ *   (lowest priority)
++ *
++ * Return: 0 on success, or a negative error code on failure
++ */
++static int ksz_port_set_apptrust_validate(struct ksz_device *dev, int port,
++					  const u8 *sel, int nsel)
++{
++	int i, j, found;
++	int j_prev = 0;
++
++	/* Iterate through the requested selectors */
++	for (i = 0; i < nsel; i++) {
++		found = 0;
++
++		/* Check if the current selector is supported by the hardware */
++		for (j = 0; j < sizeof(ksz_supported_apptrust); j++) {
++			if (sel[i] != ksz_supported_apptrust[j])
++				continue;
++
++			found = 1;
++
++			/* Ensure that no higher priority selector (lower index)
++			 * precedes a lower priority one
++			 */
++			if (i > 0 && j <= j_prev)
++				goto invalid;
++
++			j_prev = j;
++			break;
++		}
++
++		if (!found)
++			goto invalid;
++	}
++
++	return 0;
++
++invalid:
++	ksz_apptrust_error(dev);
++
++	return -EINVAL;
++}
++
++/**
++ * ksz_get_apptrus_map_and_reg - Retrieves the apptrust map and register
++ * @dev: Pointer to the KSZ switch device structure
++ * @map: Pointer to the apptrust map to be set
++ * @reg: Pointer to the register address to be set
++ * @mask: Pointer to the mask to be set
++ *
++ * This function retrieves the apptrust map and register address for the
++ * apptrust configuration.
++ */
++static void ksz_get_apptrus_map_and_reg(struct ksz_device *dev,
++					const struct ksz_apptrust_map **map,
++					int *reg, u8 *mask)
++{
++	if (is_ksz8(dev)) {
++		*map = ksz8_apptrust_map_to_bit;
++		*reg = KSZ8_REG_PORT_1_CTRL_0;
++		*mask = KSZ8_PORT_DIFFSERV_ENABLE | KSZ8_PORT_802_1P_ENABLE;
++	} else {
++		*map = ksz9477_apptrust_map_to_bit;
++		*reg = KSZ9477_REG_PORT_MRI_PRIO_CTRL;
++		*mask = KSZ9477_PORT_802_1P_PRIO_ENABLE |
++			KSZ9477_PORT_DIFFSERV_PRIO_ENABLE;
++	}
++}
++
++/**
++ * ksz_port_set_apptrust - Sets the apptrust selectors for a port on a KSZ
++ *			   switch
++ * @ds: Pointer to the DSA switch structure
++ * @port: Port number for which to set the apptrust selectors
++ * @sel: Array of apptrust selectors to set
++ * @nsel: Number of apptrust selectors in the array
++ *
++ * This function sets the apptrust selectors for the specified port on a KSZ
++ * switch.
++ *
++ * Return: 0 on success, or a negative error code on failure
++ */
++int ksz_port_set_apptrust(struct dsa_switch *ds, int port,
++			  const u8 *sel, int nsel)
++{
++	const struct ksz_apptrust_map *map;
++	struct ksz_device *dev = ds->priv;
++	int reg, i, ret;
++	u8 data = 0;
++	u8 mask;
++
++	ret = ksz_port_set_apptrust_validate(dev, port, sel, nsel);
++	if (ret)
++		return ret;
++
++	ksz_get_apptrus_map_and_reg(dev, &map, &reg, &mask);
++
++	for (i = 0; i < nsel; i++) {
++		int j;
++
++		for (j = 0; j < ARRAY_SIZE(ksz_supported_apptrust); j++) {
++			if (sel[i] != ksz_supported_apptrust[j])
++				continue;
++
++			data |= map[j].bit;
++			break;
++		}
++	}
++
++	return ksz_prmw8(dev, port, reg, mask, data);
++}
++
++/**
++ * ksz_port_get_apptrust - Retrieves the apptrust selectors for a port on a KSZ
++ *			   switch
++ * @ds: Pointer to the DSA switch structure
++ * @port: Port number for which to get the apptrust selectors
++ * @sel: Array to store the apptrust selectors
++ * @nsel: Number of apptrust selectors in the array
++ *
++ * This function fetches the apptrust selectors for the specified port on a KSZ
++ * switch.
++ *
++ * Return: 0 on success, or a negative error code on failure
++ */
++int ksz_port_get_apptrust(struct dsa_switch *ds, int port, u8 *sel, int *nsel)
++{
++	const struct ksz_apptrust_map *map;
++	struct ksz_device *dev = ds->priv;
++	int reg, i, ret;
++	u8 data;
++	u8 mask;
++
++	ksz_get_apptrus_map_and_reg(dev, &map, &reg, &mask);
++
++	ret = ksz_pread8(dev, port, reg, &data);
++	if (ret)
++		return ret;
++
++	*nsel = 0;
++	for (i = 0; i < ARRAY_SIZE(ksz_supported_apptrust); i++) {
++		if (data & map[i].bit)
++			sel[(*nsel)++] = ksz_supported_apptrust[i];
++	}
++
++	return 0;
++}
++
++/**
++ * ksz_dcb_init_port - Initializes the DCB configuration for a port on a KSZ
++ * @dev: Pointer to the KSZ switch device structure
++ * @port: Port number for which to initialize the DCB configuration
++ *
++ * This function initializes the DCB configuration for the specified port on a
++ * KSZ switch. Particular DCB configuration is set for the port, including the
++ * default priority and apptrust selectors.
++ * The default priority is set to Best Effort, and the apptrust selectors are
++ * set to all supported selectors.
++ *
++ * Return: 0 on success, or a negative error code on failure
++ */
++int ksz_dcb_init_port(struct ksz_device *dev, int port)
++{
++	int ret, ipv;
++
++	if (is_ksz8(dev)) {
++		ipv = ieee8021q_tt_to_tc(IEEE8021Q_TT_BE,
++					 dev->info->num_tx_queues);
++		if (ipv < 0)
++			return ipv;
++	} else {
++		ipv = IEEE8021Q_TT_BE;
++	}
++
++	/* Set the default priority for the port to Best Effort */
++	ret = ksz_port_set_default_prio(dev->ds, port, ipv);
++	if (ret)
++		return ret;
++
++	return ksz_port_set_apptrust(dev->ds, port, ksz_supported_apptrust,
++				     ARRAY_SIZE(ksz_supported_apptrust));
++}
++
++/**
++ * ksz_dcb_init - Initializes the DCB configuration for a KSZ switch
++ * @dev: Pointer to the KSZ switch device structure
++ *
++ * This function initializes the DCB configuration for a KSZ switch. The global
++ * DSCP-to-priority mapping table is initialized.
++ *
++ * Return: 0 on success, or a negative error code on failure
++ */
++int ksz_dcb_init(struct ksz_device *dev)
++{
++	int ret;
++
++	ret = ksz_init_global_dscp_map(dev);
++	if (ret)
++		return ret;
++
++	return 0;
++}
+diff --git a/drivers/net/dsa/microchip/ksz_dcb.h b/drivers/net/dsa/microchip/ksz_dcb.h
+new file mode 100644
+index 0000000000000..254c0e7bdafca
+--- /dev/null
++++ b/drivers/net/dsa/microchip/ksz_dcb.h
+@@ -0,0 +1,21 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/* Copyright (c) 2024 Pengutronix, Oleksij Rempel <kernel@pengutronix.de> */
++
++#ifndef __KSZ_DCB_H
++#define __KSZ_DCB_H
++
++#include <net/dsa.h>
++
++#include "ksz_common.h"
++
++int ksz_port_get_default_prio(struct dsa_switch *ds, int port);
++int ksz_port_set_default_prio(struct dsa_switch *ds, int port, u8 prio);
++int ksz_port_get_dscp_prio(struct dsa_switch *ds, int port, u8 dscp);
++int ksz_port_set_apptrust(struct dsa_switch *ds, int port,
++			  const unsigned char *sel,
++			  int nsel);
++int ksz_port_get_apptrust(struct dsa_switch *ds, int port, u8 *sel, int *nsel);
++int ksz_dcb_init_port(struct ksz_device *dev, int port);
++int ksz_dcb_init(struct ksz_device *dev);
++
++#endif /* __KSZ_DCB_H */
 -- 
 2.39.2
 
