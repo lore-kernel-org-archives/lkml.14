@@ -1,116 +1,82 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out203-205-251-66.mail.qq.com (out203-205-251-66.mail.qq.com [203.205.251.66])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77F86142E73;
-	Fri,  5 Apr 2024 10:26:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1540142E73
+	for <linux-kernel@vger.kernel.org>; Fri,  5 Apr 2024 10:26:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.251.66
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712312778; cv=none; b=cKNtQ2gu4jcA/mHhae21izyoC2Aw5ET3vR0eW8Ff6uoTDywHd3bf8ln3GyJ9h4JNYLLDqyo+yS3BeY/cCX5/f8KFRRcqTiz9/NGeb3KS48XwOJiWbkIbTX+4CcYC65FfwjusWcRxNaDAhEwOzf1o1UJpudw99z7vlhupB5LkVds=
+	t=1712312798; cv=none; b=Icpf9LpmLe5FYbTWBk55SGzfS5p/JX7ilmaumZAhQs2BZgcMItoqz6jRqhFN72tB/stLXfkyvuS/hq7m8VG+Gq4+VjUaQ6UtGMj8JqTiP6qE6c7TVfwUduOvHXQhNlLgQ2KjmOOac2gjezL1M+mz7iwbczI3F+pTyZ5oC/Rgvl4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712312778; c=relaxed/simple;
-	bh=qxvSkouKOtVZUfYflXrpgvGiCmviOJRnuWLFOMraY9Q=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rF8b4CQyg/L+GnNXfJuyc5/WftlZiVkWIdxoqGaL/8hyUDRi7kxdxgaXYsQ4caHQG5UnlPoWktDm+FXflum3b4FFN4HB0yov+UVRjiewJ7CKyYPplnWa86LZywgGgrYjeWX4dJ7UtPQVd5p1eLFWTQn7QRtxyPtlk5AT4SAuVUg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bINCfElL; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1712312798; c=relaxed/simple;
+	bh=ZUjt3cn6Jciw9Yzl+9UZycVqc/qXs9Q8GWj5hR5RLZ4=;
+	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
+	 MIME-Version; b=Mf2SqJDbcGt+AkOc3wii1yIquD2outFJFi85n27PI6QUSmgvbcBNPwDwpptfmI/kwdMSTc1bXhl1uU7b/gI5USzR5JAVZ1MTGehdU0OtDL3Nb2prcUhNZqxosJH6cEq4GWQDywfHfxMhs8dSnuupe6CWvAMIwmqm40q10ysllGA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=FHCTfvGW; arc=none smtp.client-ip=203.205.251.66
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bINCfElL"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B1883C433C7;
-	Fri,  5 Apr 2024 10:26:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712312778;
-	bh=qxvSkouKOtVZUfYflXrpgvGiCmviOJRnuWLFOMraY9Q=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=bINCfElL0YOkSGUGgBWQU1PYTboFoNjPpGUmdkBGEcNqNV3v3DE8rR8UUBoVjXUKZ
-	 SF3gqSACH3hIVgkBpt7V3YnZNoH5beyWwUNr8Nq5rkP6D9jVf7JyAXA06DbOKRiFaP
-	 U7gqB7jS2VVMEbxMNgQUy66/yy6C+qwiHnB+GvSbRkRIQJhQdtWwzmtHEThe3JaVM2
-	 EG6ZC1RLGavidNg6oLm80JqkS+AwnsNa4KT1En63HEr/HvHvWj+wWEiPysX4pQaFVc
-	 rG0fQXqGdn/eUccA8z41XKZgsx8EWC5GxnIb3Tcp/UWA0H6whhyugJB3UprYeVElyk
-	 dZMOI3E9EM+0w==
-Date: Fri, 5 Apr 2024 12:26:10 +0200
-From: Christian Brauner <brauner@kernel.org>
-To: Jan Kara <jack@suse.cz>
-Cc: kernel test robot <oliver.sang@intel.com>, 
-	syzbot <syzbot+4139435cb1b34cf759c2@syzkaller.appspotmail.com>, Edward Adam Davis <eadavis@qq.com>, 
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>, oe-lkp@lists.linux.dev, lkp@intel.com, 
-	Linux Memory Management List <linux-mm@kvack.org>, linux-fsdevel@vger.kernel.org, linux-nfs@vger.kernel.org, 
-	amir73il@gmail.com, chuck.lever@oracle.com, jlayton@kernel.org, 
-	linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk
-Subject: Re: [linux-next:master] [fs]  1b43c46297: kernel_BUG_at_mm/usercopy.c
-Message-ID: <20240405-basisarbeit-kohlenkeller-676735d80a89@brauner>
-References: <202404031550.f3de0571-lkp@intel.com>
- <000000000000f075b9061520cbbe@google.com>
- <tencent_A7845DD769577306D813742365E976E3A205@qq.com>
- <20240403-mundgerecht-klopapier-e921ceb787ca@brauner>
- <20240403110316.qtmypq2rtpueloga@quack3>
+	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="FHCTfvGW"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
+	t=1712312786; bh=37tWAJ0q0mR8nZCkCCUVBIS8KeNb1ZTR/arOTSOcqzo=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=FHCTfvGW0P66a7EGzk5rgkeplkI1T/msLhJSM5BCvpLkBv622NwjUxWGC/M+bd0Yc
+	 NmbP2RMmcE3XtDXzfcaUEe8ez9/zEni7vICIAY2pCrwigCkZwHuy1/uufE40WjXYqO
+	 kt9nArPuHgq6l/VpFfD/hnV6eOa1jBLyt1lx2T04=
+Received: from pek-lxu-l1.wrs.com ([111.198.228.153])
+	by newxmesmtplogicsvrsza7-0.qq.com (NewEsmtp) with SMTP
+	id 517872E8; Fri, 05 Apr 2024 18:20:23 +0800
+X-QQ-mid: xmsmtpt1712312423t8wyk8uxe
+Message-ID: <tencent_3625ABBA9DBB0A33C69E1A1B8A4B7B1BC308@qq.com>
+X-QQ-XMAILINFO: MFWpArBVhhGTWNlr2ZQekxpqK7CZKj2N3vN0YlVUpCOhZwiBLQFDcdss7Tjs7G
+	 8OzJ9hopT36pRIb70GKQos42iqcq7BvLyeK9vSyJxTpIGkL8P4BQr9SKuSxpJWykI13zd95RkCD2
+	 N+GFEMLpAl9BroXBim+g9XH6Du6Vb0mBAY37+ypjp82P3V0jo/4r5UEJs0MtaYIjlmdm4wCj1RN2
+	 t+sTUNShmia6JEaPNXDvAjUWPHs6BB7PzoAl/O0ppL/ykpZGKIfz4xbnJtbCm/C2pDXGoav6VAa/
+	 IPbpVev7RpzcXYSDMXFza/JJNwZaAP2HFxm6vVFnA9MhyLZG0OhWmvr9AXHZLPSlMPiuSmRovQ2m
+	 d2/orSduTvJfrsumBI7BZPMO+1HRox37m+e8zxhmpxXh+pPIWCY1SFIc6adkwXqy/6s4WrYVTzDE
+	 m0N8SQ6nPNjXaoD2lBv51shUbqBKykKYyYIsXJr7xvM2vlfKs3jneMDxanqGm5MyUxdpG3Plx2ja
+	 S2OpWQyCoS2O8C44ZE2Y86C9dmjmNZAxjv0vp27RDDi3sM8LVeWMuCyQrjNiZfJkaYCeTv44vTGu
+	 Xp2cwUEjhPIM7/w0JnA4id34sn/86tCpYg4DAvu1N4nP1Ppw695QDS039EYgQu9G6oliCyRhGRRv
+	 ezzghjfLo9TvyJSCeCDER9nZVrBhNil5SpkSnCwj62UVecYQpyzo6Crhvr0MfnH3QW6fyTr3zKIH
+	 RJQS4yLX6kAW08aUtgQC1DOVPu+Hf6Dg4B4yarTEXDU7fkItnpEXhKpLDw4DDPCTwUjIH0LBJG7Q
+	 On2DLk5vB7xJSX+oWjOXCM7ScmYtIZqG9kIAQ3eTojMHK3nYvxRiC0jz8Omaw4ABROPBKqj8qvG/
+	 6UVDUxzjQlSsn+Lg3ZglVDJ8euWPFztrW6Sx9YjNZnhGbV7nslC2hCmvPu+M6b+fXshC8mKRMDuj
+	 jRZI1PODXpyB5aXC+3hUE3zp4n9zXvQ2f7B+MSaQwB2+BRsuRB207UiLcZ8VFnQNp/iGHqPjkNy6
+	 IWI3rgaNg5jORrQAwQrDPCU8Rohc0OsLVZuxGoyQ==
+X-QQ-XMRINFO: Mp0Kj//9VHAxr69bL5MkOOs=
+From: Edward Adam Davis <eadavis@qq.com>
+To: syzbot+b71011ec0a23f4d15625@syzkaller.appspotmail.com
+Cc: linux-kernel@vger.kernel.org,
+	syzkaller-bugs@googlegroups.com
+Subject: Re: [syzbot] [bluetooth?] KASAN: slab-out-of-bounds Read in l2cap_sock_setsockopt
+Date: Fri,  5 Apr 2024 18:20:24 +0800
+X-OQ-MSGID: <20240405102023.570352-2-eadavis@qq.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <000000000000b0848f061553f0d5@google.com>
+References: <000000000000b0848f061553f0d5@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20240403110316.qtmypq2rtpueloga@quack3>
+Content-Transfer-Encoding: 8bit
 
-On Wed, Apr 03, 2024 at 01:03:16PM +0200, Jan Kara wrote:
-> On Wed 03-04-24 10:46:19, Christian Brauner wrote:
-> > On Wed, Apr 03, 2024 at 02:54:14PM +0800, Edward Adam Davis wrote:
-> > > [Syzbot reported]
-> > > BUG: KASAN: slab-out-of-bounds in instrument_copy_from_user_before include/linux/instrumented.h:129 [inline]
-> > > BUG: KASAN: slab-out-of-bounds in _copy_from_user+0x7b/0xe0 lib/usercopy.c:22
-> > > Write of size 48 at addr ffff88802b8cbc88 by task syz-executor333/5090
-> > > 
-> > > CPU: 0 PID: 5090 Comm: syz-executor333 Not tainted 6.9.0-rc2-next-20240402-syzkaller #0
-> > > Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 03/27/2024
-> > > Call Trace:
-> > >  <TASK>
-> > >  __dump_stack lib/dump_stack.c:88 [inline]
-> > >  dump_stack_lvl+0x241/0x360 lib/dump_stack.c:114
-> > >  print_address_description mm/kasan/report.c:377 [inline]
-> > >  print_report+0x169/0x550 mm/kasan/report.c:488
-> > >  kasan_report+0x143/0x180 mm/kasan/report.c:601
-> > >  kasan_check_range+0x282/0x290 mm/kasan/generic.c:189
-> > >  instrument_copy_from_user_before include/linux/instrumented.h:129 [inline]
-> > >  _copy_from_user+0x7b/0xe0 lib/usercopy.c:22
-> > >  copy_from_user include/linux/uaccess.h:183 [inline]
-> > >  handle_to_path fs/fhandle.c:203 [inline]
-> > >  do_handle_open+0x204/0x660 fs/fhandle.c:226
-> > >  do_syscall_64+0xfb/0x240
-> > >  entry_SYSCALL_64_after_hwframe+0x72/0x7a
-> > > [Fix] 
-> > > When copying data to f_handle, the length of the copied data should not include
-> > > the length of "struct file_handle".
-> > > 
-> > > Reported-by: syzbot+4139435cb1b34cf759c2@syzkaller.appspotmail.com
-> > > Signed-off-by: Edward Adam Davis <eadavis@qq.com>
-> > > ---
-> > >  fs/fhandle.c | 2 +-
-> > >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > > 
-> > > diff --git a/fs/fhandle.c b/fs/fhandle.c
-> > > index 53ed54711cd2..8a7f86c2139a 100644
-> > > --- a/fs/fhandle.c
-> > > +++ b/fs/fhandle.c
-> > > @@ -202,7 +202,7 @@ static int handle_to_path(int mountdirfd, struct file_handle __user *ufh,
-> > >  	*handle = f_handle;
-> > >  	if (copy_from_user(&handle->f_handle,
-> > >  			   &ufh->f_handle,
-> > > -			   struct_size(ufh, f_handle, f_handle.handle_bytes))) {
-> > > +			   f_handle.handle_bytes)) {
-> > 
-> > Groan, of course. What a silly mistake. Thanks for the fix.
-> > I'll fold this into:
-> > Fixes: 1b43c4629756 ("fs: Annotate struct file_handle with __counted_by() and use struct_size()")
-> > because this hasn't hit mainline yet and it doesn't make sense to keep
-> > that bug around.
-> > 
-> > Sorry, that'll mean we drop your patch but I'll give you credit in the
-> > commit log of the original patch.
-> 
-> Indeed, I should have caught this during review. Sorry for that and thanks
-> for fixing this up quickly.
+please test oob in rfcomm_sock_setsockopt
 
-Fwiw, it wasn't meant that way. I meant it's a silly mistake in the
-sense that it is so easy to miss because the patch looks so benign. The
-fact is that we will have to live with missing things like this once in
-a while and that is why we have testing bots as well. :)
+#syz test https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git fe46a7dd189e
+
+diff --git a/net/socket.c b/net/socket.c
+index e5f3af49a8b6..d5b2ab6c859c 100644
+--- a/net/socket.c
++++ b/net/socket.c
+@@ -2327,6 +2327,9 @@ int __sys_setsockopt(int fd, int level, int optname, char __user *user_optval,
+ 	int err, fput_needed;
+ 	struct socket *sock;
+ 
++	if (optlen < 4)
++		return -EINVAL;
++
+ 	sock = sockfd_lookup_light(fd, &err, &fput_needed);
+ 	if (!sock)
+ 		return err;
+
