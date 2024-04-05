@@ -1,48 +1,48 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7D58174EF6;
-	Fri,  5 Apr 2024 22:26:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A235175578;
+	Fri,  5 Apr 2024 22:26:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712356008; cv=none; b=r9t6nxOxgyqEXB8UvK1TijLH+IeDduj4JmIS1YAW6DPvLzIuo3DbV8uyArIB2uezOqb4aALt53xKLBoqTwpFa+3LWJpHbn8YoqEgclWNex4FlpipfGnn0wZAq3lpcD8QnbLYTSflryBlStQdq/zQLNpAPu3LRPwPQIx4Hi8r0Bw=
+	t=1712356010; cv=none; b=D/HSW2cA+l1IzzLOORvSsqLyuf3cONF/rifnm/ufymF2sKkAngVr2tHyWNNsm/BMEyuUGZH+f1txkM7O+7vQ2cwpOa+VIJedfOGb7ZfyNQBq/0ukEXEaRZgY7KuOuzZFIpg3Nz8cxya88gyUAgFB/PaJ7AM3G/32r1h7EGj8vCY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712356008; c=relaxed/simple;
-	bh=Bh8qAq471IuQbwA8oP4ru9wTknH7iKls9mGK6YcKMpg=;
+	s=arc-20240116; t=1712356010; c=relaxed/simple;
+	bh=BpLqiaNgpSDbcOwdg5E2m/UG/ZOHZCK4TD1uJoCRw+g=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=XJxNMfu7Ns5WvN23yDi831au4MUupMC8+v8GPszZMBS3SJMSCwgdOU19zROFowumWDERahQRM79LfDnFvFJi0HiFJEvScDQ8dMtIHBhk4T2VbPRS8oI6pT120JcXTBmkXlB5u7wfr59CMGdqm2q37lt8sC0Nab+p8g1N5E9ze4A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XokvInM3; arc=none smtp.client-ip=192.198.163.10
+	 MIME-Version; b=QSIAbDk0yNf/J4qT9eoL6ETFdp9pnLscW34kK/H+TnuILT+D6mTxwZVQkecWGsydauHsDNmBj5PsJQhTU9afBPIVbX7RjLYnSXHUwMON3MvFqlSMK+d9TsM0wY/1gktE5FHEKlmYV+PcXo/VUG5+dPJGrs2QuDjkGJZtE10Z5To=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PLtPgPC9; arc=none smtp.client-ip=192.198.163.10
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XokvInM3"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PLtPgPC9"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1712356007; x=1743892007;
+  t=1712356010; x=1743892010;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=Bh8qAq471IuQbwA8oP4ru9wTknH7iKls9mGK6YcKMpg=;
-  b=XokvInM3RIiZ1dEeTQuqOZzUL1b12Wcxlq7cvJjDHqfROV6SRgV8GWJM
-   iV9ccygx8BOSsH0hYWfC7i17b+1c84QuCozKsM7PuuvY/ICB3qtjn3+bS
-   PTBDU7SCFIqcp30NwovbEnuAHFEbIzrXyYyZyCUcpVl2FyUaUG1GyGVhq
-   yBwv8TQ6CU7pd2eGdrMVW4YdjqMmG8EH5xqhrfpdGGA8oCly/vsQ2NN3P
-   N6oo0Gmx7GhHtXHARC6VMGFESGS8V9Akks8kGrW6D/H3SRGIyA4nh78c5
-   Gwf3lwrABEz9gWCNSLNSI62qNd1HAs4pRu/U6vXuc1sY2SLHrfWtnUbt9
-   g==;
-X-CSE-ConnectionGUID: 1CfHmgnzRKWhUTCBWNuuww==
-X-CSE-MsgGUID: ZS9969qVRk6mQmqmdJfP5g==
-X-IronPort-AV: E=McAfee;i="6600,9927,11035"; a="19062669"
+  bh=BpLqiaNgpSDbcOwdg5E2m/UG/ZOHZCK4TD1uJoCRw+g=;
+  b=PLtPgPC9xIaiu1DdRgTXdhhZ11NBGsjO79wcZPY64j3DOuCSRUYN/NIT
+   8T8xg6B8+Ul4ZZ09g4ud9lsHMui8Dux3ETYo1FK52+z6CxmNoajrmvAa6
+   0olbukhECKM++n2pyWztdLRQvL130GxgozQlU3AJnzsjQSo+o0x3pMaeL
+   7AAlD+Xlfv1QYoFOCfMy0p9v309Tn/UwdJw/PQzI7CB6JsmaRikUFiYLf
+   DV1br842rvviPJkRLJntQz1htRYTnsguPWSyD4qrsiaMjp9OM9Us5kCsB
+   uF6rQNeVkso5PtIpnZlYboa+HwpJHotm1i2ZsFyaamisdGujV97NcuNS6
+   Q==;
+X-CSE-ConnectionGUID: nXNelvspQQKeNW7KQz3CPg==
+X-CSE-MsgGUID: PiFS6lxMRqWHzCS1C7FLnw==
+X-IronPort-AV: E=McAfee;i="6600,9927,11035"; a="19062717"
 X-IronPort-AV: E=Sophos;i="6.07,182,1708416000"; 
-   d="scan'208";a="19062669"
+   d="scan'208";a="19062717"
 Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Apr 2024 15:26:45 -0700
-X-CSE-ConnectionGUID: cPYrfhevQh+UdDZtipl+Cg==
-X-CSE-MsgGUID: jc3lcFRGSWyLv6aWkzfreA==
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Apr 2024 15:26:47 -0700
+X-CSE-ConnectionGUID: 13qTgNPtQAOkBjpU3IPkgQ==
+X-CSE-MsgGUID: mpnrgrsBTUWcfeColep1OQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.07,182,1708416000"; 
-   d="scan'208";a="23928308"
+   d="scan'208";a="23928317"
 Received: from jacob-builder.jf.intel.com ([10.54.39.125])
-  by fmviesa004.fm.intel.com with ESMTP; 05 Apr 2024 15:26:44 -0700
+  by fmviesa004.fm.intel.com with ESMTP; 05 Apr 2024 15:26:46 -0700
 From: Jacob Pan <jacob.jun.pan@linux.intel.com>
 To: LKML <linux-kernel@vger.kernel.org>,
 	X86 Kernel <x86@kernel.org>,
@@ -70,9 +70,9 @@ Cc: Paul Luse <paul.e.luse@intel.com>,
 	guang.zeng@intel.com,
 	robert.hoo.linux@gmail.com,
 	Jacob Pan <jacob.jun.pan@linux.intel.com>
-Subject: [PATCH v2 01/13] x86/irq: Move posted interrupt descriptor out of vmx code
-Date: Fri,  5 Apr 2024 15:30:58 -0700
-Message-Id: <20240405223110.1609888-2-jacob.jun.pan@linux.intel.com>
+Subject: [PATCH v2 04/13] x86/irq: Add a Kconfig option for posted MSI
+Date: Fri,  5 Apr 2024 15:31:01 -0700
+Message-Id: <20240405223110.1609888-5-jacob.jun.pan@linux.intel.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20240405223110.1609888-1-jacob.jun.pan@linux.intel.com>
 References: <20240405223110.1609888-1-jacob.jun.pan@linux.intel.com>
@@ -84,244 +84,39 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-To prepare native usage of posted interrupt, move PID declaration out of
-VMX code such that they can be shared.
+This option will be used to support delivering MSIs as posted
+interrupts. Interrupt remapping is required.
 
 Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
----
- arch/x86/include/asm/posted_intr.h | 88 ++++++++++++++++++++++++++++
- arch/x86/kvm/vmx/posted_intr.h     | 93 +-----------------------------
- arch/x86/kvm/vmx/vmx.c             |  1 +
- arch/x86/kvm/vmx/vmx.h             |  2 +-
- 4 files changed, 91 insertions(+), 93 deletions(-)
- create mode 100644 arch/x86/include/asm/posted_intr.h
 
-diff --git a/arch/x86/include/asm/posted_intr.h b/arch/x86/include/asm/posted_intr.h
-new file mode 100644
-index 000000000000..f0324c56f7af
---- /dev/null
-+++ b/arch/x86/include/asm/posted_intr.h
-@@ -0,0 +1,88 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef _X86_POSTED_INTR_H
-+#define _X86_POSTED_INTR_H
-+
-+#define POSTED_INTR_ON  0
-+#define POSTED_INTR_SN  1
-+
-+#define PID_TABLE_ENTRY_VALID 1
-+
-+/* Posted-Interrupt Descriptor */
-+struct pi_desc {
-+	u32 pir[8];     /* Posted interrupt requested */
-+	union {
-+		struct {
-+				/* bit 256 - Outstanding Notification */
-+			u16	on	: 1,
-+				/* bit 257 - Suppress Notification */
-+				sn	: 1,
-+				/* bit 271:258 - Reserved */
-+				rsvd_1	: 14;
-+				/* bit 279:272 - Notification Vector */
-+			u8	nv;
-+				/* bit 287:280 - Reserved */
-+			u8	rsvd_2;
-+				/* bit 319:288 - Notification Destination */
-+			u32	ndst;
-+		};
-+		u64 control;
-+	};
-+	u32 rsvd[6];
-+} __aligned(64);
-+
-+static inline bool pi_test_and_set_on(struct pi_desc *pi_desc)
-+{
-+	return test_and_set_bit(POSTED_INTR_ON, (unsigned long *)&pi_desc->control);
-+}
-+
-+static inline bool pi_test_and_clear_on(struct pi_desc *pi_desc)
-+{
-+	return test_and_clear_bit(POSTED_INTR_ON, (unsigned long *)&pi_desc->control);
-+}
-+
-+static inline bool pi_test_and_clear_sn(struct pi_desc *pi_desc)
-+{
-+	return test_and_clear_bit(POSTED_INTR_SN, (unsigned long *)&pi_desc->control);
-+}
-+
-+static inline bool pi_test_and_set_pir(int vector, struct pi_desc *pi_desc)
-+{
-+	return test_and_set_bit(vector, (unsigned long *)pi_desc->pir);
-+}
-+
-+static inline bool pi_is_pir_empty(struct pi_desc *pi_desc)
-+{
-+	return bitmap_empty((unsigned long *)pi_desc->pir, NR_VECTORS);
-+}
-+
-+static inline void pi_set_sn(struct pi_desc *pi_desc)
-+{
-+	set_bit(POSTED_INTR_SN, (unsigned long *)&pi_desc->control);
-+}
-+
-+static inline void pi_set_on(struct pi_desc *pi_desc)
-+{
-+	set_bit(POSTED_INTR_ON, (unsigned long *)&pi_desc->control);
-+}
-+
-+static inline void pi_clear_on(struct pi_desc *pi_desc)
-+{
-+	clear_bit(POSTED_INTR_ON, (unsigned long *)&pi_desc->control);
-+}
-+
-+static inline void pi_clear_sn(struct pi_desc *pi_desc)
-+{
-+	clear_bit(POSTED_INTR_SN, (unsigned long *)&pi_desc->control);
-+}
-+
-+static inline bool pi_test_on(struct pi_desc *pi_desc)
-+{
-+	return test_bit(POSTED_INTR_ON, (unsigned long *)&pi_desc->control);
-+}
-+
-+static inline bool pi_test_sn(struct pi_desc *pi_desc)
-+{
-+	return test_bit(POSTED_INTR_SN, (unsigned long *)&pi_desc->control);
-+}
-+
-+#endif /* _X86_POSTED_INTR_H */
-diff --git a/arch/x86/kvm/vmx/posted_intr.h b/arch/x86/kvm/vmx/posted_intr.h
-index 26992076552e..6b2a0226257e 100644
---- a/arch/x86/kvm/vmx/posted_intr.h
-+++ b/arch/x86/kvm/vmx/posted_intr.h
-@@ -1,98 +1,7 @@
- /* SPDX-License-Identifier: GPL-2.0 */
- #ifndef __KVM_X86_VMX_POSTED_INTR_H
- #define __KVM_X86_VMX_POSTED_INTR_H
--
--#define POSTED_INTR_ON  0
--#define POSTED_INTR_SN  1
--
--#define PID_TABLE_ENTRY_VALID 1
--
--/* Posted-Interrupt Descriptor */
--struct pi_desc {
--	u32 pir[8];     /* Posted interrupt requested */
--	union {
--		struct {
--				/* bit 256 - Outstanding Notification */
--			u16	on	: 1,
--				/* bit 257 - Suppress Notification */
--				sn	: 1,
--				/* bit 271:258 - Reserved */
--				rsvd_1	: 14;
--				/* bit 279:272 - Notification Vector */
--			u8	nv;
--				/* bit 287:280 - Reserved */
--			u8	rsvd_2;
--				/* bit 319:288 - Notification Destination */
--			u32	ndst;
--		};
--		u64 control;
--	};
--	u32 rsvd[6];
--} __aligned(64);
--
--static inline bool pi_test_and_set_on(struct pi_desc *pi_desc)
--{
--	return test_and_set_bit(POSTED_INTR_ON,
--			(unsigned long *)&pi_desc->control);
--}
--
--static inline bool pi_test_and_clear_on(struct pi_desc *pi_desc)
--{
--	return test_and_clear_bit(POSTED_INTR_ON,
--			(unsigned long *)&pi_desc->control);
--}
--
--static inline bool pi_test_and_clear_sn(struct pi_desc *pi_desc)
--{
--	return test_and_clear_bit(POSTED_INTR_SN,
--			(unsigned long *)&pi_desc->control);
--}
--
--static inline bool pi_test_and_set_pir(int vector, struct pi_desc *pi_desc)
--{
--	return test_and_set_bit(vector, (unsigned long *)pi_desc->pir);
--}
--
--static inline bool pi_is_pir_empty(struct pi_desc *pi_desc)
--{
--	return bitmap_empty((unsigned long *)pi_desc->pir, NR_VECTORS);
--}
--
--static inline void pi_set_sn(struct pi_desc *pi_desc)
--{
--	set_bit(POSTED_INTR_SN,
--		(unsigned long *)&pi_desc->control);
--}
--
--static inline void pi_set_on(struct pi_desc *pi_desc)
--{
--	set_bit(POSTED_INTR_ON,
--		(unsigned long *)&pi_desc->control);
--}
--
--static inline void pi_clear_on(struct pi_desc *pi_desc)
--{
--	clear_bit(POSTED_INTR_ON,
--		(unsigned long *)&pi_desc->control);
--}
--
--static inline void pi_clear_sn(struct pi_desc *pi_desc)
--{
--	clear_bit(POSTED_INTR_SN,
--		(unsigned long *)&pi_desc->control);
--}
--
--static inline bool pi_test_on(struct pi_desc *pi_desc)
--{
--	return test_bit(POSTED_INTR_ON,
--			(unsigned long *)&pi_desc->control);
--}
--
--static inline bool pi_test_sn(struct pi_desc *pi_desc)
--{
--	return test_bit(POSTED_INTR_SN,
--			(unsigned long *)&pi_desc->control);
--}
-+#include <asm/posted_intr.h>
+---
+v2: Remove x2apic dependency
+---
+ arch/x86/Kconfig | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
+
+diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+index 39886bab943a..f5688f4e299b 100644
+--- a/arch/x86/Kconfig
++++ b/arch/x86/Kconfig
+@@ -464,6 +464,17 @@ config X86_X2APIC
  
- void vmx_vcpu_pi_load(struct kvm_vcpu *vcpu, int cpu);
- void vmx_vcpu_pi_put(struct kvm_vcpu *vcpu);
-diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index c37a89eda90f..d94bb069bac9 100644
---- a/arch/x86/kvm/vmx/vmx.c
-+++ b/arch/x86/kvm/vmx/vmx.c
-@@ -70,6 +70,7 @@
- #include "x86.h"
- #include "smm.h"
- #include "vmx_onhyperv.h"
-+#include "posted_intr.h"
+ 	  If you don't know what to do here, say N.
  
- MODULE_AUTHOR("Qumranet");
- MODULE_LICENSE("GPL");
-diff --git a/arch/x86/kvm/vmx/vmx.h b/arch/x86/kvm/vmx/vmx.h
-index 65786dbe7d60..e133e8077e6d 100644
---- a/arch/x86/kvm/vmx/vmx.h
-+++ b/arch/x86/kvm/vmx/vmx.h
-@@ -7,10 +7,10 @@
- #include <asm/kvm.h>
- #include <asm/intel_pt.h>
- #include <asm/perf_event.h>
-+#include <asm/posted_intr.h>
- 
- #include "capabilities.h"
- #include "../kvm_cache_regs.h"
--#include "posted_intr.h"
- #include "vmcs.h"
- #include "vmx_ops.h"
- #include "../cpuid.h"
++config X86_POSTED_MSI
++	bool "Enable MSI and MSI-x delivery by posted interrupts"
++	depends on X86_64 && IRQ_REMAP
++	help
++	  This enables MSIs that are under interrupt remapping to be delivered as
++	  posted interrupts to the host kernel. Interrupt throughput can
++	  potentially be improved by coalescing CPU notifications during high
++	  frequency bursts.
++
++	  If you don't know what to do here, say N.
++
+ config X86_MPPARSE
+ 	bool "Enable MPS table" if ACPI
+ 	default y
 -- 
 2.25.1
 
