@@ -1,91 +1,127 @@
-Received: from mx0b-001ae601.pphosted.com (mx0a-001ae601.pphosted.com [67.231.149.25])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7BD71C36
-	for <linux-kernel@vger.kernel.org>; Fri,  5 Apr 2024 21:24:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.149.25
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED0561C36;
+	Fri,  5 Apr 2024 21:25:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712352297; cv=none; b=LzMFZrMPXd0IWA+qzZz4gTYlkkMfPrpDW8QmD8Bc9qCYVqUGnHUyLelL5Frjb/jwxsnsnHLoha6JzOiJ4DgNg3VRx+1YLn8MOGa/9KVh46XncCrBlJFRlETww+Al+wbfq5zhIlZG5t9vYgKOrmBqpzA7/Y1Z9bfS+g/q23l/IAs=
+	t=1712352344; cv=none; b=Ij1VQ8GgcGL33HR5N67UOD/4AJEPOEJlUpFJG2sCjuZUo2vgD6/DYimjtuD5ax8mRiJ5RptYIpTbi8E5MpDXrW38RC1/uUcw4DNLQnjPXXaig8NeHjNjO9Y2oPNNfR7oduUyNsQRqAY57E531cvLWy0FVCTfmUNB1d/DrLq3AQU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712352297; c=relaxed/simple;
-	bh=AzRzhyt+Vd1boYqQdmsKxcKo8CA6xnf/+ug55dlAcB8=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=n/ny9jilUqWotFnZ8uD6/5IzjnuAlcDHB+MufrhHNQb5def9Erz952VYf+Ls28JZE5duBreCbQYDZvvAkvCRYyN1jwaq6hu81akmCKjv8pO1123hbp7FnoHbYhbozDGMjFsf6VeArRJR9n2kIhgZnPT6gHSNZgiLrlxTPH3OG+Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com; spf=pass smtp.mailfrom=opensource.cirrus.com; dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b=DuM3G8uQ; arc=none smtp.client-ip=67.231.149.25
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=opensource.cirrus.com
+	s=arc-20240116; t=1712352344; c=relaxed/simple;
+	bh=qtrepOP/++YzudVg2mOAW7Yr5SJM+9y2cmpgD1N/WK8=;
+	h=Message-ID:Content-Type:MIME-Version:In-Reply-To:References:
+	 Subject:From:Cc:To:Date; b=K2l5pwvDbDqN50PYPLokeAKEVV0hn6lajy0hlxMvkw3HI96PrzQywIYCPwohhR1YbfPvUA5K+ru27jQc7Z/rqJQGPiYdzOjO005kv50JfWmg9bAIsGH8woYbLINfcWipXUBP7Gzka6Xf3R43EGI36FLvHMEAvgNZmng1Ob6tJiI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AjQSSyP9; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="DuM3G8uQ"
-Received: from pps.filterd (m0077473.ppops.net [127.0.0.1])
-	by mx0a-001ae601.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 435I8xXx029173;
-	Fri, 5 Apr 2024 16:06:52 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=
-	from:to:cc:subject:date:message-id:mime-version
-	:content-transfer-encoding:content-type; s=PODMain02222019; bh=C
-	9xz+q7sZO8o2T0HIFUpDXObF87YG74PWWGj+Gj3weQ=; b=DuM3G8uQfZrZMEkYL
-	zpo5GuvLH7n6HUcJF6/CQbz9MJ2geUx0uwXVFmiUw6BYfGuWhN7MWd5RZi/cO10q
-	YnVkL/z8BZoRiQDMqNK/HcyX6Vo3IzkjTIgZRAPavdyms5F9oKNd/T3NJkxAvuCk
-	M+ygjLdmWccEsmwO/+TS3jJEYYo8O6mRTDo372GhHMSDPvf1sO4435nj/rodWsv/
-	qWmhavKXOxE8MYjTp7B/NB1NVewdebGXOCfQ+y4YuIRpJIg+PL/Lk8dsHqDbSuWI
-	cL+8D1nT0SF6s2m94yq1RzSlqhtAE0eXGpQN0MWKuejLKrwjoHmU0hgoTKMyvJpp
-	1sOIg==
-Received: from ediex02.ad.cirrus.com ([84.19.233.68])
-	by mx0a-001ae601.pphosted.com (PPS) with ESMTPS id 3x9em6a4pc-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 05 Apr 2024 16:06:51 -0500 (CDT)
-Received: from ediex01.ad.cirrus.com (198.61.84.80) by ediex02.ad.cirrus.com
- (198.61.84.81) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Fri, 5 Apr 2024
- 22:06:48 +0100
-Received: from ediswmail9.ad.cirrus.com (198.61.86.93) by
- ediex01.ad.cirrus.com (198.61.84.80) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9
- via Frontend Transport; Fri, 5 Apr 2024 22:06:48 +0100
-Received: from lon-bigdaddy.ad.cirrus.com (EDIN3CZV9K3.ad.cirrus.com [198.61.64.177])
-	by ediswmail9.ad.cirrus.com (Postfix) with ESMTP id 3BB21820243;
-	Fri,  5 Apr 2024 21:06:48 +0000 (UTC)
-From: Vitaly Rodionov <vitalyr@opensource.cirrus.com>
-To: Takashi Iwai <tiwai@suse.com>
-CC: Mark Brown <broonie@kernel.org>, <patches@opensource.cirrus.com>,
-        <linux-kernel@vger.kernel.org>,
-        Vitaly Rodionov
-	<vitalyr@opensource.cirrus.com>
-Subject: [PATCH] ALSA: hda/realtek: Add quirk for HP SnowWhite laptops
-Date: Fri, 5 Apr 2024 22:06:35 +0100
-Message-ID: <20240405210635.22193-1-vitalyr@opensource.cirrus.com>
-X-Mailer: git-send-email 2.40.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AjQSSyP9"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6E47BC433F1;
+	Fri,  5 Apr 2024 21:25:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1712352343;
+	bh=qtrepOP/++YzudVg2mOAW7Yr5SJM+9y2cmpgD1N/WK8=;
+	h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
+	b=AjQSSyP9hOpfox3T1hgMDJ7CFV7RxrxK8yREv/JBVV1RehSGh+ziIrXPFGZg1DJS6
+	 8EWK52CGbPA7vlea/Xa5DjpX3MvN95FE/7dLmPXsouPMzgRl/Hq0WR2WTCnoeE34OO
+	 iKlzMv2MpaOnPeUvP+f0FAx8gIKuvonJKe9QZu6O8SFA0aHrn0pRcnDCjjIYS1n54H
+	 EowcI3w5q93MuNcEaROcjFXPfdQa6flqWmxkMJb0f2CHofm9SIVwkBZBYWsI8dnOKu
+	 wc0letDzZJmFwZSouoJrLVc8yd8FyuwiF18eC9FYGPkNepOGz1GAjjU9lvdrIPk3xv
+	 RmZ5zbvUhQ6Xw==
+Message-ID: <9d738246b5043cd2a3c1dc7609805f0f.sboyd@kernel.org>
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Proofpoint-GUID: LG0YJO8b7yPBTUgBPBVWPxmRa5ixgG7z
-X-Proofpoint-ORIG-GUID: LG0YJO8b7yPBTUgBPBVWPxmRa5ixgG7z
-X-Proofpoint-Spam-Reason: safe
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <ZgaceJT2FMsQVoPa@hu-varada-blr.qualcomm.com>
+References: <20240328075936.223461-1-quic_varada@quicinc.com> <20240328075936.223461-4-quic_varada@quicinc.com> <80131262978e6e4799864cdfd0784fdf.sboyd@kernel.org> <ZgaceJT2FMsQVoPa@hu-varada-blr.qualcomm.com>
+Subject: Re: [PATCH v5 3/5] clk: qcom: common: Add interconnect clocks support
+From: Stephen Boyd <sboyd@kernel.org>
+Cc: andersson@kernel.org, conor+dt@kernel.org, devicetree@vger.kernel.org, djakov@kernel.org, dmitry.baryshkov@linaro.org, konrad.dybcio@linaro.org, krzysztof.kozlowski+dt@linaro.org, linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, mturquette@baylibre.com, quic_anusha@quicinc.com, robh@kernel.org
+To: Varadarajan Narayanan <quic_varada@quicinc.com>
+Date: Fri, 05 Apr 2024 14:25:41 -0700
+User-Agent: alot/0.10
 
-Add support for HP SnowWhite laptops with CS35L51 amplifiers on I2C
-bus connected to Realtek codec.
+Quoting Varadarajan Narayanan (2024-03-29 03:48:24)
+> On Thu, Mar 28, 2024 at 02:54:52PM -0700, Stephen Boyd wrote:
+> > Quoting Varadarajan Narayanan (2024-03-28 00:59:34)
+> > > diff --git a/drivers/clk/qcom/common.c b/drivers/clk/qcom/common.c
+> > > index 75f09e6e057e..9fa271812373 100644
+> > > --- a/drivers/clk/qcom/common.c
+> > > +++ b/drivers/clk/qcom/common.c
+> > > @@ -234,6 +236,41 @@ static struct clk_hw *qcom_cc_clk_hw_get(struct =
+of_phandle_args *clkspec,
+> > >         return cc->rclks[idx] ? &cc->rclks[idx]->hw : NULL;
+> > >  }
+> > >
+> > > +#if IS_ENABLED(CONFIG_INTERCONNECT_CLK)
+> > > +static int qcom_cc_icc_register(struct device *dev,
+> > > +                               const struct qcom_cc_desc *desc)
+> > > +{
+> > > +       struct icc_clk_data *icd;
+> > > +       int i;
+> > > +
+> > > +       if (!desc->icc_hws)
+> > > +               return 0;
+> > > +
+> > > +       icd =3D devm_kcalloc(dev, desc->num_icc_hws, sizeof(*icd), GF=
+P_KERNEL);
+> > > +       if (!icd)
+> > > +               return -ENOMEM;
+> > > +
+> > > +       for (i =3D 0; i < desc->num_icc_hws; i++) {
+> > > +               icd[i].clk =3D devm_clk_hw_get_clk(dev, desc->icc_hws=
+[i], "qcom");
+> >
+> > Make the con_id "icc" instead please, so we know the consumer is
+> > icc_clk.
+>=20
+> Ok.
+>=20
+> > Even better would be for the icc_clk device itself to be the
+> > one requesting with devm_clk_hw_get_clk() so that we associate the clk
+> > handle with the consumer device. It would also help us make it so that
+> > drivers defer probe until their clk isn't an orphan.
+>=20
+> Not sure if I understand the comments correctly.
+>=20
+> In one of the previous patches, had
+>         icd[i].clk =3D clks[noc_clks[i]]->hw.clk;
+>=20
+> This was said to be error prone since the clock would not be
+> ref counted. Hence used devm_clk_hw_get_clk before doing
+> icc_clk_register.
+>=20
+> Now, are you suggesting to use the direct clock pointer
+> and do a devm_clk_hw_get_clk from the consumer driver?
+> This will take care of the refcounting. However, we will
+> have to add these clock entries to the consumer DT node.
+> Is this ok?
 
-Signed-off-by: Vitaly Rodionov <vitalyr@opensource.cirrus.com>
----
- sound/pci/hda/patch_realtek.c | 2 ++
- 1 file changed, 2 insertions(+)
+Why do they need to be added to the consumer DT node? Why can't the
+icc_clk device driver (icc_clk_driver?) use struct clk_hw instead of
+struct clk in struct icc_clk_data? The answer cannot be that the icc_clk
+driver cannot be changed.
 
-diff --git a/sound/pci/hda/patch_realtek.c b/sound/pci/hda/patch_realtek.c
-index a17c36a36aa5..5baf68c254d2 100644
---- a/sound/pci/hda/patch_realtek.c
-+++ b/sound/pci/hda/patch_realtek.c
-@@ -10037,6 +10037,8 @@ static const struct snd_pci_quirk alc269_fixup_tbl[] = {
- 	SND_PCI_QUIRK(0x103c, 0x8ca7, "HP ZBook Fury", ALC245_FIXUP_CS35L41_SPI_2_HP_GPIO_LED),
- 	SND_PCI_QUIRK(0x103c, 0x8cdd, "HP Spectre", ALC287_FIXUP_CS35L41_I2C_2),
- 	SND_PCI_QUIRK(0x103c, 0x8cde, "HP Spectre", ALC287_FIXUP_CS35L41_I2C_2),
-+	SND_PCI_QUIRK(0x103c, 0x8cdf, "HP SnowWhite", ALC287_FIXUP_CS35L41_I2C_2_HP_GPIO_LED),
-+	SND_PCI_QUIRK(0x103c, 0x8ce0, "HP SnowWhite", ALC287_FIXUP_CS35L41_I2C_2_HP_GPIO_LED),
- 	SND_PCI_QUIRK(0x103c, 0x8cf5, "HP ZBook Studio 16", ALC245_FIXUP_CS35L41_SPI_4_HP_GPIO_LED),
- 	SND_PCI_QUIRK(0x1043, 0x103e, "ASUS X540SA", ALC256_FIXUP_ASUS_MIC),
- 	SND_PCI_QUIRK(0x1043, 0x103f, "ASUS TX300", ALC282_FIXUP_ASUS_TX300),
--- 
-2.40.1
+> > > diff --git a/drivers/clk/qcom/common.h b/drivers/clk/qcom/common.h
+> > > index 9c8f7b798d9f..d8ac26d83f3c 100644
+> > > --- a/drivers/clk/qcom/common.h
+> > > +++ b/drivers/clk/qcom/common.h
+> > > @@ -29,6 +29,9 @@ struct qcom_cc_desc {
+> > >         size_t num_gdscs;
+> > >         struct clk_hw **clk_hws;
+> > >         size_t num_clk_hws;
+> > > +       struct clk_hw **icc_hws;
+> > > +       size_t num_icc_hws;
+> > > +       unsigned int first_id;
+> >
+> > 'first_id' is gross.
+>=20
+> will change it to 'icc_id'.
 
+That's not what I meant :) The whole concept of having to pick some
+random number is bad. At the least, hide that in the icc_clk driver so
+that we don't have to put this in every clk provider that is also an
+interconnect provider.
