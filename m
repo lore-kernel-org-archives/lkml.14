@@ -1,55 +1,81 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from out203-205-251-36.mail.qq.com (out203-205-251-36.mail.qq.com [203.205.251.36])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 456D6161303;
-	Fri,  5 Apr 2024 09:56:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A25CA161910
+	for <linux-kernel@vger.kernel.org>; Fri,  5 Apr 2024 09:56:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.251.36
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712310965; cv=none; b=nENW4L6jC7azkY39hZheeEQVAWmSnHuaNvw+4JYmwBxXcmBKbHB3XzwAJ+G3F9oJENz4StZqb8ICDA9hQLIY8kFHzXGTSx+f67o3qBR05gkTLEFl2eRXSRhDPpJ8tuDbOGN3wq/cvypJhUP6oesUhGpys3chO+dvIdfDyqRVtio=
+	t=1712310994; cv=none; b=JhbRvwJh5dkfAdNfBsLYz8ZeWe0yLJaVxTrRd+TYF6Sk8dD3wBDynXxsBk8K5gMvfNOA2GOdrgsShtPi/OvK7wX0oD5/NpjYW7T1D027K2JGi7ab/JA0wT9V1COahXpgjldLAfA0y+7XQv/2FzFkLJbgnuATVSI2HExzieFUAYQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712310965; c=relaxed/simple;
-	bh=nAKV/KIjO0niNMWNTOLLP1H2qDBqS7M9ULvho+EQ1zA=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=qj3k1MIp6haMEKg5L6flYwVM+Am2/NCgERIJk+FLa28Ul6saT/47zDMy59Zd1smbdcAGyGVSkwCF3SXzAHUtQCmtrHRtLjnoGqSg6rlnJ9dtJbuoptBAjEQQAzDQJxWA39EwKVHn3I7hygOVk02QMOHkGdd347YltowE0GQy2ic=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.31])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4V9tzY2lJqz6J7pn;
-	Fri,  5 Apr 2024 17:51:21 +0800 (CST)
-Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
-	by mail.maildlp.com (Postfix) with ESMTPS id CEFDC1400D1;
-	Fri,  5 Apr 2024 17:56:01 +0800 (CST)
-Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.35; Fri, 5 Apr
- 2024 10:56:01 +0100
-Date: Fri, 5 Apr 2024 10:56:00 +0100
-From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To: Lukasz Luba <lukasz.luba@arm.com>
-CC: <linux-kernel@vger.kernel.org>, <linux-pm@vger.kernel.org>,
-	<dietmar.eggemann@arm.com>, <linux-arm-kernel@lists.infradead.org>,
-	<sudeep.holla@arm.com>, <cristian.marussi@arm.com>,
-	<linux-samsung-soc@vger.kernel.org>, <rafael@kernel.org>,
-	<viresh.kumar@linaro.org>, <quic_sibis@quicinc.com>
-Subject: Re: [PATCH 0/2] Update Energy Model with perfromance limits
-Message-ID: <20240405105600.000019fd@Huawei.com>
-In-Reply-To: <20240403162315.1458337-1-lukasz.luba@arm.com>
-References: <20240403162315.1458337-1-lukasz.luba@arm.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+	s=arc-20240116; t=1712310994; c=relaxed/simple;
+	bh=ZUjt3cn6Jciw9Yzl+9UZycVqc/qXs9Q8GWj5hR5RLZ4=;
+	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
+	 MIME-Version; b=gXKiPhu19YtrY5bLKrv+1NPeyrDsYiArMa1LL4B00OEAR7AyBi0PYSd7y2or6wEdY7fzf1JzBR2jha5ORifpgC0R4ul1bKRcxnwWCadqTbkCFTVWGGI+QxujmzUFEvRglXXsPCtySuferwXGj8WjBFLGPVgGFhkOXrj9gM5wLos=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=Et5NeLrd; arc=none smtp.client-ip=203.205.251.36
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="Et5NeLrd"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
+	t=1712310983; bh=37tWAJ0q0mR8nZCkCCUVBIS8KeNb1ZTR/arOTSOcqzo=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=Et5NeLrdvj2hY+pZBny8nWD2wSW9gS9Tn4t7C9Ia8kcq7s8eQZU3i6+ZPauGanrBm
+	 /tkpBBuCFp0oJQBQZqLUvX3HYV3biAApyIhRqxF8T16Ae6RvUPCezkCZ5JloJWedHC
+	 GVnUrrLQViFL7Z4KMxqOzElO1AKFd70MxgpVYOzk=
+Received: from pek-lxu-l1.wrs.com ([111.198.228.153])
+	by newxmesmtplogicsvrszc5-1.qq.com (NewEsmtp) with SMTP
+	id C94000B1; Fri, 05 Apr 2024 17:50:20 +0800
+X-QQ-mid: xmsmtpt1712310620t154w0w6e
+Message-ID: <tencent_C1E376696F23B004491777176886D9D37905@qq.com>
+X-QQ-XMAILINFO: NnIX2CK8LSsJdzqollVvw54F7RWdteg4akgDllpDD41GdwuxkWGpgMHkitHGn6
+	 Ls3l260F4J6G2f0cmrvAfOPBczHa65Ymt3pq5tno9aZLS1i/m2WIW6YUXWkEqS5t8wNxpoCtWqcs
+	 +GloxPYYSjsiH5hQP9ga3gcy7nVkYKoc/8WGDh1X87Ie32oQR7LctFQRWv5xETYmYi9VAMYkMh+T
+	 IUfIlV7v+GxFBtZuArls2qIYeXy76SrWEMg919t4DmcBsKCf22OvikD+srSHP5dzZoPtN2h0RAmo
+	 dG210+e1fiBbASkBuFKIWEPswVBp+mTjQfH9G17qDqEByGWQD+8gATRqJdjQ0JzCBT+lD6q4eeJs
+	 yU7KzwwychGgQT/MT2smIe61B2Iy17ws8nH2fa7/Z/bYGYzUGag5Gi7joVpfRnB2qUmwIxUIEg3b
+	 pNTbQp5dRhq8EgINmqF8henVEI7YBxQZFsvBvG+5xPsQfjZ+iDHpcDuXALVfuK/ea5Pi3SNxT7Qx
+	 O9Lre3XOUMEUYkPtkDmjUElx5KKCb4GucMN9J/IjzKuuLUfbyW2fOGS5J4a8vXZnJys6YNfELiCa
+	 HSWQzPMvIRHtO4GPfyXKWLrkKCMwL9vQD1/w2DFsbPY+Wl3XfyIMBjXs5ON0P/QwV1B7wM8Y0f+o
+	 8D0kE3midU64c4cq2q5/YveFwOGtdlNMMFIRXSoLbsGTQBlaxf5wDJGbTFNHN758oBWlIqBAtpGm
+	 ksIYvKEt44tc1HYjZvtrJxZycdCLbcZ6lTV7kiNWWcgIBVs4vZfH0ZsNOEskvcyFVom3K8l36LrZ
+	 9/+vjfWc/9NI89ySvJHJ9TQkgDBcs7dSeQbAD10NNwyll9qNLNKTWoCTc1LMpX9a7PnJqx7fGwM5
+	 0v4VcS+RhrIV1KWQdKwDZqQkkaQwObr8Ur7a0/1xi57M3E2mhO31wreoLW5bZ95k4G2hiVlvE///
+	 cQeraYKVoypCsnMoxoE1LpoNPD40mJDwuuyELiXF4YGXIDlxJM5XUSnSLelLGN
+X-QQ-XMRINFO: Mp0Kj//9VHAxr69bL5MkOOs=
+From: Edward Adam Davis <eadavis@qq.com>
+To: syzbot+8a1d152fba6b41f760ae@syzkaller.appspotmail.com
+Cc: linux-kernel@vger.kernel.org,
+	syzkaller-bugs@googlegroups.com
+Subject: Re: [syzbot] [bluetooth?] KASAN: slab-out-of-bounds Read in l2cap_sock_setsockopt
+Date: Fri,  5 Apr 2024 17:50:20 +0800
+X-OQ-MSGID: <20240405095019.538520-2-eadavis@qq.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <000000000000b48cb0061553f087@google.com>
+References: <000000000000b48cb0061553f087@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml100003.china.huawei.com (7.191.160.210) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
+Content-Transfer-Encoding: 8bit
 
-On Wed,  3 Apr 2024 17:23:13 +0100
-Lukasz Luba <lukasz.luba@arm.com> wrote:
+please test oob in rfcomm_sock_setsockopt
 
-Typo in patch title.  performance
+#syz test https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git fe46a7dd189e
+
+diff --git a/net/socket.c b/net/socket.c
+index e5f3af49a8b6..d5b2ab6c859c 100644
+--- a/net/socket.c
++++ b/net/socket.c
+@@ -2327,6 +2327,9 @@ int __sys_setsockopt(int fd, int level, int optname, char __user *user_optval,
+ 	int err, fput_needed;
+ 	struct socket *sock;
+ 
++	if (optlen < 4)
++		return -EINVAL;
++
+ 	sock = sockfd_lookup_light(fd, &err, &fput_needed);
+ 	if (!sock)
+ 		return err;
+
