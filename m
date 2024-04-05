@@ -1,188 +1,119 @@
-Received: from mail-yw1-f195.google.com (mail-yw1-f195.google.com [209.85.128.195])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9626917278B;
-	Fri,  5 Apr 2024 20:22:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B06ED174EC2
+	for <linux-kernel@vger.kernel.org>; Fri,  5 Apr 2024 20:24:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712348568; cv=none; b=qfi+0nzCrBT6L8yWAodq7RjOyEBYV4h4Hes8DTuvirzgXfWzA9puXws/j3Mm+knOSPKY8mo8sRny7xZdBomeqx9QNovvnV8pkDjOLoHJHVf2UiO9nyBsCTIIlvP7E+efLTdgllFdI3tjY25swoiukaxFNBl9bjKov7Px+MeHZzI=
+	t=1712348644; cv=none; b=ZJCAP+qoCfUIQGKwSZWAvlR5IwGMqV5s20zK/rPXiF52a1w3H3rC2RqanbR8HFYcX/tdqHen//uvUpF7IB5EW7RkoPLrBGGsJLYxxMlRUc/08ulvx/fgsEkBRStS1IpJOev3Seo8wc6ukLW5CidP7ol267ojz1HVDMSmS9py3xk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712348568; c=relaxed/simple;
-	bh=/c7g36rtE40BDeZV1S/AlcHS7dY6Xj4ExtPGgjvBAJw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=bQLLnS6PQY5nswlNehf4XDnrCWpo3/IjA3xFDKR4oSR7JIhN7t3GDhYOyijCBRU8nXuDJkb4LWeE4KpKkH9hw3K/69qU+W2Yx4F86RCB5qV5VTgNjs33MP4yblGucHQJRWSwDyEBNBmMK9AW2J7DPIh8xgbY1hIKcMZwbbeDLhg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QJkFbOmN; arc=none smtp.client-ip=209.85.128.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1712348644; c=relaxed/simple;
+	bh=Dw4JPIXlD0rrP8zv2l2cW7VTI4jVcNnThSj8nYZebo0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=WEUguid8Vv1f0x9Uy5karFl/60F6I9lCWIWDDzqP7WmkxySB8PjoQL3n4Iq0RLYciWAJgyHJgcjR6zPlcWzSNda5sysXxnLfP+fPYaOYCi5be+9gVccbt3oRqU+qlRO1DHPcSxillWB1fKrO1jiU4TVNIH/JBWDfrxH5cOklrHQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=F5HQZl/c; arc=none smtp.client-ip=198.175.65.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QJkFbOmN"
-Received: by mail-yw1-f195.google.com with SMTP id 00721157ae682-615038fc5baso27621997b3.3;
-        Fri, 05 Apr 2024 13:22:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1712348565; x=1712953365; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=9uO9sL7m4DMsIKcxtkPkEJUbu4NEoxIAppzIfnBTObw=;
-        b=QJkFbOmNZCyJpTeJ3OHD1+CWxPuXIZmk72B7MpAHrkxuhjbWY5YwNg31+CYGxQ8gg+
-         6Jl/RaOn0/IFRp2JmHlfqQOvw6KEiLygln/MiCMDt8HNSXA9BeH6nL2GiH+SMDOGUI7n
-         9W/sff4BWrrjmd2E40gILEiAI0VS3gJEoJ3wJBqbsWQh8Ho3tTnOV4raveO0r6icdjNM
-         /fYjHMiYmNq6xUMsSZ3XVMxQHyBPn/EtkBx91VTq697SuEnxToJuscWn21J5t6h3k41P
-         6WcRCIc8pccvnjyD/qhdHavqu6keyVkr4lVEfA86uQCv5+dYIWtkviQnTnnHHSRCPAZR
-         VFCQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712348565; x=1712953365;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=9uO9sL7m4DMsIKcxtkPkEJUbu4NEoxIAppzIfnBTObw=;
-        b=auFIa6uCHGnnKCYstwSvTCU2dI6dFVjRVtAU46w0Xcd0Md6evH2gqf4I71uUDE99ab
-         jKur8E/7rhlxeSUbxryJ9Zj7jUTWIf0bB60QiC0sxBhztNVviCA5wUEBfPzDPN7OpJWr
-         OVDFXWC34Z0oQBs0HMvtuZpekLw7ZBo538iFXlTPpCqRwbO9mv2w0/FYIYy9k18wpNCK
-         9Sr+maUwrhvjsR23dapZJF7MkEqr7j/phUGkxuwyXuyYx6igD2zrgpM0YpqhiBbMvw4+
-         nIioRlkyDQk5uZq4EnSbXvFYM0am+/xRskoSYfSDtLPFvuzUbsIjByL1XcjHtVCRZuBQ
-         lWCg==
-X-Forwarded-Encrypted: i=1; AJvYcCW2yESLT1QhkZWCeJMAXBie3UB7hST2ZO5N6ZDW0wGYjnJ8tF32sm7WXuZeSn+R3KfMCcn2wD10AWA82hVhIAjhFdp5aaWRRkzViqCkAxi1dveRalZw43iaUYT5mHEF5StC7ugB
-X-Gm-Message-State: AOJu0Yzui/4VVQd/sHX+6gjd8/cU22lPCqIfgyAhBrsVWoCxezWCN5QC
-	DE2ksXCBjT0ELXHBu5BeH2wRb+W7Y61678xnnKW7jXg86tUdd5Z2
-X-Google-Smtp-Source: AGHT+IH/fk1YAwa90MOBxgFnsa+3wbT2P6MSx+PBNEyLZqpyED42kh5pJENTlsy6ODPjOmgWmKoDIA==
-X-Received: by 2002:a0d:d9d1:0:b0:615:1413:95c1 with SMTP id b200-20020a0dd9d1000000b00615141395c1mr2510706ywe.19.1712348564458;
-        Fri, 05 Apr 2024 13:22:44 -0700 (PDT)
-Received: from [10.102.6.66] ([208.97.243.82])
-        by smtp.gmail.com with ESMTPSA id x11-20020a81b04b000000b006155d6134dasm501309ywk.141.2024.04.05.13.22.43
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 05 Apr 2024 13:22:44 -0700 (PDT)
-Message-ID: <651c87fc-1f21-4153-bade-2dad048eecbd@gmail.com>
-Date: Fri, 5 Apr 2024 16:22:43 -0400
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="F5HQZl/c"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1712348641; x=1743884641;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=Dw4JPIXlD0rrP8zv2l2cW7VTI4jVcNnThSj8nYZebo0=;
+  b=F5HQZl/cSGEr6YP59T6EQppSLYHLRbW+BgXaHVpziFyiotxpgcz/SlKE
+   fpkP0GLUVQAZ86kpldnl1ZxvyU+ItvRpTMWnRMZKd5dLGPbfUN/2ddINl
+   wMMGmWvsDpPDdvmyZniMh2diCkYi7xXRJss5Yk/uELw9BbbrhYyWRRSxY
+   HgsUc2678GM3qm19qUoLskheAF/fssdyYOcxbzqOkUORYcTGhv2N8BS/G
+   jdkG467vzgWHIFxbNZEPsp9drmpcbUXM3CNLzvtd2rLrBqeyaTxEVywle
+   VsGFt2Ma8KjMIolLgsAE9Zsq8nlW5sA0Z0sockFAXiGOQuZEaCjx7qZVY
+   A==;
+X-CSE-ConnectionGUID: mem9opVVTkq1hfJTdcihsw==
+X-CSE-MsgGUID: eL8O7mRqSEaDH1I3doG/sg==
+X-IronPort-AV: E=McAfee;i="6600,9927,11035"; a="7789086"
+X-IronPort-AV: E=Sophos;i="6.07,182,1708416000"; 
+   d="scan'208";a="7789086"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Apr 2024 13:24:01 -0700
+X-CSE-ConnectionGUID: LK0yzfpbTsu4u8NnnfJGcQ==
+X-CSE-MsgGUID: XTB8CfXqQwOSqMzhOI9Yfg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,182,1708416000"; 
+   d="scan'208";a="24000510"
+Received: from lkp-server01.sh.intel.com (HELO e61807b1d151) ([10.239.97.150])
+  by orviesa005.jf.intel.com with ESMTP; 05 Apr 2024 13:23:59 -0700
+Received: from kbuild by e61807b1d151 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1rsq6P-0002fw-2Z;
+	Fri, 05 Apr 2024 20:23:57 +0000
+Date: Sat, 6 Apr 2024 04:23:54 +0800
+From: kernel test robot <lkp@intel.com>
+To: Yosry Ahmed <yosryahmed@google.com>,
+	Andrew Morton <akpm@linux-foundation.org>
+Cc: oe-kbuild-all@lists.linux.dev,
+	Linux Memory Management List <linux-mm@kvack.org>,
+	Johannes Weiner <hannes@cmpxchg.org>, Nhat Pham <nphamcs@gmail.com>,
+	Chengming Zhou <chengming.zhou@linux.dev>,
+	linux-kernel@vger.kernel.org, Yosry Ahmed <yosryahmed@google.com>
+Subject: Re: [PATCH v2 2/5] mm: zswap: calculate limits only when updated
+Message-ID: <202404060445.zMPxumi9-lkp@intel.com>
+References: <20240405053510.1948982-3-yosryahmed@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH RFC net-next 00/10] MC Flood disable and snooping
-To: Nikolay Aleksandrov <razor@blackwall.org>,
- Vladimir Oltean <olteanv@gmail.com>
-Cc: Joseph Huang <Joseph.Huang@garmin.com>, netdev@vger.kernel.org,
- Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- Roopa Prabhu <roopa@nvidia.com>, =?UTF-8?Q?Linus_L=C3=BCssing?=
- <linus.luessing@c0d3.blue>, linux-kernel@vger.kernel.org,
- bridge@lists.linux.dev
-References: <20240402001137.2980589-1-Joseph.Huang@garmin.com>
- <7fc8264a-a383-4682-a144-8d91fe3971d9@blackwall.org>
- <20240402174348.wosc37adyub5o7xu@skbuf>
- <a8968719-a63b-4969-a971-173c010d708f@blackwall.org>
- <20240402204600.5ep4xlzrhleqzw7k@skbuf>
- <065b803f-14a9-4013-8f11-712bb8d54848@blackwall.org>
- <804b7bf3-1b29-42c4-be42-4c23f1355aaf@gmail.com>
- <20240405102033.vjkkoc3wy2i3vdvg@skbuf>
- <935c18c1-7736-416c-b5c5-13ca42035b1f@blackwall.org>
-Content-Language: en-US
-From: Joseph Huang <joseph.huang.2024@gmail.com>
-In-Reply-To: <935c18c1-7736-416c-b5c5-13ca42035b1f@blackwall.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240405053510.1948982-3-yosryahmed@google.com>
 
-On 4/5/2024 7:00 AM, Nikolay Aleksandrov wrote:
-> On 4/5/24 13:20, Vladimir Oltean wrote:
->> On Thu, Apr 04, 2024 at 06:16:12PM -0400, Joseph Huang wrote:
->>>>> mcast_flood == off:
->>>>> - mcast_ipv4_ctrl_flood: don't care (maybe can force to "off")
->>>>> - mcast_ipv4_data_flood: don't care
->>>>> - mcast_ipv6_ctrl_flood: don't care
->>>>> - mcast_ipv6_data_flood: don't care
->>>>> - mcast_l2_flood: don't care
->>>>> mcast_flood == on:
->>>>> - Flood 224.0.0.x according to mcast_ipv4_ctrl_flood
->>>>> - Flood all other IPv4 multicast according to mcast_ipv4_data_flood
->>>>> - Flood ff02::/16 according to mcast_ipv6_ctrl_flood
->>>>> - Flood all other IPv6 multicast according to mcast_ipv6_data_flood
->>>>> - Flood L2 according to mcast_l2_flood
->>>
->>> Did you mean
->>>
->>> if mcast_flood == on (meaning mcast_flood is ENABLED)
->>> - mcast_ipv4_ctrl_flood: don't care (since 224.0.0.x will be flooded 
->>> anyway)
->>> ...
->>>
->>> if mcast_flood == off (meaning mcast_flood is DISABLED)
->>> - Flood 224.0.0.x according to mcast_ipv4_ctrl_flood
->>> ...
->>>
->>> ? Otherwise the problem is still not solved when mcast_flood is 
->>> disabled.
->>
->> No, I mean exactly as I said. My goal was not to "solve the problem"
->> when mcast_flood is disabled, but to give you an option to configure the
->> bridge to achieve what you want, in a way which I think is more 
->> acceptable.
->>
->> AFAIU, there is not really any "problem" - the bridge behaves exactly as
->> instructed given the limited language available to instruct it 
->> ("mcast_flood"
->> covers all multicast). So the other knobs have the role of fine-tuning
->> what gets flooded when mcast_flood is on. Like "yes, but..."
->>
->> You can't "solve the problem" when it involves changing an established
->> behavior that somebody probably depended on to be just like that.
->>
->>>> Yep, sounds good to me. I was thinking about something in these lines
->>>> as well if doing a kernel solution in order to make it simpler and more
->>>> generic. The ctrl flood bits need to be handled more carefully to make
->>>> sure they match only control traffic and not link-local data.
->>>
->>> Do we consider 224.0.0.251 (mDNS) to be control or data? What 
->>> qualifies as
->>> control I guess that's my question.
->>
->> Well, as I said, I'm proposing that 224.0.0.x qualifies as control and
->> the rest of IPv4 multicast as data. Which means that, applied to your
->> case, "mcast_flood on mcast_ipv4_ctrl_flood on mcast_ipv4_data_flood off"
->> will "force flood" mDNS just like the IGMP traffic from your patches.
->> I'm not aware if this could be considered problematic (I don't think so).
->>
->> The reason behind this proposal is that, AFAIU, endpoints may choose to
->> join IGMP groups in the 224.0.0.x range or not, but RFC4541 says that
->> switches shouldn't prune the destinations towards endpoints that don't
->> join this range anyway: https://www.rfc-editor.org/rfc/rfc4541#page-6
->>
->> Whereas for IP multicast traffic towards an address outside 224.0.0.x,
->> pruning will happen as per the IGMP join tracking mechanism.
-> 
-> +1, non-IGMP traffic to 224.0.0.x must be flooded to all anyway
-> so this should allow for a better control over it, but perhaps
-> the naming should be link_local instead because control usually
-> means IGMP, maybe something like mcast_ip_link_local_flood
-> 
+Hi Yosry,
 
-Like this?
+kernel test robot noticed the following build warnings:
 
-bridge link set dev swp0 mcast_flood off
-   - all flooding disabled
+[auto build test WARNING on akpm-mm/mm-everything]
+[also build test WARNING on next-20240405]
+[cannot apply to linus/master v6.9-rc2]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-bridge link set dev swp0 mcast_flood on
-   - all flooding enabled
+url:    https://github.com/intel-lab-lkp/linux/commits/Yosry-Ahmed/mm-zswap-always-shrink-in-zswap_store-if-zswap_pool_reached_full/20240405-133623
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm.git mm-everything
+patch link:    https://lore.kernel.org/r/20240405053510.1948982-3-yosryahmed%40google.com
+patch subject: [PATCH v2 2/5] mm: zswap: calculate limits only when updated
+config: i386-randconfig-061-20240405 (https://download.01.org/0day-ci/archive/20240406/202404060445.zMPxumi9-lkp@intel.com/config)
+compiler: gcc-10 (Ubuntu 10.5.0-1ubuntu1) 10.5.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240406/202404060445.zMPxumi9-lkp@intel.com/reproduce)
 
-bridge link set dev swp0 mcast_flood on mcast_ipv4_data_flood off 
-mcast_ipv6_data_flood off
-   - IPv4 data packets flooding disabled, IPv6 data packets flooding 
-disabled, everything else floods (that is to say, only allow IPv4 local 
-subnet and IPv6 link-local to flood)
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202404060445.zMPxumi9-lkp@intel.com/
 
-?
+sparse warnings: (new ones prefixed by >>)
+>> mm/zswap.c:132:15: sparse: sparse: symbol 'zswap_accept_thr_pages' was not declared. Should it be static?
+   mm/zswap.c:1188:23: sparse: sparse: context imbalance in 'shrink_memcg_cb' - unexpected unlock
 
-The syntax seems to be counterintuitive.
+vim +/zswap_accept_thr_pages +132 mm/zswap.c
 
-Or like this?
+   120	
+   121	static int zswap_max_pool_param_set(const char *,
+   122					       const struct kernel_param *);
+   123	static const struct kernel_param_ops zswap_max_pool_param_ops = {
+   124		.set =		zswap_max_pool_param_set,
+   125		.get =		param_get_uint,
+   126	};
+   127	module_param_cb(max_pool_percent, &zswap_max_pool_param_ops,
+   128			&zswap_max_pool_percent, 0644);
+   129	
+   130	/* The threshold for accepting new pages after the max_pool_percent was hit */
+   131	static unsigned int zswap_accept_thr_percent = 90; /* of max pool size */
+ > 132	unsigned long zswap_accept_thr_pages;
+   133	
 
-bridge link set dev swp0 mcast_flood on mcast_ipv4_ctrl_flood on
-   - only allow IPv4 local subnet to flood, everything else off
-
-?
-
-So basically the question is, what should the behavior be when something 
-is omitted from the command line?
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
