@@ -1,207 +1,242 @@
-Received: from mail-yb1-f178.google.com (mail-yb1-f178.google.com [209.85.219.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F283B13D289
-	for <linux-kernel@vger.kernel.org>; Fri,  5 Apr 2024 07:44:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 059B013D534
+	for <linux-kernel@vger.kernel.org>; Fri,  5 Apr 2024 07:44:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712303077; cv=none; b=Ze96H/XgILHzu78nKANdIBHPNpdSl7zHtyHiYDxwdof0sDm2DucwUNvvC04LF05NYdFkpiPUlyYM4rRlEEjrKOJDzYWDLjhzl3nfuts9jFnhWQpXKhwJJL/3voX/K4JO0Z4OvuV32rBuP49j3/mg5r7vOcaGKLULRQBxdrDACOM=
+	t=1712303100; cv=none; b=XrXe+ykX6KPE497xU9F33mtG2QQ7lu2rXPIafxRlw45GKa3Emd7rtCzie3m1SYw0+Qf5iMmTFtHVFYe8sSzdaaLGcq+3niTqm2jJkFNT8SdMmPBzEfBJIMTUL59YigxqFqIk2+DR2P8Zrg7VF1P4D7e5w3n/k50gXEvohLiV6Bg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712303077; c=relaxed/simple;
-	bh=bxMd5VtoFtZ5IA+lfWe6irnCCj68qYa5NaOxVXPK+Zs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=RXQ5SU7/F6XT4KU6l/76loIE/IbLmZLf7HMkAurIAZeHn2fHS0QqsrLC+QNoxTqpY3GuuPYcU4cnMj/0shW//NAxsZzVR8VdCwjcr4dvtvzA3NRL+n7JQ3hNqIt8TbgOJCfjvkiWCs1/0xNuPtV+p92TWAY0WFUWjk5239pgLyM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=c84w0mMz; arc=none smtp.client-ip=209.85.219.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="c84w0mMz"
-Received: by mail-yb1-f178.google.com with SMTP id 3f1490d57ef6-dcbc6a6808fso1947767276.2
-        for <linux-kernel@vger.kernel.org>; Fri, 05 Apr 2024 00:44:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1712303075; x=1712907875; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=zYQYHc96aAqkJY4oGXNQ40gKh1E9/vfyHDywYKQqVgk=;
-        b=c84w0mMzteKparFyfWw+KzRpMnkX2NbKQICh758hUtWdlVr1o5Js8TXjfy+lwLBjux
-         X+p+a2ddT36Cwt07YJUmepMSAbjJyDzgkfuf8LaosV2ktpDU4dbV5a5XX098dR+OAVVJ
-         MKCnODMoZBOHELCnHl6acIc+X097JlZmhPByWfXyVTQ1ZrEoOivMEvbUje204gGc0xDr
-         HtK1kTzCGI8R4VW2ynBUtqTeH0AlQ/aSZcM0G6Chta0I9hoJjvqg7YzgnwEij6KuRTCf
-         btiZrKx7kPDoAskNk87fFq0CkfRoLMT1cBcLjOU53/I4dBSz/16amjzSMI5mMJbN/wdt
-         7YFQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712303075; x=1712907875;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=zYQYHc96aAqkJY4oGXNQ40gKh1E9/vfyHDywYKQqVgk=;
-        b=UBj7dohpxHNVZ+d7Tr2dljotH7HElpXTakCzHjm97kklwZ1kHWjI+09Z1JQY5hcasw
-         7l1CkmvjtmJyV36YyXdj8pxwST/qyhWziv1Y+F6Jylv1cFDmeNswVvzsLU6hDbXWbC/h
-         /vUuaSL1uf5i1DaKegn1i5TqKFr4JrV2BYUR0A3jUqsFrf0Wj4Kd9szaA8aMPwZnj4gP
-         znLq4oAYEojUTW3QPnvrVNg4+y+l0/cSz6U/360CEBId5cztIaGZw3SXjj7vyZmH3MIA
-         4iHoaf/SLREguMx7HBzXv6V9YlH+GJmJ5FZIcdY/W/EvDzJFbJ9qPcFUqK4khLrZ9Mib
-         6uqg==
-X-Forwarded-Encrypted: i=1; AJvYcCVOd2srywp9VaeRYVzzsQfqRBz5vdKlRbE9SOzJVCgqb/JFc6Rmqz1nfCZaZktxuxajufm7tDqeqjpBCxdjffHoJqhuJcUVQw1o2VXX
-X-Gm-Message-State: AOJu0YzbxQBWB05zG+8bqp8fUS4kYjCKpX+j6t1ZaYeni2CQDOfyQb1x
-	8+jpemSgAnF/yHxKewS10D2vvJRwImO6iejFV9cEoYaZnPHGtyh+CFfgoaL/2x1dgcs0UOnmKDY
-	AuJhftuel1Da2vJKX0D60oQ05rhHt/FofmuMSgw==
-X-Google-Smtp-Source: AGHT+IEu6kTYj/i3eHlvNZAWtBlfhRcBURjNaSYT7hSkM1HYOoTHlVFCzx0BUjloetjyotgljRz9/W3Z2OBtLyxBdoM=
-X-Received: by 2002:a25:800c:0:b0:dc7:4367:2527 with SMTP id
- m12-20020a25800c000000b00dc743672527mr599078ybk.49.1712303075009; Fri, 05 Apr
- 2024 00:44:35 -0700 (PDT)
+	s=arc-20240116; t=1712303100; c=relaxed/simple;
+	bh=EGFVhu5uEEGFBRV4ovRnzduyzuYnoarCf2q6cUuQ8OU=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=IaL+mycj8nWslvsSDXmF+LU8pstp1Fkbj7L1Ar6/DotHswfQ+uxtfkcflY5IIS8LbT/D2jrT19/Hj8WNJ8CIeN0fIy3BttgMCeZ0YEUZtBcrwoWKc9zCpAemF/q4l6+2jw9NcxPf3GE4VKR9+YezuNjfNWjWn/XgY1qDXJYwz3o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <m.grzeschik@pengutronix.de>)
+	id 1rseFt-0001Wp-AV; Fri, 05 Apr 2024 09:44:57 +0200
+Received: from [2a0a:edc0:0:1101:1d::ac] (helo=dude04.red.stw.pengutronix.de)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <m.grzeschik@pengutronix.de>)
+	id 1rseFs-00AWqy-ST; Fri, 05 Apr 2024 09:44:56 +0200
+Received: from localhost ([::1] helo=dude04.red.stw.pengutronix.de)
+	by dude04.red.stw.pengutronix.de with esmtp (Exim 4.96)
+	(envelope-from <m.grzeschik@pengutronix.de>)
+	id 1rseFs-00DzJw-2h;
+	Fri, 05 Apr 2024 09:44:56 +0200
+From: Michael Grzeschik <m.grzeschik@pengutronix.de>
+Date: Fri, 05 Apr 2024 09:44:56 +0200
+Subject: [PATCH v2] usb: gadget: uvc: Improve error checking and tagging
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240321092529.13362-1-quic_jkona@quicinc.com>
- <20240321092529.13362-7-quic_jkona@quicinc.com> <CAA8EJppHGS+W-aiXvJ2cE=jCbua8Y0Q+zv_QTs+C9V5+Y1vuZg@mail.gmail.com>
- <008d574f-9c9e-48c6-b64e-89fb469cbde4@quicinc.com> <b3464321-0c52-4c41-9198-e9e7b16aa419@quicinc.com>
- <CAA8EJpqDwCVAjDphnC-HdfseMJ-xd8VVxb5+9UcGEcKLcn-heg@mail.gmail.com>
- <fba2474e-31a6-4fef-acf9-7069933584c8@quicinc.com> <CAA8EJprfaALkQe-wUrBow6B1A66ro0AoVpfnQJLXgqFmL8isNQ@mail.gmail.com>
- <8a5a3cf8-5b4f-487f-ad91-00499509f8ec@quicinc.com> <CAA8EJpoW8MQQ3OPfOVYRJtgsn1JgKd5Ew7vqgWx3xWE-xJ=R-g@mail.gmail.com>
- <03f8d2ee-2467-48aa-9b76-06eb13202b8c@quicinc.com>
-In-Reply-To: <03f8d2ee-2467-48aa-9b76-06eb13202b8c@quicinc.com>
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Date: Fri, 5 Apr 2024 10:44:23 +0300
-Message-ID: <CAA8EJpqL_bkyoUKkY_nr7PvbvC-1dVKr9kNQKsAU-2PPO9717g@mail.gmail.com>
-Subject: Re: [PATCH V2 RESEND 6/6] arm64: dts: qcom: sm8650: Add video and
- camera clock controllers
-To: Jagadeesh Kona <quic_jkona@quicinc.com>
-Cc: Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konrad.dybcio@linaro.org>, 
-	Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
-	Rob Herring <robh+dt@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Vladimir Zapolskiy <vladimir.zapolskiy@linaro.org>, linux-arm-msm@vger.kernel.org, 
-	linux-clk@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Taniya Das <quic_tdas@quicinc.com>, 
-	Satya Priya Kakitapalli <quic_skakitap@quicinc.com>, Ajit Pandey <quic_ajipan@quicinc.com>, 
-	Imran Shaik <quic_imrashai@quicinc.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240324-uvc-gadget-errorcheck-v2-1-f141b13ade0e@pengutronix.de>
+X-B4-Tracking: v=1; b=H4sIAPerD2YC/4WNSwqDMBQAryJZ9xUTI0pXvUdxkc8zCZUoLxos4
+ t2beoEuZ2CYgyWkgIk9qoMR5pDCHAuIW8WMV9EhBFuYiVrIuhEStmzAKetwBSSayXg0b5Bc97x
+ T4yilZaXVKiFoUtH4UsdtmopcCMewX7PXUNiHtM70ud6Z/+y/TebAoW2b3rSd1qjVc8HotpXmG
+ Pa7RTac5/kFNO2MXtQAAAA=
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, 
+ Daniel Scally <dan.scally@ideasonboard.com>, 
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Michael Grzeschik <m.grzeschik@pengutronix.de>
+X-Mailer: b4 0.12.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=6004;
+ i=m.grzeschik@pengutronix.de; h=from:subject:message-id;
+ bh=EGFVhu5uEEGFBRV4ovRnzduyzuYnoarCf2q6cUuQ8OU=;
+ b=owEBbQKS/ZANAwAKAb9pWET5cfSrAcsmYgBmD6v4dkOR1+x1k0MdAqaO+E5Koh62lTp4/8eYL
+ mGId6/9C12JAjMEAAEKAB0WIQQV2+2Fpbqd6fvv0Gi/aVhE+XH0qwUCZg+r+AAKCRC/aVhE+XH0
+ qxLoD/9RwbdmTQR8SpV4BicvnulhQKbDIihIHJvHTj9/LnFfP5kadiYRGSbJB7iFpGhc3/Wve9a
+ kASzasUJ+zB6Lo+QS4+uyUl4WIkLlfM6yQ7wQ1CIRATxv5Byd4NBSx/mxxhyQOQbl7/hf95V+iK
+ kC+IBq9XcuNpdOlQp9xKEiOI39lt6KeCYt1shYI+K5p+z2rRddOJeh5X44eyVCotyLHaxmtNpBm
+ n89yOdHqx3wUXq1r7tsKMXinMi9jnQeeVBTtnfTWL3azvwDo1oYylpfDINXvMzoNHB9VlNyVVCn
+ O7XbDI8yHOkoQbQdKy/wsV5OBV1ao64SU4qtl7VfrusDt/A9A2asOicdqhvymeuSMK4j6vEOBJt
+ qXarZ78iR8KTPjugC3U8R3hAoPOsRomYvPi75YasFJxrX/nV+M7MWNsvqqnxrYQJowOHtBB/QYu
+ qHFxvPEcOPLb3x7czqJtisRKArEKRM2qkHOG9ejHUuFlWq7c+Yp+RsvEGIXpNIJTdfUwZ2qAeH9
+ IPxa/DqIe2Li0C77SprjU+ipHogQc8PPz0MgbSS9WvKgQ9iqbZqrpInmsf90hz9SYqArj/8P+0d
+ hLGmYyCwxi/fqCn9vsv2qg4eVgPe1yRQ5CQegknUXHFFudt8P2udiTowG5QKTgiJMhp/jIto7mr
+ rDLj/LM9ctnm3/A==
+X-Developer-Key: i=m.grzeschik@pengutronix.de; a=openpgp;
+ fpr=957BC452CE953D7EA60CF4FC0BE9E3157A1E2C64
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: m.grzeschik@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-On Fri, 5 Apr 2024 at 09:01, Jagadeesh Kona <quic_jkona@quicinc.com> wrote:
->
->
->
-> On 4/4/2024 9:35 PM, Dmitry Baryshkov wrote:
-> > On Thu, 4 Apr 2024 at 13:06, Jagadeesh Kona <quic_jkona@quicinc.com> wrote:
-> >>
-> >>
-> >>
-> >> On 4/4/2024 11:00 AM, Dmitry Baryshkov wrote:
-> >>> On Thu, 4 Apr 2024 at 08:13, Jagadeesh Kona <quic_jkona@quicinc.com> wrote:
-> >>>>
-> >>>>
-> >>>>
-> >>>> On 4/3/2024 9:24 PM, Dmitry Baryshkov wrote:
-> >>>>> On Wed, 3 Apr 2024 at 10:16, Jagadeesh Kona <quic_jkona@quicinc.com> wrote:
-> >>>>>>
-> >>>>>>
-> >>>>>>
-> >>>>>> On 3/25/2024 11:38 AM, Jagadeesh Kona wrote:
-> >>>>>>>
-> >>>>>>>
-> >>>>>>> On 3/21/2024 6:43 PM, Dmitry Baryshkov wrote:
-> >>>>>>>> On Thu, 21 Mar 2024 at 11:27, Jagadeesh Kona <quic_jkona@quicinc.com>
-> >>>>>>>> wrote:
-> >>>>>>>>>
-> >>>>>>>>> Add device nodes for video and camera clock controllers on Qualcomm
-> >>>>>>>>> SM8650 platform.
-> >>>>>>>>>
-> >>>>>>>>> Signed-off-by: Jagadeesh Kona <quic_jkona@quicinc.com>
-> >>>>>>>>> ---
-> >>>>>>>>>      arch/arm64/boot/dts/qcom/sm8650.dtsi | 28 ++++++++++++++++++++++++++++
-> >>>>>>>>>      1 file changed, 28 insertions(+)
-> >>>>>>>>>
-> >>>>>>>>> diff --git a/arch/arm64/boot/dts/qcom/sm8650.dtsi
-> >>>>>>>>> b/arch/arm64/boot/dts/qcom/sm8650.dtsi
-> >>>>>>>>> index 32c0a7b9aded..d862aa6be824 100644
-> >>>>>>>>> --- a/arch/arm64/boot/dts/qcom/sm8650.dtsi
-> >>>>>>>>> +++ b/arch/arm64/boot/dts/qcom/sm8650.dtsi
-> >>>>>>>>> @@ -4,6 +4,8 @@
-> >>>>>>>>>       */
-> >>>>>>>>>
-> >>>>>>>>>      #include <dt-bindings/clock/qcom,rpmh.h>
-> >>>>>>>>> +#include <dt-bindings/clock/qcom,sm8450-videocc.h>
-> >>>>>>>>> +#include <dt-bindings/clock/qcom,sm8650-camcc.h>
-> >>>>>>>>>      #include <dt-bindings/clock/qcom,sm8650-dispcc.h>
-> >>>>>>>>>      #include <dt-bindings/clock/qcom,sm8650-gcc.h>
-> >>>>>>>>>      #include <dt-bindings/clock/qcom,sm8650-gpucc.h>
-> >>>>>>>>> @@ -3110,6 +3112,32 @@ opp-202000000 {
-> >>>>>>>>>                             };
-> >>>>>>>>>                     };
-> >>>>>>>>>
-> >>>>>>>>> +               videocc: clock-controller@aaf0000 {
-> >>>>>>>>> +                       compatible = "qcom,sm8650-videocc";
-> >>>>>>>>> +                       reg = <0 0x0aaf0000 0 0x10000>;
-> >>>>>>>>> +                       clocks = <&bi_tcxo_div2>,
-> >>>>>>>>> +                                <&gcc GCC_VIDEO_AHB_CLK>;
-> >>>>>>>>> +                       power-domains = <&rpmhpd RPMHPD_MMCX>;
-> >>>>>>>>> +                       required-opps = <&rpmhpd_opp_low_svs>;
-> >>>>>>>>
-> >>>>>>>> The required-opps should no longer be necessary.
-> >>>>>>>>
-> >>>>>>>
-> >>>>>>> Sure, will check and remove this if not required.
-> >>>>>>
-> >>>>>>
-> >>>>>> I checked further on this and without required-opps, if there is no vote
-> >>>>>> on the power-domain & its peer from any other consumers, when runtime
-> >>>>>> get is called on device, it enables the power domain just at the minimum
-> >>>>>> non-zero level. But in some cases, the minimum non-zero level of
-> >>>>>> power-domain could be just retention and is not sufficient for clock
-> >>>>>> controller to operate, hence required-opps property is needed to specify
-> >>>>>> the minimum level required on power-domain for this clock controller.
-> >>>>>
-> >>>>> In which cases? If it ends up with the retention vote, it is a bug
-> >>>>> which must be fixed.
-> >>>>>
-> >>>>
-> >>>> The minimum non-zero level(configured from bootloaders) of MMCX is
-> >>>> retention on few chipsets but it can vary across the chipsets. Hence to
-> >>>> be on safer side from our end, it is good to have required-opps in DT to
-> >>>> specify the minimum level required for this clock controller.
-> >>>
-> >>> We are discussing sm8650, not some abstract chipset. Does it list
-> >>> retention or low_svs as a minimal level for MMCX?
-> >>>
-> >>
-> >> Actually, the minimum level for MMCX is external to the clock
-> >> controllers.
-> >
-> > Yes, it comes from cmd-db
-> >
-> >>   But the clock controller requires MMCX to be atleast at
-> >> lowsvs for it to be functional.
-> >
-> > Correct
-> >
-> >> Hence we need to keep required-opps to
-> >> ensure the same without relying on the actual minimum level for MMCX.
-> >
-> > And this is not correct. There is no need for the DT to be redundant.
-> > I plan to send patches removing the existing required-opps when they
-> > are not required.
-> >
-> I agree this is not required if cmd-db minimum level is already at
-> lowsvs. But since MMCX running at lowsvs is a mandatory requirement for
-> clock controller to operate, I believe it is good to have required-opps
-> to ensure we meet this requirement in all cases, rather than relying on
-> the cmd-db minimum level which we have no control over.
+Right now after one transfer was completed with EXDEV the currently
+encoded frame will get the UVC_STREAM_ERR tag attached. Since the
+complete and encode path are handling separate requests from different
+threads, there is no direct correspondence between the missed transfer
+of one request and the currently encoded request which might already
+belong to an completely different frame.
 
-IIf we follow this logic, we should throw cmd-db away and hardcode all
-those values in the RPMh drivers.
+When queueing requests into the hardware by calling ep_queue the
+underlying ringbuffer of the usb driver will be filled. However when
+one of these requests will have some issue while transfer the hardware
+will trigger an interrupt but will continue transferring the pending
+requests in the ringbuffer. This interrupt-latency will make it
+impossible to react in time to tag the fully enqueued frame with the
+UVC_STREAM_ERR in the header.
 
-We have cmd-db. If it is correct, there is no need to duplicate it. If
-it is incorrect, it is a bug that should be fixed or worked around.
+This patch is also addressing this particular issue by delaying the
+transmit of the EOF/ERR tagged header by waiting for the last enqueued
+buffer of the frame to be completed. This way it is possible to react to
+send the EOF/ERR tag depending on the whole frame transfer status.
 
->
-> Thanks,
-> Jagadeesh
->
+Signed-off-by: Michael Grzeschik <m.grzeschik@pengutronix.de>
+---
+Changes in v2:
+- removed unnecessary uvc_gadget_errorcheck_param module parameter
+- Link to v1: https://lore.kernel.org/r/20240324-uvc-gadget-errorcheck-v1-1-5538c57bbeba@pengutronix.de
+---
+ drivers/usb/gadget/function/uvc.h       |  2 +
+ drivers/usb/gadget/function/uvc_video.c | 69 ++++++++++++++++++++++++++++-----
+ 2 files changed, 61 insertions(+), 10 deletions(-)
 
+diff --git a/drivers/usb/gadget/function/uvc.h b/drivers/usb/gadget/function/uvc.h
+index cb35687b11e7e..210c9b5e6a5ee 100644
+--- a/drivers/usb/gadget/function/uvc.h
++++ b/drivers/usb/gadget/function/uvc.h
+@@ -91,6 +91,8 @@ struct uvc_video {
+ 	struct work_struct pump;
+ 	struct workqueue_struct *async_wq;
+ 
++	struct usb_request *last_req;
++
+ 	/* Frame parameters */
+ 	u8 bpp;
+ 	u32 fcc;
+diff --git a/drivers/usb/gadget/function/uvc_video.c b/drivers/usb/gadget/function/uvc_video.c
+index d41f5f31dadd5..2bfeea94131a9 100644
+--- a/drivers/usb/gadget/function/uvc_video.c
++++ b/drivers/usb/gadget/function/uvc_video.c
+@@ -35,9 +35,6 @@ uvc_video_encode_header(struct uvc_video *video, struct uvc_buffer *buf,
+ 
+ 	data[1] = UVC_STREAM_EOH | video->fid;
+ 
+-	if (video->queue.flags & UVC_QUEUE_DROP_INCOMPLETE)
+-		data[1] |= UVC_STREAM_ERR;
+-
+ 	if (video->queue.buf_used == 0 && ts.tv_sec) {
+ 		/* dwClockFrequency is 48 MHz */
+ 		u32 pts = ((u64)ts.tv_sec * USEC_PER_SEC + ts.tv_nsec / NSEC_PER_USEC) * 48;
+@@ -62,9 +59,6 @@ uvc_video_encode_header(struct uvc_video *video, struct uvc_buffer *buf,
+ 
+ 	data[0] = pos;
+ 
+-	if (buf->bytesused - video->queue.buf_used <= len - pos)
+-		data[1] |= UVC_STREAM_EOF;
+-
+ 	return pos;
+ }
+ 
+@@ -366,6 +360,32 @@ static void uvc_video_ep_queue_initial_requests(struct uvc_video *video)
+ 	spin_unlock_irqrestore(&video->req_lock, flags);
+ }
+ 
++static void
++uvc_video_fixup_header(struct usb_request *next, struct usb_request *done,
++		       bool error)
++{
++	struct uvc_request *next_ureq = next->context;
++	struct uvc_request *done_ureq = done->context;
++	struct uvc_video *video = next_ureq->video;
++	struct uvc_video_queue *queue = &video->queue;
++
++	u8 header = UVC_STREAM_EOF;
++
++	if (error)
++		header |= UVC_STREAM_ERR;
++
++	if (queue->use_sg) {
++		memcpy(next_ureq->header, done_ureq->header,
++				UVCG_REQUEST_HEADER_LEN);
++
++		((u8 *)next_ureq->header)[1] |= header;
++	} else {
++		memcpy(next->buf, done->buf, UVCG_REQUEST_HEADER_LEN);
++
++		((u8 *)next->buf)[1] |= header;
++	}
++}
++
+ static void
+ uvc_video_complete(struct usb_ep *ep, struct usb_request *req)
+ {
+@@ -377,6 +397,7 @@ uvc_video_complete(struct usb_ep *ep, struct usb_request *req)
+ 	unsigned long flags;
+ 	bool is_bulk = video->max_payload_size;
+ 	int ret = 0;
++	bool error = false;
+ 
+ 	spin_lock_irqsave(&video->req_lock, flags);
+ 	if (!video->is_enabled) {
+@@ -419,6 +440,8 @@ uvc_video_complete(struct usb_ep *ep, struct usb_request *req)
+ 
+ 	if (last_buf) {
+ 		spin_lock_irqsave(&queue->irqlock, flags);
++		if (queue->flags & UVC_QUEUE_DROP_INCOMPLETE)
++			error = true;
+ 		uvcg_complete_buffer(queue, last_buf);
+ 		spin_unlock_irqrestore(&queue->irqlock, flags);
+ 	}
+@@ -449,11 +472,37 @@ uvc_video_complete(struct usb_ep *ep, struct usb_request *req)
+ 	 * requests and cannot recover.
+ 	 */
+ 	to_queue->length = 0;
++
++	/* If the last request was queued just copy the previous
++	 * header without payload to the empty request and fixup the
++	 * tags with ERR/EOF to finish the frame.
++	 */
++	if (video->last_req == req) {
++		uvc_video_fixup_header(to_queue, req, error);
++		to_queue->length = UVCG_REQUEST_HEADER_LEN;
++		video->last_req = NULL;
++	}
++
+ 	if (!list_empty(&video->req_ready)) {
+-		to_queue = list_first_entry(&video->req_ready,
+-			struct usb_request, list);
+-		list_del(&to_queue->list);
+-		list_add_tail(&req->list, &video->req_free);
++		struct usb_request *next_req =
++				list_first_entry(&video->req_ready,
++						 struct usb_request, list);
++		struct uvc_request *next_ureq = next_req->context;
++
++		/* If the last request of the frame will be queued, we delay
++		 * the enqueueing of every next request. This way it is
++		 * possible to react to send the EOF/ERR tag depending
++		 * on the whole frame transfer status.
++		 */
++		if (!video->last_req && !to_queue->length) {
++			if (next_ureq->last_buf)
++				video->last_req = next_req;
++
++			to_queue = next_req;
++			list_del(&to_queue->list);
++			list_add_tail(&req->list, &video->req_free);
++		}
++
+ 		/*
+ 		 * Queue work to the wq as well since it is possible that a
+ 		 * buffer may not have been completely encoded with the set of
 
+---
+base-commit: 3295f1b866bfbcabd625511968e8a5c541f9ab32
+change-id: 20240324-uvc-gadget-errorcheck-41b817aff44d
+
+Best regards,
 -- 
-With best wishes
-Dmitry
+Michael Grzeschik <m.grzeschik@pengutronix.de>
+
