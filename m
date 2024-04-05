@@ -1,158 +1,123 @@
-Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com [209.85.167.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB419142E73
-	for <linux-kernel@vger.kernel.org>; Fri,  5 Apr 2024 09:51:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 014E615FCEC
+	for <linux-kernel@vger.kernel.org>; Fri,  5 Apr 2024 09:52:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712310710; cv=none; b=kdVe6Swn0IuO8VLjaAey+rRf4x2XJo/sc41JEFJvmRLiJcvjgwwDatcDV3NJvOwREdGRdevnzQLl4wdhK2b6FbisXCwForljUWp1ZYwKG67lpXAJeqJaympEDG2V2fHi37TnQkiYs/WLbvN69ol9aWawWEN0bYphFRnOUfbFsIw=
+	t=1712310747; cv=none; b=aEWS2nar/vzdQ+pyjSzVpyMCIV+jKuwnRP7z3qwVeYCFIPQpX1DEUhyDJekUW9mmr5ylL9+dm8xXA6QPI/lQcqNADUE9eHN5G0KCDTc5pOeUILUuNy6nUMVpM2k0T8KxVfqEYDBd3+buKMBQaO5LyBbVeP+Th7tXer7jx4E+y0k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712310710; c=relaxed/simple;
-	bh=9z7NXciC8Z8/xPDHcNCTcqyOvDYKe+Q//7hKlc2E1fw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=F00LjghQTjMJH0N40TKZJxhjTbIWodk9QEmSMyjyZ2U3LbY7DyfNj8u6XHw3Mt4qkJKxsM2luxTFPZjJ115jhyCsFs0/nqvozQDJOmGjx0+2tZtgbiepiRQSecOSPAqRKXPmcvKD8MBhLyqqqUEZhIZXMhe9F8ubdfLz0NyMtj0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=JbrVApFv; arc=none smtp.client-ip=209.85.167.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="JbrVApFv"
-Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-516d6e23253so82667e87.1
-        for <linux-kernel@vger.kernel.org>; Fri, 05 Apr 2024 02:51:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1712310707; x=1712915507; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=XznLbi2Z1SKvx8bRj0+Hw75ngrOt6iwbmtsVcIRJxZA=;
-        b=JbrVApFvipQKIx68+/9lcIy+ybhZTcBFyUjgjy2xBmPRu4qMbBzM6rAcCU+E8d5FPo
-         VoUCbGKNK+ADHf0MtrP7kwdtCj4V3MNTMV8zYJonX0uKLekbHAIV+GCQXfix/qeFmSPb
-         YzchkGUk/SJ6/w7o+EPq327QeNW5H/GeuzcYgYB/CYhJ8CJ4Z6gMlp23vJ/rtlcZ864x
-         jEHLOW2EAUekATvZoNevH6dqjWd9B7tIWTJv5OmjVZfqTSdjfzkum7BAQmWKT0QPX4Qs
-         1LijJde4lV6ObRX3g621WBOHxMJJj+DyJVol/10XapQyhtdKqBQQvH8hgEulcsMEMK94
-         eOMQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712310707; x=1712915507;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=XznLbi2Z1SKvx8bRj0+Hw75ngrOt6iwbmtsVcIRJxZA=;
-        b=WEJB0mQDjM9xs7HFMhbEjBa7Vu/BxqzBsGC3yqA//OAXfuL6QnBL8mJ/fB3Cfp7vhA
-         32NlHbxk2AapvAsk4JGB02Xldw56EOcvHQSrq4pDgOnWWB9X+2G7hnEDocnvNCy1pqQu
-         MV4Dtr62y9IsyFUgH83zk3dqtUUUVu/YdUM6ZL8valp8LqT6U82ioVDJXu7Y6rPFYJDt
-         r52WVcMnoux86a9N0zlghn7Tuu27rB5TMFA/QSjykRyvD8ONh81Gqp96sPtQPaei5e6Z
-         bI/0lleHNmVgJ6PWsBJpPPHqYhhH0lfeKkNdTRA84zVeOKedxGQB7nx+gDPIhvi8gRMc
-         bz3w==
-X-Forwarded-Encrypted: i=1; AJvYcCWYrtA8j2OTahtNHo0xz+noazUfbJvyzjCjSwIGAQ9QxY73xJc3U/f/9AMR6WJy8NQIhRnbSxro//LjMXww55IBPaQqwl+PO7EFoeS/
-X-Gm-Message-State: AOJu0YyWzCSIAiCvLfKVbRvP9+a6I1rTVFGzvjd9MZWtvcoV5W1Ud6L1
-	vateZGd0s910yfrsFQedSu+MR28UPalQjJzmIYUuBbqxQIM94A93VAVUnV9fFZc=
-X-Google-Smtp-Source: AGHT+IFuRBcasfkE1HoHSCQ7OdWv+EtlpW9OQz09tguqfMAKrRd1NUyHNpjIOZuZmN0l9ZISYTgUFw==
-X-Received: by 2002:ac2:5ddb:0:b0:516:d2eb:6edd with SMTP id x27-20020ac25ddb000000b00516d2eb6eddmr735020lfq.26.1712310706830;
-        Fri, 05 Apr 2024 02:51:46 -0700 (PDT)
-Received: from aspen.lan (aztw-34-b2-v4wan-166919-cust780.vm26.cable.virginm.net. [82.37.195.13])
-        by smtp.gmail.com with ESMTPSA id e28-20020adfa45c000000b00343e1c3298asm1428854wra.0.2024.04.05.02.51.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 05 Apr 2024 02:51:46 -0700 (PDT)
-Date: Fri, 5 Apr 2024 10:51:44 +0100
-From: Daniel Thompson <daniel.thompson@linaro.org>
-To: Justin Stitt <justinstitt@google.com>
-Cc: Jason Wessel <jason.wessel@windriver.com>,
-	Douglas Anderson <dianders@chromium.org>,
-	kgdb-bugreport@lists.sourceforge.net, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v2] kdb: replace deprecated strncpy
-Message-ID: <20240405095144.GB2890893@aspen.lan>
-References: <20240405-strncpy-kernel-debug-kdb-kdb_io-c-v2-1-d0bf595ab301@google.com>
+	s=arc-20240116; t=1712310747; c=relaxed/simple;
+	bh=cDY1hCw7M8ZviUcPfvgRPAT7J54RvZFu0CmQkhff66o=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=VLb0hBt41Ukac6chTl/dZXOQC/RbLz2Hx291ar+HbFQmI1TMkQW0v1A2brdS7V0to5PZYvjLplWkjS9peG2JHZQxviPFuRUyz/JyvAMkuK1J+QKC30bTNgYei3zUiUQw+LtTb5mzXpqoobaMAyOCyMoyS/OhYTcI0UPSgtgTUVE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <ore@pengutronix.de>)
+	id 1rsgFA-0005EE-S9; Fri, 05 Apr 2024 11:52:20 +0200
+Received: from [2a0a:edc0:0:1101:1d::ac] (helo=dude04.red.stw.pengutronix.de)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <ore@pengutronix.de>)
+	id 1rsgF8-00AXqn-FL; Fri, 05 Apr 2024 11:52:18 +0200
+Received: from ore by dude04.red.stw.pengutronix.de with local (Exim 4.96)
+	(envelope-from <ore@pengutronix.de>)
+	id 1rsgF8-001U5s-1A;
+	Fri, 05 Apr 2024 11:52:18 +0200
+From: Oleksij Rempel <o.rempel@pengutronix.de>
+To: "David S. Miller" <davem@davemloft.net>,
+	Andrew Lunn <andrew@lunn.ch>,
+	Eric Dumazet <edumazet@google.com>,
+	Florian Fainelli <f.fainelli@gmail.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Vladimir Oltean <olteanv@gmail.com>,
+	Woojung Huh <woojung.huh@microchip.com>,
+	Arun Ramadoss <arun.ramadoss@microchip.com>
+Cc: Oleksij Rempel <o.rempel@pengutronix.de>,
+	kernel@pengutronix.de,
+	linux-kernel@vger.kernel.org,
+	netdev@vger.kernel.org,
+	UNGLinuxDriver@microchip.com,
+	David Ahern <dsahern@kernel.org>,
+	Simon Horman <horms@kernel.org>,
+	Willem de Bruijn <willemb@google.com>,
+	=?UTF-8?q?S=C3=B8ren=20Andersen?= <san@skov.dk>
+Subject: [PATCH net-next v3 9/9] net: dsa: microchip: let DCB code do PCP and DSCP policy configuration
+Date: Fri,  5 Apr 2024 11:52:16 +0200
+Message-Id: <20240405095216.353829-10-o.rempel@pengutronix.de>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20240405095216.353829-1-o.rempel@pengutronix.de>
+References: <20240405095216.353829-1-o.rempel@pengutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240405-strncpy-kernel-debug-kdb-kdb_io-c-v2-1-d0bf595ab301@google.com>
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ore@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-On Fri, Apr 05, 2024 at 02:33:58AM +0000, Justin Stitt wrote:
-> We should move away from using strncpy because it is deprecated [1].
->
-> Since these buffers want to be NUL-terminated, let's use strscpy() which
-> guarantees this behavior.
->
-> The code in question enables the visual autocomplete when using kdb tab
-> completion. After pressing tab a couple times when sitting on a partial
-> symbol it will attempt to fill it in.
+802.1P (PCP) and DiffServ (DSCP) are handled now by DCB code. Let it do
+all needed initial configuration.
 
-FWIW the code that this patch changes is only executed when tab is
-pressed once.
+Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
+---
+ drivers/net/dsa/microchip/ksz8795.c | 6 ------
+ drivers/net/dsa/microchip/ksz9477.c | 6 ------
+ 2 files changed, 12 deletions(-)
 
+diff --git a/drivers/net/dsa/microchip/ksz8795.c b/drivers/net/dsa/microchip/ksz8795.c
+index 5f0d72137b484..ddfac08b5a6a6 100644
+--- a/drivers/net/dsa/microchip/ksz8795.c
++++ b/drivers/net/dsa/microchip/ksz8795.c
+@@ -1565,16 +1565,10 @@ void ksz8_port_setup(struct ksz_device *dev, int port, bool cpu_port)
+ 
+ 	ksz8_port_queue_split(dev, port, queues);
+ 
+-	/* disable DiffServ priority */
+-	ksz_port_cfg(dev, port, P_PRIO_CTRL, PORT_DIFFSERV_ENABLE, false);
+-
+ 	/* replace priority */
+ 	ksz_port_cfg(dev, port, P_802_1P_CTRL,
+ 		     masks[PORT_802_1P_REMAPPING], false);
+ 
+-	/* enable 802.1p priority */
+-	ksz_port_cfg(dev, port, P_PRIO_CTRL, PORT_802_1P_ENABLE, true);
+-
+ 	if (cpu_port)
+ 		member = dsa_user_ports(ds);
+ 	else
+diff --git a/drivers/net/dsa/microchip/ksz9477.c b/drivers/net/dsa/microchip/ksz9477.c
+index 7f745628c84d1..f8ad7833f5d9d 100644
+--- a/drivers/net/dsa/microchip/ksz9477.c
++++ b/drivers/net/dsa/microchip/ksz9477.c
+@@ -1158,18 +1158,12 @@ void ksz9477_port_setup(struct ksz_device *dev, int port, bool cpu_port)
+ 	/* enable broadcast storm limit */
+ 	ksz_port_cfg(dev, port, P_BCAST_STORM_CTRL, PORT_BROADCAST_STORM, true);
+ 
+-	/* disable DiffServ priority */
+-	ksz_port_cfg(dev, port, P_PRIO_CTRL, PORT_DIFFSERV_PRIO_ENABLE, false);
+-
+ 	/* replace priority */
+ 	ksz_port_cfg(dev, port, REG_PORT_MRI_MAC_CTRL, PORT_USER_PRIO_CEILING,
+ 		     false);
+ 	ksz9477_port_cfg32(dev, port, REG_PORT_MTI_QUEUE_CTRL_0__4,
+ 			   MTI_PVID_REPLACE, false);
+ 
+-	/* enable 802.1p priority */
+-	ksz_port_cfg(dev, port, P_PRIO_CTRL, PORT_802_1P_PRIO_ENABLE, true);
+-
+ 	/* force flow control for non-PHY ports only */
+ 	ksz_port_cfg(dev, port, REG_PORT_CTRL_0,
+ 		     PORT_FORCE_TX_FLOW_CTRL | PORT_FORCE_RX_FLOW_CTRL,
+-- 
+2.39.2
 
-> In my testing, strscpy() provides
-> the exact same autocomplete behavior that strncpy() provides here (i.e:
-> it fills in the same number of characters for the user).
->
-> You can confirm this by enabling kdb [3] and booting up the kernel. I
-> performed my tests with qemu with this incantation (wow these get long):
->
-> $ /usr/bin/qemu-system-x86_64 -display none -nodefaults -cpu Nehalem
-> -append 'console=ttyS0,115200 earlycon=uart8250,io,0x3f8 rdinit=/bin/sh
-> kgdboc=ttyS0,115200 nokaslr' -kernel $BUILD_DIR/arch/x86/boot/bzImage
-> -initrd $REPOS/boot-utils/images/x86_64/rootfs.cpio -m 512m -serial
-> mon:stdio
->
-> ... then you can type some symbols and see that autocomplete still kicks
-> in and performs exactly the same.
->
-> For example:
-> tes <tab><tab> gives you "test",
-> then "test_ap" <tab><tab> gives you "test_aperfmperf"
->
-> Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
-> Link: https://github.com/KSPP/linux/issues/90 [2]
-> Link: https://www.kernel.org/doc/html/v5.0/dev-tools/kgdb.html#using-kdb [3]
-> Cc: linux-hardening@vger.kernel.org
-> Signed-off-by: Justin Stitt <justinstitt@google.com>
-> ---
-> Changes in v2:
-> - use strscpy over memcpy (thanks Daniel T.)
-> - Link to v1: https://lore.kernel.org/r/20240403-strncpy-kernel-debug-kdb-kdb_io-c-v1-1-7f78a08e9ff4@google.com
-> ---
-> ---
->  kernel/debug/kdb/kdb_io.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/kernel/debug/kdb/kdb_io.c b/kernel/debug/kdb/kdb_io.c
-> index 9443bc63c5a2..60be22132020 100644
-> --- a/kernel/debug/kdb/kdb_io.c
-> +++ b/kernel/debug/kdb/kdb_io.c
-> @@ -368,9 +368,9 @@ static char *kdb_read(char *buffer, size_t bufsize)
->  			kdb_printf("%s", buffer);
->  		} else if (tab != 2 && count > 0) {
->  			len_tmp = strlen(p_tmp);
-> -			strncpy(p_tmp+len_tmp, cp, lastchar-cp+1);
-> +			strscpy(p_tmp+len_tmp, cp, lastchar-cp+1);
-
-This still looks like it is reproducing the obvious[1] error in
-the original strncpy() call. The third argument does *not* provide the
-number of characters in the destination buffer.
-
-Just to be really clear, I think this patch and your original memcpy()
-conversion is mechanically correct, in that the new code is equivalent
-to the original strncpy(). The problem is that neither patch acts
-on the warning signs that the original code is broken.
-
-
-[1] I know that this code is hard to read so "obvious" is a relative
-    term. However just looking at one line tells us that the source
-    pointer is part of a two pointer calculation that purports to
-    give the length of the destination string! Such code is almost
-    always going to be wrong.
-
-
->  			len_tmp = strlen(p_tmp);
-> -			strncpy(cp, p_tmp+len, len_tmp-len + 1);
-> +			strscpy(cp, p_tmp+len, len_tmp-len + 1);
-
-Again, I really don't think the third argument provides the number of
-characters in the destination buffer.
-
-
-Daniel.
