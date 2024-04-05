@@ -1,111 +1,76 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f70.google.com (mail-io1-f70.google.com [209.85.166.70])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62E8943170;
-	Fri,  5 Apr 2024 15:27:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A09B16F83A
+	for <linux-kernel@vger.kernel.org>; Fri,  5 Apr 2024 15:28:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.70
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712330880; cv=none; b=ENOGv/1BrtqiSbNIaMkls4JPugZITSRXwCUlTsf9DficlBsTPatw9vXvYl950pDB7UlIZahk+sA2vqxQZ32b3tXrXp5fyniCNlZuSBVUtjUmMaeGHlnGMVdIWsqOd8N7fWNr6hzXUU6XU3LZrjLv4x5k4nfZMfpGpumgC7IHMtw=
+	t=1712330894; cv=none; b=tV0ILLGjOVVqLy9mirVjN0BN0SFglvPyoiIrC28T0KHK+ur5Zyrlyt1cSvz6l0u9Olb2bC1z0af4g3GZW5Ctv2wr03YebBwHuFwY5iXsQ6iDuqzlN7fcT4ZsMfraCax69Umq3O48jwGn2QKvQMj3WtFxqRjJarBhSq0WpjMw1BM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712330880; c=relaxed/simple;
-	bh=6FeiWzJ1Vf8aTbstdcvsoIhMFVzWRcv6R5pNqaplI/M=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=j/d5McDVouNwBBzQ/5ifvF5FPwR2LgBd+cmOsOIcDOAAo9mr3kUyu5/T/pu1WtIG7BSMbbK/04aj8nw7YUG7Dl/BJFkTEvXrHoFOoiSprJia8BaPnuanFaCbuN4/hjY+fxJaB4gxt5gg3Bl1hHWJxLQ7byHQOQrputy+1QAl0Qs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TyBZnGBl; arc=none smtp.client-ip=192.198.163.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TyBZnGBl"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1712330879; x=1743866879;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=6FeiWzJ1Vf8aTbstdcvsoIhMFVzWRcv6R5pNqaplI/M=;
-  b=TyBZnGBlTKmfprPDO5X4v9OaWIYdqd/Uqz3cER3SAJc8nqWTk8LDzYmZ
-   dJ4msYta7SdmJkssBjp76AaUnxGvBe0CahRfBM/GJhymuOudqXYE/xDk2
-   MrWhBT4Z4jhd5yizvy1Q6xtt3k5WqlLrZ1D5kfvFBThK6PxHD3QKv+E4M
-   4zF25KAxs3YpUIkBdq9kzn3gyltWfwUPGifYvnZHBwpWXuhyP8BHYswLc
-   40m4oSk79Gbf8veteRXA9V+oFILfPeX+bFUt3GlEhdjm17WZLjIiV5WTD
-   Y8DXL1Z+BhGEVfpGEjDHnbGh7MENuZbptSBaHtseztOFtT6OA9ilhhx8u
-   A==;
-X-CSE-ConnectionGUID: c0rWmrL6RZSwRFeVtTU0Fw==
-X-CSE-MsgGUID: 0KOlrQKQQf2c1CIN5NvN7Q==
-X-IronPort-AV: E=McAfee;i="6600,9927,11035"; a="18274974"
-X-IronPort-AV: E=Sophos;i="6.07,181,1708416000"; 
-   d="scan'208";a="18274974"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Apr 2024 08:27:58 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,11035"; a="915256953"
-X-IronPort-AV: E=Sophos;i="6.07,181,1708416000"; 
-   d="scan'208";a="915256953"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.72.54])
-  by fmsmga002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Apr 2024 08:27:55 -0700
-Received: from andy by smile with local (Exim 4.97)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1rslTt-00000001mcG-0MKY;
-	Fri, 05 Apr 2024 18:27:53 +0300
-Date: Fri, 5 Apr 2024 18:27:52 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Randy Dunlap <rdunlap@infradead.org>
-Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	Kent Gibson <warthog618@gmail.com>, linux-gpio@vger.kernel.org,
-	linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Mika Westerberg <mika.westerberg@linux.intel.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>
-Subject: Re: [PATCH v1 1/1] gpiolib: Update the kernel documentation - add
- Return sections
-Message-ID: <ZhAYeMNzHg0x97gN@smile.fi.intel.com>
-References: <20240404212706.3587456-1-andriy.shevchenko@linux.intel.com>
- <2df0e132-5599-4cb5-93f8-4ed664a5d1cc@infradead.org>
+	s=arc-20240116; t=1712330894; c=relaxed/simple;
+	bh=Ua4UH4I4k/JeMFUwY40iLcsmX8BFMt/ki6Da//Nmsic=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=GU2MUTUYKTnL3Al2QZKSLsD0fdCCtPsTOFkZSl6t9DnmMFzla599kgFYE453I27tpsLuZlGP8GqlUW+mF/ZI74mAvuQjt5/NEd8tJ8/za5ek9YcY3tlLohpXhoo1E8O6kZ+q30WiSlLCOGvWgWkJdoeG02pjyPpKvDfghnT5fB0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.70
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f70.google.com with SMTP id ca18e2360f4ac-7cf265b30e2so234925939f.1
+        for <linux-kernel@vger.kernel.org>; Fri, 05 Apr 2024 08:28:13 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712330892; x=1712935692;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=42yxhYql2V3Voi1huQg+HWg+/wPkrovGkKGYzhUjPcg=;
+        b=Y5uhpWje7tb3htHWYXge7giZwqNmCUEsRxpkuqco45iplVnHoUFIK4fxJ6l22PK3/C
+         C/kLneVOdx0rSXnCl2HBjSS7nRI/V+RM7bRzbBYmyzb3g3U8/9ks8gYxThxc8Qbq6vdY
+         8qcLgxvgkkYkhw6xpAUC2ci5ufM3IM3mUdMmh6RWl+GZ+Q0BTcDDUCNbeIjEdGr29kXD
+         6nrqja0AFNvEE9zQPvQbEwxh3llaEEobSaUfbGScgAEdSY2ZP8KIvJnnHz2d72oHEDSP
+         9K34NhfivxPqaYUDzVzzN/+PBDuPg0aXPKJsk1Sw0iw/FHm9/m63MdQGQUCbZZIpgANO
+         mY2A==
+X-Gm-Message-State: AOJu0YyVnn8o3dmv5IO3Y0gyk+XKTRz1TAazxNKT6ecDw/pd2d+kaCR8
+	R/BAy8H/225PQTTPkiaaoMMo9wDxnaoSvd9+KVgcJBDInK98BEBRzO17lOBUlqup+Z7RrbWw0WJ
+	GoAHwiRoEncNId9eb4nJLel42u/WJENxDElHZAiHm4zvFxAnEZj+plXEAeg==
+X-Google-Smtp-Source: AGHT+IFiVliGLH/CsHssqeRbqQj+tT3bVSC1Mc2+PPB4jxYcGYCdFEHXyhA97uZLAaUfspN2bkW4128na2xZIrx8jlIiZ7nvlt0N
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2df0e132-5599-4cb5-93f8-4ed664a5d1cc@infradead.org>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+X-Received: by 2002:a05:6638:1501:b0:480:ee35:85fa with SMTP id
+ b1-20020a056638150100b00480ee3585famr66397jat.1.1712330892524; Fri, 05 Apr
+ 2024 08:28:12 -0700 (PDT)
+Date: Fri, 05 Apr 2024 08:28:12 -0700
+In-Reply-To: <00000000000003b4af060de27f6b@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000096521906155b1ad2@google.com>
+Subject: Re: [syzbot] [PATCH net] nfc: nci: Fix uninit-value in nci_rx_work
+From: syzbot <syzbot+d7b4dc6cd50410152534@syzkaller.appspotmail.com>
+To: linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Thu, Apr 04, 2024 at 09:10:09PM -0700, Randy Dunlap wrote:
-> On 4/4/24 2:27 PM, Andy Shevchenko wrote:
-> > $ scripts/kernel-doc -v -none -Wall drivers/gpio/gpiolib* 2>&1 | grep -w warning | wc -l
-> > 67
-> > 
-> > Fix these by adding Return sections. While at it, make sure all of
-> > Return sections use the same style.
+For archival purposes, forwarding an incoming command email to
+linux-kernel@vger.kernel.org.
 
-...
+***
 
-> I would use %true, %false, %NULL, %0, and %1 in a few places.
+Subject: [PATCH net] nfc: nci: Fix uninit-value in nci_rx_work
+Author: ryasuoka@redhat.com
 
-Why? I specifically removed % from all of them, it's not so useful.
-Do we have, btw, generated HTML with these % as an example to see
-the difference. Maybe that helps to understand this better?
+#syz test: git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git 58c806d867bf265c6fd16fc3bc62e2d3c156b5c9
 
-> s/error-code/error code/
-> or
-> s/error-code/errno/
-> 
-> I would s/active-low/active low/
-> 
-> or it can just be merged as is. It's a nice improvement.
-
-That's what I prefer as any of your comments may touch other parts of the
-documentation and need to be aligned across all comments, which is out scope of
-this patch.
-
-> Reviewed-by: Randy Dunlap <rdunlap@infradead.org>
-> Tested-by: Randy Dunlap <rdunlap@infradead.org>
-
-Thank you!
-
--- 
-With Best Regards,
-Andy Shevchenko
-
+diff --git a/net/nfc/nci/core.c b/net/nfc/nci/core.c
+index 0d26c8ec9993..b7a020484131 100644
+--- a/net/nfc/nci/core.c
++++ b/net/nfc/nci/core.c
+@@ -1516,7 +1516,7 @@ static void nci_rx_work(struct work_struct *work)
+ 		nfc_send_to_raw_sock(ndev->nfc_dev, skb,
+ 				     RAW_PAYLOAD_NCI, NFC_DIRECTION_RX);
+ 
+-		if (!nci_plen(skb->data)) {
++		if (!skb->len || !nci_plen(skb->data)) {
+ 			kfree_skb(skb);
+ 			break;
+ 		}
 
