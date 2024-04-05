@@ -1,161 +1,133 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from mail.zeus03.de (www.zeus03.de [194.117.254.33])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C6D4161908;
-	Fri,  5 Apr 2024 10:16:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0D2D16190E
+	for <linux-kernel@vger.kernel.org>; Fri,  5 Apr 2024 10:18:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712312193; cv=none; b=Ol5sc0swujUSp3+tYosYgXKPs8TepyGVj+SFDd6jDa7oeTHvhbgkTW/O/9YKagBH7qDvZpCRUzrp/Pue7UZx4PrvoDcK1aCPPYYmPUFL3fzK9nRSzQ9SLP4Ffa5VaVv10apICgXsZEhlwx/wwLBwluCy+6obAGfd8ayNP1FC0KA=
+	t=1712312323; cv=none; b=tFVXZ94E2Dfgfd9cH0hNGWAFLqKkGR4MMu3tlODLf3N2bLCGPxQDi//MQl82ehKIaBhSpdV1XGuFJJeBhHsmvlrn3DTV/Fjrk16Q42sMQDemtrR5DyCnmlu1KVVuQvc4bu6AHapkST0oA0mwX7Ktn5YtwfIG/1or0xZCjbYBLjU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712312193; c=relaxed/simple;
-	bh=IicMOvK28H3EnncVC3yjaeAGnYaW03ovhlG7vCImlgE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=sWtS+h9uwTMnkB8EnOQftdDxGmsPVAC2ZsaaO0gz09E7F235Ca/mqXnHe9p0ItTWYg2R4F9FulYlx3Krkjz6Aid9CIAlYZmsNfgz/dhAYB+LaYiy0DY2T6BRLdQslfUC87VNHncLW8PB9hmzAb0J+BFnCe1zRNKxkt32Mb9H85Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=c9mANT52; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1712312323; c=relaxed/simple;
+	bh=5fZz+hrMjs1KcvnTZOEbAJMZkLsCTGpJnRmjeSMAJeQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=n5/Be8LL3kO1PL5yujXK0E2+H1cYPfwEFcGOElr6lYixYAIbMD1v/nGlZQE3mVKHin/6LRnrkw8/0zl3tUhWC0NEXNB6lquGGYAQ2c/a+GdHng4VIi49gob368pXi7uRnN3XJr93VwAxxlfiAIunav0a0fGrZ+yfNRh7DWGcug8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=TbhXudkY; arc=none smtp.client-ip=194.117.254.33
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="c9mANT52"
-Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 4359ptL8003900;
-	Fri, 5 Apr 2024 10:16:22 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	message-id:date:mime-version:subject:to:cc:references:from
-	:in-reply-to:content-type:content-transfer-encoding; s=
-	qcppdkim1; bh=XoKf4c/Zf9/PmnCv6NFmNqJ8E0n9nXZfLg8KjCiDALE=; b=c9
-	mANT52is76j10P9oMSmn42gYfx4YhJda+q/pYO6hgqCTPBj51WORBXrtD5MdA5NM
-	Q/H0Y7U9Na+Yv3Q79HH/7AdCbt86CdnKOorI4n1wtx41Vu7ya18d0A2slSkkcj1Y
-	Jqukms0EJ/GlpdNiFfMTsKW1MefGpQ3jKPx0WfqTXKA0ynUgrF/EKoqCFUbvApgo
-	WsN9s8vZpKprst6W5mmDESGHM+/JxNStfunXptsMRrKXOO10M3SqcOdJLFKlWa0A
-	+0p/vwl0+KbQhXzL6NIMn/SteXSZEy8BESML2FCWMKFw1iPXMyicSpduMIDdkw7L
-	Oj1HW43bbcBwap74nIkQ==
-Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3xa7m5gwun-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 05 Apr 2024 10:16:20 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA03.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 435AGJaf010862
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 5 Apr 2024 10:16:19 GMT
-Received: from [10.216.8.191] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Fri, 5 Apr 2024
- 03:16:11 -0700
-Message-ID: <190caeb1-3f47-d0b0-bf98-f1022b8f3a90@quicinc.com>
-Date: Fri, 5 Apr 2024 15:46:08 +0530
+	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="TbhXudkY"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	sang-engineering.com; h=date:from:to:cc:subject:message-id
+	:references:mime-version:content-type:in-reply-to; s=k1; bh=XRZ/
+	7f9TpBVm+EqkcIlzKupPDZE9c/6S0MGx+T9aWhU=; b=TbhXudkYnme5n6iHh1a7
+	RBdhDu2GT6+9PAy8ABhR4DJ4AFeu9vn7KF9NnItdIjxg3lODlyxOWMQzmHvBjUuV
+	6C2iJlxx9lPXa2C8k2zkTkCSAQ80w4ipFFE24BRkYFzXyEK7FP0vMNw5j1O2wMwt
+	rY3DTBf3ZIZFcTyDbCkD+x2BtRIlE2QfpykSPGqfi0fAa4E69G+hgGGV7l0hOuGb
+	eRpF0U2crVKhUWxUBjAZhcKkAmkgy6/e5eOeLvTbIQriGrx9zqcvXZvr+o3oYemF
+	ZV3lsTAHA9m7SGPcs05kwS6QKI/86ISnt7+jeteV6CxjkYrq8U88Su9gL7GEhrTR
+	qA==
+Received: (qmail 4072572 invoked from network); 5 Apr 2024 12:18:37 +0200
+Received: by mail.zeus03.de with ESMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 5 Apr 2024 12:18:37 +0200
+X-UD-Smtp-Session: l3s3148p1@a0Brx1YVfIUgAwDPXwEGAANOsN0UmmrN
+Date: Fri, 5 Apr 2024 12:18:37 +0200
+From: Wolfram Sang <wsa+renesas@sang-engineering.com>
+To: Easwar Hariharan <eahariha@linux.microsoft.com>
+Cc: 
+	"open list:RADEON and AMDGPU DRM DRIVERS" <amd-gfx@lists.freedesktop.org>, "open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>, 
+	open list <linux-kernel@vger.kernel.org>, 
+	"open list:INTEL DRM DISPLAY FOR XE AND I915 DRIVERS" <intel-gfx@lists.freedesktop.org>, 
+	"open list:INTEL DRM DISPLAY FOR XE AND I915 DRIVERS" <intel-xe@lists.freedesktop.org>, 
+	"open list:DRM DRIVER FOR NVIDIA GEFORCE/QUADRO GPUS" <nouveau@lists.freedesktop.org>, 
+	"open list:I2C SUBSYSTEM HOST DRIVERS" <linux-i2c@vger.kernel.org>, 
+	"open list:BTTV VIDEO4LINUX DRIVER" <linux-media@vger.kernel.org>, "open list:FRAMEBUFFER LAYER" <linux-fbdev@vger.kernel.org>
+Subject: Re: [PATCH v0 00/14] Make I2C terminology more inclusive for I2C
+ Algobit and consumers
+Message-ID: <ffumcagmzdstcf3qcn3f26555pnu7i6azjppciyd4zvcoit7pv@vu262tsfnqyr>
+Mail-Followup-To: Wolfram Sang <wsa+renesas@sang-engineering.com>, 
+	Easwar Hariharan <eahariha@linux.microsoft.com>, 
+	"open list:RADEON and AMDGPU DRM DRIVERS" <amd-gfx@lists.freedesktop.org>, "open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>, 
+	open list <linux-kernel@vger.kernel.org>, 
+	"open list:INTEL DRM DISPLAY FOR XE AND I915 DRIVERS" <intel-gfx@lists.freedesktop.org>, 
+	"open list:INTEL DRM DISPLAY FOR XE AND I915 DRIVERS" <intel-xe@lists.freedesktop.org>, 
+	"open list:DRM DRIVER FOR NVIDIA GEFORCE/QUADRO GPUS" <nouveau@lists.freedesktop.org>, 
+	"open list:I2C SUBSYSTEM HOST DRIVERS" <linux-i2c@vger.kernel.org>, 
+	"open list:BTTV VIDEO4LINUX DRIVER" <linux-media@vger.kernel.org>, "open list:FRAMEBUFFER LAYER" <linux-fbdev@vger.kernel.org>
+References: <20240329170038.3863998-1-eahariha@linux.microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.13.1
-Subject: Re: [PATCH v8 3/7] PCI: qcom: Add ICC bandwidth vote for CPU to PCIe
- path
-Content-Language: en-US
-To: Manivannan Sadhasivam <mani@kernel.org>
-CC: Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio
-	<konrad.dybcio@linaro.org>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
-        Rob Herring
-	<robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-        Krzysztof Kozlowski
-	<krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Rob Herring
-	<robh+dt@kernel.org>,
-        Johan Hovold <johan+linaro@kernel.org>,
-        Brian Masney
-	<bmasney@redhat.com>, Georgi Djakov <djakov@kernel.org>,
-        <linux-arm-msm@vger.kernel.org>, <linux-pci@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <vireshk@kernel.org>, <quic_vbadigan@quicinc.com>,
-        <quic_skananth@quicinc.com>, <quic_nitegupt@quicinc.com>,
-        <quic_parass@quicinc.com>,
-        Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-References: <20240302-opp_support-v8-0-158285b86b10@quicinc.com>
- <20240302-opp_support-v8-3-158285b86b10@quicinc.com>
- <20240304174111.GB31079@thinkpad>
- <9d878f69-c9d1-1ee4-f80e-1d8f16c6920e@quicinc.com>
- <20240405082944.GE2953@thinkpad>
-From: Krishna Chaitanya Chundru <quic_krichai@quicinc.com>
-In-Reply-To: <20240405082944.GE2953@thinkpad>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: V-jYCDRiPY5Fgq6Gpizpd63QNyzx8axk
-X-Proofpoint-GUID: V-jYCDRiPY5Fgq6Gpizpd63QNyzx8axk
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-04-05_09,2024-04-04_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- mlxlogscore=999 spamscore=0 adultscore=0 phishscore=0 bulkscore=0
- mlxscore=0 suspectscore=0 malwarescore=0 impostorscore=0 classifier=spam
- adjust=0 reason=mlx scancount=1 engine=8.19.0-2404010003
- definitions=main-2404050076
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="wrrai2fidezv42rs"
+Content-Disposition: inline
+In-Reply-To: <20240329170038.3863998-1-eahariha@linux.microsoft.com>
 
 
+--wrrai2fidezv42rs
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On 4/5/2024 1:59 PM, Manivannan Sadhasivam wrote:
-> On Tue, Mar 05, 2024 at 04:23:21PM +0530, Krishna Chaitanya Chundru wrote:
->>
->>
->> On 3/4/2024 11:11 PM, Manivannan Sadhasivam wrote:
->>> On Sat, Mar 02, 2024 at 09:29:57AM +0530, Krishna chaitanya chundru wrote:
->>>> To access PCIe registers, PCIe BAR space, config space the CPU-PCIe
->>>> ICC (interconnect consumers) path should be voted otherwise it may
->>>> lead to NoC (Network on chip) timeout. We are surviving because of
->>>> other driver vote for this path.
->>>>
->>>> As there is less access on this path compared to PCIe to mem path
->>>> add minimum vote i.e 1KBps bandwidth always.
->>>
->>> Please add the info that 1KBps is what shared by the HW team.
->>>
->> Ack to all the comments
->>>>
->>>> When suspending, disable this path after register space access
->>>> is done.
->>>>
->>>> Reviewed-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
->>>> Signed-off-by: Krishna chaitanya chundru <quic_krichai@quicinc.com>
->>>> ---
->>>>    drivers/pci/controller/dwc/pcie-qcom.c | 38 ++++++++++++++++++++++++++++++++--
->>>>    1 file changed, 36 insertions(+), 2 deletions(-)
->>>>
->>>> diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
->>>> index 10f2d0bb86be..a0266bfe71f1 100644
->>>> --- a/drivers/pci/controller/dwc/pcie-qcom.c
->>>> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
-> 
-> [...]
-> 
->>>> +	ret = icc_disable(pcie->icc_cpu);
->>>> +	if (ret) {
->>>> +		dev_err(dev, "failed to disable icc path of cpu-pcie: %d\n", ret);
->>>
->>> "CPU-PCIe"
->>>
->>>> +		if (pcie->suspended) {
->>>> +			qcom_pcie_host_init(&pcie->pci->pp);
->>>
->>> Interesting. So if icc_disable() fails, can the IP continue to function?
->>>
->> As the ICC already enable before icc_disable() fails, the IP should work.
-> 
-> If icc_disable() fails, then most likely something is wrong with RPMh. How can
-> the IP continue to work in that case?
->
-Ok then I will log the error and return here
+Hello Easwar,
 
-- Krishna Chaitanya.
+On Fri, Mar 29, 2024 at 05:00:24PM +0000, Easwar Hariharan wrote:
+> I2C v7, SMBus 3.2, and I3C specifications have replaced "master/slave"
+> with more appropriate terms. Inspired by and following on to Wolfram's
+> series to fix drivers/i2c/[1], fix the terminology for users of the
+> I2C_ALGOBIT bitbanging interface, now that the approved verbiage exists
+> in the specification.
 
-> - Mani
-> 
+I really appreciate that you want to assist in this task to improve the
+I2C core. I do. I am afraid, however, that you took the second step
+before the first one, though. As I mentioned in my original cover
+letter, this is not only about renaming but also improving the I2C API
+(splitting up header files...). So, drivers are not a priority right
+now. They can be better fixed once the core is ready.
+
+It is true that I changed quite some controller drivers within the i2c
+realm. I did this to gain experience. As you also noticed quite some
+questions came up. We need to agree on answers first. And once we are
+happy with the answers we found, then IMO we can go outside of the i2c
+realm and send patches to other subsystems referencing agreed
+precedence. I intentionally did not go outside i2c yet. Since your
+patches are already there, you probably want to foster them until they
+are ready for inclusion. Yet, regarding further patches, my suggestion
+is to wait until the core is ready. That might take a while, though.
+However, there is enough to discuss until the core is ready. So, your
+collaboration there is highly appreciated!
+
+> The last patch updating the .master_xfer method to .xfer depends on
+> patch 1 of Wolfram's series below, but the series is otherwise
+> independent. It may make sense for the last patch to go in with
+
+Please drop the last patch from this series. It will nicely remove the
+dependency. Also, like above, I first want to gain experience with i2c
+before going to other subsystems. That was intended.
+
+All the best and happy hacking,
+
+   Wolfram
+
+
+--wrrai2fidezv42rs
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmYPz/kACgkQFA3kzBSg
+Kbb2khAArgkbDpks50YTmBYCaMaPYcuR0VEc60/+z8tRAlS4IKaYIXzw2LEXG7Lz
+vJE8MMcWs6lGZjapOyfhFrB/U9Zu8Ffpg1qataFG3ZnRZG6BYb8i2cCTCwK9h4Vk
+KfijUXjmqXMGKRcaUcIYL/IxYZYRP0Y9yYGfBibDtxV7hnMakp6+XXbfM8FVCj1g
+iW3ORBfLYR32dJxnI4unFt15e2aXFDQkJDLqBJ4WGynGPaGr0lmfQpWQDP2aYlN0
+Dyormc+6tCEOAN6PBG0cssZbMUj4ABQYOxxNhQ8hP6gAqkMuqqC1+nHAH3PNQjkf
+VHMYFPogE0LGrCOOVKzgeU3QIfF9MABirrNB8bx+K3tl1te0EWse1u4CXIKrmBZ7
+VS1fVRMUdS25YnzNM5cfZQTGv2JxgebrXUqN1bneFpKmISO66p2hF3/8lsaPO8Rw
+6QOTRpcHay1sESrreLn9gAj/NeddgU7XhI3oGqk6PQyYQrE5LbTh0wuZil02rwjJ
+ea29MTkK7muy5fQT9dDHOk38fjG0jk48Oyk5NBVMboeLKlvPy6OTiXG6Z1lifGga
+xZe0cBBoH5gHPY6ZIVh4HaHfbmzt5jGIpzf8Sx9E9n03K6Njewqu+Wxm24AMr/OR
+79BvBK0rlCVMmck+ZJiW969Q/G9JKFieQnUDqHlMc5nIAHMB0Lw=
+=T3F5
+-----END PGP SIGNATURE-----
+
+--wrrai2fidezv42rs--
