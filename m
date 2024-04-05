@@ -1,60 +1,61 @@
-Received: from mail-pg1-f178.google.com (mail-pg1-f178.google.com [209.85.215.178])
+Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 143FA16C453
-	for <linux-kernel@vger.kernel.org>; Fri,  5 Apr 2024 11:09:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4387C16C691
+	for <linux-kernel@vger.kernel.org>; Fri,  5 Apr 2024 11:10:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712315397; cv=none; b=Isv7ghA4XBmcD6NKAhyqBheGf5MzonhEXfxSRg5u6YyEN40xchGvHykj3bByV6DPWFFCADdx67zG9+Vy6m6b+sqvmJCm/aY3DoMbn/XvGJGlHw8bGgBtG8gks49Ov8lFsYu0JkX5KUMZWGrkfv8taGFXK5UqeDBObEAaFq6MEDU=
+	t=1712315406; cv=none; b=JHDI62O/VkmCevmAsi/azB4jeTwZCShHxkA9K64qCcpt11S8+7iWTZFvv9l9cttVkz5aaSPqC3qO2coCjF1bK+8fE/bCRWkr70Oms6dMbUeAXyPyT+Ny/WRLFW0llW2V1if239H6sYDJvffT7VLXjW1x6L7+KNZlK7eEi0ZaA2c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712315397; c=relaxed/simple;
-	bh=2EcJ5DiB+HBEAoHUohIiZf7RD7GHSOqqFQDVZWKbmss=;
+	s=arc-20240116; t=1712315406; c=relaxed/simple;
+	bh=oJ0Xk5ltsUzu+JZRjpvBKqDh2i8n3mVzm5U30u1RFic=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=bDAaBaMALIlbF6ehl/VyOh0Wz/j2RuQ3XdS/guDuWTUW3UZT+MdfJzmSQ2BVuN6x2Q/qIXDC3FOcDluJHM8kdqJL/6XH6Ovg1lX0XnKjTMM9bqm4NMVIZFnb81xUdvM/7JH51g3btQrrSww77Pz7kI5GOKO4Pk/lpLYYTO58lM0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=jtUmAC1v; arc=none smtp.client-ip=209.85.215.178
+	 MIME-Version; b=Kp8le0O6kEHqtB9/h4R+Cgzw2dOIICI48ymjIDpZefwc5WqGTqMRHnoPGkNO2roMKiPy0GPBj72IL7bqKbQfR4GnENq1bVHdHMyEGzQh0L5loOXAT2S/RwGt5zAWEbeuG8iMNPUH14FwojEhwfCluHssa7x1Cb6gqgQcqC+o+Z4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Fh8wBnw7; arc=none smtp.client-ip=209.85.214.176
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jtUmAC1v"
-Received: by mail-pg1-f178.google.com with SMTP id 41be03b00d2f7-5cf2d73a183so2274207a12.1
-        for <linux-kernel@vger.kernel.org>; Fri, 05 Apr 2024 04:09:54 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Fh8wBnw7"
+Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-1e0d82d441bso18190935ad.3
+        for <linux-kernel@vger.kernel.org>; Fri, 05 Apr 2024 04:10:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1712315394; x=1712920194; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1712315402; x=1712920202; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Gsu5OYWeYSVBZDXAd+w+rXoj01VyZpbg9nhZSFAD/Ko=;
-        b=jtUmAC1vkTK7JjtxYxrOp17yR8MlODkOoZE5EkjUTK51UTDcKtDeuvxc6xOb0rbJ4J
-         JbvdeZtmvg+oFdRXpLOZR0okjodr+s5W30o9p69GZrsBmXfwFhKQxkfj4oLBxISmEW3k
-         +oIRSppkhB8Np+tdW4a7WAMheFBUC3Zo7VZm2bActHj6L/EOK2aa3QUAjlZW54vd8o9f
-         aiySnSkOhr7gYjJG8AO413Km4+yoEq+0pEY/744p+Ic9fFwO5fgVYqUkTt46OtERnAI+
-         Wvx/PFdi2t6c5LsFwE6xi5QOWuSm7iMnQvZyYr/SVT7kHN82d1Bbq5PHkFAEEEHP6Ohu
-         59Sw==
+        bh=Ys2+MgQ3wDlipfHVv7Q6NNeD/t7+Th7HLHKb6mu7BLE=;
+        b=Fh8wBnw7hDzzYdD/s3mlOCL6n/BRvfJVfMWPPrvntKBZam9VS0SyPObxRCeg8xn/k0
+         4B32wlfoHtZ/4Way/ADAbmBihWMS1cKxtxnulV05oADTwdZLwemdgRieYqOW4rWV/4UT
+         5rm3IAtEMwVMZlwsij2zw9zvKepfj3W0baJItCV7hi0taFHsxEBMxGursmMdK3+SFMkR
+         Inhv/QHtl5X0qewZ6OatQQglcag82IrDS8krwENPZL0hys6lBBHFOiPLmn6bl1ubZoer
+         iHEVcVZ5xxAJHF68i0l/+I1+M5278kOJUTEV5SG8M3b2gMGpG6+zadJweGxjUIN+MmL+
+         IUSA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712315394; x=1712920194;
+        d=1e100.net; s=20230601; t=1712315402; x=1712920202;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=Gsu5OYWeYSVBZDXAd+w+rXoj01VyZpbg9nhZSFAD/Ko=;
-        b=FkrjQhocahqHyt6pwGH38UiRvnAqjWJzm7HeFOmUAGRb38VQ3SMgOhjU6c+3xSVAY9
-         /MWPU6+zitNZKLo1wqVM18iY9GFK/7IuYXO5IAPa3V0IDy7NbL4KteHpxclcrINnWDkx
-         cg6F3DcDKEHI+jNxE1oZVPZLgUaOGs58c0w5KK0kOQYHnAE3ah+v1KoiVXMUR2WpE2Qd
-         gnyiUuEIDjRXRWx3IAeIq4PRuYQjbZXwcLReCUqc3EQvrAlL9Esm07BnYkP/K6WHwa8g
-         ZYL2xIoSG6x6tya/l14lJ8effyT9NimpifhVVgDJYye/GSUHBNPIaoJx2mOL77vSvJV9
-         CW0g==
-X-Forwarded-Encrypted: i=1; AJvYcCXM2GnFgqKCkJXYy9Wa1bV0IDkEpMI4+Vzoj3yxn6epcy0vReoTmv57BZmSsEtqcHrZFKm8/5Gbny+fX0tcxbJs7lEU0ctySo9cMyC0
-X-Gm-Message-State: AOJu0YzdIvG0wmB8m/oEnzSoxMT56RQzh2H9ceSJpwqVnvKpIkfRoJh4
-	suJ/Cf/VKzMWltc3dpzmpCaEmi1ortL8Dzzr5t9qmYif0BPV3a8n7hqimcupvkc=
-X-Google-Smtp-Source: AGHT+IGgTgOgBLmYA6ftK3+ZUfKAwfsElLS+qJg9lnOaUfEGs2K3+NA1MUGU3wbCbJEaXfAh83VPkw==
-X-Received: by 2002:a17:90b:3793:b0:2a2:9e5d:9bf9 with SMTP id mz19-20020a17090b379300b002a29e5d9bf9mr2912912pjb.8.1712315393848;
-        Fri, 05 Apr 2024 04:09:53 -0700 (PDT)
+        bh=Ys2+MgQ3wDlipfHVv7Q6NNeD/t7+Th7HLHKb6mu7BLE=;
+        b=M6Q9d9WsXlJLIXcFxCeavdRtgCktuQTp/vvHzv0aJIuWhzSRyHdjXuFlKEwDDMdfoh
+         ZYWlYw3wVlyApEuejyaV7lal8rU6pQGvIwws1mciozyU0IQaopHLOkDhGS6Rbql//Vm5
+         429ZDpXSOeFQhc50lbRhkNi2ITWYd2X7lpD3bFL0tq/xFQoaKnPr/kM2bpsLE05Cyt4w
+         ufTCl8jgPsRusd4GKGxohJEmD4jTFQ0n2oUOhIVS2Gc6Vx8I9rHtuCnMLObqYml61v5D
+         UFGk5TGKgJHScLQkrciBAVT69WyPnLsUTltz1idY4v3ki9UBmIcO7gNFaQ13Yr6JSSwX
+         1iMw==
+X-Forwarded-Encrypted: i=1; AJvYcCV0Zjr+/P3vSdSC0rovBLiMW4jiY7OabnFhbgg06D7YZ3D5DmwgO1VUZSoVISwlkHB8g0xBOoqred/atnSLe/uflU1u5BGpZPAjaaZK
+X-Gm-Message-State: AOJu0YxyUF1GBamS1umF6R/PEzqOMHyioYcf6ngcdkefnRGU0Z4kUzCK
+	hT4fSNF7KbEWCeIakZV8c2YLbT69QqBqqYlJobRmt0VGKrf1xAuZ1Lzk7cKPjx8=
+X-Google-Smtp-Source: AGHT+IHY008fVlaXyLCmPu4dOH9eJ8BuR16MLkMWqRpMFG6rw8TwPA5CEyLsSKF/R0JagteMrv6iVg==
+X-Received: by 2002:a17:902:d4c4:b0:1e2:1df1:5ac0 with SMTP id o4-20020a170902d4c400b001e21df15ac0mr1301311plg.9.1712315402338;
+        Fri, 05 Apr 2024 04:10:02 -0700 (PDT)
 Received: from localhost ([122.172.85.136])
-        by smtp.gmail.com with ESMTPSA id q14-20020a17090a2dce00b002a25bf61931sm3057419pjm.29.2024.04.05.04.09.52
+        by smtp.gmail.com with ESMTPSA id l17-20020a170902d05100b001dddf29b6e8sm1297065pll.299.2024.04.05.04.10.01
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 05 Apr 2024 04:09:53 -0700 (PDT)
+        Fri, 05 Apr 2024 04:10:01 -0700 (PDT)
 From: Viresh Kumar <viresh.kumar@linaro.org>
 To: "Rafael J. Wysocki" <rafael@kernel.org>,
 	Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+	Viresh Kumar <viresh.kumar@linaro.org>,
 	Miguel Ojeda <ojeda@kernel.org>,
 	Alex Gaynor <alex.gaynor@gmail.com>,
 	Wedson Almeida Filho <wedsonaf@gmail.com>,
@@ -64,8 +65,7 @@ To: "Rafael J. Wysocki" <rafael@kernel.org>,
 	Benno Lossin <benno.lossin@proton.me>,
 	Andreas Hindborg <a.hindborg@samsung.com>,
 	Alice Ryhl <aliceryhl@google.com>
-Cc: Viresh Kumar <viresh.kumar@linaro.org>,
-	linux-pm@vger.kernel.org,
+Cc: linux-pm@vger.kernel.org,
 	Vincent Guittot <vincent.guittot@linaro.org>,
 	Stephen Boyd <sboyd@kernel.org>,
 	Nishanth Menon <nm@ti.com>,
@@ -75,9 +75,9 @@ Cc: Viresh Kumar <viresh.kumar@linaro.org>,
 	=?UTF-8?q?Alex=20Benn=C3=A9e?= <alex.bennee@linaro.org>,
 	Joakim Bech <joakim.bech@linaro.org>,
 	linux-kernel@vger.kernel.org
-Subject: [RFC PATCH 1/3] rust: Add bindings for OPP framework
-Date: Fri,  5 Apr 2024 16:39:38 +0530
-Message-Id: <06bb914eae00671a69b393bf86bb01ddec86c16f.1712314032.git.viresh.kumar@linaro.org>
+Subject: [RFC PATCH 3/3] cpufreq: Add Rust based cpufreq-dt driver
+Date: Fri,  5 Apr 2024 16:39:40 +0530
+Message-Id: <1792467a772b7a8355c6d0cb0cbacfbffff08afd.1712314032.git.viresh.kumar@linaro.org>
 X-Mailer: git-send-email 2.31.1.272.g89b43f80a514
 In-Reply-To: <cover.1712314032.git.viresh.kumar@linaro.org>
 References: <cover.1712314032.git.viresh.kumar@linaro.org>
@@ -89,945 +89,325 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-This commit adds Rust bindings for the Operating performance points
-(OPP) core. The current implementation doesn't implement Rust wrappers
-for all the APIs, but mostly the ones usable by the cpufreq-dt driver.
+This commit adds a Rust based cpufreq-dt driver, which covers most of
+the functionality of the existing C based driver. Only a handful of
+things are left, like fetching platform data from cpufreq-dt-platdev.c.
 
-The missing APIs will be added later once required.
+This is tested with the help of QEMU for now and switching of
+frequencies work as expected.
 
 Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
 ---
- rust/bindings/bindings_helper.h |   1 +
- rust/kernel/lib.rs              |   2 +
- rust/kernel/opp.rs              | 895 ++++++++++++++++++++++++++++++++
- 3 files changed, 898 insertions(+)
- create mode 100644 rust/kernel/opp.rs
+ drivers/cpufreq/Kconfig        |  12 ++
+ drivers/cpufreq/Makefile       |   1 +
+ drivers/cpufreq/rcpufreq_dt.rs | 264 +++++++++++++++++++++++++++++++++
+ 3 files changed, 277 insertions(+)
+ create mode 100644 drivers/cpufreq/rcpufreq_dt.rs
 
-diff --git a/rust/bindings/bindings_helper.h b/rust/bindings/bindings_helper.h
-index baabff999bd5..370043838a54 100644
---- a/rust/bindings/bindings_helper.h
-+++ b/rust/bindings/bindings_helper.h
-@@ -22,6 +22,7 @@
- #include <linux/platform_device.h>
- #include <linux/phy.h>
- #include <linux/pid_namespace.h>
-+#include <linux/pm_opp.h>
- #include <linux/poll.h>
- #include <linux/refcount.h>
- #include <linux/sched.h>
-diff --git a/rust/kernel/lib.rs b/rust/kernel/lib.rs
-index a153336973e6..56b666f466a0 100644
---- a/rust/kernel/lib.rs
-+++ b/rust/kernel/lib.rs
-@@ -46,6 +46,8 @@
- #[cfg(CONFIG_NET)]
- pub mod net;
- pub mod of;
-+#[cfg(CONFIG_PM_OPP)]
-+pub mod opp;
- pub mod platform;
- pub mod prelude;
- pub mod print;
-diff --git a/rust/kernel/opp.rs b/rust/kernel/opp.rs
+diff --git a/drivers/cpufreq/Kconfig b/drivers/cpufreq/Kconfig
+index 94e55c40970a..eb9359bd3c5c 100644
+--- a/drivers/cpufreq/Kconfig
++++ b/drivers/cpufreq/Kconfig
+@@ -217,6 +217,18 @@ config CPUFREQ_DT
+ 
+ 	  If in doubt, say N.
+ 
++config CPUFREQ_DT_RUST
++	tristate "Rust based Generic DT based cpufreq driver"
++	depends on HAVE_CLK && OF && RUST
++	select CPUFREQ_DT_PLATDEV
++	select PM_OPP
++	help
++	  This adds a Rust based generic DT based cpufreq driver for frequency
++	  management.  It supports both uniprocessor (UP) and symmetric
++	  multiprocessor (SMP) systems.
++
++	  If in doubt, say N.
++
+ config CPUFREQ_DT_PLATDEV
+ 	tristate "Generic DT based cpufreq platdev driver"
+ 	depends on OF
+diff --git a/drivers/cpufreq/Makefile b/drivers/cpufreq/Makefile
+index 8d141c71b016..4981d908b803 100644
+--- a/drivers/cpufreq/Makefile
++++ b/drivers/cpufreq/Makefile
+@@ -15,6 +15,7 @@ obj-$(CONFIG_CPU_FREQ_GOV_COMMON)		+= cpufreq_governor.o
+ obj-$(CONFIG_CPU_FREQ_GOV_ATTR_SET)	+= cpufreq_governor_attr_set.o
+ 
+ obj-$(CONFIG_CPUFREQ_DT)		+= cpufreq-dt.o
++obj-$(CONFIG_CPUFREQ_DT_RUST)		+= rcpufreq_dt.o
+ obj-$(CONFIG_CPUFREQ_DT_PLATDEV)	+= cpufreq-dt-platdev.o
+ 
+ # Traces
+diff --git a/drivers/cpufreq/rcpufreq_dt.rs b/drivers/cpufreq/rcpufreq_dt.rs
 new file mode 100644
-index 000000000000..dba4b8592ac0
+index 000000000000..d29182eba75e
 --- /dev/null
-+++ b/rust/kernel/opp.rs
-@@ -0,0 +1,895 @@
++++ b/drivers/cpufreq/rcpufreq_dt.rs
+@@ -0,0 +1,264 @@
 +// SPDX-License-Identifier: GPL-2.0
 +
-+//! Operating performance points.
-+//!
-+//! This module provides bindings for interacting with the OPP subsystem.
-+//!
-+//! C header: [`include/linux/pm_opp.h`](../../../../../../include/linux/pm_opp.h)
++//! Rust based implementation of the cpufreq-dt driver.
 +
-+use crate::{
-+    bindings, cpufreq,
-+    device::{Device, RawDevice},
-+    error::{code::*, from_err_ptr, from_result, to_result, Error, Result, VTABLE_DEFAULT_ERROR},
++use core::{format_args, ptr};
++
++use kernel::{
++    b_str, bindings, c_str, cpufreq, define_of_id_table,
++    device::{self, Device, RawDevice},
++    error::{code::*, to_result},
++    fmt,
++    macros::vtable,
++    module_platform_driver, of, opp, platform,
 +    prelude::*,
 +    str::CString,
++    sync::Arc,
 +};
 +
-+use core::{ffi::c_char, marker::PhantomData, ops::Deref, ptr};
++// Finds exact supply name from the OF node.
++fn find_supply_name_exact(np: *mut bindings::device_node, name: &str) -> Option<CString> {
++    let sname = CString::try_from_fmt(fmt!("{}-supply", name)).ok()?;
 +
-+use macros::vtable;
-+
-+// Creates a pinned null-terminated slice of pointers to Cstrings.
-+fn to_c_str_array(names: &Pin<Vec<CString>>) -> Result<Vec<*const c_char>> {
-+    // Allocated a null-terminated vector of pointers.
-+    let mut list = Vec::try_with_capacity(names.len() + 1)?;
-+
-+    for name in names.iter() {
-+        list.try_push(name.as_ptr() as _)?;
-+    }
-+
-+    list.try_push(ptr::null())?;
-+    Ok(list)
-+}
-+
-+/// Equivalent to `struct dev_pm_opp_data` in the C Code.
-+#[repr(transparent)]
-+pub struct Data(bindings::dev_pm_opp_data);
-+
-+impl Data {
-+    /// Creates new instance of [`Data`].
-+    pub fn new(freq: u64, u_volt: u64, level: u32, turbo: bool) -> Self {
-+        Self(bindings::dev_pm_opp_data {
-+            turbo,
-+            freq,
-+            u_volt,
-+            level,
-+        })
++    // SAFETY: The OF node is guaranteed by the C code to be valid.
++    let pp = unsafe { bindings::of_find_property(np, sname.as_ptr() as *mut _, ptr::null_mut()) };
++    if pp.is_null() {
++        None
++    } else {
++        CString::try_from_fmt(fmt!("{}", name)).ok()
 +    }
 +}
 +
-+/// OPP search types.
-+#[derive(Copy, Clone, Debug, Eq, PartialEq)]
-+pub enum SearchType {
-+    /// Search for exact value.
-+    Exact,
-+    /// Search for highest value less than equal to value.
-+    Floor,
-+    /// Search for lowest value greater than equal to value.
-+    Ceil,
++// Finds supply name for the CPU from DT.
++fn find_supply_names(dev: &Device, cpu: u32) -> Option<Vec<CString>> {
++    // SAFETY: The requirements are satisfied by the existence of `RawDevice` and its safety
++    // requirements. The OF node is guaranteed by the C code to be valid or NULL and
++    // `of_node_get()` handles both the cases safely.
++    let np = unsafe { bindings::of_node_get((*dev.raw_device()).of_node) };
++    if np.is_null() {
++        return None;
++    }
++
++    // Try "cpu0" for older DTs.
++    let mut name = if cpu == 0 {
++        find_supply_name_exact(np, "cpu0")
++    } else {
++        None
++    };
++
++    if name.is_none() {
++        name = find_supply_name_exact(np, "cpu");
++    }
++
++    // SAFETY: It is safe to drop reference to the OF node we just took.
++    unsafe { bindings::of_node_put(np) };
++
++    match name {
++        Some(name) => {
++            let mut list = Vec::try_with_capacity(1).ok()?;
++            list.try_push(name).ok()?;
++
++            // SAFETY: The slice is fully initialized now.
++            Some(list)
++        }
++
++        None => None,
++    }
 +}
 +
-+/// Implement this trait to provide OPP Configuration callbacks.
++// Represents the cpufreq dt device.
++struct CPUFreqDTDevice {
++    opp_table: opp::Table,
++    freq_table: opp::FreqTable,
++    #[allow(dead_code)]
++    config: Option<opp::Config<Self>>,
++    #[allow(dead_code)]
++    clk: cpufreq::Clk,
++}
++
 +#[vtable]
-+pub trait ConfigOps {
-+    /// Called by the OPP core to configure OPP clks.
-+    fn config_clks(_dev: &Device, _table: &Table, _opp: &OPP, _scaling_down: bool) -> Result<()> {
-+        kernel::build_error(VTABLE_DEFAULT_ERROR)
-+    }
++impl opp::ConfigOps for CPUFreqDTDevice {}
 +
-+    /// Called by the OPP core to configure OPP regulators.
-+    fn config_regulators(
-+        _dev: &Device,
-+        _opp_old: &OPP,
-+        _opp_new: &OPP,
-+        _data: *mut *mut bindings::regulator,
-+        _count: u32,
-+    ) -> Result<()> {
-+        kernel::build_error(VTABLE_DEFAULT_ERROR)
-+    }
-+}
++#[vtable]
++impl cpufreq::DriverOps for CPUFreqDTDevice {
++    type PData = Arc<Self>;
 +
-+/// Equivalent to `struct dev_pm_opp_config` in the C Code.
-+pub struct Config<T: ConfigOps> {
-+    token: Option<i32>,
-+    clk_names: Option<Pin<Vec<CString>>>,
-+    prop_name: Option<Pin<CString>>,
-+    regulator_names: Option<Pin<Vec<CString>>>,
-+    genpd_names: Option<Pin<Vec<CString>>>,
-+    supported_hw: Option<Pin<Vec<u32>>>,
-+    required_devs: Option<Pin<Vec<Device>>>,
-+    _data: PhantomData<T>,
-+}
++    fn init(policy: &mut cpufreq::Policy) -> Result<Self::PData> {
++        let cpu = policy.cpu();
 +
-+impl<T: ConfigOps> Config<T> {
-+    /// Creates a new instance of [`Config`].
-+    pub fn new() -> Self {
-+        Self {
-+            token: None,
-+            clk_names: None,
-+            prop_name: None,
-+            regulator_names: None,
-+            genpd_names: None,
-+            supported_hw: None,
-+            required_devs: None,
-+            _data: PhantomData,
-+        }
-+    }
-+
-+    /// Initializes clock names.
-+    pub fn set_clk_names(&mut self, names: Vec<CString>) -> Result<()> {
-+        // Already configured.
-+        if self.token.is_some() {
-+            return Err(EBUSY);
++        // SAFETY: It is safe to call `get_cpu_device()` for any CPU.
++        let dev = unsafe { bindings::get_cpu_device(cpu) };
++        if dev.is_null() {
++            return Err(ENODEV);
 +        }
 +
-+        // Already configured.
-+        if self.clk_names.is_some() {
-+            return Err(EBUSY);
-+        }
++        // SAFETY: `dev` is valid, non-null, and has a non-zero reference count.
++        let dev = unsafe { Device::new(dev) };
 +
-+        if names.is_empty() {
-+            return Err(EINVAL);
-+        }
++        policy.set_cpus(cpu);
 +
-+        self.clk_names = Some(Pin::new(names));
-+        Ok(())
-+    }
-+
-+    /// Initializes property name.
-+    pub fn set_prop_name(&mut self, name: CString) -> Result<()> {
-+        // Already configured.
-+        if self.token.is_some() {
-+            return Err(EBUSY);
-+        }
-+
-+        // Already configured.
-+        if self.prop_name.is_some() {
-+            return Err(EBUSY);
-+        }
-+
-+        self.prop_name = Some(Pin::new(name));
-+        Ok(())
-+    }
-+
-+    /// Initializes regulator names.
-+    pub fn set_regulator_names(&mut self, names: Vec<CString>) -> Result<()> {
-+        // Already configured.
-+        if self.token.is_some() {
-+            return Err(EBUSY);
-+        }
-+
-+        // Already configured.
-+        if self.regulator_names.is_some() {
-+            return Err(EBUSY);
-+        }
-+
-+        if names.is_empty() {
-+            return Err(EINVAL);
-+        }
-+
-+        self.regulator_names = Some(Pin::new(names));
-+
-+        Ok(())
-+    }
-+
-+    /// Initializes genpd names.
-+    pub fn set_genpd_names(&mut self, names: Vec<CString>) -> Result<()> {
-+        // Already configured.
-+        if self.token.is_some() {
-+            return Err(EBUSY);
-+        }
-+
-+        // Already configured. Only one of genpd or required devs can be configured.
-+        if self.genpd_names.is_some() || self.required_devs.is_some() {
-+            return Err(EBUSY);
-+        }
-+
-+        if names.is_empty() {
-+            return Err(EINVAL);
-+        }
-+
-+        self.genpd_names = Some(Pin::new(names));
-+        Ok(())
-+    }
-+
-+    /// Initializes required devices.
-+    pub fn set_required_devs(&mut self, devs: Vec<Device>) -> Result<()> {
-+        // Already configured.
-+        if self.token.is_some() {
-+            return Err(EBUSY);
-+        }
-+
-+        // Already configured. Only one of genpd or required devs can be configured.
-+        if self.genpd_names.is_some() || self.required_devs.is_some() {
-+            return Err(EBUSY);
-+        }
-+
-+        if devs.is_empty() {
-+            return Err(EINVAL);
-+        }
-+
-+        self.required_devs = Some(Pin::new(devs));
-+        Ok(())
-+    }
-+
-+    /// Initializes supported hardware.
-+    pub fn set_supported_hw(&mut self, hw: Vec<u32>) -> Result<()> {
-+        // Already configured.
-+        if self.token.is_some() {
-+            return Err(EBUSY);
-+        }
-+
-+        // Already configured.
-+        if self.supported_hw.is_some() {
-+            return Err(EBUSY);
-+        }
-+
-+        if hw.is_empty() {
-+            return Err(EINVAL);
-+        }
-+
-+        self.supported_hw = Some(Pin::new(hw));
-+        Ok(())
-+    }
-+
-+    /// Sets the configuration with the OPP core.
-+    pub fn set(&mut self, dev: &Device) -> Result<()> {
-+        // Already configured.
-+        if self.token.is_some() {
-+            return Err(EBUSY);
-+        }
-+
-+        let (_clk_list, clk_names) = match &self.clk_names {
-+            Some(x) => {
-+                let list = to_c_str_array(x)?;
-+                let ptr = list.as_ptr();
-+                (Some(list), ptr)
-+            }
-+            None => (None, ptr::null()),
++        let config = if let Some(names) = find_supply_names(&dev, cpu) {
++            let mut config = opp::Config::<Self>::new();
++            config.set_regulator_names(names)?;
++            config.set(&dev)?;
++            Some(config)
++        } else {
++            None
 +        };
 +
-+        let (_regulator_list, regulator_names) = match &self.regulator_names {
-+            Some(x) => {
-+                let list = to_c_str_array(x)?;
-+                let ptr = list.as_ptr();
-+                (Some(list), ptr)
-+            }
-+            None => (None, ptr::null()),
-+        };
-+
-+        let (_genpd_list, genpd_names) = match &self.genpd_names {
-+            Some(x) => {
-+                let list = to_c_str_array(x)?;
-+                let ptr = list.as_ptr();
-+                (Some(list), ptr)
-+            }
-+            None => (None, ptr::null()),
-+        };
-+
-+        let prop_name = match &self.prop_name {
-+            Some(x) => x.as_char_ptr(),
-+            None => ptr::null(),
-+        };
-+
-+        let (supported_hw, supported_hw_count) = match &self.supported_hw {
-+            Some(x) => (x.as_ptr(), x.len() as u32),
-+            None => (ptr::null(), 0),
-+        };
-+
-+        let (_required_devs_list, required_devs) = match &self.required_devs {
-+            Some(x) => {
-+                // Create a non-NULL-terminated vectorof pointers.
-+                let mut list = Vec::try_with_capacity(x.len())?;
-+
-+                for dev in x.iter() {
-+                    list.try_push(dev.raw_device())?;
++        // Get OPP-sharing information from "operating-points-v2" bindings.
++        let fallback = match opp::Table::of_sharing_cpus(&dev, policy.cpus()) {
++            Ok(_) => false,
++            Err(e) => {
++                if e != ENOENT {
++                    return Err(e);
 +                }
 +
-+                let ptr = list.as_mut_ptr();
-+                (Some(list), ptr)
++                // "operating-points-v2" not supported. If the platform hasn't
++                // set sharing CPUs, fallback to all CPUs share the `Policy`
++                // for backward compatibility.
++                opp::Table::sharing_cpus(&dev, policy.cpus()).is_err()
 +            }
-+            None => (None, ptr::null_mut()),
 +        };
 +
-+        let mut config = bindings::dev_pm_opp_config {
-+            clk_names,
-+            config_clks: if T::HAS_CONFIG_CLKS {
-+                Some(Self::config_clks)
-+            } else {
-+                None
-+            },
-+            prop_name,
-+            regulator_names,
-+            config_regulators: if T::HAS_CONFIG_REGULATORS {
-+                Some(Self::config_regulators)
-+            } else {
-+                None
-+            },
-+            genpd_names,
-+            supported_hw,
-+            supported_hw_count,
-+
-+            // Don't need to support virt_devs for now.
-+            virt_devs: ptr::null_mut(),
-+            required_devs,
-+        };
-+
-+        // SAFETY: The requirements are satisfied by the existence of `RawDevice` and its safety
-+        // requirements. The OPP core guarantees to not use fields of `config`, after this call has
-+        // returned and so we don't need to save a copy of them for future use
-+        let ret = unsafe { bindings::dev_pm_opp_set_config(dev.raw_device(), &mut config) };
-+        if ret < 0 {
-+            Err(Error::from_errno(ret))
-+        } else {
-+            self.token = Some(ret);
-+            Ok(())
-+        }
-+    }
-+
-+    // Config's config_clks callback.
-+    extern "C" fn config_clks(
-+        dev: *mut bindings::device,
-+        opp_table: *mut bindings::opp_table,
-+        opp: *mut bindings::dev_pm_opp,
-+        _data: *mut core::ffi::c_void,
-+        scaling_down: bool,
-+    ) -> core::ffi::c_int {
-+        from_result(|| {
-+            // SAFETY: 'dev' is guaranteed by the C code to be valid.
-+            let dev = unsafe { Device::new(dev) };
-+            T::config_clks(
-+                &dev,
-+                // SAFETY: 'opp_table' is guaranteed by the C code to be valid.
-+                &unsafe { Table::from_ptr(opp_table, dev.clone()) },
-+                // SAFETY: 'opp' is guaranteed by the C code to be valid.
-+                &unsafe { OPP::new(opp) },
-+                scaling_down,
-+            )
-+            .map(|_| 0)
-+        })
-+    }
-+
-+    // Config's config_regulators callback.
-+    extern "C" fn config_regulators(
-+        dev: *mut bindings::device,
-+        old_opp: *mut bindings::dev_pm_opp,
-+        new_opp: *mut bindings::dev_pm_opp,
-+        regulators: *mut *mut bindings::regulator,
-+        count: core::ffi::c_uint,
-+    ) -> core::ffi::c_int {
-+        from_result(|| {
-+            // SAFETY: 'dev' is guaranteed by the C code to be valid.
-+            let dev = unsafe { Device::new(dev) };
-+            T::config_regulators(
-+                &dev,
-+                // SAFETY: 'old_opp' is guaranteed by the C code to be valid.
-+                &unsafe { OPP::new(old_opp) },
-+                // SAFETY: 'new_opp' is guaranteed by the C code to be valid.
-+                &unsafe { OPP::new(new_opp) },
-+                regulators,
-+                count,
-+            )
-+            .map(|_| 0)
-+        })
-+    }
-+}
-+
-+impl<T: ConfigOps> Drop for Config<T> {
-+    fn drop(&mut self) {
-+        if let Some(token) = self.token.take() {
-+            // SAFETY: By the type invariants, we know that `self` owns a reference, so it is safe
-+            // to relinquish it now.
-+            unsafe { bindings::dev_pm_opp_clear_config(token) };
-+        }
-+    }
-+}
-+
-+/// CPU Frequency table created from OPP entries.
-+pub struct FreqTable {
-+    dev: Device,
-+    table: cpufreq::Table,
-+}
-+
-+impl FreqTable {
-+    /// Creates new instance of [`FreqTable`] from raw pointer.
-+    fn new(table: &Table) -> Result<Self> {
-+        let mut ptr: *mut bindings::cpufreq_frequency_table = ptr::null_mut();
-+
-+        // SAFETY: The requirements are satisfied by the existence of `RawDevice` and its safety
-+        // requirements.
-+        to_result(unsafe {
-+            bindings::dev_pm_opp_init_cpufreq_table(table.dev.raw_device(), &mut ptr)
-+        })?;
-+        Ok(Self {
-+            dev: table.dev.clone(),
-+            // SAFETY: The `ptr` is guaranteed by the C code to be valid.
-+            table: unsafe { cpufreq::Table::from_raw(ptr) },
-+        })
-+    }
-+
-+    /// Returns reference to the underlying [`cpufreq::Table`].
-+    pub fn table(&self) -> &cpufreq::Table {
-+        &self.table
-+    }
-+}
-+
-+impl Deref for FreqTable {
-+    type Target = cpufreq::Table;
-+
-+    #[inline]
-+    fn deref(&self) -> &Self::Target {
-+        &self.table
-+    }
-+}
-+
-+impl Drop for FreqTable {
-+    fn drop(&mut self) {
-+        // SAFETY: By the type invariants, we know that `self` owns a reference, so it is safe to
-+        // relinquish it now.
-+        unsafe {
-+            bindings::dev_pm_opp_free_cpufreq_table(self.dev.raw_device(), &mut self.as_ptr())
-+        };
-+    }
-+}
-+
-+/// Operating performance point (OPP) table.
-+///
-+/// # Invariants
-+///
-+/// `ptr` is valid, non-null, and has a non-zero reference count. One of the references is owned by
-+/// `self`, and will be decremented when `self` is dropped.
-+pub struct Table {
-+    ptr: *mut bindings::opp_table,
-+    dev: Device,
-+    em: bool,
-+    of: bool,
-+    cpumask: Option<cpufreq::Cpumask>,
-+}
-+
-+// SAFETY: The fields of `Table` are safe to be used from any thread.
-+unsafe impl Send for Table {}
-+
-+// SAFETY: The fields of `Table` are safe to be referenced from any thread.
-+unsafe impl Sync for Table {}
-+
-+impl Table {
-+    /// Creates a new OPP table instance from raw pointer.
-+    ///
-+    /// # Safety
-+    ///
-+    /// Callers must ensure that `ptr` is valid and non-null.
-+    unsafe fn from_ptr(ptr: *mut bindings::opp_table, dev: Device) -> Self {
-+        // SAFETY: By the safety requirements, ptr is valid and its refcount will be incremented.
-+        unsafe { bindings::dev_pm_opp_get_opp_table_ref(ptr) };
-+
-+        Self {
-+            ptr,
-+            dev,
-+            em: false,
-+            of: false,
-+            cpumask: None,
-+        }
-+    }
-+
-+    /// Find OPP table from device.
-+    pub fn from_dev(dev: &Device) -> Result<Self> {
-+        // SAFETY: The requirements are satisfied by the existence of `RawDevice` and its safety
-+        // requirements. Refcount of the OPP table is incremented as well.
-+        let ptr = from_err_ptr(unsafe { bindings::dev_pm_opp_get_opp_table(dev.raw_device()) })?;
-+
-+        Ok(Self {
-+            ptr,
-+            dev: dev.clone(),
-+            em: false,
-+            of: false,
-+            cpumask: None,
-+        })
-+    }
-+
-+    /// Add device tree based OPP table for the device.
-+    #[cfg(CONFIG_OF)]
-+    pub fn from_of(dev: &Device, index: i32) -> Result<Self> {
-+        // SAFETY: The requirements are satisfied by the existence of `RawDevice` and its safety
-+        // requirements. Refcount of the OPP table is incremented as well.
-+        to_result(unsafe { bindings::dev_pm_opp_of_add_table_indexed(dev.raw_device(), index) })?;
-+
-+        // Fetch the newly created table.
-+        let mut table = Self::from_dev(dev)?;
-+        table.of = true;
-+
-+        Ok(table)
-+    }
-+
-+    // Remove device tree based OPP table for the device.
-+    #[cfg(CONFIG_OF)]
-+    fn remove_of(&self) {
-+        // SAFETY: The requirements are satisfied by the existence of `RawDevice` and its safety
-+        // requirements. We took the reference from `from_of` earlier, it is safe to drop the same
-+        // now.
-+        unsafe { bindings::dev_pm_opp_of_remove_table(self.dev.raw_device()) };
-+    }
-+
-+    /// Add device tree based OPP table for CPU devices.
-+    #[cfg(CONFIG_OF)]
-+    pub fn from_of_cpumask(dev: &Device, cpumask: &mut cpufreq::Cpumask) -> Result<Self> {
-+        // SAFETY: The cpumask is valid and the returned ptr will be owned by the [`Table`] instance.
-+        to_result(unsafe { bindings::dev_pm_opp_of_cpumask_add_table(cpumask.as_ptr()) })?;
-+
-+        // Fetch the newly created table.
-+        let mut table = Self::from_dev(dev)?;
-+        // SAFETY: The `cpumask` is guaranteed by the C code to be valid.
-+        table.cpumask = Some(unsafe { cpufreq::Cpumask::new(cpumask.as_mut_ptr()) });
-+
-+        Ok(table)
-+    }
-+
-+    // Remove device tree based OPP table for CPU devices.
-+    #[cfg(CONFIG_OF)]
-+    fn remove_of_cpumask(&self, cpumask: &cpufreq::Cpumask) {
-+        // SAFETY: The cpumask is valid and we took the reference from `from_of_cpumask` earlier,
-+        // it is safe to drop the same now.
-+        unsafe { bindings::dev_pm_opp_of_cpumask_remove_table(cpumask.as_ptr()) };
-+    }
-+
-+    /// Returns the number of OPPs in the table.
-+    pub fn opp_count(&self) -> Result<u32> {
-+        // SAFETY: The requirements are satisfied by the existence of `RawDevice` and its safety
-+        // requirements.
-+        let ret = unsafe { bindings::dev_pm_opp_get_opp_count(self.dev.raw_device()) };
-+        if ret < 0 {
-+            Err(Error::from_errno(ret))
-+        } else {
-+            Ok(ret as u32)
-+        }
-+    }
-+
-+    /// Returns max clock latency of the OPPs in the table.
-+    pub fn max_clock_latency(&self) -> u64 {
-+        // SAFETY: The requirements are satisfied by the existence of `RawDevice` and its safety
-+        // requirements.
-+        unsafe { bindings::dev_pm_opp_get_max_clock_latency(self.dev.raw_device()) }
-+    }
-+
-+    /// Returns max volt latency of the OPPs in the table.
-+    pub fn max_volt_latency(&self) -> u64 {
-+        // SAFETY: The requirements are satisfied by the existence of `RawDevice` and its safety
-+        // requirements.
-+        unsafe { bindings::dev_pm_opp_get_max_volt_latency(self.dev.raw_device()) }
-+    }
-+
-+    /// Returns max transition latency of the OPPs in the table.
-+    pub fn max_transition_latency(&self) -> u64 {
-+        // SAFETY: The requirements are satisfied by the existence of `RawDevice` and its safety
-+        // requirements.
-+        unsafe { bindings::dev_pm_opp_get_max_transition_latency(self.dev.raw_device()) }
-+    }
-+
-+    /// Returns the suspend OPP.
-+    pub fn suspend_freq(&self) -> u64 {
-+        // SAFETY: The requirements are satisfied by the existence of `RawDevice` and its safety
-+        // requirements.
-+        unsafe { bindings::dev_pm_opp_get_suspend_opp_freq(self.dev.raw_device()) }
-+    }
-+
-+    /// Synchronizes regulators used by the OPP table.
-+    pub fn sync_regulators(&self) -> Result<()> {
-+        // SAFETY: The requirements are satisfied by the existence of `RawDevice` and its safety
-+        // requirements.
-+        to_result(unsafe { bindings::dev_pm_opp_sync_regulators(self.dev.raw_device()) })
-+    }
-+
-+    /// Gets sharing CPUs.
-+    pub fn sharing_cpus(dev: &Device, cpumask: &mut cpufreq::Cpumask) -> Result<()> {
-+        // SAFETY: The requirements are satisfied by the existence of `RawDevice` and its safety
-+        // requirements.
-+        to_result(unsafe {
-+            bindings::dev_pm_opp_get_sharing_cpus(dev.raw_device(), cpumask.as_mut_ptr())
-+        })
-+    }
-+
-+    /// Sets sharing CPUs.
-+    pub fn set_sharing_cpus(&self, cpumask: &cpufreq::Cpumask) -> Result<()> {
-+        // SAFETY: The requirements are satisfied by the existence of `RawDevice` and its safety
-+        // requirements.
-+        to_result(unsafe {
-+            bindings::dev_pm_opp_set_sharing_cpus(self.dev.raw_device(), cpumask.as_ptr())
-+        })
-+    }
-+
-+    /// Gets sharing CPUs from Device tree.
-+    #[cfg(CONFIG_OF)]
-+    pub fn of_sharing_cpus(dev: &Device, cpumask: &mut cpufreq::Cpumask) -> Result<()> {
-+        // SAFETY: The requirements are satisfied by the existence of `RawDevice` and its safety
-+        // requirements.
-+        to_result(unsafe {
-+            bindings::dev_pm_opp_of_get_sharing_cpus(dev.raw_device(), cpumask.as_mut_ptr())
-+        })
-+    }
-+
-+    /// Updates the voltage value for an OPP.
-+    pub fn adjust_voltage(
-+        &self,
-+        freq: u64,
-+        u_volt: u64,
-+        u_volt_min: u64,
-+        u_volt_max: u64,
-+    ) -> Result<()> {
-+        // SAFETY: The requirements are satisfied by the existence of `RawDevice` and its safety
-+        // requirements.
-+        to_result(unsafe {
-+            bindings::dev_pm_opp_adjust_voltage(
-+                self.dev.raw_device(),
-+                freq,
-+                u_volt,
-+                u_volt_min,
-+                u_volt_max,
-+            )
-+        })
-+    }
-+
-+    /// Create cpufreq table from OPP table.
-+    pub fn to_cpufreq_table(&mut self) -> Result<FreqTable> {
-+        FreqTable::new(self)
-+    }
-+
-+    /// Sets a matching OPP based on frequency.
-+    pub fn set_rate(&self, freq: u64) -> Result<()> {
-+        // SAFETY: The requirements are satisfied by the existence of `RawDevice` and its safety
-+        // requirements.
-+        to_result(unsafe { bindings::dev_pm_opp_set_rate(self.dev.raw_device(), freq) })
-+    }
-+
-+    /// Sets exact OPP.
-+    pub fn set_opp(&self, opp: &OPP) -> Result<()> {
-+        // SAFETY: The requirements are satisfied by the existence of `RawDevice` and its safety
-+        // requirements.
-+        to_result(unsafe { bindings::dev_pm_opp_set_opp(self.dev.raw_device(), opp.as_mut_ptr()) })
-+    }
-+
-+    /// Finds OPP based on frequency.
-+    pub fn opp_from_freq(
-+        &self,
-+        mut freq: u64,
-+        available: Option<bool>,
-+        index: Option<u32>,
-+        stype: SearchType,
-+    ) -> Result<OPP> {
-+        let rdev = self.dev.raw_device();
-+        let index = index.unwrap_or(0);
-+
-+        let ptr = from_err_ptr(match stype {
-+            SearchType::Exact => {
-+                if let Some(available) = available {
-+                    // SAFETY: The requirements are satisfied by the existence of `RawDevice` and
-+                    // its safety requirements. The returned ptr will be owned by the new [`OPP`]
-+                    // instance.
-+                    unsafe {
-+                        bindings::dev_pm_opp_find_freq_exact_indexed(rdev, freq, index, available)
-+                    }
-+                } else {
-+                    return Err(EINVAL);
++        // Initialize OPP tables for all policy cpus.
++        //
++        // For platforms not using "operating-points-v2" bindings, we do this
++        // before updating policy cpus. Otherwise, we will end up creating
++        // duplicate OPPs for the CPUs.
++        //
++        // OPPs might be populated at runtime, don't fail for error here unless
++        // it is -EPROBE_DEFER.
++        let mut opp_table = match opp::Table::from_of_cpumask(&dev, policy.cpus()) {
++            Ok(table) => table,
++            Err(e) => {
++                if e == EPROBE_DEFER {
++                    return Err(e);
 +                }
++
++                // The table is added dynamically ?
++                opp::Table::from_dev(&dev)?
 +            }
++        };
 +
-+            // SAFETY: The requirements are satisfied by the existence of `RawDevice` and its
-+            // safety requirements. The returned ptr will be owned by the new [`OPP`] instance.
-+            SearchType::Ceil => unsafe {
-+                bindings::dev_pm_opp_find_freq_ceil_indexed(rdev, &mut freq as *mut u64, index)
-+            },
++        // The OPP table must be initialized, statically or dynamically, by this point.
++        opp_table.opp_count()?;
 +
-+            // SAFETY: The requirements are satisfied by the existence of `RawDevice` and its
-+            // safety requirements. The returned ptr will be owned by the new [`OPP`] instance.
-+            SearchType::Floor => unsafe {
-+                bindings::dev_pm_opp_find_freq_floor_indexed(rdev, &mut freq as *mut u64, index)
-+            },
-+        })?;
++        // Set sharing cpus for fallback scenario.
++        if fallback {
++            policy.set_all_cpus();
++            opp_table.set_sharing_cpus(policy.cpus())?;
++        }
 +
-+        // SAFETY: The `ptr` is guaranteed by the C code to be valid.
-+        Ok(unsafe { OPP::new_owned(ptr) })
++        let mut transition_latency = opp_table.max_transition_latency() as u32;
++        if transition_latency == 0 {
++            transition_latency = cpufreq::ETERNAL_LATENCY;
++        }
++
++        let freq_table = opp_table.to_cpufreq_table()?;
++        policy.set_freq_table(freq_table.table());
++        policy.set_dvfs_possible_from_any_cpu();
++        policy.set_suspend_freq((opp_table.suspend_freq() / 1000) as u32);
++        policy.set_transition_latency(transition_latency);
++        let clk = policy.set_clk(&dev, None)?;
++
++        Ok(Arc::try_new(CPUFreqDTDevice {
++            opp_table,
++            config,
++            freq_table,
++            clk,
++        })?)
 +    }
 +
-+    /// Finds OPP based on level.
-+    pub fn opp_from_level(&self, mut level: u32, stype: SearchType) -> Result<OPP> {
-+        let rdev = self.dev.raw_device();
-+
-+        let ptr = from_err_ptr(match stype {
-+            // SAFETY: The requirements are satisfied by the existence of `RawDevice` and its
-+            // safety requirements. The returned ptr will be owned by the new [`OPP`] instance.
-+            SearchType::Exact => unsafe { bindings::dev_pm_opp_find_level_exact(rdev, level) },
-+
-+            // SAFETY: The requirements are satisfied by the existence of `RawDevice` and its
-+            // safety requirements. The returned ptr will be owned by the new [`OPP`] instance.
-+            SearchType::Ceil => unsafe {
-+                bindings::dev_pm_opp_find_level_ceil(rdev, &mut level as *mut u32)
-+            },
-+
-+            // SAFETY: The requirements are satisfied by the existence of `RawDevice` and its
-+            // safety requirements. The returned ptr will be owned by the new [`OPP`] instance.
-+            SearchType::Floor => unsafe {
-+                bindings::dev_pm_opp_find_level_floor(rdev, &mut level as *mut u32)
-+            },
-+        })?;
-+
-+        // SAFETY: The `ptr` is guaranteed by the C code to be valid.
-+        Ok(unsafe { OPP::new_owned(ptr) })
-+    }
-+
-+    /// Finds OPP based on bandwidth.
-+    pub fn opp_from_bw(&self, mut bw: u32, index: i32, stype: SearchType) -> Result<OPP> {
-+        let rdev = self.dev.raw_device();
-+
-+        let ptr = from_err_ptr(match stype {
-+            // The OPP core doesn't support this yet.
-+            SearchType::Exact => return Err(EINVAL),
-+
-+            // SAFETY: The requirements are satisfied by the existence of `RawDevice` and its
-+            // safety requirements. The returned ptr will be owned by the new [`OPP`] instance.
-+            SearchType::Ceil => unsafe {
-+                bindings::dev_pm_opp_find_bw_ceil(rdev, &mut bw as *mut u32, index)
-+            },
-+
-+            // SAFETY: The requirements are satisfied by the existence of `RawDevice` and its
-+            // safety requirements. The returned ptr will be owned by the new [`OPP`] instance.
-+            SearchType::Floor => unsafe {
-+                bindings::dev_pm_opp_find_bw_floor(rdev, &mut bw as *mut u32, index)
-+            },
-+        })?;
-+
-+        // SAFETY: The `ptr` is guaranteed by the C code to be valid.
-+        Ok(unsafe { OPP::new_owned(ptr) })
-+    }
-+
-+    /// Enable the OPP.
-+    pub fn enable_opp(&self, freq: u64) -> Result<()> {
-+        // SAFETY: The requirements are satisfied by the existence of `RawDevice` and its safety
-+        // requirements.
-+        to_result(unsafe { bindings::dev_pm_opp_enable(self.dev.raw_device(), freq) })
-+    }
-+
-+    /// Disable the OPP.
-+    pub fn disable_opp(&self, freq: u64) -> Result<()> {
-+        // SAFETY: The requirements are satisfied by the existence of `RawDevice` and its safety
-+        // requirements.
-+        to_result(unsafe { bindings::dev_pm_opp_disable(self.dev.raw_device(), freq) })
-+    }
-+
-+    /// Registers with Energy model.
-+    #[cfg(CONFIG_OF)]
-+    pub fn of_register_em(&mut self, cpumask: &mut cpufreq::Cpumask) -> Result<()> {
-+        // SAFETY: The requirements are satisfied by the existence of `RawDevice` and its safety
-+        // requirements.
-+        to_result(unsafe {
-+            bindings::dev_pm_opp_of_register_em(self.dev.raw_device(), cpumask.as_mut_ptr())
-+        })?;
-+
-+        self.em = true;
++    fn exit(_policy: &mut cpufreq::Policy, _data: Option<Self::PData>) -> Result<()> {
 +        Ok(())
 +    }
 +
-+    // Unregisters with Energy model.
-+    #[cfg(CONFIG_OF)]
-+    fn of_unregister_em(&self) {
-+        // SAFETY: The requirements are satisfied by the existence of `RawDevice` and its safety
-+        // requirements. We registered with the EM framework earlier, it is safe to unregister now.
-+        unsafe { bindings::em_dev_unregister_perf_domain(self.dev.raw_device()) };
++    fn online(_policy: &mut cpufreq::Policy) -> Result<()> {
++        // We did light-weight tear down earlier, nothing to do here.
++        Ok(())
++    }
++
++    fn offline(_policy: &mut cpufreq::Policy) -> Result<()> {
++        // Preserve policy->data and don't free resources on light-weight
++        // tear down.
++        Ok(())
++    }
++
++    fn suspend(policy: &mut cpufreq::Policy) -> Result<()> {
++        // SAFETY: By the type invariants, we know that `self` owns a reference, so it is safe to
++        // use it now.
++        to_result(unsafe { bindings::cpufreq_generic_suspend(policy.as_ptr()) })
++    }
++
++    fn verify(data: &mut cpufreq::PolicyData) -> Result<()> {
++        // SAFETY: By the type invariants, we know that `data` owns a reference received from the C
++        // code, so it is safe to use it now.
++        to_result(unsafe { bindings::cpufreq_generic_frequency_table_verify(data.as_ptr()) })
++    }
++
++    fn target_index(policy: &mut cpufreq::Policy, index: u32) -> Result<()> {
++        let data = match policy.data::<Self::PData>() {
++            Some(data) => data,
++            None => return Err(ENOENT),
++        };
++
++        let freq = data.freq_table.freq(index.try_into().unwrap())? as u64;
++        data.opp_table.set_rate(freq * 1000)
++    }
++
++    fn get(policy: &mut cpufreq::Policy) -> Result<u32> {
++        // SAFETY: It is safe to call `cpufreq_generic_get()` for policy's CPU.
++        Ok(unsafe { bindings::cpufreq_generic_get(policy.cpu()) })
++    }
++
++    fn set_boost(_policy: &mut cpufreq::Policy, _state: i32) -> Result<()> {
++        Ok(())
++    }
++
++    fn register_em(policy: &mut cpufreq::Policy) {
++        // SAFETY: By the type invariants, we know that `self` owns a reference, so it is safe to
++        // use it now.
++        unsafe { bindings::cpufreq_register_em_with_opp(policy.as_ptr()) };
 +    }
 +}
 +
-+impl Drop for Table {
-+    fn drop(&mut self) {
-+        // SAFETY: By the type invariants, we know that `self` owns a reference, so it is safe
-+        // to relinquish it now.
-+        unsafe { bindings::dev_pm_opp_put_opp_table(self.ptr) };
++type DeviceData = device::Data<cpufreq::Registration<CPUFreqDTDevice>, (), ()>;
 +
-+        #[cfg(CONFIG_OF)]
-+        {
-+            if self.em {
-+                self.of_unregister_em();
-+            }
++struct CPUFreqDTDriver;
 +
-+            if self.of {
-+                self.remove_of();
-+            } else if let Some(cpumask) = &self.cpumask {
-+                self.remove_of_cpumask(cpumask);
-+            }
-+        }
++impl platform::Driver for CPUFreqDTDriver {
++    type Data = Arc<DeviceData>;
++
++    define_of_id_table! {(), [
++        (of::DeviceId::Compatible(b_str!("operating-points-v2")), None),
++    ]}
++
++    fn probe(_dev: &mut platform::Device, _id_info: Option<&Self::IdInfo>) -> Result<Self::Data> {
++        let data = Arc::<DeviceData>::from(kernel::new_device_data!(
++            cpufreq::Registration::new(),
++            (),
++            (),
++            "CPUFreqDT::Registration"
++        )?);
++        let flags = cpufreq::flags::NEED_INITIAL_FREQ_CHECK | cpufreq::flags::IS_COOLING_DEV;
++        let boost = true;
++
++        data.registrations()
++            .ok_or(ENXIO)?
++            .as_pinned_mut()
++            .register(c_str!("cpufreq-dt"), (), flags, boost)?;
++
++        pr_info!("CPUFreq DT driver registered\n");
++
++        Ok(data)
 +    }
 +}
 +
-+/// Operating performance point (OPP).
-+///
-+/// # Invariants
-+///
-+/// `ptr` is valid, non-null, and has a non-zero reference count. One of the references is owned by
-+/// `self`, and will be decremented when `self` is dropped.
-+#[repr(transparent)]
-+pub struct OPP(*mut bindings::dev_pm_opp);
-+
-+// SAFETY: `OPP` only holds a pointer to a C OPP, which is safe to be used from any thread.
-+unsafe impl Send for OPP {}
-+
-+// SAFETY: `OPP` only holds a pointer to a C OPP, references to which are safe to be used from any
-+// thread.
-+unsafe impl Sync for OPP {}
-+
-+impl OPP {
-+    /// Creates a new OPP instance.
-+    ///
-+    /// # Safety
-+    ///
-+    /// Callers must ensure that `ptr` is valid, and non-null.
-+    unsafe fn new(ptr: *mut bindings::dev_pm_opp) -> Self {
-+        // SAFETY: The `ptr` is guaranteed by the C code to be valid.
-+        unsafe { bindings::dev_pm_opp_get(ptr) };
-+        Self(ptr)
-+    }
-+
-+    /// Creates a new owned OPP instance.
-+    ///
-+    /// # Safety
-+    ///
-+    /// Callers must ensure that `ptr` is valid, and non-null.
-+    unsafe fn new_owned(ptr: *mut bindings::dev_pm_opp) -> Self {
-+        Self(ptr)
-+    }
-+
-+    fn as_mut_ptr(&self) -> *mut bindings::dev_pm_opp {
-+        self.0
-+    }
-+
-+    /// Adds an OPP dynamically.
-+    pub fn add(dev: &Device, mut data: Data) -> Result<()> {
-+        // SAFETY: The requirements are satisfied by the existence of `RawDevice` and its safety
-+        // requirements.
-+        to_result(unsafe { bindings::dev_pm_opp_add_dynamic(dev.raw_device(), &mut data.0) })
-+    }
-+
-+    /// Removes a dynamically added OPP.
-+    pub fn remove(dev: &Device, freq: u64) {
-+        // SAFETY: The requirements are satisfied by the existence of `RawDevice` and its safety
-+        // requirements.
-+        unsafe { bindings::dev_pm_opp_remove(dev.raw_device(), freq) };
-+    }
-+
-+    /// Returns the frequency of an OPP.
-+    pub fn freq(&self, index: Option<u32>) -> u64 {
-+        let index = index.unwrap_or(0);
-+
-+        // SAFETY: By the type invariants, we know that `self` owns a reference, so it is safe to
-+        // use it.
-+        unsafe { bindings::dev_pm_opp_get_freq_indexed(self.0, index) }
-+    }
-+
-+    /// Returns the voltage of an OPP.
-+    pub fn voltage(&self) -> u64 {
-+        // SAFETY: By the type invariants, we know that `self` owns a reference, so it is safe to
-+        // use it.
-+        unsafe { bindings::dev_pm_opp_get_voltage(self.0) }
-+    }
-+
-+    /// Returns the level of an OPP.
-+    pub fn level(&self) -> u32 {
-+        // SAFETY: By the type invariants, we know that `self` owns a reference, so it is safe to
-+        // use it.
-+        unsafe { bindings::dev_pm_opp_get_level(self.0) }
-+    }
-+
-+    /// Returns the power of an OPP.
-+    pub fn power(&self) -> u64 {
-+        // SAFETY: By the type invariants, we know that `self` owns a reference, so it is safe to
-+        // use it.
-+        unsafe { bindings::dev_pm_opp_get_power(self.0) }
-+    }
-+
-+    /// Returns the required pstate of an OPP.
-+    pub fn required_pstate(&self, index: u32) -> u32 {
-+        // SAFETY: By the type invariants, we know that `self` owns a reference, so it is safe to
-+        // use it.
-+        unsafe { bindings::dev_pm_opp_get_required_pstate(self.0, index) }
-+    }
-+
-+    /// Returns true if the OPP is turbo.
-+    pub fn is_turbo(&self) -> bool {
-+        // SAFETY: By the type invariants, we know that `self` owns a reference, so it is safe to
-+        // use it.
-+        unsafe { bindings::dev_pm_opp_is_turbo(self.0) }
-+    }
-+}
-+
-+impl Drop for OPP {
-+    fn drop(&mut self) {
-+        // SAFETY: By the type invariants, we know that `self` owns a reference, so it is safe to
-+        // relinquish it now.
-+        unsafe { bindings::dev_pm_opp_put(self.0) };
-+    }
++module_platform_driver! {
++    type: CPUFreqDTDriver,
++    name: "cpufreq_dt",
++    author: "Viresh Kumar <viresh.kumar@linaro.org>",
++    description: "Generic CPUFreq DT driver",
++    license: "GPL v2",
 +}
 -- 
 2.31.1.272.g89b43f80a514
