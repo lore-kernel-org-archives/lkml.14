@@ -1,16 +1,16 @@
 Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1460E17555C
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0712C175568
 	for <linux-kernel@vger.kernel.org>; Fri,  5 Apr 2024 21:47:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712353624; cv=none; b=MUl8EiwbMiostszwg++k8rbv6AJ4o/JX0Kcl5GIGIbthEurS0Meoo2z4vh3Onr+F+UEtA9m3fxNqmNEzhgzWoAGwWkShdWatOR8FT9Xad/2Cl6Sv+hAC1/XmswC81vMQ94NXBL5Y3z2t1mDXbt0LAQQH/6dpgD6WYqstt5VGfPo=
+	t=1712353625; cv=none; b=GSDSrqAzeLtI0O/EUn/e12Sn5/gbXZmNYyFja6Z6FQZEJZ3/KfAFHb8Brdt9rbB0R30nzuoGpI75DSJUEvHC5Sc7GsTwdiFKirMrq+x6jTy0atuoJaEPfCGgFZRK6hNw6Q49dha8A0paDucqXbEHEJ/J2RkNoRHq5hIUHDqXR60=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712353624; c=relaxed/simple;
-	bh=oSEa2gyMcGIfhQwmaPV347eueIBz6gl9/RjTI336w9c=;
+	s=arc-20240116; t=1712353625; c=relaxed/simple;
+	bh=5WQXbchr2+pcgHmnAk+za+jAZgPFVam2B/+DHZzH6iE=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=f+MrElqyeBYL/RdzIlXhWydsZtesedpxjwnYKq9DgGJdJjKhg2ljbwVdQjaOrAd1SahEL2LVCduKRHSzbCMO8QkxRsg+2U0Lt9Gq0oiRiNVtvTO+94gw1zJmPUDdGagFAoV7whxX7+bOq5cEgXfSK+5DiGoRGugv+I99pV9OCgI=
+	 MIME-Version:Content-Type; b=SO2gyUfiFXm4aHOeebdHMgYIWURWFNnf1yOboxr02+0fHD3LYAqZBrSN4XikstAih2dy5WzuxSwjgtEqMXSmrImkpdk/AVRmbaYKa2UUZDSW/jpkySJGt5YLTg7vk7PRZf3E5GEhCeWzBhiuugMxdn9HEspEcg0XAA5hDT5sbHg=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
@@ -18,16 +18,16 @@ Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
 	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
 	(Exim 4.92)
 	(envelope-from <ukl@pengutronix.de>)
-	id 1rsrOd-0003Xx-B0; Fri, 05 Apr 2024 23:46:51 +0200
+	id 1rsrOX-00030X-4w; Fri, 05 Apr 2024 23:46:45 +0200
 Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
 	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
 	(Exim 4.94.2)
 	(envelope-from <ukl@pengutronix.de>)
-	id 1rsrOc-00Ad5U-Ko; Fri, 05 Apr 2024 23:46:50 +0200
+	id 1rsrOW-00Ad3g-NM; Fri, 05 Apr 2024 23:46:44 +0200
 Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.96)
 	(envelope-from <ukl@pengutronix.de>)
-	id 1rsrOc-00FZqc-1l;
-	Fri, 05 Apr 2024 23:46:50 +0200
+	id 1rsrOW-00FZoo-23;
+	Fri, 05 Apr 2024 23:46:44 +0200
 From: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
 To: Rob Herring <robh@kernel.org>,
 	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
@@ -41,9 +41,9 @@ Cc: Pengutronix Kernel Team <kernel@pengutronix.de>,
 	linux-arm-kernel@lists.infradead.org,
 	linux-kernel@vger.kernel.org,
 	Alexander Stein <alexander.stein@ew.tq-group.com>
-Subject: [PATCH v1 34/49] ARM: dts: imx6q-pistachio: Use #pwm-cells = <3> for imx27-pwm device
-Date: Fri,  5 Apr 2024 23:42:21 +0200
-Message-ID:  <a424befaebf49475f8ce5893d688fefb267b6313.1712352665.git.u.kleine-koenig@pengutronix.de>
+Subject: [PATCH v1 06/49] ARM: dts: imx6dl-aristainetos_4: Use #pwm-cells = <3> for imx27-pwm device
+Date: Fri,  5 Apr 2024 23:41:53 +0200
+Message-ID:  <0c7ac88b2b121841dee7bbae0ee3f9ebd7a00551.1712352665.git.u.kleine-koenig@pengutronix.de>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <cover.1712352665.git.u.kleine-koenig@pengutronix.de>
 References: <cover.1712352665.git.u.kleine-koenig@pengutronix.de>
@@ -54,7 +54,7 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1137; i=u.kleine-koenig@pengutronix.de; h=from:subject:message-id; bh=oSEa2gyMcGIfhQwmaPV347eueIBz6gl9/RjTI336w9c=; b=owEBbQGS/pANAwAKAY+A+1h9Ev5OAcsmYgBmEHCYHojXZwL3pxLiEyWyfajKznlUe/hWL7DxZ Tvw4XI0PZeJATMEAAEKAB0WIQQ/gaxpOnoeWYmt/tOPgPtYfRL+TgUCZhBwmAAKCRCPgPtYfRL+ TlfCB/9oMJZCZJLaeRFIc2hdhidMhFFoZGge/qwrAbqejvsYiywWcf8rJxtmOSghFdwhcILCdoV B1tu8UqnH915aKKe29GrzmkNnFjC00cEqHS4JowK2Z4+9N+z7RkDh4WQdcMkZAb6BvEm20j1zt+ bL0rxe9be5T9osBPsG8Zd9lyvjyqqiytRAnEnaIEaZtNiLw0Dar0r7CWQI2sK+lYGnIGylbRYNM 4D3Ex5iTl+RqgBiM8yiwZUuaq1fJziKI4SJDRD+4zRStGbemMLpX9kBx96AA9ymxnSQ0owuj+qa isgBhvNd6JxUe4Wu2ASRXveI9wanBqX9u9ybbQxfgFa9Ncma
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1122; i=u.kleine-koenig@pengutronix.de; h=from:subject:message-id; bh=5WQXbchr2+pcgHmnAk+za+jAZgPFVam2B/+DHZzH6iE=; b=owGbwMvMwMXY3/A7olbonx/jabUkhjSBAo242Vtjfh8y1hISmmsTJ9Y36agn0+vESUcuBIS/C ax7+o6/k9GYhYGRi0FWTJHFvnFNplWVXGTn2n+XYQaxMoFMYeDiFICJBJ9m/8NZvshkpfoG5hcT hFkc18yOOlhaYXP/3e5JXrNEvpYUN62WsA7l+dtQON+I93m++6vpnekcL9LWvT3bFarfohMZt3K PHG/gAdan8tZ7mmpXe69mdEsqUVlTc+tN+hERiQl+2zmU+PcnrTw4tcS5TmVH4ISb7XtyDiXKNN 75fXJj1ZnKZZ7nhPaJ2ac+4BVJkg9M6OzlsQ2ec/b234TQhUpmL1qVLwcFO6h16qvPyqi5/nLq5 mbf1M3TJ/AXx2dcPpYZprr3+U+lKB9nKRVtJsEFP8rfC7TefG7t/Xxju0xfHE+cWqCf6Lmzc5Oj Cucf4N5rvV3k7ob2/btsdnpnnPHQ+vNVp/PB9Q3BH9sZAA==
 X-Developer-Key: i=u.kleine-koenig@pengutronix.de; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
 Content-Transfer-Encoding: 8bit
 X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
@@ -66,35 +66,34 @@ The binding dictates using 3 pwm-cells. Adhere to that.
 
 This fixes the following dtbs_check warning:
 
-	arch/arm/boot/dts/nxp/imx/imx6q-pistachio.dtb: pwm@2080000: #pwm-cells:0:0: 3 was expected
+	arch/arm/boot/dts/nxp/imx/imx6dl-aristainetos_4.dtb: pwm@2080000: #pwm-cells:0:0: 3 was expected
 		from schema : http://devicetree.org/schemas/pwm/imx-pwm.yaml#
 
 Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
 ---
- arch/arm/boot/dts/nxp/imx/imx6q-pistachio.dts | 3 +--
+ arch/arm/boot/dts/nxp/imx/imx6dl-aristainetos_4.dts | 3 +--
  1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/arch/arm/boot/dts/nxp/imx/imx6q-pistachio.dts b/arch/arm/boot/dts/nxp/imx/imx6q-pistachio.dts
-index 46c6b96d8073..56b77cc0af2b 100644
---- a/arch/arm/boot/dts/nxp/imx/imx6q-pistachio.dts
-+++ b/arch/arm/boot/dts/nxp/imx/imx6q-pistachio.dts
-@@ -124,7 +124,7 @@ sound {
+diff --git a/arch/arm/boot/dts/nxp/imx/imx6dl-aristainetos_4.dts b/arch/arm/boot/dts/nxp/imx/imx6dl-aristainetos_4.dts
+index cc861a43eb58..a5ac79346854 100644
+--- a/arch/arm/boot/dts/nxp/imx/imx6dl-aristainetos_4.dts
++++ b/arch/arm/boot/dts/nxp/imx/imx6dl-aristainetos_4.dts
+@@ -14,7 +14,7 @@ / {
  
- 	backlight_lvds: backlight-lvds {
+ 	backlight {
  		compatible = "pwm-backlight";
--		pwms = <&pwm1 0 50000>;
-+		pwms = <&pwm1 0 50000 0>;
- 		brightness-levels = <
- 			0  /*1  2  3  4  5  6*/  7  8  9
- 			10 11 12 13 14 15 16 17 18 19
-@@ -571,7 +571,6 @@ lvds0_out: endpoint {
+-		pwms = <&pwm1 0 5000000>;
++		pwms = <&pwm1 0 5000000 0>;
+ 		brightness-levels = <0 4 8 16 32 64 128 255>;
+ 		default-brightness-level = <7>;
+ 		enable-gpios = <&gpio1 2 GPIO_ACTIVE_HIGH>;
+@@ -79,6 +79,5 @@ &ipu1_di0_disp0 {
  };
  
  &pwm1 {
 -	#pwm-cells = <2>;
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_pwm1>;
  	status = "okay";
+ };
 -- 
 2.43.0
 
