@@ -1,45 +1,43 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4011216C6AE
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57B7016C6B1
 	for <linux-kernel@vger.kernel.org>; Fri,  5 Apr 2024 11:58:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712318306; cv=none; b=dJc//wwHbHdvHChvf+mxpO2mYYzs+lI2bymDY3y4UFfsJulNUS9rASrUbmgtbVVooxK0fEaBc+wC6vMlGRmLNc6D5e0Rs16parDyTt6CbiU6P+jCvyXnpqSiGVmbThnbMKapu+IquXb3cXRDokzUybyJZWheFAKssqOAqMmqvhw=
+	t=1712318308; cv=none; b=Ohpsr6HlbTts0Urc/McU9/ofjzQo023V4K2oHjr/AawSaTi0Vgj84oXWBZXlQMHvAowuOmsplzcxkxFlP+jFi63TnVvDfJzs88QgGWo/uB1gQqq5q9XwKpyyY+j+18J5z9yeywzC01pCCQ2UNu9C+VOTa7fI0hFrZCbycOq5GKA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712318306; c=relaxed/simple;
-	bh=MVPfw12aKDAKYxBgmyfiqiiyclWrH3J9VU7NBfl7yag=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=JV8+LEIyrSaPam1SANerHvgTh6OZDeiNsZaw7uK43TiO06jwFemRVhKdHoa17DN8Fnv5CZ6M9pPtQ6ikOMC0j9ggg4zHOoBuJLXT19Guh1bhtPGZ8LnM422QV9YAOhuangpekRoXgTQ8oryJJ37hmSWTdepSL0p1NtkiH6M6Jdw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=YNlN6w8D; arc=none smtp.client-ip=170.10.133.124
+	s=arc-20240116; t=1712318308; c=relaxed/simple;
+	bh=2JWd/jbsS4JWnaAnGX+DxvfAkF7VrJqaJ4JcNlZZdG8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Ikceei6S60MkvGc/fXvLQEUCc4klqfKFUaykEhnr3spdev9YBGYWG4F1gVaG0kMFdJmqatfV+zUrAxB7ws9FxpcYbb7iM8uj/6sWsW0NS6WfMeOPjsjuMv+p9jM5NYh+wgCiQJXvV0DiH6a4XI7ogJGSNF49wKbu4j1E9R5iYeI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=UF8NNnVz; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YNlN6w8D"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UF8NNnVz"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
 	s=mimecast20190719; t=1712318304;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=PYlVlmhvJPdz+cTS0GmxjcvjKIkp+1zDoZOzzNIMhco=;
-	b=YNlN6w8DWj2tHYEhPnlZTjJDAT5rIUMHYTzkyGZGn2RTFtja+vhsy+JFCg+lotzLqk7WCj
-	71tkCzOH1gOGjMDApLFS6Qnb4jATaqhgmf0pczWsGjThXAzy5gHCKuxbvGYY05yDfPHawP
-	g1X+dZd8TXhb+giz/gjX5Yc/Tbso4PI=
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=W+x0+CoZa6QVpu1rtgd+fH2pAb0xlu8sJLIuEb6A4kU=;
+	b=UF8NNnVzDf/DQIBknZnHp0hw1idQ4fgvBp96CrPquMIa30b2eepda8I+08PWwzRVs8szYi
+	0QHlBqr024GiHJWAOtBErRW+J2qPZ/hxlb95EA+FXJrK3mq/8UQt7lB17w70aRvBO+KIZu
+	mDtXOC9US4jYuhC9Ax1VU0MYiCN8rA0=
 Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
  by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-94-jWBq89b1PjOkiIzryzMcEA-1; Fri,
- 05 Apr 2024 07:58:21 -0400
-X-MC-Unique: jWBq89b1PjOkiIzryzMcEA-1
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-589-LvYJznJmMXOAGq3bGEzUmg-1; Fri,
+ 05 Apr 2024 07:58:19 -0400
+X-MC-Unique: LvYJznJmMXOAGq3bGEzUmg-1
 Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.rdu2.redhat.com [10.11.54.2])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 07BB2382C473;
-	Fri,  5 Apr 2024 11:58:20 +0000 (UTC)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 675AB1C05AF2;
+	Fri,  5 Apr 2024 11:58:18 +0000 (UTC)
 Received: from virtlab701.virt.lab.eng.bos.redhat.com (virtlab701.virt.lab.eng.bos.redhat.com [10.19.152.228])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 470FC40C6CB5;
-	Fri,  5 Apr 2024 11:58:19 +0000 (UTC)
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 20CB240C6CB5;
+	Fri,  5 Apr 2024 11:58:16 +0000 (UTC)
 From: Paolo Bonzini <pbonzini@redhat.com>
 To: linux-kernel@vger.kernel.org,
 	kvm@vger.kernel.org
@@ -63,11 +61,9 @@ Cc: Marc Zyngier <maz@kernel.org>,
 	linux-mm@kvack.org,
 	linux-trace-kernel@vger.kernel.org,
 	linux-perf-users@vger.kernel.org
-Subject: [PATCH 2/4] KVM: remove unused argument of kvm_handle_hva_range()
-Date: Fri,  5 Apr 2024 07:58:13 -0400
-Message-ID: <20240405115815.3226315-3-pbonzini@redhat.com>
-In-Reply-To: <20240405115815.3226315-1-pbonzini@redhat.com>
-References: <20240405115815.3226315-1-pbonzini@redhat.com>
+Subject: [PATCH 0/4] KVM, mm: remove the .change_pte() MMU notifier and set_pte_at_notify()
+Date: Fri,  5 Apr 2024 07:58:11 -0400
+Message-ID: <20240405115815.3226315-1-pbonzini@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -78,52 +74,66 @@ Content-Type: text/plain
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.2
 
-The only user was kvm_mmu_notifier_change_pte(), which is now gone.
+The .change_pte() MMU notifier callback was intended as an optimization
+and for this reason it was initially called without a surrounding
+mmu_notifier_invalidate_range_{start,end}() pair.  It was only ever
+implemented by KVM (which was also the original user of MMU notifiers)
+and the rules on when to call set_pte_at_notify() rather than set_pte_at()
+have always been pretty obscure.
 
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
----
- virt/kvm/kvm_main.c | 7 +------
- 1 file changed, 1 insertion(+), 6 deletions(-)
+It may seem a miracle that it has never caused any hard to trigger
+bugs, but there's a good reason for that: KVM's implementation has
+been nonfunctional for a good part of its existence.  Already in
+2012, commit 6bdb913f0a70 ("mm: wrap calls to set_pte_at_notify with
+invalidate_range_start and invalidate_range_end", 2012-10-09) changed the
+.change_pte() callback to occur within an invalidate_range_start/end()
+pair; and because KVM unmaps the sPTEs during .invalidate_range_start(),
+.change_pte() has no hope of finding a sPTE to change.
 
-diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
-index 2fcd9979752a..9701888811ad 100644
---- a/virt/kvm/kvm_main.c
-+++ b/virt/kvm/kvm_main.c
-@@ -595,8 +595,6 @@ static void kvm_null_fn(void)
- }
- #define IS_KVM_NULL_FN(fn) ((fn) == (void *)kvm_null_fn)
- 
--static const union kvm_mmu_notifier_arg KVM_MMU_NOTIFIER_NO_ARG;
--
- /* Iterate over each memslot intersecting [start, last] (inclusive) range */
- #define kvm_for_each_memslot_in_hva_range(node, slots, start, last)	     \
- 	for (node = interval_tree_iter_first(&slots->hva_tree, start, last); \
-@@ -682,14 +680,12 @@ static __always_inline kvm_mn_ret_t __kvm_handle_hva_range(struct kvm *kvm,
- static __always_inline int kvm_handle_hva_range(struct mmu_notifier *mn,
- 						unsigned long start,
- 						unsigned long end,
--						union kvm_mmu_notifier_arg arg,
- 						gfn_handler_t handler)
- {
- 	struct kvm *kvm = mmu_notifier_to_kvm(mn);
- 	const struct kvm_mmu_notifier_range range = {
- 		.start		= start,
- 		.end		= end,
--		.arg		= arg,
- 		.handler	= handler,
- 		.on_lock	= (void *)kvm_null_fn,
- 		.flush_on_ret	= true,
-@@ -880,8 +876,7 @@ static int kvm_mmu_notifier_clear_flush_young(struct mmu_notifier *mn,
- {
- 	trace_kvm_age_hva(start, end);
- 
--	return kvm_handle_hva_range(mn, start, end, KVM_MMU_NOTIFIER_NO_ARG,
--				    kvm_age_gfn);
-+	return kvm_handle_hva_range(mn, start, end, kvm_age_gfn);
- }
- 
- static int kvm_mmu_notifier_clear_young(struct mmu_notifier *mn,
+Therefore, all the code for .change_pte() can be removed from both KVM
+and mm/, and set_pte_at_notify() can be replaced with just set_pte_at().
+
+Please review!  Also feel free to take the KVM patches through the mm
+tree, as I don't expect any conflicts.
+
+Thanks,
+
+Paolo
+
+Paolo Bonzini (4):
+  KVM: delete .change_pte MMU notifier callback
+  KVM: remove unused argument of kvm_handle_hva_range()
+  mmu_notifier: remove the .change_pte() callback
+  mm: replace set_pte_at_notify() with just set_pte_at()
+
+ arch/arm64/kvm/mmu.c                  | 34 -----------------
+ arch/loongarch/include/asm/kvm_host.h |  1 -
+ arch/loongarch/kvm/mmu.c              | 32 ----------------
+ arch/mips/kvm/mmu.c                   | 30 ---------------
+ arch/powerpc/include/asm/kvm_ppc.h    |  1 -
+ arch/powerpc/kvm/book3s.c             |  5 ---
+ arch/powerpc/kvm/book3s.h             |  1 -
+ arch/powerpc/kvm/book3s_64_mmu_hv.c   | 12 ------
+ arch/powerpc/kvm/book3s_hv.c          |  1 -
+ arch/powerpc/kvm/book3s_pr.c          |  7 ----
+ arch/powerpc/kvm/e500_mmu_host.c      |  6 ---
+ arch/riscv/kvm/mmu.c                  | 20 ----------
+ arch/x86/kvm/mmu/mmu.c                | 54 +--------------------------
+ arch/x86/kvm/mmu/spte.c               | 16 --------
+ arch/x86/kvm/mmu/spte.h               |  2 -
+ arch/x86/kvm/mmu/tdp_mmu.c            | 46 -----------------------
+ arch/x86/kvm/mmu/tdp_mmu.h            |  1 -
+ include/linux/kvm_host.h              |  2 -
+ include/linux/mmu_notifier.h          | 44 ----------------------
+ include/trace/events/kvm.h            | 15 --------
+ kernel/events/uprobes.c               |  5 +--
+ mm/ksm.c                              |  4 +-
+ mm/memory.c                           |  7 +---
+ mm/migrate_device.c                   |  8 +---
+ mm/mmu_notifier.c                     | 17 ---------
+ virt/kvm/kvm_main.c                   | 50 +------------------------
+ 26 files changed, 10 insertions(+), 411 deletions(-)
+
 -- 
 2.43.0
-
 
