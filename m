@@ -1,118 +1,104 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1B2A16F28F;
-	Fri,  5 Apr 2024 14:31:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63AD879F3;
+	Fri,  5 Apr 2024 14:32:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712327496; cv=none; b=N86aw0/juGhyg26ouclOvLjH3MnRNg4APYoGApwcGzgDFWtqkOanH7zj+OBG2NBmWg+IrJ9sm9+XFD4wukX6BaahCzrBEDISBbHaJT142jsVP8XPMGcOBrogSVKcSGTkRCGVz0vxBse+6FFM6BwY1C8nwa4DKGWZuuzfTpHjvzY=
+	t=1712327568; cv=none; b=js7GfxzPfZMOHB6rDc1rzrxySkJNcz1qZr99gbPYogqhzO5yoiMbIkzAGCzrTd9Hej8bri89+pLFiz1uyCuQgV/Bu2pESrftPfkfRsUTZrLXQOZ+t8T9hWfLRXR9/77v9y6CWWIhjGyldH1Kfpo61FthhyLgLKfjhh68JzfJ4rw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712327496; c=relaxed/simple;
-	bh=REmT479AFnCCcCTlpWSmaYrzgIUHjpteGLS0bjBDaMI=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=ZCMgA97hPphSTyKl1o13HGtbRYZJbWACpr+zo2XblBoc82H5/AEPeve1dyOuNCckWXW5pD5b+BVll3xeXiFseYSMqrSZyh4nHkjJOydZvPgqSBhCuqAu7LuptoOmp0qJj9FNAUdii6Msh2yypn9Aurl26Im1wfdBmCkMGuarbpA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Jd4JG8EP; arc=none smtp.client-ip=198.175.65.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1712327568; c=relaxed/simple;
+	bh=+oo3aoyeQYFyc18BS/Ko8Z7rugy4H+kTpGy/XFlZNaw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=MtN2oXrM8GFl7o5AfvgJy9vZEgwWGSywmQmnVTRM/6UZOe6YDoE1Orm0gH4aJAwQ11AtdMO+TALE5SXcEAube5S9udZooyxYwizswvM1nKo7MI2byUIzUn+Z7njiElSlODHzG78Elzy0AZ5Pczeoa4eJpHDs3BJ6YOAleL2kHCo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ggW49QXl; arc=none smtp.client-ip=209.85.208.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Jd4JG8EP"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1712327495; x=1743863495;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=REmT479AFnCCcCTlpWSmaYrzgIUHjpteGLS0bjBDaMI=;
-  b=Jd4JG8EP7YHUnLe55tF3hAayLQoqofxADkK7DXC0/9T5TVO2gUtn0iuR
-   1q9hAwqY8IXxJwVYewf1fmrNsOnvtlHYqHp4rtJr1zJoTGERjAV23hcHk
-   /Ry/R6cfUY/jf762CEoXxM7K47LoPS1gC0NJgMLRA0uH9mF9g2jU3neii
-   KO8FuNEF+1Xxdv4d7yuBLFO6nc+EZGTWFQicRZD3MOj4GP/f5s0kSVhdl
-   x+6asxAuaNMtDMp+dB6caBut/ASwfjCn+NFjO6UWCK38LsSquJNOM2Y1A
-   vOdvV7qRin92XsOpFpAhZSp6cj2RiH/DghAph3J+AydA7pbGTSQOcJywo
-   w==;
-X-CSE-ConnectionGUID: xZLblvNlRxGeB8zdggtnjA==
-X-CSE-MsgGUID: RSnP59z6RhC4szRvjBiuKQ==
-X-IronPort-AV: E=McAfee;i="6600,9927,11035"; a="11476450"
-X-IronPort-AV: E=Sophos;i="6.07,181,1708416000"; 
-   d="scan'208";a="11476450"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Apr 2024 07:31:34 -0700
-X-CSE-ConnectionGUID: hG8APWZARMy+KffIgepD6w==
-X-CSE-MsgGUID: 7Z8NtXy/R1S6q3/uPejMug==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,181,1708416000"; 
-   d="scan'208";a="23817555"
-Received: from kanliang-dev.jf.intel.com ([10.165.154.102])
-  by fmviesa004.fm.intel.com with ESMTP; 05 Apr 2024 07:31:33 -0700
-From: kan.liang@linux.intel.com
-To: peterz@infradead.org,
-	mingo@redhat.com,
-	acme@kernel.org,
-	namhyung@kernel.org,
-	irogers@google.com,
-	adrian.hunter@intel.com,
-	alexander.shishkin@linux.intel.com,
-	linux-kernel@vger.kernel.org
-Cc: Kan Liang <kan.liang@linux.intel.com>,
-	"Bayduraev, Alexey V" <alexey.v.bayduraev@intel.com>,
-	stable@vger.kernel.org
-Subject: [PATCH] perf/x86/intel/ds: Fix non 0 retire latency on Raptorlake
-Date: Fri,  5 Apr 2024 07:30:32 -0700
-Message-Id: <20240405143032.1243201-1-kan.liang@linux.intel.com>
-X-Mailer: git-send-email 2.35.1
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ggW49QXl"
+Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-56e2e09fc27so1464662a12.0;
+        Fri, 05 Apr 2024 07:32:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1712327565; x=1712932365; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=BS81x8TgiZotkdmg7KJCaBTl5pwcK5PQXZyvnJwjgzU=;
+        b=ggW49QXlevp0AievJMN1YSQ2eBmP8twPi5t7HqxnCoVRNQaOJadgQOsRfxu8/cZHiN
+         Ei+/LALmMcZzZ1BjXELKV8FJFiFqX+oPS5c65IiFeHWGfYpgG0Bdk1u45W1J2IYt4B3o
+         c3LSfZXk/A6hafj0PW7r9ZnWLZjSSOIP4IjQBUBKMbEtWl849hx/xCG3cHe4Dj2BHTkp
+         G39ENaX+b6/ePlSBMFsTucm+u7enrvVU5EEsPHn9iNUN3A0FkbMahtPFJvN3Fzqkww3O
+         EvbmNr9hK1PHJgI1dn0YcFmCJXFnry+ym9AGEu/VghQ/VtIJFJsdLwmRtbOaKBQPs0Yq
+         Pjpg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712327565; x=1712932365;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=BS81x8TgiZotkdmg7KJCaBTl5pwcK5PQXZyvnJwjgzU=;
+        b=FMZJA4mEDi9wBgQoAlasqCLJ++URUcWX5nDn9FZ0re/gp4+Ry8XqXenmMW/eVDXvOH
+         yHgV7sYPakg3D5VoR9sDbAcuSLu3QD2vn6TlV/oQvz/xgljpzYTdPInGdmOuacYVZZS7
+         MkBBhd/mTFgeGkkv7IDHTIGRelvTDiqNl4jzaLRTemCeqoBq20d+bOsWgu0TssR7BkPU
+         gksd5ZJcffclKkQBUvv2TZK7Ytl3VKnpRBBItuCASaztzZg3ivDTmxinQSNB8FFZCChr
+         /qG3x5UWx2q3+QLnTFdjI+FCJ5zUGRt65jlKEicNRoD/ad+ddPHUfR8ASdAO9qhd5f5H
+         pryA==
+X-Forwarded-Encrypted: i=1; AJvYcCXsPC+YufjxWgRPhvfNMT3D1lkMD0M/wmH8q018RneUQgCPPdSxKs9VsNYJYmDqJxq6pQgvIzu/69qcKOHoctpnbnTD9LVTm/T9kcsO
+X-Gm-Message-State: AOJu0YyG1ro7r4Lhc3++pfjwC0/fKXtCzAy0c/b05Gi7zMwJkZat7aNn
+	itnqhR+Qv8GZYKWm8d86qoNPMNcuZBTuhcXKDesADZOyIsfv451+
+X-Google-Smtp-Source: AGHT+IHknrErSLdjdwLAoXYuvvbyExzg4+NqILRcgR1gVkWXerNNZU/EBW3H5xt1vN3N51pBrlnpsQ==
+X-Received: by 2002:a50:bb29:0:b0:56d:c85a:7893 with SMTP id y38-20020a50bb29000000b0056dc85a7893mr70911ede.8.1712327564348;
+        Fri, 05 Apr 2024 07:32:44 -0700 (PDT)
+Received: from skbuf ([2a02:2f04:d700:2000::b2c])
+        by smtp.gmail.com with ESMTPSA id h1-20020a0564020e8100b005682a0e915fsm841041eda.76.2024.04.05.07.32.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 05 Apr 2024 07:32:43 -0700 (PDT)
+Date: Fri, 5 Apr 2024 17:32:40 +0300
+From: Vladimir Oltean <olteanv@gmail.com>
+To: Pawel Dembicki <paweldembicki@gmail.com>
+Cc: netdev@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>,
+	Simon Horman <horms@kernel.org>,
+	Russell King <linux@armlinux.org.uk>, Andrew Lunn <andrew@lunn.ch>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Florian Fainelli <f.fainelli@gmail.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Claudiu Manoil <claudiu.manoil@nxp.com>,
+	Alexandre Belloni <alexandre.belloni@bootlin.com>,
+	UNGLinuxDriver@microchip.com, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next v8 01/16] net: dsa: vsc73xx: use
+ read_poll_timeout instead delay loop
+Message-ID: <20240405143240.rwm5klyy7nm7lvdm@skbuf>
+References: <20240403103734.3033398-1-paweldembicki@gmail.com>
+ <20240403103734.3033398-2-paweldembicki@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240403103734.3033398-2-paweldembicki@gmail.com>
 
-From: Kan Liang <kan.liang@linux.intel.com>
+On Wed, Apr 03, 2024 at 12:37:17PM +0200, Pawel Dembicki wrote:
+> Switch the delay loop during the Arbiter empty check from
+> vsc73xx_adjust_link() to use read_poll_timeout(). Functionally,
+> one msleep() call is eliminated at the end of the loop in the timeout
+> case.
+> 
+> As Russell King suggested:
+> 
+> "This [change] avoids the issue that on the last iteration, the code reads
+> the register, tests it, finds the condition that's being waiting for is
+> false, _then_ waits and end up printing the error message - that last
+> wait is rather useless, and as the arbiter state isn't checked after
+> waiting, it could be that we had success during the last wait."
+> 
+> Suggested-by: Russell King <linux@armlinux.org.uk>
+> Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+> Reviewed-by: Florian Fainelli <florian.fainelli@broadcom.com>
+> Signed-off-by: Pawel Dembicki <paweldembicki@gmail.com>
+> ---
 
-A non-0 retire latency can be observed on a Raptorlake which doesn't
-support the retire latency feature.
-By design, the retire latency shares the PERF_SAMPLE_WEIGHT_STRUCT
-sample type with other types of latency. That could avoid adding too
-many different sample types to support all kinds of latency. For the
-machine which doesn't support some kind of latency, 0 should be
-returned.
-
-Perf doesn’t clear/init all the fields of a sample data for the sake
-of performance. It expects the later perf_{prepare,output}_sample() to
-update the uninitialized field. However, the current implementation
-doesn't touch the field of the retire latency if the feature is not
-supported. The memory garbage is dumped into the perf data.
-
-Clear the retire latency if the feature is not supported.
-
-Fixes: c87a31093c70 ("perf/x86: Support Retire Latency")
-Reported-by: "Bayduraev, Alexey V" <alexey.v.bayduraev@intel.com>
-Tested-by: "Bayduraev, Alexey V" <alexey.v.bayduraev@intel.com>
-Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
-Cc: stable@vger.kernel.org
----
- arch/x86/events/intel/ds.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
-
-diff --git a/arch/x86/events/intel/ds.c b/arch/x86/events/intel/ds.c
-index f95cca6b632a..838f3e23bce9 100644
---- a/arch/x86/events/intel/ds.c
-+++ b/arch/x86/events/intel/ds.c
-@@ -1989,8 +1989,12 @@ static void setup_pebs_adaptive_sample_data(struct perf_event *event,
- 	set_linear_ip(regs, basic->ip);
- 	regs->flags = PERF_EFLAGS_EXACT;
- 
--	if ((sample_type & PERF_SAMPLE_WEIGHT_STRUCT) && (x86_pmu.flags & PMU_FL_RETIRE_LATENCY))
--		data->weight.var3_w = format_size >> PEBS_RETIRE_LATENCY_OFFSET & PEBS_LATENCY_MASK;
-+	if (sample_type & PERF_SAMPLE_WEIGHT_STRUCT) {
-+		if (x86_pmu.flags & PMU_FL_RETIRE_LATENCY)
-+			data->weight.var3_w = format_size >> PEBS_RETIRE_LATENCY_OFFSET & PEBS_LATENCY_MASK;
-+		else
-+			data->weight.var3_w = 0;
-+	}
- 
- 	/*
- 	 * The record for MEMINFO is in front of GP
--- 
-2.35.1
-
+Reviewed-by: Vladimir Oltean <olteanv@gmail.com>
