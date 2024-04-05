@@ -1,76 +1,115 @@
-Received: from mail-io1-f70.google.com (mail-io1-f70.google.com [209.85.166.70])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from e3i57.smtp2go.com (e3i57.smtp2go.com [158.120.84.57])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A09B16F83A
-	for <linux-kernel@vger.kernel.org>; Fri,  5 Apr 2024 15:28:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.70
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAA2816F82A
+	for <linux-kernel@vger.kernel.org>; Fri,  5 Apr 2024 15:29:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=158.120.84.57
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712330894; cv=none; b=tV0ILLGjOVVqLy9mirVjN0BN0SFglvPyoiIrC28T0KHK+ur5Zyrlyt1cSvz6l0u9Olb2bC1z0af4g3GZW5Ctv2wr03YebBwHuFwY5iXsQ6iDuqzlN7fcT4ZsMfraCax69Umq3O48jwGn2QKvQMj3WtFxqRjJarBhSq0WpjMw1BM=
+	t=1712330949; cv=none; b=Abk/BKPH+CKepuVxIffMOpMKJ0XPfgklRx4JmDLsXRHFNG+9F+d0wH2YeuFokuRtsX3yjy+32sdG3t0Xd7q6X17KsAR62b4EqNhEDe2Ec6z7pP9c37h0RO62xpeXaZIT4mwc6nOknL3C0IGYOc2DUpztYiIHCzBut0aCJaQFAQk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712330894; c=relaxed/simple;
-	bh=Ua4UH4I4k/JeMFUwY40iLcsmX8BFMt/ki6Da//Nmsic=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=GU2MUTUYKTnL3Al2QZKSLsD0fdCCtPsTOFkZSl6t9DnmMFzla599kgFYE453I27tpsLuZlGP8GqlUW+mF/ZI74mAvuQjt5/NEd8tJ8/za5ek9YcY3tlLohpXhoo1E8O6kZ+q30WiSlLCOGvWgWkJdoeG02pjyPpKvDfghnT5fB0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.70
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f70.google.com with SMTP id ca18e2360f4ac-7cf265b30e2so234925939f.1
-        for <linux-kernel@vger.kernel.org>; Fri, 05 Apr 2024 08:28:13 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712330892; x=1712935692;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=42yxhYql2V3Voi1huQg+HWg+/wPkrovGkKGYzhUjPcg=;
-        b=Y5uhpWje7tb3htHWYXge7giZwqNmCUEsRxpkuqco45iplVnHoUFIK4fxJ6l22PK3/C
-         C/kLneVOdx0rSXnCl2HBjSS7nRI/V+RM7bRzbBYmyzb3g3U8/9ks8gYxThxc8Qbq6vdY
-         8qcLgxvgkkYkhw6xpAUC2ci5ufM3IM3mUdMmh6RWl+GZ+Q0BTcDDUCNbeIjEdGr29kXD
-         6nrqja0AFNvEE9zQPvQbEwxh3llaEEobSaUfbGScgAEdSY2ZP8KIvJnnHz2d72oHEDSP
-         9K34NhfivxPqaYUDzVzzN/+PBDuPg0aXPKJsk1Sw0iw/FHm9/m63MdQGQUCbZZIpgANO
-         mY2A==
-X-Gm-Message-State: AOJu0YyVnn8o3dmv5IO3Y0gyk+XKTRz1TAazxNKT6ecDw/pd2d+kaCR8
-	R/BAy8H/225PQTTPkiaaoMMo9wDxnaoSvd9+KVgcJBDInK98BEBRzO17lOBUlqup+Z7RrbWw0WJ
-	GoAHwiRoEncNId9eb4nJLel42u/WJENxDElHZAiHm4zvFxAnEZj+plXEAeg==
-X-Google-Smtp-Source: AGHT+IFiVliGLH/CsHssqeRbqQj+tT3bVSC1Mc2+PPB4jxYcGYCdFEHXyhA97uZLAaUfspN2bkW4128na2xZIrx8jlIiZ7nvlt0N
+	s=arc-20240116; t=1712330949; c=relaxed/simple;
+	bh=yEXd6R2RFIyAkUmeFULIOxy0s9OfDiNnoGFMw55jKdY=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=mmZILIwWc+M0+lZHSs+xKtdPllhhAFrkMtB3FC//3AXwkSZSxe065UQKOKUUfpw0g2YjixImSODBKxkogFeaF8mgXJVkOyu9OSB8oCoksFTi0IW5pq4GrHhyM8Qt5KUV7VBcVy+h2fZH2FJbbdj93BwCPRW5nbEcKG2bI2QyfF8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=asem.it; spf=pass smtp.mailfrom=em1174574.asem.it; dkim=pass (2048-bit key) header.d=smtpcorp.com header.i=@smtpcorp.com header.b=bAGlnnUw; dkim=pass (2048-bit key) header.d=asem.it header.i=@asem.it header.b=PSdFMBzG; arc=none smtp.client-ip=158.120.84.57
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=asem.it
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=em1174574.asem.it
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=smtpcorp.com header.i=@smtpcorp.com header.b="bAGlnnUw";
+	dkim=pass (2048-bit key) header.d=asem.it header.i=@asem.it header.b="PSdFMBzG"
+Received: from [10.86.249.198] (helo=asas054.asem.intra)
+	by smtpcorp.com with esmtpa (Exim 4.96.1-S2G)
+	(envelope-from <f.suligoi@asem.it>)
+	id 1rslV0-04gIYl-1e;
+	Fri, 05 Apr 2024 15:29:02 +0000
+Received: from flavio-x.asem.intra ([172.16.18.47]) by asas054.asem.intra with Microsoft SMTPSVC(10.0.14393.4169);
+	 Fri, 5 Apr 2024 17:29:01 +0200
+From: Flavio Suligoi <f.suligoi@asem.it>
+To: Alexandre Torgue <alexandre.torgue@foss.st.com>,
+	Jose Abreu <joabreu@synopsys.com>,
+	"David S . Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konrad.dybcio@linaro.org>,
+	Giuseppe Cavallaro <peppe.cavallaro@st.com>
+Cc: netdev@vger.kernel.org,
+	linux-stm32@st-md-mailman.stormreply.com,
+	linux-arm-kernel@lists.infradead.org,
+	devicetree@vger.kernel.org,
+	imx@lists.linux.dev,
+	linux-arm-msm@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Flavio Suligoi <f.suligoi@asem.it>
+Subject: [PATCH 0/6] Remove stmmac tx-sched-sp property from documentation and DT
+Date: Fri,  5 Apr 2024 17:27:54 +0200
+Message-Id: <20240405152800.638461-1-f.suligoi@asem.it>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6638:1501:b0:480:ee35:85fa with SMTP id
- b1-20020a056638150100b00480ee3585famr66397jat.1.1712330892524; Fri, 05 Apr
- 2024 08:28:12 -0700 (PDT)
-Date: Fri, 05 Apr 2024 08:28:12 -0700
-In-Reply-To: <00000000000003b4af060de27f6b@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000096521906155b1ad2@google.com>
-Subject: Re: [syzbot] [PATCH net] nfc: nci: Fix uninit-value in nci_rx_work
-From: syzbot <syzbot+d7b4dc6cd50410152534@syzkaller.appspotmail.com>
-To: linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-OriginalArrivalTime: 05 Apr 2024 15:29:01.0370 (UTC) FILETIME=[FC3A11A0:01DA876D]
+X-smtpcorp-track: 1rs_V004gmY_1-.Eui6jfSQrAwkQ
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=smtpcorp.com;
+ i=@smtpcorp.com; q=dns/txt; s=a1-4; t=1712330944; h=feedback-id :
+ x-smtpcorp-track : date : message-id : to : subject : from : reply-to
+ : sender : list-unsubscribe;
+ bh=PPveenjhvhYMsU4A99FqUOwm3FtKhb+PERao04VTYEk=;
+ b=bAGlnnUwIN3ZJKkrzm2jVnPSYl5POO5zE3nXE6ZXfn54ht0+4Q42Vm4zg8iswy7Ri+K6j
+ jE495Wwn7xqLjEr0QMHo4xXGD/QqZgjTjOngMQYrpviMCM8S+O/h+1/oFuzpKOHZNISECZr
+ xd0bbS0aiwAXmbn0x8Ms0cfSjMBcRomc9HyZdofTMIuMsmWvR4XP4UvrcmNE1IlmESZQV4c
+ 7PZMtDyeBwUNmCI6Ucn3dnvyM0aUOQegiw27z5ncOCqj+HIF7ewQ+R4dgEu3zLZzj178Ip1
+ jxjaFclxVAjMVBS3MQcqtEnByJoFsGKTd9i6VFNz2sMGIhi0qCItMDv2c/tw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=asem.it;
+ i=@asem.it; q=dns/txt; s=s1174574; t=1712330944; h=from : subject : to
+ : message-id : date; bh=PPveenjhvhYMsU4A99FqUOwm3FtKhb+PERao04VTYEk=;
+ b=PSdFMBzGzUfbj1EL/TWfgJzR+3E/I4HG9eR94sLd8gEKLhKUsEaKDCPKVy07Z8xnfV+jH
+ ABtJetQVpj2I2f80xWzHc70Pb3VA6ny4zTAffL52G0fZuCX+y000REBXz7eSJF0tnF/Abrn
+ K7FyBgJdBgpbgzuf1Bn4q16KJpRE+XZgzl9/0uQplUYuAcdLOT78ENQ2paKpB8kKF/nUfM6
+ XjuYoG9to5hV6mNnmr9aCLckgsQ+59I8YSdDVjrithWYZYjbqawtV7iMq1WuzQ0WVvpBxJu
+ ZgsAnbJpRD9nT9KPRSZUqKtYT5TlKuQ12W2SuzMRbv0F0/Px5SLN2rfGauRw==
 
-For archival purposes, forwarding an incoming command email to
-linux-kernel@vger.kernel.org.
+The property "tx-sched-sp" no longer exists, as it was removed from the
+file:
 
-***
+drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c
 
-Subject: [PATCH net] nfc: nci: Fix uninit-value in nci_rx_work
-Author: ryasuoka@redhat.com
+by the commit:
 
-#syz test: git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git 58c806d867bf265c6fd16fc3bc62e2d3c156b5c9
+commit aed6864035b1 ("net: stmmac: platform: Delete a redundant condition
+branch")
 
-diff --git a/net/nfc/nci/core.c b/net/nfc/nci/core.c
-index 0d26c8ec9993..b7a020484131 100644
---- a/net/nfc/nci/core.c
-+++ b/net/nfc/nci/core.c
-@@ -1516,7 +1516,7 @@ static void nci_rx_work(struct work_struct *work)
- 		nfc_send_to_raw_sock(ndev->nfc_dev, skb,
- 				     RAW_PAYLOAD_NCI, NFC_DIRECTION_RX);
- 
--		if (!nci_plen(skb->data)) {
-+		if (!skb->len || !nci_plen(skb->data)) {
- 			kfree_skb(skb);
- 			break;
- 		}
+This patch serie remove this property both from the "snps,dwmac.yaml"
+documentation and from some device-tree boards files where was still used.
+
+Flavio Suligoi (6):
+  dt-bindings: net: snps,dwmac: remove tx-sched-sp property
+  arm64: dts: imx8mp-beacon: remove tx-sched-sp property
+  arm64: dts: imx8mp-evk: remove tx-sched-sp property
+  arm64: dts: imx8mp-verdin: remove tx-sched-sp property
+  arm64: dts: qcom: sa8540p-ride: remove tx-sched-sp property
+  dts: qcom: sa8775p-ride: remove tx-sched-sp property
+
+ .../devicetree/bindings/net/snps,dwmac.yaml        | 14 --------------
+ .../boot/dts/freescale/imx8mp-beacon-som.dtsi      |  1 -
+ arch/arm64/boot/dts/freescale/imx8mp-evk.dts       |  1 -
+ arch/arm64/boot/dts/freescale/imx8mp-verdin.dtsi   |  1 -
+ arch/arm64/boot/dts/qcom/sa8540p-ride.dts          |  2 --
+ arch/arm64/boot/dts/qcom/sa8775p-ride.dts          |  2 --
+ 6 files changed, 21 deletions(-)
+
+-- 
+2.34.1
 
