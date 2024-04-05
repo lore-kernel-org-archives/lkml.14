@@ -1,84 +1,367 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4ED381DFE4;
-	Fri,  5 Apr 2024 12:39:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDC8B1DFE4;
+	Fri,  5 Apr 2024 12:39:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712320766; cv=none; b=JES9F4ebE3mgUJ3Sx9vLJMsQ8KZCswUtRXpTPMkwbkhRAOaN3rq7fi3HeM601zAPrRqu9EQfQ2Wq2iBC1087mqoAIWkJXPlher9wf1C31x16HP7hmNZy7zaGi45ceDjBJYIUNIFU5pkxFoD4tCfL6O5VUonwYSeF1Ut5TrsqwNc=
+	t=1712320771; cv=none; b=VFAIOGIEsQ4kNunyqAfqkAxJ8oYwUWpoljKfu0HA6xoHZ9s7EeTCTGRXxBpGBqq/c9tI8fBFjafEdHCfIJNzA1N0B2zhMp4szke1MiE4lZriRqq3t/oDNZcIlwj6j85KP046rwZgwQJYagtS5lIiAAyUASejiaNN30Xox66xxWU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712320766; c=relaxed/simple;
-	bh=ZKeANhgTUQ8MeecSfiWfk4B2eYxgbQsdvyAYyRCr27w=;
-	h=From:To:Cc:Subject:Date:Message-Id; b=UAqgR3byMijVpD8kaOkKG5/G6ChBglqPosk9OgOEli73x3Z08mimnpGQz2cBgEFPuPQF2e+oAcpsE6T6VAUP9iANuM1OGW8chVA8iD/LEz3NmjdLGt9d8hjpHSxPL48O823Nj13SBkGlRBQx23/CIO9E5yU0/wPCIj1fKLpsrMs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=J1r6MLJ7; arc=none smtp.client-ip=198.175.65.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1712320771; c=relaxed/simple;
+	bh=yRpitgM+m1pVWlMGu1BVSdU1GFZ43sgEarLLyPEtBAg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=dB2cE2o+JRef6/wCGki4PuEEp5V+NZbxbCm0aiVaH48ut0t9Z0tQ7qqkZ/5LFjPYItMXQEg6pW35rYrQRlZ1rnHbxwohYGXWFayD1uxGWgApWEuSArRYePH8qmbm0xgbufviHcVL6jckk3Qdv4OmLmwETTCL03MQFA49QgElmkI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=IbMukQYS; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="J1r6MLJ7"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1712320765; x=1743856765;
-  h=from:to:cc:subject:date:message-id;
-  bh=ZKeANhgTUQ8MeecSfiWfk4B2eYxgbQsdvyAYyRCr27w=;
-  b=J1r6MLJ73aWEOzVTqhlk5LCx5Q3osBZcRRqb0db1KuEN5wm+KWh7mNMz
-   1t5s7PlgQ5btna9/Iq1DpzfLijv9HGNUQjCoCKL/ki5wBf9maLwpdbwWL
-   bi26lJN9qHDuUM8uz71T8zat0uiwtTqibjSRlVGzyXV5cE8oFnFcnVRvM
-   2svvlwWGorlgLGU3J55z+Md5iguC7PKw9BZtwBIqCw62PIn2v20VbCcTQ
-   5Mk4uydfmYnQI1jjtG2zr9kGIron2QbZRTDjqskKeiC42wCaHibWeTyAm
-   DIAKSNDnZdOL/Yv5DOFK6Lyk81fnSjZ0uixTlcVj1q78NsWSLIAGcQNUv
-   w==;
-X-CSE-ConnectionGUID: DywZJ8VaTI6gCS3/j9GieQ==
-X-CSE-MsgGUID: gFlIuWA8TAe1B0NmsISQmQ==
-X-IronPort-AV: E=McAfee;i="6600,9927,11034"; a="11464018"
-X-IronPort-AV: E=Sophos;i="6.07,181,1708416000"; 
-   d="scan'208";a="11464018"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Apr 2024 05:39:24 -0700
-X-CSE-ConnectionGUID: tr50e2YESf+nmGmKkC6nTw==
-X-CSE-MsgGUID: 7M8Pl57oRaC07wIT8Ns/UQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,181,1708416000"; 
-   d="scan'208";a="19582177"
-Received: from srpawnik.iind.intel.com ([10.223.107.103])
-  by orviesa007.jf.intel.com with ESMTP; 05 Apr 2024 05:39:21 -0700
-From: Sumeet Pawnikar <sumeet.r.pawnikar@intel.com>
-To: alexhung@gmail.com,
-	hdegoede@redhat.com,
-	ilpo.jarvinen@linux.intel.com,
-	platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: srinivas.pandruvada@linux.intel.com,
-	sumeet.r.pawnikar@intel.com
-Subject: [PATCH] platform/x86/intel/hid: Add Lunar Lake and Arrow Lake support
-Date: Fri,  5 Apr 2024 17:56:30 +0530
-Message-Id: <20240405122630.32154-1-sumeet.r.pawnikar@intel.com>
-X-Mailer: git-send-email 2.17.1
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="IbMukQYS"
+Received: from [192.168.88.20] (91-154-34-181.elisa-laajakaista.fi [91.154.34.181])
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 1DC1C8E1;
+	Fri,  5 Apr 2024 14:38:47 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1712320729;
+	bh=yRpitgM+m1pVWlMGu1BVSdU1GFZ43sgEarLLyPEtBAg=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=IbMukQYStkTPpZVpoHIoCX0N5RD6fMzVaHmrVODI5U53Eu6voMFfqy0YhmJCWb474
+	 /DXIOS0a3A31amskVy2dTxywc2UaINNXSG3lbMRxecKL934k0y1KY7zXpDQX2UbSRE
+	 d0bxRlZwZUJyJFi4WY58wg5m2FEdwkD6BY+qSiLo=
+Message-ID: <0179c94f-88c1-4b54-8a61-2834f35325ec@ideasonboard.com>
+Date: Fri, 5 Apr 2024 15:39:22 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 4/9] drm: xlnx: zynqmp_dpsub: Anounce supported input
+ formats
+To: Anatoliy Klymenko <anatoliy.klymenko@amd.com>
+Cc: dri-devel@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-media@vger.kernel.org,
+ Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
+ Michal Simek <michal.simek@amd.com>, Andrzej Hajda
+ <andrzej.hajda@intel.com>, Neil Armstrong <neil.armstrong@linaro.org>,
+ Robert Foss <rfoss@kernel.org>, Jonas Karlman <jonas@kwiboo.se>,
+ Jernej Skrabec <jernej.skrabec@gmail.com>, Rob Herring <robh+dt@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>,
+ Mauro Carvalho Chehab <mchehab@kernel.org>
+References: <20240321-dp-live-fmt-v3-0-d5090d796b7e@amd.com>
+ <20240321-dp-live-fmt-v3-4-d5090d796b7e@amd.com>
+From: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
+Content-Language: en-US
+Autocrypt: addr=tomi.valkeinen@ideasonboard.com; keydata=
+ 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
+In-Reply-To: <20240321-dp-live-fmt-v3-4-d5090d796b7e@amd.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Add INTC107B for Lunar Lake and INTC10CB for Arrow Lake ACPI devices IDs.
+On 21/03/2024 22:43, Anatoliy Klymenko wrote:
+> DPSUB in bridge mode supports multiple input media bus formats.
+> 
+> Announce the list of supported input media bus formats via
+> drm_bridge.atomic_get_input_bus_fmts callback.
+> Introduce a set of live input formats, supported by DPSUB.
+> Rename zynqmp_disp_layer_drm_formats() to zynqmp_disp_layer_formats() to
+> reflect semantics for both live and non-live layer format lists.
+> 
+> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> Signed-off-by: Anatoliy Klymenko <anatoliy.klymenko@amd.com>
+> ---
+>   drivers/gpu/drm/xlnx/zynqmp_disp.c | 76 +++++++++++++++++++++++++++++++++-----
+>   drivers/gpu/drm/xlnx/zynqmp_disp.h |  4 +-
+>   drivers/gpu/drm/xlnx/zynqmp_dp.c   | 31 ++++++++++++++++
+>   drivers/gpu/drm/xlnx/zynqmp_kms.c  |  2 +-
+>   4 files changed, 101 insertions(+), 12 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/xlnx/zynqmp_disp.c b/drivers/gpu/drm/xlnx/zynqmp_disp.c
+> index e6d26ef60e89..abdc3971b193 100644
+> --- a/drivers/gpu/drm/xlnx/zynqmp_disp.c
+> +++ b/drivers/gpu/drm/xlnx/zynqmp_disp.c
+> @@ -18,6 +18,7 @@
+>   #include <linux/dma/xilinx_dpdma.h>
+>   #include <linux/dma-mapping.h>
+>   #include <linux/dmaengine.h>
+> +#include <linux/media-bus-format.h>
+>   #include <linux/module.h>
+>   #include <linux/of.h>
+>   #include <linux/platform_device.h>
+> @@ -77,12 +78,14 @@ enum zynqmp_dpsub_layer_mode {
+>   /**
+>    * struct zynqmp_disp_format - Display subsystem format information
+>    * @drm_fmt: DRM format (4CC)
+> + * @bus_fmt: Media bus format
+>    * @buf_fmt: AV buffer format
+>    * @swap: Flag to swap R & B for RGB formats, and U & V for YUV formats
+>    * @sf: Scaling factors for color components
+>    */
+>   struct zynqmp_disp_format {
+>   	u32 drm_fmt;
+> +	u32 bus_fmt;
+>   	u32 buf_fmt;
+>   	bool swap;
+>   	const u32 *sf;
+> @@ -182,6 +185,12 @@ static const u32 scaling_factors_565[] = {
+>   	ZYNQMP_DISP_AV_BUF_5BIT_SF,
+>   };
+>   
+> +static const u32 scaling_factors_666[] = {
+> +	ZYNQMP_DISP_AV_BUF_6BIT_SF,
+> +	ZYNQMP_DISP_AV_BUF_6BIT_SF,
+> +	ZYNQMP_DISP_AV_BUF_6BIT_SF,
+> +};
+> +
+>   static const u32 scaling_factors_888[] = {
+>   	ZYNQMP_DISP_AV_BUF_8BIT_SF,
+>   	ZYNQMP_DISP_AV_BUF_8BIT_SF,
+> @@ -364,6 +373,41 @@ static const struct zynqmp_disp_format avbuf_gfx_fmts[] = {
+>   	},
+>   };
+>   
+> +/* List of live video layer formats */
+> +static const struct zynqmp_disp_format avbuf_live_fmts[] = {
+> +	{
+> +		.drm_fmt	= DRM_FORMAT_RGB565,
+> +		.bus_fmt	= MEDIA_BUS_FMT_RGB666_1X18,
+> +		.buf_fmt	= ZYNQMP_DISP_AV_BUF_LIVE_CONFIG_BPC_6 |
+> +				  ZYNQMP_DISP_AV_BUF_LIVE_CONFIG_FMT_RGB,
+> +		.sf		= scaling_factors_666,
+> +	}, {
+> +		.drm_fmt	= DRM_FORMAT_RGB888,
+> +		.bus_fmt	= MEDIA_BUS_FMT_RGB888_1X24,
+> +		.buf_fmt	= ZYNQMP_DISP_AV_BUF_LIVE_CONFIG_BPC_8 |
+> +				  ZYNQMP_DISP_AV_BUF_LIVE_CONFIG_FMT_RGB,
+> +		.sf		= scaling_factors_888,
+> +	}, {
+> +		.drm_fmt	= DRM_FORMAT_YUV422,
+> +		.bus_fmt	= MEDIA_BUS_FMT_UYVY8_1X16,
+> +		.buf_fmt	= ZYNQMP_DISP_AV_BUF_LIVE_CONFIG_BPC_8 |
+> +				  ZYNQMP_DISP_AV_BUF_LIVE_CONFIG_FMT_YUV422,
+> +		.sf		= scaling_factors_888,
+> +	}, {
+> +		.drm_fmt	= DRM_FORMAT_YUV444,
+> +		.bus_fmt	= MEDIA_BUS_FMT_VUY8_1X24,
+> +		.buf_fmt	= ZYNQMP_DISP_AV_BUF_LIVE_CONFIG_BPC_8 |
+> +				  ZYNQMP_DISP_AV_BUF_LIVE_CONFIG_FMT_YUV444,
+> +		.sf		= scaling_factors_888,
+> +	}, {
+> +		.drm_fmt	= DRM_FORMAT_P210,
+> +		.bus_fmt	= MEDIA_BUS_FMT_UYVY10_1X20,
+> +		.buf_fmt	= ZYNQMP_DISP_AV_BUF_LIVE_CONFIG_BPC_10 |
+> +				  ZYNQMP_DISP_AV_BUF_LIVE_CONFIG_FMT_YUV422,
+> +		.sf		= scaling_factors_101010,
+> +	},
+> +};
+> +
+>   static u32 zynqmp_disp_avbuf_read(struct zynqmp_disp *disp, int reg)
+>   {
+>   	return readl(disp->avbuf.base + reg);
+> @@ -883,16 +927,17 @@ zynqmp_disp_layer_find_format(struct zynqmp_disp_layer *layer,
+>   }
+>   
+>   /**
+> - * zynqmp_disp_layer_drm_formats - Return the DRM formats supported by the layer
+> + * zynqmp_disp_layer_formats - Return DRM or media bus formats supported by
+> + * the layer
+>    * @layer: The layer
+>    * @num_formats: Pointer to the returned number of formats
+>    *
+> - * Return: A newly allocated u32 array that stores all the DRM formats
+> + * Return: A newly allocated u32 array that stores all DRM or media bus formats
+>    * supported by the layer. The number of formats in the array is returned
+>    * through the num_formats argument.
+>    */
+> -u32 *zynqmp_disp_layer_drm_formats(struct zynqmp_disp_layer *layer,
+> -				   unsigned int *num_formats)
+> +u32 *zynqmp_disp_layer_formats(struct zynqmp_disp_layer *layer,
+> +			       unsigned int *num_formats)
+>   {
+>   	unsigned int i;
+>   	u32 *formats;
+> @@ -903,7 +948,9 @@ u32 *zynqmp_disp_layer_drm_formats(struct zynqmp_disp_layer *layer,
+>   		return NULL;
+>   
+>   	for (i = 0; i < layer->info->num_formats; ++i)
+> -		formats[i] = layer->info->formats[i].drm_fmt;
+> +		formats[i] = layer->mode == ZYNQMP_DPSUB_LAYER_NONLIVE
+> +			   ? layer->info->formats[i].drm_fmt
+> +			   : layer->info->formats[i].bus_fmt;
 
-Signed-off-by: Sumeet Pawnikar <sumeet.r.pawnikar@intel.com>
----
- drivers/platform/x86/intel/hid.c | 2 ++
- 1 file changed, 2 insertions(+)
+I find this quite confusing. Depending on the layer mode, you return 
+different format types. I think it's quite easy to use this kind of 
+function the wrong way.
 
-diff --git a/drivers/platform/x86/intel/hid.c b/drivers/platform/x86/intel/hid.c
-index 7457ca2b27a6..66410ab9925d 100644
---- a/drivers/platform/x86/intel/hid.c
-+++ b/drivers/platform/x86/intel/hid.c
-@@ -49,6 +49,8 @@ static const struct acpi_device_id intel_hid_ids[] = {
- 	{"INTC1076", 0},
- 	{"INTC1077", 0},
- 	{"INTC1078", 0},
-+	{"INTC107B", 0},
-+	{"INTC10CB", 0},
- 	{"", 0},
- };
- MODULE_DEVICE_TABLE(acpi, intel_hid_ids);
--- 
-2.17.1
+Why not just make two separate functions?
+
+  Tomi
+
+>   	*num_formats = layer->info->num_formats;
+>   	return formats;
+> @@ -1131,6 +1178,11 @@ static int zynqmp_disp_create_layers(struct zynqmp_disp *disp)
+>   			.num_channels = 1,
+>   		},
+>   	};
+> +	static const struct zynqmp_disp_layer_info live_layer_info = {
+> +		.formats = avbuf_live_fmts,
+> +		.num_formats = ARRAY_SIZE(avbuf_live_fmts),
+> +		.num_channels = 0,
+> +	};
+>   
+>   	unsigned int i;
+>   	int ret;
+> @@ -1140,12 +1192,18 @@ static int zynqmp_disp_create_layers(struct zynqmp_disp *disp)
+>   
+>   		layer->id = i;
+>   		layer->disp = disp;
+> -		layer->info = &layer_info[i];
+> -		/* For now assume dpsub works in either live or non-live mode for both layers.
+> +
+> +		/*
+> +		 * For now assume dpsub works in either live or non-live mode for both layers.
+>   		 * Hybrid mode is not supported yet.
+>   		 */
+> -		layer->mode = disp->dpsub->dma_enabled ? ZYNQMP_DPSUB_LAYER_NONLIVE
+> -						       : ZYNQMP_DPSUB_LAYER_LIVE;
+> +		if (disp->dpsub->dma_enabled) {
+> +			layer->mode = ZYNQMP_DPSUB_LAYER_NONLIVE;
+> +			layer->info = &layer_info[i];
+> +		} else {
+> +			layer->mode = ZYNQMP_DPSUB_LAYER_LIVE;
+> +			layer->info = &live_layer_info;
+> +		}
+>   
+>   		ret = zynqmp_disp_layer_request_dma(disp, layer);
+>   		if (ret)
+> diff --git a/drivers/gpu/drm/xlnx/zynqmp_disp.h b/drivers/gpu/drm/xlnx/zynqmp_disp.h
+> index 9b8b202224d9..88c285a12e23 100644
+> --- a/drivers/gpu/drm/xlnx/zynqmp_disp.h
+> +++ b/drivers/gpu/drm/xlnx/zynqmp_disp.h
+> @@ -50,8 +50,8 @@ int zynqmp_disp_setup_clock(struct zynqmp_disp *disp,
+>   void zynqmp_disp_blend_set_global_alpha(struct zynqmp_disp *disp,
+>   					bool enable, u32 alpha);
+>   
+> -u32 *zynqmp_disp_layer_drm_formats(struct zynqmp_disp_layer *layer,
+> -				   unsigned int *num_formats);
+> +u32 *zynqmp_disp_layer_formats(struct zynqmp_disp_layer *layer,
+> +			       unsigned int *num_formats);
+>   void zynqmp_disp_layer_enable(struct zynqmp_disp_layer *layer);
+>   void zynqmp_disp_layer_disable(struct zynqmp_disp_layer *layer);
+>   void zynqmp_disp_layer_set_format(struct zynqmp_disp_layer *layer,
+> diff --git a/drivers/gpu/drm/xlnx/zynqmp_dp.c b/drivers/gpu/drm/xlnx/zynqmp_dp.c
+> index 4faafdd76798..e3b9eb3d9273 100644
+> --- a/drivers/gpu/drm/xlnx/zynqmp_dp.c
+> +++ b/drivers/gpu/drm/xlnx/zynqmp_dp.c
+> @@ -22,6 +22,7 @@
+>   #include <linux/delay.h>
+>   #include <linux/device.h>
+>   #include <linux/io.h>
+> +#include <linux/media-bus-format.h>
+>   #include <linux/module.h>
+>   #include <linux/platform_device.h>
+>   #include <linux/pm_runtime.h>
+> @@ -1577,6 +1578,35 @@ static const struct drm_edid *zynqmp_dp_bridge_edid_read(struct drm_bridge *brid
+>   	return drm_edid_read_ddc(connector, &dp->aux.ddc);
+>   }
+>   
+> +static u32 *zynqmp_dp_bridge_default_bus_fmts(unsigned int *num_input_fmts)
+> +{
+> +	u32 *formats = kzalloc(sizeof(*formats), GFP_KERNEL);
+> +
+> +	if (formats)
+> +		*formats = MEDIA_BUS_FMT_FIXED;
+> +	*num_input_fmts = !!formats;
+> +
+> +	return formats;
+> +}
+> +
+> +static u32 *
+> +zynqmp_dp_bridge_get_input_bus_fmts(struct drm_bridge *bridge,
+> +				    struct drm_bridge_state *bridge_state,
+> +				    struct drm_crtc_state *crtc_state,
+> +				    struct drm_connector_state *conn_state,
+> +				    u32 output_fmt,
+> +				    unsigned int *num_input_fmts)
+> +{
+> +	struct zynqmp_dp *dp = bridge_to_dp(bridge);
+> +	struct zynqmp_disp_layer *layer;
+> +
+> +	layer = zynqmp_dp_disp_connected_live_layer(dp);
+> +	if (layer)
+> +		return zynqmp_disp_layer_formats(layer, num_input_fmts);
+> +	else
+> +		return zynqmp_dp_bridge_default_bus_fmts(num_input_fmts);
+> +}
+> +
+>   static const struct drm_bridge_funcs zynqmp_dp_bridge_funcs = {
+>   	.attach = zynqmp_dp_bridge_attach,
+>   	.detach = zynqmp_dp_bridge_detach,
+> @@ -1589,6 +1619,7 @@ static const struct drm_bridge_funcs zynqmp_dp_bridge_funcs = {
+>   	.atomic_check = zynqmp_dp_bridge_atomic_check,
+>   	.detect = zynqmp_dp_bridge_detect,
+>   	.edid_read = zynqmp_dp_bridge_edid_read,
+> +	.atomic_get_input_bus_fmts = zynqmp_dp_bridge_get_input_bus_fmts,
+>   };
+>   
+>   /* -----------------------------------------------------------------------------
+> diff --git a/drivers/gpu/drm/xlnx/zynqmp_kms.c b/drivers/gpu/drm/xlnx/zynqmp_kms.c
+> index 43bf416b33d5..bf9fba01df0e 100644
+> --- a/drivers/gpu/drm/xlnx/zynqmp_kms.c
+> +++ b/drivers/gpu/drm/xlnx/zynqmp_kms.c
+> @@ -152,7 +152,7 @@ static int zynqmp_dpsub_create_planes(struct zynqmp_dpsub *dpsub)
+>   		unsigned int num_formats;
+>   		u32 *formats;
+>   
+> -		formats = zynqmp_disp_layer_drm_formats(layer, &num_formats);
+> +		formats = zynqmp_disp_layer_formats(layer, &num_formats);
+>   		if (!formats)
+>   			return -ENOMEM;
+>   
+> 
 
