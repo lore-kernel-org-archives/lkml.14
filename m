@@ -1,170 +1,150 @@
-Received: from mo-csw-fb.securemx.jp (mo-csw-fb1121.securemx.jp [210.130.202.129])
+Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEB981D556;
-	Fri,  5 Apr 2024 06:47:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.130.202.129
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 564EA22F0C
+	for <linux-kernel@vger.kernel.org>; Fri,  5 Apr 2024 06:48:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712299645; cv=none; b=M95a2rcJhGMehEVPYOwJCHL6Xo9cqqBo1wDTpOYDfec9HFhrIfirmyuOf2ouhaPijn2SyAAV4YP2WMsT0jHL2Fxh6Uvk3xXqCDeexMk+MakNMnvwtyVETSHxK6EgrrNfYV+8hHhuMAb4ZUiuxjM6AB+MAQz2BkTWXv1lOIx9OX0=
+	t=1712299697; cv=none; b=HHs8H+Ile8IxQQFumbn2zY3Ddn+fVAA7KCu3Vl0iZlIJ24gG+Zfv3fWTzmWPC7A62hMUA4vlEHVC0ZzchxEEI/qBeP/udKVYrwwuofNmqAeSIDdxPYvHjw/enjZBtbiG7q2FohZOdE6XuP82QJTtfeta8THyjYhYSp495c05DfI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712299645; c=relaxed/simple;
-	bh=dJUTKxD4XBA6+hIRAinaK6cEmG7qw63qofZNFG7MDxs=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=fl0/XVUnTyopNqUAxEdTJtrZnjTxPOl6JFJXDm4rdYzm+gej5QlrGiBGDBMhVZavTNx3sFUbgL3HDHF84gYavdkNMKVSEtbIcHyq4+2naPf/Es5KMHN4FuwwqNMA7ILjDaGyo5iztoccZbeq89FYRWf6NQT1Cj6uY/40Lq9VkgY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kioxia.com; spf=pass smtp.mailfrom=kioxia.com; arc=none smtp.client-ip=210.130.202.129
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kioxia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kioxia.com
-Received: by mo-csw-fb.securemx.jp (mx-mo-csw-fb1121) id 4355K5I21310389; Fri, 5 Apr 2024 14:20:06 +0900
-Received: by mo-csw.securemx.jp (mx-mo-csw1120) id 4355I7mJ2067497; Fri, 5 Apr 2024 14:18:07 +0900
-X-Iguazu-Qid: 2rWgdkpBO6OePkihnS
-X-Iguazu-QSIG: v=2; s=0; t=1712294286; q=2rWgdkpBO6OePkihnS; m=H8i1jpPUTZXpV+y8ImFQuSpTNChbT1Oq2VpBd65iopU=
-Received: from CNN1EMTA03.test.kioxia.com ([202.248.33.144])
-	by relay.securemx.jp (mx-mr1120) id 4355I5fU1283493
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-	Fri, 5 Apr 2024 14:18:05 +0900
-Received: from Switcher-Post_Send (gateway [10.232.20.1])
-	by CNN1EMTA03.test.kioxia.com (Postfix) with ESMTP id 2FB152F603;
-	Fri,  5 Apr 2024 14:18:05 +0900 (JST)
-Received: from CNN1ESTR04.kioxia.com (localhost [127.0.0.1])
-	by Switcher-Post_Send (Postfix) with ESMTP id E01B01900001F6;
-	Fri,  5 Apr 2024 14:05:31 +0900 (JST)
-Received: from localhost [127.0.0.1] 
-	 by CNN1ESTR04.kioxia.com with ESMTP id 0003QAAAAAA00F34;
-	 Fri, 5 Apr 2024 14:05:31 +0900
-Received: from CNN1EXMB03.r1.kioxia.com (CNN1EXMB03.r1.kioxia.com [10.232.20.152])
-	by Switcher-Pre_Send (Postfix) with ESMTP id D468DA29C5E08;
-	Fri,  5 Apr 2024 14:05:31 +0900 (JST)
-Received: from CNN1EXMB03.r1.kioxia.com (10.232.20.152) by
- CNN1EXMB03.r1.kioxia.com (10.232.20.152) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Fri, 5 Apr 2024 14:18:04 +0900
-Received: from CNN1EXMB03.r1.kioxia.com ([10.13.100.22]) by
- CNN1EXMB03.r1.kioxia.com ([10.13.100.22]) with mapi id 15.01.2507.035; Fri, 5
- Apr 2024 14:18:04 +0900
-From: tada keisuke <keisuke1.tada@kioxia.com>
-To: kernel test robot <oliver.sang@intel.com>
-CC: "oe-lkp@lists.linux.dev" <oe-lkp@lists.linux.dev>,
-        "lkp@intel.com"
-	<lkp@intel.com>,
-        ohtake toshifumi <toshifumi.ootake@kioxia.com>,
-        "linux-raid@vger.kernel.org" <linux-raid@vger.kernel.org>,
-        "song@kernel.org"
-	<song@kernel.org>,
-        "yukuai3@huawei.com" <yukuai3@huawei.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH 09/11] md: add atomic mode switching when removing disk
-Thread-Topic: [PATCH 09/11] md: add atomic mode switching when removing disk
-Thread-Index: AQHagv7ppOhMD1h+V0G2IfGpZUQoObFZG7ZQ
-Date: Fri, 5 Apr 2024 05:18:04 +0000
-Message-ID: <bdffa39d605c4340910640d10ac6a9b4@kioxia.com>
-References: <e95e7cea71d1465496a9502b4de49e75@kioxia.com>
- <202403310746.6c8b0587-oliver.sang@intel.com>
-In-Reply-To: <202403310746.6c8b0587-oliver.sang@intel.com>
-Accept-Language: ja-JP, en-US
-Content-Language: ja-JP
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-x-tm-as-product-ver: ISME-14.0.0.2080-9.0.1002-28298.001
-x-tm-as-result: No-10--9.854900-8.000000
-x-tmase-matchedrid: 13nEecSBt9GmagT1k9kBpu5i6weAmSDKQV99ahimM1VYC5LPd7Bvbaso
-	qU8yj7u9HIMkasPj1EKWe6+6619iNKf0QmPqa4keZj7E6vHnuNZpkBMYDn8FeGnes/wd3/vhtMd
-	GzZAls9Y07flFHfXJs1F+SzCZQid2dh9gYos97K2vv6qFlL+SGTVEnbrqmBw7r9t08Ze+Qb+9cy
-	KhdlQvHTtvYiW4KdPqzHj1xOR70ZBSr2+67Jvlw2/6CCblACLhQR7lWMXPA1vWfdTIhX4P841EI
-	8AWiw6UhJtbBPDn7JuOYTH9s0ioWFxxDx5qbkR9gxsfzkNRlfKx5amWK2anSPoLR4+zsDTtw1tM
-	VU7ONTyP4W9NA3FMNEROBxJTpKtE+er4HxlNLTJiqx3X0AgSIg==
-x-tm-as-user-approved-sender: No
-x-tm-as-user-blocked-sender: No
-x-tmase-result: 10--9.854900-8.000000
-x-tmase-version: ISME-14.0.0.2080-9.0.1002-28298.001
-x-tm-snts-smtp: AA4D7E06A98E6AA4E04D8A32D99A7095106733D0D9011490F3E322652644B7292000:8
-Content-Type: text/plain; charset="iso-2022-jp"
-Content-Transfer-Encoding: quoted-printable
+	s=arc-20240116; t=1712299697; c=relaxed/simple;
+	bh=mvUDIPVQiYmNl9e07oUeV3Zkf38WVnnIHOouN7dV1eY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=jHsohAv5OaO/bY153iWM8xFblTOtEfWpfUStGTB8mRLPkIbYnm5zvYG2X4LgXWTSJZLyJZLMV4DKg/C/UaTVPJeZaS9nfTsYM8zkUvyXWQBj6B5Wucc6whtp6xGktzWIg6vFq7scPTJO7WcAkZqqB6qr47kh8TG/iE2eP1y9lWI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=DNsalWdr; arc=none smtp.client-ip=209.85.208.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DNsalWdr"
+Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-563cb3ba9daso1849602a12.3
+        for <linux-kernel@vger.kernel.org>; Thu, 04 Apr 2024 23:48:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1712299695; x=1712904495; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:to:subject:user-agent:mime-version:date
+         :message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=gVKYAnnmAlON4rWKKLEP3SoYcUsb6KEipfoxr6rlUsQ=;
+        b=DNsalWdrnFCaBS1KeVHKdLAW+jWuSD4of9P23PFJ442mcq+rjyrkyl6qoGzzKwsEjS
+         bebPV70ze/PbKeeVPI4bjG6X7ekgg0Pq8Gk9boqBt2mp6kkseUxV/yHpFW8vg2P/wdYr
+         z8u+xaNphkgK74K10YVgQij7Dx0iGeYKCldb+yHDjUgOSajnsZ4hBWpfzLBUBY043bYL
+         vcE5xvnwMriyBGreBnRUHVxzvrobTtk7Qq1eq4jELTqQ9Tg68bx2d69IYWZigcI4LP8t
+         DwBwY0skUD4iN9BX3mv+IUdtdOfAB+ymzkCPQ0XE1E1SGQUgPxx4KNRafn3H/lYHHwkf
+         8A9Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712299695; x=1712904495;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:to:subject:user-agent:mime-version:date
+         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=gVKYAnnmAlON4rWKKLEP3SoYcUsb6KEipfoxr6rlUsQ=;
+        b=A8HNuyOQonaXZlXfLBoyW3qRAobqospJouvrqDwaazZjV0HeomY7ZtPss5HYOAW0yr
+         CzM50H1pupaRZYtHYjI7383t2Z9NikAe12F6icw/ZtRZ9XBxE2d55E4WdK2/gdFddFph
+         2h751zD8N3Wd1aMfG3l5R26JVXs77ZlYK3zGb1WjH+INH34CZylo9T3TNJNybX77xFy7
+         gcmlPCSD4VfWAPUy30KqnwLNA6bewy2ycj8ZMuhH6xWHpH7HFGRHecCjit3xlkDp8Y0u
+         phDqqu/UvHxZJF7sUdh+yvwdhqbsRrGX95OK2aE/vyzlC14XZS/WDFRaIU//lWIiavIR
+         DmHg==
+X-Forwarded-Encrypted: i=1; AJvYcCXQMxIo+Gp3mpXG4GSrr2jnKKCzEaeF3v/OinZBnkXUAA+uYVh60RPYZCuND4A3RBPIoMvv+citjPNiya4IeZp7q196/9Ceyogyh5hT
+X-Gm-Message-State: AOJu0YxVd8TBX/xYwd9LvmXy0qNtFQ1qBT0RE6of2prGePAje3bG8o6+
+	+iFfDlLzH+2GFDiS2yA5iPYpnVnSD0cDAPM5bw9yXnQOOL9eybfy+IMLIw+exms=
+X-Google-Smtp-Source: AGHT+IH24JYQRJC5CkBUIUx2M/FA1p7K+9+aslAftnXvnZAE+7EBYSCh4Mp8z25S5NG0dEpzwtKxlw==
+X-Received: by 2002:a17:906:81cd:b0:a4d:f56a:19fc with SMTP id e13-20020a17090681cd00b00a4df56a19fcmr448700ejx.13.1712299694767;
+        Thu, 04 Apr 2024 23:48:14 -0700 (PDT)
+Received: from [192.168.1.20] ([178.197.223.16])
+        by smtp.gmail.com with ESMTPSA id ji7-20020a170907980700b00a4e86dd231dsm489108ejc.42.2024.04.04.23.48.13
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 04 Apr 2024 23:48:14 -0700 (PDT)
+Message-ID: <a4276893-ba74-4baf-bcb9-9aee9f90d8c0@linaro.org>
+Date: Fri, 5 Apr 2024 08:48:12 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-CrossPremisesHeadersFilteredBySendConnector: CNN1EXMB03.r1.kioxia.com
-X-OrganizationHeadersPreserved: CNN1EXMB03.r1.kioxia.com
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/4] ARM: dts: aspeed: greatlakes: correct Mellanox
+ multi-host property
+To: Andrew Jeffery <andrew@codeconstruct.com.au>,
+ Rob Herring <robh+dt@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>, Joel Stanley <joel@jms.id.au>,
+ devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org
+References: <20231209104412.12916-1-krzysztof.kozlowski@linaro.org>
+ <171213860535.16780.4635499105199545058.b4-ty@linaro.org>
+ <8610e0a8aa5c2916fa04292a10e8a843862ff0ee.camel@codeconstruct.com.au>
+ <c3902c6e-c38e-4604-b79e-2b5406274d8f@linaro.org>
+ <65060691d4649c4a8da46e5ba762a3c905ade690.camel@codeconstruct.com.au>
+Content-Language: en-US
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
+ 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
+ D2GYIS41Kv4Isx2dEFh+/Q==
+In-Reply-To: <65060691d4649c4a8da46e5ba762a3c905ade690.camel@codeconstruct.com.au>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-> kern  :err   : [  118.926307] BUG: sleeping function called from invalid =
-context at lib/percpu-refcount.c:331
-> kern  :err   : [  118.935427] in_atomic(): 0, irqs_disabled(): 0, non_blo=
-ck: 0, pid: 55, name: kworker/6:0
-> kern  :err   : [  118.944338] preempt_count: 0, expected: 0
-> kern  :err   : [  118.949122] RCU nest depth: 1, expected: 0
-> kern  :warn  : [  118.954016] CPU: 6 PID: 55 Comm: kworker/6:0 Tainted: G=
- S
-> 6.8.0-rc3-00236-gff944d1be0fa #1
-> kern  :warn  : [  118.964389] Hardware name: Gigabyte Technology Co., Ltd=
-. Z97X-UD5H/Z97X-UD5H, BIOS F9
-> 04/21/2015
-> kern  :warn  : [  118.973916] Workqueue: md_misc md_start_sync
-> kern  :warn  : [  118.978937] Call Trace:
-> kern  :warn  : [  118.982115]  <TASK>
-> kern :warn : [  118.984943] dump_stack_lvl (lib/dump_stack.c:107 (discrim=
-inator 1))
-> kern :warn : [  118.989337] __might_resched (kernel/sched/core.c:10190)
-> kern :warn : [  118.993989] ? _raw_spin_lock_irqsave (arch/x86/include/as=
-m/atomic.h:115
-> include/linux/atomic/atomic-arch-fallback.h:2164 include/linux/atomic/ato=
-mic-instrumented.h:1296
-> include/asm-generic/qspinlock.h:111 include/linux/spinlock.h:187 include/=
-linux/spinlock_api_smp.h:111
-> kernel/locking/spinlock.c:162)
-> kern :warn : [  118.999243] ? preempt_notifier_dec (kernel/sched/core.c:1=
-0144)
-> kern :warn : [  119.004321] percpu_ref_switch_to_atomic_sync (include/lin=
-ux/kernel.h:107 lib/percpu-refcount.c:331)
-> kern :warn : [  119.010353] ? percpu_ref_reinit (lib/percpu-refcount.c:32=
-9)
-> kern :warn : [  119.015351] ? _raw_spin_lock_irqsave (arch/x86/include/as=
-m/atomic.h:115
-> include/linux/atomic/atomic-arch-fallback.h:2164 include/linux/atomic/ato=
-mic-instrumented.h:1296
-> include/asm-generic/qspinlock.h:111 include/linux/spinlock.h:187 include/=
-linux/spinlock_api_smp.h:111
-> kernel/locking/spinlock.c:162)
-> kern :warn : [  119.020596] ? _raw_read_unlock_irqrestore (kernel/locking=
-/spinlock.c:161)
-> kern :warn : [  119.026282] ? finish_task_switch+0x158/0x730
-> kern :warn : [  119.031969] ? __switch_to (arch/x86/include/asm/bitops.h:=
-55
-> include/asm-generic/bitops/instrumented-atomic.h:29 include/linux/thread_=
-info.h:89
-> arch/x86/include/asm/fpu/sched.h:66 arch/x86/kernel/process_64.c:626)
-> kern :warn : [  119.036435] rdev_removeable (drivers/md/md.c:9282)
-> kern :warn : [  119.041083] md_start_sync (drivers/md/md.c:9339 drivers/m=
-d/md.c:9449)
-> kern :warn : [  119.045462] ? mddev_unlock (drivers/md/md.c:9444)
-> kern :warn : [  119.050021] ? _raw_spin_lock_irq (arch/x86/include/asm/at=
-omic.h:115
-> include/linux/atomic/atomic-arch-fallback.h:2164 include/linux/atomic/ato=
-mic-instrumented.h:1296
-> include/asm-generic/qspinlock.h:111 include/linux/spinlock.h:187 include/=
-linux/spinlock_api_smp.h:120
-> kernel/locking/spinlock.c:170)
-> kern :warn : [  119.054928] ? _raw_spin_lock_bh (kernel/locking/spinlock.=
-c:169)
-> kern :warn : [  119.059739] process_one_work (kernel/workqueue.c:2638)
-> kern :warn : [  119.064476] worker_thread (kernel/workqueue.c:2700 kernel=
-/workqueue.c:2787)
-> kern :warn : [  119.068943] ? process_one_work (kernel/workqueue.c:2733)
-> kern :warn : [  119.073864] kthread (kernel/kthread.c:388)
-> kern :warn : [  119.077815] ? kthread_complete_and_exit (kernel/kthread.c=
-:341)
-> kern :warn : [  119.083321] ret_from_fork (arch/x86/kernel/process.c:153)
-> kern :warn : [  119.087627] ? kthread_complete_and_exit (kernel/kthread.c=
-:341)
-> kern :warn : [  119.093140] ret_from_fork_asm (arch/x86/entry/entry_64.S:=
-250)
-> kern  :warn  : [  119.097786]  </TASK>
+On 05/04/2024 01:21, Andrew Jeffery wrote:
+>>>
+>>> Acked-by: Andrew Jeffery <andrew@codeconstruct.com.au>
+>>>
+>>> I'm working to stay on top of things a bit more now than I have in the
+>>> recent past, so hopefully I won't miss patches again in the future.
+>>
+>> Stephen reported conflict, although trivial, but maybe better if you
+>> take them?
+>>
+> 
+> Yeah, happy to.
+> 
+>> I can rebase and resend.
 
-Thanks for reporting.
-I need to execute percpu_ref_switch_to_atomic_sync() when RCU is unlocked.
-I will fix this problem and submit v2.
+I dropped these patches (and one more) from my tree, rebased and resent
+everything as v2.
 
-Thanks,
-Keisuke
+Thanks!
+
+Best regards,
+Krzysztof
 
