@@ -1,127 +1,100 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64F371DA32
-	for <linux-kernel@vger.kernel.org>; Fri,  5 Apr 2024 21:44:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1460E17555C
+	for <linux-kernel@vger.kernel.org>; Fri,  5 Apr 2024 21:47:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712353470; cv=none; b=FNzRanMB1wGz+lTaV+6PjET9PmQhRsSal4CkGBoLRb0z/8Nrdp7HTFhWA7C9VbfjhaZVBiKodaz829ewWqLuQ2pTtsp7MLdv/KIkk9tjIwDvhZsSid70V0DAl9eCvK3DpX5Wtpc92iONBMrh6MhTB6Ya9CX0qMkW73UAkU6S07E=
+	t=1712353624; cv=none; b=MUl8EiwbMiostszwg++k8rbv6AJ4o/JX0Kcl5GIGIbthEurS0Meoo2z4vh3Onr+F+UEtA9m3fxNqmNEzhgzWoAGwWkShdWatOR8FT9Xad/2Cl6Sv+hAC1/XmswC81vMQ94NXBL5Y3z2t1mDXbt0LAQQH/6dpgD6WYqstt5VGfPo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712353470; c=relaxed/simple;
-	bh=VwUtSHE5K2hbSjDkxBhPMyHvodI0rBVLGkUu9QMlZ8M=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=GvzR+pvJ/YsroexmWqQGlbvxP8MgBiyhSbeYsOZNZgoKCy596u3/u3gMNasQ8Q7hkOAWhmmr7q6/W0VRAWi8FWYYbyyEdkRCOHeDyCuz54oXH438Xa9XWx8P0GashGLj0NTOeGh10nxfwRk9nEP3hTyxJkPoHhJ9uvqjEKoPMdk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=fcOsco/l; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="fcOsco/l"
-Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 435L0uwn018392;
-	Fri, 5 Apr 2024 21:43:46 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	message-id:date:mime-version:subject:to:cc:references:from
-	:in-reply-to:content-type:content-transfer-encoding; s=
-	qcppdkim1; bh=TIKqf+/mjzQE++LZKAfQ2rUXtVcdStL2Y6GyMNGqRI8=; b=fc
-	Osco/lNvkY6OidF/l10oMq/2bzYr87JRZ5QClRwsOF0qMRXt4Fbz1ai4i80V+xNG
-	n6kTky/7imsZnueu5JfZ1/Apo6xIAcuKe3rTW2TaZIByRFb3pbWuA8oSz0ssIBPC
-	cEObCzwZzNHCJQRg+/DRgTQeDlpBTFc+eyPyes5cwsGKlu8+dCdY6XXwMgOxdGpF
-	e8rxNuAwvoHSq0Et6V1/MXaZ5B3zTi7g+ax8plIEBp1SE1ksHvzFEjIQT6obj9/8
-	xPNvC3Wo1QdFwtGQwIpJhtUXwFfqSNMTNLArTKyxPYNEUrLsT1bY+efbCCZoRi0t
-	jB7abRAktHMD7Ot/48BQ==
-Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3xahgt1479-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 05 Apr 2024 21:43:46 +0000 (GMT)
-Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
-	by NALASPPMTA03.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 435LhivP032282
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 5 Apr 2024 21:43:44 GMT
-Received: from [10.110.71.75] (10.80.80.8) by nalasex01b.na.qualcomm.com
- (10.47.209.197) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Fri, 5 Apr 2024
- 14:43:43 -0700
-Message-ID: <d1368d46-5350-4455-ad72-418bad1dec09@quicinc.com>
-Date: Fri, 5 Apr 2024 14:43:43 -0700
+	s=arc-20240116; t=1712353624; c=relaxed/simple;
+	bh=oSEa2gyMcGIfhQwmaPV347eueIBz6gl9/RjTI336w9c=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=f+MrElqyeBYL/RdzIlXhWydsZtesedpxjwnYKq9DgGJdJjKhg2ljbwVdQjaOrAd1SahEL2LVCduKRHSzbCMO8QkxRsg+2U0Lt9Gq0oiRiNVtvTO+94gw1zJmPUDdGagFAoV7whxX7+bOq5cEgXfSK+5DiGoRGugv+I99pV9OCgI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1rsrOd-0003Xx-B0; Fri, 05 Apr 2024 23:46:51 +0200
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1rsrOc-00Ad5U-Ko; Fri, 05 Apr 2024 23:46:50 +0200
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.96)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1rsrOc-00FZqc-1l;
+	Fri, 05 Apr 2024 23:46:50 +0200
+From: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To: Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>
+Cc: Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	devicetree@vger.kernel.org,
+	imx@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	Alexander Stein <alexander.stein@ew.tq-group.com>
+Subject: [PATCH v1 34/49] ARM: dts: imx6q-pistachio: Use #pwm-cells = <3> for imx27-pwm device
+Date: Fri,  5 Apr 2024 23:42:21 +0200
+Message-ID:  <a424befaebf49475f8ce5893d688fefb267b6313.1712352665.git.u.kleine-koenig@pengutronix.de>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <cover.1712352665.git.u.kleine-koenig@pengutronix.de>
+References: <cover.1712352665.git.u.kleine-koenig@pengutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/6] drm/panel: novatek-nt36682e: don't unregister DSI
- device
-Content-Language: en-US
-To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-        Neil Armstrong
-	<neil.armstrong@linaro.org>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        "Maarten
- Lankhorst" <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard
-	<mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        David Airlie
-	<airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
-        Matthias Kaehlcke
-	<mka@chromium.org>,
-        Harigovindan P <harigovi@codeaurora.org>,
-        Ritesh Kumar
-	<quic_riteshk@quicinc.com>,
-        Sumit Semwal <sumit.semwal@linaro.org>
-CC: <dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>
-References: <20240404-drop-panel-unregister-v1-0-9f56953c5fb9@linaro.org>
- <20240404-drop-panel-unregister-v1-2-9f56953c5fb9@linaro.org>
-From: Jessica Zhang <quic_jesszhan@quicinc.com>
-In-Reply-To: <20240404-drop-panel-unregister-v1-2-9f56953c5fb9@linaro.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01b.na.qualcomm.com (10.47.209.197)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: nXJjY52e_EB-AGW9EaVj9oyjdD6YtJQt
-X-Proofpoint-ORIG-GUID: nXJjY52e_EB-AGW9EaVj9oyjdD6YtJQt
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-04-05_26,2024-04-05_02,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999 clxscore=1015
- lowpriorityscore=0 suspectscore=0 mlxscore=0 malwarescore=0 phishscore=0
- impostorscore=0 adultscore=0 bulkscore=0 spamscore=0 priorityscore=1501
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2404010003
- definitions=main-2404050155
+Content-Type: text/plain; charset=UTF-8
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1137; i=u.kleine-koenig@pengutronix.de; h=from:subject:message-id; bh=oSEa2gyMcGIfhQwmaPV347eueIBz6gl9/RjTI336w9c=; b=owEBbQGS/pANAwAKAY+A+1h9Ev5OAcsmYgBmEHCYHojXZwL3pxLiEyWyfajKznlUe/hWL7DxZ Tvw4XI0PZeJATMEAAEKAB0WIQQ/gaxpOnoeWYmt/tOPgPtYfRL+TgUCZhBwmAAKCRCPgPtYfRL+ TlfCB/9oMJZCZJLaeRFIc2hdhidMhFFoZGge/qwrAbqejvsYiywWcf8rJxtmOSghFdwhcILCdoV B1tu8UqnH915aKKe29GrzmkNnFjC00cEqHS4JowK2Z4+9N+z7RkDh4WQdcMkZAb6BvEm20j1zt+ bL0rxe9be5T9osBPsG8Zd9lyvjyqqiytRAnEnaIEaZtNiLw0Dar0r7CWQI2sK+lYGnIGylbRYNM 4D3Ex5iTl+RqgBiM8yiwZUuaq1fJziKI4SJDRD+4zRStGbemMLpX9kBx96AA9ymxnSQ0owuj+qa isgBhvNd6JxUe4Wu2ASRXveI9wanBqX9u9ybbQxfgFa9Ncma
+X-Developer-Key: i=u.kleine-koenig@pengutronix.de; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
+The binding dictates using 3 pwm-cells. Adhere to that.
 
+This fixes the following dtbs_check warning:
 
-On 4/4/2024 3:08 AM, Dmitry Baryshkov wrote:
-> The DSI device for the panel was registered by the DSI host, so it is an
-> error to unregister it from the panel driver. Drop the call to
-> mipi_dsi_device_unregister().
-> 
-> Fixes: ea4f9975625a ("drm/panel: Add support for Novatek NT36672E panel driver")
-> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+	arch/arm/boot/dts/nxp/imx/imx6q-pistachio.dtb: pwm@2080000: #pwm-cells:0:0: 3 was expected
+		from schema : http://devicetree.org/schemas/pwm/imx-pwm.yaml#
 
-Reviewed-by: Jessica Zhang <quic_jesszhan@quicinc.com>
+Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+---
+ arch/arm/boot/dts/nxp/imx/imx6q-pistachio.dts | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-> ---
->   drivers/gpu/drm/panel/panel-novatek-nt36672e.c | 2 --
->   1 file changed, 2 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/panel/panel-novatek-nt36672e.c b/drivers/gpu/drm/panel/panel-novatek-nt36672e.c
-> index cb7406d74466..c39fe0fc5d69 100644
-> --- a/drivers/gpu/drm/panel/panel-novatek-nt36672e.c
-> +++ b/drivers/gpu/drm/panel/panel-novatek-nt36672e.c
-> @@ -614,8 +614,6 @@ static void nt36672e_panel_remove(struct mipi_dsi_device *dsi)
->   	struct nt36672e_panel *ctx = mipi_dsi_get_drvdata(dsi);
->   
->   	mipi_dsi_detach(ctx->dsi);
-> -	mipi_dsi_device_unregister(ctx->dsi);
-> -
->   	drm_panel_remove(&ctx->panel);
->   }
->   
-> 
-> -- 
-> 2.39.2
-> 
+diff --git a/arch/arm/boot/dts/nxp/imx/imx6q-pistachio.dts b/arch/arm/boot/dts/nxp/imx/imx6q-pistachio.dts
+index 46c6b96d8073..56b77cc0af2b 100644
+--- a/arch/arm/boot/dts/nxp/imx/imx6q-pistachio.dts
++++ b/arch/arm/boot/dts/nxp/imx/imx6q-pistachio.dts
+@@ -124,7 +124,7 @@ sound {
+ 
+ 	backlight_lvds: backlight-lvds {
+ 		compatible = "pwm-backlight";
+-		pwms = <&pwm1 0 50000>;
++		pwms = <&pwm1 0 50000 0>;
+ 		brightness-levels = <
+ 			0  /*1  2  3  4  5  6*/  7  8  9
+ 			10 11 12 13 14 15 16 17 18 19
+@@ -571,7 +571,6 @@ lvds0_out: endpoint {
+ };
+ 
+ &pwm1 {
+-	#pwm-cells = <2>;
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_pwm1>;
+ 	status = "okay";
+-- 
+2.43.0
+
