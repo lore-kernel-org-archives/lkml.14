@@ -1,219 +1,134 @@
-Received: from box.trvn.ru (box.trvn.ru [194.87.146.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEE1B16D32D;
-	Fri,  5 Apr 2024 14:07:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.87.146.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB0E016D9D1;
+	Fri,  5 Apr 2024 14:09:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712326029; cv=none; b=M8ttRK4jQPnPmb9KtB+ew0GMGp+otB6Av0ExesAqjvAqOidNF8OpQ3Nvqf51FofSmK5THeg/zMpNq6c8F8zYTlySu4S7Jm/1yuP2ESdDWGlbMuAlrF7mg0kXpkiyEghWvgXo29TiyR3ZLzIGyAunDDK82AY3ITppgLsTRr7jpZs=
+	t=1712326193; cv=none; b=oDwmrRuw+scAn5SEinXbibRSvkkMeLrP4PN3forCw6W/Y8GolIUrTnCWtgrV8hqN6ghY0c3AzPlUXzEMF+h4Q9jo33LKBQp9FChEWZdkkCCPycd9BRqK7OvGr9jS7ztzEPqmeDFyGYLNHNx7bPq5yrT/BUdIAXNCxzntryYsNQo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712326029; c=relaxed/simple;
-	bh=zMX6/kEpKXg2JJqCO+hct8hxdYhd0CZBG7xGH54MWtU=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=VEnZrOA5oqqqgE66hmCdVKAFzr+UbQ7phfPc4ANW9NoeiTuc/ltlnyRmjFjX+2lrn/4yqx52Yahf8C8Ef1pXPV7KTywcSey25HG2zTExYlo6ZyfA+XahcPeTS/SG8emmY9CxcHu2RT5pef8jsvPyPiBj3MLr27ySXep5ncLXYdM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=trvn.ru; spf=pass smtp.mailfrom=trvn.ru; dkim=pass (2048-bit key) header.d=trvn.ru header.i=@trvn.ru header.b=a9DQzRfs; arc=none smtp.client-ip=194.87.146.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=trvn.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=trvn.ru
+	s=arc-20240116; t=1712326193; c=relaxed/simple;
+	bh=cnrxDzXd1/Zz7OjSfw40jDJ0E7JSzUp/GezENfo8XHY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=mP+u3ZPahpUkd9JG7l/rqzqr3EYjMhYYbuwyO/YpznvQ8SHI7ZNVXjCsp2aWoRSjjEzwrZ5Sr3QumvN8Y9LlUhC1v1W7HMp4ckA5oSJiLKsDwcK93AIkILhyIOueV8bViDiK9mzePhq4ynr3G1rimkUVm0F3rcNJnrWyBsGM1u8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Nh0miAyy; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=trvn.ru header.i=@trvn.ru header.b="a9DQzRfs"
-Received: from authenticated-user (box.trvn.ru [194.87.146.52])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-	(No client certificate requested)
-	by box.trvn.ru (Postfix) with ESMTPSA id F3BC741B3D;
-	Fri,  5 Apr 2024 19:06:48 +0500 (+05)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=trvn.ru; s=mail;
-	t=1712326009; bh=zMX6/kEpKXg2JJqCO+hct8hxdYhd0CZBG7xGH54MWtU=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=a9DQzRfsY7LMQCmzdye+cfdnte6tsZzMcE8sEOud3nFUYKnxifR5BD/GFMRN/zdrx
-	 o9UjKNDjCvo8O6c1vRvESPpirsGrAg4Tn7rVHg3oQJ1eOYq9uQK8Ttst9BkgHedbYI
-	 dAduAiCVQ5KAaK/fJS64Cq4TqkrO6w5gUhdZmLSJH5/iBYfnAs8K0mb4u92kbqz0So
-	 r79w4idU306K5j02Mozx1mUpN/O3UNAG63AC4D9P6HNaKibkj7mGF79Dr9kGbYZ6f6
-	 mCZHO2axrrDaCqw865v790XuprbLVsrTEM9CVu1uMQ3v1bfSGMJGDTz+lhsVhFq85p
-	 3NhmI5AKnB2AA==
-From: Nikita Travkin <nikita@trvn.ru>
-Date: Fri, 05 Apr 2024 19:06:13 +0500
-Subject: [PATCH 4/4] arm64: dts: qcom: Add Motorola Moto G 2015 (osprey)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Nh0miAyy"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0B27AC433F1;
+	Fri,  5 Apr 2024 14:09:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1712326193;
+	bh=cnrxDzXd1/Zz7OjSfw40jDJ0E7JSzUp/GezENfo8XHY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Nh0miAyy9/qk0l633k/apXAeuCAu0WCqUlCM5Dl+p/Lu3KpcT2Ozmm0u0DngGulRt
+	 fHWQhPOSUTNxHvH7L/ssLzPYMqbsnSZKOc673X1EMymNb8bM715PCfZH5K4FNrOqin
+	 uPefYhwuuZrs8Ps1Xx7IjK3bIRbucl53oIlgs47BSkWo94RWUSrKb0qU5iHq+ga40+
+	 Jq8va0mUr5Ead9a/N3lXvDmryg8hUKAlMnPQlHRAa6Y5FnkyPLneXUOIaN+COlZYQG
+	 gvX3cfMxtKfIBfTNhAqNdbo7PKYrCUZGG6+j6dSTbnWJ9UcqP/ISksVJ86Mlrh0DpQ
+	 403WyqEA359yQ==
+Date: Fri, 5 Apr 2024 15:09:46 +0100
+From: Mark Brown <broonie@kernel.org>
+To: Shenghao Ding <shenghao-ding@ti.com>
+Cc: linux-kernel@vger.kernel.org, lgirdwood@gmail.com, robh+dt@kernel.org,
+	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
+	linux-sound@vger.kernel.org, devicetree@vger.kernel.org,
+	perex@perex.cz, tiwai@suse.com, 13916275206@139.com,
+	mohit.chawla@ti.com, soyer@irl.hu, jkhuang3@ti.com, tiwai@suse.de,
+	pdjuandi@ti.com, manisha.agrawal@ti.com, aviel@ti.com,
+	hnagalla@ti.com, praneeth@ti.com, Baojun.Xu@fpt.com
+Subject: Re: [PATCH v8 1/4] ASoc: PCM6240: Create PCM6240 Family driver code
+Message-ID: <dc5dad72-09cc-4001-afdc-1cd92cac312e@sirena.org.uk>
+References: <20240403003159.389-1-shenghao-ding@ti.com>
+ <20240403003159.389-2-shenghao-ding@ti.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240405-msm8916-moto-init-v1-4-502b58176d34@trvn.ru>
-References: <20240405-msm8916-moto-init-v1-0-502b58176d34@trvn.ru>
-In-Reply-To: <20240405-msm8916-moto-init-v1-0-502b58176d34@trvn.ru>
-To: Bjorn Andersson <andersson@kernel.org>, 
- Konrad Dybcio <konrad.dybcio@linaro.org>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
- Conor Dooley <conor+dt@kernel.org>
-Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, Nikita Travkin <nikita@trvn.ru>, 
- Martijn Braam <martijn@brixit.nl>, Stephan Gerhold <stephan@gerhold.net>
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3668; i=nikita@trvn.ru;
- h=from:subject:message-id; bh=1lxV4kmdpqmEPj0zA90yXKpvEuv1NFWQ2boCZ0RO+Q8=;
- b=owEBbQKS/ZANAwAIAUMc7O4oGb91AcsmYgBmEAVz9Gow7um2uy0HXK62Xn8smmZtA4BgR1cVp
- CypqEnMpdiJAjMEAAEIAB0WIQTAhK9UUj+qg34uxUdDHOzuKBm/dQUCZhAFcwAKCRBDHOzuKBm/
- dTDyEACoM7nY2EUtgyBqauzrDYAM+62aHtdOoE0hNSE6Bkbf7MRBP8mtvFK07I9PW4PVv6kiuKl
- ZgC+C+hfNKXFIz4yZqN8EeNIZGjI3sox8NEU/bIktF4xmx0iFRIyxOv+gkPhXKcdzMYFDEZnucO
- NUOAJM3olx+eIOpKwJA7cg9nsaS3bNAMqD6nk+/kfrkUTiXfMH953Rx767+Oi8MImYgMExB5Us2
- 5XDB8Z9LOs62ZsrjhqoeaigWO6SFxbB4g/l2YBlr2dJFC1onzAuyfQQDq0rnv+/n+j9/2hiAaoZ
- nat4zaMF6hp50MpDQV08HdAuRyML4cvAufn0rzIlx980XdMGqx4fK0ZDt7jRTlGCMDM8SH9zxpS
- rw5Ljfn61mznLWqo9662qr3yNa7zLU4NJkJ/7ZeqC51RgpuoB5VFrsA/JMagUrVse5C9iQYmbx6
- i61H9Bt2ts6+iilyRnIlJv/WPua8L+QGPkrjW9OqgyOvkBjHPXufM8CQ4kpll8yfM/1X+k7Nsas
- R+G2CtE4XRurCgXZZQSIuvhOn/O+0OqRa7zNRccltEeKBVYPnpUM6WWzCyLos1ojsN3rzdLkZGh
- jsktuv0ThFpBA3JFXDi3Utnvv7Wl+wbb5DcI8OStfbK10ENQ49LXaX9t5cyVkjwpF7r2/rvc1zT
- sERVPPdYGGkvQEA==
-X-Developer-Key: i=nikita@trvn.ru; a=openpgp;
- fpr=C084AF54523FAA837E2EC547431CECEE2819BF75
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="zE+8122Hjp+Flwjb"
+Content-Disposition: inline
+In-Reply-To: <20240403003159.389-2-shenghao-ding@ti.com>
+X-Cookie: Honk if you love peace and quiet.
 
-From: Martijn Braam <martijn@brixit.nl>
 
-Motorola Moto G 2015 is an msm8916 based smartphone.
+--zE+8122Hjp+Flwjb
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Supported features:
+On Wed, Apr 03, 2024 at 08:31:55AM +0800, Shenghao Ding wrote:
 
-- eMMC and SD;
-- Buttons;
-- Touchscreen;
-- USB;
-- Fuel Gauge;
-- Sound.
+> +static const char *const pcmdev_ctrl_name[] = {
+> +	"%s-i2c-%d-dev%d-ch%d-ana-gain",
+> +	"%s-i2c-%d-dev%d-ch%d-digi-gain",
+> +	"%s-i2c-%d-dev%d-ch%d-fine-gain",
+> +};
+> +
+> +static const char *const pcmdev_ctrl_name_with_prefix[] = {
+> +	"%s-dev%d-ch%d-ana-gain",
+> +	"%s-dev%d-ch%d-digi-gain",
+> +	"%s-dev%d-ch%d-fine-gain",
+> +};
 
-Signed-off-by: Martijn Braam <martijn@brixit.nl>
-Signed-off-by: Stephan Gerhold <stephan@gerhold.net>
-[Nikita: Use common dtsi]
-Signed-off-by: Nikita Travkin <nikita@trvn.ru>
----
- arch/arm64/boot/dts/qcom/Makefile                  |   1 +
- .../boot/dts/qcom/msm8916-motorola-osprey.dts      | 105 +++++++++++++++++++++
- 2 files changed, 106 insertions(+)
+These still don't look like idiomatic ALSA control names, if nothing
+else volume controls should end with Volume but the whole all lower case
+with -s thing really isn't idiomatic.
 
-diff --git a/arch/arm64/boot/dts/qcom/Makefile b/arch/arm64/boot/dts/qcom/Makefile
-index acf3ee316fba..ff23afb1b0db 100644
---- a/arch/arm64/boot/dts/qcom/Makefile
-+++ b/arch/arm64/boot/dts/qcom/Makefile
-@@ -32,6 +32,7 @@ dtb-$(CONFIG_ARCH_QCOM)	+= msm8916-huawei-g7.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= msm8916-longcheer-l8150.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= msm8916-longcheer-l8910.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= msm8916-motorola-harpia.dtb
-+dtb-$(CONFIG_ARCH_QCOM)	+= msm8916-motorola-osprey.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= msm8916-motorola-surnia.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= msm8916-mtp.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= msm8916-samsung-a3u-eur.dtb
-diff --git a/arch/arm64/boot/dts/qcom/msm8916-motorola-osprey.dts b/arch/arm64/boot/dts/qcom/msm8916-motorola-osprey.dts
-new file mode 100644
-index 000000000000..ec5589fc69bd
---- /dev/null
-+++ b/arch/arm64/boot/dts/qcom/msm8916-motorola-osprey.dts
-@@ -0,0 +1,105 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+
-+/dts-v1/;
-+
-+#include "msm8916-motorola-common.dtsi"
-+
-+/ {
-+	model = "Motorola Moto G 2015";
-+	compatible = "motorola,osprey", "qcom,msm8916";
-+	chassis-type = "handset";
-+
-+	reg_touch_vdda: regulator-touch-vdda {
-+		compatible = "regulator-fixed";
-+		regulator-name = "touch_vdda";
-+		gpio = <&tlmm 114 GPIO_ACTIVE_HIGH>;
-+		enable-active-high;
-+		pinctrl-0 = <&touch_vdda_default>;
-+		pinctrl-names = "default";
-+		startup-delay-us = <300>;
-+		vin-supply = <&pm8916_l16>;
-+	};
-+};
-+
-+&blsp_i2c1 {
-+	status = "okay";
-+
-+	battery@36 {
-+		compatible = "maxim,max17050";
-+		reg = <0x36>;
-+
-+		interrupts-extended = <&tlmm 49 IRQ_TYPE_EDGE_FALLING>;
-+
-+		pinctrl-0 = <&battery_alert_default>;
-+		pinctrl-names = "default";
-+
-+		maxim,rsns-microohm = <10000>;
-+		maxim,over-heat-temp = <600>;
-+		maxim,cold-temp = <(-200)>;
-+		maxim,dead-volt = <3200>;
-+		maxim,over-volt = <4500>;
-+
-+	};
-+};
-+
-+&blsp_i2c6 {
-+	/* magnetometer@c */
-+};
-+
-+&pm8916_codec {
-+	qcom,micbias1-ext-cap;
-+	qcom,micbias2-ext-cap;
-+};
-+
-+&sdhc_2 {
-+	pinctrl-0 = <&sdc2_default &sdc2_cd_default>;
-+	pinctrl-1 = <&sdc2_sleep &sdc2_cd_default>;
-+	pinctrl-names = "default", "sleep";
-+
-+	cd-gpios = <&tlmm 25 GPIO_ACTIVE_LOW>;
-+};
-+
-+&sound {
-+	audio-routing =
-+		"AMIC1", "MIC BIAS External1",
-+		"AMIC3", "MIC BIAS External1";
-+};
-+
-+&touchscreen {
-+	interrupts-extended = <&tlmm 21 IRQ_TYPE_EDGE_FALLING>;
-+
-+	vdd-supply = <&reg_touch_vdda>;
-+
-+	pinctrl-0 = <&ts_int_default>;
-+	pinctrl-names = "default";
-+};
-+
-+&tlmm {
-+	battery_alert_default: battery-alert-default-state {
-+		pins = "gpio49";
-+		function = "gpio";
-+		drive-strength = <2>;
-+		bias-pull-up;
-+	};
-+
-+	sdc2_cd_default: sdc2-cd-default-state {
-+		pins = "gpio25";
-+		function = "gpio";
-+		drive-strength = <2>;
-+		bias-disable;
-+	};
-+
-+	ts_int_default: ts-int-default-state {
-+		pins = "gpio21";
-+		function = "gpio";
-+		drive-strength = <2>;
-+		bias-disable;
-+	};
-+
-+	touch_vdda_default: touch-vdda-default-state {
-+		pins = "gpio114";
-+		function = "gpio";
-+		drive-strength = <2>;
-+		bias-disable;
-+	};
-+};
+> +static int pcmdev_put_volsw(struct snd_kcontrol *kcontrol,
+> +	struct snd_ctl_elem_value *ucontrol, int vol_ctrl_type)
+> +{
 
--- 
-2.44.0
+> +	err = pcmdev_dev_update_bits(pcm_dev, dev_no, reg, val_mask, val);
+> +	if (err) {
+> +		dev_err(pcm_dev->dev, "%s: update_bits err = %d\n",
+> +			__func__, err);
+> +		err = 0;
+> +	}
 
+Why don't we report errors to users?
+
+> +		case PCMDEVICE_CMD_DELAY: {
+> +			unsigned int delay_time = 0;
+> +
+> +			if (subblk_offset + 2 > sublocksize) {
+> +				dev_err(pcm_dev->dev,
+> +					"%s: deley out of boundary\n",
+> +					__func__);
+> +				break;
+> +			}
+> +			delay_time = get_unaligned_be16(&data[2]) * 1000;
+> +			usleep_range(delay_time, delay_time + 50);
+> +			subblk_offset += 2;
+> +		}
+> +			break;
+> +		case PCMDEVICE_CMD_FIELD_W:
+> +		if (subblk_offset + 6 > sublocksize) {
+> +			dev_err(pcm_dev->dev,
+> +				"%s: bit write out of memory\n", __func__);
+> +			break;
+> +		}
+> +		ret = pcmdev_dev_update_bits(pcm_dev, chn,
+> +			PCMDEVICE_REG(data[subblk_offset + 3],
+> +			data[subblk_offset + 4]), data[subblk_offset + 1],
+> +			data[subblk_offset + 5]);
+
+The indentation here is all messed up, things not indented for the case
+blocks and so on.
+
+--zE+8122Hjp+Flwjb
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmYQBikACgkQJNaLcl1U
+h9Bstgf/fZgVu4w8dXZljCEZ/q4J2JEc9LqY60UgCz5OG6rDlq7Vngmm398tJIiX
+L+9sNepPJRkNh1QGaujU/yK/aB9WBkiQqEKAPmspBYbqDf1ypAPjOtP8pJeKiHc3
+MyLJ/NiblAMt3+rdt23gLWhy2LV6tLAj+b/sM09vwSCVy0eqnkt+R7awszCsxb7k
+ZmZ2I4JCC41iqzZlWg+8qgJTiVD8JfOHhINxj0wuYwqwtdQOqGj/sVsv3e0spq6L
+aZJs4WRnnFKJy8jkrCs4TIGe2qyqnBHECYd+68hdjwuoWIjoVPqpceAIjD/HhIPG
+XXfAKY4FRSJONbDd4A5685V5ctPODg==
+=prZg
+-----END PGP SIGNATURE-----
+
+--zE+8122Hjp+Flwjb--
