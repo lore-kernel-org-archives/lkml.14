@@ -1,55 +1,58 @@
 Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AB96171667;
-	Fri,  5 Apr 2024 17:05:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E1FB171658;
+	Fri,  5 Apr 2024 17:05:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712336757; cv=none; b=HT3TsKH0Y60tJbaEicXZipl6fRKXK6S+dh9y5BOt9kW6n7b+baIlA4cOV8PVo/1oc5WChQ0ajNZDhPfXJ9jTs2CPoYAwdmJeR28GNTlbpRglWmxHGmIS0nB/Tnyx/Yas3q7uB1D/jQ1GdXWbGgRIeHwnz8IVKZsWzEl2XNJuuro=
+	t=1712336756; cv=none; b=G9zf71sDNIYOyxAInu9tS5gvSCafg1PE/RBKH1zh5EPvuDcaYF1+amPlBfN2mKqZnRaFGBUMScygxZO8ZbQ+9wZKL4ww3P6zp+V1AAPPZlQBZbo2+6Lw9xZyVR1FEtQbXNIVijSlQMfypt9DASQFnhhZcLbFBtPRUV7o2Kwsw90=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712336757; c=relaxed/simple;
-	bh=3MGXpzhZa+gKGaC3J1tW/XisbdnMmhiN8wByr21xusU=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=D6n4XTtEPWuV1OMkpF8VXBnpkXlzx1tEg9HWeKzWK6Qr52gUFRB5/CI4reo7EI/Kjk5rE84SIUpzPciQVDedGx5TiSg/BEXKVMmZec0vZVW5sp6REfjDvpsQbtUaB0k/p+FYqu4/Ad9FvkarIHE+81TaCOaqF6OfDKqLoYg3H84=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=QVDI5ZkD; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=HREehNmU; arc=none smtp.client-ip=195.135.223.130
+	s=arc-20240116; t=1712336756; c=relaxed/simple;
+	bh=sNMiOrjpJBDlOy/o9yvn0i9g7eME0srR4YDWEYMqrMI=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=u7IPdEn0Wo6XGmPtTPVl2OyKdzEAd9j6aFGHGT6eA0QcjsTkUxnqbxw2mmS2WMLoR1S5LK/DW0W+7fDDxuky1fJ1tj0q+hv4rKt1BzUQ0w1wHZEYFuEOJczMyYKnGz4xlYaT97m1eGUxAeMbRfJN7Inrodif7pWsmyeMMcPuqxM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=eOtiogYD; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=eOtiogYD; arc=none smtp.client-ip=195.135.223.130
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="QVDI5ZkD";
-	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="HREehNmU"
+	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="eOtiogYD";
+	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="eOtiogYD"
 Received: from imap2.dmz-prg2.suse.org (imap2.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:98])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id B9C1621ABD;
-	Fri,  5 Apr 2024 17:05:50 +0000 (UTC)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 5239121AC4;
+	Fri,  5 Apr 2024 17:05:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
 	t=1712336752; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=tYd9ZCVD4B5C76HBNsh7rrYDdpVnw16Z20c+CbVHIHY=;
-	b=QVDI5ZkDa7kjXVucu/wn/cG6/Ws0VGhyDLsshTv56UndfTmPEAelmT9rPr1y664+c1f3hr
-	q5qvDbIAl0qMBff2JibgGnYew52DqGK97bpc8OjAdmggOrB9ehXwVxKi2IeKdrNaD1xanM
-	jajzR0wHDyvh80TTqKymK7F9tMW01LE=
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=JL3VRnglLkYkgr45ZBKtck6zrwTEkznP9XmoZIrWnWY=;
+	b=eOtiogYDrUalSfchBR9qJbJ2LeHTZuh51KD2A/q/ggcTFhK7FbQ7Lp5Znl7nwZwdLTdBMc
+	J3rmnoLPgBN6MOGETJTb5ppMGvGIxe8Yz7qnVBabjr3F8kQ4+JnfX0jOKl29cCGVC+vfNS
+	dr/s4Eb/WOcJ9xtLIZFDH7xh2FMRL28=
 Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.com header.s=susede1 header.b=HREehNmU
+	dkim=pass header.d=suse.com header.s=susede1 header.b=eOtiogYD
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1712336750; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	t=1712336752; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=tYd9ZCVD4B5C76HBNsh7rrYDdpVnw16Z20c+CbVHIHY=;
-	b=HREehNmUjhmCeyr2mWq5nHivhsblunCRm9u/XprWvOaQT/oRLC/0BYtrQLJFk8t4d1AESn
-	H1kImb6MP1s9jbZfefrIbV3CPAPtxfdbPa8ye/6gx53+4XQ02X3qRCT0y3U5gYh6qqBPH9
-	nrkijp49BrjomK065BSiQdC00eIThKs=
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=JL3VRnglLkYkgr45ZBKtck6zrwTEkznP9XmoZIrWnWY=;
+	b=eOtiogYDrUalSfchBR9qJbJ2LeHTZuh51KD2A/q/ggcTFhK7FbQ7Lp5Znl7nwZwdLTdBMc
+	J3rmnoLPgBN6MOGETJTb5ppMGvGIxe8Yz7qnVBabjr3F8kQ4+JnfX0jOKl29cCGVC+vfNS
+	dr/s4Eb/WOcJ9xtLIZFDH7xh2FMRL28=
 Received: from imap2.dmz-prg2.suse.org (localhost [127.0.0.1])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by imap2.dmz-prg2.suse.org (Postfix) with ESMTPS id 91B4A139E8;
-	Fri,  5 Apr 2024 17:05:50 +0000 (UTC)
+	by imap2.dmz-prg2.suse.org (Postfix) with ESMTPS id 2B39313A92;
+	Fri,  5 Apr 2024 17:05:52 +0000 (UTC)
 Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
 	by imap2.dmz-prg2.suse.org with ESMTPSA
-	id TQDGIm4vEGYteAAAn2gu4w
-	(envelope-from <mkoutny@suse.com>); Fri, 05 Apr 2024 17:05:50 +0000
+	id qIPoCXAvEGYteAAAn2gu4w
+	(envelope-from <mkoutny@suse.com>); Fri, 05 Apr 2024 17:05:52 +0000
 From: =?UTF-8?q?Michal=20Koutn=C3=BD?= <mkoutny@suse.com>
 To: cgroups@vger.kernel.org,
 	linux-doc@vger.kernel.org,
@@ -60,10 +63,12 @@ Cc: Tejun Heo <tj@kernel.org>,
 	Johannes Weiner <hannes@cmpxchg.org>,
 	Jonathan Corbet <corbet@lwn.net>,
 	Shuah Khan <shuah@kernel.org>
-Subject: [RFC PATCH v3 0/9] pids controller events rework and migration charging
-Date: Fri,  5 Apr 2024 19:05:39 +0200
-Message-ID: <20240405170548.15234-1-mkoutny@suse.com>
+Subject: [RFC PATCH v3 8/9] cgroup/pids: Enforce pids.max on task migrations
+Date: Fri,  5 Apr 2024 19:05:47 +0200
+Message-ID: <20240405170548.15234-9-mkoutny@suse.com>
 X-Mailer: git-send-email 2.44.0
+In-Reply-To: <20240405170548.15234-1-mkoutny@suse.com>
+References: <20240405170548.15234-1-mkoutny@suse.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -94,70 +99,180 @@ X-Spamd-Result: default: False [-3.51 / 50.00];
 	RCPT_COUNT_SEVEN(0.00)[9];
 	RCVD_COUNT_TWO(0.00)[2];
 	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[pids.events:url,suse.com:dkim,imap2.dmz-prg2.suse.org:helo,imap2.dmz-prg2.suse.org:rdns];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap2.dmz-prg2.suse.org:helo,imap2.dmz-prg2.suse.org:rdns,suse.com:dkim,suse.com:email];
 	DKIM_SIGNED(0.00)[suse.com:s=susede1];
 	DKIM_TRACE(0.00)[suse.com:+]
 X-Rspamd-Action: no action
-X-Rspamd-Queue-Id: B9C1621ABD
+X-Rspamd-Queue-Id: 5239121AC4
 X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
 X-Spam-Flag: NO
 X-Spam-Score: -3.51
 
-The series consists of two parts:
-- pids.events rework (originally v2, patches 1-6,
-- migration charging, patches 7-9.
+While pids controller is designed with only forks in mind, it leads to
+situations where limit is apparently ineffective.
+A manager daemon is in /src and it spawns tasks into /dst. The
+administrator sets up a limit dst/pids.max while src/pids.max is
+unlimited. The manager daemon can spawn more than dst/pids.max tasks
+because they get into their target cgroup via migration (or
+CLONE_INTO_CGROUP).
 
-The changes are independent in principle, I stacked them for (my)
-convenience and because they both deserve RFC:
+For this (migration) to work both src and dst must be in the same
+resource domain so the manager daemon does not honor the limit which is
+under its control anyway and no excessive resource consumption happens.
 
-1) Changed semantics of v2 pids.events
-  - similar change was proposed for memory.swap.events:max [1]
-2) Migration charging is obsolete concept
+dst/pids.current > dst/pids.max may come as a surprise when the
+spawning mechanism is opaque to the administrator of dst/pids.max.
 
-How are the new events supposed to be useful?
+Change the behavior of pids controller to take into account limits of
+target cgroup upon migration (but only below common ancestor src and
+dst, pids.current of common ancestor and above is not affected by
+migration, so deliberatly ignore pre-existing pids.current > pids.max).
 
-- pids.events.local:max
-  - tells that cgroup's limit is hit (too tight?)
-- pids.events.local:max.imposed
-  - tells that cgroup's workload was restricted (generalization of
-    'cgroup: fork rejected by pids controller in %s' message)
-- pids.events:*
-  - "only" directs top-down search to cgroups of interest
+This change of behavior is hidden behind cgroup2 mount option and
+the default is unchanged, pids.max won't affect migrations.
 
-The migration charging is motivated by apparenty surprising
-	pids.current > pids.max
-because supervised processes are forked in supervisor's cgroup (more
-details in commit cgroup/pids: Enforce pids.max on task migrations too)
+Signed-off-by: Michal Koutný <mkoutny@suse.com>
+---
+ Documentation/admin-guide/cgroup-v2.rst |  8 +++++++-
+ include/linux/cgroup-defs.h             |  7 ++++++-
+ kernel/cgroup/cgroup.c                  | 16 +++++++++++++++-
+ kernel/cgroup/pids.c                    |  8 ++++++--
+ 4 files changed, 34 insertions(+), 5 deletions(-)
 
-Changes from v2 (https://lore.kernel.org/r/20200205134426.10570-1-mkoutny@suse.com)
-- implemented pids.events.local (Tejun)
-- added migration charging
-
-[1] https://lore.kernel.org/r/20230202155626.1829121-1-hannes@cmpxchg.org/
-
-Michal Koutný (9):
-  cgroup/pids: Remove superfluous zeroing
-  cgroup/pids: Separate semantics of pids.events related to pids.max
-  cgroup/pids: Make event counters hierarchical
-  cgroup/pids: Add pids.events.local
-  selftests: cgroup: Lexicographic order in Makefile
-  selftests: cgroup: Add basic tests for pids controller
-  cgroup/pids: Replace uncharge/charge pair with a single function
-  cgroup/pids: Enforce pids.max on task migrations
-  selftests: cgroup: Add tests pids controller
-
- Documentation/admin-guide/cgroup-v1/pids.rst |   3 +-
- Documentation/admin-guide/cgroup-v2.rst      |  22 +-
- include/linux/cgroup-defs.h                  |   7 +-
- kernel/cgroup/cgroup.c                       |  16 +-
- kernel/cgroup/pids.c                         | 206 +++++++++----
- tools/testing/selftests/cgroup/Makefile      |  25 +-
- tools/testing/selftests/cgroup/test_pids.c   | 302 +++++++++++++++++++
- 7 files changed, 514 insertions(+), 67 deletions(-)
- create mode 100644 tools/testing/selftests/cgroup/test_pids.c
-
-
-base-commit: 026e680b0a08a62b1d948e5a8ca78700bfac0e6e
+diff --git a/Documentation/admin-guide/cgroup-v2.rst b/Documentation/admin-guide/cgroup-v2.rst
+index 5d4c505cae06..d7e721aed584 100644
+--- a/Documentation/admin-guide/cgroup-v2.rst
++++ b/Documentation/admin-guide/cgroup-v2.rst
+@@ -239,6 +239,11 @@ cgroup v2 currently supports the following mount options.
+           will not be tracked by the memory controller (even if cgroup
+           v2 is remounted later on).
+ 
++  pids_miglimit
++        Apply pids.max limit also when migrating tasks between cgroups. Only
++        new destination limit are taken into account, i.e. if subtree has
++        pids.current > pids.max, migration within that subtree is allowed.
++
+ 
+ Organizing Processes and Threads
+ --------------------------------
+@@ -2204,7 +2209,8 @@ Organisational operations are not blocked by cgroup policies, so it is
+ possible to have pids.current > pids.max.  This can be done by either
+ setting the limit to be smaller than pids.current, or attaching enough
+ processes to the cgroup such that pids.current is larger than
+-pids.max.  However, it is not possible to violate a cgroup PID policy
++pids.max (unless pids_miglimit mount options is given).
++However, it is not possible to violate a cgroup PID policy
+ through fork() or clone(). These will return -EAGAIN if the creation
+ of a new process would cause a cgroup policy to be violated.
+ 
+diff --git a/include/linux/cgroup-defs.h b/include/linux/cgroup-defs.h
+index ea48c861cd36..a99db24b5496 100644
+--- a/include/linux/cgroup-defs.h
++++ b/include/linux/cgroup-defs.h
+@@ -119,7 +119,12 @@ enum {
+ 	/*
+ 	 * Enable hugetlb accounting for the memory controller.
+ 	 */
+-	 CGRP_ROOT_MEMORY_HUGETLB_ACCOUNTING = (1 << 19),
++	CGRP_ROOT_MEMORY_HUGETLB_ACCOUNTING = (1 << 19),
++
++	/*
++	 * Enforce pids limit upon task migration
++	 */
++	CGRP_ROOT_PIDS_MIGRATION_LIMIT = (1 << 20),
+ };
+ 
+ /* cftype->flags */
+diff --git a/kernel/cgroup/cgroup.c b/kernel/cgroup/cgroup.c
+index a66c088c851c..9aa6428c84c1 100644
+--- a/kernel/cgroup/cgroup.c
++++ b/kernel/cgroup/cgroup.c
+@@ -1922,6 +1922,7 @@ enum cgroup2_param {
+ 	Opt_memory_localevents,
+ 	Opt_memory_recursiveprot,
+ 	Opt_memory_hugetlb_accounting,
++	Opt_pids_miglimit,
+ 	nr__cgroup2_params
+ };
+ 
+@@ -1931,6 +1932,7 @@ static const struct fs_parameter_spec cgroup2_fs_parameters[] = {
+ 	fsparam_flag("memory_localevents",	Opt_memory_localevents),
+ 	fsparam_flag("memory_recursiveprot",	Opt_memory_recursiveprot),
+ 	fsparam_flag("memory_hugetlb_accounting", Opt_memory_hugetlb_accounting),
++	fsparam_flag("pids_miglimit",           Opt_pids_miglimit),
+ 	{}
+ };
+ 
+@@ -1960,6 +1962,9 @@ static int cgroup2_parse_param(struct fs_context *fc, struct fs_parameter *param
+ 	case Opt_memory_hugetlb_accounting:
+ 		ctx->flags |= CGRP_ROOT_MEMORY_HUGETLB_ACCOUNTING;
+ 		return 0;
++	case Opt_pids_miglimit:
++		ctx->flags |= CGRP_ROOT_PIDS_MIGRATION_LIMIT;
++		return 0;
+ 	}
+ 	return -EINVAL;
+ }
+@@ -1989,6 +1994,12 @@ static void apply_cgroup_root_flags(unsigned int root_flags)
+ 			cgrp_dfl_root.flags |= CGRP_ROOT_MEMORY_HUGETLB_ACCOUNTING;
+ 		else
+ 			cgrp_dfl_root.flags &= ~CGRP_ROOT_MEMORY_HUGETLB_ACCOUNTING;
++
++		if (root_flags & CGRP_ROOT_PIDS_MIGRATION_LIMIT)
++			cgrp_dfl_root.flags |= CGRP_ROOT_PIDS_MIGRATION_LIMIT;
++		else
++			cgrp_dfl_root.flags &= ~CGRP_ROOT_PIDS_MIGRATION_LIMIT;
++
+ 	}
+ }
+ 
+@@ -2004,6 +2015,8 @@ static int cgroup_show_options(struct seq_file *seq, struct kernfs_root *kf_root
+ 		seq_puts(seq, ",memory_recursiveprot");
+ 	if (cgrp_dfl_root.flags & CGRP_ROOT_MEMORY_HUGETLB_ACCOUNTING)
+ 		seq_puts(seq, ",memory_hugetlb_accounting");
++	if (cgrp_dfl_root.flags & CGRP_ROOT_PIDS_MIGRATION_LIMIT)
++		seq_puts(seq, ",pids_miglimit");
+ 	return 0;
+ }
+ 
+@@ -7061,7 +7074,8 @@ static ssize_t features_show(struct kobject *kobj, struct kobj_attribute *attr,
+ 			"favordynmods\n"
+ 			"memory_localevents\n"
+ 			"memory_recursiveprot\n"
+-			"memory_hugetlb_accounting\n");
++			"memory_hugetlb_accounting\n"
++			"pids_miglimit\n");
+ }
+ static struct kobj_attribute cgroup_features_attr = __ATTR_RO(features);
+ 
+diff --git a/kernel/cgroup/pids.c b/kernel/cgroup/pids.c
+index 9df8a209a6e2..4683629b8168 100644
+--- a/kernel/cgroup/pids.c
++++ b/kernel/cgroup/pids.c
+@@ -217,6 +217,7 @@ static int pids_can_attach(struct cgroup_taskset *tset)
+ {
+ 	struct task_struct *task;
+ 	struct cgroup_subsys_state *dst_css;
++	int err, ret = 0;
+ 
+ 	cgroup_taskset_for_each(task, dst_css, tset) {
+ 		struct pids_cgroup *pids = css_pids(dst_css);
+@@ -231,10 +232,13 @@ static int pids_can_attach(struct cgroup_taskset *tset)
+ 		old_css = task_css(task, pids_cgrp_id);
+ 		old_pids = css_pids(old_css);
+ 
+-		(void) pids_tranfer_charge(old_pids, pids, 1);
++		err = pids_tranfer_charge(old_pids, pids, 1);
++
++		if (!ret && (cgrp_dfl_root.flags & CGRP_ROOT_PIDS_MIGRATION_LIMIT))
++			ret = err;
+ 	}
+ 
+-	return 0;
++	return ret;
+ }
+ 
+ static void pids_cancel_attach(struct cgroup_taskset *tset)
 -- 
 2.44.0
 
