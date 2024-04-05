@@ -1,78 +1,61 @@
-Received: from mail-pf1-f169.google.com (mail-pf1-f169.google.com [209.85.210.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out203-205-251-80.mail.qq.com (out203-205-251-80.mail.qq.com [203.205.251.80])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A99B81649B3
-	for <linux-kernel@vger.kernel.org>; Fri,  5 Apr 2024 10:27:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2694527447;
+	Fri,  5 Apr 2024 10:29:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.251.80
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712312858; cv=none; b=V6uMkkZJUODO4nce5H8H67HFjukFLZolndBqfBFSCu5DLVZZlGOBpBjPrKNLkpDSxeVTpDm8Y2VaL2//R4gY5rYZn52D9mMox8bh6JSZKPwhV7uCBZWaLCEysX4OoELhS/GAZJGxBN5OfJMHDwV1kOIDB7ZsGE9VOH+1xzSVHAk=
+	t=1712312992; cv=none; b=gsNJTdD/o0s05z4pXM0T4ZE8wTMqRjrJ0noEf7ex0iKdmYxfhPxgSO9q6XuJkbw0kXji+DffliDkP8hIzV1BszLxIOmwVxySicWuFqxizdN8btaqnzbT+Z8xSw5vMzT3Lcu4kUHrbr4Y3e18RGImfaEuGZGS+0D+bn4ZCS1Njcg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712312858; c=relaxed/simple;
-	bh=xU+87YeJV2oMg/LrboKIyNFcwar7pMcfTUa1FZYXXlg=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=ulJtbZIBmTFsZ0aZK5nPP95v3VKa7p4eGusX6zmhNrmunxxj3KJftV72w7aMvnF/j5bfequLwAyxqMU4hE6Ithy3N0ezWMxDYBMukX5D0nB3TBzVdPdHwTiUI+Iz9fjwICqJaJLHTEh0qCKYNv6s5Swy1MoZUUHG5GrrgBl2ZIM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RWWkZXSp; arc=none smtp.client-ip=209.85.210.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1712312992; c=relaxed/simple;
+	bh=BroQavTwVXKhYcOxCeyHgRm5Lf2bnHD/v6yEJjqHO7g=;
+	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
+	 MIME-Version; b=p3QsL2uvMTB5aXQZrG9pHanbEu97JZkZc9oWbF+HyqA+UyzcVWdN8AIMPDoYDkK8Smmj+PZdtPOTtQ/uw4lL3LvUeTTzDCB2xMsOc+fScLwvgkKddjJhFoT+pdI/od8SjmuugMJk3C3ieo9Mk+jyMWZnFho0xgzxEyObhmDRFIY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=ilOJSdeQ; arc=none smtp.client-ip=203.205.251.80
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RWWkZXSp"
-Received: by mail-pf1-f169.google.com with SMTP id d2e1a72fcca58-6ecfeefe94cso358194b3a.0
-        for <linux-kernel@vger.kernel.org>; Fri, 05 Apr 2024 03:27:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1712312856; x=1712917656; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ykuY6i2Fu38nsDbXE/VtCFZLlgGKZpXgb6cmPoEsG8o=;
-        b=RWWkZXSpcytbPO9+InhPbUk3jdAz92PM6gSi2zMSMPCTq+BRU22KwbARcklHoReVE/
-         Lde/g9CuqItTs1XobhAGmczeGhf7Z6hPpuser4qfCJPyU57ySb2iapDfGDqHfdKsuRNw
-         jro36eiQ6VpHbnjZGAfj3MdG0NNlADdk6UOErNfy3eeSUdR/H0qMiGzhkn7N+hVF96D9
-         D71JFmxAsAq1uQRLfwkNTPRva8auH/MfCsDvFR76WWQ2fBsNWhXTWbxu6WKrmT6BsQXj
-         4KThhbnwvH7Qp1cgorfICzRbv9JjUIDF9PDyb4DDD0qQMiexaPHMMahrC3W4+LDc1owJ
-         2ikw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712312856; x=1712917656;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ykuY6i2Fu38nsDbXE/VtCFZLlgGKZpXgb6cmPoEsG8o=;
-        b=orGtLcfZcR4Ct8lCQgROeiLyO9+zeI+LD4WP0kUiwHAbuox4cByTqcKZjGL7Nod93d
-         8cQcYHeWu7umHx9GGWHxxlSKeFCGH2r0t3RKqmQ4sjTjlalLKHgc3bDFE1yiAoMi66vG
-         Odkj7GM5lODiPgYUmMq8TzAO8dt+oBEoWNghCNuLTIfKXtwDDNiYj+5xCoWf0tpUhSgx
-         PbNIPN32lSC4efgIbaB0F7YkDWa8ReZbroXX7cxp0PtuHtbmkBn4eanWNclJIlQBGj2F
-         QKjqxcjCki0vj1Z55mHkNWC5ZJ4ZKZLmiThG8zXrp1xeDnmgUX4cx4iFSDlkvd/6LIrz
-         9VyA==
-X-Forwarded-Encrypted: i=1; AJvYcCXoxPGuLwk5hs9qa/yvLQyq32T2x2/HekGC+4BS/AViuP3jLh375/NVyutQB/eIKzqUaIxdoeA12WnAYEhesAqmfD81ubyQGfTC8sPb
-X-Gm-Message-State: AOJu0YwaD7yVSqTi+hpQvFemQhheN68OlnXZjAwuf2efGUSx3hwjsjAA
-	AxIU5m5ClCGJal+dbbsyznhsEO/grrC/MctqpZE13kLGqB26N9yZ
-X-Google-Smtp-Source: AGHT+IH7lyqbZgiy6gFtYdrA72hCZMiuUcdajSkaC+qbDc4j+Oz8Sw3oeAQrQ+KFY+9839aPVaFHvA==
-X-Received: by 2002:a05:6a00:2341:b0:6ea:9b37:c288 with SMTP id j1-20020a056a00234100b006ea9b37c288mr1454381pfj.15.1712312855698;
-        Fri, 05 Apr 2024 03:27:35 -0700 (PDT)
-Received: from localhost.localdomain ([2407:7000:8942:5500:aaa1:59ff:fe57:eb97])
-        by smtp.gmail.com with ESMTPSA id f20-20020a056a00229400b006ed06aa3604sm113334pfe.82.2024.04.05.03.27.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 05 Apr 2024 03:27:35 -0700 (PDT)
-From: Barry Song <21cnbao@gmail.com>
-To: david@redhat.com,
-	akpm@linux-foundation.org,
-	linux-mm@kvack.org,
-	ryan.roberts@arm.com
-Cc: cerasuolodomenico@gmail.com,
-	chrisl@kernel.org,
-	kasong@tencent.com,
-	peterx@redhat.com,
-	surenb@google.com,
-	v-songbaohua@oppo.com,
-	willy@infradead.org,
-	yosryahmed@google.com,
-	yuzhao@google.com,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v4 2/2] mm: add per-order mTHP anon_swpout and anon_swpout_fallback counters
-Date: Fri,  5 Apr 2024 23:27:04 +1300
-Message-Id: <20240405102704.77559-3-21cnbao@gmail.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240405102704.77559-1-21cnbao@gmail.com>
-References: <20240405102704.77559-1-21cnbao@gmail.com>
+	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="ilOJSdeQ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
+	t=1712312988; bh=WrqgBxPkvI6XXjQlFOMTo2LeveGikRfDs1ScFmq+qNY=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=ilOJSdeQ+emB3vMqr5qPR8E93VPwGQHGOEVANtcmS58R0zAEAOTEXokxCdUyNwn7D
+	 DBBVo2HCCVnZ0F9/hxdYxIiBObueUYpJmixxGPJTTzv/i9IuAyr92LnznCJu07J8Yh
+	 aFDKS4AFs9GI/XzdoBijkhGzONb7rG1ihwjUOAGo=
+Received: from pek-lxu-l1.wrs.com ([111.198.228.153])
+	by newxmesmtplogicsvrszc5-2.qq.com (NewEsmtp) with SMTP
+	id 41D2E06C; Fri, 05 Apr 2024 18:16:29 +0800
+X-QQ-mid: xmsmtpt1712312189tckr4w7xc
+Message-ID: <tencent_7A77E9664E3C953694964A37444AF474AF09@qq.com>
+X-QQ-XMAILINFO: NQR8mRxMnur9EWvzZcbDggbR8qCE1SJg8KGpNB0/q6DjF1HISqr2Nc++sPg2za
+	 ftiQvoaYMJdbjeHxgnBTEYsQUKxEb6rmRItMqjVVvZ2twzLW0iY8mERov1oNDMESxZf45fuxfdPs
+	 pRQjLr+7f53wYeWFK6WNJK2yWDplpMH2hVJomWih0btIp5ISOwHqXIeOMtSTxUR/5/3rlY2qW+t0
+	 b3MWhfgLUVZ3C/dKF3LcaJYnnyrh/NT8aNs4c/ub5uI1UCwtPr1cbVaWJWlKAtCURZUd5tohc/8Q
+	 bcCq4FbSmZTiAE7xK50fz6DBrVYpdkRuhUSiSWzAr90V0zADNwOxV9/JGnEJ494fx7kDkuPAmSRw
+	 QLzCyLxGDr48qSSstY4LLWZ/l2ieZSv6D0TX64C93NTnzu42dzTFocH45vdEH922gSa6Pjh+9OKc
+	 3VEk8sQ7wzHICoyLrfEr3+FOfcAQU0P+iXOFyEbRzuf47dhGY/U7L9a9TKJQJSinaKJv+NE8dMLJ
+	 j6Urh7KyOc6CeUjcwMMR9+XtO84MVUhw16uAUrWJbK36nhy9aRvNJW8CjIHAG0PO5IStjvXrpL9Y
+	 yS7u34rnI6ydcJc0glUJ0fvXGCes867Ij8zcKsGYKGO8xtk3ireWSZekzk/OJs2xCLmywSGzWCYM
+	 i9oEL3emc1bZvEk47dn/XwNrzQMI0U75ZB+8OqhsEzKx+KhZJ8Jrtgai7gwITpSRsI0bJK2qQLbq
+	 S1zsP2UcjD+4Qys3G7D1oqIacaZaQTZXAcuiPaWnV6INR3LtzUAiUrKr0fXI6sLGFrcuyuiUUNq+
+	 J+gl0n/kKB6AGqHA1/5o3/mvrkcqnzTis1v5hAvAc9k4DI+se48FbGBYR6eOgZsjTrjqDbMdIhYj
+	 dZA2S49uxz3C2GCxXs+hRuDfM36VCOygh0Q9MLVvJSlkr2aIrTeoy2waaZeQbqAhh0gYJPL3TL2Y
+	 sMOr14DwDzKwbOnXLOBoMhbjtHNA01b6nFSDhVfxitfkGV2VIz4Oq238OQsSEY
+X-QQ-XMRINFO: NS+P29fieYNw95Bth2bWPxk=
+From: Edward Adam Davis <eadavis@qq.com>
+To: syzbot+d4ecae01a53fd9b42e7d@syzkaller.appspotmail.com
+Cc: johan.hedberg@gmail.com,
+	linux-bluetooth@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	luiz.dentz@gmail.com,
+	marcel@holtmann.org,
+	syzkaller-bugs@googlegroups.com
+Subject: [PATCH] net/socket: the length value of the input socket option parameter is too small
+Date: Fri,  5 Apr 2024 18:16:29 +0800
+X-OQ-MSGID: <20240405101629.562985-2-eadavis@qq.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <000000000000b9b20e061553f06e@google.com>
+References: <000000000000b9b20e061553f06e@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -81,91 +64,92 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Barry Song <v-songbaohua@oppo.com>
+[Syzbot reported]
+BUG: KASAN: slab-out-of-bounds in copy_from_sockptr_offset include/linux/sockptr.h:49 [inline]
+BUG: KASAN: slab-out-of-bounds in copy_from_sockptr include/linux/sockptr.h:55 [inline]
+BUG: KASAN: slab-out-of-bounds in rfcomm_sock_setsockopt_old net/bluetooth/rfcomm/sock.c:632 [inline]
+BUG: KASAN: slab-out-of-bounds in rfcomm_sock_setsockopt+0x893/0xa70 net/bluetooth/rfcomm/sock.c:673
+Read of size 4 at addr ffff8880209a8bc3 by task syz-executor632/5064
 
-This helps to display the fragmentation situation of the swapfile,
-knowing the proportion of how much we haven't split large folios.
-So far, we only support non-split swapout for anon memory, with
-the possibility of expanding to shmem in the future.  So, we add
-the "anon" prefix to the counter names.
+CPU: 0 PID: 5064 Comm: syz-executor632 Not tainted 6.8.0-syzkaller-08951-gfe46a7dd189e #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 03/27/2024
+Call Trace:
+ <TASK>
+ __dump_stack lib/dump_stack.c:88 [inline]
+ dump_stack_lvl+0x241/0x360 lib/dump_stack.c:114
+ print_address_description mm/kasan/report.c:377 [inline]
+ print_report+0x169/0x550 mm/kasan/report.c:488
+ kasan_report+0x143/0x180 mm/kasan/report.c:601
+ copy_from_sockptr_offset include/linux/sockptr.h:49 [inline]
+ copy_from_sockptr include/linux/sockptr.h:55 [inline]
+ rfcomm_sock_setsockopt_old net/bluetooth/rfcomm/sock.c:632 [inline]
+ rfcomm_sock_setsockopt+0x893/0xa70 net/bluetooth/rfcomm/sock.c:673
+ do_sock_setsockopt+0x3af/0x720 net/socket.c:2311
+ __sys_setsockopt+0x1ae/0x250 net/socket.c:2334
+ __do_sys_setsockopt net/socket.c:2343 [inline]
+ __se_sys_setsockopt net/socket.c:2340 [inline]
+ __x64_sys_setsockopt+0xb5/0xd0 net/socket.c:2340
+ do_syscall_64+0xfb/0x240
+ entry_SYSCALL_64_after_hwframe+0x6d/0x75
+RIP: 0033:0x7f36ff898dc9
+Code: 28 00 00 00 75 05 48 83 c4 28 c3 e8 91 18 00 00 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b8 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007ffe010c2208 EFLAGS: 00000246 ORIG_RAX: 0000000000000036
+RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 00007f36ff898dc9
+RDX: 0000000000000003 RSI: 0000000000000012 RDI: 0000000000000006
+RBP: 0000000000000006 R08: 0000000000000002 R09: 0000000000000000
+R10: 00000000200000c0 R11: 0000000000000246 R12: 0000555567399338
+R13: 000000000000000e R14: 0000000000000000 R15: 0000000000000000
+ </TASK>
 
-Signed-off-by: Barry Song <v-songbaohua@oppo.com>
+Allocated by task 5064:
+ kasan_save_stack mm/kasan/common.c:47 [inline]
+ kasan_save_track+0x3f/0x80 mm/kasan/common.c:68
+ poison_kmalloc_redzone mm/kasan/common.c:370 [inline]
+ __kasan_kmalloc+0x98/0xb0 mm/kasan/common.c:387
+ kasan_kmalloc include/linux/kasan.h:211 [inline]
+ __do_kmalloc_node mm/slub.c:3966 [inline]
+ __kmalloc+0x233/0x4a0 mm/slub.c:3979
+ kmalloc include/linux/slab.h:632 [inline]
+ __cgroup_bpf_run_filter_setsockopt+0xd2f/0x1040 kernel/bpf/cgroup.c:1869
+ do_sock_setsockopt+0x6b4/0x720 net/socket.c:2293
+ __sys_setsockopt+0x1ae/0x250 net/socket.c:2334
+ __do_sys_setsockopt net/socket.c:2343 [inline]
+ __se_sys_setsockopt net/socket.c:2340 [inline]
+ __x64_sys_setsockopt+0xb5/0xd0 net/socket.c:2340
+ do_syscall_64+0xfb/0x240
+ entry_SYSCALL_64_after_hwframe+0x6d/0x75
+
+The buggy address belongs to the object at ffff8880209a8bc0
+ which belongs to the cache kmalloc-8 of size 8
+The buggy address is located 1 bytes to the right of
+ allocated 2-byte region [ffff8880209a8bc0, ffff8880209a8bc2)
+[Fix]
+The optlen value passed by syzbot to _sys_setsockopt() is 2, which results in
+only 2 bytes being allocated when allocating memory to kernel_optval, and the
+optval size passed when calling the function copy_from_sockptr() is 4 bytes.
+Here, optlen is determined uniformly in the entry function __sys_setsockopt(). 
+If its value is less than 4, the parameter is considered invalid.
+
+Reported-by: syzbot+d4ecae01a53fd9b42e7d@syzkaller.appspotmail.com
+Signed-off-by: Edward Adam Davis <eadavis@qq.com>
 ---
- include/linux/huge_mm.h | 2 ++
- mm/huge_memory.c        | 4 ++++
- mm/page_io.c            | 6 +++++-
- mm/vmscan.c             | 3 +++
- 4 files changed, 14 insertions(+), 1 deletion(-)
+ net/socket.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/include/linux/huge_mm.h b/include/linux/huge_mm.h
-index c5d33017a4dd..1d893a358df6 100644
---- a/include/linux/huge_mm.h
-+++ b/include/linux/huge_mm.h
-@@ -267,6 +267,8 @@ unsigned long thp_vma_allowable_orders(struct vm_area_struct *vma,
- enum mthp_stat_item {
- 	MTHP_STAT_ANON_ALLOC,
- 	MTHP_STAT_ANON_ALLOC_FALLBACK,
-+	MTHP_STAT_ANON_SWPOUT,
-+	MTHP_STAT_ANON_SWPOUT_FALLBACK,
- 	__MTHP_STAT_COUNT
- };
+diff --git a/net/socket.c b/net/socket.c
+index e5f3af49a8b6..ac8fd4f6ebfe 100644
+--- a/net/socket.c
++++ b/net/socket.c
+@@ -2327,6 +2327,9 @@ int __sys_setsockopt(int fd, int level, int optname, char __user *user_optval,
+ 	int err, fput_needed;
+ 	struct socket *sock;
  
-diff --git a/mm/huge_memory.c b/mm/huge_memory.c
-index 5b875f0fc923..28113f8fdf18 100644
---- a/mm/huge_memory.c
-+++ b/mm/huge_memory.c
-@@ -554,10 +554,14 @@ static struct kobj_attribute _name##_attr = __ATTR_RO(_name)
- 
- DEFINE_MTHP_STAT_ATTR(anon_alloc, MTHP_STAT_ANON_ALLOC);
- DEFINE_MTHP_STAT_ATTR(anon_alloc_fallback, MTHP_STAT_ANON_ALLOC_FALLBACK);
-+DEFINE_MTHP_STAT_ATTR(anon_swpout, MTHP_STAT_ANON_SWPOUT);
-+DEFINE_MTHP_STAT_ATTR(anon_swpout_fallback, MTHP_STAT_ANON_SWPOUT_FALLBACK);
- 
- static struct attribute *stats_attrs[] = {
- 	&anon_alloc_attr.attr,
- 	&anon_alloc_fallback_attr.attr,
-+	&anon_swpout_attr.attr,
-+	&anon_swpout_fallback_attr.attr,
- 	NULL,
- };
- 
-diff --git a/mm/page_io.c b/mm/page_io.c
-index a9a7c236aecc..7669452e8b4d 100644
---- a/mm/page_io.c
-+++ b/mm/page_io.c
-@@ -212,13 +212,17 @@ int swap_writepage(struct page *page, struct writeback_control *wbc)
- 
- static inline void count_swpout_vm_event(struct folio *folio)
- {
-+	long nr_pages = folio_nr_pages(folio);
++	if (optlen < sizeof(int))
++		return -EINVAL;
 +
- #ifdef CONFIG_TRANSPARENT_HUGEPAGE
- 	if (unlikely(folio_test_pmd_mappable(folio))) {
- 		count_memcg_folio_events(folio, THP_SWPOUT, 1);
- 		count_vm_event(THP_SWPOUT);
- 	}
-+	if (nr_pages > 0)
-+		count_mthp_stat(folio_order(folio), MTHP_STAT_ANON_SWPOUT);
- #endif
--	count_vm_events(PSWPOUT, folio_nr_pages(folio));
-+	count_vm_events(PSWPOUT, nr_pages);
- }
- 
- #if defined(CONFIG_MEMCG) && defined(CONFIG_BLK_CGROUP)
-diff --git a/mm/vmscan.c b/mm/vmscan.c
-index ffc4553c8615..b30e6294f82a 100644
---- a/mm/vmscan.c
-+++ b/mm/vmscan.c
-@@ -1247,6 +1247,9 @@ static unsigned int shrink_folio_list(struct list_head *folio_list,
- 						count_vm_event(
- 							THP_SWPOUT_FALLBACK);
- 					}
-+					if (nr_pages > 0)
-+						count_mthp_stat(get_order(nr_pages * PAGE_SIZE),
-+							MTHP_STAT_ANON_SWPOUT_FALLBACK);
- #endif
- 					if (!add_to_swap(folio))
- 						goto activate_locked_split;
+ 	sock = sockfd_lookup_light(fd, &err, &fput_needed);
+ 	if (!sock)
+ 		return err;
 -- 
-2.34.1
+2.43.0
 
