@@ -1,164 +1,373 @@
-Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail-4316.protonmail.ch (mail-4316.protonmail.ch [185.70.43.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55B3B1607BE
-	for <linux-kernel@vger.kernel.org>; Fri,  5 Apr 2024 09:39:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EB0215FA9C;
+	Fri,  5 Apr 2024 09:40:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.43.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712309960; cv=none; b=bp74r4o9JzEUU+gTAG1dgBOTAzywqZ2x48nWjmQuTT66s5yk09rV9gRGnaVKKqsG7Ej2RvY69AfZWtIPsA/+N6Ls/ixwV2RaSnEBLrr6D+ew66wWz7EDM2M7TnPaUA7qcFk2CpQky0vh1/HYhmqC02+UIRghFFWMOUxXfEXYJcQ=
+	t=1712310030; cv=none; b=tSIKSiQ/Kg/N0bIm/Vr+MC4kSI6yl4yCllyxIjiqw7+VMnIvFdptWQF9szaWs3N2KTPi4Y5xja7YDt6uD/8RlgjrPIXZb8ImGM6woTsudYy63azQXdJ7naBk0hd5PUETWdpIg6v1ghqZZgNii/rJ7b6i0H6EwYuw216eV1nExT0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712309960; c=relaxed/simple;
-	bh=zmndCcYKR9wkId2+6XojaBfbuykMPOBN0hPpSrc94lk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=iW3QBdnlZ7rDRsraUpWWXgowuqKkwILcwYpKYwYgpcsYHjEk+2e7I/u980WdIqq+MZvdBQ28Fke0JUgvzEe0zPQAgOKB5hjVSpYlin4x3/MOeuIhtJWGwaujwEK4CkINykvDt5fbctoH4fY4ek6NERBQMrEzQ+ReudTzyyFV30I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=dzcibRbS; arc=none smtp.client-ip=209.85.218.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1712310030; c=relaxed/simple;
+	bh=8drT0GLOZkPmACYruwMyCFQj0gkFYEO5agjMHKeluLk=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=aOTO9xJyGNgftQkpXzrA2cao4mb0AqdXMn+0fVXKVI/YBRHNPqWZ+CG/lpIozTZBV1/xSJnZLDRyTsTENEYoLySgB7BrSHCe3OO863nZESab1f8Hn2uWzKBh62BL3gEQIGlPq70J/a4n5SiITZ9ShKGGij+fqLrThl/DRGT1wtk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me; spf=pass smtp.mailfrom=proton.me; dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b=Jb+Hv4lg; arc=none smtp.client-ip=185.70.43.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dzcibRbS"
-Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-a4702457ccbso267428366b.3
-        for <linux-kernel@vger.kernel.org>; Fri, 05 Apr 2024 02:39:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1712309957; x=1712914757; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=vOtuMlTk2m3YNZ5+uB4sYTifNH5+qhYv4NhFn5r3qQg=;
-        b=dzcibRbSpDrmeoco+H/zL83NFWNfBfsgZlITs+Wuf2NcM2vqsKaMWABaXMk2MZxoA0
-         Z+KsAWm/hQx0b8OXJsUALxTsi3AlA9RDbdgZZdc34HuOZPejH4Xen16CqsMQm3TBdDl9
-         Ix6D6KyuE1L2CRVh+flY3ITWhF4rspwmaqSqVP9Ve25om3bk/CC2XuFDU/EOPDgXerKD
-         pOMX44axJpKh6S6B5WZnyab5ULM7mY3CyS3cNBmJIF5ugrAtzY3djL5eIB1tiXBrUMaD
-         n2NtRY037yTTlA05yAkAp6xPsflf2vtBoSB+PBh/YO39C/Rd9j6YgisJ3C9qm4dSpKFP
-         PrVA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712309957; x=1712914757;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=vOtuMlTk2m3YNZ5+uB4sYTifNH5+qhYv4NhFn5r3qQg=;
-        b=bPU696pDxy5mwR2AaVkltNp1g6XUxlJ+aqtCSc5oYzYFulwvmGDL2K3MGEK+pb9Qda
-         D5sdKAI283ob5FQKL4FtN5GXKDW7Sn+8impELfnhfpqeQjhRABLugnPtVOxgb0PbixhE
-         zDkZMtkouGmsTQyeQeIPRY7v76mLnnh4fSSZZ+DwFthDntrbuiSxUvQidfWFqU53hYuQ
-         LivdbohmzMOtZi5NNemXTaUDzbGnYOYyv8pJSW/GaqT+MnNnE0is0Qd01r1g+VYDyDhQ
-         nfZ21e/iVnaV28po79pFKfV5NOzrvbNrBejgjmW0puexA2zPW1L2sTtekIJPM/G6nQ9j
-         xtDQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVyfwZ0LgwjdKZjXmDfListmugy2DlJuxbgP4ucYlkMZ13Nt/kXNm1pOC0A9ngu19wkaLQSRcAEEQTRS8ywgxIRriPTRMBnwfZRAxcd
-X-Gm-Message-State: AOJu0Yy2kSDhK5LFaj7GdRh/7U7Gz/7BlF7C8VBgUz5+qC2j9FxpCxis
-	9L+fur5WY4DsPG11ZOk33JE88v2B8mGYDzI+C/d2bOFAIx619BmGhbruh46qtW8=
-X-Google-Smtp-Source: AGHT+IGQ2XybYMZzpX18d1hysEX9de282AhfXEgp81k7S5Zoi3kly1NvF5Qmy1EVfeHG3MBTngIxDQ==
-X-Received: by 2002:a17:906:f909:b0:a47:3651:a302 with SMTP id lc9-20020a170906f90900b00a473651a302mr565941ejb.42.1712309956654;
-        Fri, 05 Apr 2024 02:39:16 -0700 (PDT)
-Received: from [192.168.1.20] ([178.197.223.16])
-        by smtp.gmail.com with ESMTPSA id dp13-20020a170906c14d00b00a4a3580b215sm630272ejc.80.2024.04.05.02.39.14
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 05 Apr 2024 02:39:16 -0700 (PDT)
-Message-ID: <610f5770-b34a-4c93-b9a7-ca224aa91089@linaro.org>
-Date: Fri, 5 Apr 2024 11:39:14 +0200
+	dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b="Jb+Hv4lg"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
+	s=protonmail; t=1712310020; x=1712569220;
+	bh=qclyYZ6klEPqLb0X2h9dxn3Q7kyRZ7Hcf+UoavLCo40=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
+	 Message-ID:BIMI-Selector;
+	b=Jb+Hv4lgt4s3YrTO5E+FyCqMgSdfdc+85PaJRc8gpRKpMvhE5HnegnA5E1jsePn4S
+	 jpgqfozjlQE9XwL8tgECa7mo76//yA+PpS+ht2/rGpQiCZ5ootvTU72tV4kk0O8ul7
+	 a0iUEFf7VeEaS9LFV1WGI/PO8SfsOrqXRc6DIJgYyqBNRpRvDDWtw4WKDYhDg/VuQ9
+	 f+PqdYm9hN/eBbMYSPTAaoyOeuCJ8G8qi5RBtwlVFlIHUPx2F7/0w+DzXoeW3w7QS4
+	 kMqwxdUpz9okOAmoVjXDRkaa1IysgOHyDpVt8GAAWFCvdACry0N/HxYADL5YYZRn/6
+	 5XhxgNswW2cRg==
+Date: Fri, 05 Apr 2024 09:40:16 +0000
+To: Andreas Hindborg <nmi@metaspace.dk>
+From: Benno Lossin <benno.lossin@proton.me>
+Cc: Jens Axboe <axboe@kernel.dk>, Christoph Hellwig <hch@lst.de>, Keith Busch <kbusch@kernel.org>, Damien Le Moal <Damien.LeMoal@wdc.com>, Bart Van Assche <bvanassche@acm.org>, Hannes Reinecke <hare@suse.de>, "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>, Andreas Hindborg <a.hindborg@samsung.com>, Wedson Almeida Filho <wedsonaf@gmail.com>, Niklas Cassel <Niklas.Cassel@wdc.com>, Greg KH <gregkh@linuxfoundation.org>, Matthew Wilcox <willy@infradead.org>, Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, Alice Ryhl <aliceryhl@google.com>, Chaitanya Kulkarni <chaitanyak@nvidia.com>, Luis Chamberlain <mcgrof@kernel.org>, Yexuan Yang <1182282462@bupt.edu.cn>, =?utf-8?Q?Sergio_Gonz=C3=A1lez_Collado?= <sergio.collado@gmail.com>, Joel Granados <j.granados@samsung.com>, "Pankaj Raghav (Samsung)" <kernel@pankajraghav.com>, Daniel Gomez
+	<da.gomez@samsung.com>, open list <linux-kernel@vger.kernel.org>, "rust-for-linux@vger.kernel.org" <rust-for-linux@vger.kernel.org>, "lsf-pc@lists.linux-foundation.org" <lsf-pc@lists.linux-foundation.org>, "gost.dev@samsung.com" <gost.dev@samsung.com>, Ming Lei <ming.lei@redhat.com>
+Subject: Re: [RFC PATCH 1/5] rust: block: introduce `kernel::block::mq` module
+Message-ID: <ab496a96-b9a2-4fc2-94ad-1691a9f133fd@proton.me>
+In-Reply-To: <875xwwmc78.fsf@metaspace.dk>
+References: <86cd5566-5f1b-434a-9163-2b2d60a759d1@proton.me> <871q7o54el.fsf@metaspace.dk> <7ed2a8df-3088-42a1-b257-dba3c2c9fc92@proton.me> <87v84ysujo.fsf@metaspace.dk> <f405ff55-fcb0-4592-ae4b-e1188eae9953@proton.me> <87zfu9r8be.fsf@metaspace.dk> <3478efc2-7e81-4688-a115-5d33c70a24aa@proton.me> <87frw1qxuv.fsf@metaspace.dk> <7d64cb7b-0957-4acc-914a-3c950660ad07@proton.me> <875xwwmc78.fsf@metaspace.dk>
+Feedback-ID: 71780778:user:proton
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 1/2] dt-bindings: net: bluetooth: btnxpuart: Add
- firmware-name property
-To: Neeraj Sanjay Kale <neeraj.sanjaykale@nxp.com>, marcel@holtmann.org,
- luiz.dentz@gmail.com, davem@davemloft.net, edumazet@google.com,
- kuba@kernel.org, pabeni@redhat.com, robh+dt@kernel.org,
- krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org
-Cc: linux-bluetooth@vger.kernel.org, netdev@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- amitkumar.karwar@nxp.com, rohit.fule@nxp.com, sherry.sun@nxp.com,
- ziniu.wang_1@nxp.com, haibo.chen@nxp.com, LnxRevLi@nxp.com
-References: <20240405090118.582310-1-neeraj.sanjaykale@nxp.com>
- <20240405090118.582310-2-neeraj.sanjaykale@nxp.com>
-Content-Language: en-US
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
- 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
- D2GYIS41Kv4Isx2dEFh+/Q==
-In-Reply-To: <20240405090118.582310-2-neeraj.sanjaykale@nxp.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On 05/04/2024 11:01, Neeraj Sanjay Kale wrote:
-> This adds a new optional device tree property called firware-name.
-> If this property is specified, the driver overrides the firmware
-> name hardcoded in the driver source code.
-> 
-> Signed-off-by: Neeraj Sanjay Kale <neeraj.sanjaykale@nxp.com>
-> ---
->  .../devicetree/bindings/net/bluetooth/nxp,88w8987-bt.yaml | 8 ++++++++
->  1 file changed, 8 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/net/bluetooth/nxp,88w8987-bt.yaml b/Documentation/devicetree/bindings/net/bluetooth/nxp,88w8987-bt.yaml
-> index f01a3988538c..25c258212bcd 100644
-> --- a/Documentation/devicetree/bindings/net/bluetooth/nxp,88w8987-bt.yaml
-> +++ b/Documentation/devicetree/bindings/net/bluetooth/nxp,88w8987-bt.yaml
-> @@ -31,6 +31,13 @@ properties:
->        This property depends on the module vendor's
->        configuration.
->  
-> +  firmware-name:
-> +    $ref: /schemas/types.yaml#/definitions/string
+On 05.04.24 10:43, Andreas Hindborg wrote:
+> Benno Lossin <benno.lossin@proton.me> writes:
+>=20
+>> On 04.04.24 11:30, Andreas Hindborg wrote:
+>>> Benno Lossin <benno.lossin@proton.me> writes:
+>>>
+>>>> On 04.04.24 07:44, Andreas Hindborg wrote:
+>>>>> Benno Lossin <benno.lossin@proton.me> writes:
+>>>>>
+>>>>>> On 03.04.24 10:46, Andreas Hindborg wrote:
+>>>>>>> Benno Lossin <benno.lossin@proton.me> writes:
+>>>>>>>
+>>>>>>>> On 23.03.24 07:32, Andreas Hindborg wrote:
+>>>>>>>>> Benno Lossin <benno.lossin@proton.me> writes:
+>>>>>>>>>> On 3/13/24 12:05, Andreas Hindborg wrote:
+>>>>>>>>>>> +//! implementations of the `Operations` trait.
+>>>>>>>>>>> +//!
+>>>>>>>>>>> +//! IO requests are passed to the driver as [`Request`] refere=
+nces. The
+>>>>>>>>>>> +//! `Request` type is a wrapper around the C `struct request`.=
+ The driver must
+>>>>>>>>>>> +//! mark start of request processing by calling [`Request::sta=
+rt`] and end of
+>>>>>>>>>>> +//! processing by calling one of the [`Request::end`], methods=
+. Failure to do so
+>>>>>>>>>>> +//! can lead to IO failures.
+>>>>>>>>>>
+>>>>>>>>>> I am unfamiliar with this, what are "IO failures"?
+>>>>>>>>>> Do you think that it might be better to change the API to use a
+>>>>>>>>>> callback? So instead of calling start and end, you would do
+>>>>>>>>>>
+>>>>>>>>>>           request.handle(|req| {
+>>>>>>>>>>               // do the stuff that would be done between start a=
+nd end
+>>>>>>>>>>           });
+>>>>>>>>>>
+>>>>>>>>>> I took a quick look at the rnull driver and there you are callin=
+g
+>>>>>>>>>> `Request::end_ok` from a different function. So my suggestion mi=
+ght not
+>>>>>>>>>> be possible, since you really need the freedom.
+>>>>>>>>>>
+>>>>>>>>>> Do you think that a guard approach might work better? ie `start`=
+ returns
+>>>>>>>>>> a guard that when dropped will call `end` and you need the guard=
+ to
+>>>>>>>>>> operate on the request.
+>>>>>>>>>
+>>>>>>>>> I don't think that would fit, since the driver might not complete=
+ the
+>>>>>>>>> request immediately. We might be able to call `start` on behalf o=
+f the
+>>>>>>>>> driver.
+>>>>>>>>>
+>>>>>>>>> At any rate, since the request is reference counted now, we can
+>>>>>>>>> automatically fail a request when the last reference is dropped a=
+nd it
+>>>>>>>>> was not marked successfully completed. I would need to measure th=
+e
+>>>>>>>>> performance implications of such a feature.
+>>>>>>>>
+>>>>>>>> Are there cases where you still need access to the request after y=
+ou
+>>>>>>>> have called `end`?
+>>>>>>>
+>>>>>>> In general no, there is no need to handle the request after calling=
+ end.
+>>>>>>> C drivers are not allowed to, because this transfers ownership of t=
+he
+>>>>>>> request back to the block layer. This patch series defer the transf=
+er of
+>>>>>>> ownership to the point when the ARef<Request> refcount goes to zero=
+, so
+>>>>>>> there should be no danger associated with touching the `Request` af=
+ter
+>>>>>>> end.
+>>>>>>>
+>>>>>>>> If no, I think it would be better for the request to
+>>>>>>>> be consumed by the `end` function.
+>>>>>>>> This is a bit difficult with `ARef`, since the user can just clone=
+ it
+>>>>>>>> though... Do you think that it might be necessary to clone request=
+s?
+>>>>>>>
+>>>>>>> Looking into the details now I see that calling `Request::end` more=
+ than
+>>>>>>> once will trigger UAF, because C code decrements the refcount on th=
+e
+>>>>>>> request. When we have `ARef<Request>` around, that is a problem. It
+>>>>>>> probably also messes with other things in C land. Good catch.
+>>>>>>>
+>>>>>>> I did implement `Request::end` to consume the request at one point
+>>>>>>> before I fell back on reference counting. It works fine for simple
+>>>>>>> drivers. However, most drivers will need to use the block layer tag=
+ set
+>>>>>>> service, that allows conversion of an integer id to a request point=
+er.
+>>>>>>> The abstraction for this feature is not part of this patch set. But=
+ the
+>>>>>>> block layer manages a mapping of integer to request mapping, and dr=
+ivers
+>>>>>>> typically use this to identify the request that corresponds to
+>>>>>>> completion messages that arrive from hardware. When drivers are abl=
+e to
+>>>>>>> turn integers into requests like this, consuming the request in the=
+ call
+>>>>>>> to `end` makes little sense (because we can just construct more).
+>>>>>>
+>>>>>> How do you ensure that this is fine?:
+>>>>>>
+>>>>>>         let r1 =3D tagset.get(0);
+>>>>>>         let r2 =3D tagset.get(0);
+>>>>>>         r1.end_ok();
+>>>>>>         r2.do_something_that_would_only_be_done_while_active();
+>>>>>>
+>>>>>> One thing that comes to my mind would be to only give out `&Request`
+>>>>>> from the tag set. And to destroy, you could have a separate operatio=
+n
+>>>>>> that also removes the request from the tag set. (I am thinking of a =
+tag
+>>>>>> set as a `HashMap<u64, Request>`.
+>>>>>
+>>>>> This would be similar to
+>>>>>
+>>>>>      let r1 =3D tagset.get(0)?;
+>>>>>      ler r2 =3D r1.clone();
+>>>>>      r1.end_ok();
+>>>>>      r2.do_something_requires_active();
+>>>>>
+>>>>> but it is not a problem because we do not implement any actions that =
+are
+>>>>> illegal in that position (outside of `end` - that _is_ a problem).
+>>>>
+>>>> Makes sense, but I think it's a bit weird to still be able to access i=
+t
+>>>> after `end`ing.
+>>>
+>>> Yes, that is true.
+>>>
+>>>>
+>>>>>
+>>>>>
+>>>>>>>
+>>>>>>> What I do now is issue the an `Option<ARef<Request>>` with
+>>>>>>> `bindings::req_ref_inc_not_zero(rq_ptr)`, to make sure that the req=
+uest
+>>>>>>> is currently owned by the driver.
+>>>>>>>
+>>>>>>> I guess we can check the absolute value of the refcount, and only i=
+ssue
+>>>>>>> a request handle if the count matches what we expect. Then we can b=
+e certain
+>>>>>>> that the handle is unique, and we can require transfer of ownership=
+ of
+>>>>>>> the handle to `Request::end` to make sure it can never be called mo=
+re
+>>>>>>> than once.
+>>>>>>>
+>>>>>>> Another option is to error out in `Request::end` if the
+>>>>>>> refcount is not what we expect.
+>>>>>>
+>>>>>> I am a bit confused, why does the refcount matter in this case? Can'=
+t
+>>>>>> the user just have multiple `ARef`s?
+>>>>>
+>>>>> Because we want to assert that we are consuming the last handle to th=
+e
+>>>>> request. After we do that, the user cannot call `Request::end` again.
+>>>>> `TagSet::get` will not issue a request reference if the request is no=
+t
+>>>>> in flight. Although there might be a race condition to watch out for.
+>>>>>
+>>>>> When the block layer hands over ownership to Rust, the reference coun=
+t
+>>>>> is 1. The first `ARef<Request>` we create increments the count to 2. =
+To
+>>>>> complete the request, we must have ownership of all reference counts
+>>>>> above 1. The block layer takes the last reference count when it takes
+>>>>> back ownership of the request.
+>>>>>
+>>>>>> I think it would be weird to use `ARef<Request>` if you expect the
+>>>>>> refcount to be 1.
+>>>>>
+>>>>> Yes, that would require a custom smart pointer with a `try_into_uniqu=
+e`
+>>>>> method that succeeds when the refcount is exactly 2. It would consume
+>>>>> the instance and decrement the refcount to 1. But as I said, there is=
+ a
+>>>>> potential race with `TagSet::get` when the refcount is 1 that needs t=
+o
+>>>>> be handled.
+>>>>>
+>>>>>> Maybe the API should be different?
+>>>>>
+>>>>> I needs to change a little, yes.
+>>>>>
+>>>>>> As I understand it, a request has the following life cycle (please
+>>>>>> correct me if I am wrong):
+>>>>>> 1. A new request is created, it is given to the driver via `queue_rq=
+`.
+>>>>>> 2. The driver can now decide what to do with it (theoretically it ca=
+n
+>>>>>>        store it somewhere and later do something with it), but it sh=
+ould at
+>>>>>>        some point call `Request::start`.
+>>>>>> 3. Work happens and eventually the driver calls `Request::end`.
+>>>>>>
+>>>>>> To me this does not seem like something where we need a refcount (we
+>>>>>> still might need one for safety, but it does not need to be exposed =
+to
+>>>>>> the user).
+>>>>>
+>>>>> It would not need to be exposed to the user, other than a) ending a r=
+equest
+>>>>> can fail OR b) `TagSet::get` can fail.
+>>>>>
+>>>>> a) would require that ending a request must be done with a unique
+>>>>> reference. This could be done by the user by the user calling
+>>>>> `try_into_unique` or by making the `end` method fallible.
+>>>>>
+>>>>> b) would make the reference handle `!Clone` and add a failure mode to
+>>>>> `TagSet::get`, so it fails to construct a `Request` handle if there a=
+re
+>>>>> already one in existence.
+>>>>>
+>>>>> I gravitate towards a) because it allows the user to clone the Reques=
+t
+>>>>> reference without adding an additional `Arc`.
+>>>>
+>>>> This confuses me a little, since I thought that `TagSet::get` returns
+>>>> `Option<ARef<Request>>`.
+>>>
+>>> It does, but in the current implementation the failure mode returning
+>>> `None` is triggered when the refcount is zero, meaning that the request
+>>> corresponding to that tag is not currently owned by the driver. For
+>>> solution b) we would change the type to be
+>>> `Option<CustomSmartPointerHandleThing<Request>>`.
+>>>
+>>>> (I tried to find the abstractions in your
+>>>> github, but I did not find them)
+>>>
+>>> It's here [1]. It was introduced in the `rnvme-v6.8` branch.
+>>
+>> Thanks for the pointer.
+>>
+>>>> I think that this could work: `queue_rq` takes a `OwnedRequest`, which
+>>>> the user can store in a `TagSet`, transferring ownership. `TagSet::get=
+`
+>>>> returns `Option<&Request>` and you can call `TagSet::remove` to get
+>>>> `Option<OwnedRequest>`. `OwnedRequest::end` consumes `self`.
+>>>> With this pattern we also do not need to take an additional refcount.
+>>>
+>>> It would, but the `TagSet` is just a wrapper for the C block layer
+>>> `strugt blk_mq_tag_set`. This is a highly optimized data structure and
+>>> tag mapping is done before the driver sees the request. I would like to
+>>> reuse that logic.
+>>>
+>>> We could implement what you suggest anyhow, but I would not want to tha=
+t
+>>> additional logic to the hot path.
+>>
+>> I overlooked an important detail: the `TagSet` is always stored in an
+>> `Arc` (IIRC since you want to be able to share it between different
+>> `Gendisk`s). This probably makes my suggestion impossible, since you
+>> can't mutably borrow the `TagSet` for removal of `Request`s.
+>> Depending on how `Request`s are associated to a `TagSet`, there might be
+>> a way around this: I saw the `qid` parameter to the `tag_to_rq`
+>> function, is that a unique identifier for a queue?
+>=20
+> A tag set services a number of request queues. Each queue has a number
+> used to identify it within the tag set. It is unique within the tag set.
+>=20
+>> Because in that case
+>> we might be able to have a unique `QueueTagSetRef` with
+>>
+>>       fn remove(&mut self, tag: u32) -> OwnedRequest;
+>=20
+> We would not need exclusive access. The tag set remove are synchronized
+> internally with some fancy atomic bit flipping [1].
 
-drop, missing maxItems. Look at recent code.
+If we bind the ability to call `Request::end` to `OwnedRequest` and
+require exclusive access to the `QueueTagSetRef`, then we could ensure
+that the `end` function is only called once.
 
-> +    description:
-> +      Specify firmware file name, prepended with nxp/.
+>>
+>>       fn get(&self, tag: u32) -> Option<&Request>;
+>>
+>> The `TagSet` would still be shared, only the ability to "remove" (I
+>> don't know if you do that manually in C, if not, then this would just
+>> remove it in the abstraction, but keep it on the C side) is unique to
+>> the `QueueTagSetRef` struct.
+>=20
+> I would not advice removing tag->request associations from the driver. I
+> understand your point and from the perspective of these patches it makes
+> sense. But it would be a major layer violation of the current block
+> layer architecture, as far as I can tell.
 
-Why with nxp? What if firmware is stored somewhere else?
+Ah I should have specified this better: we don't remove the request from
+the C side, only from the `TagSet` Rust abstraction. Maybe a better name
+would be `end_request` (the function would then return bool to indicate
+if there was a request with that tag).
 
+> I am having trouble enough trying to justify deferred free of the
+> request structure as it is.
 
-> +      This property overrides the firmware names hardcoded
-> +      in the driver source code.
+Using this approach, there also would not be a deferred free, as we
+would call `end` immediately, right?
 
-Drop, you now describe current OS policy. What if U-boot treats it
-differently?
+>> But feel free to use your proposed option a), it is simpler and we can
+>> try to make this work when you send the `TagSet` abstractions.
+>> I just think that we should try a bit harder to make it even better.
+>=20
+> I'll code it up a) and see how it looks (and what it costs in
+> performance) =F0=9F=91=8D
 
-Best regards,
-Krzysztof
+Sure.
+
+We can also speak about this in the meeting, I have the feeling that
+that would be easier than trying via mail :)
+
+--=20
+Cheers,
+Benno
 
