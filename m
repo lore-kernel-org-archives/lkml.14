@@ -1,106 +1,192 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABBFC12F5A2
-	for <linux-kernel@vger.kernel.org>; Fri,  5 Apr 2024 07:38:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3586F12BF2D;
+	Fri,  5 Apr 2024 07:39:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712302736; cv=none; b=ovOb26l91IMjwVVcwARs2MRlwKm/RbzL6OqYWSX3zjUDx2oY0lBJibsUuoGkIx3wxblZv37+7XYB46hiY3gWEXAM9XoygFUP/twIkcbCs8MOmydYK66laY1oYqqURD22fvkCw9Slb1p+wAIFVGjfTnS6yriVw7RsUSOlMD0Q0t0=
+	t=1712302776; cv=none; b=WxOJfuxgwdpqgrCyqYGMb17VUZ3RDBYg4VyjeCEE/QCwHJZ9WeDsSSFJN+GW2CxNKk/M40c+PJQxJhaPD5qg6A+HrILE3FsaF3W/mqxfSKy+FgyPv69OyQIzpfSH9q72vzDtAwTD3h/FP0biglJYukG0p8KYux9Fi3z5W8A1i3A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712302736; c=relaxed/simple;
-	bh=Q1q0lpvEiRrF/DtOMIMMNcoHWUtaSlZl8xP7ty3msrE=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=iglhdz7jLTgxaZS4bF1JiisdzM6RQluy74p3UhJvC3THIgRgnURRk/veOh1Sh9azicXMzpu64KVaN9u9Yj8BtvYtSsD+QfNCtX/FcVYkyObYb8pSenpX9vqUphOi80VLAfbUW5xRjacUBWS/0PhRaev5OjQwYvtbInVT1ex9zHU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <s.hauer@pengutronix.de>)
-	id 1rse9n-0005mf-Ol; Fri, 05 Apr 2024 09:38:39 +0200
-Received: from [2a0a:edc0:0:1101:1d::28] (helo=dude02.red.stw.pengutronix.de)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <s.hauer@pengutronix.de>)
-	id 1rse9m-00AWpy-Tj; Fri, 05 Apr 2024 09:38:38 +0200
-Received: from localhost ([::1] helo=dude02.red.stw.pengutronix.de)
-	by dude02.red.stw.pengutronix.de with esmtp (Exim 4.96)
-	(envelope-from <s.hauer@pengutronix.de>)
-	id 1rse9m-008vil-2i;
-	Fri, 05 Apr 2024 09:38:38 +0200
-From: Sascha Hauer <s.hauer@pengutronix.de>
-Date: Fri, 05 Apr 2024 09:38:37 +0200
-Subject: [PATCH 2/2] clk: rockchip: clk-rk3568.c: Add missing USB480M_PHY
- mux
+	s=arc-20240116; t=1712302776; c=relaxed/simple;
+	bh=QORV4pD15vZ3OzypvqpxnQvSoqXSnK5DsqvoayCIrCU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=momG6MSmijrnjFHhTlBIh3/xKR+aHWbsIrqkExPMu/vhIcrAG8gxRuwxwU4x/pURi7W8KjsvdP08y8NHchFfKmlOHs6kunLYIryRccZ2cMu5YBNhF0+vlWL0rW5KlGMSiDbA+yBjRUv4IhMgfIntkZMYonpw26wG67254QLlJdo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=jBTG5G5W; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="jBTG5G5W"
+Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 4355ATg1031822;
+	Fri, 5 Apr 2024 07:39:24 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	message-id:date:mime-version:subject:to:cc:references:from
+	:in-reply-to:content-type:content-transfer-encoding; s=
+	qcppdkim1; bh=3Z1qhTERAHY9u7xtJ3fTK4uczfNK3XCfZWVKTFMT7DY=; b=jB
+	TG5G5WM3Dpx6ELoYVHtsiNaaHSgwLHIc/P00q8kyb8kRU8tMCdk+y73yhgiMFoFL
+	1XI16Tksf02Fuhvy5geA9meNS1U49qZccNWE3sHoFRW24BOhuBNHnAVXrFJUkuvR
+	FAuJgAlFuAcL2ycfmTjte9y50YQOmAoF8TuwR+omUMKoxvUSLGVJF4AlPOvZDmzt
+	KQkvxW6HDtSTfPiajfhEwdGGJIQr+3a3W5kdsSCFfiWnw7fiFO1GWv2rceL4cr90
+	9K2tUYq/ys9nAIUOprF6WNiFCkCJHqdklEQ45b4oFTrw7QbYnUF4nsK3hpG+hAsq
+	UOiYTotuL9QaJpSkCuzQ==
+Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3x9en0kjhb-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 05 Apr 2024 07:39:24 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA04.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 4357dD7f031799
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 5 Apr 2024 07:39:13 GMT
+Received: from [10.216.11.24] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Fri, 5 Apr 2024
+ 00:39:08 -0700
+Message-ID: <5c3f6747-86f6-3fe9-6dfa-edc44b53c0b1@quicinc.com>
+Date: Fri, 5 Apr 2024 13:09:04 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.13.0
+Subject: Re: [PATCH v3 04/19] media: venus: core: Set OPP clkname in a common
+ code path
+Content-Language: en-US
+To: Konrad Dybcio <konrad.dybcio@linaro.org>,
+        Stanimir Varbanov
+	<stanimir.k.varbanov@gmail.com>,
+        Vikash Garodia <quic_vgarodia@quicinc.com>,
+        Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
+        Andy Gross
+	<agross@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        "Mauro Carvalho
+ Chehab" <mchehab@kernel.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>
+CC: Marijn Suijten <marijn.suijten@somainline.org>,
+        Stanimir Varbanov
+	<stanimir.varbanov@linaro.org>,
+        Mauro Carvalho Chehab
+	<mchehab+huawei@kernel.org>,
+        <linux-media@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20230911-topic-mars-v3-0-79f23b81c261@linaro.org>
+ <20230911-topic-mars-v3-4-79f23b81c261@linaro.org>
+From: Dikshita Agarwal <quic_dikshita@quicinc.com>
+In-Reply-To: <20230911-topic-mars-v3-4-79f23b81c261@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240405-clk-rk3568-usb480m-phy-mux-v1-2-6c89de20a6ff@pengutronix.de>
-References: <20240405-clk-rk3568-usb480m-phy-mux-v1-0-6c89de20a6ff@pengutronix.de>
-In-Reply-To: <20240405-clk-rk3568-usb480m-phy-mux-v1-0-6c89de20a6ff@pengutronix.de>
-To: Michael Turquette <mturquette@baylibre.com>, 
- Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
- Conor Dooley <conor+dt@kernel.org>, Heiko Stuebner <heiko@sntech.de>
-Cc: linux-clk@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
- linux-rockchip@lists.infradead.org, Sascha Hauer <s.hauer@pengutronix.de>, 
- David Jander <david@protonic.nl>
-X-Mailer: b4 0.12.3
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1712302718; l=1727;
- i=s.hauer@pengutronix.de; s=20230412; h=from:subject:message-id;
- bh=44l464I+8ufBOnGWKzr+u7dDUBLxmqV+t43m4zLKDNo=;
- b=QJj+czEOvCKL7bvhelhLzfG22dqf0ZvsMg4FkodeTlWzPJILaF+9qW21J3tq+ELCWizF4eeGO
- 6LIcKkcUsRwBpGKHJdvfqGnLJBM/Ba687zl43n2wT60h70+XcI8H4RE
-X-Developer-Key: i=s.hauer@pengutronix.de; a=ed25519;
- pk=4kuc9ocmECiBJKWxYgqyhtZOHj5AWi7+d0n/UjhkwTg=
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: s.hauer@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: 57Arb5L_f6dJ5K6qzLk9j6jW-c6fzNul
+X-Proofpoint-GUID: 57Arb5L_f6dJ5K6qzLk9j6jW-c6fzNul
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-04-05_06,2024-04-04_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ clxscore=1015 impostorscore=0 adultscore=0 priorityscore=1501 phishscore=0
+ mlxscore=0 bulkscore=0 mlxlogscore=999 spamscore=0 malwarescore=0
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2404010003 definitions=main-2404050055
 
-From: David Jander <david@protonic.nl>
 
-The USB480M clock can source from a MUX that selects the clock to come
-from either of the USB-phy internal 480MHz PLLs. These clocks are
-provided by the USB phy driver.
 
-Signed-off-by: David Jander <david@protonic.nl>
-Link: https://lore.kernel.org/r/20240404-clk-rockchip-rk3568-add-usb480m-phy-mux-v1-1-e8542afd58b9@pengutronix.de
-Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
----
- drivers/clk/rockchip/clk-rk3568.c | 4 ++++
- 1 file changed, 4 insertions(+)
-
-diff --git a/drivers/clk/rockchip/clk-rk3568.c b/drivers/clk/rockchip/clk-rk3568.c
-index 8cb21d10beca2..2d44bcaef046b 100644
---- a/drivers/clk/rockchip/clk-rk3568.c
-+++ b/drivers/clk/rockchip/clk-rk3568.c
-@@ -215,6 +215,7 @@ static const struct rockchip_cpuclk_reg_data rk3568_cpuclk_data = {
- 
- PNAME(mux_pll_p)			= { "xin24m" };
- PNAME(mux_usb480m_p)			= { "xin24m", "usb480m_phy", "clk_rtc_32k" };
-+PNAME(mux_usb480m_phy_p)		= { "clk_usbphy0_480m", "clk_usbphy1_480m"};
- PNAME(mux_armclk_p)			= { "apll", "gpll" };
- PNAME(clk_i2s0_8ch_tx_p)		= { "clk_i2s0_8ch_tx_src", "clk_i2s0_8ch_tx_frac", "i2s0_mclkin", "xin_osc0_half" };
- PNAME(clk_i2s0_8ch_rx_p)		= { "clk_i2s0_8ch_rx_src", "clk_i2s0_8ch_rx_frac", "i2s0_mclkin", "xin_osc0_half" };
-@@ -485,6 +486,9 @@ static struct rockchip_clk_branch rk3568_clk_branches[] __initdata = {
- 	MUX(USB480M, "usb480m", mux_usb480m_p, CLK_SET_RATE_PARENT,
- 			RK3568_MODE_CON0, 14, 2, MFLAGS),
- 
-+	MUX(USB480M_PHY, "usb480m_phy", mux_usb480m_phy_p, CLK_SET_RATE_PARENT,
-+			RK3568_MISC_CON2, 15, 1, MFLAGS),
-+
- 	/* PD_CORE */
- 	COMPOSITE(0, "sclk_core_src", apll_gpll_npll_p, CLK_IGNORE_UNUSED,
- 			RK3568_CLKSEL_CON(2), 8, 2, MFLAGS, 0, 4, DFLAGS | CLK_DIVIDER_READ_ONLY,
-
--- 
-2.39.2
-
+On 3/27/2024 11:38 PM, Konrad Dybcio wrote:
+> Calling devm_pm_opp_set_clkname() is repeated for all HFI versions in
+> pm_ops->core_power.
+> 
+> Move it to the common codepath.
+> 
+> This also lets us get rid of core_get_v1.
+> 
+> Signed-off-by: Konrad Dybcio <konrad.dybcio@linaro.org>
+> ---
+>  drivers/media/platform/qcom/venus/core.c       |  5 +++++
+>  drivers/media/platform/qcom/venus/pm_helpers.c | 23 ++---------------------
+>  2 files changed, 7 insertions(+), 21 deletions(-)
+> 
+> diff --git a/drivers/media/platform/qcom/venus/core.c b/drivers/media/platform/qcom/venus/core.c
+> index ce206b709754..5ab3c414ec0f 100644
+> --- a/drivers/media/platform/qcom/venus/core.c
+> +++ b/drivers/media/platform/qcom/venus/core.c
+> @@ -14,6 +14,7 @@
+>  #include <linux/of.h>
+>  #include <linux/of_platform.h>
+>  #include <linux/platform_device.h>
+> +#include <linux/pm_opp.h>
+>  #include <linux/slab.h>
+>  #include <linux/types.h>
+>  #include <linux/pm_domain.h>
+> @@ -319,6 +320,10 @@ static int venus_probe(struct platform_device *pdev)
+>  	if (!core->pm_ops)
+>  		return -ENODEV;
+>  
+> +	ret = devm_pm_opp_set_clkname(dev, "core");
+> +	if (ret)
+> +		return ret;
+> +
+>  	if (core->pm_ops->core_get) {
+>  		ret = core->pm_ops->core_get(core);
+>  		if (ret)
+> diff --git a/drivers/media/platform/qcom/venus/pm_helpers.c b/drivers/media/platform/qcom/venus/pm_helpers.c
+> index cf91f50a33aa..ef4b0f0da36f 100644
+> --- a/drivers/media/platform/qcom/venus/pm_helpers.c
+> +++ b/drivers/media/platform/qcom/venus/pm_helpers.c
+> @@ -318,21 +318,6 @@ static int load_scale_v1(struct venus_inst *inst)
+>  	return ret;
+>  }
+>  
+> -static int core_get_v1(struct venus_core *core)
+> -{
+> -	int ret;
+> -
+> -	ret = venus_clks_get(core);
+> -	if (ret)
+> -		return ret;
+> -
+> -	ret = devm_pm_opp_set_clkname(core->dev, "core");
+> -	if (ret)
+> -		return ret;
+> -
+> -	return 0;
+> -}
+> -
+>  static void core_put_v1(struct venus_core *core)
+>  {
+>  }
+> @@ -350,7 +335,7 @@ static int core_power_v1(struct venus_core *core, int on)
+>  }
+>  
+>  static const struct venus_pm_ops pm_ops_v1 = {
+> -	.core_get = core_get_v1,
+> +	.core_get = venus_clks_get,
+>  	.core_put = core_put_v1,
+>  	.core_power = core_power_v1,
+>  	.load_scale = load_scale_v1,
+> @@ -423,7 +408,7 @@ static int venc_power_v3(struct device *dev, int on)
+>  }
+>  
+>  static const struct venus_pm_ops pm_ops_v3 = {
+> -	.core_get = core_get_v1,
+> +	.core_get = venus_clks_get,
+>  	.core_put = core_put_v1,
+>  	.core_power = core_power_v1,
+>  	.vdec_get = vdec_get_v3,
+> @@ -1013,10 +998,6 @@ static int core_get_v4(struct venus_core *core)
+>  	if (legacy_binding)
+>  		return 0;
+>  
+> -	ret = devm_pm_opp_set_clkname(dev, "core");
+> -	if (ret)
+> -		return ret;
+> -
+>  	ret = vcodec_domains_get(core);
+>  	if (ret)
+>  		return ret;
+> 
+>
+Reviewed-by: Dikshita Agarwal <quic_dikshita@quicinc.com>
