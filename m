@@ -1,147 +1,118 @@
-Received: from mail-oo1-f68.google.com (mail-oo1-f68.google.com [209.85.161.68])
+Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC2D416D318;
-	Fri,  5 Apr 2024 14:27:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.68
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C84E16D32D;
+	Fri,  5 Apr 2024 14:28:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712327266; cv=none; b=nCjVEGPGRp8CDWnDa5m21wvI0sv/BAN5Rwlmx4v1TLJkX+u5dJogxHgyxu70EpC1hTYd6GwmDRimzQeI3YgRpXvaZyGMkcSrDxjrbJjjoQAmi0/IxjkeqG/2jV5ToFZt///XgsbyA9vAPW4IavBFfUlMfDqD0+sTcg2CTYBdqwk=
+	t=1712327283; cv=none; b=s2oC6FEtk/kkzfHwhcTxcXnfRBUFq6v2hAfCFfxl9ihEzOeNqzBWBHD6n5UunBsiGRANJJy76vEwEHzuEnsnEF+ZBT2bh+dUq/9H85gbtkgpWomfie8f89431kiGRTRr4J0XeRUZLxSpWaXgenRUFjY9B3tnR/BJXvFcRAPF8xc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712327266; c=relaxed/simple;
-	bh=txEEOwGjitw5rYbE/djW7+ZIv3gDGXm7WfJRnMoiIpc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=lC5PA6t0dEz9Qe9B0/6A+EfvB85FUtV9Aj0vz31vylYOHroDwJXPt1fXkGhkWeVesp7+lBunadSSYmX/qPbTgV8i1ZXfT+HfGgtzp1YyT72hUSQifgUeunKyvCd4vFMiowr5X+zpCfGEo/bCtJOkihULJcmdBtgDh9NSJWYSrAQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.161.68
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+	s=arc-20240116; t=1712327283; c=relaxed/simple;
+	bh=edtWDz0F9ERyIwkradda1dEIoOdPdwzXb2qVkEfqBV0=;
+	h=Content-Type:Mime-Version:Date:Message-Id:To:Cc:Subject:From:
+	 References:In-Reply-To; b=lGaVtozIKtUSKp0J0xMug7Htbtd4OI5mF1kIX8tcpwlbNKz8eTaz966PrPM+ZI/jM6MjSoIu/GExIRa9Tt8TeesbUUFYVzCxbjyGVa53udrcgV8CFLf9+d7jGMKz8s3ENPEB7dz0r2E7i7MQ1Heud5JlNSnNE/Tql61dcUhno/M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RIpag5M7; arc=none smtp.client-ip=209.85.128.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-oo1-f68.google.com with SMTP id 006d021491bc7-5a9ec68784cso630986eaf.2;
-        Fri, 05 Apr 2024 07:27:44 -0700 (PDT)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RIpag5M7"
+Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-4162ec14805so7510085e9.1;
+        Fri, 05 Apr 2024 07:28:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1712327280; x=1712932080; darn=vger.kernel.org;
+        h=in-reply-to:references:from:subject:cc:to:message-id:date
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=O7LERPVCSW+Wfgv7Cf7Coboc+jfMXyoBnYaZV6ymz4A=;
+        b=RIpag5M78SHwP4RvqAZaWdnkoNPkr2eZb/5eFr103wlw3dNgXWAzesltU1F4er5EEl
+         0nswVIqpEcwDniyI9Xzii3tXzADjaYJaEE2Zfh9fbBSGXwuVsJLBondgZqBFbOG7pWbW
+         pLjAjiA+l6ErcJFXIpFIbmj2DaUpQvrYhs1sHodFarUndI3N8i3JxJXtFE0cczBl2hoU
+         qCBJN6lyIAyw1RrtDq2wgDgQqd4aWxEkE5lELHP82x9/64NT2BxoBlbv0WdvVSlzCE2+
+         lLlSDKoiLM4z3rfINIwJt42+ecK1l4H9FPkD/0mFRneo8LFG7XEJtachzsuUeD1FHGWp
+         +frg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712327264; x=1712932064;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=PocJzIJm9BmbxkIOP3QKpq0ppKs7IoB/uMDxWflb82Q=;
-        b=Ej0LcxuzAzpqLtxsBDs5INfO0bVTvSutmGch2FeGi4aH1gUgVd7Om+65NdgukYI2Jx
-         LvHanbFp9LoqY0NBnoKIhBD/mA14jqQ5kpwLvzrbdta2Os9SrxJ6FvjothH/xJF2jQWY
-         ant4amW0MoUoM2Rb7AAmFnFsKc5M+89ZdMSip5hFeSBfbOWVLMPKLbKHNDo9ZmjZ3pXq
-         oVuQll8urXmCSzDVUejFuXZxn7yyPkW3ts30Gc7DHfEEvtyxFCtQICCzhp5vgDc9Eh2T
-         zL10TFlO8kPvJvR3Gqu7E4hqFNeEv+hqrUERN829yRs/UgA0flL6FirlYTHjzjG/wFCa
-         40nA==
-X-Forwarded-Encrypted: i=1; AJvYcCUEsLCt6GAsPxamr3GPvD0Bi6/RE60k+pncQoArtURGpH94Xo4ylaNPZebgnKT0LuLVPrMIgl4gPoORARSB0fAui3+nxNCwPf2dSNyKNdUz4aZtAzrTfnPbtGDbFIelVCUTEkyilTf2/82jHkPyFpJGQzFNuTZOm6tPxValcV4jhBuWjBe5TvTNMyn0axxKvky92otKiPNHnn9xoqeyoj+/KjoYU8xxm2jl8XWCh/KlTlQSGES3TYzwsvvnunKK6YPr70SjOH+ii/eQqBp6qCu1gvR29E7AedQ5Uxu0SPVraeLGprCVbax+F7LQtWOC/D+6C0dYwmropJJbP7wQ4+ifFWen2uUmhlzF+9+oBGrZoiOD/O9Dr2M=
-X-Gm-Message-State: AOJu0YzliBBMMdH5OU0mGt2056PuEb+J8BmrAZEPYPbg+iTwNC+I0req
-	jQHJafjzzarLa6ZZXlZ+25J0YVWqIZh5k4bIHcUyKshYfjrDr6oqhN79LKh+JEDLyg==
-X-Google-Smtp-Source: AGHT+IG33HrZubBpzY8CpjRIQwVD80jMhPy2dSPTMGLUVGxGflRdQJ0BZwQCntKNtwbopvefvVBfOQ==
-X-Received: by 2002:a0d:c845:0:b0:610:ca8b:9a1a with SMTP id k66-20020a0dc845000000b00610ca8b9a1amr1164098ywd.46.1712320862179;
-        Fri, 05 Apr 2024 05:41:02 -0700 (PDT)
-Received: from mail-yb1-f176.google.com (mail-yb1-f176.google.com. [209.85.219.176])
-        by smtp.gmail.com with ESMTPSA id jw1-20020a05690c74c100b006144dd11472sm331431ywb.83.2024.04.05.05.41.02
+        d=1e100.net; s=20230601; t=1712327280; x=1712932080;
+        h=in-reply-to:references:from:subject:cc:to:message-id:date
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=O7LERPVCSW+Wfgv7Cf7Coboc+jfMXyoBnYaZV6ymz4A=;
+        b=QDPcJDN+Pp0oT//u4sF8zjQzRu9Joh8sweB8L5DXoCY8OWtM2LM0tA6NtjsGn23jsA
+         FsBY7D/OKfcFamCdAJ4+WlNYz4k5xzOhWCSj9g6Lu06ff3igoMs21FKXc/oj4+WAXuv7
+         mgswZn2LI4GmdoyEmrU1QcqzSw4nyCLnbL9bZgeCfZfxsAcE/hygeHoNZZs5+s+dR1/T
+         pqsUzILOv3UIjwf5WDGJpExE9aAxoKcGkGEZIOynraxoS5zu1unyk09c8uaor0NDARh1
+         bCeCBuJhxCd5MHWy3pk4UGJk6KZBZxXOQOzc8iWGUoimAScbIx05wTbml/7h+g5mDzNZ
+         IgMw==
+X-Forwarded-Encrypted: i=1; AJvYcCXpJi7gIpM8kan83r/qAPg2QRPWlrWpjoXpG487mQ9Qk08S/COYrtn7yvXSg97At30O3s7GAh/AFoA+vhkhuacjwzQlGhIGY9yJNLXF8lPxOg48e9MLnLzbRuylpkJk7g2i/jd06vjgOjAPM1ncnB4CnxKi6rnm+sa0IbzL3nddrz4=
+X-Gm-Message-State: AOJu0YzGVDts9PinOnfJYGRQyjgMb6f0RIwbDj9vaSS1t/6TPD7zUy3U
+	LgNRlAa0kdIWb+I6ktJZvAGhRqCu6BamYSxg1RHRgGfcOP2Znm+59mVZbJus
+X-Google-Smtp-Source: AGHT+IGmhovB4WvvEoGfhcQ7/7+9sQMUwNRkZ/ya0lVDZIypZ5bRpVOnEtbrPOgNbrIt2UzRbbBa6g==
+X-Received: by 2002:a05:6000:188a:b0:343:39f4:3f2e with SMTP id a10-20020a056000188a00b0034339f43f2emr2164436wri.5.1712327279625;
+        Fri, 05 Apr 2024 07:27:59 -0700 (PDT)
+Received: from localhost (p200300e41f162000f22f74fffe1f3a53.dip0.t-ipconnect.de. [2003:e4:1f16:2000:f22f:74ff:fe1f:3a53])
+        by smtp.gmail.com with ESMTPSA id i6-20020a05600c354600b0041488691eb1sm6662907wmq.17.2024.04.05.07.27.58
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 05 Apr 2024 05:41:02 -0700 (PDT)
-Received: by mail-yb1-f176.google.com with SMTP id 3f1490d57ef6-dc74e33fe1bso2067042276.0;
-        Fri, 05 Apr 2024 05:41:02 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCV0xJzsjm2isj8Cc+w+NQb30rBTV98QfS4Uo5wL6Sr0oiul+gz+xIigjwnQ8P6Hv4wksmkydeB6mzO+9oMQPmPq7BnWrD6FVyoUurMotxGzeXkyp8FQ94Z6cKYTwS2g/vzAlrYTtkYV7ThBiZU03NlEbeUw74VWdoAQM4r8WeQHHDWkL1HDyV6D3UHz6WatyOjpv93Mf5OlXEn5I+1xVEr5Sq3BnGNmowDyfTEVpA9n0PM3tzJny1j+CCgVqm5AoYJNDDB/DxAbHmjf5R9cY0Fjbxina0zMeRKHDsCtKlb9GrztaU04qKbWhTFtknnQiqPJGdSdQMnQSwtaV5aa7b5hB9XkL0uohwER8VgW3t7MjkrVEv73TTQ=
-X-Received: by 2002:a05:6902:c06:b0:dcf:56c5:4298 with SMTP id
- fs6-20020a0569020c0600b00dcf56c54298mr1422009ybb.12.1712320861884; Fri, 05
- Apr 2024 05:41:01 -0700 (PDT)
+        Fri, 05 Apr 2024 07:27:59 -0700 (PDT)
+Content-Type: multipart/signed;
+ boundary=2bced5962d6df3645374ca32f7e19dc7b5f911531a5e3e0d1afd7115069e;
+ micalg=pgp-sha256; protocol="application/pgp-signature"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <cover.1712207606.git.ysato@users.sourceforge.jp> <1db8627e4ca50b9d2d27e95d245518cac1cd62dc.1712207606.git.ysato@users.sourceforge.jp>
-In-Reply-To: <1db8627e4ca50b9d2d27e95d245518cac1cd62dc.1712207606.git.ysato@users.sourceforge.jp>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Fri, 5 Apr 2024 14:40:50 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdWnioh8er_xDvEY8ny9TgEyfb9AR-p2paS7D4OrbKykvg@mail.gmail.com>
-Message-ID: <CAMuHMdWnioh8er_xDvEY8ny9TgEyfb9AR-p2paS7D4OrbKykvg@mail.gmail.com>
-Subject: Re: [RESEND v7 13/37] dt-bindings: clock: sh7750-cpg: Add
- renesas,sh7750-cpg header.
-To: Yoshinori Sato <ysato@users.sourceforge.jp>
-Cc: linux-sh@vger.kernel.org, Damien Le Moal <dlemoal@kernel.org>, 
-	Niklas Cassel <cassel@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
-	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, Thomas Gleixner <tglx@linutronix.de>, 
-	Bjorn Helgaas <bhelgaas@google.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
-	=?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jirislaby@kernel.org>, 
-	Magnus Damm <magnus.damm@gmail.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, 
-	Rich Felker <dalias@libc.org>, John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>, 
-	Lee Jones <lee@kernel.org>, Helge Deller <deller@gmx.de>, 
-	Heiko Stuebner <heiko.stuebner@cherry.de>, Shawn Guo <shawnguo@kernel.org>, 
-	Sebastian Reichel <sre@kernel.org>, Chris Morgan <macromorgan@hotmail.com>, 
-	Linus Walleij <linus.walleij@linaro.org>, Arnd Bergmann <arnd@arndb.de>, 
-	David Rientjes <rientjes@google.com>, Hyeonggon Yoo <42.hyeyoo@gmail.com>, 
-	Vlastimil Babka <vbabka@suse.cz>, Baoquan He <bhe@redhat.com>, 
-	Andrew Morton <akpm@linux-foundation.org>, Guenter Roeck <linux@roeck-us.net>, 
-	Kefeng Wang <wangkefeng.wang@huawei.com>, Stephen Rothwell <sfr@canb.auug.org.au>, 
-	Javier Martinez Canillas <javierm@redhat.com>, Guo Ren <guoren@kernel.org>, 
-	Azeem Shaikh <azeemshaikh38@gmail.com>, Max Filippov <jcmvbkbc@gmail.com>, 
-	Jonathan Corbet <corbet@lwn.net>, Jacky Huang <ychuang3@nuvoton.com>, 
-	Herve Codina <herve.codina@bootlin.com>, 
-	Manikanta Guntupalli <manikanta.guntupalli@amd.com>, Anup Patel <apatel@ventanamicro.com>, 
-	Biju Das <biju.das.jz@bp.renesas.com>, 
-	=?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@pengutronix.de>, 
-	Sam Ravnborg <sam@ravnborg.org>, Sergey Shtylyov <s.shtylyov@omp.ru>, 
-	Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, linux-ide@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-renesas-soc@vger.kernel.org, linux-clk@vger.kernel.org, 
-	dri-devel@lists.freedesktop.org, linux-pci@vger.kernel.org, 
-	linux-serial@vger.kernel.org, linux-fbdev@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Mime-Version: 1.0
+Date: Fri, 05 Apr 2024 16:27:58 +0200
+Message-Id: <D0C9D05HXLMP.PNF08QRPH8O2@gmail.com>
+To: "Sameer Pujar" <spujar@nvidia.com>, <broonie@kernel.org>,
+ <linux-sound@vger.kernel.org>, <alsa-devel@alsa-project.org>
+Cc: <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+ <lgirdwood@gmail.com>, <jonathanh@nvidia.com>, <mkumard@nvidia.com>,
+ <stable@vger.kernel.org>
+Subject: Re: [RESEND PATCH v2] ASoC: tegra: Fix DSPK 16-bit playback
+From: "Thierry Reding" <thierry.reding@gmail.com>
+X-Mailer: aerc 0.16.0-1-0-g560d6168f0ed-dirty
+References: <20240405104306.551036-1-spujar@nvidia.com>
+In-Reply-To: <20240405104306.551036-1-spujar@nvidia.com>
+
+--2bced5962d6df3645374ca32f7e19dc7b5f911531a5e3e0d1afd7115069e
+Mime-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
 
-Hi Sato-san,
-
-Thanks for the update!
-
-On Thu, Apr 4, 2024 at 7:15=E2=80=AFAM Yoshinori Sato
-<ysato@users.sourceforge.jp> wrote:
+On Fri Apr 5, 2024 at 12:43 PM CEST, Sameer Pujar wrote:
+> DSPK configuration is wrong for 16-bit playback and this happens because
+> the client config is always fixed at 24-bit in hw_params(). Fix this by
+> updating the client config to 16-bit for the respective playback.
 >
-> SH7750 CPG Clock output define.
+> Fixes: 327ef6470266 ("ASoC: tegra: Add Tegra186 based DSPK driver")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Sameer Pujar <spujar@nvidia.com>
+> ---
+>  changes in v2:
+>   * moved common setting to S32_LE switch case.
+>
+>  sound/soc/tegra/tegra186_dspk.c | 7 +++----
+>  1 file changed, 3 insertions(+), 4 deletions(-)
 
-(from my comments on v6) Please improve the patch description.
+Acked-by: Thierry Reding <treding@nvidia.com>
 
-> Signed-off-by: Yoshinori Sato <ysato@users.sourceforge.jp>
+--2bced5962d6df3645374ca32f7e19dc7b5f911531a5e3e0d1afd7115069e
+Content-Type: application/pgp-signature; name="signature.asc"
 
-> index 000000000000..04c10b0834ee
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/clock/renesas,sh7750-cpg.yaml
+-----BEGIN PGP SIGNATURE-----
 
-The actual bindings LGTM.
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmYQCm8ACgkQ3SOs138+
+s6HsnRAAnbvXUuFwGeAoUlndo/z+e8xofUaZP2R83hBnA3JyUK5SdmWuf44y6VoJ
+x0/RyQOZ20Wm0MGqRnalCMND9z5yNtfH0prJMBJlvhjKJFtMUI1+zpcfvqzMCxLJ
+4qtwzO324JwLnPMMV64aWfiHY5unR6wvwf2Angf60yWrD61RjJ0LPUfY/9a/zAGO
+ZKuGqslx+x7Xx3OZayaf/9sg+a1DcQEbCRsAzsWp22PGi52wp4PPgfDNUcTHGkhK
+bWFTkm46ZWV7DdUTCnJ50xc2lcz/9hDRou6sEbaZZYtWHjZTj5V4omVyteP0xIsL
+7dVC8lCT2Mf99iBcKlLRPy58NdWPnun5PCKMJ8s1GmFA+BYuGsUVxYko8Lnq5LDh
+GV9uzOIYwzs6LWJ2cMEKnR6uNXJEtLoq8YFoBvSHxaBnvAi0jO20Ak5UlO4YTwEo
+aUx8dpyjjCv6N+4U+9Y+rj0D7MsIvVbeBx8T8Ln6/0sw4mQ8qJe094/AzdU/UJEc
+8jnJFmkf1ae6CkTBpOrOR/KUQO6jcdENhqzUV4NAQPKJOm5mQ/0Zxd7hK8fYHWOB
+6ptE6q+mrMQJfsMdjl4X+MExHSX2LC8rCxawk0E4zoBQ7LBGDVLt5DtngAAVFBVP
+DpZMRBOvlDBSWQtdg3Gwlgq9Tw8VfyBihA0izA/HBugbXG9VrYg=
+=+hkQ
+-----END PGP SIGNATURE-----
 
-> +examples:
-> +  - |
-> +    #include <dt-bindings/clock/sh7750-cpg.h>
-> +    cpg: clock-controller@ffc00000 {
-> +        #clock-cells =3D <1>;
-> +        #power-domain-cells =3D <0>;
-> +        compatible =3D "renesas,sh7751r-cpg";
-> +        clocks =3D <&extal>;
-> +        clock-names =3D "extal";
-> +        reg =3D <0xffc00000 20>, <0xfe0a0000 16>;
-> +        reg-names =3D "FRQCR", "CLKSTP00";
-> +        renesas,mode =3D <0>;
-> +    };
-
-Please read
-https://docs.kernel.org/devicetree/bindings/dts-coding-style.html#order-of-=
-properties-in-device-node
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---=20
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
-.org
-
-In personal conversations with technical people, I call myself a hacker. Bu=
-t
-when I'm talking to journalists I just say "programmer" or something like t=
-hat.
-                                -- Linus Torvalds
+--2bced5962d6df3645374ca32f7e19dc7b5f911531a5e3e0d1afd7115069e--
