@@ -1,94 +1,103 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C690816FF32;
-	Fri,  5 Apr 2024 15:21:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89B5B16F8E7;
+	Fri,  5 Apr 2024 15:24:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712330468; cv=none; b=OCcqRo0Q0QZD5n/+qLpZkTkfZKkLMvUPHNebdHPgMgMf6jrjIkImQbbKEqRPjnhhlLo/shXEDZABXXyaiuCAn7isajiaxz6ekJCLbKmGxYrav+WDqzzV/4p0EB11ed6maFdDGfed663GadDF71VsxCzYBsW7fnR9OWahU5ujWO8=
+	t=1712330695; cv=none; b=qYMmtMCRgelW85vhBodfBVCE6JlSiKZ3z8Bq3haQ90T9PUIgOsOH9FlQ1EhwAmGb07t0NLLovZVRymwAyhb4L9DdEZd7DLW5IzdE0NdWCD4ecPeRt/VIWnr9cL+CxZo4reKhsN/keoP0xUTv4cPGwCeZLyKU0oPuDIKEvYuzYyo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712330468; c=relaxed/simple;
-	bh=X6XGUm6JZsKq6Bbf/V28UbuXZ15PV3XG3X+8BEf6k+A=;
-	h=Message-ID:Date:MIME-Version:From:To:Subject:Cc:Content-Type; b=XoXN/idxczbvda//DrW6G4Z6XlqVlSDwcX6gydJbEG6pgClIf/0fRZ5U+OCKLk4r7XuEme9Czpe4f6Crkjd+6POB8Ghp+9yqMynF7uTHmt+u/ZN4J+9/DaU7TIzrrvHZCf0zldCNerzPWTQzdh1gROjh/QL/0lR3yvGvQsOyYUw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=JNhKaCGk; arc=none smtp.client-ip=80.237.130.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	s=arc-20240116; t=1712330695; c=relaxed/simple;
+	bh=GyDxE2CA81kKBR9d6tCMtIF9rih/K6NKJd4/EhB1CNE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=IzXBjZiQZ329PtHIZq60QxbKVxih2JWe7cSXc+sAAhl1GTu69U3gsChd4+0NnSrzeTFhklL+K02qGGgBxnlQtLe1DK8xnruh/SR2npo1wHcX4zztkQLLhVwjPYD+JrpY1QOcjhUN4egJitahNp30EnaKchbExK+hHd3kIknk5xA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=l13UVQis; arc=none smtp.client-ip=192.198.163.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="JNhKaCGk"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
-	Reply-To:Cc:Subject:To:From:MIME-Version:Date:Message-ID:From:Sender:Reply-To
-	:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
-	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
-	References; bh=v+qNG8sMUH5bGX+DRd6ZrkCiAd3Pu96BpQB8qRYZ0u8=; t=1712330466;
-	x=1712762466; b=JNhKaCGks6Ki/21xuIkSJgSjtV4ew9AwXk7AkkePp35/SD46QhNIC53V99JpL
-	+QlLXAxsYqtNN5VlvKa4HtKtHu8snRPec9pvRDmAnDdaKO71hbIJ5MYoRldSMTb2cQ0hhi4xpxK0x
-	QiPyEAdyeJvAVOO7Y25qHPzVkRVc23u9i4Co3D67KL8OLzCX/G76S0INmfasbURVgpDu5IlT7QzAT
-	ycinjlaOUcObl2pVjqPeSTbN0QjFBdoQsNd2NYWddDYVtyAP09QV4eSS0k8kAY5H+LvK6FXAQycvB
-	mwDJvOnX0rVtYSboiERpk2LYUH04uj+Tr4Jl9z2bCUTNsmRpLQ==;
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1rslNI-0005aJ-0J; Fri, 05 Apr 2024 17:21:04 +0200
-Message-ID: <19851b9b-c3ff-4781-8292-4ce5999747d3@leemhuis.info>
-Date: Fri, 5 Apr 2024 17:21:03 +0200
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="l13UVQis"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1712330695; x=1743866695;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=GyDxE2CA81kKBR9d6tCMtIF9rih/K6NKJd4/EhB1CNE=;
+  b=l13UVQiszEgnkWzs3Ya7fRqvxN3lSXRae1nLPW6bwXs2c1Mz6REegBKJ
+   1Qm5UE5K6ZZx08lH02uCoVhsAa1jWgZK5E34OvU8EP2Y12TLm+xcYJ89J
+   XEt9P83CEt17CMorjS1LI6JCrll5s6baRl/sUgEi1cR4VNhrnZLb4NKWm
+   fWmKyNGImMBWc1npHyuO9A6rcXhjm8l5DfaskO7towSzA9kHSSVV98gfY
+   5oJNFzIhoAZqGde3enacuGZPVak/8YPeYQffcL07nKqF9erGJKnicWqL9
+   uer73xilQnIniNGzw5qsygl2Gt3fAMG5QXTOZSJ/Yf/yn6+2MVrM68zd7
+   g==;
+X-CSE-ConnectionGUID: gn7YmV2nR3apEaGvWLms7w==
+X-CSE-MsgGUID: uGW8Z3lCQmO72K89ReDolw==
+X-IronPort-AV: E=McAfee;i="6600,9927,11035"; a="18274770"
+X-IronPort-AV: E=Sophos;i="6.07,181,1708416000"; 
+   d="scan'208";a="18274770"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Apr 2024 08:24:54 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,11035"; a="915256912"
+X-IronPort-AV: E=Sophos;i="6.07,181,1708416000"; 
+   d="scan'208";a="915256912"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.72.54])
+  by fmsmga002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Apr 2024 08:24:51 -0700
+Received: from andy by smile with local (Exim 4.97)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1rslQv-00000001ma2-21xQ;
+	Fri, 05 Apr 2024 18:24:49 +0300
+Date: Fri, 5 Apr 2024 18:24:49 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Damien Le Moal <dlemoal@kernel.org>
+Cc: "Martin K. Petersen" <martin.petersen@oracle.com>,
+	Hannes Reinecke <hare@suse.de>, linux-ide@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Niklas Cassel <cassel@kernel.org>
+Subject: Re: [PATCH v1 1/1] ata: libata: Move inclusion to where it belongs
+Message-ID: <ZhAXwWtA8ASDG89x@smile.fi.intel.com>
+References: <20240404192111.3580578-1-andriy.shevchenko@linux.intel.com>
+ <8e37f392-1ddd-4c8e-87df-acb3bb5bdf0b@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-Content-Language: en-US, de-DE
-To: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: [regression] opp issues on devices with multiple power-domains
-Cc: Linux PM <linux-pm@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
- Linux kernel regressions list <regressions@lists.linux.dev>,
- Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1712330466;6f3db7fd;
-X-HE-SMSGID: 1rslNI-0005aJ-0J
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <8e37f392-1ddd-4c8e-87df-acb3bb5bdf0b@kernel.org>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-Hi, Thorsten here, the Linux kernel's regression tracker.
+On Fri, Apr 05, 2024 at 08:16:29AM +0900, Damien Le Moal wrote:
+> On 4/5/24 04:21, Andy Shevchenko wrote:
 
-Viresh Kumar, I noticed a report about a regression in
-bugzilla.kernel.org that appears to be caused by a change of yours
-(e37440e7e2c276 ("OPP: Call dev_pm_opp_set_opp() for required OPPs")
-[v6.8-rc1]). As many (most?) kernel developers don't keep an eye on it,
-I decided to forward it by mail.
+...
 
-Quoting from https://bugzilla.kernel.org/show_bug.cgi?id=218682 :
-
-> Created attachment 306086 [details]
-> Dmesg from xiaomi-onclite
+> >  /* libata-acpi.c */
+> > +
+> > +#include <linux/acpi.h>
 > 
-> Devices with multiple power-domains has issues with required_opps is
-> pointing to wrong opp table because it lazily just uses dt node to find it.
-> But every genpd device has its own table.
+> I am really not a big fan of including files in the middle of a header file.
+
+I'm fine to place it at the top.
+
+...
+
+> > -#include <linux/acpi.h>
 > 
-> The issue was fixed downstream with this commit:
-> https://github.com/msm8953-mainline/linux/commit/6afec1ea2cf1cdb968d646c45d1d1a80f6cb5fb2
+> Why not:
+> 
+> #ifdef CONFIG_ATA_ACPI
+> #include <linux/acpi.h>
+> #endif
+> 
+> Which avoids the union forward declaration below.
 
-See the ticket for more details. Note, you have to use bugzilla to reach
-the reporter, as I sadly[1] can not CCed them in mails like this.
+The point is to reduce dependency hell. The header does NOT dependent on
+ACPI guts, that's why I really prefer forward declaration over including
+a monstrous acpi.h.
 
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
---
-Everything you wanna know about Linux kernel regression tracking:
-https://linux-regtracking.leemhuis.info/about/#tldr
-If I did something stupid, please tell me, as explained on that page.
+-- 
+With Best Regards,
+Andy Shevchenko
 
-[1] because bugzilla.kernel.org tells users upon registration their
-"email address will never be displayed to logged out users"
 
-P.S.: let me use this mail to also add the report to the list of tracked
-regressions to ensure it's doesn't fall through the cracks:
-
-#regzbot introduced: e37440e7e2c2760475d60c5556b59c8880a7fd63
-#regzbot title: OPP: issues on devices with multiple power-domains
-#regzbot from: Barnabás Czémán
-#regzbot duplicate: https://bugzilla.kernel.org/show_bug.cgi?id=218682
-#regzbot ignore-activity
