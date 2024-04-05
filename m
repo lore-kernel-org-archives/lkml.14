@@ -1,84 +1,413 @@
-Received: from tretyak2.mcst.ru (tretyak2.mcst.ru [212.5.119.215])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f72.google.com (mail-io1-f72.google.com [209.85.166.72])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFAAA16F90E;
-	Fri,  5 Apr 2024 15:36:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.5.119.215
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 214F016F909
+	for <linux-kernel@vger.kernel.org>; Fri,  5 Apr 2024 15:37:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712331400; cv=none; b=AtMaJVT+CVZ3fM19YGG2E4GPHSYyEh73mLzXinuBjxyKSa//8NWc96zAAW3epPp1o+fehzZSER39LaZWeNZY8SHJSbtf8M3KcutCOlrVCBcWYNtdhQnKRM2o5hZfobxwPN7Yg21iR795VXO0n7IEym2h0ZcMBYqx/U9Au9tOL4M=
+	t=1712331426; cv=none; b=XOGsIWblD0Wqhz5oSpAfXbbC2y4zU4IevOUeN/5rIh8evTKP69xDBilAXxT+ZAhCRJDHR+CssVtVMOra8UDKY4/nfBXnvLz8nvTMCtss2cHr47bZh8jVfr8zwcZP3N/beJ+5DI3XhFKqJeDnSzWJwJkBnOuLNHDncCZidO0q078=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712331400; c=relaxed/simple;
-	bh=zHcMHKvPO78NbKWFx4WJtT4MssjLzx3ZxNF75dmvbvc=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=g93ZzVx3aUTad9ci3pDWw0sJ7Nlxi/7oGb3qiMh2yKbPZDDES1wvpSXEX90n4UktB1uAsSWkPHV0iLuUaRD0D21hHEeDgHdW2k3fcBeupK9n2+ZKk6hFL5Z4XXXZWkZJmQ5qUB49FgkY/kPJlpztGsvHzbvew98WevrY6Jjei4Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mcst.ru; spf=pass smtp.mailfrom=mcst.ru; arc=none smtp.client-ip=212.5.119.215
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mcst.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mcst.ru
-Received: from tretyak2.mcst.ru (localhost [127.0.0.1])
-	by tretyak2.mcst.ru (Postfix) with ESMTP id 42140102397;
-	Fri,  5 Apr 2024 18:28:28 +0300 (MSK)
-Received: from frog.lab.sun.mcst.ru (frog.lab.sun.mcst.ru [176.16.4.50])
-	by tretyak2.mcst.ru (Postfix) with ESMTP id 381C9102398;
-	Fri,  5 Apr 2024 18:27:43 +0300 (MSK)
-Received: from artemiev-i.lab.sun.mcst.ru (avior-1 [192.168.63.223])
-	by frog.lab.sun.mcst.ru (8.13.4/8.12.11) with ESMTP id 435FRgqo010337;
-	Fri, 5 Apr 2024 18:27:42 +0300
-From: Igor Artemiev <Igor.A.Artemiev@mcst.ru>
-To: Johannes Berg <johannes@sipsolutions.net>
-Cc: Igor Artemiev <Igor.A.Artemiev@mcst.ru>,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>, linux-wireless@vger.kernel.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        lvc-project@linuxtesting.org
-Subject: [lvc-project] [PATCH] wifi: cfg80211: fix the order of arguments for trace events of the tx_rx_evt class
-Date: Fri,  5 Apr 2024 18:24:30 +0300
-Message-Id: <20240405152431.270267-1-Igor.A.Artemiev@mcst.ru>
-X-Mailer: git-send-email 2.39.2
+	s=arc-20240116; t=1712331426; c=relaxed/simple;
+	bh=Eqg7zd/QST9m80hX8tzCCgytIUyKMEIYUxzKDGMunLo=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=ZcpYlY5/zfaGvbzsnxCTHcW6DHUQWbHN4Jf5TGeKSJDu2XAwNTq2lH8pBAoVu4rEs6Qq544R61I7aErYI0B1nY0W8fbXX3NJ8vPXGoJsyU7QVVjK8l+jMEeGlxshTF/BJvU51BZ0+yLpUR9g3n8T752cVFBpHJHRAyInQFtxZ9s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.72
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f72.google.com with SMTP id ca18e2360f4ac-7cc78077032so224545839f.0
+        for <linux-kernel@vger.kernel.org>; Fri, 05 Apr 2024 08:37:03 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712331423; x=1712936223;
+        h=content-transfer-encoding:to:from:subject:message-id:in-reply-to
+         :date:mime-version:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=0xKogxjIZVk1/fWjEvp+XETHn9KPKT+/XjMYzcN2I2I=;
+        b=RM0Gg1VjUDBQ0yGd24RxPCXPFOolusaIS7LKGizrzXMFspqqG8waG/7aKpLG+HDt7B
+         Bpj5yKERUY4iS3kGQLJddw+6EuFGN8fyBvjO/s8YJxGLnsAX5eiYD/uK9TcGbVdF7GMU
+         c+y+o6ObOadhH6YQ814ZMwYhvveDE2i2NNhu/QwbzY+40kGhqRfXOt70WmNkYpamSdTL
+         Xtn8ncqiHvU2tsFaq4BJWINJ3NDOGN9I3ve0yvI5Ud7/ny866K7nLbYvP7zJe2bsTnZt
+         3x7x5kX0ZnHfGPvmhXJfdsRuqPL7cwj8okAlXFu4LPgs/1+9HD5DHpXNhls2TyTvqlLo
+         aZag==
+X-Forwarded-Encrypted: i=1; AJvYcCUUF3Qncwn6eKVFr7PqzhVT9/FDLsPonMnhwYH2IUt1P51ccq3zB1W8q28Loey9LBGYrx+MnqsHSmLUHEy086xpIKYUZ33wl8eKItwB
+X-Gm-Message-State: AOJu0YzvNubjIw3Ku24iyJc5+Ur/thdqmPEv/Qtvcqzwlrc07iR7XAmp
+	C5KbcGtLGr9X+PyX8sIZXLZtYk+/0z6kb+bnvCPwBAC5I3H/algiYGrwjxvPIaQj+E1aL0vCmBF
+	j0nN6NFDBUr1Op2zC1uCxbBTqmXM6SpB5knSlNwadzoNTqve9EuY2My0=
+X-Google-Smtp-Source: AGHT+IE4eKpMQQc4p0ohc4eF9nfJZuQe830wyDTMXMc+uVkKMCyLz6KME2jA5aAloAy/OyIQMf+0OZlU/gQxTbCsl5jxSTVfuDKY
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Anti-Virus: Kaspersky Anti-Virus for Linux Mail Server 5.6.39/RELEASE,
-	 bases: 20111107 #2745587, check: 20240405 notchecked
-X-AV-Checked: ClamAV using ClamSMTP
+X-Received: by 2002:a05:6602:2c82:b0:7d0:3436:d2e0 with SMTP id
+ i2-20020a0566022c8200b007d03436d2e0mr72695iow.4.1712331423280; Fri, 05 Apr
+ 2024 08:37:03 -0700 (PDT)
+Date: Fri, 05 Apr 2024 08:37:03 -0700
+In-Reply-To: <CAOQ4uxhm5m9CvX0y2RcJGuP=vryZLp9M+tS6vH1o_9BGUqxrvg@mail.gmail.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000039026a06155b3a12@google.com>
+Subject: Re: [syzbot] [kernfs?] possible deadlock in kernfs_fop_llseek
+From: syzbot <syzbot+9a5b0ced8b1bfb238b56@syzkaller.appspotmail.com>
+To: amir73il@gmail.com, brauner@kernel.org, gregkh@linuxfoundation.org, 
+	hch@lst.de, jack@suse.cz, linux-fsdevel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, miklos@szeredi.hu, 
+	syzkaller-bugs@googlegroups.com, tj@kernel.org, valesini@yandex-team.ru, 
+	viro@zeniv.linux.org.uk
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The declarations of the tx_rx_evt class and the rdev_set_antenna event
-use the wrong order of arguments in the TP_ARGS macro.
+Hello,
 
-Fix the order of arguments in the TP_ARGS macro.
+syzbot tried to test the proposed patch but the build/boot failed:
 
-Found by Linux Verification Center (linuxtesting.org) with SVACE.
+viperboard
+[    8.144672][    T1] usbcore: registered new interface driver dln2
+[    8.146814][    T1] usbcore: registered new interface driver pn533_usb
+[    8.154721][    T1] nfcsim 0.2 initialized
+[    8.156856][    T1] usbcore: registered new interface driver port100
+[    8.158745][    T1] usbcore: registered new interface driver nfcmrvl
+[    8.168709][    T1] Loading iSCSI transport class v2.0-870.
+[    8.188275][    T1] virtio_scsi virtio0: 1/0/0 default/read/poll queues
+[    8.202624][    T1] ------------[ cut here ]------------
+[    8.204252][    T1] refcount_t: decrement hit 0; leaking memory.
+[    8.206219][    T1] WARNING: CPU: 0 PID: 1 at lib/refcount.c:31 refcount=
+_warn_saturate+0xfa/0x1d0
+[    8.208638][    T1] Modules linked in:
+[    8.209556][    T1] CPU: 0 PID: 1 Comm: swapper/0 Not tainted 6.9.0-rc1-=
+syzkaller-00001-g70d370568b75 #0
+[    8.214301][    T1] Hardware name: Google Google Compute Engine/Google C=
+ompute Engine, BIOS Google 03/27/2024
+[    8.217361][    T1] RIP: 0010:refcount_warn_saturate+0xfa/0x1d0
+[    8.218680][    T1] Code: b2 00 00 00 e8 77 99 f2 fc 5b 5d c3 cc cc cc c=
+c e8 6b 99 f2 fc c6 05 11 1e f0 0a 01 90 48 c7 c7 e0 5e 1e 8c e8 b7 35 b5 f=
+c 90 <0f> 0b 90 90 eb d9 e8 4b 99 f2 fc c6 05 ee 1d f0 0a 01 90 48 c7 c7
+[    8.223425][    T1] RSP: 0000:ffffc90000066e18 EFLAGS: 00010246
+[    8.225385][    T1] RAX: 1f757896feb95b00 RBX: ffff8881482a2d7c RCX: fff=
+f888016ac8000
+[    8.227629][    T1] RDX: 0000000000000000 RSI: 0000000000000000 RDI: 000=
+0000000000000
+[    8.229990][    T1] RBP: 0000000000000004 R08: ffffffff8157ffe2 R09: fff=
+ffbfff1c396e0
+[    8.232520][    T1] R10: dffffc0000000000 R11: fffffbfff1c396e0 R12: fff=
+fea000502cdc0
+[    8.234601][    T1] R13: ffffea000502cdc8 R14: 1ffffd4000a059b9 R15: 000=
+0000000000000
+[    8.236876][    T1] FS:  0000000000000000(0000) GS:ffff8880b9400000(0000=
+) knlGS:0000000000000000
+[    8.239600][    T1] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[    8.240914][    T1] CR2: ffff88823ffff000 CR3: 000000000e132000 CR4: 000=
+00000003506f0
+[    8.243303][    T1] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 000=
+0000000000000
+[    8.245750][    T1] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 000=
+0000000000400
+[    8.247945][    T1] Call Trace:
+[    8.248964][    T1]  <TASK>
+[    8.250217][    T1]  ? __warn+0x163/0x4e0
+[    8.251589][    T1]  ? refcount_warn_saturate+0xfa/0x1d0
+[    8.253743][    T1]  ? report_bug+0x2b3/0x500
+[    8.254770][    T1]  ? refcount_warn_saturate+0xfa/0x1d0
+[    8.256336][    T1]  ? handle_bug+0x3e/0x70
+[    8.257030][    T1]  ? exc_invalid_op+0x1a/0x50
+[    8.258667][    T1]  ? asm_exc_invalid_op+0x1a/0x20
+[    8.259957][    T1]  ? __warn_printk+0x292/0x360
+[    8.261215][    T1]  ? refcount_warn_saturate+0xfa/0x1d0
+[    8.263208][    T1]  ? refcount_warn_saturate+0xf9/0x1d0
+[    8.264293][    T1]  __free_pages_ok+0xc54/0xd80
+[    8.265404][    T1]  make_alloc_exact+0xa3/0xf0
+[    8.266560][    T1]  vring_alloc_queue_split+0x20a/0x600
+[    8.267988][    T1]  ? __pfx_vring_alloc_queue_split+0x10/0x10
+[    8.269965][    T1]  ? vp_find_vqs+0x4c/0x4e0
+[    8.271058][    T1]  ? virtscsi_probe+0x3ea/0xf60
+[    8.272057][    T1]  ? virtio_dev_probe+0x991/0xaf0
+[    8.273466][    T1]  ? really_probe+0x2b8/0xad0
+[    8.275102][    T1]  ? driver_probe_device+0x50/0x430
+[    8.276174][    T1]  vring_create_virtqueue_split+0xc6/0x310
+[    8.277826][    T1]  ? ret_from_fork+0x4b/0x80
+[    8.279140][    T1]  ? __pfx_vring_create_virtqueue_split+0x10/0x10
+[    8.281586][    T1]  vring_create_virtqueue+0xca/0x110
+[    8.283311][    T1]  ? __pfx_vp_notify+0x10/0x10
+[    8.285146][    T1]  ? __pfx_virtscsi_ctrl_done+0x10/0x10
+[    8.286554][    T1]  setup_vq+0xe9/0x2d0
+[    8.287916][    T1]  ? __pfx_vp_notify+0x10/0x10
+[    8.289684][    T1]  ? __pfx_virtscsi_ctrl_done+0x10/0x10
+[    8.291329][    T1]  ? __pfx_virtscsi_ctrl_done+0x10/0x10
+[    8.292741][    T1]  ? __pfx_virtscsi_ctrl_done+0x10/0x10
+[    8.294786][    T1]  vp_setup_vq+0xbf/0x330
+[    8.296422][    T1]  ? __pfx_vp_config_changed+0x10/0x10
+[    8.297504][    T1]  ? ioread16+0x2f/0x90
+[    8.298989][    T1]  ? __pfx_virtscsi_ctrl_done+0x10/0x10
+[    8.300925][    T1]  vp_find_vqs_msix+0x8b2/0xc80
+[    8.302291][    T1]  vp_find_vqs+0x4c/0x4e0
+[    8.303546][    T1]  virtscsi_init+0x8db/0xd00
+[    8.304820][    T1]  ? __pfx_virtscsi_init+0x10/0x10
+[    8.305808][    T1]  ? __pfx_default_calc_sets+0x10/0x10
+[    8.307015][    T1]  ? scsi_host_alloc+0xa57/0xea0
+[    8.308290][    T1]  ? vp_get+0xfd/0x140
+[    8.309405][    T1]  virtscsi_probe+0x3ea/0xf60
+[    8.310389][    T1]  ? __pfx_virtscsi_probe+0x10/0x10
+[    8.311500][    T1]  ? kernfs_add_one+0x156/0x8b0
+[    8.312348][    T1]  ? virtio_no_restricted_mem_acc+0x9/0x10
+[    8.313977][    T1]  ? virtio_features_ok+0x10c/0x270
+[    8.314859][    T1]  virtio_dev_probe+0x991/0xaf0
+[    8.315766][    T1]  ? __pfx_virtio_dev_probe+0x10/0x10
+[    8.316886][    T1]  really_probe+0x2b8/0xad0
+[    8.317711][    T1]  __driver_probe_device+0x1a2/0x390
+[    8.318525][    T1]  driver_probe_device+0x50/0x430
+[    8.319567][    T1]  __driver_attach+0x45f/0x710
+[    8.320525][    T1]  ? __pfx___driver_attach+0x10/0x10
+[    8.321841][    T1]  bus_for_each_dev+0x239/0x2b0
+[    8.322872][    T1]  ? __pfx___driver_attach+0x10/0x10
+[    8.324235][    T1]  ? __pfx_bus_for_each_dev+0x10/0x10
+[    8.326127][    T1]  ? do_raw_spin_unlock+0x13c/0x8b0
+[    8.327579][    T1]  bus_add_driver+0x347/0x620
+[    8.328989][    T1]  driver_register+0x23a/0x320
+[    8.330318][    T1]  ? __pfx_virtio_scsi_init+0x10/0x10
+[    8.332178][    T1]  virtio_scsi_init+0x65/0xe0
+[    8.333752][    T1]  ? __pfx_virtio_scsi_init+0x10/0x10
+[    8.334950][    T1]  do_one_initcall+0x248/0x880
+[    8.336015][    T1]  ? __pfx_virtio_scsi_init+0x10/0x10
+[    8.337202][    T1]  ? __pfx_do_one_initcall+0x10/0x10
+[    8.338254][    T1]  ? lockdep_hardirqs_on_prepare+0x43d/0x780
+[    8.339378][    T1]  ? __pfx_parse_args+0x10/0x10
+[    8.341464][    T1]  ? do_initcalls+0x1c/0x80
+[    8.342223][    T1]  ? rcu_is_watching+0x15/0xb0
+[    8.343161][    T1]  do_initcall_level+0x157/0x210
+[    8.344252][    T1]  do_initcalls+0x3f/0x80
+[    8.345400][    T1]  kernel_init_freeable+0x435/0x5d0
+[    8.346571][    T1]  ? __pfx_kernel_init_freeable+0x10/0x10
+[    8.349024][    T1]  ? __pfx_lockdep_hardirqs_on_prepare+0x10/0x10
+[    8.350664][    T1]  ? __pfx_kernel_init+0x10/0x10
+[    8.352143][    T1]  ? __pfx_kernel_init+0x10/0x10
+[    8.353430][    T1]  ? __pfx_kernel_init+0x10/0x10
+[    8.354609][    T1]  kernel_init+0x1d/0x2b0
+[    8.355433][    T1]  ret_from_fork+0x4b/0x80
+[    8.356203][    T1]  ? __pfx_kernel_init+0x10/0x10
+[    8.357092][    T1]  ret_from_fork_asm+0x1a/0x30
+[    8.358282][    T1]  </TASK>
+[    8.359166][    T1] Kernel panic - not syncing: kernel: panic_on_warn se=
+t ...
+[    8.360941][    T1] CPU: 0 PID: 1 Comm: swapper/0 Not tainted 6.9.0-rc1-=
+syzkaller-00001-g70d370568b75 #0
+[    8.363085][    T1] Hardware name: Google Google Compute Engine/Google C=
+ompute Engine, BIOS Google 03/27/2024
+[    8.363411][    T1] Call Trace:
+[    8.363411][    T1]  <TASK>
+[    8.363411][    T1]  dump_stack_lvl+0x241/0x360
+[    8.363411][    T1]  ? __pfx_dump_stack_lvl+0x10/0x10
+[    8.363411][    T1]  ? __pfx__printk+0x10/0x10
+[    8.363411][    T1]  ? _printk+0xd5/0x120
+[    8.363411][    T1]  ? vscnprintf+0x5d/0x90
+[    8.363411][    T1]  panic+0x349/0x860
+[    8.363411][    T1]  ? __warn+0x172/0x4e0
+[    8.363411][    T1]  ? __pfx_panic+0x10/0x10
+[    8.363411][    T1]  ? show_trace_log_lvl+0x4e6/0x520
+[    8.363411][    T1]  ? ret_from_fork_asm+0x1a/0x30
+[    8.363411][    T1]  __warn+0x346/0x4e0
+[    8.363411][    T1]  ? refcount_warn_saturate+0xfa/0x1d0
+[    8.363411][    T1]  report_bug+0x2b3/0x500
+[    8.363411][    T1]  ? refcount_warn_saturate+0xfa/0x1d0
+[    8.363411][    T1]  handle_bug+0x3e/0x70
+[    8.363411][    T1]  exc_invalid_op+0x1a/0x50
+[    8.363411][    T1]  asm_exc_invalid_op+0x1a/0x20
+[    8.363411][    T1] RIP: 0010:refcount_warn_saturate+0xfa/0x1d0
+[    8.363411][    T1] Code: b2 00 00 00 e8 77 99 f2 fc 5b 5d c3 cc cc cc c=
+c e8 6b 99 f2 fc c6 05 11 1e f0 0a 01 90 48 c7 c7 e0 5e 1e 8c e8 b7 35 b5 f=
+c 90 <0f> 0b 90 90 eb d9 e8 4b 99 f2 fc c6 05 ee 1d f0 0a 01 90 48 c7 c7
+[    8.363411][    T1] RSP: 0000:ffffc90000066e18 EFLAGS: 00010246
+[    8.363411][    T1] RAX: 1f757896feb95b00 RBX: ffff8881482a2d7c RCX: fff=
+f888016ac8000
+[    8.363411][    T1] RDX: 0000000000000000 RSI: 0000000000000000 RDI: 000=
+0000000000000
+[    8.363411][    T1] RBP: 0000000000000004 R08: ffffffff8157ffe2 R09: fff=
+ffbfff1c396e0
+[    8.363411][    T1] R10: dffffc0000000000 R11: fffffbfff1c396e0 R12: fff=
+fea000502cdc0
+[    8.363411][    T1] R13: ffffea000502cdc8 R14: 1ffffd4000a059b9 R15: 000=
+0000000000000
+[    8.363411][    T1]  ? __warn_printk+0x292/0x360
+[    8.363411][    T1]  ? refcount_warn_saturate+0xf9/0x1d0
+[    8.363411][    T1]  __free_pages_ok+0xc54/0xd80
+[    8.363411][    T1]  make_alloc_exact+0xa3/0xf0
+[    8.363411][    T1]  vring_alloc_queue_split+0x20a/0x600
+[    8.363411][    T1]  ? __pfx_vring_alloc_queue_split+0x10/0x10
+[    8.363411][    T1]  ? vp_find_vqs+0x4c/0x4e0
+[    8.363411][    T1]  ? virtscsi_probe+0x3ea/0xf60
+[    8.363411][    T1]  ? virtio_dev_probe+0x991/0xaf0
+[    8.363411][    T1]  ? really_probe+0x2b8/0xad0
+[    8.363411][    T1]  ? driver_probe_device+0x50/0x430
+[    8.363411][    T1]  vring_create_virtqueue_split+0xc6/0x310
+[    8.363411][    T1]  ? ret_from_fork+0x4b/0x80
+[    8.363411][    T1]  ? __pfx_vring_create_virtqueue_split+0x10/0x10
+[    8.363411][    T1]  vring_create_virtqueue+0xca/0x110
+[    8.363411][    T1]  ? __pfx_vp_notify+0x10/0x10
+[    8.363411][    T1]  ? __pfx_virtscsi_ctrl_done+0x10/0x10
+[    8.363411][    T1]  setup_vq+0xe9/0x2d0
+[    8.363411][    T1]  ? __pfx_vp_notify+0x10/0x10
+[    8.363411][    T1]  ? __pfx_virtscsi_ctrl_done+0x10/0x10
+[    8.363411][    T1]  ? __pfx_virtscsi_ctrl_done+0x10/0x10
+[    8.363411][    T1]  ? __pfx_virtscsi_ctrl_done+0x10/0x10
+[    8.363411][    T1]  vp_setup_vq+0xbf/0x330
+[    8.363411][    T1]  ? __pfx_vp_config_changed+0x10/0x10
+[    8.363411][    T1]  ? ioread16+0x2f/0x90
+[    8.363411][    T1]  ? __pfx_virtscsi_ctrl_done+0x10/0x10
+[    8.363411][    T1]  vp_find_vqs_msix+0x8b2/0xc80
+[    8.363411][    T1]  vp_find_vqs+0x4c/0x4e0
+[    8.363411][    T1]  virtscsi_init+0x8db/0xd00
+[    8.363411][    T1]  ? __pfx_virtscsi_init+0x10/0x10
+[    8.363411][    T1]  ? __pfx_default_calc_sets+0x10/0x10
+[    8.363411][    T1]  ? scsi_host_alloc+0xa57/0xea0
+[    8.363411][    T1]  ? vp_get+0xfd/0x140
+[    8.363411][    T1]  virtscsi_probe+0x3ea/0xf60
+[    8.363411][    T1]  ? __pfx_virtscsi_probe+0x10/0x10
+[    8.363411][    T1]  ? kernfs_add_one+0x156/0x8b0
+[    8.363411][    T1]  ? virtio_no_restricted_mem_acc+0x9/0x10
+[    8.363411][    T1]  ? virtio_features_ok+0x10c/0x270
+[    8.363411][    T1]  virtio_dev_probe+0x991/0xaf0
+[    8.363411][    T1]  ? __pfx_virtio_dev_probe+0x10/0x10
+[    8.363411][    T1]  really_probe+0x2b8/0xad0
+[    8.363411][    T1]  __driver_probe_device+0x1a2/0x390
+[    8.363411][    T1]  driver_probe_device+0x50/0x430
+[    8.363411][    T1]  __driver_attach+0x45f/0x710
+[    8.363411][    T1]  ? __pfx___driver_attach+0x10/0x10
+[    8.363411][    T1]  bus_for_each_dev+0x239/0x2b0
+[    8.363411][    T1]  ? __pfx___driver_attach+0x10/0x10
+[    8.363411][    T1]  ? __pfx_bus_for_each_dev+0x10/0x10
+[    8.363411][    T1]  ? do_raw_spin_unlock+0x13c/0x8b0
+[    8.363411][    T1]  bus_add_driver+0x347/0x620
+[    8.363411][    T1]  driver_register+0x23a/0x320
+[    8.363411][    T1]  ? __pfx_virtio_scsi_init+0x10/0x10
+[    8.363411][    T1]  virtio_scsi_init+0x65/0xe0
+[    8.363411][    T1]  ? __pfx_virtio_scsi_init+0x10/0x10
+[    8.363411][    T1]  do_one_initcall+0x248/0x880
+[    8.363411][    T1]  ? __pfx_virtio_scsi_init+0x10/0x10
+[    8.363411][    T1]  ? __pfx_do_one_initcall+0x10/0x10
+[    8.363411][    T1]  ? lockdep_hardirqs_on_prepare+0x43d/0x780
+[    8.363411][    T1]  ? __pfx_parse_args+0x10/0x10
+[    8.363411][    T1]  ? do_initcalls+0x1c/0x80
+[    8.363411][    T1]  ? rcu_is_watching+0x15/0xb0
+[    8.363411][    T1]  do_initcall_level+0x157/0x210
+[    8.363411][    T1]  do_initcalls+0x3f/0x80
+[    8.363411][    T1]  kernel_init_freeable+0x435/0x5d0
+[    8.363411][    T1]  ? __pfx_kernel_init_freeable+0x10/0x10
+[    8.363411][    T1]  ? __pfx_lockdep_hardirqs_on_prepare+0x10/0x10
+[    8.363411][    T1]  ? __pfx_kernel_init+0x10/0x10
+[    8.363411][    T1]  ? __pfx_kernel_init+0x10/0x10
+[    8.363411][    T1]  ? __pfx_kernel_init+0x10/0x10
+[    8.363411][    T1]  kernel_init+0x1d/0x2b0
+[    8.363411][    T1]  ret_from_fork+0x4b/0x80
+[    8.363411][    T1]  ? __pfx_kernel_init+0x10/0x10
+[    8.363411][    T1]  ret_from_fork_asm+0x1a/0x30
+[    8.363411][    T1]  </TASK>
+[    8.363411][    T1] Kernel Offset: disabled
+[    8.363411][    T1] Rebooting in 86400 seconds..
 
-Signed-off-by: Igor Artemiev <Igor.A.Artemiev@mcst.ru>
----
- net/wireless/trace.h | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/net/wireless/trace.h b/net/wireless/trace.h
-index cbbf347c6b2e..df013c98b80d 100644
---- a/net/wireless/trace.h
-+++ b/net/wireless/trace.h
-@@ -1758,7 +1758,7 @@ TRACE_EVENT(rdev_return_void_tx_rx,
- 
- DECLARE_EVENT_CLASS(tx_rx_evt,
- 	TP_PROTO(struct wiphy *wiphy, u32 tx, u32 rx),
--	TP_ARGS(wiphy, rx, tx),
-+	TP_ARGS(wiphy, tx, rx),
- 	TP_STRUCT__entry(
- 		WIPHY_ENTRY
- 		__field(u32, tx)
-@@ -1775,7 +1775,7 @@ DECLARE_EVENT_CLASS(tx_rx_evt,
- 
- DEFINE_EVENT(tx_rx_evt, rdev_set_antenna,
- 	TP_PROTO(struct wiphy *wiphy, u32 tx, u32 rx),
--	TP_ARGS(wiphy, rx, tx)
-+	TP_ARGS(wiphy, tx, rx)
- );
- 
- DECLARE_EVENT_CLASS(wiphy_netdev_id_evt,
--- 
-2.39.2
+syzkaller build log:
+go env (err=3D<nil>)
+GO111MODULE=3D'auto'
+GOARCH=3D'amd64'
+GOBIN=3D''
+GOCACHE=3D'/syzkaller/.cache/go-build'
+GOENV=3D'/syzkaller/.config/go/env'
+GOEXE=3D''
+GOEXPERIMENT=3D''
+GOFLAGS=3D''
+GOHOSTARCH=3D'amd64'
+GOHOSTOS=3D'linux'
+GOINSECURE=3D''
+GOMODCACHE=3D'/syzkaller/jobs-2/linux/gopath/pkg/mod'
+GONOPROXY=3D''
+GONOSUMDB=3D''
+GOOS=3D'linux'
+GOPATH=3D'/syzkaller/jobs-2/linux/gopath'
+GOPRIVATE=3D''
+GOPROXY=3D'https://proxy.golang.org,direct'
+GOROOT=3D'/usr/local/go'
+GOSUMDB=3D'sum.golang.org'
+GOTMPDIR=3D''
+GOTOOLCHAIN=3D'auto'
+GOTOOLDIR=3D'/usr/local/go/pkg/tool/linux_amd64'
+GOVCS=3D''
+GOVERSION=3D'go1.21.4'
+GCCGO=3D'gccgo'
+GOAMD64=3D'v1'
+AR=3D'ar'
+CC=3D'gcc'
+CXX=3D'g++'
+CGO_ENABLED=3D'1'
+GOMOD=3D'/syzkaller/jobs-2/linux/gopath/src/github.com/google/syzkaller/go.=
+mod'
+GOWORK=3D''
+CGO_CFLAGS=3D'-O2 -g'
+CGO_CPPFLAGS=3D''
+CGO_CXXFLAGS=3D'-O2 -g'
+CGO_FFLAGS=3D'-O2 -g'
+CGO_LDFLAGS=3D'-O2 -g'
+PKG_CONFIG=3D'pkg-config'
+GOGCCFLAGS=3D'-fPIC -m64 -pthread -Wl,--no-gc-sections -fmessage-length=3D0=
+ -ffile-prefix-map=3D/tmp/go-build2829307758=3D/tmp/go-build -gno-record-gc=
+c-switches'
 
+git status (err=3D<nil>)
+HEAD detached at 51c4dcff8
+nothing to commit, working tree clean
+
+
+tput: No value for $TERM and no -T specified
+tput: No value for $TERM and no -T specified
+Makefile:31: run command via tools/syz-env for best compatibility, see:
+Makefile:32: https://github.com/google/syzkaller/blob/master/docs/contribut=
+ing.md#using-syz-env
+go list -f '{{.Stale}}' ./sys/syz-sysgen | grep -q false || go install ./sy=
+s/syz-sysgen
+make .descriptions
+tput: No value for $TERM and no -T specified
+tput: No value for $TERM and no -T specified
+Makefile:31: run command via tools/syz-env for best compatibility, see:
+Makefile:32: https://github.com/google/syzkaller/blob/master/docs/contribut=
+ing.md#using-syz-env
+bin/syz-sysgen
+touch .descriptions
+GOOS=3Dlinux GOARCH=3Damd64 go build "-ldflags=3D-s -w -X github.com/google=
+/syzkaller/prog.GitRevision=3D51c4dcff83b0574620c280cc5130ef59cc4a2e32 -X '=
+github.com/google/syzkaller/prog.gitRevisionDate=3D20240403-123700'" "-tags=
+=3Dsyz_target syz_os_linux syz_arch_amd64 " -o ./bin/linux_amd64/syz-fuzzer=
+ github.com/google/syzkaller/syz-fuzzer
+GOOS=3Dlinux GOARCH=3Damd64 go build "-ldflags=3D-s -w -X github.com/google=
+/syzkaller/prog.GitRevision=3D51c4dcff83b0574620c280cc5130ef59cc4a2e32 -X '=
+github.com/google/syzkaller/prog.gitRevisionDate=3D20240403-123700'" "-tags=
+=3Dsyz_target syz_os_linux syz_arch_amd64 " -o ./bin/linux_amd64/syz-execpr=
+og github.com/google/syzkaller/tools/syz-execprog
+GOOS=3Dlinux GOARCH=3Damd64 go build "-ldflags=3D-s -w -X github.com/google=
+/syzkaller/prog.GitRevision=3D51c4dcff83b0574620c280cc5130ef59cc4a2e32 -X '=
+github.com/google/syzkaller/prog.gitRevisionDate=3D20240403-123700'" "-tags=
+=3Dsyz_target syz_os_linux syz_arch_amd64 " -o ./bin/linux_amd64/syz-stress=
+ github.com/google/syzkaller/tools/syz-stress
+mkdir -p ./bin/linux_amd64
+gcc -o ./bin/linux_amd64/syz-executor executor/executor.cc \
+	-m64 -O2 -pthread -Wall -Werror -Wparentheses -Wunused-const-variable -Wfr=
+ame-larger-than=3D16384 -Wno-stringop-overflow -Wno-array-bounds -Wno-forma=
+t-overflow -Wno-unused-but-set-variable -Wno-unused-command-line-argument -=
+static-pie -fpermissive -w -DGOOS_linux=3D1 -DGOARCH_amd64=3D1 \
+	-DHOSTGOOS_linux=3D1 -DGIT_REVISION=3D\"51c4dcff83b0574620c280cc5130ef59cc=
+4a2e32\"
+
+
+Error text is too large and was truncated, full error text is at:
+https://syzkaller.appspot.com/x/error.txt?x=3D16ae7ead180000
+
+
+Tested on:
+
+commit:         70d37056 kernfs: annotate different lockdep class for ..
+git tree:       https://github.com/amir73il/linux/ vfs-fixes
+kernel config:  https://syzkaller.appspot.com/x/.config?x=3Dd45c08b2154c215=
+d
+dashboard link: https://syzkaller.appspot.com/bug?extid=3D9a5b0ced8b1bfb238=
+b56
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debia=
+n) 2.40
+
+Note: no patches were applied.
