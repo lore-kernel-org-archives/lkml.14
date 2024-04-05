@@ -1,63 +1,66 @@
-Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
+Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96AD12D606
-	for <linux-kernel@vger.kernel.org>; Fri,  5 Apr 2024 07:09:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB1A22C691
+	for <linux-kernel@vger.kernel.org>; Fri,  5 Apr 2024 07:09:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712300986; cv=none; b=nN7ML8mG3OVesxyawjm3rBV3VG8dDMwV3BkaUfjqYtzdR7lhWc15nAJS6qf36/DTyQvBRo9o/2ymBjHN9ldGrPCH8V4tr8R8xSekxyk3/BdMEmVtCMIfZI1Sv4UJE48SuoKX+hFIAe0eORnVPZohWOjxQR9UkR440oYUBkkZlGo=
+	t=1712300988; cv=none; b=BAIEPVItTgYN+5UFG1Bh3e0du1/8Z3l/E2ruEbYMwN044JcjmUjjbNk98FWw+XXg7fUF8BCesdhuWx5bG05oE2G8s/3pwm2kcTLEK1QdDFQQqwucKAnPXvlNq99iv5TeV5XTA2/l+yR5aKqZIdTUkGLVq2nElpiNft9bsG6Y00w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712300986; c=relaxed/simple;
-	bh=8e9KWBvPyofUY9y0WRoCSTVhc7X7fvbk4pxXNNYyPx4=;
-	h=Date:Message-Id:Mime-Version:Subject:From:To:Content-Type; b=VgBjL0XIdkgaLTapmxFIxK4c829SEhkvB0mLVaZBUU/sNqOfYUP93SagD1GQTTxrgci38woegZEZVleD/rgntZFiSPZrnzVB2nC3rPJO/O5ce9aJecrQudIUtu0HLBTjmBxZ7WV8C6Fsg8atga53OzQXAI+8+SuG86E39N+Ow/8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=aC8A6Eze; arc=none smtp.client-ip=209.85.128.201
+	s=arc-20240116; t=1712300988; c=relaxed/simple;
+	bh=VQdVOjuFNCXOa8vkszw3kZMD2q0Y4KMc33Opfqtl/As=;
+	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
+	 To:Content-Type; b=NQOwNq7QvKgfvmvgONgqkvwZYtKNYPYW8ToVcXc2LZnJbE7oIikldS3i4vtMMhSIBXG7+g4StkQmp4Ufjs78ianL6JTBLlco0mWeROD3FaEG1X8R+WLFpfW2aktgaWd3I70ziXc4WX1UYluozcB8rC3rY+aupINmBwQ8HtLkxL4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=nogE8Ygh; arc=none smtp.client-ip=209.85.128.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="aC8A6Eze"
-Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-60cbba6f571so30343837b3.1
-        for <linux-kernel@vger.kernel.org>; Fri, 05 Apr 2024 00:09:44 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="nogE8Ygh"
+Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-610b96c8ca2so30903327b3.2
+        for <linux-kernel@vger.kernel.org>; Fri, 05 Apr 2024 00:09:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1712300983; x=1712905783; darn=vger.kernel.org;
-        h=to:from:subject:mime-version:message-id:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=0Ob7TzpDpTM9SCKkDzrXTBQ/YxjYsrPaKVbzk6RxhdE=;
-        b=aC8A6Eze0FwSxcNzfpl74IOV4pdnzvKZxVFE+o1WOI78aTVuBY/0stL97OPGyqFZPP
-         mjCLJ6l/BZFLfE+C6OH4X1+sRCLtwEiIXPs39/Q3Cyv0b6QcOdubSCeyLB1E7Ge5ky7Q
-         CmEySy6/2NqIYNxxKeEFvikHpxGq0HCh1UVPqBNe0QDACuD6v0USzJVcsl3utQIbRe6Q
-         GUphOIaBE3xD1fURRctceDQmcyE3t3vUUDXGK5mTyUcJvcXVbiCRHePZiFdMNncPXKNs
-         zjog8j9PIBaJlr74R0BZe4VaRl9L6qVJuZdLu+wJYeGexQBCOJCHJMhJwwFm1Pd6l2GG
-         Q3ww==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712300983; x=1712905783;
-        h=to:from:subject:mime-version:message-id:date:x-gm-message-state
+        d=google.com; s=20230601; t=1712300986; x=1712905786; darn=vger.kernel.org;
+        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=0Ob7TzpDpTM9SCKkDzrXTBQ/YxjYsrPaKVbzk6RxhdE=;
-        b=mBEa5jLdfp0la+S/ZUC8U91hT81uY2ipDw02Ti0LHarvbQSpn4FgrN3EdfMJikhBwI
-         RR54zcnU3ksm+FGlmPcfkGh4RLiTXm122ZueJOht4vYaB0e4FsZaA/1QIFiXFgNtbQqM
-         Q6uYO7s7ngq7afxxtUcB33nOvCCnb9wyTEfzOgsel29iSdYoc3VQMzkU/6Xqy8dOYYyp
-         JL3Af2gRmrJPiVaVd2Q0/crq2PUuLBN14qxvDk4Ifp1wVQfN+lg4e81kaJXpUMhi3YkE
-         D15DXGmjQX7k2pLDiDqLtcGW6nWhrLAtRbh4uJcpbeyyuLVWM628V3HXUGn0B0Qycz+Y
-         FdVw==
-X-Forwarded-Encrypted: i=1; AJvYcCWEBjYQa99kixQr4oBMUyl3dLRyAPj8/WRXWHTT0gryiv9tljB1d8JXy2TAjEIeLgFYt0Z5cHsK4OuyfrcZSPtwtznr25jS5cQmFr0L
-X-Gm-Message-State: AOJu0Yy5fr+IeCt8UPloHQZT+LNZMpQfQwfrApUIit1iOO19bLYLzims
-	XMSo3/uZQDf45BTybYNyRyfwdzD4i9JnXmhxIqooozjEpjNe6iICkfgQ2/n3p+wFH33uf+WfU58
-	6kUV/nw==
-X-Google-Smtp-Source: AGHT+IFcU9sQHia2Mb0d3O/yCjE4MOE0iAyf7ZUHX4r565opxam1MGsSvxr6cU2YG4krjMG3mQrf4pd+2jk6
+        bh=AT9Egetdt6A++F2BYy2vD+NdRNiosWU6soZGtG4+BZw=;
+        b=nogE8Ygh7A5HMW+f914ydS5RxObgEVskc/e/CStLuN4NQ4I1mkXxKIGYbuY+GQoT3M
+         v5c0eomMAiJV1/+iKMaXv/AvaIL6CnV3zLeRhmgJDZ2A90E1hvcPNtE8QB1ggLOrgK4i
+         ktwtX2nYkWZxO2EinJLyXcXHQ5vv0dNn95iQ7tK4/oBfDPfAUb65C3HzV8IdoguGU8an
+         PXZdKwy8JzM4T5vgTHYeLz43xEPBGtqZz8MAol+bOeKQbCoamqQmHrCZSWQ/z9STm7we
+         tQluKPp/hMtJNDIsJvOKJDcGmEXFKc62ZG31uXRtCijNG9oCY34fio/94Y4yddeoe90b
+         cA/g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712300986; x=1712905786;
+        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=AT9Egetdt6A++F2BYy2vD+NdRNiosWU6soZGtG4+BZw=;
+        b=vgwqpblYx0bIsabf8MCYIxb1xGLyLpCixU9In25UpXGFwDgxMkQIyD6WmAx9jgbBwH
+         pJuFTpc+Yu7Ek6e5PSfn4eD7cdQmESOLIzo2Yxuvr57lIiUxO57iqPhdPOLXjqcvOpxY
+         FG1UDLcsiptbLwta1BqJjMJ2j41PRFfOFbrF3Qyjcq++i/4Mnp5nGmWu9iZ5AUJWkfEN
+         E74RyuTYVHscxuMFfo76v1ckNK0tyXqegy0MZhkwk5HjHI6jtNc5KMlkLIFuGNeic3q9
+         zVgUpY870J2CLeghfx5rynLag7zXAY8XOuogb2CeDcqeqEaZRYvrCtby6P4Kl3pcKjO5
+         YuVQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWVA6nfXGkDHDeq8feld3ChFkh+Y2gw9emKqf/YUjfk75YN4hWKNbrluODSkRE9CigSTILC5SNzVeThF6vfeoU7R1LN5kbTcGQzYDS1
+X-Gm-Message-State: AOJu0YykcMYp++E1on9y9bJTYVzN4FSS9i+a+5prcJg91WMI1GrNmkjB
+	wVLStanrNgPiCZ9Vx+LfOUenOLFqtMlzme2YNZRHv5m2OIc8wHBilHp5T5nK5afQyRbi5DhvNg0
+	aE3+d1g==
+X-Google-Smtp-Source: AGHT+IGhGx96fxbkEMZrzw8bqd79Y1y+1w5eH772l6o7gnSy1Ymlw+0QtvD3GcsuT0krXWaIobPvtTej3oAc
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:6765:20d3:72cb:f573])
- (user=irogers job=sendgmr) by 2002:a81:fe0c:0:b0:611:747a:daac with SMTP id
- j12-20020a81fe0c000000b00611747adaacmr162273ywn.0.1712300983701; Fri, 05 Apr
- 2024 00:09:43 -0700 (PDT)
-Date: Fri,  5 Apr 2024 00:09:30 -0700
-Message-Id: <20240405070931.1231245-1-irogers@google.com>
+ (user=irogers job=sendgmr) by 2002:a05:690c:6382:b0:615:df:f4bc with SMTP id
+ hp2-20020a05690c638200b0061500dff4bcmr160786ywb.4.1712300986068; Fri, 05 Apr
+ 2024 00:09:46 -0700 (PDT)
+Date: Fri,  5 Apr 2024 00:09:31 -0700
+In-Reply-To: <20240405070931.1231245-1-irogers@google.com>
+Message-Id: <20240405070931.1231245-2-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
+References: <20240405070931.1231245-1-irogers@google.com>
 X-Mailer: git-send-email 2.44.0.478.gd926399ef9-goog
-Subject: [PATCH v1 1/2] tools subcmd: Add check_if_command_finished
+Subject: [PATCH v1 2/2] perf test: Display number of remaining tests
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -68,135 +71,189 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-Add non-blocking function to check if a child_process has
-completed. If the process has completed the exit code is stored in the
-child_process so that finish_command returns it.
+Before polling or sleeping to wait for a test to complete, print out
+": Running (<num> remaining)" where the number of remaining tests is
+determined by iterating over the remaining tests and seeing which
+return true for check_if_command_finished. After the delay, erase the
+line and either update it with the new number of remaining tests, or
+print the test's result. This allows a user to know a test is running
+and in parallel mode (default) how many of the tests are waiting to
+complete. If color mode is disabled then avoid displaying the
+"Running" message.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/lib/subcmd/run-command.c | 70 ++++++++++++++++++++++------------
- tools/lib/subcmd/run-command.h |  3 ++
- 2 files changed, 49 insertions(+), 24 deletions(-)
+ tools/perf/tests/builtin-test.c | 77 ++++++++++++++++++++++-----------
+ tools/perf/util/color.h         |  1 +
+ 2 files changed, 53 insertions(+), 25 deletions(-)
 
-diff --git a/tools/lib/subcmd/run-command.c b/tools/lib/subcmd/run-command.c
-index d435eb42354b..4e3a557a2f37 100644
---- a/tools/lib/subcmd/run-command.c
-+++ b/tools/lib/subcmd/run-command.c
-@@ -165,43 +165,65 @@ int start_command(struct child_process *cmd)
+diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin-test.c
+index 73f53b02f733..15b8e8e32749 100644
+--- a/tools/perf/tests/builtin-test.c
++++ b/tools/perf/tests/builtin-test.c
+@@ -238,7 +238,10 @@ static int run_test_child(struct child_process *process)
+ 	return -err;
+ }
+ 
+-static int print_test_result(struct test_suite *t, int i, int subtest, int result, int width)
++#define TEST_RUNNING -3
++
++static int print_test_result(struct test_suite *t, int i, int subtest, int result, int width,
++			     int remaining)
+ {
+ 	if (has_subtests(t)) {
+ 		int subw = width > 2 ? width - 2 : width;
+@@ -248,6 +251,9 @@ static int print_test_result(struct test_suite *t, int i, int subtest, int resul
+ 		pr_info("%3d: %-*s:", i + 1, width, test_description(t, subtest));
+ 
+ 	switch (result) {
++	case TEST_RUNNING:
++		color_fprintf(stderr, PERF_COLOR_YELLOW, " Running (%d remaining)\n", remaining);
++		break;
+ 	case TEST_OK:
+ 		pr_info(" Ok\n");
+ 		break;
+@@ -269,13 +275,15 @@ static int print_test_result(struct test_suite *t, int i, int subtest, int resul
  	return 0;
  }
  
--static int wait_or_whine(pid_t pid)
-+static int wait_or_whine(struct child_process *cmd, bool block)
+-static int finish_test(struct child_test *child_test, int width)
++static int finish_test(struct child_test **child_tests, int running_test, int child_test_num,
++		       int width)
  {
--	char sbuf[STRERR_BUFSIZE];
-+	bool finished = cmd->finished;
-+	int result = cmd->finish_result;
++	struct child_test *child_test = child_tests[running_test];
+ 	struct test_suite *t = child_test->test;
+ 	int i = child_test->test_num;
+ 	int subi = child_test->subtest;
+ 	int err = child_test->process.err;
+-	bool err_done = err <= 0;
++	bool err_done = false;
+ 	struct strbuf err_output = STRBUF_INIT;
+ 	int ret;
  
--	for (;;) {
-+	while (!finished) {
- 		int status, code;
--		pid_t waiting = waitpid(pid, &status, 0);
-+		pid_t waiting = waitpid(cmd->pid, &status, block ? 0 : WNOHANG);
-+
-+		if (!block && waiting == 0)
-+			break;
-+
-+		if (waiting < 0 && errno == EINTR)
-+			continue;
- 
-+		finished = true;
- 		if (waiting < 0) {
--			if (errno == EINTR)
--				continue;
-+			char sbuf[STRERR_BUFSIZE];
-+
- 			fprintf(stderr, " Error: waitpid failed (%s)",
- 				str_error_r(errno, sbuf, sizeof(sbuf)));
--			return -ERR_RUN_COMMAND_WAITPID;
--		}
--		if (waiting != pid)
--			return -ERR_RUN_COMMAND_WAITPID_WRONG_PID;
--		if (WIFSIGNALED(status))
--			return -ERR_RUN_COMMAND_WAITPID_SIGNAL;
+@@ -290,7 +298,7 @@ static int finish_test(struct child_test *child_test, int width)
+ 	 * Busy loop reading from the child's stdout/stderr that are set to be
+ 	 * non-blocking until EOF.
+ 	 */
+-	if (!err_done)
++	if (err > 0)
+ 		fcntl(err, F_SETFL, O_NONBLOCK);
+ 	if (verbose > 1) {
+ 		if (has_subtests(t))
+@@ -304,29 +312,48 @@ static int finish_test(struct child_test *child_test, int width)
+ 			  .events = POLLIN | POLLERR | POLLHUP | POLLNVAL,
+ 			},
+ 		};
+-		char buf[512];
+-		ssize_t len;
 -
--		if (!WIFEXITED(status))
--			return -ERR_RUN_COMMAND_WAITPID_NOEXIT;
--		code = WEXITSTATUS(status);
--		switch (code) {
--		case 127:
--			return -ERR_RUN_COMMAND_EXEC;
--		case 0:
--			return 0;
--		default:
--			return -code;
-+			result = -ERR_RUN_COMMAND_WAITPID;
-+		} else if (waiting != cmd->pid) {
-+			result = -ERR_RUN_COMMAND_WAITPID_WRONG_PID;
-+		} else if (WIFSIGNALED(status)) {
-+			result = -ERR_RUN_COMMAND_WAITPID_SIGNAL;
-+		} else if (!WIFEXITED(status)) {
-+			result = -ERR_RUN_COMMAND_WAITPID_NOEXIT;
-+		} else {
-+			code = WEXITSTATUS(status);
-+			switch (code) {
-+			case 127:
-+				result = -ERR_RUN_COMMAND_EXEC;
-+				break;
-+			case 0:
-+				result = 0;
-+				break;
-+			default:
-+				result = -code;
-+				break;
-+			}
- 		}
- 	}
-+	if (finished) {
-+		cmd->finished = 1;
-+		cmd->finish_result = result;
-+	}
-+	return result;
-+}
+-		/* Poll to avoid excessive spinning, timeout set for 100ms. */
+-		poll(pfds, ARRAY_SIZE(pfds), /*timeout=*/100);
+-		if (!err_done && pfds[0].revents) {
+-			errno = 0;
+-			len = read(err, buf, sizeof(buf) - 1);
+-
+-			if (len <= 0) {
+-				err_done = errno != EAGAIN;
+-			} else {
+-				buf[len] = '\0';
+-				if (verbose > 1)
+-					fprintf(stdout, "%s", buf);
+-				else
++		if (perf_use_color_default) {
++			int tests_in_progress = running_test;
 +
-+int check_if_command_finished(struct child_process *cmd)
-+{
-+	wait_or_whine(cmd, /*block=*/false);
-+	return cmd->finished;
++			for (int y = running_test; y < child_test_num; y++) {
++				if (check_if_command_finished(&child_tests[y]->process))
++					tests_in_progress++;
++			}
++			print_test_result(t, i, subi, TEST_RUNNING, width,
++					  child_test_num - tests_in_progress);
++		}
++
++		err_done = true;
++		if (err <= 0) {
++			/* No child stderr to poll, sleep for 10ms for child to complete. */
++			usleep(10 * 1000);
++		} else {
++			/* Poll to avoid excessive spinning, timeout set for 100ms. */
++			poll(pfds, ARRAY_SIZE(pfds), /*timeout=*/100);
++			if (pfds[0].revents) {
++				char buf[512];
++				ssize_t len;
++
++				len = read(err, buf, sizeof(buf) - 1);
++
++				if (len > 0) {
++					err_done = false;
++					buf[len] = '\0';
+ 					strbuf_addstr(&err_output, buf);
++				}
+ 			}
+ 		}
++		if (err_done)
++			err_done = check_if_command_finished(&child_test->process);
++
++		if (perf_use_color_default) {
++			/* Erase "Running (.. remaining)" line printed before poll/sleep. */
++			fprintf(debug_file(), PERF_COLOR_DELETE_LINE);
++		}
+ 	}
+ 	/* Clean up child process. */
+ 	ret = finish_command(&child_test->process);
+-	if (verbose == 1 && ret == TEST_FAIL) {
++	if (verbose > 1 || (verbose == 1 && ret == TEST_FAIL)) {
+ 		/* Add header for test that was skipped above. */
+ 		if (has_subtests(t))
+ 			pr_info("%3d.%1d: %s:\n", i + 1, subi + 1, test_description(t, subi));
+@@ -335,7 +362,7 @@ static int finish_test(struct child_test *child_test, int width)
+ 		fprintf(stderr, "%s", err_output.buf);
+ 	}
+ 	strbuf_release(&err_output);
+-	print_test_result(t, i, subi, ret, width);
++	print_test_result(t, i, subi, ret, width, /*remaining=*/0);
+ 	if (err > 0)
+ 		close(err);
+ 	return 0;
+@@ -351,7 +378,7 @@ static int start_test(struct test_suite *test, int i, int subi, struct child_tes
+ 		pr_debug("--- start ---\n");
+ 		err = test_function(test, subi)(test, subi);
+ 		pr_debug("---- end ----\n");
+-		print_test_result(test, i, subi, err, width);
++		print_test_result(test, i, subi, err, width, /*remaining=*/0);
+ 		return 0;
+ 	}
+ 
+@@ -376,7 +403,7 @@ static int start_test(struct test_suite *test, int i, int subi, struct child_tes
+ 	err = start_command(&(*child)->process);
+ 	if (err || !sequential)
+ 		return  err;
+-	return finish_test(*child, width);
++	return finish_test(child, /*running_test=*/0, /*child_test_num=*/1, width);
  }
  
- int finish_command(struct child_process *cmd)
- {
--	return wait_or_whine(cmd->pid);
-+	return wait_or_whine(cmd, /*block=*/true);
- }
+ #define for_each_test(j, k, t)					\
+@@ -461,7 +488,7 @@ static int __cmd_test(int argc, const char *argv[], struct intlist *skiplist)
+ 	}
+ 	for (i = 0; i < child_test_num; i++) {
+ 		if (!sequential) {
+-			int ret  = finish_test(child_tests[i], width);
++			int ret  = finish_test(child_tests, i, child_test_num, width);
  
- int run_command(struct child_process *cmd)
-diff --git a/tools/lib/subcmd/run-command.h b/tools/lib/subcmd/run-command.h
-index d794138a797f..b2d39de6e690 100644
---- a/tools/lib/subcmd/run-command.h
-+++ b/tools/lib/subcmd/run-command.h
-@@ -41,17 +41,20 @@ struct child_process {
- 	int err;
- 	const char *dir;
- 	const char *const *env;
-+	int finish_result;
- 	unsigned no_stdin:1;
- 	unsigned no_stdout:1;
- 	unsigned no_stderr:1;
- 	unsigned exec_cmd:1; /* if this is to be external sub-command */
- 	unsigned stdout_to_stderr:1;
-+	unsigned finished:1;
- 	void (*preexec_cb)(void);
- 	 /* If set, call function in child rather than doing an exec. */
- 	int (*no_exec_cmd)(struct child_process *process);
- };
+ 			if (ret)
+ 				return ret;
+diff --git a/tools/perf/util/color.h b/tools/perf/util/color.h
+index 01f7bed21c9b..4b9f8d5d4439 100644
+--- a/tools/perf/util/color.h
++++ b/tools/perf/util/color.h
+@@ -22,6 +22,7 @@
+ #define MIN_GREEN	0.5
+ #define MIN_RED		5.0
  
- int start_command(struct child_process *);
-+int check_if_command_finished(struct child_process *);
- int finish_command(struct child_process *);
- int run_command(struct child_process *);
- 
++#define PERF_COLOR_DELETE_LINE	"\033[A\33[2K\r"
+ /*
+  * This variable stores the value of color.ui
+  */
 -- 
 2.44.0.478.gd926399ef9-goog
 
