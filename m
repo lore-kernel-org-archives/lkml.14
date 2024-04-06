@@ -1,202 +1,119 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 985804E1A0
-	for <linux-kernel@vger.kernel.org>; Sat,  6 Apr 2024 21:14:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF8484E1A0
+	for <linux-kernel@vger.kernel.org>; Sat,  6 Apr 2024 21:21:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712438093; cv=none; b=IbWy4vcmkiEWDP6viETF7T8tYMI3LBiSIpm5dO1Tf28XOXvTnnoDfDA9zYXC00H21d4vriOQ1wKwfu7jM60slo7F2Q81dDvUVs4USPmW8GRZMFVc0z2mSqtniaMLUGZLh7Eb8uY6+lSnBMlaxh2Pqi6TniG6Odqrqp/sRy18hDc=
+	t=1712438513; cv=none; b=K9YupqDM1tIDR3qZWQIjWC0FWKaIsSRJgEiBku1MxQ6orogffEapY6C9xiGzd9LzM1OSNhDjAYI1/b//mQceJKhqLqp9GXhLGU/bUqnJ5JRSNfaO7gZrdgXfWBRR3fbu3/Xe7VT6dRunj7eTxsuEIuvyyyfzXH627b53Pcqmw6c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712438093; c=relaxed/simple;
-	bh=dmNNyfbVSsVmGstlEtt+9GFUYC6Tw+gx4nXYmXDUBh0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=klhg351FOJ+/uooNAl91M8dyw0PaFTXRgkBCe353+thQ7ZnZ9lEts4Vy1r1S17UesujENKLtNstwlp/5UM6scjeigEXgvrRiVp/dVwom0k59nT6hgGN8vn74zmjEvV1nVerS/eG09/tTGfemCpPNxvpJmirkf6HsMFaxm4l/shY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=DZPRGUz3; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1712438513; c=relaxed/simple;
+	bh=y//Lh8Tr8uv2aV+WmYKxwzKjGldtEJe8+2y5s9hvN40=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=pb9eC7pdCkCPcq9bH/sTGRAK/Y9vo57IUt7yUl0lUPuXntlMgRgyrcTrWfCfn8wnh/mgaEzLrzOunHH1t3VXsLC49id9+72Aw74TxbX7eXygB1P2IHbmNG/nEjLqqgQ8W+7nm1Nl0VEsMsyI4B3mEQA0u8hhltf+8vC4eZ9Ypec=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com; spf=none smtp.mailfrom=toblux.com; dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b=ND3qzpn6; arc=none smtp.client-ip=209.85.128.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=toblux.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DZPRGUz3"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1712438089;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=oHlEIGlMy5AeytAApxqnvbACljlKOkZKhDAKTWpoYzU=;
-	b=DZPRGUz3isSNzRRzBeEcix0QeuhgcVQamI58OfNBwlhqq++4O8wUZCW4BEF3nGQh/I2U1t
-	ochdpn43Uu/aNfqNtIe58uKYPXgxD2CyMipoDNp7h0j/3X96nWxcR2W4V/1mzNYCDxH7B4
-	64udNuZxfdPG8uVlB2Swo5Eqat7/JAI=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-156-xrmUZh_FPx27M8azjuNlpg-1; Sat, 06 Apr 2024 17:14:45 -0400
-X-MC-Unique: xrmUZh_FPx27M8azjuNlpg-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.rdu2.redhat.com [10.11.54.3])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 0DBCD180A1E7;
-	Sat,  6 Apr 2024 21:14:45 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.226.136])
-	by smtp.corp.redhat.com (Postfix) with SMTP id A5BB2100077A;
-	Sat,  6 Apr 2024 21:14:42 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Sat,  6 Apr 2024 23:13:20 +0200 (CEST)
-Date: Sat, 6 Apr 2024 23:13:13 +0200
-From: Oleg Nesterov <oleg@redhat.com>
-To: Muhammad Usama Anjum <usama.anjum@collabora.com>
-Cc: Marco Elver <elver@google.com>, Peter Zijlstra <peterz@infradead.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@kernel.org>,
-	"Eric W. Biederman" <ebiederm@xmission.com>,
-	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-	Dmitry Vyukov <dvyukov@google.com>, kasan-dev@googlegroups.com
-Subject: Re: [PATCH v6 2/2] selftests/timers/posix_timers: Test delivery of
- signals across threads
-Message-ID: <20240406211312.GD3060@redhat.com>
-References: <20230316123028.2890338-1-elver@google.com>
- <20230316123028.2890338-2-elver@google.com>
- <46ad25c9-f63c-4bb7-9707-4bc8b21ccaca@collabora.com>
+	dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b="ND3qzpn6"
+Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-4162ad8ddd0so18592475e9.0
+        for <linux-kernel@vger.kernel.org>; Sat, 06 Apr 2024 14:21:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=toblux-com.20230601.gappssmtp.com; s=20230601; t=1712438510; x=1713043310; darn=vger.kernel.org;
+        h=to:references:message-id:content-transfer-encoding:cc:date
+         :in-reply-to:from:subject:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=NyXlKEN39j2LXw6tJQQuTLODo/6T3jH4hJW4z2ZyOQo=;
+        b=ND3qzpn6VYoxApjHAhaK9bV7KLLyA0m8GU19SIgykqk7gNSxxtDY3ZZzdAU3n2V6lg
+         G1A93yvacXFVf2xLlcPaxjoEPaQbNqDcBaGqklCD8VZakfWKghSAWom3lpCW+IVOLtur
+         4cdrvoQmzcElDAhSknpam8lzNT8dCc3I9nesWB6qLRSUtCfdRmHLeeEsPB7WcTHhsmlI
+         SRqtUxLn7vPcjEHkmRIxWC6nFW//+AWhcUh0FhY8gHdRGe4dBVDrjqhJJoLrLEZV3FRH
+         6HaS3TJJ5pzWfXzOvYQtGgQvwjGOYsiSrn4gesi8/PRLHGzitwioWy3NEO4jKk6ojMHU
+         PhpA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712438510; x=1713043310;
+        h=to:references:message-id:content-transfer-encoding:cc:date
+         :in-reply-to:from:subject:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=NyXlKEN39j2LXw6tJQQuTLODo/6T3jH4hJW4z2ZyOQo=;
+        b=EVrQXcbugXPzNDRiNLIci81c+tUv6VvhwNfIJZOO2jC+l6CIRkClZS1M0+72p8k0MS
+         7FHoJ/7Cen4xEehsn0TT6fnBt7Q1nedi/vzjJj5e/wh6pTnO/vZU2c5wnH1PWYyCpaZ2
+         AVrpxylyvfwKzcVuNgU55yUA4aakS25EFo6SzpwKR47mmepv+SxRr2FMWolRfAw7ueLi
+         3yuAo+EOEdz4lNQzZzF56kaVCLPYQqX/GCs6j8e4NmeG2Cen4oM4AOdNzlMBmOytDB5N
+         52Djjue3FgIXn/TxjJulnI0cUGDLAtQKyCY4fMazdz/mO/L30nLVC7ywuE6ehFMzR7JZ
+         jOMQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXT084b8PMf/2Pg0nxDYzM+nhFEQ79WgzWZ+jMaFGW+RK3M5ubKnIUfmrBi+lmNsc9gZxjAdrfgwYIENnsMe/aaMR6LxQjW1DHTFAJf
+X-Gm-Message-State: AOJu0Yzuc4SYwLdZl/JAQuW4exG/ozgeIVPJdLC6PjTn0G3HYl3/DwSO
+	wu4pa/xGfnnbYfDuEnH2GrUPRrOe66r+Alc8s6yRBgNmbe3OgMThJwZRYnfkZtA=
+X-Google-Smtp-Source: AGHT+IEjV0U0KkcWPwvL/zTdku2P/I8C40e1EFFT1iQps4xd4LDMS9Nj3IIMWd4uTXK4+mB2spfzKA==
+X-Received: by 2002:a05:600c:a04:b0:414:1325:e8a8 with SMTP id z4-20020a05600c0a0400b004141325e8a8mr4279849wmp.39.1712438509955;
+        Sat, 06 Apr 2024 14:21:49 -0700 (PDT)
+Received: from smtpclient.apple ([2001:a61:10c6:ce01:f18b:c867:4069:879e])
+        by smtp.gmail.com with ESMTPSA id bi15-20020a05600c3d8f00b0041657f61f1dsm211660wmb.25.2024.04.06.14.21.48
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Sat, 06 Apr 2024 14:21:49 -0700 (PDT)
+Content-Type: text/plain;
+	charset=utf-8
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <46ad25c9-f63c-4bb7-9707-4bc8b21ccaca@collabora.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.3
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3774.500.171.1.1\))
+Subject: Re: [PATCH] bcachefs: Rename struct field swap to prevent macro
+ naming collision
+From: Thorsten Blum <thorsten.blum@toblux.com>
+In-Reply-To: <wvui43l6pcfexoglhyy4xfdjs4mrjzmbcwupnb4djlgvrebn7s@l22gudock5d6>
+Date: Sat, 6 Apr 2024 23:21:37 +0200
+Cc: Brian Foster <bfoster@redhat.com>,
+ linux-bcachefs@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <E5B1C1FA-0B85-49ED-8EE6-4F01FBA2AC99@toblux.com>
+References: <20240406141919.248148-2-thorsten.blum@toblux.com>
+ <wvui43l6pcfexoglhyy4xfdjs4mrjzmbcwupnb4djlgvrebn7s@l22gudock5d6>
+To: Kent Overstreet <kent.overstreet@linux.dev>
+X-Mailer: Apple Mail (2.3774.500.171.1.1)
 
-Muhammad,
+On 6. Apr 2024, at 20:48, Kent Overstreet <kent.overstreet@linux.dev> =
+wrote:
+>=20
+> On Sat, Apr 06, 2024 at 04:19:20PM +0200, Thorsten Blum wrote:
+>> The struct field swap can collide with the swap() macro defined in
+>> linux/minmax.h. Rename the struct field to prevent such collisions.
+>=20
+> Same as in lib/sort.c, so what's the actual reason?
 
-I am sorry, but... are you aware that this patch was applied over a year ago,
-and then this code was updated to use the ksft_API?
+I included <linux/minmax.h> in arch/m68k/include/asm/bitops.h (to use =
+the min()
+macro), but received the following error:
 
-Oleg.
+fs/bcachefs/eytzinger.c: In function =E2=80=98do_swap=E2=80=99:
+fs/bcachefs/eytzinger.c:128:69: error: macro "swap" passed 3 arguments, =
+but takes just 2
+  128 |                 ((const struct wrapper *)priv)->swap(a, b, =
+(int)size);
+      |                                                                  =
+   ^
+In file included from ./arch/m68k/include/asm/bitops.h:16,
+                 from ./include/linux/bitops.h:68,
+                 from fs/bcachefs/eytzinger.h:5,
+                 from fs/bcachefs/eytzinger.c:3:
+./include/linux/minmax.h:270: note: macro "swap" defined here
+  270 | #define swap(a, b) \
+      |
+fs/bcachefs/eytzinger.c:128:47: warning: statement with no effect =
+[-Wunused-value]
+  128 |                 ((const struct wrapper *)priv)->swap(a, b, =
+(int)size);
+      |                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~
+make[4]: *** [scripts/Makefile.build:244: fs/bcachefs/eytzinger.o] Error =
+1
+make[3]: *** [scripts/Makefile.build:485: fs/bcachefs] Error 2
 
-On 04/07, Muhammad Usama Anjum wrote:
->
-> On 3/16/23 5:30 PM, Marco Elver wrote:
-> > From: Dmitry Vyukov <dvyukov@google.com>
-> > 
-> > Test that POSIX timers using CLOCK_PROCESS_CPUTIME_ID eventually deliver
-> > a signal to all running threads.  This effectively tests that the kernel
-> > doesn't prefer any one thread (or subset of threads) for signal delivery.
-> > 
-> > Signed-off-by: Dmitry Vyukov <dvyukov@google.com>
-> > Signed-off-by: Marco Elver <elver@google.com>
-> > ---
-> > v6:
-> > - Update wording on what the test aims to test.
-> > - Fix formatting per checkpatch.pl.
-> > ---
-> >  tools/testing/selftests/timers/posix_timers.c | 77 +++++++++++++++++++
-> >  1 file changed, 77 insertions(+)
-> > 
-> > diff --git a/tools/testing/selftests/timers/posix_timers.c b/tools/testing/selftests/timers/posix_timers.c
-> > index 0ba500056e63..8a17c0e8d82b 100644
-> > --- a/tools/testing/selftests/timers/posix_timers.c
-> > +++ b/tools/testing/selftests/timers/posix_timers.c
-> > @@ -188,6 +188,80 @@ static int check_timer_create(int which)
-> >  	return 0;
-> >  }
-> >  
-> > +int remain;
-> > +__thread int got_signal;
-> > +
-> > +static void *distribution_thread(void *arg)
-> > +{
-> > +	while (__atomic_load_n(&remain, __ATOMIC_RELAXED));
-> > +	return NULL;
-> > +}
-> > +
-> > +static void distribution_handler(int nr)
-> > +{
-> > +	if (!__atomic_exchange_n(&got_signal, 1, __ATOMIC_RELAXED))
-> > +		__atomic_fetch_sub(&remain, 1, __ATOMIC_RELAXED);
-> > +}
-> > +
-> > +/*
-> > + * Test that all running threads _eventually_ receive CLOCK_PROCESS_CPUTIME_ID
-> > + * timer signals. This primarily tests that the kernel does not favour any one.
-> > + */
-> > +static int check_timer_distribution(void)
-> > +{
-> > +	int err, i;
-> > +	timer_t id;
-> > +	const int nthreads = 10;
-> > +	pthread_t threads[nthreads];
-> > +	struct itimerspec val = {
-> > +		.it_value.tv_sec = 0,
-> > +		.it_value.tv_nsec = 1000 * 1000,
-> > +		.it_interval.tv_sec = 0,
-> > +		.it_interval.tv_nsec = 1000 * 1000,
-> > +	};
-> > +
-> > +	printf("Check timer_create() per process signal distribution... ");
-> Use APIs from kselftest.h. Use ksft_print_msg() here.
-> 
-> > +	fflush(stdout);
-> > +
-> > +	remain = nthreads + 1;  /* worker threads + this thread */
-> > +	signal(SIGALRM, distribution_handler);
-> > +	err = timer_create(CLOCK_PROCESS_CPUTIME_ID, NULL, &id);
-> > +	if (err < 0) {
-> > +		perror("Can't create timer\n");
-> ksft_perror() here
-> 
-> > +		return -1;
-> > +	}
-> > +	err = timer_settime(id, 0, &val, NULL);
-> > +	if (err < 0) {
-> > +		perror("Can't set timer\n");
-> > +		return -1;
-> > +	}
-> > +
-> > +	for (i = 0; i < nthreads; i++) {
-> > +		if (pthread_create(&threads[i], NULL, distribution_thread, NULL)) {
-> > +			perror("Can't create thread\n");
-> > +			return -1;
-> > +		}
-> > +	}
-> > +
-> > +	/* Wait for all threads to receive the signal. */
-> > +	while (__atomic_load_n(&remain, __ATOMIC_RELAXED));
-> > +
-> > +	for (i = 0; i < nthreads; i++) {
-> > +		if (pthread_join(threads[i], NULL)) {
-> > +			perror("Can't join thread\n");
-> > +			return -1;
-> > +		}
-> > +	}
-> > +
-> > +	if (timer_delete(id)) {
-> > +		perror("Can't delete timer\n");
-> > +		return -1;
-> > +	}
-> > +
-> > +	printf("[OK]\n");
-> ksft_test_result or _pass variant as needed?
-> 
-> > +	return 0;
-> > +}
-> > +
-> >  int main(int argc, char **argv)
-> >  {
-> >  	printf("Testing posix timers. False negative may happen on CPU execution \n");
-> > @@ -217,5 +291,8 @@ int main(int argc, char **argv)
-> >  	if (check_timer_create(CLOCK_PROCESS_CPUTIME_ID) < 0)
-> >  		return ksft_exit_fail();
-> >  
-> > +	if (check_timer_distribution() < 0)
-> > +		return ksft_exit_fail();
-> > +
-> >  	return ksft_exit_pass();
-> >  }
-> 
-> -- 
-> BR,
-> Muhammad Usama Anjum
-> 
+I thought about using #undef swap, but renaming it seemed to be the =
+least
+disruptive change. Maybe there's a better solution?
 
+Thanks,
+Thorsten=
