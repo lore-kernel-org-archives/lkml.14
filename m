@@ -1,256 +1,79 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+Received: from 19.mo550.mail-out.ovh.net (19.mo550.mail-out.ovh.net [178.32.97.206])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F0AC535D1
-	for <linux-kernel@vger.kernel.org>; Sat,  6 Apr 2024 23:11:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5626B57870
+	for <linux-kernel@vger.kernel.org>; Sat,  6 Apr 2024 23:25:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.32.97.206
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712445116; cv=none; b=aXTxOkSUgb07S2cJLVPc5AYPtqIalVu8NUOMR8w/tRbFw59KxgS+bAVwL+ieyQ8x+oHnASNcI3kQudYabvx5zcGuuxp1p3lvNcPLvLUG2t+CYxmozr8Q36pLxJMPRyzCM+Mfzx5Ptaz394ZqeBDYU1JArPmZCnverxVaCH06xJ8=
+	t=1712445905; cv=none; b=EOOeayXglP8I725gpAGKrpviDyvN+jQSW4wcPuXKCuXRMyHZpNf3222+AT39K4TWZqPKjpxiOClKMC0lgyeMFsnXO5eRnERxbIqsnRyswHbrpliA1vElIuRBZNJhOiv4d6d+vQzdRvvfWW4y5aQPpHkpk75EcpxDf/xWiioYf5A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712445116; c=relaxed/simple;
-	bh=3IvB0G836iHfUvGEJHfdKug7mWF8EeO12PXYFxfIZ7g=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=aH5q6mVp8lbCdl1qVTcR0QYakPilg1Qd6ZqQpOnG2MH7HefT3a1LDZFKzvkcycclYLBohjqzr/xuEFjI47Aej4P4jW5KNYpbuiv2cN5A+kAje8RrT6QQdtrEfJPb5dcGGXa6wMlkuKb3Imf1Ceg43Z+9t7vAiJ+ybGIKFBagnxI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Vpiy7FtX; arc=none smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Vpiy7FtX"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1712445114; x=1743981114;
-  h=date:from:to:cc:subject:message-id;
-  bh=3IvB0G836iHfUvGEJHfdKug7mWF8EeO12PXYFxfIZ7g=;
-  b=Vpiy7FtXaXd4RC7FblSJDUqL46N8dmp08HTPA/CqMHfCoo650HRbi8QY
-   p59WGmH1dP2Rom0MM55BQqfWWz+EM4IgUdllid6Tm3y0GPyOo1zPADdTo
-   MK/Cpx44ExzqJM/Tg6JM1UNoCuhEvxgMgQ3aISNfHid4r2/Rgf2YbAj7c
-   JE8t5WkoiVTaOG8BgiSBetqmwV7zBH3zEjZFqqR95ALpeTM6LZXCm3MGR
-   BnoWxOlnxIGBE646Fm8IoTZp9zKN+Oz/5wy/dzo13o8VL9kPE63EF/zk/
-   rzB/F0bEBi4hON57ro1tSW1h/gM8DMcC3YGOCYOwvnOKkYlWt0ByWNtx/
-   A==;
-X-CSE-ConnectionGUID: 99SryqjcR+ODMJ5Ewe5c8A==
-X-CSE-MsgGUID: S/+JlvQyQn+nJlAgbkgZXg==
-X-IronPort-AV: E=McAfee;i="6600,9927,11036"; a="18886048"
-X-IronPort-AV: E=Sophos;i="6.07,184,1708416000"; 
-   d="scan'208";a="18886048"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Apr 2024 16:11:53 -0700
-X-CSE-ConnectionGUID: ao5W46xSRpm0kd7vUiVUAg==
-X-CSE-MsgGUID: WJkB4pYxT2aKgP0qTMbdQA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,184,1708416000"; 
-   d="scan'208";a="19621861"
-Received: from lkp-server01.sh.intel.com (HELO e61807b1d151) ([10.239.97.150])
-  by fmviesa008.fm.intel.com with ESMTP; 06 Apr 2024 16:11:52 -0700
-Received: from kbuild by e61807b1d151 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1rtFCQ-0003wy-0K;
-	Sat, 06 Apr 2024 23:11:50 +0000
-Date: Sun, 07 Apr 2024 07:11:13 +0800
-From: kernel test robot <lkp@intel.com>
-To: "x86-ml" <x86@kernel.org>
-Cc: linux-kernel@vger.kernel.org
-Subject: [tip:master] BUILD SUCCESS
- f6f609de2b987bfce0dd3283f7bfbff1aa692c7a
-Message-ID: <202404070710.0kvHzp51-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	s=arc-20240116; t=1712445905; c=relaxed/simple;
+	bh=y7rjYAJFlIDV2+5E+3xKk0Wop34dA9aGa9K7aHF7l64=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=Me5xhzwWGsQURZ8uox2SsXa1RQZFHK5h40oujR9927q5aLU91T7iNG200bnGTTlnHA5yuouK09r804bQOH6Yz7Fa3BCvDsnIm4Qtn5ZXPVn+dWab9KsrVEePDqZBdIrJC0vwcQvYn1Rz3+8slFMH/nJJDJMr0N27yOlovNVMkwE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=etezian.org; arc=none smtp.client-ip=178.32.97.206
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=etezian.org
+Received: from director1.ghost.mail-out.ovh.net (unknown [10.109.148.200])
+	by mo550.mail-out.ovh.net (Postfix) with ESMTP id 4VBmC25kCNz1PD1
+	for <linux-kernel@vger.kernel.org>; Sat,  6 Apr 2024 19:49:18 +0000 (UTC)
+Received: from ghost-submission-6684bf9d7b-wcc7n (unknown [10.111.174.42])
+	by director1.ghost.mail-out.ovh.net (Postfix) with ESMTPS id 63BC61FE47;
+	Sat,  6 Apr 2024 19:49:14 +0000 (UTC)
+Received: from etezian.org ([37.59.142.107])
+	by ghost-submission-6684bf9d7b-wcc7n with ESMTPSA
+	id qQRmNDqnEWZW6QUA7OFEhA
+	(envelope-from <andi@etezian.org>); Sat, 06 Apr 2024 19:49:14 +0000
+Authentication-Results:garm.ovh; auth=pass (GARM-107S00125f72fca-bae7-4125-a8c4-596bb9fcfba6,
+                    474D68B9A30E89157E7E9069718C3EC714C936DF) smtp.auth=andi@etezian.org
+X-OVh-ClientIp:194.230.160.95
+From: Andi Shyti <andi.shyti@kernel.org>
+To: Wolfram Sang <wsa+renesas@sang-engineering.com>, 
+ Niklas Schnelle <schnelle@linux.ibm.com>
+Cc: linux-i2c@vger.kernel.org, Arnd Bergmann <arnd@kernel.org>, 
+ Heiko Carstens <hca@linux.ibm.com>, linux-kernel@vger.kernel.org
+In-Reply-To: <20240405101009.2807447-1-schnelle@linux.ibm.com>
+References: <20240405101009.2807447-1-schnelle@linux.ibm.com>
+Subject: Re: [PATCH v2 0/1] i2c: Handle HAS_IOPORT dependencies
+Message-Id: <171243294822.75370.15549035576290413403.b4-ty@kernel.org>
+Date: Sat, 06 Apr 2024 21:49:08 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.13.0
+X-Ovh-Tracer-Id: 12051069656881302036
+X-VR-SPAMSTATE: OK
+X-VR-SPAMSCORE: -100
+X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgedvledrudegvddgudegvdcutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfqggfjpdevjffgvefmvefgnecuuegrihhlohhuthemucehtddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhvfevjghfuffkffggtgfgofesthejredtredtjeenucfhrhhomheptehnughiucfuhhihthhiuceorghnughirdhshhihthhisehkvghrnhgvlhdrohhrgheqnecuggftrfgrthhtvghrnhepffetheduffdvhfdugfffudfgjeejudehheegfeeguefhieeugffhgfeuffdvgfefnecuffhomhgrihhnpehkvghrnhgvlhdrohhrghenucfkphepuddvjedrtddrtddruddpudelgedrvdeftddrudeitddrleehpdefjedrheelrddugedvrddutdejnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepuddvjedrtddrtddruddpmhgrihhlfhhrohhmpegrnhguihesvghtvgiiihgrnhdrohhrghdpnhgspghrtghpthhtohepuddprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdpoffvtefjohhsthepmhhoheehtddpmhhouggvpehsmhhtphhouhht
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git master
-branch HEAD: f6f609de2b987bfce0dd3283f7bfbff1aa692c7a  Merge branch into tip/master: 'x86/shstk'
+Hi
 
-elapsed time: 723m
+On Fri, 05 Apr 2024 12:10:08 +0200, Niklas Schnelle wrote:
+> This is a follow up in my ongoing effort of making inb()/outb() and
+> similar I/O port accessors compile-time optional. Previously I sent this
+> as a treewide series titled "treewide: Remove I/O port accessors for
+> HAS_IOPORT=n" with the latest being its 5th version[0]. With a significant
+> subset of patches merged I've changed over to per-subsystem series. These
+> series are stand alone and should be merged via the relevant tree such
+> that with all subsystems complete we can follow this up with the final
+> patch that will make the I/O port accessors compile-time optional.
+> 
+> [...]
 
-configs tested: 179
-configs skipped: 3
+Applied to i2c/i2c-host on
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+git://git.kernel.org/pub/scm/linux/kernel/git/andi.shyti/linux.git
 
-tested configs:
-alpha                             allnoconfig   gcc  
-alpha                            allyesconfig   gcc  
-alpha                               defconfig   gcc  
-arc                              allmodconfig   gcc  
-arc                               allnoconfig   gcc  
-arc                              allyesconfig   gcc  
-arc                          axs103_defconfig   gcc  
-arc                                 defconfig   gcc  
-arc                 nsimosci_hs_smp_defconfig   gcc  
-arc                   randconfig-001-20240407   gcc  
-arc                   randconfig-002-20240407   gcc  
-arm                              allmodconfig   gcc  
-arm                               allnoconfig   clang
-arm                              allyesconfig   gcc  
-arm                         at91_dt_defconfig   clang
-arm                                 defconfig   clang
-arm                          ep93xx_defconfig   clang
-arm                         lpc18xx_defconfig   clang
-arm                         lpc32xx_defconfig   clang
-arm                       netwinder_defconfig   gcc  
-arm                   randconfig-001-20240407   gcc  
-arm                   randconfig-002-20240407   clang
-arm                   randconfig-003-20240407   gcc  
-arm                   randconfig-004-20240407   gcc  
-arm                        shmobile_defconfig   gcc  
-arm64                            allmodconfig   clang
-arm64                             allnoconfig   gcc  
-arm64                               defconfig   gcc  
-arm64                 randconfig-001-20240407   gcc  
-arm64                 randconfig-002-20240407   clang
-arm64                 randconfig-003-20240407   gcc  
-arm64                 randconfig-004-20240407   gcc  
-csky                             allmodconfig   gcc  
-csky                              allnoconfig   gcc  
-csky                             allyesconfig   gcc  
-csky                                defconfig   gcc  
-csky                  randconfig-001-20240407   gcc  
-csky                  randconfig-002-20240407   gcc  
-hexagon                          allmodconfig   clang
-hexagon                           allnoconfig   clang
-hexagon                          allyesconfig   clang
-hexagon                             defconfig   clang
-hexagon               randconfig-001-20240407   clang
-hexagon               randconfig-002-20240407   clang
-i386                             allmodconfig   gcc  
-i386                              allnoconfig   gcc  
-i386                             allyesconfig   gcc  
-i386         buildonly-randconfig-001-20240406   clang
-i386         buildonly-randconfig-002-20240406   clang
-i386         buildonly-randconfig-003-20240406   gcc  
-i386         buildonly-randconfig-004-20240406   clang
-i386         buildonly-randconfig-005-20240406   gcc  
-i386         buildonly-randconfig-006-20240406   clang
-i386                                defconfig   clang
-i386                  randconfig-001-20240406   clang
-i386                  randconfig-002-20240406   gcc  
-i386                  randconfig-003-20240406   clang
-i386                  randconfig-004-20240406   clang
-i386                  randconfig-005-20240406   clang
-i386                  randconfig-006-20240406   gcc  
-i386                  randconfig-011-20240406   clang
-i386                  randconfig-012-20240406   clang
-i386                  randconfig-013-20240406   clang
-i386                  randconfig-014-20240406   gcc  
-i386                  randconfig-015-20240406   clang
-i386                  randconfig-016-20240406   clang
-loongarch                        allmodconfig   gcc  
-loongarch                         allnoconfig   gcc  
-loongarch                           defconfig   gcc  
-loongarch             randconfig-001-20240407   gcc  
-loongarch             randconfig-002-20240407   gcc  
-m68k                             allmodconfig   gcc  
-m68k                              allnoconfig   gcc  
-m68k                             allyesconfig   gcc  
-m68k                                defconfig   gcc  
-m68k                       m5208evb_defconfig   gcc  
-m68k                       m5249evb_defconfig   gcc  
-m68k                       m5475evb_defconfig   gcc  
-m68k                          sun3x_defconfig   gcc  
-microblaze                       allmodconfig   gcc  
-microblaze                        allnoconfig   gcc  
-microblaze                       allyesconfig   gcc  
-microblaze                          defconfig   gcc  
-mips                              allnoconfig   gcc  
-mips                             allyesconfig   gcc  
-nios2                            allmodconfig   gcc  
-nios2                             allnoconfig   gcc  
-nios2                            allyesconfig   gcc  
-nios2                               defconfig   gcc  
-nios2                 randconfig-001-20240407   gcc  
-nios2                 randconfig-002-20240407   gcc  
-openrisc                         alldefconfig   gcc  
-openrisc                          allnoconfig   gcc  
-openrisc                         allyesconfig   gcc  
-openrisc                            defconfig   gcc  
-parisc                           allmodconfig   gcc  
-parisc                            allnoconfig   gcc  
-parisc                           allyesconfig   gcc  
-parisc                              defconfig   gcc  
-parisc                randconfig-001-20240407   gcc  
-parisc                randconfig-002-20240407   gcc  
-parisc64                            defconfig   gcc  
-powerpc                          allmodconfig   gcc  
-powerpc                           allnoconfig   gcc  
-powerpc                          allyesconfig   clang
-powerpc                 mpc8313_rdb_defconfig   gcc  
-powerpc               randconfig-001-20240407   clang
-powerpc               randconfig-002-20240407   clang
-powerpc               randconfig-003-20240407   gcc  
-powerpc64             randconfig-001-20240407   clang
-powerpc64             randconfig-002-20240407   clang
-powerpc64             randconfig-003-20240407   clang
-riscv                            allmodconfig   clang
-riscv                             allnoconfig   gcc  
-riscv                            allyesconfig   clang
-riscv                               defconfig   clang
-riscv                 randconfig-001-20240407   clang
-riscv                 randconfig-002-20240407   gcc  
-s390                             allmodconfig   clang
-s390                              allnoconfig   clang
-s390                             allyesconfig   gcc  
-s390                                defconfig   clang
-s390                  randconfig-001-20240407   gcc  
-s390                  randconfig-002-20240407   gcc  
-sh                               allmodconfig   gcc  
-sh                                allnoconfig   gcc  
-sh                               allyesconfig   gcc  
-sh                                  defconfig   gcc  
-sh                    randconfig-001-20240407   gcc  
-sh                    randconfig-002-20240407   gcc  
-sparc                            allmodconfig   gcc  
-sparc                             allnoconfig   gcc  
-sparc                               defconfig   gcc  
-sparc64                          allmodconfig   gcc  
-sparc64                          allyesconfig   gcc  
-sparc64                             defconfig   gcc  
-sparc64               randconfig-001-20240407   gcc  
-sparc64               randconfig-002-20240407   gcc  
-um                               allmodconfig   clang
-um                                allnoconfig   clang
-um                               allyesconfig   gcc  
-um                                  defconfig   clang
-um                             i386_defconfig   gcc  
-um                    randconfig-001-20240407   gcc  
-um                    randconfig-002-20240407   gcc  
-um                           x86_64_defconfig   clang
-x86_64                            allnoconfig   clang
-x86_64                           allyesconfig   clang
-x86_64       buildonly-randconfig-001-20240406   clang
-x86_64       buildonly-randconfig-002-20240406   gcc  
-x86_64       buildonly-randconfig-003-20240406   clang
-x86_64       buildonly-randconfig-004-20240406   gcc  
-x86_64       buildonly-randconfig-005-20240406   gcc  
-x86_64       buildonly-randconfig-006-20240406   clang
-x86_64                              defconfig   gcc  
-x86_64                randconfig-001-20240406   gcc  
-x86_64                randconfig-002-20240406   clang
-x86_64                randconfig-003-20240406   gcc  
-x86_64                randconfig-004-20240406   clang
-x86_64                randconfig-005-20240406   clang
-x86_64                randconfig-006-20240406   clang
-x86_64                randconfig-011-20240406   gcc  
-x86_64                randconfig-012-20240406   clang
-x86_64                randconfig-013-20240406   clang
-x86_64                randconfig-014-20240406   gcc  
-x86_64                randconfig-015-20240406   gcc  
-x86_64                randconfig-016-20240406   clang
-x86_64                randconfig-071-20240406   clang
-x86_64                randconfig-072-20240406   clang
-x86_64                randconfig-073-20240406   clang
-x86_64                randconfig-074-20240406   clang
-x86_64                randconfig-075-20240406   clang
-x86_64                randconfig-076-20240406   gcc  
-x86_64                          rhel-8.3-rust   clang
-xtensa                            allnoconfig   gcc  
-xtensa                  audio_kc705_defconfig   gcc  
-xtensa                randconfig-001-20240407   gcc  
-xtensa                randconfig-002-20240407   gcc  
-xtensa                    smp_lx200_defconfig   gcc  
+Thank you,
+Andi
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Patches applied
+===============
+[1/1] i2c: add HAS_IOPORT dependencies
+      commit: 53f44c1005ba64215ab6c3c5bbbcaef0870ae7d6
+
