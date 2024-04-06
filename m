@@ -1,108 +1,117 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A439D3A8F9;
-	Sat,  6 Apr 2024 17:30:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FBA84D5A2;
+	Sat,  6 Apr 2024 17:30:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712424629; cv=none; b=L3gEyJnUx0C43ebec0OVg/FEmA4085JipyICgVH4mvkQwt+kusnqKkxwS4UM6hL1YSdZoaAVbcW3bBMwOKtprTkTF6xzKfAxBP4TdTMs1Vetd9DrDFGDbd6lsLT2vHqHfZPBymyucmP0uahEdQE910tNpih7lmvbAnVhSaAM2RM=
+	t=1712424640; cv=none; b=QvB2w+QGpLiDB71Qrym/JXCQSq6mlQp0s9uS8LbfqSJqHVjRTRIcfv8BChQbrGpTGRJCb24vtV/p4NPqjtCNV/zsBfUr4LLITVdqmJOCzUup63OepAl9iTauTQgfc6x5VGDEctKL4Pwf1CbBxUTak/RpsLCns6Pli3IQ2xv8quc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712424629; c=relaxed/simple;
-	bh=OH9KHxGszVemhHYPpLuSdvMAeb+Xyw3DNtED6GDXdSo=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=rwt0e6x4ziQFuA+lA/YXqudfIw8W6s85B7yqeKgvWDba+HnhFEVmS4JKBcuxpIAQmtL1Po/eGvOyOvOI1gcXcWajmCk6sDKjCTwMp0W5wiKPb0Nq7S5doijS5h8zwh40K4qcJMJlmOeqDzW7WR9t7kteD+/qT8oJke0yJiAxTXw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Eq/4KaNO; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1712424640; c=relaxed/simple;
+	bh=9blK4OQKj/2lNxw4LOVkLGN3TcMkm+ghLy1JbGfiX4A=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=BsIyY6S0nRvv3qiwQsc+lRbAnOgn092XKE7CnAs32ASrz4uvbgKEBCZMchZ180YM7cCaN4GO3uQI17xQGFdFADiD/N6ZhFpHrXrJOjGzcDeje3OoD2boEyvGGkMRgPhNTgvCIWYNMVh7MfQptdB08Kl99GkLn535JH/ZxD5xrpQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=leEwDcI5; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Eq/4KaNO"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 3DE0BC43390;
-	Sat,  6 Apr 2024 17:30:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712424629;
-	bh=OH9KHxGszVemhHYPpLuSdvMAeb+Xyw3DNtED6GDXdSo=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=Eq/4KaNOFAQV7+ZLJu65m4yKdvLmeeFLj89g6orUKh6dkE1571a7cDJypoQTwm8di
-	 9QaWKPGTNk89IheUZknQ5OfzW8oxksVtREgG/ZJGCFqrqeYZlKwiYlXzVG7/B2Mm3w
-	 ztPjYG95l4iVmcP9NntxLsKHt0YneOo3VkFtbqvlOuRTeiYzWbFdjo+TrQkv3XhRjt
-	 p9CYOZ9jVInYt5BFpoAbql2eRuJmd2nSI1VpuR4KNqlI7hXAXlumV8WhoUoU39FjYJ
-	 RhytPLEJVwExQ6Bnre/lz5Ibsxx5YOecm7MuzqUz+t7UC2B+6dQsHmEblBTdJRHFDX
-	 Hl9A/WLWuJkmw==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 2A770D8A101;
-	Sat,  6 Apr 2024 17:30:29 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="leEwDcI5"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
+	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+	Message-ID:Sender:Reply-To:Content-ID:Content-Description;
+	bh=lXE3SxtyN0lJf3smmlCQJcJR+2EbuVxm0dyKikqHdbQ=; b=leEwDcI5iKdXyTGxFyucYD1jhi
+	rdY9JrxHF5z8rvhp85oGDHMCKUETCCUGSRs5uTANJwjQxvS1i4Z+lX9/OM/uKK9dfU+zSQmC+Bgdo
+	EYgrHlB/Hgtpy4XO3+f1PCBiiZFLmr6znjXaCk+Aw9XuxXaEUTtWWAeaphUZQuhwIuHYGI9omkdw4
+	u9o+XfmuDLvVQC5ZoDPvQW2EY2i6PmCw5+oNUnxiXVUdyYsVeCyGmlGs/rDB+v+ghSgVEC0c90Auz
+	mi7A+SCrE719friOfgbwUCmtUZ+Zgfu2C71u5+cTPKuA7Bx3GabsR4snrpMu3M+VxK00CZoe6VBHm
+	Pg2sos6g==;
+Received: from [50.53.2.121] (helo=[192.168.254.15])
+	by bombadil.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1rt9s2-0000000AjdN-2lNl;
+	Sat, 06 Apr 2024 17:30:26 +0000
+Message-ID: <a2df1641-cd13-4516-afa5-546bb9ef8608@infradead.org>
+Date: Sat, 6 Apr 2024 10:30:23 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net-next v11 00/13] Introduce PHY listing and link_topology
- tracking
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <171242462917.4000.9759453824684907063.git-patchwork-notify@kernel.org>
-Date: Sat, 06 Apr 2024 17:30:29 +0000
-References: <20240404093004.2552221-1-maxime.chevallier@bootlin.com>
-In-Reply-To: <20240404093004.2552221-1-maxime.chevallier@bootlin.com>
-To: Maxime Chevallier <maxime.chevallier@bootlin.com>
-Cc: davem@davemloft.net, netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
- thomas.petazzoni@bootlin.com, andrew@lunn.ch, kuba@kernel.org,
- edumazet@google.com, pabeni@redhat.com, linux@armlinux.org.uk,
- linux-arm-kernel@lists.infradead.org, christophe.leroy@csgroup.eu,
- herve.codina@bootlin.com, f.fainelli@gmail.com, hkallweit1@gmail.com,
- vladimir.oltean@nxp.com, kory.maincent@bootlin.com,
- jesse.brandeburg@intel.com, corbet@lwn.net, kabel@kernel.org,
- piergiorgio.beruto@gmail.com, o.rempel@pengutronix.de, nicveronese@gmail.com,
- horms@kernel.org, mwojtas@chromium.org
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 01/17] perf/core: Fix several typos
+To: Kuan-Wei Chiu <visitorckw@gmail.com>, colyli@suse.de,
+ kent.overstreet@linux.dev, msakai@redhat.com, peterz@infradead.org,
+ mingo@redhat.com, acme@kernel.org, namhyung@kernel.org,
+ akpm@linux-foundation.org
+Cc: bfoster@redhat.com, mark.rutland@arm.com,
+ alexander.shishkin@linux.intel.com, jolsa@kernel.org, irogers@google.com,
+ adrian.hunter@intel.com, jserv@ccns.ncku.edu.tw,
+ linux-bcache@vger.kernel.org, linux-kernel@vger.kernel.org,
+ dm-devel@lists.linux.dev, linux-bcachefs@vger.kernel.org,
+ linux-perf-users@vger.kernel.org
+References: <20240406164727.577914-1-visitorckw@gmail.com>
+ <20240406164727.577914-2-visitorckw@gmail.com>
+Content-Language: en-US
+From: Randy Dunlap <rdunlap@infradead.org>
+In-Reply-To: <20240406164727.577914-2-visitorckw@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hello:
 
-This series was applied to netdev/net-next.git (main)
-by David S. Miller <davem@davemloft.net>:
 
-On Thu,  4 Apr 2024 11:29:50 +0200 you wrote:
-> Hello everyone,
+On 4/6/24 9:47 AM, Kuan-Wei Chiu wrote:
+> Replace 'artifically' with 'artificially'.
+> Replace 'irrespecive' with 'irrespective'.
+> Replace 'futher' with 'further'.
+> Replace 'sufficent' with 'sufficient'.
 > 
-> This is V11 for the link topology addition, allowing to track all PHYs
-> that are linked to netdevices.
-> 
-> This V11 addresses the various netlink-related issues that were raised
-> by Jakub, and fixes some typos in the documentation.
-> 
-> [...]
+> Signed-off-by: Kuan-Wei Chiu <visitorckw@gmail.com>
+> Reviewed-by: Ian Rogers <irogers@google.com>
 
-Here is the summary with links:
-  - [net-next,v11,01/13] net: phy: Introduce ethernet link topology representation
-    https://git.kernel.org/netdev/net-next/c/6916e461e793
-  - [net-next,v11,02/13] net: sfp: pass the phy_device when disconnecting an sfp module's PHY
-    https://git.kernel.org/netdev/net-next/c/0ec5ed6c130e
-  - [net-next,v11,03/13] net: phy: add helpers to handle sfp phy connect/disconnect
-    https://git.kernel.org/netdev/net-next/c/e75e4e074c44
-  - [net-next,v11,04/13] net: sfp: Add helper to return the SFP bus name
-    https://git.kernel.org/netdev/net-next/c/fdd353965b52
-  - [net-next,v11,05/13] net: ethtool: Allow passing a phy index for some commands
-    https://git.kernel.org/netdev/net-next/c/841942bc6212
-  - [net-next,v11,06/13] netlink: specs: add phy-index as a header parameter
-    (no matching commit)
-  - [net-next,v11,07/13] net: ethtool: Introduce a command to list PHYs on an interface
-    (no matching commit)
-  - [net-next,v11,08/13] netlink: specs: add ethnl PHY_GET command set
-    (no matching commit)
-  - [net-next,v11,09/13] net: ethtool: plca: Target the command to the requested PHY
-    (no matching commit)
-  - [net-next,v11,10/13] net: ethtool: pse-pd: Target the command to the requested PHY
-    (no matching commit)
-  - [net-next,v11,11/13] net: ethtool: cable-test: Target the command to the requested PHY
-    (no matching commit)
-  - [net-next,v11,12/13] net: ethtool: strset: Allow querying phy stats by index
-    (no matching commit)
-  - [net-next,v11,13/13] Documentation: networking: document phy_link_topology
-    (no matching commit)
+Reviewed-by: Randy Dunlap <rdunlap@infradead.org>
 
-You are awesome, thank you!
+Thanks.
+
+> ---
+>  kernel/events/core.c | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
+> 
+> diff --git a/kernel/events/core.c b/kernel/events/core.c
+> index 724e6d7e128f..10ac2db83f14 100644
+> --- a/kernel/events/core.c
+> +++ b/kernel/events/core.c
+> @@ -534,7 +534,7 @@ void perf_sample_event_took(u64 sample_len_ns)
+>  	__this_cpu_write(running_sample_length, running_len);
+>  
+>  	/*
+> -	 * Note: this will be biased artifically low until we have
+> +	 * Note: this will be biased artificially low until we have
+>  	 * seen NR_ACCUMULATED_SAMPLES. Doing it this way keeps us
+>  	 * from having to maintain a count.
+>  	 */
+> @@ -596,10 +596,10 @@ static inline u64 perf_event_clock(struct perf_event *event)
+>   *
+>   * Event groups make things a little more complicated, but not terribly so. The
+>   * rules for a group are that if the group leader is OFF the entire group is
+> - * OFF, irrespecive of what the group member states are. This results in
+> + * OFF, irrespective of what the group member states are. This results in
+>   * __perf_effective_state().
+>   *
+> - * A futher ramification is that when a group leader flips between OFF and
+> + * A further ramification is that when a group leader flips between OFF and
+>   * !OFF, we need to update all group member times.
+>   *
+>   *
+> @@ -891,7 +891,7 @@ static int perf_cgroup_ensure_storage(struct perf_event *event,
+>  	int cpu, heap_size, ret = 0;
+>  
+>  	/*
+> -	 * Allow storage to have sufficent space for an iterator for each
+> +	 * Allow storage to have sufficient space for an iterator for each
+>  	 * possibly nested cgroup plus an iterator for events with no cgroup.
+>  	 */
+>  	for (heap_size = 1; css; css = css->parent)
+
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
-
+#Randy
