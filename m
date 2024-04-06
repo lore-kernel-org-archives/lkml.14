@@ -1,353 +1,221 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 618261FDA;
-	Sat,  6 Apr 2024 00:58:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712365096; cv=none; b=mU32/180Hs9iA7aVHqXGjhyM8CCnZkUizHNVabvSqyEf0BTL/fD57pnxfU4GSoxjAGNV9mG9IvtaPGn892XVJsY6/7fs06fYbgwTLWFs2vU87lRM/J062WywnR38os3ixpySr26NLRk3nk2iOJitQBR9fbMsl/BiL/XXSyE3sV4=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712365096; c=relaxed/simple;
-	bh=M2NpUF0GpEYkCm0hpvAgVNS5+2TcRpN8c57fAIjoOvc=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=umtZtv9iSwTTMaTZEosxrdlCW+S//Ma+eRYtAH+jxEJ/vpAWUaaCAvXSjRWmC3NjLKdkCKLnLtrLzxr66J2uDqMxTE2UsLZC10WlfwZpDth3P2WMnO8z0Cv4rPRq3oChPLsNo3Omha9J3t7BSVa49orFsaeEazti+pQ6gbS3GFU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dB4PADLG; arc=none smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD7B74C7C;
+	Sat,  6 Apr 2024 00:58:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.15
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1712365123; cv=fail; b=uDxe0vliX+k8oUvdOj1mzGDIck6sia4rrGOjlGjtztg3Xg9xUI9MSMzZZX+pO+vSUQ4niAMMrOcA7yTHmSsq6MCnzbFRhp0d72NSjhgYyIPUje9A9gFvWfAGazxhIuHxfu1Ph/9kBnR0jLuoQElDrGzv/fJTSSf+A4kqNxx1oXo=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1712365123; c=relaxed/simple;
+	bh=Yj/iCdV3q7PJNZBhvbWlf/71hOyuS1Pv3hRgYd6DS94=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=WEeNoIxLhq5tnR75y21RrbYxRcQ/qg7WGAXh3luTZsxDcex883bSkaEouNsGz6m3csEdCujGcZzS4YFY32D+DxS+iKos46YCbqvS6Lc5/kCIMjcTeMEWBc0kkmx8SMuI4HNDdG4/JVgtD/TlzjwFyfPgfTvL8CmGRVeVY5h+CVI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=SeVgtKeM; arc=fail smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dB4PADLG"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SeVgtKeM"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1712365093; x=1743901093;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references;
-  bh=M2NpUF0GpEYkCm0hpvAgVNS5+2TcRpN8c57fAIjoOvc=;
-  b=dB4PADLGl5ewOfk+9gA7SZFsOBn7QVyyqUxq2X4HcTbhyRBHg7X6jm5v
-   kBOgoenZEdy0SuGQuCG/eo4SGOEOTg/PEgY3r4z02tlgCPx1yFfdVOTZ4
-   7VIBauvjrbHXy034/xJoLR/UnDeVhttQjubU8N3EaZlJ8nk7IDOmDZUjQ
-   lVIp/4YF6G7H7tjByw16JzN+hxv3wBUuLrDF/9TXdrwFaJ+iOrEhsFLnz
-   iDq2eblumvZHaLcB/JmnMACCJ/L/nvftpj3t8GQFVnk6KPz3w/GI+9RWs
-   tsWbKEIawD3C+Si205pn2DpRS5O3sxo24uCK10YXPs/HNuSSVoMzIlDdD
+  t=1712365122; x=1743901122;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-id:content-transfer-encoding:
+   mime-version;
+  bh=Yj/iCdV3q7PJNZBhvbWlf/71hOyuS1Pv3hRgYd6DS94=;
+  b=SeVgtKeMbXuYH2JX63ihAyW3Q4UWOZV0XjjgiNfg/QpY8Fv2jD2jlxY5
+   x3ByUuY/YJVxj4JO2Nvrlb7Ycj1uyflkhc9StApkzSDQp6ZXoFdDjNHdr
+   AV9kEvWl20CjgkUJMy7lbOwOyo4qWMNIFLQYfYosJBATMFjg1LMN3Jhu3
+   LBlIM8GWpDM1Y6umVO5bYfF6Cyj5mawJzi/fhoBCPsMrpwAo46A/CGn8t
+   hd7+XdS2cw4r1kP1/hP2A8GFfVKK2Rr0MjeQPrpN9VNlwshO7PSo+1M5G
+   cH2hiBUeDi+l7Av+OvogsI9vdpE0NpaGQzZSbG69CizguP7t1myG+wILe
    w==;
-X-CSE-ConnectionGUID: znTeJ8cWSHasj041cU1b5A==
-X-CSE-MsgGUID: PUbXdbdIQoS73QY4TQ8DEg==
-X-IronPort-AV: E=McAfee;i="6600,9927,11035"; a="25153873"
+X-CSE-ConnectionGUID: uwqBnwrkTda59cULrKok0w==
+X-CSE-MsgGUID: B2YujqWLRAGE9JHPfUxvGg==
+X-IronPort-AV: E=McAfee;i="6600,9927,11035"; a="11506860"
 X-IronPort-AV: E=Sophos;i="6.07,182,1708416000"; 
-   d="scan'208";a="25153873"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Apr 2024 17:58:11 -0700
-X-CSE-ConnectionGUID: uC34GYp+QSCYAP2KhqIrcA==
-X-CSE-MsgGUID: 3mzLzgSMQuiqh+5MUcc3NQ==
+   d="scan'208";a="11506860"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Apr 2024 17:58:41 -0700
+X-CSE-ConnectionGUID: GHZy8TwKRn+FxMS7meVrpQ==
+X-CSE-MsgGUID: NgteIrOFTzKu0xRZe5+rcQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.07,182,1708416000"; 
-   d="scan'208";a="19252363"
-Received: from ranerica-svr.sc.intel.com ([172.25.110.23])
-  by orviesa009.jf.intel.com with ESMTP; 05 Apr 2024 17:58:11 -0700
-From: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
-To: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-	Zhang Rui <rui.zhang@intel.com>,
-	Jean Delvare <jdelvare@suse.com>,
-	Guenter Roeck <linux@roeck-us.net>
-Cc: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-	Lukasz Luba <lukasz.luba@arm.com>,
-	Daniel Lezcano <daniel.lezcano@linaro.org>,
-	linux-pm@vger.kernel.org,
-	linux-hwmon@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Ricardo Neri <ricardo.neri@intel.com>
-Subject: [PATCH 1/3] thermal: intel: intel_tcc: Add model checks for temperature registers
-Date: Fri,  5 Apr 2024 18:04:14 -0700
-Message-Id: <20240406010416.4821-2-ricardo.neri-calderon@linux.intel.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20240406010416.4821-1-ricardo.neri-calderon@linux.intel.com>
-References: <20240406010416.4821-1-ricardo.neri-calderon@linux.intel.com>
+   d="scan'208";a="24023612"
+Received: from orsmsx601.amr.corp.intel.com ([10.22.229.14])
+  by orviesa003.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 05 Apr 2024 17:58:40 -0700
+Received: from orsmsx610.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Fri, 5 Apr 2024 17:58:39 -0700
+Received: from orsmsx610.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX610.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Fri, 5 Apr 2024 17:58:39 -0700
+Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
+ orsmsx610.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35 via Frontend Transport; Fri, 5 Apr 2024 17:58:39 -0700
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (104.47.70.100)
+ by edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Fri, 5 Apr 2024 17:58:39 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=KUuLQcA9u6FRL8nksz/Z4w5SsvmbP4c/50nKYBEdbW//oMkTKva1LtMsz6JGqERh9LZp/OQTZd958HgPIp2D3/jBOerhHX09r5WfpdBt7AyGmnKqztxOOQqa1PTXgQjhWc8zy5+uQWZTVgXHzkWHmIkFnlVFtQjc5Cn1HuoQPygaQv6pFSMljt0dQcuXfcqXqieF3cR5pE+O+0kgv1/j3q6Jrz7GhTSjnGOgCaN1efurpZ+p5gEp7AXrJ88lZLoDe1qQdJRPtz3toFilQ6+xvWDjA0AjnqsU/xcrkcuZi2dAq1I6Z0Kfq0mXw+PUvSDML1h+CqEIgzSdb2uQ5FsJMA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Yj/iCdV3q7PJNZBhvbWlf/71hOyuS1Pv3hRgYd6DS94=;
+ b=EDn3b/kQM0tuJ3LGnV4TYLwNEMeU9AhAzsqmdtqRgQ3WCWnntslZtIq/lkMciBs7v5MXa2k/zn3l/YznEk6e5vwca2szFX+ZCG6BpGXKhBFF6RXIbUkd6FwYz1uTfFFwGIGJ/dlm8vWqbHTeqzPCqOEb+TK6nk1NnFeU3wtE4WMfN9vHn+KS81IyxAXLoUDmUmahZ3TeQZuMitJ1yZw/pk8T3xgf/QuEERu88dfKsJ+qcpQSpUBf7qvgcZySDVq6mV8uotawshhDdJCQAeTNW90bV5Ro+1plGbLY0Ho2BuYZK/WTCBomiwzNHLQTRNE3VDRF9qenuOqkZmUaW9fJwQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Received: from BL1PR11MB5978.namprd11.prod.outlook.com (2603:10b6:208:385::18)
+ by CO1PR11MB5169.namprd11.prod.outlook.com (2603:10b6:303:95::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7452.24; Sat, 6 Apr
+ 2024 00:58:36 +0000
+Received: from BL1PR11MB5978.namprd11.prod.outlook.com
+ ([fe80::ef2c:d500:3461:9b92]) by BL1PR11MB5978.namprd11.prod.outlook.com
+ ([fe80::ef2c:d500:3461:9b92%4]) with mapi id 15.20.7452.019; Sat, 6 Apr 2024
+ 00:58:35 +0000
+From: "Huang, Kai" <kai.huang@intel.com>
+To: "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>,
+	"binbin.wu@linux.intel.com" <binbin.wu@linux.intel.com>, "Yamahata, Isaku"
+	<isaku.yamahata@intel.com>
+CC: "Zhang, Tina" <tina.zhang@intel.com>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "seanjc@google.com" <seanjc@google.com>,
+	"Yuan, Hang" <hang.yuan@intel.com>, "pbonzini@redhat.com"
+	<pbonzini@redhat.com>, "Chen, Bo2" <chen.bo@intel.com>, "sagis@google.com"
+	<sagis@google.com>, "isaku.yamahata@linux.intel.com"
+	<isaku.yamahata@linux.intel.com>, "Aktas, Erdem" <erdemaktas@google.com>,
+	"sean.j.christopherson@intel.com" <sean.j.christopherson@intel.com>,
+	"kvm@vger.kernel.org" <kvm@vger.kernel.org>, "isaku.yamahata@gmail.com"
+	<isaku.yamahata@gmail.com>
+Subject: Re: [PATCH v19 067/130] KVM: TDX: Add load_mmu_pgd method for TDX
+Thread-Topic: [PATCH v19 067/130] KVM: TDX: Add load_mmu_pgd method for TDX
+Thread-Index: AQHaaI3KAQ1iVMSqikKm0e5+Em3C07FTx1GAgANBugCAA5NJAIAADaUA
+Date: Sat, 6 Apr 2024 00:58:35 +0000
+Message-ID: <f61bb57eba91c68e7cf50c4e806de94c2341ad16.camel@intel.com>
+References: <cover.1708933498.git.isaku.yamahata@intel.com>
+	 <bef7033b687e75c5436c0aee07691327d36734ea.1708933498.git.isaku.yamahata@intel.com>
+	 <331fbd0d-f560-4bde-858f-e05678b42ff0@linux.intel.com>
+	 <20240403173344.GF2444378@ls.amr.corp.intel.com>
+	 <a2386cbfc8a4e091f86840df491fb4d999478f44.camel@intel.com>
+In-Reply-To: <a2386cbfc8a4e091f86840df491fb4d999478f44.camel@intel.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+user-agent: Evolution 3.50.3 (3.50.3-1.fc39) 
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: BL1PR11MB5978:EE_|CO1PR11MB5169:EE_
+x-ld-processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: IVYvK/iSo873z0ikAR60YLvj67otZR7VTOJ8F1CUdG1RRq1OqS0tgHi5y3hWElK8WFjcu39GP4yBU4p6thq/vCGRAo7Bl47QmYzi5BslMRmuFc/ClXwMiBRtaGi+2gn6qFAsrO3dfTiwF097fNLOnMEDv77nfJOVwXGLap4H6lsGFSrL2frHFPU6GKDsKtZiJgS0oYHPqQN+ZDxk4oJOCAn4MjoCAa8HfUUuvJNAvTuUF34ikdjSuIL2cgvvVbX/m4BaPiQDrIy+gtociSREZMIw1N2CT5n3+jBf5aD0nSxqbjhuYZi9Go5uQiOI0W57t/bXCQFZgYVAeJCbA3Ygxz2mSdIHtQhvo38zsepQ7t7muQc+kRaBAjghadbLX5obSzScnNgsR2m/3VG0ox5hzJGX1PZCE3/pDR3eRu/22zW2kRHOmbyTzJbo83zgyvPN81bspI/xd2LLL8nOUQGvvlbQMf5vldVFUaUZkN5C7VVqAkBaZiWtBc5ObHfkPBhh6DQL1cE+nWt+AnCjoiR4UT24uPyL/CLRmqIUuxQtGFZZk7C/LM3z9IyAt2Cc8sqaQghRYZsG2D4/RQAR3J1TQg+chc458+Rfdc7TvdAVW9q4e8wj75w35XeA44fe0DAfkmf2WomVnvNRNpeddFBv1JmadeR6IvnkPEK7n49Q/V0=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL1PR11MB5978.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366007)(1800799015)(376005);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?utf-8?B?OFJWVExPQXE1UUtwb0FpUDlTYUYxNmI1MHF1UlFyTUlPWllGblZPSE9HMUlY?=
+ =?utf-8?B?MmNSVWhZSXBEbDlpU1JaaDUxcjhYWWtuV0FMdVp3dGtaK0o2ZzJua1NrWURw?=
+ =?utf-8?B?TWNLM2hmWjNyMHBaZklMLzdLaUoyYUJzYVVGVDZ6Si90L2pxWittM09ncU5k?=
+ =?utf-8?B?dlhpRVVPb1RGK2NlVTZqcnd1WXZiOWtwT1BuTERUMnRyK0RzR0ZJKzNFRDdW?=
+ =?utf-8?B?TmR2dkZqTGFQMFBacE5vWENGVytJTmR3SnQ5VCs5T2IvKzdSRUtWK1R2Y0NK?=
+ =?utf-8?B?VGxWMnNDVytiYUFJNTA4eGV1VlRySmcxV2FIeXZ1WTJNRnVLeG5DUWV0eFhr?=
+ =?utf-8?B?NTVvRThTSy9WNGMrNWhTaCtzRnhxZnpSTVN6ZVJzRzFkQjZlOGluNWJ3Y2Mw?=
+ =?utf-8?B?c0w5SE0rZ1o2alNObm9YUWM1RVovc1hkcEpZbTJhQTF2d2JmUDB4eVJrQ2Zm?=
+ =?utf-8?B?M3g5UW9HaDhwK2JSM3JOeGR2bXk5YW5iVDJkbWJjN1A3UTZobzhxQ0RUWVY2?=
+ =?utf-8?B?TTNNRzQzc05FeGZ6RjB5L0UvOG0wU2dUVWpnMnZvNWdsZko2SnFzUW5RRTBM?=
+ =?utf-8?B?cWdzc3dVdldmY2t3UmpCaytKSnp1cmNHWGRqSkJVL1FLUENaUnA2UkNrYmNa?=
+ =?utf-8?B?NmowUC9RZFoxUkIyT2MzckJHd0txUFB5NHpYeUpDM2FVUlh2eXpjZzdDVVll?=
+ =?utf-8?B?Uk51V0h3bG9HWmw1dWRBR0Z1KzBMWVBiRXZ5UmN0eHFid3lPempUQmt2SjF0?=
+ =?utf-8?B?cklpeUtWM1VUYXZFb0txZmVLWkFPenpDM1NIS2k0amhaUldEQnpYeTZwU3lX?=
+ =?utf-8?B?a2pJL3RrVWovU0czOXd1OXEvclNINUdsVUlEeWdydE5BdTdyWHZPaWtKcHF5?=
+ =?utf-8?B?MGhUYm05TkFLdWlKK2IyQXdNVFUvM2NrZmZoSmg3V1R5bThtRXBWN1lTaERH?=
+ =?utf-8?B?aG5BQWhNWDQrZzlnNXZRV1FNa1FZQlJtT2RrdEozOHJIbDJqc3ZZSmVLcjJI?=
+ =?utf-8?B?KzBLaDZlYnZSdnB3WlA0MEpTQmxuSm1wcHdzbVdiV0xBTElwaGNJMXh3eUls?=
+ =?utf-8?B?ckxkbG1kbkFMYlNrbGFZZFRUN0VNb0Fta1NXOFVOL0ZoYjlWUm9ham1qM0ds?=
+ =?utf-8?B?ZmdIODEzeUJlbEdWcEdPZ3pYZUdjcjl2SzJzb2JlV2RpdFZGYTJxQjR4ZWxr?=
+ =?utf-8?B?TFFjOFl5cktiZXQxQkoyZkR4MU5ybGZMOWI5R2o4ZU1QY0NlR25sUGhnaEVp?=
+ =?utf-8?B?Q0QzZDBrcm52RkJNTVNNWUdTYW1XU25NOUpDRno5Vk1reGh0ZnA5WU4xR1Q5?=
+ =?utf-8?B?YlFuVko2SUlzSUordTE5bW5YbTdFNlUwRUR1SjA2RE5SVld2ZVRHS25VZm1o?=
+ =?utf-8?B?eGZrMnpvZ1AzZ1RScklzc0FjUGo3Qkc4a0JVeFV3amk3V3U5Y0RJUGcyTHRq?=
+ =?utf-8?B?QU9JZE82OEtobnFCMVhudVRVaW13NVRPc3MweTBkdmRwTkFWT2tveE5Na3lI?=
+ =?utf-8?B?ZWZlcnZ1UC9sZmpkTExHY0hhVTkwcS83aXJzQ3VYWDJYZnNmVXJhTjlXS2NN?=
+ =?utf-8?B?UmVYZnQ5Q3FjaTFXSUpmN1JSN2dlTmhaeG45S3dGSEduWi8zQldFNFQwRU9r?=
+ =?utf-8?B?NnJQa3hTZHZCR1N3eUc5dUdWL1pyNnVxNDFiRVVZVWpQclF2cVBMZFV6R0d0?=
+ =?utf-8?B?bG04Y01nRXlHZDNDQnJKUjEvMGQ3Njl2QVBDTTVKd3BhbUV4MmE1VXU5RVdy?=
+ =?utf-8?B?amRWejZMUEl0VGczUVFyQUt5bHlMWXE5a1BhVFlZMlFmRnpoU0hHVGd6OHpm?=
+ =?utf-8?B?MktsV202MHBRa2hDV1lvZlF5ZzJEci9La3REZ2czQkRhWVRzRE9Vc1p3Q0ZX?=
+ =?utf-8?B?WnYvcjIwdHVBZGVmNU1Xa0JxTUJuTFRaR2NWKzNQZXZkL0d1NGx4eDlxcUZn?=
+ =?utf-8?B?UEhZcFIvdmNzVjNsb1IzZk5FOUhUdEFld1NobWNkNm9zNkpxQjhXcWNlYk90?=
+ =?utf-8?B?Y1E4ZmZRUzBtTm5xRllhL1hLMWFsTDQvNHM4ZGg3aFpHNzVmVklXNkt2L2pD?=
+ =?utf-8?B?czFpSitwQ0dLbjhZQS81Y3JweFBaU3ZHN3JnMFF5enZOSXErV3gzWmRER2NE?=
+ =?utf-8?B?RXltR0hGZ05GWjZBZ09mcEVPWEh5Mkt3STZTS09leVpvR0xZdlFHVGswTTBS?=
+ =?utf-8?B?cUE9PQ==?=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <C0B67189779E944D8C048D6BF280270D@namprd11.prod.outlook.com>
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: BL1PR11MB5978.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: c6804e6c-9562-494f-0308-08dc55d4b045
+X-MS-Exchange-CrossTenant-originalarrivaltime: 06 Apr 2024 00:58:35.8094
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 9rFuu/p4pj6YAPuVctrSXG6Fr9RGekzgyDKsW7xcLU+kuWrB52WilImQv/eQfkW9aC6fLMNrSBtO5VA/HhtZSg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CO1PR11MB5169
+X-OriginatorOrg: intel.com
 
-The register MSR_TEMPERATURE_TARGET is not architectural. Its fields may be
-defined differently for each processor model. TCC_OFFSET is an example of
-such case.
-
-Despite being specified as architectural, the registers IA32_[PACKAGE]_
-THERM_STATUS have become model-specific: in recent processors, the
-digital temperature readout uses bits [23:16] whereas the Intel Software
-Developer's manual specifies bits [22:16].
-
-Create an array of processor models and their bitmasks for TCC_OFFSET and
-the digital temperature readout fields. Do not include recent processors.
-Instead, use the bitmasks of these recent processors as default.
-
-Use these model-specific bitmasks when reading TCC_OFFSET or the
-temperature sensors.
-
-Initialize a model-specific data structure during subsys_initcall() to
-have it ready when thermal drivers are loaded.
-
-Expose the new interfaces get_tcc_offset_mask() and
-intel_tcc_get_temp_mask(). The hwmon/coretemp and the intel_tcc_cooling
-drivers need to use model-specific bitmasks. Include stubs that reflect
-minimum support for !CONFIG_INTEL_TCC.
-
-Signed-off-by: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
----
-Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc: Lukasz Luba <lukasz.luba@arm.com>
-Cc: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Cc: linux-hwmon@vger.kernel.org
-Cc: linux-pm@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Cc: stable@vger.kernel.org # v6.7+
----
- drivers/thermal/intel/intel_tcc.c | 177 +++++++++++++++++++++++++++++-
- include/linux/intel_tcc.h         |   8 ++
- 2 files changed, 180 insertions(+), 5 deletions(-)
-
-diff --git a/drivers/thermal/intel/intel_tcc.c b/drivers/thermal/intel/intel_tcc.c
-index 5e8b7f34b395..1f595f174ab0 100644
---- a/drivers/thermal/intel/intel_tcc.c
-+++ b/drivers/thermal/intel/intel_tcc.c
-@@ -6,8 +6,170 @@
- 
- #include <linux/errno.h>
- #include <linux/intel_tcc.h>
-+#include <asm/cpu_device_id.h>
-+#include <asm/intel-family.h>
- #include <asm/msr.h>
- 
-+/**
-+ * struct temp_masks - Bitmasks for temperature readings
-+ * @tcc_offset:			TCC offset in MSR_TEMPERATURE_TARGET
-+ * @digital_readout:		Digital readout in MSR_IA32_THERM_STATUS
-+ * @pkg_digital_readout:	Digital readout in MSR_IA32_PACKAGE_THERM_STATUS
-+ *
-+ * Bitmasks to extract the fields of the MSR_TEMPERATURE and IA32_[PACKAGE]_
-+ * THERM_STATUS registers for different processor models.
-+ *
-+ * The bitmask of TjMax is not included in this structure. It is always 0xff.
-+ */
-+struct temp_masks {
-+	u32 tcc_offset;
-+	u32 digital_readout;
-+	u32 pkg_digital_readout;
-+};
-+
-+#define TCC_FAM6_MODEL_TEMP_MASKS(model, _tcc_offset, _digital_readout,	\
-+			_pkg_digital_readout)				\
-+	static const struct temp_masks temp_##model __initconst = {	\
-+		.tcc_offset = _tcc_offset,				\
-+		.digital_readout = _digital_readout,			\
-+		.pkg_digital_readout = _pkg_digital_readout		\
-+	}
-+
-+TCC_FAM6_MODEL_TEMP_MASKS(nehalem, 0, 0x7f, 0x7f);
-+TCC_FAM6_MODEL_TEMP_MASKS(haswell_x, 0xf, 0x7f, 0x7f);
-+TCC_FAM6_MODEL_TEMP_MASKS(broadwell, 0x3f, 0x7f, 0x7f);
-+TCC_FAM6_MODEL_TEMP_MASKS(goldmont, 0x7f, 0x7f, 0x7f);
-+TCC_FAM6_MODEL_TEMP_MASKS(tigerlake, 0x3f, 0xff, 0xff);
-+TCC_FAM6_MODEL_TEMP_MASKS(sapphirerapids, 0x3f, 0x7f, 0xff);
-+
-+/* Use these masks for processors not included in @tcc_cpu_ids. */
-+static struct temp_masks intel_tcc_temp_masks __ro_after_init = {
-+	.tcc_offset = 0x7f,
-+	.digital_readout = 0xff,
-+	.pkg_digital_readout = 0xff,
-+};
-+
-+static const struct x86_cpu_id intel_tcc_cpu_ids[] __initconst = {
-+	X86_MATCH_INTEL_FAM6_MODEL(CORE_YONAH,		&temp_nehalem),
-+	X86_MATCH_INTEL_FAM6_MODEL(CORE2_MEROM,		&temp_nehalem),
-+	X86_MATCH_INTEL_FAM6_MODEL(CORE2_MEROM_L,	&temp_nehalem),
-+	X86_MATCH_INTEL_FAM6_MODEL(CORE2_PENRYN,	&temp_nehalem),
-+	X86_MATCH_INTEL_FAM6_MODEL(CORE2_DUNNINGTON,	&temp_nehalem),
-+	X86_MATCH_INTEL_FAM6_MODEL(NEHALEM,		&temp_nehalem),
-+	X86_MATCH_INTEL_FAM6_MODEL(NEHALEM_G,		&temp_nehalem),
-+	X86_MATCH_INTEL_FAM6_MODEL(NEHALEM_EP,		&temp_nehalem),
-+	X86_MATCH_INTEL_FAM6_MODEL(NEHALEM_EX,		&temp_nehalem),
-+	X86_MATCH_INTEL_FAM6_MODEL(WESTMERE,		&temp_nehalem),
-+	X86_MATCH_INTEL_FAM6_MODEL(WESTMERE_EP,		&temp_nehalem),
-+	X86_MATCH_INTEL_FAM6_MODEL(WESTMERE_EX,		&temp_nehalem),
-+	X86_MATCH_INTEL_FAM6_MODEL(SANDYBRIDGE,		&temp_nehalem),
-+	X86_MATCH_INTEL_FAM6_MODEL(SANDYBRIDGE_X,	&temp_nehalem),
-+	X86_MATCH_INTEL_FAM6_MODEL(IVYBRIDGE,		&temp_nehalem),
-+	X86_MATCH_INTEL_FAM6_MODEL(IVYBRIDGE_X,		&temp_haswell_x),
-+	X86_MATCH_INTEL_FAM6_MODEL(HASWELL,		&temp_nehalem),
-+	X86_MATCH_INTEL_FAM6_MODEL(HASWELL_X,		&temp_haswell_x),
-+	X86_MATCH_INTEL_FAM6_MODEL(HASWELL_L,		&temp_nehalem),
-+	X86_MATCH_INTEL_FAM6_MODEL(HASWELL_G,		&temp_nehalem),
-+	X86_MATCH_INTEL_FAM6_MODEL(BROADWELL,		&temp_broadwell),
-+	X86_MATCH_INTEL_FAM6_MODEL(BROADWELL_G,		&temp_broadwell),
-+	X86_MATCH_INTEL_FAM6_MODEL(BROADWELL_X,		&temp_haswell_x),
-+	X86_MATCH_INTEL_FAM6_MODEL(BROADWELL_D,		&temp_haswell_x),
-+	X86_MATCH_INTEL_FAM6_MODEL(SKYLAKE_L,		&temp_broadwell),
-+	X86_MATCH_INTEL_FAM6_MODEL(SKYLAKE,		&temp_broadwell),
-+	X86_MATCH_INTEL_FAM6_MODEL(SKYLAKE_X,		&temp_haswell_x),
-+	X86_MATCH_INTEL_FAM6_MODEL(KABYLAKE_L,		&temp_broadwell),
-+	X86_MATCH_INTEL_FAM6_MODEL(KABYLAKE,		&temp_broadwell),
-+	X86_MATCH_INTEL_FAM6_MODEL(COMETLAKE,		&temp_broadwell),
-+	X86_MATCH_INTEL_FAM6_MODEL(COMETLAKE_L,		&temp_broadwell),
-+	X86_MATCH_INTEL_FAM6_MODEL(CANNONLAKE_L,	&temp_broadwell),
-+	X86_MATCH_INTEL_FAM6_MODEL(ICELAKE_X,		&temp_broadwell),
-+	X86_MATCH_INTEL_FAM6_MODEL(ICELAKE_D,		&temp_broadwell),
-+	X86_MATCH_INTEL_FAM6_MODEL(ICELAKE,		&temp_broadwell),
-+	X86_MATCH_INTEL_FAM6_MODEL(ICELAKE_L,		&temp_broadwell),
-+	X86_MATCH_INTEL_FAM6_MODEL(ICELAKE_NNPI,	&temp_broadwell),
-+	X86_MATCH_INTEL_FAM6_MODEL(ROCKETLAKE,		&temp_broadwell),
-+	X86_MATCH_INTEL_FAM6_MODEL(TIGERLAKE_L,		&temp_tigerlake),
-+	X86_MATCH_INTEL_FAM6_MODEL(TIGERLAKE,		&temp_tigerlake),
-+	X86_MATCH_INTEL_FAM6_MODEL(SAPPHIRERAPIDS_X,	&temp_sapphirerapids),
-+	X86_MATCH_INTEL_FAM6_MODEL(EMERALDRAPIDS_X,	&temp_sapphirerapids),
-+	X86_MATCH_INTEL_FAM6_MODEL(LAKEFIELD,		&temp_broadwell),
-+	X86_MATCH_INTEL_FAM6_MODEL(ALDERLAKE,		&temp_tigerlake),
-+	X86_MATCH_INTEL_FAM6_MODEL(ALDERLAKE_L,		&temp_tigerlake),
-+	X86_MATCH_INTEL_FAM6_MODEL(RAPTORLAKE,		&temp_tigerlake),
-+	X86_MATCH_INTEL_FAM6_MODEL(RAPTORLAKE_P,	&temp_tigerlake),
-+	X86_MATCH_INTEL_FAM6_MODEL(RAPTORLAKE_S,	&temp_tigerlake),
-+	X86_MATCH_INTEL_FAM6_MODEL(ATOM_BONNELL,	&temp_nehalem),
-+	X86_MATCH_INTEL_FAM6_MODEL(ATOM_BONNELL_MID,	&temp_nehalem),
-+	X86_MATCH_INTEL_FAM6_MODEL(ATOM_SALTWELL,	&temp_nehalem),
-+	X86_MATCH_INTEL_FAM6_MODEL(ATOM_SALTWELL_MID,	&temp_nehalem),
-+	X86_MATCH_INTEL_FAM6_MODEL(ATOM_SILVERMONT,	&temp_broadwell),
-+	X86_MATCH_INTEL_FAM6_MODEL(ATOM_SILVERMONT_D,	&temp_broadwell),
-+	X86_MATCH_INTEL_FAM6_MODEL(ATOM_SILVERMONT_MID,	&temp_broadwell),
-+	X86_MATCH_INTEL_FAM6_MODEL(ATOM_AIRMONT,	&temp_broadwell),
-+	X86_MATCH_INTEL_FAM6_MODEL(ATOM_AIRMONT_MID,	&temp_broadwell),
-+	X86_MATCH_INTEL_FAM6_MODEL(ATOM_AIRMONT_NP,	&temp_broadwell),
-+	X86_MATCH_INTEL_FAM6_MODEL(ATOM_GOLDMONT,	&temp_goldmont),
-+	X86_MATCH_INTEL_FAM6_MODEL(ATOM_GOLDMONT_D,	&temp_goldmont),
-+	X86_MATCH_INTEL_FAM6_MODEL(ATOM_GOLDMONT_PLUS,	&temp_goldmont),
-+	X86_MATCH_INTEL_FAM6_MODEL(ATOM_TREMONT_D,	&temp_broadwell),
-+	X86_MATCH_INTEL_FAM6_MODEL(ATOM_TREMONT,	&temp_broadwell),
-+	X86_MATCH_INTEL_FAM6_MODEL(ATOM_TREMONT_L,	&temp_broadwell),
-+	X86_MATCH_INTEL_FAM6_MODEL(ATOM_GRACEMONT,	&temp_tigerlake),
-+	X86_MATCH_INTEL_FAM6_MODEL(XEON_PHI_KNL,	&temp_broadwell),
-+	X86_MATCH_INTEL_FAM6_MODEL(XEON_PHI_KNM,	&temp_broadwell),
-+	{}
-+};
-+
-+static int __init intel_tcc_init(void)
-+{
-+	const struct x86_cpu_id *id;
-+
-+	id = x86_match_cpu(intel_tcc_cpu_ids);
-+	if (id)
-+		memcpy(&intel_tcc_temp_masks, (const void *)id->driver_data,
-+		       sizeof(intel_tcc_temp_masks));
-+
-+	return 0;
-+}
-+/*
-+ * Use subsys_initcall to ensure temperature bitmasks are initialized before
-+ * the drivers that use this library.
-+ */
-+subsys_initcall(intel_tcc_init);
-+
-+/**
-+ * get_tcc_offset_mask() - Returns the model-specific bitmask for TCC offset
-+ *
-+ * Get the model-specific bitmask to extract TCC_OFFSET from the MSR_TEMPERATURE_
-+ * TARGET register. If the mask is 0, it means the processor does not support TCC offset.
-+ *
-+ * Return: The model-specific bitmask for TCC offset.
-+ */
-+u32 get_tcc_offset_mask(void)
-+{
-+	return intel_tcc_temp_masks.tcc_offset;
-+}
-+EXPORT_SYMBOL_NS(get_tcc_offset_mask, INTEL_TCC);
-+
-+/**
-+ * intel_tcc_get_temp_mask() - Returns the model-specific bitmask for temperature
-+ *
-+ * @pkg: true: Package Thermal Sensor. false: Core Thermal Sensor.
-+ *
-+ * Get the model-specific bitmask to extract the temperature reading from the
-+ * MSR_IA32_[PACKAGE]_THERM_STATUS register.
-+ *
-+ * Callers must check if the thermal status registers are supported.
-+ *
-+ * Return: The model-specific bitmask for temperature reading
-+ */
-+u32 intel_tcc_get_temp_mask(bool pkg)
-+{
-+	return pkg ? intel_tcc_temp_masks.pkg_digital_readout :
-+	       intel_tcc_temp_masks.digital_readout;
-+}
-+EXPORT_SYMBOL_NS(intel_tcc_get_temp_mask, INTEL_TCC);
-+
- /**
-  * intel_tcc_get_tjmax() - returns the default TCC activation Temperature
-  * @cpu: cpu that the MSR should be run on, nagative value means any cpu.
-@@ -56,7 +218,7 @@ int intel_tcc_get_offset(int cpu)
- 	if (err)
- 		return err;
- 
--	return (low >> 24) & 0x3f;
-+	return (low >> 24) & intel_tcc_temp_masks.tcc_offset;
- }
- EXPORT_SYMBOL_NS_GPL(intel_tcc_get_offset, INTEL_TCC);
- 
-@@ -76,7 +238,10 @@ int intel_tcc_set_offset(int cpu, int offset)
- 	u32 low, high;
- 	int err;
- 
--	if (offset < 0 || offset > 0x3f)
-+	if (!intel_tcc_temp_masks.tcc_offset)
-+		return -ENODEV;
-+
-+	if (offset < 0 || offset > intel_tcc_temp_masks.tcc_offset)
- 		return -EINVAL;
- 
- 	if (cpu < 0)
-@@ -90,7 +255,7 @@ int intel_tcc_set_offset(int cpu, int offset)
- 	if (low & BIT(31))
- 		return -EPERM;
- 
--	low &= ~(0x3f << 24);
-+	low &= ~(intel_tcc_temp_masks.tcc_offset << 24);
- 	low |= offset << 24;
- 
- 	if (cpu < 0)
-@@ -113,8 +278,8 @@ EXPORT_SYMBOL_NS_GPL(intel_tcc_set_offset, INTEL_TCC);
-  */
- int intel_tcc_get_temp(int cpu, int *temp, bool pkg)
- {
--	u32 low, high;
- 	u32 msr = pkg ? MSR_IA32_PACKAGE_THERM_STATUS : MSR_IA32_THERM_STATUS;
-+	u32 low, high, mask;
- 	int tjmax, err;
- 
- 	tjmax = intel_tcc_get_tjmax(cpu);
-@@ -132,7 +297,9 @@ int intel_tcc_get_temp(int cpu, int *temp, bool pkg)
- 	if (!(low & BIT(31)))
- 		return -ENODATA;
- 
--	*temp = tjmax - ((low >> 16) & 0x7f);
-+	mask = intel_tcc_get_temp_mask(pkg);
-+
-+	*temp = tjmax - ((low >> 16) & mask);
- 
- 	return 0;
- }
-diff --git a/include/linux/intel_tcc.h b/include/linux/intel_tcc.h
-index 8ff8eabb4a98..e281cf06aeab 100644
---- a/include/linux/intel_tcc.h
-+++ b/include/linux/intel_tcc.h
-@@ -14,5 +14,13 @@ int intel_tcc_get_tjmax(int cpu);
- int intel_tcc_get_offset(int cpu);
- int intel_tcc_set_offset(int cpu, int offset);
- int intel_tcc_get_temp(int cpu, int *temp, bool pkg);
-+#ifdef CONFIG_INTEL_TCC
-+u32 get_tcc_offset_mask(void);
-+u32 intel_tcc_get_temp_mask(bool pkg);
-+#else
-+static inline u32 get_tcc_offset_mask(void) { return 0; }
-+/* Use the architectural bitmask of the temperature readout. No model checks. */
-+static inline u32 intel_tcc_get_temp_mask(bool pkg) { return 0x7f; }
-+#endif
- 
- #endif /* __INTEL_TCC_H__ */
--- 
-2.34.1
-
+T24gU2F0LCAyMDI0LTA0LTA2IGF0IDAwOjA5ICswMDAwLCBFZGdlY29tYmUsIFJpY2sgUCB3cm90
+ZToNCj4gT24gV2VkLCAyMDI0LTA0LTAzIGF0IDEwOjMzIC0wNzAwLCBJc2FrdSBZYW1haGF0YSB3
+cm90ZToNCj4gPiBPbiBNb24sIEFwciAwMSwgMjAyNCBhdCAxMTo0OTo0M1BNICswODAwLA0KPiA+
+IEJpbmJpbiBXdSA8YmluYmluLnd1QGxpbnV4LmludGVsLmNvbT4gd3JvdGU6DQo+ID4gDQo+ID4g
+PiANCj4gPiA+IA0KPiA+ID4gT24gMi8yNi8yMDI0IDQ6MjYgUE0sIGlzYWt1LnlhbWFoYXRhQGlu
+dGVsLmNvbcKgd3JvdGU6DQo+ID4gPiA+IEZyb206IFNlYW4gQ2hyaXN0b3BoZXJzb24gPHNlYW4u
+ai5jaHJpc3RvcGhlcnNvbkBpbnRlbC5jb20+DQo+ID4gPiA+IA0KPiA+ID4gPiBGb3IgdmlydHVh
+bCBJTywgdGhlIGd1ZXN0IFREIHNoYXJlcyBndWVzdCBwYWdlcyB3aXRoIFZNTSB3aXRob3V0DQo+
+ID4gPiA+IGVuY3J5cHRpb24uDQo+ID4gPiANCj4gPiA+IFZpcnR1YWwgSU8gaXMgYSB1c2UgY2Fz
+ZSBvZiBzaGFyZWQgbWVtb3J5LCBpdCdzIGJldHRlciB0byB1c2UgaXQNCj4gPiA+IGFzIGEgZXhh
+bXBsZSBpbnN0ZWFkIG9mIHB1dHRpbmcgaXQgYXQgdGhlIGJlZ2lubmluZyBvZiB0aGUgc2VudGVu
+Y2UuDQo+ID4gPiANCj4gPiA+IA0KPiA+ID4gPiDCoMKgIFNoYXJlZCBFUFQgaXMgdXNlZCB0byBt
+YXAgZ3Vlc3QgcGFnZXMgaW4gdW5wcm90ZWN0ZWQgd2F5Lg0KPiA+ID4gPiANCj4gPiA+ID4gQWRk
+IHRoZSBWTUNTIGZpZWxkIGVuY29kaW5nIGZvciB0aGUgc2hhcmVkIEVQVFAsIHdoaWNoIHdpbGwg
+YmUgdXNlZCBieQ0KPiA+ID4gPiBURFggdG8gaGF2ZSBzZXBhcmF0ZSBFUFQgd2Fsa3MgZm9yIHBy
+aXZhdGUgR1BBcyAoZXhpc3RpbmcgRVBUUCkgdmVyc3VzDQo+ID4gPiA+IHNoYXJlZCBHUEFzIChu
+ZXcgc2hhcmVkIEVQVFApLg0KPiA+ID4gPiANCj4gPiA+ID4gU2V0IHNoYXJlZCBFUFQgcG9pbnRl
+ciB2YWx1ZSBmb3IgdGhlIFREWCBndWVzdCB0byBpbml0aWFsaXplIFREWCBNTVUuDQo+ID4gPiBN
+YXkgaGF2ZSBhIG1lbnRpb24gdGhhdCB0aGUgRVBUUCBmb3IgcHJpYXZldCBHUEFzIGlzIHNldCBi
+eSBURFggbW9kdWxlLg0KPiA+IA0KPiA+IFN1cmUsIGxldCBtZSB1cGRhdGUgdGhlIGNvbW1pdCBt
+ZXNzYWdlLg0KPiANCj4gSG93IGFib3V0IHRoaXM/DQoNCkxvb2tzIGdvb2QuICBTb21lIG5pdHMg
+dGhvdWdoOg0KDQo+IA0KPiBLVk06IFREWDogQWRkIGxvYWRfbW11X3BnZCBtZXRob2QgZm9yIFRE
+WA0KPiANCj4gVERYIGhhcyB1c2VzIHR3byBFUFQgcG9pbnRlcnMsIG9uZSBmb3IgdGhlIHByaXZh
+dGUgaGFsZiBvZiB0aGUgR1BBDQoNCiJURFggdXNlcyINCg0KPiBzcGFjZSBhbmQgb25lIGZvciB0
+aGUgc2hhcmVkIGhhbGYuIFRoZSBwcml2YXRlIGhhbGYgdXNlZCB0aGUgbm9ybWFsDQoNCiJ1c2Vk
+IiAtPiAidXNlcyINCg0KPiBFUFRfUE9JTlRFUiB2bWNzIGZpZWxkIGFuZCBpcyBtYW5hZ2VkIGlu
+IGEgc3BlY2lhbCB3YXkgYnkgdGhlIFREWCBtb2R1bGUuDQoNClBlcmhhcHMgYWRkOg0KDQpLVk0g
+aXMgbm90IGFsbG93ZWQgdG8gb3BlcmF0ZSBvbiB0aGUgRVBUX1BPSU5URVIgZGlyZWN0bHkuDQoN
+Cj4gVGhlIHNoYXJlZCBoYWxmIHVzZXMgYSBuZXcgU0hBUkVEX0VQVF9QT0lOVEVSIGZpZWxkIGFu
+ZCB3aWxsIGJlIG1hbmFnZWQgYnkNCj4gdGhlIGNvbnZlbnRpb25hbCBNTVUgbWFuYWdlbWVudCBv
+cGVyYXRpb25zIHRoYXQgb3BlcmF0ZSBkaXJlY3RseSBvbiB0aGUNCj4gRVBUIHRhYmxlcy7CoA0K
+PiANCg0KSSB3b3VsZCBsaWtlIHRvIGV4cGxpY2l0bHkgY2FsbCBvdXQgS1ZNIGNhbiB1cGRhdGUg
+U0hBUkVEX0VQVF9QT0lOVEVSIGRpcmVjdGx5Og0KDQpUaGUgc2hhcmVkIGhhbGYgdXNlcyBhIG5l
+dyBTSEFSRURfRVBUX1BPSU5URVIgZmllbGQuICBLVk0gaXMgYWxsb3dlZCB0byBzZXQgaXQNCmRp
+cmVjdGx5IGJ5IHRoZSBpbnRlcmZhY2UgcHJvdmlkZWQgYnkgdGhlIFREWCBtb2R1bGUsIGFuZCBL
+Vk0gaXMgZXhwZWN0ZWQgdG8NCm1hbmFnZSB0aGUgc2hhcmVkIGhhbGYganVzdCBsaWtlIGl0IG1h
+bmFnZXMgdGhlIGV4aXN0aW5nIEVQVCBwYWdlIHRhYmxlIHRvZGF5Lg0KDQoNCj4gVGhpcyBtZWFu
+cyBmb3IgVERYIHRoZSAubG9hZF9tbXVfcGdkKCkgb3BlcmF0aW9uIHdpbGwgbmVlZCB0bw0KPiBr
+bm93IHRvIHVzZSB0aGUgU0hBUkVEX0VQVF9QT0lOVEVSIGZpZWxkIGluc3RlYWQgb2YgdGhlIG5v
+cm1hbCBvbmUuIEFkZCBhDQo+IG5ldyB3cmFwcGVyIGluIHg4NiBvcHMgZm9yIGxvYWRfbW11X3Bn
+ZCgpIHRoYXQgZWl0aGVyIGRpcmVjdHMgdGhlIHdyaXRlIHRvDQo+IHRoZSBleGlzdGluZyB2bXgg
+aW1wbGVtZW50YXRpb24gb3IgYSBURFggb25lLg0KPiANCj4gRm9yIHRoZSBURFggb3BlcmF0aW9u
+LCBFUFQgd2lsbCBhbHdheXMgYmUgdXNlZCwgc28gaXQgY2FuIHNpbXB5IHdyaXRlIHRvDQo+IHRo
+ZSBTSEFSRURfRVBUX1BPSU5URVIgZmllbGQuDQoNCg0K
