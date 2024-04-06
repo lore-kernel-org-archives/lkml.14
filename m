@@ -1,97 +1,106 @@
-Received: from mail.rosalinux.ru (mail.rosalinux.ru [195.19.76.54])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 941FC376E0;
-	Sat,  6 Apr 2024 15:16:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.19.76.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FE19381A4;
+	Sat,  6 Apr 2024 15:19:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712416574; cv=none; b=tvK0PashjhNBBHi1QkXLVj3ByQsJg3zjTn7nRhpxwGWQl/P+/gG1PhNvzrgGRvzMfCC1zIvJTEBhr3BaBvRZv/R5f02GOiEvxE7QWn7vEZhzBx8au+5cPJJ5Xi75xnZ6I4GsCrLQAFC+zZnCPhlhqBhFHrGxli+fBSp8xKzWb+o=
+	t=1712416789; cv=none; b=EW9HXyT2FFKhhJQA2yY6vh/pyvMTvOPt0RmYBCPn0lRWXB7E3hwxilY+s3j/dZVRqGHJeUaXinlYLmdMA78PuE63I3I/cmVEiexOU+MHrUH29SHPwqbwFLs/MAj7E/6GA8/ckSriof5OXBHjrvRI9GSTBvRl0ZRTOMw09lMcaP0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712416574; c=relaxed/simple;
-	bh=AjC9VPGBDKa+qIIk5rpRw8XzGhdO0n+wLvwpBvsUocg=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=m9bjfzETLr6Ok37kcW6ZSD7K9fWN27zOz6w/eT4DZWAeKlnRYGGtcpc7xfJ3v+Z9lYJ34WQUHsOkc8geWcEFKYMjAwAg1kOPZWuARu3EqboAQ8N//1SC2185h/J5AeDY7pcnmotLlJr8TeeChnq1tCIAaAGsEvpAxQBWy4FoEqU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=rosalinux.ru; spf=pass smtp.mailfrom=rosalinux.ru; dkim=pass (2048-bit key) header.d=rosalinux.ru header.i=@rosalinux.ru header.b=WDRTBFYx; arc=none smtp.client-ip=195.19.76.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=rosalinux.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rosalinux.ru
+	s=arc-20240116; t=1712416789; c=relaxed/simple;
+	bh=F0yD2te0Q85dmAD07i6O7OobeJIw3035Mh6eXZKnERY=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=KPZOdXkiS9mpeVl8geYkDrNUJG+9KzJtUUOOVZ0CQ2/vAlpYjuK6UkkvSf+1FfEgCcSnZluGdu1YGC3TrmK8GW/vFiymXd7KMWRaYFo9QbVBe6b/xYErKD1oPxjA+2zFIUUEe+JDJnayZI6Uh5C9bdFSh6gIwTA//R6mhx/ujAE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mEQ5BuWm; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rosalinux.ru header.i=@rosalinux.ru header.b="WDRTBFYx"
-Received: from localhost (localhost [127.0.0.1])
-	by mail.rosalinux.ru (Postfix) with ESMTP id 93FBAEF2DB4FB;
-	Sat,  6 Apr 2024 18:15:59 +0300 (MSK)
-Received: from mail.rosalinux.ru ([127.0.0.1])
-	by localhost (mail.rosalinux.ru [127.0.0.1]) (amavisd-new, port 10032)
-	with ESMTP id SecWJ8moq5Pd; Sat,  6 Apr 2024 18:15:59 +0300 (MSK)
-Received: from localhost (localhost [127.0.0.1])
-	by mail.rosalinux.ru (Postfix) with ESMTP id 5EF1FEF2DB4FE;
-	Sat,  6 Apr 2024 18:15:59 +0300 (MSK)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.rosalinux.ru 5EF1FEF2DB4FE
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=rosalinux.ru;
-	s=1D4BB666-A0F1-11EB-A1A2-F53579C7F503; t=1712416559;
-	bh=t7XFvKjb/fmLNl9bggienWjZmjBucE0mCAmH+77OYak=;
-	h=From:To:Date:Message-ID:MIME-Version;
-	b=WDRTBFYx3OPElQXj++OVzjp2iKo+06Th6kiMz1ASk7wYQ5XmEBVFGLBFZf7JBmMau
-	 VeVUUKlvJihsM+usuDUGFren83CF44GINJPM9kGJDHH/DhcrAP0oSmmI+KwQ4jCQ4b
-	 MO80/MHOMSSAHYTrNTm5zx54TVK5PcwS30WNxg3zqGtuvD2CjdbW0s08Id74Nd8wU+
-	 DTx7LLrvDNUVc2RJkMqvL0JvthZ2nX2zYzsiRQQ3kIswOkYz91j573fhsn8aRLC1ti
-	 4BnJL+HSEiYLXwWsP84dds+3JsIPmc5mRBChOiNSIMz6MEzeINwbVqgyeRdXLTnIJJ
-	 AG2ScTJaIVagQ==
-X-Virus-Scanned: amavisd-new at rosalinux.ru
-Received: from mail.rosalinux.ru ([127.0.0.1])
-	by localhost (mail.rosalinux.ru [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id zsqipvTHXt3j; Sat,  6 Apr 2024 18:15:59 +0300 (MSK)
-Received: from localhost.localdomain (unknown [213.87.161.43])
-	by mail.rosalinux.ru (Postfix) with ESMTPSA id 8B6F9EF2DB4FB;
-	Sat,  6 Apr 2024 18:15:58 +0300 (MSK)
-From: Mikhail Lobanov <m.lobanov@rosalinux.ru>
-To: Martin KaFai Lau <martin.lau@linux.dev>
-Cc: Mikhail Lobanov <m.lobanov@rosalinux.ru>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Song Liu <song@kernel.org>,
-	Roman Gushchin <roman.gushchin@linux.dev>,
-	bpf@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Subject: [PATCH] bpf: dereference of null in __cgroup_bpf_query() function
-Date: Sat,  6 Apr 2024 11:14:55 -0400
-Message-ID: <20240406151457.4774-1-m.lobanov@rosalinux.ru>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mEQ5BuWm"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D9E45C433C7;
+	Sat,  6 Apr 2024 15:19:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1712416788;
+	bh=F0yD2te0Q85dmAD07i6O7OobeJIw3035Mh6eXZKnERY=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=mEQ5BuWmG8QsLe9rfJTRZ8DTfgoFzmPBoWN905oUQ+1V6iOLJbX9u+jG0Nw9PAK4x
+	 De7bd6r8v/z8XFHt6e+5+mYLOq4RKQNNEH9aZ56rvoKTViutm5rXUmVjCB7N4gwHKb
+	 JyGoPYl5Rg4BMNOhux4bliCmxeJLBbPNMvdLfVvri4ujp9uQepgSoD/CJKsQRTGV/e
+	 YBCn9XqIXgBF9/qwfdb0Y3x9nIwacbMpFlNos3YBYtDEj9hMD+0/SeUsVFRQncv/Cy
+	 CrJktO5MDDaBf3zzD5DjmuCqL0W9OiK/8Rfx9S26SX2/b1rksFLh9ufdSK0cPOfjUZ
+	 RXdPVCz1Aaxlg==
+Date: Sat, 6 Apr 2024 16:19:33 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: Lothar Rubusch <l.rubusch@gmail.com>
+Cc: lars@metafoo.de, Michael.Hennerich@analog.com, robh+dt@kernel.org,
+ krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
+ linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, eraretuya@gmail.com
+Subject: Re: [PATCH v7 0/8]  iio: accel: adxl345: Add spi-3wire feature
+Message-ID: <20240406161933.56da10a0@jic23-huawei>
+In-Reply-To: <20240401194906.56810-1-l.rubusch@gmail.com>
+References: <20240401194906.56810-1-l.rubusch@gmail.com>
+X-Mailer: Claws Mail 4.2.0 (GTK 3.24.41; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-In the __cgroup_bpf_query() function, it is possible to dereference
-the null pointer in the line id =3D prog->aux->id; since there is no
-check for a non-zero value of the variable prog.
+On Mon,  1 Apr 2024 19:48:58 +0000
+Lothar Rubusch <l.rubusch@gmail.com> wrote:
 
-Found by Linux Verification Center (linuxtesting.org) with SVACE.
+> Pass a function setup() as pointer from SPI/I2C specific modules to the
+> core module. Implement setup() to pass the spi-3wire bus option, if
+> declared in the device-tree.
+> 
+> In the core module then update data_format register configuration bits
+> instead of overwriting it. The changes allow to remove a data_range field.
+> 
+> Signed-off-by: Lothar Rubusch <l.rubusch@gmail.com>
+Series applied to the togreg branch of iio.git and pushed out initially
+as testing to let 0-day work it's magic (find build issues for us!)
 
-Fixes: af6eea57437a ("bpf: Implement bpf_link-based cgroup BPF program at=
-tachment")
-Cc: stable@vger.kernel.org
-Signed-off-by: Mikhail Lobanov <m.lobanov@rosalinux.ru>
----
- kernel/bpf/cgroup.c | 2 ++
- 1 file changed, 2 insertions(+)
+I'll push it out for linux-next to pick up sometime in next week (ish)
 
-diff --git a/kernel/bpf/cgroup.c b/kernel/bpf/cgroup.c
-index 491d20038cbe..7f2db96f0c6a 100644
---- a/kernel/bpf/cgroup.c
-+++ b/kernel/bpf/cgroup.c
-@@ -1092,6 +1092,8 @@ static int __cgroup_bpf_query(struct cgroup *cgrp, =
-const union bpf_attr *attr,
- 			i =3D 0;
- 			hlist_for_each_entry(pl, progs, node) {
- 				prog =3D prog_list_prog(pl);
-+               	       	if (!prog_list_prog(pl))
-+				continue;
- 				id =3D prog->aux->id;
- 				if (copy_to_user(prog_ids + i, &id, sizeof(id)))
- 					return -EFAULT;
---=20
-2.43.0
+Jonathan
+
+> ---
+> V1 -> V2: Split into spi-3wire and refactoring
+> V2 -> V3: Split further, focus on needed changesets
+> V3 -> V4: Drop "Remove single info instances";
+>           split "Group bus configuration" into separat
+>           comment patch; reorder patch set
+> V4 -> V5: Refrase comments; Align comments to 75; rebuild FORMAT_MASK by
+>           available flags; fix indention
+> V5 -> V6: Remove FORMAT_MASK by a local variable on call site;
+>           Refrase comments;
+>           Remove unneeded include
+> V6 -> V7: Restructure optional passing the setup() to core's probe()
+>           Guarantee that initially a regmap_write() was called to init
+>           all bits to a defined state
+>           - When a setup() e.g. for 3wire is passed, then call
+>             regmap_write() inside the setup(). In the following
+>             core's probe() has to call regmap_update()
+>           - When NULL is passed, then call regmap_write() in core's
+>             probe()
+>           - Refactoring: remove obvious comments and simplify code
+> 
+> Lothar Rubusch (8):
+>   iio: accel: adxl345: Make data_range obsolete
+>   iio: accel: adxl345: Group bus configuration
+>   iio: accel: adxl345: Move defines to header
+>   dt-bindings: iio: accel: adxl345: Add spi-3wire
+>   iio: accel: adxl345: Pass function pointer to core
+>   iio: accel: adxl345: Reorder probe initialization
+>   iio: accel: adxl345: Add comment to probe
+>   iio: accel: adxl345: Add spi-3wire option
+> 
+>  .../bindings/iio/accel/adi,adxl345.yaml       |  2 +
+>  drivers/iio/accel/adxl345.h                   | 36 +++++++-
+>  drivers/iio/accel/adxl345_core.c              | 92 ++++++++++---------
+>  drivers/iio/accel/adxl345_i2c.c               |  2 +-
+>  drivers/iio/accel/adxl345_spi.c               | 10 +-
+>  5 files changed, 94 insertions(+), 48 deletions(-)
+> 
 
