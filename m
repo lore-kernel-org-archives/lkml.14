@@ -1,58 +1,77 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+Received: from wfhigh6-smtp.messagingengine.com (wfhigh6-smtp.messagingengine.com [64.147.123.157])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AC50A38
-	for <linux-kernel@vger.kernel.org>; Sat,  6 Apr 2024 01:01:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 954124C81
+	for <linux-kernel@vger.kernel.org>; Sat,  6 Apr 2024 01:04:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=64.147.123.157
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712365276; cv=none; b=jwextitqRZbm4su++w9Jpra8Hr/EoPm53ulsTo3b1LgQ1PpR25H7YeeHInMm/WbfO1YKDeFVyNlUWEHHEs/LoU0W7lle5iaX9s3QHbE3y1Pi3UHJzBWqVN0AvK4vbKxNtFzWh/+1ht+vk1r5Af5cMacHrdYKmA23u48mGhbsQ9o=
+	t=1712365468; cv=none; b=Ymhr2c4BYCxd3VNdSN21m7IPAI+Hd+yUyzVG/Q/LDq27VqgUgOSxZrGlHGhsqhvZbgwN6lOKQ95/o5wY/pksTck9OG9ugdQjtR65G5xJgaNMzMe8s28rg0wyQ7nHKu0ZgczWSVhU3tVqoaYuITuaVT1UmanoeCa/CHv5TzJX0H8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712365276; c=relaxed/simple;
-	bh=RPBiXOvJ3qO08FTb2PnV5TeQKTc1e33mARDhTSge36Q=;
+	s=arc-20240116; t=1712365468; c=relaxed/simple;
+	bh=J/SFrCGV6sqtwMRf+6u6rRAJU2v7VuzQfoSzMbDWQmg=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=tssEORZgF5cc9BYB1UZpjaP7OLDR9PDoiqX+5UusUFvG5nKn0h6M7hmXXm1CgAd2BF8HtGSrZuKurKz041HsOwUP5E8+kgd6Mwxux6uvhHzhLp0y5cWReH+Lluqd5c2yZKjQ7kQ6ha3TeKECARlT5DLe/PEeJxxkdYwv0cwph7E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=AzG1Zzj8; arc=none smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	 Content-Disposition; b=q+uU3GjfcshLR+M5UvBJWFG4wx7X0dbi71Yk3BsjKcn34aiDfDfGKdHCdVHmIfRUJJFODR2R1rErJknBQsK/lStMlXAMpZie3jflimlP/6JqwcEOQ8cQ3CD8qw9UreXkyVbrrHBVcBgi586QLEEwEBG2t+v202LjkG0ALzhyvG0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sakamocchi.jp; spf=pass smtp.mailfrom=sakamocchi.jp; dkim=pass (2048-bit key) header.d=sakamocchi.jp header.i=@sakamocchi.jp header.b=KaEjfSMa; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=uf/yfG7e; arc=none smtp.client-ip=64.147.123.157
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sakamocchi.jp
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sakamocchi.jp
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="AzG1Zzj8"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1712365274; x=1743901274;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=RPBiXOvJ3qO08FTb2PnV5TeQKTc1e33mARDhTSge36Q=;
-  b=AzG1Zzj8vH65S8h+Zi1sunFXktTUfBJU6uLB5utz2YV/rzHdYQynv919
-   6cfpOstSC/bJStgJY+LSoY6FrWI613O8ws3r29wVkBhuNoXffaMPkTubM
-   BM8LJrIUPK2dJ5Ahp1zQDqmj3gS+2+0SbLUKA0TDcAGdsIOs7NFfCZSOa
-   VW4RW/mKj9AYM/1XrhbCgNSQ4FMH21Wn2QQy+7tuciP24hYFMrzMzbil2
-   iROT5jLHJyAS+wBArkJd0hc0mqRFye3WuRDpGosEFB+WT/aRS886/JGEP
-   HKUaOGldvEwR6vJUigEWM5WzoKPuhivxNm9aqlrgauzPfADcrakKR+MaK
-   w==;
-X-CSE-ConnectionGUID: ialNMgs5Sm2pkKenngiIMg==
-X-CSE-MsgGUID: VLXx2OMNRd+ZG5lgGdFcEw==
-X-IronPort-AV: E=McAfee;i="6600,9927,11035"; a="25154210"
-X-IronPort-AV: E=Sophos;i="6.07,182,1708416000"; 
-   d="scan'208";a="25154210"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Apr 2024 18:01:13 -0700
-X-CSE-ConnectionGUID: Kq04r+ZxSMyO0jmPvuZ9Mg==
-X-CSE-MsgGUID: TGfzPn0dS3aZHhuFHGentA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,182,1708416000"; 
-   d="scan'208";a="19253399"
-Received: from lkp-server01.sh.intel.com (HELO e61807b1d151) ([10.239.97.150])
-  by orviesa009.jf.intel.com with ESMTP; 05 Apr 2024 18:01:12 -0700
-Received: from kbuild by e61807b1d151 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1rsuQf-0002wu-1x;
-	Sat, 06 Apr 2024 01:01:09 +0000
-Date: Sat, 6 Apr 2024 09:00:49 +0800
-From: kernel test robot <lkp@intel.com>
-To: Masahiro Yamada <masahiroy@kernel.org>
-Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org
-Subject: include/linux/list.h:69:(.text+0x338f): dangerous relocation:
- windowed longcall crosses 1GB boundary; return may fail: *UND*
-Message-ID: <202404060846.sebDx4Nj-lkp@intel.com>
+	dkim=pass (2048-bit key) header.d=sakamocchi.jp header.i=@sakamocchi.jp header.b="KaEjfSMa";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="uf/yfG7e"
+Received: from compute7.internal (compute7.nyi.internal [10.202.2.48])
+	by mailfhigh.west.internal (Postfix) with ESMTP id CB0951800101;
+	Fri,  5 Apr 2024 21:04:24 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute7.internal (MEProxy); Fri, 05 Apr 2024 21:04:25 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sakamocchi.jp;
+	 h=cc:cc:content-type:content-type:date:date:from:from
+	:in-reply-to:message-id:mime-version:reply-to:subject:subject:to
+	:to; s=fm2; t=1712365464; x=1712451864; bh=89U+TdJUj1ZMB4RVMN7/q
+	e49kuN6JsPg2Vp2UH9cvuo=; b=KaEjfSMa158SQqfmpSyJMX8NiwyHm8Kzwt3Rc
+	c6RrysL1DoSgbELtsz6A1p0DhsCAqmZEtmA6uQdaR/Hd6QVT/ZLuwRyr+fO6Am12
+	J3/PllBMLMJP/lrJp+gMTMbeEyMGo3l81SJgDhcCApTWr7tVtAc1QYAbqf10hTYT
+	I0ifv0SmKiZi9UCSPVlQFYAwhT3g7V4v5FX5WOggrffBntKc0qc9WBOO8URST3UE
+	zz5nU24uG0GfPFkqVdHD9vGQdKiWxUpwnUmtu2ru8N61foGhm4ObY+Ttl8T52Srj
+	oXjWVKtZ5lgTe6U1+bv944MUuG24yaP7L73nZkT+UQxgY0eog==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:message-id
+	:mime-version:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=
+	1712365464; x=1712451864; bh=89U+TdJUj1ZMB4RVMN7/qe49kuN6JsPg2Vp
+	2UH9cvuo=; b=uf/yfG7eNr9YjWcwedFazqg1JeTdYRD+Ac2vd42pYb5dJuvSqgT
+	6Z6o6f+PhDhKQHlG2RlwP1R6P8E2y7kZz/ZhR6pOBUS8NFywuI+LKRj0JQYw/fdS
+	r79AWL5puTyKXZqehv2Xsx85F6VeW0TglXXyxBh/traFSj94D0MGOnAVe4+BnP6T
+	RmpK/C/A4HS4OyqepxXIB8mCjuHOSI0FBNTCu14NWvDwJXq7ZX5gJtjZjxbcbc6w
+	5DIhwLB7cXCOGVkXSOu5ios0/uWWRC4ZXvhfaWhp6x7ov23iA8EnyrbuspJyREhA
+	bz6x/n4f8VrtFL15c8syFb9N+WEMp0jgNSg==
+X-ME-Sender: <xms:mJ8QZrCStbst69IILut2OlO0TYCh3fJxwMvFEJAxxo_ylv09shrpfA>
+    <xme:mJ8QZhixTzBL0H_nTUgT8XDxQggre-_0V9fWCuP_5JZ6pgHfa13N4z_vcHOIx6iNK
+    nBSQG0kpssTe-QXZho>
+X-ME-Received: <xmr:mJ8QZmlPijTT76pkvMh56lOJ5TsQWHDss670OA4vRVZ2_QUECk6s7HvjGYbrgjZs87kybubJe5ImcaPUOsiUFcvAKh0BFmnoIXc>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrudeguddggedvucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucenucfjughrpeffhffvvefukfggtggusehttdertd
+    dttddvnecuhfhrohhmpefvrghkrghshhhiucfurghkrghmohhtohcuoehoqdhtrghkrghs
+    hhhisehsrghkrghmohgttghhihdrjhhpqeenucggtffrrghtthgvrhhnpeetfeeiteefve
+    egvdfggeffheetleejkeekleeugeffffdtgfdtteetkeevvddvgfenucffohhmrghinhep
+    khgvrhhnvghlrdhorhhgnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrg
+    hilhhfrhhomhepohdqthgrkhgrshhhihesshgrkhgrmhhotggthhhirdhjph
+X-ME-Proxy: <xmx:mJ8QZtyR6ym9-bUBLGqJZw2EunWE_x4pW0nAKB24yY9fMKQ3ZFJ8EA>
+    <xmx:mJ8QZgSHbPn0pHlZW0sSiSTpywpd1W8stPHgSLK4GmLGMfUOG8Eurw>
+    <xmx:mJ8QZgaxGSW907T8Cs2_RkMNYts87Wc5kNsZFlFDr10pzwjtfbDX-A>
+    <xmx:mJ8QZhRVIbm4a0jVyMs2z6IEaZn3OIVoZ_kiLFhgQ5E1LO0aVPwEfA>
+    <xmx:mJ8QZmfxyPKRojDSyf_tLSpMX2FxnByh8WYEhYZByxrugb-a3tCATI9D>
+Feedback-ID: ie8e14432:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
+ 5 Apr 2024 21:04:23 -0400 (EDT)
+Date: Sat, 6 Apr 2024 10:04:20 +0900
+From: Takashi Sakamoto <o-takashi@sakamocchi.jp>
+To: torvalds@linux-foundation.org
+Cc: linux-kernel@vger.kernel.org
+Subject: [GIT PULL] firewire fixes for v6.9-rc2
+Message-ID: <20240406010420.GA7197@workstation.local>
+Mail-Followup-To: Takashi Sakamoto <o-takashi@sakamocchi.jp>,
+	torvalds@linux-foundation.org, linux-kernel@vger.kernel.org
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -62,54 +81,35 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-head:   8a05ef7087166d7fa0de986fb6a2d97850dbd551
-commit: 481461f5109919babbb393d6f68002936b8e2493 linux/export.h: make <linux/export.h> independent of CONFIG_MODULES
-date:   9 months ago
-config: xtensa-randconfig-r012-20230616 (https://download.01.org/0day-ci/archive/20240406/202404060846.sebDx4Nj-lkp@intel.com/config)
-compiler: xtensa-linux-gcc (GCC) 13.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240406/202404060846.sebDx4Nj-lkp@intel.com/reproduce)
+Hi Linus,
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202404060846.sebDx4Nj-lkp@intel.com/
+The following changes since commit 39cd87c4eb2b893354f3b850f916353f2658ae6f:
 
-All errors (new ones prefixed by >>):
+  Linux 6.9-rc2 (2024-03-31 14:32:39 -0700)
 
-   drivers/media/common/siano/smscoreapi.o: in function `smscore_register_hotplug':
->> include/linux/list.h:69:(.text+0x338f): dangerous relocation: windowed longcall crosses 1GB boundary; return may fail: *UND*
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/ieee1394/linux1394.git tags/firewire-fixes-6.9-rc2
+
+for you to fetch changes up to 752e3c53de0fa3b7d817a83050b6699b8e9c6ec9:
+
+  firewire: ohci: mask bus reset interrupts between ISR and bottom half (2024-04-06 09:36:46 +0900)
+
+----------------------------------------------------------------
+firewire fixes for v6.9-rc2
+
+The firewire-ohci kernel module has a parameter for verbose kernel logging.
+It is well-known that it logs the spurious IRQ for bus-reset event due to
+the unmasked register for IRQ event. This update fixes the issue.
+
+----------------------------------------------------------------
+Adam Goldman (1):
+      firewire: ohci: mask bus reset interrupts between ISR and bottom half
+
+ drivers/firewire/ohci.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
 
-vim +69 include/linux/list.h
+Regards
 
-d7c816733d501b Kees Cook        2016-08-17  58  
-^1da177e4c3f41 Linus Torvalds   2005-04-16  59  /*
-^1da177e4c3f41 Linus Torvalds   2005-04-16  60   * Insert a new entry between two known consecutive entries.
-^1da177e4c3f41 Linus Torvalds   2005-04-16  61   *
-^1da177e4c3f41 Linus Torvalds   2005-04-16  62   * This is only for internal list manipulation where we know
-^1da177e4c3f41 Linus Torvalds   2005-04-16  63   * the prev/next entries already!
-^1da177e4c3f41 Linus Torvalds   2005-04-16  64   */
-^1da177e4c3f41 Linus Torvalds   2005-04-16  65  static inline void __list_add(struct list_head *new,
-^1da177e4c3f41 Linus Torvalds   2005-04-16  66  			      struct list_head *prev,
-^1da177e4c3f41 Linus Torvalds   2005-04-16  67  			      struct list_head *next)
-^1da177e4c3f41 Linus Torvalds   2005-04-16  68  {
-d7c816733d501b Kees Cook        2016-08-17 @69  	if (!__list_add_valid(new, prev, next))
-d7c816733d501b Kees Cook        2016-08-17  70  		return;
-d7c816733d501b Kees Cook        2016-08-17  71  
-^1da177e4c3f41 Linus Torvalds   2005-04-16  72  	next->prev = new;
-^1da177e4c3f41 Linus Torvalds   2005-04-16  73  	new->next = next;
-^1da177e4c3f41 Linus Torvalds   2005-04-16  74  	new->prev = prev;
-1c97be677f72b3 Paul E. McKenney 2015-09-20  75  	WRITE_ONCE(prev->next, new);
-^1da177e4c3f41 Linus Torvalds   2005-04-16  76  }
-^1da177e4c3f41 Linus Torvalds   2005-04-16  77  
-
-:::::: The code at line 69 was first introduced by commit
-:::::: d7c816733d501b59dbdc2483f2cc8e4431fd9160 list: Split list_add() debug checking into separate function
-
-:::::: TO: Kees Cook <keescook@chromium.org>
-:::::: CC: Paul E. McKenney <paulmck@linux.vnet.ibm.com>
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Takashi Sakamoto
