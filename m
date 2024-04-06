@@ -1,64 +1,65 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C949210A1A;
-	Sat,  6 Apr 2024 11:07:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1B292BAE9;
+	Sat,  6 Apr 2024 11:08:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712401680; cv=none; b=T6kamQ0WKKCBbMi5yjAnYei4/EnSr7FoII6WkkhYfZzR3Qqp7JolAKJgX9jG1zrssdOPxOxafoV1JLm45y/MC1S696mZ8Ly3QVKTCJMmEI0BJSoeJRUWBlhFNc1T/GgdCKX2Ur5XrP6jZL+Gj/6m6hchr1KJ8WcJyGoZqFOz49U=
+	t=1712401682; cv=none; b=aJoLs20qUXUT6tw39onghH2DmjEJesX5VegX/gMMuZikIFSPKuvqFa/xLdxVvN0R/gro9IFuYaeW9HUDNfk23JID/0ajzfEHhoCr0WDg6L29fIN3euUC6+d9NHIbR8ZOgUDvGchWur1wUTxS6GMDGUyv4lWiUpXu/R+rz6R1PYY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712401680; c=relaxed/simple;
-	bh=0ZsSVu7FwwDeT1dTRsyrltoc6bjWUMxL35uO76l5+RQ=;
+	s=arc-20240116; t=1712401682; c=relaxed/simple;
+	bh=35iPJt2vYEXwxrqjybT/QgbF/cf5H0/aDboES+VMFk4=;
 	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=IoECcvT1XjqsDnBqFcQSlmN+fXses/xwzU2y5pYaHypO9d5T10vNUINJVQDo9odO8zod40Zvz/np2q+tTbodAE8ISkt7AY0o1rtD4DEtMm6lHFX58k63iY1lc2BUYflGJUKRwEVt71V4LmGBzf4H2h8e6wnKfMOv81E8AVoTczI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=aGsZ2T+q; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=/0ewbai/; arc=none smtp.client-ip=193.142.43.55
+	 Message-ID:Content-Type; b=AtZTt42I+ftSv+6zw0inmv1/CuX0A7Sx/w8ZyMIondEFybOZ3SPzhoJtDgJ1zo4tY8G+zHePKE+Dd0vQwUiUhYIPVKhBn8bItTBYiEAsBtwctOcv4ypOd4A7UFVofMKbQmMPzfd7dbMLD7XCEZy3TzkAqfvVB57e59rq7YGaYvg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=fokGcvQ6; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=ceywDiBY; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="aGsZ2T+q";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="/0ewbai/"
-Date: Sat, 06 Apr 2024 11:07:56 -0000
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="fokGcvQ6";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ceywDiBY"
+Date: Sat, 06 Apr 2024 11:07:57 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1712401677;
+	s=2020; t=1712401678;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=lIZGlFZMVJf16JyvzNlrZhZAIcJu92pRLG0r9frCNmU=;
-	b=aGsZ2T+qTuOqbUaTrHBBrGPtpWTT/zrSwFMo0uwauK+7cwuxvwjeJmDGamfduNMVmRQvTj
-	mdboHK7mt7SbHUz0fCV4O2JkxHegjhkkKnOD6nnJsqfUzD28QVbbOlHzHAypRVRHWmYlW/
-	mcF5HQ8nfznnfX+RgrXzOLOUfz73jI/7zVGBLpsAAkvXGP+loHVW24cf+BV3UQ4ciVRkvy
-	Ce38zvps1HOdTyFO0grezy1cXGGbBHiwmvr7KGFfOseXFG1G0YyVLup3ocDstbL45/0I8r
-	PeKQWpncRpUtmXdQlYfJYaWknPzj3Vro7spikaCoqNMdhj2oBJPFE6KrQkBrRw==
+	bh=eJAn+beJLw8/tsPos9WG8VMHVJ5tgycFTzTz18XIK9Q=;
+	b=fokGcvQ6AHpFP3lx/PyumYgVlQbd+3a3gLljfz7L1RLWSP/FGuvqGmjktVTQfhGfRmY5td
+	e6QkPww9nhQA3/Iv8Ap0p/CGPRFHyKNyYYKl7JK4SPzICY/BdFARz3rdClV9rHEIr9bCMj
+	/3tMbDkQTM68GgaHRck3eXVadMYQbDfd+Uy5TZTgACrJ+QGBcQ+Ob+2WoNjh0rJQ+R0iVF
+	OhaUztszhf3sqFZFNBi8q3j32ppCK6fwDzyFvyLMOi/FA7Wmv9FTxqPRyCmJakRP2lcYQq
+	O7zu5cp7bXcOv5FnMMHEewPcjiIfh2cEhEtUdlzyjPcCJ8cdH0ovhy7/mWQ70A==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1712401677;
+	s=2020e; t=1712401678;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=lIZGlFZMVJf16JyvzNlrZhZAIcJu92pRLG0r9frCNmU=;
-	b=/0ewbai/UXT6qGINX+Xv4Ur/9D7SxRP+6VhU+FTnvpBjqtMLd/oEfbUkXzOHs8MJ3dLDs5
-	qawdN2pgyIPFXHDQ==
+	bh=eJAn+beJLw8/tsPos9WG8VMHVJ5tgycFTzTz18XIK9Q=;
+	b=ceywDiBY7++Y+mayFKfL6l99uQINFF2+xzBPYLqGqc0hCss9gJ+13v3JgXKRo4wmI5ZcAa
+	M9QFOgczCubJgBDw==
 From: "tip-bot2 for Uros Bizjak" <tip-bot2@linutronix.de>
 Sender: tip-bot2@linutronix.de
 Reply-to: linux-kernel@vger.kernel.org
 To: linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/percpu] x86/percpu: Introduce raw_cpu_read_long() to reduce
- ifdeffery
+Subject: [tip: x86/percpu] x86/percpu: Fix x86_this_cpu_variable_test_bit()
+ asm template
 Cc: Uros Bizjak <ubizjak@gmail.com>, Ingo Molnar <mingo@kernel.org>,
- Linus Torvalds <torvalds@linux-foundation.org>, x86@kernel.org,
+ Linus Torvalds <torvalds@linux-foundation.org>,
+ "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
  linux-kernel@vger.kernel.org
-In-Reply-To: <20240404094218.448963-3-ubizjak@gmail.com>
-References: <20240404094218.448963-3-ubizjak@gmail.com>
+In-Reply-To: <20240404094218.448963-1-ubizjak@gmail.com>
+References: <20240404094218.448963-1-ubizjak@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <171240167636.10875.3775749856704912792.tip-bot2@tip-bot2>
+Message-ID: <171240167793.10875.5486559736366474315.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2@linutronix.de>
 Robot-Unsubscribe:
  Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -68,66 +69,48 @@ Content-Transfer-Encoding: 7bit
 
 The following commit has been merged into the x86/percpu branch of tip:
 
-Commit-ID:     93cfa544cf9e4771def159002304a2e366cd97af
-Gitweb:        https://git.kernel.org/tip/93cfa544cf9e4771def159002304a2e366cd97af
+Commit-ID:     4c3677c077582f8665806def3f6dd35587793c69
+Gitweb:        https://git.kernel.org/tip/4c3677c077582f8665806def3f6dd35587793c69
 Author:        Uros Bizjak <ubizjak@gmail.com>
-AuthorDate:    Thu, 04 Apr 2024 11:42:03 +02:00
+AuthorDate:    Thu, 04 Apr 2024 11:42:01 +02:00
 Committer:     Ingo Molnar <mingo@kernel.org>
 CommitterDate: Sat, 06 Apr 2024 12:42:17 +02:00
 
-x86/percpu: Introduce raw_cpu_read_long() to reduce ifdeffery
+x86/percpu: Fix x86_this_cpu_variable_test_bit() asm template
 
-Introduce raw_cpu_read_long() macro to slightly reduce ifdeffery
-in <asm/percpu.h>.
+Fix x86_this_cpu_variable_test_bit(), which is implemented with an
+incorrect asm template, where argument 2 (count argument) is considered
+a percpu variable. However, x86_this_cpu_test_bit() is currently
+used exclusively with constant bit number argument, so the called
+x86_this_cpu_variable_test_bit() function is never instantiated.
 
-No functional changes intended.
+The fix introduces named assembler operands to prevent this kind
+of error.
 
 Signed-off-by: Uros Bizjak <ubizjak@gmail.com>
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Link: https://lore.kernel.org/r/20240404094218.448963-3-ubizjak@gmail.com
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Link: https://lore.kernel.org/r/20240404094218.448963-1-ubizjak@gmail.com
 ---
- arch/x86/include/asm/percpu.h | 14 ++++++--------
- 1 file changed, 6 insertions(+), 8 deletions(-)
+ arch/x86/include/asm/percpu.h | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
 diff --git a/arch/x86/include/asm/percpu.h b/arch/x86/include/asm/percpu.h
-index d6ff0db..3bedee1 100644
+index 20696df..cbfbbe8 100644
 --- a/arch/x86/include/asm/percpu.h
 +++ b/arch/x86/include/asm/percpu.h
-@@ -59,12 +59,6 @@
- #define __force_percpu_prefix	"%%"__stringify(__percpu_seg)":"
- #define __my_cpu_offset		this_cpu_read(this_cpu_off)
+@@ -586,10 +586,11 @@ static inline bool x86_this_cpu_variable_test_bit(int nr,
+ {
+ 	bool oldbit;
  
--#ifdef CONFIG_X86_64
--#define __raw_my_cpu_offset	raw_cpu_read_8(this_cpu_off);
--#else
--#define __raw_my_cpu_offset	raw_cpu_read_4(this_cpu_off);
--#endif
--
- /*
-  * Compared to the generic __my_cpu_offset version, the following
-  * saves one instruction and avoids clobbering a temp register.
-@@ -76,7 +70,7 @@
- #ifndef BUILD_VDSO32_64
- #define arch_raw_cpu_ptr(_ptr)					\
- ({								\
--	unsigned long tcp_ptr__ = __raw_my_cpu_offset;		\
-+	unsigned long tcp_ptr__ = raw_cpu_read_long(this_cpu_off); \
- 	tcp_ptr__ += (__force unsigned long)(_ptr);		\
- 	(typeof(*(_ptr)) __kernel __force *)tcp_ptr__;		\
- })
-@@ -563,9 +557,13 @@ do {									\
- #define this_cpu_xchg_8(pcp, nval)		this_percpu_xchg_op(pcp, nval)
- #define this_cpu_cmpxchg_8(pcp, oval, nval)	percpu_cmpxchg_op(8, volatile, pcp, oval, nval)
- #define this_cpu_try_cmpxchg_8(pcp, ovalp, nval)	percpu_try_cmpxchg_op(8, volatile, pcp, ovalp, nval)
-+
-+#define raw_cpu_read_long(pcp)		raw_cpu_read_8(pcp)
- #else
- /* There is no generic 64 bit read stable operation for 32 bit targets. */
--#define this_cpu_read_stable_8(pcp)    ({ BUILD_BUG(); (typeof(pcp))0; })
-+#define this_cpu_read_stable_8(pcp)	({ BUILD_BUG(); (typeof(pcp))0; })
-+
-+#define raw_cpu_read_long(pcp)		raw_cpu_read_4(pcp)
- #endif
+-	asm volatile("btl "__percpu_arg(2)",%1"
++	asm volatile("btl %[nr], " __percpu_arg([var])
+ 			CC_SET(c)
+ 			: CC_OUT(c) (oldbit)
+-			: "m" (*__my_cpu_ptr((unsigned long __percpu *)(addr))), "Ir" (nr));
++			: [var] "m" (*__my_cpu_ptr((unsigned long __percpu *)(addr))),
++			  [nr] "Ir" (nr));
  
- #define x86_this_cpu_constant_test_bit(_nr, _var)			\
+ 	return oldbit;
+ }
