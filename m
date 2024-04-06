@@ -1,142 +1,155 @@
-Received: from mail-ot1-f49.google.com (mail-ot1-f49.google.com [209.85.210.49])
+Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5D594CE17;
-	Sat,  6 Apr 2024 16:48:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 084D75810F;
+	Sat,  6 Apr 2024 16:48:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712422131; cv=none; b=twNNrXm1zFcpdy0HO6fYvWudUx3suY2DXilyZoqIPSEB5i6MycLTK89JuB0t/qCibH/CGFYFERrKtoc81dw4mQu58Uui22QGRsrZf0dpb0I4R86S43Tv60LG2kG8uNFxn0Bp9d/fEPGqTXZtYftRAuzuIKTlY44rL3r/YQi1rXQ=
+	t=1712422134; cv=none; b=O19VQ5qpUDv1Ml0XM2L1jJvxihB6HOYGRn6kLQVM635k4vu+g7ivXVK7qqQI2yiZV5veDMCqZCvuPGULt5gqFX2r1m41nfTSkXL6OLepVniMCL06/90DWjkrJkv/d9rWEFVrkFx+N+LEj70p0bv/2Xphcw5OlfAmSM44i0L9LYc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712422131; c=relaxed/simple;
-	bh=l0HOUvCH5NyJ7m1SR7z+oF/8ktmm109ZvDWMpVVXq88=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=N7ChMlJi9kjK+ysMFgqyHcNsK8wRqKr/8fUz5w7+FbMe3bO/f3UZp0V7xfv/cAEvUAFxrDOcS0zy3t8whVycKkajzi3btvdv/WuMRiwXvTQER5nU8Obr8h0AmkKCoD91PkemCy1guE6rBrOGJspb1SOZqghQ/LzAjXedCfFysMs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nkwjDuVN; arc=none smtp.client-ip=209.85.210.49
+	s=arc-20240116; t=1712422134; c=relaxed/simple;
+	bh=nGzZ5R9SZdgLiSQrHDAKei5XKniCC8VqmnZwC34Exuk=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=kOPvlEWi5jzbjVfr9h0yrUJNgoqW/KBgKk1pGsTNPmB0JMPZZYdJ7BEypbZRFEFqLeqBKiC9fIN08COWnr8+pehgcSD09Ay6kQbxOa2QlDruzNfgwgsp6jqSlpc91p5ROmySiHFkPjPqZ3+dnBsaEUaF6lmuIX7i47J83aFGmqM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZfhVTYTV; arc=none smtp.client-ip=209.85.214.178
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nkwjDuVN"
-Received: by mail-ot1-f49.google.com with SMTP id 46e09a7af769-6e6a00de24aso1813728a34.3;
-        Sat, 06 Apr 2024 09:48:49 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZfhVTYTV"
+Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-1e2a307902cso4973295ad.1;
+        Sat, 06 Apr 2024 09:48:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1712422129; x=1713026929; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=DKheQqCooEORfEAc4BfVHAN7JSAJma1nB9maY1cQRV4=;
-        b=nkwjDuVN41tyYOOa/+a+Yw5xNlSffz7DilVPwDiL43lvNT/GK5jiFVDn6dg5SD0wmg
-         gF4jWTeJVD1I4DhTpoRgFtXSFXXOFoEi+1O0RHZSyz8WvYGeHa7aTTNySYb0rK9zB5y4
-         zRyMYaQsD/bTPFLktzjp11X6jIxWocXGuJx4iSMoMclHUZhI0kR1l5YAhGi36ipl7Mox
-         QMH7pbywVBbwbP52sLJls1hX+nPjImZV4GryTI83r7GKWRVcvGUsBrmIPu+Z6gl1W0uW
-         XA5RS0uc6b8sLAE0kIp9wg6aVhDE6EfqLIK59T2oMQvjJDCObBdWvbxregF4mWroIRYb
-         nwtA==
+        d=gmail.com; s=20230601; t=1712422132; x=1713026932; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=pUFbtjS0qmDCTon3KqdyHnzuILiHtuPCl7OJb9nludU=;
+        b=ZfhVTYTVKzM6cpLoTfAkDZRZ/CGnp2MMlmFwnyo7dFa/u+YI3nyjgs9lS9H3jYMT9l
+         KsYRn6wd4ejiK+WDXXZpiynd4xRhvRFxIH5SB2VyEzFmEQFJuclkwUEdF91Y8b3SBRwA
+         4emcswfnTiad9d0AWxtFHfj96P6ALb/VWQh2fwBAeTHg1HJeQ9PZgFQf6+TGl1U7jmXj
+         ak/hm/5qi75QShZm5zOn2bY/BisHGLiyIN7ppUNtBIQN1fgOtfFHkuc3YaPVpw9iGei4
+         YIygflHuyxPtSsHBg9PXLlgkdIS9Y7CxwTGI7QPwXcal0fWah7NSJoN7yrYhGkzEp3kD
+         RQPA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712422129; x=1713026929;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=DKheQqCooEORfEAc4BfVHAN7JSAJma1nB9maY1cQRV4=;
-        b=N0mKFSOy35s0MFbmTObHjVhBsggUIQ2X5deGwrX3sWpXOnVOQZKKOfKilOw2S+Ra2Z
-         geDRZokDh1Iu5l1olXxIxvBHfyKPjhx7PKmgLAoTqP6qvHDNXgyl2EUNFXTnE9Lq2xix
-         ErilFSQ7AZtMrV6UbN8hr7nJiEJPecIDlIWNf/emwE/Jh01E8KJq10Yst4JCkA/xEv4n
-         wgvty9xAGNQfVKk8XpRH4gC/MB9ZGWTJ/p/ywbAEscm+LdnCElCMhEBe7lb7nkje4Hrg
-         8qLxCG3BMuUH4lSYdvsozvlyRjMpKPLVXMsK9iWqbfBFU10mXBUKFyRWw83bUbo4kJil
-         6iLQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVRd6g2ROl/Q3qzmDfsMmu+2gTWjXBqxjhJL1o0Htd96KXul/juIfHUEI7ktTteidllr+p1wYmWNrjjlwJMosNI8eBePUcmtTLAiZzRj1qLBqXx9138g4cM/A6bNEwbWH+q6Rt2grXlgg3WLg==
-X-Gm-Message-State: AOJu0YxFlSY6RDi6SSZvPTPkJq0oX+HspZK86cPSCgiYEwZy/Y10XbYd
-	Lq19W3ZdPFHs+YrLOyGozQydSP2C2QLjeNKqvqnmpxsgdrmndN0t
-X-Google-Smtp-Source: AGHT+IHQhCgoz1D7z2Bflhbg39hCU1gZZwVTvOMMq3IkNcQxp3kf0snzpBO3qyliIQ0NwjSLyvPMJw==
-X-Received: by 2002:a05:6830:11c5:b0:6ea:f00:5c2c with SMTP id v5-20020a05683011c500b006ea0f005c2cmr701920otq.35.1712422128821;
-        Sat, 06 Apr 2024 09:48:48 -0700 (PDT)
-Received: from [192.168.7.110] (c-98-197-58-203.hsd1.tx.comcast.net. [98.197.58.203])
-        by smtp.gmail.com with ESMTPSA id i4-20020a4aab04000000b005a48e64c699sm821908oon.40.2024.04.06.09.48.47
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 06 Apr 2024 09:48:48 -0700 (PDT)
-Message-ID: <45e1a982-fd59-48de-ace4-d6b6e821189d@gmail.com>
-Date: Sat, 6 Apr 2024 11:48:45 -0500
+        d=1e100.net; s=20230601; t=1712422132; x=1713026932;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=pUFbtjS0qmDCTon3KqdyHnzuILiHtuPCl7OJb9nludU=;
+        b=Hxgyj6FvvTPFLd+Vee+tw0SOdiFAKqVMaVKvSsQioPxEGLV2+4WOYpjcvjn6TiCQUD
+         rznRI/6E66ZHkYC+rgU0GWY6QGgr9UwAbt4lw1/ihZiNd4tyGguPs2rxl80UhWxcmpX1
+         WH9Uh+LekPBJHa1BZdCLqe31kboyeN6p2FHDaEB3jpoQhSFlC7qeHHQE6hlYgvx3ttlK
+         6GHtSkLpZfyqNrNtzRh5CoCfg73NIdxQwQVdZEKlAFBUQN1sJXqwEb/BwKxn6F5mMwny
+         5KCD8I+nYyOIYIV8oeAjYpUb+W2KyfK8aYpDd6TjemXFH8pEOoEfIB6QCM56dvyxpPBY
+         1oyg==
+X-Forwarded-Encrypted: i=1; AJvYcCWKBCV48VmtVCGX5gLcCoXXRfwXtjetG3s7K7IK/+sCJ/ZO6f41zJGuvnLH6b/iIhnlZ34z6vXOfP3e3c8iqiQJABGtZJfEeSZh0BabozD5x+PskGCdTQkFH0PGWzpaKIEp1bNXc9zUpbYb2UwxZlzuPedmtKhHDi6oCLL5Toa+gPXRYTzK11FsyNHLqcSdJtjlPAz5PXWmmOKVA4oR+UhO5cwxImI/ixMksz5a
+X-Gm-Message-State: AOJu0YzI/7EqfkylQgs7efQuV3P8mFp8D9fMllkw+V636d8/6k6VvQrA
+	iWoxEW7C+M/vptzxEybx42MFTjTkyEj4GVKeU72+0UqqNtwUj+Gr
+X-Google-Smtp-Source: AGHT+IFn7ROdpfvq4Af61VXP9NL1gvD2SbKlCYOri0wmXqQgy51gfkXMrEA0iklwvkQSiS1rBr8X0w==
+X-Received: by 2002:a17:902:e811:b0:1dd:da28:e5ca with SMTP id u17-20020a170902e81100b001ddda28e5camr5421423plg.0.1712422132369;
+        Sat, 06 Apr 2024 09:48:52 -0700 (PDT)
+Received: from visitorckw-System-Product-Name.. ([140.113.216.168])
+        by smtp.gmail.com with ESMTPSA id q14-20020a170902a3ce00b001e2b8c91f04sm3665068plb.22.2024.04.06.09.48.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 06 Apr 2024 09:48:51 -0700 (PDT)
+From: Kuan-Wei Chiu <visitorckw@gmail.com>
+To: colyli@suse.de,
+	kent.overstreet@linux.dev,
+	msakai@redhat.com,
+	peterz@infradead.org,
+	mingo@redhat.com,
+	acme@kernel.org,
+	namhyung@kernel.org,
+	akpm@linux-foundation.org
+Cc: bfoster@redhat.com,
+	mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com,
+	jolsa@kernel.org,
+	irogers@google.com,
+	adrian.hunter@intel.com,
+	jserv@ccns.ncku.edu.tw,
+	linux-bcache@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	dm-devel@lists.linux.dev,
+	linux-bcachefs@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	Kuan-Wei Chiu <visitorckw@gmail.com>
+Subject: [PATCH v3 15/17] lib/test_min_heap: Add test for heap_del()
+Date: Sun,  7 Apr 2024 00:47:25 +0800
+Message-Id: <20240406164727.577914-16-visitorckw@gmail.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240406164727.577914-1-visitorckw@gmail.com>
+References: <20240406164727.577914-1-visitorckw@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 6/7] phy: qcom-qmp-pcie: add support for ipq9574 gen3x2
- PHY
-To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
- Vinod Koul <vkoul@kernel.org>
-Cc: Bjorn Andersson <andersson@kernel.org>,
- Konrad Dybcio <konrad.dybcio@linaro.org>,
- Kishon Vijay Abraham I <kishon@kernel.org>, ansuelsmth@gmail.com,
- robimarko@gmail.com, linux-arm-msm@vger.kernel.org,
- linux-phy@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20240402192555.1955204-1-mr.nuke.me@gmail.com>
- <20240402192555.1955204-6-mr.nuke.me@gmail.com> <ZhEMB0HP0g1YwPvE@matsya>
- <CAA8EJpqYV537aCbkwTRUeZJzcn4wMXFqGxQHSdDFraGV_2zbQQ@mail.gmail.com>
-Content-Language: en-US
-From: "Alex G." <mr.nuke.me@gmail.com>
-In-Reply-To: <CAA8EJpqYV537aCbkwTRUeZJzcn4wMXFqGxQHSdDFraGV_2zbQQ@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 4/6/24 09:37, Dmitry Baryshkov wrote:
-> On Sat, 6 Apr 2024 at 11:47, Vinod Koul <vkoul@kernel.org> wrote:
->>
->> On 02-04-24, 14:25, Alexandru Gagniuc wrote:
->>> Add support for the gen3x2 PCIe PHY on IPQ9574, ported form downstream
->>> 5.4 kernel. Only the serdes and pcs_misc tables are new, the others
->>> being reused from IPQ8074 and IPQ6018 PHYs.
->>>
->>> Signed-off-by: Alexandru Gagniuc <mr.nuke.me@gmail.com>
->>> ---
->>>   drivers/phy/qualcomm/phy-qcom-qmp-pcie.c      | 136 +++++++++++++++++-
->>>   .../phy/qualcomm/phy-qcom-qmp-pcs-pcie-v5.h   |  14 ++
->>>   2 files changed, 149 insertions(+), 1 deletion(-)
->>>
->>> diff --git a/drivers/phy/qualcomm/phy-qcom-qmp-pcie.c b/drivers/phy/qualcomm/phy-qcom-qmp-pcie.c
->>> index 8836bb1ff0cc..f07bd27e3b7a 100644
->>> --- a/drivers/phy/qualcomm/phy-qcom-qmp-pcie.c
->>> +++ b/drivers/phy/qualcomm/phy-qcom-qmp-pcie.c
->>> @@ -487,6 +487,100 @@ static const struct qmp_phy_init_tbl ipq8074_pcie_gen3_pcs_misc_tbl[] = {
->>>        QMP_PHY_INIT_CFG(QPHY_V4_PCS_PCIE_ENDPOINT_REFCLK_DRIVE, 0xc1),
->>>   };
->>>
->>> +static const struct qmp_phy_init_tbl ipq9574_gen3x2_pcie_serdes_tbl[] = {
->>> +     QMP_PHY_INIT_CFG(QSERDES_PLL_BIAS_EN_CLKBUFLR_EN, 0x18),
->>> +     QMP_PHY_INIT_CFG(QSERDES_PLL_BIAS_EN_CTRL_BY_PSM, 0x01),
->>> +     QMP_PHY_INIT_CFG(QSERDES_PLL_CLK_SELECT, 0x31),
->>> +     QMP_PHY_INIT_CFG(QSERDES_PLL_PLL_IVCO, 0x0F),
->>> +     QMP_PHY_INIT_CFG(QSERDES_PLL_BG_TRIM, 0x0F),
->>
->> Lower case here and everywhere please
-> 
-> For hex values
+Add test cases for the min_heap_del() to ensure its functionality is
+thoroughly tested.
 
-I will these updated in V2. Thanks!
+Signed-off-by: Kuan-Wei Chiu <visitorckw@gmail.com>
+---
+ lib/test_min_heap.c | 36 ++++++++++++++++++++++++++++++++++++
+ 1 file changed, 36 insertions(+)
 
->>>   static const struct qmp_phy_init_tbl sdm845_qmp_pcie_serdes_tbl[] = {
->>>        QMP_PHY_INIT_CFG(QSERDES_V3_COM_BIAS_EN_CLKBUFLR_EN, 0x14),
->>>        QMP_PHY_INIT_CFG(QSERDES_V3_COM_CLK_SELECT, 0x30),
->>> @@ -2448,7 +2542,7 @@ static inline void qphy_clrbits(void __iomem *base, u32 offset, u32 val)
->>>
->>>   /* list of clocks required by phy */
->>>   static const char * const qmp_pciephy_clk_l[] = {
->>> -     "aux", "cfg_ahb", "ref", "refgen", "rchng", "phy_aux",
->>> +     "aux", "cfg_ahb", "ref", "refgen", "rchng", "phy_aux", "anoc", "snoc"
->>
->> How about older platforms which dont have these clocks
-> 
-> The driver uses devm_clk_bulk_get_optional(), so it should be fine.
-> But the more important question should be why the platform needs
-> anoc/snoc clocks here.
-> 
+diff --git a/lib/test_min_heap.c b/lib/test_min_heap.c
+index 67dd4f644f6c..9d4bbb590a49 100644
+--- a/lib/test_min_heap.c
++++ b/lib/test_min_heap.c
+@@ -160,6 +160,40 @@ static __init int test_heap_pop_push(bool min_heap)
+ 	return err;
+ }
+ 
++static __init int test_heap_del(bool min_heap)
++{
++	int values[] = { 3, 1, 2, 4, 0x8000000, 0x7FFFFFF, 0,
++			 -3, -1, -2, -4, 0x8000000, 0x7FFFFFF };
++	struct min_heap_test heap;
++
++	min_heap_init(&heap, values, ARRAY_SIZE(values));
++	heap.nr = ARRAY_SIZE(values);
++	struct min_heap_callbacks funcs = {
++		.less = min_heap ? less_than : greater_than,
++		.swp = swap_ints,
++	};
++	int i, err;
++
++	/* Test with known set of values. */
++	min_heapify_all(&heap, &funcs, NULL);
++	for (i = 0; i < ARRAY_SIZE(values) / 2; i++)
++		min_heap_del(&heap, get_random_u32() % heap.nr, &funcs, NULL);
++	err = pop_verify_heap(min_heap, &heap, &funcs);
++
++
++	/* Test with randomly generated values. */
++	heap.nr = ARRAY_SIZE(values);
++	for (i = 0; i < heap.nr; i++)
++		values[i] = get_random_u32();
++	min_heapify_all(&heap, &funcs, NULL);
++
++	for (i = 0; i < ARRAY_SIZE(values) / 2; i++)
++		min_heap_del(&heap, get_random_u32() % heap.nr, &funcs, NULL);
++	err += pop_verify_heap(min_heap, &heap, &funcs);
++
++	return err;
++}
++
+ static int __init test_min_heap_init(void)
+ {
+ 	int err = 0;
+@@ -170,6 +204,8 @@ static int __init test_min_heap_init(void)
+ 	err += test_heap_push(false);
+ 	err += test_heap_pop_push(true);
+ 	err += test_heap_pop_push(false);
++	err += test_heap_del(true);
++	err += test_heap_del(false);
+ 	if (err) {
+ 		pr_err("test failed with %d errors\n", err);
+ 		return -EINVAL;
+-- 
+2.34.1
 
-I got the info from the downstream 5.4 kernel. While I don't know why 
-these new clocks are required, they are needed. Omitting them will cause 
-the boot to hang.
-
-I could rename them to "snoc_lane" and "anoc_lane", if you think that 
-makes more sense.
-
-
-Alex
