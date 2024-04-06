@@ -1,89 +1,122 @@
-Received: from mail-108-mta3.mxroute.com (mail-108-mta3.mxroute.com [136.175.108.3])
+Received: from mail-qt1-f178.google.com (mail-qt1-f178.google.com [209.85.160.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D479F18E02
-	for <linux-kernel@vger.kernel.org>; Sat,  6 Apr 2024 05:28:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=136.175.108.3
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F494A50;
+	Sat,  6 Apr 2024 05:34:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712381341; cv=none; b=XZjX4RhKm1fQcHD9RjD5bAmHhYzsdrLbw+Xqe6eg2hQSTzne1D8Z60wi/RsCz6uXCg/STCo7SDGWlnSNrXYf5RFCRL1LFqM6VokHj5qZZPUd//m2F1P3lPNH7DiGRdLvnyPsCEQVZdmtw7PvvS0KZzHP2NtkUVHSa1Z4hOrAoeo=
+	t=1712381656; cv=none; b=Fx7uH/ElgfHrEi2s13khT/SOuP7lFlrbkJX5egu6B2nO5RTwimJp8SFf9nzex2Hc7xL75+prYxwnRe1TPuLFFVM3+PDzDHJFkJD6TvYonZEGx880uO0hced5vrNBiG3JGh0g8kqP2mRm0tbcuN8GHVYQVGoqsOtBI8X5+7TawuQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712381341; c=relaxed/simple;
-	bh=XvGGiaKjAp46vAegdWKN0fVnxmrfC1H1J6zN0QKFTrw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=b18wrU10kKIR7ztROAhRGkeO7L7pLnXngdfB4FaI83Cm0HJG6rU/AbffJza9V9LDmCwaPpNfYXOO1ZkpB5CCF0HxRunrrHUTcqAuOFYjPrTnzlvZpxhlya6E/iepBUffQuiMdvGIiO4JslI7CAm6DoAh/aVmBO1349uTBMGWMiY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=luigi311.com; spf=pass smtp.mailfrom=luigi311.com; dkim=pass (2048-bit key) header.d=luigi311.com header.i=@luigi311.com header.b=RU30JmeZ; arc=none smtp.client-ip=136.175.108.3
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=luigi311.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=luigi311.com
+	s=arc-20240116; t=1712381656; c=relaxed/simple;
+	bh=sjIb0OmKeVi5cnv4+A4sEyUIYpuAgv5LPoDxz0p0v/M=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ogM5jrtoBTx+ijyaOMiZBnLacX/oY8dk2z7C/AsxmgEk1QNTN9BjIhWCFSh5ydukCksmeog94KEOx8/cp5S5Z7e5kiCxnr2Rw3yuEBoiC2YoNOeeS2xnXKxbTDPHGXJ/i2Ix64bONLMoMaDSO1igouB/52v+SVTAT9y3SGtTQAM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ctyhzgDt; arc=none smtp.client-ip=209.85.160.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=luigi311.com header.i=@luigi311.com header.b="RU30JmeZ"
-Received: from filter006.mxroute.com ([136.175.111.2] filter006.mxroute.com)
- (Authenticated sender: mN4UYu2MZsgR)
- by mail-108-mta3.mxroute.com (ZoneMTA) with ESMTPSA id 18eb1dce0660003bea.010
- for <linux-kernel@vger.kernel.org>
- (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384);
- Sat, 06 Apr 2024 05:23:46 +0000
-X-Zone-Loop: 2c23c9c3f44d8386bff19afe2fabfbe4d319e8d0e977
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=luigi311.com; s=x; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:
-	From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=ZmuhkTALxM8lf0cfAvP+7dJ0PJ20DaBe8z1ii1wZ960=; b=RU30JmeZw8NfKZujRbkVuhHZc7
-	Wdnson/TB15EBa0BLASqHxyQNxUo4sK/fpaxMJHvihEmZLBTATxOJV2BXo3NfWsttfvLKNJJWHRsE
-	CeKtDYAyQP6Ppj2blTGdGqOtuua7XHqeODzZls2nZUb2ZPnnyrjg5+IiMbLf1veOem4ZcIE6FulIa
-	cFzdxpC9SCQ77SbyAmHMfGhhZKRZBLnK2b3qt+pu5WL3NOdQhoD4Sx3PAD7JyD1tpsiBRFs/Iw5M2
-	WYtRtpD/Nl5uPmjzU7acJ0j6ti7PD2GE0ijqjph2h/9H2Iu3mWHFgIpfSZoj8eNzC+j+RW3r4jlbG
-	IjfS1GLw==;
-Message-ID: <bbf7c8c3-ca67-43a1-88d0-199cc9299c6d@luigi311.com>
-Date: Fri, 5 Apr 2024 23:23:42 -0600
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ctyhzgDt"
+Received: by mail-qt1-f178.google.com with SMTP id d75a77b69052e-4317aff5cfdso14744211cf.2;
+        Fri, 05 Apr 2024 22:34:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1712381653; x=1712986453; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=y+J2wZBHLKqPS/mVbQJu/RljYJnB9FBy3Yw/ZVeK47A=;
+        b=ctyhzgDts24n7+iNmKK/igh8ClzDTPxp6WuN7PoSANyqgMu3DgaXbcnZ2YF2RBVvWp
+         KVOO0k/cndvbX5c3Q21GoXp3h8aKZ71qcxsXEgiqvsy6VG6b16svgcvN2GGhr054DgBd
+         jyUOuRhP48AYAEu3GKopJjyjR8x0jeOwaUqP+yJcSG432Iir11ISlD+l+TUIIXkQc+aN
+         4G4chYyGayzYz2CheqwLh0NnNmUsnd3Lpvqj5DcpDQ9yjSPFbeilDB+J4YJ84lqgv9/G
+         GgYzwhZ9QK3tKjb734iN71risLald0g4u1rKrPcHyUFcD+2QVYj7ImM7yx8wDobbwu30
+         Penw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712381653; x=1712986453;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=y+J2wZBHLKqPS/mVbQJu/RljYJnB9FBy3Yw/ZVeK47A=;
+        b=N8knhDhbNFvAZ4M4zoR8Y6Mo7/kEimlOumbCtw7CL9P08Ji8L2U2M82z9VIpLXMQle
+         oNeGh63uYtmjFaaGKqmXRyXNfdleHkDFGjmJQm4wis+7M9Y/4t6Rie3PlSIioVmWU9P3
+         KMDPzT3mXcyj+j7AOC3ck3kX4JNy7XbUXb4d8D4BYktd6Xap41MitAbzlaR1jE/QlE1v
+         V6uw3sF0NfsDHJ+PB+VIasyKFWjgKkD54heBEzlmJpV8viqZjXZloOj9TkaQErm2N1SH
+         5Vev53uaZ03Tud6Cd7klGIpEGukfBNo9HDeF4aKXTPJHzvTIiCboYJed2VEt9b6kOxOn
+         VZGg==
+X-Forwarded-Encrypted: i=1; AJvYcCWCdLZ7y4AGvNDplboD8wd3Ysxa7et8tuxs/QlFhy4fe2mvZZtrIrve3YqrVssNlMk2BvV6/H+RrOrQGMKIMkBusJRtgNvyKQh7OVO0x9PI98g9jdUGznGzKye0RVFBjI7JC26Vmi6oJxh4aA==
+X-Gm-Message-State: AOJu0Yz4DrCX13+l0x4+4AhQTeVYgfGh0xI4cHIYX9Jn12fUauFPsScM
+	5hk+CXY73AnV8HP2xBxL5bov5VfuFxg7fppex/8VXhpOc19jbRZthfXc6XjLjxIrG4xBCAwyYdK
+	j5QpyBl8VGeQ9qg6iWMyA7ItOJSc=
+X-Google-Smtp-Source: AGHT+IGdpi3X6hvAiJJU5vuC1goR2nuppjKEUonPfQf7cgrtAzkjKl+THURhFH/wwQbjGtQlDmzfAgaknHBUlVp9PZs=
+X-Received: by 2002:ac8:7d05:0:b0:434:5897:c6f0 with SMTP id
+ g5-20020ac87d05000000b004345897c6f0mr3018031qtb.28.1712381653464; Fri, 05 Apr
+ 2024 22:34:13 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 05/25] media: i2c: imx258: Add regulator control
-To: Pavel Machek <pavel@ucw.cz>
-Cc: linux-media@vger.kernel.org, dave.stevenson@raspberrypi.com,
- jacopo.mondi@ideasonboard.com, mchehab@kernel.org, robh@kernel.org,
- krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org, shawnguo@kernel.org,
- s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
- sakari.ailus@linux.intel.com, devicetree@vger.kernel.org,
- imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org, phone-devel@vger.kernel.org
-References: <20240403150355.189229-1-git@luigi311.com>
- <20240403150355.189229-6-git@luigi311.com> <Zg2jgmmqw0nXDYcF@duo.ucw.cz>
-Content-Language: en-US
-From: Luis Garcia <git@luigi311.com>
-In-Reply-To: <Zg2jgmmqw0nXDYcF@duo.ucw.cz>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Authenticated-Id: git@luigi311.com
+References: <CAOQ4uxhm5m9CvX0y2RcJGuP=vryZLp9M+tS6vH1o_9BGUqxrvg@mail.gmail.com>
+ <00000000000039026a06155b3a12@google.com> <20240405162333.GU538574@ZenIV>
+In-Reply-To: <20240405162333.GU538574@ZenIV>
+From: Amir Goldstein <amir73il@gmail.com>
+Date: Sat, 6 Apr 2024 08:34:02 +0300
+Message-ID: <CAOQ4uxgJ5URyDG26Ny5Cmg7DceOeG-exNt9N346pq9U0TmcYtg@mail.gmail.com>
+Subject: Re: [syzbot] [kernfs?] possible deadlock in kernfs_fop_llseek
+To: Al Viro <viro@zeniv.linux.org.uk>
+Cc: syzbot <syzbot+9a5b0ced8b1bfb238b56@syzkaller.appspotmail.com>, 
+	brauner@kernel.org, gregkh@linuxfoundation.org, hch@lst.de, jack@suse.cz, 
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	miklos@szeredi.hu, syzkaller-bugs@googlegroups.com, tj@kernel.org, 
+	valesini@yandex-team.ru
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 4/3/24 12:44, Pavel Machek wrote:
-> Hi!
-> 
->> The device tree bindings define the relevant regulators for the
->> sensor, so update the driver to request the regulators and control
->> them at the appropriate times.
-> 
->> @@ -995,9 +1007,19 @@ static int imx258_power_on(struct device *dev)
->>  	struct imx258 *imx258 = to_imx258(sd);
->>  	int ret;
->>  
->> +	ret = regulator_bulk_enable(IMX258_NUM_SUPPLIES,
->> +				    imx258->supplies);
->> +	if (ret) {
-> 
-> Will this make it fail for all current users?
-> 
-> Best regards,
-> 								Pavel
-> 								
+On Fri, Apr 5, 2024 at 7:23=E2=80=AFPM Al Viro <viro@zeniv.linux.org.uk> wr=
+ote:
+>
+> On Fri, Apr 05, 2024 at 08:37:03AM -0700, syzbot wrote:
+> > Hello,
+> >
+> > syzbot tried to test the proposed patch but the build/boot failed:
+>
+> WTF?  The patch is
+>
+> diff --git a/fs/kernfs/file.c b/fs/kernfs/file.c
+> index e9df2f87072c6..8502ef68459b9 100644
+> --- a/fs/kernfs/file.c
+> +++ b/fs/kernfs/file.c
+> @@ -636,11 +636,18 @@ static int kernfs_fop_open(struct inode *inode, str=
+uct file *file)
+>          * each file a separate locking class.  Let's differentiate on
+>          * whether the file has mmap or not for now.
+>          *
+> -        * Both paths of the branch look the same.  They're supposed to
+> +        * For similar reasons, writable and readonly files are given dif=
+ferent
+> +        * lockdep key, because the writable file /sys/power/resume may c=
+all vfs
+> +        * lookup helpers for arbitrary paths and readonly files can be r=
+ead by
+> +        * overlayfs from vfs helpers when sysfs is a lower layer of over=
+alyfs.
+> +        *
+> +        * All three cases look the same.  They're supposed to
+>          * look that way and give @of->mutex different static lockdep key=
+s.
+>          */
+>         if (has_mmap)
+>                 mutex_init(&of->mutex);
+> +       else if (file->f_mode & FMODE_WRITE)
+> +               mutex_init(&of->mutex);
+>         else
+>                 mutex_init(&of->mutex);
+>
+> How could it possibly trigger boot failure?  Test the parent, perhaps?
 
-It shouldn't affect current users as this was added in by dave for
-a completely different sensor and it still works on my ppp. Looking
-at the dmesg for imx258 it does reference the regulators that the
-ppp doesnt have but it still works.
+Let's try again, rebased on current master:
+
+#syz test: https://github.com/amir73il/linux/ vfs-fixes
+
+Thanks,
+Amir.
