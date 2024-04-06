@@ -1,117 +1,78 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84C9939FC5;
-	Sat,  6 Apr 2024 16:07:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8745D3F8D4;
+	Sat,  6 Apr 2024 16:07:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712419650; cv=none; b=B+l8yPM/XleGZpqBFxT/0VWUF0FB6PzwHP9G3AW9V/9gyBTmgRTn1oMyNVlOoyEFtTEvu+J41x/jqkacoh4kTJwxMcEwtMcnCct8mjHF27wQkXrIXVUC1QZZUoCVfAmzTK+D+UHp98zfB4rE9+GTSZEQkZuiF3ESMnL1GfdcpC0=
+	t=1712419672; cv=none; b=WMUIhZTs/KtbBwwoeT6LCVQ419LsV+PoxzAgM939waNbYNz3k1wHI4+uy6eyNm5GEHJqBSjoogcbKUETKiIH4okqLqVH4OlzE94k8NrnpcUBn8R4UdCviSg9Zph1OZwzW61Ug0whEL3Xj3P5YzGc99Mdvx24F3rmui4I/f/kY9o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712419650; c=relaxed/simple;
-	bh=zVT1kTFyJpggrN2Vq9amRM/0R/MdFrOjEQnNLK1sYHc=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=GwGjTxWL49jh/RerOiRAHP+uOo+OeH9Zoln9WtMzeFV0H3EOBcRUAhNMNxneEB01UgEzD5BmqDX+bir62E74YUjKFt4vPJovGSC0DvClBEczFpDVT76jaPQe4UH3wMCcZRLpJFu1IpA8tt/EtUYrhd2gWWiJJpgo2O6a/wYgRwA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mQmIhjkS; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1712419672; c=relaxed/simple;
+	bh=3MH6xRpqIpnSprqXrq70BtOwwayuxEjLhibVKg4SMLQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=SkNs+h/SibvhCoZaiK3f5qTQshsojbHxjkqdAs/SOG89jlCRHyQxaSwU8AWWvAyLboiXt4fjtBI4Od3BRBUfq08t5CE76r1q930qFrBfLc83pxrCz2KlaoPUkWU0uAYX7MO92aaXISIlsWBVR3bLxYjvxvSB90VVZHyYfJV9IVQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=Yva0p4QL; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mQmIhjkS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8779FC433C7;
-	Sat,  6 Apr 2024 16:07:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712419649;
-	bh=zVT1kTFyJpggrN2Vq9amRM/0R/MdFrOjEQnNLK1sYHc=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=mQmIhjkSlsHCV3tzg2qGznXeY83la3QN1daXmG1AiYQsu/4iqvPj8bWs6JERDHPrq
-	 fG4lFV+O83dxD+X3rsq1xTJ3ufdjd8DzXYgGjXoBnvtYXt1BtKtok8sD1IW3AxU4/G
-	 fasr7sKbGmwKctlBu8255KzOuvVTXz7AwX9vOr7h3PIOcJJxQ++bcs+A3HNbnLUAjn
-	 IfMBDFYIIrFIr1UB+Cv2z/31d/LOOwe5968mUcIlIoNAcwGt5n20ZHufYnOXerZS/p
-	 zDyfJCy2JkJ7y5kuoUiqIpwXGgUCeVquDGLZ8pUeRUOvoX2qJYlARseHvyQI8zXUOY
-	 ULCUurC5EBPqw==
-Date: Sat, 6 Apr 2024 17:07:17 +0100
-From: Jonathan Cameron <jic23@kernel.org>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Nuno =?UTF-8?B?U8Oh?= <noname.nuno@gmail.com>, Nuno Sa
- <nuno.sa@analog.com>, Petr Mladek <pmladek@suse.com>, Lars-Peter Clausen
- <lars@metafoo.de>, Olivier Moysan <olivier.moysan@foss.st.com>, Jyoti
- Bhayana <jbhayana@google.com>, Chris Down <chris@chrisdown.name>, John
- Ogness <john.ogness@linutronix.de>, Greg Kroah-Hartman
- <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org,
- linux-iio@vger.kernel.org
-Subject: Re: [PATCH 3/4] iio: backend: make use of dev_errp_probe()
-Message-ID: <20240406170717.31ab7e47@jic23-huawei>
-In-Reply-To: <Zg7DWQtY6SP9E_1m@smile.fi.intel.com>
-References: <20240404-dev-add_dev_errp_probe-v1-0-d18e3eb7ec3f@analog.com>
-	<20240404-dev-add_dev_errp_probe-v1-3-d18e3eb7ec3f@analog.com>
-	<Zg6bsS3WMvp-nY3S@smile.fi.intel.com>
-	<9f91388faee750e16021f2c0544e7a158a16202b.camel@gmail.com>
-	<Zg7DWQtY6SP9E_1m@smile.fi.intel.com>
-X-Mailer: Claws Mail 4.2.0 (GTK 3.24.41; x86_64-pc-linux-gnu)
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="Yva0p4QL"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=qQ3n2ZRE/couwmhnDhXXSavtEX8krCNtDnPAhcPo4Bs=; b=Yva0p4QLaSWRVoTW3jTYrUEiXy
+	j5bsbh8UL4xLQ19xx3SmA/Fu26G7uEx9nPqP5p6SM9/Wm6OgoP9/bF4sgop4P5R+vAg9vdXgBGGL7
+	IADcRt8SHuTw6IcI77XTI9SV56JNtOallR4EMo8InkilUkn7/QUkxv/DxhA/KaguQLlo=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1rt8a4-00CNcW-2q; Sat, 06 Apr 2024 18:07:48 +0200
+Date: Sat, 6 Apr 2024 18:07:48 +0200
+From: Andrew Lunn <andrew@lunn.ch>
+To: Maxime Chevallier <maxime.chevallier@bootlin.com>
+Cc: davem@davemloft.net, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, thomas.petazzoni@bootlin.com,
+	Jakub Kicinski <kuba@kernel.org>,
+	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
+	Russell King <linux@armlinux.org.uk>,
+	linux-arm-kernel@lists.infradead.org,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Herve Codina <herve.codina@bootlin.com>,
+	Florian Fainelli <f.fainelli@gmail.com>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	Vladimir Oltean <vladimir.oltean@nxp.com>,
+	=?iso-8859-1?Q?K=F6ry?= Maincent <kory.maincent@bootlin.com>,
+	Jesse Brandeburg <jesse.brandeburg@intel.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Marek =?iso-8859-1?Q?Beh=FAn?= <kabel@kernel.org>,
+	Piergiorgio Beruto <piergiorgio.beruto@gmail.com>,
+	Oleksij Rempel <o.rempel@pengutronix.de>,
+	=?iso-8859-1?Q?Nicol=F2?= Veronese <nicveronese@gmail.com>,
+	Simon Horman <horms@kernel.org>, mwojtas@chromium.org
+Subject: Re: [PATCH net-next v11 13/13] Documentation: networking: document
+ phy_link_topology
+Message-ID: <333ae4dc-7ce9-47e8-b4bf-f85462fa95b2@lunn.ch>
+References: <20240404093004.2552221-1-maxime.chevallier@bootlin.com>
+ <20240404093004.2552221-14-maxime.chevallier@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240404093004.2552221-14-maxime.chevallier@bootlin.com>
 
-On Thu, 4 Apr 2024 18:12:25 +0300
-Andy Shevchenko <andriy.shevchenko@linux.intel.com> wrote:
+On Thu, Apr 04, 2024 at 11:30:03AM +0200, Maxime Chevallier wrote:
+> The newly introduced phy_link_topology tracks all ethernet PHYs that are
+> attached to a netdevice. Document the base principle, internal and
+> external APIs. As the phy_link_topology is expected to be extended, this
+> documentation will hold any further improvements and additions made
+> relative to topology handling.
+> 
+> Signed-off-by: Maxime Chevallier <maxime.chevallier@bootlin.com>
 
-> On Thu, Apr 04, 2024 at 04:58:27PM +0200, Nuno S=C3=A1 wrote:
-> > On Thu, 2024-04-04 at 15:23 +0300, Andy Shevchenko wrote: =20
-> > > On Thu, Apr 04, 2024 at 01:06:25PM +0200, Nuno Sa wrote: =20
-> > > > Using dev_errp_probe() to simplify the code. =20
->=20
-> ...
->=20
-> > > > +	if (IS_ERR(fwnode))
-> > > > +		return dev_errp_probe(dev, PTR_ERR(fwnode),
-> > > > +				=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 "Cannot get Firmware reference\=
-n"); =20
-> > >=20
-> > > ERR_CAST() seems quite good candidate to have here.
-> > >=20
-> > > 		return dev_errp_probe(dev, fwnode, "Cannot get Firmware
-> > > reference\n");
-> > >=20
-> > > (Assuming dev_errp_probe() magically understands that, note you may h=
-ave it as
-> > > =C2=A0a macro and distinguish parameter type with _Generic() or so an=
-d behave
-> > > =C2=A0differently: ERR_PTR() vs. ERR_CAST(), see acpi_dev_hid_uid_mat=
-ch()
-> > > =C2=A0implementation, but also keep in mind that it doesn't distingui=
-sh NULL/0,
-> > > there
-> > > =C2=A0is a patch available in the mailing list to fix that, though.) =
-=20
-> >=20
-> > Do we care that much for going with that trouble? =20
->=20
-> I don't think we do. We are not supposed to be called with ret =3D=3D 0/N=
-ULL.
-> That's why I pointed out to the current version.
->=20
-> > I understand like this we go
-> > PTR_ERR() to then comeback to ERR_PTR() but this for probe() which is n=
-ot a
-> > fastpath. So perhaps we could just keep it simple? =20
->=20
-> It's not about performance, it's about readability. See the difference be=
-tween
-> yours and mine.
->=20
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
 
-You are suggesting making it transparently take an error ptr or an integer?
-Whilst clever, I'm not seeing that as a good idea for readability / reviewa=
-bility.
-I expect something that looks like a function to take the same parameters (=
-other vargs)
-always.  _Generic messes with that.
-
-Maybe I just don't like to learn new things!  If consensus comes down in fa=
-vour
-of _Generic trickery then I'll get used to it eventually.
-
-Jonathan
-
+    Andrew
