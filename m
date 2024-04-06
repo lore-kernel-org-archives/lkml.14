@@ -1,101 +1,115 @@
-Received: from dggsgout11.his.huawei.com (unknown [45.249.212.51])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 280CD22EED;
-	Sat,  6 Apr 2024 07:57:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB1771EB40
+	for <linux-kernel@vger.kernel.org>; Sat,  6 Apr 2024 08:06:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712390253; cv=none; b=u7eARA/f9fFccO5xSbD2zSBkp1ybjJuBcQjCijX7SuafK798Z3UDjjdaSaXl/NqwFRAIZXEJ8bFOb4mCFas4kdNVWuSGIp7JDPKAX8IRBEUZ23A4fKxpEA3XWUCw+7SBX/L3b9vjrL2GZATOmtgn635rjJQOkeT5Ky92t448IZA=
+	t=1712390809; cv=none; b=bPphZogU60R5vdlU8WS3psvwHPtkYfUlYhnfeIQMfJ442TOuFmQ+sRaREVr4M6Iwjui1nMlvreSGr5BXb2zwyh7mEXjn7hG8IyzRpdnsL29JxA6LK4nO7APB3MLDKnahrACuZtTfgcPBdFoExRyQggit6msWReQs994DIctLQm4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712390253; c=relaxed/simple;
-	bh=THI3tmLsG+soDseJVPejbNFfCFRp6+BOKn+OLvM+bI0=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=VooV4MOxsToHq85Be6v07ejtEzuEMOOQqkxoQTCs98HCVFFurCnfkyKvLtSv5xZq3ewISpDTNFcEuyG+gMr/4qDCLuSyVU2/i5STsrLL65JMU1AmdbeFCKw/BoYJlGe7kLOVL7i0bdHBiEHubKeXlsvTXg7dgk2hUAwJg9AHiDU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.93.142])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4VBSPR0yhdz4f3lCm;
-	Sat,  6 Apr 2024 15:57:15 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.112])
-	by mail.maildlp.com (Postfix) with ESMTP id 990B11A016E;
-	Sat,  6 Apr 2024 15:57:23 +0800 (CST)
-Received: from [10.174.176.73] (unknown [10.174.176.73])
-	by APP1 (Coremail) with SMTP id cCh0CgAX5g5bABFmRrnjJA--.19824S3;
-	Sat, 06 Apr 2024 15:57:16 +0800 (CST)
-Subject: Re: [PATCH 0/2] block: support to account io_ticks precisely
-To: Yu Kuai <yukuai1@huaweicloud.com>, ming.lei@redhat.com, hch@lst.de,
- bvanassche@acm.org, axboe@kernel.dk, mpatocka@redhat.com, snitzer@redhat.com
-Cc: linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
- yi.zhang@huawei.com, yangerkun@huawei.com, "yukuai (C)" <yukuai3@huawei.com>
-References: <20240323035959.1397382-1-yukuai1@huaweicloud.com>
-From: Yu Kuai <yukuai1@huaweicloud.com>
-Message-ID: <513db882-ebe1-7287-99dd-3783c2c9b90f@huaweicloud.com>
-Date: Sat, 6 Apr 2024 15:57:14 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+	s=arc-20240116; t=1712390809; c=relaxed/simple;
+	bh=M87uudLlyUpqSYEX63NZsIYqD2BGh3l0n8hlMS93E4U=;
+	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
+	 Subject:Content-Type; b=Mt4ijT+GgHb7hf0ILV7g7DUM/s2828rGCj8w5gHURlYz3VZPgfRL4X8b8ULVNrDWawn0TXdnFRMFHCNulGENis5nMkFZnU0iacZ/CFbPKccGlgonLKUwkarjYpLp/RkqO4cYMLhEg8BgHnM5cwS9gax2mdgEjGkCLzNY2zACHq0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DZMaRcXg; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DZMaRcXg"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0245EC43390
+	for <linux-kernel@vger.kernel.org>; Sat,  6 Apr 2024 08:06:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1712390809;
+	bh=M87uudLlyUpqSYEX63NZsIYqD2BGh3l0n8hlMS93E4U=;
+	h=In-Reply-To:References:Date:From:To:Cc:Subject:From;
+	b=DZMaRcXggFxoaTFtgJFZZSIS8FJbGkFVCdMMOawJwkiu0/XSao2jO7OScmYiQmq7E
+	 aGIKIRq2Wpb082mBWY5+pOW+ekN0aEVS77gODR6ytHOnMIsWb3+v8HR0T+v7ww3ccN
+	 aPJe2MRdVQAKNvwbTQJYpKk8rzGIOnptM40pB+OSecgmRVIbqM7U949gZ50XpOkVCx
+	 L4s45kLH5getuGe3e2EmoqmtYZEbLPjW3QnceLq5YgdGeGGo1zdwZqXpqVRFsJHT47
+	 crX9A7gPMJCB6wbN1vTAeJcTY1Wbr9lNCOzt5eFRYzaAYPuEnNOwpQbPvu7EmlSDuE
+	 38rPvLIibyUog==
+Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
+	by mailfauth.nyi.internal (Postfix) with ESMTP id 0627F1200066;
+	Sat,  6 Apr 2024 04:06:47 -0400 (EDT)
+Received: from imap51 ([10.202.2.101])
+  by compute5.internal (MEProxy); Sat, 06 Apr 2024 04:06:48 -0400
+X-ME-Sender: <xms:lwIRZhfGxOfrq3GRd6jrUncCIgt1032rvYV3h1tC9BRH1mdw0k1Hdg>
+    <xme:lwIRZvMd609QFkaSkldvCzTg-up2jq1WFbigPvZBDkWJTLW4qnfYHQvEUFfbalSQs
+    EE5R7uSdyakOwrkKVM>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrudegvdcutefuodetggdotefrodftvfcurf
+    hrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecuuegr
+    ihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjug
+    hrpefofgggkfgjfhffhffvvefutgesthdtredtreertdenucfhrhhomhepfdetrhhnugcu
+    uegvrhhgmhgrnhhnfdcuoegrrhhnugeskhgvrhhnvghlrdhorhhgqeenucggtffrrghtth
+    gvrhhnpeelvefgudeiheefledttedthfffgfekudegkeelffdtiedvgfevieetteekheff
+    veenucffohhmrghinhepkhgvrhhnvghlrdhorhhgnecuvehluhhsthgvrhfuihiivgeptd
+    enucfrrghrrghmpehmrghilhhfrhhomheprghrnhguodhmvghsmhhtphgruhhthhhpvghr
+    shhonhgrlhhithihqdduvdekhedujedtvdegqddvkeejtddtvdeigedqrghrnhgupeepkh
+    gvrhhnvghlrdhorhhgsegrrhhnuggsrdguvg
+X-ME-Proxy: <xmx:lwIRZqhqaJE6nrIv7iq94np4B3clKvBFCWeBms2nHPX9HazvEWFeTg>
+    <xmx:lwIRZq_FCwFnKL65wo2I-wHIAMoQPHRvBOrrrjLHZRgbZWcNW2GnlQ>
+    <xmx:lwIRZtspNkEHBTzoEnmofoh-Sv4WjWHiPtzHQ_1OgZHh3J6BdujJYw>
+    <xmx:lwIRZpEwdW4VCUXgH3ti4aW5vKmRKdP__imCofjIpm3BGO02BZkS5A>
+    <xmx:lwIRZrV3vkNe6sCYNq80UxYlG_mr8KktdGBhKrsiuybh1cvNUzd20Qzb>
+Feedback-ID: i36794607:Fastmail
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+	id E64B8B6008D; Sat,  6 Apr 2024 04:06:46 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.11.0-alpha0-333-gbfea15422e-fm-20240327.001-gbfea1542
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20240323035959.1397382-1-yukuai1@huaweicloud.com>
-Content-Type: text/plain; charset=gbk; format=flowed
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:cCh0CgAX5g5bABFmRrnjJA--.19824S3
-X-Coremail-Antispam: 1UD129KBjvdXoWrZF47JFyUury5Gw45tr47Jwb_yoWkGFc_uF
-	yvyFy8Gr4fXa1fuFnFkFyUJrZ7Kw4UJr9xX34DXFW7Jr97XFyUJr4rtr4DX3sxXan8Ww1r
-	Aws7Zry7Crn2qjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUIcSsGvfJTRUUUb3kFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
-	6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
-	A2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Cr0_
-	Gr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s
-	0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xII
-	jxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr
-	1lF7xvr2IY64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7M4IIrI8v6xkF7I0E8cxan2IY
-	04v7Mxk0xIA0c2IEe2xFo4CEbIxvr21l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7
-	v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF
-	1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIx
-	AIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWrZr1j6s0D
-	MIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIda
-	VFxhVjvjDU0xZFpf9x0JUdHUDUUUUU=
-X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
+Message-Id: <7e6757c1-10ad-4852-9927-6e0dca100524@app.fastmail.com>
+In-Reply-To: <ZhB8MnWSeySAHGXG@black.fi.intel.com>
+References: <20240405152924.252598-1-schnelle@linux.ibm.com>
+ <ZhB8MnWSeySAHGXG@black.fi.intel.com>
+Date: Sat, 06 Apr 2024 10:06:21 +0200
+From: "Arnd Bergmann" <arnd@kernel.org>
+To: "Andy Shevchenko" <andy@black.fi.intel.com>,
+ "Niklas Schnelle" <schnelle@linux.ibm.com>
+Cc: "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
+ "Jiri Slaby" <jirislaby@kernel.org>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ linux-serial@vger.kernel.org, "Heiko Carstens" <hca@linux.ibm.com>,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/1] tty: Handle HAS_IOPORT dependencies
+Content-Type: text/plain
 
-Hi, Jens!
-Hi, Ming!
-Hi, Christoph!
-Hi, Bart!
+On Sat, Apr 6, 2024, at 00:33, Andy Shevchenko wrote:
+> On Fri, Apr 05, 2024 at 05:29:23PM +0200, Niklas Schnelle wrote:
+>> Hi Greg, Jiri, Ilpo,
+>> 
+>> This is a follow up in my ongoing effort of making inb()/outb() and
+>> similar I/O port accessors compile-time optional. Previously I sent this
+>> as a treewide series titled "treewide: Remove I/O port accessors for
+>> HAS_IOPORT=n" with the latest being its 5th version[0]. With a significant
+>> subset of patches merged I've changed over to per-subsystem series. These
+>> series are stand alone and should be merged via the relevant tree such
+>> that with all subsystems complete we can follow this up with the final
+>> patch that will make the I/O port accessors compile-time optional.
+>> 
+>> The current state of the full series with changes to the remaining subsystems
+>> and the aforementioned final patch can be found for your convenience on my
+>> git.kernel.org tree in the has_ioport branch[1]. As for compile-time vs runtime
+>> see Linus' reply to my first attempt[2].
+>> 
+>> The patch was previously acked[3] by Greg but given this was almost
+>> a year ago and didn't apply then I didn't carry the Ack over. That said
+>> I don't think there were non trivial changes.
+>
+> Hmm... Can those drivers simply be converted to use ioreadXX/iowriteXX
+> instead?
 
-Friendly ping ...
+Not 8250, for a couple of reasons:
 
-The 'util' reported by iostat is very important for users, they don't
-have much choise to get disk status, while 'util' has been inaccurate
-for a long time unnecessarily. I really think patch 1 is meaningful.
+- the irq autoconfig code uses outb_p(), which has no iowrite()
+  equivalent
+- the driver is used on machines that cannot implement
+  ioport_map() because of the nonlinear address translation,
+  e.g. certain early alpha and mips machines.
+- it still needs its own I/O abstraction layer to deal with
+  different-sized registers, so the result would not be any
+  more readable even without the other issues.
 
-Patch 2 also tries to fix a problem by our customer that util can
-sometimes be huge. The root cause is that 'inflight' is account from
-blk_mq_start_request() while 'io_ticks' is account from
-blk_account_io_start(), there is a gap. I let 'inflight' to be account
-from blk_account_io_start() as well, please let me know if this is not
-good.
-
-Thanks!
-Kuai
-
-ÔÚ 2024/03/23 11:59, Yu Kuai Ð´µÀ:
-> From: Yu Kuai <yukuai3@huawei.com>
-> 
-> Yu Kuai (2):
->    block: support to account io_ticks precisely
->    block: remove blk_mq_in_flight() and blk_mq_in_flight_rw()
-> 
->   block/blk-core.c  |  9 +++++----
->   block/blk-merge.c |  2 ++
->   block/blk-mq.c    | 36 ++++--------------------------------
->   block/blk-mq.h    |  5 -----
->   block/blk.h       |  1 +
->   block/genhd.c     | 20 ++++----------------
->   6 files changed, 16 insertions(+), 57 deletions(-)
-> 
-
+     Arnd
