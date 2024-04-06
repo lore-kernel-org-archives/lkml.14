@@ -1,67 +1,117 @@
-Received: from irl.hu (irl.hu [95.85.9.111])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58560139F;
-	Sat,  6 Apr 2024 00:00:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.85.9.111
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B49C32C92;
+	Sat,  6 Apr 2024 00:01:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712361614; cv=none; b=J8ukGKjJMuctvYSZiv1aLg5zjZa0DRsImJfug8TunxvxhRwcKLZUC0RSVMEdHEdr9imWB6HDNXu4FAvNnxsTFubxYeNVCPPROy+lfzYHEKH5yhzbcdQk6SbAJ5nPrsNDI3LOVXd9XOEHPSLewlJEtsRS1rfrtFy3LrGUuo3yYBU=
+	t=1712361695; cv=none; b=OMf/b7k61sm+BcoGn83uodVpMVY399pAuyawy+ek8dP3Q7sVZBcgt5veKUpYxPMEJf/aOtfA934WzQuQDHfbjcSpVwAUvmAO7uUkSlnnvU8xjVoT4HfSRZYV1PiSsfYKexmmeOYSvrMZH6LySxD+uH1A90AY/2Fl9jYdxp3l/rE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712361614; c=relaxed/simple;
-	bh=3aPCaNK+jTu0FyoSDeQk7ne6TPziRcZYI+G6aXKvcRY=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=A2AHJLb0rC6TpNdCw154fcqH+y+XrtuKVXVBGzrJt3WSrguyUMO9U/GpaThn0ZGnJJxSZ1zCZ7amvPtUbtgd18wvc4uff6w+UIkQeu/FePAxM70I9XiDv8XzVryiZSZ3CjMeSjNpBO8uvbJBiKsj1bPWQW/aFJCmd3NVjWEXQCs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=irl.hu; spf=pass smtp.mailfrom=irl.hu; arc=none smtp.client-ip=95.85.9.111
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=irl.hu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=irl.hu
-Received: from [192.168.2.4] (51b69f53.dsl.pool.telekom.hu [::ffff:81.182.159.83])
-  (AUTH: CRAM-MD5 soyer@irl.hu, )
-  by irl.hu with ESMTPSA
-  id 000000000006F985.0000000066109083.0025D529; Sat, 06 Apr 2024 02:00:03 +0200
-Message-ID: <0d78bced4d012fc30f0ad70091559d04fa7b13b9.camel@irl.hu>
-Subject: Re: [PATCH v4 1/3] ACPI: platform-profile: add
- platform_profile_cycle()
-From: Gergo Koteles <soyer@irl.hu>
-To: =?UTF-8?Q?Barnab=C3=A1s_P=C5=91cze?= <pobrn@protonmail.com>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>,
-  Len Brown <lenb@kernel.org>, Ike Panhc <ike.pan@canonical.com>,
-  Hans de Goede <hdegoede@redhat.com>,
-  Ilpo =?ISO-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-  Henrique de Moraes Holschuh <hmh@hmh.eng.br>,
-  linux-acpi@vger.kernel.org, ibm-acpi-devel@lists.sourceforge.net,
-  platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Date: Sat, 06 Apr 2024 02:00:02 +0200
-In-Reply-To: <g_07w0jkBp9IeComzpK26YHPB1QZNjN_amEZ2bTG6xrOMMltvaav0Rd9Oh4a0nlzPsW2guvvUHkNQrfzSdFGbJhKDB0SHgUJB4belZNrapI=@protonmail.com>
-References: <cover.1712282976.git.soyer@irl.hu>
-	 <fdc1b0b9f910753967b7a9b1996e4923cc63124f.1712282976.git.soyer@irl.hu>
-	 <g_07w0jkBp9IeComzpK26YHPB1QZNjN_amEZ2bTG6xrOMMltvaav0Rd9Oh4a0nlzPsW2guvvUHkNQrfzSdFGbJhKDB0SHgUJB4belZNrapI=@protonmail.com>
-Autocrypt: addr=soyer@irl.hu; prefer-encrypt=mutual;
- keydata=mDMEZgeDQBYJKwYBBAHaRw8BAQdAD5oxV6MHkjzSfQL2O8VsPW3rSUeCHfbx/a6Yfj3NUnS0HEdlcmdvIEtvdGVsZXMgPHNveWVyQGlybC5odT6ImQQTFgoAQRYhBLSYvEYEgjzzEMQCqgtEJzXf/1IRBQJmB4NAAhsDBQkFo5qABQsJCAcCAiICBhUKCQgLAgQWAgMBAh4HAheAAAoJEAtEJzXf/1IRmdYA/0bE1BX7zOGKBgCa1DwzH2UHXawSKLpptADvI/ao6OOtAP4+wYgpR0kWR28lhmkRTpzG/+8GiMWsT60SV2bz9B7sCbg4BGYHg0ASCisGAQQBl1UBBQEBB0CPo8ow/E97WYtaek9EsLXvsvwpBsjWLq5mMOgJL/ukCwMBCAeIfgQYFgoAJhYhBLSYvEYEgjzzEMQCqgtEJzXf/1IRBQJmB4NAAhsMBQkFo5qAAAoJEAtEJzXf/1IRklEA/ipTfAI/onzNwZIp9sCdnt0bLhR5Oz8RD/FpbrJV1v7eAP0c/C6NQPDPWbQpobBR0pf1eTjWXjjr1fj2jxSvWbMRCw==
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.50.4 (3.50.4-1.fc39) 
+	s=arc-20240116; t=1712361695; c=relaxed/simple;
+	bh=dnEl1bSn8VJ78TGNl6mm0353QJWGdbMkyEQ8vUlvqOQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=AunQDUcLsvubkGw4emxIwY97Z7D+xs9gu7OJY8HcHU0i1jsWmQFyVcGfm8m4uebkHoSJUKUSX34BR/VlQQkkEQ598wOoI0PSOA8IJmmQ71LT6d3n4hO6jXRqxklc4Yh1QTSkoouOR28opWKpQ4G5G+7bWn6l6QKSBn5FkMCYLCo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PIeL2grW; arc=none smtp.client-ip=192.198.163.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PIeL2grW"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1712361693; x=1743897693;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=dnEl1bSn8VJ78TGNl6mm0353QJWGdbMkyEQ8vUlvqOQ=;
+  b=PIeL2grWeeeDXPV5Z8zZSWmXmF9vkKft1681h/bb/vDM5Tc767VqgDB5
+   mBSaBmZGD4xrzJoB8fEdaFTG9aKZ+sm2ea9pqxsPYvb5V6hmvBtJWtoCt
+   ZpfHFu175XrLjEhpEVuA/I/FoHKreFU1msFH1voOFgPd7lpM0+5j1r9jR
+   2pTaAXx0rX5A6h30AjzQD8XZfBkO/c/PuDMnkG5Crc0ZyfD72IGhrI3UR
+   551CcwIDq7GR1voaP7cZ2Ry55CjmmrC4RTODdTb5KstaUibrUJk68N9DA
+   JmgnAbJWINmZWTN9GiS2C3mEtGyrl5ELWIkKPMhZYXERH/TEJ3CJs69Nq
+   Q==;
+X-CSE-ConnectionGUID: EraClYA9Rf2pFJmlCf37kQ==
+X-CSE-MsgGUID: HqxLVUU+Q9y5scj/jWT3Vg==
+X-IronPort-AV: E=McAfee;i="6600,9927,11035"; a="19071058"
+X-IronPort-AV: E=Sophos;i="6.07,182,1708416000"; 
+   d="scan'208";a="19071058"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Apr 2024 17:01:32 -0700
+X-CSE-ConnectionGUID: srenPdH2SkaNTFfAdLd4bA==
+X-CSE-MsgGUID: zkq/j+qcQUKmUocue1es1A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,182,1708416000"; 
+   d="scan'208";a="19379967"
+Received: from djiang5-mobl3.amr.corp.intel.com (HELO [10.212.38.118]) ([10.212.38.118])
+  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Apr 2024 17:01:33 -0700
+Message-ID: <9593d672-8a01-437c-8a87-7217a38408c1@intel.com>
+Date: Fri, 5 Apr 2024 17:01:31 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 04/26] cxl/region: Add dynamic capacity decoder and region
+ modes
+Content-Language: en-US
+To: Ira Weiny <ira.weiny@intel.com>, Fan Ni <fan.ni@samsung.com>,
+ Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+ Navneet Singh <navneet.singh@intel.com>
+Cc: Dan Williams <dan.j.williams@intel.com>,
+ Davidlohr Bueso <dave@stgolabs.net>,
+ Alison Schofield <alison.schofield@intel.com>,
+ Vishal Verma <vishal.l.verma@intel.com>, linux-btrfs@vger.kernel.org,
+ linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20240324-dcd-type2-upstream-v1-0-b7b00d623625@intel.com>
+ <20240324-dcd-type2-upstream-v1-4-b7b00d623625@intel.com>
+ <1c7f63c5-1b7a-4f7b-9d48-4dd8b017d7de@intel.com>
+ <661040ab52a14_e9f9f2943c@iweiny-mobl.notmuch>
+From: Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <661040ab52a14_e9f9f2943c@iweiny-mobl.notmuch>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi Barnab=C3=A1s,
 
-On Fri, 2024-04-05 at 16:34 +0000, Barnab=C3=A1s P=C5=91cze wrote:
-> > +	next =3D ffs(cur_profile->choices[0] >> (profile + 1)) + profile;
-> > +
-> > +	/* current profile is the highest, select the lowest */
-> > +	if (next =3D=3D profile)
-> > +		next =3D ffs(cur_profile->choices[0]) - 1;
->=20
-> I think you can use `find_next_bit()` or similar instead.
->=20
 
-Thanks, it looks much better with find_next_bit_wrap.
+On 4/5/24 11:19 AM, Ira Weiny wrote:
+> Dave Jiang wrote:
+>>
+>>
+>> On 3/24/24 4:18 PM, ira.weiny@intel.com wrote:
+>>> From: Navneet Singh <navneet.singh@intel.com>
+>>>
+>>> Region mode must reflect a general dynamic capacity type which is
+>>> associated with a specific Dynamic Capacity (DC) partitions in each
+>>> device decoder within the region.  DC partitions are also know as DC
+>>> regions per CXL 3.1.
+>>
+>> This section reads somewhat awkward to me. Does this read any better?
+>>
+>> One or more Dynamic Capacity (DC) partitions (and decoders) form a CXL
+>> software region. The region mode reflects composition of that entire software
+>> region. Decoder mode reflects a specific DC partition. DC partitions are also
+>> known as DC regions per CXL specification r3.1 but is not the same entity as
+>> CXL software regions.
+> 
+> Yea that does sound better but I think this builds on your text and is even
+> more clear.
+> 
+> <commit>
+> cxl/region: Add dynamic capacity decoder and region modes
+> 
+> One or more decoders each pointing to a Dynamic Capacity (DC) partition form a
+> CXL software region.  The region mode reflects composition of that entire
+> software region.  Decoder mode reflects a specific DC partition.  DC partitions
+> are also known as DC regions per CXL specification r3.1 but they are not the
+> same entity as CXL software regions.
+> 
+> Define the new modes and helper functions required to make the association
+> between these new modes.
+> 
+> </commit>
+> 
 
->=20
-Best regards,
-Gergo
-
+LGTM
+> 
+> Ira
