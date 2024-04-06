@@ -1,85 +1,130 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from smtp-relay-internal-0.canonical.com (smtp-relay-internal-0.canonical.com [185.125.188.122])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E69D383B2;
-	Sat,  6 Apr 2024 09:19:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5CC23A8E4
+	for <linux-kernel@vger.kernel.org>; Sat,  6 Apr 2024 09:20:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.188.122
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712395187; cv=none; b=Atw5937KX/3AVdPogS0bGp4NHYp4q7vBHi0pYS5zYD8s2hb9NOhmLFQI/QAESMtoluyVQO/fv+zrjXM19i8wc2x10ek1IbLQ5iVfPCTPqTea4yGMwa/GQvP3a7VDs+SPUkHhSEgCYdlQpR0EV/MfbCivdj16BqFu1iHHx79THeU=
+	t=1712395222; cv=none; b=LL9TvjbVJt2H1S7HaG2FEEW/HpihwX/jet13Jil5gxi+URKPWkubqmQDlbBWdEazcV9r0wxNbbzCi0dpNrDUqKQxWdRRNtGzJGVAsozPU8GMqH2YU3kqZa9dvbTrF0COqc1XOPYT5pv7M/LJvnR/fR0jHWb6zWuQtGNtLExyrVE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712395187; c=relaxed/simple;
-	bh=ZszyxTgj8EnYtTuGNwhBJNSzLvn+uASx2IZx41dSrN0=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=kaUb+gXDbXhSF8oLm3TZwe83nZRV9NGZKok+LE2SFsy9fDJiGh1JePo0C7DmIxeDZxoW4sY9vR+SMp6M916gAX9tiTV2n0mgxwHozX+/rbj4u+tXpe6tlBt65fSCJ/bJOZbbbDurwJiy11fum/DnnFA1FwtmJg36Vcu6CFCf1DM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=S/S//RIe; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1712395222; c=relaxed/simple;
+	bh=wls7Uj9lvj1C2cR+9fWVS8Sq79ZqlDYd8ckzjVd9vKU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=sQBVJeQ/gmN0T56UQWpmu1RDxmDSyGs4cBG6iGhEkxASnTPCO37yK7h3qNvlCi6JZkfcBH9r0bE/qnBwmBUIr/TJ/wk7bzUryJj6toOvvMZLZRT5zTUj/Wc/bJl/gMpons7nPgzsVtIV0W93iZxVrruwTih/kIeYi5q9ZTqir/g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b=dTTemcW8; arc=none smtp.client-ip=185.125.188.122
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S/S//RIe"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0387DC433C7;
-	Sat,  6 Apr 2024 09:19:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712395186;
-	bh=ZszyxTgj8EnYtTuGNwhBJNSzLvn+uASx2IZx41dSrN0=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=S/S//RIegxSFn0baXqS24IoG5k/cCwd0QHq6+/TG/px0q/G4vbzjQt3CS1rCI9Sfb
-	 79e71HDf79008J3/hSjstjqxKc6n6UKpooTPTMF9OqoyVP9DLWYcQjzN/Jx4WtP3Jm
-	 vHwmykKoniJ8lTkQFq1wYycXt8kwbXwBSMm54AhkEwAlAu0QOzo5pIts56x1c3W7Wm
-	 7Wqp3n5z4Y1hJU9f9rwQ5vrheMPSRstxdZ5cnr5rjVdKbsLo2j8vL8eOty+6Zcr0fZ
-	 HSnNDyT0K33hMUjL27D6bEwId/2CqR6jghbjIPMxDrUDoO5ocMKswmjMdYaqRI1vVq
-	 JYpnGTyGqRRog==
-From: Vinod Koul <vkoul@kernel.org>
-To: mturquette@baylibre.com, sboyd@kernel.org, robh@kernel.org, 
- krzk+dt@kernel.org, conor+dt@kernel.org, kishon@kernel.org, 
- alim.akhtar@samsung.com, avri.altman@wdc.com, bvanassche@acm.org, 
- s.nawrocki@samsung.com, cw00.choi@samsung.com, jejb@linux.ibm.com, 
- martin.petersen@oracle.com, chanho61.park@samsung.com, ebiggers@kernel.org, 
- Peter Griffin <peter.griffin@linaro.org>
-Cc: linux-scsi@vger.kernel.org, linux-phy@lists.infradead.org, 
- devicetree@vger.kernel.org, linux-clk@vger.kernel.org, 
- linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-arm-kernel@lists.infradead.org, tudor.ambarus@linaro.org, 
- andre.draszik@linaro.org, saravanak@google.com, willmcvicker@google.com
-In-Reply-To: <20240404122559.898930-1-peter.griffin@linaro.org>
-References: <20240404122559.898930-1-peter.griffin@linaro.org>
-Subject: Re: (subset) [PATCH 00/17] HSI2, UFS & UFS phy support for Tensor
- GS101
-Message-Id: <171239517860.352396.12091328444055090399.b4-ty@kernel.org>
-Date: Sat, 06 Apr 2024 14:49:38 +0530
+	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="dTTemcW8"
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com [209.85.128.72])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-relay-internal-0.canonical.com (Postfix) with ESMTPS id 18AF142491
+	for <linux-kernel@vger.kernel.org>; Sat,  6 Apr 2024 09:20:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
+	s=20210705; t=1712395216;
+	bh=yx7vpzXIHTYh5j3nTDQp+mlNbiWJAYHc0w9red4g/BM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version;
+	b=dTTemcW89wPCE3kxSJqUC+M/Rqs9uBto0yzTF+UN4tDLeX2jOrTnyB38xMu/SZOm5
+	 6HmXr2+otfYFvoyS7+fGWESgb4eUJkyA0eECdQWTjbjZu08DPoY8dbMVeN0ODVLIWI
+	 IDPA4uoA8vXs9MDALGlkZZaBmdDWifYGdjH4n5D4Em3DVc5plJGd5gwWdkNbDCQNEw
+	 ceRX3YNwnoI4NU2mgWQlHbDUpPK8lTuGrZ5ONvLLapcb20YBiaNF6ssT80LHSJ6B6o
+	 TKmSeTRmpZiauZUaELT9NhsU0YRyAIwqyBHR2HcR7cZmI7cSGev/KO3Y4s+2hpe4Ud
+	 3GT/vQX5Clp0w==
+Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-41489c04e3aso13581185e9.0
+        for <linux-kernel@vger.kernel.org>; Sat, 06 Apr 2024 02:20:16 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712395212; x=1713000012;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=yx7vpzXIHTYh5j3nTDQp+mlNbiWJAYHc0w9red4g/BM=;
+        b=n3EPhVtPZ3rpm8cYyHxNa/bE6HRWOyxufBpsc687ljWm/GWW0r2YGg0XA87sNcQ49d
+         oDH7JvRY9r+73fguLU6J5AMgCkls0579dDZdqWHz7oz9eY0hInBK2S8FZ1IWetETyonm
+         gV1uABivDk4oKFhSIwukSa2E33ntuvfsQJAUB4IxwN4IWvpCf0HBQi2p1JL0OSrqRb26
+         JlOfaj2HA6p+29JmMPQ9CEo+3muDtIQA1x6fiFrrNWvpJYwXYC8rGwxRyYwQrPLbC6aC
+         rrRW2LrgpnIqJn1lznZR8i1IuXUJPEVqqWwJqPDXlvhxM0F+NsLpippW4/FKrUaCDXuu
+         fgpQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVLVzgczU+C/vf9bpdrp4auEJjRV3mm/k7sGxWekyTd5GCjX6b+X6wm+cgix3II8XBKEpQ5/NP6Zv9fjnTgQJmIfbrM3abpzS63pMb1
+X-Gm-Message-State: AOJu0Yzo5UhARqa4rYtLcWY1S+n2IVKpGtUrpoOma9yhsn2uGWbDHDyv
+	3m8V4f5im4VHxGymuqAoAQ6Wjon9vS1OJeG1C3ZUl7YSXMr2Zyf9tmvluruO31FAS0DgBcHI/0b
+	HlBr+EdVj/hw6ao+CgJb6RkG1wmvuVrqhIBIwZ4/iTJofouvp3T6OempiJJvIUXX452iTvg9wfm
+	favw==
+X-Received: by 2002:a05:600c:4e93:b0:415:691c:f83d with SMTP id f19-20020a05600c4e9300b00415691cf83dmr2852396wmq.33.1712395212471;
+        Sat, 06 Apr 2024 02:20:12 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHit5kOPUjw5jx+vy2tg5jUYvea3lG9TQoPRZVf5aXYZyCaWrS8RAEXac+i+7u4IVkSCPt8Yg==
+X-Received: by 2002:a05:600c:4e93:b0:415:691c:f83d with SMTP id f19-20020a05600c4e9300b00415691cf83dmr2852376wmq.33.1712395211958;
+        Sat, 06 Apr 2024 02:20:11 -0700 (PDT)
+Received: from gpd.station (net-2-39-142-110.cust.vodafonedsl.it. [2.39.142.110])
+        by smtp.gmail.com with ESMTPSA id l23-20020a7bc457000000b00414924f307csm5779993wmi.26.2024.04.06.02.20.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 06 Apr 2024 02:20:11 -0700 (PDT)
+From: Andrea Righi <andrea.righi@canonical.com>
+To: Andrii Nakryiko <andrii@kernel.org>,
+	Eduard Zingerman <eddyz87@gmail.com>
+Cc: Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Martin KaFai Lau <martin.lau@linux.dev>,
+	Song Liu <song@kernel.org>,
+	Yonghong Song <yonghong.song@linux.dev>,
+	John Fastabend <john.fastabend@gmail.com>,
+	KP Singh <kpsingh@kernel.org>,
+	Stanislav Fomichev <sdf@google.com>,
+	Hao Luo <haoluo@google.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	David Vernet <void@manifault.com>,
+	Tejun Heo <tj@kernel.org>,
+	bpf@vger.kernel.org,
+	linux-kselftest@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v4 0/4] libbpf: API to partially consume items from ringbuffer
+Date: Sat,  6 Apr 2024 11:15:40 +0200
+Message-ID: <20240406092005.92399-1-andrea.righi@canonical.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.12.3
+Content-Transfer-Encoding: 8bit
 
+Introduce ring__consume_n() and ring_buffer__consume_n() API to
+partially consume items from one (or more) ringbuffer(s).
 
-On Thu, 04 Apr 2024 13:25:42 +0100, Peter Griffin wrote:
-> This series adds support for the High Speed Interface (HSI) 2 clock
-> management unit, UFS controller and UFS phy calibration/tuning for GS101.
-> 
-> With this series applied, UFS is now functional! The SKhynix HN8T05BZGKX015
-> can be enumerated, partitions mounted etc. This then allows us to move away
-> from the initramfs rootfs we have been using for development so far.
-> 
-> [...]
+This can be useful, for example, to consume just a single item or when
+we need to copy multiple items to a limited user-space buffer from the
+ringbuffer callback.
 
-Applied, thanks!
+Practical example (where this API can be used):
+https://github.com/sched-ext/scx/blob/b7c06b9ed9f72cad83c31e39e9c4e2cfd8683a55/rust/scx_rustland_core/src/bpf.rs#L217
 
-[04/17] dt-bindings: phy: samsung,ufs-phy: Add dedicated gs101-ufs-phy compatible
-        commit: 724e4fc053fe217d0ed477517ae68db11feab1f5
-[09/17] phy: samsung-ufs: use exynos_get_pmu_regmap_by_phandle() to obtain PMU regmap
-        commit: f2c6d0fa197a1558f4ef50162bb87e6644af232d
-[10/17] phy: samsung-ufs: ufs: Add SoC callbacks for calibration and clk data recovery
-        commit: a4de58a9096b471f9dc1c2bc6bfaa8aa48110c31
-[11/17] phy: samsung-ufs: ufs: Add support for gs101 UFS phy tuning
-        commit: c1cf725db1065153459f0deb69bd4d497a5fd183
-[17/17] MAINTAINERS: Add phy-gs101-ufs file to Tensor GS101.
-        commit: 0338e1d2f933a4ec7ae96ed1f40c39b899e357d7
+See also:
+https://lore.kernel.org/lkml/20240310154726.734289-1-andrea.righi@canonical.com/T/#u
 
-Best regards,
--- 
-~Vinod
+v4:
+ - add a selftest to test the new API
+ - open a new 1.5.0 cycle
 
+v3:
+ - rename ring__consume_max() -> ring__consume_n() and
+   ring_buffer__consume_max() -> ring_buffer__consume_n()
+ - add new API to a new 1.5.0 cycle
+ - fixed minor nits / comments
 
+v2:
+ - introduce a new API instead of changing the callback's retcode
+   behavior
+
+Andrea Righi (4):
+      libbpf: Start v1.5 development cycle
+      libbpf: ringbuf: allow to consume up to a certain amount of items
+      libbpf: Add ring__consume_n / ring_buffer__consume_n
+      selftests/bpf: Add tests for ring__consume_n and ring_buffer__consume_n
+
+ tools/lib/bpf/libbpf.h                           | 12 +++++
+ tools/lib/bpf/libbpf.map                         |  6 +++
+ tools/lib/bpf/libbpf_version.h                   |  2 +-
+ tools/lib/bpf/ringbuf.c                          | 59 ++++++++++++++++++++----
+ tools/testing/selftests/bpf/prog_tests/ringbuf.c |  8 ++++
+ 5 files changed, 76 insertions(+), 11 deletions(-)
