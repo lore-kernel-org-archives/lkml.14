@@ -1,55 +1,55 @@
-Received: from mail-wr1-f74.google.com (mail-wr1-f74.google.com [209.85.221.74])
+Received: from mail-wm1-f74.google.com (mail-wm1-f74.google.com [209.85.128.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3B0547F62
-	for <linux-kernel@vger.kernel.org>; Sat,  6 Apr 2024 17:37:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B80544CB37
+	for <linux-kernel@vger.kernel.org>; Sat,  6 Apr 2024 17:37:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712425036; cv=none; b=ExxVW5hc7ATG2klofj0poQEOY1dsdYQwxQs0Dt/5/9eLX1Y6cYg5iPB+Ju9gezzIAIUuyThifwV8yhu4JnEr/e9bRJTvCvqmiNu7yByByoujPpIhIl7BCt2TK2jgynTF5pW6LjOl9XINn2ZrMxJWV/uWovqcFnHx3TqArmZwDKo=
+	t=1712425040; cv=none; b=dCwGA6RMSfjOtZZsEs4MzwfINk/QUwD4y4X3bIQLv0cF2bs8N8DEaWV5OE2riB3eOoplOl8b7KW0sCNbmbb+gBj8d0CXR+u/lNHMHJUchcoFNuRlLQ/3XaPqBCJ0nWpBUkb0y+FP6a9VvuomOz/RflOSu1YYlYh8Ew0Fn92dVgk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712425036; c=relaxed/simple;
-	bh=lY36yAlNaLWHkONy9rkhkoFdCznv/w9z2O0V8Zo6DZw=;
+	s=arc-20240116; t=1712425040; c=relaxed/simple;
+	bh=ZXKJqGIpOeNVjmTs2kjmqOaHkG1DnLLt0+tv6mFfRmc=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=PwV3jdQgRa2C6RPrRnVwJVeP4aK5zXWPN4mJBAF02MENRZ+tIbh+oebFZL5JdN90Qze8A60IhlBbVf5HLUJnO/xkhIFR45d8YqaBISZbIG181B2gl6TIfPLUy+l+eAgfwqBIrKNWnfv/xZstjYsiZBNp4NfthXr1eaIGAIal3ns=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Ed3x+7DQ; arc=none smtp.client-ip=209.85.221.74
+	 To:Cc:Content-Type; b=a1oDJUyS8HwbwvtfOfTlVmPgkjFdd8YKUjI5O2MIdaZ/VIHsV7pB/cbh3lwIbWa0UMsZDQOTzzEILXKCntEMAJkpB6+vDzl2xgMwHDdM2oY2szV+AfAkPFOndkH3HnKk2Eb/TzKSXoHpNrDLYB/qz6ty3UdkHaZ3RF7d9p3XhsU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=hdqPCg6g; arc=none smtp.client-ip=209.85.128.74
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Ed3x+7DQ"
-Received: by mail-wr1-f74.google.com with SMTP id ffacd0b85a97d-343da0a889dso1506328f8f.0
-        for <linux-kernel@vger.kernel.org>; Sat, 06 Apr 2024 10:37:14 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="hdqPCg6g"
+Received: by mail-wm1-f74.google.com with SMTP id 5b1f17b1804b1-4162ba19021so13017985e9.2
+        for <linux-kernel@vger.kernel.org>; Sat, 06 Apr 2024 10:37:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1712425033; x=1713029833; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1712425037; x=1713029837; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=UwAjnEJMd/y0KgJ1Rlt+HQo0eDVf/xq2JsdZn7nys8c=;
-        b=Ed3x+7DQ+utWxTc8hHAbnUt0uoqtRbMzRo49u/eE4m349kG5WAjDfM6+BgiYD9rkle
-         wrNN8eA/yhY6eufwhJC6D5E3Ob4fIQxJC/z60O+PaoJYnp2WF3bGezPubBjFWqPlIGHA
-         FSAGhkUaXPtDq363x7+zicNukn+Qsk0X8kOk7cusz8g36j8/45paLYr6q1h2xQKaKMMH
-         lUFZQKCa1/cZbXReeC9i0tmsqE7rQFQyswFGC3CH6Nm6Esv1G7aR9p/Ga9I50pBqaYvq
-         M/DGordMlgi4JWmvDW8kqVQBgJwEm8P8FRxVAxkKiZEfqCA8vXoj5m+/FToYVf2Yg1zx
-         h5dg==
+        bh=Ty21zwhpIK06gSNfvHnlQi0EabGuqqhLB368ZO8Z3zI=;
+        b=hdqPCg6gevaNSIQmD2CeJAUDGTfne+gESGpgLQG5JXs+5NvDx2IWbCXlRYPaz6ctRq
+         wnFBPNKFwp7CLrLAZawczAtGE9Hue6Qg1WyssBG3AxluvMJp7N9y2rNexrZB3EUF1zKY
+         NwiZ0idxQkKVKr29gUWaLKcHluGsrD7Q+SzVsz+xPIt43SmUV0mAJBiZ+6zrA0RdINxk
+         NS2VDzWNgm+UJHJOTUhs3PTVrDHkgFzL0HRSvOcQbHarVAtq91EyIc8cz4m1hbodzHEY
+         eAWjmqBl5N28+D8w87KOot9jXGe/6iviXqdlFD86h55ItGwe4zU8wsfT3F56jJcmfr8+
+         Jktw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712425033; x=1713029833;
+        d=1e100.net; s=20230601; t=1712425037; x=1713029837;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=UwAjnEJMd/y0KgJ1Rlt+HQo0eDVf/xq2JsdZn7nys8c=;
-        b=GVGx7i7HdKD4mIvNlVx0QcbJRIO1byUeTJ/VLgRKdypNbN3htticS+UQChJH7TEfA4
-         xD/ozrVt7gZPedge4VbcT3HbDnSgMVuutZHcnCkiXGWPPxwSUqHoOCXJXUvkomp4hiuD
-         KSniW2B42zE7VBvNMv5zC+u26ODQ/kzSfy6AHrd3SeT6e6412iRzemEEQcuVCoYu9Otk
-         LB8x9dleXqXvBQW05BJF5/R3cW8VkPJqmaeOJhazSjI7Kml7lzLhid/jbC8XtmMA7yw9
-         tBr3oMnNEpv3bwaPuPvCqaN1MLtMXgHm6Xh/jDfWifYxWuqkGqFJ9Jjwqsv2mHgVxSyD
-         wVKw==
-X-Forwarded-Encrypted: i=1; AJvYcCU72xUDVJSKQyFitmf36ok9G4lDMuw9QEjFEKGjEX6AWd5Z32c4cestcewVovbNFjW2b9Z+P1sy060nQxmbtHRy6xbn2Hdm0xr6QKQm
-X-Gm-Message-State: AOJu0YxUN+CB1Pd8a2yPqyIxhSzmjizFUSJZQrw3hM3sz0tS8Iuhyf24
-	lRH0uUsLo5hbIPerDgYOItcbQGDgj0C74HIHaDqyaMNmRcfM8UZmI/Q2Sz5/VQ7l51rWGJtqncn
-	hjqj2/KxGi3rVydBI2Q==
-X-Google-Smtp-Source: AGHT+IH4aAdFCbQpVTxOIxmJnKvlunl2HlLx9B7Ji/MUNPmgnfqGAPV7aMMW3i4CtjntM1+7sFIFi2tQe3Uv+aKw
+        bh=Ty21zwhpIK06gSNfvHnlQi0EabGuqqhLB368ZO8Z3zI=;
+        b=RY4DyS7kuqY+t6Jxc+NvuNDKOf9J+bWTYb9iVUwi7v53mpr+Tnev13i3Lh/+7MsHvh
+         rb8UlzzBJXeNcnXFpnjWzLVpzbyQkcv+mzh58RAanNbmc+N+bwtZuTD9p08c2CaheTnk
+         E8xyTZnUHzYrPSmxJcBnZlebCaW6OfR8saEpNSo5mJjYSN4HlSA/JNTsw2KWJVC85JqY
+         rTu6yn82WS4yqta9YDywHQBn4eWchHM+Ec9lItYkqYtyKTmOdECwJ39TGVAqQJ3c8Lqd
+         iZ1w6r7ZmDe9dhN879c7tBghVBr0KLZa1wVzRb+lhMLiFvdgDZandChPAPlR8fKD7Xui
+         tAFg==
+X-Forwarded-Encrypted: i=1; AJvYcCWmlGZBF5HhvvpWauLvH8yM41ndHKbPKrAoIiAC7l+6O3sFzjutqyZ2hzEmKXYXM1jwZ6AVu4xseduKp2ceQpcKaoGAgste5/LfkyKW
+X-Gm-Message-State: AOJu0YxBkAgF4oN6z2+aIP8BWb2Ynlbu8y/6TOs/ULrqUW18ML+3Fnn7
+	XjP5QOmWyVX1Zyh5YVc8GjfLFYaMgap6icyYa8mO72J0XMVdlFNSG68MSJKFQ9qQFhtAqJaJoY6
+	BME8LTJ4dvMVQSxzutQ==
+X-Google-Smtp-Source: AGHT+IFReF1ERsWWIPgz1JSJrIwd0rDbnVD1YVq93tsvm6NKhHiCRiCXvYIWyx3ScIJGSHQhE/4nxxXtdOFV8TRO
 X-Received: from vdonnefort.c.googlers.com ([fda3:e722:ac3:cc00:28:9cb1:c0a8:2eea])
- (user=vdonnefort job=sendgmr) by 2002:adf:e187:0:b0:343:9761:2ad5 with SMTP
- id az7-20020adfe187000000b0034397612ad5mr10353wrb.11.1712425033134; Sat, 06
- Apr 2024 10:37:13 -0700 (PDT)
-Date: Sat,  6 Apr 2024 18:36:46 +0100
+ (user=vdonnefort job=sendgmr) by 2002:a05:600c:4f81:b0:416:43b8:c04a with
+ SMTP id n1-20020a05600c4f8100b0041643b8c04amr2546wmq.1.1712425037413; Sat, 06
+ Apr 2024 10:37:17 -0700 (PDT)
+Date: Sat,  6 Apr 2024 18:36:48 +0100
 In-Reply-To: <20240406173649.3210836-1-vdonnefort@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -59,602 +59,144 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20240406173649.3210836-1-vdonnefort@google.com>
 X-Mailer: git-send-email 2.44.0.478.gd926399ef9-goog
-Message-ID: <20240406173649.3210836-3-vdonnefort@google.com>
-Subject: [PATCH v20 2/5] ring-buffer: Introducing ring-buffer mapping functions
+Message-ID: <20240406173649.3210836-5-vdonnefort@google.com>
+Subject: [PATCH v20 4/5] Documentation: tracing: Add ring-buffer mapping
 From: Vincent Donnefort <vdonnefort@google.com>
 To: rostedt@goodmis.org, mhiramat@kernel.org, linux-kernel@vger.kernel.org, 
 	linux-trace-kernel@vger.kernel.org
 Cc: mathieu.desnoyers@efficios.com, kernel-team@android.com, 
-	rdunlap@infradead.org, Vincent Donnefort <vdonnefort@google.com>, linux-mm@kvack.org
+	rdunlap@infradead.org, Vincent Donnefort <vdonnefort@google.com>
 Content-Type: text/plain; charset="UTF-8"
 
-In preparation for allowing the user-space to map a ring-buffer, add
-a set of mapping functions:
+It is now possible to mmap() a ring-buffer to stream its content. Add
+some documentation and a code example.
 
-  ring_buffer_{map,unmap}()
-
-And controls on the ring-buffer:
-
-  ring_buffer_map_get_reader()  /* swap reader and head */
-
-Mapping the ring-buffer also involves:
-
-  A unique ID for each subbuf of the ring-buffer, currently they are
-  only identified through their in-kernel VA.
-
-  A meta-page, where are stored ring-buffer statistics and a
-  description for the current reader
-
-The linear mapping exposes the meta-page, and each subbuf of the
-ring-buffer, ordered following their unique ID, assigned during the
-first mapping.
-
-Once mapped, no subbuf can get in or out of the ring-buffer: the buffer
-size will remain unmodified and the splice enabling functions will in
-reality simply memcpy the data instead of swapping subbufs.
-
-CC: <linux-mm@kvack.org>
 Signed-off-by: Vincent Donnefort <vdonnefort@google.com>
 
-diff --git a/include/linux/ring_buffer.h b/include/linux/ring_buffer.h
-index dc5ae4e96aee..96d2140b471e 100644
---- a/include/linux/ring_buffer.h
-+++ b/include/linux/ring_buffer.h
-@@ -6,6 +6,8 @@
- #include <linux/seq_file.h>
- #include <linux/poll.h>
- 
-+#include <uapi/linux/trace_mmap.h>
-+
- struct trace_buffer;
- struct ring_buffer_iter;
- 
-@@ -223,4 +225,8 @@ int trace_rb_cpu_prepare(unsigned int cpu, struct hlist_node *node);
- #define trace_rb_cpu_prepare	NULL
- #endif
- 
-+int ring_buffer_map(struct trace_buffer *buffer, int cpu,
-+		    struct vm_area_struct *vma);
-+int ring_buffer_unmap(struct trace_buffer *buffer, int cpu);
-+int ring_buffer_map_get_reader(struct trace_buffer *buffer, int cpu);
- #endif /* _LINUX_RING_BUFFER_H */
-diff --git a/include/uapi/linux/trace_mmap.h b/include/uapi/linux/trace_mmap.h
+diff --git a/Documentation/trace/index.rst b/Documentation/trace/index.rst
+index 5092d6c13af5..0b300901fd75 100644
+--- a/Documentation/trace/index.rst
++++ b/Documentation/trace/index.rst
+@@ -29,6 +29,7 @@ Linux Tracing Technologies
+    timerlat-tracer
+    intel_th
+    ring-buffer-design
++   ring-buffer-map
+    stm
+    sys-t
+    coresight/index
+diff --git a/Documentation/trace/ring-buffer-map.rst b/Documentation/trace/ring-buffer-map.rst
 new file mode 100644
-index 000000000000..ffcd8dfcaa4f
+index 000000000000..8e296bcc0d7f
 --- /dev/null
-+++ b/include/uapi/linux/trace_mmap.h
-@@ -0,0 +1,46 @@
-+/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
-+#ifndef _TRACE_MMAP_H_
-+#define _TRACE_MMAP_H_
++++ b/Documentation/trace/ring-buffer-map.rst
+@@ -0,0 +1,106 @@
++.. SPDX-License-Identifier: GPL-2.0
 +
-+#include <linux/types.h>
++==================================
++Tracefs ring-buffer memory mapping
++==================================
 +
-+/**
-+ * struct trace_buffer_meta - Ring-buffer Meta-page description
-+ * @meta_page_size:	Size of this meta-page.
-+ * @meta_struct_len:	Size of this structure.
-+ * @subbuf_size:	Size of each sub-buffer.
-+ * @nr_subbufs:		Number of subbfs in the ring-buffer, including the reader.
-+ * @reader.lost_events:	Number of events lost at the time of the reader swap.
-+ * @reader.id:		subbuf ID of the current reader. ID range [0 : @nr_subbufs - 1]
-+ * @reader.read:	Number of bytes read on the reader subbuf.
-+ * @flags:		Placeholder for now, 0 until new features are supported.
-+ * @entries:		Number of entries in the ring-buffer.
-+ * @overrun:		Number of entries lost in the ring-buffer.
-+ * @read:		Number of entries that have been read.
-+ * @Reserved1:		Reserved for future use.
-+ * @Reserved2:		Reserved for future use.
-+ */
-+struct trace_buffer_meta {
-+	__u32		meta_page_size;
-+	__u32		meta_struct_len;
++:Author: Vincent Donnefort <vdonnefort@google.com>
 +
-+	__u32		subbuf_size;
-+	__u32		nr_subbufs;
++Overview
++========
++Tracefs ring-buffer memory map provides an efficient method to stream data
++as no memory copy is necessary. The application mapping the ring-buffer becomes
++then a consumer for that ring-buffer, in a similar fashion to trace_pipe.
 +
-+	struct {
-+		__u64	lost_events;
-+		__u32	id;
-+		__u32	read;
-+	} reader;
++Memory mapping setup
++====================
++The mapping works with a mmap() of the trace_pipe_raw interface.
 +
-+	__u64	flags;
++The first system page of the mapping contains ring-buffer statistics and
++description. It is referred to as the meta-page. One of the most important
++fields of the meta-page is the reader. It contains the sub-buffer ID which can
++be safely read by the mapper (see ring-buffer-design.rst).
 +
-+	__u64	entries;
-+	__u64	overrun;
-+	__u64	read;
++The meta-page is followed by all the sub-buffers, ordered by ascending ID. It is
++therefore effortless to know where the reader starts in the mapping:
 +
-+	__u64	Reserved1;
-+	__u64	Reserved2;
-+};
++.. code-block:: c
 +
-+#endif /* _TRACE_MMAP_H_ */
-diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-index cc9ebe593571..793ecc454039 100644
---- a/kernel/trace/ring_buffer.c
-+++ b/kernel/trace/ring_buffer.c
-@@ -9,6 +9,7 @@
- #include <linux/ring_buffer.h>
- #include <linux/trace_clock.h>
- #include <linux/sched/clock.h>
-+#include <linux/cacheflush.h>
- #include <linux/trace_seq.h>
- #include <linux/spinlock.h>
- #include <linux/irq_work.h>
-@@ -26,6 +27,7 @@
- #include <linux/list.h>
- #include <linux/cpu.h>
- #include <linux/oom.h>
-+#include <linux/mm.h>
- 
- #include <asm/local64.h>
- #include <asm/local.h>
-@@ -338,6 +340,7 @@ struct buffer_page {
- 	local_t		 entries;	/* entries on this page */
- 	unsigned long	 real_end;	/* real end of data */
- 	unsigned	 order;		/* order of the page */
-+	u32		 id;		/* ID for external mapping */
- 	struct buffer_data_page *page;	/* Actual data page */
- };
- 
-@@ -484,6 +487,12 @@ struct ring_buffer_per_cpu {
- 	u64				read_stamp;
- 	/* pages removed since last reset */
- 	unsigned long			pages_removed;
++        reader_id = meta->reader->id;
++        reader_offset = meta->meta_page_size + reader_id * meta->subbuf_size;
 +
-+	unsigned int			mapped;
-+	struct mutex			mapping_lock;
-+	unsigned long			*subbuf_ids;	/* ID to subbuf VA */
-+	struct trace_buffer_meta	*meta_page;
++When the application is done with the current reader, it can get a new one using
++the trace_pipe_raw ioctl() TRACE_MMAP_IOCTL_GET_READER. This ioctl also updates
++the meta-page fields.
 +
- 	/* ring buffer pages to update, > 0 to add, < 0 to remove */
- 	long				nr_pages_to_update;
- 	struct list_head		new_pages; /* new pages to add */
-@@ -1599,6 +1608,7 @@ rb_allocate_cpu_buffer(struct trace_buffer *buffer, long nr_pages, int cpu)
- 	init_irq_work(&cpu_buffer->irq_work.work, rb_wake_up_waiters);
- 	init_waitqueue_head(&cpu_buffer->irq_work.waiters);
- 	init_waitqueue_head(&cpu_buffer->irq_work.full_waiters);
-+	mutex_init(&cpu_buffer->mapping_lock);
- 
- 	bpage = kzalloc_node(ALIGN(sizeof(*bpage), cache_line_size()),
- 			    GFP_KERNEL, cpu_to_node(cpu));
-@@ -1789,8 +1799,6 @@ bool ring_buffer_time_stamp_abs(struct trace_buffer *buffer)
- 	return buffer->time_stamp_abs;
- }
- 
--static void rb_reset_cpu(struct ring_buffer_per_cpu *cpu_buffer);
--
- static inline unsigned long rb_page_entries(struct buffer_page *bpage)
- {
- 	return local_read(&bpage->entries) & RB_WRITE_MASK;
-@@ -5211,6 +5219,22 @@ static void rb_clear_buffer_page(struct buffer_page *page)
- 	page->read = 0;
- }
- 
-+static void rb_update_meta_page(struct ring_buffer_per_cpu *cpu_buffer)
-+{
-+	struct trace_buffer_meta *meta = cpu_buffer->meta_page;
++Limitations
++===========
++When a mapping is in place on a Tracefs ring-buffer, it is not possible to
++either resize it (either by increasing the entire size of the ring-buffer or
++each subbuf). It is also not possible to use snapshot and causes splice to copy
++the ring buffer data instead of using the copyless swap from the ring buffer.
 +
-+	meta->reader.read = cpu_buffer->reader_page->read;
-+	meta->reader.id = cpu_buffer->reader_page->id;
-+	meta->reader.lost_events = cpu_buffer->lost_events;
++Concurrent readers (either another application mapping that ring-buffer or the
++kernel with trace_pipe) are allowed but not recommended. They will compete for
++the ring-buffer and the output is unpredictable, just like concurrent readers on
++trace_pipe would be.
 +
-+	meta->entries = local_read(&cpu_buffer->entries);
-+	meta->overrun = local_read(&cpu_buffer->overrun);
-+	meta->read = cpu_buffer->read;
++Example
++=======
 +
-+	/* Some archs do not have data cache coherency between kernel and user-space */
-+	flush_dcache_folio(virt_to_folio(cpu_buffer->meta_page));
-+}
++.. code-block:: c
 +
- static void
- rb_reset_cpu(struct ring_buffer_per_cpu *cpu_buffer)
- {
-@@ -5255,6 +5279,9 @@ rb_reset_cpu(struct ring_buffer_per_cpu *cpu_buffer)
- 	cpu_buffer->lost_events = 0;
- 	cpu_buffer->last_overrun = 0;
- 
-+	if (cpu_buffer->mapped)
-+		rb_update_meta_page(cpu_buffer);
++        #include <fcntl.h>
++        #include <stdio.h>
++        #include <stdlib.h>
++        #include <unistd.h>
 +
- 	rb_head_page_activate(cpu_buffer);
- 	cpu_buffer->pages_removed = 0;
- }
-@@ -5469,6 +5496,12 @@ int ring_buffer_swap_cpu(struct trace_buffer *buffer_a,
- 	cpu_buffer_a = buffer_a->buffers[cpu];
- 	cpu_buffer_b = buffer_b->buffers[cpu];
- 
-+	/* It's up to the callers to not try to swap mapped buffers */
-+	if (WARN_ON_ONCE(cpu_buffer_a->mapped || cpu_buffer_b->mapped)) {
-+		ret = -EBUSY;
-+		goto out;
-+	}
++        #include <linux/trace_mmap.h>
 +
- 	/* At least make sure the two buffers are somewhat the same */
- 	if (cpu_buffer_a->nr_pages != cpu_buffer_b->nr_pages)
- 		goto out;
-@@ -5733,7 +5766,8 @@ int ring_buffer_read_page(struct trace_buffer *buffer,
- 	 * Otherwise, we can simply swap the page with the one passed in.
- 	 */
- 	if (read || (len < (commit - read)) ||
--	    cpu_buffer->reader_page == cpu_buffer->commit_page) {
-+	    cpu_buffer->reader_page == cpu_buffer->commit_page ||
-+	    cpu_buffer->mapped) {
- 		struct buffer_data_page *rpage = cpu_buffer->reader_page->page;
- 		unsigned int rpos = read;
- 		unsigned int pos = 0;
-@@ -5956,6 +5990,11 @@ int ring_buffer_subbuf_order_set(struct trace_buffer *buffer, int order)
- 
- 		cpu_buffer = buffer->buffers[cpu];
- 
-+		if (cpu_buffer->mapped) {
-+			err = -EBUSY;
-+			goto error;
-+		}
++        #include <sys/mman.h>
++        #include <sys/ioctl.h>
 +
- 		/* Update the number of pages to match the new size */
- 		nr_pages = old_size * buffer->buffers[cpu]->nr_pages;
- 		nr_pages = DIV_ROUND_UP(nr_pages, buffer->subbuf_size);
-@@ -6057,6 +6096,358 @@ int ring_buffer_subbuf_order_set(struct trace_buffer *buffer, int order)
- }
- EXPORT_SYMBOL_GPL(ring_buffer_subbuf_order_set);
- 
-+static int rb_alloc_meta_page(struct ring_buffer_per_cpu *cpu_buffer)
-+{
-+	struct page *page;
++        #define TRACE_PIPE_RAW "/sys/kernel/tracing/per_cpu/cpu0/trace_pipe_raw"
 +
-+	if (cpu_buffer->meta_page)
-+		return 0;
++        int main(void)
++        {
++                int page_size = getpagesize(), fd, reader_id;
++                unsigned long meta_len, data_len;
++                struct trace_buffer_meta *meta;
++                void *map, *reader, *data;
 +
-+	page = alloc_page(GFP_USER | __GFP_ZERO);
-+	if (!page)
-+		return -ENOMEM;
++                fd = open(TRACE_PIPE_RAW, O_RDONLY | O_NONBLOCK);
++                if (fd < 0)
++                        exit(EXIT_FAILURE);
 +
-+	cpu_buffer->meta_page = page_to_virt(page);
++                map = mmap(NULL, page_size, PROT_READ, MAP_SHARED, fd, 0);
++                if (map == MAP_FAILED)
++                        exit(EXIT_FAILURE);
 +
-+	return 0;
-+}
++                meta = (struct trace_buffer_meta *)map;
++                meta_len = meta->meta_page_size;
 +
-+static void rb_free_meta_page(struct ring_buffer_per_cpu *cpu_buffer)
-+{
-+	unsigned long addr = (unsigned long)cpu_buffer->meta_page;
++                printf("entries:        %llu\n", meta->entries);
++                printf("overrun:        %llu\n", meta->overrun);
++                printf("read:           %llu\n", meta->read);
++                printf("nr_subbufs:     %u\n", meta->nr_subbufs);
 +
-+	free_page(addr);
-+	cpu_buffer->meta_page = NULL;
-+}
++                data_len = meta->subbuf_size * meta->nr_subbufs;
++                data = mmap(NULL, data_len, PROT_READ, MAP_SHARED, fd, meta_len);
++                if (data == MAP_FAILED)
++                        exit(EXIT_FAILURE);
 +
-+static void rb_setup_ids_meta_page(struct ring_buffer_per_cpu *cpu_buffer,
-+				   unsigned long *subbuf_ids)
-+{
-+	struct trace_buffer_meta *meta = cpu_buffer->meta_page;
-+	unsigned int nr_subbufs = cpu_buffer->nr_pages + 1;
-+	struct buffer_page *first_subbuf, *subbuf;
-+	int id = 0;
++                if (ioctl(fd, TRACE_MMAP_IOCTL_GET_READER) < 0)
++                        exit(EXIT_FAILURE);
 +
-+	subbuf_ids[id] = (unsigned long)cpu_buffer->reader_page->page;
-+	cpu_buffer->reader_page->id = id++;
++                reader_id = meta->reader.id;
++                reader = data + meta->subbuf_size * reader_id;
 +
-+	first_subbuf = subbuf = rb_set_head_page(cpu_buffer);
-+	do {
-+		if (WARN_ON(id >= nr_subbufs))
-+			break;
++                printf("Current reader address: %p\n", reader);
 +
-+		subbuf_ids[id] = (unsigned long)subbuf->page;
-+		subbuf->id = id;
++                munmap(data, data_len);
++                munmap(meta, meta_len);
++                close (fd);
 +
-+		rb_inc_page(&subbuf);
-+		id++;
-+	} while (subbuf != first_subbuf);
-+
-+	/* install subbuf ID to kern VA translation */
-+	cpu_buffer->subbuf_ids = subbuf_ids;
-+
-+	/* __rb_map_vma() pads the meta-page to align it with the sub-buffers */
-+	meta->meta_page_size = PAGE_SIZE << cpu_buffer->buffer->subbuf_order;
-+	meta->meta_struct_len = sizeof(*meta);
-+	meta->nr_subbufs = nr_subbufs;
-+	meta->subbuf_size = cpu_buffer->buffer->subbuf_size + BUF_PAGE_HDR_SIZE;
-+
-+	rb_update_meta_page(cpu_buffer);
-+}
-+
-+static struct ring_buffer_per_cpu *
-+rb_get_mapped_buffer(struct trace_buffer *buffer, int cpu)
-+{
-+	struct ring_buffer_per_cpu *cpu_buffer;
-+
-+	if (!cpumask_test_cpu(cpu, buffer->cpumask))
-+		return ERR_PTR(-EINVAL);
-+
-+	cpu_buffer = buffer->buffers[cpu];
-+
-+	mutex_lock(&cpu_buffer->mapping_lock);
-+
-+	if (!cpu_buffer->mapped) {
-+		mutex_unlock(&cpu_buffer->mapping_lock);
-+		return ERR_PTR(-ENODEV);
-+	}
-+
-+	return cpu_buffer;
-+}
-+
-+static void rb_put_mapped_buffer(struct ring_buffer_per_cpu *cpu_buffer)
-+{
-+	mutex_unlock(&cpu_buffer->mapping_lock);
-+}
-+
-+/*
-+ * Fast-path for rb_buffer_(un)map(). Called whenever the meta-page doesn't need
-+ * to be set-up or torn-down.
-+ */
-+static int __rb_inc_dec_mapped(struct ring_buffer_per_cpu *cpu_buffer,
-+			       bool inc)
-+{
-+	unsigned long flags;
-+
-+	lockdep_assert_held(&cpu_buffer->mapping_lock);
-+
-+	if (inc && cpu_buffer->mapped == UINT_MAX)
-+		return -EBUSY;
-+
-+	if (WARN_ON(!inc && cpu_buffer->mapped == 0))
-+		return -EINVAL;
-+
-+	mutex_lock(&cpu_buffer->buffer->mutex);
-+	raw_spin_lock_irqsave(&cpu_buffer->reader_lock, flags);
-+
-+	if (inc)
-+		cpu_buffer->mapped++;
-+	else
-+		cpu_buffer->mapped--;
-+
-+	raw_spin_unlock_irqrestore(&cpu_buffer->reader_lock, flags);
-+	mutex_unlock(&cpu_buffer->buffer->mutex);
-+
-+	return 0;
-+}
-+
-+#define subbuf_page(off, start) \
-+	virt_to_page((void *)((start) + ((off) << PAGE_SHIFT)))
-+
-+#define foreach_subbuf_page(sub_order, start, page)		\
-+	page = subbuf_page(0, (start));				\
-+	for (int __off = 0; __off < (1 << (sub_order));		\
-+	     __off++, page = subbuf_page(__off, (start)))
-+
-+/*
-+ *   +--------------+  pgoff == 0
-+ *   |   meta page  |
-+ *   +--------------+  pgoff == 1
-+ *   |   000000000  |
-+ *   +--------------+  pgoff == (1 << subbuf_order)
-+ *   | subbuffer 0  |
-+ *   |              |
-+ *   +--------------+  pgoff == (2 * (1 << subbuf_order))
-+ *   | subbuffer 1  |
-+ *   |              |
-+ *         ...
-+ */
-+static int __rb_map_vma(struct ring_buffer_per_cpu *cpu_buffer,
-+			struct vm_area_struct *vma)
-+{
-+	unsigned long nr_subbufs, nr_pages, vma_pages, pgoff = vma->vm_pgoff;
-+	unsigned int subbuf_pages, subbuf_order;
-+	struct page **pages;
-+	int p = 0, s = 0;
-+	int err;
-+
-+	lockdep_assert_held(&cpu_buffer->mapping_lock);
-+
-+	subbuf_order = cpu_buffer->buffer->subbuf_order;
-+	subbuf_pages = 1 << subbuf_order;
-+
-+	if (subbuf_order && pgoff % subbuf_pages)
-+		return -EINVAL;
-+
-+	nr_subbufs = cpu_buffer->nr_pages + 1;
-+	nr_pages = ((nr_subbufs + 1) << subbuf_order) - pgoff;
-+
-+	vma_pages = (vma->vm_end - vma->vm_start) >> PAGE_SHIFT;
-+	if (!vma_pages || vma_pages > nr_pages)
-+		return -EINVAL;
-+
-+	nr_pages = vma_pages;
-+
-+	pages = kcalloc(nr_pages, sizeof(*pages), GFP_KERNEL);
-+	if (!pages)
-+		return -ENOMEM;
-+
-+	if (!pgoff) {
-+		unsigned long meta_page_padding;
-+
-+		pages[p++] = virt_to_page(cpu_buffer->meta_page);
-+
-+		/*
-+		 * Pad with the zero-page to align the meta-page with the
-+		 * sub-buffers.
-+		 */
-+		meta_page_padding = subbuf_pages - 1;
-+		while (meta_page_padding-- && p < nr_pages)
-+			pages[p++] = ZERO_PAGE(0);
-+	} else {
-+		/* Skip the meta-page */
-+		pgoff -= subbuf_pages;
-+
-+		s += pgoff / subbuf_pages;
-+	}
-+
-+	while (s < nr_subbufs && p < nr_pages) {
-+		struct page *page;
-+
-+		foreach_subbuf_page(subbuf_order, cpu_buffer->subbuf_ids[s], page) {
-+			if (p >= nr_pages)
-+				break;
-+
-+			pages[p++] = page;
-+		}
-+		s++;
-+	}
-+
-+	err = vm_insert_pages(vma, vma->vm_start, pages, &nr_pages);
-+
-+	kfree(pages);
-+
-+	return err;
-+}
-+
-+int ring_buffer_map(struct trace_buffer *buffer, int cpu,
-+		    struct vm_area_struct *vma)
-+{
-+	struct ring_buffer_per_cpu *cpu_buffer;
-+	unsigned long flags, *subbuf_ids;
-+	int err = 0;
-+
-+	if (!cpumask_test_cpu(cpu, buffer->cpumask))
-+		return -EINVAL;
-+
-+	cpu_buffer = buffer->buffers[cpu];
-+
-+	mutex_lock(&cpu_buffer->mapping_lock);
-+
-+	if (cpu_buffer->mapped) {
-+		err = __rb_map_vma(cpu_buffer, vma);
-+		if (!err)
-+			err = __rb_inc_dec_mapped(cpu_buffer, true);
-+		mutex_unlock(&cpu_buffer->mapping_lock);
-+		return err;
-+	}
-+
-+	/* prevent another thread from changing buffer/sub-buffer sizes */
-+	mutex_lock(&buffer->mutex);
-+
-+	err = rb_alloc_meta_page(cpu_buffer);
-+	if (err)
-+		goto unlock;
-+
-+	/* subbuf_ids include the reader while nr_pages does not */
-+	subbuf_ids = kcalloc(cpu_buffer->nr_pages + 1, sizeof(*subbuf_ids), GFP_KERNEL);
-+	if (!subbuf_ids) {
-+		rb_free_meta_page(cpu_buffer);
-+		err = -ENOMEM;
-+		goto unlock;
-+	}
-+
-+	atomic_inc(&cpu_buffer->resize_disabled);
-+
-+	/*
-+	 * Lock all readers to block any subbuf swap until the subbuf IDs are
-+	 * assigned.
-+	 */
-+	raw_spin_lock_irqsave(&cpu_buffer->reader_lock, flags);
-+	rb_setup_ids_meta_page(cpu_buffer, subbuf_ids);
-+	raw_spin_unlock_irqrestore(&cpu_buffer->reader_lock, flags);
-+
-+	err = __rb_map_vma(cpu_buffer, vma);
-+	if (!err) {
-+		raw_spin_lock_irqsave(&cpu_buffer->reader_lock, flags);
-+		cpu_buffer->mapped = 1;
-+		raw_spin_unlock_irqrestore(&cpu_buffer->reader_lock, flags);
-+	} else {
-+		kfree(cpu_buffer->subbuf_ids);
-+		cpu_buffer->subbuf_ids = NULL;
-+		rb_free_meta_page(cpu_buffer);
-+	}
-+unlock:
-+	mutex_unlock(&buffer->mutex);
-+	mutex_unlock(&cpu_buffer->mapping_lock);
-+
-+	return err;
-+}
-+
-+int ring_buffer_unmap(struct trace_buffer *buffer, int cpu)
-+{
-+	struct ring_buffer_per_cpu *cpu_buffer;
-+	unsigned long flags;
-+	int err = 0;
-+
-+	if (!cpumask_test_cpu(cpu, buffer->cpumask))
-+		return -EINVAL;
-+
-+	cpu_buffer = buffer->buffers[cpu];
-+
-+	mutex_lock(&cpu_buffer->mapping_lock);
-+
-+	if (!cpu_buffer->mapped) {
-+		err = -ENODEV;
-+		goto out;
-+	} else if (cpu_buffer->mapped > 1) {
-+		__rb_inc_dec_mapped(cpu_buffer, false);
-+		goto out;
-+	}
-+
-+	mutex_lock(&buffer->mutex);
-+	raw_spin_lock_irqsave(&cpu_buffer->reader_lock, flags);
-+
-+	cpu_buffer->mapped = 0;
-+
-+	raw_spin_unlock_irqrestore(&cpu_buffer->reader_lock, flags);
-+
-+	kfree(cpu_buffer->subbuf_ids);
-+	cpu_buffer->subbuf_ids = NULL;
-+	rb_free_meta_page(cpu_buffer);
-+	atomic_dec(&cpu_buffer->resize_disabled);
-+
-+	mutex_unlock(&buffer->mutex);
-+out:
-+	mutex_unlock(&cpu_buffer->mapping_lock);
-+
-+	return err;
-+}
-+
-+int ring_buffer_map_get_reader(struct trace_buffer *buffer, int cpu)
-+{
-+	struct ring_buffer_per_cpu *cpu_buffer;
-+	unsigned long reader_size;
-+	unsigned long flags;
-+
-+	cpu_buffer = rb_get_mapped_buffer(buffer, cpu);
-+	if (IS_ERR(cpu_buffer))
-+		return (int)PTR_ERR(cpu_buffer);
-+
-+	raw_spin_lock_irqsave(&cpu_buffer->reader_lock, flags);
-+consume:
-+	if (rb_per_cpu_empty(cpu_buffer))
-+		goto out;
-+
-+	reader_size = rb_page_size(cpu_buffer->reader_page);
-+
-+	/*
-+	 * There are data to be read on the current reader page, we can
-+	 * return to the caller. But before that, we assume the latter will read
-+	 * everything. Let's update the kernel reader accordingly.
-+	 */
-+	if (cpu_buffer->reader_page->read < reader_size) {
-+		while (cpu_buffer->reader_page->read < reader_size)
-+			rb_advance_reader(cpu_buffer);
-+		goto out;
-+	}
-+
-+	if (WARN_ON(!rb_get_reader_page(cpu_buffer)))
-+		goto out;
-+
-+	goto consume;
-+out:
-+	/* Some archs do not have data cache coherency between kernel and user-space */
-+	flush_dcache_folio(virt_to_folio(cpu_buffer->reader_page->page));
-+
-+	rb_update_meta_page(cpu_buffer);
-+
-+	raw_spin_unlock_irqrestore(&cpu_buffer->reader_lock, flags);
-+	rb_put_mapped_buffer(cpu_buffer);
-+
-+	return 0;
-+}
-+
- /*
-  * We only allocate new buffers, never free them if the CPU goes down.
-  * If we were to free the buffer, then the user would lose any trace that was in
++                return 0;
++        }
 -- 
 2.44.0.478.gd926399ef9-goog
 
