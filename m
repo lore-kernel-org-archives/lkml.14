@@ -1,89 +1,71 @@
-Received: from out-175.mta0.migadu.com (out-175.mta0.migadu.com [91.218.175.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f72.google.com (mail-io1-f72.google.com [209.85.166.72])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61C1F1CAAC;
-	Sat,  6 Apr 2024 05:20:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6248819479
+	for <linux-kernel@vger.kernel.org>; Sat,  6 Apr 2024 05:22:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712380856; cv=none; b=i75F6AeYSMGwts9u2XWiazuqqhnRhnk/3SQSdhMEkW2Dj5oBQxuFkhZafJXvxC0jb7va24vR/dLNPu/q3CJ2NbIcbNGm8jOyRADw0ud6ilN/UymbABzAIP0Xhv4Sw/EH0MjCUs6os6ScZjPrDoj7dKW+LhW+S2VASH6Gs5O9Tcc=
+	t=1712380924; cv=none; b=FotyjJufMHRdgPlEUulu/PBnuycxOkwSE4JuMkJGH3xbYiK/ZVG6fbsDesjeWbR49MdJE0IAEhFwr19qJPk5nU02s9PRWn4UG+V0tLXIEIKKFQXzXMigtltUEZXpEas6Fq4WYkg1pGwND2dV8v9ieCJ5MmsHzXxlJfCeZFUzxLQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712380856; c=relaxed/simple;
-	bh=PIoOgNzqkPt6pFqlUzqJVdnsJcxBBJL9KPIQo8L9CWE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=heQrbeE7Ijt2hhEKpgYF1KUAJAC/C1cQvwoDgIjGMDp+NWg2F1nS2JQkEX7wo7wEUbv7wYr/NFI0DQ4lNwAacRM1EtNrIYAymaDK4LUq/NUzEXVPeTJeQSGYjM0tMZRgc4rMFus9kfhc/Qop1sB2OTTFDM+xzKdoscCc9D7grVs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=lLPAYrt5; arc=none smtp.client-ip=91.218.175.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="lLPAYrt5"
-Date: Sat, 6 Apr 2024 01:20:46 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1712380852;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=bhfWeUnybAsPC5w2wnk+v+3mDew6UZBufRKxuTERnpI=;
-	b=lLPAYrt5fteZomt541z2r9imi7ugwkVNiZC5pZZu3KjNFo/chRlOU1XA+bzccxMdMbIll9
-	iA+zhVqapFEEo0NHoRaICnZZ4CQhn70DUUTzecq//OFELR8OzaQySC7v12I2ZtwQTy4tva
-	HKowOJToS6St8IaHHb2Zg43DVWkqMkE=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Kent Overstreet <kent.overstreet@linux.dev>
-To: Andreas Dilger <adilger@dilger.ca>
-Cc: Sweet Tea Dorminy <sweettea-kernel@dorminy.me>, 
-	Jonathan Corbet <corbet@lwn.net>, Brian Foster <bfoster@redhat.com>, Chris Mason <clm@fb.com>, 
-	Josef Bacik <josef@toxicpanda.com>, David Sterba <dsterba@suse.com>, 
-	Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <chao@kernel.org>, 
-	Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, 
-	=?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>, linux-doc@vger.kernel.org, 
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-bcachefs@vger.kernel.org, 
-	linux-btrfs <linux-btrfs@vger.kernel.org>, linux-f2fs-devel@lists.sourceforge.net, 
-	linux-fsdevel <linux-fsdevel@vger.kernel.org>, kernel-team@meta.com
-Subject: Re: [PATCH v3 13/13] bcachefs: fiemap: emit new COMPRESSED state
-Message-ID: <2iyoi665o6hogzzlfhs6ets6vq2joh4xi5t3fbcpdmlv2cyrxu@7umadxpnaql7>
-References: <cover.1712126039.git.sweettea-kernel@dorminy.me>
- <943938ff75580b210eebf6c885659dd95f029486.1712126039.git.sweettea-kernel@dorminy.me>
- <7CF0A3D0-50E7-448F-A992-90B9168D557F@dilger.ca>
+	s=arc-20240116; t=1712380924; c=relaxed/simple;
+	bh=/ShBSzsDsIy1nIRHLF0JRwNUrp13oo/gxJmBA9gxzvU=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=J3jJRENSyQcxIgulmAQFFJLqSh1GjbuwzxGiRPlYZFmQruY3wyHxfPmuOZVMaveE35MSJyiAur4OXGJVVSL4m0F56IqhiPLSwEKb9zc2jJxPPpl+B6COfEMZxsvDUwWcT5SqwLFr+Ft2Jq/qUJ4lflEHpQ5MjKKttVN8AFxsvGY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.72
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f72.google.com with SMTP id ca18e2360f4ac-7cc0370e9b0so323182439f.0
+        for <linux-kernel@vger.kernel.org>; Fri, 05 Apr 2024 22:22:03 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712380922; x=1712985722;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=IshTEpsAMnjmjMc4RLrugnhne7oKjGH+YMoy5m+jGns=;
+        b=vwpl7yyyez8/lCKDS8sC0FHBFRf5kwoRDTm+5rw5AoV3Nv/9E30Xa9QmnDdiKvKICD
+         t9sAwbOpnjDx2Yr37XO635hi27sfYEA73gzKk4YY4zTNoUaToBCcZIR3aw93tm1alY5b
+         1OefIBf34QU6UyDdfD6eBFG4ruv2i2l7l4cxMPd0Ra//pS+eZuRrhsUZc3HX7kXAvp4W
+         06+aK/xkd2lMze5TtRVfWuIKIIuzKJ5xsQJ87S2l/pdps/BItp2VD2HtGTvllU1p7lS9
+         Rh84YSjlhEJx5RnrE8dUb04/3xE/ToHBHabH617WQaW230QQhgQaaVmvWrBSIo8v69YG
+         C6jg==
+X-Forwarded-Encrypted: i=1; AJvYcCWL4377n0AT7oRbH8G1OOpcJp4El2XxReLvigZ6XM5bl28iJAInvVdNxHnlIFnjUJ3z9ox0/RmadGs08okET2ppn/Nlp8T5M4mF5OUi
+X-Gm-Message-State: AOJu0YwLq4I2KOYXkDcKp8S+MtIMMsT7RbwCD37siDXCmEOqRurZSdC6
+	FBm3oUawGP72slhX9ggrhOXu6OqnRJ6b9V5PsKynkfsLGPJH4gY9eqQu0EWYblzURxS3cxo16bl
+	HZygWcYs7Q0zMpLVmsrH+sqI8GB5kBz6OP1QL6mY5uLPC/3xmbO1bPbE=
+X-Google-Smtp-Source: AGHT+IF72dcWSck7M3sskOmYjDu1n4+OwxFLhZR8b52M+++B4wA+e40iVG8DSrhh+oVxeCnqTF/M6AzdZu9TIt2ly4k0lfYhNO/z
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <7CF0A3D0-50E7-448F-A992-90B9168D557F@dilger.ca>
-X-Migadu-Flow: FLOW_OUT
+X-Received: by 2002:a05:6602:1411:b0:7cc:31f:f4fe with SMTP id
+ t17-20020a056602141100b007cc031ff4femr134308iov.3.1712380922612; Fri, 05 Apr
+ 2024 22:22:02 -0700 (PDT)
+Date: Fri, 05 Apr 2024 22:22:02 -0700
+In-Reply-To: <20240405094924.896-1-hdanton@sina.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000009cdf66061566c086@google.com>
+Subject: Re: [syzbot] [bluetooth?] KASAN: slab-out-of-bounds Read in hci_sock_setsockopt
+From: syzbot <syzbot+837ba09d9db969068367@syzkaller.appspotmail.com>
+To: hdanton@sina.com, linux-kernel@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-On Fri, Apr 05, 2024 at 01:17:45PM -0600, Andreas Dilger wrote:
-> On Apr 3, 2024, at 1:22 AM, Sweet Tea Dorminy <sweettea-kernel@dorminy.me> wrote:
-> > 
-> > Signed-off-by: Sweet Tea Dorminy <sweettea-kernel@dorminy.me>
-> > ---
-> > fs/bcachefs/fs.c | 2 +-
-> > 1 file changed, 1 insertion(+), 1 deletion(-)
-> > 
-> > diff --git a/fs/bcachefs/fs.c b/fs/bcachefs/fs.c
-> > index d2793bae842d..54f613f977b4 100644
-> > --- a/fs/bcachefs/fs.c
-> > +++ b/fs/bcachefs/fs.c
-> > @@ -921,7 +921,7 @@ static int bch2_fill_extent(struct bch_fs *c,
-> > 				flags2 |= FIEMAP_EXTENT_UNWRITTEN;
-> > 
-> > 			if (p.crc.compression_type) {
-> > -				flags2 |= FIEMAP_EXTENT_ENCODED;
-> > +				flags2 |= FIEMAP_EXTENT_DATA_COMPRESSED;
-> 
-> (defect) This should *also* set FIEMAP_EXTENT_ENCODED in this case,
-> along with FIEMAP_EXTENT_DATA_COMPRESSED.  Both for compatibility with
-> older code that doesn't understand FIEMAP_EXTENT_DATA_COMPRESSED, and
-> because the data still cannot be read directly from the volume when it
-> is not mounted.
-> 
-> Probably Kent should chime in here with what needs to be done to set
-> the phys_len properly for bcachefs, or leave this patch out of your
-> series and let him submit it directly.  With proposed wrapper in the
-> first patch of the series there isn't a hard requirement to change
-> all of the filesystems in one shot.
+Hello,
 
-You get phys len from crc.compressed_size - that's always guaranteed,
-even if it's not compressed
+syzbot has tested the proposed patch and the reproducer did not trigger any issue:
+
+Reported-and-tested-by: syzbot+837ba09d9db969068367@syzkaller.appspotmail.com
+
+Tested on:
+
+commit:         fe46a7dd Merge tag 'sound-6.9-rc1' of git://git.kernel..
+git tree:       https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
+console output: https://syzkaller.appspot.com/x/log.txt?x=170f6fc5180000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=4d90a36f0cab495a
+dashboard link: https://syzkaller.appspot.com/bug?extid=837ba09d9db969068367
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+patch:          https://syzkaller.appspot.com/x/patch.diff?x=122093e3180000
+
+Note: testing is done by a robot and is best-effort only.
