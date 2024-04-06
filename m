@@ -1,115 +1,123 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from dggsgout11.his.huawei.com (unknown [45.249.212.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB1771EB40
-	for <linux-kernel@vger.kernel.org>; Sat,  6 Apr 2024 08:06:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A00722EED;
+	Sat,  6 Apr 2024 08:09:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712390809; cv=none; b=bPphZogU60R5vdlU8WS3psvwHPtkYfUlYhnfeIQMfJ442TOuFmQ+sRaREVr4M6Iwjui1nMlvreSGr5BXb2zwyh7mEXjn7hG8IyzRpdnsL29JxA6LK4nO7APB3MLDKnahrACuZtTfgcPBdFoExRyQggit6msWReQs994DIctLQm4=
+	t=1712390956; cv=none; b=V/khBzUeDxjx56PGSE0oDKdZjeWvs3uW5zg/bIX+VJkfPrkdtqPoBnzbosgzh3h3B08zjTTEVpW4yOpirQRx2xoZn1nwEJlVOf+MAVHDL/Ognct1SH4czoWSeR58aqoDl30h3/W9uvjWSFx+VAqg2necTbj1VcnJncOUjIoGEHw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712390809; c=relaxed/simple;
-	bh=M87uudLlyUpqSYEX63NZsIYqD2BGh3l0n8hlMS93E4U=;
-	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
-	 Subject:Content-Type; b=Mt4ijT+GgHb7hf0ILV7g7DUM/s2828rGCj8w5gHURlYz3VZPgfRL4X8b8ULVNrDWawn0TXdnFRMFHCNulGENis5nMkFZnU0iacZ/CFbPKccGlgonLKUwkarjYpLp/RkqO4cYMLhEg8BgHnM5cwS9gax2mdgEjGkCLzNY2zACHq0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DZMaRcXg; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DZMaRcXg"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0245EC43390
-	for <linux-kernel@vger.kernel.org>; Sat,  6 Apr 2024 08:06:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712390809;
-	bh=M87uudLlyUpqSYEX63NZsIYqD2BGh3l0n8hlMS93E4U=;
-	h=In-Reply-To:References:Date:From:To:Cc:Subject:From;
-	b=DZMaRcXggFxoaTFtgJFZZSIS8FJbGkFVCdMMOawJwkiu0/XSao2jO7OScmYiQmq7E
-	 aGIKIRq2Wpb082mBWY5+pOW+ekN0aEVS77gODR6ytHOnMIsWb3+v8HR0T+v7ww3ccN
-	 aPJe2MRdVQAKNvwbTQJYpKk8rzGIOnptM40pB+OSecgmRVIbqM7U949gZ50XpOkVCx
-	 L4s45kLH5getuGe3e2EmoqmtYZEbLPjW3QnceLq5YgdGeGGo1zdwZqXpqVRFsJHT47
-	 crX9A7gPMJCB6wbN1vTAeJcTY1Wbr9lNCOzt5eFRYzaAYPuEnNOwpQbPvu7EmlSDuE
-	 38rPvLIibyUog==
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-	by mailfauth.nyi.internal (Postfix) with ESMTP id 0627F1200066;
-	Sat,  6 Apr 2024 04:06:47 -0400 (EDT)
-Received: from imap51 ([10.202.2.101])
-  by compute5.internal (MEProxy); Sat, 06 Apr 2024 04:06:48 -0400
-X-ME-Sender: <xms:lwIRZhfGxOfrq3GRd6jrUncCIgt1032rvYV3h1tC9BRH1mdw0k1Hdg>
-    <xme:lwIRZvMd609QFkaSkldvCzTg-up2jq1WFbigPvZBDkWJTLW4qnfYHQvEUFfbalSQs
-    EE5R7uSdyakOwrkKVM>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrudegvdcutefuodetggdotefrodftvfcurf
-    hrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecuuegr
-    ihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjug
-    hrpefofgggkfgjfhffhffvvefutgesthdtredtreertdenucfhrhhomhepfdetrhhnugcu
-    uegvrhhgmhgrnhhnfdcuoegrrhhnugeskhgvrhhnvghlrdhorhhgqeenucggtffrrghtth
-    gvrhhnpeelvefgudeiheefledttedthfffgfekudegkeelffdtiedvgfevieetteekheff
-    veenucffohhmrghinhepkhgvrhhnvghlrdhorhhgnecuvehluhhsthgvrhfuihiivgeptd
-    enucfrrghrrghmpehmrghilhhfrhhomheprghrnhguodhmvghsmhhtphgruhhthhhpvghr
-    shhonhgrlhhithihqdduvdekhedujedtvdegqddvkeejtddtvdeigedqrghrnhgupeepkh
-    gvrhhnvghlrdhorhhgsegrrhhnuggsrdguvg
-X-ME-Proxy: <xmx:lwIRZqhqaJE6nrIv7iq94np4B3clKvBFCWeBms2nHPX9HazvEWFeTg>
-    <xmx:lwIRZq_FCwFnKL65wo2I-wHIAMoQPHRvBOrrrjLHZRgbZWcNW2GnlQ>
-    <xmx:lwIRZtspNkEHBTzoEnmofoh-Sv4WjWHiPtzHQ_1OgZHh3J6BdujJYw>
-    <xmx:lwIRZpEwdW4VCUXgH3ti4aW5vKmRKdP__imCofjIpm3BGO02BZkS5A>
-    <xmx:lwIRZrV3vkNe6sCYNq80UxYlG_mr8KktdGBhKrsiuybh1cvNUzd20Qzb>
-Feedback-ID: i36794607:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-	id E64B8B6008D; Sat,  6 Apr 2024 04:06:46 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.11.0-alpha0-333-gbfea15422e-fm-20240327.001-gbfea1542
+	s=arc-20240116; t=1712390956; c=relaxed/simple;
+	bh=h0RhV8ibSEdOVAZU/kaIWg6VheFaanRrzHLKmEQKyOc=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=W0Ic83v5P7lv3r3ISvAOr2ZAtA2gf3kosnCf9RdHLdqhWEn28qxF8u5jTQuQi+K+ZFxWY5uLFbMxhttSH1SyiBeLnkLE7ak/2ePowkM3O4k+snd1A99rdBT5wz7wczGKx03L5pu6rScHwHTNH6Trn1j3k1gQpP92DBJwlf5b+1s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.93.142])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4VBSg51sWrz4f3jpk;
+	Sat,  6 Apr 2024 16:09:05 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.112])
+	by mail.maildlp.com (Postfix) with ESMTP id 8F60C1A0175;
+	Sat,  6 Apr 2024 16:09:09 +0800 (CST)
+Received: from huaweicloud.com (unknown [10.175.104.67])
+	by APP1 (Coremail) with SMTP id cCh0CgDHlxAjAxFmnZTkJA--.2125S4;
+	Sat, 06 Apr 2024 16:09:09 +0800 (CST)
+From: Yu Kuai <yukuai1@huaweicloud.com>
+To: axboe@kernel.dk,
+	chenhuacai@kernel.org,
+	tj@kernel.org,
+	josef@toxicpanda.com,
+	jhs@mojatatu.com,
+	svenjoac@gmx.de,
+	raven@themaw.net,
+	pctammela@mojatatu.com,
+	yukuai3@huawei.com,
+	qde@naccy.de,
+	zhaotianrui@loongson.cn
+Cc: linux-block@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	cgroups@vger.kernel.org,
+	yukuai1@huaweicloud.com,
+	yi.zhang@huawei.com,
+	yangerkun@huawei.com
+Subject: [PATCH RFC v2 0/6] blk-throttle: support enable and disable during runtime
+Date: Sat,  6 Apr 2024 16:00:53 +0800
+Message-Id: <20240406080059.2248314-1-yukuai1@huaweicloud.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-Id: <7e6757c1-10ad-4852-9927-6e0dca100524@app.fastmail.com>
-In-Reply-To: <ZhB8MnWSeySAHGXG@black.fi.intel.com>
-References: <20240405152924.252598-1-schnelle@linux.ibm.com>
- <ZhB8MnWSeySAHGXG@black.fi.intel.com>
-Date: Sat, 06 Apr 2024 10:06:21 +0200
-From: "Arnd Bergmann" <arnd@kernel.org>
-To: "Andy Shevchenko" <andy@black.fi.intel.com>,
- "Niklas Schnelle" <schnelle@linux.ibm.com>
-Cc: "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
- "Jiri Slaby" <jirislaby@kernel.org>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- linux-serial@vger.kernel.org, "Heiko Carstens" <hca@linux.ibm.com>,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/1] tty: Handle HAS_IOPORT dependencies
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:cCh0CgDHlxAjAxFmnZTkJA--.2125S4
+X-Coremail-Antispam: 1UD129KBjvJXoW7Zw13Kr4UJw1UXFWxXrWrXwb_yoW8Xr47pr
+	Waqr15Gr12gFn09Fn3Cw1SgrW8ta95GrWUJ3s8XF4SyryjkryIvFnYvr18ZayIvFW2yF42
+	vr15GryIkF1Uu37anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUvF14x267AKxVW5JVWrJwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26F1j6w1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
+	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
+	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
+	2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
+	W8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2
+	Y2ka0xkIwI1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4
+	xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r4a6rW5
+	MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I
+	0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWrJr0_WFyUJwCI42IY6I8E87Iv67AK
+	xVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvj
+	fUOmhFUUUUU
+X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
 
-On Sat, Apr 6, 2024, at 00:33, Andy Shevchenko wrote:
-> On Fri, Apr 05, 2024 at 05:29:23PM +0200, Niklas Schnelle wrote:
->> Hi Greg, Jiri, Ilpo,
->> 
->> This is a follow up in my ongoing effort of making inb()/outb() and
->> similar I/O port accessors compile-time optional. Previously I sent this
->> as a treewide series titled "treewide: Remove I/O port accessors for
->> HAS_IOPORT=n" with the latest being its 5th version[0]. With a significant
->> subset of patches merged I've changed over to per-subsystem series. These
->> series are stand alone and should be merged via the relevant tree such
->> that with all subsystems complete we can follow this up with the final
->> patch that will make the I/O port accessors compile-time optional.
->> 
->> The current state of the full series with changes to the remaining subsystems
->> and the aforementioned final patch can be found for your convenience on my
->> git.kernel.org tree in the has_ioport branch[1]. As for compile-time vs runtime
->> see Linus' reply to my first attempt[2].
->> 
->> The patch was previously acked[3] by Greg but given this was almost
->> a year ago and didn't apply then I didn't carry the Ack over. That said
->> I don't think there were non trivial changes.
->
-> Hmm... Can those drivers simply be converted to use ioreadXX/iowriteXX
-> instead?
+From: Yu Kuai <yukuai3@huawei.com>
 
-Not 8250, for a couple of reasons:
+Hi, all!
 
-- the irq autoconfig code uses outb_p(), which has no iowrite()
-  equivalent
-- the driver is used on machines that cannot implement
-  ioport_map() because of the nonlinear address translation,
-  e.g. certain early alpha and mips machines.
-- it still needs its own I/O abstraction layer to deal with
-  different-sized registers, so the result would not be any
-  more readable even without the other issues.
+I'm planning to support build all blk-throttle polices as kernel module,
+this is the first part for blk-throttle:
 
-     Arnd
+- patch 1 remove THROTTLE LOW;
+- patch 2 delay initialization from disk initialization to
+configuration;
+- patch 3-5 support to destroy blk-throttle is it's disabled;
+- patch 6 switch blk-throttle to use rq_qos to stop exposing
+blk-throttle internal implementations;
+
+Changes from RFV v1:
+ - add missing places in patch 1;
+ - add patch 2-6;
+
+Yu Kuai (6):
+  blk-throttle: remove CONFIG_BLK_DEV_THROTTLING_LOW
+  blk-throttle: delay initialization until configuration
+  blk-throttle: expand tg_conf_updated() to return if any tg has rules
+  blk-cgroup: add a new helper blkg_conf_exit_blkg()
+  blk-throttle: support to destroy throtl_data when blk-throttle is
+    disabled
+  blk-throtl: switch to use rq_qos
+
+ Documentation/ABI/stable/sysfs-block       |   12 -
+ arch/loongarch/configs/loongson3_defconfig |    1 -
+ block/Kconfig                              |   11 -
+ block/bio.c                                |    1 -
+ block/blk-cgroup.c                         |   25 +-
+ block/blk-cgroup.h                         |    1 +
+ block/blk-core.c                           |    4 +-
+ block/blk-merge.c                          |    2 +-
+ block/blk-mq-debugfs.c                     |    2 +
+ block/blk-rq-qos.c                         |   13 +
+ block/blk-rq-qos.h                         |   11 +
+ block/blk-stat.c                           |    3 -
+ block/blk-sysfs.c                          |    9 -
+ block/blk-throttle.c                       | 1598 ++++++--------------
+ block/blk-throttle.h                       |   76 +-
+ block/blk.h                                |   11 -
+ block/genhd.c                              |    3 -
+ include/linux/blkdev.h                     |    4 -
+ 18 files changed, 495 insertions(+), 1292 deletions(-)
+
+-- 
+2.39.2
+
