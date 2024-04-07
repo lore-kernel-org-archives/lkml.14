@@ -1,207 +1,199 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 351913A268
-	for <linux-kernel@vger.kernel.org>; Sun,  7 Apr 2024 13:49:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 474F011720
+	for <linux-kernel@vger.kernel.org>; Sun,  7 Apr 2024 13:54:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712497790; cv=none; b=cXo3t4WrQWqwUg0ZXZUhrvk1TOHY/Kbu4YXiLWnsImNM2vqFQps1nQJyMHNH5T4SFcs/NcKBHYlmHPcJv0cbzMyk6bgKE+3sWnUg1vtEZHAftzqHToSqkfWR0eeXO/EjZSNpi+VrARCWn2v4MGql16pbVZiymxANwdqaA+UDsxg=
+	t=1712498068; cv=none; b=BJKmPUc41i2JS+0IteRvF4vZQ/6lh2V2QE6cq6pbFgSvNyDgNKT+XajLHQy1hYNAmIiswB9JaLNv+Q6uGxAwLVJweLjSdMoLD0pmRqVe/l/lfDuAWWozhIRHyCuNyqkcYWaPpdfKWxd1WzifX5mCVp8XEx5Fjw8MYb9dL8PcMAs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712497790; c=relaxed/simple;
-	bh=xcRpV3twoKsvi8UAsPruAGCIK2HXzx060lBI5tv8958=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=YCbJgCB+kns8vZo+IU6VCgkigk6KYG1q86WONSeqJ2HU/+1XodUm26rotzhZXTqj0DzlRUqZVdXPHmLr6EyqEVoUb2O3gOIctLYrPOc0FkyHCFvPblLJ+wZOKX06U6rtzs72ICNjBjDnMvWm2qYd1QEYREkkfikkw/gfvFHpxZg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dcp3aXHP; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1712498068; c=relaxed/simple;
+	bh=jxBqjjbPajszaEdq2fwpE6x+8A0oeppI3j2mrb+v9n4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=KHnIyXCBSTh1ysOeNLSNimBiuswPHIN2oGAWkPC8ERCJXy2COlaON9RvYpRXx+IZm4MNJNo/5TVyfLPI9cFDs8BPhvFBSFnezOgsDOICFqiFjtyZ93f7mGo3uUA0lT/wP1FTVNhohPyXZkRf+d48Q5AG7qFTCMHq+WvVXv84r/E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=UNEuwH7k; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dcp3aXHP"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7CA25C43390;
-	Sun,  7 Apr 2024 13:49:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712497789;
-	bh=xcRpV3twoKsvi8UAsPruAGCIK2HXzx060lBI5tv8958=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=dcp3aXHPrmJQTfW5fCZyWb476EwkNwP9UAs6wLa0UXpU4fJ19jT5q6SibOH+c3+EU
-	 mJQISCJmRiolg9IXMpQMaqeppYTvIogn/VfRI4wjHwgqY+GLEKNotNzytsje0PrnuT
-	 EdSZFkX/A4u0qlTkB9JKH2QJWsjG1cCH0jf9tBMWUZ4Szwzjj9T4bRsaTvjQ55XQR0
-	 /dHM0lZm83EHKX2GXKWNq1Ji9ivzgxzn+kAOLPeYpeWXCB8yvWvi4FlRH4HyctC/B3
-	 Q2AshRW22zDcFFONfV4SxXDf8CxMcUgXeUvvEgx1RJhMKmBt6iPIbjU3a2LmDcXwCb
-	 iTIaY/m8X1/9w==
-From: Chao Yu <chao@kernel.org>
-To: jaegeuk@kernel.org
-Cc: linux-f2fs-devel@lists.sourceforge.net,
-	linux-kernel@vger.kernel.org,
-	Chao Yu <chao@kernel.org>
-Subject: [PATCH v2 2/2] f2fs: introduce written_map to indicate written datas
-Date: Sun,  7 Apr 2024 21:49:34 +0800
-Message-Id: <20240407134934.3635739-2-chao@kernel.org>
-X-Mailer: git-send-email 2.40.1
-In-Reply-To: <20240407134934.3635739-1-chao@kernel.org>
-References: <20240407134934.3635739-1-chao@kernel.org>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UNEuwH7k"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1712498065;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=88iwLBU2e6djTkjvz8Wf+ZEeZw4XISzU7qQzK/TLfNA=;
+	b=UNEuwH7kSvj89Z+q0/HDLUbYf07g5yLb8+SJXmNcHtpaZr3mlEMZxyBErV60uUaRTyuKuk
+	30hI6OL7EZswthPcy4yElqEvIvwfbCE0LoOWOtn+YgmaT9gGqf4QZfUmhNTuizTL0MAm3f
+	7ktMEwjLf3ZAUH2ZQMIVRAKHpjITEpk=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-66-upORUUgENOS-LCzNvktl5Q-1; Sun, 07 Apr 2024 09:54:23 -0400
+X-MC-Unique: upORUUgENOS-LCzNvktl5Q-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.rdu2.redhat.com [10.11.54.7])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id C692A104457C;
+	Sun,  7 Apr 2024 13:54:22 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.224.79])
+	by smtp.corp.redhat.com (Postfix) with SMTP id B63031C21915;
+	Sun,  7 Apr 2024 13:54:18 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+	oleg@redhat.com; Sun,  7 Apr 2024 15:52:57 +0200 (CEST)
+Date: Sun, 7 Apr 2024 15:52:48 +0200
+From: Oleg Nesterov <oleg@redhat.com>
+To: Frederic Weisbecker <frederic@kernel.org>
+Cc: Nick Piggin <npiggin@gmail.com>, Tejun Heo <tj@kernel.org>,
+	Leonardo Bras <leobras@redhat.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Lai Jiangshan <jiangshanlai@gmail.com>,
+	linux-kernel@vger.kernel.org, Junyao Zhao <junzhao@redhat.com>,
+	Chris von Recklinghausen <crecklin@redhat.com>
+Subject: Re: Nohz_full on boot CPU is broken (was: Re: [PATCH v2 1/1] wq:
+ Avoid using isolated cpus' timers on queue_delayed_work)
+Message-ID: <20240407135248.GB10796@redhat.com>
+References: <20240130010046.2730139-2-leobras@redhat.com>
+ <20240402105847.GA24832@redhat.com>
+ <Zg2qFinSkAOmRHcM@slm.duckdns.org>
+ <20240403203814.GD31764@redhat.com>
+ <20240405140449.GB22839@redhat.com>
+ <ZhByg-xQv6_PC3Pd@localhost.localdomain>
+ <20240407130914.GA10796@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240407130914.GA10796@redhat.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.7
 
-Currently, __exchange_data_block() will check checkpointed state of data,
-if it is not checkpointed, it will try to exchange blkaddrs directly in
-dnode.
+On 04/07, Oleg Nesterov wrote:
+>
+> On 04/05, Frederic Weisbecker wrote:
+> >
+> > +Cc Nick
+> >
+> > Le Fri, Apr 05, 2024 at 04:04:49PM +0200, Oleg Nesterov a écrit :
+> > > On 04/03, Oleg Nesterov wrote:
+> > > >
+> > > > > > OTOH, Documentation/timers/no_hz.rst says
+> > > > > >
+> > > > > > 	Therefore, the
+> > > > > > 	boot CPU is prohibited from entering adaptive-ticks mode.  Specifying a
+> > > > > > 	"nohz_full=" mask that includes the boot CPU will result in a boot-time
+> > > > > > 	error message, and the boot CPU will be removed from the mask.
+> > > > > >
+> > > > > > and this doesn't match the reality.
+> > > > >
+> > > > > Don't some archs allow the boot CPU to go down too tho? If so, this doesn't
+> > > > > really solve the problem, right?
+> > > >
+> > > > I do not know. But I thought about this too.
+> > > >
+> > > > In the context of this discussion we do not care if the boot CPU goes down.
+> > > > But we need at least one housekeeping CPU after cpu_down(). The comment in
+> > > > cpu_down_maps_locked() says
+> > > >
+> > > > 	Also keep at least one housekeeping cpu onlined
+> > > >
+> > > > but it checks HK_TYPE_DOMAIN, and I do not know (and it is too late for me
+> > > > to try to read the code ;) if housekeeping.cpumasks[HK_TYPE_TIMER] can get
+> > > > empty or not.
+> > >
+> > > This nearly killed me, but I managed to convince myself we shouldn't worry
+> > > about cpu_down().
+> > >
+> > > HK_FLAG_TIMER implies HK_FLAG_TICK.
+> > >
+> > > HK_FLAG_TICK implies tick_nohz_full_setup() which sets
+> > > tick_nohz_full_mask = non_housekeeping_mask.
+> > >
+> > > When tick_setup_device() is called on a housekeeping CPU it does
+> > >
+> > > 	else if (tick_do_timer_boot_cpu != -1 &&
+> > > 					!tick_nohz_full_cpu(cpu)) {
+> > > 		tick_take_do_timer_from_boot();
+> > > 		tick_do_timer_boot_cpu = -1;
+> > >
+> > >
+> > > 	and this sets tick_do_timer_cpu = first-housekeeping-cpu.
+> > >
+> > > cpu_down(tick_do_timer_cpu) will fail, tick_nohz_cpu_down() will nack it.
+> > >
+> > > So cpu_down() can't make housekeeping.cpumasks[HK_FLAG_TIMER] empty and I
+> > > still think that the change below is the right approach.
+> > >
+> > > But probably WARN_ON() in housekeeping_any_cpu() makes sense anyway.
+> > >
+> > > What do you think?
+> >
+> > Good analysis on this nasty housekeeping VS tick code. I promised so many
+> > times to cleanup this mess but things keep piling up.
+> >
+> > It is indeed possible for the boot CPU to be a nohz_full CPU and as
+> > you can see, it's only half-working. This is so ever since:
+> >
+> >     08ae95f4fd3b (nohz_full: Allow the boot CPU to be nohz_full)
+>
+> Thanks... So this is intentional. I was confused by
+>
+> 	Therefore, the
+> 	boot CPU is prohibited from entering adaptive-ticks mode.  Specifying a
+> 	"nohz_full=" mask that includes the boot CPU will result in a boot-time
+> 	error message, and the boot CPU will be removed from the mask.
+>
+> from Documentation/timers/no_hz.rst
+>
+> > I would love
+> > to revert that now but I don't know if anyone uses this and have it working
+> > by chance somewhere... Should we continue to support a broken feature? Can we
+> > break user ABI if it's already half-broken?
+>
+> Well, the changelog says
+>
+>     nohz_full has been trialed at a large supercomputer site and found to
+>     significantly reduce jitter. In order to deploy it in production, they
+>     need CPU0 to be nohz_full
+>
+> so I guess this feature has users.
+>
+> But after the commit aae17ebb53cd3da ("workqueue: Avoid using isolated cpus'
+> timers on queue_delayed_work") the kernel will crash at boot time if the boot
+> CPU is nohz_full.
+>
+> So we need a workaround at least. I am starting to think I will send a trivial
+> patch which changes __queue_delayed_work() to validate the cpu returned by
+> housekeeping_any_cpu(HK_TYPE_TIMER).
+>
+> But perhaps something like below makes more sense as a (stupid) workaround?
 
-However, after commit 899fee36fac0 ("f2fs: fix to avoid data corruption
-by forbidding SSR overwrite"), in order to disallow SSR allocator to
-reuse all written data/node type blocks, all written blocks were set as
-checkpointed.
+Or simply
 
-In order to reenable metadata exchange functionality, let's introduce
-written_map to indicate all written blocks including checkpointed one,
-or newly written and invalidated one, and use it for SSR allocation,
-and then ckpt_valid_bitmap can indicate real checkpointed status, and
-we can use it correctly in __exchange_data_block().
 
-[testcase]
-xfs_io -f /mnt/f2fs/src -c "pwrite 0 2m"
-xfs_io -f /mnt/f2fs/dst -c "pwrite 0 2m"
-xfs_io /mnt/f2fs/src -c "fiemap -v"
-xfs_io /mnt/f2fs/dst -c "fiemap -v"
-f2fs_io move_range /mnt/f2fs/src /mnt/f2fs/dst 0 0 2097152
-xfs_io /mnt/f2fs/src -c "fiemap -v"
-xfs_io /mnt/f2fs/dst -c "fiemap -v"
-
-[before]
-/mnt/f2fs/src:
- EXT: FILE-OFFSET      BLOCK-RANGE      TOTAL FLAGS
-   0: [0..4095]:       8445952..8450047  4096 0x1001
-/mnt/f2fs/dst:
- EXT: FILE-OFFSET      BLOCK-RANGE      TOTAL FLAGS
-   0: [0..4095]:       143360..147455    4096 0x1001
-
-/mnt/f2fs/src:
-/mnt/f2fs/dst:
- EXT: FILE-OFFSET      BLOCK-RANGE      TOTAL FLAGS
-   0: [0..4095]:       4284416..4288511  4096 0x1001
-
-[after]
-/mnt/f2fs/src:
- EXT: FILE-OFFSET      BLOCK-RANGE      TOTAL FLAGS
-   0: [0..4095]:       147456..151551    4096 0x1001
-/mnt/f2fs/dst:
- EXT: FILE-OFFSET      BLOCK-RANGE      TOTAL FLAGS
-   0: [0..4095]:       151552..155647    4096 0x1001
-
-/mnt/f2fs/src:
-/mnt/f2fs/dst:
- EXT: FILE-OFFSET      BLOCK-RANGE      TOTAL FLAGS
-   0: [0..4095]:       147456..151551    4096 0x1001
-
-Signed-off-by: Chao Yu <chao@kernel.org>
----
-v2:
-- rebase to last dev-test branch
- fs/f2fs/segment.c | 24 ++++++++++++------------
- fs/f2fs/segment.h |  6 ++++++
- 2 files changed, 18 insertions(+), 12 deletions(-)
-
-diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
-index 9039d60c989d..86436033c730 100644
---- a/fs/f2fs/segment.c
-+++ b/fs/f2fs/segment.c
-@@ -2456,13 +2456,12 @@ static void update_sit_entry(struct f2fs_sb_info *sbi, block_t blkaddr, int del)
- 			sbi->discard_blks--;
+diff --git a/kernel/sched/isolation.c b/kernel/sched/isolation.c
+index 373d42c707bc..e912555c6fc8 100644
+--- a/kernel/sched/isolation.c
++++ b/kernel/sched/isolation.c
+@@ -46,7 +46,11 @@ int housekeeping_any_cpu(enum hk_type type)
+ 			if (cpu < nr_cpu_ids)
+ 				return cpu;
  
- 		/*
--		 * SSR should never reuse block which is checkpointed
--		 * or newly invalidated.
-+		 * if CP disabling is enable, it allows SSR to reuse newly
-+		 * invalidated block, otherwise forbidding it to pretect fsyned
-+		 * datas.
- 		 */
--		if (!is_sbi_flag_set(sbi, SBI_CP_DISABLED)) {
--			if (!f2fs_test_and_set_bit(offset, se->ckpt_valid_map))
--				se->ckpt_valid_blocks++;
--		}
-+		if (!is_sbi_flag_set(sbi, SBI_CP_DISABLED))
-+			f2fs_set_bit(offset, se->written_map);
- 	} else {
- 		exist = f2fs_test_and_clear_bit(offset, se->cur_valid_map);
- #ifdef CONFIG_F2FS_CHECK_FS
-@@ -2498,8 +2497,6 @@ static void update_sit_entry(struct f2fs_sb_info *sbi, block_t blkaddr, int del)
- 			f2fs_test_and_clear_bit(offset, se->discard_map))
- 			sbi->discard_blks++;
- 	}
--	if (!f2fs_test_bit(offset, se->ckpt_valid_map))
--		se->ckpt_valid_blocks += del;
- 
- 	__mark_sit_entry_dirty(sbi, segno);
- 
-@@ -2847,11 +2844,11 @@ static void __get_segment_bitmap(struct f2fs_sb_info *sbi,
- 	struct seg_entry *se = get_seg_entry(sbi, segno);
- 	int entries = SIT_VBLOCK_MAP_SIZE / sizeof(unsigned long);
- 	unsigned long *ckpt_map = (unsigned long *)se->ckpt_valid_map;
--	unsigned long *cur_map = (unsigned long *)se->cur_valid_map;
-+	unsigned long *written_map = (unsigned long *)se->written_map;
- 	int i;
- 
- 	for (i = 0; i < entries; i++)
--		target_map[i] = ckpt_map[i] | cur_map[i];
-+		target_map[i] = ckpt_map[i] | written_map[i];
- }
- 
- static int __next_free_blkoff(struct f2fs_sb_info *sbi, unsigned long *bitmap,
-@@ -4510,9 +4507,9 @@ static int build_sit_info(struct f2fs_sb_info *sbi)
- 		return -ENOMEM;
- 
- #ifdef CONFIG_F2FS_CHECK_FS
--	bitmap_size = MAIN_SEGS(sbi) * SIT_VBLOCK_MAP_SIZE * (3 + discard_map);
-+	bitmap_size = MAIN_SEGS(sbi) * SIT_VBLOCK_MAP_SIZE * (4 + discard_map);
- #else
--	bitmap_size = MAIN_SEGS(sbi) * SIT_VBLOCK_MAP_SIZE * (2 + discard_map);
-+	bitmap_size = MAIN_SEGS(sbi) * SIT_VBLOCK_MAP_SIZE * (3 + discard_map);
- #endif
- 	sit_i->bitmap = f2fs_kvzalloc(sbi, bitmap_size, GFP_KERNEL);
- 	if (!sit_i->bitmap)
-@@ -4527,6 +4524,9 @@ static int build_sit_info(struct f2fs_sb_info *sbi)
- 		sit_i->sentries[start].ckpt_valid_map = bitmap;
- 		bitmap += SIT_VBLOCK_MAP_SIZE;
- 
-+		sit_i->sentries[start].written_map = bitmap;
-+		bitmap += SIT_VBLOCK_MAP_SIZE;
+-			return cpumask_any_and(housekeeping.cpumasks[type], cpu_online_mask);
++			cpu = cpumask_any_and(housekeeping.cpumasks[type], cpu_online_mask);
++			if (cpu < nr_cpu_ids)
++				return cpu;
 +
- #ifdef CONFIG_F2FS_CHECK_FS
- 		sit_i->sentries[start].cur_valid_map_mir = bitmap;
- 		bitmap += SIT_VBLOCK_MAP_SIZE;
-diff --git a/fs/f2fs/segment.h b/fs/f2fs/segment.h
-index 10f3e44f036f..38385c371f0f 100644
---- a/fs/f2fs/segment.h
-+++ b/fs/f2fs/segment.h
-@@ -204,6 +204,10 @@ struct seg_entry {
- 	 * checkpoint pack. This information is used by the SSR mode.
- 	 */
- 	unsigned char *ckpt_valid_map;	/* validity bitmap of blocks last cp */
-+	unsigned char *written_map;	/*
-+					 * blocks were written, including newly
-+					 * invalidated data
-+					 */
- 	unsigned char *discard_map;
- 	unsigned long long mtime;	/* modification time of the segment */
- };
-@@ -369,6 +373,7 @@ static inline void seg_info_from_raw_sit(struct seg_entry *se,
- 	se->ckpt_valid_blocks = GET_SIT_VBLOCKS(rs);
- 	memcpy(se->cur_valid_map, rs->valid_map, SIT_VBLOCK_MAP_SIZE);
- 	memcpy(se->ckpt_valid_map, rs->valid_map, SIT_VBLOCK_MAP_SIZE);
-+	memcpy(se->written_map, rs->valid_map, SIT_VBLOCK_MAP_SIZE);
- #ifdef CONFIG_F2FS_CHECK_FS
- 	memcpy(se->cur_valid_map_mir, rs->valid_map, SIT_VBLOCK_MAP_SIZE);
- #endif
-@@ -411,6 +416,7 @@ static inline void seg_info_to_raw_sit(struct seg_entry *se,
- 	__seg_info_to_raw_sit(se, rs);
- 
- 	memcpy(se->ckpt_valid_map, rs->valid_map, SIT_VBLOCK_MAP_SIZE);
-+	memcpy(se->written_map, rs->valid_map, SIT_VBLOCK_MAP_SIZE);
- 	se->ckpt_valid_blocks = se->valid_blocks;
- }
- 
--- 
-2.40.1
++			WARN_ON_ONCE(system_state == SYSTEM_RUNNING);
+ 		}
+ 	}
+ 	return smp_processor_id();
 
