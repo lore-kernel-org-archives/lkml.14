@@ -1,267 +1,162 @@
-Received: from mail-pf1-f176.google.com (mail-pf1-f176.google.com [209.85.210.176])
+Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C3BF38DEC;
-	Sun,  7 Apr 2024 09:04:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A183F38FB6
+	for <linux-kernel@vger.kernel.org>; Sun,  7 Apr 2024 09:04:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712480661; cv=none; b=FNuo6gIRX/c9zH7morNLEIA2PwOCt+AkL++PjdpPd7hp+WR5kQcS8TpDec7XjQlcPuUgdRzqDTvz4imt4JvxAYUpLnLdkZHnva3lUPsik8Nh3u0qfOFwaLixBxiRLMwu8t9enFb2Br3S70iQZAKXWVYkyau2owFFyZgecxbqM9Q=
+	t=1712480665; cv=none; b=oN7vxszmaPRQ9Z9wkqyv5R3vb9gQvN5s22CkhXXZhZ42sblHpMvgSzmYacQb63Shmvz1yUboZtiFLJwTRDvhTZ38th7lBN5jHaAvCtc+X9YQeUvjJMcfi5hAGQoX96j0Sl7poC3bKHqFiInQuMhz8qF1BchOQtwH0tSzshtGI08=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712480661; c=relaxed/simple;
-	bh=biS7KzzHTKcOQAMJum93/nBTbQjerhk67V4BVUndbxs=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=KFvkIINNQBRGw1CmZS6wMCn7zJzicxsehnVPY0BNNQcNSpioW+qZx6OuHxgBZTFrluvMgUYy/nhDnUBDokxEN09s8YdCFJBHFctl+p/2xdqUGl5113oLidwUIdVTu/Z5rhKz2qlP5N/rDgBz418krlosv7mclnaWc6DiUdxzuho=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=U8N5sEYz; arc=none smtp.client-ip=209.85.210.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1712480665; c=relaxed/simple;
+	bh=9Rxz9uLQQm/s+66PiRuMCLIxRzAvPCh4g/bvkxN5R0s=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=crCAFavGnuhf6rgQCs8Ka+JvsMtut0maFy3pEnJaEymPFGTa4yy92qbgHVMPSLiRuCfTz0a2AmRSK4EHE/9iadRvWM3n/reRpP01v7kKxppsP8F9RMjo4YH1/QT/fu2uSrNXvHyUrH3fCOFoRVLBSBKpWpyE+dkNI1A+1jv6AV0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Ok1h2Mkv; arc=none smtp.client-ip=209.85.221.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="U8N5sEYz"
-Received: by mail-pf1-f176.google.com with SMTP id d2e1a72fcca58-6ed04c91c46so1752574b3a.0;
-        Sun, 07 Apr 2024 02:04:20 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Ok1h2Mkv"
+Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-343e70dd405so1742386f8f.3
+        for <linux-kernel@vger.kernel.org>; Sun, 07 Apr 2024 02:04:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1712480659; x=1713085459; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=8pFdud31CO30bbz/KPNSHwu6wK19wUtd+HcNwJYEJfY=;
-        b=U8N5sEYztOMLwG/sg0hjXHkBMQbgbp9eOeMEK2mkl7XE3EDtQObQ1afeIZ5kBv9vME
-         3BfNA+oUm8ptdHbZcdPYlHdDPBmIZobkRsjKwX/xhphkW7sg0O65kI7aExLBZbGL0aRR
-         EQCSmaqnUpIVQ1UGFTHWdQydM6IiVBAHFUazkMXxKrV2jAJMAzrUNpnL+uxBnboCaQhc
-         HXiAVGOVfS4i7hycABprt5mgT91MlW5cfrVZhj9DOe81MmlbW0WeHHWU/bMzZWspYCHO
-         SNEQU9jibNay/CrVXdF8i1zsRs5H0dLh6AASuadR4roLiSO4exZWDsTTKdATyOLEJbKR
-         Av0g==
+        d=linaro.org; s=google; t=1712480662; x=1713085462; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=uRNhwyw9FS3sbWuSwutVho3jP99EmZFo+hdFmKQFtUc=;
+        b=Ok1h2MkvuEcSZbw8uHk3AVZ4i59Hb1ikHgfz3OZeY7+UE3Fs7uCJTfVi7hI58mTZsm
+         10Mg8/VE5ZeFQLTRAKkp59R99gNeb+i1yqdmYqe9Cm9viKcugP7aanicMX6klq+3v866
+         hWnbOU/g9v3Cl05G6V2I68MNi3biJt5Rr2/L8bhskjGXuESH4lxUMBqhWn7kOxaSikbL
+         yDvDPKHAmk9DQhdcCrV1gOkQadxaRuvAL6XeknsrVu+3N7G5sdcUNJhcg1YX8apRTnkb
+         4F82pnpbra6DIeX+M/ZWdw/cafSs3Sz0Pue/p6U6DsrRiK2Wtdp7kgD5UGm9xZY9gAcn
+         N5rw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712480659; x=1713085459;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=8pFdud31CO30bbz/KPNSHwu6wK19wUtd+HcNwJYEJfY=;
-        b=KIFOF9iMiXd7TdPgRxWlOpZcU79uudNDa6SQDGbjKsGNJ75gXtF70lp9Amzfj8lMoU
-         5VgJ+Jk6WcjQFYexQV2B5C6ur74jbX7GLyFZNrRGILgRZlGDOUJAIDIAq/nX7wnVMu4u
-         bkDatfYXUSip+Rabl1YcxgnPBS2mp7gBt88ttv2cXfHBesB+eW4o+b8NRFTyZBIa2p6v
-         iRHG0dhqgXsGMPNtpbbFaSX84dybUlg9yx1JHrhN1DSoRpQqfLzoVKq5YfzaB1OXvX/F
-         R9CSIIzquOl/2LS+PsxEfqGaLRFKWy0t5mSRyzFbAbQt4qNoR+/0oTd4kDIQHvBZ3QLt
-         t7Xg==
-X-Gm-Message-State: AOJu0YxPbsQ3oncf7vL2b/Id46mp4CC9quLdHRUSn6Fo0B4hFTxtdrPT
-	UqN67OPq/j7wdh9QXV/sAcCzqbpy7tvpjLF1Pp3cOYg+fZnt8svrGhRzImRB
-X-Google-Smtp-Source: AGHT+IEaKJcXHWyEbaXHBNXfVOIsKNaj3lY8ob579KruAgIbKEgl/YO0KV/ToaFfMleSxyGz42XHwA==
-X-Received: by 2002:a05:6a21:329b:b0:1a7:1cb:3e20 with SMTP id yt27-20020a056a21329b00b001a701cb3e20mr7113512pzb.54.1712480659129;
-        Sun, 07 Apr 2024 02:04:19 -0700 (PDT)
-Received: from localhost ([198.11.178.15])
-        by smtp.gmail.com with ESMTPSA id r6-20020aa78446000000b006eb0027f2b8sm4322191pfn.9.2024.04.07.02.04.18
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 07 Apr 2024 02:04:18 -0700 (PDT)
-From: Lai Jiangshan <jiangshanlai@gmail.com>
-To: linux-kernel@vger.kernel.org
-Cc: rcu@vger.kernel.org,
-	x86@kernel.org,
-	Lai Jiangshan <jiangshan.ljs@antgroup.com>,
-	"Paul E. McKenney" <paulmck@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Frederic Weisbecker <frederic@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Uros Bizjak <ubizjak@gmail.com>,
-	Josh Poimboeuf <jpoimboe@kernel.org>,
-	Breno Leitao <leitao@debian.org>,
-	Kent Overstreet <kent.overstreet@linux.dev>,
-	Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-	Rick Edgecombe <rick.p.edgecombe@intel.com>,
-	Vegard Nossum <vegard.nossum@oracle.com>,
-	Daniel Sneddon <daniel.sneddon@linux.intel.com>,
-	Nikolay Borisov <nik.borisov@suse.com>
-Subject: [PATCH V2 10/11] x86/rcu: Add rcu_preempt_count
-Date: Sun,  7 Apr 2024 17:05:57 +0800
-Message-Id: <20240407090558.3395-11-jiangshanlai@gmail.com>
-X-Mailer: git-send-email 2.19.1.6.gb485710b
-In-Reply-To: <20240407090558.3395-1-jiangshanlai@gmail.com>
-References: <20240407090558.3395-1-jiangshanlai@gmail.com>
+        d=1e100.net; s=20230601; t=1712480662; x=1713085462;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=uRNhwyw9FS3sbWuSwutVho3jP99EmZFo+hdFmKQFtUc=;
+        b=WOXOwt9DowdYObfixTt+Ivbxg76qdRoR03sx7n5MEVGjdajs9LJ35wUQDxYI5q6Qe5
+         k1/5+m0WZQpbLoihlRBf9jS+K9cH0d9NSU1azEpCOIFbNfmBk9/RqUtRzVnI0YEXHrTM
+         0nDqezoHN7P4useLY3XIs2HZiEt+MccNubMDLPax/qma5P/IFUfm00Tpr/rgUA6oguom
+         VhTWOTp7BJVbfknRX13s4YM5E7FiAd7HUQmTLCWyTDRcSKAqNr5/w004KFsHVw02q/mU
+         P4WoiY8A5AVWxKKDvjkKw/xSaZEA6SegUuUYa2q4oeucZ73aecaFkZAQLOFBYEU2Wgf4
+         S47w==
+X-Forwarded-Encrypted: i=1; AJvYcCVAachoFRlO4y5qbNiDh5xrYUMR2lFLjTW6BW43cImmZ++EPiZ/gURTEwT9Ao7ZGC8xjyzrgfic4bb29qMLGcNUnOK2xuzi2XXPc0B8
+X-Gm-Message-State: AOJu0Yy3aImQcTxV6DWXQguWrE070xL/86DA4lAVmheTeTt/01kXSDzz
+	J9TF6EA0JVvAdMA5P4wuuC49xM6tiF0del2Vr507WP4qnskc3XgM5YmHWAfCdmw=
+X-Google-Smtp-Source: AGHT+IEKpCxN3SthrzEr0aFlPZAGWF/+OIRaM7T0GqXAbZgLjeRmQdk+0GcFJEMmF66rUre334UlZw==
+X-Received: by 2002:a5d:58f3:0:b0:33f:6ec1:56dd with SMTP id f19-20020a5d58f3000000b0033f6ec156ddmr4654585wrd.45.1712480662001;
+        Sun, 07 Apr 2024 02:04:22 -0700 (PDT)
+Received: from [192.168.1.20] ([178.197.223.16])
+        by smtp.gmail.com with ESMTPSA id q1-20020adfb181000000b00341c3071c93sm6318807wra.73.2024.04.07.02.04.20
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 07 Apr 2024 02:04:21 -0700 (PDT)
+Message-ID: <f019690a-2397-4bf8-9472-ec38f4b94c1d@linaro.org>
+Date: Sun, 7 Apr 2024 11:04:19 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 1/1] arm64: dts: imx93-11x11-evk: add rtc PCF2131
+ support
+To: Joy Zou <joy.zou@nxp.com>, ping.bai@nxp.com, robh+dt@kernel.org,
+ krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org, shawnguo@kernel.org,
+ s.hauer@pengutronix.de
+Cc: kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com,
+ devicetree@vger.kernel.org, imx@lists.linux.dev,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20240407051913.1989364-1-joy.zou@nxp.com>
+ <20240407051913.1989364-2-joy.zou@nxp.com>
+Content-Language: en-US
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
+ 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
+ D2GYIS41Kv4Isx2dEFh+/Q==
+In-Reply-To: <20240407051913.1989364-2-joy.zou@nxp.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-From: Lai Jiangshan <jiangshan.ljs@antgroup.com>
+On 07/04/2024 07:19, Joy Zou wrote:
+> Support rtc PCF2131 on imx93-11x11-evk.
+> 
+> Signed-off-by: Joy Zou <joy.zou@nxp.com>
+> ---
+>  .../boot/dts/freescale/imx93-11x11-evk.dts    | 25 +++++++++++++++++++
+>  1 file changed, 25 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/freescale/imx93-11x11-evk.dts b/arch/arm64/boot/dts/freescale/imx93-11x11-evk.dts
+> index 07e85a30a25f..065fa3390791 100644
+> --- a/arch/arm64/boot/dts/freescale/imx93-11x11-evk.dts
+> +++ b/arch/arm64/boot/dts/freescale/imx93-11x11-evk.dts
+> @@ -281,6 +281,24 @@ ldo5: LDO5 {
+>  	};
+>  };
+>  
+> +&lpi2c3 {
+> +	#address-cells = <1>;
+> +	#size-cells = <0>;
+> +	clock-frequency = <400000>;
+> +	pinctrl-names = "default", "sleep";
+> +	pinctrl-0 = <&pinctrl_lpi2c3>;
+> +	pinctrl-1 = <&pinctrl_lpi2c3>;
+> +	status = "okay";
+> +
+> +	pcf2131: rtc@53 {
+> +			compatible = "nxp,pcf2131";
+> +			reg = <0x53>;
+> +			interrupt-parent = <&pcal6524>;
+> +			interrupts = <1 IRQ_TYPE_EDGE_FALLING>;
+> +			status = "okay";
 
-Implement PCPU_RCU_PREEMPT_COUNT for x86.
-Mainly copied from asm/preempt.h
+Really, just drop...
 
-Make rcu_read_[un]lock() inlined for rcu-preempt.
-Make rcu_read_lock() only one instruction.
-Make rcu_read_unlock() only two instructions in the fast path.
 
-Cc: "Paul E. McKenney" <paulmck@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Frederic Weisbecker <frederic@kernel.org>
-Signed-off-by: Lai Jiangshan <jiangshan.ljs@antgroup.com>
----
- arch/x86/Kconfig                   |   1 +
- arch/x86/include/asm/current.h     |   3 +
- arch/x86/include/asm/rcu_preempt.h | 107 +++++++++++++++++++++++++++++
- arch/x86/kernel/cpu/common.c       |   4 ++
- 4 files changed, 115 insertions(+)
- create mode 100644 arch/x86/include/asm/rcu_preempt.h
-
-diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-index 4fff6ed46e90..e805cac3763d 100644
---- a/arch/x86/Kconfig
-+++ b/arch/x86/Kconfig
-@@ -256,6 +256,7 @@ config X86
- 	select HAVE_OBJTOOL			if X86_64
- 	select HAVE_OPTPROBES
- 	select HAVE_PAGE_SIZE_4KB
-+	select HAVE_PCPU_RCU_PREEMPT_COUNT
- 	select HAVE_PCSPKR_PLATFORM
- 	select HAVE_PERF_EVENTS
- 	select HAVE_PERF_EVENTS_NMI
-diff --git a/arch/x86/include/asm/current.h b/arch/x86/include/asm/current.h
-index bf5953883ec3..dcc2ef784120 100644
---- a/arch/x86/include/asm/current.h
-+++ b/arch/x86/include/asm/current.h
-@@ -24,6 +24,9 @@ struct pcpu_hot {
- 			unsigned long		top_of_stack;
- 			void			*hardirq_stack_ptr;
- 			u16			softirq_pending;
-+#ifdef CONFIG_PCPU_RCU_PREEMPT_COUNT
-+			int			rcu_preempt_count;
-+#endif // #ifdef CONFIG_PCPU_RCU_PREEMPT_COUNT
- #ifdef CONFIG_X86_64
- 			bool			hardirq_stack_inuse;
- #else
-diff --git a/arch/x86/include/asm/rcu_preempt.h b/arch/x86/include/asm/rcu_preempt.h
-new file mode 100644
-index 000000000000..cb25ebe038a5
---- /dev/null
-+++ b/arch/x86/include/asm/rcu_preempt.h
-@@ -0,0 +1,107 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef __ASM_RCU_PREEMPT_H
-+#define __ASM_RCU_PREEMPT_H
-+
-+#include <asm/rmwcc.h>
-+#include <asm/percpu.h>
-+#include <asm/current.h>
-+
-+#ifdef CONFIG_PCPU_RCU_PREEMPT_COUNT
-+
-+/* We use the MSB mostly because its available */
-+#define RCU_PREEMPT_UNLOCK_SPECIAL_INVERTED	0x80000000
-+
-+/*
-+ * We use the RCU_PREEMPT_UNLOCK_SPECIAL_INVERTED bit as an inverted
-+ * current->rcu_read_unlock_special.s such that a decrement hitting 0
-+ * means we can and should call rcu_read_unlock_special().
-+ */
-+#define RCU_PREEMPT_INIT	(0 + RCU_PREEMPT_UNLOCK_SPECIAL_INVERTED)
-+
-+/*
-+ * We mask the RCU_PREEMPT_UNLOCK_SPECIAL_INVERTED bit so as not to
-+ * confuse all current users that think a non-zero value indicates we
-+ * are in a critical section.
-+ */
-+static inline int pcpu_rcu_preempt_count(void)
-+{
-+	return raw_cpu_read_4(pcpu_hot.rcu_preempt_count) & ~RCU_PREEMPT_UNLOCK_SPECIAL_INVERTED;
-+}
-+
-+static inline void pcpu_rcu_preempt_count_set(int count)
-+{
-+	int old, new;
-+
-+	old = raw_cpu_read_4(pcpu_hot.rcu_preempt_count);
-+	do {
-+		new = (old & RCU_PREEMPT_UNLOCK_SPECIAL_INVERTED) |
-+			(count & ~RCU_PREEMPT_UNLOCK_SPECIAL_INVERTED);
-+	} while (!raw_cpu_try_cmpxchg_4(pcpu_hot.rcu_preempt_count, &old, new));
-+}
-+
-+/*
-+ * We fold the RCU_PREEMPT_UNLOCK_SPECIAL_INVERTED bit into the RCU
-+ * preempt count such that rcu_read_unlock() can decrement and test for
-+ * the need of unlock-special handling with a single instruction.
-+ *
-+ * We invert the actual bit, so that when the decrement hits 0 we know
-+ * we both reach a quiescent state (no rcu preempt count) and need to
-+ * handle unlock-special (the bit is cleared), normally to report the
-+ * quiescent state immediately.
-+ */
-+
-+static inline void pcpu_rcu_preempt_special_set(void)
-+{
-+	raw_cpu_and_4(pcpu_hot.rcu_preempt_count, ~RCU_PREEMPT_UNLOCK_SPECIAL_INVERTED);
-+}
-+
-+static inline void pcpu_rcu_preempt_special_clear(void)
-+{
-+	raw_cpu_or_4(pcpu_hot.rcu_preempt_count, RCU_PREEMPT_UNLOCK_SPECIAL_INVERTED);
-+}
-+
-+static inline bool pcpu_rcu_preempt_special_test(void)
-+{
-+	return !(raw_cpu_read_4(pcpu_hot.rcu_preempt_count) & RCU_PREEMPT_UNLOCK_SPECIAL_INVERTED);
-+}
-+
-+static inline void pcpu_rcu_preempt_switch(int count, bool special)
-+{
-+	if (likely(!special))
-+		raw_cpu_write(pcpu_hot.rcu_preempt_count, count | RCU_PREEMPT_UNLOCK_SPECIAL_INVERTED);
-+	else
-+		raw_cpu_write(pcpu_hot.rcu_preempt_count, count);
-+}
-+
-+/*
-+ * The various rcu_preempt_count add/sub methods
-+ */
-+
-+static __always_inline void pcpu_rcu_preempt_count_add(int val)
-+{
-+	raw_cpu_add_4(pcpu_hot.rcu_preempt_count, val);
-+}
-+
-+static __always_inline void pcpu_rcu_preempt_count_sub(int val)
-+{
-+	raw_cpu_add_4(pcpu_hot.rcu_preempt_count, -val);
-+}
-+
-+/*
-+ * Because we keep RCU_PREEMPT_UNLOCK_SPECIAL_INVERTED set when we do
-+ * _not_ need to handle unlock-special for a fast-path decrement.
-+ */
-+static __always_inline bool pcpu_rcu_preempt_count_dec_and_test(void)
-+{
-+	return GEN_UNARY_RMWcc("decl", __my_cpu_var(pcpu_hot.rcu_preempt_count), e,
-+			       __percpu_arg([var]));
-+}
-+
-+#define pcpu_rcu_read_unlock_special()						\
-+do {										\
-+	rcu_read_unlock_special();						\
-+} while (0)
-+
-+#endif // #ifdef CONFIG_PCPU_RCU_PREEMPT_COUNT
-+
-+#endif /* __ASM_RCU_PREEMPT_H */
-diff --git a/arch/x86/kernel/cpu/common.c b/arch/x86/kernel/cpu/common.c
-index 5c1e6d6be267..918b1f5cb75d 100644
---- a/arch/x86/kernel/cpu/common.c
-+++ b/arch/x86/kernel/cpu/common.c
-@@ -1995,6 +1995,10 @@ DEFINE_PER_CPU_ALIGNED(struct pcpu_hot, pcpu_hot) = {
- 	.current_task	= &init_task,
- 	.preempt_count	= INIT_PREEMPT_COUNT,
- 	.top_of_stack	= TOP_OF_INIT_STACK,
-+
-+#ifdef CONFIG_PCPU_RCU_PREEMPT_COUNT
-+	.rcu_preempt_count	= RCU_PREEMPT_INIT,
-+#endif // #ifdef CONFIG_PCPU_RCU_PREEMPT_COUNT
- };
- EXPORT_PER_CPU_SYMBOL(pcpu_hot);
- EXPORT_PER_CPU_SYMBOL(const_pcpu_hot);
--- 
-2.19.1.6.gb485710b
+Best regards,
+Krzysztof
 
