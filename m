@@ -1,153 +1,258 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BAC33A1C7;
-	Sun,  7 Apr 2024 16:15:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22BFF3A1CA
+	for <linux-kernel@vger.kernel.org>; Sun,  7 Apr 2024 16:23:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712506550; cv=none; b=MxF4u5KvJ3MtAmU7iDgmOJ8UOsReqbLmHS8iUjoZ5KOoXh8D4BxKFhAPVWA5AsnmXmCFgPZAeWgfiBik0mYQzYdnGNOFIYWt4MrYZY2shbNw4YuQt2QL93bsfh+sWONGTfW99a3eGCOqGQtoC5vEYAanqVK5FdqC+M/Wz2wxhQ0=
+	t=1712507026; cv=none; b=NG5e3NhY2ZJJdXD4rh7nJCvPO+TbnFeSS+53/UPqqDEwUlTwFZtRwq/D+/lDAa3jbEPLPEa/zMlzfAYhJDxKepXuEvR5Qhqu7tw8Bq/5FYw0cmfyQNHwpwGNYyLwBdvV9OcgfuwYEe5wl3B+sZEIK4FbJ4hisc32YegsncBFU48=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712506550; c=relaxed/simple;
-	bh=Wx29/u2HmesnOY5HNS11s3zqFGiGxLSe5oJTWtN3DA8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=OYdgUix4v1ZMEXJjyejqsbbTBSiv6Wjx3eivs05ZyUUJTN13bXOp3d0kJozlcms1eCcIkL8eYIn2Lk1CNdJkI2FMbGO4FuuVE05PH5UznBD03QDE2Ajmi8IOWIuN/de8VCSb4dZUF67GLR72zRl+Z++VJB5LTLbsyR2Lhs3lhw0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qBwCdcRR; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1712507026; c=relaxed/simple;
+	bh=JVkBmCam2jdYO9LinquGWXrAvLM+y7WEW8TtTtGRCWc=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=JerZapaaVgVm7/uSAJK6KWIyn7sM+iSY8kLKvwCzSXfBpEACf58kBh0Q+pq/2/bs3tMvztlM0ukNw/AR+AyMTcjhaTZz9VDF5oPAt3RWcrsr5X2hEfH9Nh21XcMWoQwg4ociII9CCPVUVcHUoZ649p0qdukt9vNkdRN9GQCvB6Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=yYB2DPKZ; arc=none smtp.client-ip=209.85.218.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qBwCdcRR"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AA570C433F1;
-	Sun,  7 Apr 2024 16:15:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712506549;
-	bh=Wx29/u2HmesnOY5HNS11s3zqFGiGxLSe5oJTWtN3DA8=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=qBwCdcRR0gpom7F6u9JKMVjSi02D/nwR5BKVWr4PATUuJjKwYNM0W4TI6B8F5cn5m
-	 l/jBOv5gQGmGME8mwyn9piKDle03zot1UFM3rToorJMOwga+e7kdwURDoWaGP/8u7+
-	 QrFzHBWy26f2muW0BIIB5pTV4TJERd6da82sHH5vpkUcYkMJ9dDx7TgRD5OkoJyIjg
-	 W9zr59UBl1h6Z1wGONuKxxwKBfR5aXtS+C0PaaN6urUD4dNnmbBKa3msFlOOGXFz7R
-	 thgjyn5LoB14uAVVnDW81KbmeXKEi6UnJ1arGoo/Aaswe7R1/h7DnEjMxTbt41UaMf
-	 WW1+7OtsAJTsg==
-Message-ID: <5b9e0e44-0b9c-44fc-9d18-21c47b46dc63@kernel.org>
-Date: Sun, 7 Apr 2024 18:15:41 +0200
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="yYB2DPKZ"
+Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-a5199906493so333585866b.1
+        for <linux-kernel@vger.kernel.org>; Sun, 07 Apr 2024 09:23:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1712507022; x=1713111822; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=kRt6rM9Twb56M3ayCf2fMMjJ0a9uWjup39IBritYyoc=;
+        b=yYB2DPKZBqvP5Vz9ZjczZyK7J7vaQMe8q2DOBqfspLOl3RpZ/LH33o9hyVhDPDQNe0
+         eH3mHQE4k6/dZNBkKmFEEV9df5lMmgDkCYxFWEn/XE0i9UUlXUSMo9K+fs3ERmgW2C2h
+         vYCa5yoJps0kLUW/nlhwh2nvWDqt+PGzZ5I8N+e4RI7bOBbdLxR4vQagorvYXDuecJ+u
+         gSQo4eSAQBH5Lxc/Rh7JsECViYqXFX+oB9y6c7fktSoyqzd5CaufqzMgHoOWuHDHLxVs
+         OdXycCTUQ0xxfw/QrZOkEzm9svHQ6dY0LXipPrR6+oVW4/cjyIKAFb3nxmUVAD0gupJr
+         5qTQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712507022; x=1713111822;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=kRt6rM9Twb56M3ayCf2fMMjJ0a9uWjup39IBritYyoc=;
+        b=amgAbq5DtTzk5Pf+CAq+egTDE9389NZBsYDRxPdNS0T0rhOVWRaz3/QWNW3pTVzO0n
+         cKg+mR59GL3y2lIOQUweMEbu1GprNz+stkNPjvAeZpAjBo0Ctv+cn2Ly3xsAoEFc92qJ
+         f5v4Q3vMulFjxRqKLrOlZQeFVWXpRk+eX3ZdtsQk+5ekEnCHCramNxJdhbjP4ytkzxYG
+         awPcDfQ4hvPgWPQtKxdQtQfinNkVSSFUL5GPf5InkLttLKforZ8I44qU+AylyACtBCYk
+         abjKodydIvyYBybgQEWNGgi3hPz4Fz0g7fAJAO7xlQGzQbLzt95ufx9v3WQxx187cARt
+         Bj0g==
+X-Forwarded-Encrypted: i=1; AJvYcCUi/tbHvUKJ8r+Q+ejW7s7aj4ovPaLI2yEnXwHAjwEN0bU6CX01CNcdKpD2YfB6uQx8clqouxYGefBb0KV1JYnZjbnVWLfASaeHrnqG
+X-Gm-Message-State: AOJu0YyP1JHuFIvdOFHZjn7FxJYfYSjVnuf31dJ6lA+B8GxuU9E8BxXA
+	7g8xX/7tnRaEWd6IHQcQEg1YyILPoVLL+CFVCSxNz2pwxViR9pzzC4PQVYHZBsE=
+X-Google-Smtp-Source: AGHT+IFByAhkWASSEH7HI0Ywz4AL/IJfpKfRcVOuocpKS+0jAne7bJChvlhu2fEdc9QBGBtBA7zj8g==
+X-Received: by 2002:a17:907:6e87:b0:a51:c1db:659f with SMTP id sh7-20020a1709076e8700b00a51c1db659fmr2880334ejc.9.1712507022013;
+        Sun, 07 Apr 2024 09:23:42 -0700 (PDT)
+Received: from [127.0.1.1] ([79.114.172.194])
+        by smtp.gmail.com with ESMTPSA id qs28-20020a170906459c00b00a51bed388a4sm1811626ejc.139.2024.04.07.09.23.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 07 Apr 2024 09:23:41 -0700 (PDT)
+From: Abel Vesa <abel.vesa@linaro.org>
+Date: Sun, 07 Apr 2024 19:23:21 +0300
+Subject: [PATCH v9 1/7] dt-bindings: spmi: Add X1E80100 SPMI PMIC ARB
+ schema
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/6] dt-bindings: firmware: arm,scmi: set
- additionalProperties to true
-To: Peng Fan <peng.fan@nxp.com>, "Peng Fan (OSS)" <peng.fan@oss.nxp.com>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
- Sascha Hauer <s.hauer@pengutronix.de>,
- Pengutronix Kernel Team <kernel@pengutronix.de>,
- Fabio Estevam <festevam@gmail.com>, Sudeep Holla <sudeep.holla@arm.com>,
- Cristian Marussi <cristian.marussi@arm.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
- "imx@lists.linux.dev" <imx@lists.linux.dev>,
- "linux-arm-kernel@lists.infradead.org"
- <linux-arm-kernel@lists.infradead.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <20240405-imx95-bbm-misc-v2-v2-0-9fc9186856c2@nxp.com>
- <20240405-imx95-bbm-misc-v2-v2-1-9fc9186856c2@nxp.com>
- <614b5107-656d-4d41-99c1-77941c48342c@kernel.org>
- <DU0PR04MB9417932A6208128FBBB22C4188012@DU0PR04MB9417.eurprd04.prod.outlook.com>
- <09f6b752-6b72-49d7-b248-6faba2fd13a7@kernel.org>
- <DU0PR04MB9417C5B9BDD9E0B47E7494C088012@DU0PR04MB9417.eurprd04.prod.outlook.com>
-Content-Language: en-US
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <DU0PR04MB9417C5B9BDD9E0B47E7494C088012@DU0PR04MB9417.eurprd04.prod.outlook.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+Message-Id: <20240407-spmi-multi-master-support-v9-1-fa151c1391f3@linaro.org>
+References: <20240407-spmi-multi-master-support-v9-0-fa151c1391f3@linaro.org>
+In-Reply-To: <20240407-spmi-multi-master-support-v9-0-fa151c1391f3@linaro.org>
+To: Stephen Boyd <sboyd@kernel.org>, 
+ Matthias Brugger <matthias.bgg@gmail.com>, 
+ Bjorn Andersson <andersson@kernel.org>, 
+ Konrad Dybcio <konrad.dybcio@linaro.org>, 
+ Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, 
+ Neil Armstrong <neil.armstrong@linaro.org>, 
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
+ Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
+ Conor Dooley <conor+dt@kernel.org>
+Cc: Srini Kandagatla <srinivas.kandagatla@linaro.org>, 
+ Johan Hovold <johan@kernel.org>, David Collins <quic_collinsd@quicinc.com>, 
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+ linux-arm-msm@vger.kernel.org, linux-mediatek@lists.infradead.org, 
+ devicetree@vger.kernel.org, Abel Vesa <abel.vesa@linaro.org>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+X-Mailer: b4 0.13.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=4280; i=abel.vesa@linaro.org;
+ h=from:subject:message-id; bh=JVkBmCam2jdYO9LinquGWXrAvLM+y7WEW8TtTtGRCWc=;
+ b=owEBbQKS/ZANAwAKARtfRMkAlRVWAcsmYgBmEsiCcr851qTRXAH7gE1SwkOFNYU1tGQZBb8B/
+ 9sEIdFUhtmJAjMEAAEKAB0WIQRO8+4RTnqPKsqn0bgbX0TJAJUVVgUCZhLIggAKCRAbX0TJAJUV
+ VtRMD/93s27RINnTGgd8p2L9n+6axxSTC3sxduApeGdowZfWkWWzP9VnxFu4rkRZTZ9zTrpScTY
+ 4K95GNeofSNDTengwSLf6mvajJrYdtE937r6A71QgepBaMO0x8l60XT5M++iohjU/OnHBAPHSic
+ 4k/5HID0me8IRvKkBzzPm+KjBNnH19llmxP0JIqblS+Ljg0yLdOWo/Y+Q0FHZa1amN/7ZbdbpZt
+ 8RgXeYgxZrA4MP20Z9EhbmJizDAxehPw/fz9x9d8E9+5TOSjpePlEn8JssBENKbep+o2vJcVUEa
+ UXqFGVevN53tDiPWvk+QbU9HjTRgwKI8Qw/Gzn8sPwmqHpA+ncuMNUAxSWqm41siYHokFrEehMK
+ z1gMJ218Oo6cbdeRXJB1des95Xm/I0JI7WRukNyEEsY16umZgqdgYpDR7OFvflkQv6aTOi+ntel
+ LFtixjMIrOb9Ry0DlPtei38OFWxs9k9FG9swucvwHGOnYKX5L32O76g0SGVU1d71VeE9LiXYNcd
+ veRBOfBctZhIz1zxxQEedS+xsvHQYod0+f43MSrRU4F99mVEiXXZQOvptpzroMH2ky2aj/dtfrf
+ 10aRzRLhVpnRR1GU/oNKHMWySGd/w3F21Vhywk9fs0fm3S/sJ38++pwATlnFP9qx2OTzI158ENm
+ GCNqbg8y3ho3l5A==
+X-Developer-Key: i=abel.vesa@linaro.org; a=openpgp;
+ fpr=6AFF162D57F4223A8770EF5AF7BF214136F41FAE
 
-On 07/04/2024 12:04, Peng Fan wrote:
->> Subject: Re: [PATCH v2 1/6] dt-bindings: firmware: arm,scmi: set
->> additionalProperties to true
->>
->> On 07/04/2024 02:37, Peng Fan wrote:
->>>> Subject: Re: [PATCH v2 1/6] dt-bindings: firmware: arm,scmi: set
->>>> additionalProperties to true
->>>>
->>>> On 05/04/2024 14:39, Peng Fan (OSS) wrote:
->>>>> From: Peng Fan <peng.fan@nxp.com>
->>>>>
->>>>> When adding vendor extension protocols, there is dt-schema warning:
->>>>> "
->>>>> imx,scmi.example.dtb: scmi: 'protocol@81', 'protocol@84' do not
->>>>> match any of the regexes: 'pinctrl-[0-9]+'
->>>>> "
->>>>>
->>>>> Set additionalProperties to true to address the issue.
->>>>
->>>> I do not see anything addressed here, except making the binding
->>>> accepting anything anywhere...
->>>
->>> I not wanna add vendor protocols in arm,scmi.yaml, so will introduce a
->>> new yaml imx.scmi.yaml which add i.MX SCMI protocol extension.
->>>
->>> With additionalProperties set to false, I not know how, please suggest.
->>
->> First of all, you cannot affect negatively existing devices (their
->> bindings) and your patch does exactly that. This should make you thing what
->> is the correct approach...
->>
->> Rob gave you the comment about missing compatible - you still did not
->> address that.
-> 
-> I added the compatible in patch 2/6 in the examples "compatible = "arm,scmi";"
+Add dedicated schema for X1E80100 PMIC ARB (v7) as it allows multiple
+buses by declaring them as child nodes.
 
-So you claim that your vendor extensions are the same or fully
-compatible with arm,scmi and you add nothing... Are your
-extensions/protocol valid for arm,scmi? If yes, why is this in separate
-binding. If no, why you use someone else's compatible?
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Signed-off-by: Abel Vesa <abel.vesa@linaro.org>
+---
+ .../bindings/spmi/qcom,x1e80100-spmi-pmic-arb.yaml | 136 +++++++++++++++++++++
+ 1 file changed, 136 insertions(+)
 
-Maybe your binding is correct, feel free to convince me (and read first
-writing bindings).
+diff --git a/Documentation/devicetree/bindings/spmi/qcom,x1e80100-spmi-pmic-arb.yaml b/Documentation/devicetree/bindings/spmi/qcom,x1e80100-spmi-pmic-arb.yaml
+new file mode 100644
+index 000000000000..a28b70fb330a
+--- /dev/null
++++ b/Documentation/devicetree/bindings/spmi/qcom,x1e80100-spmi-pmic-arb.yaml
+@@ -0,0 +1,136 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/spmi/qcom,x1e80100-spmi-pmic-arb.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Qualcomm X1E80100 SPMI Controller (PMIC Arbiter v7)
++
++maintainers:
++  - Stephen Boyd <sboyd@kernel.org>
++
++description: |
++  The X1E80100 SPMI PMIC Arbiter implements HW version 7 and it's an SPMI
++  controller with wrapping arbitration logic to allow for multiple on-chip
++  devices to control up to 2 SPMI separate buses.
++
++  The PMIC Arbiter can also act as an interrupt controller, providing interrupts
++  to slave devices.
++
++properties:
++  compatible:
++    const: qcom,x1e80100-spmi-pmic-arb
++
++  reg:
++    items:
++      - description: core registers
++      - description: tx-channel per virtual slave registers
++      - description: rx-channel (called observer) per virtual slave registers
++
++  reg-names:
++    items:
++      - const: core
++      - const: chnls
++      - const: obsrvr
++
++  ranges: true
++
++  '#address-cells':
++    const: 2
++
++  '#size-cells':
++    const: 2
++
++  qcom,ee:
++    $ref: /schemas/types.yaml#/definitions/uint32
++    minimum: 0
++    maximum: 5
++    description: >
++      indicates the active Execution Environment identifier
++
++  qcom,channel:
++    $ref: /schemas/types.yaml#/definitions/uint32
++    minimum: 0
++    maximum: 5
++    description: >
++      which of the PMIC Arb provided channels to use for accesses
++
++patternProperties:
++  "^spmi@[a-f0-9]+$":
++    type: object
++    $ref: /schemas/spmi/spmi.yaml
++    unevaluatedProperties: false
++
++    properties:
++      reg:
++        items:
++          - description: configuration registers
++          - description: interrupt controller registers
++
++      reg-names:
++        items:
++          - const: cnfg
++          - const: intr
++
++      interrupts:
++        maxItems: 1
++
++      interrupt-names:
++        const: periph_irq
++
++      interrupt-controller: true
++
++      '#interrupt-cells':
++        const: 4
++        description: |
++          cell 1: slave ID for the requested interrupt (0-15)
++          cell 2: peripheral ID for requested interrupt (0-255)
++          cell 3: the requested peripheral interrupt (0-7)
++          cell 4: interrupt flags indicating level-sense information,
++                  as defined in dt-bindings/interrupt-controller/irq.h
++
++required:
++  - compatible
++  - reg-names
++  - qcom,ee
++  - qcom,channel
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/interrupt-controller/arm-gic.h>
++
++    soc {
++      #address-cells = <2>;
++      #size-cells = <2>;
++
++      spmi: arbiter@c400000 {
++        compatible = "qcom,x1e80100-spmi-pmic-arb";
++        reg = <0 0x0c400000 0 0x3000>,
++              <0 0x0c500000 0 0x4000000>,
++              <0 0x0c440000 0 0x80000>;
++        reg-names = "core", "chnls", "obsrvr";
++
++        qcom,ee = <0>;
++        qcom,channel = <0>;
++
++        #address-cells = <2>;
++        #size-cells = <2>;
++        ranges;
++
++        spmi_bus0: spmi@c42d000 {
++          reg = <0 0x0c42d000 0 0x4000>,
++                <0 0x0c4c0000 0 0x10000>;
++          reg-names = "cnfg", "intr";
++
++          interrupt-names = "periph_irq";
++          interrupts-extended = <&pdc 1 IRQ_TYPE_LEVEL_HIGH>;
++          interrupt-controller;
++          #interrupt-cells = <4>;
++
++          #address-cells = <2>;
++          #size-cells = <0>;
++        };
++      };
++    };
 
-Best regards,
-Krzysztof
+-- 
+2.34.1
 
