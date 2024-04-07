@@ -1,149 +1,119 @@
-Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
+Received: from mail-pg1-f176.google.com (mail-pg1-f176.google.com [209.85.215.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2C2F2BD1F
-	for <linux-kernel@vger.kernel.org>; Sun,  7 Apr 2024 09:03:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A3BC22F02;
+	Sun,  7 Apr 2024 09:03:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712480632; cv=none; b=OGGEfqbTv3TOAGWV13AglMlgWnkM2TfsEH6miguZrJ8gKyFAk4yFKFuFzlKYvuetVcymKYyhB0GaNwyL/WNLTE0k1gQ5H80JAWtuJshqhHjvc52n70OnGDC8mv39nCYceNTHHZs2H2wYzQeV71BZM/E6jwaTrcCXy7iLZNi4JwU=
+	t=1712480635; cv=none; b=JsMUejhSOD/p9WDs0Z5ccP69t+EK+BCIX1hgVFvoRPSghs/TqMYDe//mzfz78ZzZU2bOWJKXLO8GCAihmpSQ0ESwPu6qCzza0JW+j06L+j/YYCWY17vY7dGfi77TvJCbZTEPhHA4dKU7JOsXM9lA55n1b1xPTAXv6HArdK7fajM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712480632; c=relaxed/simple;
-	bh=Zraf+IF8jjkme58EOXXWX37lUIAIsTXRXwE0Yo0XLt0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=XZ+vcu8B24hY3L+cP/s4beOGJXIGX2yDW7xYkdhRezii7qdgkBIYm5tj4nez/hdGBn8WDnirYrdJeUAhxvPx/Rxt2TiZwZtZhZGzDL+ztnBe7O3P7IpotfzK5e0KZaW/WnPCOVmt27TkyrrQ1cR6k1LAvo58u0MH85ALMtpDL6U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=de+uYFVq; arc=none smtp.client-ip=209.85.221.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1712480635; c=relaxed/simple;
+	bh=3TturtFYIwfV1u8ACm2gm3tHdeACQEBcKlzkWT/2VSg=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=KsJfJ4rkUx7Ti05n00K2Q1THzY3hGnym0gvw68dy3Hrqz0dZ8h5ucdxokJBXhJ9oOwcIfkwxJC7I6aZb6wvoP3es1BOztrQT7IWtiNbsVwIODb9uL0XNAUT78MsLxMz3h/fmdGTQBgTXAP2W579t4SnFe2+f/CN9jpQTp71B0O8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=M1xsNfx0; arc=none smtp.client-ip=209.85.215.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="de+uYFVq"
-Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-343e46ec237so1672073f8f.2
-        for <linux-kernel@vger.kernel.org>; Sun, 07 Apr 2024 02:03:50 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="M1xsNfx0"
+Received: by mail-pg1-f176.google.com with SMTP id 41be03b00d2f7-5dbcfa0eb5dso2580802a12.3;
+        Sun, 07 Apr 2024 02:03:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1712480629; x=1713085429; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=lhJcyPhgX3F0B/BWk2i159pv3qTElO9d0HVqBUfqNmg=;
-        b=de+uYFVqjaYt9/aQ0+G0lfgECLBV3i/dX4o7RGqP1hvBA2TaIQY+s59Riab7nHIxjV
-         DqTtgD17XtI20GG6n+8O7/vKhE4qAQPaxbDxNtqVo7Ok0nc3bFqTG69su8/q2S/OcEbv
-         +FbkFYvBpvu/j9bMnCpHF6st6nB8tzslLOc+rnBuBoyPYy+aXLykfCIRe8EvpvxSAhcN
-         NIromxR0gGYJLAW2pr3+ff0r/2C97Yr/4OUxUt8RAQXKVMVAj/VltQ0SEXwEftG9uY1L
-         rdqWSKxhHAwSLdoIF0vYRnPSpEfQus6qobIQVtgsTda5dk36PjNuKsndC38jvvXqJTIU
-         7u2Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712480629; x=1713085429;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1712480633; x=1713085433; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=lhJcyPhgX3F0B/BWk2i159pv3qTElO9d0HVqBUfqNmg=;
-        b=vGr5kbszItG/VmxoF8Ff4rF2nkMiLepMxevYwXbbyPJQQvgGgmRaeSum7li/WEd0Ns
-         cGoxuT8i+nHpY91OyZuNObm87jniFyVC7jUdm6k+KVRo520pfOYW18zH1SrM5QGveLuZ
-         WM5mvsJLGYqAAZjrd9DFlJuxziBikKdMaHBwzpMyDUkJGB4iDSBbpAolPtHsrDGMFlO7
-         hgmUuhLjpEJ+lcRpA1JO3YHzN83WCxQ9ZhGs1oh9ZoTLiH/CTY4KfYv7O8t5FQRquWD1
-         9pTBonoAsfUOyKBOL2VnbXX8uVXcBqwxR5GJYu2vAEggQ1x1M1rUzAd/2vPLUWstau6A
-         XIXw==
-X-Forwarded-Encrypted: i=1; AJvYcCU8fFPAWM8McJJDi2fhds3e0+BqwJiR+qDEdPgYBDZ+qLRk/+uPwmTStZIL81xJvF92sakl8jvBu5S2g4LfZtpa8W5g4kBhvy0HJJzP
-X-Gm-Message-State: AOJu0YwYypTtsY0pbCB1yVzbCcAerXbr+RG6Vr8fRAnbL8Og0gPojf73
-	JTSY4sQr/g8iPFcFd9Wnj8OfYQnRXEqnVP9lUrxX1zL4Pg1RfnCy39W47U26IHs=
-X-Google-Smtp-Source: AGHT+IHy9eHKYMxaf9vkWbmen7WIUbOBEXV1kBr5+IVFEdpHNIy8u+qMnpLBM1geid95shOzQ7Z9MA==
-X-Received: by 2002:adf:f74e:0:b0:343:9189:e698 with SMTP id z14-20020adff74e000000b003439189e698mr4119708wrp.43.1712480629179;
-        Sun, 07 Apr 2024 02:03:49 -0700 (PDT)
-Received: from [192.168.1.20] ([178.197.223.16])
-        by smtp.gmail.com with ESMTPSA id i11-20020adfe48b000000b0034330c9eccasm6269503wrm.79.2024.04.07.02.03.47
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 07 Apr 2024 02:03:48 -0700 (PDT)
-Message-ID: <d24628cf-a628-4eb1-ae2f-bf414b62534a@linaro.org>
-Date: Sun, 7 Apr 2024 11:03:47 +0200
+        bh=U7zjP/fD7ntbdBgOTsfd20ge3XzeOlmyb2f9DwxHaY0=;
+        b=M1xsNfx0NmYoubyMUScrEDrph+U8x/PfXlmiFJft93QuVlGx1Xc9u8FmDxQ1w7SOfu
+         zDJvfuGr3K4kL1Xw5AvSM0k7whx12HNXPPmBp3HldfjA7vH6+u4BT8XYf2SRelAgoNU6
+         p3weNc/P7KQi5A4aO76VKHIkT19b6uVMhSkkFxj7JGAmFythsSgG6AjWcgIyyaV7bqF6
+         9+varSYGy4yfIGDJuY7JudIbuf4PE2KlacMsVHANa6dgiQIecfzb4xWnM/ikRZGEaMsZ
+         92C1K2WC/1qtPyaSmPMDzysDJeb1nz+hbeuzeNQrV83/QQuQgglHiiJI8mkJuSQ2iuu7
+         u6BA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712480633; x=1713085433;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=U7zjP/fD7ntbdBgOTsfd20ge3XzeOlmyb2f9DwxHaY0=;
+        b=BJBRYsqWNYA6Sox7Jekcx9Cw0pXEY4oXUpNcdLIy62gpV1VZgUk3qmQn9suGDuexRk
+         f1TgpmLnt47CQuRWsS0zD3BxyPL4a7Uym+28s41CXF7wpVJdnqulJkaiKl6PIXMDlCJW
+         6C+uINsBR4Tadq/Wg+0IUv0IHwmCxW93hYxjvPJnz9V5ygU/tnfFJFb/bIXYsNIiGV/4
+         H+i3jY3xvjzLDUGJwsadsPlDy+ACXHr6l3l1zBow7BeA4VYp5EoawSzn9NN1sTIXM6dk
+         zSp2Qtnr807VU9rcq0eSgWl3Bz18AkIsTQSDh4B8yqZCUJMBbTLP4/A4JBaKK3Z8DXHf
+         VECg==
+X-Gm-Message-State: AOJu0YxkuSd3vvqi6Gm3AIj8z+o+msgIT1dR4sffQLFMxoCk3FE2H/6O
+	/RJIBbKKLHfVqWjRa7PksupvHZCA/8JESbxBHUs2icNqqgSjSvAWW6EVjscE
+X-Google-Smtp-Source: AGHT+IGUXYj82DWPk7jq9yGQJ0difrAS0sPahh0a1BfbXK03ecPROvUt1tXny7PR6YY3g1QvTtJxog==
+X-Received: by 2002:a17:902:d386:b0:1e0:119e:f935 with SMTP id e6-20020a170902d38600b001e0119ef935mr4703483pld.15.1712480633128;
+        Sun, 07 Apr 2024 02:03:53 -0700 (PDT)
+Received: from localhost ([47.254.32.37])
+        by smtp.gmail.com with ESMTPSA id h7-20020a170902680700b001e2b4f513e1sm4632217plk.106.2024.04.07.02.03.52
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 07 Apr 2024 02:03:52 -0700 (PDT)
+From: Lai Jiangshan <jiangshanlai@gmail.com>
+To: linux-kernel@vger.kernel.org
+Cc: rcu@vger.kernel.org,
+	x86@kernel.org,
+	Lai Jiangshan <jiangshan.ljs@antgroup.com>,
+	"Paul E. McKenney" <paulmck@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Frederic Weisbecker <frederic@kernel.org>,
+	Neeraj Upadhyay <quic_neeraju@quicinc.com>,
+	Joel Fernandes <joel@joelfernandes.org>,
+	Josh Triplett <josh@joshtriplett.org>,
+	Boqun Feng <boqun.feng@gmail.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Lai Jiangshan <jiangshanlai@gmail.com>,
+	Zqiang <qiang.zhang1211@gmail.com>
+Subject: [PATCH V2 06/11] rcu: Rename marco __LINUX_RCU_H to __KERNEL_RCU_H
+Date: Sun,  7 Apr 2024 17:05:53 +0800
+Message-Id: <20240407090558.3395-7-jiangshanlai@gmail.com>
+X-Mailer: git-send-email 2.19.1.6.gb485710b
+In-Reply-To: <20240407090558.3395-1-jiangshanlai@gmail.com>
+References: <20240407090558.3395-1-jiangshanlai@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 2/2] arm64: dts: qcom: sm8550: Add support for Samsung
- Galaxy Z Fold5
-To: serdeliuk@yahoo.com, Bjorn Andersson <andersson@kernel.org>,
- Konrad Dybcio <konrad.dybcio@linaro.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>
-Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20240407-samsung-galaxy-zfold5-q5q-v4-0-8b67b1813653@yahoo.com>
- <20240407-samsung-galaxy-zfold5-q5q-v4-2-8b67b1813653@yahoo.com>
-Content-Language: en-US
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
- 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
- D2GYIS41Kv4Isx2dEFh+/Q==
-In-Reply-To: <20240407-samsung-galaxy-zfold5-q5q-v4-2-8b67b1813653@yahoo.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 07/04/2024 07:38, Alexandru Marc Serdeliuc via B4 Relay wrote:
-> From: Alexandru Marc Serdeliuc <serdeliuk@yahoo.com>
-> 
-> Add support for Samsung Galaxy Z Fold5 (q5q) foldable phone based on sm8550
-> 
-> Currently working features:
-> - Framebuffer
-> - UFS
-> - i2c
-> - Buttons
-> 
-> Signed-off-by: Alexandru Marc Serdeliuc <serdeliuk@yahoo.com>
-> ---
->  arch/arm64/boot/dts/qcom/Makefile               |   1 +
+From: Lai Jiangshan <jiangshan.ljs@antgroup.com>
 
-Where is the changelog? This is v4 and nothing (neither here nor in
-cover letter) explained what was happening with this patchset.
+to reflect the path of kernel/rcu/rcu.h.
 
-Tags were ignored, so maybe comments as well?
+Cc: "Paul E. McKenney" <paulmck@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Frederic Weisbecker <frederic@kernel.org>
+Signed-off-by: Lai Jiangshan <jiangshan.ljs@antgroup.com>
+---
+ kernel/rcu/rcu.h | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-Please provide *full* and detailed changelog.
-
-Best regards,
-Krzysztof
+diff --git a/kernel/rcu/rcu.h b/kernel/rcu/rcu.h
+index 86fce206560e..b17b2ed657fc 100644
+--- a/kernel/rcu/rcu.h
++++ b/kernel/rcu/rcu.h
+@@ -7,8 +7,8 @@
+  * Author: Paul E. McKenney <paulmck@linux.ibm.com>
+  */
+ 
+-#ifndef __LINUX_RCU_H
+-#define __LINUX_RCU_H
++#ifndef __KERNEL_RCU_H
++#define __KERNEL_RCU_H
+ 
+ #include <linux/slab.h>
+ #include <trace/events/rcu.h>
+@@ -668,4 +668,4 @@ int rcu_stall_notifier_call_chain(unsigned long val, void *v);
+ static inline int rcu_stall_notifier_call_chain(unsigned long val, void *v) { return NOTIFY_DONE; }
+ #endif // #else // #if defined(CONFIG_RCU_STALL_COMMON) && defined(CONFIG_RCU_CPU_STALL_NOTIFIER)
+ 
+-#endif /* __LINUX_RCU_H */
++#endif /* __KERNEL_RCU_H */
+-- 
+2.19.1.6.gb485710b
 
