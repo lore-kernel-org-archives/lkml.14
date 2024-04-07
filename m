@@ -1,500 +1,102 @@
-Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
+Received: from smtp.smtpout.orange.fr (smtp-27.smtpout.orange.fr [80.12.242.27])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0119F22324
-	for <linux-kernel@vger.kernel.org>; Sun,  7 Apr 2024 10:20:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95ADA1642B
+	for <linux-kernel@vger.kernel.org>; Sun,  7 Apr 2024 10:22:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.27
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712485218; cv=none; b=YqJRJKYI4QPa+wCVWdUHMqSqdbH62tVz3jbN5p2LL603YehaFuoSfRUabxiuilSUGumvdPAH0Lmw9LxioCSFOQnQLcY7zSr4pAlICUkleHHB0fb1uT1zH02hDzy35ZEvaQ9CC4RckvnJULvf6ChfFs/h6gHj5HCePdkxF9rOC88=
+	t=1712485375; cv=none; b=uiwZdVvFjCVWqRJsmOGUG6lnPvtKFUnBbjVK8GB9iPxkh643yr4zYXJ97rOpLg50/tOFkm7joGtKWnYjdYUfrw053+oowW08RxqyQjLHwDt1j/ed8BS+/SffBSyoGTWXnJWMLu5TEvzP4OBpWUrdaRcpEkTC+xjoFuUE4bz2DD4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712485218; c=relaxed/simple;
-	bh=IyigiUXqfkyxr9LwRAcxDUtvNu6/TM1v/83gsb1KeKU=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=SIJY3nX2EGzDrsXqTHXdv64p5C5HQhkCHkdpD2FuPRihCdFg11UFz/YyHywGE22y414NbRi8dAScFNd0gxavo1qjiEJSB5WPBQo83wQXy3s/46vyWBAifi2PrQBGZXgAIYozPmOOFezykDXKuKTLkbsMAA40b1hNDgHJ0DsSavk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=FtKHOW/b; arc=none smtp.client-ip=209.85.221.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1712485375; c=relaxed/simple;
+	bh=Lt2crmJayq9F3vHRkvZNrVEFSduxCuPNpTmHtF5Idpk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=QOuAE0dUHjAIOSvI9tRxQkYjt6hywFI9t/IFxJnpM3UNDvalAhCUsW46BNUe+pYeDCKdFATPXGDf/Hm1OovLjTaZ4nep5mUQAdEwj3ElgaCRfoQbR5Y/Brx0Hiu0U1M/98Vg9RQ5n0DHKIgnJ5KUEqVKlBlcadeugfb2YGVP5Qs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=Olvan3Fx; arc=none smtp.client-ip=80.12.242.27
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="FtKHOW/b"
-Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-34005b5927eso2281732f8f.1
-        for <linux-kernel@vger.kernel.org>; Sun, 07 Apr 2024 03:20:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1712485214; x=1713090014; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=mnClIcxeNTCAJvOGIqqRS1p1KDt6khfthGozCH9PY8c=;
-        b=FtKHOW/bkS+Gbo5gq/IQNkE6uzo1sPTWGkndOw2ggbvGWOyx6C/To+Q+3sPDXCpzUF
-         +jDrF9Hmkeod3zyuEf3whLWr7oU5PiHMBLqK1vKwUJHf+MAfQzpUL5Qbaoa2PfkxM0fx
-         bmEnt9dZwVIDy118m/Yn7iG56pAO21XSAYKdLIPOcXwaQLi+2qty+Dd90H4y1NDWfg0H
-         lGv24VMKqMuCS40CgIhg0yQYire2E9Bin+n38XbkFn5mMt1PDh9rytVWEYynJ+KGHRNb
-         6nOkIKk3BJqr7/2HHss1JRdM4DCzeC5qxqsNIeoL7M6j5pBFIlCqIIMv6vY+KXGaG62O
-         ldcw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712485214; x=1713090014;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=mnClIcxeNTCAJvOGIqqRS1p1KDt6khfthGozCH9PY8c=;
-        b=iHzm1P1UULAYBWEwXgV/n0rpCiBsZzUf4szIWeQtrEmdqpjsRdXphh/A4S8C8w4QCp
-         5siAqaSuFSvelx43R4MuskR0GSiXJy6rXT6XhMHdPyhF19/aCtsZztvlRNpRTGEKhDfd
-         JQIAmMqb0gKFC20UGyYWT3jHksnXurjZDS10RwamFXUjolEnGeL4M2RovTdzMfvyKNXD
-         ai5u0N99iussShazao4s04l/wEHCh5l/fzbsGBq3z3ByUdPNEtC0xAm/9dM+AWFV7P+s
-         AVwfvWzOUCfzs7zPR8sCAePmRfeEbgp1Z65IqzuVJEBigse9emxZs90jrf2Gwe/xj7nI
-         Mftg==
-X-Forwarded-Encrypted: i=1; AJvYcCVAipDNSh+Rf7SdplPb8q/HUYDfDnZsvbpK1PFOmqDFhxPMnplppgy074WAatlYrSfATp6a0eGny2oHxXd6ZiNbHUka5Rcj31R4flC7
-X-Gm-Message-State: AOJu0YwvClsBDUg5ail2LcmhRp69WYnIxQYnyQnRFMyMlwqIOAvrmu06
-	xc6FgkAES9f9PmucAhLaP1zDl4vsPnY4rQSnDTgxop/kxNWFz+Iw3KptXJU1TyU=
-X-Google-Smtp-Source: AGHT+IEvFcYweyd3hb0NKU1F37wgjCKo+SqG2hMlMxwV0wmdg5iPdEiYe7OagVX4SKZAxlH3JsRyAg==
-X-Received: by 2002:adf:f48e:0:b0:341:bdd4:aedf with SMTP id l14-20020adff48e000000b00341bdd4aedfmr3574221wro.25.1712485214391;
-        Sun, 07 Apr 2024 03:20:14 -0700 (PDT)
-Received: from krzk-bin.. ([178.197.223.16])
-        by smtp.gmail.com with ESMTPSA id f5-20020a5d58e5000000b0033ec9ddc638sm6354395wrd.31.2024.04.07.03.20.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 07 Apr 2024 03:20:13 -0700 (PDT)
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-To: Bjorn Helgaas <bhelgaas@google.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Hector Martin <marcan@marcan.st>,
-	Sven Peter <sven@svenpeter.dev>,
-	Alyssa Rosenzweig <alyssa@rosenzweig.io>,
-	Ray Jui <rjui@broadcom.com>,
-	Scott Branden <sbranden@broadcom.com>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	Jim Quinlan <jim2101024@gmail.com>,
-	Nicolas Saenz Julienne <nsaenz@kernel.org>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Will Deacon <will@kernel.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Srikanth Thokala <srikanth.thokala@intel.com>,
-	Ryder Lee <ryder.lee@mediatek.com>,
-	Jianjun Wang <jianjun.wang@mediatek.com>,
-	Sergio Paracuellos <sergio.paracuellos@gmail.com>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Daire McNamara <daire.mcnamara@microchip.com>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konrad.dybcio@linaro.org>,
-	Marek Vasut <marek.vasut+renesas@gmail.com>,
-	Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-	Shawn Lin <shawn.lin@rock-chips.com>,
-	Heiko Stuebner <heiko@sntech.de>,
-	Jingoo Han <jingoohan1@gmail.com>,
-	Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Bharat Kumar Gogada <bharat.kumar.gogada@amd.com>,
-	Michal Simek <michal.simek@amd.com>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Magnus Damm <magnus.damm@gmail.com>,
-	Neil Armstrong <neil.armstrong@linaro.org>,
-	Mark Kettenis <kettenis@openbsd.org>,
-	Tom Joseph <tjoseph@cadence.com>,
-	Ahmad Zainie <wan.ahmad.zainie.wan.mohamad@intel.com>,
-	Jiaxun Yang <jiaxun.yang@flygoat.com>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	Thippeswamy Havalige <thippeswamy.havalige@amd.com>,
-	linux-pci@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	asahi@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org,
-	linux-rpi-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org,
-	linux-arm-msm@vger.kernel.org,
-	linux-renesas-soc@vger.kernel.org,
-	linux-rockchip@lists.infradead.org
-Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Subject: [PATCH 3/3] dt-bindings: PCI: host-bridges: switch from deprecated pci-bus.yaml
-Date: Sun,  7 Apr 2024 12:20:00 +0200
-Message-Id: <20240407102000.37213-3-krzysztof.kozlowski@linaro.org>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240407102000.37213-1-krzysztof.kozlowski@linaro.org>
-References: <20240407102000.37213-1-krzysztof.kozlowski@linaro.org>
+	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="Olvan3Fx"
+Received: from [192.168.1.18] ([86.243.17.157])
+	by smtp.orange.fr with ESMTPA
+	id tP9trN2AQ7XO5tP9urPag1; Sun, 07 Apr 2024 11:49:55 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
+	s=t20230301; t=1712483395;
+	bh=onjAi5287tQzkMkFd5wR1HMVpRtkvypYb66fooySo48=;
+	h=Message-ID:Date:MIME-Version:Subject:To:From;
+	b=Olvan3FxyorBxQrVC82szkPbGGYAi45ejWmdNXCnNg89AoEoRsD8xTA1YLFEeeidV
+	 ZYoxuFhP/hiQwrvKcsSJ4KP53DTatjYT2WQ3wi8rceAVXpMqkh2mS67vViK0jtp1s3
+	 gGzYh+qYdp2m1iL2DIyObDBA6+pfiT3wbj/jtMDGOHR2elMQU/o6+cNy2cT3VzUxap
+	 AI8ow5tRNAuNrgvRx+p0V7aP7krbuKEiNEihc/vJ+MqsOfz4cIrmYI7t4tQ6dgQYPZ
+	 V0bvQxHVDe3u81+QJhmSDSAKDQ3u95GUhWULrkt1aMMKjOQFVH3sjjhL+16RPKX9ZD
+	 FCFt3buV5eFeQ==
+X-ME-Helo: [192.168.1.18]
+X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
+X-ME-Date: Sun, 07 Apr 2024 11:49:55 +0200
+X-ME-IP: 86.243.17.157
+Message-ID: <559293f8-0291-4059-95ac-99c5c106320a@wanadoo.fr>
+Date: Sun, 7 Apr 2024 11:49:52 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH V2] ppdev: Add an error check in register_device
+To: Huai-Yuan Liu <qq810974084@gmail.com>, sudipm.mukherjee@gmail.com,
+ arnd@arndb.de, gregkh@linuxfoundation.org
+Cc: linux-kernel@vger.kernel.org, baijiaju1990@outlook.com
+References: <20240407080358.8635-1-qq810974084@gmail.com>
+Content-Language: en-MW
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+In-Reply-To: <20240407080358.8635-1-qq810974084@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-dtschema package with core schemas deprecated pci-bus.yaml schema in
-favor of pci-host-bridge.yaml.  Update all bindings to use the latter
-one.
+Le 07/04/2024 à 10:03, Huai-Yuan Liu a écrit :
+> In register_device, the return value of ida_simple_get is unchecked,
+> in witch ida_simple_get will use an invalid index value.
+> 
+> To address this issue, index should be checked after ida_simple_get. When
+> the index value is abnormal, a warning message should be printed, the port
+> should be dropped, and the value should be recorded, then jump to 'err'.
+> 
+> Fixes: 9a69645dde11 ("ppdev: fix registering same device name")
+> Signed-off-by: Huai-Yuan Liu <qq810974084@gmail.com>
+> ---
+> V2:
+> * In patch V2, we found that parport_find_number implicitly calls
+> parport_get_port(). So when dealing with abnormal index values, we should
+> call parport_put_port() to throw away the reference to the port.
+> ---
+>   drivers/char/ppdev.c | 7 +++++++
+>   1 file changed, 7 insertions(+)
+> 
+> diff --git a/drivers/char/ppdev.c b/drivers/char/ppdev.c
+> index 4c188e9e477c..ac5a93d39fbd 100644
+> --- a/drivers/char/ppdev.c
+> +++ b/drivers/char/ppdev.c
+> @@ -300,6 +300,13 @@ static int register_device(int minor, struct pp_struct *pp)
+>   	}
+>   
+>   	index = ida_simple_get(&ida_index, 0, 0, GFP_KERNEL);
+> +	if (index < 0) {
+> +		pr_warn("%s: failed to get index!\n", name);
+> +		parport_put_port(port);
 
-The difference between pci-bus.yaml and pci-host-bridge.yaml is only in
-lack of "reg" property defined by the latter, which should not have any
-effect here, because all these bindings define the "reg".
+Hi,
 
-The change is therefore quite trivial, except mediatek,mt7621-pcie.yaml
-binding which have children nodes being also host bridges, apparently.
+I think that a new label should be added, just before the 'err' label, 
+and move this parport_put_port() call there, as well as the one just 
+after parport_register_dev_model().
 
-Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
----
- Documentation/devicetree/bindings/pci/amlogic,axg-pcie.yaml   | 2 +-
- Documentation/devicetree/bindings/pci/apple,pcie.yaml         | 2 +-
- Documentation/devicetree/bindings/pci/brcm,iproc-pcie.yaml    | 2 +-
- Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml      | 2 +-
- Documentation/devicetree/bindings/pci/cdns-pcie-host.yaml     | 2 +-
- Documentation/devicetree/bindings/pci/faraday,ftpci100.yaml   | 2 +-
- Documentation/devicetree/bindings/pci/host-generic-pci.yaml   | 2 +-
- Documentation/devicetree/bindings/pci/intel,ixp4xx-pci.yaml   | 2 +-
- Documentation/devicetree/bindings/pci/intel,keembay-pcie.yaml | 2 +-
- Documentation/devicetree/bindings/pci/loongson.yaml           | 2 +-
- .../devicetree/bindings/pci/mediatek,mt7621-pcie.yaml         | 4 ++--
- Documentation/devicetree/bindings/pci/mediatek-pcie-gen3.yaml | 2 +-
- .../devicetree/bindings/pci/microchip,pcie-host.yaml          | 2 +-
- Documentation/devicetree/bindings/pci/qcom,pcie-common.yaml   | 2 +-
- Documentation/devicetree/bindings/pci/qcom,pcie.yaml          | 2 +-
- Documentation/devicetree/bindings/pci/rcar-pci-host.yaml      | 2 +-
- .../devicetree/bindings/pci/renesas,pci-rcar-gen2.yaml        | 2 +-
- .../devicetree/bindings/pci/rockchip,rk3399-pcie.yaml         | 2 +-
- Documentation/devicetree/bindings/pci/snps,dw-pcie.yaml       | 2 +-
- Documentation/devicetree/bindings/pci/ti,am65-pci-host.yaml   | 2 +-
- Documentation/devicetree/bindings/pci/versatile.yaml          | 2 +-
- Documentation/devicetree/bindings/pci/xilinx-versal-cpm.yaml  | 2 +-
- Documentation/devicetree/bindings/pci/xlnx,axi-pcie-host.yaml | 2 +-
- Documentation/devicetree/bindings/pci/xlnx,nwl-pcie.yaml      | 2 +-
- Documentation/devicetree/bindings/pci/xlnx,xdma-host.yaml     | 2 +-
- 25 files changed, 26 insertions(+), 26 deletions(-)
+CJ
 
-diff --git a/Documentation/devicetree/bindings/pci/amlogic,axg-pcie.yaml b/Documentation/devicetree/bindings/pci/amlogic,axg-pcie.yaml
-index a5bd90bc0712..79a21ba0f9fd 100644
---- a/Documentation/devicetree/bindings/pci/amlogic,axg-pcie.yaml
-+++ b/Documentation/devicetree/bindings/pci/amlogic,axg-pcie.yaml
-@@ -13,7 +13,7 @@ description:
-   Amlogic Meson PCIe host controller is based on the Synopsys DesignWare PCI core.
- 
- allOf:
--  - $ref: /schemas/pci/pci-bus.yaml#
-+  - $ref: /schemas/pci/pci-host-bridge.yaml#
-   - $ref: /schemas/pci/snps,dw-pcie-common.yaml#
- 
- # We need a select here so we don't match all nodes with 'snps,dw-pcie'
-diff --git a/Documentation/devicetree/bindings/pci/apple,pcie.yaml b/Documentation/devicetree/bindings/pci/apple,pcie.yaml
-index 215ff9a9c835..c8775f9cb071 100644
---- a/Documentation/devicetree/bindings/pci/apple,pcie.yaml
-+++ b/Documentation/devicetree/bindings/pci/apple,pcie.yaml
-@@ -85,7 +85,7 @@ required:
- unevaluatedProperties: false
- 
- allOf:
--  - $ref: /schemas/pci/pci-bus.yaml#
-+  - $ref: /schemas/pci/pci-host-bridge.yaml#
-   - $ref: /schemas/interrupt-controller/msi-controller.yaml#
-   - if:
-       properties:
-diff --git a/Documentation/devicetree/bindings/pci/brcm,iproc-pcie.yaml b/Documentation/devicetree/bindings/pci/brcm,iproc-pcie.yaml
-index 0e07ab61a48d..5434c144d2ec 100644
---- a/Documentation/devicetree/bindings/pci/brcm,iproc-pcie.yaml
-+++ b/Documentation/devicetree/bindings/pci/brcm,iproc-pcie.yaml
-@@ -11,7 +11,7 @@ maintainers:
-   - Scott Branden <scott.branden@broadcom.com>
- 
- allOf:
--  - $ref: /schemas/pci/pci-bus.yaml#
-+  - $ref: /schemas/pci/pci-host-bridge.yaml#
- 
- properties:
-   compatible:
-diff --git a/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml b/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
-index 22491f7f8852..11f8ea33240c 100644
---- a/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
-+++ b/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
-@@ -108,7 +108,7 @@ required:
-   - msi-controller
- 
- allOf:
--  - $ref: /schemas/pci/pci-bus.yaml#
-+  - $ref: /schemas/pci/pci-host-bridge.yaml#
-   - $ref: /schemas/interrupt-controller/msi-controller.yaml#
-   - if:
-       properties:
-diff --git a/Documentation/devicetree/bindings/pci/cdns-pcie-host.yaml b/Documentation/devicetree/bindings/pci/cdns-pcie-host.yaml
-index a6b494401ebb..f4eb82e684bd 100644
---- a/Documentation/devicetree/bindings/pci/cdns-pcie-host.yaml
-+++ b/Documentation/devicetree/bindings/pci/cdns-pcie-host.yaml
-@@ -10,7 +10,7 @@ maintainers:
-   - Tom Joseph <tjoseph@cadence.com>
- 
- allOf:
--  - $ref: /schemas/pci/pci-bus.yaml#
-+  - $ref: /schemas/pci/pci-host-bridge.yaml#
-   - $ref: cdns-pcie.yaml#
- 
- properties:
-diff --git a/Documentation/devicetree/bindings/pci/faraday,ftpci100.yaml b/Documentation/devicetree/bindings/pci/faraday,ftpci100.yaml
-index 92efbf0f1297..378dd1c8e2ee 100644
---- a/Documentation/devicetree/bindings/pci/faraday,ftpci100.yaml
-+++ b/Documentation/devicetree/bindings/pci/faraday,ftpci100.yaml
-@@ -51,7 +51,7 @@ description: |
-         <0x6000 0 0 4 &pci_intc 2>;
- 
- allOf:
--  - $ref: /schemas/pci/pci-bus.yaml#
-+  - $ref: /schemas/pci/pci-host-bridge.yaml#
- 
- properties:
-   compatible:
-diff --git a/Documentation/devicetree/bindings/pci/host-generic-pci.yaml b/Documentation/devicetree/bindings/pci/host-generic-pci.yaml
-index d25423aa7167..3484e0b4b412 100644
---- a/Documentation/devicetree/bindings/pci/host-generic-pci.yaml
-+++ b/Documentation/devicetree/bindings/pci/host-generic-pci.yaml
-@@ -116,7 +116,7 @@ required:
-   - ranges
- 
- allOf:
--  - $ref: /schemas/pci/pci-bus.yaml#
-+  - $ref: /schemas/pci/pci-host-bridge.yaml#
-   - if:
-       properties:
-         compatible:
-diff --git a/Documentation/devicetree/bindings/pci/intel,ixp4xx-pci.yaml b/Documentation/devicetree/bindings/pci/intel,ixp4xx-pci.yaml
-index debfb54a8042..3cae2e0f7f5e 100644
---- a/Documentation/devicetree/bindings/pci/intel,ixp4xx-pci.yaml
-+++ b/Documentation/devicetree/bindings/pci/intel,ixp4xx-pci.yaml
-@@ -12,7 +12,7 @@ maintainers:
- description: PCI host controller found in the Intel IXP4xx SoC series.
- 
- allOf:
--  - $ref: /schemas/pci/pci-bus.yaml#
-+  - $ref: /schemas/pci/pci-host-bridge.yaml#
- 
- properties:
-   compatible:
-diff --git a/Documentation/devicetree/bindings/pci/intel,keembay-pcie.yaml b/Documentation/devicetree/bindings/pci/intel,keembay-pcie.yaml
-index 505acc4f3efc..1fd557504b10 100644
---- a/Documentation/devicetree/bindings/pci/intel,keembay-pcie.yaml
-+++ b/Documentation/devicetree/bindings/pci/intel,keembay-pcie.yaml
-@@ -11,7 +11,7 @@ maintainers:
-   - Srikanth Thokala <srikanth.thokala@intel.com>
- 
- allOf:
--  - $ref: /schemas/pci/pci-bus.yaml#
-+  - $ref: /schemas/pci/pci-host-bridge.yaml#
- 
- properties:
-   compatible:
-diff --git a/Documentation/devicetree/bindings/pci/loongson.yaml b/Documentation/devicetree/bindings/pci/loongson.yaml
-index a8324a9bd002..1988465e73a1 100644
---- a/Documentation/devicetree/bindings/pci/loongson.yaml
-+++ b/Documentation/devicetree/bindings/pci/loongson.yaml
-@@ -13,7 +13,7 @@ description: |+
-   PCI host controller found on Loongson PCHs and SoCs.
- 
- allOf:
--  - $ref: /schemas/pci/pci-bus.yaml#
-+  - $ref: /schemas/pci/pci-host-bridge.yaml#
- 
- properties:
-   compatible:
-diff --git a/Documentation/devicetree/bindings/pci/mediatek,mt7621-pcie.yaml b/Documentation/devicetree/bindings/pci/mediatek,mt7621-pcie.yaml
-index 61d027239910..5bbb4a3f3dbd 100644
---- a/Documentation/devicetree/bindings/pci/mediatek,mt7621-pcie.yaml
-+++ b/Documentation/devicetree/bindings/pci/mediatek,mt7621-pcie.yaml
-@@ -14,7 +14,7 @@ description: |+
-   with 3 Root Ports. Each Root Port supports a Gen1 1-lane Link
- 
- allOf:
--  - $ref: /schemas/pci/pci-bus.yaml#
-+  - $ref: /schemas/pci/pci-host-bridge.yaml#
- 
- properties:
-   compatible:
-@@ -33,7 +33,7 @@ properties:
- patternProperties:
-   '^pcie@[0-2],0$':
-     type: object
--    $ref: /schemas/pci/pci-bus.yaml#
-+    $ref: /schemas/pci/pci-host-bridge.yaml#
- 
-     properties:
-       reg:
-diff --git a/Documentation/devicetree/bindings/pci/mediatek-pcie-gen3.yaml b/Documentation/devicetree/bindings/pci/mediatek-pcie-gen3.yaml
-index 7e8c7a2a5f9b..76d742051f73 100644
---- a/Documentation/devicetree/bindings/pci/mediatek-pcie-gen3.yaml
-+++ b/Documentation/devicetree/bindings/pci/mediatek-pcie-gen3.yaml
-@@ -140,7 +140,7 @@ required:
-   - interrupt-controller
- 
- allOf:
--  - $ref: /schemas/pci/pci-bus.yaml#
-+  - $ref: /schemas/pci/pci-host-bridge.yaml#
-   - if:
-       properties:
-         compatible:
-diff --git a/Documentation/devicetree/bindings/pci/microchip,pcie-host.yaml b/Documentation/devicetree/bindings/pci/microchip,pcie-host.yaml
-index f7a3c2636355..a3c4ddc094aa 100644
---- a/Documentation/devicetree/bindings/pci/microchip,pcie-host.yaml
-+++ b/Documentation/devicetree/bindings/pci/microchip,pcie-host.yaml
-@@ -10,7 +10,7 @@ maintainers:
-   - Daire McNamara <daire.mcnamara@microchip.com>
- 
- allOf:
--  - $ref: /schemas/pci/pci-bus.yaml#
-+  - $ref: /schemas/pci/pci-host-bridge.yaml#
-   - $ref: /schemas/interrupt-controller/msi-controller.yaml#
- 
- properties:
-diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie-common.yaml b/Documentation/devicetree/bindings/pci/qcom,pcie-common.yaml
-index 0d1b23523f62..0a39bbfcb28b 100644
---- a/Documentation/devicetree/bindings/pci/qcom,pcie-common.yaml
-+++ b/Documentation/devicetree/bindings/pci/qcom,pcie-common.yaml
-@@ -95,6 +95,6 @@ anyOf:
-       - msi-map
- 
- allOf:
--  - $ref: /schemas/pci/pci-bus.yaml#
-+  - $ref: /schemas/pci/pci-host-bridge.yaml#
- 
- additionalProperties: true
-diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie.yaml b/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
-index cf9a6910b542..f867746b1ae5 100644
---- a/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
-+++ b/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
-@@ -130,7 +130,7 @@ anyOf:
-       - msi-map
- 
- allOf:
--  - $ref: /schemas/pci/pci-bus.yaml#
-+  - $ref: /schemas/pci/pci-host-bridge.yaml#
-   - if:
-       properties:
-         compatible:
-diff --git a/Documentation/devicetree/bindings/pci/rcar-pci-host.yaml b/Documentation/devicetree/bindings/pci/rcar-pci-host.yaml
-index b6a7cb32f61e..210c3f2bf94c 100644
---- a/Documentation/devicetree/bindings/pci/rcar-pci-host.yaml
-+++ b/Documentation/devicetree/bindings/pci/rcar-pci-host.yaml
-@@ -12,7 +12,7 @@ maintainers:
-   - Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
- 
- allOf:
--  - $ref: pci-bus.yaml#
-+  - $ref: /schemas/pci/pci-host-bridge.yaml#
- 
- properties:
-   compatible:
-diff --git a/Documentation/devicetree/bindings/pci/renesas,pci-rcar-gen2.yaml b/Documentation/devicetree/bindings/pci/renesas,pci-rcar-gen2.yaml
-index 5a0d64d3ae6b..b288cdb1ec70 100644
---- a/Documentation/devicetree/bindings/pci/renesas,pci-rcar-gen2.yaml
-+++ b/Documentation/devicetree/bindings/pci/renesas,pci-rcar-gen2.yaml
-@@ -110,7 +110,7 @@ required:
-   - "#interrupt-cells"
- 
- allOf:
--  - $ref: /schemas/pci/pci-bus.yaml#
-+  - $ref: /schemas/pci/pci-host-bridge.yaml#
- 
-   - if:
-       properties:
-diff --git a/Documentation/devicetree/bindings/pci/rockchip,rk3399-pcie.yaml b/Documentation/devicetree/bindings/pci/rockchip,rk3399-pcie.yaml
-index 002b728cbc71..720a5f945a4e 100644
---- a/Documentation/devicetree/bindings/pci/rockchip,rk3399-pcie.yaml
-+++ b/Documentation/devicetree/bindings/pci/rockchip,rk3399-pcie.yaml
-@@ -10,7 +10,7 @@ maintainers:
-   - Shawn Lin <shawn.lin@rock-chips.com>
- 
- allOf:
--  - $ref: /schemas/pci/pci-bus.yaml#
-+  - $ref: /schemas/pci/pci-host-bridge.yaml#
-   - $ref: rockchip,rk3399-pcie-common.yaml#
- 
- properties:
-diff --git a/Documentation/devicetree/bindings/pci/snps,dw-pcie.yaml b/Documentation/devicetree/bindings/pci/snps,dw-pcie.yaml
-index 022055edbf9e..548f59d76ef2 100644
---- a/Documentation/devicetree/bindings/pci/snps,dw-pcie.yaml
-+++ b/Documentation/devicetree/bindings/pci/snps,dw-pcie.yaml
-@@ -23,7 +23,7 @@ select:
-     - compatible
- 
- allOf:
--  - $ref: /schemas/pci/pci-bus.yaml#
-+  - $ref: /schemas/pci/pci-host-bridge.yaml#
-   - $ref: /schemas/pci/snps,dw-pcie-common.yaml#
-   - if:
-       not:
-diff --git a/Documentation/devicetree/bindings/pci/ti,am65-pci-host.yaml b/Documentation/devicetree/bindings/pci/ti,am65-pci-host.yaml
-index a20dccbafd94..695e491b7b3b 100644
---- a/Documentation/devicetree/bindings/pci/ti,am65-pci-host.yaml
-+++ b/Documentation/devicetree/bindings/pci/ti,am65-pci-host.yaml
-@@ -11,7 +11,7 @@ maintainers:
-   - Kishon Vijay Abraham I <kishon@ti.com>
- 
- allOf:
--  - $ref: /schemas/pci/pci-bus.yaml#
-+  - $ref: /schemas/pci/pci-host-bridge.yaml#
- 
- properties:
-   compatible:
-diff --git a/Documentation/devicetree/bindings/pci/versatile.yaml b/Documentation/devicetree/bindings/pci/versatile.yaml
-index 09748ef6b94f..294c7cd84b37 100644
---- a/Documentation/devicetree/bindings/pci/versatile.yaml
-+++ b/Documentation/devicetree/bindings/pci/versatile.yaml
-@@ -13,7 +13,7 @@ description: |+
-   PCI host controller found on the ARM Versatile PB board's FPGA.
- 
- allOf:
--  - $ref: /schemas/pci/pci-bus.yaml#
-+  - $ref: /schemas/pci/pci-host-bridge.yaml#
- 
- properties:
-   compatible:
-diff --git a/Documentation/devicetree/bindings/pci/xilinx-versal-cpm.yaml b/Documentation/devicetree/bindings/pci/xilinx-versal-cpm.yaml
-index 4734be456bde..b75ceefa6f93 100644
---- a/Documentation/devicetree/bindings/pci/xilinx-versal-cpm.yaml
-+++ b/Documentation/devicetree/bindings/pci/xilinx-versal-cpm.yaml
-@@ -10,7 +10,7 @@ maintainers:
-   - Bharat Kumar Gogada <bharat.kumar.gogada@amd.com>
- 
- allOf:
--  - $ref: /schemas/pci/pci-bus.yaml#
-+  - $ref: /schemas/pci/pci-host-bridge.yaml#
- 
- properties:
-   compatible:
-diff --git a/Documentation/devicetree/bindings/pci/xlnx,axi-pcie-host.yaml b/Documentation/devicetree/bindings/pci/xlnx,axi-pcie-host.yaml
-index 69b7decabd45..fb87b960a250 100644
---- a/Documentation/devicetree/bindings/pci/xlnx,axi-pcie-host.yaml
-+++ b/Documentation/devicetree/bindings/pci/xlnx,axi-pcie-host.yaml
-@@ -10,7 +10,7 @@ maintainers:
-   - Thippeswamy Havalige <thippeswamy.havalige@amd.com>
- 
- allOf:
--  - $ref: /schemas/pci/pci-bus.yaml#
-+  - $ref: /schemas/pci/pci-host-bridge.yaml#
- 
- properties:
-   compatible:
-diff --git a/Documentation/devicetree/bindings/pci/xlnx,nwl-pcie.yaml b/Documentation/devicetree/bindings/pci/xlnx,nwl-pcie.yaml
-index 426f90a47f35..b0d07c71c1c0 100644
---- a/Documentation/devicetree/bindings/pci/xlnx,nwl-pcie.yaml
-+++ b/Documentation/devicetree/bindings/pci/xlnx,nwl-pcie.yaml
-@@ -10,7 +10,7 @@ maintainers:
-   - Thippeswamy Havalige <thippeswamy.havalige@amd.com>
- 
- allOf:
--  - $ref: /schemas/pci/pci-bus.yaml#
-+  - $ref: /schemas/pci/pci-host-bridge.yaml#
-   - $ref: /schemas/interrupt-controller/msi-controller.yaml#
- 
- properties:
-diff --git a/Documentation/devicetree/bindings/pci/xlnx,xdma-host.yaml b/Documentation/devicetree/bindings/pci/xlnx,xdma-host.yaml
-index 0aa00b8e49b3..2f59b3a73dd2 100644
---- a/Documentation/devicetree/bindings/pci/xlnx,xdma-host.yaml
-+++ b/Documentation/devicetree/bindings/pci/xlnx,xdma-host.yaml
-@@ -10,7 +10,7 @@ maintainers:
-   - Thippeswamy Havalige <thippeswamy.havalige@amd.com>
- 
- allOf:
--  - $ref: /schemas/pci/pci-bus.yaml#
-+  - $ref: /schemas/pci/pci-host-bridge.yaml#
- 
- properties:
-   compatible:
--- 
-2.34.1
+> +		rc = index;
+> +		goto err;
+> +	}
+> +
+>   	memset(&ppdev_cb, 0, sizeof(ppdev_cb));
+>   	ppdev_cb.irq_func = pp_irq;
+>   	ppdev_cb.flags = (pp->flags & PP_EXCL) ? PARPORT_FLAG_EXCL : 0;
 
