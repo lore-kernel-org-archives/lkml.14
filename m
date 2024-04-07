@@ -1,100 +1,203 @@
-Received: from gandalf.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24A3038F9C;
-	Sun,  7 Apr 2024 23:15:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E852C1E893;
+	Sun,  7 Apr 2024 23:20:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712531737; cv=none; b=s0oL3NSnq3sLAPBpKxyYPDln9O7IIdLqq6wwVtXraCLH4kXFy+drHRXTMTU16l1Ve7QCcsfM5NKOx1B/jMPIq0XvIOAublM+kghp8DPApsgpi4kEB7oGFBsEZsM52tL8Xam+AmVikn6pOF+k4IVjZIFZLAn9hyjXNOpp/iHvycA=
+	t=1712532030; cv=none; b=X+3+V7z0vp0TAunwUIttnkMfxw41iS++kx4JOxi9JLAg1uoylGRlvcSkHhWk8Fi0YLG2/0lAVeVh/39jwBzAczLIK3b4IqnKwLy3VGAedv0vzsQNR131oBOxahcPORL6QOdGxpoCUsLc27WqAQyhge3WMZrp1qsCdM3rYvTApM0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712531737; c=relaxed/simple;
-	bh=J12MOgEY8a+3bmhya1dTFLRjK77jrBUR2Fkr92yMHkg=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=t40E1eTkBYJdVWajRLF8DcfVEGx4Hb8wPw0kqKCmCrJ9dlDuThFWBV3xOcySOAkitngVW2ZQ2XUBl4Z7j0XCVILtu7JFBgGsTMF72QvEu8EgcRFC8fVh1eNC9wF9HU5VDKXFdn8TkjCTjwmZVOnbGU7lyVjFgA1WfMcKD+F96Ik=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=AtUhHuIy; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+	s=arc-20240116; t=1712532030; c=relaxed/simple;
+	bh=Y/j0qNmFRDBaKOS+TGqHbCS5rou+RE1grg9TlB3OhyY=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=hGd9S1N4tTL8fLab3w2mC5v5G9Rz0U4eXgfImTTaWg2GW1d+v4JEg5JlBubeM10FNtLySafXapu9xFrptQEclZWjpMnYqKxZGLEb/fxUzcI4cc20547kwoxjxVZfiRE49qXfNohj36QFujvDiFtvGcHI7cAWkPV7koI3MUtVGnk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jEHELQS3; arc=none smtp.client-ip=198.175.65.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="AtUhHuIy"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=201702; t=1712531729;
-	bh=zcn+XVfd3MWVQszLLcpWvD4qpTxFdGiCrd5YkSCNqMc=;
-	h=Date:From:To:Cc:Subject:From;
-	b=AtUhHuIyshI0v4HylDYtmplViiPmNrsVts3ZCmbQqDy4UZdf1ZoaBxrtiro/UKPWN
-	 sy/VzbA6hrQmdzdE0Hi4Ib/yvEN4PzNod5UJmgdwYoD9T3jpoSoLaZVQwxYqUhBsEl
-	 7alt/lWVbmVa01DkV7+VHir7VKJP1eKbu5vYMZoAWE5f703SczJMvEET44dDf2FBtF
-	 Mzve32sL4noGrUULkpZb5AnL2I9SY7Uny2U/GIUTFtZWRDxOeK7Nd6I9k5j9lkuxPI
-	 pkyyFWfII0KEQqXVsFuIz619iFx0JjNu9cyU5iqdcmPaEN1j5Rzw22g/P5HSh17KMt
-	 6USvc5xYqedxg==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4VCSkS6fNcz4wjF;
-	Mon,  8 Apr 2024 09:15:28 +1000 (AEST)
-Date: Mon, 8 Apr 2024 09:15:26 +1000
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: Barry Song <v-songbaohua@oppo.com>, Linux Kernel Mailing List
- <linux-kernel@vger.kernel.org>, Linux Next Mailing List
- <linux-next@vger.kernel.org>
-Subject: linux-next: build failure after merge of the mm tree
-Message-ID: <20240408091526.562c30e1@canb.auug.org.au>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jEHELQS3"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1712532027; x=1744068027;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=Y/j0qNmFRDBaKOS+TGqHbCS5rou+RE1grg9TlB3OhyY=;
+  b=jEHELQS3IPTwloyjvcSlcY1zjF2ldljFZvTOrz25AVLWoADg5YdTADOm
+   hY+22hLFP60coBEg4YSORfjvVahMSYkL4Ko61eIrY1hPc25WuRqYV4ltl
+   9MgGa4Jv27Fmz0ezUxSNmsZE97h8GNvE0Jx+HQGLmjgu/f2uEjBO+9nt3
+   8XIlIcvlaNq9lAc4/vtWGZK33moB5kBSR4jC9gqM9QzqqOutxTHi+H0d8
+   Fw/ECofzBVDC6NCx3IesSGjRTBrTqjpoBFfxaXWUfNzGWgs1Pj5INPfn5
+   4DfWn8lDvua93IIdA6RTywL15stgbFWKAS5NZ0JDKPC/jVCRgyPcb7q9O
+   w==;
+X-CSE-ConnectionGUID: QR732DZOQ82jVky8OYvo1g==
+X-CSE-MsgGUID: rT5Z06ylTGuZTak04ViHsA==
+X-IronPort-AV: E=McAfee;i="6600,9927,11037"; a="7704012"
+X-IronPort-AV: E=Sophos;i="6.07,185,1708416000"; 
+   d="scan'208";a="7704012"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2024 16:20:27 -0700
+X-CSE-ConnectionGUID: 9waKUil4QDaN6QUvkUIM5g==
+X-CSE-MsgGUID: i9QBSZRrQ4Sg4FoWsI7k0Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,185,1708416000"; 
+   d="scan'208";a="50678941"
+Received: from chang-linux-3.sc.intel.com ([172.25.66.175])
+  by orviesa002.jf.intel.com with ESMTP; 07 Apr 2024 16:20:27 -0700
+From: "Chang S. Bae" <chang.seok.bae@intel.com>
+To: linux-kernel@vger.kernel.org,
+	linux-crypto@vger.kernel.org
+Cc: ebiggers@kernel.org,
+	luto@kernel.org,
+	dave.hansen@linux.intel.com,
+	tglx@linutronix.de,
+	bp@alien8.de,
+	mingo@kernel.org,
+	x86@kernel.org,
+	herbert@gondor.apana.org.au,
+	ardb@kernel.org,
+	elliott@hpe.com,
+	dan.j.williams@intel.com,
+	bernie.keany@intel.com,
+	charishma1.gairuboyina@intel.com,
+	chang.seok.bae@intel.com,
+	Dave Hansen <dave.hansen@intel.com>,
+	Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
+Subject: [PATCH v9a 10/14] x86/cpu/keylocker: Check Gather Data Sampling mitigation
+Date: Sun,  7 Apr 2024 16:04:32 -0700
+Message-Id: <20240407230432.912290-1-chang.seok.bae@intel.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240329065742.fc5of75e776y2g4b@desk>
+References: <20240329065742.fc5of75e776y2g4b@desk>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/1boJlDeg2tOlPJ9PAbAo0aX";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Transfer-Encoding: 8bit
 
---Sig_/1boJlDeg2tOlPJ9PAbAo0aX
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Gather Data Sampling is a transient execution side channel issue in some
+CPU models. The stale data in registers is not guaranteed as secure when
+this vulnerability is not addressed.
 
-Hi all,
+In the Key Locker usage during AES transformations, the temporary storage
+of the original key in registers poses a risk. The key material can be
+staled in some implementations, leading to susceptibility to leakage of
+the AES key.
 
-After merging the mm tree, today's linux-next build (powerpc
-ppc64_defconfig) failed like this:
+To mitigate this vulnerability, a qualified microcode image must be
+applied. Add code to ensure that the mitigation is installed and securely
+locked. Disable the feature, otherwise.
 
-In file included from include/linux/mm.h:1115,
-                 from include/linux/mman.h:5,
-                 from arch/powerpc/kernel/asm-offsets.c:19:
-include/linux/huge_mm.h:276:23: error: variably modified 'stats' at file sc=
-ope
-  276 |         unsigned long stats[PMD_ORDER + 1][__MTHP_STAT_COUNT];
-      |                       ^~~~~
+Expand gds_ucode_mitigated() to examine the lock state.
 
-Caused by commit
+Signed-off-by: Chang S. Bae <chang.seok.bae@intel.com>
+Cc: Dave Hansen <dave.hansen@intel.com>
+Cc: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
+---
+Changes from v9:
+* Removed MSR reads and utilized the helper function. (Pawan Gupta)
 
-  d4358ee0a075 ("mm: add per-order mTHP anon_alloc and anon_alloc_fallback =
-counters")
+Alternatively, 'gds_mitigation' can be exported and referenced directly.
+Using 'gds_mitigation == GDS_MITIGATION_FULL_LOCKED' may also be
+readable. However, it was opted to expand gds_ucode_mitigated() for
+consistency, as it is already established.
 
-from the mm-unstable branch of the mm tree.
+Note that this approach aligns with Intel's guidance, as the bugs.c code
+checks the following MSR bits:
+  "Intel recommends that system software does not enable Key Locker (by
+   setting CR4.KL) unless the GDS mitigation is enabled
+   (IA32_MCU_OPT_CTRL[GDS_MITG_DIS] (bit 4) is 0) and locked
+   (IA32_MCU_OPT_CTRL [GDS_MITG_LOCK](bit 5) is 1)."
 
-PMD_ORDER is not necessarily constant on PowerPC (since it depends on
-PTE_INDEX_SIZE).
+For more information, refer to Intel's technical documentation on Gather
+Data Sampling:
+  https://www.intel.com/content/www/us/en/developer/articles/technical/software-security-guidance/technical-documentation/gather-data-sampling.html
+---
+ arch/x86/include/asm/processor.h |  7 ++++++-
+ arch/x86/kernel/cpu/bugs.c       |  5 ++++-
+ arch/x86/kernel/keylocker.c      | 12 ++++++++++++
+ arch/x86/kvm/x86.c               |  2 +-
+ 4 files changed, 23 insertions(+), 3 deletions(-)
 
-I have reverted that commit (and the following one) for today.
+diff --git a/arch/x86/include/asm/processor.h b/arch/x86/include/asm/processor.h
+index 811548f131f4..74eaa3a2b85b 100644
+--- a/arch/x86/include/asm/processor.h
++++ b/arch/x86/include/asm/processor.h
+@@ -721,7 +721,12 @@ enum mds_mitigations {
+ 	MDS_MITIGATION_VMWERV,
+ };
+ 
+-extern bool gds_ucode_mitigated(void);
++enum mitigation_info {
++	MITG_FULL,
++	MITG_LOCKED,
++};
++
++extern bool gds_ucode_mitigated(enum mitigation_info mitg);
+ 
+ /*
+  * Make previous memory operations globally visible before
+diff --git a/arch/x86/kernel/cpu/bugs.c b/arch/x86/kernel/cpu/bugs.c
+index e7ba936d798b..80f6e70619cb 100644
+--- a/arch/x86/kernel/cpu/bugs.c
++++ b/arch/x86/kernel/cpu/bugs.c
+@@ -752,8 +752,11 @@ static const char * const gds_strings[] = {
+ 	[GDS_MITIGATION_HYPERVISOR]	= "Unknown: Dependent on hypervisor status",
+ };
+ 
+-bool gds_ucode_mitigated(void)
++bool gds_ucode_mitigated(enum mitigation_info mitg)
+ {
++	if (mitg == MITG_LOCKED)
++		return gds_mitigation == GDS_MITIGATION_FULL_LOCKED;
++
+ 	return (gds_mitigation == GDS_MITIGATION_FULL ||
+ 		gds_mitigation == GDS_MITIGATION_FULL_LOCKED);
+ }
+diff --git a/arch/x86/kernel/keylocker.c b/arch/x86/kernel/keylocker.c
+index 1e81d0704eea..23cf4a235f11 100644
+--- a/arch/x86/kernel/keylocker.c
++++ b/arch/x86/kernel/keylocker.c
+@@ -113,6 +113,15 @@ void restore_keylocker(void)
+ 	valid_wrapping_key = false;
+ }
+ 
++/* Check if Key Locker is secure enough to be used. */
++static bool __init secure_keylocker(void)
++{
++	if (boot_cpu_has_bug(X86_BUG_GDS) && !gds_ucode_mitigated(MITG_LOCKED))
++		return false;
++
++	return true;
++}
++
+ static int __init init_keylocker(void)
+ {
+ 	u32 eax, ebx, ecx, edx;
+@@ -126,6 +135,9 @@ static int __init init_keylocker(void)
+ 		goto clear_cap;
+ 	}
+ 
++	if (!secure_keylocker())
++		goto clear_cap;
++
+ 	cr4_set_bits(X86_CR4_KEYLOCKER);
+ 
+ 	/* AESKLE depends on CR4.KEYLOCKER */
+diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+index 47d9f03b7778..4ab50e95fdb5 100644
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -1675,7 +1675,7 @@ static u64 kvm_get_arch_capabilities(void)
+ 		 */
+ 	}
+ 
+-	if (!boot_cpu_has_bug(X86_BUG_GDS) || gds_ucode_mitigated())
++	if (!boot_cpu_has_bug(X86_BUG_GDS) || gds_ucode_mitigated(MITG_FULL))
+ 		data |= ARCH_CAP_GDS_NO;
+ 
+ 	return data;
+-- 
+2.40.1
 
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/1boJlDeg2tOlPJ9PAbAo0aX
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmYTKQ4ACgkQAVBC80lX
-0GzgsAf/bwPry6OrXEcvi7DTSMPh/cRl/1HfvbPykZM4r6quhE3L4rEXYmjR38zy
-kcaENe1h9GmnpyoRJ1sI/smdSDT7Ak7wSQaoMTafq3STjr5C+yrN/cAdne1V+8lQ
-jwToZ/H/mSFv9jkqNQnd8ga5DLlMySewzqEMdIXh4G5F/mC8GRiDlgAtssHNI1rQ
-EMYyPCi1d0GamwmoNmrGDtDKytyzC14KW+yY/ChmwGfioTkt1dJfNx8J0KqldN7k
-hs63Kn1ubQ4P1pJxVx7zmBEM8jcT22X6le7ssBkepSaJ7IbzVWSw+rcDR40FL8jD
-dHLppQy/fKC89FNkoAWUypSYxWMEeg==
-=UaaD
------END PGP SIGNATURE-----
-
---Sig_/1boJlDeg2tOlPJ9PAbAo0aX--
