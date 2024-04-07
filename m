@@ -1,237 +1,292 @@
-Received: from mail-io1-f71.google.com (mail-io1-f71.google.com [209.85.166.71])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F33A17F0
-	for <linux-kernel@vger.kernel.org>; Sun,  7 Apr 2024 05:18:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.71
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E1996AB9
+	for <linux-kernel@vger.kernel.org>; Sun,  7 Apr 2024 05:34:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712467107; cv=none; b=WEsbz0B/oCQ+y6fhqhGEmgW3JJ1wq/AqdWX759Oa21IipFoGsb+uXnSoLeooDRdnGAETJrYmbpzmR4KOOB27znFfPqyMQBEHjtrBpcOCUdbuleiqBFSHgdEjCzDblQj5Mh+vOJBrFOmjY3L+6uE5UegrFJo6bO6EMg2zksobY+M=
+	t=1712468051; cv=none; b=QuX5I04QX3AAMYABhuq53oBoWB6xz4Mgtsz+Rk6YuYtHxqtCQsRXd/xg8ixdwVGFofjBKzUkxaR32+CECAc8CGby7xVB29QoYcazaG8pLTcLSALS5Sav1OSIB0wJDyMFhdEBAeglzkOsjFrhwVFHYHkptGjecRgDLl9q7Bz06bA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712467107; c=relaxed/simple;
-	bh=MlmTbqDCXZmzQ8g8iy/EAy7eKiq1xs3qaAP7fvLBjbA=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=G2pgroruhoZIHOEdXhwUe4M4xs9qZqlVQ3ofqdMiX4+yR45CoQUkJmePORP6+oyzstPETwAidVfBLzOWzmsc/a1OdGJVfgcIaUeLQDYTMgu4kI2+ZLjxtU3AWCkXriI5PTtcxSzeyJLkWXwp88VHNlcf0+RD+y7NkqpM/uYOa18=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.71
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f71.google.com with SMTP id ca18e2360f4ac-7d5e487d194so2556339f.0
-        for <linux-kernel@vger.kernel.org>; Sat, 06 Apr 2024 22:18:25 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712467105; x=1713071905;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=MH8LCDUm7YgevgRehOESoxCJDka7u1fwHf2mJqhbyBc=;
-        b=q1zUn6z/XdHQM8yV4djnGMiKp2n/NN+ZT20eDZZGyGU2Ij7KlFTkIzvsnMtCH8XgDE
-         F8bGwzO7dtXzqJsOoWxLBiiYYILrREqJlvR+L1Cu2oOMx+WUJ+ImS6LYlRrqTzoLxVeF
-         p6ja+ELJe3eQT/Y1lgFd24Ll9i8yC7c9Pxv11nUf1tLOi+mDQ+TJ8ciNXJxagW0be93X
-         TQUyScl1AHp6Tqly3BqVTL8yLxOU83fCD/bR6FniCECzgKPIDUs/kJjz40rPednza7JT
-         D/HBSxef6xsPaFeNrxPB4L5OMgogsaXmFyXlpg9p53PA3TyHFzhFnmc9C4U0FRg+1wkW
-         PrOA==
-X-Forwarded-Encrypted: i=1; AJvYcCX7+K1nf1HVoubpEVLW2L67K0vMocW8zhy6YQtIPkhrva9WA1MWBOQW4FZJGJd8TPqg98NQUcIoD7EXr+TVk0B07ZDk/qOzzgx4nNub
-X-Gm-Message-State: AOJu0YydiW0L0TiSSduC8Tfvhtvt5S1V2LewCa5VmeQa4dowi6iK54yT
-	cT1QD0x5oJQTQPdYP5yUSrx+PtyrHgvkYWkqLcs+yMWwSJCJIjKmqK5bN1atBosNSrOjmEb6QkS
-	lfxhy1YMcDRvXCghZVTXdIWJUsR6IOegvR3O/rO3NRXjhG7iPIj/HnD0=
-X-Google-Smtp-Source: AGHT+IFdLLzlKY5AWQR5Ou5hh1jTnjMqczmCfF4ygNKuMZt6ZcFQRq02Uqqt1yFcrxKtT7RhBzzpokKaDR0nflXrDWGZUH+1WzPL
+	s=arc-20240116; t=1712468051; c=relaxed/simple;
+	bh=hS14BoUXabQE9RbhnDRWpPJPj15kQ0oX5ql7Imy7tbg=;
+	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=RfBeCiMQeavWWn/b3aZmI5zsMUyoFbe4gumsGXHqtDVXUdxAQ5ybCPgiG6pK32g8WSdt/plxIx51ly1d2nBRy8Ttqv6MXPaX4QSpCCCDI8EQZwu88wYwrcrRt901QEb8sIIB6sEUP8XYoizPt/nji24gCCB7U2FplhQcTlxZ8TU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Vh8e95ri; arc=none smtp.client-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Vh8e95ri"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1712468050; x=1744004050;
+  h=message-id:date:mime-version:cc:subject:to:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=hS14BoUXabQE9RbhnDRWpPJPj15kQ0oX5ql7Imy7tbg=;
+  b=Vh8e95riOHwf5PGWscTH55T4+Tv4ZF5LD74XBUhcOFXxo81/AA9R+Mbz
+   wxI3OZJOb7i5o5z0RScO5Co+9iC2C4Vw1JxehWEXXeHKi0OYUx2jSwhdu
+   JlPYAA4ZVskDsuBsfDqbcq+5MHDXtfEuoLIH2XJ8K2CJ1HABL9hiQqhIx
+   q3DL8KMzM2Wa7rHB7E8rhd/eUqcaZb475hUtLFl8VcQMUFg79YMJTB5Ll
+   amqh0NC8LiMbEJ7rvo32vkR77BlB55zss2GwctiUjj/TbfWEkBiwXqtGR
+   N5DFnyjWpt+c/Tdr5RMSTDej83jorwtkGgqWfN4nvDzu7t0kJ2KSDwTy6
+   g==;
+X-CSE-ConnectionGUID: 9BWXQczLSfOQd7PZCNXadQ==
+X-CSE-MsgGUID: 1OS5/5U8Rd6bKLHNsiQ2QQ==
+X-IronPort-AV: E=McAfee;i="6600,9927,11036"; a="8334132"
+X-IronPort-AV: E=Sophos;i="6.07,184,1708416000"; 
+   d="scan'208";a="8334132"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Apr 2024 22:34:09 -0700
+X-CSE-ConnectionGUID: 3snujzdnQQeW0hmoBOLzQw==
+X-CSE-MsgGUID: VvFcIJIeTFuRWKvRCUiFmQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,184,1708416000"; 
+   d="scan'208";a="24046191"
+Received: from allen-box.sh.intel.com (HELO [10.239.159.127]) ([10.239.159.127])
+  by fmviesa005.fm.intel.com with ESMTP; 06 Apr 2024 22:34:06 -0700
+Message-ID: <9aeb7dfd-e8af-4da8-b67e-274f3227efa4@linux.intel.com>
+Date: Sun, 7 Apr 2024 13:33:00 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6638:2999:b0:480:4e6a:bf00 with SMTP id
- eh25-20020a056638299900b004804e6abf00mr105863jab.2.1712467105172; Sat, 06 Apr
- 2024 22:18:25 -0700 (PDT)
-Date: Sat, 06 Apr 2024 22:18:25 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000007e66d506157ad1bc@google.com>
-Subject: [syzbot] [gfs2?] possible deadlock in do_qc
-From: syzbot <syzbot+8ef337b733667f9a7ec8@syzkaller.appspotmail.com>
-To: agruenba@redhat.com, gfs2@lists.linux.dev, linux-fsdevel@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Cc: baolu.lu@linux.intel.com, "Zhang, Tina" <tina.zhang@intel.com>,
+ "Liu, Yi L" <yi.l.liu@intel.com>,
+ "iommu@lists.linux.dev" <iommu@lists.linux.dev>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 02/12] iommu/vt-d: Add cache tag invalidation helpers
+To: "Tian, Kevin" <kevin.tian@intel.com>, Joerg Roedel <joro@8bytes.org>,
+ Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
+ Jason Gunthorpe <jgg@ziepe.ca>
+References: <20240325021705.249769-1-baolu.lu@linux.intel.com>
+ <20240325021705.249769-3-baolu.lu@linux.intel.com>
+ <BN9PR11MB52769F48D89273B0CCAA0B7C8C3B2@BN9PR11MB5276.namprd11.prod.outlook.com>
+Content-Language: en-US
+From: Baolu Lu <baolu.lu@linux.intel.com>
+In-Reply-To: <BN9PR11MB52769F48D89273B0CCAA0B7C8C3B2@BN9PR11MB5276.namprd11.prod.outlook.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hello,
+On 3/28/24 3:39 PM, Tian, Kevin wrote:
+>> From: Lu Baolu <baolu.lu@linux.intel.com>
+>> Sent: Monday, March 25, 2024 10:17 AM
+>>
+>> +
+>> +static unsigned long calculate_psi_aligned_address(unsigned long start,
+>> +						   unsigned long end,
+>> +						   unsigned long *_pages,
+>> +						   unsigned long *_mask)
+>> +{
+>> +	unsigned long pages = (end - start + VTD_PAGE_SIZE - 1) >>
+>> VTD_PAGE_SHIFT;
+> 
+> this doesn't sound correct. You'd want to follow aligned_nrpages().
 
-syzbot found the following issue on:
+Okay, I will make it like below.
 
-HEAD commit:    707081b61156 Merge branch 'for-next/core', remote-tracking..
-git tree:       git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git for-kernelci
-console output: https://syzkaller.appspot.com/x/log.txt?x=15db6719180000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=caeac3f3565b057a
-dashboard link: https://syzkaller.appspot.com/bug?extid=8ef337b733667f9a7ec8
-compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
-userspace arch: arm64
+	unsigned long pages = aligned_nrpages(start, end - start + 1);
 
-Unfortunately, I don't have any reproducer for this issue yet.
+> 
+>> +		case CACHE_TAG_TYPE_DEVTLB:
+>> +			if (tag->pasid == IOMMU_NO_PASID)
+>> +				qi_flush_dev_iotlb(iommu, sid, info->pfsid,
+>> +						   info->ats_qdep, addr,
+>> mask);
+>> +			else
+>> +				qi_flush_dev_iotlb_pasid(iommu, sid, info-
+>>> pfsid,
+>> +							 tag->pasid, info-
+>>> ats_qdep,
+>> +							 addr, mask);
+>> +
+>> +			quirk_extra_dev_tlb_flush(info, addr, mask, tag-
+>>> pasid, info->ats_qdep);
+>> +			break;
+>> +		case CACHE_TAG_TYPE_PARENT_DEVTLB:
+>> +			/*
+>> +			 * Address translation cache in device side caches the
+>> +			 * result of nested translation. There is no easy way
+>> +			 * to identify the exact set of nested translations
+>> +			 * affected by a change in S2. So just flush the entire
+>> +			 * device cache.
+>> +			 */
+>> +			qi_flush_dev_iotlb(iommu, sid, info->pfsid, info-
+>>> ats_qdep,
+>> +					   0, MAX_AGAW_PFN_WIDTH);
+>> +			quirk_extra_dev_tlb_flush(info, 0,
+>> MAX_AGAW_PFN_WIDTH,
+>> +						  IOMMU_NO_PASID, info-
+>>> ats_qdep);
+>> +			break;
+> 
+> parent devtlb can has pasid too, though not enabled now. As core helpers
+> probably we can support it now leading to simpler code:
+> 
+> 	case CACHE_TAG_TYPE_PARENT_DEVTLB:
+> 		//change addr/mask
+> 		//fallthrough
+> 	case CACHE_TAG_TYPE_DEVTLB:
+> 		//what this patch does
 
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/6cad68bf7532/disk-707081b6.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/1a27e5400778/vmlinux-707081b6.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/67dfc53755d0/Image-707081b6.gz.xz
+Yes. Yours is better. I will make it like below:
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+8ef337b733667f9a7ec8@syzkaller.appspotmail.com
-
-======================================================
-WARNING: possible circular locking dependency detected
-6.8.0-rc7-syzkaller-g707081b61156 #0 Not tainted
-------------------------------------------------------
-syz-executor.3/6998 is trying to acquire lock:
-ffff0000ccd04ae8 (&sdp->sd_quota_mutex){+.+.}-{3:3}, at: do_qc+0xac/0x5c8 fs/gfs2/quota.c:720
-
-but task is already holding lock:
-ffff0000db995688 (&ip->i_rw_mutex){++++}-{3:3}, at: sweep_bh_for_rgrps fs/gfs2/bmap.c:1529 [inline]
-ffff0000db995688 (&ip->i_rw_mutex){++++}-{3:3}, at: punch_hole+0x1f58/0x2f7c fs/gfs2/bmap.c:1852
-
-which lock already depends on the new lock.
-
-
-the existing dependency chain (in reverse order) is:
-
--> #1 (&ip->i_rw_mutex){++++}-{3:3}:
-       down_read+0x58/0x2fc kernel/locking/rwsem.c:1526
-       __gfs2_iomap_get+0x138/0x1058 fs/gfs2/bmap.c:859
-       gfs2_iomap_get+0xd8/0x154 fs/gfs2/bmap.c:1413
-       bh_get+0x1ec/0x690 fs/gfs2/quota.c:417
-       qdsb_get+0x1c8/0x30c fs/gfs2/quota.c:566
-       gfs2_quota_hold+0x16c/0x560 fs/gfs2/quota.c:646
-       punch_hole+0xc10/0x2f7c fs/gfs2/bmap.c:1813
-       gfs2_iomap_end+0x448/0x618 fs/gfs2/bmap.c:1174
-       iomap_iter+0x1f4/0x1018 fs/iomap/iter.c:79
-       iomap_file_buffered_write+0x968/0xb30 fs/iomap/buffered-io.c:976
-       gfs2_file_buffered_write+0x468/0x76c fs/gfs2/file.c:1059
-       gfs2_file_write_iter+0x79c/0xdb0 fs/gfs2/file.c:1163
-       call_write_iter include/linux/fs.h:2087 [inline]
-       new_sync_write fs/read_write.c:497 [inline]
-       vfs_write+0x968/0xc3c fs/read_write.c:590
-       ksys_write+0x15c/0x26c fs/read_write.c:643
-       __do_sys_write fs/read_write.c:655 [inline]
-       __se_sys_write fs/read_write.c:652 [inline]
-       __arm64_sys_write+0x7c/0x90 fs/read_write.c:652
-       __invoke_syscall arch/arm64/kernel/syscall.c:34 [inline]
-       invoke_syscall+0x98/0x2b8 arch/arm64/kernel/syscall.c:48
-       el0_svc_common+0x130/0x23c arch/arm64/kernel/syscall.c:133
-       do_el0_svc+0x48/0x58 arch/arm64/kernel/syscall.c:152
-       el0_svc+0x54/0x168 arch/arm64/kernel/entry-common.c:712
-       el0t_64_sync_handler+0x84/0xfc arch/arm64/kernel/entry-common.c:730
-       el0t_64_sync+0x190/0x194 arch/arm64/kernel/entry.S:598
-
--> #0 (&sdp->sd_quota_mutex){+.+.}-{3:3}:
-       check_prev_add kernel/locking/lockdep.c:3134 [inline]
-       check_prevs_add kernel/locking/lockdep.c:3253 [inline]
-       validate_chain kernel/locking/lockdep.c:3869 [inline]
-       __lock_acquire+0x3384/0x763c kernel/locking/lockdep.c:5137
-       lock_acquire+0x23c/0x71c kernel/locking/lockdep.c:5754
-       __mutex_lock_common+0x190/0x21a0 kernel/locking/mutex.c:608
-       __mutex_lock kernel/locking/mutex.c:752 [inline]
-       mutex_lock_nested+0x2c/0x38 kernel/locking/mutex.c:804
-       do_qc+0xac/0x5c8 fs/gfs2/quota.c:720
-       gfs2_quota_change+0x238/0x728 fs/gfs2/quota.c:1315
-       punch_hole+0x2a30/0x2f7c fs/gfs2/bmap.c:1953
-       gfs2_iomap_end+0x448/0x618 fs/gfs2/bmap.c:1174
-       iomap_iter+0x1f4/0x1018 fs/iomap/iter.c:79
-       iomap_file_buffered_write+0x968/0xb30 fs/iomap/buffered-io.c:976
-       gfs2_file_buffered_write+0x468/0x76c fs/gfs2/file.c:1059
-       gfs2_file_write_iter+0x79c/0xdb0 fs/gfs2/file.c:1163
-       call_write_iter include/linux/fs.h:2087 [inline]
-       new_sync_write fs/read_write.c:497 [inline]
-       vfs_write+0x968/0xc3c fs/read_write.c:590
-       ksys_write+0x15c/0x26c fs/read_write.c:643
-       __do_sys_write fs/read_write.c:655 [inline]
-       __se_sys_write fs/read_write.c:652 [inline]
-       __arm64_sys_write+0x7c/0x90 fs/read_write.c:652
-       __invoke_syscall arch/arm64/kernel/syscall.c:34 [inline]
-       invoke_syscall+0x98/0x2b8 arch/arm64/kernel/syscall.c:48
-       el0_svc_common+0x130/0x23c arch/arm64/kernel/syscall.c:133
-       do_el0_svc+0x48/0x58 arch/arm64/kernel/syscall.c:152
-       el0_svc+0x54/0x168 arch/arm64/kernel/entry-common.c:712
-       el0t_64_sync_handler+0x84/0xfc arch/arm64/kernel/entry-common.c:730
-       el0t_64_sync+0x190/0x194 arch/arm64/kernel/entry.S:598
-
-other info that might help us debug this:
-
- Possible unsafe locking scenario:
-
-       CPU0                    CPU1
-       ----                    ----
-  lock(&ip->i_rw_mutex);
-                               lock(&sdp->sd_quota_mutex);
-                               lock(&ip->i_rw_mutex);
-  lock(&sdp->sd_quota_mutex);
-
- *** DEADLOCK ***
-
-6 locks held by syz-executor.3/6998:
- #0: ffff0000d5936348 (&f->f_pos_lock){+.+.}-{3:3}, at: __fdget_pos+0x218/0x2a4 fs/file.c:1191
- #1: ffff0000f2b02420 (sb_writers#24){.+.+}-{0:0}, at: file_start_write include/linux/fs.h:2794 [inline]
- #1: ffff0000f2b02420 (sb_writers#24){.+.+}-{0:0}, at: vfs_write+0x368/0xc3c fs/read_write.c:586
- #2: ffff0000db9951f0 (&sb->s_type->i_mutex_key#27){+.+.}-{3:3}, at: inode_lock include/linux/fs.h:804 [inline]
- #2: ffff0000db9951f0 (&sb->s_type->i_mutex_key#27){+.+.}-{3:3}, at: gfs2_file_write_iter+0x2ac/0xdb0 fs/gfs2/file.c:1114
- #3: ffff0000f2b02610 (sb_internal#6){.+.+}-{0:0}, at: gfs2_trans_begin+0x8c/0x100 fs/gfs2/trans.c:118
- #4: ffff0000ccd05060 (&sdp->sd_log_flush_lock){++++}-{3:3}, at: __gfs2_trans_begin+0x510/0x908 fs/gfs2/trans.c:87
- #5: ffff0000db995688 (&ip->i_rw_mutex){++++}-{3:3}, at: sweep_bh_for_rgrps fs/gfs2/bmap.c:1529 [inline]
- #5: ffff0000db995688 (&ip->i_rw_mutex){++++}-{3:3}, at: punch_hole+0x1f58/0x2f7c fs/gfs2/bmap.c:1852
-
-stack backtrace:
-CPU: 0 PID: 6998 Comm: syz-executor.3 Not tainted 6.8.0-rc7-syzkaller-g707081b61156 #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 03/27/2024
-Call trace:
- dump_backtrace+0x1b8/0x1e4 arch/arm64/kernel/stacktrace.c:291
- show_stack+0x2c/0x3c arch/arm64/kernel/stacktrace.c:298
- __dump_stack lib/dump_stack.c:88 [inline]
- dump_stack_lvl+0xd0/0x124 lib/dump_stack.c:106
- dump_stack+0x1c/0x28 lib/dump_stack.c:113
- print_circular_bug+0x150/0x1b8 kernel/locking/lockdep.c:2060
- check_noncircular+0x310/0x404 kernel/locking/lockdep.c:2187
- check_prev_add kernel/locking/lockdep.c:3134 [inline]
- check_prevs_add kernel/locking/lockdep.c:3253 [inline]
- validate_chain kernel/locking/lockdep.c:3869 [inline]
- __lock_acquire+0x3384/0x763c kernel/locking/lockdep.c:5137
- lock_acquire+0x23c/0x71c kernel/locking/lockdep.c:5754
- __mutex_lock_common+0x190/0x21a0 kernel/locking/mutex.c:608
- __mutex_lock kernel/locking/mutex.c:752 [inline]
- mutex_lock_nested+0x2c/0x38 kernel/locking/mutex.c:804
- do_qc+0xac/0x5c8 fs/gfs2/quota.c:720
- gfs2_quota_change+0x238/0x728 fs/gfs2/quota.c:1315
- punch_hole+0x2a30/0x2f7c fs/gfs2/bmap.c:1953
- gfs2_iomap_end+0x448/0x618 fs/gfs2/bmap.c:1174
- iomap_iter+0x1f4/0x1018 fs/iomap/iter.c:79
- iomap_file_buffered_write+0x968/0xb30 fs/iomap/buffered-io.c:976
- gfs2_file_buffered_write+0x468/0x76c fs/gfs2/file.c:1059
- gfs2_file_write_iter+0x79c/0xdb0 fs/gfs2/file.c:1163
- call_write_iter include/linux/fs.h:2087 [inline]
- new_sync_write fs/read_write.c:497 [inline]
- vfs_write+0x968/0xc3c fs/read_write.c:590
- ksys_write+0x15c/0x26c fs/read_write.c:643
- __do_sys_write fs/read_write.c:655 [inline]
- __se_sys_write fs/read_write.c:652 [inline]
- __arm64_sys_write+0x7c/0x90 fs/read_write.c:652
- __invoke_syscall arch/arm64/kernel/syscall.c:34 [inline]
- invoke_syscall+0x98/0x2b8 arch/arm64/kernel/syscall.c:48
- el0_svc_common+0x130/0x23c arch/arm64/kernel/syscall.c:133
- do_el0_svc+0x48/0x58 arch/arm64/kernel/syscall.c:152
- el0_svc+0x54/0x168 arch/arm64/kernel/entry-common.c:712
- el0t_64_sync_handler+0x84/0xfc arch/arm64/kernel/entry-common.c:730
- el0t_64_sync+0x190/0x194 arch/arm64/kernel/entry.S:598
++               case CACHE_TAG_PARENT_DEVTLB:
++                       /*
++                        * Address translation cache in device side 
+caches the
++                        * result of nested translation. There is no 
+easy way
++                        * to identify the exact set of nested translations
++                        * affected by a change in S2. So just flush the 
+entire
++                        * device cache.
++                        */
++                       addr = 0;
++                       mask = MAX_AGAW_PFN_WIDTH;
++                       fallthrough;
+                 case CACHE_TAG_DEVTLB:
 
 
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+>> +void cache_tag_flush_all(struct dmar_domain *domain)
+>> +{
+>> +	struct cache_tag *tag;
+>> +	unsigned long flags;
+>> +
+>> +	spin_lock_irqsave(&domain->cache_lock, flags);
+>> +	list_for_each_entry(tag, &domain->cache_tags, node) {
+>> +		struct device_domain_info *info = dev_iommu_priv_get(tag-
+>>> dev);
+>> +		struct intel_iommu *iommu = tag->iommu;
+>> +		u16 sid = PCI_DEVID(info->bus, info->devfn);
+>> +
+>> +		switch (tag->type) {
+>> +		case CACHE_TAG_TYPE_IOTLB:
+>> +		case CACHE_TAG_TYPE_PARENT_IOTLB:
+>> +			if (domain->use_first_level)
+>> +				qi_flush_piotlb(iommu, tag->domain_id,
+>> +						tag->pasid, 0, -1, 0);
+>> +			else
+>> +				iommu->flush.flush_iotlb(iommu, tag-
+>>> domain_id,
+>> +							 0, 0,
+>> DMA_TLB_DSI_FLUSH);
+>> +			break;
+>> +		case CACHE_TAG_TYPE_DEVTLB:
+>> +		case CACHE_TAG_TYPE_PARENT_DEVTLB:
+>> +			qi_flush_dev_iotlb(iommu, sid, info->pfsid, info-
+>>> ats_qdep,
+>> +					   0, MAX_AGAW_PFN_WIDTH);
+>> +			quirk_extra_dev_tlb_flush(info, 0,
+>> MAX_AGAW_PFN_WIDTH,
+>> +						  IOMMU_NO_PASID, info-
+>>> ats_qdep);
+>> +			break;
+>> +		}
+>> +	}
+> 
+> could this loop be consolidated with the one in previous helper? anyway
+> the only difference is on addr/mask...
+> 
+>> +/*
+>> + * Invalidate a range of IOVA when IOMMU is in caching mode and new
+>> mappings
+>> + * are added to the target domain.
+>> + */
+>> +void cache_tag_flush_cm_range(struct dmar_domain *domain, unsigned
+>> long start,
+>> +			      unsigned long end)
+>> +{
+> 
+> I'm also not sure why this is worth a separate helper. why couldn't it
+> be managed by previous flush_range()?
+This is only my preference. I'd like to separate things belonging to
+different paths, so that it's easier for maintenance. For example, if,
+in the future, we need to add or enhance something for a specific case,
+we don't need to care about other cases.
 
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+> 
+>> +	unsigned long pages, mask, addr;
+>> +	struct cache_tag *tag;
+>> +	unsigned long flags;
+>> +
+>> +	addr = calculate_psi_aligned_address(start, end, &pages, &mask);
+>> +
+>> +	spin_lock_irqsave(&domain->cache_lock, flags);
+>> +	list_for_each_entry(tag, &domain->cache_tags, node) {
+>> +		struct intel_iommu *iommu = tag->iommu;
+>> +
+>> +		/*
+>> +		 * When IOMMU is enabled in caching mode some non-
+>> present
+>> +		 * mappings may be cached by the IOTLB if it uses second-
+>> +		 * only translation.
+>> +		 */
+>> +		if (!cap_caching_mode(iommu->cap) || domain-
+>>> use_first_level) {
+>> +			iommu_flush_write_buffer(iommu);
+>> +			continue;
+>> +		}
+> 
+> the comment really doesn't tell what this block does. from its intention
+> it probably more suitable to be in the caller side as today.
 
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
+Yes, agreed. Will remove it.
 
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
+> 
+>> +
+>> +		if (tag->type == CACHE_TAG_TYPE_IOTLB ||
+>> +		    tag->type == CACHE_TAG_TYPE_PARENT_IOTLB) {
+>> +			/*
+>> +			 * Fallback to domain selective flush if no
+>> +			 * PSI support or the size is too big.
+>> +			 */
+>> +			if (!cap_pgsel_inv(iommu->cap) ||
+>> +			    mask > cap_max_amask_val(iommu->cap))
+>> +				iommu->flush.flush_iotlb(iommu, tag-
+>>> domain_id,
+>> +							 0, 0,
+>> DMA_TLB_DSI_FLUSH);
+>> +			else
+>> +				iommu->flush.flush_iotlb(iommu, tag-
+>>> domain_id,
+>> +							 addr, mask,
+>> +
+>> DMA_TLB_PSI_FLUSH);
+>> +		}
+>> +	}
+> 
+> You skipped devtlb invalidation. yes it's not necessary based on current
+> nested translation design and this part is inconsistent in different paths.
+> 
+> but as a semantics change you may want to first make removing devtlb
+> invalidation a separate patch and then do this cleanup, so bisect is easier.
 
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
+This helper is designed for map paths when the IOMMU is in caching mode.
+Caching mode doesn't impact the device TLB, so we should not invalidate
+the device TLB here.
 
-If you want to undo deduplication, reply with:
-#syz undup
+I guess the confusing thing is about the code below.
+
+
+         /*
+          * In caching mode, changes of pages from non-present to 
+present require
+          * flush. However, device IOTLB doesn't need to be flushed in 
+this case.
+          */
+         if (!cap_caching_mode(iommu->cap) || !map)
+                 iommu_flush_dev_iotlb(domain, addr, mask);
+
+The real code doesn't match the comments, and I think the comments
+describe the right thing. So perhaps the code should be changed to match
+the comments.
+
+	if (!map)
+		iommu_flush_dev_iotlb(domain, addr, mask);
+
+??
+
+Best regards,
+baolu
