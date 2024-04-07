@@ -1,197 +1,215 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from szxga05-in.huawei.com (szxga05-in.huawei.com [45.249.212.191])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 482302BAE8
-	for <linux-kernel@vger.kernel.org>; Sun,  7 Apr 2024 13:10:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 223BE37700;
+	Sun,  7 Apr 2024 13:10:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.191
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712495456; cv=none; b=GfoS/kFxsv14yKNqmtIVwR4fFt8rvy2IOOwAzl0yFKB6z/fM2akjyVYxPdUNT0wK8+vrqTn7aqoTw1pTHT6vJFyt965RJI7ZMnsnbxzufw5T1bLbX82DFc4+POzlmaNtxPQqtLhDTIsYYwFdtFnIIQKXBNBNq670xQzHOUdhitw=
+	t=1712495460; cv=none; b=Y49DTpdpqWj+iaD/X1c5Y9oQd+Bcl89u77G5gnC86CkqyBZ+yG3qLsJWE0GJL1oyb5F/3+W2/h38Okz4b7+pKb5k70ar/hWQkXz0Xv5ynBTA2grZs1j/9JsBg8AxxqlDswAZRvQiaiQp9JG+8XoTylHUP9uYceKntIYzt/2RaVk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712495456; c=relaxed/simple;
-	bh=9PXGMNAgOACqNin9bgdIyvcpskUTE+lFjxIcvvOoZeA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PCuIIePoByLcCgBkr6e/zK8bEVyAi3WRCuOrNlLSOowif+mZgnnkjwknvSyz4+Lnzee7vXuSGR4+GjqbYgHmblVYZaoxFQMvCONND7Fmj3N8Jc5IiZsVwJcMU/HBAUAXpkHz4PPVjDSWGAJcrFJp8FyqRP9Fo/Ifje/hF3NNrkQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=XgT6VCuh; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XgT6VCuh"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1712495453;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=a6vxxG5xgzXX9R/YtKyD3zzQDfQBIezrwLJQElkxb28=;
-	b=XgT6VCuhMZ2oKkG81sb9IwUe33R5O9iwnDqJYCqNSZMri/aTA0qyRQOR++RQky/xR31bn1
-	nOpT4258yYm9S8MVIgMZYp15qTpvuO1fzY23MYymUrMkQJvO8GArfI/cNHjSMKNlAdpQZh
-	4wTdYHJjYbxAmjjEGjHDbqyz6Q+1I6U=
-Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
- by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-288-n62oceUmPRWuQNZU-k7Xmw-1; Sun,
- 07 Apr 2024 09:10:48 -0400
-X-MC-Unique: n62oceUmPRWuQNZU-k7Xmw-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.rdu2.redhat.com [10.11.54.6])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 9CEA629AB3F7;
-	Sun,  7 Apr 2024 13:10:47 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.224.79])
-	by smtp.corp.redhat.com (Postfix) with SMTP id BB260200B3C6;
-	Sun,  7 Apr 2024 13:10:44 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Sun,  7 Apr 2024 15:09:22 +0200 (CEST)
-Date: Sun, 7 Apr 2024 15:09:14 +0200
-From: Oleg Nesterov <oleg@redhat.com>
-To: Frederic Weisbecker <frederic@kernel.org>
-Cc: Nick Piggin <npiggin@gmail.com>, Tejun Heo <tj@kernel.org>,
-	Leonardo Bras <leobras@redhat.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Lai Jiangshan <jiangshanlai@gmail.com>,
-	linux-kernel@vger.kernel.org, Junyao Zhao <junzhao@redhat.com>,
-	Chris von Recklinghausen <crecklin@redhat.com>
-Subject: Re: Nohz_full on boot CPU is broken (was: Re: [PATCH v2 1/1] wq:
- Avoid using isolated cpus' timers on queue_delayed_work)
-Message-ID: <20240407130914.GA10796@redhat.com>
-References: <20240130010046.2730139-2-leobras@redhat.com>
- <20240402105847.GA24832@redhat.com>
- <Zg2qFinSkAOmRHcM@slm.duckdns.org>
- <20240403203814.GD31764@redhat.com>
- <20240405140449.GB22839@redhat.com>
- <ZhByg-xQv6_PC3Pd@localhost.localdomain>
+	s=arc-20240116; t=1712495460; c=relaxed/simple;
+	bh=pYYv09HgrZO8dDeNfrFDpFe3TGrfSXjtQZHpPFKc/BU=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=McrzPtQ0T1q5HKfrkPmRjHfRmJvu2wFKLT1qHkxWEClSvwXujGTSFlxY113M6KO+9Da31IxhCCDl8b4dyjIew63eTJ4YlIIVAiIdK+SaPZcjVySGKyv85VX5PnN9ugT10JVTnC9bqGyl4PLkc7JTyxPIP/Q4k3d0xKTh7R7GRIs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.191
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.17])
+	by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4VCCJ30Xjdz1GCqF;
+	Sun,  7 Apr 2024 21:10:11 +0800 (CST)
+Received: from dggpemm500005.china.huawei.com (unknown [7.185.36.74])
+	by mail.maildlp.com (Postfix) with ESMTPS id 05B0E1A0172;
+	Sun,  7 Apr 2024 21:10:54 +0800 (CST)
+Received: from localhost.localdomain (10.69.192.56) by
+ dggpemm500005.china.huawei.com (7.185.36.74) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Sun, 7 Apr 2024 21:10:53 +0800
+From: Yunsheng Lin <linyunsheng@huawei.com>
+To: <davem@davemloft.net>, <kuba@kernel.org>, <pabeni@redhat.com>
+CC: <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>, Yunsheng Lin
+	<linyunsheng@huawei.com>, Alexander Duyck <alexander.duyck@gmail.com>,
+	Matthias Brugger <matthias.bgg@gmail.com>, AngeloGioacchino Del Regno
+	<angelogioacchino.delregno@collabora.com>, Alexei Starovoitov
+	<ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, Jesper Dangaard
+ Brouer <hawk@kernel.org>, John Fastabend <john.fastabend@gmail.com>,
+	<linux-arm-kernel@lists.infradead.org>, <linux-mediatek@lists.infradead.org>,
+	<bpf@vger.kernel.org>
+Subject: [PATCH net-next v1 00/12] First try to replace page_frag with page_frag_cache
+Date: Sun, 7 Apr 2024 21:08:37 +0800
+Message-ID: <20240407130850.19625-1-linyunsheng@huawei.com>
+X-Mailer: git-send-email 2.33.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <ZhByg-xQv6_PC3Pd@localhost.localdomain>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.6
+Content-Type: text/plain
+X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
+ dggpemm500005.china.huawei.com (7.185.36.74)
 
-On 04/05, Frederic Weisbecker wrote:
->
-> +Cc Nick
->
-> Le Fri, Apr 05, 2024 at 04:04:49PM +0200, Oleg Nesterov a écrit :
-> > On 04/03, Oleg Nesterov wrote:
-> > >
-> > > > > OTOH, Documentation/timers/no_hz.rst says
-> > > > >
-> > > > > 	Therefore, the
-> > > > > 	boot CPU is prohibited from entering adaptive-ticks mode.  Specifying a
-> > > > > 	"nohz_full=" mask that includes the boot CPU will result in a boot-time
-> > > > > 	error message, and the boot CPU will be removed from the mask.
-> > > > >
-> > > > > and this doesn't match the reality.
-> > > >
-> > > > Don't some archs allow the boot CPU to go down too tho? If so, this doesn't
-> > > > really solve the problem, right?
-> > >
-> > > I do not know. But I thought about this too.
-> > >
-> > > In the context of this discussion we do not care if the boot CPU goes down.
-> > > But we need at least one housekeeping CPU after cpu_down(). The comment in
-> > > cpu_down_maps_locked() says
-> > >
-> > > 	Also keep at least one housekeeping cpu onlined
-> > >
-> > > but it checks HK_TYPE_DOMAIN, and I do not know (and it is too late for me
-> > > to try to read the code ;) if housekeeping.cpumasks[HK_TYPE_TIMER] can get
-> > > empty or not.
-> >
-> > This nearly killed me, but I managed to convince myself we shouldn't worry
-> > about cpu_down().
-> >
-> > HK_FLAG_TIMER implies HK_FLAG_TICK.
-> >
-> > HK_FLAG_TICK implies tick_nohz_full_setup() which sets
-> > tick_nohz_full_mask = non_housekeeping_mask.
-> >
-> > When tick_setup_device() is called on a housekeeping CPU it does
-> >
-> > 	else if (tick_do_timer_boot_cpu != -1 &&
-> > 					!tick_nohz_full_cpu(cpu)) {
-> > 		tick_take_do_timer_from_boot();
-> > 		tick_do_timer_boot_cpu = -1;
-> >
-> >
-> > 	and this sets tick_do_timer_cpu = first-housekeeping-cpu.
-> >
-> > cpu_down(tick_do_timer_cpu) will fail, tick_nohz_cpu_down() will nack it.
-> >
-> > So cpu_down() can't make housekeeping.cpumasks[HK_FLAG_TIMER] empty and I
-> > still think that the change below is the right approach.
-> >
-> > But probably WARN_ON() in housekeeping_any_cpu() makes sense anyway.
-> >
-> > What do you think?
->
-> Good analysis on this nasty housekeeping VS tick code. I promised so many
-> times to cleanup this mess but things keep piling up.
->
-> It is indeed possible for the boot CPU to be a nohz_full CPU and as
-> you can see, it's only half-working. This is so ever since:
->
->     08ae95f4fd3b (nohz_full: Allow the boot CPU to be nohz_full)
+After [1], Only there are two implementations for page frag:
 
-Thanks... So this is intentional. I was confused by
+1. mm/page_alloc.c: net stack seems to be using it in the
+   rx part with 'struct page_frag_cache' and the main API
+   being page_frag_alloc_align().
+2. net/core/sock.c: net stack seems to be using it in the
+   tx part with 'struct page_frag' and the main API being
+   skb_page_frag_refill().
 
-	Therefore, the
-	boot CPU is prohibited from entering adaptive-ticks mode.  Specifying a
-	"nohz_full=" mask that includes the boot CPU will result in a boot-time
-	error message, and the boot CPU will be removed from the mask.
+This patchset tries to unfiy the page frag implementation
+by replacing page_frag with page_frag_cache for sk_page_frag()
+first. net_high_order_alloc_disable_key for the implementation
+in net/core/sock.c doesn't seems matter that much now have
+have pcp support for high-order pages in commit 44042b449872
+("mm/page_alloc: allow high-order pages to be stored on the
+per-cpu lists").
 
-from Documentation/timers/no_hz.rst
+As the related change is mostly related to networking, so
+targeting the net-next. And will try to replace the rest
+of page_frag in the follow patchset.
 
-> I would love
-> to revert that now but I don't know if anyone uses this and have it working
-> by chance somewhere... Should we continue to support a broken feature? Can we
-> break user ABI if it's already half-broken?
+After this patchset, we are not only able to unify the page
+frag implementation a little, but seems able to have about
+0.5+% performance boost testing by using the vhost_net_test
+introduced in [1] and page_frag_test.ko introduced in this
+patch.
 
-Well, the changelog says
+Before this patchset:
+Performance counter stats for './vhost_net_test' (10 runs):
 
-    nohz_full has been trialed at a large supercomputer site and found to
-    significantly reduce jitter. In order to deploy it in production, they
-    need CPU0 to be nohz_full
+         603027.29 msec task-clock                       #    1.756 CPUs utilized               ( +-  0.04% )
+           2097713      context-switches                 #    3.479 K/sec                       ( +-  0.00% )
+               212      cpu-migrations                   #    0.352 /sec                        ( +-  4.72% )
+                40      page-faults                      #    0.066 /sec                        ( +-  1.18% )
+      467215266413      cycles                           #    0.775 GHz                         ( +-  0.12% )  (66.02%)
+      131736729037      stalled-cycles-frontend          #   28.20% frontend cycles idle        ( +-  2.38% )  (64.34%)
+       77728393294      stalled-cycles-backend           #   16.64% backend cycles idle         ( +-  3.98% )  (65.42%)
+      345874254764      instructions                     #    0.74  insn per cycle
+                                                  #    0.38  stalled cycles per insn     ( +-  0.75% )  (70.28%)
+      105166217892      branches                         #  174.397 M/sec                       ( +-  0.65% )  (68.56%)
+        9649321070      branch-misses                    #    9.18% of all branches             ( +-  0.69% )  (65.38%)
 
-so I guess this feature has users.
+           343.376 +- 0.147 seconds time elapsed  ( +-  0.04% )
 
-But after the commit aae17ebb53cd3da ("workqueue: Avoid using isolated cpus'
-timers on queue_delayed_work") the kernel will crash at boot time if the boot
-CPU is nohz_full.
 
-So we need a workaround at least. I am starting to think I will send a trivial
-patch which changes __queue_delayed_work() to validate the cpu returned by
-housekeeping_any_cpu(HK_TYPE_TIMER).
+ Performance counter stats for 'insmod ./page_frag_test.ko nr_test=99999999' (30 runs):
 
-But perhaps something like below makes more sense as a (stupid) workaround?
+             39.12 msec task-clock                       #    0.001 CPUs utilized               ( +-  4.51% )
+                 5      context-switches                 #  127.805 /sec                        ( +-  3.76% )
+                 1      cpu-migrations                   #   25.561 /sec                        ( +- 15.52% )
+               197      page-faults                      #    5.035 K/sec                       ( +-  0.10% )
+          10689913      cycles                           #    0.273 GHz                         ( +-  9.46% )  (72.72%)
+           2821237      stalled-cycles-frontend          #   26.39% frontend cycles idle        ( +- 12.04% )  (76.23%)
+           5035549      stalled-cycles-backend           #   47.11% backend cycles idle         ( +-  9.69% )  (49.40%)
+           5439395      instructions                     #    0.51  insn per cycle
+                                                  #    0.93  stalled cycles per insn     ( +- 11.58% )  (51.45%)
+           1274419      branches                         #   32.575 M/sec                       ( +- 12.69% )  (77.88%)
+             49562      branch-misses                    #    3.89% of all branches             ( +-  9.91% )  (72.32%)
 
-Oleg.
+            30.309 +- 0.305 seconds time elapsed  ( +-  1.01% )
 
---- a/kernel/sched/isolation.c
-+++ b/kernel/sched/isolation.c
-@@ -46,7 +46,15 @@ int housekeeping_any_cpu(enum hk_type type)
- 			if (cpu < nr_cpu_ids)
- 				return cpu;
- 
--			return cpumask_any_and(housekeeping.cpumasks[type], cpu_online_mask);
-+			cpu = cpumask_any_and(housekeeping.cpumasks[type], cpu_online_mask);
-+			if (cpu < nr_cpu_ids)
-+				return cpu;
-+
-+			cpu = READ_ONCE(tick_do_timer_boot_cpu);
-+			if (cpu >= 0)
-+				return cpu;
-+
-+			WARN_ON_ONCE(1);
- 		}
- 	}
- 	return smp_processor_id();
+
+After this patchset:
+Performance counter stats for './vhost_net_test' (10 runs):
+
+         598081.02 msec task-clock                       #    1.752 CPUs utilized               ( +-  0.11% )
+           2097738      context-switches                 #    3.507 K/sec                       ( +-  0.00% )
+               220      cpu-migrations                   #    0.368 /sec                        ( +-  6.58% )
+                40      page-faults                      #    0.067 /sec                        ( +-  0.92% )
+      469788205101      cycles                           #    0.785 GHz                         ( +-  0.27% )  (64.86%)
+      137108509582      stalled-cycles-frontend          #   29.19% frontend cycles idle        ( +-  0.96% )  (63.62%)
+       75499065401      stalled-cycles-backend           #   16.07% backend cycles idle         ( +-  1.04% )  (65.86%)
+      345469451681      instructions                     #    0.74  insn per cycle
+                                                  #    0.40  stalled cycles per insn     ( +-  0.37% )  (70.16%)
+      102782224964      branches                         #  171.853 M/sec                       ( +-  0.62% )  (69.28%)
+        9295357532      branch-misses                    #    9.04% of all branches             ( +-  1.08% )  (66.21%)
+
+           341.466 +- 0.305 seconds time elapsed  ( +-  0.09% )
+
+
+ Performance counter stats for 'insmod ./page_frag_test.ko nr_test=99999999' (30 runs):
+
+             40.09 msec task-clock                       #    0.001 CPUs utilized               ( +-  4.60% )
+                 5      context-switches                 #  124.722 /sec                        ( +-  3.45% )
+                 1      cpu-migrations                   #   24.944 /sec                        ( +- 12.62% )
+               197      page-faults                      #    4.914 K/sec                       ( +-  0.11% )
+          10221721      cycles                           #    0.255 GHz                         ( +-  9.05% )  (27.73%)
+           2459009      stalled-cycles-frontend          #   24.06% frontend cycles idle        ( +- 10.80% )  (29.05%)
+           5148423      stalled-cycles-backend           #   50.37% backend cycles idle         ( +-  7.30% )  (82.47%)
+           5889929      instructions                     #    0.58  insn per cycle
+                                                  #    0.87  stalled cycles per insn     ( +- 11.85% )  (87.75%)
+           1276667      branches                         #   31.846 M/sec                       ( +- 11.48% )  (89.80%)
+             50631      branch-misses                    #    3.97% of all branches             ( +-  8.72% )  (83.20%)
+
+            29.341 +- 0.300 seconds time elapsed  ( +-  1.02% )
+
+CC: Alexander Duyck <alexander.duyck@gmail.com>
+
+1. https://lore.kernel.org/all/20240228093013.8263-1-linyunsheng@huawei.com/
+
+Yunsheng Lin (12):
+  mm: Move the page fragment allocator from page_alloc into its own file
+  mm: page_frag: use initial zero offset for page_frag_alloc_align()
+  mm: page_frag: change page_frag_alloc_* API to accept align param
+  mm: page_frag: add '_va' suffix to page_frag API
+  mm: page_frag: add two inline helper for page_frag API
+  mm: page_frag: reuse MSB of 'size' field for pfmemalloc
+  mm: page_frag: reuse existing bit field of 'va' for pagecnt_bias
+  net: introduce the skb_copy_to_va_nocache() helper
+  mm: page_frag: introduce prepare/commit API for page_frag
+  net: replace page_frag with page_frag_cache
+  mm: page_frag: add a test module for page_frag
+  mm: page_frag: update documentation and maintainer for page_frag
+
+ Documentation/mm/page_frags.rst               | 115 ++++--
+ MAINTAINERS                                   |  10 +
+ .../chelsio/inline_crypto/chtls/chtls.h       |   3 -
+ .../chelsio/inline_crypto/chtls/chtls_io.c    | 101 ++---
+ .../chelsio/inline_crypto/chtls/chtls_main.c  |   3 -
+ drivers/net/ethernet/google/gve/gve_rx.c      |   4 +-
+ drivers/net/ethernet/intel/ice/ice_txrx.c     |   2 +-
+ drivers/net/ethernet/intel/ice/ice_txrx.h     |   2 +-
+ drivers/net/ethernet/intel/ice/ice_txrx_lib.c |   2 +-
+ .../net/ethernet/intel/ixgbevf/ixgbevf_main.c |   4 +-
+ .../marvell/octeontx2/nic/otx2_common.c       |   2 +-
+ drivers/net/ethernet/mediatek/mtk_wed_wo.c    |   4 +-
+ drivers/net/tun.c                             |  34 +-
+ drivers/nvme/host/tcp.c                       |   8 +-
+ drivers/nvme/target/tcp.c                     |  22 +-
+ drivers/vhost/net.c                           |   6 +-
+ include/linux/gfp.h                           |  22 --
+ include/linux/mm_types.h                      |  18 -
+ include/linux/page_frag_cache.h               | 339 ++++++++++++++++
+ include/linux/sched.h                         |   4 +-
+ include/linux/skbuff.h                        |  15 +-
+ include/net/sock.h                            |  29 +-
+ kernel/bpf/cpumap.c                           |   2 +-
+ kernel/exit.c                                 |   3 +-
+ kernel/fork.c                                 |   2 +-
+ mm/Kconfig.debug                              |   8 +
+ mm/Makefile                                   |   2 +
+ mm/page_alloc.c                               | 136 -------
+ mm/page_frag_cache.c                          | 185 +++++++++
+ mm/page_frag_test.c                           | 366 ++++++++++++++++++
+ net/core/skbuff.c                             |  57 +--
+ net/core/skmsg.c                              |  22 +-
+ net/core/sock.c                               |  46 ++-
+ net/core/xdp.c                                |   2 +-
+ net/ipv4/ip_output.c                          |  35 +-
+ net/ipv4/tcp.c                                |  35 +-
+ net/ipv4/tcp_output.c                         |  28 +-
+ net/ipv6/ip6_output.c                         |  35 +-
+ net/kcm/kcmsock.c                             |  30 +-
+ net/mptcp/protocol.c                          |  74 ++--
+ net/rxrpc/txbuf.c                             |  16 +-
+ net/sunrpc/svcsock.c                          |   4 +-
+ net/tls/tls_device.c                          | 139 ++++---
+ 43 files changed, 1404 insertions(+), 572 deletions(-)
+ create mode 100644 include/linux/page_frag_cache.h
+ create mode 100644 mm/page_frag_cache.c
+ create mode 100644 mm/page_frag_test.c
+
+-- 
+2.33.0
 
