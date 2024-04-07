@@ -1,61 +1,60 @@
-Received: from sonic316-21.consmr.mail.ne1.yahoo.com (sonic316-21.consmr.mail.ne1.yahoo.com [66.163.187.147])
+Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 376C914273
-	for <linux-kernel@vger.kernel.org>; Sun,  7 Apr 2024 09:32:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=66.163.187.147
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2670B17999;
+	Sun,  7 Apr 2024 09:36:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712482329; cv=none; b=qifIV94+iYTP7+CxxBCiNM8Nu2i4NhNhAzHEuw3NyYYLs5cQS5P8ZeKqgji676hLK+52uMyoO3ku0sCWYdC2/eRRaygCsTgkx1YESlbjxVQ8rAwF8aT7yzX+J09ksag4rVrmH7mVoX2Uw1xEhSy4p/I0h5Zm6ik/2Mu/YYqUvB0=
+	t=1712482588; cv=none; b=cCK8R5evUGLNEmd0LwDXdAJSYh7iLQxlk31zFn1+Cjg2YGERrYFSrj/XYlN7kQa/gJjEVIM1xLEkcAVaW5lcqKsvXUqX11STvQrz2NK5xNYIkkPCR7rGXFq7P6nCnqP8ylZyEtJzHQYceaihR/bqeoqFkMrJu1PBdUwU/o6Ih80=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712482329; c=relaxed/simple;
-	bh=IWTIjbsO7ky6wjX0WM/09NBDuwxkAXd4zp0bVFc/FtY=;
+	s=arc-20240116; t=1712482588; c=relaxed/simple;
+	bh=4p3gqivp3q4YZE9SUTujN/IyDYJz8cPf96naYBFaaQA=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=a5ooDh3QoL6wAjfaqo0/oQOuaXs73RNYQvIR7TPSCsQ1YA024QlBA7eu8Dvxieu0RmIYkUFGqK74dMCO5fMSl9j29rAXHhgsCHZ9MWH21aMB8jye/xW3C5iw7WvAzvfLta1+3Ba8hu8rNgVWRlbk1F6DtkwIhoA8Y6TmI05JcF0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=yahoo.com; spf=pass smtp.mailfrom=yahoo.com; dkim=pass (2048-bit key) header.d=yahoo.com header.i=@yahoo.com header.b=aATv4b2/; arc=none smtp.client-ip=66.163.187.147
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=yahoo.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yahoo.com
+	 In-Reply-To:Content-Type; b=auXD3+b+tTBNaz9tbeJWH3mfnDMI8VwpVNj0Lesgvz0PVT62Ytokiq7V9lru1MTiLbpHY4WlZOrkKacJkuU/lUT703QJT40Jnpgvyo3mCKQoW8R6acw514bQChdbKnaOvtiWZasKE6t0B55iy5CmnRmAVzTyf9U9rerju9SYaKE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gyG6n6l5; arc=none smtp.client-ip=209.85.218.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=yahoo.com header.i=@yahoo.com header.b="aATv4b2/"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1712482321; bh=hB89fBU1gf++hm9muSsqTrPVUIEBVDR5AlHXJ0AmO2I=; h=Date:Subject:To:Cc:References:From:In-Reply-To:From:Subject:Reply-To; b=aATv4b2/X7TkNcxnTn0JM5Is3RlFzFr3iDiuebrWv3S0qdGTAFBefWbN6TRnWywJeOwSEISHymIt1p4KZHMyhhsY/081nWVpwklxP8U7iZi5GtNK3qA2nM/82DY5q/eZnpC4so5ryFkn9iFvdwJ/ALJ0ls/b/3B+9VZ81+yxRYHNyYCwVF4AqNb6pglQkgHkX92Dw2wlHpRjEVA7xBf5oDGk7EZCMl6Ult3CTMH5PkQ5m0dke4+7RxrNvDTKxlnEuiFOzCPLlQ7fCyN/VhsTKlB+ydTRXy6RxntQJQRf+4ytpzUVv53r0YyINshP/G0dkh1cZFwwe4YYlXxyfcyREg==
-X-SONIC-DKIM-SIGN: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1712482321; bh=hVTz+bUgigHMvG+hBoTKtdLfZtu3ty/x02B4xSuM/u1=; h=X-Sonic-MF:Date:Subject:To:From:From:Subject; b=FUjaXqBoZ83PxBIq5b/woMVen8tPmm97nsijgR8NKUPqiX4j3aYwLharxtTbQPbAaSmaR3p5SCDQfc8O3IYn+LsMtEtk6gZuTkcFSU7i9TTJzOB92zqQcYRoGwuLgDqTjyLcswfXzQXGz8Loc9VsquJAeXLjFrxgkkKd+rBtV1gzGgcRKSgqJ9S8gJODsZ3Rf+JgwCj05P+j5TFfJ8PyLYTyCydB7amwcSbEggHb9Dj4RS6CEwEdq3Fa74rnd7P7fdAcsUbyzr7UrgD3z6nSteVsPavtg1N7EVZpuolpn9YGH3W4nSPGsjaKkcy3MYp5kF1B7SePZAoeEwvT81m/rQ==
-X-YMail-OSG: dGKwT_QVM1n3ifVo18XuI4LRTSPwXAO6P5PcF2l1dl64t4U2t.sYjZZiVgjHv0V
- qihZU_lDhdrunQ_5qCvMfvpoLBIPOEYYwS0n0zbYYXkKdJArz8m5ZLHOAWtTqWt7gZEXCb6hGbwb
- LWu5n1OXUmVhYsEvCgfYHxHXgZ_WYtINsrYkcQ9Lyo8GyQh2M5M777pWRnukDkJPFRrjhmC2.tCW
- PRIs3myAr2sZNbBQ32f2MWqmbmLAFJYJQNHaLi0zIf_IHEwGqz9Zobhd0.whhkvYY2T75xbgPPGP
- xR74WzmFvpeUtTY9XWcugO1_uafbr0CMzpSjdO2Gm586zgugRXRyVadAO5t6LFA0CdjrvkbgVauN
- fEIcazDy4uy9wcP..DaKv5GdQKZRYl5XfDchv.Nn36j_yoqsn4khC2f7OWeCe3KsXMpLGJOHquiX
- zrAYe8giV_IauUvGGW.VdkeB8z0.5wIpCFgsJK4sIH96nKOQxNq8ZAvyN1DWhLzsU2Imoht6SkEX
- O8o1aw92ULb5C8FAoOQbXf_PKVggnOqQr90UXRNf17.mtCpsrF92dACjHAHYwbdkvk7Xdl_Q6rwW
- eJpAAFY99Agv6cbfzXJDGmRPOjH.4icNj3k02CXNParZTBMOS6ACPxoYpK2SwaUnPPTfl._HTE8w
- Y3nSaB7Dbr2_W3yal81a9pswfj5Dnurq5vaMAUR7aIIEUH1nIskobcUuxs_xy0ijR_a1YnfQ5K4C
- 0C7bEsQzdA0F0CoJpM_AXWKSWPBDuEDTqPAJeosDGViV9dGhfSKwIebILSbfQLVaoD.WwelKhksQ
- 5T53dwhAe9YSLkY9OQvpbYvdwIutppHJ9dUFgB9Z435ryMUjz3VT9qg74Zk5knxmFxSUu_8wHRWg
- YmkZmFU7odBxxsE16IvDyHd9r_rDG5h1RFBt0NnB5saRkqbUj3LUYKvlmTeKAnWxnOuo5b_LbFFp
- qYQvrwdDEWoGVtuk4UHAJg0S_UYc3YA.mBI.OqoDEMCqgPucik_v8BlTzl_xVujukcLrSU1F32ZW
- kEvkUTMoOc0keC06aRNIq01yvLVTAsPSzs0b_Rt5puCXg_gImgU0EqGrp_4dAtvce.wqKvwORn3I
- ypvMkVIOvTbiRdIPCQQcasEUi4tOTExhpOUu5I_uV7bIV1shVeCOXpOc8Vf7JdGoNUxs7vLO7ukc
- 8vYDqmkqD0hXIiBva89ncUCo0TqFdrgl2TUYkVbs4ppEbS.gkClYfXDObHJOqxc1abYUoav9P_Wh
- rK6hKzW8hH8mWJ68th6VkBDHIPikS6FsGRoHVqZmNZy89s7XXfW2ueAveP3iq4vGkpQ4gGv4bSWr
- .qZMdVQ39EkybBb_7q2AHYx6PiaaDiIq5RqkbbvH9RXSH.X.YK9vwzuHNa7h4Kxh27n._uXm.c60
- fwYuzERMPz9yTijROWbMThW00pcLv7sbVuTy725UqGSErzNWZTdJQOT6nyJpnMGH9WF2uFGKPEUe
- 2JgmIHK_ULnjp3knTmyJL5ng.g6ABYEi4tB9WWwD6U9BEr8AQuHq7Qu4ni9vaGyDn7JWuv80XKvL
- ftqw9w6wL1b1ICl_MEnroY6W1AMwpZJ_PYMwgtmReQpgri1N_mMv8aRLBD7fS_N8spmGKi9LfBAk
- 5upaHNFUgHq4NqB6_NEmMJvAUA9fTb42VHaKK_fXzJTaht_W9TDrPqTUqS0j31A0.u9vLih6El4L
- zmu4zphZOatD3LWiPPaGdDG_8..kpmPmgYei3sVWvW25L2CsB4mTE4lyrQimVJFCQjHz_sQPFi5h
- Q_C4gVyLrwJcmD_KOeQT1q76YT.o14zuKc_g1_KcN5EabrYikFCdwd3dq6hid_UJr.KkijVjZGWc
- vo5hBOQfyZX19XyKjSFE08YPYLs4N3Yjj4tzhOT1M3XVjtE5bSggTClqoQWinRDGlSaoaagYYb_K
- _CoUBaKlnZZPSEHhsN6BAfrxArHrVMOHZapsJve.dKBCyTGGwzLVUlHiJWUCJUy4jBt4PgtJ64Ud
- TIbjW2ukuWMAgJ0IfsfQaecyfKS4WKUkmmOv35m4bYVW4Bnz5o5_tiF7MGipapWVIJYM3frYyrbZ
- nuX56YxABuJ4.ceahe8liN66hr20YduxG4lzl7G2abvn_s6ugpsS0bY1xbcUQW84.SMjoc5gpExQ
- xObw7b.k0YGcH35IQvjMyL5KhkzFjf6p0FJI7gATFgFptEKWJQ7rwnE.mQS91dy3N0rikwbn.LjB
- 4GKRiGrKsLKgEX3IgbPKh.F7oW2R4qH3L39oej2KPN.iv75dImcIKfQA66d4-
-X-Sonic-MF: <serdeliuk@yahoo.com>
-X-Sonic-ID: a0bca023-4f5a-4498-a152-d9853cf88d13
-Received: from sonic.gate.mail.ne1.yahoo.com by sonic316.consmr.mail.ne1.yahoo.com with HTTP; Sun, 7 Apr 2024 09:32:01 +0000
-Received: by hermes--production-ir2-7bc88bfc75-6cqn4 (Yahoo Inc. Hermes SMTP Server) with ESMTPA ID 69da7276310ac0065901e6077002f504;
-          Sun, 07 Apr 2024 09:21:52 +0000 (UTC)
-Message-ID: <46ca8527-8b3e-4894-a1ee-8f2663e457fb@yahoo.com>
-Date: Sun, 7 Apr 2024 11:21:50 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gyG6n6l5"
+Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-a51ae40460bso35342266b.1;
+        Sun, 07 Apr 2024 02:36:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1712482585; x=1713087385; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=4p3gqivp3q4YZE9SUTujN/IyDYJz8cPf96naYBFaaQA=;
+        b=gyG6n6l5I84TWTvSunB59ri4nqJ5dZz3MTBoKm2HucDbbzNxvv/3bULvkRZADmPVbT
+         V6YghhbxNoY4G2yDA+o6s8K3fMK1eFVZH22gT/joDKfEA8sgcBVL2V1zmdClNjj10Hm2
+         SzMelg8BsCFNWQFFD61LnFfpsnCSAUDR8YPzQyT+Zj1PkShLBCe5TeYeAWADCGULvrZe
+         EC5XXRVeoy/an5VgDUoe8hMZfrHSSC5r3xkQ2zfuSx/DlwGto4cL03Tn0NBwc70/zeXY
+         EkD4Lwe/evjr1fdiWbhIkHRCNi7XwbfPCSC956LU3G37aQwb4pIDb1NTj+u3tD5xiqE9
+         BJyg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712482585; x=1713087385;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=4p3gqivp3q4YZE9SUTujN/IyDYJz8cPf96naYBFaaQA=;
+        b=qAp6eKyh+hutnSFGLQu9MKWnuVVAW0gxyanqTXXgdAnL45sbBtrtiM2mChvJE17n/f
+         DYmiYBaSC5V7bdgwWWJdkXJN7l2VbgTEz4PU5TEgJHLahdGpA8UKYghY+V6ORIO03jfI
+         5+MY+DgcITjtY+3DEEKFEo2yYUOyEkS9TJl6Gg8RoEF5q4LU8qZv2H2cWzOJsrP/BPux
+         fQFCVojFXRKbUnetiNYrEprvgDXu8UT6HkZuuU7xrzMemBODn2axPih8JZ6sr+WnKY42
+         mbja691vWd7ene/DLJss+53UHBR7VHlbSELqNmHTp6xh9N2TcrtgbfWsqPnRnOyXOQ2b
+         O3Qw==
+X-Forwarded-Encrypted: i=1; AJvYcCUCsfFdVByBLAuRFLxhMog3nYGvG9K8xB8ELso7PoF9nr4doRucGgousDYXdfUfestPOM8kXKejsHhcsmPe3V0m4n+UIEb2ih52JutEt7CvpnLN9F6PXWJJ5J0QtRHTrS9QsUUl
+X-Gm-Message-State: AOJu0Yz/7L+rOs7Tnn3CmXyScaIBH+PYPmaqDbDUl7BwgZ99gZM/dzsF
+	eXXzkkNZOmZUWlGJGT1mNqPhVBOAJ+2N6dpFf4/QLiT+V6XPckj6coFc0sY6d3OnBUun
+X-Google-Smtp-Source: AGHT+IGeUtzl+ftXHB+D6b4Quoamt4GxOvDKy9IJCIiaNhWMIwr8D+TYTUtQK1hoAmRtNEdrOOyfJA==
+X-Received: by 2002:a17:906:338e:b0:a51:a255:ed83 with SMTP id v14-20020a170906338e00b00a51a255ed83mr3780016eja.2.1712482585318;
+        Sun, 07 Apr 2024 02:36:25 -0700 (PDT)
+Received: from [192.168.1.2] ([91.86.182.228])
+        by smtp.gmail.com with ESMTPSA id c27-20020a170906d19b00b00a51a00142bdsm2952669ejz.212.2024.04.07.02.36.24
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 07 Apr 2024 02:36:24 -0700 (PDT)
+Message-ID: <0a716f53-5c88-42e7-b183-fb8ae4d4959c@gmail.com>
+Date: Sun, 7 Apr 2024 11:36:23 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -63,56 +62,65 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 1/2] dt-bindings: arm: qcom: Document the Samsung
- Galaxy Z Fold5
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
- Bjorn Andersson <andersson@kernel.org>,
- Konrad Dybcio <konrad.dybcio@linaro.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>
-Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20240407-samsung-galaxy-zfold5-q5q-v4-0-8b67b1813653@yahoo.com>
- <20240407-samsung-galaxy-zfold5-q5q-v4-1-8b67b1813653@yahoo.com>
- <32b01e4e-dcdb-49bc-90bd-a75bb34c5b1b@linaro.org>
-Content-Language: en-US
-From: Alexandru Serdeliuc <serdeliuk@yahoo.com>
-In-Reply-To: <32b01e4e-dcdb-49bc-90bd-a75bb34c5b1b@linaro.org>
+Subject: Re: Linux 6.8.4
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: torvalds@linux-foundation.org, lwn@lwn.net, jslaby@suse.cz,
+ linux-kernel@vger.kernel.org, akpm@linux-foundation.org,
+ stable@vger.kernel.org
+References: <2024040409-attentive-raffle-d9bc@gregkh>
+ <2024040409-disliking-mammogram-096d@gregkh>
+ <41c2bdd3-9b66-404a-aecb-8633d4aa98fb@gmail.com>
+ <762f7ace-7fee-4f61-823b-54a1b7d5bdce@gmail.com>
+ <2024040629-bullfight-wind-54f0@gregkh>
+Content-Language: fr-FR
+From: =?UTF-8?Q?Fran=C3=A7ois_Valenduc?= <francoisvalenduc@gmail.com>
+Autocrypt: addr=francoisvalenduc@gmail.com; keydata=
+ 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
+In-Reply-To: <2024040629-bullfight-wind-54f0@gregkh>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-Mailer: WebService/1.1.22205 mail.backend.jedi.jws.acl:role.jedi.acl.token.atz.jws.hermes.yahoo
 
-I am terribly sorry, this is my first patch sent  here, I am still 
-trying to understand what and how to do it.
+While bisecting, I noticed there is now a new configuration option in KVM (support for Microsoft hyper v emulation) which is thus needed for Windows guests.
 
-How to proceed with those missing tags? i should create a v5 and add them?
+If I enable it, it works correctly.
 
+Best regards,
 
-On 7/4/24 11:01, Krzysztof Kozlowski wrote:
-> On 07/04/2024 07:38, Alexandru Marc Serdeliuc via B4 Relay wrote:
->> From: Alexandru Marc Serdeliuc <serdeliuk@yahoo.com>
->>
->> This documents Samsung Galaxy Z Fold5 (samsung,q5q)
->> which is a foldable phone by Samsung based on the sm8550 SoC.
->>
->> Signed-off-by: Alexandru Marc Serdeliuc <serdeliuk@yahoo.com>
->> ---
-> This is a friendly reminder during the review process.
+François Valenduc
+
+Le 6/04/24 à 15:27, Greg Kroah-Hartman a écrit :
+> On Sat, Apr 06, 2024 at 02:42:07PM +0200, François Valenduc wrote:
+>> I also get the same problem with kernel 6.9-rc2.
+> Great, can you run 'git bisect' to find the offending commit?
 >
-> It looks like you received a tag and forgot to add it.
+> thanks,
 >
-> If you do not know the process, here is a short explanation:
-> Please add Acked-by/Reviewed-by/Tested-by tags when posting new
-> versions, under or above your Signed-off-by tag. Tag is "received", when
-> provided in a message replied to you on the mailing list. Tools like b4
-> can help here. However, there's no need to repost patches *only* to add
-> the tags. The upstream maintainer will do that for tags received on the
-> version they apply.
->
-> https://elixir.bootlin.com/linux/v6.5-rc3/source/Documentation/process/submitting-patches.rst#L577
->
-> If a tag was not added on purpose, please state why and what changed.
->
-> Best regards,
-> Krzysztof
->
+> greg k-h
