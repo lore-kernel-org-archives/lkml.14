@@ -1,264 +1,374 @@
-Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com [209.85.167.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from dggsgout11.his.huawei.com (unknown [45.249.212.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0415EA935;
-	Sun,  7 Apr 2024 02:41:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2DFC15C0;
+	Sun,  7 Apr 2024 02:48:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712457669; cv=none; b=N4S8gq8YwJl2QzCDXQmR2KDWDknJWzcGp2GvIFTD8OUArjNWo5Z5lrpZInS5usbDluFQ3QwAOhV87pJRWcmLric0lZyR6QBEFNJM32QGgyMX192eoWHmfEt5We3aqdVmjh4e4iYdOGOEplIls8k59bijNJLtLafuT4cF6qqjT0A=
+	t=1712458096; cv=none; b=EY4Kv+thLGMaHQCGJgLmusc42yL52JjKy7M8M13rv/Bb/7kItCN2d/hxwgzFeSrntLylud8YPV0Glm3T2jTS3LOJdP9QpJzlC+e2MD/rJ/WEQ+HTRfQFrkdwcR7Pcv2b4+noRCsS6AJQiAsLLZJNwRxJmD4+892kB5avdtsmwdo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712457669; c=relaxed/simple;
-	bh=jE8wYV7ClylQm1BWuzREFYyBRBC/QLEWOZoJ5AuIi5c=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=SwHGC6Rj/sk8PKVCJPNkm6Fs1KlOROZH+V4JW1i7Xz3E4FOhSiCdxdIjDnluQ01dmDrTcKj+8xfqs/rZ2009vuKlEyII9VpANFeaoC1GeFy1PtCBWiEDvOnfHpIuNYcIyPCszDsZEDDmQha/FiEcBSrzgr4+u70iEvyYH5k9FSM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fRnwqjXX; arc=none smtp.client-ip=209.85.167.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fRnwqjXX"
-Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-516d47ce662so3050071e87.1;
-        Sat, 06 Apr 2024 19:41:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1712457666; x=1713062466; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=svi7IG4j1NCRd7Qsuibjxz4QatOdbrOlqhYRp4ynUhA=;
-        b=fRnwqjXX9bBprzYPn4eqjndNI88CTqWYjLBipZ2c87woM1vBOpGDFiubr2BrPT7JwO
-         Hq3p1obCTou4ee+ri6ho6rhYoyb8WpBpcVEFxcFUIbkBQSWTpzmOw7IvzBEG2BQYymuK
-         9Ab9goZGU1cG6w626tPvVVi87lcbsC9MS++C/qd9sEwDy6Tf0EbXi2WR0wz68r9V0zoE
-         A6bOzvmidJsmY+/XpYUcChJkrbxAvVGE+TAJakZ1lvPhwxmmQ/G/eiXaMMj7ma5xBdTi
-         5mOxGoCTIesbwvzRFdG8ahAbu0pvxWsmi88jrVDIHOhix54qB4EMbPQd7fg5nu4Qebhq
-         RKrg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712457666; x=1713062466;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=svi7IG4j1NCRd7Qsuibjxz4QatOdbrOlqhYRp4ynUhA=;
-        b=ey+PFsEzZnKdjRaTa4pUxI4Ye435rCqQ3hUodLK55AeeXX3d45Rt0E3yJTC5gTO6a3
-         SETsu5DeYHlVG/61m651WLgLSSjsov34/tHMVLIfAP940h5DtiqACvzCh71Vah3giShe
-         CTAbADHfElq+wnNfL/GeopN9pou0TvmbZPJr55lRXIz04wTIg/fn2w6kMAFMxPxU550E
-         L+QGtM0RxNAngSnwjFO8dCBkavlUvmC3tYTxWGWFZ022RaKg32rmShMlSUbNWso+dyIv
-         rLF1SHLi8B0QQvMkf/kB18+EUPpN1psMqy17Upk7QOOuNz4cDrsqZx/IgN3yKNXkGEd8
-         PNbQ==
-X-Forwarded-Encrypted: i=1; AJvYcCV8FXPXzAIGMnuPyxp/1FUNjwNilmjwdbFGbXukVQWdrJzEAeEYb0kJ1mKI6iP9tSQLnmIqrgrFAf6L7Yp99HkxJylqBtYn8AoPK6B1YYKKcrat7u9dQRHypOD+yLNNqFD3Agbhy4AP9ASCU6vuMSGT6vz+TOyub0A237oA0wlJgtm4
-X-Gm-Message-State: AOJu0YxnijzEDXMbX5Gh/7U6q/pqOMNMPm45wyED5odbKpBcOEQyRO3n
-	Dy52n8Wo0BsfWOBxWJ2DMWIzmvTvu6nzJ4L0f9ZcUrZA0w5Dy0NlN58t14rKpPEfq45++oZPhCK
-	dfr+QtXqHRkK3p4a/riQ4+iWX31o=
-X-Google-Smtp-Source: AGHT+IGWhN1NiFvJL3wo1zaH/XA3X0sToWCJylJisJevqvEm+O++z85W13bqOe6L/e+DrbufZDhUvIpgKc3pOrd4vSU=
-X-Received: by 2002:ac2:5612:0:b0:513:ebb5:d9b0 with SMTP id
- v18-20020ac25612000000b00513ebb5d9b0mr4104722lfd.52.1712457665721; Sat, 06
- Apr 2024 19:41:05 -0700 (PDT)
+	s=arc-20240116; t=1712458096; c=relaxed/simple;
+	bh=Xicg4ksnZvNtAayzEIyLqhMBd1X4QEvw9mbwLMGJ+ag=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=btPfeZhcP8HOFKE0cW3t6LXCfY1A9jrnO3rMq47bkHfCtS4+dPpvpYY7n8zPZFSJXQ4zfB1r7gzSYiNV9ydA5Bi4TVD/v0ngMyROstQqTOhUM+/SC+22ERWkTAK09Lw7PwDwTxO7t00AzfirZDKF0yayM8vwHQCRSrqbj+uSu0o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.216])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4VBxV81rpJz4f3l1r;
+	Sun,  7 Apr 2024 10:48:00 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.128])
+	by mail.maildlp.com (Postfix) with ESMTP id C164A1A0DE6;
+	Sun,  7 Apr 2024 10:48:08 +0800 (CST)
+Received: from [10.174.178.129] (unknown [10.174.178.129])
+	by APP4 (Coremail) with SMTP id gCh0CgBnuWtnCRJmITLdJQ--.25183S2;
+	Sun, 07 Apr 2024 10:48:08 +0800 (CST)
+Subject: Re: [PATCH v2 3/6] writeback: support retrieving per group debug
+ writeback stats of bdi
+To: Brian Foster <bfoster@redhat.com>
+Cc: akpm@linux-foundation.org, willy@infradead.org, jack@suse.cz,
+ tj@kernel.org, dsterba@suse.com, mjguzik@gmail.com, dhowells@redhat.com,
+ linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+ linux-fsdevel@vger.kernel.org
+References: <20240327155751.3536-1-shikemeng@huaweicloud.com>
+ <20240327155751.3536-4-shikemeng@huaweicloud.com> <Zga937dR5UgtSVaz@bfoster>
+ <e3816f9c-0f29-a0e4-8ad8-a6acf82a06ad@huaweicloud.com>
+ <Zg1wGvTeQxjqjYUG@bfoster>
+From: Kemeng Shi <shikemeng@huaweicloud.com>
+Message-ID: <7f5a90cc-d6c5-0bb9-825a-7be15bc80878@huaweicloud.com>
+Date: Sun, 7 Apr 2024 10:48:06 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240401082019.2318193-1-haibo1.xu@intel.com> <20240402-7bd2b9ed00094befa6927b60@orel>
-In-Reply-To: <20240402-7bd2b9ed00094befa6927b60@orel>
-From: Haibo Xu <xiaobo55x@gmail.com>
-Date: Sun, 7 Apr 2024 10:40:54 +0800
-Message-ID: <CAJve8onPGb_ZqXaU7t50893PKS=9mrbzqvthc8dYMHDFKJdUAg@mail.gmail.com>
-Subject: Re: [PATCH] KVM: riscv: selftests: Add SBI base extension test
-To: Andrew Jones <ajones@ventanamicro.com>
-Cc: Haibo Xu <haibo1.xu@intel.com>, Paolo Bonzini <pbonzini@redhat.com>, 
-	Shuah Khan <shuah@kernel.org>, Anup Patel <anup@brainfault.org>, 
-	Atish Patra <atishp@atishpatra.org>, Paul Walmsley <paul.walmsley@sifive.com>, 
-	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, linux-kernel@vger.kernel.org, 
-	kvm@vger.kernel.org, linux-kselftest@vger.kernel.org, 
-	kvm-riscv@lists.infradead.org, linux-riscv@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <Zg1wGvTeQxjqjYUG@bfoster>
+Content-Type: text/plain; charset=gbk
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:gCh0CgBnuWtnCRJmITLdJQ--.25183S2
+X-Coremail-Antispam: 1UD129KBjvJXoW3Jr4kXFyDCw17uFW7uFy3Jwb_yoWDGw1xpF
+	W5J3W5Kr4UXr129rnIv3Wjqr9Iy395try7XF97A345CryDtr13tFyrGrWYkryrAryrAryU
+	Za1YyrZ7urZ0yrJanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUvab4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k2
+	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
+	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7Cj
+	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
+	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
+	6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
+	Cjc4AY6r1j6r4UM4x0Y48IcVAKI48JM4IIrI8v6xkF7I0E8cxan2IY04v7Mxk0xIA0c2IE
+	e2xFo4CEbIxvr21l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxV
+	Aqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q
+	6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6x
+	kF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWrJr0_WFyUJwCI42IY6I8E87Iv
+	67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyT
+	uYvjxUrR6zUUUUU
+X-CM-SenderInfo: 5vklyvpphqwq5kxd4v5lfo033gof0z/
 
-On Tue, Apr 2, 2024 at 10:12=E2=80=AFPM Andrew Jones <ajones@ventanamicro.c=
-om> wrote:
->
-> On Mon, Apr 01, 2024 at 04:20:18PM +0800, Haibo Xu wrote:
-> > This is the first patch to enable the base extension selftest
-> > for the SBI implementation in KVM. Test for other extensions
-> > will be added later.
->
-> I'm not sure we want SBI tests in KVM selftests since we already
-> plan to add them to kvm-unit-tests, where they can be used to
-> test both KVM's SBI implementation and M-mode firmware implementations.
-> If we also have them here, then we'll end up duplicating that effort.
->
 
-Thanks for the information, Andrew!
 
-The SBI KVM selftest was planned last year when I talked with Anup about
-KVM selftest support on RISC-V. Since the kvm-unit-tests has already covere=
-d
-it, I'm fine to drop the support in KVM selftest.
+on 4/3/2024 11:04 PM, Brian Foster wrote:
+> On Wed, Apr 03, 2024 at 04:49:42PM +0800, Kemeng Shi wrote:
+>>
+>>
+>> on 3/29/2024 9:10 PM, Brian Foster wrote:
+>>> On Wed, Mar 27, 2024 at 11:57:48PM +0800, Kemeng Shi wrote:
+>>>> Add /sys/kernel/debug/bdi/xxx/wb_stats to show per group writeback stats
+>>>> of bdi.
+>>>>
+>>>
+>>> Hi Kemeng,
+>> Hello Brian,
+>>>
+>>> Just a few random thoughts/comments..
+>>>
+>>>> Following domain hierarchy is tested:
+>>>>                 global domain (320G)
+>>>>                 /                 \
+>>>>         cgroup domain1(10G)     cgroup domain2(10G)
+>>>>                 |                 |
+>>>> bdi            wb1               wb2
+>>>>
+>>>> /* per wb writeback info of bdi is collected */
+>>>> cat /sys/kernel/debug/bdi/252:16/wb_stats
+>>>> WbCgIno:                    1
+>>>> WbWriteback:                0 kB
+>>>> WbReclaimable:              0 kB
+>>>> WbDirtyThresh:              0 kB
+>>>> WbDirtied:                  0 kB
+>>>> WbWritten:                  0 kB
+>>>> WbWriteBandwidth:      102400 kBps
+>>>> b_dirty:                    0
+>>>> b_io:                       0
+>>>> b_more_io:                  0
+>>>> b_dirty_time:               0
+>>>> state:                      1
+>>>
+>>> Maybe some whitespace or something between entries would improve
+>>> readability?
+>> Sure, I will add a whitespace in next version.
+>>>
+>>>> WbCgIno:                 4094
+>>>> WbWriteback:            54432 kB
+>>>> WbReclaimable:         766080 kB
+>>>> WbDirtyThresh:        3094760 kB
+>>>> WbDirtied:            1656480 kB
+>>>> WbWritten:             837088 kB
+>>>> WbWriteBandwidth:      132772 kBps
+>>>> b_dirty:                    1
+>>>> b_io:                       1
+>>>> b_more_io:                  0
+>>>> b_dirty_time:               0
+>>>> state:                      7
+>>>> WbCgIno:                 4135
+>>>> WbWriteback:            15232 kB
+>>>> WbReclaimable:         786688 kB
+>>>> WbDirtyThresh:        2909984 kB
+>>>> WbDirtied:            1482656 kB
+>>>> WbWritten:             681408 kB
+>>>> WbWriteBandwidth:      124848 kBps
+>>>> b_dirty:                    0
+>>>> b_io:                       1
+>>>> b_more_io:                  0
+>>>> b_dirty_time:               0
+>>>> state:                      7
+>>>>
+>>>> Signed-off-by: Kemeng Shi <shikemeng@huaweicloud.com>
+>>>> ---
+>>>>  include/linux/writeback.h |  1 +
+>>>>  mm/backing-dev.c          | 88 +++++++++++++++++++++++++++++++++++++++
+>>>>  mm/page-writeback.c       | 19 +++++++++
+>>>>  3 files changed, 108 insertions(+)
+>>>>
+>>> ...
+>>>> diff --git a/mm/backing-dev.c b/mm/backing-dev.c
+>>>> index 8daf950e6855..e3953db7d88d 100644
+>>>> --- a/mm/backing-dev.c
+>>>> +++ b/mm/backing-dev.c
+>>>> @@ -103,6 +103,91 @@ static void collect_wb_stats(struct wb_stats *stats,
+>>>>  }
+>>>>  
+>>>>  #ifdef CONFIG_CGROUP_WRITEBACK
+>>> ...
+>>>> +static int cgwb_debug_stats_show(struct seq_file *m, void *v)
+>>>> +{
+>>>> +	struct backing_dev_info *bdi;
+>>>> +	unsigned long background_thresh;
+>>>> +	unsigned long dirty_thresh;
+>>>> +	struct bdi_writeback *wb;
+>>>> +	struct wb_stats stats;
+>>>> +
+>>>> +	rcu_read_lock();
+>>>> +	bdi = lookup_bdi(m);
+>>>> +	if (!bdi) {
+>>>> +		rcu_read_unlock();
+>>>> +		return -EEXIST;
+>>>> +	}
+>>>> +
+>>>> +	global_dirty_limits(&background_thresh, &dirty_thresh);
+>>>> +
+>>>> +	list_for_each_entry_rcu(wb, &bdi->wb_list, bdi_node) {
+>>>> +		memset(&stats, 0, sizeof(stats));
+>>>> +		stats.dirty_thresh = dirty_thresh;
+>>>
+>>> If you did something like the following here, wouldn't that also zero
+>>> the rest of the structure?
+>>>
+>>> 		struct wb_stats stats = { .dirty_thresh = dirty_thresh };
+>>>
+>> Suer, will do it in next version.
+>>>> +		collect_wb_stats(&stats, wb);
+>>>> +
+>>>
+>>> Also, similar question as before on whether you'd want to check
+>>> WB_registered or something here..
+>> Still prefer to keep full debug info and user could filter out on
+>> demand.
+> 
+> Ok. I was more wondering if that was needed for correctness. If not,
+> then that seems fair enough to me.
+For bdi->wb, it's unavailable after release_bdi. As bdi_debug_unregister
+will block bdi_unregister, then release_bdi must not be reached yet and
+it's safe to collect bdi->wb info.
+For wb in cgroup, it's unavailable after cgwb_release_workfn, we could
+prevent this with wb_tryget before collection.
+So it's correct for per-wb stats but we add a extra wb_trget in
+bdi stats in patch 2 and will do it in next version.
+> 
+>>>
+>>>> +		if (mem_cgroup_wb_domain(wb) == NULL) {
+>>>> +			wb_stats_show(m, wb, &stats);
+>>>> +			continue;
+>>>> +		}
+>>>
+>>> Can you explain what this logic is about? Is the cgwb_calc_thresh()
+>>> thing not needed in this case? A comment might help for those less
+>>> familiar with the implementation details.
+>> If mem_cgroup_wb_domain(wb) is NULL, then it's bdi->wb, otherwise,
+>> it's wb in cgroup. For bdi->wb, there is no need to do wb_tryget
+>> and cgwb_calc_thresh. Will add some comment in next version.
+>>>
+>>> BTW, I'm also wondering if something like the following is correct
+>>> and/or roughly equivalent:
+>>> 	
+>>> 	list_for_each_*(wb, ...) {
+>>> 		struct wb_stats stats = ...;
+>>>
+>>> 		if (!wb_tryget(wb))
+>>> 			continue;
+>>>
+>>> 		collect_wb_stats(&stats, wb);
+>>>
+>>> 		/*
+>>> 		 * Extra wb_thresh magic. Drop rcu lock because ... . We
+>>> 		 * can do so here because we have a ref.
+>>> 		 */
+>>> 		if (mem_cgroup_wb_domain(wb)) {
+>>> 			rcu_read_unlock();
+>>> 			stats.wb_thresh = min(stats.wb_thresh, cgwb_calc_thresh(wb));
+>>> 			rcu_read_lock();
+>>> 		}
+>>>
+>>> 		wb_stats_show(m, wb, &stats)
+>>> 		wb_put(wb);
+>>> 	}
+>> It's correct as wb_tryget to bdi->wb has no harm. I have considered
+>> to do it in this way, I change my mind to do it in new way for
+>> two reason:
+>> 1. Put code handling wb in cgroup more tight which could be easier
+>> to maintain.
+>> 2. Rmove extra wb_tryget/wb_put for wb in bdi.
+>> Would this make sense to you?
+> 
+> Ok, well assuming it is correct the above logic is a bit more simple and
+> readable to me. I think you'd just need to fill in the comment around
+> the wb_thresh thing rather than i.e. having to explain we don't need to
+> ref bdi->wb even though it doesn't seem to matter.
+> 
+> I kind of feel the same on the wb_stats file thing below just because it
+> seems more consistent and available if wb_stats eventually grows more
+> wb-specific data.
+> 
+> That said, this is subjective and not hugely important so I don't insist
+> on either point. Maybe wait a bit and see if Jan or Tejun or somebody
+> has any thoughts..? If nobody else expresses explicit preference then
+> I'm good with it either way.
+Sure, I will wait for someday and decide the way used in next version.
 
-Regards,
-Haibo
+Thanks so much for all the advise.
 
-> I do like the approach of only checking for an error, rather than
-> also for a value, for these ID getters. In kvm-unit-tests we're
-> currently requiring that the expected value be passed in, otherwise
-> the whole test is skipped. We could fallback to only checking for
-> an error instead, as is done here.
->
-> Thanks,
-> drew
->
-> >
-> > Signed-off-by: Haibo Xu <haibo1.xu@intel.com>
-> > ---
-> >  tools/testing/selftests/kvm/Makefile          |  1 +
-> >  .../selftests/kvm/include/riscv/processor.h   |  8 +-
-> >  tools/testing/selftests/kvm/riscv/sbi_test.c  | 95 +++++++++++++++++++
-> >  3 files changed, 103 insertions(+), 1 deletion(-)
-> >  create mode 100644 tools/testing/selftests/kvm/riscv/sbi_test.c
-> >
-> > diff --git a/tools/testing/selftests/kvm/Makefile b/tools/testing/selft=
-ests/kvm/Makefile
-> > index 741c7dc16afc..a6acbbcad757 100644
-> > --- a/tools/testing/selftests/kvm/Makefile
-> > +++ b/tools/testing/selftests/kvm/Makefile
-> > @@ -189,6 +189,7 @@ TEST_GEN_PROGS_s390x +=3D rseq_test
-> >  TEST_GEN_PROGS_s390x +=3D set_memory_region_test
-> >  TEST_GEN_PROGS_s390x +=3D kvm_binary_stats_test
-> >
-> > +TEST_GEN_PROGS_riscv +=3D riscv/sbi_test
-> >  TEST_GEN_PROGS_riscv +=3D arch_timer
-> >  TEST_GEN_PROGS_riscv +=3D demand_paging_test
-> >  TEST_GEN_PROGS_riscv +=3D dirty_log_test
-> > diff --git a/tools/testing/selftests/kvm/include/riscv/processor.h b/to=
-ols/testing/selftests/kvm/include/riscv/processor.h
-> > index ce473fe251dd..df530ac751c4 100644
-> > --- a/tools/testing/selftests/kvm/include/riscv/processor.h
-> > +++ b/tools/testing/selftests/kvm/include/riscv/processor.h
-> > @@ -178,7 +178,13 @@ enum sbi_ext_id {
-> >  };
-> >
-> >  enum sbi_ext_base_fid {
-> > -     SBI_EXT_BASE_PROBE_EXT =3D 3,
-> > +     SBI_EXT_BASE_GET_SPEC_VERSION =3D 0,
-> > +     SBI_EXT_BASE_GET_IMP_ID,
-> > +     SBI_EXT_BASE_GET_IMP_VERSION,
-> > +     SBI_EXT_BASE_PROBE_EXT,
-> > +     SBI_EXT_BASE_GET_MVENDORID,
-> > +     SBI_EXT_BASE_GET_MARCHID,
-> > +     SBI_EXT_BASE_GET_MIMPID,
-> >  };
-> >
-> >  struct sbiret {
-> > diff --git a/tools/testing/selftests/kvm/riscv/sbi_test.c b/tools/testi=
-ng/selftests/kvm/riscv/sbi_test.c
-> > new file mode 100644
-> > index 000000000000..b9378546e3b6
-> > --- /dev/null
-> > +++ b/tools/testing/selftests/kvm/riscv/sbi_test.c
-> > @@ -0,0 +1,95 @@
-> > +// SPDX-License-Identifier: GPL-2.0
-> > +/*
-> > + * sbi_test - SBI API test for KVM's SBI implementation.
-> > + *
-> > + * Copyright (c) 2024 Intel Corporation
-> > + *
-> > + * Test cover the following SBI extentions:
-> > + *  - Base: All functions in this extension should be supported
-> > + */
-> > +
-> > +#include "kvm_util.h"
-> > +#include "processor.h"
-> > +#include "test_util.h"
-> > +
-> > +/*
-> > + * Test that all functions in the base extension must be supported
-> > + */
-> > +static void base_ext_guest_code(void)
-> > +{
-> > +     struct sbiret ret;
-> > +
-> > +     /*
-> > +      * Since the base extension was introduced in SBI Spec v0.2,
-> > +      * assert if the implemented SBI version is below 0.2.
-> > +      */
-> > +     ret =3D sbi_ecall(SBI_EXT_BASE, SBI_EXT_BASE_GET_SPEC_VERSION, 0,
-> > +                     0, 0, 0, 0, 0);
-> > +     __GUEST_ASSERT(!ret.error && ret.value >=3D 2, "Get Spec Version =
-Error: ret.error=3D%ld, "
-> > +                     "ret.value=3D%ld\n", ret.error, ret.value);
-> > +
-> > +     ret =3D sbi_ecall(SBI_EXT_BASE, SBI_EXT_BASE_GET_IMP_ID, 0,
-> > +                     0, 0, 0, 0, 0);
-> > +     __GUEST_ASSERT(!ret.error && ret.value =3D=3D 3, "Get Imp ID Erro=
-r: ret.error=3D%ld, "
-> > +                     "ret.value=3D%ld\n",
-> > +                     ret.error, ret.value);
-> > +
-> > +     ret =3D sbi_ecall(SBI_EXT_BASE, SBI_EXT_BASE_GET_IMP_VERSION, 0,
-> > +                     0, 0, 0, 0, 0);
-> > +     __GUEST_ASSERT(!ret.error, "Get Imp Version Error: ret.error=3D%l=
-d\n", ret.error);
-> > +
-> > +     ret =3D sbi_ecall(SBI_EXT_BASE, SBI_EXT_BASE_PROBE_EXT, SBI_EXT_B=
-ASE,
-> > +                     0, 0, 0, 0, 0);
-> > +     __GUEST_ASSERT(!ret.error && ret.value =3D=3D 1, "Probe ext Error=
-: ret.error=3D%ld, "
-> > +                     "ret.value=3D%ld\n",
-> > +                     ret.error, ret.value);
-> > +
-> > +     ret =3D sbi_ecall(SBI_EXT_BASE, SBI_EXT_BASE_GET_MVENDORID, 0,
-> > +                     0, 0, 0, 0, 0);
-> > +     __GUEST_ASSERT(!ret.error, "Get Machine Vendor ID Error: ret.erro=
-r=3D%ld\n", ret.error);
-> > +
-> > +     ret =3D sbi_ecall(SBI_EXT_BASE, SBI_EXT_BASE_GET_MARCHID, 0,
-> > +                     0, 0, 0, 0, 0);
-> > +     __GUEST_ASSERT(!ret.error, "Get Machine Arch ID Error: ret.error=
-=3D%ld\n", ret.error);
-> > +
-> > +     ret =3D sbi_ecall(SBI_EXT_BASE, SBI_EXT_BASE_GET_MIMPID, 0,
-> > +                     0, 0, 0, 0, 0);
-> > +     __GUEST_ASSERT(!ret.error, "Get Machine Imp ID Error: ret.error=
-=3D%ld\n", ret.error);
-> > +
-> > +     GUEST_DONE();
-> > +}
-> > +
-> > +static void sbi_base_ext_test(void)
-> > +{
-> > +     struct kvm_vm *vm;
-> > +     struct kvm_vcpu *vcpu;
-> > +     struct ucall uc;
-> > +
-> > +     vm =3D vm_create_with_one_vcpu(&vcpu, base_ext_guest_code);
-> > +     while (1) {
-> > +             vcpu_run(vcpu);
-> > +             TEST_ASSERT(vcpu->run->exit_reason =3D=3D UCALL_EXIT_REAS=
-ON,
-> > +                         "Unexpected exit reason: %u (%s),",
-> > +                         vcpu->run->exit_reason, exit_reason_str(vcpu-=
->run->exit_reason));
-> > +
-> > +             switch (get_ucall(vcpu, &uc)) {
-> > +             case UCALL_DONE:
-> > +                     goto done;
-> > +             case UCALL_ABORT:
-> > +                     fprintf(stderr, "Guest assert failed!\n");
-> > +                     REPORT_GUEST_ASSERT(uc);
-> > +             default:
-> > +                     TEST_FAIL("Unexpected ucall %lu", uc.cmd);
-> > +             }
-> > +     }
-> > +
-> > +done:
-> > +     kvm_vm_free(vm);
-> > +}
-> > +
-> > +int main(void)
-> > +{
-> > +     sbi_base_ext_test();
-> > +
-> > +     return 0;
-> > +}
-> > --
-> > 2.34.1
-> >
+Kemeng
+> 
+> Brian
+> 
+>>>
+>>>> +
+>>>> +		/*
+>>>> +		 * cgwb_release will destroy wb->memcg_completions which
+>>>> +		 * will be ued in cgwb_calc_thresh. Use wb_tryget to prevent
+>>>> +		 * memcg_completions destruction from cgwb_release.
+>>>> +		 */
+>>>> +		if (!wb_tryget(wb))
+>>>> +			continue;
+>>>> +
+>>>> +		rcu_read_unlock();
+>>>> +		/* cgwb_calc_thresh may sleep in cgroup_rstat_flush */
+>>>> +		stats.wb_thresh = min(stats.wb_thresh, cgwb_calc_thresh(wb));
+>>>> +		wb_stats_show(m, wb, &stats);
+>>>> +		rcu_read_lock();
+>>>> +		wb_put(wb);
+>>>> +	}
+>>>> +	rcu_read_unlock();
+>>>> +
+>>>> +	return 0;
+>>>> +}
+>>>> +DEFINE_SHOW_ATTRIBUTE(cgwb_debug_stats);
+>>>> +
+>>>> +static void cgwb_debug_register(struct backing_dev_info *bdi)
+>>>> +{
+>>>> +	debugfs_create_file("wb_stats", 0444, bdi->debug_dir, bdi,
+>>>> +			    &cgwb_debug_stats_fops);
+>>>> +}
+>>>> +
+>>>>  static void bdi_collect_stats(struct backing_dev_info *bdi,
+>>>>  			      struct wb_stats *stats)
+>>>>  {
+>>>> @@ -117,6 +202,8 @@ static void bdi_collect_stats(struct backing_dev_info *bdi,
+>>>>  {
+>>>>  	collect_wb_stats(stats, &bdi->wb);
+>>>>  }
+>>>> +
+>>>> +static inline void cgwb_debug_register(struct backing_dev_info *bdi) { }
+>>>
+>>> Could we just create the wb_stats file regardless of whether cgwb is
+>>> enabled? Obviously theres only one wb in the !CGWB case and it's
+>>> somewhat duplicative with the bdi stats file, but that seems harmless if
+>>> the same code can be reused..? Maybe there's also a small argument for
+>>> dropping the state info from the bdi stats file and moving it to
+>>> wb_stats.In backing-dev.c, there are a lot "#ifdef CGWB .. #else .. #endif" to
+>> avoid unneed extra cost when CGWB is not enabled.
+>> I think it's better to avoid extra cost from wb_stats when CGWB is not
+>> enabled. For now, we only save cpu cost to create and destroy wb_stats
+>> and save memory cost to record debugfs file, we could save more in
+>> future when wb_stats records more debug info.
+>> Move state info from bdi stats to wb_stats make senses to me. The only
+>> concern would be compatibility problem. I will add a new patch to this
+>> to make this more noticeable and easier to revert.
+>> Thanks a lot for review!
+>>
+>> Kemeng
+>>>
+>>> Brian
+>>>
+>>>>  #endif
+>>>>  
+>>>>  static int bdi_debug_stats_show(struct seq_file *m, void *v)
+>>>> @@ -182,6 +269,7 @@ static void bdi_debug_register(struct backing_dev_info *bdi, const char *name)
+>>>>  
+>>>>  	debugfs_create_file("stats", 0444, bdi->debug_dir, bdi,
+>>>>  			    &bdi_debug_stats_fops);
+>>>> +	cgwb_debug_register(bdi);
+>>>>  }
+>>>>  
+>>>>  static void bdi_debug_unregister(struct backing_dev_info *bdi)
+>>>> diff --git a/mm/page-writeback.c b/mm/page-writeback.c
+>>>> index 0e20467367fe..3724c7525316 100644
+>>>> --- a/mm/page-writeback.c
+>>>> +++ b/mm/page-writeback.c
+>>>> @@ -893,6 +893,25 @@ unsigned long wb_calc_thresh(struct bdi_writeback *wb, unsigned long thresh)
+>>>>  	return __wb_calc_thresh(&gdtc, thresh);
+>>>>  }
+>>>>  
+>>>> +unsigned long cgwb_calc_thresh(struct bdi_writeback *wb)
+>>>> +{
+>>>> +	struct dirty_throttle_control gdtc = { GDTC_INIT_NO_WB };
+>>>> +	struct dirty_throttle_control mdtc = { MDTC_INIT(wb, &gdtc) };
+>>>> +	unsigned long filepages, headroom, writeback;
+>>>> +
+>>>> +	gdtc.avail = global_dirtyable_memory();
+>>>> +	gdtc.dirty = global_node_page_state(NR_FILE_DIRTY) +
+>>>> +		     global_node_page_state(NR_WRITEBACK);
+>>>> +
+>>>> +	mem_cgroup_wb_stats(wb, &filepages, &headroom,
+>>>> +			    &mdtc.dirty, &writeback);
+>>>> +	mdtc.dirty += writeback;
+>>>> +	mdtc_calc_avail(&mdtc, filepages, headroom);
+>>>> +	domain_dirty_limits(&mdtc);
+>>>> +
+>>>> +	return __wb_calc_thresh(&mdtc, mdtc.thresh);
+>>>> +}
+>>>> +
+>>>>  /*
+>>>>   *                           setpoint - dirty 3
+>>>>   *        f(dirty) := 1.0 + (----------------)
+>>>> -- 
+>>>> 2.30.0
+>>>>
+>>>
+>>>
+>>
+> 
+> 
+
