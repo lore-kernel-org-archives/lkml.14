@@ -1,44 +1,48 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93F287E563;
-	Sun,  7 Apr 2024 13:12:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78E4F3C466;
+	Sun,  7 Apr 2024 13:12:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712495562; cv=none; b=AjW9M0YZQZ2xwMntMkxYrJ+Dw3t+/yHRgcI952J/0Ukg3GGDBoT1Gvu2ZInKi0/lSzhS219mQFsxjGJv1n4w6D0643QnBEkQfVZolSj0ENnNGr0BtIVG9ElwO44YnR4Zg0TnHTW+xxkcabI7II7lHIVzTypOIL+O3d+liP2qE7Y=
+	t=1712495565; cv=none; b=kk6zC1YTzYuPEE01npkztHndw11t7uzJ1jxPshx+T5Jw4DlMLf8XxiZMURJuXLAU7DlbhYrIoRRngHO1yQXEFoIIgM7O0Wxw8cElMTwqfD4lL1KdfM84BzEAhcAPr+GYb2hnxVHIZI8Szef+tZ1n9wro6Pa3MEb8qMwCvHFtlbk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712495562; c=relaxed/simple;
-	bh=0OpaY3f1UokZUbnZwDjdWqN3plIkjyGbW6ru4XC/ri8=;
+	s=arc-20240116; t=1712495565; c=relaxed/simple;
+	bh=MC0tgLt0jrr0NSy2yRRQrTbju6Z/nby9f3YMGcj9yOo=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=suI1aQYTM9xJRCNaydjFp7hzxO/ZL7UeYp/YpPH8bEppKpJxfp638EOKJen6/Dy3qWx/JmunU0O2Kh/vZ0TwrF5M2xgVewHaXR95WDv6DLbu9t9HxiJ107B4eK37FMj8QrBidC1OazdC/1SSxEQ8uE8j0bgY9mRZwsZISkM9w48=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ogrEm93/; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=l/peDNQEXsZpiNd4oYIbi2B8sy8wRKWWympN0nRBKU2cm/eSxVgZJnoWM4T5thM8hfzufNiiWE6nUpzIk1M+8jN9I5DriLGQOrOuHvwj1eh55WxjTiKR3XYU5s4z5cH284uzIeMbxmlFy8GVo45NP3PGadrcDSSLncPC3pQzlro=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CCPcAzpy; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ogrEm93/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 336CDC433F1;
-	Sun,  7 Apr 2024 13:12:41 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CCPcAzpy"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A79C1C43390;
+	Sun,  7 Apr 2024 13:12:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712495562;
-	bh=0OpaY3f1UokZUbnZwDjdWqN3plIkjyGbW6ru4XC/ri8=;
+	s=k20201202; t=1712495565;
+	bh=MC0tgLt0jrr0NSy2yRRQrTbju6Z/nby9f3YMGcj9yOo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=ogrEm93/Sq2dDm2LTXwQqZIgPoWBkM03b52YZHtTMC8RdXjTq0V6+9lmzwjUqjV69
-	 EwsxLkU4khacej559GheM0RjY11wqNRi0AjXLbQIkxCe94U3SXPzXP2ATjHDbaMFwd
-	 WMzG0uFwafI4piwAcQRS9s6VlatAC3bCtYXnf1osva2f91U5W+B5I+RRQsZ7RkkLGf
-	 r/qAFE2mFNWdDHMW4xD5aXCBhIFdNk+9bf6EovnFqxLiGYWyZWt3iTvXh8KkyRoe/b
-	 fdSVgGEpawzqHzZ3krwJlARH3X6oBQ6o8BuI9gSD+C/bWLySaYghYlNC41vHiDsqK6
-	 z0syoLJoB+W4A==
+	b=CCPcAzpyMahWnUXCWiSj6h9TQwQnG8O1SMFB4HApf3WX1XRZ+mLqvS4+19Axi4Q+o
+	 JyIbIx0LMYSmSsCHPZj6L7il/slt+bsoxbLX8sOtQmYucXyLkwygr4QowqERQqD0OS
+	 lQ4u9USEKsWhBVahaxuZDyeBNS46ddnTGw44eWxuGw9YAG0n4OhDXF65CHHbySsmc8
+	 jKPpqtjgazR+mllmG224+DmWlA9cDwgKwE2CSLLEYYYVITeCUux9TcfSbDsFxqE4yP
+	 IcswVc4FooEb5wUU7uS+ksdB6sS6H1AVJ/IYMO2jVsmiUuCfjeWC9RRi1A7ER1lVO4
+	 75rhfrpYvsYtg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Justin Tee <justin.tee@broadcom.com>,
-	"Martin K . Petersen" <martin.petersen@oracle.com>,
+Cc: Jeff Johnson <quic_jjohnson@quicinc.com>,
+	Simon Horman <horms@kernel.org>,
+	Johannes Berg <johannes.berg@intel.com>,
 	Sasha Levin <sashal@kernel.org>,
-	james.smart@broadcom.com,
-	dick.kennedy@broadcom.com,
-	jejb@linux.ibm.com,
-	linux-scsi@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.6 07/22] scsi: lpfc: Use a dedicated lock for ras_fwlog state
-Date: Sun,  7 Apr 2024 09:12:06 -0400
-Message-ID: <20240407131231.1051652-7-sashal@kernel.org>
+	johannes@sipsolutions.net,
+	davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	linux-wireless@vger.kernel.org,
+	netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.6 09/22] wifi: mac80211: fix ieee80211_bss_*_flags kernel-doc
+Date: Sun,  7 Apr 2024 09:12:08 -0400
+Message-ID: <20240407131231.1051652-9-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240407131231.1051652-1-sashal@kernel.org>
 References: <20240407131231.1051652-1-sashal@kernel.org>
@@ -53,235 +57,47 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.6.25
 Content-Transfer-Encoding: 8bit
 
-From: Justin Tee <justin.tee@broadcom.com>
+From: Jeff Johnson <quic_jjohnson@quicinc.com>
 
-[ Upstream commit f733a76ea0a9a84aee4ac41b81fad4d610ecbd8e ]
+[ Upstream commit 774f8841f55d7ac4044c79812691649da203584a ]
 
-To reduce usage of and contention for hbalock, a separate dedicated lock is
-used to protect ras_fwlog state.
+Running kernel-doc on ieee80211_i.h flagged the following:
+net/mac80211/ieee80211_i.h:145: warning: expecting prototype for enum ieee80211_corrupt_data_flags. Prototype was for enum ieee80211_bss_corrupt_data_flags instead
+net/mac80211/ieee80211_i.h:162: warning: expecting prototype for enum ieee80211_valid_data_flags. Prototype was for enum ieee80211_bss_valid_data_flags instead
 
-Signed-off-by: Justin Tee <justin.tee@broadcom.com>
-Link: https://lore.kernel.org/r/20240305200503.57317-8-justintee8345@gmail.com
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Fix these warnings.
+
+Signed-off-by: Jeff Johnson <quic_jjohnson@quicinc.com>
+Reviewed-by: Simon Horman <horms@kernel.org>
+Link: https://msgid.link/20240314-kdoc-ieee80211_i-v1-1-72b91b55b257@quicinc.com
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/lpfc/lpfc.h         |  1 +
- drivers/scsi/lpfc/lpfc_attr.c    |  4 ++--
- drivers/scsi/lpfc/lpfc_bsg.c     | 20 ++++++++++----------
- drivers/scsi/lpfc/lpfc_debugfs.c | 12 ++++++------
- drivers/scsi/lpfc/lpfc_init.c    |  3 +++
- drivers/scsi/lpfc/lpfc_sli.c     | 20 ++++++++++----------
- 6 files changed, 32 insertions(+), 28 deletions(-)
+ net/mac80211/ieee80211_i.h | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/scsi/lpfc/lpfc.h b/drivers/scsi/lpfc/lpfc.h
-index be016732ab2ea..9670cb2bf198e 100644
---- a/drivers/scsi/lpfc/lpfc.h
-+++ b/drivers/scsi/lpfc/lpfc.h
-@@ -1429,6 +1429,7 @@ struct lpfc_hba {
- 	struct timer_list inactive_vmid_poll;
- 
- 	/* RAS Support */
-+	spinlock_t ras_fwlog_lock; /* do not take while holding another lock */
- 	struct lpfc_ras_fwlog ras_fwlog;
- 
- 	uint32_t iocb_cnt;
-diff --git a/drivers/scsi/lpfc/lpfc_attr.c b/drivers/scsi/lpfc/lpfc_attr.c
-index b1c9107d34083..79b45ea5fdb5e 100644
---- a/drivers/scsi/lpfc/lpfc_attr.c
-+++ b/drivers/scsi/lpfc/lpfc_attr.c
-@@ -5864,9 +5864,9 @@ lpfc_ras_fwlog_buffsize_set(struct lpfc_hba  *phba, uint val)
- 	if (phba->cfg_ras_fwlog_func != PCI_FUNC(phba->pcidev->devfn))
- 		return -EINVAL;
- 
--	spin_lock_irq(&phba->hbalock);
-+	spin_lock_irq(&phba->ras_fwlog_lock);
- 	state = phba->ras_fwlog.state;
--	spin_unlock_irq(&phba->hbalock);
-+	spin_unlock_irq(&phba->ras_fwlog_lock);
- 
- 	if (state == REG_INPROGRESS) {
- 		lpfc_printf_log(phba, KERN_ERR, LOG_SLI, "6147 RAS Logging "
-diff --git a/drivers/scsi/lpfc/lpfc_bsg.c b/drivers/scsi/lpfc/lpfc_bsg.c
-index 595dca92e8db5..593b1cf78979e 100644
---- a/drivers/scsi/lpfc/lpfc_bsg.c
-+++ b/drivers/scsi/lpfc/lpfc_bsg.c
-@@ -5070,12 +5070,12 @@ lpfc_bsg_get_ras_config(struct bsg_job *job)
- 		bsg_reply->reply_data.vendor_reply.vendor_rsp;
- 
- 	/* Current logging state */
--	spin_lock_irq(&phba->hbalock);
-+	spin_lock_irq(&phba->ras_fwlog_lock);
- 	if (ras_fwlog->state == ACTIVE)
- 		ras_reply->state = LPFC_RASLOG_STATE_RUNNING;
- 	else
- 		ras_reply->state = LPFC_RASLOG_STATE_STOPPED;
--	spin_unlock_irq(&phba->hbalock);
-+	spin_unlock_irq(&phba->ras_fwlog_lock);
- 
- 	ras_reply->log_level = phba->ras_fwlog.fw_loglevel;
- 	ras_reply->log_buff_sz = phba->cfg_ras_fwlog_buffsize;
-@@ -5132,13 +5132,13 @@ lpfc_bsg_set_ras_config(struct bsg_job *job)
- 
- 	if (action == LPFC_RASACTION_STOP_LOGGING) {
- 		/* Check if already disabled */
--		spin_lock_irq(&phba->hbalock);
-+		spin_lock_irq(&phba->ras_fwlog_lock);
- 		if (ras_fwlog->state != ACTIVE) {
--			spin_unlock_irq(&phba->hbalock);
-+			spin_unlock_irq(&phba->ras_fwlog_lock);
- 			rc = -ESRCH;
- 			goto ras_job_error;
- 		}
--		spin_unlock_irq(&phba->hbalock);
-+		spin_unlock_irq(&phba->ras_fwlog_lock);
- 
- 		/* Disable logging */
- 		lpfc_ras_stop_fwlog(phba);
-@@ -5149,10 +5149,10 @@ lpfc_bsg_set_ras_config(struct bsg_job *job)
- 		 * FW-logging with new log-level. Return status
- 		 * "Logging already Running" to caller.
- 		 **/
--		spin_lock_irq(&phba->hbalock);
-+		spin_lock_irq(&phba->ras_fwlog_lock);
- 		if (ras_fwlog->state != INACTIVE)
- 			action_status = -EINPROGRESS;
--		spin_unlock_irq(&phba->hbalock);
-+		spin_unlock_irq(&phba->ras_fwlog_lock);
- 
- 		/* Enable logging */
- 		rc = lpfc_sli4_ras_fwlog_init(phba, log_level,
-@@ -5268,13 +5268,13 @@ lpfc_bsg_get_ras_fwlog(struct bsg_job *job)
- 		goto ras_job_error;
- 
- 	/* Logging to be stopped before reading */
--	spin_lock_irq(&phba->hbalock);
-+	spin_lock_irq(&phba->ras_fwlog_lock);
- 	if (ras_fwlog->state == ACTIVE) {
--		spin_unlock_irq(&phba->hbalock);
-+		spin_unlock_irq(&phba->ras_fwlog_lock);
- 		rc = -EINPROGRESS;
- 		goto ras_job_error;
- 	}
--	spin_unlock_irq(&phba->hbalock);
-+	spin_unlock_irq(&phba->ras_fwlog_lock);
- 
- 	if (job->request_len <
- 	    sizeof(struct fc_bsg_request) +
-diff --git a/drivers/scsi/lpfc/lpfc_debugfs.c b/drivers/scsi/lpfc/lpfc_debugfs.c
-index ea9b42225e629..20662b4f339eb 100644
---- a/drivers/scsi/lpfc/lpfc_debugfs.c
-+++ b/drivers/scsi/lpfc/lpfc_debugfs.c
-@@ -2196,12 +2196,12 @@ static int lpfc_debugfs_ras_log_data(struct lpfc_hba *phba,
- 
- 	memset(buffer, 0, size);
- 
--	spin_lock_irq(&phba->hbalock);
-+	spin_lock_irq(&phba->ras_fwlog_lock);
- 	if (phba->ras_fwlog.state != ACTIVE) {
--		spin_unlock_irq(&phba->hbalock);
-+		spin_unlock_irq(&phba->ras_fwlog_lock);
- 		return -EINVAL;
- 	}
--	spin_unlock_irq(&phba->hbalock);
-+	spin_unlock_irq(&phba->ras_fwlog_lock);
- 
- 	list_for_each_entry_safe(dmabuf, next,
- 				 &phba->ras_fwlog.fwlog_buff_list, list) {
-@@ -2252,13 +2252,13 @@ lpfc_debugfs_ras_log_open(struct inode *inode, struct file *file)
- 	int size;
- 	int rc = -ENOMEM;
- 
--	spin_lock_irq(&phba->hbalock);
-+	spin_lock_irq(&phba->ras_fwlog_lock);
- 	if (phba->ras_fwlog.state != ACTIVE) {
--		spin_unlock_irq(&phba->hbalock);
-+		spin_unlock_irq(&phba->ras_fwlog_lock);
- 		rc = -EINVAL;
- 		goto out;
- 	}
--	spin_unlock_irq(&phba->hbalock);
-+	spin_unlock_irq(&phba->ras_fwlog_lock);
- 
- 	if (check_mul_overflow(LPFC_RAS_MIN_BUFF_POST_SIZE,
- 			       phba->cfg_ras_fwlog_buffsize, &size))
-diff --git a/drivers/scsi/lpfc/lpfc_init.c b/drivers/scsi/lpfc/lpfc_init.c
-index 76c883cc66ed6..416816d74ea1c 100644
---- a/drivers/scsi/lpfc/lpfc_init.c
-+++ b/drivers/scsi/lpfc/lpfc_init.c
-@@ -7698,6 +7698,9 @@ lpfc_setup_driver_resource_phase1(struct lpfc_hba *phba)
- 				"NVME" : " "),
- 			(phba->nvmet_support ? "NVMET" : " "));
- 
-+	/* ras_fwlog state */
-+	spin_lock_init(&phba->ras_fwlog_lock);
-+
- 	/* Initialize the IO buffer list used by driver for SLI3 SCSI */
- 	spin_lock_init(&phba->scsi_buf_list_get_lock);
- 	INIT_LIST_HEAD(&phba->lpfc_scsi_buf_list_get);
-diff --git a/drivers/scsi/lpfc/lpfc_sli.c b/drivers/scsi/lpfc/lpfc_sli.c
-index 9dab33686a931..5af669b930193 100644
---- a/drivers/scsi/lpfc/lpfc_sli.c
-+++ b/drivers/scsi/lpfc/lpfc_sli.c
-@@ -6844,9 +6844,9 @@ lpfc_ras_stop_fwlog(struct lpfc_hba *phba)
- {
- 	struct lpfc_ras_fwlog *ras_fwlog = &phba->ras_fwlog;
- 
--	spin_lock_irq(&phba->hbalock);
-+	spin_lock_irq(&phba->ras_fwlog_lock);
- 	ras_fwlog->state = INACTIVE;
--	spin_unlock_irq(&phba->hbalock);
-+	spin_unlock_irq(&phba->ras_fwlog_lock);
- 
- 	/* Disable FW logging to host memory */
- 	writel(LPFC_CTL_PDEV_CTL_DDL_RAS,
-@@ -6889,9 +6889,9 @@ lpfc_sli4_ras_dma_free(struct lpfc_hba *phba)
- 		ras_fwlog->lwpd.virt = NULL;
- 	}
- 
--	spin_lock_irq(&phba->hbalock);
-+	spin_lock_irq(&phba->ras_fwlog_lock);
- 	ras_fwlog->state = INACTIVE;
--	spin_unlock_irq(&phba->hbalock);
-+	spin_unlock_irq(&phba->ras_fwlog_lock);
- }
+diff --git a/net/mac80211/ieee80211_i.h b/net/mac80211/ieee80211_i.h
+index 07beb72ddd25a..fefaa9e902a2f 100644
+--- a/net/mac80211/ieee80211_i.h
++++ b/net/mac80211/ieee80211_i.h
+@@ -122,7 +122,7 @@ struct ieee80211_bss {
+ };
  
  /**
-@@ -6993,9 +6993,9 @@ lpfc_sli4_ras_mbox_cmpl(struct lpfc_hba *phba, LPFC_MBOXQ_t *pmb)
- 		goto disable_ras;
- 	}
+- * enum ieee80211_corrupt_data_flags - BSS data corruption flags
++ * enum ieee80211_bss_corrupt_data_flags - BSS data corruption flags
+  * @IEEE80211_BSS_CORRUPT_BEACON: last beacon frame received was corrupted
+  * @IEEE80211_BSS_CORRUPT_PROBE_RESP: last probe response received was corrupted
+  *
+@@ -135,7 +135,7 @@ enum ieee80211_bss_corrupt_data_flags {
+ };
  
--	spin_lock_irq(&phba->hbalock);
-+	spin_lock_irq(&phba->ras_fwlog_lock);
- 	ras_fwlog->state = ACTIVE;
--	spin_unlock_irq(&phba->hbalock);
-+	spin_unlock_irq(&phba->ras_fwlog_lock);
- 	mempool_free(pmb, phba->mbox_mem_pool);
- 
- 	return;
-@@ -7027,9 +7027,9 @@ lpfc_sli4_ras_fwlog_init(struct lpfc_hba *phba,
- 	uint32_t len = 0, fwlog_buffsize, fwlog_entry_count;
- 	int rc = 0;
- 
--	spin_lock_irq(&phba->hbalock);
-+	spin_lock_irq(&phba->ras_fwlog_lock);
- 	ras_fwlog->state = INACTIVE;
--	spin_unlock_irq(&phba->hbalock);
-+	spin_unlock_irq(&phba->ras_fwlog_lock);
- 
- 	fwlog_buffsize = (LPFC_RAS_MIN_BUFF_POST_SIZE *
- 			  phba->cfg_ras_fwlog_buffsize);
-@@ -7090,9 +7090,9 @@ lpfc_sli4_ras_fwlog_init(struct lpfc_hba *phba,
- 	mbx_fwlog->u.request.lwpd.addr_lo = putPaddrLow(ras_fwlog->lwpd.phys);
- 	mbx_fwlog->u.request.lwpd.addr_hi = putPaddrHigh(ras_fwlog->lwpd.phys);
- 
--	spin_lock_irq(&phba->hbalock);
-+	spin_lock_irq(&phba->ras_fwlog_lock);
- 	ras_fwlog->state = REG_INPROGRESS;
--	spin_unlock_irq(&phba->hbalock);
-+	spin_unlock_irq(&phba->ras_fwlog_lock);
- 	mbox->vport = phba->pport;
- 	mbox->mbox_cmpl = lpfc_sli4_ras_mbox_cmpl;
- 
+ /**
+- * enum ieee80211_valid_data_flags - BSS valid data flags
++ * enum ieee80211_bss_valid_data_flags - BSS valid data flags
+  * @IEEE80211_BSS_VALID_WMM: WMM/UAPSD data was gathered from non-corrupt IE
+  * @IEEE80211_BSS_VALID_RATES: Supported rates were gathered from non-corrupt IE
+  * @IEEE80211_BSS_VALID_ERP: ERP flag was gathered from non-corrupt IE
 -- 
 2.43.0
 
