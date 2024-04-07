@@ -1,48 +1,48 @@
-Received: from out203-205-221-235.mail.qq.com (out203-205-221-235.mail.qq.com [203.205.221.235])
+Received: from out162-62-58-211.mail.qq.com (out162-62-58-211.mail.qq.com [162.62.58.211])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C2571EEE0;
-	Sun,  7 Apr 2024 16:28:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.221.235
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0807222EE5;
+	Sun,  7 Apr 2024 16:30:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.62.58.211
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712507333; cv=none; b=QIKpMZlyszVlmGWwWg7sxyvPXn6OKKtUuq2ZSnwSbicg15mPUeDUTn5BxzbolF1S7HsOhgjI8x/MkiVnUbYuv5N1NirlSB2yYYT5wdc3Fs4DJx3+TYusJp3Ayuf+b/noGXz6dMl9W7ab06IaJi+NQF9+w4vc6M63ipjJ8mi+WRE=
+	t=1712507408; cv=none; b=gVg3YZqR7QVXmnGNHraqs2GiaG6HoJHD97eCbKvedo0efHdh4j9Oo8C1rV2fRcMwbuiEC3axd2NAY0Xsj9d8lD4dDEJ2JGiXXdmvqbAZDvDRRZR9q3rpze2/61L5nBDESzQIaf5mNcZtg1zOaQOgus2K4cwb0MW9AJipHjqHJAM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712507333; c=relaxed/simple;
-	bh=wXV3PZPgCplDPzdxK8lDx5Fnt0zaJ4scVK+3RKlTX+Y=;
+	s=arc-20240116; t=1712507408; c=relaxed/simple;
+	bh=N+hdJ/K/367z9AduiEVjZAfGxfY8hfBNcT/rU+ctJoA=;
 	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
-	 MIME-Version; b=DUAURTybT1j+aH1gdYzKUTnTdQXQNIjIdqWnmyFzmmr/+TOfop3IDomAwN8r191MaafuLud9OXQna3FM9FMSn/Owb1CAmEzmiJPsgFCNXUoKA9fmg/JIB6X3LpDqMg6/G5vPxE0ZpTIOrXoYG4Bhw4x758dj++/jSP08cEyYJps=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cyyself.name; spf=none smtp.mailfrom=cyyself.name; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=hnwqhEAT; arc=none smtp.client-ip=203.205.221.235
+	 MIME-Version; b=QtcwPFZSdrB3ZV/cDSsq4FaXGESWhiWsNZLrSR3Itw5sxJILFx+sVpmjsP2EJjQfK/I5dWPrWCmeRxkcCPy9DM8tbo+dx9fu1fZFZYnvGdFY6ss99D0TE7b/ldT7hLiK6xL0i81aGLj/qPzmm3fDCwP6gxzs3HIrsuRTyYj1QBY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cyyself.name; spf=none smtp.mailfrom=cyyself.name; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=ylgD4jQi; arc=none smtp.client-ip=162.62.58.211
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cyyself.name
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=cyyself.name
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="hnwqhEAT"
+	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="ylgD4jQi"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
-	t=1712507322; bh=sxK2uMITViuWCRH/HETWDTh3a/M4c3Sxsj5q2qzVrG0=;
+	t=1712507395; bh=rcU9GmGkfYObnRvy+6sIXXI4nFg1KITAK23jcYZUxzQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=hnwqhEATw8fnz07DknXAyDTRPZ8Pp2mzcn2dFmsTqLmalxSpmBCY9MbJ7IsEWP3vR
-	 jgts84IeDWsLLYzqxheODmmVPk/BbIslcuFsHTEUjAvsEFtv2cx9eJCHmGpwt1Fulw
-	 DEHn2PfrPMnNZ3AZ4yBBk4lhXH5d5EwYloMoRagg=
+	b=ylgD4jQi6pgyFF6q9bIq8RlPRSoDqOZV2mt5gT65tMJ4iF1CEJAwzQ4L/PrGMJoMy
+	 q5j9q6JFx7Ay0rin3Ni1Vbp5srHY44AIQXyevdV/OePTRKAy4Gcp+vsYVkS+81ocTv
+	 pV0v/lm6VBA+eFdB2dKkUiYJD1UoiQSvRXv8A0rU=
 Received: from cyy-pc.lan ([240e:379:225a:6d00:f878:7a6f:5832:7f4d])
 	by newxmesmtplogicsvrsza1-0.qq.com (NewEsmtp) with SMTP
 	id 726A94B5; Mon, 08 Apr 2024 00:28:38 +0800
-X-QQ-mid: xmsmtpt1712507318tnhd39v60
-Message-ID: <tencent_D0AEA0AC3695230C6E548C6DC843632F5F06@qq.com>
-X-QQ-XMAILINFO: NMGzQWUSIfvTF2H89VCD5B5MquUUEi5HN2UvR+mZmWRrk2sUssVu8QvS6kZ7RJ
-	 zFrw3scCVIf/ghuubj8+9YuqgIU/r08+2DFdTA+0J8jpQuwbv67FTaPbJePkfGkB8P0nqzg+nz1d
-	 tivUeoDBVl8RmRRKaxfGXSVX7b49gij49y2cqVGRxfog6/i/d2qm8Te6mjFjAzx2X6qpknBCV5Z2
-	 HCRSfRsPuMIIBEQxaSEbpFJlvjQO+YvGFvGjzCFRAHDby4DzNAx55FKxPGLzUYf8CbhY0IEN8aO+
-	 UfX7JtFrEGQSfTqVVCCPokppeYGuzXvCIyYIZuTr4rrfWwTXd9j0vTg+qeYV1Jxgq/tNrhdnsv7o
-	 Ip6mjXqdcRr31mo7C7SaWC9ow8mi5CDCX9Jbph3sIQKWhCUj5yiJ6zqqL/sIifhePNkCZztvbbcU
-	 cRsTGi9IAMr0K/GRD8FCDPzuWKNGbu2H6IBhfXvyZ+uohd1H42F+PthZnzq/Sgk67WAB/SeGu83N
-	 +XBjC2VjnShFIy2qN6YvnOwpnP87zjJZTqfpYKfZezF+upY2Urhyy5pf9k7I+JrlsMl9eZbNHQQA
-	 u+gF5HlYWB1holPx5Oyxc8nFN+t5cQYppKOcezbjJKOHAjWEqDJV22lMBiizc5JyWAIeIgak5pJc
-	 zklC8x1QW0oZF+KaFrjtkyyt3VWQpoPHoMnrzhAozWHSb7yUMC1qGlpAFkiznqRqn7BWDt1AuwoC
-	 wLLZ8zLBCa/zVWmxxYwTvMXTkJK7GmAWYDGjd+z35XNljAONGvs45YZ5/4xdhaluGnZrIiEwJyGW
-	 4QmaMLPNb9Vytd6b88fbpNSfGOIQPgYXJQiodFYRXu46xz/fpZwx10FkCn6zLboqxHTNaEfN1Bbx
-	 pKYuCxvy+FInj6VtekOIFeR2QmHT0kUstrAFwVpzDoSlkI961OAc4A53l/T9qwlYzivIW/+Jcbp0
-	 IPkodqxInigjj2wjySU324ivj1pNOXPU59e1XNMIBwg3X2pT+leCJJUaplhZn6eingyEQxVUOXOC
-	 245G3A2viNTnaPdOvNVlyV5Lmja80=
-X-QQ-XMRINFO: MSVp+SPm3vtS1Vd6Y4Mggwc=
+X-QQ-mid: xmsmtpt1712507323t1fs8ch17
+Message-ID: <tencent_CBA62384BD9191CF4FF0407BD17118B73605@qq.com>
+X-QQ-XMAILINFO: OakVxA/3u/8R12L76aW4bi3wLSBBjKGo+MGgTo8NYImiAKoZmXjzk+W6r1Qy0H
+	 kyMBROiT1RxVk8iEgN5L7Tlfb38tDH0mDfv9aH402v9A/kSN90FNKStOaXt456WeMEqrPDRa/hBz
+	 LiprRh4MSPNBxxPxtB6sG5W1JLxzhNTYyCb3g17mJunw4k8zAREtjKY2TFV3DGpi732HnPunD/MU
+	 MOar/ks4AePCm2X40YCxP1H7RyUYf9e0ffDGr4IEINGkLyJ3AR5fhRAkLibTU5/EqnyEK5TZRQjd
+	 QJvth/J9pD70ykbmSp00G7uNXxW8DEeL1ef+p9Yp2he8ulxKtGdZOv7WazVVri4YkgEWt9FzJg3Z
+	 inn2C+RZtvxbd8RClpEp7obd3mFlKf+mM3iZIIP7Ebk46Ww/O0kOF9fV+MVXTKRxsed4zOM13GIi
+	 wSS20ubsX9krBjqX3E1bcmk1BNDkhfJ1Ovg1Lotk3YdjPi9DRQ3lD7BCS2M/ZD456jJu3fMSUan3
+	 /RSwq4j/6rgKH0nRJgRHJ57u7K1FY5BuEW0lCj0nObLadSA2NU5v+TIymOXRe23w46xyXNDd0hMd
+	 vkWMh/FjRxkWHLXYu+9r69oNcdk1VHAufbK7TRNCpsBH3sX7HEItJBl64Yds2OYhDPLHmgBA9oGX
+	 MACG3Mi/BeaWrRMVOhSQKhTdKXbHSxggJ9AL5awAwKJJ3iDeZ17AlIvXPqeXkBOgKBaqxtNO6Wxy
+	 BaVBGJQR0Rx5JwgDxdbvBnZC5TB4oGq0LZcmqkxvYsE4OySf/tnE+V0ks8j35Ucf3E9KF7K4SO9E
+	 FhMO1bQojG0arbQIG+HK6kpyzhDV9eHQBxPGWRe/kxWOemKkwxGRbTgiUS2OK9BWm31wTFH19AEV
+	 FVLizEfz8gzNjqOJKh3zG2F1Vxml47SHi8V0bTpcxfbvugKkQFpsbUMId9i9+o2mp1+jlLWSpUdK
+	 6eFVml2pFdSKYutBo7jR29G06FZzv/GrgCEhONMOZQlwNu0EAuFJ9GE0PdxgXbOQAA0N0fUw5rd8
+	 /FBbbDE1vcTzzjDRPzkT8BQWP30ePC8BK37cYMKAiKERAnEHNFqT/scTL3Xu4=
+X-QQ-XMRINFO: NyFYKkN4Ny6FSmKK/uo/jdU=
 From: Yangyu Chen <cyy@cyyself.name>
 To: linux-riscv@lists.infradead.org
 Cc: Conor Dooley <conor@kernel.org>,
@@ -57,10 +57,10 @@ Cc: Conor Dooley <conor@kernel.org>,
 	devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Yangyu Chen <cyy@cyyself.name>,
-	Conor Dooley <conor.dooley@microchip.com>
-Subject: [PATCH RESEND v8 1/6] dt-bindings: riscv: Add T-HEAD C908 compatible
-Date: Mon,  8 Apr 2024 00:28:30 +0800
-X-OQ-MSGID: <20240407162835.3199788-1-cyy@cyyself.name>
+	Rob Herring <robh@kernel.org>
+Subject: [PATCH RESEND v8 3/6] dt-bindings: timer: Add Canaan K230 CLINT
+Date: Mon,  8 Apr 2024 00:28:32 +0800
+X-OQ-MSGID: <20240407162835.3199788-3-cyy@cyyself.name>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <tencent_22BA0425B4DF1CA1713B62E4423C1BFBF809@qq.com>
 References: <tencent_22BA0425B4DF1CA1713B62E4423C1BFBF809@qq.com>
@@ -72,28 +72,27 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The thead,c908 is a RISC-V CPU core from T-HEAD Semiconductor which used
-in Canaan Kendryte K230 SoC.
+Add compatible string for Canaan K230 CLINT.
 
 Signed-off-by: Yangyu Chen <cyy@cyyself.name>
-Acked-by: Conor Dooley <conor.dooley@microchip.com>
+Acked-by: Rob Herring <robh@kernel.org>
 Reviewed-by: Guo Ren <guoren@kernel.org>
 ---
- Documentation/devicetree/bindings/riscv/cpus.yaml | 1 +
+ Documentation/devicetree/bindings/timer/sifive,clint.yaml | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/Documentation/devicetree/bindings/riscv/cpus.yaml b/Documentation/devicetree/bindings/riscv/cpus.yaml
-index d87dd50f1a4b..d067f2a468ee 100644
---- a/Documentation/devicetree/bindings/riscv/cpus.yaml
-+++ b/Documentation/devicetree/bindings/riscv/cpus.yaml
-@@ -47,6 +47,7 @@ properties:
-               - sifive,u74
-               - sifive,u74-mc
-               - thead,c906
-+              - thead,c908
-               - thead,c910
-               - thead,c920
-           - const: riscv
+diff --git a/Documentation/devicetree/bindings/timer/sifive,clint.yaml b/Documentation/devicetree/bindings/timer/sifive,clint.yaml
+index fced6f2d8ecb..06c67f20ad3c 100644
+--- a/Documentation/devicetree/bindings/timer/sifive,clint.yaml
++++ b/Documentation/devicetree/bindings/timer/sifive,clint.yaml
+@@ -38,6 +38,7 @@ properties:
+       - items:
+           - enum:
+               - allwinner,sun20i-d1-clint
++              - canaan,k230-clint
+               - sophgo,cv1800b-clint
+               - sophgo,cv1812h-clint
+               - thead,th1520-clint
 -- 
 2.43.0
 
