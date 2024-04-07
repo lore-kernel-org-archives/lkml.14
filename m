@@ -1,80 +1,186 @@
-Received: from mail-4322.protonmail.ch (mail-4322.protonmail.ch [185.70.43.22])
+Received: from szxga04-in.huawei.com (szxga04-in.huawei.com [45.249.212.190])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DAF5748F;
-	Sun,  7 Apr 2024 08:56:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.43.22
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5953511725
+	for <linux-kernel@vger.kernel.org>; Sun,  7 Apr 2024 08:57:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.190
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712480211; cv=none; b=MU+rir1BjA8fKawZPBgfpsK7BsV2PZcriNRGai00qQMqidr9APXr0QsdE8UvFQE1T6a0hxf4MwsFFQXO8Djpd6xTd0L8SXcn1whDkCUYEX2I+ArrP7a6MhgRZ7itxIgOfQHMW1K5TdaUKffH63ABaPgbieCbU8dPT/8iEgCyRF8=
+	t=1712480228; cv=none; b=rUxFFg8T4SB7GNcE0mW5k/HV+lOSaZabN3Xb+jkPFXFvobT8ZjeUYwkIXY2dLfau7+QTqVsPlxcW/+WpYwaGAbR0+p+yf3+nvrVDD5+IwrfXHL2RQ1M4zqYfUmuJ1DoQMKURgC6P1D6Zr/YaaYNyNdAqhaHxDWP3DQ3DttPiViM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712480211; c=relaxed/simple;
-	bh=lcxJexEkoHogdNOtOs2qWf4QkdeM/dGq8DJ6At4V7Ns=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=iB6bD1hCpUxr5ol6DEOQhEllIPq/J+hk3RqtpB4tB5YDw8YdVsshRjs2gApteRHqqtIOCGiWGL3kfIJqIKUG35+Uz57mtwSOu1qSoAi+Ni/0uN/70Cny5ig7j76LCbID8GF2mdV3HODabvs87WZnE4gd2kWIhQLKv+ZJQaojyPY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me; spf=pass smtp.mailfrom=proton.me; dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b=ZgJMAxvj; arc=none smtp.client-ip=185.70.43.22
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b="ZgJMAxvj"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
-	s=protonmail; t=1712480199; x=1712739399;
-	bh=fkLAMTA9SYFbeV2VtvwPt35anLNFZH3MmztMTzZClDY=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
-	 Message-ID:BIMI-Selector;
-	b=ZgJMAxvjg/nMNDu66DoiwGc8Qh7cfbFSk9Ogx0240Ih+NUZcYNXC0WZByINQbrNSa
-	 tSH1UZgeDqn5VRKuVtsxNRmLGWB4O7Dm+dbl97MWCdKsuFWvprJSEUi6sJ9WlCqody
-	 rOgqVhtZ1gvWY/gkz/IosmLOj/CsfAn17WkiuozUo06nbJTEmtZIb6n3QXrLEjh86r
-	 jA3jOIQ0W8eNnHoBi0uCwgZioMZqV0nMWROqotKvIa+tuqtbtTlb7ebZzwed1nYibM
-	 ETlSjctnwfvSIvi4XHey1emXm9vSf4fXrkltsGsrTLQMYXhd+mG77Tztv6ZKMXMiwC
-	 TP1DVyXtiRAuA==
-Date: Sun, 07 Apr 2024 08:56:31 +0000
-To: Laine Taffin Altman <alexanderaltman@me.com>, Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-From: Benno Lossin <benno.lossin@proton.me>
-Cc: Alex Gaynor <alex.gaynor@gmail.com>, rust-for-linux@vger.kernel.org, Wedson Almeida Filho <wedsonaf@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, Andreas Hindborg <a.hindborg@samsung.com>, Alice Ryhl <aliceryhl@google.com>, Martin Rodriguez Reboredo <yakoyoku@gmail.com>, lkml <linux-kernel@vger.kernel.org>, stable@vger.kernel.org
-Subject: Re: [PATCH v4] rust: init: remove impl Zeroable for Infallible
-Message-ID: <3ecba34f-95a2-4f18-9729-f9cb3a4366c0@proton.me>
-In-Reply-To: <A68286F0-AB83-4D64-99E3-EE47F03D1AAE@me.com>
-References: <CANiq72nyqxH2C1gr=UUCOftaKe0zSuuB++mMUD9zXo-pPBVMVg@mail.gmail.com> <A68286F0-AB83-4D64-99E3-EE47F03D1AAE@me.com>
-Feedback-ID: 71780778:user:proton
+	s=arc-20240116; t=1712480228; c=relaxed/simple;
+	bh=4YI1fs382dYOh+gXVcV+MbGyzONEu0Cykttx/iMZ910=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=eKIdbqiPrPH4plkRU/e2Oxy7ug+0mLrqEOJKDa1afv+t+cuATy25+8ii1PTejPaIcfjifnmN6UQ5EjBTIBvZJpuVj9XEW7CI7IPEiX52/2nN8jNlC+vkpGZ28buF18uYAk7S/qXK7IJnCQ0jMVlpkDXM2FO32jD1tPVYnS5DWu0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.190
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.44])
+	by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4VC5cj4VFFz29khB;
+	Sun,  7 Apr 2024 16:54:13 +0800 (CST)
+Received: from canpemm500002.china.huawei.com (unknown [7.192.104.244])
+	by mail.maildlp.com (Postfix) with ESMTPS id CE4E71400D3;
+	Sun,  7 Apr 2024 16:57:02 +0800 (CST)
+Received: from huawei.com (10.173.135.154) by canpemm500002.china.huawei.com
+ (7.192.104.244) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.35; Sun, 7 Apr
+ 2024 16:57:02 +0800
+From: Miaohe Lin <linmiaohe@huawei.com>
+To: <akpm@linux-foundation.org>
+CC: <linmiaohe@huawei.com>, <naoya.horiguchi@nec.com>, <linux-mm@kvack.org>,
+	<linux-kernel@vger.kernel.org>
+Subject: [PATCH] mm/memory-failure: fix deadlock when hugetlb_optimize_vmemmap is enabled
+Date: Sun, 7 Apr 2024 16:54:56 +0800
+Message-ID: <20240407085456.2798193-1-linmiaohe@huawei.com>
+X-Mailer: git-send-email 2.33.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
+ canpemm500002.china.huawei.com (7.192.104.244)
 
-On 04.04.24 19:28, Laine Taffin Altman wrote:
-> On Apr 4, 2024, at 4:03=E2=80=AFAM, Miguel Ojeda <miguel.ojeda.sandonis@g=
-mail.com> wrote:
->>
->> =EF=BB=BFOn Thu, Apr 4, 2024 at 11:01=E2=80=AFAM Benno Lossin <benno.los=
-sin@proton.me> wrote:
->>>
->>> I don't see this commit in the kernel tree, what did you specify as
->>> `--base` when running `git format`?
->>
->> Yeah, I don't have it either, but it seems to apply cleanly.
->>
->> Cheers,
->> Miguel
->=20
-> I ran `git format-patch origin/master --base=3Dorigin/master`.  I
-> can=E2=80=99t imagine how that could have resulted in a nonexistent commi=
-t
-> hash?
+When I did hard offline test with hugetlb pages, below deadlock occurs:
 
-That heavily depends on what `origin/master` is. Is `origin` pointing to
-Torvald's git? In that case it would explain why we don't have that
-commit hash yet.
-Normally you should base your work on the tree listed in the `T:` entry
-of the subsystem in the MAINTAINERS file. In our case it is `rust-next`.
-But no worries, since it applies cleanly it should be fine for this
-patch. Just something to keep in mind if you submit any future patches.
+======================================================
+WARNING: possible circular locking dependency detected
+6.8.0-11409-gf6cef5f8c37f #1 Not tainted
+------------------------------------------------------
+bash/46904 is trying to acquire lock:
+ffffffffabe68910 (cpu_hotplug_lock){++++}-{0:0}, at: static_key_slow_dec+0x16/0x60
 
---=20
-Cheers,
-Benno
+but task is already holding lock:
+ffffffffabf92ea8 (pcp_batch_high_lock){+.+.}-{3:3}, at: zone_pcp_disable+0x16/0x40
+
+which lock already depends on the new lock.
+
+the existing dependency chain (in reverse order) is:
+
+-> #1 (pcp_batch_high_lock){+.+.}-{3:3}:
+       __mutex_lock+0x6c/0x770
+       page_alloc_cpu_online+0x3c/0x70
+       cpuhp_invoke_callback+0x397/0x5f0
+       __cpuhp_invoke_callback_range+0x71/0xe0
+       _cpu_up+0xeb/0x210
+       cpu_up+0x91/0xe0
+       cpuhp_bringup_mask+0x49/0xb0
+       bringup_nonboot_cpus+0xb7/0xe0
+       smp_init+0x25/0xa0
+       kernel_init_freeable+0x15f/0x3e0
+       kernel_init+0x15/0x1b0
+       ret_from_fork+0x2f/0x50
+       ret_from_fork_asm+0x1a/0x30
+
+-> #0 (cpu_hotplug_lock){++++}-{0:0}:
+       __lock_acquire+0x1298/0x1cd0
+       lock_acquire+0xc0/0x2b0
+       cpus_read_lock+0x2a/0xc0
+       static_key_slow_dec+0x16/0x60
+       __hugetlb_vmemmap_restore_folio+0x1b9/0x200
+       dissolve_free_huge_page+0x211/0x260
+       __page_handle_poison+0x45/0xc0
+       memory_failure+0x65e/0xc70
+       hard_offline_page_store+0x55/0xa0
+       kernfs_fop_write_iter+0x12c/0x1d0
+       vfs_write+0x387/0x550
+       ksys_write+0x64/0xe0
+       do_syscall_64+0xca/0x1e0
+       entry_SYSCALL_64_after_hwframe+0x6d/0x75
+
+other info that might help us debug this:
+
+ Possible unsafe locking scenario:
+
+       CPU0                    CPU1
+       ----                    ----
+  lock(pcp_batch_high_lock);
+                               lock(cpu_hotplug_lock);
+                               lock(pcp_batch_high_lock);
+  rlock(cpu_hotplug_lock);
+
+ *** DEADLOCK ***
+
+5 locks held by bash/46904:
+ #0: ffff98f6c3bb23f0 (sb_writers#5){.+.+}-{0:0}, at: ksys_write+0x64/0xe0
+ #1: ffff98f6c328e488 (&of->mutex){+.+.}-{3:3}, at: kernfs_fop_write_iter+0xf8/0x1d0
+ #2: ffff98ef83b31890 (kn->active#113){.+.+}-{0:0}, at: kernfs_fop_write_iter+0x100/0x1d0
+ #3: ffffffffabf9db48 (mf_mutex){+.+.}-{3:3}, at: memory_failure+0x44/0xc70
+ #4: ffffffffabf92ea8 (pcp_batch_high_lock){+.+.}-{3:3}, at: zone_pcp_disable+0x16/0x40
+
+stack backtrace:
+CPU: 10 PID: 46904 Comm: bash Kdump: loaded Not tainted 6.8.0-11409-gf6cef5f8c37f #1
+Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.14.0-0-g155821a1990b-prebuilt.qemu.org 04/01/2014
+Call Trace:
+ <TASK>
+ dump_stack_lvl+0x68/0xa0
+ check_noncircular+0x129/0x140
+ __lock_acquire+0x1298/0x1cd0
+ lock_acquire+0xc0/0x2b0
+ cpus_read_lock+0x2a/0xc0
+ static_key_slow_dec+0x16/0x60
+ __hugetlb_vmemmap_restore_folio+0x1b9/0x200
+ dissolve_free_huge_page+0x211/0x260
+ __page_handle_poison+0x45/0xc0
+ memory_failure+0x65e/0xc70
+ hard_offline_page_store+0x55/0xa0
+ kernfs_fop_write_iter+0x12c/0x1d0
+ vfs_write+0x387/0x550
+ ksys_write+0x64/0xe0
+ do_syscall_64+0xca/0x1e0
+ entry_SYSCALL_64_after_hwframe+0x6d/0x75
+RIP: 0033:0x7fc862314887
+Code: 10 00 f7 d8 64 89 02 48 c7 c0 ff ff ff ff eb b7 0f 1f 00 f3 0f 1e fa 64 8b 04 25 18 00 00 00 85 c0 75 10 b8 01 00 00 00 0f 05 <48> 3d 00 f0 ff ff 77 51 c3 48 83 ec 28 48 89 54 24 18 48 89 74 24
+RSP: 002b:00007fff19311268 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
+RAX: ffffffffffffffda RBX: 000000000000000c RCX: 00007fc862314887
+RDX: 000000000000000c RSI: 000056405645fe10 RDI: 0000000000000001
+RBP: 000056405645fe10 R08: 00007fc8623d1460 R09: 000000007fffffff
+R10: 0000000000000000 R11: 0000000000000246 R12: 000000000000000c
+R13: 00007fc86241b780 R14: 00007fc862417600 R15: 00007fc862416a00
+
+In short, below scene breaks the lock dependency chain:
+
+ memory_failure
+  __page_handle_poison
+   zone_pcp_disable -- lock(pcp_batch_high_lock)
+   dissolve_free_huge_page
+    __hugetlb_vmemmap_restore_folio
+     static_key_slow_dec
+      cpus_read_lock -- rlock(cpu_hotplug_lock)
+
+Fix this by calling drain_all_pages() instead.
+
+Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
+---
+ mm/memory-failure.c | 12 +++++++++---
+ 1 file changed, 9 insertions(+), 3 deletions(-)
+
+diff --git a/mm/memory-failure.c b/mm/memory-failure.c
+index edd6e114462f..88359a185c5f 100644
+--- a/mm/memory-failure.c
++++ b/mm/memory-failure.c
+@@ -153,11 +153,17 @@ static int __page_handle_poison(struct page *page)
+ {
+ 	int ret;
+ 
+-	zone_pcp_disable(page_zone(page));
++	/*
++	 * zone_pcp_disable() can't be used here. It will hold pcp_batch_high_lock and
++	 * dissolve_free_huge_page() might hold cpu_hotplug_lock via static_key_slow_dec()
++	 * when hugetlb vmemmap optimization is enabled. This will break current lock
++	 * dependency chain and leads to deadlock.
++	 */
+ 	ret = dissolve_free_huge_page(page);
+-	if (!ret)
++	if (!ret) {
++		drain_all_pages(page_zone(page));
+ 		ret = take_page_off_buddy(page);
+-	zone_pcp_enable(page_zone(page));
++	}
+ 
+ 	return ret;
+ }
+-- 
+2.33.0
 
