@@ -1,29 +1,29 @@
 Received: from szxga05-in.huawei.com (szxga05-in.huawei.com [45.249.212.191])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 487741097B;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4873F1096F;
 	Sun,  7 Apr 2024 08:04:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.191
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712477076; cv=none; b=pz1R4LOFQdWfcVWNwLzTiO50qNMfhpE4O8Bh1FQLP1RG9p85O6FWrz/UYaTaao33Q4JE1rpU0QI8J3w6e2CGdJbyq7bgXxVZ691Wm3+IyrAzVcp5uYqbnCgqsmtqKGRGL6uDxynPP+mUoUl5PgCCFYKAXLfH3wSie/9SkUGCmyk=
+	t=1712477076; cv=none; b=ktmYXWgXSLMzw/LXclmTWpRDciJtJ6KAA2HutGNPRwEB4lmzH/2hCmMH/Aal+nV7EqSnGVanXJdFUMRKU1q0ELbIgkv7fu0U92tungo7NX7ZtIOSWRkhxAnKU1xInVtWgZC2yeQlEeRykIsqk/1G2HygkkWLK96X1/K9+sdkElQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1712477076; c=relaxed/simple;
-	bh=MGF1c7hP756vbZB6s7mhJ9xaU9LW9VFYD7JABjDB6bQ=;
+	bh=INGEGqdsSMSW8P5U9FPTJWpgdgTcifxfTvht2tN20+A=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=IuuVB3kfFi4dfikBIjXODfkKSMqemNEWyuYvKt/ak1IWkRwioV/GxU/1GCBQmfh/6ioz05s3r+TLCDTfgi9YZamVOfDjWG2kcCzBler/ZwNIiklqOlhNiQgPUPvR65NscLl1IU9lQvSr3d+8caMNKh/N8KWwJyzhM/gRKFsXTik=
+	 MIME-Version:Content-Type; b=L6DcqjpT8awZ4VRW6XEK4ZwrIZ1i7Y0h3iJ8zljNv+0dh1DJKz0IFMZ7I/XRMeUZGUJ9NW1YuateX7AM492EfFWoCcHZ9Bcvz8xcydHJepaS6u7pPXxhtcxBFMNz90yH9UFELxXnxSxp4HiP9oAP9DvVsXOuAYwj1N5uedjH94E=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.191
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.214])
-	by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4VC4S654NFz1h4Kl;
-	Sun,  7 Apr 2024 16:01:42 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.19.162.112])
+	by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4VC4VV6wX0z1GG9P;
+	Sun,  7 Apr 2024 16:03:46 +0800 (CST)
 Received: from kwepemi500025.china.huawei.com (unknown [7.221.188.170])
-	by mail.maildlp.com (Postfix) with ESMTPS id A71191A016C;
-	Sun,  7 Apr 2024 16:04:31 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id 3F0C7140416;
+	Sun,  7 Apr 2024 16:04:29 +0800 (CST)
 Received: from localhost.localdomain (10.67.165.2) by
  kwepemi500025.china.huawei.com (7.221.188.170) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Sun, 7 Apr 2024 16:04:30 +0800
+ 15.1.2507.35; Sun, 7 Apr 2024 16:04:28 +0800
 From: Chenghai Huang <huangchenghai2@huawei.com>
 To: <herbert@gondor.apana.org.au>, <davem@davemloft.net>
 CC: <linux-kernel@vger.kernel.org>, <linux-crypto@vger.kernel.org>,
@@ -31,9 +31,9 @@ CC: <linux-kernel@vger.kernel.org>, <linux-crypto@vger.kernel.org>,
 	<songzhiqi1@huawei.com>, <qianweili@huawei.com>, <liushangbin@hisilicon.com>,
 	<linwenkai6@hisilicon.com>, <taoqi10@huawei.com>, <wangzhou1@hisilicon.com>,
 	<huangchenghai2@huawei.com>
-Subject: [PATCH v2 5/9] crypto: hisilicon/qm - Add the default processing branch
-Date: Sun, 7 Apr 2024 15:59:56 +0800
-Message-ID: <20240407080000.673435-6-huangchenghai2@huawei.com>
+Subject: [PATCH v2 1/9] crypto: hisilicon/sec - Add the condition for configuring the sriov function
+Date: Sun, 7 Apr 2024 15:59:52 +0800
+Message-ID: <20240407080000.673435-2-huangchenghai2@huawei.com>
 X-Mailer: git-send-email 2.30.0
 In-Reply-To: <20240407080000.673435-1-huangchenghai2@huawei.com>
 References: <20240407080000.673435-1-huangchenghai2@huawei.com>
@@ -48,29 +48,32 @@ Content-Type: text/plain
 X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
  kwepemi500025.china.huawei.com (7.221.188.170)
 
-The cmd type can be extended. Currently, only four types of cmd
-can be processed. Therefor, add the default processing branch
-to intercept incorrect parameter input.
+When CONFIG_PCI_IOV is disabled, the SRIOV configuration
+function is not required. An error occurs if this function is
+incorrectly called.
+
+Consistent with other modules, add the condition for
+configuring the sriov function of sec_pci_driver.
 
 Signed-off-by: Chenghai Huang <huangchenghai2@huawei.com>
 ---
- drivers/crypto/hisilicon/qm.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/crypto/hisilicon/sec2/sec_main.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/crypto/hisilicon/qm.c b/drivers/crypto/hisilicon/qm.c
-index 92f0a1d9b4a6..cedb3af1fc1a 100644
---- a/drivers/crypto/hisilicon/qm.c
-+++ b/drivers/crypto/hisilicon/qm.c
-@@ -645,6 +645,9 @@ int qm_set_and_get_xqc(struct hisi_qm *qm, u8 cmd, void *xqc, u32 qp_id, bool op
- 		tmp_xqc = qm->xqc_buf.aeqc;
- 		xqc_dma = qm->xqc_buf.aeqc_dma;
- 		break;
-+	default:
-+		dev_err(&qm->pdev->dev, "unknown mailbox cmd %u\n", cmd);
-+		return -EINVAL;
- 	}
- 
- 	/* Setting xqc will fail if master OOO is blocked. */
+diff --git a/drivers/crypto/hisilicon/sec2/sec_main.c b/drivers/crypto/hisilicon/sec2/sec_main.c
+index c290d8937b19..f4e10741610f 100644
+--- a/drivers/crypto/hisilicon/sec2/sec_main.c
++++ b/drivers/crypto/hisilicon/sec2/sec_main.c
+@@ -1324,7 +1324,8 @@ static struct pci_driver sec_pci_driver = {
+ 	.probe = sec_probe,
+ 	.remove = sec_remove,
+ 	.err_handler = &sec_err_handler,
+-	.sriov_configure = hisi_qm_sriov_configure,
++	.sriov_configure = IS_ENABLED(CONFIG_PCI_IOV) ?
++				hisi_qm_sriov_configure : NULL,
+ 	.shutdown = hisi_qm_dev_shutdown,
+ 	.driver.pm = &sec_pm_ops,
+ };
 -- 
 2.30.0
 
