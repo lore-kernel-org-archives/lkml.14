@@ -1,131 +1,259 @@
-Received: from exchange.fintech.ru (exchange.fintech.ru [195.54.195.159])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+Received: from mail-io1-f70.google.com (mail-io1-f70.google.com [209.85.166.70])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A425E34CDE
-	for <linux-kernel@vger.kernel.org>; Sun,  7 Apr 2024 16:41:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.54.195.159
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7322F39FDA
+	for <linux-kernel@vger.kernel.org>; Sun,  7 Apr 2024 16:43:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.70
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712508118; cv=none; b=Csn3uDV3kI6xcVbZqN/iUkju4OXTHpge01uMdg64pkMmkL5FUHZzFEmW8Mo8HG/Geb68G+CXmphnAsjRQOwVvoxuQDGvDUi5V/so2VbaLXOeMrvvapg4EXsMZgAwUBfVcf2ErE5q0t1BxDR2aiH83/rkcSD2xrpFQpCTxpo+PDc=
+	t=1712508201; cv=none; b=ou0nnTav9WsWyKJEDh1G5G/2AcQEQU9fi7n8pJRwck1BhxXQXjMytp+ipucWsPPA9vnJBfmeB/WKm5NTwOetOX0kySuL6M4Ug2Bz+aqx+5VEFSQVaZ0oWPzKy46rb0VHkEXrsnk82RouUd9JG6iTDJ5LTb+GCV3g1pb8y+/VWDA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712508118; c=relaxed/simple;
-	bh=P1n2NBhL+CGNTEY95t/4arqBbPgfZEhAo9PFvDy5JBA=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=IYwapuiA/XtfPW6+9t9E0O8ZebAwwcMgkQHuN8pKSrKOJvomtb2HLHVD30Eih7CmrTlypo2WFBKXDns+5ORxcUImqczugtcTVm0rGHvMZ9bkxEUds2Lk98WbiPGli7sOvaMdCZPYanhc12xnlO9Jf5TRrdZpNBOZjqOJBMmpUJE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fintech.ru; spf=pass smtp.mailfrom=fintech.ru; arc=none smtp.client-ip=195.54.195.159
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fintech.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fintech.ru
-Received: from Ex16-01.fintech.ru (10.0.10.18) by exchange.fintech.ru
- (195.54.195.169) with Microsoft SMTP Server (TLS) id 14.3.498.0; Sun, 7 Apr
- 2024 19:41:51 +0300
-Received: from localhost (10.0.253.138) by Ex16-01.fintech.ru (10.0.10.18)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2242.4; Sun, 7 Apr 2024
- 19:26:49 +0300
-From: Nikita Zhandarovich <n.zhandarovich@fintech.ru>
-To: Ian Abbott <abbotti@mev.co.uk>
-CC: Nikita Zhandarovich <n.zhandarovich@fintech.ru>, H Hartley Sweeten
-	<hsweeten@visionengravers.com>, Greg Kroah-Hartman
-	<gregkh@linuxfoundation.org>, Alan Stern <stern@rowland.harvard.edu>,
-	<linux-kernel@vger.kernel.org>, <lvc-project@linuxtesting.org>,
-	<syzbot+5f29dc6a889fc42bd896@syzkaller.appspotmail.com>
-Subject: [PATCH] comedi: vmk80xx: fix incomplete endpoint checking
-Date: Sun, 7 Apr 2024 09:26:46 -0700
-Message-ID: <20240407162646.27486-1-n.zhandarovich@fintech.ru>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1712508201; c=relaxed/simple;
+	bh=KvzxPEuq4vcY5EeVWlYUVpOZQtrzLOokskWb0WNJcHA=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=uZMB+A8n2xjgLIM46r2rppCrPFLpxdZ3QUgEy9Po9zo8A2Jcd4e4Pzt1/4x9OLdiSCjIz3oAO9hiYEQC+okbaSkGdzSHuiYzbgNsa/Dd9lmkJamPwu+J8outBuf9Rz5+veZadcVQ7rIfi3G/IedsPua7LlsVz+pN23ri1tZHY28=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.70
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f70.google.com with SMTP id ca18e2360f4ac-7d5e031e805so59895039f.3
+        for <linux-kernel@vger.kernel.org>; Sun, 07 Apr 2024 09:43:19 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712508198; x=1713112998;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=NqLRYk2j/Nq4E0ccGrPv2Ftq1hhSPQyFtWhTwR0lOmA=;
+        b=OwoENT+om5CS07pdn7MDVKEN+B6doDtt/llPmfBow6TkNQN6KCLAX73L4u4O0/2uzw
+         x3BLmlpxU++1l9NLtjAy9w842NZ58F2ZkHE0HEG/GXHzy4QCwUumLSvQC9Q7l5qgSP8u
+         hZovGi96xx8TdxQaPmFWbFHGZ1CI+zGtQgkvMpL63Up/1CYcCkTPU8VrVLnInK3AimHN
+         MiH8ZJ5nKVSzYOFCwCl+6GRfCxjp30ycJv5eT2/O7dYcPnJLaoskOMQopLZGgaHXSxp7
+         Sa+4WVZM+5PsT0sNUtw9FNKXUusDitzPHQuPx61hY7ssSA0UQbx9e4DMNUtecvW8C1L3
+         v5Hw==
+X-Forwarded-Encrypted: i=1; AJvYcCXGQP0cJ2TV1MyJtayQuxdYmjzsFJasIWnl0E39y+nEbLto1ZGEU3VV3O6czNqImoxkdm7xK/TzGn6wbjDGtmudsZR55oWydnCsV8Rm
+X-Gm-Message-State: AOJu0YyDTBVbCk01XakJreTFNw2RE6zMuBZMBqSq8bfm7kXbrxUdKXZT
+	WRKGrwSxZ/n+pHoiTkFcRTC5v+JBgdNpznRjDjb0AU8KLPStKBZ4534gkPv672hM2aGcp9wiP0c
+	Yhm6oIMKAy5F1kuPIZW1Sjx4IVtJZ4prRIuGWak9ZjIFXR3ay+BV0KOA=
+X-Google-Smtp-Source: AGHT+IG5Ie9ksyKVVVj5MCjVWYiwdMuFelnNfecJ/dQtwv5aNuLxNL8aZbO769jt+oIYJ7qqcce92c+HOSOui6GVe9yLKOHJXMa4
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: Ex16-02.fintech.ru (10.0.10.19) To Ex16-01.fintech.ru
- (10.0.10.18)
+X-Received: by 2002:a05:6e02:148a:b0:36a:254b:af9b with SMTP id
+ n10-20020a056e02148a00b0036a254baf9bmr31451ilk.5.1712508198726; Sun, 07 Apr
+ 2024 09:43:18 -0700 (PDT)
+Date: Sun, 07 Apr 2024 09:43:18 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000dc3d170615846225@google.com>
+Subject: [syzbot] [kernfs?] possible deadlock in walk_component (3)
+From: syzbot <syzbot+fa60c773a1654e2eda40@syzkaller.appspotmail.com>
+To: gregkh@linuxfoundation.org, linux-fsdevel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com, tj@kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-While vmk80xx does have endpoint checking implemented, some things
-can fall through the cracks. Depending on the hardware model,
-URBs can have either bulk or interrupt type, and current version
-of vmk80xx_find_usb_endpoints() function does not take that fully
-into account. While this warning does not seem to be too harmful,
-at the very least it will crash systems with 'panic_on_warn' set on
-them.
+Hello,
 
-Fix the issue found by Syzkaller [1] by somewhat simplifying the
-endpoint checking process with usb_find_common_endpoints() and
-ensuring that only expected endpoint types are present.
+syzbot found the following issue on:
 
-This patch has not been tested on real hardware.
+HEAD commit:    3e92c1e6cd87 Merge tag 'selinux-pr-20240402' of git://git...
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=16ebae03180000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=411644804960f423
+dashboard link: https://syzkaller.appspot.com/bug?extid=fa60c773a1654e2eda40
+compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
 
-[1] Syzkaller report:
-usb 1-1: BOGUS urb xfer, pipe 1 != type 3
-WARNING: CPU: 0 PID: 781 at drivers/usb/core/urb.c:504 usb_submit_urb+0xc4e/0x18c0 drivers/usb/core/urb.c:503
-...
+Unfortunately, I don't have any reproducer for this issue yet.
+
+Downloadable assets:
+disk image (non-bootable): https://storage.googleapis.com/syzbot-assets/7bc7510fe41f/non_bootable_disk-3e92c1e6.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/34cc55fbbf72/vmlinux-3e92c1e6.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/09668ee3251b/bzImage-3e92c1e6.xz
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+fa60c773a1654e2eda40@syzkaller.appspotmail.com
+
+======================================================
+WARNING: possible circular locking dependency detected
+6.9.0-rc2-syzkaller-00042-g3e92c1e6cd87 #0 Not tainted
+------------------------------------------------------
+syz-executor.2/22789 is trying to acquire lock:
+ffff888032f275b0 (&ovl_i_mutex_dir_key[depth]){++++}-{3:3}, at: inode_lock_shared include/linux/fs.h:803 [inline]
+ffff888032f275b0 (&ovl_i_mutex_dir_key[depth]){++++}-{3:3}, at: lookup_slow fs/namei.c:1708 [inline]
+ffff888032f275b0 (&ovl_i_mutex_dir_key[depth]){++++}-{3:3}, at: walk_component+0x342/0x5b0 fs/namei.c:2004
+
+but task is already holding lock:
+ffff888040373488 (&of->mutex){+.+.}-{3:3}, at: kernfs_fop_write_iter+0x281/0x500 fs/kernfs/file.c:325
+
+which lock already depends on the new lock.
+
+
+the existing dependency chain (in reverse order) is:
+
+-> #3 (&of->mutex){+.+.}-{3:3}:
+       __mutex_lock_common kernel/locking/mutex.c:608 [inline]
+       __mutex_lock+0x175/0x9c0 kernel/locking/mutex.c:752
+       kernfs_fop_write_iter+0x281/0x500 fs/kernfs/file.c:325
+       call_write_iter include/linux/fs.h:2108 [inline]
+       iter_file_splice_write+0x906/0x10b0 fs/splice.c:743
+       do_splice_from fs/splice.c:941 [inline]
+       do_splice+0x12c7/0x1f10 fs/splice.c:1354
+       __do_splice+0x327/0x360 fs/splice.c:1436
+       __do_sys_splice fs/splice.c:1652 [inline]
+       __se_sys_splice fs/splice.c:1634 [inline]
+       __x64_sys_splice+0x1d2/0x260 fs/splice.c:1634
+       do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+       do_syscall_64+0xd2/0x260 arch/x86/entry/common.c:83
+       entry_SYSCALL_64_after_hwframe+0x72/0x7a
+
+-> #2 (&pipe->mutex){+.+.}-{3:3}:
+       __mutex_lock_common kernel/locking/mutex.c:608 [inline]
+       __mutex_lock+0x175/0x9c0 kernel/locking/mutex.c:752
+       pipe_lock fs/pipe.c:92 [inline]
+       pipe_lock+0x64/0x80 fs/pipe.c:89
+       iter_file_splice_write+0x1f0/0x10b0 fs/splice.c:687
+       do_splice_from fs/splice.c:941 [inline]
+       do_splice+0x12c7/0x1f10 fs/splice.c:1354
+       __do_splice+0x327/0x360 fs/splice.c:1436
+       __do_sys_splice fs/splice.c:1652 [inline]
+       __se_sys_splice fs/splice.c:1634 [inline]
+       __x64_sys_splice+0x1d2/0x260 fs/splice.c:1634
+       do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+       do_syscall_64+0xd2/0x260 arch/x86/entry/common.c:83
+       entry_SYSCALL_64_after_hwframe+0x72/0x7a
+
+-> #1 (sb_writers#5){.+.+}-{0:0}:
+       percpu_down_read include/linux/percpu-rwsem.h:51 [inline]
+       __sb_start_write include/linux/fs.h:1662 [inline]
+       sb_start_write include/linux/fs.h:1798 [inline]
+       mnt_want_write+0x6f/0x450 fs/namespace.c:409
+       ovl_xattr_set+0x136/0x530 fs/overlayfs/xattrs.c:63
+       ovl_own_xattr_set+0x86/0xd0 fs/overlayfs/xattrs.c:213
+       __vfs_setxattr+0x173/0x1e0 fs/xattr.c:200
+       __vfs_setxattr_noperm+0x127/0x5e0 fs/xattr.c:234
+       __vfs_setxattr_locked+0x182/0x260 fs/xattr.c:295
+       vfs_setxattr+0x146/0x350 fs/xattr.c:321
+       do_setxattr+0x146/0x170 fs/xattr.c:629
+       setxattr+0x15d/0x180 fs/xattr.c:652
+       path_setxattr+0x179/0x1e0 fs/xattr.c:671
+       __do_sys_setxattr fs/xattr.c:687 [inline]
+       __se_sys_setxattr fs/xattr.c:683 [inline]
+       __x64_sys_setxattr+0xc4/0x160 fs/xattr.c:683
+       do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+       do_syscall_64+0xd2/0x260 arch/x86/entry/common.c:83
+       entry_SYSCALL_64_after_hwframe+0x72/0x7a
+
+-> #0 (&ovl_i_mutex_dir_key[depth]){++++}-{3:3}:
+       check_prev_add kernel/locking/lockdep.c:3134 [inline]
+       check_prevs_add kernel/locking/lockdep.c:3253 [inline]
+       validate_chain kernel/locking/lockdep.c:3869 [inline]
+       __lock_acquire+0x2478/0x3b30 kernel/locking/lockdep.c:5137
+       lock_acquire kernel/locking/lockdep.c:5754 [inline]
+       lock_acquire+0x1b1/0x560 kernel/locking/lockdep.c:5719
+       down_read+0x9a/0x330 kernel/locking/rwsem.c:1526
+       inode_lock_shared include/linux/fs.h:803 [inline]
+       lookup_slow fs/namei.c:1708 [inline]
+       walk_component+0x342/0x5b0 fs/namei.c:2004
+       lookup_last fs/namei.c:2461 [inline]
+       path_lookupat+0x17f/0x770 fs/namei.c:2485
+       filename_lookup+0x1e5/0x5b0 fs/namei.c:2514
+       kern_path+0x35/0x50 fs/namei.c:2622
+       lookup_bdev+0xd9/0x280 block/bdev.c:1079
+       resume_store+0x1d8/0x460 kernel/power/hibernate.c:1235
+       kobj_attr_store+0x55/0x80 lib/kobject.c:840
+       sysfs_kf_write+0x117/0x170 fs/sysfs/file.c:136
+       kernfs_fop_write_iter+0x343/0x500 fs/kernfs/file.c:334
+       call_write_iter include/linux/fs.h:2108 [inline]
+       new_sync_write fs/read_write.c:497 [inline]
+       vfs_write+0x6db/0x1100 fs/read_write.c:590
+       ksys_write+0x12f/0x260 fs/read_write.c:643
+       do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+       do_syscall_64+0xd2/0x260 arch/x86/entry/common.c:83
+       entry_SYSCALL_64_after_hwframe+0x72/0x7a
+
+other info that might help us debug this:
+
+Chain exists of:
+  &ovl_i_mutex_dir_key[depth] --> &pipe->mutex --> &of->mutex
+
+ Possible unsafe locking scenario:
+
+       CPU0                    CPU1
+       ----                    ----
+  lock(&of->mutex);
+                               lock(&pipe->mutex);
+                               lock(&of->mutex);
+  rlock(&ovl_i_mutex_dir_key[depth]);
+
+ *** DEADLOCK ***
+
+4 locks held by syz-executor.2/22789:
+ #0: ffff88802cc70ac8 (&f->f_pos_lock){+.+.}-{3:3}, at: __fdget_pos+0xeb/0x180 fs/file.c:1191
+ #1: ffff88802533e420 (sb_writers#9){.+.+}-{0:0}, at: ksys_write+0x12f/0x260 fs/read_write.c:643
+ #2: ffff888040373488 (&of->mutex){+.+.}-{3:3}, at: kernfs_fop_write_iter+0x281/0x500 fs/kernfs/file.c:325
+ #3: ffff8880196eb5a8 (kn->active#85){.+.+}-{0:0}, at: kernfs_fop_write_iter+0x2a4/0x500 fs/kernfs/file.c:326
+
+stack backtrace:
+CPU: 0 PID: 22789 Comm: syz-executor.2 Not tainted 6.9.0-rc2-syzkaller-00042-g3e92c1e6cd87 #0
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.2-debian-1.16.2-1 04/01/2014
 Call Trace:
  <TASK>
- usb_start_wait_urb+0x113/0x520 drivers/usb/core/message.c:59
- vmk80xx_reset_device drivers/comedi/drivers/vmk80xx.c:227 [inline]
- vmk80xx_auto_attach+0xa1c/0x1a40 drivers/comedi/drivers/vmk80xx.c:818
- comedi_auto_config+0x238/0x380 drivers/comedi/drivers.c:1067
- usb_probe_interface+0x5cd/0xb00 drivers/usb/core/driver.c:399
-...
+ __dump_stack lib/dump_stack.c:88 [inline]
+ dump_stack_lvl+0x116/0x1f0 lib/dump_stack.c:114
+ check_noncircular+0x31a/0x400 kernel/locking/lockdep.c:2187
+ check_prev_add kernel/locking/lockdep.c:3134 [inline]
+ check_prevs_add kernel/locking/lockdep.c:3253 [inline]
+ validate_chain kernel/locking/lockdep.c:3869 [inline]
+ __lock_acquire+0x2478/0x3b30 kernel/locking/lockdep.c:5137
+ lock_acquire kernel/locking/lockdep.c:5754 [inline]
+ lock_acquire+0x1b1/0x560 kernel/locking/lockdep.c:5719
+ down_read+0x9a/0x330 kernel/locking/rwsem.c:1526
+ inode_lock_shared include/linux/fs.h:803 [inline]
+ lookup_slow fs/namei.c:1708 [inline]
+ walk_component+0x342/0x5b0 fs/namei.c:2004
+ lookup_last fs/namei.c:2461 [inline]
+ path_lookupat+0x17f/0x770 fs/namei.c:2485
+ filename_lookup+0x1e5/0x5b0 fs/namei.c:2514
+ kern_path+0x35/0x50 fs/namei.c:2622
+ lookup_bdev+0xd9/0x280 block/bdev.c:1079
+ resume_store+0x1d8/0x460 kernel/power/hibernate.c:1235
+ kobj_attr_store+0x55/0x80 lib/kobject.c:840
+ sysfs_kf_write+0x117/0x170 fs/sysfs/file.c:136
+ kernfs_fop_write_iter+0x343/0x500 fs/kernfs/file.c:334
+ call_write_iter include/linux/fs.h:2108 [inline]
+ new_sync_write fs/read_write.c:497 [inline]
+ vfs_write+0x6db/0x1100 fs/read_write.c:590
+ ksys_write+0x12f/0x260 fs/read_write.c:643
+ do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+ do_syscall_64+0xd2/0x260 arch/x86/entry/common.c:83
+ entry_SYSCALL_64_after_hwframe+0x72/0x7a
+RIP: 0033:0x7fb6a4e7dde9
+Code: 28 00 00 00 75 05 48 83 c4 28 c3 e8 e1 20 00 00 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b0 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007fb6a5b2f0c8 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
+RAX: ffffffffffffffda RBX: 00007fb6a4fabf80 RCX: 00007fb6a4e7dde9
+RDX: 0000000000000012 RSI: 0000000020000000 RDI: 0000000000000007
+RBP: 00007fb6a4eca47a R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
+R13: 000000000000004d R14: 00007fb6a4fabf80 R15: 00007ffdad03fdb8
+ </TASK>
+PM: Image not found (code -6)
 
-Similar issue also found by Syzkaller:
-Link: https://syzkaller.appspot.com/bug?extid=5205eb2f17de3e01946e
 
-Reported-and-tested-by: syzbot+5f29dc6a889fc42bd896@syzkaller.appspotmail.com
-Fixes: 49253d542cc0 ("staging: comedi: vmk80xx: factor out usb endpoint detection")
-Signed-off-by: Nikita Zhandarovich <n.zhandarovich@fintech.ru>
 ---
- drivers/comedi/drivers/vmk80xx.c | 35 ++++++++++++-----------------------
- 1 file changed, 12 insertions(+), 23 deletions(-)
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-diff --git a/drivers/comedi/drivers/vmk80xx.c b/drivers/comedi/drivers/vmk80xx.c
-index 4536ed43f65b..476885403c61 100644
---- a/drivers/comedi/drivers/vmk80xx.c
-+++ b/drivers/comedi/drivers/vmk80xx.c
-@@ -641,33 +641,22 @@ static int vmk80xx_find_usb_endpoints(struct comedi_device *dev)
- 	struct vmk80xx_private *devpriv = dev->private;
- 	struct usb_interface *intf = comedi_to_usb_interface(dev);
- 	struct usb_host_interface *iface_desc = intf->cur_altsetting;
--	struct usb_endpoint_descriptor *ep_desc;
--	int i;
-+	struct usb_endpoint_descriptor *ep_rx_desc, *ep_tx_desc;
-+	int i, ret;
- 
--	if (iface_desc->desc.bNumEndpoints != 2)
--		return -ENODEV;
--
--	for (i = 0; i < iface_desc->desc.bNumEndpoints; i++) {
--		ep_desc = &iface_desc->endpoint[i].desc;
--
--		if (usb_endpoint_is_int_in(ep_desc) ||
--		    usb_endpoint_is_bulk_in(ep_desc)) {
--			if (!devpriv->ep_rx)
--				devpriv->ep_rx = ep_desc;
--			continue;
--		}
--
--		if (usb_endpoint_is_int_out(ep_desc) ||
--		    usb_endpoint_is_bulk_out(ep_desc)) {
--			if (!devpriv->ep_tx)
--				devpriv->ep_tx = ep_desc;
--			continue;
--		}
--	}
-+	if (devpriv->model == VMK8061_MODEL)
-+		ret = usb_find_common_endpoints(iface_desc, &ep_rx_desc,
-+						&ep_tx_desc, NULL, NULL);
-+	else
-+		ret = usb_find_common_endpoints(iface_desc, NULL, NULL,
-+						&ep_rx_desc, &ep_tx_desc);
- 
--	if (!devpriv->ep_rx || !devpriv->ep_tx)
-+	if (ret)
- 		return -ENODEV;
- 
-+	devpriv->ep_rx = ep_rx_desc;
-+	devpriv->ep_tx = ep_tx_desc;
-+
- 	if (!usb_endpoint_maxp(devpriv->ep_rx) || !usb_endpoint_maxp(devpriv->ep_tx))
- 		return -EINVAL;
- 
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
+
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
