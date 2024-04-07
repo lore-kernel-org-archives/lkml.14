@@ -1,166 +1,101 @@
-Received: from sonic314-20.consmr.mail.ne1.yahoo.com (sonic314-20.consmr.mail.ne1.yahoo.com [66.163.189.146])
+Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8DFA1799B
-	for <linux-kernel@vger.kernel.org>; Sun,  7 Apr 2024 10:23:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=66.163.189.146
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0826E14294
+	for <linux-kernel@vger.kernel.org>; Sun,  7 Apr 2024 10:28:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712485427; cv=none; b=JtIKNFUsTzjtU49K59YNs7MjA78jrgOv3+c+200QNanKc7+/9l22LHhssOWzRd3xCKLFJ8chEBKZ2m2fMsZaPJd6okbuVkYeRrTkpceJ9hZ4uW8+AUiy2TgUVOnnzDPmeX5P/HEJN+dS7cOIvsHzoi/gtJuy8STq3h35yPvFIsk=
+	t=1712485727; cv=none; b=MBE56h4zZdZBvJS6iNNJnRAMuX1gti64Mmuy1A2GVK1mab+3Z+yMxaOTX+xQEhMgR14PucJpSF+hLKvA59HRYphHf/VaD0ONii6XrDehfN2l8ggn5uJc9qg1lXxSxwjraGX2KOl1pax97vf7Zj5l3woKOn3YPNkEjvDJZHU28yo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712485427; c=relaxed/simple;
-	bh=yGgCFWmUblU7TeY652VRyEhoNAP7wR/NJDvGHApKSok=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=pHXqKqbTh+qTPRyJvP8eQIoQ3F2XJCWZCrkcd7iEXZ1TS9Io2Ph2+FlAzAhymfsE6RWD4I0R7LdjSDNkShNVERpByKjKrJVXXLi8xAbMTSvD9ETmibG3e6Ym5cSpji/GHd4660hOS/SmOieL2NVCsiTY4t1yOYv+CXpq+gJnFgQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=yahoo.com; spf=pass smtp.mailfrom=yahoo.com; dkim=pass (2048-bit key) header.d=yahoo.com header.i=@yahoo.com header.b=DDFhpiB/; arc=none smtp.client-ip=66.163.189.146
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=yahoo.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yahoo.com
+	s=arc-20240116; t=1712485727; c=relaxed/simple;
+	bh=zrafKbkh4s7cjDZTL+DArSyH4tS3eCcTAoC9DhpXz44=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=D7je5Haxrnirgkf+9pCOAdbFWKlOLefXgOM0AdXIL3UyYcqF93IGxKe7q/MgyShGCWXLv4PoVNhADmglT+dZi5IokmeXs6d39wYOPCBf0lrlUxPL61W3i8TPw+HIXe95LJdHBfK5Zjqc81KJMfgK5mA68aukvGXZ1ONN7GrkUo8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=vJZCW/S8; arc=none smtp.client-ip=209.85.128.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=yahoo.com header.i=@yahoo.com header.b="DDFhpiB/"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1712485419; bh=C+AJS1T/rb/tqDj2Rt/RDlXJGUr5YMNuZdSvL1OS3yk=; h=Date:Subject:To:Cc:References:From:In-Reply-To:From:Subject:Reply-To; b=DDFhpiB//rhpAX+mRnQGmWVufqQ+ihLagVNLtM+HkIFilYxPzunHrjDtekk9LZFWCh8dIYoIzmMWgz00v1GOhIW8mWqUNbQ65FY+f6Uh2kOKkHSPSAVBvIT1Ctpkdj98IikjI8okbQsS5insy/iMNe8TBAndarOkDMvEdUBdu21EJk9es/JysqlE6hkPI6e02Wb11Wl8G/s6yk0OkbyNaLHVPmiptpylEhG0DGXto8tLu9pnWDaIs7sH84tUe/LeWHc71Hxmm/aWMQT5StlA4XdDQ/Nf0XAymyYDwfrUKQ5UtpBf9zYegbSPXPNR8LsQ3KT0mDjoIOfSA9ySBRc+ow==
-X-SONIC-DKIM-SIGN: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1712485419; bh=8K6Tfq1h+fxYHmMwVeWkwHifR33AZoFvDWuQkp6rlwR=; h=X-Sonic-MF:Date:Subject:To:From:From:Subject; b=HIB9ARBj/3hy4EVcBwfP+6mkrmn5HxjldnKqS5Lv1l+DrLH9Q43cV0bHiIhGRUQgDyKXE4rszbVDwSz0Br6JPvPd3zPDhg4PTnZI2BV4SliSv+Eyyp2WZzkaiLiQeURFDse3e3drT1PAFNlYZbNMqKLDhL3AvX75j5eukn84Qk//5UJzkVEuRNXpGnLA/aqX1S6T1tcTvvKLIQ5arWv66gSA5KYZuFGhrpnvxkJIRLjWtt6Jr17YcKSnzZYzTQDzptDKXVpCbDVf44WLXYWBAMnjMX3/pTrjjFcpaCuVM++Oh+wozPnvaCfxoE/zLRxQ8eD3LEtbwh9DpGqJAZjrpQ==
-X-YMail-OSG: 0DA6kfsVM1nwR23I0UbehfkcWLvCI_ajbttLepwVuLyyajAG4p9bTHgiapfStB9
- IvRrrTMO0ZUQ8WX9KyzZjlhxOXZbtyMcjRLlRWSLSEP7cHutpmr.YDXtaZjl677RXAw..XN2W8J6
- MiPCMNUZ7xywyS_wl5fB1lPhu9cEBwyQZoZl_UAbt8tQHp8OMo5Wa.moRu.xXVRgMbfngJzUoo3i
- G0MiWcmJgbFYM.E1ptk02y1nW20GDlaUVoa5HzGAitLMgdxikYGUdTz5oYi0G1e8t5aUgoUVuJfc
- eoyNz.2y4pkZKNnwwTLLXp.i.uHRMgkvt1Ms3Xna7uLEv4b5j7bXidy2wvOdJp4zgbNP9s44sZp1
- sg9fbIiROnK505TjOFeqYAfKG2PUAlPnfYzbKU7EhRfrrjescbZarGUewX3J7jNH4jnsy96PG2AF
- 8A6imHB95cBf9jWFUnnrrUIOEFbgMpZjcIlBO4qGjp3Nwmv9cb47J5XEQLJzSWOX5vdp.KHGxvaA
- ZDL990Q3fHUuYGRU8.HBgQfQTvyjoqOcvY0f7FTCnmKictSfJSXAO0WREdUP2eDIyl_yB7V3BF3w
- FnvK3jroOQEYLEG3ToJSR36HSCADLEGhCAgBjHF2xfmb_L0wLPvZmfUJvHdoYdWb0wmmjRk5Kan5
- Uog.NP7b2nYWd9HZAfcmgm8xCyULuSOCPnvfqbrO0wDN9IyMaNGX2.7RxJtltug6G3lNoOmhGH..
- NX0f.c3AiT91EYCU2gkWiqrgaPCJThoN0kiMckFZ47aQURsL6KSv0WTkgZIe3NevS.6yFA0khz2n
- ttU7eeEy0lpz.UmNq2OP7wwFCdjWIMtby6cr.Uyc9NV1exG0dJKQ7mNALmwSGzkZbf3nrOe4E5UP
- Gk.RUVLG00c.sxUFUR5ZcFhH2p4.mJ2Pw3whYb8bRo3.N6P3ZLtJ6csw13.ZIeuO2mpOhpTKMdrI
- YmNt37sCP_Y5dj5lrFI_l6EK9_dw3YQQV_JHD1vfEdMRa4pF_jTlSCrv7g3iZEYDouEkmGxU_aS8
- 4lSsg4eZSYF0HqxXASGtdZKYHeXO16Yg116st_Xr4VB.56FdofCo9.pN437X.5EvtnptFz5HNps.
- xvCdzVf77ZXzW0ML6qfnuTv2MwtKccIbRoTme5OC2hbXrIZ3zvSmaksUfp45lFoyljIh.353Hy9l
- PtewfdKrCueu4XrfYWGkdTKyopLo0DOi9qPWYjPR4uXdMPorjUYvmiNztUKxS_M8G64k2s39Na77
- LOsqs0bQPTX1jazpDaQcBZmo3mmBK9oMv3NW7xeS18oY_dviI8fJMeiBqEv2of2796ocihuWRdKR
- p3_wkgW1oLMChoVKCeFS3f68QDlTgy3IO_0pioAoII87hIC.46wAbxWlxIKQyOdxiyeUogKN9x6H
- ww3iEauENVLC_b_cOx6R5hVMQ.OpckdEhJ3qcSiLaqvlYEwLP3M12wBAyv5qwy2GtKdlgAK7A4iw
- QhZ5Od9fNa5x559mELepia5_omql.ssuKdwqwkcyaH5gYWg37Hvnv1KkK_62bMmJTva6G_aoJ7bU
- UiuawvOplMiYi_ObIMmpwDzwy.1iX_IZUiwRC1sbwoa0Yp5QmcSGsNIaimAtqJbcH5oaN.YSMH0p
- xXInBnEtfhgboXIBfXKi8BYh2LFeAxyfYauzfBNcaJascyqVSaeCRjMdc446UbVhTcO71OcQ3.CM
- O5_syph2Uj2f1CVa6u70ZQX7TJJ0ZFhvzpPBeMRodjvUNyWMyMQn8EW3qVSeK45PU2WnZyMpBAVM
- FMN73avtlos3RazTwnHpWTwccWdFb76bdQddcjt6co9lSw2J5Q7pb0JCFUvbnAvTiNwje3Z9CXVE
- 4DC2GL.ydDNn6UqopQPzla5cX4MbjBHZqkyuTh4GnInalhavdqZCl8JLV_Y0e64d6H_Io.iMPaYF
- wB6oSRCwcRNywIWY8v_.Txnj9e_IDO4_sEo3gigA7STBjiLbPBnOAmpDsEGq1AHrcliKCGeZred.
- YmEMlKqbC1RLKszyxH0G3.9eElFV0pDv53WHGO9.hixwjAFEerzYvjSPDbeC4Pkw_6xf_sDPQurh
- MSrKmrVCipOZkmby.IM7u2VOf3meiUZihL8eHXchH4bmOGZRD4Q1nALFltPQ8oTPMTCgf9Tg7aZb
- 1BdD.1MFHkKCSKzeCMm4VQtQVNSOiKWlrzrCyojXhYAjSq5uhsVn_7WTAxixZZp8RAjpFBA8e90f
- 0nI9tPtLFTVWwpguhmtZkN0yFaWAw0WSaesgo4W9dyrDt7gUkI8HQYwvgGAngx8Zo
-X-Sonic-MF: <serdeliuk@yahoo.com>
-X-Sonic-ID: c4a14069-9116-423e-a1c7-ab8455b6c999
-Received: from sonic.gate.mail.ne1.yahoo.com by sonic314.consmr.mail.ne1.yahoo.com with HTTP; Sun, 7 Apr 2024 10:23:39 +0000
-Received: by hermes--production-ir2-7bc88bfc75-pxs6z (Yahoo Inc. Hermes SMTP Server) with ESMTPA ID 7f655095cc1d4bc604c8852f53d289b4;
-          Sun, 07 Apr 2024 10:03:20 +0000 (UTC)
-Message-ID: <84c8ad35-e695-4d5a-9c22-518b84e5dc6a@yahoo.com>
-Date: Sun, 7 Apr 2024 12:03:17 +0200
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vJZCW/S8"
+Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-4166d58a71eso65455e9.1
+        for <linux-kernel@vger.kernel.org>; Sun, 07 Apr 2024 03:28:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1712485724; x=1713090524; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=J3Cl7h9jU7ChQNHuc95qoMqQpHtUsnk01qC1Q0FakwM=;
+        b=vJZCW/S8H44LIaWAgDPqluycE4xdQfqRMM8kY+IR3UZoninWFGjWEkuu2fHrgQn1HY
+         rXFiXAwCrIGYa18FOyXHmP88g4Vhu87w9ARiOAQMrx473pUQGBVoLrViuvE8aDNtvLt6
+         wf+uq7n0u1jtE7tbI0zWGpmmoQj+JHrCRwWgGc9/67mDuCr7ePntncMl+ob1Bgj25mWl
+         GuQhIjzLkGKccQAMVEhl3HqHWinc1Qs70e6XExI3vCW3bXIf/fY7GdxxMHgg/or6Dh0+
+         280YUL2LEN3aIFhN5KLjjtODaGqoA8k8Ptiz/fXzB4LQ3mTQqgkUnP6Ywe2N6I8IUS01
+         NNRA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712485724; x=1713090524;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=J3Cl7h9jU7ChQNHuc95qoMqQpHtUsnk01qC1Q0FakwM=;
+        b=gjCun9mZ8sSaDfCtgvcQAeH4KXj2qnCPL/OBcJbnL4ZBXo3p3IgvzWK2Ys1uyCb3vm
+         OsP7oo7zNzA9iLD3WiYeYJAQ58svdoOvuZHEpsfjzy224PNglJCr2sNfvgQ05qUe2dX5
+         KBtroHRGeINDF1nEvpPwRpept5vf5JwiVzlRU19CUAsTcMyeEJEv9zLDjrLDulEn/7kN
+         4ZbsnEjOGzIyOIHxTR1a68qSOB75Ti40/KQCRl5CPUEsBpPQ0ThoAhU0YqcCjPBRThEQ
+         6sGW/He0HxQTK3pvAwAEOMLSV60ceSILDz/cnizE560Ra47MCS7I+bWpQQ/AYhEvGXmo
+         p3Eg==
+X-Forwarded-Encrypted: i=1; AJvYcCV2muKVna5v2HQ1+iPOu/FtRseWDx69Xsrpaz+OatEc0uZO0JuduIc4YalWYVfcJfUSlJ+TxW8LVysJHWCj+YxeunwpeR++dy0Kkc4e
+X-Gm-Message-State: AOJu0YwDmeFvNm5krmksFyJO9p6d+xfPtH5E2G4KnxsKwXtA2zLQFolG
+	VEl60muCb00fW5ZbSGga5fOJl4C+OVCJ6lE5i+t5/CGV+8YIkKK/R0fVWymdR7Q=
+X-Google-Smtp-Source: AGHT+IGyr6WK4/XKIk3R6H/gfyVg/+5WfEv6sJHc2P9Nl5aDbnzIrVYpRGVPWmpM5DaRkh/h36MGIQ==
+X-Received: by 2002:a05:600c:154b:b0:415:6b6d:da6f with SMTP id f11-20020a05600c154b00b004156b6dda6fmr5397004wmg.39.1712485724165;
+        Sun, 07 Apr 2024 03:28:44 -0700 (PDT)
+Received: from krzk-bin.. ([178.197.223.16])
+        by smtp.gmail.com with ESMTPSA id g6-20020a05600c4ec600b004148d7b889asm13241002wmq.8.2024.04.07.03.28.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 07 Apr 2024 03:28:43 -0700 (PDT)
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+To: Robert Richter <rric@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	linux-arm-kernel@lists.infradead.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: [PATCH] arm64: dts: cavium: thunder2-99xx:: drop redundant reg-names
+Date: Sun,  7 Apr 2024 12:28:41 +0200
+Message-Id: <20240407102841.38617-1-krzysztof.kozlowski@linaro.org>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 2/2] arm64: dts: qcom: sm8550: Add support for Samsung
- Galaxy Z Fold5
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
- Bjorn Andersson <andersson@kernel.org>,
- Konrad Dybcio <konrad.dybcio@linaro.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>
-Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20240407-samsung-galaxy-zfold5-q5q-v4-0-8b67b1813653@yahoo.com>
- <20240407-samsung-galaxy-zfold5-q5q-v4-2-8b67b1813653@yahoo.com>
- <d24628cf-a628-4eb1-ae2f-bf414b62534a@linaro.org>
-Content-Language: en-US
-From: Alexandru Serdeliuc <serdeliuk@yahoo.com>
-In-Reply-To: <d24628cf-a628-4eb1-ae2f-bf414b62534a@linaro.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-Mailer: WebService/1.1.22205 mail.backend.jedi.jws.acl:role.jedi.acl.token.atz.jws.hermes.yahoo
 
-Hi, please excuse my lack of knowledge, I am still trying to figure out 
-how to properly send a patch. Hopefully not wasting your time too much.
+There is no "reg-names" property in the PCI bindings and the value does
+not conform to Devicetree coding style (upper-case letters, space), so
+assume this was copied from downstream.
 
+This fixes dtbs_check warning:
 
-Here is what was changed, or I should send a v5 and add the 
-modifications to cover letter?
+  thunder2-99xx.dtb: pcie@30000000: Unevaluated properties are not allowed ('reg-names' was unexpected)
 
-- v4
+Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+---
+ arch/arm64/boot/dts/cavium/thunder2-99xx.dtsi | 1 -
+ 1 file changed, 1 deletion(-)
 
-   . removed a spurious new line
+diff --git a/arch/arm64/boot/dts/cavium/thunder2-99xx.dtsi b/arch/arm64/boot/dts/cavium/thunder2-99xx.dtsi
+index 3419bd252696..874d4d3a4e4f 100644
+--- a/arch/arm64/boot/dts/cavium/thunder2-99xx.dtsi
++++ b/arch/arm64/boot/dts/cavium/thunder2-99xx.dtsi
+@@ -103,7 +103,6 @@ pcie@30000000 {
+ 
+ 		/* ECAM at 0x3000_0000 - 0x4000_0000 */
+ 		reg = <0x0 0x30000000  0x0 0x10000000>;
+-		reg-names = "PCI ECAM";
+ 
+ 		/*
+ 		 * PCI ranges:
+-- 
+2.34.1
 
-   . removed pcie_1_phy_aux_clk as requested
-
-   . removed secondary pcie1 which does not exists on the device
-
-   . changed firmware extension from .mbn to .mdt
-
-   . added missing reserved memory regions required  by firmware to 
-properly load
-
-
-- v3
-
-   . added b4 version 3
-
-   . removed address and size cells in device description
-
-
-- v2 added both but added an extra v2 in the subject line instead to b4 
-subject header, was requested to send the patch again, along with 
-following mods:
-
-   . removed whole bootargs line
-
-   . fixed underscores in reserved memory by removing all reserved 
-memory regions
-
-   . added missing idetation to  spash_screen remark
-
-   . validated the dts with "dtbs_check"
-
-   . removed all comments at the end of nodes
-
-   . moved status of the node at the end of the node
-
-   . reversed pin control name with control numbers
-
-   . ordered the  nodes alphabetically
-
-
-- The initial request was split in two patches sent due to the following 
-checkpatch warning, was requested to re send them together:
-
-WARNING: DT binding docs and includes should be a separate patch. See: 
-Documentation/devicetree/bindings/submitting-patches.rst
-
-
-On 7/4/24 11:03, Krzysztof Kozlowski wrote:
-> On 07/04/2024 07:38, Alexandru Marc Serdeliuc via B4 Relay wrote:
->> From: Alexandru Marc Serdeliuc <serdeliuk@yahoo.com>
->>
->> Add support for Samsung Galaxy Z Fold5 (q5q) foldable phone based on sm8550
->>
->> Currently working features:
->> - Framebuffer
->> - UFS
->> - i2c
->> - Buttons
->>
->> Signed-off-by: Alexandru Marc Serdeliuc <serdeliuk@yahoo.com>
->> ---
->>   arch/arm64/boot/dts/qcom/Makefile               |   1 +
-> Where is the changelog? This is v4 and nothing (neither here nor in
-> cover letter) explained what was happening with this patchset.
->
-> Tags were ignored, so maybe comments as well?
->
-> Please provide *full* and detailed changelog.
->
-> Best regards,
-> Krzysztof
->
