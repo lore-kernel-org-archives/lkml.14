@@ -1,56 +1,56 @@
-Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
+Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED3EF1118E
-	for <linux-kernel@vger.kernel.org>; Sun,  7 Apr 2024 08:43:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 112BC12E4A
+	for <linux-kernel@vger.kernel.org>; Sun,  7 Apr 2024 08:43:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712479432; cv=none; b=GBefnl30R4BNe+HN/erwyfvDmnNudx5mw+Rl/yN/OpeT61sIVfTpAVAoyYiN7U50TDiCCbJvwttHcKczmUL0tNlivxrg7O0Xcc8NZC68hAewXX+0pkGKJyu+CoT6niYXQX5sizNRGvn5FqO/tV9+ruHJnVS0iu2b7Z1Q+qjsSYw=
+	t=1712479437; cv=none; b=raX07pcZuszz9InVfl8dEB82euKz1KZJwaBoWEjF8XtW/SdmX5Oc7rL12jpFCTsXfzWO5gSe8WwoP2tqHTZmbmYOxO74KbDaNKji/Wj+d+316qjDt6L8D+sbHYaw8Ze7x9w9qrw16QpRn4GsANgwV6WDoDH7iI8wjdG3FM+eP2s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712479432; c=relaxed/simple;
-	bh=GpqckT4PQWS5UGY5qS1vIf767JaV3bKOohoBleDdXec=;
+	s=arc-20240116; t=1712479437; c=relaxed/simple;
+	bh=1cfKYyrnEvztQUnFWzwlLx+l5JMLFzJIb6cZ3/a5bbQ=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Kwm0IModx5nIcic+b3QydAI22E474NhwHEEDGGrf70ijNbOWqsPkHTI9EijdSmkZMqU/LRClUgbKNZy9PU2hU1y4H3K9fIlBxtuojoIDHcuBZAeCC6gsv5mhxzQJ2XzjjzdsmLNCMlSkgEkrCFUMj5UA8tcbj74zS+DPM5Dl6HU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mlTjVYq8; arc=none smtp.client-ip=209.85.218.53
+	 MIME-Version; b=RKQexpjzNJDPs+2rT51Rawg11Qd+qYOxRZXMgWUlckE72abTPxW0b+DWpzAJECTzFm8NVeX2bmtFaD2MvMrVEBOUhU992P0P1Hu1HNHvMjc+R0hTW8FG/5uZHELj8BGnhaBckMNgUELEkEJDsE1A871RXwVhr/x3pCcePhtnsB4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SQxMipHR; arc=none smtp.client-ip=209.85.208.45
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mlTjVYq8"
-Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-a51d05c50b2so20643966b.0
-        for <linux-kernel@vger.kernel.org>; Sun, 07 Apr 2024 01:43:46 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SQxMipHR"
+Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-56e0e1d162bso3569491a12.1
+        for <linux-kernel@vger.kernel.org>; Sun, 07 Apr 2024 01:43:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1712479425; x=1713084225; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1712479429; x=1713084229; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:sender:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=7X5+KOwLFw5wxxr4yK4f1vWf4/L1Olar3a9d+X8Qauk=;
-        b=mlTjVYq8KtaOl+PpkR5bSw+ptOGuZ1QJ9XBsYgEMdMAJwdjZ5DvZBLqf/naMh9Tm2L
-         s1+PlqlRxQxuLziBWQfEqczlv8796OwgOGk22+WBNkthqT2ZEBZFboe43hHi9Pm2rV7w
-         GmvPHjMkQo2Qyy4dCpoIjISD9V5l7ZmevH+ft1X8JHrpofeo44F1/KPMT9wNt/qKLKl4
-         fZf3ZkgmBUx+gKdPty80YQQFv2WADUHOH99iJdTnyeUIhHmsV2xVXhMlPY0n/A5S+PWx
-         WQIXH32z0jUrHS4tlWLHpiQW8U+QCYk7ar7jIwn2HFK6Ybx8LbsaN2KLOoXE1Yp9gpno
-         ebCg==
+        bh=tHtl7o0dYPtw1SC9aB/Vlm1DlmM+4sQQVOAdOTL2aE0=;
+        b=SQxMipHRUxIaoCN7oQRXgFejgabvt1SQT7wA/j7FSb9OYaLIOUET7HBz/hQpYO1tZV
+         48EES1DwuCjEd8jIoaLPfjfWeBiUscv3PbjKVZlGYIBmknCPJag61jeoV84xkJNOfTar
+         NhVWb8hsxDpYt4po/M08ZfTIgHlTyNHwlRNU2UpeclMYZn4b238F1dKRA9O2KaYsFJAH
+         1z0su7j2BU8Q1cvIqP4f8vu+Gl0FfE6zTmyYG1Rp5xwJ106BJRrYs+M5U/lmuEnEG2Qi
+         nDM2vg4e1yV9COZd6g3osbMxc8ZegodOww/Uv4yRlMlE5+rtZ0BLD+Yi3GsT/OoYwyha
+         cCLg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712479425; x=1713084225;
+        d=1e100.net; s=20230601; t=1712479429; x=1713084229;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:sender:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=7X5+KOwLFw5wxxr4yK4f1vWf4/L1Olar3a9d+X8Qauk=;
-        b=RnkG88k4MB9xQfMKSvNkOCLAJsMwobPzYBReeauzAsB31P5luc0sr72eNXHFEOfynP
-         7nx8AlKa0pDMHsOitdyR3Zh7x0XEHBMqVD/O2xYdh+c3EEwE3hEr2accHI3Tvi9uNeAp
-         kPwd8zfgrAasJWujAG4lIf5GpioYatUYu4GmogYqmKCxF1b7Iof9Qr5YYqvgeGfVPI/X
-         fAqm/SyHzOA0vtVsN072tzUhBXidarP7MpKHvmwooas3A0p2O7S5G/b+PC/Egl6TcVov
-         glIWapgu8OPpF9UTEt2GJBpvsqRImX4dz874W8h83nd3AASleUfUqQ88L7hO6ojF4p9j
-         9pTg==
-X-Gm-Message-State: AOJu0YxqY+9ip7hTaESX0qYfxCYkUGdxKp2jHnKBOZCX0LXNhl0zntPW
-	sGpsnjGGuXnmrWOQZ8G01w6ayoqw+8c6f1Imu9mGx/v7iX7Sk1nUA7t7uDpnkXE=
-X-Google-Smtp-Source: AGHT+IF/WtfxhIQeIrbtH5Scm0qgNed7RCQlvHGzybtcj/GG9AEyXj8Skw3vYf4Pglehjl2prfkTjQ==
-X-Received: by 2002:a17:907:985b:b0:a4e:109f:7b4b with SMTP id jj27-20020a170907985b00b00a4e109f7b4bmr4235700ejc.41.1712479423775;
-        Sun, 07 Apr 2024 01:43:43 -0700 (PDT)
+        bh=tHtl7o0dYPtw1SC9aB/Vlm1DlmM+4sQQVOAdOTL2aE0=;
+        b=qFJKMjha52Q8H8qRaXgkzWzSMhnvbgKcvfQ2MggKbK+LmIzC8uD220c69Uc1I6CLgB
+         gfmsgQDvt/OG8no/S5ilUrfa2Jwh94PZ5Gp8tUDPzlzu2Ks1cExiVk0OXVdCSktSFrVJ
+         wda+as/PhA+8a9UipFBN7hli5GaxqdhUKwZ7JP5lr0UNt4Qp7V8FwJobxeGOewjzHB2Z
+         9whQWpwCkLC8bm0xymCyzEOKwzsNHhjHGxvTHc18L6IMhESWtdQRRu2LDXLXEJvTEDFi
+         0VxeNuEAV3RN4P/5KvJRhrF9dhE+pOVbsf4o1H9nTuK7WFnMchZgsbM4mXQ7SMTRZyJV
+         FY0g==
+X-Gm-Message-State: AOJu0YyZJvf/8xxwlMsxFzpH54oWli5b5u+6IlQSceHIbHaDR0LP6x74
+	3bvSlu9QP5L2AwJaaFqpWCSSWJRz8KuHvzJbeG7iBol+MRxYBhlFPPyXZVP73lE=
+X-Google-Smtp-Source: AGHT+IF5fprmNgfQf7xZLIPNmHEVvA85Sa+CWkB0jFI7L/4sQlUCBx2hA9BkneQcvXf8fsdXUUKLrw==
+X-Received: by 2002:a17:906:81cd:b0:a51:a771:9e36 with SMTP id e13-20020a17090681cd00b00a51a7719e36mr3721932ejx.14.1712479427924;
+        Sun, 07 Apr 2024 01:43:47 -0700 (PDT)
 Received: from thule.. (84-236-113-28.pool.digikabel.hu. [84.236.113.28])
-        by smtp.gmail.com with ESMTPSA id d21-20020a170906c21500b00a4e28cacbddsm2891579ejz.57.2024.04.07.01.43.42
+        by smtp.gmail.com with ESMTPSA id d21-20020a170906c21500b00a4e28cacbddsm2891579ejz.57.2024.04.07.01.43.46
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 07 Apr 2024 01:43:43 -0700 (PDT)
+        Sun, 07 Apr 2024 01:43:46 -0700 (PDT)
 Sender: Ingo Molnar <mingo.kernel.org@gmail.com>
 From: Ingo Molnar <mingo@kernel.org>
 To: linux-kernel@vger.kernel.org
@@ -60,9 +60,9 @@ Cc: Peter Zijlstra <peterz@infradead.org>,
 	Shrikanth Hegde <sshegde@linux.ibm.com>,
 	Valentin Schneider <vschneid@redhat.com>,
 	Vincent Guittot <vincent.guittot@linaro.org>
-Subject: [PATCH 1/5] sched: Split out kernel/sched/syscalls.c from kernel/sched/core.c
-Date: Sun,  7 Apr 2024 10:43:15 +0200
-Message-Id: <20240407084319.1462211-2-mingo@kernel.org>
+Subject: [PATCH 3/5] sched: Split out kernel/sched/numa_balancing.c from kernel/sched/fair.c
+Date: Sun,  7 Apr 2024 10:43:17 +0200
+Message-Id: <20240407084319.1462211-4-mingo@kernel.org>
 X-Mailer: git-send-email 2.40.1
 In-Reply-To: <20240407084319.1462211-1-mingo@kernel.org>
 References: <20240407084319.1462211-1-mingo@kernel.org>
@@ -74,4022 +74,4717 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-core.c has become rather large, move most scheduler syscall
-related functionality into a separate file, syscalls.c.
+Much of the NUMA balancing code already lives in a single #ifdef
+block - move it over into its own file: kernel/sched/numa_balancing.c.
 
-Move the alloc_user_cpus_ptr(), __rt_effective_prio(),
-rt_effective_prio(), uclamp_none(), uclamp_se_set()
-and uclamp_bucket_id() inlines to kernel/sched/sched.h.
+Expose a handful of methods internally to facilitate this.
 
-Internally export the __sched_setscheduler(), __sched_setaffinity(),
-__setscheduler_prio(), set_load_weight(), enqueue_task(), dequeue_task(),
-check_class_changed(), splice_balance_callbacks() and balance_callbacks()
-methods to better facilitate this.
+This further shrinks the rather large kernel/sched/fair.c file.
 
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
 ---
- kernel/sched/Makefile   |    1 +
- kernel/sched/core.c     | 1950 ++++---------------------------------------------------------------
- kernel/sched/sched.h    |  106 +++-
- kernel/sched/syscalls.c | 1691 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
- 4 files changed, 1892 insertions(+), 1856 deletions(-)
+ kernel/sched/Makefile         |    1 +
+ kernel/sched/fair.c           | 2307 +------------------------------------------------------------
+ kernel/sched/numa_balancing.c | 2277 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ kernel/sched/sched.h          |   40 +-
+ 4 files changed, 2318 insertions(+), 2307 deletions(-)
 
 diff --git a/kernel/sched/Makefile b/kernel/sched/Makefile
-index 976092b7bd45..c7afe445480a 100644
+index 898f6062a2a7..45ab29e60fc7 100644
 --- a/kernel/sched/Makefile
 +++ b/kernel/sched/Makefile
-@@ -29,6 +29,7 @@ endif
- # build parallelizes well and finishes roughly at once:
- #
- obj-y += core.o
-+obj-y += syscalls.o
+@@ -32,5 +32,6 @@ obj-y += core.o
+ obj-y += syscalls.o
  obj-y += fair.o
+ obj-y += fair_balance.o
++obj-y += numa_balancing.o
  obj-y += build_policy.o
  obj-y += build_utility.o
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index 0621e4ee31de..7fbb53d27229 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -1324,7 +1324,7 @@ int tg_nop(struct task_group *tg, void *data)
- }
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index 9eba1c4e2a00..0197ba78b89c 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -107,7 +107,7 @@ static unsigned int sysctl_sched_cfs_bandwidth_slice		= 5000UL;
+ 
+ #ifdef CONFIG_NUMA_BALANCING
+ /* Restrict the NUMA promotion throughput (MB/s) for each target node. */
+-static unsigned int sysctl_numa_balancing_promote_rate_limit = 65536;
++unsigned int sysctl_numa_balancing_promote_rate_limit = 65536;
  #endif
  
--static void set_load_weight(struct task_struct *p, bool update_load)
-+void set_load_weight(struct task_struct *p, bool update_load)
- {
- 	int prio = p->static_prio - MAX_RT_PRIO;
- 	struct load_weight *load = &p->se.load;
-@@ -1384,7 +1384,7 @@ static unsigned int __maybe_unused sysctl_sched_uclamp_util_max = SCHED_CAPACITY
-  * This knob will not override the system default sched_util_clamp_min defined
-  * above.
+ #ifdef CONFIG_SYSCTL
+@@ -1256,2271 +1256,6 @@ update_stats_curr_start(struct cfs_rq *cfs_rq, struct sched_entity *se)
+  * Scheduling class queueing methods:
   */
--static unsigned int sysctl_sched_uclamp_util_min_rt_default = SCHED_CAPACITY_SCALE;
-+unsigned int sysctl_sched_uclamp_util_min_rt_default = SCHED_CAPACITY_SCALE;
  
- /* All clamps are required to be less or equal than these values */
- static struct uclamp_se uclamp_default[UCLAMP_CNT];
-@@ -1409,32 +1409,6 @@ static struct uclamp_se uclamp_default[UCLAMP_CNT];
-  */
- DEFINE_STATIC_KEY_FALSE(sched_uclamp_used);
- 
--/* Integer rounded range for each bucket */
--#define UCLAMP_BUCKET_DELTA DIV_ROUND_CLOSEST(SCHED_CAPACITY_SCALE, UCLAMP_BUCKETS)
--
--#define for_each_clamp_id(clamp_id) \
--	for ((clamp_id) = 0; (clamp_id) < UCLAMP_CNT; (clamp_id)++)
--
--static inline unsigned int uclamp_bucket_id(unsigned int clamp_value)
+-#ifdef CONFIG_SMP
+-bool is_core_idle(int cpu)
 -{
--	return min_t(unsigned int, clamp_value / UCLAMP_BUCKET_DELTA, UCLAMP_BUCKETS - 1);
--}
+-#ifdef CONFIG_SCHED_SMT
+-	int sibling;
 -
--static inline unsigned int uclamp_none(enum uclamp_id clamp_id)
--{
--	if (clamp_id == UCLAMP_MIN)
--		return 0;
--	return SCHED_CAPACITY_SCALE;
--}
+-	for_each_cpu(sibling, cpu_smt_mask(cpu)) {
+-		if (cpu == sibling)
+-			continue;
 -
--static inline void uclamp_se_set(struct uclamp_se *uc_se,
--				 unsigned int value, bool user_defined)
--{
--	uc_se->value = value;
--	uc_se->bucket_id = uclamp_bucket_id(value);
--	uc_se->user_defined = user_defined;
--}
--
- static inline unsigned int
- uclamp_idle_value(struct rq *rq, enum uclamp_id clamp_id,
- 		  unsigned int clamp_value)
-@@ -1898,107 +1872,6 @@ static int sysctl_sched_uclamp_handler(struct ctl_table *table, int write,
- }
- #endif
- 
--static int uclamp_validate(struct task_struct *p,
--			   const struct sched_attr *attr)
--{
--	int util_min = p->uclamp_req[UCLAMP_MIN].value;
--	int util_max = p->uclamp_req[UCLAMP_MAX].value;
--
--	if (attr->sched_flags & SCHED_FLAG_UTIL_CLAMP_MIN) {
--		util_min = attr->sched_util_min;
--
--		if (util_min + 1 > SCHED_CAPACITY_SCALE + 1)
--			return -EINVAL;
+-		if (!idle_cpu(sibling))
+-			return false;
 -	}
+-#endif
 -
--	if (attr->sched_flags & SCHED_FLAG_UTIL_CLAMP_MAX) {
--		util_max = attr->sched_util_max;
+-	return true;
+-}
+-#endif
 -
--		if (util_max + 1 > SCHED_CAPACITY_SCALE + 1)
--			return -EINVAL;
--	}
+-#ifdef CONFIG_NUMA
+-#define NUMA_IMBALANCE_MIN 2
 -
--	if (util_min != -1 && util_max != -1 && util_min > util_max)
--		return -EINVAL;
+-long adjust_numa_imbalance(int imbalance, int dst_running, int imb_numa_nr)
+-{
+-	/*
+-	 * Allow a NUMA imbalance if busy CPUs is less than the maximum
+-	 * threshold. Above this threshold, individual tasks may be contending
+-	 * for both memory bandwidth and any shared HT resources.  This is an
+-	 * approximation as the number of running tasks may not be related to
+-	 * the number of busy CPUs due to sched_setaffinity.
+-	 */
+-	if (dst_running > imb_numa_nr)
+-		return imbalance;
 -
 -	/*
--	 * We have valid uclamp attributes; make sure uclamp is enabled.
--	 *
--	 * We need to do that here, because enabling static branches is a
--	 * blocking operation which obviously cannot be done while holding
--	 * scheduler locks.
+-	 * Allow a small imbalance based on a simple pair of communicating
+-	 * tasks that remain local when the destination is lightly loaded.
 -	 */
--	static_branch_enable(&sched_uclamp_used);
+-	if (imbalance <= NUMA_IMBALANCE_MIN)
+-		return 0;
 -
--	return 0;
+-	return imbalance;
+-}
+-#endif /* CONFIG_NUMA */
+-
+-#ifdef CONFIG_NUMA_BALANCING
+-/*
+- * Approximate time to scan a full NUMA task in ms. The task scan period is
+- * calculated based on the tasks virtual memory size and
+- * numa_balancing_scan_size.
+- */
+-unsigned int sysctl_numa_balancing_scan_period_min = 1000;
+-unsigned int sysctl_numa_balancing_scan_period_max = 60000;
+-
+-/* Portion of address space to scan in MB */
+-unsigned int sysctl_numa_balancing_scan_size = 256;
+-
+-/* Scan @scan_size MB every @scan_period after an initial @scan_delay in ms */
+-unsigned int sysctl_numa_balancing_scan_delay = 1000;
+-
+-/* The page with hint page fault latency < threshold in ms is considered hot */
+-unsigned int sysctl_numa_balancing_hot_threshold = MSEC_PER_SEC;
+-
+-struct numa_group {
+-	refcount_t refcount;
+-
+-	spinlock_t lock; /* nr_tasks, tasks */
+-	int nr_tasks;
+-	pid_t gid;
+-	int active_nodes;
+-
+-	struct rcu_head rcu;
+-	unsigned long total_faults;
+-	unsigned long max_faults_cpu;
+-	/*
+-	 * faults[] array is split into two regions: faults_mem and faults_cpu.
+-	 *
+-	 * Faults_cpu is used to decide whether memory should move
+-	 * towards the CPU. As a consequence, these stats are weighted
+-	 * more by CPU use than by memory faults.
+-	 */
+-	unsigned long faults[];
+-};
+-
+-/*
+- * For functions that can be called in multiple contexts that permit reading
+- * ->numa_group (see struct task_struct for locking rules).
+- */
+-static struct numa_group *deref_task_numa_group(struct task_struct *p)
+-{
+-	return rcu_dereference_check(p->numa_group, p == current ||
+-		(lockdep_is_held(__rq_lockp(task_rq(p))) && !READ_ONCE(p->on_cpu)));
 -}
 -
--static bool uclamp_reset(const struct sched_attr *attr,
--			 enum uclamp_id clamp_id,
--			 struct uclamp_se *uc_se)
+-static struct numa_group *deref_curr_numa_group(struct task_struct *p)
 -{
--	/* Reset on sched class change for a non user-defined clamp value. */
--	if (likely(!(attr->sched_flags & SCHED_FLAG_UTIL_CLAMP)) &&
--	    !uc_se->user_defined)
--		return true;
+-	return rcu_dereference_protected(p->numa_group, p == current);
+-}
 -
--	/* Reset on sched_util_{min,max} == -1. */
--	if (clamp_id == UCLAMP_MIN &&
--	    attr->sched_flags & SCHED_FLAG_UTIL_CLAMP_MIN &&
--	    attr->sched_util_min == -1) {
--		return true;
+-static inline unsigned long group_faults_priv(struct numa_group *ng);
+-static inline unsigned long group_faults_shared(struct numa_group *ng);
+-
+-static unsigned int task_nr_scan_windows(struct task_struct *p)
+-{
+-	unsigned long rss = 0;
+-	unsigned long nr_scan_pages;
+-
+-	/*
+-	 * Calculations based on RSS as non-present and empty pages are skipped
+-	 * by the PTE scanner and NUMA hinting faults should be trapped based
+-	 * on resident pages
+-	 */
+-	nr_scan_pages = sysctl_numa_balancing_scan_size << (20 - PAGE_SHIFT);
+-	rss = get_mm_rss(p->mm);
+-	if (!rss)
+-		rss = nr_scan_pages;
+-
+-	rss = round_up(rss, nr_scan_pages);
+-	return rss / nr_scan_pages;
+-}
+-
+-/* For sanity's sake, never scan more PTEs than MAX_SCAN_WINDOW MB/sec. */
+-#define MAX_SCAN_WINDOW 2560
+-
+-static unsigned int task_scan_min(struct task_struct *p)
+-{
+-	unsigned int scan_size = READ_ONCE(sysctl_numa_balancing_scan_size);
+-	unsigned int scan, floor;
+-	unsigned int windows = 1;
+-
+-	if (scan_size < MAX_SCAN_WINDOW)
+-		windows = MAX_SCAN_WINDOW / scan_size;
+-	floor = 1000 / windows;
+-
+-	scan = sysctl_numa_balancing_scan_period_min / task_nr_scan_windows(p);
+-	return max_t(unsigned int, floor, scan);
+-}
+-
+-static unsigned int task_scan_start(struct task_struct *p)
+-{
+-	unsigned long smin = task_scan_min(p);
+-	unsigned long period = smin;
+-	struct numa_group *ng;
+-
+-	/* Scale the maximum scan period with the amount of shared memory. */
+-	rcu_read_lock();
+-	ng = rcu_dereference(p->numa_group);
+-	if (ng) {
+-		unsigned long shared = group_faults_shared(ng);
+-		unsigned long private = group_faults_priv(ng);
+-
+-		period *= refcount_read(&ng->refcount);
+-		period *= shared + 1;
+-		period /= private + shared + 1;
+-	}
+-	rcu_read_unlock();
+-
+-	return max(smin, period);
+-}
+-
+-static unsigned int task_scan_max(struct task_struct *p)
+-{
+-	unsigned long smin = task_scan_min(p);
+-	unsigned long smax;
+-	struct numa_group *ng;
+-
+-	/* Watch for min being lower than max due to floor calculations */
+-	smax = sysctl_numa_balancing_scan_period_max / task_nr_scan_windows(p);
+-
+-	/* Scale the maximum scan period with the amount of shared memory. */
+-	ng = deref_curr_numa_group(p);
+-	if (ng) {
+-		unsigned long shared = group_faults_shared(ng);
+-		unsigned long private = group_faults_priv(ng);
+-		unsigned long period = smax;
+-
+-		period *= refcount_read(&ng->refcount);
+-		period *= shared + 1;
+-		period /= private + shared + 1;
+-
+-		smax = max(smax, period);
 -	}
 -
--	if (clamp_id == UCLAMP_MAX &&
--	    attr->sched_flags & SCHED_FLAG_UTIL_CLAMP_MAX &&
--	    attr->sched_util_max == -1) {
+-	return max(smin, smax);
+-}
+-
+-static void account_numa_enqueue(struct rq *rq, struct task_struct *p)
+-{
+-	rq->nr_numa_running += (p->numa_preferred_nid != NUMA_NO_NODE);
+-	rq->nr_preferred_running += (p->numa_preferred_nid == task_node(p));
+-}
+-
+-static void account_numa_dequeue(struct rq *rq, struct task_struct *p)
+-{
+-	rq->nr_numa_running -= (p->numa_preferred_nid != NUMA_NO_NODE);
+-	rq->nr_preferred_running -= (p->numa_preferred_nid == task_node(p));
+-}
+-
+-/* Shared or private faults. */
+-#define NR_NUMA_HINT_FAULT_TYPES 2
+-
+-/* Memory and CPU locality */
+-#define NR_NUMA_HINT_FAULT_STATS (NR_NUMA_HINT_FAULT_TYPES * 2)
+-
+-/* Averaged statistics, and temporary buffers. */
+-#define NR_NUMA_HINT_FAULT_BUCKETS (NR_NUMA_HINT_FAULT_STATS * 2)
+-
+-pid_t task_numa_group_id(struct task_struct *p)
+-{
+-	struct numa_group *ng;
+-	pid_t gid = 0;
+-
+-	rcu_read_lock();
+-	ng = rcu_dereference(p->numa_group);
+-	if (ng)
+-		gid = ng->gid;
+-	rcu_read_unlock();
+-
+-	return gid;
+-}
+-
+-/*
+- * The averaged statistics, shared & private, memory & CPU,
+- * occupy the first half of the array. The second half of the
+- * array is for current counters, which are averaged into the
+- * first set by task_numa_placement.
+- */
+-static inline int task_faults_idx(enum numa_faults_stats s, int nid, int priv)
+-{
+-	return NR_NUMA_HINT_FAULT_TYPES * (s * nr_node_ids + nid) + priv;
+-}
+-
+-static inline unsigned long task_faults(struct task_struct *p, int nid)
+-{
+-	if (!p->numa_faults)
+-		return 0;
+-
+-	return p->numa_faults[task_faults_idx(NUMA_MEM, nid, 0)] +
+-		p->numa_faults[task_faults_idx(NUMA_MEM, nid, 1)];
+-}
+-
+-static inline unsigned long group_faults(struct task_struct *p, int nid)
+-{
+-	struct numa_group *ng = deref_task_numa_group(p);
+-
+-	if (!ng)
+-		return 0;
+-
+-	return ng->faults[task_faults_idx(NUMA_MEM, nid, 0)] +
+-		ng->faults[task_faults_idx(NUMA_MEM, nid, 1)];
+-}
+-
+-static inline unsigned long group_faults_cpu(struct numa_group *group, int nid)
+-{
+-	return group->faults[task_faults_idx(NUMA_CPU, nid, 0)] +
+-		group->faults[task_faults_idx(NUMA_CPU, nid, 1)];
+-}
+-
+-static inline unsigned long group_faults_priv(struct numa_group *ng)
+-{
+-	unsigned long faults = 0;
+-	int node;
+-
+-	for_each_online_node(node) {
+-		faults += ng->faults[task_faults_idx(NUMA_MEM, node, 1)];
+-	}
+-
+-	return faults;
+-}
+-
+-static inline unsigned long group_faults_shared(struct numa_group *ng)
+-{
+-	unsigned long faults = 0;
+-	int node;
+-
+-	for_each_online_node(node) {
+-		faults += ng->faults[task_faults_idx(NUMA_MEM, node, 0)];
+-	}
+-
+-	return faults;
+-}
+-
+-/*
+- * A node triggering more than 1/3 as many NUMA faults as the maximum is
+- * considered part of a numa group's pseudo-interleaving set. Migrations
+- * between these nodes are slowed down, to allow things to settle down.
+- */
+-#define ACTIVE_NODE_FRACTION 3
+-
+-static bool numa_is_active_node(int nid, struct numa_group *ng)
+-{
+-	return group_faults_cpu(ng, nid) * ACTIVE_NODE_FRACTION > ng->max_faults_cpu;
+-}
+-
+-/* Handle placement on systems where not all nodes are directly connected. */
+-static unsigned long score_nearby_nodes(struct task_struct *p, int nid,
+-					int lim_dist, bool task)
+-{
+-	unsigned long score = 0;
+-	int node, max_dist;
+-
+-	/*
+-	 * All nodes are directly connected, and the same distance
+-	 * from each other. No need for fancy placement algorithms.
+-	 */
+-	if (sched_numa_topology_type == NUMA_DIRECT)
+-		return 0;
+-
+-	/* sched_max_numa_distance may be changed in parallel. */
+-	max_dist = READ_ONCE(sched_max_numa_distance);
+-	/*
+-	 * This code is called for each node, introducing N^2 complexity,
+-	 * which should be OK given the number of nodes rarely exceeds 8.
+-	 */
+-	for_each_online_node(node) {
+-		unsigned long faults;
+-		int dist = node_distance(nid, node);
+-
+-		/*
+-		 * The furthest away nodes in the system are not interesting
+-		 * for placement; nid was already counted.
+-		 */
+-		if (dist >= max_dist || node == nid)
+-			continue;
+-
+-		/*
+-		 * On systems with a backplane NUMA topology, compare groups
+-		 * of nodes, and move tasks towards the group with the most
+-		 * memory accesses. When comparing two nodes at distance
+-		 * "hoplimit", only nodes closer by than "hoplimit" are part
+-		 * of each group. Skip other nodes.
+-		 */
+-		if (sched_numa_topology_type == NUMA_BACKPLANE && dist >= lim_dist)
+-			continue;
+-
+-		/* Add up the faults from nearby nodes. */
+-		if (task)
+-			faults = task_faults(p, node);
+-		else
+-			faults = group_faults(p, node);
+-
+-		/*
+-		 * On systems with a glueless mesh NUMA topology, there are
+-		 * no fixed "groups of nodes". Instead, nodes that are not
+-		 * directly connected bounce traffic through intermediate
+-		 * nodes; a numa_group can occupy any set of nodes.
+-		 * The further away a node is, the less the faults count.
+-		 * This seems to result in good task placement.
+-		 */
+-		if (sched_numa_topology_type == NUMA_GLUELESS_MESH) {
+-			faults *= (max_dist - dist);
+-			faults /= (max_dist - LOCAL_DISTANCE);
+-		}
+-
+-		score += faults;
+-	}
+-
+-	return score;
+-}
+-
+-/*
+- * These return the fraction of accesses done by a particular task, or
+- * task group, on a particular numa node.  The group weight is given a
+- * larger multiplier, in order to group tasks together that are almost
+- * evenly spread out between numa nodes.
+- */
+-unsigned long task_weight(struct task_struct *p, int nid, int dist)
+-{
+-	unsigned long faults, total_faults;
+-
+-	if (!p->numa_faults)
+-		return 0;
+-
+-	total_faults = p->total_numa_faults;
+-
+-	if (!total_faults)
+-		return 0;
+-
+-	faults = task_faults(p, nid);
+-	faults += score_nearby_nodes(p, nid, dist, true);
+-
+-	return 1000 * faults / total_faults;
+-}
+-
+-unsigned long group_weight(struct task_struct *p, int nid, int dist)
+-{
+-	struct numa_group *ng = deref_task_numa_group(p);
+-	unsigned long faults, total_faults;
+-
+-	if (!ng)
+-		return 0;
+-
+-	total_faults = ng->total_faults;
+-
+-	if (!total_faults)
+-		return 0;
+-
+-	faults = group_faults(p, nid);
+-	faults += score_nearby_nodes(p, nid, dist, false);
+-
+-	return 1000 * faults / total_faults;
+-}
+-
+-/*
+- * If memory tiering mode is enabled, cpupid of slow memory page is
+- * used to record scan time instead of CPU and PID.  When tiering mode
+- * is disabled at run time, the scan time (in cpupid) will be
+- * interpreted as CPU and PID.  So CPU needs to be checked to avoid to
+- * access out of array bound.
+- */
+-static inline bool cpupid_valid(int cpupid)
+-{
+-	return cpupid_to_cpu(cpupid) < nr_cpu_ids;
+-}
+-
+-/*
+- * For memory tiering mode, if there are enough free pages (more than
+- * enough watermark defined here) in fast memory node, to take full
+- * advantage of fast memory capacity, all recently accessed slow
+- * memory pages will be migrated to fast memory node without
+- * considering hot threshold.
+- */
+-static bool pgdat_free_space_enough(struct pglist_data *pgdat)
+-{
+-	int z;
+-	unsigned long enough_wmark;
+-
+-	enough_wmark = max(1UL * 1024 * 1024 * 1024 >> PAGE_SHIFT,
+-			   pgdat->node_present_pages >> 4);
+-	for (z = pgdat->nr_zones - 1; z >= 0; z--) {
+-		struct zone *zone = pgdat->node_zones + z;
+-
+-		if (!populated_zone(zone))
+-			continue;
+-
+-		if (zone_watermark_ok(zone, 0,
+-				      wmark_pages(zone, WMARK_PROMO) + enough_wmark,
+-				      ZONE_MOVABLE, 0))
+-			return true;
+-	}
+-	return false;
+-}
+-
+-/*
+- * For memory tiering mode, when page tables are scanned, the scan
+- * time will be recorded in struct page in addition to make page
+- * PROT_NONE for slow memory page.  So when the page is accessed, in
+- * hint page fault handler, the hint page fault latency is calculated
+- * via,
+- *
+- *	hint page fault latency = hint page fault time - scan time
+- *
+- * The smaller the hint page fault latency, the higher the possibility
+- * for the page to be hot.
+- */
+-static int numa_hint_fault_latency(struct folio *folio)
+-{
+-	int last_time, time;
+-
+-	time = jiffies_to_msecs(jiffies);
+-	last_time = folio_xchg_access_time(folio, time);
+-
+-	return (time - last_time) & PAGE_ACCESS_TIME_MASK;
+-}
+-
+-/*
+- * For memory tiering mode, too high promotion/demotion throughput may
+- * hurt application latency.  So we provide a mechanism to rate limit
+- * the number of pages that are tried to be promoted.
+- */
+-static bool numa_promotion_rate_limit(struct pglist_data *pgdat,
+-				      unsigned long rate_limit, int nr)
+-{
+-	unsigned long nr_cand;
+-	unsigned int now, start;
+-
+-	now = jiffies_to_msecs(jiffies);
+-	mod_node_page_state(pgdat, PGPROMOTE_CANDIDATE, nr);
+-	nr_cand = node_page_state(pgdat, PGPROMOTE_CANDIDATE);
+-	start = pgdat->nbp_rl_start;
+-	if (now - start > MSEC_PER_SEC &&
+-	    cmpxchg(&pgdat->nbp_rl_start, start, now) == start)
+-		pgdat->nbp_rl_nr_cand = nr_cand;
+-	if (nr_cand - pgdat->nbp_rl_nr_cand >= rate_limit)
+-		return true;
+-	return false;
+-}
+-
+-#define NUMA_MIGRATION_ADJUST_STEPS	16
+-
+-static void numa_promotion_adjust_threshold(struct pglist_data *pgdat,
+-					    unsigned long rate_limit,
+-					    unsigned int ref_th)
+-{
+-	unsigned int now, start, th_period, unit_th, th;
+-	unsigned long nr_cand, ref_cand, diff_cand;
+-
+-	now = jiffies_to_msecs(jiffies);
+-	th_period = sysctl_numa_balancing_scan_period_max;
+-	start = pgdat->nbp_th_start;
+-	if (now - start > th_period &&
+-	    cmpxchg(&pgdat->nbp_th_start, start, now) == start) {
+-		ref_cand = rate_limit *
+-			sysctl_numa_balancing_scan_period_max / MSEC_PER_SEC;
+-		nr_cand = node_page_state(pgdat, PGPROMOTE_CANDIDATE);
+-		diff_cand = nr_cand - pgdat->nbp_th_nr_cand;
+-		unit_th = ref_th * 2 / NUMA_MIGRATION_ADJUST_STEPS;
+-		th = pgdat->nbp_threshold ? : ref_th;
+-		if (diff_cand > ref_cand * 11 / 10)
+-			th = max(th - unit_th, unit_th);
+-		else if (diff_cand < ref_cand * 9 / 10)
+-			th = min(th + unit_th, ref_th * 2);
+-		pgdat->nbp_th_nr_cand = nr_cand;
+-		pgdat->nbp_threshold = th;
+-	}
+-}
+-
+-bool should_numa_migrate_memory(struct task_struct *p, struct folio *folio,
+-				int src_nid, int dst_cpu)
+-{
+-	struct numa_group *ng = deref_curr_numa_group(p);
+-	int dst_nid = cpu_to_node(dst_cpu);
+-	int last_cpupid, this_cpupid;
+-
+-	/*
+-	 * Cannot migrate to memoryless nodes.
+-	 */
+-	if (!node_state(dst_nid, N_MEMORY))
+-		return false;
+-
+-	/*
+-	 * The pages in slow memory node should be migrated according
+-	 * to hot/cold instead of private/shared.
+-	 */
+-	if (sysctl_numa_balancing_mode & NUMA_BALANCING_MEMORY_TIERING &&
+-	    !node_is_toptier(src_nid)) {
+-		struct pglist_data *pgdat;
+-		unsigned long rate_limit;
+-		unsigned int latency, th, def_th;
+-
+-		pgdat = NODE_DATA(dst_nid);
+-		if (pgdat_free_space_enough(pgdat)) {
+-			/* workload changed, reset hot threshold */
+-			pgdat->nbp_threshold = 0;
+-			return true;
+-		}
+-
+-		def_th = sysctl_numa_balancing_hot_threshold;
+-		rate_limit = sysctl_numa_balancing_promote_rate_limit << \
+-			(20 - PAGE_SHIFT);
+-		numa_promotion_adjust_threshold(pgdat, rate_limit, def_th);
+-
+-		th = pgdat->nbp_threshold ? : def_th;
+-		latency = numa_hint_fault_latency(folio);
+-		if (latency >= th)
+-			return false;
+-
+-		return !numa_promotion_rate_limit(pgdat, rate_limit,
+-						  folio_nr_pages(folio));
+-	}
+-
+-	this_cpupid = cpu_pid_to_cpupid(dst_cpu, current->pid);
+-	last_cpupid = folio_xchg_last_cpupid(folio, this_cpupid);
+-
+-	if (!(sysctl_numa_balancing_mode & NUMA_BALANCING_MEMORY_TIERING) &&
+-	    !node_is_toptier(src_nid) && !cpupid_valid(last_cpupid))
+-		return false;
+-
+-	/*
+-	 * Allow first faults or private faults to migrate immediately early in
+-	 * the lifetime of a task. The magic number 4 is based on waiting for
+-	 * two full passes of the "multi-stage node selection" test that is
+-	 * executed below.
+-	 */
+-	if ((p->numa_preferred_nid == NUMA_NO_NODE || p->numa_scan_seq <= 4) &&
+-	    (cpupid_pid_unset(last_cpupid) || cpupid_match_pid(p, last_cpupid)))
+-		return true;
+-
+-	/*
+-	 * Multi-stage node selection is used in conjunction with a periodic
+-	 * migration fault to build a temporal task<->page relation. By using
+-	 * a two-stage filter we remove short/unlikely relations.
+-	 *
+-	 * Using P(p) ~ n_p / n_t as per frequentist probability, we can equate
+-	 * a task's usage of a particular page (n_p) per total usage of this
+-	 * page (n_t) (in a given time-span) to a probability.
+-	 *
+-	 * Our periodic faults will sample this probability and getting the
+-	 * same result twice in a row, given these samples are fully
+-	 * independent, is then given by P(n)^2, provided our sample period
+-	 * is sufficiently short compared to the usage pattern.
+-	 *
+-	 * This quadric squishes small probabilities, making it less likely we
+-	 * act on an unlikely task<->page relation.
+-	 */
+-	if (!cpupid_pid_unset(last_cpupid) &&
+-				cpupid_to_nid(last_cpupid) != dst_nid)
+-		return false;
+-
+-	/* Always allow migrate on private faults */
+-	if (cpupid_match_pid(p, last_cpupid))
+-		return true;
+-
+-	/* A shared fault, but p->numa_group has not been set up yet. */
+-	if (!ng)
+-		return true;
+-
+-	/*
+-	 * Destination node is much more heavily used than the source
+-	 * node? Allow migration.
+-	 */
+-	if (group_faults_cpu(ng, dst_nid) > group_faults_cpu(ng, src_nid) *
+-					ACTIVE_NODE_FRACTION)
+-		return true;
+-
+-	/*
+-	 * Distribute memory according to CPU & memory use on each node,
+-	 * with 3/4 hysteresis to avoid unnecessary memory migrations:
+-	 *
+-	 * faults_cpu(dst)   3   faults_cpu(src)
+-	 * --------------- * - > ---------------
+-	 * faults_mem(dst)   4   faults_mem(src)
+-	 */
+-	return group_faults_cpu(ng, dst_nid) * group_faults(p, src_nid) * 3 >
+-	       group_faults_cpu(ng, src_nid) * group_faults(p, dst_nid) * 4;
+-}
+-
+-/*
+- * 'numa_type' describes the node at the moment of load balancing.
+- */
+-enum numa_type {
+-	/* The node has spare capacity that can be used to run more tasks.  */
+-	node_has_spare = 0,
+-	/*
+-	 * The node is fully used and the tasks don't compete for more CPU
+-	 * cycles. Nevertheless, some tasks might wait before running.
+-	 */
+-	node_fully_busy,
+-	/*
+-	 * The node is overloaded and can't provide expected CPU cycles to all
+-	 * tasks.
+-	 */
+-	node_overloaded
+-};
+-
+-/* Cached statistics for all CPUs within a node */
+-struct numa_stats {
+-	unsigned long load;
+-	unsigned long runnable;
+-	unsigned long util;
+-	/* Total compute capacity of CPUs on a node */
+-	unsigned long compute_capacity;
+-	unsigned int nr_running;
+-	unsigned int weight;
+-	enum numa_type node_type;
+-	int idle_cpu;
+-};
+-
+-struct task_numa_env {
+-	struct task_struct *p;
+-
+-	int src_cpu, src_nid;
+-	int dst_cpu, dst_nid;
+-	int imb_numa_nr;
+-
+-	struct numa_stats src_stats, dst_stats;
+-
+-	int imbalance_pct;
+-	int dist;
+-
+-	struct task_struct *best_task;
+-	long best_imp;
+-	int best_cpu;
+-};
+-
+-static unsigned long cpu_load(struct rq *rq);
+-
+-static inline enum
+-numa_type numa_classify(unsigned int imbalance_pct,
+-			 struct numa_stats *ns)
+-{
+-	if ((ns->nr_running > ns->weight) &&
+-	    (((ns->compute_capacity * 100) < (ns->util * imbalance_pct)) ||
+-	     ((ns->compute_capacity * imbalance_pct) < (ns->runnable * 100))))
+-		return node_overloaded;
+-
+-	if ((ns->nr_running < ns->weight) ||
+-	    (((ns->compute_capacity * 100) > (ns->util * imbalance_pct)) &&
+-	     ((ns->compute_capacity * imbalance_pct) > (ns->runnable * 100))))
+-		return node_has_spare;
+-
+-	return node_fully_busy;
+-}
+-
+-#ifdef CONFIG_SCHED_SMT
+-/* Forward declarations of select_idle_sibling helpers */
+-static inline bool test_idle_cores(int cpu);
+-static inline int numa_idle_core(int idle_core, int cpu)
+-{
+-	if (!static_branch_likely(&sched_smt_present) ||
+-	    idle_core >= 0 || !test_idle_cores(cpu))
+-		return idle_core;
+-
+-	/*
+-	 * Prefer cores instead of packing HT siblings
+-	 * and triggering future load balancing.
+-	 */
+-	if (is_core_idle(cpu))
+-		idle_core = cpu;
+-
+-	return idle_core;
+-}
+-#else
+-static inline int numa_idle_core(int idle_core, int cpu)
+-{
+-	return idle_core;
+-}
+-#endif
+-
+-/*
+- * Gather all necessary information to make NUMA balancing placement
+- * decisions that are compatible with standard load balancer. This
+- * borrows code and logic from update_sg_lb_stats but sharing a
+- * common implementation is impractical.
+- */
+-static void update_numa_stats(struct task_numa_env *env,
+-			      struct numa_stats *ns, int nid,
+-			      bool find_idle)
+-{
+-	int cpu, idle_core = -1;
+-
+-	memset(ns, 0, sizeof(*ns));
+-	ns->idle_cpu = -1;
+-
+-	rcu_read_lock();
+-	for_each_cpu(cpu, cpumask_of_node(nid)) {
+-		struct rq *rq = cpu_rq(cpu);
+-
+-		ns->load += cpu_load(rq);
+-		ns->runnable += cpu_runnable(rq);
+-		ns->util += cpu_util_cfs(cpu);
+-		ns->nr_running += rq->cfs.h_nr_running;
+-		ns->compute_capacity += capacity_of(cpu);
+-
+-		if (find_idle && idle_core < 0 && !rq->nr_running && idle_cpu(cpu)) {
+-			if (READ_ONCE(rq->numa_migrate_on) ||
+-			    !cpumask_test_cpu(cpu, env->p->cpus_ptr))
+-				continue;
+-
+-			if (ns->idle_cpu == -1)
+-				ns->idle_cpu = cpu;
+-
+-			idle_core = numa_idle_core(idle_core, cpu);
+-		}
+-	}
+-	rcu_read_unlock();
+-
+-	ns->weight = cpumask_weight(cpumask_of_node(nid));
+-
+-	ns->node_type = numa_classify(env->imbalance_pct, ns);
+-
+-	if (idle_core >= 0)
+-		ns->idle_cpu = idle_core;
+-}
+-
+-static void task_numa_assign(struct task_numa_env *env,
+-			     struct task_struct *p, long imp)
+-{
+-	struct rq *rq = cpu_rq(env->dst_cpu);
+-
+-	/* Check if run-queue part of active NUMA balance. */
+-	if (env->best_cpu != env->dst_cpu && xchg(&rq->numa_migrate_on, 1)) {
+-		int cpu;
+-		int start = env->dst_cpu;
+-
+-		/* Find alternative idle CPU. */
+-		for_each_cpu_wrap(cpu, cpumask_of_node(env->dst_nid), start + 1) {
+-			if (cpu == env->best_cpu || !idle_cpu(cpu) ||
+-			    !cpumask_test_cpu(cpu, env->p->cpus_ptr)) {
+-				continue;
+-			}
+-
+-			env->dst_cpu = cpu;
+-			rq = cpu_rq(env->dst_cpu);
+-			if (!xchg(&rq->numa_migrate_on, 1))
+-				goto assign;
+-		}
+-
+-		/* Failed to find an alternative idle CPU */
+-		return;
+-	}
+-
+-assign:
+-	/*
+-	 * Clear previous best_cpu/rq numa-migrate flag, since task now
+-	 * found a better CPU to move/swap.
+-	 */
+-	if (env->best_cpu != -1 && env->best_cpu != env->dst_cpu) {
+-		rq = cpu_rq(env->best_cpu);
+-		WRITE_ONCE(rq->numa_migrate_on, 0);
+-	}
+-
+-	if (env->best_task)
+-		put_task_struct(env->best_task);
+-	if (p)
+-		get_task_struct(p);
+-
+-	env->best_task = p;
+-	env->best_imp = imp;
+-	env->best_cpu = env->dst_cpu;
+-}
+-
+-static bool load_too_imbalanced(long src_load, long dst_load,
+-				struct task_numa_env *env)
+-{
+-	long imb, old_imb;
+-	long orig_src_load, orig_dst_load;
+-	long src_capacity, dst_capacity;
+-
+-	/*
+-	 * The load is corrected for the CPU capacity available on each node.
+-	 *
+-	 * src_load        dst_load
+-	 * ------------ vs ---------
+-	 * src_capacity    dst_capacity
+-	 */
+-	src_capacity = env->src_stats.compute_capacity;
+-	dst_capacity = env->dst_stats.compute_capacity;
+-
+-	imb = abs(dst_load * src_capacity - src_load * dst_capacity);
+-
+-	orig_src_load = env->src_stats.load;
+-	orig_dst_load = env->dst_stats.load;
+-
+-	old_imb = abs(orig_dst_load * src_capacity - orig_src_load * dst_capacity);
+-
+-	/* Would this change make things worse? */
+-	return (imb > old_imb);
+-}
+-
+-/*
+- * Maximum NUMA importance can be 1998 (2*999);
+- * SMALLIMP @ 30 would be close to 1998/64.
+- * Used to deter task migration.
+- */
+-#define SMALLIMP	30
+-
+-/*
+- * This checks if the overall compute and NUMA accesses of the system would
+- * be improved if the source tasks was migrated to the target dst_cpu taking
+- * into account that it might be best if task running on the dst_cpu should
+- * be exchanged with the source task
+- */
+-static bool task_numa_compare(struct task_numa_env *env,
+-			      long taskimp, long groupimp, bool maymove)
+-{
+-	struct numa_group *cur_ng, *p_ng = deref_curr_numa_group(env->p);
+-	struct rq *dst_rq = cpu_rq(env->dst_cpu);
+-	long imp = p_ng ? groupimp : taskimp;
+-	struct task_struct *cur;
+-	long src_load, dst_load;
+-	int dist = env->dist;
+-	long moveimp = imp;
+-	long load;
+-	bool stopsearch = false;
+-
+-	if (READ_ONCE(dst_rq->numa_migrate_on))
+-		return false;
+-
+-	rcu_read_lock();
+-	cur = rcu_dereference(dst_rq->curr);
+-	if (cur && ((cur->flags & PF_EXITING) || is_idle_task(cur)))
+-		cur = NULL;
+-
+-	/*
+-	 * Because we have preemption enabled we can get migrated around and
+-	 * end try selecting ourselves (current == env->p) as a swap candidate.
+-	 */
+-	if (cur == env->p) {
+-		stopsearch = true;
+-		goto unlock;
+-	}
+-
+-	if (!cur) {
+-		if (maymove && moveimp >= env->best_imp)
+-			goto assign;
+-		else
+-			goto unlock;
+-	}
+-
+-	/* Skip this swap candidate if cannot move to the source cpu. */
+-	if (!cpumask_test_cpu(env->src_cpu, cur->cpus_ptr))
+-		goto unlock;
+-
+-	/*
+-	 * Skip this swap candidate if it is not moving to its preferred
+-	 * node and the best task is.
+-	 */
+-	if (env->best_task &&
+-	    env->best_task->numa_preferred_nid == env->src_nid &&
+-	    cur->numa_preferred_nid != env->src_nid) {
+-		goto unlock;
+-	}
+-
+-	/*
+-	 * "imp" is the fault differential for the source task between the
+-	 * source and destination node. Calculate the total differential for
+-	 * the source task and potential destination task. The more negative
+-	 * the value is, the more remote accesses that would be expected to
+-	 * be incurred if the tasks were swapped.
+-	 *
+-	 * If dst and source tasks are in the same NUMA group, or not
+-	 * in any group then look only at task weights.
+-	 */
+-	cur_ng = rcu_dereference(cur->numa_group);
+-	if (cur_ng == p_ng) {
+-		/*
+-		 * Do not swap within a group or between tasks that have
+-		 * no group if there is spare capacity. Swapping does
+-		 * not address the load imbalance and helps one task at
+-		 * the cost of punishing another.
+-		 */
+-		if (env->dst_stats.node_type == node_has_spare)
+-			goto unlock;
+-
+-		imp = taskimp + task_weight(cur, env->src_nid, dist) -
+-		      task_weight(cur, env->dst_nid, dist);
+-		/*
+-		 * Add some hysteresis to prevent swapping the
+-		 * tasks within a group over tiny differences.
+-		 */
+-		if (cur_ng)
+-			imp -= imp / 16;
+-	} else {
+-		/*
+-		 * Compare the group weights. If a task is all by itself
+-		 * (not part of a group), use the task weight instead.
+-		 */
+-		if (cur_ng && p_ng)
+-			imp += group_weight(cur, env->src_nid, dist) -
+-			       group_weight(cur, env->dst_nid, dist);
+-		else
+-			imp += task_weight(cur, env->src_nid, dist) -
+-			       task_weight(cur, env->dst_nid, dist);
+-	}
+-
+-	/* Discourage picking a task already on its preferred node */
+-	if (cur->numa_preferred_nid == env->dst_nid)
+-		imp -= imp / 16;
+-
+-	/*
+-	 * Encourage picking a task that moves to its preferred node.
+-	 * This potentially makes imp larger than it's maximum of
+-	 * 1998 (see SMALLIMP and task_weight for why) but in this
+-	 * case, it does not matter.
+-	 */
+-	if (cur->numa_preferred_nid == env->src_nid)
+-		imp += imp / 8;
+-
+-	if (maymove && moveimp > imp && moveimp > env->best_imp) {
+-		imp = moveimp;
+-		cur = NULL;
+-		goto assign;
+-	}
+-
+-	/*
+-	 * Prefer swapping with a task moving to its preferred node over a
+-	 * task that is not.
+-	 */
+-	if (env->best_task && cur->numa_preferred_nid == env->src_nid &&
+-	    env->best_task->numa_preferred_nid != env->src_nid) {
+-		goto assign;
+-	}
+-
+-	/*
+-	 * If the NUMA importance is less than SMALLIMP,
+-	 * task migration might only result in ping pong
+-	 * of tasks and also hurt performance due to cache
+-	 * misses.
+-	 */
+-	if (imp < SMALLIMP || imp <= env->best_imp + SMALLIMP / 2)
+-		goto unlock;
+-
+-	/*
+-	 * In the overloaded case, try and keep the load balanced.
+-	 */
+-	load = task_h_load(env->p) - task_h_load(cur);
+-	if (!load)
+-		goto assign;
+-
+-	dst_load = env->dst_stats.load + load;
+-	src_load = env->src_stats.load - load;
+-
+-	if (load_too_imbalanced(src_load, dst_load, env))
+-		goto unlock;
+-
+-assign:
+-	/* Evaluate an idle CPU for a task numa move. */
+-	if (!cur) {
+-		int cpu = env->dst_stats.idle_cpu;
+-
+-		/* Nothing cached so current CPU went idle since the search. */
+-		if (cpu < 0)
+-			cpu = env->dst_cpu;
+-
+-		/*
+-		 * If the CPU is no longer truly idle and the previous best CPU
+-		 * is, keep using it.
+-		 */
+-		if (!idle_cpu(cpu) && env->best_cpu >= 0 &&
+-		    idle_cpu(env->best_cpu)) {
+-			cpu = env->best_cpu;
+-		}
+-
+-		env->dst_cpu = cpu;
+-	}
+-
+-	task_numa_assign(env, cur, imp);
+-
+-	/*
+-	 * If a move to idle is allowed because there is capacity or load
+-	 * balance improves then stop the search. While a better swap
+-	 * candidate may exist, a search is not free.
+-	 */
+-	if (maymove && !cur && env->best_cpu >= 0 && idle_cpu(env->best_cpu))
+-		stopsearch = true;
+-
+-	/*
+-	 * If a swap candidate must be identified and the current best task
+-	 * moves its preferred node then stop the search.
+-	 */
+-	if (!maymove && env->best_task &&
+-	    env->best_task->numa_preferred_nid == env->src_nid) {
+-		stopsearch = true;
+-	}
+-unlock:
+-	rcu_read_unlock();
+-
+-	return stopsearch;
+-}
+-
+-static void task_numa_find_cpu(struct task_numa_env *env,
+-				long taskimp, long groupimp)
+-{
+-	bool maymove = false;
+-	int cpu;
+-
+-	/*
+-	 * If dst node has spare capacity, then check if there is an
+-	 * imbalance that would be overruled by the load balancer.
+-	 */
+-	if (env->dst_stats.node_type == node_has_spare) {
+-		unsigned int imbalance;
+-		int src_running, dst_running;
+-
+-		/*
+-		 * Would movement cause an imbalance? Note that if src has
+-		 * more running tasks that the imbalance is ignored as the
+-		 * move improves the imbalance from the perspective of the
+-		 * CPU load balancer.
+-		 * */
+-		src_running = env->src_stats.nr_running - 1;
+-		dst_running = env->dst_stats.nr_running + 1;
+-		imbalance = max(0, dst_running - src_running);
+-		imbalance = adjust_numa_imbalance(imbalance, dst_running,
+-						  env->imb_numa_nr);
+-
+-		/* Use idle CPU if there is no imbalance */
+-		if (!imbalance) {
+-			maymove = true;
+-			if (env->dst_stats.idle_cpu >= 0) {
+-				env->dst_cpu = env->dst_stats.idle_cpu;
+-				task_numa_assign(env, NULL, 0);
+-				return;
+-			}
+-		}
+-	} else {
+-		long src_load, dst_load, load;
+-		/*
+-		 * If the improvement from just moving env->p direction is better
+-		 * than swapping tasks around, check if a move is possible.
+-		 */
+-		load = task_h_load(env->p);
+-		dst_load = env->dst_stats.load + load;
+-		src_load = env->src_stats.load - load;
+-		maymove = !load_too_imbalanced(src_load, dst_load, env);
+-	}
+-
+-	for_each_cpu(cpu, cpumask_of_node(env->dst_nid)) {
+-		/* Skip this CPU if the source task cannot migrate */
+-		if (!cpumask_test_cpu(cpu, env->p->cpus_ptr))
+-			continue;
+-
+-		env->dst_cpu = cpu;
+-		if (task_numa_compare(env, taskimp, groupimp, maymove))
+-			break;
+-	}
+-}
+-
+-static int task_numa_migrate(struct task_struct *p)
+-{
+-	struct task_numa_env env = {
+-		.p = p,
+-
+-		.src_cpu = task_cpu(p),
+-		.src_nid = task_node(p),
+-
+-		.imbalance_pct = 112,
+-
+-		.best_task = NULL,
+-		.best_imp = 0,
+-		.best_cpu = -1,
+-	};
+-	unsigned long taskweight, groupweight;
+-	struct sched_domain *sd;
+-	long taskimp, groupimp;
+-	struct numa_group *ng;
+-	struct rq *best_rq;
+-	int nid, ret, dist;
+-
+-	/*
+-	 * Pick the lowest SD_NUMA domain, as that would have the smallest
+-	 * imbalance and would be the first to start moving tasks about.
+-	 *
+-	 * And we want to avoid any moving of tasks about, as that would create
+-	 * random movement of tasks -- counter the numa conditions we're trying
+-	 * to satisfy here.
+-	 */
+-	rcu_read_lock();
+-	sd = rcu_dereference(per_cpu(sd_numa, env.src_cpu));
+-	if (sd) {
+-		env.imbalance_pct = 100 + (sd->imbalance_pct - 100) / 2;
+-		env.imb_numa_nr = sd->imb_numa_nr;
+-	}
+-	rcu_read_unlock();
+-
+-	/*
+-	 * Cpusets can break the scheduler domain tree into smaller
+-	 * balance domains, some of which do not cross NUMA boundaries.
+-	 * Tasks that are "trapped" in such domains cannot be migrated
+-	 * elsewhere, so there is no point in (re)trying.
+-	 */
+-	if (unlikely(!sd)) {
+-		sched_setnuma(p, task_node(p));
+-		return -EINVAL;
+-	}
+-
+-	env.dst_nid = p->numa_preferred_nid;
+-	dist = env.dist = node_distance(env.src_nid, env.dst_nid);
+-	taskweight = task_weight(p, env.src_nid, dist);
+-	groupweight = group_weight(p, env.src_nid, dist);
+-	update_numa_stats(&env, &env.src_stats, env.src_nid, false);
+-	taskimp = task_weight(p, env.dst_nid, dist) - taskweight;
+-	groupimp = group_weight(p, env.dst_nid, dist) - groupweight;
+-	update_numa_stats(&env, &env.dst_stats, env.dst_nid, true);
+-
+-	/* Try to find a spot on the preferred nid. */
+-	task_numa_find_cpu(&env, taskimp, groupimp);
+-
+-	/*
+-	 * Look at other nodes in these cases:
+-	 * - there is no space available on the preferred_nid
+-	 * - the task is part of a numa_group that is interleaved across
+-	 *   multiple NUMA nodes; in order to better consolidate the group,
+-	 *   we need to check other locations.
+-	 */
+-	ng = deref_curr_numa_group(p);
+-	if (env.best_cpu == -1 || (ng && ng->active_nodes > 1)) {
+-		for_each_node_state(nid, N_CPU) {
+-			if (nid == env.src_nid || nid == p->numa_preferred_nid)
+-				continue;
+-
+-			dist = node_distance(env.src_nid, env.dst_nid);
+-			if (sched_numa_topology_type == NUMA_BACKPLANE &&
+-						dist != env.dist) {
+-				taskweight = task_weight(p, env.src_nid, dist);
+-				groupweight = group_weight(p, env.src_nid, dist);
+-			}
+-
+-			/* Only consider nodes where both task and groups benefit */
+-			taskimp = task_weight(p, nid, dist) - taskweight;
+-			groupimp = group_weight(p, nid, dist) - groupweight;
+-			if (taskimp < 0 && groupimp < 0)
+-				continue;
+-
+-			env.dist = dist;
+-			env.dst_nid = nid;
+-			update_numa_stats(&env, &env.dst_stats, env.dst_nid, true);
+-			task_numa_find_cpu(&env, taskimp, groupimp);
+-		}
+-	}
+-
+-	/*
+-	 * If the task is part of a workload that spans multiple NUMA nodes,
+-	 * and is migrating into one of the workload's active nodes, remember
+-	 * this node as the task's preferred numa node, so the workload can
+-	 * settle down.
+-	 * A task that migrated to a second choice node will be better off
+-	 * trying for a better one later. Do not set the preferred node here.
+-	 */
+-	if (ng) {
+-		if (env.best_cpu == -1)
+-			nid = env.src_nid;
+-		else
+-			nid = cpu_to_node(env.best_cpu);
+-
+-		if (nid != p->numa_preferred_nid)
+-			sched_setnuma(p, nid);
+-	}
+-
+-	/* No better CPU than the current one was found. */
+-	if (env.best_cpu == -1) {
+-		trace_sched_stick_numa(p, env.src_cpu, NULL, -1);
+-		return -EAGAIN;
+-	}
+-
+-	best_rq = cpu_rq(env.best_cpu);
+-	if (env.best_task == NULL) {
+-		ret = migrate_task_to(p, env.best_cpu);
+-		WRITE_ONCE(best_rq->numa_migrate_on, 0);
+-		if (ret != 0)
+-			trace_sched_stick_numa(p, env.src_cpu, NULL, env.best_cpu);
+-		return ret;
+-	}
+-
+-	ret = migrate_swap(p, env.best_task, env.best_cpu, env.src_cpu);
+-	WRITE_ONCE(best_rq->numa_migrate_on, 0);
+-
+-	if (ret != 0)
+-		trace_sched_stick_numa(p, env.src_cpu, env.best_task, env.best_cpu);
+-	put_task_struct(env.best_task);
+-	return ret;
+-}
+-
+-/* Attempt to migrate a task to a CPU on the preferred node. */
+-static void numa_migrate_preferred(struct task_struct *p)
+-{
+-	unsigned long interval = HZ;
+-
+-	/* This task has no NUMA fault statistics yet */
+-	if (unlikely(p->numa_preferred_nid == NUMA_NO_NODE || !p->numa_faults))
+-		return;
+-
+-	/* Periodically retry migrating the task to the preferred node */
+-	interval = min(interval, msecs_to_jiffies(p->numa_scan_period) / 16);
+-	p->numa_migrate_retry = jiffies + interval;
+-
+-	/* Success if task is already running on preferred CPU */
+-	if (task_node(p) == p->numa_preferred_nid)
+-		return;
+-
+-	/* Otherwise, try migrate to a CPU on the preferred node */
+-	task_numa_migrate(p);
+-}
+-
+-/*
+- * Find out how many nodes the workload is actively running on. Do this by
+- * tracking the nodes from which NUMA hinting faults are triggered. This can
+- * be different from the set of nodes where the workload's memory is currently
+- * located.
+- */
+-static void numa_group_count_active_nodes(struct numa_group *numa_group)
+-{
+-	unsigned long faults, max_faults = 0;
+-	int nid, active_nodes = 0;
+-
+-	for_each_node_state(nid, N_CPU) {
+-		faults = group_faults_cpu(numa_group, nid);
+-		if (faults > max_faults)
+-			max_faults = faults;
+-	}
+-
+-	for_each_node_state(nid, N_CPU) {
+-		faults = group_faults_cpu(numa_group, nid);
+-		if (faults * ACTIVE_NODE_FRACTION > max_faults)
+-			active_nodes++;
+-	}
+-
+-	numa_group->max_faults_cpu = max_faults;
+-	numa_group->active_nodes = active_nodes;
+-}
+-
+-/*
+- * When adapting the scan rate, the period is divided into NUMA_PERIOD_SLOTS
+- * increments. The more local the fault statistics are, the higher the scan
+- * period will be for the next scan window. If local/(local+remote) ratio is
+- * below NUMA_PERIOD_THRESHOLD (where range of ratio is 1..NUMA_PERIOD_SLOTS)
+- * the scan period will decrease. Aim for 70% local accesses.
+- */
+-#define NUMA_PERIOD_SLOTS 10
+-#define NUMA_PERIOD_THRESHOLD 7
+-
+-/*
+- * Increase the scan period (slow down scanning) if the majority of
+- * our memory is already on our local node, or if the majority of
+- * the page accesses are shared with other processes.
+- * Otherwise, decrease the scan period.
+- */
+-static void update_task_scan_period(struct task_struct *p,
+-			unsigned long shared, unsigned long private)
+-{
+-	unsigned int period_slot;
+-	int lr_ratio, ps_ratio;
+-	int diff;
+-
+-	unsigned long remote = p->numa_faults_locality[0];
+-	unsigned long local = p->numa_faults_locality[1];
+-
+-	/*
+-	 * If there were no record hinting faults then either the task is
+-	 * completely idle or all activity is in areas that are not of interest
+-	 * to automatic numa balancing. Related to that, if there were failed
+-	 * migration then it implies we are migrating too quickly or the local
+-	 * node is overloaded. In either case, scan slower
+-	 */
+-	if (local + shared == 0 || p->numa_faults_locality[2]) {
+-		p->numa_scan_period = min(p->numa_scan_period_max,
+-			p->numa_scan_period << 1);
+-
+-		p->mm->numa_next_scan = jiffies +
+-			msecs_to_jiffies(p->numa_scan_period);
+-
+-		return;
+-	}
+-
+-	/*
+-	 * Prepare to scale scan period relative to the current period.
+-	 *	 == NUMA_PERIOD_THRESHOLD scan period stays the same
+-	 *       <  NUMA_PERIOD_THRESHOLD scan period decreases (scan faster)
+-	 *	 >= NUMA_PERIOD_THRESHOLD scan period increases (scan slower)
+-	 */
+-	period_slot = DIV_ROUND_UP(p->numa_scan_period, NUMA_PERIOD_SLOTS);
+-	lr_ratio = (local * NUMA_PERIOD_SLOTS) / (local + remote);
+-	ps_ratio = (private * NUMA_PERIOD_SLOTS) / (private + shared);
+-
+-	if (ps_ratio >= NUMA_PERIOD_THRESHOLD) {
+-		/*
+-		 * Most memory accesses are local. There is no need to
+-		 * do fast NUMA scanning, since memory is already local.
+-		 */
+-		int slot = ps_ratio - NUMA_PERIOD_THRESHOLD;
+-		if (!slot)
+-			slot = 1;
+-		diff = slot * period_slot;
+-	} else if (lr_ratio >= NUMA_PERIOD_THRESHOLD) {
+-		/*
+-		 * Most memory accesses are shared with other tasks.
+-		 * There is no point in continuing fast NUMA scanning,
+-		 * since other tasks may just move the memory elsewhere.
+-		 */
+-		int slot = lr_ratio - NUMA_PERIOD_THRESHOLD;
+-		if (!slot)
+-			slot = 1;
+-		diff = slot * period_slot;
+-	} else {
+-		/*
+-		 * Private memory faults exceed (SLOTS-THRESHOLD)/SLOTS,
+-		 * yet they are not on the local NUMA node. Speed up
+-		 * NUMA scanning to get the memory moved over.
+-		 */
+-		int ratio = max(lr_ratio, ps_ratio);
+-		diff = -(NUMA_PERIOD_THRESHOLD - ratio) * period_slot;
+-	}
+-
+-	p->numa_scan_period = clamp(p->numa_scan_period + diff,
+-			task_scan_min(p), task_scan_max(p));
+-	memset(p->numa_faults_locality, 0, sizeof(p->numa_faults_locality));
+-}
+-
+-/*
+- * Get the fraction of time the task has been running since the last
+- * NUMA placement cycle. The scheduler keeps similar statistics, but
+- * decays those on a 32ms period, which is orders of magnitude off
+- * from the dozens-of-seconds NUMA balancing period. Use the scheduler
+- * stats only if the task is so new there are no NUMA statistics yet.
+- */
+-static u64 numa_get_avg_runtime(struct task_struct *p, u64 *period)
+-{
+-	u64 runtime, delta, now;
+-	/* Use the start of this time slice to avoid calculations. */
+-	now = p->se.exec_start;
+-	runtime = p->se.sum_exec_runtime;
+-
+-	if (p->last_task_numa_placement) {
+-		delta = runtime - p->last_sum_exec_runtime;
+-		*period = now - p->last_task_numa_placement;
+-
+-		/* Avoid time going backwards, prevent potential divide error: */
+-		if (unlikely((s64)*period < 0))
+-			*period = 0;
+-	} else {
+-		delta = p->se.avg.load_sum;
+-		*period = LOAD_AVG_MAX;
+-	}
+-
+-	p->last_sum_exec_runtime = runtime;
+-	p->last_task_numa_placement = now;
+-
+-	return delta;
+-}
+-
+-/*
+- * Determine the preferred nid for a task in a numa_group. This needs to
+- * be done in a way that produces consistent results with group_weight,
+- * otherwise workloads might not converge.
+- */
+-static int preferred_group_nid(struct task_struct *p, int nid)
+-{
+-	nodemask_t nodes;
+-	int dist;
+-
+-	/* Direct connections between all NUMA nodes. */
+-	if (sched_numa_topology_type == NUMA_DIRECT)
+-		return nid;
+-
+-	/*
+-	 * On a system with glueless mesh NUMA topology, group_weight
+-	 * scores nodes according to the number of NUMA hinting faults on
+-	 * both the node itself, and on nearby nodes.
+-	 */
+-	if (sched_numa_topology_type == NUMA_GLUELESS_MESH) {
+-		unsigned long score, max_score = 0;
+-		int node, max_node = nid;
+-
+-		dist = sched_max_numa_distance;
+-
+-		for_each_node_state(node, N_CPU) {
+-			score = group_weight(p, node, dist);
+-			if (score > max_score) {
+-				max_score = score;
+-				max_node = node;
+-			}
+-		}
+-		return max_node;
+-	}
+-
+-	/*
+-	 * Finding the preferred nid in a system with NUMA backplane
+-	 * interconnect topology is more involved. The goal is to locate
+-	 * tasks from numa_groups near each other in the system, and
+-	 * untangle workloads from different sides of the system. This requires
+-	 * searching down the hierarchy of node groups, recursively searching
+-	 * inside the highest scoring group of nodes. The nodemask tricks
+-	 * keep the complexity of the search down.
+-	 */
+-	nodes = node_states[N_CPU];
+-	for (dist = sched_max_numa_distance; dist > LOCAL_DISTANCE; dist--) {
+-		unsigned long max_faults = 0;
+-		nodemask_t max_group = NODE_MASK_NONE;
+-		int a, b;
+-
+-		/* Are there nodes at this distance from each other? */
+-		if (!find_numa_distance(dist))
+-			continue;
+-
+-		for_each_node_mask(a, nodes) {
+-			unsigned long faults = 0;
+-			nodemask_t this_group;
+-			nodes_clear(this_group);
+-
+-			/* Sum group's NUMA faults; includes a==b case. */
+-			for_each_node_mask(b, nodes) {
+-				if (node_distance(a, b) < dist) {
+-					faults += group_faults(p, b);
+-					node_set(b, this_group);
+-					node_clear(b, nodes);
+-				}
+-			}
+-
+-			/* Remember the top group. */
+-			if (faults > max_faults) {
+-				max_faults = faults;
+-				max_group = this_group;
+-				/*
+-				 * subtle: at the smallest distance there is
+-				 * just one node left in each "group", the
+-				 * winner is the preferred nid.
+-				 */
+-				nid = a;
+-			}
+-		}
+-		/* Next round, evaluate the nodes within max_group. */
+-		if (!max_faults)
+-			break;
+-		nodes = max_group;
+-	}
+-	return nid;
+-}
+-
+-static void task_numa_placement(struct task_struct *p)
+-{
+-	int seq, nid, max_nid = NUMA_NO_NODE;
+-	unsigned long max_faults = 0;
+-	unsigned long fault_types[2] = { 0, 0 };
+-	unsigned long total_faults;
+-	u64 runtime, period;
+-	spinlock_t *group_lock = NULL;
+-	struct numa_group *ng;
+-
+-	/*
+-	 * The p->mm->numa_scan_seq field gets updated without
+-	 * exclusive access. Use READ_ONCE() here to ensure
+-	 * that the field is read in a single access:
+-	 */
+-	seq = READ_ONCE(p->mm->numa_scan_seq);
+-	if (p->numa_scan_seq == seq)
+-		return;
+-	p->numa_scan_seq = seq;
+-	p->numa_scan_period_max = task_scan_max(p);
+-
+-	total_faults = p->numa_faults_locality[0] +
+-		       p->numa_faults_locality[1];
+-	runtime = numa_get_avg_runtime(p, &period);
+-
+-	/* If the task is part of a group prevent parallel updates to group stats */
+-	ng = deref_curr_numa_group(p);
+-	if (ng) {
+-		group_lock = &ng->lock;
+-		spin_lock_irq(group_lock);
+-	}
+-
+-	/* Find the node with the highest number of faults */
+-	for_each_online_node(nid) {
+-		/* Keep track of the offsets in numa_faults array */
+-		int mem_idx, membuf_idx, cpu_idx, cpubuf_idx;
+-		unsigned long faults = 0, group_faults = 0;
+-		int priv;
+-
+-		for (priv = 0; priv < NR_NUMA_HINT_FAULT_TYPES; priv++) {
+-			long diff, f_diff, f_weight;
+-
+-			mem_idx = task_faults_idx(NUMA_MEM, nid, priv);
+-			membuf_idx = task_faults_idx(NUMA_MEMBUF, nid, priv);
+-			cpu_idx = task_faults_idx(NUMA_CPU, nid, priv);
+-			cpubuf_idx = task_faults_idx(NUMA_CPUBUF, nid, priv);
+-
+-			/* Decay existing window, copy faults since last scan */
+-			diff = p->numa_faults[membuf_idx] - p->numa_faults[mem_idx] / 2;
+-			fault_types[priv] += p->numa_faults[membuf_idx];
+-			p->numa_faults[membuf_idx] = 0;
+-
+-			/*
+-			 * Normalize the faults_from, so all tasks in a group
+-			 * count according to CPU use, instead of by the raw
+-			 * number of faults. Tasks with little runtime have
+-			 * little over-all impact on throughput, and thus their
+-			 * faults are less important.
+-			 */
+-			f_weight = div64_u64(runtime << 16, period + 1);
+-			f_weight = (f_weight * p->numa_faults[cpubuf_idx]) /
+-				   (total_faults + 1);
+-			f_diff = f_weight - p->numa_faults[cpu_idx] / 2;
+-			p->numa_faults[cpubuf_idx] = 0;
+-
+-			p->numa_faults[mem_idx] += diff;
+-			p->numa_faults[cpu_idx] += f_diff;
+-			faults += p->numa_faults[mem_idx];
+-			p->total_numa_faults += diff;
+-			if (ng) {
+-				/*
+-				 * safe because we can only change our own group
+-				 *
+-				 * mem_idx represents the offset for a given
+-				 * nid and priv in a specific region because it
+-				 * is at the beginning of the numa_faults array.
+-				 */
+-				ng->faults[mem_idx] += diff;
+-				ng->faults[cpu_idx] += f_diff;
+-				ng->total_faults += diff;
+-				group_faults += ng->faults[mem_idx];
+-			}
+-		}
+-
+-		if (!ng) {
+-			if (faults > max_faults) {
+-				max_faults = faults;
+-				max_nid = nid;
+-			}
+-		} else if (group_faults > max_faults) {
+-			max_faults = group_faults;
+-			max_nid = nid;
+-		}
+-	}
+-
+-	/* Cannot migrate task to CPU-less node */
+-	max_nid = numa_nearest_node(max_nid, N_CPU);
+-
+-	if (ng) {
+-		numa_group_count_active_nodes(ng);
+-		spin_unlock_irq(group_lock);
+-		max_nid = preferred_group_nid(p, max_nid);
+-	}
+-
+-	if (max_faults) {
+-		/* Set the new preferred node */
+-		if (max_nid != p->numa_preferred_nid)
+-			sched_setnuma(p, max_nid);
+-	}
+-
+-	update_task_scan_period(p, fault_types[0], fault_types[1]);
+-}
+-
+-static inline int get_numa_group(struct numa_group *grp)
+-{
+-	return refcount_inc_not_zero(&grp->refcount);
+-}
+-
+-static inline void put_numa_group(struct numa_group *grp)
+-{
+-	if (refcount_dec_and_test(&grp->refcount))
+-		kfree_rcu(grp, rcu);
+-}
+-
+-static void task_numa_group(struct task_struct *p, int cpupid, int flags,
+-			int *priv)
+-{
+-	struct numa_group *grp, *my_grp;
+-	struct task_struct *tsk;
+-	bool join = false;
+-	int cpu = cpupid_to_cpu(cpupid);
+-	int i;
+-
+-	if (unlikely(!deref_curr_numa_group(p))) {
+-		unsigned int size = sizeof(struct numa_group) +
+-				    NR_NUMA_HINT_FAULT_STATS *
+-				    nr_node_ids * sizeof(unsigned long);
+-
+-		grp = kzalloc(size, GFP_KERNEL | __GFP_NOWARN);
+-		if (!grp)
+-			return;
+-
+-		refcount_set(&grp->refcount, 1);
+-		grp->active_nodes = 1;
+-		grp->max_faults_cpu = 0;
+-		spin_lock_init(&grp->lock);
+-		grp->gid = p->pid;
+-
+-		for (i = 0; i < NR_NUMA_HINT_FAULT_STATS * nr_node_ids; i++)
+-			grp->faults[i] = p->numa_faults[i];
+-
+-		grp->total_faults = p->total_numa_faults;
+-
+-		grp->nr_tasks++;
+-		rcu_assign_pointer(p->numa_group, grp);
+-	}
+-
+-	rcu_read_lock();
+-	tsk = READ_ONCE(cpu_rq(cpu)->curr);
+-
+-	if (!cpupid_match_pid(tsk, cpupid))
+-		goto no_join;
+-
+-	grp = rcu_dereference(tsk->numa_group);
+-	if (!grp)
+-		goto no_join;
+-
+-	my_grp = deref_curr_numa_group(p);
+-	if (grp == my_grp)
+-		goto no_join;
+-
+-	/*
+-	 * Only join the other group if its bigger; if we're the bigger group,
+-	 * the other task will join us.
+-	 */
+-	if (my_grp->nr_tasks > grp->nr_tasks)
+-		goto no_join;
+-
+-	/*
+-	 * Tie-break on the grp address.
+-	 */
+-	if (my_grp->nr_tasks == grp->nr_tasks && my_grp > grp)
+-		goto no_join;
+-
+-	/* Always join threads in the same process. */
+-	if (tsk->mm == current->mm)
+-		join = true;
+-
+-	/* Simple filter to avoid false positives due to PID collisions */
+-	if (flags & TNF_SHARED)
+-		join = true;
+-
+-	/* Update priv based on whether false sharing was detected */
+-	*priv = !join;
+-
+-	if (join && !get_numa_group(grp))
+-		goto no_join;
+-
+-	rcu_read_unlock();
+-
+-	if (!join)
+-		return;
+-
+-	WARN_ON_ONCE(irqs_disabled());
+-	double_lock_irq(&my_grp->lock, &grp->lock);
+-
+-	for (i = 0; i < NR_NUMA_HINT_FAULT_STATS * nr_node_ids; i++) {
+-		my_grp->faults[i] -= p->numa_faults[i];
+-		grp->faults[i] += p->numa_faults[i];
+-	}
+-	my_grp->total_faults -= p->total_numa_faults;
+-	grp->total_faults += p->total_numa_faults;
+-
+-	my_grp->nr_tasks--;
+-	grp->nr_tasks++;
+-
+-	spin_unlock(&my_grp->lock);
+-	spin_unlock_irq(&grp->lock);
+-
+-	rcu_assign_pointer(p->numa_group, grp);
+-
+-	put_numa_group(my_grp);
+-	return;
+-
+-no_join:
+-	rcu_read_unlock();
+-	return;
+-}
+-
+-/*
+- * Get rid of NUMA statistics associated with a task (either current or dead).
+- * If @final is set, the task is dead and has reached refcount zero, so we can
+- * safely free all relevant data structures. Otherwise, there might be
+- * concurrent reads from places like load balancing and procfs, and we should
+- * reset the data back to default state without freeing ->numa_faults.
+- */
+-void task_numa_free(struct task_struct *p, bool final)
+-{
+-	/* safe: p either is current or is being freed by current */
+-	struct numa_group *grp = rcu_dereference_raw(p->numa_group);
+-	unsigned long *numa_faults = p->numa_faults;
+-	unsigned long flags;
+-	int i;
+-
+-	if (!numa_faults)
+-		return;
+-
+-	if (grp) {
+-		spin_lock_irqsave(&grp->lock, flags);
+-		for (i = 0; i < NR_NUMA_HINT_FAULT_STATS * nr_node_ids; i++)
+-			grp->faults[i] -= p->numa_faults[i];
+-		grp->total_faults -= p->total_numa_faults;
+-
+-		grp->nr_tasks--;
+-		spin_unlock_irqrestore(&grp->lock, flags);
+-		RCU_INIT_POINTER(p->numa_group, NULL);
+-		put_numa_group(grp);
+-	}
+-
+-	if (final) {
+-		p->numa_faults = NULL;
+-		kfree(numa_faults);
+-	} else {
+-		p->total_numa_faults = 0;
+-		for (i = 0; i < NR_NUMA_HINT_FAULT_STATS * nr_node_ids; i++)
+-			numa_faults[i] = 0;
+-	}
+-}
+-
+-/*
+- * Got a PROT_NONE fault for a page on @node.
+- */
+-void task_numa_fault(int last_cpupid, int mem_node, int pages, int flags)
+-{
+-	struct task_struct *p = current;
+-	bool migrated = flags & TNF_MIGRATED;
+-	int cpu_node = task_node(current);
+-	int local = !!(flags & TNF_FAULT_LOCAL);
+-	struct numa_group *ng;
+-	int priv;
+-
+-	if (!static_branch_likely(&sched_numa_balancing))
+-		return;
+-
+-	/* for example, ksmd faulting in a user's mm */
+-	if (!p->mm)
+-		return;
+-
+-	/*
+-	 * NUMA faults statistics are unnecessary for the slow memory
+-	 * node for memory tiering mode.
+-	 */
+-	if (!node_is_toptier(mem_node) &&
+-	    (sysctl_numa_balancing_mode & NUMA_BALANCING_MEMORY_TIERING ||
+-	     !cpupid_valid(last_cpupid)))
+-		return;
+-
+-	/* Allocate buffer to track faults on a per-node basis */
+-	if (unlikely(!p->numa_faults)) {
+-		int size = sizeof(*p->numa_faults) *
+-			   NR_NUMA_HINT_FAULT_BUCKETS * nr_node_ids;
+-
+-		p->numa_faults = kzalloc(size, GFP_KERNEL|__GFP_NOWARN);
+-		if (!p->numa_faults)
+-			return;
+-
+-		p->total_numa_faults = 0;
+-		memset(p->numa_faults_locality, 0, sizeof(p->numa_faults_locality));
+-	}
+-
+-	/*
+-	 * First accesses are treated as private, otherwise consider accesses
+-	 * to be private if the accessing pid has not changed
+-	 */
+-	if (unlikely(last_cpupid == (-1 & LAST_CPUPID_MASK))) {
+-		priv = 1;
+-	} else {
+-		priv = cpupid_match_pid(p, last_cpupid);
+-		if (!priv && !(flags & TNF_NO_GROUP))
+-			task_numa_group(p, last_cpupid, flags, &priv);
+-	}
+-
+-	/*
+-	 * If a workload spans multiple NUMA nodes, a shared fault that
+-	 * occurs wholly within the set of nodes that the workload is
+-	 * actively using should be counted as local. This allows the
+-	 * scan rate to slow down when a workload has settled down.
+-	 */
+-	ng = deref_curr_numa_group(p);
+-	if (!priv && !local && ng && ng->active_nodes > 1 &&
+-				numa_is_active_node(cpu_node, ng) &&
+-				numa_is_active_node(mem_node, ng))
+-		local = 1;
+-
+-	/*
+-	 * Retry to migrate task to preferred node periodically, in case it
+-	 * previously failed, or the scheduler moved us.
+-	 */
+-	if (time_after(jiffies, p->numa_migrate_retry)) {
+-		task_numa_placement(p);
+-		numa_migrate_preferred(p);
+-	}
+-
+-	if (migrated)
+-		p->numa_pages_migrated += pages;
+-	if (flags & TNF_MIGRATE_FAIL)
+-		p->numa_faults_locality[2] += pages;
+-
+-	p->numa_faults[task_faults_idx(NUMA_MEMBUF, mem_node, priv)] += pages;
+-	p->numa_faults[task_faults_idx(NUMA_CPUBUF, cpu_node, priv)] += pages;
+-	p->numa_faults_locality[local] += pages;
+-}
+-
+-static void reset_ptenuma_scan(struct task_struct *p)
+-{
+-	/*
+-	 * We only did a read acquisition of the mmap sem, so
+-	 * p->mm->numa_scan_seq is written to without exclusive access
+-	 * and the update is not guaranteed to be atomic. That's not
+-	 * much of an issue though, since this is just used for
+-	 * statistical sampling. Use READ_ONCE/WRITE_ONCE, which are not
+-	 * expensive, to avoid any form of compiler optimizations:
+-	 */
+-	WRITE_ONCE(p->mm->numa_scan_seq, READ_ONCE(p->mm->numa_scan_seq) + 1);
+-	p->mm->numa_scan_offset = 0;
+-}
+-
+-static bool vma_is_accessed(struct mm_struct *mm, struct vm_area_struct *vma)
+-{
+-	unsigned long pids;
+-	/*
+-	 * Allow unconditional access first two times, so that all the (pages)
+-	 * of VMAs get prot_none fault introduced irrespective of accesses.
+-	 * This is also done to avoid any side effect of task scanning
+-	 * amplifying the unfairness of disjoint set of VMAs' access.
+-	 */
+-	if ((READ_ONCE(current->mm->numa_scan_seq) - vma->numab_state->start_scan_seq) < 2)
+-		return true;
+-
+-	pids = vma->numab_state->pids_active[0] | vma->numab_state->pids_active[1];
+-	if (test_bit(hash_32(current->pid, ilog2(BITS_PER_LONG)), &pids))
+-		return true;
+-
+-	/*
+-	 * Complete a scan that has already started regardless of PID access, or
+-	 * some VMAs may never be scanned in multi-threaded applications:
+-	 */
+-	if (mm->numa_scan_offset > vma->vm_start) {
+-		trace_sched_skip_vma_numa(mm, vma, NUMAB_SKIP_IGNORE_PID);
 -		return true;
 -	}
 -
 -	return false;
 -}
 -
--static void __setscheduler_uclamp(struct task_struct *p,
--				  const struct sched_attr *attr)
+-#define VMA_PID_RESET_PERIOD (4 * sysctl_numa_balancing_scan_delay)
+-
+-/*
+- * The expensive part of numa migration is done from task_work context.
+- * Triggered from task_tick_numa().
+- */
+-static void task_numa_work(struct callback_head *work)
 -{
--	enum uclamp_id clamp_id;
+-	unsigned long migrate, next_scan, now = jiffies;
+-	struct task_struct *p = current;
+-	struct mm_struct *mm = p->mm;
+-	u64 runtime = p->se.sum_exec_runtime;
+-	struct vm_area_struct *vma;
+-	unsigned long start, end;
+-	unsigned long nr_pte_updates = 0;
+-	long pages, virtpages;
+-	struct vma_iterator vmi;
+-	bool vma_pids_skipped;
+-	bool vma_pids_forced = false;
 -
--	for_each_clamp_id(clamp_id) {
--		struct uclamp_se *uc_se = &p->uclamp_req[clamp_id];
--		unsigned int value;
+-	SCHED_WARN_ON(p != container_of(work, struct task_struct, numa_work));
 -
--		if (!uclamp_reset(attr, clamp_id, uc_se))
+-	work->next = work;
+-	/*
+-	 * Who cares about NUMA placement when they're dying.
+-	 *
+-	 * NOTE: make sure not to dereference p->mm before this check,
+-	 * exit_task_work() happens _after_ exit_mm() so we could be called
+-	 * without p->mm even though we still had it when we enqueued this
+-	 * work.
+-	 */
+-	if (p->flags & PF_EXITING)
+-		return;
+-
+-	if (!mm->numa_next_scan) {
+-		mm->numa_next_scan = now +
+-			msecs_to_jiffies(sysctl_numa_balancing_scan_delay);
+-	}
+-
+-	/*
+-	 * Enforce maximal scan/migration frequency..
+-	 */
+-	migrate = mm->numa_next_scan;
+-	if (time_before(now, migrate))
+-		return;
+-
+-	if (p->numa_scan_period == 0) {
+-		p->numa_scan_period_max = task_scan_max(p);
+-		p->numa_scan_period = task_scan_start(p);
+-	}
+-
+-	next_scan = now + msecs_to_jiffies(p->numa_scan_period);
+-	if (!try_cmpxchg(&mm->numa_next_scan, &migrate, next_scan))
+-		return;
+-
+-	/*
+-	 * Delay this task enough that another task of this mm will likely win
+-	 * the next time around.
+-	 */
+-	p->node_stamp += 2 * TICK_NSEC;
+-
+-	pages = sysctl_numa_balancing_scan_size;
+-	pages <<= 20 - PAGE_SHIFT; /* MB in pages */
+-	virtpages = pages * 8;	   /* Scan up to this much virtual space */
+-	if (!pages)
+-		return;
+-
+-
+-	if (!mmap_read_trylock(mm))
+-		return;
+-
+-	/*
+-	 * VMAs are skipped if the current PID has not trapped a fault within
+-	 * the VMA recently. Allow scanning to be forced if there is no
+-	 * suitable VMA remaining.
+-	 */
+-	vma_pids_skipped = false;
+-
+-retry_pids:
+-	start = mm->numa_scan_offset;
+-	vma_iter_init(&vmi, mm, start);
+-	vma = vma_next(&vmi);
+-	if (!vma) {
+-		reset_ptenuma_scan(p);
+-		start = 0;
+-		vma_iter_set(&vmi, start);
+-		vma = vma_next(&vmi);
+-	}
+-
+-	do {
+-		if (!vma_migratable(vma) || !vma_policy_mof(vma) ||
+-			is_vm_hugetlb_page(vma) || (vma->vm_flags & VM_MIXEDMAP)) {
+-			trace_sched_skip_vma_numa(mm, vma, NUMAB_SKIP_UNSUITABLE);
 -			continue;
+-		}
 -
 -		/*
--		 * RT by default have a 100% boost value that could be modified
--		 * at runtime.
+-		 * Shared library pages mapped by multiple processes are not
+-		 * migrated as it is expected they are cache replicated. Avoid
+-		 * hinting faults in read-only file-backed mappings or the vDSO
+-		 * as migrating the pages will be of marginal benefit.
 -		 */
--		if (unlikely(rt_task(p) && clamp_id == UCLAMP_MIN))
--			value = sysctl_sched_uclamp_util_min_rt_default;
--		else
--			value = uclamp_none(clamp_id);
+-		if (!vma->vm_mm ||
+-		    (vma->vm_file && (vma->vm_flags & (VM_READ|VM_WRITE)) == (VM_READ))) {
+-			trace_sched_skip_vma_numa(mm, vma, NUMAB_SKIP_SHARED_RO);
+-			continue;
+-		}
 -
--		uclamp_se_set(uc_se, value, false);
+-		/*
+-		 * Skip inaccessible VMAs to avoid any confusion between
+-		 * PROT_NONE and NUMA hinting PTEs
+-		 */
+-		if (!vma_is_accessible(vma)) {
+-			trace_sched_skip_vma_numa(mm, vma, NUMAB_SKIP_INACCESSIBLE);
+-			continue;
+-		}
 -
+-		/* Initialise new per-VMA NUMAB state. */
+-		if (!vma->numab_state) {
+-			vma->numab_state = kzalloc(sizeof(struct vma_numab_state),
+-				GFP_KERNEL);
+-			if (!vma->numab_state)
+-				continue;
+-
+-			vma->numab_state->start_scan_seq = mm->numa_scan_seq;
+-
+-			vma->numab_state->next_scan = now +
+-				msecs_to_jiffies(sysctl_numa_balancing_scan_delay);
+-
+-			/* Reset happens after 4 times scan delay of scan start */
+-			vma->numab_state->pids_active_reset =  vma->numab_state->next_scan +
+-				msecs_to_jiffies(VMA_PID_RESET_PERIOD);
+-
+-			/*
+-			 * Ensure prev_scan_seq does not match numa_scan_seq,
+-			 * to prevent VMAs being skipped prematurely on the
+-			 * first scan:
+-			 */
+-			 vma->numab_state->prev_scan_seq = mm->numa_scan_seq - 1;
+-		}
+-
+-		/*
+-		 * Scanning the VMAs of short lived tasks add more overhead. So
+-		 * delay the scan for new VMAs.
+-		 */
+-		if (mm->numa_scan_seq && time_before(jiffies,
+-						vma->numab_state->next_scan)) {
+-			trace_sched_skip_vma_numa(mm, vma, NUMAB_SKIP_SCAN_DELAY);
+-			continue;
+-		}
+-
+-		/* RESET access PIDs regularly for old VMAs. */
+-		if (mm->numa_scan_seq &&
+-				time_after(jiffies, vma->numab_state->pids_active_reset)) {
+-			vma->numab_state->pids_active_reset = vma->numab_state->pids_active_reset +
+-				msecs_to_jiffies(VMA_PID_RESET_PERIOD);
+-			vma->numab_state->pids_active[0] = READ_ONCE(vma->numab_state->pids_active[1]);
+-			vma->numab_state->pids_active[1] = 0;
+-		}
+-
+-		/* Do not rescan VMAs twice within the same sequence. */
+-		if (vma->numab_state->prev_scan_seq == mm->numa_scan_seq) {
+-			mm->numa_scan_offset = vma->vm_end;
+-			trace_sched_skip_vma_numa(mm, vma, NUMAB_SKIP_SEQ_COMPLETED);
+-			continue;
+-		}
+-
+-		/*
+-		 * Do not scan the VMA if task has not accessed it, unless no other
+-		 * VMA candidate exists.
+-		 */
+-		if (!vma_pids_forced && !vma_is_accessed(mm, vma)) {
+-			vma_pids_skipped = true;
+-			trace_sched_skip_vma_numa(mm, vma, NUMAB_SKIP_PID_INACTIVE);
+-			continue;
+-		}
+-
+-		do {
+-			start = max(start, vma->vm_start);
+-			end = ALIGN(start + (pages << PAGE_SHIFT), HPAGE_SIZE);
+-			end = min(end, vma->vm_end);
+-			nr_pte_updates = change_prot_numa(vma, start, end);
+-
+-			/*
+-			 * Try to scan sysctl_numa_balancing_size worth of
+-			 * hpages that have at least one present PTE that
+-			 * is not already PTE-numa. If the VMA contains
+-			 * areas that are unused or already full of prot_numa
+-			 * PTEs, scan up to virtpages, to skip through those
+-			 * areas faster.
+-			 */
+-			if (nr_pte_updates)
+-				pages -= (end - start) >> PAGE_SHIFT;
+-			virtpages -= (end - start) >> PAGE_SHIFT;
+-
+-			start = end;
+-			if (pages <= 0 || virtpages <= 0)
+-				goto out;
+-
+-			cond_resched();
+-		} while (end != vma->vm_end);
+-
+-		/* VMA scan is complete, do not scan until next sequence. */
+-		vma->numab_state->prev_scan_seq = mm->numa_scan_seq;
+-
+-		/*
+-		 * Only force scan within one VMA at a time, to limit the
+-		 * cost of scanning a potentially uninteresting VMA.
+-		 */
+-		if (vma_pids_forced)
+-			break;
+-	} for_each_vma(vmi, vma);
+-
+-	/*
+-	 * If no VMAs are remaining and VMAs were skipped due to the PID
+-	 * not accessing the VMA previously, then force a scan to ensure
+-	 * forward progress:
+-	 */
+-	if (!vma && !vma_pids_forced && vma_pids_skipped) {
+-		vma_pids_forced = true;
+-		goto retry_pids;
 -	}
 -
--	if (likely(!(attr->sched_flags & SCHED_FLAG_UTIL_CLAMP)))
+-out:
+-	/*
+-	 * It is possible to reach the end of the VMA list but the last few
+-	 * VMAs are not guaranteed to the vma_migratable. If they are not, we
+-	 * would find the !migratable VMA on the next scan but not reset the
+-	 * scanner to the start so check it now.
+-	 */
+-	if (vma)
+-		mm->numa_scan_offset = start;
+-	else
+-		reset_ptenuma_scan(p);
+-	mmap_read_unlock(mm);
+-
+-	/*
+-	 * Make sure tasks use at least 32x as much time to run other code
+-	 * than they used here, to limit NUMA PTE scanning overhead to 3% max.
+-	 * Usually update_task_scan_period slows down scanning enough; on an
+-	 * overloaded system we need to limit overhead on a per task basis.
+-	 */
+-	if (unlikely(p->se.sum_exec_runtime != runtime)) {
+-		u64 diff = p->se.sum_exec_runtime - runtime;
+-		p->node_stamp += 32 * diff;
+-	}
+-}
+-
+-void init_numa_balancing(unsigned long clone_flags, struct task_struct *p)
+-{
+-	int mm_users = 0;
+-	struct mm_struct *mm = p->mm;
+-
+-	if (mm) {
+-		mm_users = atomic_read(&mm->mm_users);
+-		if (mm_users == 1) {
+-			mm->numa_next_scan = jiffies + msecs_to_jiffies(sysctl_numa_balancing_scan_delay);
+-			mm->numa_scan_seq = 0;
+-		}
+-	}
+-	p->node_stamp			= 0;
+-	p->numa_scan_seq		= mm ? mm->numa_scan_seq : 0;
+-	p->numa_scan_period		= sysctl_numa_balancing_scan_delay;
+-	p->numa_migrate_retry		= 0;
+-	/* Protect against double add, see task_tick_numa and task_numa_work */
+-	p->numa_work.next		= &p->numa_work;
+-	p->numa_faults			= NULL;
+-	p->numa_pages_migrated		= 0;
+-	p->total_numa_faults		= 0;
+-	RCU_INIT_POINTER(p->numa_group, NULL);
+-	p->last_task_numa_placement	= 0;
+-	p->last_sum_exec_runtime	= 0;
+-
+-	init_task_work(&p->numa_work, task_numa_work);
+-
+-	/* New address space, reset the preferred nid */
+-	if (!(clone_flags & CLONE_VM)) {
+-		p->numa_preferred_nid = NUMA_NO_NODE;
+-		return;
+-	}
+-
+-	/*
+-	 * New thread, keep existing numa_preferred_nid which should be copied
+-	 * already by arch_dup_task_struct but stagger when scans start.
+-	 */
+-	if (mm) {
+-		unsigned int delay;
+-
+-		delay = min_t(unsigned int, task_scan_max(current),
+-			current->numa_scan_period * mm_users * NSEC_PER_MSEC);
+-		delay += 2 * TICK_NSEC;
+-		p->node_stamp = delay;
+-	}
+-}
+-
+-/*
+- * Drive the periodic memory faults..
+- */
+-static void task_tick_numa(struct rq *rq, struct task_struct *curr)
+-{
+-	struct callback_head *work = &curr->numa_work;
+-	u64 period, now;
+-
+-	/*
+-	 * We don't care about NUMA placement if we don't have memory.
+-	 */
+-	if (!curr->mm || (curr->flags & (PF_EXITING | PF_KTHREAD)) || work->next != work)
 -		return;
 -
--	if (attr->sched_flags & SCHED_FLAG_UTIL_CLAMP_MIN &&
--	    attr->sched_util_min != -1) {
--		uclamp_se_set(&p->uclamp_req[UCLAMP_MIN],
--			      attr->sched_util_min, true);
+-	/*
+-	 * Using runtime rather than walltime has the dual advantage that
+-	 * we (mostly) drive the selection from busy threads and that the
+-	 * task needs to have done some actual work before we bother with
+-	 * NUMA placement.
+-	 */
+-	now = curr->se.sum_exec_runtime;
+-	period = (u64)curr->numa_scan_period * NSEC_PER_MSEC;
+-
+-	if (now > curr->node_stamp + period) {
+-		if (!curr->node_stamp)
+-			curr->numa_scan_period = task_scan_start(curr);
+-		curr->node_stamp += period;
+-
+-		if (!time_before(jiffies, curr->mm->numa_next_scan))
+-			task_work_add(curr, work, TWA_RESUME);
+-	}
+-}
+-
+-static void update_scan_period(struct task_struct *p, int new_cpu)
+-{
+-	int src_nid = cpu_to_node(task_cpu(p));
+-	int dst_nid = cpu_to_node(new_cpu);
+-
+-	if (!static_branch_likely(&sched_numa_balancing))
+-		return;
+-
+-	if (!p->mm || !p->numa_faults || (p->flags & PF_EXITING))
+-		return;
+-
+-	if (src_nid == dst_nid)
+-		return;
+-
+-	/*
+-	 * Allow resets if faults have been trapped before one scan
+-	 * has completed. This is most likely due to a new task that
+-	 * is pulled cross-node due to wakeups or load balancing.
+-	 */
+-	if (p->numa_scan_seq) {
+-		/*
+-		 * Avoid scan adjustments if moving to the preferred
+-		 * node or if the task was not previously running on
+-		 * the preferred node.
+-		 */
+-		if (dst_nid == p->numa_preferred_nid ||
+-		    (p->numa_preferred_nid != NUMA_NO_NODE &&
+-			src_nid != p->numa_preferred_nid))
+-			return;
 -	}
 -
--	if (attr->sched_flags & SCHED_FLAG_UTIL_CLAMP_MAX &&
--	    attr->sched_util_max != -1) {
--		uclamp_se_set(&p->uclamp_req[UCLAMP_MAX],
--			      attr->sched_util_max, true);
--	}
+-	p->numa_scan_period = task_scan_start(p);
 -}
 -
- static void uclamp_fork(struct task_struct *p)
- {
- 	enum uclamp_id clamp_id;
-@@ -2066,13 +1939,6 @@ static void __init init_uclamp(void)
- #else /* !CONFIG_UCLAMP_TASK */
- static inline void uclamp_rq_inc(struct rq *rq, struct task_struct *p) { }
- static inline void uclamp_rq_dec(struct rq *rq, struct task_struct *p) { }
--static inline int uclamp_validate(struct task_struct *p,
--				  const struct sched_attr *attr)
--{
--	return -EOPNOTSUPP;
--}
--static void __setscheduler_uclamp(struct task_struct *p,
--				  const struct sched_attr *attr) { }
- static inline void uclamp_fork(struct task_struct *p) { }
- static inline void uclamp_post_fork(struct task_struct *p) { }
- static inline void init_uclamp(void) { }
-@@ -2102,7 +1968,7 @@ unsigned long get_wchan(struct task_struct *p)
- 	return ip;
- }
- 
--static inline void enqueue_task(struct rq *rq, struct task_struct *p, int flags)
-+void enqueue_task(struct rq *rq, struct task_struct *p, int flags)
- {
- 	if (!(flags & ENQUEUE_NOCLOCK))
- 		update_rq_clock(rq);
-@@ -2119,7 +1985,7 @@ static inline void enqueue_task(struct rq *rq, struct task_struct *p, int flags)
- 		sched_core_enqueue(rq, p);
- }
- 
--static inline void dequeue_task(struct rq *rq, struct task_struct *p, int flags)
-+void dequeue_task(struct rq *rq, struct task_struct *p, int flags)
- {
- 	if (sched_core_enabled(rq))
- 		sched_core_dequeue(rq, p, flags);
-@@ -2157,52 +2023,6 @@ void deactivate_task(struct rq *rq, struct task_struct *p, int flags)
- 	dequeue_task(rq, p, flags);
- }
- 
--static inline int __normal_prio(int policy, int rt_prio, int nice)
--{
--	int prio;
--
--	if (dl_policy(policy))
--		prio = MAX_DL_PRIO - 1;
--	else if (rt_policy(policy))
--		prio = MAX_RT_PRIO - 1 - rt_prio;
--	else
--		prio = NICE_TO_PRIO(nice);
--
--	return prio;
--}
--
--/*
-- * Calculate the expected normal priority: i.e. priority
-- * without taking RT-inheritance into account. Might be
-- * boosted by interactivity modifiers. Changes upon fork,
-- * setprio syscalls, and whenever the interactivity
-- * estimator recalculates.
-- */
--static inline int normal_prio(struct task_struct *p)
--{
--	return __normal_prio(p->policy, p->rt_priority, PRIO_TO_NICE(p->static_prio));
--}
--
--/*
-- * Calculate the current priority, i.e. the priority
-- * taken into account by the scheduler. This value might
-- * be boosted by RT tasks, or might be boosted by
-- * interactivity modifiers. Will be RT if the task got
-- * RT-boosted. If not then it returns p->normal_prio.
-- */
--static int effective_prio(struct task_struct *p)
--{
--	p->normal_prio = normal_prio(p);
--	/*
--	 * If we are RT tasks or we were boosted to RT priority,
--	 * keep the priority unchanged. Otherwise, update priority
--	 * to the normal priority:
--	 */
--	if (!rt_prio(p->prio))
--		return p->normal_prio;
--	return p->prio;
--}
--
- /**
-  * task_curr - is this task currently executing on a CPU?
-  * @p: the task in question.
-@@ -2221,9 +2041,9 @@ inline int task_curr(const struct task_struct *p)
-  * this means any call to check_class_changed() must be followed by a call to
-  * balance_callback().
-  */
--static inline void check_class_changed(struct rq *rq, struct task_struct *p,
--				       const struct sched_class *prev_class,
--				       int oldprio)
-+void check_class_changed(struct rq *rq, struct task_struct *p,
-+			 const struct sched_class *prev_class,
-+			 int oldprio)
- {
- 	if (prev_class != p->sched_class) {
- 		if (prev_class->switched_from)
-@@ -2392,9 +2212,6 @@ unsigned long wait_task_inactive(struct task_struct *p, unsigned int match_state
- static void
- __do_set_cpus_allowed(struct task_struct *p, struct affinity_context *ctx);
- 
--static int __set_cpus_allowed_ptr(struct task_struct *p,
--				  struct affinity_context *ctx);
--
- static void migrate_disable_switch(struct rq *rq, struct task_struct *p)
- {
- 	struct affinity_context ac = {
-@@ -2821,16 +2638,6 @@ void do_set_cpus_allowed(struct task_struct *p, const struct cpumask *new_mask)
- 	kfree_rcu((union cpumask_rcuhead *)ac.user_mask, rcu);
- }
- 
--static cpumask_t *alloc_user_cpus_ptr(int node)
--{
--	/*
--	 * See do_set_cpus_allowed() above for the rcu_head usage.
--	 */
--	int size = max_t(int, cpumask_size(), sizeof(struct rcu_head));
--
--	return kmalloc_node(size, GFP_KERNEL, node);
--}
--
- int dup_user_cpus_ptr(struct task_struct *dst, struct task_struct *src,
- 		      int node)
- {
-@@ -3199,8 +3006,7 @@ static int __set_cpus_allowed_ptr_locked(struct task_struct *p,
-  * task must not exit() & deallocate itself prematurely. The
-  * call is not atomic; no spinlocks may be held.
-  */
--static int __set_cpus_allowed_ptr(struct task_struct *p,
--				  struct affinity_context *ctx)
-+int __set_cpus_allowed_ptr(struct task_struct *p, struct affinity_context *ctx)
- {
- 	struct rq_flags rf;
- 	struct rq *rq;
-@@ -3319,9 +3125,6 @@ void force_compatible_cpus_allowed_ptr(struct task_struct *p)
- 	free_cpumask_var(new_mask);
- }
- 
--static int
--__sched_setaffinity(struct task_struct *p, struct affinity_context *ctx);
--
- /*
-  * Restore the affinity of a task @p which was previously restricted by a
-  * call to force_compatible_cpus_allowed_ptr().
-@@ -3701,12 +3504,6 @@ void sched_set_stop_task(int cpu, struct task_struct *stop)
- 
- #else /* CONFIG_SMP */
- 
--static inline int __set_cpus_allowed_ptr(struct task_struct *p,
--					 struct affinity_context *ctx)
--{
--	return set_cpus_allowed_ptr(p, ctx->new_mask);
--}
--
- static inline void migrate_disable_switch(struct rq *rq, struct task_struct *p) { }
- 
- static inline bool rq_has_pinned_tasks(struct rq *rq)
-@@ -3714,11 +3511,6 @@ static inline bool rq_has_pinned_tasks(struct rq *rq)
- 	return false;
- }
- 
--static inline cpumask_t *alloc_user_cpus_ptr(int node)
--{
--	return NULL;
--}
--
- #endif /* !CONFIG_SMP */
- 
- static void
-@@ -5096,7 +4888,7 @@ __splice_balance_callbacks(struct rq *rq, bool split)
- 	return head;
- }
- 
--static inline struct balance_callback *splice_balance_callbacks(struct rq *rq)
-+struct balance_callback *splice_balance_callbacks(struct rq *rq)
- {
- 	return __splice_balance_callbacks(rq, true);
- }
-@@ -5106,7 +4898,7 @@ static void __balance_callbacks(struct rq *rq)
- 	do_balance_callbacks(rq, __splice_balance_callbacks(rq, false));
- }
- 
--static inline void balance_callbacks(struct rq *rq, struct balance_callback *head)
-+void balance_callbacks(struct rq *rq, struct balance_callback *head)
- {
- 	unsigned long flags;
- 
-@@ -5123,15 +4915,6 @@ static inline void __balance_callbacks(struct rq *rq)
- {
- }
- 
--static inline struct balance_callback *splice_balance_callbacks(struct rq *rq)
--{
--	return NULL;
--}
--
--static inline void balance_callbacks(struct rq *rq, struct balance_callback *head)
--{
--}
--
- #endif
- 
- static inline void
-@@ -7081,7 +6864,7 @@ int default_wake_function(wait_queue_entry_t *curr, unsigned mode, int wake_flag
- }
- EXPORT_SYMBOL(default_wake_function);
- 
--static void __setscheduler_prio(struct task_struct *p, int prio)
-+void __setscheduler_prio(struct task_struct *p, int prio)
- {
- 	if (dl_prio(prio))
- 		p->sched_class = &dl_sched_class;
-@@ -7121,21 +6904,6 @@ void rt_mutex_post_schedule(void)
- 	lockdep_assert(fetch_and_set(current->sched_rt_mutex, 0));
- }
- 
--static inline int __rt_effective_prio(struct task_struct *pi_task, int prio)
--{
--	if (pi_task)
--		prio = min(prio, pi_task->prio);
--
--	return prio;
--}
--
--static inline int rt_effective_prio(struct task_struct *p, int prio)
--{
--	struct task_struct *pi_task = rt_mutex_get_top_task(p);
--
--	return __rt_effective_prio(pi_task, prio);
--}
--
- /*
-  * rt_mutex_setprio - set the current priority of a task
-  * @p: task to boost
-@@ -7264,1434 +7032,117 @@ void rt_mutex_setprio(struct task_struct *p, struct task_struct *pi_task)
- 
- 	preempt_enable();
- }
 -#else
--static inline int rt_effective_prio(struct task_struct *p, int prio)
+-static void task_tick_numa(struct rq *rq, struct task_struct *curr)
 -{
--	return prio;
 -}
- #endif
- 
--void set_user_nice(struct task_struct *p, long nice)
-+#if !defined(CONFIG_PREEMPTION) || defined(CONFIG_PREEMPT_DYNAMIC)
-+int __sched __cond_resched(void)
- {
--	bool queued, running;
--	struct rq *rq;
--	int old_prio;
 -
--	if (task_nice(p) == nice || nice < MIN_NICE || nice > MAX_NICE)
--		return;
--	/*
--	 * We have to be careful, if called from sys_setpriority(),
--	 * the task might be in the middle of scheduling on another CPU.
--	 */
--	CLASS(task_rq_lock, rq_guard)(p);
--	rq = rq_guard.rq;
--
--	update_rq_clock(rq);
--
--	/*
--	 * The RT priorities are set via sched_setscheduler(), but we still
--	 * allow the 'normal' nice value to be set - but as expected
--	 * it won't have any effect on scheduling until the task is
--	 * SCHED_DEADLINE, SCHED_FIFO or SCHED_RR:
--	 */
--	if (task_has_dl_policy(p) || task_has_rt_policy(p)) {
--		p->static_prio = NICE_TO_PRIO(nice);
--		return;
-+	if (should_resched(0)) {
-+		preempt_schedule_common();
-+		return 1;
- 	}
--
--	queued = task_on_rq_queued(p);
--	running = task_current(rq, p);
--	if (queued)
--		dequeue_task(rq, p, DEQUEUE_SAVE | DEQUEUE_NOCLOCK);
--	if (running)
--		put_prev_task(rq, p);
--
--	p->static_prio = NICE_TO_PRIO(nice);
--	set_load_weight(p, true);
--	old_prio = p->prio;
--	p->prio = effective_prio(p);
--
--	if (queued)
--		enqueue_task(rq, p, ENQUEUE_RESTORE | ENQUEUE_NOCLOCK);
--	if (running)
--		set_next_task(rq, p);
--
- 	/*
--	 * If the task increased its priority or is running and
--	 * lowered its priority, then reschedule its CPU:
-+	 * In preemptible kernels, ->rcu_read_lock_nesting tells the tick
-+	 * whether the current CPU is in an RCU read-side critical section,
-+	 * so the tick can report quiescent states even for CPUs looping
-+	 * in kernel context.  In contrast, in non-preemptible kernels,
-+	 * RCU readers leave no in-memory hints, which means that CPU-bound
-+	 * processes executing in kernel context might never report an
-+	 * RCU quiescent state.  Therefore, the following code causes
-+	 * cond_resched() to report a quiescent state, but only when RCU
-+	 * is in urgent need of one.
- 	 */
--	p->sched_class->prio_changed(rq, p, old_prio);
-+#ifndef CONFIG_PREEMPT_RCU
-+	rcu_all_qs();
-+#endif
-+	return 0;
- }
--EXPORT_SYMBOL(set_user_nice);
-+EXPORT_SYMBOL(__cond_resched);
-+#endif
- 
--/*
-- * is_nice_reduction - check if nice value is an actual reduction
-- *
-- * Similar to can_nice() but does not perform a capability check.
-- *
-- * @p: task
-- * @nice: nice value
-- */
--static bool is_nice_reduction(const struct task_struct *p, const int nice)
+-static inline void account_numa_enqueue(struct rq *rq, struct task_struct *p)
 -{
--	/* Convert nice value [19,-20] to rlimit style value [1,40]: */
--	int nice_rlim = nice_to_rlimit(nice);
-+#ifdef CONFIG_PREEMPT_DYNAMIC
-+#if defined(CONFIG_HAVE_PREEMPT_DYNAMIC_CALL)
-+#define cond_resched_dynamic_enabled	__cond_resched
-+#define cond_resched_dynamic_disabled	((void *)&__static_call_return0)
-+DEFINE_STATIC_CALL_RET0(cond_resched, __cond_resched);
-+EXPORT_STATIC_CALL_TRAMP(cond_resched);
- 
--	return (nice_rlim <= task_rlimit(p, RLIMIT_NICE));
-+#define might_resched_dynamic_enabled	__cond_resched
-+#define might_resched_dynamic_disabled	((void *)&__static_call_return0)
-+DEFINE_STATIC_CALL_RET0(might_resched, __cond_resched);
-+EXPORT_STATIC_CALL_TRAMP(might_resched);
-+#elif defined(CONFIG_HAVE_PREEMPT_DYNAMIC_KEY)
-+static DEFINE_STATIC_KEY_FALSE(sk_dynamic_cond_resched);
-+int __sched dynamic_cond_resched(void)
-+{
-+	klp_sched_try_switch();
-+	if (!static_branch_unlikely(&sk_dynamic_cond_resched))
-+		return 0;
-+	return __cond_resched();
- }
-+EXPORT_SYMBOL(dynamic_cond_resched);
- 
--/*
-- * can_nice - check if a task can reduce its nice value
-- * @p: task
-- * @nice: nice value
-- */
--int can_nice(const struct task_struct *p, const int nice)
-+static DEFINE_STATIC_KEY_FALSE(sk_dynamic_might_resched);
-+int __sched dynamic_might_resched(void)
- {
--	return is_nice_reduction(p, nice) || capable(CAP_SYS_NICE);
-+	if (!static_branch_unlikely(&sk_dynamic_might_resched))
-+		return 0;
-+	return __cond_resched();
- }
+-}
 -
--#ifdef __ARCH_WANT_SYS_NICE
-+EXPORT_SYMBOL(dynamic_might_resched);
-+#endif
-+#endif
+-static inline void account_numa_dequeue(struct rq *rq, struct task_struct *p)
+-{
+-}
+-
+-static inline void update_scan_period(struct task_struct *p, int new_cpu)
+-{
+-}
+-
+-#endif /* CONFIG_NUMA_BALANCING */
+-
+ static void
+ account_entity_enqueue(struct cfs_rq *cfs_rq, struct sched_entity *se)
+ {
+@@ -5865,17 +3600,6 @@ static inline void set_idle_cores(int cpu, int val)
+ 		WRITE_ONCE(sds->has_idle_cores, val);
+ }
  
+-static inline bool test_idle_cores(int cpu)
+-{
+-	struct sched_domain_shared *sds;
+-
+-	sds = rcu_dereference(per_cpu(sd_llc_shared, cpu));
+-	if (sds)
+-		return READ_ONCE(sds->has_idle_cores);
+-
+-	return false;
+-}
+-
  /*
-- * sys_nice - change the priority of the current process.
-- * @increment: priority increment
-+ * __cond_resched_lock() - if a reschedule is pending, drop the given lock,
-+ * call schedule, and on return reacquire the lock.
-  *
-- * sys_setpriority is a more generic, but much slower function that
-- * does similar things.
-+ * This works OK both with and without CONFIG_PREEMPTION. We do strange low-level
-+ * operations here to prevent schedule() from being called twice (once via
-+ * spin_unlock(), once by hand).
-  */
--SYSCALL_DEFINE1(nice, int, increment)
-+int __cond_resched_lock(spinlock_t *lock)
+  * Scans the local SMT mask to see if the entire core is idle, and records this
+  * information in sd_llc_shared->has_idle_cores.
+@@ -5967,11 +3691,6 @@ static inline void set_idle_cores(int cpu, int val)
  {
--	long nice, retval;
--
--	/*
--	 * Setpriority might change our priority at the same moment.
--	 * We don't have to worry. Conceptually one call occurs first
--	 * and we have a single winner.
--	 */
--	increment = clamp(increment, -NICE_WIDTH, NICE_WIDTH);
--	nice = task_nice(current) + increment;
--
--	nice = clamp_val(nice, MIN_NICE, MAX_NICE);
--	if (increment < 0 && !can_nice(current, nice))
--		return -EPERM;
-+	int resched = should_resched(PREEMPT_LOCK_OFFSET);
-+	int ret = 0;
- 
--	retval = security_task_setnice(current, nice);
--	if (retval)
--		return retval;
-+	lockdep_assert_held(lock);
- 
--	set_user_nice(current, nice);
--	return 0;
-+	if (spin_needbreak(lock) || resched) {
-+		spin_unlock(lock);
-+		if (!_cond_resched())
-+			cpu_relax();
-+		ret = 1;
-+		spin_lock(lock);
-+	}
-+	return ret;
  }
-+EXPORT_SYMBOL(__cond_resched_lock);
  
--#endif
+-static inline bool test_idle_cores(int cpu)
+-{
+-	return false;
+-}
 -
--/**
-- * task_prio - return the priority value of a given task.
-- * @p: the task in question.
-- *
-- * Return: The priority value as seen by users in /proc.
-- *
-- * sched policy         return value   kernel prio    user prio/nice
-- *
-- * normal, batch, idle     [0 ... 39]  [100 ... 139]          0/[-20 ... 19]
-- * fifo, rr             [-2 ... -100]     [98 ... 0]  [1 ... 99]
-- * deadline                     -101             -1           0
-- */
--int task_prio(const struct task_struct *p)
-+int __cond_resched_rwlock_read(rwlock_t *lock)
+ static inline int select_idle_core(struct task_struct *p, int core, struct cpumask *cpus, int *idle_cpu)
  {
--	return p->prio - MAX_RT_PRIO;
-+	int resched = should_resched(PREEMPT_LOCK_OFFSET);
-+	int ret = 0;
-+
-+	lockdep_assert_held_read(lock);
-+
-+	if (rwlock_needbreak(lock) || resched) {
-+		read_unlock(lock);
-+		if (!_cond_resched())
-+			cpu_relax();
-+		ret = 1;
-+		read_lock(lock);
-+	}
-+	return ret;
+ 	return __select_idle_cpu(core, p);
+@@ -7982,30 +5701,6 @@ void print_cfs_stats(struct seq_file *m, int cpu)
+ 		print_cfs_rq(m, cpu, cfs_rq);
+ 	rcu_read_unlock();
  }
-+EXPORT_SYMBOL(__cond_resched_rwlock_read);
- 
--/**
-- * idle_cpu - is a given CPU idle currently?
-- * @cpu: the processor in question.
-- *
-- * Return: 1 if the CPU is currently idle. 0 otherwise.
-- */
--int idle_cpu(int cpu)
-+int __cond_resched_rwlock_write(rwlock_t *lock)
- {
--	struct rq *rq = cpu_rq(cpu);
-+	int resched = should_resched(PREEMPT_LOCK_OFFSET);
-+	int ret = 0;
- 
--	if (rq->curr != rq->idle)
--		return 0;
 -
--	if (rq->nr_running)
--		return 0;
--
--#ifdef CONFIG_SMP
--	if (rq->ttwu_pending)
--		return 0;
--#endif
--
--	return 1;
--}
--
--/**
-- * available_idle_cpu - is a given CPU idle for enqueuing work.
-- * @cpu: the CPU in question.
-- *
-- * Return: 1 if the CPU is currently idle. 0 otherwise.
-- */
--int available_idle_cpu(int cpu)
+-#ifdef CONFIG_NUMA_BALANCING
+-void show_numa_stats(struct task_struct *p, struct seq_file *m)
 -{
--	if (!idle_cpu(cpu))
--		return 0;
+-	int node;
+-	unsigned long tsf = 0, tpf = 0, gsf = 0, gpf = 0;
+-	struct numa_group *ng;
 -
--	if (vcpu_is_preempted(cpu))
--		return 0;
--
--	return 1;
--}
--
--/**
-- * idle_task - return the idle task for a given CPU.
-- * @cpu: the processor in question.
-- *
-- * Return: The idle task for the CPU @cpu.
-- */
--struct task_struct *idle_task(int cpu)
--{
--	return cpu_rq(cpu)->idle;
--}
--
--#ifdef CONFIG_SCHED_CORE
--int sched_core_idle_cpu(int cpu)
--{
--	struct rq *rq = cpu_rq(cpu);
--
--	if (sched_core_enabled(rq) && rq->curr == rq->idle)
--		return 1;
--
--	return idle_cpu(cpu);
--}
--
--#endif
--
--#ifdef CONFIG_SMP
--/*
-- * This function computes an effective utilization for the given CPU, to be
-- * used for frequency selection given the linear relation: f = u * f_max.
-- *
-- * The scheduler tracks the following metrics:
-- *
-- *   cpu_util_{cfs,rt,dl,irq}()
-- *   cpu_bw_dl()
-- *
-- * Where the cfs,rt and dl util numbers are tracked with the same metric and
-- * synchronized windows and are thus directly comparable.
-- *
-- * The cfs,rt,dl utilization are the running times measured with rq->clock_task
-- * which excludes things like IRQ and steal-time. These latter are then accrued
-- * in the irq utilization.
-- *
-- * The DL bandwidth number otoh is not a measured metric but a value computed
-- * based on the task model parameters and gives the minimal utilization
-- * required to meet deadlines.
-- */
--unsigned long effective_cpu_util(int cpu, unsigned long util_cfs,
--				 unsigned long *min,
--				 unsigned long *max)
--{
--	unsigned long util, irq, scale;
--	struct rq *rq = cpu_rq(cpu);
--
--	scale = arch_scale_cpu_capacity(cpu);
--
--	/*
--	 * Early check to see if IRQ/steal time saturates the CPU, can be
--	 * because of inaccuracies in how we track these -- see
--	 * update_irq_load_avg().
--	 */
--	irq = cpu_util_irq(rq);
--	if (unlikely(irq >= scale)) {
--		if (min)
--			*min = scale;
--		if (max)
--			*max = scale;
--		return scale;
--	}
--
--	if (min) {
--		/*
--		 * The minimum utilization returns the highest level between:
--		 * - the computed DL bandwidth needed with the IRQ pressure which
--		 *   steals time to the deadline task.
--		 * - The minimum performance requirement for CFS and/or RT.
--		 */
--		*min = max(irq + cpu_bw_dl(rq), uclamp_rq_get(rq, UCLAMP_MIN));
--
--		/*
--		 * When an RT task is runnable and uclamp is not used, we must
--		 * ensure that the task will run at maximum compute capacity.
--		 */
--		if (!uclamp_is_used() && rt_rq_is_runnable(&rq->rt))
--			*min = max(*min, scale);
--	}
--
--	/*
--	 * Because the time spend on RT/DL tasks is visible as 'lost' time to
--	 * CFS tasks and we use the same metric to track the effective
--	 * utilization (PELT windows are synchronized) we can directly add them
--	 * to obtain the CPU's actual utilization.
--	 */
--	util = util_cfs + cpu_util_rt(rq);
--	util += cpu_util_dl(rq);
--
--	/*
--	 * The maximum hint is a soft bandwidth requirement, which can be lower
--	 * than the actual utilization because of uclamp_max requirements.
--	 */
--	if (max)
--		*max = min(scale, uclamp_rq_get(rq, UCLAMP_MAX));
--
--	if (util >= scale)
--		return scale;
--
--	/*
--	 * There is still idle time; further improve the number by using the
--	 * irq metric. Because IRQ/steal time is hidden from the task clock we
--	 * need to scale the task numbers:
--	 *
--	 *              max - irq
--	 *   U' = irq + --------- * U
--	 *                 max
--	 */
--	util = scale_irq_capacity(util, irq, scale);
--	util += irq;
--
--	return min(scale, util);
--}
--
--unsigned long sched_cpu_util(int cpu)
--{
--	return effective_cpu_util(cpu, cpu_util_cfs(cpu), NULL, NULL);
--}
--#endif /* CONFIG_SMP */
--
--/**
-- * find_process_by_pid - find a process with a matching PID value.
-- * @pid: the pid in question.
-- *
-- * The task of @pid, if found. %NULL otherwise.
-- */
--static struct task_struct *find_process_by_pid(pid_t pid)
--{
--	return pid ? find_task_by_vpid(pid) : current;
--}
--
--static struct task_struct *find_get_task(pid_t pid)
--{
--	struct task_struct *p;
--	guard(rcu)();
--
--	p = find_process_by_pid(pid);
--	if (likely(p))
--		get_task_struct(p);
--
--	return p;
--}
--
--DEFINE_CLASS(find_get_task, struct task_struct *, if (_T) put_task_struct(_T),
--	     find_get_task(pid), pid_t pid)
--
--/*
-- * sched_setparam() passes in -1 for its policy, to let the functions
-- * it calls know not to change it.
-- */
--#define SETPARAM_POLICY	-1
--
--static void __setscheduler_params(struct task_struct *p,
--		const struct sched_attr *attr)
--{
--	int policy = attr->sched_policy;
--
--	if (policy == SETPARAM_POLICY)
--		policy = p->policy;
--
--	p->policy = policy;
--
--	if (dl_policy(policy))
--		__setparam_dl(p, attr);
--	else if (fair_policy(policy))
--		p->static_prio = NICE_TO_PRIO(attr->sched_nice);
--
--	/*
--	 * __sched_setscheduler() ensures attr->sched_priority == 0 when
--	 * !rt_policy. Always setting this ensures that things like
--	 * getparam()/getattr() don't report silly values for !rt tasks.
--	 */
--	p->rt_priority = attr->sched_priority;
--	p->normal_prio = normal_prio(p);
--	set_load_weight(p, true);
--}
--
--/*
-- * Check the target process has a UID that matches the current process's:
-- */
--static bool check_same_owner(struct task_struct *p)
--{
--	const struct cred *cred = current_cred(), *pcred;
--	guard(rcu)();
--
--	pcred = __task_cred(p);
--	return (uid_eq(cred->euid, pcred->euid) ||
--		uid_eq(cred->euid, pcred->uid));
--}
--
--/*
-- * Allow unprivileged RT tasks to decrease priority.
-- * Only issue a capable test if needed and only once to avoid an audit
-- * event on permitted non-privileged operations:
-- */
--static int user_check_sched_setscheduler(struct task_struct *p,
--					 const struct sched_attr *attr,
--					 int policy, int reset_on_fork)
--{
--	if (fair_policy(policy)) {
--		if (attr->sched_nice < task_nice(p) &&
--		    !is_nice_reduction(p, attr->sched_nice))
--			goto req_priv;
--	}
--
--	if (rt_policy(policy)) {
--		unsigned long rlim_rtprio = task_rlimit(p, RLIMIT_RTPRIO);
--
--		/* Can't set/change the rt policy: */
--		if (policy != p->policy && !rlim_rtprio)
--			goto req_priv;
--
--		/* Can't increase priority: */
--		if (attr->sched_priority > p->rt_priority &&
--		    attr->sched_priority > rlim_rtprio)
--			goto req_priv;
--	}
--
--	/*
--	 * Can't set/change SCHED_DEADLINE policy at all for now
--	 * (safest behavior); in the future we would like to allow
--	 * unprivileged DL tasks to increase their relative deadline
--	 * or reduce their runtime (both ways reducing utilization)
--	 */
--	if (dl_policy(policy))
--		goto req_priv;
--
--	/*
--	 * Treat SCHED_IDLE as nice 20. Only allow a switch to
--	 * SCHED_NORMAL if the RLIMIT_NICE would normally permit it.
--	 */
--	if (task_has_idle_policy(p) && !idle_policy(policy)) {
--		if (!is_nice_reduction(p, task_nice(p)))
--			goto req_priv;
--	}
--
--	/* Can't change other user's priorities: */
--	if (!check_same_owner(p))
--		goto req_priv;
--
--	/* Normal users shall not reset the sched_reset_on_fork flag: */
--	if (p->sched_reset_on_fork && !reset_on_fork)
--		goto req_priv;
--
--	return 0;
--
--req_priv:
--	if (!capable(CAP_SYS_NICE))
--		return -EPERM;
--
--	return 0;
--}
--
--static int __sched_setscheduler(struct task_struct *p,
--				const struct sched_attr *attr,
--				bool user, bool pi)
--{
--	int oldpolicy = -1, policy = attr->sched_policy;
--	int retval, oldprio, newprio, queued, running;
--	const struct sched_class *prev_class;
--	struct balance_callback *head;
--	struct rq_flags rf;
--	int reset_on_fork;
--	int queue_flags = DEQUEUE_SAVE | DEQUEUE_MOVE | DEQUEUE_NOCLOCK;
--	struct rq *rq;
--	bool cpuset_locked = false;
--
--	/* The pi code expects interrupts enabled */
--	BUG_ON(pi && in_interrupt());
--recheck:
--	/* Double check policy once rq lock held: */
--	if (policy < 0) {
--		reset_on_fork = p->sched_reset_on_fork;
--		policy = oldpolicy = p->policy;
--	} else {
--		reset_on_fork = !!(attr->sched_flags & SCHED_FLAG_RESET_ON_FORK);
--
--		if (!valid_policy(policy))
--			return -EINVAL;
--	}
--
--	if (attr->sched_flags & ~(SCHED_FLAG_ALL | SCHED_FLAG_SUGOV))
--		return -EINVAL;
--
--	/*
--	 * Valid priorities for SCHED_FIFO and SCHED_RR are
--	 * 1..MAX_RT_PRIO-1, valid priority for SCHED_NORMAL,
--	 * SCHED_BATCH and SCHED_IDLE is 0.
--	 */
--	if (attr->sched_priority > MAX_RT_PRIO-1)
--		return -EINVAL;
--	if ((dl_policy(policy) && !__checkparam_dl(attr)) ||
--	    (rt_policy(policy) != (attr->sched_priority != 0)))
--		return -EINVAL;
--
--	if (user) {
--		retval = user_check_sched_setscheduler(p, attr, policy, reset_on_fork);
--		if (retval)
--			return retval;
--
--		if (attr->sched_flags & SCHED_FLAG_SUGOV)
--			return -EINVAL;
--
--		retval = security_task_setscheduler(p);
--		if (retval)
--			return retval;
--	}
--
--	/* Update task specific "requested" clamps */
--	if (attr->sched_flags & SCHED_FLAG_UTIL_CLAMP) {
--		retval = uclamp_validate(p, attr);
--		if (retval)
--			return retval;
--	}
--
--	/*
--	 * SCHED_DEADLINE bandwidth accounting relies on stable cpusets
--	 * information.
--	 */
--	if (dl_policy(policy) || dl_policy(p->policy)) {
--		cpuset_locked = true;
--		cpuset_lock();
--	}
--
--	/*
--	 * Make sure no PI-waiters arrive (or leave) while we are
--	 * changing the priority of the task:
--	 *
--	 * To be able to change p->policy safely, the appropriate
--	 * runqueue lock must be held.
--	 */
--	rq = task_rq_lock(p, &rf);
--	update_rq_clock(rq);
--
--	/*
--	 * Changing the policy of the stop threads its a very bad idea:
--	 */
--	if (p == rq->stop) {
--		retval = -EINVAL;
--		goto unlock;
--	}
--
--	/*
--	 * If not changing anything there's no need to proceed further,
--	 * but store a possible modification of reset_on_fork.
--	 */
--	if (unlikely(policy == p->policy)) {
--		if (fair_policy(policy) && attr->sched_nice != task_nice(p))
--			goto change;
--		if (rt_policy(policy) && attr->sched_priority != p->rt_priority)
--			goto change;
--		if (dl_policy(policy) && dl_param_changed(p, attr))
--			goto change;
--		if (attr->sched_flags & SCHED_FLAG_UTIL_CLAMP)
--			goto change;
--
--		p->sched_reset_on_fork = reset_on_fork;
--		retval = 0;
--		goto unlock;
--	}
--change:
--
--	if (user) {
--#ifdef CONFIG_RT_GROUP_SCHED
--		/*
--		 * Do not allow realtime tasks into groups that have no runtime
--		 * assigned.
--		 */
--		if (rt_bandwidth_enabled() && rt_policy(policy) &&
--				task_group(p)->rt_bandwidth.rt_runtime == 0 &&
--				!task_group_is_autogroup(task_group(p))) {
--			retval = -EPERM;
--			goto unlock;
+-	rcu_read_lock();
+-	ng = rcu_dereference(p->numa_group);
+-	for_each_online_node(node) {
+-		if (p->numa_faults) {
+-			tsf = p->numa_faults[task_faults_idx(NUMA_MEM, node, 0)];
+-			tpf = p->numa_faults[task_faults_idx(NUMA_MEM, node, 1)];
 -		}
--#endif
--#ifdef CONFIG_SMP
--		if (dl_bandwidth_enabled() && dl_policy(policy) &&
--				!(attr->sched_flags & SCHED_FLAG_SUGOV)) {
--			cpumask_t *span = rq->rd->span;
--
--			/*
--			 * Don't allow tasks with an affinity mask smaller than
--			 * the entire root_domain to become SCHED_DEADLINE. We
--			 * will also fail if there's no bandwidth available.
--			 */
--			if (!cpumask_subset(span, p->cpus_ptr) ||
--			    rq->rd->dl_bw.bw == 0) {
--				retval = -EPERM;
--				goto unlock;
--			}
+-		if (ng) {
+-			gsf = ng->faults[task_faults_idx(NUMA_MEM, node, 0)],
+-			gpf = ng->faults[task_faults_idx(NUMA_MEM, node, 1)];
 -		}
--#endif
+-		print_numa_stats(m, node, tsf, tpf, gsf, gpf);
 -	}
--
--	/* Re-check policy now with rq lock held: */
--	if (unlikely(oldpolicy != -1 && oldpolicy != p->policy)) {
--		policy = oldpolicy = -1;
--		task_rq_unlock(rq, p, &rf);
--		if (cpuset_locked)
--			cpuset_unlock();
--		goto recheck;
--	}
--
--	/*
--	 * If setscheduling to SCHED_DEADLINE (or changing the parameters
--	 * of a SCHED_DEADLINE task) we need to check if enough bandwidth
--	 * is available.
--	 */
--	if ((dl_policy(policy) || dl_task(p)) && sched_dl_overflow(p, policy, attr)) {
--		retval = -EBUSY;
--		goto unlock;
--	}
--
--	p->sched_reset_on_fork = reset_on_fork;
--	oldprio = p->prio;
--
--	newprio = __normal_prio(policy, attr->sched_priority, attr->sched_nice);
--	if (pi) {
--		/*
--		 * Take priority boosted tasks into account. If the new
--		 * effective priority is unchanged, we just store the new
--		 * normal parameters and do not touch the scheduler class and
--		 * the runqueue. This will be done when the task deboost
--		 * itself.
--		 */
--		newprio = rt_effective_prio(p, newprio);
--		if (newprio == oldprio)
--			queue_flags &= ~DEQUEUE_MOVE;
--	}
--
--	queued = task_on_rq_queued(p);
--	running = task_current(rq, p);
--	if (queued)
--		dequeue_task(rq, p, queue_flags);
--	if (running)
--		put_prev_task(rq, p);
--
--	prev_class = p->sched_class;
--
--	if (!(attr->sched_flags & SCHED_FLAG_KEEP_PARAMS)) {
--		__setscheduler_params(p, attr);
--		__setscheduler_prio(p, newprio);
--	}
--	__setscheduler_uclamp(p, attr);
--
--	if (queued) {
--		/*
--		 * We enqueue to tail when the priority of a task is
--		 * increased (user space view).
--		 */
--		if (oldprio < p->prio)
--			queue_flags |= ENQUEUE_HEAD;
--
--		enqueue_task(rq, p, queue_flags);
--	}
--	if (running)
--		set_next_task(rq, p);
--
--	check_class_changed(rq, p, prev_class, oldprio);
--
--	/* Avoid rq from going away on us: */
--	preempt_disable();
--	head = splice_balance_callbacks(rq);
--	task_rq_unlock(rq, p, &rf);
--
--	if (pi) {
--		if (cpuset_locked)
--			cpuset_unlock();
--		rt_mutex_adjust_pi(p);
--	}
--
--	/* Run balance callbacks after we've adjusted the PI chain: */
--	balance_callbacks(rq, head);
--	preempt_enable();
--
--	return 0;
--
--unlock:
--	task_rq_unlock(rq, p, &rf);
--	if (cpuset_locked)
--		cpuset_unlock();
--	return retval;
+-	rcu_read_unlock();
 -}
--
--static int _sched_setscheduler(struct task_struct *p, int policy,
--			       const struct sched_param *param, bool check)
--{
--	struct sched_attr attr = {
--		.sched_policy   = policy,
--		.sched_priority = param->sched_priority,
--		.sched_nice	= PRIO_TO_NICE(p->static_prio),
--	};
--
--	/* Fixup the legacy SCHED_RESET_ON_FORK hack. */
--	if ((policy != SETPARAM_POLICY) && (policy & SCHED_RESET_ON_FORK)) {
--		attr.sched_flags |= SCHED_FLAG_RESET_ON_FORK;
--		policy &= ~SCHED_RESET_ON_FORK;
--		attr.sched_policy = policy;
--	}
--
--	return __sched_setscheduler(p, &attr, check, true);
--}
--/**
-- * sched_setscheduler - change the scheduling policy and/or RT priority of a thread.
-- * @p: the task in question.
-- * @policy: new policy.
-- * @param: structure containing the new RT priority.
-- *
-- * Use sched_set_fifo(), read its comment.
-- *
-- * Return: 0 on success. An error code otherwise.
-- *
-- * NOTE that the task may be already dead.
-- */
--int sched_setscheduler(struct task_struct *p, int policy,
--		       const struct sched_param *param)
--{
--	return _sched_setscheduler(p, policy, param, true);
--}
--
--int sched_setattr(struct task_struct *p, const struct sched_attr *attr)
--{
--	return __sched_setscheduler(p, attr, true, true);
--}
--
--int sched_setattr_nocheck(struct task_struct *p, const struct sched_attr *attr)
--{
--	return __sched_setscheduler(p, attr, false, true);
--}
--EXPORT_SYMBOL_GPL(sched_setattr_nocheck);
--
--/**
-- * sched_setscheduler_nocheck - change the scheduling policy and/or RT priority of a thread from kernelspace.
-- * @p: the task in question.
-- * @policy: new policy.
-- * @param: structure containing the new RT priority.
-- *
-- * Just like sched_setscheduler, only don't bother checking if the
-- * current context has permission.  For example, this is needed in
-- * stop_machine(): we create temporary high priority worker threads,
-- * but our caller might not have that capability.
-- *
-- * Return: 0 on success. An error code otherwise.
-- */
--int sched_setscheduler_nocheck(struct task_struct *p, int policy,
--			       const struct sched_param *param)
--{
--	return _sched_setscheduler(p, policy, param, false);
--}
--
--/*
-- * SCHED_FIFO is a broken scheduler model; that is, it is fundamentally
-- * incapable of resource management, which is the one thing an OS really should
-- * be doing.
-- *
-- * This is of course the reason it is limited to privileged users only.
-- *
-- * Worse still; it is fundamentally impossible to compose static priority
-- * workloads. You cannot take two correctly working static prio workloads
-- * and smash them together and still expect them to work.
-- *
-- * For this reason 'all' FIFO tasks the kernel creates are basically at:
-- *
-- *   MAX_RT_PRIO / 2
-- *
-- * The administrator _MUST_ configure the system, the kernel simply doesn't
-- * know enough information to make a sensible choice.
-- */
--void sched_set_fifo(struct task_struct *p)
--{
--	struct sched_param sp = { .sched_priority = MAX_RT_PRIO / 2 };
--	WARN_ON_ONCE(sched_setscheduler_nocheck(p, SCHED_FIFO, &sp) != 0);
--}
--EXPORT_SYMBOL_GPL(sched_set_fifo);
--
--/*
-- * For when you don't much care about FIFO, but want to be above SCHED_NORMAL.
-- */
--void sched_set_fifo_low(struct task_struct *p)
--{
--	struct sched_param sp = { .sched_priority = 1 };
--	WARN_ON_ONCE(sched_setscheduler_nocheck(p, SCHED_FIFO, &sp) != 0);
--}
--EXPORT_SYMBOL_GPL(sched_set_fifo_low);
--
--void sched_set_normal(struct task_struct *p, int nice)
--{
--	struct sched_attr attr = {
--		.sched_policy = SCHED_NORMAL,
--		.sched_nice = nice,
--	};
--	WARN_ON_ONCE(sched_setattr_nocheck(p, &attr) != 0);
--}
--EXPORT_SYMBOL_GPL(sched_set_normal);
--
--static int
--do_sched_setscheduler(pid_t pid, int policy, struct sched_param __user *param)
--{
--	struct sched_param lparam;
--
--	if (!param || pid < 0)
--		return -EINVAL;
--	if (copy_from_user(&lparam, param, sizeof(struct sched_param)))
--		return -EFAULT;
--
--	CLASS(find_get_task, p)(pid);
--	if (!p)
--		return -ESRCH;
--
--	return sched_setscheduler(p, policy, &lparam);
--}
--
--/*
-- * Mimics kernel/events/core.c perf_copy_attr().
-- */
--static int sched_copy_attr(struct sched_attr __user *uattr, struct sched_attr *attr)
--{
--	u32 size;
--	int ret;
--
--	/* Zero the full structure, so that a short copy will be nice: */
--	memset(attr, 0, sizeof(*attr));
--
--	ret = get_user(size, &uattr->size);
--	if (ret)
--		return ret;
--
--	/* ABI compatibility quirk: */
--	if (!size)
--		size = SCHED_ATTR_SIZE_VER0;
--	if (size < SCHED_ATTR_SIZE_VER0 || size > PAGE_SIZE)
--		goto err_size;
--
--	ret = copy_struct_from_user(attr, sizeof(*attr), uattr, size);
--	if (ret) {
--		if (ret == -E2BIG)
--			goto err_size;
--		return ret;
--	}
--
--	if ((attr->sched_flags & SCHED_FLAG_UTIL_CLAMP) &&
--	    size < SCHED_ATTR_SIZE_VER1)
--		return -EINVAL;
--
--	/*
--	 * XXX: Do we want to be lenient like existing syscalls; or do we want
--	 * to be strict and return an error on out-of-bounds values?
--	 */
--	attr->sched_nice = clamp(attr->sched_nice, MIN_NICE, MAX_NICE);
--
--	return 0;
--
--err_size:
--	put_user(sizeof(*attr), &uattr->size);
--	return -E2BIG;
--}
--
--static void get_params(struct task_struct *p, struct sched_attr *attr)
--{
--	if (task_has_dl_policy(p))
--		__getparam_dl(p, attr);
--	else if (task_has_rt_policy(p))
--		attr->sched_priority = p->rt_priority;
--	else
--		attr->sched_nice = task_nice(p);
--}
--
--/**
-- * sys_sched_setscheduler - set/change the scheduler policy and RT priority
-- * @pid: the pid in question.
-- * @policy: new policy.
-- * @param: structure containing the new RT priority.
-- *
-- * Return: 0 on success. An error code otherwise.
-- */
--SYSCALL_DEFINE3(sched_setscheduler, pid_t, pid, int, policy, struct sched_param __user *, param)
--{
--	if (policy < 0)
--		return -EINVAL;
--
--	return do_sched_setscheduler(pid, policy, param);
--}
--
--/**
-- * sys_sched_setparam - set/change the RT priority of a thread
-- * @pid: the pid in question.
-- * @param: structure containing the new RT priority.
-- *
-- * Return: 0 on success. An error code otherwise.
-- */
--SYSCALL_DEFINE2(sched_setparam, pid_t, pid, struct sched_param __user *, param)
--{
--	return do_sched_setscheduler(pid, SETPARAM_POLICY, param);
--}
--
--/**
-- * sys_sched_setattr - same as above, but with extended sched_attr
-- * @pid: the pid in question.
-- * @uattr: structure containing the extended parameters.
-- * @flags: for future extension.
-- */
--SYSCALL_DEFINE3(sched_setattr, pid_t, pid, struct sched_attr __user *, uattr,
--			       unsigned int, flags)
--{
--	struct sched_attr attr;
--	int retval;
--
--	if (!uattr || pid < 0 || flags)
--		return -EINVAL;
--
--	retval = sched_copy_attr(uattr, &attr);
--	if (retval)
--		return retval;
--
--	if ((int)attr.sched_policy < 0)
--		return -EINVAL;
--	if (attr.sched_flags & SCHED_FLAG_KEEP_POLICY)
--		attr.sched_policy = SETPARAM_POLICY;
--
--	CLASS(find_get_task, p)(pid);
--	if (!p)
--		return -ESRCH;
--
--	if (attr.sched_flags & SCHED_FLAG_KEEP_PARAMS)
--		get_params(p, &attr);
--
--	return sched_setattr(p, &attr);
--}
--
--/**
-- * sys_sched_getscheduler - get the policy (scheduling class) of a thread
-- * @pid: the pid in question.
-- *
-- * Return: On success, the policy of the thread. Otherwise, a negative error
-- * code.
-- */
--SYSCALL_DEFINE1(sched_getscheduler, pid_t, pid)
--{
--	struct task_struct *p;
--	int retval;
--
--	if (pid < 0)
--		return -EINVAL;
--
--	guard(rcu)();
--	p = find_process_by_pid(pid);
--	if (!p)
--		return -ESRCH;
--
--	retval = security_task_getscheduler(p);
--	if (!retval) {
--		retval = p->policy;
--		if (p->sched_reset_on_fork)
--			retval |= SCHED_RESET_ON_FORK;
--	}
--	return retval;
--}
--
--/**
-- * sys_sched_getparam - get the RT priority of a thread
-- * @pid: the pid in question.
-- * @param: structure containing the RT priority.
-- *
-- * Return: On success, 0 and the RT priority is in @param. Otherwise, an error
-- * code.
-- */
--SYSCALL_DEFINE2(sched_getparam, pid_t, pid, struct sched_param __user *, param)
--{
--	struct sched_param lp = { .sched_priority = 0 };
--	struct task_struct *p;
--	int retval;
--
--	if (!param || pid < 0)
--		return -EINVAL;
--
--	scoped_guard (rcu) {
--		p = find_process_by_pid(pid);
--		if (!p)
--			return -ESRCH;
--
--		retval = security_task_getscheduler(p);
--		if (retval)
--			return retval;
--
--		if (task_has_rt_policy(p))
--			lp.sched_priority = p->rt_priority;
--	}
--
--	/*
--	 * This one might sleep, we cannot do it with a spinlock held ...
--	 */
--	return copy_to_user(param, &lp, sizeof(*param)) ? -EFAULT : 0;
--}
--
--/*
-- * Copy the kernel size attribute structure (which might be larger
-- * than what user-space knows about) to user-space.
-- *
-- * Note that all cases are valid: user-space buffer can be larger or
-- * smaller than the kernel-space buffer. The usual case is that both
-- * have the same size.
-- */
--static int
--sched_attr_copy_to_user(struct sched_attr __user *uattr,
--			struct sched_attr *kattr,
--			unsigned int usize)
--{
--	unsigned int ksize = sizeof(*kattr);
--
--	if (!access_ok(uattr, usize))
--		return -EFAULT;
--
--	/*
--	 * sched_getattr() ABI forwards and backwards compatibility:
--	 *
--	 * If usize == ksize then we just copy everything to user-space and all is good.
--	 *
--	 * If usize < ksize then we only copy as much as user-space has space for,
--	 * this keeps ABI compatibility as well. We skip the rest.
--	 *
--	 * If usize > ksize then user-space is using a newer version of the ABI,
--	 * which part the kernel doesn't know about. Just ignore it - tooling can
--	 * detect the kernel's knowledge of attributes from the attr->size value
--	 * which is set to ksize in this case.
--	 */
--	kattr->size = min(usize, ksize);
--
--	if (copy_to_user(uattr, kattr, kattr->size))
--		return -EFAULT;
--
--	return 0;
--}
--
--/**
-- * sys_sched_getattr - similar to sched_getparam, but with sched_attr
-- * @pid: the pid in question.
-- * @uattr: structure containing the extended parameters.
-- * @usize: sizeof(attr) for fwd/bwd comp.
-- * @flags: for future extension.
-- */
--SYSCALL_DEFINE4(sched_getattr, pid_t, pid, struct sched_attr __user *, uattr,
--		unsigned int, usize, unsigned int, flags)
--{
--	struct sched_attr kattr = { };
--	struct task_struct *p;
--	int retval;
--
--	if (!uattr || pid < 0 || usize > PAGE_SIZE ||
--	    usize < SCHED_ATTR_SIZE_VER0 || flags)
--		return -EINVAL;
--
--	scoped_guard (rcu) {
--		p = find_process_by_pid(pid);
--		if (!p)
--			return -ESRCH;
--
--		retval = security_task_getscheduler(p);
--		if (retval)
--			return retval;
--
--		kattr.sched_policy = p->policy;
--		if (p->sched_reset_on_fork)
--			kattr.sched_flags |= SCHED_FLAG_RESET_ON_FORK;
--		get_params(p, &kattr);
--		kattr.sched_flags &= SCHED_FLAG_ALL;
--
--#ifdef CONFIG_UCLAMP_TASK
--		/*
--		 * This could race with another potential updater, but this is fine
--		 * because it'll correctly read the old or the new value. We don't need
--		 * to guarantee who wins the race as long as it doesn't return garbage.
--		 */
--		kattr.sched_util_min = p->uclamp_req[UCLAMP_MIN].value;
--		kattr.sched_util_max = p->uclamp_req[UCLAMP_MAX].value;
--#endif
--	}
--
--	return sched_attr_copy_to_user(uattr, &kattr, usize);
--}
--
--#ifdef CONFIG_SMP
--int dl_task_check_affinity(struct task_struct *p, const struct cpumask *mask)
--{
--	/*
--	 * If the task isn't a deadline task or admission control is
--	 * disabled then we don't care about affinity changes.
--	 */
--	if (!task_has_dl_policy(p) || !dl_bandwidth_enabled())
--		return 0;
--
--	/*
--	 * Since bandwidth control happens on root_domain basis,
--	 * if admission test is enabled, we only admit -deadline
--	 * tasks allowed to run on all the CPUs in the task's
--	 * root_domain.
--	 */
--	guard(rcu)();
--	if (!cpumask_subset(task_rq(p)->rd->span, mask))
--		return -EBUSY;
--
--	return 0;
--}
--#endif
--
--static int
--__sched_setaffinity(struct task_struct *p, struct affinity_context *ctx)
--{
--	int retval;
--	cpumask_var_t cpus_allowed, new_mask;
--
--	if (!alloc_cpumask_var(&cpus_allowed, GFP_KERNEL))
--		return -ENOMEM;
--
--	if (!alloc_cpumask_var(&new_mask, GFP_KERNEL)) {
--		retval = -ENOMEM;
--		goto out_free_cpus_allowed;
--	}
--
--	cpuset_cpus_allowed(p, cpus_allowed);
--	cpumask_and(new_mask, ctx->new_mask, cpus_allowed);
--
--	ctx->new_mask = new_mask;
--	ctx->flags |= SCA_CHECK;
--
--	retval = dl_task_check_affinity(p, new_mask);
--	if (retval)
--		goto out_free_new_mask;
--
--	retval = __set_cpus_allowed_ptr(p, ctx);
--	if (retval)
--		goto out_free_new_mask;
--
--	cpuset_cpus_allowed(p, cpus_allowed);
--	if (!cpumask_subset(new_mask, cpus_allowed)) {
--		/*
--		 * We must have raced with a concurrent cpuset update.
--		 * Just reset the cpumask to the cpuset's cpus_allowed.
--		 */
--		cpumask_copy(new_mask, cpus_allowed);
--
--		/*
--		 * If SCA_USER is set, a 2nd call to __set_cpus_allowed_ptr()
--		 * will restore the previous user_cpus_ptr value.
--		 *
--		 * In the unlikely event a previous user_cpus_ptr exists,
--		 * we need to further restrict the mask to what is allowed
--		 * by that old user_cpus_ptr.
--		 */
--		if (unlikely((ctx->flags & SCA_USER) && ctx->user_mask)) {
--			bool empty = !cpumask_and(new_mask, new_mask,
--						  ctx->user_mask);
--
--			if (WARN_ON_ONCE(empty))
--				cpumask_copy(new_mask, cpus_allowed);
--		}
--		__set_cpus_allowed_ptr(p, ctx);
--		retval = -EINVAL;
--	}
--
--out_free_new_mask:
--	free_cpumask_var(new_mask);
--out_free_cpus_allowed:
--	free_cpumask_var(cpus_allowed);
--	return retval;
--}
--
--long sched_setaffinity(pid_t pid, const struct cpumask *in_mask)
--{
--	struct affinity_context ac;
--	struct cpumask *user_mask;
--	int retval;
--
--	CLASS(find_get_task, p)(pid);
--	if (!p)
--		return -ESRCH;
--
--	if (p->flags & PF_NO_SETAFFINITY)
--		return -EINVAL;
--
--	if (!check_same_owner(p)) {
--		guard(rcu)();
--		if (!ns_capable(__task_cred(p)->user_ns, CAP_SYS_NICE))
--			return -EPERM;
--	}
--
--	retval = security_task_setscheduler(p);
--	if (retval)
--		return retval;
--
--	/*
--	 * With non-SMP configs, user_cpus_ptr/user_mask isn't used and
--	 * alloc_user_cpus_ptr() returns NULL.
--	 */
--	user_mask = alloc_user_cpus_ptr(NUMA_NO_NODE);
--	if (user_mask) {
--		cpumask_copy(user_mask, in_mask);
--	} else if (IS_ENABLED(CONFIG_SMP)) {
--		return -ENOMEM;
--	}
--
--	ac = (struct affinity_context){
--		.new_mask  = in_mask,
--		.user_mask = user_mask,
--		.flags     = SCA_USER,
--	};
--
--	retval = __sched_setaffinity(p, &ac);
--	kfree(ac.user_mask);
--
--	return retval;
--}
--
--static int get_user_cpu_mask(unsigned long __user *user_mask_ptr, unsigned len,
--			     struct cpumask *new_mask)
--{
--	if (len < cpumask_size())
--		cpumask_clear(new_mask);
--	else if (len > cpumask_size())
--		len = cpumask_size();
--
--	return copy_from_user(new_mask, user_mask_ptr, len) ? -EFAULT : 0;
--}
--
--/**
-- * sys_sched_setaffinity - set the CPU affinity of a process
-- * @pid: pid of the process
-- * @len: length in bytes of the bitmask pointed to by user_mask_ptr
-- * @user_mask_ptr: user-space pointer to the new CPU mask
-- *
-- * Return: 0 on success. An error code otherwise.
-- */
--SYSCALL_DEFINE3(sched_setaffinity, pid_t, pid, unsigned int, len,
--		unsigned long __user *, user_mask_ptr)
--{
--	cpumask_var_t new_mask;
--	int retval;
--
--	if (!alloc_cpumask_var(&new_mask, GFP_KERNEL))
--		return -ENOMEM;
--
--	retval = get_user_cpu_mask(user_mask_ptr, len, new_mask);
--	if (retval == 0)
--		retval = sched_setaffinity(pid, new_mask);
--	free_cpumask_var(new_mask);
--	return retval;
--}
--
--long sched_getaffinity(pid_t pid, struct cpumask *mask)
--{
--	struct task_struct *p;
--	int retval;
--
--	guard(rcu)();
--	p = find_process_by_pid(pid);
--	if (!p)
--		return -ESRCH;
--
--	retval = security_task_getscheduler(p);
--	if (retval)
--		return retval;
--
--	guard(raw_spinlock_irqsave)(&p->pi_lock);
--	cpumask_and(mask, &p->cpus_mask, cpu_active_mask);
--
--	return 0;
--}
--
--/**
-- * sys_sched_getaffinity - get the CPU affinity of a process
-- * @pid: pid of the process
-- * @len: length in bytes of the bitmask pointed to by user_mask_ptr
-- * @user_mask_ptr: user-space pointer to hold the current CPU mask
-- *
-- * Return: size of CPU mask copied to user_mask_ptr on success. An
-- * error code otherwise.
-- */
--SYSCALL_DEFINE3(sched_getaffinity, pid_t, pid, unsigned int, len,
--		unsigned long __user *, user_mask_ptr)
--{
--	int ret;
--	cpumask_var_t mask;
--
--	if ((len * BITS_PER_BYTE) < nr_cpu_ids)
--		return -EINVAL;
--	if (len & (sizeof(unsigned long)-1))
--		return -EINVAL;
--
--	if (!zalloc_cpumask_var(&mask, GFP_KERNEL))
--		return -ENOMEM;
--
--	ret = sched_getaffinity(pid, mask);
--	if (ret == 0) {
--		unsigned int retlen = min(len, cpumask_size());
--
--		if (copy_to_user(user_mask_ptr, cpumask_bits(mask), retlen))
--			ret = -EFAULT;
--		else
--			ret = retlen;
--	}
--	free_cpumask_var(mask);
--
--	return ret;
--}
--
--static void do_sched_yield(void)
--{
--	struct rq_flags rf;
--	struct rq *rq;
--
--	rq = this_rq_lock_irq(&rf);
--
--	schedstat_inc(rq->yld_count);
--	current->sched_class->yield_task(rq);
--
--	preempt_disable();
--	rq_unlock_irq(rq, &rf);
--	sched_preempt_enable_no_resched();
--
--	schedule();
--}
--
--/**
-- * sys_sched_yield - yield the current processor to other threads.
-- *
-- * This function yields the current CPU to other tasks. If there are no
-- * other threads running on this CPU then this function will return.
-- *
-- * Return: 0.
-- */
--SYSCALL_DEFINE0(sched_yield)
--{
--	do_sched_yield();
--	return 0;
--}
--
--#if !defined(CONFIG_PREEMPTION) || defined(CONFIG_PREEMPT_DYNAMIC)
--int __sched __cond_resched(void)
--{
--	if (should_resched(0)) {
--		preempt_schedule_common();
--		return 1;
--	}
--	/*
--	 * In preemptible kernels, ->rcu_read_lock_nesting tells the tick
--	 * whether the current CPU is in an RCU read-side critical section,
--	 * so the tick can report quiescent states even for CPUs looping
--	 * in kernel context.  In contrast, in non-preemptible kernels,
--	 * RCU readers leave no in-memory hints, which means that CPU-bound
--	 * processes executing in kernel context might never report an
--	 * RCU quiescent state.  Therefore, the following code causes
--	 * cond_resched() to report a quiescent state, but only when RCU
--	 * is in urgent need of one.
--	 */
--#ifndef CONFIG_PREEMPT_RCU
--	rcu_all_qs();
--#endif
--	return 0;
--}
--EXPORT_SYMBOL(__cond_resched);
--#endif
--
--#ifdef CONFIG_PREEMPT_DYNAMIC
--#if defined(CONFIG_HAVE_PREEMPT_DYNAMIC_CALL)
--#define cond_resched_dynamic_enabled	__cond_resched
--#define cond_resched_dynamic_disabled	((void *)&__static_call_return0)
--DEFINE_STATIC_CALL_RET0(cond_resched, __cond_resched);
--EXPORT_STATIC_CALL_TRAMP(cond_resched);
--
--#define might_resched_dynamic_enabled	__cond_resched
--#define might_resched_dynamic_disabled	((void *)&__static_call_return0)
--DEFINE_STATIC_CALL_RET0(might_resched, __cond_resched);
--EXPORT_STATIC_CALL_TRAMP(might_resched);
--#elif defined(CONFIG_HAVE_PREEMPT_DYNAMIC_KEY)
--static DEFINE_STATIC_KEY_FALSE(sk_dynamic_cond_resched);
--int __sched dynamic_cond_resched(void)
--{
--	klp_sched_try_switch();
--	if (!static_branch_unlikely(&sk_dynamic_cond_resched))
--		return 0;
--	return __cond_resched();
--}
--EXPORT_SYMBOL(dynamic_cond_resched);
--
--static DEFINE_STATIC_KEY_FALSE(sk_dynamic_might_resched);
--int __sched dynamic_might_resched(void)
--{
--	if (!static_branch_unlikely(&sk_dynamic_might_resched))
--		return 0;
--	return __cond_resched();
--}
--EXPORT_SYMBOL(dynamic_might_resched);
--#endif
--#endif
--
--/*
-- * __cond_resched_lock() - if a reschedule is pending, drop the given lock,
-- * call schedule, and on return reacquire the lock.
-- *
-- * This works OK both with and without CONFIG_PREEMPTION. We do strange low-level
-- * operations here to prevent schedule() from being called twice (once via
-- * spin_unlock(), once by hand).
-- */
--int __cond_resched_lock(spinlock_t *lock)
--{
--	int resched = should_resched(PREEMPT_LOCK_OFFSET);
--	int ret = 0;
--
--	lockdep_assert_held(lock);
--
--	if (spin_needbreak(lock) || resched) {
--		spin_unlock(lock);
--		if (!_cond_resched())
--			cpu_relax();
--		ret = 1;
--		spin_lock(lock);
--	}
--	return ret;
--}
--EXPORT_SYMBOL(__cond_resched_lock);
--
--int __cond_resched_rwlock_read(rwlock_t *lock)
--{
--	int resched = should_resched(PREEMPT_LOCK_OFFSET);
--	int ret = 0;
--
--	lockdep_assert_held_read(lock);
--
--	if (rwlock_needbreak(lock) || resched) {
--		read_unlock(lock);
--		if (!_cond_resched())
--			cpu_relax();
--		ret = 1;
--		read_lock(lock);
--	}
--	return ret;
--}
--EXPORT_SYMBOL(__cond_resched_rwlock_read);
--
--int __cond_resched_rwlock_write(rwlock_t *lock)
--{
--	int resched = should_resched(PREEMPT_LOCK_OFFSET);
--	int ret = 0;
--
--	lockdep_assert_held_write(lock);
-+	lockdep_assert_held_write(lock);
+-#endif /* CONFIG_NUMA_BALANCING */
+ #endif /* CONFIG_SCHED_DEBUG */
  
- 	if (rwlock_needbreak(lock) || resched) {
- 		write_unlock(lock);
-@@ -8911,100 +7362,6 @@ static inline void preempt_dynamic_init(void) { }
- 
- #endif /* #ifdef CONFIG_PREEMPT_DYNAMIC */
- 
--/**
-- * yield - yield the current processor to other threads.
-- *
-- * Do not ever use this function, there's a 99% chance you're doing it wrong.
-- *
-- * The scheduler is at all times free to pick the calling task as the most
-- * eligible task to run, if removing the yield() call from your code breaks
-- * it, it's already broken.
-- *
-- * Typical broken usage is:
-- *
-- * while (!event)
-- *	yield();
-- *
-- * where one assumes that yield() will let 'the other' process run that will
-- * make event true. If the current task is a SCHED_FIFO task that will never
-- * happen. Never use yield() as a progress guarantee!!
-- *
-- * If you want to use yield() to wait for something, use wait_event().
-- * If you want to use yield() to be 'nice' for others, use cond_resched().
-- * If you still want to use yield(), do not!
-- */
--void __sched yield(void)
--{
--	set_current_state(TASK_RUNNING);
--	do_sched_yield();
--}
--EXPORT_SYMBOL(yield);
--
--/**
-- * yield_to - yield the current processor to another thread in
-- * your thread group, or accelerate that thread toward the
-- * processor it's on.
-- * @p: target task
-- * @preempt: whether task preemption is allowed or not
-- *
-- * It's the caller's job to ensure that the target task struct
-- * can't go away on us before we can do any checks.
-- *
-- * Return:
-- *	true (>0) if we indeed boosted the target task.
-- *	false (0) if we failed to boost the target.
-- *	-ESRCH if there's no task to yield to.
-- */
--int __sched yield_to(struct task_struct *p, bool preempt)
--{
--	struct task_struct *curr = current;
--	struct rq *rq, *p_rq;
--	int yielded = 0;
--
--	scoped_guard (irqsave) {
--		rq = this_rq();
--
--again:
--		p_rq = task_rq(p);
--		/*
--		 * If we're the only runnable task on the rq and target rq also
--		 * has only one task, there's absolutely no point in yielding.
--		 */
--		if (rq->nr_running == 1 && p_rq->nr_running == 1)
--			return -ESRCH;
--
--		guard(double_rq_lock)(rq, p_rq);
--		if (task_rq(p) != p_rq)
--			goto again;
--
--		if (!curr->sched_class->yield_to_task)
--			return 0;
--
--		if (curr->sched_class != p->sched_class)
--			return 0;
--
--		if (task_on_cpu(p_rq, p) || !task_is_running(p))
--			return 0;
--
--		yielded = curr->sched_class->yield_to_task(rq, p);
--		if (yielded) {
--			schedstat_inc(rq->yld_count);
--			/*
--			 * Make p's CPU reschedule; pick_next_entity
--			 * takes care of fairness.
--			 */
--			if (preempt && rq != p_rq)
--				resched_curr(p_rq);
--		}
--	}
--
--	if (yielded)
--		schedule();
--
--	return yielded;
--}
--EXPORT_SYMBOL_GPL(yield_to);
--
- int io_schedule_prepare(void)
- {
- 	int old_iowait = current->in_iowait;
-@@ -9046,123 +7403,6 @@ void __sched io_schedule(void)
- }
- EXPORT_SYMBOL(io_schedule);
- 
--/**
-- * sys_sched_get_priority_max - return maximum RT priority.
-- * @policy: scheduling class.
-- *
-- * Return: On success, this syscall returns the maximum
-- * rt_priority that can be used by a given scheduling class.
-- * On failure, a negative error code is returned.
-- */
--SYSCALL_DEFINE1(sched_get_priority_max, int, policy)
--{
--	int ret = -EINVAL;
--
--	switch (policy) {
--	case SCHED_FIFO:
--	case SCHED_RR:
--		ret = MAX_RT_PRIO-1;
--		break;
--	case SCHED_DEADLINE:
--	case SCHED_NORMAL:
--	case SCHED_BATCH:
--	case SCHED_IDLE:
--		ret = 0;
--		break;
--	}
--	return ret;
--}
--
--/**
-- * sys_sched_get_priority_min - return minimum RT priority.
-- * @policy: scheduling class.
-- *
-- * Return: On success, this syscall returns the minimum
-- * rt_priority that can be used by a given scheduling class.
-- * On failure, a negative error code is returned.
-- */
--SYSCALL_DEFINE1(sched_get_priority_min, int, policy)
--{
--	int ret = -EINVAL;
--
--	switch (policy) {
--	case SCHED_FIFO:
--	case SCHED_RR:
--		ret = 1;
--		break;
--	case SCHED_DEADLINE:
--	case SCHED_NORMAL:
--	case SCHED_BATCH:
--	case SCHED_IDLE:
--		ret = 0;
--	}
--	return ret;
--}
--
--static int sched_rr_get_interval(pid_t pid, struct timespec64 *t)
--{
--	unsigned int time_slice = 0;
--	int retval;
--
--	if (pid < 0)
--		return -EINVAL;
--
--	scoped_guard (rcu) {
--		struct task_struct *p = find_process_by_pid(pid);
--		if (!p)
--			return -ESRCH;
--
--		retval = security_task_getscheduler(p);
--		if (retval)
--			return retval;
--
--		scoped_guard (task_rq_lock, p) {
--			struct rq *rq = scope.rq;
--			if (p->sched_class->get_rr_interval)
--				time_slice = p->sched_class->get_rr_interval(rq, p);
--		}
--	}
--
--	jiffies_to_timespec64(time_slice, t);
--	return 0;
--}
--
--/**
-- * sys_sched_rr_get_interval - return the default timeslice of a process.
-- * @pid: pid of the process.
-- * @interval: userspace pointer to the timeslice value.
-- *
-- * this syscall writes the default timeslice value of a given process
-- * into the user-space timespec buffer. A value of '0' means infinity.
-- *
-- * Return: On success, 0 and the timeslice is in @interval. Otherwise,
-- * an error code.
-- */
--SYSCALL_DEFINE2(sched_rr_get_interval, pid_t, pid,
--		struct __kernel_timespec __user *, interval)
--{
--	struct timespec64 t;
--	int retval = sched_rr_get_interval(pid, &t);
--
--	if (retval == 0)
--		retval = put_timespec64(&t, interval);
--
--	return retval;
--}
--
--#ifdef CONFIG_COMPAT_32BIT_TIME
--SYSCALL_DEFINE2(sched_rr_get_interval_time32, pid_t, pid,
--		struct old_timespec32 __user *, interval)
--{
--	struct timespec64 t;
--	int retval = sched_rr_get_interval(pid, &t);
--
--	if (retval == 0)
--		retval = put_old_timespec32(&t, interval);
--	return retval;
--}
--#endif
--
- void sched_show_task(struct task_struct *p)
- {
- 	unsigned long free = 0;
-diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
-index 7c39dbf31f75..18b4c8147364 100644
---- a/kernel/sched/sched.h
-+++ b/kernel/sched/sched.h
-@@ -2418,8 +2418,19 @@ extern void update_group_capacity(struct sched_domain *sd, int cpu);
- 
- extern void sched_balance_trigger(struct rq *rq);
- 
-+extern int __set_cpus_allowed_ptr(struct task_struct *p, struct affinity_context *ctx);
- extern void set_cpus_allowed_common(struct task_struct *p, struct affinity_context *ctx);
- 
-+static inline cpumask_t *alloc_user_cpus_ptr(int node)
-+{
-+	/*
-+	 * See do_set_cpus_allowed() above for the rcu_head usage.
-+	 */
-+	int size = max_t(int, cpumask_size(), sizeof(struct rcu_head));
-+
-+	return kmalloc_node(size, GFP_KERNEL, node);
-+}
-+
- static inline struct task_struct *get_push_task(struct rq *rq)
- {
- 	struct task_struct *p = rq->curr;
-@@ -2441,7 +2452,20 @@ static inline struct task_struct *get_push_task(struct rq *rq)
- 
- extern int push_cpu_stop(void *arg);
- 
--#endif
-+#else /* !CONFIG_SMP: */
-+
-+static inline int __set_cpus_allowed_ptr(struct task_struct *p,
-+					 struct affinity_context *ctx)
-+{
-+	return set_cpus_allowed_ptr(p, ctx->new_mask);
-+}
-+
-+static inline cpumask_t *alloc_user_cpus_ptr(int node)
-+{
-+	return NULL;
-+}
-+
-+#endif /* !CONFIG_SMP */
- 
- #ifdef CONFIG_CPU_IDLE
- static inline void idle_set_state(struct rq *rq,
-@@ -3113,6 +3137,36 @@ static inline bool uclamp_is_used(void)
- {
- 	return static_branch_likely(&sched_uclamp_used);
- }
-+
-+#define for_each_clamp_id(clamp_id) \
-+	for ((clamp_id) = 0; (clamp_id) < UCLAMP_CNT; (clamp_id)++)
-+
-+extern unsigned int sysctl_sched_uclamp_util_min_rt_default;
-+
-+
-+static inline unsigned int uclamp_none(enum uclamp_id clamp_id)
-+{
-+	if (clamp_id == UCLAMP_MIN)
-+		return 0;
-+	return SCHED_CAPACITY_SCALE;
-+}
-+
-+/* Integer rounded range for each bucket */
-+#define UCLAMP_BUCKET_DELTA DIV_ROUND_CLOSEST(SCHED_CAPACITY_SCALE, UCLAMP_BUCKETS)
-+
-+static inline unsigned int uclamp_bucket_id(unsigned int clamp_value)
-+{
-+	return min_t(unsigned int, clamp_value / UCLAMP_BUCKET_DELTA, UCLAMP_BUCKETS - 1);
-+}
-+
-+static inline void uclamp_se_set(struct uclamp_se *uc_se,
-+				 unsigned int value, bool user_defined)
-+{
-+	uc_se->value = value;
-+	uc_se->bucket_id = uclamp_bucket_id(value);
-+	uc_se->user_defined = user_defined;
-+}
-+
- #else /* CONFIG_UCLAMP_TASK */
- static inline unsigned long uclamp_eff_value(struct task_struct *p,
- 					     enum uclamp_id clamp_id)
-@@ -3148,6 +3202,7 @@ static inline bool uclamp_rq_is_idle(struct rq *rq)
- {
- 	return false;
- }
-+
- #endif /* CONFIG_UCLAMP_TASK */
- 
- #ifdef CONFIG_HAVE_SCHED_AVG_IRQ
-@@ -3490,4 +3545,53 @@ static inline void init_sched_mm_cid(struct task_struct *t) { }
- extern u64 avg_vruntime(struct cfs_rq *cfs_rq);
- extern int entity_eligible(struct cfs_rq *cfs_rq, struct sched_entity *se);
- 
-+#ifdef CONFIG_RT_MUTEXES
-+static inline int __rt_effective_prio(struct task_struct *pi_task, int prio)
-+{
-+	if (pi_task)
-+		prio = min(prio, pi_task->prio);
-+
-+	return prio;
-+}
-+
-+static inline int rt_effective_prio(struct task_struct *p, int prio)
-+{
-+	struct task_struct *pi_task = rt_mutex_get_top_task(p);
-+
-+	return __rt_effective_prio(pi_task, prio);
-+}
-+#else
-+static inline int rt_effective_prio(struct task_struct *p, int prio)
-+{
-+	return prio;
-+}
-+#endif
-+
-+extern int __sched_setscheduler(struct task_struct *p, const struct sched_attr *attr, bool user, bool pi);
-+extern int __sched_setaffinity(struct task_struct *p, struct affinity_context *ctx);
-+extern void __setscheduler_prio(struct task_struct *p, int prio);
-+extern void set_load_weight(struct task_struct *p, bool update_load);
-+extern void enqueue_task(struct rq *rq, struct task_struct *p, int flags);
-+extern void dequeue_task(struct rq *rq, struct task_struct *p, int flags);
-+
-+extern void check_class_changed(struct rq *rq, struct task_struct *p,
-+				const struct sched_class *prev_class,
-+				int oldprio);
-+
-+#ifdef CONFIG_SMP
-+extern struct balance_callback *splice_balance_callbacks(struct rq *rq);
-+extern void balance_callbacks(struct rq *rq, struct balance_callback *head);
-+#else
-+
-+static inline struct balance_callback *splice_balance_callbacks(struct rq *rq)
-+{
-+	return NULL;
-+}
-+
-+static inline void balance_callbacks(struct rq *rq, struct balance_callback *head)
-+{
-+}
-+
-+#endif
-+
- #endif /* _KERNEL_SCHED_SCHED_H */
-diff --git a/kernel/sched/syscalls.c b/kernel/sched/syscalls.c
+ __init void init_sched_fair_class(void)
+diff --git a/kernel/sched/numa_balancing.c b/kernel/sched/numa_balancing.c
 new file mode 100644
-index 000000000000..7b37a7bfbb16
+index 000000000000..2649ba6ed349
 --- /dev/null
-+++ b/kernel/sched/syscalls.c
-@@ -0,0 +1,1691 @@
++++ b/kernel/sched/numa_balancing.c
+@@ -0,0 +1,2277 @@
 +#include <linux/sched.h>
-+#include <linux/cpuset.h>
-+#include <linux/sched/debug.h>
-+
-+#include <uapi/linux/sched/types.h>
++#include <linux/memory-tiers.h>
++#include <linux/mempolicy.h>
++#include <linux/task_work.h>
 +
 +#include "sched.h"
-+#include "autogroup.h"
-+
-+static inline int __normal_prio(int policy, int rt_prio, int nice)
-+{
-+	int prio;
-+
-+	if (dl_policy(policy))
-+		prio = MAX_DL_PRIO - 1;
-+	else if (rt_policy(policy))
-+		prio = MAX_RT_PRIO - 1 - rt_prio;
-+	else
-+		prio = NICE_TO_PRIO(nice);
-+
-+	return prio;
-+}
-+
-+/*
-+ * Calculate the expected normal priority: i.e. priority
-+ * without taking RT-inheritance into account. Might be
-+ * boosted by interactivity modifiers. Changes upon fork,
-+ * setprio syscalls, and whenever the interactivity
-+ * estimator recalculates.
-+ */
-+static inline int normal_prio(struct task_struct *p)
-+{
-+	return __normal_prio(p->policy, p->rt_priority, PRIO_TO_NICE(p->static_prio));
-+}
-+
-+/*
-+ * Calculate the current priority, i.e. the priority
-+ * taken into account by the scheduler. This value might
-+ * be boosted by RT tasks, or might be boosted by
-+ * interactivity modifiers. Will be RT if the task got
-+ * RT-boosted. If not then it returns p->normal_prio.
-+ */
-+static int effective_prio(struct task_struct *p)
-+{
-+	p->normal_prio = normal_prio(p);
-+	/*
-+	 * If we are RT tasks or we were boosted to RT priority,
-+	 * keep the priority unchanged. Otherwise, update priority
-+	 * to the normal priority:
-+	 */
-+	if (!rt_prio(p->prio))
-+		return p->normal_prio;
-+	return p->prio;
-+}
-+
-+void set_user_nice(struct task_struct *p, long nice)
-+{
-+	bool queued, running;
-+	struct rq *rq;
-+	int old_prio;
-+
-+	if (task_nice(p) == nice || nice < MIN_NICE || nice > MAX_NICE)
-+		return;
-+	/*
-+	 * We have to be careful, if called from sys_setpriority(),
-+	 * the task might be in the middle of scheduling on another CPU.
-+	 */
-+	CLASS(task_rq_lock, rq_guard)(p);
-+	rq = rq_guard.rq;
-+
-+	update_rq_clock(rq);
-+
-+	/*
-+	 * The RT priorities are set via sched_setscheduler(), but we still
-+	 * allow the 'normal' nice value to be set - but as expected
-+	 * it won't have any effect on scheduling until the task is
-+	 * SCHED_DEADLINE, SCHED_FIFO or SCHED_RR:
-+	 */
-+	if (task_has_dl_policy(p) || task_has_rt_policy(p)) {
-+		p->static_prio = NICE_TO_PRIO(nice);
-+		return;
-+	}
-+
-+	queued = task_on_rq_queued(p);
-+	running = task_current(rq, p);
-+	if (queued)
-+		dequeue_task(rq, p, DEQUEUE_SAVE | DEQUEUE_NOCLOCK);
-+	if (running)
-+		put_prev_task(rq, p);
-+
-+	p->static_prio = NICE_TO_PRIO(nice);
-+	set_load_weight(p, true);
-+	old_prio = p->prio;
-+	p->prio = effective_prio(p);
-+
-+	if (queued)
-+		enqueue_task(rq, p, ENQUEUE_RESTORE | ENQUEUE_NOCLOCK);
-+	if (running)
-+		set_next_task(rq, p);
-+
-+	/*
-+	 * If the task increased its priority or is running and
-+	 * lowered its priority, then reschedule its CPU:
-+	 */
-+	p->sched_class->prio_changed(rq, p, old_prio);
-+}
-+EXPORT_SYMBOL(set_user_nice);
-+
-+/*
-+ * is_nice_reduction - check if nice value is an actual reduction
-+ *
-+ * Similar to can_nice() but does not perform a capability check.
-+ *
-+ * @p: task
-+ * @nice: nice value
-+ */
-+static bool is_nice_reduction(const struct task_struct *p, const int nice)
-+{
-+	/* Convert nice value [19,-20] to rlimit style value [1,40]: */
-+	int nice_rlim = nice_to_rlimit(nice);
-+
-+	return (nice_rlim <= task_rlimit(p, RLIMIT_NICE));
-+}
-+
-+/*
-+ * can_nice - check if a task can reduce its nice value
-+ * @p: task
-+ * @nice: nice value
-+ */
-+int can_nice(const struct task_struct *p, const int nice)
-+{
-+	return is_nice_reduction(p, nice) || capable(CAP_SYS_NICE);
-+}
-+
-+#ifdef __ARCH_WANT_SYS_NICE
-+
-+/*
-+ * sys_nice - change the priority of the current process.
-+ * @increment: priority increment
-+ *
-+ * sys_setpriority is a more generic, but much slower function that
-+ * does similar things.
-+ */
-+SYSCALL_DEFINE1(nice, int, increment)
-+{
-+	long nice, retval;
-+
-+	/*
-+	 * Setpriority might change our priority at the same moment.
-+	 * We don't have to worry. Conceptually one call occurs first
-+	 * and we have a single winner.
-+	 */
-+	increment = clamp(increment, -NICE_WIDTH, NICE_WIDTH);
-+	nice = task_nice(current) + increment;
-+
-+	nice = clamp_val(nice, MIN_NICE, MAX_NICE);
-+	if (increment < 0 && !can_nice(current, nice))
-+		return -EPERM;
-+
-+	retval = security_task_setnice(current, nice);
-+	if (retval)
-+		return retval;
-+
-+	set_user_nice(current, nice);
-+	return 0;
-+}
-+
-+#endif
-+
-+/**
-+ * task_prio - return the priority value of a given task.
-+ * @p: the task in question.
-+ *
-+ * Return: The priority value as seen by users in /proc.
-+ *
-+ * sched policy         return value   kernel prio    user prio/nice
-+ *
-+ * normal, batch, idle     [0 ... 39]  [100 ... 139]          0/[-20 ... 19]
-+ * fifo, rr             [-2 ... -100]     [98 ... 0]  [1 ... 99]
-+ * deadline                     -101             -1           0
-+ */
-+int task_prio(const struct task_struct *p)
-+{
-+	return p->prio - MAX_RT_PRIO;
-+}
-+
-+/**
-+ * idle_cpu - is a given CPU idle currently?
-+ * @cpu: the processor in question.
-+ *
-+ * Return: 1 if the CPU is currently idle. 0 otherwise.
-+ */
-+int idle_cpu(int cpu)
-+{
-+	struct rq *rq = cpu_rq(cpu);
-+
-+	if (rq->curr != rq->idle)
-+		return 0;
-+
-+	if (rq->nr_running)
-+		return 0;
++#include "pelt.h"
 +
 +#ifdef CONFIG_SMP
-+	if (rq->ttwu_pending)
-+		return 0;
++bool is_core_idle(int cpu)
++{
++#ifdef CONFIG_SCHED_SMT
++	int sibling;
++
++	for_each_cpu(sibling, cpu_smt_mask(cpu)) {
++		if (cpu == sibling)
++			continue;
++
++		if (!idle_cpu(sibling))
++			return false;
++	}
 +#endif
 +
-+	return 1;
++	return true;
 +}
-+
-+/**
-+ * available_idle_cpu - is a given CPU idle for enqueuing work.
-+ * @cpu: the CPU in question.
-+ *
-+ * Return: 1 if the CPU is currently idle. 0 otherwise.
-+ */
-+int available_idle_cpu(int cpu)
-+{
-+	if (!idle_cpu(cpu))
-+		return 0;
-+
-+	if (vcpu_is_preempted(cpu))
-+		return 0;
-+
-+	return 1;
-+}
-+
-+/**
-+ * idle_task - return the idle task for a given CPU.
-+ * @cpu: the processor in question.
-+ *
-+ * Return: The idle task for the CPU @cpu.
-+ */
-+struct task_struct *idle_task(int cpu)
-+{
-+	return cpu_rq(cpu)->idle;
-+}
-+
-+#ifdef CONFIG_SCHED_CORE
-+int sched_core_idle_cpu(int cpu)
-+{
-+	struct rq *rq = cpu_rq(cpu);
-+
-+	if (sched_core_enabled(rq) && rq->curr == rq->idle)
-+		return 1;
-+
-+	return idle_cpu(cpu);
-+}
-+
 +#endif
 +
-+#ifdef CONFIG_SMP
++#ifdef CONFIG_NUMA
++#define NUMA_IMBALANCE_MIN 2
++
++long adjust_numa_imbalance(int imbalance, int dst_running, int imb_numa_nr)
++{
++	/*
++	 * Allow a NUMA imbalance if busy CPUs is less than the maximum
++	 * threshold. Above this threshold, individual tasks may be contending
++	 * for both memory bandwidth and any shared HT resources.  This is an
++	 * approximation as the number of running tasks may not be related to
++	 * the number of busy CPUs due to sched_setaffinity.
++	 */
++	if (dst_running > imb_numa_nr)
++		return imbalance;
++
++	/*
++	 * Allow a small imbalance based on a simple pair of communicating
++	 * tasks that remain local when the destination is lightly loaded.
++	 */
++	if (imbalance <= NUMA_IMBALANCE_MIN)
++		return 0;
++
++	return imbalance;
++}
++#endif /* CONFIG_NUMA */
++
++#ifdef CONFIG_NUMA_BALANCING
 +/*
-+ * This function computes an effective utilization for the given CPU, to be
-+ * used for frequency selection given the linear relation: f = u * f_max.
-+ *
-+ * The scheduler tracks the following metrics:
-+ *
-+ *   cpu_util_{cfs,rt,dl,irq}()
-+ *   cpu_bw_dl()
-+ *
-+ * Where the cfs,rt and dl util numbers are tracked with the same metric and
-+ * synchronized windows and are thus directly comparable.
-+ *
-+ * The cfs,rt,dl utilization are the running times measured with rq->clock_task
-+ * which excludes things like IRQ and steal-time. These latter are then accrued
-+ * in the irq utilization.
-+ *
-+ * The DL bandwidth number otoh is not a measured metric but a value computed
-+ * based on the task model parameters and gives the minimal utilization
-+ * required to meet deadlines.
++ * Approximate time to scan a full NUMA task in ms. The task scan period is
++ * calculated based on the tasks virtual memory size and
++ * numa_balancing_scan_size.
 + */
-+unsigned long effective_cpu_util(int cpu, unsigned long util_cfs,
-+				 unsigned long *min,
-+				 unsigned long *max)
-+{
-+	unsigned long util, irq, scale;
-+	struct rq *rq = cpu_rq(cpu);
++unsigned int sysctl_numa_balancing_scan_period_min = 1000;
++unsigned int sysctl_numa_balancing_scan_period_max = 60000;
 +
-+	scale = arch_scale_cpu_capacity(cpu);
++/* Portion of address space to scan in MB */
++unsigned int sysctl_numa_balancing_scan_size = 256;
 +
++/* Scan @scan_size MB every @scan_period after an initial @scan_delay in ms */
++unsigned int sysctl_numa_balancing_scan_delay = 1000;
++
++/* The page with hint page fault latency < threshold in ms is considered hot */
++unsigned int sysctl_numa_balancing_hot_threshold = MSEC_PER_SEC;
++
++struct numa_group {
++	refcount_t refcount;
++
++	spinlock_t lock; /* nr_tasks, tasks */
++	int nr_tasks;
++	pid_t gid;
++	int active_nodes;
++
++	struct rcu_head rcu;
++	unsigned long total_faults;
++	unsigned long max_faults_cpu;
 +	/*
-+	 * Early check to see if IRQ/steal time saturates the CPU, can be
-+	 * because of inaccuracies in how we track these -- see
-+	 * update_irq_load_avg().
-+	 */
-+	irq = cpu_util_irq(rq);
-+	if (unlikely(irq >= scale)) {
-+		if (min)
-+			*min = scale;
-+		if (max)
-+			*max = scale;
-+		return scale;
-+	}
-+
-+	if (min) {
-+		/*
-+		 * The minimum utilization returns the highest level between:
-+		 * - the computed DL bandwidth needed with the IRQ pressure which
-+		 *   steals time to the deadline task.
-+		 * - The minimum performance requirement for CFS and/or RT.
-+		 */
-+		*min = max(irq + cpu_bw_dl(rq), uclamp_rq_get(rq, UCLAMP_MIN));
-+
-+		/*
-+		 * When an RT task is runnable and uclamp is not used, we must
-+		 * ensure that the task will run at maximum compute capacity.
-+		 */
-+		if (!uclamp_is_used() && rt_rq_is_runnable(&rq->rt))
-+			*min = max(*min, scale);
-+	}
-+
-+	/*
-+	 * Because the time spend on RT/DL tasks is visible as 'lost' time to
-+	 * CFS tasks and we use the same metric to track the effective
-+	 * utilization (PELT windows are synchronized) we can directly add them
-+	 * to obtain the CPU's actual utilization.
-+	 */
-+	util = util_cfs + cpu_util_rt(rq);
-+	util += cpu_util_dl(rq);
-+
-+	/*
-+	 * The maximum hint is a soft bandwidth requirement, which can be lower
-+	 * than the actual utilization because of uclamp_max requirements.
-+	 */
-+	if (max)
-+		*max = min(scale, uclamp_rq_get(rq, UCLAMP_MAX));
-+
-+	if (util >= scale)
-+		return scale;
-+
-+	/*
-+	 * There is still idle time; further improve the number by using the
-+	 * irq metric. Because IRQ/steal time is hidden from the task clock we
-+	 * need to scale the task numbers:
++	 * faults[] array is split into two regions: faults_mem and faults_cpu.
 +	 *
-+	 *              max - irq
-+	 *   U' = irq + --------- * U
-+	 *                 max
++	 * Faults_cpu is used to decide whether memory should move
++	 * towards the CPU. As a consequence, these stats are weighted
++	 * more by CPU use than by memory faults.
 +	 */
-+	util = scale_irq_capacity(util, irq, scale);
-+	util += irq;
++	unsigned long faults[];
++};
 +
-+	return min(scale, util);
-+}
-+
-+unsigned long sched_cpu_util(int cpu)
-+{
-+	return effective_cpu_util(cpu, cpu_util_cfs(cpu), NULL, NULL);
-+}
-+#endif /* CONFIG_SMP */
-+
-+/**
-+ * find_process_by_pid - find a process with a matching PID value.
-+ * @pid: the pid in question.
-+ *
-+ * The task of @pid, if found. %NULL otherwise.
++/*
++ * For functions that can be called in multiple contexts that permit reading
++ * ->numa_group (see struct task_struct for locking rules).
 + */
-+static struct task_struct *find_process_by_pid(pid_t pid)
++static struct numa_group *deref_task_numa_group(struct task_struct *p)
 +{
-+	return pid ? find_task_by_vpid(pid) : current;
++	return rcu_dereference_check(p->numa_group, p == current ||
++		(lockdep_is_held(__rq_lockp(task_rq(p))) && !READ_ONCE(p->on_cpu)));
 +}
 +
-+static struct task_struct *find_get_task(pid_t pid)
++static struct numa_group *deref_curr_numa_group(struct task_struct *p)
 +{
-+	struct task_struct *p;
-+	guard(rcu)();
++	return rcu_dereference_protected(p->numa_group, p == current);
++}
 +
-+	p = find_process_by_pid(pid);
-+	if (likely(p))
++static inline unsigned long group_faults_priv(struct numa_group *ng);
++static inline unsigned long group_faults_shared(struct numa_group *ng);
++
++static unsigned int task_nr_scan_windows(struct task_struct *p)
++{
++	unsigned long rss = 0;
++	unsigned long nr_scan_pages;
++
++	/*
++	 * Calculations based on RSS as non-present and empty pages are skipped
++	 * by the PTE scanner and NUMA hinting faults should be trapped based
++	 * on resident pages
++	 */
++	nr_scan_pages = sysctl_numa_balancing_scan_size << (20 - PAGE_SHIFT);
++	rss = get_mm_rss(p->mm);
++	if (!rss)
++		rss = nr_scan_pages;
++
++	rss = round_up(rss, nr_scan_pages);
++	return rss / nr_scan_pages;
++}
++
++/* For sanity's sake, never scan more PTEs than MAX_SCAN_WINDOW MB/sec. */
++#define MAX_SCAN_WINDOW 2560
++
++static unsigned int task_scan_min(struct task_struct *p)
++{
++	unsigned int scan_size = READ_ONCE(sysctl_numa_balancing_scan_size);
++	unsigned int scan, floor;
++	unsigned int windows = 1;
++
++	if (scan_size < MAX_SCAN_WINDOW)
++		windows = MAX_SCAN_WINDOW / scan_size;
++	floor = 1000 / windows;
++
++	scan = sysctl_numa_balancing_scan_period_min / task_nr_scan_windows(p);
++	return max_t(unsigned int, floor, scan);
++}
++
++static unsigned int task_scan_start(struct task_struct *p)
++{
++	unsigned long smin = task_scan_min(p);
++	unsigned long period = smin;
++	struct numa_group *ng;
++
++	/* Scale the maximum scan period with the amount of shared memory. */
++	rcu_read_lock();
++	ng = rcu_dereference(p->numa_group);
++	if (ng) {
++		unsigned long shared = group_faults_shared(ng);
++		unsigned long private = group_faults_priv(ng);
++
++		period *= refcount_read(&ng->refcount);
++		period *= shared + 1;
++		period /= private + shared + 1;
++	}
++	rcu_read_unlock();
++
++	return max(smin, period);
++}
++
++static unsigned int task_scan_max(struct task_struct *p)
++{
++	unsigned long smin = task_scan_min(p);
++	unsigned long smax;
++	struct numa_group *ng;
++
++	/* Watch for min being lower than max due to floor calculations */
++	smax = sysctl_numa_balancing_scan_period_max / task_nr_scan_windows(p);
++
++	/* Scale the maximum scan period with the amount of shared memory. */
++	ng = deref_curr_numa_group(p);
++	if (ng) {
++		unsigned long shared = group_faults_shared(ng);
++		unsigned long private = group_faults_priv(ng);
++		unsigned long period = smax;
++
++		period *= refcount_read(&ng->refcount);
++		period *= shared + 1;
++		period /= private + shared + 1;
++
++		smax = max(smax, period);
++	}
++
++	return max(smin, smax);
++}
++
++void account_numa_enqueue(struct rq *rq, struct task_struct *p)
++{
++	rq->nr_numa_running += (p->numa_preferred_nid != NUMA_NO_NODE);
++	rq->nr_preferred_running += (p->numa_preferred_nid == task_node(p));
++}
++
++void account_numa_dequeue(struct rq *rq, struct task_struct *p)
++{
++	rq->nr_numa_running -= (p->numa_preferred_nid != NUMA_NO_NODE);
++	rq->nr_preferred_running -= (p->numa_preferred_nid == task_node(p));
++}
++
++/* Shared or private faults. */
++#define NR_NUMA_HINT_FAULT_TYPES 2
++
++/* Memory and CPU locality */
++#define NR_NUMA_HINT_FAULT_STATS (NR_NUMA_HINT_FAULT_TYPES * 2)
++
++/* Averaged statistics, and temporary buffers. */
++#define NR_NUMA_HINT_FAULT_BUCKETS (NR_NUMA_HINT_FAULT_STATS * 2)
++
++pid_t task_numa_group_id(struct task_struct *p)
++{
++	struct numa_group *ng;
++	pid_t gid = 0;
++
++	rcu_read_lock();
++	ng = rcu_dereference(p->numa_group);
++	if (ng)
++		gid = ng->gid;
++	rcu_read_unlock();
++
++	return gid;
++}
++
++/*
++ * The averaged statistics, shared & private, memory & CPU,
++ * occupy the first half of the array. The second half of the
++ * array is for current counters, which are averaged into the
++ * first set by task_numa_placement.
++ */
++static inline int task_faults_idx(enum numa_faults_stats s, int nid, int priv)
++{
++	return NR_NUMA_HINT_FAULT_TYPES * (s * nr_node_ids + nid) + priv;
++}
++
++static inline unsigned long task_faults(struct task_struct *p, int nid)
++{
++	if (!p->numa_faults)
++		return 0;
++
++	return p->numa_faults[task_faults_idx(NUMA_MEM, nid, 0)] +
++		p->numa_faults[task_faults_idx(NUMA_MEM, nid, 1)];
++}
++
++static inline unsigned long group_faults(struct task_struct *p, int nid)
++{
++	struct numa_group *ng = deref_task_numa_group(p);
++
++	if (!ng)
++		return 0;
++
++	return ng->faults[task_faults_idx(NUMA_MEM, nid, 0)] +
++		ng->faults[task_faults_idx(NUMA_MEM, nid, 1)];
++}
++
++static inline unsigned long group_faults_cpu(struct numa_group *group, int nid)
++{
++	return group->faults[task_faults_idx(NUMA_CPU, nid, 0)] +
++		group->faults[task_faults_idx(NUMA_CPU, nid, 1)];
++}
++
++static inline unsigned long group_faults_priv(struct numa_group *ng)
++{
++	unsigned long faults = 0;
++	int node;
++
++	for_each_online_node(node) {
++		faults += ng->faults[task_faults_idx(NUMA_MEM, node, 1)];
++	}
++
++	return faults;
++}
++
++static inline unsigned long group_faults_shared(struct numa_group *ng)
++{
++	unsigned long faults = 0;
++	int node;
++
++	for_each_online_node(node) {
++		faults += ng->faults[task_faults_idx(NUMA_MEM, node, 0)];
++	}
++
++	return faults;
++}
++
++/*
++ * A node triggering more than 1/3 as many NUMA faults as the maximum is
++ * considered part of a numa group's pseudo-interleaving set. Migrations
++ * between these nodes are slowed down, to allow things to settle down.
++ */
++#define ACTIVE_NODE_FRACTION 3
++
++static bool numa_is_active_node(int nid, struct numa_group *ng)
++{
++	return group_faults_cpu(ng, nid) * ACTIVE_NODE_FRACTION > ng->max_faults_cpu;
++}
++
++/* Handle placement on systems where not all nodes are directly connected. */
++static unsigned long score_nearby_nodes(struct task_struct *p, int nid,
++					int lim_dist, bool task)
++{
++	unsigned long score = 0;
++	int node, max_dist;
++
++	/*
++	 * All nodes are directly connected, and the same distance
++	 * from each other. No need for fancy placement algorithms.
++	 */
++	if (sched_numa_topology_type == NUMA_DIRECT)
++		return 0;
++
++	/* sched_max_numa_distance may be changed in parallel. */
++	max_dist = READ_ONCE(sched_max_numa_distance);
++	/*
++	 * This code is called for each node, introducing N^2 complexity,
++	 * which should be OK given the number of nodes rarely exceeds 8.
++	 */
++	for_each_online_node(node) {
++		unsigned long faults;
++		int dist = node_distance(nid, node);
++
++		/*
++		 * The furthest away nodes in the system are not interesting
++		 * for placement; nid was already counted.
++		 */
++		if (dist >= max_dist || node == nid)
++			continue;
++
++		/*
++		 * On systems with a backplane NUMA topology, compare groups
++		 * of nodes, and move tasks towards the group with the most
++		 * memory accesses. When comparing two nodes at distance
++		 * "hoplimit", only nodes closer by than "hoplimit" are part
++		 * of each group. Skip other nodes.
++		 */
++		if (sched_numa_topology_type == NUMA_BACKPLANE && dist >= lim_dist)
++			continue;
++
++		/* Add up the faults from nearby nodes. */
++		if (task)
++			faults = task_faults(p, node);
++		else
++			faults = group_faults(p, node);
++
++		/*
++		 * On systems with a glueless mesh NUMA topology, there are
++		 * no fixed "groups of nodes". Instead, nodes that are not
++		 * directly connected bounce traffic through intermediate
++		 * nodes; a numa_group can occupy any set of nodes.
++		 * The further away a node is, the less the faults count.
++		 * This seems to result in good task placement.
++		 */
++		if (sched_numa_topology_type == NUMA_GLUELESS_MESH) {
++			faults *= (max_dist - dist);
++			faults /= (max_dist - LOCAL_DISTANCE);
++		}
++
++		score += faults;
++	}
++
++	return score;
++}
++
++/*
++ * These return the fraction of accesses done by a particular task, or
++ * task group, on a particular numa node.  The group weight is given a
++ * larger multiplier, in order to group tasks together that are almost
++ * evenly spread out between numa nodes.
++ */
++unsigned long task_weight(struct task_struct *p, int nid, int dist)
++{
++	unsigned long faults, total_faults;
++
++	if (!p->numa_faults)
++		return 0;
++
++	total_faults = p->total_numa_faults;
++
++	if (!total_faults)
++		return 0;
++
++	faults = task_faults(p, nid);
++	faults += score_nearby_nodes(p, nid, dist, true);
++
++	return 1000 * faults / total_faults;
++}
++
++unsigned long group_weight(struct task_struct *p, int nid, int dist)
++{
++	struct numa_group *ng = deref_task_numa_group(p);
++	unsigned long faults, total_faults;
++
++	if (!ng)
++		return 0;
++
++	total_faults = ng->total_faults;
++
++	if (!total_faults)
++		return 0;
++
++	faults = group_faults(p, nid);
++	faults += score_nearby_nodes(p, nid, dist, false);
++
++	return 1000 * faults / total_faults;
++}
++
++/*
++ * If memory tiering mode is enabled, cpupid of slow memory page is
++ * used to record scan time instead of CPU and PID.  When tiering mode
++ * is disabled at run time, the scan time (in cpupid) will be
++ * interpreted as CPU and PID.  So CPU needs to be checked to avoid to
++ * access out of array bound.
++ */
++static inline bool cpupid_valid(int cpupid)
++{
++	return cpupid_to_cpu(cpupid) < nr_cpu_ids;
++}
++
++/*
++ * For memory tiering mode, if there are enough free pages (more than
++ * enough watermark defined here) in fast memory node, to take full
++ * advantage of fast memory capacity, all recently accessed slow
++ * memory pages will be migrated to fast memory node without
++ * considering hot threshold.
++ */
++static bool pgdat_free_space_enough(struct pglist_data *pgdat)
++{
++	int z;
++	unsigned long enough_wmark;
++
++	enough_wmark = max(1UL * 1024 * 1024 * 1024 >> PAGE_SHIFT,
++			   pgdat->node_present_pages >> 4);
++	for (z = pgdat->nr_zones - 1; z >= 0; z--) {
++		struct zone *zone = pgdat->node_zones + z;
++
++		if (!populated_zone(zone))
++			continue;
++
++		if (zone_watermark_ok(zone, 0,
++				      wmark_pages(zone, WMARK_PROMO) + enough_wmark,
++				      ZONE_MOVABLE, 0))
++			return true;
++	}
++	return false;
++}
++
++/*
++ * For memory tiering mode, when page tables are scanned, the scan
++ * time will be recorded in struct page in addition to make page
++ * PROT_NONE for slow memory page.  So when the page is accessed, in
++ * hint page fault handler, the hint page fault latency is calculated
++ * via,
++ *
++ *	hint page fault latency = hint page fault time - scan time
++ *
++ * The smaller the hint page fault latency, the higher the possibility
++ * for the page to be hot.
++ */
++static int numa_hint_fault_latency(struct folio *folio)
++{
++	int last_time, time;
++
++	time = jiffies_to_msecs(jiffies);
++	last_time = folio_xchg_access_time(folio, time);
++
++	return (time - last_time) & PAGE_ACCESS_TIME_MASK;
++}
++
++/*
++ * For memory tiering mode, too high promotion/demotion throughput may
++ * hurt application latency.  So we provide a mechanism to rate limit
++ * the number of pages that are tried to be promoted.
++ */
++static bool numa_promotion_rate_limit(struct pglist_data *pgdat,
++				      unsigned long rate_limit, int nr)
++{
++	unsigned long nr_cand;
++	unsigned int now, start;
++
++	now = jiffies_to_msecs(jiffies);
++	mod_node_page_state(pgdat, PGPROMOTE_CANDIDATE, nr);
++	nr_cand = node_page_state(pgdat, PGPROMOTE_CANDIDATE);
++	start = pgdat->nbp_rl_start;
++	if (now - start > MSEC_PER_SEC &&
++	    cmpxchg(&pgdat->nbp_rl_start, start, now) == start)
++		pgdat->nbp_rl_nr_cand = nr_cand;
++	if (nr_cand - pgdat->nbp_rl_nr_cand >= rate_limit)
++		return true;
++	return false;
++}
++
++#define NUMA_MIGRATION_ADJUST_STEPS	16
++
++static void numa_promotion_adjust_threshold(struct pglist_data *pgdat,
++					    unsigned long rate_limit,
++					    unsigned int ref_th)
++{
++	unsigned int now, start, th_period, unit_th, th;
++	unsigned long nr_cand, ref_cand, diff_cand;
++
++	now = jiffies_to_msecs(jiffies);
++	th_period = sysctl_numa_balancing_scan_period_max;
++	start = pgdat->nbp_th_start;
++	if (now - start > th_period &&
++	    cmpxchg(&pgdat->nbp_th_start, start, now) == start) {
++		ref_cand = rate_limit *
++			sysctl_numa_balancing_scan_period_max / MSEC_PER_SEC;
++		nr_cand = node_page_state(pgdat, PGPROMOTE_CANDIDATE);
++		diff_cand = nr_cand - pgdat->nbp_th_nr_cand;
++		unit_th = ref_th * 2 / NUMA_MIGRATION_ADJUST_STEPS;
++		th = pgdat->nbp_threshold ? : ref_th;
++		if (diff_cand > ref_cand * 11 / 10)
++			th = max(th - unit_th, unit_th);
++		else if (diff_cand < ref_cand * 9 / 10)
++			th = min(th + unit_th, ref_th * 2);
++		pgdat->nbp_th_nr_cand = nr_cand;
++		pgdat->nbp_threshold = th;
++	}
++}
++
++bool should_numa_migrate_memory(struct task_struct *p, struct folio *folio,
++				int src_nid, int dst_cpu)
++{
++	struct numa_group *ng = deref_curr_numa_group(p);
++	int dst_nid = cpu_to_node(dst_cpu);
++	int last_cpupid, this_cpupid;
++
++	/*
++	 * Cannot migrate to memoryless nodes.
++	 */
++	if (!node_state(dst_nid, N_MEMORY))
++		return false;
++
++	/*
++	 * The pages in slow memory node should be migrated according
++	 * to hot/cold instead of private/shared.
++	 */
++	if (sysctl_numa_balancing_mode & NUMA_BALANCING_MEMORY_TIERING &&
++	    !node_is_toptier(src_nid)) {
++		struct pglist_data *pgdat;
++		unsigned long rate_limit;
++		unsigned int latency, th, def_th;
++
++		pgdat = NODE_DATA(dst_nid);
++		if (pgdat_free_space_enough(pgdat)) {
++			/* workload changed, reset hot threshold */
++			pgdat->nbp_threshold = 0;
++			return true;
++		}
++
++		def_th = sysctl_numa_balancing_hot_threshold;
++		rate_limit = sysctl_numa_balancing_promote_rate_limit << \
++			(20 - PAGE_SHIFT);
++		numa_promotion_adjust_threshold(pgdat, rate_limit, def_th);
++
++		th = pgdat->nbp_threshold ? : def_th;
++		latency = numa_hint_fault_latency(folio);
++		if (latency >= th)
++			return false;
++
++		return !numa_promotion_rate_limit(pgdat, rate_limit,
++						  folio_nr_pages(folio));
++	}
++
++	this_cpupid = cpu_pid_to_cpupid(dst_cpu, current->pid);
++	last_cpupid = folio_xchg_last_cpupid(folio, this_cpupid);
++
++	if (!(sysctl_numa_balancing_mode & NUMA_BALANCING_MEMORY_TIERING) &&
++	    !node_is_toptier(src_nid) && !cpupid_valid(last_cpupid))
++		return false;
++
++	/*
++	 * Allow first faults or private faults to migrate immediately early in
++	 * the lifetime of a task. The magic number 4 is based on waiting for
++	 * two full passes of the "multi-stage node selection" test that is
++	 * executed below.
++	 */
++	if ((p->numa_preferred_nid == NUMA_NO_NODE || p->numa_scan_seq <= 4) &&
++	    (cpupid_pid_unset(last_cpupid) || cpupid_match_pid(p, last_cpupid)))
++		return true;
++
++	/*
++	 * Multi-stage node selection is used in conjunction with a periodic
++	 * migration fault to build a temporal task<->page relation. By using
++	 * a two-stage filter we remove short/unlikely relations.
++	 *
++	 * Using P(p) ~ n_p / n_t as per frequentist probability, we can equate
++	 * a task's usage of a particular page (n_p) per total usage of this
++	 * page (n_t) (in a given time-span) to a probability.
++	 *
++	 * Our periodic faults will sample this probability and getting the
++	 * same result twice in a row, given these samples are fully
++	 * independent, is then given by P(n)^2, provided our sample period
++	 * is sufficiently short compared to the usage pattern.
++	 *
++	 * This quadric squishes small probabilities, making it less likely we
++	 * act on an unlikely task<->page relation.
++	 */
++	if (!cpupid_pid_unset(last_cpupid) &&
++				cpupid_to_nid(last_cpupid) != dst_nid)
++		return false;
++
++	/* Always allow migrate on private faults */
++	if (cpupid_match_pid(p, last_cpupid))
++		return true;
++
++	/* A shared fault, but p->numa_group has not been set up yet. */
++	if (!ng)
++		return true;
++
++	/*
++	 * Destination node is much more heavily used than the source
++	 * node? Allow migration.
++	 */
++	if (group_faults_cpu(ng, dst_nid) > group_faults_cpu(ng, src_nid) *
++					ACTIVE_NODE_FRACTION)
++		return true;
++
++	/*
++	 * Distribute memory according to CPU & memory use on each node,
++	 * with 3/4 hysteresis to avoid unnecessary memory migrations:
++	 *
++	 * faults_cpu(dst)   3   faults_cpu(src)
++	 * --------------- * - > ---------------
++	 * faults_mem(dst)   4   faults_mem(src)
++	 */
++	return group_faults_cpu(ng, dst_nid) * group_faults(p, src_nid) * 3 >
++	       group_faults_cpu(ng, src_nid) * group_faults(p, dst_nid) * 4;
++}
++
++/*
++ * 'numa_type' describes the node at the moment of load balancing.
++ */
++enum numa_type {
++	/* The node has spare capacity that can be used to run more tasks.  */
++	node_has_spare = 0,
++	/*
++	 * The node is fully used and the tasks don't compete for more CPU
++	 * cycles. Nevertheless, some tasks might wait before running.
++	 */
++	node_fully_busy,
++	/*
++	 * The node is overloaded and can't provide expected CPU cycles to all
++	 * tasks.
++	 */
++	node_overloaded
++};
++
++/* Cached statistics for all CPUs within a node */
++struct numa_stats {
++	unsigned long load;
++	unsigned long runnable;
++	unsigned long util;
++	/* Total compute capacity of CPUs on a node */
++	unsigned long compute_capacity;
++	unsigned int nr_running;
++	unsigned int weight;
++	enum numa_type node_type;
++	int idle_cpu;
++};
++
++struct task_numa_env {
++	struct task_struct *p;
++
++	int src_cpu, src_nid;
++	int dst_cpu, dst_nid;
++	int imb_numa_nr;
++
++	struct numa_stats src_stats, dst_stats;
++
++	int imbalance_pct;
++	int dist;
++
++	struct task_struct *best_task;
++	long best_imp;
++	int best_cpu;
++};
++
++static unsigned long cpu_load(struct rq *rq);
++
++static inline enum
++numa_type numa_classify(unsigned int imbalance_pct,
++			 struct numa_stats *ns)
++{
++	if ((ns->nr_running > ns->weight) &&
++	    (((ns->compute_capacity * 100) < (ns->util * imbalance_pct)) ||
++	     ((ns->compute_capacity * imbalance_pct) < (ns->runnable * 100))))
++		return node_overloaded;
++
++	if ((ns->nr_running < ns->weight) ||
++	    (((ns->compute_capacity * 100) > (ns->util * imbalance_pct)) &&
++	     ((ns->compute_capacity * imbalance_pct) > (ns->runnable * 100))))
++		return node_has_spare;
++
++	return node_fully_busy;
++}
++
++#ifdef CONFIG_SCHED_SMT
++static inline int numa_idle_core(int idle_core, int cpu)
++{
++	if (!static_branch_likely(&sched_smt_present) ||
++	    idle_core >= 0 || !test_idle_cores(cpu))
++		return idle_core;
++
++	/*
++	 * Prefer cores instead of packing HT siblings
++	 * and triggering future load balancing.
++	 */
++	if (is_core_idle(cpu))
++		idle_core = cpu;
++
++	return idle_core;
++}
++#else
++static inline int numa_idle_core(int idle_core, int cpu)
++{
++	return idle_core;
++}
++#endif
++
++/*
++ * Gather all necessary information to make NUMA balancing placement
++ * decisions that are compatible with standard load balancer. This
++ * borrows code and logic from update_sg_lb_stats but sharing a
++ * common implementation is impractical.
++ */
++static void update_numa_stats(struct task_numa_env *env,
++			      struct numa_stats *ns, int nid,
++			      bool find_idle)
++{
++	int cpu, idle_core = -1;
++
++	memset(ns, 0, sizeof(*ns));
++	ns->idle_cpu = -1;
++
++	rcu_read_lock();
++	for_each_cpu(cpu, cpumask_of_node(nid)) {
++		struct rq *rq = cpu_rq(cpu);
++
++		ns->load += cpu_load(rq);
++		ns->runnable += cpu_runnable(rq);
++		ns->util += cpu_util_cfs(cpu);
++		ns->nr_running += rq->cfs.h_nr_running;
++		ns->compute_capacity += capacity_of(cpu);
++
++		if (find_idle && idle_core < 0 && !rq->nr_running && idle_cpu(cpu)) {
++			if (READ_ONCE(rq->numa_migrate_on) ||
++			    !cpumask_test_cpu(cpu, env->p->cpus_ptr))
++				continue;
++
++			if (ns->idle_cpu == -1)
++				ns->idle_cpu = cpu;
++
++			idle_core = numa_idle_core(idle_core, cpu);
++		}
++	}
++	rcu_read_unlock();
++
++	ns->weight = cpumask_weight(cpumask_of_node(nid));
++
++	ns->node_type = numa_classify(env->imbalance_pct, ns);
++
++	if (idle_core >= 0)
++		ns->idle_cpu = idle_core;
++}
++
++static void task_numa_assign(struct task_numa_env *env,
++			     struct task_struct *p, long imp)
++{
++	struct rq *rq = cpu_rq(env->dst_cpu);
++
++	/* Check if run-queue part of active NUMA balance. */
++	if (env->best_cpu != env->dst_cpu && xchg(&rq->numa_migrate_on, 1)) {
++		int cpu;
++		int start = env->dst_cpu;
++
++		/* Find alternative idle CPU. */
++		for_each_cpu_wrap(cpu, cpumask_of_node(env->dst_nid), start + 1) {
++			if (cpu == env->best_cpu || !idle_cpu(cpu) ||
++			    !cpumask_test_cpu(cpu, env->p->cpus_ptr)) {
++				continue;
++			}
++
++			env->dst_cpu = cpu;
++			rq = cpu_rq(env->dst_cpu);
++			if (!xchg(&rq->numa_migrate_on, 1))
++				goto assign;
++		}
++
++		/* Failed to find an alternative idle CPU */
++		return;
++	}
++
++assign:
++	/*
++	 * Clear previous best_cpu/rq numa-migrate flag, since task now
++	 * found a better CPU to move/swap.
++	 */
++	if (env->best_cpu != -1 && env->best_cpu != env->dst_cpu) {
++		rq = cpu_rq(env->best_cpu);
++		WRITE_ONCE(rq->numa_migrate_on, 0);
++	}
++
++	if (env->best_task)
++		put_task_struct(env->best_task);
++	if (p)
 +		get_task_struct(p);
 +
-+	return p;
++	env->best_task = p;
++	env->best_imp = imp;
++	env->best_cpu = env->dst_cpu;
 +}
 +
-+DEFINE_CLASS(find_get_task, struct task_struct *, if (_T) put_task_struct(_T),
-+	     find_get_task(pid), pid_t pid)
-+
-+/*
-+ * sched_setparam() passes in -1 for its policy, to let the functions
-+ * it calls know not to change it.
-+ */
-+#define SETPARAM_POLICY	-1
-+
-+static void __setscheduler_params(struct task_struct *p,
-+		const struct sched_attr *attr)
++static bool load_too_imbalanced(long src_load, long dst_load,
++				struct task_numa_env *env)
 +{
-+	int policy = attr->sched_policy;
-+
-+	if (policy == SETPARAM_POLICY)
-+		policy = p->policy;
-+
-+	p->policy = policy;
-+
-+	if (dl_policy(policy))
-+		__setparam_dl(p, attr);
-+	else if (fair_policy(policy))
-+		p->static_prio = NICE_TO_PRIO(attr->sched_nice);
++	long imb, old_imb;
++	long orig_src_load, orig_dst_load;
++	long src_capacity, dst_capacity;
 +
 +	/*
-+	 * __sched_setscheduler() ensures attr->sched_priority == 0 when
-+	 * !rt_policy. Always setting this ensures that things like
-+	 * getparam()/getattr() don't report silly values for !rt tasks.
-+	 */
-+	p->rt_priority = attr->sched_priority;
-+	p->normal_prio = normal_prio(p);
-+	set_load_weight(p, true);
-+}
-+
-+/*
-+ * Check the target process has a UID that matches the current process's:
-+ */
-+static bool check_same_owner(struct task_struct *p)
-+{
-+	const struct cred *cred = current_cred(), *pcred;
-+	guard(rcu)();
-+
-+	pcred = __task_cred(p);
-+	return (uid_eq(cred->euid, pcred->euid) ||
-+		uid_eq(cred->euid, pcred->uid));
-+}
-+
-+#ifdef CONFIG_UCLAMP_TASK
-+
-+static int uclamp_validate(struct task_struct *p,
-+			   const struct sched_attr *attr)
-+{
-+	int util_min = p->uclamp_req[UCLAMP_MIN].value;
-+	int util_max = p->uclamp_req[UCLAMP_MAX].value;
-+
-+	if (attr->sched_flags & SCHED_FLAG_UTIL_CLAMP_MIN) {
-+		util_min = attr->sched_util_min;
-+
-+		if (util_min + 1 > SCHED_CAPACITY_SCALE + 1)
-+			return -EINVAL;
-+	}
-+
-+	if (attr->sched_flags & SCHED_FLAG_UTIL_CLAMP_MAX) {
-+		util_max = attr->sched_util_max;
-+
-+		if (util_max + 1 > SCHED_CAPACITY_SCALE + 1)
-+			return -EINVAL;
-+	}
-+
-+	if (util_min != -1 && util_max != -1 && util_min > util_max)
-+		return -EINVAL;
-+
-+	/*
-+	 * We have valid uclamp attributes; make sure uclamp is enabled.
++	 * The load is corrected for the CPU capacity available on each node.
 +	 *
-+	 * We need to do that here, because enabling static branches is a
-+	 * blocking operation which obviously cannot be done while holding
-+	 * scheduler locks.
++	 * src_load        dst_load
++	 * ------------ vs ---------
++	 * src_capacity    dst_capacity
 +	 */
-+	static_branch_enable(&sched_uclamp_used);
++	src_capacity = env->src_stats.compute_capacity;
++	dst_capacity = env->dst_stats.compute_capacity;
 +
-+	return 0;
++	imb = abs(dst_load * src_capacity - src_load * dst_capacity);
++
++	orig_src_load = env->src_stats.load;
++	orig_dst_load = env->dst_stats.load;
++
++	old_imb = abs(orig_dst_load * src_capacity - orig_src_load * dst_capacity);
++
++	/* Would this change make things worse? */
++	return (imb > old_imb);
 +}
 +
-+static bool uclamp_reset(const struct sched_attr *attr,
-+			 enum uclamp_id clamp_id,
-+			 struct uclamp_se *uc_se)
-+{
-+	/* Reset on sched class change for a non user-defined clamp value. */
-+	if (likely(!(attr->sched_flags & SCHED_FLAG_UTIL_CLAMP)) &&
-+	    !uc_se->user_defined)
-+		return true;
++/*
++ * Maximum NUMA importance can be 1998 (2*999);
++ * SMALLIMP @ 30 would be close to 1998/64.
++ * Used to deter task migration.
++ */
++#define SMALLIMP	30
 +
-+	/* Reset on sched_util_{min,max} == -1. */
-+	if (clamp_id == UCLAMP_MIN &&
-+	    attr->sched_flags & SCHED_FLAG_UTIL_CLAMP_MIN &&
-+	    attr->sched_util_min == -1) {
-+		return true;
++/*
++ * This checks if the overall compute and NUMA accesses of the system would
++ * be improved if the source tasks was migrated to the target dst_cpu taking
++ * into account that it might be best if task running on the dst_cpu should
++ * be exchanged with the source task
++ */
++static bool task_numa_compare(struct task_numa_env *env,
++			      long taskimp, long groupimp, bool maymove)
++{
++	struct numa_group *cur_ng, *p_ng = deref_curr_numa_group(env->p);
++	struct rq *dst_rq = cpu_rq(env->dst_cpu);
++	long imp = p_ng ? groupimp : taskimp;
++	struct task_struct *cur;
++	long src_load, dst_load;
++	int dist = env->dist;
++	long moveimp = imp;
++	long load;
++	bool stopsearch = false;
++
++	if (READ_ONCE(dst_rq->numa_migrate_on))
++		return false;
++
++	rcu_read_lock();
++	cur = rcu_dereference(dst_rq->curr);
++	if (cur && ((cur->flags & PF_EXITING) || is_idle_task(cur)))
++		cur = NULL;
++
++	/*
++	 * Because we have preemption enabled we can get migrated around and
++	 * end try selecting ourselves (current == env->p) as a swap candidate.
++	 */
++	if (cur == env->p) {
++		stopsearch = true;
++		goto unlock;
 +	}
 +
-+	if (clamp_id == UCLAMP_MAX &&
-+	    attr->sched_flags & SCHED_FLAG_UTIL_CLAMP_MAX &&
-+	    attr->sched_util_max == -1) {
++	if (!cur) {
++		if (maymove && moveimp >= env->best_imp)
++			goto assign;
++		else
++			goto unlock;
++	}
++
++	/* Skip this swap candidate if cannot move to the source cpu. */
++	if (!cpumask_test_cpu(env->src_cpu, cur->cpus_ptr))
++		goto unlock;
++
++	/*
++	 * Skip this swap candidate if it is not moving to its preferred
++	 * node and the best task is.
++	 */
++	if (env->best_task &&
++	    env->best_task->numa_preferred_nid == env->src_nid &&
++	    cur->numa_preferred_nid != env->src_nid) {
++		goto unlock;
++	}
++
++	/*
++	 * "imp" is the fault differential for the source task between the
++	 * source and destination node. Calculate the total differential for
++	 * the source task and potential destination task. The more negative
++	 * the value is, the more remote accesses that would be expected to
++	 * be incurred if the tasks were swapped.
++	 *
++	 * If dst and source tasks are in the same NUMA group, or not
++	 * in any group then look only at task weights.
++	 */
++	cur_ng = rcu_dereference(cur->numa_group);
++	if (cur_ng == p_ng) {
++		/*
++		 * Do not swap within a group or between tasks that have
++		 * no group if there is spare capacity. Swapping does
++		 * not address the load imbalance and helps one task at
++		 * the cost of punishing another.
++		 */
++		if (env->dst_stats.node_type == node_has_spare)
++			goto unlock;
++
++		imp = taskimp + task_weight(cur, env->src_nid, dist) -
++		      task_weight(cur, env->dst_nid, dist);
++		/*
++		 * Add some hysteresis to prevent swapping the
++		 * tasks within a group over tiny differences.
++		 */
++		if (cur_ng)
++			imp -= imp / 16;
++	} else {
++		/*
++		 * Compare the group weights. If a task is all by itself
++		 * (not part of a group), use the task weight instead.
++		 */
++		if (cur_ng && p_ng)
++			imp += group_weight(cur, env->src_nid, dist) -
++			       group_weight(cur, env->dst_nid, dist);
++		else
++			imp += task_weight(cur, env->src_nid, dist) -
++			       task_weight(cur, env->dst_nid, dist);
++	}
++
++	/* Discourage picking a task already on its preferred node */
++	if (cur->numa_preferred_nid == env->dst_nid)
++		imp -= imp / 16;
++
++	/*
++	 * Encourage picking a task that moves to its preferred node.
++	 * This potentially makes imp larger than it's maximum of
++	 * 1998 (see SMALLIMP and task_weight for why) but in this
++	 * case, it does not matter.
++	 */
++	if (cur->numa_preferred_nid == env->src_nid)
++		imp += imp / 8;
++
++	if (maymove && moveimp > imp && moveimp > env->best_imp) {
++		imp = moveimp;
++		cur = NULL;
++		goto assign;
++	}
++
++	/*
++	 * Prefer swapping with a task moving to its preferred node over a
++	 * task that is not.
++	 */
++	if (env->best_task && cur->numa_preferred_nid == env->src_nid &&
++	    env->best_task->numa_preferred_nid != env->src_nid) {
++		goto assign;
++	}
++
++	/*
++	 * If the NUMA importance is less than SMALLIMP,
++	 * task migration might only result in ping pong
++	 * of tasks and also hurt performance due to cache
++	 * misses.
++	 */
++	if (imp < SMALLIMP || imp <= env->best_imp + SMALLIMP / 2)
++		goto unlock;
++
++	/*
++	 * In the overloaded case, try and keep the load balanced.
++	 */
++	load = task_h_load(env->p) - task_h_load(cur);
++	if (!load)
++		goto assign;
++
++	dst_load = env->dst_stats.load + load;
++	src_load = env->src_stats.load - load;
++
++	if (load_too_imbalanced(src_load, dst_load, env))
++		goto unlock;
++
++assign:
++	/* Evaluate an idle CPU for a task numa move. */
++	if (!cur) {
++		int cpu = env->dst_stats.idle_cpu;
++
++		/* Nothing cached so current CPU went idle since the search. */
++		if (cpu < 0)
++			cpu = env->dst_cpu;
++
++		/*
++		 * If the CPU is no longer truly idle and the previous best CPU
++		 * is, keep using it.
++		 */
++		if (!idle_cpu(cpu) && env->best_cpu >= 0 &&
++		    idle_cpu(env->best_cpu)) {
++			cpu = env->best_cpu;
++		}
++
++		env->dst_cpu = cpu;
++	}
++
++	task_numa_assign(env, cur, imp);
++
++	/*
++	 * If a move to idle is allowed because there is capacity or load
++	 * balance improves then stop the search. While a better swap
++	 * candidate may exist, a search is not free.
++	 */
++	if (maymove && !cur && env->best_cpu >= 0 && idle_cpu(env->best_cpu))
++		stopsearch = true;
++
++	/*
++	 * If a swap candidate must be identified and the current best task
++	 * moves its preferred node then stop the search.
++	 */
++	if (!maymove && env->best_task &&
++	    env->best_task->numa_preferred_nid == env->src_nid) {
++		stopsearch = true;
++	}
++unlock:
++	rcu_read_unlock();
++
++	return stopsearch;
++}
++
++static void task_numa_find_cpu(struct task_numa_env *env,
++				long taskimp, long groupimp)
++{
++	bool maymove = false;
++	int cpu;
++
++	/*
++	 * If dst node has spare capacity, then check if there is an
++	 * imbalance that would be overruled by the load balancer.
++	 */
++	if (env->dst_stats.node_type == node_has_spare) {
++		unsigned int imbalance;
++		int src_running, dst_running;
++
++		/*
++		 * Would movement cause an imbalance? Note that if src has
++		 * more running tasks that the imbalance is ignored as the
++		 * move improves the imbalance from the perspective of the
++		 * CPU load balancer.
++		 * */
++		src_running = env->src_stats.nr_running - 1;
++		dst_running = env->dst_stats.nr_running + 1;
++		imbalance = max(0, dst_running - src_running);
++		imbalance = adjust_numa_imbalance(imbalance, dst_running,
++						  env->imb_numa_nr);
++
++		/* Use idle CPU if there is no imbalance */
++		if (!imbalance) {
++			maymove = true;
++			if (env->dst_stats.idle_cpu >= 0) {
++				env->dst_cpu = env->dst_stats.idle_cpu;
++				task_numa_assign(env, NULL, 0);
++				return;
++			}
++		}
++	} else {
++		long src_load, dst_load, load;
++		/*
++		 * If the improvement from just moving env->p direction is better
++		 * than swapping tasks around, check if a move is possible.
++		 */
++		load = task_h_load(env->p);
++		dst_load = env->dst_stats.load + load;
++		src_load = env->src_stats.load - load;
++		maymove = !load_too_imbalanced(src_load, dst_load, env);
++	}
++
++	for_each_cpu(cpu, cpumask_of_node(env->dst_nid)) {
++		/* Skip this CPU if the source task cannot migrate */
++		if (!cpumask_test_cpu(cpu, env->p->cpus_ptr))
++			continue;
++
++		env->dst_cpu = cpu;
++		if (task_numa_compare(env, taskimp, groupimp, maymove))
++			break;
++	}
++}
++
++static int task_numa_migrate(struct task_struct *p)
++{
++	struct task_numa_env env = {
++		.p = p,
++
++		.src_cpu = task_cpu(p),
++		.src_nid = task_node(p),
++
++		.imbalance_pct = 112,
++
++		.best_task = NULL,
++		.best_imp = 0,
++		.best_cpu = -1,
++	};
++	unsigned long taskweight, groupweight;
++	struct sched_domain *sd;
++	long taskimp, groupimp;
++	struct numa_group *ng;
++	struct rq *best_rq;
++	int nid, ret, dist;
++
++	/*
++	 * Pick the lowest SD_NUMA domain, as that would have the smallest
++	 * imbalance and would be the first to start moving tasks about.
++	 *
++	 * And we want to avoid any moving of tasks about, as that would create
++	 * random movement of tasks -- counter the numa conditions we're trying
++	 * to satisfy here.
++	 */
++	rcu_read_lock();
++	sd = rcu_dereference(per_cpu(sd_numa, env.src_cpu));
++	if (sd) {
++		env.imbalance_pct = 100 + (sd->imbalance_pct - 100) / 2;
++		env.imb_numa_nr = sd->imb_numa_nr;
++	}
++	rcu_read_unlock();
++
++	/*
++	 * Cpusets can break the scheduler domain tree into smaller
++	 * balance domains, some of which do not cross NUMA boundaries.
++	 * Tasks that are "trapped" in such domains cannot be migrated
++	 * elsewhere, so there is no point in (re)trying.
++	 */
++	if (unlikely(!sd)) {
++		sched_setnuma(p, task_node(p));
++		return -EINVAL;
++	}
++
++	env.dst_nid = p->numa_preferred_nid;
++	dist = env.dist = node_distance(env.src_nid, env.dst_nid);
++	taskweight = task_weight(p, env.src_nid, dist);
++	groupweight = group_weight(p, env.src_nid, dist);
++	update_numa_stats(&env, &env.src_stats, env.src_nid, false);
++	taskimp = task_weight(p, env.dst_nid, dist) - taskweight;
++	groupimp = group_weight(p, env.dst_nid, dist) - groupweight;
++	update_numa_stats(&env, &env.dst_stats, env.dst_nid, true);
++
++	/* Try to find a spot on the preferred nid. */
++	task_numa_find_cpu(&env, taskimp, groupimp);
++
++	/*
++	 * Look at other nodes in these cases:
++	 * - there is no space available on the preferred_nid
++	 * - the task is part of a numa_group that is interleaved across
++	 *   multiple NUMA nodes; in order to better consolidate the group,
++	 *   we need to check other locations.
++	 */
++	ng = deref_curr_numa_group(p);
++	if (env.best_cpu == -1 || (ng && ng->active_nodes > 1)) {
++		for_each_node_state(nid, N_CPU) {
++			if (nid == env.src_nid || nid == p->numa_preferred_nid)
++				continue;
++
++			dist = node_distance(env.src_nid, env.dst_nid);
++			if (sched_numa_topology_type == NUMA_BACKPLANE &&
++						dist != env.dist) {
++				taskweight = task_weight(p, env.src_nid, dist);
++				groupweight = group_weight(p, env.src_nid, dist);
++			}
++
++			/* Only consider nodes where both task and groups benefit */
++			taskimp = task_weight(p, nid, dist) - taskweight;
++			groupimp = group_weight(p, nid, dist) - groupweight;
++			if (taskimp < 0 && groupimp < 0)
++				continue;
++
++			env.dist = dist;
++			env.dst_nid = nid;
++			update_numa_stats(&env, &env.dst_stats, env.dst_nid, true);
++			task_numa_find_cpu(&env, taskimp, groupimp);
++		}
++	}
++
++	/*
++	 * If the task is part of a workload that spans multiple NUMA nodes,
++	 * and is migrating into one of the workload's active nodes, remember
++	 * this node as the task's preferred numa node, so the workload can
++	 * settle down.
++	 * A task that migrated to a second choice node will be better off
++	 * trying for a better one later. Do not set the preferred node here.
++	 */
++	if (ng) {
++		if (env.best_cpu == -1)
++			nid = env.src_nid;
++		else
++			nid = cpu_to_node(env.best_cpu);
++
++		if (nid != p->numa_preferred_nid)
++			sched_setnuma(p, nid);
++	}
++
++	/* No better CPU than the current one was found. */
++	if (env.best_cpu == -1) {
++		trace_sched_stick_numa(p, env.src_cpu, NULL, -1);
++		return -EAGAIN;
++	}
++
++	best_rq = cpu_rq(env.best_cpu);
++	if (env.best_task == NULL) {
++		ret = migrate_task_to(p, env.best_cpu);
++		WRITE_ONCE(best_rq->numa_migrate_on, 0);
++		if (ret != 0)
++			trace_sched_stick_numa(p, env.src_cpu, NULL, env.best_cpu);
++		return ret;
++	}
++
++	ret = migrate_swap(p, env.best_task, env.best_cpu, env.src_cpu);
++	WRITE_ONCE(best_rq->numa_migrate_on, 0);
++
++	if (ret != 0)
++		trace_sched_stick_numa(p, env.src_cpu, env.best_task, env.best_cpu);
++	put_task_struct(env.best_task);
++	return ret;
++}
++
++/* Attempt to migrate a task to a CPU on the preferred node. */
++static void numa_migrate_preferred(struct task_struct *p)
++{
++	unsigned long interval = HZ;
++
++	/* This task has no NUMA fault statistics yet */
++	if (unlikely(p->numa_preferred_nid == NUMA_NO_NODE || !p->numa_faults))
++		return;
++
++	/* Periodically retry migrating the task to the preferred node */
++	interval = min(interval, msecs_to_jiffies(p->numa_scan_period) / 16);
++	p->numa_migrate_retry = jiffies + interval;
++
++	/* Success if task is already running on preferred CPU */
++	if (task_node(p) == p->numa_preferred_nid)
++		return;
++
++	/* Otherwise, try migrate to a CPU on the preferred node */
++	task_numa_migrate(p);
++}
++
++/*
++ * Find out how many nodes the workload is actively running on. Do this by
++ * tracking the nodes from which NUMA hinting faults are triggered. This can
++ * be different from the set of nodes where the workload's memory is currently
++ * located.
++ */
++static void numa_group_count_active_nodes(struct numa_group *numa_group)
++{
++	unsigned long faults, max_faults = 0;
++	int nid, active_nodes = 0;
++
++	for_each_node_state(nid, N_CPU) {
++		faults = group_faults_cpu(numa_group, nid);
++		if (faults > max_faults)
++			max_faults = faults;
++	}
++
++	for_each_node_state(nid, N_CPU) {
++		faults = group_faults_cpu(numa_group, nid);
++		if (faults * ACTIVE_NODE_FRACTION > max_faults)
++			active_nodes++;
++	}
++
++	numa_group->max_faults_cpu = max_faults;
++	numa_group->active_nodes = active_nodes;
++}
++
++/*
++ * When adapting the scan rate, the period is divided into NUMA_PERIOD_SLOTS
++ * increments. The more local the fault statistics are, the higher the scan
++ * period will be for the next scan window. If local/(local+remote) ratio is
++ * below NUMA_PERIOD_THRESHOLD (where range of ratio is 1..NUMA_PERIOD_SLOTS)
++ * the scan period will decrease. Aim for 70% local accesses.
++ */
++#define NUMA_PERIOD_SLOTS 10
++#define NUMA_PERIOD_THRESHOLD 7
++
++/*
++ * Increase the scan period (slow down scanning) if the majority of
++ * our memory is already on our local node, or if the majority of
++ * the page accesses are shared with other processes.
++ * Otherwise, decrease the scan period.
++ */
++static void update_task_scan_period(struct task_struct *p,
++			unsigned long shared, unsigned long private)
++{
++	unsigned int period_slot;
++	int lr_ratio, ps_ratio;
++	int diff;
++
++	unsigned long remote = p->numa_faults_locality[0];
++	unsigned long local = p->numa_faults_locality[1];
++
++	/*
++	 * If there were no record hinting faults then either the task is
++	 * completely idle or all activity is in areas that are not of interest
++	 * to automatic numa balancing. Related to that, if there were failed
++	 * migration then it implies we are migrating too quickly or the local
++	 * node is overloaded. In either case, scan slower
++	 */
++	if (local + shared == 0 || p->numa_faults_locality[2]) {
++		p->numa_scan_period = min(p->numa_scan_period_max,
++			p->numa_scan_period << 1);
++
++		p->mm->numa_next_scan = jiffies +
++			msecs_to_jiffies(p->numa_scan_period);
++
++		return;
++	}
++
++	/*
++	 * Prepare to scale scan period relative to the current period.
++	 *	 == NUMA_PERIOD_THRESHOLD scan period stays the same
++	 *       <  NUMA_PERIOD_THRESHOLD scan period decreases (scan faster)
++	 *	 >= NUMA_PERIOD_THRESHOLD scan period increases (scan slower)
++	 */
++	period_slot = DIV_ROUND_UP(p->numa_scan_period, NUMA_PERIOD_SLOTS);
++	lr_ratio = (local * NUMA_PERIOD_SLOTS) / (local + remote);
++	ps_ratio = (private * NUMA_PERIOD_SLOTS) / (private + shared);
++
++	if (ps_ratio >= NUMA_PERIOD_THRESHOLD) {
++		/*
++		 * Most memory accesses are local. There is no need to
++		 * do fast NUMA scanning, since memory is already local.
++		 */
++		int slot = ps_ratio - NUMA_PERIOD_THRESHOLD;
++		if (!slot)
++			slot = 1;
++		diff = slot * period_slot;
++	} else if (lr_ratio >= NUMA_PERIOD_THRESHOLD) {
++		/*
++		 * Most memory accesses are shared with other tasks.
++		 * There is no point in continuing fast NUMA scanning,
++		 * since other tasks may just move the memory elsewhere.
++		 */
++		int slot = lr_ratio - NUMA_PERIOD_THRESHOLD;
++		if (!slot)
++			slot = 1;
++		diff = slot * period_slot;
++	} else {
++		/*
++		 * Private memory faults exceed (SLOTS-THRESHOLD)/SLOTS,
++		 * yet they are not on the local NUMA node. Speed up
++		 * NUMA scanning to get the memory moved over.
++		 */
++		int ratio = max(lr_ratio, ps_ratio);
++		diff = -(NUMA_PERIOD_THRESHOLD - ratio) * period_slot;
++	}
++
++	p->numa_scan_period = clamp(p->numa_scan_period + diff,
++			task_scan_min(p), task_scan_max(p));
++	memset(p->numa_faults_locality, 0, sizeof(p->numa_faults_locality));
++}
++
++/*
++ * Get the fraction of time the task has been running since the last
++ * NUMA placement cycle. The scheduler keeps similar statistics, but
++ * decays those on a 32ms period, which is orders of magnitude off
++ * from the dozens-of-seconds NUMA balancing period. Use the scheduler
++ * stats only if the task is so new there are no NUMA statistics yet.
++ */
++static u64 numa_get_avg_runtime(struct task_struct *p, u64 *period)
++{
++	u64 runtime, delta, now;
++	/* Use the start of this time slice to avoid calculations. */
++	now = p->se.exec_start;
++	runtime = p->se.sum_exec_runtime;
++
++	if (p->last_task_numa_placement) {
++		delta = runtime - p->last_sum_exec_runtime;
++		*period = now - p->last_task_numa_placement;
++
++		/* Avoid time going backwards, prevent potential divide error: */
++		if (unlikely((s64)*period < 0))
++			*period = 0;
++	} else {
++		delta = p->se.avg.load_sum;
++		*period = LOAD_AVG_MAX;
++	}
++
++	p->last_sum_exec_runtime = runtime;
++	p->last_task_numa_placement = now;
++
++	return delta;
++}
++
++/*
++ * Determine the preferred nid for a task in a numa_group. This needs to
++ * be done in a way that produces consistent results with group_weight,
++ * otherwise workloads might not converge.
++ */
++static int preferred_group_nid(struct task_struct *p, int nid)
++{
++	nodemask_t nodes;
++	int dist;
++
++	/* Direct connections between all NUMA nodes. */
++	if (sched_numa_topology_type == NUMA_DIRECT)
++		return nid;
++
++	/*
++	 * On a system with glueless mesh NUMA topology, group_weight
++	 * scores nodes according to the number of NUMA hinting faults on
++	 * both the node itself, and on nearby nodes.
++	 */
++	if (sched_numa_topology_type == NUMA_GLUELESS_MESH) {
++		unsigned long score, max_score = 0;
++		int node, max_node = nid;
++
++		dist = sched_max_numa_distance;
++
++		for_each_node_state(node, N_CPU) {
++			score = group_weight(p, node, dist);
++			if (score > max_score) {
++				max_score = score;
++				max_node = node;
++			}
++		}
++		return max_node;
++	}
++
++	/*
++	 * Finding the preferred nid in a system with NUMA backplane
++	 * interconnect topology is more involved. The goal is to locate
++	 * tasks from numa_groups near each other in the system, and
++	 * untangle workloads from different sides of the system. This requires
++	 * searching down the hierarchy of node groups, recursively searching
++	 * inside the highest scoring group of nodes. The nodemask tricks
++	 * keep the complexity of the search down.
++	 */
++	nodes = node_states[N_CPU];
++	for (dist = sched_max_numa_distance; dist > LOCAL_DISTANCE; dist--) {
++		unsigned long max_faults = 0;
++		nodemask_t max_group = NODE_MASK_NONE;
++		int a, b;
++
++		/* Are there nodes at this distance from each other? */
++		if (!find_numa_distance(dist))
++			continue;
++
++		for_each_node_mask(a, nodes) {
++			unsigned long faults = 0;
++			nodemask_t this_group;
++			nodes_clear(this_group);
++
++			/* Sum group's NUMA faults; includes a==b case. */
++			for_each_node_mask(b, nodes) {
++				if (node_distance(a, b) < dist) {
++					faults += group_faults(p, b);
++					node_set(b, this_group);
++					node_clear(b, nodes);
++				}
++			}
++
++			/* Remember the top group. */
++			if (faults > max_faults) {
++				max_faults = faults;
++				max_group = this_group;
++				/*
++				 * subtle: at the smallest distance there is
++				 * just one node left in each "group", the
++				 * winner is the preferred nid.
++				 */
++				nid = a;
++			}
++		}
++		/* Next round, evaluate the nodes within max_group. */
++		if (!max_faults)
++			break;
++		nodes = max_group;
++	}
++	return nid;
++}
++
++static void task_numa_placement(struct task_struct *p)
++{
++	int seq, nid, max_nid = NUMA_NO_NODE;
++	unsigned long max_faults = 0;
++	unsigned long fault_types[2] = { 0, 0 };
++	unsigned long total_faults;
++	u64 runtime, period;
++	spinlock_t *group_lock = NULL;
++	struct numa_group *ng;
++
++	/*
++	 * The p->mm->numa_scan_seq field gets updated without
++	 * exclusive access. Use READ_ONCE() here to ensure
++	 * that the field is read in a single access:
++	 */
++	seq = READ_ONCE(p->mm->numa_scan_seq);
++	if (p->numa_scan_seq == seq)
++		return;
++	p->numa_scan_seq = seq;
++	p->numa_scan_period_max = task_scan_max(p);
++
++	total_faults = p->numa_faults_locality[0] +
++		       p->numa_faults_locality[1];
++	runtime = numa_get_avg_runtime(p, &period);
++
++	/* If the task is part of a group prevent parallel updates to group stats */
++	ng = deref_curr_numa_group(p);
++	if (ng) {
++		group_lock = &ng->lock;
++		spin_lock_irq(group_lock);
++	}
++
++	/* Find the node with the highest number of faults */
++	for_each_online_node(nid) {
++		/* Keep track of the offsets in numa_faults array */
++		int mem_idx, membuf_idx, cpu_idx, cpubuf_idx;
++		unsigned long faults = 0, group_faults = 0;
++		int priv;
++
++		for (priv = 0; priv < NR_NUMA_HINT_FAULT_TYPES; priv++) {
++			long diff, f_diff, f_weight;
++
++			mem_idx = task_faults_idx(NUMA_MEM, nid, priv);
++			membuf_idx = task_faults_idx(NUMA_MEMBUF, nid, priv);
++			cpu_idx = task_faults_idx(NUMA_CPU, nid, priv);
++			cpubuf_idx = task_faults_idx(NUMA_CPUBUF, nid, priv);
++
++			/* Decay existing window, copy faults since last scan */
++			diff = p->numa_faults[membuf_idx] - p->numa_faults[mem_idx] / 2;
++			fault_types[priv] += p->numa_faults[membuf_idx];
++			p->numa_faults[membuf_idx] = 0;
++
++			/*
++			 * Normalize the faults_from, so all tasks in a group
++			 * count according to CPU use, instead of by the raw
++			 * number of faults. Tasks with little runtime have
++			 * little over-all impact on throughput, and thus their
++			 * faults are less important.
++			 */
++			f_weight = div64_u64(runtime << 16, period + 1);
++			f_weight = (f_weight * p->numa_faults[cpubuf_idx]) /
++				   (total_faults + 1);
++			f_diff = f_weight - p->numa_faults[cpu_idx] / 2;
++			p->numa_faults[cpubuf_idx] = 0;
++
++			p->numa_faults[mem_idx] += diff;
++			p->numa_faults[cpu_idx] += f_diff;
++			faults += p->numa_faults[mem_idx];
++			p->total_numa_faults += diff;
++			if (ng) {
++				/*
++				 * safe because we can only change our own group
++				 *
++				 * mem_idx represents the offset for a given
++				 * nid and priv in a specific region because it
++				 * is at the beginning of the numa_faults array.
++				 */
++				ng->faults[mem_idx] += diff;
++				ng->faults[cpu_idx] += f_diff;
++				ng->total_faults += diff;
++				group_faults += ng->faults[mem_idx];
++			}
++		}
++
++		if (!ng) {
++			if (faults > max_faults) {
++				max_faults = faults;
++				max_nid = nid;
++			}
++		} else if (group_faults > max_faults) {
++			max_faults = group_faults;
++			max_nid = nid;
++		}
++	}
++
++	/* Cannot migrate task to CPU-less node */
++	max_nid = numa_nearest_node(max_nid, N_CPU);
++
++	if (ng) {
++		numa_group_count_active_nodes(ng);
++		spin_unlock_irq(group_lock);
++		max_nid = preferred_group_nid(p, max_nid);
++	}
++
++	if (max_faults) {
++		/* Set the new preferred node */
++		if (max_nid != p->numa_preferred_nid)
++			sched_setnuma(p, max_nid);
++	}
++
++	update_task_scan_period(p, fault_types[0], fault_types[1]);
++}
++
++static inline int get_numa_group(struct numa_group *grp)
++{
++	return refcount_inc_not_zero(&grp->refcount);
++}
++
++static inline void put_numa_group(struct numa_group *grp)
++{
++	if (refcount_dec_and_test(&grp->refcount))
++		kfree_rcu(grp, rcu);
++}
++
++static void task_numa_group(struct task_struct *p, int cpupid, int flags,
++			int *priv)
++{
++	struct numa_group *grp, *my_grp;
++	struct task_struct *tsk;
++	bool join = false;
++	int cpu = cpupid_to_cpu(cpupid);
++	int i;
++
++	if (unlikely(!deref_curr_numa_group(p))) {
++		unsigned int size = sizeof(struct numa_group) +
++				    NR_NUMA_HINT_FAULT_STATS *
++				    nr_node_ids * sizeof(unsigned long);
++
++		grp = kzalloc(size, GFP_KERNEL | __GFP_NOWARN);
++		if (!grp)
++			return;
++
++		refcount_set(&grp->refcount, 1);
++		grp->active_nodes = 1;
++		grp->max_faults_cpu = 0;
++		spin_lock_init(&grp->lock);
++		grp->gid = p->pid;
++
++		for (i = 0; i < NR_NUMA_HINT_FAULT_STATS * nr_node_ids; i++)
++			grp->faults[i] = p->numa_faults[i];
++
++		grp->total_faults = p->total_numa_faults;
++
++		grp->nr_tasks++;
++		rcu_assign_pointer(p->numa_group, grp);
++	}
++
++	rcu_read_lock();
++	tsk = READ_ONCE(cpu_rq(cpu)->curr);
++
++	if (!cpupid_match_pid(tsk, cpupid))
++		goto no_join;
++
++	grp = rcu_dereference(tsk->numa_group);
++	if (!grp)
++		goto no_join;
++
++	my_grp = deref_curr_numa_group(p);
++	if (grp == my_grp)
++		goto no_join;
++
++	/*
++	 * Only join the other group if its bigger; if we're the bigger group,
++	 * the other task will join us.
++	 */
++	if (my_grp->nr_tasks > grp->nr_tasks)
++		goto no_join;
++
++	/*
++	 * Tie-break on the grp address.
++	 */
++	if (my_grp->nr_tasks == grp->nr_tasks && my_grp > grp)
++		goto no_join;
++
++	/* Always join threads in the same process. */
++	if (tsk->mm == current->mm)
++		join = true;
++
++	/* Simple filter to avoid false positives due to PID collisions */
++	if (flags & TNF_SHARED)
++		join = true;
++
++	/* Update priv based on whether false sharing was detected */
++	*priv = !join;
++
++	if (join && !get_numa_group(grp))
++		goto no_join;
++
++	rcu_read_unlock();
++
++	if (!join)
++		return;
++
++	WARN_ON_ONCE(irqs_disabled());
++	double_lock_irq(&my_grp->lock, &grp->lock);
++
++	for (i = 0; i < NR_NUMA_HINT_FAULT_STATS * nr_node_ids; i++) {
++		my_grp->faults[i] -= p->numa_faults[i];
++		grp->faults[i] += p->numa_faults[i];
++	}
++	my_grp->total_faults -= p->total_numa_faults;
++	grp->total_faults += p->total_numa_faults;
++
++	my_grp->nr_tasks--;
++	grp->nr_tasks++;
++
++	spin_unlock(&my_grp->lock);
++	spin_unlock_irq(&grp->lock);
++
++	rcu_assign_pointer(p->numa_group, grp);
++
++	put_numa_group(my_grp);
++	return;
++
++no_join:
++	rcu_read_unlock();
++	return;
++}
++
++/*
++ * Get rid of NUMA statistics associated with a task (either current or dead).
++ * If @final is set, the task is dead and has reached refcount zero, so we can
++ * safely free all relevant data structures. Otherwise, there might be
++ * concurrent reads from places like load balancing and procfs, and we should
++ * reset the data back to default state without freeing ->numa_faults.
++ */
++void task_numa_free(struct task_struct *p, bool final)
++{
++	/* safe: p either is current or is being freed by current */
++	struct numa_group *grp = rcu_dereference_raw(p->numa_group);
++	unsigned long *numa_faults = p->numa_faults;
++	unsigned long flags;
++	int i;
++
++	if (!numa_faults)
++		return;
++
++	if (grp) {
++		spin_lock_irqsave(&grp->lock, flags);
++		for (i = 0; i < NR_NUMA_HINT_FAULT_STATS * nr_node_ids; i++)
++			grp->faults[i] -= p->numa_faults[i];
++		grp->total_faults -= p->total_numa_faults;
++
++		grp->nr_tasks--;
++		spin_unlock_irqrestore(&grp->lock, flags);
++		RCU_INIT_POINTER(p->numa_group, NULL);
++		put_numa_group(grp);
++	}
++
++	if (final) {
++		p->numa_faults = NULL;
++		kfree(numa_faults);
++	} else {
++		p->total_numa_faults = 0;
++		for (i = 0; i < NR_NUMA_HINT_FAULT_STATS * nr_node_ids; i++)
++			numa_faults[i] = 0;
++	}
++}
++
++/*
++ * Got a PROT_NONE fault for a page on @node.
++ */
++void task_numa_fault(int last_cpupid, int mem_node, int pages, int flags)
++{
++	struct task_struct *p = current;
++	bool migrated = flags & TNF_MIGRATED;
++	int cpu_node = task_node(current);
++	int local = !!(flags & TNF_FAULT_LOCAL);
++	struct numa_group *ng;
++	int priv;
++
++	if (!static_branch_likely(&sched_numa_balancing))
++		return;
++
++	/* for example, ksmd faulting in a user's mm */
++	if (!p->mm)
++		return;
++
++	/*
++	 * NUMA faults statistics are unnecessary for the slow memory
++	 * node for memory tiering mode.
++	 */
++	if (!node_is_toptier(mem_node) &&
++	    (sysctl_numa_balancing_mode & NUMA_BALANCING_MEMORY_TIERING ||
++	     !cpupid_valid(last_cpupid)))
++		return;
++
++	/* Allocate buffer to track faults on a per-node basis */
++	if (unlikely(!p->numa_faults)) {
++		int size = sizeof(*p->numa_faults) *
++			   NR_NUMA_HINT_FAULT_BUCKETS * nr_node_ids;
++
++		p->numa_faults = kzalloc(size, GFP_KERNEL|__GFP_NOWARN);
++		if (!p->numa_faults)
++			return;
++
++		p->total_numa_faults = 0;
++		memset(p->numa_faults_locality, 0, sizeof(p->numa_faults_locality));
++	}
++
++	/*
++	 * First accesses are treated as private, otherwise consider accesses
++	 * to be private if the accessing pid has not changed
++	 */
++	if (unlikely(last_cpupid == (-1 & LAST_CPUPID_MASK))) {
++		priv = 1;
++	} else {
++		priv = cpupid_match_pid(p, last_cpupid);
++		if (!priv && !(flags & TNF_NO_GROUP))
++			task_numa_group(p, last_cpupid, flags, &priv);
++	}
++
++	/*
++	 * If a workload spans multiple NUMA nodes, a shared fault that
++	 * occurs wholly within the set of nodes that the workload is
++	 * actively using should be counted as local. This allows the
++	 * scan rate to slow down when a workload has settled down.
++	 */
++	ng = deref_curr_numa_group(p);
++	if (!priv && !local && ng && ng->active_nodes > 1 &&
++				numa_is_active_node(cpu_node, ng) &&
++				numa_is_active_node(mem_node, ng))
++		local = 1;
++
++	/*
++	 * Retry to migrate task to preferred node periodically, in case it
++	 * previously failed, or the scheduler moved us.
++	 */
++	if (time_after(jiffies, p->numa_migrate_retry)) {
++		task_numa_placement(p);
++		numa_migrate_preferred(p);
++	}
++
++	if (migrated)
++		p->numa_pages_migrated += pages;
++	if (flags & TNF_MIGRATE_FAIL)
++		p->numa_faults_locality[2] += pages;
++
++	p->numa_faults[task_faults_idx(NUMA_MEMBUF, mem_node, priv)] += pages;
++	p->numa_faults[task_faults_idx(NUMA_CPUBUF, cpu_node, priv)] += pages;
++	p->numa_faults_locality[local] += pages;
++}
++
++static void reset_ptenuma_scan(struct task_struct *p)
++{
++	/*
++	 * We only did a read acquisition of the mmap sem, so
++	 * p->mm->numa_scan_seq is written to without exclusive access
++	 * and the update is not guaranteed to be atomic. That's not
++	 * much of an issue though, since this is just used for
++	 * statistical sampling. Use READ_ONCE/WRITE_ONCE, which are not
++	 * expensive, to avoid any form of compiler optimizations:
++	 */
++	WRITE_ONCE(p->mm->numa_scan_seq, READ_ONCE(p->mm->numa_scan_seq) + 1);
++	p->mm->numa_scan_offset = 0;
++}
++
++static bool vma_is_accessed(struct mm_struct *mm, struct vm_area_struct *vma)
++{
++	unsigned long pids;
++	/*
++	 * Allow unconditional access first two times, so that all the (pages)
++	 * of VMAs get prot_none fault introduced irrespective of accesses.
++	 * This is also done to avoid any side effect of task scanning
++	 * amplifying the unfairness of disjoint set of VMAs' access.
++	 */
++	if ((READ_ONCE(current->mm->numa_scan_seq) - vma->numab_state->start_scan_seq) < 2)
++		return true;
++
++	pids = vma->numab_state->pids_active[0] | vma->numab_state->pids_active[1];
++	if (test_bit(hash_32(current->pid, ilog2(BITS_PER_LONG)), &pids))
++		return true;
++
++	/*
++	 * Complete a scan that has already started regardless of PID access, or
++	 * some VMAs may never be scanned in multi-threaded applications:
++	 */
++	if (mm->numa_scan_offset > vma->vm_start) {
++		trace_sched_skip_vma_numa(mm, vma, NUMAB_SKIP_IGNORE_PID);
 +		return true;
 +	}
 +
 +	return false;
 +}
 +
-+static void __setscheduler_uclamp(struct task_struct *p,
-+				  const struct sched_attr *attr)
++#define VMA_PID_RESET_PERIOD (4 * sysctl_numa_balancing_scan_delay)
++
++/*
++ * The expensive part of numa migration is done from task_work context.
++ * Triggered from task_tick_numa().
++ */
++static void task_numa_work(struct callback_head *work)
 +{
-+	enum uclamp_id clamp_id;
++	unsigned long migrate, next_scan, now = jiffies;
++	struct task_struct *p = current;
++	struct mm_struct *mm = p->mm;
++	u64 runtime = p->se.sum_exec_runtime;
++	struct vm_area_struct *vma;
++	unsigned long start, end;
++	unsigned long nr_pte_updates = 0;
++	long pages, virtpages;
++	struct vma_iterator vmi;
++	bool vma_pids_skipped;
++	bool vma_pids_forced = false;
 +
-+	for_each_clamp_id(clamp_id) {
-+		struct uclamp_se *uc_se = &p->uclamp_req[clamp_id];
-+		unsigned int value;
++	SCHED_WARN_ON(p != container_of(work, struct task_struct, numa_work));
 +
-+		if (!uclamp_reset(attr, clamp_id, uc_se))
-+			continue;
-+
-+		/*
-+		 * RT by default have a 100% boost value that could be modified
-+		 * at runtime.
-+		 */
-+		if (unlikely(rt_task(p) && clamp_id == UCLAMP_MIN))
-+			value = sysctl_sched_uclamp_util_min_rt_default;
-+		else
-+			value = uclamp_none(clamp_id);
-+
-+		uclamp_se_set(uc_se, value, false);
-+
-+	}
-+
-+	if (likely(!(attr->sched_flags & SCHED_FLAG_UTIL_CLAMP)))
++	work->next = work;
++	/*
++	 * Who cares about NUMA placement when they're dying.
++	 *
++	 * NOTE: make sure not to dereference p->mm before this check,
++	 * exit_task_work() happens _after_ exit_mm() so we could be called
++	 * without p->mm even though we still had it when we enqueued this
++	 * work.
++	 */
++	if (p->flags & PF_EXITING)
 +		return;
 +
-+	if (attr->sched_flags & SCHED_FLAG_UTIL_CLAMP_MIN &&
-+	    attr->sched_util_min != -1) {
-+		uclamp_se_set(&p->uclamp_req[UCLAMP_MIN],
-+			      attr->sched_util_min, true);
-+	}
-+
-+	if (attr->sched_flags & SCHED_FLAG_UTIL_CLAMP_MAX &&
-+	    attr->sched_util_max != -1) {
-+		uclamp_se_set(&p->uclamp_req[UCLAMP_MAX],
-+			      attr->sched_util_max, true);
-+	}
-+}
-+
-+#else /* !CONFIG_UCLAMP_TASK: */
-+
-+static inline int uclamp_validate(struct task_struct *p,
-+				  const struct sched_attr *attr)
-+{
-+	return -EOPNOTSUPP;
-+}
-+static void __setscheduler_uclamp(struct task_struct *p,
-+				  const struct sched_attr *attr) { }
-+#endif
-+
-+/*
-+ * Allow unprivileged RT tasks to decrease priority.
-+ * Only issue a capable test if needed and only once to avoid an audit
-+ * event on permitted non-privileged operations:
-+ */
-+static int user_check_sched_setscheduler(struct task_struct *p,
-+					 const struct sched_attr *attr,
-+					 int policy, int reset_on_fork)
-+{
-+	if (fair_policy(policy)) {
-+		if (attr->sched_nice < task_nice(p) &&
-+		    !is_nice_reduction(p, attr->sched_nice))
-+			goto req_priv;
-+	}
-+
-+	if (rt_policy(policy)) {
-+		unsigned long rlim_rtprio = task_rlimit(p, RLIMIT_RTPRIO);
-+
-+		/* Can't set/change the rt policy: */
-+		if (policy != p->policy && !rlim_rtprio)
-+			goto req_priv;
-+
-+		/* Can't increase priority: */
-+		if (attr->sched_priority > p->rt_priority &&
-+		    attr->sched_priority > rlim_rtprio)
-+			goto req_priv;
++	if (!mm->numa_next_scan) {
++		mm->numa_next_scan = now +
++			msecs_to_jiffies(sysctl_numa_balancing_scan_delay);
 +	}
 +
 +	/*
-+	 * Can't set/change SCHED_DEADLINE policy at all for now
-+	 * (safest behavior); in the future we would like to allow
-+	 * unprivileged DL tasks to increase their relative deadline
-+	 * or reduce their runtime (both ways reducing utilization)
++	 * Enforce maximal scan/migration frequency..
 +	 */
-+	if (dl_policy(policy))
-+		goto req_priv;
++	migrate = mm->numa_next_scan;
++	if (time_before(now, migrate))
++		return;
++
++	if (p->numa_scan_period == 0) {
++		p->numa_scan_period_max = task_scan_max(p);
++		p->numa_scan_period = task_scan_start(p);
++	}
++
++	next_scan = now + msecs_to_jiffies(p->numa_scan_period);
++	if (!try_cmpxchg(&mm->numa_next_scan, &migrate, next_scan))
++		return;
 +
 +	/*
-+	 * Treat SCHED_IDLE as nice 20. Only allow a switch to
-+	 * SCHED_NORMAL if the RLIMIT_NICE would normally permit it.
++	 * Delay this task enough that another task of this mm will likely win
++	 * the next time around.
 +	 */
-+	if (task_has_idle_policy(p) && !idle_policy(policy)) {
-+		if (!is_nice_reduction(p, task_nice(p)))
-+			goto req_priv;
-+	}
++	p->node_stamp += 2 * TICK_NSEC;
 +
-+	/* Can't change other user's priorities: */
-+	if (!check_same_owner(p))
-+		goto req_priv;
++	pages = sysctl_numa_balancing_scan_size;
++	pages <<= 20 - PAGE_SHIFT; /* MB in pages */
++	virtpages = pages * 8;	   /* Scan up to this much virtual space */
++	if (!pages)
++		return;
 +
-+	/* Normal users shall not reset the sched_reset_on_fork flag: */
-+	if (p->sched_reset_on_fork && !reset_on_fork)
-+		goto req_priv;
 +
-+	return 0;
-+
-+req_priv:
-+	if (!capable(CAP_SYS_NICE))
-+		return -EPERM;
-+
-+	return 0;
-+}
-+
-+int __sched_setscheduler(struct task_struct *p,
-+			 const struct sched_attr *attr,
-+			 bool user, bool pi)
-+{
-+	int oldpolicy = -1, policy = attr->sched_policy;
-+	int retval, oldprio, newprio, queued, running;
-+	const struct sched_class *prev_class;
-+	struct balance_callback *head;
-+	struct rq_flags rf;
-+	int reset_on_fork;
-+	int queue_flags = DEQUEUE_SAVE | DEQUEUE_MOVE | DEQUEUE_NOCLOCK;
-+	struct rq *rq;
-+	bool cpuset_locked = false;
-+
-+	/* The pi code expects interrupts enabled */
-+	BUG_ON(pi && in_interrupt());
-+recheck:
-+	/* Double check policy once rq lock held: */
-+	if (policy < 0) {
-+		reset_on_fork = p->sched_reset_on_fork;
-+		policy = oldpolicy = p->policy;
-+	} else {
-+		reset_on_fork = !!(attr->sched_flags & SCHED_FLAG_RESET_ON_FORK);
-+
-+		if (!valid_policy(policy))
-+			return -EINVAL;
-+	}
-+
-+	if (attr->sched_flags & ~(SCHED_FLAG_ALL | SCHED_FLAG_SUGOV))
-+		return -EINVAL;
++	if (!mmap_read_trylock(mm))
++		return;
 +
 +	/*
-+	 * Valid priorities for SCHED_FIFO and SCHED_RR are
-+	 * 1..MAX_RT_PRIO-1, valid priority for SCHED_NORMAL,
-+	 * SCHED_BATCH and SCHED_IDLE is 0.
++	 * VMAs are skipped if the current PID has not trapped a fault within
++	 * the VMA recently. Allow scanning to be forced if there is no
++	 * suitable VMA remaining.
 +	 */
-+	if (attr->sched_priority > MAX_RT_PRIO-1)
-+		return -EINVAL;
-+	if ((dl_policy(policy) && !__checkparam_dl(attr)) ||
-+	    (rt_policy(policy) != (attr->sched_priority != 0)))
-+		return -EINVAL;
++	vma_pids_skipped = false;
 +
-+	if (user) {
-+		retval = user_check_sched_setscheduler(p, attr, policy, reset_on_fork);
-+		if (retval)
-+			return retval;
-+
-+		if (attr->sched_flags & SCHED_FLAG_SUGOV)
-+			return -EINVAL;
-+
-+		retval = security_task_setscheduler(p);
-+		if (retval)
-+			return retval;
++retry_pids:
++	start = mm->numa_scan_offset;
++	vma_iter_init(&vmi, mm, start);
++	vma = vma_next(&vmi);
++	if (!vma) {
++		reset_ptenuma_scan(p);
++		start = 0;
++		vma_iter_set(&vmi, start);
++		vma = vma_next(&vmi);
 +	}
 +
-+	/* Update task specific "requested" clamps */
-+	if (attr->sched_flags & SCHED_FLAG_UTIL_CLAMP) {
-+		retval = uclamp_validate(p, attr);
-+		if (retval)
-+			return retval;
-+	}
-+
-+	/*
-+	 * SCHED_DEADLINE bandwidth accounting relies on stable cpusets
-+	 * information.
-+	 */
-+	if (dl_policy(policy) || dl_policy(p->policy)) {
-+		cpuset_locked = true;
-+		cpuset_lock();
-+	}
-+
-+	/*
-+	 * Make sure no PI-waiters arrive (or leave) while we are
-+	 * changing the priority of the task:
-+	 *
-+	 * To be able to change p->policy safely, the appropriate
-+	 * runqueue lock must be held.
-+	 */
-+	rq = task_rq_lock(p, &rf);
-+	update_rq_clock(rq);
-+
-+	/*
-+	 * Changing the policy of the stop threads its a very bad idea:
-+	 */
-+	if (p == rq->stop) {
-+		retval = -EINVAL;
-+		goto unlock;
-+	}
-+
-+	/*
-+	 * If not changing anything there's no need to proceed further,
-+	 * but store a possible modification of reset_on_fork.
-+	 */
-+	if (unlikely(policy == p->policy)) {
-+		if (fair_policy(policy) && attr->sched_nice != task_nice(p))
-+			goto change;
-+		if (rt_policy(policy) && attr->sched_priority != p->rt_priority)
-+			goto change;
-+		if (dl_policy(policy) && dl_param_changed(p, attr))
-+			goto change;
-+		if (attr->sched_flags & SCHED_FLAG_UTIL_CLAMP)
-+			goto change;
-+
-+		p->sched_reset_on_fork = reset_on_fork;
-+		retval = 0;
-+		goto unlock;
-+	}
-+change:
-+
-+	if (user) {
-+#ifdef CONFIG_RT_GROUP_SCHED
-+		/*
-+		 * Do not allow realtime tasks into groups that have no runtime
-+		 * assigned.
-+		 */
-+		if (rt_bandwidth_enabled() && rt_policy(policy) &&
-+				task_group(p)->rt_bandwidth.rt_runtime == 0 &&
-+				!task_group_is_autogroup(task_group(p))) {
-+			retval = -EPERM;
-+			goto unlock;
++	do {
++		if (!vma_migratable(vma) || !vma_policy_mof(vma) ||
++			is_vm_hugetlb_page(vma) || (vma->vm_flags & VM_MIXEDMAP)) {
++			trace_sched_skip_vma_numa(mm, vma, NUMAB_SKIP_UNSUITABLE);
++			continue;
 +		}
-+#endif
-+#ifdef CONFIG_SMP
-+		if (dl_bandwidth_enabled() && dl_policy(policy) &&
-+				!(attr->sched_flags & SCHED_FLAG_SUGOV)) {
-+			cpumask_t *span = rq->rd->span;
++
++		/*
++		 * Shared library pages mapped by multiple processes are not
++		 * migrated as it is expected they are cache replicated. Avoid
++		 * hinting faults in read-only file-backed mappings or the vDSO
++		 * as migrating the pages will be of marginal benefit.
++		 */
++		if (!vma->vm_mm ||
++		    (vma->vm_file && (vma->vm_flags & (VM_READ|VM_WRITE)) == (VM_READ))) {
++			trace_sched_skip_vma_numa(mm, vma, NUMAB_SKIP_SHARED_RO);
++			continue;
++		}
++
++		/*
++		 * Skip inaccessible VMAs to avoid any confusion between
++		 * PROT_NONE and NUMA hinting PTEs
++		 */
++		if (!vma_is_accessible(vma)) {
++			trace_sched_skip_vma_numa(mm, vma, NUMAB_SKIP_INACCESSIBLE);
++			continue;
++		}
++
++		/* Initialise new per-VMA NUMAB state. */
++		if (!vma->numab_state) {
++			vma->numab_state = kzalloc(sizeof(struct vma_numab_state),
++				GFP_KERNEL);
++			if (!vma->numab_state)
++				continue;
++
++			vma->numab_state->start_scan_seq = mm->numa_scan_seq;
++
++			vma->numab_state->next_scan = now +
++				msecs_to_jiffies(sysctl_numa_balancing_scan_delay);
++
++			/* Reset happens after 4 times scan delay of scan start */
++			vma->numab_state->pids_active_reset =  vma->numab_state->next_scan +
++				msecs_to_jiffies(VMA_PID_RESET_PERIOD);
 +
 +			/*
-+			 * Don't allow tasks with an affinity mask smaller than
-+			 * the entire root_domain to become SCHED_DEADLINE. We
-+			 * will also fail if there's no bandwidth available.
++			 * Ensure prev_scan_seq does not match numa_scan_seq,
++			 * to prevent VMAs being skipped prematurely on the
++			 * first scan:
 +			 */
-+			if (!cpumask_subset(span, p->cpus_ptr) ||
-+			    rq->rd->dl_bw.bw == 0) {
-+				retval = -EPERM;
-+				goto unlock;
-+			}
++			 vma->numab_state->prev_scan_seq = mm->numa_scan_seq - 1;
 +		}
-+#endif
-+	}
 +
-+	/* Re-check policy now with rq lock held: */
-+	if (unlikely(oldpolicy != -1 && oldpolicy != p->policy)) {
-+		policy = oldpolicy = -1;
-+		task_rq_unlock(rq, p, &rf);
-+		if (cpuset_locked)
-+			cpuset_unlock();
-+		goto recheck;
-+	}
++		/*
++		 * Scanning the VMAs of short lived tasks add more overhead. So
++		 * delay the scan for new VMAs.
++		 */
++		if (mm->numa_scan_seq && time_before(jiffies,
++						vma->numab_state->next_scan)) {
++			trace_sched_skip_vma_numa(mm, vma, NUMAB_SKIP_SCAN_DELAY);
++			continue;
++		}
++
++		/* RESET access PIDs regularly for old VMAs. */
++		if (mm->numa_scan_seq &&
++				time_after(jiffies, vma->numab_state->pids_active_reset)) {
++			vma->numab_state->pids_active_reset = vma->numab_state->pids_active_reset +
++				msecs_to_jiffies(VMA_PID_RESET_PERIOD);
++			vma->numab_state->pids_active[0] = READ_ONCE(vma->numab_state->pids_active[1]);
++			vma->numab_state->pids_active[1] = 0;
++		}
++
++		/* Do not rescan VMAs twice within the same sequence. */
++		if (vma->numab_state->prev_scan_seq == mm->numa_scan_seq) {
++			mm->numa_scan_offset = vma->vm_end;
++			trace_sched_skip_vma_numa(mm, vma, NUMAB_SKIP_SEQ_COMPLETED);
++			continue;
++		}
++
++		/*
++		 * Do not scan the VMA if task has not accessed it, unless no other
++		 * VMA candidate exists.
++		 */
++		if (!vma_pids_forced && !vma_is_accessed(mm, vma)) {
++			vma_pids_skipped = true;
++			trace_sched_skip_vma_numa(mm, vma, NUMAB_SKIP_PID_INACTIVE);
++			continue;
++		}
++
++		do {
++			start = max(start, vma->vm_start);
++			end = ALIGN(start + (pages << PAGE_SHIFT), HPAGE_SIZE);
++			end = min(end, vma->vm_end);
++			nr_pte_updates = change_prot_numa(vma, start, end);
++
++			/*
++			 * Try to scan sysctl_numa_balancing_size worth of
++			 * hpages that have at least one present PTE that
++			 * is not already PTE-numa. If the VMA contains
++			 * areas that are unused or already full of prot_numa
++			 * PTEs, scan up to virtpages, to skip through those
++			 * areas faster.
++			 */
++			if (nr_pte_updates)
++				pages -= (end - start) >> PAGE_SHIFT;
++			virtpages -= (end - start) >> PAGE_SHIFT;
++
++			start = end;
++			if (pages <= 0 || virtpages <= 0)
++				goto out;
++
++			cond_resched();
++		} while (end != vma->vm_end);
++
++		/* VMA scan is complete, do not scan until next sequence. */
++		vma->numab_state->prev_scan_seq = mm->numa_scan_seq;
++
++		/*
++		 * Only force scan within one VMA at a time, to limit the
++		 * cost of scanning a potentially uninteresting VMA.
++		 */
++		if (vma_pids_forced)
++			break;
++	} for_each_vma(vmi, vma);
 +
 +	/*
-+	 * If setscheduling to SCHED_DEADLINE (or changing the parameters
-+	 * of a SCHED_DEADLINE task) we need to check if enough bandwidth
-+	 * is available.
++	 * If no VMAs are remaining and VMAs were skipped due to the PID
++	 * not accessing the VMA previously, then force a scan to ensure
++	 * forward progress:
 +	 */
-+	if ((dl_policy(policy) || dl_task(p)) && sched_dl_overflow(p, policy, attr)) {
-+		retval = -EBUSY;
-+		goto unlock;
++	if (!vma && !vma_pids_forced && vma_pids_skipped) {
++		vma_pids_forced = true;
++		goto retry_pids;
 +	}
 +
-+	p->sched_reset_on_fork = reset_on_fork;
-+	oldprio = p->prio;
-+
-+	newprio = __normal_prio(policy, attr->sched_priority, attr->sched_nice);
-+	if (pi) {
-+		/*
-+		 * Take priority boosted tasks into account. If the new
-+		 * effective priority is unchanged, we just store the new
-+		 * normal parameters and do not touch the scheduler class and
-+		 * the runqueue. This will be done when the task deboost
-+		 * itself.
-+		 */
-+		newprio = rt_effective_prio(p, newprio);
-+		if (newprio == oldprio)
-+			queue_flags &= ~DEQUEUE_MOVE;
-+	}
-+
-+	queued = task_on_rq_queued(p);
-+	running = task_current(rq, p);
-+	if (queued)
-+		dequeue_task(rq, p, queue_flags);
-+	if (running)
-+		put_prev_task(rq, p);
-+
-+	prev_class = p->sched_class;
-+
-+	if (!(attr->sched_flags & SCHED_FLAG_KEEP_PARAMS)) {
-+		__setscheduler_params(p, attr);
-+		__setscheduler_prio(p, newprio);
-+	}
-+	__setscheduler_uclamp(p, attr);
-+
-+	if (queued) {
-+		/*
-+		 * We enqueue to tail when the priority of a task is
-+		 * increased (user space view).
-+		 */
-+		if (oldprio < p->prio)
-+			queue_flags |= ENQUEUE_HEAD;
-+
-+		enqueue_task(rq, p, queue_flags);
-+	}
-+	if (running)
-+		set_next_task(rq, p);
-+
-+	check_class_changed(rq, p, prev_class, oldprio);
-+
-+	/* Avoid rq from going away on us: */
-+	preempt_disable();
-+	head = splice_balance_callbacks(rq);
-+	task_rq_unlock(rq, p, &rf);
-+
-+	if (pi) {
-+		if (cpuset_locked)
-+			cpuset_unlock();
-+		rt_mutex_adjust_pi(p);
-+	}
-+
-+	/* Run balance callbacks after we've adjusted the PI chain: */
-+	balance_callbacks(rq, head);
-+	preempt_enable();
-+
-+	return 0;
-+
-+unlock:
-+	task_rq_unlock(rq, p, &rf);
-+	if (cpuset_locked)
-+		cpuset_unlock();
-+	return retval;
-+}
-+
-+static int _sched_setscheduler(struct task_struct *p, int policy,
-+			       const struct sched_param *param, bool check)
-+{
-+	struct sched_attr attr = {
-+		.sched_policy   = policy,
-+		.sched_priority = param->sched_priority,
-+		.sched_nice	= PRIO_TO_NICE(p->static_prio),
-+	};
-+
-+	/* Fixup the legacy SCHED_RESET_ON_FORK hack. */
-+	if ((policy != SETPARAM_POLICY) && (policy & SCHED_RESET_ON_FORK)) {
-+		attr.sched_flags |= SCHED_FLAG_RESET_ON_FORK;
-+		policy &= ~SCHED_RESET_ON_FORK;
-+		attr.sched_policy = policy;
-+	}
-+
-+	return __sched_setscheduler(p, &attr, check, true);
-+}
-+/**
-+ * sched_setscheduler - change the scheduling policy and/or RT priority of a thread.
-+ * @p: the task in question.
-+ * @policy: new policy.
-+ * @param: structure containing the new RT priority.
-+ *
-+ * Use sched_set_fifo(), read its comment.
-+ *
-+ * Return: 0 on success. An error code otherwise.
-+ *
-+ * NOTE that the task may be already dead.
-+ */
-+int sched_setscheduler(struct task_struct *p, int policy,
-+		       const struct sched_param *param)
-+{
-+	return _sched_setscheduler(p, policy, param, true);
-+}
-+
-+int sched_setattr(struct task_struct *p, const struct sched_attr *attr)
-+{
-+	return __sched_setscheduler(p, attr, true, true);
-+}
-+
-+int sched_setattr_nocheck(struct task_struct *p, const struct sched_attr *attr)
-+{
-+	return __sched_setscheduler(p, attr, false, true);
-+}
-+EXPORT_SYMBOL_GPL(sched_setattr_nocheck);
-+
-+/**
-+ * sched_setscheduler_nocheck - change the scheduling policy and/or RT priority of a thread from kernelspace.
-+ * @p: the task in question.
-+ * @policy: new policy.
-+ * @param: structure containing the new RT priority.
-+ *
-+ * Just like sched_setscheduler, only don't bother checking if the
-+ * current context has permission.  For example, this is needed in
-+ * stop_machine(): we create temporary high priority worker threads,
-+ * but our caller might not have that capability.
-+ *
-+ * Return: 0 on success. An error code otherwise.
-+ */
-+int sched_setscheduler_nocheck(struct task_struct *p, int policy,
-+			       const struct sched_param *param)
-+{
-+	return _sched_setscheduler(p, policy, param, false);
-+}
-+
-+/*
-+ * SCHED_FIFO is a broken scheduler model; that is, it is fundamentally
-+ * incapable of resource management, which is the one thing an OS really should
-+ * be doing.
-+ *
-+ * This is of course the reason it is limited to privileged users only.
-+ *
-+ * Worse still; it is fundamentally impossible to compose static priority
-+ * workloads. You cannot take two correctly working static prio workloads
-+ * and smash them together and still expect them to work.
-+ *
-+ * For this reason 'all' FIFO tasks the kernel creates are basically at:
-+ *
-+ *   MAX_RT_PRIO / 2
-+ *
-+ * The administrator _MUST_ configure the system, the kernel simply doesn't
-+ * know enough information to make a sensible choice.
-+ */
-+void sched_set_fifo(struct task_struct *p)
-+{
-+	struct sched_param sp = { .sched_priority = MAX_RT_PRIO / 2 };
-+	WARN_ON_ONCE(sched_setscheduler_nocheck(p, SCHED_FIFO, &sp) != 0);
-+}
-+EXPORT_SYMBOL_GPL(sched_set_fifo);
-+
-+/*
-+ * For when you don't much care about FIFO, but want to be above SCHED_NORMAL.
-+ */
-+void sched_set_fifo_low(struct task_struct *p)
-+{
-+	struct sched_param sp = { .sched_priority = 1 };
-+	WARN_ON_ONCE(sched_setscheduler_nocheck(p, SCHED_FIFO, &sp) != 0);
-+}
-+EXPORT_SYMBOL_GPL(sched_set_fifo_low);
-+
-+void sched_set_normal(struct task_struct *p, int nice)
-+{
-+	struct sched_attr attr = {
-+		.sched_policy = SCHED_NORMAL,
-+		.sched_nice = nice,
-+	};
-+	WARN_ON_ONCE(sched_setattr_nocheck(p, &attr) != 0);
-+}
-+EXPORT_SYMBOL_GPL(sched_set_normal);
-+
-+static int
-+do_sched_setscheduler(pid_t pid, int policy, struct sched_param __user *param)
-+{
-+	struct sched_param lparam;
-+
-+	if (!param || pid < 0)
-+		return -EINVAL;
-+	if (copy_from_user(&lparam, param, sizeof(struct sched_param)))
-+		return -EFAULT;
-+
-+	CLASS(find_get_task, p)(pid);
-+	if (!p)
-+		return -ESRCH;
-+
-+	return sched_setscheduler(p, policy, &lparam);
-+}
-+
-+/*
-+ * Mimics kernel/events/core.c perf_copy_attr().
-+ */
-+static int sched_copy_attr(struct sched_attr __user *uattr, struct sched_attr *attr)
-+{
-+	u32 size;
-+	int ret;
-+
-+	/* Zero the full structure, so that a short copy will be nice: */
-+	memset(attr, 0, sizeof(*attr));
-+
-+	ret = get_user(size, &uattr->size);
-+	if (ret)
-+		return ret;
-+
-+	/* ABI compatibility quirk: */
-+	if (!size)
-+		size = SCHED_ATTR_SIZE_VER0;
-+	if (size < SCHED_ATTR_SIZE_VER0 || size > PAGE_SIZE)
-+		goto err_size;
-+
-+	ret = copy_struct_from_user(attr, sizeof(*attr), uattr, size);
-+	if (ret) {
-+		if (ret == -E2BIG)
-+			goto err_size;
-+		return ret;
-+	}
-+
-+	if ((attr->sched_flags & SCHED_FLAG_UTIL_CLAMP) &&
-+	    size < SCHED_ATTR_SIZE_VER1)
-+		return -EINVAL;
-+
++out:
 +	/*
-+	 * XXX: Do we want to be lenient like existing syscalls; or do we want
-+	 * to be strict and return an error on out-of-bounds values?
++	 * It is possible to reach the end of the VMA list but the last few
++	 * VMAs are not guaranteed to the vma_migratable. If they are not, we
++	 * would find the !migratable VMA on the next scan but not reset the
++	 * scanner to the start so check it now.
 +	 */
-+	attr->sched_nice = clamp(attr->sched_nice, MIN_NICE, MAX_NICE);
-+
-+	return 0;
-+
-+err_size:
-+	put_user(sizeof(*attr), &uattr->size);
-+	return -E2BIG;
-+}
-+
-+static void get_params(struct task_struct *p, struct sched_attr *attr)
-+{
-+	if (task_has_dl_policy(p))
-+		__getparam_dl(p, attr);
-+	else if (task_has_rt_policy(p))
-+		attr->sched_priority = p->rt_priority;
++	if (vma)
++		mm->numa_scan_offset = start;
 +	else
-+		attr->sched_nice = task_nice(p);
-+}
++		reset_ptenuma_scan(p);
++	mmap_read_unlock(mm);
 +
-+/**
-+ * sys_sched_setscheduler - set/change the scheduler policy and RT priority
-+ * @pid: the pid in question.
-+ * @policy: new policy.
-+ * @param: structure containing the new RT priority.
-+ *
-+ * Return: 0 on success. An error code otherwise.
-+ */
-+SYSCALL_DEFINE3(sched_setscheduler, pid_t, pid, int, policy, struct sched_param __user *, param)
-+{
-+	if (policy < 0)
-+		return -EINVAL;
-+
-+	return do_sched_setscheduler(pid, policy, param);
-+}
-+
-+/**
-+ * sys_sched_setparam - set/change the RT priority of a thread
-+ * @pid: the pid in question.
-+ * @param: structure containing the new RT priority.
-+ *
-+ * Return: 0 on success. An error code otherwise.
-+ */
-+SYSCALL_DEFINE2(sched_setparam, pid_t, pid, struct sched_param __user *, param)
-+{
-+	return do_sched_setscheduler(pid, SETPARAM_POLICY, param);
-+}
-+
-+/**
-+ * sys_sched_setattr - same as above, but with extended sched_attr
-+ * @pid: the pid in question.
-+ * @uattr: structure containing the extended parameters.
-+ * @flags: for future extension.
-+ */
-+SYSCALL_DEFINE3(sched_setattr, pid_t, pid, struct sched_attr __user *, uattr,
-+			       unsigned int, flags)
-+{
-+	struct sched_attr attr;
-+	int retval;
-+
-+	if (!uattr || pid < 0 || flags)
-+		return -EINVAL;
-+
-+	retval = sched_copy_attr(uattr, &attr);
-+	if (retval)
-+		return retval;
-+
-+	if ((int)attr.sched_policy < 0)
-+		return -EINVAL;
-+	if (attr.sched_flags & SCHED_FLAG_KEEP_POLICY)
-+		attr.sched_policy = SETPARAM_POLICY;
-+
-+	CLASS(find_get_task, p)(pid);
-+	if (!p)
-+		return -ESRCH;
-+
-+	if (attr.sched_flags & SCHED_FLAG_KEEP_PARAMS)
-+		get_params(p, &attr);
-+
-+	return sched_setattr(p, &attr);
-+}
-+
-+/**
-+ * sys_sched_getscheduler - get the policy (scheduling class) of a thread
-+ * @pid: the pid in question.
-+ *
-+ * Return: On success, the policy of the thread. Otherwise, a negative error
-+ * code.
-+ */
-+SYSCALL_DEFINE1(sched_getscheduler, pid_t, pid)
-+{
-+	struct task_struct *p;
-+	int retval;
-+
-+	if (pid < 0)
-+		return -EINVAL;
-+
-+	guard(rcu)();
-+	p = find_process_by_pid(pid);
-+	if (!p)
-+		return -ESRCH;
-+
-+	retval = security_task_getscheduler(p);
-+	if (!retval) {
-+		retval = p->policy;
-+		if (p->sched_reset_on_fork)
-+			retval |= SCHED_RESET_ON_FORK;
++	/*
++	 * Make sure tasks use at least 32x as much time to run other code
++	 * than they used here, to limit NUMA PTE scanning overhead to 3% max.
++	 * Usually update_task_scan_period slows down scanning enough; on an
++	 * overloaded system we need to limit overhead on a per task basis.
++	 */
++	if (unlikely(p->se.sum_exec_runtime != runtime)) {
++		u64 diff = p->se.sum_exec_runtime - runtime;
++		p->node_stamp += 32 * diff;
 +	}
-+	return retval;
 +}
 +
-+/**
-+ * sys_sched_getparam - get the RT priority of a thread
-+ * @pid: the pid in question.
-+ * @param: structure containing the RT priority.
-+ *
-+ * Return: On success, 0 and the RT priority is in @param. Otherwise, an error
-+ * code.
-+ */
-+SYSCALL_DEFINE2(sched_getparam, pid_t, pid, struct sched_param __user *, param)
++void init_numa_balancing(unsigned long clone_flags, struct task_struct *p)
 +{
-+	struct sched_param lp = { .sched_priority = 0 };
-+	struct task_struct *p;
-+	int retval;
++	int mm_users = 0;
++	struct mm_struct *mm = p->mm;
 +
-+	if (!param || pid < 0)
-+		return -EINVAL;
++	if (mm) {
++		mm_users = atomic_read(&mm->mm_users);
++		if (mm_users == 1) {
++			mm->numa_next_scan = jiffies + msecs_to_jiffies(sysctl_numa_balancing_scan_delay);
++			mm->numa_scan_seq = 0;
++		}
++	}
++	p->node_stamp			= 0;
++	p->numa_scan_seq		= mm ? mm->numa_scan_seq : 0;
++	p->numa_scan_period		= sysctl_numa_balancing_scan_delay;
++	p->numa_migrate_retry		= 0;
++	/* Protect against double add, see task_tick_numa and task_numa_work */
++	p->numa_work.next		= &p->numa_work;
++	p->numa_faults			= NULL;
++	p->numa_pages_migrated		= 0;
++	p->total_numa_faults		= 0;
++	RCU_INIT_POINTER(p->numa_group, NULL);
++	p->last_task_numa_placement	= 0;
++	p->last_sum_exec_runtime	= 0;
 +
-+	scoped_guard (rcu) {
-+		p = find_process_by_pid(pid);
-+		if (!p)
-+			return -ESRCH;
++	init_task_work(&p->numa_work, task_numa_work);
 +
-+		retval = security_task_getscheduler(p);
-+		if (retval)
-+			return retval;
-+
-+		if (task_has_rt_policy(p))
-+			lp.sched_priority = p->rt_priority;
++	/* New address space, reset the preferred nid */
++	if (!(clone_flags & CLONE_VM)) {
++		p->numa_preferred_nid = NUMA_NO_NODE;
++		return;
 +	}
 +
 +	/*
-+	 * This one might sleep, we cannot do it with a spinlock held ...
++	 * New thread, keep existing numa_preferred_nid which should be copied
++	 * already by arch_dup_task_struct but stagger when scans start.
 +	 */
-+	return copy_to_user(param, &lp, sizeof(*param)) ? -EFAULT : 0;
++	if (mm) {
++		unsigned int delay;
++
++		delay = min_t(unsigned int, task_scan_max(current),
++			current->numa_scan_period * mm_users * NSEC_PER_MSEC);
++		delay += 2 * TICK_NSEC;
++		p->node_stamp = delay;
++	}
 +}
 +
 +/*
-+ * Copy the kernel size attribute structure (which might be larger
-+ * than what user-space knows about) to user-space.
-+ *
-+ * Note that all cases are valid: user-space buffer can be larger or
-+ * smaller than the kernel-space buffer. The usual case is that both
-+ * have the same size.
++ * Drive the periodic memory faults..
 + */
-+static int
-+sched_attr_copy_to_user(struct sched_attr __user *uattr,
-+			struct sched_attr *kattr,
-+			unsigned int usize)
++void task_tick_numa(struct rq *rq, struct task_struct *curr)
 +{
-+	unsigned int ksize = sizeof(*kattr);
-+
-+	if (!access_ok(uattr, usize))
-+		return -EFAULT;
++	struct callback_head *work = &curr->numa_work;
++	u64 period, now;
 +
 +	/*
-+	 * sched_getattr() ABI forwards and backwards compatibility:
-+	 *
-+	 * If usize == ksize then we just copy everything to user-space and all is good.
-+	 *
-+	 * If usize < ksize then we only copy as much as user-space has space for,
-+	 * this keeps ABI compatibility as well. We skip the rest.
-+	 *
-+	 * If usize > ksize then user-space is using a newer version of the ABI,
-+	 * which part the kernel doesn't know about. Just ignore it - tooling can
-+	 * detect the kernel's knowledge of attributes from the attr->size value
-+	 * which is set to ksize in this case.
++	 * We don't care about NUMA placement if we don't have memory.
 +	 */
-+	kattr->size = min(usize, ksize);
++	if (!curr->mm || (curr->flags & (PF_EXITING | PF_KTHREAD)) || work->next != work)
++		return;
 +
-+	if (copy_to_user(uattr, kattr, kattr->size))
-+		return -EFAULT;
++	/*
++	 * Using runtime rather than walltime has the dual advantage that
++	 * we (mostly) drive the selection from busy threads and that the
++	 * task needs to have done some actual work before we bother with
++	 * NUMA placement.
++	 */
++	now = curr->se.sum_exec_runtime;
++	period = (u64)curr->numa_scan_period * NSEC_PER_MSEC;
 +
-+	return 0;
++	if (now > curr->node_stamp + period) {
++		if (!curr->node_stamp)
++			curr->numa_scan_period = task_scan_start(curr);
++		curr->node_stamp += period;
++
++		if (!time_before(jiffies, curr->mm->numa_next_scan))
++			task_work_add(curr, work, TWA_RESUME);
++	}
 +}
 +
-+/**
-+ * sys_sched_getattr - similar to sched_getparam, but with sched_attr
-+ * @pid: the pid in question.
-+ * @uattr: structure containing the extended parameters.
-+ * @usize: sizeof(attr) for fwd/bwd comp.
-+ * @flags: for future extension.
-+ */
-+SYSCALL_DEFINE4(sched_getattr, pid_t, pid, struct sched_attr __user *, uattr,
-+		unsigned int, usize, unsigned int, flags)
++void update_scan_period(struct task_struct *p, int new_cpu)
 +{
-+	struct sched_attr kattr = { };
-+	struct task_struct *p;
-+	int retval;
++	int src_nid = cpu_to_node(task_cpu(p));
++	int dst_nid = cpu_to_node(new_cpu);
 +
-+	if (!uattr || pid < 0 || usize > PAGE_SIZE ||
-+	    usize < SCHED_ATTR_SIZE_VER0 || flags)
-+		return -EINVAL;
++	if (!static_branch_likely(&sched_numa_balancing))
++		return;
 +
-+	scoped_guard (rcu) {
-+		p = find_process_by_pid(pid);
-+		if (!p)
-+			return -ESRCH;
++	if (!p->mm || !p->numa_faults || (p->flags & PF_EXITING))
++		return;
 +
-+		retval = security_task_getscheduler(p);
-+		if (retval)
-+			return retval;
++	if (src_nid == dst_nid)
++		return;
 +
-+		kattr.sched_policy = p->policy;
-+		if (p->sched_reset_on_fork)
-+			kattr.sched_flags |= SCHED_FLAG_RESET_ON_FORK;
-+		get_params(p, &kattr);
-+		kattr.sched_flags &= SCHED_FLAG_ALL;
-+
-+#ifdef CONFIG_UCLAMP_TASK
++	/*
++	 * Allow resets if faults have been trapped before one scan
++	 * has completed. This is most likely due to a new task that
++	 * is pulled cross-node due to wakeups or load balancing.
++	 */
++	if (p->numa_scan_seq) {
 +		/*
-+		 * This could race with another potential updater, but this is fine
-+		 * because it'll correctly read the old or the new value. We don't need
-+		 * to guarantee who wins the race as long as it doesn't return garbage.
++		 * Avoid scan adjustments if moving to the preferred
++		 * node or if the task was not previously running on
++		 * the preferred node.
 +		 */
-+		kattr.sched_util_min = p->uclamp_req[UCLAMP_MIN].value;
-+		kattr.sched_util_max = p->uclamp_req[UCLAMP_MAX].value;
-+#endif
++		if (dst_nid == p->numa_preferred_nid ||
++		    (p->numa_preferred_nid != NUMA_NO_NODE &&
++			src_nid != p->numa_preferred_nid))
++			return;
 +	}
 +
-+	return sched_attr_copy_to_user(uattr, &kattr, usize);
++	p->numa_scan_period = task_scan_start(p);
 +}
 +
-+#ifdef CONFIG_SMP
-+int dl_task_check_affinity(struct task_struct *p, const struct cpumask *mask)
++#ifdef CONFIG_SCHED_DEBUG
++void show_numa_stats(struct task_struct *p, struct seq_file *m)
 +{
-+	/*
-+	 * If the task isn't a deadline task or admission control is
-+	 * disabled then we don't care about affinity changes.
-+	 */
-+	if (!task_has_dl_policy(p) || !dl_bandwidth_enabled())
-+		return 0;
++	int node;
++	unsigned long tsf = 0, tpf = 0, gsf = 0, gpf = 0;
++	struct numa_group *ng;
 +
-+	/*
-+	 * Since bandwidth control happens on root_domain basis,
-+	 * if admission test is enabled, we only admit -deadline
-+	 * tasks allowed to run on all the CPUs in the task's
-+	 * root_domain.
-+	 */
-+	guard(rcu)();
-+	if (!cpumask_subset(task_rq(p)->rd->span, mask))
-+		return -EBUSY;
-+
-+	return 0;
-+}
-+#endif /* CONFIG_SMP */
-+
-+int __sched_setaffinity(struct task_struct *p, struct affinity_context *ctx)
-+{
-+	int retval;
-+	cpumask_var_t cpus_allowed, new_mask;
-+
-+	if (!alloc_cpumask_var(&cpus_allowed, GFP_KERNEL))
-+		return -ENOMEM;
-+
-+	if (!alloc_cpumask_var(&new_mask, GFP_KERNEL)) {
-+		retval = -ENOMEM;
-+		goto out_free_cpus_allowed;
-+	}
-+
-+	cpuset_cpus_allowed(p, cpus_allowed);
-+	cpumask_and(new_mask, ctx->new_mask, cpus_allowed);
-+
-+	ctx->new_mask = new_mask;
-+	ctx->flags |= SCA_CHECK;
-+
-+	retval = dl_task_check_affinity(p, new_mask);
-+	if (retval)
-+		goto out_free_new_mask;
-+
-+	retval = __set_cpus_allowed_ptr(p, ctx);
-+	if (retval)
-+		goto out_free_new_mask;
-+
-+	cpuset_cpus_allowed(p, cpus_allowed);
-+	if (!cpumask_subset(new_mask, cpus_allowed)) {
-+		/*
-+		 * We must have raced with a concurrent cpuset update.
-+		 * Just reset the cpumask to the cpuset's cpus_allowed.
-+		 */
-+		cpumask_copy(new_mask, cpus_allowed);
-+
-+		/*
-+		 * If SCA_USER is set, a 2nd call to __set_cpus_allowed_ptr()
-+		 * will restore the previous user_cpus_ptr value.
-+		 *
-+		 * In the unlikely event a previous user_cpus_ptr exists,
-+		 * we need to further restrict the mask to what is allowed
-+		 * by that old user_cpus_ptr.
-+		 */
-+		if (unlikely((ctx->flags & SCA_USER) && ctx->user_mask)) {
-+			bool empty = !cpumask_and(new_mask, new_mask,
-+						  ctx->user_mask);
-+
-+			if (WARN_ON_ONCE(empty))
-+				cpumask_copy(new_mask, cpus_allowed);
++	rcu_read_lock();
++	ng = rcu_dereference(p->numa_group);
++	for_each_online_node(node) {
++		if (p->numa_faults) {
++			tsf = p->numa_faults[task_faults_idx(NUMA_MEM, node, 0)];
++			tpf = p->numa_faults[task_faults_idx(NUMA_MEM, node, 1)];
 +		}
-+		__set_cpus_allowed_ptr(p, ctx);
-+		retval = -EINVAL;
-+	}
-+
-+out_free_new_mask:
-+	free_cpumask_var(new_mask);
-+out_free_cpus_allowed:
-+	free_cpumask_var(cpus_allowed);
-+	return retval;
-+}
-+
-+long sched_setaffinity(pid_t pid, const struct cpumask *in_mask)
-+{
-+	struct affinity_context ac;
-+	struct cpumask *user_mask;
-+	int retval;
-+
-+	CLASS(find_get_task, p)(pid);
-+	if (!p)
-+		return -ESRCH;
-+
-+	if (p->flags & PF_NO_SETAFFINITY)
-+		return -EINVAL;
-+
-+	if (!check_same_owner(p)) {
-+		guard(rcu)();
-+		if (!ns_capable(__task_cred(p)->user_ns, CAP_SYS_NICE))
-+			return -EPERM;
-+	}
-+
-+	retval = security_task_setscheduler(p);
-+	if (retval)
-+		return retval;
-+
-+	/*
-+	 * With non-SMP configs, user_cpus_ptr/user_mask isn't used and
-+	 * alloc_user_cpus_ptr() returns NULL.
-+	 */
-+	user_mask = alloc_user_cpus_ptr(NUMA_NO_NODE);
-+	if (user_mask) {
-+		cpumask_copy(user_mask, in_mask);
-+	} else if (IS_ENABLED(CONFIG_SMP)) {
-+		return -ENOMEM;
-+	}
-+
-+	ac = (struct affinity_context){
-+		.new_mask  = in_mask,
-+		.user_mask = user_mask,
-+		.flags     = SCA_USER,
-+	};
-+
-+	retval = __sched_setaffinity(p, &ac);
-+	kfree(ac.user_mask);
-+
-+	return retval;
-+}
-+
-+static int get_user_cpu_mask(unsigned long __user *user_mask_ptr, unsigned len,
-+			     struct cpumask *new_mask)
-+{
-+	if (len < cpumask_size())
-+		cpumask_clear(new_mask);
-+	else if (len > cpumask_size())
-+		len = cpumask_size();
-+
-+	return copy_from_user(new_mask, user_mask_ptr, len) ? -EFAULT : 0;
-+}
-+
-+/**
-+ * sys_sched_setaffinity - set the CPU affinity of a process
-+ * @pid: pid of the process
-+ * @len: length in bytes of the bitmask pointed to by user_mask_ptr
-+ * @user_mask_ptr: user-space pointer to the new CPU mask
-+ *
-+ * Return: 0 on success. An error code otherwise.
-+ */
-+SYSCALL_DEFINE3(sched_setaffinity, pid_t, pid, unsigned int, len,
-+		unsigned long __user *, user_mask_ptr)
-+{
-+	cpumask_var_t new_mask;
-+	int retval;
-+
-+	if (!alloc_cpumask_var(&new_mask, GFP_KERNEL))
-+		return -ENOMEM;
-+
-+	retval = get_user_cpu_mask(user_mask_ptr, len, new_mask);
-+	if (retval == 0)
-+		retval = sched_setaffinity(pid, new_mask);
-+	free_cpumask_var(new_mask);
-+	return retval;
-+}
-+
-+long sched_getaffinity(pid_t pid, struct cpumask *mask)
-+{
-+	struct task_struct *p;
-+	int retval;
-+
-+	guard(rcu)();
-+	p = find_process_by_pid(pid);
-+	if (!p)
-+		return -ESRCH;
-+
-+	retval = security_task_getscheduler(p);
-+	if (retval)
-+		return retval;
-+
-+	guard(raw_spinlock_irqsave)(&p->pi_lock);
-+	cpumask_and(mask, &p->cpus_mask, cpu_active_mask);
-+
-+	return 0;
-+}
-+
-+/**
-+ * sys_sched_getaffinity - get the CPU affinity of a process
-+ * @pid: pid of the process
-+ * @len: length in bytes of the bitmask pointed to by user_mask_ptr
-+ * @user_mask_ptr: user-space pointer to hold the current CPU mask
-+ *
-+ * Return: size of CPU mask copied to user_mask_ptr on success. An
-+ * error code otherwise.
-+ */
-+SYSCALL_DEFINE3(sched_getaffinity, pid_t, pid, unsigned int, len,
-+		unsigned long __user *, user_mask_ptr)
-+{
-+	int ret;
-+	cpumask_var_t mask;
-+
-+	if ((len * BITS_PER_BYTE) < nr_cpu_ids)
-+		return -EINVAL;
-+	if (len & (sizeof(unsigned long)-1))
-+		return -EINVAL;
-+
-+	if (!zalloc_cpumask_var(&mask, GFP_KERNEL))
-+		return -ENOMEM;
-+
-+	ret = sched_getaffinity(pid, mask);
-+	if (ret == 0) {
-+		unsigned int retlen = min(len, cpumask_size());
-+
-+		if (copy_to_user(user_mask_ptr, cpumask_bits(mask), retlen))
-+			ret = -EFAULT;
-+		else
-+			ret = retlen;
-+	}
-+	free_cpumask_var(mask);
-+
-+	return ret;
-+}
-+
-+static void do_sched_yield(void)
-+{
-+	struct rq_flags rf;
-+	struct rq *rq;
-+
-+	rq = this_rq_lock_irq(&rf);
-+
-+	schedstat_inc(rq->yld_count);
-+	current->sched_class->yield_task(rq);
-+
-+	preempt_disable();
-+	rq_unlock_irq(rq, &rf);
-+	sched_preempt_enable_no_resched();
-+
-+	schedule();
-+}
-+
-+/**
-+ * sys_sched_yield - yield the current processor to other threads.
-+ *
-+ * This function yields the current CPU to other tasks. If there are no
-+ * other threads running on this CPU then this function will return.
-+ *
-+ * Return: 0.
-+ */
-+SYSCALL_DEFINE0(sched_yield)
-+{
-+	do_sched_yield();
-+	return 0;
-+}
-+
-+/**
-+ * yield - yield the current processor to other threads.
-+ *
-+ * Do not ever use this function, there's a 99% chance you're doing it wrong.
-+ *
-+ * The scheduler is at all times free to pick the calling task as the most
-+ * eligible task to run, if removing the yield() call from your code breaks
-+ * it, it's already broken.
-+ *
-+ * Typical broken usage is:
-+ *
-+ * while (!event)
-+ *	yield();
-+ *
-+ * where one assumes that yield() will let 'the other' process run that will
-+ * make event true. If the current task is a SCHED_FIFO task that will never
-+ * happen. Never use yield() as a progress guarantee!!
-+ *
-+ * If you want to use yield() to wait for something, use wait_event().
-+ * If you want to use yield() to be 'nice' for others, use cond_resched().
-+ * If you still want to use yield(), do not!
-+ */
-+void __sched yield(void)
-+{
-+	set_current_state(TASK_RUNNING);
-+	do_sched_yield();
-+}
-+EXPORT_SYMBOL(yield);
-+
-+/**
-+ * yield_to - yield the current processor to another thread in
-+ * your thread group, or accelerate that thread toward the
-+ * processor it's on.
-+ * @p: target task
-+ * @preempt: whether task preemption is allowed or not
-+ *
-+ * It's the caller's job to ensure that the target task struct
-+ * can't go away on us before we can do any checks.
-+ *
-+ * Return:
-+ *	true (>0) if we indeed boosted the target task.
-+ *	false (0) if we failed to boost the target.
-+ *	-ESRCH if there's no task to yield to.
-+ */
-+int __sched yield_to(struct task_struct *p, bool preempt)
-+{
-+	struct task_struct *curr = current;
-+	struct rq *rq, *p_rq;
-+	int yielded = 0;
-+
-+	scoped_guard (irqsave) {
-+		rq = this_rq();
-+
-+again:
-+		p_rq = task_rq(p);
-+		/*
-+		 * If we're the only runnable task on the rq and target rq also
-+		 * has only one task, there's absolutely no point in yielding.
-+		 */
-+		if (rq->nr_running == 1 && p_rq->nr_running == 1)
-+			return -ESRCH;
-+
-+		guard(double_rq_lock)(rq, p_rq);
-+		if (task_rq(p) != p_rq)
-+			goto again;
-+
-+		if (!curr->sched_class->yield_to_task)
-+			return 0;
-+
-+		if (curr->sched_class != p->sched_class)
-+			return 0;
-+
-+		if (task_on_cpu(p_rq, p) || !task_is_running(p))
-+			return 0;
-+
-+		yielded = curr->sched_class->yield_to_task(rq, p);
-+		if (yielded) {
-+			schedstat_inc(rq->yld_count);
-+			/*
-+			 * Make p's CPU reschedule; pick_next_entity
-+			 * takes care of fairness.
-+			 */
-+			if (preempt && rq != p_rq)
-+				resched_curr(p_rq);
++		if (ng) {
++			gsf = ng->faults[task_faults_idx(NUMA_MEM, node, 0)],
++			gpf = ng->faults[task_faults_idx(NUMA_MEM, node, 1)];
 +		}
++		print_numa_stats(m, node, tsf, tpf, gsf, gpf);
 +	}
-+
-+	if (yielded)
-+		schedule();
-+
-+	return yielded;
++	rcu_read_unlock();
 +}
-+EXPORT_SYMBOL_GPL(yield_to);
++#endif /* CONFIG_SCHED_DEBUG */
 +
-+/**
-+ * sys_sched_get_priority_max - return maximum RT priority.
-+ * @policy: scheduling class.
-+ *
-+ * Return: On success, this syscall returns the maximum
-+ * rt_priority that can be used by a given scheduling class.
-+ * On failure, a negative error code is returned.
-+ */
-+SYSCALL_DEFINE1(sched_get_priority_max, int, policy)
-+{
-+	int ret = -EINVAL;
++#endif /* CONFIG_NUMA_BALANCING */
+diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
+index 7f1d856fdc3b..d687b9a272fc 100644
+--- a/kernel/sched/sched.h
++++ b/kernel/sched/sched.h
+@@ -3608,7 +3608,7 @@ sched_balance_find_dst_group(struct sched_domain *sd, struct task_struct *p, int
+ #ifdef CONFIG_FAIR_GROUP_SCHED
+ extern unsigned long task_h_load(struct task_struct *p);
+ #else
+-static unsigned long task_h_load(struct task_struct *p)
++static inline unsigned long task_h_load(struct task_struct *p)
+ {
+ 	return p->se.avg.load_avg;
+ }
+@@ -3850,4 +3850,42 @@ static inline void detach_entity_load_avg(struct cfs_rq *cfs_rq, struct sched_en
+ static inline void remove_entity_load_avg(struct sched_entity *se) {}
+ #endif
+ 
++#ifdef CONFIG_NUMA_BALANCING
++extern void task_tick_numa(struct rq *rq, struct task_struct *curr);
++extern void account_numa_enqueue(struct rq *rq, struct task_struct *p);
++extern void account_numa_dequeue(struct rq *rq, struct task_struct *p);
++extern void update_scan_period(struct task_struct *p, int new_cpu);
 +
-+	switch (policy) {
-+	case SCHED_FIFO:
-+	case SCHED_RR:
-+		ret = MAX_RT_PRIO-1;
-+		break;
-+	case SCHED_DEADLINE:
-+	case SCHED_NORMAL:
-+	case SCHED_BATCH:
-+	case SCHED_IDLE:
-+		ret = 0;
-+		break;
-+	}
-+	return ret;
-+}
++extern unsigned int sysctl_numa_balancing_promote_rate_limit;
 +
-+/**
-+ * sys_sched_get_priority_min - return minimum RT priority.
-+ * @policy: scheduling class.
-+ *
-+ * Return: On success, this syscall returns the minimum
-+ * rt_priority that can be used by a given scheduling class.
-+ * On failure, a negative error code is returned.
-+ */
-+SYSCALL_DEFINE1(sched_get_priority_min, int, policy)
-+{
-+	int ret = -EINVAL;
-+
-+	switch (policy) {
-+	case SCHED_FIFO:
-+	case SCHED_RR:
-+		ret = 1;
-+		break;
-+	case SCHED_DEADLINE:
-+	case SCHED_NORMAL:
-+	case SCHED_BATCH:
-+	case SCHED_IDLE:
-+		ret = 0;
-+	}
-+	return ret;
-+}
-+
-+static int sched_rr_get_interval(pid_t pid, struct timespec64 *t)
-+{
-+	unsigned int time_slice = 0;
-+	int retval;
-+
-+	if (pid < 0)
-+		return -EINVAL;
-+
-+	scoped_guard (rcu) {
-+		struct task_struct *p = find_process_by_pid(pid);
-+		if (!p)
-+			return -ESRCH;
-+
-+		retval = security_task_getscheduler(p);
-+		if (retval)
-+			return retval;
-+
-+		scoped_guard (task_rq_lock, p) {
-+			struct rq *rq = scope.rq;
-+			if (p->sched_class->get_rr_interval)
-+				time_slice = p->sched_class->get_rr_interval(rq, p);
-+		}
-+	}
-+
-+	jiffies_to_timespec64(time_slice, t);
-+	return 0;
-+}
-+
-+/**
-+ * sys_sched_rr_get_interval - return the default timeslice of a process.
-+ * @pid: pid of the process.
-+ * @interval: userspace pointer to the timeslice value.
-+ *
-+ * this syscall writes the default timeslice value of a given process
-+ * into the user-space timespec buffer. A value of '0' means infinity.
-+ *
-+ * Return: On success, 0 and the timeslice is in @interval. Otherwise,
-+ * an error code.
-+ */
-+SYSCALL_DEFINE2(sched_rr_get_interval, pid_t, pid,
-+		struct __kernel_timespec __user *, interval)
-+{
-+	struct timespec64 t;
-+	int retval = sched_rr_get_interval(pid, &t);
-+
-+	if (retval == 0)
-+		retval = put_timespec64(&t, interval);
-+
-+	return retval;
-+}
-+
-+#ifdef CONFIG_COMPAT_32BIT_TIME
-+SYSCALL_DEFINE2(sched_rr_get_interval_time32, pid_t, pid,
-+		struct old_timespec32 __user *, interval)
-+{
-+	struct timespec64 t;
-+	int retval = sched_rr_get_interval(pid, &t);
-+
-+	if (retval == 0)
-+		retval = put_old_timespec32(&t, interval);
-+	return retval;
-+}
++#else
++static inline void task_tick_numa(struct rq *rq, struct task_struct *curr) { }
++static inline void account_numa_enqueue(struct rq *rq, struct task_struct *p) { }
++static inline void account_numa_dequeue(struct rq *rq, struct task_struct *p) { }
++static inline void update_scan_period(struct task_struct *p, int new_cpu) { }
 +#endif
 +
++
++#ifdef CONFIG_SCHED_SMT
++
++static inline bool test_idle_cores(int cpu)
++{
++	struct sched_domain_shared *sds;
++
++	sds = rcu_dereference(per_cpu(sd_llc_shared, cpu));
++	if (sds)
++		return READ_ONCE(sds->has_idle_cores);
++
++	return false;
++}
++
++#else
++
++static inline bool test_idle_cores(int cpu)
++{
++	return false;
++}
++
++#endif
++
+ #endif /* _KERNEL_SCHED_SCHED_H */
 -- 
 2.40.1
 
