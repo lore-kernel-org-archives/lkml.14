@@ -1,193 +1,406 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+Received: from esa1.hgst.iphmx.com (esa1.hgst.iphmx.com [68.232.141.245])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8687917FF
-	for <linux-kernel@vger.kernel.org>; Sun,  7 Apr 2024 06:04:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B046F111AA;
+	Sun,  7 Apr 2024 06:04:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.141.245
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712469855; cv=none; b=Xn7zcGylacHcmmVxQZJrUUNY8aCnETKmJADFMoFGql+csqlE+WxQjx2s1U6cahKUymV8pnmJlFEh6q0JFHN3g2dRQH+5kyW077Bnz0iDcAvrN49MzeuBEohK33AnYU7U9bZjykWdN37DCpWZsNbFWEOi8T5wSVorgMBWH57NEOE=
+	t=1712469869; cv=none; b=k6/VmWnlfCt2szCD6Pr3ErehNlFCItyHOwntCZ/l6xQqhK4PbROgWpnwXfXvma+cZkMYC3asY15Cx5egMHtIlpNNLwjfSx1Qwp0JffEhRcUrC+B3HL72Zept+srSS3DUaycnfnSPQpMwMatQo5NhCH7a9yfqN3QzBq9Ke9rSW8M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712469855; c=relaxed/simple;
-	bh=9ASREbF5V+W5V2iTmngHkcY+rf4Cr1ccazmdC+nE9Pc=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=XsbAXrgcyUFLeuoL1G0KcxRJYrtwyCL+D5dcV2ERehE6h5oOUciuDl/Z3SwNvKO9yfPtktsYMJ1VRoL6DMX21nXHT+3CzmHj7SCDIGnPA1Dtd5QNgfg33ExvlWKcDUZph/WkPw6xb/uXtvLeHsHRIC3LG+ylegQ84M8I9VlUbK0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=buK6wkFn; arc=none smtp.client-ip=192.198.163.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1712469869; c=relaxed/simple;
+	bh=t/ajfETUN+LYoOt+WkqShoD9CjGX5UIn9BP5Mlcq4II=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=LegjU1iwS1lr9ZHqe/TbkHnvTsUe2DRKTul04U6Wwhh2fyKnXn6nkIiBvQYnNtw9jqnZ7P2arirlee8gZy+/Eb4TXNCnNvvkSHUn+PlDNie6yUL7alw7Iv0BDh36bYjs3B2CS+FEQEIXtbgy1sVYeKMVhiuU7Wf+USkTQg+5g10=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wdc.com; spf=pass smtp.mailfrom=wdc.com; dkim=pass (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b=c2PSSwk0; arc=none smtp.client-ip=68.232.141.245
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wdc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wdc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="buK6wkFn"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1712469853; x=1744005853;
-  h=from:to:cc:subject:in-reply-to:references:date:
-   message-id:mime-version;
-  bh=9ASREbF5V+W5V2iTmngHkcY+rf4Cr1ccazmdC+nE9Pc=;
-  b=buK6wkFnrJHJXhhXVMbguHyl9IB7s/bf98Q6h4Yst2kTaz7IkWvTeIFy
-   wTsnSuykLoqnuv7g4U286MIZom7KM9XXhg7UHa6sS547Mt4GZoI1BB5Ev
-   tXhGybKPO9DXepyw+fQ5NR3QdRup3f8YIrNytR2Hflu+l2oNSJathWylK
-   IzgfmZLv0liZ0Je3Brf6XmID6McysjYq2/MZioHWUZ8W09ONFfhq2tElz
-   jonIOjFlhoT8kgEeyjKQ9TG3xomNvhO781O88s9cFbAn+nHW9MHWzZbgP
-   OtHWQKMLixw55rZhxvBfWGMRcJlpreMMv9rnPu3usU2yLULDAdf7oc3Tf
+	dkim=pass (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="c2PSSwk0"
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1712469866; x=1744005866;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=t/ajfETUN+LYoOt+WkqShoD9CjGX5UIn9BP5Mlcq4II=;
+  b=c2PSSwk0BF9TSBzdGgjkMGllI7cGcM1Hw/lDJXjq58GLrU2C0Po3DqNL
+   9PtIlU4dLOFhaIsBevA1MaXnh03n9v/VBKeATIdFK4am/Du9Ex+dzpZjG
+   vDIdXg7bn60wxduzW9q3CyrvnxWmx+RBPObo2vVhabF225Bw+o2t7khM6
+   vwUJ5Mvx+ljtLBMsJJYTtqimTtKCPSxQWHz3c1YlQjMHek7NWyYy+joGY
+   S1lAEyRCsC6/KrGUulOGgxhaoKXzp52uUcVChofZKwsDXyBbSO6rG2ndg
+   FznaHZZAm1f/fe3VVUa6GLRZPn7t5Eha3aKxv/hOF0Y75OCsg1uaiZZ23
    Q==;
-X-CSE-ConnectionGUID: Ky3gTTOeSLyFX6FYe8UsrA==
-X-CSE-MsgGUID: t6w9zYVHTfWSOcMACKrlow==
-X-IronPort-AV: E=McAfee;i="6600,9927,11036"; a="7944394"
-X-IronPort-AV: E=Sophos;i="6.07,184,1708416000"; 
-   d="scan'208";a="7944394"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Apr 2024 23:04:12 -0700
-X-CSE-ConnectionGUID: enoCzR67Q7GqsPFXl1aIDg==
-X-CSE-MsgGUID: /eEN4FILTLOXj5Wgffu5wQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,184,1708416000"; 
-   d="scan'208";a="19611610"
-Received: from yhuang6-desk2.sh.intel.com (HELO yhuang6-desk2.ccr.corp.intel.com) ([10.238.208.55])
-  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Apr 2024 23:04:09 -0700
-From: "Huang, Ying" <ying.huang@intel.com>
-To: David Hildenbrand <david@redhat.com>
-Cc: Ryan Roberts <ryan.roberts@arm.com>,  Andrew Morton
- <akpm@linux-foundation.org>,  Matthew Wilcox <willy@infradead.org>,  Gao
- Xiang <xiang@kernel.org>,  Yu Zhao <yuzhao@google.com>,  Yang Shi
- <shy828301@gmail.com>,  Michal Hocko <mhocko@suse.com>,  Kefeng Wang
- <wangkefeng.wang@huawei.com>,  Barry Song <21cnbao@gmail.com>,  Chris Li
- <chrisl@kernel.org>,  Lance Yang <ioworker0@gmail.com>,
-  linux-mm@kvack.org,  linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v6 4/6] mm: swap: Allow storage of all mTHP orders
-In-Reply-To: <c7748c77-b2a3-4b06-aaeb-02793a160aaf@redhat.com> (David
-	Hildenbrand's message of "Fri, 5 Apr 2024 12:38:10 +0200")
-References: <20240403114032.1162100-1-ryan.roberts@arm.com>
-	<20240403114032.1162100-5-ryan.roberts@arm.com>
-	<c7748c77-b2a3-4b06-aaeb-02793a160aaf@redhat.com>
-Date: Sun, 07 Apr 2024 14:02:16 +0800
-Message-ID: <87edbhaexj.fsf@yhuang6-desk2.ccr.corp.intel.com>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+X-CSE-ConnectionGUID: tb9yxORlSeCSbTKqU2Sa4A==
+X-CSE-MsgGUID: j2L+ma3jSESQB0EHME0agw==
+X-IronPort-AV: E=Sophos;i="6.07,184,1708358400"; 
+   d="scan'208";a="13672855"
+Received: from h199-255-45-15.hgst.com (HELO uls-op-cesaep02.wdc.com) ([199.255.45.15])
+  by ob1.hgst.iphmx.com with ESMTP; 07 Apr 2024 14:04:20 +0800
+IronPort-SDR: CF3CTaqM97YM6VqhCBP007CpkMsekEPP9v7HM4BMqnc5nkfw+sUT4tmbg0NouCRkm0Qe/ugded
+ /Bq6kEBmFj5g==
+Received: from uls-op-cesaip02.wdc.com ([10.248.3.37])
+  by uls-op-cesaep02.wdc.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 06 Apr 2024 22:07:10 -0700
+IronPort-SDR: GvFU5KAuaErs4WtKF1+9RXL/MJB/xR5s+YQOwOW/z5bFn2lOO7Knp36BS6dnDeR7AE/zXL/43Y
+ XQL2G5nJbb4Q==
+WDCIronportException: Internal
+Received: from bxygm33.ad.shared ([10.45.31.229])
+  by uls-op-cesaip02.wdc.com with ESMTP; 06 Apr 2024 23:04:17 -0700
+From: Avri Altman <avri.altman@wdc.com>
+To: "James E . J . Bottomley" <jejb@linux.ibm.com>,
+	"Martin K . Petersen" <martin.petersen@oracle.com>
+Cc: Christoph Hellwig <hch@infradead.org>,
+	Bart Van Assche <bvanassche@acm.org>,
+	Bean Huo <beanhuo@micron.com>,
+	linux-scsi@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Avri Altman <avri.altman@wdc.com>
+Subject: [PATCH v3 1/1] scsi: ufs: Remove support for old UFSHCI versions
+Date: Sun,  7 Apr 2024 09:04:10 +0300
+Message-ID: <20240407060412.856-2-avri.altman@wdc.com>
+X-Mailer: git-send-email 2.42.0
+In-Reply-To: <20240407060412.856-1-avri.altman@wdc.com>
+References: <20240407060412.856-1-avri.altman@wdc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=ascii
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-David Hildenbrand <david@redhat.com> writes:
+UFS spec version 2.1 was published more than 10 years ago. It is
+vanishingly unlikely that even there are out there platforms that uses
+earlier host controllers, let alone that those ancient platforms will
+ever run a V6.10 kernel.  To be extra cautious, leave out support for
+UFSHCI2.0 as well, and just remove support of host controllers prior
+to UFS2.0.
 
-> On 03.04.24 13:40, Ryan Roberts wrote:
->> Multi-size THP enables performance improvements by allocating large,
->> pte-mapped folios for anonymous memory. However I've observed that on an
->> arm64 system running a parallel workload (e.g. kernel compilation)
->> across many cores, under high memory pressure, the speed regresses. This
->> is due to bottlenecking on the increased number of TLBIs added due to
->> all the extra folio splitting when the large folios are swapped out.
->> Therefore, solve this regression by adding support for swapping out
->> mTHP
->> without needing to split the folio, just like is already done for
->> PMD-sized THP. This change only applies when CONFIG_THP_SWAP is enabled,
->> and when the swap backing store is a non-rotating block device. These
->> are the same constraints as for the existing PMD-sized THP swap-out
->> support.
->> Note that no attempt is made to swap-in (m)THP here - this is still
->> done
->> page-by-page, like for PMD-sized THP. But swapping-out mTHP is a
->> prerequisite for swapping-in mTHP.
->> The main change here is to improve the swap entry allocator so that
->> it
->> can allocate any power-of-2 number of contiguous entries between [1, (1
->> << PMD_ORDER)]. This is done by allocating a cluster for each distinct
->> order and allocating sequentially from it until the cluster is full.
->> This ensures that we don't need to search the map and we get no
->> fragmentation due to alignment padding for different orders in the
->> cluster. If there is no current cluster for a given order, we attempt to
->> allocate a free cluster from the list. If there are no free clusters, we
->> fail the allocation and the caller can fall back to splitting the folio
->> and allocates individual entries (as per existing PMD-sized THP
->> fallback).
->> The per-order current clusters are maintained per-cpu using the
->> existing
->> infrastructure. This is done to avoid interleving pages from different
->> tasks, which would prevent IO being batched. This is already done for
->> the order-0 allocations so we follow the same pattern.
->> As is done for order-0 per-cpu clusters, the scanner now can steal
->> order-0 entries from any per-cpu-per-order reserved cluster. This
->> ensures that when the swap file is getting full, space doesn't get tied
->> up in the per-cpu reserves.
->> This change only modifies swap to be able to accept any order
->> mTHP. It
->> doesn't change the callers to elide doing the actual split. That will be
->> done in separate changes.
->> Reviewed-by: "Huang, Ying" <ying.huang@intel.com>
->> Signed-off-by: Ryan Roberts <ryan.roberts@arm.com>
->> ---
->>   include/linux/swap.h |  10 ++-
->>   mm/swap_slots.c      |   6 +-
->>   mm/swapfile.c        | 175 ++++++++++++++++++++++++-------------------
->>   3 files changed, 109 insertions(+), 82 deletions(-)
->> diff --git a/include/linux/swap.h b/include/linux/swap.h
->> index 5e1e4f5bf0cb..11c53692f65f 100644
->> --- a/include/linux/swap.h
->> +++ b/include/linux/swap.h
->> @@ -268,13 +268,19 @@ struct swap_cluster_info {
->>    */
->>   #define SWAP_NEXT_INVALID	0
->>   +#ifdef CONFIG_THP_SWAP
->> +#define SWAP_NR_ORDERS		(PMD_ORDER + 1)
->> +#else
->> +#define SWAP_NR_ORDERS		1
->> +#endif
->> +
->>   /*
->>    * We assign a cluster to each CPU, so each CPU can allocate swap entry from
->>    * its own cluster and swapout sequentially. The purpose is to optimize swapout
->>    * throughput.
->>    */
->>   struct percpu_cluster {
->> -	unsigned int next; /* Likely next allocation offset */
->> +	unsigned int next[SWAP_NR_ORDERS]; /* Likely next allocation offset */
->>   };
->>     struct swap_cluster_list {
->> @@ -471,7 +477,7 @@ swp_entry_t folio_alloc_swap(struct folio *folio);
->>   bool folio_free_swap(struct folio *folio);
->>   void put_swap_folio(struct folio *folio, swp_entry_t entry);
->>   extern swp_entry_t get_swap_page_of_type(int);
->> -extern int get_swap_pages(int n, swp_entry_t swp_entries[], int entry_size);
->> +extern int get_swap_pages(int n, swp_entry_t swp_entries[], int order);
->>   extern int add_swap_count_continuation(swp_entry_t, gfp_t);
->>   extern void swap_shmem_alloc(swp_entry_t);
->>   extern int swap_duplicate(swp_entry_t);
->> diff --git a/mm/swap_slots.c b/mm/swap_slots.c
->> index 53abeaf1371d..13ab3b771409 100644
->> --- a/mm/swap_slots.c
->> +++ b/mm/swap_slots.c
->> @@ -264,7 +264,7 @@ static int refill_swap_slots_cache(struct swap_slots_cache *cache)
->>   	cache->cur = 0;
->>   	if (swap_slot_cache_active)
->>   		cache->nr = get_swap_pages(SWAP_SLOTS_CACHE_SIZE,
->> -					   cache->slots, 1);
->> +					   cache->slots, 0);
->>     	return cache->nr;
->>   }
->> @@ -311,7 +311,7 @@ swp_entry_t folio_alloc_swap(struct folio *folio)
->>     	if (folio_test_large(folio)) {
->>   		if (IS_ENABLED(CONFIG_THP_SWAP))
->> -			get_swap_pages(1, &entry, folio_nr_pages(folio));
->> +			get_swap_pages(1, &entry, folio_order(folio));
->
-> The only comment I have is that this nr_pages -> order conversion adds
-> a bit of noise to this patch.
->
-> AFAIKS, it's primarily only required for "cluster->next[order]",
-> everything else doesn't really require the order.
->
-> I'd just have split that out into a separate patch, or simply
-> converted nr_pages -> order where required.
->
-> Nothing jumped at me, but I'm not an expert on that code, so I'm
-> mostly trusting the others ;)
+This patch removes some legacy tuning calls that no longer apply.
 
-The nr_pages -> order conversion replaces ilog2(nr_pages) with
-(1<<order).  IIUC, "<<" is a little faster than "ilog2()".  And, we
-don't need to worry about whether nr_pages is a power of 2.  Do you
-think that this makes sense?
+Signed-off-by: Avri Altman <avri.altman@wdc.com>
+Acked-by: Bean Huo <beanhuo@micron.com>
+---
+ drivers/ufs/core/ufshcd.c   | 158 +++---------------------------------
+ drivers/ufs/host/ufs-qcom.c |   3 +-
+ include/ufs/ufshcd.h        |   2 -
+ include/ufs/ufshci.h        |  13 +--
+ 4 files changed, 15 insertions(+), 161 deletions(-)
 
---
-Best Regards,
-Huang, Ying
+diff --git a/drivers/ufs/core/ufshcd.c b/drivers/ufs/core/ufshcd.c
+index 62c8575f2c67..c72ef87ea867 100644
+--- a/drivers/ufs/core/ufshcd.c
++++ b/drivers/ufs/core/ufshcd.c
+@@ -748,8 +748,6 @@ static int ufshcd_wait_for_register(struct ufs_hba *hba, u32 reg, u32 mask,
+  */
+ static inline u32 ufshcd_get_intr_mask(struct ufs_hba *hba)
+ {
+-	if (hba->ufs_version == ufshci_version(1, 0))
+-		return INTERRUPT_MASK_ALL_VER_10;
+ 	if (hba->ufs_version <= ufshci_version(2, 0))
+ 		return INTERRUPT_MASK_ALL_VER_11;
+ 
+@@ -990,30 +988,6 @@ bool ufshcd_is_hba_active(struct ufs_hba *hba)
+ }
+ EXPORT_SYMBOL_GPL(ufshcd_is_hba_active);
+ 
+-u32 ufshcd_get_local_unipro_ver(struct ufs_hba *hba)
+-{
+-	/* HCI version 1.0 and 1.1 supports UniPro 1.41 */
+-	if (hba->ufs_version <= ufshci_version(1, 1))
+-		return UFS_UNIPRO_VER_1_41;
+-	else
+-		return UFS_UNIPRO_VER_1_6;
+-}
+-EXPORT_SYMBOL(ufshcd_get_local_unipro_ver);
+-
+-static bool ufshcd_is_unipro_pa_params_tuning_req(struct ufs_hba *hba)
+-{
+-	/*
+-	 * If both host and device support UniPro ver1.6 or later, PA layer
+-	 * parameters tuning happens during link startup itself.
+-	 *
+-	 * We can manually tune PA layer parameters if either host or device
+-	 * doesn't support UniPro ver 1.6 or later. But to keep manual tuning
+-	 * logic simple, we will only do manual tuning if local unipro version
+-	 * doesn't support ver1.6 or later.
+-	 */
+-	return ufshcd_get_local_unipro_ver(hba) < UFS_UNIPRO_VER_1_6;
+-}
+-
+ /**
+  * ufshcd_pm_qos_init - initialize PM QoS request
+  * @hba: per adapter instance
+@@ -2674,14 +2648,7 @@ static void ufshcd_enable_intr(struct ufs_hba *hba, u32 intrs)
+ {
+ 	u32 set = ufshcd_readl(hba, REG_INTERRUPT_ENABLE);
+ 
+-	if (hba->ufs_version == ufshci_version(1, 0)) {
+-		u32 rw;
+-		rw = set & INTERRUPT_MASK_RW_VER_10;
+-		set = rw | ((set ^ intrs) & intrs);
+-	} else {
+-		set |= intrs;
+-	}
+-
++	set |= intrs;
+ 	ufshcd_writel(hba, set, REG_INTERRUPT_ENABLE);
+ }
+ 
+@@ -2694,16 +2661,7 @@ static void ufshcd_disable_intr(struct ufs_hba *hba, u32 intrs)
+ {
+ 	u32 set = ufshcd_readl(hba, REG_INTERRUPT_ENABLE);
+ 
+-	if (hba->ufs_version == ufshci_version(1, 0)) {
+-		u32 rw;
+-		rw = (set & INTERRUPT_MASK_RW_VER_10) &
+-			~(intrs & INTERRUPT_MASK_RW_VER_10);
+-		set = rw | ((set & intrs) & ~INTERRUPT_MASK_RW_VER_10);
+-
+-	} else {
+-		set &= ~intrs;
+-	}
+-
++	set &= ~intrs;
+ 	ufshcd_writel(hba, set, REG_INTERRUPT_ENABLE);
+ }
+ 
+@@ -2715,21 +2673,17 @@ static void ufshcd_disable_intr(struct ufs_hba *hba, u32 intrs)
+  * @upiu_flags: flags required in the header
+  * @cmd_dir: requests data direction
+  * @ehs_length: Total EHS Length (in 32‐bytes units of all Extra Header Segments)
+- * @legacy_type: UTP_CMD_TYPE_SCSI or UTP_CMD_TYPE_DEV_MANAGE
+  */
+ static void
+ ufshcd_prepare_req_desc_hdr(struct ufs_hba *hba, struct ufshcd_lrb *lrbp,
+ 			    u8 *upiu_flags, enum dma_data_direction cmd_dir,
+-			    int ehs_length, enum utp_cmd_type legacy_type)
++			    int ehs_length)
+ {
+ 	struct utp_transfer_req_desc *req_desc = lrbp->utr_descriptor_ptr;
+ 	struct request_desc_header *h = &req_desc->header;
+ 	enum utp_data_direction data_direction;
+ 
+-	if (hba->ufs_version <= ufshci_version(1, 1))
+-		lrbp->command_type = legacy_type;
+-	else
+-		lrbp->command_type = UTP_CMD_TYPE_UFS_STORAGE;
++	lrbp->command_type = UTP_CMD_TYPE_UFS_STORAGE;
+ 
+ 	*h = (typeof(*h)){ };
+ 
+@@ -2863,7 +2817,7 @@ static int ufshcd_compose_devman_upiu(struct ufs_hba *hba,
+ 	u8 upiu_flags;
+ 	int ret = 0;
+ 
+-	ufshcd_prepare_req_desc_hdr(hba, lrbp, &upiu_flags, DMA_NONE, 0, UTP_CMD_TYPE_DEV_MANAGE);
++	ufshcd_prepare_req_desc_hdr(hba, lrbp, &upiu_flags, DMA_NONE, 0);
+ 
+ 	if (hba->dev_cmd.type == DEV_CMD_TYPE_QUERY)
+ 		ufshcd_prepare_utp_query_req_upiu(hba, lrbp, upiu_flags);
+@@ -2887,8 +2841,7 @@ static void ufshcd_comp_scsi_upiu(struct ufs_hba *hba, struct ufshcd_lrb *lrbp)
+ 	unsigned int ioprio_class = IOPRIO_PRIO_CLASS(req_get_ioprio(rq));
+ 	u8 upiu_flags;
+ 
+-	ufshcd_prepare_req_desc_hdr(hba, lrbp, &upiu_flags,
+-				    lrbp->cmd->sc_data_direction, 0, UTP_CMD_TYPE_SCSI);
++	ufshcd_prepare_req_desc_hdr(hba, lrbp, &upiu_flags, lrbp->cmd->sc_data_direction, 0);
+ 	if (ioprio_class == IOPRIO_CLASS_RT)
+ 		upiu_flags |= UPIU_CMD_FLAGS_CP;
+ 	ufshcd_prepare_utp_scsi_cmd_upiu(lrbp, upiu_flags);
+@@ -5559,15 +5512,12 @@ void ufshcd_compl_one_cqe(struct ufs_hba *hba, int task_tag,
+ 		ufshcd_release_scsi_cmd(hba, lrbp);
+ 		/* Do not touch lrbp after scsi done */
+ 		scsi_done(cmd);
+-	} else if (lrbp->command_type == UTP_CMD_TYPE_DEV_MANAGE ||
+-		   lrbp->command_type == UTP_CMD_TYPE_UFS_STORAGE) {
+-		if (hba->dev_cmd.complete) {
+-			if (cqe) {
+-				ocs = le32_to_cpu(cqe->status) & MASK_OCS;
+-				lrbp->utr_descriptor_ptr->header.ocs = ocs;
+-			}
+-			complete(hba->dev_cmd.complete);
++	} else if (hba->dev_cmd.complete) {
++		if (cqe) {
++			ocs = le32_to_cpu(cqe->status) & MASK_OCS;
++			lrbp->utr_descriptor_ptr->header.ocs = ocs;
+ 		}
++		complete(hba->dev_cmd.complete);
+ 	}
+ }
+ 
+@@ -7220,7 +7170,7 @@ static int ufshcd_issue_devman_upiu_cmd(struct ufs_hba *hba,
+ 
+ 	ufshcd_setup_dev_cmd(hba, lrbp, cmd_type, 0, tag);
+ 
+-	ufshcd_prepare_req_desc_hdr(hba, lrbp, &upiu_flags, DMA_NONE, 0, UTP_CMD_TYPE_DEV_MANAGE);
++	ufshcd_prepare_req_desc_hdr(hba, lrbp, &upiu_flags, DMA_NONE, 0);
+ 
+ 	/* update the task tag in the request upiu */
+ 	req_upiu->header.task_tag = tag;
+@@ -7372,7 +7322,7 @@ int ufshcd_advanced_rpmb_req_handler(struct ufs_hba *hba, struct utp_upiu_req *r
+ 
+ 	ufshcd_setup_dev_cmd(hba, lrbp, DEV_CMD_TYPE_RPMB, UFS_UPIU_RPMB_WLUN, tag);
+ 
+-	ufshcd_prepare_req_desc_hdr(hba, lrbp, &upiu_flags, DMA_NONE, ehs, UTP_CMD_TYPE_DEV_MANAGE);
++	ufshcd_prepare_req_desc_hdr(hba, lrbp, &upiu_flags, DMA_NONE, ehs);
+ 
+ 	/* update the task tag */
+ 	req_upiu->header.task_tag = tag;
+@@ -8359,83 +8309,6 @@ static void ufs_put_device_desc(struct ufs_hba *hba)
+ 	dev_info->model = NULL;
+ }
+ 
+-/**
+- * ufshcd_tune_pa_tactivate - Tunes PA_TActivate of local UniPro
+- * @hba: per-adapter instance
+- *
+- * PA_TActivate parameter can be tuned manually if UniPro version is less than
+- * 1.61. PA_TActivate needs to be greater than or equal to peerM-PHY's
+- * RX_MIN_ACTIVATETIME_CAPABILITY attribute. This optimal value can help reduce
+- * the hibern8 exit latency.
+- *
+- * Return: zero on success, non-zero error value on failure.
+- */
+-static int ufshcd_tune_pa_tactivate(struct ufs_hba *hba)
+-{
+-	int ret = 0;
+-	u32 peer_rx_min_activatetime = 0, tuned_pa_tactivate;
+-
+-	ret = ufshcd_dme_peer_get(hba,
+-				  UIC_ARG_MIB_SEL(
+-					RX_MIN_ACTIVATETIME_CAPABILITY,
+-					UIC_ARG_MPHY_RX_GEN_SEL_INDEX(0)),
+-				  &peer_rx_min_activatetime);
+-	if (ret)
+-		goto out;
+-
+-	/* make sure proper unit conversion is applied */
+-	tuned_pa_tactivate =
+-		((peer_rx_min_activatetime * RX_MIN_ACTIVATETIME_UNIT_US)
+-		 / PA_TACTIVATE_TIME_UNIT_US);
+-	ret = ufshcd_dme_set(hba, UIC_ARG_MIB(PA_TACTIVATE),
+-			     tuned_pa_tactivate);
+-
+-out:
+-	return ret;
+-}
+-
+-/**
+- * ufshcd_tune_pa_hibern8time - Tunes PA_Hibern8Time of local UniPro
+- * @hba: per-adapter instance
+- *
+- * PA_Hibern8Time parameter can be tuned manually if UniPro version is less than
+- * 1.61. PA_Hibern8Time needs to be maximum of local M-PHY's
+- * TX_HIBERN8TIME_CAPABILITY & peer M-PHY's RX_HIBERN8TIME_CAPABILITY.
+- * This optimal value can help reduce the hibern8 exit latency.
+- *
+- * Return: zero on success, non-zero error value on failure.
+- */
+-static int ufshcd_tune_pa_hibern8time(struct ufs_hba *hba)
+-{
+-	int ret = 0;
+-	u32 local_tx_hibern8_time_cap = 0, peer_rx_hibern8_time_cap = 0;
+-	u32 max_hibern8_time, tuned_pa_hibern8time;
+-
+-	ret = ufshcd_dme_get(hba,
+-			     UIC_ARG_MIB_SEL(TX_HIBERN8TIME_CAPABILITY,
+-					UIC_ARG_MPHY_TX_GEN_SEL_INDEX(0)),
+-				  &local_tx_hibern8_time_cap);
+-	if (ret)
+-		goto out;
+-
+-	ret = ufshcd_dme_peer_get(hba,
+-				  UIC_ARG_MIB_SEL(RX_HIBERN8TIME_CAPABILITY,
+-					UIC_ARG_MPHY_RX_GEN_SEL_INDEX(0)),
+-				  &peer_rx_hibern8_time_cap);
+-	if (ret)
+-		goto out;
+-
+-	max_hibern8_time = max(local_tx_hibern8_time_cap,
+-			       peer_rx_hibern8_time_cap);
+-	/* make sure proper unit conversion is applied */
+-	tuned_pa_hibern8time = ((max_hibern8_time * HIBERN8TIME_UNIT_US)
+-				/ PA_HIBERN8_TIME_UNIT_US);
+-	ret = ufshcd_dme_set(hba, UIC_ARG_MIB(PA_HIBERN8TIME),
+-			     tuned_pa_hibern8time);
+-out:
+-	return ret;
+-}
+-
+ /**
+  * ufshcd_quirk_tune_host_pa_tactivate - Ensures that host PA_TACTIVATE is
+  * less than device PA_TACTIVATE time.
+@@ -8508,11 +8381,6 @@ static int ufshcd_quirk_tune_host_pa_tactivate(struct ufs_hba *hba)
+ 
+ static void ufshcd_tune_unipro_params(struct ufs_hba *hba)
+ {
+-	if (ufshcd_is_unipro_pa_params_tuning_req(hba)) {
+-		ufshcd_tune_pa_tactivate(hba);
+-		ufshcd_tune_pa_hibern8time(hba);
+-	}
+-
+ 	ufshcd_vops_apply_dev_quirks(hba);
+ 
+ 	if (hba->dev_quirks & UFS_DEVICE_QUIRK_PA_TACTIVATE)
+diff --git a/drivers/ufs/host/ufs-qcom.c b/drivers/ufs/host/ufs-qcom.c
+index 0c067d56305c..cca190d1c577 100644
+--- a/drivers/ufs/host/ufs-qcom.c
++++ b/drivers/ufs/host/ufs-qcom.c
+@@ -534,8 +534,7 @@ static int ufs_qcom_link_startup_notify(struct ufs_hba *hba,
+ 		 * and device TX LCC are disabled once link startup is
+ 		 * completed.
+ 		 */
+-		if (ufshcd_get_local_unipro_ver(hba) != UFS_UNIPRO_VER_1_41)
+-			err = ufshcd_disable_host_tx_lcc(hba);
++		err = ufshcd_disable_host_tx_lcc(hba);
+ 
+ 		break;
+ 	default:
+diff --git a/include/ufs/ufshcd.h b/include/ufs/ufshcd.h
+index a35e12f8e68b..431af365cf5e 100644
+--- a/include/ufs/ufshcd.h
++++ b/include/ufs/ufshcd.h
+@@ -1390,8 +1390,6 @@ void ufshcd_release(struct ufs_hba *hba);
+ 
+ void ufshcd_clkgate_delay_set(struct device *dev, unsigned long value);
+ 
+-u32 ufshcd_get_local_unipro_ver(struct ufs_hba *hba);
+-
+ int ufshcd_get_vreg(struct device *dev, struct ufs_vreg *vreg);
+ 
+ int ufshcd_send_uic_cmd(struct ufs_hba *hba, struct uic_command *uic_cmd);
+diff --git a/include/ufs/ufshci.h b/include/ufs/ufshci.h
+index 88193f5540e5..385e1c6b8d60 100644
+--- a/include/ufs/ufshci.h
++++ b/include/ufs/ufshci.h
+@@ -355,12 +355,8 @@ enum {
+ 
+ /* Interrupt disable masks */
+ enum {
+-	/* Interrupt disable mask for UFSHCI v1.0 */
+-	INTERRUPT_MASK_ALL_VER_10	= 0x30FFF,
+-	INTERRUPT_MASK_RW_VER_10	= 0x30000,
+-
+ 	/* Interrupt disable mask for UFSHCI v1.1 */
+-	INTERRUPT_MASK_ALL_VER_11	= 0x31FFF,
++	INTERRUPT_MASK_ALL_VER_11       = 0x31FFF,
+ 
+ 	/* Interrupt disable mask for UFSHCI v2.1 */
+ 	INTERRUPT_MASK_ALL_VER_21	= 0x71FFF,
+@@ -425,13 +421,6 @@ union ufs_crypto_cfg_entry {
+  * Request Descriptor Definitions
+  */
+ 
+-/* Transfer request command type */
+-enum utp_cmd_type {
+-	UTP_CMD_TYPE_SCSI		= 0x0,
+-	UTP_CMD_TYPE_UFS		= 0x1,
+-	UTP_CMD_TYPE_DEV_MANAGE		= 0x2,
+-};
+-
+ /* To accommodate UFS2.0 required Command type */
+ enum {
+ 	UTP_CMD_TYPE_UFS_STORAGE	= 0x1,
+-- 
+2.42.0
+
