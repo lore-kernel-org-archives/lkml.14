@@ -1,246 +1,197 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B6F825745;
-	Sun,  7 Apr 2024 13:05:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 482302BAE8
+	for <linux-kernel@vger.kernel.org>; Sun,  7 Apr 2024 13:10:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712495158; cv=none; b=rBT0t3pLrhKM+0r/RfYwXVogu4HmCacCWKGOfm1OEqz0g3bZv3I6uM7YTzbHy2vfA9Qhi6Z2snDbGykdiUrGMSq4uut7dsMMiXm8REX4OCXF8pU6q310fQ8j7nbkZRP237TIUsG+sWbhPl8nI9VKfIPM6YByCKlLXUNNDJOs6Bs=
+	t=1712495456; cv=none; b=GfoS/kFxsv14yKNqmtIVwR4fFt8rvy2IOOwAzl0yFKB6z/fM2akjyVYxPdUNT0wK8+vrqTn7aqoTw1pTHT6vJFyt965RJI7ZMnsnbxzufw5T1bLbX82DFc4+POzlmaNtxPQqtLhDTIsYYwFdtFnIIQKXBNBNq670xQzHOUdhitw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712495158; c=relaxed/simple;
-	bh=K6HcT4y4Ugz2ZCMyMPN622D3EmrRbqTPBq2b8S/ir2s=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=fErrrSeMHyxPBmEQgcoIcvu/j6taCYh1iC85rvuSYmSy9p69DFmQKvDO6DRina9rPtdT4d+ezCQA9ZejSxIO9+v2b7/12ZgSLcIpqtt9YzoM9eYJsDS+T90fpI1NCUMfHIKqxaYcrJhjc9vBSzb3Q+TQ1AG9hGGYX3IBd26RFeQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=2KO/DJmV; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=ftE4mxiq; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=11kQdusK; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=b1GRYztO; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1712495456; c=relaxed/simple;
+	bh=9PXGMNAgOACqNin9bgdIyvcpskUTE+lFjxIcvvOoZeA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=PCuIIePoByLcCgBkr6e/zK8bEVyAi3WRCuOrNlLSOowif+mZgnnkjwknvSyz4+Lnzee7vXuSGR4+GjqbYgHmblVYZaoxFQMvCONND7Fmj3N8Jc5IiZsVwJcMU/HBAUAXpkHz4PPVjDSWGAJcrFJp8FyqRP9Fo/Ifje/hF3NNrkQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=XgT6VCuh; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="2KO/DJmV";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="ftE4mxiq";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="11kQdusK";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="b1GRYztO"
-Received: from imap2.dmz-prg2.suse.org (imap2.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:98])
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XgT6VCuh"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1712495453;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=a6vxxG5xgzXX9R/YtKyD3zzQDfQBIezrwLJQElkxb28=;
+	b=XgT6VCuhMZ2oKkG81sb9IwUe33R5O9iwnDqJYCqNSZMri/aTA0qyRQOR++RQky/xR31bn1
+	nOpT4258yYm9S8MVIgMZYp15qTpvuO1fzY23MYymUrMkQJvO8GArfI/cNHjSMKNlAdpQZh
+	4wTdYHJjYbxAmjjEGjHDbqyz6Q+1I6U=
+Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
+ by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-288-n62oceUmPRWuQNZU-k7Xmw-1; Sun,
+ 07 Apr 2024 09:10:48 -0400
+X-MC-Unique: n62oceUmPRWuQNZU-k7Xmw-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.rdu2.redhat.com [10.11.54.6])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 0948321C63;
-	Sun,  7 Apr 2024 13:05:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1712495154; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
-	bh=+qGlEDHzb7FpeLjonTz5IywzApZvF8isqA+3qX4uTqc=;
-	b=2KO/DJmVlWLwlOtRKvqvGbMboDYBH7XvgAY96MSIU+p2/mcEMgqYm0zCoY0UiiYkLlmfNd
-	SZYwUP2Ce7mjRwxKXi35f7R8bkOCqBn3AVRPRGLkHaeeLSbH8FGkjvzYIgb7EAZQQ2buNH
-	JogiPUvA2wsBBjex3mqUshQq22DMy+g=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1712495154;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
-	bh=+qGlEDHzb7FpeLjonTz5IywzApZvF8isqA+3qX4uTqc=;
-	b=ftE4mxiqJ9fwKCk+l8nytwyWct/mrgohQy55PbmD8Bl6Uc+14ZP1O6reM7vsTGOuxl1ThE
-	wM58OqDCrh8uMIBQ==
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=11kQdusK;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=b1GRYztO
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1712495153; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
-	bh=+qGlEDHzb7FpeLjonTz5IywzApZvF8isqA+3qX4uTqc=;
-	b=11kQdusKXO52CX7ndjEh1QLOe//sOt2mH0JDv8ya7h+XOA9ACbTv8Sy0YFJTwqJzPCr43M
-	Zwx/WrDA1Dh/znkMy6OPMVy4ExcYT9dXpDG5ThInHXLSi67uF0XJVZUcKLs0GG9bM9NqxT
-	5lD5rxn2hRPcoktrrf8gVfPvwYgvjmw=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1712495153;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
-	bh=+qGlEDHzb7FpeLjonTz5IywzApZvF8isqA+3qX4uTqc=;
-	b=b1GRYztO14KMD0OEKnjw5YGVMFvVdei3gUIl2Jut8bSAwUuQ6zxhjpMRzOwM2DOjpv0fdQ
-	Sc9lmXdNuoil3oBQ==
-Received: from imap2.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap2.dmz-prg2.suse.org (Postfix) with ESMTPS id 716C7132FF;
-	Sun,  7 Apr 2024 13:05:52 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap2.dmz-prg2.suse.org with ESMTPSA
-	id K/XtGDCaEmYGDQAAn2gu4w
-	(envelope-from <osalvador@suse.de>); Sun, 07 Apr 2024 13:05:52 +0000
-From: Oscar Salvador <osalvador@suse.de>
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org,
-	Miaohe Lin <linmiaohe@huawei.com>,
-	David Hildenbrand <david@redhat.com>,
-	Peter Xu <peterx@redhat.com>,
-	stable@vger.kernel.org,
-	Oscar Salvador <osalvador@suse.de>,
-	Tony Luck <tony.luck@intel.com>
-Subject: [PATCH] mm,swapops: Update check in is_pfn_swap_entry for hwpoison entries
-Date: Sun,  7 Apr 2024 15:05:37 +0200
-Message-ID: <20240407130537.16977-1-osalvador@suse.de>
-X-Mailer: git-send-email 2.44.0
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 9CEA629AB3F7;
+	Sun,  7 Apr 2024 13:10:47 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.224.79])
+	by smtp.corp.redhat.com (Postfix) with SMTP id BB260200B3C6;
+	Sun,  7 Apr 2024 13:10:44 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+	oleg@redhat.com; Sun,  7 Apr 2024 15:09:22 +0200 (CEST)
+Date: Sun, 7 Apr 2024 15:09:14 +0200
+From: Oleg Nesterov <oleg@redhat.com>
+To: Frederic Weisbecker <frederic@kernel.org>
+Cc: Nick Piggin <npiggin@gmail.com>, Tejun Heo <tj@kernel.org>,
+	Leonardo Bras <leobras@redhat.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Lai Jiangshan <jiangshanlai@gmail.com>,
+	linux-kernel@vger.kernel.org, Junyao Zhao <junzhao@redhat.com>,
+	Chris von Recklinghausen <crecklin@redhat.com>
+Subject: Re: Nohz_full on boot CPU is broken (was: Re: [PATCH v2 1/1] wq:
+ Avoid using isolated cpus' timers on queue_delayed_work)
+Message-ID: <20240407130914.GA10796@redhat.com>
+References: <20240130010046.2730139-2-leobras@redhat.com>
+ <20240402105847.GA24832@redhat.com>
+ <Zg2qFinSkAOmRHcM@slm.duckdns.org>
+ <20240403203814.GD31764@redhat.com>
+ <20240405140449.GB22839@redhat.com>
+ <ZhByg-xQv6_PC3Pd@localhost.localdomain>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-Spam-Flag: NO
-X-Spam-Score: -3.01
-X-Rspamd-Action: no action
-X-Rspamd-Queue-Id: 0948321C63
-X-Spam-Level: 
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Spamd-Result: default: False [-3.01 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	MID_CONTAINS_FROM(1.00)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_MISSING_CHARSET(0.50)[];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:98:from];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	ARC_NA(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	RCVD_TLS_ALL(0.00)[];
-	DKIM_TRACE(0.00)[suse.de:+];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	RCPT_COUNT_SEVEN(0.00)[9];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap2.dmz-prg2.suse.org:helo,imap2.dmz-prg2.suse.org:rdns,intel.com:email,suse.de:dkim,suse.de:email]
+In-Reply-To: <ZhByg-xQv6_PC3Pd@localhost.localdomain>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.6
 
-Tony reported that the Machine check recovery was broken in v6.9-rc1,
-as he was hitting a VM_BUG_ON when injecting uncorrectable memory errors
-to DRAM.
-After some more digging and debugging on his side, he realized that this
-went back to v6.1, with the introduction of 'commit 0d206b5d2e0d ("mm/swap: add
-swp_offset_pfn() to fetch PFN from swap entry")'.
-That commit, among other things, introduced swp_offset_pfn(), replacing
-hwpoison_entry_to_pfn() in its favour.
+On 04/05, Frederic Weisbecker wrote:
+>
+> +Cc Nick
+>
+> Le Fri, Apr 05, 2024 at 04:04:49PM +0200, Oleg Nesterov a écrit :
+> > On 04/03, Oleg Nesterov wrote:
+> > >
+> > > > > OTOH, Documentation/timers/no_hz.rst says
+> > > > >
+> > > > > 	Therefore, the
+> > > > > 	boot CPU is prohibited from entering adaptive-ticks mode.  Specifying a
+> > > > > 	"nohz_full=" mask that includes the boot CPU will result in a boot-time
+> > > > > 	error message, and the boot CPU will be removed from the mask.
+> > > > >
+> > > > > and this doesn't match the reality.
+> > > >
+> > > > Don't some archs allow the boot CPU to go down too tho? If so, this doesn't
+> > > > really solve the problem, right?
+> > >
+> > > I do not know. But I thought about this too.
+> > >
+> > > In the context of this discussion we do not care if the boot CPU goes down.
+> > > But we need at least one housekeeping CPU after cpu_down(). The comment in
+> > > cpu_down_maps_locked() says
+> > >
+> > > 	Also keep at least one housekeeping cpu onlined
+> > >
+> > > but it checks HK_TYPE_DOMAIN, and I do not know (and it is too late for me
+> > > to try to read the code ;) if housekeeping.cpumasks[HK_TYPE_TIMER] can get
+> > > empty or not.
+> >
+> > This nearly killed me, but I managed to convince myself we shouldn't worry
+> > about cpu_down().
+> >
+> > HK_FLAG_TIMER implies HK_FLAG_TICK.
+> >
+> > HK_FLAG_TICK implies tick_nohz_full_setup() which sets
+> > tick_nohz_full_mask = non_housekeeping_mask.
+> >
+> > When tick_setup_device() is called on a housekeeping CPU it does
+> >
+> > 	else if (tick_do_timer_boot_cpu != -1 &&
+> > 					!tick_nohz_full_cpu(cpu)) {
+> > 		tick_take_do_timer_from_boot();
+> > 		tick_do_timer_boot_cpu = -1;
+> >
+> >
+> > 	and this sets tick_do_timer_cpu = first-housekeeping-cpu.
+> >
+> > cpu_down(tick_do_timer_cpu) will fail, tick_nohz_cpu_down() will nack it.
+> >
+> > So cpu_down() can't make housekeeping.cpumasks[HK_FLAG_TIMER] empty and I
+> > still think that the change below is the right approach.
+> >
+> > But probably WARN_ON() in housekeeping_any_cpu() makes sense anyway.
+> >
+> > What do you think?
+>
+> Good analysis on this nasty housekeeping VS tick code. I promised so many
+> times to cleanup this mess but things keep piling up.
+>
+> It is indeed possible for the boot CPU to be a nohz_full CPU and as
+> you can see, it's only half-working. This is so ever since:
+>
+>     08ae95f4fd3b (nohz_full: Allow the boot CPU to be nohz_full)
 
-The patch also introduced a VM_BUG_ON() check for is_pfn_swap_entry(),
-but is_pfn_swap_entry() never got updated to cover hwpoison entries, which
-means that we would hit the VM_BUG_ON whenever we would call
-swp_offset_pfn() for such entries on environments with CONFIG_DEBUG_VM set.
-Fix this by updating the check to cover hwpoison entries as well, and update
-the comment while we are it.
+Thanks... So this is intentional. I was confused by
 
-Reported-by: Tony Luck <tony.luck@intel.com>
-Closes: https://lore.kernel.org/all/Zg8kLSl2yAlA3o5D@agluck-desk3/
-Tested-by: Tony Luck <tony.luck@intel.com>
-Fixes: 0d206b5d2e0d ("mm/swap: add swp_offset_pfn() to fetch PFN from swap entry")
-Cc: <stable@vger.kernel.org> # 6.1.x
-Signed-off-by: Oscar Salvador <osalvador@suse.de>
----
- include/linux/swapops.h | 65 +++++++++++++++++++++--------------------
- 1 file changed, 33 insertions(+), 32 deletions(-)
+	Therefore, the
+	boot CPU is prohibited from entering adaptive-ticks mode.  Specifying a
+	"nohz_full=" mask that includes the boot CPU will result in a boot-time
+	error message, and the boot CPU will be removed from the mask.
 
-diff --git a/include/linux/swapops.h b/include/linux/swapops.h
-index 48b700ba1d18..a5c560a2f8c2 100644
---- a/include/linux/swapops.h
-+++ b/include/linux/swapops.h
-@@ -390,6 +390,35 @@ static inline bool is_migration_entry_dirty(swp_entry_t entry)
- }
- #endif	/* CONFIG_MIGRATION */
+from Documentation/timers/no_hz.rst
+
+> I would love
+> to revert that now but I don't know if anyone uses this and have it working
+> by chance somewhere... Should we continue to support a broken feature? Can we
+> break user ABI if it's already half-broken?
+
+Well, the changelog says
+
+    nohz_full has been trialed at a large supercomputer site and found to
+    significantly reduce jitter. In order to deploy it in production, they
+    need CPU0 to be nohz_full
+
+so I guess this feature has users.
+
+But after the commit aae17ebb53cd3da ("workqueue: Avoid using isolated cpus'
+timers on queue_delayed_work") the kernel will crash at boot time if the boot
+CPU is nohz_full.
+
+So we need a workaround at least. I am starting to think I will send a trivial
+patch which changes __queue_delayed_work() to validate the cpu returned by
+housekeeping_any_cpu(HK_TYPE_TIMER).
+
+But perhaps something like below makes more sense as a (stupid) workaround?
+
+Oleg.
+
+--- a/kernel/sched/isolation.c
++++ b/kernel/sched/isolation.c
+@@ -46,7 +46,15 @@ int housekeeping_any_cpu(enum hk_type type)
+ 			if (cpu < nr_cpu_ids)
+ 				return cpu;
  
-+#ifdef CONFIG_MEMORY_FAILURE
+-			return cpumask_any_and(housekeeping.cpumasks[type], cpu_online_mask);
++			cpu = cpumask_any_and(housekeeping.cpumasks[type], cpu_online_mask);
++			if (cpu < nr_cpu_ids)
++				return cpu;
 +
-+/*
-+ * Support for hardware poisoned pages
-+ */
-+static inline swp_entry_t make_hwpoison_entry(struct page *page)
-+{
-+	BUG_ON(!PageLocked(page));
-+	return swp_entry(SWP_HWPOISON, page_to_pfn(page));
-+}
++			cpu = READ_ONCE(tick_do_timer_boot_cpu);
++			if (cpu >= 0)
++				return cpu;
 +
-+static inline int is_hwpoison_entry(swp_entry_t entry)
-+{
-+	return swp_type(entry) == SWP_HWPOISON;
-+}
-+
-+#else
-+
-+static inline swp_entry_t make_hwpoison_entry(struct page *page)
-+{
-+	return swp_entry(0, 0);
-+}
-+
-+static inline int is_hwpoison_entry(swp_entry_t swp)
-+{
-+	return 0;
-+}
-+#endif
-+
- typedef unsigned long pte_marker;
- 
- #define  PTE_MARKER_UFFD_WP			BIT(0)
-@@ -483,8 +512,9 @@ static inline struct folio *pfn_swap_entry_folio(swp_entry_t entry)
- 
- /*
-  * A pfn swap entry is a special type of swap entry that always has a pfn stored
-- * in the swap offset. They are used to represent unaddressable device memory
-- * and to restrict access to a page undergoing migration.
-+ * in the swap offset. They can either be used to represent unaddressable device
-+ * memory, to restrict access to a page undergoing migration or to represent a
-+ * pfn which has been hwpoisoned and unmapped.
-  */
- static inline bool is_pfn_swap_entry(swp_entry_t entry)
- {
-@@ -492,7 +522,7 @@ static inline bool is_pfn_swap_entry(swp_entry_t entry)
- 	BUILD_BUG_ON(SWP_TYPE_SHIFT < SWP_PFN_BITS);
- 
- 	return is_migration_entry(entry) || is_device_private_entry(entry) ||
--	       is_device_exclusive_entry(entry);
-+	       is_device_exclusive_entry(entry) || is_hwpoison_entry(entry);
- }
- 
- struct page_vma_mapped_walk;
-@@ -561,35 +591,6 @@ static inline int is_pmd_migration_entry(pmd_t pmd)
- }
- #endif  /* CONFIG_ARCH_ENABLE_THP_MIGRATION */
- 
--#ifdef CONFIG_MEMORY_FAILURE
--
--/*
-- * Support for hardware poisoned pages
-- */
--static inline swp_entry_t make_hwpoison_entry(struct page *page)
--{
--	BUG_ON(!PageLocked(page));
--	return swp_entry(SWP_HWPOISON, page_to_pfn(page));
--}
--
--static inline int is_hwpoison_entry(swp_entry_t entry)
--{
--	return swp_type(entry) == SWP_HWPOISON;
--}
--
--#else
--
--static inline swp_entry_t make_hwpoison_entry(struct page *page)
--{
--	return swp_entry(0, 0);
--}
--
--static inline int is_hwpoison_entry(swp_entry_t swp)
--{
--	return 0;
--}
--#endif
--
- static inline int non_swap_entry(swp_entry_t entry)
- {
- 	return swp_type(entry) >= MAX_SWAPFILES;
--- 
-2.44.0
++			WARN_ON_ONCE(1);
+ 		}
+ 	}
+ 	return smp_processor_id();
 
