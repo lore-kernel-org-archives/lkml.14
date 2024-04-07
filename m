@@ -1,157 +1,149 @@
-Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
+Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFE7B2BAF2;
-	Sun,  7 Apr 2024 09:03:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2C2F2BD1F
+	for <linux-kernel@vger.kernel.org>; Sun,  7 Apr 2024 09:03:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712480631; cv=none; b=hkd4U9UaJX/4+8qu8mg9+23MXcyRTtdresRXhh3CvI+BANdaJRlZbQkDBSW4uKmYr3gCFgYsula9AXHq5T+DTRGmMfqq0eUIHPtixfVsqGYS0kDkWlEo5P9iapZ0lsT6BnSUWaypoDBxjn6mZIqt0cAXWGXqJHEAwfkaIb1U/tQ=
+	t=1712480632; cv=none; b=OGGEfqbTv3TOAGWV13AglMlgWnkM2TfsEH6miguZrJ8gKyFAk4yFKFuFzlKYvuetVcymKYyhB0GaNwyL/WNLTE0k1gQ5H80JAWtuJshqhHjvc52n70OnGDC8mv39nCYceNTHHZs2H2wYzQeV71BZM/E6jwaTrcCXy7iLZNi4JwU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712480631; c=relaxed/simple;
-	bh=WQzpAah6Oo2bkMAnx/zWo1QQcwsq2Z/42lDo9dpY4/s=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=bSyX0UAy2o13e69fSSpHuY633NjLqE8MY1DoXVIYqi91zQTL5nVd9JvL6tOsunpQibSKorzvL0cJLi49DWCr8BJXeIVkOkuIf5ACqCrFyst806kQqY8xpsEZzRA+DaYix7ICxEb1+IyBk53sJtF1Ocf5y2wUtKsp1P+Azkt1za4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FTEgtn7Z; arc=none smtp.client-ip=209.85.214.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1712480632; c=relaxed/simple;
+	bh=Zraf+IF8jjkme58EOXXWX37lUIAIsTXRXwE0Yo0XLt0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=XZ+vcu8B24hY3L+cP/s4beOGJXIGX2yDW7xYkdhRezii7qdgkBIYm5tj4nez/hdGBn8WDnirYrdJeUAhxvPx/Rxt2TiZwZtZhZGzDL+ztnBe7O3P7IpotfzK5e0KZaW/WnPCOVmt27TkyrrQ1cR6k1LAvo58u0MH85ALMtpDL6U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=de+uYFVq; arc=none smtp.client-ip=209.85.221.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FTEgtn7Z"
-Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-1e2a7b5ef7bso28881515ad.1;
-        Sun, 07 Apr 2024 02:03:49 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="de+uYFVq"
+Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-343e46ec237so1672073f8f.2
+        for <linux-kernel@vger.kernel.org>; Sun, 07 Apr 2024 02:03:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1712480629; x=1713085429; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=OwgJg6qGDb4F/2vLVULuXMEXIMCZTw7ICcUrvera85s=;
-        b=FTEgtn7Zt1EOobuHeT/vt/VT462oSr1qdMiG6mmuwkTV0znRAXAr2UO1MUpj+TwlqT
-         cbIUclZdEXMAK0ADqGAKfbhSQiszUk77TEX1NEDu3j9axLO5sPhNKNNYmwDcNGhNv6QI
-         rdwnOYI8Hd0FyFNQ23/DKsjF4H/esIJBGo3xB86d8iVlS/XG6HDu3Ilr4/vJzEsI0Z7P
-         ANe0wAZXtnRGlTP9ompFOVAhUXVwwC0CS+Z6tsu4vkc+Nhxukobj1JrDYG/+hNRPMGcE
-         5BCRZm0HSFnrrgYnkStR9Cuwe5CVupupV1++UzjBvei7YElYy6t//SHfR6SgbuzS5GsI
-         01qQ==
+        d=linaro.org; s=google; t=1712480629; x=1713085429; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=lhJcyPhgX3F0B/BWk2i159pv3qTElO9d0HVqBUfqNmg=;
+        b=de+uYFVqjaYt9/aQ0+G0lfgECLBV3i/dX4o7RGqP1hvBA2TaIQY+s59Riab7nHIxjV
+         DqTtgD17XtI20GG6n+8O7/vKhE4qAQPaxbDxNtqVo7Ok0nc3bFqTG69su8/q2S/OcEbv
+         +FbkFYvBpvu/j9bMnCpHF6st6nB8tzslLOc+rnBuBoyPYy+aXLykfCIRe8EvpvxSAhcN
+         NIromxR0gGYJLAW2pr3+ff0r/2C97Yr/4OUxUt8RAQXKVMVAj/VltQ0SEXwEftG9uY1L
+         rdqWSKxhHAwSLdoIF0vYRnPSpEfQus6qobIQVtgsTda5dk36PjNuKsndC38jvvXqJTIU
+         7u2Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20230601; t=1712480629; x=1713085429;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=OwgJg6qGDb4F/2vLVULuXMEXIMCZTw7ICcUrvera85s=;
-        b=bWKrJjUc3gG30LBjP5dm5eNsj0n1NBZHg7kp9hC7/7z+YCjRLHIBLGqzsjsjFkm+y8
-         PE/PEcbTTwiur42bcyWtqf6awjUPtfmt4u+m9EndYY+g7FLJFKmkui350yM7OdST2hg/
-         b2h53tP0RLkiSc3gndfncguBWPbdYlJheACARfbyAgS62+X5GrQXVlTeghMBzfX6LeAc
-         ABcCoXl3LLFaHosRBxUxDLfa6w6F5niTtXsyUKqxzLcsqcWsQ9/be7obbeoagCoQH8RM
-         KodB03cfKWEEiO5qPUJ5OYStuouUWcynTGXBbOHPhGL4ZPGtvQs/iX+GJrFj2yscuMXF
-         bZWg==
-X-Gm-Message-State: AOJu0YzoFlfmaAaPgma6Stcnoeft4MwzE0RCYn0DUXfsehgZ5QyvL1Xf
-	/zG7I0gd5h7yWAfXOAJluVPznmj0CKaeWXO6q9djoVnpq6+tcm2XfCyYPn6p
-X-Google-Smtp-Source: AGHT+IFNSd0I3oJLebO3gMhdolrLbFNc1uMWBKx4Hq0g7mWJqEwiqFZrjSqYatrRa2/RMSDzojoBog==
-X-Received: by 2002:a17:903:1112:b0:1e2:3d61:e266 with SMTP id n18-20020a170903111200b001e23d61e266mr8168295plh.49.1712480628868;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=lhJcyPhgX3F0B/BWk2i159pv3qTElO9d0HVqBUfqNmg=;
+        b=vGr5kbszItG/VmxoF8Ff4rF2nkMiLepMxevYwXbbyPJQQvgGgmRaeSum7li/WEd0Ns
+         cGoxuT8i+nHpY91OyZuNObm87jniFyVC7jUdm6k+KVRo520pfOYW18zH1SrM5QGveLuZ
+         WM5mvsJLGYqAAZjrd9DFlJuxziBikKdMaHBwzpMyDUkJGB4iDSBbpAolPtHsrDGMFlO7
+         hgmUuhLjpEJ+lcRpA1JO3YHzN83WCxQ9ZhGs1oh9ZoTLiH/CTY4KfYv7O8t5FQRquWD1
+         9pTBonoAsfUOyKBOL2VnbXX8uVXcBqwxR5GJYu2vAEggQ1x1M1rUzAd/2vPLUWstau6A
+         XIXw==
+X-Forwarded-Encrypted: i=1; AJvYcCU8fFPAWM8McJJDi2fhds3e0+BqwJiR+qDEdPgYBDZ+qLRk/+uPwmTStZIL81xJvF92sakl8jvBu5S2g4LfZtpa8W5g4kBhvy0HJJzP
+X-Gm-Message-State: AOJu0YwYypTtsY0pbCB1yVzbCcAerXbr+RG6Vr8fRAnbL8Og0gPojf73
+	JTSY4sQr/g8iPFcFd9Wnj8OfYQnRXEqnVP9lUrxX1zL4Pg1RfnCy39W47U26IHs=
+X-Google-Smtp-Source: AGHT+IHy9eHKYMxaf9vkWbmen7WIUbOBEXV1kBr5+IVFEdpHNIy8u+qMnpLBM1geid95shOzQ7Z9MA==
+X-Received: by 2002:adf:f74e:0:b0:343:9189:e698 with SMTP id z14-20020adff74e000000b003439189e698mr4119708wrp.43.1712480629179;
+        Sun, 07 Apr 2024 02:03:49 -0700 (PDT)
+Received: from [192.168.1.20] ([178.197.223.16])
+        by smtp.gmail.com with ESMTPSA id i11-20020adfe48b000000b0034330c9eccasm6269503wrm.79.2024.04.07.02.03.47
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
         Sun, 07 Apr 2024 02:03:48 -0700 (PDT)
-Received: from localhost ([47.89.225.180])
-        by smtp.gmail.com with ESMTPSA id i12-20020a17090332cc00b001ddc83fda95sm4508784plr.186.2024.04.07.02.03.47
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 07 Apr 2024 02:03:48 -0700 (PDT)
-From: Lai Jiangshan <jiangshanlai@gmail.com>
-To: linux-kernel@vger.kernel.org
-Cc: rcu@vger.kernel.org,
-	x86@kernel.org,
-	Lai Jiangshan <jiangshan.ljs@antgroup.com>,
-	"Paul E. McKenney" <paulmck@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Frederic Weisbecker <frederic@kernel.org>,
-	Neeraj Upadhyay <quic_neeraju@quicinc.com>,
-	Joel Fernandes <joel@joelfernandes.org>,
-	Josh Triplett <josh@joshtriplett.org>,
-	Boqun Feng <boqun.feng@gmail.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Lai Jiangshan <jiangshanlai@gmail.com>,
-	Zqiang <qiang.zhang1211@gmail.com>
-Subject: [PATCH V2 05/11] rcu: Make rcu_read_unlock_special() global
-Date: Sun,  7 Apr 2024 17:05:52 +0800
-Message-Id: <20240407090558.3395-6-jiangshanlai@gmail.com>
-X-Mailer: git-send-email 2.19.1.6.gb485710b
-In-Reply-To: <20240407090558.3395-1-jiangshanlai@gmail.com>
-References: <20240407090558.3395-1-jiangshanlai@gmail.com>
+Message-ID: <d24628cf-a628-4eb1-ae2f-bf414b62534a@linaro.org>
+Date: Sun, 7 Apr 2024 11:03:47 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 2/2] arm64: dts: qcom: sm8550: Add support for Samsung
+ Galaxy Z Fold5
+To: serdeliuk@yahoo.com, Bjorn Andersson <andersson@kernel.org>,
+ Konrad Dybcio <konrad.dybcio@linaro.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20240407-samsung-galaxy-zfold5-q5q-v4-0-8b67b1813653@yahoo.com>
+ <20240407-samsung-galaxy-zfold5-q5q-v4-2-8b67b1813653@yahoo.com>
+Content-Language: en-US
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
+ 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
+ D2GYIS41Kv4Isx2dEFh+/Q==
+In-Reply-To: <20240407-samsung-galaxy-zfold5-q5q-v4-2-8b67b1813653@yahoo.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-From: Lai Jiangshan <jiangshan.ljs@antgroup.com>
+On 07/04/2024 07:38, Alexandru Marc Serdeliuc via B4 Relay wrote:
+> From: Alexandru Marc Serdeliuc <serdeliuk@yahoo.com>
+> 
+> Add support for Samsung Galaxy Z Fold5 (q5q) foldable phone based on sm8550
+> 
+> Currently working features:
+> - Framebuffer
+> - UFS
+> - i2c
+> - Buttons
+> 
+> Signed-off-by: Alexandru Marc Serdeliuc <serdeliuk@yahoo.com>
+> ---
+>  arch/arm64/boot/dts/qcom/Makefile               |   1 +
 
-Make it global so that it can be used in the future inlined rcu_read_unlock().
+Where is the changelog? This is v4 and nothing (neither here nor in
+cover letter) explained what was happening with this patchset.
 
-Make it exported so that the inlined rcu_read_unlock() can be used in modules.
+Tags were ignored, so maybe comments as well?
 
-Make it taking a void-argument so that the caller can reduce instructions
-obtaining the "current" task and it can be used in THUNK later.
+Please provide *full* and detailed changelog.
 
-Cc: "Paul E. McKenney" <paulmck@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Frederic Weisbecker <frederic@kernel.org>
-Signed-off-by: Lai Jiangshan <jiangshan.ljs@antgroup.com>
----
- include/linux/rcupdate.h | 2 ++
- kernel/rcu/tree_plugin.h | 7 ++++---
- 2 files changed, 6 insertions(+), 3 deletions(-)
-
-diff --git a/include/linux/rcupdate.h b/include/linux/rcupdate.h
-index ebe9bfc700bb..328667ae8086 100644
---- a/include/linux/rcupdate.h
-+++ b/include/linux/rcupdate.h
-@@ -68,6 +68,8 @@ static inline bool same_state_synchronize_rcu(unsigned long oldstate1, unsigned
- 
- #ifdef CONFIG_PREEMPT_RCU
- 
-+void rcu_read_unlock_special(void);
-+
- void __rcu_read_lock(void);
- void __rcu_read_unlock(void);
- 
-diff --git a/kernel/rcu/tree_plugin.h b/kernel/rcu/tree_plugin.h
-index 3dbd5609185e..880b3fef1158 100644
---- a/kernel/rcu/tree_plugin.h
-+++ b/kernel/rcu/tree_plugin.h
-@@ -104,7 +104,6 @@ static void __init rcu_bootup_announce_oddness(void)
- 
- static void rcu_report_exp_rnp(struct rcu_node *rnp, bool wake);
- static bool sync_rcu_exp_done(struct rcu_node *rnp);
--static void rcu_read_unlock_special(struct task_struct *t);
- 
- #define set_rcu_preempt_special(reason)	do {				\
- 	WRITE_ONCE(current->rcu_read_unlock_special.b.reason, true);	\
-@@ -427,7 +426,7 @@ void __rcu_read_unlock(void)
- 	if (rcu_preempt_read_exit() == 0) {
- 		barrier();  // critical-section exit before .s check.
- 		if (unlikely(READ_ONCE(t->rcu_read_unlock_special.s)))
--			rcu_read_unlock_special(t);
-+			rcu_read_unlock_special();
- 	}
- 	if (IS_ENABLED(CONFIG_PROVE_LOCKING)) {
- 		int rrln = rcu_preempt_depth();
-@@ -627,8 +626,9 @@ static void rcu_preempt_deferred_qs_handler(struct irq_work *iwp)
-  * notify RCU core processing or task having blocked during the RCU
-  * read-side critical section.
-  */
--static void rcu_read_unlock_special(struct task_struct *t)
-+void rcu_read_unlock_special(void)
- {
-+	struct task_struct *t = current;
- 	unsigned long flags;
- 	bool irqs_were_disabled;
- 	bool preempt_bh_were_disabled =
-@@ -684,6 +684,7 @@ static void rcu_read_unlock_special(struct task_struct *t)
- 	}
- 	rcu_preempt_deferred_qs_irqrestore(t, flags);
- }
-+EXPORT_SYMBOL_GPL(rcu_read_unlock_special);
- 
- /*
-  * Check that the list of blocked tasks for the newly completed grace
--- 
-2.19.1.6.gb485710b
+Best regards,
+Krzysztof
 
