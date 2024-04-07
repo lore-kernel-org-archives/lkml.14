@@ -1,117 +1,109 @@
-Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-178.mta1.migadu.com (out-178.mta1.migadu.com [95.215.58.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 308106FC3
-	for <linux-kernel@vger.kernel.org>; Sun,  7 Apr 2024 07:55:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DD6F7484
+	for <linux-kernel@vger.kernel.org>; Sun,  7 Apr 2024 08:03:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712476533; cv=none; b=aexVEGkQ2b68LccpZYGhRGc6zWmmts9V9qyJxRNBVboknKFy1MTm5Gd3rjF/8OtqjnFmOuF1CgPke/zKaS6MMZ8b9+AVcl/U7da0xW44BN6WEIZ/iEzlYQEOawB1Z/F9LgL+kSz68JZTzcC+EGvXGQNcRTIZ0su2T4sE2pBlc68=
+	t=1712476995; cv=none; b=ttCQJbOK5/x8Tlcsr/UN53ajoRUnmekajPryZNgq1vmSA/9X9ZjUOjOXyPFrcPMWUEkCDd+Y8brtnobpCR6AAwqUmsFgj8aD+qEly40OWVJ4X2JeAuj/GgoesA4B+55vmx9fPUbptbS8LFs/MTnu1HNkTeISw/X4wTCHKd26fd4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712476533; c=relaxed/simple;
-	bh=+B8d/wmf1YxZiAa4fbdsDHljotFFId2D8bExhgkmTFk=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=Bz/RCgs9FX4xNLoVBD6X+9TwUBSVZVhQr7KEP9WKodQuoAmtiTjw5r27TmMIHvRm3R0s1cgO6BCu3Y3JSgfxtmxhRFJcRxs+Y4GErSLLGLA63HtPlA1clvQrShnTFooYvFmFUH6aM//xpBqx0p51eCYYxH6jLWNEYPVWRIjThjs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OyoiW8Px; arc=none smtp.client-ip=209.85.221.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1712476995; c=relaxed/simple;
+	bh=VpCRfGVmAZH+eRewYKO1bd92dnbG0HP+33QgL9TtfzA=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=EK5F3jIg+3HjUuMtMJfF+Q0fpVdQlPq0ZP0jYCcrN4Cl1z/QhIf791IhwM2B7v8NIxGt/Hg757cccddj9Qj86FsxZ89bqi0Kg1nOp19oiBN8mXaz52usE/IyRCUF0I2gmFbDXx7c8YSutCITYX2dV32h0OaVE78OeXyXF98bkMM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=CF3DDT0+; arc=none smtp.client-ip=95.215.58.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OyoiW8Px"
-Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-343e46ec237so1643933f8f.2
-        for <linux-kernel@vger.kernel.org>; Sun, 07 Apr 2024 00:55:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1712476530; x=1713081330; darn=vger.kernel.org;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :sender:from:to:cc:subject:date:message-id:reply-to;
-        bh=g3MTv1Idd5V8ahBC+akHFcdn0CaAt9Plz28mXNpxS2Y=;
-        b=OyoiW8PxzcfBbRcR4SlqocWzgaawyzu7HD9m+2HApDaSPFaI4Am+wIVkWMZPFRljO4
-         OjGgAWChjueSgOrbOaacitwEV+Sl6QK12zL92lKFE2RWOWiQyMZ43ZBsbf2D647wemO0
-         m2YUtakiFRtt6JSca/Zgdf2kqygDXrfV9eQBpskyx2VW7KGuCN1FoBmZiJnGwojqjM4f
-         LYmKGHboeM+3lzR8LuVB0L/e9Y7CfEhlhicZMi6RuV4KuqmmI56xM2DGiS2SW0GcCsSF
-         KaUvZ2H6Bk4IV6yWrvmdOKVV5pvxNhov/ZFHTYcbdmR0cHpu9w9/ONXhYc7A1EqcRD2g
-         iSrQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712476530; x=1713081330;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :sender:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=g3MTv1Idd5V8ahBC+akHFcdn0CaAt9Plz28mXNpxS2Y=;
-        b=nuez1KpYonESwOXYOcRvxW9m2FNLi6Zq5Uq0pbeNhjZxKgTAyMBkgE8RVs1Ag2lcz9
-         bj0Ggpzqk+wV6yLFPgf7VFDx8Meujx9THajox8evelruv+Mujc98MlT4J6fW/Pu40d/x
-         P4YvS+rkujyaCBipk3F5FInhsj9LswGb0E4ji4YI27EGY1HkPwyRafdlY45oFfrv8g6E
-         hxHNG1NT6KzyuHVRfPzCIoGxV0XqCIN4RhgIFWDgIZDuYRESBs7/ogGWatoKRg7EhHxl
-         9zScqKx1P1sALBH2FdXCP+9TZDxXgpgNiLGk6lkU85jcfPKTjUibj4HpNrJQ2nkfRWsp
-         opAA==
-X-Gm-Message-State: AOJu0YwE135xSWH2GMpT3Nejt6keoQhl+JGKZBTNKrSSsu+2cV1HIscV
-	Kc4kiUZsJHz+wobZKE39FjxkKgcjfMPfNljx6QhRmD+L3/zJU7KW
-X-Google-Smtp-Source: AGHT+IHHYgL/8qifd/w5Lh+AI03DdF4/WJsH9k/EPGUJ7XTe8esElIx635OUsBPWpW4Y7t0p+fylFg==
-X-Received: by 2002:adf:e50f:0:b0:343:3a38:d934 with SMTP id j15-20020adfe50f000000b003433a38d934mr4444416wrm.19.1712476529986;
-        Sun, 07 Apr 2024 00:55:29 -0700 (PDT)
-Received: from gmail.com (84-236-113-28.pool.digikabel.hu. [84.236.113.28])
-        by smtp.gmail.com with ESMTPSA id x8-20020adfffc8000000b00343c1cd5aedsm6084796wrs.52.2024.04.07.00.55.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 07 Apr 2024 00:55:29 -0700 (PDT)
-Sender: Ingo Molnar <mingo.kernel.org@gmail.com>
-Date: Sun, 7 Apr 2024 09:55:27 +0200
-From: Ingo Molnar <mingo@kernel.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: linux-kernel@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>
-Subject: [GIT PULL] perf fix
-Message-ID: <ZhJRb8TBJOLEEES5@gmail.com>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="CF3DDT0+"
+Content-Type: text/plain;
+	charset=us-ascii
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1712476990;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=tDol3Thk1zGuXnMJZM7JUv81lJKthEk370IWT+a5GiA=;
+	b=CF3DDT0+NCXjui8lYn41GwetR5UjLID4XSWDzMloC8+rMpUZJAXTbXwgZ1V7Od+eXBCyBw
+	CHC6cUUDnod1a53rMx9Oos0rmTBG73MVQg9Gzp51/dVh/sup81/srVTq0u3+8cp6E4Pa3+
+	7//QRlZbmuPkEFfjnH9gn9fVGVFQhPc=
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3774.500.171.1.1\))
+Subject: Re: [PATCH 2/2] mm/hugetlb: pass correct order_per_bit to
+ cma_declare_contiguous_nid
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Muchun Song <muchun.song@linux.dev>
+In-Reply-To: <20240404162515.527802-2-fvdl@google.com>
+Date: Sun, 7 Apr 2024 16:02:35 +0800
+Cc: Linux-MM <linux-mm@kvack.org>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ linux-kernel@vger.kernel.org,
+ Roman Gushchin <roman.gushchin@linux.dev>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <5037C21B-92A9-4125-B644-02CC6EBD7B08@linux.dev>
+References: <20240404162515.527802-1-fvdl@google.com>
+ <20240404162515.527802-2-fvdl@google.com>
+To: Frank van der Linden <fvdl@google.com>
+X-Migadu-Flow: FLOW_OUT
 
 
-Linus,
 
-Please pull the latest perf/urgent Git tree from:
+> On Apr 5, 2024, at 00:25, Frank van der Linden <fvdl@google.com> =
+wrote:
+>=20
+> The hugetlb_cma code passes 0 in the order_per_bit argument to
+> cma_declare_contiguous_nid (the alignment, computed using the
+> page order, is correctly passed in).
+>=20
+> This causes a bit in the cma allocation bitmap to always represent
+> a 4k page, making the bitmaps potentially very large, and slower.
+>=20
+> So, correctly pass in the order instead.
+>=20
+> Signed-off-by: Frank van der Linden <fvdl@google.com>
+> Cc: Roman Gushchin <roman.gushchin@linux.dev>
+> Fixes: cf11e85fc08c ("mm: hugetlb: optionally allocate gigantic =
+hugepages using cma")
+> ---
+> mm/hugetlb.c | 6 +++---
+> 1 file changed, 3 insertions(+), 3 deletions(-)
+>=20
+> diff --git a/mm/hugetlb.c b/mm/hugetlb.c
+> index 23ef240ba48a..6dc62d8b2a3a 100644
+> --- a/mm/hugetlb.c
+> +++ b/mm/hugetlb.c
+> @@ -7873,9 +7873,9 @@ void __init hugetlb_cma_reserve(int order)
+> 		* huge page demotion.
+> 		*/
+> 		res =3D cma_declare_contiguous_nid(0, size, 0,
+> - 						PAGE_SIZE << =
+HUGETLB_PAGE_ORDER,
+> - 						0, false, name,
+> - 						&hugetlb_cma[nid], nid);
+> +						PAGE_SIZE << =
+HUGETLB_PAGE_ORDER,
+> +						HUGETLB_PAGE_ORDER, =
+false, name,
 
-   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git perf-urgent-2024-04-07
+IIUC, we could make the optimization further to change order_per_bit to
+'MAX_PAGE_ORDER + 1' since only gigantic hugetlb pages could allocated =
+from
+the CMA pool meaning any gigantic page is greater than or equal to the
+size of two to the power of 'MAX_PAGE_ORDER + 1'.
 
-   # HEAD: 312be9fc2234c8acfb8148a9f4c358b70d358dee perf/x86/intel/ds: Don't clear ->pebs_data_cfg for the last PEBS event
+Thanks.
 
-Fix a combined PEBS events bug on x86 Intel CPUs.
+> +						&hugetlb_cma[nid], nid);
+> 		if (res) {
+> 			pr_warn("hugetlb_cma: reservation failed: err =
+%d, node %d",
+> 				res, nid);
+> --=20
+> 2.44.0.478.gd926399ef9-goog
+>=20
 
- Thanks,
-
-	Ingo
-
------------------->
-Kan Liang (1):
-      perf/x86/intel/ds: Don't clear ->pebs_data_cfg for the last PEBS event
-
-
- arch/x86/events/intel/ds.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
-
-diff --git a/arch/x86/events/intel/ds.c b/arch/x86/events/intel/ds.c
-index 2641ba620f12..e010bfed8417 100644
---- a/arch/x86/events/intel/ds.c
-+++ b/arch/x86/events/intel/ds.c
-@@ -1237,11 +1237,11 @@ pebs_update_state(bool needed_cb, struct cpu_hw_events *cpuc,
- 	struct pmu *pmu = event->pmu;
- 
- 	/*
--	 * Make sure we get updated with the first PEBS
--	 * event. It will trigger also during removal, but
--	 * that does not hurt:
-+	 * Make sure we get updated with the first PEBS event.
-+	 * During removal, ->pebs_data_cfg is still valid for
-+	 * the last PEBS event. Don't clear it.
- 	 */
--	if (cpuc->n_pebs == 1)
-+	if ((cpuc->n_pebs == 1) && add)
- 		cpuc->pebs_data_cfg = PEBS_UPDATE_DS_SW;
- 
- 	if (needed_cb != pebs_needs_sched_cb(cpuc)) {
