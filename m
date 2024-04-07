@@ -1,132 +1,140 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+Received: from out30-124.freemail.mail.aliyun.com (out30-124.freemail.mail.aliyun.com [115.124.30.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 214111DFC4
-	for <linux-kernel@vger.kernel.org>; Sun,  7 Apr 2024 06:55:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA8B87489
+	for <linux-kernel@vger.kernel.org>; Sun,  7 Apr 2024 06:58:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712472908; cv=none; b=DaWT675Rrfv0LY+ZeCyc8SQsBNoTwIt536Ucds5RrZWG2f79BnrlePVHbvVb0dGQrZOsk83DpiESkn9uB2EAQzG/8CqLRI/zSMaqlEJ85HGNazEsr1Q0h7ow7LQ9b5FmWNARSCP/EGGvoywLwo1UynEJOlE4yrUMwI0m9sj5a24=
+	t=1712473098; cv=none; b=rLDc5VW/DI2V+bFILy/dBUimvACkFdgFSNWkSJSJPvy2gPZqH1jp2+sFddCa0fzhuyaLIDTCfc3Dwm82m/kQY5dCCqx0H/teOf11/boVvrnahFEqWPBD39ABg+pv/75Bis7+i+M80FS4Ws+R87scG6I+wPkfJaodtFsAo5r7m7s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712472908; c=relaxed/simple;
-	bh=iCd4mqulyCBb7Qt4H3d7QCvUjxPxbKW3n2d2uZXJx4M=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=KuBkKRbeqwc3aZd59OOcZsFiiblEwha5AjvOR+tL6K1PJEqL1pMXsiQCZYot00WwJN6589GFgAlC+H/eUnkAJb/25yGXJ+xHNRERyV2W0MBy0PY3zpWZOVaWOHPHnYTNJyw+iCmBzH0PHUResEOfUhcCJeKN1xklWQjvGo+M828=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Q0AFAdzQ; arc=none smtp.client-ip=198.175.65.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1712473098; c=relaxed/simple;
+	bh=TaNgPEqiKGl7DzwBOZcUc0XNLqFsrIeNAGpIOO0BTsU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=cO5Cm73OfvtYDsumDMukGEbKahzpEh8ERfmJ2K5V/8M/706qy+DUWY3uZiKOG+6kNl3x/36NyjSSHx0TCGk3/kGXG4niaPLUeuVwoPx3oBxg58MI9jB3ML901qGZ4rVg81RloIuYQIBbDJDt1unvwcEFSL/zqaTcumB1CMnctcE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=RvIQ7f5j; arc=none smtp.client-ip=115.124.30.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Q0AFAdzQ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1712472907; x=1744008907;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=iCd4mqulyCBb7Qt4H3d7QCvUjxPxbKW3n2d2uZXJx4M=;
-  b=Q0AFAdzQUAvyBzcGz5zV8zYtfmvFsgOc/12zDoLRs07NrvZ87J4toKla
-   Eh+bwrZc/pI7Pd7pX0ZopSA5EToS+A0LUp+jML5IqG6Y7yKPfKT8OsVRL
-   yMzZvGzysgnN9l7t98VXCsa8cHQF6SKdDO2yn1GQ0HnLTPH8m/e16p0CE
-   2SdZdImIlCUzCyBm/CD33GDm3An2by7uBLkm3gxq7TKkxTpfs2HX6v3tS
-   e/VZdxB9WG3IazrcGpFgrIehdi3t19pL8YBS3PgIp5+q3ZNDrFvvN8eb/
-   SWHfegyPCdcGtkMXW8LIgqYLyS3FTsVLi0wXivboMlg5b97QAsFWes5ZR
-   g==;
-X-CSE-ConnectionGUID: OMOoyVPMRwK7zXjFAgCRPA==
-X-CSE-MsgGUID: rmJ4PieIQjKSXi2Whq8eMw==
-X-IronPort-AV: E=McAfee;i="6600,9927,11036"; a="11553347"
-X-IronPort-AV: E=Sophos;i="6.07,184,1708416000"; 
-   d="scan'208";a="11553347"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Apr 2024 23:55:06 -0700
-X-CSE-ConnectionGUID: p7xOMK39Rwu9L0HLtgKMNw==
-X-CSE-MsgGUID: vXEl9dyTRHuimbx6P1capg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,184,1708416000"; 
-   d="scan'208";a="24243470"
-Received: from yangdaiy-mobl.ccr.corp.intel.com (HELO yhuang6-mobl2.ccr.corp.intel.com) ([10.255.29.196])
-  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Apr 2024 23:55:03 -0700
-From: Huang Ying <ying.huang@intel.com>
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org,
-	Huang Ying <ying.huang@intel.com>,
-	Ryan Roberts <ryan.roberts@arm.com>,
-	David Hildenbrand <david@redhat.com>,
-	Miaohe Lin <linmiaohe@huawei.com>,
-	Hugh Dickins <hughd@google.com>,
-	Minchan Kim <minchan@kernel.org>
-Subject: [PATCH] mm,swap: add document about RCU read lock and swapoff interaction
-Date: Sun,  7 Apr 2024 14:54:50 +0800
-Message-Id: <20240407065450.498821-1-ying.huang@intel.com>
-X-Mailer: git-send-email 2.39.2
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="RvIQ7f5j"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1712473092; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=keZgjnQ9O+2hNdJMQ6VR91QK3KYWM4wdrpBYXw8no5M=;
+	b=RvIQ7f5jjaSlelrNYF2fvq7zaKGNkyuIlQrzyMvElTxnhuFUvWLb3uoqW9f5gyT7SwUidH5ExOvcqOoQDDVzlFbBnXwSrdBE8DwT/M7iua1lmp8SBv66Ci0OgaCDoP8do9M8UhAnEd6QTSl6OWh7hPqr5dWukFFE2L683POmiVs=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R681e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045192;MF=baolin.wang@linux.alibaba.com;NM=1;PH=DS;RN=9;SR=0;TI=SMTPD_---0W4.dlUx_1712473012;
+Received: from 30.97.56.66(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0W4.dlUx_1712473012)
+          by smtp.aliyun-inc.com;
+          Sun, 07 Apr 2024 14:58:12 +0800
+Message-ID: <e5282de6-4a44-45bf-95ed-7453da21191a@linux.alibaba.com>
+Date: Sun, 7 Apr 2024 14:58:11 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 06/10] mm: page_alloc: fix freelist movement during block
+ conversion
+To: Johannes Weiner <hannes@cmpxchg.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+ Vlastimil Babka <vbabka@suse.cz>, Mel Gorman <mgorman@techsingularity.net>,
+ Zi Yan <ziy@nvidia.com>, "Huang, Ying" <ying.huang@intel.com>,
+ David Hildenbrand <david@redhat.com>, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org
+References: <20240320180429.678181-1-hannes@cmpxchg.org>
+ <20240320180429.678181-7-hannes@cmpxchg.org>
+ <a97697e0-45b0-4f71-b087-fdc7a1d43c0e@linux.alibaba.com>
+ <20240405165632.GA870124@cmpxchg.org>
+From: Baolin Wang <baolin.wang@linux.alibaba.com>
+In-Reply-To: <20240405165632.GA870124@cmpxchg.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-During reviewing a patch to fix the race condition between
-free_swap_and_cache() and swapoff() [1], it was found that the
-document about how to prevent racing with swapoff isn't clear enough.
-Especially RCU read lock can prevent swapoff from freeing data
-structures.  So, the document is added as comments.
 
-[1] https://lore.kernel.org/linux-mm/c8fe62d0-78b8-527a-5bef-ee663ccdc37a@huawei.com/
 
-Signed-off-by: "Huang, Ying" <ying.huang@intel.com>
-Cc: Ryan Roberts <ryan.roberts@arm.com>
-Cc: David Hildenbrand <david@redhat.com>
-Cc: Miaohe Lin <linmiaohe@huawei.com>
-Cc: Hugh Dickins <hughd@google.com>
-Cc: Minchan Kim <minchan@kernel.org>
----
- mm/swapfile.c | 26 +++++++++++++-------------
- 1 file changed, 13 insertions(+), 13 deletions(-)
+On 2024/4/6 00:56, Johannes Weiner wrote:
+> Hi Baolin,
+> 
+> On Fri, Apr 05, 2024 at 08:11:47PM +0800, Baolin Wang wrote:
+>> On 2024/3/21 02:02, Johannes Weiner wrote:
+>>> @@ -2127,15 +2165,14 @@ __rmqueue(struct zone *zone, unsigned int order, int migratetype,
+>>>    				return page;
+>>>    		}
+>>>    	}
+>>> -retry:
+>>> +
+>>>    	page = __rmqueue_smallest(zone, order, migratetype);
+>>>    	if (unlikely(!page)) {
+>>>    		if (alloc_flags & ALLOC_CMA)
+>>>    			page = __rmqueue_cma_fallback(zone, order);
+>>> -
+>>> -		if (!page && __rmqueue_fallback(zone, order, migratetype,
+>>> -								alloc_flags))
+>>> -			goto retry;
+>>> +		else
+>>> +			page = __rmqueue_fallback(zone, order, migratetype,
+>>> +						  alloc_flags);
+>>
+>> (Sorry for chim in late.)
+>>
+>> I have some doubts about the changes here. The original code logic was
+>> that if the 'migratetype' type allocation is failed, it would first try
+>> CMA page allocation and then attempt to fallback to other migratetype
+>> allocations. Now it has been changed so that if CMA allocation fails, it
+>> will directly return. This change has caused a regression when I running
+>> the thpcompact benchmark, resulting in a significant reduction in the
+>> percentage of THPs like below:
+>>
+>> thpcompact Percentage Faults Huge
+>>                            K6.9-rc2                K6.9-rc2 + this patch
+>> Percentage huge-1        78.18 (   0.00%)       42.49 ( -45.65%)
+>> Percentage huge-3        86.70 (   0.00%)       35.13 ( -59.49%)
+>> Percentage huge-5        90.26 (   0.00%)       52.35 ( -42.00%)
+>> Percentage huge-7        92.34 (   0.00%)       31.84 ( -65.52%)
+>> Percentage huge-12       91.18 (   0.00%)       45.85 ( -49.72%)
+>> Percentage huge-18       89.00 (   0.00%)       29.18 ( -67.22%)
+>> Percentage huge-24       90.52 (   0.00%)       46.68 ( -48.43%)
+>> Percentage huge-30       94.44 (   0.00%)       38.35 ( -59.39%)
+>> Percentage huge-32       93.09 (   0.00%)       39.37 ( -57.70%)
+> 
+> Ouch, sorry about that! I changed that specific part around later
+> during development and didn't retest with CMA. I'll be sure to
+> re-enable it again in my config.
+> 
+>> After making the following modifications, the regression is gone.
+>>
+>> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+>> index ce67dc6777fa..a7cfe65e45c1 100644
+>> --- a/mm/page_alloc.c
+>> +++ b/mm/page_alloc.c
+>> @@ -2139,7 +2139,8 @@ __rmqueue(struct zone *zone, unsigned int order,
+>> int migratetype,
+>>           if (unlikely(!page)) {
+>>                   if (alloc_flags & ALLOC_CMA)
+>>                           page = __rmqueue_cma_fallback(zone, order);
+>> -               else
+>> +
+>> +               if (!page)
+>>                           page = __rmqueue_fallback(zone, order, migratetype,
+>>                                                     alloc_flags);
+>>           }
+>>
+>> But I am not sure your original change is intentional? IIUC, we still
+>> need try fallbacking even though CMA allocation is failed, please
+>> correct me if I misunderstand your code. Thanks.
+> 
+> No, this was accidental. I missed that CMA dependency when changing
+> things around for the new return type of __rmqueue_fallback(). Your
+> fix is good: just because the request qualifies for CMA doesn't mean
+> it will succeed from that region. We need the fallback for those.
 
-diff --git a/mm/swapfile.c b/mm/swapfile.c
-index 4919423cce76..6925462406fa 100644
---- a/mm/swapfile.c
-+++ b/mm/swapfile.c
-@@ -1226,16 +1226,15 @@ static unsigned char __swap_entry_free_locked(struct swap_info_struct *p,
- 
- /*
-  * When we get a swap entry, if there aren't some other ways to
-- * prevent swapoff, such as the folio in swap cache is locked, page
-- * table lock is held, etc., the swap entry may become invalid because
-- * of swapoff.  Then, we need to enclose all swap related functions
-- * with get_swap_device() and put_swap_device(), unless the swap
-- * functions call get/put_swap_device() by themselves.
-+ * prevent swapoff, such as the folio in swap cache is locked, RCU
-+ * reader side is locked, etc., the swap entry may become invalid
-+ * because of swapoff.  Then, we need to enclose all swap related
-+ * functions with get_swap_device() and put_swap_device(), unless the
-+ * swap functions call get/put_swap_device() by themselves.
-  *
-- * Note that when only holding the PTL, swapoff might succeed immediately
-- * after freeing a swap entry. Therefore, immediately after
-- * __swap_entry_free(), the swap info might become stale and should not
-- * be touched without a prior get_swap_device().
-+ * RCU reader side lock (including any spinlock) is sufficient to
-+ * prevent swapoff, because synchronize_rcu() is called in swapoff()
-+ * before freeing data structures.
-  *
-  * Check whether swap entry is valid in the swap device.  If so,
-  * return pointer to swap_info_struct, and keep the swap entry valid
-@@ -2495,10 +2494,11 @@ SYSCALL_DEFINE1(swapoff, const char __user *, specialfile)
- 
- 	/*
- 	 * Wait for swap operations protected by get/put_swap_device()
--	 * to complete.
--	 *
--	 * We need synchronize_rcu() here to protect the accessing to
--	 * the swap cache data structure.
-+	 * to complete.  Because of synchronize_rcu() here, all swap
-+	 * operations protected by RCU reader side lock (including any
-+	 * spinlock) will be waited too.  This makes it easy to
-+	 * prevent folio_test_swapcache() and the following swap cache
-+	 * operations from racing with swapoff.
- 	 */
- 	percpu_ref_kill(&p->users);
- 	synchronize_rcu();
--- 
-2.39.2
+OK. Thanks for the clarification.
 
+> Andrew, could you please pick up Baolin's change for this patch?
+> 
+> [baolin.wang@linux.alibaba.com: fix allocation failures with CONFIG_CMA]
+> 
+> Thanks for debugging this and the fix, Baolin.
+
+My pleasure.
