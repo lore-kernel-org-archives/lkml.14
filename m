@@ -1,65 +1,61 @@
-Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B14571802E
-	for <linux-kernel@vger.kernel.org>; Sun,  7 Apr 2024 06:53:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 214111DFC4
+	for <linux-kernel@vger.kernel.org>; Sun,  7 Apr 2024 06:55:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712472834; cv=none; b=ObaJzkK/7aNvpkfn9Tk3OlsxnN5+InvJtI0vBh5nMAGELOkYhARqcpZZ55j8mu6Gc2AW+0auqrbrcO7zNNQ0U6axlUb/f6BKamthoZzBpqJuZpFSEEZjHWC318HJL4GlixmXNF80vDqrPOHvnjkIQrSnc2jG8Y+rPAk3zavJHuY=
+	t=1712472908; cv=none; b=DaWT675Rrfv0LY+ZeCyc8SQsBNoTwIt536Ucds5RrZWG2f79BnrlePVHbvVb0dGQrZOsk83DpiESkn9uB2EAQzG/8CqLRI/zSMaqlEJ85HGNazEsr1Q0h7ow7LQ9b5FmWNARSCP/EGGvoywLwo1UynEJOlE4yrUMwI0m9sj5a24=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712472834; c=relaxed/simple;
-	bh=NXBeI8nM38jsXftlPIL2RhoAHKBqMyKcR+Dp0rYNUtw=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=jL7LeWKOriEkuQpZ04UluE3qLNq59s8ZVXV8oUu/8Wt84E7TJG9vtu80H1DbKRh1jy8kXb72hKBbCbIdnorNoyGy33E6ySgb3Yqa1e/0OZ2q1Smh9Z1psBOVlqEGTC60LglUgxKqb3DrmyhwOwyVaT2S9MybXhpAWg6MvWIAWQ4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
-X-UUID: da943092f4a711eeaf09c5092e5928d1-20240407
-X-CID-UNFAMILIAR: 1
-X-CID-O-RULE: Release_Ham
-X-CID-RULE: EDM_GE969F26
-X-CID-O-INFO: VERSION:1.1.37,REQID:948c4543-3f8b-4a76-ab10-3baa5673adff,IP:15,
-	URL:0,TC:0,Content:0,EDM:-25,RT:0,SF:12,FILE:0,BULK:0,RULE:Release_Ham,ACT
-	ION:release,TS:2
-X-CID-INFO: VERSION:1.1.37,REQID:948c4543-3f8b-4a76-ab10-3baa5673adff,IP:15,UR
-	L:0,TC:0,Content:0,EDM:-25,RT:0,SF:12,FILE:0,BULK:0,RULE:EDM_GE969F26,ACTI
-	ON:release,TS:2
-X-CID-META: VersionHash:6f543d0,CLOUDID:60e088d839de1bf4cdd3d3db2ff0b4a3,BulkI
-	D:2404071427067MY2OJ0A,BulkQuantity:0,Recheck:0,SF:66|38|25|16|19|44|102,T
-	C:nil,Content:0,EDM:1,IP:-2,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,
-	COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0
-X-CID-BVR: 0
-X-CID-BAS: 0,_,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_USA,TF_CID_SPAM_FSD,TF_CID_SPAM_FSI
-X-CTIC-Tags:
-	HR_CC_COUNT, HR_CC_DOMAIN_COUNT, HR_CC_NAME, HR_CC_NO_NAME, HR_CTE_8B
-	HR_CTT_MISS, HR_DATE_H, HR_DATE_WKD, HR_DATE_ZONE, HR_FROM_NAME
-	HR_SJ_LANG, HR_SJ_LEN, HR_SJ_LETTER, HR_SJ_NOR_SYM, HR_SJ_PHRASE
-	HR_SJ_PHRASE_LEN, HR_SJ_WS, HR_TO_COUNT, HR_TO_DOMAIN_COUNT, HR_TO_NO_NAME
-	IP_TRUSTED, SRC_TRUSTED, DN_TRUSTED, SA_TRUSTED, SA_EXISTED
-	SN_TRUSTED, SN_EXISTED, SPF_NOPASS, DKIM_NOPASS, DMARC_NOPASS
-	CIE_BAD, CIE_GOOD_SPF, GTI_FG_BS, GTI_RG_INFO, GTI_C_BU
-	AMN_T1, AMN_GOOD, AMN_C_TI, AMN_C_BU, ABX_MISS_RDNS
-	ZHF_RECV_LOCALHOST
-X-UUID: da943092f4a711eeaf09c5092e5928d1-20240407
-X-User: gehao@kylinos.cn
-Received: from localhost.localdomain [(116.128.244.171)] by mailgw
-	(envelope-from <gehao@kylinos.cn>)
-	(Generic MTA)
-	with ESMTP id 1678508837; Sun, 07 Apr 2024 14:27:05 +0800
-From: Hao Ge <gehao@kylinos.cn>
-To: akpm@linux-foundation.org,
-	Liam.Howlett@oracle.com,
-	vbabka@suse.cz,
-	lstoakes@gmail.com,
-	willy@infradead.org
+	s=arc-20240116; t=1712472908; c=relaxed/simple;
+	bh=iCd4mqulyCBb7Qt4H3d7QCvUjxPxbKW3n2d2uZXJx4M=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=KuBkKRbeqwc3aZd59OOcZsFiiblEwha5AjvOR+tL6K1PJEqL1pMXsiQCZYot00WwJN6589GFgAlC+H/eUnkAJb/25yGXJ+xHNRERyV2W0MBy0PY3zpWZOVaWOHPHnYTNJyw+iCmBzH0PHUResEOfUhcCJeKN1xklWQjvGo+M828=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Q0AFAdzQ; arc=none smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Q0AFAdzQ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1712472907; x=1744008907;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=iCd4mqulyCBb7Qt4H3d7QCvUjxPxbKW3n2d2uZXJx4M=;
+  b=Q0AFAdzQUAvyBzcGz5zV8zYtfmvFsgOc/12zDoLRs07NrvZ87J4toKla
+   Eh+bwrZc/pI7Pd7pX0ZopSA5EToS+A0LUp+jML5IqG6Y7yKPfKT8OsVRL
+   yMzZvGzysgnN9l7t98VXCsa8cHQF6SKdDO2yn1GQ0HnLTPH8m/e16p0CE
+   2SdZdImIlCUzCyBm/CD33GDm3An2by7uBLkm3gxq7TKkxTpfs2HX6v3tS
+   e/VZdxB9WG3IazrcGpFgrIehdi3t19pL8YBS3PgIp5+q3ZNDrFvvN8eb/
+   SWHfegyPCdcGtkMXW8LIgqYLyS3FTsVLi0wXivboMlg5b97QAsFWes5ZR
+   g==;
+X-CSE-ConnectionGUID: OMOoyVPMRwK7zXjFAgCRPA==
+X-CSE-MsgGUID: rmJ4PieIQjKSXi2Whq8eMw==
+X-IronPort-AV: E=McAfee;i="6600,9927,11036"; a="11553347"
+X-IronPort-AV: E=Sophos;i="6.07,184,1708416000"; 
+   d="scan'208";a="11553347"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Apr 2024 23:55:06 -0700
+X-CSE-ConnectionGUID: p7xOMK39Rwu9L0HLtgKMNw==
+X-CSE-MsgGUID: vXEl9dyTRHuimbx6P1capg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,184,1708416000"; 
+   d="scan'208";a="24243470"
+Received: from yangdaiy-mobl.ccr.corp.intel.com (HELO yhuang6-mobl2.ccr.corp.intel.com) ([10.255.29.196])
+  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Apr 2024 23:55:03 -0700
+From: Huang Ying <ying.huang@intel.com>
+To: Andrew Morton <akpm@linux-foundation.org>
 Cc: linux-mm@kvack.org,
 	linux-kernel@vger.kernel.org,
-	gehao618@163.com,
-	Hao Ge <gehao@kylinos.cn>
-Subject: [PATCH] mm/mmap: make vma_wants_writenotify return bool
-Date: Sun,  7 Apr 2024 14:26:53 +0800
-Message-Id: <20240407062653.803142-1-gehao@kylinos.cn>
-X-Mailer: git-send-email 2.25.1
+	Huang Ying <ying.huang@intel.com>,
+	Ryan Roberts <ryan.roberts@arm.com>,
+	David Hildenbrand <david@redhat.com>,
+	Miaohe Lin <linmiaohe@huawei.com>,
+	Hugh Dickins <hughd@google.com>,
+	Minchan Kim <minchan@kernel.org>
+Subject: [PATCH] mm,swap: add document about RCU read lock and swapoff interaction
+Date: Sun,  7 Apr 2024 14:54:50 +0800
+Message-Id: <20240407065450.498821-1-ying.huang@intel.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -68,70 +64,69 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-vma_wants_writenotify should return bool,so we change it
+During reviewing a patch to fix the race condition between
+free_swap_and_cache() and swapoff() [1], it was found that the
+document about how to prevent racing with swapoff isn't clear enough.
+Especially RCU read lock can prevent swapoff from freeing data
+structures.  So, the document is added as comments.
 
-Signed-off-by: Hao Ge <gehao@kylinos.cn>
+[1] https://lore.kernel.org/linux-mm/c8fe62d0-78b8-527a-5bef-ee663ccdc37a@huawei.com/
+
+Signed-off-by: "Huang, Ying" <ying.huang@intel.com>
+Cc: Ryan Roberts <ryan.roberts@arm.com>
+Cc: David Hildenbrand <david@redhat.com>
+Cc: Miaohe Lin <linmiaohe@huawei.com>
+Cc: Hugh Dickins <hughd@google.com>
+Cc: Minchan Kim <minchan@kernel.org>
 ---
- include/linux/mm.h |  2 +-
- mm/mmap.c          | 12 ++++++------
- 2 files changed, 7 insertions(+), 7 deletions(-)
+ mm/swapfile.c | 26 +++++++++++++-------------
+ 1 file changed, 13 insertions(+), 13 deletions(-)
 
-diff --git a/include/linux/mm.h b/include/linux/mm.h
-index 0436b919f1c7..e2f1374c43b0 100644
---- a/include/linux/mm.h
-+++ b/include/linux/mm.h
-@@ -2550,7 +2550,7 @@ extern unsigned long move_page_tables(struct vm_area_struct *vma,
- 					    MM_CP_UFFD_WP_RESOLVE)
+diff --git a/mm/swapfile.c b/mm/swapfile.c
+index 4919423cce76..6925462406fa 100644
+--- a/mm/swapfile.c
++++ b/mm/swapfile.c
+@@ -1226,16 +1226,15 @@ static unsigned char __swap_entry_free_locked(struct swap_info_struct *p,
  
- bool vma_needs_dirty_tracking(struct vm_area_struct *vma);
--int vma_wants_writenotify(struct vm_area_struct *vma, pgprot_t vm_page_prot);
-+bool vma_wants_writenotify(struct vm_area_struct *vma, pgprot_t vm_page_prot);
- static inline bool vma_wants_manual_pte_write_upgrade(struct vm_area_struct *vma)
- {
- 	/*
-diff --git a/mm/mmap.c b/mm/mmap.c
-index 6dbda99a47da..ac219f1689e0 100644
---- a/mm/mmap.c
-+++ b/mm/mmap.c
-@@ -1514,32 +1514,32 @@ bool vma_needs_dirty_tracking(struct vm_area_struct *vma)
-  * to the private version (using protection_map[] without the
-  * VM_SHARED bit).
-  */
--int vma_wants_writenotify(struct vm_area_struct *vma, pgprot_t vm_page_prot)
-+bool vma_wants_writenotify(struct vm_area_struct *vma, pgprot_t vm_page_prot)
- {
- 	/* If it was private or non-writable, the write bit is already clear */
- 	if (!vma_is_shared_writable(vma))
--		return 0;
-+		return false;
- 
- 	/* The backer wishes to know when pages are first written to? */
- 	if (vm_ops_needs_writenotify(vma->vm_ops))
--		return 1;
-+		return true;
- 
- 	/* The open routine did something to the protections that pgprot_modify
- 	 * won't preserve? */
- 	if (pgprot_val(vm_page_prot) !=
- 	    pgprot_val(vm_pgprot_modify(vm_page_prot, vma->vm_flags)))
--		return 0;
-+		return false;
+ /*
+  * When we get a swap entry, if there aren't some other ways to
+- * prevent swapoff, such as the folio in swap cache is locked, page
+- * table lock is held, etc., the swap entry may become invalid because
+- * of swapoff.  Then, we need to enclose all swap related functions
+- * with get_swap_device() and put_swap_device(), unless the swap
+- * functions call get/put_swap_device() by themselves.
++ * prevent swapoff, such as the folio in swap cache is locked, RCU
++ * reader side is locked, etc., the swap entry may become invalid
++ * because of swapoff.  Then, we need to enclose all swap related
++ * functions with get_swap_device() and put_swap_device(), unless the
++ * swap functions call get/put_swap_device() by themselves.
+  *
+- * Note that when only holding the PTL, swapoff might succeed immediately
+- * after freeing a swap entry. Therefore, immediately after
+- * __swap_entry_free(), the swap info might become stale and should not
+- * be touched without a prior get_swap_device().
++ * RCU reader side lock (including any spinlock) is sufficient to
++ * prevent swapoff, because synchronize_rcu() is called in swapoff()
++ * before freeing data structures.
+  *
+  * Check whether swap entry is valid in the swap device.  If so,
+  * return pointer to swap_info_struct, and keep the swap entry valid
+@@ -2495,10 +2494,11 @@ SYSCALL_DEFINE1(swapoff, const char __user *, specialfile)
  
  	/*
- 	 * Do we need to track softdirty? hugetlb does not support softdirty
- 	 * tracking yet.
+ 	 * Wait for swap operations protected by get/put_swap_device()
+-	 * to complete.
+-	 *
+-	 * We need synchronize_rcu() here to protect the accessing to
+-	 * the swap cache data structure.
++	 * to complete.  Because of synchronize_rcu() here, all swap
++	 * operations protected by RCU reader side lock (including any
++	 * spinlock) will be waited too.  This makes it easy to
++	 * prevent folio_test_swapcache() and the following swap cache
++	 * operations from racing with swapoff.
  	 */
- 	if (vma_soft_dirty_enabled(vma) && !is_vm_hugetlb_page(vma))
--		return 1;
-+		return true;
- 
- 	/* Do we need write faults for uffd-wp tracking? */
- 	if (userfaultfd_wp(vma))
--		return 1;
-+		return true;
- 
- 	/* Can the mapping track the dirty pages? */
- 	return vma_fs_can_writeback(vma);
+ 	percpu_ref_kill(&p->users);
+ 	synchronize_rcu();
 -- 
-2.25.1
+2.39.2
 
