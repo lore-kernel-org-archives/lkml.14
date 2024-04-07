@@ -1,152 +1,129 @@
-Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
+Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAA9311717
-	for <linux-kernel@vger.kernel.org>; Sun,  7 Apr 2024 09:01:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E318107B3;
+	Sun,  7 Apr 2024 09:03:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712480516; cv=none; b=NLzuwdKSfbXJBCkyhY0hgdd78cE8/qJHgI2wlI0sdwCVHwCI1HeMzKsmwOnRlBhWnOUaZ4gb1qbmsiKdjM2gNMUdBIOomqZCFeexB3MJk8/WAk1De46f4yVayA15b4MLG8rRy16H6rTrYzcmwj1rtvA4M+s+ARteDY8X1NYeGNQ=
+	t=1712480610; cv=none; b=F128v/mVX0LbzMz9mM8mA4rRO3CB+hWOSO9LxcRymNFRaFtnCsza4e0B2Br2s8lsGvxinvONE+dNOTCt0miZvV8CVZKlgGtsmxUwHQx869w0bxQm4dZ7/63W1QW/d9h4AadvcDUmV0+ojhKdSX4lISosYfZJG/Cd1y3/rvHmbHU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712480516; c=relaxed/simple;
-	bh=wHwjKy8SgHi3UQK5d+O0wk9q/j7cR+gRsdCschp8ywA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=nYNjhcVnMwPKwXcjHmiM4YtEaWO0Lndaz7b3dubhDaQjqegNeB9agzcU0j7hSZMpnDif6ubf+ii6PasayNKGi9ybCbx2i12We6bWG2WksrFalHP1Wmreb3lkEshaZC0r+ck63Zo3qRZMVzyeZij7UDqWvDFZ+o+w0/QDKKTkHGE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=YaQOBTHP; arc=none smtp.client-ip=209.85.221.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1712480610; c=relaxed/simple;
+	bh=C1ND876ga6wOsjhU/2loncqkn3wXD+UIygFGnTiw5rY=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=YLid6AvWQc3g3CEOywdzKGm9ur3CAbLULnc8g7j5J5N0kIPRDqabAHSDes7CBWNVz6S1Ndh/U7+ZFC+WSsE1SqJK3Ffw30L+dgtGzzoPDiXyYquGFCanlQLmV9EaOC1vlw4/81VtSxZyYbFlh2vWjFNtvbOfuNn7DHV/N/6B/dA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aaksZKTo; arc=none smtp.client-ip=209.85.214.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YaQOBTHP"
-Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-343e096965bso1552902f8f.3
-        for <linux-kernel@vger.kernel.org>; Sun, 07 Apr 2024 02:01:54 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aaksZKTo"
+Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-1e419d1f080so327845ad.1;
+        Sun, 07 Apr 2024 02:03:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1712480513; x=1713085313; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=+tNJN6JWclFx+tfdmoXHbQzLKY+48jFcwswH5XFGZeo=;
-        b=YaQOBTHPzizxw/L/KOMzC231ZgDsDuznPEVQ87Ez/S9KEGsnJkSXsg6Xkm2XaMsRW2
-         ZajLXOlJxVFsd1w4l/uVShGe4gEVFDH1nKRcUL24Zq5pgV6r89fZFb7Ni/ErcLo7Wl5J
-         r5F6pqTGjlPvLWwFezPRCFRo3cEmPrn43oaJLQrLfdlqeTkBofMK5daPZgluTrEBJKib
-         19uTyjmj+HPy6+nPBLREHFjZ5U2h8ang/kd2QTvzwzsZAiyv0X8WPTAYuqh7qAZb7BF5
-         UriZB1ZDxRI605EBRQfPbJCz0UuqZI3aFTM43u0Hea7RhwGJQjR/DbhPo3kwZI07PTTO
-         n39Q==
+        d=gmail.com; s=20230601; t=1712480607; x=1713085407; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=h1bFR4gVDaJQ4aqQ51G3SX0DM+161YZC2qeUsvJ8EuA=;
+        b=aaksZKTo1z9+f0PWr816QKABd7n4LOGqb2QYym5CxPtAx6Y6Kmkk4FwzhqJ68ahzh2
+         sI1meLcZdrvFNa8YF2VrwdCC6y2vQ2x0X+4OkgWl3jW/EAK37BsbVLi/BCBkqEe/rf2Y
+         kH4fMoBEP8VevhXcr2cOW4B+DTnIjO7xvjTRhf/591TPOFUry9bQ2u9z5Bn6lai8O+CP
+         IbSQ7v8CvKGZPg2uyiI6ZkGcZJsMzQN3s6+1uEONHUVa0fCZKa3Ld+fjkixNRy64hDZf
+         8vLtwYY/+JBTfcASlpCjzWN9ste9dE7pvkI4cI+GTeyAnilDHIjV8yOnfq+JalJZfYW8
+         0VVQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712480513; x=1713085313;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=+tNJN6JWclFx+tfdmoXHbQzLKY+48jFcwswH5XFGZeo=;
-        b=OcFL9PFKubIxX0UrNadcaJ6rom8U4Djza9SZ8gwhDzBU5hkJbN9jEvFEpPc6bsJhxr
-         tOYZIZRz0C+gXCbbGnpNMA9zFdYzskqBVwsYHt7oSQoy4GDTxFapia+hHY/QqiDLStX7
-         n3Lgiyvda8M24V2YDk6RM49YX+Hp8g36uqXMexxJuWdpVWkvNMdVhIfn8Ss8FkSjUmlZ
-         M+VDFpnRL4Ertq1hLx8jienOfv+64CHsddi4ectRu471N7YOynEznP3ILKPGHR3+Y2hN
-         +8yV8TWr+Jj6AB2B4d3BFWVoVpQT+IdmrsCCbq3loj5KSWqENUDF09m5DFC4YNK9uqtY
-         MM2g==
-X-Forwarded-Encrypted: i=1; AJvYcCWRjwd6rSb8MXh/VK8hml94pTVKfHmCp4SGEyipv9cpdaQj0X/F+/2oJIr2eNZ+fVOtoecZm8Dp1wNZyLERTi/z6qj6/SZDRdq5ALV8
-X-Gm-Message-State: AOJu0Ywg9wbVRCRo+mVtmMbbi/yEVq/RLeOLpkdaQi8InllyQbr1CHKQ
-	FOpyDIqehMQnDTqfWQQ3D+0v0VhpN55Np8AJq/p/se4zMqutfgS69kzNhyGf76o=
-X-Google-Smtp-Source: AGHT+IFpjyz85NNXrXD16it8z+JMDW9/HU8RV/0KB1iPitRfsnI1q98N2mXy0PTDQLyNVbnRBW19wg==
-X-Received: by 2002:a05:6000:1885:b0:343:bb92:c7d0 with SMTP id a5-20020a056000188500b00343bb92c7d0mr5867233wri.12.1712480513065;
-        Sun, 07 Apr 2024 02:01:53 -0700 (PDT)
-Received: from [192.168.1.20] ([178.197.223.16])
-        by smtp.gmail.com with ESMTPSA id b9-20020a5d5509000000b003418364032asm6217596wrv.112.2024.04.07.02.01.51
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 07 Apr 2024 02:01:52 -0700 (PDT)
-Message-ID: <32b01e4e-dcdb-49bc-90bd-a75bb34c5b1b@linaro.org>
-Date: Sun, 7 Apr 2024 11:01:51 +0200
+        d=1e100.net; s=20230601; t=1712480607; x=1713085407;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=h1bFR4gVDaJQ4aqQ51G3SX0DM+161YZC2qeUsvJ8EuA=;
+        b=lxGfxslyycnRjqae/wCAsZmufTVScm3pwPu8iAcAw7ieV0Dzz3x0EXNPZoDClUCOh+
+         KFA5ps3bow3rCZnW1/cYvRUKmTnj3TngOnQCSYFlk/0zuj6Gn8cilH5y/vas8D40KdYD
+         4iEZqLfSBta+Yz9CiyieExtP9MKCvSO/3bO0qE+SAekYszWEsrQo1pGHyUXlSS9C/Feh
+         T4PM7+KO2MO4GDj5CtxVBeBtAXwBpRAh63UHA7/OTcD38/H7AlA7fi7RiOmmEacDAOVp
+         6vTJaPs7FhOZwY0dfxB1Qq31wIijPC0e2qu2AUHlvHLtXiLHH9rBkjd6xuKQGiHcnk+F
+         rsdw==
+X-Gm-Message-State: AOJu0Yx48S6ht5+zn6qvC91fMACz64VNbEl1UMJWhm/JXUQiNzwx9MxV
+	dksNE7iKDecSgn1NXYFoEmSfgQc86cSlUUz55Xv7hXozcNjSfNwybDxMmBtP
+X-Google-Smtp-Source: AGHT+IHGzUUXPzELIiLivkTMJF4A9K7JA7R4Mx8XrmfEQDIn9agWRTnAWyKssQPGECrN9hIIbfWtUw==
+X-Received: by 2002:a17:902:d896:b0:1e3:e256:44e0 with SMTP id b22-20020a170902d89600b001e3e25644e0mr2116520plz.31.1712480607365;
+        Sun, 07 Apr 2024 02:03:27 -0700 (PDT)
+Received: from localhost ([198.11.176.14])
+        by smtp.gmail.com with ESMTPSA id p7-20020a1709028a8700b001deecb4f897sm4527258plo.100.2024.04.07.02.03.26
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 07 Apr 2024 02:03:26 -0700 (PDT)
+From: Lai Jiangshan <jiangshanlai@gmail.com>
+To: linux-kernel@vger.kernel.org
+Cc: rcu@vger.kernel.org,
+	x86@kernel.org,
+	Lai Jiangshan <jiangshan.ljs@antgroup.com>,
+	"Paul E. McKenney" <paulmck@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Frederic Weisbecker <frederic@kernel.org>
+Subject: [PATCH V2 00/11] rcu/x86: Use per-cpu rcu preempt count
+Date: Sun,  7 Apr 2024 17:05:47 +0800
+Message-Id: <20240407090558.3395-1-jiangshanlai@gmail.com>
+X-Mailer: git-send-email 2.19.1.6.gb485710b
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 1/2] dt-bindings: arm: qcom: Document the Samsung
- Galaxy Z Fold5
-To: serdeliuk@yahoo.com, Bjorn Andersson <andersson@kernel.org>,
- Konrad Dybcio <konrad.dybcio@linaro.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>
-Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20240407-samsung-galaxy-zfold5-q5q-v4-0-8b67b1813653@yahoo.com>
- <20240407-samsung-galaxy-zfold5-q5q-v4-1-8b67b1813653@yahoo.com>
-Content-Language: en-US
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
- 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
- D2GYIS41Kv4Isx2dEFh+/Q==
-In-Reply-To: <20240407-samsung-galaxy-zfold5-q5q-v4-1-8b67b1813653@yahoo.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 07/04/2024 07:38, Alexandru Marc Serdeliuc via B4 Relay wrote:
-> From: Alexandru Marc Serdeliuc <serdeliuk@yahoo.com>
-> 
-> This documents Samsung Galaxy Z Fold5 (samsung,q5q)
-> which is a foldable phone by Samsung based on the sm8550 SoC.
-> 
-> Signed-off-by: Alexandru Marc Serdeliuc <serdeliuk@yahoo.com>
-> ---
+From: Lai Jiangshan <jiangshan.ljs@antgroup.com>
 
-This is a friendly reminder during the review process.
 
-It looks like you received a tag and forgot to add it.
+Changed from v1:
+	Merge thunk_64.S and thunk_32.S into thunk.S
+	Add missing #ifdef in arch/x86/kernel/cpu/common.c
 
-If you do not know the process, here is a short explanation:
-Please add Acked-by/Reviewed-by/Tested-by tags when posting new
-versions, under or above your Signed-off-by tag. Tag is "received", when
-provided in a message replied to you on the mailing list. Tools like b4
-can help here. However, there's no need to repost patches *only* to add
-the tags. The upstream maintainer will do that for tags received on the
-version they apply.
+X86 can access percpu data in a single instruction.
 
-https://elixir.bootlin.com/linux/v6.5-rc3/source/Documentation/process/submitting-patches.rst#L577
+Use per-cpu rcu preempt count and make it able to be inlined.
 
-If a tag was not added on purpose, please state why and what changed.
+patch 1-8: prepare
+patch 9-11: implement PCPU_RCU_PREEMPT_COUNT
 
-Best regards,
-Krzysztof
+Cc: "Paul E. McKenney" <paulmck@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Frederic Weisbecker <frederic@kernel.org>
+
+
+Lai Jiangshan (11):
+  lib: Use rcu_preempt_depth() to replace current->rcu_read_lock_nesting
+  rcu: Move rcu_preempt_depth_set() to rcupdate.h
+  rcu: Reorder tree_exp.h after tree_plugin.h
+  rcu: Add macros set_rcu_preempt_special() and
+    clear_rcu_preempt_special()
+  rcu: Make rcu_read_unlock_special() global
+  rcu: Rename marco __LINUX_RCU_H to __KERNEL_RCU_H
+  sched/core: Add rcu_preempt_switch()
+  x86/entry: Merge thunk_64.S and thunk_32.S into thunk.S
+  rcu: Implement PCPU_RCU_PREEMPT_COUNT framework
+  x86/rcu: Add rcu_preempt_count
+  x86/rcu: Add THUNK rcu_read_unlock_special_thunk
+
+ arch/x86/Kconfig                       |   1 +
+ arch/x86/entry/Makefile                |   2 +-
+ arch/x86/entry/{thunk_64.S => thunk.S} |   5 ++
+ arch/x86/entry/thunk_32.S              |  18 ----
+ arch/x86/include/asm/current.h         |   3 +
+ arch/x86/include/asm/rcu_preempt.h     | 109 +++++++++++++++++++++++++
+ arch/x86/kernel/cpu/common.c           |   4 +
+ include/linux/rcupdate.h               |  36 ++++++++
+ kernel/rcu/Kconfig                     |   8 ++
+ kernel/rcu/rcu.h                       |  15 +++-
+ kernel/rcu/tree.c                      |   2 +-
+ kernel/rcu/tree_exp.h                  |   2 +-
+ kernel/rcu/tree_plugin.h               |  41 ++++++----
+ kernel/sched/core.c                    |   2 +
+ lib/locking-selftest.c                 |   6 +-
+ 15 files changed, 212 insertions(+), 42 deletions(-)
+ rename arch/x86/entry/{thunk_64.S => thunk.S} (72%)
+ delete mode 100644 arch/x86/entry/thunk_32.S
+ create mode 100644 arch/x86/include/asm/rcu_preempt.h
+
+
+base-commit: f2f80ac809875855ac843f9e5e7480604b5cbff5
+-- 
+2.19.1.6.gb485710b
 
