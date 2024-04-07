@@ -1,39 +1,36 @@
-Received: from szxga05-in.huawei.com (szxga05-in.huawei.com [45.249.212.191])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from exchange.fintech.ru (exchange.fintech.ru [195.54.195.159])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C88D3F9DB;
-	Sun,  7 Apr 2024 13:11:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.191
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E00E3FB16;
+	Sun,  7 Apr 2024 13:11:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.54.195.159
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712495480; cv=none; b=QIEN90S1P7BpcxnghdUw94TY7Dxr1MfMbjNEZl+WST8z4PvhfNxmriE9o33a+74xsG6k1uzA0W5xWvgDoPQycL3Ier+9loKoeTkjlJ6H5D1DpdU4Ch4ciouM4IVbpwyaPop6e0sWGPBhZb0Vvrhx4N9vvZEt/re1iyFZYBgH7Jg=
+	t=1712495480; cv=none; b=UVQSnaSwVLG1mdHRSS9hWiYoCOe30uJlOq75MgMPAvWA9V20qn541DjnXboWkG8W1DOypYsKt9Si+X0m2rc+wV2oS8aWQel2FIEPguUupLJi00CE3/x9vEUYlgiSA/nEWFV0CI5ON/JPbBiOC7Y0BK21JWpNLU/HN0K1CPhoZNE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1712495480; c=relaxed/simple;
-	bh=77TAy3kea4Va3Is1I0qN4USj8ONZ6KixwSmbOIBXyLo=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=MqE6BDc0YFgfxKak7+9bGk/OU4yb2yfdnLdOAYvfhSyrggwO6yI8Da16WREjsEYDZP6Nq5sR8Ls6N4+t1KC45a9Gn0ZdowDIpXR4AUGLT85lW09RZlbx4ZBG2efi5G0qttg+VHCqCjsuvv2UeeoP0DmhlxZvXRqominnErJwd64=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.191
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.44])
-	by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4VCCG32pMPz1h5vr;
-	Sun,  7 Apr 2024 21:08:27 +0800 (CST)
-Received: from dggpemm500005.china.huawei.com (unknown [7.185.36.74])
-	by mail.maildlp.com (Postfix) with ESMTPS id 8B7501401E0;
-	Sun,  7 Apr 2024 21:11:16 +0800 (CST)
-Received: from localhost.localdomain (10.69.192.56) by
- dggpemm500005.china.huawei.com (7.185.36.74) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Sun, 7 Apr 2024 21:11:16 +0800
-From: Yunsheng Lin <linyunsheng@huawei.com>
-To: <davem@davemloft.net>, <kuba@kernel.org>, <pabeni@redhat.com>
-CC: <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>, Yunsheng Lin
-	<linyunsheng@huawei.com>, Eric Dumazet <edumazet@google.com>
-Subject: [PATCH net-next v1 08/12] net: introduce the skb_copy_to_va_nocache() helper
-Date: Sun, 7 Apr 2024 21:08:45 +0800
-Message-ID: <20240407130850.19625-9-linyunsheng@huawei.com>
-X-Mailer: git-send-email 2.33.0
-In-Reply-To: <20240407130850.19625-1-linyunsheng@huawei.com>
-References: <20240407130850.19625-1-linyunsheng@huawei.com>
+	bh=tOK8citKj5coWWGdrUGQDHZ0rmgq5F1rm/dGHe8XHdE=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=GAEiu0dofjln8s6oh1SwnMIyjT0mNE5sv7Pj0FoGK8rAxZnXAJWzqQD5adR2ZVwWmONDK3p13Z2z/tf7w28xshDP2B+3RsSqmMK9Vxvo5XL0NF+zgFzh6rFG1AqAe/Ytl8DbRhD96hcd6Ts5QViRXFOANCa4RH0kwHdnVfG6AbA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fintech.ru; spf=pass smtp.mailfrom=fintech.ru; arc=none smtp.client-ip=195.54.195.159
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fintech.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fintech.ru
+Received: from Ex16-01.fintech.ru (10.0.10.18) by exchange.fintech.ru
+ (195.54.195.159) with Microsoft SMTP Server (TLS) id 14.3.498.0; Sun, 7 Apr
+ 2024 16:11:15 +0300
+Received: from localhost (10.0.253.138) by Ex16-01.fintech.ru (10.0.10.18)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2242.4; Sun, 7 Apr 2024
+ 16:11:15 +0300
+From: Nikita Zhandarovich <n.zhandarovich@fintech.ru>
+To: Christian Lamparter <chunkeey@googlemail.com>, Kalle Valo
+	<kvalo@kernel.org>
+CC: Nikita Zhandarovich <n.zhandarovich@fintech.ru>,
+	<linux-wireless@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<syzkaller-bugs@googlegroups.com>, <lvc-project@linuxtesting.org>,
+	<syzbot+0ae4804973be759fa420@syzkaller.appspotmail.com>
+Subject: [PATCH] wifi: carl9170: add a proper sanity check for endpoints
+Date: Sun, 7 Apr 2024 06:11:09 -0700
+Message-ID: <20240407131109.26212-1-n.zhandarovich@fintech.ru>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -42,43 +39,88 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
- dggpemm500005.china.huawei.com (7.185.36.74)
+X-ClientProxiedBy: Ex16-02.fintech.ru (10.0.10.19) To Ex16-01.fintech.ru
+ (10.0.10.18)
 
-introduce the skb_copy_to_va_nocache() helper to avoid
-calling virt_to_page() and skb_copy_to_page_nocache().
+Syzkaller reports [1] hitting a warning which is caused by presence
+of a wrong endpoint type at the URB sumbitting stage. While there
+was a check for a specific 4th endpoint, since it can switch types
+between bulk and interrupt, other endpoints are trusted implicitly.
+Similar warning is triggered in a couple of other syzbot issues [2].
 
-Signed-off-by: Yunsheng Lin <linyunsheng@huawei.com>
+Fix the issue by doing a comprehensive check of all endpoints
+taking into account difference between high- and full-speed
+configuration.
+
+This patch has not been tested on real hardware.
+
+[1] Syzkaller report:
+...
+WARNING: CPU: 0 PID: 4721 at drivers/usb/core/urb.c:504 usb_submit_urb+0xed6/0x1880 drivers/usb/core/urb.c:504
+...
+Call Trace:
+ <TASK>
+ carl9170_usb_send_rx_irq_urb+0x273/0x340 drivers/net/wireless/ath/carl9170/usb.c:504
+ carl9170_usb_init_device drivers/net/wireless/ath/carl9170/usb.c:939 [inline]
+ carl9170_usb_firmware_finish drivers/net/wireless/ath/carl9170/usb.c:999 [inline]
+ carl9170_usb_firmware_step2+0x175/0x240 drivers/net/wireless/ath/carl9170/usb.c:1028
+ request_firmware_work_func+0x130/0x240 drivers/base/firmware_loader/main.c:1107
+ process_one_work+0x9bf/0x1710 kernel/workqueue.c:2289
+ worker_thread+0x669/0x1090 kernel/workqueue.c:2436
+ kthread+0x2e8/0x3a0 kernel/kthread.c:376
+ ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:308
+ </TASK>
+
+[2] Related syzkaller crashes:
+Link: https://syzkaller.appspot.com/bug?extid=e394db78ae0b0032cb4d
+Link: https://syzkaller.appspot.com/bug?extid=9468df99cb63a4a4c4e1
+
+Reported-and-tested-by: syzbot+0ae4804973be759fa420@syzkaller.appspotmail.com
+Fixes: a84fab3cbfdc ("carl9170: 802.11 rx/tx processing and usb backend")
+Signed-off-by: Nikita Zhandarovich <n.zhandarovich@fintech.ru>
 ---
- include/net/sock.h | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
+P.S. as AR9170_USB_EP_CMD endpoint can switch between bulk and int,
+I failed to find a prettier solution to this problem. Will be glad
+to hear if there is a better option...
 
-diff --git a/include/net/sock.h b/include/net/sock.h
-index a495330c5c49..d214aeca72ad 100644
---- a/include/net/sock.h
-+++ b/include/net/sock.h
-@@ -2272,6 +2272,21 @@ static inline int skb_copy_to_page_nocache(struct sock *sk, struct iov_iter *fro
- 	return 0;
- }
+ drivers/net/wireless/ath/carl9170/usb.c | 27 +++++++++++++++++++++++++++
+ 1 file changed, 27 insertions(+)
+
+diff --git a/drivers/net/wireless/ath/carl9170/usb.c b/drivers/net/wireless/ath/carl9170/usb.c
+index c4edf8355941..66d2ad561fd3 100644
+--- a/drivers/net/wireless/ath/carl9170/usb.c
++++ b/drivers/net/wireless/ath/carl9170/usb.c
+@@ -1069,6 +1069,33 @@ static int carl9170_usb_probe(struct usb_interface *intf,
+ 			ar->usb_ep_cmd_is_bulk = true;
+ 	}
  
-+static inline int skb_copy_to_va_nocache(struct sock *sk, struct iov_iter *from,
-+					 struct sk_buff *skb, char *va, int copy)
-+{
-+	int err;
++	/* Verify that all expected endpoints are present */
++	if (ar->usb_ep_cmd_is_bulk) {
++		u8 bulk_ep_addr[] = {
++			AR9170_USB_EP_RX | USB_DIR_IN,
++			AR9170_USB_EP_TX | USB_DIR_OUT,
++			AR9170_USB_EP_CMD | USB_DIR_OUT,
++			0};
++		u8 int_ep_addr[] = {
++			AR9170_USB_EP_IRQ | USB_DIR_IN,
++			0};
++		if (!usb_check_bulk_endpoints(intf, bulk_ep_addr) ||
++		    !usb_check_int_endpoints(intf, int_ep_addr))
++			return -ENODEV;
++	} else {
++		u8 bulk_ep_addr[] = {
++			AR9170_USB_EP_RX | USB_DIR_IN,
++			AR9170_USB_EP_TX | USB_DIR_OUT,
++			0};
++		u8 int_ep_addr[] = {
++			AR9170_USB_EP_IRQ | USB_DIR_IN,
++			AR9170_USB_EP_CMD | USB_DIR_OUT,
++			0};
++		if (!usb_check_bulk_endpoints(intf, bulk_ep_addr) ||
++		    !usb_check_int_endpoints(intf, int_ep_addr))
++			return -ENODEV;
++	}
 +
-+	err = skb_do_copy_data_nocache(sk, skb, from, va, copy, skb->len);
-+	if (err)
-+		return err;
-+
-+	skb_len_add(skb, copy);
-+	sk_wmem_queued_add(sk, copy);
-+	sk_mem_charge(sk, copy);
-+	return 0;
-+}
-+
- /**
-  * sk_wmem_alloc_get - returns write allocations
-  * @sk: socket
--- 
-2.33.0
-
+ 	usb_set_intfdata(intf, ar);
+ 	SET_IEEE80211_DEV(ar->hw, &intf->dev);
+ 
