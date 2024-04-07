@@ -1,406 +1,292 @@
-Received: from esa1.hgst.iphmx.com (esa1.hgst.iphmx.com [68.232.141.245])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com [209.85.167.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B046F111AA;
-	Sun,  7 Apr 2024 06:04:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.141.245
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AA4E6FC3;
+	Sun,  7 Apr 2024 06:09:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712469869; cv=none; b=k6/VmWnlfCt2szCD6Pr3ErehNlFCItyHOwntCZ/l6xQqhK4PbROgWpnwXfXvma+cZkMYC3asY15Cx5egMHtIlpNNLwjfSx1Qwp0JffEhRcUrC+B3HL72Zept+srSS3DUaycnfnSPQpMwMatQo5NhCH7a9yfqN3QzBq9Ke9rSW8M=
+	t=1712470143; cv=none; b=OdU0JO0yCz324ekQRo1oMyy60DbxRmU4mEIJkmW9126koD7buXq21SXb96zuXrinVP1an8DniqggKCjzp084VhnCxRGPs8PyNKeRq3fGLGYbZ+iK1NWs9lb8ONVHb6c1wMZ++Qs9OVd2VY5fH53MBU+RDgn1BbmMJs+AxBXN5lg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712469869; c=relaxed/simple;
-	bh=t/ajfETUN+LYoOt+WkqShoD9CjGX5UIn9BP5Mlcq4II=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=LegjU1iwS1lr9ZHqe/TbkHnvTsUe2DRKTul04U6Wwhh2fyKnXn6nkIiBvQYnNtw9jqnZ7P2arirlee8gZy+/Eb4TXNCnNvvkSHUn+PlDNie6yUL7alw7Iv0BDh36bYjs3B2CS+FEQEIXtbgy1sVYeKMVhiuU7Wf+USkTQg+5g10=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wdc.com; spf=pass smtp.mailfrom=wdc.com; dkim=pass (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b=c2PSSwk0; arc=none smtp.client-ip=68.232.141.245
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wdc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wdc.com
+	s=arc-20240116; t=1712470143; c=relaxed/simple;
+	bh=delEZxan1fnhA6L/GdiGgg5yR6lq/O1F1NB/EXbR57U=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=CXy3axCyZoM/iKPlQPd6kINeQdO7/JQknPkfXbVw8Ymcbp6GCWIdrOMCDO2gjmyYeyDgT0ngT4XlHCoegcxB2FNHNhrerayg63VmkFjIEm5GDjl1FjvhlnoKkKjmIh0N/hwMLPNEJpSnBwPQmFOfMvdBt2XaiTa2rZ5fQOcXun4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RP1IllP8; arc=none smtp.client-ip=209.85.167.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="c2PSSwk0"
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1712469866; x=1744005866;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=t/ajfETUN+LYoOt+WkqShoD9CjGX5UIn9BP5Mlcq4II=;
-  b=c2PSSwk0BF9TSBzdGgjkMGllI7cGcM1Hw/lDJXjq58GLrU2C0Po3DqNL
-   9PtIlU4dLOFhaIsBevA1MaXnh03n9v/VBKeATIdFK4am/Du9Ex+dzpZjG
-   vDIdXg7bn60wxduzW9q3CyrvnxWmx+RBPObo2vVhabF225Bw+o2t7khM6
-   vwUJ5Mvx+ljtLBMsJJYTtqimTtKCPSxQWHz3c1YlQjMHek7NWyYy+joGY
-   S1lAEyRCsC6/KrGUulOGgxhaoKXzp52uUcVChofZKwsDXyBbSO6rG2ndg
-   FznaHZZAm1f/fe3VVUa6GLRZPn7t5Eha3aKxv/hOF0Y75OCsg1uaiZZ23
-   Q==;
-X-CSE-ConnectionGUID: tb9yxORlSeCSbTKqU2Sa4A==
-X-CSE-MsgGUID: j2L+ma3jSESQB0EHME0agw==
-X-IronPort-AV: E=Sophos;i="6.07,184,1708358400"; 
-   d="scan'208";a="13672855"
-Received: from h199-255-45-15.hgst.com (HELO uls-op-cesaep02.wdc.com) ([199.255.45.15])
-  by ob1.hgst.iphmx.com with ESMTP; 07 Apr 2024 14:04:20 +0800
-IronPort-SDR: CF3CTaqM97YM6VqhCBP007CpkMsekEPP9v7HM4BMqnc5nkfw+sUT4tmbg0NouCRkm0Qe/ugded
- /Bq6kEBmFj5g==
-Received: from uls-op-cesaip02.wdc.com ([10.248.3.37])
-  by uls-op-cesaep02.wdc.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 06 Apr 2024 22:07:10 -0700
-IronPort-SDR: GvFU5KAuaErs4WtKF1+9RXL/MJB/xR5s+YQOwOW/z5bFn2lOO7Knp36BS6dnDeR7AE/zXL/43Y
- XQL2G5nJbb4Q==
-WDCIronportException: Internal
-Received: from bxygm33.ad.shared ([10.45.31.229])
-  by uls-op-cesaip02.wdc.com with ESMTP; 06 Apr 2024 23:04:17 -0700
-From: Avri Altman <avri.altman@wdc.com>
-To: "James E . J . Bottomley" <jejb@linux.ibm.com>,
-	"Martin K . Petersen" <martin.petersen@oracle.com>
-Cc: Christoph Hellwig <hch@infradead.org>,
-	Bart Van Assche <bvanassche@acm.org>,
-	Bean Huo <beanhuo@micron.com>,
-	linux-scsi@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Avri Altman <avri.altman@wdc.com>
-Subject: [PATCH v3 1/1] scsi: ufs: Remove support for old UFSHCI versions
-Date: Sun,  7 Apr 2024 09:04:10 +0300
-Message-ID: <20240407060412.856-2-avri.altman@wdc.com>
-X-Mailer: git-send-email 2.42.0
-In-Reply-To: <20240407060412.856-1-avri.altman@wdc.com>
-References: <20240407060412.856-1-avri.altman@wdc.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RP1IllP8"
+Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-516ef30b16eso400671e87.3;
+        Sat, 06 Apr 2024 23:09:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1712470140; x=1713074940; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=wwqhdfOJOk0MaHNZfcfnTsXGw1LNLnH298zQoiFoYps=;
+        b=RP1IllP8cgpwcrhIKhXxkfN7doPW2NYdU84QCOH6lDPoV/szsdfKuQArrsv5xMJi+r
+         SS30dWGoq2VANJbLIuUIjWMYEhilu5kB4fvfjP7Bw2cis6tt8lxOs28e76hrLSbJqrRB
+         2wLZGgQMnVx7G4q+TDkctkSJtykYlBv9iRydqEXNMxTj9keV2F3gvGO0v65yR+TM8Ak1
+         FCw/RBvPvm+fJFwb3HJHcUTvvpQkZULYdjFdIHd2/fWiab34sWgdOwQy+1FTdTgabsoz
+         EYDGqUYlNg9zNilS79c9SZk6g01aG300maoWMDnfd/BC0B3RWM179HjFQujhqEJRShlD
+         4oOA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712470140; x=1713074940;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=wwqhdfOJOk0MaHNZfcfnTsXGw1LNLnH298zQoiFoYps=;
+        b=ZNJaUZIwvJyO7u5tozik3z6FaWtMKZg7OCcOTLEpZoeoTcvi4aGd1KAmbAsX0YIRB3
+         NNeLvYgV/28i1iQBANnmwMCZJsS1z1zmUN90MhMPr6n2WslStdDxk4QjPh/PLABoJX1b
+         MPVvxako/KkC7pRHp+5dbwWkVTyK/kdtYjf1ATIg01Pgv8R8iQru3DSeXBGaYMF43xhh
+         gjo1IJkkwM0H4TB5AZE4sA7jcKe3HSj4P4RnJutXJhLZKdOzllm/xh+36zbsJBG9A4hL
+         olWa4r0+NxPGf73lkMqU07Obmfs9D8RcklFuOCsWMS2gJxc6O6gidSvP5/qPx3aSHQCq
+         14fA==
+X-Forwarded-Encrypted: i=1; AJvYcCXCij/tsGJZ6kBNUYWyGRMVOORDm88sk6xAMwXET73PQVwY3IpJnqYtD5vYQ4AjUQ6WOfvkOM/pjmOzxdNvk+m24gOi74BGB6PT94DfOD1VNMnajPPgqO1/T8hOkimdmns8K6151mRflcb/dmWjmx1f3vXEdA546qTIrM9dxzWl1sb2
+X-Gm-Message-State: AOJu0YwrstRvmx8M0U7skZrcyTfepJQYu25rLPfR4iMjUAPGNdOdypZC
+	E2TDskmh+qylqESO2f4IQUCWKzVYNgQC5S7q7V0v1u4Q74xMA46wQAk44UJq87zcMbAVFu2xtt4
+	LMv5QYWaYreLE4CPhpFHjccgvzuk=
+X-Google-Smtp-Source: AGHT+IHalJgBeNYHv+OuduAaadjWLpFmG82zb9mgb6Kh58GYSp/jo01qprOElHIH7I5cRFWp08asDejmjLO69MaXlAw=
+X-Received: by 2002:a19:6908:0:b0:513:ccda:bc86 with SMTP id
+ e8-20020a196908000000b00513ccdabc86mr3280571lfc.4.1712470139341; Sat, 06 Apr
+ 2024 23:08:59 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20240401082019.2318193-1-haibo1.xu@intel.com> <20240402-7bd2b9ed00094befa6927b60@orel>
+ <CAJve8onPGb_ZqXaU7t50893PKS=9mrbzqvthc8dYMHDFKJdUAg@mail.gmail.com> <CAK9=C2WZB1hB-1d=16gsfWB3y=xCq5=PtfDGXc-W4ERwvWjRUg@mail.gmail.com>
+In-Reply-To: <CAK9=C2WZB1hB-1d=16gsfWB3y=xCq5=PtfDGXc-W4ERwvWjRUg@mail.gmail.com>
+From: Haibo Xu <xiaobo55x@gmail.com>
+Date: Sun, 7 Apr 2024 14:08:47 +0800
+Message-ID: <CAJve8ok1NtEf7=eDKkvZ-wv4Qb2UqzFQ-mWqkP1RNQKZRwnSKA@mail.gmail.com>
+Subject: Re: [PATCH] KVM: riscv: selftests: Add SBI base extension test
+To: Anup Patel <apatel@ventanamicro.com>
+Cc: Andrew Jones <ajones@ventanamicro.com>, Haibo Xu <haibo1.xu@intel.com>, 
+	Paolo Bonzini <pbonzini@redhat.com>, Shuah Khan <shuah@kernel.org>, Anup Patel <anup@brainfault.org>, 
+	Atish Patra <atishp@atishpatra.org>, Paul Walmsley <paul.walmsley@sifive.com>, 
+	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, linux-kernel@vger.kernel.org, 
+	kvm@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+	kvm-riscv@lists.infradead.org, linux-riscv@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-UFS spec version 2.1 was published more than 10 years ago. It is
-vanishingly unlikely that even there are out there platforms that uses
-earlier host controllers, let alone that those ancient platforms will
-ever run a V6.10 kernel.  To be extra cautious, leave out support for
-UFSHCI2.0 as well, and just remove support of host controllers prior
-to UFS2.0.
+On Sun, Apr 7, 2024 at 12:45=E2=80=AFPM Anup Patel <apatel@ventanamicro.com=
+> wrote:
+>
+> On Sun, Apr 7, 2024 at 8:11=E2=80=AFAM Haibo Xu <xiaobo55x@gmail.com> wro=
+te:
+> >
+> > On Tue, Apr 2, 2024 at 10:12=E2=80=AFPM Andrew Jones <ajones@ventanamic=
+ro.com> wrote:
+> > >
+> > > On Mon, Apr 01, 2024 at 04:20:18PM +0800, Haibo Xu wrote:
+> > > > This is the first patch to enable the base extension selftest
+> > > > for the SBI implementation in KVM. Test for other extensions
+> > > > will be added later.
+> > >
+> > > I'm not sure we want SBI tests in KVM selftests since we already
+> > > plan to add them to kvm-unit-tests, where they can be used to
+> > > test both KVM's SBI implementation and M-mode firmware implementation=
+s.
+> > > If we also have them here, then we'll end up duplicating that effort.
+> > >
+> >
+> > Thanks for the information, Andrew!
+> >
+> > The SBI KVM selftest was planned last year when I talked with Anup abou=
+t
+> > KVM selftest support on RISC-V. Since the kvm-unit-tests has already co=
+vered
+> > it, I'm fine to drop the support in KVM selftest.
+>
+> Initially we did plan to have all SBI tests under KVM selftests but later
+> we decided to have SBI tests at a common place which will benefit all
+> hypervisors and M-mode firmwares implementing SBI spec.
+>
+> Instead of this, I suggest we should have more selfttests targeting
+> AIA (CSRs, IMSIC, and APLIC) virtualization.
+>
 
-This patch removes some legacy tuning calls that no longer apply.
+Sure.
 
-Signed-off-by: Avri Altman <avri.altman@wdc.com>
-Acked-by: Bean Huo <beanhuo@micron.com>
----
- drivers/ufs/core/ufshcd.c   | 158 +++---------------------------------
- drivers/ufs/host/ufs-qcom.c |   3 +-
- include/ufs/ufshcd.h        |   2 -
- include/ufs/ufshci.h        |  13 +--
- 4 files changed, 15 insertions(+), 161 deletions(-)
-
-diff --git a/drivers/ufs/core/ufshcd.c b/drivers/ufs/core/ufshcd.c
-index 62c8575f2c67..c72ef87ea867 100644
---- a/drivers/ufs/core/ufshcd.c
-+++ b/drivers/ufs/core/ufshcd.c
-@@ -748,8 +748,6 @@ static int ufshcd_wait_for_register(struct ufs_hba *hba, u32 reg, u32 mask,
-  */
- static inline u32 ufshcd_get_intr_mask(struct ufs_hba *hba)
- {
--	if (hba->ufs_version == ufshci_version(1, 0))
--		return INTERRUPT_MASK_ALL_VER_10;
- 	if (hba->ufs_version <= ufshci_version(2, 0))
- 		return INTERRUPT_MASK_ALL_VER_11;
- 
-@@ -990,30 +988,6 @@ bool ufshcd_is_hba_active(struct ufs_hba *hba)
- }
- EXPORT_SYMBOL_GPL(ufshcd_is_hba_active);
- 
--u32 ufshcd_get_local_unipro_ver(struct ufs_hba *hba)
--{
--	/* HCI version 1.0 and 1.1 supports UniPro 1.41 */
--	if (hba->ufs_version <= ufshci_version(1, 1))
--		return UFS_UNIPRO_VER_1_41;
--	else
--		return UFS_UNIPRO_VER_1_6;
--}
--EXPORT_SYMBOL(ufshcd_get_local_unipro_ver);
--
--static bool ufshcd_is_unipro_pa_params_tuning_req(struct ufs_hba *hba)
--{
--	/*
--	 * If both host and device support UniPro ver1.6 or later, PA layer
--	 * parameters tuning happens during link startup itself.
--	 *
--	 * We can manually tune PA layer parameters if either host or device
--	 * doesn't support UniPro ver 1.6 or later. But to keep manual tuning
--	 * logic simple, we will only do manual tuning if local unipro version
--	 * doesn't support ver1.6 or later.
--	 */
--	return ufshcd_get_local_unipro_ver(hba) < UFS_UNIPRO_VER_1_6;
--}
--
- /**
-  * ufshcd_pm_qos_init - initialize PM QoS request
-  * @hba: per adapter instance
-@@ -2674,14 +2648,7 @@ static void ufshcd_enable_intr(struct ufs_hba *hba, u32 intrs)
- {
- 	u32 set = ufshcd_readl(hba, REG_INTERRUPT_ENABLE);
- 
--	if (hba->ufs_version == ufshci_version(1, 0)) {
--		u32 rw;
--		rw = set & INTERRUPT_MASK_RW_VER_10;
--		set = rw | ((set ^ intrs) & intrs);
--	} else {
--		set |= intrs;
--	}
--
-+	set |= intrs;
- 	ufshcd_writel(hba, set, REG_INTERRUPT_ENABLE);
- }
- 
-@@ -2694,16 +2661,7 @@ static void ufshcd_disable_intr(struct ufs_hba *hba, u32 intrs)
- {
- 	u32 set = ufshcd_readl(hba, REG_INTERRUPT_ENABLE);
- 
--	if (hba->ufs_version == ufshci_version(1, 0)) {
--		u32 rw;
--		rw = (set & INTERRUPT_MASK_RW_VER_10) &
--			~(intrs & INTERRUPT_MASK_RW_VER_10);
--		set = rw | ((set & intrs) & ~INTERRUPT_MASK_RW_VER_10);
--
--	} else {
--		set &= ~intrs;
--	}
--
-+	set &= ~intrs;
- 	ufshcd_writel(hba, set, REG_INTERRUPT_ENABLE);
- }
- 
-@@ -2715,21 +2673,17 @@ static void ufshcd_disable_intr(struct ufs_hba *hba, u32 intrs)
-  * @upiu_flags: flags required in the header
-  * @cmd_dir: requests data direction
-  * @ehs_length: Total EHS Length (in 32‐bytes units of all Extra Header Segments)
-- * @legacy_type: UTP_CMD_TYPE_SCSI or UTP_CMD_TYPE_DEV_MANAGE
-  */
- static void
- ufshcd_prepare_req_desc_hdr(struct ufs_hba *hba, struct ufshcd_lrb *lrbp,
- 			    u8 *upiu_flags, enum dma_data_direction cmd_dir,
--			    int ehs_length, enum utp_cmd_type legacy_type)
-+			    int ehs_length)
- {
- 	struct utp_transfer_req_desc *req_desc = lrbp->utr_descriptor_ptr;
- 	struct request_desc_header *h = &req_desc->header;
- 	enum utp_data_direction data_direction;
- 
--	if (hba->ufs_version <= ufshci_version(1, 1))
--		lrbp->command_type = legacy_type;
--	else
--		lrbp->command_type = UTP_CMD_TYPE_UFS_STORAGE;
-+	lrbp->command_type = UTP_CMD_TYPE_UFS_STORAGE;
- 
- 	*h = (typeof(*h)){ };
- 
-@@ -2863,7 +2817,7 @@ static int ufshcd_compose_devman_upiu(struct ufs_hba *hba,
- 	u8 upiu_flags;
- 	int ret = 0;
- 
--	ufshcd_prepare_req_desc_hdr(hba, lrbp, &upiu_flags, DMA_NONE, 0, UTP_CMD_TYPE_DEV_MANAGE);
-+	ufshcd_prepare_req_desc_hdr(hba, lrbp, &upiu_flags, DMA_NONE, 0);
- 
- 	if (hba->dev_cmd.type == DEV_CMD_TYPE_QUERY)
- 		ufshcd_prepare_utp_query_req_upiu(hba, lrbp, upiu_flags);
-@@ -2887,8 +2841,7 @@ static void ufshcd_comp_scsi_upiu(struct ufs_hba *hba, struct ufshcd_lrb *lrbp)
- 	unsigned int ioprio_class = IOPRIO_PRIO_CLASS(req_get_ioprio(rq));
- 	u8 upiu_flags;
- 
--	ufshcd_prepare_req_desc_hdr(hba, lrbp, &upiu_flags,
--				    lrbp->cmd->sc_data_direction, 0, UTP_CMD_TYPE_SCSI);
-+	ufshcd_prepare_req_desc_hdr(hba, lrbp, &upiu_flags, lrbp->cmd->sc_data_direction, 0);
- 	if (ioprio_class == IOPRIO_CLASS_RT)
- 		upiu_flags |= UPIU_CMD_FLAGS_CP;
- 	ufshcd_prepare_utp_scsi_cmd_upiu(lrbp, upiu_flags);
-@@ -5559,15 +5512,12 @@ void ufshcd_compl_one_cqe(struct ufs_hba *hba, int task_tag,
- 		ufshcd_release_scsi_cmd(hba, lrbp);
- 		/* Do not touch lrbp after scsi done */
- 		scsi_done(cmd);
--	} else if (lrbp->command_type == UTP_CMD_TYPE_DEV_MANAGE ||
--		   lrbp->command_type == UTP_CMD_TYPE_UFS_STORAGE) {
--		if (hba->dev_cmd.complete) {
--			if (cqe) {
--				ocs = le32_to_cpu(cqe->status) & MASK_OCS;
--				lrbp->utr_descriptor_ptr->header.ocs = ocs;
--			}
--			complete(hba->dev_cmd.complete);
-+	} else if (hba->dev_cmd.complete) {
-+		if (cqe) {
-+			ocs = le32_to_cpu(cqe->status) & MASK_OCS;
-+			lrbp->utr_descriptor_ptr->header.ocs = ocs;
- 		}
-+		complete(hba->dev_cmd.complete);
- 	}
- }
- 
-@@ -7220,7 +7170,7 @@ static int ufshcd_issue_devman_upiu_cmd(struct ufs_hba *hba,
- 
- 	ufshcd_setup_dev_cmd(hba, lrbp, cmd_type, 0, tag);
- 
--	ufshcd_prepare_req_desc_hdr(hba, lrbp, &upiu_flags, DMA_NONE, 0, UTP_CMD_TYPE_DEV_MANAGE);
-+	ufshcd_prepare_req_desc_hdr(hba, lrbp, &upiu_flags, DMA_NONE, 0);
- 
- 	/* update the task tag in the request upiu */
- 	req_upiu->header.task_tag = tag;
-@@ -7372,7 +7322,7 @@ int ufshcd_advanced_rpmb_req_handler(struct ufs_hba *hba, struct utp_upiu_req *r
- 
- 	ufshcd_setup_dev_cmd(hba, lrbp, DEV_CMD_TYPE_RPMB, UFS_UPIU_RPMB_WLUN, tag);
- 
--	ufshcd_prepare_req_desc_hdr(hba, lrbp, &upiu_flags, DMA_NONE, ehs, UTP_CMD_TYPE_DEV_MANAGE);
-+	ufshcd_prepare_req_desc_hdr(hba, lrbp, &upiu_flags, DMA_NONE, ehs);
- 
- 	/* update the task tag */
- 	req_upiu->header.task_tag = tag;
-@@ -8359,83 +8309,6 @@ static void ufs_put_device_desc(struct ufs_hba *hba)
- 	dev_info->model = NULL;
- }
- 
--/**
-- * ufshcd_tune_pa_tactivate - Tunes PA_TActivate of local UniPro
-- * @hba: per-adapter instance
-- *
-- * PA_TActivate parameter can be tuned manually if UniPro version is less than
-- * 1.61. PA_TActivate needs to be greater than or equal to peerM-PHY's
-- * RX_MIN_ACTIVATETIME_CAPABILITY attribute. This optimal value can help reduce
-- * the hibern8 exit latency.
-- *
-- * Return: zero on success, non-zero error value on failure.
-- */
--static int ufshcd_tune_pa_tactivate(struct ufs_hba *hba)
--{
--	int ret = 0;
--	u32 peer_rx_min_activatetime = 0, tuned_pa_tactivate;
--
--	ret = ufshcd_dme_peer_get(hba,
--				  UIC_ARG_MIB_SEL(
--					RX_MIN_ACTIVATETIME_CAPABILITY,
--					UIC_ARG_MPHY_RX_GEN_SEL_INDEX(0)),
--				  &peer_rx_min_activatetime);
--	if (ret)
--		goto out;
--
--	/* make sure proper unit conversion is applied */
--	tuned_pa_tactivate =
--		((peer_rx_min_activatetime * RX_MIN_ACTIVATETIME_UNIT_US)
--		 / PA_TACTIVATE_TIME_UNIT_US);
--	ret = ufshcd_dme_set(hba, UIC_ARG_MIB(PA_TACTIVATE),
--			     tuned_pa_tactivate);
--
--out:
--	return ret;
--}
--
--/**
-- * ufshcd_tune_pa_hibern8time - Tunes PA_Hibern8Time of local UniPro
-- * @hba: per-adapter instance
-- *
-- * PA_Hibern8Time parameter can be tuned manually if UniPro version is less than
-- * 1.61. PA_Hibern8Time needs to be maximum of local M-PHY's
-- * TX_HIBERN8TIME_CAPABILITY & peer M-PHY's RX_HIBERN8TIME_CAPABILITY.
-- * This optimal value can help reduce the hibern8 exit latency.
-- *
-- * Return: zero on success, non-zero error value on failure.
-- */
--static int ufshcd_tune_pa_hibern8time(struct ufs_hba *hba)
--{
--	int ret = 0;
--	u32 local_tx_hibern8_time_cap = 0, peer_rx_hibern8_time_cap = 0;
--	u32 max_hibern8_time, tuned_pa_hibern8time;
--
--	ret = ufshcd_dme_get(hba,
--			     UIC_ARG_MIB_SEL(TX_HIBERN8TIME_CAPABILITY,
--					UIC_ARG_MPHY_TX_GEN_SEL_INDEX(0)),
--				  &local_tx_hibern8_time_cap);
--	if (ret)
--		goto out;
--
--	ret = ufshcd_dme_peer_get(hba,
--				  UIC_ARG_MIB_SEL(RX_HIBERN8TIME_CAPABILITY,
--					UIC_ARG_MPHY_RX_GEN_SEL_INDEX(0)),
--				  &peer_rx_hibern8_time_cap);
--	if (ret)
--		goto out;
--
--	max_hibern8_time = max(local_tx_hibern8_time_cap,
--			       peer_rx_hibern8_time_cap);
--	/* make sure proper unit conversion is applied */
--	tuned_pa_hibern8time = ((max_hibern8_time * HIBERN8TIME_UNIT_US)
--				/ PA_HIBERN8_TIME_UNIT_US);
--	ret = ufshcd_dme_set(hba, UIC_ARG_MIB(PA_HIBERN8TIME),
--			     tuned_pa_hibern8time);
--out:
--	return ret;
--}
--
- /**
-  * ufshcd_quirk_tune_host_pa_tactivate - Ensures that host PA_TACTIVATE is
-  * less than device PA_TACTIVATE time.
-@@ -8508,11 +8381,6 @@ static int ufshcd_quirk_tune_host_pa_tactivate(struct ufs_hba *hba)
- 
- static void ufshcd_tune_unipro_params(struct ufs_hba *hba)
- {
--	if (ufshcd_is_unipro_pa_params_tuning_req(hba)) {
--		ufshcd_tune_pa_tactivate(hba);
--		ufshcd_tune_pa_hibern8time(hba);
--	}
--
- 	ufshcd_vops_apply_dev_quirks(hba);
- 
- 	if (hba->dev_quirks & UFS_DEVICE_QUIRK_PA_TACTIVATE)
-diff --git a/drivers/ufs/host/ufs-qcom.c b/drivers/ufs/host/ufs-qcom.c
-index 0c067d56305c..cca190d1c577 100644
---- a/drivers/ufs/host/ufs-qcom.c
-+++ b/drivers/ufs/host/ufs-qcom.c
-@@ -534,8 +534,7 @@ static int ufs_qcom_link_startup_notify(struct ufs_hba *hba,
- 		 * and device TX LCC are disabled once link startup is
- 		 * completed.
- 		 */
--		if (ufshcd_get_local_unipro_ver(hba) != UFS_UNIPRO_VER_1_41)
--			err = ufshcd_disable_host_tx_lcc(hba);
-+		err = ufshcd_disable_host_tx_lcc(hba);
- 
- 		break;
- 	default:
-diff --git a/include/ufs/ufshcd.h b/include/ufs/ufshcd.h
-index a35e12f8e68b..431af365cf5e 100644
---- a/include/ufs/ufshcd.h
-+++ b/include/ufs/ufshcd.h
-@@ -1390,8 +1390,6 @@ void ufshcd_release(struct ufs_hba *hba);
- 
- void ufshcd_clkgate_delay_set(struct device *dev, unsigned long value);
- 
--u32 ufshcd_get_local_unipro_ver(struct ufs_hba *hba);
--
- int ufshcd_get_vreg(struct device *dev, struct ufs_vreg *vreg);
- 
- int ufshcd_send_uic_cmd(struct ufs_hba *hba, struct uic_command *uic_cmd);
-diff --git a/include/ufs/ufshci.h b/include/ufs/ufshci.h
-index 88193f5540e5..385e1c6b8d60 100644
---- a/include/ufs/ufshci.h
-+++ b/include/ufs/ufshci.h
-@@ -355,12 +355,8 @@ enum {
- 
- /* Interrupt disable masks */
- enum {
--	/* Interrupt disable mask for UFSHCI v1.0 */
--	INTERRUPT_MASK_ALL_VER_10	= 0x30FFF,
--	INTERRUPT_MASK_RW_VER_10	= 0x30000,
--
- 	/* Interrupt disable mask for UFSHCI v1.1 */
--	INTERRUPT_MASK_ALL_VER_11	= 0x31FFF,
-+	INTERRUPT_MASK_ALL_VER_11       = 0x31FFF,
- 
- 	/* Interrupt disable mask for UFSHCI v2.1 */
- 	INTERRUPT_MASK_ALL_VER_21	= 0x71FFF,
-@@ -425,13 +421,6 @@ union ufs_crypto_cfg_entry {
-  * Request Descriptor Definitions
-  */
- 
--/* Transfer request command type */
--enum utp_cmd_type {
--	UTP_CMD_TYPE_SCSI		= 0x0,
--	UTP_CMD_TYPE_UFS		= 0x1,
--	UTP_CMD_TYPE_DEV_MANAGE		= 0x2,
--};
--
- /* To accommodate UFS2.0 required Command type */
- enum {
- 	UTP_CMD_TYPE_UFS_STORAGE	= 0x1,
--- 
-2.42.0
-
+> Regards,
+> Anup
+>
+> >
+> > Regards,
+> > Haibo
+> >
+> > > I do like the approach of only checking for an error, rather than
+> > > also for a value, for these ID getters. In kvm-unit-tests we're
+> > > currently requiring that the expected value be passed in, otherwise
+> > > the whole test is skipped. We could fallback to only checking for
+> > > an error instead, as is done here.
+> > >
+> > > Thanks,
+> > > drew
+> > >
+> > > >
+> > > > Signed-off-by: Haibo Xu <haibo1.xu@intel.com>
+> > > > ---
+> > > >  tools/testing/selftests/kvm/Makefile          |  1 +
+> > > >  .../selftests/kvm/include/riscv/processor.h   |  8 +-
+> > > >  tools/testing/selftests/kvm/riscv/sbi_test.c  | 95 +++++++++++++++=
+++++
+> > > >  3 files changed, 103 insertions(+), 1 deletion(-)
+> > > >  create mode 100644 tools/testing/selftests/kvm/riscv/sbi_test.c
+> > > >
+> > > > diff --git a/tools/testing/selftests/kvm/Makefile b/tools/testing/s=
+elftests/kvm/Makefile
+> > > > index 741c7dc16afc..a6acbbcad757 100644
+> > > > --- a/tools/testing/selftests/kvm/Makefile
+> > > > +++ b/tools/testing/selftests/kvm/Makefile
+> > > > @@ -189,6 +189,7 @@ TEST_GEN_PROGS_s390x +=3D rseq_test
+> > > >  TEST_GEN_PROGS_s390x +=3D set_memory_region_test
+> > > >  TEST_GEN_PROGS_s390x +=3D kvm_binary_stats_test
+> > > >
+> > > > +TEST_GEN_PROGS_riscv +=3D riscv/sbi_test
+> > > >  TEST_GEN_PROGS_riscv +=3D arch_timer
+> > > >  TEST_GEN_PROGS_riscv +=3D demand_paging_test
+> > > >  TEST_GEN_PROGS_riscv +=3D dirty_log_test
+> > > > diff --git a/tools/testing/selftests/kvm/include/riscv/processor.h =
+b/tools/testing/selftests/kvm/include/riscv/processor.h
+> > > > index ce473fe251dd..df530ac751c4 100644
+> > > > --- a/tools/testing/selftests/kvm/include/riscv/processor.h
+> > > > +++ b/tools/testing/selftests/kvm/include/riscv/processor.h
+> > > > @@ -178,7 +178,13 @@ enum sbi_ext_id {
+> > > >  };
+> > > >
+> > > >  enum sbi_ext_base_fid {
+> > > > -     SBI_EXT_BASE_PROBE_EXT =3D 3,
+> > > > +     SBI_EXT_BASE_GET_SPEC_VERSION =3D 0,
+> > > > +     SBI_EXT_BASE_GET_IMP_ID,
+> > > > +     SBI_EXT_BASE_GET_IMP_VERSION,
+> > > > +     SBI_EXT_BASE_PROBE_EXT,
+> > > > +     SBI_EXT_BASE_GET_MVENDORID,
+> > > > +     SBI_EXT_BASE_GET_MARCHID,
+> > > > +     SBI_EXT_BASE_GET_MIMPID,
+> > > >  };
+> > > >
+> > > >  struct sbiret {
+> > > > diff --git a/tools/testing/selftests/kvm/riscv/sbi_test.c b/tools/t=
+esting/selftests/kvm/riscv/sbi_test.c
+> > > > new file mode 100644
+> > > > index 000000000000..b9378546e3b6
+> > > > --- /dev/null
+> > > > +++ b/tools/testing/selftests/kvm/riscv/sbi_test.c
+> > > > @@ -0,0 +1,95 @@
+> > > > +// SPDX-License-Identifier: GPL-2.0
+> > > > +/*
+> > > > + * sbi_test - SBI API test for KVM's SBI implementation.
+> > > > + *
+> > > > + * Copyright (c) 2024 Intel Corporation
+> > > > + *
+> > > > + * Test cover the following SBI extentions:
+> > > > + *  - Base: All functions in this extension should be supported
+> > > > + */
+> > > > +
+> > > > +#include "kvm_util.h"
+> > > > +#include "processor.h"
+> > > > +#include "test_util.h"
+> > > > +
+> > > > +/*
+> > > > + * Test that all functions in the base extension must be supported
+> > > > + */
+> > > > +static void base_ext_guest_code(void)
+> > > > +{
+> > > > +     struct sbiret ret;
+> > > > +
+> > > > +     /*
+> > > > +      * Since the base extension was introduced in SBI Spec v0.2,
+> > > > +      * assert if the implemented SBI version is below 0.2.
+> > > > +      */
+> > > > +     ret =3D sbi_ecall(SBI_EXT_BASE, SBI_EXT_BASE_GET_SPEC_VERSION=
+, 0,
+> > > > +                     0, 0, 0, 0, 0);
+> > > > +     __GUEST_ASSERT(!ret.error && ret.value >=3D 2, "Get Spec Vers=
+ion Error: ret.error=3D%ld, "
+> > > > +                     "ret.value=3D%ld\n", ret.error, ret.value);
+> > > > +
+> > > > +     ret =3D sbi_ecall(SBI_EXT_BASE, SBI_EXT_BASE_GET_IMP_ID, 0,
+> > > > +                     0, 0, 0, 0, 0);
+> > > > +     __GUEST_ASSERT(!ret.error && ret.value =3D=3D 3, "Get Imp ID =
+Error: ret.error=3D%ld, "
+> > > > +                     "ret.value=3D%ld\n",
+> > > > +                     ret.error, ret.value);
+> > > > +
+> > > > +     ret =3D sbi_ecall(SBI_EXT_BASE, SBI_EXT_BASE_GET_IMP_VERSION,=
+ 0,
+> > > > +                     0, 0, 0, 0, 0);
+> > > > +     __GUEST_ASSERT(!ret.error, "Get Imp Version Error: ret.error=
+=3D%ld\n", ret.error);
+> > > > +
+> > > > +     ret =3D sbi_ecall(SBI_EXT_BASE, SBI_EXT_BASE_PROBE_EXT, SBI_E=
+XT_BASE,
+> > > > +                     0, 0, 0, 0, 0);
+> > > > +     __GUEST_ASSERT(!ret.error && ret.value =3D=3D 1, "Probe ext E=
+rror: ret.error=3D%ld, "
+> > > > +                     "ret.value=3D%ld\n",
+> > > > +                     ret.error, ret.value);
+> > > > +
+> > > > +     ret =3D sbi_ecall(SBI_EXT_BASE, SBI_EXT_BASE_GET_MVENDORID, 0=
+,
+> > > > +                     0, 0, 0, 0, 0);
+> > > > +     __GUEST_ASSERT(!ret.error, "Get Machine Vendor ID Error: ret.=
+error=3D%ld\n", ret.error);
+> > > > +
+> > > > +     ret =3D sbi_ecall(SBI_EXT_BASE, SBI_EXT_BASE_GET_MARCHID, 0,
+> > > > +                     0, 0, 0, 0, 0);
+> > > > +     __GUEST_ASSERT(!ret.error, "Get Machine Arch ID Error: ret.er=
+ror=3D%ld\n", ret.error);
+> > > > +
+> > > > +     ret =3D sbi_ecall(SBI_EXT_BASE, SBI_EXT_BASE_GET_MIMPID, 0,
+> > > > +                     0, 0, 0, 0, 0);
+> > > > +     __GUEST_ASSERT(!ret.error, "Get Machine Imp ID Error: ret.err=
+or=3D%ld\n", ret.error);
+> > > > +
+> > > > +     GUEST_DONE();
+> > > > +}
+> > > > +
+> > > > +static void sbi_base_ext_test(void)
+> > > > +{
+> > > > +     struct kvm_vm *vm;
+> > > > +     struct kvm_vcpu *vcpu;
+> > > > +     struct ucall uc;
+> > > > +
+> > > > +     vm =3D vm_create_with_one_vcpu(&vcpu, base_ext_guest_code);
+> > > > +     while (1) {
+> > > > +             vcpu_run(vcpu);
+> > > > +             TEST_ASSERT(vcpu->run->exit_reason =3D=3D UCALL_EXIT_=
+REASON,
+> > > > +                         "Unexpected exit reason: %u (%s),",
+> > > > +                         vcpu->run->exit_reason, exit_reason_str(v=
+cpu->run->exit_reason));
+> > > > +
+> > > > +             switch (get_ucall(vcpu, &uc)) {
+> > > > +             case UCALL_DONE:
+> > > > +                     goto done;
+> > > > +             case UCALL_ABORT:
+> > > > +                     fprintf(stderr, "Guest assert failed!\n");
+> > > > +                     REPORT_GUEST_ASSERT(uc);
+> > > > +             default:
+> > > > +                     TEST_FAIL("Unexpected ucall %lu", uc.cmd);
+> > > > +             }
+> > > > +     }
+> > > > +
+> > > > +done:
+> > > > +     kvm_vm_free(vm);
+> > > > +}
+> > > > +
+> > > > +int main(void)
+> > > > +{
+> > > > +     sbi_base_ext_test();
+> > > > +
+> > > > +     return 0;
+> > > > +}
+> > > > --
+> > > > 2.34.1
+> > > >
+> >
