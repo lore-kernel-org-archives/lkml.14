@@ -1,135 +1,130 @@
-Received: from mail-ot1-f50.google.com (mail-ot1-f50.google.com [209.85.210.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.zeus03.de (www.zeus03.de [194.117.254.33])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFB603A1B5;
-	Sun,  7 Apr 2024 17:48:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9A703BBD5
+	for <linux-kernel@vger.kernel.org>; Sun,  7 Apr 2024 17:50:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712512117; cv=none; b=nflEPElHaLAMfMXZgKg/yJt4vMqTLg4r7A+z6w5NW2SIVzXgakQwqUYRpY7YweY7IXJNZoJYxv6K8KTpBg+mWSHzAF1BpolvWrYr5zkHhfMhBggPTysZ165mhK+fjx55zrOey8Sv6C7Zhnyf0NSJn0j6uFQRfrApUkZGinXyCqU=
+	t=1712512257; cv=none; b=SjWYNU2Kfu0lygpDPBCjtpzE8TqOLyFgfRdt7Nlf2vp+Q3SRrzckOEtxzQ6GaouNACI+bQ5fqcmLwslNFEVT9cjt1x2ANMKLFuq0lTiqwXuubeXILBmQN6BOB/oZD5kqqDdFDC5hNDCvQJNgXA+zjCZczbGjkfiETdIpcDLlnoI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712512117; c=relaxed/simple;
-	bh=rYYsdMtLNJhfKR+qWZmjeR6swj48dWfG4F6Xfwy5SqI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=pDzl9nE32H/M2uBfkp8r6BV2CaKnQGqNzcEIMAHeDufbj2pGBtejE7ZCsbZWhMVi5Uu6FvRIxXSg+6+xuaKsqufmjXHC86SuSPlwbc7Qh0Foc9Qm/VM8iXra+3/iTBYi2J8tB4d+g92N2W8ISGulPTxvXSNRPGeESXggwabJwRM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=K69cf+Bx; arc=none smtp.client-ip=209.85.210.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1712512257; c=relaxed/simple;
+	bh=R/jq20IySS+sgGI9eBuSnT2kN35JE6wijH5AxS7Br70=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=iNuYaCjDcfSOV+mvZKrFXcul/qJeg0EFKavuDefO0qKOe6Ysxxpz9bQZ18JuTa6R7bTwAU1t1yObasLkfu5KYT23ub7K9Cfcgx7VWKWJWmS7oXipGEzKjaMkSrTieIfWyYFFW2+s5wnReb9mZg1HEh8pUWk680+TO0g+Q/J3LQE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=I8rcFXs8; arc=none smtp.client-ip=194.117.254.33
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="K69cf+Bx"
-Received: by mail-ot1-f50.google.com with SMTP id 46e09a7af769-6ea1189de94so551965a34.0;
-        Sun, 07 Apr 2024 10:48:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1712512115; x=1713116915; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=5sXdKQMfOKyJsj4qQ0BFKCNMJKW5FrQPDHTE6QFVUwU=;
-        b=K69cf+BxvxR9wFmPbZCVC0qR6OqtzjEahOcDYlpwjluMHFUOOoAQb07gEh5QTNQfwf
-         E94T3Nsnep9entfAvSjNeDyXKldFL/Mj6hTJPI+N1vqdPmVK7XylsgeZoRdDtQD5ldlz
-         1J6k8Qd2QJqejLMaySGvd17Dth16pmwSrq5R9IbfoGdwTXuN+rXQ/LmGPAvw41RIJrkO
-         6+E4+eIYd0ACWOMgoVLyEpsn957ndZP/eknoFkJyJ+LqyS4OSOHcoQFvo+m9qfct5rFi
-         XqEjJ0MsMlt752bl9asxTYF93NSMswJOMjg391ZrWHA2pV/hIfmSiI7WkbZWLKJpnfbR
-         +sVQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712512115; x=1713116915;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=5sXdKQMfOKyJsj4qQ0BFKCNMJKW5FrQPDHTE6QFVUwU=;
-        b=GulK0RfcZ4Zn5R4EzBkYR0TI2vJcOQlnKqj6pm21wEq4grA5Tvsz+fbZN+rRewhomo
-         pIzQXIiCVPL6KdL/Kj5Bcd7c+jfuF9CMOThx3FyQJLyA0mY62QwWV6XckCRm7PHeVANn
-         vl98vbbzXCyVK+Qc9aJ5phMd0NVR2m5n9DTNhv/TjD71sc77mS2edU6pk/tb5lWi+LQN
-         09hpspVSH3wSRmydoPtj+2cWZlh5xZ9E5wH7iLKSSF8CMyArygAEABlrRb5yAQHwAP0K
-         55DgJoimfjcCdjVLIUakc5E3n+ZaFwgJmKyeTyDiR+OPxTyhznEHrV/wV8Yr4UcLVS36
-         WvXg==
-X-Forwarded-Encrypted: i=1; AJvYcCWCTOyxT2M6kfUE9cuwqTRY654yaujY1IejCCkySzDmrn6ps8K8GgrAAWxs8ZajTo16VyQR4Z65n9IRZlLYv4tFDo1o91JziNlC9b3tfNKr7MAv9KxDkLnQbKzCTc7gIrIy9wyMOC1GMrRR/+1qXjjLzxlx5XpIYPjXey1avrcFPg2qmtf7sa1ke9doQ+vpSbie4xsffyODBcnwpq0D7GKuE6A=
-X-Gm-Message-State: AOJu0YzTXjAXYW7TscxqmYBw+IExMI6M8pOtiCaiCqpCQUsmc58qUIIh
-	uGUFG2nGjbg4qgbEyU8FKBbdNI1Ws76PMFhoVW0BJZEJox+V6irk
-X-Google-Smtp-Source: AGHT+IEmJUaWcK/hJUC5cAwg09zB7vyfipJlWU9lLlEVltY3uzjfm97qWwibUja23CycpiqAQa5onQ==
-X-Received: by 2002:a9d:6a5a:0:b0:6ea:f34:8ab4 with SMTP id h26-20020a9d6a5a000000b006ea0f348ab4mr3238793otn.28.1712512114955;
-        Sun, 07 Apr 2024 10:48:34 -0700 (PDT)
-Received: from [192.168.7.110] (c-98-197-58-203.hsd1.tx.comcast.net. [98.197.58.203])
-        by smtp.gmail.com with ESMTPSA id a25-20020a9d74d9000000b006ea178dadd3sm132893otl.21.2024.04.07.10.48.33
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 07 Apr 2024 10:48:34 -0700 (PDT)
-Message-ID: <1c803d8c-80b2-47a9-bc8c-8b13cbfc6841@gmail.com>
-Date: Sun, 7 Apr 2024 12:48:32 -0500
+	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="I8rcFXs8"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	sang-engineering.com; h=date:from:to:cc:subject:message-id
+	:references:mime-version:content-type:in-reply-to; s=k1; bh=4t2Y
+	Q/qy30jidZ7O24IB3uqzEABMi7K+pNMZ6EvQcas=; b=I8rcFXs8Ya99YYGwKQjv
+	BDixyZfMkAM0HErrUX9O+UN9Cl4QLLoj+1+tW9ghHFlZcZLg19vMflJtIBWr6mWI
+	kiREuEovpji1/WrfPNyyxzK+loDURCBXJYw+OqS0f5b7x/XJw2SkAD3LRrOpJ5T6
+	T0JwU2yacMK0fgWJzl8kuPxknxooMbcY0LcPQsVNdLuBpf1Lnq1jdSlIfvMEfSAE
+	STnGfKR202alQDncdL3TVlC5VPbqov6TNPuwo0CLHEtm3j9qvg4XBx392N8pPGLG
+	5D6FQEzlzMX8kvu28JTDoA2tgyNWbZmW6r2OsRZBr5oP4flPBJMXUjGFHhLf8d2Y
+	6w==
+Received: (qmail 538382 invoked from network); 7 Apr 2024 19:50:45 +0200
+Received: by mail.zeus03.de with ESMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 7 Apr 2024 19:50:45 +0200
+X-UD-Smtp-Session: l3s3148p1@Dli0U4UVEoUgAQnoAF4/ADroH6KhJW9n
+Date: Sun, 7 Apr 2024 19:50:39 +0200
+From: Wolfram Sang <wsa+renesas@sang-engineering.com>
+To: Easwar Hariharan <eahariha@linux.microsoft.com>
+Cc: "open list:RADEON and AMDGPU DRM DRIVERS" <amd-gfx@lists.freedesktop.org>,
+	"open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>,
+	open list <linux-kernel@vger.kernel.org>,
+	"open list:INTEL DRM DISPLAY FOR XE AND I915 DRIVERS" <intel-gfx@lists.freedesktop.org>,
+	"open list:INTEL DRM DISPLAY FOR XE AND I915 DRIVERS" <intel-xe@lists.freedesktop.org>,
+	"open list:DRM DRIVER FOR NVIDIA GEFORCE/QUADRO GPUS" <nouveau@lists.freedesktop.org>,
+	"open list:I2C SUBSYSTEM HOST DRIVERS" <linux-i2c@vger.kernel.org>,
+	"open list:BTTV VIDEO4LINUX DRIVER" <linux-media@vger.kernel.org>,
+	"open list:FRAMEBUFFER LAYER" <linux-fbdev@vger.kernel.org>
+Subject: Re: [PATCH v0 00/14] Make I2C terminology more inclusive for I2C
+ Algobit and consumers
+Message-ID: <20240407175039.za3eg7la7i2jwvun@kunai>
+Mail-Followup-To: Wolfram Sang <wsa+renesas@sang-engineering.com>,
+	Easwar Hariharan <eahariha@linux.microsoft.com>,
+	"open list:RADEON and AMDGPU DRM DRIVERS" <amd-gfx@lists.freedesktop.org>,
+	"open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>,
+	open list <linux-kernel@vger.kernel.org>,
+	"open list:INTEL DRM DISPLAY FOR XE AND I915 DRIVERS" <intel-gfx@lists.freedesktop.org>,
+	"open list:INTEL DRM DISPLAY FOR XE AND I915 DRIVERS" <intel-xe@lists.freedesktop.org>,
+	"open list:DRM DRIVER FOR NVIDIA GEFORCE/QUADRO GPUS" <nouveau@lists.freedesktop.org>,
+	"open list:I2C SUBSYSTEM HOST DRIVERS" <linux-i2c@vger.kernel.org>,
+	"open list:BTTV VIDEO4LINUX DRIVER" <linux-media@vger.kernel.org>,
+	"open list:FRAMEBUFFER LAYER" <linux-fbdev@vger.kernel.org>
+References: <20240329170038.3863998-1-eahariha@linux.microsoft.com>
+ <ffumcagmzdstcf3qcn3f26555pnu7i6azjppciyd4zvcoit7pv@vu262tsfnqyr>
+ <3bd8d2f6-dfe1-479f-bff1-f2921b1940ed@linux.microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 3/5] spi: spi-qpic: Add qpic spi nand driver support
-To: Md Sadre Alam <quic_mdalam@quicinc.com>, andersson@kernel.org,
- konrad.dybcio@linaro.org, broonie@kernel.org, robh@kernel.org,
- krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
- miquel.raynal@bootlin.com, richard@nod.at, vigneshr@ti.com,
- manivannan.sadhasivam@linaro.org, neil.armstrong@linaro.org,
- daniel@makrotopia.org, arnd@arndb.de, chris.packham@alliedtelesis.co.nz,
- christophe.kerello@foss.st.com, linux-arm-msm@vger.kernel.org,
- linux-spi@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org
-Cc: quic_srichara@quicinc.com, quic_varada@quicinc.com
-References: <20240308091752.16136-1-quic_mdalam@quicinc.com>
- <20240308091752.16136-4-quic_mdalam@quicinc.com>
-Content-Language: en-US
-From: "Alex G." <mr.nuke.me@gmail.com>
-In-Reply-To: <20240308091752.16136-4-quic_mdalam@quicinc.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="otbz5n53lv3dv44g"
+Content-Disposition: inline
+In-Reply-To: <3bd8d2f6-dfe1-479f-bff1-f2921b1940ed@linux.microsoft.com>
 
-On 3/8/24 03:17, Md Sadre Alam wrote:
-> Add qpic spi nand driver support. The spi nand
-> driver currently supported the below commands.
-> 
-> -- RESET
-> -- READ ID
-> -- SET FEATURE
-> -- GET FEATURE
-> -- READ PAGE
-> -- WRITE PAGE
-> -- ERASE PAGE
-> 
-> Co-developed-by: Sricharan Ramabadhran <quic_srichara@quicinc.com>
-> Signed-off-by: Sricharan Ramabadhran <quic_srichara@quicinc.com>
-> Co-developed-by: Varadarajan Narayanan <quic_varada@quicinc.com>
-> Signed-off-by: Varadarajan Narayanan <quic_varada@quicinc.com>
-> Signed-off-by: Md Sadre Alam <quic_mdalam@quicinc.com>
-> ---
 
-For the entire series:
+--otbz5n53lv3dv44g
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Tested-by: Alexandru Gagniuc <mr.nuke.me@gmail.com>
+Hi Easwar,
 
-> diff --git a/drivers/spi/Kconfig b/drivers/spi/Kconfig
-> index bc7021da2fe9..63764e943d82 100644
-> --- a/drivers/spi/Kconfig
-> +++ b/drivers/spi/Kconfig
-> @@ -882,6 +882,14 @@ config SPI_QCOM_QSPI
->   	help
->   	  QSPI(Quad SPI) driver for Qualcomm QSPI controller.
->   
-> +config SPI_QPIC_SNAND
-> +	tristate "QPIC SNAND controller"
-> +	depends on ARCH_QCOM || COMPILE_TEST
+> Sorry, got excited. :) There were drivers I'd been part of that I specifi=
+cally
+> wanted to fixup, but then the scope grew to other users of algobit.
 
-Here, it needs to 'select QPIC_COMMON`. Otherwise it can run into 
-unresolved symbols:
+Well, you got some positive feedback, so that is good.
 
-: drivers/spi/spi-qpic-snand.o: in function `snandc_set_reg':
-  drivers/spi/spi-qpic-snand.c:56:(.text+0x484): undefined reference to 
-`qcom_offset_to_nandc_reg'
-...
+> > It is true that I changed quite some controller drivers within the i2c
+> > realm. I did this to gain experience. As you also noticed quite some
+> > questions came up. We need to agree on answers first. And once we are
+> > happy with the answers we found, then IMO we can go outside of the i2c
+> > realm and send patches to other subsystems referencing agreed
+> > precedence. I intentionally did not go outside i2c yet. Since your
+> > patches are already there, you probably want to foster them until they
+> > are ready for inclusion.
+>=20
+> Sorry, I don't quite follow what you mean by foster in this context. Are
+> you asking me to hold off on merging the series, or to follow through on
+> getting it merged?
 
-> +	help
-> +	  QPIC_SNAND (QPIC SPI NAND) driver for Qualcomm QPIC controller.
-> +	  QPIC controller supports both parallel nand and serial nand.
-> +	  This config will enable serial nand driver for QPIC controller.
-> +
->   config SPI_QUP
->   	tristate "Qualcomm SPI controller with QUP interface"
->   	depends on ARCH_QCOM || COMPILE_TEST
+I think they are your patches, so this is up to you to decide. With
+"foster", I meant you keep working on them until everyone is happy. I
+haven't looked at the drivers you modify. I can't tell if they can be
+converted right away or if they use a lot of I2C API calls, so that it
+makes sense to wait until the core is converted. I trust you to decide
+this.
 
-Alex
+Happy hacking,
+
+   Wolfram
+
+--otbz5n53lv3dv44g
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmYS3OoACgkQFA3kzBSg
+KbYf7g/+KaVes7wupe7nkKcoPIanoG7cxHpUDAmN7oUnNvo+ohAUMW4QQArNIm2s
+5XNlfsu3X6VylCN8OD2kzHwBeAv706tbSViyjCtxmeVKAaXEh7/WMAfKBkrcDZMr
+RCcbCz3DiLj7jX+r4iaSebNE3FBuLX6seWUJgN0vF0M+RvsS5uQhsmUd4+cUHBo3
+pMk38vgS7Q3H47QRW64JJRKsKT3N5S8NMoYZKGDMt8omF6hnkvgJ9W0TnvenD6Q9
+QTMZur4Z25/gnF3Ds2WS4R4Y0VNo6EFludz5hNNg56DuMF9ErhUkGeixAYIgRJG2
+6YxZ1f003gWC3SgXuw91vD32QNJoR49DTaE4AnRhSx/EFK7zvwMoA7jOj7xx43i1
+xUPEpGjI4K68E32JP9wLj/rvjAW7REQyA+nKVaO7O6vbKVihpdMr/HgMq/UE3sIK
+CpMJ1Czfd56FUKE38vNihyL4V70O9iqMMiJmGd0gTQZ+WLYootZU9u68kQeMDah7
+2bbZnQzBSDy/xGzVdfrozrUkvAqd0Lo9qIJcCxTqMSrC7QWBGLkQXMOTWivlCRe7
+TtE5kBO4N4deizuNFwQEnoBpM9RCV+P/Jxd9EXHbQ8uwVWC2xU0QAJdWJwjicO5x
+Qmmz2/i/uKhU6Xwi82t8aASq+Lyc/L5LLwBDymYh51o1dRG3mVM=
+=V5fB
+-----END PGP SIGNATURE-----
+
+--otbz5n53lv3dv44g--
