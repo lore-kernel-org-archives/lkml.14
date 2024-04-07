@@ -1,99 +1,119 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f179.google.com (mail-qk1-f179.google.com [209.85.222.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEB5417577;
-	Sun,  7 Apr 2024 10:59:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72B3F18C1F;
+	Sun,  7 Apr 2024 11:03:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712487570; cv=none; b=DD0DyDYqHiRJ6/VlPcBpq7PuXlM3H/euXbXNyGJhNTPMmowJHWiqE7EINAJMZFnL2WOcZ7EIrNJyo1kNCFIy++ygf7LhqcU9m/Q48ZDFen0ktOTVAbXb9a/oVpXtJKH1X42hZfZ1dfkHvA0bBKFZ5C/Qf7SsU3ZfVM6i7VmKdvw=
+	t=1712487788; cv=none; b=RvOl84hVzFcZezNo/tvMVYoDG7fGezpHxBKchWu6BJzKUujOxkIRs8KEYR4Kk02FNfnA1Kke9TQs9M+hi212XyeQQnvS3ZUYPZJ+P0Q53BvDhI4zIggZ5oRZFdABCB81FcQh5in5rczM9ssT0yleCvpFLRwr3lqundfjgSYw+TQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712487570; c=relaxed/simple;
-	bh=mUqwJvMwwddQUj3/Op3ujtR7UUXWdIvM3MJCfhjD1tE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SAcJiX7olEMOPzxxpEFt0EV6hL2HM+0Y42DkejoImb0cLrgv+pq/qcMHyQrGZ3i5v/kzaifmS7uywerMwhab6/flYfaRfs+HotyAX/zx0Ow2PWxTM1rwNdAPVHQCTVCGmJtg467+XwthZLMCc1ioSrJuiHaRKjY8PgxwE3Q5EOA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aKsbdN24; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1712487788; c=relaxed/simple;
+	bh=2bnSJcE/EunYmSFZYekZyYXjQHtFS370sqqCcC7vL6Y=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=AKG/Mtz8+sH92OKzRM61zcokSfllgjWhm0rf3sO9UjoOkX9PgKbPXYKJYwWLkMn2acIrIQqlhqzh84D08u7Qrok1ysX6xjx2GRI+XYbSmvKZrw5L2ye0LZjdNaK8a4V4yfze/3M8xkjYCAiPF01i+mpOseIz4OXP66nArMZ+tVE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ecy07tw7; arc=none smtp.client-ip=209.85.222.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aKsbdN24"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0C51AC433F1;
-	Sun,  7 Apr 2024 10:59:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712487570;
-	bh=mUqwJvMwwddQUj3/Op3ujtR7UUXWdIvM3MJCfhjD1tE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=aKsbdN24NetxsdAUdftzcQGHZxeRaoDejGMt7iJYzfdfSBOJW/NvlcrebKEceshmz
-	 htEB+uslSRnpbNWvN//HFjN7AyG4NbtQtgUAR5rGmXSiXGHC89STlACMQQW9BdBTjD
-	 eoyvlkR5FmpwUVF9dq5Fpwb1hs5dyfbyTo23+RlF6+2FlAGyb3E8RJHhDej8EsucF9
-	 0VF1f2+fYuh0/tAk3+VtocRAVvG9cTdeLa4yWGdbY71DpEi1w9TVTQoXUo6SI9EYJk
-	 22nqltABbRh5r4k1uQhqU4yQ+RhKOK88AVgssP7i3/OHJ3UyTfyOw4Xrx/qE5Bwz9d
-	 FHvtFiZ+vpQhw==
-Date: Sun, 7 Apr 2024 11:59:25 +0100
-From: Conor Dooley <conor@kernel.org>
-To: Rob Herring <robh@kernel.org>
-Cc: Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Masahiro Yamada <masahiroy@kernel.org>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nicolas Schier <nicolas@fjasle.eu>,
-	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-	Marijn Suijten <marijn.suijten@somainline.org>,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-kbuild@vger.kernel.org
-Subject: Re: [PATCH v2 3/3] dt-bindings: kbuild: Add separate
- target/dependency for processed-schema.json
-Message-ID: <20240407-other-widow-399ec7ca8c8f@spud>
-References: <20240405-dt-kbuild-rework-v2-0-3a035caee357@kernel.org>
- <20240405-dt-kbuild-rework-v2-3-3a035caee357@kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ecy07tw7"
+Received: by mail-qk1-f179.google.com with SMTP id af79cd13be357-78d515ae606so119548585a.0;
+        Sun, 07 Apr 2024 04:03:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1712487786; x=1713092586; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=5nwRbexcYOPp30ekgwuJ6VgzDw5dRFusyO6fanHsflY=;
+        b=ecy07tw7AVEF0mjmcrakqx7/p1J6Gsg/zt8FW/T6A2nYxMvqDzldZgF3eyQ089KZRr
+         WDdHI+DZrtyUej6HX6bF2hykZ7/dPaokjx1Ilhj/cBJuAgP3ejPiqG/JOy4sh1YSspUw
+         GvB8rlYF3CJQ+DpcNd0BCcLVzOqwuzeBfSfHmSLFqVckaSKQ5+9EbD3AzsvW532CHszV
+         lvJP3AVqGXvbcstv3XAZDbnDkriPJRsi2ysmDBztAPHuMF4KI9efTaTG2ApDX05YXw0f
+         wX3Xv1LCOtGe0IxjFbmxg6OTamQmmeUR9jo/PhdeMxlklL3ylv+zZF0YI3JNHgEhNcJY
+         EkuQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712487786; x=1713092586;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=5nwRbexcYOPp30ekgwuJ6VgzDw5dRFusyO6fanHsflY=;
+        b=hwxRJ4K0LjBPzRqX+HhlJcUSjcGlSA/iRwIl4jcRh2+WyWQk+FehPRRVLSpXiHaQf7
+         QwxOEpzLFOGgYDupEyQA17kfc9CedO9S3krNcA7S15W8LRlRatdrYdpVDPh16MJwrbww
+         qC009b3MiU7RMpQ6433pizbfpSPKGCu4qicB5uAdfdBImRlJB1vc3GxL2MokhLW35MR0
+         Oq4tvfYB3RkNSkrDAPcKCK1nL8AZGxMlKxlDKtlSuIigDto3Dy8Q4/nPK6uUUr74KCAq
+         7fM2Wd4rkBZvwxQ42EvrcVMkfJi2CMOKKHb7eWCrQbvHPY6TEYv2C05+Y6QCMMXKc5/q
+         ZGaA==
+X-Forwarded-Encrypted: i=1; AJvYcCUhtZAonl1vbanfv12r4fLVtN4MGgPcDQaiysU9Eug8DMG6geaqUK+W4VBH6QdFABj6XHHOBU6euK4NE31JUzyU7ZtEj/Idql45OuYovRrDzFUCI0fcAYly+Im5qZjl7J89Qj1jetwGDMkR4A==
+X-Gm-Message-State: AOJu0Yz578Arp00faq8znyd3yZtenocKTI6ZA7c7VwM+HZG3iWttMbFG
+	rY4TLdun9b7h8Z9jEwzn6wpZlAR4kG37FaPtlOUSIh7hpSXVw587p1T09Nj2I1OhsQYR0MnGEZl
+	E7p3ZWtPGQXdGsn/jfxWTtzuhIizcItIwFkc=
+X-Google-Smtp-Source: AGHT+IGEl/fhvMWuigWpp5T/hRSMXCz9SaI1xF8O7il2iyC3X2Iozqdj/gTeeQyJyQRAJOtvG+/c6gyQT0Y9RCgag6I=
+X-Received: by 2002:a05:6214:b13:b0:699:1b89:178c with SMTP id
+ u19-20020a0562140b1300b006991b89178cmr12331825qvj.2.1712487786390; Sun, 07
+ Apr 2024 04:03:06 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="LrPBrqQ2Jt21+wkW"
-Content-Disposition: inline
-In-Reply-To: <20240405-dt-kbuild-rework-v2-3-3a035caee357@kernel.org>
-
-
---LrPBrqQ2Jt21+wkW
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+References: <CAOQ4uxgJ5URyDG26Ny5Cmg7DceOeG-exNt9N346pq9U0TmcYtg@mail.gmail.com>
+ <000000000000107743061568319c@google.com> <20240406071130.GB538574@ZenIV>
+ <CAOQ4uxhpXGuDy4VRE4Xj9iJpR0MUh9tKYF3TegT8NQJwanHQ8g@mail.gmail.com> <20240407005056.GF538574@ZenIV>
+In-Reply-To: <20240407005056.GF538574@ZenIV>
+From: Amir Goldstein <amir73il@gmail.com>
+Date: Sun, 7 Apr 2024 14:02:54 +0300
+Message-ID: <CAOQ4uxgkTRghep_-VFpHPWW1ua+NWZ2YuFZVJHCAa0euTHgkJg@mail.gmail.com>
+Subject: Re: [syzbot] [kernfs?] possible deadlock in kernfs_fop_llseek
+To: Al Viro <viro@zeniv.linux.org.uk>
+Cc: syzbot <syzbot+9a5b0ced8b1bfb238b56@syzkaller.appspotmail.com>, 
+	brauner@kernel.org, gregkh@linuxfoundation.org, hch@lst.de, jack@suse.cz, 
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	miklos@szeredi.hu, syzkaller-bugs@googlegroups.com, tj@kernel.org, 
+	valesini@yandex-team.ru, Hillf Danton <hdanton@sina.com>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Apr 05, 2024 at 05:56:03PM -0500, Rob Herring wrote:
-> Running dtbs_check and dt_compatible_check targets really only depend
-> on processed-schema.json, but the dependency is 'dt_binding_check'. That
-> was sort worked around with the CHECK_DT_BINDING variable in order to
-> skip some of the work that 'dt_binding_check' does. It still runs the
-> full checks of the schemas which is not necessary and adds 10s of
-> seconds to the build time. That's significant when checking only a few
-> DTBs and with recent changes that have improved the validation time by
-> 6-7x.
->=20
-> Add a new target, dt_binding_schema, which just builds
-> processed-schema.json and can be used as the dependency for other
-> targets. The scripts_dtc dependency isn't needed either as the examples
-> aren't built for it.
->=20
-> Signed-off-by: Rob Herring <robh@kernel.org>
+On Sun, Apr 7, 2024 at 3:51=E2=80=AFAM Al Viro <viro@zeniv.linux.org.uk> wr=
+ote:
+>
+> On Sat, Apr 06, 2024 at 11:57:11AM +0300, Amir Goldstein wrote:
+> > On Sat, Apr 6, 2024 at 10:11=E2=80=AFAM Al Viro <viro@zeniv.linux.org.u=
+k> wrote:
+> > >
+> > > On Sat, Apr 06, 2024 at 12:05:04AM -0700, syzbot wrote:
+> > >
+> > > > commit:         3398bf34 kernfs: annotate different lockdep class f=
+or ..
+> > > > git tree:       https://github.com/amir73il/linux/ vfs-fixes
+> > > > kernel config:  https://syzkaller.appspot.com/x/.config?x=3Dc5cda11=
+2a8438056
+> > > > dashboard link: https://syzkaller.appspot.com/bug?extid=3D9a5b0ced8=
+b1bfb238b56
+> > > > compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils f=
+or Debian) 2.40
+> > > >
+> > > > Note: no patches were applied.
+> > >
+> >
+> > Looks like it fixes the problem:
+> > https://lore.kernel.org/lkml/000000000000a386f2061562ba6a@google.com/
+> >
+> > Al,
+> >
+> > Are you ok with going with your solution?
+> > Do you want to pick it up through your tree?
+> > Or shall I post it and ask Christian or Greg to pick it up?
+>
+> Umm...  I can grab it into #fixes.
 
-Yoo, that's pretty nice. 20 seconds cut off my dtbs_check build time on
-riscv with this change :) As you point out, when you're not checking all
-that many it is pretty significant - 48 seconds before and 28 seconds now
-Tested-by: Conor Dooley <conor.dooley@microchip.com>
+Cool.
+
+Also:
+
+#syz dup: possible deadlock in seq_read_iter (3)
+
+https://lore.kernel.org/linux-fsdevel/CAJfpegumD0gDXpZwy53pPu54ifOfW-tTBLni=
+LHep3sW2Z96MjQ@mail.gmail.com/
 
 Thanks,
-Conor.
-
---LrPBrqQ2Jt21+wkW
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZhJ8jQAKCRB4tDGHoIJi
-0jngAP9fiiu62rotgAy0KbbE5nvYcdXtnLZ30d8vRNvq0TJFegEAlR0OmWLZUSHx
-bsiXSS4PqQRiXrr6DDj0IaPJS2n/qw4=
-=p86i
------END PGP SIGNATURE-----
-
---LrPBrqQ2Jt21+wkW--
+Amir.
