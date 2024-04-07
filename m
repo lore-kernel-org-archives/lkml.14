@@ -1,121 +1,119 @@
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+Received: from mail-40134.protonmail.ch (mail-40134.protonmail.ch [185.70.40.134])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC7781CAA4;
-	Sun,  7 Apr 2024 09:49:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9B96125D6
+	for <linux-kernel@vger.kernel.org>; Sun,  7 Apr 2024 09:54:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.40.134
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712483366; cv=none; b=EhtlHbOgMQNyZTiEVomKhj52pvMxnMzx7F76+9w9HF8eQhvp0Mit3khiuCFWYmTZ35F3aSj/hSHSpChhDUIGL+F3y251tl9VyOOWsCZTqiq77H60DI9t/c/65FEQUHB55BVCBQTiPiJA/NpW2sR9N4xHlgWqjEvvOdUY1wN2k0M=
+	t=1712483669; cv=none; b=UjN+l3XfVqzdsUIZmEvAYQ8luUfOpPVsJ19YEUY7CWVlr4jQyzVsUzSevI80znrtUreEdTpTD/BoNyjBpbBeWnY4yoEKLgdDn5ZrB5D8TNnh4yhmPk4rGWHtkT8SCxz0BUukh1xxKwNET/16kTMjNtTKBGc0do7g101JkydbRIA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712483366; c=relaxed/simple;
-	bh=ZmoHroEEWQNn9yJ7NQoUQMxBXY/9Ta5EgVKE6Owbfh8=;
-	h=CC:Subject:To:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=WmsQibuW6ttyfXF1tui9DM3rhXtKXDWDW98cWGrrpGrD1S9BY8CGAz8dJxn8zOMm6b3WNyn8IrJtW73XWHmbAZ9H3PK4mzSY8ORShYaCPyTs5JNe+FpSXTsykfSGdG6PE5OYSIpw6n+x04Y/xPdh3q6Tf/4BErX5lNxh/7KtQbo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.174])
-	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4VC6qD23fdzbfQB;
-	Sun,  7 Apr 2024 17:48:24 +0800 (CST)
-Received: from kwepemd200014.china.huawei.com (unknown [7.221.188.8])
-	by mail.maildlp.com (Postfix) with ESMTPS id 13E3B140156;
-	Sun,  7 Apr 2024 17:49:21 +0800 (CST)
-Received: from [10.67.121.177] (10.67.121.177) by
- kwepemd200014.china.huawei.com (7.221.188.8) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.28; Sun, 7 Apr 2024 17:49:20 +0800
-CC: <yangyicong@hisilicon.com>, Jiri Slaby <jirislaby@kernel.org>, Tony
- Lindgren <tony@atomide.com>, kernel test robot <oliver.sang@intel.com>
-Subject: Re: [PATCH v1 1/1] serial: core: Clearing the circular buffer before
- NULLifying it
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Greg Kroah-Hartman
-	<gregkh@linuxfoundation.org>, <linux-kernel@vger.kernel.org>,
-	<linux-serial@vger.kernel.org>
-References: <20240404150034.41648-1-andriy.shevchenko@linux.intel.com>
-From: Yicong Yang <yangyicong@huawei.com>
-Message-ID: <b3fd1077-b49e-d99b-9cd1-c41bd244f290@huawei.com>
-Date: Sun, 7 Apr 2024 17:49:19 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.5.1
+	s=arc-20240116; t=1712483669; c=relaxed/simple;
+	bh=i8Pf56totbaL2ToXcQKolVxiIZ/TpmMBAZ0t/LCkK3w=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=rhonBt7I33DAy3G2CIYqRWZqLmalo0Efb8Fbms11oUw0ShCQrxIQbkl0PX0wGyu2dKkyo3DzVd9zlzAnFoQZSd6tRSSUQ/LcjARqTboBS3+9DgQpZOzdSLJBiFa3ObWu53aaRNER8tJygYStqC5TU5DyeDShvQsOwv2VOijLybA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me; spf=pass smtp.mailfrom=proton.me; dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b=loS8/9k4; arc=none smtp.client-ip=185.70.40.134
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b="loS8/9k4"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
+	s=protonmail; t=1712483664; x=1712742864;
+	bh=FpPOsxrlm7kGglog0YaejIMtnmrT68wmHt8AAfV1foA=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
+	 Message-ID:BIMI-Selector;
+	b=loS8/9k4aV1FTA3BHgGAukGuWqqeBVljBwDIWzkAUljm/0zq6hSqJ8lBwn2P5rfB7
+	 7hgv5H2yThaIDK4kSj+MbPpjK7d++cHJcljgs/mFixr8gzLtHjkP/88V2kHVawH6js
+	 7P3nOU6SklxAWyFecLxPypNogf82q7zCbK7g2raSQfhM4Ov7Py6moiNoNxkxRwWR2e
+	 MmkVjKt1ESsQQMsKZEFCIQwNNeUCgVQLjaUEB7KskCCP5DUYbizydYKDirxFuoNagl
+	 v4xhZwOUDNXemN2PNDfDaWK9UrfSplCR2bBZk8bxfFt5paquQALAo39ev4FS7oslvb
+	 tv2kLnKfdTylg==
+Date: Sun, 07 Apr 2024 09:54:19 +0000
+To: Viresh Kumar <viresh.kumar@linaro.org>, "Rafael J. Wysocki" <rafael@kernel.org>, Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>, Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, Wedson Almeida Filho <wedsonaf@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, Andreas Hindborg <a.hindborg@samsung.com>, Alice Ryhl <aliceryhl@google.com>
+From: Benno Lossin <benno.lossin@proton.me>
+Cc: linux-pm@vger.kernel.org, Vincent Guittot <vincent.guittot@linaro.org>, Stephen Boyd <sboyd@kernel.org>, Nishanth Menon <nm@ti.com>, rust-for-linux@vger.kernel.org, Manos Pitsidianakis <manos.pitsidianakis@linaro.org>, Erik Schilling <erik.schilling@linaro.org>, =?utf-8?Q?Alex_Benn=C3=A9e?= <alex.bennee@linaro.org>, Joakim Bech <joakim.bech@linaro.org>, linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH 1/3] rust: Add bindings for OPP framework
+Message-ID: <ff6c7d5e-d6e9-4331-b8cc-eab139160e59@proton.me>
+In-Reply-To: <06bb914eae00671a69b393bf86bb01ddec86c16f.1712314032.git.viresh.kumar@linaro.org>
+References: <cover.1712314032.git.viresh.kumar@linaro.org> <06bb914eae00671a69b393bf86bb01ddec86c16f.1712314032.git.viresh.kumar@linaro.org>
+Feedback-ID: 71780778:user:proton
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20240404150034.41648-1-andriy.shevchenko@linux.intel.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
- kwepemd200014.china.huawei.com (7.221.188.8)
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-Hi Andy,
+Hi,
 
-On 2024/4/4 22:59, Andy Shevchenko wrote:
-> The circular buffer is NULLified in uart_tty_port_shutdown()
-> under the spin lock. However, the PM or other timer based callbacks
-> may still trigger after this event without knowning that buffer pointer
-> is not valid. Since the serial code is a bit inconsistent in checking
-> the buffer state (some rely on the head-tail positions, some on the
-> buffer pointer), it's better to have both aligned, i.e. buffer pointer
-> to be NULL and head-tail possitions to be the same, meaning it's empty.
-> This will prevent asynchronous calls to dereference NULL pointer as
-> reported recently in 8250 case:
-> 
->   BUG: kernel NULL pointer dereference, address: 00000cf5
->   Workqueue: pm pm_runtime_work
->   EIP: serial8250_tx_chars (drivers/tty/serial/8250/8250_port.c:1809)
->   ...
->   ? serial8250_tx_chars (drivers/tty/serial/8250/8250_port.c:1809)
->   __start_tx (drivers/tty/serial/8250/8250_port.c:1551)
->   serial8250_start_tx (drivers/tty/serial/8250/8250_port.c:1654)
->   serial_port_runtime_suspend (include/linux/serial_core.h:667 drivers/tty/serial/serial_port.c:63)
->   __rpm_callback (drivers/base/power/runtime.c:393)
->   ? serial_port_remove (drivers/tty/serial/serial_port.c:50)
->   rpm_suspend (drivers/base/power/runtime.c:447)
-> 
-> The proposed change will prevent ->start_tx() to be called during
-> suspend on shut down port.
-> 
+I took a quick look and left some comments from the Rust side of view.
 
-Just saw the issue and thanks for your timely fix. I didn't got a board with 8250 and sorry for
-didn't found this issue.
+On 05.04.24 13:09, Viresh Kumar wrote:
+> +/// Equivalent to `struct dev_pm_opp_config` in the C Code.
+> +pub struct Config<T: ConfigOps> {
+> +    token: Option<i32>,
+> +    clk_names: Option<Pin<Vec<CString>>>,
 
-FYI, I checked device_shutdown() and seems it called pm_runtime_barrier() for waiting all
-the scheduled RPM callbacks finished and keep the device in resume state. So ideally there
-shouldn't be any pending requests later since we handled them before shutdown?
+Why are you using `Pin<Vec<_>>`? The vector may reallocate the backing
+storage at any point in time.
 
-There's someone encountered the same issue in shutdown() due to runtime pm and fixed it in
-	af8db1508f2c ("PM / driver core: disable device's runtime PM during shutdown")
-patch above seems to still have some problem and later fixed by:
-	fe6b91f47080 ("PM / Driver core: leave runtime PM enabled during system shutdown")
+> +    prop_name: Option<Pin<CString>>,
+> +    regulator_names: Option<Pin<Vec<CString>>>,
+> +    genpd_names: Option<Pin<Vec<CString>>>,
+> +    supported_hw: Option<Pin<Vec<u32>>>,
+> +    required_devs: Option<Pin<Vec<Device>>>,
+> +    _data: PhantomData<T>,
+> +}
 
-But seems the handling in the driver core doesn't cover the case here..
+[...]
 
-> Fixes: 43066e32227e ("serial: port: Don't suspend if the port is still busy")
-> Reported-by: kernel test robot <oliver.sang@intel.com>
-> Closes: https://lore.kernel.org/oe-lkp/202404031607.2e92eebe-lkp@intel.com
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> ---
-> 
-> I have got into the very similar issue while working on max3100 driver.
-> I haven't checked the 8250 case, but for mine the culprit is the same
-> and this patch fixes it. Hence I assume it will fix the 8250 case as
-> well.
-> 
->  drivers/tty/serial/serial_core.c | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/drivers/tty/serial/serial_core.c b/drivers/tty/serial/serial_core.c
-> index a005fc06a077..ba3a674a8bbf 100644
-> --- a/drivers/tty/serial/serial_core.c
-> +++ b/drivers/tty/serial/serial_core.c
-> @@ -1788,6 +1788,7 @@ static void uart_tty_port_shutdown(struct tty_port *port)
->  	 * Free the transmit buffer.
->  	 */
->  	uart_port_lock_irq(uport);
-> +	uart_circ_clear(&state->xmit);
->  	buf = state->xmit.buf;
->  	state->xmit.buf = NULL;
->  	uart_port_unlock_irq(uport);
-> 
+> +    /// Sets the configuration with the OPP core.
+> +    pub fn set(&mut self, dev: &Device) -> Result<()> {
+> +        // Already configured.
+> +        if self.token.is_some() {
+
+Why does the config hold onto this token? Would it make sense to consume
+the config and return a `Handle` or `Token` abstraction? Then you don't
+need to check if the config has been "used" before.
+
+> +            return Err(EBUSY);
+> +        }
+> +
+> +        let (_clk_list, clk_names) =3D match &self.clk_names {
+> +            Some(x) =3D> {
+> +                let list =3D to_c_str_array(x)?;
+> +                let ptr =3D list.as_ptr();
+> +                (Some(list), ptr)
+> +            }
+> +            None =3D> (None, ptr::null()),
+> +        };
+
+[...]
+
+> +/// Operating performance point (OPP).
+> +///
+> +/// # Invariants
+> +///
+> +/// `ptr` is valid, non-null, and has a non-zero reference count. One of=
+ the references is owned by
+> +/// `self`, and will be decremented when `self` is dropped.
+> +#[repr(transparent)]
+> +pub struct OPP(*mut bindings::dev_pm_opp);
+
+I think you should use the `ARef` pattern instead:
+
+     #[repr(transparent)]
+     pub struct OPP(Opaque<bindings::dev_pm_opp>);
+
+     unsafe impl AlwaysRefCounted for OPP {
+         // ...
+     }
+
+Then you can use `ARef<OPP>` everywhere you use `OPP` currently.
+
+--=20
+Cheers,
+Benno
+
