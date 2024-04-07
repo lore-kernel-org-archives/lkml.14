@@ -1,37 +1,37 @@
 Received: from szxga05-in.huawei.com (szxga05-in.huawei.com [45.249.212.191])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A91E240BEB;
-	Sun,  7 Apr 2024 13:11:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86D9538F9B;
+	Sun,  7 Apr 2024 13:11:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.191
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712495482; cv=none; b=u6S327AucpM27bvW0PtBaiZqSW3RTnZq3ykssV3H1a4NUjdIOMu74XKZkJewi3xqpsY2pkMz7/SPaRVxyY3NJXWY7SKs0RYyP/pl36hT2OrI7D7ZcTX0jAoo4nnYk4e3FkCr8fm0hAEc/p+zWlKAQaQNlNJDDku4t1ldlfqTSeM=
+	t=1712495491; cv=none; b=AaDRiXsNWJBl58pVnnPoid6A2rMwolZ4wCk76KrWB8//4PadR2ME+OMTaWx4nC52amXx80btdcZqO0aYYH52wCvFtvB7D1Vu9jmFf2tOhPsoObx9Jb0p4UiMwracGbDFCYIyDFWgFB+os1dnA6+cicBQS3EFkO42KchNs+Nxg78=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712495482; c=relaxed/simple;
-	bh=pzP6X31Z4/s7y8HXW1cwy6Xr+yD0+ZY3i/X90DuBceg=;
+	s=arc-20240116; t=1712495491; c=relaxed/simple;
+	bh=Bp7IreIK7SyJ9cJt8kOTpaanWwtNLojIjlShgciOf/4=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=mtJRkGijbJ1ol2v1F8ZVJIucdrF/UB0ywJ+QFnPJKvXpwWb4ZeqqQ0aeYQqheHcleR0DWnCZRMtOTFKQJ/CLk1SipbEofcxYZAAWonQYEvW6e4frY/z7hfEVw9tl9u7bTh5PAZ471RyXzE8BHAYh8hpsDhVMTTYf9gX6wQCbp8k=
+	 MIME-Version:Content-Type; b=UWWldwP1sI36SUpLJ5ndVgDFkzu1xrAocPiMkN7H7zpYRpD+iO6T6yv2aE6smDfWuDMYG8N4rvg3bVJwYxoO+6pUyIwWd+c4za7pmkiF7HdQvPneN+xdzk7KVjeY1teQ5ROiPQRpQvgwNDLSC2COMuv58aCHeug38dcWY9LFH34=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.191
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.163])
-	by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4VCCJW4f0Xz1GGCR;
-	Sun,  7 Apr 2024 21:10:35 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.19.163.17])
+	by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4VCCJh3KRmz1GG52;
+	Sun,  7 Apr 2024 21:10:44 +0800 (CST)
 Received: from dggpemm500005.china.huawei.com (unknown [7.185.36.74])
-	by mail.maildlp.com (Postfix) with ESMTPS id 9352D18005F;
-	Sun,  7 Apr 2024 21:11:18 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id 661961A0172;
+	Sun,  7 Apr 2024 21:11:27 +0800 (CST)
 Received: from localhost.localdomain (10.69.192.56) by
  dggpemm500005.china.huawei.com (7.185.36.74) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Sun, 7 Apr 2024 21:11:18 +0800
+ 15.1.2507.35; Sun, 7 Apr 2024 21:11:27 +0800
 From: Yunsheng Lin <linyunsheng@huawei.com>
 To: <davem@davemloft.net>, <kuba@kernel.org>, <pabeni@redhat.com>
 CC: <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>, Yunsheng Lin
 	<linyunsheng@huawei.com>, Andrew Morton <akpm@linux-foundation.org>,
 	<linux-mm@kvack.org>
-Subject: [PATCH net-next v1 09/12] mm: page_frag: introduce prepare/commit API for page_frag
-Date: Sun, 7 Apr 2024 21:08:46 +0800
-Message-ID: <20240407130850.19625-10-linyunsheng@huawei.com>
+Subject: [PATCH net-next v1 11/12] mm: page_frag: add a test module for page_frag
+Date: Sun, 7 Apr 2024 21:08:48 +0800
+Message-ID: <20240407130850.19625-12-linyunsheng@huawei.com>
 X-Mailer: git-send-email 2.33.0
 In-Reply-To: <20240407130850.19625-1-linyunsheng@huawei.com>
 References: <20240407130850.19625-1-linyunsheng@huawei.com>
@@ -46,232 +46,430 @@ Content-Type: text/plain
 X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
  dggpemm500005.china.huawei.com (7.185.36.74)
 
-There are many use cases that need minimum memory in order
-for forward progressing, but can do better if there is more
-memory available.
+Basing on the lib/objpool.c, change it to something like a
+ptrpool, so that we can utilize that to test the correctness
+and performance of the page_frag.
 
-Currently skb_page_frag_refill() API is used to solve the
-above usecases, as mentioned in [1], its implementation is
-similar to the one in mm subsystem.
+The testing is done by ensuring that the fragments allocated
+from a frag_frag_cache instance is pushed into a ptrpool
+instance in a kthread binded to the first cpu, and a kthread
+binded to the current node will pop the fragmemt from the
+ptrpool and call page_frag_alloc_va() to free the fragmemt.
 
-To unify those two page_frag implementations, introduce a
-prepare API to ensure minimum memory is satisfied and return
-how much the actual memory is available to the caller.
-
-And the caller can decide how much memory to use by calling
-commit API, or not calling the commit API if deciding to not
-use any memory.
-
-Note it seems hard to decide which header files for caling
-virt_to_page() in the inline helper, so macro is used instead
-of inline helper to avoid dealing with that.
-
-1. https://lore.kernel.org/all/20240228093013.8263-1-linyunsheng@huawei.com/
+We may refactor out the common part between objpool and ptrpool
+if this ptrpool thing turns out to be helpful for other place.
 
 Signed-off-by: Yunsheng Lin <linyunsheng@huawei.com>
 ---
- include/linux/page_frag_cache.h | 141 +++++++++++++++++++++++++++++++-
- mm/page_frag_cache.c            |  13 ++-
- 2 files changed, 144 insertions(+), 10 deletions(-)
+ mm/Kconfig.debug    |   8 +
+ mm/Makefile         |   1 +
+ mm/page_frag_test.c | 366 ++++++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 375 insertions(+)
+ create mode 100644 mm/page_frag_test.c
 
-diff --git a/include/linux/page_frag_cache.h b/include/linux/page_frag_cache.h
-index a97a1ac017d6..28185969cd2c 100644
---- a/include/linux/page_frag_cache.h
-+++ b/include/linux/page_frag_cache.h
-@@ -43,8 +43,25 @@ static inline bool page_frag_cache_is_pfmemalloc(struct page_frag_cache *nc)
+diff --git a/mm/Kconfig.debug b/mm/Kconfig.debug
+index afc72fde0f03..1ebcd45f47d4 100644
+--- a/mm/Kconfig.debug
++++ b/mm/Kconfig.debug
+@@ -142,6 +142,14 @@ config DEBUG_PAGE_REF
+ 	  kernel code.  However the runtime performance overhead is virtually
+ 	  nil until the tracepoints are actually enabled.
  
- void page_frag_cache_drain(struct page_frag_cache *nc);
- void __page_frag_cache_drain(struct page *page, unsigned int count);
--void *page_frag_alloc_va(struct page_frag_cache *nc, unsigned int fragsz,
--			 gfp_t gfp_mask);
-+void *page_frag_cache_refill(struct page_frag_cache *nc, unsigned int fragsz,
-+			     gfp_t gfp_mask);
++config DEBUG_PAGE_FRAG_TEST
++	tristate "Test module for page_frag"
++	default n
++	depends on m && DEBUG_KERNEL
++	help
++	  This builds the "page_frag_test" module that is used to test the
++	  correctness and performance of page_frag's implementation.
 +
-+static inline void *page_frag_alloc_va(struct page_frag_cache *nc,
-+				       unsigned int fragsz, gfp_t gfp_mask)
+ config DEBUG_RODATA_TEST
+     bool "Testcase for the marking rodata read-only"
+     depends on STRICT_KERNEL_RWX
+diff --git a/mm/Makefile b/mm/Makefile
+index 146c481c006f..8b62f5de48a7 100644
+--- a/mm/Makefile
++++ b/mm/Makefile
+@@ -102,6 +102,7 @@ obj-$(CONFIG_MEMORY_FAILURE) += memory-failure.o
+ obj-$(CONFIG_HWPOISON_INJECT) += hwpoison-inject.o
+ obj-$(CONFIG_DEBUG_KMEMLEAK) += kmemleak.o
+ obj-$(CONFIG_DEBUG_RODATA_TEST) += rodata_test.o
++obj-$(CONFIG_DEBUG_PAGE_FRAG_TEST) += page_frag_test.o
+ obj-$(CONFIG_DEBUG_VM_PGTABLE) += debug_vm_pgtable.o
+ obj-$(CONFIG_PAGE_OWNER) += page_owner.o
+ obj-$(CONFIG_MEMORY_ISOLATION) += page_isolation.o
+diff --git a/mm/page_frag_test.c b/mm/page_frag_test.c
+new file mode 100644
+index 000000000000..e311c2e7ff49
+--- /dev/null
++++ b/mm/page_frag_test.c
+@@ -0,0 +1,366 @@
++// SPDX-License-Identifier: GPL-2.0
++
++/*
++ * Test module for page_frag cache
++ *
++ * Copyright: linyunsheng@huawei.com
++ */
++
++#include <linux/module.h>
++#include <linux/page_frag_cache.h>
++#include <linux/version.h>
++#include <linux/slab.h>
++#include <linux/vmalloc.h>
++#include <linux/atomic.h>
++#include <linux/irqflags.h>
++#include <linux/cpumask.h>
++#include <linux/log2.h>
++#include <linux/completion.h>
++#include <linux/kthread.h>
++
++#define OBJPOOL_NR_OBJECT_MAX	BIT(24)
++
++struct objpool_slot {
++	u32 head;
++	u32 tail;
++	u32 last;
++	u32 mask;
++	void *entries[];
++} __packed;
++
++struct objpool_head {
++	int nr_cpus;
++	int capacity;
++	struct objpool_slot **cpu_slots;
++};
++
++/* initialize percpu objpool_slot */
++static void objpool_init_percpu_slot(struct objpool_head *pool,
++				     struct objpool_slot *slot)
 +{
-+	unsigned int offset;
-+	void *va;
-+
-+	va = page_frag_cache_refill(nc, fragsz, gfp_mask);
-+	if (unlikely(!va))
-+		return NULL;
-+
-+	offset = nc->offset;
-+	nc->pagecnt_bias--;
-+	nc->offset = offset + fragsz;
-+
-+	return va + offset;
-+}
- 
- static inline void *__page_frag_alloc_va_align(struct page_frag_cache *nc,
- 					       unsigned int fragsz,
-@@ -69,6 +86,126 @@ static inline void *page_frag_alloc_va_align(struct page_frag_cache *nc,
- 	return __page_frag_alloc_va_align(nc, fragsz, gfp_mask, align);
- }
- 
-+static inline void *page_frag_alloc_va_prepare(struct page_frag_cache *nc,
-+					       unsigned int *offset,
-+					       unsigned int *size,
-+					       gfp_t gfp_mask)
-+{
-+	void *va;
-+
-+	va = page_frag_cache_refill(nc, *size, gfp_mask);
-+	if (unlikely(!va))
-+		return NULL;
-+
-+	*offset = nc->offset;
-+
-+#if (PAGE_SIZE < PAGE_FRAG_CACHE_MAX_SIZE)
-+	*size = nc->size_mask - *offset + 1;
-+#else
-+	*size = PAGE_SIZE - *offset;
-+#endif
-+
-+	return va + *offset;
-+}
-+
-+static inline void *page_frag_alloc_va_prepare_align(struct page_frag_cache *nc,
-+						     unsigned int *offset,
-+						     unsigned int *size,
-+						     unsigned int align,
-+						     gfp_t gfp_mask)
-+{
-+	WARN_ON_ONCE(!is_power_of_2(align) || align >= PAGE_SIZE ||
-+		     *size < sizeof(unsigned int));
-+
-+	*offset = nc->offset;
-+	nc->offset = ALIGN(*offset, align);
-+	return page_frag_alloc_va_prepare(nc, offset, size, gfp_mask);
-+}
-+
-+static inline void *__page_frag_alloc_pg_prepare(struct page_frag_cache *nc,
-+						 unsigned int *offset,
-+						 unsigned int *size,
-+						 gfp_t gfp_mask)
-+{
-+	void *va;
-+
-+	va = page_frag_cache_refill(nc, *size, gfp_mask);
-+	if (unlikely(!va))
-+		return NULL;
-+
-+	*offset = nc->offset;
-+
-+#if (PAGE_SIZE < PAGE_FRAG_CACHE_MAX_SIZE)
-+	*size = nc->size_mask - *offset + 1;
-+#else
-+	*size = PAGE_SIZE - *offset;
-+#endif
-+
-+	return va;
++	/* initialize elements of percpu objpool_slot */
++	slot->mask = pool->capacity - 1;
 +}
 +
-+#define page_frag_alloc_pg_prepare(nc, offset, size, gfp)		\
-+({									\
-+	struct page *__page = NULL;					\
-+	void *__va;							\
-+									\
-+	__va = __page_frag_alloc_pg_prepare(nc, offset, size, gfp);	\
-+	if (likely(__va))						\
-+		__page = virt_to_page(__va);				\
-+									\
-+	__page;								\
-+})
-+
-+static inline void *__page_frag_alloc_prepare(struct page_frag_cache *nc,
-+					      unsigned int *offset,
-+					      unsigned int *size,
-+					      void **va, gfp_t gfp_mask)
++/* allocate and initialize percpu slots */
++static int objpool_init_percpu_slots(struct objpool_head *pool,
++				     int nr_objs, gfp_t gfp)
 +{
-+	void *nc_va;
++	int i;
 +
-+	nc_va = page_frag_cache_refill(nc, *size, gfp_mask);
-+	if (unlikely(!nc_va))
-+		return NULL;
++	for (i = 0; i < pool->nr_cpus; i++) {
++		struct objpool_slot *slot;
++		int size;
 +
-+	*offset = nc->offset;
-+	*va = nc_va + *offset;
++		/* skip the cpu node which could never be present */
++		if (!cpu_possible(i))
++			continue;
 +
-+#if (PAGE_SIZE < PAGE_FRAG_CACHE_MAX_SIZE)
-+	*size = nc->size_mask - *offset + 1;
-+#else
-+	*size = PAGE_SIZE - *offset;
-+#endif
++		size = struct_size(slot, entries, pool->capacity);
 +
-+	return nc_va;
++		/*
++		 * here we allocate percpu-slot & objs together in a single
++		 * allocation to make it more compact, taking advantage of
++		 * warm caches and TLB hits. in default vmalloc is used to
++		 * reduce the pressure of kernel slab system. as we know,
++		 * mimimal size of vmalloc is one page since vmalloc would
++		 * always align the requested size to page size
++		 */
++		if (gfp & GFP_ATOMIC)
++			slot = kmalloc_node(size, gfp, cpu_to_node(i));
++		else
++			slot = __vmalloc_node(size, sizeof(void *), gfp,
++					      cpu_to_node(i),
++					      __builtin_return_address(0));
++		if (!slot)
++			return -ENOMEM;
++
++		memset(slot, 0, size);
++		pool->cpu_slots[i] = slot;
++
++		objpool_init_percpu_slot(pool, slot);
++	}
++
++	return 0;
 +}
 +
-+#define page_frag_alloc_prepare(nc, offset, size, va, gfp)		\
-+({									\
-+	struct page *__page = NULL;					\
-+	void *__va;							\
-+									\
-+	__va = __page_frag_alloc_prepare(nc, offset, size, va, gfp);	\
-+	if (likely(__va))						\
-+		__page = virt_to_page(__va);				\
-+									\
-+	__page;								\
-+})
-+
-+static inline void page_frag_alloc_commit(struct page_frag_cache *nc,
-+					  unsigned int offset,
-+					  unsigned int size)
++/* cleanup all percpu slots of the object pool */
++static void objpool_fini_percpu_slots(struct objpool_head *pool)
 +{
-+	nc->pagecnt_bias--;
-+	nc->offset = offset + size;
++	int i;
++
++	if (!pool->cpu_slots)
++		return;
++
++	for (i = 0; i < pool->nr_cpus; i++)
++		kvfree(pool->cpu_slots[i]);
++	kfree(pool->cpu_slots);
 +}
 +
-+static inline void page_frag_alloc_commit_noref(struct page_frag_cache *nc,
-+						unsigned int offset,
-+						unsigned int size)
++/* initialize object pool and pre-allocate objects */
++static int objpool_init(struct objpool_head *pool, int nr_objs, gfp_t gfp)
 +{
-+	nc->offset = offset + size;
++	int rc, capacity, slot_size;
++
++	/* check input parameters */
++	if (nr_objs <= 0 || nr_objs > OBJPOOL_NR_OBJECT_MAX)
++		return -EINVAL;
++
++	/* calculate capacity of percpu objpool_slot */
++	capacity = roundup_pow_of_two(nr_objs);
++	if (!capacity)
++		return -EINVAL;
++
++	gfp = gfp & ~__GFP_ZERO;
++
++	/* initialize objpool pool */
++	memset(pool, 0, sizeof(struct objpool_head));
++	pool->nr_cpus = nr_cpu_ids;
++	pool->capacity = capacity;
++	slot_size = pool->nr_cpus * sizeof(struct objpool_slot *);
++	pool->cpu_slots = kzalloc(slot_size, gfp);
++	if (!pool->cpu_slots)
++		return -ENOMEM;
++
++	/* initialize per-cpu slots */
++	rc = objpool_init_percpu_slots(pool, nr_objs, gfp);
++	if (rc)
++		objpool_fini_percpu_slots(pool);
++
++	return rc;
 +}
 +
- void page_frag_free_va(void *addr);
- 
- #endif
-diff --git a/mm/page_frag_cache.c b/mm/page_frag_cache.c
-index ae1393d0619a..cbd0ed82a596 100644
---- a/mm/page_frag_cache.c
-+++ b/mm/page_frag_cache.c
-@@ -81,8 +81,8 @@ void __page_frag_cache_drain(struct page *page, unsigned int count)
- }
- EXPORT_SYMBOL(__page_frag_cache_drain);
- 
--void *page_frag_alloc_va(struct page_frag_cache *nc, unsigned int fragsz,
--			 gfp_t gfp_mask)
-+void *page_frag_cache_refill(struct page_frag_cache *nc, unsigned int fragsz,
-+			     gfp_t gfp_mask)
- {
- 	unsigned long size_mask;
- 	unsigned int offset;
-@@ -120,7 +120,7 @@ void *page_frag_alloc_va(struct page_frag_cache *nc, unsigned int fragsz,
- 		set_page_count(page, size_mask);
- 		nc->pagecnt_bias |= size_mask;
- 
--		offset = 0;
-+		nc->offset = 0;
- 		if (unlikely(fragsz > (size_mask + 1))) {
- 			/*
- 			 * The caller is trying to allocate a fragment
-@@ -135,12 +135,9 @@ void *page_frag_alloc_va(struct page_frag_cache *nc, unsigned int fragsz,
- 		}
- 	}
- 
--	nc->pagecnt_bias--;
--	nc->offset = offset + fragsz;
--
--	return va + offset;
-+	return va;
- }
--EXPORT_SYMBOL(page_frag_alloc_va);
-+EXPORT_SYMBOL(page_frag_cache_refill);
- 
- /*
-  * Frees a page fragment allocated out of either a compound or order 0 page.
++/* adding object to slot, abort if the slot was already full */
++static int objpool_try_add_slot(void *obj, struct objpool_head *pool, int cpu)
++{
++	struct objpool_slot *slot = pool->cpu_slots[cpu];
++	u32 head, tail;
++
++	/* loading tail and head as a local snapshot, tail first */
++	tail = READ_ONCE(slot->tail);
++
++	do {
++		head = READ_ONCE(slot->head);
++		/* slot is full */
++		if (unlikely(tail - head >= pool->capacity))
++			return -ENOSPC;
++	} while (!try_cmpxchg_acquire(&slot->tail, &tail, tail + 1));
++
++	/* now the tail position is reserved for the given obj */
++	WRITE_ONCE(slot->entries[tail & slot->mask], obj);
++	/* update sequence to make this obj available for pop() */
++	smp_store_release(&slot->last, tail + 1);
++
++	return 0;
++}
++
++/* reclaim an object to object pool */
++static int objpool_push(void *obj, struct objpool_head *pool)
++{
++	unsigned long flags;
++	int rc;
++
++	/* disable local irq to avoid preemption & interruption */
++	raw_local_irq_save(flags);
++	rc = objpool_try_add_slot(obj, pool, raw_smp_processor_id());
++	raw_local_irq_restore(flags);
++
++	return rc;
++}
++
++/* try to retrieve object from slot */
++static void *objpool_try_get_slot(struct objpool_head *pool, int cpu)
++{
++	struct objpool_slot *slot = pool->cpu_slots[cpu];
++	/* load head snapshot, other cpus may change it */
++	u32 head = smp_load_acquire(&slot->head);
++
++	while (head != READ_ONCE(slot->last)) {
++		void *obj;
++
++		/*
++		 * data visibility of 'last' and 'head' could be out of
++		 * order since memory updating of 'last' and 'head' are
++		 * performed in push() and pop() independently
++		 *
++		 * before any retrieving attempts, pop() must guarantee
++		 * 'last' is behind 'head', that is to say, there must
++		 * be available objects in slot, which could be ensured
++		 * by condition 'last != head && last - head <= nr_objs'
++		 * that is equivalent to 'last - head - 1 < nr_objs' as
++		 * 'last' and 'head' are both unsigned int32
++		 */
++		if (READ_ONCE(slot->last) - head - 1 >= pool->capacity) {
++			head = READ_ONCE(slot->head);
++			continue;
++		}
++
++		/* obj must be retrieved before moving forward head */
++		obj = READ_ONCE(slot->entries[head & slot->mask]);
++
++		/* move head forward to mark it's consumption */
++		if (try_cmpxchg_release(&slot->head, &head, head + 1))
++			return obj;
++	}
++
++	return NULL;
++}
++
++/* allocate an object from object pool */
++static void *objpool_pop(struct objpool_head *pool)
++{
++	void *obj = NULL;
++	unsigned long flags;
++	int i, cpu;
++
++	/* disable local irq to avoid preemption & interruption */
++	raw_local_irq_save(flags);
++
++	cpu = raw_smp_processor_id();
++	for (i = 0; i < num_possible_cpus(); i++) {
++		obj = objpool_try_get_slot(pool, cpu);
++		if (obj)
++			break;
++		cpu = cpumask_next_wrap(cpu, cpu_possible_mask, -1, 1);
++	}
++	raw_local_irq_restore(flags);
++
++	return obj;
++}
++
++/* release whole objpool forcely */
++static void objpool_free(struct objpool_head *pool)
++{
++	if (!pool->cpu_slots)
++		return;
++
++	/* release percpu slots */
++	objpool_fini_percpu_slots(pool);
++}
++
++static struct objpool_head ptr_pool;
++static int nr_objs = 512;
++static int nr_test = 5120000;
++static atomic_t nthreads;
++static struct completion wait;
++struct page_frag_cache test_frag;
++
++module_param(nr_test, int, 0600);
++MODULE_PARM_DESC(nr_test, "number of iterations to test");
++
++static int page_frag_pop_thread(void *arg)
++{
++	struct objpool_head *pool = arg;
++	int nr = nr_test;
++
++	pr_info("page_frag pop test thread begins on cpu %d\n",
++		smp_processor_id());
++
++	while (nr > 0) {
++		void *obj = objpool_pop(pool);
++
++		if (obj) {
++			nr--;
++			page_frag_free_va(obj);
++		} else {
++			cond_resched();
++		}
++	}
++
++	if (atomic_dec_and_test(&nthreads))
++		complete(&wait);
++
++	pr_info("page_frag pop test thread exits on cpu %d\n",
++		smp_processor_id());
++
++	return 0;
++}
++
++static int page_frag_push_thread(void *arg)
++{
++	struct objpool_head *pool = arg;
++	int nr = nr_test;
++
++	pr_info("page_frag push test thread begins on cpu %d\n",
++		smp_processor_id());
++
++	while (nr > 0) {
++		unsigned int size = get_random_u32();
++		void *va;
++		int ret;
++
++		size = clamp(size, sizeof(unsigned int), PAGE_SIZE);
++		va = page_frag_alloc_va(&test_frag, size, GFP_KERNEL);
++		if (!va)
++			continue;
++
++		ret = objpool_push(va, pool);
++		if (ret) {
++			page_frag_free_va(va);
++			cond_resched();
++		} else {
++			nr--;
++		}
++	}
++
++	pr_info("page_frag push test thread exits on cpu %d\n",
++		smp_processor_id());
++
++	if (atomic_dec_and_test(&nthreads))
++		complete(&wait);
++
++	return 0;
++}
++
++static int __init page_frag_test_init(void)
++{
++	struct task_struct *tsk_push, *tsk_pop;
++	ktime_t start;
++	u64 duration;
++	int ret;
++
++	page_frag_cache_init(&test_frag);
++	atomic_set(&nthreads, 2);
++	init_completion(&wait);
++
++	ret = objpool_init(&ptr_pool, nr_objs, GFP_KERNEL);
++	if (ret)
++		return ret;
++
++	tsk_push = kthread_create_on_cpu(page_frag_push_thread, &ptr_pool,
++					 cpumask_first(cpu_online_mask),
++					 "page_frag_push");
++	if (IS_ERR(tsk_push))
++		return PTR_ERR(tsk_push);
++
++	tsk_pop = kthread_create(page_frag_pop_thread, &ptr_pool,
++				 "page_frag_pop");
++	if (IS_ERR(tsk_pop)) {
++		kthread_stop(tsk_push);
++		return PTR_ERR(tsk_pop);
++	}
++
++	start = ktime_get();
++	wake_up_process(tsk_push);
++	wake_up_process(tsk_pop);
++
++	pr_info("waiting for test to complete\n");
++	wait_for_completion(&wait);
++
++	duration = (u64)ktime_us_delta(ktime_get(), start);
++	pr_info("%d of iterations took: %lluus\n", nr_test, duration);
++
++	objpool_free(&ptr_pool);
++	page_frag_cache_drain(&test_frag);
++
++	return -EAGAIN;
++}
++
++static void __exit page_frag_test_exit(void)
++{
++}
++
++module_init(page_frag_test_init);
++module_exit(page_frag_test_exit);
++
++MODULE_LICENSE("GPL");
 -- 
 2.33.0
 
