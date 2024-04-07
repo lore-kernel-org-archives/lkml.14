@@ -1,109 +1,199 @@
-Received: from mail-pj1-f66.google.com (mail-pj1-f66.google.com [209.85.216.66])
+Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com [209.85.167.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 779B511711
-	for <linux-kernel@vger.kernel.org>; Sun,  7 Apr 2024 08:06:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.66
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12E9B10A0E
+	for <linux-kernel@vger.kernel.org>; Sun,  7 Apr 2024 08:09:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712477168; cv=none; b=lc+cTfH9+0Bi8LO4Vc5S7U+x6glbIx/GcpUemMOjsCwtb0QtaLdoFSPnpacG2KgVpTcZoHgCVR9vzc6EUZL10LSRx+AKVoYEukiRhVzmui0BMOLPglhtG4aep7V5tIZeEHlM2Q/AtDHzDiKSbfZsIxB8hwjBwsafju09QoYf9Yg=
+	t=1712477371; cv=none; b=exr01fm+j6xlIKcUpZr6fQtc9q3HYI0Cb364O+88bzcz9QFVAfiNC5TCVFyVA2KNDGm0IkWdI8QQyXdUa27dCG0w+jLkduf7WrkInjwuKBCjzye4zXkeGVYx7lMPgx8eV/xFcYXS74jT4hu4L16/wMTg6HFg3N3lpGROkaLkHbw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712477168; c=relaxed/simple;
-	bh=Rgb7nDRXj9MupxIRPzx+m7bzOmhCyq6njAcjkgSTuqs=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=OA4uOs9iFTmCW4Ehvnqw59CAKD6sd2DxY41P3fCWMavbeFi8rV0Oe7Ld63IfhMZYA6IeqdSiQwdUdkCgVF+mwKchk7r5wrean+H/IUesjJPEXiHsjSRvbTDUbRaj6LRwkc6f5pighyi6rAN1Ev1k8meok/ZPCY5lw7QP5dlfc4E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=E1Yme6dj; arc=none smtp.client-ip=209.85.216.66
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1712477371; c=relaxed/simple;
+	bh=L5AAMQbSoF0YudkIwfBHSSHgJwFQtAS3w22mcBvp7F0=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=FTPzfxg/w3ZKT2YURq4n3vNNRJOeN4gO0lJdcWri3MuKdzDZAWPBnRN8xLfHfN+VLJVS5QKtE6wpoQO3GKrlqDQOYqg4dVktBheVJzZeRk3edd1aGei1U+gNZvvjw2i2B7PSJ1eEAQqZi+zBIQXqbguUllMGF6EO/z0A2M6XL+8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ndufresne.ca; spf=none smtp.mailfrom=ndufresne.ca; dkim=pass (2048-bit key) header.d=ndufresne-ca.20230601.gappssmtp.com header.i=@ndufresne-ca.20230601.gappssmtp.com header.b=eHA8wJQ9; arc=none smtp.client-ip=209.85.167.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ndufresne.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ndufresne.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E1Yme6dj"
-Received: by mail-pj1-f66.google.com with SMTP id 98e67ed59e1d1-2a2c9903ef0so2439920a91.3
-        for <linux-kernel@vger.kernel.org>; Sun, 07 Apr 2024 01:06:07 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=ndufresne-ca.20230601.gappssmtp.com header.i=@ndufresne-ca.20230601.gappssmtp.com header.b="eHA8wJQ9"
+Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-516d487659bso2729349e87.2
+        for <linux-kernel@vger.kernel.org>; Sun, 07 Apr 2024 01:09:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1712477167; x=1713081967; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=jHRwBHxn0oc7UK384XKn6F49yYwWNuwEXuLNUt2jUsA=;
-        b=E1Yme6djx2dertv4qoU0riiTlkw0kHhSwdRBDmKYeNuHL7py1DO5zMU6cgCLvfnLEu
-         WrzKVfOrQqLDYrQJOpUjzB/kcmrwdEfaDMpuq0TiQLwagLHhuYKJixYIiBBQ0kNnxl+G
-         Ht+/2CJIPNXW9iGIrgMFkkTxrwKQYWUCj+iXKoUYJ+H+XIXMZ8/TspJCsfsOEKKSHTub
-         AhS+EdI4YYliXHkbBvgWuWvH0C/IgawfCS91jkHGcOwV7fq1KoFSUfUJkJCc42vyTfcK
-         crV4MUutGe6Lf4YBbcb+2TISM4W7BkrOckxVDbK+YooaQWB4maF6TV0FRJ1mF5/3TnGv
-         V3rw==
+        d=ndufresne-ca.20230601.gappssmtp.com; s=20230601; t=1712477368; x=1713082168; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:autocrypt
+         :references:in-reply-to:date:cc:to:from:subject:message-id:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=RoR1pZo3Vw2aL2foO6O0rlclxwNL4uebAWFaAlNYhYo=;
+        b=eHA8wJQ9uOAlvgGF9crKXIBujUfFI8vSlRUb1ZXHo3GQ403c345zGzNuEzJjtl0lkS
+         twuQpNRAPaL8yMG4zvdDC/7b/Q2hjCoAwWe0IoPdJMH75O1Du3ghN24qYwe+3GkyL4gI
+         c32clIHqfHTSxpfc9EedsOyEeVagsWZRD85h0F/NpYN9Rvxgj8iG+B8tzia8hHCru6zU
+         rNXvZwRUuM63hW7PQBls++jCIjEky/wARmijlYSqLPdz6AgMLl9mOpTpe+FA/VPngoe3
+         RjACHjgtnz2fwps8NEuvxms7f3NUKPt0Lpfjkaf5QBy4JJtkpODtCYGOjEZe6iODF7b0
+         soWQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712477167; x=1713081967;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=jHRwBHxn0oc7UK384XKn6F49yYwWNuwEXuLNUt2jUsA=;
-        b=N9iFTv2e8HriiAuCbfhnu5waXqipIdu3QtS3gBeCe6Q/UcJICM8Gnf5PMgYhN6jHOy
-         zJ/8svPZkyER/YY/8N7NRqW1cz9Xlk3yl2RpqYxJry52UFED0bR0HtQvdQc4ixdQ9fLN
-         JDvSvIa9LxVsm9Llaj9sRe7Z8d6ObEuQsM3anZvEpmNlhnKIqvWUwoZMAOUJ1+CPetZB
-         AC+QqFgQ4gmfjFBZDIsElqlSDXez9uwilxJuqQXtBlxTOMnf7XLfGNrUOjO4R7Sa3Ky5
-         Sq3310hfcw/JqIruz+DIJ0snoskJOuau1Ym+aoFPsM8bwWRkroOe+YyRnhCfR5+CUOHQ
-         b3eg==
-X-Gm-Message-State: AOJu0YxuwigMYryHzQdSuLH2xDHt9/Os6RJGR2vvW1NEqEKI7z9O2NIw
-	HAYbmNe0J5KFKIYwKDrgf4EjirkeW8JwCuexpJBNJ4vSpQSDhDE+LGm9nvggEsgftUfI5j8=
-X-Google-Smtp-Source: AGHT+IFN3cUyK1XcxkTtz7Llt5DIHYe/KljlX635QLCeG1ldOn6n2qJWUpuAqK8X7l6sWIFttlLtmw==
-X-Received: by 2002:a05:6a00:1390:b0:6e9:74d7:7092 with SMTP id t16-20020a056a00139000b006e974d77092mr6789288pfg.24.1712477166675;
-        Sun, 07 Apr 2024 01:06:06 -0700 (PDT)
-Received: from lhy-a01-ubuntu22.. ([106.39.42.164])
-        by smtp.gmail.com with ESMTPSA id s12-20020a056a00178c00b006e6c856c0f3sm4191297pfg.188.2024.04.07.01.06.03
+        d=1e100.net; s=20230601; t=1712477368; x=1713082168;
+        h=mime-version:user-agent:content-transfer-encoding:autocrypt
+         :references:in-reply-to:date:cc:to:from:subject:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=RoR1pZo3Vw2aL2foO6O0rlclxwNL4uebAWFaAlNYhYo=;
+        b=fds50cEq1o3ZWhk4/DesBlYamfFRjFMIly9NJoJPywqCjHj+WQygkVxP7aeAVwRGlr
+         DEM74XXAuj2ePJgbmdB00myS4RUU3fzBjZoAtEwPOdHz7G3jNojZbyRu9yIBHzihsbGr
+         pjmjQwHmLftz5BGWQkCs3foqHhOhqXWdOUUd0bHy2Fda8/zTnHM2aPc7ghHx3rI/DAAt
+         X94jE8QSBo6jzcAeh5RAHz4R5NXspzdJNbRMMwO84LLuqWTAax8ouN5KJ9C0UrQNZIhk
+         VP+aoXtss3Jka7lesYQrphFKaUL0A5k0VueXjycWUAP7BOmo4AKDrn6GqC6IgQydLOc9
+         /Ypg==
+X-Gm-Message-State: AOJu0YxqxwpvYsV7lbdGm8OgD1DFAqSnZ1TVeKM4TM7yQ8QsNgncufaX
+	oNz+F2EZ+jgqKnNVkrlBNEfLljVlo9c/YyzzLx71faQ5s0rnazqaxZHJkloLiKA=
+X-Google-Smtp-Source: AGHT+IH0P9sWNMW1yyWdHET4wFxBLnPE44dQ6iyO/SJlklsjpRQZxUghb+32SdG+wT+lEVbRaNVwUg==
+X-Received: by 2002:ac2:4c3c:0:b0:516:d482:d720 with SMTP id u28-20020ac24c3c000000b00516d482d720mr3681790lfq.30.1712477368029;
+        Sun, 07 Apr 2024 01:09:28 -0700 (PDT)
+Received: from nicolas-tpx395.localdomain (ip-185-104-138-24.ptr.icomera.net. [185.104.138.24])
+        by smtp.gmail.com with ESMTPSA id s7-20020adfea87000000b0033e7de97214sm6144093wrm.40.2024.04.07.01.09.05
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 07 Apr 2024 01:06:06 -0700 (PDT)
-From: Huai-Yuan Liu <qq810974084@gmail.com>
-To: sudipm.mukherjee@gmail.com,
-	arnd@arndb.de,
-	gregkh@linuxfoundation.org
-Cc: linux-kernel@vger.kernel.org,
-	baijiaju1990@outlook.com,
-	Huai-Yuan Liu <qq810974084@gmail.com>
-Subject: [PATCH V2] ppdev: Add an error check in register_device
-Date: Sun,  7 Apr 2024 16:03:58 +0800
-Message-Id: <20240407080358.8635-1-qq810974084@gmail.com>
-X-Mailer: git-send-email 2.34.1
+        Sun, 07 Apr 2024 01:09:27 -0700 (PDT)
+Message-ID: <ed0b32ec6da10f46ff5d820612bfe700388fae1e.camel@ndufresne.ca>
+Subject: Re: [PATCH v2 0/2] Enable JPEG encoding on rk3588
+From: Nicolas Dufresne <nicolas@ndufresne.ca>
+To: Link Mauve <linkmauve@linkmauve.fr>
+Cc: linux-kernel@vger.kernel.org, Ezequiel Garcia
+ <ezequiel@vanguardiasur.com.ar>, Philipp Zabel <p.zabel@pengutronix.de>, 
+ Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley
+ <conor+dt@kernel.org>,  Heiko Stuebner <heiko@sntech.de>, Joerg Roedel
+ <joro@8bytes.org>, Will Deacon <will@kernel.org>,  Robin Murphy
+ <robin.murphy@arm.com>, Sebastian Reichel
+ <sebastian.reichel@collabora.com>, Cristian Ciocaltea
+ <cristian.ciocaltea@collabora.com>, Dragan Simic <dsimic@manjaro.org>,
+ Shreeya Patel <shreeya.patel@collabora.com>, Chris Morgan
+ <macromorgan@hotmail.com>, Andy Yan <andy.yan@rock-chips.com>, Nicolas
+ Frattaroli <frattaroli.nicolas@gmail.com>,  linux-media@vger.kernel.org,
+ linux-rockchip@lists.infradead.org,  devicetree@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org,  iommu@lists.linux.dev
+Date: Sun, 07 Apr 2024 10:08:58 +0200
+In-Reply-To: <ZhAI6tQZTD7BTosI@desktop>
+References: <20240327134115.424846-1-linkmauve@linkmauve.fr>
+	 <bbcb66e9499120a86b367e7abdac2d8e2e704bfb.camel@ndufresne.ca>
+	 <ZhAI6tQZTD7BTosI@desktop>
+Autocrypt: addr=nicolas@ndufresne.ca; prefer-encrypt=mutual; keydata=mQGiBEUQN0MRBACQYceNSezSdMjx7sx6gwKkMghrrODgl3B0eXBTgNp6c431IfOOEsdvkoOh1kwoYcQgbg4MXw6beOltysX4e8fFWsiRkc2nvvRW9ir9kHDm49MkBLqaDjTqOkYKNMiurFW+gozpr/lUW15QqT6v68RYe0zRdtwGZqeLzX2LVuukGwCg4AISzswrrYHNV7vQLcbaUhPgIl0D+gILYT9TJgAEK4YHW+bFRcY+cgUFoLQqQayECMlctKoLOE69nIYOc/hDr9uih1wxrQ/yL0NJvQCohSPyoyLF9b2EuIGhQVp05XP7FzlTxhYvGO/DtO08ec85+bTfVBMV6eeY4MS3ZU+1z7ObD7Pf29YjyTehN2Dan6w1g2rBk5MoA/9nDocSlk4pbFpsYSFmVHsDiAOFje3+iY4ftVDKunKYWMhwRVBjAREOByBagmRau0cLEcElpf4hX5f978GoxSGIsiKoDAlXX+ICDOWC1/EXhEEmBR1gL0QJgiVviNyLfGJlZWnPjw6xhhmtHYWTDxBOP5peztyc2PqeKsLsLWzAr7RDTmljb2xhcyBEdWZyZXNuZSAoQi4gU2MuIEluZm9ybWF0aXF1ZSkgPG5pY29sYXMuZHVmcmVzbmVAZ21haWwuY29tPohgBBMRAgAgBQJFlCyOAhsDBgsJCAcDAgQVAggDBBYCAwECHgECF4AACgkQcVMCLawGqBwhLQCgzYlrLBj6KIAZ4gmsfjXD6ZtddT8AoIeGDicVq5WvMHNWign6ApQcZUihtElOaWNvbGFzIER1ZnJlc25lIChCLiBTYy4gSW5mb3JtYXRpcXVlKSA8bmljb2xhcy5kdWZyZXNuZUBjb2xsYWJvcmEuY28udWs+iGIEExECACIFAkuzca8CGwMGCwkIBwMCBhUIAgkKCwQWA
+ gMBAh4BAheAAAoJEHFTAi2sBqgcQX8An2By6LDEeMxi4B9hUbpvRnzaaeNqA J9Rox8rfqHZnSErw9bCHiBwvwJZ77QxTmljb2xhcyBEdWZyZXNuZSA8bmljb2xhcy5kdWZyZXNuZUBjb2xsYWJvcmEuY29tPohiBBMRAgAiBQJNzZzPAhsDBgsJCAcDAgYVCAIJCgsEFgIDAQIeAQIXgAAKCRBxUwItrAaoHLlxAKCYAGf4JL7DYDLs/188CPMGuwLypwCfWKc9DorA9f5pyYlD5pQo6SgSoiC0J05pY29sYXMgRHVmcmVzbmUgPG5pY29sYXNAbmR1ZnJlc25lLmNhPohiBBMRAgAiBQJVwNwgAhsDBgsJCAcDAgYVCAIJCgsEFgIDAQIeAQIXgAAKCRBxUwItrAaoHCZ4AJ0QwU6/G4c7h9CkMBT9ZxGLX4KSnQCgq0P7CX7hv/M7HeyfMFZe8t3vAEW0RE5pY29sYXMgRHVmcmVzbmUgKEIuIFNjLiBJbmZvcm1hdGlxdWUpIDxuaWNvbGFzZEBibHVlc3RyZWFrdGVjaC5jb20+iGAEExECACAFAkZjGzoCGwMGCwkIBwMCBBUCCAMEFgIDAQIeAQIXgAAKCRBxUwItrAaoHBl7AJ0d2lrzshMmJaik/EaDEakzEwqgxQCg0JVZMZm9gRfEou1FvinuZxwf/mu0R05pY29sYXMgRHVmcmVzbmUgKEIgU2MuIEluZm9ybWF0aXF1ZSkgPG5pY29sYXMuZHVmcmVzbmVAdXNoZXJicm9va2UuY2E+iGAEExECACAFAkUQN0MCGwMGCwkIBwMCBBUCCAMEFgIDAQIeAQIXgAAKCRBxUwItrAaoHPTnAJ0WGgJJVspoctAvEcI00mtp5WAFGgCgr+E7ItOqZEHAs+xabBgknYZIFPW5Ag0ERRA3UhAIAJ0rxl2HsVg/nSOAUt7U/T/W+RKzVAlD9orCB0pRVvyWNxSr8MHcH
+ mWCxykLuB34ouM4GuDVRKfGnqLzJRBfjs7Ax9K2FI3Odund9xpviLCt1jFC0K XL04RebrFT7xjDfocDaSLFvgxMVs/Jr2/ckKPId1oKvgYgt/o+MzUabKyFB8wIvq4GMtj3LoBKLCie2nCaSt7uVUt6q2t5bNWrd3lO6/mWn7YMc5Hsn33H9pS0+9szw6m3dG08eMKNueDlt72QxiYl2rhjzkT4ltKEkFgYBdyrtIj1UO6eX+YXb4E1rCMJrdjBSgqDPK1sWHC7gliy+izr+XTHuFwlfy8gBpsAAwUIAJJNus64gri4HAL632eqVpza83EphX1IuHzLi1LlMnQ9Tm7XKag46NhmJbOByMG33LwBsBdLjjHQSVkYZFWUifq+NWSFC/kqlb72vW8rBAv64+i3QdfxK9FWbweiRsPpvuHjJQuecbPDJpubLaxKbu2aqLCN5LuHXvdQr6KiXwabT+OJ9AJAqHG7q4IEzg4RNUVn9AS6L8bxqMSocjqpWNBCY2efCVd/c6k4Acv6jXu+wDAZEbWXK+71uaUHExhigBYBpiHGrobe32YlTVE/XEIzKKywhm/Hkn5YKWzumLte6xiD9JhKabmD7uqIvLt2twUpz4BdPzj0dvGlSmvFcaaISQQYEQIACQUCRRA3UgIbDAAKCRBxUwItrAaoHJLyAKDeS3AFowM3f1Y3OFU6XRCTKK2ZhwCfT/7P9WDjkkmiq5AfeOiwVlpuHtM=
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.50.4 (3.50.4-1.fc39) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-In register_device, the return value of ida_simple_get is unchecked, 
-in witch ida_simple_get will use an invalid index value.
+Le vendredi 05 avril 2024 =C3=A0 16:21 +0200, Link Mauve a =C3=A9crit=C2=A0=
+:
+> On Thu, Apr 04, 2024 at 01:41:15PM -0400, Nicolas Dufresne wrote:
+> > Hi,
+>=20
+> Hi,
+>=20
+> >=20
+> > Le mercredi 27 mars 2024 =C3=A0 14:41 +0100, Emmanuel Gil Peyrot a =C3=
+=A9crit=C2=A0:
+> > > Only the JPEG encoder is available for now, although there are patche=
+s
+> > > for the undocumented VP8 encoder floating around[0].
+> >=20
+> > [0] seems like a broken link. The VP8 encoder RFC is for RK3399 (and Ha=
+ntro H1
+> > posted by ST more recently). The TRM says "VEPU121(JPEG encoder only)",=
+ which
+> > suggest that the H.264 and VP8 encoders usually found on the VEPU121 ar=
+e
+> > removed. As Rockchip have remove the synthesize register while modifyin=
+g the H1
+> > IP, it is difficult to verify. Confusingly the H.264 specific registers=
+ are
+> > documented in the TRM around VEPU121.
+>=20
+> Ah, the link became, and was indeed ST=E2=80=99s series:
+> https://patchwork.kernel.org/project/linux-rockchip/list/?series=3D789885=
+&archive=3Dboth
+>=20
+> But the TRM part 1 says the VEPU121 supports H.264 encoding (page 367),
+> and it=E2=80=99s likely they didn=E2=80=99t remove just VP8 support since=
+ the codec
+> features are pretty close to H.264=E2=80=99s.
+>=20
+> >=20
+> > >=20
+> > > This has been tested on a rock-5b, resulting in four /dev/video*
+> > > encoders.  The userspace program I=E2=80=99ve been using to test them=
+ is
+> > > Onix[1], using the jpeg-encoder example, it will pick one of these fo=
+ur
+> > > at random (but displays the one it picked):
+> > > % ffmpeg -i <input image> -pix_fmt yuvj420p temp.yuv
+> > > % jpeg-encoder temp.yuv <width> <height> NV12 <quality> output.jpeg
+> >=20
+> > I don't like that we exposing each identical cores a separate video nod=
+es. I
+> > think we should aim for 1 device, and then multi-plex and schedule de c=
+ores from
+> > inside the Linux kernel.
+>=20
+> I agree, but this should be handled in the driver not in the device
+> tree, and it can be done later.
 
-To address this issue, index should be checked after ida_simple_get. When
-the index value is abnormal, a warning message should be printed, the port
-should be dropped, and the value should be recorded, then jump to 'err'.
+As the behaviour we want is that these cores becomes a group and get schedu=
+le
+together, its certainly a good time to slow down and evaluate if that part =
+needs
+to be improve in the DT too.
 
-Fixes: 9a69645dde11 ("ppdev: fix registering same device name")
-Signed-off-by: Huai-Yuan Liu <qq810974084@gmail.com>
----
-V2:
-* In patch V2, we found that parport_find_number implicitly calls 
-parport_get_port(). So when dealing with abnormal index values, we should
-call parport_put_port() to throw away the reference to the port.
----
- drivers/char/ppdev.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+Hantro G1/H1 and VEPU/VDPU121 combos originally shared the same sram region=
+. Its
+not clear if any of these cores have this limitation and if this should be
+expressed in the DT / driver.
 
-diff --git a/drivers/char/ppdev.c b/drivers/char/ppdev.c
-index 4c188e9e477c..ac5a93d39fbd 100644
---- a/drivers/char/ppdev.c
-+++ b/drivers/char/ppdev.c
-@@ -300,6 +300,13 @@ static int register_device(int minor, struct pp_struct *pp)
- 	}
- 
- 	index = ida_simple_get(&ida_index, 0, 0, GFP_KERNEL);
-+	if (index < 0) {
-+		pr_warn("%s: failed to get index!\n", name);
-+		parport_put_port(port);
-+		rc = index;
-+		goto err;
-+	}
-+
- 	memset(&ppdev_cb, 0, sizeof(ppdev_cb));
- 	ppdev_cb.irq_func = pp_irq;
- 	ppdev_cb.flags = (pp->flags & PP_EXCL) ? PARPORT_FLAG_EXCL : 0;
--- 
-2.34.1
+>=20
+> >=20
+> > Not doing this now means we'll never have an optimal hardware usage
+> > distribution. Just consider two userspace software wanting to do jpeg e=
+ncoding.
+> > If they both take a guess, they may endup using a single core. Where wi=
+th proper
+> > scheduling in V4L2, the kernel will be able to properly distribute the =
+load. I
+> > insist on this, since if we merge you changes it becomes an ABI and we =
+can't
+> > change it anymore.
+>=20
+> Will it really become ABI just like that?  Userspace should always
+> discover the video nodes and their capabilities and not hardcode e.g. a
+> specific /dev/videoN file for a specific codec.  I would argue that this
+> series would let userspace do JPEG encoding right away, even if in a
+> less optimal way than if the driver would round-robin them through a
+> single video node, but that can always be added in a future version.
 
+Might be on the gray side, but there is good chances software written for y=
+our
+specific board can stop working after te grouping is done.
+
+>=20
+> >=20
+> > I understand that this impose a rework of the mem2mem framework so that=
+ we can
+> > run multiple jobs, but this will be needed anyway on RK3588, since the =
+rkvdec2,
+> > which we don't have a driver yet is also multi-core, but you need to us=
+e 2 cores
+> > when the resolution is close to 8K.
+>=20
+> I think the mediatek JPEG driver already supports that, would it be ok
+> to do it the same way?
+
+I don't know for JPEG, the MTK vcoder do support cascading cores. This is
+different from concurrent cores. In MTK architecture, for some of the codec=
+,
+there is LAT (entropy decoder) and CORE (the reconstruction block) that are
+split.
+
+Nicolas
