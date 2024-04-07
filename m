@@ -1,152 +1,202 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A01CB8494
-	for <linux-kernel@vger.kernel.org>; Sun,  7 Apr 2024 03:12:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AD6F10A0A;
+	Sun,  7 Apr 2024 03:13:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712459580; cv=none; b=I3iy4Ei+9XVjJQZnee4htolG73/i9AP7BP/niQblmBqR+sOzneWgnkaSNxplaRcreGykHN1PDvJcLh+lW5/V4LL8OZsVYtehy6h2bUjWR/xLF34n9rjjCl8B3hN+i/oHAEzeLYMgbVCfwIo5+IL60yklLNu1RPlE2Np0byA//QQ=
+	t=1712459629; cv=none; b=NYoMrM+WiFNgNPq8sMAUOPbxopKIQSKODY8v8jK0UbPe2zXUguUdIocdLllZnO+oMEXIMZrs9DQ0xDTDRG3C2vTMOrbb3yS9A+U5mFIBZDBURwLaNbhfP2JcBzo8hvC3c26T3eoUwoRCh2xZ0ghv7kH3I5i/GEeRFtxpfvC39gU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712459580; c=relaxed/simple;
-	bh=TiIS2U0Z+wfIv7YPyJrbBALHfW6m6U5jca6+YzZuA6Y=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=YDaBd5SP/tr459NMrk+cUyW/aDAsJvI9uHAp93VT//sfcijO3u7X6IetgwnIuP30U2CQIkGi3MdczTJcbDqAcJIZ48P/lfrk6qB7+Ma2But2psUa/S4PQ0pc8EBWTMadt+WTfMh43Z67TQoV9GujBAfUGsqrOWUbm4iPSRr9ikU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Lq1lBg3j; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Lq1lBg3j"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1712459577;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=MJmu/t6Sirl2odpSd1zSsNcSzxnsR4Ufnqv6dslmQe4=;
-	b=Lq1lBg3jJm4jSUZ/GIybfSzzCE26MTKnCVqw0hSGyOdu24+V6lWeAYxS/TkDmBJ77QmJLZ
-	kpHGTc1SAkhKphabBVWH/1aLJ+lY9Ahi/x13TStguXFh4teN8N2U21QE5+BuDJeSd6f/O+
-	MRsp/dwwQXaBBH1pqoe3/XaPqWl5ih8=
-Received: from mail-oi1-f200.google.com (mail-oi1-f200.google.com
- [209.85.167.200]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-295-XxLg2od_O12BCC3KCtp72A-1; Sat, 06 Apr 2024 23:12:55 -0400
-X-MC-Unique: XxLg2od_O12BCC3KCtp72A-1
-Received: by mail-oi1-f200.google.com with SMTP id 5614622812f47-3c5d97b2950so3432583b6e.1
-        for <linux-kernel@vger.kernel.org>; Sat, 06 Apr 2024 20:12:55 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712459575; x=1713064375;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=MJmu/t6Sirl2odpSd1zSsNcSzxnsR4Ufnqv6dslmQe4=;
-        b=bNeRuaCdpHKH0Sh2ICp0HP27Dyp0D2VGj9gEA8RIhIjVySiWXSKY769f9B0xPXcNiz
-         ASgAFIgvDOA4pzThBKmEqaH1BC03S9t2qGo9R2mskShfQZJPw9e8bBau+UE2cVgT9H/+
-         HbTCmDgqnTlNLvLr3J+hFg/VwkSD+7lyUYGtllALFRe7kyLB6i+6eppYZ037pdm8soPq
-         aXpusiXvqHPfJJ1FbYeewSJJ1P1mVbcuGDAGK9GR/UjAcBxLo2+NBclsLWfzEf/SCTNP
-         gZIRprgo6/t0HdPZmfrzmMziwAAUF1oES7gM0OevW6WGBcSQFFMnbkXE49TQNHhvyitO
-         b9Uw==
-X-Gm-Message-State: AOJu0YwzF1BMsiSGhCn75MDJQEndEluYmz7zrOoCGXg1bf2kSaJnAkgI
-	Ndt6OI0Tef+u1O7719VahhznU1G+guZDt1Uo4CmI2qmLbrm4KpgGgV88gcc1wS8++C8O6dBspdL
-	XB52ztEio7OD37aJYrVB+BSXz6+YQipxxJmZXosyfDEXtWxL8ANfvdZU4sdj57+ktWmJEG1CzdZ
-	KA7lubi2tFoLhHwg5I8n0P0lCJ8dmsk++wtKvo
-X-Received: by 2002:a05:6871:6a5:b0:22e:ae01:db2f with SMTP id l37-20020a05687106a500b0022eae01db2fmr5926305oao.36.1712459575181;
-        Sat, 06 Apr 2024 20:12:55 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFxJaq7stpKgMSraYoLMx3TodA+2coKA76eR/QIAcIB6lXcpj5+7p+9fIFMZ3XBRdEPZlKh8jIwI46m3wMubro=
-X-Received: by 2002:a05:6871:6a5:b0:22e:ae01:db2f with SMTP id
- l37-20020a05687106a500b0022eae01db2fmr5926294oao.36.1712459574910; Sat, 06
- Apr 2024 20:12:54 -0700 (PDT)
+	s=arc-20240116; t=1712459629; c=relaxed/simple;
+	bh=yJe8X8J68cHa2gvIMU5bJdS9Gcj3O1sw/lxHUWoIo+g=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=OepkQlXiNTT9iz+G/olJYF7BkgBGhJsef9vIFXKCofjYuz5QttdF7ltBauoUtRhWn5t3PrhIaJfVuQepXyWDAHD2KFL3vI7OzCnNSpRpKtJSGgMCDDAc8Uu/hYRj+w/sO5mLZXzAiEMpINMuVU0Q5ViaHxZ+eYAnv/2fWvkiu54=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.235])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4VBy3f3Gxbz4f3lgF;
+	Sun,  7 Apr 2024 11:13:34 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.112])
+	by mail.maildlp.com (Postfix) with ESMTP id F07051A0568;
+	Sun,  7 Apr 2024 11:13:42 +0800 (CST)
+Received: from [10.174.178.129] (unknown [10.174.178.129])
+	by APP1 (Coremail) with SMTP id cCh0CgAnRQ5lDxJmd0M4JQ--.28098S2;
+	Sun, 07 Apr 2024 11:13:42 +0800 (CST)
+Subject: Re: [PATCH v2 3/6] writeback: support retrieving per group debug
+ writeback stats of bdi
+To: Jan Kara <jack@suse.cz>, Brian Foster <bfoster@redhat.com>
+Cc: akpm@linux-foundation.org, willy@infradead.org, tj@kernel.org,
+ dsterba@suse.com, mjguzik@gmail.com, dhowells@redhat.com,
+ linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+ linux-fsdevel@vger.kernel.org
+References: <20240327155751.3536-1-shikemeng@huaweicloud.com>
+ <20240327155751.3536-4-shikemeng@huaweicloud.com> <Zga937dR5UgtSVaz@bfoster>
+ <e3816f9c-0f29-a0e4-8ad8-a6acf82a06ad@huaweicloud.com>
+ <Zg1wGvTeQxjqjYUG@bfoster> <20240404090753.q3iugmqeeqig64db@quack3>
+From: Kemeng Shi <shikemeng@huaweicloud.com>
+Message-ID: <6bf2280d-bce1-c1c5-3b25-8cfc7e1fa81d@huaweicloud.com>
+Date: Sun, 7 Apr 2024 11:13:41 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <41c1c5489688abe5bfef9f7cf15584e3fb872ac5.1712092759.git.mst@redhat.com>
-In-Reply-To: <41c1c5489688abe5bfef9f7cf15584e3fb872ac5.1712092759.git.mst@redhat.com>
-From: Jason Wang <jasowang@redhat.com>
-Date: Sun, 7 Apr 2024 11:12:43 +0800
-Message-ID: <CACGkMEuBt9BvUSr0hhSx4obX9SmiZgze8eK7Omujx1LBDgWz4A@mail.gmail.com>
-Subject: Re: [PATCH] vhost-vdpa: change ioctl # for VDPA_GET_VRING_SIZE
-To: "Michael S. Tsirkin" <mst@redhat.com>
-Cc: linux-kernel@vger.kernel.org, Arnaldo Carvalho de Melo <acme@kernel.org>, 
-	Namhyung Kim <namhyung@kernel.org>, Zhu Lingshan <lingshan.zhu@intel.com>, 
-	=?UTF-8?Q?Eugenio_P=C3=A9rez?= <eperezma@redhat.com>, kvm@vger.kernel.org, 
-	virtualization@lists.linux.dev, netdev@vger.kernel.org, 
-	Adrian Hunter <adrian.hunter@intel.com>, Ian Rogers <irogers@google.com>, 
-	Jiri Olsa <jolsa@kernel.org>, Kan Liang <kan.liang@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20240404090753.q3iugmqeeqig64db@quack3>
+Content-Type: text/plain; charset=gbk
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:cCh0CgAnRQ5lDxJmd0M4JQ--.28098S2
+X-Coremail-Antispam: 1UD129KBjvJXoWxKw1xCF48ZF1rKw4Duw43trb_yoW7AryUp3
+	Wqg3W7Kr4DXw1IkwnFv34jv34IyrZ5JryUXr9rG345CF90qFn3ZF4rGFW5uFy5ZrW8Aw4U
+	Zw4jyrZxW3y5tFJanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUvab4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k2
+	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
+	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7Cj
+	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
+	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
+	6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
+	Cjc4AY6r1j6r4UM4x0Y48IcVAKI48JM4IIrI8v6xkF7I0E8cxan2IY04v7Mxk0xIA0c2IE
+	e2xFo4CEbIxvr21l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxV
+	Aqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q
+	6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6x
+	kF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWrJr0_WFyUJwCI42IY6I8E87Iv
+	67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyT
+	uYvjxUrR6zUUUUU
+X-CM-SenderInfo: 5vklyvpphqwq5kxd4v5lfo033gof0z/
 
-On Wed, Apr 3, 2024 at 5:21=E2=80=AFAM Michael S. Tsirkin <mst@redhat.com> =
-wrote:
->
-> VDPA_GET_VRING_SIZE by mistake uses the already occupied
-> ioctl # 0x80 and we never noticed - it happens to work
-> because the direction and size are different, but confuses
-> tools such as perf which like to look at just the number,
-> and breaks the extra robustness of the ioctl numbering macros.
->
-> To fix, sort the entries and renumber the ioctl - not too late
-> since it wasn't in any released kernels yet.
->
-> Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
-> Reported-by: Namhyung Kim <namhyung@kernel.org>
-> Fixes: x ("vhost-vdpa: uapi to support reporting per vq size")
-> Cc: "Zhu Lingshan" <lingshan.zhu@intel.com>
-> Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
 
-Acked-by: Jason Wang <jasowang@redhat.com>
 
-Thanks
+on 4/4/2024 5:07 PM, Jan Kara wrote:
+> On Wed 03-04-24 11:04:58, Brian Foster wrote:
+>> On Wed, Apr 03, 2024 at 04:49:42PM +0800, Kemeng Shi wrote:
+>>> on 3/29/2024 9:10 PM, Brian Foster wrote:
+>>>> On Wed, Mar 27, 2024 at 11:57:48PM +0800, Kemeng Shi wrote:
+>>>>> +		collect_wb_stats(&stats, wb);
+>>>>> +
+>>>>
+>>>> Also, similar question as before on whether you'd want to check
+>>>> WB_registered or something here..
+>>> Still prefer to keep full debug info and user could filter out on
+>>> demand.
+>>
+>> Ok. I was more wondering if that was needed for correctness. If not,
+>> then that seems fair enough to me.
+>>
+>>>>> +		if (mem_cgroup_wb_domain(wb) == NULL) {
+>>>>> +			wb_stats_show(m, wb, &stats);
+>>>>> +			continue;
+>>>>> +		}
+>>>>
+>>>> Can you explain what this logic is about? Is the cgwb_calc_thresh()
+>>>> thing not needed in this case? A comment might help for those less
+>>>> familiar with the implementation details.
+>>> If mem_cgroup_wb_domain(wb) is NULL, then it's bdi->wb, otherwise,
+>>> it's wb in cgroup. For bdi->wb, there is no need to do wb_tryget
+>>> and cgwb_calc_thresh. Will add some comment in next version.
+>>>>
+>>>> BTW, I'm also wondering if something like the following is correct
+>>>> and/or roughly equivalent:
+>>>> 	
+>>>> 	list_for_each_*(wb, ...) {
+>>>> 		struct wb_stats stats = ...;
+>>>>
+>>>> 		if (!wb_tryget(wb))
+>>>> 			continue;
+>>>>
+>>>> 		collect_wb_stats(&stats, wb);
+>>>>
+>>>> 		/*
+>>>> 		 * Extra wb_thresh magic. Drop rcu lock because ... . We
+>>>> 		 * can do so here because we have a ref.
+>>>> 		 */
+>>>> 		if (mem_cgroup_wb_domain(wb)) {
+>>>> 			rcu_read_unlock();
+>>>> 			stats.wb_thresh = min(stats.wb_thresh, cgwb_calc_thresh(wb));
+>>>> 			rcu_read_lock();
+>>>> 		}
+>>>>
+>>>> 		wb_stats_show(m, wb, &stats)
+>>>> 		wb_put(wb);
+>>>> 	}
+>>> It's correct as wb_tryget to bdi->wb has no harm. I have considered
+>>> to do it in this way, I change my mind to do it in new way for
+>>> two reason:
+>>> 1. Put code handling wb in cgroup more tight which could be easier
+>>> to maintain.
+>>> 2. Rmove extra wb_tryget/wb_put for wb in bdi.
+>>> Would this make sense to you?
+>>
+>> Ok, well assuming it is correct the above logic is a bit more simple and
+>> readable to me. I think you'd just need to fill in the comment around
+>> the wb_thresh thing rather than i.e. having to explain we don't need to
+>> ref bdi->wb even though it doesn't seem to matter.
+>>
+>> I kind of feel the same on the wb_stats file thing below just because it
+>> seems more consistent and available if wb_stats eventually grows more
+>> wb-specific data.
+>>
+>> That said, this is subjective and not hugely important so I don't insist
+>> on either point. Maybe wait a bit and see if Jan or Tejun or somebody
+>> has any thoughts..? If nobody else expresses explicit preference then
+>> I'm good with it either way.
+> 
+> No strong opinion from me really.
+> 
+>>>>> +static void cgwb_debug_register(struct backing_dev_info *bdi)
+>>>>> +{
+>>>>> +	debugfs_create_file("wb_stats", 0444, bdi->debug_dir, bdi,
+>>>>> +			    &cgwb_debug_stats_fops);
+>>>>> +}
+>>>>> +
+>>>>>  static void bdi_collect_stats(struct backing_dev_info *bdi,
+>>>>>  			      struct wb_stats *stats)
+>>>>>  {
+>>>>> @@ -117,6 +202,8 @@ static void bdi_collect_stats(struct backing_dev_info *bdi,
+>>>>>  {
+>>>>>  	collect_wb_stats(stats, &bdi->wb);
+>>>>>  }
+>>>>> +
+>>>>> +static inline void cgwb_debug_register(struct backing_dev_info *bdi) { }
+>>>>
+>>>> Could we just create the wb_stats file regardless of whether cgwb is
+>>>> enabled? Obviously theres only one wb in the !CGWB case and it's
+>>>> somewhat duplicative with the bdi stats file, but that seems harmless if
+>>>> the same code can be reused..? Maybe there's also a small argument for
+>>>> dropping the state info from the bdi stats file and moving it to
+>>>> wb_stats.In backing-dev.c, there are a lot "#ifdef CGWB .. #else .. #endif" to
+>>> avoid unneed extra cost when CGWB is not enabled.
+>>> I think it's better to avoid extra cost from wb_stats when CGWB is not
+>>> enabled. For now, we only save cpu cost to create and destroy wb_stats
+>>> and save memory cost to record debugfs file, we could save more in
+>>> future when wb_stats records more debug info.
+> 
+> Well, there's the other side that you don't have to think whether the
+> kernel has CGWB enabled or not when asking a customer to gather the
+> writeback debug info - you can always ask for wb_stats. Also if you move
+> the wb->state to wb_stats only it will become inaccessible with CGWB
+> disabled. So I agree with Brian that it is better to provide wb_stats also
+> with CGWB disabled (and we can just implement wb_stats for !CGWB case with
+> the same function as bdi_stats).
+> 
+> That being said all production kernels I have seen do have CGWB enabled so
+> I don't care that much about this...
+It's acceptable to me if the extra cost is tolerable.
+> 
+>>> Move state info from bdi stats to wb_stats make senses to me. The only
+>>> concern would be compatibility problem. I will add a new patch to this
+>>> to make this more noticeable and easier to revert.
+> 
+> Yeah, I don't think we care much about debugfs compatibility but I think
+> removing state from bdi_stats is not worth the inconsistency between
+> wb_stats and bdi_stats in the !CGWB case.
+OK, I will simply keep wb_stats even CGWB is not enabled while keep state
+in both bdi_stats and wb_stats if Braian doesn't against in recent dasy.
 
-> ---
->
-> Build tested only - userspace patches using this will have to adjust.
-> I will merge this in a week or so unless I hear otherwise,
-> and afterwards perf can update there header.
->
->  include/uapi/linux/vhost.h | 15 ++++++++-------
->  1 file changed, 8 insertions(+), 7 deletions(-)
->
-> diff --git a/include/uapi/linux/vhost.h b/include/uapi/linux/vhost.h
-> index bea697390613..b95dd84eef2d 100644
-> --- a/include/uapi/linux/vhost.h
-> +++ b/include/uapi/linux/vhost.h
-> @@ -179,12 +179,6 @@
->  /* Get the config size */
->  #define VHOST_VDPA_GET_CONFIG_SIZE     _IOR(VHOST_VIRTIO, 0x79, __u32)
->
-> -/* Get the count of all virtqueues */
-> -#define VHOST_VDPA_GET_VQS_COUNT       _IOR(VHOST_VIRTIO, 0x80, __u32)
-> -
-> -/* Get the number of virtqueue groups. */
-> -#define VHOST_VDPA_GET_GROUP_NUM       _IOR(VHOST_VIRTIO, 0x81, __u32)
-> -
->  /* Get the number of address spaces. */
->  #define VHOST_VDPA_GET_AS_NUM          _IOR(VHOST_VIRTIO, 0x7A, unsigned=
- int)
->
-> @@ -228,10 +222,17 @@
->  #define VHOST_VDPA_GET_VRING_DESC_GROUP        _IOWR(VHOST_VIRTIO, 0x7F,=
-       \
->                                               struct vhost_vring_state)
->
-> +
-> +/* Get the count of all virtqueues */
-> +#define VHOST_VDPA_GET_VQS_COUNT       _IOR(VHOST_VIRTIO, 0x80, __u32)
-> +
-> +/* Get the number of virtqueue groups. */
-> +#define VHOST_VDPA_GET_GROUP_NUM       _IOR(VHOST_VIRTIO, 0x81, __u32)
-> +
->  /* Get the queue size of a specific virtqueue.
->   * userspace set the vring index in vhost_vring_state.index
->   * kernel set the queue size in vhost_vring_state.num
->   */
-> -#define VHOST_VDPA_GET_VRING_SIZE      _IOWR(VHOST_VIRTIO, 0x80,       \
-> +#define VHOST_VDPA_GET_VRING_SIZE      _IOWR(VHOST_VIRTIO, 0x82,       \
->                                               struct vhost_vring_state)
->  #endif
-> --
-> MST
->
+Kemeng
+> 
+> 								Honza
+> 
 
