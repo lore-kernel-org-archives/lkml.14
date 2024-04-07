@@ -1,131 +1,152 @@
-Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFF661B5A4;
-	Sun,  7 Apr 2024 09:04:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3370A39ACC
+	for <linux-kernel@vger.kernel.org>; Sun,  7 Apr 2024 09:04:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712480668; cv=none; b=TyapFc+O78+4YbvM8pN8TSo3YDuKSN5Nqqi4VfG4Z1bt8n2Dx7Al6ZUbnws4FylWrdHz8CPGsW+lJMoeN6aJegBJjIG7bYcbY3bDqllyUryPxcHeICS6dEYsw8pyOQMplSmNsg7plc+cexYnpZa490uiujFehwrxExR1XC74gTY=
+	t=1712480687; cv=none; b=pScvLvkCd3196Mz7ZzRWcoxEpumoINrEYw4hwBrZl+NatGIzoLjXV+BJqyhSDPmYxfD3OEpSNZmT4ouwuXCrTS2lubcu0y6zgQUldpbrIXMMNycMZ9IXmCFTEZKh1P59JjnDZ9zepaJT62sQ5FymJGganPeooBdjWwTAJMGOxP0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712480668; c=relaxed/simple;
-	bh=IhZYosKK4YOMcbHez/fMmD2UL1qwCvnS6/0P7o8GM80=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=djd9VTuemOWPpKuTNZuj0iTV5FdcitQx8w9fPvbpV0pFMS5oyaoPucgbujh3tGsTisanBwDKb7FltslT3Cx4mWCd52YhO8QJZIv5gE2woi+N10XO8P+YZKNnW71yrcPD+wuwSCcF4lYqHPsBkBpTYnuXwaoCyHpp/T8T8xRemCY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jNnBC+JN; arc=none smtp.client-ip=209.85.214.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1712480687; c=relaxed/simple;
+	bh=NWmV/zVwYeDIUGVXbweL9v1eUvuMUKlVVU4WOstYh/M=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=AS5FZa9IYNV4znp75s/CRn00iEz6pwR7Hex6dZShwmncFRNeyjDnbafmb7vPLY6+Iwet9NKk4Uv71uBVHbG92eAfLXKqACFP2rESiJkomrlQbrNV91FBgy9jqrh7uQgXxMNCeLbpsbr1hO+uZA6lG4hnMtrcqBIj1wXms2xOOEU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Grbakf5Z; arc=none smtp.client-ip=209.85.128.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jNnBC+JN"
-Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-1e3f17c6491so3927195ad.2;
-        Sun, 07 Apr 2024 02:04:26 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Grbakf5Z"
+Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-4164f41fa5dso3533425e9.0
+        for <linux-kernel@vger.kernel.org>; Sun, 07 Apr 2024 02:04:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1712480666; x=1713085466; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=LkIq2OM32fM/A9YPDdmXDhI8BJtLMOXuFU9dLok8GaA=;
-        b=jNnBC+JNqzBiqk0HHJBE1z2R+nvrFM5al1tSFCs94uY77p9fwN8yUKfk7JPCI68d0x
-         C1LTCiEB89E/CPxehd1VIQ/nrmkYPmH5Usuav/z5OmvP18AQY3AWD7ySue4dUstF4OIP
-         tuiDgLocKVsn75i+TLtXuJRM6p61fP1ZTrpnvHPsSZUEG3EQgMwc5kUN0fbCBF81nfmA
-         DhIX1h445S4SwdP2hdi3kw/Hdak+Yl8RanFX7UOboBk41CgaswE+gJ8yOzsuTLEM3jeS
-         FskUviZ1kTZVsy7OQ1beVw/WYU/haDGiatZ76p4GILc/7rJ1sK39SBYXurMhOxusZjhX
-         NdEA==
+        d=linaro.org; s=google; t=1712480683; x=1713085483; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=SuU76zJ7LNrNz2801XBBYqK3yKOkIBoi96/o4wIa/WM=;
+        b=Grbakf5ZmUk4KmxBRUnOuL4cImUC0M410ar2l6xAeG/rbC0D8FeaB8Q6lBRfUGiVqt
+         f7s5Kk6Urqw86nf8K35G4sYH/WsldTE6XpXfXdKN/9oyMZfYAiauvgU2eWO8ARTZba6L
+         xjhVjTlAKiVJlXSACtVn+WOvlJiOG0CUjmWCre20dIVNKrXFyI+rDQ643rSh7/gJgMUB
+         L6UDdsEm5Ud1gbJK7PKgY0mpBKvIDlgDZLQoUmiDn1WRKwCI+jzTXBBtZ8jy5AaiqX8F
+         x/0fXIzMPRdAMSG715/6K8UAAJpEkGMpfW+qMw0n5Aiwji/FNdTvRCZIpgheToVPwzSS
+         uNqg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712480666; x=1713085466;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=LkIq2OM32fM/A9YPDdmXDhI8BJtLMOXuFU9dLok8GaA=;
-        b=m45CIo3WESkRpGbwEKRqygujIxAUXwtOwaKttrFU5UGfWjHfKanSXEHF7hOFPJLEeJ
-         T67jYwp74go/pM+bLRSLIcVs05XlqZSBqequlD3P+67n7/p4mhv3zVdoNeKnJv/yDJKP
-         DTWM1X6j6VE6FIVBGDFhKzLDUQfc7Gag1wzxb7Duy0xORs1eLTGx89IO/3iK0rgv3D05
-         AE/8PKf7FZGD7Lq24rbVhcNeMPcMGXITrRw7XXf/VYtd6x6JSKZblmE13+wdMTBNN22d
-         Yww4PMSE6eQc1e45Tq3DL+bXf/j6cWv3MWkJ4Gs5d8yKqQ26QVBTIaaYzXtOyDhol4J+
-         rNsw==
-X-Gm-Message-State: AOJu0YyQ+fI6ukUTphnJObU/Sqfd8PniemmmtDuY5Iw9D0hH+IlbH49B
-	8jD5hYeSt9Fo9jcBH4wSgv9348hJMIzz/VW8pusvea59kngZCA0KB6ExGKGJ
-X-Google-Smtp-Source: AGHT+IF9PcRqZDnUhHy3vl6624twg2/Jp4GtKYwOmGa3ZycNF1LGiu6DrMU4VbWU9vWZoHd1u0jlIw==
-X-Received: by 2002:a05:6a21:a5aa:b0:1a7:647a:420e with SMTP id gd42-20020a056a21a5aa00b001a7647a420emr710671pzc.3.1712480666154;
-        Sun, 07 Apr 2024 02:04:26 -0700 (PDT)
-Received: from localhost ([47.89.225.180])
-        by smtp.gmail.com with ESMTPSA id fa12-20020a056a002d0c00b006e694719fa0sm2412840pfb.147.2024.04.07.02.04.25
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 07 Apr 2024 02:04:25 -0700 (PDT)
-From: Lai Jiangshan <jiangshanlai@gmail.com>
-To: linux-kernel@vger.kernel.org
-Cc: rcu@vger.kernel.org,
-	x86@kernel.org,
-	Lai Jiangshan <jiangshan.ljs@antgroup.com>,
-	"Paul E. McKenney" <paulmck@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Frederic Weisbecker <frederic@kernel.org>,
-	Andy Lutomirski <luto@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H. Peter Anvin" <hpa@zytor.com>
-Subject: [PATCH V2 11/11] x86/rcu: Add THUNK rcu_read_unlock_special_thunk
-Date: Sun,  7 Apr 2024 17:05:58 +0800
-Message-Id: <20240407090558.3395-12-jiangshanlai@gmail.com>
-X-Mailer: git-send-email 2.19.1.6.gb485710b
-In-Reply-To: <20240407090558.3395-1-jiangshanlai@gmail.com>
-References: <20240407090558.3395-1-jiangshanlai@gmail.com>
+        d=1e100.net; s=20230601; t=1712480683; x=1713085483;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=SuU76zJ7LNrNz2801XBBYqK3yKOkIBoi96/o4wIa/WM=;
+        b=r4LHEYx4OwGBGGydfHJsJBormr5/aNpzTTzddzDFKUFiNE9o46VFiy1UleCBAGftuW
+         lWUz0mf0YHMJy8TuGAjPXjrK6ab6UL1mIZ9REEd49N4P2aeQi+q2hZyG8i8iEQzk86Gc
+         rW/Oka/7pYdatsEJxBgJ36kqhKWOQvroV9OoJ8h9YiWC/pLkcn43wWEf5u20ehSJzhkl
+         wdO0fBluvIRpQEjOCBr2K5HIm4lwuDrCEVHOppBPtQTX+6+4qyVVlmBjtC7oAgYzN4ER
+         9Q4e/mxu4NpTUityo7zguwUqK2ApeONEkDNR3h9XeMs7gYnvK8B5vk8JY17UW7aCneO2
+         OkSg==
+X-Forwarded-Encrypted: i=1; AJvYcCVgO9ZdhJJAhpt4UDCXiYPaEgd9CL2f2948kcZCXzUDO37IhhimFgh6cDkm13XSgrHK1zFbaDApgvwADoMY8s0rj4kFv9nreqYGro3S
+X-Gm-Message-State: AOJu0YwgNLXhPaoTVxce+KLVF73JH4gciJkEDbZ0O+VlKGuwU1zuFGXv
+	AvLrNm3cSAwa8JDlqqcTdPao2QuBUk6gh8sFK9BBcKEmifWkuTO4royGYoc4dC0=
+X-Google-Smtp-Source: AGHT+IH8LYv7KiDMFFMHVpdxcqk8gpP/AVlZ3rPu6c90GWsMzWUwZ6VJPlRolafwrSDLl9wlXMIHXQ==
+X-Received: by 2002:a05:600c:1f0f:b0:416:536b:b6bb with SMTP id bd15-20020a05600c1f0f00b00416536bb6bbmr920402wmb.23.1712480683633;
+        Sun, 07 Apr 2024 02:04:43 -0700 (PDT)
+Received: from [192.168.1.20] ([178.197.223.16])
+        by smtp.gmail.com with ESMTPSA id l10-20020a1c790a000000b0041622c5c5d6sm7831694wme.1.2024.04.07.02.04.41
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 07 Apr 2024 02:04:43 -0700 (PDT)
+Message-ID: <b3f9d98f-e9cd-492c-ac7a-5b6628fdf4cb@linaro.org>
+Date: Sun, 7 Apr 2024 11:04:41 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 4/5] dt-bindings: fsl-imx-sdma: Add I2C peripheral
+ types ID
+To: Frank Li <Frank.Li@nxp.com>, Vinod Koul <vkoul@kernel.org>,
+ Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>,
+ Pengutronix Kernel Team <kernel@pengutronix.de>,
+ Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>,
+ Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>, Joy Zou <joy.zou@nxp.com>
+Cc: dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, imx@lists.linux.dev
+References: <20240329-sdma_upstream-v4-0-daeb3067dea7@nxp.com>
+ <20240329-sdma_upstream-v4-4-daeb3067dea7@nxp.com>
+Content-Language: en-US
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
+ 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
+ D2GYIS41Kv4Isx2dEFh+/Q==
+In-Reply-To: <20240329-sdma_upstream-v4-4-daeb3067dea7@nxp.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-From: Lai Jiangshan <jiangshan.ljs@antgroup.com>
+On 29/03/2024 15:34, Frank Li wrote:
+> Add peripheral types ID 26 for I2C because sdma firmware (sdma-6q: v3.6,
+> sdma-7d: v4.6) support I2C DMA transfer.
+> 
+> Signed-off-by: Frank Li <Frank.Li@nxp.com>
 
-Add rcu_read_unlock_special_thunk(), so that the inlined rcu_read_unlock()
-doesn't need any code to save the caller-saved registers.
+This is a friendly reminder during the review process.
 
-Make rcu_read_unlock() only two instructions in the slow path at the
-caller site.
+It looks like you received a tag and forgot to add it.
 
-Cc: "Paul E. McKenney" <paulmck@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Frederic Weisbecker <frederic@kernel.org>
-Signed-off-by: Lai Jiangshan <jiangshan.ljs@antgroup.com>
----
- arch/x86/entry/thunk.S             | 5 +++++
- arch/x86/include/asm/rcu_preempt.h | 4 +++-
- 2 files changed, 8 insertions(+), 1 deletion(-)
+If you do not know the process, here is a short explanation:
+Please add Acked-by/Reviewed-by/Tested-by tags when posting new
+versions, under or above your Signed-off-by tag. Tag is "received", when
+provided in a message replied to you on the mailing list. Tools like b4
+can help here. However, there's no need to repost patches *only* to add
+the tags. The upstream maintainer will do that for tags received on the
+version they apply.
 
-diff --git a/arch/x86/entry/thunk.S b/arch/x86/entry/thunk.S
-index 119ebdc3d362..10c60369a67c 100644
---- a/arch/x86/entry/thunk.S
-+++ b/arch/x86/entry/thunk.S
-@@ -13,3 +13,8 @@ THUNK preempt_schedule_thunk, preempt_schedule
- THUNK preempt_schedule_notrace_thunk, preempt_schedule_notrace
- EXPORT_SYMBOL(preempt_schedule_thunk)
- EXPORT_SYMBOL(preempt_schedule_notrace_thunk)
-+
-+#ifdef CONFIG_PCPU_RCU_PREEMPT_COUNT
-+THUNK rcu_read_unlock_special_thunk, rcu_read_unlock_special
-+EXPORT_SYMBOL_GPL(rcu_read_unlock_special_thunk)
-+#endif /* #ifdef CONFIG_PCPU_RCU_PREEMPT_COUNT */
-diff --git a/arch/x86/include/asm/rcu_preempt.h b/arch/x86/include/asm/rcu_preempt.h
-index cb25ebe038a5..acdd73b74c05 100644
---- a/arch/x86/include/asm/rcu_preempt.h
-+++ b/arch/x86/include/asm/rcu_preempt.h
-@@ -97,9 +97,11 @@ static __always_inline bool pcpu_rcu_preempt_count_dec_and_test(void)
- 			       __percpu_arg([var]));
- }
- 
-+extern asmlinkage void rcu_read_unlock_special_thunk(void);
-+
- #define pcpu_rcu_read_unlock_special()						\
- do {										\
--	rcu_read_unlock_special();						\
-+	asm volatile ("call rcu_read_unlock_special_thunk" : ASM_CALL_CONSTRAINT);\
- } while (0)
- 
- #endif // #ifdef CONFIG_PCPU_RCU_PREEMPT_COUNT
--- 
-2.19.1.6.gb485710b
+https://elixir.bootlin.com/linux/v6.5-rc3/source/Documentation/process/submitting-patches.rst#L577
+
+If a tag was not added on purpose, please state why and what changed.
+
+Best regards,
+Krzysztof
 
