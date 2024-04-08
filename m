@@ -1,282 +1,109 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+Received: from mx3.molgen.mpg.de (mx3.molgen.mpg.de [141.14.17.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82163143C56;
-	Mon,  8 Apr 2024 16:35:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3225E142645;
+	Mon,  8 Apr 2024 16:37:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=141.14.17.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712594132; cv=none; b=e+GoFfIMRAbsiOl0Vyi+sT73HgYU8qwhJEGLDWRoAau8Hrwi2irmKlYQDY8AuXROWT+Aer0nYaNkaZU967vxIh/FM8JzBjageGheO0Pl1/e8t9pb6h9+0pjjQvPALZQzDhpS9p/tj+WMOzzgN69ZDeSkRSd+mMvHQbACAypY7P8=
+	t=1712594283; cv=none; b=ZEgsmDFh51gZEWRTtjdG40sOmOhYyi17hQs9L24JiFVCJRrOOzosySXJDQSsEd4LwCbhVDb+m8HyojHlqXp6aCs4zFICgaIjamkS+LdaQEzXbR0pXGK9qw0KcJ4mV1L7d+8J7zQnNTSxlxs2FPQgFSc0Z9OnsJYfaJOGf/4MKYA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712594132; c=relaxed/simple;
-	bh=Pi8iFK7pv9gVSy4zoMZi823T9m60lWJMkW/RGNBSPt4=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=BlNwzvYoGV5YlDTa+VJ7Tye0xf4HmYpfvqphFTpHHkETxfzCMaJDibOWSuhQzP/iaVyFl3q67QvhjMcX2YEuULy1ark0epYb8b4xKxsyXMBenlu3wxqUZ5+sH6Qy+VHwQlayKEoFp9ybvrRc3jB9fB+y18GrLnL0qHVRS5K/lKc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=P7nkEvgr; arc=none smtp.client-ip=192.198.163.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="P7nkEvgr"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1712594130; x=1744130130;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=Pi8iFK7pv9gVSy4zoMZi823T9m60lWJMkW/RGNBSPt4=;
-  b=P7nkEvgr+4+oj9fWOeCFnBb/Fz985GiVB6Qh4fvZXiHrkmvww1bKeLrF
-   N9niTH7h/sdgSsQbr1qCgS9FW1t+ls4kxREMSwDunP31WVCVlMEYQBwjH
-   T53uEXSMQiKks8N8ZgYxaqs2BvUacCmt6KYoc/vA59omE2o2lSOh8maZo
-   eEUQrpRqmHKEt8vOxCUbf9I6fkDBGj158UonzqHgkqqVvrryeFOuQxSut
-   G28gXmgZNpC/hIYUbyjg+knEeZYmijgc47dRcfGdl8ju98dRiUPiMsCwk
-   GFSQ8gPZUZn9FgGOh8iWZkGiK5/xtG/DdrG3aNG3U7CbCHhdE2pcjBzjq
-   A==;
-X-CSE-ConnectionGUID: u6/IEKL/QJ+fPhuLLyt6OA==
-X-CSE-MsgGUID: oGxkhFJrTnO6jtgW3twb2g==
-X-IronPort-AV: E=McAfee;i="6600,9927,11038"; a="7739013"
-X-IronPort-AV: E=Sophos;i="6.07,187,1708416000"; 
-   d="scan'208";a="7739013"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2024 09:35:30 -0700
-X-CSE-ConnectionGUID: d3Vm6xtjSLekTdGc28CwmA==
-X-CSE-MsgGUID: QzRKYmE9RQSZG364hhtU4w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,187,1708416000"; 
-   d="scan'208";a="20503591"
-Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.247.28])
-  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2024 09:35:27 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: linux-kselftest@vger.kernel.org,
-	Reinette Chatre <reinette.chatre@intel.com>,
-	Shuah Khan <shuah@kernel.org>,
-	Babu Moger <babu.moger@amd.com>,
-	=?UTF-8?q?Maciej=20Wiecz=C3=B3r-Retman?= <maciej.wieczor-retman@intel.com>
-Cc: Fenghua Yu <fenghua.yu@intel.com>,
-	linux-kernel@vger.kernel.org,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Subject: [PATCH v3 16/16] selftests/resctrl: Remove test name comparing from write_bm_pid_to_resctrl()
-Date: Mon,  8 Apr 2024 19:32:47 +0300
-Message-Id: <20240408163247.3224-17-ilpo.jarvinen@linux.intel.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240408163247.3224-1-ilpo.jarvinen@linux.intel.com>
-References: <20240408163247.3224-1-ilpo.jarvinen@linux.intel.com>
+	s=arc-20240116; t=1712594283; c=relaxed/simple;
+	bh=tHxJ3krplcWnanw+f2gs+vuLQSJPq5GNtNrhO6CiBXk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=fqIWgjiVOb9mjkdblnx2OQ1EIOmCF2n4U+9I3A2mPr8KSGzCgs+dWdzYU4IQUq+1924BVGy5hKy6k8edX9s9HYF4BEA1gSmCBT+O+IGPdWbPratfjr5F04C/0Mdfa4I4gWz0l33y6z6isyiJEm3WVmLn+SNVv+uzTuUSHvd+JOI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de; spf=pass smtp.mailfrom=molgen.mpg.de; arc=none smtp.client-ip=141.14.17.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=molgen.mpg.de
+Received: from [192.168.0.2] (ip5f5af0ad.dynamic.kabel-deutschland.de [95.90.240.173])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: pmenzel)
+	by mx.molgen.mpg.de (Postfix) with ESMTPSA id 2DF9361E5FE01;
+	Mon,  8 Apr 2024 18:37:23 +0200 (CEST)
+Message-ID: <bd4bdabc-2d83-4022-87f4-8c599009d9f5@molgen.mpg.de>
+Date: Mon, 8 Apr 2024 18:37:22 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+User-Agent: Mozilla Thunderbird
+Subject: Re: xhci_hcd 0000:00:14.0: ERROR Transfer event TRB DMA ptr not part
+ of current TD ep_index 1 comp_code 1
+To: Mathias Nyman <mathias.nyman@linux.intel.com>,
+ =?UTF-8?Q?Micha=C5=82_Pecio?= <michal.pecio@gmail.com>
+Cc: Mathias Nyman <mathias.nyman@intel.com>, linux-usb@vger.kernel.org,
+ LKML <linux-kernel@vger.kernel.org>
+References: <58bca6f2-797a-4e20-a476-2294309afdd5@molgen.mpg.de>
+ <20240405113247.743e34b2@foxbook>
+ <7090d3af-18ce-40e1-8ac2-bf18152e5c4a@molgen.mpg.de>
+ <20240406183659.3daf4fa0@foxbook>
+ <c57f2116-8c42-44fb-9c32-6115ad88f914@molgen.mpg.de>
+ <20240407142542.036fb02f@foxbook>
+ <1f64af9a-0618-a7da-4acc-f043b6580308@linux.intel.com>
+Content-Language: en-US
+From: Paul Menzel <pmenzel@molgen.mpg.de>
+In-Reply-To: <1f64af9a-0618-a7da-4acc-f043b6580308@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-write_bm_pid_to_resctrl() uses resctrl_val to check test name which is
-not a good interface generic resctrl FS functions should provide.
+Dear Mathias, dear Michał,
 
-Only MBM and CMT tests define mongrp so the test name check in
-write_bm_pid_to_resctrl() can be changed to depend simply on mongrp
-being non-NULL.
 
-With last user of resctrl_val gone, the parameter and member from the
-struct resctrl_val_param can removed. Test name constants can also be
-removed because they are not used anymore.
+Thank you very much for your assistance.
 
-Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
----
- tools/testing/selftests/resctrl/cat_test.c    |  5 +--
- tools/testing/selftests/resctrl/cmt_test.c    |  1 -
- tools/testing/selftests/resctrl/mba_test.c    |  1 -
- tools/testing/selftests/resctrl/mbm_test.c    |  1 -
- tools/testing/selftests/resctrl/resctrl.h     | 10 +-----
- tools/testing/selftests/resctrl/resctrl_val.c |  4 +--
- tools/testing/selftests/resctrl/resctrlfs.c   | 33 ++++++++-----------
- 7 files changed, 17 insertions(+), 38 deletions(-)
 
-diff --git a/tools/testing/selftests/resctrl/cat_test.c b/tools/testing/selftests/resctrl/cat_test.c
-index c7686fb6641a..d4dffc934bc3 100644
---- a/tools/testing/selftests/resctrl/cat_test.c
-+++ b/tools/testing/selftests/resctrl/cat_test.c
-@@ -158,7 +158,6 @@ static int cat_test(const struct resctrl_test *test,
- 		    struct resctrl_val_param *param,
- 		    size_t span, unsigned long current_mask)
- {
--	char *resctrl_val = param->resctrl_val;
- 	struct perf_event_read pe_read;
- 	struct perf_event_attr pea;
- 	cpu_set_t old_affinity;
-@@ -178,8 +177,7 @@ static int cat_test(const struct resctrl_test *test,
- 		return ret;
- 
- 	/* Write benchmark to specified con_mon grp, mon_grp in resctrl FS*/
--	ret = write_bm_pid_to_resctrl(bm_pid, param->ctrlgrp, param->mongrp,
--				      resctrl_val);
-+	ret = write_bm_pid_to_resctrl(bm_pid, param->ctrlgrp, param->mongrp);
- 	if (ret)
- 		goto reset_affinity;
- 
-@@ -272,7 +270,6 @@ static int cat_run_test(const struct resctrl_test *test, const struct user_param
- 	start_mask = create_bit_mask(start, n);
- 
- 	struct resctrl_val_param param = {
--		.resctrl_val	= CAT_STR,
- 		.ctrlgrp	= "c1",
- 		.filename	= RESULT_FILE_NAME,
- 		.num_of_runs	= 0,
-diff --git a/tools/testing/selftests/resctrl/cmt_test.c b/tools/testing/selftests/resctrl/cmt_test.c
-index 238f514ba7e6..e1fadc1bfa37 100644
---- a/tools/testing/selftests/resctrl/cmt_test.c
-+++ b/tools/testing/selftests/resctrl/cmt_test.c
-@@ -144,7 +144,6 @@ static int cmt_run_test(const struct resctrl_test *test, const struct user_param
- 	}
- 
- 	struct resctrl_val_param param = {
--		.resctrl_val	= CMT_STR,
- 		.ctrlgrp	= "c1",
- 		.mongrp		= "m1",
- 		.filename	= RESULT_FILE_NAME,
-diff --git a/tools/testing/selftests/resctrl/mba_test.c b/tools/testing/selftests/resctrl/mba_test.c
-index 5e0b1e794295..1f2a7dc73b62 100644
---- a/tools/testing/selftests/resctrl/mba_test.c
-+++ b/tools/testing/selftests/resctrl/mba_test.c
-@@ -164,7 +164,6 @@ static void mba_test_cleanup(void)
- static int mba_run_test(const struct resctrl_test *test, const struct user_params *uparams)
- {
- 	struct resctrl_val_param param = {
--		.resctrl_val	= MBA_STR,
- 		.ctrlgrp	= "c1",
- 		.filename	= RESULT_FILE_NAME,
- 		.init		= mba_init,
-diff --git a/tools/testing/selftests/resctrl/mbm_test.c b/tools/testing/selftests/resctrl/mbm_test.c
-index 0a3ab99b31ab..b027d17b57c5 100644
---- a/tools/testing/selftests/resctrl/mbm_test.c
-+++ b/tools/testing/selftests/resctrl/mbm_test.c
-@@ -132,7 +132,6 @@ static void mbm_test_cleanup(void)
- static int mbm_run_test(const struct resctrl_test *test, const struct user_params *uparams)
- {
- 	struct resctrl_val_param param = {
--		.resctrl_val	= MBM_STR,
- 		.ctrlgrp	= "c1",
- 		.mongrp		= "m1",
- 		.filename	= RESULT_FILE_NAME,
-diff --git a/tools/testing/selftests/resctrl/resctrl.h b/tools/testing/selftests/resctrl/resctrl.h
-index a999fbc13fd3..2dda56084588 100644
---- a/tools/testing/selftests/resctrl/resctrl.h
-+++ b/tools/testing/selftests/resctrl/resctrl.h
-@@ -81,7 +81,6 @@ struct resctrl_test {
- 
- /*
-  * resctrl_val_param:	resctrl test parameters
-- * @resctrl_val:	Resctrl feature (Eg: mbm, mba.. etc)
-  * @ctrlgrp:		Name of the control monitor group (con_mon grp)
-  * @mongrp:		Name of the monitor group (mon grp)
-  * @filename:		Name of file to which the o/p should be written
-@@ -90,7 +89,6 @@ struct resctrl_test {
-  * @measure:		Callback that performs the measurement (a single test)
-  */
- struct resctrl_val_param {
--	char		*resctrl_val;
- 	const char	*ctrlgrp;
- 	const char	*mongrp;
- 	char		filename[64];
-@@ -113,11 +111,6 @@ struct perf_event_read {
- 	} values[2];
- };
- 
--#define MBM_STR			"mbm"
--#define MBA_STR			"mba"
--#define CMT_STR			"cmt"
--#define CAT_STR			"cat"
--
- /*
-  * Memory location that consumes values compiler must not optimize away.
-  * Volatile ensures writes to this location cannot be optimized away by
-@@ -143,8 +136,7 @@ int taskset_benchmark(pid_t bm_pid, int cpu_no, cpu_set_t *old_affinity);
- int taskset_restore(pid_t bm_pid, cpu_set_t *old_affinity);
- int write_schemata(const char *ctrlgrp, char *schemata, int cpu_no,
- 		   const char *resource);
--int write_bm_pid_to_resctrl(pid_t bm_pid, const char *ctrlgrp,
--			    const char *mongrp, const char *resctrl_val);
-+int write_bm_pid_to_resctrl(pid_t bm_pid, const char *ctrlgrp, const char *mongrp);
- int perf_event_open(struct perf_event_attr *hw_event, pid_t pid, int cpu,
- 		    int group_fd, unsigned long flags);
- unsigned char *alloc_buffer(size_t buf_size, int memflush);
-diff --git a/tools/testing/selftests/resctrl/resctrl_val.c b/tools/testing/selftests/resctrl/resctrl_val.c
-index a9e0bb35a4ab..17b93b44b013 100644
---- a/tools/testing/selftests/resctrl/resctrl_val.c
-+++ b/tools/testing/selftests/resctrl/resctrl_val.c
-@@ -664,7 +664,6 @@ int resctrl_val(const struct resctrl_test *test,
- 		const char * const *benchmark_cmd,
- 		struct resctrl_val_param *param)
- {
--	char *resctrl_val = param->resctrl_val;
- 	struct sigaction sigact;
- 	int ret = 0, pipefd[2];
- 	char pipe_message = 0;
-@@ -755,8 +754,7 @@ int resctrl_val(const struct resctrl_test *test,
- 		goto out;
- 
- 	/* Write benchmark to specified control&monitoring grp in resctrl FS */
--	ret = write_bm_pid_to_resctrl(bm_pid, param->ctrlgrp, param->mongrp,
--				      resctrl_val);
-+	ret = write_bm_pid_to_resctrl(bm_pid, param->ctrlgrp, param->mongrp);
- 	if (ret)
- 		goto out;
- 
-diff --git a/tools/testing/selftests/resctrl/resctrlfs.c b/tools/testing/selftests/resctrl/resctrlfs.c
-index 6b4448588666..4bf1fe6dc308 100644
---- a/tools/testing/selftests/resctrl/resctrlfs.c
-+++ b/tools/testing/selftests/resctrl/resctrlfs.c
-@@ -519,7 +519,6 @@ static int write_pid_to_tasks(char *tasks, pid_t pid)
-  * @bm_pid:		PID that should be written
-  * @ctrlgrp:		Name of the control monitor group (con_mon grp)
-  * @mongrp:		Name of the monitor group (mon grp)
-- * @resctrl_val:	Resctrl feature (Eg: mbm, mba.. etc)
-  *
-  * If a con_mon grp is requested, create it and write pid to it, otherwise
-  * write pid to root con_mon grp.
-@@ -529,8 +528,7 @@ static int write_pid_to_tasks(char *tasks, pid_t pid)
-  *
-  * Return: 0 on success, < 0 on error.
-  */
--int write_bm_pid_to_resctrl(pid_t bm_pid, const char *ctrlgrp,
--			    const char *mongrp, const char *resctrl_val)
-+int write_bm_pid_to_resctrl(pid_t bm_pid, const char *ctrlgrp, const char *mongrp)
- {
- 	char controlgroup[128], monitorgroup[512], monitorgroup_p[256];
- 	char tasks[1024];
-@@ -550,22 +548,19 @@ int write_bm_pid_to_resctrl(pid_t bm_pid, const char *ctrlgrp,
- 	if (ret)
- 		goto out;
- 
--	/* Create mon grp and write pid into it for "mbm" and "cmt" test */
--	if (!strncmp(resctrl_val, CMT_STR, sizeof(CMT_STR)) ||
--	    !strncmp(resctrl_val, MBM_STR, sizeof(MBM_STR))) {
--		if (mongrp) {
--			sprintf(monitorgroup_p, "%s/mon_groups", controlgroup);
--			sprintf(monitorgroup, "%s/%s", monitorgroup_p, mongrp);
--			ret = create_grp(mongrp, monitorgroup, monitorgroup_p);
--			if (ret)
--				goto out;
--
--			sprintf(tasks, "%s/mon_groups/%s/tasks",
--				controlgroup, mongrp);
--			ret = write_pid_to_tasks(tasks, bm_pid);
--			if (ret)
--				goto out;
--		}
-+	/* Create monitor group and write pid into if it is used */
-+	if (mongrp) {
-+		sprintf(monitorgroup_p, "%s/mon_groups", controlgroup);
-+		sprintf(monitorgroup, "%s/%s", monitorgroup_p, mongrp);
-+		ret = create_grp(mongrp, monitorgroup, monitorgroup_p);
-+		if (ret)
-+			goto out;
-+
-+		sprintf(tasks, "%s/mon_groups/%s/tasks",
-+			controlgroup, mongrp);
-+		ret = write_pid_to_tasks(tasks, bm_pid);
-+		if (ret)
-+			goto out;
- 	}
- 
- out:
--- 
-2.39.2
+Am 08.04.24 um 09:17 schrieb Mathias Nyman:
+> On 7.4.2024 15.25, Michał Pecio wrote:
+>> This (and the absence of any earlier errors on the endpoint) looks
+>> like the hardware may be confirming a "successful" transfer twice or
+>> the driver may be processing one such confirmation twice.
+> 
+> It's also possible this TD/TRB was cancelled due to the disconnect.
+> Could be that even if driver removes the TD from the list and cleans out 
+> the TRB from the ring buffer (turns TRB to no-op) hardware may have read
+> ahead and cached the TRB, and process it anyway.
+> 
+>> [   94.088594] usb 1-2: USB disconnect, device number 8
+>> [   94.089370] xhci_hcd 0000:00:14.0: ERROR Transfer event TRB DMA ptr not part of current TD ep_index 1 comp_code 1
+>> [   94.089403] xhci_hcd 0000:00:14.0: Looking for event-dma 00000001250310f0 trb-start 0000000125031100 trb-end 0000000125031100 seg-start 0000000125031000 seg-end 0000000125031ff0
+>> [   94.089427] xhci_hcd 0000:00:14.0: last xhci_td_cleanup: first_dma 1250310f0 last_dma 1250310f0 status -115 from finish_td
+>>
+>> (I say "successful" but it really isn't - the device is no longer
+>> listening. But there is no delivery confirmation on isochronous OUT
+>> endpoints so the xHC doesn't suspect anything.)
+>>
+>> Could you try again with this updated debug patch to get more info?
+> 
+> Would also be helpful to add xhci dynamic debug and xhci tracing (two 
+> separate logs). These will show in detail everything that is going on.
+> 
+> Steps:
+> 
+> mount -t debugfs none /sys/kernel/debug
+> echo 'module xhci_hcd =p' >/sys/kernel/debug/dynamic_debug/control
+> echo 'module usbcore =p' >/sys/kernel/debug/dynamic_debug/control
+> echo 81920 > /sys/kernel/debug/tracing/buffer_size_kb
+> echo 1 > /sys/kernel/debug/tracing/events/xhci-hcd/enable
+> echo 1 > /sys/kernel/debug/tracing/tracing_on
+> < Reproduce issue >
+> Send output of dmesg
+> Send content of /sys/kernel/debug/tracing/trace
+> 
+> please copy the /sys/kernel/debug/tracing/trace file somewhere as soon
+> as possible after reproducing the issue. It grows fast.
 
+For posterity I created Linux Kernel Bugzilla issue #218695 [1], and 
+attached the files there. Hopefully everything was captured, that you 
+need. The discussion could continue on this list, but do as it suits you 
+best.
+
+
+Kind regards,
+
+Paul
+
+
+[1]: https://bugzilla.kernel.org/show_bug.cgi?id=218695
