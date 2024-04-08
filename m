@@ -1,43 +1,44 @@
 Received: from mx1.sberdevices.ru (mx2.sberdevices.ru [45.89.224.132])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 880431E532;
-	Mon,  8 Apr 2024 16:49:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B4BE1428F7;
+	Mon,  8 Apr 2024 16:49:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.89.224.132
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712595001; cv=none; b=K7/6qn89LW6RVtwLeQU0aeTbFHQKvNLRVcEl1l6V5eQxZMt0oZdgVO1D4F5zrmJ/wZgEMFOrRK8DrkLTs/fmaxVegjt+H1LNp2lpIi9EHU+GjIoJv177UZ9a+eFJcpbA1yKyX0atzhdTaGQ2Xec9sGNt/IC0FSt0eHpwlP0RDJ8=
+	t=1712595001; cv=none; b=amN41hCq9QE1549vGhjMYUjrZFam/j7nD+YN/0T8/9ck9t+ouIvAkfMZscsEkpFeFTKcA02PvYjZDL83EiX50//6/dR3VMNiNJzTirNluBheEE0oyNvu5aBdC6CHrWYRb7SxwP2bCSPncU4vmoRXwEICDKSA+QLaZZC5AD6pCY4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1712595001; c=relaxed/simple;
-	bh=1TwjqB1I0raub8VPyrmdRKHURhBFHprQC67n8Xq0EhY=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=GblEDg2ALATgdgmIA2JfzLYLb14Wq8kC1e/67iPQZOZ7YAinicEDk0C3lnkSRFFqalFyt6WgFAqtk1otbdol13PTvIDTIutitgfGlbPwf/woqvf4QViMy3mG8b8f/7I72XGFUAh8VFbCg228e6oAt/RvIqSzkzBw9QBLa+kJWl0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=salutedevices.com; spf=pass smtp.mailfrom=salutedevices.com; dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b=GKl0rt1J; arc=none smtp.client-ip=45.89.224.132
+	bh=33ya6iAIdhOO+qGkv/GeYEfF192TQ7WZCShCQ0XLBNo=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=k7Q96WkUhICVga2E3pigWA1j63+RUvLkjoglR+f4VyxOA0C7/Lk83QHy3YDwv5aBQPWYXPkbrh0YzcW7DPhOSJND0kwEdNPJJ9sBNyWR2k2tDVivna8g0IYqgJM4vS04RAZgHlalFN9rO6Tl2Rn+SH9eKVwd+lmr2qx0q0XQbcI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=salutedevices.com; spf=pass smtp.mailfrom=salutedevices.com; dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b=Mbjhu4jU; arc=none smtp.client-ip=45.89.224.132
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=salutedevices.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=salutedevices.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b="GKl0rt1J"
+	dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b="Mbjhu4jU"
 Received: from p-infra-ksmg-sc-msk02 (localhost [127.0.0.1])
-	by mx1.sberdevices.ru (Postfix) with ESMTP id 9103F120023;
-	Mon,  8 Apr 2024 19:49:54 +0300 (MSK)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mx1.sberdevices.ru 9103F120023
+	by mx1.sberdevices.ru (Postfix) with ESMTP id AD415120027;
+	Mon,  8 Apr 2024 19:49:56 +0300 (MSK)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mx1.sberdevices.ru AD415120027
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=salutedevices.com;
-	s=mail; t=1712594994;
-	bh=GVKo6znhMy5c2DD7Af70VLwRzPogSN+CP1wNv/Gt+K0=;
+	s=mail; t=1712594996;
+	bh=HZCeDqOWZRFrRmmJb31Zwudz+k5V9qwLfzuWrQFrCr0=;
 	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type:From;
-	b=GKl0rt1Jj2HYmfyKyUjhNSb/kz4hyLxsaa/jopgRVQ/gw0Paprmnt287VkE/rRfoH
-	 REmEizIKeseLRD60c482kp0flYdlWsjOk441rFXVXHkOhpfdX/CSjpDAg0/uy3iLzx
-	 BEtgao8PC1EKsXa/qgVn+530uet9waOyOQtZKm8HqptZuC4L1T6wbF4AEsyR/kXWDI
-	 DhqeviGKT0GgzB8Lh/EeKUwgO6EskWAqX3ZHpTmrMIXeMsyGH4QTOK4NYNAfjYA+bD
-	 PRKiICVaXkblhNOhVq9Rfeq3PbLYlSByxmvVAID5KzL+j/6jAL4zXyVd64qIK4IE6i
-	 Go2JZZdr+sw8A==
+	b=Mbjhu4jURZzp+med9MOYEhZqXIgEyuvptRXXUaggCCEGe0qvFQqtxIECPMCb09o4e
+	 9U+RLqL4qYCNn5WhVgap/l44esWXeH78j+mYbOz68RQ/ty1a9IVMOSnflfPJhuiMUH
+	 USz3kmZn5u++K7n//jZRMP27/O+bEQHRQI56/FB86sk6gOmkichtCluqUd89Xsy59p
+	 OwQJIP/K5BoU4biD4gdHOxLYzSvewd+E5QbMu+3M+cxoHVZg1q3AR3FCh5izEt4dss
+	 mplv84t39KGU4/ZQIK1PKZFy9sA2b0iRa2Wp9eHlMcJfD3VsesvN70pEe5X3O5yQyt
+	 odkf53me/OI+A==
 Received: from smtp.sberdevices.ru (p-i-exch-sc-m02.sberdevices.ru [172.16.192.103])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
 	by mx1.sberdevices.ru (Postfix) with ESMTPS;
-	Mon,  8 Apr 2024 19:49:54 +0300 (MSK)
+	Mon,  8 Apr 2024 19:49:56 +0300 (MSK)
 Received: from CAB-WSD-L081021.sberdevices.ru (100.64.160.123) by
  p-i-exch-sc-m02.sberdevices.ru (172.16.192.103) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.40; Mon, 8 Apr 2024 19:49:53 +0300
+ 15.2.1118.40; Mon, 8 Apr 2024 19:49:56 +0300
 From: Dmitry Rokosov <ddrokosov@salutedevices.com>
 To: <neil.armstrong@linaro.org>, <lgirdwood@gmail.com>,
 	<jbrunet@baylibre.com>, <broonie@kernel.org>, <conor+dt@kernel.org>,
@@ -49,10 +50,12 @@ CC: <kernel@salutedevices.com>, <rockosov@gmail.com>,
 	<linux-sound@vger.kernel.org>, <devicetree@vger.kernel.org>,
 	<linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
 	Dmitry Rokosov <ddrokosov@salutedevices.com>
-Subject: [PATCH v1 0/2] ASoC: meson: implement link-name optional property in meson audio card
-Date: Mon, 8 Apr 2024 19:49:38 +0300
-Message-ID: <20240408164947.30717-1-ddrokosov@salutedevices.com>
+Subject: [PATCH v1 2/2] ASoC: meson: implement link-name optional property in meson card utils
+Date: Mon, 8 Apr 2024 19:49:40 +0300
+Message-ID: <20240408164947.30717-3-ddrokosov@salutedevices.com>
 X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240408164947.30717-1-ddrokosov@salutedevices.com>
+References: <20240408164947.30717-1-ddrokosov@salutedevices.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -80,20 +83,49 @@ X-KSMG-LinksScanning: Clean
 X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 2.0.1.6960, bases: 2024/04/08 12:02:00 #24709100
 X-KSMG-AntiVirus-Status: Clean, skipped
 
-The 'link-name' is optional feature in the Device Tree that allows users
-to customize the name associated with the DAI link and PCM stream.  This
-feature provides enhanced flexibility in DAI naming conventions, leading
-to improved system integration and a better user experience.
+The 'link-name' property presents an optional DT feature that empowers
+users to customize the name associated with the DAI link and PCM stream.
+This functionality reflects the approach often employed in Qualcomm
+audio cards, providing enhanced flexibility in DAI naming conventions
+for improved system integration and userspace experience.
 
-Dmitry Rokosov (2):
-  ASoC: dt-bindings: meson: introduce link-name optional property
-  ASoC: meson: implement link-name optional property in meson card utils
+It allows userspace program to easy determine PCM stream purpose, e.g.:
+    ~ # cat /proc/asound/pcm
+    00-00: speaker (*) :  : playback 1
+    00-01: mics (*) :  : capture 1
+    00-02: loopback (*) :  : capture 1
 
- .../bindings/sound/amlogic,axg-sound-card.yaml       |  6 ++++++
- .../bindings/sound/amlogic,gx-sound-card.yaml        |  6 ++++++
- sound/soc/meson/meson-card-utils.c                   | 12 ++++++++----
- 3 files changed, 20 insertions(+), 4 deletions(-)
+The previous naming approach using auto-generated fe or be strings
+continues to be utilized as a fallback.
 
+Signed-off-by: Dmitry Rokosov <ddrokosov@salutedevices.com>
+---
+ sound/soc/meson/meson-card-utils.c | 12 ++++++++----
+ 1 file changed, 8 insertions(+), 4 deletions(-)
+
+diff --git a/sound/soc/meson/meson-card-utils.c b/sound/soc/meson/meson-card-utils.c
+index ed6c7e2f609c..7bae72905a9b 100644
+--- a/sound/soc/meson/meson-card-utils.c
++++ b/sound/soc/meson/meson-card-utils.c
+@@ -94,10 +94,14 @@ static int meson_card_set_link_name(struct snd_soc_card *card,
+ 				    struct device_node *node,
+ 				    const char *prefix)
+ {
+-	char *name = devm_kasprintf(card->dev, GFP_KERNEL, "%s.%s",
+-				    prefix, node->full_name);
+-	if (!name)
+-		return -ENOMEM;
++	const char *name;
++
++	if (of_property_read_string(node, "link-name", &name)) {
++		name = devm_kasprintf(card->dev, GFP_KERNEL, "%s.%s",
++				      prefix, node->full_name);
++		if (!name)
++			return -ENOMEM;
++	}
+ 
+ 	link->name = name;
+ 	link->stream_name = name;
 -- 
 2.43.0
 
