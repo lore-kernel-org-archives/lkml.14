@@ -1,222 +1,101 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAA3D13F01A;
-	Mon,  8 Apr 2024 14:58:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 470CD13F42A;
+	Mon,  8 Apr 2024 15:01:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712588307; cv=none; b=pG/GOZ6Kq4DJQkxI9NVhCaet/XrXejStyV+c42sJ3LToziG1YTUBfEIcsJDzL8LhdiGlhs+OMvnLkGVJjFgYZhmcin1ERbxyjRxdUTFnSwIJAuWODieuK2+HU6hIVsHGD2oNCg65JmF/1jaewnP/+YY+KpHS5OtLRkxiTDBuSYk=
+	t=1712588494; cv=none; b=uRoqqWANLNavbl5vmJnsCI4xn5XWcY4D5QYlTYtBKee6s8H4U6lakBSySHofUzWXb4l8a5c1DZh7NevtJfL8iJDzHTUxGPz/OhMui4vbheLZfMah4cCeRzo/tXAOPsbuHWNcrjaUtDl4On02G5sBnG4plBv6lJpcDBLscpEvzCE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712588307; c=relaxed/simple;
-	bh=H2v7MTrPicOoDLC8fqGHfCf75dQRyPiiI+mZ/zR7ZIg=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=PB65kLFXBvYIFd8KJhBxMwjpLvb5bsdixtCR1nK1MSUbHEMRoK+bQlnT3DWmLVmNRmwo800t1RQhXPNWE61Fia2Vaiv5Me9meGM1k/dHU3IjORcT6E+geY1//DXy0ogkrBlOg2h8IU7IH6VfRIzfy6s+pVwzqveLL/U7H5MyTfk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=vWOLiIYf; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=vWOLiIYf; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1712588494; c=relaxed/simple;
+	bh=EITVdlJtkrnylLXhed9Pr1DfYAyVTQ3XvaUDh63E534=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=bjGRrwHk++ZbrkhTgH5dXtENpfRHmOQgJczDQVc15iA567JVW7k1W6MUUOXs7yZhxnNGzTX9gfmFXSqeiqb/RfO03pubmr21C5vGhsPv+wymsdlr54E51D1WxkfwCXhutiACQjLNfRk4LWGJ4pRpG7g74ENrtKCkg1UVyI74PrE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iPVzIBvT; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="vWOLiIYf";
-	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="vWOLiIYf"
-Received: from imap2.dmz-prg2.suse.org (imap2.dmz-prg2.suse.org [10.150.64.98])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 08316203F0;
-	Mon,  8 Apr 2024 14:58:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1712588302; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=YTjJZsX/P9tXqTfUJFkBVLEtRqDKu3yAXjWfeJPn/ds=;
-	b=vWOLiIYfYbL3aGlyNL1lo+sJ1v8hiRj1ROFWPrNLXjvZyWk7j0Tn4URnBWbbWI/hPtloSi
-	u/F+H/QULKRTeKge7WFIAz9XAjuGrY2tu31B91juR6NFYDgObLLfuCNpL6HzGXBWvcO6NJ
-	wjiiOrCZBLKJZSXIdY63apPBD8J7XaY=
-Authentication-Results: smtp-out2.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1712588302; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=YTjJZsX/P9tXqTfUJFkBVLEtRqDKu3yAXjWfeJPn/ds=;
-	b=vWOLiIYfYbL3aGlyNL1lo+sJ1v8hiRj1ROFWPrNLXjvZyWk7j0Tn4URnBWbbWI/hPtloSi
-	u/F+H/QULKRTeKge7WFIAz9XAjuGrY2tu31B91juR6NFYDgObLLfuCNpL6HzGXBWvcO6NJ
-	wjiiOrCZBLKJZSXIdY63apPBD8J7XaY=
-Received: from imap2.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap2.dmz-prg2.suse.org (Postfix) with ESMTPS id DB92813AA4;
-	Mon,  8 Apr 2024 14:58:21 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([10.150.64.162])
-	by imap2.dmz-prg2.suse.org with ESMTPSA
-	id yNxwNQ0GFGa8dgAAn2gu4w
-	(envelope-from <mkoutny@suse.com>); Mon, 08 Apr 2024 14:58:21 +0000
-From: =?UTF-8?q?Michal=20Koutn=C3=BD?= <mkoutny@suse.com>
-To: linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org
-Cc: Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Christian Brauner <brauner@kernel.org>,
-	Oleg Nesterov <oleg@redhat.com>,
-	Kent Overstreet <kent.overstreet@linux.dev>,
-	Kees Cook <keescook@chromium.org>,
-	=?UTF-8?q?Michal=20Koutn=C3=BD?= <mkoutny@suse.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Tycho Andersen <tandersen@netflix.com>,
-	Jens Axboe <axboe@kernel.dk>,
-	Aleksa Sarai <cyphar@cyphar.com>
-Subject: [PATCH 2/3] kernel/pid: Remove default pid_max value
-Date: Mon,  8 Apr 2024 16:58:18 +0200
-Message-ID: <20240408145819.8787-3-mkoutny@suse.com>
-X-Mailer: git-send-email 2.44.0
-In-Reply-To: <20240408145819.8787-1-mkoutny@suse.com>
-References: <20240408145819.8787-1-mkoutny@suse.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iPVzIBvT"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CB446C433F1;
+	Mon,  8 Apr 2024 15:01:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1712588493;
+	bh=EITVdlJtkrnylLXhed9Pr1DfYAyVTQ3XvaUDh63E534=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=iPVzIBvT/iSK03mJ74WyCdtfwrYQ0FIvhL5K8YMXOWzUcxtAW1X9DNCrqtBiFjfyi
+	 tl90sPwPpZ5rbnlWkWlrmucbJbApIpssRcLEk4bwAVt6FxwLnhmycj60p3s5ZulGuY
+	 Oi6kb5XzN6oeZLDaCEoYGMUGaCwA36s9aVa2vFCs+0r3L2ACNZZS6RJMIMK7lmGxXl
+	 LZaKWREq5eaTZ8dEmqubeluPfq1pepZhLI9FVjpANsP8XqyeISOYtrQC8gZ/KN/t0I
+	 J4RLdMza2ntow+e8CC8hAcBjXsrybDusTaZepo397svH4xSl9ToXUzq+mYubuhRT/b
+	 17pKAxdggeVsA==
+Received: by mail-ot1-f50.google.com with SMTP id 46e09a7af769-6ea1572136eso453455a34.1;
+        Mon, 08 Apr 2024 08:01:33 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCW3+0lUuKg3hHhe5fIqYbB6u665OvDnFDviXdUd7KWwdn3iXbLFY6hEeIr3VKPT+6KhtijdC/aMEQixQJR8e62LzYen9GjggTwawKLEhn9SqELjylZL57kGQkpxmjD/8n7Z+WFUBW8H2HCWTBOLjc+YqFVDm55FTv5XdDPgzEIaiLOjT+XnmOtAolUMwTh7zUKraa7MV0+2yxafcRNvULKVG6VwrLZivXIW1gexeQtwi62weIsFjgZCMyHHVQ==
+X-Gm-Message-State: AOJu0YzUFgJuG5OoHcgg+C7cG0jOPGlDiSTYqqsmM17PI9Otqcm2Gp8w
+	0xKNpdaFYwl5HKE7Dz+tIuFRrDijMGKw9nsfRzmQji05ws/GVvDn/2lcM2jA+e5CupL+fHBJ80z
+	yHjpuw6lyNGtgRjHxBoAg7xnjuYg=
+X-Google-Smtp-Source: AGHT+IE7BjvtTOsOgPqYkXR1Qq+KOOG/nJtiEyKbfNUuvRcPpCIK8D3B6ZYbWXxS6qJ87RK9Jxd6UH195uv+p6a4TTw=
+X-Received: by 2002:a05:6808:603:b0:3c5:f534:e2c7 with SMTP id
+ y3-20020a056808060300b003c5f534e2c7mr2839026oih.1.1712588493105; Mon, 08 Apr
+ 2024 08:01:33 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Spam-Level: 
-X-Spamd-Result: default: False [-3.30 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	MID_CONTAINS_FROM(1.00)[];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MIME_TRACE(0.00)[0:+];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[14];
-	ARC_NA(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	TO_DN_SOME(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	DKIM_SIGNED(0.00)[suse.com:s=susede1];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:email,imap2.dmz-prg2.suse.org:helo,imap2.dmz-prg2.suse.org:rdns]
-X-Spam-Score: -3.30
-X-Spam-Flag: NO
+References: <cover.1712410202.git.lukas@wunner.de>
+In-Reply-To: <cover.1712410202.git.lukas@wunner.de>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Mon, 8 Apr 2024 17:01:22 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0hOHCSp8-8EZjuGAOR0QSH3CcvokG3uBGAKFFpTrkqQRA@mail.gmail.com>
+Message-ID: <CAJZ5v0hOHCSp8-8EZjuGAOR0QSH3CcvokG3uBGAKFFpTrkqQRA@mail.gmail.com>
+Subject: Re: [PATCH 0/2] Deduplicate bin_attribute simple read() callbacks
+To: Lukas Wunner <lukas@wunner.de>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	linux-kernel@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>, 
+	linuxppc-dev@lists.ozlabs.org, linux-acpi@vger.kernel.org, 
+	Jean Delvare <jdelvare@suse.com>, Ard Biesheuvel <ardb@kernel.org>, linux-efi@vger.kernel.org, 
+	Zhenyu Wang <zhenyuw@linux.intel.com>, Zhi Wang <zhi.wang.linux@gmail.com>, 
+	intel-gvt-dev@lists.freedesktop.org, 
+	Daniel Lezcano <daniel.lezcano@linaro.org>, linux-pm@vger.kernel.org, 
+	Luis Chamberlain <mcgrof@kernel.org>, linux-modules@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-pid_max is a per-pidns (thus global too) limit on a number of tasks the
-kernel admits. The knob can be configured by admin in the range between
-pid_max_min and pid_max_max (sic). The default value sits between
-those and it typically equals max(32k, 1k*nr_cpus).
+On Sat, Apr 6, 2024 at 3:52=E2=80=AFPM Lukas Wunner <lukas@wunner.de> wrote=
+:
+>
+> For my upcoming PCI device authentication v2 patches, I have the need
+> to expose a simple buffer in virtual memory as a bin_attribute.
+>
+> It turns out we've duplicated the ->read() callback for such simple
+> buffers a fair number of times across the tree.
+>
+> So instead of reinventing the wheel, I decided to introduce a common
+> helper and eliminate all duplications I could find.
+>
+> I'm open to a bikeshedding discussion on the sysfs_bin_attr_simple_read()
+> name. ;)
+>
+> Lukas Wunner (2):
+>   sysfs: Add sysfs_bin_attr_simple_read() helper
+>   treewide: Use sysfs_bin_attr_simple_read() helper
+>
+>  arch/powerpc/platforms/powernv/opal.c              | 10 +-------
+>  drivers/acpi/bgrt.c                                |  9 +-------
+>  drivers/firmware/dmi_scan.c                        | 12 ++--------
+>  drivers/firmware/efi/rci2-table.c                  | 10 +-------
+>  drivers/gpu/drm/i915/gvt/firmware.c                | 26 +++++-----------=
+-----
+>  .../intel/int340x_thermal/int3400_thermal.c        |  9 +-------
+>  fs/sysfs/file.c                                    | 27 ++++++++++++++++=
+++++++
+>  include/linux/sysfs.h                              | 15 ++++++++++++
+>  init/initramfs.c                                   | 10 +-------
+>  kernel/module/sysfs.c                              | 13 +----------
+>  10 files changed, 56 insertions(+), 85 deletions(-)
+>
+> --
 
-The nr_cpu scaling was introduced in commit 72680a191b93 ("pids:
-increase pid_max based on num_possible_cpus") to accommodate kernel's own
-helper tasks (before workqueues). Generally, 1024 tasks/cpu cap is too
-much if they were all running and it is also too little when they are
-idle (memory being bottleneck).
+For the series
 
-The kernel also provides other mechanisms to restrict number of tasks --
-threads-max sysctl and RLIMIT_NPROC with memory-scaled defaults and
-generic pids cgroup controller (the last one being the solution of
-fork-bombs, with qualified limits set up by admin).
-
-The kernel provides mechanisms, while it should not imply policies --
-default pid_max seems to be an example of the policy that does not fit
-all. At the same time pid_max must have some value assigned, so use the
-end of the allowed range -- pid_max_max.
-
-This change thus increases initial pid_max from 32k to 4M (x86_64
-defconfig).
-
-This has effect on size of structure that alloc_pid/idr_alloc_cyclic
-eventually uses and structure that kernel tracing uses with
-'record-tgid' (~16 MiB).
-
-Signed-off-by: Michal Koutný <mkoutny@suse.com>
----
- include/linux/pid.h     |  4 ++--
- include/linux/threads.h | 15 ++++-----------
- kernel/pid.c            |  8 +++-----
- 3 files changed, 9 insertions(+), 18 deletions(-)
-
-diff --git a/include/linux/pid.h b/include/linux/pid.h
-index a3aad9b4074c..0d191ac02958 100644
---- a/include/linux/pid.h
-+++ b/include/linux/pid.h
-@@ -106,8 +106,8 @@ extern void exchange_tids(struct task_struct *task, struct task_struct *old);
- extern void transfer_pid(struct task_struct *old, struct task_struct *new,
- 			 enum pid_type);
- 
--extern int pid_max;
--extern int pid_max_min, pid_max_max;
-+extern int pid_max_min, pid_max;
-+extern const int pid_max_max;
- 
- /*
-  * look up a PID in the hash table. Must be called with the tasklist_lock
-diff --git a/include/linux/threads.h b/include/linux/threads.h
-index c34173e6c5f1..43f8f38a0c13 100644
---- a/include/linux/threads.h
-+++ b/include/linux/threads.h
-@@ -22,25 +22,18 @@
- 
- #define MIN_THREADS_LEFT_FOR_ROOT 4
- 
--/*
-- * This controls the default maximum pid allocated to a process
-- */
--#define PID_MAX_DEFAULT (CONFIG_BASE_SMALL ? 0x1000 : 0x8000)
--
- /*
-  * A maximum of 4 million PIDs should be enough for a while.
-  * [NOTE: PID/TIDs are limited to 2^30 ~= 1 billion, see FUTEX_TID_MASK.]
-  */
- #define PID_MAX_LIMIT (CONFIG_BASE_SMALL ? PAGE_SIZE * 8 : \
--	(sizeof(long) > 4 ? 4 * 1024 * 1024 : PID_MAX_DEFAULT))
-+	(sizeof(long) > 4 ? 4 * 1024 * 1024 : 0x8000))
- 
- /*
-- * Define a minimum number of pids per cpu.  Heuristically based
-- * on original pid max of 32k for 32 cpus.  Also, increase the
-- * minimum settable value for pid_max on the running system based
-- * on similar defaults.  See kernel/pid.c:pid_idr_init() for details.
-+ * Define a minimum number of pids per cpu. Mainly to accommodate
-+ * smpboot_register_percpu_thread() kernel threads.
-+ * See kernel/pid.c:pid_idr_init() for details.
-  */
--#define PIDS_PER_CPU_DEFAULT	1024
- #define PIDS_PER_CPU_MIN	8
- 
- #endif
-diff --git a/kernel/pid.c b/kernel/pid.c
-index da76ed1873f7..24ae505ac3b0 100644
---- a/kernel/pid.c
-+++ b/kernel/pid.c
-@@ -60,10 +60,10 @@ struct pid init_struct_pid = {
- 	}, }
- };
- 
--int pid_max = PID_MAX_DEFAULT;
-+int pid_max = PID_MAX_LIMIT;
- 
- int pid_max_min = RESERVED_PIDS + 1;
--int pid_max_max = PID_MAX_LIMIT;
-+const int pid_max_max = PID_MAX_LIMIT;
- /*
-  * Pseudo filesystems start inode numbering after one. We use Reserved
-  * PIDs as a natural offset.
-@@ -652,9 +652,7 @@ void __init pid_idr_init(void)
- 	/* Verify no one has done anything silly: */
- 	BUILD_BUG_ON(PID_MAX_LIMIT >= PIDNS_ADDING);
- 
--	/* bump default and minimum pid_max based on number of cpus */
--	pid_max = min(pid_max_max, max_t(int, pid_max,
--				PIDS_PER_CPU_DEFAULT * num_possible_cpus()));
-+	/* bump minimum pid_max based on number of cpus */
- 	pid_max_min = max_t(int, pid_max_min,
- 				PIDS_PER_CPU_MIN * num_possible_cpus());
- 	pr_info("pid_max: default: %u minimum: %u\n", pid_max, pid_max_min);
--- 
-2.44.0
-
+Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
