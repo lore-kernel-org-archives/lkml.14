@@ -1,174 +1,171 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC1B31422BC;
-	Mon,  8 Apr 2024 16:54:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.11
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712595295; cv=fail; b=PXrXaCwuRcL4zXWDWoKSUKN39mlxOPKYIn1Fv+RQ/jbxXWSNUxEirWWaE1goiYysImGaAq6bYw4n6srLNnCEUDevRvdPNvGn0v13kjjEDhlcqyLhASV5HPQA/3D8E/O9GXJfiiWfUH3lXZ7oZsGRHX+mf7BbyBAtw7AdCPEc6Nk=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712595295; c=relaxed/simple;
-	bh=GLGm4CturOjS2M22Mlvv7afTDB2VxW12ZN2F3zVNwJg=;
-	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=DiroFytefaXCZao9yZCHP3Ey5afs+3takRZHMx+s7GDSn1dhzSiLJp9PJM8rsUl642O/WW3RotMLtp5OXvaWCxn9vlgBTTMDbs9CSqVq2QCrrJ/Js9ulBgLgNP+6d1NY4OYRfDw2bmUpMhIPdsJKRMyPxv875ES6ZlfDwcFYVmg=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=eqr8lFGR; arc=fail smtp.client-ip=192.198.163.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE6F3142E7D;
+	Mon,  8 Apr 2024 16:55:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1712595325; cv=none; b=fbkNVTLH4HEZ+0sEnPsqqV5S4XLBamKxwF6azTGTITQcLR3S6WfGSpRezrZ5QRxu17KMXqG0uocaZPKtceOa9fgiR15fACZ81WnW4be8IYGNmzZfXSc0rRZNPKGEzxsGs4zr6I4+egxxp/NtyUnCUQFVNYuzMG960W5Wco0rJKo=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1712595325; c=relaxed/simple;
+	bh=YFesB505hWnJdX9pdGDcBCrm9rzqVPPUgN5AuPqk1jo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=MjNO6rovc5DZ3TixSze9tlIwAfN0rMtZtri7/8JgdEOHoJx/xfM2pg6CJzNkyS73j7VRfjTpxzCQkK0GXuw1SpxSiSH8qGUnh2xyFjzNLqBdN2Z7JcaJOEk4p4tNs13byolTJpsqhTL70Rfn662+9pmsr8dEw/sEchZheDBIPBM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CBqmxFJN; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="eqr8lFGR"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1712595294; x=1744131294;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=GLGm4CturOjS2M22Mlvv7afTDB2VxW12ZN2F3zVNwJg=;
-  b=eqr8lFGRW9Yj0w1u5L8xLHTXNykCbzd0LP23gZ8sPDk6Ty7bwRXVTy1l
-   YcvsNZbGsLUV1WTVutaG7y6yYhZWsENs4Xtv0OOrrdeE/pnnDs8xDSzoj
-   ZZGjp3N+nX59O858kFuQP/pBl2b6SultIzndoMAofru7OakU6wr936aSK
-   l88tG/6jj5yjw7ooot1/qxsDCgKQXLe3msdjaIuzkoFvYDG1wKvlokVwY
-   Jpz+EG/DgA8QBkinYjLBM0YsHs4bLj6yMA/cL4LE8yG4q/wAVW9xToOQI
-   5ApVfHpkVz96xuQZw63DplBsSbR1LegHCvvrfOqKAXUOqePfevpd6KSNI
-   w==;
-X-CSE-ConnectionGUID: GAnwZj+wSCux3Naw5WEHhw==
-X-CSE-MsgGUID: zBjSDVbBRhSzY/dHuKwXug==
-X-IronPort-AV: E=McAfee;i="6600,9927,11038"; a="18494714"
-X-IronPort-AV: E=Sophos;i="6.07,187,1708416000"; 
-   d="scan'208";a="18494714"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2024 09:54:53 -0700
-X-CSE-ConnectionGUID: jK2kV5fxQ+ag8puPjtaaPg==
-X-CSE-MsgGUID: oL8F1GJkRzeWBv4992XJiw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,187,1708416000"; 
-   d="scan'208";a="20387398"
-Received: from orsmsx602.amr.corp.intel.com ([10.22.229.15])
-  by orviesa006.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 08 Apr 2024 09:54:52 -0700
-Received: from orsmsx611.amr.corp.intel.com (10.22.229.24) by
- ORSMSX602.amr.corp.intel.com (10.22.229.15) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Mon, 8 Apr 2024 09:54:52 -0700
-Received: from orsmsx603.amr.corp.intel.com (10.22.229.16) by
- ORSMSX611.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Mon, 8 Apr 2024 09:54:51 -0700
-Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
- orsmsx603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35 via Frontend Transport; Mon, 8 Apr 2024 09:54:51 -0700
-Received: from NAM02-DM3-obe.outbound.protection.outlook.com (104.47.56.40) by
- edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Mon, 8 Apr 2024 09:54:51 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Hyk2C/ZmbHNkvNgWPLpjGwpzgnduuqZqKgQ4Opi8hCsBi0VWuxXIM/Ch1cmwdRDkMGBY5qshGix5B7USdhAtcmw2srETLdxExQbHlCndgBZUNaXr1IxNN0LZT+LTJeyWH3TWZzqdG6/0Lsn031vvJA+pyuvIyf7Ftp5RM0Y1fKBPMjlRmoZQpxbXtIB+ZKlGSr9IpGUWTNqByE4tOzObW6DK2IjWdS1v3ShkF8Z1es2tf+8kQDE97ihPx8mYbeSQd/QNm7v6uXwlu8JMTA6+5pNGtm7QaJmtlMkXYClzPFea+LeFXtfZua88P/wDr2DzIOWjwpdDhURzmmgduOvTiw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=pl89HAxr5yUSR+JVUQZ5s4nr2eoWg5o+FJxmgErWZs4=;
- b=GpHlwmRZ8p8S7MaIDcTyQjGQyF5cSew2ukn/KSOIL9yPUf+FNOh9Oib/ejl9ZrUgLs7SnzBX1spH7KFxHftWnQJP/5VdNqNYVY0MNHGB7PovNX5TR9ciP0SgOHyRnT8moqLRl51zTnoWdyHcqPGcyT53zF/S6Rac5kbdmmE8ZEhGlvjnYjPOU5/ibmj+BIOekRqq4lTVOTEX5pL12GR76EvB2xTrVRpqWAbp1uOWMCe4EtD541EWwAVQbozv42SKPqsg3L0vh7r4Rp2R7ssttmkx+1WGex6BPSd3dSsIrF2nLjRyeQ2W2pMqcoV34s2tfGNHypNaplf5xeh0/8XVIQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
- by CH3PR11MB8156.namprd11.prod.outlook.com (2603:10b6:610:165::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.33; Mon, 8 Apr
- 2024 16:54:49 +0000
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::82fd:75df:40d7:ed71]) by PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::82fd:75df:40d7:ed71%4]) with mapi id 15.20.7430.045; Mon, 8 Apr 2024
- 16:54:49 +0000
-Date: Mon, 8 Apr 2024 09:54:47 -0700
-From: Dan Williams <dan.j.williams@intel.com>
-To: <ppwaskie@kernel.org>, Dan Williams <dan.j.williams@intel.com>,
-	<linux-cxl@vger.kernel.org>, <linux-pci@vger.kernel.org>
-CC: <linux-kernel@vger.kernel.org>, PJ Waskiewicz <ppwaskie@kernel.org>
-Subject: RE: [PATCH 1/1] cxl/acpi.c: Add buggy BIOS hint for CXL ACPI lookup
- failure
-Message-ID: <661421574048c_2583ad294d0@dwillia2-xfh.jf.intel.com.notmuch>
-References: <20240407210526.8500-1-ppwaskie@kernel.org>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20240407210526.8500-1-ppwaskie@kernel.org>
-X-ClientProxiedBy: MW4PR04CA0248.namprd04.prod.outlook.com
- (2603:10b6:303:88::13) To PH8PR11MB8107.namprd11.prod.outlook.com
- (2603:10b6:510:256::6)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CBqmxFJN"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5068EC433F1;
+	Mon,  8 Apr 2024 16:55:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1712595324;
+	bh=YFesB505hWnJdX9pdGDcBCrm9rzqVPPUgN5AuPqk1jo=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+	b=CBqmxFJNWXXmB6Mytn75OQxNrcngJMryHSEI+Hp/ETWN1cAsGUcQGncp66pzuie3g
+	 glriyS4CYQaYGBNVTbzUEP4ZAR3mDwqKs7WKq9UFu3L8lA632C5CN9LhoPlvCgNjir
+	 qnHTDCaE7XOnpNDku2GaUCUZukZTycMhid4NyM3moCZIx0R6y2X0HtKXMtbHZ1WuXz
+	 4dqXce9nprWNNPskUmQgAlDfHVHVxTaJGkqZLgpI+V+x0YSjWHAdfcQs7bvOfAf9M5
+	 h6PcDlYaKvgcNNRgT6xaTSiUS7o39LVA3AvYyBEgsyF1EaAnLyFWVTK2ppk2ktwpxv
+	 YYKk/40Nxicww==
+Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
+	id E96B8CE126C; Mon,  8 Apr 2024 09:55:23 -0700 (PDT)
+Date: Mon, 8 Apr 2024 09:55:23 -0700
+From: "Paul E. McKenney" <paulmck@kernel.org>
+To: Matthew Wilcox <willy@infradead.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>,
+	Philipp Stanner <pstanner@redhat.com>,
+	Kent Overstreet <kent.overstreet@linux.dev>,
+	Boqun Feng <boqun.feng@gmail.com>, rust-for-linux@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
+	llvm@lists.linux.dev, Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Wedson Almeida Filho <wedsonaf@gmail.com>,
+	Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@samsung.com>,
+	Alice Ryhl <aliceryhl@google.com>,
+	Alan Stern <stern@rowland.harvard.edu>,
+	Andrea Parri <parri.andrea@gmail.com>,
+	Will Deacon <will@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	David Howells <dhowells@redhat.com>,
+	Jade Alglave <j.alglave@ucl.ac.uk>,
+	Luc Maranget <luc.maranget@inria.fr>,
+	Akira Yokosawa <akiyks@gmail.com>,
+	Daniel Lustig <dlustig@nvidia.com>,
+	Joel Fernandes <joel@joelfernandes.org>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nick Desaulniers <ndesaulniers@google.com>,
+	kent.overstreet@gmail.com,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, elver@google.com,
+	Mark Rutland <mark.rutland@arm.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	linux-arm-kernel@lists.infradead.org, linux-fsdevel@vger.kernel.org
+Subject: Re: [WIP 0/3] Memory model and atomic API in Rust
+Message-ID: <fec60bba-e414-43d1-bc3e-870f5ffe4626@paulmck-laptop>
+Reply-To: paulmck@kernel.org
+References: <20240322233838.868874-1-boqun.feng@gmail.com>
+ <s2jeqq22n5ef5jknaps37mfdjvuqrns4w7i22qp2r7r4bzjqs2@my3eyxoa3pl3>
+ <CAHk-=whY5A=S=bLwCFL=043DoR0TTgSDUmfPDx2rXhkk3KANPQ@mail.gmail.com>
+ <u2suttqa4c423q4ojehbucaxsm6wguqtgouj7vudp55jmuivq3@okzfgryarwnv>
+ <CAHk-=whkQk=zq5XiMcaU3xj4v69+jyoP-y6Sywhq-TvxSSvfEA@mail.gmail.com>
+ <c51227c9a4103ad1de43fc3cda5396b1196c31d7.camel@redhat.com>
+ <CAHk-=wjP1i014DGPKTsAC6TpByC3xeNHDjVA4E4gsnzUgJBYBQ@mail.gmail.com>
+ <ZhQVHZnU3beOhEGU@casper.infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|CH3PR11MB8156:EE_
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: t1SmzHMB7daULw3ZilA7S9nbMgs3QffFOGolZwsvFJITNfM+759rCdHFE4xow6Ly5f8HqdeE4eOnt0RRWJ7s/Ytp4reQgspo1M4RvMSPRB/7gwSL7sUk9Ofu0cT9dCCJn9pQbpuCfRDlaMKMOpXSpQYobMpsIxiKvtB7NgEUJvpwp7a2z1CZJ8/oMTa3eR7C4P7gxtf+Yf1VUGil+Vog+pdtSL3AgYAm3rEcEsbeVn8KL+m90EHvgBX5HDPWwiRvQYov5MTyPUtVc/9QjYqhqqtquJUwwhk/pp96gVB4E7Ij+qxgyGkmQYLkfl1PvFcAc+QbhYy23qb4cyULuNxAI7oY2ArMNCor7ixJa4ebCLNQ5kJRM9V4PdXIRu0X2UW/lcOLX2lPz8UlILAy74idi4k9tcdac6wyrp7KjeEtgUInMQD3wAoTkYFpjUBTicBNmfc00gMmXI8s2CoyCnD7hkQ2fNkonVLAQhLVIuIY+NzXE808KrP058yUAvUxoB4OhNP1ypdmpweZfWEjHvhBxM6ksibsJcKAsGWvv2jyUi4hApP9Byo4wKDjaWB3Ch1HhO6F1sBrXF4aAr5ZeaqR2c1PNnh2757FDJhotlHlz1XWabdpSyegRDjv7QrpQsZQC5pgNthUe/HD2+Y2+6UMBa2Z49DH5EfzDgCJx9KuzdY=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366007)(376005)(1800799015);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?DkR3hscpPUwUtOH9sXqiCgE2cH9CA5E6QcxmG+0gFBRAHffRvb7/7o3uLEJi?=
- =?us-ascii?Q?0z1jlhKa8cCzvDxHmdcL6D76KyE0V9WbUw+s7UsS2yRqwi7NZ5wxwRoBM9j/?=
- =?us-ascii?Q?sHPd3I6MySuPzWFfjfh1X4DBmkAX9YsFtiI83Ox8lixg4d3SOCIzVdyd2mNt?=
- =?us-ascii?Q?qmbJMXSq4LMewzXp3gc+IdNN1pZqVqgDXl+zjys+2D9Uy3RUX1AqzaHYk+T3?=
- =?us-ascii?Q?vqDHWTm4FYNMJhI5j1vVwryI+pWL+bGs1sfRhj3VFgjbmDPhyqO+LAE+UwVf?=
- =?us-ascii?Q?7Ht9Ha/I3zWhQyUconwkh0zg36Q9/5TLHdIcXzL+j+FpHZR6swgOLSfwEWQE?=
- =?us-ascii?Q?LIyMTYdprYssrKFz+pz5ufQe4LN2TRTv4Bh+cXAQoxSEdEIdrMrPW1a0LCoE?=
- =?us-ascii?Q?kM7qD4mCCwAl8jTa7lUay6SdncDENnMz2eLsE2X/G6s6O5yjBAl7pOmcS/Zr?=
- =?us-ascii?Q?XTqC7myzdsnoW77Bbm0+eSu57c5U0/hVa375dfc4TA7Hvf/dyXA6XXivgP5v?=
- =?us-ascii?Q?qoWttiwlBLaIBDB/p8KLDa9jio+789EUOCsgTLrLVPylyE1sIz8b15jFuQjS?=
- =?us-ascii?Q?VCoqD1WHIX+4TwU1iNN3ri3/+qYlaG2urScQSWmxjE4lU+We3h37CMixTi1f?=
- =?us-ascii?Q?HaUHEwrWC1mHwys4G57r0TVzixI4Z16RVXYbauP/1PF73mHcAbgUHKsGK09I?=
- =?us-ascii?Q?Xc69uc4kR9phufPGRBV95X/av4ESwriQXtDqVl35ALgOHntcQLKo/wOkDv6y?=
- =?us-ascii?Q?WUHMYz+O5wRkbGkJGG+xaNMfdHi+ODYb0AGgM4ibSOTmi4Quth0svzDjFHF8?=
- =?us-ascii?Q?g9lFzmSqAXe5rTRphvVWiaTKMM82kGRDkRhXuIMhckLe921czWmuOrJS1KSq?=
- =?us-ascii?Q?xyXkComKbTaxqnrIA1ejlSBcFnDK9IrECruQvjuQpOsFi7L7MPyj1adfu9C+?=
- =?us-ascii?Q?4OMaNnPGKoLOYTgrr6Jgc2PqqtsPP4f5qIt76SvqOUMrAkqbWc+HvICJsf/V?=
- =?us-ascii?Q?5BOnB5X+bxeLmfUeDKVjeo+csYNNAcpRpv0FpT7QyP23nL+eeSEVdEeXl0gU?=
- =?us-ascii?Q?7+TukJBvMUdS7Q8Asb6MgSYlG6E7l1m3iCvz31ut2FIINcv8tEe2InEI2plZ?=
- =?us-ascii?Q?4o6GfJ/shkhLV8dhlQCKvgRz59Hgsoi7UEmWfOPppTx1P0c0hnmJFqEnENYG?=
- =?us-ascii?Q?LMQHVS4iNvnmPRz6II2W3HwYwDMIeCTQ0yM4zxLIw3XJNgivCKJAzoBp7bQo?=
- =?us-ascii?Q?Xh2fCRBwsUeYk5EMOx7haaQEKgvjFO2qaXBaCEZWO0zKIXYaH7z/A/VrWWyT?=
- =?us-ascii?Q?YlWXaFjx1fMyjCPId8OHWHhEBzJY9NxThgGduSD1MOn96ore22fwoPd9FWuu?=
- =?us-ascii?Q?UaibUYkGyBKjo9r3QF8Tfi64PJ/82ezoJ3un+Qx8OymVicR0HIAeKX1vMeRP?=
- =?us-ascii?Q?Bf1SENGVsDavXm7lgWH/pl3pMmhdJfasUd0ICXgNk/1WoCUaB7nt0242T8nV?=
- =?us-ascii?Q?Gc925iyZrCFZYpLZn9NX8gj2aVYhDBxh+1xPwZRiyKX8IhWqF61tHR7z9bmx?=
- =?us-ascii?Q?xxSwrzqKpnae1BwPQWWstpWqXAS5HT+UcRbwc5//Z397hH/OlH/q/6MvCkOU?=
- =?us-ascii?Q?iQ=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: fd16d068-babb-49fe-4aff-08dc57ec9a47
-X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Apr 2024 16:54:49.3123
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: zaYSvhPV6tOumBAjG8/eI6qKDSiAK8dPBV0R/bjEoImVu5GcZtJWbAU3QvM5fmMzYLYNOLo4OWWIBkhLeqqfgwy+olDtMsJB496BNosLxck=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR11MB8156
-X-OriginatorOrg: intel.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZhQVHZnU3beOhEGU@casper.infradead.org>
 
-ppwaskie@ wrote:
-> From: PJ Waskiewicz <ppwaskie@kernel.org>
+On Mon, Apr 08, 2024 at 05:02:37PM +0100, Matthew Wilcox wrote:
+> On Mon, Mar 25, 2024 at 10:44:43AM -0700, Linus Torvalds wrote:
+> > So I actually think most compiler people are perfectly fine with the
+> > kernel model of mostly doing 'volatile' not on the data structures
+> > themselves, but as accesses through casts.
+> > 
+> > It's very traditional C, and there's actually nothing particularly odd
+> > about it. Not even from a compiler standpoint.
+> > 
+> > In fact, I personally will argue that it is fundamentally wrong to
+> > think that the underlying data has to be volatile. A variable may be
+> > entirely stable in some cases (ie locks held), but not in others.
+> > 
+> > So it's not the *variable* (aka "object") that is 'volatile', it's the
+> > *context* that makes a particular access volatile.
+> > 
+> > That explains why the kernel has basically zero actual volatile
+> > objects, and 99% of all volatile accesses are done through accessor
+> > functions that use a cast to mark a particular access volatile.
 > 
-> Currently, Type 3 CXL devices (CXL.mem) can train using host CXL
-> drivers on Emerald Rapids systems.  However, on some production
-> systems from some vendors, a buggy BIOS exists that improperly
-> populates the ACPI => PCI mappings.  This leads to the cxl_acpi
-> driver to fail probe when it cannot find the root port's _UID, in
-> order to look up the device's CXL attributes in the CEDT.
+> What annoys me is that 'volatile' accesses have (at least) two distinct
+> meanings:
+>  - Make this access untorn
+>  - Prevent various optimisations (code motion,
+>    common-subexpression-elimination, ...)
 > 
-> Add a bit more of a descriptive message that the lookup failure
-> could be a bad BIOS, rather than just "failed."
+> As an example, folio_migrate_flags() (in mm/migrate.c):
+> 
+>         if (folio_test_error(folio))
+>                 folio_set_error(newfolio);
+>         if (folio_test_referenced(folio))
+>                 folio_set_referenced(newfolio);
+>         if (folio_test_uptodate(folio))
+>                 folio_mark_uptodate(newfolio);
+> 
+> ... which becomes...
+> 
+>       1f:       f6 c4 04                test   $0x4,%ah
+>       22:       74 05                   je     29 <folio_migrate_flags+0x19>
+>       24:       f0 80 4f 01 04          lock orb $0x4,0x1(%rdi)
+>       29:       48 8b 03                mov    (%rbx),%rax
+>       2c:       a8 04                   test   $0x4,%al
+>       2e:       74 05                   je     35 <folio_migrate_flags+0x25>
+>       30:       f0 80 4d 00 04          lock orb $0x4,0x0(%rbp)
+>       35:       48 8b 03                mov    (%rbx),%rax
+>       38:       a8 08                   test   $0x8,%al
+>       3a:       74 05                   je     41 <folio_migrate_flags+0x31>
+>       3c:       f0 80 4d 00 08          lock orb $0x8,0x0(%rbp)
+> 
+> In my ideal world, the compiler would turn this into:
+> 
+> 	newfolio->flags |= folio->flags & MIGRATE_MASK;
+> 
+> but because folio_test_foo() and folio_set_foo() contain all manner of
+> volatile casts, the compiler is forced to do individual tests and sets.
+> 
+> Part of that is us being dumb; folio_set_foo() should be __folio_set_foo()
+> because this folio is newly allocated and nobody else can be messing
+> with its flags word yet.  I failed to spot that at the time I was doing
+> the conversion from SetPageFoo to folio_set_foo.
+> 
+> But if the compiler people could give us something a little more
+> granular than "scary volatile access disable everything", that would
+> be nice.  Also hard, because now you have to figure out what this new
+> thing interacts with and when is it safe to do what.
 
-Makes sense, but is the goal here to name and shame the BIOS, or find a
-potential quirk workaround? Presumably we could fall back to parsing
-_UID instead of a string and then get some guidance from said BIOS about
-how to lookup the corresponding ACPI0016 device from that identifier.
+OK, I will bite...
 
-In other words, I see this patch as a warning shot of, "hey,
-$platform_vendor if you
-don't want folks to RMA these platforms please tell us how to do the
-association Linux expects per the spec". Otherwise, this can escalate to
-a loud WARN_TAINT(TAINT_FIRMWARE_WORKAROUND...), but I first want more
-details from this platform like an acpidump and the exact error code
-acpi_evaluate_integer() is returning.
+Why not accumulate the changes in a mask, and then apply the mask the
+one time?  (In situations where __folio_set_foo() need not apply.)
+
+If it turns out that we really do need a not-quite-volatile, what exactly
+does it do?  You clearly want it to be able to be optimized so as to merge
+similar accesses.  Is there a limit to the number of accesses that can
+be merged or to the region of code over which such merging is permitted?
+Either way, how is the compiler informed of these limits?
+
+(I admit that I am not crazy about this sort of proposal, but that might
+have something to do with the difficulty of repeatedly convincing
+people that volatile is necessary and must be retained...)
+
+							Thanx, Paul
