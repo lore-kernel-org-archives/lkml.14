@@ -1,184 +1,100 @@
-Received: from mail-yw1-f182.google.com (mail-yw1-f182.google.com [209.85.128.182])
+Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 288837E8
-	for <linux-kernel@vger.kernel.org>; Mon,  8 Apr 2024 21:14:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 750437482;
+	Mon,  8 Apr 2024 21:17:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712610844; cv=none; b=qHImwKc4gt8pLwV2fzPZQBZHg0uZPm/zs38L/wGhTEa87h1QTst1Q1o0jzo1qLrXvn1emyt3CUAIGdTf88ao95TvwngI7aE0vfut3EPB2wkQu5uqtZ/5w3OnAywZWk3lr99vYCluFSyAcyNpox75IiftGT5TNcooz642tntfyzA=
+	t=1712611066; cv=none; b=hh6dZG2a47UoSDYM7KiLrAP/Pqo1mnyp80OEfX6rIrcuhq5HXNJwMlEv2bvlkAWJTFJoEQ5lkInH5N+bGKzMr98b7b26lWgFnZupF/ZxxyCwJb6EkOsoYFxrDJBriXjy1JPyGvRBhYatCrXZuppqdLoiSbMYO2Ejf+N/lahFXA0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712610844; c=relaxed/simple;
-	bh=JVukTz5MbqkHdCQ0GujdpyPi+ERWJVOdSTb+ewBrKnk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=k8cGgKbDPaE/o8HsFEXVhi873jk3fI8EV6qzpZtoOku3/5ez0xY2nJIcBuZNTVwhn9xsN0cH8zGzP0W7o8nwC7mV3k7TjmiIFxYAKy6vArVIvCZyrpIx/dVfsLjUR8HVqOVfKwry/wSYAS5oJ85d1Yuf5RDkhtlxmRPBNGhqptg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=xFcQfoFd; arc=none smtp.client-ip=209.85.128.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1712611066; c=relaxed/simple;
+	bh=nccc6s/QyxPnhkMngljVQwgwV5GBYeJoErKU2w5fY5Y=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=RprXRQD30AzMj7i6/dUbljHAsrP2wYfV0fQebJdWnotSUL8j1WHffuvwMzTWYgZFkoBnQfkBX+8vCB4FkMnGymX2hCxW0ue7hrnXbWlLXXeqHbTHyo7oA9ZXSc/Yd5xnpOykR1NO8z6lWDjXKxO2L9d5+P3Yq0YWT1JgxfgM6FM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cZGQ+rU8; arc=none smtp.client-ip=209.85.208.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xFcQfoFd"
-Received: by mail-yw1-f182.google.com with SMTP id 00721157ae682-614ec7ee902so51366377b3.2
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Apr 2024 14:14:00 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cZGQ+rU8"
+Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-56e2b3e114fso4598301a12.2;
+        Mon, 08 Apr 2024 14:17:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1712610840; x=1713215640; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=9H/wJYl3v6Nf1hcV5ZGzgLNZ6Hl7Vc5YVwplWIJ86fg=;
-        b=xFcQfoFdgDV4AfaH9BHpzATz5eHaXaotnDjZD9NJh8onIIveDwY20PVj/Uvu5u9VHP
-         Rqg38H/ygH3HRtyDkeS8hSugELwr0wMKTklz/o0IiwUSaa+TnDZhgf4Lr8tQLRZiWuAc
-         AHuur5sjz9tEiShfivbM1s0itSi5AfrDpZ7DIaxdMeaE0YW32mbif5OTS0S3iGaAwLMf
-         PDHXgg3k5q+KgLlZezPQPuIlVOml66AL/4FhJ2NHa4l1l28s5xzcbhXCCq5ZO2GcpPKg
-         dpFuonF8TnF8s5unh9e+hzwtQ/hSoPv0ba5PnOmMdfQTqVS6LUpWJOfkITy+OE99xCFl
-         Rjzw==
+        d=gmail.com; s=20230601; t=1712611063; x=1713215863; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=nccc6s/QyxPnhkMngljVQwgwV5GBYeJoErKU2w5fY5Y=;
+        b=cZGQ+rU8gUpkMDcEslNTS4zqSB31mSN+8UxH7trxE47KyMJ9NMMnPuVRS5PL3mgbWV
+         1sNBocXozq9K8MTT9Ls370hmX9b985JlbuKogUdk+iSdKPHXQK0bvTGEAbn4HEkbjfut
+         oMC73oWuxlEy1nw85/WcitUvclAQN++5OSa6J4oupHlfBmV8W/ebEJkkSVcOvYLKtHJn
+         Pa6BY+ctg2yiK9DYrrZBH4HRooRI0QhG1YisbEKBijOJAggR+YXKBmLBvPLd6/MGcitp
+         xiCjKvy4iP6O2kvoW0Kmz2BvgkJ2sK4VvaEYgIVAiaVTsraPNAx/xkdtz8Ou3/3xNk3v
+         6njw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712610840; x=1713215640;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=9H/wJYl3v6Nf1hcV5ZGzgLNZ6Hl7Vc5YVwplWIJ86fg=;
-        b=d3hEZmKCnLtY+Vym1EW5gOcB91F+8kk4crsjAl0IUNrhXF4QJLaOtS1emhpBDuYVWj
-         lzCnl8rgi1ZEeClIkxUMJkOZE8zVoEZwEEDGA750RMhkD11ayDQuMDP8tUzKoS7pysyB
-         lVYFQLr0YopeZfU0yDHcr+Ff9ZZpOTe1GoUDFzkY2PdvPqS2x8DTARmcXv/yoBNaV56w
-         8r6evcFa5tKIFCCJiIEY5ZMfVQLjG8fvHnUx7PBFNQ5xrgU08AlRyST+0v9gQp/HXPtA
-         9saby8Yx/+bbwwnObjBhXGwByAc/Rv9jejIGA14XDRg2aE1rSZt4YwF0NGsL2W58lJSg
-         d1Ig==
-X-Forwarded-Encrypted: i=1; AJvYcCVIw86UW19HDi52/BSdrtymyqdzYjlVmBCjDMANG43wkB2Fuy2upPBjIXGntrRF1FIhNOiTXeNUKC6rd+esqyKUMPeUuXtttZwgRfqt
-X-Gm-Message-State: AOJu0YxEdqIktiCbnUwCPMRHvB0EmG0Ccqln+rScNKdApaiGRe8Has0v
-	/jvO2JpSss7whcTZpD4FzuENwrmL8dSpIyqSLs+LHqz4xCvQN8ex2O2vkEOjv6l0tHFpShj72l2
-	AAdwYmmkQwjPu17Bs+CrF9QSUzJf9bPs5NkuS+Q==
-X-Google-Smtp-Source: AGHT+IHXQ+bA+Y2zmisBo7GBSUwb5kuuO1IoG7nvhUH198RXgyldfz/Lvk4EBBBE3RI7gbBloKytkwb0/Oo957i0dQQ=
-X-Received: by 2002:a25:5f42:0:b0:dca:59a7:896b with SMTP id
- h2-20020a255f42000000b00dca59a7896bmr7293567ybm.50.1712610839753; Mon, 08 Apr
- 2024 14:13:59 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1712611063; x=1713215863;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=nccc6s/QyxPnhkMngljVQwgwV5GBYeJoErKU2w5fY5Y=;
+        b=dHzMcFvgqt/HH1MxUQJzbZDcf6SjVgqpHeZA/EsXdePnX1ugan3J0w1udRXUTaZ4CE
+         5n7F2aI0LYBUm52aafsb/afbMkIwqDyvMRbN7ZDp5ZpgeCetC4Y6O2tGht0NCZUx7dN7
+         DyxKauHtp+PsWKN+MnZRjOdG7MImdGtpcN39t7wLMnkvvm76SXYFQjW8m8QukN99YgaW
+         bsEiFfI5v9VFY+MN/ALdbwR/KgG30f/hSqiD1VjpaQ+BaW8c4kC/kduEtes3Zn45Ad4k
+         8GM1pyFAtpQ9ZSD+C66Ghem6UZCU7cKLGl4ubiT0Yz33+/Yd9EtiiulwqPAoa0Y0ikq4
+         czYg==
+X-Forwarded-Encrypted: i=1; AJvYcCVBDUyNqOvfW1mpJ70+Vk9dCwB34Ph7Qd/CDzmpk9JU43G/Sgj/thzzzL4cG5XrVLaHVZfy/4HqPlXpDN0eNtLQ3l7Owz2sS30q/ifEHJl7EWmWCfMbeQAOLP40bo0hpZiqKCQ+9YnGYQFCH5JSN4ZP0uhAQ4Z42q7/dLID1pz71MGt
+X-Gm-Message-State: AOJu0Yy68tz2DfQZrd/qm4q3LMY51Wa0Q8mE2TcntsKnViI/pocTd0Zv
+	BmPcoJeWXR3UvmcCopey51cwewfPMoGvcqt6VKxPteebdUzfRSN1
+X-Google-Smtp-Source: AGHT+IFGcXZQpUVnkBg6IX3TYcnATbe7YapUuNx2sNZb2AlCGn04W/UKHOiLipHNyxj3R/sNKBYc7A==
+X-Received: by 2002:a17:906:5296:b0:a51:b23c:13f8 with SMTP id c22-20020a170906529600b00a51b23c13f8mr4969629ejm.1.1712611062465;
+        Mon, 08 Apr 2024 14:17:42 -0700 (PDT)
+Received: from [192.168.100.206] ([89.28.99.140])
+        by smtp.gmail.com with ESMTPSA id q14-20020a170906a08e00b00a4e8353be19sm4874556ejy.224.2024.04.08.14.17.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 08 Apr 2024 14:17:41 -0700 (PDT)
+Message-ID: <371c84608bd10736de6b1a8abee3fd1d43664a9a.camel@gmail.com>
+Subject: Re: [PATCH RFC bpf-next v6 1/6] bpf/helpers: introduce sleepable
+ bpf_timers
+From: Eduard Zingerman <eddyz87@gmail.com>
+To: Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Cc: Benjamin Tissoires <bentiss@kernel.org>, Alexei Starovoitov
+ <ast@kernel.org>,  Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko
+ <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>,  Song Liu
+ <song@kernel.org>, Yonghong Song <yonghong.song@linux.dev>, John Fastabend
+ <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>, Stanislav
+ Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>, Jiri Olsa
+ <jolsa@kernel.org>,  Mykola Lysenko <mykolal@fb.com>, Shuah Khan
+ <shuah@kernel.org>, bpf@vger.kernel.org,  linux-kernel@vger.kernel.org,
+ linux-kselftest@vger.kernel.org
+Date: Tue, 09 Apr 2024 00:17:38 +0300
+In-Reply-To: <CAO-hwJ+0erX3iJcOh9KBG3f01UiYvGk_Gx+-zyFc4Vb5LCcHxA@mail.gmail.com>
+References: <20240408-hid-bpf-sleepable-v6-0-0499ddd91b94@kernel.org>
+	 <20240408-hid-bpf-sleepable-v6-1-0499ddd91b94@kernel.org>
+	 <65c249a6af45bfa5fe0f6c2331dcc1771a6f0b05.camel@gmail.com>
+	 <CAO-hwJ+0erX3iJcOh9KBG3f01UiYvGk_Gx+-zyFc4Vb5LCcHxA@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.0 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240406031548.25829-1-quic_abhinavk@quicinc.com>
- <ale6wbwzkfagcg2q6glb4vsxu3pthhkk3tquv2ixlatbdryqvh@xscsq2h6emho>
- <01cb1c0d-a801-37f9-2f55-2bbd8d3a68b9@quicinc.com> <k7f22hyltul4h4o4vqe6prc2yx3mm2q4dzk66j3xrsdpdtqllb@3c6ul4fpimwz>
- <b7ed299d-4cf7-8829-fd7f-e518aef05fb2@quicinc.com>
-In-Reply-To: <b7ed299d-4cf7-8829-fd7f-e518aef05fb2@quicinc.com>
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Date: Tue, 9 Apr 2024 00:13:48 +0300
-Message-ID: <CAA8EJpqYWXs+KzZcrJA0zL2KNhpHQ+5xNpVNPmepztujmVJf=w@mail.gmail.com>
-Subject: Re: [PATCH v3] drm/msm/dp: call dp_hpd_plug_handle()/unplug_handle()
- directly for external HPD
-To: Abhinav Kumar <quic_abhinavk@quicinc.com>
-Cc: Bjorn Andersson <andersson@kernel.org>, freedreno@lists.freedesktop.org, 
-	Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>, 
-	Marijn Suijten <marijn.suijten@somainline.org>, David Airlie <airlied@gmail.com>, 
-	Daniel Vetter <daniel@ffwll.ch>, Kuogee Hsieh <quic_khsieh@quicinc.com>, 
-	dri-devel@lists.freedesktop.org, seanpaul@chromium.org, swboyd@chromium.org, 
-	quic_jesszhan@quicinc.com, quic_bjorande@quicinc.com, johan@kernel.org, 
-	linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
 
-On Tue, 9 Apr 2024 at 00:08, Abhinav Kumar <quic_abhinavk@quicinc.com> wrote:
->
->
->
-> On 4/8/2024 1:41 PM, Bjorn Andersson wrote:
-> > On Mon, Apr 08, 2024 at 12:43:34PM -0700, Abhinav Kumar wrote:
-> >>
-> >>
-> >> On 4/7/2024 11:48 AM, Bjorn Andersson wrote:
-> >>> On Fri, Apr 05, 2024 at 08:15:47PM -0700, Abhinav Kumar wrote:
-> >>>> From: Kuogee Hsieh <quic_khsieh@quicinc.com>
-> >>> [..]
-> >>>> diff --git a/drivers/gpu/drm/msm/dp/dp_display.c b/drivers/gpu/drm/msm/dp/dp_display.c
-> >>>> index d80f89581760..bfb6dfff27e8 100644
-> >>>> --- a/drivers/gpu/drm/msm/dp/dp_display.c
-> >>>> +++ b/drivers/gpu/drm/msm/dp/dp_display.c
-> >>>> @@ -1665,7 +1665,7 @@ void dp_bridge_hpd_notify(struct drm_bridge *bridge,
-> >>>>                    return;
-> >>>>            if (!dp_display->link_ready && status == connector_status_connected)
-> >>>> -          dp_add_event(dp, EV_HPD_PLUG_INT, 0, 0);
-> >>>> +          dp_hpd_plug_handle(dp, 0);
-> >>>
-> >>> If I read the code correctly, and we get an external connect event
-> >>> inbetween a previous disconnect and the related disable call, this
-> >>> should result in a PLUG_INT being injected into the queue still.
-> >>>
-> >>> Will that not cause the same problem?
-> >>>
-> >>> Regards,
-> >>> Bjorn
-> >>>
-> >>
-> >> Yes, your observation is correct and I had asked the same question to kuogee
-> >> before taking over this change and posting.
-> >>
-> >> We will have to handle that case separately. I don't have a good solution
-> >> yet for it without requiring further rework or we drop the below snippet.
-> >>
-> >>          if (state == ST_DISCONNECT_PENDING) {
-> >>                  /* wait until ST_DISCONNECTED */
-> >>                  dp_add_event(dp, EV_HPD_PLUG_INT, 0, 1); /* delay = 1 */
-> >>                  mutex_unlock(&dp->event_mutex);
-> >>                  return 0;
-> >>          }
-> >>
-> >> I will need sometime to address that use-case as I need to see if we can
-> >> handle that better and then drop the the DISCONNECT_PENDING state to address
-> >> this fully. But it needs more testing.
-> >>
-> >> But, we will need this patch anyway because without this we will not be able
-> >> to fix even the most regular and commonly seen case of basic
-> >> connect/disconnect receiving complementary events.
-> >>
-> >
-> > I did some more testing on this patch. Connecting and disconnecting the
-> > cable while in fbcon works reliably, except for:
->
-> Thanks for the tests !
->
-> > - edid/modes are not read before we bring up the link so I always end up
-> >    with 640x480
-> >
->
-> hmmm, I wonder why this should be affected due to this patch. We always
-> read the EDID during hpd_connect() and the selected resolution will be
-> programmed with the modeset. We will retry this with our x1e80100 and see.
+On Mon, 2024-04-08 at 19:20 +0200, Benjamin Tissoires wrote:
 
-BTW, why is EDID read during HPD handling? I always supposed that it
-can be read much later, when the DRM framework calls the get_modes /
-get_edid callbacks.
+[...]
 
->
-> > - if I run modetest -s <id>:<mode> the link is brought up with the new
-> >    resolution and I get my test image on the screen.
-> >    But as we're shutting down the link for the resolution chance I end up
-> >    in dp_bridge_hpd_notify() with link_ready && state = disconnected.
-> >    This triggers an unplug which hangs on the event_mutex, such that as
-> >    soon as I get the test image, the state machine enters
-> >    DISCONNECT_PENDING. This is immediately followed by another
-> >    !link_ready && status = connected, which attempts to perform the plug
-> >    operation, but as we're in DISCONNECT_PENDING this is posted on the
-> >    event queue. From there I get a log entry from my PLUG_INT, every
-> >    100ms stating that we're still in DISCONNECT_PENDING. If I exit
-> >    modetest the screen goes black, and no new mode can be selected,
-> >    because we're in DISCONNECT_PENDING. The only way out is to disconnect
-> >    the cable to complete the DISCONNECT_PENDING.
-> >
->
-> I am going to run this test-case and see what we can do.
->
-> > Regards,
-> > Bjorn
-> >
-> >>
-> >>>>            else if (dp_display->link_ready && status == connector_status_disconnected)
-> >>>> -          dp_add_event(dp, EV_HPD_UNPLUG_INT, 0, 0);
-> >>>> +          dp_hpd_unplug_handle(dp, 0);
-> >>>>    }
-> >>>> --
-> >>>> 2.43.2
-> >>>>
+> That was my initial assumption too, but Alexei told me it was fine.
+> And I think he is correct because kfree_rcu doesn't need the rcu_head
+> to be initialized.
+>=20
+> So in the end, we initialize the memory as a work_struct, and when
+> that work kicks in, we reuse that exact same memory as the rcu_head.
+> This is fine because that work will never be reused.
 
+Oh, I get it, thank you for explanation.
 
-
--- 
-With best wishes
-Dmitry
+Thanks,
+Eduard
