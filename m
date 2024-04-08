@@ -1,109 +1,85 @@
-Received: from mx3.molgen.mpg.de (mx3.molgen.mpg.de [141.14.17.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from ahti.lucaweiss.eu (ahti.lucaweiss.eu [128.199.32.197])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3225E142645;
-	Mon,  8 Apr 2024 16:37:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=141.14.17.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56A6113A258;
+	Mon,  8 Apr 2024 16:39:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=128.199.32.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712594283; cv=none; b=ZEgsmDFh51gZEWRTtjdG40sOmOhYyi17hQs9L24JiFVCJRrOOzosySXJDQSsEd4LwCbhVDb+m8HyojHlqXp6aCs4zFICgaIjamkS+LdaQEzXbR0pXGK9qw0KcJ4mV1L7d+8J7zQnNTSxlxs2FPQgFSc0Z9OnsJYfaJOGf/4MKYA=
+	t=1712594397; cv=none; b=j4baIyAW2+37liqFqbtJeJAoS0ZfWEN3DiHI4ZUCNXsJ4nWQYSZ9J/xi8xvW2efNTlpoYaGdR9y93apCrm8ZAi4/19g89oJCpv3c55i0bspIeV6InLiMmo7E8RbUwK2N7lvs36I1Iu9E34xtsBrMl4bbZS41/kLyZau/6tuJJAg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712594283; c=relaxed/simple;
-	bh=tHxJ3krplcWnanw+f2gs+vuLQSJPq5GNtNrhO6CiBXk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=fqIWgjiVOb9mjkdblnx2OQ1EIOmCF2n4U+9I3A2mPr8KSGzCgs+dWdzYU4IQUq+1924BVGy5hKy6k8edX9s9HYF4BEA1gSmCBT+O+IGPdWbPratfjr5F04C/0Mdfa4I4gWz0l33y6z6isyiJEm3WVmLn+SNVv+uzTuUSHvd+JOI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de; spf=pass smtp.mailfrom=molgen.mpg.de; arc=none smtp.client-ip=141.14.17.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=molgen.mpg.de
-Received: from [192.168.0.2] (ip5f5af0ad.dynamic.kabel-deutschland.de [95.90.240.173])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: pmenzel)
-	by mx.molgen.mpg.de (Postfix) with ESMTPSA id 2DF9361E5FE01;
-	Mon,  8 Apr 2024 18:37:23 +0200 (CEST)
-Message-ID: <bd4bdabc-2d83-4022-87f4-8c599009d9f5@molgen.mpg.de>
-Date: Mon, 8 Apr 2024 18:37:22 +0200
+	s=arc-20240116; t=1712594397; c=relaxed/simple;
+	bh=UgqILHngj6Gyw5PQr/uALS4Jpv9WIiH3QtFphCP3HAA=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=I8/Xv3C8v4Mcw3XDtylQTNVH0gNWd6ImcZp+yiGRTFGVXFDSU7tks6fos0U5vpT5obtsOAsfLJTsroBAulAY39I1dsAcKeJfl64gH1X1egNifvQGgPVCdiGovjYu6+xCNRTSdXLwlJirDBzegs+LtlGutyevh1D70QOBqJMvjfc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=z3ntu.xyz; spf=pass smtp.mailfrom=z3ntu.xyz; dkim=pass (1024-bit key) header.d=z3ntu.xyz header.i=@z3ntu.xyz header.b=FiCu9vjF; arc=none smtp.client-ip=128.199.32.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=z3ntu.xyz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=z3ntu.xyz
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=z3ntu.xyz header.i=@z3ntu.xyz header.b="FiCu9vjF"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=z3ntu.xyz; s=s1;
+	t=1712594393; bh=UgqILHngj6Gyw5PQr/uALS4Jpv9WIiH3QtFphCP3HAA=;
+	h=From:Subject:Date:To:Cc;
+	b=FiCu9vjF3qnliNr6J7kDXTVgw4ZUjuyxet11KkcsoxK006s+4Cl/3UDaXdND+UAx2
+	 OrFo1up+S+LqQPu5j2CSR1EzcGyQ6HiAvBc/iU3j4Kg/CFkiKipQxgtEjbIX9s+fiX
+	 MTiu34V2k1NmUMiffVs2vM9w31hPaeZ23990sFDk=
+From: Luca Weiss <luca@z3ntu.xyz>
+Subject: [PATCH 0/2] Allow gpio-hog nodes in qcom,pmic-gpio bindings (& dt
+ fixup)
+Date: Mon, 08 Apr 2024 18:39:46 +0200
+Message-Id: <20240408-qcom-pmic-gpio-hog-v1-0-f61fc5323110@z3ntu.xyz>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: xhci_hcd 0000:00:14.0: ERROR Transfer event TRB DMA ptr not part
- of current TD ep_index 1 comp_code 1
-To: Mathias Nyman <mathias.nyman@linux.intel.com>,
- =?UTF-8?Q?Micha=C5=82_Pecio?= <michal.pecio@gmail.com>
-Cc: Mathias Nyman <mathias.nyman@intel.com>, linux-usb@vger.kernel.org,
- LKML <linux-kernel@vger.kernel.org>
-References: <58bca6f2-797a-4e20-a476-2294309afdd5@molgen.mpg.de>
- <20240405113247.743e34b2@foxbook>
- <7090d3af-18ce-40e1-8ac2-bf18152e5c4a@molgen.mpg.de>
- <20240406183659.3daf4fa0@foxbook>
- <c57f2116-8c42-44fb-9c32-6115ad88f914@molgen.mpg.de>
- <20240407142542.036fb02f@foxbook>
- <1f64af9a-0618-a7da-4acc-f043b6580308@linux.intel.com>
-Content-Language: en-US
-From: Paul Menzel <pmenzel@molgen.mpg.de>
-In-Reply-To: <1f64af9a-0618-a7da-4acc-f043b6580308@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIANIdFGYC/x3MQQqAIBBA0avErBtQs4iuEi3KJp2FaQoRSHdPW
+ r7F/wUyJaYMU1Mg0c2Zw1kh2waMW09LyHs1KKG00GLEywSP0bNBGzmgCxbVpk1/SNFJNUANY6K
+ Dn386L+/7ATEtFuZkAAAA
+To: ~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org, 
+ Bjorn Andersson <andersson@kernel.org>, 
+ Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Konrad Dybcio <konrad.dybcio@linaro.org>
+Cc: linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org, 
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Luca Weiss <luca@z3ntu.xyz>
+X-Mailer: b4 0.13.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=619; i=luca@z3ntu.xyz;
+ h=from:subject:message-id; bh=UgqILHngj6Gyw5PQr/uALS4Jpv9WIiH3QtFphCP3HAA=;
+ b=owEBbQKS/ZANAwAIAXLYQ7idTddWAcsmYgBmFB3WpBhApA+Bhim0b2gEEMYkGswaVpLvw7sZl
+ DxKiS3Z4vSJAjMEAAEIAB0WIQQ5utIvCCzakboVj/py2EO4nU3XVgUCZhQd1gAKCRBy2EO4nU3X
+ VnQBD/9g+/Uuv1wZPvIkIaFcDmxaE+/dARx7wyPgzaWfRPB/99QqnEhgbfsGZvLof9AMCTL4A2L
+ VLYEBykzCR1QVCPUhYjlVEXHmZ54oNNTuO6gZKVIbwaBsHcWpM6dpyHrxdgGzvWW0gp8pxy3DiL
+ RaWrx9rixRiYD9uMB5PVBeF7WYbuguNvAGqRiOy7Vp2OlHDpMkvMptI5M/lFqqPbrEQlvXfvVQq
+ aMuhC0VKJ7hKKnx9jO+cbyMWwLWE6gXvWGTshTmX4uM+iOjDQy4XHB19b2gDpv8o/6LzUs5GC0F
+ ON1qBfx4ZUjmg7/+8h50HGjlAgnKpofY9o6CIXq2AlBg4b/guPJg5XwKl21Ll11xpdviR25rfn1
+ 72h2Q8DiFsP7KznV4F6lpJBE1S/shScVsc2Z+SC8UhWcaMgVuMAbNevTyJWj9HrZIbC+E5J1wm4
+ KioIpL4n+yxapp84PUF/qL3sf55faDyhzKgr8no/fo1E6pTRSIgqU4FGucaGVEKOoieyiGgaHWv
+ Ba8fjXtmT4wRgvb2XzqgrO3du7uYd/PAg9Fopc1X+Smp5fVF1R0GNiurlcP4scARo2klqxwHK7k
+ aerv/MzVEGq5U0ppJ7xvnTTMl2iPKBGg2NyR/eGJFZPof29CZlMWNd1l2652PubsCTWqbJjD9Tj
+ xRsFkbo5g6nmedg==
+X-Developer-Key: i=luca@z3ntu.xyz; a=openpgp;
+ fpr=BD04DA24C971B8D587B2B8D7FAF69CF6CD2D02CD
 
-Dear Mathias, dear Michał,
+Resolve the dt validation failure on Nexus 5.
 
+Signed-off-by: Luca Weiss <luca@z3ntu.xyz>
+---
+Luca Weiss (2):
+      dt-bindings: pinctrl: qcom,pmic-gpio: Allow gpio-hog nodes
+      ARM: dts: qcom: msm8974-hammerhead: Update gpio hog node name
 
-Thank you very much for your assistance.
+ .../devicetree/bindings/pinctrl/qcom,pmic-gpio.yaml          | 12 ++++++++++++
+ .../arm/boot/dts/qcom/qcom-msm8974-lge-nexus5-hammerhead.dts |  2 +-
+ 2 files changed, 13 insertions(+), 1 deletion(-)
+---
+base-commit: 8568bb2ccc278f344e6ac44af6ed010a90aa88dc
+change-id: 20240408-qcom-pmic-gpio-hog-2b4c5f103126
 
+Best regards,
+-- 
+Luca Weiss <luca@z3ntu.xyz>
 
-Am 08.04.24 um 09:17 schrieb Mathias Nyman:
-> On 7.4.2024 15.25, Michał Pecio wrote:
->> This (and the absence of any earlier errors on the endpoint) looks
->> like the hardware may be confirming a "successful" transfer twice or
->> the driver may be processing one such confirmation twice.
-> 
-> It's also possible this TD/TRB was cancelled due to the disconnect.
-> Could be that even if driver removes the TD from the list and cleans out 
-> the TRB from the ring buffer (turns TRB to no-op) hardware may have read
-> ahead and cached the TRB, and process it anyway.
-> 
->> [   94.088594] usb 1-2: USB disconnect, device number 8
->> [   94.089370] xhci_hcd 0000:00:14.0: ERROR Transfer event TRB DMA ptr not part of current TD ep_index 1 comp_code 1
->> [   94.089403] xhci_hcd 0000:00:14.0: Looking for event-dma 00000001250310f0 trb-start 0000000125031100 trb-end 0000000125031100 seg-start 0000000125031000 seg-end 0000000125031ff0
->> [   94.089427] xhci_hcd 0000:00:14.0: last xhci_td_cleanup: first_dma 1250310f0 last_dma 1250310f0 status -115 from finish_td
->>
->> (I say "successful" but it really isn't - the device is no longer
->> listening. But there is no delivery confirmation on isochronous OUT
->> endpoints so the xHC doesn't suspect anything.)
->>
->> Could you try again with this updated debug patch to get more info?
-> 
-> Would also be helpful to add xhci dynamic debug and xhci tracing (two 
-> separate logs). These will show in detail everything that is going on.
-> 
-> Steps:
-> 
-> mount -t debugfs none /sys/kernel/debug
-> echo 'module xhci_hcd =p' >/sys/kernel/debug/dynamic_debug/control
-> echo 'module usbcore =p' >/sys/kernel/debug/dynamic_debug/control
-> echo 81920 > /sys/kernel/debug/tracing/buffer_size_kb
-> echo 1 > /sys/kernel/debug/tracing/events/xhci-hcd/enable
-> echo 1 > /sys/kernel/debug/tracing/tracing_on
-> < Reproduce issue >
-> Send output of dmesg
-> Send content of /sys/kernel/debug/tracing/trace
-> 
-> please copy the /sys/kernel/debug/tracing/trace file somewhere as soon
-> as possible after reproducing the issue. It grows fast.
-
-For posterity I created Linux Kernel Bugzilla issue #218695 [1], and 
-attached the files there. Hopefully everything was captured, that you 
-need. The discussion could continue on this list, but do as it suits you 
-best.
-
-
-Kind regards,
-
-Paul
-
-
-[1]: https://bugzilla.kernel.org/show_bug.cgi?id=218695
