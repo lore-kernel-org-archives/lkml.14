@@ -1,40 +1,40 @@
 Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02407149DEF;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E46ED149DED;
 	Mon,  8 Apr 2024 22:51:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712616677; cv=none; b=gN0jmV6eQxTLzO/5m8zOv4n6w2Ajd36dhBa0vzCqULBHiMLKXlxobqtcVqQIMUXogh6TmFJ2u9EQ9JGtIo2YrTAaWqwf72Qa6tR8p1hu4LgnJU8nORjDeDLREi1L8qwipGUPJn9Ol+rylLNT5bFxNDyFzZLAyhfM7OhKkpbjTZ0=
+	t=1712616677; cv=none; b=a4ZFQcx4HnWoCAyCdouT69fjMpn0fo6lSrTIWrANO06RJMLXxpT45Wog1fiY2tbOvkVAP5P8QgeztHfNndXtkoWNUiBDi7VznxpjtISd3/jWYwATmKp78i3PwKnDvAQfogogH2AzhCwhfkpHa0N6gYESdjHVzyLLAFTAaaIAPEo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1712616677; c=relaxed/simple;
-	bh=czCfbCIPjGP9pvjr6UIUI+9KpI2JwNoa8jr1BZd0FOw=;
+	bh=wiEnxwe82TmRvgNDZ6E4uS/rMyY8NbaFBv7UCAOXX94=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Y05rYwn7ybmsJHHSXWaH4kvcFsf1EvT50gknExYwfWOjekuE7rnMjGb5xCbr5QZkwf3/WXUVx0uw/rJZ0RvL/N/28X2v3iLWgPe7ymF64I6dR4NYDmPKvH25UuCIeXyKYrmSYT/Hnsno4bP6dPNBIuAkgMVD5YAJ2Man7ZJW3MM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=grA6DCAd; arc=none smtp.client-ip=46.235.227.194
+	 MIME-Version; b=cHC7/PstgD1fswJCDlmldRA05uXpu6aAXwP5i1VxVD2EuHHDT7LIKgWDsqdeKRcSo/+CqAVa41zMdNvkyE4F69wVqb6a8pl0a8OuQDYAHUNmeWLq15LxNizyFEwvYdWf4h88tbA+BkEQgBzyw+I27gbuL+KW3NjkCFLtHgLWi5o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=n/Yz6cX0; arc=none smtp.client-ip=46.235.227.194
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="grA6DCAd"
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="n/Yz6cX0"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
 	s=mail; t=1712616671;
-	bh=czCfbCIPjGP9pvjr6UIUI+9KpI2JwNoa8jr1BZd0FOw=;
+	bh=wiEnxwe82TmRvgNDZ6E4uS/rMyY8NbaFBv7UCAOXX94=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=grA6DCAd81R08RrZfoAPZ2CHrphx0CmPZWcEy7Ax4cpp5yUkc0FxffrJcDFiI1a2O
-	 iqotO08/6QM4anRXSvgSZzY/mnUdqzIXtEyR2zYm4Pu55di7p1dk4xQJe48YL1Fpr6
-	 Q0g8pRefm72qUZdzYXmVHxw1LvB9Jh68Fc5ZIVhhEzyJ2xJi1qmvcuTmQpaTqOZH9R
-	 hvk+5sJcYryfT79X7eCtCv/50fdukaHmXV+BDb9iqIrYvufATrON6JBFdycB+D+Wa2
-	 zl8iyf9SFhUgDO7bIZQdwA/oRbYNOwXxdYev2NL0Qc4LqxeUL/5Q2oOd7Sp3bBuexO
-	 /Ml3XKIX8gm9Q==
+	b=n/Yz6cX0OXhZyPfDtUV+fI2DETymWeeQkSt3O+jGPkzwf61S/QhgibpofCCmALcIs
+	 0Ld4o81NE1whCffXxukU8ZAPlN+dLhdEBEWE+33x58ZRHbHubFDziro7Vw9H59UHja
+	 EZRuQnwNVPtk6EKIEglGOXGbPw/xEGoS52QhtdXBwxahAkIQ6JYCWrveYumoheO+36
+	 mnrTsq23iIVGUzfxYMXtoUcn3AfD1XUsf6nXz7b3+wnFhmrNAcTkVKdN8LXHpm0aVW
+	 mLhT8zdgQVmqnf46rU1hIwHWIjQjwwoNEnMz4fAk0xx07IjfXa1D2eGrLYCXmEypF+
+	 FfDbuiiEdOPBg==
 Received: from jupiter.universe (cola.collaboradmins.com [195.201.22.229])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits))
 	(No client certificate requested)
 	(Authenticated sender: sre)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 5246A37820F8;
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 4100837820F3;
 	Mon,  8 Apr 2024 22:51:11 +0000 (UTC)
 Received: by jupiter.universe (Postfix, from userid 1000)
-	id 4A71C4800DC; Tue,  9 Apr 2024 00:51:10 +0200 (CEST)
+	id 46ED34800D5; Tue,  9 Apr 2024 00:51:10 +0200 (CEST)
 From: Sebastian Reichel <sebastian.reichel@collabora.com>
 To: Heiko Stuebner <heiko@sntech.de>,
 	Vinod Koul <vkoul@kernel.org>,
@@ -50,9 +50,9 @@ Cc: Rob Herring <robh+dt@kernel.org>,
 	linux-kernel@vger.kernel.org,
 	Sebastian Reichel <sebastian.reichel@collabora.com>,
 	kernel@collabora.com
-Subject: [PATCH v5 09/10] arm64: dts: rockchip: add upper USB3 port to rock-5a
-Date: Tue,  9 Apr 2024 00:50:36 +0200
-Message-ID: <20240408225109.128953-10-sebastian.reichel@collabora.com>
+Subject: [PATCH v5 07/10] arm64: dts: rockchip: add USB3 DRD controllers on rk3588
+Date: Tue,  9 Apr 2024 00:50:34 +0200
+Message-ID: <20240408225109.128953-8-sebastian.reichel@collabora.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240408225109.128953-1-sebastian.reichel@collabora.com>
 References: <20240408225109.128953-1-sebastian.reichel@collabora.com>
@@ -64,57 +64,78 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Enable full support (XHCI, EHCI, OHCI) for the upper USB3 port from
-Radxa Rock 5 Model A. The lower one is already supported.
+Add both USB3 dual-role controllers to the RK3588 devicetree.
 
 Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
 ---
- .../boot/dts/rockchip/rk3588s-rock-5a.dts      | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
+ arch/arm64/boot/dts/rockchip/rk3588.dtsi  | 20 ++++++++++++++++++++
+ arch/arm64/boot/dts/rockchip/rk3588s.dtsi | 22 ++++++++++++++++++++++
+ 2 files changed, 42 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3588s-rock-5a.dts b/arch/arm64/boot/dts/rockchip/rk3588s-rock-5a.dts
-index 00afb90d4eb1..b8ca3ee4c89a 100644
---- a/arch/arm64/boot/dts/rockchip/rk3588s-rock-5a.dts
-+++ b/arch/arm64/boot/dts/rockchip/rk3588s-rock-5a.dts
-@@ -697,6 +697,14 @@ regulator-state-mem {
+diff --git a/arch/arm64/boot/dts/rockchip/rk3588.dtsi b/arch/arm64/boot/dts/rockchip/rk3588.dtsi
+index 4fdd047c9eb9..5984016b5f96 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3588.dtsi
++++ b/arch/arm64/boot/dts/rockchip/rk3588.dtsi
+@@ -7,6 +7,26 @@
+ #include "rk3588-pinctrl.dtsi"
+ 
+ / {
++	usb_host1_xhci: usb@fc400000 {
++		compatible = "rockchip,rk3588-dwc3", "snps,dwc3";
++		reg = <0x0 0xfc400000 0x0 0x400000>;
++		interrupts = <GIC_SPI 221 IRQ_TYPE_LEVEL_HIGH 0>;
++		clocks = <&cru REF_CLK_USB3OTG1>, <&cru SUSPEND_CLK_USB3OTG1>,
++			 <&cru ACLK_USB3OTG1>;
++		clock-names = "ref_clk", "suspend_clk", "bus_clk";
++		dr_mode = "otg";
++		phys = <&u2phy1_otg>, <&usbdp_phy1 PHY_TYPE_USB3>;
++		phy-names = "usb2-phy", "usb3-phy";
++		phy_type = "utmi_wide";
++		power-domains = <&power RK3588_PD_USB>;
++		resets = <&cru SRST_A_USB3OTG1>;
++		snps,dis_enblslpm_quirk;
++		snps,dis-u2-freeclk-exists-quirk;
++		snps,dis-del-phy-power-chg-quirk;
++		snps,dis-tx-ipgap-linecheck-quirk;
++		status = "disabled";
++	};
++
+ 	pcie30_phy_grf: syscon@fd5b8000 {
+ 		compatible = "rockchip,rk3588-pcie3-phy-grf", "syscon";
+ 		reg = <0x0 0xfd5b8000 0x0 0x10000>;
+diff --git a/arch/arm64/boot/dts/rockchip/rk3588s.dtsi b/arch/arm64/boot/dts/rockchip/rk3588s.dtsi
+index 3a4f433cef5c..a8f14a74d471 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3588s.dtsi
++++ b/arch/arm64/boot/dts/rockchip/rk3588s.dtsi
+@@ -436,6 +436,28 @@ scmi_shmem: sram@0 {
+ 		};
  	};
- };
  
-+&u2phy0 {
-+	status = "okay";
-+};
++	usb_host0_xhci: usb@fc000000 {
++		compatible = "rockchip,rk3588-dwc3", "snps,dwc3";
++		reg = <0x0 0xfc000000 0x0 0x400000>;
++		interrupts = <GIC_SPI 220 IRQ_TYPE_LEVEL_HIGH 0>;
++		clocks = <&cru REF_CLK_USB3OTG0>, <&cru SUSPEND_CLK_USB3OTG0>,
++			 <&cru ACLK_USB3OTG0>;
++		clock-names = "ref_clk", "suspend_clk", "bus_clk";
++		dr_mode = "otg";
++		phys = <&u2phy0_otg>, <&usbdp_phy0 PHY_TYPE_USB3>;
++		phy-names = "usb2-phy", "usb3-phy";
++		phy_type = "utmi_wide";
++		power-domains = <&power RK3588_PD_USB>;
++		resets = <&cru SRST_A_USB3OTG0>;
++		snps,dis_enblslpm_quirk;
++		snps,dis-u1-entry-quirk;
++		snps,dis-u2-entry-quirk;
++		snps,dis-u2-freeclk-exists-quirk;
++		snps,dis-del-phy-power-chg-quirk;
++		snps,dis-tx-ipgap-linecheck-quirk;
++		status = "disabled";
++	};
 +
-+&u2phy0_otg {
-+	status = "okay";
-+};
-+
- &u2phy2 {
- 	status = "okay";
- };
-@@ -720,6 +728,11 @@ &uart2 {
- 	status = "okay";
- };
- 
-+&usbdp_phy0 {
-+	status = "okay";
-+	rockchip,dp-lane-mux = <2 3>;
-+};
-+
- &usb_host0_ehci {
- 	status = "okay";
- 	pinctrl-names = "default";
-@@ -730,6 +743,11 @@ &usb_host0_ohci {
- 	status = "okay";
- };
- 
-+&usb_host0_xhci {
-+	dr_mode = "host";
-+	status = "okay";
-+};
-+
- &usb_host1_ehci {
- 	status = "okay";
- };
+ 	usb_host0_ehci: usb@fc800000 {
+ 		compatible = "rockchip,rk3588-ehci", "generic-ehci";
+ 		reg = <0x0 0xfc800000 0x0 0x40000>;
 -- 
 2.43.0
 
