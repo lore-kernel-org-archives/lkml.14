@@ -1,114 +1,78 @@
-Received: from jabberwock.ucw.cz (jabberwock.ucw.cz [46.255.230.98])
+Received: from out203-205-251-59.mail.qq.com (out203-205-251-59.mail.qq.com [203.205.251.59])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F2795FB97;
-	Mon,  8 Apr 2024 11:21:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.255.230.98
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78805524DE
+	for <linux-kernel@vger.kernel.org>; Mon,  8 Apr 2024 11:23:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.251.59
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712575317; cv=none; b=eXSLxARZfn78WGInb5j5FPo4HTqQCL8Tm677hjBaL3TKntocW1YZqpwgbV97WsTtZev1H7sokS3KmOvoom0W1D2koWW/Eyg6M4qBMpJM+SUEl4JPb4IB49bGBTd32e9Lz7SrKI94dJJmYPy0H7rrN08TPazzQajVqV3gehEnD64=
+	t=1712575382; cv=none; b=LM1O4s4TlfBNlUDiVCzDpPj1XXIMOIVFZmW+ECIEghUn8lT1wtcfLju+sdEt40DZnLV9c+vhOu3NIsRmSDlG0sRX7gkJYVtDtnpUWAc1sBPBzmMEG6z1iPNAWJLRJRRHmctO3XVIJqZKE6XrLfJntReUjylyt25gkBcI/2OUEQ8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712575317; c=relaxed/simple;
-	bh=fdquaXWCbYL4ik7x4w+mTdj5QkTTmaC30QJ1pMlJkJ8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RfhRVxvH+yqyg2c2eti9ahw5ibkSXyAVjbBpK7JHndJXqflgkG65yaxUlnwtP/KWDOWCWcbXEKO3Y5JfnB/5oIy4irNH/ix51V1KqC+hCADB83K8mozkA4v8Md5kfup/fqSJmDMLoJehTr2IzFPRq+9gOj1ul+5OhTmM6X2tR/s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ucw.cz; spf=pass smtp.mailfrom=ucw.cz; dkim=pass (1024-bit key) header.d=ucw.cz header.i=@ucw.cz header.b=cxWklAGe; arc=none smtp.client-ip=46.255.230.98
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ucw.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ucw.cz
+	s=arc-20240116; t=1712575382; c=relaxed/simple;
+	bh=XhqTmTMe18T6k+62nzT1yDwjlXkJi47c+0NJqPcL7cA=;
+	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
+	 MIME-Version; b=qutKFQwt/m7oF6z04moajBERGruNtusIFvCoHXqsN8wdb3cb9rxHz74SsvDveqpndKuU3Chj6inOYf10Gmj1EQRPj9oMgUoT456g9lRCId1r3LvY/p7cSPj8NzXHILfAvL2Tur4uJHe2QWod3BHDiIQB2kMlXBBIUtQpfI1P++s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=d9Cz5HFy; arc=none smtp.client-ip=203.205.251.59
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ucw.cz header.i=@ucw.cz header.b="cxWklAGe"
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-	id 2F9B51C006B; Mon,  8 Apr 2024 13:21:52 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ucw.cz; s=gen1;
-	t=1712575312;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=BrP8N21nXarKEWVxpMkevruH+XMKp5XToFxXZz5jtTM=;
-	b=cxWklAGeXe6x3EkvF82RB5i7oLcXDXwKw3Y7ozLZDFUGQNZVVQczWqUPVycL5ywH4XJPTo
-	h1w+sBy0Wv4iKUUMPmzMVVqkaw4cceMGBKRCcokHcTVr0ktLqjTJHcMVoT+CnRGTTzHt/n
-	XbbeHL3NCwuQPQNBGREv7pN7ZnrXnq0=
-Date: Mon, 8 Apr 2024 13:21:51 +0200
-From: Pavel Machek <pavel@ucw.cz>
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc: phone-devel@vger.kernel.org, kernel list <linux-kernel@vger.kernel.org>,
-	fiona.klute@gmx.de, martijn@brixit.nl, samuel@sholland.org,
-	heikki.krogerus@linux.intel.com, gregkh@linuxfoundation.org,
-	linux-usb@vger.kernel.org, robh+dt@kernel.org,
-	krzysztof.kozlowski+dt@linaro.org, devicetree@vger.kernel.org,
-	megi@xff.cz
-Subject: Re: [PATCHv3 1/2] dt-bindings: usb: typec: anx7688: start a binding
- document
-Message-ID: <ZhPTTxI4oTF3pgrk@duo.ucw.cz>
-References: <ZhPMHdt6r/4D99Zg@duo.ucw.cz>
- <ab9affc8-de68-4ec9-bdfc-02131191bc3a@linaro.org>
+	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="d9Cz5HFy"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
+	t=1712575071; bh=IN0PPZfitbW7SvARXHrN9jP/IWMkw2Od0a/16l8uoxw=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=d9Cz5HFyMa3bfHerdHOKB+/u8a9ROZg+v65R1Ah+qBh17zy9df1pDP0HTc5CIrHEH
+	 CXcmS19HuYgBL0X1Y1tlSoMnPifZ5ldbqhw6Gd50NPZq0nvhDFUIigz2ETvTl+320B
+	 wLodJHx/09xCiWShSV4OL7lIR8gXb4YCYqfrKMEU=
+Received: from pek-lxu-l1.wrs.com ([111.198.228.153])
+	by newxmesmtplogicsvrsza7-0.qq.com (NewEsmtp) with SMTP
+	id 4718FE4A; Mon, 08 Apr 2024 19:17:49 +0800
+X-QQ-mid: xmsmtpt1712575069thrfk93hs
+Message-ID: <tencent_7C336C9E5A1B9C4B9F1B7C251BBA77BB4008@qq.com>
+X-QQ-XMAILINFO: MPEorwW6cFo9f+ohww/ti2qvfbDyw8Fhy6Vi73WGjkRV3AM54ABgu60WO2/irK
+	 FW87jxRM980OUEYhw3o4GtxZrbIKeGV2/Y6xETaL3XyOd4ikGys6+pAQvjFW+qwEq7dwZzYk+9Hc
+	 9ow7ThDefuo9EdlTk17i7WiRAzljacJWW30peRuM47VkFAmk1I3q0LmTrU9EgsYDufNDzqkhM72u
+	 4zWP+Z4kSM7JAwgEk0MZAnylGLOMWUKm7F5Y1IDEdI4McPBUCijPE15RBlflewvmo4++x95aNohD
+	 SgiPDA++rIrboDmIqCBXm0GYJUv+f6AZvk+A8PZW8NnHu7mBJHx+n5UzGF7QuR6lm+8Xeu/c6Ajt
+	 4sFcJPRfkWvZJTXnCvVZXEf3vkXUeudKKFHLh3GAwNTzvLMP2COhlE/p27qqBVDgQwc7CzCIhzef
+	 Xus4vXBAjSQHE0QLcF8J/vaytQI31w5gWSLajYen5thDb8qWmjiAJjwvWhGvXmfJsn338NfrpSFT
+	 aGM5zybH+iUVVfE4vkFQfsg6n9w7DTFJ0PZs2swv3rBiF3ShLBO5oINUhPI8g3wIuzlGhLwXEORr
+	 LDmu3QMWqN6koyNQ155gV6n40OTS42HcYu0BUOmL23vC5Od0zCzN8CpzGzdMeyudvdBVE6m15kaR
+	 RLmlpvT329jXDtZbKZxQ3A4kOkIshH7sjqeEyqMRu5PpCh49SsPBW2eSDVbgN3vr0UJcdNocyJ5W
+	 Vziw08BKEs66oBhPltnHfeTJBnUKEdzsNKO+ghvhl98yv3kRgwySm1qC9lI63Cz+ENyEEJr5oMI4
+	 a0xYvK0V0s8sN7gMLTSZZzpG3s+rbyGubPm6JcofFz6Tg4kTdgAE/e8oFNeVun1yOatMfWkTgnYJ
+	 pRoFp1UQeGayzNvHIcbnoKCCb0uaPNYPNB/TS36I+zjTdOMRvkWWW1du7k1MI16mX2UTAPOMR2
+X-QQ-XMRINFO: NS+P29fieYNw95Bth2bWPxk=
+From: Edward Adam Davis <eadavis@qq.com>
+To: syzbot+ff14db38f56329ef68df@syzkaller.appspotmail.com
+Cc: linux-kernel@vger.kernel.org,
+	syzkaller-bugs@googlegroups.com
+Subject: Re: [syzbot] [v9fs?] KMSAN: uninit-value in p9_client_rpc (2)
+Date: Mon,  8 Apr 2024 19:17:48 +0800
+X-OQ-MSGID: <20240408111747.3191219-2-eadavis@qq.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <000000000000a77e580614ded85a@google.com>
+References: <000000000000a77e580614ded85a@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="PGNyKrA94GXh8GmU"
-Content-Disposition: inline
-In-Reply-To: <ab9affc8-de68-4ec9-bdfc-02131191bc3a@linaro.org>
+Content-Transfer-Encoding: 8bit
 
+please test uv p9_client_rpc
 
---PGNyKrA94GXh8GmU
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+#syz test https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
 
-Hi!
+diff --git a/net/9p/client.c b/net/9p/client.c
+index e265a0ca6bdd..cd525cee5885 100644
+--- a/net/9p/client.c
++++ b/net/9p/client.c
+@@ -235,6 +235,7 @@ static int p9_fcall_init(struct p9_client *c, struct p9_fcall *fc,
+ 	if (!fc->sdata)
+ 		return -ENOMEM;
+ 	fc->capacity = alloc_msize;
++	fc->tag = 0;
+ 	return 0;
+ }
+ 
 
-> > Add binding for anx7688 usb type-c bridge. I don't have a datasheet,
-> > but I did best I could.
-> >=20
-> > Signed-off-by: Pavel Machek <pavel@ucw.cz>
->=20
-> ...
->=20
-> > +  cabledet-gpios:
-> > +    maxItems: 1
-> > +    description: GPIO controlling CABLE_DET (C3) pin.
-> > +
-> > +  avdd10-supply:
-> > +    description: 1.0V power supply going to AVDD10 (A4, ...) pins
-> > +
-> > +  dvdd10-supply:
-> > +    description: 1.0V power supply going to DVDD10 (D6, ...) pins
-> > +
-> > +  avdd18-supply:
-> > +    description: 1.8V power supply going to AVDD18 (E3, ...) pins
-> > +
-> > +  dvdd18-supply:
-> > +    description: 1.8V power supply going to DVDD18 (G4, ...) pins
-> > +
-> > +  avdd33-supply:
-> > +    description: 3.3V power supply going to AVDD33 (C4, ...) pins
-> > +
-> > +  i2c-supply: true
-> > +  vconn-supply: true
->=20
-> There are no such supplies like i2c and vconn on the schematics.
->=20
-> I think this represents some other part of component which was added
-> here only for convenience.
-
-Can you give me pointer to documentation you are looking at?
-
-Best regards,
-							Pavel
---=20
-People of Russia, stop Putin before his war on Ukraine escalates.
-
---PGNyKrA94GXh8GmU
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCZhPTTwAKCRAw5/Bqldv6
-8pSfAKChCJQYbXh+ffiYIr3g7dsXssSWbQCfT8lWq5X3vnCAnv25EY7uJIVeogE=
-=7fNt
------END PGP SIGNATURE-----
-
---PGNyKrA94GXh8GmU--
