@@ -1,191 +1,127 @@
-Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com [209.85.167.51])
+Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6151F14036F;
-	Mon,  8 Apr 2024 15:23:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8DED140E5C;
+	Mon,  8 Apr 2024 15:23:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712589803; cv=none; b=pg33elQWafXWYLmqxe+QxBn1f/U9IVInzaZt23hHvNEdXzhqiMNMBJpaPYQrVRLvsi2tErgTxDMNbLvNB6W8kDBrZ1pLhWYFPi1cNtvD+l1lKsxyyoUThb/lC6ju2j9nQaTPvM0uydJWmGl/3GUYXYHvdVwLZXBKJ+SyLq2JXcM=
+	t=1712589811; cv=none; b=GBR7NaaH0Pb3OIQ6ftLBpPRWBXWL9uEFYOujtK4dLTM2djxfMLFJyIaPpdMz8/AjEC6HHWCPC76YmEPjguKksUCb+uraFCr72gf+rhRAhADOLhyF5xgZqQvNOgXwOTknB+b2up8719eCTIcTwU1tu8CP53qgA6C4cwvgv98vujM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712589803; c=relaxed/simple;
-	bh=aWmOwBMxnBPrBPIX7HbRjPzOo9yySi2pZ/rTpMbx3kU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=jDJQzWAJIPJs333BPsxD8zObG+1TwqJV+buwOngpImk2faqPU1GVvhk9DCJRznET/IcV845hRC/EA+2BMTieKjRbMYU+VNqMCtoikqoM37Z32MTrfcDjT76lpK1LvxU3zSSueOm7fRQpMblu8vsUaklwivmqKIpKKkINppvIUyE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bINt+vVT; arc=none smtp.client-ip=209.85.167.51
+	s=arc-20240116; t=1712589811; c=relaxed/simple;
+	bh=YE2/eJwGtOKC270Pf6AD/gnWZLqa2aC+ZVpjLPeWt6o=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=EPT3LbWRHIRHlh+DvpXQZoOewF/7VoImhHmaq7Ch70YHrheV0YF0TcN58YVBZBoumGWtNf6YVItl+PI1ZJFXvUfwy4Fsc08kIHO0nyBvtNjVlL7QzPEMI5gkE4qzictJB6BMt0HsYqIWSR1XjNAVvFcux1y6L1acj0y3Pa+QcrQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Q4kInhAj; arc=none smtp.client-ip=209.85.208.41
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bINt+vVT"
-Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-516b6e75dc3so5681834e87.3;
-        Mon, 08 Apr 2024 08:23:21 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Q4kInhAj"
+Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-56e56ee8d5cso1817968a12.2;
+        Mon, 08 Apr 2024 08:23:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1712589799; x=1713194599; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=5aJBY+lZMBOzeDlvQBcDc5wZfXjkZJi9SVA77e0QYTY=;
-        b=bINt+vVT/kQ1PcYsAtgZFZhSpRyJp9bs7NPSWSQ1S5hzUGzUNdwq6irgLJl/SgrnhB
-         tQIOHZOQRaMycnTJoMo2CCRdiloCNwYsqCWbMo68e3s+tIl0VZvqV4qqXbwJIWpAEYhe
-         QzqGbyBfJgcvIN6YRUn99jjdVdHE7grZpvOsSHK6hsGo7O1S5GZant0ceCFtnwOGt0/r
-         I0pjHFol+M4hXarBhmY4NQp/+M7vPGUjcSJI35PnJAek0nOuFsV7AvE7yXSsANAS6ucg
-         fxQzDx8FRmm2wNWVjpBoXKwwZo2w12pMR6JSMmCxXzjo4vXaem+bgjn2fWxluNVcruLU
-         d3tQ==
+        d=gmail.com; s=20230601; t=1712589808; x=1713194608; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=YE2/eJwGtOKC270Pf6AD/gnWZLqa2aC+ZVpjLPeWt6o=;
+        b=Q4kInhAjPNSLPl8GBvfT2+gjLlxLpEp9SIAZm6hd7VxxY2dg/YlLc0JNngbtGh3UqN
+         YEA88vUE9drO1dWiis5cxwTSRzPIBECdp1HxnMQh1mLXUnZlaCYDZi+/9Qgafm/8Cgck
+         U1XnuCWLFf4qRkitCWJxc3CjFyuFhn8moHJT/LdHwVnGahfugAED2rGieueo1jWnKH3t
+         HssxXWKoGcxLWV1UCczuC1+P3zrL9fa83+YgV7aEaGICLUxyoqSDqTVcRrCjqBYwXyOc
+         zMfT6ZtvNzVatTDDx58r55F7KwiHgBSWiUUaeO2sdBZ4GYRJMJDvoIDaebPtQRy2BgQg
+         6Ncw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712589799; x=1713194599;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=5aJBY+lZMBOzeDlvQBcDc5wZfXjkZJi9SVA77e0QYTY=;
-        b=FJprU7A5Vgkv4Kkh5lclgw0n94W3qicZtCx5invhGwdlLDZb1tTn3cecEwAQOv75aO
-         HN97QMfqorCp2/U76kk6Db/Uq1zMVAVvZ7HHxBuyFCp282lZUJK2UeiUPvf4xarnlNDy
-         hHt4B7yCiHgxtvrodlOpZLfasncppSzw+J+2biNjtWrSz2LUf/xIwr0Gs8ine+0UOQ0T
-         nvC96hbGbhPrNjgUqGdhpfIXCFQWpl7u8q6wVY7q+y/2hDteosWMJ9IHTS2+V3X49kXX
-         +Lul+TDMNtQ6+Pz+9ME1lg/eb9j0BerETp9RqH9JBZxTcgK9O/QMt8vUm06aY5t2oujR
-         LBHQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUA1PJw/djglZQWwNSD7idzCA96f8biRK4DNgL4mJKrnnH6IAoMWbm05wgqNVSow3pg9ni7yqslxyC2MQGiTflFkx5kv1p4TJWs6NWqAsVF0NoF/8FQeMP7oko9r7EQyxo38K+h4nT4EjaxzS55zuu5NF7cLNCpkZbVfsSTzUBD/0WUWasZ0+Hjfh08S81sunIn6qXdL6jKfmzL8GByQlpic3PEQo3YocdALA==
-X-Gm-Message-State: AOJu0YwZo/elvB97QfX2lFFTCpUPpLGG8FWEDOOB/ZW5rnwDvrtPx6x6
-	+LTWsdMo7jnwCO7mOH2e4L4FW8e6D2qD2/HdoflFDiHQji3eZmRc
-X-Google-Smtp-Source: AGHT+IH4FQk+olUPye5/qT5UhgYxtR0ctIYPXKb7ahlfpoh73KZ4aTrWe59dHaOVw+Ua31BF9351Lw==
-X-Received: by 2002:a19:914b:0:b0:516:be09:4b5e with SMTP id y11-20020a19914b000000b00516be094b5emr5477888lfj.46.1712589796719;
-        Mon, 08 Apr 2024 08:23:16 -0700 (PDT)
-Received: from [192.168.1.105] ([94.120.83.72])
-        by smtp.gmail.com with ESMTPSA id a23-20020a1709062b1700b00a51dd26f6dcsm922980ejg.51.2024.04.08.08.23.14
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 08 Apr 2024 08:23:16 -0700 (PDT)
-Message-ID: <15fdc072-9329-4675-8d9e-189862d88351@gmail.com>
-Date: Mon, 8 Apr 2024 18:23:13 +0300
+        d=1e100.net; s=20230601; t=1712589808; x=1713194608;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=YE2/eJwGtOKC270Pf6AD/gnWZLqa2aC+ZVpjLPeWt6o=;
+        b=bGABpB+VTiJvF+yGWAVCVEAJ1vwv91GlLvpTiUkf3eGuK6PBft/LXO8B9XXwJTZh2H
+         MVdPLfp7goRv3Y5959AMg99BTA2aAOC2bYZt56Hc76h/753gHqr9QGUa+pOR5rDI5/xD
+         YtIS53r6lA9lrjRojQvrWxKsEO3ArqZ2920WXcT6TOpwBimWa3Jdk08QK1LPDp/jbbJL
+         06iYO82Iy3ELsKfL4Kw1fFvxCAwdRmO2B6xli2LiuBRMAG6Z8HYmva1XXgCj/Nds46gI
+         FQW1xGox65wKWutFMHmzszzYT0yXkfOBawPGtLzwTgDRMGGiQn9pfljIj/YjHqfaEsdT
+         MgPw==
+X-Forwarded-Encrypted: i=1; AJvYcCXleMFBCP4/VWQicLEDhmzOdU3rrewP8zu2RQxw3Aq5g3gGesuOKAW+sNxmZ3+ECgb4X3gGV72dtfXad5fo9pJqmwE+xjKzxQymbCOeYTXpOXPHrrYoilaCpZOcuwSBZecc2no0Gd5GdgFxUD0=
+X-Gm-Message-State: AOJu0YzpOFzaO/YaMwoFLRqx940MwJuJbCeaX/sWnc7AicxKlj8bIzVf
+	Ma1S82mhQAh2oRVRKqoHQy1f9ASmJTUIoKhu71jXC1MrL5O4CLCDLejLYHFf0n9dle8NQPE2wPW
+	OB61PNE1jyl0G1sG686R1Rjbwo9h7n7SqjF0=
+X-Google-Smtp-Source: AGHT+IEJvbxzuNcQXgeFuh8Ke1Vj6bw5Qs2GP3BPuhWpp9IRpSdKAmcs1TpqyhEdrxoRqqjjfJIzAib9+6pfN5hwvYs=
+X-Received: by 2002:a50:d59b:0:b0:56b:cfef:b2de with SMTP id
+ v27-20020a50d59b000000b0056bcfefb2demr7217258edi.26.1712589807970; Mon, 08
+ Apr 2024 08:23:27 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 0/1] platform/x86: Add wmi driver for Casper Excalibur
- laptops
-To: Stella Bloom <windowz414@gnuweeb.org>
-Cc: hdegoede@redhat.com, ilpo.jarvinen@linux.intel.com, jdelvare@suse.com,
- lee@kernel.org, linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-leds@vger.kernel.org, linux@roeck-us.net, pavel@ucw.cz,
- platform-driver-x86@vger.kernel.org,
- Alviro Iskandar Setiawan <alviro.iskandar@gnuweeb.org>,
- Ammar Faizi <ammarfaizi2@gnuweeb.org>,
- GNU/Weeb Mailing List <gwml@vger.gnuweeb.org>,
- Stella Bloom <stelbl@elrant.team>,
- Bedirhan KURT <bedirhan_kurt22@erdogan.edu.tr>
-References: <20240324181201.87882-1-mustafa.eskieksi@gmail.com>
- <20240407005746.412603-1-windowz414@gnuweeb.org>
-Content-Language: en-US
-From: =?UTF-8?Q?Mustafa_Ek=C5=9Fi?= <mustafa.eskieksi@gmail.com>
-In-Reply-To: <20240407005746.412603-1-windowz414@gnuweeb.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <CANiq72meap5C9bkj5rNDE=0U5gb5OKwDrrTSrVRwJbkAPWgUsg@mail.gmail.com>
+ <d912f0e0-19d5-4cde-a548-10db94da15a9@yahoo.de>
+In-Reply-To: <d912f0e0-19d5-4cde-a548-10db94da15a9@yahoo.de>
+From: =?UTF-8?Q?Sergio_Gonz=C3=A1lez_Collado?= <sergio.collado@gmail.com>
+Date: Mon, 8 Apr 2024 17:22:49 +0200
+Message-ID: <CAA76j92Sd-YN=UYET7jyMyBuzyhET+rwqF-Rxo-0S_60+TUX1Q@mail.gmail.com>
+Subject: Re: [PATCH] x86/insn_decoder_test: allow longer symbol-names
+To: Danilo Krummrich <danilokrummrich@yahoo.de>
+Cc: miguel.ojeda.sandonis@gmail.com, tglx@linutronix.de, x86@kernel.org, 
+	mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com, 
+	david@readahead.eu, davidgow@google.com, hpa@zytor.com, 
+	john.m.baublitz@gmail.com, linux-kernel@vger.kernel.org, mhiramat@kernel.org, 
+	mingo@kernel.org, rust-for-linux@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 7.04.2024 03:57, Stella Bloom wrote:
->> From: Mustafa Ekşi <mustafa.eskieksi@gmail.com>
->>
->> Hi,
->> I want to note that moving mutex_init to the bottom of the function
->> crashes the driver when mutex_lock is called. I didn't investigate it
->> further but I wanted to say that since Ai Chao also did it like that.
->>
->> Driver sets all leds to white on start. Before that, when a led's
->> brightness is changed, that led's color gets set to white but others
->> keep their old colors which creates a bad user experience (at least for
->> me). Please inform me if this is a bad approach.
->> Also, this driver still lacks support for changing modes and I seek
->> advise for that.
->>
->> Mustafa Ekşi (1):
->>    platform/x86: Add wmi driver for Casper Excalibur laptops
->>
->>   MAINTAINERS                       |   6 +
->>   drivers/platform/x86/Kconfig      |  14 +
->>   drivers/platform/x86/Makefile     |   1 +
->>   drivers/platform/x86/casper-wmi.c | 641 ++++++++++++++++++++++++++++++
->>   4 files changed, 662 insertions(+)
->>   create mode 100644 drivers/platform/x86/casper-wmi.c
->>
-> Hi there,
+Hello,
+
+I was just waiting in case there was feedback from David Rheinsberg.
+
+Cheers!
+
+On Mon, 8 Apr 2024 at 14:52, Danilo Krummrich <danilokrummrich@yahoo.de> wr=
+ote:
 >
-> I just wanted to pitch in by testing the driver on the kernel I use
-> on my Arch install on an Excalibur G770.1245, namely xdevs23's
-> linux-nitrous (https://gitlab.com/xdevs23/linux-nitrous), but trying to
-> compile the driver using LLVM, which is the default compilation behavior
-> in this kernel's AUR package, spits out the following error;
-> ```
-> drivers/platform/x86/casper-wmi.c:633:3: error: field designator 'no_singleton' does not refer to any field in type 'struct wmi_driver'
->   633 |         .no_singleton = true,
->       |         ~^~~~~~~~~~~~~~~~~~~
-> 1 error generated.
-> make[5]: *** [scripts/Makefile.build:243: drivers/platform/x86/casper-wmi.o] Error 1
-> make[4]: *** [scripts/Makefile.build:481: drivers/platform/x86] Error 2
-> make[3]: *** [scripts/Makefile.build:481: drivers/platform] Error 2
-> make[2]: *** [scripts/Makefile.build:481: drivers] Error 2
-> make[1]: *** [/home/stella/.cache/yay/linux-nitrous/src/linux-nitrous/Makefile:1919: .] Error 2
-> make: *** [Makefile:240: __sub-make] Error 2
-> ```
+> On 2/20/24 18:07, Miguel Ojeda wrote:
+> >
+> > On Fri, Jan 27, 2023 at 11:39=E2=80=AFAM David Rheinsberg <david@readah=
+ead.eu> wrote:
+> >>
+> >> The current workaround is to just disable CONFIG_X86_DECODER_SELFTEST,=
+ which I thought is a sad state. I can gladly use `256 + KSYM_NAME_LEN` and=
+ add a comment ala "room for insn-encoding and a symbol name". Would that b=
+e acceptable? The alternative would be to try to dyn-alloc a buffer and inc=
+rease it to the actual line-length?
+> >
+> > John independently hit this issue again. Could we fix this? Going for
+> > the `256 + KSYM_NAME_LEN` sounds good enough for the moment since it
+> > would be a clear improvement, though I agree this could be cleaned up
+> > further.
 >
-> I want to help debug this somehow, but I'm more of an Android custom
-> ROM developer than a Linux kernel maintainer, so my knowledge on the
-> programming and build system languages other than Java, Makefile, Bash,
-> etc is pretty much limited if not outright non-existent.
-Hi,
-This is because of a newly merged patch from Armin Wolf:
-https://lore.kernel.org/platform-driver-x86/20240226193557.2888-2-W_Armin@gmx.de/
-You can comment that line or apply that patch to your tree to make it
-compile. Also, you'll probablyneed to change the call to wmidev_block_set in
-casper_query function with wmi_set_block (which is now deprecated).
-> I would *love* to see this driver actually hit mainline repos, and
-> eventually the upcoming kernel releases, given how much I need to use
-> this laptop of mine as a computer engineering student.
+> I hit this independently as well. Miguel pointed me on this mail thread
+> when I sent another fix for this in [1].
 >
-> Asking just for the case I manage to get this driver up and going on
-> my end somehow: Is there a tool made for controlling the LED colors yet?
-> I can still use CLI tools much like on ASUS ROG series laptops, but it
-> would be much easier and more appreciated to have a GUI provided
-> Excalibur series laptops' LED lights can virtually take any color in
-> the RGB space - At least that's how I interpreted with the
-> configurations I used to do on mine using Excalibur Control Center
-> on Windows 10/11.
-No, there isn't a tool yet but controlling leds via sysfs ispretty easy.
-For example, if you wanted to change the left led zone's color to red:
-```
-# echo 0xff0000 > /sys/class/leds/casper\:\:kbd_zoned_backlight-left/multi_intensity
-```
-And don't forget that all leds' initial brightnesses are 0.
-Also, I'm planning to add support for this API in OpenRGB.
-> And as for the profiles, let me make sure we're talking about the same
-> thing in this term: You're talking about the "Office", "Gaming" and
-> "High Performance" modes as seen in Excalibur Control Center, right?
-For laptops with 11th gen processors or newer: yes.
-For laptops with 10th gen processors or older: no, there are 4 power
-profiles for these laptops (High Performance, Gaming, Text Mode andPower
-save).
-> If so, can this be somehow integrated into `power-profiles-daemon`
-> SystemD service for easier controlling with GNOME and other DEs that
-> use it? It's fine if it can't be, this was just a thought struck on my
-> mind for whatever reason.
-Yes, power-profiles-daemon is already integrated with platform_profile.
-> Please do CC me and the people I've added to the CC list with this email
-> of mine on the upcoming revisions, if any. We would love to keep track
-> of this driver and I personally would love to contribute into testing
-> as a power user.
+> >
+> > Sergio took the approach David suggested in a related patch [1], but
+> > perhaps it is best to submit the fix on its own so that it is easier
+> > to put it in. David, would you be so kind as to submit a v2 with that?
+> > Hopefully x86 can pick it up, otherwise with an Acked-by I am happy to
+> > take it too; and then Sergio can submit his patch on top again.
 >
-> Cc: Alviro Iskandar Setiawan <alviro.iskandar@gnuweeb.org>
-> Cc: Ammar Faizi <ammarfaizi2@gnuweeb.org>
-> Cc: GNU/Weeb Mailing List <gwml@vger.gnuweeb.org>
+> Sergio, David: Do you intend to follow up on this? Otherwise, I can also
+> pick this up and re-submit.
 >
-> Also adding my organizational and school email addresses to the CC list
-> so I can still be notified while I stay offline on this email address.
-> GNOME Evolution doesn't run in the background and periodically check
-> for emails sadly, and I switch ROMs every now and then on my phone as a
-> source maintainer of 3 different custom ROMs. :/
+> - Danilo
 >
-> Cc: Stella Bloom <stelbl@elrant.team>
-> Cc: Bedirhan KURT <bedirhan_kurt22@erdogan.edu.tr>
+> >
+> > Thanks!
+> >
+> > (Cc'ing also Masami who wrote this originally)
+> >
+> > [1] https://lore.kernel.org/rust-for-linux/20231119180145.157455-1-serg=
+io.collado@gmail.com/
+> >
+> > Cheers,
+> > Miguel
 >
-> --
-> Stella Bloom
-Thanks for your interest,
-Mustafa Ekşi
+> [1] https://lore.kernel.org/rust-for-linux/20240325174924.95899-2-dakr@re=
+dhat.com/
