@@ -1,108 +1,144 @@
-Received: from mail-pj1-f44.google.com (mail-pj1-f44.google.com [209.85.216.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B60E3FBBE;
-	Mon,  8 Apr 2024 09:19:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D805B3F9FA;
+	Mon,  8 Apr 2024 09:19:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712567977; cv=none; b=DctyotTFJ6Qfv24b4PzvyoeuwsfEv71T+Ms62XeLTVR6qHUGyNKSqdO9LSfo5CvQzfT6oulL2QuIkcxrMB1ru+kSNw6cRnV5ziuhdzEfuDxTedRAnQ/8DzBVy/N3idelkWJzfQnGArzGSK+KtfKVSZ7EmpoQIzBDO6d02iDqTB8=
+	t=1712567989; cv=none; b=QJVBp7mpKwp4nq6wA5Ja8wDMQm2C6mBr5sRWgSuuhPTx2xpiruAVjfXPY8MyYQugMbBf8JBBgk6dCYgpDWj4i9zpqvDmIMDqgg3r3YfT97aoQI0DwsJaHiQ0NnYYmu/8Zb+c5rhOkKQdIb7REB4/yQpd/N5TWzF/TM377sY/VLM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712567977; c=relaxed/simple;
-	bh=xpv4GXaNvHbwNmLZOBogoUexAaRgl91nGHRAWB70R1c=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=jFgf9RsxuM82rLCzAQQPflgHAEupubUX9NJuvxejHIXk3zM15YN8FS+iNxhTgn0rzHnKtsjKM065DNGrshZ/PVA1Znq6iyVwEyZDtwEVTerMLyEAUrYUMfOB+FAYjgIVoD2RPZicm+NWxUWsbfVdIPlv7Fk8Pu+Rk3IF6lQDTFg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kbSW43LS; arc=none smtp.client-ip=209.85.216.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1712567989; c=relaxed/simple;
+	bh=ofbbhjOcn3gokpPZJXWug0E1Se7nblKWJlzQsqVrdiw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=NnXGmOYq3mKArgG/egXW+mNXBs8xnKUXYUlo7yJ+Jj6+P+/y5vcVpTnvcoaoJtPL1WEKU6hl36sBb0gk7iY4qGvCgy+SmCcPZgK3z3QkUdIsSXIk9zzCXBS90iE5XzWwIySumEDy7ECf5j5ajsNV90BxwdoeN3zjK1VTEgPz8nA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=T1DeOK/Z; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kbSW43LS"
-Received: by mail-pj1-f44.google.com with SMTP id 98e67ed59e1d1-2a526803fccso302123a91.1;
-        Mon, 08 Apr 2024 02:19:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1712567976; x=1713172776; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=CMNyRdQrOSFasuq0gOdjmdHM1CPNAmXdupymxZqTDfQ=;
-        b=kbSW43LS53/RHgzEBoQV7dtqa2HscbuSZOvIFMVtd2wua84SWQboW+E1NMRIzwM8Kw
-         5V3JJZJCHi39ZP/Ak3wvPSyN06+4yjxANEtz1bydeWbjtkxGNVqX9MFL5dFuTxbSnkGe
-         gkY5xOTnNSeF+HggYpc2eMwcgwNv9VNR23GnoYsxKYm13IU2+X61N3K7l/bt7rib1CKt
-         txB4b8EpQQgpm5FV7TAZuqNbw4KtiFio1hRyfbz9a5OmS99/dVNmiO/7DHxSHAQkEw2s
-         F+E1j2IIrWDnL/UnoMVUzU2/R8IZenDSB4G7R2vshYAC4yzm8mMTlrCRq04HMP3TYFRZ
-         B/LA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712567976; x=1713172776;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=CMNyRdQrOSFasuq0gOdjmdHM1CPNAmXdupymxZqTDfQ=;
-        b=i6JxahFk6Jv1Pn9xib1agVVHHEgahx9Q8GO4feK9OOyTKGYHZL2LmjrFKdcYthhE0p
-         h5pOATMtrLLCKk6VBvmVUaoyEPBcHPbLeJAEEFrOHPEGc5Uqsbov+uPvZUKPh6zBe7w+
-         yiZhMmONveuIr0pd1RPZW31iXroErgc344caiJtroPcTW0Gp1F6Q7tK7qqBdgd6645yL
-         JJP6n+zkVm54oa0kCd2MlDglrdFZHl3gLo2N3ceGIW3KKwvsZb7oxhDuoK0k+zH2Tzv8
-         /KeWFA/lIUEwaVuKTRz6n2zPVy+gNuata+NnBgGhd11hD0AzHHAukOnfBMQxleT3NkMW
-         k3mQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVA/tMcVAmoRgfjuZJwh/6iTIt1WsJ2G1aNvyzkqBIrZtGwDBj4LVeBZcTLtUsKNKYRlZbDp593HZYwUl+oSiQHhe0gw6J+N078RDEvYpaDba6W8okWIS7i9uoROLI6X0DRuhu4PRNJurvTf18=
-X-Gm-Message-State: AOJu0YzI3vk8W+tqpLBMelDsqYf/Bo6mX2l89Ve2GIDp0SZ6DylXzhSi
-	9L/3uHfvp8nWfkcjNTtbw+jnJmfAiRQ8q8YLG2Sey1iprW37p5WnVG+2JxSLb/NiO/NSq70AO2l
-	EzGlbKPGJ+EUigf+bb+NqGG7wO+4=
-X-Google-Smtp-Source: AGHT+IFhMRh7Af+1ofz2RUc8GsbDJVtkVO04aivZzCObwcByfet4XkSJddJNLUkQxaNSLaJfOd2L+aFtpEY4xfTHT9E=
-X-Received: by 2002:a17:90a:e50f:b0:2a2:97ce:24f5 with SMTP id
- t15-20020a17090ae50f00b002a297ce24f5mr7693686pjy.35.1712567975830; Mon, 08
- Apr 2024 02:19:35 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="T1DeOK/Z"
+Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 4386c1Tu030644;
+	Mon, 8 Apr 2024 09:19:42 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	message-id:date:mime-version:subject:to:cc:references:from
+	:in-reply-to:content-type:content-transfer-encoding; s=
+	qcppdkim1; bh=bxHJFz7JARPgNmGRmpA2i8VMFIvKy301v4ZlZfnTBK0=; b=T1
+	DeOK/ZUTBxQfvCbOOeQQIayXgxxP1mI5Ly29rR/KfcvPSkh7Gon8QugU3JOj7joM
+	LPbBsfUqhu/fvzCyRVekc/o06yvSARfiWESBWFdAHf27MZjn2boZVTswB+iv7nAL
+	Ofpl2UbyvmbUB0kF6OeBh7yklev3CRQJaGtEyUUA4vzHhvYvXy0Ui/57iZ5RA7Kw
+	AC2tAefUBShpj9JSATUHBwpwOmrHK+wVr+HKnMqOMMsju2LRO/pSB+COqrb8uonp
+	WY3mcRrO2sPHXJ2PnETGnjg1oTRZFCz8lXbwOKhZxhlOC9NtuvZa/jaRvWGCuD/r
+	yGKlRKhlGIGpFVBNpl3w==
+Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3xcbg1ga73-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 08 Apr 2024 09:19:42 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA02.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 4389JfQL006266
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 8 Apr 2024 09:19:41 GMT
+Received: from [10.238.176.241] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Mon, 8 Apr 2024
+ 02:19:39 -0700
+Message-ID: <7c13cb26-0a0d-b73e-443a-b83264cf482b@quicinc.com>
+Date: Mon, 8 Apr 2024 17:19:36 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240404-alice-mm-v4-0-49a84242cf02@google.com>
- <20240404-alice-mm-v4-4-49a84242cf02@google.com> <a48b2347-b58b-432e-bdb8-d5449016ab57@proton.me>
- <CAH5fLgg3wpcDE+n6nd0CGtDzyXSrD2nLhY8RxdTHjAD8hQ9VDQ@mail.gmail.com>
- <c130a6f5-77d7-4d9e-984d-7a8bf48ff918@proton.me> <CAH5fLgigLV17+6U75MC43XFnYeqtgvrrTWD7JmDSB-ebNjCVvw@mail.gmail.com>
-In-Reply-To: <CAH5fLgigLV17+6U75MC43XFnYeqtgvrrTWD7JmDSB-ebNjCVvw@mail.gmail.com>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Mon, 8 Apr 2024 11:18:52 +0200
-Message-ID: <CANiq72mZ5QPrb1-jWiKFhO2OF517Xvx=Js3zwM+_VyVL=dy2LA@mail.gmail.com>
-Subject: Re: [PATCH v4 4/4] rust: add abstraction for `struct page`
-To: Alice Ryhl <aliceryhl@google.com>
-Cc: Benno Lossin <benno.lossin@proton.me>, Miguel Ojeda <ojeda@kernel.org>, 
-	Matthew Wilcox <willy@infradead.org>, Al Viro <viro@zeniv.linux.org.uk>, 
-	Andrew Morton <akpm@linux-foundation.org>, Kees Cook <keescook@chromium.org>, 
-	Alex Gaynor <alex.gaynor@gmail.com>, Wedson Almeida Filho <wedsonaf@gmail.com>, 
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Andreas Hindborg <a.hindborg@samsung.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	=?UTF-8?B?QXJ2ZSBIasO4bm5ldsOlZw==?= <arve@android.com>, 
-	Todd Kjos <tkjos@android.com>, Martijn Coenen <maco@android.com>, 
-	Joel Fernandes <joel@joelfernandes.org>, Carlos Llamas <cmllamas@google.com>, 
-	Suren Baghdasaryan <surenb@google.com>, Arnd Bergmann <arnd@arndb.de>, linux-mm@kvack.org, 
-	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org, 
-	Christian Brauner <brauner@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.11.0
+Subject: Re: [PATCH V4 2/2] rtc-pm8xxx: Correct the value written into the
+ PM8xxx_RTC_ALARM_CLEAR
+Content-Language: en-US
+To: Bjorn Andersson <quic_bjorande@quicinc.com>
+CC: Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio
+	<konrad.dybcio@linaro.org>,
+        Alexandre Belloni
+	<alexandre.belloni@bootlin.com>,
+        <linux-arm-msm@vger.kernel.org>, <linux-rtc@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20240401-fix-rtc-alarm-which-fired-before-driver-probe-not-be-cleard-v1-0-aab2cd6ddab8@quicinc.com>
+ <20240401-fix-rtc-alarm-which-fired-before-driver-probe-not-be-cleard-v1-2-aab2cd6ddab8@quicinc.com>
+ <Zg9mKnPrhTTNafdb@hu-bjorande-lv.qualcomm.com>
+From: jianbin zhang <quic_jianbinz@quicinc.com>
+In-Reply-To: <Zg9mKnPrhTTNafdb@hu-bjorande-lv.qualcomm.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: BjYveIFvFL8tZJy-Em57oF0k8eeVD6Gy
+X-Proofpoint-GUID: BjYveIFvFL8tZJy-Em57oF0k8eeVD6Gy
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-04-08_07,2024-04-05_02,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 bulkscore=0
+ impostorscore=0 adultscore=0 priorityscore=1501 malwarescore=0 spamscore=0
+ mlxlogscore=999 suspectscore=0 lowpriorityscore=0 clxscore=1015 mlxscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2404010003
+ definitions=main-2404080072
 
-On Mon, Apr 8, 2024 at 9:54=E2=80=AFAM Alice Ryhl <aliceryhl@google.com> wr=
-ote:
+
+On 4/5/24 10:47, Bjorn Andersson wrote:
+> On Mon, Apr 01, 2024 at 09:56:30AM +0800, jianbin zhang wrote:
+>> Writing 1 to the PM8xxx_RTC_ALARM_CLEAR register is expected to clear
+>> the triggered alarm status. In patch v2, the value written to the
+> I'm not sure what "in patch v2" refers to here.
+
+Thanks for reviewing, "In patch v2" refers to https://lore.kernel.org/lkml/20230202155448.6715-4-johan+linaro@kernel.org/ which siwtch to use regmap_update_bits.
+
+> Also, as with patch 1, please fix your subject line and use internal
+> review list.
 >
-> From bindgen's point of view, this constant is just an integer literal
-> with no type information. So I don't see how we can expect it to
-> always be generated as a usize?
-
-In the case of `PAGE_SIZE`, there is type information (`size_t`),
-since it comes from the constant helper:
-
-    const size_t RUST_CONST_HELPER_PAGE_SIZE =3D PAGE_SIZE;
-
-For the other one, `PAGE_SHIFT`, there is also type information
-(`int`), but bindgen currently picks a type based on the value for
-those (but ideally/eventually bindgen should respect it instead).
-
-So for the former, the allow and the cast are not needed since we are
-already handling it explicitly. And for the latter, if we want to have
-it as `usize`, we should have the cast but not the allow, because now
-it does `u32`, but if it respected the type, it would be `c_int` or
-`i32`. So either way we would need the cast.
-
-Cheers,
-Miguel
+> Regards,
+> Bjorn
+Sure, Will fix the subject line and use internal review list in next 
+patch version.
+>> PM8xxx_RTC_ALARM_CLEAR register in the trigger function is incorrectly
+>> written as 0. So correct the value written to PM8xxx_RTC_ALARM_CLEAR
+>> register into 1.
+>>
+>> Signed-off-by: jianbin zhang <quic_jianbinz@quicinc.com>
+>> ---
+>> Changess in v4:
+>> - add the cover letter
+>> - modify the patch to conform to the specification
+>>
+>> Changes in v3:
+>> - Correct the value written into the PM8xxx_RTC_ALARM_CLEAR to 1.
+>> - link: https://lore.kernel.org/linux-rtc/20240319191216.GB3796206@hu-bjorande-lv.qualcomm.com/T/#t
+>>
+>> Changes in v2:
+>> - Switch to using regmap_update_bits() instead of open coding
+>>    read-modify-write accesses.
+>> - link: https://lore.kernel.org/lkml/20230202155448.6715-4-johan+linaro@kernel.org/
+>>
+>> Changes in v1:
+>> -link: https://lore.kernel.org/linux-rtc/20230126142057.25715-4-johan+linaro@kernel.org/
+>> ---
+>>   drivers/rtc/rtc-pm8xxx.c | 2 +-
+>>   1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/rtc/rtc-pm8xxx.c b/drivers/rtc/rtc-pm8xxx.c
+>> index e4e2307445cf..806c99cdac9a 100644
+>> --- a/drivers/rtc/rtc-pm8xxx.c
+>> +++ b/drivers/rtc/rtc-pm8xxx.c
+>> @@ -391,7 +391,7 @@ static irqreturn_t pm8xxx_alarm_trigger(int irq, void *dev_id)
+>>   
+>>   	/* Clear alarm status */
+>>   	rc = regmap_update_bits(rtc_dd->regmap, regs->alarm_ctrl2,
+>> -				PM8xxx_RTC_ALARM_CLEAR, 0);
+>> +				PM8xxx_RTC_ALARM_CLEAR, 1);
+>>   	if (rc)
+>>   		return IRQ_NONE;
+>>   
+>>
+>> -- 
+>> 2.43.2
+>>
