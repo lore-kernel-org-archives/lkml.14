@@ -1,124 +1,82 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AFB9126F3F;
-	Mon,  8 Apr 2024 14:29:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E74C130AED;
+	Mon,  8 Apr 2024 14:30:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712586570; cv=none; b=I4rlEsvi3EQpGZ8bnoNzw/OUVthZxkUBkCZyZwKC26c1H1wIbPcrWd5ach0xzc/1QR+RtjsIgg1/dA+a8iK4/iZL1JkHY9Q3fgZ2+E8HsQLvXwvgjSNd3uxC+e8sPGFpAqRWaBzKZIFmpHFTXaLxsJleqTos0ew2EVFBfGf1Zno=
+	t=1712586627; cv=none; b=XbuD+REPW6Ku9rTVquAf2BXfS0JtVUtV1gtRsDNovWqlV01nrYelqw2qNyTrAoct8y+LyFRDD9U3HJhTfLjlq9I1VJVX2653gde2V9aDo2AfGMD/wKgD2gA4TqzZ0NW22yi7JyltTAyzHsIg3tm8CerATqzqELnhaG+S8B7cxPk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712586570; c=relaxed/simple;
-	bh=DbgXMyCHE8Wx/Fa+odUEeisTrN7s8C2INM07ftx/blw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=WaNOEp/IGJM7IGhocxrl5DofRERquT3kGD+ohP+Wv2Bnu5kYhHZYH1KmIWPsZ2ga+9DEBcfuLfZubscvbnk75tWUPhT9nLe/cxNkurB3GR/Ox+7lNOHf/U4XUYeh3OPkNCe7Uf1li3YVd7BYG4M543fXJgYwS6lAsIRicH/K4fM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BibektuL; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1712586627; c=relaxed/simple;
+	bh=Alfp2ELwhITazKMEegUqvVbJyfZKJCbUEoIYjFPYgmc=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=bmTgg2tKgf0tuqkOiLlM99Y8x78iIOXearPG1MVSMaiCue6fAxdl/uMxqc75cm6/0FptviqEvLsMXwH+OinQ/hDx+Lfgxy9A7aj2FVUHWAiqyfgEQL1smgmVOyjR/rOaCJfc9NCniwVrU0r4A6Mrz50OwPMDSTVyMIyhJEgT1nA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Y8LB4WOq; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BibektuL"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A48ABC43390;
-	Mon,  8 Apr 2024 14:29:29 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Y8LB4WOq"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 146D7C43390;
+	Mon,  8 Apr 2024 14:30:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712586569;
-	bh=DbgXMyCHE8Wx/Fa+odUEeisTrN7s8C2INM07ftx/blw=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=BibektuLLtArBrXYfKEcOlobHfI71PcexZdZw5MbuLk4QtO/zJ51A03LXXpo3av/A
-	 PLd4HYaYqvaCV3yS20/CsSY8ctrWrh4NU1GHfmbMrotXua9nK8Qi3l28huFigWgDkC
-	 DPnngR3b8g/qBfQ602OsrEcjEXjTVQcMxi9q+p8w1whq2HBaT6DFqlXvv+DZ0h/xIV
-	 GrfkOGzHYEEKfPHMH7JQWYd9NIV42CLdEfMXi+b7LqmgqnpmEyJwR3ETZAGWzan4kf
-	 gC3SLiwMkztb8MtKImoV9nsPjUeTM8E0Q+KZjtQcgLveTIgpd/Qg7CI9FCRmTnP6Eu
-	 1n5Xctw4jJ6AA==
-Received: by mail-ot1-f50.google.com with SMTP id 46e09a7af769-6ea0a6856d7so610883a34.1;
-        Mon, 08 Apr 2024 07:29:29 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCWhmndsXIi3z5Sr9+Gj1NBH0AOTYWc9koDl0by3qazPW39SjP+NGcZHHs8GHokXEfjA3hYNubCbu4Ap+lMbKhgTAlL3CiUUwH6U9PqPPVYxw17hCuTIklNsJroIg1xULPUStM/dm3GqpQ==
-X-Gm-Message-State: AOJu0YyJBsvRJJ19UFWyhUukG47g98Ml9r6GP5+Be0vsX2R0lxYZHbl0
-	dywiDT3FOHDgLp2xOKkM5iNAWIT1gKLpYA6+m2kId5+ZbMVVDihruy+71mHggg2r5GZzHvEXgQw
-	1djfjOR64RukCZasQ/gRGCo/l2NU=
-X-Google-Smtp-Source: AGHT+IEr3QTeW3KL1Co0KvWLK0r/MBjs6UjG3WZiw6tFUu42vVwm3HBLRXNd99YZP5dEGbQU+zGB/VXoEXcia7caZqQ=
-X-Received: by 2002:a05:6820:248e:b0:5aa:14ff:4128 with SMTP id
- cq14-20020a056820248e00b005aa14ff4128mr6134359oob.1.1712586568935; Mon, 08
- Apr 2024 07:29:28 -0700 (PDT)
+	s=k20201202; t=1712586627;
+	bh=Alfp2ELwhITazKMEegUqvVbJyfZKJCbUEoIYjFPYgmc=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=Y8LB4WOq8S/HKOQhBSfEl++bTKhnOqa+MVCjoT3nZKwZIP+iCIyBu+ibN53oksdkz
+	 y4amJknhZgJvaj7/9fNShGylwWb8GQZfjxbYK3Q27HvzCazJwQHtAxCTfShZpRXjCk
+	 0/3KJBS+Vg5YHmXGd7GVY6cLO7hvDPszraeG+YM5ZI6rR18LIrImi0/uwIHF6p4vaU
+	 b+NRCtF1c0s1fzeF5/9Pv6jWhwXTGVli4suxGVtF5OUOIGYR4dnwaABLIlqwGwWQDl
+	 CSme3uKEL0Q5bp+XGwwes4hqqZCDS7OKcaTD1FGqP9IahaOUZEke8KSAijKc1Ivpiy
+	 Q6rEm2aozqkRw==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 067A5D72A03;
+	Mon,  8 Apr 2024 14:30:27 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240403004718.11902-1-W_Armin@gmx.de>
-In-Reply-To: <20240403004718.11902-1-W_Armin@gmx.de>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Mon, 8 Apr 2024 16:29:18 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0i3TAyDERxCm5caud5x5kLbc6J6MKqXXFWecShYe-gCrA@mail.gmail.com>
-Message-ID: <CAJZ5v0i3TAyDERxCm5caud5x5kLbc6J6MKqXXFWecShYe-gCrA@mail.gmail.com>
-Subject: Re: [PATCH] ACPICA: Fix memory leak then namespace lookup fails
-To: Armin Wolf <W_Armin@gmx.de>
-Cc: robert.moore@intel.com, rafael.j.wysocki@intel.com, lenb@kernel.org, 
-	dmantipov@yandex.ru, linux-acpi@vger.kernel.org, acpica-devel@lists.linux.dev, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH v2 0/2] Add missing mmc statistics in DW GMAC
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <171258662702.25921.3073865414312265648.git-patchwork-notify@kernel.org>
+Date: Mon, 08 Apr 2024 14:30:27 +0000
+References: <20240408012943.66508-1-minda.chen@starfivetech.com>
+In-Reply-To: <20240408012943.66508-1-minda.chen@starfivetech.com>
+To: Minda Chen <minda.chen@starfivetech.com>
+Cc: alexandre.torgue@foss.st.com, joabreu@synopsys.com, davem@davemloft.net,
+ edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+ mcoquelin.stm32@gmail.com, netdev@vger.kernel.org,
+ linux-stm32@st-md-mailman.stormreply.com,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 
-On Wed, Apr 3, 2024 at 2:47=E2=80=AFAM Armin Wolf <W_Armin@gmx.de> wrote:
->
-> When acpi_ps_get_next_namepath() fails due to a namespace lookup
-> failure, the acpi_parse_object is not freed before returning the
-> error code, causing a memory leak.
->
-> Fix this by freeing the acpi_parse_object when encountering an
-> error.
->
-> Tested-by: Dmitry Antipov <dmantipov@yandex.ru>
-> Signed-off-by: Armin Wolf <W_Armin@gmx.de>
+Hello:
 
-Because ACPICA is an external project supplying code to the Linux
-kernel, the way to change the ACPICA code in the kernel is to submit a
-pull request to the upstream ACPICA project on GitHub and once that PR
-has been merged, submit a Linux patch corresponding to it including
-the Link: tag pointing to the PR in question and the git ID of the
-corresponding upstream ACPICA commit.
+This series was applied to netdev/net.git (main)
+by David S. Miller <davem@davemloft.net>:
 
-However, note that upstream ACPICA commits are automatically included
-into the Linux kernel source code every time the upstream ACPICA
-project makes a release, so it is not necessary to send the
-corresponding Linux patches for them unless in the cases when timing
-matters.
+On Mon,  8 Apr 2024 09:29:41 +0800 you wrote:
+> Add miss MMC statistic in DW GMAC
+> 
+> base on 6.9-rc1
+> 
+> changed
+> v2:
+>    patch2 : remove mmc_rx_control_g due to it is gotten in
+> ethtool_ops::get_eth_ctrl_stats.
+> 
+> [...]
 
-> ---
->  drivers/acpi/acpica/psargs.c | 8 ++++++++
->  1 file changed, 8 insertions(+)
->
-> diff --git a/drivers/acpi/acpica/psargs.c b/drivers/acpi/acpica/psargs.c
-> index 422c074ed289..7debfd5ce0d8 100644
-> --- a/drivers/acpi/acpica/psargs.c
-> +++ b/drivers/acpi/acpica/psargs.c
-> @@ -820,6 +820,10 @@ acpi_ps_get_next_arg(struct acpi_walk_state *walk_st=
-ate,
->                             acpi_ps_get_next_namepath(walk_state, parser_=
-state,
->                                                       arg,
->                                                       ACPI_NOT_METHOD_CAL=
-L);
-> +                       if (ACPI_FAILURE(status)) {
-> +                               acpi_ps_free_op(arg);
-> +                               return_ACPI_STATUS(status);
-> +                       }
->                 } else {
->                         /* Single complex argument, nothing returned */
->
-> @@ -854,6 +858,10 @@ acpi_ps_get_next_arg(struct acpi_walk_state *walk_st=
-ate,
->                             acpi_ps_get_next_namepath(walk_state, parser_=
-state,
->                                                       arg,
->                                                       ACPI_POSSIBLE_METHO=
-D_CALL);
-> +                       if (ACPI_FAILURE(status)) {
-> +                               acpi_ps_free_op(arg);
-> +                               return_ACPI_STATUS(status);
-> +                       }
->
->                         if (arg->common.aml_opcode =3D=3D AML_INT_METHODC=
-ALL_OP) {
->
-> --
-> 2.39.2
->
->
+Here is the summary with links:
+  - [v2,1/2] net: stmmac: mmc_core: Add GMAC LPI statistics
+    https://git.kernel.org/netdev/net/c/dfe073f8714d
+  - [v2,2/2] net: stmmac: mmc_core: Add GMAC mmc tx/rx missing statistics
+    https://git.kernel.org/netdev/net/c/ff20393bdc45
+
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
+
