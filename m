@@ -1,82 +1,107 @@
-Received: from gandalf.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50D61C2E3
-	for <linux-kernel@vger.kernel.org>; Mon,  8 Apr 2024 04:25:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2236F1DA3A;
+	Mon,  8 Apr 2024 04:25:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712550310; cv=none; b=BD2fDELHWlmNY71GY14yZkCCLBzDL9STBUZUICgG81qXRRrSZb5zNH2f3HfLlDTbh06AsFPrCR4AAHhTkZflxlIp2qWMbllRc6U+6x02thO/AKLZOdAT3f2zs1WifCKdjDuqjigOd6dh0f10y1BYQrjB9OLz0nccBTj3Tn6YISs=
+	t=1712550331; cv=none; b=Uu3igZyXGgXYXqkhs2cK8hg9oFWk8w5mfdtwAJ3kz8VTG7moJWHusOl61Wi0xsDiEX26toDvJMlhbh/I4Lia6tMj22Lm2D61fYU3zyki+3sV1gHGvm4Gza5GPJMWKnO1fe2oFVBSTzG8wS++cp7Ro+AYTXAKnewX5Zj9I4ket4Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712550310; c=relaxed/simple;
-	bh=pgLg7GUxxXMnTYvn05nNtKMQObwyusSFdPPrFMX71DA=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=m7i88snxxRlIHj6dCIMRze7oxPGd9E6SsTdMNuhuHaG5xQOpvx1V58LUe03QXVDsrBDJu+0zyiTMgV4FfPjB/m/+SX3Oz7VoaK+fT06zvdUOTRtVJxqjFx26h51CtjLdahTcF90qybRRx6hs6MKUkQIaQD+ZYpOtFxPvrRBRLL0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ellerman.id.au; spf=pass smtp.mailfrom=ellerman.id.au; dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b=Sp3Bdtn6; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ellerman.id.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ellerman.id.au
+	s=arc-20240116; t=1712550331; c=relaxed/simple;
+	bh=BWggyIN77X+84boaNlv2K6iWL18mThvvhk4eyK3b/y4=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=NopPcbjf0vB5RlDS/AzhFl0miaxwk2+mm0uPiI3wt5Y8dPT103RzIcwNmXdhhWenIbway6KypEnXSBYi4hHam61YbO+DFPAu8/DSs9HOMTVRki80Zy/MJ/epP0ox6hFQHke0NunQZjU/IiCI3JsTPsb1/ZsOdReQXtL17LiMPPo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=LXtNZpIJ; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="Sp3Bdtn6"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ellerman.id.au;
-	s=201909; t=1712550306;
-	bh=9IeDw0jg/iSTJmzT7tMO0PqrDYTpMdttta7G5B8J0DU=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=Sp3Bdtn6OeC5sT0aJW+ARoTMwpGJXNh2PfiiwcMeknb0msWMDsNBeMvK3/N1panIm
-	 w1id8AW0E/7VWJijXUeioUu4O03AoJN71R9c+Mj4GgYFLa8juXRm9/XFNs9LAHEL/r
-	 8bo7i0xsE94Rek0Df80966YGFSRr+/i6DoZYiqSeXuRUG1TFp7ul+lwC5a8m+CT2Ic
-	 MjUbVGviYLiGRRfAwzbfEYzPj4TGVXz9UDnit9OmSPSz5JueW/6Z0/k/MI9qTtkT+o
-	 ko4XWCodSXIjmZZUjht05XmXt7EYbebVf3yjnF7+Hl2RdQNB7ab1bI/8I+5n05znZC
-	 XorIO5MG1GpyQ==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4VCbbh6SRFz4wxt;
-	Mon,  8 Apr 2024 14:25:04 +1000 (AEST)
-From: Michael Ellerman <mpe@ellerman.id.au>
-To: Yang Li <yang.lee@linux.alibaba.com>, arnd@arndb.de, npiggin@gmail.com,
- christophe.leroy@csgroup.eu, aneesh.kumar@kernel.org,
- naveen.n.rao@linux.ibm.com
-Cc: linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org, Yang Li
- <yang.lee@linux.alibaba.com>
-Subject: Re: [PATCH -next 1/3] powerpc: boot: Fix a typo in
- partial_decompress() comment
-In-Reply-To: <20240407063952.36270-1-yang.lee@linux.alibaba.com>
-References: <20240407063952.36270-1-yang.lee@linux.alibaba.com>
-Date: Mon, 08 Apr 2024 14:25:04 +1000
-Message-ID: <874jcccwgv.fsf@mail.lhotse>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="LXtNZpIJ"
+Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 4384NEi7014046;
+	Mon, 8 Apr 2024 04:25:18 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	from:to:cc:subject:date:message-id:mime-version
+	:content-transfer-encoding:content-type; s=qcppdkim1; bh=8rwJ7X7
+	BsrHqiHe9vDrTrF/LfDcZsLpICEqqBloRnRo=; b=LXtNZpIJeK5a8QMwcigI7nt
+	VNrJYVtLlVCcjiYSLPx5Vp4/xHC423CaSslzmyB8VkQjEwgBIfzUdmJEQkIig5Y7
+	UK8UNFT9xoKTZ3UO+TLpPFA5mouIvQ6Xdv/RfRFMdcoIfgVEbwLCYj9zOzgNkeeq
+	a99m6h2lmerR0JwcpoMmtg0h1vrhIyqMfAUJHj+nTcGUh0lVOoWN2JSmV9zk8dD3
+	/RVJt6jWo/DWnM8YB5dWj1orh6WZh6oHGg27LWl5E7+47rx6McseQveloI8gew00
+	BDljSzDTXti8Wsvl6Tc1dtzHI3SeXTUAUwzj7Hjq2rSqI3pJdnIBCze1EbdbHkw=
+	=
+Received: from nasanppmta05.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3xaxsbjmbd-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 08 Apr 2024 04:25:18 +0000 (GMT)
+Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
+	by NASANPPMTA05.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 4384PHEj029010
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 8 Apr 2024 04:25:17 GMT
+Received: from hu-mohs-hyd.qualcomm.com (10.80.80.8) by
+ nasanex01c.na.qualcomm.com (10.45.79.139) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.4; Sun, 7 Apr 2024 21:25:12 -0700
+From: Mohammad Rafi Shaik <quic_mohs@quicinc.com>
+To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Banajit Goswami
+	<bgoswami@quicinc.com>,
+        Liam Girdwood <lgirdwood@gmail.com>, Mark Brown
+	<broonie@kernel.org>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski
+	<krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>, Jaroslav Kysela
+	<perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>
+CC: <linux-arm-msm@vger.kernel.org>, <alsa-devel@alsa-project.org>,
+        <linux-sound@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <quic_rohkumar@quicinc.com>,
+        "Mohammad Rafi
+ Shaik" <quic_mohs@quicinc.com>
+Subject: [RESEND v3 0/2] Add support for QCM6490 and QCS6490
+Date: Mon, 8 Apr 2024 09:53:29 +0530
+Message-ID: <20240408042331.403103-1-quic_mohs@quicinc.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nasanex01c.na.qualcomm.com (10.45.79.139)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: n24um7N0kwKcnvrJ6yCBi-X2iekIJlzg
+X-Proofpoint-ORIG-GUID: n24um7N0kwKcnvrJ6yCBi-X2iekIJlzg
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-04-08_02,2024-04-05_02,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 bulkscore=0
+ impostorscore=0 phishscore=0 clxscore=1015 suspectscore=0 adultscore=0
+ malwarescore=0 mlxlogscore=607 spamscore=0 lowpriorityscore=0
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2404010003 definitions=main-2404080032
 
-Yang Li <yang.lee@linux.alibaba.com> writes:
-> This commit adds kernel-doc style comments with complete parameter
-> descriptions for the function partial_decompress().
+This patchset adds support for sound card on Qualcomm QCM6490 IDP and
+QCS6490 RB3Gen2 boards.
 
-This change log doesn't match the subject or the patch.
+Changes since v2:
+	- Modify qcm6490 compatible name as qcm6490-idp. Suggested by Dmitry
 
-cheers
+Changes since v1:
+	- Use existing sc8280xp machine driver instead of separate driver.
+	- Modify qcs6490 compatible name as qcs6490-rb3gen2.
 
-> Signed-off-by: Yang Li <yang.lee@linux.alibaba.com>
-> ---
->  arch/powerpc/boot/decompress.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/arch/powerpc/boot/decompress.c b/arch/powerpc/boot/decompress.c
-> index 977eb15a6d17..6835cb53f034 100644
-> --- a/arch/powerpc/boot/decompress.c
-> +++ b/arch/powerpc/boot/decompress.c
-> @@ -101,7 +101,7 @@ static void print_err(char *s)
->   * @input_size:  length of the input buffer
->   * @outbuf:      output buffer
->   * @output_size: length of the output buffer
-> - * @skip         number of output bytes to ignore
-> + * @_skip:       number of output bytes to ignore
->   *
->   * This function takes compressed data from inbuf, decompresses and write it to
->   * outbuf. Once output_size bytes are written to the output buffer, or the
-> -- 
-> 2.20.1.7.g153144c
+Mohammad Rafi Shaik (2):
+  ASoC: dt-bindings: qcom,sm8250: Add QCM6490 snd QCS6490 sound card
+  ASoC: qcom: sc8280xp: Add support for QCM6490 and QCS6490
+
+ Documentation/devicetree/bindings/sound/qcom,sm8250.yaml | 2 ++
+ sound/soc/qcom/sc8280xp.c                                | 2 ++
+ 2 files changed, 4 insertions(+)
+
+-- 
+2.25.1
+
