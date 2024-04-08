@@ -1,36 +1,36 @@
 Received: from relay4-d.mail.gandi.net (relay4-d.mail.gandi.net [217.70.183.196])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C967D4F1F2
-	for <linux-kernel@vger.kernel.org>; Mon,  8 Apr 2024 07:50:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB0633FB22
+	for <linux-kernel@vger.kernel.org>; Mon,  8 Apr 2024 07:50:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.196
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712562626; cv=none; b=UH/7C6I7uFI6HNGrnGk9W/hgbQddPvLA+4hgFlBMgUmsxI2FAoBCxujzY2peVKtnb7b9JlpdXykkt2fqzpArgeKHLst5E8HMNtV4b0jBoc4P90pBBxV0tsXZ5ko9Nt8mJpitS9D2B9j6JMT0GHFrG2CsT953blS/eKg3S0UCFbU=
+	t=1712562629; cv=none; b=q8AlF4/UlVknxpmnhDeIU42zaA74/cKKiMkPuTbX9AeDz4BNdCI79NwYfig/5Z1gU2NjWNhQaWq0+a3rkl+gYPTjL5gGe6EAFRlAfk8ykCTjkjjhU+X/iqJ/0DsLR6t4DDyeYH93rqUmaFnjymGt0SIceon6mZqeKe5ZjfLmGNc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712562626; c=relaxed/simple;
-	bh=WqdOCdrY/xOmno0//WQBT+1RV9eg4o/bNCEn6yn9ju0=;
+	s=arc-20240116; t=1712562629; c=relaxed/simple;
+	bh=Xv5ac54yFQ4yvCUhBxYR85Jkrckw1oJF/Y8XzToUAIQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=O4UEWZQSEdHqOLJS7il9qLwh38kGt2CmKZsGXFYZDka+rkQR+hJMQW+PE6Otp9z6vgErvD0OeZzbaE9n9ZjjeJb6Xo3buFJRjTlIcqwmzuOHLWeNzSvpNIkwgL50ZXCgGECTgvFVRPfDu07D8Zyg1rrTGruPTfZ/jZkpVNNnveE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=XAC/suZQ; arc=none smtp.client-ip=217.70.183.196
+	 Content-Type:Content-Disposition:In-Reply-To; b=SLw2D/erUlyYDb0lJ1JNotc3vOHfoVZDYJoIikTWq+MoMzZ7/Td6oSy3t8MDUvC3CKYn3pvP+Kx3WfUyG5nl0vU7xabNxzijEc3E0wxzVBbchmZV97ihaAZDosBzC/UoN5fr4X5YvFTpOlLXfzYX20HLWt+Ye0aZQD/M5lHGp9c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=Y3M+f3+Y; arc=none smtp.client-ip=217.70.183.196
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="XAC/suZQ"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 3784FE000B;
-	Mon,  8 Apr 2024 07:50:21 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="Y3M+f3+Y"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 5A357E000F;
+	Mon,  8 Apr 2024 07:50:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1712562622;
+	t=1712562625;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=IAPqJ4g313zE/TlE7dp772NjLJOJwn+82LmIi07EBrY=;
-	b=XAC/suZQmLIRPrfczo9z+hTWEqZ18SHKMxnn5Os9F/2zPcMfAqP5GYPKPCuwd5+6gIQEqh
-	nInJ1cWtKCmaywyH9GE4N8rsAq6beNi2NzByk+EryKSEK6D6vxPRoCO5KjwTmhaxXhK8ry
-	wb94Sf62MQN0R+P84Da8HjULTAringuBUaBfJ5NArPOeGtLnQyLTTko/RzZTv+XD5ziV4b
-	L47ZZxNwNsg8c4w4klnx4f60Sd+nI3sUew1bnKPToew9x7IGoHtSjCrhPGMO8wBscG2e0T
-	zCpX8qz5pbUKJ4KvplVaze68ZZd+0gUV1mmr85K6N+sxW1YWltqtttCF/j2sPg==
-Date: Mon, 8 Apr 2024 09:50:18 +0200
+	bh=8929Ht2F0eqnJanMo124GV2zt49aSsSpdMeXmcF5Ky0=;
+	b=Y3M+f3+YLeI2D6jgBWix/2Ap9dYrF463ZYyYtwkrJJzJgPOVqJlV3qGT6HjIQHKww52/YO
+	vD6s7/eEtJiQ0JfiW7XJNUs+msy7VbL/V0ktJW0/QhHr4ZUlR3LkzqTQsOA0FsTeeDc9/M
+	9NV1G6DVkbr17N80sywHgFJMRsUc8mtaQYB729Gn211hPbD6VXpq9Ax5RN2fDhI8WZs1D8
+	AqzKsL7z2CH/33v5gjn2MmkWoy5mfXfUIRbVVe1twEYyXwNwbPsLVC+6CexQFsnJtk0dZ2
+	h3CjYt0WJWXfa4kTHK77Zm9kPPxGLzAH8R9Ch/T7T92+8aMKOUOq2RJneQUDpg==
+Date: Mon, 8 Apr 2024 09:50:20 +0200
 From: Louis Chauvet <louis.chauvet@bootlin.com>
 To: Pekka Paalanen <pekka.paalanen@collabora.com>
 Cc: Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>,
@@ -46,9 +46,8 @@ Cc: Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>,
 	linux-kernel@vger.kernel.org, jeremie.dautheribes@bootlin.com,
 	miquel.raynal@bootlin.com, thomas.petazzoni@bootlin.com,
 	seanpaul@google.com, marcheu@google.com, nicolejadeyee@google.com
-Subject: Re: [PATCH v5 10/16] drm/vkms: Re-introduce line-per-line
- composition algorithm
-Message-ID: <ZhOhuoVhM2pHbrfm@louis-chauvet-laptop>
+Subject: Re: [PATCH v5 16/16] drm/vkms: Add support for DRM_FORMAT_R*
+Message-ID: <ZhOhvM3HTsxTEXTT@louis-chauvet-laptop>
 Mail-Followup-To: Pekka Paalanen <pekka.paalanen@collabora.com>,
 	Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>,
 	Melissa Wen <melissa.srw@gmail.com>,
@@ -64,10 +63,8 @@ Mail-Followup-To: Pekka Paalanen <pekka.paalanen@collabora.com>,
 	miquel.raynal@bootlin.com, thomas.petazzoni@bootlin.com,
 	seanpaul@google.com, marcheu@google.com, nicolejadeyee@google.com
 References: <20240313-yuv-v5-0-e610cbd03f52@bootlin.com>
- <20240313-yuv-v5-10-e610cbd03f52@bootlin.com>
- <20240325174309.28f91bec.pekka.paalanen@collabora.com>
- <ZgLwTvjdzf8KTZsY@localhost.localdomain>
- <20240327142951.192e0b5f.pekka.paalanen@collabora.com>
+ <20240313-yuv-v5-16-e610cbd03f52@bootlin.com>
+ <20240328160057.124b32c4.pekka.paalanen@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -77,219 +74,225 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240327142951.192e0b5f.pekka.paalanen@collabora.com>
+In-Reply-To: <20240328160057.124b32c4.pekka.paalanen@collabora.com>
 X-GND-Sasl: louis.chauvet@bootlin.com
 
-Le 27/03/24 - 14:29, Pekka Paalanen a écrit :
-> On Tue, 26 Mar 2024 16:57:02 +0100
+Le 28/03/24 - 16:00, Pekka Paalanen a écrit :
+> On Wed, 13 Mar 2024 18:45:10 +0100
 > Louis Chauvet <louis.chauvet@bootlin.com> wrote:
 > 
-> > [...]
+> > This add the support for:
+> > - R1/R2/R4/R8
 > > 
-> > > > @@ -215,34 +188,146 @@ static void blend(struct vkms_writeback_job *wb,
-> > > >  {
-> > > >  	struct vkms_plane_state **plane = crtc_state->active_planes;
-> > > >  	u32 n_active_planes = crtc_state->num_active_planes;
-> > > > -	int y_pos, x_dst, x_limit;
-> > > >  
-> > > >  	const struct pixel_argb_u16 background_color = { .a = 0xffff };
-> > > >  
-> > > > -	size_t crtc_y_limit = crtc_state->base.crtc->mode.vdisplay;
-> > > > +	int crtc_y_limit = crtc_state->base.crtc->mode.vdisplay;
-> > > > +	int crtc_x_limit = crtc_state->base.crtc->mode.hdisplay;
-> > > >  
-> > > >  	/*
-> > > >  	 * The planes are composed line-by-line to avoid heavy memory usage. It is a necessary
-> > > >  	 * complexity to avoid poor blending performance.
-> > > >  	 *
-> > > > -	 * The function vkms_compose_row is used to read a line, pixel-by-pixel, into the staging
-> > > > -	 * buffer.
-> > > > +	 * The function pixel_read_line callback is used to read a line, using an efficient
-> > > > +	 * algorithm for a specific format, into the staging buffer.
-> > > >  	 */
-> > > >  	for (size_t y = 0; y < crtc_y_limit; y++) {
-> > > >  		fill_background(&background_color, output_buffer);
-> > > >  
-> > > >  		/* The active planes are composed associatively in z-order. */
-> > > >  		for (size_t i = 0; i < n_active_planes; i++) {
-> > > > -			x_dst = plane[i]->frame_info->dst.x1;
-> > > > -			x_limit = min_t(size_t, drm_rect_width(&plane[i]->frame_info->dst),
-> > > > -					stage_buffer->n_pixels);
-> > > > -			y_pos = get_y_pos(plane[i]->frame_info, y);
-> > > > +			struct vkms_plane_state *current_plane = plane[i];
-> > > >  
-> > > > -			if (!check_limit(plane[i]->frame_info, y_pos))
-> > > > +			/* Avoid rendering useless lines */
-> > > > +			if (y < current_plane->frame_info->dst.y1 ||
-> > > > +			    y >= current_plane->frame_info->dst.y2)
-> > > >  				continue;
-> > > >  
-> > > > -			vkms_compose_row(stage_buffer, plane[i], y_pos);
-> > > > -			pre_mul_alpha_blend(stage_buffer, output_buffer, x_dst, x_limit);
-> > > > +			/*
-> > > > +			 * dst_line is the line to copy. The initial coordinates are inside the  
+> > R1 format was tested with [1] and [2].
 > > 
-> > [...]
+> > [1]: https://lore.kernel.org/r/20240313-new_rotation-v2-0-6230fd5cae59@bootlin.com
+> > [2]: https://lore.kernel.org/igt-dev/20240306-b4-kms_tests-v1-0-8fe451efd2ac@bootlin.com/
 > > 
-> > > > +				 */
-> > > > +				pixel_count = drm_rect_width(&src_line);
-> > > > +				if (x_start < 0) {
-> > > > +					pixel_count += x_start;
-> > > > +					x_start = 0;
-> > > > +				}
-> > > > +				if (x_start + pixel_count > current_plane->frame_info->fb->width) {
-> > > > +					pixel_count =
-> > > > +						(int)current_plane->frame_info->fb->width - x_start;
-> > > > +				}
-> > > > +			} else {
-> > > > +				/*
-> > > > +				 * In vertical reading, the src_line height is the number of pixel
-> > > > +				 * to read
-> > > > +				 */
-> > > > +				pixel_count = drm_rect_height(&src_line);
-> > > > +				if (y_start < 0) {
-> > > > +					pixel_count += y_start;
-> > > > +					y_start = 0;
-> > > > +				}
-> > > > +				if (y_start + pixel_count > current_plane->frame_info->fb->height) {
-> > > > +					pixel_count =
-> > > > +						(int)current_plane->frame_info->fb->width - y_start;
-> > > > +				}  
-> > > 
-> > > When you are clamping x_start or y_start or pixel_count to be inside
-> > > the source FB, should you not equally adjust the destination
-> > > coordinates as well?  
+> > Signed-off-by: Louis Chauvet <louis.chauvet@bootlin.com>
+> > ---
+> >  drivers/gpu/drm/vkms/vkms_formats.c | 100 ++++++++++++++++++++++++++++++++++++
+> >  drivers/gpu/drm/vkms/vkms_plane.c   |   6 ++-
+> >  2 files changed, 105 insertions(+), 1 deletion(-)
 > > 
-> > I did not think about it. Currently it is not an issue and it will not 
-> > read or write outside a buffer because the pixel count is properly 
-> > limited. But indeed, there is an issue here. I will fix it in the v6.
+> > diff --git a/drivers/gpu/drm/vkms/vkms_formats.c b/drivers/gpu/drm/vkms/vkms_formats.c
+> > index 863fc91d6d48..cbb2ec09564a 100644
+> > --- a/drivers/gpu/drm/vkms/vkms_formats.c
+> > +++ b/drivers/gpu/drm/vkms/vkms_formats.c
+> > @@ -201,6 +201,11 @@ static struct pixel_argb_u16 argb_u16_from_RGB565(const u16 *pixel)
+> >  	return out_pixel;
+> >  }
 > >  
-> > > If we take a step back and look at the UAPI, I believe the answer is
-> > > "no", but it's in no way obvious. It results from the combination of
-> > > several facts:
-> > > 
-> > > - UAPI checks reject any source rectangle that extends outside of the
-> > >   source FB.
-> > > 
-> > > - The source rectangle stretches to fill the destination rectangle
-> > >   exactly.
-> > > 
-> > > - VKMS does not support stretching (scaling), so its UAPI checks reject
-> > >   any commit with source and destination rectangles of different sizes
-> > >   after accounting for rotation. (Right?)  
-> > 
-> > I don't know what are exactly the UAPI contract but as the dst can be 
-> > outside the CRTC, I assumed that the src can be outside the source plane. 
-> > After thinking it doesn't really make sense.
+> > +static struct pixel_argb_u16 argb_u16_from_gray8(u8 gray)
+> > +{
+> > +	return argb_u16_from_u8888(255, gray, gray, gray);
+> > +}
+> > +
+> >  VISIBLE_IF_KUNIT struct pixel_argb_u16 argb_u16_from_yuv888(u8 y, u8 cb, u8 cr,
+> >  							    struct conversion_matrix *matrix)
+> >  {
+> > @@ -269,6 +274,89 @@ static void black_to_argb_u16(const struct vkms_plane_state *plane, int x_start,
+> >  	}
+> >  }
+> >  
+> > +static void Rx_read_line(const struct vkms_plane_state *plane, int x_start,
+> > +			 int y_start, enum pixel_read_direction direction, int count,
+> > +			 struct pixel_argb_u16 out_pixel[], u8 bit_per_pixel, u8 lum_per_level)
+> > +{
+> > +	struct pixel_argb_u16 *end = out_pixel + count;
+> > +	u8 *src_pixels;
+> > +	int rem_x, rem_y;
+> > +
+> > +	packed_pixels_addr(plane->frame_info, x_start, y_start, 0, &src_pixels, &rem_x, &rem_y);
 > 
-> The UAPI contract for source and destination rectangles is here:
-> https://dri.freedesktop.org/docs/drm/gpu/drm-kms.html#standard-plane-properties
-> 
-> I assume there is some shared (helper?) code in DRM that enforces the
-> contract and returns error to userspace if it is violated.
-> 
-> > > I think this results in the clamping code being actually dead code.
-> > > However, I would not delete the clamping code, because it is a cheap
-> > > safety net in case something goes wrong.  
-> > 
-> > If UAPI check that the source rectangle is inside the plane, yes it is 
-> > just a safety net. Otherwise, it is required to manage properly the 
-> > userspace requests. In the v6, the outside of a source buffer is 
-> > transparent.
-> > 
-> > > If you agree that it's just a safety net, then maybe explain that in a
-> > > comment? If the safety net catches anything, the composition result
-> > > will be wrong anyway, so it doesn't matter to adjust the destination
-> > > rectangle to match.  
-> > 
-> > I will extract this whole clamping stuff in a function, is this comment 
-> > enough?
-> > 
-> >  * This function is mainly a safety net to avoid reading outside the source buffer. As the
-> >  * userspace should never ask to read outside the source plane, all the cases covered here should
-> >  * be dead code.
-> 
-> Sure. Perhaps use a bit more assertive tone about what the UAPI
-> contract guarantees. Yes, userspace "should not", but the kernel DRM
-> code ensures that it does not.
+> Maybe assert that rem_y = 0? Or block_h = 1.
 
- * This function is mainly a safety net to avoid reading outside the source buffer. As the
- * userspace can't ask to read outside the source plane, all the cases covered here should
- * be dead code.
+Done for the v6.
  
-> > > When the last point is relaxed and VKMS gains scaling support, I think
-> > > it won't change the fact that the clamping remains as a safety net. It
-> > > just increases the risk of bugs that would be caught by the net.
-> > > 
-> > > Going outside of FB boundaries is a serious bug and deserves to be
-> > > checked. Going outside of the source rectangle would be a bug too,
-> > > assuming that partially included pixels are considered fully included,
-> > > but it's not serious enough to warrant explicit checks. Ideally IGT
-> > > would catch it.  
-> > 
-> > That was exactly the idea behind all those check and clamping: avoid 
-> > access outside the buffers.
+> > +	int bit_offset = (int)rem_x * bit_per_pixel;
 > 
-> Good.
+> Why cast rem_x to int when it was defined to be int?
+
+Because it was not the case for my first implementation, and I miss this 
+cast... Thanks.
+
+> > +	int step = get_step_next_block(plane->frame_info->fb, direction, 0);
+> > +	int mask = (0x1 << bit_per_pixel) - 1;
 > 
-> To catch a driver using pixels outside of a source rectangle, the test
-> FB in IGT should be painted to have a different non-black color outside
-> of the source rectangle.
+> Since mask will interact with u8, it should be unsigned too.
 
-The IGT test kms_plane already does that, you can use an option to ask for 
-a border around the framebuffer.
+Ok, I will change it for the v6.
 
-Thanks,
+> > +
+> > +	if (direction == READ_LEFT_TO_RIGHT || direction == READ_RIGHT_TO_LEFT) {
+> > +		int restart_bit_offset = 0;
+> > +		int step_bit_offset = bit_per_pixel;
+> > +
+> > +		if (direction == READ_RIGHT_TO_LEFT) {
+> > +			restart_bit_offset = 8 - bit_per_pixel;
+> > +			step_bit_offset = -bit_per_pixel;
+> > +		}
+> > +
+> > +		while (out_pixel < end) {
+> > +			u8 val = (*src_pixels & (mask << bit_offset)) >> bit_offset;
+> 
+> or shorter: (*src_pixels >> bit_offset) & mask
+> 
+> However, shouldn't the first pixel be on the high bits?
+
+Obviously yes... I missunderstood it... fixed in the v6 (and it will be 
+fixed in the next iteration of my igt series).
+
+> That how I would understand the comments in drm_fourcc.h.
+> 
+> Again a reason to avoid a solid color fill in IGT.
+
+Yes, but in this case I wrote the IGT test too... So "wrong + wrong = 
+test SUCCESS" :)
+
+There are some patterns in IGT, but they are only for "color". None of 
+them are available for "black and white"/"gray" formats.
+
+> > +
+> > +			*out_pixel = argb_u16_from_gray8(val * lum_per_level);
+> > +
+> > +			bit_offset += step_bit_offset;
+> > +			if (bit_offset < 0 || 8 <= bit_offset) {
+> > +				bit_offset = restart_bit_offset;
+> > +				src_pixels += step;
+> > +			}
+> > +			out_pixel += 1;
+> > +		}
+> > +	} else if (direction == READ_TOP_TO_BOTTOM || direction == READ_BOTTOM_TO_TOP) {
+> > +		while (out_pixel < end) {
+> > +			u8 val = (*src_pixels & (mask << bit_offset)) >> bit_offset;
+> > +			*out_pixel = argb_u16_from_gray8(val * lum_per_level);
+> > +			src_pixels += step;
+> > +			out_pixel += 1;
+> > +		}
+> > +	}
+> > +}
+> > +
+> > +static void R1_read_line(const struct vkms_plane_state *plane, int x_start,
+> > +			 int y_start, enum pixel_read_direction direction, int count,
+> > +			 struct pixel_argb_u16 out_pixel[])
+> > +{
+> > +	Rx_read_line(plane, x_start, y_start, direction, count, out_pixel, 1, 0xFF);
+> > +}
+> > +
+> > +static void R2_read_line(const struct vkms_plane_state *plane, int x_start,
+> > +			 int y_start, enum pixel_read_direction direction, int count,
+> > +			 struct pixel_argb_u16 out_pixel[])
+> > +{
+> > +	Rx_read_line(plane, x_start, y_start, direction, count, out_pixel, 2, 0x55);
+> > +}
+> > +
+> > +static void R4_read_line(const struct vkms_plane_state *plane, int x_start,
+> > +			 int y_start, enum pixel_read_direction direction, int count,
+> > +			 struct pixel_argb_u16 out_pixel[])
+> > +{
+> > +	Rx_read_line(plane, x_start, y_start, direction, count, out_pixel, 4, 0x11);
+> > +}
+> > +
+> > +static void R8_read_line(const struct vkms_plane_state *plane, int x_start,
+> > +			 int y_start, enum pixel_read_direction direction, int count,
+> > +			 struct pixel_argb_u16 out_pixel[])
+> > +{
+> > +	struct pixel_argb_u16 *end = out_pixel + count;
+> > +	u8 *src_pixels;
+> > +	int rem_x, rem_y;
+> > +	int step = get_step_next_block(plane->frame_info->fb, direction, 0);
+> > +
+> > +	packed_pixels_addr(plane->frame_info, x_start, y_start, 0, &src_pixels, &rem_x, &rem_y);
+> 
+> Assert on block size?
+
+Fixed in v6.
+
+> > +
+> > +	while (out_pixel < end) {
+> > +		*out_pixel = argb_u16_from_gray8(*src_pixels);
+> > +		src_pixels += step;
+> > +		out_pixel += 1;
+> > +	}
+> > +}
+> > +
+> >  static void ARGB8888_read_line(const struct vkms_plane_state *plane, int x_start, int y_start,
+> >  			       enum pixel_read_direction direction, int count,
+> >  			       struct pixel_argb_u16 out_pixel[])
+> > @@ -582,6 +670,14 @@ pixel_read_line_t get_pixel_read_line_function(u32 format)
+> >  	case DRM_FORMAT_YVU422:
+> >  	case DRM_FORMAT_YVU444:
+> >  		return &planar_yuv_read_line;
+> > +	case DRM_FORMAT_R1:
+> > +		return &R1_read_line;
+> > +	case DRM_FORMAT_R2:
+> > +		return &R2_read_line;
+> > +	case DRM_FORMAT_R4:
+> > +		return &R4_read_line;
+> > +	case DRM_FORMAT_R8:
+> > +		return &R8_read_line;
+> >  	default:
+> >  		/*
+> >  		 * This is a bug in vkms_plane_atomic_check. All the supported
+> > @@ -855,6 +951,10 @@ get_conversion_matrix_to_argb_u16(u32 format, enum drm_color_encoding encoding,
+> >  	case DRM_FORMAT_ARGB16161616:
+> >  	case DRM_FORMAT_XRGB16161616:
+> >  	case DRM_FORMAT_RGB565:
+> > +	case DRM_FORMAT_R1:
+> > +	case DRM_FORMAT_R2:
+> > +	case DRM_FORMAT_R4:
+> > +	case DRM_FORMAT_R8:
+> >  		/*
+> >  		 * Those formats are supported, but they don't need a conversion matrix. Return
+> 
+> It is strange that you need to list irrelevant formats here.
+
+It is not needed anymore.
+
+Thanks for your review,
 Louis Chauvet
 
-> > > > +			}
-> > > > +
-> > > > +			if (pixel_count <= 0) {
-> > > > +				/* Nothing to read, so avoid multiple function calls for nothing */
-> > > > +				continue;
-> > > > +			}
-> > > > +
-> > > > +			/*
-> > > > +			 * Modify the starting point to take in account the rotation
-> > > > +			 *
-> > > > +			 * src_line is the top-left corner, so when reading READ_RIGHT_TO_LEFT or
-> > > > +			 * READ_BOTTOM_TO_TOP, it must be changed to the top-right/bottom-left
-> > > > +			 * corner.
-> > > > +			 */
-> > > > +			if (direction == READ_RIGHT_TO_LEFT) {
-> > > > +				// x_start is now the right point
-> > > > +				x_start += pixel_count - 1;
-> > > > +			} else if (direction == READ_BOTTOM_TO_TOP) {
-> > > > +				// y_start is now the bottom point
-> > > > +				y_start += pixel_count - 1;
-> > > > +			}
-> > > > +
-> > > > +			/*
-> > > > +			 * Perform the conversion and the blending
-> > > > +			 *
-> > > > +			 * Here we know that the read line (x_start, y_start, pixel_count) is
-> > > > +			 * inside the source buffer [2] and we don't write outside the stage
-> > > > +			 * buffer [1]
-> > > > +			 */
-> > > > +			current_plane->pixel_read_line(
-> > > > +				current_plane, x_start, y_start, direction, pixel_count,
-> > > > +				&stage_buffer->pixels[current_plane->frame_info->dst.x1]);
-> > > > +
-> > > > +			pre_mul_alpha_blend(stage_buffer, output_buffer,
-> > > > +					    current_plane->frame_info->dst.x1,
-> > > > +					    pixel_count);
-> > > >  		}
-> > > >  
-> > > >  		apply_lut(crtc_state, output_buffer);
-> > > > @@ -250,7 +335,7 @@ static void blend(struct vkms_writeback_job *wb,
-> > > >  		*crc32 = crc32_le(*crc32, (void *)output_buffer->pixels, row_size);
-> > > >  
-> > > >  		if (wb)
-> > > > -			vkms_writeback_row(wb, output_buffer, y_pos);
-> > > > +			vkms_writeback_row(wb, output_buffer, y);
-> > > >  	}
-> > > >  }
 > 
+> >  		 * a valid pointer to avoid kernel panic in case this matrix is used/checked
+> > diff --git a/drivers/gpu/drm/vkms/vkms_plane.c b/drivers/gpu/drm/vkms/vkms_plane.c
+> > index e21cc92cf497..dc9d62acf350 100644
+> > --- a/drivers/gpu/drm/vkms/vkms_plane.c
+> > +++ b/drivers/gpu/drm/vkms/vkms_plane.c
+> > @@ -29,7 +29,11 @@ static const u32 vkms_formats[] = {
+> >  	DRM_FORMAT_YUV444,
+> >  	DRM_FORMAT_YVU420,
+> >  	DRM_FORMAT_YVU422,
+> > -	DRM_FORMAT_YVU444
+> > +	DRM_FORMAT_YVU444,
+> > +	DRM_FORMAT_R1,
+> > +	DRM_FORMAT_R2,
+> > +	DRM_FORMAT_R4,
+> > +	DRM_FORMAT_R8
+> >  };
+> >  
+> >  static struct drm_plane_state *
+> > 
 > 
 > Thanks,
 > pq
