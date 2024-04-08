@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80C8E144D02;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D79D1448DD;
 	Mon,  8 Apr 2024 17:49:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712598587; cv=none; b=BFfKvAlcAZ3PU+VrhXg/miSXDx5L3OmEs0TBaaYkZOpVkQXsaCrdQOhS3a2YQuiO14G05DegegZlJVl9FGSzaTO9ZQU5HsrxL45sBW6k5M5HUdapPnKMR2u66252AoGtwvvmqo+q3fmXCdicSWMSntXdFsPtr5JcTmrwkrGZPdw=
+	t=1712598587; cv=none; b=IwiQDn5QX7UoNIDsPwnbFMYwoBEqu0FCAPhANixn7f9RhRPd2CpvZ8+L3tMDe8t5Bu/95NQTIZdGQwBSWcYMxmdxy5I+Kdm91Buk/+HtvpvUYEnOe8Fl3a3IFEtlDrkYFW6YwOtICIkFueScE01ZT81Pw/4uK/i46vfMIn0c41I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1712598587; c=relaxed/simple;
-	bh=C5CpU6dpky4LWKttI7kOlyW29BP4G9a1vbAChlmbviA=;
+	bh=Zs6ak+wPmG4tPQkLrLcc6JxAJjrKyJZjKo6tat/+S/g=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=tZWtZm6tki6e7cnZGsZ4g1pGooypCYEQ35kpRY3n8LXZ0k+pQUA9E5BV3uEMPP2Z45X8CXscUhPHVU9+R29cIIr+rfrb+x6kAzIDWW9dcP0EznRq2r3yFFA32d3wAKcmvFnZtMI0rZzcHt0RHcna1PBIM7EUa17pEgYJyUwohQA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=A7mkThM0; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=qzVnjEWYPEr0UbBlmGO2SXtLrJu+AlYUimBmjzGQB4ml+TKMq3jI3vT4jaXkxuQuzXuIqx/dg1+dZ/fqzFez0EzlWMh2Y6/bnfpk1/w4XIZSvtlmKdNpxtWu2zfOK8ciivPYjY1c49Su8I/rHz9lfwtvys6AA4BMx+sNw4wLjHQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pjWDSlzB; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="A7mkThM0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2EFC6C3278A;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pjWDSlzB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 093D1C43142;
 	Mon,  8 Apr 2024 17:49:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1712598587;
-	bh=C5CpU6dpky4LWKttI7kOlyW29BP4G9a1vbAChlmbviA=;
+	bh=Zs6ak+wPmG4tPQkLrLcc6JxAJjrKyJZjKo6tat/+S/g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=A7mkThM0RImV5o66khbu030tAe3dAuCBOfGyC/Gsufo5lDDRbKEqi703ShDHrgs4W
-	 N6vGVkNABpkg96qmyMxOdeLocfsr0Q1MVHw1v5JtkfCQ//ID+fj0zYbnwosa+vKfzo
-	 v9DJtG/03ZC85kSHKPZom8p7hG6krmM9y7b6Xr3XbTS2n0FXtBGzdsMx6vynZ8ETsl
-	 eUGyXiNaDWemAYweRkAqDKvdrM8/rk5KW4RQzW5idrhitIJgeggHDZ3jTYINu9HpDu
-	 9tWbrN+6yXG/DuLg9/zQ87xLf+RqXqHm1fl3WQDF3OosbU164PNBKMkdQYirYC09oJ
-	 x59xgkDFCLTJw==
+	b=pjWDSlzBhwQ4qB8O00FJjJXhK/J+MUo0IKYNwnd+lZQtcfrJnSVLG9asJrOsDpsIK
+	 jqzrNovshWX4pfBmetx5No7YjJfMLbfqBHQzlSZQwFmdct/OymQMft3/yxi2K9vE9/
+	 TWW8nE+ihDQkz8soa8GyuYsKtOn+t4XvlIoZkrf8v7ti7LUCy9SsIN7dsCl5TpBSLx
+	 09xN+tJ47BuuKPQ93m0/3EFQ2z7hdyzqZW1HmXVBZnupMpJY20n8yWymPPTjnCGvwF
+	 SIOu8K7/MaOWtD8XxMmVCeMkUMD9NZY7yCV5FErh42J5zvrLqjI6Hobzl8QVXbi/Bh
+	 +0iQhp9+D6YaQ==
 Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
-	id 5FC5BCE2CE2; Mon,  8 Apr 2024 10:49:46 -0700 (PDT)
+	id 51F0DCE2CCF; Mon,  8 Apr 2024 10:49:46 -0700 (PDT)
 From: "Paul E. McKenney" <paulmck@kernel.org>
 To: linux-arch@vger.kernel.org,
 	linux-kernel@vger.kernel.org
@@ -39,15 +39,10 @@ Cc: elver@google.com,
 	pmladek@suse.com,
 	torvalds@linux-foundation.org,
 	Arnd Bergmann <arnd@arndb.de>,
-	"Paul E. McKenney" <paulmck@kernel.org>,
-	Yujie Liu <yujie.liu@intel.com>,
-	Andi Shyti <andi.shyti@linux.intel.com>,
-	Andrzej Hajda <andrzej.hajda@intel.com>,
-	linux-riscv@lists.infradead.org,
-	Palmer Dabbelt <palmer@rivosinc.com>
-Subject: [PATCH cmpxchg 14/14] riscv: Emulate one-byte cmpxchg
-Date: Mon,  8 Apr 2024 10:49:44 -0700
-Message-Id: <20240408174944.907695-14-paulmck@kernel.org>
+	"Paul E. McKenney" <paulmck@kernel.org>
+Subject: [PATCH cmpxchg 09/14] lib: Add one-byte emulation function
+Date: Mon,  8 Apr 2024 10:49:39 -0700
+Message-Id: <20240408174944.907695-9-paulmck@kernel.org>
 X-Mailer: git-send-email 2.40.1
 In-Reply-To: <7b3646e0-667c-48e2-8f09-e493c43c30cb@paulmck-laptop>
 References: <7b3646e0-667c-48e2-8f09-e493c43c30cb@paulmck-laptop>
@@ -59,87 +54,137 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Use the new cmpxchg_emu_u8() to emulate one-byte cmpxchg() on riscv.
+Architectures are required to provide four-byte cmpxchg() and 64-bit
+architectures are additionally required to provide eight-byte cmpxchg().
+However, there are cases where one-byte cmpxchg() would be extremely
+useful.  Therefore, provide cmpxchg_emu_u8() that emulates one-byte
+cmpxchg() in terms of four-byte cmpxchg().
 
+Note that this emulations is fully ordered, and can (for example) cause
+one-byte cmpxchg_relaxed() to incur the overhead of full ordering.
+If this causes problems for a given architecture, that architecture is
+free to provide its own lighter-weight primitives.
+
+[ paulmck: Apply Marco Elver feedback. ]
 [ paulmck: Apply kernel test robot feedback. ]
 [ paulmck: Drop two-byte support per Arnd Bergmann feedback. ]
 
-Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
-Tested-by: Yujie Liu <yujie.liu@intel.com>
-Cc: Andi Shyti <andi.shyti@linux.intel.com>
-Cc: Andrzej Hajda <andrzej.hajda@intel.com>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: <linux-riscv@lists.infradead.org>
-Acked-by: Palmer Dabbelt <palmer@rivosinc.com>
----
- arch/riscv/Kconfig               |  1 +
- arch/riscv/include/asm/cmpxchg.h | 13 +++++++++++++
- 2 files changed, 14 insertions(+)
+Link: https://lore.kernel.org/all/0733eb10-5e7a-4450-9b8a-527b97c842ff@paulmck-laptop/
 
-diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
-index be09c8836d56b..3bab9c5c0f465 100644
---- a/arch/riscv/Kconfig
-+++ b/arch/riscv/Kconfig
-@@ -44,6 +44,7 @@ config RISCV
- 	select ARCH_HAS_UBSAN
- 	select ARCH_HAS_VDSO_DATA
- 	select ARCH_KEEP_MEMBLOCK if ACPI
-+	select ARCH_NEED_CMPXCHG_1_EMU
- 	select ARCH_OPTIONAL_KERNEL_RWX if ARCH_HAS_STRICT_KERNEL_RWX
- 	select ARCH_OPTIONAL_KERNEL_RWX_DEFAULT
- 	select ARCH_STACKWALK
-diff --git a/arch/riscv/include/asm/cmpxchg.h b/arch/riscv/include/asm/cmpxchg.h
-index 2fee65cc84432..abcd5543b861b 100644
---- a/arch/riscv/include/asm/cmpxchg.h
-+++ b/arch/riscv/include/asm/cmpxchg.h
-@@ -9,6 +9,7 @@
- #include <linux/bug.h>
+Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
+Acked-by: Marco Elver <elver@google.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: "Peter Zijlstra (Intel)" <peterz@infradead.org>
+Cc: Douglas Anderson <dianders@chromium.org>
+Cc: Petr Mladek <pmladek@suse.com>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: <linux-arch@vger.kernel.org>
+---
+ arch/Kconfig                |  3 +++
+ include/linux/cmpxchg-emu.h | 15 +++++++++++++
+ lib/Makefile                |  1 +
+ lib/cmpxchg-emu.c           | 45 +++++++++++++++++++++++++++++++++++++
+ 4 files changed, 64 insertions(+)
+ create mode 100644 include/linux/cmpxchg-emu.h
+ create mode 100644 lib/cmpxchg-emu.c
+
+diff --git a/arch/Kconfig b/arch/Kconfig
+index 9f066785bb71d..284663392eef8 100644
+--- a/arch/Kconfig
++++ b/arch/Kconfig
+@@ -1609,4 +1609,7 @@ config CC_HAS_SANE_FUNCTION_ALIGNMENT
+ 	# strict alignment always, even with -falign-functions.
+ 	def_bool CC_HAS_MIN_FUNCTION_ALIGNMENT || CC_IS_CLANG
  
- #include <asm/fence.h>
++config ARCH_NEED_CMPXCHG_1_EMU
++	bool
++
+ endmenu
+diff --git a/include/linux/cmpxchg-emu.h b/include/linux/cmpxchg-emu.h
+new file mode 100644
+index 0000000000000..998deec67740a
+--- /dev/null
++++ b/include/linux/cmpxchg-emu.h
+@@ -0,0 +1,15 @@
++/* SPDX-License-Identifier: GPL-2.0+ */
++/*
++ * Emulated 1-byte and 2-byte cmpxchg operations for architectures
++ * lacking direct support for these sizes.  These are implemented in terms
++ * of 4-byte cmpxchg operations.
++ *
++ * Copyright (C) 2024 Paul E. McKenney.
++ */
++
++#ifndef __LINUX_CMPXCHG_EMU_H
++#define __LINUX_CMPXCHG_EMU_H
++
++uintptr_t cmpxchg_emu_u8(volatile u8 *p, uintptr_t old, uintptr_t new);
++
++#endif /* __LINUX_CMPXCHG_EMU_H */
+diff --git a/lib/Makefile b/lib/Makefile
+index ffc6b2341b45a..cc3d52fdb477d 100644
+--- a/lib/Makefile
++++ b/lib/Makefile
+@@ -236,6 +236,7 @@ obj-$(CONFIG_FUNCTION_ERROR_INJECTION) += error-inject.o
+ lib-$(CONFIG_GENERIC_BUG) += bug.o
+ 
+ obj-$(CONFIG_HAVE_ARCH_TRACEHOOK) += syscall.o
++obj-$(CONFIG_ARCH_NEED_CMPXCHG_1_EMU) += cmpxchg-emu.o
+ 
+ obj-$(CONFIG_DYNAMIC_DEBUG_CORE) += dynamic_debug.o
+ #ensure exported functions have prototypes
+diff --git a/lib/cmpxchg-emu.c b/lib/cmpxchg-emu.c
+new file mode 100644
+index 0000000000000..27f6f97cb60dd
+--- /dev/null
++++ b/lib/cmpxchg-emu.c
+@@ -0,0 +1,45 @@
++// SPDX-License-Identifier: GPL-2.0+
++/*
++ * Emulated 1-byte cmpxchg operation for architectures lacking direct
++ * support for this size.  This is implemented in terms of 4-byte cmpxchg
++ * operations.
++ *
++ * Copyright (C) 2024 Paul E. McKenney.
++ */
++
++#include <linux/types.h>
++#include <linux/export.h>
++#include <linux/instrumented.h>
++#include <linux/atomic.h>
++#include <linux/panic.h>
++#include <linux/bug.h>
++#include <asm-generic/rwonce.h>
 +#include <linux/cmpxchg-emu.h>
- 
- #define __xchg_relaxed(ptr, new, size)					\
- ({									\
-@@ -170,6 +171,9 @@
- 	__typeof__(*(ptr)) __ret;					\
- 	register unsigned int __rc;					\
- 	switch (size) {							\
-+	case 1:								\
-+		__ret = (__typeof__(*(ptr)))cmpxchg_emu_u8((volatile u8 *)__ptr, (uintptr_t)__old, (uintptr_t)__new); \
-+		break;							\
- 	case 4:								\
- 		__asm__ __volatile__ (					\
- 			"0:	lr.w %0, %2\n"				\
-@@ -214,6 +218,9 @@
- 	__typeof__(*(ptr)) __ret;					\
- 	register unsigned int __rc;					\
- 	switch (size) {							\
-+	case 1:								\
-+		__ret = (__typeof__(*(ptr)))cmpxchg_emu_u8((volatile u8 *)__ptr, __old, __new); \
-+		break;							\
- 	case 4:								\
- 		__asm__ __volatile__ (					\
- 			"0:	lr.w %0, %2\n"				\
-@@ -260,6 +267,9 @@
- 	__typeof__(*(ptr)) __ret;					\
- 	register unsigned int __rc;					\
- 	switch (size) {							\
-+	case 1:								\
-+		__ret = (__typeof__(*(ptr)))cmpxchg_emu_u8((volatile u8 *)__ptr, __old, __new); \
-+		break;							\
- 	case 4:								\
- 		__asm__ __volatile__ (					\
- 			RISCV_RELEASE_BARRIER				\
-@@ -306,6 +316,9 @@
- 	__typeof__(*(ptr)) __ret;					\
- 	register unsigned int __rc;					\
- 	switch (size) {							\
-+	case 1:								\
-+		__ret = (__typeof__(*(ptr)))cmpxchg_emu_u8((volatile u8 *)__ptr, __old, __new); \
-+		break;							\
- 	case 4:								\
- 		__asm__ __volatile__ (					\
- 			"0:	lr.w %0, %2\n"				\
++
++union u8_32 {
++	u8 b[4];
++	u32 w;
++};
++
++/* Emulate one-byte cmpxchg() in terms of 4-byte cmpxchg. */
++uintptr_t cmpxchg_emu_u8(volatile u8 *p, uintptr_t old, uintptr_t new)
++{
++	u32 *p32 = (u32 *)(((uintptr_t)p) & ~0x3);
++	int i = ((uintptr_t)p) & 0x3;
++	union u8_32 old32;
++	union u8_32 new32;
++	u32 ret;
++
++	ret = READ_ONCE(*p32);
++	do {
++		old32.w = ret;
++		if (old32.b[i] != old)
++			return old32.b[i];
++		new32.w = old32.w;
++		new32.b[i] = new;
++		instrument_atomic_read_write(p, 1);
++		ret = data_race(cmpxchg(p32, old32.w, new32.w)); // Overridden above.
++	} while (ret != old32.w);
++	return old;
++}
++EXPORT_SYMBOL_GPL(cmpxchg_emu_u8);
 -- 
 2.40.1
 
