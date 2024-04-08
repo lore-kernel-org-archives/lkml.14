@@ -1,92 +1,166 @@
-Received: from mail-yw1-f178.google.com (mail-yw1-f178.google.com [209.85.128.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from APC01-SG2-obe.outbound.protection.outlook.com (mail-sgaapc01olkn2055.outbound.protection.outlook.com [40.92.53.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E40D48792
-	for <linux-kernel@vger.kernel.org>; Mon,  8 Apr 2024 09:07:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.178
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712567258; cv=none; b=tjECqmRD4xak2eHYkHhop/vxaeu6gDwUPBpZH59ImiLQ5wfLwpp+bOegPC/yXVEF/Q0VEe9TCtHu2eiZZBW7Ol86JFT7BB5pmZrUmDP3heWRw8frNFP0QZBhwJTZjZwW0Ca5laARw9BFQAr4UAWM3qOUzzEc4HDYkOpFVr3mHHo=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712567258; c=relaxed/simple;
-	bh=tk/FMXk9/BxJnMNCpZbjrtftVzviHOWK1p4pvZ7JEcs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=QZUmTvt+/pfbgyXokQqIag4T+xfINmsJbLPbseKo0zXAIIHKPdjbX3kW2eGpC0guwJFIsxBJpagN/clDDok2brZ7MTC8PJQ9oBiFYp+P1n/6H6sC32six0/4nlw5AN8cwoyeOESEzAwGmqo2hl6Oy5ZwDBqr35lbCd6EbldvPwA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=neLQpJu1; arc=none smtp.client-ip=209.85.128.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B75962E84F;
+	Mon,  8 Apr 2024 09:09:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.53.55
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1712567400; cv=fail; b=M6lg5ExS1OklrGQcFJbz2sItOlkzCUTFP80DN2USdNmveX0lLPHVoL26K8aicFwdu6Nq/LwNI3u2SMBzTth6MWnn/LFpb5OPzkSWwrctpOaILObz49D4FxcMXOz1Bh7AVyi3zg2x9VCeZQGC3edTBryshEnzqVv4JBYhYNkATdE=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1712567400; c=relaxed/simple;
+	bh=xFBmjdM1oV3rkJLfiM+NyJ4Du4Ns/aVCjTyngWTIoi0=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=geof+gCs0yTRwxkvg9+V26EX4zYLz1zijruv3f69IY9Ms6Zf2mQQLdFPC3cQT6n+L0MSoGAzuFowbiLmzJvRr23YyY0IMu+gBgNYuCEma5X05SFHhb09EJMY1w0521aLiJrufShY45inLxYNWFxqrQv5AU6kVhd3W0huzcz7xew=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=dZZer8AZ; arc=fail smtp.client-ip=40.92.53.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="neLQpJu1"
-Received: by mail-yw1-f178.google.com with SMTP id 00721157ae682-61814e68cfcso4123607b3.0
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Apr 2024 02:07:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1712567256; x=1713172056; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=tk/FMXk9/BxJnMNCpZbjrtftVzviHOWK1p4pvZ7JEcs=;
-        b=neLQpJu1ltJQSpt2HIz2fVulRGgAM0rv/Q0y2eAlFnvd6rO6WuAcAiAq1qoFjVytH6
-         YRk1BHZZLviSVQZfWLa7hiw/7sccY+wlzeS83PuCTETaCgS1CV8nGCs3T9/LaGx+Wi8F
-         d5VoEt7yZj3FvYQBkdJdC0bpBx4EVIqNPX3GmmW9oqOnassdlKHS6jqS5E/Kg+npaFLh
-         AETBk+NaQdU32VqUM5AcpZ7CkRuw65XV5220NpEdLq1c+Y4Lm7uqD6gGSM9MVn57dcR1
-         q60kBGur4VgFBWzgLi3EGi7F0L7UjhXK+ijSIFppOxoqtq3+n54A7w5eeYdwgl9ChJub
-         NKtA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712567256; x=1713172056;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=tk/FMXk9/BxJnMNCpZbjrtftVzviHOWK1p4pvZ7JEcs=;
-        b=dKBCfPFmu0LVhLod5oQkCMK4EyosLqmbd+3LBHHSH409LA1NMA6r3W/sRrfWS+pVb9
-         iLwMxMdjdIJO4y4rTd3CEFBsPmlpMt2JqiwXHg6bz4BqJjnKswsxDh1Lspnje9klP46r
-         UXeURs9QJMNveuKwPLYmWWGnZYWjMgNn5puniKVaC4Cauv2cWBaGvOy3JCvhxL1HgW40
-         IZ64FYt8COZSsdocLgwlNnTe8pfl75BkAeR7J63mwAQKSN3m/gMPP+9RGXzYAI8ayffn
-         DVCXNzb+krDNikA4UKdrq9tRH6I9RyOjO5lUyrq15zxnVj5ahS6qT49Hpj/aOp+O26hA
-         wmWA==
-X-Gm-Message-State: AOJu0YzQc7tI90YJt1kitxkdyVHoEuLib8PtGIfSAWouiwbl5Cl4YrKY
-	R/IaSL+Pec7AViXhuE6Rz0jfzoRbUwcsdFtbG4Xx4lLG9pJPLCXvJq/uoYKgepsEmEQtwaZ050r
-	L03Udfo6hssX/pKP0M8K4gyD8uEVO/Zbrn+1+QUVrtp5buFKo
-X-Google-Smtp-Source: AGHT+IHc7QXzytUFxC5uuwvB0MD7ljWc/U60G9Qiq47arRNTNk1jBZh9YkNee2tiKSi0tDR8vq/XfeSFX3czfX77EaA=
-X-Received: by 2002:a5b:b8f:0:b0:dc6:dd80:430e with SMTP id
- l15-20020a5b0b8f000000b00dc6dd80430emr6480600ybq.27.1712567256106; Mon, 08
- Apr 2024 02:07:36 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="dZZer8AZ"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=gQ3IbbyTkxP1cJ8lxe1lXMUwiEvXjAKzzm6ePKFyr8nHqiKE8DO7qSup29w2gnL6w3UEiiT0Fo2TgnjzSHpnU5O9RUeDTQan3LBFMkmPm+uKdK0ovTzb9KUlpkfxCosEBLyaHn4oMMobUceQlMiDFM8/1EalB9A7hkrKBz7U91xK/+yLv7VwlszIiYJF67JYFOVHtjA3MN4HJVyYfh8O2nBlhn4NZ/V5976lnP+63QYVOHbelOGPpH0wA9NMSBZaLAq1LwiK+qxSlh09UGIWlDUhb+vsT+WkL8CBjtY2lSMF+6AxmmYQBV3rAvGyLPf1Q27r2gfjZXd4tk+915pJTA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=SmZmlapQUrKRkLGlkMOyMugECznBqSCO2e4AA+yC6so=;
+ b=l4MeDLP/O6qBKARvT0avcRWJgC1ZRo9oKWrJbhfTQtBFKf/bDQ8lrHR1RnYAqCYjoPp8E4LSzS3DrXRITOGkkVdvZcQSF949fla4oNAV8hNxrxs50niqEMuB9pCbNpwDwMkNMzF+aLWiSzdsxcfqZlnRSK/zrs60zlrcLlrqe7Msi+NSaHwi1UzfKj3Nnsi27+W0HZ2S/QXgzRLrd+c2X5pF2WehPXUnkLiOaWpdziUfUzAioWSgyN4FsPA7a60gvI9c1MmPd86tJ1Mv7BDtXf+Ml9L2fyFU8pDEutfGpUolSKg0qlfhjjSvD7LvWXIa+1jXD/rzI2uls2rW5lLWJw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=SmZmlapQUrKRkLGlkMOyMugECznBqSCO2e4AA+yC6so=;
+ b=dZZer8AZueiXeGIl1GBY0c/HtB3gD20EIb+RPRl1Jaq6gVhiZBdLJXm1zTScg4P0vwbH1FeCKoAyaljjnMvbNGUo7lecT/ZBxdOWYtLPVV/WX6ncsTvDskH/8I11t0ESprchCe6g06OpSdmOpMwvp0DpEpit+iQFVFKLWca6TsbiOgoko3zNc0KqJtKOzhigPKFnN+OHR6HB4rvgUI+NhDBP7JwyKz0jarBihHFAUR0FYOaDD91nhGdetQz51lX3VchmewObFlBL8VPPAFgd89oWTOm8VoQMpoxvAKCWlntW2Lx0o+NBT8xRWKu1og4djr5qb2MHL3THvLCbiC1Ycg==
+Received: from SEZPR06MB6959.apcprd06.prod.outlook.com (2603:1096:101:1ed::14)
+ by TYSPR06MB7164.apcprd06.prod.outlook.com (2603:1096:405:91::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.46; Mon, 8 Apr
+ 2024 09:09:53 +0000
+Received: from SEZPR06MB6959.apcprd06.prod.outlook.com
+ ([fe80::aced:cbb9:4616:96d8]) by SEZPR06MB6959.apcprd06.prod.outlook.com
+ ([fe80::aced:cbb9:4616:96d8%2]) with mapi id 15.20.7409.042; Mon, 8 Apr 2024
+ 09:09:52 +0000
+Message-ID:
+ <SEZPR06MB69594D51286B7A4C00749E1C96002@SEZPR06MB6959.apcprd06.prod.outlook.com>
+Date: Mon, 8 Apr 2024 17:09:47 +0800
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 0/3] arm64: dts: hi3798cv200: fix GICR size, add cache
+ info, maintenance irq and GICH, GICV spaces
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+ Wei Xu <xuwei5@hisilicon.com>, Rob Herring <robh+dt@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>,
+ Jiancheng Xue <xuejiancheng@hisilicon.com>, Alex Elder <elder@linaro.org>,
+ Peter Griffin <peter.griffin@linaro.org>
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, stable@vger.kernel.org
+References: <20240219-cache-v3-0-a33c57534ae9@outlook.com>
+ <171256140981.12523.5652563259173425537.b4-ty@linaro.org>
+Content-Language: en-US
+From: Yang Xiwen <forbidden405@outlook.com>
+In-Reply-To: <171256140981.12523.5652563259173425537.b4-ty@linaro.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-TMN: [3TKD/MkYj01KceV+HGDQa9KttFW4A0GUsLQxG152tOzeUy9voRFk6IdMoAqVDC33]
+X-ClientProxiedBy: PU1PR06CA0018.apcprd06.prod.outlook.com
+ (2603:1096:803:2a::30) To SEZPR06MB6959.apcprd06.prod.outlook.com
+ (2603:1096:101:1ed::14)
+X-Microsoft-Original-Message-ID:
+ <ea79b8c9-aff1-4b3e-998c-48b24f6be45b@outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240405115318.904143-1-jens.wiklander@linaro.org> <20240405115318.904143-3-jens.wiklander@linaro.org>
-In-Reply-To: <20240405115318.904143-3-jens.wiklander@linaro.org>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Mon, 8 Apr 2024 11:07:25 +0200
-Message-ID: <CACRpkdYLCuRKZRqRUkav7UoT+0FSaMmciH9bps3VGgxLCw6+_g@mail.gmail.com>
-Subject: Re: [PATCH v4 2/3] mmc: block: register RPMB partition with the RPMB subsystem
-To: Jens Wiklander <jens.wiklander@linaro.org>
-Cc: linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org, 
-	op-tee@lists.trustedfirmware.org, 
-	Shyam Saini <shyamsaini@linux.microsoft.com>, Ulf Hansson <ulf.hansson@linaro.org>, 
-	Jerome Forissier <jerome.forissier@linaro.org>, Sumit Garg <sumit.garg@linaro.org>, 
-	Ilias Apalodimas <ilias.apalodimas@linaro.org>, Bart Van Assche <bvanassche@acm.org>, 
-	Randy Dunlap <rdunlap@infradead.org>, Ard Biesheuvel <ardb@kernel.org>, Arnd Bergmann <arnd@arndb.de>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Tomas Winkler <tomas.winkler@intel.com>, 
-	Alexander Usyskin <alexander.usyskin@intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-Exchange-MessageSentRepresentingType: 1
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SEZPR06MB6959:EE_|TYSPR06MB7164:EE_
+X-MS-Office365-Filtering-Correlation-Id: 541f44a5-ae35-465c-ca21-08dc57aba528
+X-MS-Exchange-SLBlob-MailProps:
+	iS5pQZgsAQBdpaPwSVsSQj2v0MDiDiZlB79YOvSyZINnufS5zhffJRGtTFnj5kTYiigrd6SEe3F2be6j9VAphv8JYwS8ysDoPGkea9fv4D6t7XO7jZQITb+I80D+u1EegFTovRfEIcJoqTb98LfwyDRXOvNZbJxuUZi+bqAYiRxUcgePn7AuIC1CuQamBbUrugVrAkbG28PQpT8wZtZT1CYSqp07IAcPHVE6bsmRIuLSjYNu3zCDTW5oAormJ4Ssc5xjx9d1BUUaJbozk0pHNkQGHuClp/00fYTeVsg73u1I0ZwBJvk3GJMTwn3kJ0d0CdMrWmDmtGkq/n3/bc7JnKCAqm+iCY3oUpX7GVNCp74CFdcYcT8RCr0Yn3bd2RovuSEjBza0CNjTGg9A9iGrs8tyCpKpfiRVXa70EYLgv19oFkxE49QrP7aRFCpKCRr1jtxJPnDYylz7wk0K0VGAHUAQwnCipqv5xer+CMTV0AjaupbN8/wm2fzUE8bmDarqGvqem4h0FYEMLv9Uoi8DRWBBpNbOW0G2+/wVolwscTePwgWuvmirkS0VZeDFr2VlLdqx/6ovJ2iWvwQwIGjNo4xIbWo5vNQ5f3/QcmLz2EvxxzQT9hR1pJFw7Kt7wrkKy+kB3CQV6lz0qTZJVS9O3r2u46OkRjvxRqSWG/3yOIrdg18ZKkpDgD0g3hIYxH2BbDRG03833biSsNjJHmHb1mieZWHegNJ2zFExq+NnDvd5G9axYu/7+Q16rVZaDPCTeFekCP4atoWnhkQplMqE/aiVodhxXLxiCo/Mh68rhOuN/nGBPFTujWmean0yttC2
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	rkX6B7z8HKgViX5dfMzXnMmbJ2+wsXsB5jt4lTMrmq0KGeSiw9077EeUKSpbibNlGBuPwcf2qAP4nkNgVNKV/W7sizM0bhUHRHy0YaBmJTkukJR3RGg3Xt/842r1eF8Au07XwM7EZQTqOD7ISACMlxqEtEymB9gFryWpD0qGmdpi0vlenQHHc6NdfWvq0KuNlhrsCn2Gg6s7XmjwzwPA3mKkxIyWx1yXFcXPyk7wsvLmoTLF0MseSVwY/FLUQIS4/hN0xVr1S3H9JjtJiojw43Tlu7q2o+qHdSiGnbOCmTngYFrwzk3pH3alWUDhz3A6/tq+EztUvZNorv6QpQBZYQ1C2qxOeFjZrMjegCMw4hg/t2hnil6GF/wKqfXmjQ1GfkXOBGVNC5fSPEzG0XtVLkZv/sy580zuxZSG2kqTJuQzaRr4d6jv0I1SJ3ZeDbgDoPBjUA1DY3IYOjjnAU9d+U6oGm6gS0d3yiH2hE1/y8m+RVfdLfWVP3PQGbOMtlIGgC1HBmcaRrSIG91rApWB4MdjVZ5ppkQVRmHHjBsHEpQmKnfWgZguLPhzSLMdlU8HLNG5AyoSgK8pGGdwOUWmXFGot95S+fLOv59wGyslQn2IzZfLooqj7xGsYBbsEszergbQS2mL8oWYfbcyCuNrhNEgrlaKnCqQpTHowAXXckg=
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?ZlpFV0c5R3JweDRmOWl2Nk5CT2s1VVk3cjNvMGZiYW5JcXlYYTl3NDM3RVBz?=
+ =?utf-8?B?bnk2S1g1K1dlUWZSWTFlT1pkMEVyNTlkOVFReE1uL1d3YVZNeEdEdm9relF3?=
+ =?utf-8?B?alVuM3FjMTlncDYrb0FEYmZYMDVKa3ZhUWROWlc2c1NKdjY2WSt4Tm5RN0xP?=
+ =?utf-8?B?L0dqendtakNvUEkxZ1lITmVWaU5HV3oyVmZkSnZPdkl2djBpZisxSjA2QVNE?=
+ =?utf-8?B?TGFiSjltbnBjTEh1djlRT3lqNE96Q3AxRkJnRzZMM2kva3Mxa0duRzJmMnJS?=
+ =?utf-8?B?MitTMEVIbkNvOU52OGZBd2grQkRsOTI2SVVuMjVMbGkzRHY4eU9NckVkNlN6?=
+ =?utf-8?B?M1pqQ0VIOEtxSHRsV0pXbndyaXc1dG5LZWhCcWtCS1NWSmxrdng3ZEhleTVC?=
+ =?utf-8?B?Y2syTVBWVjcxQU9iT3lnMUNFMXB3R01MeU9uSGtBd3NVZmR4UnlvSzBLUm01?=
+ =?utf-8?B?c2x3L21hdXR4eS85eDNpKytjbE5aZWpTR3VsTWJMaitFVnNhZFI0ZXNQa2dW?=
+ =?utf-8?B?cXRZQVV5eFpVRFdBR1dOdTlFbW9NUUhLM1dQOTFnNWI1MWcrRVB3bnBsUGFy?=
+ =?utf-8?B?OVdTaDFEeHFMR1JDZVNWSFBBbkNkdVErL2xuY2RUSDJPMWh3SjJIL0ZrRFNa?=
+ =?utf-8?B?Slo0YnJINjh3WjB1a2ZaZGdhTDdEY1Q0dXhSejJ2aVR5TUxoRDFpNHlJd1da?=
+ =?utf-8?B?OFllVGhzRURFVFdQNjQ1S2FDVjJlZDRYdlBXY2tLV04ySGJkQjl2R05xOU0y?=
+ =?utf-8?B?c3JPd2lTWXc4VXRpSHVsa3g4VXFBNnRYNHRadHN6RjgyV2x1WGRJRWRxYW04?=
+ =?utf-8?B?WUdOWjRka0NNTWZlOS90WndYTDFmeUZFaFFNUjdodmVXUlk4N0gwcDR5UHhT?=
+ =?utf-8?B?TGtsSmp5VHA1TU9LSE9Td0d0MWQ4a3YrSjd2T0MyNytEMHR0bUdUdHNjVDJE?=
+ =?utf-8?B?dkx0VVQ1NEE2VEZwMGtLN1hDNEV3eXIrSW1rVkNVbFpCRWc1WFpIR2t5UzI0?=
+ =?utf-8?B?SWIxMisyOGg3T2I4aHdTbTRkVjgzWGpiNmFkOW1mYlBSNU9VOG5NS25uRGdw?=
+ =?utf-8?B?UnhZdmNVczdkZVVnVGF1R3Z1ZVJFbU5wU1BwVllBVUtzeERXaWJlQlFwcEZa?=
+ =?utf-8?B?dUMxRWVyWkkvOTlMeXovYi9XVlVHczdtbUVLZ1hlcWpzblNiTEtUSnlLeDBn?=
+ =?utf-8?B?U1RlY1BTQjE3TUVnU0lyUFZSa2NpVFh2dWZpT1dzSFBNTWV0SzU4ZWlGaTZD?=
+ =?utf-8?B?TDNGN2ZTYlBuUmFzelZTSnErT3N1eE11ZTdhOHlqdi9VSTdYcjdSSkp0Tlcx?=
+ =?utf-8?B?dnFibkRodGxiOFRvR0V6UnhDTGhDb3Y0N3ZSUWxBM1hqTVdOeWVmWXQ3VWNK?=
+ =?utf-8?B?TWJOeVlKMDVjVERTQzgyL25IMnlQQkk4NVNIVFZubUNnd0tGNHprS3phREpQ?=
+ =?utf-8?B?NmtaaUgzUnk4bVZaN3o1SHFzSGJiNlVKdFk0WTZRV2xMNWFBblNUVnhpRFRO?=
+ =?utf-8?B?Yis1cTNuNkRxZk56aTJpL0tnZjBJelpITHJ0MC9rU2NlVXM0VjVDaWhKeU02?=
+ =?utf-8?B?bnlQdks2dDVjbloxZkJaclpMSWZVYUZIL2xvQWFzT1IzWi9veFpWcFZOa1ow?=
+ =?utf-8?B?clNCckFkbmk4d2d5R2J0SzZOdTZBZjZYOHB3NlJzWHFVQ1EwUTdhT2d6N0NY?=
+ =?utf-8?B?Y3M5T1dNRGlFTGEvNE9qaW5qd0tWZC91VjFTS1BYR3YxTTRCLzFEVkl6WHhs?=
+ =?utf-8?Q?lz1iNUxE1ECMuiFMR6/BZ6UDwVT3fDH/mthBINY?=
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 541f44a5-ae35-465c-ca21-08dc57aba528
+X-MS-Exchange-CrossTenant-AuthSource: SEZPR06MB6959.apcprd06.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Apr 2024 09:09:50.4070
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
+	00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYSPR06MB7164
 
-Hi Jens,
+On 4/8/2024 3:31 PM, Krzysztof Kozlowski wrote:
+> On Mon, 19 Feb 2024 23:05:25 +0800, Yang Xiwen wrote:
+>> The patchset fixes some warnings reported by the kernel during boot.
+>>
+>> The cache size info is from Processor_Datasheet_v2XX.pdf [1], Section
+>> 2.2.1 Master Processor.
+>>
+>> The cache line size and the set-associative info are from Cortex-A53
+>> Documentation [2].
+>>
+>> [...]
+> It's rc3 and almost one month after last ping/talk, so apparently these got
+> lost. I'll take them, but let me know if this should go via different tree.
 
-On Fri, Apr 5, 2024 at 1:53=E2=80=AFPM Jens Wiklander <jens.wiklander@linar=
-o.org> wrote:
 
-> +/**
-> + * struct rpmb_frame - rpmb frame as defined by specs
+Thanks a lot. From my experience, i think this should go via HiSilicon's 
+tree first(which stalls now), then go to SOC tree 
+(git.kernel.org/pub/scm/linux/kernel/git/soc/soc.git), finally in 
+torvald's tree. This was the case for some qcom dts changes about 1yr ago.
 
-As Tomas said maybe we can write the name of the spec or the number or
-something so users can find it?
 
-I would also write explicitly "the stuff bytes and big-endian properties ar=
-e
-modeled to fit to the spec".
+>
+>
+> Applied, thanks!
+>
+> [1/3] arm64: dts: hi3798cv200: fix the size of GICR
+>        https://git.kernel.org/krzk/linux-dt/c/428a575dc9038846ad259466d5ba109858c0a023
+> [2/3] arm64: dts: hi3798cv200: add GICH, GICV register space and irq
+>        https://git.kernel.org/krzk/linux-dt/c/f00a6b9644a5668e25ad9ca5aff53b6de4b0aaf6
+> [3/3] arm64: dts: hi3798cv200: add cache info
+>        https://git.kernel.org/krzk/linux-dt/c/c7a3ad884d1dc1302dcc3295baa18917180b8bec
+>
+> Best regards,
 
-Yours,
-Linus Walleij
+
+-- 
+Regards,
+Yang Xiwen
+
