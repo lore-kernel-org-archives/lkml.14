@@ -1,124 +1,107 @@
-Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0917A149DF1
-	for <linux-kernel@vger.kernel.org>; Mon,  8 Apr 2024 23:15:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F219B38DD9;
+	Mon,  8 Apr 2024 23:17:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712618105; cv=none; b=EugSfTmdpfKohheFfspWdbvQMVBUPtn2XrlMwYICeHkJi/ZdcosRAH0EgL4bH3gYJhJOTPa6yJNN+9/DTDbuWzlc6PfuE1ME06SWCQ2giEQMglD/51qmb6MZxdNsrKayOy+TSaoxotxk7N36Ebtxgq5RX7Jfm7p73mbVaZeLuLQ=
+	t=1712618261; cv=none; b=kF20FLohT5PIs4odAbTWaML1wIAUsoZaZgKWbNzL9nlJHCfQ8n1vVIOfLP/6L35BoxfYDQb5JMxqgHl0xVPRK1oJoMZ+rEE4ZHRJr2cEcElOEcZwpOc5Kfx0TtxPNPq2ryyoHZEA26foA87p1N1hDfssDqyu7QVxuoxIRMcqYN4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712618105; c=relaxed/simple;
-	bh=DOYw13QQ4X0EPu4h0Hk0eMsaMAsay1WGuwkMc6K7le8=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=BAYKScKlqsPAKbUBqFq9gEJpOHi5uwbFuCbbETdwh9qC2es24Noa4I1/EPMVipaTkS+yTXdDDQb/9Mu0F2xmhmVhSOgs8gLU7EromD1oVlt2Lixm6ZJHO5ZkoxkywJ52aCfscMeEy+Fx5STh2eO+D49tF5zI6Ld0U19BMkslNRc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=K9/lYa/j; arc=none smtp.client-ip=209.85.128.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1712618261; c=relaxed/simple;
+	bh=OZrzEFdKvPOSNSciBqI9vzb5cQOAqSfgD21/jOJfMKk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=c/9oNcxMyjwVA4TUDEtUUNSBCvuu2I65oeZep1jfcznW0BGgyeqHr4VC3S4Gxuz0jqrXCJ8DuGWjpOm1QBm/QJIJpwo5P3FbdnLituFakB+kQlXH7YRuJ93aazSaU4eY4HYAtNrPjUuh4k3C4re3QxqxSzDEnX5LTkph12KyOgk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mXCvlBh/; arc=none smtp.client-ip=198.175.65.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="K9/lYa/j"
-Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-61561dbdf14so67364807b3.1
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Apr 2024 16:15:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1712618103; x=1713222903; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:reply-to:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=qyUIHRfCAjlDtpSvIRtUoFNFSXoqUQf0joMFOoV5o3U=;
-        b=K9/lYa/jp6prmEfLMwI+0eg8vywjF5AS6ULA893TEFk3NAtuqQzD/qDsGNEgIhV1Ce
-         DujRWEUhIxLtsFKfORll8x/yHkdwYHfQMK/mY4rYt9b+mYpVRIcaJOLPglmjlP0fiXFJ
-         TPHtZdw9DyR4YTtyRXTVuXiW9Sgvv+5yhoAdquEORODAbmpPuTBYYmI4dTvHF1gISFh/
-         m0/IfQYwGrHlrVESZg0AV+93z9fgMqe3v/u1XDqyNrQ/r8v9NPtT+Lr5A9e2NXXut5aq
-         +XqlJL7ikceTRBQN0SgSTt/27dB0FDfcam+pFU2wdq9UQRivRkZfGCMhxI1FY7SW+bzT
-         jsYw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712618103; x=1713222903;
-        h=cc:to:from:subject:message-id:mime-version:date:reply-to
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=qyUIHRfCAjlDtpSvIRtUoFNFSXoqUQf0joMFOoV5o3U=;
-        b=W4RvupaNmlqTrHyjB6Xub8AbJOf6Yzwc6KROaaB+CblGVuiyAJzsaZdTQek1jfy2Mr
-         ipEcvdjusdp6W2w8I0AJSbKdPbpgK4Swd00ikVnAgLH8vT7Jt5+t+HOlBuhGawM7FQtL
-         4xKNW5DmbjJCR+yT/1RFKpUGcDdStLJQ2VNuoJm+v64aS7t/grBWp8oUdKw1uXiyC+zu
-         iC6hRIxptRUcSQURfvJ/srgq7/fVf3fQooODuCbXWVQPQaBqtNse4vbS/2psk44KQ6fO
-         RdvgNxkfUq27c/hXIUcOPhdUB3VYe0U6M86+GxPISGEfsv2EMzhH3yMgW6qyB82htul5
-         vaDg==
-X-Forwarded-Encrypted: i=1; AJvYcCW+X7HS4GRE2mazg2ThTlaEFz9k/DduljtSsK1RnynxwO8r3M7xWjvx3SxSeeBnfitjAMDIS56HWuBzFW/mj3LhLntfQYRe0kaGfnBk
-X-Gm-Message-State: AOJu0YwvZHiso8xp/ljeRkMkGQ0Vi4sLHJ4+S2SCM0VfCmxvyUhaxBl/
-	8OHNNam5Lr9qG3VLtbgZ/7LYpxrKkKq9wJbaKn8uAWyluGP90/+UXVYCS9PEtMKyvh6WzRhhzuu
-	elw==
-X-Google-Smtp-Source: AGHT+IE3/k1q393IctUF8bjpLVCbrBuBXVYLZXFh+i0hQyGqBHqiXi49PbzgGkXsdYxTtNv5ROu1Xh/+mYs=
-X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
- (user=seanjc job=sendgmr) by 2002:a05:6902:2d07:b0:dd9:2782:d1c6 with SMTP id
- fo7-20020a0569022d0700b00dd92782d1c6mr332864ybb.1.1712618103073; Mon, 08 Apr
- 2024 16:15:03 -0700 (PDT)
-Reply-To: Sean Christopherson <seanjc@google.com>
-Date: Mon,  8 Apr 2024 16:15:00 -0700
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mXCvlBh/"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1712618260; x=1744154260;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=OZrzEFdKvPOSNSciBqI9vzb5cQOAqSfgD21/jOJfMKk=;
+  b=mXCvlBh/oijWL0CD8eO9l1Z8ucmzYgi06OQJl+qgBkuNjDiRag8Jhro/
+   Tg8I8fiZKqAMzLUH6pQmc+ZNGS8XK69ZpbaAn9cHPV3Saa+4nMJBNaZ5q
+   93OIkfCd5Eq9Wi8rQP/7q365wGIBLjFqhHnu7BOf6gKciEgDVH5rBALon
+   yjUwLs/yaz5+cK0hfT5HAt8FiT15h8KCSqW9eupoz0FwRdYZc7Ii7cO1B
+   FfMVn26cumzlgbIFE7KXRwtr38QDhIch39e1GAY0fRzRYmuR0xJ7U6Ldx
+   QR2ogDFcsHzS9pSF8l2jHLxWDNKQA9lEdknpExD6LWooPgQdS9hbxQpBN
+   Q==;
+X-CSE-ConnectionGUID: n6hfu70uTPyX+Zke5SZbDQ==
+X-CSE-MsgGUID: YDGSvRaCQTCpIcvTxTi62g==
+X-IronPort-AV: E=McAfee;i="6600,9927,11038"; a="7831107"
+X-IronPort-AV: E=Sophos;i="6.07,187,1708416000"; 
+   d="scan'208";a="7831107"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2024 16:17:39 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,11038"; a="937092374"
+X-IronPort-AV: E=Sophos;i="6.07,187,1708416000"; 
+   d="scan'208";a="937092374"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmsmga001.fm.intel.com with ESMTP; 08 Apr 2024 16:17:34 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+	id BDB2312C; Tue,  9 Apr 2024 02:17:33 +0300 (EEST)
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	Kent Gibson <warthog618@gmail.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	linux-gpio@vger.kernel.org,
+	linux-acpi@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-wireless@vger.kernel.org,
+	brcm80211@lists.linux.dev,
+	brcm80211-dev-list.pdl@broadcom.com
+Cc: Mika Westerberg <mika.westerberg@linux.intel.com>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Arend van Spriel <arend.vanspriel@broadcom.com>,
+	Kalle Valo <kvalo@kernel.org>,
+	Charles Keepax <ckeepax@opensource.cirrus.com>
+Subject: [PATCH v2 0/2] gpiolib: Fix gpio_lookup_flags mess and add Return sections
+Date: Tue,  9 Apr 2024 02:12:49 +0300
+Message-ID: <20240408231727.396452-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.43.0.rc1.1.gbec44491f096
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.44.0.478.gd926399ef9-goog
-Message-ID: <20240408231500.1388122-1-seanjc@google.com>
-Subject: [PATCH] KVM: x86: Allow, don't ignore, same-value writes to immutable MSRs
-From: Sean Christopherson <seanjc@google.com>
-To: Sean Christopherson <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>
-Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Jim Mattson <jmattson@google.com>, Raghavendra Rao Ananta <rananta@google.com>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-When handling userspace writes to immutable feature MSRs for a vCPU that
-has already run, fall through into the normal code to set the MSR instead
-of immediately returning '0'.  I.e. allow such writes, instead of ignoring
-such writes.  This fixes a bug where KVM incorrectly allows writes to the
-VMX MSRs that enumerate which CR{0,4} can be set, but only if the vCPU has
-already run.
+While reviewing another patch I have realised that enum
+gpio_lookup_flags messes up with GPIO_* flags definitions.
+Hence the first patch fix. Second one is an updated version
+of adding Return sections to the kernel-doc.
 
-The intent of returning '0' and thus ignoring the write, was to avoid any
-side effects, e.g. refreshing the PMU and thus doing weird things with
-perf events while the vCPU is running.  That approach sounds nice in
-theory, but in practice it makes it all but impossible to maintain a sane
-ABI, e.g. all VMX MSRs return -EBUSY if the CPU is post-VMXON, and the VMX
-MSRs for fixed-1 CR bits are never writable, etc.
+The series is made in assumption that the patches will land in this
+order, but if applied separately, e.g., one to for-current and one to
+for-next branches, no conflicts should appear.
 
-As for refreshing the PMU, kvm_set_msr_common() explicitly skips the PMU
-refresh if MSR_IA32_PERF_CAPABILITIES is being written with the current
-value, specifically to avoid unwanted side effects.  And if necessary,
-adding similar logic for other MSRs is not difficult.
+In v2:
+- new patch 1
+- replaces error-code by errno (Randy)
+- added tags to patch 2 (Randy)
 
-Fixes: 0094f62c7eaa ("KVM: x86: Disallow writes to immutable feature MSRs after KVM_RUN")
-Reported-by: Jim Mattson <jmattson@google.com>
-Cc: Raghavendra Rao Ananta <rananta@google.com>
-Signed-off-by: Sean Christopherson <seanjc@google.com>
----
- arch/x86/kvm/x86.c | 11 ++++-------
- 1 file changed, 4 insertions(+), 7 deletions(-)
+Andy Shevchenko (2):
+  gpiolib: Fix a mess with the GPIO_* flags
+  gpiolib: Update the kernel documentation - add Return sections
 
-diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index 47d9f03b7778..a3358c80a88e 100644
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -2230,16 +2230,13 @@ static int do_set_msr(struct kvm_vcpu *vcpu, unsigned index, u64 *data)
- 	/*
- 	 * Disallow writes to immutable feature MSRs after KVM_RUN.  KVM does
- 	 * not support modifying the guest vCPU model on the fly, e.g. changing
--	 * the nVMX capabilities while L2 is running is nonsensical.  Ignore
-+	 * the nVMX capabilities while L2 is running is nonsensical.  Allow
- 	 * writes of the same value, e.g. to allow userspace to blindly stuff
- 	 * all MSRs when emulating RESET.
- 	 */
--	if (kvm_vcpu_has_run(vcpu) && kvm_is_immutable_feature_msr(index)) {
--		if (do_get_msr(vcpu, index, &val) || *data != val)
--			return -EINVAL;
--
--		return 0;
--	}
-+	if (kvm_vcpu_has_run(vcpu) && kvm_is_immutable_feature_msr(index) &&
-+	    (do_get_msr(vcpu, index, &val) || *data != val))
-+		return -EINVAL;
- 
- 	return kvm_set_msr_ignored_check(vcpu, index, *data, true);
- }
+ drivers/gpio/gpiolib-acpi.c                   |  22 ++-
+ drivers/gpio/gpiolib-cdev.c                   |   8 +-
+ drivers/gpio/gpiolib-devres.c                 |  44 ++++-
+ drivers/gpio/gpiolib-legacy.c                 |   3 +
+ drivers/gpio/gpiolib-of.c                     |  53 ++++--
+ drivers/gpio/gpiolib-swnode.c                 |   4 +-
+ drivers/gpio/gpiolib-sysfs.c                  |   6 +-
+ drivers/gpio/gpiolib.c                        | 165 ++++++++++++++----
+ .../broadcom/brcm80211/brcmsmac/led.c         |   2 +-
+ include/linux/gpio/driver.h                   |   3 +-
+ include/linux/gpio/machine.h                  |  20 +--
+ 11 files changed, 245 insertions(+), 85 deletions(-)
 
-base-commit: 8cb4a9a82b21623dbb4b3051dd30d98356cf95bc
 -- 
-2.44.0.478.gd926399ef9-goog
+2.43.0.rc1.1.gbec44491f096
 
