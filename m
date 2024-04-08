@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53CCD14601F;
-	Mon,  8 Apr 2024 18:55:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80254146D4C;
+	Mon,  8 Apr 2024 18:55:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712602524; cv=none; b=Td5fJCFblRaA9ftT0PSfgkOINMYNCXCNl7k+qEoQevsSrxrokfLwdD+xyWbwcb3Lc882jolqKD2y/H0GdDgeiBYZ4QVdPIYYDVJ7e2gO69vv8+dKSXpM9KyT3ZwwCTEEI88VUI8p1S5d2Nmx5J+xHe1BnqgFZFBXZBdwQgk/jvY=
+	t=1712602525; cv=none; b=eKRLcc0QVrQS6bXKNhQDb2+dm6VoaaepIiT3rCF0wWQxENK9I0dkL3oiS/1F5Np3iLrr+UxugGz3ODxAw4erCeHNusPDfm9e4ITlQP3ig0M2ONSpFL049kOj2mRGjAfb4suwl1Jos2olWk8Y3eokn02v5t4LnaXNXYCkIyZNPpI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712602524; c=relaxed/simple;
-	bh=WZI+UPEDXKp0AGVon/G5dC3J9SoMCzRad9Ln6loXDDc=;
+	s=arc-20240116; t=1712602525; c=relaxed/simple;
+	bh=cWyaFlEddClc55CiM7T9Ily/NaD1dyUwXHboki/L7wQ=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=rvATP8OlPp3TqvK+hhrL4e7Te4dK6cmxzk9GzO3fXcqSmqGgoEiklMnPf2u7I4L16dx3YMd9txNGmTC9mj/S1mIQj03a0yKbSjIUh+ixCw00HdjozwtkhFZPi1UT6G/QlSVhPddSYJxKICMpB6yCIiDJ/z8d1dwN/G6XOkcnGUE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RhNQ54mo; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=WVupBefR/FeahqPScqXjZ/x+ZuoOIUNsa05+kFrBHB8QxhvVfcwZenZas0Srp8hNY2xn594Ua3oIbLYWr+R73B//7FzevT1WyuQpDbby86Hh8BOEf3HnIneI+DA7jaQuhMpdc6eKz58ve2OTbFlXjMMFTMyrBZQBYbvjC4eYMXU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mS70M4kA; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RhNQ54mo"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 73412C43142;
-	Mon,  8 Apr 2024 18:55:23 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mS70M4kA"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C899CC43609;
+	Mon,  8 Apr 2024 18:55:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712602523;
-	bh=WZI+UPEDXKp0AGVon/G5dC3J9SoMCzRad9Ln6loXDDc=;
+	s=k20201202; t=1712602525;
+	bh=cWyaFlEddClc55CiM7T9Ily/NaD1dyUwXHboki/L7wQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=RhNQ54moQZojEdG9F2dwxx5Fj/5G+xI1NEfku+X5s7NrIxMeVWLg5uo9tZZMmbIjY
-	 gYoOYnEE+MlAzD820ldnRyIliImxOraEiLVEmChssnmX64QRIt2wImmnpUuF3SGH1J
-	 EBQMsqnD5Cz7CFi680qKwbkDKbUqvZY/M5o9ekREt4QB20zTkqywcTiUfsXCcsQBm0
-	 uW4YLbgr2QkjMGuMrg2fpFAOH5+lmrdL1U1k8FOxc6EimtlxeexrpdFxMbr1/qXHwD
-	 hcO5dlODNHLsSb0ihBA9LEtLI/4PDnN7k3l1JVnoxcKsnBu16K9nhnsiVOQcD9yiWf
-	 vSRbo+JMkzhmQ==
+	b=mS70M4kALtjgUm0oz5Ph+ht+c3IiMWnPnpqJyTchMdUufdoKFAjKLA5L2QF8e1Gue
+	 lrjCh2T/uHr87bgsLz+1G6RD9K9xn8dKWkAt5/Ye7Edbhign8IG77pbo3S/Cnq+LBt
+	 V5bfV2zoEsjnvKcemAKVvoVhqjPwzQb4oTkmiAB1jrsDW/AZjJxoMDsvPb7YagzqPV
+	 v6Hw4Q1lmpcJWeXyib9vdyVooxByMZu/G/nSShMbT4YCIwL1DIKtnTFmjcCz44S+uI
+	 uXEJpIPg7TPmx+1hKeQ//E+er2iHPVM1EsYVFjGqX997puAhfx7s7TriUF6JFoHKuz
+	 NcTBhg+xVhegQ==
 From: Namhyung Kim <namhyung@kernel.org>
 To: Arnaldo Carvalho de Melo <acme@kernel.org>,
 	Ian Rogers <irogers@google.com>,
@@ -36,12 +36,15 @@ Cc: Jiri Olsa <jolsa@kernel.org>,
 	Ingo Molnar <mingo@kernel.org>,
 	LKML <linux-kernel@vger.kernel.org>,
 	linux-perf-users@vger.kernel.org,
-	Jaroslav Kysela <perex@perex.cz>,
-	Takashi Iwai <tiwai@suse.com>,
-	linux-sound@vger.kernel.org
-Subject: [PATCH 4/9] tools/include: Sync uapi/sound/asound.h with the kernel sources
-Date: Mon,  8 Apr 2024 11:55:15 -0700
-Message-ID: <20240408185520.1550865-5-namhyung@kernel.org>
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	x86@kernel.org
+Subject: [PATCH 6/9] tools/include: Sync x86 asm/irq_vectors.h with the kernel sources
+Date: Mon,  8 Apr 2024 11:55:17 -0700
+Message-ID: <20240408185520.1550865-7-namhyung@kernel.org>
 X-Mailer: git-send-email 2.44.0.478.gd926399ef9-goog
 In-Reply-To: <20240408185520.1550865-1-namhyung@kernel.org>
 References: <20240408185520.1550865-1-namhyung@kernel.org>
@@ -55,44 +58,40 @@ Content-Transfer-Encoding: 8bit
 
 To pick up the changes from:
 
-  85df6b5a6658 ("ALSA: pcm: clarify and fix default msbits value for all formats")
+  0cbca1bf44a0 ("x86: irq: unconditionally define KVM interrupt vectors")
 
-This should be used to beautify sound syscall arguments and it addresses
-these tools/perf build warnings:
+This should address these tools/perf build warnings:
 
   Warning: Kernel ABI header differences:
-    diff -u tools/include/uapi/sound/asound.h include/uapi/sound/asound.h
+    diff -u tools/arch/x86/include/asm/irq_vectors.h arch/x86/include/asm/irq_vectors.h
 
-Cc: Jaroslav Kysela <perex@perex.cz>
-Cc: Takashi Iwai <tiwai@suse.com>
-Cc: linux-sound@vger.kernel.org
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Dave Hansen <dave.hansen@linux.intel.com>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: x86@kernel.org
 Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 ---
- tools/include/uapi/sound/asound.h | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ tools/arch/x86/include/asm/irq_vectors.h | 2 --
+ 1 file changed, 2 deletions(-)
 
-diff --git a/tools/include/uapi/sound/asound.h b/tools/include/uapi/sound/asound.h
-index d5b9cfbd9cea..628d46a0da92 100644
---- a/tools/include/uapi/sound/asound.h
-+++ b/tools/include/uapi/sound/asound.h
-@@ -142,7 +142,7 @@ struct snd_hwdep_dsp_image {
-  *                                                                           *
-  *****************************************************************************/
+diff --git a/tools/arch/x86/include/asm/irq_vectors.h b/tools/arch/x86/include/asm/irq_vectors.h
+index 3f73ac3ed3a0..d18bfb238f66 100644
+--- a/tools/arch/x86/include/asm/irq_vectors.h
++++ b/tools/arch/x86/include/asm/irq_vectors.h
+@@ -84,11 +84,9 @@
+ #define HYPERVISOR_CALLBACK_VECTOR	0xf3
  
--#define SNDRV_PCM_VERSION		SNDRV_PROTOCOL_VERSION(2, 0, 16)
-+#define SNDRV_PCM_VERSION		SNDRV_PROTOCOL_VERSION(2, 0, 17)
+ /* Vector for KVM to deliver posted interrupt IPI */
+-#if IS_ENABLED(CONFIG_KVM)
+ #define POSTED_INTR_VECTOR		0xf2
+ #define POSTED_INTR_WAKEUP_VECTOR	0xf1
+ #define POSTED_INTR_NESTED_VECTOR	0xf0
+-#endif
  
- typedef unsigned long snd_pcm_uframes_t;
- typedef signed long snd_pcm_sframes_t;
-@@ -416,7 +416,7 @@ struct snd_pcm_hw_params {
- 	unsigned int rmask;		/* W: requested masks */
- 	unsigned int cmask;		/* R: changed masks */
- 	unsigned int info;		/* R: Info flags for returned setup */
--	unsigned int msbits;		/* R: used most significant bits */
-+	unsigned int msbits;		/* R: used most significant bits (in sample bit-width) */
- 	unsigned int rate_num;		/* R: rate numerator */
- 	unsigned int rate_den;		/* R: rate denominator */
- 	snd_pcm_uframes_t fifo_size;	/* R: chip FIFO size in frames */
+ #define MANAGED_IRQ_SHUTDOWN_VECTOR	0xef
+ 
 -- 
 2.44.0.478.gd926399ef9-goog
 
