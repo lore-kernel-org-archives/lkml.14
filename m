@@ -1,102 +1,147 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89B0F1EB46;
-	Mon,  8 Apr 2024 20:58:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDF3D1EB46
+	for <linux-kernel@vger.kernel.org>; Mon,  8 Apr 2024 20:59:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712609934; cv=none; b=R0dH2H7QnkKTx2qsHml3OXMVsi3CpgjIO7U/UGxgzM5w9AyaOlttrOyR0k6PBD46DHRnO/oMuMNHNaRZXFoJ0dKven8WLK6s/krZN00r5MXk4pSC55i5h2f0B2xDA2BmjL7Ys5utOeiqY6u0XJai7y7no8y9+FfBHKqLJDMj0nI=
+	t=1712609942; cv=none; b=JdnZGhzYDmM6t4ruzM5QdN0vbdG/cAY7H3D2yKZnR7cHjbfw7PQMCQrExAwO/4vJ/35jRA5U0f2qLXM9NirwePI9Z1jn+Bi/PNE34VAgKbDVcAj7eOUtrZzU4uYmUBAih99evEuFXXJP4Gmh/4F4NihJataokzeOElVfg9GC5p0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712609934; c=relaxed/simple;
-	bh=RivaelhbL8/R2Cq/U40S9EoXUuV3ar3kkSKVrsKkD5o=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=h/chz0fEd8EAbLYm0Ss3fjMTINS8oVeIENsonxGWPq1QurLw7rVmaBmN8bzdll7FBCt4ctP5cSpRfOhq0nuCup6M9Idqd2RyIXgGxP4NBo+Fa/hwkDo3oyfyYtDZY3WJuqdrqTjUqyHm3LWca2swwaH7BOKmqRGcHehpF7e7Y54=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dB8VNrrK; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1712609942; c=relaxed/simple;
+	bh=Sp8ULhDiuUc9igWncb9vXY5dJILFO+9U0kIAbBLTpnI=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Kfz1weL5L3G2/fg3rZ62YC5B0cb02jDGWXtXvr/W1yRYapIkg7yW+8kXKOWx6kfbIEqa4IXG9NVka6X1grbM0Dopx1HX/V0+g3hE2i7scdPb29cyN1l6vNRN301ngwR9kToKfOhAldn7CSICpPCkJcXzkMNOFJk6JEsS0w3q7jA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=CC4fYGAo; arc=none smtp.client-ip=192.198.163.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dB8VNrrK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CC297C433C7;
-	Mon,  8 Apr 2024 20:58:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712609934;
-	bh=RivaelhbL8/R2Cq/U40S9EoXUuV3ar3kkSKVrsKkD5o=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=dB8VNrrKnfxdSYX24RUGwsY507ar92cFxs2Z8aq8tQhWOdLwCUmAjfjW9hlhGec73
-	 70ZZpZh3RlmUii4yn7UvP3FbHr8ukhibrAbcdQEslDHeXY4/w1vL2rwM9qMsCyjUhA
-	 0nJM2wOn/o33xP9Pu8T1C6ZBQPcWC3gEsEV4K9sOJ65i5kJUyirrI4PNzNNaeKERGW
-	 0ys7HfQ8eyC6/LfsxFPG/PJH4qLsIcwa5NF1T8QV2otwTquyedrOQG26BDGB1V7hxC
-	 dlkoCXFTZ456xuiBF2etG9Fxihvzpzmlgx5TU04xRONZJKr1ERWi82BxqFg1cVM19L
-	 yfuhSpSA5jZfw==
-Date: Mon, 8 Apr 2024 22:58:51 +0200
-From: Frederic Weisbecker <frederic@kernel.org>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-	Ian Rogers <irogers@google.com>,
-	LKML <linux-kernel@vger.kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH 0/4] perf: Fix leaked events when sigtrap = 1
-Message-ID: <ZhRaizXTwxpe_bm_@pavilion.home>
-References: <20240329235812.18917-1-frederic@kernel.org>
- <CAP-5=fVwT1FPTps=i=hG2O0sWr9DH92VSt66Co=Rhf9dyZX7ag@mail.gmail.com>
- <ZhRI7WfjgkCTK9aK@pavilion.home>
- <ZhRRi0KENKnV5o7_@x1>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="CC4fYGAo"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1712609941; x=1744145941;
+  h=date:from:to:cc:subject:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=Sp8ULhDiuUc9igWncb9vXY5dJILFO+9U0kIAbBLTpnI=;
+  b=CC4fYGAoUcsXwQ5Opdww9fsC4u6JsacTv1I9hHCkvMDIGtzvEb4AlTkT
+   roY4ZYxMeIw6diMOPTdSeDKZMEpyE6xkOrFKF7CZNW8RuGeHgm8FxK8t7
+   dfu97PWfVks3J8G8AxCQ6dCVt7/SOGWoOo1G2tNzybIFgnluF9MO8WUsK
+   88cckYt+eAdCyBw+4+sOeXnqeKGDAbmB6U98zDomK3k1OCOUDBsH+XTJ5
+   FPrgnLwDFqiYadlvqDdIygG5+VGI2GW2XXqtE4mSRQjsJzu/w46+r+kob
+   vvhT6GXljqFUX8Oe2vGjqrUdGGoKEiwxGN2y/1AqLUfG08yL/yC4yjEGP
+   w==;
+X-CSE-ConnectionGUID: VB6vMlwtR0WMHeL8D7enjw==
+X-CSE-MsgGUID: a5/gBSsHQayFCQyfQeaGwA==
+X-IronPort-AV: E=McAfee;i="6600,9927,11038"; a="19289633"
+X-IronPort-AV: E=Sophos;i="6.07,187,1708416000"; 
+   d="scan'208";a="19289633"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2024 13:59:00 -0700
+X-CSE-ConnectionGUID: yhOEEWpNTwC+KnlTevbKCQ==
+X-CSE-MsgGUID: zYNBIbgvRQi+m5Cu9bJqdg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,187,1708416000"; 
+   d="scan'208";a="20055284"
+Received: from jacob-builder.jf.intel.com (HELO jacob-builder) ([10.54.39.125])
+  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2024 13:59:00 -0700
+Date: Mon, 8 Apr 2024 14:03:29 -0700
+From: Jacob Pan <jacob.jun.pan@linux.intel.com>
+To: Lu Baolu <baolu.lu@linux.intel.com>
+Cc: iommu@lists.linux.dev, Kevin Tian <kevin.tian@intel.com>, Yi Liu
+ <yi.l.liu@intel.com>, Joerg Roedel <joro@8bytes.org>, Will Deacon
+ <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
+ linux-kernel@vger.kernel.org, jacob.jun.pan@linux.intel.com
+Subject: Re: [PATCH 2/2] iommu/vt-d: Remove caching mode check before devtlb
+ flush
+Message-ID: <20240408140329.6290377f@jacob-builder>
+In-Reply-To: <20240407144232.190355-2-baolu.lu@linux.intel.com>
+References: <20240407144232.190355-1-baolu.lu@linux.intel.com>
+	<20240407144232.190355-2-baolu.lu@linux.intel.com>
+Organization: OTC
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <ZhRRi0KENKnV5o7_@x1>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Le Mon, Apr 08, 2024 at 05:20:27PM -0300, Arnaldo Carvalho de Melo a écrit :
-> On Mon, Apr 08, 2024 at 09:43:41PM +0200, Frederic Weisbecker wrote:
-> > Le Fri, Mar 29, 2024 at 08:23:49PM -0700, Ian Rogers a écrit :
-> > > On Fri, Mar 29, 2024 at 4:58 PM Frederic Weisbecker <frederic@kernel.org> wrote:
-> > > >
-> > > > While looking at task_work users I just noticed that perf doesn't flush
-> > > > its own upon event exiting. This looks especially problematic with child
-> > > > events. Please have a thourough look at the last patch, I may easily
-> > > > have missed something within the maze.
-> > > >
-> > > > Frederic Weisbecker (4):
-> > > >   task_work: s/task_work_cancel()/task_work_cancel_func()/
-> > > >   task_work: Introduce task_work_cancel() again
-> > > >   perf: Fix event leak upon exit
-> > > >   perf: Fix event leak upon exec and file release
-> > > >
-> > > >  include/linux/perf_event.h |  1 +
-> > > >  include/linux/task_work.h  |  3 ++-
-> > > >  kernel/events/core.c       | 40 +++++++++++++++++++++++++++++++-------
-> > > >  kernel/irq/manage.c        |  2 +-
-> > > >  kernel/task_work.c         | 34 +++++++++++++++++++++++++++-----
-> > > >  security/keys/keyctl.c     |  2 +-
-> > > >  6 files changed, 67 insertions(+), 15 deletions(-)
-> > > 
-> > > Thanks for this! I wonder if this relates to fuzzing failures like:
-> > > https://lore.kernel.org/linux-perf-users/CAP-5=fUa+-Tj2b_hxk96Qg5=Qu7jYHgHREbsmBa2ZmuF-X9QaA@mail.gmail.com/
-> > > "[ 2519.138665] unexpected event refcount: 2; ptr=000000009c56b097"
-> > 
-> > Probably not since those seem to happen on perf_event_open() failures. This
-> > looks different.
-> 
-> Probably clashes with this one?
-> 
-> "[PATCH v3 0/4] perf: Make SIGTRAP and __perf_pending_irq() work on RT."
-> 
-> https://lore.kernel.org/all/20240322065208.60456-1-bigeasy@linutronix.de/T/#u
+Hi Lu,
 
-Nice, I think it partially fixes the issues I've seen. Lemme review that.
+On Sun,  7 Apr 2024 22:42:32 +0800, Lu Baolu <baolu.lu@linux.intel.com>
+wrote:
 
-Thanks.
-
+> The Caching Mode (CM) of the Intel IOMMU indicates if the hardware
+> implementation caches not-present or erroneous translation-structure
+> entries except the first-stage translation. The caching mode is
+> unrelated to the device TLB , therefore there is no need to check
+> it before a device TLB invalidation operation.
 > 
-> - Arnaldo
+> Before the scalable mode is introduced, caching mode is treated as
+> an indication that the driver is running in a VM guest. This is just
+> a software contract as shadow page table is the only way to implement
+> a virtual IOMMU. But the VT-d spec doesn't state this anywhere. After
+> the scalable mode is introduced, this doesn't stand for anymore, as
+> caching mode is not relevant for the first-stage translation. A virtual
+> IOMMU implementation is free to support first-stage translation only
+> with caching mode cleared.
+> 
+> Remove the caching mode check before device TLB invalidation to ensure
+> compatibility with the scalable mode use cases.
+> 
+I agree with the changes below, what about this CM check:
+
+/* Notification for newly created mappings */
+static void __mapping_notify_one(struct intel_iommu *iommu, struct dmar_domain *domain,
+				 unsigned long pfn, unsigned int pages)
+{
+	/*
+	 * It's a non-present to present mapping. Only flush if caching mode
+	 * and second level.
+	 */
+	if (cap_caching_mode(iommu->cap) && !domain->use_first_level)
+		iommu_flush_iotlb_psi(iommu, domain, pfn, pages, 0, 1);
+
+We are still tying devTLB flush to CM=1, no?
+
+If we are running in the guest with second level page table (shadowed), can
+we decide if devTLB flush is needed based on ATS enable just as the rest of
+the cases?
+
+
+> Fixes: 792fb43ce2c9 ("iommu/vt-d: Enable Intel IOMMU scalable mode by
+> default") Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
+> ---
+>  drivers/iommu/intel/iommu.c | 5 ++---
+>  1 file changed, 2 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/iommu/intel/iommu.c b/drivers/iommu/intel/iommu.c
+> index 493b6a600394..681789b1258d 100644
+> --- a/drivers/iommu/intel/iommu.c
+> +++ b/drivers/iommu/intel/iommu.c
+> @@ -1501,7 +1501,7 @@ static void iommu_flush_iotlb_psi(struct
+> intel_iommu *iommu, else
+>  		__iommu_flush_iotlb_psi(iommu, did, pfn, pages, ih);
+>  
+> -	if (!cap_caching_mode(iommu->cap) && !map)
+> +	if (!map)
+>  		iommu_flush_dev_iotlb(domain, addr, mask);
+>  }
+>  
+> @@ -1575,8 +1575,7 @@ static void intel_flush_iotlb_all(struct
+> iommu_domain *domain) iommu->flush.flush_iotlb(iommu, did, 0, 0,
+>  						 DMA_TLB_DSI_FLUSH);
+>  
+> -		if (!cap_caching_mode(iommu->cap))
+> -			iommu_flush_dev_iotlb(dmar_domain, 0,
+> MAX_AGAW_PFN_WIDTH);
+> +		iommu_flush_dev_iotlb(dmar_domain, 0,
+> MAX_AGAW_PFN_WIDTH); }
+>  
+>  	if (dmar_domain->nested_parent)
+
+
+Thanks,
+
+Jacob
