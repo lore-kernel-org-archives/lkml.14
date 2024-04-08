@@ -1,156 +1,143 @@
-Received: from fhigh8-smtp.messagingengine.com (fhigh8-smtp.messagingengine.com [103.168.172.159])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F8641428E3
-	for <linux-kernel@vger.kernel.org>; Mon,  8 Apr 2024 14:46:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.159
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFA561CD21;
+	Mon,  8 Apr 2024 14:49:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712587590; cv=none; b=JdGG6ohVnesoKDkaJGvGJVtT5ugn18q7LX0D0VKtRDXraWJw+UTcFuz1gvlSRrDWdSZqfBn4kdxcP9woPPjd7mZUWao48DuJGNG1Pye1CyuaWv3fTyCb+3PHkSHRT7FUUetv3xTs37EGRMnTxOUQvbQHC+d/DOYIsBiGvj9JwB4=
+	t=1712587758; cv=none; b=jU4iBcA/Ulu4xaRyhbNVHnhxWsFwnnrkutL4YjEzsIKyeXZP8AnPSAUsQwikjgL+V/wprfzRZSrfTexco5Abzmz8FzgmW3k2LrQimt86m2Obq9QdQI4Hv0Ks6A+vbWiNwTSzCaVSfDOaIAYSW5dRrOEQc63FMQzo53w+jt9wuFA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712587590; c=relaxed/simple;
-	bh=v4yKxV+/WzRBeB81VjjZZYKzuZ7bP6EdeLsNPvivKRo=;
-	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
-	 Subject:Content-Type; b=ptuqW2TNpvTc5tRSRX/1b1ubt058Ic9FpspbKN2zS8m4RHw40XqemE3qt9gyKBKqAgOOgJptSI7Gw2sRl3VE1u1lJHhRsAjHmBBpicCZjuthN819vNmjlIDOkSOVewEI1oj6TtswlIKxzALWplwY4LDdIyc4r504UmAtWO/NOfw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=jPQtOQlU; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=lUMs5gBM; arc=none smtp.client-ip=103.168.172.159
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+	s=arc-20240116; t=1712587758; c=relaxed/simple;
+	bh=jNMK47ZUmrpZUfLl5QCOPVV6yzsTpHyaMvQaLUlYv5g=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=oRgYkl5ER06+VHc5zDfDBbPLuSrFcUz/Ckna3/JtceIXHeW9eb27EP24JiTRmZK3wJDfouSjgxRmPAUOPKYpRcHRhXHsSEV5B+gvRimW3CA22nx2FHxhyuqMxBOZuDDaCh23VnZ68azdT9RaDLbC+VbK6wLoF1OcH8zUgqxULpQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=mf3Vn5ND; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=K9Bd285U; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="jPQtOQlU";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="lUMs5gBM"
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-	by mailfhigh.nyi.internal (Postfix) with ESMTP id 76937114011F;
-	Mon,  8 Apr 2024 10:46:26 -0400 (EDT)
-Received: from imap51 ([10.202.2.101])
-  by compute5.internal (MEProxy); Mon, 08 Apr 2024 10:46:26 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-type:content-type:date:date:from:from:in-reply-to
-	:in-reply-to:message-id:mime-version:references:reply-to:subject
-	:subject:to:to; s=fm2; t=1712587586; x=1712673986; bh=nIY/vooCvW
-	b7sDpDbVJLzdbAh6TBB6z157QyPtKUGXw=; b=jPQtOQlUmbM+DvUTeMZjnxT8fJ
-	QbSAiTEKNmoRnYmmzc0Vpnl2SCsnoUfbVmoyhXtf49OALgRDWQGGQ0l5fh8BO8Hg
-	GFOcHbWSSYp7KzT/Bxl3lFalc881zXadMVQwE7diD5t0fUUzZvfv8PKjXhiEV7bx
-	QQdgyKff6Oa5k9qKzKAPecTSh2JVBrwDmJdCefFWdRJjNBH2NgkJc4LXW8lEpfmC
-	XlZcwOtXACsxPi18F3JfSRggjId8d9cqwHd1LbbKqqKI67xueMBuvbnPGCmdNzPB
-	JtxzeTuC7WHm7kN9aWBxfRPucjoFk5h7C5PR4Je/JWk/bfM1Gxmt1YmSyYTQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-	fm2; t=1712587586; x=1712673986; bh=nIY/vooCvWb7sDpDbVJLzdbAh6TB
-	B6z157QyPtKUGXw=; b=lUMs5gBMgCW8CKyLjNn+iLQOwZHcm/eH0WpZKi0SehAJ
-	Pm5bY8MtyiFnAW7apphtj6v95Mfkz6DHx4oUxuhR5u0tUsLVKIujIvtq4+Wh8LQV
-	93BGckc2wAymkLaWE/vyQEbeU0AJ1ATmAVjsF3KjouORS1xEKIx0EC1Jj80zZxzA
-	vzA10Bm7Kf4lbTT8swcno/9QE79hO3L4s4gBIXC9v60Ei8vdSCU4I+37/v4VDd1m
-	Wvg4TNOvhEhIvwuLWSCEAAZdkKMDTll3xtpVcu1b774dWm6A9V7FZJbdNs7u5Xyj
-	of5YiI4K53rGFXHNieCtQZGhu/c+56VULhLkH0EjkQ==
-X-ME-Sender: <xms:QQMUZkV1aTfbmdvvGe9Zwcc6wDARKCE-CHHPE0Esg_RSm2_0zZ66xA>
-    <xme:QQMUZokI1ZCDPQ9VTjz6J5mMZji013ykJz1xv36vZFvBFI5x5nXSI4K5wUChKIYPm
-    ieeWUS1ZYsXM3mS5t8>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrudegiedgkedtucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepofgfggfkjghffffhvfevufgtsehttdertderredtnecuhfhrohhmpedftehr
-    nhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrdguvgeqnecuggftrfgrth
-    htvghrnhepffehueegteeihfegtefhjefgtdeugfegjeelheejueethfefgeeghfektdek
-    teffnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprg
-    hrnhgusegrrhhnuggsrdguvg
-X-ME-Proxy: <xmx:QQMUZoYQDLRYIu4qvtWhc3IufGviGcT-BvLVn2gkPMDztYdUfwFJpw>
-    <xmx:QQMUZjXZZjSUO-Koda4Mi6y-699QYiF2J_XQQ5raycuBuFfAJU4W7A>
-    <xmx:QQMUZundDyYYeoU8Smw5YuuykVa0Wcu5VAJv5lCIUqbXqy3-_Llu4g>
-    <xmx:QQMUZodu05fRktHQeWSSsqRZ0mfpz_n4f_TA0B1PHblSN7wr6cPsbw>
-    <xmx:QgMUZsa1YpMyIR4nR7kkQOowyQwqwVZa7BlXtGC3t8GqjxGT1YM9Mkag>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-	id ADD29B6008D; Mon,  8 Apr 2024 10:46:25 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.11.0-alpha0-368-gc733b1d8df-fm-20240402.001-gc733b1d8
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="mf3Vn5ND";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="K9Bd285U"
+Date: Mon, 08 Apr 2024 14:49:14 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1712587755;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ZSBZKxVagqSyyqgX5YL8fRhaTlaaIEoJrClKUTvlErk=;
+	b=mf3Vn5NDuJQaN/lzB3cxTV21tWLhq4nqO2rjNs5u8ywZYm7Q0j8MEbQ5mMloNtLiyI1oT8
+	VCm0+qgTT/wU+4Qnuwn2No/loTglgPF3lRmoq92u8rp1sk1JZq7lj2cY91prFiGxKTnU+y
+	DCkU1Wm6sVvIo/32pZKCJu8VYyZ5gkynnMaIeB43YdfrpQRZqm7k+rLn5VDXHwl+zADkWZ
+	+Peh80RDl4q3pF+WHaJlezboxXOWTG+XsgVXxN7s4XLSpmZSv1TYU7WeJufRZbVimWdUpq
+	QQ0uzwteolFlZJunhzNnSDCiWrQLsqqY2Yd9tJHjhnXLcx+hAJyZZcMy08MGzg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1712587755;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ZSBZKxVagqSyyqgX5YL8fRhaTlaaIEoJrClKUTvlErk=;
+	b=K9Bd285UeNBWe0e8XhNipjtbIFhfgTUv5qil1ZKXm1TqRLlQ3Rf/mT1VoJWZjqj9p1+EdF
+	rbVsE42+DmuJNQCg==
+From: "tip-bot2 for Sebastian Andrzej Siewior" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject: [tip: locking/urgent] locking: Make
+ rwsem_assert_held_write_nolockdep() build with PREEMPT_RT=y
+Cc: Clark Williams <williams@redhat.com>,
+ Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+ Thomas Gleixner <tglx@linutronix.de>, Waiman Long <longman@redhat.com>,
+ x86@kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20240319182050.U4AzUF3I@linutronix.de>
+References: <20240319182050.U4AzUF3I@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-Id: <d8ee72ec-c16f-443a-b9c1-555dcbc69182@app.fastmail.com>
-In-Reply-To: <695be581-548f-4e5e-a211-5f3b95568e77@moroto.mountain>
-References: <20240328140512.4148825-1-arnd@kernel.org>
- <20240328140512.4148825-4-arnd@kernel.org>
- <695be581-548f-4e5e-a211-5f3b95568e77@moroto.mountain>
-Date: Mon, 08 Apr 2024 16:45:55 +0200
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Dan Carpenter" <dan.carpenter@linaro.org>,
- "Arnd Bergmann" <arnd@kernel.org>
-Cc: linux-kernel@vger.kernel.org,
- "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
- "Kees Cook" <keescook@chromium.org>, "Daniel Micay" <danielmicay@gmail.com>,
- linux-staging@lists.linux.dev
-Subject: Re: [PATCH 03/11] staging: replace weird strncpy() with memcpy()
-Content-Type: text/plain
+Message-ID: <171258775408.10875.1006562089920074677.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
-On Thu, Mar 28, 2024, at 17:35, Dan Carpenter wrote:
-> On Thu, Mar 28, 2024 at 03:04:47PM +0100, Arnd Bergmann wrote:
->> This partially reverts an earlier bugfix that replaced the original
->> incorrect memcpy() with a less bad strncpy(), but it now also avoids
->> the original overflow.
->> 
->> Fixes: 88a5b39b69ab ("staging/rts5208: Fix read overflow in memcpy")
->
-> I don't see a problem with this commit.  The "sendbytes - 8" prevents
-> a write overflow to buf, and the strncpy() prevents read overflow from
-> inquiry_string.
+The following commit has been merged into the locking/urgent branch of tip:
 
-I agree the commit did not introduce a runtime bug, but it did
-introduce a warning about the string being truncated.
+Commit-ID:     fa1f51162338b3e2f520d4bfedc42b3b2e00da6d
+Gitweb:        https://git.kernel.org/tip/fa1f51162338b3e2f520d4bfedc42b3b2e00da6d
+Author:        Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+AuthorDate:    Tue, 19 Mar 2024 19:20:50 +01:00
+Committer:     Thomas Gleixner <tglx@linutronix.de>
+CommitterDate: Mon, 08 Apr 2024 16:39:16 +02:00
 
->> diff --git a/drivers/staging/rts5208/rtsx_scsi.c b/drivers/staging/rts5208/rtsx_scsi.c
->> index 08bd768ad34d..a73b0959f5a9 100644
->> --- a/drivers/staging/rts5208/rtsx_scsi.c
->> +++ b/drivers/staging/rts5208/rtsx_scsi.c
->> @@ -523,7 +523,7 @@ static int inquiry(struct scsi_cmnd *srb, struct rtsx_chip *chip)
->>  
->>  	if (sendbytes > 8) {
->>  		memcpy(buf, inquiry_buf, 8);
->> -		strncpy(buf + 8, inquiry_string, sendbytes - 8);
->> +		memcpy(buf + 8, inquiry_string, min(sendbytes, 36) - 8);
->
-> I think your math is off.  The string is 29 characters + NUL.  So it
-> should be "min(sendbytes, 38) - 8".  You're chopping off the space and
-> the NUL terminator.
->
-> This only affects pro_formatter_flag code...
+locking: Make rwsem_assert_held_write_nolockdep() build with PREEMPT_RT=y
 
-The extra two bytes were clearly a mistake in the original version
-at the time it got added to drivers/staging. Note how the code
-immediately below it would overwrite the space and NUL byte again:
+The commit cited below broke the build for PREEMPT_RT because
+rwsem_assert_held_write_nolockdep() passes a struct rw_semaphore but
+rw_base_assert_held_write() expects struct rwbase_rt. Fixing the type alone
+leads to the problem that WARN_ON() is not found because bug.h is missing.
 
-        if (pro_formatter_flag) {
-                if (sendbytes > 36)
-                        memcpy(buf + 36, formatter_inquiry_str, sendbytes - 36);
-        }
+In order to resolve this:
 
-> This code is such a mess.  I'm not sure your fix is the complete fix.
-> When I see code that's clearly buggy like this and it's not sure the fix
-> is complete then I generally prefer to leave the static checker warning
-> as is so that we are reminded of the bug occasionally.
+ - Keep the assert (WARN_ON()) in rwsem.h (not rwbase_rt.h)
 
-I still think my patch is correct here, but I'll remove the confusing
-spaces at the end of the strings and try to improve the commit
-text.
+ - Make rwsem_assert_held_write_nolockdep() do the implementation
+   specific (rw_base) writer check.
 
-A more readable version of the code might construct the entire
-56 byte buffer on the stack and then do a single memcpy, but I
-think the simpler change is sufficient here.
+ - Replace the "inline" with __always_inline which was used before.
 
-> How close are
-> you to removing all these -Wstringop-truncation warnings?  Maybe we just
-> add a comment or a TODO item in the drivers/staging/rts5208/TODO file.
+Fixes: f70405afc99b1 ("locking: Add rwsem_assert_held() and rwsem_assert_held_write()")
+Reported-by: Clark Williams <williams@redhat.com>
+Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Reviewed-by: Waiman Long <longman@redhat.com>
+Link: https://lore.kernel.org/r/20240319182050.U4AzUF3I@linutronix.de
+---
+ include/linux/rwbase_rt.h | 4 ++--
+ include/linux/rwsem.h     | 6 +++---
+ 2 files changed, 5 insertions(+), 5 deletions(-)
 
-I'm down to eight warnings for clang now (on x86, arm and arm64 randconfigs
-as well as allmodconfig and defconfig elsewhere), and hope to have it
-enabled by default in either 6.10 or 6.11 after those are all
-addressed.
-
-I think gcc shows more warnings because it analyses buffer sizes
-across inlining, while clang only does it within a given function.
-
-      Arnd
+diff --git a/include/linux/rwbase_rt.h b/include/linux/rwbase_rt.h
+index 29c4e4f..f2394a4 100644
+--- a/include/linux/rwbase_rt.h
++++ b/include/linux/rwbase_rt.h
+@@ -31,9 +31,9 @@ static __always_inline bool rw_base_is_locked(const struct rwbase_rt *rwb)
+ 	return atomic_read(&rwb->readers) != READER_BIAS;
+ }
+ 
+-static inline void rw_base_assert_held_write(const struct rwbase_rt *rwb)
++static __always_inline bool rw_base_is_write_locked(const struct rwbase_rt *rwb)
+ {
+-	WARN_ON(atomic_read(&rwb->readers) != WRITER_BIAS);
++	return atomic_read(&rwb->readers) == WRITER_BIAS;
+ }
+ 
+ static __always_inline bool rw_base_is_contended(const struct rwbase_rt *rwb)
+diff --git a/include/linux/rwsem.h b/include/linux/rwsem.h
+index 4f1c189..c8b543d 100644
+--- a/include/linux/rwsem.h
++++ b/include/linux/rwsem.h
+@@ -167,14 +167,14 @@ static __always_inline int rwsem_is_locked(const struct rw_semaphore *sem)
+ 	return rw_base_is_locked(&sem->rwbase);
+ }
+ 
+-static inline void rwsem_assert_held_nolockdep(const struct rw_semaphore *sem)
++static __always_inline void rwsem_assert_held_nolockdep(const struct rw_semaphore *sem)
+ {
+ 	WARN_ON(!rwsem_is_locked(sem));
+ }
+ 
+-static inline void rwsem_assert_held_write_nolockdep(const struct rw_semaphore *sem)
++static __always_inline void rwsem_assert_held_write_nolockdep(const struct rw_semaphore *sem)
+ {
+-	rw_base_assert_held_write(sem);
++	WARN_ON(!rw_base_is_write_locked(&sem->rwbase));
+ }
+ 
+ static __always_inline int rwsem_is_contended(struct rw_semaphore *sem)
