@@ -1,121 +1,126 @@
-Received: from ahti.lucaweiss.eu (ahti.lucaweiss.eu [128.199.32.197])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A75CB145B0C;
-	Mon,  8 Apr 2024 16:34:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=128.199.32.197
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2F82145FF1;
+	Mon,  8 Apr 2024 16:34:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712594090; cv=none; b=oaI7SKe83bCFQuNIERxAvnN/gzqFTU5u39o4iZDpm29JReDr8XPklNnSjUwQh+UXd7VyW5LiWj78Gl1KPIpD9G2HB1J3PwzJ5Ff39U+iaz1vpJYoxrqCcwwkD9BZXANagH/xbremmIicjcDeE3efSuguBcgA1v5qm8lH7EsaoRE=
+	t=1712594093; cv=none; b=Y4LsDvs64+k0mZg+hhxymgwsFQMGLyWNYrPoqwnaDsBaQaR9AuWbl1A97qxns46XH88TL2ycakNQKn/Egy7TwHqI2wbv2+1DPbQwJNhhmuLtyNkRcdGtNLWAnl7HMEvGg9+FI/boa5H7ZkZESpMdCEjWUwePTmrjwI9Sc0UiAhg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712594090; c=relaxed/simple;
-	bh=qvnGOQ4wjXBKzINryA0Oef5MwTy2fQxVBq/S+8Agw2Y=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=adus7K+JDy+7tTjTvxVqV4ICM1zqyaaOqvc0PTgOQpiL7dHdqxy+hhiQMebOvAmt1+KR9rAUNWKUJl1cx2WyfbidgEVMKskoTdWUqOE6BBnEglbMYGvhitf7pUEF2t5AHHTZAuqAFkAXJW9hXw8noHY81w3WM75RViCQGLH1AEE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=z3ntu.xyz; spf=pass smtp.mailfrom=z3ntu.xyz; dkim=pass (1024-bit key) header.d=z3ntu.xyz header.i=@z3ntu.xyz header.b=h4AmvDjp; arc=none smtp.client-ip=128.199.32.197
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=z3ntu.xyz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=z3ntu.xyz
+	s=arc-20240116; t=1712594093; c=relaxed/simple;
+	bh=530we9tbb1br2D5djQ/lnp1n4VHVKq4UhHt+32wQESQ=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=HqGHDZhErXS+8EyCOwMgWs6mEIGPqlCTkIQeJfpaoMoc+zwZqf8cN7+Psdh6XhMIDZr0gOrse6yRVWB5gqeWKr36lfy6Zt5V7em1VIGwKExnOgSa4znfpGyQBRBg/hk7PNurWVP7UMYh5U/E9CXt0VXhpJiMvx46NcN5PJbSx64=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XUyyhXYW; arc=none smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=z3ntu.xyz header.i=@z3ntu.xyz header.b="h4AmvDjp"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=z3ntu.xyz; s=s1;
-	t=1712594080; bh=qvnGOQ4wjXBKzINryA0Oef5MwTy2fQxVBq/S+8Agw2Y=;
-	h=From:Date:Subject:To:Cc;
-	b=h4AmvDjprPpaCHFC3VFnqEHkF7s0Izxi6UkKUa8nRGM76eTH2Zvp/mdeOiiGBPWnI
-	 ki6MUrN+CLCDX05zi7cK0Lutay3A3kuVdCH/Ih9JLxPWIZR3P7yT/1bilyOO1SIc8Z
-	 Gpa81Itt+BzcId5pj/mhNvuqm4ATMxiUuRHX4s5s=
-From: Luca Weiss <luca@z3ntu.xyz>
-Date: Mon, 08 Apr 2024 18:34:33 +0200
-Subject: [PATCH] dt-bindings: iio: imu: mpu6050: Improve i2c-gate disallow
- list
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XUyyhXYW"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1712594092; x=1744130092;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=530we9tbb1br2D5djQ/lnp1n4VHVKq4UhHt+32wQESQ=;
+  b=XUyyhXYWem4JwYea+eWmDo8xGG/CsIcrJI+3ZTfb5KLrrMSKfZRuCxcp
+   Ed8mIFGwnDhbXJkTinRw2TiNbcksC/7eZSRQKaPBJIVczjKW8oDtzGFm9
+   IIJW0n8BrfjOwpd7ohH6DbpEg4u+2EASPjENNMqUkm8aaPQ0tcnnO3+3H
+   kAIvdwr3/Fipnq2txrJtb0mRcG9nPH3u2dIFmymtNDvy3oxbpNbwQeyHD
+   G/8v9wGEGVIjRftdW1ITu5b4ZA8MyDoHo/drlTHkZNKJUTTv23R4RlA/B
+   DtY65JrRueHwuuDZC+bJgQAbxMcBXJSySrREDAVjw+yXbvRWFoJzz4zyF
+   w==;
+X-CSE-ConnectionGUID: LEtF753+Sgu8mK1pJUnbpA==
+X-CSE-MsgGUID: KOVaHBkSTpOWxS2VxSH/HQ==
+X-IronPort-AV: E=McAfee;i="6600,9927,11038"; a="7750091"
+X-IronPort-AV: E=Sophos;i="6.07,187,1708416000"; 
+   d="scan'208";a="7750091"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2024 09:34:51 -0700
+X-CSE-ConnectionGUID: u9ZmcFUxR+CQrfR1YRRegw==
+X-CSE-MsgGUID: q6bWzXGLS8acwixytYsBWQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,187,1708416000"; 
+   d="scan'208";a="57396663"
+Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.247.28])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2024 09:34:48 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+To: linux-kselftest@vger.kernel.org,
+	Reinette Chatre <reinette.chatre@intel.com>,
+	Shuah Khan <shuah@kernel.org>,
+	Babu Moger <babu.moger@amd.com>,
+	=?UTF-8?q?Maciej=20Wiecz=C3=B3r-Retman?= <maciej.wieczor-retman@intel.com>
+Cc: Fenghua Yu <fenghua.yu@intel.com>,
+	linux-kernel@vger.kernel.org,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Subject: [PATCH v3 13/16] selftests/resctrl: Make some strings passed to resctrlfs functions const
+Date: Mon,  8 Apr 2024 19:32:44 +0300
+Message-Id: <20240408163247.3224-14-ilpo.jarvinen@linux.intel.com>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20240408163247.3224-1-ilpo.jarvinen@linux.intel.com>
+References: <20240408163247.3224-1-ilpo.jarvinen@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240408-mpu6050-i2c-gate-v1-1-621f051ce7de@z3ntu.xyz>
-X-B4-Tracking: v=1; b=H4sIAJgcFGYC/x3MSQqAMAxA0atI1gZijeNVxEXRqFk40KoI0rtbX
- L7F/y94cSoe2uQFJ7d63beILE1gWOw2C+oYDYYME1ON63GVVBCqGXC2pyCL5SoXbszEELPDyaT
- Pv+z6ED62G1XZYgAAAA==
-To: ~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org, 
- Jonathan Cameron <jic23@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>, 
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, 
- Jean-Baptiste Maneyrol <jmaneyrol@invensense.com>
-Cc: linux-iio@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, Luca Weiss <luca@z3ntu.xyz>
-X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2368; i=luca@z3ntu.xyz;
- h=from:subject:message-id; bh=qvnGOQ4wjXBKzINryA0Oef5MwTy2fQxVBq/S+8Agw2Y=;
- b=owEBbQKS/ZANAwAIAXLYQ7idTddWAcsmYgBmFBycxBKS0t7+PhZbuZ4QPqgAnd1HaVGlCHuGC
- oHmew1B+IqJAjMEAAEIAB0WIQQ5utIvCCzakboVj/py2EO4nU3XVgUCZhQcnAAKCRBy2EO4nU3X
- Vv0ZD/9JNUtWSrR42AK5CKQoOxnEa2zSvCXJu2h3oOeeXjg1UFx7CSH7gG5jm4vd0vHzngHqpYH
- 0nRKJ4IyQSLcEIVZjugNvHsSha7qhhoFLPX9iHEVD9RNf+aWrERd1qDVsEfUWhtKkDYVnKkamA2
- ZniDBuGMfnB53mqSG7gUfqqmArP06/lOI2cjC3qfINdz9IOLdZaKy7I7G4cHPEM3Avy29n6GZ+V
- Yg38AdMkwBXvEPEwWsLRq+AwARZWlti9GHuISrEijRD9GOjS3MP5WgoYv620Q25T3ry71BmnfZ3
- PUNHjod7CpUxGHgmwDJyBPepbmK8TbTgly3anKaxWwmKkwDY4bWZwRqevu6KulBGoUbHAqZRc9b
- Vh7Tz7Ku9yo+vABOI2T5umZFj3dsl2QzDpiKEPUJuGawHEqhVkgKo4Lt3b6FxwTJYwk7B1MV2VE
- 842q0AJXfmDBY2Y4PtpuIYhBt5NpqIWzKcLt2dP2qyziCywwQI6PTqlWkyT6tSBA+e6GKgfZhef
- d2kb+KaSnm6aKqMiFIpQGS11Z4HkbQQCJhwegvF04EWNwBYSwj49V3lqJi6OGK74XR3M0UqMUlV
- x2686vNZLejkPcVbpHfFvTVKiZRmDuoZHMMjl0SR5/SRBSdWiM7q/X8u6imN1Jy/B4fMthhexSH
- 35oIqKaQ69TEaRg==
-X-Developer-Key: i=luca@z3ntu.xyz; a=openpgp;
- fpr=BD04DA24C971B8D587B2B8D7FAF69CF6CD2D02CD
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Before all supported sensors except for MPU{9150,9250,9255} were not
-allowed to use i2c-gate in the bindings which excluded quite a few
-supported sensors where this functionality is supported.
+Control group, monitor group and resctrl_val are not mutated and
+should not be mutated within resctrlfs.c functions.
 
-Switch the list of sensors to ones where the Linux driver explicitly
-disallows support for the auxiliary bus ("inv_mpu_i2c_aux_bus"). Since
-the driver is also based on "default: return true" this should scale
-better into the future.
+Mark this by using const char * for the arguments.
 
-Signed-off-by: Luca Weiss <luca@z3ntu.xyz>
+Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
 ---
-This fixes dt validation error on qcom-msm8974-lge-nexus5-hammerhead
-which uses mpu6515
+ tools/testing/selftests/resctrl/resctrl.h   | 7 ++++---
+ tools/testing/selftests/resctrl/resctrlfs.c | 7 ++++---
+ 2 files changed, 8 insertions(+), 6 deletions(-)
 
-arch/arm/boot/dts/qcom/qcom-msm8974-lge-nexus5-hammerhead.dtb: mpu6515@68: i2c-gate: False schema does not allow {'#address-cells': [[1]], '#size-cells': [[0]], 'ak8963@f': {'compatible': ['asahi-kasei,ak8963'], 'reg': [[15]], 'gpios': [[40, 67, 0]], 'vid-supply': [[50]], 'vdd-supply': [[49]]}, 'bmp280@76': {'compatible': ['bosch,bmp280'], 'reg': [[118]], 'vdda-supply': [[50]], 'vddd-supply': [[49]]}}
-        from schema $id: http://devicetree.org/schemas/iio/imu/invensense,mpu6050.yaml#
----
- .../devicetree/bindings/iio/imu/invensense,mpu6050.yaml | 17 +++++++++--------
- 1 file changed, 9 insertions(+), 8 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/iio/imu/invensense,mpu6050.yaml b/Documentation/devicetree/bindings/iio/imu/invensense,mpu6050.yaml
-index 297b8a1a7ffb..587ff2bced2d 100644
---- a/Documentation/devicetree/bindings/iio/imu/invensense,mpu6050.yaml
-+++ b/Documentation/devicetree/bindings/iio/imu/invensense,mpu6050.yaml
-@@ -62,14 +62,15 @@ properties:
- allOf:
-   - $ref: /schemas/spi/spi-peripheral-props.yaml#
-   - if:
--      not:
--        properties:
--          compatible:
--            contains:
--              enum:
--                - invensense,mpu9150
--                - invensense,mpu9250
--                - invensense,mpu9255
-+      properties:
-+        compatible:
-+          contains:
-+            enum:
-+              - invensense,iam20680
-+              - invensense,icm20602
-+              - invensense,icm20608
-+              - invensense,icm20609
-+              - invensense,icm20689
-     then:
-       properties:
-         i2c-gate: false
-
----
-base-commit: 8568bb2ccc278f344e6ac44af6ed010a90aa88dc
-change-id: 20240408-mpu6050-i2c-gate-4ea473e492f4
-
-Best regards,
+diff --git a/tools/testing/selftests/resctrl/resctrl.h b/tools/testing/selftests/resctrl/resctrl.h
+index 4446a0e493ef..5967389038d4 100644
+--- a/tools/testing/selftests/resctrl/resctrl.h
++++ b/tools/testing/selftests/resctrl/resctrl.h
+@@ -141,9 +141,10 @@ bool test_resource_feature_check(const struct resctrl_test *test);
+ char *fgrep(FILE *inf, const char *str);
+ int taskset_benchmark(pid_t bm_pid, int cpu_no, cpu_set_t *old_affinity);
+ int taskset_restore(pid_t bm_pid, cpu_set_t *old_affinity);
+-int write_schemata(char *ctrlgrp, char *schemata, int cpu_no, const char *resource);
+-int write_bm_pid_to_resctrl(pid_t bm_pid, char *ctrlgrp, char *mongrp,
+-			    char *resctrl_val);
++int write_schemata(const char *ctrlgrp, char *schemata, int cpu_no,
++		   const char *resource);
++int write_bm_pid_to_resctrl(pid_t bm_pid, const char *ctrlgrp,
++			    const char *mongrp, const char *resctrl_val);
+ int perf_event_open(struct perf_event_attr *hw_event, pid_t pid, int cpu,
+ 		    int group_fd, unsigned long flags);
+ unsigned char *alloc_buffer(size_t buf_size, int memflush);
+diff --git a/tools/testing/selftests/resctrl/resctrlfs.c b/tools/testing/selftests/resctrl/resctrlfs.c
+index aac382eaa032..a0e84157eb63 100644
+--- a/tools/testing/selftests/resctrl/resctrlfs.c
++++ b/tools/testing/selftests/resctrl/resctrlfs.c
+@@ -534,8 +534,8 @@ static int write_pid_to_tasks(char *tasks, pid_t pid)
+  *
+  * Return: 0 on success, < 0 on error.
+  */
+-int write_bm_pid_to_resctrl(pid_t bm_pid, char *ctrlgrp, char *mongrp,
+-			    char *resctrl_val)
++int write_bm_pid_to_resctrl(pid_t bm_pid, const char *ctrlgrp,
++			    const char *mongrp, const char *resctrl_val)
+ {
+ 	char controlgroup[128], monitorgroup[512], monitorgroup_p[256];
+ 	char tasks[1024];
+@@ -593,7 +593,8 @@ int write_bm_pid_to_resctrl(pid_t bm_pid, char *ctrlgrp, char *mongrp,
+  *
+  * Return: 0 on success, < 0 on error.
+  */
+-int write_schemata(char *ctrlgrp, char *schemata, int cpu_no, const char *resource)
++int write_schemata(const char *ctrlgrp, char *schemata, int cpu_no,
++		   const char *resource)
+ {
+ 	char controlgroup[1024], reason[128], schema[1024] = {};
+ 	int domain_id, fd, schema_len, ret = 0;
 -- 
-Luca Weiss <luca@z3ntu.xyz>
+2.39.2
 
