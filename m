@@ -1,176 +1,113 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E4E8644C94
-	for <linux-kernel@vger.kernel.org>; Mon,  8 Apr 2024 09:24:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-vk1-f175.google.com (mail-vk1-f175.google.com [209.85.221.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8430247A7D
+	for <linux-kernel@vger.kernel.org>; Mon,  8 Apr 2024 09:26:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712568294; cv=none; b=aj/9k64knJ+nsyYiiUhUmDL6/HXxQGLrjiC1jfoa/NGhSwjq9znMn1Vc5v6iJjv2CG7tCougsaztB+rEq+BwLV6KrE6EJCqCieREeKQaqzrjiP70yIUpzTUIzaFWvmsYMsR/NzmWVDeMrAbnJnpC/kZ9w5CWrq0XESM72QoFtuE=
+	t=1712568397; cv=none; b=q+qaJPdyrA/SX4grJwoxkdIKFT59Pj5TgKP58Rjt4/um64VprK8hN2hXdtM3oZmWZfr7ACch6i2gWWyCO51mE+BhXFLmjtt3rFOEqi+oFQnkvu4K3rXKVcRuCruloU3QwgjCHNYMicUdPPa3BvH7nUio/Ik1zuXD+5hOhQLoIgY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712568294; c=relaxed/simple;
-	bh=S40D8o9ko7CIYGSt3w3/at32KStj3az8GYQ8bF6pQHg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=LX+QMUydOF1zsXTEMVSxYJtHYrkrDpLb8eLVjYWLgFOZXW09xW0Vcx5h0dK+RLA7pMOW5ScGJj4k8cBtFEEAxp3ENH2wKaGafuNnq89uoeA08CE0ohjJMcId0iKOr4/yXXQbrx+dVB2b74mbOjB44iEO2w0jltZkx7/Qbwd33C0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 780D51007;
-	Mon,  8 Apr 2024 02:25:22 -0700 (PDT)
-Received: from [10.57.73.169] (unknown [10.57.73.169])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 246CC3F766;
-	Mon,  8 Apr 2024 02:24:50 -0700 (PDT)
-Message-ID: <ba63464e-afc3-4bbb-b13f-704eaf9ed4af@arm.com>
-Date: Mon, 8 Apr 2024 10:24:48 +0100
+	s=arc-20240116; t=1712568397; c=relaxed/simple;
+	bh=oFfg9XsxElE7cRN9U3m13pRPYNa0LsdhfdKdd2Ctvkw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=s5GcKJjVCGBH/ac5vC7zknWNIvGM+YVskAPdeYl6PtR3Dh5uB4rXxWcBWMavn8VB+sSRdlTGFklPhu5coLz62mEgjopIS3YKckF7eYSRNADCOp6jUE9kFGjMvok3eDwzZpkQYF50BimsvpMs2C9+klqlxcIdaV47YM1hSHxvglI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=3WaA6Qpf; arc=none smtp.client-ip=209.85.221.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="3WaA6Qpf"
+Received: by mail-vk1-f175.google.com with SMTP id 71dfb90a1353d-4daa2b076beso1141700e0c.1
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Apr 2024 02:26:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1712568394; x=1713173194; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=oIy9SeLJ1nvzPDO0+gT7LUDRnqZqv1g2qTZnmvRtF8w=;
+        b=3WaA6QpftjDJHVSsMe+qcWz50x+ihCAkGZh+u3P3CwtfeEuG8nTgS0uek+mJ3MfFbU
+         Nj+bZVQtfkMHjDv1BIsPNqjSTgVOOP2UK0nDIxBxXXOE3doe9ZJ5htj3mGqyjoAIBQGk
+         g6Kmqd9aLtx67ni/9jciuA+CmaZlDUTUgLB3FY8DTJTdHRcwA8btvKn/fSKDiPi6st8O
+         JwdGdVNLvzrca8Ykee5YoW+97hUZCB/HIB9e53UN1v9X7vEPboSXopJvkZoaH+kPV28M
+         oBe1Ejh51vL93C7Vd/VWXYizchLe31aBRCewg4umCXOSarIN8CZke96MhJT5WTH5Oeke
+         FUkw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712568394; x=1713173194;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=oIy9SeLJ1nvzPDO0+gT7LUDRnqZqv1g2qTZnmvRtF8w=;
+        b=ng4V1px3hsI+O3aI00+M7mMsw1jVkmQHFwWSxRLwpIFFrHALMX2CRd7zdn0gJoCgTT
+         OSdtSrSlwy8IqUzjeA2FHRTOGd/oMNZln+0oG2j9sZiJATzhzc7LFUTArEFOtml5kZhx
+         7ldIKy1o39j+Os1/OitIBVjesnbQQAKkJoR7M/skdZ8pHMPRoR0UfxmhVuo7T2mkI53z
+         Kj+i+ZyPkgkKrF1Egs+wtgodMUzEMQxgMfG3y7IuXIENUG50kAXBe1d2xZus3wDclaZi
+         4ixWJ+Ne8J9hJfWGROhbHXugNnh4K8FjHJZo0s50MkG4eQ7cBuNIlg/gwgBsCZco0tjc
+         fzdg==
+X-Forwarded-Encrypted: i=1; AJvYcCXFH/iXtZN50vE5+O2utH+7qF+Mb089xSbh4TX6yEhe8204774wd6P2n9dhlf5DTOttlwI/rgwnDWu1lzZRfsrBBpQGRecdLbLnSZu3
+X-Gm-Message-State: AOJu0YwVjG6YS3nxq1qL6QzRtw+1pc8btsIfvMDmB2Wj0g3NkqesoVq2
+	dbR0l4YIdT1+C5IqixOifdeaESDNy40MoxK347WN+D4OUpPhZBvZC/WNqww3Y2vv4ISkmOCwq+C
+	BbIgUGQHr0Z3iTFiecaKd+1F29JT6UI4s+t1K
+X-Google-Smtp-Source: AGHT+IE3ctn60mbisPE+3PgDQzWKYFH4fz7jLn6kIz89GDQBsxDl4h15/TtK0Z8YFRnQV/FF1toMip/RgGPmLJg1kxc=
+X-Received: by 2002:a05:6122:4809:b0:4d3:35ac:3553 with SMTP id
+ ef9-20020a056122480900b004d335ac3553mr4054281vkb.10.1712568394315; Mon, 08
+ Apr 2024 02:26:34 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 4/6] mm: swap: Allow storage of all mTHP orders
-Content-Language: en-GB
-To: "Huang, Ying" <ying.huang@intel.com>, David Hildenbrand <david@redhat.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
- Matthew Wilcox <willy@infradead.org>, Gao Xiang <xiang@kernel.org>,
- Yu Zhao <yuzhao@google.com>, Yang Shi <shy828301@gmail.com>,
- Michal Hocko <mhocko@suse.com>, Kefeng Wang <wangkefeng.wang@huawei.com>,
- Barry Song <21cnbao@gmail.com>, Chris Li <chrisl@kernel.org>,
- Lance Yang <ioworker0@gmail.com>, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org
-References: <20240403114032.1162100-1-ryan.roberts@arm.com>
- <20240403114032.1162100-5-ryan.roberts@arm.com>
- <c7748c77-b2a3-4b06-aaeb-02793a160aaf@redhat.com>
- <87edbhaexj.fsf@yhuang6-desk2.ccr.corp.intel.com>
-From: Ryan Roberts <ryan.roberts@arm.com>
-In-Reply-To: <87edbhaexj.fsf@yhuang6-desk2.ccr.corp.intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20240404-alice-mm-v4-0-49a84242cf02@google.com>
+ <20240404-alice-mm-v4-4-49a84242cf02@google.com> <a48b2347-b58b-432e-bdb8-d5449016ab57@proton.me>
+ <CAH5fLgg3wpcDE+n6nd0CGtDzyXSrD2nLhY8RxdTHjAD8hQ9VDQ@mail.gmail.com>
+ <c130a6f5-77d7-4d9e-984d-7a8bf48ff918@proton.me> <CAH5fLgigLV17+6U75MC43XFnYeqtgvrrTWD7JmDSB-ebNjCVvw@mail.gmail.com>
+ <CANiq72mZ5QPrb1-jWiKFhO2OF517Xvx=Js3zwM+_VyVL=dy2LA@mail.gmail.com>
+In-Reply-To: <CANiq72mZ5QPrb1-jWiKFhO2OF517Xvx=Js3zwM+_VyVL=dy2LA@mail.gmail.com>
+From: Alice Ryhl <aliceryhl@google.com>
+Date: Mon, 8 Apr 2024 11:26:23 +0200
+Message-ID: <CAH5fLgjr57qB2qp+b7xQ3wsKGyT0zsOkhQj0Q-z0KLo2jhCsTQ@mail.gmail.com>
+Subject: Re: [PATCH v4 4/4] rust: add abstraction for `struct page`
+To: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Cc: Benno Lossin <benno.lossin@proton.me>, Miguel Ojeda <ojeda@kernel.org>, 
+	Matthew Wilcox <willy@infradead.org>, Al Viro <viro@zeniv.linux.org.uk>, 
+	Andrew Morton <akpm@linux-foundation.org>, Kees Cook <keescook@chromium.org>, 
+	Alex Gaynor <alex.gaynor@gmail.com>, Wedson Almeida Filho <wedsonaf@gmail.com>, 
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Andreas Hindborg <a.hindborg@samsung.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	=?UTF-8?B?QXJ2ZSBIasO4bm5ldsOlZw==?= <arve@android.com>, 
+	Todd Kjos <tkjos@android.com>, Martijn Coenen <maco@android.com>, 
+	Joel Fernandes <joel@joelfernandes.org>, Carlos Llamas <cmllamas@google.com>, 
+	Suren Baghdasaryan <surenb@google.com>, Arnd Bergmann <arnd@arndb.de>, linux-mm@kvack.org, 
+	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org, 
+	Christian Brauner <brauner@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 07/04/2024 07:02, Huang, Ying wrote:
-> David Hildenbrand <david@redhat.com> writes:
-> 
->> On 03.04.24 13:40, Ryan Roberts wrote:
->>> Multi-size THP enables performance improvements by allocating large,
->>> pte-mapped folios for anonymous memory. However I've observed that on an
->>> arm64 system running a parallel workload (e.g. kernel compilation)
->>> across many cores, under high memory pressure, the speed regresses. This
->>> is due to bottlenecking on the increased number of TLBIs added due to
->>> all the extra folio splitting when the large folios are swapped out.
->>> Therefore, solve this regression by adding support for swapping out
->>> mTHP
->>> without needing to split the folio, just like is already done for
->>> PMD-sized THP. This change only applies when CONFIG_THP_SWAP is enabled,
->>> and when the swap backing store is a non-rotating block device. These
->>> are the same constraints as for the existing PMD-sized THP swap-out
->>> support.
->>> Note that no attempt is made to swap-in (m)THP here - this is still
->>> done
->>> page-by-page, like for PMD-sized THP. But swapping-out mTHP is a
->>> prerequisite for swapping-in mTHP.
->>> The main change here is to improve the swap entry allocator so that
->>> it
->>> can allocate any power-of-2 number of contiguous entries between [1, (1
->>> << PMD_ORDER)]. This is done by allocating a cluster for each distinct
->>> order and allocating sequentially from it until the cluster is full.
->>> This ensures that we don't need to search the map and we get no
->>> fragmentation due to alignment padding for different orders in the
->>> cluster. If there is no current cluster for a given order, we attempt to
->>> allocate a free cluster from the list. If there are no free clusters, we
->>> fail the allocation and the caller can fall back to splitting the folio
->>> and allocates individual entries (as per existing PMD-sized THP
->>> fallback).
->>> The per-order current clusters are maintained per-cpu using the
->>> existing
->>> infrastructure. This is done to avoid interleving pages from different
->>> tasks, which would prevent IO being batched. This is already done for
->>> the order-0 allocations so we follow the same pattern.
->>> As is done for order-0 per-cpu clusters, the scanner now can steal
->>> order-0 entries from any per-cpu-per-order reserved cluster. This
->>> ensures that when the swap file is getting full, space doesn't get tied
->>> up in the per-cpu reserves.
->>> This change only modifies swap to be able to accept any order
->>> mTHP. It
->>> doesn't change the callers to elide doing the actual split. That will be
->>> done in separate changes.
->>> Reviewed-by: "Huang, Ying" <ying.huang@intel.com>
->>> Signed-off-by: Ryan Roberts <ryan.roberts@arm.com>
->>> ---
->>>   include/linux/swap.h |  10 ++-
->>>   mm/swap_slots.c      |   6 +-
->>>   mm/swapfile.c        | 175 ++++++++++++++++++++++++-------------------
->>>   3 files changed, 109 insertions(+), 82 deletions(-)
->>> diff --git a/include/linux/swap.h b/include/linux/swap.h
->>> index 5e1e4f5bf0cb..11c53692f65f 100644
->>> --- a/include/linux/swap.h
->>> +++ b/include/linux/swap.h
->>> @@ -268,13 +268,19 @@ struct swap_cluster_info {
->>>    */
->>>   #define SWAP_NEXT_INVALID	0
->>>   +#ifdef CONFIG_THP_SWAP
->>> +#define SWAP_NR_ORDERS		(PMD_ORDER + 1)
->>> +#else
->>> +#define SWAP_NR_ORDERS		1
->>> +#endif
->>> +
->>>   /*
->>>    * We assign a cluster to each CPU, so each CPU can allocate swap entry from
->>>    * its own cluster and swapout sequentially. The purpose is to optimize swapout
->>>    * throughput.
->>>    */
->>>   struct percpu_cluster {
->>> -	unsigned int next; /* Likely next allocation offset */
->>> +	unsigned int next[SWAP_NR_ORDERS]; /* Likely next allocation offset */
->>>   };
->>>     struct swap_cluster_list {
->>> @@ -471,7 +477,7 @@ swp_entry_t folio_alloc_swap(struct folio *folio);
->>>   bool folio_free_swap(struct folio *folio);
->>>   void put_swap_folio(struct folio *folio, swp_entry_t entry);
->>>   extern swp_entry_t get_swap_page_of_type(int);
->>> -extern int get_swap_pages(int n, swp_entry_t swp_entries[], int entry_size);
->>> +extern int get_swap_pages(int n, swp_entry_t swp_entries[], int order);
->>>   extern int add_swap_count_continuation(swp_entry_t, gfp_t);
->>>   extern void swap_shmem_alloc(swp_entry_t);
->>>   extern int swap_duplicate(swp_entry_t);
->>> diff --git a/mm/swap_slots.c b/mm/swap_slots.c
->>> index 53abeaf1371d..13ab3b771409 100644
->>> --- a/mm/swap_slots.c
->>> +++ b/mm/swap_slots.c
->>> @@ -264,7 +264,7 @@ static int refill_swap_slots_cache(struct swap_slots_cache *cache)
->>>   	cache->cur = 0;
->>>   	if (swap_slot_cache_active)
->>>   		cache->nr = get_swap_pages(SWAP_SLOTS_CACHE_SIZE,
->>> -					   cache->slots, 1);
->>> +					   cache->slots, 0);
->>>     	return cache->nr;
->>>   }
->>> @@ -311,7 +311,7 @@ swp_entry_t folio_alloc_swap(struct folio *folio)
->>>     	if (folio_test_large(folio)) {
->>>   		if (IS_ENABLED(CONFIG_THP_SWAP))
->>> -			get_swap_pages(1, &entry, folio_nr_pages(folio));
->>> +			get_swap_pages(1, &entry, folio_order(folio));
->>
->> The only comment I have is that this nr_pages -> order conversion adds
->> a bit of noise to this patch.
->>
->> AFAIKS, it's primarily only required for "cluster->next[order]",
->> everything else doesn't really require the order.
->>
->> I'd just have split that out into a separate patch, or simply
->> converted nr_pages -> order where required.
->>
->> Nothing jumped at me, but I'm not an expert on that code, so I'm
->> mostly trusting the others ;)
-> 
-> The nr_pages -> order conversion replaces ilog2(nr_pages) with
-> (1<<order).  IIUC, "<<" is a little faster than "ilog2()".  And, we
-> don't need to worry about whether nr_pages is a power of 2.  Do you
-> think that this makes sense?
+On Mon, Apr 8, 2024 at 11:19=E2=80=AFAM Miguel Ojeda
+<miguel.ojeda.sandonis@gmail.com> wrote:
+>
+> On Mon, Apr 8, 2024 at 9:54=E2=80=AFAM Alice Ryhl <aliceryhl@google.com> =
+wrote:
+> >
+> > From bindgen's point of view, this constant is just an integer literal
+> > with no type information. So I don't see how we can expect it to
+> > always be generated as a usize?
+>
+> In the case of `PAGE_SIZE`, there is type information (`size_t`),
+> since it comes from the constant helper:
+>
+>     const size_t RUST_CONST_HELPER_PAGE_SIZE =3D PAGE_SIZE;
+>
+> For the other one, `PAGE_SHIFT`, there is also type information
+> (`int`), but bindgen currently picks a type based on the value for
+> those (but ideally/eventually bindgen should respect it instead).
+>
+> So for the former, the allow and the cast are not needed since we are
+> already handling it explicitly. And for the latter, if we want to have
+> it as `usize`, we should have the cast but not the allow, because now
+> it does `u32`, but if it respected the type, it would be `c_int` or
+> `i32`. So either way we would need the cast.
 
-I think that David's point was that I should just split out that change to its
-own patch to aid readability? I'm happy to do that if no one objects.
+Good point. Will fix this for next version.
 
-> 
-> --
-> Best Regards,
-> Huang, Ying
-
+Alice
