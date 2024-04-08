@@ -1,81 +1,107 @@
-Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A314143893;
-	Mon,  8 Apr 2024 17:21:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA15F14389C;
+	Mon,  8 Apr 2024 17:23:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712596898; cv=none; b=cqTN7ipigq2edQeAE0SdSa7Q7tP6/WR7EA/RBD9U6gn7QmyAlVuuyZLHVzFqiq+xHuAcdY/bOD4GBhcZwUKTq3hk1D0msStjJyp5uKYJFHzs7H41SZknCn3uYSsRbVz292bQk5Vdn0lN3RPExcB+dURe9DjkM5SG03rzOllLyyk=
+	t=1712596982; cv=none; b=Ujd3PKRlPIA+r/xXwv1rVqLjwpns90Qf8l0CVQ0ETVoF43rQye98mOSxziPTG92IAgxrEZg1wMU0+s8UkVuk+lgSY+2ujxKgMEm+QRRH0F/yoSPeWq9LHN12glBs1+aI4Rq51merzxBwsksT5uha7fabah6frru7sLLefBvGpRY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712596898; c=relaxed/simple;
-	bh=CD+KxDHqdUb5j2VIVvwfKn0QC5O9nZf/3mXOmaOeTAw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=eCPpSKOFab6f7f3oqn2Od/eO47i0CxqbrQ40Mq0VDax/8HtgyvJ3NPHFvAqmuAuzF+78ifEbmweFFRnDgVzXgwR0IIPVWBqFAsHH1JEF3C7Yokl6VluTkycB+qUzJXN48xb/V9OfatrCUsJ2hJ5+jjAg0MglRR3ZOLI0mcCp7n4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com; spf=pass smtp.mailfrom=googlemail.com; dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b=d2eeQuXj; arc=none smtp.client-ip=209.85.214.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=googlemail.com
+	s=arc-20240116; t=1712596982; c=relaxed/simple;
+	bh=PSdUNjxecv9/EH8TvrTsRyagADl80n4dir3Oe48bPOI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Kfu7ZbcDYAMFKHi4mAh4FtzjwtXKKW2SQgl5VoMY/dYg/kXraCrx/MJTHZsi08H9EAutpi6tsWPip5ZEy4+XIgY82KT+oOkR9eIMFPV+WwkLFU1GDwCY02BLYBXVgqYlUgFa7yRt4olqVR72MxhJyXESgm4ndcEE+LK31PKrmNs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nZ4TR5Ma; arc=none smtp.client-ip=198.175.65.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="d2eeQuXj"
-Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-1e403dd3995so6812005ad.2;
-        Mon, 08 Apr 2024 10:21:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20230601; t=1712596897; x=1713201697; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=CD+KxDHqdUb5j2VIVvwfKn0QC5O9nZf/3mXOmaOeTAw=;
-        b=d2eeQuXjqbnnas27VijjflZI4zO+CKojp2N84SQYWWhOaEj31IA/lDvrrqqTcGex4M
-         Bc9McgPsh8h0GPW/taOkTIUitViVWZk60OA9rH7UVXWuHSXLJWJti6f3vcdYt3e6jhZS
-         Z+QP2ORysebrq9v9JyV5QlQflSY21Tn3odvT2l3Tyc6qUbLzeAHDvXaqa3AwHpFJx4sS
-         swU9+cH1tZ6v78UQBCvrK0/3PJdbKkuGXSbsoausQW2yGjAtaEsMU1iVfKCIfVTAKrZI
-         AgswTewCp9d2tu0mvtMeZGgkAEq0otq8fakyW/tw0qCALv7bZeqMCQ4OZnPQ0SZbZmDQ
-         WKtA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712596897; x=1713201697;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=CD+KxDHqdUb5j2VIVvwfKn0QC5O9nZf/3mXOmaOeTAw=;
-        b=uOAUEjf30kEKonguEOcaLMJfLSvRkmcKEgfrTLMdMJ4yVOzDq79dL0hku18PTXzhiP
-         rNB4wDWRe0P7oZh4ARjLWlE8nIZKZ6Cbubde5sGXcXsRbYxG+7ZJuEfAZ2PEC6LraR/X
-         UbfXv9kTavO7MGXGc+XtROiinYQq3WYhrhGasIJIUldyF7a6MiZHFelcb8awoJCPuKbk
-         eGJ4kh/BbTxqoKsaZ0hl2d8ph2Mlm+EpgtNuwL28f5STK8t7IntyrmBVUZaPR1PmRKt6
-         vCAITDaHSDeSHqE4yC+fqlsA+XYM8rAm8LQ8eFiZthTrCzpBt9vgKvnd2U5XpHWWb0R/
-         UcmQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWaQc21Mm74sKXF2kO76uz20cWWd86qA1Sl6jqx8DDIcIjsCFO91poYwEYMYt5U62U+9HkVBph3HM2YRVtJWapKT/e4jyUqLgXwnMg05/DoV3fCCPd2W1Rn54Rm43AwuvOLiNPIqbQ4
-X-Gm-Message-State: AOJu0Yz+7JIH2a/90Bckiw61wZUIZtvhQeTl+lFKPMowRQNrncAGNINH
-	E4Gp8gas0CS2SNpI3IAIRbLNofURQTpKxm84rEU6Y0WS+/wXc3q/L+u4cJCofD3PnIHLXKOOetG
-	HKkOx0iDFjd+W6LTN1Es71F1myMo=
-X-Google-Smtp-Source: AGHT+IHKVZXmaxUYg2//3d3GkHNXzmwnMizOwlMUFZ14NDcEJmhIn3JkJUCLgsKZlmTC21ybmfXcgXIAwiaCdHNERgA=
-X-Received: by 2002:a17:903:32cb:b0:1e4:fd4:48cf with SMTP id
- i11-20020a17090332cb00b001e40fd448cfmr3779134plr.41.1712596896729; Mon, 08
- Apr 2024 10:21:36 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nZ4TR5Ma"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1712596981; x=1744132981;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=PSdUNjxecv9/EH8TvrTsRyagADl80n4dir3Oe48bPOI=;
+  b=nZ4TR5MaekUhIy6cDlE9WHE8T+dN9+EtVSydQAII/uojo83l+ZwaYsVR
+   Jcd9TlCZQXZfEGm5VTRKBRsi+MIb2nIUA4K46QxdLoEZutGW0oseiTAEl
+   tjxzm202gQk0k+XioylUh5yxByoDZe8+wVb6F/htyrtuZXpfNqEdkYn+N
+   MupaR4/s3lDVHej3FfBgalVLD2TnHOTjFmJlo/3Nfge2d4jlmFyyhmQoL
+   6V7d/n1krPFCaMOgGnoNs+xjW1RrojKVzt2FKUIIIestBl0mZe+xuDKn3
+   g4oCh4jVb3sZh8b5n3vQt7IimLOSLwGv8S7UcNFUpSgbUPATljJGJgAL1
+   w==;
+X-CSE-ConnectionGUID: oghk6tjmQiakx4EFQSU6Ag==
+X-CSE-MsgGUID: RRXlIi+0SU6okRH0KXMJpA==
+X-IronPort-AV: E=McAfee;i="6600,9927,11038"; a="7757467"
+X-IronPort-AV: E=Sophos;i="6.07,187,1708416000"; 
+   d="scan'208";a="7757467"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2024 10:23:00 -0700
+X-CSE-ConnectionGUID: a8sq+q/VRRmRTSHSWV6cuw==
+X-CSE-MsgGUID: OlpQj4e/SoSchFFOlUJeuw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,187,1708416000"; 
+   d="scan'208";a="24697460"
+Received: from shahsmit-mobl1.amr.corp.intel.com (HELO [10.212.101.141]) ([10.212.101.141])
+  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2024 10:22:59 -0700
+Message-ID: <ba585faa-d761-45ed-9e44-784097b3439a@linux.intel.com>
+Date: Mon, 8 Apr 2024 10:37:29 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240408-amlogic-v6-9-upstream-fix-clk-module-license-v1-1-366ddc0f3db9@linaro.org>
-In-Reply-To: <20240408-amlogic-v6-9-upstream-fix-clk-module-license-v1-1-366ddc0f3db9@linaro.org>
-From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Date: Mon, 8 Apr 2024 19:21:24 +0200
-Message-ID: <CAFBinCBQtMHeQ2drNTJhqtknR32M1pjy+V3nQD7XFRiT8u4DGg@mail.gmail.com>
-Subject: Re: [PATCH] clk: meson: fix module license to GPL only
-To: Neil Armstrong <neil.armstrong@linaro.org>
-Cc: Jerome Brunet <jbrunet@baylibre.com>, Michael Turquette <mturquette@baylibre.com>, 
-	Stephen Boyd <sboyd@kernel.org>, Kevin Hilman <khilman@baylibre.com>, 
-	linux-amlogic@lists.infradead.org, linux-clk@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] ASoC: Intel: sof_rt5682: Fix uninitialized variable in
+ probe
+To: Dan Carpenter <dan.carpenter@linaro.org>, Brent Lu <brent.lu@intel.com>
+Cc: Cezary Rojewski <cezary.rojewski@intel.com>,
+ Liam Girdwood <liam.r.girdwood@linux.intel.com>,
+ Peter Ujfalusi <peter.ujfalusi@linux.intel.com>,
+ Bard Liao <yung-chuan.liao@linux.intel.com>,
+ Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
+ Kai Vehmanen <kai.vehmanen@linux.intel.com>, Mark Brown
+ <broonie@kernel.org>, Jaroslav Kysela <perex@perex.cz>,
+ Takashi Iwai <tiwai@suse.com>, Terry Cheong <htcheong@chromium.org>,
+ Uday M Bhat <uday.m.bhat@intel.com>,
+ Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+ Mac Chiang <mac.chiang@intel.com>, apoorv <apoorv@intel.com>,
+ alsa-devel@alsa-project.org, linux-sound@vger.kernel.org,
+ linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
+References: <6e16433f-1897-46a2-b3ee-e177e7d846b8@moroto.mountain>
+Content-Language: en-US
+From: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+In-Reply-To: <6e16433f-1897-46a2-b3ee-e177e7d846b8@moroto.mountain>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Mon, Apr 8, 2024 at 11:18=E2=80=AFAM Neil Armstrong
-<neil.armstrong@linaro.org> wrote:
->
-> Fix the checkpatch warning:
-> WARNING: Prefer "GPL" over "GPL v2" - see commit bf7fbeeae6db ("module: C=
-ure the MODULE_LICENSE "GPL" vs. "GPL v2" bogosity")
->
-> Signed-off-by: Neil Armstrong <neil.armstrong@linaro.org>
-Reviewed-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+
+
+On 4/8/24 02:35, Dan Carpenter wrote:
+> Initialize "is_legacy_cpu" to false to prevent an uninitialized variable
+> bug.
+> 
+> Fixes: 8efcd4864652 ("ASoC: Intel: sof_rt5682: use common module for sof_card_private initialization")
+> Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
+
+Good catch.
+
+Acked-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+
+> ---
+>  sound/soc/intel/boards/sof_rt5682.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/sound/soc/intel/boards/sof_rt5682.c b/sound/soc/intel/boards/sof_rt5682.c
+> index aadd341a202c..966bcd3e8bdc 100644
+> --- a/sound/soc/intel/boards/sof_rt5682.c
+> +++ b/sound/soc/intel/boards/sof_rt5682.c
+> @@ -606,7 +606,7 @@ static int sof_audio_probe(struct platform_device *pdev)
+>  {
+>  	struct snd_soc_acpi_mach *mach = pdev->dev.platform_data;
+>  	struct sof_card_private *ctx;
+> -	bool is_legacy_cpu;
+> +	bool is_legacy_cpu = false;
+>  	int ret;
+>  
+>  	if (pdev->id_entry && pdev->id_entry->driver_data)
