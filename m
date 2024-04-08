@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 160B6146A6E;
-	Mon,  8 Apr 2024 18:55:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D59FA147C9F;
+	Mon,  8 Apr 2024 18:55:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712602525; cv=none; b=oRWyvDQrJj26b1r1QpEM5bUNYtbfzpIcerxjkP9mtJjwqHXyYEXRLQL7nAV3hGaHvn/t4fE3muv8z76agYteyYoq2q3nOshxiG30jLNGYkx0uEQC896YO2jk/v6M8rcaLIXQb/k4fhETwM1uTVyvDHtVWTsAgRidGl03UXgg6OE=
+	t=1712602526; cv=none; b=Wz9aAbD+SP3V+pXvputaeh7y6/mpQa75p078tiickigOZO3pPO9zR7LNAYb3ftAh7jTt59NM/YrTBOktsBxtNAhrBW3V3UXNDIbHP2/2cIC3Gt0F04HQ5LxPAiT76wETzHLWfimrcD1095YZ4uQC0kksM71DJkd6DPQJOFSZxOg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712602525; c=relaxed/simple;
-	bh=7PoVJmimaSPjnO8B487RlebpLNs+6OqGKUwsigSg9gw=;
+	s=arc-20240116; t=1712602526; c=relaxed/simple;
+	bh=6IP15GRrvoLWh+SkcnFaIq4Jq+IWeRLFF0e6voiaEoM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=S7KMi0thIC62WiVZGarkfbgGmcYJrOP+x8KB7VDA5FHvzrKdqrwX6ZAVZ+SA78TDE7i97/n2lVL3lepFbkvj1ueLrPsARsTx/A6pFDo8ctf/bk5RqkXd2nO2hepjedzeMvaCrA+87wdc55HITJrteCA21+e9cW7EecrTRfUhvfo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OZvNrH4B; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=jEdOu78rp3pl7Ua5zJ7e4d4I5pm6USLFcQ7bivwBVlaQdNM8/JSNPkK/2IR1rVgo5ffIC013ahmg4AbwrM2Qt52Y2EDkQt3ROI9SVaXRY3s177U/ZHXCZT33UxJs2Nx/hPyGYAva43+EZxPIZh5Nr0yJyTKbgU9WeRo59BvaNlA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Zi04pRXS; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OZvNrH4B"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 11922C43390;
-	Mon,  8 Apr 2024 18:55:24 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Zi04pRXS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3E37DC433A6;
+	Mon,  8 Apr 2024 18:55:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712602524;
-	bh=7PoVJmimaSPjnO8B487RlebpLNs+6OqGKUwsigSg9gw=;
+	s=k20201202; t=1712602526;
+	bh=6IP15GRrvoLWh+SkcnFaIq4Jq+IWeRLFF0e6voiaEoM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=OZvNrH4BmeNOmDOldspGZUSicZ0uN54YWEf2xmXkxloPSVfVl8ZPhsn946eJ1ncYp
-	 CXyQ2R45675G4pmQR+NPsU7QmKq6GzDp0YRgNEI0x7ogBx0tYCZ26brPIffNj/oscn
-	 SnSAbG4tf/oNVFbuxhHNtw/RX68thDTWZyTA0GdEuMCNoNPZf8QINZx6BYLyNV5vdT
-	 B+URhLgPxePH9GyHQvSkEuSgPKoQiJKrUQWOsxFqLCC5k//TRb/W1GGgB6pu2PDn6/
-	 0/1nrnO01AiJPg+Pc45F9n49MUuPGL8ctdxWlkWyoxSzBepfRhirP7ooFYPm6aDi9K
-	 zjIg85yeU/QIQ==
+	b=Zi04pRXSNJM5LcEtZVPcOcxUMaCTLL4pxB6O4fqD6TkkJFEJxsd17dTOgXSYenG1u
+	 dj/l8g51Dw5KXwcRxwP97wX+tXuq1O/EhkhelbctuW0dxvHmAEPnpK6vfykTfAbT6P
+	 wv5ORA4MOYaRzLN550SCGqCBzUOTiAlh/o6r4fEa9wBmwCWrzrlFgKD+7OmDt2XouZ
+	 yQ9jZ03/lnP3I/fpL54zNhlNbYIswSd95jrPso4lYBi3zZHKXkAya28RHIWT7ZWMrS
+	 m31luBCIshtkxKdbrCjdCisRQjlnyvBnyyu1nI8F8L8+SFlJr94yg5Cul9nySQKHfM
+	 KXFY8FFfsWlOA==
 From: Namhyung Kim <namhyung@kernel.org>
 To: Arnaldo Carvalho de Melo <acme@kernel.org>,
 	Ian Rogers <irogers@google.com>,
@@ -36,15 +36,13 @@ Cc: Jiri Olsa <jolsa@kernel.org>,
 	Ingo Molnar <mingo@kernel.org>,
 	LKML <linux-kernel@vger.kernel.org>,
 	linux-perf-users@vger.kernel.org,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	x86@kernel.org
-Subject: [PATCH 5/9] tools/include: Sync x86 CPU feature headers with the kernel sources
-Date: Mon,  8 Apr 2024 11:55:16 -0700
-Message-ID: <20240408185520.1550865-6-namhyung@kernel.org>
+	Arnd Bergmann <arnd@arndb.de>,
+	Geert Uytterhoeven <geert@linux-m68k.org>,
+	Palmer Dabbelt <palmer@rivosinc.com>,
+	linux-arch@vger.kernel.org
+Subject: [PATCH 8/9] tools/include: Sync asm-generic/bitops/fls.h with the kernel sources
+Date: Mon,  8 Apr 2024 11:55:19 -0700
+Message-ID: <20240408185520.1550865-9-namhyung@kernel.org>
 X-Mailer: git-send-email 2.44.0.478.gd926399ef9-goog
 In-Reply-To: <20240408185520.1550865-1-namhyung@kernel.org>
 References: <20240408185520.1550865-1-namhyung@kernel.org>
@@ -58,126 +56,82 @@ Content-Transfer-Encoding: 8bit
 
 To pick up the changes from:
 
-  598c2fafc06f ("perf/x86/amd/lbr: Use freeze based on availability")
-  7f274e609f3d ("x86/cpufeatures: Add new word for scattered features")
+  cb4ede926134 ("riscv: Avoid code duplication with generic bitops implementation")
 
 This should address these tools/perf build warnings:
 
   Warning: Kernel ABI header differences:
-    diff -u tools/arch/x86/include/asm/disabled-features.h arch/x86/include/asm/disabled-features.h
-    diff -u tools/arch/x86/include/asm/required-features.h arch/x86/include/asm/required-features.h
-    diff -u tools/arch/x86/include/asm/cpufeatures.h arch/x86/include/asm/cpufeatures.h
+    diff -u tools/include/asm-generic/bitops/__fls.h include/asm-generic/bitops/__fls.h
+    diff -u tools/include/asm-generic/bitops/fls.h include/asm-generic/bitops/fls.h
 
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Dave Hansen <dave.hansen@linux.intel.com>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: x86@kernel.org
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Palmer Dabbelt <palmer@rivosinc.com>
+Cc: linux-arch@vger.kernel.org
 Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 ---
- tools/arch/x86/include/asm/cpufeatures.h       | 17 ++++++++++++-----
- tools/arch/x86/include/asm/disabled-features.h | 11 +++++++++--
- tools/arch/x86/include/asm/required-features.h |  3 ++-
- 3 files changed, 23 insertions(+), 8 deletions(-)
+ tools/include/asm-generic/bitops/__fls.h | 8 ++++++--
+ tools/include/asm-generic/bitops/fls.h   | 8 ++++++--
+ 2 files changed, 12 insertions(+), 4 deletions(-)
 
-diff --git a/tools/arch/x86/include/asm/cpufeatures.h b/tools/arch/x86/include/asm/cpufeatures.h
-index 25160d26764b..a38f8f9ba657 100644
---- a/tools/arch/x86/include/asm/cpufeatures.h
-+++ b/tools/arch/x86/include/asm/cpufeatures.h
-@@ -13,7 +13,7 @@
- /*
-  * Defines x86 CPU feature bits
+diff --git a/tools/include/asm-generic/bitops/__fls.h b/tools/include/asm-generic/bitops/__fls.h
+index 03f721a8a2b1..54ccccf96e21 100644
+--- a/tools/include/asm-generic/bitops/__fls.h
++++ b/tools/include/asm-generic/bitops/__fls.h
+@@ -5,12 +5,12 @@
+ #include <asm/types.h>
+ 
+ /**
+- * __fls - find last (most-significant) set bit in a long word
++ * generic___fls - find last (most-significant) set bit in a long word
+  * @word: the word to search
+  *
+  * Undefined if no set bit exists, so code should check against 0 first.
   */
--#define NCAPINTS			21	   /* N 32-bit words worth of info */
-+#define NCAPINTS			22	   /* N 32-bit words worth of info */
- #define NBUGINTS			2	   /* N 32-bit bug flags */
+-static __always_inline unsigned long __fls(unsigned long word)
++static __always_inline unsigned long generic___fls(unsigned long word)
+ {
+ 	int num = BITS_PER_LONG - 1;
  
- /*
-@@ -81,10 +81,8 @@
- #define X86_FEATURE_K6_MTRR		( 3*32+ 1) /* AMD K6 nonstandard MTRRs */
- #define X86_FEATURE_CYRIX_ARR		( 3*32+ 2) /* Cyrix ARRs (= MTRRs) */
- #define X86_FEATURE_CENTAUR_MCR		( 3*32+ 3) /* Centaur MCRs (= MTRRs) */
--
--/* CPU types for specific tunings: */
- #define X86_FEATURE_K8			( 3*32+ 4) /* "" Opteron, Athlon64 */
--/* FREE, was #define X86_FEATURE_K7			( 3*32+ 5) "" Athlon */
-+#define X86_FEATURE_ZEN5		( 3*32+ 5) /* "" CPU based on Zen5 microarchitecture */
- #define X86_FEATURE_P3			( 3*32+ 6) /* "" P3 */
- #define X86_FEATURE_P4			( 3*32+ 7) /* "" P4 */
- #define X86_FEATURE_CONSTANT_TSC	( 3*32+ 8) /* TSC ticks at a constant rate */
-@@ -97,7 +95,7 @@
- #define X86_FEATURE_SYSENTER32		( 3*32+15) /* "" sysenter in IA32 userspace */
- #define X86_FEATURE_REP_GOOD		( 3*32+16) /* REP microcode works well */
- #define X86_FEATURE_AMD_LBR_V2		( 3*32+17) /* AMD Last Branch Record Extension Version 2 */
--/* FREE, was #define X86_FEATURE_LFENCE_RDTSC		( 3*32+18) "" LFENCE synchronizes RDTSC */
-+#define X86_FEATURE_CLEAR_CPU_BUF	( 3*32+18) /* "" Clear CPU buffers using VERW */
- #define X86_FEATURE_ACC_POWER		( 3*32+19) /* AMD Accumulated Power Mechanism */
- #define X86_FEATURE_NOPL		( 3*32+20) /* The NOPL (0F 1F) instructions */
- #define X86_FEATURE_ALWAYS		( 3*32+21) /* "" Always-present feature */
-@@ -461,6 +459,14 @@
- #define X86_FEATURE_IBPB_BRTYPE		(20*32+28) /* "" MSR_PRED_CMD[IBPB] flushes all branch type predictions */
- #define X86_FEATURE_SRSO_NO		(20*32+29) /* "" CPU is not affected by SRSO */
+@@ -41,4 +41,8 @@ static __always_inline unsigned long __fls(unsigned long word)
+ 	return num;
+ }
  
-+/*
-+ * Extended auxiliary flags: Linux defined - for features scattered in various
-+ * CPUID levels like 0x80000022, etc.
-+ *
-+ * Reuse free bits when adding new feature flags!
-+ */
-+#define X86_FEATURE_AMD_LBR_PMC_FREEZE	(21*32+ 0) /* AMD LBR and PMC Freeze */
-+
- /*
-  * BUG word(s)
-  */
-@@ -508,4 +514,5 @@
- /* BUG word 2 */
- #define X86_BUG_SRSO			X86_BUG(1*32 + 0) /* AMD SRSO bug */
- #define X86_BUG_DIV0			X86_BUG(1*32 + 1) /* AMD DIV0 speculation bug */
-+#define X86_BUG_RFDS			X86_BUG(1*32 + 2) /* CPU is vulnerable to Register File Data Sampling */
- #endif /* _ASM_X86_CPUFEATURES_H */
-diff --git a/tools/arch/x86/include/asm/disabled-features.h b/tools/arch/x86/include/asm/disabled-features.h
-index 1f23960d2b06..c492bdc97b05 100644
---- a/tools/arch/x86/include/asm/disabled-features.h
-+++ b/tools/arch/x86/include/asm/disabled-features.h
-@@ -123,6 +123,12 @@
- # define DISABLE_FRED	(1 << (X86_FEATURE_FRED & 31))
- #endif
- 
-+#ifdef CONFIG_KVM_AMD_SEV
-+#define DISABLE_SEV_SNP		0
-+#else
-+#define DISABLE_SEV_SNP		(1 << (X86_FEATURE_SEV_SNP & 31))
++#ifndef __HAVE_ARCH___FLS
++#define __fls(word) generic___fls(word)
 +#endif
 +
- /*
-  * Make sure to add features to the correct mask
+ #endif /* _ASM_GENERIC_BITOPS___FLS_H_ */
+diff --git a/tools/include/asm-generic/bitops/fls.h b/tools/include/asm-generic/bitops/fls.h
+index b168bb10e1be..26f3ce1dd6e4 100644
+--- a/tools/include/asm-generic/bitops/fls.h
++++ b/tools/include/asm-generic/bitops/fls.h
+@@ -3,14 +3,14 @@
+ #define _ASM_GENERIC_BITOPS_FLS_H_
+ 
+ /**
+- * fls - find last (most-significant) bit set
++ * generic_fls - find last (most-significant) bit set
+  * @x: the word to search
+  *
+  * This is defined the same way as ffs.
+  * Note fls(0) = 0, fls(1) = 1, fls(0x80000000) = 32.
   */
-@@ -147,8 +153,9 @@
- 			 DISABLE_ENQCMD)
- #define DISABLED_MASK17	0
- #define DISABLED_MASK18	(DISABLE_IBT)
--#define DISABLED_MASK19	0
-+#define DISABLED_MASK19	(DISABLE_SEV_SNP)
- #define DISABLED_MASK20	0
--#define DISABLED_MASK_CHECK BUILD_BUG_ON_ZERO(NCAPINTS != 21)
-+#define DISABLED_MASK21	0
-+#define DISABLED_MASK_CHECK BUILD_BUG_ON_ZERO(NCAPINTS != 22)
  
- #endif /* _ASM_X86_DISABLED_FEATURES_H */
-diff --git a/tools/arch/x86/include/asm/required-features.h b/tools/arch/x86/include/asm/required-features.h
-index 7ba1726b71c7..e9187ddd3d1f 100644
---- a/tools/arch/x86/include/asm/required-features.h
-+++ b/tools/arch/x86/include/asm/required-features.h
-@@ -99,6 +99,7 @@
- #define REQUIRED_MASK18	0
- #define REQUIRED_MASK19	0
- #define REQUIRED_MASK20	0
--#define REQUIRED_MASK_CHECK BUILD_BUG_ON_ZERO(NCAPINTS != 21)
-+#define REQUIRED_MASK21	0
-+#define REQUIRED_MASK_CHECK BUILD_BUG_ON_ZERO(NCAPINTS != 22)
+-static __always_inline int fls(unsigned int x)
++static __always_inline int generic_fls(unsigned int x)
+ {
+ 	int r = 32;
  
- #endif /* _ASM_X86_REQUIRED_FEATURES_H */
+@@ -39,4 +39,8 @@ static __always_inline int fls(unsigned int x)
+ 	return r;
+ }
+ 
++#ifndef __HAVE_ARCH_FLS
++#define fls(x) generic_fls(x)
++#endif
++
+ #endif /* _ASM_GENERIC_BITOPS_FLS_H_ */
 -- 
 2.44.0.478.gd926399ef9-goog
 
