@@ -1,275 +1,121 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from ahti.lucaweiss.eu (ahti.lucaweiss.eu [128.199.32.197])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 713C014534F;
-	Mon,  8 Apr 2024 16:34:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A75CB145B0C;
+	Mon,  8 Apr 2024 16:34:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=128.199.32.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712594085; cv=none; b=E//zf+M/wKVl4O4GvS8aYmG7FYBwvahgsvhTHYIe8Q//KQaxs6tyreay1W5PZ7NdW7w5Kqz40ew7K1tWkthnTEsMdAG3h9U+W8NUxNiTSqAxOyqvvGOuIDoXIKiYyBBdQzUdRVRLYnLMKP+nJNm7BiuIZl3v1PZ1VGvdVDS8DrI=
+	t=1712594090; cv=none; b=oaI7SKe83bCFQuNIERxAvnN/gzqFTU5u39o4iZDpm29JReDr8XPklNnSjUwQh+UXd7VyW5LiWj78Gl1KPIpD9G2HB1J3PwzJ5Ff39U+iaz1vpJYoxrqCcwwkD9BZXANagH/xbremmIicjcDeE3efSuguBcgA1v5qm8lH7EsaoRE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712594085; c=relaxed/simple;
-	bh=ou95bQenO6eaVT0zNYeAL1pHVoXX2ezb5k+zzB03VxQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=d/GDQCqAc+xwS9RrjxBRRb/S8+mt+vs8wToWkc851kigCXNbugB2jqT0idvsfDGvtuFEnwcfyXtQTMdfE3DoWUaYn1ttQ0dnxyxRtW1H1DF9NshmdEVPnkfgTzKiDa18zknVezfpH4x1ZEC+QctAQIajfe7NWGVq1GbObWkkylU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=WvnLlk9j; arc=none smtp.client-ip=192.198.163.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1712594090; c=relaxed/simple;
+	bh=qvnGOQ4wjXBKzINryA0Oef5MwTy2fQxVBq/S+8Agw2Y=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=adus7K+JDy+7tTjTvxVqV4ICM1zqyaaOqvc0PTgOQpiL7dHdqxy+hhiQMebOvAmt1+KR9rAUNWKUJl1cx2WyfbidgEVMKskoTdWUqOE6BBnEglbMYGvhitf7pUEF2t5AHHTZAuqAFkAXJW9hXw8noHY81w3WM75RViCQGLH1AEE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=z3ntu.xyz; spf=pass smtp.mailfrom=z3ntu.xyz; dkim=pass (1024-bit key) header.d=z3ntu.xyz header.i=@z3ntu.xyz header.b=h4AmvDjp; arc=none smtp.client-ip=128.199.32.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=z3ntu.xyz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=z3ntu.xyz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WvnLlk9j"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1712594083; x=1744130083;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=ou95bQenO6eaVT0zNYeAL1pHVoXX2ezb5k+zzB03VxQ=;
-  b=WvnLlk9jEaI5EDRzPb1x84Jkbwg8rMh8gWHU1siMBRn9YgJjI3Oxopub
-   Ftb1bzXK2BYyH2+Vr159rNZ9+/dpUi9sfqYh6GTAzLQrP6B6pZFll0W2c
-   YSn2mK1YVa8LBN6ihjKck4beDTdv6YY1Ln5VOA/mRfzG9lWnh4Pyi/sGU
-   Ksr9KdHSS4WuPJyXHG9Iof5YIWcabLxFdE/hfKcsuDQAlYE1HGgF2+Ard
-   EWqA2TbM0aPDc1WuHY8sSUMJIvN4LhuvTD7qPB+AkccoS80t0/3aa7eDQ
-   3eDg5P1IhH/nUfnK2mvPOqUzsTbjxJAmPDaVMSzdlaXGS5Y4IaxSxS0sX
-   A==;
-X-CSE-ConnectionGUID: xp+jwV+6SjK017f+divwhQ==
-X-CSE-MsgGUID: DgIimFZcQPStKZFGLHtIog==
-X-IronPort-AV: E=McAfee;i="6600,9927,11038"; a="7750077"
-X-IronPort-AV: E=Sophos;i="6.07,187,1708416000"; 
-   d="scan'208";a="7750077"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2024 09:34:43 -0700
-X-CSE-ConnectionGUID: hf3wv+xnQg+vQoMtHJVsaQ==
-X-CSE-MsgGUID: 9/kPExKzQ3CHElAQJAR6nQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,187,1708416000"; 
-   d="scan'208";a="57396660"
-Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.247.28])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2024 09:34:39 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: linux-kselftest@vger.kernel.org,
-	Reinette Chatre <reinette.chatre@intel.com>,
-	Shuah Khan <shuah@kernel.org>,
-	Babu Moger <babu.moger@amd.com>,
-	=?UTF-8?q?Maciej=20Wiecz=C3=B3r-Retman?= <maciej.wieczor-retman@intel.com>
-Cc: Fenghua Yu <fenghua.yu@intel.com>,
-	linux-kernel@vger.kernel.org,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Subject: [PATCH v3 12/16] selftests/resctrl: Simplify bandwidth report type handling
-Date: Mon,  8 Apr 2024 19:32:43 +0300
-Message-Id: <20240408163247.3224-13-ilpo.jarvinen@linux.intel.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240408163247.3224-1-ilpo.jarvinen@linux.intel.com>
-References: <20240408163247.3224-1-ilpo.jarvinen@linux.intel.com>
+	dkim=pass (1024-bit key) header.d=z3ntu.xyz header.i=@z3ntu.xyz header.b="h4AmvDjp"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=z3ntu.xyz; s=s1;
+	t=1712594080; bh=qvnGOQ4wjXBKzINryA0Oef5MwTy2fQxVBq/S+8Agw2Y=;
+	h=From:Date:Subject:To:Cc;
+	b=h4AmvDjprPpaCHFC3VFnqEHkF7s0Izxi6UkKUa8nRGM76eTH2Zvp/mdeOiiGBPWnI
+	 ki6MUrN+CLCDX05zi7cK0Lutay3A3kuVdCH/Ih9JLxPWIZR3P7yT/1bilyOO1SIc8Z
+	 Gpa81Itt+BzcId5pj/mhNvuqm4ATMxiUuRHX4s5s=
+From: Luca Weiss <luca@z3ntu.xyz>
+Date: Mon, 08 Apr 2024 18:34:33 +0200
+Subject: [PATCH] dt-bindings: iio: imu: mpu6050: Improve i2c-gate disallow
+ list
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240408-mpu6050-i2c-gate-v1-1-621f051ce7de@z3ntu.xyz>
+X-B4-Tracking: v=1; b=H4sIAJgcFGYC/x3MSQqAMAxA0atI1gZijeNVxEXRqFk40KoI0rtbX
+ L7F/y94cSoe2uQFJ7d63beILE1gWOw2C+oYDYYME1ON63GVVBCqGXC2pyCL5SoXbszEELPDyaT
+ Pv+z6ED62G1XZYgAAAA==
+To: ~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org, 
+ Jonathan Cameron <jic23@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>, 
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Jean-Baptiste Maneyrol <jmaneyrol@invensense.com>
+Cc: linux-iio@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, Luca Weiss <luca@z3ntu.xyz>
+X-Mailer: b4 0.13.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2368; i=luca@z3ntu.xyz;
+ h=from:subject:message-id; bh=qvnGOQ4wjXBKzINryA0Oef5MwTy2fQxVBq/S+8Agw2Y=;
+ b=owEBbQKS/ZANAwAIAXLYQ7idTddWAcsmYgBmFBycxBKS0t7+PhZbuZ4QPqgAnd1HaVGlCHuGC
+ oHmew1B+IqJAjMEAAEIAB0WIQQ5utIvCCzakboVj/py2EO4nU3XVgUCZhQcnAAKCRBy2EO4nU3X
+ Vv0ZD/9JNUtWSrR42AK5CKQoOxnEa2zSvCXJu2h3oOeeXjg1UFx7CSH7gG5jm4vd0vHzngHqpYH
+ 0nRKJ4IyQSLcEIVZjugNvHsSha7qhhoFLPX9iHEVD9RNf+aWrERd1qDVsEfUWhtKkDYVnKkamA2
+ ZniDBuGMfnB53mqSG7gUfqqmArP06/lOI2cjC3qfINdz9IOLdZaKy7I7G4cHPEM3Avy29n6GZ+V
+ Yg38AdMkwBXvEPEwWsLRq+AwARZWlti9GHuISrEijRD9GOjS3MP5WgoYv620Q25T3ry71BmnfZ3
+ PUNHjod7CpUxGHgmwDJyBPepbmK8TbTgly3anKaxWwmKkwDY4bWZwRqevu6KulBGoUbHAqZRc9b
+ Vh7Tz7Ku9yo+vABOI2T5umZFj3dsl2QzDpiKEPUJuGawHEqhVkgKo4Lt3b6FxwTJYwk7B1MV2VE
+ 842q0AJXfmDBY2Y4PtpuIYhBt5NpqIWzKcLt2dP2qyziCywwQI6PTqlWkyT6tSBA+e6GKgfZhef
+ d2kb+KaSnm6aKqMiFIpQGS11Z4HkbQQCJhwegvF04EWNwBYSwj49V3lqJi6OGK74XR3M0UqMUlV
+ x2686vNZLejkPcVbpHfFvTVKiZRmDuoZHMMjl0SR5/SRBSdWiM7q/X8u6imN1Jy/B4fMthhexSH
+ 35oIqKaQ69TEaRg==
+X-Developer-Key: i=luca@z3ntu.xyz; a=openpgp;
+ fpr=BD04DA24C971B8D587B2B8D7FAF69CF6CD2D02CD
 
-bw_report is only needed for selecting the correct value from the
-values IMC measured. It is a member in the resctrl_val_param struct and
-is always set to "reads". The value is then checked in resctrl_val()
-using validate_bw_report_request() that besides validating the input,
-assumes it can mutate the string which is questionable programming
-practice.
+Before all supported sensors except for MPU{9150,9250,9255} were not
+allowed to use i2c-gate in the bindings which excluded quite a few
+supported sensors where this functionality is supported.
 
-Simplify handling bw_report:
+Switch the list of sensors to ones where the Linux driver explicitly
+disallows support for the auxiliary bus ("inv_mpu_i2c_aux_bus"). Since
+the driver is also based on "default: return true" this should scale
+better into the future.
 
-- Convert validate_bw_report_request() into get_bw_report_type() that
-  inputs and returns const char *. Use NULL to indicate error.
-
-- Validate the report types inside measure_mem_bw(), not in
-  resctrl_val().
-
-- As resctrl_val() no longer needs bw_report for anything, it can just
-  be passed to measure_mem_bw() by the ->measure() hooks.
-
-Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+Signed-off-by: Luca Weiss <luca@z3ntu.xyz>
 ---
+This fixes dt validation error on qcom-msm8974-lge-nexus5-hammerhead
+which uses mpu6515
 
-v2:
-- Rebased on top of next to resolve conflict in resctrl.h
+arch/arm/boot/dts/qcom/qcom-msm8974-lge-nexus5-hammerhead.dtb: mpu6515@68: i2c-gate: False schema does not allow {'#address-cells': [[1]], '#size-cells': [[0]], 'ak8963@f': {'compatible': ['asahi-kasei,ak8963'], 'reg': [[15]], 'gpios': [[40, 67, 0]], 'vid-supply': [[50]], 'vdd-supply': [[49]]}, 'bmp280@76': {'compatible': ['bosch,bmp280'], 'reg': [[118]], 'vdda-supply': [[50]], 'vddd-supply': [[49]]}}
+        from schema $id: http://devicetree.org/schemas/iio/imu/invensense,mpu6050.yaml#
 ---
- tools/testing/selftests/resctrl/mba_test.c    |  3 +--
- tools/testing/selftests/resctrl/mbm_test.c    |  3 +--
- tools/testing/selftests/resctrl/resctrl.h     |  7 +++----
- tools/testing/selftests/resctrl/resctrl_val.c | 19 +++++++++----------
- tools/testing/selftests/resctrl/resctrlfs.c   | 13 ++++++-------
- 5 files changed, 20 insertions(+), 25 deletions(-)
+ .../devicetree/bindings/iio/imu/invensense,mpu6050.yaml | 17 +++++++++--------
+ 1 file changed, 9 insertions(+), 8 deletions(-)
 
-diff --git a/tools/testing/selftests/resctrl/mba_test.c b/tools/testing/selftests/resctrl/mba_test.c
-index 0a95c42f1616..9c9a4f22e529 100644
---- a/tools/testing/selftests/resctrl/mba_test.c
-+++ b/tools/testing/selftests/resctrl/mba_test.c
-@@ -67,7 +67,7 @@ static int mba_setup(const struct resctrl_test *test,
- static int mba_measure(const struct user_params *uparams,
- 		       struct resctrl_val_param *param, pid_t bm_pid)
- {
--	return measure_mem_bw(uparams, param, bm_pid);
-+	return measure_mem_bw(uparams, param, bm_pid, "reads");
- }
- 
- static bool show_mba_info(unsigned long *bw_imc, unsigned long *bw_resc)
-@@ -168,7 +168,6 @@ static int mba_run_test(const struct resctrl_test *test, const struct user_param
- 		.ctrlgrp	= "c1",
- 		.mongrp		= "m1",
- 		.filename	= RESULT_FILE_NAME,
--		.bw_report	= "reads",
- 		.init		= mba_init,
- 		.setup		= mba_setup,
- 		.measure	= mba_measure,
-diff --git a/tools/testing/selftests/resctrl/mbm_test.c b/tools/testing/selftests/resctrl/mbm_test.c
-index 90716917e6ef..0a3ab99b31ab 100644
---- a/tools/testing/selftests/resctrl/mbm_test.c
-+++ b/tools/testing/selftests/resctrl/mbm_test.c
-@@ -121,7 +121,7 @@ static int mbm_setup(const struct resctrl_test *test,
- static int mbm_measure(const struct user_params *uparams,
- 		       struct resctrl_val_param *param, pid_t bm_pid)
- {
--	return measure_mem_bw(uparams, param, bm_pid);
-+	return measure_mem_bw(uparams, param, bm_pid, "reads");
- }
- 
- static void mbm_test_cleanup(void)
-@@ -136,7 +136,6 @@ static int mbm_run_test(const struct resctrl_test *test, const struct user_param
- 		.ctrlgrp	= "c1",
- 		.mongrp		= "m1",
- 		.filename	= RESULT_FILE_NAME,
--		.bw_report	= "reads",
- 		.init		= mbm_init,
- 		.setup		= mbm_setup,
- 		.measure	= mbm_measure,
-diff --git a/tools/testing/selftests/resctrl/resctrl.h b/tools/testing/selftests/resctrl/resctrl.h
-index d3fbb957309d..4446a0e493ef 100644
---- a/tools/testing/selftests/resctrl/resctrl.h
-+++ b/tools/testing/selftests/resctrl/resctrl.h
-@@ -85,7 +85,6 @@ struct resctrl_test {
-  * @ctrlgrp:		Name of the control monitor group (con_mon grp)
-  * @mongrp:		Name of the monitor group (mon grp)
-  * @filename:		Name of file to which the o/p should be written
-- * @bw_report:		Bandwidth report type (reads vs writes)
-  * @init:		Callback function to initialize test environment
-  * @setup:		Callback function to setup per test run environment
-  * @measure:		Callback that performs the measurement (a single test)
-@@ -95,7 +94,6 @@ struct resctrl_val_param {
- 	char		ctrlgrp[64];
- 	char		mongrp[64];
- 	char		filename[64];
--	char		*bw_report;
- 	unsigned long	mask;
- 	int		num_of_runs;
- 	int		(*init)(const struct resctrl_val_param *param,
-@@ -135,7 +133,7 @@ int filter_dmesg(void);
- int get_domain_id(const char *resource, int cpu_no, int *domain_id);
- int mount_resctrlfs(void);
- int umount_resctrlfs(void);
--int validate_bw_report_request(char *bw_report);
-+const char *get_bw_report_type(const char *bw_report);
- bool resctrl_resource_exists(const char *resource);
- bool resctrl_mon_feature_exists(const char *resource, const char *feature);
- bool resource_info_file_exists(const char *resource, const char *file);
-@@ -154,7 +152,8 @@ void fill_cache_read(unsigned char *buf, size_t buf_size, bool once);
- int run_fill_buf(size_t buf_size, int memflush, int op, bool once);
- int initialize_mem_bw_imc(void);
- int measure_mem_bw(const struct user_params *uparams,
--		   struct resctrl_val_param *param, pid_t bm_pid);
-+		   struct resctrl_val_param *param, pid_t bm_pid,
-+		   const char *bw_report);
- void initialize_mem_bw_resctrl(const struct resctrl_val_param *param,
- 			       int domain_id);
- int resctrl_val(const struct resctrl_test *test,
-diff --git a/tools/testing/selftests/resctrl/resctrl_val.c b/tools/testing/selftests/resctrl/resctrl_val.c
-index d289c17f1f03..a9e0bb35a4ab 100644
---- a/tools/testing/selftests/resctrl/resctrl_val.c
-+++ b/tools/testing/selftests/resctrl/resctrl_val.c
-@@ -338,7 +338,7 @@ static void do_imc_mem_bw_test(void)
-  *
-  * Return: = 0 on success. < 0 on failure.
-  */
--static int get_mem_bw_imc(char *bw_report, float *bw_imc)
-+static int get_mem_bw_imc(const char *bw_report, float *bw_imc)
- {
- 	float reads, writes, of_mul_read, of_mul_write;
- 	int imc;
-@@ -550,14 +550,20 @@ static int print_results_bw(char *filename, pid_t bm_pid, float bw_imc,
-  * @uparams:		User supplied parameters
-  * @param:		parameters passed to resctrl_val()
-  * @bm_pid:		PID that runs the benchmark
-+ * @bw_report:		Bandwidth report type (reads, writes)
-  */
- int measure_mem_bw(const struct user_params *uparams,
--		   struct resctrl_val_param *param, pid_t bm_pid)
-+		   struct resctrl_val_param *param, pid_t bm_pid,
-+		   const char *bw_report)
- {
- 	unsigned long bw_resc, bw_resc_start, bw_resc_end;
- 	float bw_imc;
- 	int ret;
- 
-+	bw_report = get_bw_report_type(bw_report);
-+	if (!bw_report)
-+		return -1;
-+
- 	/*
- 	 * Measure memory bandwidth from resctrl and from
- 	 * another source which is perf imc value or could
-@@ -579,7 +585,7 @@ int measure_mem_bw(const struct user_params *uparams,
- 	if (ret < 0)
- 		return ret;
- 
--	ret = get_mem_bw_imc(param->bw_report, &bw_imc);
-+	ret = get_mem_bw_imc(bw_report, &bw_imc);
- 	if (ret < 0)
- 		return ret;
- 
-@@ -674,13 +680,6 @@ int resctrl_val(const struct resctrl_test *test,
- 		return ret;
- 	}
- 
--	if (!strncmp(resctrl_val, MBA_STR, sizeof(MBA_STR)) ||
--	    !strncmp(resctrl_val, MBM_STR, sizeof(MBM_STR))) {
--		ret = validate_bw_report_request(param->bw_report);
--		if (ret)
--			return ret;
--	}
--
- 	/*
- 	 * If benchmark wasn't successfully started by child, then child should
- 	 * kill parent, so save parent's pid
-diff --git a/tools/testing/selftests/resctrl/resctrlfs.c b/tools/testing/selftests/resctrl/resctrlfs.c
-index 9b86f826a40c..aac382eaa032 100644
---- a/tools/testing/selftests/resctrl/resctrlfs.c
-+++ b/tools/testing/selftests/resctrl/resctrlfs.c
-@@ -837,22 +837,21 @@ int filter_dmesg(void)
- 	return 0;
- }
- 
--int validate_bw_report_request(char *bw_report)
-+const char *get_bw_report_type(const char *bw_report)
- {
- 	if (strcmp(bw_report, "reads") == 0)
--		return 0;
-+		return bw_report;
- 	if (strcmp(bw_report, "writes") == 0)
--		return 0;
-+		return bw_report;
- 	if (strcmp(bw_report, "nt-writes") == 0) {
--		strcpy(bw_report, "writes");
--		return 0;
-+		return "writes";
- 	}
- 	if (strcmp(bw_report, "total") == 0)
--		return 0;
-+		return bw_report;
- 
- 	fprintf(stderr, "Requested iMC bandwidth report type unavailable\n");
- 
--	return -1;
-+	return NULL;
- }
- 
- int perf_event_open(struct perf_event_attr *hw_event, pid_t pid, int cpu,
+diff --git a/Documentation/devicetree/bindings/iio/imu/invensense,mpu6050.yaml b/Documentation/devicetree/bindings/iio/imu/invensense,mpu6050.yaml
+index 297b8a1a7ffb..587ff2bced2d 100644
+--- a/Documentation/devicetree/bindings/iio/imu/invensense,mpu6050.yaml
++++ b/Documentation/devicetree/bindings/iio/imu/invensense,mpu6050.yaml
+@@ -62,14 +62,15 @@ properties:
+ allOf:
+   - $ref: /schemas/spi/spi-peripheral-props.yaml#
+   - if:
+-      not:
+-        properties:
+-          compatible:
+-            contains:
+-              enum:
+-                - invensense,mpu9150
+-                - invensense,mpu9250
+-                - invensense,mpu9255
++      properties:
++        compatible:
++          contains:
++            enum:
++              - invensense,iam20680
++              - invensense,icm20602
++              - invensense,icm20608
++              - invensense,icm20609
++              - invensense,icm20689
+     then:
+       properties:
+         i2c-gate: false
+
+---
+base-commit: 8568bb2ccc278f344e6ac44af6ed010a90aa88dc
+change-id: 20240408-mpu6050-i2c-gate-4ea473e492f4
+
+Best regards,
 -- 
-2.39.2
+Luca Weiss <luca@z3ntu.xyz>
 
