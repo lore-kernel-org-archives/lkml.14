@@ -1,113 +1,112 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com [209.85.167.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1BA6747F;
-	Mon,  8 Apr 2024 04:25:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F2324404
+	for <linux-kernel@vger.kernel.org>; Mon,  8 Apr 2024 04:30:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712550340; cv=none; b=RJWJfZKloErgUwwoE1QVn7gyaJQ5OgZ150FZfnzKxu31jh0W56yN4nOThoq9XdTI+md/AHB4DeBPSb8LCkz8/wB5waEt44jIPTZPBxbj3a1DRQBO0dVsnkN4kVhxRth+j/E2n5BaTql872oOtaOMV8+IpdZlBaTcHBK2DnnzAio=
+	t=1712550656; cv=none; b=mmgRugynp8dDnQe/AY2pPjPoVafAVT4DbB8sBp7nV06OhHaZqpCdyPujjThaDdl59KMJPRTQvTHgRLsH7dHBCpqurMIrn2KWNEdWOP00P8zg7zs8bkkuFRrfo49iNYL+Wwf3BA8IdzwzcI67qx+d/R+Ee7nXZLBTQQ7IcoDdBzU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712550340; c=relaxed/simple;
-	bh=Z4CsF2281mZmL7xf7ynNJXP+RNbaJ8x8o9H19nrf1V8=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=NKZ7wwW/jrmzOnteRDcbNX5TsX1ZRWI/GjMznl268Axh1l6PWFdAI9M79V6xqEvb5KT8ZoKeSYjro08u/8SKO7aoFAL4nZdkBzebLBA83sS10/BUeh7dPehWMVxsneLd9r9m2wN4+BFPc9jy77yV2XMIFMvTAhOwADipS0yc8ZY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=BhFaME95; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1712550656; c=relaxed/simple;
+	bh=TxV7kxeMfkDnxNQLSQVdz6XPhubojpXImgsuhhZ9918=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=O1EECSSRMCh4mVR2xbs0nSjgtuwgY60xeNnuOwsmuw39aQqKkXIoumg6JIxpBW85G8pHpVx0MeXPAuKUXLl5++qGwEdY+ma/JG5mkMmK8DRlzrcHAsPT6hpZzhCVXjXYt9qGZ5fTDi3T6iHMd68+v6PbvqBDi6kET9+B930Zyh0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=rcddXvQg; arc=none smtp.client-ip=209.85.167.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="BhFaME95"
-Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 43840ENc012334;
-	Mon, 8 Apr 2024 04:25:28 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	from:to:cc:subject:date:message-id:in-reply-to:references
-	:mime-version:content-transfer-encoding:content-type; s=
-	qcppdkim1; bh=6naomMVvQqPbfJJOQtxuDorZsTKMcpI7bZfiKtjJCgM=; b=Bh
-	FaME95INVlRnsXxHXEPxX/gca3zoc6GK08+tigqoYKhO1ZFgBY9poMAk0APHYAca
-	TL9gGn95LTZ0LneGpLfRk19v/4oPHekxQqavlz+dXOSV9ItvaniByiDKmhCtTYda
-	pKUwOunhpMCJd5jT4QsTAXp62Siwin15P5/GGwHXKeN8EOd87iZQ6lgOywOI8sbM
-	nbdvznLJUUfhbjTl9A+/sj3dcP1udoKGrq/njZ4rc3F46FnQMASrAq9bRghd3f1n
-	/+3FH1i91mY6jB0wNefSyQ+qoVnxzVpvJIADL757j1GEWTcUOymc+whnR4Gfkp/o
-	WLmQpMXet/aX0k+FY5eA==
-Received: from nasanppmta03.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3xawqpjnde-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 08 Apr 2024 04:25:27 +0000 (GMT)
-Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
-	by NASANPPMTA03.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 4384PQsp000600
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 8 Apr 2024 04:25:26 GMT
-Received: from hu-mohs-hyd.qualcomm.com (10.80.80.8) by
- nasanex01c.na.qualcomm.com (10.45.79.139) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.4; Sun, 7 Apr 2024 21:25:21 -0700
-From: Mohammad Rafi Shaik <quic_mohs@quicinc.com>
-To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Banajit Goswami
-	<bgoswami@quicinc.com>,
-        Liam Girdwood <lgirdwood@gmail.com>, Mark Brown
-	<broonie@kernel.org>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski
-	<krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>, Jaroslav Kysela
-	<perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>
-CC: <linux-arm-msm@vger.kernel.org>, <alsa-devel@alsa-project.org>,
-        <linux-sound@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <quic_rohkumar@quicinc.com>,
-        "Mohammad Rafi
- Shaik" <quic_mohs@quicinc.com>
-Subject: [RESEND v3 2/2] ASoC: qcom: sc8280xp: Add support for QCM6490 and QCS6490
-Date: Mon, 8 Apr 2024 09:53:31 +0530
-Message-ID: <20240408042331.403103-3-quic_mohs@quicinc.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240408042331.403103-1-quic_mohs@quicinc.com>
-References: <20240408042331.403103-1-quic_mohs@quicinc.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rcddXvQg"
+Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-516c97ddcd1so4453380e87.2
+        for <linux-kernel@vger.kernel.org>; Sun, 07 Apr 2024 21:30:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1712550653; x=1713155453; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=R/AU7a0dE2jT+MxgeDV/IUhWmuS+tYRumxiy4yU3zg4=;
+        b=rcddXvQg7slkBtr0606CGyWJvwUizPYxmUDL3DrgjhkoDc8a0sVPly/8Hp7POj3e16
+         fwy9h7OUrk0g1z2b62w0LClb05C1W19hIo/OLO+mAC4oBc41cG/AmrsR6rJ76FxJ88ye
+         jeG2I6lI58owDc3Y6PPiUQJBtwGSBRJmNssmgiQ+4ePIF70E9Y7oMIC6gxcQsrUPeK+e
+         CaNTWNi+74tlck4uJATjFqn0HAC2OY43MfTOnomS5SufiyKn570muJB2jOQsP8yq/z2N
+         V+ERiXpU3Ul1IgWEjnuNBscZ0ppdoDQeLClUK4Zs0ivmcp5GQ+AObCfgPn61AOkW9Aek
+         70CQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712550653; x=1713155453;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=R/AU7a0dE2jT+MxgeDV/IUhWmuS+tYRumxiy4yU3zg4=;
+        b=aUghqi64h00zRL3zt0ZvHp206Y+zgjHEf03HGkgh97J9+r9iCdWWBP54ZgQIt/fBvr
+         /FEHJzRImjLn9m+i39HHMhUBCQRwAk6+7lyIe4EDihE7RuBLZR01zyiyPcEgnc8tlU+X
+         rlC4qbB7MxckTj4JNE37g4xM8GuUKRbzK7ADU0MvpgahN7bS3GJny0xTHmW8lKav+WUa
+         j57xSaqu1gPqAE79KBpGUu5jZ5Wl65nDxpR+Z/JMo2oRCQ1FQEtFISyVBM2/cNI3O+rj
+         5M0RbwZkQNkX19TShrSxbLBeHfILmcV6RR1l0kTa6O3jdaUFRyjH+Ug4mWRsbsgGHAY+
+         aGnQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUh4zVMy+Et6YO1MpoHJMnPmsiQ2mJBEryjDALvTdT5x3jNpEhzezvRu75dv3EFEx4xVzTFu9DsgiyAp14EzuYdZF5DqvMKFnZTvYa0
+X-Gm-Message-State: AOJu0Yz5rl84PPBE6g6jRpVE4AbhB6KtMys/sq7U6W00KxKnw5p7txGR
+	rhnAiXT7+CyuW4JvVp6Bk6NDQDN3C5XuTXGahUzZ+c3maVDYi4K8B8q4qkFCyXY=
+X-Google-Smtp-Source: AGHT+IGOuPES33b69mPKBp4LG22SUH+x046DRFeubXhcnej3y95Vj2V+oL78vSjGWxH/luINOt2QsA==
+X-Received: by 2002:a05:6512:6a:b0:516:b92f:98ef with SMTP id i10-20020a056512006a00b00516b92f98efmr4983894lfo.47.1712550652792;
+        Sun, 07 Apr 2024 21:30:52 -0700 (PDT)
+Received: from umbar.lan ([192.130.178.91])
+        by smtp.gmail.com with ESMTPSA id g13-20020ac2538d000000b005132f12ee7asm1033207lfh.174.2024.04.07.21.30.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 07 Apr 2024 21:30:52 -0700 (PDT)
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Subject: [PATCH 0/5] usb: typec: ucsi: glink: rework orientation handling
+Date: Mon, 08 Apr 2024 07:30:48 +0300
+Message-Id: <20240408-ucsi-orient-aware-v1-0-95a74a163a10@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nasanex01c.na.qualcomm.com (10.45.79.139)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: HvRBedq2qORahbEhczr0KgIdfGpeQdl5
-X-Proofpoint-ORIG-GUID: HvRBedq2qORahbEhczr0KgIdfGpeQdl5
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-04-08_02,2024-04-05_02,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 malwarescore=0
- clxscore=1015 impostorscore=0 suspectscore=0 spamscore=0 mlxscore=0
- lowpriorityscore=0 mlxlogscore=982 priorityscore=1501 bulkscore=0
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2404010003 definitions=main-2404080032
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAPhyE2YC/x3MOQqAMBBA0avI1A5kM6hXEYsQR50mkcQNxLsbL
+ H/x/gOZElOGvnog0cmZYygh6wr86sJCyFNpUEIZYUSLh8+MsZiwo7tcIuys0bOyjdZCQnFbopn
+ v/zmM7/sB8fdlx2MAAAA=
+To: Heikki Krogerus <heikki.krogerus@linux.intel.com>, 
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Neil Armstrong <neil.armstrong@linaro.org>, linux-usb@vger.kernel.org, 
+ linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+X-Mailer: b4 0.13.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1102;
+ i=dmitry.baryshkov@linaro.org; h=from:subject:message-id;
+ bh=TxV7kxeMfkDnxNQLSQVdz6XPhubojpXImgsuhhZ9918=;
+ b=owEBbQGS/pANAwAKAYs8ij4CKSjVAcsmYgBmE3L7xRtVnpyvawuIFkBpylB2c7C2KZLKziSy4
+ kk08ILS5mqJATMEAAEKAB0WIQRMcISVXLJjVvC4lX+LPIo+Aiko1QUCZhNy+wAKCRCLPIo+Aiko
+ 1dVfB/9IwOa57SEU0VeCYu2O2rae3gNu+fxFoWSazbkQXEftn4JWocoLEoKq1GpaiJ68Lj/nOe3
+ rI7fkpA38eo1MOB4f0F52vBGSLtvKUeY8TVJiuxrigaHLX/KMfse/3Dt8+U6w6/6Z4bB/wmeVZH
+ hYlsrY4QBEiylaO59w2gHVQTFg3tLyl4kN4pnsVKnFiyedhyQZKZSAyO02Y6qQzq/P3j92haxjz
+ 7s85Wmi58Dya5zmKR1Ls7g4Ksoc73o6C815Fp5t/DL9cnBGx2jJ9X1lPDfWgLLTXn7vW0+5eK06
+ cS0sVc02HuqTNtE4QL7PrblhMG35Ic4wfBxeyISv44uZXAN3
+X-Developer-Key: i=dmitry.baryshkov@linaro.org; a=openpgp;
+ fpr=8F88381DD5C873E4AE487DA5199BF1243632046A
 
-Add compatibles for sound card on Qualcomm QCM6490 IDP and
-QCS6490 RB3Gen2 boards.
+Simplify the way the UCSI GLINK driver handles cable orientation. Make
+the UCSI core responsible for pinging the driver to get cable status.
+Use typec-port API instead of calling typec_switch_set() directly.
+Also make the orientation status available via the sysfs.
 
-Signed-off-by: Mohammad Rafi Shaik <quic_mohs@quicinc.com>
+Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 ---
- sound/soc/qcom/sc8280xp.c | 2 ++
- 1 file changed, 2 insertions(+)
+Dmitry Baryshkov (5):
+      usb: typec: ucsi: add callback for connector status updates
+      usb: typec: ucsi: glink: move GPIO reading into connector_status callback
+      usb: typec: ucsi: glink: use typec_set_orientation
+      usb: typec: ucsi: make it orientation-aware
+      usb: typec: ucsi: glink: set orientation aware if supported
 
-diff --git a/sound/soc/qcom/sc8280xp.c b/sound/soc/qcom/sc8280xp.c
-index b7fd503a1666..878bd50ad4a7 100644
---- a/sound/soc/qcom/sc8280xp.c
-+++ b/sound/soc/qcom/sc8280xp.c
-@@ -169,6 +169,8 @@ static int sc8280xp_platform_probe(struct platform_device *pdev)
- }
- 
- static const struct of_device_id snd_sc8280xp_dt_match[] = {
-+	{.compatible = "qcom,qcm6490-idp-sndcard", "qcm6490"},
-+	{.compatible = "qcom,qcs6490-rb3gen2-sndcard", "qcs6490"},
- 	{.compatible = "qcom,sc8280xp-sndcard", "sc8280xp"},
- 	{.compatible = "qcom,sm8450-sndcard", "sm8450"},
- 	{.compatible = "qcom,sm8550-sndcard", "sm8550"},
+ drivers/usb/typec/ucsi/ucsi.c       |  8 ++++++
+ drivers/usb/typec/ucsi/ucsi.h       |  4 +++
+ drivers/usb/typec/ucsi/ucsi_glink.c | 55 +++++++++++++++----------------------
+ 3 files changed, 34 insertions(+), 33 deletions(-)
+---
+base-commit: a7636ecc2a798cf6dfcfe5c993be9deedceb1888
+change-id: 20240408-ucsi-orient-aware-9643f2653301
+
+Best regards,
 -- 
-2.25.1
+Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 
