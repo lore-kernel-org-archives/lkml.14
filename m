@@ -1,163 +1,117 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
+Received: from sxb1plsmtpa01-12.prod.sxb1.secureserver.net (sxb1plsmtpa01-12.prod.sxb1.secureserver.net [188.121.53.128])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59A8050A62
-	for <linux-kernel@vger.kernel.org>; Tue,  9 Apr 2024 01:50:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 920E379E1
+	for <linux-kernel@vger.kernel.org>; Tue,  9 Apr 2024 01:53:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.121.53.128
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712627417; cv=none; b=bVvqwXSeW/rDHnMJY9xEkYMoDttlY9yX8G1cHnv1da42TohFqzVvFXFcVpDpmD8OnpA0Jy692PPktFPjSv12YV4sjlNq8AZx/4Ap3DiGPvmPQ18EkHYnjyFQhHneI1+gRkuZY7oQ0+9k0w6HJzfOCphcqwuSMtB1kMa8PsqEGZY=
+	t=1712627607; cv=none; b=QIVV8tjFfklx6A/a2fu/S/h8Ye0GQBJ4gkd0DOUBT7aF81AUJpLi+/Uqn3/5lYbK30kVVKbaE1cBQLolZ9KtsMt8vW5cUAPHpvdlUHFYHrRO1l/FacC3qalWQMzPmbhdANZfo/tHvrqbBeSeYi6BIM6IRk3Z0FnNvSoqsg+TnqM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712627417; c=relaxed/simple;
-	bh=RK2dp9XNhI6UYAvrY+D9uB16/aVW9vKXSASv3fqh1qw=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=LKeErrMWt2AybJE0izzygHe3viqxn5DRD9fHpKeBRPVlnm/6LxXLw43TUIHLsRbiAm0Bex+ptShVolceTfBpJd8Dd01igkJmlj4YoNdZscuR4FigHro2upspcxu/Os4EoLv5rGM/klQN2LZ6hsranhdmadP0qMWIoZWeSQaCct8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NchnYLZo; arc=none smtp.client-ip=198.175.65.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NchnYLZo"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1712627415; x=1744163415;
-  h=date:from:to:cc:subject:message-id;
-  bh=RK2dp9XNhI6UYAvrY+D9uB16/aVW9vKXSASv3fqh1qw=;
-  b=NchnYLZod5BHHdPidVPcsnw2vItL6XxHpu/gZVYeyCQt2MzBAX8FQIJm
-   cREIytE7nJkkAzegR3fY5TS9FHpGOoRWd+YuW9KAAGyj92rEykO7kfEFM
-   77t7ZVqMHZGfuq2gkQZ556uYkFZOel+9iQRT0cnPULv8d2DNZpjUA+eVQ
-   2AExjbEpAI+3ffIn4rbUshKaelFsXhUxiRvEc994zuUqFJR/evNGxFQzr
-   YRNTxxUk1jlTJ4GFDP5kzBs3+X728az5a4Acp0R2Bi8YAuzdPgyJvgjyE
-   qPQ43heR1Za8/Aj9BajqSGVmEXldxzdebJKjzisCPRKflWRRqphEAK0aR
-   g==;
-X-CSE-ConnectionGUID: 3yZxjVKVQNGwMd/ZLPkGzA==
-X-CSE-MsgGUID: u2aX9gG3Q8KAD/U/KeIx6w==
-X-IronPort-AV: E=McAfee;i="6600,9927,11038"; a="7795782"
-X-IronPort-AV: E=Sophos;i="6.07,188,1708416000"; 
-   d="scan'208";a="7795782"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2024 18:50:15 -0700
-X-CSE-ConnectionGUID: KrDUh997TfmB7C139KUWsA==
-X-CSE-MsgGUID: 8dMBW29aTvyGMCq4PMi8hA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,188,1708416000"; 
-   d="scan'208";a="19987061"
-Received: from lkp-server01.sh.intel.com (HELO e61807b1d151) ([10.239.97.150])
-  by orviesa009.jf.intel.com with ESMTP; 08 Apr 2024 18:50:14 -0700
-Received: from kbuild by e61807b1d151 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1ru0cl-0005cb-2J;
-	Tue, 09 Apr 2024 01:50:11 +0000
-Date: Tue, 09 Apr 2024 09:49:56 +0800
-From: kernel test robot <lkp@intel.com>
-To: "x86-ml" <x86@kernel.org>
-Cc: linux-kernel@vger.kernel.org
-Subject: [tip:x86/urgent] BUILD SUCCESS
- 5ce344beaca688f4cdea07045e0b8f03dc537e74
-Message-ID: <202404090955.mhINp1PS-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	s=arc-20240116; t=1712627607; c=relaxed/simple;
+	bh=3HBPHjqBlTJQ8GA62J3dwHHTdwgGwyG6YNrro7MYCrk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=FWvOx4Hptz+8PTVwSXSCADcz5/PQzB+InBixFcrcZ3W3e5PfzDl7Y5j4GFeZgdtCvmHBK2B5zbsFSsXM2pSrZnbFQO/hEsMryT46Zd0ZTl5Gcuk+RmaqqqYib8am4yj7s2NPQVBb5204IRZgCPq32LzQGi+ZJ6OogXyXIuwT+E8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squashfs.org.uk; spf=pass smtp.mailfrom=squashfs.org.uk; arc=none smtp.client-ip=188.121.53.128
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squashfs.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=squashfs.org.uk
+Received: from [192.168.178.90] ([82.69.79.175])
+	by :SMTPAUTH: with ESMTPA
+	id twGFrZZEAUWUFtwGGrUO5Q; Mon, 08 Apr 2024 14:10:42 -0700
+X-CMAE-Analysis: v=2.4 cv=H/oQwPYi c=1 sm=1 tr=0 ts=66145d53
+ a=84ok6UeoqCVsigPHarzEiQ==:117 a=84ok6UeoqCVsigPHarzEiQ==:17
+ a=IkcTkHD0fZMA:10 a=bv5mqyoQTMx-qQ9dIWAA:9 a=QEXdDO2ut3YA:10
+X-SECURESERVER-ACCT: phillip@squashfs.org.uk
+Message-ID: <a51419a5-5685-4a6b-8467-be8d3837c519@squashfs.org.uk>
+Date: Mon, 8 Apr 2024 22:10:36 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: UBSAN array-index-out-of-bounds in read_blocklist
+To: Ubisectech Sirius <bugreport@ubisectech.com>,
+ linux-kernel <linux-kernel@vger.kernel.org>,
+ linux-trace-kernel <linux-trace-kernel@vger.kernel.org>
+References: <87f5c007-b8a5-41ae-8b57-431e924c5915.bugreport@ubisectech.com>
+Content-Language: en-GB
+From: Phillip Lougher <phillip@squashfs.org.uk>
+In-Reply-To: <87f5c007-b8a5-41ae-8b57-431e924c5915.bugreport@ubisectech.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4xfPHxFGFdCEUayiJ5NuoGSj++Zmq6KWIhIogShVOmcnXEPEVaH6TVQn/nUfM+rv/87RuwNtK2D5x3bjQfgBf/+e5Jm9jrx2O3Bf2M+K2aNLTM4LUAITXL
+ LlyYqeNFStHNlnlmnUhizYfwoPP1WGR4sILHFnbFZS48FSrulr+Zgu2NL5xJJCLbEQlXUn0+H8J34+sNFi/X53XjXrykE4mem1EvpB/+BHAPJ6qnsEODPidv
+ Rg3LGMlP6vxa4hOYHtRRorvBxU2a3/RgpVbfXAc3ThtZ4l07TeQQF4J193jq9ETF
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86/urgent
-branch HEAD: 5ce344beaca688f4cdea07045e0b8f03dc537e74  x86/apic: Force native_apic_mem_read() to use the MOV instruction
+On 08/04/2024 01:56, Ubisectech Sirius wrote:
+> Hello.
+> We are Ubisectech Sirius Team, the vulnerability lab of China ValiantSec. Recently, our team has discovered a issue in Linux kernel 6.8. Attached to the email were a PoC file of the issue.
+Hello,
 
-elapsed time: 727m
+I have found the cause of the problem and fixed it.
 
-configs tested: 86
-configs skipped: 135
+A patch will be sent to the LKML shortly.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+Thanks
 
-tested configs:
-alpha                             allnoconfig   gcc  
-alpha                            allyesconfig   gcc  
-alpha                               defconfig   gcc  
-arc                               allnoconfig   gcc  
-arc                                 defconfig   gcc  
-arc                        vdk_hs38_defconfig   gcc  
-arm                           sunxi_defconfig   gcc  
-arm                    vt8500_v6_v7_defconfig   gcc  
-arm64                            allmodconfig   clang
-arm64                             allnoconfig   gcc  
-arm64                            allyesconfig   clang
-arm64                               defconfig   gcc  
-csky                              allnoconfig   gcc  
-csky                                defconfig   gcc  
-i386                             allmodconfig   gcc  
-i386                              allnoconfig   gcc  
-i386                             allyesconfig   gcc  
-i386         buildonly-randconfig-001-20240409   clang
-i386         buildonly-randconfig-002-20240409   clang
-i386         buildonly-randconfig-003-20240409   gcc  
-i386         buildonly-randconfig-004-20240409   clang
-i386         buildonly-randconfig-005-20240409   gcc  
-i386         buildonly-randconfig-006-20240409   gcc  
-i386                                defconfig   clang
-i386                  randconfig-001-20240409   clang
-i386                  randconfig-002-20240409   gcc  
-i386                  randconfig-003-20240409   clang
-i386                  randconfig-004-20240409   gcc  
-i386                  randconfig-005-20240409   gcc  
-i386                  randconfig-006-20240409   clang
-i386                  randconfig-011-20240409   gcc  
-i386                  randconfig-012-20240409   clang
-i386                  randconfig-013-20240409   clang
-i386                  randconfig-014-20240409   clang
-i386                  randconfig-015-20240409   gcc  
-i386                  randconfig-016-20240409   clang
-loongarch                         allnoconfig   gcc  
-loongarch                           defconfig   gcc  
-m68k                              allnoconfig   gcc  
-m68k                                defconfig   gcc  
-microblaze                        allnoconfig   gcc  
-microblaze                          defconfig   gcc  
-microblaze                      mmu_defconfig   gcc  
-mips                              allnoconfig   gcc  
-mips                       bmips_be_defconfig   gcc  
-mips                     cu1830-neo_defconfig   gcc  
-nios2                             allnoconfig   gcc  
-nios2                               defconfig   gcc  
-openrisc                          allnoconfig   gcc  
-openrisc                            defconfig   gcc  
-openrisc                       virt_defconfig   gcc  
-parisc                            allnoconfig   gcc  
-parisc                              defconfig   gcc  
-parisc64                            defconfig   gcc  
-powerpc                           allnoconfig   gcc  
-powerpc                          allyesconfig   clang
-powerpc                  iss476-smp_defconfig   gcc  
-powerpc                         ps3_defconfig   gcc  
-powerpc                  storcenter_defconfig   gcc  
-riscv                            allmodconfig   clang
-riscv                             allnoconfig   gcc  
-riscv                            allyesconfig   clang
-s390                             allyesconfig   gcc  
-sh                               allmodconfig   gcc  
-sh                                allnoconfig   gcc  
-sh                               allyesconfig   gcc  
-sh                                  defconfig   gcc  
-sh                            hp6xx_defconfig   gcc  
-sh                           se7705_defconfig   gcc  
-sh                           sh2007_defconfig   gcc  
-sparc                            allmodconfig   gcc  
-sparc                             allnoconfig   gcc  
-sparc                               defconfig   gcc  
-sparc                       sparc32_defconfig   gcc  
-sparc64                          allmodconfig   gcc  
-sparc64                          allyesconfig   gcc  
-sparc64                             defconfig   gcc  
-um                               allyesconfig   gcc  
-um                             i386_defconfig   gcc  
-x86_64                            allnoconfig   clang
-x86_64                           allyesconfig   clang
-x86_64                              defconfig   gcc  
-x86_64                          rhel-8.3-rust   clang
-x86_64                               rhel-8.3   gcc  
-xtensa                            allnoconfig   gcc  
-xtensa                generic_kc705_defconfig   gcc  
+Phillip
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Squashfs maintainer.
+
+> 
+> Stack dump:
+> ------------[ cut here ]------------
+> UBSAN: array-index-out-of-bounds in fs/squashfs/file.c:256:34
+> index 4294967295 is out of range for type 'meta_entry [127]'
+> CPU: 1 PID: 16927 Comm: syz-executor.0 Not tainted 6.8.0 #1
+> Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.15.0-1 04/01/2014
+> Call Trace:
+>   <TASK>
+>   __dump_stack lib/dump_stack.c:88 [inline]
+>   dump_stack_lvl+0x136/0x150 lib/dump_stack.c:106
+>   ubsan_epilogue lib/ubsan.c:217 [inline]
+>   __ubsan_handle_out_of_bounds+0xd5/0x130 lib/ubsan.c:347
+>   fill_meta_index fs/squashfs/file.c:256 [inline]
+>   read_blocklist+0x175e/0x1790 fs/squashfs/file.c:333
+>   squashfs_readahead+0x14fa/0x22d0 fs/squashfs/file.c:591
+>   read_pages+0x1a2/0xd70 mm/readahead.c:160
+>   page_cache_ra_unbounded+0x477/0x5f0 mm/readahead.c:269
+>   do_page_cache_ra mm/readahead.c:299 [inline]
+>   page_cache_ra_order+0x772/0xa00 mm/readahead.c:544
+>   do_sync_mmap_readahead mm/filemap.c:3153 [inline]
+>   filemap_fault+0x1691/0x3390 mm/filemap.c:3245
+>   __do_fault+0x108/0x490 mm/memory.c:4396
+>   do_read_fault mm/memory.c:4758 [inline]
+>   do_fault mm/memory.c:4888 [inline]
+>   do_pte_missing mm/memory.c:3745 [inline]
+>   handle_pte_fault mm/memory.c:5164 [inline]
+>   __handle_mm_fault+0x340a/0x48b0 mm/memory.c:5305
+>   handle_mm_fault+0x3c2/0xa40 mm/memory.c:5470
+>   do_user_addr_fault+0x2ed/0x1010 arch/x86/mm/fault.c:1355
+>   handle_page_fault arch/x86/mm/fault.c:1498 [inline]
+>   exc_page_fault+0x99/0x180 arch/x86/mm/fault.c:1554
+>   asm_exc_page_fault+0x26/0x30 arch/x86/include/asm/idtentry.h:570
+> RIP: 0033:0x7f8446a28202
+> Code: 48 63 c3 5b c3 0f 1f 00 f3 0f 1e fa 48 89 7c 24 f0 48 89 74 24 e8 48 89 54 24 e0 48 8b 4c 24 f0 48 8b 54 24 e8 48 8b 74 24 e0 <8b> 41 40 23 81 00 01 00 00 f3 0f 6f 06 c1 e0 06 48 01 d0 0f 11 00
+> RSP: 002b:00007f8447755018 EFLAGS: 00010212
+> RAX: 00007f8446a281e0 RBX: 00007f8446bcbf80 RCX: 0000000020ff0000
+> RDX: 0000000000000000 RSI: 0000000020000000 RDI: 0000000020ff0000
+> RBP: 00007f8446af14a6 R08: 0000000000000000 R09: 0000000000000000
+> R10: 0000000020ff0000 R11: 0000000020000000 R12: 0000000000000000
+> R13: 000000000000000b R14: 00007f8446bcbf80 R15: 00007f8447735000
+>   </TASK>
+> ---[ end trace ]---
+> 
+> Thank you for taking the time to read this email and we look forward to working with you further.
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+
