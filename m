@@ -1,93 +1,110 @@
-Received: from mail.zeus03.de (www.zeus03.de [194.117.254.33])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 635724D9E8
-	for <linux-kernel@vger.kernel.org>; Mon,  8 Apr 2024 09:04:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6494F2B9B3
+	for <linux-kernel@vger.kernel.org>; Mon,  8 Apr 2024 09:06:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712567079; cv=none; b=ji7rRvjeGk7hCMDGw5Jg2wq6cA9f0hfp3hMUUilUZB5SNx+Z6spxceEIcNzL3NRpIHhs1sKTzdy2bt8A46S87GhE0HJbhu4q803Do63s9rQOkd7oRg8wPFQklNfmIWbOOrz+7ol0YOVEEchXDYp4spDOlmRLKTss96tchh9G9/E=
+	t=1712567217; cv=none; b=TH/BQ8PrqQCVEbf8w6R2D1z8w9kGymXrlwDVeEIk54bjYunX+D318uzk60UfakY84qZjY1HqME8jwkRJ+5YNSUP6aZp8L41NjTmKImC92FoKhLvC6h/m8gxgSUH0VLGSw+qlzTR94h9930LvFegFejRfkYhZb0IB3zgyZjhKb08=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712567079; c=relaxed/simple;
-	bh=kjDjXKKoE8Ayi+1GrmxBgboTFb2pUfu6mHNkhO8ngac=;
+	s=arc-20240116; t=1712567217; c=relaxed/simple;
+	bh=WX2clcqIapiLgV4kd+/kSbDTwYbN0xY2asa6XDOMkPQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=llH9i8CJ1BBYfnKhN5ub/eKH61EzdAckQtxOM6s+ZVj/prATDiyr1W4hOtD+uwAgvtNXUW4Yw2EJlhUj9LvfEG9kfOcKuUOEEaVq4nX2VYw92FykuHKOxNKvSefG2/HJOar2x352kYWJ2ITLyuFh6yAfuhxA0InALao3vwA88Is=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=XJjGzyTS; arc=none smtp.client-ip=194.117.254.33
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=INgQ9smA65Ctv9d3UbtkG0Ud8pN2OkvL6kAB0kDgwgN9R4Jbm/BMEVLmvvkGrpYz0jtKtkA+gTSe9Yyq+1pO5BZkaJGweodPGmVJoesCanB6BQvl8HJzm8bUHD4FFBBYg6bxofkWNC58SgVAkUblBqZLT09w3Rb/Lg5OEYJ8v5E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=Dt7IdZ7J; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="XJjGzyTS"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	sang-engineering.com; h=date:from:to:cc:subject:message-id
-	:references:mime-version:content-type:in-reply-to; s=k1; bh=lh0X
-	YsdX9X7r+2LfLut3yBKFYOyg97EUMVhcdGoaLIo=; b=XJjGzyTSVij7r9HRza6z
-	sWYNWwG61nhB7EyH5ca89Wl0/Fpvdj0+EIjvMtK+S+JG1yvPn/qH6QKJ55SL1Flc
-	VyQECrU3n3+PV7wMLcOpF8AVxCJ6ooDXSmC2aALkuHJ3CclgS4XjMhnZ3cc5Fs3C
-	gzNepVtYURM/uyuRHz0WJxtdNrBfZZZYCMaKtcBJU0688a4TFj/uLeMA4nSlvmMV
-	527TnoKEaOR2QLV/rgf6po1Ej5vzgfOXbgSm302RpwOa/MTwc5b4WxQfxUvReVm2
-	ePYrkjkTyfDgiGtaTUHu1x+WHt7tN6jji5W9aXBkKMrhH/U8w22qTKrxw/LsNEZz
-	ag==
-Received: (qmail 713144 invoked from network); 8 Apr 2024 11:04:34 +0200
-Received: by mail.zeus03.de with ESMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 8 Apr 2024 11:04:34 +0200
-X-UD-Smtp-Session: l3s3148p1@YmsjGJIVvNAgAwDPXwE9APSWg5D5lDs4
-Date: Mon, 8 Apr 2024 11:04:34 +0200
-From: Wolfram Sang <wsa+renesas@sang-engineering.com>
-To: Andi Shyti <andi.shyti@kernel.org>
-Cc: linux-i2c@vger.kernel.org, Jochen Friedrich <jochen@scram.de>, 
-	linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 14/64] i2c: cpm: reword according to newest specification
-Message-ID: <maxjcriuq6qfoeoing5ic7l5pnxdyylovjdoh4w3bzhnmco6ax@mslv35p4k35k>
-Mail-Followup-To: Wolfram Sang <wsa+renesas@sang-engineering.com>, 
-	Andi Shyti <andi.shyti@kernel.org>, linux-i2c@vger.kernel.org, Jochen Friedrich <jochen@scram.de>, 
-	linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-References: <20240322132619.6389-1-wsa+renesas@sang-engineering.com>
- <20240322132619.6389-15-wsa+renesas@sang-engineering.com>
- <jpp67ejeropvsc6gwompwc5t2nbl6cde2o33vtf42e2on2ycal@42ovfdhp6oh4>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Dt7IdZ7J"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=sm9Wn29IGquX2zaks5ZMVq/SXQDZ+cbatvHLSoHIGg4=; b=Dt7IdZ7JyAWYarzPj/osEMPqJ8
+	99+FQ7bd/eN8iP3Ooq1m2/xU88WLpO/ByvFCZf4f8EaJ/MC94CZg5S1B3yiC63ys++2DEFoxxSy3e
+	NsYY4lmtt5KuX1MNrBZuAjZECWsgm2xVngDIsHd4gNNbze0LxeYxUKnXwhTSPQ6J7ESthdE/hjjtX
+	wh3iTvikK42VXINv4alqcWqWh1XYXLA25M8RMxrMylwVDBEHPizo4NhgerUyztyH652q5uqvH9RmX
+	mTlEXSyZWvIcGQiMjVGZhz3TDJsgIiDbbjf5T1m/iGXzP1AX0hHtH4uS4ECAhY3bc8Z40P7Dqn5Sg
+	0Kz6QtAw==;
+Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1rtkxc-0000000H6cQ-0enP;
+	Mon, 08 Apr 2024 09:06:40 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id C958430046F; Mon,  8 Apr 2024 11:06:39 +0200 (CEST)
+Date: Mon, 8 Apr 2024 11:06:39 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Chen Yu <yu.c.chen@intel.com>
+Cc: mingo@redhat.com, juri.lelli@redhat.com, vincent.guittot@linaro.org,
+	dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
+	mgorman@suse.de, bristot@redhat.com, vschneid@redhat.com,
+	linux-kernel@vger.kernel.org, kprateek.nayak@amd.com,
+	wuyun.abel@bytedance.com, tglx@linutronix.de, efault@gmx.de,
+	yu.chen.surf@gmail.com
+Subject: Re: [RFC][PATCH 08/10] sched/fair: Implement delayed dequeue
+Message-ID: <20240408090639.GD21904@noisy.programming.kicks-ass.net>
+References: <20240405102754.435410987@infradead.org>
+ <20240405110010.631664251@infradead.org>
+ <ZhEUjX1Nw0y2eJ1o@chenyu5-mobl2>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="e5r3yanqecrrgaxn"
-Content-Disposition: inline
-In-Reply-To: <jpp67ejeropvsc6gwompwc5t2nbl6cde2o33vtf42e2on2ycal@42ovfdhp6oh4>
-
-
---e5r3yanqecrrgaxn
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <ZhEUjX1Nw0y2eJ1o@chenyu5-mobl2>
 
+On Sat, Apr 06, 2024 at 05:23:25PM +0800, Chen Yu wrote:
 
-> >  	out_8(&cpm->i2c_reg->i2mod, 0x00);
-> > -	out_8(&cpm->i2c_reg->i2com, I2COM_MASTER);	/* Master mode */
-> > +	out_8(&cpm->i2c_reg->i2com, I2COM_MASTER);	/* Host mode */
->=20
-> I2COM_MASTER might be coming from the datasheet.
+> The 99th wakeup latency increases a little bit, and should be in the acceptible
+> range(25 -> 31 us).
 
-Maybe we can just drop the comment? The value we write is pretty
-self-explaining.
+Ah, my test runs haven't been stable enough to observe that.
 
+> Meanwhile the throughput increases accordingly. Here are
+> the possible reason I can think of:
+> 
+> 1. wakeup latency: The time to find an eligible entity in the tree
+>    during wakeup might take longer - if there are more delayed-dequeue
+>    tasks in the tree.
 
---e5r3yanqecrrgaxn
-Content-Type: application/pgp-signature; name="signature.asc"
+Another possible cause might be that previously a schedule() would be
+1 dequeue, 1 pick.
 
------BEGIN PGP SIGNATURE-----
+But now it can be much more variable, a pick can basically do N dequeues
+and N+1 picks.
 
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmYTsx4ACgkQFA3kzBSg
-KbYO6g/5AedCCDQIWj4C4jH7ScNJsrMsQsNgW1n2+FdZUbvt0sA7ZQcuIVZnbQEP
-bHkMsZmy6ftTFuxN5a10qk/jpmIAGDBgP6MYa568mAPsBp4G9/9tK6sMo/q6Hvcl
-YWqiCbbhD5h3/EqcEEEzOr8ft+79mXdtLawdQH5BuwKtBNJPHdKvhtrc9Y9whFxg
-M4cWJUOgANxPIogyi6sWSsC2iaJTT4R14+ReipObubq32mZiGz7lk93wwAg0pF94
-jMzH3fpEMXmJHpcqob9oj9Rsg/ymefKh9aU/p/uCC4seFrvS94KYb4xjsSBFU1RZ
-a3vYArJNg3gclCE3AH6hks3UpQWHm6OYrQBX/VUZEhw/V013ymrIDWCpZY7nGgBr
-BIgEqWbn8pnOTCRXQ7E4WmoR0fyF+eWTK98EFQ5QI5Itxj+fyFuffWfvzo8PoXQI
-GqFT7LoEa1TvbL7pitevPMLzjKCWpdIDkLnvzzhe02oyd09AZlRhtM6wZ9oby3fc
-TZO9NP9OFH9iR+MEQ5awHBKlTim4VaBkCndqtw01ehQ2OgPD5fdlyNXgw3MIqFBf
-bsnitjgnu2lbv/xtL7aW1GOsHzRP4Z8t3aeYRUA0+PbYqD6Nq5QQGfRrLxCRxxTN
-RKgM6DeDl3dWXkU9NqV2W4HnKTsZQpegdg0cxYXZTcJAHwHvciE=
-=8GgV
------END PGP SIGNATURE-----
+So not only do we do more picks, but if you're focussed on worst case
+latency, it goes up, because we can do multiple dequeues for a single
+pick.
 
---e5r3yanqecrrgaxn--
+If we find this to really be a problem, I had some half baked ideas to
+fix it, but it added significant complexity, so keep it simple until
+need proves we need more etc.
+
+> 2. throughput: Inhibit task dequeue can decrease the ratio to touch the
+>    task group's load_avg: dequeue_entity()-> { update_load_avg(), update_cfs_group()),
+>    which reduces the cache contention among CPUs, and improves throughput.
+
+Ah, yes, there's that.
+
+> > +	} else {
+> > +		bool sleep = flags & DEQUEUE_SLEEP;
+> > +
+> > +		SCHED_WARN_ON(sleep && se->sched_delayed);
+> > +		update_curr(cfs_rq);
+> > +
+> > +		if (sched_feat(DELAY_DEQUEUE) && sleep &&
+> > +		    !entity_eligible(cfs_rq, se)) {
+> 
+> Regarding the elibigle check, it was found that there could be an overflow
+> issue, and it brings false negative of entity_eligible(), which was described here:
+> https://lore.kernel.org/lkml/20240226082349.302363-1-yu.c.chen@intel.com/
+> and also reported on another machine
+> https://lore.kernel.org/lkml/ZeCo7STWxq+oyN2U@gmail.com/
+> I don't have good idea to avoid that overflow properly, while I'm trying to
+> reproduce it locally, do you have any guidance on how to address it?
+
+I have not yet seen those, let me go stare at them now. Thanks!
