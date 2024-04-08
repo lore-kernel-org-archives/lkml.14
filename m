@@ -1,203 +1,140 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F7DB34CDE;
-	Mon,  8 Apr 2024 09:13:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.19
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712567595; cv=fail; b=iXScg4bkVBCFE8p1U4R/TbDQjpNMFffq0ZRoJl1w6eNxUScp10pAYwN8r9KdGj/GKBY8eqaiIF1I+2nw/ZAl3Gz1+L6ga9OIg8nEwpW3c4ZAi9lJ7VPsl59GPh2isZCoB5tEUVhhd9BWjzi03Cfm1tP0mxdoczmJcVKMaUjmS+Q=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712567595; c=relaxed/simple;
-	bh=xcKSjtU+PHxCXnYZAYhbfuVeVt5l+qJ+CPRmv4Zn420=;
-	h=Message-ID:Date:Subject:To:CC:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=BDVNmPmO8GSb1X19/zMme7sFKxw/h/8kgkP/XId55pUxFc3l415kCOgTnUKsaTsThJZP6LVaMlVL1F81dYuoO8Tb4bItUZLlYAcInMb/E/TSIGTQD5hLHh6RI4ZRL+4ob2wTB63iccoccDEkNuI9CDFdTYEpdn+1SfqtBL+bjmI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Kk+jAJne; arc=fail smtp.client-ip=198.175.65.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Kk+jAJne"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1712567594; x=1744103594;
-  h=message-id:date:subject:to:cc:references:from:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=xcKSjtU+PHxCXnYZAYhbfuVeVt5l+qJ+CPRmv4Zn420=;
-  b=Kk+jAJneWSaFHS+qxx0+8+T7mYo4fKMLXY1US8jJ9i3BbbzkTlV5o6Dl
-   pKbwk2zcoYX5p7CvV4tvmQEpFFFeFEqCq4rOrcwvbj1ZpkGZuRVwa3tUJ
-   LaSf1X+vBRM4pc8LtScME5zelnFkLnnbTYxI8tYDjovSBFFzfTTQCaCX+
-   ItlJOD4sTu5zX4bcAfSzyliQ7gplOclzNXeldWDKR/3EHwWJENeqfh5Cq
-   pXX2cy6UZJTN9ea1yWFRWUnG4FRjL+9SWOqeTwEm3RcjRalq6AVBV3G6M
-   4ITdZua1vOUxV+RCAKs7UYw0xv0vKg3b/RO9LeMdhqCwlonzzSszGJmbL
-   g==;
-X-CSE-ConnectionGUID: gMjnt8dTQ+WYsTiyJWJ8vw==
-X-CSE-MsgGUID: 7Fb5leDdQuCKUoMACiTocQ==
-X-IronPort-AV: E=McAfee;i="6600,9927,11037"; a="7700788"
-X-IronPort-AV: E=Sophos;i="6.07,186,1708416000"; 
-   d="scan'208";a="7700788"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2024 02:13:13 -0700
-X-CSE-ConnectionGUID: gNACThbSR6iRZKikCQDZhA==
-X-CSE-MsgGUID: VEgIVGh/Tp+ESUgqMNVc5Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,186,1708416000"; 
-   d="scan'208";a="50806666"
-Received: from fmsmsx602.amr.corp.intel.com ([10.18.126.82])
-  by orviesa002.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 08 Apr 2024 02:13:12 -0700
-Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
- fmsmsx602.amr.corp.intel.com (10.18.126.82) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Mon, 8 Apr 2024 02:13:11 -0700
-Received: from fmsedg602.ED.cps.intel.com (10.1.192.136) by
- fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35 via Frontend Transport; Mon, 8 Apr 2024 02:13:11 -0700
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (104.47.66.40) by
- edgegateway.intel.com (192.55.55.71) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Mon, 8 Apr 2024 02:13:11 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=RRz9IDEx90ByugqgrpHy+6+wWypYAcOB+oS2osSA1/kFV/yIwAorge3epIuhJlmPYaxWbyzUazb+rJN1fYbvq4Q7PzWuyxbUoAgy9tj4gILwDcOmnDUywRqzyOCNhMro1P67Z5smA2c/B0WdPnRucr9fkAaPLUXmc0db3Ms8iEaCVrMoZ00vHoGBh+ScrcbtCQL0oGjTEpxXtHmkTMmL0lDrRT4d5DAYden45HHPVz1G1b/s2tXVbILl0loS4WdDZgBiQWCccaVkNHjHy51KG7vHeTYp1DfKWvyRcdspfLKK0IB0qiKHsYrWJ5xnXbd4MPwSu0/BrmPsvnU2GEctxg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=wVjdQshzdVQPvZfAW9n8+HmULBn01fTXyHhgx4SXKxo=;
- b=IlYaHpXFeaQdlOpxUtk6O8VdOP6l3ZHj1u0p5ZBpmuwjy0AbIo6YC2dLJScEmyc3HDDzBn2JxYwfiSxYeE7AYf9j7qkkxYgnoHWu5Pk78zynFzkyL7QvfBc8Bw2XSuWubPhMII3azwcACLaTiwYju9EfAgsWEVt4sQMmKcnsYr8gxq7jloWiV69cNpOLyO7LADKlZiMRbfTTzfG8CpDIRpMrgVLr8HSvSq6YNhRzdP8AQJGkgVPpZJRxXwuSySJfoQJiEGeCPje/iInLlw7117CO+/G/hkrxm4qNvfq1+AXOh9iK3gA3F71al73IHtnSR0mrx13bC3DW2od8V7KNkA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Received: from DS0PR11MB8718.namprd11.prod.outlook.com (2603:10b6:8:1b9::20)
- by SJ2PR11MB8321.namprd11.prod.outlook.com (2603:10b6:a03:546::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7452.26; Mon, 8 Apr
- 2024 09:13:04 +0000
-Received: from DS0PR11MB8718.namprd11.prod.outlook.com
- ([fe80::654c:d66a:ec8e:45e9]) by DS0PR11MB8718.namprd11.prod.outlook.com
- ([fe80::654c:d66a:ec8e:45e9%6]) with mapi id 15.20.7452.019; Mon, 8 Apr 2024
- 09:13:04 +0000
-Message-ID: <1dda8fd5-233b-4b26-95cc-f4eb339a7f88@intel.com>
-Date: Mon, 8 Apr 2024 11:11:12 +0200
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net-next v9 7/9] libeth: add Rx buffer management
-To: Jakub Kicinski <kuba@kernel.org>
-CC: "David S. Miller" <davem@davemloft.net>, Eric Dumazet
-	<edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, Alexander Duyck
-	<alexanderduyck@fb.com>, Yunsheng Lin <linyunsheng@huawei.com>, "Jesper
- Dangaard Brouer" <hawk@kernel.org>, Ilias Apalodimas
-	<ilias.apalodimas@linaro.org>, Christoph Lameter <cl@linux.com>, "Vlastimil
- Babka" <vbabka@suse.cz>, Andrew Morton <akpm@linux-foundation.org>,
-	<nex.sw.ncis.osdt.itp.upstreaming@intel.com>, <netdev@vger.kernel.org>,
-	<intel-wired-lan@lists.osuosl.org>, <linux-mm@kvack.org>,
-	<linux-kernel@vger.kernel.org>
-References: <20240404154402.3581254-1-aleksander.lobakin@intel.com>
- <20240404154402.3581254-8-aleksander.lobakin@intel.com>
- <20240405212513.0d189968@kernel.org>
-From: Alexander Lobakin <aleksander.lobakin@intel.com>
-Content-Language: en-US
-In-Reply-To: <20240405212513.0d189968@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: ZRAP278CA0009.CHEP278.PROD.OUTLOOK.COM
- (2603:10a6:910:10::19) To DS0PR11MB8718.namprd11.prod.outlook.com
- (2603:10b6:8:1b9::20)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FCFC34CDE;
+	Mon,  8 Apr 2024 09:13:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1712567617; cv=none; b=ToV+d1F6kFmFC9jKQLWn+khNuUeCV9I+dUI6xNJu2IOTL1M2i4JOuzUrUV/IAja9UYoO0GGuyoJOJepuPymVsodwHrjbfxnZtJiUy7AzsqwfIb5F2OmSqHA+V4/PjL9sjJ830eQ0Z1puyGf1LMQWofa2ZsRythOfB6P17wyZj40=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1712567617; c=relaxed/simple;
+	bh=yTqsvhBCkSc78Imgw8E+ZDntOPJsWlkyEET4fsR9Q6k=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=OBZRGBS3HCuXUGTq6fzhbI8OJUMjuNh3O4L+8aD47HGgZY1WTM/FBR8o4QbQATYi4d2h8j6pptUfdJ9b6M55bVtVwrT2aKxzKG/ew4n19QG5kIKHTyByRx4jysUQefj8yM/kOxAD/1MoerJSOAN1DKEXkhfyjdi7x0/qYKfttZc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 10ED0C433C7;
+	Mon,  8 Apr 2024 09:13:35 +0000 (UTC)
+Message-ID: <b7ed772f-f66b-48cf-a419-0826777df974@xs4all.nl>
+Date: Mon, 8 Apr 2024 11:13:34 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS0PR11MB8718:EE_|SJ2PR11MB8321:EE_
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: CLjS6Ae6gai8iXIwkyUXWS8d01R7pKAnkVI2GmNhFUKVCrz1qpSzDH/4iOuYMZntpYlpzGV9UJEvKbmkc5kCqJI+thx3sWqbwXI/npnIGRR3TDecXk3iLLev1mNdDAnZ3OmKVQZ5vMQMdyUWw02QE7v2wGKoYxtWsetnQ6Zf89h8hJMyoLRrXBLWU/txhNf5Qt81HsJJbXK3fEJHkfGnBRwRUDz5loczb4osRK4DZ4Py6EeHkGe/qbbuka3+yZ4R9EakvoVVBVsCSK5tGSjy5X7YhiE/1igDnCcwxQ+3FyvKBQ5CfdjAvKO4peYDKruRn5ywunhBX/wO1m1ilb2+TLd6xOzFPIJ5CaqCDhMkHBH5iZyuH01M1E25a5dhUfc1J93tToP4yZORAe91LHL19OTghY8CCNM+uRzc3rXWf0bceT2eMd4NejJNms+C8XYElV680amh1MTcjN9pXqw1cf+dyA8je4wjScT25IF9UBFJa38aDrSScyubDmmbhs3VEJiqNIROnUPpYbS7ELgyRgehVXwEMXDUN+eVD1pOxOdMMeyghCf2cvAIu3901DPXieq+Kv1mDUVtgT8iE43j2Ftq7PHZD9cXJ8XmLOeohwFYKP3ydChq4nz0oGsq8mHtZWhJoZl8+yMmft7llxFq/RTO5k3Yoj9X/Nlccrw4OTQ=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS0PR11MB8718.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366007)(376005)(1800799015)(7416005);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?YWFwOEFjWHhtc2dKWXdrMjhibU1UOFFxcjdZbnYwa2twaEtGb04yd0ZsdDRW?=
- =?utf-8?B?emRyZG5YZnA2MXRDYjc0S1cwTGlwdGZmbExFaUZhdnFDRWthaU45TDdjbWgr?=
- =?utf-8?B?NFBIWnhUMkQ5a2xlMExIRFJ3NFdBdktUM2J5ZWZrMWZneVUwajlyYUpyMTJX?=
- =?utf-8?B?djZrdWtiRmNrVm9PU1MwOFk0bDl5VWhKQlQ0bXh2WkFNSWM3TGFpZ2NjWVdH?=
- =?utf-8?B?TDRVbVRzZlJKelpwM3E1Mi9HNXBoeDh4VTFNUENNQ3hXQUFEYUdtZk5IUjZO?=
- =?utf-8?B?bXZQTXBITFk2UWVxdU1rMC9MNmlVRC9GODJhZ2FGWTJPNXArRkFqQTdvMTZn?=
- =?utf-8?B?TVFyYXlwYjVCUHdzZ3RKdmcxOUFMdEs5bXRqaTE4eWRJR3JURmhxYVZockc5?=
- =?utf-8?B?RDNLRkdWOHpaUnZaU0VLNmtVZStZSW5WU2t3WU9XaUFDc3hYOWxqMUZDVVh1?=
- =?utf-8?B?bXA3c0I5ODlFcmJ2MEFSYUFqc3hkbGdTazkxcnp0T3V3aVZkZ1VDY0ZVR3hx?=
- =?utf-8?B?MGJLODFpMURvWjBqUUsvcDc4Y1h0UXhRaE90SHZPYkFHWWcvbXR3c0ptb0Y0?=
- =?utf-8?B?WmVKaWlLL0dkN3hzaG4yQ0pDaWpOQWVSS09vVEh6YzV0L29QVndRYWZHTmlH?=
- =?utf-8?B?eG51a0EzNVFZdzJYQ3lCM3NzdVJnWHdnWEgvb1JZTUJDUW1aN29kaFp0NGxz?=
- =?utf-8?B?akZaTjJnYS96N3JZUzBxK0NVaVpUR2VMWVJ1aTh0TUovN2hIdU5iUTNaYUFY?=
- =?utf-8?B?NHFmRXh1RDFieU5kMGtGZy9rVEpVVW14MDNzTjd1bytXT3p0eklmbE5JWFVm?=
- =?utf-8?B?c2tscWJvZ1N1L1dRWE85RHJPTTBNTDVJa0tRQUtSaTFhb0Vhc1d3UTFDYnE4?=
- =?utf-8?B?ZVh0b0pSN1pQMWp3Vnd6TW8wTkd5aG5FQUYyMThlVXBtQUp4KzhuT2J6QVh0?=
- =?utf-8?B?NE9scERFcllvcU1MZmVkeDIxdnhyWHd4UTRTeUZuNFkxeHBzT28rUkh1WVpD?=
- =?utf-8?B?ZERVSWJ2VHBZZ1kwN2VlRmFnUE42OTJWdVBhdTd4VzBLRWFScW03clYwZHlr?=
- =?utf-8?B?ay9Yd1ZsbHhtY2N1aTZacVFvZGIyKzUrajcyL1hwUVFYYjRZRjhRWHN3L2l2?=
- =?utf-8?B?Y1RLOEUzU0Nna0ZpYWl1TjVzbnhWNjJqalRNUWM5NEduYWkyWVlnUmczMDZE?=
- =?utf-8?B?enlGOFQ2UDJhZlU0c3hITkxmN2NDa3NQNGplWXh0UVRsaXRaN1VWMW9tSnhJ?=
- =?utf-8?B?T01KKzEvMXhZVm5TZFJQWVNyNWVhVDdtM1liak9qN3ZRNWVtRWJOaDY1VThG?=
- =?utf-8?B?SENmeEsyeWtyRXpzY3UrdExaV3U1QUs1VHNDcGlRSjNRajFVOUsyS0YwK1dD?=
- =?utf-8?B?MmRtV2haQXlIU293Vk1zd1F0ZVNudTBOU0wyZ2VESDUvMzZOSktnSkVRL0RO?=
- =?utf-8?B?S2hubERBdHdoeG11VUFtTXEzVUJVaXUxKzBud2tUcGVYUDRuWnFyVGE0a1kw?=
- =?utf-8?B?ZjNkM1A4MHlla09abVNZN0VFVWhWUTJNYXRaeEdHcUVNdWpwUEZOc0R1MEoz?=
- =?utf-8?B?TVFaTitKdk4xc2E4SmZ3Q1Y1bHo2UUJMcnJtT0FmK0xEYmIyMFlsMHVqRHlS?=
- =?utf-8?B?clZhSDZLU3FXMGozWThLeUl4UnA4T0dtMHMzVTN5M2NaMXVkdlB3WmYwK2Mr?=
- =?utf-8?B?OVprUHZNRGZCNGVrc21CVkhFdkNmU2VWUmp6cnp2UXY2VExkRnRTVmdEWkpq?=
- =?utf-8?B?eDNNUHZZRWxycUdGd1pOK1ZNQkdTMVNpdlpkRFJFQjg4U2crKzY0dEYxd0xm?=
- =?utf-8?B?dW9uWm9iNU5pdkdxQTdtTGdsMWdRQk5SbkRNQzRzYS9QbWx3N2hVSkE3bzRp?=
- =?utf-8?B?d2c1RXdiTlR0ZExidzA5YUIvbkpTak4vUlhlQSs4eGtVbXNDMGVndnp0UGk3?=
- =?utf-8?B?b0tZVFhBc0M2S2pSWjBKYmJHZEgycG9PaTlmLzF3YkhqV3ZpM3d5SmhhcWxo?=
- =?utf-8?B?TEM0VHluR2p6bWhabktveVVxb2tNWS80NS83KzRNOTc4YjZCTG1PZXVyOUIw?=
- =?utf-8?B?cW5Zb0VSZ2JramZZaFNRUmQxNUIvdkZSWWNyeTJycW04djh6bEVMWWl3ZENX?=
- =?utf-8?B?TTg1eHA3ZkFMZ1FYdHZaL0d4OEVsUU85cXkrazhGN0lWSHo4eVhtS05uZCsz?=
- =?utf-8?B?MUE9PQ==?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7e7d48c5-9790-46f2-dba6-08dc57ac190d
-X-MS-Exchange-CrossTenant-AuthSource: DS0PR11MB8718.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Apr 2024 09:13:04.7962
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: jKPOS3/S3inuCVh+h7rHEjpuizdSrbz1HyXYeSB7Plao+ZrgLjZCKHgrozFAVRVyAP4UnY0f3twsvsZDKZErYPNYzvkAyTvB0rEJkOhr2jk=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ2PR11MB8321
-X-OriginatorOrg: intel.com
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] media: v4l2-tpg: Fix division by zero error in
+ color_to_hsv
+Content-Language: en-US, nl
+To: Mikhail Lobanov <m.lobanov@rosalinux.ru>,
+ Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20240301170838.57421-1-m.lobanov@rosalinux.ru>
+From: Hans Verkuil <hverkuil@xs4all.nl>
+Autocrypt: addr=hverkuil@xs4all.nl; keydata=
+ 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
+In-Reply-To: <20240301170838.57421-1-m.lobanov@rosalinux.ru>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-From: Jakub Kicinski <kuba@kernel.org>
-Date: Fri, 5 Apr 2024 21:25:13 -0700
-
-> On Thu,  4 Apr 2024 17:44:00 +0200 Alexander Lobakin wrote:
->> +/**
->> + * struct libeth_fq - structure representing a buffer queue
->> + * @fp: hotpath part of the structure
+On 01/03/2024 18:08, Mikhail Lobanov wrote:
+> In the color_to_hsv function, division by zero is possible due to
+> attributes r,g,b are equal so diff_rgb = 0.
 > 
-> Second time this happens this week, so maybe some tooling change in 6.9
-> but apparently kdoc does not want to know about the tagged struct:
+> Found by Linux Verification Center (linuxtesting.org) with SVACE.
 > 
-> include/net/libeth/rx.h:69: warning: Excess struct member 'fp' description in 'libeth_fq'
+> Fixes: 54fb15348385 ("[media] vivid: Add support for HSV formats")
+> Signed-off-by: Mikhail Lobanov <m.lobanov@rosalinux.ru>
 
-Oh no, maybe we should teach kdoc to parse struct_group*()?
+With this patch I get this compiler warning:
 
+drivers/media/common/v4l2-tpg/v4l2-tpg-core.c: In function 'precalculate_color':
+drivers/media/common/v4l2-tpg/v4l2-tpg-core.c:1004:35: warning: 'h' may be used uninitialized [-Wmaybe-uninitialized]
+ 1004 |                 tpg->colors[k][0] = h;
+      |                 ~~~~~~~~~~~~~~~~~~^~~
+drivers/media/common/v4l2-tpg/v4l2-tpg-core.c:1001:21: note: 'h' was declared here
+ 1001 |                 int h, s, v;
+      |                     ^
+
+In any case, I think this patch is wrong.
+
+Based on this formula:
+
+https://www.rapidtables.com/convert/color/rgb-to-hsv.html
+
+The bug is in:
+
+        *s = aux;
+        if (!aux) {
+                *h = 0;
+                return;
+        }
+
+'if (!aux)' should be 'if (!diff_rgb)'.
+
+Regards,
+
+	Hans
+
+> ---
+>  drivers/media/common/v4l2-tpg/v4l2-tpg-core.c | 5 +++++
+>  1 file changed, 5 insertions(+)
 > 
->> + * @pp: &page_pool for buffer management
->> + * @fqes: array of Rx buffers
->> + * @truesize: size to allocate per buffer, w/overhead
->> + * @count: number of descriptors/buffers the queue has
->> + * @buf_len: HW-writeable length per each buffer
->> + * @nid: ID of the closest NUMA node with memory
->> + */
->> +struct libeth_fq {
->> +	struct_group_tagged(libeth_fq_fp, fp,
->> +		struct page_pool	*pp;
->> +		struct libeth_fqe	*fqes;
->> +
->> +		u32			truesize;
->> +		u32			count;
->> +	);
->> +
->> +	/* Cold fields */
->> +	u32			buf_len;
->> +	int			nid;
->> +};
+> diff --git a/drivers/media/common/v4l2-tpg/v4l2-tpg-core.c b/drivers/media/common/v4l2-tpg/v4l2-tpg-core.c
+> index a366566f22c3..943aab3ad97c 100644
+> --- a/drivers/media/common/v4l2-tpg/v4l2-tpg-core.c
+> +++ b/drivers/media/common/v4l2-tpg/v4l2-tpg-core.c
+> @@ -597,6 +597,11 @@ static void color_to_hsv(struct tpg_data *tpg, int r, int g, int b,
+>  		third = third_size * 2;
+>  	}
+>  
+> +	if (!diff_rgb) {
+> +		*s = 0;
+> +		return;
+> +	}
+> +
+>  	aux *= third_size / 2;
+>  	aux += diff_rgb / 2;
+>  	aux /= diff_rgb;
 
-Thanks,
-Olek
