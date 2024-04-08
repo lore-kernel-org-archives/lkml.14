@@ -1,35 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B779644C71;
-	Mon,  8 Apr 2024 08:10:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1EB347F6A;
+	Mon,  8 Apr 2024 08:10:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712563806; cv=none; b=j/bn6K2b1hpOrnifKkysof6lV3sep8ASb1TGs+aKFdDHcomPV/kFr9jHjJwQJVnjBj+jEW6AI2dFOkbHCRIdOkf4cExwKI5T5qLwr6JDKZOGaJrPHgVKyIdNNU7uG7pb5MVyDigSM1HGxc4T9Umr2/eHMEepnwY/q6UlqNPJ+0k=
+	t=1712563810; cv=none; b=o8YfqP6vLiEGoCdbPtOYZfzvBxXsgjXuA4UbhCv0YuwURl+V/l2ZKT8am9U8SlsGwfAcNMWQzpHqKRLJb7hOXpTzY91JNe7w2TPFDeD+UutmcCTEuISBXmUBlI0Q3C6ZQOG/FlvbAkmCpeHg9wlcoL7Ap1RtrBY/4p5v5bHItQc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712563806; c=relaxed/simple;
-	bh=F6xXyYbfZDX1T1rGuNQBL+pHxwN2Kf/niVJyhWfdoQU=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=m6I7j8P5Jp1rcWqu9F0X5w5qOgHA5z53hEIhuFGcK/YRnruYQerqpixDOS2VW5ydncRgmYssR7JX3IPD/RpZZAAohUS1sENfmPFkbIB9/5VSuSlQo5T7i37yViakpkeImFZmZ4GmdRPN2Hfz2PDh3wROfiG7Z6Im4IDHHXxcnHc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aCjsAwN5; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1712563810; c=relaxed/simple;
+	bh=IIA39zjHLzll86E9aMpUuAcvhrfq1ysOLkBGOaeDoyY=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=aJd+hrGgCtl07+6mzwF5wgBnKhWQqPG+aFkekju8R2qtglNBiL1By2/hShNNRvHhcV73OMJugqQ+3S1TmK8qtCZ9KFEwMKpxVNbmZpooApl17fXCTdIv25MHitUfBwPq63jQe8p6C+vddui3g852X0I1PzQ6KvWszoTjce7Dedg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=n/4/QCWF; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aCjsAwN5"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 364F8C433C7;
-	Mon,  8 Apr 2024 08:10:03 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="n/4/QCWF"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id BDA2CC43394;
+	Mon,  8 Apr 2024 08:10:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712563806;
-	bh=F6xXyYbfZDX1T1rGuNQBL+pHxwN2Kf/niVJyhWfdoQU=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=aCjsAwN5fiGJQ66awNc9vEq9aXNcRHSp8sO5tM2TRsvsyLVwhsxAT9N82VNcy02Ja
-	 VgY17UNED+3hgLMj7M8i1qCK96KuA6dW3ryz9ssOi6JqKTIogKtmTAMtn6B/KxZA7e
-	 ucE2eVewBtuYhigcL949wiHKgPYcCNISbOeYklyvOUWYUpVptj3BGpmzmG64w4SYaU
-	 WbAFO4DmMWEuDi5NVFNz8qrQq9sSrLifLJKFkfRXoZlrwo9KuVN5D1BGeM9XGsqzM8
-	 K2J+70xJ8NdEPvw4wO1oCp99glFytyDsFTIyywmqP2cl3qr1w3CohaELUPEgSmfEtc
-	 bOeLFvepiJ6GA==
-From: Benjamin Tissoires <bentiss@kernel.org>
-Date: Mon, 08 Apr 2024 10:09:29 +0200
-Subject: [PATCH RFC bpf-next v6 4/6] bpf/helpers: mark the callback of
- bpf_timer_set_sleepable_cb() as sleepable
+	s=k20201202; t=1712563809;
+	bh=IIA39zjHLzll86E9aMpUuAcvhrfq1ysOLkBGOaeDoyY=;
+	h=From:Subject:Date:To:Cc:Reply-To:From;
+	b=n/4/QCWFfHGh0rrTQ17mrgLgSDnHduSB00YXZtRGEJg4Hr8CfZ5XuDY6GVGQ+5O1A
+	 D1YXZGIATxyHwvICJOTwf5ZeZVQh0jDMspG+sRl61bTpmPJ07tcwWaVXL0aU+xupFY
+	 4OhJNi2MbNkKUozWwkquH/B7F0MYXyKjtgMtYKyWgH9R345Yl3vFTMoWrNniz4ujvl
+	 xAh72fUsIDIXXYYJT5V6PeIBjQOLMd/eG/O/f6MdmNH3hmsqXjblRg5Wdfxe4fNETh
+	 jQVBB2hcyK3Yw4Cx+SiZCuNYE/Yg1x3aRkGqqowMyyp0DSAYsxPomIIyaPcUZOzC11
+	 VA8nDHV3b0n5g==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0B93CD128A;
+	Mon,  8 Apr 2024 08:10:09 +0000 (UTC)
+From: Nikita Shubin via B4 Relay <devnull+nikita.shubin.maquefel.me@kernel.org>
+Subject: [PATCH 0/4] DONOTMERGE: ep93xx-clk from ep93xx device tree
+ conversion
+Date: Mon, 08 Apr 2024 11:09:52 +0300
+Message-Id: <20240408-ep93xx-clk-v1-0-1d0f4c324647@maquefel.me>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -38,122 +41,67 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240408-hid-bpf-sleepable-v6-4-0499ddd91b94@kernel.org>
-References: <20240408-hid-bpf-sleepable-v6-0-0499ddd91b94@kernel.org>
-In-Reply-To: <20240408-hid-bpf-sleepable-v6-0-0499ddd91b94@kernel.org>
-To: Alexei Starovoitov <ast@kernel.org>, 
- Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>, 
- Martin KaFai Lau <martin.lau@linux.dev>, 
- Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
- Yonghong Song <yonghong.song@linux.dev>, 
- John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>, 
- Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>, 
- Jiri Olsa <jolsa@kernel.org>, Mykola Lysenko <mykolal@fb.com>, 
- Shuah Khan <shuah@kernel.org>
-Cc: Benjamin Tissoires <bentiss@kernel.org>, bpf@vger.kernel.org, 
- linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
-X-Mailer: b4 0.12.4
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1712563787; l=3425;
- i=bentiss@kernel.org; s=20230215; h=from:subject:message-id;
- bh=F6xXyYbfZDX1T1rGuNQBL+pHxwN2Kf/niVJyhWfdoQU=;
- b=r5nlEnLIcuh7ege37WQb6PvbynSZjHTTOu1bMBt4RMC5kwYK0dCnCNKZF/rGk7SLnVvuz4gTH
- FlWCkTvU3IXA/m+YrkTpbYYyIJVmVn3Dw/np1qSvmAHxM7Hjdx/v1re
-X-Developer-Key: i=bentiss@kernel.org; a=ed25519;
- pk=7D1DyAVh6ajCkuUTudt/chMuXWIJHlv2qCsRkIizvFw=
+X-B4-Tracking: v=1; b=H4sIAFCmE2YC/x2NywqDQAwAf0VybmB9bttfKT3ENWqobiUpZUH89
+ 649DsMwOxirsMG92EH5KybvmKG8FBBmihOjDJmhclXjGndF3m51ShiWF3atp7Ju/cCdhxz0ZIy
+ 9UgzzmaxkH9ZTbMqjpP/l8TyOH6ea6q51AAAA
+To: Michael Turquette <mturquette@baylibre.com>, 
+ Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Alexander Sverdlin <alexander.sverdlin@gmail.com>
+Cc: linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, 
+ devicetree@vger.kernel.org, Nikita Shubin <nikita.shubin@maquefel.me>, 
+ Arnd Bergmann <arnd@arndb.de>, Linus Walleij <linus.walleij@linaro.org>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+X-Mailer: b4 0.12.1
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1712563809; l=1512;
+ i=nikita.shubin@maquefel.me; s=20230718; h=from:subject:message-id;
+ bh=IIA39zjHLzll86E9aMpUuAcvhrfq1ysOLkBGOaeDoyY=;
+ b=VrVRfqAJGBH1TITFNnree6/Us9PYdMLtl0Qns75QqpclZGI12eTYgimDEbaQtaCmo5HyyCKqye4S
+ b9UycqxfAzF8HtZKL8jJJAmsAgmFG7MRjTlg8fqfD9DJ0646I32q
+X-Developer-Key: i=nikita.shubin@maquefel.me; a=ed25519;
+ pk=vqf5YIUJ7BJv3EJFaNNxWZgGuMgDH6rwufTLflwU9ac=
+X-Endpoint-Received: by B4 Relay for nikita.shubin@maquefel.me/20230718
+ with auth_id=65
+X-Original-From: Nikita Shubin <nikita.shubin@maquefel.me>
+Reply-To: nikita.shubin@maquefel.me
 
-Now that we have bpf_timer_set_sleepable_cb() available and working, we
-can tag the attached callback as sleepable, and let the verifier check
-in the correct context the calls and kfuncs.
+The goal is to recieve ACKs.
 
-Signed-off-by: Benjamin Tissoires <bentiss@kernel.org>
+This is a fraction of v9 "ep93xx device tree conversion" series:
 
+https://lore.kernel.org/all/20240326-ep93xx-v9-0-156e2ae5dfc8@maquefel.me/
+
+The clk driver for ep93xx was converted to AUX device, as suggested
+originally by Stephen Boyd.
+
+Signed-off-by: Nikita Shubin <nikita.shubin@maquefel.me>
 ---
+Nikita Shubin (4):
+      ARM: ep93xx: add regmap aux_dev
+      clk: ep93xx: add DT support for Cirrus EP93xx
+      dt-bindings: soc: Add Cirrus EP93xx
+      soc: Add SoC driver for Cirrus ep93xx
 
-no changes in v6
-
-no changes in v5
-
-changes in v4:
-- use a function parameter to forward the sleepable information
-
-new in v3 (split from v2 02/10)
+ .../bindings/arm/cirrus/cirrus,ep9301.yaml         |  38 +
+ .../bindings/soc/cirrus/cirrus,ep9301-syscon.yaml  |  94 +++
+ drivers/clk/Kconfig                                |   8 +
+ drivers/clk/Makefile                               |   1 +
+ drivers/clk/clk-ep93xx.c                           | 840 +++++++++++++++++++++
+ drivers/soc/Kconfig                                |   1 +
+ drivers/soc/Makefile                               |   1 +
+ drivers/soc/cirrus/Kconfig                         |  13 +
+ drivers/soc/cirrus/Makefile                        |   2 +
+ drivers/soc/cirrus/soc-ep93xx.c                    | 240 ++++++
+ include/dt-bindings/clock/cirrus,ep9301-syscon.h   |  46 ++
+ include/linux/soc/cirrus/ep93xx.h                  |  26 +
+ 12 files changed, 1310 insertions(+)
 ---
- include/linux/bpf_verifier.h |  1 +
- kernel/bpf/verifier.c        | 13 ++++++++++---
- 2 files changed, 11 insertions(+), 3 deletions(-)
+base-commit: fec50db7033ea478773b159e0e2efb135270e3b7
+change-id: 20240408-ep93xx-clk-657a1357de67
 
-diff --git a/include/linux/bpf_verifier.h b/include/linux/bpf_verifier.h
-index 7cb1b75eee38..14e4ee67b694 100644
---- a/include/linux/bpf_verifier.h
-+++ b/include/linux/bpf_verifier.h
-@@ -426,6 +426,7 @@ struct bpf_verifier_state {
- 	 * while they are still in use.
- 	 */
- 	bool used_as_loop_entry;
-+	bool in_sleepable;
- 
- 	/* first and last insn idx of this verifier state */
- 	u32 first_insn_idx;
-diff --git a/kernel/bpf/verifier.c b/kernel/bpf/verifier.c
-index 00ac3a3a5f01..b75a8aca6ec9 100644
---- a/kernel/bpf/verifier.c
-+++ b/kernel/bpf/verifier.c
-@@ -1434,6 +1434,7 @@ static int copy_verifier_state(struct bpf_verifier_state *dst_state,
- 	}
- 	dst_state->speculative = src->speculative;
- 	dst_state->active_rcu_lock = src->active_rcu_lock;
-+	dst_state->in_sleepable = src->in_sleepable;
- 	dst_state->curframe = src->curframe;
- 	dst_state->active_lock.ptr = src->active_lock.ptr;
- 	dst_state->active_lock.id = src->active_lock.id;
-@@ -2407,7 +2408,7 @@ static void init_func_state(struct bpf_verifier_env *env,
- /* Similar to push_stack(), but for async callbacks */
- static struct bpf_verifier_state *push_async_cb(struct bpf_verifier_env *env,
- 						int insn_idx, int prev_insn_idx,
--						int subprog)
-+						int subprog, bool is_sleepable)
- {
- 	struct bpf_verifier_stack_elem *elem;
- 	struct bpf_func_state *frame;
-@@ -2434,6 +2435,7 @@ static struct bpf_verifier_state *push_async_cb(struct bpf_verifier_env *env,
- 	 * Initialize it similar to do_check_common().
- 	 */
- 	elem->st.branches = 1;
-+	elem->st.in_sleepable = is_sleepable;
- 	frame = kzalloc(sizeof(*frame), GFP_KERNEL);
- 	if (!frame)
- 		goto err;
-@@ -5279,7 +5281,8 @@ static int map_kptr_match_type(struct bpf_verifier_env *env,
- 
- static bool in_sleepable(struct bpf_verifier_env *env)
- {
--	return env->prog->sleepable;
-+	return env->prog->sleepable ||
-+	       (env->cur_state && env->cur_state->in_sleepable);
- }
- 
- /* The non-sleepable programs and sleepable programs with explicit bpf_rcu_read_lock()
-@@ -9497,7 +9500,8 @@ static int push_callback_call(struct bpf_verifier_env *env, struct bpf_insn *ins
- 		/* there is no real recursion here. timer callbacks are async */
- 		env->subprog_info[subprog].is_async_cb = true;
- 		async_cb = push_async_cb(env, env->subprog_info[subprog].start,
--					 insn_idx, subprog);
-+					 insn_idx, subprog,
-+					 is_bpf_timer_set_sleepable_cb_impl_kfunc(insn->imm));
- 		if (!async_cb)
- 			return -EFAULT;
- 		callee = async_cb->frame[0];
-@@ -16947,6 +16951,9 @@ static bool states_equal(struct bpf_verifier_env *env,
- 	if (old->active_rcu_lock != cur->active_rcu_lock)
- 		return false;
- 
-+	if (old->in_sleepable != cur->in_sleepable)
-+		return false;
-+
- 	/* for states to be equal callsites have to be the same
- 	 * and all frame states need to be equivalent
- 	 */
-
+Best regards,
 -- 
-2.44.0
+Nikita Shubin <nikita.shubin@maquefel.me>
+
 
