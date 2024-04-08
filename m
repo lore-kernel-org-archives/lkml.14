@@ -1,193 +1,79 @@
-Received: from esa2.ltts.com (unknown [14.140.155.42])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D268171B47;
-	Mon,  8 Apr 2024 12:41:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=14.140.155.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D16F06CDA9;
+	Mon,  8 Apr 2024 12:41:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712580092; cv=none; b=lDLLbhELpJvVM5lEdonRNeAsAGfqtjsA+oyJ9MwW6LCLR2K5/744hU5+M4sy2mGPLutTJRTEZhOcxktY4gGiN8SOwjZb0crmuzsnF6Ka4IU++idHQmdLMNDgB96tBuEQovE3VdJ85gMjiablw4PYrnNoiSLaADDtLtUnLIORDTE=
+	t=1712580097; cv=none; b=SCq7Nhph9ArEiSBi2KYxWVLdVQbrFX7mttVUFG5YOnXqTGLeLB9gIGMlptWT4Mjs1mevPz3rzelZKuoor0VWuwHK1u8rYXZiKVYRSRLcUuGDcw/UfffxrZ1lobOsv86PbbRMJpso657J1KC6sifeHp0jAg2h5vMNw3gWk2RxZNI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712580092; c=relaxed/simple;
-	bh=/z6DZH45bLOkfq/gVueWFPb4M8m52qtDKhLklz3wx38=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=rM2RMrlmcxt2RsHGe5PMAzfJdDgiNM8XNoDP+HSXaouZVEttcklCs3myya6Ce4DZzD+ipzjcOOXC/vuVQOzTUlMeqw9INRsj6ZeNguVwnLQnD3a6rdH69KOVK20L6K7yTR21nxNppNz+jiwUtRJlKSw4RwvRotr20yZyePdzMhc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ltts.com; spf=pass smtp.mailfrom=ltts.com; arc=none smtp.client-ip=14.140.155.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ltts.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ltts.com
-IronPort-SDR: w6Kdt8ZmnvpgPA1o2uIndLjVLlbWA2/ozduYRp+PAd+sqOcxk9ZcyrPhWka0gv+mSlnbnS0YwG
- Ek5HbuyrWlNg==
-Received: from unknown (HELO localhost.localdomain) ([192.168.34.55])
-  by esa2.ltts.com with ESMTP; 08 Apr 2024 18:11:25 +0530
-From: Bhargav Raviprakash <bhargav.r@ltts.com>
-To: linux-kernel@vger.kernel.org
-Cc: m.nirmaladevi@ltts.com,
-	lee@kernel.org,
-	robh+dt@kernel.org,
-	krzysztof.kozlowski+dt@linaro.org,
-	conor+dt@kernel.org,
-	jpanis@baylibre.com,
-	devicetree@vger.kernel.org,
-	arnd@arndb.de,
-	gregkh@linuxfoundation.org,
-	lgirdwood@gmail.com,
-	broonie@kernel.org,
-	linus.walleij@linaro.org,
-	linux-gpio@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	nm@ti.com,
-	vigneshr@ti.com,
-	kristo@kernel.org,
-	eblanc@baylibre.com,
-	Bhargav Raviprakash <bhargav.r@ltts.com>
-Subject: [PATCH v6 11/11] arch: arm64: dts: ti: k3-am62p5-sk: Add TPS65224 PMIC support in AM62P dts
-Date: Mon,  8 Apr 2024 18:10:47 +0530
-Message-Id: <20240408124047.191895-12-bhargav.r@ltts.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240408124047.191895-1-bhargav.r@ltts.com>
-References: <20240408124047.191895-1-bhargav.r@ltts.com>
+	s=arc-20240116; t=1712580097; c=relaxed/simple;
+	bh=84XOeCfBTbfAfttwzGK3yMdnjmXgpOzlJpVU1/u2iwY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=AfoRikhNE4F1iKoGclla1rACLuXm3UdRbiVfZNFDKH5atux2oUNu/wGmbonjL3mgEHv1kXkVfzNYXVhY0Edk7XDojhuwCahAWRDaTMlERl1VheChChizO/koQHgpfIs+Dw3iBJ16pFEEg+VKTl8OmrEEB4QlWeFJrbHRIySht/w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ADo9i2gD; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ADo9i2gD"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 02028C433F1;
+	Mon,  8 Apr 2024 12:41:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1712580097;
+	bh=84XOeCfBTbfAfttwzGK3yMdnjmXgpOzlJpVU1/u2iwY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ADo9i2gDRMK9fGFxuyRBtekoT/HW6XfvyyIBJPylgXOsjOWfer5glc+0FAA2Zgo9E
+	 KVq/2M72ncIn1oUdL/jiMVMN9tBKRDlXwGJvcM3UQr9b7TQ/EPfhREtdae0SiATLxc
+	 fhKNpEjk6++Z16otyBAZtL6H+O7a/k8SMDxKzttxkZdAptOzdTEGv1efESdTIyKnRz
+	 CwI70XxMnDpOkrxYWlzxgaRRc02ZtfNbGW0siFvn3tvd1QI/U60LaZvHOnFdl4fmcT
+	 Kr28iG7YF4YnfdfOWKZIdCEBDxGrsV2A/MwgcCMqSmZfQQDVtwZ0bzKNPI0WH57c0B
+	 e7oi/a/9Coefw==
+Date: Mon, 8 Apr 2024 13:41:33 +0100
+From: Mark Brown <broonie@kernel.org>
+To: Richard Fitzgerald <rf@opensource.cirrus.com>
+Cc: tiwai@suse.com, linux-sound@vger.kernel.org,
+	alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
+	patches@opensource.cirrus.com
+Subject: Re: [PATCH 1/4] regmap: Add regmap_read_bypassed()
+Message-ID: <043a984a-db22-4216-96d9-1fefe4694d88@sirena.org.uk>
+References: <20240408101803.43183-1-rf@opensource.cirrus.com>
+ <20240408101803.43183-2-rf@opensource.cirrus.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="zejkK65P6uQG8f5B"
+Content-Disposition: inline
+In-Reply-To: <20240408101803.43183-2-rf@opensource.cirrus.com>
+X-Cookie: Drive defensively.  Buy a tank.
 
-Add support for TPS65224 PMIC in device tree of AM62P EVM. Adds regulator
-configuration, pinmux configurations and pmic device nodes.
 
-Signed-off-by: Bhargav Raviprakash <bhargav.r@ltts.com>
----
- arch/arm64/boot/dts/ti/k3-am62p5-sk.dts | 95 +++++++++++++++++++++++++
- 1 file changed, 95 insertions(+)
+--zejkK65P6uQG8f5B
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-diff --git a/arch/arm64/boot/dts/ti/k3-am62p5-sk.dts b/arch/arm64/boot/dts/ti/k3-am62p5-sk.dts
-index 1773c05f7..5d8e4321b 100644
---- a/arch/arm64/boot/dts/ti/k3-am62p5-sk.dts
-+++ b/arch/arm64/boot/dts/ti/k3-am62p5-sk.dts
-@@ -112,6 +112,16 @@ vddshv_sdio: regulator-3 {
- 		bootph-all;
- 	};
- 
-+	vcc_3v3_main: regulator-4 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "vcc_3v3_main";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+		vin-supply = <&vmain_pd>;
-+		regulator-always-on;
-+		regulator-boot-on;
-+	};
-+
- 	leds {
- 		compatible = "gpio-leds";
- 		pinctrl-names = "default";
-@@ -580,6 +590,12 @@ &main_uart1 {
- &mcu_pmx0 {
- 	bootph-all;
- 
-+	pmic_irq_pins_default: pmic-irq-default-pins {
-+		pinctrl-single,pins = <
-+			AM62PX_MCU_IOPAD(0x000, PIN_INPUT, 7) /* (B10) MCU_GPIO0_0 */
-+		>;
-+	};
-+
- 	wkup_uart0_pins_default: wkup-uart0-default-pins {
- 		pinctrl-single,pins = <
- 			AM62PX_MCU_IOPAD(0x02c, PIN_INPUT, 0)	/* (C7) WKUP_UART0_CTSn */
-@@ -589,6 +605,13 @@ AM62PX_MCU_IOPAD(0x028, PIN_OUTPUT, 0)	/* (D7) WKUP_UART0_TXD */
- 		>;
- 		bootph-all;
- 	};
-+
-+	wkup_i2c0_pins_default: wkup-i2c0-default-pins {
-+		pinctrl-single,pins = <
-+			AM62PX_MCU_IOPAD(0x04c, PIN_INPUT, 0) /* (A13) WKUP_I2C0_SCL */
-+			AM62PX_MCU_IOPAD(0x050, PIN_INPUT, 0) /* (C11) WKUP_I2C0_SDA */
-+		>;
-+	};
- };
- 
- &wkup_uart0 {
-@@ -599,6 +622,78 @@ &wkup_uart0 {
- 	bootph-all;
- };
- 
-+&wkup_i2c0 {
-+	status = "okay";
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&wkup_i2c0_pins_default>;
-+	clock-frequency = <400000>;
-+
-+	tps65224: pmic@48 {
-+		compatible = "ti,tps65224-q1";
-+		reg = <0x48>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pmic_irq_pins_default>;
-+		interrupt-parent = <&mcu_gpio0>;
-+		interrupts = <0 IRQ_TYPE_EDGE_FALLING>;
-+		ti,primary-pmic;
-+
-+		gpio-controller;
-+		#gpio-cells = <2>;
-+
-+		buck12-supply = <&vcc_3v3_main>;
-+		buck3-supply = <&vcc_3v3_main>;
-+		buck4-supply = <&vcc_3v3_main>;
-+
-+		ldo1-supply = <&vcc_3v3_main>;
-+		ldo2-supply = <&vcc_3v3_main>;
-+		ldo3-supply = <&vcc1v8_sys>;
-+
-+		regulators {
-+			vcc_core: buck12 {
-+				regulator-name = "vcc_core_buck12";
-+				regulator-min-microvolt = <715000>;
-+				regulator-max-microvolt = <895000>;
-+				regulator-always-on;
-+			};
-+
-+			vcc1v8_sys: buck3 {
-+				regulator-name = "vcc1v8_sys_buck3";
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <1800000>;
-+				regulator-always-on;
-+			};
-+
-+			vcc1v1: buck4 {
-+				regulator-name = "vcc1v1_buck4";
-+				regulator-min-microvolt = <1100000>;
-+				regulator-max-microvolt = <1100000>;
-+				regulator-always-on;
-+			};
-+
-+			vdda1v8: ldo1 {
-+				regulator-name = "vdda1v8_ldo1";
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <1800000>;
-+				regulator-always-on;
-+			};
-+
-+			dvdd3v3: ldo2 {
-+				regulator-name = "dvdd3v3_ldo2";
-+				regulator-min-microvolt = <3300000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-always-on;
-+			};
-+
-+			vcc_0v85: ldo3 {
-+				regulator-name = "vcc_0v85_ldo3";
-+				regulator-min-microvolt = <850000>;
-+				regulator-max-microvolt = <850000>;
-+				regulator-always-on;
-+			};
-+		};
-+	};
-+};
-+
- /* mcu_gpio0 and mcu_gpio_intr are reserved for mcu firmware usage */
- &mcu_gpio0 {
- 	status = "reserved";
--- 
-2.25.1
+On Mon, Apr 08, 2024 at 11:18:00AM +0100, Richard Fitzgerald wrote:
 
+> I have a kunit test case for this. But it's based on top of a chain of
+> other changes I've made to the regmap kunit test, so I'll send it with
+> that chain.
+
+The usual term is series or patch series...
+
+--zejkK65P6uQG8f5B
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmYT5fwACgkQJNaLcl1U
+h9Bd2gf/aVxNn0Us1Z5jnN3TVYqcd+LL0xVE5/jlXAQJmUIqyWBzWxzmqMTFHfaR
+CfWnsK6kciVGQdEfKJaWxWt0Xa4ouBC6N7k9AnUCtHVHe9ag6FMWaTOZAFPhczSi
+5hk6zPZOjdiZk9NRBUB5SkLX195zJtMpu92HOOvgb/EjahoI/Gqt0vHPag27rsgv
+5VnvTW3+HGkayPRoUVWCXgcm9A+SIpXMbS6sCYpA/1hHjUIa3UMd1R/ssoRuDjnR
+CagEvIqMNUS4JovbB8KKdaUsEyDfqjQfXXp5k0w24if+sCPXrbDwLBpYuZqs0pnu
+RrrfGlBL0NOgULLw3YOh3ZhTw2ADKw==
+=SuRZ
+-----END PGP SIGNATURE-----
+
+--zejkK65P6uQG8f5B--
