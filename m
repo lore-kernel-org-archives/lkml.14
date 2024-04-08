@@ -1,75 +1,182 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from inva020.nxp.com (inva020.nxp.com [92.121.34.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B92D16FB9;
-	Mon,  8 Apr 2024 05:10:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 529D57470;
+	Mon,  8 Apr 2024 05:14:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=92.121.34.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712553026; cv=none; b=HMluDdIXoph5B7jkacHkv6z1L0+Q9IHJbfCNS7uD6KznS+XgiMZPqn/ZxPCSaAhlcsxMowhaXBuOthVrx2RZCH4ZM1Aajcjd7At9DQuFxBczoBgt7wyDtmIzz4adXT7d31008Ox+XHTrmm3Suu/t5Cjr4tozlFjZfP3NPOMlkhQ=
+	t=1712553245; cv=none; b=aakpLeXoHYHECzaYI+e+ecLsVaVdtP2Luvw28U+k+vKXeQTTIc38fW5S1txkXKq/WFFcamMeY0GKt/e/BswXwZ+UIo0BhMpCVRg9xDwoZa4sbC3idDSKKIxb/qawT8U+08GLjGPyA/6EZ6+zNFDl/YjFJJOqnZHmK0HfFoFN0Lk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712553026; c=relaxed/simple;
-	bh=jJxoNyvfc0B15/6PXUf+qqfQN3TZK/hFvq7v7R3dbPE=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=u+3zj10+qmaDFc+Y/TogKbolEeOAiGWjQsSbm08ymHpMxYDykmhgMcy+cUlyJRb3I/7MDoxYA6lbxuVegImo9a0tRYR7law7MMhB/N6EBtHTr5WKbumR7izFN2TILicSwGHUbt8M19MbeeJeNgVwvKoE2hNie+HHHe4alze/VX8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YHWA9sh8; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YHWA9sh8"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 5B3EEC433C7;
-	Mon,  8 Apr 2024 05:10:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712553026;
-	bh=jJxoNyvfc0B15/6PXUf+qqfQN3TZK/hFvq7v7R3dbPE=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=YHWA9sh8jNWSaEws5H41QH3nCyW4hYlgCJOw6v9FJMaZzfCo4fUQ5gUEyzPBcf1/R
-	 IU9iQJydn30kCtYku6a+zCvnWpyZAZccKa+TfKxzuDk1QUS+uqA8AXfYFpq+NFZoSO
-	 33Z14JjuLOTF75JiB9sfEQ80fpQX/KHAIGl3YdI1R0U3b6oZsVLA/a49XPQlDeMClh
-	 TYhFVaXIlzdiV76qnCesEV52BA7BKM1Om1qH7pfo4cePSOPK2sNkxvaNEZF4MtGHRJ
-	 J68ejrGYUCUthE4XVC7C8T007x3XUc2WHh/dZBmmzt4jJdcjcgvWOWF0DIpnUaT/VV
-	 QXO1Y2YjlCF4g==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 4CDE9D2D0FD;
-	Mon,  8 Apr 2024 05:10:26 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	s=arc-20240116; t=1712553245; c=relaxed/simple;
+	bh=DLwbCxfXbeWl6N3M1HF6ulR5vBBN4/iqyDlNh+AnF8k=;
+	h=From:To:Subject:Date:Message-Id; b=Pu2PhX98juSRx3SEXRr2hHAx/JJDl+Ls9/1xZmffOccveIgHhfkS70P8L/wuLa08gki87UggvjSuTpKcwhN+IOSRS1ddpJmw6UaAq8BFJW/tBfCvzgYASG2A9/XOzwNP1a2SkqwwJG69Vld6wL70uOcIW9SgqYH6w58Ic+LC808=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; arc=none smtp.client-ip=92.121.34.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+	by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 644221A1276;
+	Mon,  8 Apr 2024 07:13:56 +0200 (CEST)
+Received: from aprdc01srsp001v.ap-rdc01.nxp.com (aprdc01srsp001v.ap-rdc01.nxp.com [165.114.16.16])
+	by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 005931A08A6;
+	Mon,  8 Apr 2024 07:13:56 +0200 (CEST)
+Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
+	by aprdc01srsp001v.ap-rdc01.nxp.com (Postfix) with ESMTP id 31AD31820F77;
+	Mon,  8 Apr 2024 13:13:54 +0800 (+08)
+From: Shengjiu Wang <shengjiu.wang@nxp.com>
+To: lgirdwood@gmail.com,
+	broonie@kernel.org,
+	robh+dt@kernel.org,
+	krzysztof.kozlowski+dt@linaro.org,
+	conor+dt@kernel.org,
+	shengjiu.wang@gmail.com,
+	linux-sound@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	shawnguo@kernel.org,
+	s.hauer@pengutronix.de,
+	kernel@pengutronix.de,
+	festevam@gmail.com,
+	imx@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org
+Subject: [PATCH] ASoC: dt-bindings: imx-audio-spdif: convert to YAML
+Date: Mon,  8 Apr 2024 12:55:42 +0800
+Message-Id: <1712552142-27055-1-git-send-email-shengjiu.wang@nxp.com>
+X-Mailer: git-send-email 2.7.4
+X-Virus-Scanned: ClamAV using ClamSMTP
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH v1 1/1] platform/chrome: cros_hps_i2c: Replace deprecated
- UNIVERSAL_DEV_PM_OPS()
-From: patchwork-bot+chrome-platform@kernel.org
-Message-Id: 
- <171255302631.29950.3498240383277651347.git-patchwork-notify@kernel.org>
-Date: Mon, 08 Apr 2024 05:10:26 +0000
-References: <20240403105502.558351-1-andriy.shevchenko@linux.intel.com>
-In-Reply-To: <20240403105502.558351-1-andriy.shevchenko@linux.intel.com>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: chrome-platform@lists.linux.dev, linux-kernel@vger.kernel.org,
- dcallagh@chromium.org, skyostil@chromium.org, bleung@chromium.org,
- tzungbi@kernel.org
 
-Hello:
+Convert the imx-audio-spdif binding to YAML.
 
-This patch was applied to chrome-platform/linux.git (for-next)
-by Tzung-Bi Shih <tzungbi@kernel.org>:
+When testing dtbs_check, found below compatible strings
+are not listed in document:
 
-On Wed,  3 Apr 2024 13:55:02 +0300 you wrote:
-> The UNIVERSAL_DEV_PM_OPS() macro is deprecated. Replace it.
-> 
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> ---
->  drivers/platform/chrome/cros_hps_i2c.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+fsl,imx-sabreauto-spdif
+fsl,imx6sx-sdb-spdif
 
-Here is the summary with links:
-  - [v1,1/1] platform/chrome: cros_hps_i2c: Replace deprecated UNIVERSAL_DEV_PM_OPS()
-    https://git.kernel.org/chrome-platform/c/1af853cb6e4d
+So add them in yaml file to pass the test.
 
-You are awesome, thank you!
+Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
+---
+ .../bindings/sound/imx-audio-spdif.txt        | 36 -----------
+ .../bindings/sound/imx-audio-spdif.yaml       | 62 +++++++++++++++++++
+ 2 files changed, 62 insertions(+), 36 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/sound/imx-audio-spdif.txt
+ create mode 100644 Documentation/devicetree/bindings/sound/imx-audio-spdif.yaml
+
+diff --git a/Documentation/devicetree/bindings/sound/imx-audio-spdif.txt b/Documentation/devicetree/bindings/sound/imx-audio-spdif.txt
+deleted file mode 100644
+index da84a442ccea..000000000000
+--- a/Documentation/devicetree/bindings/sound/imx-audio-spdif.txt
++++ /dev/null
+@@ -1,36 +0,0 @@
+-Freescale i.MX audio complex with S/PDIF transceiver
+-
+-Required properties:
+-
+-  - compatible		: "fsl,imx-audio-spdif"
+-
+-  - model		: The user-visible name of this sound complex
+-
+-  - spdif-controller	: The phandle of the i.MX S/PDIF controller
+-
+-
+-Optional properties:
+-
+-  - spdif-out		: This is a boolean property. If present, the
+-			  transmitting function of S/PDIF will be enabled,
+-			  indicating there's a physical S/PDIF out connector
+-			  or jack on the board or it's connecting to some
+-			  other IP block, such as an HDMI encoder or
+-			  display-controller.
+-
+-  - spdif-in		: This is a boolean property. If present, the receiving
+-			  function of S/PDIF will be enabled, indicating there
+-			  is a physical S/PDIF in connector/jack on the board.
+-
+-* Note: At least one of these two properties should be set in the DT binding.
+-
+-
+-Example:
+-
+-sound-spdif {
+-	compatible = "fsl,imx-audio-spdif";
+-	model = "imx-spdif";
+-	spdif-controller = <&spdif>;
+-	spdif-out;
+-	spdif-in;
+-};
+diff --git a/Documentation/devicetree/bindings/sound/imx-audio-spdif.yaml b/Documentation/devicetree/bindings/sound/imx-audio-spdif.yaml
+new file mode 100644
+index 000000000000..b29e024f553f
+--- /dev/null
++++ b/Documentation/devicetree/bindings/sound/imx-audio-spdif.yaml
+@@ -0,0 +1,62 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/sound/imx-audio-spdif.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Freescale i.MX audio complex with S/PDIF transceiver
++
++maintainers:
++  - Shengjiu Wang <shengjiu.wang@nxp.com>
++
++properties:
++  compatible:
++    oneOf:
++      - items:
++          - enum:
++              - fsl,imx-audio-spdif
++          - enum:
++              - fsl,imx-sabreauto-spdif
++              - fsl,imx6sx-sdb-spdif
++      - items:
++          - enum:
++              - fsl,imx-audio-spdif
++
++  model:
++    $ref: /schemas/types.yaml#/definitions/string
++    description: User specified audio sound card name
++
++  spdif-controller:
++    $ref: /schemas/types.yaml#/definitions/phandle
++    description: The phandle of the i.MX S/PDIF controller
++
++  spdif-out:
++    type: boolean
++    description: |
++      If present, the transmitting function of S/PDIF will be enabled,
++      indicating there's a physical S/PDIF out connector or jack on the
++      board or it's connecting to some other IP block, such as an HDMI
++      encoder or display-controller.
++
++  spdif-in:
++    type: boolean
++    description: |
++      If present, the receiving function of S/PDIF will be enabled,
++      indicating there is a physical S/PDIF in connector/jack on the board.
++
++required:
++  - compatible
++  - model
++  - spdif-controller
++
++additionalProperties: false
++
++examples:
++  - |
++    sound-spdif {
++        compatible = "fsl,imx-audio-spdif";
++        model = "imx-spdif";
++        spdif-controller = <&spdif>;
++        spdif-out;
++        spdif-in;
++    };
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
+2.34.1
 
