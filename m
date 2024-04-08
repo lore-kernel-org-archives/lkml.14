@@ -1,152 +1,108 @@
-Received: from mail-yb1-f176.google.com (mail-yb1-f176.google.com [209.85.219.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [217.70.183.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F6F07BAF7
-	for <linux-kernel@vger.kernel.org>; Mon,  8 Apr 2024 12:43:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5776C7BAF7;
+	Mon,  8 Apr 2024 12:43:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712580215; cv=none; b=TQf2NKnfQABXzyvvJV05kCGBh/lPUc5eL1DsuRYHLwp9ievENlYju53d7e3B4QrEm3CO1oSKX8lTg4Za1BUcLoLXFAFxrkrwX1Ve6QA/wfuW7Jxo+53Vpg/GGeTLRl+e7IpkIwWdpa8tyILAzhXRd2GPngl96bfPyElvdb3LEg0=
+	t=1712580221; cv=none; b=fVDxnpo4DOHywN2cgif/mkinq+8VGyAERYHplLr4tswAdW8oQu78rKWsH2RJzxvx6bOk73ovStqHv/2axqQtT1ygZEym3YJendHRoyquV4pLBwJURB7XKrvpGQ+S2kBOvlzpEJeHWrJRhbCUniKTimE86+DVooDkrFRrrRvUbxo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712580215; c=relaxed/simple;
-	bh=fKehCiClD9dg01VzoXzMKEtrJs4OUkNg+PrGr3/Dtj4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=mAfkD8K3Q62Fu5314OJvYbJ0iq3BT+GYVdhVHGcf8fjlLsvmRQynqsePGrnY9HfTMf+l+QSp4BD/DqPaoamGcN9uArMzn1ut53+fW4gLPsEho4yV3RffgUwgCB0jXLA+pMmOv8NOFeTg7z8lGAZ3YzOECK6dDYLMQziSv+EyghE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=hlbGNp/f; arc=none smtp.client-ip=209.85.219.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1712580221; c=relaxed/simple;
+	bh=EHeLp8BG4YmTJLnNGQoteg6h/bg34plAh2da3ELzups=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=IyVBOjsObLAHZY5VCuZIEXwXaRZbMaae0sDJ6L2CN2ghg+4/FlzmeaIUhvG+UoGcfPT0p4VXrPSCRBHMLjFAHJIYC23O2VA2mAFIghXTTDZ5xh46BtQB4IlErAZG/lg7+NAEahCaHBieBKkWUDooUNsCImmvyGxkJTa1YYGTxwM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=P39HssVx; arc=none smtp.client-ip=217.70.183.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="hlbGNp/f"
-Received: by mail-yb1-f176.google.com with SMTP id 3f1490d57ef6-dcd9e34430cso5026879276.1
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Apr 2024 05:43:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1712580212; x=1713185012; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=JxaT3PMRuL4e9KTFT/emlcM/OCUcuLvdOqHXG/okFts=;
-        b=hlbGNp/fBHWVphGMddVgDdX+vu3xoJ9QQPpk6l8/NG4rT82WYaVeixwkytbFU8/JQC
-         A8q8q1r2C8yMKaItjJaVpoUj4SUxaKQPJ9r9sqZSQU7+N5UIcunE0ytCeULyfHUqQgjr
-         OcGZS7+ph3UilRsolSfKpyET8XsQmMk3B8oayeOEdZ8UmtVPJ3GXwVwhTc2UE0MDY7V9
-         5bIbd4fsAA7lBdAAAcSpU8pwvZIxYzGWooW6ZP0MHEvXTI1IrcjE9eXemPn6HTGvyA97
-         tXe0TqsL+UvcxSMSdv7Mv56VFx9d+A5Y+VAuL+ZLF+WX5hy5umtW41Predm+PK7S4KAT
-         CUAg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712580212; x=1713185012;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=JxaT3PMRuL4e9KTFT/emlcM/OCUcuLvdOqHXG/okFts=;
-        b=jQZZxHN2Tvskei3EbdB1wJoIyOuqbJAQVZEOmSF7FE0WWhROUWLG78aYHR0Yd2R2aC
-         hnLJS425etklSeZwR3cKcPyJVzUHYex1q8XYnafp0w4dxi5R8q6G/n1oCeyqdVWAcsz+
-         wYcJoicATPVZa0OY1wyZM3rzK2JyZrfkBJeZIVAPBnQeF9jne91nr/1o47GoK3g7Vrbf
-         wnBeSmOVjZ521ITqO8qs4kJJ/f5N5XI8VS1DxwSk/yMQa83OMHU7MJwUyOgFapEhLdjZ
-         QCveCQ1ZOfeB0NdEaNPQY9ikKKiV1FshCgzSg52lksYbCJbJi+IC4LtcSUctbtxwi/KO
-         wQTA==
-X-Gm-Message-State: AOJu0YzLrvHu0pbsRTs2nik0CHHazUQXxuzKujffSN5IuIID5/aNlZJq
-	a+Q2Vjldbk1ZiAg+IxtZs/+kxjKMxYepUdhjZxIUeZqhy63QtgrsGQEuTRPj+I4RpOoXEY87JbR
-	Xh3/d140XdB2j3dAe4yMDHLW09d6aowi/0ImexA==
-X-Google-Smtp-Source: AGHT+IGQxbNzH63UQFQ7p/mhjOGB9jWdMTr1htv/fo/3N9wxCGG7juvIee6jEqslTXlE94kDc2JpOoAnb98ws1sIxxU=
-X-Received: by 2002:a25:ef03:0:b0:dcd:5bdb:4aa4 with SMTP id
- g3-20020a25ef03000000b00dcd5bdb4aa4mr5956331ybd.51.1712580212336; Mon, 08 Apr
- 2024 05:43:32 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="P39HssVx"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 3D7FE1BF20A;
+	Mon,  8 Apr 2024 12:43:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1712580217;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=EGb9QvvQMCEnKLy7lBueRK3Kn722zA1+bA5mCoVE8rc=;
+	b=P39HssVxYttUmscR0T1RCbh+Ar5Zyp6gJsubxF/YeXwhBAOewcWkqNvdfiixNBpB3RAXEf
+	aDgp7/CyW/dlEdtQIcERESZbyIPT91AEsoRNCS7CLdAbHVjTTpDRFQwMX8N/sdZEibqisa
+	yRfe7jHJ+YXRpfujhylFClFi0Otsiir1CMhIC43a6WBn+eF0Jh3VkmWHR2J6xlUymaLac1
+	Yp1jC8akzBD/l3MO4WQ85R4RQgdmlsS1/qHvZ4uKxEQ+RERtX9JI5lqyVte5fxD/wGZNyQ
+	N1vA0A8Jw+mPRwvXTayIpPZpOkJ5aNK7QTaXzIUbv9fZ72IwV2D/Pf8gHY5XLg==
+Date: Mon, 8 Apr 2024 14:43:35 +0200
+From: Herve Codina <herve.codina@bootlin.com>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki"
+ <rafael@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Lizhi Hou
+ <lizhi.hou@amd.com>, Rob Herring <robh@kernel.org>
+Cc: Max Zhen <max.zhen@amd.com>, Sonal Santan <sonal.santan@amd.com>,
+ Stefano Stabellini <stefano.stabellini@xilinx.com>, Jonathan Cameron
+ <Jonathan.Cameron@Huawei.com>, Krzysztof =?UTF-8?B?V2lsY3p5xYRza2k=?=
+ <kwilczynski@kernel.org>, linux-kernel@vger.kernel.org,
+ linux-pci@vger.kernel.org, Allan Nielsen <allan.nielsen@microchip.com>,
+ Horatiu Vultur <horatiu.vultur@microchip.com>, Steen Hegelund
+ <steen.hegelund@microchip.com>, Thomas Petazzoni
+ <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH v3 0/2] Attach DT nodes to existing PCI devices
+Message-ID: <20240408144335.5e9b6a2b@bootlin.com>
+In-Reply-To: <20240325153919.199337-1-herve.codina@bootlin.com>
+References: <20240325153919.199337-1-herve.codina@bootlin.com>
+Organization: Bootlin
+X-Mailer: Claws Mail 4.2.0 (GTK 3.24.41; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240405083410.4896-1-anna-maria@linutronix.de> <87r0fg5ocg.fsf@somnus>
-In-Reply-To: <87r0fg5ocg.fsf@somnus>
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Date: Mon, 8 Apr 2024 14:42:56 +0200
-Message-ID: <CAPDyKFo7KT4V8Nvn58N3mNfeW6ai=-5hampjN7N19kYaR7zdVA@mail.gmail.com>
-Subject: Re: [PATCH v2] PM: s2idle: Make sure CPUs will wakeup directly on resume
-To: Anna-Maria Behnsen <anna-maria@linutronix.de>
-Cc: linux-kernel@vger.kernel.org, "Rafael J . Wysocki" <rafael@kernel.org>, 
-	Pavel Machek <pavel@ucw.cz>, Len Brown <len.brown@intel.com>, linux-pm@vger.kernel.org, 
-	Frederic Weisbecker <frederic@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, x86@kernel.org, 
-	Mario Limonciello <mario.limonciello@amd.com>, stable@kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-GND-Sasl: herve.codina@bootlin.com
 
-On Mon, 8 Apr 2024 at 09:02, Anna-Maria Behnsen
-<anna-maria@linutronix.de> wrote:
->
-> s2idle works like a regular suspend with freezing processes and freezing
-> devices. All CPUs except the control CPU go into idle. Once this is
-> completed the control CPU kicks all other CPUs out of idle, so that they
-> reenter the idle loop and then enter s2idle state. The control CPU then
-> issues an swait() on the suspend state and therefore enters the idle loop
-> as well.
->
-> Due to being kicked out of idle, the other CPUs leave their NOHZ states,
-> which means the tick is active and the corresponding hrtimer is programmed
-> to the next jiffie.
->
-> On entering s2idle the CPUs shut down their local clockevent device to
-> prevent wakeups. The last CPU which enters s2idle shuts down its local
-> clockevent and freezes timekeeping.
->
-> On resume, one of the CPUs receives the wakeup interrupt, unfreezes
-> timekeeping and its local clockevent and starts the resume process. At that
-> point all other CPUs are still in s2idle with their clockevents switched
-> off. They only resume when they are kicked by another CPU or after resuming
-> devices and then receiving a device interrupt.
->
-> That means there is no guarantee that all CPUs will wakeup directly on
-> resume. As a consequence there is no guarantee that timers which are queued
-> on those CPUs and should expire directly after resume, are handled. Also
-> timer list timers which are remotely queued to one of those CPUs after
-> resume will not result in a reprogramming IPI as the tick is
-> active. Queueing a hrtimer will also not result in a reprogramming IPI
-> because the first hrtimer event is already in the past.
->
-> The recent introduction of the timer pull model (7ee988770326 ("timers:
-> Implement the hierarchical pull model")) amplifies this problem, if the
-> current migrator is one of the non woken up CPUs. When a non pinned timer
-> list timer is queued and the queuing CPU goes idle, it relies on the still
-> suspended migrator CPU to expire the timer which will happen by chance.
->
-> The problem exists since commit 8d89835b0467 ("PM: suspend: Do not pause
-> cpuidle in the suspend-to-idle path"). There the cpuidle_pause() call which
-> in turn invoked a wakeup for all idle CPUs was moved to a later point in
-> the resume process. This might not be reached or reached very late because
-> it waits on a timer of a still suspended CPU.
->
-> Address this by kicking all CPUs out of idle after the control CPU returns
-> from swait() so that they resume their timers and restore consistent system
-> state.
->
-> Closes: https://bugzilla.kernel.org/show_bug.cgi?id=218641
-> Fixes: 8d89835b0467 ("PM: suspend: Do not pause cpuidle in the suspend-to-idle path")
-> Signed-off-by: Anna-Maria Behnsen <anna-maria@linutronix.de>
-> Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
-> Tested-by: Mario Limonciello <mario.limonciello@amd.com>
-> Cc: stable@kernel.org
+Hi,
 
-Thanks for the detailed commit message! Please add:
+On Mon, 25 Mar 2024 16:39:13 +0100
+Herve Codina <herve.codina@bootlin.com> wrote:
 
-Reviewed-by: Ulf Hansson <ulf.hansson@linaro.org>
+> Hi,
+> 
+> The commit 407d1a51921e ("PCI: Create device tree node for bridge")
+> creates of_node for PCI devices.
+> 
+> During the insertion handling of these new DT nodes done by of_platform,
+> new devices (struct device) are created. For each PCI devices a struct
+> device is already present (created and handled by the PCI core).
+> 
+> Creating a new device from a DT node leads to some kind of wrong struct
+> device duplication to represent the exact same PCI device.
+> 
+> This patch series first introduces device_{add,remove}_of_node() in
+> order to add or remove a newly created of_node to an already existing
+> device. Then it fixes the DT node creation for PCI devices to add or
+> remove the created node to the existing PCI device without any new
+> device creation.
+> 
+> Compared to the previous iteration:
+>   https://lore.kernel.org/all/20231130165700.685764-1-herve.codina@bootlin.com/
+> this v3 series rewrap commit log.
+> 
+> The potential issue related to the sysfs of_node symlink added after the
+> sysfs PCI device is visible from user-space (raised during the v2
+> review) is maybe not a problem according to Bjorn:
+>   https://lore.kernel.org/all/20240319165430.GA1233494@bhelgaas/
+> 
+> IMHO, the discussions started with Rob around the interrupt-controller
+> during the v2 review are out of the issue this specific series tries to
+> fix. Some modifications are needed for the interrupt-controller topic
+> but should be done in a specific series.
+> 
+> Best regards,
+> Hervé
+> 
 
-Kind regards
-Uffe
+I have received no feedback on this v3 series.
+I know maintainers are busy but I would like to be sure that this series was
+not simply missed.
 
-> ---
-> v2: Fix typos in commit message
-> ---
->  kernel/power/suspend.c |    6 ++++++
->  1 file changed, 6 insertions(+)
->
-> --- a/kernel/power/suspend.c
-> +++ b/kernel/power/suspend.c
-> @@ -106,6 +106,12 @@ static void s2idle_enter(void)
->         swait_event_exclusive(s2idle_wait_head,
->                     s2idle_state == S2IDLE_STATE_WAKE);
->
-> +       /*
-> +        * Kick all CPUs to ensure that they resume their timers and restore
-> +        * consistent system state.
-> +        */
-> +       wake_up_all_idle_cpus();
-> +
->         cpus_read_unlock();
->
->         raw_spin_lock_irq(&s2idle_lock);
+Best regards,
+Hervé
