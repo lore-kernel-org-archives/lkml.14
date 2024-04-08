@@ -1,70 +1,61 @@
-Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-001ae601.pphosted.com (mx0b-001ae601.pphosted.com [67.231.152.168])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AC1E5FB95
-	for <linux-kernel@vger.kernel.org>; Mon,  8 Apr 2024 10:52:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EAD65FEF9;
+	Mon,  8 Apr 2024 10:52:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.152.168
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712573578; cv=none; b=pYh2EomCp8syqvc0BMgpoxWLk9bbhAK4fnZCcQpu2nh3g7obLChmqFUBUOsZbkHG2T9jUzpoeXvSiVnajW2TnCQOWOeRzsoBLpxYrE/+CCVooPaYp2GhiC82uHf6dtulnyArC7XCK6x1ye9QDQVC04T5UxfTRnBANaxN9dmJy6k=
+	t=1712573580; cv=none; b=FbKpIq2HGc7NnqI8ewSKfh70fjGJXarWG8hWJRCwlFqeuBfDP/tYsWptRLxfXlkZvPR0kzUcV4PuRbX4WpwgoOxixHWRj+UVOBtfse3CzgNIoO+xHI19mUXuAbQVs/DH0nWpKAASsbtkErL8/J2EZSnVlyylCpkhLSiJyWcggc4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712573578; c=relaxed/simple;
-	bh=aF/W46UoLp2taMYWzXVCLlW68M9W3n2oWkNKNWSuY7A=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=W26fichbpgeApATiTaP18EEilYWTKyEIzMqA3baxoYloIzsGazKKLZurf7CyWQgyIIkU/X/Ljo5YWyoKpUdC3HLmEPngouTkYYlz7245mDPK8eP9s9UZuNHX/nIwlYCYsitNO/cImxTJMSWEKYwUs27rOb61FiBVj8E9/nPlEss=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com; spf=none smtp.mailfrom=toblux.com; dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b=gWjvX8kn; arc=none smtp.client-ip=209.85.218.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=toblux.com
+	s=arc-20240116; t=1712573580; c=relaxed/simple;
+	bh=nPXVmptz56OdLEho6OfeI9Emay8PrdaXJx7f3Ty6vxI=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=GIfegbIPwkLe7pO0sx5f4sNTcCIByT4lhR1HU9/z2UEPcr1P0650BccwzvQRd3cG/neeJcet2IEj3HKr+ZQyqMxz8Y52U/8h6JjbgIWf3dE+owIRrEuZdIkYjszcZfDEfXqjJ3b5tAYtDrZ7HtND7jCbPU75IS1pUKgmKjrFhIE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com; spf=pass smtp.mailfrom=opensource.cirrus.com; dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b=nu/qa6hv; arc=none smtp.client-ip=67.231.152.168
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=opensource.cirrus.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b="gWjvX8kn"
-Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-a51a7d4466bso316127866b.2
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Apr 2024 03:52:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=toblux-com.20230601.gappssmtp.com; s=20230601; t=1712573573; x=1713178373; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=c+6FLVqqHt8Puy85HABB6phKSAnHTOaWceMatcPamvE=;
-        b=gWjvX8knPeP5lAuTtc5pkOU7gKGKBK4a6gsdE+UzCEpIAPbSIGGCuVW+zGGkRbIz4B
-         2cHMdu8RdnEXacrIZZCCaK6yHj1fDj4DUNkL78X/TAjVpRo7TRGsLAYVHzXgU7kGjlcZ
-         RFcoVKA59Olsh4Czgk9NcqUGGSY8YvaZ4u6WPH6BaVo0NAY1zinpZl1wWqPJi0Z3C0yn
-         x75XIvAGsRvLn5sGUIdfghFBnTW23xn2OqhvJ2KQOAH1RgIdLBg/jmGTHTkjJtJwsMB5
-         HlegJhSPQFtKdf5Ii3XtmyJAYQGJzyAvBbGfg4a0m67KDyDfCPLWk8VbnSOVTWlA5aOA
-         YcbA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712573573; x=1713178373;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=c+6FLVqqHt8Puy85HABB6phKSAnHTOaWceMatcPamvE=;
-        b=iie/YcEfFkqRbwa2/PcA3LUzIOtojCfYElV97bZM//b1HgY9kkRF/nU+5YEkVQtGTy
-         LgKepTUAnCrZtXGqk7jJjLJXkC8YBprNNpSWffDqDmxWS1ZNVLJBLKptek1NMiyzSrq3
-         MZHzjMYF7VEauQ6mo9O9AcQuSSJPfC/UQBz1xxocmnMnRdCr1UzdsKRpvGRZtCrozYRp
-         IL2lbBk2F254xUiJDMGXRtg9YQX1J7kVkGkXF5QIfL5igkv4x7dpVnS2q4lvuDqgvuAx
-         Wy6WkHpJxWUed1l8kIJWaxJALRbxco9h71bQeqL0uKVoqDlhGMLjvFqRPi1hO2l/ibRb
-         8pkw==
-X-Forwarded-Encrypted: i=1; AJvYcCVZY/2eHFKg7l3ipE9RLuCWly/hZJ3DYl3yIB9t5V+T4cvBJfo6E2+YfsgW7xVks3CB+cIXykb4Yf7CdZtb0IQKuoFgronVSiM7XYM3
-X-Gm-Message-State: AOJu0YzBDiC2MIpE4P8vJGHiyA/Krj7u2ksQNUP+C0UXIVb1b/njr4Dt
-	lSGqPvwHd+0i4jcV287/x/nW9GllJXsbAc8hAKDG97E7m9VQNRVciakR1bBIaKY=
-X-Google-Smtp-Source: AGHT+IHtnHD0iZGBcOLtZepHusEAfnU6WYK0+W/v7TX2d8AXCJpOSAKOKV0P/Fas9oUdy52dsQXIyg==
-X-Received: by 2002:a17:906:c104:b0:a51:aad5:8c62 with SMTP id do4-20020a170906c10400b00a51aad58c62mr6350921ejc.60.1712573573514;
-        Mon, 08 Apr 2024 03:52:53 -0700 (PDT)
-Received: from fedora.fritz.box (aftr-82-135-80-212.dynamic.mnet-online.de. [82.135.80.212])
-        by smtp.gmail.com with ESMTPSA id gx12-20020a1709068a4c00b00a4e03c28fd5sm4310119ejc.43.2024.04.08.03.52.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 08 Apr 2024 03:52:53 -0700 (PDT)
-From: Thorsten Blum <thorsten.blum@toblux.com>
-To: Heiko Carstens <hca@linux.ibm.com>,
-	Vasily Gorbik <gor@linux.ibm.com>,
-	Alexander Gordeev <agordeev@linux.ibm.com>,
-	Christian Borntraeger <borntraeger@linux.ibm.com>,
-	Sven Schnelle <svens@linux.ibm.com>
-Cc: Frederic Weisbecker <frederic@kernel.org>,
-	Ilya Leoshkevich <iii@linux.ibm.com>,
-	linux-s390@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Thorsten Blum <thorsten.blum@toblux.com>
-Subject: [PATCH] s390/smp: Use min() to fix Coccinelle warning
-Date: Mon,  8 Apr 2024 12:51:25 +0200
-Message-ID: <20240408105124.2162-2-thorsten.blum@toblux.com>
-X-Mailer: git-send-email 2.44.0
+	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="nu/qa6hv"
+Received: from pps.filterd (m0077474.ppops.net [127.0.0.1])
+	by mx0b-001ae601.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4385o0CV020277;
+	Mon, 8 Apr 2024 05:24:19 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=
+	from:to:cc:subject:date:message-id:in-reply-to:references
+	:mime-version:content-transfer-encoding:content-type; s=
+	PODMain02222019; bh=Ybaj5RNqmFluk/TOgHFDrpuyU98eEXfpsybGrhMcO78=; b=
+	nu/qa6hvqjt3Nj2p/N+kYUujZ8ReKl2OVSIo9L0Gl8SrCJ/x5IJ+AOi/QVB3FWJb
+	zKbKKz1lwSMkiaLSNHlsJjBuoHSzv1l1c+ZS0AHVesuIUqrr+8meLousuLn7uyjn
+	7MKwPtItGAeh1YeAlMJKmOwBmbP12/7ukWRM0bzxNX/NHIRybucbeltJAxFO1aWI
+	XYwNDk2nc8jrzvuXMkd+OjHdGfO/LRFjK5G72hksKB/VEYpQMdcenkq3s/flm2eK
+	GCYsu746pGr7ESmmUpzFiUs8YQJpUeyymVYKJcOgGMUw7PqDdrnhNAIhm9XDVqn9
+	KknY4CAK8f7x64CUPod+Mw==
+Received: from ediex02.ad.cirrus.com ([84.19.233.68])
+	by mx0b-001ae601.pphosted.com (PPS) with ESMTPS id 3xb2tjhp0e-2
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 08 Apr 2024 05:24:18 -0500 (CDT)
+Received: from ediex01.ad.cirrus.com (198.61.84.80) by ediex02.ad.cirrus.com
+ (198.61.84.81) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Mon, 8 Apr 2024
+ 11:24:16 +0100
+Received: from ediswmail9.ad.cirrus.com (198.61.86.93) by
+ ediex01.ad.cirrus.com (198.61.84.80) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9
+ via Frontend Transport; Mon, 8 Apr 2024 11:24:16 +0100
+Received: from ediswws06.ad.cirrus.com (ediswws06.ad.cirrus.com [198.90.208.18])
+	by ediswmail9.ad.cirrus.com (Postfix) with ESMTP id 3398682024A;
+	Mon,  8 Apr 2024 10:18:03 +0000 (UTC)
+From: Richard Fitzgerald <rf@opensource.cirrus.com>
+To: <broonie@kernel.org>, <tiwai@suse.com>
+CC: <linux-sound@vger.kernel.org>, <alsa-devel@alsa-project.org>,
+        <linux-kernel@vger.kernel.org>, <patches@opensource.cirrus.com>,
+        "Richard
+ Fitzgerald" <rf@opensource.cirrus.com>
+Subject: [PATCH 1/4] regmap: Add regmap_read_bypassed()
+Date: Mon, 8 Apr 2024 11:18:00 +0100
+Message-ID: <20240408101803.43183-2-rf@opensource.cirrus.com>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20240408101803.43183-1-rf@opensource.cirrus.com>
+References: <20240408101803.43183-1-rf@opensource.cirrus.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -72,30 +63,112 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Proofpoint-ORIG-GUID: r1mKnv9K2x_btF63HBeaMCNqcEF-X3EN
+X-Proofpoint-GUID: r1mKnv9K2x_btF63HBeaMCNqcEF-X3EN
+X-Proofpoint-Spam-Reason: safe
 
-Fixes the following Coccinelle/coccicheck warning reported by
-minmax.cocci:
+Add a regmap_read_bypassed() to allow reads from the hardware registers
+while the regmap is in cache-only mode.
 
-	WARNING opportunity for min()
+This patch is a prerequisite for a bugfix to the ASoC cs35l56 driver.
 
-Signed-off-by: Thorsten Blum <thorsten.blum@toblux.com>
+A typical use for this is to keep the cache in cache-only mode until
+the hardware has reached a valid state, but one or more status registers
+must be polled to determine when this state is reached.
+
+For example, firmware download on the cs35l56 can take several seconds if
+there are multiple amps sharing limited bus bandwidth. This is too long
+to block in probe() so it is done as a background task. The device must
+be soft-reset to reboot the firmware and during this time the registers are
+not accessible, so the cache should be in cache-only. But the driver must
+poll a register to detect when reboot has completed.
+
+Signed-off-by: Richard Fitzgerald <rf@opensource.cirrus.com>
+Fixes: 8a731fd37f8b ("ASoC: cs35l56: Move utility functions to shared file")
 ---
- arch/s390/kernel/smp.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+I have a kunit test case for this. But it's based on top of a chain of
+other changes I've made to the regmap kunit test, so I'll send it with
+that chain.
+---
+ drivers/base/regmap/regmap.c | 37 ++++++++++++++++++++++++++++++++++++
+ include/linux/regmap.h       |  8 ++++++++
+ 2 files changed, 45 insertions(+)
 
-diff --git a/arch/s390/kernel/smp.c b/arch/s390/kernel/smp.c
-index 0324649aae0a..d69cf2475744 100644
---- a/arch/s390/kernel/smp.c
-+++ b/arch/s390/kernel/smp.c
-@@ -1205,7 +1205,7 @@ static int __init s390_smp_init(void)
- 
- 	rc = cpuhp_setup_state(CPUHP_AP_ONLINE_DYN, "s390/smp:online",
- 			       smp_cpu_online, smp_cpu_pre_down);
--	rc = rc <= 0 ? rc : 0;
-+	rc = min(rc, 0);
- out:
- 	return rc;
+diff --git a/drivers/base/regmap/regmap.c b/drivers/base/regmap/regmap.c
+index 5cb425f6f02d..0a34dd3c4f38 100644
+--- a/drivers/base/regmap/regmap.c
++++ b/drivers/base/regmap/regmap.c
+@@ -2838,6 +2838,43 @@ int regmap_read(struct regmap *map, unsigned int reg, unsigned int *val)
  }
+ EXPORT_SYMBOL_GPL(regmap_read);
+ 
++/**
++ * regmap_read_bypassed() - Read a value from a single register direct
++ *			    from the device, bypassing the cache
++ *
++ * @map: Register map to read from
++ * @reg: Register to be read from
++ * @val: Pointer to store read value
++ *
++ * A value of zero will be returned on success, a negative errno will
++ * be returned in error cases.
++ */
++int regmap_read_bypassed(struct regmap *map, unsigned int reg, unsigned int *val)
++{
++	int ret;
++	bool bypass, cache_only;
++
++	if (!IS_ALIGNED(reg, map->reg_stride))
++		return -EINVAL;
++
++	map->lock(map->lock_arg);
++
++	bypass = map->cache_bypass;
++	cache_only = map->cache_only;
++	map->cache_bypass = true;
++	map->cache_only = false;
++
++	ret = _regmap_read(map, reg, val);
++
++	map->cache_bypass = bypass;
++	map->cache_only = cache_only;
++
++	map->unlock(map->lock_arg);
++
++	return ret;
++}
++EXPORT_SYMBOL_GPL(regmap_read_bypassed);
++
+ /**
+  * regmap_raw_read() - Read raw data from the device
+  *
+diff --git a/include/linux/regmap.h b/include/linux/regmap.h
+index b743241cfb7c..d470303b1bbb 100644
+--- a/include/linux/regmap.h
++++ b/include/linux/regmap.h
+@@ -1230,6 +1230,7 @@ int regmap_multi_reg_write_bypassed(struct regmap *map,
+ int regmap_raw_write_async(struct regmap *map, unsigned int reg,
+ 			   const void *val, size_t val_len);
+ int regmap_read(struct regmap *map, unsigned int reg, unsigned int *val);
++int regmap_read_bypassed(struct regmap *map, unsigned int reg, unsigned int *val);
+ int regmap_raw_read(struct regmap *map, unsigned int reg,
+ 		    void *val, size_t val_len);
+ int regmap_noinc_read(struct regmap *map, unsigned int reg,
+@@ -1739,6 +1740,13 @@ static inline int regmap_read(struct regmap *map, unsigned int reg,
+ 	return -EINVAL;
+ }
+ 
++static inline int regmap_read_bypassed(struct regmap *map, unsigned int reg,
++				       unsigned int *val)
++{
++	WARN_ONCE(1, "regmap API is disabled");
++	return -EINVAL;
++}
++
+ static inline int regmap_raw_read(struct regmap *map, unsigned int reg,
+ 				  void *val, size_t val_len)
+ {
 -- 
-2.44.0
+2.39.2
 
