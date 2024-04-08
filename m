@@ -1,209 +1,104 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48B3B524C2
-	for <linux-kernel@vger.kernel.org>; Mon,  8 Apr 2024 08:10:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE2F336AFB
+	for <linux-kernel@vger.kernel.org>; Mon,  8 Apr 2024 08:10:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712563826; cv=none; b=AFhCaY7gqUDtC2ywhl/YGnZP8pnHr0jlXY2LiIV+HyqiQEO/ukE+V/gtytmAFNpeysnWSvxNgmPNR/70QjYoKR+zEoEU0u9i4/2qNiAQ/HrAbOPHnHzULo4LdvZlJYbY3qLjtngdRVPSipsEopcvOu/frXKQ7fYE1ZhPvlhi2ds=
+	t=1712563827; cv=none; b=spyX0F9n73YgeejUpZLOiKL7KfRV4P65f3/2TLFakmg0CJC1bG9lx8+54weQGMwbtY4w6ine0bushskXfBNxenRy8MyaOTkAoG1uOsYsW61u7sZqCwxeQFgz4kHMXXmhKOg2i8lz8MtxDpXEYiMh9fgH5KCSc1/NvjRoNxY4ifs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712563826; c=relaxed/simple;
-	bh=yqiVE4oOJ/gIlN9qWpoU6AB/pFNy8uHPjaDhffYbiOM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hwuBG87lx2RVru0KNTx3vNLPXLovOTcoDDvONIN6HO5FItncwp+M7iShZaK6wpvePTETKZEMtX4IA/ymcqrP7nJk15Iuu4s7fYdh2j/OUc2nUIDuzov8OCv92SQGZLJ207w45dqazUNs28qI2Ur8MkdcOnoKDdM7aQbTF0pRynw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lOSlqe9o; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1712563827; c=relaxed/simple;
+	bh=GHDQU9zd2nMXU7UlrQa3DtToNffnBvQ5Ugz2l1CzFYM=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=rN3LJtVJ2v/kGLINElf6/lp+Su33Jhw6EVxfpFhUNSsUL5DyCX1gVwEazeVBXBwsHxjRpJXcokJeR6i1Ti1uGvM8d+06Sb0xfiHbKB3efaMSfrGYqqNobbZom2geghj2jo6Nq3zcFSQJRgSy1+PDNm+J05R4280x5A1PKovkGbg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=lA1jsfpf; arc=none smtp.client-ip=209.85.208.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lOSlqe9o"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EEA2AC433C7;
-	Mon,  8 Apr 2024 08:10:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712563825;
-	bh=yqiVE4oOJ/gIlN9qWpoU6AB/pFNy8uHPjaDhffYbiOM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=lOSlqe9ooFAE+xEuEvFhU73tgJwlTKO2GXJ2y50/dMwuCl9s/Sj9DTtVajE/V1QeR
-	 4RHMeegHvTnP/6ti3t5dpS7+0UaQPeF6mQknZ319QerAH9VxbKda0wAaApNMTeFKfW
-	 5xlt8LIqc+S7RIeuNaSRKnh0itiH6vGaTJB6AD+bB446Q9qfJ2/0zlX3mJ6fLRXHes
-	 JqoQCufIZikyuzKogLjynQB5cPPSGTQlipoiDPGWtWIN02ijND8aTcGaUE7eq79U23
-	 JLb2qi0Izz5QzS8Pja3GmxUf+pNRr9v9dD3oz7V35DHMTcv+ZHEAZarpkz1qWorrU1
-	 qM5nddh3uIT6Q==
-Date: Mon, 8 Apr 2024 09:10:19 +0100
-From: Conor Dooley <conor@kernel.org>
-To: Christoph =?iso-8859-1?Q?M=FCllner?= <christoph.muellner@vrull.eu>
-Cc: Yangyu Chen <cyy@cyyself.name>, ajones@ventanamicro.com, alex@ghiti.fr,
-	alistair.francis@wdc.com, Albert Ou <aou@eecs.berkeley.edu>,
-	bjorn@kernel.org, Conor Dooley <conor.dooley@microchip.com>,
-	cooper.qu@linux.alibaba.com, dbarboza@ventanamicro.com,
-	Qingfang Deng <dqfext@gmail.com>, eric.huang@linux.alibaba.com,
-	heiko@sntech.de, linux-kernel@vger.kernel.org,
-	linux-riscv@lists.infradead.org,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Paul Walmsley <paul.walmsley@sifive.com>, philipp.tomsich@vrull.eu,
-	samuel.holland@sifive.com, zhiwei_liu@linux.alibaba.com,
-	Guo Ren <guoren@kernel.org>
-Subject: Re: [PATCH v3 2/2] riscv: T-Head: Test availability bit before
- enabling MAE errata
-Message-ID: <20240408-dispersal-foster-49c4e269216e@spud>
-References: <20240407213236.2121592-3-christoph.muellner@vrull.eu>
- <tencent_CF232CDF85208DF6BFA3076E73CC4E087306@qq.com>
- <CAEg0e7h0F_LaeMoS6Co1UjgLM6ML8SXtTfHW5+OQS6yedjdZPQ@mail.gmail.com>
- <tencent_459BC09115173E0624A4A0F19D2F43704F05@qq.com>
- <CAEg0e7jW=Sfc3tcc0eJwbTx=vb0HM49ZWpda972E-t=Fj1PG+g@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="lA1jsfpf"
+Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-56e1baf0380so4540988a12.3
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Apr 2024 01:10:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1712563823; x=1713168623; darn=vger.kernel.org;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=LOr2piSF59rBtL6qQkJRVxuVH7En2uLFiUAi/dy63d4=;
+        b=lA1jsfpfNIMPKQ3qH+2mopqRLcf3heuEPPpprN54142bgZ57ukTuIitDmKQGYUDwgK
+         u1eA82n6FfDFzT62zXPg4fKPfOCf7SPlmyfb7gjv1OefhVEEJi2RFqszkC8WJii2oOj3
+         I2tMjb2BrccF8OoctXyZPxXO8FDw6JE9r60nHUFr1KytJzzV3JrwjN4pgiXiI6oAsssr
+         Xj/oTcfPfSQdWGlUj5BE51PDpV5pj0MpVysmIv4fvWdKB1RiLK6zGRDaIa46/imDiieS
+         44ZpCA7fL+Lai6VmPe+/zw4n/muLAxkW7rrKA80hVt8GO5bLq662vsqVBaVSpc1U61HY
+         jjSw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712563823; x=1713168623;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=LOr2piSF59rBtL6qQkJRVxuVH7En2uLFiUAi/dy63d4=;
+        b=w8W2EOB8f+TsHxhGywb1+UhgQ6bgHrjt5Vpqtv2Ev3WnTBJntdXV9UIgDKptghuDbU
+         RG5j51fNl4lhnqEHdeTPp5zAM2PsS1ZtekCRF1JUGy/+OFy+10/LAA+uK6EltaggXKOS
+         ySq7+yiqZmH5BeNcCFDa+CLe9tcwmfXY/F02DoZbFZL8nskLGV2KwCE068Om9aNVJpKi
+         HcEg0tcMUnS35fS8ZBGviuxbyvivgX9kiKsIkgmc71+GbcyZJgXMwS69EBiL49iUgJu6
+         bLPDt2oyQyzyRmM9K4fr3gNSiYCJpc0MGI3Y/vH3yncBFsCRYh+5S80map0Tn4i3l/Zp
+         fC/g==
+X-Forwarded-Encrypted: i=1; AJvYcCV3oIU1uykKARVqLs1yQGBZufKX+Z/vqcQ+JZCqcWwVAQPuEy4IgLrPe+PKiKmpW6v5jqNy51xgQKIaGN4+Mm2KsQK5ougyxanfk6XP
+X-Gm-Message-State: AOJu0YxHKPH140KYOrb1gXL/WQqm3WAwsbaCtQqR7320k3WZPJe4rrPX
+	rto4E8MU6J+fL57iWM7qy8J4vHJuyecnWDmZmmvGZgRQheVaCwOwuGeHvuwoj5U=
+X-Google-Smtp-Source: AGHT+IHSMNUBKuLQipt6eiK/GpbVAIRoVBfOGY9eusOY9M1lS39qRZiKY7EBBCgcSpTRamQWTGpjPQ==
+X-Received: by 2002:a50:d6d2:0:b0:56e:2bf4:fe0a with SMTP id l18-20020a50d6d2000000b0056e2bf4fe0amr6239511edj.35.1712563823192;
+        Mon, 08 Apr 2024 01:10:23 -0700 (PDT)
+Received: from localhost ([102.222.70.76])
+        by smtp.gmail.com with ESMTPSA id b14-20020aa7c90e000000b0056e46beba6dsm2416447edt.16.2024.04.08.01.10.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 08 Apr 2024 01:10:23 -0700 (PDT)
+Date: Mon, 8 Apr 2024 10:36:35 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: Boris Brezillon <boris.brezillon@collabora.com>
+Cc: Steven Price <steven.price@arm.com>, Liviu Dudau <liviu.dudau@arm.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
+	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+	kernel-janitors@vger.kernel.org
+Subject: [PATCH] drm/panthor: clean up some types in panthor_sched_suspend()
+Message-ID: <85356b15-4840-4e64-8c75-922cdd6a5fef@moroto.mountain>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="eyhaaW+BF6W5xuPl"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAEg0e7jW=Sfc3tcc0eJwbTx=vb0HM49ZWpda972E-t=Fj1PG+g@mail.gmail.com>
+X-Mailer: git-send-email haha only kidding
 
+These variables should be u32 instead of u64 because they're only
+storing u32 values.  Also static checkers complain when we do:
 
---eyhaaW+BF6W5xuPl
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+	suspended_slots &= ~upd_ctx.timedout_mask;
 
-On Mon, Apr 08, 2024 at 09:55:48AM +0200, Christoph M=C3=BCllner wrote:
-> On Mon, Apr 8, 2024 at 9:37=E2=80=AFAM Yangyu Chen <cyy@cyyself.name> wro=
-te:
-> > > On Apr 8, 2024, at 14:00, Christoph M=C3=BCllner <christoph.muellner@=
-vrull.eu> wrote:
-> > > On Mon, Apr 8, 2024 at 3:58=E2=80=AFAM Yangyu Chen <cyy@cyyself.name>=
- wrote:
-> > >> On 2024/4/8 05:32, Christoph M=C3=BCllner wrote:
-> > >>> T-Head's memory attribute extension (XTheadMae) (non-compatible
-> > >>> equivalent of RVI's Svpbmt) is currently assumed for all T-Head har=
-ts.
-> > >>> However, QEMU recently decided to drop acceptance of guests that wr=
-ite
-> > >>> reserved bits in PTEs.
-> > >>> As XTheadMae uses reserved bits in PTEs and Linux applies the MAE e=
-rrata
-> > >>> for all T-Head harts, this broke the Linux startup on QEMU emulatio=
-ns
-> > >>> of the C906 emulation.
-> > >>>
-> > >>> This patch attempts to address this issue by testing the MAE-enable=
- bit
-> > >>> in the th.sxstatus CSR. This CSR is available in HW and can be
-> > >>> emulated in QEMU.
-> > >>>
-> > >>> This patch also makes the XTheadMae probing mechanism reliable, bec=
-ause
-> > >>> a test for the right combination of mvendorid, marchid, and mimpid
-> > >>> is not sufficient to enable MAE.
-> > >>>
-> > >>> Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
-> > >>> Signed-off-by: Christoph M=C3=BCllner <christoph.muellner@vrull.eu>
+In this code "suspended_slots" is a u64 and "upd_ctx.timedout_mask".  The
+mask clears out the top 32 bits which would likely be a bug if anything
+were stored there.
 
-> > >>> @@ -28,11 +31,14 @@ static bool errata_probe_mae(unsigned int stage,
-> > >>>      if (arch_id !=3D 0 || impid !=3D 0)
-> > >>>              return false;
-> > >>>
-> > >>
-> > >> I would raise a little concern about keeping this "if" statement for
-> > >> arch_id and imp_id after we have probed it in this CSR way. I would =
-like to
-> > >> remove it and move the CSR probe earlier than RISCV_ALTERNATIVES.
-> > >>
-> > >> I added CC to guoren for more opinions.
-> > >>
-> > >> Even T-Head C908 comes in 2023, which supports RVV 1.0 and also keep=
-s MAEE.
-> > >> But it also supports Svpbmt, and we can perform the switch by cleari=
-ng the
-> > >> MAEE bit in CSR_TH_MXSTATUS in M-Mode Software.
-> > >>
-> > >> Moreover, T-Head MAEE may not be removed in the future of T-Head CPU=
-s. We
-> > >> can see something from the T-Head C908 User Manual that adds a Secur=
-ity bit
-> > >> to MAEE. So, it might used in their own TEE implementation and will =
-not be
-> > >> removed.
-> > >>
-> > >> However, C908 has arch_id and impid, which are not equal to zero. Yo=
-u can
-> > >> see it from the C908 boot log [2] from my patch to support K230 [3].=
- So, if
-> > >> we have probed MAEE using CSR, you confirmed that this bit will also=
- be set
-> > >> in the C906 core. We can only probe it this way and no longer use ar=
-ch_id
-> > >> and imp_id. And if the arch_id and imp_id probes get removed, we sho=
-uld
-> > >> also move the csr probe earlier than riscv alternatives.
-> > >
-> > > We keep the probing via arch_id=3D=3D0&&impid=3D=3D0 because we had t=
-hat
-> > > already in the kernel and don't want to break existing functionality.
-> > >
-> > > From the discussions that we had about the v1 and v2 of this series,
-> > > my impression is that we should use DT properties instead of probing
-> > > arch_id and impid. So, if C908 support is needed, this should probably
-> > > be introduced using DT properties. The logic would then be:
-> > > * if arch_id =3D=3D 0 and impid =3D=3D 0 then decide based on th.sxst=
-atus.MAEE
-> > > * else test if "xtheadmae" is in the DT
-> > >
-> > >
-> >
-> > I know about it, and Conor also mentioned adding this property to DT a =
-few
-> > months ago. I agree with this at that time. But for now, you have found=
- the
-> > T-Head document description about this, and we can probe MAE using CSR =
-even
-> > on C906. I think only probing in CSR will be a better way to do that. It
-> > can maintain compatibility with some early cores, such as C906. And will
-> > also support some new cores with non-zero arch_id and impl_id but may h=
-ave
-> > MAE enabled, such as C908.
-> >
-> > For future concerns, T-Head said from their documentation that
-> > "Availability: The th.sxstatus CSR is available on all systems whose
-> > mvendorid CSR holds a value of 0x5B7." [1] and this extension is frozen=
- and
-> > stable. I think it's okay to have MAE errara for some cpus whose impl_id
-> > and arch_id are non-zero. And T-Head may have used this for their TEE, =
-so
-> > it might never be removed.
->=20
-> I wrote that specification. And yes, T-Head reviewed that part.
-> But there is no guarantee for future cores.
+Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
+---
+ drivers/gpu/drm/panthor/panthor_sched.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Yeah, that is what I assumed. Unless its a 100% certainty that this bit
-will always have this meaning, we can't unconditionally assume that it
-does.
+diff --git a/drivers/gpu/drm/panthor/panthor_sched.c b/drivers/gpu/drm/panthor/panthor_sched.c
+index d4bc652b34d5..b3a51a6de523 100644
+--- a/drivers/gpu/drm/panthor/panthor_sched.c
++++ b/drivers/gpu/drm/panthor/panthor_sched.c
+@@ -2546,7 +2546,7 @@ void panthor_sched_suspend(struct panthor_device *ptdev)
+ {
+ 	struct panthor_scheduler *sched = ptdev->scheduler;
+ 	struct panthor_csg_slots_upd_ctx upd_ctx;
+-	u64 suspended_slots, faulty_slots;
++	u32 suspended_slots, faulty_slots;
+ 	struct panthor_group *group;
+ 	u32 i;
+ 
+-- 
+2.43.0
 
-> > Since it might never be removed, if some vendor uses it and makes it ha=
-rd
-> > to run the mainline kernel since it requires setting CSR in M-Mode soft=
-ware
-> > or changing the DT, they may be hard to change for some security reasons
-> > for TEE, I think it's not right
-
-> The question is: why should the kernel have to care about that?
-> This can all be addressed (hidden) in FW, where core-specific
-> routines can test the required bits in vendor CSRs and set DT properties
-> that match the core's configuration.
-
-I'm also not super inclined to care about it requiring changes in
-firmware, because the last time I checked T-Head's SDK (and therefore
-the vendors') use a version of OpenSBI that cannot even run mainline and
-needs to be updated to begin with.
-
---eyhaaW+BF6W5xuPl
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZhOmawAKCRB4tDGHoIJi
-0tr/AQCd+JE5/L+WVnwdvpplHfpAcFtlQe7GsV2410Q6Cosm2wEAvHjLaChHcrUb
-ASrH4Zsmcv0BeVXzNNn2VagMox0TzAU=
-=HNw+
------END PGP SIGNATURE-----
-
---eyhaaW+BF6W5xuPl--
