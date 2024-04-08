@@ -1,226 +1,92 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4ACC86A333
-	for <linux-kernel@vger.kernel.org>; Mon,  8 Apr 2024 12:07:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B11169E07;
+	Mon,  8 Apr 2024 12:09:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712578069; cv=none; b=UHSm81FcImiGx6xtajl/c8WKo+k0aNcnMOeU9e5DzOISG+1k0WS0DOlG+K2P4baMg12ikfi77oFNUh8pmcGrzUUMqu9HMt9ulGAzPnG7i9IZzmfvd165dx/xDjqm+enSJW4eFGofFG1wqCCajzWn+nGgpxRg7Fzx681WA0p9tzA=
+	t=1712578167; cv=none; b=DCHSMtu3E+oBeSgsgTDaz9icsNnabuDNxDMZmRN2Wcz7eD/DD/H0I29uoT7IMEJiJy+Wqo/tNifLS1wMSbrqFqQHm74d251uOfPtcMlo+Dp5ga3R9YMBQ8M2zttR4Oph2v5d5X/g2QQ3IAJoBPQzQOI89io7OiWiHMr0EM/GCYU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712578069; c=relaxed/simple;
-	bh=b8pWrBbsgVx0W4YG0AiioljQVukONKMHKcEisvgp6Ig=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=oQUE+EreTL0v4qmSC39XkxZALYBAGvA0lg4s7aW2wRq26k1MdkikmNlsEVT4ikXnH5MBNGz8imVSeFJ7Om6gM+BV+Koy0VBaL4YrchMKXOUkcXHoZySxBdE6s/8O6Qv44LfIhgzh7LUd9jpuiWV6JwAgVdzi36GaY4R8hFVWlUc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id ED007DA7;
-	Mon,  8 Apr 2024 05:08:15 -0700 (PDT)
-Received: from [10.57.73.169] (unknown [10.57.73.169])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A01823F64C;
-	Mon,  8 Apr 2024 05:07:43 -0700 (PDT)
-Message-ID: <4110bb1d-65e5-4cf0-91ad-62749975829d@arm.com>
-Date: Mon, 8 Apr 2024 13:07:42 +0100
+	s=arc-20240116; t=1712578167; c=relaxed/simple;
+	bh=jMhyIsACrXJPq53fcYvr3d0wlQI+edXLZWNObmw9AEU=;
+	h=From:To:Cc:Subject:Date:Message-Id; b=ECzZsqZNs7hKgo6+C5ebFigbpzfqrudL+Dt463PHKV3zMcgzkWg6pPbPs1uaxW4a7acx4DP6plTT4vqs9KqC2JLSl31C70/6AhsSKuMT9dDUqerBTt8gp4DT9StGzTANH84WRJ5A21vUBZ1dVEtyT/ArIRtfWANtxAOVFhhxYbI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=iC9iw0e8; arc=none smtp.client-ip=192.198.163.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="iC9iw0e8"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1712578165; x=1744114165;
+  h=from:to:cc:subject:date:message-id;
+  bh=jMhyIsACrXJPq53fcYvr3d0wlQI+edXLZWNObmw9AEU=;
+  b=iC9iw0e8sQegLjGdWuR8hWOT4gN2X1+Uj5V8prrIaV8ff7Reo8YhciZ0
+   vIDo8QGgYgQztzHJsKaG/0cSYr3v7TMAZiE2mz7m5QUh7Nd/s80aLRgUP
+   pRFUpf6lxZogNnKoLsOEojOYuB4pNCupIVGQwbnA1qIIQqSweCRDFPy8j
+   ucxpm5GZFRft03PUPz3SM+5gDmIh/Fh4jFBPxYQJ27aahF8RgoHB245YT
+   49ppczSVri01YjLBF8QKJ9os/gIIkkbBvypftrWdgfeHiaTpOm0uk27e/
+   WsCT6HYl0z2RDjN5ziUnW5vPn40r5tmSuiVc5iDDLqvALVoOQFSECRpnu
+   g==;
+X-CSE-ConnectionGUID: B1oEyCpeTkyBe5bQaYPKVQ==
+X-CSE-MsgGUID: /rga3l4HR9uAFSj+8HN8DA==
+X-IronPort-AV: E=McAfee;i="6600,9927,11037"; a="18463659"
+X-IronPort-AV: E=Sophos;i="6.07,186,1708416000"; 
+   d="scan'208";a="18463659"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2024 05:09:24 -0700
+X-CSE-ConnectionGUID: M5fgWsTQQRKekXUmxflf9g==
+X-CSE-MsgGUID: Z3t4AKR7S8mEqSiz4pwDBg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,186,1708416000"; 
+   d="scan'208";a="57334813"
+Received: from qiuxu-clx.sh.intel.com ([10.239.53.109])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2024 05:09:23 -0700
+From: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
+To: Tony Luck <tony.luck@intel.com>
+Cc: Qiuxu Zhuo <qiuxu.zhuo@intel.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Aristeu Rozanski <aris@redhat.com>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	linux-edac@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 1/1] EDAC/skx_common: Allow decoding of SGX addresses
+Date: Mon,  8 Apr 2024 20:04:19 +0800
+Message-Id: <20240408120419.50234-1-qiuxu.zhuo@intel.com>
+X-Mailer: git-send-email 2.17.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 2/6] mm: swap: free_swap_and_cache_nr() as batched
- free_swap_and_cache()
-Content-Language: en-GB
-To: David Hildenbrand <david@redhat.com>,
- Andrew Morton <akpm@linux-foundation.org>,
- Matthew Wilcox <willy@infradead.org>, Huang Ying <ying.huang@intel.com>,
- Gao Xiang <xiang@kernel.org>, Yu Zhao <yuzhao@google.com>,
- Yang Shi <shy828301@gmail.com>, Michal Hocko <mhocko@suse.com>,
- Kefeng Wang <wangkefeng.wang@huawei.com>, Barry Song <21cnbao@gmail.com>,
- Chris Li <chrisl@kernel.org>, Lance Yang <ioworker0@gmail.com>
-Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org
-References: <20240403114032.1162100-1-ryan.roberts@arm.com>
- <20240403114032.1162100-3-ryan.roberts@arm.com>
- <051052af-3b56-4290-98d3-fd5a1eb11ce1@redhat.com>
-From: Ryan Roberts <ryan.roberts@arm.com>
-In-Reply-To: <051052af-3b56-4290-98d3-fd5a1eb11ce1@redhat.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
 
-[...]
-> 
-> [...]
-> 
->> +
->> +/**
->> + * swap_pte_batch - detect a PTE batch for a set of contiguous swap entries
->> + * @start_ptep: Page table pointer for the first entry.
->> + * @max_nr: The maximum number of table entries to consider.
->> + * @entry: Swap entry recovered from the first table entry.
->> + *
->> + * Detect a batch of contiguous swap entries: consecutive (non-present) PTEs
->> + * containing swap entries all with consecutive offsets and targeting the same
->> + * swap type.
->> + *
-> 
-> Likely you should document that any swp pte bits are ignored? ()
+There are no "struct page" associations with SGX pages, causing the check
+pfn_to_online_page() to fail. This results in the inability to decode the
+SGX addresses and warning messages like:
 
-Now that I understand what swp pte bits are, I think the simplest thing is to
-just make this function always consider the pte bits by using pte_same() as you
-suggest below? I don't think there is ever a case for ignoring the swp pte bits?
-And then I don't need to do anything special for uffd-wp either (below you
-suggested not doing batching when the VMA has uffd enabled).
+  Invalid address 0x34cc9a98840 in IA32_MC17_ADDR
 
-Any concerns?
+Add an additional check to allow the decoding of the error address and to
+skip the warning message, if the error address is an SGX address.
 
-> 
->> + * max_nr must be at least one and must be limited by the caller so scanning
->> + * cannot exceed a single page table.
->> + *
->> + * Return: the number of table entries in the batch.
->> + */
->> +static inline int swap_pte_batch(pte_t *start_ptep, int max_nr,
->> +                 swp_entry_t entry)
->> +{
->> +    const pte_t *end_ptep = start_ptep + max_nr;
->> +    unsigned long expected_offset = swp_offset(entry) + 1;
->> +    unsigned int expected_type = swp_type(entry);
->> +    pte_t *ptep = start_ptep + 1;
->> +
->> +    VM_WARN_ON(max_nr < 1);
->> +    VM_WARN_ON(non_swap_entry(entry));
->> +
->> +    while (ptep < end_ptep) {
->> +        pte_t pte = ptep_get(ptep);
->> +
->> +        if (pte_none(pte) || pte_present(pte))
->> +            break;
->> +
->> +        entry = pte_to_swp_entry(pte);
->> +
->> +        if (non_swap_entry(entry) ||
->> +            swp_type(entry) != expected_type ||
->> +            swp_offset(entry) != expected_offset)
->> +            break;
->> +
->> +        expected_offset++;
->> +        ptep++;
->> +    }
->> +
->> +    return ptep - start_ptep;
->> +}
-> 
-> Looks very clean :)
-> 
-> I was wondering whether we could similarly construct the expected swp PTE and
-> only check pte_same.
-> 
-> expected_pte = __swp_entry_to_pte(__swp_entry(expected_type, expected_offset));
+Fixes: 1e92af09fab1 ("EDAC/skx_common: Filter out the invalid address")
+Signed-off-by: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
+---
+ drivers/edac/skx_common.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-So planning to do this.
-
-> 
-> ... or have a variant to increase only the swp offset for an existing pte. But
-> non-trivial due to the arch-dependent format.
-
-not this - I agree this will be difficult due to per-arch changes. I'd rather
-just do the generic version and leave the compiler to do the best it can to
-simplify and optimize.
-
-> 
-> But then, we'd fail on mismatch of other swp pte bits.
-> 
-> 
-> On swapin, when reusing this function (likely!), we'll might to make sure that
-> the PTE bits match as well.
-> 
-> See below regarding uffd-wp.
-> 
-> 
->>   #endif /* CONFIG_MMU */
->>     void __acct_reclaim_writeback(pg_data_t *pgdat, struct folio *folio,
->> diff --git a/mm/madvise.c b/mm/madvise.c
->> index 1f77a51baaac..070bedb4996e 100644
->> --- a/mm/madvise.c
->> +++ b/mm/madvise.c
->> @@ -628,6 +628,7 @@ static int madvise_free_pte_range(pmd_t *pmd, unsigned
->> long addr,
->>       struct folio *folio;
->>       int nr_swap = 0;
->>       unsigned long next;
->> +    int nr, max_nr;
->>         next = pmd_addr_end(addr, end);
->>       if (pmd_trans_huge(*pmd))
->> @@ -640,7 +641,8 @@ static int madvise_free_pte_range(pmd_t *pmd, unsigned
->> long addr,
->>           return 0;
->>       flush_tlb_batched_pending(mm);
->>       arch_enter_lazy_mmu_mode();
->> -    for (; addr != end; pte++, addr += PAGE_SIZE) {
->> +    for (; addr != end; pte += nr, addr += PAGE_SIZE * nr) {
->> +        nr = 1;
->>           ptent = ptep_get(pte);
->>             if (pte_none(ptent))
->> @@ -655,9 +657,11 @@ static int madvise_free_pte_range(pmd_t *pmd, unsigned
->> long addr,
->>                 entry = pte_to_swp_entry(ptent);
->>               if (!non_swap_entry(entry)) {
->> -                nr_swap--;
->> -                free_swap_and_cache(entry);
->> -                pte_clear_not_present_full(mm, addr, pte, tlb->fullmm);
->> +                max_nr = (end - addr) / PAGE_SIZE;
->> +                nr = swap_pte_batch(pte, max_nr, entry);
->> +                nr_swap -= nr;
->> +                free_swap_and_cache_nr(entry, nr);
->> +                clear_not_present_full_ptes(mm, addr, pte, nr, tlb->fullmm);
->>               } else if (is_hwpoison_entry(entry) ||
->>                      is_poisoned_swp_entry(entry)) {
->>                   pte_clear_not_present_full(mm, addr, pte, tlb->fullmm);
->> diff --git a/mm/memory.c b/mm/memory.c
->> index 7dc6c3d9fa83..ef2968894718 100644
->> --- a/mm/memory.c
->> +++ b/mm/memory.c
->> @@ -1637,12 +1637,13 @@ static unsigned long zap_pte_range(struct mmu_gather
->> *tlb,
->>                   folio_remove_rmap_pte(folio, page, vma);
->>               folio_put(folio);
->>           } else if (!non_swap_entry(entry)) {
->> -            /* Genuine swap entry, hence a private anon page */
->> +            max_nr = (end - addr) / PAGE_SIZE;
->> +            nr = swap_pte_batch(pte, max_nr, entry);
->> +            /* Genuine swap entries, hence a private anon pages */
->>               if (!should_zap_cows(details))
->>                   continue;
->> -            rss[MM_SWAPENTS]--;
->> -            if (unlikely(!free_swap_and_cache(entry)))
->> -                print_bad_pte(vma, addr, ptent, NULL);
->> +            rss[MM_SWAPENTS] -= nr;
->> +            free_swap_and_cache_nr(entry, nr);
->>           } else if (is_migration_entry(entry)) {
->>               folio = pfn_swap_entry_folio(entry);
->>               if (!should_zap_folio(details, folio))
->> @@ -1665,8 +1666,8 @@ static unsigned long zap_pte_range(struct mmu_gather *tlb,
->>               pr_alert("unrecognized swap entry 0x%lx\n", entry.val);
->>               WARN_ON_ONCE(1);
->>           }
->> -        pte_clear_not_present_full(mm, addr, pte, tlb->fullmm);
->> -        zap_install_uffd_wp_if_needed(vma, addr, pte, 1, details, ptent);
->> +        clear_not_present_full_ptes(mm, addr, pte, nr, tlb->fullmm);
-> 
-> For zap_install_uffd_wp_if_needed(), the uffd-wp bit has to match.
-> 
-> zap_install_uffd_wp_if_needed() will use the uffd-wp information in
-> ptent->pteval to make a decision whether to place PTE_MARKER_UFFD_WP markers.
-> 
-> On mixture, you either lose some or place too many markers.
-> 
-> A simple workaround would be to disable any such batching if the VMA does have
-> uffd-wp enabled.
-
-Rather than this, I'll just consider all the swp pte bits when batching.
-
-> 
->> +        zap_install_uffd_wp_if_needed(vma, addr, pte, nr, details, ptent);
->>       } while (pte += nr, addr += PAGE_SIZE * nr, addr != end);
-
-[...]
+diff --git a/drivers/edac/skx_common.c b/drivers/edac/skx_common.c
+index 9c5b6f8bd8bd..27996b7924c8 100644
+--- a/drivers/edac/skx_common.c
++++ b/drivers/edac/skx_common.c
+@@ -648,7 +648,7 @@ int skx_mce_check_error(struct notifier_block *nb, unsigned long val,
+ 	memset(&res, 0, sizeof(res));
+ 	res.mce  = mce;
+ 	res.addr = mce->addr & MCI_ADDR_PHYSADDR;
+-	if (!pfn_to_online_page(res.addr >> PAGE_SHIFT)) {
++	if (!pfn_to_online_page(res.addr >> PAGE_SHIFT) && !arch_is_platform_page(res.addr)) {
+ 		pr_err("Invalid address 0x%llx in IA32_MC%d_ADDR\n", mce->addr, mce->bank);
+ 		return NOTIFY_DONE;
+ 	}
+-- 
+2.17.1
 
