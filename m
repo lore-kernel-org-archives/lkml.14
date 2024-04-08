@@ -1,80 +1,122 @@
-Received: from mr3.vodafonemail.de (mr3.vodafonemail.de [145.253.228.163])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCB6912837C;
-	Mon,  8 Apr 2024 14:18:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=145.253.228.163
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54D14126F11;
+	Mon,  8 Apr 2024 14:18:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712585897; cv=none; b=G/dG1MruRzwlgTmiva/0+i6ZJ7UM/iugfj7YT/Pjo9Fs9pzJtBdQuVcVS9Jl3W3tyPyxCAHM6x/clAe+3ZVWqI4kAydc66s0dKL2y5dXeWLFXDBGQkWad2dA53qjWJM2S3J4xd9AbowYj/HJcL+6ChzGaeW8QzacCXgVXQNjY8g=
+	t=1712585909; cv=none; b=kLUT4I2950Mz+YwVLMom+iD3jkOcqDtLu3+feAAh/NA6+BjU15ItVseaQHyov8emvRYpc9UJ/chmaS6RDWOXn3oga01PqZ/SWL/f3paJG8zhjbnsk1DAqQabiVGAj3Dnz1Pu1yhRKcmRcH5xgbeGdmuaSEXJoQ1cAwtQURibKL8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712585897; c=relaxed/simple;
-	bh=irgPcGQf2zed/zi+Zrwi80XgAyLN2AyMzpIrIbtSQE4=;
-	h=From:To:Cc:Subject:Date:MIME-Version:Content-Type; b=AkJTqrWEfTWm8X7cp9gKftIqH6rIQXpSirMuPAxKI8FJZjSdeJviZ2f3pgNLh2/kRYAlqpXzGQkOlSsNlFonwNSdJfAtlwxUY9RAjuhsIrikmk4zV5Nu9gPplYLc0ge8j4xc9cdXc5SgsvyPE2dvl5WUjZBY0fh/RSoYtKhzwxg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nexgo.de; spf=pass smtp.mailfrom=nexgo.de; dkim=pass (1024-bit key) header.d=nexgo.de header.i=@nexgo.de header.b=OshMzrSd; arc=none smtp.client-ip=145.253.228.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nexgo.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nexgo.de
+	s=arc-20240116; t=1712585909; c=relaxed/simple;
+	bh=3UzV0UOZOjy3JtO3wdK62tyyxKBmlnga1vPlyrqfpSw=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=mk2vorVZph1w8XKT3iyTf40z3uO1RXXVdVYStWgBrDp4nWEJV4dURTF2EWilr/w1CM3bi4wvUVr5dIqNlo5pWOR9R74ong39V7GUsW+OZigHweD1U/kOBrmyXF/qkhfjt7r5vXYpP0RMwmLUuroHemWP1fZvxOeFT6eUdxtOhcc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZDfYiL35; arc=none smtp.client-ip=209.85.128.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=nexgo.de header.i=@nexgo.de header.b="OshMzrSd"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nexgo.de;
-	s=vfde-mb-mr2-23sep; t=1712585894;
-	bh=EqPE8k2XuYVTtDepIsOZ9NsJpR3M/yKeP15J7IxBfJU=;
-	h=From:To:Subject:Date:Content-Type:From;
-	b=OshMzrSdvWGepEERjICWAnDNdMgEGg9erQFxL0W7p9k4rHL2ooehPhSX3pSBS/Dr/
-	 Tks9PdY9KdTGSa6pR9a+kTwknWY8WSlkgE4faDpwchnPSLI9gLW5i0fFXZaI7TjeoZ
-	 wzWbGFN5TAOjZuVURdE/2JrzG4UmP6jRZQEWGQEI=
-Received: from smtp.vodafone.de (unknown [10.0.0.2])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits))
-	(No client certificate requested)
-	by mr3.vodafonemail.de (Postfix) with ESMTPS id 4VCrm60SJxz2Fmq;
-	Mon,  8 Apr 2024 14:18:14 +0000 (UTC)
-Received: from sha1_ni_asm.patch (p5de6d4c4.dip0.t-ipconnect.de [93.230.212.196])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.vodafone.de (Postfix) with ESMTPSA id 4VCrln1qV6z9thx;
-	Mon,  8 Apr 2024 14:17:54 +0000 (UTC)
-From: "Stefan Kanthak" <stefan.kanthak@nexgo.de>
-To: <linux-kernel@vger.kernel.org>, <linux-crypto@vger.kernel.org>
-Cc: <tim.c.chen@linux.intel.com>, "Eric Biggers" <ebiggers@kernel.org>
-Subject: [PATCH v2 1/2] crypto: s(h)aving 16 byte constant off arch/x86/crypto/sha1_ni_asm.S
-Date: Mon, 8 Apr 2024 16:08:52 +0200
-Organization: Me, myself & IT
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZDfYiL35"
+Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-416422e2acbso8932475e9.1;
+        Mon, 08 Apr 2024 07:18:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1712585905; x=1713190705; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=rfFYVChXPcbDou1VfhqYcnGp2/xfKZ8N+NQj6tQE/JQ=;
+        b=ZDfYiL35jr9uFyx9bmhoUDSbrsOMiXgV+TwhmdkcgKH/9HyHrhYi2GhdQvsqXOBiDH
+         LgRIoDMW2DU0E9PTlHjjDtWpAxIwKwA0m39uGlmeQnzx/j1ven8fmi73BSHmUQHYM36v
+         9cnpyUNGSRjsFjgLUXo4hLy2TA7EpRFxDxmeWRGBTZP+Q08jKw0CHZ61LixafpnUjmuz
+         q+TfLcuo2vQ+KozKfLC4cK6+6s49ZHG9RQatk2t8yCTaTNRJgyQP0SjNGmgaCPsIGYiD
+         ruwjADVOOxRWL6ZjkWLxck9Iu0T1Ypi8sLO/Ek1cnvJclU1L0YPZdWC+WgY5gJerZ4AL
+         Plbg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712585905; x=1713190705;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=rfFYVChXPcbDou1VfhqYcnGp2/xfKZ8N+NQj6tQE/JQ=;
+        b=LtKNpygrrKSJ0aVAjw3xvjSZ1hBNfAQ8Z0TYaQtrq34rPOzUC9qk9lW9F5plE13mMe
+         fogqZs6pQ0cbTCVa5FxASuXqWTq4CuJrW0XzP9JkfK8JGHwK8e/KJOsUOnvfq24CUmac
+         OFDFQ4q6eBnIHpne5lCx2yQDc22uxIyF66GQzfReHBIVxITC6aXYl9QqovZnxe6knm+F
+         jFOYd2pro+Gdp2lKcUIbJMZf435u4plk+zjUzCVNk6rnWvaxgjxN5JbkdRAClkXMPai7
+         u6cknaMa1psO1zv8W+HcQCnovOAw6I/BRFlxHzZO0lMyzLQSijao/ug/05zaZMYFvRbg
+         AVWA==
+X-Forwarded-Encrypted: i=1; AJvYcCVap/xtXr+MaeyMaVeoix2btSCQWWHBHvkPmU4QwECruBU6DM4wQY7o9EW2r4JG/+x71s4S1x+cfFCa/BQR9NoLnXWhecy6WGdB34lwcbUKhm8o3pmRuF1/Sl4LhYHpWUkkEuH8TxDKOEzoqbIPJOzMR6S/MPtoTJ7cYy9YXN0fq3GGkx8K
+X-Gm-Message-State: AOJu0Yz1lIblTE9z8FRjnlZhJp9hu9/Ntuasw7OiBXiUGWNFYmQayQIk
+	VYBxwbdPBaKjF9OCYTNkqDESKn05qnjq1CwhRFTkQELU0ps9YOda
+X-Google-Smtp-Source: AGHT+IGFSSbBd8XYoB84N0vtmb7X579DGGFjZgnnHVjl8X8i+pfqtf0WuWRSbcTqG/Az7bduDB0P8w==
+X-Received: by 2002:a05:600c:3ba7:b0:416:2abe:b886 with SMTP id n39-20020a05600c3ba700b004162abeb886mr8544919wms.0.1712585905543;
+        Mon, 08 Apr 2024 07:18:25 -0700 (PDT)
+Received: from localhost ([146.70.204.204])
+        by smtp.gmail.com with ESMTPSA id p13-20020a05600c468d00b004163059bb53sm12323389wmo.16.2024.04.08.07.18.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 08 Apr 2024 07:18:25 -0700 (PDT)
+From: Richard Gobert <richardbgobert@gmail.com>
+To: davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	willemdebruijn.kernel@gmail.com,
+	dsahern@kernel.org,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-kselftest@vger.kernel.org
+Cc: Richard Gobert <richardbgobert@gmail.com>
+Subject: [PATCH net-next v5 1/6] net: gro: add flush check in udp_gro_receive_segment
+Date: Mon,  8 Apr 2024 16:17:15 +0200
+Message-Id: <20240408141720.98832-2-richardbgobert@gmail.com>
+In-Reply-To: <20240408141720.98832-1-richardbgobert@gmail.com>
+References: <20240408141720.98832-1-richardbgobert@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-X-purgate-type: clean
-X-purgate: clean
-X-purgate-size: 734
-X-purgate-ID: 155817::1712585889-6FFFDA4B-A983EAB5/0/0
-Message-ID: <20240408140852.7IrbCT995YfkzWGvzZecmdDaYREy6yttd_Db6j1dPAQ@z>
+Content-Transfer-Encoding: 8bit
 
-Get rid of 16 byte constant, use shift instead of mask
+GRO-GSO path is supposed to be transparent and as such L3 flush checks are
+relevant to all flows which call skb_gro_receive. This patch uses the same
+logic and code from tcp_gro_receive but in the relevant flow path in
+udp_gro_receive_segment.
 
---- -/arch/x86/crypto/sha1_ni_asm.S
-+++ +/arch/x86/crypto/sha1_ni_asm.S
-@@ -104,9 +104,9 @@
- 	add		DATA_PTR, NUM_BLKS	/* pointer to end of data */
+Signed-off-by: Richard Gobert <richardbgobert@gmail.com>
+---
+ net/ipv4/udp_offload.c | 13 ++++++++++++-
+ 1 file changed, 12 insertions(+), 1 deletion(-)
+
+diff --git a/net/ipv4/udp_offload.c b/net/ipv4/udp_offload.c
+index 3498dd1d0694..1f4e08f43c4b 100644
+--- a/net/ipv4/udp_offload.c
++++ b/net/ipv4/udp_offload.c
+@@ -471,6 +471,7 @@ static struct sk_buff *udp_gro_receive_segment(struct list_head *head,
+ 	struct sk_buff *p;
+ 	unsigned int ulen;
+ 	int ret = 0;
++	int flush;
  
- 	/* load initial hash values */
--	pinsrd		$3, 1*16(DIGEST_PTR), E0
-+	pinsrd		$0, 1*16(DIGEST_PTR), E0
- 	movdqu		0*16(DIGEST_PTR), ABCD
--	pand		UPPER_WORD_MASK(%rip), E0
-+	pslldq		$12, E0
- 	pshufd		$0x1B, ABCD, ABCD
+ 	/* requires non zero csum, for symmetry with GSO */
+ 	if (!uh->check) {
+@@ -528,7 +529,17 @@ static struct sk_buff *udp_gro_receive_segment(struct list_head *head,
+ 				skb_gro_postpull_rcsum(skb, uh,
+ 						       sizeof(struct udphdr));
  
- 	movdqa		PSHUFFLE_BYTE_FLIP_MASK(%rip), SHUF_MASK
-@@ -297,8 +297,3 @@
- .align 16
- PSHUFFLE_BYTE_FLIP_MASK:
- 	.octa 0x000102030405060708090a0b0c0d0e0f
--
--.section	.rodata.cst16.UPPER_WORD_MASK, "aM", @progbits, 16
--.align 16
--UPPER_WORD_MASK:
--	.octa 0xFFFFFFFF000000000000000000000000
+-				ret = skb_gro_receive(p, skb);
++				flush = NAPI_GRO_CB(p)->flush;
++
++				if (NAPI_GRO_CB(p)->flush_id != 1 ||
++				    NAPI_GRO_CB(p)->count != 1 ||
++				    !NAPI_GRO_CB(p)->is_atomic)
++					flush |= NAPI_GRO_CB(p)->flush_id;
++				else
++					NAPI_GRO_CB(p)->is_atomic = false;
++
++				if (flush || skb_gro_receive(p, skb))
++					ret = 1;
+ 			}
+ 		}
+ 
+-- 
+2.36.1
+
