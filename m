@@ -1,111 +1,186 @@
-Received: from smtp.forwardemail.net (smtp.forwardemail.net [149.28.215.223])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from wfout4-smtp.messagingengine.com (wfout4-smtp.messagingengine.com [64.147.123.147])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57DE713F431
-	for <linux-kernel@vger.kernel.org>; Mon,  8 Apr 2024 14:56:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=149.28.215.223
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 303F913F422;
+	Mon,  8 Apr 2024 14:56:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=64.147.123.147
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712588176; cv=none; b=YFopN1MBl4mquET0Sc66z+BWuOtQSOpOJpsUL5VpRzJ3ZZwAP/wpHM0mx3aQUErQfyK/03QFEPVJq3bF8aBo87s/Xn2bpuMEOXE8wzgMDBzDAueozOenw8kclh4PFVVoJLu5jci2FeKTKSs90snY/QGtwoD2tlSpOGKPsWd4WEs=
+	t=1712588187; cv=none; b=p9XGO6+lmmBkY8Zn/LWDDvE07Z51V2avQFEvEuYz21uPLph4xU/SCgaebFV34pvLTqtXHHKC1CjrT2ymgkvj4aG6XBxG6RmObHT6l4pADqhVmkUGgi0NxwPvPNZ/Dz12Mf9fBcDZXlr4qChBvano+8R5Ptqp15r39EaNumQSSxc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712588176; c=relaxed/simple;
-	bh=cqFYl01GK1Z+HA9RDkQobFzsKdk9qmaC0k6MZJer498=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=U0Hj8vcFYXeUjCz5x6tvFYWOOJ5t/jKLjnEtlDFYW5pj5Nv5BA80SEi3aMXAdDkyxGB0cI28qdLpOM9moBPaY8HIgiNsksN2MeKzaVln6ybLtjr3cK2z/H1Pf3neajpPJR3i7hOScGAvXYR9Fw0nc+VGgHdZ0OeJvpQ9SUKxTeM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kwiboo.se; spf=pass smtp.mailfrom=fe-bounces.kwiboo.se; dkim=pass (2048-bit key) header.d=kwiboo.se header.i=@kwiboo.se header.b=MgPZ3s7s; arc=none smtp.client-ip=149.28.215.223
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kwiboo.se
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fe-bounces.kwiboo.se
+	s=arc-20240116; t=1712588187; c=relaxed/simple;
+	bh=uvf6TFwCLvpcgJnWKp+IqUvyxTwUo7A7wcFLgOftIvw=;
+	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
+	 Subject:Content-Type; b=ZOmtyNPLaxX2iTtMmntGfKfgzUWQ7j+rVIeK++hhXRkN2S5HIRpgGag+IJEj3fMTYvM2lSEPGHqpkcVbdDa9TvKjRzh9SYTlvODlBIWD4353okgHNeMoMP2I9EKulvrzvnQTmURQgCIlJ25ix6S71zxD1COEde+rFEoHo+cM08c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squebb.ca; spf=pass smtp.mailfrom=squebb.ca; dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b=DLNhd8JY; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=e1TuCh66; arc=none smtp.client-ip=64.147.123.147
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squebb.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=squebb.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kwiboo.se header.i=@kwiboo.se header.b="MgPZ3s7s"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kwiboo.se;
- h=Content-Transfer-Encoding: Content-Type: In-Reply-To: From: References:
- Cc: To: Subject: MIME-Version: Date: Message-ID; q=dns/txt;
- s=fe-e1b5cab7be; t=1712588161;
- bh=iiUPPh2I4PeOMPRWiFfmL4G08QmAU+W5ckpVa9L6HE4=;
- b=MgPZ3s7sPSuZsy3gQ3AfLF0u/64SqrAboDp9YiANPEx6K/Fgr0xV363zF2ei/tcp9Jot7eQoM
- EwlRasREyRmCEKSbN/HEaSWT+lMLrkdg7XhZ8S/IlUVfxs3JZft8ImZYsr/IUWAJV/dQpa2NR7/
- ctKvsW+Fh6KJqxp6OuQVgaY1As2dmCq/Bi/JI0aDe8X80cKhn8zxQahbZ3uGYJOMD0GNUQh2C9H
- BjpwC8rSAnwDk31ALheiUrFfeDQAhB8SqbnhBYam3TyOI0f+hMK+tZUDD2WeoEJNLYvioE50Sm7
- 6McoadT2EKO5FILMhcqDKHjWGRoUOp1nnaybrfw5a1Lw==
-Message-ID: <421ab43b-ff92-41c6-9904-3c7681c926be@kwiboo.se>
-Date: Mon, 8 Apr 2024 16:44:59 +0200
+	dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b="DLNhd8JY";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="e1TuCh66"
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+	by mailfout.west.internal (Postfix) with ESMTP id 52A501C000E1;
+	Mon,  8 Apr 2024 10:56:23 -0400 (EDT)
+Received: from imap52 ([10.202.2.102])
+  by compute3.internal (MEProxy); Mon, 08 Apr 2024 10:56:24 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=squebb.ca; h=cc
+	:cc:content-type:content-type:date:date:from:from:in-reply-to
+	:in-reply-to:message-id:mime-version:references:reply-to:subject
+	:subject:to:to; s=fm3; t=1712588182; x=1712674582; bh=bCWpPGV2vJ
+	YgZ3bq3vRrz3FGsmLszaLN5U7PO44bhCI=; b=DLNhd8JYzB3+bRSSRNyvtjPFZy
+	7L2UummJ5c8SIg2vWVcF0DproH/wJmUPOz5bxXuGmNRLTYg07aW/mz74NUETTc2s
+	wq9ke0TuZ6bFEmSBo1SJLRTqjDCzFmxXcsiAEtMKaCnupJxED31XGQIkcQ1zRJeC
+	pgOuePuOOMoyic2bLNXVJs0Su3sUr2o00W2A0UikZEYaY59lLprY6UCTP1/q41q4
+	Y2IH8c/up11UvgRXPJmM4dXOEgWXvt3DETcd6I6x/y9lBppZKGsW48nrvZb9oRLE
+	ahoKHsUbeSXJUzJRE8f5ieD0cKntYppt4lc4P/XNAA0w/8giBM3p6il2FWGw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+	fm2; t=1712588182; x=1712674582; bh=bCWpPGV2vJYgZ3bq3vRrz3FGsmLs
+	zaLN5U7PO44bhCI=; b=e1TuCh66ExaTJ5mMSci9uxjBSdh8YePTAdXxa/KFBQ+V
+	wokLBtcCDb7TS30pwZMlMortskyCCUf3olQ6ENpBwfU990rVgEDfqREBFyTs9Dnn
+	IjeeFZ2LVxZZFalnT58rGH08SZaJpich7pyBa8AlB5BBXNg90gYaXqoNBvp6I45I
+	Xy2WZpOE+vy5n7M/QVUF8NJJvFsk0YxA1WzGx4YYOoYyGpVBswnwdwWBKpXbRZKk
+	7i5SBIH5z6KVCN0pcOr0zZ1Jb5l7pGfD21tFWlc1PkgznQ5UWtGA5xp8ldxqm+QT
+	+xuxax0Ai3CJ8xX7nYGDThJzJYNYTMilpjcTjVf5yQ==
+X-ME-Sender: <xms:lgUUZtBiFYcQspTQiF_PDSC1PnalTnMmbd382eSRDiwVSix1t11MOA>
+    <xme:lgUUZrgOmHppfF9lcScIedcgeGZD5pBPSlKRtf1vH2pzNIMHAdgW-h9b9LSi8sc4t
+    N3tyixI1kNwriShhCw>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrudegiedgkedvucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepofgfggfkjghffffhvfevufgtsehttdertderredtnecuhfhrohhmpedfofgr
+    rhhkucfrvggrrhhsohhnfdcuoehmphgvrghrshhonhdqlhgvnhhovhhosehsqhhuvggssg
+    drtggrqeenucggtffrrghtthgvrhhnpeeiueefjeeiveetuddvkeetfeeltdevffevudeh
+    ffefjedufedvieejgedugeekhfenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmh
+    epmhgrihhlfhhrohhmpehmphgvrghrshhonhdqlhgvnhhovhhosehsqhhuvggssgdrtggr
+X-ME-Proxy: <xmx:lgUUZons9-jeK2MfxW_wGy-Zgf66EiA9OnhoRboSx3Mw_Ect6KTakA>
+    <xmx:lgUUZnw4QhG5vNeFtm_ynfrFh5T9WFQWgAX6esdQtkoTvOUrSTJnXw>
+    <xmx:lgUUZiQ5ha7EAc0BHCYSG2hMYR4PHQOnFiHlEKXIqsBAsX6sNeWz-g>
+    <xmx:lgUUZqZIJmZAcDs72TEaOU4hSbbhq6-Aynseo0VUmUm41OWLcHve2w>
+    <xmx:lgUUZnJc_E4BFyb8Ou12ytisOPdkCbxghCRb-3uPgP2Jfu95QdOpsw03>
+Feedback-ID: ibe194615:Fastmail
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+	id 251DFC60097; Mon,  8 Apr 2024 10:56:22 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.11.0-alpha0-368-gc733b1d8df-fm-20240402.001-gc733b1d8
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/1] arm64: dts: rockchip: enable onboard spi flash for
- rock-3a
-To: Chukun Pan <amadeus@jmu.edu.cn>, Heiko Stuebner <heiko@sntech.de>
-Cc: Conor Dooley <conor+dt@kernel.org>, Krzysztof Kozlowski
- <krzk+dt@kernel.org>, Rob Herring <robh@kernel.org>,
- linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org,
- linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-References: <20240408124005.182565-1-amadeus@jmu.edu.cn>
-Content-Language: en-US
-From: Jonas Karlman <jonas@kwiboo.se>
-In-Reply-To: <20240408124005.182565-1-amadeus@jmu.edu.cn>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Report-Abuse-To: abuse@forwardemail.net
-X-Report-Abuse: abuse@forwardemail.net
-X-Complaints-To: abuse@forwardemail.net
-X-ForwardEmail-Version: 0.4.40
-X-ForwardEmail-Sender: rfc822; jonas@kwiboo.se, smtp.forwardemail.net,
- 149.28.215.223
-X-ForwardEmail-ID: 661402f23464f70b49a22d57
+Message-Id: <e88a2f41-f89d-444c-a09a-487097c6e9eb@app.fastmail.com>
+In-Reply-To: <e1ccf281-5c77-4447-a6c7-5b0b008c7c56@redhat.com>
+References: <mpearson-lenovo@squebb.ca>
+ <20240324210817.192033-1-mpearson-lenovo@squebb.ca>
+ <20240324210817.192033-3-mpearson-lenovo@squebb.ca>
+ <e1ccf281-5c77-4447-a6c7-5b0b008c7c56@redhat.com>
+Date: Mon, 08 Apr 2024 10:56:25 -0400
+From: "Mark Pearson" <mpearson-lenovo@squebb.ca>
+To: "Hans de Goede" <hdegoede@redhat.com>
+Cc: dmitry.torokhov@gmail.com, linux-kernel@vger.kernel.org,
+ "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>,
+ "Vishnu Sankar" <vsankar@lenovo.com>, ibm-acpi-devel@lists.sourceforge.net,
+ "Henrique de Moraes Holschuh" <hmh@hmh.eng.br>, linux-input@vger.kernel.org,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ "Peter Hutterer" <peter.hutterer@redhat.com>,
+ "Nitin Joshi1" <njoshi1@lenovo.com>
+Subject: Re: [ibm-acpi-devel] [PATCH 2/4] platform/x86: thinkpad_acpi: Support for
+ trackpoint doubletap
+Content-Type: text/plain
 
-Hi Chukun,
+Hi Hans,
 
-On 2024-04-08 14:40, Chukun Pan wrote:
-> There is a mx25u12835f spi flash on this board, enable it.
-> 
-> [    2.525805] spi-nor spi4.0: mx25u12835f (16384 Kbytes)
-> 
-> Signed-off-by: Chukun Pan <amadeus@jmu.edu.cn>
-> ---
->  arch/arm64/boot/dts/rockchip/rk3568-rock-3a.dts | 12 ++++++++++++
->  1 file changed, 12 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/rockchip/rk3568-rock-3a.dts b/arch/arm64/boot/dts/rockchip/rk3568-rock-3a.dts
-> index a5e974ea659e..d8738cc47c73 100644
-> --- a/arch/arm64/boot/dts/rockchip/rk3568-rock-3a.dts
-> +++ b/arch/arm64/boot/dts/rockchip/rk3568-rock-3a.dts
-> @@ -757,6 +757,18 @@ &sdmmc2 {
->  	status = "okay";
->  };
->  
-> +&sfc {
+Many thanks for the review.
 
-This is missing:
+On Mon, Apr 8, 2024, at 9:04 AM, Hans de Goede wrote:
+> Hi Mark,
+>
+> On 3/24/24 10:07 PM, Mark Pearson wrote:
+>> Lenovo trackpoints are adding the ability to generate a doubletap event.
+>> This handles the doubletap event and sends the KEY_DOUBLECLICK event to
+>> userspace.
+>> 
+>> Signed-off-by: Mark Pearson <mpearson-lenovo@squebb.ca>
+>> Signed-off-by: Vishnu Sankar <vsankar@lenovo.com>
+>> ---
+>>  drivers/platform/x86/thinkpad_acpi.c | 17 +++++++++++++++++
+>>  1 file changed, 17 insertions(+)
+>> 
+>> diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
+>> index 82429e59999d..2bbb32c898e9 100644
+>> --- a/drivers/platform/x86/thinkpad_acpi.c
+>> +++ b/drivers/platform/x86/thinkpad_acpi.c
+>> @@ -232,6 +232,7 @@ enum tpacpi_hkey_event_t {
+>>  
+>>  	/* Misc */
+>>  	TP_HKEY_EV_RFKILL_CHANGED	= 0x7000, /* rfkill switch changed */
+>> +	TP_HKEY_EV_TRACKPOINT_DOUBLETAP = 0x8036, /* doubletap on Trackpoint*/
+>>  };
+>>  
+>>  /****************************************************************************
+>> @@ -4081,6 +4082,22 @@ static void hotkey_notify(struct ibm_struct *ibm, u32 event)
+>>  				break;
+>>  			}
+>>  			fallthrough;	/* to default */
+>
+> This now no longer fallsthrough to default. IMHO the best thing to do
+> here is add a new preparation patch which initializes known_ev to false
+> inside the while before the switch-case (together with the send_acpi_ev
+> and ignore_acpi_ev init). and then change this fallthrough to a break
+> in the preparation patch. You can then also remove the default case
+> altogether in this prep patch.
+>
+Ack - that makes sense. I'll look at doing that.
 
-	#address-cells = <1>;
-	#size-cells = <0>;
+>> +		case 8:
+>> +			/* 0x8036: Trackpoint doubletaps */
+>> +			if (hkey == TP_HKEY_EV_TRACKPOINT_DOUBLETAP) {
+>> +				send_acpi_ev = true;
+>> +				ignore_acpi_ev = false;
+>
+> These 2 values are set as the default above the switch-case, please
+> drop these 2 lines.
 
-> +	status = "okay";
-> +
-> +	flash@0 {
-> +		compatible = "jedec,spi-nor";
-> +		reg = <0x0>;
-> +		spi-max-frequency = <50000000>;
+Agreed. Will change.
 
-At least in U-Boot the spi clock only support 24, 100 or 200 mhz and I
-am pretty sure the spi flash support 100mhz, so I would suggest you test
-with 100mhz, same as used on other rk356x boards.
+>
+>> +				known_ev = true;
+>> +				/* Send to user space */
+>> +				mutex_lock(&tpacpi_inputdev_send_mutex);
+>> +				input_report_key(tpacpi_inputdev, KEY_DOUBLECLICK, 1);
+>> +				input_sync(tpacpi_inputdev);
+>> +				input_report_key(tpacpi_inputdev, KEY_DOUBLECLICK, 0);
+>> +				input_sync(tpacpi_inputdev);
+>> +				mutex_unlock(&tpacpi_inputdev_send_mutex);
+>
+> This code duplicates tpacpi_input_send_key(), what you want to do here
+> is define a hotkey_keycode_map scancode range for new 0x8xxx codes like how this
+> was done when extended scancodes where added to deal with the new 0x13xx hotkey
+> event codes for the 2017+ models.
+>
+> See commit 696c6523ec8f ("platform/x86: thinkpad_acpi: add mapping for 
+> new hotkeys")
+>
+> Despite re-using tpacpi_input_send_key() there are 2 reasons why we want
+> scancodes for these new "keys".
+>
+> 1. By adding the keys to the hotkey_keycode_map they automatically
+> also get input_set_capability(tpacpi_inputdev, EV_KEY, hotkey_keycode_map[i]);
+> called on them advertising to userspace that tpacpi_inputdev can actually
+> generate these keypresses. Something which is currently lacking from your
+> patch. Related to this did you test this with evtest? I think that the input
+> core will suppress the events when you do not set the capability ?
+>
+> 2. This allows remapping scancodes to different KEY_foo values with hwdb
+> entries.
+>
+Will look into doing this.
+There was a reason originally I did it like this, but I can't remember what it was. I'll revisit it.
 
-For U-Boot I have used 24 mhz for rk356x boards not defining a flash@0
-node in linux device tree, such as the rock-3a board.
+I did test with evtest but I ended up having to cheat as there's quite a few layers in userspace and I got a bit bogged down chewing my way through those (building them against the right headers etc). 
+I ended up using an already existing code to make sure it was doing the right thing in the driver - and then assumed that once the keycode was 'released', and the different user space projects updated per normal procedure, it would work. It's possible it meant I bypassed/missed this issue so I'll retry once I've made the updates.
 
-Regards,
-Jonas
-
-> +		spi-rx-bus-width = <4>;
-> +		spi-tx-bus-width = <1>;
-> +	};
-> +};
-> +
->  &tsadc {
->  	rockchip,hw-tshut-mode = <1>;
->  	rockchip,hw-tshut-polarity = <0>;
-
+Mark
