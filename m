@@ -1,87 +1,106 @@
-Received: from mr3.vodafonemail.de (mr3.vodafonemail.de [145.253.228.163])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C2F72D05D;
-	Mon,  8 Apr 2024 09:55:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=145.253.228.163
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B22524E1DA
+	for <linux-kernel@vger.kernel.org>; Mon,  8 Apr 2024 09:56:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712570153; cv=none; b=NCjLDDAckHAM+KGUOeMfcuVWzbAzlTraeh9z/FohhoRIRXUO4KPy+hvgXyi+4zcYWZKkwUtq6hCTfQM8pwzJ2zJtrwSZ9Sq8/EnZ0zX7fom7p9l4VglTK2QgkFzgtYhsyf8d3uO8H2+YstuLqdhtgTaCqKgaOmw90W9GNaPsS88=
+	t=1712570169; cv=none; b=c44JkLCsqjNOFZiv3DrzdECn2MxaQNfTKIwyc3eY4zNUy8hsDtAFSwObW4+u7ngrM5SBkjDoBW0C+Mj9lKo4N0XYdLY39p/vn+eEIdYy3PyKp303NHx2oNLLuyR+MvIyzOzF3wuhoHB1Ly/xNy96D89usCNm76od+0BI/WbWPXU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712570153; c=relaxed/simple;
-	bh=b+ss1pbu8Nyctt8S2ZiLqKtptJtaOp9ebfIid4XFBI8=;
-	h=Message-ID:From:To:Cc:Subject:Date:MIME-Version:Content-Type; b=GD1A9Ehig5k5HrN0YCFE25TSjtgj7xEjxaDaIdNBXnNi5scbcYmL7s6MiUxn7/rPt/8TVc/hobuwYm3HeB5VAK46jsP1JaZQovyUy+Ru6Ju1xQpAy7ikysBkrAjAmo8FdHf3M0cjhGqA7U35L1ioNrH9XXLY6jAl0JWQZ2V0BuA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nexgo.de; spf=pass smtp.mailfrom=nexgo.de; dkim=pass (1024-bit key) header.d=nexgo.de header.i=@nexgo.de header.b=hSpOHSbS; arc=none smtp.client-ip=145.253.228.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nexgo.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nexgo.de
+	s=arc-20240116; t=1712570169; c=relaxed/simple;
+	bh=LwyvMM/osJwH6vJPmU4ZO2uCiOeVzGUiiHNqjIKfpJ0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=UYuf/YiV0oa8nyTh/mTvxPrrXLh2Wihspk9QgyM7CrRMZMN1K4czFBPkHVSSRXJwEOllIcyOkpDQUnfNZGC0gCTmUWTBJAHVpTQyhFIwcNGjcZVTGfN5CnpIEF+t9oQdsGRcVlTyVQ5NJpDlZI+j2l4qDo+0veeI35pnUHeeGYw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=h4Dyzskj; arc=none smtp.client-ip=209.85.208.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=nexgo.de header.i=@nexgo.de header.b="hSpOHSbS"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nexgo.de;
-	s=vfde-mb-mr2-23sep; t=1712569759;
-	bh=EqPE8k2XuYVTtDepIsOZ9NsJpR3M/yKeP15J7IxBfJU=;
-	h=Message-ID:From:To:Subject:Date:Content-Type:X-Mailer:From;
-	b=hSpOHSbSrHHQHC4kxvORRyzWIIbKY+CtjK81dCdycNgfJpnylqrdIRZLiILdiov/N
-	 Xgcknyjy/OuajgFcgTR9FHRDPXy0CswgO+IdxgAY80rteznJWmfuvi72JxNOlNWh31
-	 x+Gwd52Vu1C/pyXXvQR722TTmQV5N1Z/H3JNqE2c=
-Received: from smtp.vodafone.de (unknown [10.0.0.2])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits))
-	(No client certificate requested)
-	by mr3.vodafonemail.de (Postfix) with ESMTPS id 4VCknq2QkLz1ynm;
-	Mon,  8 Apr 2024 09:49:19 +0000 (UTC)
-Received: from H270 (p5de6d4c4.dip0.t-ipconnect.de [93.230.212.196])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.vodafone.de (Postfix) with ESMTPSA id 4VCknY4ZKXzMmXC;
-	Mon,  8 Apr 2024 09:49:02 +0000 (UTC)
-Message-ID: <7F88D9730FA04A02ACCE0B47584422C5@H270>
-From: "Stefan Kanthak" <stefan.kanthak@nexgo.de>
-To: <linux-kernel@vger.kernel.org>>,
-	<linux-crypto@vger.kernel.org>
-Cc: <tim.c.chen@linux.intel.com>,
-	<sean.m.gulley@intel.com>
-Subject: [PATCH 2/2] crypto: s(h)aving 16 byte constant off arch/x86/crypto/sha1_ni_asm.S
-Date: Mon, 8 Apr 2024 11:38:56 +0200
-Organization: Me, myself & IT
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="h4Dyzskj"
+Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-56e2e851794so14561a12.0
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Apr 2024 02:56:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1712570166; x=1713174966; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=5NBLlpBXDu8VTMGb4M7KQYnrZBt176tELNst411LxfI=;
+        b=h4DyzskjeqyNDor3BayhZbsEIlgTDmEw4jidjv/vi3IEVKrFIUGWor2I7VYTc9O4kf
+         Ey/WTu3YOd2eElxZXDzb6R+q8gFaXH77wiX6pf+eMJuiKPJ+kxgWnSuAdGG7hVVCVVgo
+         fWkKsvx/pY9vhsjt3kaBSUZ8NGylWJGUfPa/+zjXcs5Uq3n6D73D8WNfCGIHbnx7o7tj
+         mWzxNjIGSRa0mPKuNbxaziNAKTM14o4igFfkORjxBxzZeo2VCaFN5wbttjyedm1+cWCx
+         sCBhZBvyuUGJflPa8PN10A2494KkGyCRYFk7gVxwUQQMQB56JGyWHvIaTR0IA0uw/oK2
+         PEhQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712570166; x=1713174966;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=5NBLlpBXDu8VTMGb4M7KQYnrZBt176tELNst411LxfI=;
+        b=r0Whh5KeYO/ud8xjqJzVrmw8MoCxXb2Vb8sPbiKKcObULXhzhv+kkwWjSgiWDN8b2c
+         Hse5J5p1M0iPssNz4tJejrGqqfc812V0SY3F2W2fu0hX4bazna8AUtwXGR2mrdBe+QUD
+         NLJGeHEnmj2AG2puCurm1ywkQ2JsUOA9YoKJznfyHUWODh1/r91A8iseGlu7jKUxYAsy
+         AvrkJJH71C3kodlo6M7r9rIX/JZmONp96fOLWvsbxQGchfwXKzRGH3MxluV/y1sKHKDg
+         gcQlLaMT6Eotm9JnS+D6aM/GF/ep9ugI1xb3xH/h/Cp5GxmTKypCnOic7AkS/kfWxinO
+         d9eQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXipp3066WwvO3MQL8Ub73Si45m2u6uHciOGm6/CzOEB/NMVMVzxG8fKAEIqB2uUUKUTAwHT3FXANzUer9f1zJouHXpA5C5cL7X/Xgj
+X-Gm-Message-State: AOJu0YxJXjR/9xxgmq0SKLHoFCLdtf4ggEFIYaNNa5gkxxcOa43fcjiq
+	OXLIt4lk/eIXFEQZkh+37wgjXFbJ/mtm4tJT+v2rx6fc+IGH0Jo0lUm68vyjNKdVZLS6E/eSmIR
+	wOs46Cd8vshLef0paGtS+LYAOpO9wDyvaPShj
+X-Google-Smtp-Source: AGHT+IE2qUojADKYdZJqeft3RAdXwSfc5OVrWJTQOnEo9gh9I4EVlEFyGGCO3ijZKUTup4SuuVnvMf9PS8JbxJKUuiU=
+X-Received: by 2002:a05:6402:3125:b0:56e:556b:c3fd with SMTP id
+ dd5-20020a056402312500b0056e556bc3fdmr120190edb.3.1712570165564; Mon, 08 Apr
+ 2024 02:56:05 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
-	charset="iso-8859-1"
-Content-Transfer-Encoding: 7bit
-X-Priority: 3
-X-MSMail-Priority: Normal
-X-Mailer: Microsoft Windows Mail 6.0.6002.18197
-X-MimeOLE: Produced By Microsoft MimeOLE V6.1.7601.24158
-X-purgate-type: clean
-X-purgate: clean
-X-purgate-size: 892
-X-purgate-ID: 155817::1712569755-63FEDA4B-F9F1E402/0/0
+References: <ZhJTu7qmOtTs9u2c@zeus>
+In-Reply-To: <ZhJTu7qmOtTs9u2c@zeus>
+From: Eric Dumazet <edumazet@google.com>
+Date: Mon, 8 Apr 2024 11:55:54 +0200
+Message-ID: <CANn89iJrQevxPFLCj2P=U+XSisYD0jqrUQpa=zWMXTjj5+RriA@mail.gmail.com>
+Subject: Re: [PATCH net] nfc: nci: Fix uninit-value in nci_rx_work
+To: Ryosuke Yasuoka <ryasuoka@redhat.com>
+Cc: krzysztof.kozlowski@linaro.org, davem@davemloft.net, kuba@kernel.org, 
+	pabeni@redhat.com, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	syoshida@redhat.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Get rid of 16 byte constant, use shift instead of mask
+On Sun, Apr 7, 2024 at 10:05=E2=80=AFAM Ryosuke Yasuoka <ryasuoka@redhat.co=
+m> wrote:
+>
+> syzbot reported the following uninit-value access issue [1]
+>
+> nci_rx_work() parses received packet from ndev->rx_q. It should be
+> checked skb->len is non-zero to verify if it is valid before processing
+> the packet. If skb->len is zero but skb->data is not, such packet is
+> invalid and should be silently discarded.
+>
+> Fixes: d24b03535e5e ("nfc: nci: Fix uninit-value in nci_dev_up and nci_nt=
+f_packet")
+> Reported-and-tested-by: syzbot+d7b4dc6cd50410152534@syzkaller.appspotmail=
+.com
+> Closes: https://syzkaller.appspot.com/bug?extid=3Dd7b4dc6cd50410152534 [1=
+]
+> Signed-off-by: Ryosuke Yasuoka <ryasuoka@redhat.com>
+> ---
+>  net/nfc/nci/core.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/net/nfc/nci/core.c b/net/nfc/nci/core.c
+> index 0d26c8ec9993..b7a020484131 100644
+> --- a/net/nfc/nci/core.c
+> +++ b/net/nfc/nci/core.c
+> @@ -1516,7 +1516,7 @@ static void nci_rx_work(struct work_struct *work)
+>                 nfc_send_to_raw_sock(ndev->nfc_dev, skb,
+>                                      RAW_PAYLOAD_NCI, NFC_DIRECTION_RX);
+>
+> -               if (!nci_plen(skb->data)) {
+> +               if (!skb->len || !nci_plen(skb->data)) {
 
---- -/arch/x86/crypto/sha1_ni_asm.S
-+++ +/arch/x86/crypto/sha1_ni_asm.S
-@@ -104,9 +104,9 @@
-         add             DATA_PTR, NUM_BLKS      /* pointer to end of data */
- 
-         /* load initial hash values */
--        pinsrd          $3, 1*16(DIGEST_PTR), E0
-+        pinsrd          $0, 1*16(DIGEST_PTR), E0
-         movdqu          0*16(DIGEST_PTR), ABCD
--        pand            UPPER_WORD_MASK(%rip), E0
-+        pslldq          $12, E0
-         pshufd          $0x1B, ABCD, ABCD
- 
-         movdqa          PSHUFFLE_BYTE_FLIP_MASK(%rip), SHUF_MASK
-@@ -297,8 +297,3 @@
- .align 16
- PSHUFFLE_BYTE_FLIP_MASK:
-         .octa 0x000102030405060708090a0b0c0d0e0f
--
--.section        .rodata.cst16.UPPER_WORD_MASK, "aM", @progbits, 16
--.align 16
--UPPER_WORD_MASK:
--        .octa 0xFFFFFFFF000000000000000000000000
+#define nci_plen(hdr)           (__u8)((hdr)[2])
+
+So your patch will not help if skb->len is 1 or 2.
