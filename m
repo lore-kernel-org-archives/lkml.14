@@ -1,124 +1,158 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 103BE142E85
-	for <linux-kernel@vger.kernel.org>; Mon,  8 Apr 2024 16:35:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48B61142640;
+	Mon,  8 Apr 2024 16:35:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712594103; cv=none; b=VGH4lclL+AzIQnNAb3V44DBmRjZiuUSxnueZTipWGIJ7BIdU70pFzEIY7n2UyE2geWVAF43YYC8S1ALEC13zn+YBjaWZZKiTOkS0kgXPDgLlL/5J5sqqwfCV64ifVeK7sknXJxSWGFPJSes9iVaUfZYp/xrdX0DTYqXQWsKj6Rs=
+	t=1712594110; cv=none; b=kFcJBRPoQCnhPBhHT99wQtw13tRxHaIWs6T4msPUVGkSgeaCuC3SMmPTfyfAVTu8kIsH34p/KKwyhC3a8PSN2Hvj0ZPAXHQprM4B/WTZg0liLgHEvRZ3UpssPPDg+GtdNWxkzcAA1JB0yQZEo5+GRO4Z4mtx2eaUFnv9eQqujo0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712594103; c=relaxed/simple;
-	bh=MwPlIh32++bFzV6p+9AvCTR3WEciP8K3VR75lLJlj6U=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=GK+nE1rLM7cxF4/psDaFhFdyRNL1nWcp9scrRbQrBSwweaLgrOd8MmLJnLOmBiWvc74arkeV9VSIlXw9ktsGe7Ar72UVP27tk2WL23KPC5mhJn54MoTYWMSTKKr+MI43wPfimDJooQSiBQRQ5eanPRjCIk9DiiJzqE8wBmHfN38=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=GCgEgaAZ; arc=none smtp.client-ip=198.175.65.12
+	s=arc-20240116; t=1712594110; c=relaxed/simple;
+	bh=zcaBoK/ACFrIjjdFXj8eyQESy8iAslUg8GB4EQy4ers=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=q9+mWew3/kqKUcLOZqgJtdbc0U+CK3Wrxe/0N4jL2SLdV+Nkieh4hdEohgwphieoHvgId+6dvemc7bmrf8bBGVKA927tH9dGM61yYIhTcP/G+wsUAsUeYO2An+r7Y/dDSD+NlwZJ+1+EATXo2AHHnebqHdeCPF6Y5O7AGBXnII4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Afmh9qgx; arc=none smtp.client-ip=192.198.163.11
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GCgEgaAZ"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Afmh9qgx"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1712594103; x=1744130103;
-  h=date:from:to:cc:subject:message-id:in-reply-to:
+  t=1712594109; x=1744130109;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=MwPlIh32++bFzV6p+9AvCTR3WEciP8K3VR75lLJlj6U=;
-  b=GCgEgaAZIlAFM/JfLXxMN0e1qy7q3Z7zqGe3BFNn9K2c2opu5qKPIjzt
-   WEUoAjmzMp64laCPoqcBkYrsH93rG7zWbJuOzirBkkSaITC+VrjPBT+XL
-   79o18CsSLajfHeRPhYBjVaH1K2ev7kF1fETiNzFrLBbzBj3umA882A8m2
-   BKP09XK2ZaWpSOyRiK0GQA6SpDdeGwNTPNPOfibTtiS8ZyGGTcKEVZUfM
-   9cdBSWJkE6vCJaZM6lXyfHrhQsrRzdcLqP5fO7KA3vxGNOTimN2tgIBFQ
-   lV6UFocQ0pG5DIcNP521heSll+PipzWDcH4OZzCx6HfZ6miTh5dgoo27x
-   w==;
-X-CSE-ConnectionGUID: zDuqMu2PTEGDBgAEYRVX5w==
-X-CSE-MsgGUID: 1vxK5uwhRuWVfftkmYKQvQ==
-X-IronPort-AV: E=McAfee;i="6600,9927,11038"; a="19315636"
+  bh=zcaBoK/ACFrIjjdFXj8eyQESy8iAslUg8GB4EQy4ers=;
+  b=Afmh9qgxHu+jm4FaAErrhGXAFylybNzDnlKIfsEcwXA1yEoeb8rLNl/L
+   OV3cx/mGQdcLi3s7mL2uw8InHFniOUpqiBjnKVrvmxezgYT+L8jFTdLGk
+   ojAOOpg2QkJmLkLjKxwUtD3QTWLWQ5qnACVeCbzMaVyyZYKyocH39n6Wq
+   Y467TPiLOMhlqpR05oiOEGKRNibzzLw7g5xExU81BUXWiB0uG2fnlQbPN
+   sCd6R0RV4tx1yGsVU+1/K2FVVReM/qsmrx1Yt9hn8YmGjv8SUjyw6eISW
+   WuH1zPYnYD1UNkzHw7ie3vDks3XGc3RJk/e2u1iygoeAJA2NYxh63ch2N
+   g==;
+X-CSE-ConnectionGUID: UH8M2wKYT5iU5+ieTuEFog==
+X-CSE-MsgGUID: E+dUqzQTQY2wPgPRae5Hrw==
+X-IronPort-AV: E=McAfee;i="6600,9927,11038"; a="18492258"
 X-IronPort-AV: E=Sophos;i="6.07,187,1708416000"; 
-   d="scan'208";a="19315636"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2024 09:35:02 -0700
-X-CSE-ConnectionGUID: 3aJmJTHiTKCgnbKS8eC6EA==
-X-CSE-MsgGUID: scKAYNiSRYObcLzhJQ55sg==
+   d="scan'208";a="18492258"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2024 09:35:08 -0700
+X-CSE-ConnectionGUID: nVeyn8h8TA6CR78BjNZ55w==
+X-CSE-MsgGUID: XeFqQqoRT66DOLOjlFQ8SQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.07,187,1708416000"; 
-   d="scan'208";a="43113931"
-Received: from jacob-builder.jf.intel.com (HELO jacob-builder) ([10.54.39.125])
-  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2024 09:35:01 -0700
-Date: Mon, 8 Apr 2024 09:39:30 -0700
-From: Jacob Pan <jacob.jun.pan@linux.intel.com>
-To: "Tian, Kevin" <kevin.tian@intel.com>
-Cc: Baolu Lu <baolu.lu@linux.intel.com>, Dimitri Sivanich
- <sivanich@hpe.com>, Thomas Gleixner <tglx@linutronix.de>, Joerg Roedel
- <joro@8bytes.org>, Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>,
- Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>, David
- Woodhouse <dwmw2@infradead.org>, Mark Rutland <mark.rutland@arm.com>, Peter
- Zijlstra <peterz@infradead.org>, Arnd Bergmann <arnd@arndb.de>, YueHaibing
- <yuehaibing@huawei.com>, "iommu@lists.linux.dev" <iommu@lists.linux.dev>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Steve Wahl
- <steve.wahl@hpe.com>, "Anderson, Russ" <russ.anderson@hpe.com>,
- jacob.jun.pan@linux.intel.com
-Subject: Re: [PATCH v2] iommu/vt-d: Allocate DMAR fault interrupts locally
-Message-ID: <20240408093930.45422bc1@jacob-builder>
-In-Reply-To: <BN9PR11MB527627689CCBBFEAFC6745568C002@BN9PR11MB5276.namprd11.prod.outlook.com>
-References: <Zfydpp2Hm+as16TY@hpe.com>
-	<BN9PR11MB52765241E3261B58BE93E8A88C002@BN9PR11MB5276.namprd11.prod.outlook.com>
-	<ec0ff625-855c-4dba-b19f-db050671fbfb@linux.intel.com>
-	<BN9PR11MB527627689CCBBFEAFC6745568C002@BN9PR11MB5276.namprd11.prod.outlook.com>
-Organization: OTC
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+   d="scan'208";a="20376584"
+Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.247.28])
+  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2024 09:35:06 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+To: linux-kselftest@vger.kernel.org,
+	Reinette Chatre <reinette.chatre@intel.com>,
+	Shuah Khan <shuah@kernel.org>,
+	Babu Moger <babu.moger@amd.com>,
+	=?UTF-8?q?Maciej=20Wiecz=C3=B3r-Retman?= <maciej.wieczor-retman@intel.com>
+Cc: Fenghua Yu <fenghua.yu@intel.com>,
+	linux-kernel@vger.kernel.org,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Subject: [PATCH v3 14/16] selftests/resctrl: Convert ctrlgrp & mongrp to pointers
+Date: Mon,  8 Apr 2024 19:32:45 +0300
+Message-Id: <20240408163247.3224-15-ilpo.jarvinen@linux.intel.com>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20240408163247.3224-1-ilpo.jarvinen@linux.intel.com>
+References: <20240408163247.3224-1-ilpo.jarvinen@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Hi Kevin,
+The struct resctrl_val_param has control and monitor groups as char
+arrays but they are not supposed to be mutated within resctrl_val().
 
-On Mon, 8 Apr 2024 09:00:05 +0000, "Tian, Kevin" <kevin.tian@intel.com>
-wrote:
+Convert the ctrlgrp and mongrp char array within resctrl_val_param to
+plain const char pointers and adjust the strlen() based checks to
+check NULL instead.
 
-> > From: Baolu Lu <baolu.lu@linux.intel.com>
-> > Sent: Monday, April 8, 2024 3:22 PM
-> > 
-> > On 2024/4/8 14:54, Tian, Kevin wrote:  
-> > >> From: Dimitri Sivanich <sivanich@hpe.com>
-> > >> Sent: Friday, March 22, 2024 4:51 AM
-> > >>
-> > >> The Intel IOMMU code currently tries to allocate all DMAR fault
-> > >> interrupt vectors on the boot cpu.  On large systems with high DMAR
-> > >> counts this results in vector exhaustion, and most of the vectors
-> > >> are not initially allocated socket local.
-> > >>
-> > >> Instead, have a cpu on each node do the vector allocation for the
-> > >> DMARs  
-> > on  
-> > >> that node.  The boot cpu still does the allocation for its node
-> > >> during its boot sequence.
-> > >>
-> > >> Signed-off-by: Dimitri Sivanich <sivanich@hpe.com>  
-> > >
-> > > Reviewed-by: Kevin Tian <kevin.tian@intel.com>
-> > >  
-> > 
-> > Kevin,
-> > 
-> > Jacob has another proposal which shares the irq among all IOMMUs.
-> > 
-> > https://lore.kernel.org/linux-iommu/20240403234548.989061-1-
-> > jacob.jun.pan@linux.intel.com/
-> > 
-> > How do you like this?
-> >   
-> 
-> I'm a bit concerning about the need of looping all IOMMU's in DMAR
-> irqchip mask/unmask handlers. this one sounds simpler to me.
-The difference is that with this patch, we still burn a few vectors on BSP
-and the leading CPU of each socket.
+Convert !grp_name check in create_grp() into internal sanity check by
+returning error if the caller asked to create a group but doesn't
+provide a name for the group. The existing code already abides this by
+only calling create_grp() if mongrp is non-NULL so the error should
+never be returned with the current selftests (ctrlgrp is never NULL).
 
-e.g. on sapphire rapids, we lose 8 vectors to DMAR fault IRQ on BSP.
+Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+---
 
-Thanks,
+v3:
+- Removed wrong comment
+- Changed grp_name check to return -1 on fail (internal sanity check)
+---
+ tools/testing/selftests/resctrl/resctrl.h   |  4 ++--
+ tools/testing/selftests/resctrl/resctrlfs.c | 15 +++++----------
+ 2 files changed, 7 insertions(+), 12 deletions(-)
 
-Jacob
+diff --git a/tools/testing/selftests/resctrl/resctrl.h b/tools/testing/selftests/resctrl/resctrl.h
+index 5967389038d4..a999fbc13fd3 100644
+--- a/tools/testing/selftests/resctrl/resctrl.h
++++ b/tools/testing/selftests/resctrl/resctrl.h
+@@ -91,8 +91,8 @@ struct resctrl_test {
+  */
+ struct resctrl_val_param {
+ 	char		*resctrl_val;
+-	char		ctrlgrp[64];
+-	char		mongrp[64];
++	const char	*ctrlgrp;
++	const char	*mongrp;
+ 	char		filename[64];
+ 	unsigned long	mask;
+ 	int		num_of_runs;
+diff --git a/tools/testing/selftests/resctrl/resctrlfs.c b/tools/testing/selftests/resctrl/resctrlfs.c
+index a0e84157eb63..6b4448588666 100644
+--- a/tools/testing/selftests/resctrl/resctrlfs.c
++++ b/tools/testing/selftests/resctrl/resctrlfs.c
+@@ -464,13 +464,8 @@ static int create_grp(const char *grp_name, char *grp, const char *parent_grp)
+ 	struct dirent *ep;
+ 	DIR *dp;
+ 
+-	/*
+-	 * At this point, we are guaranteed to have resctrl FS mounted and if
+-	 * length of grp_name == 0, it means, user wants to use root con_mon
+-	 * grp, so do nothing
+-	 */
+-	if (strlen(grp_name) == 0)
+-		return 0;
++	if (!grp_name)
++		return -1;
+ 
+ 	/* Check if requested grp exists or not */
+ 	dp = opendir(parent_grp);
+@@ -541,7 +536,7 @@ int write_bm_pid_to_resctrl(pid_t bm_pid, const char *ctrlgrp,
+ 	char tasks[1024];
+ 	int ret = 0;
+ 
+-	if (strlen(ctrlgrp))
++	if (ctrlgrp)
+ 		sprintf(controlgroup, "%s/%s", RESCTRL_PATH, ctrlgrp);
+ 	else
+ 		sprintf(controlgroup, "%s", RESCTRL_PATH);
+@@ -558,7 +553,7 @@ int write_bm_pid_to_resctrl(pid_t bm_pid, const char *ctrlgrp,
+ 	/* Create mon grp and write pid into it for "mbm" and "cmt" test */
+ 	if (!strncmp(resctrl_val, CMT_STR, sizeof(CMT_STR)) ||
+ 	    !strncmp(resctrl_val, MBM_STR, sizeof(MBM_STR))) {
+-		if (strlen(mongrp)) {
++		if (mongrp) {
+ 			sprintf(monitorgroup_p, "%s/mon_groups", controlgroup);
+ 			sprintf(monitorgroup, "%s/%s", monitorgroup_p, mongrp);
+ 			ret = create_grp(mongrp, monitorgroup, monitorgroup_p);
+@@ -612,7 +607,7 @@ int write_schemata(const char *ctrlgrp, char *schemata, int cpu_no,
+ 		goto out;
+ 	}
+ 
+-	if (strlen(ctrlgrp) != 0)
++	if (ctrlgrp)
+ 		sprintf(controlgroup, "%s/%s/schemata", RESCTRL_PATH, ctrlgrp);
+ 	else
+ 		sprintf(controlgroup, "%s/schemata", RESCTRL_PATH);
+-- 
+2.39.2
+
