@@ -1,114 +1,120 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 683A3524AD
-	for <linux-kernel@vger.kernel.org>; Mon,  8 Apr 2024 10:17:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDC4A52F83;
+	Mon,  8 Apr 2024 10:18:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712571462; cv=none; b=qIEyZmoatXd0654MHfNtOn9th3RtMAL/8sIdb441EGcL543CTF8rzq5Qou+K/PuW0N/vaYniEAaJmphpnpisn8U/UZrXykXz4KAJrmLbiY6+uCTSDYkCtX9CYz+LsaugfrV1Q4enDedwGMJpGtnNdWSW0AVrmEZOHv2kjwpTCC8=
+	t=1712571484; cv=none; b=XWxUGJUE8x2ekoY46Bb6ElgKIsOrxH9kudJU0LFVCYMICSRsi5+fFMaObc1riWOgE7r9p9x25IW80kfYhFQafwFMFR7jAj4feGanu9/mCRoGrgDAn//+2+2ijnR3rva196wsftFdTvu2e68WqAuqPw5D4knPpc5/DEKUiFymFdU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712571462; c=relaxed/simple;
-	bh=OG9cNKuW5LqEoaNK3TpF1vRBrzAoC6dHxwMeVlrmYwk=;
-	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
-	 Subject:Content-Type; b=M1SDkOaGURqkwzX/K18g7skwep3LLFe69sRLFUnxU8HypHk29Tj4vtfl4GXDNHggMmBu7fTCNPfnD5+eFxs1vqmiLK53AWFkf+2i1XcDmeuqMdi0YL91yecnLyToOE6vLBehWflDXcm6DNsjKReBrphQanO/QUJjr3O6quamSR0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rvKU2GoZ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1712571484; c=relaxed/simple;
+	bh=ndnxWBaDMIoX9SuwF9xmE9J0d9iLYQgbIKQaVs/ewVE=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=M1L7mTYKDLnBG744Rnsv095+p2jGhV3NEd5RPswODE1ghflWG2xzmnMAciZDQplKeL9hffwW58rV1u3AiVHkIi2UVkx3TjR0MXWkMLH9WzFGrprjOLaGYBfHHJWA5i4A+4qqznsaj/kwE32puaL8N3yz6V3KmXBdgJ6KkUKjKtg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=K9Nv+sTO; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=IWbytI7n; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rvKU2GoZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C66E9C43399;
-	Mon,  8 Apr 2024 10:17:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712571462;
-	bh=OG9cNKuW5LqEoaNK3TpF1vRBrzAoC6dHxwMeVlrmYwk=;
-	h=In-Reply-To:References:Date:From:To:Cc:Subject:From;
-	b=rvKU2GoZyRcnmUQC6I5QcNLol4ltbN43mN908IkVPTkRzrbhzbMCk23uo9Ggd4N6Z
-	 5J3ny7gOZmeOGpWDXUXiKl72V0qUBosunju6XK7c7xCAfrsnYUI/mv6LoWfEbclkrB
-	 CabtOpETgsDZ1Ty+xrCI7O09f+54S/H1Gg5OUSVXj7y6EarRWRZzerfnK/FgzmmBF6
-	 EotvhUS9LO+z74cEVHbOi+MvNM+13oMn8Fdp5Xbpi2d6RDTk0aw7+cRhGswBYgtYa1
-	 z5yhslDnxNU81okjLWme3mGQZUOXPxycLAkO8UcSVvs2xEZZmm1KoCkuqXfSgYpS7Y
-	 d2D6PftNbxQqA==
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-	by mailfauth.nyi.internal (Postfix) with ESMTP id DE6371200032;
-	Mon,  8 Apr 2024 06:17:40 -0400 (EDT)
-Received: from imap51 ([10.202.2.101])
-  by compute5.internal (MEProxy); Mon, 08 Apr 2024 06:17:40 -0400
-X-ME-Sender: <xms:RMQTZhvjfL83qhCd2GU_ETsiMg40OoKqUFwstf1AW8Ut7xLxONl59A>
-    <xme:RMQTZqcQEcuQtDs_bJGOEqNoBwfsKvPxQdcZz-XIY7TtvOlxCaVemOcxYaFxG6Eop
-    oBczHKsS7PcWAfUqnk>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrudegiedgvdeiucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepofgfggfkjghffffhvfevufgtgfesthhqredtreerjeenucfhrhhomhepfdet
-    rhhnugcuuegvrhhgmhgrnhhnfdcuoegrrhhnugeskhgvrhhnvghlrdhorhhgqeenucggtf
-    frrghtthgvrhhnpedvtddtffejfeeggefgleefgfeghfehfeefffetgffgleegudevveet
-    hfefjeevkeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhroh
-    hmpegrrhhnugdomhgvshhmthhprghuthhhphgvrhhsohhnrghlihhthidquddvkeehudej
-    tddvgedqvdekjedttddvieegqdgrrhhnugeppehkvghrnhgvlhdrohhrghesrghrnhgusg
-    druggv
-X-ME-Proxy: <xmx:RMQTZkx5ju5gpobZgFR8FVpj5E41Gdvwap84jlBI0D2r0A3jAsCQoQ>
-    <xmx:RMQTZoNZl5IuWlGdOZTq1LEe75nV_jMa7w2oRRj161m9WXyBw7H-2A>
-    <xmx:RMQTZh-T5L8NzLGr69g-BX6dDea3rOXCIjbLAr5rFOxLfDwHCVVbnw>
-    <xmx:RMQTZoUa-xMGeRHODc5ituxuH9M5NJDS8kjIxaZYlbkoEBdXPXCayw>
-    <xmx:RMQTZida91ZjUK0cXg1N6T1yaIQnrzUXPzzGJtpwkFEMHrRf3pjcK5Fj>
-Feedback-ID: i36794607:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-	id 97B6BB6008D; Mon,  8 Apr 2024 06:17:40 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.11.0-alpha0-368-gc733b1d8df-fm-20240402.001-gc733b1d8
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="K9Nv+sTO";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="IWbytI7n"
+Date: Mon, 08 Apr 2024 10:18:00 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1712571481;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=VY5Yn0pEVsFL1jcTs8xAw+j/ArLb8o13dUUPeJ/7V+A=;
+	b=K9Nv+sTOiDNRcDQgtkOjepl0ofJGfpH8gdU4HXxgEJ1EHPVpmu4gQV+KS4KrMrwpBetpSZ
+	oEQHM8IfEgyCS2iesBenKpCuYlgiYiRK45CKYdkZ/+KZ5EHCB54lC4PRX/jil5A0QLp19P
+	lemcMu3L/tPfXbA0so7KCpUfBKz7morV/GZqCjYG7oWmJEdk7pobEH6IAGg0PGt3j0SitU
+	uD434tdjRAh06iu9ugVSNfDWSw/vRsMwewJ+uHlrQF1t3Pd290F9VdDcWYjy6cH6hHI5I9
+	yqVLJzeD8ZBFqqTVp9BKG47btTjfToe9FbzEWmJRrGjvoS6X74rveNdb5TQjjg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1712571481;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=VY5Yn0pEVsFL1jcTs8xAw+j/ArLb8o13dUUPeJ/7V+A=;
+	b=IWbytI7nCCwmK4afyeY+qbH10yuUD635NOqJ4hDQemh7SgQnX/B+CrGj6T0ADc1i8yVuCD
+	LXnnThtyxy1stSCQ==
+From: "tip-bot2 for Andy Shevchenko" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject: [tip: irq/core] irqdomain: Check virq for 0 before use in
+ irq_dispose_mapping()
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+ Thomas Gleixner <tglx@linutronix.de>, x86@kernel.org,
+ linux-kernel@vger.kernel.org, maz@kernel.org
+In-Reply-To: <20240405190105.3932034-1-andriy.shevchenko@linux.intel.com>
+References: <20240405190105.3932034-1-andriy.shevchenko@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-Id: <80c20c7b-4e7a-43af-8b59-7f2a98272e99@app.fastmail.com>
-In-Reply-To: <1a14ac6e-30e9-048e-50cc-c1c3aacc2118@linux.intel.com>
-References: <20240405152924.252598-1-schnelle@linux.ibm.com>
- <20240405152924.252598-2-schnelle@linux.ibm.com>
- <1a14ac6e-30e9-048e-50cc-c1c3aacc2118@linux.intel.com>
-Date: Mon, 08 Apr 2024 12:17:19 +0200
-From: "Arnd Bergmann" <arnd@kernel.org>
-To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- "Niklas Schnelle" <schnelle@linux.ibm.com>
-Cc: "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
- "Jiri Slaby" <jirislaby@kernel.org>,
- linux-serial <linux-serial@vger.kernel.org>,
- "Heiko Carstens" <hca@linux.ibm.com>, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/1] tty: serial: handle HAS_IOPORT dependencies
-Content-Type: text/plain;charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Message-ID: <171257148005.10875.12889492362507316257.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
-On Mon, Apr 8, 2024, at 11:54, Ilpo J=C3=A4rvinen wrote:
-> On Fri, 5 Apr 2024, Niklas Schnelle wrote:
+The following commit has been merged into the irq/core branch of tip:
 
->>  config SERIAL_8250_CS
->>  	tristate "8250/16550 PCMCIA device support"
->> -	depends on PCMCIA && SERIAL_8250
->> +	depends on PCMCIA && SERIAL_8250 && HAS_IOPORT
->>  	help
->>  	  Say Y here to enable support for 16-bit PCMCIA serial devices,
->>  	  including serial port cards, modems, and the modem functions of
->
-> What about drivers that use SERIAL8250_PORT()?
+Commit-ID:     a2ea3cd78317ae8995b65b52299158bbae52a77f
+Gitweb:        https://git.kernel.org/tip/a2ea3cd78317ae8995b65b52299158bbae52a77f
+Author:        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+AuthorDate:    Fri, 05 Apr 2024 22:01:05 +03:00
+Committer:     Thomas Gleixner <tglx@linutronix.de>
+CommitterDate: Mon, 08 Apr 2024 12:08:58 +02:00
 
-It probably makes sense to hide these, since they won't ever
-work. I probably missed them in my initial series because they
-don't cause a compile-time error, but I agree that there is no
-use in showing the options here.
+irqdomain: Check virq for 0 before use in irq_dispose_mapping()
 
-> Also port provided in 8250_PNP might expect it I think.
+It's a bit hard to read the logic since the virq is used before checking it
+for 0. Rearrange the code to make it better to understand.
 
-I don't think these need any change: 8250_pnp.c supports
-both IORESOURCE_IO and IORESOURCE_MEM based ports. It will
-still create a 8250 port for the I/O based ones but they
-will now correctly fail to probe in the main driver rather
-than crashing the kernel. PNP devices that only use
-memory BARs will keep working as before, on both machines
-with and without CONFIG_HAS_IOPORT.
+This, in particular, should clearly answer the question whether the caller
+needs to perform this check or not, and there are plenty of places for both
+variants, confirming a confusion.
 
-I think that most 8250_pnp variants are probably used only
-with ISAPNP or PNPBIOS, neither of which exists without
-HAS_IOPORT, but you could certainly have PNPACPI on arm
-or riscv machines that don't have port I/O but come with
-a memory-mapped 8250 port described by firmware.
+Fun fact that the new code is shorter:
 
-    Arnd
+  Function                                     old     new   delta
+  irq_dispose_mapping                          278     271      -7
+  Total: Before=11625, After=11618, chg -0.06%
+
+when compiled by GCC on Debian for x86_64.
+
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lore.kernel.org/r/20240405190105.3932034-1-andriy.shevchenko@linux.intel.com
+
+---
+ kernel/irq/irqdomain.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/kernel/irq/irqdomain.c b/kernel/irq/irqdomain.c
+index 3dd1c87..aadc889 100644
+--- a/kernel/irq/irqdomain.c
++++ b/kernel/irq/irqdomain.c
+@@ -909,10 +909,11 @@ EXPORT_SYMBOL_GPL(irq_create_of_mapping);
+  */
+ void irq_dispose_mapping(unsigned int virq)
+ {
+-	struct irq_data *irq_data = irq_get_irq_data(virq);
++	struct irq_data *irq_data;
+ 	struct irq_domain *domain;
+ 
+-	if (!virq || !irq_data)
++	irq_data = virq ? irq_get_irq_data(virq) : NULL;
++	if (!irq_data)
+ 		return;
+ 
+ 	domain = irq_data->domain;
