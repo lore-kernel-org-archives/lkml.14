@@ -1,75 +1,159 @@
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BC5A1411C9;
-	Mon,  8 Apr 2024 16:00:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFCBF22091
+	for <linux-kernel@vger.kernel.org>; Mon,  8 Apr 2024 16:01:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712592009; cv=none; b=ulkgIhi/YxXh/sUK+7FjKxRi7m7mdXLb9dO4RVUV19BjTqLFABV4OW09x58hHRJUQ3BwojeYcsl7RCKSmr6eiFvfTFcqD+53Cscye+eVZOQf8MP5nd8sDk3T24v/wPhWDMIvP5NPhb5Ha5WUij+2hDKcbYgc84vVSzjm1IImPq8=
+	t=1712592093; cv=none; b=PJyiqiFDROGTkma3x/YiQZ5NF3nBQNwzKsMw7cDNSkH2i1fuCWZSQ9gvdr5ghB1LARkHYuI+sppqn5pjdUFqYX8+pFJiDqS63OsmWHmIhd/WhT49t+VJ8Pwzbhu2NxLNOzL+aOvnxampiqS9jocxsRwl0mMc4kX8Vaol1mlp/XA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712592009; c=relaxed/simple;
-	bh=EsluPGBp8z3WBuyBSd9yS9dXpcZyDXvLR8NR4Vhr3vQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GHCdvPxbIAkNF3kbKgb34y8LHMkYufkEvUrezu9nczehvv3QARQ/UWXwDmI2/cK+v4jpf9bDlYjb+apFki7s6XOAek0WeNaCGqsrmIcKAisxGtZ1xsoWKfwvzzYwT7ONB8D5rwe4nfeYVhMrr5Q94xIu8NVoJOc7zAX6QyYPOQw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=G7ayW8YJ; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1712592093; c=relaxed/simple;
+	bh=Ygi3/4LFZQsuI5V6cl+E49vdQAx7C3y5XXwlxvBn2is=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=DCXViUeFC1Uhh/lHytkW83YNiX4HmiWAtQXRv060vNPLIiayJmKeWv51aY5w36oOPLhOKQslhOCgNCf3NLdD5h7z8AA/LKO2YIUiyTPRh4qkHSJYqYUkpbJWUi30cvCSjkEoF2u+UGf6Cb/LOhONiqICQI7oZVQnm2QjDA8EkYE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jJFUlIKe; arc=none smtp.client-ip=192.198.163.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="G7ayW8YJ"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=i+CnLiyt3a/2zi5nZLCIWovq8ywq+T8g1xLxm8wLpf0=; b=G7ayW8YJwpLfRcKPNK//Na+wnG
-	JFvLxiIAB9r/u3thtdxelqWM1GqjtIPobvbqqvf3uE1H+rlE9mv4N5Go5/ti2N4rIbuWe34xwlSKS
-	K1KRJB3BJsgwi+AYdpkqJGYpbaM6O0VgVQhS0gvvxqcMe/j63N0CmQGJ9y6vdx2WqN6f7g/lzen9B
-	Ls9d2c6G0E333K8CG4FJ9pquS/kQzN+MvHD67cuHsqpQ3UnlnfUuz2tGFrAS46W3KfnEKyaGprxQq
-	9kPiUcEytYy6iU4P99SV6HL6DA0db/rUwpuSAYOMI6S1zqR150mVJyaj50c6pPDCanx6JuI/v5jsY
-	/5Hw3VzA==;
-Received: from mcgrof by bombadil.infradead.org with local (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1rtrPi-0000000G84E-1mFm;
-	Mon, 08 Apr 2024 16:00:06 +0000
-Date: Mon, 8 Apr 2024 09:00:06 -0700
-From: Luis Chamberlain <mcgrof@kernel.org>
-To: Arnd Bergmann <arnd@kernel.org>
-Cc: Arnd Bergmann <arnd@arndb.de>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	linux-modules@vger.kernel.org,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Jens Axboe <axboe@kernel.dk>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] [v4] module: don't ignore sysfs_create_link() failures
-Message-ID: <ZhQUhvSCpz48f6tw@bombadil.infradead.org>
-References: <20240408080616.3911573-1-arnd@kernel.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jJFUlIKe"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1712592091; x=1744128091;
+  h=date:from:to:cc:subject:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=Ygi3/4LFZQsuI5V6cl+E49vdQAx7C3y5XXwlxvBn2is=;
+  b=jJFUlIKeCD8fik/sMmsC0Tq/aka9fnhwTMoK4sG5Fvb2++ZTpOHJm8Bv
+   IxmovYgqxvjzBMJxKXASgMvCulxp3Rn8SX6kqjvdv1XkLkBsIWxDRS2ZJ
+   s7ELLfuTbSnIXIq/xayY+JC/jl06jB3vRM0ia7jtEM88cQJRsMauBH2U6
+   ASePbOdPvuaSgcdvhv8+8kns6fNFD+hwNxLvC4EqQum6I67qjgxqfktJp
+   jIEz4sOkr3put4Q/6zO9OsQGz/m/qOwZefDWlnG45Ix+DdNMCai4yAPoi
+   SF+RUK1PHpEoFQtOVPkCx1P2fqL1wD528uOJhEOz0rFqgx9xYAD8OixDv
+   Q==;
+X-CSE-ConnectionGUID: g6jaeGAySxGMUDsc3Lsb4w==
+X-CSE-MsgGUID: J3XNDgoxTs690Qv5G5PRjA==
+X-IronPort-AV: E=McAfee;i="6600,9927,11038"; a="11656105"
+X-IronPort-AV: E=Sophos;i="6.07,187,1708416000"; 
+   d="scan'208";a="11656105"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2024 09:01:31 -0700
+X-CSE-ConnectionGUID: INLreHreTUSw5gvULrK0Mw==
+X-CSE-MsgGUID: e2IUKgdJRnS2RmR0O3qmPQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,187,1708416000"; 
+   d="scan'208";a="20054868"
+Received: from jacob-builder.jf.intel.com (HELO jacob-builder) ([10.54.39.125])
+  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2024 09:01:27 -0700
+Date: Mon, 8 Apr 2024 09:05:56 -0700
+From: Jacob Pan <jacob.jun.pan@linux.intel.com>
+To: "Tian, Kevin" <kevin.tian@intel.com>
+Cc: "sivanich@hpe.com" <sivanich@hpe.com>, Thomas Gleixner
+ <tglx@linutronix.de>, LKML <linux-kernel@vger.kernel.org>,
+ "iommu@lists.linux.dev" <iommu@lists.linux.dev>, Lu Baolu
+ <baolu.lu@linux.intel.com>, Joerg Roedel <joro@8bytes.org>, "Liu, Yi L"
+ <yi.l.liu@intel.com>, "steve.wahl@hpe.com" <steve.wahl@hpe.com>, "Anderson,
+ Russ" <russ.anderson@hpe.com>, "Peter Zijlstra" <peterz@infradead.org>,
+ Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
+ jacob.jun.pan@linux.intel.com
+Subject: Re: [PATCH 2/2] iommu/vt-d: Share DMAR fault IRQ to prevent vector
+ exhaustion
+Message-ID: <20240408090556.6165e603@jacob-builder>
+In-Reply-To: <BN9PR11MB527677A69A2004A951165CC38C002@BN9PR11MB5276.namprd11.prod.outlook.com>
+References: <20240403234548.989061-1-jacob.jun.pan@linux.intel.com>
+	<20240403234548.989061-2-jacob.jun.pan@linux.intel.com>
+	<BN9PR11MB527677A69A2004A951165CC38C002@BN9PR11MB5276.namprd11.prod.outlook.com>
+Organization: OTC
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240408080616.3911573-1-arnd@kernel.org>
-Sender: Luis Chamberlain <mcgrof@infradead.org>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Mon, Apr 08, 2024 at 10:05:58AM +0200, Arnd Bergmann wrote:
-> From: Arnd Bergmann <arnd@arndb.de>
-> 
-> The sysfs_create_link() return code is marked as __must_check, but the
-> module_add_driver() function tries hard to not care, by assigning the
-> return code to a variable. When building with 'make W=1', gcc still
-> warns because this variable is only assigned but not used:
-> 
-> drivers/base/module.c: In function 'module_add_driver':
-> drivers/base/module.c:36:6: warning: variable 'no_warn' set but not used [-Wunused-but-set-variable]
-> 
-> Rework the code to properly unwind and return the error code to the
-> caller. My reading of the original code was that it tries to
-> not fail when the links already exist, so keep ignoring -EEXIST
-> errors.
-> 
-> Fixes: e17e0f51aeea ("Driver core: show drivers in /sys/module/")
-> Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Hi Kevin,
 
-Reviewed-by: Luis Chamberlain <mcgrof@kernel.org>
+On Mon, 8 Apr 2024 08:48:54 +0000, "Tian, Kevin" <kevin.tian@intel.com>
+wrote:
 
-  Luis
+> > From: Jacob Pan <jacob.jun.pan@linux.intel.com>
+> > Sent: Thursday, April 4, 2024 7:46 AM
+> > 
+> > DMAR fault interrupt is used for per-IOMMU unrecoverable fault
+> > reporting, it occurs only if there is a kernel programming error or
+> > serious hardware failure. In other words, they should never occur under
+> > normal circumstances.  
+> 
+> this is not accurate. When a device is assigned to a malicious guest then
+> it's not unusual to observe faults.
+> 
+Right, a malicious guest kernel could cause unrecoverable faults, e.g.
+wrong privilege.
+
+> in this context you probably meant that it's not a performance path hence
+> sharing the vector is acceptable.
+> 
+Yes.
+> >
+> > @@ -1182,7 +1182,6 @@ static void free_iommu(struct intel_iommu
+> > *iommu)
+> >  			iommu->pr_irq = 0;
+> >  		}
+> >  		free_irq(iommu->fault_irq, iommu);
+> > -		dmar_free_hwirq(iommu->fault_irq);  
+> 
+> You still want to free the vector for the iommu which first gets the
+> vector allocated.
+> 
+I think we always want to keep this vector since the system always needs
+one vector to share. We will never offline all the IOMMUs, right?
+
+> > @@ -1956,9 +1955,8 @@ void dmar_msi_mask(struct irq_data *data)
+> >  	raw_spin_unlock_irqrestore(&iommu->register_lock, flag);
+> >  }
+> > 
+> > -void dmar_msi_write(int irq, struct msi_msg *msg)
+> > +static void dmar_msi_write_msg(struct intel_iommu *iommu, int irq,
+> > struct msi_msg *msg)
+> >  {  
+> 
+> what about iommu_msi_write_msg() to match the first parameter?
+> 
+> otherwise it leads to a slightly circled calltrace:
+> 	dmar_msi_write_msg()
+> 		dmar_msi_write()
+> 			dmar_msi_write_msg()
+> 
+Good point, will do.
+
+> > +
+> > +	/*
+> > +	 * Only the owner IOMMU of the shared IRQ has its fault event
+> > +	 * interrupt unmasked after request_irq(), the rest are
+> > explicitly
+> > +	 * unmasked.
+> > +	 */
+> > +	if (!(iommu->flags & VTD_FLAG_FAULT_IRQ_OWNER))
+> > +		dmar_fault_irq_unmask(iommu);
+> > +  
+> 
+> em there is a problem in dmar_msi_mask() and dmar_msi_mask()
+> which only touches the owner IOMMU. With this shared vector
+> approach we should mask/unmask all IOMMU's together. 
+I thought about this as well, in addition to fault_irq,
+dmar_msi_mask/unmask() are used for other DMAR irqs, page request and
+perfmon. So we need a special case for fault_irq there, it is not pretty.
+
+I added a special case here in this patch, thinking we never mask the
+fault_irq since we need to cover the lifetime of the system. I have looked
+at:
+1.IOMMU suspend/resume, no mask/unmask
+2.IRQ migration, added IRQF_NOBALANCING
+
+maybe I missed some cases?
+
+
+Thanks,
+
+Jacob
