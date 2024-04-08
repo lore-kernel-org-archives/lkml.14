@@ -1,128 +1,116 @@
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.153.233])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C40CF657C4;
-	Mon,  8 Apr 2024 11:33:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.153.233
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBEEA1E497;
+	Mon,  8 Apr 2024 11:40:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712576024; cv=none; b=jcmir31eUJrCpNlXqQBuY/TMR6N7iGqS006pfg699Lk50/2oblPFqh+NXp9J30vO4dcv2j2IY0ufRks6Q1wd3zAWjuUufS+kQCVC+MLdkZbGFuGC9DdM1DvctCsKigJ303kyepJskPtwy1Ezh7Z7QsC4tJw0Gx92kq45Hy9nyso=
+	t=1712576419; cv=none; b=CY3QRNQ3KVVk2d87uzD/PQHrA5xk/qbCHh2DOnbNcRhH8u5PqmMkeKrJeuQ0wS/EV/BSFICdP1VBNvQKjP0q6Q+MD3mmq+vqPQUG8g+KIdGiySIawHqwFR2cz2gmwctHT57fbO5T8iszoAO69pqdgMMZLJ6egkBRatr6p1gyJ/o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712576024; c=relaxed/simple;
-	bh=Wo/fnT4vrzEdJzsfaOrBfM3t1EYcWSQcfI+sddFhP94=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=B/iPL4SIvp6EYEQ/TaVCq825r7KGC/l9kmNtcC4HqGYYN4dbQeF9ikWQqdsPzlASfyakNo7ISlBzAWoHcorcg7eqNWbQv/plk5QCzybeXI/BItRBD/Gj0dv6Hnw0FiWFAPnQ5Mj8Dfsg6dleiK23vFvVx+4wPl2KL7PuivXNX9E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=1MRvaI9V; arc=none smtp.client-ip=68.232.153.233
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
+	s=arc-20240116; t=1712576419; c=relaxed/simple;
+	bh=rWFRjSTrFEi3sr3QTftz5bcZoSq9cdKy8xG19AUfBpo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=d7k9bSmJpdxwZuxl6dLk//rBgIUAUsdqKckcs9MwgGL5pEdNuwOQk+qr/DLIh6Ta806XPQynsqLWyc2mtVzKIPUQ4ozyylP0UUDJMpQaZzrUOFkRtOh6egSowL8SCC0ehgbzEep0OpTfBw3WD6EGBDaG0X5MtfQGMK34d100Ljw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=U/1oprHx; arc=none smtp.client-ip=209.85.214.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="1MRvaI9V"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1712576022; x=1744112022;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=Wo/fnT4vrzEdJzsfaOrBfM3t1EYcWSQcfI+sddFhP94=;
-  b=1MRvaI9Vxv4becgs+ORWqyQ7d1yLZqnFQYG4J9Dwed3/mGf9wl0U1BOK
-   GnkWdVuY2H9lDbQlSskYD+Mm4Gje86iuC6D9WpTM2NPcmGVZjbotxb5RX
-   jZUglB5duSGjdUQC6RbjCdeKb7LlW95LVKVIB5DCQz1t4Ap93q6kdqu6a
-   hKqkRf8qRgXlSUPEf4890mQqw5qIkbO6oS22G2cAyVnYcix2oBZ8pk4qQ
-   3FaBozDiB1J+h9EIwEUuiP220G3xQLfEyaG7LhRYdbq0Tec8iizPZ1qbK
-   AGFxZ7d6GDXjTDrSjKdyAAJWoZ+Z46hWGww6qzxdVX3FnFhIO7oSlFP8w
-   g==;
-X-CSE-ConnectionGUID: 8UDBYYxJQwS+kRlQNe0HGg==
-X-CSE-MsgGUID: dSm+3HjYRNyanz2ynRLD9w==
-X-IronPort-AV: E=Sophos;i="6.07,186,1708412400"; 
-   d="scan'208";a="250791766"
-X-Amp-Result: SKIPPED(no attachment in message)
-Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa5.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 08 Apr 2024 04:33:42 -0700
-Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
- chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Mon, 8 Apr 2024 04:33:22 -0700
-Received: from [10.159.245.205] (10.10.85.11) by chn-vm-ex03.mchp-main.com
- (10.10.85.151) with Microsoft SMTP Server id 15.1.2507.35 via Frontend
- Transport; Mon, 8 Apr 2024 04:33:21 -0700
-Message-ID: <d8f2d9ab-3c68-4ba1-8733-7ae9754011ed@microchip.com>
-Date: Mon, 8 Apr 2024 13:32:18 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="U/1oprHx"
+Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-1e45b9a5c53so2708175ad.3;
+        Mon, 08 Apr 2024 04:40:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1712576417; x=1713181217; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=o8Bi3GrM8szMy/fOrN09Zas7BpLrzN+uFd18xGLTGdw=;
+        b=U/1oprHxwvfac4Zg5q7t4Ni3AfNbHOFZEpbVAHlSqTohOBeoB0uZd1slDzP9s+OiQu
+         lA5/qLJkqlu1jz72+/3YqoNeSVRU5tPYkP8fQZ04PoDsqJQZm3ZhVWl51McPQF5eZBVs
+         7DBBdtkGvo8fMNpGUff4dq8leVlWRZTJ9ZxrQf+0jUwGTwUzeNweiJTDyFkyv8wdP37Y
+         UzoYkc/zrENCZdpLyCAZir8nWfFspe8xPf8n2WNpgSh9IfeDHLO4hJnni/ihisxdJwRC
+         TG+8ArBncUpGdjMnWl+CCFQvTy8IHIi5gq+iB+p3hOEuLQRmDik6SilsNkh8NONdY9t7
+         VORQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712576417; x=1713181217;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=o8Bi3GrM8szMy/fOrN09Zas7BpLrzN+uFd18xGLTGdw=;
+        b=UdaKECoP9C2qx3NVHMiBfnqkinQNoHVn8sp6nPD+mfDJ9xT97xrWCXD3yYnmmjoJ1N
+         b1v7P1SHPuXGLatsvNN8QMTwaZL54bFqLG2W4tcvaIKn9hAeFRqR98pgxvo3hioGM3XX
+         M9lJHrngUj8t44UAMiq9z1Ayeb1gYVWdbB+x8vz5aewuOdPKS19QJkrPXFEyHEoIaKoY
+         4M1HXqHI13TIP8i4l/jWJcT07wFQXuCFTEJya1uR5kD/h4e8sA9uUmvD08Y6ygs0E1vf
+         k8fQMNocC35925qYbaIb+il2wbfP3ChUY03FAc+58rKE51Ro7eEjfZG28PXKC8RHku4w
+         dFfA==
+X-Forwarded-Encrypted: i=1; AJvYcCVdk6+d5FaKnfZNMPjzAWYoOu/EN8SNGLrD7SddULUjRdJSnB/DJBpQSsEZ/OvwCoOW+mAXKfitkgMu41hXKjWpRYTJNCxkKSQwuB8BrNuM7wQyXWmw90OjpBiKefvg1LovqD6E4vVzdupsXR2t8S/cEwJA0Zdi7UgeyiLpWXVbTSsy8A==
+X-Gm-Message-State: AOJu0Yx9I5iccTLx5+6B4gyn7IAAnfqPTpNbjnS+iGhxJBlV8xw5Nv/2
+	/uURiuN1YqK3D2X/UKWg6E/TQTH7DVFeGJNvQNEhs4xWcKmoiUrP
+X-Google-Smtp-Source: AGHT+IGwQWIqu2bxXFF7QdG5ABpWhh1MQiQODBJT2SoTN/3dDWilIKrLY6SbJvOTCbbTs6SIeQeOBw==
+X-Received: by 2002:a17:902:6b02:b0:1e2:3e0a:fc5e with SMTP id o2-20020a1709026b0200b001e23e0afc5emr8424464plk.33.1712576416956;
+        Mon, 08 Apr 2024 04:40:16 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id p22-20020a1709027ed600b001e3e081d07esm4439176plb.179.2024.04.08.04.40.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 08 Apr 2024 04:40:15 -0700 (PDT)
+Sender: Guenter Roeck <groeck7@gmail.com>
+Date: Mon, 8 Apr 2024 04:40:14 -0700
+From: Guenter Roeck <linux@roeck-us.net>
+To: "Zhang, Rui" <rui.zhang@intel.com>
+Cc: "ricardo.neri-calderon@linux.intel.com" <ricardo.neri-calderon@linux.intel.com>,
+	"Neri, Ricardo" <ricardo.neri@intel.com>,
+	"linux-hwmon@vger.kernel.org" <linux-hwmon@vger.kernel.org>,
+	"lukasz.luba@arm.com" <lukasz.luba@arm.com>,
+	"daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>,
+	"jdelvare@suse.com" <jdelvare@suse.com>,
+	"srinivas.pandruvada@linux.intel.com" <srinivas.pandruvada@linux.intel.com>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"Wysocki, Rafael J" <rafael.j.wysocki@intel.com>,
+	"linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>
+Subject: Re: [PATCH 3/3] hwmon: (coretemp) Use a model-specific bitmask to
+ read registers
+Message-ID: <48f81be1-b484-45c1-850b-8aa364b8d836@roeck-us.net>
+References: <20240406010416.4821-1-ricardo.neri-calderon@linux.intel.com>
+ <20240406010416.4821-4-ricardo.neri-calderon@linux.intel.com>
+ <f4d18a63-c348-4882-897b-dc636feb149b@roeck-us.net>
+ <d0b5ae04b4d08e2003114c4d6b6d3a040f585995.camel@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] MAINTAINERS: mailmap: update Richard Genoud's email
- address
-Content-Language: en-US, fr-FR
-To: Richard Genoud <richard.genoud@bootlin.com>, Greg Kroah-Hartman
-	<gregkh@linuxfoundation.org>
-CC: Alexandre Belloni <alexandre.belloni@bootlin.com>,
-	<linux-kernel@vger.kernel.org>, <linux-serial@vger.kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>
-References: <20240408101329.9448-1-richard.genoud@bootlin.com>
-From: Nicolas Ferre <nicolas.ferre@microchip.com>
-Organization: microchip
-In-Reply-To: <20240408101329.9448-1-richard.genoud@bootlin.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <d0b5ae04b4d08e2003114c4d6b6d3a040f585995.camel@intel.com>
 
-On 08/04/2024 at 12:13, Richard Genoud wrote:
-> I'm working now at bootlin, so I'll use my bootlin address for kernel
-> development from now on.
+On Sun, Apr 07, 2024 at 08:39:51AM +0000, Zhang, Rui wrote:
+> > I do not think it is appropriate to make a hardware monitoring driver
+> > depend on the thermal subsystem.
+> > 
+> > NAK in the current form.
+> > 
+> Hi, Guenter,
 > 
-> Update also the yaml file for atmel-serial accordingly.
+> Thanks for reviewing.
 > 
-> Signed-off-by: Richard Genoud <richard.genoud@bootlin.com>
+> We've seen a couple of hwmon drivers depends on or imply THERMAL.
+> That's why we think this is an applicable solution.
 
-Thanks for the update Richard!
-Reviewed-by: Nicolas Ferre <nicolas.ferre@microchip.com>
+So far this was - unless someone sneaked something by - for drivers
+which registered thermal zones, not for calling code which resides
+inside thermal subsystem.
 
-Best regards,
-   Nicolas
+> Using the intel_tcc APIs can effectively reduce the future maintenance
+> burden because we don't need to duplicate the model list in multiple
+> places.
+> 
+> or do you have any suggestions?
 
-> ---
->   .mailmap                                                       | 1 +
->   Documentation/devicetree/bindings/serial/atmel,at91-usart.yaml | 2 +-
->   MAINTAINERS                                                    | 2 +-
->   3 files changed, 3 insertions(+), 2 deletions(-)
-> 
-> diff --git a/.mailmap b/.mailmap
-> index 8284692f9610..71e28f4e0d4a 100644
-> --- a/.mailmap
-> +++ b/.mailmap
-> @@ -524,6 +524,7 @@ Rémi Denis-Courmont <rdenis@simphalempin.com>
->   Ricardo Ribalda <ribalda@kernel.org> <ricardo@ribalda.com>
->   Ricardo Ribalda <ribalda@kernel.org> Ricardo Ribalda Delgado <ribalda@kernel.org>
->   Ricardo Ribalda <ribalda@kernel.org> <ricardo.ribalda@gmail.com>
-> +Richard Genoud <richard.genoud@bootlin.com> <richard.genoud@gmail.com>
->   Richard Leitner <richard.leitner@linux.dev> <dev@g0hl1n.net>
->   Richard Leitner <richard.leitner@linux.dev> <me@g0hl1n.net>
->   Richard Leitner <richard.leitner@linux.dev> <richard.leitner@skidata.com>
-> diff --git a/Documentation/devicetree/bindings/serial/atmel,at91-usart.yaml b/Documentation/devicetree/bindings/serial/atmel,at91-usart.yaml
-> index 65cb2e5c5eee..eb2992a447d7 100644
-> --- a/Documentation/devicetree/bindings/serial/atmel,at91-usart.yaml
-> +++ b/Documentation/devicetree/bindings/serial/atmel,at91-usart.yaml
-> @@ -8,7 +8,7 @@ $schema: http://devicetree.org/meta-schemas/core.yaml#
->   title: Atmel Universal Synchronous Asynchronous Receiver/Transmitter (USART)
-> 
->   maintainers:
-> -  - Richard Genoud <richard.genoud@gmail.com>
-> +  - Richard Genoud <richard.genoud@bootlin.com>
-> 
->   properties:
->     compatible:
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index aea47e04c3a5..0dbdc81e46c6 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -14363,7 +14363,7 @@ F:      drivers/dma/at_xdmac.c
->   F:     include/dt-bindings/dma/at91.h
-> 
->   MICROCHIP AT91 SERIAL DRIVER
-> -M:     Richard Genoud <richard.genoud@gmail.com>
-> +M:     Richard Genoud <richard.genoud@bootlin.com>
->   S:     Maintained
->   F:     Documentation/devicetree/bindings/serial/atmel,at91-usart.yaml
->   F:     drivers/tty/serial/atmel_serial.c
+The exported code should reside outside the thermal subsystem.
 
+Also, as implemented, if INTEL_TCC=n, the returned temperature mask value
+is 0x7f, and the offset mask is 0. So the alternative would be to just use
+those values unconditionally since apparently that is sufficient.
+
+Thanks,
+Guenter
