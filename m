@@ -1,197 +1,115 @@
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2075.outbound.protection.outlook.com [40.107.94.75])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82783BE55;
-	Mon,  8 Apr 2024 05:56:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.94.75
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712555783; cv=fail; b=h6Vg45HXIBGLYThaSyBevLrjci9zeDViT2w6GHQxs9UaGIP0O8oi0MyKyu9ddwT0Gos/GiMjCTCRkHiAeMExtDVX+rdByvN9Zcim9HLB7DZN5+GrAFDj1ULtCt+HfuUEtHydA5qZS1+ufUZ1uN2xC4Q8MBDX7/IcGcjZZ+rhmBk=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712555783; c=relaxed/simple;
-	bh=sETc1CltxqaEsBFpn9XoOKsO721a28C/EPYMworu6g8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rkmHyJ0TE5CJ4UU9S5MumCywa8IEVuerrSUuYNBVDEgOQpgspKBvmvzB3k31qvqKalaMlrlB/X7L3u+G/AXt1aIDZmaUJ+36Ig8URToOljMadnnGsipOFPJxI0uKGh4/cFeJ2ri47HOFSRM/dgGWba71a+wOJXJ++bSIhFf3Qgo=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sony.com; spf=pass smtp.mailfrom=sony.com; dkim=pass (1024-bit key) header.d=Sony.onmicrosoft.com header.i=@Sony.onmicrosoft.com header.b=naPG2Vhc; arc=fail smtp.client-ip=40.107.94.75
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sony.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sony.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBAC379D2;
+	Mon,  8 Apr 2024 05:56:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1712555799; cv=none; b=FyUR+qfhgbA8GlaOn4tgrx6ERtQA3tEki+5TL9efPP8zzyDvS24ss0arQQdsPTPiEveu7EWNyDfxscwi6JEt9xdB272LFqlXBCklo4LemHcjfR7oHKm2pKYuXnYtHs09956aVNud7byDgi+NGeeLdWwTJy1mPcFccRMO6nMAScE=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1712555799; c=relaxed/simple;
+	bh=+ZnrNv4vW5/x1rpaIq+iT7fbeNGAlBuKr0XPju3wIuM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=BeYTneaCYDOI9zzzalheSPYx9yXwdFY+JB6QP8d/3vPBR/tVfsj/lP/YmvmE1EnzIN+nE1SIV6nRj9jr0DTwXCiBjJTr/IbtZ5vr9JRx/8vYrZ547r1RL8/1uqVV7eUsy6WNEldDwYK4LnfI/bP6aGcAmz1suBu5ywMnWosiPaw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sviIvLK8; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=Sony.onmicrosoft.com header.i=@Sony.onmicrosoft.com header.b="naPG2Vhc"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=U1RS+/QtZMxfYpDJbWa4y0XhBDWuX0Y1LR+bo712cFFJdgpdDju9+RUDM3l1UCBq2pUaeBPJS5buxoThXc3pu0lUp8WAXmWswPz+8i/+rhWnfa5wlzsHQXAPHQERvzQmkNuzD3mr/y4z26BfVtMolpd7PM/PW/97DsAIANEtIooKPi/qUZJV3C5ZDZFmE9RF5SPTN8a/2QzU2JOrqU/M/k0I3xoSBB3Ofe2iumRbEdMim6CBX8P8mFKy9gfD9HfH3nWwFn3+MelijLQm4icI0QXGc/1YjIAmmzs+U8KWp5fF9EA7j3Z9zid/79pXkGGzjqVQEI0XDbdLHdSEl/2cDQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=8kmD/K69K1k1eR6qLLgoNMW8GhJj1vk3TQMPHRuUzGs=;
- b=H6ma8MB9Yfd9eBSoMY3WU8h3l66i/lAO8fP1xpNdF5BgIrRkJpnpvs5KYgD9+GLJseMsUtjLJu4HfxG66I7/a0SosTm3j8hMY6DpvkV3Ce865FBSSslBMZrGJzjstOlFe+kNZhByLQdPotZL4wiCO4HxXsNu/+hmUxOMqwPCZmKHLnLQ9xxAnefCg/0uQjHTJgm6z4wp7ouq94FRCy3FSUeH/F6+WzhK6NsE7y7/naER3HjIQglntkuCG39Pw2cFvFvLOt3jmt2RrGoZc0PQ4tAnd0zyjDIoxyiwOueWb5xQ4Hizh2jZ3odPFQh5lnv/299AlOfP49ttJcrtmMpUZg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=fail (sender ip is
- 121.100.38.198) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=sony.com;
- dmarc=fail (p=none sp=none pct=100) action=none header.from=sony.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Sony.onmicrosoft.com;
- s=selector2-Sony-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=8kmD/K69K1k1eR6qLLgoNMW8GhJj1vk3TQMPHRuUzGs=;
- b=naPG2Vhc0DmYiM58xjSbBoTH52WGQ7PaQkSyPcTP7vIOryldGGA3OWNrqtnTBChoFstTXEmPqWki1gu/59aa2qR7qhMro9p7I7N3rB5IwF8E5933/SsFHbFkZNcg3HG9TwN3eR1ssxjmeLqckJyhoHWX3Yunk7PjQnq2zfQJ1ek=
-Received: from BN9PR03CA0134.namprd03.prod.outlook.com (2603:10b6:408:fe::19)
- by MW4PR13MB5409.namprd13.prod.outlook.com (2603:10b6:303:181::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.46; Mon, 8 Apr
- 2024 05:56:18 +0000
-Received: from BN3PEPF0000B06D.namprd21.prod.outlook.com
- (2603:10b6:408:fe:cafe::f0) by BN9PR03CA0134.outlook.office365.com
- (2603:10b6:408:fe::19) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7452.35 via Frontend
- Transport; Mon, 8 Apr 2024 05:56:17 +0000
-X-MS-Exchange-Authentication-Results: spf=fail (sender IP is 121.100.38.198)
- smtp.mailfrom=sony.com; dkim=none (message not signed)
- header.d=none;dmarc=fail action=none header.from=sony.com;
-Received-SPF: Fail (protection.outlook.com: domain of sony.com does not
- designate 121.100.38.198 as permitted sender)
- receiver=protection.outlook.com; client-ip=121.100.38.198;
- helo=gepdcl09.sg.gdce.sony.com.sg;
-Received: from gepdcl09.sg.gdce.sony.com.sg (121.100.38.198) by
- BN3PEPF0000B06D.mail.protection.outlook.com (10.167.243.72) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.7495.0 via Frontend Transport; Mon, 8 Apr 2024 05:56:16 +0000
-Received: from gepdcl04.s.gdce.sony.com.sg (SGGDCSE1NS08.sony.com.sg [146.215.123.198])
-	by gepdcl09.sg.gdce.sony.com.sg (8.14.7/8.14.4) with ESMTP id 4385s6SK027698;
-	Mon, 8 Apr 2024 13:55:59 +0800
-Received: from mail.sony.com ([43.88.80.246])
-	by gepdcl04.s.gdce.sony.com.sg (8.14.7/8.14.4) with ESMTP id 4385rXmh008417;
-	Mon, 8 Apr 2024 13:53:33 +0800
-Received: by mail.sony.com (Postfix, from userid 1001)
-	id A98AF1D804D2; Mon,  8 Apr 2024 11:23:32 +0530 (IST)
-Date: Mon, 8 Apr 2024 11:23:32 +0530
-From: Sreenath Vijayan <sreenath.vijayan@sony.com>
-To: pmladek@suse.com, john.ogness@linutronix.de, corbet@lwn.net,
-        gregkh@linuxfoundation.org, jirislaby@kernel.org
-Cc: rdunlap@infradead.org, rostedt@goodmis.org, senozhatsky@chromium.org,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-serial@vger.kernel.org, taichi.shimoyashiki@sony.com,
-        daniel.palmer@sony.com, anandakumar.balasubramaniam@sony.com
-Subject: Re: [PATCH v6 2/2] tty/sysrq: Replay kernel log messages on consoles
- via sysrq
-Message-ID: <ZhOGXGwGTWK5JVuU@sreenath.vijayan@sony.com>
-References: <cover.1710220326.git.sreenath.vijayan@sony.com>
- <cc3b9b1aae60a236c6aed1dc7b0ffa2c7cd1f183.1710220326.git.sreenath.vijayan@sony.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sviIvLK8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 49F46C433F1;
+	Mon,  8 Apr 2024 05:56:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1712555799;
+	bh=+ZnrNv4vW5/x1rpaIq+iT7fbeNGAlBuKr0XPju3wIuM=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=sviIvLK8dz4OGlOKa/TN9AmSCVEndDvBQFxaxRE5zVXefgoUOyLiTcPyd9jxJJ0LW
+	 omE0FJC9OFIyTxZUWWumXNkhYXmmsnhecovJw8PRzwICCVNt3BtRm7BjWQNT0ZWtdb
+	 Asft9gNS12Guviz6TpHxs7l0D7uiuzQ7wkJ2WaZa0hBP5M/iNZz57GNB964n3z3W83
+	 wz3JnIXGMb9JHBqWeVR1BsKnOYCuP/HR2LZn/KGJy1ZuD85JO6XiS/kAWylsWe5oYH
+	 Mt4gvr4L8fYsH+UyUUkqE4dFuRaY2S71lc1iq2TjIJh3d/L9v9VS5vVNJsQPMrdOCY
+	 iwdv2o/Y9yenw==
+Message-ID: <67ca18b4-0904-41e4-8218-ecb2016d532d@kernel.org>
+Date: Mon, 8 Apr 2024 07:56:27 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cc3b9b1aae60a236c6aed1dc7b0ffa2c7cd1f183.1710220326.git.sreenath.vijayan@sony.com>
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BN3PEPF0000B06D:EE_|MW4PR13MB5409:EE_
-X-MS-Office365-Filtering-Correlation-Id: e08d2a49-c493-433b-22b4-08dc57909b84
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	MA2W6rknB4Vlp6hDaZcNyAaEndR6h22VH1afjedTIKuc8GzgBIIwKi1eRtMVS7996d339eRjH8gxIMu7pmueOlCiB6LlpTG08okVLU79PpApLJzn3WLwL9xqYIXOJlSfsfyckmyrJKqUaZaKvOP/0/DKbhrcsDFPf1EPiVU60BVvosesRIKksObFcPoc6CZ3hf3flVoeg0Dtoo2TBJtUSXYz9ubeEStjrfYELq4JpC7EnqjvdlZGZq4s83C6WkdvOlWX4Dos41uwOmMTApTLBewchgWtM+CCCfZ2BW8qnbABzwwUCyV5qXiBU7uWsVmkMvm7zNROWg1Ym7IZ0BMRLwiuZSdD58fhkOnDhtur64xIDHetx1RavbA8e+hqgNMg1w53mppuSweyNRcbvdcvEP4+ljDUGIjkgW/L9od+qaVGdZ7lJRKF5PE8T6zP8cH0p9XYbdEgobMstp//Kjw7QcrQjtr8iUIyURzHoopOPDJ2Q2TtrqQ4CQ/jVti4eg6F94ZwW99CiKMeIPdWCI8EjKZXXXpY+4anEolLDO6hyJHtwJtZ+Rkzq3E6UfHfwxkRJuCXZmpu7DCKeChrAf5kbGRUnkCzf1fM/WYj2moNDeLya6fP5x894D2aCM+B9q3f35CeqEYDxkE3XHyMUTSvKj/HxmklVOMA+G1711QFQNcyigbuJkhpohyx3NJ96aGWyeyF/62OtYqc3oVtZHSudF0IkxYEe3uwSC35SA5PhGCMntjnWh8vlxI9crGPNIjp
-X-Forefront-Antispam-Report:
-	CIP:121.100.38.198;CTRY:SG;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:gepdcl09.sg.gdce.sony.com.sg;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(1800799015)(36860700004)(376005)(82310400014);DIR:OUT;SFP:1101;
-X-OriginatorOrg: sony.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Apr 2024 05:56:16.8303
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: e08d2a49-c493-433b-22b4-08dc57909b84
-X-MS-Exchange-CrossTenant-Id: 66c65d8a-9158-4521-a2d8-664963db48e4
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=66c65d8a-9158-4521-a2d8-664963db48e4;Ip=[121.100.38.198];Helo=[gepdcl09.sg.gdce.sony.com.sg]
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: TreatMessagesAsInternal-BN3PEPF0000B06D.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR13MB5409
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RESEND v3 0/2] Add support for QCM6490 and QCS6490
+To: Mohammad Rafi Shaik <quic_mohs@quicinc.com>,
+ Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+ Banajit Goswami <bgoswami@quicinc.com>, Liam Girdwood <lgirdwood@gmail.com>,
+ Mark Brown <broonie@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Jaroslav Kysela <perex@perex.cz>,
+ Takashi Iwai <tiwai@suse.com>
+Cc: linux-arm-msm@vger.kernel.org, alsa-devel@alsa-project.org,
+ linux-sound@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, quic_rohkumar@quicinc.com
+References: <20240408042331.403103-1-quic_mohs@quicinc.com>
+Content-Language: en-US
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <20240408042331.403103-1-quic_mohs@quicinc.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Wed, Mar 13, 2024 at 03:52:52PM +0530, Sreenath Vijayan wrote:
-> When terminal is unresponsive, one cannot use dmesg to view
-> the printk ring buffer messages. Also, syslog services may be
-> disabled, especially on embedded systems, to check the messages
-> after a reboot. In this scenario, replay the messages in printk
-> ring buffer on consoles via sysrq by pressing sysrq+R.
+On 08/04/2024 06:23, Mohammad Rafi Shaik wrote:
+> This patchset adds support for sound card on Qualcomm QCM6490 IDP and
+> QCS6490 RB3Gen2 boards.
 > 
-> The console loglevel will determine which all kernel log messages
-> are displayed. The messages will be displayed only when
-> console_trylock() succeeds. Users could repeat the sysrq key when
-> it fails. If the owner of console subsystem lock is stuck,
-> repeating the key won't work.
+> Changes since v2:
+> 	- Modify qcm6490 compatible name as qcm6490-idp. Suggested by Dmitry
 > 
-> Suggested-by: Petr Mladek <pmladek@suse.com>
-> Signed-off-by: Shimoyashiki Taichi <taichi.shimoyashiki@sony.com>
-> Reviewed-by: John Ogness <john.ogness@linutronix.de>
-> Signed-off-by: Sreenath Vijayan <sreenath.vijayan@sony.com>
-> ---
->  Documentation/admin-guide/sysrq.rst |  9 +++++++++
->  drivers/tty/sysrq.c                 | 13 ++++++++++++-
->  2 files changed, 21 insertions(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/admin-guide/sysrq.rst b/Documentation/admin-guide/sysrq.rst
-> index 2f2e5bd440f9..a85b3384d1e7 100644
-> --- a/Documentation/admin-guide/sysrq.rst
-> +++ b/Documentation/admin-guide/sysrq.rst
-> @@ -161,6 +161,8 @@ Command	    Function
->              will be printed to your console. (``0``, for example would make
->              it so that only emergency messages like PANICs or OOPSes would
->              make it to your console.)
-> +
-> +``R``	    Replay the kernel log messages on consoles.
->  =========== ===================================================================
->  
->  Okay, so what can I use them for?
-> @@ -211,6 +213,13 @@ processes.
->  "just thaw ``it(j)``" is useful if your system becomes unresponsive due to a
->  frozen (probably root) filesystem via the FIFREEZE ioctl.
->  
-> +``Replay logs(R)`` is useful to view the kernel log messages when system is hung
-> +or you are not able to use dmesg command to view the messages in printk buffer.
-> +User may have to press the key combination multiple times if console system is
-> +busy. If it is completely locked up, then messages won't be printed. Output
-> +messages depend on current console loglevel, which can be modified using
-> +sysrq[0-9] (see above).
-> +
->  Sometimes SysRq seems to get 'stuck' after using it, what can I do?
->  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
->  
-> diff --git a/drivers/tty/sysrq.c b/drivers/tty/sysrq.c
-> index 02217e3c916b..e5974b8239c9 100644
-> --- a/drivers/tty/sysrq.c
-> +++ b/drivers/tty/sysrq.c
-> @@ -450,6 +450,17 @@ static const struct sysrq_key_op sysrq_unrt_op = {
->  	.enable_mask	= SYSRQ_ENABLE_RTNICE,
->  };
->  
-> +static void sysrq_handle_replay_logs(u8 key)
-> +{
-> +	console_replay_all();
-> +}
-> +static struct sysrq_key_op sysrq_replay_logs_op = {
-> +	.handler        = sysrq_handle_replay_logs,
-> +	.help_msg       = "replay-kernel-logs(R)",
-> +	.action_msg     = "Replay kernel logs on consoles",
-> +	.enable_mask    = SYSRQ_ENABLE_DUMP,
-> +};
-> +
->  /* Key Operations table and lock */
->  static DEFINE_SPINLOCK(sysrq_key_table_lock);
->  
-> @@ -519,7 +530,7 @@ static const struct sysrq_key_op *sysrq_key_table[62] = {
->  	NULL,				/* O */
->  	NULL,				/* P */
->  	NULL,				/* Q */
-> -	NULL,				/* R */
-> +	&sysrq_replay_logs_op,		/* R */
->  	NULL,				/* S */
->  	NULL,				/* T */
->  	NULL,				/* U */
-> -- 
-> 2.25.1
+> Changes since v1:
+> 	- Use existing sc8280xp machine driver instead of separate driver.
+> 	- Modify qcs6490 compatible name as qcs6490-rb3gen2.
 > 
 
-Hi,
+Why are you resending 15 minutes after previous round?
 
-Kindly let me know if there are any review comments for the above changes.
+Best regards,
+Krzysztof
 
-Regards,
-Sreenath
