@@ -1,152 +1,141 @@
-Received: from mail-io1-f70.google.com (mail-io1-f70.google.com [209.85.166.70])
+Received: from mail-il1-f199.google.com (mail-il1-f199.google.com [209.85.166.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97948383BF
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC83438DF9
 	for <linux-kernel@vger.kernel.org>; Mon,  8 Apr 2024 08:26:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.70
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712564779; cv=none; b=LnADyD+xF6P3gx20KC5nUwwhbgjcy0V3ijXGOBm+nanYHA3+/t0iI+cWIYLQdDw9pPnGZRy5rr4qWrryAudjnpm+9PdqvYTUL9u42y+43YY53dqMOFD17E2GNFvvHT7NIwz6E/Z1VHCaZg6vGPTut59wIT8Y4bvK+WTu2xjrGgA=
+	t=1712564779; cv=none; b=t4MD5/3G0OuRDpRrXO4aqlDCStV5xJPmlC7RIXnavZJ8BmOrnTicnWgx93F1TAAw77ufraxd+IGVPdglEAvDREao0s/1KF9Kbd1YBfoayx4NiNX8+nLIeoJbo1JUJRQVSpuZJUHSPAaIcmgpkeBg5S7tNzh166f+Um4o8Ea1Qbg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1712564779; c=relaxed/simple;
-	bh=ahM4sKjAO5edlda9Nas7d9FHNATVhvUe8SVagNj7Ljc=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=eB3K9lcLashrw3jKUt+gO1m+VIkqgUf7MT57fDZVUTKac5EL9ByJ6/3rLtJGkSFUl4Dz9iDjqWVMhfIopvts/vlTlkYtG6pCQLA8KGSmqBUTjL23FzjRluwu+PQmiM7B+bG5RGdR05rl8pc+FYU4d261Ypj6XKQIdOc88Fwtpy8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.70
+	bh=/Jtg+NeRPMsFlE0QQGjsP4QoCICP4TGVEmqGhuOhyJE=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=PrAkmSlL3Uy1CCHV9bnWlyrb7FPMU5dQdmIXar9hBqP5/E0uy3Xo1UzUfFJQd8ZKnOF9svFJRQbnv0/bXUGBcp7GcKTHwTVKkkKyRDo89SaPjWMGdgS/FCw3K2jXiGQLjhKqHW/1cO//isdvgpdkfhbDXkGAHiEj/NtiIMGwfFI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.199
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f70.google.com with SMTP id ca18e2360f4ac-7d5db4db530so155006639f.3
+Received: by mail-il1-f199.google.com with SMTP id e9e14a558f8ab-36a194c4d91so14824795ab.2
         for <linux-kernel@vger.kernel.org>; Mon, 08 Apr 2024 01:26:17 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712564776; x=1713169576;
+        d=1e100.net; s=20230601; t=1712564777; x=1713169577;
         h=to:from:subject:message-id:date:mime-version:x-gm-message-state
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=LfdopbNRnLcAIOo/lZmMzRZy7zUBvqfghCeWaQ4eHOc=;
-        b=qIZ4Pz1PWGE1273+zNW1Qc3gh6oNmDohV0E00Vyy+HlSICLpXSThjzL93E5igcSCKt
-         bz7VTd+STz6h4St4Plt5i3s9smnCqKmshyBBR46zeY24Lg5if6cHtkgGSuCC438W3ssk
-         38wSIMFGiIY5pVK9PVy9/kfRhvD9s/LOGol7AVSH2q1K2vI05THdgiYp7jUBmSnt2RhK
-         2QuMGaK6lrqFycyAdQJ86Ko6XratXGXe/ZxhAwkqkO3JK+iRJ9+yRAqQq4LcuNn4TMFW
-         w60+zyPAs3K8FV3P+nX3sRCKi8/WWkusb77NBIlsHBH9/NQglKB1tCTZmRXkQrNIaU4V
-         BRhw==
-X-Forwarded-Encrypted: i=1; AJvYcCU6mBNnY98+bNmcQAE6QHeh3SEmmzc85ajFh9Tnpz6PcKFz7fT81OzaYN61H4q3IotB7xlRAxVFxybLis6lsYtBv+pqrBmGQOwg9mDx
-X-Gm-Message-State: AOJu0Yzkreo7qoeobkRVuYnkj41vagMbRL7zqrEfncNM2+iXGVxQ8FzH
-	8J5ngbE2tbmqiAuZVHv21EQmXsrMnzpyOBKJyrCYyha2jHPvuh74QGNxfjzuFxFqqV1Fwn4vif3
-	/mD26dX5HvUqIcSLONcRcu1DyEvCJg5e9ezXT23yguP9cnB8hUcXXO9o=
-X-Google-Smtp-Source: AGHT+IEpeVW55jmEl2YOLeVKfr7DvxEny6izV9a/c9NTXptaDyenFLwYqqno/aa2269MRFFfRh58WqOwclGdY8YNj9gpkev6O3Re
+        bh=jpwnnhL0X5X253cB4zSmLnXn1GULv9cGLQ5C9RbRTj8=;
+        b=u7e9U7fRx1QBSA+0e9myEJ+mvMSawFk/ozSLpEwFIaNMaqASR6iC/Msgc9V4Tlj6y1
+         +5khz2OmtyZwlK8Um8enxwaGDQhYVssH7u3h/NoDkq2QTgUKLRy4UBerzCFp8WbVIO9G
+         qBxn/5knmEtbAoNGOg5Esal8Sv7yUqeWDys04tFyBgNPn/O4sCeLN2NJdkK7XlxXwMw6
+         UBEPxBeQKTd1Bl/uijOmdhf6pS3VBs1Gh2535CPgAPMvKenWW8FA8EQhhiD/kJaSEnYw
+         8KVMCISyvJrm34LLDBo6lNkAKyZxdL/2cdDW9F9ruNV+8vQ9dUSWCPAOsR2uSkvQHjiJ
+         N16g==
+X-Forwarded-Encrypted: i=1; AJvYcCXig1nAwL1vVPguBjqyMf5wJhLNppJPTp9J1lXRZYF1r0I5nQtYxmow8OEnS7Uj6+WsfMhHqc/pIOziKk5z7urvqfmgmmqoimaP06aD
+X-Gm-Message-State: AOJu0Yz1w34fYv7vG+AnOsnODD4pXeDVCsvOzPq90o0gce665Hyibk1k
+	hh5tH97X2knSUVEP9CsWjYjgnq46z233SaZJNGDFlTw4mgj681DtG4wSjmJT1TqaT73vlWts4Kp
+	E4BEa9+pjBQjH3vgd0FxJMZuHWcb0cX8ANdCY0HPCCGkJjxtHe+TxwsQ=
+X-Google-Smtp-Source: AGHT+IHNYmesH17RC4hBVq4RhTEaAwgh3U3TO/yO0EHYxbE0BSQhMEvihQ2J76h92zaR3+LhiHraj/1fC15O1XnIGJHFLYfBYOXU
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:1a86:b0:36a:2a29:5b46 with SMTP id
- k6-20020a056e021a8600b0036a2a295b46mr43661ilv.5.1712564776816; Mon, 08 Apr
- 2024 01:26:16 -0700 (PDT)
-Date: Mon, 08 Apr 2024 01:26:16 -0700
+X-Received: by 2002:a92:c54c:0:b0:36a:23d5:e371 with SMTP id
+ a12-20020a92c54c000000b0036a23d5e371mr186634ilj.6.1712564777018; Mon, 08 Apr
+ 2024 01:26:17 -0700 (PDT)
+Date: Mon, 08 Apr 2024 01:26:17 -0700
 X-Google-Appengine-App-Id: s~syzkaller
 X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000002d631f0615918f1e@google.com>
-Subject: [syzbot] [fs?] [io-uring?] general protection fault in __ep_remove
-From: syzbot <syzbot+045b454ab35fd82a35fb@syzkaller.appspotmail.com>
-To: axboe@kernel.dk, brauner@kernel.org, io-uring@vger.kernel.org, 
-	jack@suse.cz, linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk
+Message-ID: <000000000000307a8e0615918f2b@google.com>
+Subject: [syzbot] [ntfs3?] WARNING in attr_data_get_block (4)
+From: syzbot <syzbot+8e034d7422d389827720@syzkaller.appspotmail.com>
+To: almaz.alexandrovich@paragon-software.com, linux-fsdevel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, ntfs3@lists.linux.dev, 
+	syzkaller-bugs@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"
 
 Hello,
 
 syzbot found the following issue on:
 
-HEAD commit:    480e035fc4c7 Merge tag 'drm-next-2024-03-13' of https://gi..
+HEAD commit:    fe46a7dd189e Merge tag 'sound-6.9-rc1' of git://git.kernel..
 git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=15f55413180000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=1e5b814e91787669
-dashboard link: https://syzkaller.appspot.com/bug?extid=045b454ab35fd82a35fb
-compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=101db623180000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=10801175180000
+console+strace: https://syzkaller.appspot.com/x/log.txt?x=10fbdda1180000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=1a07d5da4eb21586
+dashboard link: https://syzkaller.appspot.com/bug?extid=8e034d7422d389827720
+compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=171bf3a9180000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1084f189180000
 
 Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/5f73b6ef963d/disk-480e035f.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/46c949396aad/vmlinux-480e035f.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/e3b4d0f5a5f8/bzImage-480e035f.xz
+disk image: https://storage.googleapis.com/syzbot-assets/b42ab0fd4947/disk-fe46a7dd.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/b8a6e7231930/vmlinux-fe46a7dd.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/4fbf3e4ce6f8/bzImage-fe46a7dd.xz
+mounted in repro: https://storage.googleapis.com/syzbot-assets/7a991be8b13a/mount_0.gz
 
 IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+045b454ab35fd82a35fb@syzkaller.appspotmail.com
+Reported-by: syzbot+8e034d7422d389827720@syzkaller.appspotmail.com
 
-general protection fault, probably for non-canonical address 0xdffffc0000000000: 0000 [#1] PREEMPT SMP KASAN PTI
-KASAN: null-ptr-deref in range [0x0000000000000000-0x0000000000000007]
-CPU: 0 PID: 5075 Comm: syz-executor119 Not tainted 6.8.0-syzkaller-08073-g480e035fc4c7 #0
+R13: 00007ffd11b1eed8 R14: 431bde82d7b634db R15: 00007fad9422c03b
+ </TASK>
+------------[ cut here ]------------
+DEBUG_RWSEMS_WARN_ON(sem->magic != sem): count = 0x100, magic = 0x0, owner = 0xffff888022b61e01, curr 0xffff888022b61e00, list not empty
+WARNING: CPU: 0 PID: 5077 at kernel/locking/rwsem.c:1342 __up_read+0x508/0x760 kernel/locking/rwsem.c:1342
+Modules linked in:
+CPU: 0 PID: 5077 Comm: syz-executor179 Not tainted 6.8.0-syzkaller-08951-gfe46a7dd189e #0
 Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 03/27/2024
-RIP: 0010:__ep_remove+0x13a/0x780 fs/eventpoll.c:825
-Code: 89 e7 49 c1 ef 03 41 80 3c 2f 00 74 08 4c 89 e7 e8 8b 81 d9 ff 4d 8b 34 24 4c 89 f0 48 c1 e8 03 48 b9 00 00 00 00 00 fc ff df <80> 3c 08 00 74 08 4c 89 f7 e8 68 81 d9 ff 49 8b 1e 48 8b 04 24 48
-RSP: 0018:ffffc90003b6fa78 EFLAGS: 00010246
-RAX: 0000000000000000 RBX: 0000000000000001 RCX: dffffc0000000000
-RDX: ffff88807a310000 RSI: 0000000000000001 RDI: 0000000000000000
-RBP: dffffc0000000000 R08: ffffffff821ec2a4 R09: fffff5200076df40
-R10: dffffc0000000000 R11: fffff5200076df40 R12: ffff88802916cbb8
-R13: ffff88802916ca00 R14: 0000000000000000 R15: 1ffff1100522d977
-FS:  00007f034c6ff6c0(0000) GS:ffff8880b9400000(0000) knlGS:0000000000000000
+RIP: 0010:__up_read+0x508/0x760 kernel/locking/rwsem.c:1342
+Code: 24 10 80 3c 02 00 0f 85 21 02 00 00 48 8b 13 41 57 48 c7 c6 a0 bf 0c 8b 48 c7 c7 e0 bf 0c 8b 4c 8b 4c 24 08 e8 39 9a e5 ff 90 <0f> 0b 90 90 5f e9 c3 fe ff ff c6 05 2c 8a 1d 0e 01 90 4c 8d 7b 58
+RSP: 0018:ffffc900043c6338 EFLAGS: 00010286
+RAX: 0000000000000000 RBX: ffff8880792208a0 RCX: ffffffff8150f3e9
+RDX: ffff888022b61e00 RSI: ffffffff8150f3f6 RDI: 0000000000000001
+RBP: ffffffff8f9f76b4 R08: 0000000000000001 R09: 0000000000000000
+R10: 0000000000000001 R11: 0000000000000001 R12: ffff8880792208a8
+R13: 1ffff92000878c6b R14: ffff888079220908 R15: ffffffff8b0cbf60
+FS:  00005555685f1380(0000) GS:ffff8880b9400000(0000) knlGS:0000000000000000
 CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000000020000004 CR3: 00000000775ec000 CR4: 00000000003506f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+CR2: 00007fad9427a100 CR3: 0000000078f48000 CR4: 0000000000350ef0
 Call Trace:
  <TASK>
- eventpoll_release_file+0xdb/0x1c0 fs/eventpoll.c:1071
- eventpoll_release include/linux/eventpoll.h:53 [inline]
- __fput+0x6d7/0x8a0 fs/file_table.c:413
- task_work_run+0x24f/0x310 kernel/task_work.c:180
- get_signal+0x1673/0x1850 kernel/signal.c:2683
- arch_do_signal_or_restart+0x96/0x860 arch/x86/kernel/signal.c:310
- exit_to_user_mode_loop kernel/entry/common.c:105 [inline]
- exit_to_user_mode_prepare include/linux/entry-common.h:328 [inline]
- __syscall_exit_to_user_mode_work kernel/entry/common.c:201 [inline]
- syscall_exit_to_user_mode+0xc9/0x360 kernel/entry/common.c:212
- do_syscall_64+0x10a/0x240 arch/x86/entry/common.c:89
+ attr_data_get_block+0x1f9/0x1b70 fs/ntfs3/attrib.c:905
+ ntfs_get_block_vbo+0x288/0xec0 fs/ntfs3/inode.c:587
+ do_mpage_readpage+0x663/0x17c0 fs/mpage.c:232
+ mpage_readahead+0x34d/0x590 fs/mpage.c:381
+ ntfs_readahead+0x1f7/0x250 fs/ntfs3/inode.c:755
+ read_pages+0x1ab/0xda0 mm/readahead.c:160
+ page_cache_ra_unbounded+0x455/0x5f0 mm/readahead.c:269
+ do_page_cache_ra mm/readahead.c:299 [inline]
+ page_cache_ra_order+0x7b7/0xa70 mm/readahead.c:544
+ ondemand_readahead+0x520/0x1140 mm/readahead.c:666
+ page_cache_sync_ra+0x174/0x1d0 mm/readahead.c:693
+ page_cache_sync_readahead include/linux/pagemap.h:1300 [inline]
+ filemap_get_pages+0xc0f/0x1840 mm/filemap.c:2507
+ filemap_read+0x39b/0xcf0 mm/filemap.c:2603
+ generic_file_read_iter+0x350/0x460 mm/filemap.c:2784
+ ntfs_file_read_iter+0x258/0x330 fs/ntfs3/file.c:768
+ __kernel_read+0x3ef/0xb20 fs/read_write.c:434
+ integrity_kernel_read+0x7f/0xb0 security/integrity/iint.c:28
+ ima_calc_file_hash_tfm+0x2cf/0x3e0 security/integrity/ima/ima_crypto.c:485
+ ima_calc_file_shash security/integrity/ima/ima_crypto.c:516 [inline]
+ ima_calc_file_hash+0x1c6/0x4a0 security/integrity/ima/ima_crypto.c:573
+ ima_collect_measurement+0x7eb/0x950 security/integrity/ima/ima_api.c:291
+ process_measurement+0x11ae/0x2100 security/integrity/ima/ima_main.c:359
+ ima_file_check+0xc1/0x110 security/integrity/ima/ima_main.c:559
+ security_file_post_open+0x70/0xc0 security/security.c:2975
+ do_open fs/namei.c:3644 [inline]
+ path_openat+0x17ad/0x2990 fs/namei.c:3799
+ do_file_open_root+0x2dd/0x5b0 fs/namei.c:3851
+ file_open_root+0x2a8/0x450 fs/open.c:1386
+ do_handle_open+0x3c9/0x5c0 fs/fhandle.c:235
+ do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+ do_syscall_64+0xd5/0x260 arch/x86/entry/common.c:83
  entry_SYSCALL_64_after_hwframe+0x6d/0x75
-RIP: 0033:0x7f034c84c059
-Code: 28 00 00 00 75 05 48 83 c4 28 c3 e8 b1 1f 00 00 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b0 ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007f034c6ff178 EFLAGS: 00000246 ORIG_RAX: 00000000000000ca
-RAX: fffffffffffffe00 RBX: 00007f034c8f0038 RCX: 00007f034c84c059
-RDX: 0000000000000000 RSI: 0000000000000080 RDI: 00007f034c8f0038
-RBP: 00007f034c8f0030 R08: 00007f034c6ff6c0 R09: 00007f034c6ff6c0
-R10: 0000000000000000 R11: 0000000000000246 R12: 00007f034c8f003c
-R13: 0000000000000002 R14: 00007f034c9ffc40 R15: 00007f034c9ffd28
+RIP: 0033:0x7fad941e3b19
+Code: 28 00 00 00 75 05 48 83 c4 28 c3 e8 f1 17 00 00 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b8 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007ffd11b1ec88 EFLAGS: 00000246 ORIG_RAX: 0000000000000130
+RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 00007fad941e3b19
+RDX: 0000000000000000 RSI: 0000000020000240 RDI: 0000000000000005
+RBP: 00007fad942765f0 R08: 00005555685f24c0 R09: 00005555685f24c0
+R10: 00005555685f24c0 R11: 0000000000000246 R12: 00007ffd11b1ecb0
+R13: 00007ffd11b1eed8 R14: 431bde82d7b634db R15: 00007fad9422c03b
  </TASK>
-Modules linked in:
----[ end trace 0000000000000000 ]---
-RIP: 0010:__ep_remove+0x13a/0x780 fs/eventpoll.c:825
-Code: 89 e7 49 c1 ef 03 41 80 3c 2f 00 74 08 4c 89 e7 e8 8b 81 d9 ff 4d 8b 34 24 4c 89 f0 48 c1 e8 03 48 b9 00 00 00 00 00 fc ff df <80> 3c 08 00 74 08 4c 89 f7 e8 68 81 d9 ff 49 8b 1e 48 8b 04 24 48
-RSP: 0018:ffffc90003b6fa78 EFLAGS: 00010246
-RAX: 0000000000000000 RBX: 0000000000000001 RCX: dffffc0000000000
-RDX: ffff88807a310000 RSI: 0000000000000001 RDI: 0000000000000000
-RBP: dffffc0000000000 R08: ffffffff821ec2a4 R09: fffff5200076df40
-R10: dffffc0000000000 R11: fffff5200076df40 R12: ffff88802916cbb8
-R13: ffff88802916ca00 R14: 0000000000000000 R15: 1ffff1100522d977
-FS:  00007f034c6ff6c0(0000) GS:ffff8880b9400000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000000020000004 CR3: 00000000775ec000 CR4: 00000000003506f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-----------------
-Code disassembly (best guess):
-   0:	89 e7                	mov    %esp,%edi
-   2:	49 c1 ef 03          	shr    $0x3,%r15
-   6:	41 80 3c 2f 00       	cmpb   $0x0,(%r15,%rbp,1)
-   b:	74 08                	je     0x15
-   d:	4c 89 e7             	mov    %r12,%rdi
-  10:	e8 8b 81 d9 ff       	call   0xffd981a0
-  15:	4d 8b 34 24          	mov    (%r12),%r14
-  19:	4c 89 f0             	mov    %r14,%rax
-  1c:	48 c1 e8 03          	shr    $0x3,%rax
-  20:	48 b9 00 00 00 00 00 	movabs $0xdffffc0000000000,%rcx
-  27:	fc ff df
-* 2a:	80 3c 08 00          	cmpb   $0x0,(%rax,%rcx,1) <-- trapping instruction
-  2e:	74 08                	je     0x38
-  30:	4c 89 f7             	mov    %r14,%rdi
-  33:	e8 68 81 d9 ff       	call   0xffd981a0
-  38:	49 8b 1e             	mov    (%r14),%rbx
-  3b:	48 8b 04 24          	mov    (%rsp),%rax
-  3f:	48                   	rex.W
 
 
 ---
