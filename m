@@ -1,86 +1,75 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9DD87CF1A
-	for <linux-kernel@vger.kernel.org>; Mon,  8 Apr 2024 13:56:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E93C37C6EB
+	for <linux-kernel@vger.kernel.org>; Mon,  8 Apr 2024 13:56:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712584588; cv=none; b=Oyr90x3c+v5XpH/kToGhnkgn2q2QUx1R9NWc/NNMSYtBT1g0fGU64NstqDA4MiiZZLlGg3avi5mjiUoSq2iENje8qnUZyR9Qpr6g0u2PDdhs6EucZgMeYMS3okDZVVhNTnBp/8l46+a2BLONEvpUqpk9sTFQeOwXSy5CfzcJgS0=
+	t=1712584594; cv=none; b=hVrb/8zNnTpytt67DkmyqZNG9tni9h+jFp9fruPvUdSsa6P6SvxwYUF8h7RBje89hWewof3jl39aAtk9r4deYci8fZ+fQaxYPI6dp1tMcpOClp35TwSXKivr11nMTXHen6/XqAUQlPvI92ulA8LwVuhK+vcJIMZaQWXFexpEhMA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712584588; c=relaxed/simple;
-	bh=Sv1lonJMRVR+UVuirFpH2YmZNDikOQMGGjjjY3UJLc4=;
+	s=arc-20240116; t=1712584594; c=relaxed/simple;
+	bh=CNyOF4nJwO4aIlfssFRJtWa0T1dWhKSg7nZbiygaFWY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=s/oP6RAPIWILCyrtsymsBdbHK0FnW8Khj2t9jJw9mpTksvnE5Kjyl3dQrJwxvW8MA5oA7iXyB+COty2EYuCADmypgX0WRuru/llB5V4AgVo8XsThnvhg5FTjGybyaF8QBbU2zzDKwmFWCIHKdDdTFfT740l0k0tMRgMdmz9xpzw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=jSkc+D6j; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=lJQKv2FCC4nSh0fOUuAQkSDjp7sxgeAI13w5lCRwJRnUGBT46EW9bEnz0wG7V9YI42QaYI6tgbBo6q47Ob2+mTLuv1WTx+2WJzS5WY1SGcX1jM9y3mzlCBZyLV4uQVHzmmjiXRJQC8+f8OjlCGh7wWFF4SLNrTfqyc88cyAmRcg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=BdTT+ihN; arc=none smtp.client-ip=209.85.208.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="jSkc+D6j"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1712584586;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=rmNJpHW5Hyb1elegWpLMoq/S1yVvTDK8DJLj5yKd5mI=;
-	b=jSkc+D6jQ67V96JT6DTwSNSLxH1rUBZFARNc5R/BSk3H3V2rn8hWEMn53rcmm7qECEhwzv
-	4DlNbLLRfAPjUgG4ztQxrrxWKNMTWd3TDmrn7o+jk2HQhR30ZhaNTPBH5Cvke1QkWwDuGc
-	aITJkULCtA6UgkkomweJs2wnjLj5alE=
-Received: from mail-ot1-f71.google.com (mail-ot1-f71.google.com
- [209.85.210.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-447-Ww0uSmuPM5GPSWdZCx43uQ-1; Mon, 08 Apr 2024 09:56:24 -0400
-X-MC-Unique: Ww0uSmuPM5GPSWdZCx43uQ-1
-Received: by mail-ot1-f71.google.com with SMTP id 46e09a7af769-6ea10c8093eso129550a34.1
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Apr 2024 06:56:24 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="BdTT+ihN"
+Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-5684db9147dso6005691a12.2
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Apr 2024 06:56:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ventanamicro.com; s=google; t=1712584591; x=1713189391; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=HouYfKm/vbFF+MRwsN8TGC5IOl3e3LWdHM07dIc/WTc=;
+        b=BdTT+ihNesDxnuYtUMnXRMOq9Dq8EY+Dt5vB4IV6IHU+ngdnpT1TJqZEq/PeC74fwi
+         xIA38Y0klZSBLoh2yraYDHcA4FTWyKgolUE7msAoxpA/WlZN78W/3AuuxbXRekvdBDEW
+         6n1Aptr4R5O06byh4B0zj/+RAcoV4UlwNSq98nhk5DYydnLNw00pP6wJbWlo4UZSX42Q
+         qyqlWNRmqmHDD6cU+V7PJjuH8palUZddyfGWTyE5ErK7Yopc8RsNquRj5VKRBX94myIw
+         cpbv2bWrz6dzYSpRf6PKs92fbtiTeFD0xqMoOi46Rt6N87RSfXH0IVRIWm94h6sw17yq
+         nnAA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712584584; x=1713189384;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=rmNJpHW5Hyb1elegWpLMoq/S1yVvTDK8DJLj5yKd5mI=;
-        b=GwrM8F65Y2l6ImNipl2RxaryE838bZQ4pNUw2Wrnl7DmSC/uGsFj1IY16ykwGgokCe
-         b8+slQRTje9d4xkx2vIsBiCJfrYa2N2mI+u/z01VI4aFyHn9tx6+arPItObUBqqi4j4C
-         bccuyfH4AfK8stDbdUvBQEgpZzHfCFvGM62p7+ivOAozgZqvnII4qNEt/KDq5CBFDmuk
-         kFRZzTlovEpM6SpSFTIaOTE6ACUhdS7TrUZ8FCCw0KeYXJsTRn84lKgrmRsFqkVchPyW
-         1uLZllm8aGwRzppWaGo0ksuC7OvlviG502hqYH1OKn7GRoRB1fO0sHgO0iPg6O4l3oF3
-         UTVA==
-X-Gm-Message-State: AOJu0Yye/eu6sWH5Pd7dbbqku26+WhX6rESTKdRZH7pOCC3IhOlbK/WU
-	HVM7pG/2Z67JP6YzhIGEDbhQ54aFnXCAxtjftVFmfr6/3qMS0feiBgnhpSPxEwx5dv2xh19bBFE
-	IGKtKS7lJpxwjrd8BRO+IbVR5k8HM2qPB/tu00MkJwbzyP7wsfbBYhDNTj0Tf1w==
-X-Received: by 2002:a05:6830:a5a:b0:6e7:592:87ab with SMTP id g26-20020a0568300a5a00b006e7059287abmr9702506otu.2.1712584583694;
-        Mon, 08 Apr 2024 06:56:23 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IE/6cZVOu40ZE5XkeceEvB5GWIk5ESL9MdZGK/RmwIM5NG0Lyufyd1ejET8K1FRMeVweFzXgg==
-X-Received: by 2002:a05:6830:a5a:b0:6e7:592:87ab with SMTP id g26-20020a0568300a5a00b006e7059287abmr9702473otu.2.1712584583118;
-        Mon, 08 Apr 2024 06:56:23 -0700 (PDT)
-Received: from x1n ([99.254.121.117])
-        by smtp.gmail.com with ESMTPSA id vw25-20020a05620a565900b0078d63baf516sm1301217qkn.129.2024.04.08.06.56.21
+        d=1e100.net; s=20230601; t=1712584591; x=1713189391;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=HouYfKm/vbFF+MRwsN8TGC5IOl3e3LWdHM07dIc/WTc=;
+        b=NkwyEbx1NB8ZeXgpCCHIwM2/PUomnjrwjBEVdCiJas0pW75HU/3PiPeGTc9n9hDzqC
+         tk00llvp9TBa/jSMHHg9f2V7IZ863+N6abgnHUdbeQSxr8cuua1Wyh8SzooVH+aK1L1T
+         pOs4s+aJoV/reIK+nafm7Q2lh7FKOs6Vo4D62+2KgCD89kirPkw6zrZbiup6gmi0OUJ/
+         3kUvgzaFpauQyt+Q6uKvJznJvKA2pppNN7Lh4I9jalLuRZWXocWtdChAoCHi8yzlqhut
+         wnl0yPZYkKGzV2ef5LTGFUpchMbiVcuDer9ucZM++N4OzE2rHvWiMEBwCFMjtlOrVPvT
+         sKHQ==
+X-Forwarded-Encrypted: i=1; AJvYcCX1VvSF1qqjXnFFRVjcsiZs8+2LJBbDZuhm3Zeute/p/Y3TsLcdIslG90IUIqKNRmZNpTD7sffcKwTwrFel+K5JJG4jAUDrtzk8Jg8C
+X-Gm-Message-State: AOJu0YzUGpjLuHwnhE8CQUqnjtVGNEl+wEmB5YyMrbxi8KZrXpWTOf4j
+	B7RHfh4ld751I9Bu7XS+2pYr/KDag6WGxBbOTNSlMtzmAq6PTMW1YOPr3jctCwQ=
+X-Google-Smtp-Source: AGHT+IFCR6IVjnRfqcicpDUul4U3E/WyEXX7mJYk1JMhoPOsAD3BJiAacEb6ue8OHNcClunSa9X47g==
+X-Received: by 2002:a50:d7dd:0:b0:56e:368c:b09d with SMTP id m29-20020a50d7dd000000b0056e368cb09dmr5287787edj.24.1712584591268;
+        Mon, 08 Apr 2024 06:56:31 -0700 (PDT)
+Received: from localhost (2001-1ae9-1c2-4c00-20f-c6b4-1e57-7965.ip6.tmcz.cz. [2001:1ae9:1c2:4c00:20f:c6b4:1e57:7965])
+        by smtp.gmail.com with ESMTPSA id de26-20020a056402309a00b0056c1cca33bfsm4104247edb.6.2024.04.08.06.56.30
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 08 Apr 2024 06:56:22 -0700 (PDT)
-Date: Mon, 8 Apr 2024 09:56:20 -0400
-From: Peter Xu <peterx@redhat.com>
-To: Paolo Bonzini <pbonzini@redhat.com>
-Cc: linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-	Marc Zyngier <maz@kernel.org>,
-	Oliver Upton <oliver.upton@linux.dev>,
-	Tianrui Zhao <zhaotianrui@loongson.cn>,
-	Bibo Mao <maobibo@loongson.cn>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	Anup Patel <anup@brainfault.org>,
-	Atish Patra <atishp@atishpatra.org>,
-	Sean Christopherson <seanjc@google.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	David Hildenbrand <david@redhat.com>,
-	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
-	loongarch@lists.linux.dev, linux-mips@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org, kvm-riscv@lists.infradead.org,
-	linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	Andrea Arcangeli <aarcange@redhat.com>
-Subject: Re: [PATCH 1/4] KVM: delete .change_pte MMU notifier callback
-Message-ID: <ZhP3hDhe2Qwo9oCL@x1n>
-References: <20240405115815.3226315-1-pbonzini@redhat.com>
- <20240405115815.3226315-2-pbonzini@redhat.com>
+        Mon, 08 Apr 2024 06:56:30 -0700 (PDT)
+Date: Mon, 8 Apr 2024 15:56:29 +0200
+From: Andrew Jones <ajones@ventanamicro.com>
+To: =?utf-8?B?Q2zDqW1lbnQgTMOpZ2Vy?= <cleger@rivosinc.com>
+Cc: Deepak Gupta <debug@rivosinc.com>, Jonathan Corbet <corbet@lwn.net>, 
+	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
+	Albert Ou <aou@eecs.berkeley.edu>, Conor Dooley <conor@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Anup Patel <anup@brainfault.org>, Shuah Khan <shuah@kernel.org>, 
+	Atish Patra <atishp@atishpatra.org>, linux-doc@vger.kernel.org, linux-riscv@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, kvm@vger.kernel.org, 
+	kvm-riscv@lists.infradead.org, linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH 0/5] Add parsing for Zimop ISA extension
+Message-ID: <20240408-8d245caaaeddc6a23e39d6dd@orel>
+References: <20240404103254.1752834-1-cleger@rivosinc.com>
+ <20240405-091c6c174f023d74b434059d@orel>
+ <CAKC1njQ3qQ8mTMoYkhhoGQfRSVtp2Tfd2LjDhAmut7UcW9-bGw@mail.gmail.com>
+ <ddc5555a-3ae8-42e5-a08a-ca5ceaf0bf28@rivosinc.com>
+ <20240408-6c93f3f50b55234f3825ca33@orel>
+ <89d4a24c-db24-487b-8c5c-bdc1fa2d42b4@rivosinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -89,45 +78,90 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20240405115815.3226315-2-pbonzini@redhat.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <89d4a24c-db24-487b-8c5c-bdc1fa2d42b4@rivosinc.com>
 
-On Fri, Apr 05, 2024 at 07:58:12AM -0400, Paolo Bonzini wrote:
-> The .change_pte() MMU notifier callback was intended as an
-> optimization. The original point of it was that KSM could tell KVM to flip
-> its secondary PTE to a new location without having to first zap it. At
-> the time there was also an .invalidate_page() callback; both of them were
-> *not* bracketed by calls to mmu_notifier_invalidate_range_{start,end}(),
-> and .invalidate_page() also doubled as a fallback implementation of
-> .change_pte().
+On Mon, Apr 08, 2024 at 01:19:39PM +0200, Clément Léger wrote:
 > 
-> Later on, however, both callbacks were changed to occur within an
-> invalidate_range_start/end() block.
 > 
-> In the case of .change_pte(), commit 6bdb913f0a70 ("mm: wrap calls to
-> set_pte_at_notify with invalidate_range_start and invalidate_range_end",
-> 2012-10-09) did so to remove the fallback from .invalidate_page() to
-> .change_pte() and allow sleepable .invalidate_page() hooks.
+> On 08/04/2024 13:03, Andrew Jones wrote:
+> > On Mon, Apr 08, 2024 at 10:01:12AM +0200, Clément Léger wrote:
+> >>
+> >>
+> >> On 05/04/2024 19:33, Deepak Gupta wrote:
+> >>> On Fri, Apr 5, 2024 at 8:26 AM Andrew Jones <ajones@ventanamicro.com> wrote:
+> >>>>
+> >>>> On Thu, Apr 04, 2024 at 12:32:46PM +0200, Clément Léger wrote:
+> >>>>> The Zimop ISA extension was ratified recently. This series adds support
+> >>>>> for parsing it from riscv,isa, hwprobe export and kvm support for
+> >>>>> Guest/VM.
+> >>>>
+> >>>> I'm not sure we need this. Zimop by itself isn't useful, so I don't know
+> >>>> if we need to advertise it at all. When an extension comes along that
+> >>>> redefines some MOPs, then we'll advertise that extension, but the fact
+> >>>> Zimop is used for that extension is really just an implementation detail.
+> >>>
+> >>> Only situation I see this can be useful is this:--
+> >>>
+> >>> An implementer, implemented Zimops in CPU solely for the purpose that they can
+> >>> run mainline distro & packages on their hardware and don't want to leverage any
+> >>> feature which are built on top of Zimop.
+> >>
+> >> Yes, the rationale was that some binaries using extensions that overload
+> >> MOPs could still be run. With Zimop exposed, the loader could determine
+> >> if the binary can be executed without potentially crashing. We could
+> >> also let the program run anyway but the execution could potentially
+> >> crash unexpectedly, which IMHO is not really good for the user
+> >> experience nor for debugging. I already think that the segfaults which
+> >> happens when executing binaries that need some missing extension are not
+> >> so easy to debug, so better add more guards.
+> > 
+> > OK. It's only one more extension out of dozens, so I won't complain more,
 > 
-> This however made KVM's usage of the .change_pte() callback completely
-> moot, because KVM unmaps the sPTEs during .invalidate_range_start()
-> and therefore .change_pte() has no hope of finding a sPTE to change.
-> Drop the generic KVM code that dispatches to kvm_set_spte_gfn(), as
-> well as all the architecture specific implementations.
+> No worries, your point *is* valid since I'm not sure yet that the loader
+> will actually do that one day.
+> 
+> BTW, are you aware of any effort to make the elf dynamic loader
+> "smarter" and actually check for needed extensions to be present rather
+> than blindly running the elf and potentially catching SIGILL ?
 
-Paolo,
-
-I may miss a bunch of details here (as I still remember some change_pte
-patches previously on the list..), however not sure whether we considered
-enable it?  Asked because I remember Andrea used to have a custom tree
-maintaining that part:
-
-https://github.com/aagit/aa/commit/c761078df7a77d13ddfaeebe56a0f4bc128b1968
-
-Maybe it can't be enabled for some reason that I overlooked in the current
-tree, or we just decided to not to?
+Jeff Law told me a bit about FMV (function multiversioning). I don't know
+much about this, but, from what he's told me, it sounds like there will be
+an ifunc resolver which invokes hwprobe to determine which variants are
+possible/best to use, so it should be possible to avoid SIGILL by always
+having a basic variant.
 
 Thanks,
+drew
 
--- 
-Peter Xu
-
+> 
+> Thanks,
+> 
+> Clément
+> 
+> > but I was thinking that binaries that use particular extensions would
+> > check for those particular extensions (step 2), rather than Zimop.
+> > 
+> > Thanks,
+> > drew
+> > 
+> >>
+> >>>
+> >>> As an example zicfilp and zicfiss are dependent on zimops. glibc can
+> >>> do following
+> >>>
+> >>> 1) check elf header if binary was compiled with zicfiss and zicfilp,
+> >>> if yes goto step 2, else goto step 6.
+> >>> 2) check if zicfiss/zicfilp is available in hw via hwprobe, if yes
+> >>> goto step 5. else goto step 3
+> >>> 3) check if zimop is available via hwprobe, if yes goto step 6, else goto step 4
+> >>
+> >> I think you meant step 5 rather than step 6.
+> >>
+> >> Clément
+> >>
+> >>> 4) This binary won't be able to run successfully on this platform,
+> >>> issue exit syscall. <-- termination
+> >>> 5) issue prctl to enable shadow stack and landing pad for current task
+> >>> <-- enable feature
+> >>> 6) let the binary run <-- let the binary run because no harm can be done
