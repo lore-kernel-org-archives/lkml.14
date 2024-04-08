@@ -1,140 +1,154 @@
-Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
+Received: from mail-io1-f70.google.com (mail-io1-f70.google.com [209.85.166.70])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1296F149DF4
-	for <linux-kernel@vger.kernel.org>; Mon,  8 Apr 2024 21:56:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 987177E8
+	for <linux-kernel@vger.kernel.org>; Mon,  8 Apr 2024 22:03:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.70
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712613393; cv=none; b=ZtYBRUdd/zOWLRWfz+FoNfLFjB4N1SRLJB9AoeF+eNwXhnpFAMvpq62RH8+FC0Xrv/92PescggVU4uJhiFt+GtbNM5A7t73IQkQcOf+cn9o0m+6gpWFLglK96e5gVz74SLFxapv6wHG01LtJ7UykrJX08ONudwG2zD2tC1MJnJc=
+	t=1712613786; cv=none; b=GW4GPDaaiWeHKuOsR5f60srgVce9wNr/6QC6qGF/EuPSNfT6d2RKAAxhudhDdRlESwjPfPNo7XZgthJUS2Qc29VANVhGfr9GN5LKPoCYidX3sgZBQJ73zWrBZBMR4GZ3NWXuF69njX77gcqP9iSHI2jnXKO2aKMFNvbWwvKuGl0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712613393; c=relaxed/simple;
-	bh=KMgMj5SuCHh7Ha85uQVvUmDrUucgoYhw/hHwBlpvQbY=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=jUx5vnVdkKvXKTqyCqEMCyYkN4PQv7NUszh4iqj0A4gOaXBdqelW11svbuYEspf13O18zhatlnUEoq8XFi+f8p14hlD/ytHv68Mo8lhhz1fN5VW1I+L59PqprD37QMKGaMe25TOOy32VE9fphdb4X6SHcPywhE9/ANiVIoixIwg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=KjlAgZE3; arc=none smtp.client-ip=209.85.219.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="KjlAgZE3"
-Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-dcc4563611cso7315378276.3
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Apr 2024 14:56:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1712613391; x=1713218191; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=0+YtI06tP7BJVW9G+3zSEn/HDI9HVvJWqFii9XPCuXU=;
-        b=KjlAgZE3nlz98x0q293PDPdRhk+5X5FEXRErDY3u7gM43ADQ/PrutCwp5eZioqhPWy
-         h6k04WR84E+XdEpDKttS2IabfF6FqTWsZN9OU0uY0tSDUjv40UDMuVNi/0N0hZJf3ORt
-         ag9HbWcuCI1ey5sl4jSrgcBusSM7snMLAZVLxYFimTmyAMJityePZwtdWOfGQ96MsymH
-         X/3hykJ/yE89A2G7XGt5onu6nDtLkz13oraQPqUZ6KGSp5bGS6UztbLBrcQh5/e80pBc
-         h7muRYDazcBlqdIFnBVppQad/bCTceGFJ08oCTSuJMicu/vWT2HNqC62Qnl626Yd+NEK
-         nZ0A==
+	s=arc-20240116; t=1712613786; c=relaxed/simple;
+	bh=JP6s7i2VAFiUd/EYR6e9JUfTFhs5g17RVYGi9G44oxI=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=fSQIMyaPdBkIWKVg4zUY9B01AtUka6DiVhyBvPtjgpJy2b2gzqG5ee0i9A7lu237wPAFg5T9Wm3Plji8zlvJYDmhnre3cgvKDRN+DbYtagMhjdZazJ4bgrHzbTIo+vyL7PDu+D+TGk6RV2PnLgYZghXSsxLXEzLApLaZ6/REdkw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.70
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f70.google.com with SMTP id ca18e2360f4ac-7cc7a6a04d9so606541139f.3
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Apr 2024 15:03:04 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712613391; x=1713218191;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=0+YtI06tP7BJVW9G+3zSEn/HDI9HVvJWqFii9XPCuXU=;
-        b=VmjMr0Bze8nUwS8TTizOLyDTWbaPYYCOb0bT80l+EukfTbT2B8S0xWohi4UDngb0Q4
-         azDohd0m+/iau78sJdpz+5l+rCKjKaX8aDKSRLsB9RZTHYBs0mJlrzbbE3eZr5+7KKeO
-         866uNAI3j4GO0V6M6rzISFohJaDmDt808h+WEPbjFgdJkLFTQE5iFdWqsaCD9xStbpmM
-         mkpNrcf+M1MzEs1phdV7SjmUu7PrDk2zmfv9KKF3hsIn7E/BfBCJjEXTM7MkDeO6EJ17
-         +IDCRw/vk3w7TA42jb+Chx18pVjV4gP2gC1vYS2+bIiCU67lboWSFsIVyFtXPSjOUbxd
-         cbgg==
-X-Forwarded-Encrypted: i=1; AJvYcCUOVN8NDE2Z4+9GaycpZHM233yZD9OkpO1/rJ5E8XP2Yz5zFjX5lV8uYlCEZWm08l9u9CAXbFXGh7/ZIvsmOcRGw1Gm3fnVxtSHBMFS
-X-Gm-Message-State: AOJu0YyWoAZZBvM64FctowjU+tJaFFqCpp1iwzSABJcW3Ud+cpI8nQ+t
-	Q7iq4RSkPXL/kSjxzoieKNANMVrYpdwAPHc6C+3hJVPbPMq5T7VNfL7M9UXCutKW4yf5nMKCGbs
-	5QQ==
-X-Google-Smtp-Source: AGHT+IFa/2P8Cih2UGweMY65SGXpak6RdHKhKQJP1InxT1VYZjJvdFlyLiwBH6E9kuck3BIMa7OXlmY5chc=
-X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
- (user=seanjc job=sendgmr) by 2002:a05:6902:188e:b0:dc2:550b:a4f4 with SMTP id
- cj14-20020a056902188e00b00dc2550ba4f4mr3047423ybb.1.1712613391167; Mon, 08
- Apr 2024 14:56:31 -0700 (PDT)
-Date: Mon, 8 Apr 2024 14:56:29 -0700
-In-Reply-To: <44eb0d36-7454-41e7-9a16-ce92a88e568c@paulmck-laptop>
+        d=1e100.net; s=20230601; t=1712613784; x=1713218584;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=IsU/sMnc5XA5zrqfRklHsN/3Qe43gMvrpG8RMn/HvFU=;
+        b=Sj9mjiODRo1oVnbVYs8mxQvKUQBOdu86c0YKpdfSHXn0w/QjrcBjsgDq5lqZAmCF12
+         yEU2+zUVfUauGoX+3P2jK8HSRcVQ3raXq9O235+qRgKAWCozA0Ewpcr+p3/C5+nmXvA+
+         at/dT4kED7qgoIoT5a1Nry+ll24n5p4wuJeXB8TGUPm4jQKWBUg7IS0dYf8Y8ArBsjsg
+         WrNr52Nhw0zny8DMiVIrPrif7TjjVC95qlRuYsszFlPWMC7/b7cP3yHyBUpETnB7Eu8+
+         xvLx0jnmplRIsQYYioWtGKSdL8daQkwyvAeCIK40ShkMJwtv/UjJewGKCcz0E41iYxvm
+         4PKA==
+X-Forwarded-Encrypted: i=1; AJvYcCX2THtn5hUw/ZZ3tWo4n4ozeMCoKrnjMiKbkjMr87ckDewUp/dFnZHvEqegLUqozTPOgbxioDU/V25492QszgkRweaR2yB30Pc1dnD9
+X-Gm-Message-State: AOJu0YzS8sQ4AcJD2o615VFM+xpIsH8YnhllOFmy63Xa9+RKXiJgUiqu
+	tO1qDBXyytrKz8xZ38k5FNyakNbgrfh2abBUb0mlr5hMTJ+zavSDUjL//Y84ZSsUwftK6tn0RJZ
+	CTkd4wROATMZUaqkZy9H2AC/eU2+DUbtCbxl7U1n/XhkVt7YQ6BJY7Yo=
+X-Google-Smtp-Source: AGHT+IEPOHz0i+nN8HqthsqApsGr1SefiMjoA0B/9H3y5BTbULzhEg6xxFL96D9wa7V1QqI3ydnVCjNIsG3KZ2gRXU83iFGadQQI
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20240328171949.743211-1-leobras@redhat.com> <ZgsXRUTj40LmXVS4@google.com>
- <ZhAAg8KNd8qHEGcO@tpad> <ZhAN28BcMsfl4gm-@google.com> <a7398da4-a72c-4933-bb8b-5bc8965d96d0@paulmck-laptop>
- <ZhQmaEXPCqmx1rTW@google.com> <414eaf1e-ca22-43f3-8dfa-0a86f5b127f5@paulmck-laptop>
- <ZhROKK9dEPsNnH4t@google.com> <44eb0d36-7454-41e7-9a16-ce92a88e568c@paulmck-laptop>
-Message-ID: <ZhRoDfoz-YqsGhIB@google.com>
-Subject: Re: [RFC PATCH v1 0/2] Avoid rcu_core() if CPU just left guest vcpu
-From: Sean Christopherson <seanjc@google.com>
-To: "Paul E. McKenney" <paulmck@kernel.org>
-Cc: Marcelo Tosatti <mtosatti@redhat.com>, Leonardo Bras <leobras@redhat.com>, 
-	Paolo Bonzini <pbonzini@redhat.com>, Frederic Weisbecker <frederic@kernel.org>, 
-	Neeraj Upadhyay <quic_neeraju@quicinc.com>, Joel Fernandes <joel@joelfernandes.org>, 
-	Josh Triplett <josh@joshtriplett.org>, Boqun Feng <boqun.feng@gmail.com>, 
-	Steven Rostedt <rostedt@goodmis.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
-	Lai Jiangshan <jiangshanlai@gmail.com>, Zqiang <qiang.zhang1211@gmail.com>, kvm@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, rcu@vger.kernel.org
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+X-Received: by 2002:a05:6638:4115:b0:47e:c165:74dc with SMTP id
+ ay21-20020a056638411500b0047ec16574dcmr585913jab.5.1712613783927; Mon, 08 Apr
+ 2024 15:03:03 -0700 (PDT)
+Date: Mon, 08 Apr 2024 15:03:03 -0700
+In-Reply-To: <877ch7hnxf.fsf@toke.dk>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000003a924406159cf8ee@google.com>
+Subject: Re: [syzbot] [bpf?] [net?] general protection fault in dev_map_enqueue
+From: syzbot <syzbot+af9492708df9797198d6@syzkaller.appspotmail.com>
+To: andrii@kernel.org, ast@kernel.org, bpf@vger.kernel.org, 
+	daniel@iogearbox.net, davem@davemloft.net, eadavis@qq.com, eddyz87@gmail.com, 
+	haoluo@google.com, hawk@kernel.org, john.fastabend@gmail.com, 
+	jolsa@kernel.org, kpsingh@kernel.org, kuba@kernel.org, 
+	linux-kernel@vger.kernel.org, martin.lau@linux.dev, netdev@vger.kernel.org, 
+	sdf@google.com, song@kernel.org, syzkaller-bugs@googlegroups.com, 
+	toke@kernel.org, yonghong.song@linux.dev
+Content-Type: text/plain; charset="UTF-8"
 
-On Mon, Apr 08, 2024, Paul E. McKenney wrote:
-> On Mon, Apr 08, 2024 at 01:06:00PM -0700, Sean Christopherson wrote:
-> > On Mon, Apr 08, 2024, Paul E. McKenney wrote:
-> > > > > > +	if (vcpu->wants_to_run)
-> > > > > > +		context_tracking_guest_start_run_loop();
-> > > > > 
-> > > > > At this point, if this is a nohz_full CPU, it will no longer report
-> > > > > quiescent states until the grace period is at least one second old.
-> > > > 
-> > > > I don't think I follow the "will no longer report quiescent states" issue.  Are
-> > > > you saying that this would prevent guest_context_enter_irqoff() from reporting
-> > > > that the CPU is entering a quiescent state?  If so, that's an issue that would
-> > > > need to be resolved regardless of what heuristic we use to determine whether or
-> > > > not a CPU is likely to enter a KVM guest.
-> > > 
-> > > Please allow me to start over.  Are interrupts disabled at this point,
-> > 
-> > Nope, IRQs are enabled.
-> > 
-> > Oof, I'm glad you asked, because I was going to say that there's one exception,
-> > kvm_sched_in(), which is KVM's notifier for when a preempted task/vCPU is scheduled
-> > back in.  But I forgot that kvm_sched_{in,out}() don't use vcpu_{load,put}(),
-> > i.e. would need explicit calls to context_tracking_guest_{stop,start}_run_loop().
-> > 
-> > > and, if so, will they remain disabled until the transfer of control to
-> > > the guest has become visible to RCU via the context-tracking code?
-> > > 
-> > > Or has the context-tracking code already made the transfer of control
-> > > to the guest visible to RCU?
-> > 
-> > Nope.  The call to __ct_user_enter(CONTEXT_GUEST) or rcu_virt_note_context_switch()
-> > happens later, just before the actual VM-Enter.  And that call does happen with
-> > IRQs disabled (and IRQs stay disabled until the CPU enters the guest).
-> 
-> OK, then we can have difficulties with long-running interrupts hitting
-> this range of code.  It is unfortunately not unheard-of for interrupts
-> plus trailing softirqs to run for tens of seconds, even minutes.
+Hello,
 
-Ah, and if that occurs, *and* KVM is slow to re-enter the guest, then there will
-be a massive lag before the CPU gets back into a quiescent state.
+syzbot has tested the proposed patch but the reproducer is still triggering an issue:
+general protection fault in dev_map_enqueue
 
-> One counter-argument is that that softirq would take scheduling-clock
-> interrupts, and would eventually make rcu_core() run.
+general protection fault, probably for non-canonical address 0xdffffc0000000000: 0000 [#1] PREEMPT SMP KASAN PTI
+KASAN: null-ptr-deref in range [0x0000000000000000-0x0000000000000007]
+CPU: 0 PID: 8787 Comm: syz-executor.0 Not tainted 6.8.0-syzkaller-05236-g443574b03387-dirty #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 03/27/2024
+RIP: 0010:dev_map_enqueue+0x31/0x3e0 kernel/bpf/devmap.c:539
+Code: 41 56 41 55 41 54 53 48 83 ec 18 49 89 d4 49 89 f5 48 89 fd 49 be 00 00 00 00 00 fc ff df e8 a6 42 d8 ff 48 89 e8 48 c1 e8 03 <42> 80 3c 30 00 74 08 48 89 ef e8 10 8a 3b 00 4c 8b 7d 00 48 83 c5
+RSP: 0018:ffffc9000bc1f688 EFLAGS: 00010246
+RAX: 0000000000000000 RBX: 0000000000000000 RCX: ffff888011815a00
+RDX: 0000000000000000 RSI: ffff88802bed7070 RDI: 0000000000000000
+RBP: 0000000000000000 R08: 0000000000000005 R09: ffffffff894ff90e
+R10: 0000000000000004 R11: ffff888011815a00 R12: ffff888022f4a000
+R13: ffff88802bed7070 R14: dffffc0000000000 R15: ffff8880b943c088
+FS:  00007f0b6b2916c0(0000) GS:ffff8880b9400000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007f0b6a5a80c0 CR3: 000000002dad2000 CR4: 00000000003506f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ <TASK>
+ __xdp_do_redirect_frame net/core/filter.c:4384 [inline]
+ xdp_do_redirect_frame+0x20d/0x4d0 net/core/filter.c:4438
+ xdp_test_run_batch net/bpf/test_run.c:337 [inline]
+ bpf_test_run_xdp_live+0xf0b/0x1f10 net/bpf/test_run.c:385
+ bpf_prog_test_run_xdp+0x813/0x11b0 net/bpf/test_run.c:1268
+ bpf_prog_test_run+0x33a/0x3b0 kernel/bpf/syscall.c:4240
+ __sys_bpf+0x48d/0x810 kernel/bpf/syscall.c:5649
+ __do_sys_bpf kernel/bpf/syscall.c:5738 [inline]
+ __se_sys_bpf kernel/bpf/syscall.c:5736 [inline]
+ __x64_sys_bpf+0x7c/0x90 kernel/bpf/syscall.c:5736
+ do_syscall_64+0xfb/0x240
+ entry_SYSCALL_64_after_hwframe+0x6d/0x75
+RIP: 0033:0x7f0b6a47dda9
+Code: 28 00 00 00 75 05 48 83 c4 28 c3 e8 e1 20 00 00 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b0 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007f0b6b2910c8 EFLAGS: 00000246 ORIG_RAX: 0000000000000141
+RAX: ffffffffffffffda RBX: 00007f0b6a5abf80 RCX: 00007f0b6a47dda9
+RDX: 0000000000000050 RSI: 0000000020000240 RDI: 000000000000000a
+RBP: 00007f0b6a4ca47a R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
+R13: 000000000000000b R14: 00007f0b6a5abf80 R15: 00007ffe8c70ed58
+ </TASK>
+Modules linked in:
+---[ end trace 0000000000000000 ]---
+RIP: 0010:dev_map_enqueue+0x31/0x3e0 kernel/bpf/devmap.c:539
+Code: 41 56 41 55 41 54 53 48 83 ec 18 49 89 d4 49 89 f5 48 89 fd 49 be 00 00 00 00 00 fc ff df e8 a6 42 d8 ff 48 89 e8 48 c1 e8 03 <42> 80 3c 30 00 74 08 48 89 ef e8 10 8a 3b 00 4c 8b 7d 00 48 83 c5
+RSP: 0018:ffffc9000bc1f688 EFLAGS: 00010246
+RAX: 0000000000000000 RBX: 0000000000000000 RCX: ffff888011815a00
+RDX: 0000000000000000 RSI: ffff88802bed7070 RDI: 0000000000000000
+RBP: 0000000000000000 R08: 0000000000000005 R09: ffffffff894ff90e
+R10: 0000000000000004 R11: ffff888011815a00 R12: ffff888022f4a000
+R13: ffff88802bed7070 R14: dffffc0000000000 R15: ffff8880b943c088
+FS:  00007f0b6b2916c0(0000) GS:ffff8880b9400000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007f0b6a5a80c0 CR3: 000000002dad2000 CR4: 00000000003506f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+----------------
+Code disassembly (best guess):
+   0:	41 56                	push   %r14
+   2:	41 55                	push   %r13
+   4:	41 54                	push   %r12
+   6:	53                   	push   %rbx
+   7:	48 83 ec 18          	sub    $0x18,%rsp
+   b:	49 89 d4             	mov    %rdx,%r12
+   e:	49 89 f5             	mov    %rsi,%r13
+  11:	48 89 fd             	mov    %rdi,%rbp
+  14:	49 be 00 00 00 00 00 	movabs $0xdffffc0000000000,%r14
+  1b:	fc ff df
+  1e:	e8 a6 42 d8 ff       	call   0xffd842c9
+  23:	48 89 e8             	mov    %rbp,%rax
+  26:	48 c1 e8 03          	shr    $0x3,%rax
+* 2a:	42 80 3c 30 00       	cmpb   $0x0,(%rax,%r14,1) <-- trapping instruction
+  2f:	74 08                	je     0x39
+  31:	48 89 ef             	mov    %rbp,%rdi
+  34:	e8 10 8a 3b 00       	call   0x3b8a49
+  39:	4c 8b 7d 00          	mov    0x0(%rbp),%r15
+  3d:	48                   	rex.W
+  3e:	83                   	.byte 0x83
+  3f:	c5                   	.byte 0xc5
 
-Considering that this behavior would be unique to nohz_full CPUs, how much
-responsibility does RCU have to ensure a sane setup?  E.g. if a softirq runs for
-multiple seconds on a nohz_full CPU whose primary role is to run a KVM vCPU, then
-whatever real-time workaround the vCPU is running is already doomed.
 
-> But does a rcu_sched_clock_irq() from a guest OS have its "user"
-> argument set?
+Tested on:
 
-No, and it shouldn't, at least not on x86 (I assume other architectures are
-similar, but I don't actually no for sure).
+commit:         443574b0 riscv, bpf: Fix kfunc parameters incompatibil..
+git tree:       https://git.kernel.org/pub/scm/linux/kernel/git/bpf/bpf.git
+console output: https://syzkaller.appspot.com/x/log.txt?x=11ac5323180000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=6fb1be60a193d440
+dashboard link: https://syzkaller.appspot.com/bug?extid=af9492708df9797198d6
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+patch:          https://syzkaller.appspot.com/x/patch.diff?x=154653d3180000
 
-On x86, the IRQ that the kernel sees comes looks like it comes from host kernel
-code.  And on AMD (SVM), the IRQ doesn't just "look" like it came from host kernel,
-the IRQ really does get vectored/handled in the host kernel.  Intel CPUs have a
-performance optimization where the IRQ gets "eaten" as part of the VM-Exit, and
-so KVM synthesizes a stack frame and does a manual CALL to invoke the IRQ handler.
-
-And that's just for IRQs that actually arrive while the guest is running.  IRQs
-arrive while KVM is active, e.g. running its large vcpu_run(), are "pure" host
-IRQs.
