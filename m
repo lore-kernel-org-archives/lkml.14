@@ -1,89 +1,116 @@
-Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 442CD53387
-	for <linux-kernel@vger.kernel.org>; Mon,  8 Apr 2024 08:45:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2B44535B4;
+	Mon,  8 Apr 2024 08:45:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712565920; cv=none; b=uIQSgPNqUe6HQygVPNUCwWtlOwj1wqJzk3KGI9zs6yr9FAon7RB9I78/5k8TtmiLxOCV+2ka05wPzDe2RRODatyV/ckmN3N0jLcxCjXXQrUlRkfPqTmt64+mFJyOwTLUFu0C9ZpUXBTt6FKHxMB87DGtG6j8t4ZDkbeuqhUAmLk=
+	t=1712565923; cv=none; b=X+c3srxOT0idB5EQpJZMCWrSU9s2MIjIMnQXRtGrvsLkB3KNCUSWjq1L/CNLtNCT6fDn63x/MAsKTKe9BGiO2z2BggeYqjnyxjMKZvcl2W0smAHSf8zB3Ch2hbAL4thZ7QhhuZZrFKfloBVWmuyS9RpaeJC+PoFmnC+uweH4Dnc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712565920; c=relaxed/simple;
-	bh=aGK4zhePW20kLwgx/TX6NVWf/ttEsE0V30HlU+WDQjg=;
-	h=From:To:Cc:Subject:Date:Message-Id; b=qnWPgk7izlCcQDRQssXjCFnqtPJEopialnh7w/m3Sykv0m5LYTi0Thi1sdYE8LUUv/jOTvMmEAEeF8Tip9ebkWd2bJBtc8jDa+bgWlTSLJHUKRAxMN0NoBzxSzkvtvGnrDCXbrRVWqZRpQagyGh9FUVp3mTSq0ds52jR/mKH54g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HuXnVE+H; arc=none smtp.client-ip=209.85.214.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1712565923; c=relaxed/simple;
+	bh=nIn/zPewsG9q+wrG7O743ZFUtC6bgOwv5+buBPM+YFQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=EspLQ1jwGVI0ehFb9IIKIvBYZRhUUb44/D9S9cbwBURx4B85YzSVjzH2afYrfmfpOY3CRrrBEW28X5iMW5dxIXhPu5tY0SUDvw53Q8IaoC97mut0qtg5rhu5rsFGSIDPZCVtGVFwBRgtu/gRKqJ3C5AAfGD8u/NlL74oz9p/9IU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=UAVjRcBe; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HuXnVE+H"
-Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-1e41f984d34so5109775ad.1
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Apr 2024 01:45:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1712565918; x=1713170718; darn=vger.kernel.org;
-        h=message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=xKAsQHr+DWmapUhPnpPuusVB9er/x+oNSaWQjeg9mXg=;
-        b=HuXnVE+HE1tYXt/f3kwsV0AtcKmilGOu40wJhNnW/KTsphT3y3Xfh4+vSK0PvG7E50
-         tFyiJgcl1fmM2ay5jVWIUHXzkwqS3+4TdFq/feyV+hcmNr+Cc9teTSKxEoQ535GktgFo
-         nlsnuFvoxVTwicq99V1zAHJAMkkYOheFusOCpQPKzNuHgMXjjNOmENs6RNWL1dsoUge5
-         KkO9sdHHOqA4B65Ko3gmUW2sEn7hnfeQDIYEHn4YNQRs/0Vuq3mEcJONnyTiagl4MTFg
-         bfF3YatxErqd+zGGlGMDXwg0bBHlxjl5Z02UkG/Y9IBcE+pPkd/r0aZZ8iEvBZ/Ceipk
-         z3mQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712565918; x=1713170718;
-        h=message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=xKAsQHr+DWmapUhPnpPuusVB9er/x+oNSaWQjeg9mXg=;
-        b=MzIbQMwKAoG1gM+ddOl5r3pMpZxXBnudN366o+2ZcgqPFwAKIqSR+JDpA4q+xSNmvo
-         rBt4n9jXLowzNBzdKoJFXWLMlFUc4PXvMvhMxys4KiUka/HneZwHr9/tLl4QxURI+jPK
-         IdC2NA1xDIqxagoO0aKDSLmUkI6HpB0Wa3dt8glqExXisVhYuQ2IFTgeQSVUmZ/1K3XQ
-         s/dZ3SeUadNUqKW32rqLyiT7YR6vpjndp3K0IVaFPqdgEoc+hSt4ZCK7kywMyvQVNBoh
-         GmFYYx+E6oEJyVqUTnxDRGy9/AMFR1FA+h+Bz/dM18dl2yLvx0NdGvSOASa6rT5tUW0E
-         8m2g==
-X-Forwarded-Encrypted: i=1; AJvYcCX2r8x22+X6XbLsjzbsJutjStK971+Txwe4AylcbxlQoU6R19p85KKyVmU75ryivrGEBvez/eJ5gTZv9g2LqkUkwn5Dfpfww/HjH4PD
-X-Gm-Message-State: AOJu0YwaDQiEwAJ6GWIoac7ozkSjQ6dI6QNp9NtJPrGZYKyMPpX4P9Rc
-	6JRS6jOjGHtTSnB+8uaR80CKORM20g8L3F69kIq65daEbIydrxFm
-X-Google-Smtp-Source: AGHT+IFghnviN3j//iMfJqIQlbmSC2kF5vTjuvqRbIeXM5wrdow02zE6yq/U33RQy+fd3wMePMOPTA==
-X-Received: by 2002:a17:902:c946:b0:1e4:1bff:1f6f with SMTP id i6-20020a170902c94600b001e41bff1f6fmr2006867pla.50.1712565918532;
-        Mon, 08 Apr 2024 01:45:18 -0700 (PDT)
-Received: from MSCND1355B05.fareast.nevint.com ([117.128.58.94])
-        by smtp.gmail.com with ESMTPSA id t3-20020a170902e84300b001e3d8c237a2sm4329466plg.260.2024.04.08.01.45.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 08 Apr 2024 01:45:18 -0700 (PDT)
-From: Zqiang <qiang.zhang1211@gmail.com>
-To: tj@kernel.org,
-	jiangshanlai@gmail.com
-Cc: qiang.zhang1211@gmail.com,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] workqueue: Add destroy_work_on_stack() in workqueue_softirq_dead()
-Date: Mon,  8 Apr 2024 16:44:04 +0800
-Message-Id: <20240408084404.31991-1-qiang.zhang1211@gmail.com>
-X-Mailer: git-send-email 2.17.1
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="UAVjRcBe"
+Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 4386dMxB009177;
+	Mon, 8 Apr 2024 08:45:06 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	message-id:date:mime-version:subject:to:cc:references:from
+	:in-reply-to:content-type:content-transfer-encoding; s=
+	qcppdkim1; bh=wkPa/yuRBAbkzPtrxt9b+AV06OSilI8lIKaafg+mXV0=; b=UA
+	VjRcBeGe437/rmaw+JYZDjRpTQO7nPJVgLvp+NP1YzoZ5OVLk1UiFl25iTbAOKsc
+	fSY+kCxaBQ0iaNug+r+R2xrbzHTGfmBun4B6TKYnWk6SvFohYiSf/3TS8grLQDgo
+	941tT7rgXjCGFPtpe9dgtkfskgEZSlY0eKmsWnjsTisxGsgLKusNkznxdzRzTpry
+	J7LH4UF54xRxlpKGnx7h5mhuEfahR+xtF0QacxU+I2BUVjKOB7m16mnbITPbeOw8
+	pU/8uqyD2LXj8Z3/dQ7ShwY///bJ1UimqIF0xwWI/Yvb93o6CFZR+2a/OhiZDRHM
+	SO3VQofAdYgP54lEey1w==
+Received: from nasanppmta02.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3xcbg307e0-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 08 Apr 2024 08:45:06 +0000 (GMT)
+Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
+	by NASANPPMTA02.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 4388j4fo010728
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 8 Apr 2024 08:45:04 GMT
+Received: from [10.216.2.95] (10.80.80.8) by nasanex01c.na.qualcomm.com
+ (10.45.79.139) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Mon, 8 Apr 2024
+ 01:44:58 -0700
+Message-ID: <c2708201-64ae-0e5a-edcc-08b8ad0e999d@quicinc.com>
+Date: Mon, 8 Apr 2024 14:14:52 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.9.1
+Subject: Re: [RESEND v3 0/2] Add support for QCM6490 and QCS6490
+Content-Language: en-US
+To: Krzysztof Kozlowski <krzk@kernel.org>,
+        Srinivas Kandagatla
+	<srinivas.kandagatla@linaro.org>,
+        Banajit Goswami <bgoswami@quicinc.com>,
+        Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
+        "Rob
+ Herring" <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        "Conor
+ Dooley" <conor+dt@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>, Takashi Iwai
+	<tiwai@suse.com>
+CC: <linux-arm-msm@vger.kernel.org>, <alsa-devel@alsa-project.org>,
+        <linux-sound@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <quic_rohkumar@quicinc.com>
+References: <20240408042331.403103-1-quic_mohs@quicinc.com>
+ <67ca18b4-0904-41e4-8218-ecb2016d532d@kernel.org>
+From: Mohammad Rafi Shaik <quic_mohs@quicinc.com>
+In-Reply-To: <67ca18b4-0904-41e4-8218-ecb2016d532d@kernel.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nasanex01c.na.qualcomm.com (10.45.79.139)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: 4T7kCvwu9m1rGFpH5T2dTAgYnEKoJnZb
+X-Proofpoint-GUID: 4T7kCvwu9m1rGFpH5T2dTAgYnEKoJnZb
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-04-08_07,2024-04-05_02,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1011
+ priorityscore=1501 malwarescore=0 phishscore=0 spamscore=0 adultscore=0
+ mlxlogscore=772 impostorscore=0 lowpriorityscore=0 suspectscore=0
+ bulkscore=0 mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2404010003 definitions=main-2404080067
 
-This commit add missed destroy_work_on_stack() operations for
-dead_work.work.
+On 4/8/2024 11:26 AM, Krzysztof Kozlowski wrote:
+> On 08/04/2024 06:23, Mohammad Rafi Shaik wrote:
+>> This patchset adds support for sound card on Qualcomm QCM6490 IDP and
+>> QCS6490 RB3Gen2 boards.
+>>
+>> Changes since v2:
+>> 	- Modify qcm6490 compatible name as qcm6490-idp. Suggested by Dmitry
+>>
+>> Changes since v1:
+>> 	- Use existing sc8280xp machine driver instead of separate driver.
+>> 	- Modify qcs6490 compatible name as qcs6490-rb3gen2.
+>>
+> 
+> Why are you resending 15 minutes after previous round?
+> 
+> Best regards,
+> Krzysztof
+> 
+Found one mistake in cover-letter.
+Instead of qcm6490-idp given qcs6490-idp.
 
-Signed-off-by: Zqiang <qiang.zhang1211@gmail.com>
----
- kernel/workqueue.c | 1 +
- 1 file changed, 1 insertion(+)
+Modified the cover-letter and reposted.
 
-diff --git a/kernel/workqueue.c b/kernel/workqueue.c
-index db004d2180e8..1edb0b06ae7c 100644
---- a/kernel/workqueue.c
-+++ b/kernel/workqueue.c
-@@ -3661,6 +3661,7 @@ void workqueue_softirq_dead(unsigned int cpu)
- 			queue_work(system_bh_wq, &dead_work.work);
- 
- 		wait_for_completion(&dead_work.done);
-+		destroy_work_on_stack(&dead_work.work);
- 	}
- }
- 
--- 
-2.17.1
-
+Thanks & Regards,
+Rafi.
