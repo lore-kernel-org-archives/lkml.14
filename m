@@ -1,259 +1,133 @@
-Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B928512BEA0;
-	Mon,  8 Apr 2024 14:19:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 907C612A14E
+	for <linux-kernel@vger.kernel.org>; Mon,  8 Apr 2024 14:19:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712585965; cv=none; b=j4MQPUj2DJ0eRpNr8xN8X8bJzj9WvePkUeoTNEDPL3xazZgw4vPvtldJcZJuj347P077Ly3tQ3j1KfRD13/eTrjw59c/hmgt6Jt4ykehiazQ6jeVPQVKo7DeBLCkFVa2hKGEke0pDbTHmVm5D9nNs8ZxbjOqYYHZMx8VIfODrTA=
+	t=1712585973; cv=none; b=gfwh4zeNzHfFykjKafiPHwG0+MUDzra7UtgROaHtkjwo7WPEcQ39mqaDYeZ1iGzS6efCdI9ejrtsf2bNzVj4qMalF4vNeXNWi2YaWajQF/6T2iIf0DpC9eZOVcaWCFpuS32B+A/+dXrQ2mAk544bvl4A3LONNbQq+tm/FO/tsxE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712585965; c=relaxed/simple;
-	bh=9Zp8iPX0jQlUJwfcjhF0I+ShRBkh39BZ3ToTtQd5BH0=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=cyk+m9aJMbA5+iUZ5dt3ee4urv9rGhiq2PuUlugEcngC7seGMELwK4Lep8uGPu3HqKuTbhoo1yuxf/YyYujt0AbQg5JWbQ+7saA7WN/W92X159z6MRlpBpTS8g3+KrJrfCsAmBCxC/aMeuCVIahaYKvMMGCcLKRxwmv7nFHylHs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Utt8VZTD; arc=none smtp.client-ip=209.85.221.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1712585973; c=relaxed/simple;
+	bh=dburm2e0CH8RMC8ZTCT8ZG/KPOT3+NbIGLgwYleaQGc=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=W/5HURQT1L04rUMHiosiU42Mar+R8XujDsCDr535/1wGcOQ8UylJhj0obRyItIvOUOQ6PINNX7TRezWtJL6O/HSQy+nOem2DfZczADZds5IW9xxtRG+BMcI3MOpqKdCL3iuG+P5tr12UxzwS0HU3hpg1eMl78UAW4A0ZGUotTWs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=JyMQ8LnK; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=kyoO6H0X; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Utt8VZTD"
-Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-343cfa6faf0so3249561f8f.0;
-        Mon, 08 Apr 2024 07:19:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1712585962; x=1713190762; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=79Cy7Ko+UcnCG7nOcHmA1+y+Nd7j5NW8NL0jgsxVudM=;
-        b=Utt8VZTDX0NgUq2DjKylVHQIGcK/sic+AIz44CzUcuUj1FWEW9PJEGncZD98TJo08z
-         V/zKALpCBn+Gx1qhUTJgy18cqcpeDOuPhz7qet6GIGiQmcbLTO1D2rjSb/EW4qoleyHW
-         tL+iKO90Vyuc7I5jZz+btkKhi6VzoURa7ZQ0ckmduS/bhAyl8pVIbVNP18beeW0EA2Xt
-         fq/HezZ+BaFbbJk/7NpMclr+6f1kTSNSylfKcMqMXgAlJ3GRknVhz8LdyZrGnf8LwAc9
-         aScrg82rWPSX9PRjAiRPEEqeW83R3BMBPwPe5Ew8WEEs3wrCX9/VtFaXm6EXy2VPo77n
-         vYZw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712585962; x=1713190762;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=79Cy7Ko+UcnCG7nOcHmA1+y+Nd7j5NW8NL0jgsxVudM=;
-        b=fla2ULhXWjwYyhw/5t/1th3q6D0CqdeT7kzzmYCo5XQH5OAWXj4FqNHn8GqPmka/0M
-         tvb95YgRn63UJm1u+EJezUl5gdqeW1v8ozjKib7flvPvZMTf7Jz7v1f3P81IX6G/jB4Z
-         LMIA8xb2gLU3fXVQm7ha3JErIJ48V/vJGZenIfSn1Qh7aJG9YAffWLig5+zmtNuE2pbt
-         jPbS+1jT4C0XXpHSuzU9GZQArc9/RIye1ECO6zGFOfz7tzip0o5Se9UAkIGCgH9qG9LI
-         0fYDqZhF40K4OxBVB4pano1DiJvm9cSxdDphFeVMW8o5lh/91MM/7O6uutYrU9okPXIw
-         J1KQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUo8+2MdInm8tISIECa1SDBmvNYLLZuWmrOaEDgchBS4tZeVbFhgsJagYKjBx8Kwl36B7kh2ibSLLeAZ9Zh4NftPHJiDYl1GcGl+Idbedz8PvyBgtN3PoX+65LZjnk2Z38JK7qu/NGwk2TkX/GX5qC1qdllKgvOBQXUOUg1u+6uOskbrTSO
-X-Gm-Message-State: AOJu0YzXkIffMYPdKjlBC83kczneG0DyXIyiWPBMdJdU5KKkMwJXMf6H
-	DPX3Yp8ZzTAgLVv6CQzKKmWTOk+xrO1DyL86oN+gegEQO3Hr6p4R
-X-Google-Smtp-Source: AGHT+IHlfUYJFytj9nVduWFBw5Z46eVAybZbdGYHwguK53NUXLGJRUBhQCb9VDIJP+zJw2h83TqRbA==
-X-Received: by 2002:adf:a4da:0:b0:33e:793b:a2aa with SMTP id h26-20020adfa4da000000b0033e793ba2aamr7647861wrb.47.1712585962157;
-        Mon, 08 Apr 2024 07:19:22 -0700 (PDT)
-Received: from localhost ([146.70.204.204])
-        by smtp.gmail.com with ESMTPSA id e16-20020adff350000000b00343ca138924sm9057837wrp.39.2024.04.08.07.19.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 08 Apr 2024 07:19:21 -0700 (PDT)
-From: Richard Gobert <richardbgobert@gmail.com>
-To: davem@davemloft.net,
-	edumazet@google.com,
-	kuba@kernel.org,
-	pabeni@redhat.com,
-	willemdebruijn.kernel@gmail.com,
-	dsahern@kernel.org,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-kselftest@vger.kernel.org
-Cc: Richard Gobert <richardbgobert@gmail.com>
-Subject: [PATCH net-next v5 6/6] selftests/net: add flush id selftests
-Date: Mon,  8 Apr 2024 16:17:20 +0200
-Message-Id: <20240408141720.98832-7-richardbgobert@gmail.com>
-In-Reply-To: <20240408141720.98832-1-richardbgobert@gmail.com>
-References: <20240408141720.98832-1-richardbgobert@gmail.com>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="JyMQ8LnK";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="kyoO6H0X"
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1712585969;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=zjhyLQPDLHKrpTEkAe5cnDIyWOE69JGkyLJy181UziI=;
+	b=JyMQ8LnKeAoO5DRg2np8AeZd3nbWuoGJvoaJYJpH9Cse3j7soPQk1687SvFW06rRB64QDs
+	Zast2jMyMkAHWKIHyIEcouQ8K0ZJU17if5DGR7PHxjp0GBxuhHscy2AzbUs72HDKJJWjm+
+	Wj/qUD2xtAh6ayi+nh51UlEyrmKWLeBoXIHGYdaA/C2TMq/uGFDVH/4aliw2S9Ywa+U1Db
+	gghkg7XeLb78XZnP4phJwzYyZU5rOLJrZ7CWesOX4WFpYuPXiVBKSArBi1MpxbyKnWOi8C
+	iR439lbfOAZeVKakN8hp/VP92ev9Nn+bG61WGufql+QStaH3beca1dIH9xYJ2A==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1712585969;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=zjhyLQPDLHKrpTEkAe5cnDIyWOE69JGkyLJy181UziI=;
+	b=kyoO6H0XTyjNhhV/ui/mCn2yrgxkjTfIMs0FSIxPTuzmbkAMR0iANW7eZoRo7r2yajjqdb
+	QujbPKCrPYymZGBA==
+To: Laura Nao <laura.nao@collabora.com>
+Cc: kernel@collabora.com, laura.nao@collabora.com,
+ linux-kernel@vger.kernel.org, regressions@leemhuis.info,
+ regressions@lists.linux.dev, x86@kernel.org
+Subject: Re: [REGRESSION] mainline boot regression on AMD Stoney Ridge
+ Chromebooks
+In-Reply-To: <20240408110605.164608-1-laura.nao@collabora.com>
+References: <87zfu46zal.ffs@tglx>
+ <20240408110605.164608-1-laura.nao@collabora.com>
+Date: Mon, 08 Apr 2024 16:19:29 +0200
+Message-ID: <87r0fg6ioe.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 
-Added flush id selftests to test different cases where DF flag is set or
-unset and id value changes in the following packets. All cases where the
-packets should coalesce or should not coalesce are tested.
+Laura!
 
-Signed-off-by: Richard Gobert <richardbgobert@gmail.com>
+On Mon, Apr 08 2024 at 13:06, Laura Nao wrote:
+> Just tried that and it doesn't boot, nothing on the serial console (I
+> kept earlyprintk=ttyS0,115200 in the cmdline).
+
+Thanks for trying. Now let's take a small step back.
+
+Please reset the tree to:
+
+      ace278e7eca6 ("x86/smpboot: Teach it about topo.amd_node_id")
+
+That's the commit right before switching over and according to your
+bisect it works. Now apply the patch below, which just runs the new
+topology scan function but discards the result.
+
+Thanks,
+
+        tglx
 ---
- tools/testing/selftests/net/gro.c | 144 ++++++++++++++++++++++++++++++
- 1 file changed, 144 insertions(+)
-
-diff --git a/tools/testing/selftests/net/gro.c b/tools/testing/selftests/net/gro.c
-index 353e1e867fbb..74ab06953c38 100644
---- a/tools/testing/selftests/net/gro.c
-+++ b/tools/testing/selftests/net/gro.c
-@@ -617,6 +617,120 @@ static void add_ipv6_exthdr(void *buf, void *optpkt, __u8 exthdr_type, char *ext
- 	iph->payload_len = htons(ntohs(iph->payload_len) + MIN_EXTHDR_SIZE);
+--- a/arch/x86/kernel/cpu/topology_amd.c
++++ b/arch/x86/kernel/cpu/topology_amd.c
+@@ -29,7 +29,17 @@ static bool parse_8000_0008(struct topo_
+ 	if (!sft)
+ 		sft = get_count_order(ecx.cpu_nthreads + 1);
+ 
+-	topology_set_dom(tscan, TOPO_SMT_DOMAIN, sft, ecx.cpu_nthreads + 1);
++	/*
++	 * cpu_nthreads describes the number of threads in the package
++	 * sft is the number of APIC ID bits per package
++	 *
++	 * As the number of actual threads per core is not described in
++	 * this leaf, just set the CORE domain shift and let the later
++	 * parsers set SMT shift. Assume one thread per core by default
++	 * which is correct if there are no other CPUID leafs to parse.
++	 */
++	topology_update_dom(tscan, TOPO_SMT_DOMAIN, 0, 1);
++	topology_set_dom(tscan, TOPO_CORE_DOMAIN, sft, ecx.cpu_nthreads + 1);
+ 	return true;
  }
  
-+static void fix_ip4_checksum(struct iphdr *iph)
-+{
-+	iph->check = 0;
-+	iph->check = checksum_fold(iph, sizeof(struct iphdr), 0);
-+}
-+
-+static void send_flush_id_case(int fd, struct sockaddr_ll *daddr, int tcase)
-+{
-+	bool send_three = false;
-+	static char buf1[MAX_HDR_LEN + PAYLOAD_LEN];
-+	static char buf2[MAX_HDR_LEN + PAYLOAD_LEN];
-+	static char buf3[MAX_HDR_LEN + PAYLOAD_LEN];
-+
-+	create_packet(buf1, 0, 0, PAYLOAD_LEN, 0);
-+	create_packet(buf2, PAYLOAD_LEN, 0, PAYLOAD_LEN, 0);
-+	create_packet(buf3, PAYLOAD_LEN * 2, 0, PAYLOAD_LEN, 0);
-+
-+	struct iphdr *iph1 = (struct iphdr *)(buf1 + ETH_HLEN);
-+	struct iphdr *iph2 = (struct iphdr *)(buf2 + ETH_HLEN);
-+	struct iphdr *iph3 = (struct iphdr *)(buf3 + ETH_HLEN);
-+
-+	switch (tcase) {
-+	case 0: /* DF=1, Incrementing - should coalesce */
-+		iph1->frag_off |= htons(IP_DF);
-+		iph1->id = htons(8);
-+		fix_ip4_checksum(iph1);
-+
-+		iph2->frag_off |= htons(IP_DF);
-+		iph2->id = htons(9);
-+		fix_ip4_checksum(iph2);
-+		break;
-+
-+	case 1: /* DF=1, Fixed - should coalesce */
-+		iph1->frag_off |= htons(IP_DF);
-+		iph1->id = htons(8);
-+		fix_ip4_checksum(iph1);
-+
-+		iph2->frag_off |= htons(IP_DF);
-+		iph2->id = htons(8);
-+		fix_ip4_checksum(iph2);
-+		break;
-+
-+	case 2: /* DF=0, Incrementing - should coalesce */
-+		iph1->frag_off &= ~htons(IP_DF);
-+		iph1->id = htons(8);
-+		fix_ip4_checksum(iph1);
-+
-+		iph2->frag_off &= ~htons(IP_DF);
-+		iph2->id = htons(9);
-+		fix_ip4_checksum(iph2);
-+		break;
-+
-+	case 3: /* DF=0, Fixed - should not coalesce */
-+		iph1->frag_off &= ~htons(IP_DF);
-+		iph1->id = htons(8);
-+		fix_ip4_checksum(iph1);
-+
-+		iph2->frag_off &= ~htons(IP_DF);
-+		iph2->id = htons(8);
-+		fix_ip4_checksum(iph2);
-+		break;
-+
-+	case 4: /* DF=1, two packets incrementing, and one fixed - should
-+		 * coalesce only the first two packets
-+		 */
-+		iph1->frag_off |= htons(IP_DF);
-+		iph1->id = htons(8);
-+		fix_ip4_checksum(iph1);
-+
-+		iph2->frag_off |= htons(IP_DF);
-+		iph2->id = htons(9);
-+		fix_ip4_checksum(iph2);
-+
-+		iph3->frag_off |= htons(IP_DF);
-+		iph3->id = htons(9);
-+		fix_ip4_checksum(iph3);
-+		send_three = true;
-+		break;
-+
-+	case 5: /* DF=1, two packets fixed, and one incrementing - should
-+		 * coalesce only the first two packets
-+		 */
-+		iph1->frag_off |= htons(IP_DF);
-+		iph1->id = htons(8);
-+		fix_ip4_checksum(iph1);
-+
-+		iph2->frag_off |= htons(IP_DF);
-+		iph2->id = htons(8);
-+		fix_ip4_checksum(iph2);
-+
-+		iph3->frag_off |= htons(IP_DF);
-+		iph3->id = htons(9);
-+		fix_ip4_checksum(iph3);
-+		send_three = true;
-+		break;
-+	}
-+
-+	write_packet(fd, buf1, total_hdr_len + PAYLOAD_LEN, daddr);
-+	write_packet(fd, buf2, total_hdr_len + PAYLOAD_LEN, daddr);
-+
-+	if (send_three)
-+		write_packet(fd, buf3, total_hdr_len + PAYLOAD_LEN, daddr);
-+}
-+
-+static void test_flush_id(int fd, struct sockaddr_ll *daddr, char *fin_pkt)
-+{
-+	for (int i = 0; i < 6; i++) {
-+		sleep(1);
-+		send_flush_id_case(fd, daddr, i);
-+		sleep(1);
-+		write_packet(fd, fin_pkt, total_hdr_len, daddr);
-+	}
-+}
-+
- static void send_ipv6_exthdr(int fd, struct sockaddr_ll *daddr, char *ext_data1, char *ext_data2)
- {
- 	static char buf[MAX_HDR_LEN + PAYLOAD_LEN];
-@@ -935,6 +1049,8 @@ static void gro_sender(void)
- 			send_fragment4(txfd, &daddr);
- 			sleep(1);
- 			write_packet(txfd, fin_pkt, total_hdr_len, &daddr);
-+
-+			test_flush_id(txfd, &daddr, fin_pkt);
- 		} else if (proto == PF_INET6) {
- 			sleep(1);
- 			send_fragment6(txfd, &daddr);
-@@ -1061,6 +1177,34 @@ static void gro_receiver(void)
+@@ -73,12 +83,14 @@ static bool parse_8000_001e(struct topo_
+ 	tscan->c->topo.initial_apicid = leaf.ext_apic_id;
  
- 			printf("fragmented ip4 doesn't coalesce: ");
- 			check_recv_pkts(rxfd, correct_payload, 2);
-+
-+			/* is_atomic checks */
-+			printf("DF=1, Incrementing - should coalesce: ");
-+			correct_payload[0] = PAYLOAD_LEN * 2;
-+			check_recv_pkts(rxfd, correct_payload, 1);
-+
-+			printf("DF=1, Fixed - should coalesce: ");
-+			correct_payload[0] = PAYLOAD_LEN * 2;
-+			check_recv_pkts(rxfd, correct_payload, 1);
-+
-+			printf("DF=0, Incrementing - should coalesce: ");
-+			correct_payload[0] = PAYLOAD_LEN * 2;
-+			check_recv_pkts(rxfd, correct_payload, 1);
-+
-+			printf("DF=0, Fixed - should not coalesce: ");
-+			correct_payload[0] = PAYLOAD_LEN;
-+			correct_payload[1] = PAYLOAD_LEN;
-+			check_recv_pkts(rxfd, correct_payload, 2);
-+
-+			printf("DF=1, 2 Incrementing and one fixed - should coalesce only first 2 packets: ");
-+			correct_payload[0] = PAYLOAD_LEN * 2;
-+			correct_payload[1] = PAYLOAD_LEN;
-+			check_recv_pkts(rxfd, correct_payload, 2);
-+
-+			printf("DF=1, 2 Fixed and one incrementing - should coalesce only first 2 packets: ");
-+			correct_payload[0] = PAYLOAD_LEN * 2;
-+			correct_payload[1] = PAYLOAD_LEN;
-+			check_recv_pkts(rxfd, correct_payload, 2);
- 		} else if (proto == PF_INET6) {
- 			/* GRO doesn't check for ipv6 hop limit when flushing.
- 			 * Hence no corresponding test to the ipv4 case.
--- 
-2.36.1
+ 	/*
+-	 * If leaf 0xb is available, then SMT shift is set already. If not
+-	 * take it from ecx.threads_per_core and use topo_update_dom() -
+-	 * topology_set_dom() would propagate and overwrite the already
+-	 * propagated CORE level.
++	 * If leaf 0xb is available, then the domain shifts are set
++	 * already and nothing to do here.
+ 	 */
+ 	if (!has_0xb) {
++		/*
++		 * Leaf 0x80000008 set the CORE domain shift already.
++		 * Update the SMT domain, but do not propagate it.
++		 */
+ 		unsigned int nthreads = leaf.core_nthreads + 1;
+ 
+ 		topology_update_dom(tscan, TOPO_SMT_DOMAIN, get_count_order(nthreads), nthreads);
+--- a/arch/x86/kernel/cpu/topology_common.c
++++ b/arch/x86/kernel/cpu/topology_common.c
+@@ -133,6 +133,10 @@ static void parse_topology(struct topo_s
+ 	tscan->ebx1_nproc_shift = get_count_order(ebx.nproc);
+ 
+ 	switch (c->x86_vendor) {
++	case X86_VENDOR_AMD:
++		if (IS_ENABLED(CONFIG_CPU_SUP_AMD))
++			cpu_parse_topology_amd(tscan);
++		break;
+ 	case X86_VENDOR_CENTAUR:
+ 	case X86_VENDOR_ZHAOXIN:
+ 		parse_legacy(tscan);
+
 
