@@ -1,359 +1,111 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6007B45C18
-	for <linux-kernel@vger.kernel.org>; Mon,  8 Apr 2024 09:31:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 07D1F4E1BE
+	for <linux-kernel@vger.kernel.org>; Mon,  8 Apr 2024 09:32:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712568715; cv=none; b=habC0t+quAlarehBdwp/K0wm+y6hJqiEop2+IgZRfO6FXiUfXkSNV8vEn862FI5uiXONrl5E8RF9tl8FhVCT98UCzCU9wcDB9TbrFdu89MfWiinoP74Sw+/VTfynbtd2nV4/1qeotluTNIcbtr/ZFfv8Twn1TjOzmoX6Pg/Tb+E=
+	t=1712568723; cv=none; b=E2yLuLEsmZqm/3/CgAuDpaTGDNrga2vHIdAmw4/voEcPFh2FayktCGaB7kMSuEExUJs3hBK2mWKXjb30ty3xo6RWSbseXTnY3mkJzJioZK/dd2WV7i14YmTwWRZd3zX4D2Unw2LO5irAj/Q/NpgrI5gPW0mQCOtHd6D6zFP/bwU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712568715; c=relaxed/simple;
-	bh=cAB7lVdaxmigcFflcRhVLrOiqujuHKwn0xXyeZZ+WAA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=cWgwRaqnBEgDM8yRoob8DNMtoT75W3NjIpyj2vBsPbQPo/taH9+KDvNdfHD401Vu0YwRGq+m7EmwIwlE/RXVwQQ+oZnaA+nC9X+c54w674COdsz1VV1tK98HFU8wN1gVikUcxPDzhr1sVJGekVzC5+Y3u3pZONDrNlyruabgqY0=
+	s=arc-20240116; t=1712568723; c=relaxed/simple;
+	bh=AUaPVnuSfJpVtVo2zwvpnfKznV2o5PAdSasSe2Vn65s=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=lWtckrFpynW2mYw1Gjio+/wIg9rk/DgOm414QqaU+KfoRkL1as1Ly67j5eRHCodtKVPe7EDj9gav55BeRlbxXj8D34UbAb/mi+5BjT6b0f7lx1wL35NA+fwtmgZekNw/Ca6aF3O2g4oZHsYHhHkb2fBDFPxTPd/Ql2mPuEQ6BRM=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5327A12FC;
-	Mon,  8 Apr 2024 02:32:23 -0700 (PDT)
-Received: from pluto.fritz.box (unknown [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 30A783F766;
-	Mon,  8 Apr 2024 02:31:51 -0700 (PDT)
-From: Cristian Marussi <cristian.marussi@arm.com>
-To: linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org
-Cc: sudeep.holla@arm.com,
-	james.quinlan@broadcom.com,
-	f.fainelli@gmail.com,
-	vincent.guittot@linaro.org,
-	peng.fan@oss.nxp.com,
-	michal.simek@amd.com,
-	quic_sibis@quicinc.com,
-	konrad.dybcio@linaro.org,
-	souvik.chakravarty@arm.com,
-	Cristian Marussi <cristian.marussi@arm.com>
-Subject: [PATCH v2 1/2] firmware: arm_scmi: Add support for multiple vendors custom protocols
-Date: Mon,  8 Apr 2024 10:30:51 +0100
-Message-ID: <20240408093052.3801576-2-cristian.marussi@arm.com>
-X-Mailer: git-send-email 2.44.0
-In-Reply-To: <20240408093052.3801576-1-cristian.marussi@arm.com>
-References: <20240408093052.3801576-1-cristian.marussi@arm.com>
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CEB991007;
+	Mon,  8 Apr 2024 02:32:31 -0700 (PDT)
+Received: from [10.57.73.169] (unknown [10.57.73.169])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 693B13F766;
+	Mon,  8 Apr 2024 02:31:59 -0700 (PDT)
+Message-ID: <47eccc1b-71a2-43f3-8d44-7d26c6ddd4f0@arm.com>
+Date: Mon, 8 Apr 2024 10:31:58 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 5/6] mm: vmscan: Avoid split during shrink_folio_list()
+Content-Language: en-GB
+To: David Hildenbrand <david@redhat.com>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Matthew Wilcox <willy@infradead.org>, Huang Ying <ying.huang@intel.com>,
+ Gao Xiang <xiang@kernel.org>, Yu Zhao <yuzhao@google.com>,
+ Yang Shi <shy828301@gmail.com>, Michal Hocko <mhocko@suse.com>,
+ Kefeng Wang <wangkefeng.wang@huawei.com>, Barry Song <21cnbao@gmail.com>,
+ Chris Li <chrisl@kernel.org>, Lance Yang <ioworker0@gmail.com>
+Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+ Barry Song <v-songbaohua@oppo.com>
+References: <20240403114032.1162100-1-ryan.roberts@arm.com>
+ <20240403114032.1162100-6-ryan.roberts@arm.com>
+ <6653ce52-53a2-4d91-b98f-50f1608ae59c@redhat.com>
+From: Ryan Roberts <ryan.roberts@arm.com>
+In-Reply-To: <6653ce52-53a2-4d91-b98f-50f1608ae59c@redhat.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Add a mechanism to be able to tag vendor protocol modules at compile-time
-with a vendor/sub_vendor string and an implementation version and then to
-choose to load, at run-time, only those vendor protocol modules matching
-as close as possible the vendor/subvendor identification advertised by
-the SCMI platform server.
+On 05/04/2024 11:42, David Hildenbrand wrote:
+> On 03.04.24 13:40, Ryan Roberts wrote:
+>> Now that swap supports storing all mTHP sizes, avoid splitting large
+>> folios before swap-out. This benefits performance of the swap-out path
+>> by eliding split_folio_to_list(), which is expensive, and also sets us
+>> up for swapping in large folios in a future series.
+>>
+>> If the folio is partially mapped, we continue to split it since we want
+>> to avoid the extra IO overhead and storage of writing out pages
+>> uneccessarily.
+>>
+>> THP_SWPOUT and THP_SWPOUT_FALLBACK counters should continue to count
+>> events only for PMD-mappable folios to avoid user confusion. THP_SWPOUT
+>> already has the appropriate guard. Add a guard for THP_SWPOUT_FALLBACK.
+>> It may be appropriate to add per-size counters in future.
+>>
+>> Reviewed-by: David Hildenbrand <david@redhat.com>
+>> Reviewed-by: Barry Song <v-songbaohua@oppo.com>
+>> Signed-off-by: Ryan Roberts <ryan.roberts@arm.com>
+>> ---
+>>   mm/vmscan.c | 17 +++++++++++------
+>>   1 file changed, 11 insertions(+), 6 deletions(-)
+>>
+>> diff --git a/mm/vmscan.c b/mm/vmscan.c
+>> index 00adaf1cb2c3..ffc4553c8615 100644
+>> --- a/mm/vmscan.c
+>> +++ b/mm/vmscan.c
+>> @@ -1223,11 +1223,12 @@ static unsigned int shrink_folio_list(struct list_head
+>> *folio_list,
+>>                       if (!can_split_folio(folio, NULL))
+>>                           goto activate_locked;
+>>                       /*
+>> -                     * Split folios without a PMD map right
+>> -                     * away. Chances are some or all of the
+>> -                     * tail pages can be freed without IO.
+>> +                     * Split partially mapped folios right
+>> +                     * away. We can free the unmapped pages
+>> +                     * without IO.
+>>                        */
+>> -                    if (!folio_entire_mapcount(folio) &&
+>> +                    if (data_race(!list_empty(
+>> +                        &folio->_deferred_list)) &&
+> 
+> Please violate the 80 chars rule where reasonable.
+> 
+> "
+> Statements longer than 80 columns should be broken into sensible chunks, unless
+> exceeding 80 columns significantly increases readability and does not hide
+> information.
+> "
+> 
+> 
+> Likely some of that code here should be refactored into readable sub-functions.
+> 
+> codingstyle also mentions
+> 
+> "The answer to that is that if you need more than 3 levels of indentation,
+> you're screwed anyway, and should fix your program."
+> 
 
-In this way, any in-tree existent vendor protocol module can be build and
-shipped by default in a single kernel image, even when using the same
-clashing protocol identification numbers, since the SCMI core will take
-care at run-time to load only the ones pertinent to the running system.
+Boo! :)
 
-Signed-off-by: Cristian Marussi <cristian.marussi@arm.com>
----
- drivers/firmware/arm_scmi/driver.c    | 165 ++++++++++++++++++++++----
- drivers/firmware/arm_scmi/protocols.h |  15 +++
- 2 files changed, 158 insertions(+), 22 deletions(-)
-
-diff --git a/drivers/firmware/arm_scmi/driver.c b/drivers/firmware/arm_scmi/driver.c
-index d0091459a276..aa18202054a5 100644
---- a/drivers/firmware/arm_scmi/driver.c
-+++ b/drivers/firmware/arm_scmi/driver.c
-@@ -33,6 +33,7 @@
- #include <linux/processor.h>
- #include <linux/refcount.h>
- #include <linux/slab.h>
-+#include <linux/xarray.h>
- 
- #include "common.h"
- #include "notify.h"
-@@ -44,8 +45,7 @@
- 
- static DEFINE_IDA(scmi_id);
- 
--static DEFINE_IDR(scmi_protocols);
--static DEFINE_SPINLOCK(protocol_lock);
-+static DEFINE_XARRAY(scmi_protocols);
- 
- /* List of all SCMI devices active in system */
- static LIST_HEAD(scmi_list);
-@@ -194,11 +194,90 @@ struct scmi_info {
- #define bus_nb_to_scmi_info(nb)	container_of(nb, struct scmi_info, bus_nb)
- #define req_nb_to_scmi_info(nb)	container_of(nb, struct scmi_info, dev_req_nb)
- 
--static const struct scmi_protocol *scmi_protocol_get(int protocol_id)
-+static unsigned long
-+scmi_vendor_protocol_signature(unsigned int protocol_id, char *vendor_id,
-+			       char *sub_vendor_id, u32 impl_ver)
- {
--	const struct scmi_protocol *proto;
-+	char *signature, *p;
-+	unsigned long hash = 0;
- 
--	proto = idr_find(&scmi_protocols, protocol_id);
-+	/* vendor_id/sub_vendor_id guaranteed <= SCMI_SHORT_NAME_MAX_SIZE */
-+	signature = kasprintf(GFP_KERNEL, "%02X|%s|%s|0x%08X", protocol_id,
-+			      vendor_id ?: "", sub_vendor_id ?: "", impl_ver);
-+	if (!signature)
-+		return 0;
-+
-+	p = signature;
-+	while (*p)
-+		hash = partial_name_hash(tolower(*p++), hash);
-+	hash = end_name_hash(hash);
-+
-+	kfree(signature);
-+
-+	return hash;
-+}
-+
-+static unsigned long
-+scmi_protocol_key_calculate(int protocol_id, char *vendor_id,
-+			    char *sub_vendor_id, u32 impl_ver)
-+{
-+	if (protocol_id < SCMI_PROTOCOL_VENDOR)
-+		return protocol_id;
-+	else
-+		return scmi_vendor_protocol_signature(protocol_id, vendor_id,
-+						      sub_vendor_id, impl_ver);
-+}
-+
-+static const struct scmi_protocol *
-+scmi_vendor_protocol_lookup(int protocol_id, char *vendor_id,
-+			    char *sub_vendor_id, u32 impl_ver)
-+{
-+	unsigned long key;
-+	struct scmi_protocol *proto = NULL;
-+
-+	/* Searching for closest match ...*/
-+	key = scmi_protocol_key_calculate(protocol_id, vendor_id,
-+					  sub_vendor_id, impl_ver);
-+	if (key)
-+		proto = xa_load(&scmi_protocols, key);
-+
-+	if (proto)
-+		return proto;
-+
-+	/* Any match on vendor/sub_vendor ? */
-+	if (impl_ver) {
-+		key = scmi_protocol_key_calculate(protocol_id, vendor_id,
-+						  sub_vendor_id, 0);
-+		if (key)
-+			proto = xa_load(&scmi_protocols, key);
-+
-+		if (proto)
-+			return proto;
-+	}
-+
-+	/* Any match on just the vendor ? */
-+	if (sub_vendor_id) {
-+		key = scmi_protocol_key_calculate(protocol_id, vendor_id,
-+						  NULL, 0);
-+		if (key)
-+			proto = xa_load(&scmi_protocols, key);
-+	}
-+
-+	return proto;
-+}
-+
-+static const struct scmi_protocol *
-+scmi_protocol_get(int protocol_id, struct scmi_revision_info *version)
-+{
-+	const struct scmi_protocol *proto = NULL;
-+
-+	if (protocol_id < SCMI_PROTOCOL_VENDOR)
-+		proto = xa_load(&scmi_protocols, protocol_id);
-+	else
-+		proto = scmi_vendor_protocol_lookup(protocol_id,
-+						    version->vendor_id,
-+						    version->sub_vendor_id,
-+						    version->impl_ver);
- 	if (!proto || !try_module_get(proto->owner)) {
- 		pr_warn("SCMI Protocol 0x%x not found!\n", protocol_id);
- 		return NULL;
-@@ -206,21 +285,46 @@ static const struct scmi_protocol *scmi_protocol_get(int protocol_id)
- 
- 	pr_debug("Found SCMI Protocol 0x%x\n", protocol_id);
- 
-+	if (protocol_id >= SCMI_PROTOCOL_VENDOR)
-+		pr_info("Loaded SCMI Vendor Protocol 0x%x - %s %s %X\n",
-+			protocol_id, proto->vendor_id ?: "",
-+			proto->sub_vendor_id ?: "", proto->impl_ver);
-+
- 	return proto;
- }
- 
--static void scmi_protocol_put(int protocol_id)
-+static void scmi_protocol_put(const struct scmi_protocol *proto)
- {
--	const struct scmi_protocol *proto;
--
--	proto = idr_find(&scmi_protocols, protocol_id);
- 	if (proto)
- 		module_put(proto->owner);
- }
- 
-+static int scmi_vendor_protocol_check(const struct scmi_protocol *proto)
-+{
-+	if (!proto->vendor_id) {
-+		pr_err("missing vendor_id for protocol 0x%x\n", proto->id);
-+		return -EINVAL;
-+	}
-+
-+	if (strlen(proto->vendor_id) >= SCMI_SHORT_NAME_MAX_SIZE) {
-+		pr_err("malformed vendor_id for protocol 0x%x\n", proto->id);
-+		return -EINVAL;
-+	}
-+
-+	if (proto->sub_vendor_id &&
-+	    strlen(proto->sub_vendor_id) >= SCMI_SHORT_NAME_MAX_SIZE) {
-+		pr_err("malformed sub_vendor_id for protocol 0x%x\n",
-+		       proto->id);
-+		return -EINVAL;
-+	}
-+
-+	return 0;
-+}
-+
- int scmi_protocol_register(const struct scmi_protocol *proto)
- {
- 	int ret;
-+	unsigned long key;
- 
- 	if (!proto) {
- 		pr_err("invalid protocol\n");
-@@ -232,12 +336,23 @@ int scmi_protocol_register(const struct scmi_protocol *proto)
- 		return -EINVAL;
- 	}
- 
--	spin_lock(&protocol_lock);
--	ret = idr_alloc(&scmi_protocols, (void *)proto,
--			proto->id, proto->id + 1, GFP_ATOMIC);
--	spin_unlock(&protocol_lock);
--	if (ret != proto->id) {
--		pr_err("unable to allocate SCMI idr slot for 0x%x - err %d\n",
-+	if (proto->id >= SCMI_PROTOCOL_VENDOR &&
-+	    scmi_vendor_protocol_check(proto))
-+		return -EINVAL;
-+
-+	/*
-+	 * Calculate a protocol key to register this protocol with the core;
-+	 * key value 0 is considered invalid.
-+	 */
-+	key = scmi_protocol_key_calculate(proto->id, proto->vendor_id,
-+					  proto->sub_vendor_id,
-+					  proto->impl_ver);
-+	if (!key)
-+		return -EINVAL;
-+
-+	ret = xa_insert(&scmi_protocols, key, (void *)proto, GFP_KERNEL);
-+	if (ret) {
-+		pr_err("unable to allocate SCMI protocol slot for 0x%x - err %d\n",
- 		       proto->id, ret);
- 		return ret;
- 	}
-@@ -250,9 +365,15 @@ EXPORT_SYMBOL_GPL(scmi_protocol_register);
- 
- void scmi_protocol_unregister(const struct scmi_protocol *proto)
- {
--	spin_lock(&protocol_lock);
--	idr_remove(&scmi_protocols, proto->id);
--	spin_unlock(&protocol_lock);
-+	unsigned long key;
-+
-+	key = scmi_protocol_key_calculate(proto->id, proto->vendor_id,
-+					  proto->sub_vendor_id,
-+					  proto->impl_ver);
-+	if (!key)
-+		return;
-+
-+	xa_erase(&scmi_protocols, key);
- 
- 	pr_debug("Unregistered SCMI Protocol 0x%x\n", proto->id);
- }
-@@ -1940,7 +2061,7 @@ scmi_alloc_init_protocol_instance(struct scmi_info *info,
- 	/* Protocol specific devres group */
- 	gid = devres_open_group(handle->dev, NULL, GFP_KERNEL);
- 	if (!gid) {
--		scmi_protocol_put(proto->id);
-+		scmi_protocol_put(proto);
- 		goto out;
- 	}
- 
-@@ -2004,7 +2125,7 @@ scmi_alloc_init_protocol_instance(struct scmi_info *info,
- 
- clean:
- 	/* Take care to put the protocol module's owner before releasing all */
--	scmi_protocol_put(proto->id);
-+	scmi_protocol_put(proto);
- 	devres_release_group(handle->dev, gid);
- out:
- 	return ERR_PTR(ret);
-@@ -2038,7 +2159,7 @@ scmi_get_protocol_instance(const struct scmi_handle *handle, u8 protocol_id)
- 		const struct scmi_protocol *proto;
- 
- 		/* Fails if protocol not registered on bus */
--		proto = scmi_protocol_get(protocol_id);
-+		proto = scmi_protocol_get(protocol_id, &info->version);
- 		if (proto)
- 			pi = scmi_alloc_init_protocol_instance(info, proto);
- 		else
-@@ -2093,7 +2214,7 @@ void scmi_protocol_release(const struct scmi_handle *handle, u8 protocol_id)
- 
- 		idr_remove(&info->protocols, protocol_id);
- 
--		scmi_protocol_put(protocol_id);
-+		scmi_protocol_put(pi->proto);
- 
- 		devres_release_group(handle->dev, gid);
- 		dev_dbg(handle->dev, "De-Initialized protocol: 0x%X\n",
-diff --git a/drivers/firmware/arm_scmi/protocols.h b/drivers/firmware/arm_scmi/protocols.h
-index 317d3fb32676..45ee8b35f56d 100644
---- a/drivers/firmware/arm_scmi/protocols.h
-+++ b/drivers/firmware/arm_scmi/protocols.h
-@@ -29,6 +29,8 @@
- #define PROTOCOL_REV_MAJOR(x)	((u16)(FIELD_GET(PROTOCOL_REV_MAJOR_MASK, (x))))
- #define PROTOCOL_REV_MINOR(x)	((u16)(FIELD_GET(PROTOCOL_REV_MINOR_MASK, (x))))
- 
-+#define SCMI_PROTOCOL_VENDOR	0x80
-+
- enum scmi_common_cmd {
- 	PROTOCOL_VERSION = 0x0,
- 	PROTOCOL_ATTRIBUTES = 0x1,
-@@ -323,6 +325,16 @@ typedef int (*scmi_prot_init_ph_fn_t)(const struct scmi_protocol_handle *);
-  *		       protocol by the agent. Each protocol implementation
-  *		       in the agent is supposed to downgrade to match the
-  *		       protocol version supported by the platform.
-+ * @vendor_id: A firmware vendor string for vendor protocols matching.
-+ *	       Ignored when @id identifies a standard protocol, cannot be NULL
-+ *	       otherwise.
-+ * @sub_vendor_id: A firmware sub_vendor string for vendor protocols matching.
-+ *		   Ignored if NULL or when @id identifies a standard protocol.
-+ * @impl_ver: A firmware implementation version for vendor protocols matching.
-+ *	      Ignored if zero or if @id identifies a standard protocol.
-+ *
-+ * Note that vendor protocols matching at load time is performed by attempting
-+ * the closest match first against the tuple (vendor, sub_vendor, impl_ver)
-  */
- struct scmi_protocol {
- 	const u8				id;
-@@ -332,6 +344,9 @@ struct scmi_protocol {
- 	const void				*ops;
- 	const struct scmi_protocol_events	*events;
- 	unsigned int				supported_version;
-+	char					*vendor_id;
-+	char					*sub_vendor_id;
-+	u32					impl_ver;
- };
- 
- #define DEFINE_SCMI_PROTOCOL_REGISTER_UNREGISTER(name, proto)	\
--- 
-2.44.0
-
+Yeah, no problem, I'll sort this.
